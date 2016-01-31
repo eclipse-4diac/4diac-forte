@@ -1,0 +1,34 @@
+;Script for MBIND to build forte.m
+;
+;Header
+;
+ModuleType        = VXW
+Version           = ../forte.ver
+Reentrant         = FALSE
+NoOnlineConfig    = FALSE
+NoOnlineInstall   = FALSE
+NoOnlineDeinstall = FALSE
+DebugInfo         = TRUE
+ErrorTolerant     = FALSE
+NoAutoInstall     = FALSE
+SystemModule      = FALSE
+;
+;Object-Code
+;
+ObjectType        = OBJ
+ObjectMode        = NORMAL
+Version           = ../forte.ver
+ObjectName        = forte.o
+;
+;Configuration-Rule
+;
+ObjectType        = BCRU
+ObjectName        = forte.bcr
+;
+;Source-Code
+;
+;ObjectType        = C-ZIP
+;ObjectName        = forte.tgz
+ObjectType = SWREQ
+Version = ../CPPLIB.ver
+ObjectName = CPPLIB

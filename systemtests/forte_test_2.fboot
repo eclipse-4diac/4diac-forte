@@ -1,0 +1,22 @@
+;<Request ID="0" Action="CREATE"><FB Name="EMB_RES" Type="EMB_RES" /></Request>
+EMB_RES;<Request ID="1" Action="CREATE"><FB Name="E_RESTART_1" Type="E_RESTART" /></Request>
+EMB_RES;<Request ID="2" Action="CREATE"><FB Name="BOOL2BOOL" Type="BOOL2BOOL" /></Request>
+EMB_RES;<Request ID="3" Action="WRITE"><Connection Source="true" Destination="BOOL2BOOL.IN" /></Request>
+EMB_RES;<Request ID="4" Action="CREATE"><FB Name="E_SWITCH" Type="E_SWITCH" /></Request>
+EMB_RES;<Request ID="5" Action="CREATE"><FB Name="OUT_ANY_CONSOLE_1" Type="OUT_ANY_CONSOLE" /></Request>
+EMB_RES;<Request ID="6" Action="WRITE"><Connection Source="1" Destination="OUT_ANY_CONSOLE_1.QI" /></Request>
+EMB_RES;<Request ID="7" Action="WRITE"><Connection Source="ERROR: T" Destination="OUT_ANY_CONSOLE_1.LABEL" /></Request>
+EMB_RES;<Request ID="8" Action="CREATE"><FB Name="OUT_ANY_CONSOLE_0" Type="OUT_ANY_CONSOLE" /></Request>
+EMB_RES;<Request ID="9" Action="WRITE"><Connection Source="1" Destination="OUT_ANY_CONSOLE_0.QI" /></Request>
+EMB_RES;<Request ID="10" Action="WRITE"><Connection Source="Done" Destination="OUT_ANY_CONSOLE_0.LABEL" /></Request>
+EMB_RES;<Request ID="11" Action="CREATE"><FB Name="STEST_END_0" Type="STEST_END" /></Request>
+EMB_RES;<Request ID="12" Action="CREATE"><Connection Source="BOOL2BOOL.CNF" Destination="E_SWITCH.EI" /></Request>
+EMB_RES;<Request ID="13" Action="CREATE"><Connection Source="E_SWITCH.EO1" Destination="OUT_ANY_CONSOLE_0.REQ" /></Request>
+EMB_RES;<Request ID="14" Action="CREATE"><Connection Source="OUT_ANY_CONSOLE_0.CNF" Destination="STEST_END_0.REQ" /></Request>
+EMB_RES;<Request ID="15" Action="CREATE"><Connection Source="E_RESTART_1.COLD" Destination="BOOL2BOOL.REQ" /></Request>
+EMB_RES;<Request ID="16" Action="CREATE"><Connection Source="E_SWITCH.EO0" Destination="OUT_ANY_CONSOLE_1.REQ" /></Request>
+EMB_RES;<Request ID="17" Action="CREATE"><Connection Source="OUT_ANY_CONSOLE_1.CNF" Destination="STEST_END_0.REQ" /></Request>
+EMB_RES;<Request ID="18" Action="CREATE"><Connection Source="BOOL2BOOL.OUT" Destination="E_SWITCH.G" /></Request>
+EMB_RES;<Request ID="19" Action="CREATE"><Connection Source="BOOL2BOOL.OUT" Destination="OUT_ANY_CONSOLE_1.IN" /></Request>
+EMB_RES;<Request ID="20" Action="CREATE"><Connection Source="BOOL2BOOL.OUT" Destination="OUT_ANY_CONSOLE_0.IN" /></Request>
+EMB_RES;<Request ID="21" Action="START"/>

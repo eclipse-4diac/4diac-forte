@@ -1,0 +1,364 @@
+%*******************************************************************************
+% * Copyright (c) 2007 - 2015 Profactor GmbH, ACIN, fortiss GmbH 
+% * All rights reserved. This program and the accompanying materials
+% * are made available under the terms of the Eclipse Public License v1.0
+% * which accompanies this distribution, and is available at
+% * http://www.eclipse.org/legal/epl-v10.html
+% *
+% * Contributors:
+% *    Gerhard Ebenhofer, Thomas Strasser, Alois Zoitl - initial API and implementation and/or initial documentation
+% *******************************************************************************/
+
+\documentclass[final,a4paper,10pt, oneside]{article}
+\usepackage[latin1]{inputenc}
+
+\usepackage{a4wide} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%   important definitions at the beginning
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\title{Coding Rules for \emph{FORTE}\footnote{Framework for Distributed Industrial Automation and Control---Run-Time Environment}}
+\author{Alois Zoitl, alil\@@users.sf.net \and Rene Smodic, smodic\@@acin.tuwien.ac.at}
+\date{May 18, 2010}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Links
+\usepackage{ifpdf}
+\ifpdf
+ \usepackage[pdftex, colorlinks, pdfstartview=FitH, plainpages=false, pdfpagelabels]{hyperref}
+ \pdfcompresslevel=9
+\else
+ \usepackage[dvipdfm, colorlinks]{hyperref}
+\fi
+
+\hypersetup{colorlinks, linkcolor=black, filecolor=black, urlcolor=black, citecolor=black, pdftitle={Coding Rules for FORTE},pdfauthor={Alois Zoitl, Smodic Rene}}
+
+% Font
+\usepackage{mathpazo}
+
+\usepackage[centerlast,small,bf]{caption2} %zentriert, kleiner als fliesstext, fett (gilt nur fuer 'Abbildung x:')
+
+% Figures
+\usepackage[dvips]{graphicx}
+
+% Listings
+\usepackage{listings}
+\lstset{language=C++}
+\lstset{commentstyle=\textit}
+\lstset{linewidth=\textwidth}
+\lstset{basicstyle=\scriptsize}
+
+
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Comments}
+A sufficient amount of comments has to be written. There are never too many comments, whereas invalid comments are worse than none --- thus
+invalid comments have to be removed from the source code. Comments have to be written in English. 
+
+\begin{quote}
+Comments for class, function, \ldots~ definitions have to follow the conventions of \emph{Doxygen} to allow the automated generation of documentation for the sourcecode. 
+\end{quote}
+
+For documenting the implementation it is allowed to indicate Single-line
+comments with \verb|//| ahead of the command or in the same line right after the command. All other comments have to be located ahead of the
+command or block. Generally comments have to be tagged with \verb|//| to allow the temporarily commenting out of code with \verb|/*...*/|.
+Comments have to be meaningful, to describe to program and to be up to date.
+
+
+\subsection{File Headers}
+Every source-file must contain a file header as follows:
+\begin{lstlisting}[frame=trbl]{}
+/*******************************************************************************
+ * Copyright (c) 2007 4DIAC - consortium.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************
+\end{lstlisting}
+An example for the file header used in an full header file is given in Appendix~\ref{subsec:FileHeader} of this document.
+
+\subsection{Keywords}
+The following Keywords should be used in the source code to mark special comments:
+\begin{itemize}
+	\item \textbf{TODO:} For comments about possible or needed extensions
+	\item \textbf{FIXME:} To be used for comments about potential (or known) bugs
+\end{itemize}
+
+\section{Datatypes}
+For the \emph{FORTE}-development we distinguish between three main kinds of data types:
+\begin{enumerate}
+\item Standard C++ data types:
+
+These data types should be used in all places where no special demands on the used data 
+type are required. Especially for standard integers the \verb=int= or \verb=unsigned int= 
+should be considered, 
+as these are on most machines the fastest and often also smaller assembler code is produced. 
+
+\item IEC 61131-3 data types:
+
+\emph{FORTE} provides a set of classes resembling the data types defined in IEC 61131-3. These classes can be found in the \verb|src/core/datatypes| directory. The class names are the IEC 61131-3 data type name prefixed with \verb=CIEC_=. They are used for the FB interfaces and for internal variables of Basic FBs. There they are also used for the transition conditions and the algorithms. When using these data types one should be aware about the overhead involved in them.
+
+\item Data types of given size: 
+
+Table~\ref{tab:datatypes} contains the definitions of important standard data types. This is done to ensure a machine independent definition of the bit-width of the standard data types. For \emph{FORTE}-development these definitions are in the file: \verb|src/arch/datatypes.h|
+\end{enumerate}
+
+\begin{table}[ht]
+	\centering
+	 \caption{Size constrained data types for \emph{FORTE}-development} \label{tab:datatypes}
+		\begin{tabular}{lll}
+			defined data type	& bit-width / description\\
+			\hline
+			TForteByte	&	8 bit unsigned\\
+			TForteWord	&	16 bit unsigned	\\
+			TForteDWord	&	32 bit unsigned	 \\
+			TForteInt8	&	8 bit signed	 \\
+			TForteInt16	&	16 bit signed	 \\
+			TForteInt32	&	32 bit signed	 \\
+			TForteUInt8	&	8 bit unsigned	 \\
+			TForteUInt16	&	16 bit unsigned	 \\
+			TForteUInt32	&	32 bit unsigned	 \\
+			TForteFloat	&	single precission IEEE float (32 bit)	 \\
+			TForteDFloat	&	double precission IEEE float (64 bit)	
+		\end{tabular}
+\end{table}
+	
+\section{Naming of Identifiers}
+Every identifier has to be named in English. 
+The first character of an identifier must not contain underscores (there are some compiler directives which start with underscores and this could lead to conflicts). 
+Mixed case letters (i.e. camel-case) have to be used and the appropriate prefixes have to be inserted where necessary.
+
+
+\subsection{Variables}
+Variables have to be named self explanatory. The names have to be provided with the appropriate prefixes and they have to start with an uppercase letter. In case of combining prefixes, the use of ranges, arrays, pointer, enumerations, or structures is at first, followed by basic data types or object prefixes. The only exception are loop variables (thereby the use of i, j, k is allowed). Only one variable declaration per line is allowed. Pointer operators at the declaration have to be located in front of the variable (not after the type identifier). If possible initializations have to be done directly at the declaration.
+
+\textbf{Global non constant variables are prohibited!}
+
+\subsection{Prefixes}
+The following prefixes have to be applied to identifiers:\\
+\begin{tabular}{ll}
+&\\
+\textbf{Type Definitions} & \textbf{Scope} \\
+\begin{tabular}{ll}
+S& for structures \\
+C& for class\\
+I& for interface\\ 
+E& for enum\\
+T& for types (e.g. typedef in C++)\\ 
+&\\
+&\\
+\end{tabular} &
+
+\begin{tabular}{ll}
+m & for member variables of classes\\
+cm & for a constant member\\	
+%g & for global variables\\
+s & for static variables\\ 	
+pa & for function parameters\\
+sm & static member\\
+scm & static constant member\\
+cg & for a global constant\\
+\end{tabular}	\vspace{5mm}\\
+
+\end{tabular}
+
+\noindent
+Optionally also more detailed type information can be given with the variable name:
+
+\begin{tabular}{ll}
+\textbf{Variable Types} & \textbf{Basic Data Types} \\
+\begin{tabular}{ll}
+a & for arrays\\
+p & for pointers\\ 	
+r & for references\\
+en & for enumerations\\
+st & for structures\\
+\end{tabular}	&
+
+\begin{tabular}{ll}
+c & for characters \\
+b & for booleans\\
+n & for integers\\	
+f & for all floating point numbers\\
+\end{tabular} \vspace{1mm}\\
+
+\textbf{Objects} & \\
+\begin{tabular}{ll}
+o & for meaningless objects\\	
+lst & for list objects\\
+v & for vector objects\\
+s & for string objects\\	
+\end{tabular} &\\
+&\\
+\end{tabular}
+
+\noindent If these optional type prefixes are used an \_ has to be inserted between scope prefix and the optional type prefix in order to increase readability. 
+
+\paragraph{Examples}
+\begin{quote}
+\verb|class CFunctionBlock;|\\
+\verb|int nNumber;|\\
+\verb|int *pnNumber = &nNumber;|\\
+\verb|char cKey;|\\
+\verb|bool g_bIsInitialized;|\\
+\verb|float m_fPi = 3.1415;|\\
+\verb|int anNumbers[10];|\\
+\end{quote}
+
+
+\subsection{Constants}
+ With C++ it is prohibited to declare constants with the \#define statement (const has to be used instead). 
+ A prefix cm, scm, or cg, depending on the cope of the constant should be used.
+ Never ever use ``magic numbers'' 
+(e.g. \verb|if (x == 3){...}|). Instead use constants.
+
+
+
+
+\section{Classes}
+In addition to the type--prefix the class identifiers have to start with a capital letter.
+\subsection{Class Structure}
+ The declaration of the class content has to be done in the following order:
+\begin{enumerate}
+\item Public
+\item Protected
+\item Private
+\end{enumerate}
+
+\subsection{Functions/Methods}
+Function-- and method--identifiers have to start with a lower case letter. Functions with a return value of a Boolean type should have a name which points to the result (relate the name to the more likely result) and the name should start with the prefix ''is``. Set and get methods have to start with the appropriate prefix. Methods which are not modifying the state of the object have to be declared as a const method (keyword const).
+
+\subsection{Parameters}
+Parameters which are keeping their value within a method have to be declared as const parameters.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Code Formatting}
+\subsection{Indentation}
+The tabulator width has to be set to 2. Instead of tabulator characters spaces have to inserted (usually there is an option for this in the IDE called: ``replace tabs'').
+A new block has to be started at the same line as its initial statement.
+An example is given in the appendix \ref{subsec:IndentionAndBlocks} of this document.
+
+\subsection{Blocks}
+The left parenthesis of a block has to be in the same line as the construct. 
+The right parenthesis has to be in an own line. 
+
+Single-line if statemtens are not allowed. 
+Parenthesis have to be used for all if, else, else if, for, while statments even when they contain only a single statement.
+
+An example how to format blocks is given in the appendix \ref{subsec:IndentionAndBlocks} of this document.
+
+\subsection{if-Statements}
+Within if-statements you should consider the following rules:
+\begin{itemize}
+\item Put constants in if-expression on the left side. If you are missing on \verb|=| or a \verb|!| in a 
+      comparison it will result in a compile error (e.g., \verb|if(if(cgMaxElements == mElements){|).
+\item Put spaces around your operators (e.g., \verb|if(0 < i){|)
+\item If you have several expressions in an if put parenthesis around each of them in order to avoid 
+      ambiguous interpretation of the compiler (e.g., \verb|if((0 < i) && (5 > i)){|).
+
+\end{itemize}
+
+
+\subsection{Eclipse}
+For users of the IDE Eclipse with the CDT plugin we provide a style file that correctly formats your code to this rules. The file can be found in FORTE's main directory and is called \verb=fortestyle.xml=. This file can be imported into your FORTE project under the Menu Project/Properties and there in the tree element C/C++ General/Code Style. With the FORTE style file you can simple correctly format your file by pressing \verb=<ctrl>+<shift>+f=.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Exceptions for IEC 61499 Elements}
+
+\subsection{Naming of IEC 61499 Objects}
+
+All identifiers corresponding to IEC 61499 objecets (ressources) should be named as defined
+in the IEC 61499 Standard. So they are execepted from the rules in sections 3 to 6. This has two advantages:
+\begin{itemize}
+\item No parsing/substitution of names in the code files is needed
+\item It helps to differentiate between "runtime-code" and "user-code"
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Performance and Size Considerations}
+
+
+
+\subsection{Function Inlining}
+Our experience showed that functions shorter than 4 to 3 line should be inlined. This nearly always reduces the size of FORTE and therefore should increase its performance. However your mileage may vary. So please use it wisely and make tests and measurements
+
+
+\subsection{Local Static Variables}
+Local static variables can be rather helpful for implementing certain features. However be warned that they may have side effects. First of all modern C++ compilers will add code from \verb=libsupc++.a= which will protect them against multi threaded access. Depending on other features you use from the standard C++ library this can result in several kilobytes of binary image size increase. The compiler flag \verb=-fno-threadsafe-statics= can help here. But be warned that you may run in trouble with this flag. 
+
+Currently FORTE is using just one local static variable, namely in the singleton pattern. For these it is safe to use the \verb=-fno-threadsafe-statics= flag. And because of other optimizations done to remove the standard lib parts this will significantly reduce your image size. 
+
+Summarizing this short excursus better think twice before using a local static variable. FORTE will try to avoid them and future version will very likely not use them any more and so should you.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Examples}
+\subsection{File Header} \label{subsec:FileHeader}
+
+\begin{lstlisting}[frame=trbl]{}
+/*******************************************************************************
+ * Copyright (c) 2007 4DIAC - consortium.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *******************************************************************************
+#ifndef _FILENAME_H_  
+#define _FILENAME_H_  
+
+//! short class description
+/*! long class description
+ */
+class CFooSpace {
+  public:
+    //! short description
+    int foo(void); /*!< long description
+                    */   
+  protected:
+    //! short description
+    void bar(void); /*!> long description
+                     */
+  private:
+    //! short member var description
+    int m_nIsBar; /*!> long description
+                   */  
+};
+
+#endif
+\end{lstlisting}
+
+\newpage
+\subsection{Indention and Blocks} \label{subsec:IndentionAndBlocks}
+\begin{lstlisting}[frame=trbl]{}
+int CFooSpace::foo(void){
+  if(m_nIsBar){
+    bar();
+    return 1;
+  }
+  else {
+    megaBar();
+  }
+    
+  if(!m_nIsBar){
+  	notBar();  
+  }
+  
+  return 0;
+}
+\end{lstlisting}
+
+\end{document}

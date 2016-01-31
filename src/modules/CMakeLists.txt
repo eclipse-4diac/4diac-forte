@@ -1,0 +1,1 @@
+INCLUDE(${CMAKE_BINARY_DIR}/src/modules/CMakeLists.txt)

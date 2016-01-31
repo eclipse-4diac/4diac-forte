@@ -1,0 +1,92 @@
+/*******************************************************************************
+ * Copyright (c) 2005 - 2014 ACIN, Profactor GmbH, fortiss GmbH
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   Alois Zoitl, Martin Melik Merkumians, Ingo Hegny, Michael Hofmann 
+ *     - initial API and implementation and/or initial documentation
+ *******************************************************************************/
+#ifndef _CONFIG_H_
+#define _CONFIG_H_
+
+#undef IN
+#undef OUT
+
+
+#include <datatype.h>
+
+/*!Define the number of times the CTimerHandler will be called per second.
+ *
+ * FORTE will use this information to calculate time values.
+ */
+const TForteUInt32 cg_nForteTicksPerSecond = ${FORTE_TicksPerSecond};
+
+/*! \brief Defines the time base in units per second that will be used in the TIME data type
+ *
+ *  The default value will be 1 000 000 000, which means that the time bas is 1 ns.
+ *  For Smaller devices which do not use 64 bit datatypes a time base of 1000 (i.e., 1ms) 
+ *  or 1000000 (i.e., 1micro s) may be suitable. 
+ */
+#define FORTE_TIME_BASE_UNITS_PER_SECOND  ${FORTE_TimeBaseUnitsPerSecond}
+
+
+/*! Define the initial size of the event chain list used in the event chain execution thread.
+ *
+ */
+const unsigned int cg_nEventChainEventListSize = ${FORTE_EventChainEventListSize};
+
+
+/*! Define the initial size of the event chain's external event list.
+ */
+const unsigned int cg_nEventChainExternalEventListSize = ${FORTE_EventChainExternalEventListSize};
+
+
+/*! Defines the number of pending communication messages can be handled by a communication function block
+ *
+ */
+const unsigned int cg_unCommunicationInterruptQueueSize = ${FORTE_CommunicationInterruptQueueSize};
+
+
+/*! Buffer size in bytes to be used by the ip layer as receive buffer.
+ *
+ */
+const unsigned int cg_unIPLayerRecvBufferSize = ${FORTE_IPLayerRecvBufferSize};
+
+/*! \brief Define the management encapsulation protocol
+ *
+ * Currently two protocols are supported:
+ *   # DEV_MGR for FBDK compliant XML encoded commands
+ *   # WBXML_DEV_MGR for WAP Binary XML encoded commands
+ */
+#define FORTE_MGM_COMMAND_PROTOCOL   ${FORTE_MGMCOMMANDPROTOCOL}
+
+//! Max supported hierarchy that can be provided in a management commands
+#define FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY   ${FORTE_MGM_MAX_SUPPOERTED_NAME_HIERACHY}
+
+/*! \brief FORTE string dict's initial string buffer size
+ * 
+ * Depending on the FORTE_STRING_DICT_FIXED_MEMORY flag the string dict will reallocate if necessary.
+ */
+const TForteUInt32 cg_unStringDictInitialStringBufSize = ${FORTE_STRINGDICTINITIALSTRINGBUFSIZE};
+
+/*! \brief FORTE string dict's initial max nr of strings
+ *
+ * Depending on the FORTE_STRING_DICT_FIXED_MEMORY flag the string dict will reallocate if necessary.
+ */
+const TForteUInt32 cg_unStringDictInitialMaxNrOfStrings = ${FORTE_STRINGDICTINITIALMAXNROFSTRINGS};
+
+
+#ifdef FORTE_SUPPORT_BOOT_FILE
+
+/*!Define the path to the Bootfile
+ */
+#define FORTE_BOOT_FILE_LOCATION "${FORTE_BootfileLocation}forte.fboot"
+
+const unsigned int cg_unBootFileLineBufSize = ${FORTE_BOOTFILELINEBUFSIZE}; 
+
+#endif
+
+#endif

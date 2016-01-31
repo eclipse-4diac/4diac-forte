@@ -1,0 +1,18 @@
+## SECTION=project_specific
+
+config FORTE_WAGO
+	bool
+	prompt "forte_wago"
+	select HOST_CMAKE
+	help
+	  FIXME
+
+if FORTE_WAGO
+
+config FORTE_WAGO_TRUNK
+	bool
+	prompt "use trunk"
+	help
+	  Build trunk instead of latest release.
+
+endif

@@ -1,0 +1,42 @@
+MODUL forte
+VERSION 120
+PROPERTY RECONF
+ROOT
+    (OwnParms)
+        DelayTime       = UINT32(5 .. 100)[25]
+END_ROOT
+
+DESC(049)
+    OwnParms            = "Applikationsspezifische Parameter"
+    OwnParms.DelayTime  = "Zykluszeit in ms"
+END_DESC
+
+DESC(001)
+    OwnParms            = "Application specific parameters"   
+    OwnParms.DelayTime  = "Access cyclic time in ms"
+END_DESC
+
+HELP(049)
+    "Allgemein:"
+    "    Dieses Software-Modul implementiert ein IEC 61499 Laufzeitsystem"
+    "    basierend auf dem Source Code FORTE aus dem 4DIAC - Framework for"
+    "    Distributed Industrial Automation and Control (www.fordiac.org)."    
+    ""
+    "SVI:"
+    "    Dieses Software-Modul verfuegt ueber einen SVI-Server. Prozesswerte"
+    "    koennen damit online ausgelesen oder geaendert werden."
+    ""    
+END_HELP
+
+HELP(001)
+    "Introduction:"
+    "    This software module enables IEC 61499 functionality based on the open"
+    "    source environment FORTE from 4DIAC - Framework for Distributed "
+    "    Industrial Automation and Control (www.fordiac.org)"    
+    ""
+    "SVI:"
+    "    This software module has an SVI server, that permits online changes of"
+    "    parameters. The number and name of the parameters depedends on the "
+    "    IEC 61499 control application loaded into this module." 
+    ""    
+END_HELP
