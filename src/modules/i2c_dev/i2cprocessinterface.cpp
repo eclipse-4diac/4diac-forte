@@ -9,7 +9,6 @@
  *    Gerd Kainz, Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "processinterface.h"
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -20,18 +19,19 @@
 #include <linux/i2c-dev.h>
 #include <string.h>
 #include <stdint.h>
+#include "i2cprocessinterface.h"
 
-const char * const CProcessInterface::scmInitDeinitOK = "OK";
-const char * const CProcessInterface::scmNotInitialised = "Not initialised";
+const char * const CI2CProcessInterface::scmInitDeinitOK = "OK";
+const char * const CI2CProcessInterface::scmNotInitialised = "Not initialised";
 
-CProcessInterface::CProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mFd(-1), mDeviceAddress(-1), mValueAddress(-1){
+CI2CProcessInterface::CI2CProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
+    CI2CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mFd(-1), mDeviceAddress(-1), mValueAddress(-1){
 }
 
-CProcessInterface::~CProcessInterface(){
+CI2CProcessInterface::~CI2CProcessInterface(){
 }
 
-bool CProcessInterface::initialise(bool paInput){
+bool CI2CProcessInterface::initialise(bool paInput){
   char path[scmBuffer];
   unsigned long funcs;
   char * element;
@@ -91,14 +91,14 @@ bool CProcessInterface::initialise(bool paInput){
   return true;
 }
 
-bool CProcessInterface::deinitialise(){
+bool CI2CProcessInterface::deinitialise(){
   close(mFd);
 
   STATUS() = scmInitDeinitOK;
   return true;
 }
 
-bool CProcessInterface::readPin(){
+bool CI2CProcessInterface::readPin(){
   int res;
 
   if(ioctl(mFd, I2C_SLAVE, mDeviceAddress) < 0){
@@ -117,7 +117,7 @@ bool CProcessInterface::readPin(){
   return true;
 }
 
-bool CProcessInterface::writePin(){
+bool CI2CProcessInterface::writePin(){
   int res;
   uint8_t byteValue;
 
@@ -142,7 +142,7 @@ bool CProcessInterface::writePin(){
   return true;
 }
 
-bool CProcessInterface::readWord(){
+bool CI2CProcessInterface::readWord(){
   int res;
 
   if(ioctl(mFd, I2C_SLAVE, mDeviceAddress) < 0){
@@ -160,7 +160,7 @@ bool CProcessInterface::readWord(){
   return true;
 }
 
-bool CProcessInterface::writeWord(){
+bool CI2CProcessInterface::writeWord(){
   int res;
 
   if(ioctl(mFd, I2C_SLAVE, mDeviceAddress) < 0){
