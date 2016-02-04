@@ -25,7 +25,7 @@ const char * const CI2CProcessInterface::scmInitDeinitOK = "OK";
 const char * const CI2CProcessInterface::scmNotInitialised = "Not initialised";
 
 CI2CProcessInterface::CI2CProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-    CI2CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mFd(-1), mDeviceAddress(-1), mValueAddress(-1){
+    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mFd(-1), mDeviceAddress(-1), mValueAddress(-1){
 }
 
 CI2CProcessInterface::~CI2CProcessInterface(){

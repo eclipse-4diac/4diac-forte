@@ -21,163 +21,51 @@
 #include <string.h>
 #include <stdint.h>
 
-const char * const CProcessInterface::scmInitDeinitOK = "OK";
-const char * const CProcessInterface::scmNotInitialised = "Not initialised";
-
-CProcessInterface::CProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mFd(-1), mDeviceAddress(-1), mValueAddress(-1){
+CProcessInterface::CProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
+    const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData,
+    TForteByte *paFBVarsData) :
+    CI2CProcessInterface(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData){
 }
 
 CProcessInterface::~CProcessInterface(){
 }
 
-bool CProcessInterface::initialise(bool paInput){
-  char path[scmBuffer];
-  unsigned long funcs;
-  char * element;
-  int i2CAdapter;
-
-  strcpy(path, PARAMS().getValue());
-  element = strtok(path, ".");
-  if(NULL == element){
-    STATUS() = scmNotInitialised;
-    return false;
-  }
-  else{
-    CIEC_INT param;
-    param.fromString(element);
-    i2CAdapter = param;
-  }
-  element = strtok(NULL, ".");
-  if(NULL == element){
-    STATUS() = scmNotInitialised;
-    return false;
-  }
-  else{
-    CIEC_INT param;
-    param.fromString(element);
-    mDeviceAddress = param;
-  }
-  element = strtok(NULL, ".");
-  if(NULL == element){
-    STATUS() = scmNotInitialised;
-    return false;
-  }
-  else{
-    CIEC_INT param;
-    param.fromString(element);
-    mValueAddress = param;
-  }
-
-  snprintf(path, scmBuffer, "/dev/i2c-%d", i2CAdapter);
-  mFd = open(path, O_RDWR);
-  if(mFd < 0){
-    STATUS() = scmNotInitialised;
-    return false;
-  }
-
-  if(ioctl(mFd, I2C_FUNCS, &funcs) < 0){
-    STATUS() = scmNotInitialised;
-    return false;
-  }
-
-  if(ioctl(mFd, I2C_SLAVE, mDeviceAddress) < 0){
-    STATUS() = scmNotInitialised;
-    return false;
-  }
-
-  STATUS() = scmInitDeinitOK;
-  return true;
-}
-
-bool CProcessInterface::deinitialise(){
-  close(mFd);
-
-  STATUS() = scmInitDeinitOK;
-  return true;
-}
-
 bool CProcessInterface::readPin(){
-  int res;
-
-  if(ioctl(mFd, I2C_SLAVE, mDeviceAddress) < 0){
-    STATUS() = "Kann net lesen";
-    return false;
+  bool retVal = CI2CProcessInterface::readPin();
+  if(retVal){
+    //Raspberry PI SPS has inverted inputs so we need to re-invert here
+    IN_X() = !(IN_X().operator bool());
   }
-
-  res = i2c_smbus_read_byte(mFd);
-  if(res < 0){
-    STATUS() = "Kann net lesen";
-    return false;
-  }
-
-  IN_X() = (!(res & (1 << mValueAddress))) ? true : false;
-
-  STATUS() = "Konnte lesen";
-  return true;
+  return retVal;
 }
 
 bool CProcessInterface::writePin(){
-  int res;
-  uint8_t byteValue;
 
-  if(ioctl(mFd, I2C_SLAVE, mDeviceAddress) < 0){
-    STATUS() = "Kann net schreiben";
-    return false;
-  }
-
-  byteValue = i2c_smbus_read_byte(mFd);
-  if(!OUT_X()){
-    byteValue = byteValue | (uint8_t) (1 << mValueAddress);
-  }
-  else{
-    byteValue = byteValue & (uint8_t) (~(1 << mValueAddress));
-  }
-  res = i2c_smbus_write_byte(mFd, byteValue);
-  if(res < 0){
-    STATUS() = "Kann net schreiben";
-    return false;
-  }
-  STATUS() = "Konnte lesen";
-  return true;
+  //Raspberry PI SPS has inverted inputs so we need to re-invert here
+  OUT_X() = !(OUT_X().operator bool());
+  bool retVal = CI2CProcessInterface::writePin();
+  //Put the value back to the original one
+  OUT_X() = !(OUT_X().operator bool());
+  return retVal;
 }
 
 bool CProcessInterface::readWord(){
   int res;
   uint8_t buffer[3];
 
-  if(ioctl(mFd, I2C_SLAVE, mDeviceAddress) < 0)
-  {
+  if(ioctl(mFd, I2C_SLAVE, mDeviceAddress) < 0){
     STATUS() = "Kann net lesen";
     return false;
   }
 
-  res = i2c_smbus_read_i2c_block_data(mFd, (uint8_t)mValueAddress, 3, buffer);
-  if (res < 0)
-  {
+  res = i2c_smbus_read_i2c_block_data(mFd, (uint8_t) mValueAddress, 3, buffer);
+  if(res < 0)
+      {
     STATUS() = "Kann net lesen";
     return false;
   }
-  IN_W() = static_cast<TForteWord>(static_cast<TForteWord>(buffer[2] << 8) | static_cast<TForteWord>(buffer[1]));
+  IN_W() = static_cast<TForteWord>(static_cast<TForteWord>(buffer[2] << 8)
+      | static_cast<TForteWord>(buffer[1]));
   STATUS() = "Konnte lesen";
-  return true;
-}
-
-bool CProcessInterface::writeWord(){
-  int res;
-
-  if(ioctl(mFd, I2C_SLAVE, mDeviceAddress) < 0)
-  {
-    STATUS() = "Kann net schreiben";
-    return false;
-  }
-
-  res = i2c_smbus_write_word_data(mFd, mValueAddress, (uint16_t)OUT_W());
-  if (res < 0)
-  {
-    STATUS() = "Kann net schreiben";
-    return false;
-  }
-  STATUS() = "Konnte schreiben";
   return true;
 }

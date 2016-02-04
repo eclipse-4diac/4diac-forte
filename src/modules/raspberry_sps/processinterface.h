@@ -12,35 +12,23 @@
 #ifndef _PROCESSINTERFACE_H_
 #define _PROCESSINTERFACE_H_
 
-#include <../../stdfblib/io/processinterfacebase.h>
+#include "../i2c_dev/i2cprocessinterface.h"
 #include <funcbloc.h>
 #include <forte_bool.h>
 #include <forte_string.h>
 
-class CProcessInterface : public CProcessInterfaceBase{
+class CProcessInterface : public CI2CProcessInterface{
 
-public:
-  CProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
-                    const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
-  virtual ~CProcessInterface();
+  public:
+    CProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
+        const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData,
+        TForteByte *paFBVarsData);
+    virtual ~CProcessInterface();
 
-protected:
-  bool initialise(bool paInput);
-  bool deinitialise();
-  bool writePin();
-  bool readPin();
-  bool writeWord();
-  bool readWord();
-
-private:
-  const static int scmBuffer = 100;
-
-  int mFd;
-  int mDeviceAddress;
-  int mValueAddress;
-
-  static const char * const scmInitDeinitOK;
-  static const char * const scmNotInitialised;
+  protected:
+    bool writePin();
+    bool readPin();
+    bool readWord();
 };
 
 #endif /* _PROCESSINTERFACE_H_ */

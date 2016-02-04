@@ -19,28 +19,29 @@
 
 class CI2CProcessInterface : public CProcessInterfaceBase{
 
-public:
-  CI2CProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
-                    const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
-  virtual ~CI2CProcessInterface();
+  public:
+    CI2CProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
+        const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData,
+        TForteByte *paFBVarsData);
+    virtual ~CI2CProcessInterface();
 
-protected:
-  bool initialise(bool paInput);
-  bool deinitialise();
-  bool writePin();
-  bool readPin();
-  bool writeWord();
-  bool readWord();
+  protected:
+    bool initialise(bool paInput);
+    bool deinitialise();
+    bool writePin();
+    bool readPin();
+    bool writeWord();
+    bool readWord();
 
-private:
-  const static int scmBuffer = 100;
+  protected:
+    const static int scmBuffer = 100;
 
-  int mFd;
-  int mDeviceAddress;
-  int mValueAddress;
+    int mFd;
+    int mDeviceAddress;
+    int mValueAddress;
 
-  static const char * const scmInitDeinitOK;
-  static const char * const scmNotInitialised;
+    static const char * const scmInitDeinitOK;
+    static const char * const scmNotInitialised;
 };
 
-#endif /* _PROCESSINTERFACE_H_ */
+#endif /* _I2CPROCESSINTERFACE_H_ */
