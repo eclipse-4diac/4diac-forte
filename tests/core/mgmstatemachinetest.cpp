@@ -15,6 +15,8 @@ class CFunctionBlockMock : public CFunctionBlock{
   public:
     CFunctionBlockMock() :
         CFunctionBlock(0, 0, 0, 0, 0){
+      //mimick the behavior provided by typelib
+      changeFBExecutionState(cg_nMGM_CMD_Reset);
     }
 
     virtual CStringDictionary::TStringId getFBTypeId(void) const{
