@@ -19,10 +19,12 @@
 #include <linux/i2c-dev.h>
 #include <string.h>
 #include <stdint.h>
+#include <sstream>
 #include "i2cprocessinterface.h"
 
 const char * const CI2CProcessInterface::scmInitDeinitOK = "OK";
 const char * const CI2CProcessInterface::scmNotInitialised = "Not initialised";
+const char * const CI2CProcessInterface::scmInvalidParam = "Invalid parameter";
 
 CI2CProcessInterface::CI2CProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
     CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mFd(-1), mDeviceAddress(-1), mValueAddress(-1){
@@ -32,68 +34,39 @@ CI2CProcessInterface::~CI2CProcessInterface(){
 }
 
 bool CI2CProcessInterface::initialise(bool paInput){
-  char path[scmBuffer];
   unsigned long funcs;
-  char * element;
-  int i2CAdapter;
 
+  bool retVal = false;
+  STATUS() = scmNotInitialised;
+  std::vector<std::string> paramsList(generateParameterList());
 
-  strcpy(path, PARAMS().getValue());
-  element = strtok(path, ".");
-  if(NULL == element){
-    STATUS() = scmNotInitialised;
-    return false;
-  }
-  else{
+  if(3 == paramsList.size()){
     CIEC_INT param;
-    param.fromString(element);
-    i2CAdapter = param;
-  }
-  element = strtok(NULL, ".");
-  if(NULL == element){
-    STATUS() = scmNotInitialised;
-    return false;
-  }
-  else{
-    CIEC_INT param;
-    param.fromString(element);
+    param.fromString(paramsList[1].c_str());  //TODO check return value
     mDeviceAddress = param;
-  }
-  element = strtok(NULL, ".");
-  if(NULL == element){
-    STATUS() = scmNotInitialised;
-    return false;
-  }
-  else{
-    CIEC_INT param;
-    param.fromString(element);
+    param.fromString(paramsList[2].c_str());  //TODO check return value
     mValueAddress = param;
-  }
 
-  snprintf(path, scmBuffer, "/dev/i2c-%d", i2CAdapter);
-  mFd = open(path, O_RDWR);
-  if(mFd < 0){
+    std::string devPath("/dev/i2c-");
+    devPath += paramsList[0];
+
     STATUS() = scmNotInitialised;
-    return false;
-  }
 
-  if(ioctl(mFd, I2C_FUNCS, &funcs) < 0){
-    STATUS() = scmNotInitialised;
-    return false;
+    mFd = open(devPath.c_str(), O_RDWR);
+    if(0 <= mFd){
+      if(0 <= ioctl(mFd, I2C_FUNCS, &funcs)){  //TODO check if really needed
+        if(0 <= ioctl(mFd, I2C_SLAVE, mDeviceAddress)){
+          STATUS() = scmInitDeinitOK;
+          retVal = true;
+        }
+      }
+    }
   }
-
-  if(ioctl(mFd, I2C_SLAVE, mDeviceAddress) < 0){
-    STATUS() = scmNotInitialised;
-    return false;
-  }
-
-  STATUS() = scmInitDeinitOK;
-  return true;
+  return retVal;
 }
 
 bool CI2CProcessInterface::deinitialise(){
   close(mFd);
-
   STATUS() = scmInitDeinitOK;
   return true;
 }
@@ -175,4 +148,16 @@ bool CI2CProcessInterface::writeWord(){
   }
   STATUS() = "Konnte schreiben";
   return true;
+}
+
+//TODO this is duplicated code from LMS EV3 process interface
+std::vector<std::string> CI2CProcessInterface::generateParameterList(){
+  std::stringstream streamBuf(std::string(PARAMS().getValue()));
+  std::string segment;
+  std::vector<std::string> retVal;
+
+  while(std::getline(streamBuf, segment, '.')){   //Separate the PARAMS input by '.' for easier processing
+    retVal.push_back(segment);
+  }
+  return retVal;
 }

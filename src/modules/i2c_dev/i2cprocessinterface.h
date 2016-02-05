@@ -16,6 +16,8 @@
 #include <funcbloc.h>
 #include <forte_bool.h>
 #include <forte_string.h>
+#include <string>
+#include <vector>
 
 class CI2CProcessInterface : public CProcessInterfaceBase{
 
@@ -40,8 +42,12 @@ class CI2CProcessInterface : public CProcessInterfaceBase{
     int mDeviceAddress;
     int mValueAddress;
 
+  private:
     static const char * const scmInitDeinitOK;
+    static const char * const scmInvalidParam;
     static const char * const scmNotInitialised;
+
+    std::vector<std::string> generateParameterList();
 };
 
 #endif /* _I2CPROCESSINTERFACE_H_ */
