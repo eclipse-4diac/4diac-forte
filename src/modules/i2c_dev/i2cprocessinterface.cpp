@@ -22,9 +22,11 @@
 #include <sstream>
 #include "i2cprocessinterface.h"
 
-const char * const CI2CProcessInterface::scmInitDeinitOK = "OK";
+const char * const CI2CProcessInterface::scmOK = "OK";
 const char * const CI2CProcessInterface::scmNotInitialised = "Not initialised";
 const char * const CI2CProcessInterface::scmInvalidParam = "Invalid parameter";
+const char * const CI2CProcessInterface::scmCouldNotRead = "Could not read value";
+const char * const CI2CProcessInterface::scmCouldNotWrite = "Could not write value";
 
 CI2CProcessInterface::CI2CProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
     CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mFd(-1), mDeviceAddress(-1), mValueAddress(-1){
@@ -55,8 +57,8 @@ bool CI2CProcessInterface::initialise(bool paInput){
     mFd = open(devPath.c_str(), O_RDWR);
     if(0 <= mFd){
       if(0 <= ioctl(mFd, I2C_FUNCS, &funcs)){  //TODO check if really needed
-        if(0 <= ioctl(mFd, I2C_SLAVE, mDeviceAddress)){
-          STATUS() = scmInitDeinitOK;
+        if(0 <= ioctl(mFd, scmSetSlaveId, mDeviceAddress)){
+          STATUS() = scmOK;
           retVal = true;
         }
       }
@@ -67,52 +69,46 @@ bool CI2CProcessInterface::initialise(bool paInput){
 
 bool CI2CProcessInterface::deinitialise(){
   close(mFd);
-  STATUS() = scmInitDeinitOK;
+  STATUS() = scmOK;
   return true;
 }
 
 bool CI2CProcessInterface::readPin(){
-  int res;
+  bool retVal = false;
+  TForteByte res;
 
-  if(ioctl(mFd, I2C_SLAVE, mDeviceAddress) < 0){
-    STATUS() = "Kann net lesen";
-    return false;
+  //TODO check if an ioctl is needed here or not
+  if(1 == read(mFd, &res, 1)){
+	  IN_X() = (res & (1 << mValueAddress)) ? true : false;
+	  retVal = true;
+	  STATUS() = scmOK;
+  }else{
+	  STATUS() = scmCouldNotRead;
   }
 
-  res = i2c_smbus_read_byte(mFd);
-  if(res < 0){
-    STATUS() = "Kann net lesen";
-    return false;
-  }
-
-  IN_X() = (res & (1 << mValueAddress)) ? true : false;
-  STATUS() = "Konnte lesen";
-  return true;
+  return retVal;
 }
 
 bool CI2CProcessInterface::writePin(){
-  int res;
-  uint8_t byteValue;
+	bool retVal = false;
+	TForteByte byteValue;
 
-  if(ioctl(mFd, I2C_SLAVE, mDeviceAddress) < 0){
-    STATUS() = "Kann net schreiben";
-    return false;
-  }
+	STATUS() = scmCouldNotWrite;
 
-  byteValue = i2c_smbus_read_byte(mFd);
-  if(OUT_X()){
-    byteValue = byteValue | (uint8_t) (1 << mValueAddress);
-  }
-  else{
-    byteValue = byteValue & (uint8_t) (~(1 << mValueAddress));
-  }
-  res = i2c_smbus_write_byte(mFd, byteValue);
-  if(res < 0){
-    STATUS() = "Kann net schreiben";
-    return false;
-  }
-  STATUS() = "Konnte lesen";
-  return true;
+	//TODO check if an ioctl is needed here or not
+	if(1 == read(mFd, &byteValue, 1)){
+		if(OUT_X()){
+			byteValue = byteValue | static_cast<TForteByte>(1 << mValueAddress);
+		}
+		else{
+			byteValue = byteValue & static_cast<TForteByte>(~(1 << mValueAddress));
+		}
+		if(1 == write(mFd, &byteValue, 1)){
+			retVal = true;
+		  STATUS() = scmOK;
+		}
+	}
+  return retVal;
 }
 
 bool CI2CProcessInterface::readWord(){

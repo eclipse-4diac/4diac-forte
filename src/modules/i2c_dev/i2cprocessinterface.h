@@ -43,9 +43,14 @@ class CI2CProcessInterface : public CProcessInterfaceBase{
     int mValueAddress;
 
   private:
-    static const char * const scmInitDeinitOK;
+    static const char * const scmOK;
     static const char * const scmInvalidParam;
     static const char * const scmNotInitialised;
+    static const char * const scmCouldNotRead;
+    static const char * const scmCouldNotWrite;
+
+    //! ioctl command id for setting the slave id to be used for the next reads and writes
+    static const int scmSetSlaveId = 0x0703;
 
     std::vector<std::string> generateParameterList();
 };
