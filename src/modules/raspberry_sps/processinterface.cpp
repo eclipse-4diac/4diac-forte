@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 fortiss GmbH
+ * Copyright (c) 2015, 2016 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,23 +7,14 @@
  *
  * Contributors:
  *    Gerd Kainz, Alois Zoitl - initial API and implementation and/or initial documentation
+ *    Alois Zoitl - made better use of generic i2c process interface implementation
+ *                  changed from i2c-dev to simple read writes
  *******************************************************************************/
 
 #include "processinterface.h"
-#include <sys/ioctl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 #include <unistd.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <linux/i2c-dev.h>
-#include <string.h>
-#include <stdint.h>
 
-CProcessInterface::CProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
-    const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData,
-    TForteByte *paFBVarsData) :
+CProcessInterface::CProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
     CI2CProcessInterface(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData){
 }
 
@@ -50,22 +41,23 @@ bool CProcessInterface::writePin(){
 }
 
 bool CProcessInterface::readWord(){
-  int res;
-  uint8_t buffer[3];
+  bool retVal = false;
+  TForteByte buffer[3];
 
-  if(ioctl(mFd, I2C_SLAVE, mDeviceAddress) < 0){
-    STATUS() = "Kann net lesen";
-    return false;
+  //set the register to read the analog value from
+  if(1 == write(mFd, &mValueAddress, 1)){
+    if(3 == read(mFd, buffer, 3)){
+      IN_W() = static_cast<TForteWord>(static_cast<TForteWord>(buffer[2] << 8) |
+                 static_cast<TForteWord>(buffer[1]));
+      STATUS() = scmOK;
+      retVal = true;
+    }
+    else{
+      STATUS() = scmCouldNotRead;
+    }
   }
-
-  res = i2c_smbus_read_i2c_block_data(mFd, (uint8_t) mValueAddress, 3, buffer);
-  if(res < 0)
-      {
-    STATUS() = "Kann net lesen";
-    return false;
+  else{
+    STATUS() = scmCouldNotRead;
   }
-  IN_W() = static_cast<TForteWord>(static_cast<TForteWord>(buffer[2] << 8)
-      | static_cast<TForteWord>(buffer[1]));
-  STATUS() = "Konnte lesen";
-  return true;
+  return retVal;
 }

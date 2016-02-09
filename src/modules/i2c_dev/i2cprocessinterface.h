@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 fortiss GmbH
+ * Copyright (c) 2015, 2016 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Gerd Kainz, Alois Zoitl - initial API and implementation and/or initial documentation
+ *    Alois Zoitl - changed from i2c-dev to simple read writes
  *******************************************************************************/
 
 #ifndef _I2CPROCESSINTERFACE_H_
@@ -39,16 +40,15 @@ class CI2CProcessInterface : public CProcessInterfaceBase{
     const static int scmBuffer = 100;
 
     int mFd;
-    int mDeviceAddress;
-    int mValueAddress;
+    TForteByte mValueAddress;
 
-  private:
     static const char * const scmOK;
     static const char * const scmInvalidParam;
     static const char * const scmNotInitialised;
     static const char * const scmCouldNotRead;
     static const char * const scmCouldNotWrite;
 
+  private:
     //! ioctl command id for setting the slave id to be used for the next reads and writes
     static const int scmSetSlaveId = 0x0703;
 

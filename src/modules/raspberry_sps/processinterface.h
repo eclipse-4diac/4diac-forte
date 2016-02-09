@@ -7,6 +7,8 @@
  *
  * Contributors:
  *    Gerd Kainz, Alois Zoitl - initial API and implementation and/or initial documentation
+ *    Alois Zoitl - made better use of generic i2c process interface implementation
+ *                  changed from i2c-dev to simple read writes
  *******************************************************************************/
 
 #ifndef _PROCESSINTERFACE_H_
