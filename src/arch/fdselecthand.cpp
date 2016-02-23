@@ -56,12 +56,6 @@ void CFDSelectHandler::run(void){
   while(isAlive()){
     // TODO: create method to prevent 100ms timeout on reconnection
     m_oSync.lock();
-    if(m_lstConnectionsList.isEmpty()){
-      m_oSync.unlock();
-      selfSuspend();
-      m_oSync.lock();
-    }
-
     if(true == m_bConnectionListChanged){
       nHighestFDID = createFDSet(&anFDSetMaster);
     }
@@ -122,7 +116,6 @@ void CFDSelectHandler::addComCallback(TFileDescriptor pa_nFD, forte::com_infra::
   if(!isAlive()){
     this->start();
   }
-  resumeSelfSuspend();
 }
 
 void CFDSelectHandler::removeComCallback(TFileDescriptor pa_nFD){
