@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 ACIN
+ * Copyright (c) 2012, 2016 ACIN, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
 #ifndef _THREAD_H_
 #define _THREAD_H_
@@ -17,6 +18,7 @@
 #include <mtypes.h>
 #include <BETask.hpp>
 #include "../datatype.h"
+#include "../threadbase.h"
 
 #define CThread CBEThread  //allows that doxygen can generate better documentation
 
@@ -31,7 +33,7 @@
  *
  * TODO implement priority assignment for realtime event chains.
  */
-class CBEThread : public BETask{
+class CBEThread : public forte::arch::CThreadBase, private BETask{
 
   public:
     /*! \brief Constructor of the Thread class
@@ -75,7 +77,7 @@ class CBEThread : public BETask{
 
     /*! \brief Stops the execution of the thread
      *
-     *  This function imidiatly stops the execution of the thread (seting m_bAlive to false) and waits till
+     *  This function immediately stops the execution of the thread (setting alive to false) and waits till
      *  this is finished.
      */
     void end(void);
@@ -112,15 +114,6 @@ class CBEThread : public BETask{
      *  This function destroies all the data structures created in the creation phase. All used memory is freed.
      */
     bool destroy(void);
-
-    /*! \brief Flag that indicates if the Thread is alive.
-     *
-     *  This flag has two main purposes:
-     *    -# indicate for other classes if the thread is still executing
-     *    -# use in the run()-method to check if the thread is still allowed to execute (e.g. while(isAlive()) ).
-     *       This is important for stopping and destroying threads.
-     */
-    bool m_bAlive;
 
     TForteUInt32 m_nDeadline; //!deadline the thread needs to be finish its exectuion. 0 means unconstraint.
 

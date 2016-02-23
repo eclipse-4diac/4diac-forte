@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 - 2015 ACIN, fortiss GmbH
+ * Copyright (c) 2006 - 2016 ACIN, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,12 +7,14 @@
  *
  * Contributors:
  *   Alois Zoitl, Carolyn Oates - initial API and implementation and/or initial documentation
+ *   Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
 #ifndef _THREAD_H_
 #define _THREAD_H_
 
 #include <cyg/kernel/kapi.h>
 #include "../datatype.h"
+#include "../threadbase.h"
 #include "sync.h"
 #include "../devlog.h"
 #include "../../core/datatypes/forte_time.h"
@@ -31,7 +33,7 @@ typedef CECOSThread *TCECOSThreadPtr;
 /*! \ingroup ECOS-HAL
  * \brief This class is a wrapper class the eCos multitasking support 
  */
-class CECOSThread {
+class CECOSThread : public forte::arch::CThreadBase {
   public:
     /*! \brief Constructor of the Thread class
      *
@@ -46,15 +48,6 @@ class CECOSThread {
      *  Will stop the execution if running and destroy the thread including all system specific data.
      */
     virtual ~CECOSThread();
-
-    /*! \brief Indicates if the thread is allowed to execute.
-     *
-     *  This functions checks if the Thread is still executing user code in its run()-method.
-     *  \return true if there the run method is active.
-     */
-    bool isAlive(void) const {
-      return m_bAlive;
-    }
 
     //!Set the deadline of the thread.
     void setDeadline(const CIEC_TIME &pa_roVal);
@@ -85,11 +78,11 @@ class CECOSThread {
 
     /*! \brief Stops the execution of the thread
      *
-     *  This function imidiatly stops the execution of the thread (seting m_bAlive to false) and waits till
+     *  This function imidiatly stops the execution of the thread (seting alive to false) and waits till
      *  this is finished.
      */
     void end(void){
-      m_bAlive = false;
+      setDeadline()false;
       resumeSelfSuspend();
       join();
     }
@@ -164,16 +157,6 @@ class CECOSThread {
     unsigned char *m_cStack;
     CIEC_TIME m_oDeadLine;
     cyg_sem_t m_stSuspendSem; //! Semaphore for implementing the self suspend
-
-
-    /*! \brief Flag that indicates if the Thread is alive.
-     *
-     *  This flag has two main purposes:
-     *    -# indicate for other classes if the thread is still executing
-     *    -# use in the run()-method to check if the thread is still allowed to execute (e.g. while(isAlive()) ).
-     *       This is important for stopping and destroying threads.
-     */
-    bool m_bAlive;
 
     //we don't want that threads can be copied or assigned therefore the copy constructor and assignment operator are declared private
     //but not implemented

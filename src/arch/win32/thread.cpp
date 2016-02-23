@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 - 2014 ACIN, Profactor GmbH, AIT, fortiss GmbH
+ * Copyright (c) 2010 - 2016 ACIN, Profactor GmbH, AIT, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *  Alois Zoitl, Gerhard Ebenhofer, Thomas Strasser - initial API and implementation and/or initial documentation
+ *  Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
 #include "thread.h"
 #include "../devlog.h"
@@ -17,9 +18,9 @@ DWORD WINAPI CWin32Thread::threadFunction(LPVOID arguments){
 
   // if pointer is ok
   if(0 != pThread){
-    pThread->m_bAlive = true;
+    pThread->setAlive(true);
     pThread->run();
-    pThread->m_bAlive = false;
+    pThread->setAlive(false);
     pThread->m_nThreadHandle = 0;
   }
   else{
@@ -29,7 +30,7 @@ DWORD WINAPI CWin32Thread::threadFunction(LPVOID arguments){
 }
 
 CWin32Thread::CWin32Thread(long pa_nStackSize) :
-    m_bAlive(false), m_nThreadHandle(0), m_nStackSize(pa_nStackSize), m_nThreadID(~0x0ul){
+    m_nThreadHandle(0), m_nStackSize(pa_nStackSize), m_nThreadID(~0x0ul){
 
   m_hSelfSuspendSemaphore = CreateSemaphore(NULL, 0, 10, NULL);
 
@@ -43,10 +44,6 @@ CWin32Thread::~CWin32Thread(){
     end();
   }
   CloseHandle(m_hSelfSuspendSemaphore);
-}
-
-bool CWin32Thread::isAlive(void) const{
-  return m_bAlive;
 }
 
 void CWin32Thread::setDeadline(const CIEC_TIME &pa_roVal){
@@ -84,7 +81,7 @@ void CWin32Thread::resumeSelfSuspend(void){
 }
 
 void CWin32Thread::end(void){
-  m_bAlive = false;
+  setAlive(false);
   resumeSelfSuspend();
   join();
 }

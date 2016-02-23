@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 - 2011 ACIN, Profactor GmbH
+ * Copyright (c) 2006 - 2016 ACIN, Profactor GmbH, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *   Alois Zoitl, Thomas Strasser, Rene Smodic, Ingo Hegny
  *    - initial API and implementation and/or initial documentation
+ *  Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
 #include "thread.h"
 
@@ -41,15 +42,14 @@ void CTXThread::threadFunction(ULONG data) {
   // if pointer is ok
   if (pThread) {
     tx_mutex_get(&(pThread->m_stMutex), TX_WAIT_FOREVER);
-    pThread->m_bAlive = true;
+    pThread->setAlive(true);
     pThread->run();
-    pThread->m_bAlive = false;
+    pThread->setAlive(false);
     tx_mutex_put(&(pThread->m_stMutex));
   }
 }
 
 CTXThread::CTXThread(long pa_nStackSize, char * pa_acThreadName) {
-  m_bAlive = false;
   m_nStackSize = pa_nStackSize;
   m_cStack = malloc(m_nStackSize);
   m_acThreadName = pa_acThreadName;
@@ -115,7 +115,7 @@ void CTXThread::setDeadline(const CIEC_TIME &pa_roVal) {
 
 void CTXThread::end(void) {
   DEVLOG_INFO("entering end ID: %d\n", (int) m_stThread.tx_thread_id);
-  m_bAlive = false;
+  setAlive(false);
   resumeSelfSuspend();
   join();
 }
@@ -123,7 +123,7 @@ void CTXThread::end(void) {
 void CTXThread::join(void) {
   if (0 != m_stThread.tx_thread_id) {
     //wait till the thread is up and running
-    while (!m_bAlive) {
+    while (!isAlive()) {
       tx_thread_sleep(1);
     }
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 - 2014 ACIN, fortiss GmbH
+ * Copyright (c) 2006 - 2016 ACIN, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
 #include <fortealloc.h>
 #include <criticalregion.h>
@@ -35,15 +36,14 @@ void CECOSThread::threadFunction(cyg_addrword_t data){
   // if pointer is ok
   if (pThread){
     CCriticalRegion criticalRegion(pThread->m_stResLock);
-    pThread->m_bAlive = true;
+    pThread->setAlive(true);
     pThread->run();
-    pThread->m_bAlive = false;
+    pThread->setAlive(false);
   }
   cyg_thread_exit();
 }
 
 CECOSThread::CECOSThread(long pa_nStackSize){
-  m_bAlive     = false;
   m_nStackSize = pa_nStackSize;
   m_cStack = new unsigned char[m_nStackSize];
   cyg_semaphore_init(&m_stSuspendSem, 0);

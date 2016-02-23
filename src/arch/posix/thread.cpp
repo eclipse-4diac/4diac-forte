@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2014 ACIN, fortiss GmbH
+ * Copyright (c) 2005 - 2016 ACIN, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *  Alois Zoitl, Rene Smodic, Martin Melik Merkiumians - initial API and implementation and/or initial documentation
+ *  Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
 #include <fortealloc.h>
 #include "thread.h"
@@ -72,9 +73,9 @@ void * CPosixThread::threadFunction(void *arguments){
   // if pointer is ok
   if(0 != pThread){
     CCriticalRegion criticalRegion(pThread->mJoinMutex);
-    pThread->m_bAlive = true;
+    pThread->setAlive(true);
     pThread->run();
-    pThread->m_bAlive = false;
+    pThread->setAlive(false);
     pThread->m_stThreadID = 0;
   }
   else{
@@ -84,7 +85,7 @@ void * CPosixThread::threadFunction(void *arguments){
 }
 
 CPosixThread::CPosixThread(long pa_nStackSize) :
-  m_bAlive(false), m_stThreadID(0), m_nStackSize(pa_nStackSize), m_pacStack(0){
+      m_stThreadID(0), m_nStackSize(pa_nStackSize), m_pacStack(0){
 
   if(0 != m_nStackSize){
     m_pacStack = new char[m_nStackSize];

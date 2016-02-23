@@ -18,5 +18,5 @@ add_subdirectory(posix)
 add_subdirectory(win32)
 add_subdirectory(be_m1)
 
-forte_add_sourcefile_hcpp(timerha devlog)
+forte_add_sourcefile_hcpp(timerha devlog threadbase)
 

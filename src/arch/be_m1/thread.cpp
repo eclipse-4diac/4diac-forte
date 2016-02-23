@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 ACIN
+ * Copyright (c) 2012, 2016 ACIN, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
 #include "thread.h"
 #include "../devlog.h"
@@ -14,7 +15,7 @@
 #include <BEModule.hpp>
 
 void CBEThread::Main(VOID){
-  m_bAlive = true;
+  setAlive(true);
   run();
 }
 
@@ -25,16 +26,11 @@ bool CBEThread::destroy(void){
 
 CBEThread::CBEThread() :
     mTskName(0){
-  m_bAlive = false;
   m_nDeadline = 0;
 }
 
 CBEThread::~CBEThread(){
   destroy();
-}
-
-bool CBEThread::isAlive(void){
-  return m_bAlive;
 }
 
 void CBEThread::setDeadline(TForteUInt32 pa_nVal){
@@ -61,7 +57,7 @@ void CBEThread::resumeSelfSuspend(void){
 }
 
 void CBEThread::end(void){
-  m_bAlive = false;
+  setAlive(false);
   resumeSelfSuspend();
   join();
 }

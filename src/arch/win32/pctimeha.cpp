@@ -90,7 +90,7 @@ void CPCTimerHandler::run(){
   stReqTimeVal.QuadPart = stFrequenzy.QuadPart / CPCTimerHandler::csm_nTicksPerSecond;
   //stReqTimeVal = 1000000 / CPCTimerHandler::csm_nTicksPerSecond;
 
-  while(m_bAlive){
+  while(isAlive()){
     stWaittime.QuadPart *= 1000; // calculate in ms, not sec
     stReq = (stWaittime.QuadPart / stFrequenzy.QuadPart); // calculate elapsed time in ms
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2006 - 2016 ACIN, Profactor GmbH, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,11 +8,13 @@
  * Contributors:
  *   Alois Zoitl, Thomas Strasser, Rene Smodic, Ingo Hegny
  *    - initial API and implementation and/or initial documentation
+ *  Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
 #ifndef _THREAD_H_
 #define _THREAD_H_
 
 #include "../datatype.h"
+#include "../threadbase.h"
 #include <threadx/tx_api.h>
 #include <../devlog.h>
 #include <stdlib.h>
@@ -36,7 +38,7 @@ typedef CTXThread *TCTXThreadPtr;
  * \brief Multithreading implementation for NET+OS.
  *
  */
-class CTXThread {
+class CTXThread : public forte::arch::CThreadBase {
   public:
     /*! \brief Constructor of the Thread class
      *
@@ -51,15 +53,6 @@ class CTXThread {
      *  Will stop the execution if running and destroy the thread including all system specific data.
      */
     virtual ~CTXThread();
-
-    /*! \brief Indicates if the thread is allowed to execute.
-     *
-     *  This functions checks if the Thread is still executing user code in its run()-method.
-     *  \return true if there the run method is acitve.
-     */
-    bool isAlive(void) const {
-      return m_bAlive;
-    }
 
     //!Set the deadline of the thread.
     void setDeadline(const CIEC_TIME &pa_roVal);
@@ -89,7 +82,7 @@ class CTXThread {
 
     /*! \brief Stops the execution of the thread
      *
-     *  This function imidiatly stops the execution of the thread (seting m_bAlive to false) and waits till
+     *  This function imidiatly stops the execution of the thread (seting alive to false) and waits till
      *  this is finished.
      */
     void end(void);
@@ -115,18 +108,6 @@ class CTXThread {
      * this function will call the run method of the thread instance.
      */
     static void threadFunction(ULONG data);
-
-    /*! \brief Abstract method for the code to execute in the thread.
-     *
-     *  This thread class has to provide means that the code a inheriting class will add to the run()-method will
-     *  be executed in a seperated thread regarding the creator of the CThread class.
-     *
-     *  The inheriting class has to fullfill the folloing rules when using the run method:
-     *    - To end the thread execution simple leave the run()-method
-     *    - In order to allow the deletion and stopping of the thread add frequent checks to isAlive and end the
-     *      execution if isAlive() returns false.
-     */
-    virtual void run() = 0;
 
     void setPriority(UINT pa_nPriority) {
       UINT nOldPrio;
@@ -169,15 +150,6 @@ class CTXThread {
 
     static const int scm_nThreadListSize;
     static TCTXThreadPtr sm_aoThreadList[27];
-
-    /*! \brief Flag that indicates if the Thread is alive.
-     *
-     *  This flag has two main purposes:
-     *    -# indicate for other classes if the thread is still executing
-     *    -# use in the run()-method to check if the thread is still allowed to execute (e.g. while(isAlive()) ).
-     *       This is important for stopping and destroying threads.
-     */
-    bool m_bAlive;
 
     //we don't want that threads can be copied or assigned therefore the copy constructor and assignment operator are declared private
     //but not implemented
