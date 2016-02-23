@@ -60,7 +60,6 @@ class CDeserTestMockCommFB : public forte::com_infra::CCommFB{
   public:
     CDeserTestMockCommFB(TForteUInt8 pa_nNumRD, const CStringDictionary::TStringId * const pa_aunDODataTypeNames) :
       forte::com_infra::CCommFB(CStringDictionary::scm_nInvalidStringId, &m_oResource, forte::com_infra::e_Publisher),
-      m_oResource(CStringDictionary::scm_nInvalidStringId, 0),
       m_oMockFBInterface(0U, 0, 0, 0, 0U, 0, 0, 0, 2U, 0, scm_anInputTypes, static_cast<TForteUInt8>(pa_nNumRD + 2U), 0, pa_aunDODataTypeNames){
 
       m_acFBConnData = new TForteByte[genFBConnDataSize(0, 2, pa_nNumRD + 2)];
@@ -78,8 +77,8 @@ class CDeserTestMockCommFB : public forte::com_infra::CCommFB{
 
   private:
     static const CStringDictionary::TStringId scm_anInputTypes[];
+    static EMB_RES m_oResource;
 
-    EMB_RES m_oResource;
     SFBInterfaceSpecforGenerics m_oMockFBInterface;
     TForteByte *m_acFBConnData;
     TForteByte *m_acFBVarsData;
@@ -87,6 +86,7 @@ class CDeserTestMockCommFB : public forte::com_infra::CCommFB{
 };
 
 const CStringDictionary::TStringId CDeserTestMockCommFB::scm_anInputTypes[] = {g_nStringIdBOOL, g_nStringIdBOOL};
+EMB_RES CDeserTestMockCommFB::m_oResource(CStringDictionary::scm_nInvalidStringId, 0);
 
 BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
 

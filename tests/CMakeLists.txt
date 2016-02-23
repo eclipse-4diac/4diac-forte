@@ -129,6 +129,7 @@ ADD_DEFINITIONS (${DEFINITION})
 if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 ADD_DEFINITIONS (-DBOOST_TEST_DYN_LINK)
 ADD_DEFINITIONS (-g -O0 --coverage -fno-inline -fno-elide-constructors)
+ADD_DEFINITIONS (-fsanitize=address,undefined)
 endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 
 if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
@@ -161,7 +162,7 @@ remove_definitions (-fno-rtti)
 remove_definitions (-fno-exceptions)
 add_definitions (-fexceptions)
 
-set_target_properties(forte_test PROPERTIES LINK_FLAGS "${link_flags_test} --coverage -lpthread")
+set_target_properties(forte_test PROPERTIES LINK_FLAGS "${link_flags_test} --coverage -lpthread -fsanitize=address,undefined")
 endif()
 
 add_test(forte_test ${EXECUTABLE_OUTPUT_PATH}/forte_test)

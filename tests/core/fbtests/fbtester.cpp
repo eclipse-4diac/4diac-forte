@@ -51,11 +51,12 @@ class CFBTestConn : public CDataConnection{
 
 CFBTester::CFBTester(CResource *pa_poTestResource) :
     CFunctionBlock(pa_poTestResource, 0, 0, 0, 0),
-        mFBUnderTest(0),
-        m_nNumSuccesfulTestCases(0), m_nNumUnsuccesfulTestCases(
-            0){
+        mFBUnderTest(0), m_nNumSuccesfulTestCases(0), m_nNumUnsuccesfulTestCases(0){
 
+  changeFBExecutionState(cg_nMGM_CMD_Reset);
   changeFBExecutionState(cg_nMGM_CMD_Start);
+  //assure that we are in running state
+  BOOST_CHECK_EQUAL(CFunctionBlock::e_RUNNING, getState());
 }
 
 CFBTester::~CFBTester(){
@@ -184,20 +185,14 @@ void CFBTester::triggerEvent(TPortId pa_nEIId){
 }
 
 void CFBTester::performCreationTest(){
-  bool bTestResult = true;
+  bool testResult = false;
 
   mFBUnderTest = CTypeLib::createFB(getFBTypeId(), getFBTypeId(), getResourcePtr());
 
-  if(0 == mFBUnderTest){
-    bTestResult = false;
-  }
-  else{
-    if((getFBTypeId() != mFBUnderTest->getFBTypeId())
-        && (getFBTypeId() != mFBUnderTest->getInstanceNameId())){
-      bTestResult = false;
-    }
-    else{
-
+  if(0 != mFBUnderTest){
+    if((CFunctionBlock::e_IDLE == mFBUnderTest->getState()) &&
+        (getFBTypeId() == mFBUnderTest->getFBTypeId()) &&
+        (getFBTypeId() == mFBUnderTest->getInstanceNameId())){
       const SFBInterfaceSpec* interfaceSpec = mFBUnderTest->getFBInterfaceSpec();
 
       SFBInterfaceSpec* testerInterfaceSpec = new SFBInterfaceSpec;
@@ -227,10 +222,11 @@ void CFBTester::performCreationTest(){
               new TForteByte[genFBVarsDataSize(testerInterfaceSpec->m_nNumDIs, testerInterfaceSpec->m_nNumDOs)] :
               0,
           true);
+      testResult = true;
     }
   }
 
-  evaluateTestResult(bTestResult, "Type creation");
+  evaluateTestResult(testResult, "Type creation");
 }
 
 void CFBTester::evaluateTestResult(bool pa_bSuccess,
