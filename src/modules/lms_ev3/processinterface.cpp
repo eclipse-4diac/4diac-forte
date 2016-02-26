@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 fortiss GmbH
+ * Copyright (c) 2015, 2016 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Alois Zoitl - initial API and implementation and/or initial documentation
+ *    Jose Cabral - expansion of capabilities
  *******************************************************************************/
 
 #include "processinterface.h"
