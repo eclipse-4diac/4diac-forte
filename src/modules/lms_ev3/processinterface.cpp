@@ -168,7 +168,6 @@ bool CLMSEV3ProcessInterface::readWord(){
 TForteWord CLMSEV3ProcessInterface::readWordCore(){
   TForteWord val = -1;
   if (mFile.is_open()){
-    std::cout << "Reading word!\n";
     char sensorData[7];
     for (int i = 0; i < 7; i++){
       sensorData[i] = 0;
@@ -182,11 +181,6 @@ TForteWord CLMSEV3ProcessInterface::readWordCore(){
     binDataString.assign(sensorData);
     std::stringstream number(binDataString);
     number >> val;  //TODO: check value of val
-    for (int i = 0; i < 7; i++)
-    {
-      std::cout << std::dec << sensorData[i];
-    }
-    std::cout << "\nBinDataSting: " << binDataString << "\nnumber: " <<  number << "\nval:" << val << "\n";
   }
 
   return val;
@@ -240,10 +234,13 @@ bool CLMSEV3ProcessInterface::setupSensor(const std::string &paParam){
   sensorNumber = findNumberFromPort(basePath, paParam);
   if(sensorNumber != -1){
     number << sensorNumber;
-    sysFileName += number.str() + "/value0"; //for now use the value file for getting the value. espeically for touch this seams to be the better option. Needs check for other sensors!!;
+    sysFileName = basePath + number.str() + "/value0"; //for now use the value file for getting the value. espeically for touch this seams to be the better option. Needs check for other sensors!!;
     mFile.open(sysFileName.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
     if(mFile.is_open()){
+      std::cout << "File " << sysFileName << " opened\n";
       retVal = true;
+    }else{
+      std::cout << "File " << sysFileName << " not opened\n";
     }
   }
   return retVal;
