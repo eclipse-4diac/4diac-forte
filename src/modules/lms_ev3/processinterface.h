@@ -18,6 +18,22 @@
 #include <string>
 #include <fstream>
 
+struct st_ButtonVariables {
+    int nmbutton;
+    int nmFd;
+};
+
+enum ETypeOfIO {
+  UNDEFINED,
+  LED,
+  SENSOR,
+  SENSORW,
+  BUTTON,
+  MOTOR,
+  PWM,
+  SPEED
+};
+
 class CLMSEV3ProcessInterface : public CProcessInterfaceBase{
 
   public:
@@ -29,27 +45,40 @@ class CLMSEV3ProcessInterface : public CProcessInterfaceBase{
     bool deinitialise();
     bool writePin();
     bool readPin();
+    bool readWord();
+    bool writeWord();
 
   private:
 
-    static const std::string scmLEDId;
+    static const std::string scmLEDID;
     static const std::string scmSensorID;
     static const std::string scmButtonID;
-
-    static std::string getSensorBasePath(const std::string &paParam);
+    static const std::string scmMotorID;
+    static const std::string scmPWMID;
+    static const std::string scmSensorWID;
+    static const std::string scmSPEEDID;
 
     std::vector<std::string> generateParameterList();
 
-    bool setupLEDOutput(const std::vector<std::string> &paParamList);
+    bool setupLED(const std::vector<std::string> &paParamList);
     bool setupSensor(const std::string &paParam);
-    bool setupButton(const std::vector<std::string> &paParamList);
+    bool setupSensorW(const std::string &paParam);
+    bool setupPWM(const std::string &paParam, bool paInput);
+    bool setupMotor(const std::vector<std::string> &paParamList);
+    bool setupButton(const std::string &paParam);
+    bool setupSpeed(const std::string &paParam);
+    TForteWord readWordCore();
+
     static int findNumberFromPort(const std::string &paBasePath, const std::string &paEv3Port);
 
 
+
+
     std::fstream mFile; //!< the file to be used for this process interface instance
-    int typeOfInput;
-    int button;
-    int fileDescriptor;
+    int mnTypeOfIO;
+    int mnNoOfBits;
+    struct st_ButtonVariables* mstButtonVariables;
+    TForteWord mCountPerRot; //The speed is measured in tacho counts per second. This variable holds the information of how many tacho counts are in one rotation.
 };
 
 //tell the IX and QX FB that this is the process interface to be used
