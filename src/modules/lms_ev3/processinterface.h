@@ -61,13 +61,13 @@ class CLMSEV3ProcessInterface : public CProcessInterfaceBase{
     std::vector<std::string> generateParameterList();
 
     bool setupLED(const std::vector<std::string> &paParamList);
-    bool setupSensor(const std::string &paParam);
-    bool setupSensorW(const std::string &paParam);
+    bool setupSensor(const std::vector<std::string> &paParamList);
+    bool setupSensorW(const std::vector<std::string> &paParamList);
     bool setupPWM(const std::string &paParam, bool paInput);
     bool setupMotor(const std::vector<std::string> &paParamList);
     bool setupButton(const std::string &paParam);
     bool setupSpeed(const std::string &paParam);
-    TForteWord readWordCore();
+    bool readWordCore(TForteInt16* paResult);
 
     static int findNumberFromPort(const std::string &paBasePath, const std::string &paEv3Port);
 

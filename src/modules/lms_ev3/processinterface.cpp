@@ -25,7 +25,7 @@ const std::string CLMSEV3ProcessInterface::scmPWMID("pwm");
 const std::string CLMSEV3ProcessInterface::scmSPEEDID("speed");
 
 CLMSEV3ProcessInterface::CLMSEV3ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-                                                                    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData){
+                                                                        CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData){
   mFile.rdbuf()->pubsetbuf(NULL, 0); //disable buffer to avoid latency
   mnTypeOfIO = UNDEFINED;
   mstButtonVariables = NULL;
@@ -46,16 +46,16 @@ bool CLMSEV3ProcessInterface::initialise(bool paInput){
     std::string ioType = paramsList.front();
 
     if(paInput){
-      if(scmSensorID == ioType){ // boolean sensor parameter format = sensor.in[X]
-        retVal = setupSensor(paramsList[1]);
+      if(scmSensorID == ioType){ // boolean sensor parameter format = sensor.in[X].[Y]
+        retVal = setupSensor(paramsList);
         mnTypeOfIO = SENSOR;
       }
       else if(scmButtonID == ioType){ //button parameter format = button.[UP | DOWN | LEFT | RIGHT | ENTER | BACKSPACE]
         retVal = setupButton(paramsList[1]);
         mnTypeOfIO = BUTTON;
       }
-      else if(scmSensorWID == ioType){ //word sensor parameter format = sensorw.in[X]
-        retVal = setupSensorW(paramsList[1]);
+      else if(scmSensorWID == ioType){ //word sensor parameter format = sensorw.in[X].[Y]
+        retVal = setupSensorW(paramsList);
         mnTypeOfIO = SENSORW;
       }
       else if(scmPWMID == ioType){ //pwm parameter format = pwm.out[X]
@@ -151,11 +151,12 @@ bool CLMSEV3ProcessInterface::writePin(){
 
 bool CLMSEV3ProcessInterface::readWord(){
   bool retVal = false;
-  TForteWord val = -1;
-  val = readWordCore();
-  if (-1 != val){
+  bool internalChecker;
+  TForteInt16 val;
+  internalChecker = readWordCore(&val);
+  if (true == internalChecker){
     if (SPEED == mnTypeOfIO){
-      IN_W() = (val * 360) / mCountPerRot; //degree per seconds
+      IN_W() = (val * 360) / (int) mCountPerRot; //degree per seconds
       std::cout << "Writing word to output: " <<  (val * 360) / mCountPerRot <<  "\n";
     }else{
       IN_W() = val;
@@ -165,8 +166,8 @@ bool CLMSEV3ProcessInterface::readWord(){
   return retVal;
 }
 
-TForteWord CLMSEV3ProcessInterface::readWordCore(){
-  TForteWord val = -1;
+bool CLMSEV3ProcessInterface::readWordCore(TForteInt16* paResult){
+  bool retVal = false;
   if (mFile.is_open()){
     char sensorData[7];
     for (int i = 0; i < 7; i++){
@@ -180,11 +181,10 @@ TForteWord CLMSEV3ProcessInterface::readWordCore(){
     sensorData[7] = '\0';
     binDataString.assign(sensorData);
     std::stringstream number(binDataString);
-    number >> val;  //TODO: check value of val
+    number >> *paResult;  //TODO: check value of val
+    retVal = true;
   }
-
-  return val;
-
+  return retVal;
 }
 
 bool CLMSEV3ProcessInterface::writeWord(){
@@ -224,30 +224,55 @@ bool CLMSEV3ProcessInterface::setupLED(const std::vector<std::string> &paParamLi
   return retVal;
 }
 
-bool CLMSEV3ProcessInterface::setupSensor(const std::string &paParam){
+bool CLMSEV3ProcessInterface::setupSensor(const std::vector<std::string> &paParamList){
   bool retVal = false;
-  std::string sysFileName;
-  std::string basePath = "/sys/class/lego-sensor/sensor";
-  std::stringstream number;
-  int sensorNumber = -1;
+    bool internalCheck;
+    std::string sysFileName;
+    std::string basePath = "/sys/class/lego-sensor/sensor";
+    std::stringstream helperStringStream;
+    int helperInteger = -1;
 
-  sensorNumber = findNumberFromPort(basePath, paParam);
-  if(sensorNumber != -1){
-    number << sensorNumber;
-    sysFileName = basePath + number.str() + "/value0"; //for now use the value file for getting the value. espeically for touch this seams to be the better option. Needs check for other sensors!!;
-    mFile.open(sysFileName.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
-    if(mFile.is_open()){
-      std::cout << "File " << sysFileName << " opened\n";
-      retVal = true;
-    }else{
-      std::cout << "File " << sysFileName << " not opened\n";
-    }
-  }
-  return retVal;
+    helperInteger = findNumberFromPort(basePath, paParamList[1]);
+
+    if(helperInteger != -1){
+      helperStringStream << helperInteger;
+      basePath += helperStringStream.str();
+      sysFileName = basePath + "/num_values";
+
+      mFile.open(sysFileName.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
+      if(mFile.is_open()){
+           std::cout << "File " << sysFileName << " opened\n";
+           TForteInt16 aux;
+           internalCheck = readWordCore(&aux);
+           mFile.close();
+           if (true == internalCheck){
+             std::cout << "File " << sysFileName << " closed\n";
+             if (0 <= aux){ //a negative value is not possible for num_values file
+
+               helperStringStream.str(paParamList[2]);
+               helperStringStream >> helperInteger; //TODO: check value
+
+               if (helperInteger <= (aux - 1)){
+                 sysFileName = basePath + "/value" + helperStringStream.str();
+                 mFile.open(sysFileName.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
+                 if(mFile.is_open()){
+                   std::cout << "File " << sysFileName << " opened\n";
+                   retVal = true;
+                 }else{
+                   std::cout << "File " << sysFileName << " not opened\n";
+                 }
+               }
+             }
+           }
+         }
+       }else{
+         std::cout << "File " << sysFileName << " not opened\n";
+       }
+       return retVal;
 }
 
-bool CLMSEV3ProcessInterface::setupSensorW(const std::string &paParam){
-  return setupSensor(paParam);
+bool CLMSEV3ProcessInterface::setupSensorW(const std::vector<std::string> &paParamList){
+  return setupSensor(paParamList);
 }
 
 bool CLMSEV3ProcessInterface::setupPWM(const std::string &paParam, bool paInput){
@@ -331,6 +356,7 @@ bool CLMSEV3ProcessInterface::setupMotor(const std::vector<std::string>& paParam
 
 bool CLMSEV3ProcessInterface::setupSpeed(const std::string& paParam){
   bool retVal = false;
+  bool internalChecker = false;
   std::string sysFileName;
   std::string basePath = "/sys/class/tacho-motor/motor";
   std::stringstream number;
@@ -340,21 +366,27 @@ bool CLMSEV3ProcessInterface::setupSpeed(const std::string& paParam){
   if(sensorNumber != -1){
     number << sensorNumber;
     sysFileName = basePath + number.str() + "/count_per_rot";
+
     mFile.open(sysFileName.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
     if(mFile.is_open()){
       std::cout << "File " << sysFileName << " opened\n";
-      TForteWord auxWord = readWordCore();
-      if (-1 != auxWord){
-        mFile.close();
+
+      TForteInt16 auxWord;
+      internalChecker = readWordCore(&auxWord);
+      mFile.close();
+      if (true == internalChecker){
         std::cout << "File " << sysFileName << " closed\n";
-        mCountPerRot = auxWord;
-        sysFileName = basePath + number.str() + "/speed";
-        mFile.open(sysFileName.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
-        if(mFile.is_open()){
-          std::cout << "File " << sysFileName << " opened\n";
-          retVal = true;
-        }else{
-          std::cout << "File " << sysFileName << " not opened\n";
+        if (auxWord >= 0){ //a negative value is not possible for count_per_rot file
+          mCountPerRot = (TForteWord) auxWord;
+
+          sysFileName = basePath + number.str() + "/speed";
+          mFile.open(sysFileName.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
+          if(mFile.is_open()){
+            std::cout << "File " << sysFileName << " opened\n";
+            retVal = true;
+          }else{
+            std::cout << "File " << sysFileName << " not opened\n";
+          }
         }
       }
     }
