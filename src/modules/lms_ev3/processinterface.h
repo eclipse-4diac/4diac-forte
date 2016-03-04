@@ -29,9 +29,13 @@ enum ETypeOfIO {
   SENSOR,
   SENSORW,
   BUTTON,
-  MOTOR,
-  PWM,
-  SPEED
+  MOTOR_ENABLE,
+  MOTOR_RESET,
+  MOTOR_PWM,
+  MOTOR_SPEED,
+  MOTOR_STOP,
+  MOTOR_POSITION,
+  MOTOR_ROT,
 };
 
 class CLMSEV3ProcessInterface : public CProcessInterfaceBase{
@@ -47,38 +51,38 @@ class CLMSEV3ProcessInterface : public CProcessInterfaceBase{
     bool readPin();
     bool readWord();
     bool writeWord();
+    bool readDouble();
 
   private:
 
     static const std::string scmLEDID;
     static const std::string scmSensorID;
+    static const std::string scmSensorWID;
     static const std::string scmButtonID;
     static const std::string scmMotorID;
+    static const std::string scmEnableID;
+    static const std::string scmResetID;
     static const std::string scmPWMID;
-    static const std::string scmSensorWID;
     static const std::string scmSPEEDID;
-
-    std::vector<std::string> generateParameterList();
+    static const std::string scmStopID;
+    static const std::string scmPositionID;
+    static const std::string scmRotID;
 
     bool setupLED(const std::vector<std::string> &paParamList);
     bool setupSensor(const std::vector<std::string> &paParamList);
     bool setupSensorW(const std::vector<std::string> &paParamList);
-    bool setupPWM(const std::string &paParam, bool paInput);
-    bool setupMotor(const std::vector<std::string> &paParamList);
+    bool setupMotor(const std::vector<std::string> &paParamList, bool isInput);
     bool setupButton(const std::string &paParam);
-    bool setupSpeed(const std::string &paParam);
-    bool readWordCore(TForteInt16* paResult);
+    bool readNumberFromFile(TForteInt32* paResult);
 
+
+    std::vector<std::string> generateParameterList();
     static int findNumberFromPort(const std::string &paBasePath, const std::string &paEv3Port);
-
-
-
 
     std::fstream mFile; //!< the file to be used for this process interface instance
     int mnTypeOfIO;
     int mnNoOfBits;
     struct st_ButtonVariables* mstButtonVariables;
-    TForteWord mCountPerRot; //The speed is measured in tacho counts per second. This variable holds the information of how many tacho counts are in one rotation.
 };
 
 //tell the IX and QX FB that this is the process interface to be used

@@ -27,30 +27,46 @@ The standard access refer to the access through well defined blocks, that allow 
 		> motor.out[X].enable
 	
 		Where X is the output capital letter of the EV3 (A-D). A true value turns the motor on, and a false value turns the motor off. 
+
+	* Motor Reset
+		> motor.out[X].reset
+
+		Where X is the output capital letter of the EV3 (A-D). A true value resets all of the motor parameter attributes to their default values. This will also have the effect of stopping the motor.
 	
 3. 	 IW: Word Input (16 bits) [CHECK FORMAT]
 
 	* Ultrasonic Sensor from Lego
-		> sensorw.in[X].[Y]
+		> sensor.in[X].[Y]
 
 		where X is the number of the input in the EV3 (1-4) and Y is the value number where to read from according to the sensor. Read the specification of the sensor to be sure. Start trying from 0 if no information is available.
 
 	* Current duty cycle from a motor (pwm)
-		> pwm.out[X]
+		> motor.out[X].pwm
 
 		Where X is the output letter of the EV3 (A-D). The value is between -100 and 100. It might seem confusing reading an input from an output but even though the signal is from an output, it is an input to the system.
 
 	* Current speed of the motor 
-		> speed.out[X]
+		> motor.out[X].speed
 
 		Where X is the output letter of the EV3 (A-D). It reads the velocity in degrees per second (360 degrees each turn)
 
 4.   QW: word output (16 bits) [CHECK FORMAT]
 
 	* Desired duty cycle for a motor (pwm)
-		> pwm.out[X]
+		> motor.out[X].pwm
 
 		Where X is the output letter of the EV3 (A-D). The value range is between -100 and 100.
+
+	* Desired behaviour when stop
+		> motor.out[X].stop
+
+		Where X is the output letter of the EV3 (A-D). This parameter is used to specify the behaviour of the motor when stoping. Possible values are 0, 1 and 2:
+		
+	    * 0: [coast]: Removes power from the motor. The motor will freely coast to a stop.
+	    * 1: [brake]: Removes power from the motor and creates a passive electrical load. This is usually done by shorting the motor terminals together. This load will absorb the energy from the rotation of the motors and cause the motor to stop more quickly than coasting.
+	    * 3: [hold]: Causes the motor to actively try to hold the current position. If an external force tries to turn the motor, the motor will “push back” to maintain its position.
+ 
+
 
 5.   ID: Double word input (32 bits) [TO BE IMPLEMENTED]
 

@@ -1738,7 +1738,7 @@ inline const CIEC_BYTE WORD_TO_BYTE(const CIEC_WORD &pa_roVal){
 }
 
 inline const CIEC_INT WORD_TO_INT(const CIEC_WORD &pa_roVal){
-  return CIEC_INT((TForteInt16) (CIEC_INT::scm_nMaxVal >= pa_roVal) ? static_cast<TForteInt16>(pa_roVal) : CIEC_INT::scm_nMaxVal);
+  return CIEC_INT((TForteInt16) static_cast<TForteInt16>(pa_roVal));
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
@@ -1910,7 +1910,7 @@ inline const CIEC_USINT INT_TO_USINT(const CIEC_INT &pa_roVal){
 }
 
 inline const CIEC_WORD INT_TO_WORD(const CIEC_INT &pa_roVal){
-  return CIEC_WORD((TForteWord) (0 < pa_roVal) ? static_cast<TForteWord>(pa_roVal) : CIEC_WORD::scm_nMinVal);
+  return CIEC_WORD((TForteWord) static_cast<TForteWord>(pa_roVal));
 }
 
 inline const CIEC_STRING INT_TO_STRING(const CIEC_INT &pa_roVal){
