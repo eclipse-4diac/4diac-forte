@@ -63,28 +63,15 @@ int CIEC_DATE::fromString(const char *pa_pacValue){
     return -1;
   }
 
-  // If we are east of the UTC, adjust the time now - otherwise
-  // we might fall before time representable by time_t. Otherwise adjust
-  // after converting - it's easier than to step back in struct tm
-  TForteInt32 tzOffset = CIEC_ANY_DATE::getTimeZoneOffset();
-  if (tzOffset > 0) {
-    tm.tm_hour = tzOffset / 60;
-    tm.tm_min =  tzOffset % 60;
-  }
-
   if(!setDateAndTime(tm, 0)){
     return -1;
   }
 
-  if (tzOffset < 0){
-    setTUINT64( getTUINT64() + (60*tzOffset * 1000ULL));
-  }
   return static_cast<unsigned int>(acBuffer - pa_pacValue);
 }
 
 int CIEC_DATE::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
   int nRetVal = -1;
-
   struct tm *ptm = getTimeStruct();
 
   if (ptm == 0)

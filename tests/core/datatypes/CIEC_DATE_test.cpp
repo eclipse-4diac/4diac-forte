@@ -63,9 +63,6 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 	char cBuffer[11];
 	char cBufferFail[2];
 
-  nTZOffset = CIEC_ANY_DATE::getTimeZoneOffset();
-	BOOST_CHECK_EQUAL(nTZOffset, 60); // Western Europe, adjust if somewhere else
-
 	//check cast operator
 	nTest = 0;
 	strcpy(cBuffer, "");
@@ -131,7 +128,6 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 	BOOST_CHECK_EQUAL(nTest.fromString("DATE#2008-04-03"), 15);
 	BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
 	BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-	BOOST_CHECK_EQUAL(strcmp(cBuffer, "2008-04-03"), 0);
 	BOOST_CHECK_EQUAL(std::string("2008-04-03"), cBuffer);
   strcpy(cBuffer, "");
   nTest = 0;
@@ -155,9 +151,6 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 	BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
 	BOOST_CHECK_EQUAL(std::string("2008-04-03"), cBuffer);
 	strcpy(cBuffer, "");
-
-  // Check timezone handling
-	BOOST_CHECK_EQUAL(nTest.fromString("1970-01-01"), 10);
-	BOOST_CHECK_EQUAL(nTest.operator TForteUInt64(), 0ULL);
 }
+
 BOOST_AUTO_TEST_SUITE_END()
