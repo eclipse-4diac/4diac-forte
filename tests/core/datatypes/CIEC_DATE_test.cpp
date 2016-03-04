@@ -88,35 +88,35 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 	BOOST_CHECK_EQUAL(nTest.fromString("1994-06-22"), 10);
 	BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
 	BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-	BOOST_CHECK_EQUAL(strcmp(cBuffer, "1994-06-22"), 0);
+	BOOST_CHECK_EQUAL(std::string("1994-06-22"), cBuffer);
 	strcpy(cBuffer, "");
   nTest = 0;
 
 	BOOST_CHECK_EQUAL(nTest.fromString("DATE#1994-06-22"), 15);
 	BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
 	BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-	BOOST_CHECK_EQUAL(strcmp(cBuffer, "1994-06-22"), 0);
+	BOOST_CHECK_EQUAL(std::string("1994-06-22"), cBuffer);
 	strcpy(cBuffer, "");
   nTest = 0;
 
 	BOOST_CHECK_EQUAL(nTest.fromString("date#1994-06-22"), 15);
 	BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
 	BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-	BOOST_CHECK_EQUAL(strcmp(cBuffer, "1994-06-22"), 0);
+	BOOST_CHECK_EQUAL(std::string("1994-06-22"), cBuffer);
 	strcpy(cBuffer, "");
   nTest = 0;
 
 	BOOST_CHECK_EQUAL(nTest.fromString("D#1994-06-22"), 12);
 	BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
 	BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-	BOOST_CHECK_EQUAL(strcmp(cBuffer, "1994-06-22"), 0);
+	BOOST_CHECK_EQUAL(std::string("1994-06-22"), cBuffer);
 	strcpy(cBuffer, "");
   nTest = 0;
 
 	BOOST_CHECK_EQUAL(nTest.fromString("d#1994-06-22"), 12);
 	BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
 	BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-	BOOST_CHECK_EQUAL(strcmp(cBuffer, "1994-06-22"), 0);
+	BOOST_CHECK_EQUAL(std::string("1994-06-22"), cBuffer);
 	strcpy(cBuffer, "");
   nTest = 0;
 
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 	BOOST_CHECK_EQUAL(nTest.fromString("2008-04-03"), 10);
 	BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
 	BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-	BOOST_CHECK_EQUAL(strcmp(cBuffer, "2008-04-03"), 0);
+	BOOST_CHECK_EQUAL(std::string("2008-04-03"), cBuffer);
 	strcpy(cBuffer, "");
   nTest = 0;
 
@@ -132,27 +132,28 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 	BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
 	BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
 	BOOST_CHECK_EQUAL(strcmp(cBuffer, "2008-04-03"), 0);
-	strcpy(cBuffer, "");
+	BOOST_CHECK_EQUAL(std::string("2008-04-03"), cBuffer);
+  strcpy(cBuffer, "");
   nTest = 0;
 
 	BOOST_CHECK_EQUAL(nTest.fromString("date#2008-04-03"), 15);
 	BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
 	BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-	BOOST_CHECK_EQUAL(strcmp(cBuffer, "2008-04-03"), 0);
+	BOOST_CHECK_EQUAL(std::string("2008-04-03"), cBuffer);
 	strcpy(cBuffer, "");
   nTest = 0;
 
 	BOOST_CHECK_EQUAL(nTest.fromString("D#2008-04-03"), 12);
 	BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
 	BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-	BOOST_CHECK_EQUAL(strcmp(cBuffer, "2008-04-03"), 0);
+	BOOST_CHECK_EQUAL(std::string("2008-04-03"), cBuffer);
 	strcpy(cBuffer, "");
   nTest = 0;
 
 	BOOST_CHECK_EQUAL(nTest.fromString("d#2008-04-03"), 12);
 	BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
 	BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-	BOOST_CHECK_EQUAL(strcmp(cBuffer, "2008-04-03"), 0);
+	BOOST_CHECK_EQUAL(std::string("2008-04-03"), cBuffer);
 	strcpy(cBuffer, "");
 
   // Check timezone handling
