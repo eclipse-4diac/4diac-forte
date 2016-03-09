@@ -30,7 +30,7 @@ const std::string CLMSEV3ProcessInterface::scmPositionID("position");
 const std::string CLMSEV3ProcessInterface::scmRotID("rot");
 
 CLMSEV3ProcessInterface::CLMSEV3ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-                                                                                    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData){
+                                                                                        CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData){
   mFile.rdbuf()->pubsetbuf(NULL, 0); //disable buffer to avoid latency
   mnTypeOfIO = UNDEFINED;
   mstButtonVariables = NULL;
@@ -162,7 +162,32 @@ bool CLMSEV3ProcessInterface::readWord(){
     internalChecker = readNumberFromFile(&val);
     if (true == internalChecker){
       IN_W() = (TForteWord) (val);
-      std::cout << "Reading word: " <<  val <<  "\n";
+
+      std::cout.flush();
+      switch (mnTypeOfIO){
+        case SENSORW:{
+          std::cout << "Reading SENSORW: " <<  val <<  "\n";
+          break;
+        }
+        case MOTOR_PWM:{
+          std::cout << "Reading PWM: " <<  val <<  "\n";
+          break;
+        }
+        case MOTOR_SPEED:{
+          std::cout << "Reading SPEED: " <<  val <<  "\n";
+          break;
+        }
+        case MOTOR_ROT:{
+          std::cout << "Reading ROT: " <<  val <<  "\n";
+          break;
+        }
+        case MOTOR_POSITION:{
+          std::cout << "Reading POSITION: " <<  val <<  "\n";
+          break;
+        }
+      }
+      std::cout.flush();
+
       retVal = true;
     }else{
       std::cout << "Could not read word\n";
@@ -364,15 +389,15 @@ bool CLMSEV3ProcessInterface::setupMotor(const std::vector<std::string>& paParam
         }else if (scmStopID == paParamList[2]){
           sysFileName += number.str() + "/stop";
           mnTypeOfIO = MOTOR_STOP;
-        }
+        } //TODO: if the type if not valid, it would try to open the folder "/sys/class/tacho-motor/motor"
         mFile.open(sysFileName.c_str(), std::fstream::out); //TODO change this when fully switching to C++11 for LMS EV3
       }
 
       if(mFile.is_open()){
-        std::cout << "File " << sysFileName << " opened\n";
+        std::cout << "File " << sysFileName << " opened with parameter" << PARAMS().getValue() << "\n";
         retVal = true;
       }else{
-        std::cout << "File " << sysFileName << " not opened\n";
+        std::cout << "File " << sysFileName << " not opened with parameter" << PARAMS().getValue()<< "\n";
       }
     }
   }
@@ -430,14 +455,11 @@ std::vector<std::string> CLMSEV3ProcessInterface::generateParameterList(){
 bool CLMSEV3ProcessInterface::readNumberFromFile(TForteInt32* paResult){
   bool retVal = false;
   if (mFile.is_open()){
-    std::cout << "readNumberFromFile: File is open\n";
     std::string read;
     mFile.clear();
     mFile.seekg(0, std::ios::beg);
     if (std::getline(mFile, read)){
       if (!mFile.fail()){
-        std::cout << "readNumberFromFile: !mFile.fail()\n";
-        std::cout << "readNumberFromFile: read string " << read << "in file\n";
         std::stringstream number(read);
         number >> *paResult;  //TODO: check value of paResult
         retVal = true;
