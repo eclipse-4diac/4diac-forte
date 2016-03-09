@@ -56,13 +56,11 @@ CTXThread::CTXThread(long pa_nStackSize, char * pa_acThreadName) {
   memset((void *) &m_stThread, 0, sizeof(m_stThread));
 
   tx_mutex_create(&m_stMutex, "test", TX_NO_INHERIT);
-  tx_semaphore_create(&m_stSemaphore, "hugo", 0);
 }
 
 CTXThread::~CTXThread() {
   end();
   tx_mutex_delete(&m_stMutex);
-  tx_semaphore_delete(&m_stSemaphore);
 }
 
 void CTXThread::setDeadline(const CIEC_TIME &pa_roVal) {
@@ -116,7 +114,6 @@ void CTXThread::setDeadline(const CIEC_TIME &pa_roVal) {
 void CTXThread::end(void) {
   DEVLOG_INFO("entering end ID: %d\n", (int) m_stThread.tx_thread_id);
   setAlive(false);
-  resumeSelfSuspend();
   join();
 }
 

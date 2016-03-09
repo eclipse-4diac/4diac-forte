@@ -59,16 +59,12 @@ class CWin32Thread : public forte::arch::CThreadBase{
      */
     void start();
 
-    /*! \brief Resumes a suspended Thread
-     */
-    void resumeSelfSuspend();
-
     /*! \brief Stops the execution of the thread
      *
      *  This function immediately stops the execution of the thread (setting alive to false) and waits till
      *  this is finished.
      */
-    void end(void);
+    virtual void end(void);
 
     /*! \brief Waits for the Thread to finish its execution.
      *
@@ -85,11 +81,6 @@ class CWin32Thread : public forte::arch::CThreadBase{
     //static void * threadFunction(void *arguments); 
     static DWORD WINAPI threadFunction(LPVOID arguments);
 
-    /*! \brief Suspends the thread.
-     *
-     *  Suspends the execution of the thread until resumeSelfSuspend(), end(), or join() is called.
-     */
-    void selfSuspend(void);
 
   private:
     //!deadline the thread needs to be finish its execution. 0 means unconstrained.
@@ -102,9 +93,6 @@ class CWin32Thread : public forte::arch::CThreadBase{
     /*! \brief the 'real' thread ID of the started thread
     */
     DWORD m_nThreadID;
-
-    //! Semaphore to handle the self suspend mechanism required for FORTE-Threads more reliable
-    HANDLE m_hSelfSuspendSemaphore;
 
     /*! \brief Size of the stack used by this thread.
      */

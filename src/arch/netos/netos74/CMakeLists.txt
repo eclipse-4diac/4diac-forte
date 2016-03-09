@@ -54,7 +54,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "NetOs 7.4")
 #######################################################################################
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/..)
   
-  forte_add_sourcefile_hcpp(../thread ../txtimeha ../sync)
+  forte_add_sourcefile_hcpp(../thread ../txtimeha ../sync ../forte_sem)
   forte_add_sourcefile_cpp(appconf_api.c ../root.cpp)
 
   if(FORTE_COM_ETH)

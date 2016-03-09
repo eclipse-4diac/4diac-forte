@@ -17,7 +17,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Phycore AT91")
 
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/..)
   
-  forte_add_sourcefile_hcpp(../thread ../ecostiha ../sync)
+  forte_add_sourcefile_hcpp(../thread ../ecostiha ../sync ../forte_sem)
   forte_add_sourcefile_cpp(phycoreAT91main.cpp)
 
   if(FORTE_COM_ETH)

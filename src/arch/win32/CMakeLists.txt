@@ -19,7 +19,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})  
   
   forte_add_sourcefile_h(fortealloc.h)
-  forte_add_sourcefile_hcpp(thread sync)
+  forte_add_sourcefile_hcpp(thread sync forte_sem)
   forte_add_sourcefile_cpp(main.cpp)
 
   if(${FORTE_BUILD_TYPE} STREQUAL SHARED_LIBRARY)

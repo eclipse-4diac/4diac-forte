@@ -90,10 +90,6 @@ CPosixThread::CPosixThread(long pa_nStackSize) :
   if(0 != m_nStackSize){
     m_pacStack = new char[m_nStackSize];
   }
-
-  if(-1 == sem_init(&m_stSuspendSemaphore, 0, 0)){
-    DEVLOG_ERROR("Could not initialize suspend sempaphore: %s\n", strerror(errno));
-  }
 }
 
 CPosixThread::~CPosixThread(){
@@ -103,7 +99,6 @@ CPosixThread::~CPosixThread(){
   if(0 != m_nStackSize){
     delete[] m_pacStack;
   }
-  sem_destroy(&m_stSuspendSemaphore);
 }
 
 void CPosixThread::setDeadline(const CIEC_TIME &pa_roVal){
@@ -112,19 +107,9 @@ void CPosixThread::setDeadline(const CIEC_TIME &pa_roVal){
   //It will not be considered.
 }
 
-void CPosixThread::resumeSelfSuspend(void){
-  sem_post(&m_stSuspendSemaphore);
-}
 
 void CPosixThread::join(void){
   if(0 != m_stThreadID){
     CCriticalRegion criticalRegion(mJoinMutex);
   }
-}
-
-void CPosixThread::selfSuspend(void) {
-  int n;
-  do{
-    n = sem_wait(&m_stSuspendSemaphore);
-  }while( (-1 == n) && (errno == EINTR) );  //handle interrupts from signals
 }

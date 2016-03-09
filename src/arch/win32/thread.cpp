@@ -31,19 +31,13 @@ DWORD WINAPI CWin32Thread::threadFunction(LPVOID arguments){
 
 CWin32Thread::CWin32Thread(long pa_nStackSize) :
     m_nThreadHandle(0), m_nStackSize(pa_nStackSize), m_nThreadID(~0x0ul){
-
-  m_hSelfSuspendSemaphore = CreateSemaphore(NULL, 0, 10, NULL);
-
-  if(0 == m_hSelfSuspendSemaphore){
-    DEVLOG_ERROR("Could not initialize suspend semphore: %d\n", GetLastError());
-  }
 }
 
 CWin32Thread::~CWin32Thread(){
   if(0 != m_nThreadHandle){
     end();
   }
-  CloseHandle(m_hSelfSuspendSemaphore);
+
 }
 
 void CWin32Thread::setDeadline(const CIEC_TIME &pa_roVal){
@@ -72,17 +66,9 @@ void CWin32Thread::start(void){
   }
 }
 
-void CWin32Thread::selfSuspend(void){
-  WaitForSingleObject(m_hSelfSuspendSemaphore, INFINITE);
-}
-
-void CWin32Thread::resumeSelfSuspend(void){
-  ReleaseSemaphore(m_hSelfSuspendSemaphore, 1, 0);
-}
 
 void CWin32Thread::end(void){
   setAlive(false);
-  resumeSelfSuspend();
   join();
 }
 

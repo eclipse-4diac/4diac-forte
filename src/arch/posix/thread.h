@@ -12,7 +12,6 @@
 #ifndef _THREAD_H_
 #define _THREAD_H_
 
-#include <semaphore.h>
 #include <pthread.h>
 #include "../threadbase.h"
 #include "../datatype.h"
@@ -60,20 +59,13 @@ class CPosixThread : public forte::arch::CThreadBase {
      */
     void start(void);
 
-    /*! \brief Resumes a suspended Thread
-     *
-     *
-     */
-    void resumeSelfSuspend(void);
-
     /*! \brief Stops the execution of the thread
      *
      *  This function immediately stops the execution of the thread (setting alive to false) and waits till
      *  this is finished.
      */
-    void end(void){
+    virtual void end(void){
       setAlive(false);
-      resumeSelfSuspend();
       join();
     }
 
@@ -83,11 +75,6 @@ class CPosixThread : public forte::arch::CThreadBase {
      */
     void join(void); // Waits
   protected:
-    /*! \brief Suspends the thread.
-     *
-     *  Suspends the execution of the thread until resumeSelfSuspend(), end(), or join() is called.
-     */
-    void selfSuspend();
 
   private:
     /*!\brief Function that is given to the system thread support that should be called for the thread.
@@ -98,8 +85,6 @@ class CPosixThread : public forte::arch::CThreadBase {
 
     //!deadline the thread needs to be finish its execution. 0 means unconstrained.
     CIEC_TIME m_oDeadline;
-
-    sem_t m_stSuspendSemaphore;
 
     CPCSyncObject mJoinMutex;
 

@@ -17,6 +17,7 @@
 #include "datatypes/forte_time.h"
 #include <thread.h>
 #include <sync.h>
+#include <forte_sem.h>
 
 class CEventSourceFB;
 
@@ -59,6 +60,16 @@ class CEventChainExecutionThread : public CThread{
       return mProcessingEvents;
     }
 
+    virtual void end(void){
+      setAlive(false);
+      resumeSelfSuspend();
+      CThread::end();
+    }
+
+    void resumeSelfSuspend(){
+      mSuspendSemaphore.semInc();
+    }
+
   protected:
     //@{
     /*! \brief List of input events to deliver.
@@ -98,6 +109,10 @@ class CEventChainExecutionThread : public CThread{
     //! Transfer elements stored in the external event list to the main event list
     void transferExternalEvents();
 
+    void selfSuspend(){
+      mSuspendSemaphore.semWaitIndefinitly();
+    }
+
     //@{
     /*! \brief List of external events that occurred during one FB's execution
      *
@@ -112,6 +127,8 @@ class CEventChainExecutionThread : public CThread{
 
     //! SyncObject for protecting the list in regard to several accesses
     CSyncObject m_oExternalEventListSync;
+
+    forte::arch::CSemaphore mSuspendSemaphore;
 
     /*! \brief Flag indicating if this event chain execution thread is currently processing any events
      *

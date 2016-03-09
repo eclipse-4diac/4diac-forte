@@ -71,21 +71,12 @@ class CTXThread : public forte::arch::CThreadBase {
       create();
     }
 
-    /*! \brief Resumes a suspended Thread
-     *
-     *
-     */
-    void resumeSelfSuspend(void) {
-      // if the thread is not created yet, we do this here
-      tx_semaphore_put(&m_stSemaphore);
-    }
-
     /*! \brief Stops the execution of the thread
      *
      *  This function imidiatly stops the execution of the thread (seting alive to false) and waits till
      *  this is finished.
      */
-    void end(void);
+    virtual void end(void);
 
     /*! \brief Waits for the Thread to finish its execution.
      *
@@ -93,14 +84,6 @@ class CTXThread : public forte::arch::CThreadBase {
      */
     void join(void);
   protected:
-
-    /*! \brief Suspends the thread.
-     *
-     *  Suspends the execution of the thread until resumeSelfSuspend(), end(), or join() is called.
-     */
-    void selfSuspend(void) {
-      tx_semaphore_get(&m_stSemaphore, TX_WAIT_FOREVER);
-    }
 
   private:
     /*!\brief Funciton that is given to the system thread support that should be called for the thread.
@@ -137,8 +120,6 @@ class CTXThread : public forte::arch::CThreadBase {
     TX_THREAD m_stThread;
 
     TX_MUTEX m_stMutex; //!< used for join function
-
-    TX_SEMAPHORE m_stSemaphore; //!< used for resume/suspend
 
     /*! \brief Size of the stack used by this thread.
      */

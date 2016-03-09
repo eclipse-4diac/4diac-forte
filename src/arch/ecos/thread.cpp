@@ -46,12 +46,10 @@ void CECOSThread::threadFunction(cyg_addrword_t data){
 CECOSThread::CECOSThread(long pa_nStackSize){
   m_nStackSize = pa_nStackSize;
   m_cStack = new unsigned char[m_nStackSize];
-  cyg_semaphore_init(&m_stSuspendSem, 0);
 }
 
 CECOSThread::~CECOSThread(){
   end();
-  cyg_semaphore_destroy(&m_stSuspendSem); 
   delete[] m_cStack;
 }
 

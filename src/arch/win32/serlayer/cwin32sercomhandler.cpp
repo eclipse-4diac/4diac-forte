@@ -31,11 +31,11 @@ void CWin32SerComHandler::registerSerComLayer(CWin32SerComLayer *pa_poComLayer){
   if(!isAlive()){
     this->start();
   }
-  resumeSelfSuspend();
+  mSem.semInc();
 }
 
 void CWin32SerComHandler::unregisterSerComLayer(CWin32SerComLayer *pa_poComLayer){
-  m_oSync.lock();
+  CCriticalRegion region(m_oSync);
 
   TCWin32SerComLayerContainer::Iterator itRunner(m_lstComLayerList.begin());
   TCWin32SerComLayerContainer::Iterator itRefNode(m_lstComLayerList.end());
@@ -55,14 +55,13 @@ void CWin32SerComHandler::unregisterSerComLayer(CWin32SerComLayer *pa_poComLayer
     itRefNode = itRunner;
     ++itRunner;
   }
-  m_oSync.unlock();
 }
 
 void CWin32SerComHandler::run(){
   while(isAlive()){
 
     if(true == m_lstComLayerList.isEmpty()){
-      selfSuspend();
+      mSem.semWaitIndefinitly();
     }
 
     m_oSync.lock();

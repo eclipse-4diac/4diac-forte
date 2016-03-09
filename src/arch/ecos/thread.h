@@ -68,22 +68,13 @@ class CECOSThread : public forte::arch::CThreadBase {
       cyg_thread_resume(m_stHandle);
     }
 
-    /*! \brief Resumes a suspended Thread
-     *
-     *
-     */
-    void resumeSelfSuspend(void){
-      cyg_semaphore_post(&m_stSuspendSem);
-    }
-
     /*! \brief Stops the execution of the thread
      *
      *  This function imidiatly stops the execution of the thread (seting alive to false) and waits till
      *  this is finished.
      */
-    void end(void){
+    virtual void end(void){
       setDeadline()false;
-      resumeSelfSuspend();
       join();
     }
 
@@ -93,15 +84,6 @@ class CECOSThread : public forte::arch::CThreadBase {
      */
     void join(void);
   protected:
-    /*! \brief Suspends the thread.
-     *
-     *  Suspends the execution of the thread until resumeSelfSuspend(), end(), or join() is called.
-     */
-
-    void selfSuspend(void){
-      cyg_semaphore_wait(&m_stSuspendSem);
-    }
-
     void setPriority(cyg_priority_t pa_nPriority) {
       DEVLOG_DEBUG(">>>>Thread: Set Priority: %d\n", pa_nPriority);
       cyg_thread_set_priority(m_stHandle, pa_nPriority);
@@ -156,7 +138,6 @@ class CECOSThread : public forte::arch::CThreadBase {
     long m_nStackSize;
     unsigned char *m_cStack;
     CIEC_TIME m_oDeadLine;
-    cyg_sem_t m_stSuspendSem; //! Semaphore for implementing the self suspend
 
     //we don't want that threads can be copied or assigned therefore the copy constructor and assignment operator are declared private
     //but not implemented
