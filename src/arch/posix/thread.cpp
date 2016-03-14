@@ -68,7 +68,7 @@ void CPosixThread::start(void){
 
 void * CPosixThread::threadFunction(void *arguments){
   // Get pointer to CThread object out of void pointer
-  CPosixThread *pThread = (CPosixThread *) arguments;
+  CPosixThread *pThread = static_cast<CPosixThread *>(arguments);
 
   // if pointer is ok
   if(0 != pThread){

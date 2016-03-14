@@ -13,13 +13,18 @@
 namespace forte {
   namespace arch {
 
-    CThreadBase::CThreadBase() : mAlive(false){
+    CThreadBase::CThreadBase() :
+        mAlive(false){
 
     }
 
     CThreadBase::~CThreadBase(){
     }
 
+    void CThreadBase::end(void){
+      setAlive(false);
+      join();
+    }
 
   } /* namespace arch */
 } /* namespace forte */

@@ -71,18 +71,7 @@ class CTXThread : public forte::arch::CThreadBase {
       create();
     }
 
-    /*! \brief Stops the execution of the thread
-     *
-     *  This function imidiatly stops the execution of the thread (seting alive to false) and waits till
-     *  this is finished.
-     */
-    virtual void end(void);
-
-    /*! \brief Waits for the Thread to finish its execution.
-     *
-     *  This function waits till the execution in the thread decides to end the execution. Blocks the caller!!!
-     */
-    void join(void);
+    virtual void join(void);
   protected:
 
   private:

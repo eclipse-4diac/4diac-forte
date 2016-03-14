@@ -75,18 +75,8 @@ class CBEThread : public forte::arch::CThreadBase, private BETask{
      */
     void resumeSelfSuspend(void);
 
-    /*! \brief Stops the execution of the thread
-     *
-     *  This function immediately stops the execution of the thread (setting alive to false) and waits till
-     *  this is finished.
-     */
-    void end(void);
+    virtual void join(void);
 
-    /*! \brief Waits for the Thread to finish its execution.
-     *
-     *  This function waits till the execution in the thread decides to end the execution. Blocks the caller!!!
-     */
-    void join(void); // Waits
   protected:
     /*! \brief Suspends the thread.
      *
@@ -95,19 +85,6 @@ class CBEThread : public forte::arch::CThreadBase, private BETask{
     void selfSuspend(void);
 
   private:
-    /*! \brief Abstract method for the code to execute in the thread.
-     *
-     *  This thread class has to provide means that the code a inheriting class will add to the run()-method will
-     *  be executed in a seperated thread regarding the creator of the CThread class.
-     *
-     *  The inheriting class has to fullfill the folloing rules when using the run method:
-     *    - To end the thread execution simple leave the run()-method
-     *    - In order to allow the deletion and stopping of the thread add frequent checks to isAlive and end the
-     *      execution if isAlive() returns false.
-     *
-     *  \return true if thread execution ended successfull
-     */
-    virtual void run() = 0;
     
     /*! \brief Destroies the thread
      *

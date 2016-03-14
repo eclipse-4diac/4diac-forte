@@ -56,12 +56,6 @@ void CBEThread::resumeSelfSuspend(void){
   Resume();
 }
 
-void CBEThread::end(void){
-  setAlive(false);
-  resumeSelfSuspend();
-  join();
-}
-
 void CBEThread::join(void){
   Delete();
 }

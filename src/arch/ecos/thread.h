@@ -41,7 +41,7 @@ class CECOSThread : public forte::arch::CThreadBase {
      *  @param pa_nStackSize the Size of the stack the thread is allowed to use. this class will
      *         allocate the stack size in bytes from the heap
      */
-    CECOSThread(long pa_nStackSize = CYGNUM_HAL_STACK_SIZE_TYPICAL);  // may need adjustment for small platforms
+    explicit CECOSThread(long pa_nStackSize = CYGNUM_HAL_STACK_SIZE_TYPICAL);  // may need adjustment for small platforms
 
     /*! \brief Stops and destroys thread.
      *
@@ -68,21 +68,7 @@ class CECOSThread : public forte::arch::CThreadBase {
       cyg_thread_resume(m_stHandle);
     }
 
-    /*! \brief Stops the execution of the thread
-     *
-     *  This function imidiatly stops the execution of the thread (seting alive to false) and waits till
-     *  this is finished.
-     */
-    virtual void end(void){
-      setDeadline()false;
-      join();
-    }
-
-    /*! \brief Waits for the Thread to finish its execution.
-     *
-     *  This function waits till the execution in the thread decides to end the execution. Blocks the caller!!!
-     */
-    void join(void);
+    virtual void join(void);
   protected:
     void setPriority(cyg_priority_t pa_nPriority) {
       DEVLOG_DEBUG(">>>>Thread: Set Priority: %d\n", pa_nPriority);

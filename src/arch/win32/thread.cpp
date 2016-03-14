@@ -14,7 +14,7 @@
 
 DWORD WINAPI CWin32Thread::threadFunction(LPVOID arguments){
   // Get pointer to CThread object out of void pointer
-  CWin32Thread *pThread = (CWin32Thread *) arguments;
+  CWin32Thread *pThread = static_cast<CWin32Thread *>(arguments);
 
   // if pointer is ok
   if(0 != pThread){
@@ -64,12 +64,6 @@ void CWin32Thread::start(void){
       DEVLOG_ERROR("Error could not create the thread!");
     }
   }
-}
-
-
-void CWin32Thread::end(void){
-  setAlive(false);
-  join();
 }
 
 void CWin32Thread::join(void){

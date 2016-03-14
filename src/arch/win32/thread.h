@@ -38,7 +38,7 @@ class CWin32Thread : public forte::arch::CThreadBase{
      *  Does all the necessary steps in order to get the thread running with the start()-method
      *  @param pa_nStackSize the Size of the stack the thread is allowed to use. 0 means use system default stack size.
      */
-    CWin32Thread(long pa_nStackSize = 0);
+    explicit CWin32Thread(long pa_nStackSize = 0);
 
     /*! \brief Stops and destroys thread.
      *
@@ -59,18 +59,7 @@ class CWin32Thread : public forte::arch::CThreadBase{
      */
     void start();
 
-    /*! \brief Stops the execution of the thread
-     *
-     *  This function immediately stops the execution of the thread (setting alive to false) and waits till
-     *  this is finished.
-     */
-    virtual void end(void);
-
-    /*! \brief Waits for the Thread to finish its execution.
-     *
-     *  This function waits till the execution in the thread decides to end the execution. Blocks the caller!!!
-     */
-    void join(void); // Waits
+    virtual void join();
 
   protected:
 

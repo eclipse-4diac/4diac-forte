@@ -37,7 +37,7 @@ class CPosixThread : public forte::arch::CThreadBase {
      *  @param pa_nStackSize the Size of the stack the thread is allowed to use. 0 means use system default stack size.
      *      If you like to set this value it is best to use the form: PTHREAD_STACK_MIN + additional bytes you need.
      */
-    CPosixThread(long pa_nStackSize = 0);
+    explicit CPosixThread(long pa_nStackSize = 0);
 
     /*! \brief Stops and destroys thread.
      *
@@ -59,21 +59,7 @@ class CPosixThread : public forte::arch::CThreadBase {
      */
     void start(void);
 
-    /*! \brief Stops the execution of the thread
-     *
-     *  This function immediately stops the execution of the thread (setting alive to false) and waits till
-     *  this is finished.
-     */
-    virtual void end(void){
-      setAlive(false);
-      join();
-    }
-
-    /*! \brief Waits for the Thread to finish its execution.
-     *
-     *  This function waits till the execution in the thread decides to end the execution. Blocks the caller!!!
-     */
-    void join(void); // Waits
+    virtual void join(void);
   protected:
 
   private:

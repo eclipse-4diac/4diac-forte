@@ -111,12 +111,6 @@ void CTXThread::setDeadline(const CIEC_TIME &pa_roVal) {
   }
 }
 
-void CTXThread::end(void) {
-  DEVLOG_INFO("entering end ID: %d\n", (int) m_stThread.tx_thread_id);
-  setAlive(false);
-  join();
-}
-
 void CTXThread::join(void) {
   if (0 != m_stThread.tx_thread_id) {
     //wait till the thread is up and running

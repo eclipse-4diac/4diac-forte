@@ -31,7 +31,7 @@ bool CECOSThread::create(void){
 
 void CECOSThread::threadFunction(cyg_addrword_t data){
  // Get pointer to CThread object out of void pointer
-  CECOSThread *pThread = (CECOSThread *)(data);
+  CECOSThread *pThread = static_cast<CECOSThread *>(data);
 
   // if pointer is ok
   if (pThread){

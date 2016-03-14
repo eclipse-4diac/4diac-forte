@@ -29,6 +29,19 @@ namespace forte {
         }
 
 
+        /*! \brief Stops the execution of the thread
+         *
+         *  This function immediately stops the execution of the thread (setting alive to false) and waits till
+         *  this is finished.
+         */
+        virtual void end();
+
+        /*! \brief Waits for the Thread to finish its execution.
+         *
+         *  This function waits till the execution in the thread decides to end the execution. Blocks the caller!!!
+         */
+        virtual void join() = 0;
+
       protected:
         virtual ~CThreadBase();
 
