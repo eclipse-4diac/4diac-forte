@@ -22,7 +22,7 @@ class CIEC_ANY_INT : public CIEC_ANY_NUM{
 	DECLARE_FIRMWARE_DATATYPE(ANY_INT)
 
   public:
-	  CIEC_ANY_INT(TLargestIntValueType paVal);
+	  explicit CIEC_ANY_INT(TLargestIntValueType paVal);
 
     virtual ~CIEC_ANY_INT(){
     }

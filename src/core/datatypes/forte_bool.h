@@ -31,6 +31,9 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
       *this = pa_rbValue;
     }
 
+    // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
+    // Maybe when we have better code generators we want to make this constructur explicit again and generate it
+    // cppcheck-suppress noExplicitConstructor
     CIEC_BOOL(bool pa_bValue){
       *this = pa_bValue;
     }

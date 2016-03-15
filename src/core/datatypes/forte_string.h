@@ -33,6 +33,9 @@ class CIEC_STRING : public CIEC_ANY_STRING{
     CIEC_STRING() {
     }
 
+    // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
+    // Maybe when we have better code generators we want to make this constructur explicit again and generate it
+    // cppcheck-suppress noExplicitConstructor
     CIEC_STRING(const char* pa_pacValue) {
       (*this) = pa_pacValue;
     }

@@ -31,10 +31,16 @@ class CIEC_TIME : public CIEC_ANY_MAGNITUDE{
       setValueSimple(pa_roValue);
     }
 
+    // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
+    // Maybe when we have better code generators we want to make this constructur explicit again and generate it
+    // cppcheck-suppress noExplicitConstructor
     CIEC_TIME(TValueType pa_nValue){
       *this = pa_nValue;
     }
 
+    // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
+    // Maybe when we have better code generators we want to make this constructur explicit again and generate it
+    // cppcheck-suppress noExplicitConstructor
     CIEC_TIME(const char *pa_pacValue){
       if(-1 == CIEC_TIME::fromString(pa_pacValue)){  //explicitly state that you like to have the fromString of this class to avoid potential virtual function clashes in the constructor
         //we had an error in string parsing set a default value
