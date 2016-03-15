@@ -16,7 +16,7 @@
 
 class CCriticalRegion{
   public:
-    CCriticalRegion(CSyncObject &paSyncObject) : mSyncObject(paSyncObject){
+    explicit CCriticalRegion(CSyncObject &paSyncObject) : mSyncObject(paSyncObject){
       mSyncObject.lock();
     }
 

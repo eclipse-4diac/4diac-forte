@@ -46,12 +46,12 @@ namespace forte {
 
         struct SLocalCommGroup{
 
-            SLocalCommGroup(CStringDictionary::TStringId pa_nGroupName) :
-            m_nGroupName(pa_nGroupName), m_lPublList(), m_lSublList(){
+            explicit SLocalCommGroup(CStringDictionary::TStringId pa_nGroupName) :
+                m_nGroupName(pa_nGroupName), m_lPublList(), m_lSublList(){
             }
 
             SLocalCommGroup(const SLocalCommGroup& pa_roLocalCommGroup) :
-            m_nGroupName(pa_roLocalCommGroup.m_nGroupName), m_lPublList(), m_lSublList(){
+                m_nGroupName(pa_roLocalCommGroup.m_nGroupName), m_lPublList(), m_lSublList(){
             }
 
             ~SLocalCommGroup(){

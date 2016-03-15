@@ -28,7 +28,7 @@
 template<typename T, typename Container>
 class CIterator  {
 public:
-  CIterator(Container* pa_poNode) : m_poCurrentPosition(pa_poNode)  {
+  explicit CIterator(Container* pa_poNode) : m_poCurrentPosition(pa_poNode)  {
 
   }
 
@@ -115,14 +115,14 @@ public:
    * \return reference of the contained object of type T
    */
   T* operator*()  {
-    return (T*)m_poCurrentPosition->getData();
+    return static_cast<T*>(m_poCurrentPosition->getData());
   }
 
   /*!\brief Returns a pointer to the contained object
    * \return A Pointer to the contained object of type T
    */
   T* operator->() {
-    return (T*)m_poCurrentPosition->getData();
+    return static_cast<T*>(m_poCurrentPosition->getData());
   }
 
   /*!\brief equality operator for the iterator

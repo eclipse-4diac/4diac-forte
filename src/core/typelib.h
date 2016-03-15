@@ -137,7 +137,7 @@ public:
     public:
       CTypeEntry *m_poNext; //!< a pointer to the next element in the list. Will be used to build single linked list of type entries.
 
-      CTypeEntry(CStringDictionary::TStringId pa_nTypeNameId);
+      explicit CTypeEntry(CStringDictionary::TStringId pa_nTypeNameId);
       ~CTypeEntry(void);
 
       CStringDictionary::TStringId getTypeNameId(void) const { return m_nTypeNameId; };

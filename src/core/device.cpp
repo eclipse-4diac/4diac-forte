@@ -21,7 +21,7 @@ EMGMResponse CDevice::executeMGMCommand(forte::core::SManagementCMD &pa_oCommand
     retval = CResource::executeMGMCommand(pa_oCommand);
   }
   else{
-    CResource *res = (CResource *)CFBContainer::getFB(pa_oCommand.mDestination);
+    CResource *res = static_cast<CResource *>(CFBContainer::getFB(pa_oCommand.mDestination));
     if(0 != res){
       pa_oCommand.mDestination = CStringDictionary::scm_nInvalidStringId;
       retval = res->executeMGMCommand(pa_oCommand);

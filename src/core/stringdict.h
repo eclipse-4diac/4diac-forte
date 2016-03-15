@@ -20,6 +20,7 @@
  *
  * Manages a dictionary of strings that can be referenced by ids
  */
+// cppcheck-suppress noConstructor
 class CStringDictionary{
   DECLARE_SINGLETON(CStringDictionary)
 public:
