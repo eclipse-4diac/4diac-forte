@@ -24,7 +24,7 @@ namespace forte {
     class CEcosSemaphore{
       public:
 
-        CEcosSemaphore(unsigned int paInitialValue  = 0);
+        explicit CEcosSemaphore(unsigned int paInitialValue  = 0);
         ~CEcosSemaphore();
 
         void semInc();

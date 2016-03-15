@@ -38,7 +38,7 @@ bool CTXThread::create(void) {
 
 void CTXThread::threadFunction(ULONG data) {
   // Get pointer to CThread object out of void pointer
-  CTXThread *pThread = (CTXThread*) (data);
+  CTXThread *pThread = static_cast<CTXThread *>(data);
   // if pointer is ok
   if (pThread) {
     tx_mutex_get(&(pThread->m_stMutex), TX_WAIT_FOREVER);

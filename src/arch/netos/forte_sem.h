@@ -24,7 +24,7 @@ namespace forte {
     class CNetOSSemaphore{
       public:
 
-        CNetOSSemaphore(unsigned int paInitialValue  = 0);
+        explicit CNetOSSemaphore(unsigned int paInitialValue  = 0);
         ~CNetOSSemaphore();
 
         void semInc();

@@ -24,7 +24,7 @@ namespace forte {
     class CPThreadSemaphore{
       public:
 
-        CPThreadSemaphore(unsigned int paInitialValue  = 0);
+        explicit CPThreadSemaphore(unsigned int paInitialValue  = 0);
         ~CPThreadSemaphore();
 
         void semInc();

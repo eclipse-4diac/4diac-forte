@@ -25,7 +25,7 @@ namespace forte {
     class CWin32Semaphore{
       public:
 
-        CWin32Semaphore(unsigned int paInitialValue  = 0);
+        explicit CWin32Semaphore(unsigned int paInitialValue  = 0);
         ~CWin32Semaphore();
 
         void semInc();
