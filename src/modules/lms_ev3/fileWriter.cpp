@@ -13,32 +13,31 @@
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "fileWriter_gen.cpp"
 #endif
-#include <string.h>
-#include <errno.h>
 
-DEFINE_FIRMWARE_FB(fileWriter, g_nStringIdfileWriter);
+#include <sstream>
+#include <ostream>
 
-const CStringDictionary::TStringId fileWriter::scm_anDataInputNames[] = {g_nStringIdQI, g_nStringIdFILE_NAME, g_nStringIdS1};
+DEFINE_FIRMWARE_FB(fileWriter, g_nStringIdfileWriter)
 
-const CStringDictionary::TStringId fileWriter::scm_anDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING};
+const CStringDictionary::TStringId fileWriter::scm_anDataInputNames[] = {g_nStringIdQI, g_nStringIdFILE_NAME, g_nStringIdS1, g_nStringIdAPPEND, g_nStringIdAPPCHAR};
 
-const CStringDictionary::TStringId fileWriter::scm_anDataOutputNames[] = { g_nStringIdQO, g_nStringIdSTATUS };
+const CStringDictionary::TStringId fileWriter::scm_anDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdBOOL, g_nStringIdSTRING};
 
-const CStringDictionary::TStringId fileWriter::scm_anDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING };
+const CStringDictionary::TStringId fileWriter::scm_anDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
 
-const TForteInt16 fileWriter::scm_anEIWithIndexes[] = { 0, 3 };
-const TDataIOID fileWriter::scm_anEIWith[] = {0, 1, 255, 0, 2, 255};
-const CStringDictionary::TStringId fileWriter::scm_anEventInputNames[] = { g_nStringIdINIT, g_nStringIdREQ };
+const CStringDictionary::TStringId fileWriter::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
 
+const TForteInt16 fileWriter::scm_anEIWithIndexes[] = {0, 3};
+const TDataIOID fileWriter::scm_anEIWith[] = {0, 1, 255, 0, 2, 3, 4, 255};
+const CStringDictionary::TStringId fileWriter::scm_anEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
 
-const TDataIOID fileWriter::scm_anEOWith[] = { 0, 1, 255, 0, 1, 255 };
-const TForteInt16 fileWriter::scm_anEOWithIndexes[] = { 0, 3, -1 };
-const CStringDictionary::TStringId fileWriter::scm_anEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF };
+const TDataIOID fileWriter::scm_anEOWith[] = {0, 1, 255, 0, 1, 255};
+const TForteInt16 fileWriter::scm_anEOWithIndexes[] = {0, 3, -1};
+const CStringDictionary::TStringId fileWriter::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
 
 const SFBInterfaceSpec fileWriter::scm_stFBInterfaceSpec = {
   2,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,
-  3,  scm_anDataInputNames, scm_anDataInputTypeIds,
+  2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  5,  scm_anDataInputNames, scm_anDataInputTypeIds,
   2,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
   0, 0
 };
@@ -90,8 +89,14 @@ void fileWriter::closeFile(){
 bool fileWriter::writeFile(){
   bool retVal = false;
   if(mFile.is_open()){
-    std::string toWrite(S1().getValue());
-    mFile.seekp(0, std::ios::beg);
+    std::string toWrite = "";
+    if (APPEND()){
+      toWrite = APPCHAR().getValue();
+    } else {
+      mFile.seekp(0, std::ios::beg);
+    }
+
+    toWrite += S1().getValue();
     mFile << toWrite;
     //TODO check if writing worked
     retVal = true;

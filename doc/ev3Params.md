@@ -4,63 +4,79 @@
 
 The standard access refer to the access through well defined blocks, that allow transparency in the access of I/O in different platforms. Each block shows the supported parameters according to the type of connection.
 
+The standard format of the parameters has 3 parts divided by points:
+			
+>   port.typeOfIO.specific
+
+where port should be the input, output or embedded, the typeOfIO part defines what is connected to it, and the specific part varies according to the second part.  A more datailed information about this is shown in each possible parameter.
+
 1.    IX: Boolean Input
 
 	* Sensor connected to an input port: 
-		> sensor.in[X].[Y]
+		> in[X].sensor.[Y]
 	
 		where X is the number of the input in the EV3 (1-4) and Y is the value number where to read from according to the sensor. Read the specification of the sensor to be sure. Start trying from 0 if no information is available.
 
 	* One of the 6 buttons of the EV3: 
-		> button.[up | down | left | right | enter | backspace] 
+		> emb.button.[up | down | left | right | enter | backspace] 
 	
 		Only one of the inputs can be selected for each IX. All parameters must be in lower case.
 
 2.    QX: Boolean Output
 
 	* Led of the EV3:
-		> led.[right | left].[red | green]
+		> emb.led.[right | left].[red | green]
 	
 		The orange led does not exist, but is the sum of green + red.
 	
 	* Motor ON/OFF
-		> motor.out[X].enable
+		> out[X].motor.enable
 	
-		Where X is the output capital letter of the EV3 (A-D). A true value turns the motor on, and a false value turns the motor off. 
+		Where X is the output capital letter of the EV3 (A-D, in uppercase). A true value turns the motor on, and a false value turns the motor off. 
 
 	* Motor Reset
-		> motor.out[X].reset
+		> out[X].motor.reset
 
-		Where X is the output capital letter of the EV3 (A-D). A true value resets all of the motor parameter attributes to their default values. This will also have the effect of stopping the motor.
+		Where X is the output capital letter of the EV3 (A-D, in uppercase). A true value resets all of the motor parameter attributes to their default values. This will also have the effect of stopping the motor.
 	
 3. 	 IW: Word Input (16 bits) [CHECK FORMAT]
 
-	* Ultrasonic Sensor from Lego
-		> sensor.in[X].[Y]
+	* Sensor value
+		> in[X].sensorw.[Y]
 
 		where X is the number of the input in the EV3 (1-4) and Y is the value number where to read from according to the sensor. Read the specification of the sensor to be sure. Start trying from 0 if no information is available.
 
-	* Current duty cycle from a motor (pwm)
-		> motor.out[X].pwm
+	* Sensor mode
+		> in[X].sensorw.mode
+		
+		where X is the number of the input in the EV3 (1-4). The read value is an index number according to the list of modes of the sensor.
 
-		Where X is the output letter of the EV3 (A-D). The value is between -100 and 100. It might seem confusing reading an input from an output but even though the signal is from an output, it is an input to the system.
+	* Current duty cycle from a motor (pwm)
+		> out[X].motor.pwm
+
+		Where X is the output letter of the EV3 (A-D, in uppercase). The value is between -100 and 100. It might seem confusing reading an input from an output but even though the signal is from an output, it is an input to the system.
 
 	* Current speed of the motor 
-		> motor.out[X].speed
+		> out[X].motor.speed
 
-		Where X is the output letter of the EV3 (A-D). It reads the velocity in degrees per second (360 degrees each turn)
+		Where X is the output letter of the EV3 (A-D, in uppercase). It reads the velocity in degrees per second (360 degrees each turn)
 
 4.   QW: word output (16 bits) [CHECK FORMAT]
 
-	* Desired duty cycle for a motor (pwm)
-		> motor.out[X].pwm
+	* Sensor mode
+		> in[X].sensorw.mode
+		
+		where X is the number of the input in the EV3 (1-4). The value to be written should be the index number according to the list of modes of the sensor.
 
-		Where X is the output letter of the EV3 (A-D). The value range is between -100 and 100.
+	* Desired duty cycle for a motor (pwm)
+		> out[X].motor.pwm
+
+		Where X is the output letter of the EV3 (A-D, in uppercase). The value range is between -100 and 100.
 
 	* Desired behaviour when stop
-		> motor.out[X].stop
+		> out[X].motor.stop
 
-		Where X is the output letter of the EV3 (A-D). This parameter is used to specify the behaviour of the motor when stoping. Possible values are 0, 1 and 2:
+		Where X is the output letter of the EV3 (A-D, in uppercase). This parameter is used to specify the behaviour of the motor when stoping. Possible values are 0, 1 and 2:
 		
 	    * 0: [coast]: Removes power from the motor. The motor will freely coast to a stop.
 	    * 1: [brake]: Removes power from the motor and creates a passive electrical load. This is usually done by shorting the motor terminals together. This load will absorb the energy from the rotation of the motors and cause the motor to stop more quickly than coasting.
@@ -71,7 +87,7 @@ The standard access refer to the access through well defined blocks, that allow 
 5.   ID: Double word input (32 bits) [TO BE IMPLEMENTED]
 
 	* Current position of the motor
-		> motor.out[X].position
+		> out[X].motor.position
 
 ## Custom access
 

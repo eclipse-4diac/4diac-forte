@@ -13,52 +13,60 @@
 #define _FILEWRITER_H_
 
 #include <funcbloc.h>
-#include <forte_any.h>
-#include <forte_string.h>
 #include <forte_bool.h>
+#include <forte_string.h>
+#include <forte_wstring.h>
 #include <fstream>
 
-class fileWriter : public CFunctionBlock{
-    DECLARE_FIRMWARE_FB(fileWriter)
+class fileWriter: public CFunctionBlock{
+  DECLARE_FIRMWARE_FB(fileWriter)
 
-  private:
-    static const CStringDictionary::TStringId scm_anDataInputNames[];
-    static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-    CIEC_BOOL &QI(){
-      return *static_cast<CIEC_BOOL*>(getDI(0));
-    }
+private:
+  static const CStringDictionary::TStringId scm_anDataInputNames[];
+  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+  CIEC_BOOL &QI() {
+    return *static_cast<CIEC_BOOL*>(getDI(0));
+  };
 
-    CIEC_STRING &FILE_NAME(){
-      return *static_cast<CIEC_STRING*>(getDI(1));
-    }
+  CIEC_STRING &FILE_NAME() {
+    return *static_cast<CIEC_STRING*>(getDI(1));
+  };
 
-    CIEC_STRING &S1(){
-      return *static_cast<CIEC_STRING*>(getDI(2));
-    }
+  CIEC_STRING &S1() {
+    return *static_cast<CIEC_STRING*>(getDI(2));
+  };
 
-    static const CStringDictionary::TStringId scm_anDataOutputNames[];
-    static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-    CIEC_BOOL &QO(){
-      return *static_cast<CIEC_BOOL*>(getDO(0));
-    };
+  CIEC_BOOL &APPEND() {
+    return *static_cast<CIEC_BOOL*>(getDI(3));
+  };
 
-    CIEC_STRING &STATUS(){
-      return *static_cast<CIEC_STRING*>(getDO(1));
-    };
+  CIEC_STRING &APPCHAR() {
+    return *static_cast<CIEC_STRING*>(getDI(4));
+  };
 
-    static const TEventID scm_nEventINITID = 0;
-    static const TEventID scm_nEventREQID = 1;
-    static const TForteInt16 scm_anEIWithIndexes[];
-    static const TDataIOID scm_anEIWith[];
-    static const CStringDictionary::TStringId scm_anEventInputNames[];
+  static const CStringDictionary::TStringId scm_anDataOutputNames[];
+  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+  CIEC_BOOL &QO() {
+    return *static_cast<CIEC_BOOL*>(getDO(0));
+  };
 
-    static const TEventID scm_nEventINITOID = 0;
-    static const TEventID scm_nEventCNFID = 1;
-    static const TForteInt16 scm_anEOWithIndexes[];
-    static const TDataIOID scm_anEOWith[];
-    static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  CIEC_WSTRING &STATUS() {
+    return *static_cast<CIEC_WSTRING*>(getDO(1));
+  };
 
-    static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  static const TEventID scm_nEventINITID = 0;
+  static const TEventID scm_nEventREQID = 1;
+  static const TForteInt16 scm_anEIWithIndexes[];
+  static const TDataIOID scm_anEIWith[];
+  static const CStringDictionary::TStringId scm_anEventInputNames[];
+
+  static const TEventID scm_nEventINITOID = 0;
+  static const TEventID scm_nEventCNFID = 1;
+  static const TForteInt16 scm_anEOWithIndexes[];
+  static const TDataIOID scm_anEOWith[];
+  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+
+  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
     void executeEvent(int pa_nEIID);
 
@@ -73,7 +81,7 @@ class fileWriter : public CFunctionBlock{
 
     std::fstream mFile;
 
-    FORTE_FB_DATA_ARRAY(2, 3, 2, 0);
+    FORTE_FB_DATA_ARRAY(2, 5, 2, 0);
 };
 
 #endif //close the ifdef sequence from the beginning of the file

@@ -21,6 +21,9 @@ const std::string CLMSEV3ProcessInterface::scmSensorID("sensor");
 const std::string CLMSEV3ProcessInterface::scmSensorWID("sensorw");
 const std::string CLMSEV3ProcessInterface::scmButtonID("button");
 const std::string CLMSEV3ProcessInterface::scmMotorID("motor");
+
+const std::string CLMSEV3ProcessInterface::scmModeID("mode");
+
 const std::string CLMSEV3ProcessInterface::scmEnableID("enable");
 const std::string CLMSEV3ProcessInterface::scmResetID("reset");
 const std::string CLMSEV3ProcessInterface::scmPWMID("pwm");
@@ -30,7 +33,7 @@ const std::string CLMSEV3ProcessInterface::scmPositionID("position");
 const std::string CLMSEV3ProcessInterface::scmRotID("rot");
 
 CLMSEV3ProcessInterface::CLMSEV3ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-                                                                                        CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData){
+    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData){
   mFile.rdbuf()->pubsetbuf(NULL, 0); //disable buffer to avoid latency
   mnTypeOfIO = UNDEFINED;
   mstButtonVariables = NULL;
@@ -43,34 +46,26 @@ CLMSEV3ProcessInterface::~CLMSEV3ProcessInterface(){
   }
 }
 
-bool CLMSEV3ProcessInterface::initialise(bool paInput){
+bool CLMSEV3ProcessInterface::initialise(bool paIsInput){
   bool retVal = false;
   std::vector<std::string> paramsList(generateParameterList());
 
   if (0 != paramsList.size()){
-    std::string ioType = paramsList.front();
+    std::string ioType = paramsList[1];
 
-    if(paInput){
-      if(scmSensorID == ioType){ // boolean sensor parameter format = sensor.in[X].[Y]
-        retVal = setupSensor(paramsList);
-      }
-      else if(scmButtonID == ioType){ //button parameter format = button.[UP | DOWN | LEFT | RIGHT | ENTER | BACKSPACE]
-        retVal = setupButton(paramsList[1]);
-      }
-      else if(scmSensorWID == ioType){ //word sensor parameter format = sensorw.in[X].[Y]
-        retVal = setupSensorW(paramsList);
-      }
-      else if(scmMotorID == ioType){ //pwm parameter format = pwm.out[X]
-        retVal = setupMotor(paramsList, true);
-      }
+    if(scmLEDID == ioType){ // led parameter format = emb.led.[right | left].[red | green]
+      retVal = setupLED(paramsList, paIsInput);
+    }else  if(scmSensorID == ioType){ // boolean sensor parameter format = in[X].sensor.[Y]
+      retVal = setupSensor(paramsList, paIsInput);
     }
-    else{
-      if(scmLEDID == paramsList.front()){ // led parameter format = led.[right | left].[red | green]
-        retVal = setupLED(paramsList);
-      }
-      else if(scmMotorID == ioType){ //motor parameter format = motor.out[X].enable
-        retVal = setupMotor(paramsList, false);
-      }
+    else if(scmSensorWID == ioType){ //word sensor parameter format = in[X].sensorw.[Y]
+      retVal = setupSensorW(paramsList, paIsInput);
+    }
+    else if(scmButtonID == ioType){ //button parameter format = emb.button.[UP | DOWN | LEFT | RIGHT | ENTER | BACKSPACE]
+      retVal = setupButton(paramsList[2], paIsInput);
+    }
+    else if(scmMotorID == ioType){ //pwm parameter format = out[X].motor.[]
+      retVal = setupMotor(paramsList, paIsInput);
     }
   }
   return retVal;
@@ -90,7 +85,7 @@ bool CLMSEV3ProcessInterface::deinitialise(){
 
 bool CLMSEV3ProcessInterface::readPin(){
   bool retVal = false;
-  if(mFile.is_open() || -1 != mstButtonVariables->nmFd){
+  if(mFile.is_open() || (NULL != mstButtonVariables && -1 != mstButtonVariables->nmFd)){
     switch (mnTypeOfIO){
       case SENSOR: {
         char binData = 0;
@@ -123,17 +118,21 @@ bool CLMSEV3ProcessInterface::readPin(){
 
 bool CLMSEV3ProcessInterface::writePin(){
   bool retVal = false;
+  std::cout << "Writing PIN\n";
   if(mFile.is_open()){
+    std::cout << "File is open\n";
     switch (mnTypeOfIO){
       case LED:{
         int val = (false != OUT_X()) ? 255 : 0; //if true set the led to full glowing
+        std::cout << "Writing led " << val << "\n";
         mFile << val;
         //TODO check if writing worked
         retVal = true;
         break;
       }
       case MOTOR_ENABLE:{
-        std::string val = (false != OUT_X()) ? "run-direct" : "stop"; //if true set the led to full glowing
+        std::string val = (false != OUT_X()) ? "run-direct" : "stop";
+        std::cout << "Writing enable " << val << "\n";
         mFile << val;
         //TODO check if writing worked
         retVal = true;
@@ -142,6 +141,7 @@ bool CLMSEV3ProcessInterface::writePin(){
       case MOTOR_RESET:{
         if (true == OUT_X()){
           mFile << "reset";
+          std::cout << "Writing " << "reset" << "\n";
           //TODO check if writing worked
           retVal = true;
           break;
@@ -156,41 +156,25 @@ bool CLMSEV3ProcessInterface::readWord(){
   bool retVal = false;
   bool internalChecker;
 
-  if (SENSORW == mnTypeOfIO || MOTOR_PWM == mnTypeOfIO || MOTOR_SPEED == mnTypeOfIO || MOTOR_ROT == mnTypeOfIO ||
+  if (SENSORW_VALUE == mnTypeOfIO || MOTOR_PWM == mnTypeOfIO || MOTOR_SPEED == mnTypeOfIO || MOTOR_ROT == mnTypeOfIO ||
       MOTOR_POSITION == mnTypeOfIO){ //this should be a double, but for testing is here
     TForteInt32 val;
     internalChecker = readNumberFromFile(&val);
     if (true == internalChecker){
       IN_W() = (TForteWord) (val);
-
-      std::cout.flush();
-      switch (mnTypeOfIO){
-        case SENSORW:{
-          std::cout << "Reading SENSORW: " <<  val <<  "\n";
-          break;
-        }
-        case MOTOR_PWM:{
-          std::cout << "Reading PWM: " <<  val <<  "\n";
-          break;
-        }
-        case MOTOR_SPEED:{
-          std::cout << "Reading SPEED: " <<  val <<  "\n";
-          break;
-        }
-        case MOTOR_ROT:{
-          std::cout << "Reading ROT: " <<  val <<  "\n";
-          break;
-        }
-        case MOTOR_POSITION:{
-          std::cout << "Reading POSITION: " <<  val <<  "\n";
-          break;
-        }
-      }
-      std::cout.flush();
-
       retVal = true;
     }else{
       std::cout << "Could not read word\n";
+    }
+  }else if (SENSORW_MODE == mnTypeOfIO){
+    std::string mode;
+    std::getline(mFile, mode);
+    TForteWord counter = 0;
+    for (std::vector<std::string>::iterator it = mModes.begin(); it < mModes.end(); it++, counter++){
+      if (mode == *it){
+        IN_W() = counter;
+        retVal = true;
+      }
     }
   }
   return retVal;
@@ -231,6 +215,12 @@ bool CLMSEV3ProcessInterface::writeWord(){
         }
         break;
       }
+      case SENSORW_MODE:{
+        if (val < mModes.size()){
+          mFile << mModes.at(val);
+          retVal = true;
+        }
+      }
     }
   }
   return retVal;
@@ -251,32 +241,64 @@ bool CLMSEV3ProcessInterface::readDouble(){
 
 /* INTIALIZATION FUNCTIONS **/
 
-bool CLMSEV3ProcessInterface::setupLED(const std::vector<std::string> &paParamList){
+bool CLMSEV3ProcessInterface::setupLED(const std::vector<std::string> &paParamList, bool paIsInput){
   bool retVal = false;
-  mnTypeOfIO = LED;
-  std::string sysFileName("/sys/class/leds/ev3:" + paParamList[1] + ":" + paParamList[2] + ":ev3dev/brightness"); //format in ev3dev is= ev3:[left | right]:[red | green]:ev3dev
-
-  mFile.open(sysFileName.c_str(), std::fstream::out); //TODO change this when fully switching to C++11 for LMS EV3
-  if(mFile.is_open()){
-    std::cout << "File " << sysFileName << " opened\n";
-    retVal = writePin(); // initialize output with default value (i.e, should be false)
-  }else{
-    //TODO:
+  if (false == paIsInput){
+    std::string sysFileName("/sys/class/leds/ev3:" + paParamList[2] + ":" + paParamList[3] + ":ev3dev/brightness"); //format in ev3dev is= ev3:[left | right]:[red | green]:ev3dev
+    mFile.open(sysFileName.c_str(), std::fstream::out); //TODO change this when fully switching to C++11 for LMS EV3
+    if(mFile.is_open()){
+      std::cout << "File " << sysFileName << " opened\n";
+      if (true == writePin()){ // initialize output with default value (i.e, should be false)
+        mnTypeOfIO = LED;
+        retVal = true;
+      }
+    }else{
+      //TODO:
+    }
   }
-
   return retVal;
 }
 
-bool CLMSEV3ProcessInterface::setupSensor(const std::vector<std::string> &paParamList){
+bool CLMSEV3ProcessInterface::setupSensor(const std::vector<std::string> &paParamList, bool paIsInput){
   bool retVal = false;
+
+  if (true == paIsInput){ //Output for sensor is not allowed
+    if (true == setupSensorValue(paParamList)){
+      mnTypeOfIO = SENSOR;
+      retVal = true;
+    }
+  }
+  return retVal;
+}
+
+bool CLMSEV3ProcessInterface::setupSensorW(const std::vector<std::string> &paParamList, bool paIsInput){
+  bool retVal = false;
+
+  if (scmModeID == paParamList[2]){ //mode of sensor can be input or output
+    if (true == setupSensorMode(paParamList)){
+      mnTypeOfIO = SENSORW_MODE;
+      retVal = true;
+    }
+  }else{ //value of sensor
+    if (true == paIsInput){
+      if (true == setupSensorValue(paParamList)){
+        mnTypeOfIO = SENSORW_VALUE;
+        retVal = true;
+      }
+    }
+  }
+  return retVal;
+}
+
+bool CLMSEV3ProcessInterface::setupSensorValue(const std::vector<std::string> &paParamList){
   bool internalCheck;
+  bool retVal = false;
   std::string sysFileName;
   std::string basePath = "/sys/class/lego-sensor/sensor";
   std::stringstream helperStringStream;
   int helperInteger = -1;
-  mnTypeOfIO = SENSOR;
 
-  helperInteger = findNumberFromPort(basePath, paParamList[1]);
+  helperInteger = findNumberFromPort(basePath, paParamList[0]);
   if(-1 != helperInteger){
     helperStringStream << helperInteger;
     basePath += helperStringStream.str();
@@ -313,54 +335,85 @@ bool CLMSEV3ProcessInterface::setupSensor(const std::vector<std::string> &paPara
   return retVal;
 }
 
-bool CLMSEV3ProcessInterface::setupSensorW(const std::vector<std::string> &paParamList){
-  bool retVal = false;
-  retVal = setupSensor(paParamList);
-  mnTypeOfIO = SENSORW;
+bool CLMSEV3ProcessInterface::setupSensorMode(const std::vector<std::string> &paParamList){
+  bool retVal;
+  std::string helperString;
+  std::string basePath = "/sys/class/lego-sensor/sensor";
+  std::stringstream helperStringStream;
+  int helperInteger = -1;
+
+  helperInteger = findNumberFromPort(basePath, paParamList[0]);
+  if(-1 != helperInteger){
+    helperStringStream << helperInteger;
+    basePath += helperStringStream.str();
+    helperString = basePath + "/modes";
+
+    mFile.open(helperString.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
+    if(mFile.is_open()){
+      std::cout << "File " << helperString << " opened\n";
+      while(std::getline(mFile, helperString, ' ')){
+        mModes.push_back(helperString);
+      }
+      mFile.close();
+      std::cout << "File closed\n";
+      helperString = basePath + "/mode";
+      mFile.open(helperString.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
+      if(mFile.is_open()){
+        std::cout << "File " << helperString << " opened\n";
+        retVal = true;
+      }else{
+        std::cout << "File " << helperString << " not opened\n";
+      }
+    }
+  }else{
+    std::cout << "File " << helperString << " not opened\n";
+  }
   return retVal;
 }
 
-bool CLMSEV3ProcessInterface::setupButton(const std::string &paParam){
+bool CLMSEV3ProcessInterface::setupButton(const std::string &paParam, bool paIsInput){
   bool retVal = false;
 
-  mnTypeOfIO = BUTTON;
-  mstButtonVariables = new st_ButtonVariables;
+  if (true == paIsInput){
+    mstButtonVariables = new st_ButtonVariables;
+    mstButtonVariables->nmFd = open("/dev/input/event0", O_RDONLY);
 
-  mstButtonVariables->nmFd = open("/dev/input/event0", O_RDONLY);
-  if (-1 !=   mstButtonVariables->nmFd){
-    //Button constant found in linux/input.h
-    if (0 == paParam.compare("up")){
-      mstButtonVariables->nmbutton = 103;
-    }else if (0 == paParam.compare("down")){
-      mstButtonVariables->nmbutton = 108;
-    }else if (0 == paParam.compare("left")){
-      mstButtonVariables->nmbutton = 105;
-    }else if (0 == paParam.compare("right")){
-      mstButtonVariables->nmbutton = 106;
-    }else if (0 == paParam.compare("enter")){
-      mstButtonVariables->nmbutton = 28;
-    }else if (0 == paParam.compare("backspace")){
-      mstButtonVariables->nmbutton = 14;
-    }
+    if (-1 !=   mstButtonVariables->nmFd){
+      //Button constant found in linux/input.h
+      if (0 == paParam.compare("up")){
+        mstButtonVariables->nmbutton = 103;
+      }else if (0 == paParam.compare("down")){
+        mstButtonVariables->nmbutton = 108;
+      }else if (0 == paParam.compare("left")){
+        mstButtonVariables->nmbutton = 105;
+      }else if (0 == paParam.compare("right")){
+        mstButtonVariables->nmbutton = 106;
+      }else if (0 == paParam.compare("enter")){
+        mstButtonVariables->nmbutton = 28;
+      }else if (0 == paParam.compare("backspace")){
+        mstButtonVariables->nmbutton = 14;
+      }
 
-    if (0 != mstButtonVariables->nmbutton) {
-      retVal = true;
+      if (0 != mstButtonVariables->nmbutton) {
+        mnTypeOfIO = BUTTON;
+        retVal = true;
+      }
     }
   }
   return retVal;
 }
 
-bool CLMSEV3ProcessInterface::setupMotor(const std::vector<std::string>& paParamList, bool isInput){
+bool CLMSEV3ProcessInterface::setupMotor(const std::vector<std::string>& paParamList, bool paIsInput){
   bool retVal = false;
   std::string sysFileName = "/sys/class/tacho-motor/motor";
   std::stringstream number;
   int sensorNumber = -1;
 
   if (3 == paParamList.size()){
-    sensorNumber = findNumberFromPort(sysFileName, paParamList[1]);
+    sensorNumber = findNumberFromPort(sysFileName, paParamList[0]);
     if(sensorNumber != -1){
       number << sensorNumber;
-      if (isInput){
+      if (paIsInput){
         if (scmPWMID == paParamList[2]){
           sysFileName += number.str() + "/duty_cycle";
           mnTypeOfIO = MOTOR_PWM;
@@ -397,6 +450,7 @@ bool CLMSEV3ProcessInterface::setupMotor(const std::vector<std::string>& paParam
         std::cout << "File " << sysFileName << " opened with parameter" << PARAMS().getValue() << "\n";
         retVal = true;
       }else{
+        mnTypeOfIO = UNDEFINED;
         std::cout << "File " << sysFileName << " not opened with parameter" << PARAMS().getValue()<< "\n";
       }
     }

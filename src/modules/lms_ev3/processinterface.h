@@ -27,7 +27,8 @@ enum ETypeOfIO {
   UNDEFINED,
   LED,
   SENSOR,
-  SENSORW,
+  SENSORW_VALUE,
+  SENSORW_MODE,
   BUTTON,
   MOTOR_ENABLE,
   MOTOR_RESET,
@@ -45,7 +46,7 @@ class CLMSEV3ProcessInterface : public CProcessInterfaceBase{
     virtual ~CLMSEV3ProcessInterface();
 
   protected:
-    bool initialise(bool paInput);
+    bool initialise(bool paIsInput);
     bool deinitialise();
     bool writePin();
     bool readPin();
@@ -60,6 +61,10 @@ class CLMSEV3ProcessInterface : public CProcessInterfaceBase{
     static const std::string scmSensorWID;
     static const std::string scmButtonID;
     static const std::string scmMotorID;
+
+    static const std::string scmModeID; /* Used together wuth sensorw*/
+
+    /* Used together with Motor */
     static const std::string scmEnableID;
     static const std::string scmResetID;
     static const std::string scmPWMID;
@@ -68,12 +73,15 @@ class CLMSEV3ProcessInterface : public CProcessInterfaceBase{
     static const std::string scmPositionID;
     static const std::string scmRotID;
 
-    bool setupLED(const std::vector<std::string> &paParamList);
-    bool setupSensor(const std::vector<std::string> &paParamList);
-    bool setupSensorW(const std::vector<std::string> &paParamList);
-    bool setupMotor(const std::vector<std::string> &paParamList, bool isInput);
-    bool setupButton(const std::string &paParam);
+    bool setupLED(const std::vector<std::string> &paParamList, bool paIsInput);
+    bool setupSensor(const std::vector<std::string> &paParamList, bool paIsInput);
+    bool setupSensorW(const std::vector<std::string> &paParamList, bool paIsInput);
+    bool setupMotor(const std::vector<std::string> &paParamList, bool paIsInput);
+    bool setupButton(const std::string &paParam, bool paIsInput);
     bool readNumberFromFile(TForteInt32* paResult);
+
+    bool setupSensorMode(const std::vector<std::string> &paParamList);
+    bool setupSensorValue(const std::vector<std::string> &paParamList);
 
 
     std::vector<std::string> generateParameterList();
@@ -83,6 +91,7 @@ class CLMSEV3ProcessInterface : public CProcessInterfaceBase{
     int mnTypeOfIO;
     int mnNoOfBits;
     struct st_ButtonVariables* mstButtonVariables;
+    std::vector<std::string> mModes;
 };
 
 //tell the IX and QX FB that this is the process interface to be used
