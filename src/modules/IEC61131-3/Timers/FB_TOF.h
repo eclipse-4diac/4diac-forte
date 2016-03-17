@@ -18,6 +18,7 @@
 #include <forte_bool.h>
 #include <forte_array.h>
 
+// cppcheck-suppress noConstructor
 class FB_TOF: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FB_TOF)
 

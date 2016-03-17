@@ -17,6 +17,7 @@
 #include <forte_time.h>
 #include <forte_bool.h>
 
+// cppcheck-suppress noConstructor
 class FORTE_RT_E_SPLIT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_RT_E_SPLIT)
 

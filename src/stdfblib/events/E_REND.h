@@ -14,6 +14,7 @@
 
 #include <funcbloc.h>
 
+// cppcheck-suppress noConstructor
 class E_REND: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(E_REND)
 

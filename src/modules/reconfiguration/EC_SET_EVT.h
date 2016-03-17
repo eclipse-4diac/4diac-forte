@@ -16,6 +16,7 @@
 #include <forte_bool.h>
 #include "core/resource.h"
 
+// cppcheck-suppress noConstructor
 class FORTE_EC_SET_EVT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_EC_SET_EVT)
 

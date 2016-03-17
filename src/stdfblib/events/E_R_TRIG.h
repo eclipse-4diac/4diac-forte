@@ -15,6 +15,7 @@
 #include <funcbloc.h>
 #include <forte_bool.h>
 
+// cppcheck-suppress noConstructor
 class E_R_TRIG: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(E_R_TRIG)
 

@@ -49,6 +49,7 @@ struct SEplMapping{
 };
 
 // CEplStackWrapper implemented as class
+// cppcheck-suppress noConstructor
 class CEplStackWrapper{
   DECLARE_SINGLETON(CEplStackWrapper)
     ;

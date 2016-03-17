@@ -58,7 +58,7 @@ namespace forte {
      */
     class CMonitoringHandler{
       public:
-        CMonitoringHandler(CResource &paResource);
+        explicit CMonitoringHandler(CResource &paResource);
 
         EMGMResponse executeMonitoringCommand(SManagementCMD &paCommand);
 

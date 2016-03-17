@@ -17,7 +17,7 @@
 
 /*! \brief Implementation of the E_RESTART FB.
  */
-
+// cppcheck-suppress noConstructor
 class E_RESTART : public CEventSourceFB{
   DECLARE_FIRMWARE_FB(E_RESTART)
 private:

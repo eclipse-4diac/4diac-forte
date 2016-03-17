@@ -16,6 +16,7 @@
 #include <forte_bool.h>
 #include "core/resource.h"
 
+// cppcheck-suppress noConstructor
 class FORTE_EC_START_ELEM: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_EC_START_ELEM)
 

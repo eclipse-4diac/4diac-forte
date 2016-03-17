@@ -17,6 +17,7 @@
 #include <forte_sint.h>
 #include <forte_array.h>
 
+// cppcheck-suppress noConstructor
 class FORTE_SET_VALUE : public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_SET_VALUE)
 

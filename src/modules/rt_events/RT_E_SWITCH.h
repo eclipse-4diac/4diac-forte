@@ -18,6 +18,7 @@
 #include <forte_bool.h>
 #include <forte_array.h>
 
+// cppcheck-suppress noConstructor
 class FORTE_RT_E_SWITCH: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_RT_E_SWITCH)
 

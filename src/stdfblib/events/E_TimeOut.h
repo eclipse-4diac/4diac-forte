@@ -16,6 +16,7 @@
 #include "../arch/timerha.h"
 #include "ATimeOut.h"
 
+// cppcheck-suppress noConstructor
 class FORTE_E_TimeOut : public CEventSourceFB{
   DECLARE_FIRMWARE_FB(FORTE_E_TimeOut)
 

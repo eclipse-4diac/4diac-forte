@@ -16,7 +16,7 @@
 
 class BE_RMT_DEV : public RMT_DEV{
   public:
-    BE_RMT_DEV(CFORTEModule &pa_roModule);
+    explicit BE_RMT_DEV(CFORTEModule &pa_roModule);
 
     virtual ~BE_RMT_DEV();
 

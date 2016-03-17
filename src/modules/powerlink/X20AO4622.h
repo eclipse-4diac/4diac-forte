@@ -21,6 +21,7 @@
 #include "EplCNCallback.h"
 #include "EplWrapper.h"
 
+// cppcheck-suppress noConstructor
 class FORTE_X20AO4622 : public CFunctionBlock, public IEplCNCallback{
   DECLARE_FIRMWARE_FB(FORTE_X20AO4622)
 
