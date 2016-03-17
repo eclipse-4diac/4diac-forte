@@ -47,8 +47,9 @@ bool CProcessInterface::readWord(){
   //set the register to read the analog value from
   if(1 == write(mFd, &mValueAddress, 1)){
     if(3 == read(mFd, buffer, 3)){
-      IN_W() = static_cast<TForteWord>(static_cast<TForteWord>(buffer[2] << 8) |
-                 static_cast<TForteWord>(buffer[1]));
+      IN_W() = (static_cast<TForteWord>(static_cast<TForteWord>(buffer[2]) << 8) |
+                 (static_cast<TForteWord>(buffer[1]) & 0xFF));
+      DEVLOG_INFO("Read Values: %x, %x\n", buffer[2], buffer[1]);
       STATUS() = scmOK;
       retVal = true;
     }
