@@ -32,8 +32,15 @@ const std::string CLMSEV3ProcessInterface::scmStopID("stop");
 const std::string CLMSEV3ProcessInterface::scmPositionID("position");
 const std::string CLMSEV3ProcessInterface::scmRotID("rot");
 
+const char * const CLMSEV3ProcessInterface::scmOK = "OK";
+const char * const CLMSEV3ProcessInterface::scmNotInitialised = "Not initialized";
+const char * const CLMSEV3ProcessInterface::scmCouldNotRead = "Could not read";
+const char * const CLMSEV3ProcessInterface::scmCouldNotWrite = "Could not write";
+
+//TODO: QO is not changed in this file, should be changed according to the execution?
+
 CLMSEV3ProcessInterface::CLMSEV3ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData){
+                                                    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData){
   mFile.rdbuf()->pubsetbuf(NULL, 0); //disable buffer to avoid latency
   mnTypeOfIO = UNDEFINED;
   mstButtonVariables = NULL;
@@ -49,6 +56,7 @@ CLMSEV3ProcessInterface::~CLMSEV3ProcessInterface(){
 bool CLMSEV3ProcessInterface::initialise(bool paIsInput){
   bool retVal = false;
   std::vector<std::string> paramsList(generateParameterList());
+  STATUS() = scmNotInitialised;
 
   if (0 != paramsList.size()){
     std::string ioType = paramsList[1];
@@ -68,6 +76,11 @@ bool CLMSEV3ProcessInterface::initialise(bool paIsInput){
       retVal = setupMotor(paramsList, paIsInput);
     }
   }
+  if (true == retVal){
+    STATUS() = scmOK;
+  }else{
+    std::cout << "----------ERROR: Not initialized\n";
+  }
   return retVal;
 }
 
@@ -78,6 +91,7 @@ bool CLMSEV3ProcessInterface::deinitialise(){
   if (NULL != mstButtonVariables){
     delete mstButtonVariables;
   }
+  STATUS() = scmOK;
   return true;
 }
 
@@ -92,9 +106,13 @@ bool CLMSEV3ProcessInterface::readPin(){
         mFile.clear();
         mFile.seekg(0, std::ios::beg);
         mFile.read(&binData, 1);
-        //TODO check if reading worked
-        IN_X() = ('0' != binData) ? true : false;
-        retVal = true;
+        if (mFile.fail()){
+          STATUS() = scmCouldNotRead;
+        }else{
+          IN_X() = ('0' != binData) ? true : false;
+          STATUS() = scmOK;
+          retVal = true;
+        }
         break;
       }
       case BUTTON: {
@@ -103,94 +121,145 @@ bool CLMSEV3ProcessInterface::readPin(){
           buf[i] = 0;
         }
         if(0 < ioctl(mstButtonVariables->nmFd, EVIOCGKEY(96), buf)){
-          retVal = true;
           IN_X() = !(buf[mstButtonVariables->nmbutton / 8] & (1 << (mstButtonVariables->nmbutton % 8))) ? true : false;
+          STATUS() = scmOK;
+          retVal = true;
         }else{
-          //TODO: react to bad return
+          STATUS() = scmCouldNotRead;
         }
         break;
       }
+      default:{
+        STATUS() = scmCouldNotRead;
+        break;
+      }
     }
+  }else{
+    STATUS() = scmNotInitialised;
+  }
 
+  if (!retVal){
+    std::cout << "----------ERROR: reading pin\n";
   }
   return retVal;
 }
 
 bool CLMSEV3ProcessInterface::writePin(){
   bool retVal = false;
-  std::cout << "Writing PIN\n";
   if(mFile.is_open()){
-    std::cout << "File is open\n";
+    mFile.clear();
+    mFile.seekp(0, std::ios::beg);
     switch (mnTypeOfIO){
       case LED:{
-        int val = (false != OUT_X()) ? 255 : 0; //if true set the led to full glowing
+        unsigned int val = (false != OUT_X()) ? 255 : 0; //if true set the led to full glowing
         std::cout << "Writing led " << val << "\n";
         mFile << val;
-        //TODO check if writing worked
-        retVal = true;
         break;
       }
       case MOTOR_ENABLE:{
         std::string val = (false != OUT_X()) ? "run-direct" : "stop";
         std::cout << "Writing enable " << val << "\n";
         mFile << val;
-        //TODO check if writing worked
-        retVal = true;
         break;
       }
       case MOTOR_RESET:{
         if (true == OUT_X()){
           mFile << "reset";
           std::cout << "Writing " << "reset" << "\n";
-          //TODO check if writing worked
-          retVal = true;
           break;
         }
       }
+      default:{
+        STATUS() = scmCouldNotRead;
+        break;
+      }
     }
+    if (mFile.fail()){
+      STATUS() = scmCouldNotWrite;
+    }else{
+      STATUS() = scmOK;
+      retVal = true;
+    }
+  }else{
+    STATUS() = scmNotInitialised;
+  }
+
+  if (!retVal){
+    std::cout << "----------ERROR: writing pin\n";
   }
   return retVal;
 }
 
 bool CLMSEV3ProcessInterface::readWord(){
   bool retVal = false;
-  bool internalChecker;
+  int internalChecker;
 
   if (SENSORW_VALUE == mnTypeOfIO || MOTOR_PWM == mnTypeOfIO || MOTOR_SPEED == mnTypeOfIO || MOTOR_ROT == mnTypeOfIO ||
       MOTOR_POSITION == mnTypeOfIO){ //this should be a double, but for testing is here
     TForteInt32 val;
     internalChecker = readNumberFromFile(&val);
-    if (true == internalChecker){
+    if (0 == internalChecker){
       IN_W() = (TForteWord) (val);
+      STATUS() = scmOK;
       retVal = true;
+    }else if (1 == internalChecker){
+      STATUS() = scmNotInitialised;
+      std::cout << "----------ERROR: Not initialized\n";
     }else{
-      std::cout << "Could not read word\n";
+      STATUS() = scmCouldNotRead;
+      std::cout << "----------ERROR: Could not read\n";
     }
   }else if (SENSORW_MODE == mnTypeOfIO){
-    std::string mode;
-    std::getline(mFile, mode);
-    TForteWord counter = 0;
-    for (std::vector<std::string>::iterator it = mModes.begin(); it < mModes.end(); it++, counter++){
-      if (mode == *it){
-        IN_W() = counter;
-        retVal = true;
+    if (mFile.is_open()){
+      std::string mode;
+      mFile.clear();
+      mFile.seekg(0, std::ios::beg);
+      std::getline(mFile, mode);
+      if(mFile.fail()){
+        STATUS() == scmCouldNotRead;
+      }else{
+        TForteWord counter = 0;
+        std::vector<std::string>::iterator it;
+        for (it = mModes.begin(); it < mModes.end(); it++, counter++){
+          if (mode == *it){
+            IN_W() = counter;
+            STATUS() = scmOK;
+            retVal = true;
+            break;
+          }
+        }
+        if (it == mModes.end()){
+          STATUS() == scmCouldNotRead;
+        }
       }
+    }else{
+      STATUS() = scmNotInitialised;
     }
+  }else{
+    STATUS() = scmCouldNotRead;
   }
+  if (!retVal){
+    std::cout << "----------ERROR: reading word\n";
+  }
+
   return retVal;
 }
 
 bool CLMSEV3ProcessInterface::writeWord(){
   bool retVal = false;
+  bool writeAttempted = false;
   if (mFile.is_open()){
+    mFile.clear();
+    mFile.seekp(0, std::ios::beg);
     TForteWord val = OUT_W();
     switch (mnTypeOfIO){
       case MOTOR_PWM:{
         TForteInt16 finalVal = (TForteInt16) val;
         if (finalVal >= -100 && finalVal <= 100){
           mFile << finalVal;
-          //TODO: Check if write worked
-          retVal = true;
+          writeAttempted = true;
+        }else{
+          STATUS() = scmCouldNotWrite;
         }
         break;
       }
@@ -209,20 +278,59 @@ bool CLMSEV3ProcessInterface::writeWord(){
             finalVal = "hold";
             break;
           }
+          default:{
+            STATUS() = scmCouldNotWrite;
+            break;
+          }
         }
         if ("" != finalVal){
           mFile << finalVal;
+          writeAttempted = true;
         }
         break;
       }
       case SENSORW_MODE:{
+        std::string finalVal = "";
         if (val < mModes.size()){
-          mFile << mModes.at(val);
-          retVal = true;
+          finalVal =  mModes[val];
+          mFile.clear();
+          mFile.seekp(0, std::ios::beg);
+          mFile << finalVal;
+          writeAttempted = true;
+        }else{
+          STATUS() = scmCouldNotWrite;
         }
+        break;
+      }
+      default:{
+        STATUS() = scmCouldNotWrite;
+        break;
       }
     }
+    if (!mFile.fail() &&  writeAttempted) {
+      STATUS() = scmOK;
+      retVal = true;
+    }else{
+      STATUS() = scmCouldNotWrite;
+      std::cout << "readNumberFromFile: mFile.fail()\n";
+      std::string result;
+      result = ((mFile.rdstate() & std::ifstream::failbit ) != 0 ) ? "true" : "false";
+      std::cout << "readNumberFromFile: fail bit = " << result << "\n";
+      result = ((mFile.rdstate() & std::ifstream::badbit ) != 0 ) ? "true" : "false";
+      std::cout << "readNumberFromFile: bad bit = " << result << "\n";
+      result = ((mFile.rdstate() & std::ifstream::eofbit ) != 0 ) ? "true" : "false";
+      std::cout << "readNumberFromFile: eof bit = " << result << "\n";
+      result = ((mFile.rdstate() & std::ifstream::goodbit ) != 0 ) ? "true" : "false";
+      std::cout << "readNumberFromFile: good bit = " << result << "\n";
+    }
+  }else{
+    STATUS() = scmNotInitialised;
   }
+
+  if (!retVal){
+    std::cout << "----------ERROR writing word\n";
+  }
+
   return retVal;
 }
 
@@ -252,8 +360,6 @@ bool CLMSEV3ProcessInterface::setupLED(const std::vector<std::string> &paParamLi
         mnTypeOfIO = LED;
         retVal = true;
       }
-    }else{
-      //TODO:
     }
   }
   return retVal;
@@ -261,7 +367,6 @@ bool CLMSEV3ProcessInterface::setupLED(const std::vector<std::string> &paParamLi
 
 bool CLMSEV3ProcessInterface::setupSensor(const std::vector<std::string> &paParamList, bool paIsInput){
   bool retVal = false;
-
   if (true == paIsInput){ //Output for sensor is not allowed
     if (true == setupSensorValue(paParamList)){
       mnTypeOfIO = SENSOR;
@@ -275,7 +380,7 @@ bool CLMSEV3ProcessInterface::setupSensorW(const std::vector<std::string> &paPar
   bool retVal = false;
 
   if (scmModeID == paParamList[2]){ //mode of sensor can be input or output
-    if (true == setupSensorMode(paParamList)){
+    if (true == setupSensorMode(paParamList, paIsInput)){
       mnTypeOfIO = SENSORW_MODE;
       retVal = true;
     }
@@ -300,30 +405,37 @@ bool CLMSEV3ProcessInterface::setupSensorValue(const std::vector<std::string> &p
 
   helperInteger = findNumberFromPort(basePath, paParamList[0]);
   if(-1 != helperInteger){
+    helperStringStream.clear();
+    helperStringStream.seekg(0, std::ios::beg);
     helperStringStream << helperInteger;
-    basePath += helperStringStream.str();
-    sysFileName = basePath + "/num_values";
+    if (!helperStringStream.fail()){
+      basePath += helperStringStream.str();
+      sysFileName = basePath + "/num_values";
 
-    mFile.open(sysFileName.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
-    if(mFile.is_open()){
-      std::cout << "File " << sysFileName << " opened\n";
-      TForteInt32 aux;
-      internalCheck = readNumberFromFile(&aux);
-      mFile.close();
-      if (true == internalCheck){
-        std::cout << "File " << sysFileName << " closed\n";
-        if (0 <= aux){ //a negative value is not possible for num_values file
-          helperStringStream.str(paParamList[2]);
-          helperStringStream >> helperInteger; //TODO: check value
-
-          if (helperInteger <= (aux - 1)){
-            sysFileName = basePath + "/value" + helperStringStream.str();
-            mFile.open(sysFileName.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
-            if(mFile.is_open()){
-              std::cout << "File " << sysFileName << " opened\n";
-              retVal = true;
-            }else{
-              std::cout << "File " << sysFileName << " not opened\n";
+      mFile.open(sysFileName.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
+      if(mFile.is_open()){
+        std::cout << "File " << sysFileName << " opened\n";
+        TForteInt32 aux;
+        internalCheck = readNumberFromFile(&aux);
+        mFile.close();
+        if (0 == internalCheck){
+          std::cout << "File " << sysFileName << " closed\n";
+          if (0 <= aux){ //a negative value is not possible for num_values file
+            helperStringStream.str(paParamList[2]);
+            helperStringStream.clear();
+            helperStringStream.seekp(0, std::ios::beg);
+            helperStringStream >> helperInteger;
+            if (!helperStringStream.fail()){
+              if (helperInteger <= (aux - 1)){
+                sysFileName = basePath + "/value" + helperStringStream.str();
+                mFile.open(sysFileName.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
+                if(mFile.is_open()){
+                  std::cout << "File " << sysFileName << " opened\n";
+                  retVal = true;
+                }else{
+                  std::cout << "File " << sysFileName << " not opened\n";
+                }
+              }
             }
           }
         }
@@ -335,7 +447,7 @@ bool CLMSEV3ProcessInterface::setupSensorValue(const std::vector<std::string> &p
   return retVal;
 }
 
-bool CLMSEV3ProcessInterface::setupSensorMode(const std::vector<std::string> &paParamList){
+bool CLMSEV3ProcessInterface::setupSensorMode(const std::vector<std::string> &paParamList, bool paIsInput){
   bool retVal;
   std::string helperString;
   std::string basePath = "/sys/class/lego-sensor/sensor";
@@ -344,25 +456,29 @@ bool CLMSEV3ProcessInterface::setupSensorMode(const std::vector<std::string> &pa
 
   helperInteger = findNumberFromPort(basePath, paParamList[0]);
   if(-1 != helperInteger){
+    helperStringStream.clear();
+    helperStringStream.seekg(0, std::ios::beg);
     helperStringStream << helperInteger;
-    basePath += helperStringStream.str();
-    helperString = basePath + "/modes";
+    if (!helperStringStream.fail()){
+      basePath += helperStringStream.str();
+      helperString = basePath + "/modes";
 
-    mFile.open(helperString.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
-    if(mFile.is_open()){
-      std::cout << "File " << helperString << " opened\n";
-      while(std::getline(mFile, helperString, ' ')){
-        mModes.push_back(helperString);
-      }
-      mFile.close();
-      std::cout << "File closed\n";
-      helperString = basePath + "/mode";
       mFile.open(helperString.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
       if(mFile.is_open()){
         std::cout << "File " << helperString << " opened\n";
-        retVal = true;
-      }else{
-        std::cout << "File " << helperString << " not opened\n";
+        while(std::getline(mFile, helperString, ' ')){
+          mModes.push_back(helperString);
+        }
+        mFile.close();
+        std::cout << "File closed\n";
+        helperString = basePath + "/mode";
+        mFile.open(helperString.c_str(), paIsInput ? std::fstream::in : std::fstream::out); //TODO change this when fully switching to C++11 for LMS EV3
+        if(mFile.is_open()){
+          std::cout << "File " << helperString << " opened\n";
+          retVal = true;
+        }else{
+          std::cout << "File " << helperString << " not opened\n";
+        }
       }
     }
   }else{
@@ -373,7 +489,6 @@ bool CLMSEV3ProcessInterface::setupSensorMode(const std::vector<std::string> &pa
 
 bool CLMSEV3ProcessInterface::setupButton(const std::string &paParam, bool paIsInput){
   bool retVal = false;
-
   if (true == paIsInput){
     mstButtonVariables = new st_ButtonVariables;
     mstButtonVariables->nmFd = open("/dev/input/event0", O_RDONLY);
@@ -399,12 +514,16 @@ bool CLMSEV3ProcessInterface::setupButton(const std::string &paParam, bool paIsI
         retVal = true;
       }
     }
+    if (!retVal){
+      delete mstButtonVariables;
+    }
   }
   return retVal;
 }
 
 bool CLMSEV3ProcessInterface::setupMotor(const std::vector<std::string>& paParamList, bool paIsInput){
   bool retVal = false;
+  bool defaultType = false;
   std::string sysFileName = "/sys/class/tacho-motor/motor";
   std::stringstream number;
   int sensorNumber = -1;
@@ -412,46 +531,53 @@ bool CLMSEV3ProcessInterface::setupMotor(const std::vector<std::string>& paParam
   if (3 == paParamList.size()){
     sensorNumber = findNumberFromPort(sysFileName, paParamList[0]);
     if(sensorNumber != -1){
+      number.clear();
+      number.seekp(0, std::ios::beg);
       number << sensorNumber;
-      if (paIsInput){
-        if (scmPWMID == paParamList[2]){
-          sysFileName += number.str() + "/duty_cycle";
-          mnTypeOfIO = MOTOR_PWM;
-        }else if (scmSPEEDID == paParamList[2]){
-          sysFileName += number.str() + "/speed";
-          mnTypeOfIO = MOTOR_SPEED;
-        }else if (scmRotID == paParamList[2]){
-          sysFileName += number.str() + "/count_per_rot";
-          mnTypeOfIO = MOTOR_ROT;
-        }else if (scmPositionID == paParamList[2]){
-          sysFileName += number.str() + "/position";
-          mnTypeOfIO = MOTOR_POSITION;
+      if (!number.fail()){
+        if (paIsInput){
+          if (scmPWMID == paParamList[2]){
+            sysFileName += number.str() + "/duty_cycle";
+            mnTypeOfIO = MOTOR_PWM;
+          }else if (scmSPEEDID == paParamList[2]){
+            sysFileName += number.str() + "/speed";
+            mnTypeOfIO = MOTOR_SPEED;
+          }else if (scmRotID == paParamList[2]){
+            sysFileName += number.str() + "/count_per_rot";
+            mnTypeOfIO = MOTOR_ROT;
+          }else if (scmPositionID == paParamList[2]){
+            sysFileName += number.str() + "/position";
+            mnTypeOfIO = MOTOR_POSITION;
+          }else{
+            defaultType = true;
+          }
+        }else{
+          if (scmEnableID == paParamList[2]){
+            sysFileName += number.str() + "/command";
+            mnTypeOfIO = MOTOR_ENABLE;
+          }else if (scmResetID == paParamList[2]){
+            sysFileName += number.str() + "/command";
+            mnTypeOfIO = MOTOR_RESET;
+          }else if (scmPWMID == paParamList[2]){
+            sysFileName += number.str() + "/duty_cycle_sp";
+            mnTypeOfIO = MOTOR_PWM;
+          }else if (scmStopID == paParamList[2]){
+            sysFileName += number.str() + "/stop_command";
+            mnTypeOfIO = MOTOR_STOP;
+          } else{
+            defaultType = true;
+          }
         }
-        mFile.open(sysFileName.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
-
-      }else{
-        if (scmEnableID == paParamList[2]){
-          sysFileName += number.str() + "/command";
-          mnTypeOfIO = MOTOR_ENABLE;
-        }else if (scmResetID == paParamList[2]){
-          sysFileName += number.str() + "/command";
-          mnTypeOfIO = MOTOR_RESET;
-        }else if (scmPWMID == paParamList[2]){
-          sysFileName += number.str() + "/duty_cycle_sp";
-          mnTypeOfIO = MOTOR_PWM;
-        }else if (scmStopID == paParamList[2]){
-          sysFileName += number.str() + "/stop";
-          mnTypeOfIO = MOTOR_STOP;
-        } //TODO: if the type if not valid, it would try to open the folder "/sys/class/tacho-motor/motor"
-        mFile.open(sysFileName.c_str(), std::fstream::out); //TODO change this when fully switching to C++11 for LMS EV3
-      }
-
-      if(mFile.is_open()){
-        std::cout << "File " << sysFileName << " opened with parameter" << PARAMS().getValue() << "\n";
-        retVal = true;
-      }else{
-        mnTypeOfIO = UNDEFINED;
-        std::cout << "File " << sysFileName << " not opened with parameter" << PARAMS().getValue()<< "\n";
+        if (!defaultType){
+          mFile.open(sysFileName.c_str(), paIsInput ? std::fstream::in : std::fstream::out); //TODO change this when fully switching to C++11 for LMS EV3
+          if(mFile.is_open()){
+            std::cout << "File " << sysFileName << " opened with parameter " << PARAMS().getValue() << "\n";
+            retVal = true;
+          }else{
+            mnTypeOfIO = UNDEFINED;
+            std::cout << "File " << sysFileName << " not opened with parameter " << PARAMS().getValue()<< "\n";
+          }
+        }
       }
     }
   }
@@ -472,23 +598,25 @@ int CLMSEV3ProcessInterface::findNumberFromPort(const std::string &paBasePath, c
   if (portLenght < 5){ //Only possible values are inX and outX according to input and output ports of the EV3
     for(int i = 0; i < 255; i++){ //TODO: check maximum value of i
       std::stringstream number;
+      number.clear();
+      number.seekp(0, std::ios::beg);
       number << i;
-      fullPath = paBasePath + number.str() + "/address";
-
-      mAddressFile.open(fullPath.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3ca
-
-      if(mAddressFile.is_open()){
-        mAddressFile.clear();
-        mAddressFile.seekg(0, std::ios::beg);
-        mAddressFile.read(port, portLenght);
-        mAddressFile.close();
-        port[portLenght] = '\0';
-
-        if(paEv3Port.compare(port) == 0){
-          retVal = i;
-          break;
+      if (!number.fail()){
+        fullPath = paBasePath + number.str() + "/address";
+        mAddressFile.open(fullPath.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3ca
+        if(mAddressFile.is_open()){
+          mAddressFile.clear();
+          mAddressFile.seekg(0, std::ios::beg);
+          mAddressFile.read(port, portLenght);
+          if (!mAddressFile.fail()){
+            port[portLenght] = '\0';
+            if(paEv3Port.compare(port) == 0){
+              retVal = i;
+              break;
+            }
+          }
+          mAddressFile.close();
         }
-
       }
     }
   }
@@ -506,31 +634,36 @@ std::vector<std::string> CLMSEV3ProcessInterface::generateParameterList(){
   return retVal;
 }
 
-bool CLMSEV3ProcessInterface::readNumberFromFile(TForteInt32* paResult){
-  bool retVal = false;
+int CLMSEV3ProcessInterface::readNumberFromFile(TForteInt32* paResult){
+  int retVal = 0; //No error
   if (mFile.is_open()){
     std::string read;
     mFile.clear();
     mFile.seekg(0, std::ios::beg);
-    if (std::getline(mFile, read)){
-      if (!mFile.fail()){
-        std::stringstream number(read);
-        number >> *paResult;  //TODO: check value of paResult
-        retVal = true;
-      }else{
-        std::cout << "readNumberFromFile: mFile.fail()\n";
-        std::string result;
-        result = ((mFile.rdstate() & std::ifstream::failbit ) != 0 ) ? "true" : "false";
-        std::cout << "readNumberFromFile: fail bit = " << result << "\n";
-        result = ((mFile.rdstate() & std::ifstream::badbit ) != 0 ) ? "true" : "false";
-        std::cout << "readNumberFromFile: bad bit = " << result << "\n";
-        result = ((mFile.rdstate() & std::ifstream::eofbit ) != 0 ) ? "true" : "false";
-        std::cout << "readNumberFromFile: eof bit = " << result << "\n";
-        result = ((mFile.rdstate() & std::ifstream::goodbit ) != 0 ) ? "true" : "false";
-        std::cout << "readNumberFromFile: good bit = " << result << "\n";
-        //TODO: Check if error
+    std::getline(mFile, read); //TODO: This return the same stream, should it be check? What behavior should it have if file is empty?
+    if (!mFile.fail()){
+      std::stringstream number(read);
+      number.clear();
+      number.seekp(0, std::ios::beg);
+      number >> *paResult;
+      if (number.fail()){
+        retVal = 2; //Could not read
       }
+    }else{
+      retVal = 2; //Could not read
+      std::cout << "readNumberFromFile: mFile.fail()\n";
+      std::string result;
+      result = ((mFile.rdstate() & std::ifstream::failbit ) != 0 ) ? "true" : "false";
+      std::cout << "readNumberFromFile: fail bit = " << result << "\n";
+      result = ((mFile.rdstate() & std::ifstream::badbit ) != 0 ) ? "true" : "false";
+      std::cout << "readNumberFromFile: bad bit = " << result << "\n";
+      result = ((mFile.rdstate() & std::ifstream::eofbit ) != 0 ) ? "true" : "false";
+      std::cout << "readNumberFromFile: eof bit = " << result << "\n";
+      result = ((mFile.rdstate() & std::ifstream::goodbit ) != 0 ) ? "true" : "false";
+      std::cout << "readNumberFromFile: good bit = " << result << "\n";
     }
+  }else{
+    retVal = 1; //Not initialized
   }
   return retVal;
 }

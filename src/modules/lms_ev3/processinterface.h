@@ -73,14 +73,24 @@ class CLMSEV3ProcessInterface : public CProcessInterfaceBase{
     static const std::string scmPositionID;
     static const std::string scmRotID;
 
+    static const char * const scmOK;
+    static const char * const scmNotInitialised;
+    static const char * const scmCouldNotRead;
+    static const char * const scmCouldNotWrite;
+
+
     bool setupLED(const std::vector<std::string> &paParamList, bool paIsInput);
     bool setupSensor(const std::vector<std::string> &paParamList, bool paIsInput);
     bool setupSensorW(const std::vector<std::string> &paParamList, bool paIsInput);
     bool setupMotor(const std::vector<std::string> &paParamList, bool paIsInput);
     bool setupButton(const std::string &paParam, bool paIsInput);
-    bool readNumberFromFile(TForteInt32* paResult);
 
-    bool setupSensorMode(const std::vector<std::string> &paParamList);
+    /**
+     * return: 0 if no error, 1 if it is not initialized, 2 if it couldn't read
+     */
+    int readNumberFromFile(TForteInt32* paResult);
+
+    bool setupSensorMode(const std::vector<std::string> &paParamList, bool paIsInput);
     bool setupSensorValue(const std::vector<std::string> &paParamList);
 
 
