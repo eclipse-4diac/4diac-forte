@@ -98,20 +98,17 @@ void CIEC_STRUCT::clear(){
 
 int CIEC_STRUCT::fromString(const char *pa_pacValue){
   int nRetVal = -1;
-  int nLength;
-  unsigned int nElementCount = 0;    // count how much elements we could retrieve
-  const char *pcRunner = pa_pacValue;
-  CStringDictionary::TStringId unElementNameId;
-  CIEC_ANY *poMember;
 
   if('(' == pa_pacValue[0]){
+    const char *pcRunner = pa_pacValue;
+    unsigned int nElementCount = 0;    // count how much elements we could retrieve
 
     while((*pcRunner != '\0') && (*pcRunner != ')') && (nElementCount < getStructSize())){
       pcRunner++;
 
       //first extract the element name
-      nLength = 0;
-      unElementNameId = parseNextElementId(pcRunner, nLength);
+      int nLength = 0;
+      CStringDictionary::TStringId unElementNameId = parseNextElementId(pcRunner, nLength);
 
       if(CStringDictionary::scm_nInvalidStringId == unElementNameId){
         return -1;
@@ -119,7 +116,7 @@ int CIEC_STRUCT::fromString(const char *pa_pacValue){
 
       pcRunner += nLength;
 
-      poMember = getMemberNamed(unElementNameId);
+      CIEC_ANY *poMember = getMemberNamed(unElementNameId);
       if(0 == poMember){
         return -1;
       }

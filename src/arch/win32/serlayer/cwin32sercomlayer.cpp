@@ -48,7 +48,6 @@ forte::com_infra::EComResponse CWin32SerComLayer::processInterrupt(){
       case forte::com_infra::e_Connected:
 		  if (0 == m_poTopLayer)  {
 			  CIEC_ANY *apoRDs = m_poFb->getRDs();
-			  unsigned int nrRDs = m_poFb->getNumRD();
 			  switch(apoRDs[0].getDataTypeID())  {
 			  case CIEC_ANY::e_STRING:
 				  static_cast<CIEC_STRING&>(apoRDs[0]).fromUTF8(m_acRecvBuffer, m_unBufFillSize, false);

@@ -56,7 +56,7 @@ CFunctionBlock * CMonitor::getFbPointer(CDevice *device, CStringDictionary::TStr
 	}
 	// Get functionblock
 	C61499Class1ObjectHandler &devObjHand = device->getObjectHandler();
-	CResource *pres = (CResource*) devObjHand.getFB(resourceNameId);
+	CResource *pres = static_cast<CResource*>(devObjHand.getFB(resourceNameId));
 	if(pres == 0){
 		return 0;
 	}
@@ -84,7 +84,7 @@ CResource * CMonitor::getResPointer(CDevice *device, CStringDictionary::TStringI
 	}
 	// Get functionblock
 	C61499Class1ObjectHandler &devObjHand = device->getObjectHandler();
-	CResource *pres = (CResource*) devObjHand.getFB(resourceID);
+	CResource *pres = static_cast<CResource*>(devObjHand.getFB(resourceID));
 	return pres;
 }
 
@@ -153,13 +153,13 @@ bool CMonitor::getWatches(CDevice *cDevice, SManagementCMD &pa_oCommand){
           pa_oCommand.m_oMonitorResponse.append("false");
           pa_oCommand.m_oMonitorResponse.append("\">");
         }
-        rspPortIter++;
+        ++rspPortIter;
         pa_oCommand.m_oMonitorResponse.append("</Port>");
       }
-      rspFbIter++;
+      ++rspFbIter;
       pa_oCommand.m_oMonitorResponse.append("</FB>");
     }
-    rspResIter++;
+    ++rspResIter;
     pa_oCommand.m_oMonitorResponse.append("</Resource>");
   }
   CMonitor::freeDeviceMap();

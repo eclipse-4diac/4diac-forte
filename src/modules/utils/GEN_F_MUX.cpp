@@ -41,14 +41,12 @@ void GEN_F_MUX::executeEvent(int pa_nEIID){
   if(pa_nEIID < m_nEInputs && pa_nEIID > -1){
 
     int startIndex = pa_nEIID * m_nDOutputs;
-    CIEC_ANY *p_dataInput;
-    CIEC_ANY *p_dataOutput;
     bool status = true;
 
     for(int input_index = startIndex, output_index = 2; input_index < startIndex + m_nDOutputs; input_index++, output_index++){
 
-      p_dataInput = getDI(input_index);
-      p_dataOutput = getDO(output_index);
+      CIEC_ANY *p_dataInput = getDI(input_index);
+      CIEC_ANY *p_dataOutput = getDO(output_index);
 
       // check whether datatypes match
       if(p_dataInput != 0 && p_dataOutput != 0 && p_dataInput->getDataTypeID() == p_dataOutput->getDataTypeID()){

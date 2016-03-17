@@ -224,7 +224,6 @@ SINT32 CFORTEModule::AppLateDeInit(VOID){
  *      <0   Error occurred
  *-------------------------------------------------------------------------*/
 SINT32 CFORTEModule::AppEOI(VOID){
-  CHAR connectionString[16];
   if(0 != m_poDev){
     m_poDev->startDevice();
     DEVLOG_INFO("m_poDev started\n");

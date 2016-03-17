@@ -51,7 +51,7 @@ class CMuxedSerCommLayer : public forte::com_infra::CComLayer{
         typedef CSinglyLinkedList<CMuxedSerCommLayer *> TConnectionContainer;
         class SSerPortEntry : public forte::com_infra::CComLayer{
           public:
-            SSerPortEntry(): forte::com_infra::CComLayer(0, 0){
+            SSerPortEntry(): forte::com_infra::CComLayer(0, 0), m_acSerPort(0){
             }
 
             char* m_acSerPort;

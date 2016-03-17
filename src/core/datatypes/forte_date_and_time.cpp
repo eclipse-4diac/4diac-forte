@@ -127,8 +127,6 @@ int CIEC_DATE_AND_TIME::toString(char* pa_pacValue, unsigned int pa_nBufferSize)
 }
 
 int CIEC_DATE_AND_TIME::toGMTString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
-  int nRetVal = -1;
-
   TForteUInt64 nToStringBuffer = getTUINT64();
   time_t t = static_cast<time_t>(nToStringBuffer / 1000);
 #if ! defined(WINCE)
@@ -141,10 +139,10 @@ int CIEC_DATE_AND_TIME::toGMTString(char* pa_pacValue, unsigned int pa_nBufferSi
 
 #endif
 #ifdef WIN32
-  nRetVal = _snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03d", 1900+ptm->tm_year, ptm->tm_mon+1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, (int) (nToStringBuffer % 1000));
+  int nRetVal = _snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03u", 1900+ptm->tm_year, ptm->tm_mon+1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, (int) (nToStringBuffer % 1000));
 #else
-  nRetVal =
-      snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03d", 1900
+  int nRetVal =
+      snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03u", 1900
           + ptm->tm_year, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, (int) (nToStringBuffer
           % 1000));
 #endif

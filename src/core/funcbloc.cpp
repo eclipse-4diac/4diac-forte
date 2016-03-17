@@ -116,9 +116,9 @@ void CFunctionBlock::setupAdapters(const SFBInterfaceSpec *pa_pstInterfaceSpec, 
       m_apoAdapters = reinterpret_cast<TAdapterPtr *>(pa_acFBData);
       for(unsigned int i = 0; i < pa_pstInterfaceSpec->m_nNumAdapters; ++i){
         //set pointer to right place in pa_acFBData
-        m_apoAdapters[i] = ((CAdapter*) CTypeLib::createAdapter(pa_pstInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID, pa_pstInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterTypeNameID, getResourcePtr(), pa_pstInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_bIsPlug));
+        m_apoAdapters[i] = CTypeLib::createAdapter(pa_pstInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID, pa_pstInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterTypeNameID, getResourcePtr(), pa_pstInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_bIsPlug);
         if(0 != m_apoAdapters[i]){
-          ((CAdapter*) m_apoAdapters[i])->setParentFB(this, static_cast<TForteUInt8>(i));
+          m_apoAdapters[i]->setParentFB(this, static_cast<TForteUInt8>(i));
 #ifdef FORTE_SUPPORT_MONITORING
           m_apoAdapters[i]->setContainer(this);
 #endif
@@ -322,7 +322,7 @@ void CFunctionBlock::sendOutputEvent(int pa_nEO){
 
 void CFunctionBlock::sendAdapterEvent(int pa_nAdapterID, int pa_nEID) const{
   if(0 != m_apoAdapters[pa_nAdapterID]){
-    ((CAdapter*) m_apoAdapters[pa_nAdapterID])->receiveInputEvent(pa_nEID, *m_poInvokingExecEnv);
+    m_apoAdapters[pa_nAdapterID]->receiveInputEvent(pa_nEID, *m_poInvokingExecEnv);
   }
 }
 

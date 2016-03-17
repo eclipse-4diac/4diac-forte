@@ -21,7 +21,7 @@ class EMB_RMT_DEV : public CDevice{
 public:
   EMB_RMT_RES MGR;
 
-  EMB_RMT_DEV(const char * pa_acId);
+  explicit EMB_RMT_DEV(const char * pa_acId);
   virtual ~EMB_RMT_DEV();
 
 /*! \brief Adds additional functionality to the originals execute func of the device.

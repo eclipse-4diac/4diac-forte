@@ -31,7 +31,7 @@ CCompositeFB::CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_ps
   //remove adapter-references for CFB
   for(TForteUInt8 i = 0; i < pa_pstInterfaceSpec->m_nNumAdapters; i++){
     if(0 != m_apoAdapters){
-      ((CAdapter*) m_apoAdapters[i])->setParentFB(0, 0);
+      static_cast<CAdapter*>(m_apoAdapters[i])->setParentFB(0, 0);
     }
   }
 
@@ -206,11 +206,11 @@ void CCompositeFB::createEventConnections(){
   if(0 != cm_cpoFBNData->m_nNumEventConnections){
     prepareIf2InEventCons();
     m_apoEventConnections = new CEventConnection *[cm_cpoFBNData->m_nNumEventConnections]; //TODO for a major revison this list could be ommited but requires a change in the faned out connections
-    const SCFB_FBConnectionData *cpstCurrentConn;
+
     CFunctionBlock *poSrcFB;
     CFunctionBlock *poDstFB;
     for(unsigned int i = 0; i < cm_cpoFBNData->m_nNumEventConnections; ++i){
-      cpstCurrentConn = &(cm_cpoFBNData->m_pstEventConnections[i]);
+      const SCFB_FBConnectionData *cpstCurrentConn = &(cm_cpoFBNData->m_pstEventConnections[i]);
       //FIXME implement way to inform FB creator that creation failed
       poSrcFB = getFunctionBlock(cpstCurrentConn->m_nSrcFBNum);
       poDstFB = getFunctionBlock(cpstCurrentConn->m_nDstFBNum);
@@ -230,9 +230,8 @@ void CCompositeFB::createEventConnections(){
       }
     }
     //now handle the fanned out connections
-    const SCFB_FBFannedOutConnectionData *cpstCurrentFannedConn;
     for(unsigned int i = 0; i < cm_cpoFBNData->m_nNumFannedOutEventConnections; ++i){
-      cpstCurrentFannedConn = &(cm_cpoFBNData->m_pstFannedOutEventConnections[i]);
+      const SCFB_FBFannedOutConnectionData *cpstCurrentFannedConn = &(cm_cpoFBNData->m_pstFannedOutEventConnections[i]);
       poDstFB = getFunctionBlock(cpstCurrentFannedConn->m_nDstFBNum);
       establishConnection(m_apoEventConnections[cpstCurrentFannedConn->m_nConnectionNum],
           poDstFB, cpstCurrentFannedConn->m_nDstId);
@@ -273,11 +272,11 @@ void CCompositeFB::createDataConnections(){
     }
 
     m_apoDataConnections = new CDataConnection *[cm_cpoFBNData->m_nNumDataConnections];
-    const SCFB_FBConnectionData *cpstCurrentConn;
+
     CFunctionBlock *poSrcFB;
     CFunctionBlock *poDstFB;
     for(unsigned int i = 0; i < cm_cpoFBNData->m_nNumDataConnections; ++i){
-      cpstCurrentConn = &(cm_cpoFBNData->m_pstDataConnections[i]);
+      const SCFB_FBConnectionData *cpstCurrentConn = &(cm_cpoFBNData->m_pstDataConnections[i]);
       //FIXME implement way to inform FB creator that creation failed
       poSrcFB = getFunctionBlock(cpstCurrentConn->m_nSrcFBNum);
       poDstFB = getFunctionBlock(cpstCurrentConn->m_nDstFBNum);
@@ -296,9 +295,8 @@ void CCompositeFB::createDataConnections(){
       }
     }
     //now handle the fanned out connections
-    const SCFB_FBFannedOutConnectionData *cpstCurrentFannedConn;
     for(unsigned int i = 0; i < cm_cpoFBNData->m_nNumFannedOutDataConnections; ++i){
-      cpstCurrentFannedConn = &(cm_cpoFBNData->m_pstFannedOutDataConnections[i]);
+      const SCFB_FBFannedOutConnectionData *cpstCurrentFannedConn = &(cm_cpoFBNData->m_pstFannedOutDataConnections[i]);
       poDstFB = getFunctionBlock(cpstCurrentFannedConn->m_nDstFBNum);
 
       establishConnection(m_apoDataConnections[cpstCurrentFannedConn->m_nConnectionNum],
@@ -315,9 +313,8 @@ void CCompositeFB::prepareIf2InDataCons(){
 }
 
 void CCompositeFB::setParams(){
-  const SCFB_FBParameter *pstCurrentParam;
   for(unsigned int i = 0; i < cm_cpoFBNData->m_nNumParams; ++i){
-    pstCurrentParam = &(cm_cpoFBNData->m_pstParams[i]);
+    const SCFB_FBParameter *pstCurrentParam = &(cm_cpoFBNData->m_pstParams[i]);
     CIEC_ANY *poDI =
         m_apoInternalFBs[pstCurrentParam->m_nFBNum]->getDataInput(pstCurrentParam->m_nDINameID);
     if(0 != poDI){

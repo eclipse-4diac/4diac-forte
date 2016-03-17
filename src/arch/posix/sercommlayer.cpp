@@ -40,10 +40,9 @@ void CSerCommLayer::closeConnection(){
 
 forte::com_infra::EComResponse CSerCommLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
   if(CFDSelectHandler::scm_nInvalidFileDescriptor != m_nFD){
-    ssize_t nSentBytes;
     ssize_t nToSend = pa_unSize;
     while(0 < nToSend){
-      nSentBytes = write(m_nFD, pa_pvData, nToSend);
+      ssize_t nSentBytes = write(m_nFD, pa_pvData, nToSend);
       if(nSentBytes <= 0){
         DEVLOG_ERROR("CSerCommLayer: Send failed: %s\n", strerror(errno));
         return e_ProcessDataSendFailed;

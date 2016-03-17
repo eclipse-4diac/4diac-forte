@@ -46,10 +46,9 @@ EComResponse CMuxedSerCommLayer::sendData(void *pa_pvData, unsigned int pa_unSiz
     memcpy(&(m_acRecvBuffer[1]), pa_pvData, pa_unSize);
     pa_unSize++;
 
-    ssize_t nSentBytes;
     ssize_t nToSend = pa_unSize;
     while(0 < nToSend){
-      nSentBytes = write(m_nFD, &(m_acRecvBuffer[0]), nToSend);
+      ssize_t nSentBytes = write(m_nFD, &(m_acRecvBuffer[0]), nToSend);
       if(nSentBytes <= 0){
         DEVLOG_ERROR("CMuxedSerCommLayer: Send failed: %s\n", strerror(errno));
         return e_ProcessDataSendFailed;

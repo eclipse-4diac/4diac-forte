@@ -62,8 +62,6 @@ int MQTTHandler::mqttMessageArrived(void* context, char* topicName, int topicLen
 }
 
 int MQTTHandler::registerLayer(char* paAddress, char* paClientId, MQTTComLayer* paLayer){
-
-  int rc;
   if(client == 0){
     mClientId = paClientId;
     mAddress = paAddress;
@@ -71,7 +69,7 @@ int MQTTHandler::registerLayer(char* paAddress, char* paClientId, MQTTComLayer* 
     MQTTCLIENT_PERSISTENCE_NONE, NULL);
     clientConnectionOptions.keepAliveInterval = 20;
     clientConnectionOptions.cleansession = 1;
-    rc = MQTTClient_setCallbacks(client, this, NULL, MQTTHandler::mqttMessageArrived, NULL);
+    int rc = MQTTClient_setCallbacks(client, this, NULL, MQTTHandler::mqttMessageArrived, NULL);
     if(rc != MQTTCLIENT_SUCCESS){
       return eConnectionFailed;
     }

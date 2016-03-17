@@ -58,13 +58,12 @@ bool GEN_ARRAY2VALUES::configureFB(const char *pa_acConfigString){
   bool bRetVal = false;
 
   m_nConfiguredFBTypeNameId = CStringDictionary::getInstance().insert(pa_acConfigString);
-  const char *dTypePos = 0;
   const char *dNumberPos = strchr(pa_acConfigString, '_');
 
   if(0 != dNumberPos){
     ++dNumberPos;
     //get position of a second underscore
-    dTypePos = strchr(dNumberPos, '_');
+    const char *dTypePos = strchr(dNumberPos, '_');
 
     if(0 != dTypePos){
       //there is a number and a data type of inputs within the typename

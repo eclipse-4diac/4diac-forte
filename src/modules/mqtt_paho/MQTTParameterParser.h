@@ -17,7 +17,7 @@
 
 class MQTTParameterParser {
 public:
-	MQTTParameterParser(char* paParameters);
+	explicit MQTTParameterParser(char* paParameters);
 	virtual ~MQTTParameterParser();
 
 	void setSeparator(char paSeparator);

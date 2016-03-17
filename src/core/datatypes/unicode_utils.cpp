@@ -177,13 +177,12 @@ int CUnicodeUtilities::checkUTF8(const char *pa_pacValue, int pa_nLength, unsign
   const TForteByte *pRunner = (const TForteByte *) pa_pacValue;
   size_t nRemLen = (pa_nLength == -1) ? strlen(pa_pacValue) : (size_t) pa_nLength;
   TForteUInt32 nCodepoint;
-  int nRes;
   int nRetVal = 0;
   size_t i = 0;
   pa_rnMaxWidth = 7;
 
   while (i < nRemLen) {
-    nRes = parseUTF8Codepoint(pRunner, nCodepoint);
+    int nRes = parseUTF8Codepoint(pRunner, nCodepoint);
     if (nRes < 0 || nRes + i > nRemLen) {
       return -1;
     }
