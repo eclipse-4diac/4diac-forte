@@ -25,12 +25,12 @@ class CProcessImageMatrix{
     unsigned int* getEntry(unsigned int pa_nCN, unsigned int pa_nModule, unsigned int pa_nIoId);
     unsigned int* getEntry(unsigned int pa_nIndex);
 
-    unsigned int getNrOfEntries();
+    unsigned int getNrOfEntries() const;
 
     //ProcessImageMatrix* is owned by caller
     CProcessImageMatrix* getModuleEntries(unsigned int pa_nCN, unsigned int pa_nModule);
 
-    unsigned long getProcessImageSize();
+    unsigned long getProcessImageSize() const ;
 
     void clearAll();
 

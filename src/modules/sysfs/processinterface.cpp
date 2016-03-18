@@ -59,7 +59,7 @@ bool CSysFsProcessInterface::initialise(bool m_bInputOrOutput){
   if(m_bInputOrOutput){
     res = write(fd, "in", 2);
   }
-  else if(!m_bInputOrOutput){
+  else{
     res = write(fd, "out", 3);
   }
   if(res < 0){

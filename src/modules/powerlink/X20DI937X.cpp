@@ -56,7 +56,7 @@ void FORTE_X20DI937X::executeEvent(int pa_nEIID){
 
       delete moduleIOs;
 
-      eplStack.registerCallback((IEplCNCallback*) this);
+      eplStack.registerCallback(static_cast<IEplCNCallback*>(this));
 
       QO() = QI();
       CNIDO() = CNID();
@@ -68,8 +68,7 @@ void FORTE_X20DI937X::executeEvent(int pa_nEIID){
       CSinglyLinkedList<char*>::Iterator itEnd = m_oEplMapping.m_lCurrentValues.end();
       CSinglyLinkedList<char*>::Iterator it = m_oEplMapping.m_lCurrentValues.begin();
       for(int i = 3; i < m_pstInterfaceSpec->m_nNumDOs && it != itEnd; i++, ++it){
-        bool ioVal = false;
-        ioVal = (bool) **it;
+        bool ioVal = (bool) **it;
         *static_cast<CIEC_BOOL*>(getDO(i)) = ioVal;
       }
       m_oSync.unlock();
@@ -90,8 +89,7 @@ void FORTE_X20DI937X::cnSynchCallback(){
   CSinglyLinkedList<char*>::Iterator itEnd = m_oEplMapping.m_lCurrentValues.end();
   CSinglyLinkedList<char*>::Iterator it = m_oEplMapping.m_lCurrentValues.begin();
   for(int i = 3, j = 1; i < m_pstInterfaceSpec->m_nNumDOs && it != itEnd; i++, j++, ++it){
-    bool ioVal = false;
-    ioVal = (bool) (eplStack.getProcImageOut()[m_oEplMapping.m_anPiOffsets[j]] & (char) (0x01 << m_oEplMapping.m_anBitOffsets[j]));
+    bool ioVal = (bool) (eplStack.getProcImageOut()[m_oEplMapping.m_anPiOffsets[j]] & (char) (0x01 << m_oEplMapping.m_anBitOffsets[j]));
     **it = (char) ioVal;
   }
 

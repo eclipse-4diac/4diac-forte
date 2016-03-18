@@ -120,6 +120,10 @@ class COpcConnection{
     bool m_bBlockingConnect;
 
     CSyncObject m_oSync;
+
+    //we don't want COpcConnection to be copy and assignable
+    COpcConnection(const COpcConnection&);
+    COpcConnection& operator = (const COpcConnection &);
 };
 
 #endif // OPCCONNECTION_H_

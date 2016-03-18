@@ -112,10 +112,10 @@ int CIEC_DATE_AND_TIME::toString(char* pa_pacValue, unsigned int pa_nBufferSize)
   if(0 != ptm){
 
 #ifdef WIN32
-    nRetVal = _snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03d", 1900+ptm->tm_year, ptm->tm_mon+1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, getMilliSeconds());
+    nRetVal = _snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03u", 1900+ptm->tm_year, ptm->tm_mon+1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, getMilliSeconds());
 #else
     nRetVal =
-        snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03d", 1900
+        snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03u", 1900
             + ptm->tm_year, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, getMilliSeconds());
 #endif
 
@@ -139,10 +139,10 @@ int CIEC_DATE_AND_TIME::toGMTString(char* pa_pacValue, unsigned int pa_nBufferSi
 
 #endif
 #ifdef WIN32
-  int nRetVal = _snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03u", 1900+ptm->tm_year, ptm->tm_mon+1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, (int) (nToStringBuffer % 1000));
+  int nRetVal = _snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03d", 1900+ptm->tm_year, ptm->tm_mon+1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, (int) (nToStringBuffer % 1000));
 #else
   int nRetVal =
-      snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03u", 1900
+      snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03d", 1900
           + ptm->tm_year, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, (int) (nToStringBuffer
           % 1000));
 #endif

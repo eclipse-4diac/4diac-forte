@@ -55,7 +55,7 @@ void FORTE_X20AI4622::executeEvent(int pa_nEIID){
 
           delete moduleIOs;
 
-          eplStack.registerCallback((IEplCNCallback*) this);
+          eplStack.registerCallback(static_cast<IEplCNCallback*>(this));
 
           m_bInitOk = true;
         }
@@ -89,7 +89,7 @@ void FORTE_X20AI4622::cnSynchCallback(){
 
   SEplMapping::TEplMappingList::Iterator itEnd = m_oEplMapping.m_lCurrentValues.end();
   SEplMapping::TEplMappingList::Iterator it = m_oEplMapping.m_lCurrentValues.begin();
-  for(it; it != itEnd; ++it){
+  for(; it != itEnd; ++it){
     short ioVal = 0x0000;
     char lowByte;
     char highByte;

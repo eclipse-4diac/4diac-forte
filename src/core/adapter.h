@@ -43,14 +43,14 @@ class CAdapter: public CFunctionBlock {
 
     /*!\brief Returns if Adapter instance is a Plug
      */
-    bool isPlug() {
+    bool isPlug() const {
       return m_bIsPlug;
     }
     ;
 
     /*!\brief Returns if Adapter instance is a Socket
      */
-    bool isSocket() {
+    bool isSocket() const {
       return !m_bIsPlug;
     }
     ;
@@ -83,7 +83,7 @@ class CAdapter: public CFunctionBlock {
      *   \param pa_poPeer Pointer to a potential peer, whose compatibility has to be checked.
      *   \return compatibility status
      */
-    bool isCompatible(CAdapter *pa_poPeer);
+    bool isCompatible(CAdapter *pa_poPeer) const;
 
     /*! provides access to the interface spec used for the specific adatpter instnace (i.e., plug or socket)
      *  Is required mainly by the anyadapter

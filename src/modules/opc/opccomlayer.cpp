@@ -364,7 +364,7 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
   }
 
   void COpcComLayer::convertInputData(void *pa_pData, unsigned int pa_nSize){
-    CIEC_ANY *apoSDs = (CIEC_ANY*) pa_pData;
+    CIEC_ANY *apoSDs =  static_cast<CIEC_ANY*>(pa_pData);
     unsigned int nrSDs = pa_nSize;
     unsigned int sdIndex = 0;
 

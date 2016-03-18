@@ -57,7 +57,6 @@ unsigned int* CProcessImageMatrix::getEntry(unsigned int pa_nCN, unsigned int pa
 // getEntry: same as above but returns the values on row "index"
 unsigned int* CProcessImageMatrix::getEntry(unsigned int pa_nIndex){
   static unsigned int data[3] = { 0, 0, 0 };
-
   if(pa_nIndex < m_nNumberOfEntries){
     TChannelList::Iterator it = m_lMatrix.begin();
     for(unsigned int i = 0; i < pa_nIndex; i++){
@@ -72,7 +71,7 @@ unsigned int* CProcessImageMatrix::getEntry(unsigned int pa_nIndex){
   return NULL;
 }
 
-unsigned int CProcessImageMatrix::getNrOfEntries(){
+unsigned int CProcessImageMatrix::getNrOfEntries() const {
   return m_nNumberOfEntries;
 }
 
@@ -92,7 +91,7 @@ CProcessImageMatrix* CProcessImageMatrix::getModuleEntries(unsigned int pa_nCN, 
   return newMatrix;
 }
 
-unsigned long CProcessImageMatrix::getProcessImageSize(){
+unsigned long CProcessImageMatrix::getProcessImageSize() const {
   // Check if the whole matrix is 32 bit aligned
   if(m_nBitSize % 32 != 0){
     int fillBits = 32 - (m_nBitSize % 32);

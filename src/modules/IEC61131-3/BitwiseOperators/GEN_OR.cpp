@@ -94,9 +94,9 @@ bool GEN_OR::configureFB(const char *pa_acConfigString) {
 		for (unsigned int di = 0; di < m_nDInputs; di = di + 1) {
 
 #ifdef WIN32
-			_snprintf(&(diNames[2]), 5 - 2, "%i", di+1);
+			_snprintf(&(diNames[2]), 5 - 2, "%u", di+1);
 #else
-			snprintf(&(diNames[2]), 5 - 2, "%i", di + 1);
+			snprintf(&(diNames[2]), 5 - 2, "%u", di + 1);
 #endif
 			m_anDataInputNames[di] = CStringDictionary::getInstance().insert(diNames);
 			m_anDataInputTypeIds[di] = g_nStringIdANY_BIT;

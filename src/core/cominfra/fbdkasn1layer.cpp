@@ -132,13 +132,13 @@ EComResponse CFBDKASN1ComLayer::sendData(void *pa_pvData, unsigned int pa_unSize
 
 EComResponse CFBDKASN1ComLayer::recvData(const void *pa_pvData, unsigned int pa_unSize){
   TForteByte *recvData = (TForteByte *) pa_pvData;
-  TForteByte *usedBuffer = 0;
   EComResponse eRetVal = e_Nothing;
 
   if(m_poFb != 0){
     CIEC_ANY *apoRDs = m_poFb->getRDs();
     unsigned int unNumRD = m_poFb->getNumRD();
     unsigned int usedBufferSize = 0;
+    TForteByte *usedBuffer = 0;
 
     // TODO: only copy if necessary
     if(mDeserBufPos == 0){
@@ -543,13 +543,12 @@ bool CFBDKASN1ComLayer::deserializeDataPointArray(const TForteByte* pa_pcBytes, 
     bRetval = ((pa_nStreamSize == 1) && (isNull(pa_pcBytes)));
   }
   else{
-    int nBuf;
     for(unsigned int i = 0; i < pa_nDataNum; ++i){
       if(0 == pa_apoData[i]){
         bRetval = false;
         break;
       }
-      nBuf = deserializeDataPoint(pa_pcBytes, pa_nStreamSize, *pa_apoData[i]);
+      int nBuf = deserializeDataPoint(pa_pcBytes, pa_nStreamSize, *pa_apoData[i]);
       if(nBuf <= 0){
         // we could not deserialize the data of we have a to small packet
         // with the compliance profile for feasibility demonstration's protocol we can not determine packet order

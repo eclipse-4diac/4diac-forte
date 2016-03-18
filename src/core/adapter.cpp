@@ -82,7 +82,7 @@ bool CAdapter::disconnect(CAdapterConnection *pa_poAdConn) {
   return true;
 }
 
-bool CAdapter::isCompatible(CAdapter *pa_poPeer) {
+bool CAdapter::isCompatible(CAdapter *pa_poPeer) const {
   //Need to check any adapter here as we don't know which adapter side is used for checking compatibility
   return ((getFBTypeId() == pa_poPeer->getFBTypeId()) ||
       ((getFBTypeId() == g_nStringIdANY_ADAPTER) && (g_nStringIdANY_ADAPTER != pa_poPeer->getFBTypeId())) ||

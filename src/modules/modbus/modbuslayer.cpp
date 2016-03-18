@@ -65,7 +65,7 @@ EComResponse CModbusComLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
 unsigned int CModbusComLayer::convertDataInput(void *pa_poInData, unsigned int pa_nDataSize, TForteUInt16 *pa_poConvertedData){
   unsigned int outLength = 0;
 
-  CIEC_ANY *apoSDs = (CIEC_ANY*) pa_poInData;
+  CIEC_ANY *apoSDs = static_cast<CIEC_ANY*>(pa_poInData);
   unsigned int nrSDs = pa_nDataSize;
 
   for(unsigned int i = 0; i < nrSDs; i++){
@@ -117,7 +117,7 @@ unsigned int CModbusComLayer::convertDataInput(void *pa_poInData, unsigned int p
       }
       case CIEC_ANY::e_DINT: // 32bit data types
       {
-        TForteInt32 out = (TForteInt32) *(CIEC_DINT*) anyVal;
+        TForteInt32 out = (TForteInt32) *static_cast<CIEC_DINT*>(anyVal);
         *(TForteInt32*) (&pa_poConvertedData[outLength]) = convertFBOutput<TForteInt32>((TForteByte*) &out, sizeof(TForteInt32));
         outLength += sizeof(TForteInt32) / 2;
         break;
@@ -384,13 +384,13 @@ EComResponse CModbusComLayer::openConnection(char *pa_acLayerParameter){
         m_pModbusConnection->setResponseTimeout(commonParams.m_nResponseTimeout);
         m_pModbusConnection->setByteTimeout(commonParams.m_nByteTimeout);
 
-        ((CModbusClientConnection*) m_pModbusConnection)->setSlaveId(commonParams.m_nSlaveId);
+        static_cast<CModbusClientConnection*>(m_pModbusConnection)->setSlaveId(commonParams.m_nSlaveId);
 
         for(unsigned int i = 0; i < commonParams.m_nNrPolls; i++){
-          ((CModbusClientConnection*) m_pModbusConnection)->addNewPoll(commonParams.m_nPollFrequency, commonParams.m_nFuncCode, commonParams.m_nReadStartAddress[i], commonParams.m_nReadNrAddresses[i]);
+          static_cast<CModbusClientConnection*>(m_pModbusConnection)->addNewPoll(commonParams.m_nPollFrequency, commonParams.m_nFuncCode, commonParams.m_nReadStartAddress[i], commonParams.m_nReadNrAddresses[i]);
         }
         for(unsigned int i = 0; i < commonParams.m_nNrSends; i++){
-          ((CModbusClientConnection*) m_pModbusConnection)->addNewSend(commonParams.m_nSendStartAddress[i], commonParams.m_nSendNrAddresses[i]);
+          static_cast<CModbusClientConnection*>m_pModbusConnection)->addNewSend(commonParams.m_nSendStartAddress[i], commonParams.m_nSendNrAddresses[i]);
         }
 
         if(m_pModbusConnection->connect() < 0){
@@ -413,7 +413,7 @@ EComResponse CModbusComLayer::openConnection(char *pa_acLayerParameter){
 }
 
 int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_pTcpParams, SRtuParams* pa_pRtuParams, SCommonParams* pa_pCommonParams){
-  char *params = new char[strlen(pa_acLayerParams)];
+  char *params = new char[strlen(pa_acLayerParams) + 1];
   strcpy(params, pa_acLayerParams);
   char *chrStorage;
 

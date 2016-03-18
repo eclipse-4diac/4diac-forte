@@ -59,7 +59,7 @@ void FORTE_X20DI4653::executeEvent(int pa_nEIID){
 
           delete moduleIOs;
 
-          eplStack.registerCallback((IEplCNCallback*) this);
+          eplStack.registerCallback(static_cast<IEplCNCallback*>(this));
 
           m_bInitOk = true;
         }
@@ -74,8 +74,7 @@ void FORTE_X20DI4653::executeEvent(int pa_nEIID){
         SEplMapping::TEplMappingList::Iterator itEnd = m_oEplMapping.m_lCurrentValues.end();
         SEplMapping::TEplMappingList::Iterator it = m_oEplMapping.m_lCurrentValues.begin();
         for(int i = 3; i < m_pstInterfaceSpec->m_nNumDOs && it != itEnd; i++, ++it){
-          bool ioVal = false;
-          ioVal = *(it->m_pchCurrentValue) != 0x00;
+          bool ioVal = *(it->m_pchCurrentValue) != 0x00;
           *static_cast<CIEC_BOOL*>(getDO(i)) = ioVal;
         }
         m_oSync.unlock();
@@ -93,9 +92,8 @@ void FORTE_X20DI4653::cnSynchCallback(){
 
   SEplMapping::TEplMappingList::Iterator itEnd = m_oEplMapping.m_lCurrentValues.end();
   SEplMapping::TEplMappingList::Iterator it = m_oEplMapping.m_lCurrentValues.begin();
-  for(it; it != itEnd; ++it){
-    bool ioVal = false;
-    ioVal = (eplStack.getProcImageOut()[it->m_nPiOffset] & (char) (0x01 << it->m_nBitOffset)) != 0x00;
+  for(; it != itEnd; ++it){
+    bool ioVal = (eplStack.getProcImageOut()[it->m_nPiOffset] & (char) (0x01 << it->m_nBitOffset)) != 0x00;
     *(it->m_pchCurrentValue) = (char) ioVal;
   }
 

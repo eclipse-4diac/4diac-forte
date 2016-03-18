@@ -59,7 +59,7 @@ void FORTE_X20DO4623::executeEvent(int pa_nEIID){
 
           delete moduleIOs;
 
-          eplStack.registerCallback((IEplCNCallback*) this);
+          eplStack.registerCallback(static_cast<IEplCNCallback*>(this));
 
           m_bInitOk = true;
         }

@@ -380,7 +380,7 @@ class CIEC_ANY{
       m_uAnyData.m_pGenData = pa_pGenData;
     }
 
-    CStringDictionary::TStringId parseTypeName(const char *pa_pacValue, const char *pa_pacHashPos);
+    static CStringDictionary::TStringId parseTypeName(const char *pa_pacValue, const char *pa_pacHashPos);
 
   private:
     const static int scm_nMaxTypeNameLength = 14;
