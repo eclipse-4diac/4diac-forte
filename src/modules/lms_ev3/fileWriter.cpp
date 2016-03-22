@@ -16,6 +16,7 @@
 
 #include <sstream>
 #include <ostream>
+#include <iostream>
 
 DEFINE_FIRMWARE_FB(fileWriter, g_nStringIdfileWriter)
 
@@ -37,16 +38,21 @@ const CStringDictionary::TStringId fileWriter::scm_anEventOutputNames[] = {g_nSt
 
 const SFBInterfaceSpec fileWriter::scm_stFBInterfaceSpec = {
   2,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  5,  scm_anDataInputNames, scm_anDataInputTypeIds,
+  2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,
+  5,  scm_anDataInputNames, scm_anDataInputTypeIds,
   2,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
   0, 0
 };
+
+const char * const fileWriter::scmOK = "OK";
+const char * const fileWriter::scmNotInitialised = "Not initialized";
+const char * const fileWriter::scmCouldNotWrite = "Could not write";
 
 void fileWriter::executeEvent(int pa_nEIID){ //TODO: manage output and status
   switch (pa_nEIID){
     case scm_nEventINITID:
       if(true == QI()){
-        openFile();
+        QO() = openFile();
       }
       else{
         closeFile();
@@ -56,9 +62,13 @@ void fileWriter::executeEvent(int pa_nEIID){ //TODO: manage output and status
     case scm_nEventREQID:
       QO() = QI();
       if(true == QI()){
-        writeFile();
+        QO() = writeFile();
       }
       sendOutputEvent(scm_nEventCNFID);
+      if (false == QO()){
+        std::cout << "----------ERROR\n";
+      }
+
       break;
   }
 }
@@ -75,7 +85,11 @@ bool fileWriter::openFile(){
     mFile.open(sysFileName.c_str(), std::fstream::out); //TODO change this when fully switching to C++11 for LMS EV3
     if(mFile.is_open()){
       retVal = true;
+    }else{
+      STATUS() = scmNotInitialised;
     }
+  }else{
+    STATUS() = scmNotInitialised;
   }
   return retVal;
 }
@@ -95,11 +109,15 @@ bool fileWriter::writeFile(){
     } else {
       mFile.seekp(0, std::ios::beg);
     }
-
+    mFile.clear();
     toWrite += S1().getValue();
     mFile << toWrite;
-    //TODO check if writing worked
-    retVal = true;
+    if (mFile.fail()){
+      STATUS() = scmCouldNotWrite;
+    }else{
+      STATUS() = scmOK;
+      retVal = true;
+    }
   }
   return retVal;
 }

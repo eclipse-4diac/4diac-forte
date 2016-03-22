@@ -26,3 +26,6 @@ forte_add_sourcefile_hcpp( ../../stdfblib/io/QW)
 forte_add_sourcefile_hcpp( ../../stdfblib/io/ID)
 forte_add_sourcefile_hcpp( ../../stdfblib/io/QD)
 forte_add_sourcefile_hcpp(processinterface)
+
+forte_add_sourcefile_hcpp(fileWriter)
+forte_add_sourcefile_hcpp(fileReader)

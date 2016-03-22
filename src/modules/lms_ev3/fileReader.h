@@ -9,8 +9,8 @@
  *    Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
  
-#ifndef _FILEWRITER_H_
-#define _FILEWRITER_H_
+#ifndef _FILEREADER_H_
+#define _FILEREADER_H_
 
 #include <funcbloc.h>
 #include <forte_bool.h>
@@ -18,8 +18,8 @@
 #include <forte_wstring.h>
 #include <fstream>
 
-class fileWriter: public CFunctionBlock{
-    DECLARE_FIRMWARE_FB(fileWriter)
+class fileReader: public CFunctionBlock{
+    DECLARE_FIRMWARE_FB(fileReader)
 
   private:
     static const CStringDictionary::TStringId scm_anDataInputNames[];
@@ -32,18 +32,6 @@ class fileWriter: public CFunctionBlock{
       return *static_cast<CIEC_STRING*>(getDI(1));
     };
 
-    CIEC_STRING &S1() {
-      return *static_cast<CIEC_STRING*>(getDI(2));
-    };
-
-    CIEC_BOOL &APPEND() {
-      return *static_cast<CIEC_BOOL*>(getDI(3));
-    };
-
-    CIEC_STRING &APPCHAR() {
-      return *static_cast<CIEC_STRING*>(getDI(4));
-    };
-
     static const CStringDictionary::TStringId scm_anDataOutputNames[];
     static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
     CIEC_BOOL &QO() {
@@ -52,6 +40,10 @@ class fileWriter: public CFunctionBlock{
 
     CIEC_WSTRING &STATUS() {
       return *static_cast<CIEC_WSTRING*>(getDO(1));
+    };
+
+    CIEC_STRING &S1() {
+      return *static_cast<CIEC_STRING*>(getDO(2));
     };
 
     static const TEventID scm_nEventINITID = 0;
@@ -70,22 +62,22 @@ class fileWriter: public CFunctionBlock{
 
     static const char * const scmOK;
     static const char * const scmNotInitialised;
-    static const char * const scmCouldNotWrite;
+    static const char * const scmCouldNotRead;
 
     void executeEvent(int pa_nEIID);
 
   public:
-    fileWriter(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
-    virtual ~fileWriter(){};
+    fileReader(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+    virtual ~fileReader(){};
 
   private:
     bool openFile();
     void closeFile();
-    bool writeFile();
 
+    bool readFile();
     std::fstream mFile;
 
-    FORTE_FB_DATA_ARRAY(2, 5, 2, 0);
+    FORTE_FB_DATA_ARRAY(2, 2, 3, 0);
 };
 
 #endif //close the ifdef sequence from the beginning of the file
