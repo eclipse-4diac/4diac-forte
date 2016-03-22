@@ -1161,7 +1161,7 @@ inline const CIEC_BOOL DWORD_TO_BOOL(const CIEC_DWORD &pa_roVal){
 }
 
 inline const CIEC_DINT DWORD_TO_DINT(const CIEC_DWORD &pa_roVal){
-  return CIEC_DINT((TForteInt32) (static_cast<TForteDWord>(CIEC_DINT::scm_nMaxVal) >= pa_roVal) ? static_cast<TForteInt32>(pa_roVal) : CIEC_DINT::scm_nMaxVal);
+  return CIEC_DINT((TForteInt32) static_cast<TForteInt32>(pa_roVal));
 }
 
 inline const CIEC_BYTE DWORD_TO_BYTE(const CIEC_DWORD &pa_roVal){

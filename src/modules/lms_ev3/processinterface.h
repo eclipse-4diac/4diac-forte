@@ -52,7 +52,8 @@ class CLMSEV3ProcessInterface : public CProcessInterfaceBase{
     bool readPin();
     bool readWord();
     bool writeWord();
-    bool readDouble();
+    bool readDWord();
+    bool writeDWord();
 
   private:
 

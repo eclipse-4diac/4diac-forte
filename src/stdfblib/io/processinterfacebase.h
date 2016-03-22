@@ -61,6 +61,14 @@ class CProcessInterfaceBase : public CEventSourceFB{
       return *static_cast<CIEC_WORD*>(getDI(2));
     };
 
+    CIEC_DWORD &IN_D(){
+      return *static_cast<CIEC_DWORD*>(getDO(2));
+    }
+
+    CIEC_DWORD &OUT_D() {
+      return *static_cast<CIEC_DWORD*>(getDI(2));
+    };
+
     //TODO move pin checking and managing code into this class. Can be solved with recurring template pattern
 };
 

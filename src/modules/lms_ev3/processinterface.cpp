@@ -40,7 +40,7 @@ const char * const CLMSEV3ProcessInterface::scmCouldNotWrite = "Could not write"
 //TODO: QO is not changed in this file, should be changed according to the execution?
 
 CLMSEV3ProcessInterface::CLMSEV3ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-                                                    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData){
+                                                        CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData){
   mFile.rdbuf()->pubsetbuf(NULL, 0); //disable buffer to avoid latency
   mnTypeOfIO = UNDEFINED;
   mstButtonVariables = NULL;
@@ -194,8 +194,8 @@ bool CLMSEV3ProcessInterface::readWord(){
   bool retVal = false;
   int internalChecker;
 
-  if (SENSORW_VALUE == mnTypeOfIO || MOTOR_PWM == mnTypeOfIO || MOTOR_SPEED == mnTypeOfIO || MOTOR_ROT == mnTypeOfIO ||
-      MOTOR_POSITION == mnTypeOfIO){ //this should be a double, but for testing is here
+  if (SENSORW_VALUE == mnTypeOfIO || MOTOR_PWM == mnTypeOfIO || MOTOR_SPEED == mnTypeOfIO || MOTOR_ROT == mnTypeOfIO) {
+    // || MOTOR_POSITION == mnTypeOfIO){ //this should be a double, but for testing is here
     TForteInt32 val;
     internalChecker = readNumberFromFile(&val);
     if (0 == internalChecker){
@@ -334,17 +334,76 @@ bool CLMSEV3ProcessInterface::writeWord(){
   return retVal;
 }
 
-bool CLMSEV3ProcessInterface::readDouble(){
+bool CLMSEV3ProcessInterface::readDWord(){
   bool retVal = false;
-  /*bool internalChecker;
+  int internalChecker;
+
   TForteInt32 val;
   internalChecker = readNumberFromFile(&val);
-  if (true == internalChecker){
+  if (0 == internalChecker){
     IN_D() = (TForteDWord) (val);
-    std::cout << "Reading integer: " <<  IN_D() <<  "\n";
+    STATUS() = scmOK;
     retVal = true;
-  }*/
+  }else if (1 == internalChecker){
+    STATUS() = scmNotInitialised;
+    std::cout << "----------ERROR: Not initialized double\n";
+  }else{
+    STATUS() = scmCouldNotRead;
+    std::cout << "----------ERROR: Could not read double\n";
+  }
+
   return retVal;
+}
+
+bool CLMSEV3ProcessInterface::writeDWord(){
+  bool retVal = false;
+  bool writeAttempted = false;
+  if (mFile.is_open()){
+    mFile.clear();
+    mFile.seekp(0, std::ios::beg);
+    TForteDWord val = OUT_D();
+    switch (mnTypeOfIO){
+      case MOTOR_POSITION:{
+        TForteInt32 finalVal = (TForteInt32) val;
+        if (finalVal >= CIEC_INT::scm_nMinVal && finalVal <= CIEC_INT::scm_nMaxVal){
+          mFile << finalVal;
+          writeAttempted = true;
+        }else{
+          STATUS() = scmCouldNotWrite;
+        }
+        break;
+      }
+      default:{
+        STATUS() = scmCouldNotWrite;
+        break;
+      }
+    }
+    if (!mFile.fail() &&  writeAttempted) {
+      STATUS() = scmOK;
+      retVal = true;
+    }else{
+      STATUS() = scmCouldNotWrite;
+      std::cout << "readNumberFromFile: mFile.fail()\n";
+      std::string result;
+      result = ((mFile.rdstate() & std::ifstream::failbit ) != 0 ) ? "true" : "false";
+      std::cout << "readNumberFromFile: fail bit = " << result << "\n";
+      result = ((mFile.rdstate() & std::ifstream::badbit ) != 0 ) ? "true" : "false";
+      std::cout << "readNumberFromFile: bad bit = " << result << "\n";
+      result = ((mFile.rdstate() & std::ifstream::eofbit ) != 0 ) ? "true" : "false";
+      std::cout << "readNumberFromFile: eof bit = " << result << "\n";
+      result = ((mFile.rdstate() & std::ifstream::goodbit ) != 0 ) ? "true" : "false";
+      std::cout << "readNumberFromFile: good bit = " << result << "\n";
+    }
+  }else{
+    STATUS() = scmNotInitialised;
+  }
+
+  if (!retVal){
+    std::cout << "----------ERROR writing DOUBLE\n";
+  }
+
+  return retVal;
+
 }
 
 /* INTIALIZATION FUNCTIONS **/
@@ -564,7 +623,10 @@ bool CLMSEV3ProcessInterface::setupMotor(const std::vector<std::string>& paParam
           }else if (scmStopID == paParamList[2]){
             sysFileName += number.str() + "/stop_command";
             mnTypeOfIO = MOTOR_STOP;
-          } else{
+          }else if (scmPositionID == paParamList[2]){
+            sysFileName += number.str() + "/position";
+            mnTypeOfIO = MOTOR_POSITION;
+          }else{
             defaultType = true;
           }
         }
@@ -583,6 +645,7 @@ bool CLMSEV3ProcessInterface::setupMotor(const std::vector<std::string>& paParam
   }
   return retVal;
 }
+
 
 /* END OF INTIALIZATION FUNCTIONS **/
 
