@@ -1,3 +1,0 @@
-[submodule "OPC_UA"]
-	path = src/modules/OPC_UA
-	url = https://github.com/frmfl/forte_opcua_integration.git
