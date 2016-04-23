@@ -37,7 +37,7 @@ set_property(CACHE FORTE_LOGLEVEL PROPERTY STRINGS LOGDEBUG LOGERROR LOGWARNING 
  
 forte_add_definition("-D${FORTE_LOGLEVEL}")
 
-SET(FORTE_TRACE_EVENTS ON CACHE BOOL "FORTE will log the events received at and sent from function blocks")
+SET(FORTE_TRACE_EVENTS OFF CACHE BOOL "FORTE will log the events received at and sent from function blocks")
 mark_as_advanced(FORTE_TRACE_EVENTS)
 if(FORTE_TRACE_EVENTS)
 forte_add_definition("-DFORTE_TRACE_EVENTS")
