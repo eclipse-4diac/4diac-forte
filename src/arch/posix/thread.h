@@ -15,7 +15,6 @@
 #include <pthread.h>
 #include "../threadbase.h"
 #include "../datatype.h"
-#include "../../core/datatypes/forte_time.h"
 #include <sync.h>
 
 /**  \ingroup FORTE-HAL 
@@ -48,11 +47,6 @@ class CPosixThread : public forte::arch::CThreadBase {
     //!Set the deadline of the thread.
     void setDeadline(const CIEC_TIME &pa_roVal);
 
-    //!Get the current deadline of the thread.
-    const CIEC_TIME &getDeadline(void) const {
-      return m_oDeadline;
-    }
-
     /*! \brief starts the Thread
      *
      *  By calling this method the execution in the run()-Method will be started.
@@ -68,9 +62,6 @@ class CPosixThread : public forte::arch::CThreadBase {
      * this function will call the run method of the thread instance.
      */
     static void * threadFunction(void *arguments);
-
-    //!deadline the thread needs to be finish its execution. 0 means unconstrained.
-    CIEC_TIME m_oDeadline;
 
     CPCSyncObject mJoinMutex;
 

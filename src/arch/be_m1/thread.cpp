@@ -38,22 +38,10 @@ void CBEThread::setDeadline(TForteUInt32 pa_nVal){
   //TODO implement priority assignment similar to threadx and ecos
 }
 
-TForteUInt32 CBEThread::getDeadline(void){
-  return m_nDeadline;
-}
-
 void CBEThread::start(void){
   if(Spawn(0, 0, 130, VX_FP_TASK, APP_TSK_STACK) == ERROR){
     log_Err("test8_mod::APPLATEINIT: Error in TaskSpawn; '%s'!", "tForteTask");
   }
-}
-
-void CBEThread::selfSuspend(void){
-  Suspend();
-}
-
-void CBEThread::resumeSelfSuspend(void){
-  Resume();
 }
 
 void CBEThread::join(void){

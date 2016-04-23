@@ -57,7 +57,6 @@ class CBEThread : public forte::arch::CThreadBase, private BETask{
     bool isAlive(void);
 
     void setDeadline(TForteUInt32 pa_nVal); //!Set the deadline of the thread.
-    TForteUInt32 getDeadline(void); //!Get the current deadline of the thread.
 
     virtual void Main(VOID);
 
@@ -69,20 +68,7 @@ class CBEThread : public forte::arch::CThreadBase, private BETask{
      */
     void start(void);
 
-    /*! \brief Resumes a suspended Thread
-     *
-     *
-     */
-    void resumeSelfSuspend(void);
-
     virtual void join(void);
-
-  protected:
-    /*! \brief Suspends the thread.
-     *
-     *  Suspends the execution of the thread until resumeSelfSuspend(), end(), or join() is called.
-     */
-    void selfSuspend(void);
 
   private:
     
@@ -91,8 +77,6 @@ class CBEThread : public forte::arch::CThreadBase, private BETask{
      *  This function destroies all the data structures created in the creation phase. All used memory is freed.
      */
     bool destroy(void);
-
-    TForteUInt32 m_nDeadline; //!deadline the thread needs to be finish its exectuion. 0 means unconstraint.
 
 };
 

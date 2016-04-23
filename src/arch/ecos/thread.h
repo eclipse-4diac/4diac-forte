@@ -17,7 +17,6 @@
 #include "../threadbase.h"
 #include "sync.h"
 #include "../devlog.h"
-#include "../../core/datatypes/forte_time.h"
 
 #define CThread CECOSThread  //allows that doxygen can generate better documentation
 class CECOSThread;
@@ -51,12 +50,6 @@ class CECOSThread : public forte::arch::CThreadBase {
 
     //!Set the deadline of the thread.
     void setDeadline(const CIEC_TIME &pa_roVal);
-
-    //!Get the current deadline of the thread.
-    const CIEC_TIME &getDeadline(void) const {
-      return m_oDeadLine;
-    }
-
 
     /*! \brief starts the Thread
      *
@@ -123,7 +116,6 @@ class CECOSThread : public forte::arch::CThreadBase {
      */
     long m_nStackSize;
     unsigned char *m_cStack;
-    CIEC_TIME m_oDeadLine;
 
     //we don't want that threads can be copied or assigned therefore the copy constructor and assignment operator are declared private
     //but not implemented

@@ -57,7 +57,7 @@ void CECOSThread::setDeadline(const CIEC_TIME &pa_roVal){
   int i, ii;
   CCriticalRegion criticalRegion(sm_oThreadListLock);
   DEVLOG_DEBUG(">>>>Thread: Set Deadline: %lu\n", pa_roVal.operator TValueType ());
-  m_oDeadLine = pa_roVal;
+  mDeadLine = pa_roVal;
   //first of all check if this thread is already in the list and remove it from the list
   for(i = 0; i < scm_nThreadListSize; i++){
     if(0 == sm_aoThreadList[i])
@@ -74,7 +74,7 @@ void CECOSThread::setDeadline(const CIEC_TIME &pa_roVal){
       }  
   }
 
-  if(0 == m_oDeadLine)
+  if(0 == mDeadLine)
     setPriority(scm_nThreadListSize + 2); // use the lowest user priority
   else{
     for(i = 0; i < scm_nThreadListSize; i++){
@@ -84,7 +84,7 @@ void CECOSThread::setDeadline(const CIEC_TIME &pa_roVal){
         break;
       }  
       else
-        if(m_oDeadLine < sm_aoThreadList[i]->getDeadline()){
+        if(mDeadLine < sm_aoThreadList[i]->getDeadline()){
           CECOSThread *poRBuf, *poSBuf= sm_aoThreadList[i];
           sm_aoThreadList[i] =  this;
           setPriority( i + 2);

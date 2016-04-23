@@ -12,12 +12,13 @@
 #ifndef _THREADBASE_H_
 #define _THREADBASE_H_
 
+#include "../core/datatypes/forte_time.h"
+
 namespace forte {
   namespace arch {
 
     class CThreadBase{
       public:
-        CThreadBase();
 
         /*! \brief Indicates if the thread is allowed to execute.
          *
@@ -42,7 +43,14 @@ namespace forte {
          */
         virtual void join() = 0;
 
+        //!Get the current deadline of the thread.
+        const CIEC_TIME &getDeadline(void) const {
+          return mDeadline;
+        }
+
       protected:
+        CThreadBase();
+
         virtual ~CThreadBase();
 
         /*! \brief set the alive flag for this flag
@@ -63,8 +71,10 @@ namespace forte {
          */
         virtual void run() = 0;
 
-      private:
+        //!deadline the thread needs to be finish its execution. 0 means unconstrained.
+        CIEC_TIME mDeadline;
 
+      private:
         /*! \brief Flag that indicates if the Thread is alive.
          *
          *  This flag has two main purposes:

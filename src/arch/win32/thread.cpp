@@ -41,13 +41,9 @@ CWin32Thread::~CWin32Thread(){
 }
 
 void CWin32Thread::setDeadline(const CIEC_TIME &pa_roVal){
-  m_oDeadline = pa_roVal;
+  mDeadline = pa_roVal;
 //under the win32 currently it makes no sense to set any priority.
 //It will not be considered.
-}
-
-const CIEC_TIME &CWin32Thread::getDeadline(void) const{
-  return m_oDeadline;
 }
 
 void CWin32Thread::start(void){
