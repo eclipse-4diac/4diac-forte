@@ -19,33 +19,36 @@
 
 class CLMSEV3ProcessInterface : public CProcessInterfaceBase{
 
-public:
- CLMSEV3ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
-        const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
+  public:
+    CLMSEV3ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
     virtual ~CLMSEV3ProcessInterface();
 
-protected:
-  bool initialise(bool paInput);
-  bool deinitialise();
-  bool writePin();
-  bool readPin();
+  protected:
+    bool initialise(bool paInput);
+    bool deinitialise();
+    bool writePin();
+    bool readPin();
 
-private:
+  private:
 
-  static const std::string scmLEDId;
-  static const std::string scmSensorID;
+    static const std::string scmLEDId;
+    static const std::string scmSensorID;
+    static const std::string scmButtonID;
 
-  static std::string getSensorBasePath(const std::string &paParam);
+    static std::string getSensorBasePath(const std::string &paParam);
 
-  std::vector<std::string> generateParameterList();
+    std::vector<std::string> generateParameterList();
 
-  bool setupLEDOutput(const std::vector<std::string> &paParamList);
-  bool setupSensor(const std::string &paParam);
-  static int findNumberFromPort(const std::string &paBasePath, const std::string &paEv3Port);
+    bool setupLEDOutput(const std::vector<std::string> &paParamList);
+    bool setupSensor(const std::string &paParam);
+    bool setupButton(const std::vector<std::string> &paParamList);
+    static int findNumberFromPort(const std::string &paBasePath, const std::string &paEv3Port);
 
 
-  std::fstream mFile; //!< the file to be used for this process interface instance
-
+    std::fstream mFile; //!< the file to be used for this process interface instance
+    int typeOfInput;
+    int button;
+    int fileDescriptor;
 };
 
 //tell the IX and QX FB that this is the process interface to be used
