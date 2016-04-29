@@ -35,12 +35,14 @@ private:
   static const std::string scmLEDId;
   static const std::string scmSensorID;
 
-  static std::string getSensorBasePath(char paSensorPortNum);
+  static std::string getSensorBasePath(const std::string &paParam);
 
   std::vector<std::string> generateParameterList();
 
   bool setupLEDOutput(const std::vector<std::string> &paParamList);
   bool setupSensor(const std::string &paParam);
+  static int findNumberFromPort(const std::string &paBasePath, const std::string &paEv3Port);
+
 
   std::fstream mFile; //!< the file to be used for this process interface instance
 
