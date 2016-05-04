@@ -82,7 +82,7 @@ namespace forte {
          *    -# use in the run()-method to check if the thread is still allowed to execute (e.g. while(isAlive()) ).
          *       This is important for stopping and destroying threads.
          */
-        bool mAlive;
+        volatile  bool mAlive;
 
         //we don't want that threads can be copied or assigned therefore the copy constructor and assignment operator are declared private
         //but not implemented
