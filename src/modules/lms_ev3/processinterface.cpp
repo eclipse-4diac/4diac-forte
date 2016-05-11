@@ -192,11 +192,11 @@ bool CLMSEV3ProcessInterface::writePin(){
 
 bool CLMSEV3ProcessInterface::readWord(){
   bool retVal = false;
-  int internalChecker;
 
   if (SENSORW_VALUE == mnTypeOfIO || MOTOR_PWM == mnTypeOfIO || MOTOR_SPEED == mnTypeOfIO || MOTOR_ROT == mnTypeOfIO) {
     // || MOTOR_POSITION == mnTypeOfIO){ //this should be a double, but for testing is here
     TForteInt32 val;
+    int internalChecker;
     internalChecker = readNumberFromFile(&val);
     if (0 == internalChecker){
       IN_W() = (TForteWord) (val);
@@ -220,7 +220,7 @@ bool CLMSEV3ProcessInterface::readWord(){
       }else{
         TForteWord counter = 0;
         std::vector<std::string>::iterator it;
-        for (it = mModes.begin(); it < mModes.end(); it++, counter++){
+        for (it = mModes.begin(); it < mModes.end(); ++it, counter++){
           if (mode == *it){
             IN_W() = counter;
             STATUS() = scmOK;
@@ -247,8 +247,9 @@ bool CLMSEV3ProcessInterface::readWord(){
 
 bool CLMSEV3ProcessInterface::writeWord(){
   bool retVal = false;
-  bool writeAttempted = false;
+
   if (mFile.is_open()){
+    bool writeAttempted = false;
     mFile.clear();
     mFile.seekp(0, std::ios::beg);
     TForteWord val = OUT_W();
@@ -357,8 +358,9 @@ bool CLMSEV3ProcessInterface::readDWord(){
 
 bool CLMSEV3ProcessInterface::writeDWord(){
   bool retVal = false;
-  bool writeAttempted = false;
+
   if (mFile.is_open()){
+    bool writeAttempted = false;
     mFile.clear();
     mFile.seekp(0, std::ios::beg);
     TForteDWord val = OUT_D();
@@ -455,14 +457,12 @@ bool CLMSEV3ProcessInterface::setupSensorW(const std::vector<std::string> &paPar
 }
 
 bool CLMSEV3ProcessInterface::setupSensorValue(const std::vector<std::string> &paParamList){
-  bool internalCheck;
   bool retVal = false;
   std::string sysFileName;
   std::string basePath = "/sys/class/lego-sensor/sensor";
   std::stringstream helperStringStream;
-  int helperInteger = -1;
+  int helperInteger = findNumberFromPort(basePath, paParamList[0]);
 
-  helperInteger = findNumberFromPort(basePath, paParamList[0]);
   if(-1 != helperInteger){
     helperStringStream.clear();
     helperStringStream.seekg(0, std::ios::beg);
@@ -473,6 +473,7 @@ bool CLMSEV3ProcessInterface::setupSensorValue(const std::vector<std::string> &p
 
       mFile.open(sysFileName.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
       if(mFile.is_open()){
+        bool internalCheck;
         std::cout << "File " << sysFileName << " opened\n";
         TForteInt32 aux;
         internalCheck = readNumberFromFile(&aux);
@@ -507,13 +508,12 @@ bool CLMSEV3ProcessInterface::setupSensorValue(const std::vector<std::string> &p
 }
 
 bool CLMSEV3ProcessInterface::setupSensorMode(const std::vector<std::string> &paParamList, bool paIsInput){
-  bool retVal;
+  bool retVal = false;
   std::string helperString;
   std::string basePath = "/sys/class/lego-sensor/sensor";
   std::stringstream helperStringStream;
-  int helperInteger = -1;
+  int helperInteger = findNumberFromPort(basePath, paParamList[0]);
 
-  helperInteger = findNumberFromPort(basePath, paParamList[0]);
   if(-1 != helperInteger){
     helperStringStream.clear();
     helperStringStream.seekg(0, std::ios::beg);
@@ -582,18 +582,18 @@ bool CLMSEV3ProcessInterface::setupButton(const std::string &paParam, bool paIsI
 
 bool CLMSEV3ProcessInterface::setupMotor(const std::vector<std::string>& paParamList, bool paIsInput){
   bool retVal = false;
-  bool defaultType = false;
   std::string sysFileName = "/sys/class/tacho-motor/motor";
   std::stringstream number;
-  int sensorNumber = -1;
 
   if (3 == paParamList.size()){
+    int sensorNumber = -1;
     sensorNumber = findNumberFromPort(sysFileName, paParamList[0]);
     if(sensorNumber != -1){
       number.clear();
       number.seekp(0, std::ios::beg);
       number << sensorNumber;
       if (!number.fail()){
+        bool defaultType = false;
         if (paIsInput){
           if (scmPWMID == paParamList[2]){
             sysFileName += number.str() + "/duty_cycle";
@@ -655,7 +655,6 @@ int CLMSEV3ProcessInterface::findNumberFromPort(const std::string &paBasePath, c
   int retVal = -1;
   std::fstream mAddressFile;
   std::string fullPath;
-  char port[5];
   int portLenght = paEv3Port.length();
 
   if (portLenght < 5){ //Only possible values are inX and outX according to input and output ports of the EV3
@@ -668,6 +667,7 @@ int CLMSEV3ProcessInterface::findNumberFromPort(const std::string &paBasePath, c
         fullPath = paBasePath + number.str() + "/address";
         mAddressFile.open(fullPath.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3ca
         if(mAddressFile.is_open()){
+          char port[5];
           mAddressFile.clear();
           mAddressFile.seekg(0, std::ios::beg);
           mAddressFile.read(port, portLenght);
