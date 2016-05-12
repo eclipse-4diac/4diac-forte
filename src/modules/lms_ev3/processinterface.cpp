@@ -586,8 +586,7 @@ bool CLMSEV3ProcessInterface::setupMotor(const std::vector<std::string>& paParam
   std::stringstream number;
 
   if (3 == paParamList.size()){
-    int sensorNumber = -1;
-    sensorNumber = findNumberFromPort(sysFileName, paParamList[0]);
+    int sensorNumber = findNumberFromPort(sysFileName, paParamList[0]);
     if(sensorNumber != -1){
       number.clear();
       number.seekp(0, std::ios::beg);
