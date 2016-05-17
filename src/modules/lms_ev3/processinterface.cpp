@@ -464,8 +464,6 @@ bool CLMSEV3ProcessInterface::setupSensorValue(const std::vector<std::string> &p
   int helperInteger = findNumberFromPort(basePath, paParamList[0]);
 
   if(-1 != helperInteger){
-    helperStringStream.clear();
-    helperStringStream.seekg(0, std::ios::beg);
     helperStringStream << helperInteger;
     if (!helperStringStream.fail()){
       basePath += helperStringStream.str();
@@ -515,8 +513,6 @@ bool CLMSEV3ProcessInterface::setupSensorMode(const std::vector<std::string> &pa
   int helperInteger = findNumberFromPort(basePath, paParamList[0]);
 
   if(-1 != helperInteger){
-    helperStringStream.clear();
-    helperStringStream.seekg(0, std::ios::beg);
     helperStringStream << helperInteger;
     if (!helperStringStream.fail()){
       basePath += helperStringStream.str();
@@ -588,8 +584,6 @@ bool CLMSEV3ProcessInterface::setupMotor(const std::vector<std::string>& paParam
   if (3 == paParamList.size()){
     int sensorNumber = findNumberFromPort(sysFileName, paParamList[0]);
     if(sensorNumber != -1){
-      number.clear();
-      number.seekp(0, std::ios::beg);
       number << sensorNumber;
       if (!number.fail()){
         bool defaultType = false;
@@ -659,8 +653,6 @@ int CLMSEV3ProcessInterface::findNumberFromPort(const std::string &paBasePath, c
   if (portLenght < 5){ //Only possible values are inX and outX according to input and output ports of the EV3
     for(int i = 0; i < 255; i++){ //TODO: check maximum value of i
       std::stringstream number;
-      number.clear();
-      number.seekp(0, std::ios::beg);
       number << i;
       if (!number.fail()){
         fullPath = paBasePath + number.str() + "/address";
@@ -705,8 +697,6 @@ int CLMSEV3ProcessInterface::readNumberFromFile(TForteInt32* paResult){
     std::getline(mFile, read); //TODO: This return the same stream, should it be check? What behavior should it have if file is empty?
     if (!mFile.fail()){
       std::stringstream number(read);
-      number.clear();
-      number.seekp(0, std::ios::beg);
       number >> *paResult;
       if (number.fail()){
         retVal = 2; //Could not read
