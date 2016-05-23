@@ -32,7 +32,7 @@ mark_as_advanced(FORTE_BUILD_TYPE)
 #######################################################################################
 # Determine the loglevel
 #######################################################################################
-set(FORTE_LOGLEVEL "LOGDEBUG" CACHE STRING "Loglevel to use")
+set(FORTE_LOGLEVEL "LOGERROR" CACHE STRING "Loglevel to use")
 set_property(CACHE FORTE_LOGLEVEL PROPERTY STRINGS LOGDEBUG LOGERROR LOGWARNING LOGINFO NOLOG)
  
 forte_add_definition("-D${FORTE_LOGLEVEL}")
