@@ -11,6 +11,7 @@
  *******************************************************************************/
 #include "devlog.h"
 #include "timerha.h"
+#include <criticalregion.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -32,8 +33,11 @@ void printLogMessage(E_MsgLevel pa_eLevel, const char *pa_acMessage);
 static const int scm_nMsgBufSize = 300;
 static char sm_acMsgBuf[scm_nMsgBufSize]; //!<Buffer for the messages created by the variable addMsg function
 
+static CSyncObject  sgMessageLock;
+
 
 void logMessage(E_MsgLevel pa_eLevel, const char *pa_acMessage, ...){
+  CCriticalRegion crticalRegion(sgMessageLock);
   va_list pstArgPtr;
 
   va_start(pstArgPtr, pa_acMessage);

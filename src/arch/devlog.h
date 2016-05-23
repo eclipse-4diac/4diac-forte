@@ -72,17 +72,19 @@ enum E_MsgLevel {E_INFO, E_WARNING, E_ERROR, E_DEBUG, E_TRACE};
 #endif
 
 #if (defined(FORTE_TRACE_EVENTS) && !defined(NOLOG))
-  #define FORTE_TRACE(...) logMessage(E_TRACE,  __VA_ARGS__)
+#define FORTE_TRACE(...) logMessage(E_TRACE,  __VA_ARGS__)
 #else
   #define FORTE_TRACE(...)
 #endif
+
 
 #ifndef NOLOG
 
 /*! \brief Adds an Entry to the LogBook
  *
  */
-    void logMessage(E_MsgLevel pa_eLevel, const char *pa_acMessage, ...);
-#endif
+void logMessage(E_MsgLevel pa_eLevel, const char *pa_acMessage, ...);
+
+#endif  //#ifndef NOLOG
 
 #endif //_DEVLOG_H_
