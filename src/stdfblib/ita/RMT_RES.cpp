@@ -46,51 +46,109 @@ RMT_RES::RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_
   addFB(CTypeLib::createFB(g_nStringIdSTART, g_nStringIdE_RESTART, this));
   addFB(CTypeLib::createFB(g_nStringIdMGR_FF, g_nStringIdE_SR, this));
   addFB(CTypeLib::createFB(g_nStringIdKERNEL, g_nStringIdDM_KRNL, this));
+  addFB(CTypeLib::createFB(g_nStringIdSVR, g_nStringIdSERVER_1_2, this));
+  addFB(CTypeLib::createFB(g_nStringIdMGR, g_nStringIdDEV_MGR, this));
 
   forte::core::SManagementCMD command;
 
   command.mFirstParam.pushBack(g_nStringIdSTART);
-  command.mFirstParam.pushBack(g_nStringIdCOLD);
-  command.mSecondParam.pushBack(g_nStringIdMGR_FF);
-  command.mSecondParam.pushBack(g_nStringIdS);
-  createConnection(command);
+    command.mFirstParam.pushBack(g_nStringIdCOLD);
+    command.mSecondParam.pushBack(g_nStringIdMGR_FF);
+    command.mSecondParam.pushBack(g_nStringIdS);
+    createConnection(command);
 
-  command.mFirstParam.clear();
-  command.mFirstParam.pushBack(g_nStringIdSTART);
-  command.mFirstParam.pushBack(g_nStringIdWARM);
-  command.mSecondParam.clear();
-  command.mSecondParam.pushBack(g_nStringIdMGR_FF);
-  command.mSecondParam.pushBack(g_nStringIdS);
-  createConnection(command);
+    command.mFirstParam.clear();
+    command.mFirstParam.pushBack(g_nStringIdSTART);
+    command.mFirstParam.pushBack(g_nStringIdwARM);
+    command.mSecondParam.clear();
+    command.mSecondParam.pushBack(g_nStringIdMGR_FF);
+    command.mSecondParam.pushBack(g_nStringIdS);
+    createConnection(command);
 
-  command.mFirstParam.clear();
-  command.mFirstParam.pushBack(g_nStringIdSTART);
-  command.mFirstParam.pushBack(g_nStringIdSTOP);
-  command.mSecondParam.clear();
-  command.mSecondParam.pushBack(g_nStringIdMGR_FF);
-  command.mSecondParam.pushBack(g_nStringIdR);
-  createConnection(command);
+    command.mFirstParam.clear();
+    command.mFirstParam.pushBack(g_nStringIdSTART);
+    command.mFirstParam.pushBack(g_nStringIdSTOP);
+    command.mSecondParam.clear();
+    command.mSecondParam.pushBack(g_nStringIdMGR_FF);
+    command.mSecondParam.pushBack(g_nStringIdR);
+    createConnection(command);
 
-  command.mFirstParam.clear();
-  command.mFirstParam.pushBack(g_nStringIdMGR_FF);
-  command.mFirstParam.pushBack(g_nStringIdEO);
-  command.mSecondParam.clear();
-  command.mSecondParam.pushBack(g_nStringIdKERNEL);
-  command.mSecondParam.pushBack(g_nStringIdINIT);
-  createConnection(command);
+    command.mFirstParam.clear();
+    command.mFirstParam.pushBack(g_nStringIdMGR_FF);
+    command.mFirstParam.pushBack(g_nStringIdEO);
+    command.mSecondParam.clear();
+    command.mSecondParam.pushBack(g_nStringIdSVR);
+    command.mSecondParam.pushBack(g_nStringIdINIT);
+    createConnection(command);
 
-  command.mFirstParam.clear();
-  command.mFirstParam.pushBack(g_nStringIdMGR_FF);
-  command.mFirstParam.pushBack(g_nStringIdQ);
-  command.mSecondParam.clear();
-  command.mSecondParam.pushBack(g_nStringIdKERNEL);
-  command.mSecondParam.pushBack(g_nStringIdQI);
-  createConnection(command);
+    command.mFirstParam.clear();
+    command.mFirstParam.pushBack(g_nStringIdSVR);
+    command.mFirstParam.pushBack(g_nStringIdINITO);
+    command.mSecondParam.clear();
+    command.mSecondParam.pushBack(g_nStringIdMGR);
+    command.mSecondParam.pushBack(g_nStringIdINIT);
+    createConnection(command);
+
+    command.mFirstParam.clear();
+    command.mFirstParam.pushBack(g_nStringIdSVR);
+    command.mFirstParam.pushBack(g_nStringIdIND);
+    command.mSecondParam.clear();
+    command.mSecondParam.pushBack(g_nStringIdMGR);
+    command.mSecondParam.pushBack(g_nStringIdREQ);
+    createConnection(command);
+
+    command.mFirstParam.clear();
+    command.mFirstParam.pushBack(g_nStringIdMGR);
+    command.mFirstParam.pushBack(g_nStringIdCNF);
+    command.mSecondParam.clear();
+    command.mSecondParam.pushBack(g_nStringIdSVR);
+    command.mSecondParam.pushBack(g_nStringIdRSP);
+    createConnection(command);
+
+    command.mFirstParam.clear();
+    command.mFirstParam.pushBack(g_nStringIdMGR_FF);
+    command.mFirstParam.pushBack(g_nStringIdQ);
+    command.mSecondParam.clear();
+    command.mSecondParam.pushBack(g_nStringIdSVR);
+    command.mSecondParam.pushBack(g_nStringIdQI);
+    createConnection(command);
+
+    command.mFirstParam.clear();
+    command.mFirstParam.pushBack(g_nStringIdSVR);
+    command.mFirstParam.pushBack(g_nStringIdQO);
+    command.mSecondParam.clear();
+    command.mSecondParam.pushBack(g_nStringIdMGR);
+    command.mSecondParam.pushBack(g_nStringIdQI);
+    createConnection(command);
+
+    command.mFirstParam.clear();
+    command.mFirstParam.pushBack(g_nStringIdSVR);
+    command.mFirstParam.pushBack(g_nStringIdRD_1);
+    command.mSecondParam.clear();
+    command.mSecondParam.pushBack(g_nStringIdMGR);
+    command.mSecondParam.pushBack(g_nStringIdDST);
+    createConnection(command);
+
+    command.mFirstParam.clear();
+    command.mFirstParam.pushBack(g_nStringIdSVR);
+    command.mFirstParam.pushBack(g_nStringIdRD_2);
+    command.mSecondParam.clear();
+    command.mSecondParam.pushBack(g_nStringIdMGR);
+    command.mSecondParam.pushBack(g_nStringIdRQST);
+    createConnection(command);
+
+    command.mFirstParam.clear();
+    command.mFirstParam.pushBack(g_nStringIdMGR);
+    command.mFirstParam.pushBack(g_nStringIdRESP);
+    command.mSecondParam.clear();
+    command.mSecondParam.pushBack(g_nStringIdSVR);
+    command.mSecondParam.pushBack(g_nStringIdSD_1);
+    createConnection(command);
 
   command.mFirstParam.clear();
   command.mFirstParam.pushBack(g_nStringIdMGR_ID);
   command.mSecondParam.clear();
-  command.mSecondParam.pushBack(g_nStringIdKERNEL);
+  command.mSecondParam.pushBack(g_nStringIdSVR);
   command.mSecondParam.pushBack(g_nStringIdID);
   createConnection(command);
   
