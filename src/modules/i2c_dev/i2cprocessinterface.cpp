@@ -111,7 +111,7 @@ bool CI2CProcessInterface::readWord(){
   if(2 == read(mFd, readValue, 2)){
     IN_W() = static_cast<TForteWord>(static_cast<TForteWord>(readValue[0]) + (static_cast<TForteWord>(readValue[1]) << 8));
   }else{
-    STATUS() = scmCouldNotWrite;
+    STATUS() = scmCouldNotRead;
     retVal = false;
   }
 
@@ -120,12 +120,11 @@ bool CI2CProcessInterface::readWord(){
 
 bool CI2CProcessInterface::writeWord(){
   bool retVal = true;
-  TForteByte writeValue[3];
+  TForteByte writeValue[3] = { mValueAddress };
   STATUS() = scmOK;
 
-  writeValue[0] = mValueAddress;
-  writeValue[1] = static_cast<TForteByte>(OUT_W().operator unsigned short int() && 0xFF);
-  writeValue[2] = static_cast<TForteByte>(OUT_W().operator unsigned short int() >> 8);
+  writeValue[2] = static_cast<TForteByte>(OUT_W().operator unsigned short int());
+  writeValue[1] = static_cast<TForteByte>(OUT_W().operator unsigned short int() >> 8);
 
   if(3 != write(mFd, writeValue, 3)){
     STATUS() = scmCouldNotWrite;
