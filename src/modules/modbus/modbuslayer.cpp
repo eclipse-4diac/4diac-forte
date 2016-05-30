@@ -390,7 +390,7 @@ EComResponse CModbusComLayer::openConnection(char *pa_acLayerParameter){
           static_cast<CModbusClientConnection*>(m_pModbusConnection)->addNewPoll(commonParams.m_nPollFrequency, commonParams.m_nFuncCode, commonParams.m_nReadStartAddress[i], commonParams.m_nReadNrAddresses[i]);
         }
         for(unsigned int i = 0; i < commonParams.m_nNrSends; i++){
-          static_cast<CModbusClientConnection*>m_pModbusConnection)->addNewSend(commonParams.m_nSendStartAddress[i], commonParams.m_nSendNrAddresses[i]);
+          static_cast<CModbusClientConnection*>(m_pModbusConnection)->addNewSend(commonParams.m_nSendStartAddress[i], commonParams.m_nSendNrAddresses[i]);
         }
 
         if(m_pModbusConnection->connect() < 0){
@@ -469,7 +469,7 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
     ++chrStorage;
   }
   else{
-    if(strcmp(params, "tcp") == 0 || strcmp(params, "tcp") == 0){
+    if(strcmp(params, "tcp") == 0 || strcmp(params, "TCP") == 0){
       params = chrStorage;
 
       chrStorage = strchr(chrStorage, ':');
@@ -644,7 +644,7 @@ int CModbusComLayer::findNextStopAddress(const char* pa_acParam, int pa_nStartIn
 }
 
 bool CModbusComLayer::isIp(const char* pa_acIp){
-  char* str = new char[strlen(pa_acIp)];
+  char* str = new char[strlen(pa_acIp) + 1];
   strcpy(str, pa_acIp);
   char* pch;
   int nrPeriods = 0;
