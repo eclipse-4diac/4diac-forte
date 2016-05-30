@@ -17,23 +17,23 @@
 namespace forte {
   namespace arch {
 
-    CPThreadSemaphore::CPThreadSemaphore(unsigned int paInitialValue){
-      m_hSelfSuspendSemaphore = CreateSemaphore(NULL, paInitialValue, 10, NULL);
-      if(0 == m_hSelfSuspendSemaphore){
-        DEVLOG_ERROR("Could not initialize suspend semphore: %d\n", GetLastError());
+    CWin32Semaphore::CWin32Semaphore(unsigned int paInitialValue){
+      mSemaphore = CreateSemaphore(NULL, paInitialValue, 10, NULL);
+      if(0 == mSemaphore){
+        DEVLOG_ERROR("Could not initialize suspend semaphore: %d\n", GetLastError());
       }
     }
 
-    CPThreadSemaphore::~CPThreadSemaphore(){
+    CWin32Semaphore::~CWin32Semaphore(){
       CloseHandle(mSemaphore);
     }
 
-    void CPThreadSemaphore::semInc(){
-      ReleaseSemaphore(m_hSelfSuspendSemaphore, 1, 0);
+    void CWin32Semaphore::semInc(){
+      ReleaseSemaphore(mSemaphore, 1, 0);
     }
 
-    void CPThreadSemaphore::semWaitIndefinitly(){
-      WaitForSingleObject(m_hSelfSuspendSemaphore, INFINITE);
+    void CWin32Semaphore::semWaitIndefinitly(){
+      WaitForSingleObject(mSemaphore, INFINITE);
     }
 
   } /* namespace arch */
