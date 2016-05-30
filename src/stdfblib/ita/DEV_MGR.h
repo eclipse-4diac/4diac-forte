@@ -18,33 +18,35 @@
 #include <forte_bool.h>
 #include <forte_string.h>
 #include <mgmcmdstruct.h>
+#include <commfb.h>
 
 /*! \brief Implementation of the DEV_MGR FB.
  */
-class DEV_MGR: public CFunctionBlock {
+class DEV_MGR: public forte::com_infra::CCommFB {
   DECLARE_FIRMWARE_FB(DEV_MGR)
 
   private:
 
+    static const CStringDictionary::TStringId scm_anDataInputNames[];
+    static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+    static const CStringDictionary::TStringId scm_anDataOutputNames[];
+    static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+
+    static const TEventID scm_nEventINITID = 0;
+    static const TEventID scm_nEventREQID = 1;
+    static const TForteInt16 scm_anEIWithIndexes[];
+    static const TDataIOID scm_anEIWith[];
+    static const CStringDictionary::TStringId scm_anEventInputNames[];
+
+    static const TEventID scm_nEventINITOID = 0;
+    static const TEventID scm_nEventCNFID = 1;
+    static const TForteInt16 scm_anEOWithIndexes[];
+    static const TDataIOID scm_anEOWith[];
+    static const CStringDictionary::TStringId scm_anEventOutputNames[];
+
     static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-    static const CStringDictionary::TStringId scm_aunEINameIds[2];
-    static const TDataIOID scm_anEIWith[6];
-    static const TForteInt16 scm_anEIWithIndexes[2];
-    static const CStringDictionary::TStringId scm_aunEONameIds[2];
-    static const TDataIOID scm_anEOWith[4];
-    static const TForteInt16 scm_anEOWithIndexes[3];
-    static const CStringDictionary::TStringId scm_aunDONameIds[2];
-    static const CStringDictionary::TStringId scm_aunDIDataTypeIds[];
-    static const CStringDictionary::TStringId scm_aunDINameIds[3];
-    static const CStringDictionary::TStringId scm_aunDODataTypeIds[];
 
-    static const TEventID csm_nEventINITOID = 0;
-    static const TEventID csm_nEventCNFID = 1;
-
-    static const TEventID csm_nEventINITID = 0;
-    static const TEventID csm_nEventREQID = 1;
-
-    FORTE_FB_DATA_ARRAY(2, 3, 2, 0);
+    FORTE_FB_DATA_ARRAY(2, 3, 4, 0);
 
     //! The device the block is contained in
     CDevice &m_poDevice;
@@ -120,25 +122,33 @@ class DEV_MGR: public CFunctionBlock {
     void generateLongResponse(EMGMResponse pa_eResp, forte::core::SManagementCMD &pa_stCMD);
     void appedIdentifierName(CIEC_STRING& paDest, forte::core::TNameIdentifier &paIdentifier);
 
-    CIEC_BOOL& QI() {
-     	return *static_cast<CIEC_BOOL*>(getDI(0));
-    }
+    CIEC_BOOL &QI() {
+      return *static_cast<CIEC_BOOL*>(getDI(0));
+    };
 
-    CIEC_STRING& DST() {
-     	return *static_cast<CIEC_STRING*>(getDI(1));
-    }
+    CIEC_STRING &ID() {
+      return *static_cast<CIEC_STRING*>(getDI(1));
+    };
 
-    CIEC_STRING& RQST() {
-     	return *static_cast<CIEC_STRING*>(getDI(2));
-    }
+    CIEC_STRING &RESP() {
+      return *static_cast<CIEC_STRING*>(getDI(2));
+    };
 
-    CIEC_BOOL& QO() {
-     	return *static_cast<CIEC_BOOL*>(getDO(0));
-    }
+    CIEC_BOOL &QO() {
+      return *static_cast<CIEC_BOOL*>(getDO(0));
+    };
 
-    CIEC_STRING& RESP() {
-     	return *static_cast<CIEC_STRING*>(getDO(1));
-    }
+    CIEC_STRING &STATUS() {
+      return *static_cast<CIEC_STRING*>(getDO(1));
+    };
+
+    CIEC_STRING &DST() {
+      return *static_cast<CIEC_STRING*>(getDO(2));
+    };
+
+    CIEC_STRING &RQST() {
+      return *static_cast<CIEC_STRING*>(getDO(3));
+    };
 
 
   public:
@@ -148,11 +158,7 @@ class DEV_MGR: public CFunctionBlock {
      */
     static const char * const scm_sMGMResponseTexts[13];
 
-    FUNCTION_BLOCK_CTOR(DEV_MGR),
-        m_poDevice(pa_poSrcRes->getDevice()) {
-      m_stCommand.mAdditionalParams.reserve(255);
-      m_stCommand.mAdditionalParams.clear();
-    };
+    DEV_MGR(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
     virtual ~DEV_MGR();
 
   private:

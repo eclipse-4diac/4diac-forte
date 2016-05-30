@@ -24,41 +24,51 @@
 
 DEFINE_FIRMWARE_FB(DEV_MGR, g_nStringIdDEV_MGR)
 
-const CStringDictionary::TStringId DEV_MGR::scm_aunEINameIds[2] = { g_nStringIdINIT, g_nStringIdREQ };
-const TDataIOID DEV_MGR::scm_anEIWith[6] = { 0, 255, 0, 1, 2, 255 };
-const TForteInt16 DEV_MGR::scm_anEIWithIndexes[2] = { 0, 2 };
-const CStringDictionary::TStringId DEV_MGR::scm_aunEONameIds[2] = { g_nStringIdINITO, g_nStringIdCNF };
-const TDataIOID DEV_MGR::scm_anEOWith[4] = { 0, 255, 1, 255 };
-const TForteInt16 DEV_MGR::scm_anEOWithIndexes[3] = { 0, 2 };
-const CStringDictionary::TStringId DEV_MGR::scm_aunDINameIds[3] = { g_nStringIdQI, g_nStringIdDST, g_nStringIdRQST };
-const CStringDictionary::TStringId DEV_MGR::scm_aunDIDataTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING };
-const CStringDictionary::TStringId DEV_MGR::scm_aunDONameIds[2] = { g_nStringIdQO, g_nStringIdRESP };
-const CStringDictionary::TStringId DEV_MGR::scm_aunDODataTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING };
+const CStringDictionary::TStringId DEV_MGR::scm_anDataInputNames[] = {g_nStringIdQI, g_nStringIdID, g_nStringIdRESP};
 
-const SFBInterfaceSpec DEV_MGR::scm_stFBInterfaceSpec = { 2, scm_aunEINameIds, scm_anEIWith, scm_anEIWithIndexes, 2, scm_aunEONameIds, scm_anEOWith, scm_anEOWithIndexes, 3, scm_aunDINameIds, scm_aunDIDataTypeIds, 2, scm_aunDONameIds, scm_aunDODataTypeIds, 0, 0 };
+const CStringDictionary::TStringId DEV_MGR::scm_anDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdSTRING};
+
+const CStringDictionary::TStringId DEV_MGR::scm_anDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS, g_nStringIdDST, g_nStringIdRQST};
+
+const CStringDictionary::TStringId DEV_MGR::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING};
+
+const TForteInt16 DEV_MGR::scm_anEIWithIndexes[] = {0, -1};
+const TDataIOID DEV_MGR::scm_anEIWith[] = {0, 1, 255};
+const CStringDictionary::TStringId DEV_MGR::scm_anEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
+
+const TDataIOID DEV_MGR::scm_anEOWith[] = {0, 1, 255, 2, 3, 255};
+const TForteInt16 DEV_MGR::scm_anEOWithIndexes[] = {0, -1, 3};
+const CStringDictionary::TStringId DEV_MGR::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
+
+const SFBInterfaceSpec DEV_MGR::scm_stFBInterfaceSpec = {
+  2,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
+  2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  3,  scm_anDataInputNames, scm_anDataInputTypeIds,
+  4,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+  0, 0
+};
 
 const char * const DEV_MGR::scm_sMGMResponseTexts[13] = { "RDY", "BAD_PARAMS", "LOCAL_TERMINATION", "SYSTEM_TERMINATION", "NOT_READY", "UNSUPPORTED_CMD", "UNSUPPORTED_TYPE", "NO_SUCH_OBJECT", "INVALID_OBJECT", "INVALID_OPERATION", "INVALID_STATE", "OVERFLOW", "INVALID_DST" };
 
 void DEV_MGR::executeEvent(int pa_nEIID){
 
-  if(csm_nEventINITID == pa_nEIID){
+  if(scm_nEventINITID == pa_nEIID){
 #ifdef FORTE_SUPPORT_BOOT_FILE
     if((true == QI()) && (false == QO())){
       //this is the first time init is called try to load a boot file
       loadForteBootFile();
     }
 #endif
-    QO() = QI();
-    sendOutputEvent(csm_nEventINITOID);
+    CCommFB::executeEvent(pa_nEIID);  //initialize the underlying server FB
   }
-  else if(csm_nEventREQID == pa_nEIID){
-    QO() = QI();
+  else if(cg_nExternalEventID == pa_nEIID){
+    //we received a message on the network let the server correctly handle it
+    CCommFB::executeEvent(pa_nEIID);
     if(true == QI()){
+      //the message was correctly received
       executeRQST();
-    }else{
-      RESP().clear();
+      //send response
+      CCommFB::executeEvent(CCommFB::scm_nSendNotificationEventID);
     }
-    sendOutputEvent(csm_nEventCNFID);
   }
 }
 
@@ -539,6 +549,13 @@ void DEV_MGR::appedIdentifierName(CIEC_STRING& paDest, forte::core::TNameIdentif
     paDest.append(CStringDictionary::getInstance().get(paIdentifier.back()));
   }
 }
+
+DEV_MGR::DEV_MGR(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
+    CCommFB(pa_nInstanceNameId, pa_poSrcRes, &scm_stFBInterfaceSpec, m_anFBConnData, m_anFBVarsData, forte::com_infra::e_Server),
+    m_poDevice(pa_poSrcRes->getDevice()) {
+  m_stCommand.mAdditionalParams.reserve(255);
+  m_stCommand.mAdditionalParams.clear();
+};
 
 DEV_MGR::~DEV_MGR(){
 }
