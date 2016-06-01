@@ -56,8 +56,8 @@ unsigned int* CProcessImageMatrix::getEntry(unsigned int pa_nCN, unsigned int pa
 
 // getEntry: same as above but returns the values on row "index"
 unsigned int* CProcessImageMatrix::getEntry(unsigned int pa_nIndex){
-  static unsigned int data[3] = { 0, 0, 0 };
   if(pa_nIndex < m_nNumberOfEntries){
+    static unsigned int data[3] = { 0, 0, 0 };
     TChannelList::Iterator it = m_lMatrix.begin();
     for(unsigned int i = 0; i < pa_nIndex; i++){
       ++it;
