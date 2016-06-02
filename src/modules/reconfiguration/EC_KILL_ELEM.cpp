@@ -12,8 +12,8 @@
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "EC_KILL_ELEM_gen.cpp"
 #endif
-#include "DEV_MGR.h"
-#include "core/device.h"
+#include "../../stdfblib/ita/DEV_MGR.h"
+#include <device.h>
 
 DEFINE_FIRMWARE_FB(FORTE_EC_KILL_ELEM, g_nStringIdEC_KILL_ELEM)
 

@@ -9,7 +9,7 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include <fortealloc.h>
-#include <RMT_DEV.h>
+#include "../../../stdfblib/ita/RMT_DEV.h"
 #include <cyg/kernel/kapi.h>
 #include <network.h>
 #include <cyg/hal/hal_io.h>             // IO macros

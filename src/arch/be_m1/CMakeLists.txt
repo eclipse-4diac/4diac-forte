@@ -35,9 +35,6 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Bachmann M1")
    forte_add_sourcefile_h(sockhand.h)
   endif(FORTE_COM_ETH)
 
-  forte_add_include_directories(../${CMAKE_CURRENT_SOURCE_DIR})
-  forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
   forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -DFORTE_LITTLE_ENDIAN  -DVXWORKS -O0 -ggdb")
   forte_add_definition("-fno-rtti")
   

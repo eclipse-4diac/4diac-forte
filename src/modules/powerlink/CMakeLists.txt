@@ -40,8 +40,6 @@ endif()
 if(FORTE_MODULE_POWERLINK)	
 	SET(FORTE_MODULE_POWERLINK_LIB_DIR "" CACHE PATH "Path to openPOWERLINK-V1.08.1 directory")
 	SET(FORTE_MODULE_POWERLINK_TINYXML_DIR "" CACHE PATH "Path to TinyXML directory")
-
-    forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
     
     forte_add_sourcefile_hcpp( POWERLINK_MN 
     						   X20DO9321
