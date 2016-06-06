@@ -11,4 +11,5 @@
 forte_add_network_layer(SER OFF "ser" CWin32SerComLayer cwin32sercomlayer "Enable Forte serial line communication")
 if(FORTE_COM_SER)
   forte_add_sourcefile_hcpp( cwin32sercomhandler )
+  forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 endif(FORTE_COM_SER)
