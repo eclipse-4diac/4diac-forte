@@ -53,8 +53,8 @@ CCommFB::CCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResourc
 CCommFB::~CCommFB(){
   closeConnection();
 
-  if(0 != m_pstInterfaceSpec){
-    //Free the memory allocated for the interface
+  if((getManagesFBData()) && (0 != m_pstInterfaceSpec)){
+    //Free the memory allocated for the interface, only do this if we dynamically created it (i.e., getManagesFBData is true)
     delete[] (m_pstInterfaceSpec->m_anEIWith);
     delete[] (m_pstInterfaceSpec->m_anEOWith);
     delete[] (m_pstInterfaceSpec->m_aunDINames);
