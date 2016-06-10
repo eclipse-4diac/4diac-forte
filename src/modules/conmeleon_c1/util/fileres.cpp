@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2016 fortiss GmbH
+ * Copyright (c) 2016 Herwig Eichler, www.conmeleon.org
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *   Herwig Eichler (conmeleon.org) - initial API and implementation and initial documentation
+ *   Herwig Eichler  - initial API and implementation and initial documentation
  *******************************************************************************/
 
 #include "../util/fileres.h"
@@ -15,7 +15,7 @@
 #include <cstdarg>
 
 
-CFileResource::CFileResource(const char* pszFileName, const char* pszOpenMode = "a+") : m_pFileHandle(std::fopen(pszFileName, pszOpenMode)) {
+CFileResource::CFileResource(const char* pszFileName, const char* pszOpenMode /*= "a+"*/) : m_pFileHandle(std::fopen(pszFileName, pszOpenMode)) {
 
 	m_ReadOnly = checkModeReadOnly(pszOpenMode);
 
