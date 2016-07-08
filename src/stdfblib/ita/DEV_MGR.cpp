@@ -227,7 +227,6 @@ bool DEV_MGR::parseConnectionData(char *pa_acRequestPartLeft, forte::core::SMana
 
 bool DEV_MGR::parseWriteConnectionData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand){
   bool bRetVal = false;
-  char cBuffer[255] = "";
   if(!strncmp("Connection Source=\"", pa_acRequestPartLeft, 19)){
     pa_acRequestPartLeft = &(pa_acRequestPartLeft[19]);
     //first retreive the data for the param
@@ -239,7 +238,8 @@ bool DEV_MGR::parseWriteConnectionData(char *pa_acRequestPartLeft, forte::core::
     }
     // TODO: check if "-character should also be trimmed from pa_acRequestPartLeft
     unsigned int i = 0;
-    for(; *pa_acRequestPartLeft != '\"'; ++pa_acRequestPartLeft, ++i){
+    char* beginOfRequest = pa_acRequestPartLeft;
+    for(; *pa_acRequestPartLeft != '\"'; ++pa_acRequestPartLeft){
       if('\0' == *pa_acRequestPartLeft){
         return false;
       }
@@ -250,11 +250,12 @@ bool DEV_MGR::parseWriteConnectionData(char *pa_acRequestPartLeft, forte::core::
         pa_acRequestPartLeft += 2; //go beyound the ; and the following "
         break;
       }
-      cBuffer[i] = *pa_acRequestPartLeft;
+      i++;
     }
-
-    cBuffer[i + 1] = '\0';
-    pa_rstCommand.mAdditionalParams.assign(cBuffer, static_cast<TForteUInt16>(i));
+    //char originalVal = beginOfRequest[i];
+    beginOfRequest[i] = '\0';
+    pa_rstCommand.mAdditionalParams.assign(beginOfRequest, static_cast<TForteUInt16>(i));
+    //beginOfRequest[i] = originalVal;
 
     pa_acRequestPartLeft = strchr(&(pa_acRequestPartLeft[1]), '\"');
     if(pa_acRequestPartLeft != 0){
