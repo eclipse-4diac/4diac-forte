@@ -14,6 +14,9 @@
 # PAHO MQTT Com Layer
 #############################################################################
 forte_add_network_layer(PAHOMQTT OFF "mqtt" MQTTComLayer MQTTComLayer "Enable Paho MQTT Com Layer")
+
+forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
 SET(FORTE_COM_PAHOMQTT_DIR "" CACHE PATH "Path to Paho MQTT src directory (leave empty for installed source code)")
 
 if(FORTE_COM_PAHOMQTT)
