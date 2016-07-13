@@ -45,8 +45,8 @@ int MQTTHandler::mqttMessageArrived(void* context, char* topicName, int topicLen
     void* pPayLoad = message->payload;
     unsigned int payLoadSize = static_cast<unsigned int>(message->payloadlen);
 
-    CCriticalRegion section(mLockMessageDelivery); //Start critical section proected the list
-    for(CSinglyLinkedList<MQTTComLayer*>::Iterator it = handler->layers.begin(); it != handler->layers.end(); ++it){
+    CCriticalRegion section(mLockMessageDelivery); //Start critical section protect the list
+    for(CSinglyLinkedList<MQTTComLayer*>::Iterator it = handler->mlayers.begin(); it != handler->mlayers.end(); ++it){
       if(0 == strcmp((*it)->getTopicName(), topicName)){
         if(forte::com_infra::e_Nothing != (*it)->recvData(pPayLoad, payLoadSize)){
           handler->startNewEventChain((*it)->getCommFB());
@@ -82,12 +82,32 @@ int MQTTHandler::registerLayer(char* paAddress, char* paClientId, MQTTComLayer* 
   else if((0 != strcmp(paClientId, mClientId)) || (0 != strcmp(paAddress, mAddress))){
     return eWrongClientID;
   }
-  MQTTHandler::layers.push_back(paLayer);
+  CCriticalRegion section(mLockMessageDelivery); //Start critical section protect the list
+  mlayers.push_back(paLayer);
   return eRegisterLayerSucceeded;
 }
 
 void MQTTHandler::unregisterLayer(MQTTComLayer* paLayer){
-  //TODO: Implement unregister; search list and delete node
+  CCriticalRegion section(mLockMessageDelivery); //Start critical section protect the list
+
+  CSinglyLinkedList<MQTTComLayer*>::Iterator itRunner(mlayers.begin());
+  CSinglyLinkedList<MQTTComLayer*>::Iterator itRefNode(mlayers.end());
+  CSinglyLinkedList<MQTTComLayer*>::Iterator itEnd(mlayers.end());
+
+  while(itRunner != itEnd){
+    if(*itRunner == paLayer){
+      if(itRefNode == itEnd){
+        mlayers.pop_front();
+      }
+      else{
+        mlayers.eraseAfter(itRefNode);
+      }
+      break;
+    }
+
+    itRefNode = itRunner;
+    ++itRunner;
+  }
 }
 
 void MQTTHandler::enableHandler(void){
