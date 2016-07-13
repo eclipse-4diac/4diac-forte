@@ -16,8 +16,8 @@
 namespace forte {
   namespace com_infra {
 
-    CRawDataComLayer::CRawDataComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poFB) : CComLayer(pa_poUpperLayer, pa_poFB){
-      m_cTerminatorSybmol = '\n';
+    CRawDataComLayer::CRawDataComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poFB) :
+            CComLayer(pa_poUpperLayer, pa_poFB){
     }
 
     CRawDataComLayer::~CRawDataComLayer(){
@@ -29,19 +29,18 @@ namespace forte {
       }
     }
 
-    EComResponse CRawDataComLayer::sendData( void *pa_pvData, unsigned int){
-      temp.clear();
-      TConstIEC_ANYPtr apoSDs = static_cast<TConstIEC_ANYPtr>(pa_pvData);
-      temp.reserve(static_cast<TForteUInt16>(static_cast<const CIEC_STRING&>(apoSDs[0]).length() + 1));
-      temp = static_cast<const CIEC_STRING&>(apoSDs[0]);
-      temp.append(const_cast<char*>(&m_cTerminatorSybmol),1);
-      m_poBottomLayer->sendData(reinterpret_cast<void*>(temp.getValue()), temp.length());
+    EComResponse CRawDataComLayer::sendData( void *paData, unsigned int){
+      TConstIEC_ANYPtr apoSDs = static_cast<TConstIEC_ANYPtr>(paData);
+      const CIEC_STRING &val(static_cast<const CIEC_STRING&>(apoSDs[0]));
+      m_poBottomLayer->sendData((void*)val.getValue(), val.length());
       return e_ProcessDataOk;
     }
 
-    EComResponse CRawDataComLayer::recvData( const void *pa_pvData, unsigned int pa_unSize){
+    EComResponse CRawDataComLayer::recvData( const void *paData, unsigned int paSize){
       if (0 == m_poTopLayer && m_poFb->getNumRD() == 1){
-        m_poFb->getRDs()[0].saveAssign(CIEC_STRING(static_cast<const char*>(pa_pvData)));
+        TIEC_ANYPtr apoRDs = static_cast<TIEC_ANYPtr>(m_poFb->getRDs());
+        CIEC_STRING &val(static_cast<CIEC_STRING&>(apoRDs[0]));
+        val.assign(static_cast<const char *>(paData), static_cast<TForteUInt16>(paSize));
       }
       return e_ProcessDataOk;
     }
