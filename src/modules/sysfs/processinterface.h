@@ -13,32 +13,29 @@
 #define _PROCESSINTERFACE_H_
 
 #include <../../stdfblib/io/processinterfacebase.h>
-#include <funcbloc.h>
-#include <forte_bool.h>
-#include <forte_string.h>
+#include <fstream>
 
 class CSysFsProcessInterface : public CProcessInterfaceBase{
 
-public:
- CSysFsProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
-        const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
+  public:
+    CSysFsProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
     virtual ~CSysFsProcessInterface();
 
-protected:
-  bool initialise(bool m_bInputOrOutput);
-  bool deinitialise();
-  bool writePin();
-  bool readPin();
+  protected:
+    bool initialise(bool paIsInput);
+    bool deinitialise();
+    bool writePin();
+    bool readPin();
 
-private:
-  bool checkPin();
-  const static int scmBuffer = 100;
+  private:
+    std::fstream mFile;
 
-  int mPinNumber;
-
-  static const char * const scmPinInUse;
-  static const char * const scmInitDeinitOK;
-  static const char * const scmNotInitialised;
+    static const char * const scmOK;
+    static const char * const scmPinInUse;
+    static const char * const scmNotInitialised;
+    static const char * const scmError;
+    static const char * const scmCouldNotRead;
+    static const char * const scmCouldNotWrite;
 
 };
 

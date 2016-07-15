@@ -10,150 +10,145 @@
  *******************************************************************************/
 
 #include "processinterface.h"
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <stdio.h>
-
+#include <string>
+const char * const CSysFsProcessInterface::scmOK = "OK";
 const char * const CSysFsProcessInterface::scmPinInUse = "Pin already in use by other FB";
-const char * const CSysFsProcessInterface::scmInitDeinitOK = "OK";
-const char * const CSysFsProcessInterface::scmNotInitialised = "Not initialised";
+const char * const CSysFsProcessInterface::scmNotInitialised = "FB not initialized";
+const char * const CSysFsProcessInterface::scmError = "Error";
+const char * const CSysFsProcessInterface::scmCouldNotRead = "Could not read";
+const char * const CSysFsProcessInterface::scmCouldNotWrite = "Could not write";
 
 CSysFsProcessInterface::CSysFsProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mPinNumber(-1){
+    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData){
+  mFile.rdbuf()->pubsetbuf(0, 0); //disable buffer to avoid latency
 }
 
 CSysFsProcessInterface::~CSysFsProcessInterface(){
+    deinitialise(); //Will unexport everything, so next time FORTE starts it won't fail to initialize.
 }
 
-bool CSysFsProcessInterface::initialise(bool m_bInputOrOutput){
-  char buffer[scmBuffer];
-  ssize_t bytes;
-  int fd;
-  int res;
-  char path[scmBuffer];
+bool CSysFsProcessInterface::initialise(bool paIsInput){
+  bool retVal = false;
+  STATUS() = scmNotInitialised;
+  std::string fileName = "/sys/class/gpio/export";
 
-  fd = open("/sys/class/gpio/export", O_WRONLY);
-  if(fd < 0){
-    STATUS() = scmNotInitialised;
-    return false;
-  }
+  mFile.clear();
+  mFile.open(fileName.c_str(), std::fstream::out);
+  if(mFile.is_open()){
+    mFile << PARAMS().getValue();
+    if(!mFile.fail()){
+      mFile.close();
+      fileName = "/sys/class/gpio/gpio" + std::string(PARAMS().getValue()) + "/direction";
 
-  CIEC_INT param;
-  param.fromString(PARAMS().getValue());
-  mPinNumber = param;
-
-  bytes = snprintf(buffer, scmBuffer, "%d", mPinNumber);
-  write(fd, buffer, bytes);
-  close(fd);
-
-  snprintf(path, scmBuffer, "/sys/class/gpio/gpio%d/direction", mPinNumber);
-  fd = open(path, O_WRONLY);
-  if(fd < 0){
-    STATUS() = scmNotInitialised;
-    return false;
-  }
-
-  if(m_bInputOrOutput){
-    res = write(fd, "in", 2);
+      mFile.open(fileName.c_str(), std::fstream::out);
+      if(mFile.is_open()){
+        mFile.clear();
+        if(paIsInput){
+          mFile << "in";
+        }
+        else{
+          mFile << "out";
+        }
+        if(!mFile.fail()){
+          mFile.close();
+          fileName = "/sys/class/gpio/gpio" + std::string(PARAMS().getValue()) + "/value";
+          if(paIsInput){
+            mFile.open(fileName.c_str(), std::fstream::in);
+          }
+          else{
+            mFile.open(fileName.c_str(), std::fstream::out);
+          }
+          if(mFile.is_open()){
+            STATUS() = scmOK;
+            retVal = true;
+          }
+          else{
+            DEVLOG_ERROR("Opening file %s failed.\n", fileName.c_str());
+          }
+        }
+        else{
+          DEVLOG_ERROR("Error writing to file %s.\n", fileName.c_str());
+        }
+      }
+      else{
+        DEVLOG_ERROR("Opening file %s failed.\n", fileName.c_str());
+      }
+    }
+    else{
+      DEVLOG_ERROR("Error writing PARAMS() to file %s.\n", fileName.c_str());
+    }
   }
   else{
-    res = write(fd, "out", 3);
+    DEVLOG_ERROR("Opening file %s failed.\n", fileName.c_str());
   }
-  if(res < 0){
-    STATUS() = scmNotInitialised;
-    return false;
-  }
-  close(fd);
 
-  STATUS() = scmInitDeinitOK;
-  return true;
+  return retVal;
 }
 
 bool CSysFsProcessInterface::deinitialise(){
-  char buffer[scmBuffer];
-  ssize_t bytes;
-  int fd;
+  bool retVal = false;
+  STATUS() = scmError;
+  std::string fileName = "/sys/class/gpio/unexport";
 
-  fd = open("/sys/class/gpio/unexport", O_WRONLY);
-  if(fd < 0){
-    STATUS() = scmNotInitialised; //rework status messages
-    return false;
+  mFile.close();
+  mFile.clear();
+  mFile.open(fileName.c_str(), std::fstream::out);
+  if(mFile.is_open()){
+    mFile << PARAMS().getValue();
+    if(!mFile.fail()){
+      retVal = true;
+      STATUS() = scmOK;
+    }
+    else{
+      DEVLOG_ERROR("Error writing PARAMS() to file %s.\n", fileName.c_str());
+    }
+  }
+  else{
+    DEVLOG_ERROR("Opening file %s failed.\n", fileName.c_str());
   }
 
-  CIEC_INT param;
-  param.fromString(PARAMS().getValue());
-  mPinNumber = param;
-
-  bytes = snprintf(buffer, scmBuffer, "%d", mPinNumber);
-  write(fd, buffer, bytes);
-  close(fd);
-
-  STATUS() = scmInitDeinitOK;
-  return true;
+  return retVal;
 }
 
 bool CSysFsProcessInterface::readPin(){
-  char path[scmBuffer];
-  int fd;
-  char result[scmBuffer] = { 0 };
+  bool retVal = false;
+  if(mFile.is_open()){
+    char binData = 0;
+    mFile.clear();
+    mFile.seekg(0, std::ios::beg);
+    mFile.read(&binData, 1);
+    if(mFile.fail()){
+      STATUS() = scmCouldNotRead;
+    }
+    else{
+      IN_X() = ('0' != binData) ? true : false;
+      STATUS() = scmOK;
+      retVal = true;
+    }
+  }else{
+    STATUS() = scmNotInitialised;
+  }
 
-  CIEC_INT param;
-  param.fromString(PARAMS().getValue());
-  mPinNumber = param;
-
-  snprintf(path, scmBuffer, "/sys/class/gpio/gpio%d/value", mPinNumber);
-  fd = open(path, O_RDONLY);
-  if(fd < 0){
-    STATUS() = "Kann net lesen";
-    return false;
-  }
-  if(read(fd, result, 3) < 0){
-    STATUS() = "Kann net lesen";
-    return false;
-  }
-  close(fd);
-
-  if('0' == result[0]){
-    IN_X() = false;
-  }
-  else if('1' == result[0]){
-    IN_X() = true;
-  }
-  STATUS() = "Konnte lesen";
-  return true;
+  return retVal;
 }
 
 bool CSysFsProcessInterface::writePin(){
-  char path[scmBuffer];
-  int fd;
-  int res;
-
-  CIEC_INT param;
-  param.fromString(PARAMS().getValue());
-  mPinNumber = param;
-
-  snprintf(path, scmBuffer, "/sys/class/gpio/gpio%d/value", mPinNumber);
-  fd = open(path, O_WRONLY);
-  if(fd < 0){
-    STATUS() = "Kann net schreiben";
-    return false;
+  bool retVal = false;
+  if(mFile.is_open()){
+    mFile.clear();
+    mFile.seekp(0, std::ios::beg);
+    unsigned int val = (false != OUT_X()) ? 1 : 0; //if true set the led to full glowing
+    mFile << val;
+    if(mFile.fail()){
+      STATUS() = scmCouldNotWrite;
+    }
+    else{
+      STATUS() = scmOK;
+      retVal = true;
+    }
+  }else{
+    STATUS() = scmNotInitialised;
   }
 
-  if(OUT_X()){
-    res = write(fd, "0", 1);
-  }
-  else{
-    res = write(fd, "1", 1);
-  }
-  if(res < 0){
-    STATUS() = "Kann net schreiben";
-    return false;
-  }
-
-  close(fd);
-  STATUS() = "Konnte lesen";
-  return true;
+  return retVal;
 }
