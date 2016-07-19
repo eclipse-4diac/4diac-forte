@@ -220,11 +220,21 @@ endif()
 GET_PROPERTY(link_flags GLOBAL PROPERTY FORTE_LINK_FLAGS)
 
 set_target_properties(forte PROPERTIES LINK_FLAGS "${link_flags}")
-
+ 
+if(${FORTE_BUILD_TYPE} STREQUAL EXECUTABLE)
 install(TARGETS forte RUNTIME DESTINATION bin)
+ENDIF(${FORTE_BUILD_TYPE} STREQUAL EXECUTABLE)
+
+if(${FORTE_BUILD_TYPE} STREQUAL STATIC_LIBRARY)
+install(TARGETS forte ARCHIVE DESTINATION bin)
+ENDIF(${FORTE_BUILD_TYPE} STREQUAL STATIC_LIBRARY)
+
+if(${FORTE_BUILD_TYPE} STREQUAL SHARED_LIBRARY)
+install(TARGETS forte ARCHIVE DESTINATION bin LIBRARY DESTINATION bin)
+ENDIF(${FORTE_BUILD_TYPE} STREQUAL SHARED_LIBRARY)
 
 #######################################################################################
-# Link Libraries to the Executeable
+# Link Libraries to the Executable
 #######################################################################################
 # get Linker-Direcotries from Modules
 get_property(LINK_LIBRARY GLOBAL PROPERTY FORTE_LINK_LIBRARY)
