@@ -167,7 +167,7 @@ EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcName
   CConnection *con = getConnection(paSrcNameList);
   if(0 != con){
     CStringDictionary::TStringId portName = paDstNameList.back();
-    paSrcNameList.popBack();
+    paDstNameList.popBack();
     forte::core::TNameIdentifier::CIterator runner(paDstNameList.begin());
     CFunctionBlock *dstFB = getContainedFB(runner);
     if((0 != dstFB) && (runner.isLastEntry())){
