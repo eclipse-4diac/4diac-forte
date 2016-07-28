@@ -27,7 +27,7 @@ class CSysFsProcessInterface : public CProcessInterfaceBase{
     bool writePin();
     bool readPin();
 
-  private:
+
     std::fstream mFile;
 
     static const char * const scmOK;
