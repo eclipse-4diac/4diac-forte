@@ -540,7 +540,6 @@ void CFunctionBlock::generateGenericInterfacePointNameArray(const char * const p
     memcpy(acBuffer, pa_acPrefix, unLen);
     char *acRunner = &acBuffer[unLen];
     char *acTenth = 0;
-    char *acHundret = 0;
     acRunner[1] = '\0';
 
     for(unsigned int i = 1, j = 0, jj = 0; i <= pa_unNumGenericDataPoints; i++){
@@ -553,6 +552,7 @@ void CFunctionBlock::generateGenericInterfacePointNameArray(const char * const p
         j++;
 
         if(0 == (j % 10)){
+          char *acHundret = 0;
           if(jj == 0){
             acHundret = acTenth;
             acTenth = acRunner;

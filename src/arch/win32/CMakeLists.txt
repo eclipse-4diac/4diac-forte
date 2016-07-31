@@ -41,8 +41,6 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
    forte_add_sourcefile_h(sockhand.h)
   endif(FORTE_COM_ETH)
 
-  forte_add_include_directories(../${CMAKE_CURRENT_SOURCE_DIR})
-  forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
   
   SET(CMAKE_CXX_FLAGS_RELEASE "/MT" ) 
   forte_add_definition("-DFORTE_LITTLE_ENDIAN") # -DNONAMESPACE -DWITH_NONAMESPACES)  

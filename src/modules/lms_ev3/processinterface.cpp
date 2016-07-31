@@ -12,9 +12,9 @@
 
 #include "processinterface.h"
 #include <sstream>
-#include <iostream>
 #include <linux/input.h>
 #include <fcntl.h>
+#include "../../arch/devlog.h"
 
 const std::string CLMSEV3ProcessInterface::scmLEDID("led");
 const std::string CLMSEV3ProcessInterface::scmSensorID("sensor");
@@ -41,14 +41,14 @@ const char * const CLMSEV3ProcessInterface::scmCouldNotWrite = "Could not write"
 
 CLMSEV3ProcessInterface::CLMSEV3ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
                                                         CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData){
-  mFile.rdbuf()->pubsetbuf(NULL, 0); //disable buffer to avoid latency
+  mFile.rdbuf()->pubsetbuf(0, 0); //disable buffer to avoid latency
   mnTypeOfIO = UNDEFINED;
-  mstButtonVariables = NULL;
+  mstButtonVariables = 0;
   mnNoOfBits = 0;
 }
 
 CLMSEV3ProcessInterface::~CLMSEV3ProcessInterface(){
-  if (NULL != mstButtonVariables){
+  if (0 != mstButtonVariables){
     delete mstButtonVariables;
   }
 }
@@ -79,7 +79,7 @@ bool CLMSEV3ProcessInterface::initialise(bool paIsInput){
   if (true == retVal){
     STATUS() = scmOK;
   }else{
-    std::cout << "----------ERROR: Not initialized\n";
+    DEVLOG_ERROR("The FB with PARAMS() = '%s' couldn't be initialized. PARAMS is not well defined.", PARAMS().getValue());
   }
   return retVal;
 }
@@ -88,7 +88,7 @@ bool CLMSEV3ProcessInterface::deinitialise(){
   if(mFile.is_open()){
     mFile.close();
   }
-  if (NULL != mstButtonVariables){
+  if (0 != mstButtonVariables){
     delete mstButtonVariables;
   }
   STATUS() = scmOK;
@@ -99,7 +99,7 @@ bool CLMSEV3ProcessInterface::deinitialise(){
 
 bool CLMSEV3ProcessInterface::readPin(){
   bool retVal = false;
-  if(mFile.is_open() || (NULL != mstButtonVariables && -1 != mstButtonVariables->nmFd)){
+  if(mFile.is_open() || (0 != mstButtonVariables && -1 != mstButtonVariables->nmFd)){
     switch (mnTypeOfIO){
       case SENSOR: {
         char binData = 0;
@@ -135,11 +135,11 @@ bool CLMSEV3ProcessInterface::readPin(){
       }
     }
   }else{
-    STATUS() = scmNotInitialised;
+    STATUS() = scmCouldNotRead;
   }
 
   if (!retVal){
-    std::cout << "----------ERROR: reading pin\n";
+    DEVLOG_ERROR("Reading pin failed. The FB with PARAMS() = '%s' couldn't be read.", PARAMS().getValue());
   }
   return retVal;
 }
@@ -152,25 +152,22 @@ bool CLMSEV3ProcessInterface::writePin(){
     switch (mnTypeOfIO){
       case LED:{
         unsigned int val = (false != OUT_X()) ? 255 : 0; //if true set the led to full glowing
-        std::cout << "Writing led " << val << "\n";
         mFile << val;
         break;
       }
       case MOTOR_ENABLE:{
         std::string val = (false != OUT_X()) ? "run-direct" : "stop";
-        std::cout << "Writing enable " << val << "\n";
         mFile << val;
         break;
       }
       case MOTOR_RESET:{
         if (true == OUT_X()){
           mFile << "reset";
-          std::cout << "Writing " << "reset" << "\n";
-          break;
         }
+        break;
       }
       default:{
-        STATUS() = scmCouldNotRead;
+        STATUS() = scmCouldNotWrite;
         break;
       }
     }
@@ -181,11 +178,11 @@ bool CLMSEV3ProcessInterface::writePin(){
       retVal = true;
     }
   }else{
-    STATUS() = scmNotInitialised;
+    STATUS() = scmCouldNotWrite;
   }
 
   if (!retVal){
-    std::cout << "----------ERROR: writing pin\n";
+    DEVLOG_ERROR("Writing pin failed. The FB with PARAMS() = '%s' couldn't be written.", PARAMS().getValue());
   }
   return retVal;
 }
@@ -194,7 +191,6 @@ bool CLMSEV3ProcessInterface::readWord(){
   bool retVal = false;
 
   if (SENSORW_VALUE == mnTypeOfIO || MOTOR_PWM == mnTypeOfIO || MOTOR_SPEED == mnTypeOfIO || MOTOR_ROT == mnTypeOfIO) {
-    // || MOTOR_POSITION == mnTypeOfIO){ //this should be a double, but for testing is here
     TForteInt32 val;
     int internalChecker;
     internalChecker = readNumberFromFile(&val);
@@ -203,11 +199,10 @@ bool CLMSEV3ProcessInterface::readWord(){
       STATUS() = scmOK;
       retVal = true;
     }else if (1 == internalChecker){
-      STATUS() = scmNotInitialised;
-      std::cout << "----------ERROR: Not initialized\n";
+      STATUS() = scmCouldNotRead;
+      DEVLOG_ERROR("Reading word failed. The FB with PARAMS() = '%s' is not initialized.", PARAMS().getValue());
     }else{
       STATUS() = scmCouldNotRead;
-      std::cout << "----------ERROR: Could not read\n";
     }
   }else if (SENSORW_MODE == mnTypeOfIO){
     if (mFile.is_open()){
@@ -233,13 +228,13 @@ bool CLMSEV3ProcessInterface::readWord(){
         }
       }
     }else{
-      STATUS() = scmNotInitialised;
+      STATUS() = scmCouldNotRead;
     }
   }else{
     STATUS() = scmCouldNotRead;
   }
   if (!retVal){
-    std::cout << "----------ERROR: reading word\n";
+    DEVLOG_ERROR("Reading word failed. The FB with PARAMS() = '%s' couldn't be read.", PARAMS().getValue());
   }
 
   return retVal;
@@ -256,7 +251,7 @@ bool CLMSEV3ProcessInterface::writeWord(){
     switch (mnTypeOfIO){
       case MOTOR_PWM:{
         TForteInt16 finalVal = (TForteInt16) val;
-        if (finalVal >= -100 && finalVal <= 100){
+        if (-100 <= finalVal && 100 >= finalVal){
           mFile << finalVal;
           writeAttempted = true;
         }else{
@@ -294,8 +289,6 @@ bool CLMSEV3ProcessInterface::writeWord(){
         std::string finalVal = "";
         if (val < mModes.size()){
           finalVal =  mModes[val];
-          mFile.clear();
-          mFile.seekp(0, std::ios::beg);
           mFile << finalVal;
           writeAttempted = true;
         }else{
@@ -313,44 +306,37 @@ bool CLMSEV3ProcessInterface::writeWord(){
       retVal = true;
     }else{
       STATUS() = scmCouldNotWrite;
-      std::cout << "readNumberFromFile: mFile.fail()\n";
-      std::string result;
-      result = ((mFile.rdstate() & std::ifstream::failbit ) != 0 ) ? "true" : "false";
-      std::cout << "readNumberFromFile: fail bit = " << result << "\n";
-      result = ((mFile.rdstate() & std::ifstream::badbit ) != 0 ) ? "true" : "false";
-      std::cout << "readNumberFromFile: bad bit = " << result << "\n";
-      result = ((mFile.rdstate() & std::ifstream::eofbit ) != 0 ) ? "true" : "false";
-      std::cout << "readNumberFromFile: eof bit = " << result << "\n";
-      result = ((mFile.rdstate() & std::ifstream::goodbit ) != 0 ) ? "true" : "false";
-      std::cout << "readNumberFromFile: good bit = " << result << "\n";
     }
   }else{
     STATUS() = scmNotInitialised;
   }
 
   if (!retVal){
-    std::cout << "----------ERROR writing word\n";
+    DEVLOG_ERROR("Writing word failed. The FB with PARAMS() = '%s' couldn't be written.", PARAMS().getValue());
   }
-
   return retVal;
 }
 
 bool CLMSEV3ProcessInterface::readDWord(){
   bool retVal = false;
-  int internalChecker;
 
-  TForteInt32 val;
-  internalChecker = readNumberFromFile(&val);
-  if (0 == internalChecker){
-    IN_D() = (TForteDWord) (val);
-    STATUS() = scmOK;
-    retVal = true;
-  }else if (1 == internalChecker){
-    STATUS() = scmNotInitialised;
-    std::cout << "----------ERROR: Not initialized double\n";
-  }else{
-    STATUS() = scmCouldNotRead;
-    std::cout << "----------ERROR: Could not read double\n";
+  if (MOTOR_POSITION == mnTypeOfIO){
+    int internalChecker;
+    TForteInt32 val;
+    internalChecker = readNumberFromFile(&val);
+    if (0 == internalChecker){
+      IN_D() = (TForteDWord) (val);
+      STATUS() = scmOK;
+      retVal = true;
+    }else if (1 == internalChecker){
+      STATUS() = scmNotInitialised;
+      DEVLOG_ERROR("Reading double word failed. The FB with PARAMS() = '%s' is not initialized.", PARAMS().getValue());
+    }else{
+      STATUS() = scmCouldNotRead;
+    }
+  }
+  if (!retVal){
+    DEVLOG_ERROR("Reading double word failed. The FB with PARAMS() = '%s' couldn't be read.", PARAMS().getValue());
   }
 
   return retVal;
@@ -367,7 +353,7 @@ bool CLMSEV3ProcessInterface::writeDWord(){
     switch (mnTypeOfIO){
       case MOTOR_POSITION:{
         TForteInt32 finalVal = (TForteInt32) val;
-        if (finalVal >= CIEC_INT::scm_nMinVal && finalVal <= CIEC_INT::scm_nMaxVal){
+        if (CIEC_INT::scm_nMinVal <= finalVal && CIEC_INT::scm_nMaxVal >= finalVal){
           mFile << finalVal;
           writeAttempted = true;
         }else{
@@ -385,27 +371,15 @@ bool CLMSEV3ProcessInterface::writeDWord(){
       retVal = true;
     }else{
       STATUS() = scmCouldNotWrite;
-      std::cout << "readNumberFromFile: mFile.fail()\n";
-      std::string result;
-      result = ((mFile.rdstate() & std::ifstream::failbit ) != 0 ) ? "true" : "false";
-      std::cout << "readNumberFromFile: fail bit = " << result << "\n";
-      result = ((mFile.rdstate() & std::ifstream::badbit ) != 0 ) ? "true" : "false";
-      std::cout << "readNumberFromFile: bad bit = " << result << "\n";
-      result = ((mFile.rdstate() & std::ifstream::eofbit ) != 0 ) ? "true" : "false";
-      std::cout << "readNumberFromFile: eof bit = " << result << "\n";
-      result = ((mFile.rdstate() & std::ifstream::goodbit ) != 0 ) ? "true" : "false";
-      std::cout << "readNumberFromFile: good bit = " << result << "\n";
     }
   }else{
     STATUS() = scmNotInitialised;
   }
 
   if (!retVal){
-    std::cout << "----------ERROR writing DOUBLE\n";
+    DEVLOG_ERROR("Writing double word failed. The FB with PARAMS() = '%s' couldn't be written.", PARAMS().getValue());
   }
-
   return retVal;
-
 }
 
 /* INTIALIZATION FUNCTIONS **/
@@ -416,11 +390,12 @@ bool CLMSEV3ProcessInterface::setupLED(const std::vector<std::string> &paParamLi
     std::string sysFileName("/sys/class/leds/ev3:" + paParamList[2] + ":" + paParamList[3] + ":ev3dev/brightness"); //format in ev3dev is= ev3:[left | right]:[red | green]:ev3dev
     mFile.open(sysFileName.c_str(), std::fstream::out); //TODO change this when fully switching to C++11 for LMS EV3
     if(mFile.is_open()){
-      std::cout << "File " << sysFileName << " opened\n";
       if (true == writePin()){ // initialize output with default value (i.e, should be false)
         mnTypeOfIO = LED;
         retVal = true;
       }
+    }else{
+      DEVLOG_ERROR("Opening file %s failed.", sysFileName.c_str());
     }
   }
   return retVal;
@@ -472,12 +447,10 @@ bool CLMSEV3ProcessInterface::setupSensorValue(const std::vector<std::string> &p
       mFile.open(sysFileName.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
       if(mFile.is_open()){
         bool internalCheck;
-        std::cout << "File " << sysFileName << " opened\n";
         TForteInt32 aux;
         internalCheck = readNumberFromFile(&aux);
         mFile.close();
         if (0 == internalCheck){
-          std::cout << "File " << sysFileName << " closed\n";
           if (0 <= aux){ //a negative value is not possible for num_values file
             helperStringStream.str(paParamList[2]);
             helperStringStream.clear();
@@ -488,19 +461,26 @@ bool CLMSEV3ProcessInterface::setupSensorValue(const std::vector<std::string> &p
                 sysFileName = basePath + "/value" + helperStringStream.str();
                 mFile.open(sysFileName.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
                 if(mFile.is_open()){
-                  std::cout << "File " << sysFileName << " opened\n";
                   retVal = true;
                 }else{
-                  std::cout << "File " << sysFileName << " not opened\n";
+                  DEVLOG_ERROR("Opening file %s failed.", sysFileName.c_str());
                 }
               }
+            }else{
+              DEVLOG_ERROR("Internal error trying to store a stringstream in an int.");
             }
           }
+        }else{
+          DEVLOG_ERROR("File %s was opened, but couln't be read.", sysFileName.c_str());
         }
+      }else{
+        DEVLOG_ERROR("Opening file %s failed.", sysFileName.c_str());
       }
+    }else{
+      DEVLOG_ERROR("Internal error trying to store an int in a stringstream");
     }
   }else{
-    std::cout << "File " << sysFileName << " not opened\n";
+    DEVLOG_ERROR("Port %s wasn't found.", paParamList[0].c_str());
   }
   return retVal;
 }
@@ -520,24 +500,25 @@ bool CLMSEV3ProcessInterface::setupSensorMode(const std::vector<std::string> &pa
 
       mFile.open(helperString.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
       if(mFile.is_open()){
-        std::cout << "File " << helperString << " opened\n";
         while(std::getline(mFile, helperString, ' ')){
           mModes.push_back(helperString);
         }
         mFile.close();
-        std::cout << "File closed\n";
         helperString = basePath + "/mode";
         mFile.open(helperString.c_str(), paIsInput ? std::fstream::in : std::fstream::out); //TODO change this when fully switching to C++11 for LMS EV3
         if(mFile.is_open()){
-          std::cout << "File " << helperString << " opened\n";
           retVal = true;
         }else{
-          std::cout << "File " << helperString << " not opened\n";
+          DEVLOG_ERROR("Opening file %s failed.", helperString.c_str());
         }
+      }else{
+        DEVLOG_ERROR("Opening file %s failed.", helperString.c_str());
       }
+    }else{
+      DEVLOG_ERROR("Internal error trying to store an int in a stringstream");
     }
   }else{
-    std::cout << "File " << helperString << " not opened\n";
+    DEVLOG_ERROR("Port %s wasn't found.", paParamList[0].c_str());
   }
   return retVal;
 }
@@ -626,14 +607,17 @@ bool CLMSEV3ProcessInterface::setupMotor(const std::vector<std::string>& paParam
         if (!defaultType){
           mFile.open(sysFileName.c_str(), paIsInput ? std::fstream::in : std::fstream::out); //TODO change this when fully switching to C++11 for LMS EV3
           if(mFile.is_open()){
-            std::cout << "File " << sysFileName << " opened with parameter " << PARAMS().getValue() << "\n";
             retVal = true;
           }else{
             mnTypeOfIO = UNDEFINED;
-            std::cout << "File " << sysFileName << " not opened with parameter " << PARAMS().getValue()<< "\n";
+            DEVLOG_ERROR("Opening file %s failed.", sysFileName.c_str());
           }
         }
+      }else{
+        DEVLOG_ERROR("Internal error trying to store an int in a stringstream");
       }
+    }else{
+      DEVLOG_ERROR("Port %s wasn't found.", paParamList[0].c_str());
     }
   }
   return retVal;
@@ -703,16 +687,6 @@ int CLMSEV3ProcessInterface::readNumberFromFile(TForteInt32* paResult){
       }
     }else{
       retVal = 2; //Could not read
-      std::cout << "readNumberFromFile: mFile.fail()\n";
-      std::string result;
-      result = ((mFile.rdstate() & std::ifstream::failbit ) != 0 ) ? "true" : "false";
-      std::cout << "readNumberFromFile: fail bit = " << result << "\n";
-      result = ((mFile.rdstate() & std::ifstream::badbit ) != 0 ) ? "true" : "false";
-      std::cout << "readNumberFromFile: bad bit = " << result << "\n";
-      result = ((mFile.rdstate() & std::ifstream::eofbit ) != 0 ) ? "true" : "false";
-      std::cout << "readNumberFromFile: eof bit = " << result << "\n";
-      result = ((mFile.rdstate() & std::ifstream::goodbit ) != 0 ) ? "true" : "false";
-      std::cout << "readNumberFromFile: good bit = " << result << "\n";
     }
   }else{
     retVal = 1; //Not initialized

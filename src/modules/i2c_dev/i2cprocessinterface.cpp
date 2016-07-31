@@ -123,8 +123,8 @@ bool CI2CProcessInterface::writeWord(){
   TForteByte writeValue[3] = { mValueAddress };
   STATUS() = scmOK;
 
-  writeValue[2] = static_cast<TForteByte>(OUT_W().operator unsigned short int());
-  writeValue[1] = static_cast<TForteByte>(OUT_W().operator unsigned short int() >> 8);
+  writeValue[1] = static_cast<TForteByte>(OUT_W().operator unsigned short int());
+  writeValue[2] = static_cast<TForteByte>(OUT_W().operator unsigned short int() >> 8);
 
   if(3 != write(mFd, writeValue, 3)){
     STATUS() = scmCouldNotWrite;

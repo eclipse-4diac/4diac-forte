@@ -11,7 +11,7 @@
 #include <fortealloc.h>
 #include <stdio.h>
 #include <signal.h>
-#include <RMT_DEV.h>
+#include "../../stdfblib/ita/RMT_DEV.h"
 #ifdef WIN32
 #include <sockhand.h>
 #endif

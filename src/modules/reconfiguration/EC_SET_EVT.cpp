@@ -12,9 +12,9 @@
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "EC_SET_EVT_gen.cpp"
 #endif
-#include "DEV_MGR.h"
+#include "../../stdfblib/ita/DEV_MGR.h"
 #include <mgmcmdstruct.h>
-#include "core/device.h"
+#include <device.h>
 
 DEFINE_FIRMWARE_FB(FORTE_EC_SET_EVT, g_nStringIdEC_SET_EVT)
 

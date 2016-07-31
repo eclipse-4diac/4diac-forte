@@ -180,7 +180,6 @@ int CEplStackWrapper::eplStackInit(char* pa_chXmlFile, char* pa_chCdcFile, char*
   tEplKernel EplRet;
   static tEplApiInitParam EplApiInitParam;
   const char* sHostname = HOSTNAME;
-  char cKey = 0;
 
   // Read and process XML file
   CEplXmlReader xmlReader(&m_oProcMatrixIn, &m_oProcMatrixOut);
@@ -202,7 +201,6 @@ int CEplStackWrapper::eplStackInit(char* pa_chXmlFile, char* pa_chCdcFile, char*
   pcap_if_t *alldevs;
   pcap_if_t *seldev;
   int i = 0;
-  int inum;
 #endif
 
 #ifdef CONFIG_POWERLINK_USERSTACK
@@ -251,7 +249,7 @@ int CEplStackWrapper::eplStackInit(char* pa_chXmlFile, char* pa_chCdcFile, char*
   // Find ETH card specified by user //
   ////////////////////////////////////////////////////////////////////////////////
 
-  bool macFound = false;
+  bool macFound;
   char correctDevName[1024];
 
   macFound = findMAC(pa_chEthDeviceName, &correctDevName[0]);
@@ -276,7 +274,6 @@ int CEplStackWrapper::eplStackInit(char* pa_chXmlFile, char* pa_chCdcFile, char*
     if(macFound){
       const char* userDescLoc = strstr(seldev->name, correctDevName);
       if(userDescLoc != NULL){
-        inum = i;
         if(seldev->description){
           printf("\nChosen Ethernet Card: %s\n      %s\n", seldev->description, seldev->name);
         }
@@ -290,7 +287,6 @@ int CEplStackWrapper::eplStackInit(char* pa_chXmlFile, char* pa_chCdcFile, char*
     if(seldev->description){
       const char* userDescLoc = strstr(seldev->description, pa_chEthDeviceName);
       if(userDescLoc != NULL){
-        inum = i;
         printf("\nChosen Ethernet Card: %s\n", seldev->description);
         break;
       }
@@ -298,7 +294,6 @@ int CEplStackWrapper::eplStackInit(char* pa_chXmlFile, char* pa_chCdcFile, char*
     else{
       const char* userDescLoc = strstr(seldev->name, pa_chEthDeviceName);
       if(userDescLoc != NULL){
-        inum = i;
         printf("Chosen Ethernet Card: %s\n", seldev->name);
         break;
       }
@@ -447,10 +442,10 @@ int CEplStackWrapper::eplStackShutdown(void){
 
   // halt the NMT state machine
   // so the processing of POWERLINK frames stops
-  EplRet = EplApiExecNmtCommand(kEplNmtEventSwitchOff);
+  EplApiExecNmtCommand(kEplNmtEventSwitchOff);
 
   // delete process image
-  EplRet = EplApiProcessImageFree();
+  EplApiProcessImageFree();
 
   // delete instance for all modules
   EplRet = EplApiShutdown();
@@ -492,8 +487,7 @@ void CEplStackWrapper::registerCallback(IEplCNCallback* pa_pCallback){
 }
 
 bool CEplStackWrapper::findMAC(const char* pa_pchUserMAC, char* pa_pchDeviceName){
-  bool macFound = false;
-  char* correctDevName;
+  //char* correctDevName;
 
 #if (TARGET_SYSTEM == _LINUX_)
 
@@ -553,7 +547,6 @@ bool CEplStackWrapper::findMAC(const char* pa_pchUserMAC, char* pa_pchDeviceName
 
     if(compareMACs(chMAC, pa_pchUserMAC)){
       strncpy(pa_pchDeviceName, pIfList->if_name, IF_NAMESIZE);
-      macFound = true;
 
       //
       // Clean up things and return
@@ -561,7 +554,7 @@ bool CEplStackWrapper::findMAC(const char* pa_pchUserMAC, char* pa_pchDeviceName
       if_freenameindex(pListSave);
       close(nSD);
 
-      return macFound;
+      return true;
     }
   }
 
@@ -595,13 +588,12 @@ bool CEplStackWrapper::findMAC(const char* pa_pchUserMAC, char* pa_pchDeviceName
     }
 
     if (compareMACs(chMAC, pa_pchUserMAC)){
-      macFound = true;
       //correctDevName = new char[strlen(pAdapterInfo->AdapterName)+1];
       strcpy(pa_pchDeviceName,pAdapterInfo->AdapterName);
       delete chMAC;
 
       //pa_pchDeviceName = correctDevName;
-      return macFound;
+      return true;
     }
 
     pAdapterInfo = pAdapterInfo->Next; // Progress through linked list
@@ -611,7 +603,7 @@ bool CEplStackWrapper::findMAC(const char* pa_pchUserMAC, char* pa_pchDeviceName
 
 #endif
 
-  pa_pchDeviceName = NULL;
+  //pa_pchDeviceName = NULL; //No effect
   return false;
 }
 

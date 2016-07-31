@@ -1,4 +1,4 @@
-#*******************************************************************************
+ #*******************************************************************************
 # * Copyright (c) 2010 - 2015 ACIN, Profactor GmbH, AIT, fortiss GmbH
 # * All rights reserved. This program and the accompanying materials
 # * are made available under the terms of the Eclipse Public License v1.0
@@ -136,8 +136,8 @@ SET(FORTE_MGMCOMMANDPROTOCOL "DEV_MGR" CACHE STRING "forte management command pr
 set_property(CACHE FORTE_MGMCOMMANDPROTOCOL PROPERTY STRINGS DEV_MGR)
 mark_as_advanced(FORTE_MGMCOMMANDPROTOCOL)
 
-SET(FORTE_MGM_MAX_SUPPOERTED_NAME_HIERACHY "30" CACHE STRING "Max supported hierarchy that can be provided in a management commands")
-mark_as_advanced(FORTE_MGM_MAX_SUPPOERTED_NAME_HIERACHY)
+SET(FORTE_MGM_MAX_SUPPORTED_NAME_HIERACHY "30" CACHE STRING "Max supported hierarchy that can be provided in a management commands")
+mark_as_advanced(FORTE_MGM_MAX_SUPPORTED_NAME_HIERACHY)
 
 SET(FORTE_STRINGDICTINITIALSTRINGBUFSIZE "8000" CACHE STRING "FORTE string dict's initial string buffer size")
 mark_as_advanced(FORTE_STRINGDICTINITIALSTRINGBUFSIZE)
