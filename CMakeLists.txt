@@ -40,7 +40,17 @@ mark_as_advanced(FORTE_BUILD_TYPE)
 #######################################################################################
 # Determine the loglevel
 #######################################################################################
-set(FORTE_LOGLEVEL "LOGERROR" CACHE STRING "Loglevel to use")
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    if(NOT (${FORTE_LOGLEVEL} STREQUAL "LOGINFO"))
+        message("Log Level was changed due to a change in CMAKE_BUILD_TYPE.")
+    endif()
+    set(FORTE_LOGLEVEL "LOGINFO" CACHE STRING "Loglevel to use" FORCE)
+else("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    if(NOT ${FORTE_LOGLEVEL} STREQUAL "NOLOG")
+        message("Log Level was changed due to a change in CMAKE_BUILD_TYPE.")
+    endif()
+    set(FORTE_LOGLEVEL "NOLOG" CACHE STRING "Loglevel to use" FORCE)
+endif("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 set_property(CACHE FORTE_LOGLEVEL PROPERTY STRINGS LOGDEBUG LOGERROR LOGWARNING LOGINFO NOLOG)
  
 forte_add_definition("-D${FORTE_LOGLEVEL}")
