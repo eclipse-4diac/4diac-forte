@@ -11,18 +11,18 @@
 
 #include "processinterface.h"
 
-COdriodProcessInterface::COdriodProcessInterface(CResource *paSrcRes,
+COdroidProcessInterface::COdroidProcessInterface(CResource *paSrcRes,
     const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
     TForteByte *paFBConnData, TForteByte *paFBVarsData) :
     CSysFsProcessInterface(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData){
 
 }
 
-COdriodProcessInterface::~COdriodProcessInterface(){
+COdroidProcessInterface::~COdroidProcessInterface(){
 
 }
 
-bool COdriodProcessInterface::initialise(bool paIsInput){
+bool COdroidProcessInterface::initialise(bool paIsInput){
   bool retVal = true;
   if((paIsInput) && (getDO(2)->getDataTypeID() == CIEC_ANY::e_WORD)){
     std::string fileName("/sys/class/saradc/ch");
@@ -44,7 +44,7 @@ bool COdriodProcessInterface::initialise(bool paIsInput){
   return retVal;
 }
 
-bool COdriodProcessInterface::deinitialise(){
+bool COdroidProcessInterface::deinitialise(){
   bool retVal = true;
   STATUS() = scmOK;
   if(getDO(2)->getDataTypeID() == CIEC_ANY::e_WORD){
@@ -56,11 +56,11 @@ bool COdriodProcessInterface::deinitialise(){
   return retVal;
 }
 
-bool COdriodProcessInterface::readWord(){
+bool COdroidProcessInterface::readWord(){
   bool retVal = false;
   if(mFile.is_open()){
-    char binData[5];
-    memset(binData, 0, 5);
+    char binData[6];
+    memset(binData, 0, 6);
     mFile.clear();
     mFile.seekg(0, std::ios::beg);
     mFile.read(binData, 5);

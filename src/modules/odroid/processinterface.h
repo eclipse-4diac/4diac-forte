@@ -13,10 +13,10 @@
 
 #include "../sysfs/sysfsprocint.h"
 
-class COdriodProcessInterface : public CSysFsProcessInterface{
+class COdroidProcessInterface : public CSysFsProcessInterface{
   public:
-    COdriodProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
-    virtual ~COdriodProcessInterface();
+    COdroidProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
+    virtual ~COdroidProcessInterface();
 
   protected:
     bool initialise(bool paIsInput);
@@ -28,6 +28,6 @@ class COdriodProcessInterface : public CSysFsProcessInterface{
 };
 
 //tell the IX and QX FB that this is the process interface to be used
-typedef COdriodProcessInterface CProcessInterface;
+typedef COdroidProcessInterface CProcessInterface;
 
 #endif

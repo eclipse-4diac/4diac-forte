@@ -9,7 +9,7 @@
 # *    Alois Zoitl - initial API and implementation and/or initial documentation
 # *******************************************************************************/ 
  
-forte_add_module(Odroid "Interacting with GPIOs and analogue inputs of the Odriod device")
+forte_add_module(Odroid "Interacting with GPIOs and analogue inputs of the Odroid device")
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
