@@ -21,7 +21,7 @@ WagoPFCProcessInterface::WagoPFCProcessInterface(CResource *paSrcRes,
     const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData,
     TForteByte *paFBVarsData) :
     CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData),
-    mSlot(0), mChannel(0),mInitialized(false),mInDataBool(false), mInDataWord(0){
+    mSlot(0), mChannel(0),mInitialized(false){
 }
 
 
@@ -30,19 +30,19 @@ WagoPFCProcessInterface::~WagoPFCProcessInterface(){
 }
 
 bool WagoPFCProcessInterface::initialise(bool paInput){
-	mInitialized = false;
-	std::vector<std::string> paramsList(generateParameterList());
-	char *pBuffer;
+  mInitialized = false;
+  std::vector<std::string> paramsList(generateParameterList());
+  char *pBuffer;
 
-	if(!paramsList.empty())	{
-		mSlot = strtol(paramsList[0].c_str(),&pBuffer,10);
-		mChannel= strtol(paramsList[1].c_str(),&pBuffer,10);
-	}
+  if(!paramsList.empty()) {
+    mSlot = strtol(paramsList[0].c_str(),&pBuffer,10);
+    mChannel= strtol(paramsList[1].c_str(),&pBuffer,10);
+  }
 
-	if((CKBusHandler::getInstance().getTerminalId(mSlot))){
-		mTerminalInfo = CKBusHandler::getInstance().getTerminalInfo(mSlot);
+  if((CKBusHandler::getInstance().getTerminalId(mSlot))){
+    mTerminalInfo = CKBusHandler::getInstance().getTerminalInfo(mSlot);
     if(0 != mTerminalInfo){
-      if(paInput){
+      if((paInput) && (getDO(2)->getDataTypeID() == CIEC_ANY::e_BOOL)){
         CKBusHandler::getInstance().registerKBusReadFB(this);
       }
 
@@ -56,45 +56,44 @@ bool WagoPFCProcessInterface::initialise(bool paInput){
       setEventChainExecutor(m_poInvokingExecEnv);
       return mInitialized;
     }
-	}
+  }
 }
 
 bool WagoPFCProcessInterface::deinitialise(){
-	CKBusHandler::getInstance().unregisterKBusReadFB(this);
-	return true;
+  CKBusHandler::getInstance().unregisterKBusReadFB(this);
+  return true;
 }
 
 bool WagoPFCProcessInterface::readPin(){
-	return true;
+  return true;
 }
 
 bool WagoPFCProcessInterface::writePin(){
-	CKBusHandler::getInstance().writeOutputDataBitToKBus(mTerminalInfo, mChannel, OUT_X());
-	return true;
+  CKBusHandler::getInstance().writeOutputDataBitToKBus(mTerminalInfo, mChannel, OUT_X());
+  return true;
 }
 
 bool WagoPFCProcessInterface::readWord(){
-  TForteWord inDataWord;
+  TForteWord inDataWord(0);
   CKBusHandler::getInstance().readInputDataWordfromKBus(mTerminalInfo, mChannel, &inDataWord);
   IN_W() = inDataWord;
   return true;
 }
 
 bool WagoPFCProcessInterface::writeWord(){
-	CKBusHandler::getInstance().writeOutputDataWordToKBus(mTerminalInfo, mChannel, OUT_W());
-	return true;
+  CKBusHandler::getInstance().writeOutputDataWordToKBus(mTerminalInfo, mChannel, OUT_W());
+  return true;
 }
 
 bool WagoPFCProcessInterface::checkInputData(){
-	bool retVal = false;
-	bool inDataBool;
-
-	CKBusHandler::getInstance().readInputDataBitfromKBus(mTerminalInfo, mChannel, &inDataBool);
-	if (inDataBool != IN_X()){
-		IN_X() = inDataBool;
-		retVal = true;
+  bool retVal = false;
+  bool inDataBool(false);
+  CKBusHandler::getInstance().readInputDataBitfromKBus(mTerminalInfo, mChannel, &inDataBool);
+  if (inDataBool != IN_X()){
+    IN_X() = inDataBool;
+    retVal = true;
   }
-	return retVal;
+  return retVal;
 }
 
 WagoPFCProcessInterface::CKBusHandler::CKBusHandler() :
@@ -123,17 +122,17 @@ WagoPFCProcessInterface::CKBusHandler::CKBusHandler() :
 }
 
  WagoPFCProcessInterface::CKBusHandler::~CKBusHandler(){
-	 closeKBusInterface();
+   closeKBusInterface();
  }
 
  bool WagoPFCProcessInterface::CKBusHandler::isKBusRunning(){
-	 return ((isAlive()) && (mKBusDeviceId != scmInvalidDeviceId));
+   return ((isAlive()) && (mKBusDeviceId != scmInvalidDeviceId));
  }
 
  bool WagoPFCProcessInterface::CKBusHandler::loadTerminalInformation(){
-	 bool bRetVal = false;
+   bool bRetVal = false;
 
-	 if(KbusInfo_Failed != ldkc_KbusInfo_Create()){
+   if(KbusInfo_Failed != ldkc_KbusInfo_Create()){
      if(KbusInfo_Failed != ldkc_KbusInfo_GetTerminalInfo(OS_ARRAY_SIZE(mTerminalDescription), mTerminalDescription, &mTerminalCount)){
        if(KbusInfo_Failed != ldkc_KbusInfo_GetTerminalList(OS_ARRAY_SIZE(mTerminalIds), mTerminalIds, NULL)){
          bRetVal = true;
@@ -177,11 +176,11 @@ tldkc_KbusInfo_TerminalInfo *WagoPFCProcessInterface::CKBusHandler::getTerminalI
 
 void WagoPFCProcessInterface::CKBusHandler::run(){
   //TODO add thread priority settings
-	bool retVal= false;
-	tApplicationStateChangedEvent stEvent;
+  bool retVal= false;
+  tApplicationStateChangedEvent stEvent;
   // Set application state to "Running" to drive kbus by ourselves.
-	stEvent.State = ApplicationState_Running;
-	if(DAL_SUCCESS == mAppDevInterface->ApplicationStateChanged(stEvent)){
+  stEvent.State = ApplicationState_Running;
+  if(DAL_SUCCESS == mAppDevInterface->ApplicationStateChanged(stEvent)){
     while(isAlive()){
      usleep(10000); // wait 10 ms  TODO make this configurable
      if(!triggerKBusCycle()){
@@ -192,30 +191,30 @@ void WagoPFCProcessInterface::CKBusHandler::run(){
      // read inputs inform FBs
      updateReadData();
     }
-	}
-	else{
-		DEVLOG_ERROR("CKBusHandler: Set application state to 'Running' failed\n");
-	}
-	closeKBusInterface();
+  }
+  else{
+    DEVLOG_ERROR("CKBusHandler: Set application state to 'Running' failed\n");
+  }
+  closeKBusInterface();
 }
 
 bool WagoPFCProcessInterface::CKBusHandler::triggerKBusCycle(){
-	bool bRetVal = false;
-	uint32_t unPushRetVal = 0;
+  bool bRetVal = false;
+  uint32_t unPushRetVal = 0;
 
-	if(DAL_SUCCESS == mAppDevInterface->CallDeviceSpecificFunction("libpackbus_Push", &unPushRetVal)){
-		if(DAL_SUCCESS == unPushRetVal){
-			mAppDevInterface->WatchdogTrigger();
-			bRetVal = true;
-		}
-		else{
-			DEVLOG_ERROR("CKBusHandler: Function 'libpackbus_Push' failed\n");
-		}
-	}
-	else{
-		DEVLOG_ERROR("CKBusHandler: CallDeviceSpecificFunction for 'libpackbus_Push' failed\n");
-	}
-	return bRetVal;
+  if(DAL_SUCCESS == mAppDevInterface->CallDeviceSpecificFunction("libpackbus_Push", &unPushRetVal)){
+    if(DAL_SUCCESS == unPushRetVal){
+      mAppDevInterface->WatchdogTrigger();
+      bRetVal = true;
+    }
+    else{
+      DEVLOG_ERROR("CKBusHandler: Function 'libpackbus_Push' failed\n");
+    }
+  }
+  else{
+    DEVLOG_ERROR("CKBusHandler: CallDeviceSpecificFunction for 'libpackbus_Push' failed\n");
+  }
+  return bRetVal;
 }
 
 std::vector<std::string> WagoPFCProcessInterface::generateParameterList(){
@@ -223,66 +222,66 @@ std::vector<std::string> WagoPFCProcessInterface::generateParameterList(){
   std:: vector<std::string> retVal;
   std:: string segment;
 
-	while(std::getline(streamBuf, segment, '.')){   //seperate the PARAMS input by '.' for easier processing
-	  retVal.push_back(segment);
-	}
-	return retVal;
+  while(std::getline(streamBuf, segment, '.')){   //seperate the PARAMS input by '.' for easier processing
+    retVal.push_back(segment);
+  }
+  return retVal;
 }
 
 void WagoPFCProcessInterface::CKBusHandler::updateReadData(){
-	//long pa_Value = strtol(m_acIndata, NULL, 16);
-	mReadFBListSync.lock();
-	mAppDevInterface->ReadStart(mKBusDeviceId, mTaskId); /* lock PD-In data */
-	TReadFBContainer::Iterator itEnd(mReadFBList.end());
-	for(TReadFBContainer::Iterator itRunner = mReadFBList.begin(); itRunner != itEnd; ++itRunner){
-		if((*itRunner)->checkInputData()){
-			// If data has changed, give the indication event
-			startNewEventChain(*itRunner);
-		}
-	}
+  //long pa_Value = strtol(m_acIndata, NULL, 16);
+  mReadFBListSync.lock();
+  mAppDevInterface->ReadStart(mKBusDeviceId, mTaskId); /* lock PD-In data */
+  TReadFBContainer::Iterator itEnd(mReadFBList.end());
+  for(TReadFBContainer::Iterator itRunner = mReadFBList.begin(); itRunner != itEnd; ++itRunner){
+    if((*itRunner)->checkInputData()){
+      // If data has changed, give the indication event
+      startNewEventChain(*itRunner);
+    }
+  }
 
-	mAppDevInterface->ReadEnd(mKBusDeviceId, mTaskId); /* unlock PD-In data */
-	mReadFBListSync.unlock();
+  mAppDevInterface->ReadEnd(mKBusDeviceId, mTaskId); /* unlock PD-In data */
+  mReadFBListSync.unlock();
 }
 
 void WagoPFCProcessInterface::CKBusHandler::registerKBusReadFB(WagoPFCProcessInterface *paFB){
-	mReadFBListSync.lock();
-	mReadFBList.push_back(paFB);
-	mReadFBListSync.unlock();
+  mReadFBListSync.lock();
+  mReadFBList.push_back(paFB);
+  mReadFBListSync.unlock();
 }
 
 void WagoPFCProcessInterface::CKBusHandler::unregisterKBusReadFB(WagoPFCProcessInterface *paFB){
-	mReadFBListSync.lock();
-	TReadFBContainer::Iterator itRunner(mReadFBList.begin());
-	TReadFBContainer::Iterator itRefNode(mReadFBList.end());
-	TReadFBContainer::Iterator itEnd(mReadFBList.end());
+  mReadFBListSync.lock();
+  TReadFBContainer::Iterator itRunner(mReadFBList.begin());
+  TReadFBContainer::Iterator itRefNode(mReadFBList.end());
+  TReadFBContainer::Iterator itEnd(mReadFBList.end());
 
-	while(itRunner != itEnd){
-		if(*itRunner == paFB){
-			if(itRefNode == itEnd){
-				mReadFBList.pop_front();
-			}
-			else{
-				mReadFBList.eraseAfter(itRefNode);
-			}
-			break;
-		}
+  while(itRunner != itEnd){
+    if(*itRunner == paFB){
+      if(itRefNode == itEnd){
+        mReadFBList.pop_front();
+      }
+      else{
+        mReadFBList.eraseAfter(itRefNode);
+      }
+      break;
+    }
 
-		itRefNode = itRunner;
-		++itRunner;
-	}
+    itRefNode = itRunner;
+    ++itRunner;
+  }
 
-	mReadFBListSync.unlock();
+  mReadFBListSync.unlock();
 }
 
 void WagoPFCProcessInterface::CKBusHandler::writeOutputDataBitToKBus(tldkc_KbusInfo_TerminalInfo *paTerminal, TForteUInt32 paChannel, bool paOutDataBool){
   mAppDevInterface->WriteStart(mKBusDeviceId, mTaskId);
-	mAppDevInterface->WriteBool(mKBusDeviceId, mTaskId, ((paTerminal->OffsetOutput_bits) + paChannel), paOutDataBool);
-	mAppDevInterface->WriteEnd(mKBusDeviceId, mTaskId);
+  mAppDevInterface->WriteBool(mKBusDeviceId, mTaskId, ((paTerminal->OffsetOutput_bits) + paChannel), paOutDataBool);
+  mAppDevInterface->WriteEnd(mKBusDeviceId, mTaskId);
 }
 
 void WagoPFCProcessInterface::CKBusHandler::readInputDataBitfromKBus(tldkc_KbusInfo_TerminalInfo *paTerminal, TForteUInt32 paChannel, bool *paInDataBool){
-	mAppDevInterface->ReadBool(mKBusDeviceId, mTaskId, ((paTerminal->OffsetInput_bits) + paChannel), paInDataBool);
+  mAppDevInterface->ReadBool(mKBusDeviceId, mTaskId, ((paTerminal->OffsetInput_bits) + paChannel), paInDataBool);
 }
 
 void WagoPFCProcessInterface::CKBusHandler::readInputDataWordfromKBus( tldkc_KbusInfo_TerminalInfo *paTerminal, TForteUInt32 paChannel, TForteWord *paInDataWord){
@@ -297,18 +296,18 @@ void WagoPFCProcessInterface::CKBusHandler::writeOutputDataWordToKBus( tldkc_Kbu
   TForteByte outData[2];
   outData[0] = static_cast <TForteByte> (paOutDataWord & 0x00FF);
   outData[1] = static_cast <TForteByte> (paOutDataWord >> 8);
-	mAppDevInterface->WriteStart(mKBusDeviceId, mTaskId);
-	mAppDevInterface->WriteBytes(mKBusDeviceId, mTaskId, ((paTerminal->OffsetOutput_bits) + (paChannel*2)), 2,  outData);
-	mAppDevInterface->WriteEnd(mKBusDeviceId, mTaskId);
+  mAppDevInterface->WriteStart(mKBusDeviceId, mTaskId);
+  mAppDevInterface->WriteBytes(mKBusDeviceId, mTaskId, ((paTerminal->OffsetOutput_bits) + (paChannel*2)), 2,  outData);
+  mAppDevInterface->WriteEnd(mKBusDeviceId, mTaskId);
 }
 
 void WagoPFCProcessInterface::CKBusHandler::closeKBusInterface(){
-	if(0 != mAppDevInterface){
-		mAppDevInterface->CloseDevice(mKBusDeviceId); // close kbus device
-		mAppDevInterface->Exit(); // disconnect ADI-Interface
-		mKBusDeviceId = scmInvalidDeviceId;
-		mAppDevInterface = 0;
-	}
+  if(0 != mAppDevInterface){
+    mAppDevInterface->CloseDevice(mKBusDeviceId); // close kbus device
+    mAppDevInterface->Exit(); // disconnect ADI-Interface
+    mKBusDeviceId = scmInvalidDeviceId;
+    mAppDevInterface = 0;
+  }
 }
 
 void WagoPFCProcessInterface::CKBusHandler::enableHandler(void){
@@ -321,5 +320,5 @@ void  WagoPFCProcessInterface::CKBusHandler::setPriority(int paPriority){
 }
 
 int WagoPFCProcessInterface::CKBusHandler::getPriority(void) const{
-	return 0;
+  return 0;
 }
