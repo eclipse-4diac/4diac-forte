@@ -158,7 +158,7 @@ int CIEC_WSTRING::toString(char* pa_acValue, unsigned int pa_nBufferSize) const{
 }
 
 int CIEC_WSTRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescape){
-  int nSrcLen = pa_nLen >= 0 ? pa_nLen : (pa_bUnescape ? determineEscapedStringLength(pa_pacValue, '"') : strlen(pa_pacValue));
+  int nSrcLen = pa_nLen >= 0 ? pa_nLen : (pa_bUnescape ? determineEscapedStringLength(pa_pacValue, '"') : static_cast<int>(strlen(pa_pacValue)));
   int nSrcCappedLength = nSrcLen;
 
   if(0 <= nSrcLen){

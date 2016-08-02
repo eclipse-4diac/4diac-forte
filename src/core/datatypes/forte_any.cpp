@@ -106,7 +106,7 @@ CStringDictionary::TStringId CIEC_ANY::parseTypeName(const char *pa_pacValue, co
 int CIEC_ANY::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
   int nRetVal = -1;
   if((strlen(scm_acAnyToStringResponse) +1) < pa_nBufferSize){
-    nRetVal = strlen(scm_acAnyToStringResponse);
+    nRetVal = static_cast<int>(strlen(scm_acAnyToStringResponse));
     memcpy(pa_pacValue, scm_acAnyToStringResponse, nRetVal);
     pa_pacValue[nRetVal] = '\0';
   }

@@ -130,7 +130,7 @@ void CFunctionBlock::setupAdapters(const SFBInterfaceSpec *pa_pstInterfaceSpec, 
 
 CEventConnection *CFunctionBlock::getEOConection(CStringDictionary::TStringId paEONameId) const{
   CEventConnection *retVal = 0;
-  unsigned int portId = getPortId(paEONameId, m_pstInterfaceSpec->m_nNumEOs, m_pstInterfaceSpec->m_aunEONames);
+  TPortId portId = getPortId(paEONameId, m_pstInterfaceSpec->m_nNumEOs, m_pstInterfaceSpec->m_aunEONames);
   if(cg_unInvalidPortId != portId){
     retVal = getEOConUnchecked(portId);
   }
@@ -294,7 +294,7 @@ void CFunctionBlock::sendOutputEvent(int pa_nEO){
       }
     }
 
-    getEOConUnchecked(pa_nEO)->triggerEvent(*m_poInvokingExecEnv);
+    getEOConUnchecked(static_cast<TPortId>(pa_nEO))->triggerEvent(*m_poInvokingExecEnv);
 
 #ifdef FORTE_SUPPORT_MONITORING
       // stop execution on Breakpoint
