@@ -113,18 +113,40 @@ int CIEC_TIME::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
   if(pa_nBufferSize > 4){
 
 #ifdef FORTE_USE_64BIT_DATATYPES
-    CIEC_LINT timeInMilliSeconds(getInMiliSeconds());
+    CIEC_LINT timeVal(getInMiliSeconds());
 #else
-    CIEC_DINT timeInMilliSeconds(getInMiliSeconds());
+    CIEC_DINT timeVal(getInMiliSeconds());
 #endif
-    nRetVal = timeInMilliSeconds.toString(pa_pacValue + 2, pa_nBufferSize - 4);
+    nRetVal = timeVal.toString(pa_pacValue + 2, pa_nBufferSize - 4);
     if(-1 != nRetVal){
       pa_pacValue[0] = 'T';
       pa_pacValue[1] = '#';
-      pa_pacValue[nRetVal + 2] = 'm';
-      pa_pacValue[nRetVal + 3] = 's';
-      pa_pacValue[nRetVal + 4] = '\0';
-      nRetVal += 4;
+      nRetVal += 2;
+
+      timeVal = getInMicroSeconds();
+      timeVal = timeVal % 1000; //we only want the microseconds
+      if(0 != timeVal){
+        //If we have a microsecond value add it to the literal
+        pa_pacValue[nRetVal] = '.';
+        ++nRetVal;
+        if(timeVal < 100){
+          pa_pacValue[nRetVal] = '0';
+          ++nRetVal;
+        }
+
+        int size = timeVal.toString(pa_pacValue + nRetVal, pa_nBufferSize - nRetVal);
+        if(-1 == size){
+          return size;
+        }
+        nRetVal += size;
+      }
+
+      pa_pacValue[nRetVal] = 'm';
+      pa_pacValue[nRetVal + 1] = 's';
+      pa_pacValue[nRetVal + 3] = '\0';
+      nRetVal += 2;
+
+
     }
   }
   return nRetVal;
