@@ -41,7 +41,7 @@ mark_as_advanced(FORTE_BUILD_TYPE)
 # Determine the loglevel
 #######################################################################################
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-    if(NOT (${FORTE_LOGLEVEL} STREQUAL "LOGINFO"))
+    if(NOT ${FORTE_LOGLEVEL} STREQUAL "LOGINFO")
         message("Log Level was changed due to a change in CMAKE_BUILD_TYPE.")
     endif()
     set(FORTE_LOGLEVEL "LOGINFO" CACHE STRING "Loglevel to use" FORCE)
