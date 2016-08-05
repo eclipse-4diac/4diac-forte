@@ -65,7 +65,7 @@ class CIEC_ANY_STRING : public CIEC_ANY_ELEMENTARY{
     }
 
     void clear(){
-      assign(0,0);
+      assign("", 0);
     }
 
     bool empty() const{return length() == 0;}
