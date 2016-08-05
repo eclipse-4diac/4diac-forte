@@ -538,36 +538,31 @@ void CFunctionBlock::generateGenericInterfacePointNameArray(const char * const p
 
   if(cg_nIdentifierLength > unLen){
     memcpy(acBuffer, pa_acPrefix, unLen);
-    char *acRunner = &acBuffer[unLen];
-    char *acTenth = 0;
-    acRunner[1] = '\0';
+    acBuffer[unLen + 1] = '\0';
+    acBuffer[unLen + 2] = '\0';
 
-    for(unsigned int i = 1, j = 0, jj = 0; i <= pa_unNumGenericDataPoints; i++){
-      if(0 == (i % 10)){
-        if(j == 0){
-          acTenth = acRunner;
-          acRunner++;
-          acRunner[1] = '\0';
-        }
-        j++;
-
-        if(0 == (j % 10)){
-          char *acHundret = 0;
-          if(jj == 0){
-            acHundret = acTenth;
-            acTenth = acRunner;
-            acRunner++;
-            acRunner[1] = '\0';
-          }
-          jj++;
-          *acHundret = static_cast<char>(0x30 + (jj % 10));
-        }
-        *acTenth = static_cast<char>(0x30 + (j % 10));
+		for(unsigned int i = 1; i <= pa_unNumGenericDataPoints; i++){
+			if(i < 10){ //1 digit
+				acBuffer[unLen] = static_cast<char>(0x30 + i);
+			}
+			else if(i < 100){ //2 digits
+				if(0 == i % 10){
+					acBuffer[unLen] = static_cast<char>(0x30 + (i % 100 / 10));
+				}
+				acBuffer[unLen + 1] = static_cast<char>(0x30 + i % 10);
       }
-      *acRunner = static_cast<char>(0x30 + (i % 10));
-      pa_anNamesArayStart[i - 1] = CStringDictionary::getInstance().insert(acBuffer);
-    }
-  }
+      else{ //3 digits
+        if(0 == i % 100){
+          acBuffer[unLen] = static_cast<char>(0x30 + (i / 100));
+        }
+        if(0 == i % 10){
+          acBuffer[unLen + 1] = static_cast<char>(0x30 + (i % 100 / 10));
+        }
+				acBuffer[unLen + 2] = static_cast<char>(0x30 + i % 10);
+			}
+			pa_anNamesArayStart[i - 1] = CStringDictionary::getInstance().insert(acBuffer);
+		}
+	}
 }
 
 void CFunctionBlock::generateGenericDataPointArrays(const char * const pa_acPrefix, CStringDictionary::TStringId* pa_anDataTypeNamesArrayStart, CStringDictionary::TStringId* pa_anNamesArrayStart, unsigned int pa_unNumGenericDataPoints){
