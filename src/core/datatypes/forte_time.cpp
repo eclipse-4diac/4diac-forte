@@ -132,6 +132,10 @@ int CIEC_TIME::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
         if(timeVal < 100){
           pa_pacValue[nRetVal] = '0';
           ++nRetVal;
+          if(timeVal < 10){
+            pa_pacValue[nRetVal] = '0';
+            ++nRetVal;
+          }
         }
 
         int size = timeVal.toString(pa_pacValue + nRetVal, pa_nBufferSize - nRetVal);
@@ -143,7 +147,7 @@ int CIEC_TIME::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
 
       pa_pacValue[nRetVal] = 'm';
       pa_pacValue[nRetVal + 1] = 's';
-      pa_pacValue[nRetVal + 3] = '\0';
+      pa_pacValue[nRetVal + 2] = '\0';
       nRetVal += 2;
 
 
