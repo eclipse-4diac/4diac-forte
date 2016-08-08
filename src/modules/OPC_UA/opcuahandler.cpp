@@ -146,13 +146,11 @@ void COPC_UA_Handler::registerNode(){
  */
 
 UA_StatusCode COPC_UA_Handler::getFBNodeId(const CFunctionBlock* pCFB, UA_NodeId* returnFBNodeId){
-	UA_StatusCode retVal = UA_STATUSCODE_GOOD;
 	const char* FBInstanceName = pCFB->getInstanceName();	// Name of the SourcePoint function block
 	UA_NodeId FBNodeId = UA_NODEID_STRING_ALLOC(1, FBInstanceName);		// Create new FBNodeId from c string
 
 	UA_NodeId* returnNodeId = UA_NodeId_new();
-	retVal = UA_Server_readNodeId(mOPCUAServer, FBNodeId, returnNodeId);		// read node of given ID
-
+	UA_StatusCode retVal = UA_Server_readNodeId(mOPCUAServer, FBNodeId, returnNodeId);		// read node of given ID
 	if(retVal != UA_STATUSCODE_GOOD){
 		return retVal;		// reading not successful
 	}else{
@@ -163,7 +161,6 @@ UA_StatusCode COPC_UA_Handler::getFBNodeId(const CFunctionBlock* pCFB, UA_NodeId
 
 
 UA_StatusCode COPC_UA_Handler::getSPNodeId(const CFunctionBlock *pCFB, SConnectionPoint& sourceRD, UA_NodeId* returnSPNodeId){
-	UA_StatusCode retVal = UA_STATUSCODE_GOOD;
 
 	// Reading the node without reference to parent node id, unknown if this works.
 	//FIXME needs further testing with OPC_UA Address Space Browser and example node
@@ -175,7 +172,7 @@ UA_StatusCode COPC_UA_Handler::getSPNodeId(const CFunctionBlock *pCFB, SConnecti
 	UA_NodeId SPNodeId = UA_NODEID_STRING_ALLOC(1, SPName);
 
 	UA_NodeId* returnNodeId = UA_NodeId_new();
-	retVal = UA_Server_readNodeId(mOPCUAServer, SPNodeId, returnNodeId);		// read node of given ID
+	UA_StatusCode retVal = UA_Server_readNodeId(mOPCUAServer,SPNodeId, returnNodeId);		// read node of given ID
 	if(retVal != UA_STATUSCODE_GOOD){
 		return retVal;		// reading not successful
 	}else{
@@ -386,14 +383,12 @@ UA_StatusCode COPC_UA_Handler::createUAVarNode(const CFunctionBlock* pCFB, SConn
  * Mapping of IEC61499 to OPC-UA types is performed by scmUADataTypeMapping array.
  */
 UA_StatusCode COPC_UA_Handler::updateNodeValue(UA_NodeId * pNodeId, CIEC_ANY &paDataPoint){
-	UA_StatusCode retVal = UA_STATUSCODE_GOOD;
 	UA_Variant* NodeValue = UA_Variant_new();
 	UA_Variant_init(NodeValue);
 
 	UA_Variant_setScalarCopy(NodeValue, static_cast<const void *>(paDataPoint.getConstDataPtr()),
 			&UA_TYPES[scmUADataTypeMapping[paDataPoint.getDataTypeID()]]);
-	retVal = UA_Server_writeValue(mOPCUAServer, *(pNodeId), *(NodeValue));
-	return retVal;
+	return UA_Server_writeValue(mOPCUAServer, *(pNodeId), *(NodeValue));
 }
 
 

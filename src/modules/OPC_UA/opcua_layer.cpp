@@ -63,7 +63,6 @@ EComResponse COPC_UA_Layer::openConnection(char * paLayerParameter){
 	/* PUBLISHER */
 	if(e_Publisher == getCommFB()->getComServiceType()){
 
-		int numData = getCommFB()->getNumSD();
 		CIEC_ANY* dataArray = getCommFB()->getSDs();
 
 
@@ -87,6 +86,7 @@ EComResponse COPC_UA_Layer::openConnection(char * paLayerParameter){
 #else
 		// Automatic creation of UA Server AddressSpace from IEC61499 Application through model transition.
 		// TODO: remove. This option is only kept as an idea source. Obsolete because solution is applicable to Publishers only.
+		int numData = getCommFB()->getNumSD();
 		m_apUANodeId = new UA_NodeId *[numData];  //TODO for now Publisher only publishes a single value. Extend to handling multiple NodeId Adapters plus corresponding SDs and RDs.
 		memset(m_apUANodeId, 0, sizeof(UA_NodeId *) * numData);
 		retValUA = createItems(dataArray, numData, paLayerParameter);
@@ -99,7 +99,7 @@ EComResponse COPC_UA_Layer::openConnection(char * paLayerParameter){
 		/* SUBSCRIBER */
 		// Subscribe has initial value and then new one after each update.
 		// for now only one subscription per subscriber block
-		int numData = getCommFB()->getNumRD();
+		//int numData = getCommFB()->getNumRD(); //numData not used
 		CIEC_ANY* dataArray = getCommFB()->getRDs();
 
 		m_apUANodeId = new UA_NodeId *[1];  //TODO for now Publisher only publishes a single value. Extend to handling multiple NodeId Adapters plus corresponding SDs and RDs.
