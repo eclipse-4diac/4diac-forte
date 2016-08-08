@@ -532,11 +532,10 @@ TPortId CFunctionBlock::getPortId(CStringDictionary::TStringId pa_unPortNameId, 
 }
 
 void CFunctionBlock::generateGenericInterfacePointNameArray(const char * const pa_acPrefix, CStringDictionary::TStringId* pa_anNamesArayStart, unsigned int pa_unNumGenericDataPoints){
-  TIdentifier acBuffer;
-
   size_t unLen = strlen(pa_acPrefix);
 
   if(cg_nIdentifierLength > unLen){
+    TIdentifier acBuffer;
     memcpy(acBuffer, pa_acPrefix, unLen);
     acBuffer[unLen + 1] = '\0';
     acBuffer[unLen + 2] = '\0';

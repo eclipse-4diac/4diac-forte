@@ -176,7 +176,7 @@ tldkc_KbusInfo_TerminalInfo *WagoPFCProcessInterface::CKBusHandler::getTerminalI
 
 void WagoPFCProcessInterface::CKBusHandler::run(){
   //TODO add thread priority settings
-  bool retVal= false;
+  //bool retVal= false;
   tApplicationStateChangedEvent stEvent;
   // Set application state to "Running" to drive kbus by ourselves.
   stEvent.State = ApplicationState_Running;
