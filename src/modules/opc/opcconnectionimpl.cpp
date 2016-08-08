@@ -21,7 +21,7 @@
 #include "OPCItem.h"
 
 COpcConnectionImpl::COpcConnectionImpl(const char *pa_acHost, const char *pa_acServerName, COpcConnection* pa_pOpcConn) :
-    m_acHost(pa_acHost), m_acServerName(pa_acServerName), m_pOpcConn(pa_pOpcConn){
+    m_acHost(pa_acHost), m_acServerName(pa_acServerName), m_pOpcConn(pa_pOpcConn), m_acGroupName(0), m_nDeadBand(0), m_nRealUpdateRate(0), m_nReqUpdateRate(0), m_pOpcHost(0), m_pOpcServer(0) {
 }
 
 COpcConnectionImpl::~COpcConnectionImpl(){
