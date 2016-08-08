@@ -25,7 +25,8 @@ CAdapter::CAdapter(CResource *pa_poSrcRes,
       m_bIsPlug(pa_bIsPlug),
   m_poPeer(0),
   m_aoLocalDIs(m_aoDIs),
-  m_poAdapterConn(0){
+  m_poAdapterConn(0),
+  m_nParentAdapterListEventID(0){
 
   setupEventEntryList();
 }

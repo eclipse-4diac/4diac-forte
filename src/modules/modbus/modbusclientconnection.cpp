@@ -24,6 +24,8 @@ using namespace modbus_connection_event;
 
 CModbusClientConnection::CModbusClientConnection() :
     CModbusConnection(), m_pModbusConnEvent(NULL), m_nNrOfPolls(0), m_nSlaveId(0xFF), m_unBufFillSize(0){
+  memset(m_anRecvBuffPosition, 0, sizeof(m_anRecvBuffPosition)); //TODO change this to  m_anRecvBuffPosition{0} in the extended list when fully switching to C++11
+  memset(m_acRecvBuffer, 0, sizeof(m_acRecvBuffer)); //TODO change this to  m_acRecvBuffer{0} in the extended list when fully switching to C++11
 }
 
 CModbusClientConnection::~CModbusClientConnection(){

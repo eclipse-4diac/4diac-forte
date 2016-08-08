@@ -21,7 +21,7 @@ WagoPFCProcessInterface::WagoPFCProcessInterface(CResource *paSrcRes,
     const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData,
     TForteByte *paFBVarsData) :
     CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData),
-    mSlot(0), mChannel(0),mInitialized(false){
+    mSlot(0), mChannel(0),mInitialized(false), mTerminalInfo(0){
 }
 
 

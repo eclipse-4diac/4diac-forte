@@ -51,7 +51,7 @@ void GEN_CSV_WRITER::executeEvent(int pa_nEIID){
 }
 
 GEN_CSV_WRITER::GEN_CSV_WRITER(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CFunctionBlock(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0){
+    CFunctionBlock(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0), m_anDataInputNames(0), m_anDataInputTypeIds(0), m_anEIWith(0){
   m_pstCSVFile = 0;
 }
 
