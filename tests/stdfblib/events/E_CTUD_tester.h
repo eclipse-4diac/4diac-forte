@@ -9,33 +9,40 @@
  *   Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef _E_CTD_TESTER_H_
-#define _E_CTD_TESTER_H_
+#ifndef _E_CTUD_TESTER_H_
+#define _E_CTUD_TESTER_H_
 
 #include "../../core/fbtests/fbtester.h"
 #include <forte_uint.h>
 #include <forte_bool.h>
-#include <E_CTD.h>
+#include <E_CTUD.h>
 
-class E_CTD_tester : public CFBTester{
-  DECLARE_FB_TESTER(E_CTD_tester);
+class E_CTUD_tester : public CFBTester{
+  DECLARE_FB_TESTER(E_CTUD_tester);
 
   public:
-    E_CTD_tester(CResource *m_poTestResource);
-    virtual ~E_CTD_tester(){};
+    E_CTUD_tester(CResource *m_poTestResource);
+    virtual ~E_CTUD_tester(){};
   private:
     virtual void executeAllTests();
 
+    bool testCase_EventCU();
     bool testCase_EventCD();
+    bool testCase_EventR();
     bool testCase_EventLD();
     bool testCase_Mix();
 
+    bool checkCU(TForteUInt16 pa_prevCV);
     bool checkCD(TForteUInt16 pa_prevCV);
+    bool checkR();
     bool checkLD(TForteUInt16 pa_usedPV);
+    bool checkBooleans();
+
 
     CIEC_UINT m_oIn_PV; //Preset value
-    CIEC_BOOL m_oOut_Q; //CV < 0
+    CIEC_BOOL m_oOut_QU; //CV >= PV
+    CIEC_BOOL m_oOut_QD; //CV <= 0
     CIEC_UINT m_oOut_CV; //count value
 };
 
-#endif /* _E_CTD_TESTER_H_ */
+#endif /* _E_CTUD_TESTER_H_ */
