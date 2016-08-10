@@ -58,7 +58,6 @@ BOOST_AUTO_TEST_CASE(Operator_test)
 BOOST_AUTO_TEST_CASE(Conversion_test)
 {
 	CIEC_DATE nTest;
-  TForteInt32 nTZOffset;
 
 	char cBuffer[11];
 	char cBufferFail[2];

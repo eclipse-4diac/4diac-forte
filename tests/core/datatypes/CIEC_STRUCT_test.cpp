@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
   void setDataTestStruct1(CIEC_TestStruct1 &pa_roStruct, const char* pa_acVal1, bool pa_nVal2, int pa_nVal3){
     (*(CIEC_STRING *) pa_roStruct.getMemberNamed(g_nStringIdVal1)) = pa_acVal1;
     (*(CIEC_BOOL *) pa_roStruct.getMemberNamed(g_nStringIdVal2)) = pa_nVal2;
-    (*(CIEC_INT *) pa_roStruct.getMemberNamed(g_nStringIdVal3)) = pa_nVal3;
+    (*(CIEC_INT *) pa_roStruct.getMemberNamed(g_nStringIdVal3)) = static_cast<TForteInt16>(pa_nVal3);
   }
 
   const char cTestStringData[] = "Check string!";
@@ -92,9 +92,9 @@ BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
 
   void setDataTestStruct2(CIEC_TestStruct2&pa_roStruct, float pa_fVal1, int pa_nVal2, bool pa_bVal3, int pa_bVal4){
       (*(CIEC_REAL *) pa_roStruct.getMemberNamed(g_nStringIdVal1)) = pa_fVal1;
-      (*(CIEC_INT *) pa_roStruct.getMemberNamed(g_nStringIdVal2)) = pa_nVal2;
+      (*(CIEC_INT *) pa_roStruct.getMemberNamed(g_nStringIdVal2)) = static_cast<TForteInt16>(pa_nVal2);
       (*(CIEC_BOOL *) pa_roStruct.getMemberNamed(g_nStringIdVal3)) = pa_bVal3;
-      (*(CIEC_INT *) pa_roStruct.getMemberNamed(g_nStringIdVal4)) = pa_bVal4;
+      (*(CIEC_INT *) pa_roStruct.getMemberNamed(g_nStringIdVal4)) = static_cast<TForteInt16>(pa_bVal4);
     }
 
   void setupTestStruct2_TestDataSet1(CIEC_TestStruct2 &pa_stStruct){
@@ -362,7 +362,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
 
   void toStringTest_testStruct1(const char* pa_acVal1, bool pa_nVal2, int pa_nVal3, const char* pa_acResult){
     CIEC_TestStruct1 stStruct;
-    int nResultLenght = strlen(pa_acResult);
+    int nResultLenght = static_cast<int>(strlen(pa_acResult));
     char acBuffer[50];
 
     for(int i = (nResultLenght + 1); i < 50; i++){
@@ -384,7 +384,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
 
   void toStringTest_testStruct2(float pa_fVal1, int pa_nVal2, bool pa_bVal3, int pa_nVal4, const char* pa_acResult){
       CIEC_TestStruct2 stStruct;
-      int nResultLenght = strlen(pa_acResult);
+      int nResultLenght = static_cast<int>(strlen(pa_acResult));
       char acBuffer[60];
 
       for(int i = (nResultLenght + 1); i < 60; i++){

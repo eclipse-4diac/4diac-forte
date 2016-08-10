@@ -967,9 +967,9 @@ BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_LINT){
 
   BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLIntm9223372036854775808, cg_unLIntSerSize));
 #ifndef __INT64_C
-  BOOST_CHECK_EQUAL((-9223372036854775808LL), nVal);
+  BOOST_CHECK_EQUAL((-9223372036854775807LL - 1), nVal);
 #else
-  BOOST_CHECK_EQUAL(__INT64_C(-9223372036854775808), nVal);
+  BOOST_CHECK_EQUAL(__INT64_C(-9223372036854775807LL - 1), nVal);
 #endif
 
   BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLInt9223372036854775807, cg_unLIntSerSize));
