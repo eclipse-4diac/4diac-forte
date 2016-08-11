@@ -46,7 +46,7 @@ unsigned int CFBTestsManager::runAllTests(CResource *paRessource){
 
   printf("*****************************************************\n");
   printf("*** Overall Test Summary:\n");
-  printf("*** Executed %d test cases (%u successful, %u unsuccessful)\n", m_nNumSuccessfulTestCases
+  printf("*** Executed %u test cases (%u successful, %u unsuccessful)\n", m_nNumSuccessfulTestCases
       + m_nNumUnsuccessfulTestCases, m_nNumSuccessfulTestCases, m_nNumUnsuccessfulTestCases);
   printf("*****************************************************\n");
 

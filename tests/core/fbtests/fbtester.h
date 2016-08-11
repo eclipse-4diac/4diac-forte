@@ -52,7 +52,7 @@ class CFBTester : public CFunctionBlock{
     }
 
   protected:
-    CFBTester(CResource *pa_poTestResource);
+    explicit CFBTester(CResource *pa_poTestResource);
 
     /*!\brief invoke the FB under Test with the given event id
      *

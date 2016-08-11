@@ -22,7 +22,7 @@ class E_SR_tester  : public CFBTester{
     DECLARE_FB_TESTER(E_SR_tester);
 
   public:
-    E_SR_tester(CResource *m_poTestResource);
+    explicit E_SR_tester(CResource *m_poTestResource);
 
   private:
     virtual void executeAllTests();

@@ -21,7 +21,7 @@ class E_CTU_tester : public CFBTester{
   DECLARE_FB_TESTER(E_CTU_tester);
 
   public:
-    E_CTU_tester(CResource *m_poTestResource);
+    explicit E_CTU_tester(CResource *m_poTestResource);
     virtual ~E_CTU_tester(){};
   private:
     virtual void executeAllTests();

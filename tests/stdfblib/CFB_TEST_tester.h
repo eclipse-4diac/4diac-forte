@@ -22,7 +22,7 @@ class CFB_TEST_tester : public CFBTester{
   public:
 
   private:
-    CFB_TEST_tester(CResource *m_poTestResource);
+    explicit CFB_TEST_tester(CResource *m_poTestResource);
     virtual void executeAllTests();
 
     bool inhibitTest();
