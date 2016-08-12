@@ -272,7 +272,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
     const unsigned int unTestData = 7;
     std::string sTestData10[unTestData] = { "0", "255", "256", "65535", "65536", "2147483647", "4294967295" };
     std::string sTestData16[unTestData] = { "0x0", "0xFF", "0x100", "0xFFFF", "0x10000", "0x7FFFFFFF", "0xFFFFFFFF" };
-    long int sTestDataResult[unTestData] = { 0, 255, 256, 65535, 65536, 2147483647, 4294967295 };
+    unsigned long int sTestDataResult[unTestData] = { 0, 255, 256, 65535, 65536, 2147483647, 4294967295 };
 
     for(unsigned int i = 0; i < unTestData; i++){
       BOOST_CHECK_EQUAL(sTestDataResult[i], forte::core::util::strtoul(sTestData10[i].c_str(), &pacEndptr, 10));
