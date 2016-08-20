@@ -130,7 +130,7 @@ int CIEC_ARRAY::fromString(const char *pa_pacValue){
     }
     if(*pcRunner == ']'){
       //arrays have to and on a closing bracket
-      nRetVal = pcRunner - pa_pacValue + 1; //+1 from the closing bracket
+      nRetVal = static_cast<int>(pcRunner - pa_pacValue + 1); //+1 from the closing bracket
       // For the rest of the array size copy the default element
       for(; i < unArraySize; ++i){
         (*this)[i]->setValue(*(&(getArray()[-1])));

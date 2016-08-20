@@ -17,7 +17,7 @@
 using namespace forte::com_infra;
 
 CModbusComLayer::CModbusComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB) :
-    CComLayer(pa_poUpperLayer, pa_poComFB){
+    CComLayer(pa_poUpperLayer, pa_poComFB), m_pModbusConnection(0), m_unBufFillSize(0){
   m_eConnectionState = e_Disconnected;
 }
 

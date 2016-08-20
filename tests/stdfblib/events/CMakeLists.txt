@@ -24,6 +24,10 @@ forte_test_add_sourcefile_cpp(../../../src/stdfblib/events/E_SWITCH.cpp)
 forte_test_add_sourcefile_cpp(../../../src/stdfblib/events/E_SELECT.cpp)
 forte_test_add_sourcefile_cpp(../../../src/stdfblib/events/GEN_E_DEMUX.cpp)
 forte_test_add_sourcefile_cpp(../../../src/stdfblib/events/GEN_E_MUX.cpp)
+forte_test_add_sourcefile_cpp(../../../src/stdfblib/events/E_CTD.cpp)
+forte_test_add_sourcefile_cpp(../../../src/stdfblib/events/E_CTU.cpp)
+forte_test_add_sourcefile_cpp(../../../src/stdfblib/events/E_CTUD.cpp)
+forte_test_add_sourcefile_cpp(../../../src/core/basicfb.cpp)
 
 #Removed as it is to unstable on build server 
 #forte_test_add_sourcefile_cpp(E_DELAY_tester.cpp)
@@ -34,3 +38,7 @@ forte_test_add_sourcefile_cpp(E_R_TRIG_tester.cpp)
 forte_test_add_sourcefile_cpp(E_SR_tester.cpp)
 forte_test_add_sourcefile_cpp(E_SELECT_tester.cpp)
 forte_test_add_sourcefile_cpp(E_SWITCH_tester.cpp)
+forte_test_add_sourcefile_cpp(E_CTD_tester.cpp)
+forte_test_add_sourcefile_cpp(E_CTU_tester.cpp)
+forte_test_add_sourcefile_cpp(E_CTUD_tester.cpp)
+

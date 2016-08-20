@@ -23,6 +23,44 @@ BOOST_AUTO_TEST_CASE(Type_test)
 
 }
 
+BOOST_AUTO_TEST_CASE(String_length)
+{
+  CIEC_STRING test1;
+  BOOST_CHECK_EQUAL(test1.length(), 0);
+
+  CIEC_STRING test2 = "\0";
+  BOOST_CHECK_EQUAL(test2.length(), 0);
+
+  CIEC_STRING test3 = "";
+  BOOST_CHECK_EQUAL(test3.length(), 0);
+
+  CIEC_STRING test4 = "1\03"; // {'1', '3', '\0'}
+  BOOST_CHECK_EQUAL(test4.length(), 2);
+
+  CIEC_STRING test5 = "123456789";
+  BOOST_CHECK_EQUAL(test5.length(), 9);
+
+}
+
+BOOST_AUTO_TEST_CASE(String_empty)
+{
+  CIEC_STRING test1;
+  BOOST_CHECK(test1.empty());
+
+  CIEC_STRING test2 = "\0";
+  BOOST_CHECK(test2.empty());
+
+  CIEC_STRING test3 = "";
+  BOOST_CHECK(test3.empty());
+
+  CIEC_STRING test4 = "1\03";  //{'1', '3', '\0'}
+  BOOST_CHECK(!test4.empty());
+
+  CIEC_STRING test5 = "12345789";
+  BOOST_CHECK(!test5.empty());
+
+}
+
 BOOST_AUTO_TEST_CASE(String_manipulation_interface)
 {
 	CIEC_STRING sTest;
@@ -60,6 +98,112 @@ BOOST_AUTO_TEST_CASE(String_assignment)
 	BOOST_CHECK_EQUAL(sTest2.length(), 28);
 	sTest2 = cTest2;
 	BOOST_CHECK((0 != strcmp(sTest1.getValue(), sTest2.getValue())));
+}
+
+BOOST_AUTO_TEST_CASE(String_clear)
+{
+  CIEC_STRING test1;
+  test1.clear();
+  BOOST_CHECK_EQUAL(test1.length(), 0);
+
+  CIEC_STRING test2 = "";
+  test2.clear();
+  BOOST_CHECK_EQUAL(test2.length(), 0);
+
+  CIEC_STRING test3 = "\0";
+  test3.clear();
+  BOOST_CHECK_EQUAL(test3.length(), 0);
+
+  CIEC_STRING test4 = "1\03";  //{'1', '3', '\0'}
+  test4.clear();
+  BOOST_CHECK_EQUAL(test4.length(), 0);
+
+  CIEC_STRING test5 = "123456789";
+  test5.clear();
+  BOOST_CHECK_EQUAL(test5.length(), 0);
+
+}
+
+BOOST_AUTO_TEST_CASE(String_re_assignment)
+{
+  CIEC_STRING test1 = "123456789";
+  BOOST_CHECK_EQUAL(test1.length(), 9);
+
+  test1.clear();
+  BOOST_CHECK_EQUAL(test1.length(), 0);
+
+  test1.assign("123456789", 9);
+  BOOST_CHECK_EQUAL(test1.length(), 9);
+
+  test1.assign("123456", 6); //smaller string
+  BOOST_CHECK_EQUAL(test1.length(), 6);
+
+  test1.assign("12345678", 8); //bigger string
+  BOOST_CHECK_EQUAL(test1.length(), 8);
+
+  test1.assign("1234567890", 9); //length to assign smaller than actual string coming from a smaller string
+  BOOST_CHECK_EQUAL(test1.length(), 9);
+
+  test1.assign("1234", 3);//length to assign smaller than actual string coming from a bigger string
+  BOOST_CHECK_EQUAL(test1.length(), 3);
+
+  test1.assign(0, 0);//shouldn't do anything
+  BOOST_CHECK_EQUAL(test1.length(), 3);
+
+  test1.assign("\0", 0);
+  BOOST_CHECK_EQUAL(test1.length(), 0);
+
+  test1.assign("0", 1);
+  BOOST_CHECK_EQUAL(test1.length(), 1);
+
+  test1.assign("", 0);
+  BOOST_CHECK_EQUAL(test1.length(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(String_append)
+{
+  CIEC_STRING test1 = "123456789";
+  BOOST_CHECK_EQUAL(test1.length(), 9);
+
+  test1.append("");
+  BOOST_CHECK_EQUAL(test1.length(), 9);
+  BOOST_CHECK_EQUAL(strcmp(test1.getValue(), "123456789"), 0);
+
+  test1.append("0");
+  BOOST_CHECK_EQUAL(test1.length(), 10);
+  BOOST_CHECK_EQUAL(strcmp(test1.getValue(), "1234567890"), 0);
+
+  test1.append("\0");
+  BOOST_CHECK_EQUAL(test1.length(), 10);
+  BOOST_CHECK_EQUAL(strcmp(test1.getValue(), "1234567890"), 0);
+
+  test1.append("123", 1);
+  BOOST_CHECK_EQUAL(test1.length(), 11);
+  BOOST_CHECK_EQUAL(strcmp(test1.getValue(), "12345678901"), 0);
+
+  test1.append("");
+  BOOST_CHECK_EQUAL(test1.length(), 11);
+  BOOST_CHECK_EQUAL(strcmp(test1.getValue(), "12345678901"), 0);
+
+  test1.append(0, 0); //shouldn't do anything
+  BOOST_CHECK_EQUAL(test1.length(), 11);
+  BOOST_CHECK_EQUAL(strcmp(test1.getValue(), "12345678901"), 0);
+
+  test1.append("1\03"); // {'1', '3', '\0'}
+  BOOST_CHECK_EQUAL(test1.length(), 13);
+  BOOST_CHECK_EQUAL(strcmp(test1.getValue(), "123456789011\3"), 0);
+
+  test1.append(0, 0);//shouldn't do anything
+  BOOST_CHECK_EQUAL(test1.length(), 13);
+  BOOST_CHECK_EQUAL(strcmp(test1.getValue(), "123456789011\3"), 0);
+
+  test1.clear();
+  test1.append("\0"); //append to empty string
+  BOOST_CHECK_EQUAL(test1.length(), 0);
+
+  test1.append(""); //append to empty string
+  BOOST_CHECK_EQUAL(test1.length(), 0);
+
 }
 
 BOOST_AUTO_TEST_CASE(String_compare)

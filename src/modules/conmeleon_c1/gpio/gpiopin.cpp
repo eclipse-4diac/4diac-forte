@@ -52,13 +52,12 @@ bool CGpioPin::sysfsExportPin() const {
 bool CGpioPin::sysfsUnexportPin() const {
 
 	char szPinNr[12] = {0};
-	bool bRet = false;
 
 	sprintf(szPinNr, "%d", m_Nr);
 
 	m_GlobalFileMutex.lock(); /* protect sysfs unexport file from multiple access */
 
-	bRet = writeToFile(UnexportFilePath, &szPinNr[0]);
+	bool bRet = writeToFile(UnexportFilePath, &szPinNr[0]);
 
 	m_GlobalFileMutex.unlock();
 	return bRet;

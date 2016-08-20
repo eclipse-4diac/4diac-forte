@@ -53,7 +53,9 @@ void createDev(const char *pa_acMGRID) {
 
   poDev->setMGR_ID(pa_acMGRID);
   poDev->startDevice();
+  DEVLOG_INFO("FORTE is up and running\n");
   poDev->MGR.getResourceEventExecution()->joinEventChainExecutionThread();
+  DEVLOG_INFO("FORTE finished\n");
   delete poDev;
 }
 

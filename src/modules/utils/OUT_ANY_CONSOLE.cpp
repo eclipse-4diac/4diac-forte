@@ -74,7 +74,7 @@ void FORTE_OUT_ANY_CONSOLE::executeEvent(int pa_nEIID) {
 					//get number of array elements
 					TForteUInt16 nArrayElements = (static_cast<CIEC_ARRAY*>(&IN()))->size();
 					//number of required bytes (including brackets '[' ']' and ',' separators
-					nRequiredBytes = nArrayElements * scm_maxStringBufSize + nArrayElements + static_cast<TForteUInt16>(1);
+					nRequiredBytes = static_cast<TForteUInt16>(nArrayElements * scm_maxStringBufSize +  nArrayElements + 1);
 				}
 				else{
 					//size for single data values
@@ -83,7 +83,7 @@ void FORTE_OUT_ANY_CONSOLE::executeEvent(int pa_nEIID) {
 
 				sOutput.reserve(nRequiredBytes);
 				//write StringValue
-				nUsedBytes = IN().toString(sOutput.getValue(), nRequiredBytes);
+				nUsedBytes = static_cast<TForteUInt16>(IN().toString(sOutput.getValue(), nRequiredBytes));
 				//maintain the state of the output data value string
 				sOutput.assign(sOutput.getValue(), nUsedBytes);
 			}

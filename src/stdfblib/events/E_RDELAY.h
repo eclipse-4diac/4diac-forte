@@ -8,8 +8,8 @@
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _E_DELAY_H_
-#define _E_DELAY_H_
+#ifndef _E_RDELAY_H_
+#define _E_RDELAY_H_
 
 #include "../timedfb.h"
 
@@ -26,4 +26,4 @@ public:
 
 };
 
-#endif /*E_DELAY_H_*/
+#endif /*E_RDELAY_H_*/

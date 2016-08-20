@@ -63,24 +63,11 @@ CFBTester::~CFBTester(){
 }
 
 void CFBTester::executeTests(){
-  printf("*****************************************************\n");
-  printf("*** Testing FB: %s\n",
-      CStringDictionary::getInstance().get(getFBTypeId()));
-  printf("*** \n");
-
   if(prepareTests()){
     evaluateTestResult(testCaseWrongInputEvent(), "Wrong Input Event");
     executeAllTests();
   }
   cleanupTestData();
-
-  printf("***\n");
-  printf("*** Test Summary:\n");
-  printf("*** Executed %d test cases (%d successful, %d unsuccessful)\n",
-      m_nNumSuccesfulTestCases + m_nNumUnsuccesfulTestCases,
-      m_nNumSuccesfulTestCases, m_nNumUnsuccesfulTestCases);
-  printf("*****************************************************\n");
-
 }
 
 bool CFBTester::prepareTests(){
@@ -238,8 +225,8 @@ void CFBTester::evaluateTestResult(bool pa_bSuccess,
     ++m_nNumUnsuccesfulTestCases;
   }
 
-  printf("*** Test case: %s: %s\n", pa_acTestCaseName,
-      (pa_bSuccess) ? "ok" : "error");
+  printf("%s - %s: %s\n",  CStringDictionary::getInstance().get(getFBTypeId()), pa_acTestCaseName,
+      (pa_bSuccess) ? "OK" : "=============> ERROR <====================");
 }
 
 int CFBTester::pullFirstChainEventID(){

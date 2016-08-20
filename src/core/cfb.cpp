@@ -20,7 +20,12 @@ CCompositeFB::CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_ps
     const CStringDictionary::TStringId pa_nInstanceNameId, const SCFB_FBNData * const pa_cpoFBNData,
     TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
         CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData),
-        cm_cpoFBNData(pa_cpoFBNData){
+        mIf2InDConns(0),
+        m_apoIn2IfDConns(0),
+        cm_cpoFBNData(pa_cpoFBNData),
+        m_apoEventConnections(0),
+        m_apoDataConnections(0),
+        mInterface2InternalEventCons(0){
 
   createInternalFBs();
 
@@ -54,9 +59,15 @@ CCompositeFB::~CCompositeFB(){
     delete[] mInterface2InternalEventCons;
   }
   if(cm_cpoFBNData->m_nNumDataConnections){
-    delete[] m_apoDataConnections;
-    delete[] mIf2InDConns;
-    delete[] m_apoIn2IfDConns;
+    if(0 != m_apoDataConnections){
+      delete[] m_apoDataConnections;
+    }
+    if(0 != mIf2InDConns){
+      delete[] mIf2InDConns;
+    }
+    if(0 != m_apoIn2IfDConns){
+      delete[] m_apoIn2IfDConns;
+    }
   }
 }
 

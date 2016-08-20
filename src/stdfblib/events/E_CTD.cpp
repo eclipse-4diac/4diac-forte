@@ -39,7 +39,7 @@ const SFBInterfaceSpec FORTE_E_CTD::scm_stFBInterfaceSpec = {
 };
 
 void FORTE_E_CTD::alg_CD(void){
-CV() = CV()-1;
+CV() = static_cast<TForteUInt16>(CV() - 1);
 Q() = ((CV() <= 0));
 
 

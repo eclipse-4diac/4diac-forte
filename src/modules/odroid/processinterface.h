@@ -11,9 +11,23 @@
 #ifndef _PROCESSINTERFACE_H_
 #define _PROCESSINTERFACE_H_
 
-#include "sysfsprocint.h"
+#include "../sysfs/sysfsprocint.h"
+
+class COdroidProcessInterface : public CSysFsProcessInterface{
+  public:
+    COdroidProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
+    virtual ~COdroidProcessInterface();
+
+  protected:
+    bool initialise(bool paIsInput);
+    bool deinitialise();
+    bool readWord();
+
+  private:
+
+};
 
 //tell the IX and QX FB that this is the process interface to be used
-typedef CSysFsProcessInterface CProcessInterface;
+typedef COdroidProcessInterface CProcessInterface;
 
 #endif

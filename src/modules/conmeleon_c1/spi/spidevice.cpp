@@ -64,9 +64,6 @@ CSpiDevice::~CSpiDevice() {
 
 bool CSpiDevice::openAndConfigureBus(const char* sDevice) {
 
-	bool 	bStateOk = false;
-	int 	nRetVal = -1;
-
 	// open the SPI device, e.g. /dev/spidev0.0
 	// in normal linux system configuration, you need to have root privileges to do that
 	m_nFileDescriptor = open(sDevice, O_RDWR);
@@ -77,8 +74,9 @@ bool CSpiDevice::openAndConfigureBus(const char* sDevice) {
 	}
 	else {
 
+	  bool  bStateOk = false; //this value is not used until line 85 when is re-assigned, but not defined there because in 82 there's work to do.
 		// setting the SPI mode and read back
-		nRetVal = ioctl(m_nFileDescriptor, SPI_IOC_WR_MODE, &m_enMode);
+	  int nRetVal = ioctl(m_nFileDescriptor, SPI_IOC_WR_MODE, &m_enMode);
 
 		if (nRetVal < 0) {
 			// TODO: add logging and error handling
@@ -138,8 +136,7 @@ bool CSpiDevice::write(const unsigned char* paData, int nLength) {
 	// check input parameters before writing anything
 	if ((paData != nullptr) && m_bValid && ( nLength > 0 )) {
 		// call write() method of linux/spi/spidev.h
-		ssize_t nRetVal = -1;
-		nRetVal = ::write(m_nFileDescriptor, paData, nLength);
+		 ssize_t nRetVal = ::write(m_nFileDescriptor, paData, nLength);
 
 		// no logging here, because write() might be called often and will flood the error output stream
 		return (nRetVal >= 0);
@@ -155,8 +152,7 @@ bool CSpiDevice::read(unsigned char* paData, int nLength) {
 	// check input parameters before reading anything
 	if ((paData != nullptr) && m_bValid && ( nLength > 0 )) {
 		// call read() method of linux/spi/spidev.h
-		ssize_t nRetVal = -1;
-		nRetVal = ::read(m_nFileDescriptor, paData, nLength);
+		 ssize_t nRetVal = ::read(m_nFileDescriptor, paData, nLength);
 
 		// no logging here, because read() might be called often and will flood the error output stream
 		return (nRetVal >= 0);
@@ -175,7 +171,6 @@ bool CSpiDevice::transfer(const unsigned char* paTxData, unsigned char* paRxData
 		 * paTxData is the buffer to hold the data sent and paRxData the data received
 		 */
 		struct spi_ioc_transfer spiMsg;
-		int 	nRetVal = -1;
 
 		// initialize spi_ioc_transfer structure first, see description in linux/spi/spidev.h
 		std::memset(&spiMsg,0,sizeof(spiMsg));
@@ -190,7 +185,7 @@ bool CSpiDevice::transfer(const unsigned char* paTxData, unsigned char* paRxData
 		spiMsg.speed_hz = m_nSpeed;
 
 		// now hand the data over to the kernel SPI driver and read back at the same time
-		nRetVal = ioctl (m_nFileDescriptor, SPI_IOC_MESSAGE(1), &spiMsg);
+		int nRetVal = ioctl (m_nFileDescriptor, SPI_IOC_MESSAGE(1), &spiMsg);
 
 		// no logging here, because transfer() might be called often and will flood the error output stream
 		return (nRetVal >= 0);

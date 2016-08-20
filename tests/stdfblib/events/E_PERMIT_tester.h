@@ -22,7 +22,7 @@ class E_PERMIT_tester : public CFBTester{
   public:
 
   private:
-    E_PERMIT_tester(CResource *m_poTestResource);
+    explicit E_PERMIT_tester(CResource *m_poTestResource);
     virtual void executeAllTests();
 
     bool testCase_Permit();

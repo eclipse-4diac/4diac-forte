@@ -17,7 +17,7 @@
 #include "utils/criticalregion.h"
 
 CEventChainExecutionThread::CEventChainExecutionThread() :
-    CThread(), mProcessingEvents(false), mSuspendSemaphore(0) {
+    CThread(), mSuspendSemaphore(0), mProcessingEvents(false) {
   clear();
 }
 

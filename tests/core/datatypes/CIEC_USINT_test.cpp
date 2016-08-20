@@ -63,7 +63,6 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 
 	//check cast operator
 	nTest = 0;
-	strcpy(cBuffer, "");
 
 	BOOST_CHECK_EQUAL(nTest.operator TForteUInt8(), 0U);
 
@@ -102,7 +101,6 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
     BOOST_CHECK_EQUAL(nTest, 0U);
     BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 4), 1);
     BOOST_CHECK_EQUAL(strcmp(cBuffer, "0"), 0);
-    strcpy(cBuffer, "");
 
     BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 0), -1);
 

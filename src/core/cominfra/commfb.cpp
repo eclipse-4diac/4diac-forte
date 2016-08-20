@@ -37,6 +37,7 @@ const char * const CCommFB::scm_sResponseTexts[] = { "OK", "INVALID_ID", "TERMIN
 
 CCommFB::CCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, forte::com_infra::EComServiceType pa_eCommServiceType) :
     CEventSourceFB(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0), m_eCommServiceType(pa_eCommServiceType), m_poTopOfComStack(0){
+  memset(m_apoInterruptQueue, 0, sizeof(m_apoInterruptQueue)); //TODO change this to  m_apoInterruptQueue{0} in the extended list when fully switching to C++11
   setEventChainExecutor(getResource().getResourceEventExecution());
   m_unComInterruptQueueCount = 0;
   m_nConfiguredFBTypeNameId = CStringDictionary::scm_nInvalidStringId;
@@ -45,6 +46,7 @@ CCommFB::CCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResourc
 CCommFB::CCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
     TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData, forte::com_infra::EComServiceType pa_eCommServiceType) :
     CEventSourceFB(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData), m_eCommServiceType(pa_eCommServiceType), m_poTopOfComStack(0){
+  memset(m_apoInterruptQueue, 0, sizeof(m_apoInterruptQueue)); //TODO change this to  m_apoInterruptQueue{0} in the extended list when fully switching to C++11
   setEventChainExecutor(getResource().getResourceEventExecution());
   m_unComInterruptQueueCount = 0;
   m_nConfiguredFBTypeNameId = CStringDictionary::scm_nInvalidStringId;
