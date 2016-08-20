@@ -13,7 +13,7 @@
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "STEST_END_gen.cpp"
 #endif
-#include <RMT_DEV.h>
+#include "../../stdfblib/ita/RMT_DEV.h"
 
 DEFINE_FIRMWARE_FB(FORTE_STEST_END, g_nStringIdSTEST_END)
 

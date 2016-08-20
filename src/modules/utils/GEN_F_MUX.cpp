@@ -38,12 +38,12 @@ GEN_F_MUX::~GEN_F_MUX(){
 
 void GEN_F_MUX::executeEvent(int pa_nEIID){
 
-  if(pa_nEIID < m_nEInputs && pa_nEIID > -1){
+  if(-1 < pa_nEIID && static_cast<unsigned int>(pa_nEIID) < m_nEInputs ){
 
     int startIndex = pa_nEIID * m_nDOutputs;
     bool status = true;
 
-    for(int input_index = startIndex, output_index = 2; input_index < startIndex + m_nDOutputs; input_index++, output_index++){
+    for(int input_index = startIndex, output_index = 2; input_index < startIndex + static_cast<int>(m_nDOutputs); input_index++, output_index++){
 
       CIEC_ANY *p_dataInput = getDI(input_index);
       CIEC_ANY *p_dataOutput = getDO(output_index);
@@ -133,8 +133,8 @@ bool GEN_F_MUX::configureFB(const char *pa_acConfigString){
   }
   else{
     //set the data and event port numbers
-    m_nEInputs = forte::core::util::strtoul(paramEI,0,10);
-    m_nDOutputs = forte::core::util::strtoul(paramDO,0,10);
+    m_nEInputs = static_cast<unsigned int>(forte::core::util::strtoul(paramEI,0,10));
+    m_nDOutputs = static_cast<unsigned int>(forte::core::util::strtoul(paramDO,0,10));
     m_nEOutputs = 1;
     m_nDInputs = m_nEInputs * m_nDOutputs;
 
@@ -160,14 +160,14 @@ bool GEN_F_MUX::configureFB(const char *pa_acConfigString){
     m_anDataInputTypeIds = new CStringDictionary::TStringId[m_nDInputs];
     char diNames[cg_nIdentifierLength] = { "IN_" };
     int di_posIndex = 0;
-    for(int ei = 0; ei < m_nEInputs; ei = ei + 1){
+    for(unsigned int ei = 0; ei < m_nEInputs; ei = ei + 1){
 
-      for(int di = 0; di < m_nDOutputs; di = di + 1){
+      for(unsigned int di = 0; di < m_nDOutputs; di = di + 1){
 
 #ifdef WIN32
-        _snprintf(&(diNames[3]), 11 - 3, "%i_%i", ei+1, di+1);
+        _snprintf(&(diNames[3]), 11 - 3, "%ui_%ui", ei+1, di+1);
 #else
-        snprintf(&(diNames[3]), 11 - 3, "%i_%i", ei + 1, di + 1);
+        snprintf(&(diNames[3]), 11 - 3, "%ui_%ui", ei + 1, di + 1);
 #endif
         di_posIndex = ei * m_nDOutputs + di;
         m_anDataInputNames[di_posIndex] = CStringDictionary::getInstance().insert(diNames);
@@ -192,12 +192,12 @@ bool GEN_F_MUX::configureFB(const char *pa_acConfigString){
     m_anEIWithIndexes = new TForteInt16[m_nEInputs];
     m_anEOWithIndexes = new TForteInt16[2]; //contains terminating -1 value
 
-    for(int ei_index = 0; ei_index < m_nEInputs; ei_index = ei_index + 1){
+    for(unsigned int ei_index = 0; ei_index < m_nEInputs; ei_index = ei_index + 1){
       if(ei_index == 0){
         m_anEIWithIndexes[ei_index] = 0;
       }
       else{
-        m_anEIWithIndexes[ei_index] = ei_index * (m_nDOutputs + 1);
+        m_anEIWithIndexes[ei_index] = static_cast<TForteInt16>(ei_index * (m_nDOutputs + 1));
       }
     }
 
@@ -211,9 +211,9 @@ bool GEN_F_MUX::configureFB(const char *pa_acConfigString){
     //in-withs
     int withListIndex = 0;
     int dataIndex = 0;
-    for(int in_block = 0; in_block < m_nEInputs; in_block = in_block + 1){
+    for(unsigned int in_block = 0; in_block < m_nEInputs; in_block = in_block + 1){
 
-      for(int in_with = 0; in_with < m_nDOutputs; in_with = in_with + 1){
+      for(unsigned int in_with = 0; in_with < m_nDOutputs; in_with = in_with + 1){
         m_anEIWith[withListIndex] = static_cast<TDataIOID>(dataIndex);
         withListIndex++;
         dataIndex++;
@@ -228,14 +228,14 @@ bool GEN_F_MUX::configureFB(const char *pa_acConfigString){
     m_anEOWith[0] = 0; //for QO and STATUS
     m_anEOWith[1] = 1;
 
-    for(int out_with = 2; out_with < m_nDOutputs + 2; out_with = out_with + 1){
+    for(unsigned int out_with = 2; out_with < m_nDOutputs + 2; out_with = out_with + 1){
       m_anEOWith[out_with] = static_cast<TForteUInt8>(out_with);
     }
     //set '255' separator
     m_anEOWith[m_nDOutputs + 2] = 255;
 
     //create the interface Specification
-    SFBInterfaceSpecforGenerics *pstInterfaceSpec = new SFBInterfaceSpecforGenerics(m_nEInputs, m_anEventInputNames, m_anEIWith, m_anEIWithIndexes, m_nEOutputs, scm_anEventOutputNames, m_anEOWith, m_anEOWithIndexes, m_nDInputs, m_anDataInputNames, m_anDataInputTypeIds, m_nDOutputs + 2, m_anDataOutputNames, m_anDataOutputTypeIds);
+    SFBInterfaceSpecforGenerics *pstInterfaceSpec = new SFBInterfaceSpecforGenerics(static_cast<TForteUInt8>(m_nEInputs), m_anEventInputNames, m_anEIWith, m_anEIWithIndexes, static_cast<TForteUInt8>(m_nEOutputs), scm_anEventOutputNames, m_anEOWith, m_anEOWithIndexes, static_cast<TForteUInt8>(m_nDInputs), m_anDataInputNames, m_anDataInputTypeIds, static_cast<TForteUInt8>(m_nDOutputs + 2), m_anDataOutputNames, m_anDataOutputTypeIds);
 
     TForteByte *acFBConnData = new TForteByte[genFBConnDataSize(pstInterfaceSpec->m_nNumEOs, pstInterfaceSpec->m_nNumDIs, pstInterfaceSpec->m_nNumDOs)];
     TForteByte *acFBVarsData = new TForteByte[genFBVarsDataSize(pstInterfaceSpec->m_nNumDIs, pstInterfaceSpec->m_nNumDOs)];

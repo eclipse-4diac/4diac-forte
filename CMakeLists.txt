@@ -1,4 +1,4 @@
-#*******************************************************************************
+ #*******************************************************************************
 # * Copyright (c) 2010 - 2015 ACIN, Profactor GmbH, AIT, fortiss GmbH
 # * All rights reserved. This program and the accompanying materials
 # * are made available under the terms of the Eclipse Public License v1.0
@@ -14,6 +14,14 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 PROJECT(FORTE)
+
+if(NOT (${CMAKE_HOST_SYSTEM_NAME} STREQUAL ${CMAKE_SYSTEM_NAME}))
+    MESSAGE("Cross compiling")
+    SET(CMAKE_CXX_USE_RESPONSE_FILE_FOR_OBJECTS 1)
+    SET(CMAKE_CXX_USE_RESPONSE_FILE_FOR_INCLUDES 1)
+    SET(CMAKE_CXX_RESPONSE_FILE_LINK_FLAG "@")
+    SET(CMAKE_CXX_CREATE_STATIC_LIBRARY "<CMAKE_AR> rc <TARGET> <LINK_FLAGS> <OBJECTS>")
+endif(NOT (${CMAKE_HOST_SYSTEM_NAME} STREQUAL ${CMAKE_SYSTEM_NAME}))
 
 SET(FORTE_BUILDSUPPORT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/buildsupport" CACHE PATH "forte build support directory.")
 mark_as_advanced(FORTE_BUILDSUPPORT_DIRECTORY)
@@ -32,7 +40,17 @@ mark_as_advanced(FORTE_BUILD_TYPE)
 #######################################################################################
 # Determine the loglevel
 #######################################################################################
-set(FORTE_LOGLEVEL "LOGERROR" CACHE STRING "Loglevel to use")
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    if(NOT ${FORTE_LOGLEVEL} STREQUAL "LOGINFO")
+        message("Log Level was changed due to a change in CMAKE_BUILD_TYPE.")
+    endif()
+    set(FORTE_LOGLEVEL "LOGINFO" CACHE STRING "Loglevel to use" FORCE)
+else("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    if(NOT ${FORTE_LOGLEVEL} STREQUAL "NOLOG")
+        message("Log Level was changed due to a change in CMAKE_BUILD_TYPE.")
+    endif()
+    set(FORTE_LOGLEVEL "NOLOG" CACHE STRING "Loglevel to use" FORCE)
+endif("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 set_property(CACHE FORTE_LOGLEVEL PROPERTY STRINGS LOGDEBUG LOGERROR LOGWARNING LOGINFO NOLOG)
  
 forte_add_definition("-D${FORTE_LOGLEVEL}")
@@ -136,8 +154,8 @@ SET(FORTE_MGMCOMMANDPROTOCOL "DEV_MGR" CACHE STRING "forte management command pr
 set_property(CACHE FORTE_MGMCOMMANDPROTOCOL PROPERTY STRINGS DEV_MGR)
 mark_as_advanced(FORTE_MGMCOMMANDPROTOCOL)
 
-SET(FORTE_MGM_MAX_SUPPOERTED_NAME_HIERACHY "30" CACHE STRING "Max supported hierarchy that can be provided in a management commands")
-mark_as_advanced(FORTE_MGM_MAX_SUPPOERTED_NAME_HIERACHY)
+SET(FORTE_MGM_MAX_SUPPORTED_NAME_HIERACHY "30" CACHE STRING "Max supported hierarchy that can be provided in a management commands")
+mark_as_advanced(FORTE_MGM_MAX_SUPPORTED_NAME_HIERACHY)
 
 SET(FORTE_STRINGDICTINITIALSTRINGBUFSIZE "8000" CACHE STRING "FORTE string dict's initial string buffer size")
 mark_as_advanced(FORTE_STRINGDICTINITIALSTRINGBUFSIZE)

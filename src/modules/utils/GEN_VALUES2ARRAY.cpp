@@ -43,9 +43,9 @@ void GEN_VALUES2ARRAY::executeEvent(int pa_nEIID){
   switch (pa_nEIID){
     case scm_nEventREQID:
 
-      for(int input_index = 0; input_index < m_nDInputs; input_index++){
+      for(unsigned int input_index = 0; input_index < m_nDInputs; input_index++){
         //copy input values to array
-        OUT_Array()[input_index]->saveAssign(*getDI(input_index));
+        OUT_Array()[static_cast<TForteUInt16>(input_index)]->saveAssign(*getDI(input_index));
       }
 
       sendOutputEvent(scm_nEventCNFID);
@@ -67,9 +67,9 @@ bool GEN_VALUES2ARRAY::configureFB(const char *pa_acConfigString){
 
     if(0 != dTypePos){
       //there is a number and a data type of inputs within the typename
-      m_nDInputs = forte::core::util::strtoul(dNumberPos, 0, 10);
+      m_nDInputs = static_cast<unsigned int>(forte::core::util::strtoul(dNumberPos, 0, 10));
 
-      unsigned int nLen = strlen(++dTypePos);
+      unsigned int nLen = static_cast<unsigned int>(strlen(++dTypePos));
       if(nLen < cg_nIdentifierLength){
         char dTypeName[cg_nIdentifierLength + 1];
 
@@ -95,11 +95,11 @@ bool GEN_VALUES2ARRAY::configureFB(const char *pa_acConfigString){
     m_anDataInputTypeIds = new CStringDictionary::TStringId[m_nDInputs];
 
     char diNames[cg_nIdentifierLength] = { "IN_" };
-    for(int di = 0; di < m_nDInputs; di = di + 1){
+    for(unsigned int di = 0; di < m_nDInputs; di = di + 1){
 #ifdef WIN32
-      _snprintf(&(diNames[3]), 7 - 3, "%i", di+1);
+      _snprintf(&(diNames[3]), 7 - 3, "%ui", di+1);
 #else
-      snprintf(&(diNames[3]), 7 - 3, "%i", di + 1);
+      snprintf(&(diNames[3]), 7 - 3, "%ui", di + 1);
 #endif
       m_anDataInputNames[di] = CStringDictionary::getInstance().insert(diNames);
       m_anDataInputTypeIds[di] = m_ValueTypeID;
@@ -115,7 +115,7 @@ bool GEN_VALUES2ARRAY::configureFB(const char *pa_acConfigString){
     m_anEIWith = new TDataIOID[m_nDInputs + 1];
 
     //in-withs
-    for(int in_with = 0; in_with < m_nDInputs + 1; in_with = in_with + 1){
+    for(unsigned int in_with = 0; in_with < m_nDInputs + 1; in_with = in_with + 1){
       if(in_with == m_nDInputs){
         //set end separator of with
         m_anEIWith[in_with] = 255;

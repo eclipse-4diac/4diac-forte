@@ -19,10 +19,6 @@
 #include <thread.h>
 #include <sync.h>
 
-#if !defined(WIN32) && !defined(NET_OS) && !defined(VXWORKS)
-#include <sys/select.h>
-#endif
-
 /*!\brief An external event handler for file descriptor based external events.
  *
  * This handler uses a thread and the select function to monitor given file descriptors on

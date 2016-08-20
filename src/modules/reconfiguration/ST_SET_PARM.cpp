@@ -12,8 +12,8 @@
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "ST_SET_PARM_gen.cpp"
 #endif
-#include "DEV_MGR.h"
-#include "core/device.h"
+#include "../../stdfblib/ita/DEV_MGR.h"
+#include <device.h>
 
 DEFINE_FIRMWARE_FB(FORTE_ST_SET_PARM, g_nStringIdST_SET_PARM)
 

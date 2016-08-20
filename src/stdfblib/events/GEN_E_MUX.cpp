@@ -34,7 +34,7 @@ GEN_E_MUX::~GEN_E_MUX(){
 
 void GEN_E_MUX::executeEvent(int pa_nEIID){
   if(pa_nEIID < m_pstInterfaceSpec->m_nNumEIs){
-    K() = pa_nEIID;
+    K() = static_cast<TForteUInt16>(pa_nEIID);
     sendOutputEvent(scm_nEventEOID);
   }
 }

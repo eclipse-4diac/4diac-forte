@@ -45,7 +45,7 @@ void GEN_ARRAY2VALUES::executeEvent(int pa_nEIID){
 
       for(int output_index = 0; output_index < m_nDOutputs; output_index++){
         //copy input values to array
-        getDO(output_index)->saveAssign(*(IN_Array()[output_index]));
+        getDO(static_cast<unsigned int>(output_index))->saveAssign(*(IN_Array()[static_cast<TForteUInt16>(output_index)]));
       }
 
       sendOutputEvent(scm_nEventCNFID);
@@ -67,9 +67,9 @@ bool GEN_ARRAY2VALUES::configureFB(const char *pa_acConfigString){
 
     if(0 != dTypePos){
       //there is a number and a data type of inputs within the typename
-      m_nDOutputs = forte::core::util::strtoul(dNumberPos, 0, 10);
+      m_nDOutputs = static_cast<int>(forte::core::util::strtoul(dNumberPos, 0, 10));
 
-      int nLen = strlen(++dTypePos);
+      unsigned int nLen = static_cast<unsigned int>(strlen(++dTypePos));
       if(nLen < cg_nIdentifierLength){
         char dTypeName[cg_nIdentifierLength + 1];
 
@@ -127,7 +127,7 @@ bool GEN_ARRAY2VALUES::configureFB(const char *pa_acConfigString){
 
     //create the interface Specification
     SFBInterfaceSpecforGenerics *pstInterfaceSpec =
-        new SFBInterfaceSpecforGenerics(1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, m_anEOWith, scm_anEOWithIndexes, 1, scm_anDataInputNames, m_anDataInputTypeIds, m_nDOutputs, m_anDataOutputNames, m_anDataOutputTypeIds);
+        new SFBInterfaceSpecforGenerics(static_cast<TForteUInt8>(1), scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, static_cast<TForteUInt8>(1), scm_anEventOutputNames, m_anEOWith, scm_anEOWithIndexes, static_cast<TForteUInt8>(1), scm_anDataInputNames, m_anDataInputTypeIds, static_cast<TForteUInt8>(m_nDOutputs), m_anDataOutputNames, m_anDataOutputTypeIds);
 
     TForteByte *acFBConnData =
         new TForteByte[genFBConnDataSize(pstInterfaceSpec->m_nNumEOs, pstInterfaceSpec->m_nNumDIs, pstInterfaceSpec->m_nNumDOs)];

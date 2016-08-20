@@ -61,9 +61,9 @@ bool GEN_ARRAY2ARRAY::configureFB(const char *pa_acConfigString){
 
 		if(0 != dTypePos){
 			//there is a number and a data type of inputs within the typename
-			m_nArrayLength = forte::core::util::strtoul(dNumberPos,0,10);
+			m_nArrayLength = static_cast<unsigned int>(forte::core::util::strtoul(dNumberPos,0,10));
 
-			unsigned int nLen = strlen(++dTypePos);
+			unsigned int nLen = static_cast<unsigned int>(strlen(++dTypePos));
 			if(nLen < cg_nIdentifierLength){
 				char dTypeName[cg_nIdentifierLength + 1];
 

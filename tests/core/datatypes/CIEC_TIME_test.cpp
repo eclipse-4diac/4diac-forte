@@ -9,6 +9,7 @@
  *   Ingo Hegny, Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
+#include <string>
 
 #include "../../../src/core/datatypes/forte_time.h"
 
@@ -118,7 +119,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 	BOOST_CHECK_EQUAL(nTest, 16560000LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000));
 	BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
 	BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-	BOOST_CHECK_EQUAL(strcmp(cBuffer, "T#16560000ms"), 0);
+	BOOST_CHECK_EQUAL(std::string(cBuffer), "T#16560000ms");
 	strcpy(cBuffer, "");
   nTest = 0;
 
@@ -126,7 +127,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 	BOOST_CHECK_EQUAL(nTest, 16560000LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000));
 	BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
 	BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-	BOOST_CHECK_EQUAL(strcmp(cBuffer, "T#16560000ms"), 0);
+	BOOST_CHECK_EQUAL(std::string(cBuffer), "T#16560000ms");
 	strcpy(cBuffer, "");
   nTest = 0;
 
@@ -134,7 +135,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 	BOOST_CHECK_EQUAL(nTest, 16560000LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000));
 	BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
 	BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-	BOOST_CHECK_EQUAL(strcmp(cBuffer, "T#16560000ms"), 0);
+	BOOST_CHECK_EQUAL(std::string(cBuffer), "T#16560000ms");
 	strcpy(cBuffer, "");
   nTest = 0;
 
@@ -142,7 +143,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 	BOOST_CHECK_EQUAL(nTest, 16560000LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000));
 	BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
 	BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-	BOOST_CHECK_EQUAL(strcmp(cBuffer, "T#16560000ms"), 0);
+	BOOST_CHECK_EQUAL(std::string(cBuffer), "T#16560000ms");
 	strcpy(cBuffer, "");
   nTest = 0;
 
@@ -156,7 +157,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 	BOOST_CHECK_EQUAL(nTest, (CIEC_TIME::TValueType)(3022LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000LL)));
 	BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 8);
 	BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-	BOOST_CHECK_EQUAL(strcmp(cBuffer, "T#3022ms"), 0);
+	BOOST_CHECK_EQUAL(std::string(cBuffer), "T#3022ms");
 	strcpy(cBuffer, "");
   nTest = 0;
 
@@ -164,7 +165,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 	BOOST_CHECK_EQUAL(nTest, 3022LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000LL));
 	BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 8);
 	BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-	BOOST_CHECK_EQUAL(strcmp(cBuffer, "T#3022ms"), 0);
+	BOOST_CHECK_EQUAL(std::string(cBuffer), "T#3022ms");
 	strcpy(cBuffer, "");
   nTest = 0;
 
@@ -172,7 +173,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 	BOOST_CHECK_EQUAL(nTest, 3022LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000LL));
 	BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 8);
 	BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-	BOOST_CHECK_EQUAL(strcmp(cBuffer, "T#3022ms"), 0);
+	BOOST_CHECK_EQUAL(std::string(cBuffer), "T#3022ms");
 	strcpy(cBuffer, "");
   nTest = 0;
 
@@ -180,13 +181,38 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 	BOOST_CHECK_EQUAL(nTest, 3022LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000LL));
 	BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 8);
 	BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-	BOOST_CHECK_EQUAL(strcmp(cBuffer, "T#3022ms"), 0);
+	BOOST_CHECK_EQUAL(std::string(cBuffer), "T#3022ms");
 	strcpy(cBuffer, "");
   nTest = 0;
 }
 
-BOOST_AUTO_TEST_CASE(time_comparision_tests)
-{
+BOOST_AUTO_TEST_CASE(time_fromString_with_microseconds_test){
+  CIEC_TIME time;
+  char cBuffer[17];
+
+  time.setFromMicroSeconds(0);
+  BOOST_CHECK_EQUAL(time.toString(cBuffer, 17), 5);
+  BOOST_CHECK_EQUAL(std::string(cBuffer), "T#0ms");
+
+  time.setFromMicroSeconds(1);
+  BOOST_CHECK_EQUAL(time.toString(cBuffer, 17), 9);
+  BOOST_CHECK_EQUAL(std::string(cBuffer), "T#0.001ms");
+
+  time.setFromMicroSeconds(10);
+  BOOST_CHECK_EQUAL(time.toString(cBuffer, 17), 9);
+  BOOST_CHECK_EQUAL(std::string(cBuffer), "T#0.010ms");
+
+  time.setFromMicroSeconds(100);
+  BOOST_CHECK_EQUAL(time.toString(cBuffer, 17), 9);
+  BOOST_CHECK_EQUAL(std::string(cBuffer), "T#0.100ms");
+
+  time.setFromMicroSeconds(3450001);
+  BOOST_CHECK_EQUAL(time.toString(cBuffer, 17), 12);
+  BOOST_CHECK_EQUAL(std::string(cBuffer), "T#3450.001ms");
+}
+
+
+BOOST_AUTO_TEST_CASE(time_comparision_tests){
   CIEC_TIME time1, time2;
 
   time1.setFromMiliSeconds(200);

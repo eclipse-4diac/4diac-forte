@@ -18,7 +18,6 @@ SET(FORTE_COM_OPC_BOOST_ROOT "" CACHE PATH "Path to Boost library root directory
 
 if(FORTE_COM_OPC)	
 	if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
-		forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 		forte_add_sourcefile_hcpp( opcconnection opcconnectionhandler opceventhandler 
 								   opcconnectionimpl opcprocessvar Cmd_AddConnection 
 								   Cmd_AddOPCProcessVar Cmd_SetProcessVarValue )

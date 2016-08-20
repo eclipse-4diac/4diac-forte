@@ -17,8 +17,6 @@ forte_add_network_layer(EclipseSCADA_SFP OFF "sfp" CES_SFP_Layer essfplayer "Lay
 
 SET(FORTE_ECLIPSE_SCADA_SFP_SERVER_LIB_DIR "" CACHE PATH "Path to EclipseSCADA SFP Server library directory (leave empty for installed source code)")
 
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
 if(FORTE_COM_EclipseSCADA_SFP)
   forte_add_sourcefile_hcpp(essfphandler) 
 

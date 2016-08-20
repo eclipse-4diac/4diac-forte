@@ -12,9 +12,9 @@
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "ST_CREATE_FB_gen.cpp"
 #endif
-#include "DEV_MGR.h"
+#include "../../stdfblib/ita/DEV_MGR.h"
 #include <mgmcmdstruct.h>
-#include "core/device.h"
+#include <device.h>
 
 DEFINE_FIRMWARE_FB(FORTE_ST_CREATE_FB, g_nStringIdST_CREATE_FB)
 
