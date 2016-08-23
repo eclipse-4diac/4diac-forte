@@ -1,0 +1,22 @@
+###########################
+# UaModeler Project File  #
+# Generated at 27.05.2016 #
+###########################
+
+PROJECTNAME = forte_init_namespace
+
+TEMPLATESET = ($TEMPLATES)/ansi_c/v1_6/t0/ansi_c.tt2set
+
+MODELS += ($MODELS)/Opc.Ua.NodeSet2.ua \
+    forte_init_namespace.ua
+
+COLORS = ($MODELS)/Opc.Ua.NodeSet2.ua: #0000ff\
+    forte_init_namespace.ua: #00ffff
+
+PROJECTVARIABLES += ProviderName = 4diac_flipflop \
+    alarmAndEvents = false
+
+OUTPUTPATH = 
+
+GENERATE += forte_init_namespace.ua 
+
