@@ -1,5 +1,5 @@
 /*******************************************************************************
-  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
+  * Copyright (c) 2005 - 2016 Profactor GmbH, ACIN, fortiss GmbH
   * All rights reserved. This program and the accompanying materials
   * are made available under the terms of the Eclipse Public License v1.0
   * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
   * Contributors:
   *    Thomas Strasser, Gunnar Grabmair, Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny
   *      - initial implementation and rework communication infrastructure
+  *    Martin Jobst - adapt for lua integration
   *******************************************************************************/
 #ifndef _BASICFB_H_
 #define _BASICFB_H_
@@ -36,8 +37,8 @@
  */
 struct SInternalVarsInformation{
     TPortId m_nNumIntVars; //!< Number of internal vars
-    const CStringDictionary::TStringId * const m_aunIntVarsNames; //!< List of the internalvarsnames
-    const CStringDictionary::TStringId * const m_aunIntVarsDataTypeNames; //!< List of the data type names for the internal vars
+    const CStringDictionary::TStringId * m_aunIntVarsNames; //!< List of the internalvarsnames
+    const CStringDictionary::TStringId * m_aunIntVarsDataTypeNames; //!< List of the data type names for the internal vars
 };
 
 /*!\ingroup CORE
