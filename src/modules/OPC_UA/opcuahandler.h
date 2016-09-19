@@ -26,7 +26,7 @@
 
 
 
-class COPC_UA_Handler : private CExternalEventHandler, public CThread{
+class COPC_UA_Handler : public CExternalEventHandler, public CThread{
 	DECLARE_SINGLETON(COPC_UA_Handler);
 
 public:
@@ -50,9 +50,10 @@ public:
 	UA_StatusCode assembleUANodeId(char* NodeIdString, UA_NodeId *returnNodeId);
 
 	/* OPC_UA Handler interaction */
-	UA_StatusCode updateNodeValue(UA_NodeId * pNodeId, CIEC_ANY &paDataPoint);
-	bool readBackDataPoint(const UA_Variant *pstValue, CIEC_ANY &paDataPoint);
+	void updateNodeValue(UA_NodeId * pNodeId, CIEC_ANY &paDataPoint);
 	UA_StatusCode registerNodeCallBack(UA_NodeId *paNodeId, forte::com_infra::CComLayer *paLayer);
+	static void onWrite(void *h, const UA_NodeId nodeid, const UA_Variant *data,
+			const UA_NumericRange *range);
 	// void handleWriteNodeCallback();		// Value Callback on write UA_Variable Node
 
 	static const int scmUADataTypeMapping[];
@@ -79,7 +80,6 @@ private:
 	virtual void run();
 
 	void registerNode();
-
 
 
 };
