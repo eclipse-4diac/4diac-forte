@@ -19,8 +19,12 @@
 using namespace forte::com_infra;
 
 
-COPC_UA_Layer::COPC_UA_Layer(CComLayer * pa_poUpperLayer, CCommFB * pa_poComFB) : CComLayer(pa_poUpperLayer, pa_poComFB){
+
+
+
+COPC_UA_Layer::COPC_UA_Layer(CComLayer * pa_poUpperLayer, CCommFB * pa_poComFB) : CComLayer(pa_poUpperLayer, pa_poComFB), m_apUANodeId(0), mInterruptResp(e_Nothing){
 	// constructor list initialization
+
 }
 
 
@@ -35,178 +39,245 @@ void COPC_UA_Layer::closeConnection(){
 
 
 EComResponse COPC_UA_Layer::openConnection(char * paLayerParameter){
-	int numData;
-	CIEC_ANY *dataArray;
+	EComResponse retValEcom = e_InitOk;
+	UA_StatusCode retValUA;
 
-	if(e_Subscriber == getCommFB()->getComServiceType()){
-		numData = getCommFB()->getNumRD();
-		dataArray = getCommFB()->getRDs();
 
-	}else{
-		numData = getCommFB()->getNumSD();
-		dataArray = getCommFB()->getSDs();
-	}
-
-	EComResponse retVal = createItems(dataArray, numData, paLayerParameter);
-
-	// Register notification Callback for Subscriber Function Blocks
-	if(e_InitOk == retVal){
-		if(e_Subscriber == getCommFB()->getComServiceType()){
-			if(0 == numData){
-				numData = 1;  //register for the item used for the event transmition
-			}
-			for(int i = 0; i < numData; i++){
-				// COPC_UA_Handler::getInstance().registerWriteCallBack(mSFPItem[i], this);
-			}
+	char *pch;
+	int i = 0;
+	pch = strtok (paLayerParameter,";");
+	while (pch != NULL) {
+		i++;
+		if(i==1){
+			/* First string is omitted for now */
+			// TODO: pass port ID to ua handler constructor
+			// COPC_UA_Handler::getInstance(portId)  -> Singleton pattern not supporting parameters?
+		} else{
+			/* Process NodeIds */
+			COPC_UA_Handler::getInstance().assembleUANodeId(pch, m_apUANodeId[i-1]);
 		}
+	    pch = strtok (NULL, ";");
 	}
 
-	// for OPC_UA also pass the parameters necessary to locate the variable at the correct
-	//position in the address space.
+
+	/* PUBLISHER */
+	if(e_Publisher == getCommFB()->getComServiceType()){
+
+		int numData = getCommFB()->getNumSD();
+		CIEC_ANY* dataArray = getCommFB()->getSDs();
 
 
-	return retVal;
+		/* check if node exist in external namespace or need to be created */
+#ifdef FORTE_COM_OPC_UA_ENABLE_INIT_NAMESPACE
+		/* Necessary if custom OPC UA FunctionBlocks are used
+		 * Solution was deprecated because of inability to create generic version of these OPC UA Blocks.
+		 * m_apUANodeId = new UA_NodeId *[1];  //TODO for now Publisher only publishes a single value. Extend to handling multiple NodeId plus corresponding SDs and RDs.
+		 * memset(m_apUANodeId, 0, sizeof(UA_NodeId *) * 1);
+		 */
 
 
+		// Use nodes from external namespace
+		//COPC_UA_Handler::getInstance().assembleUANodeId(dataArray, m_apUANodeId[1]);	// Assemble node id from ANodeId Adapter information
+
+		// write the initial value to the OPC_UA Address Space so that the data type of the item gets set
+		COPC_UA_Handler::getInstance().updateNodeValue(m_apUANodeId[1], dataArray[1]);
+
+
+
+#else
+		// Automatic creation of UA Server AddressSpace from IEC61499 Application through model transition.
+		// TODO: remove. This option is only kept as an idea source. Obsolete because solution is applicable to Publishers only.
+		m_apUANodeId = new UA_NodeId *[numData];  //TODO for now Publisher only publishes a single value. Extend to handling multiple NodeId Adapters plus corresponding SDs and RDs.
+		memset(m_apUANodeId, 0, sizeof(UA_NodeId *) * numData);
+		retValUA = createItems(dataArray, numData, paLayerParameter);
+
+#endif
+
+
+	} else if (e_Subscriber == getCommFB()->getComServiceType()){
+
+		/* SUBSCRIBER */
+		// Subscribe has initial value and then new one after each update.
+		// for now only one subscription per subscriber block
+		int numData = getCommFB()->getNumRD();
+		CIEC_ANY* dataArray = getCommFB()->getRDs();
+
+		m_apUANodeId = new UA_NodeId *[1];  //TODO for now Publisher only publishes a single value. Extend to handling multiple NodeId Adapters plus corresponding SDs and RDs.
+		memset(m_apUANodeId, 0, sizeof(UA_NodeId *) * 1);
+
+		//COPC_UA_Handler::getInstance().assembleUANodeId(dataArray, m_apUANodeId[1]);	// Assemble node id from ANodeId Adapter information
+
+		// write the initial value to the OPC_UA Address Space so that the data type of the item gets set
+		COPC_UA_Handler::getInstance().updateNodeValue(m_apUANodeId[1], dataArray[1]);
+
+		// Register notification Callback for Subscriber Function Blocks
+		if(e_InitOk == retValEcom){
+			COPC_UA_Handler::getInstance().registerNodeCallBack(m_apUANodeId[1], this);
+		}
+
+
+	} else if(e_Server == getCommFB()->getComServiceType()) {
+		/* SERVER */
+		for(int i = 0; i<2; i++){
+			//2 for one NodeId of the input and one NodeId of the output
+		}
+	} else{
+		// Unknown Function Block Type
+	}
+	return retValEcom;
 }
+
 
 
 EComResponse COPC_UA_Layer::createItems(CIEC_ANY *paDataArray, int numSD, char* paLayerParameter){
 	EComResponse retValEcom = e_InitOk;
 	UA_StatusCode retVal = UA_STATUSCODE_GOOD;
-	if(0 == numSD){
-		//handle pure event message
+
+	if(0 == numSD){		// For pure event indication
+
 		retValEcom = e_InitInvalidId;
-		// implement handling for pure event connections
-		DEVLOG_ERROR("OPC_UA Publisher no SD Ports, pure Event messages\n");
-		retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
+		DEVLOG_ERROR("OPCUA Publisher without SD Signal, pure event handling\n");
+		retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;	//FIXME add event handling
 
-	} else{
-		// allocate memory for an array of pointers to pointers pointing to values of type NodeId
-		st_ParentChildNodeId.ppNodeId_ParentFB = new UA_NodeId *[numSD];
-		st_ParentChildNodeId.ppNodeId_SrcPoint = new UA_NodeId *[numSD];
+	} else{		// For handling publish requests
 
-		memset(st_ParentChildNodeId.ppNodeId_ParentFB, 0, sizeof(UA_NodeId *) * numSD);		//!< initialize pointer memory: multiply size of NodeID pointer with amount
-		memset(st_ParentChildNodeId.ppNodeId_SrcPoint, 0, sizeof(UA_NodeId *) * numSD);		//!< initialize pointer memory: multiply size of NodeID pointer with amount
 
-		/* check for FBParent existence
-		 * create FBParent Node
-		 * check for SourcePoint Node existing
-		 * create SourcePoint Node
-		 */
+		for(int i = 0; i < (numSD); i++)	// iteration over number of SendData (Publish) Signals
+		{
+			int portId = i + 2;
 
-		for(int i = 0; i < (numSD); i++){
-			int portCnt = i + 2;
+			/* Retrieve Publisher, Connection and Signals Source Function Block Information */
 			const SFBInterfaceSpec* pstInterfaceSpec = getCommFB()->getFBInterfaceSpec();
-			const CStringDictionary::TStringId paDINameId = pstInterfaceSpec->m_aunDINames[portCnt];
+			const CStringDictionary::TStringId paSDNameId = pstInterfaceSpec->m_aunDINames[portId];
 
-			const char* myname = CStringDictionary::getInstance().get(paDINameId);
-			DEVLOG_INFO("%s with port ID %i and name %s found\n",CStringDictionary::getInstance().get(getCommFB()->getFBTypeId()), portCnt, myname);
+			const char* SDName = CStringDictionary::getInstance().get(paSDNameId);
+			DEVLOG_INFO("Processing publish signal %s at port %i.\n", SDName, portId);
 
-			const CDataConnection* pC_DIConn = getCommFB()->getDIConnection(paDINameId); 	//!< pointer to a Connection Object
+			const CDataConnection* pC_DIConn = getCommFB()->getDIConnection(paSDNameId); 	//!< pointer to a Connection Object
 
-			// retrieve connection source point (SP)
-			//const SConnectionPoint& rst_sourceRD = const_cast<const CDataConnection*>(pC_DIConn)->getSourceId();
 			const SConnectionPoint& rst_sourceRD(pC_DIConn->getSourceId());
 
-			const CFunctionBlock *sourceFB = rst_sourceRD.mFB;	// pointer to Parent Function Block
+			const CFunctionBlock *sourceFB = rst_sourceRD.mFB;	// pointer to Signals Source Function Block
 			UA_NodeId* returnFBNodeId = UA_NodeId_new();
 
-			// check if Function Block is present in the Address Space otherwise create it
-			UA_StatusCode retValgetNode = COPC_UA_Handler::getInstance().getFBNodeId(sourceFB, returnFBNodeId);
 
-			if(retValgetNode == UA_STATUSCODE_GOOD){
-				// Parent object node (FB Node) was present in the UA Address Space.
-				DEVLOG_INFO("Function block node already present in the Address space.\n");
-				st_ParentChildNodeId.ppNodeId_ParentFB[i] = returnFBNodeId;
-				retVal = UA_STATUSCODE_GOOD;
+			/*
+			 * Check if Signals ParentNode with NodeId already exists in the server address space
+			 */
+			retVal = COPC_UA_Handler::getInstance().getFBNodeId(sourceFB, returnFBNodeId);
+			UA_NodeId_delete(returnFBNodeId);
 
-			}else{
-				// Parent object node (FB Node) was not present in the UA Address space -> create it.
-				DEVLOG_INFO("Parent object node was not present in AS, create it.\n");
+			/* Handle Parent Function Block Node */
+			if(retVal == UA_STATUSCODE_GOOD){
+				// Parent Function Block node already exists
+				DEVLOG_INFO("Function block node already present in the server address space.\n");
+
+			}else{	// Create Function Block Node
+
+				DEVLOG_INFO("Creating parent Function Block Object Node.\n");
 				UA_NodeId * returnObjNodeId = UA_NodeId_new();
-				UA_StatusCode retValcreateObjNode = COPC_UA_Handler::getInstance().createUAObjNode(sourceFB, returnObjNodeId);
+				retVal = COPC_UA_Handler::getInstance().createUAObjNode(sourceFB, returnObjNodeId);
 
-				if(retValcreateObjNode == UA_STATUSCODE_GOOD){
-					// Node creation successful
-					//returnObjNodeId->identifier;
-					//DEVLOG_INFO("Object node %s successfully created.\n",returnObjNodeId->identifier.string);		//FIXME add objectnode identifier here
-					DEVLOG_INFO("Object node successfully created.\n"); //FIXME convert returnObjNode identifier to string ->then output
-					//FIXME obacht bei union
-					st_ParentChildNodeId.ppNodeId_ParentFB[i] = returnObjNodeId;
-					retVal = UA_STATUSCODE_GOOD;
+				if(retVal == UA_STATUSCODE_GOOD){  // Node creation successful
 
-				}else{
-					// Node creation not successful
-					DEVLOG_ERROR("Error creating node %s\n", retValcreateObjNode);
-					retVal = retValcreateObjNode;
+					DEVLOG_INFO("Object node creation successful: %s\n", retVal);
 
+				}else{  // Node creation not successful
+
+					DEVLOG_ERROR("Error creating node: %s\n", retVal);
 				}
 			}
 
-			UA_NodeId* returnSPNodeId = UA_NodeId_new();
-			// check if Variable Node is present in Address Space otherwise create it.
-			retValgetNode = COPC_UA_Handler::getInstance().getSPNodeId(sourceFB, const_cast<SConnectionPoint&>(rst_sourceRD), returnSPNodeId);
-			//retValgetNode = COPC_UA_Handler::getInstance().getSPNodeId(sourceFB, sourceRD, returnSPNodeId);
 
-			if(retValgetNode == UA_STATUSCODE_GOOD){
+			/*
+			 * Check for existing Signal Node in Address Space or create it.
+			 */
+			UA_NodeId* returnSPNodeId = UA_NodeId_new();
+			// check if Signal Variable Node is present in Address Space
+			retVal = COPC_UA_Handler::getInstance().getSPNodeId(sourceFB, const_cast<SConnectionPoint&>(rst_sourceRD), returnSPNodeId);
+
+			if(retVal == UA_STATUSCODE_GOOD){
 				// SourcePoint node (SP Node) was present in the UA Address Space.
 				DEVLOG_INFO("SP node already present in the Address space.\n");
-				st_ParentChildNodeId.ppNodeId_SrcPoint[i] = returnSPNodeId;
-				retVal = UA_STATUSCODE_GOOD;
+				m_apUANodeId[i] = returnSPNodeId;
 
 			}else{
 				// Create SourcePort Node (Publishers SD Port) in UA Server Address Space
-				// pass Function Block pointer
-				// pass SourcePort reference
-				UA_NodeId * returnVarNodeId = UA_NodeId_new();
-				UA_StatusCode retValcreateVarNode = COPC_UA_Handler::getInstance().createUAVarNode(sourceFB, const_cast<SConnectionPoint&>(rst_sourceRD), returnVarNodeId);
+				UA_StatusCode retVal = COPC_UA_Handler::getInstance().createUAVarNode(sourceFB, const_cast<SConnectionPoint&>(rst_sourceRD), returnSPNodeId);
 
-				if(retValcreateVarNode == UA_STATUSCODE_GOOD){
-					// Node creation successful
-					//DEVLOG_INFO("Object node %s successfully created.\n",returnVarNodeId->identifier.string);  //FIXME
-					DEVLOG_INFO("Object node successfully created. \n");
-					st_ParentChildNodeId.ppNodeId_SrcPoint[i] = returnVarNodeId;
-					retVal = UA_STATUSCODE_GOOD;
+				if(retVal == UA_STATUSCODE_GOOD){ 	//Node creation successful
+					DEVLOG_INFO("Variable node successfully created. \n");
+					m_apUANodeId[i] = returnSPNodeId;
 
-				}else{
-					// Node creation not successful
-					DEVLOG_ERROR("Error creating node %s\n", retValcreateVarNode);
-					retVal = retValcreateVarNode;
-
+				}else{ // Node creation not successful
+					DEVLOG_ERROR("Error creating node %s\n", retVal);
 				}
-
-				if(st_ParentChildNodeId.ppNodeId_SrcPoint[i]){
-					// write the initial value to the OPC_UA Address Space so that the data type of the item gets set
-					//COPC_UA_Handler::getInstance().updateNodeValue(st_ParentChildNodeId.ppNodeId_SrcPoint[i], paDataArray[i]);
-
-				}else {
-					retVal = e_InitInvalidId;
-					break;
-				}
-
 			}
+			// Initialize address space node with value
+			COPC_UA_Handler::getInstance().updateNodeValue(m_apUANodeId[i],paDataArray[i]);
 		}
-
 	}
-
-	//FIXME: mapping from UA_StatusCode to EComResponse type!
-	// FIXME: set return value correct.
-	retValEcom = e_InitOk;
+	if(retVal == UA_STATUSCODE_GOOD){
+		retValEcom = e_InitOk;
+	}else{
+		retValEcom = e_InitInvalidId;
+	}
 	return retValEcom;
 }
 
 EComResponse COPC_UA_Layer::sendData(void *paData, unsigned int paSize){
 
 	EComResponse retVal = e_ProcessDataOk;
+
+	if(0 == paSize){
+		//TODO change to an update now with out the need for a new allocation
+		// sfp_item_update_data_allocated(*mSFPItem, sfp_variant_new_null(), sfp_time_in_millis ());
+	}else {
+		//CIEC_ANY const *SDs(static_cast<TConstIEC_ANYPtr>(paData));
+		CIEC_ANY *SDs(static_cast<CIEC_ANY*>(paData));	// direct initialization of pointer to CIEC_ANY class
+
+#ifdef FORTE_COM_OPC_UA_ENABLE_INIT_NAMESPACE
+
+		COPC_UA_Handler::getInstance().updateNodeValue(m_apUANodeId[1], SDs[1]);
+
+#else
+		for(unsigned int i = 0; i < paSize; i++){
+			COPC_UA_Handler::getInstance().updateNodeValue(m_apUANodeId[i], SDs[i]);
+			break;
+		}
+#endif
+
+
+	}
 	return retVal;
 }
 
 
-EComResponse COPC_UA_Layer::recvData(const void *paData, unsigned int ){
+
+
+EComResponse COPC_UA_Layer::recvData(const void * pa_pvData, unsigned int pa_unSize){
+	mInterruptResp = e_ProcessDataOk;
+	/*const struct sfp_variant *value = static_cast<const UA_Variant *>(paData);
+
+	if(0 == getCommFB()->getNumRD()){
+		//we are a subscribe 0
+		if(VT_NULL != value->type){
+			mInterruptResp = e_ProcessDataRecvFaild;
+		}
+	}else{
+		CIEC_ANY &RD1(*getCommFB()->getRDs());
+		if(!CEclipseSCADASFPHandler::readBackDataPoint(value, RD1)){
+			mInterruptResp = e_ProcessDataRecvFaild;
+		}
+	}
+
+	 */getCommFB()->interruptCommFB(this);
+	 return mInterruptResp;
 }
 
 EComResponse COPC_UA_Layer::processInterrupt(){
+	//we don't need to do anything here
+	return mInterruptResp;
 }
 
 

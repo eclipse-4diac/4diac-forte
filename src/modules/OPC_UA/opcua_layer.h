@@ -1,14 +1,14 @@
 /*******************************************************************************
-  * Copyright (c) 2015-2016 Florian Froschermeier <florian.froschermeier@tum.de>
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Florian Froschermeier
-  *      - initial integration of the OPC-UA protocol
-  *******************************************************************************/
+ * Copyright (c) 2015-2016 Florian Froschermeier <florian.froschermeier@tum.de>
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Florian Froschermeier
+ *      - initial integration of the OPC-UA protocol
+ *******************************************************************************/
 
 
 #ifndef SRC_MODULES_OPC_UA_OPCUA_LAYER_H_
@@ -39,10 +39,18 @@ private:
 
 	forte::com_infra::EComResponse mInterruptResp;
 
-	struct {UA_NodeId **ppNodeId_ParentFB;	//!< pointer to the array of Parent FunctionBlock NodeIds managed by the OCP_UA Server Stack
-				UA_NodeId **ppNodeId_SrcPoint;} st_ParentChildNodeId;	//!< pointer to the array of SourcePoint (SDs) NodeIds managed by the OCP_UA Server Stack
-
+	/* struct {
+		UA_NodeId **ppNodeId_ParentFB;	//!< pointer to the array of Parent FunctionBlock NodeIds managed by the OPC_UA Server Stack
+		UA_NodeId **ppNodeId_SrcPoint;
+	} st_ParentChildNodeId;	//!< pointer to the array of SourcePoint (SDs) NodeIds managed by the OPC_UA Server Stack
+	 */
+	//TODO: array necessary. For input and output
+	UA_NodeId **m_apUANodeId;	// OPC UA (Publisher and Subscriber SIFBs) are restricted to a single port each. For OPC UA Server a input ouput pair format: opc_ua[address:port];InputNodeId:OutputNodeId
+	static constexpr const char* scmParamIDSeparator = ";";	// Character separating the Param ID in the following format: opc_ua[address:port];OPCUA_NodeId
+	static constexpr const char* scmNodeIdSeparator = ":";		// Character separating the OPCUA_NodeId in the following format: opc_ua[address:port];NamespaceIndex(int):IdentifierType(numeric,string,guid,bytestring):Identifier(union of type).
 };
+
+
 
 #endif /* SRC_MODULES_OPC_UA_OPCUA_LAYER_H_ */
 
