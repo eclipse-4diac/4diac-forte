@@ -15,6 +15,7 @@
 #include <string.h>
 #include <cstdbool>
 #include <commfb.h>
+#include <devexec.h>
 
 /*#ifdef FORTE_COM_OPC_UA_ENABLE_INIT_NAMESPACE
 #include <open62541/build/src_generated/ua_namespaceinit_generated.h>
@@ -212,7 +213,7 @@ UA_StatusCode COPC_UA_Handler::assembleUANodeId(char* NodeIdString, UA_NodeId *r
 		i++;
 		if(i == 1){
 			/* Assign NodeId namespace index */
-			ReferenceId->namespaceIndex = (UA_UInt16) pch;
+			ReferenceId->namespaceIndex = atoi(pch);
 
 		} else if (i == 2){
 			/* Assign NodeId identifier types */
@@ -236,17 +237,19 @@ UA_StatusCode COPC_UA_Handler::assembleUANodeId(char* NodeIdString, UA_NodeId *r
 			/* Assign NodeId identifier */
 			switch (ReferenceId->identifierType) {
 			case 0:
-				ReferenceId->identifier.numeric = (UA_UInt32) pch;
+				ReferenceId->identifier.numeric = atoi(pch);
 				break;
 			case 3:
-				ReferenceId->identifier.string = (UA_String) pch;
+				ReferenceId->identifier.string = UA_STRING(pch);
 				break;
-			case 4:
+				// TODO: missing mapping to type struct
+				/*case 4:
 				ReferenceId->identifier.guid = (UA_Guid) pch;
 				break;
 			case 5:
 				ReferenceId->identifier.byteString = (UA_ByteString) pch;
 				break;
+				 */
 			default:
 				break;
 			}
@@ -258,46 +261,6 @@ UA_StatusCode COPC_UA_Handler::assembleUANodeId(char* NodeIdString, UA_NodeId *r
 	retVal = UA_NodeId_copy(ReferenceId, returnNodeId);	// NodeId successfully created
 	return retVal;
 }
-
-
-//CIEC_ANY::EDataTypeID myid1 = dataArray[1].getDataTypeID();
-
-
-/*
-	const UA_DataType objDataType = UA_TYPES[COPC_UA_Handler::getInstance().scmUADataTypeMapping[dataArray[2].getDataTypeID()]];
-	void* myObj = UA_new(&objDataType);
-	//returnNodeId->namespaceIndex = const_cast<objDataType>();
-	//UA_DataTypeAttributes
-	const UA_DataType* mytype = valueVar->type;
-	UA_DataType mytype_value
- */
-
-
-
-//retVal = UA_Variant_setScalarCopy(valueVar, static_cast<const void*>(dataArray[2].getConstDataPtr()),
-//		&UA_TYPES[COPC_UA_Handler::getInstance().scmUADataTypeMapping[dataArray[2].getDataTypeID()]]);
-
-/*if(valueVar->type == &UA_UInt16){
-	returnNodeId->namespaceIndex = *(reinterpret_cast<UA_UInt16 *>(valueVar->data));
-	}
- */
-
-//void *value = UA_new(valueVar->type);
-//void* data = valueVar->data;
-
-//UA_Variant_setScalarCopy(value, valueVar->data, valueVar->type);
-/*
-	       retVal = UA_Variant_setScalarCopy(valueVar, static_cast<const void*>(dataArray[3].getConstDataPtr()),
-	                       &UA_TYPES[COPC_UA_Handler::getInstance().scmUADataTypeMapping[dataArray[3].getDataTypeID()]]);
-	       returnNodeId->identifierType = static_cast<UA_NodeIdType>(valueVar->data);
- */
-/*
-	       retVal = UA_Variant_setScalarCopy(valueVar, static_cast<const void*>(dataArray[4].getConstDataPtr()),
-	                       &UA_TYPES[COPC_UA_Handler::getInstance().scmUADataTypeMapping[dataArray[4].getDataTypeID()]]);
-
-	      returnNodeId->identifier = *valueVar;
-
- */
 
 
 
@@ -417,172 +380,22 @@ UA_StatusCode COPC_UA_Handler::createUAVarNode(const CFunctionBlock* pCFB, SConn
 	}
 	return retVal;
 }
-/*
-UA_Server_addMethodNode(server, UA_NODEID_NUMERIC(1,62541),
-		UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER),
-		UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
-		UA_QUALIFIEDNAME(1, "hello world"),
-		helloAttr, &helloWorldMethod, NULL,
-		1, &inputArguments, 1, &outputArguments, NULL);
-UA_NODEID_NUMERIC;
-
-UA_NS0ID_OBJECTSFOLDER
-namespace
-UA_NS0ID_HASCOMPONENT
- */
-
-/*
- * Create OPC UA Method Node in Server Address Space
- */
-/*UA_StatusCode COPC_UA_Handler::createUAMethodNode(const CFunctionBlock* pCFB, SConnectionPoint& sourceRD, UA_NodeId * returnVarNodeId){
-	// get pointer/handle to node config function block or structure with data?
-
-	// set UA NodeId attributes
-	UA_NodeId newNodeId = UA_NODEID_STRING_ALLOC(1,SPName);
-	UA_NodeId parentNodeId = UA_NODEID_STRING_ALLOC(1, srcFBName);
-	UA_NodeId referenceTypeId = UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES);
-	char browsename[32];
-	sprintf(browsename, "%s\n", SPName);
-	UA_QualifiedName nodeBrowseName = UA_QUALIFIEDNAME(1, browsename);
-	UA_NodeId typeDefinition = UA_NODEID_NULL;
-
-	// attribute value
-	UA_UInt32 myInteger = 42;
-
-	// create variable attributes
-	UA_VariableAttributes var_attr;
-	UA_VariableAttributes_init(&var_attr);
-
-	char display[32];
-	sprintf(display, "SD-%s\n", SPName);
-
-	var_attr.displayName = UA_LOCALIZEDTEXT("en_US", display);
-	var_attr.description = UA_LOCALIZEDTEXT("en_US", "SD port of Publisher");
-	UA_Variant_setScalar(&var_attr.value, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
-
-
-	UA_MethodAttributes helloAttr;
-	UA_MethodAttributes_init(&helloAttr);
-	helloAttr.description = UA_LOCALIZEDTEXT("en_US","Say `Hello World`");
-	helloAttr.displayName = UA_LOCALIZEDTEXT("en_US","Hello World");
-	helloAttr.executable = UA_TRUE;
-	helloAttr.userExecutable = UA_TRUE;
-
-	UA_Argument methodInputArgs;
-	UA_Argument_init(&methodInputArgs);
-	methodInputArgs.name = UA_STRING("MyInput");
-	methodInputArgs.dataType = UA_TYPES[UA_TYPES_STRING].typeId;
-	methodInputArgs.valueRank = -1;
-	methodInputArgs.arrayDimensionsSize = -1;
-	methodInputArgs.arrayDimensions = NULL;
-	methodInputArgs.description = UA_LOCALIZEDTEXT("en_US", "A String");
-
-
-	UA_Argument methodOutputArgs;
-	UA_Argument_init(&methodOutputArgs);
-	methodOutputArgs.name = UA_STRING("MyOutput");
-	methodOutputArgs.dataType = UA_TYPES[UA_TYPES_STRING].typeId;
-	methodOutputArgs.valueRank = -1;
-	methodOutputArgs.arrayDimensionsSize = -1;
-	methodOutputArgs.arrayDimensions = NULL;
-	methodOutputArgs.description = UA_LOCALIZEDTEXT("en_US", "A String");
-
-newNodeId = UA_NODEID_NUMERIC(1,62541);
-parentNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER),
-referenceTypeId = UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
-nodeBrowseName = UA_QUALIFIEDNAME(1, "hello world")
-
-
-	// add UA Variable Node to the server address space
-	UA_NodeId * returnNodeId = UA_NodeId_new();
-	UA_StatusCode retVal = UA_Server_addMethodNode(
-			mOPCUAServer,                 // server
-			newNodeId,              	  // requestedNewNodeId
-			parentNodeId,                 // parentNodeId
-			referenceTypeId,        	  // referenceTypeId   Reference to the type definition for the variable node
-			nodeBrowseName,                // browseName/displayName in address space
-			nodeAttr,                     // Variable attributes
-			methodCallback,                         // instantiation callback
-			handle,
-			sizeInputArgs,
-			methodInputArgs,
-			sizeOutputArgs,
-			methodOutputArgs,
-			returnNodeId);			  	  // return Node Id
-	// input and output args are mandatory.
-
-
-	UA_Server_addMethodNode(server, UA_NODEID_NUMERIC(1,62541),
-			UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER),
-			UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
-			UA_QUALIFIEDNAME(1, "hello world"),
-			helloAttr, &helloWorldMethod, NULL,
-			1, &inputArguments, 1, &outputArguments, NULL);
-
-	UA_Server_addMethodNode(UA_Server *server, const UA_NodeId requestedNewNodeId,
-			const UA_NodeId parentNodeId, const UA_NodeId referenceTypeId,
-			const UA_QualifiedName browseName, const UA_MethodAttributes attr,
-			UA_MethodCallback method, void *handle,
-			size_t inputArgumentsSize, const UA_Argument* inputArguments,
-			size_t outputArgumentsSize, const UA_Argument* outputArguments,
-			UA_NodeId *outNewNodeId)
-
-
-	if(retVal == UA_STATUSCODE_GOOD){
-		DEVLOG_INFO("UA-Server AddressSpace: New Variable Node - %s added.\n", browsename);
-		retVal = UA_NodeId_copy(returnNodeId, returnVarNodeId);
-	}else{
-		DEVLOG_INFO("UA-Server AddressSpace: Adding Variable Node %s failed. Message: %x\n", browsename, retVal);
-	}
-	return retVal;
-}
-
-/*
- *     UA_Argument inputArguments;
-    UA_Argument_init(&inputArguments);
-    inputArguments.arrayDimensionsSize = -1;
-    inputArguments.arrayDimensions = NULL;
-    inputArguments.dataType = UA_TYPES[UA_TYPES_STRING].typeId;
-    inputArguments.description = UA_LOCALIZEDTEXT("en_US", "A String");
-    inputArguments.name = UA_STRING("MyInput");
-    inputArguments.valueRank = -1;
-
-    UA_Argument outputArguments;
-    UA_Argument_init(&outputArguments);
-    outputArguments.arrayDimensionsSize = -1;
-    outputArguments.arrayDimensions = NULL;
-    outputArguments.dataType = UA_TYPES[UA_TYPES_STRING].typeId;
-    outputArguments.description = UA_LOCALIZEDTEXT("en_US", "A String");
-    outputArguments.name = UA_STRING("MyOutput");
-    outputArguments.valueRank = -1;
-
-    UA_MethodAttributes helloAttr;
-    UA_MethodAttributes_init(&helloAttr);
-    helloAttr.description = UA_LOCALIZEDTEXT("en_US","Say `Hello World`");
-    helloAttr.displayName = UA_LOCALIZEDTEXT("en_US","Hello World");
-    helloAttr.executable = UA_TRUE;
-    helloAttr.userExecutable = UA_TRUE;
-    UA_Server_addMethodNode(server, UA_NODEID_NUMERIC(1,62541),
-                            UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER),
-                            UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
-                            UA_QUALIFIEDNAME(1, "hello world"),
-                            helloAttr, &helloWorldMethod, NULL,
-                            1, &inputArguments, 1, &outputArguments, NULL);
-
- */
 
 /*
  * Update UA Address Space node value given by the data pointer to an IEC61499 data object.
  * Mapping of IEC61499 to OPC-UA types is performed by scmUADataTypeMapping array.
  */
-void COPC_UA_Handler::updateNodeValue(UA_NodeId * pNodeId, CIEC_ANY &paDataPoint){
-	UA_Variant NodeValue;		// new Variant object
-	UA_Variant_init(&NodeValue);
+UA_StatusCode COPC_UA_Handler::updateNodeValue(UA_NodeId * pNodeId, CIEC_ANY &paDataPoint){
+	UA_StatusCode retVal = UA_STATUSCODE_GOOD;
+	UA_Variant* NodeValue = UA_Variant_new();
+	UA_Variant_init(NodeValue);
 
-	UA_Variant_setScalarCopy(&NodeValue, static_cast<const void *>(paDataPoint.getConstDataPtr()),
+	UA_Variant_setScalarCopy(NodeValue, static_cast<const void *>(paDataPoint.getConstDataPtr()),
 			&UA_TYPES[scmUADataTypeMapping[paDataPoint.getDataTypeID()]]);
-	UA_Server_writeValue(mOPCUAServer, *pNodeId, NodeValue);
+	retVal = UA_Server_writeValue(mOPCUAServer, *(pNodeId), *(NodeValue));
+	return retVal;
 }
+
 
 /* Register a callback routine to a Node in the Address Space that is executed
  * on either write or read access on the node. A handle to the caller communication layer
@@ -590,64 +403,177 @@ void COPC_UA_Handler::updateNodeValue(UA_NodeId * pNodeId, CIEC_ANY &paDataPoint
  * originating layer of the external event.
  */
 UA_StatusCode COPC_UA_Handler::registerNodeCallBack(UA_NodeId *paNodeId, forte::com_infra::CComLayer *paLayer){
-	UA_ValueCallback callback = {static_cast<void *>(paLayer), NULL, onWrite};
+	UA_ValueCallback callback = {static_cast<void *>(paLayer), NULL, COPC_UA_Handler().getInstance().onwrite};
 	UA_StatusCode retVal = UA_Server_setVariableNode_valueCallback(mOPCUAServer, *paNodeId, callback);
 	return retVal;
 }
 
 
-void COPC_UA_Handler::onWrite(void *h, const UA_NodeId nodeid, const UA_Variant *data,
-		const UA_NumericRange *range){
-	/*
-	forte::com_infra::CComLayer *layer = static_cast<forte::com_infra::CComLayer *>(handle);
+void onwrite(void *pa_pvCtx, const UA_NodeId nodeid, const UA_Variant *data, const UA_NumericRange *range){
 
-	EComResponse retVal = layer->recvData(static_cast<void *>(pa_pstValue), 0);
-
-
-	if(e_ProcessDataOk == retVal){
-		//only update data in item if data could be read
-		//sfp_item_update_data(pa_pstItem, pa_pstValue, sfp_time_in_millis());
-	}
-
-	if(e_Nothing != retVal){
-		getInstance().startNewEventChain(layer->getCommFB());
-	}
-	 */
-}
-
-/*
-void COPC_UA_Handler::handleWriteNodeCallback(struct sfp_item * pa_pstItem, struct sfp_variant *pa_pstValue, int32_t pa_nOperationID,
-		struct sfp_strategy * pa_pstStrategy,
-		void (*handle_result)(struct sfp_strategy* strategy, int32_t operation_id, struct sfp_error_information* error),
-		void * pa_pvCtx){
 	CComLayer *layer = static_cast<CComLayer *>(pa_pvCtx);
 
-	EComResponse retVal = layer->recvData(static_cast<void *>(pa_pstValue), 0);
+	EComResponse retVal = layer->recvData(static_cast<const void *>(data), 0);	//TODO: add multidimensional data handling with 'range'.
 
+	/* Handle return of receive data */
 	if(e_ProcessDataOk == retVal){
 		//only update data in item if data could be read
-		sfp_item_update_data(pa_pstItem, pa_pstValue, sfp_time_in_millis());
 	}
 
 	if(e_Nothing != retVal){
-		getInstance().startNewEventChain(layer->getCommFB());
+		CExternalEventHandler::
+		CExternalEventHandler::.startNewEventChain(layer->getCommFB());
 	}
 
-	//  sfp_error_information_new(
-	//
-	handle_result(pa_pstStrategy, pa_nOperationID, NULL );
 }
 
 
-bool COPC_UA_Handler::readBackDataPoint(const struct sfp_variant *paValue, CIEC_ANY &paDataPoint){
+
+bool COPC_UA_Handler::readBackDataPoint(const UA_Variant *paValue, CIEC_ANY &paDataPoint){
 	bool retVal = true;
+/*
+	switch (paDataPoint.getDataTypeID()){
+	case CIEC_ANY::e_BOOL:
+		if(UA_TYPES_BOOLEAN == *(paValue->type)){
+			((CIEC_BOOL &) paDataPoint) = paValue->data;
+		}else{
+			retVal = false;
+		}
+		break;
+	case CIEC_ANY::e_SINT:
+		if(UA_TYPES_SBYTE == *(paValue->type)){
+			((CIEC_SINT &) paDataPoint) = (paValue->data);
+		}else{
+			retVal = false;
+		}
+		break;
+	case CIEC_ANY::e_INT:
+		if(UA_TYPES_INT16 == *(paValue->type)){
+			((CIEC_INT &) paDataPoint) = (paValue->data);
+		}else{
+			retVal = false;
+		}
+		break;
+	case CIEC_ANY::e_DINT:
+		if(UA_TYPES_INT32 == *(paValue->type)){
+			((CIEC_DINT &) paDataPoint) = (paValue->data);
+		}else{
+			retVal = false;
+		}
+		break;
+#ifdef FORTE_USE_64BIT_DATATYPES
+	case CIEC_ANY::e_LINT:
+		if(UA_TYPES_INT64 == *(paValue->type)){
+			((CIEC_LINT &) paDataPoint) = (paValue->data);
+		}else{
+			retVal = false;
+		}
+		break;
+#endif
+	case CIEC_ANY::e_USINT:
+		if(UA_TYPES_BYTE == *(paValue->type)){
+			((CIEC_USINT &) paDataPoint) = (paValue->data);
+		}else{
+			retVal = false;
+		}
+		break;
+	case CIEC_ANY::e_UINT:
+		if(UA_TYPES_UINT16 == *(paValue->type)){
+			((CIEC_UINT &) paDataPoint) = (paValue->data);
+		}else{
+			retVal = false;
+		}
+		break;
+	case CIEC_ANY::e_UDINT:
+		if(UA_TYPES_UINT32 == *(paValue->type)){
+			((CIEC_UDINT &) paDataPoint) = (paValue->data);
+		}else{
+			retVal = false;
+		}
+		break;
+#ifdef FORTE_USE_64BIT_DATATYPES
+	case CIEC_ANY::e_ULINT:
+		if(UA_TYPES_UINT64 == *(paValue->type)){
+			((CIEC_ULINT &) paDataPoint) = (paValue->data);
+		}else{
+			retVal = false;
+		}
+		break;
+#endif
+	case CIEC_ANY::e_BYTE:
+		if(UA_TYPES_BYTE == *(paValue->type)){
+			((CIEC_USINT &) paDataPoint) = (paValue->data);
+		}else{
+			retVal = false;
+		}
+		break;
+	case CIEC_ANY::e_WORD:
+		if(UA_TYPES_UINT16 == *(paValue->type)){
+			((CIEC_WORD &) paDataPoint) = (paValue->data);
+		}else{
+			retVal = false;
+		}
+		break;
+	case CIEC_ANY::e_DWORD:
+		if(UA_TYPES_UINT32 == *(paValue->type)){
+			((CIEC_USINT &) paDataPoint) = (paValue->data);
+		}else{
+			retVal = false;
+		}
+		break;
+#ifdef FORTE_USE_64BIT_DATATYPES
+	case CIEC_ANY::e_LWORD:
+		if(UA_TYPES_UINT64 == *(paValue->type)){
+			((CIEC_LWORD &) paDataPoint) = (paValue->data);
+		}else{
+			retVal = false;
+		}
+		break;
+#endif
+	case CIEC_ANY::e_REAL:
+		if(UA_TYPES_FLOAT == *(paValue->type)){
+			((CIEC_ANY_REAL &) paDataPoint) = (paValue->data);
+		}else{
+			retVal = false;
+		}
+		break;
+#ifdef FORTE_USE_64BIT_DATATYPES
+	case CIEC_ANY::e_LREAL:
+		if(UA_TYPES_DOUBLE == *(paValue->type)){
+			((CIEC_LREAL &) paDataPoint) = (paValue->data);
+		}else{
+			retVal = false;
+		}
+		break;
+#endif
+	case CIEC_ANY::e_STRING:
+		if(UA_TYPES_STRING == *(paValue->type)){
+			((CIEC_STRING &) paDataPoint) = (paValue->data);
+		}else{
+			retVal = false;
+		}
+		break;
+#ifdef FORTE_USE_64BIT_DATATYPES
 
-
+	case CIEC_ANY::e_WSTRING:
+		if(UA_TYPES_STRING == *(paValue->type)){
+		((CIEC_WSTRING &) paDataPoint) = (paValue->data);
+	}else{
+		retVal = false;
+	}
+	break;
+#endif
+	default:
+		//TODO handle other datatypes
+		retVal = false;
+		break;
+	}
+*/
 	return retVal;
 }
 
 
- */
+
 
 
 
