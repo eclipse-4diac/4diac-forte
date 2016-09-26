@@ -84,7 +84,14 @@ void CIEC_ANY_STRING::reserve(TForteUInt16 pa_nRequestedSize){
     if(nNewLength < pa_nRequestedSize){
       nNewLength = pa_nRequestedSize;
     }
-    setGenData((TForteByte *) forte_realloc(getGenData(), nNewLength + 5));  // the plus five are 2 bytes for length, 2 bytes for capacity and one for a backup \0
+
+    TForteByte *newMemory = (TForteByte *) forte_malloc(nNewLength + 5);  // the plus five are 2 bytes for length, 2 bytes for capacity and one for a backup \0
+    TForteByte *oldMemory = getGenData();
+    if(0 != oldMemory){
+      memcpy(newMemory, oldMemory, getCapacity() + 5);
+      forte_free(oldMemory);
+    }
+    setGenData(newMemory);
     setAllocatedLength(static_cast<TForteUInt16>(nNewLength));  //only newLength is useable for strings and should be considered in the size checks
     if (firstAlloc) {
       setLength(nLength);  //necessary to initialize the length if this is the first reserve call

@@ -26,9 +26,5 @@ void *forte_malloc(size_t pa_nSize){
   return malloc(pa_nSize);
 }
 
-inline
-void *forte_realloc(void *pa_pvData, size_t pa_nSize){
-  return realloc(pa_pvData, pa_nSize);
-}
 
 #endif /* GENFORTEALLOC_H_ */

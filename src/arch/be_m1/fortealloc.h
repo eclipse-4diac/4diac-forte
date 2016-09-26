@@ -43,10 +43,5 @@ void *forte_malloc(size_t pa_nSize){
     return pTemp;
 }
 
-inline
-void *forte_realloc(void *pa_pvData, size_t pa_nSize){
-  //FIXME add realloc implementation for BE_M1 platform
-  return realloc(pa_pvData, pa_nSize);
-}
 
 #endif /* FORTEALLOC_H_ */
