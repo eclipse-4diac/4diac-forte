@@ -10,7 +10,7 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "stringdict.h"
-#include <fortealloc.h>
+#include <fortenew.h>
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "stringdict_gen.cpp"
 #endif

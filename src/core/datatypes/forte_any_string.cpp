@@ -9,7 +9,7 @@
   *    Stansilav Meduna, Alois Zoitl, Ingo Hegny, Monika Wenger
   *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
-#include <fortealloc.h>
+#include <fortenew.h>
 #include "forte_any_string.h"
 #include "unicode_utils.h"
 #include <string.h>

@@ -9,7 +9,7 @@
   *    Alois Zoitl, Ingo Hegny, Stansilav Meduna
   *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
-#include <fortealloc.h>
+#include <fortenew.h>
 #include "forte_array.h"
 #include <stdlib.h>
 

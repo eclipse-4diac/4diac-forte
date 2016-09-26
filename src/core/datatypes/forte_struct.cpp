@@ -9,7 +9,7 @@
   *    Ingo Hegny, Alois Zoitl
   *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
-#include <fortealloc.h>
+#include <fortenew.h>
 #include "forte_struct.h"
 #include <stdlib.h>
 //#include <stdio.h>

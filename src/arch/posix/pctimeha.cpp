@@ -8,7 +8,7 @@
  * Contributors:
  *  Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include <fortealloc.h>
+#include <fortenew.h>
 #include "pctimeha.h"
 #include "../../core/devexec.h"
 #include <time.h>
