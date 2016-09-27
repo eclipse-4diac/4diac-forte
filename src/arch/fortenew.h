@@ -16,8 +16,12 @@
 #include <fortealloc.h>
 #include <new>
 
-/*! \file genfortealloc.h
- * Collection of new and delete operators used by forte for dynamically allocating memory.
+
+#ifndef FORTE_USE_DEFAULT_NEW_AND_DELETE
+//With this define platforms can use the default new and delete operators provided by the standard library
+//It should be set in the fortealloc.h file
+
+/*!Collection of new and delete operators used by forte for dynamically allocating memory.
  *
  * The generic implementation uses malloc and free in order to not introduce any std c++ overhead
  * other implementations are also fine.
@@ -72,5 +76,6 @@ inline
 void operator delete[](void *, TForteByte *){
 }
 
+#endif FORTE_USE_DEFAULT_NEW_AND_DELETE
 
 #endif /* SRC_ARCH_FORTENEW_H_ */
