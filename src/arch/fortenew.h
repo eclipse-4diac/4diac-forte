@@ -76,6 +76,6 @@ inline
 void operator delete[](void *, TForteByte *){
 }
 
-#endif FORTE_USE_DEFAULT_NEW_AND_DELETE
+#endif //FORTE_USE_DEFAULT_NEW_AND_DELETE
 
 #endif /* SRC_ARCH_FORTENEW_H_ */
