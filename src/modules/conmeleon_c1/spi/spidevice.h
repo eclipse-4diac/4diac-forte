@@ -111,7 +111,7 @@ public:
 	 * The constructor sets the default parameters to m_nBitsPerWord = 8, m_enMode = SPIMODE0 and m_nSpeed to 1 MHz.
 	 * It configures the bus via file access to /dev/spidevx.y and using ioctl() calls to the kernel driver
 	 */
-	CSpiDevice(const char* sDevice);
+	explicit CSpiDevice(const char* sDevice);
 
 	/*! \fn CSpiDevice(const char* sDevice, unsigned int nSpeed, ESpiMode enMode)
 	 * \brief creates a SPI device according to the  \a sDevice parameter

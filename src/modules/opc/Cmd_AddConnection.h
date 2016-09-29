@@ -16,7 +16,7 @@ class COpcConnectionImpl;
 
 class CCmd_AddConnection : public ICmd{
   public:
-    CCmd_AddConnection(COpcConnectionImpl *pa_pConnection);
+    explicit CCmd_AddConnection(COpcConnectionImpl *pa_pConnection);
     virtual ~CCmd_AddConnection();
 
     virtual void runCommand();

@@ -35,7 +35,7 @@ void COpcConnectionImpl::connect(){
     m_pOpcHost = COPCClient::makeHost(m_acHost);
 
     m_pOpcServer = m_pOpcHost->connectDAServer(m_acServerName);
-  } catch (OPCException e){
+  } catch (OPCException &e){
     m_pOpcConn->response_connect(false);
     return;
   }
@@ -51,7 +51,7 @@ void COpcConnectionImpl::addItem(COpcProcessVar* pa_pNewItem){
     COPCItem* newItem = itemGroup->addItem(itemName, true);
     pa_pNewItem->setOpcItem(newItem);
     pa_pNewItem->setIsActive(true);
-  } catch (OPCException e){
+  } catch (OPCException &e){
     pa_pNewItem->setIsActive(false);
   }
   m_pOpcConn->response_itemAdded(pa_pNewItem);
@@ -109,7 +109,7 @@ COPCGroup* COpcConnectionImpl::getOpcGroup(const char* pa_acGroupName, COpcProce
             it->m_pOpcGroupRead = retGroup = m_pOpcServer->makeGroup(groupName, true, it->m_nReqUpdateRate, it->m_nRevisedUpdateRate, it->m_nDeadBand);
             it->m_pOpcGroupRead->enableAsynch(*this);
             it->m_bReadGroupAdded = true;
-          } catch (OPCException e){
+          } catch (OPCException &e){
             // TODO
           }
           free(groupName);
@@ -125,7 +125,7 @@ COPCGroup* COpcConnectionImpl::getOpcGroup(const char* pa_acGroupName, COpcProce
           try{
             it->m_pOpcGroupWrite = retGroup = m_pOpcServer->makeGroup(groupName, true, it->m_nReqUpdateRate, it->m_nRevisedUpdateRate, it->m_nDeadBand);
             it->m_bWriteGroupAdded = true;
-          } catch (OPCException e){
+          } catch (OPCException &e){
             // TODO
           }
           free(groupName);
