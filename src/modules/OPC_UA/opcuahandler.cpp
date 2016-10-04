@@ -65,18 +65,18 @@ const int COPC_UA_Handler::scmUADataTypeMapping[] = {
 		//e_Max = 65535 // Guarantees at least 16 bits - otherwise gcc will optimizes on some platforms
 };
 
-void COPC_UA_Handler::configureUAServer(int UAServerPort) {
+void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
 	m_server_config = UA_ServerConfig_standard;
 	m_server_config.enableUsernamePasswordLogin = false;
 	m_server_config.networkLayersSize = 1;
-	m_server_config.logger = Logger_Stdout;
+	m_server_config.logger = UA_Log_Stdout;
 
 	m_server_networklayer = UA_ServerNetworkLayerTCP(UA_ConnectionConfig_standard, UAServerPort);	// TODO: pass port ID from layer ->Problems with Singleton
 	m_server_config.networkLayers = &m_server_networklayer;
 }
 
 COPC_UA_Handler::COPC_UA_Handler() : m_server_config(), m_server_networklayer(){
-	int UAServerPort = 16664;	// TODO: pass port ID from layer ->Problems with Singleton
+	TForteUInt16 UAServerPort = 16664;	// TODO: pass port ID from layer ->Problems with Singleton
 	configureUAServer(UAServerPort); 	// configure a standard server
 	mOPCUAServer = UA_Server_new(m_server_config);
 
@@ -210,7 +210,7 @@ UA_StatusCode COPC_UA_Handler::assembleUANodeId(char* NodeIdString, UA_NodeId *r
 		i++;
 		if(i == 1){
 			/* Assign NodeId namespace index */
-			ReferenceId->namespaceIndex = atoi(pch);
+			ReferenceId->namespaceIndex = (UA_UInt16)atoi(pch);
 
 		} else if (i == 2){
 			/* Assign NodeId identifier types */
@@ -282,11 +282,12 @@ UA_StatusCode COPC_UA_Handler::createUAObjNode(const CFunctionBlock* pCFB, UA_No
 	UA_ObjectAttributes_init(&obj_attr);
 	char dispName[32];
 	sprintf(dispName, "FB1-%s\n", srcFBName);
-	obj_attr.displayName = UA_LOCALIZEDTEXT("en_US", dispName);
+	char locale[] = "en_US";
+	obj_attr.displayName = UA_LOCALIZEDTEXT(locale, dispName);
 	char descpName[64];
 	sprintf(descpName, "Object node of FB1-%s, origin: Publisher\n", srcFBName);
 
-	obj_attr.description =  UA_LOCALIZEDTEXT("en_US", descpName);
+	obj_attr.description =  UA_LOCALIZEDTEXT(locale, descpName);
 
 	UA_InstantiationCallback* instCallback = NULL; //((void *)0);	// Nullpointer as callback for this Node
 	UA_NodeId * returnNodeId = UA_NodeId_new();
@@ -349,8 +350,11 @@ UA_StatusCode COPC_UA_Handler::createUAVarNode(const CFunctionBlock* pCFB, SConn
 	char display[32];
 	sprintf(display, "SD-%s\n", SPName);
 
-	var_attr.displayName = UA_LOCALIZEDTEXT("en_US", display);
-	var_attr.description = UA_LOCALIZEDTEXT("en_US", "SD port of Publisher");
+	char locale[] = "en_US";
+	char description[] = "SD port of Publisher";
+
+	var_attr.displayName = UA_LOCALIZEDTEXT(locale, display);
+	var_attr.description = UA_LOCALIZEDTEXT(locale, description);
 	UA_Variant_setScalar(&var_attr.value, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
 
 	UA_InstantiationCallback* instCallback = NULL; //((void *)0);	// Nullpointer as callback for this Node
@@ -398,13 +402,13 @@ UA_StatusCode COPC_UA_Handler::updateNodeValue(UA_NodeId * pNodeId, CIEC_ANY &pa
  * originating layer of the external event.
  */
 UA_StatusCode COPC_UA_Handler::registerNodeCallBack(UA_NodeId *paNodeId, forte::com_infra::CComLayer *paLayer){
-	UA_ValueCallback callback = {static_cast<void *>(paLayer), NULL, COPC_UA_Handler().getInstance().onwrite};
+	UA_ValueCallback callback = {static_cast<void *>(paLayer), NULL, COPC_UA_Handler().getInstance().onWrite};
 	UA_StatusCode retVal = UA_Server_setVariableNode_valueCallback(mOPCUAServer, *paNodeId, callback);
 	return retVal;
 }
 
 
-void onwrite(void *pa_pvCtx, const UA_NodeId nodeid, const UA_Variant *data, const UA_NumericRange *range){
+void COPC_UA_Handler::onWrite(void *pa_pvCtx, __attribute__((unused)) const UA_NodeId nodeid, const UA_Variant *data, __attribute__((unused)) const UA_NumericRange *range){
 
 	CComLayer *layer = static_cast<CComLayer *>(pa_pvCtx);
 
@@ -416,15 +420,14 @@ void onwrite(void *pa_pvCtx, const UA_NodeId nodeid, const UA_Variant *data, con
 	}
 
 	if(e_Nothing != retVal){
-		CExternalEventHandler::
-		CExternalEventHandler::.startNewEventChain(layer->getCommFB());
+		getInstance().startNewEventChain(layer->getCommFB());
 	}
 
 }
 
 
 
-bool COPC_UA_Handler::readBackDataPoint(const UA_Variant *paValue, CIEC_ANY &paDataPoint){
+bool COPC_UA_Handler::readBackDataPoint(__attribute__((unused)) const UA_Variant *paValue, __attribute__((unused)) CIEC_ANY &paDataPoint){
 	bool retVal = true;
 /*
 	switch (paDataPoint.getDataTypeID()){
