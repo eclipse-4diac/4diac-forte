@@ -11,14 +11,16 @@
 #include "sync.h"
 
 CrcXSyncObject::CrcXSyncObject(){
-  rX_MemAllocateMemory(&hMtxTsk1,RX_MUTEX_SIZE);
+  rX_MemAllocateMemory(&mMutexHandle, RX_MUTEX_SIZE);
   //TODO handle result
   
   rX_MtxCreateMutex("Mforte", mMutexHandle, 0);
   //TODO handle result
+  //TODO: Being the name static, it will return RX_KNL_DUPLICATE_NAME, right?
 }
 
 CrcXSyncObject::~CrcXSyncObject(){
   rX_MtxDeleteMutex(mMutexHandle);
   //TODO handle return value
+  rX_MemFreeMemory(mMutexHandle);
 }

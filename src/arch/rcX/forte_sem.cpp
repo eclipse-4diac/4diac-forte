@@ -16,13 +16,17 @@ namespace forte {
   namespace arch {
 
     CrcXSemaphore::CrcXSemaphore(unsigned int paInitialValue){
+    	rX_MemAllocateMemory(&mSemaphore, RX_SEMAPHORE_SIZE);
+    	//TODO handle result
       if(RX_OK != rX_SemCreateSemaphore(0, mSemaphore, paInitialValue)){
+        //TODO: take care of the first parameter (name).
         DEVLOG_ERROR("Could not initialize semaphore\n");
       }
     }
 
     CrcXSemaphore::~CrcXSemaphore(){
       rX_SemDeleteSemaphore(mSemaphore);
+      rX_MemFreeMemory(mSemaphore);
     }
 
     void CrcXSemaphore::semInc(){
@@ -33,7 +37,7 @@ namespace forte {
     }
 
     void CrcXSemaphore::semWaitIndefinitly(){
-      rX_SemGetSemaphore(mSemaphore);
+      rX_SemWaitForSemaphore(mSemaphore, RX_INFINITE);
       //FIXME what to dow if retval is not RX_OK?
     }
 
