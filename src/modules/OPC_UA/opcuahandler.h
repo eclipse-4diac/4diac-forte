@@ -14,7 +14,10 @@
 #ifndef SRC_MODULES_OPC_UA_OPCUAHANDLER_H_
 #define SRC_MODULES_OPC_UA_OPCUAHANDLER_H_
 
-#include <open62541/build/open62541.h>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#include <open62541.h>
+#pragma GCC diagnostic pop
 #include <singlet.h>
 #include <thread.h>
 #include <extevhan.h>
@@ -50,7 +53,8 @@ public:
 	UA_StatusCode assembleUANodeId(char* NodeIdString, UA_NodeId *returnNodeId);
 
 	/* OPC_UA Handler interaction */
-	void updateNodeValue(UA_NodeId * pNodeId, CIEC_ANY &paDataPoint);
+	UA_StatusCode updateNodeValue(UA_NodeId * pNodeId, CIEC_ANY &paDataPoint);
+	bool readBackDataPoint(const UA_Variant *pstValue, CIEC_ANY &paDataPoint);
 	UA_StatusCode registerNodeCallBack(UA_NodeId *paNodeId, forte::com_infra::CComLayer *paLayer);
 	static void onWrite(void *h, const UA_NodeId nodeid, const UA_Variant *data,
 			const UA_NumericRange *range);
@@ -74,7 +78,7 @@ private:
 	void setServerRunning();
 	void stopServerRunning();
 	//static forte::com_infra::EComResponse m_eComResponse;
-	void configureUAServer(int UAServerPort);
+	void configureUAServer(TForteUInt16 UAServerPort);
 
 	// implementation of thread.h virtual method start
 	virtual void run();

@@ -16,7 +16,10 @@
 
 #include "comlayer.h"
 #include <forte_any.h>
-#include <open62541/build/open62541.h>
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#include <open62541.h>
+#pragma GCC diagnostic pop
 #include "commfb.h"
 #include "../../arch/devlog.h"
 

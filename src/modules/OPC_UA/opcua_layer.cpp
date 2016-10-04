@@ -22,7 +22,7 @@ using namespace forte::com_infra;
 
 
 
-COPC_UA_Layer::COPC_UA_Layer(CComLayer * pa_poUpperLayer, CCommFB * pa_poComFB) : CComLayer(pa_poUpperLayer, pa_poComFB), m_apUANodeId(0), mInterruptResp(e_Nothing){
+COPC_UA_Layer::COPC_UA_Layer(CComLayer * pa_poUpperLayer, CCommFB * pa_poComFB) : CComLayer(pa_poUpperLayer, pa_poComFB), mInterruptResp(e_Nothing), m_apUANodeId(0){
 	// constructor list initialization
 
 }
@@ -40,7 +40,6 @@ void COPC_UA_Layer::closeConnection(){
 
 EComResponse COPC_UA_Layer::openConnection(char * paLayerParameter){
 	EComResponse retValEcom = e_InitOk;
-	UA_StatusCode retValUA;
 
 
 	char *pch;
@@ -89,7 +88,7 @@ EComResponse COPC_UA_Layer::openConnection(char * paLayerParameter){
 		int numData = getCommFB()->getNumSD();
 		m_apUANodeId = new UA_NodeId *[numData];  //TODO for now Publisher only publishes a single value. Extend to handling multiple NodeId Adapters plus corresponding SDs and RDs.
 		memset(m_apUANodeId, 0, sizeof(UA_NodeId *) * numData);
-		retValUA = createItems(dataArray, numData, paLayerParameter);
+		UA_StatusCode retValUA = createItems(dataArray, numData, paLayerParameter);
 
 #endif
 
@@ -136,7 +135,7 @@ EComResponse COPC_UA_Layer::openConnection(char * paLayerParameter){
 
 
 
-EComResponse COPC_UA_Layer::createItems(CIEC_ANY *paDataArray, int numSD, char* paLayerParameter){
+EComResponse COPC_UA_Layer::createItems(CIEC_ANY *paDataArray, int numSD, __attribute__((unused)) char* paLayerParameter){
 	EComResponse retValEcom = e_InitOk;
 	UA_StatusCode retVal = UA_STATUSCODE_GOOD;
 
@@ -261,7 +260,7 @@ EComResponse COPC_UA_Layer::sendData(void *paData, unsigned int paSize){
 
 
 
-EComResponse COPC_UA_Layer::recvData(const void * pa_pvData, unsigned int pa_unSize){
+EComResponse COPC_UA_Layer::recvData(const void * pa_pvData, __attribute__((unused)) unsigned int pa_unSize){
 	mInterruptResp = e_ProcessDataOk;
 
 	const UA_Variant *value = static_cast<const UA_Variant*>(pa_pvData);
