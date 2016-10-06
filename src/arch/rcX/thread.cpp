@@ -66,7 +66,7 @@ CrcXThread::~CrcXThread(){
   if(0 != m_stThreadID){
     end();
   }
-  rX_SysDeleteTask(m_stThreadID);
+  rX_SysDeleteTask(m_stThreadID, 0);
   delete[] m_pacStack;
 }
 

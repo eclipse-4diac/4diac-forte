@@ -11,6 +11,7 @@
 
 #include <fortenew.h>
 #include "rcXTimerHandler.h"
+#include "../devlog.h"
 
 void CTimerHandler::createTimerHandler(void){
   if(0 == sm_poFORTETimer)

@@ -12,6 +12,7 @@
 #include "rcXUtilities.h"
 #include "sync.h"
 #include <fortenew.h>
+#include "../devlog.h"
 
 CrcXSyncObject::CrcXSyncObject(){
   mMutexHandle = new char[RX_MUTEX_SIZE];
