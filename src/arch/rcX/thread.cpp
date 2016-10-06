@@ -34,7 +34,7 @@ void CrcXThread::start(void){
   }
 }
 
-void * CrcXThread::threadFunction(void *arguments){
+void CrcXThread::threadFunction(void *arguments){
   // Get pointer to CThread object out of void pointer
   CrcXThread *pThread = static_cast<CrcXThread *>(arguments);
 
@@ -48,7 +48,6 @@ void * CrcXThread::threadFunction(void *arguments){
   else{
     DEVLOG_ERROR("pThread pointer is 0!");
   }
-  return 0;
 }
 
 CrcXThread::CrcXThread(long pa_nStackSize) :

@@ -9,24 +9,32 @@
  *  Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
+#include "rcXUtilities.h"
 #include "forte_sem.h"
 #include "../devlog.h"
+#include <fortenew.h>
 
 namespace forte {
   namespace arch {
 
     CrcXSemaphore::CrcXSemaphore(unsigned int paInitialValue){
-    	rX_MemAllocateMemory(&mSemaphore, RX_SEMAPHORE_SIZE);
-    	//TODO handle result
-      if(RX_OK != rX_SemCreateSemaphore(0, mSemaphore, paInitialValue)){
-        //TODO: take care of the first parameter (name).
-        DEVLOG_ERROR("Could not initialize semaphore\n");
+      mSemaphore = new char[RX_SEMAPHORE_SIZE];
+      if(0 == mSemaphore){
+        DEVLOG_ERROR("Not enough memory to allocate %i bytes for creating a new semaphore\n", RX_SEMAPHORE_SIZE);
+      }else{
+        char semaphoreName[8];
+        getRandomString(&semaphoreName[0], 7);
+        if(RX_OK != rX_SemCreateSemaphore(&semaphoreName[0], mSemaphore, paInitialValue)){
+          DEVLOG_ERROR("Could not initialize semaphore\n");
+        }
       }
     }
 
     CrcXSemaphore::~CrcXSemaphore(){
-      rX_SemDeleteSemaphore(mSemaphore);
-      rX_MemFreeMemory(mSemaphore);
+      if(0 != mSemaphore){
+        rX_SemDeleteSemaphore(mSemaphore);
+        delete[] mSemaphore;
+      }
     }
 
     void CrcXSemaphore::semInc(){

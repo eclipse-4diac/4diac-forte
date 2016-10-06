@@ -55,7 +55,7 @@ class CrcXThread : public forte::arch::CThreadBase {
      *
      * this function will call the run method of the thread instance.
      */
-    static void * threadFunction(void *arguments);
+    static void threadFunction(void *arguments);
 
     CPCSyncObject mJoinMutex;
 

@@ -8,19 +8,25 @@
  * Contributors:
  *  Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
+
+#include "rcXUtilities.h"
 #include "sync.h"
+#include <fortenew.h>
 
 CrcXSyncObject::CrcXSyncObject(){
-  rX_MemAllocateMemory(&mMutexHandle, RX_MUTEX_SIZE);
-  //TODO handle result
-  
-  rX_MtxCreateMutex("Mforte", mMutexHandle, 0);
-  //TODO handle result
-  //TODO: Being the name static, it will return RX_KNL_DUPLICATE_NAME, right?
+  mMutexHandle = new char[RX_MUTEX_SIZE];
+  if(0 == mMutexHandle){
+    DEVLOG_ERROR("Not enough memory to allocate %i bytes for creating a new mutex\n", RX_MUTEX_SIZE);
+  }else{
+    char mutexName[8];
+    getRandomString(&mutexName[0], 7);
+    if(RX_OK != rX_MtxCreateMutex(&mutexName[0], mMutexHandle, 0)){
+      DEVLOG_ERROR("Could not create mutex\n");
+    }
+  }
 }
 
 CrcXSyncObject::~CrcXSyncObject(){
   rX_MtxDeleteMutex(mMutexHandle);
-  //TODO handle return value
-  rX_MemFreeMemory(mMutexHandle);
+  delete[] mMutexHandle;
 }
