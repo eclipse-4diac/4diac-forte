@@ -45,6 +45,8 @@ class CrcXTimerHandler : public CTimerHandler {
     CrcXTimerHandler();
 
     RX_HANDLE mTimer;
+
+    friend CTimerHandler;
 };
 
 
