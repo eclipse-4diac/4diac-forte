@@ -41,22 +41,8 @@ void COPC_UA_Layer::closeConnection(){
 EComResponse COPC_UA_Layer::openConnection(char * paLayerParameter){
 	EComResponse retValEcom = e_InitOk;
 
+	UA_NodeId* parentNode = COPC_UA_Handler::getInstance().getNodeForPath(paLayerParameter, true);
 
-	char *pch;
-	int i = 0;
-	pch = strtok (paLayerParameter,";");
-	while (pch != NULL) {
-		i++;
-		if(i==1){
-			/* First string is omitted for now */
-			// TODO: pass port ID to ua handler constructor
-			// COPC_UA_Handler::getInstance(portId)  -> Singleton pattern not supporting parameters?
-		} else{
-			/* Process NodeIds */
-			COPC_UA_Handler::getInstance().assembleUANodeId(pch, m_apUANodeId[i-1]);
-		}
-		pch = strtok (NULL, ";");
-	}
 
 
 	/* PUBLISHER */

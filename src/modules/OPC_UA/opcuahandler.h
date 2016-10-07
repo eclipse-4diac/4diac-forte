@@ -50,7 +50,7 @@ public:
 	UA_StatusCode createUAVarNode(const CFunctionBlock* pCFB, SConnectionPoint& sourceRD, UA_NodeId * returnVarNodeId);	// create variable node from SourcePoint Node Id
 	UA_StatusCode createUAObjNode(const CFunctionBlock* pCFB, UA_NodeId * returnObjNodeId);	// create object node from Parent Function Block Node Id
 	//UA_StatusCode createUAMethodNode(const CFunctionBlock* pCFB, UA_NodeId * returnMethodNodeId);
-	UA_StatusCode assembleUANodeId(char* NodeIdString, UA_NodeId *returnNodeId);
+	//UA_StatusCode assembleUANodeId(char* NodeIdString, UA_NodeId *returnNodeId);
 
 	/* OPC_UA Handler interaction */
 	UA_StatusCode updateNodeValue(UA_NodeId * pNodeId, CIEC_ANY &paDataPoint);
@@ -62,6 +62,16 @@ public:
 
 	static const int scmUADataTypeMapping[];
 
+
+	/**
+	 * Get the node id of the node which is represented by the given path.
+	 * If createIfNotFound is set to true, all nodes which do not exist yet will be created.
+	 *
+	 * @param nodePath Full path to the node, e.g. '/Objects/FlipFlop'
+	 * @param createIfNotFound if true all the missing nodes will be created as FolderType objects.
+	 * @return the node ID or null if createIfNotFound is false and node is not found.
+	 */
+	UA_NodeId *getNodeForPath(char* nodePath, bool createIfNotFound);
 
 protected:
 
@@ -84,6 +94,8 @@ private:
 	virtual void run();
 
 	void registerNode();
+
+	CSyncObject getNodeForPathMutex;
 
 
 };

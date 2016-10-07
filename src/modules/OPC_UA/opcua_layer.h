@@ -49,8 +49,7 @@ private:
 	 */
 	//TODO: array necessary. For input and output
 	UA_NodeId **m_apUANodeId;	// OPC UA (Publisher and Subscriber SIFBs) are restricted to a single port each. For OPC UA Server a input ouput pair format: opc_ua[address:port];InputNodeId:OutputNodeId
-	static constexpr const char* scmParamIDSeparator = ";";	// Character separating the Param ID in the following format: opc_ua[address:port];OPCUA_NodeId
-	static constexpr const char* scmNodeIdSeparator = ":";		// Character separating the OPCUA_NodeId in the following format: opc_ua[address:port];NamespaceIndex(int):IdentifierType(numeric,string,guid,bytestring):Identifier(union of type).
+
 };
 
 
