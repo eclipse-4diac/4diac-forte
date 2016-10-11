@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2015-2016 Florian Froschermeier <florian.froschermeier@tum.de>
+ * Copyright (c) 2015-2016 Florian Froschermeier <florian.froschermeier@tum.de>,
+ * 							fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +9,8 @@
  * Contributors:
  *    Florian Froschermeier
  *      - initial integration of the OPC-UA protocol
+ *    Stefan Profanter
+ *      - refactoring and adaption to new concept
  *******************************************************************************/
 
 
@@ -24,7 +27,6 @@
 #include "../../arch/devlog.h"
 
 
-
 class COPC_UA_Layer : public forte::com_infra::CComLayer{
 public:
 	COPC_UA_Layer(forte::com_infra::CComLayer* pa_poUpperLayer, forte::com_infra::CCommFB* pa_poComFB);
@@ -38,7 +40,7 @@ public:
 private:
 	forte::com_infra::EComResponse openConnection(char * paLayerParameter);
 
-	forte::com_infra::EComResponse createItems(CIEC_ANY *paDataArray, int numDI, char *paLayerParameter);
+	forte::com_infra::EComResponse createPublishNodes(const CIEC_ANY *sdArray, unsigned int numSd);
 
 	forte::com_infra::EComResponse mInterruptResp;
 
@@ -50,6 +52,14 @@ private:
 	//TODO: array necessary. For input and output
 	UA_NodeId **m_apUANodeId;	// OPC UA (Publisher and Subscriber SIFBs) are restricted to a single port each. For OPC UA Server a input ouput pair format: opc_ua[address:port];InputNodeId:OutputNodeId
 
+
+	UA_NodeId *fbNodeId;
+	struct FB_NodeIds {
+		UA_NodeId *functionBlockId;
+		UA_NodeId *variableId;
+	};
+	struct FB_NodeIds *sendDataNodeIds;
+	struct FB_NodeIds *readDataNodeIds;
 };
 
 

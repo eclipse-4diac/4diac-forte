@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2015-2016 Florian Froschermeier <florian.froschermeier@tum.de>
+ * Copyright (c) 2015-2016 Florian Froschermeier <florian.froschermeier@tum.de>,
+ * 							fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +9,8 @@
  * Contributors:
  *    Florian Froschermeier
  *      - initial integration of the OPC-UA protocol
+ *    Stefan Profanter
+ *      - refactoring and adaption to new concept
  *******************************************************************************/
 
 
@@ -47,7 +50,21 @@ public:
 
 	UA_StatusCode getFBNodeId(const CFunctionBlock *pCFB, UA_NodeId* returnFBNodeId);		// get function block (FB) NodeId
 	UA_StatusCode getSPNodeId(const CFunctionBlock *pCFB, SConnectionPoint& sourceRD, UA_NodeId* returnSPNodeId);		// get source point (SP) NodeId
-	UA_StatusCode createUAVarNode(const CFunctionBlock* pCFB, SConnectionPoint& sourceRD, UA_NodeId * returnVarNodeId);	// create variable node from SourcePoint Node Id
+
+	/**
+	 * For a given connection SourcePoint between two 61499 FBs add a variable Node to the OPC_UA address space.
+	 * Node is described by the name of the port and the name of the parent function block.
+	 * If creation successful the NodeId is returned otherwise
+	 * UA_StatusCode from node creation with error message.
+	 * @param parentNode Parent node for the variable
+	 * @param varName browse name of the variable
+	 * @param varType Datatype of the varialbe
+	 * @param varValue initial value of the variable
+	 * @param returnVarNodeId the node ID of the created variable node
+	 * @return UA_STATUSCODE_GOOD on succes, the error code otherwise
+	 */
+	UA_StatusCode createUAVariableNode(const UA_NodeId *parentNode, const char* varName, const UA_DataType* varType, void* varValue, UA_NodeId * returnVarNodeId);	// create variable node from SourcePoint Node Id
+
 	UA_StatusCode createUAObjNode(const CFunctionBlock* pCFB, UA_NodeId * returnObjNodeId);	// create object node from Parent Function Block Node Id
 	//UA_StatusCode createUAMethodNode(const CFunctionBlock* pCFB, UA_NodeId * returnMethodNodeId);
 	//UA_StatusCode assembleUANodeId(char* NodeIdString, UA_NodeId *returnNodeId);
@@ -67,11 +84,15 @@ public:
 	 * Get the node id of the node which is represented by the given path.
 	 * If createIfNotFound is set to true, all nodes which do not exist yet will be created.
 	 *
+	 * @param foundNodeId the node ID which corresponds to the nodePath or null if it is not found and createIfNotFound is false.
 	 * @param nodePath Full path to the node, e.g. '/Objects/FlipFlop'
 	 * @param createIfNotFound if true all the missing nodes will be created as FolderType objects.
-	 * @return the node ID or null if createIfNotFound is false and node is not found.
+	 * @param startingNode the nodeId from where the given browse path starts. If NULL, the starting Node is Root and the path has to
+	 * 			start with '/Objects'
+	 * @param newNodeType type of the new node, if it has to be created. Default is FolderType
+	 * @return UA_STATUSCODE_GOOD on success or the corresponding error code.
 	 */
-	UA_NodeId *getNodeForPath(char* nodePath, bool createIfNotFound);
+	UA_StatusCode getNodeForPath(UA_NodeId **foundNodeId, char* nodePath, bool createIfNotFound, const UA_NodeId *startingNode = NULL, const UA_NodeId *newNodeType = NULL);
 
 protected:
 

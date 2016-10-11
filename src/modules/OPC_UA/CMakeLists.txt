@@ -26,7 +26,8 @@ SET(FORTE_COM_OPC_UA_DIR "" CACHE PATH "ABSOLUTE path to OPC UA build folder or 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 if(FORTE_COM_OPC_UA)
-	forte_add_sourcefile_hcpp( opcua_layer opcuahandler )
+	forte_add_sourcefile_hcpp( opcua_layer opcua_handler )
+	forte_add_sourcefile_hcpp( opcua_layer opcua_helper )
 	if(EXISTS ${FORTE_COM_OPC_UA_DIR})
 	    if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
     		forte_add_include_directories( ${FORTE_COM_OPC_UA_DIR})
@@ -46,16 +47,6 @@ endif(FORTE_COM_OPC_UA)
 # CMake for IEC 61499 based OPC-UA publish-subscribe function blocks
 set(OPCUA_FB_PATH "61499_FBs")
 forte_add_sourcefile_hcpp(${OPCUA_FB_PATH}/AOPCUANodeID ${OPCUA_FB_PATH}/GEN_SUBSCRIBEOPCUA ${OPCUA_FB_PATH}/GEN_PUBLISHOPCUA ${OPCUA_FB_PATH}/OPCUA_NodeID)
-
-# Set if the open62541 OPC-UA server WAS built with an external INIT namespace (predefined nodes defined in xml file),
-# see open62541 documentation.
-set(FORTE_COM_OPC_UA_ENABLE_INIT_NAMESPACE ON CACHE BOOL "Include the external init namespace the open62541 server was built with")
-mark_as_advanced(FORTE_COM_OPC_UA_ENABLE_INIT_NAMESPACE)
-
-if(FORTE_COM_OPC_UA_ENABLE_INIT_NAMESPACE)
-  forte_add_definition("-DFORTE_COM_OPC_UA_ENABLE_INIT_NAMESPACE")
-endif(FORTE_COM_OPC_UA_ENABLE_INIT_NAMESPACE)
-
 
 #get_directory_property( DirDefs COMPILE_DEFINITIONS )
 #message( "COMPILE_DEFINITIONS = ${DirDefs}" )
