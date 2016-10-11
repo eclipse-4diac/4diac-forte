@@ -24,6 +24,7 @@
 struct UA_TypeConvert {
 	const UA_DataType *type;
 	bool (*get)(const CIEC_ANY *src, void* dst);
+	bool (*set)(const void* src, CIEC_ANY *dst);
 };
 
 class COPC_UA_Helper {

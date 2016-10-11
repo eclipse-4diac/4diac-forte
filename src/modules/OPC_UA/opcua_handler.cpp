@@ -24,46 +24,6 @@ DEFINE_SINGLETON(COPC_UA_Handler);
 
 #define FORTE_COM_OPC_UA_PORT 4840
 
-const int COPC_UA_Handler::scmUADataTypeMapping[] = {
-		/* Datatype mapping of IEC61131 types to OPC-UA types according
-		 * to OPC UA standard specification release 1.0,
-		 * PLCOpen-OPC-UA-"Information Model" Table 26, Section 5.2 Datatypes;
-		 */
-
-		UA_TYPES_VARIANT, //e_ANY,
-		UA_TYPES_BOOLEAN, //e_BOOL,
-		UA_TYPES_SBYTE, //e_SINT,
-		UA_TYPES_INT16,	//e_INT
-		UA_TYPES_INT32, //e_DINT
-		UA_TYPES_INT64, //e_LINT
-		UA_TYPES_BYTE, //e_USINT,
-		UA_TYPES_UINT16, //e_UINT
-		UA_TYPES_UINT32, //e_UDINT
-		UA_TYPES_UINT64, //e_ULINT
-		UA_TYPES_BYTE, //e_BYTE
-		UA_TYPES_UINT16, //e_WORD
-		UA_TYPES_UINT32, //e_DWORD
-		UA_TYPES_UINT64, //e_LWORD
-		UA_TYPES_DATETIME, //e_DATE,
-		UA_TYPES_DATETIME, //e_TIME_OF_DAY,
-		UA_TYPES_DATETIME, //e_DATE_AND_TIME,
-		UA_TYPES_DOUBLE, //e_TIME, //until here simple Datatypes
-		UA_TYPES_FLOAT, //e_REAL
-		UA_TYPES_DOUBLE, //e_LREAL
-		UA_TYPES_STRING, //e_STRING
-		UA_TYPES_STRING //e_WSTRING,
-
-		//FIXME add mapping for following datatypes.
-		//e_DerivedData,
-		//e_DirectlyDerivedData,
-		//e_EnumeratedData,
-		//e_SubrangeData,
-		//e_ARRAY, //according to the compliance profile
-		//e_STRUCT,
-		//e_External = 256, // Base for CIEC_ANY based types outside of the forte base
-		//e_Max = 65535 // Guarantees at least 16 bits - otherwise gcc will optimizes on some platforms
-};
-
 void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
 	m_server_config = UA_ServerConfig_standard;
 	m_server_config.enableUsernamePasswordLogin = false;
@@ -81,12 +41,8 @@ COPC_UA_Handler::COPC_UA_Handler() : m_server_config(), m_server_networklayer(),
 	setServerRunning();		// set server loop flag
 
 	if(!isAlive()){
-		//thread is not running start it
 		start();
 	}
-
-	// OPTION: add a namespace in xml format to the server containing the application configuration.
-	//UA_Server_addExternalNamespace()
 }
 
 COPC_UA_Handler::~COPC_UA_Handler() {
@@ -110,6 +66,7 @@ void COPC_UA_Handler::disableHandler(void){
 }
 
 void COPC_UA_Handler::setPriority(int){
+
 	//currently we are doing nothing here.
 	//TODO We should adjust the thread priority.
 }
@@ -119,11 +76,6 @@ int COPC_UA_Handler::getPriority(void) const{
 	return 0;
 }
 
-UA_Server * COPC_UA_Handler::getServer(){
-	return mOPCUAServer;
-}
-
-
 void COPC_UA_Handler::setServerRunning(){
 	*mbServerRunning = UA_TRUE;
 }
@@ -131,54 +83,6 @@ void COPC_UA_Handler::setServerRunning(){
 void COPC_UA_Handler::stopServerRunning(){
 	*mbServerRunning = UA_FALSE;
 }
-
-
-void COPC_UA_Handler::registerNode(){
-}
-
-
-/*
- * Get Function Block Node Id from the pointer to a CFunctionBlock.
- * Method is used to check if a not to the pointed function block already
- * exists in the address space of the OPC-UA Server.
- */
-
-UA_StatusCode COPC_UA_Handler::getFBNodeId(const CFunctionBlock* pCFB, UA_NodeId* returnFBNodeId){
-	const char* FBInstanceName = pCFB->getInstanceName();	// Name of the SourcePoint function block
-	UA_NodeId FBNodeId = UA_NODEID_STRING_ALLOC(1, FBInstanceName);		// Create new FBNodeId from c string
-
-	UA_NodeId* returnNodeId = UA_NodeId_new();
-	UA_StatusCode retVal = UA_Server_readNodeId(mOPCUAServer, FBNodeId, returnNodeId);		// read node of given ID
-	if(retVal != UA_STATUSCODE_GOOD){
-		return retVal;		// reading not successful
-	}else{
-		retVal = UA_NodeId_copy(returnNodeId, returnFBNodeId);	// reading successful, return NodeId
-	};
-	return retVal;
-}
-
-
-UA_StatusCode COPC_UA_Handler::getSPNodeId(const CFunctionBlock *pCFB, SConnectionPoint& sourceRD, UA_NodeId* returnSPNodeId){
-
-	// Reading the node without reference to parent node id, unknown if this works.
-	//FIXME needs further testing with OPC_UA Address Space Browser and example node
-	const SFBInterfaceSpec* sourceFBInterface = pCFB->getFBInterfaceSpec();
-
-	CStringDictionary::TStringId SPNameId = sourceFBInterface->m_aunDONames[sourceRD.mPortId];
-	const char * SPName = CStringDictionary::getInstance().get(SPNameId);
-
-	UA_NodeId SPNodeId = UA_NODEID_STRING_ALLOC(1, SPName);
-
-	UA_NodeId* returnNodeId = UA_NodeId_new();
-	UA_StatusCode retVal = UA_Server_readNodeId(mOPCUAServer,SPNodeId, returnNodeId);		// read node of given ID
-	if(retVal != UA_STATUSCODE_GOOD){
-		return retVal;		// reading not successful
-	}else{
-		retVal = UA_NodeId_copy(returnNodeId, returnSPNodeId);	// reading successful, return NodeId
-	};
-	return retVal;
-}
-
 
 UA_StatusCode COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char* nodePath, bool createIfNotFound, const UA_NodeId *startingNode, const UA_NodeId *newNodeType) {
 
@@ -434,34 +338,60 @@ UA_StatusCode COPC_UA_Handler::createUAVariableNode(const UA_NodeId *parentNode,
  * Update UA Address Space node value given by the data pointer to an IEC61499 data object.
  * Mapping of IEC61499 to OPC-UA types is performed by scmUADataTypeMapping array.
  */
-UA_StatusCode COPC_UA_Handler::updateNodeValue(UA_NodeId * pNodeId, CIEC_ANY &paDataPoint){
-	UA_Variant* NodeValue = UA_Variant_new();
-	UA_Variant_init(NodeValue);
+UA_StatusCode COPC_UA_Handler::updateNodeValue(const UA_NodeId *nodeId, const CIEC_ANY *data, const UA_TypeConvert *convert){
+	UA_Variant* nodeValue = UA_Variant_new();
+	UA_Variant_init(nodeValue);
 
-	// TODO make sure index of dataType in scmUADataTypeMapping is in range
-	UA_Variant_setScalarCopy(NodeValue, static_cast<const void *>(paDataPoint.getConstDataPtr()),
-			&UA_TYPES[scmUADataTypeMapping[paDataPoint.getDataTypeID()]]);
-	return UA_Server_writeValue(mOPCUAServer, *(pNodeId), *(NodeValue));
-}
+	void *varValue = UA_new(convert->type);
+	if (!convert->get(data, varValue)) {
+		UA_delete(varValue, convert->type);
+		return UA_STATUSCODE_BADUNEXPECTEDERROR;
+	}
 
-
-/* Register a callback routine to a Node in the Address Space that is executed
- * on either write or read access on the node. A handle to the caller communication layer
- * is passed too. This alleviates for the process of searching the
- * originating layer of the external event.
- */
-UA_StatusCode COPC_UA_Handler::registerNodeCallBack(UA_NodeId *paNodeId, forte::com_infra::CComLayer *paLayer){
-	UA_ValueCallback callback = {static_cast<void *>(paLayer), NULL, COPC_UA_Handler().getInstance().onWrite};
-	UA_StatusCode retVal = UA_Server_setVariableNode_valueCallback(mOPCUAServer, *paNodeId, callback);
+	UA_Variant_setScalarCopy(nodeValue, varValue, convert->type);
+	UA_StatusCode retVal = UA_Server_writeValue(mOPCUAServer, *nodeId, *nodeValue);
+	UA_delete(varValue, convert->type);
 	return retVal;
 }
 
+struct UA_NodeCallback_Handle {
+	forte::com_infra::CComLayer *comLayer;
+	const struct UA_TypeConvert* convert;
+	unsigned int portIndex;
+};
 
-void COPC_UA_Handler::onWrite(void *pa_pvCtx, __attribute__((unused)) const UA_NodeId nodeid, const UA_Variant *data, __attribute__((unused)) const UA_NumericRange *range){
+UA_StatusCode COPC_UA_Handler::registerNodeCallBack(const UA_NodeId *nodeId, forte::com_infra::CComLayer *comLayer, const struct UA_TypeConvert* convert,
+													unsigned int portIndex){
+	struct UA_NodeCallback_Handle handle = {
+		comLayer: comLayer,
+		convert: convert,
+		portIndex: portIndex
+	};
 
-	CComLayer *layer = static_cast<CComLayer *>(pa_pvCtx);
+	UA_ValueCallback callback = {static_cast<void *>(&handle), NULL, COPC_UA_Handler().getInstance().onWrite};
+	return UA_Server_setVariableNode_valueCallback(mOPCUAServer, *nodeId, callback);
+}
 
-	EComResponse retVal = layer->recvData(static_cast<const void *>(data), 0);	//TODO: add multidimensional data handling with 'range'.
+
+void COPC_UA_Handler::onWrite(void *handleRaw, const UA_NodeId nodeid, const UA_Variant *data, const UA_NumericRange *range){
+
+	struct UA_NodeCallback_Handle *handle = static_cast<struct UA_NodeCallback_Handle *>(handleRaw);
+
+	CComLayer *layer = handle->comLayer;
+
+	EComResponse retVal;
+
+	struct recvData_handle {
+		const struct UA_TypeConvert* convert;
+		unsigned int portIndex;
+		const UA_Variant *data;
+	} handleRecv;
+
+	handleRecv.data = data;
+	handleRecv.portIndex = handle->portIndex;
+	handleRecv.convert = handle->convert;
+
+	retVal = layer->recvData(static_cast<const void *>(&handleRecv), 0);	//TODO: add multidimensional data handling with 'range'.
 
 	/* Handle return of receive data */
 	if(e_ProcessDataOk == retVal){
@@ -472,151 +402,6 @@ void COPC_UA_Handler::onWrite(void *pa_pvCtx, __attribute__((unused)) const UA_N
 		getInstance().startNewEventChain(layer->getCommFB());
 	}
 
-}
-
-
-
-bool COPC_UA_Handler::readBackDataPoint(__attribute__((unused)) const UA_Variant *paValue, __attribute__((unused)) CIEC_ANY &paDataPoint){
-	bool retVal = true;
-/*
-	switch (paDataPoint.getDataTypeID()){
-	case CIEC_ANY::e_BOOL:
-		if(UA_TYPES_BOOLEAN == *(paValue->type)){
-			((CIEC_BOOL &) paDataPoint) = paValue->data;
-		}else{
-			retVal = false;
-		}
-		break;
-	case CIEC_ANY::e_SINT:
-		if(UA_TYPES_SBYTE == *(paValue->type)){
-			((CIEC_SINT &) paDataPoint) = (paValue->data);
-		}else{
-			retVal = false;
-		}
-		break;
-	case CIEC_ANY::e_INT:
-		if(UA_TYPES_INT16 == *(paValue->type)){
-			((CIEC_INT &) paDataPoint) = (paValue->data);
-		}else{
-			retVal = false;
-		}
-		break;
-	case CIEC_ANY::e_DINT:
-		if(UA_TYPES_INT32 == *(paValue->type)){
-			((CIEC_DINT &) paDataPoint) = (paValue->data);
-		}else{
-			retVal = false;
-		}
-		break;
-#ifdef FORTE_USE_64BIT_DATATYPES
-	case CIEC_ANY::e_LINT:
-		if(UA_TYPES_INT64 == *(paValue->type)){
-			((CIEC_LINT &) paDataPoint) = (paValue->data);
-		}else{
-			retVal = false;
-		}
-		break;
-#endif
-	case CIEC_ANY::e_USINT:
-		if(UA_TYPES_BYTE == *(paValue->type)){
-			((CIEC_USINT &) paDataPoint) = (paValue->data);
-		}else{
-			retVal = false;
-		}
-		break;
-	case CIEC_ANY::e_UINT:
-		if(UA_TYPES_UINT16 == *(paValue->type)){
-			((CIEC_UINT &) paDataPoint) = (paValue->data);
-		}else{
-			retVal = false;
-		}
-		break;
-	case CIEC_ANY::e_UDINT:
-		if(UA_TYPES_UINT32 == *(paValue->type)){
-			((CIEC_UDINT &) paDataPoint) = (paValue->data);
-		}else{
-			retVal = false;
-		}
-		break;
-#ifdef FORTE_USE_64BIT_DATATYPES
-	case CIEC_ANY::e_ULINT:
-		if(UA_TYPES_UINT64 == *(paValue->type)){
-			((CIEC_ULINT &) paDataPoint) = (paValue->data);
-		}else{
-			retVal = false;
-		}
-		break;
-#endif
-	case CIEC_ANY::e_BYTE:
-		if(UA_TYPES_BYTE == *(paValue->type)){
-			((CIEC_USINT &) paDataPoint) = (paValue->data);
-		}else{
-			retVal = false;
-		}
-		break;
-	case CIEC_ANY::e_WORD:
-		if(UA_TYPES_UINT16 == *(paValue->type)){
-			((CIEC_WORD &) paDataPoint) = (paValue->data);
-		}else{
-			retVal = false;
-		}
-		break;
-	case CIEC_ANY::e_DWORD:
-		if(UA_TYPES_UINT32 == *(paValue->type)){
-			((CIEC_USINT &) paDataPoint) = (paValue->data);
-		}else{
-			retVal = false;
-		}
-		break;
-#ifdef FORTE_USE_64BIT_DATATYPES
-	case CIEC_ANY::e_LWORD:
-		if(UA_TYPES_UINT64 == *(paValue->type)){
-			((CIEC_LWORD &) paDataPoint) = (paValue->data);
-		}else{
-			retVal = false;
-		}
-		break;
-#endif
-	case CIEC_ANY::e_REAL:
-		if(UA_TYPES_FLOAT == *(paValue->type)){
-			((CIEC_ANY_REAL &) paDataPoint) = (paValue->data);
-		}else{
-			retVal = false;
-		}
-		break;
-#ifdef FORTE_USE_64BIT_DATATYPES
-	case CIEC_ANY::e_LREAL:
-		if(UA_TYPES_DOUBLE == *(paValue->type)){
-			((CIEC_LREAL &) paDataPoint) = (paValue->data);
-		}else{
-			retVal = false;
-		}
-		break;
-#endif
-	case CIEC_ANY::e_STRING:
-		if(UA_TYPES_STRING == *(paValue->type)){
-			((CIEC_STRING &) paDataPoint) = (paValue->data);
-		}else{
-			retVal = false;
-		}
-		break;
-#ifdef FORTE_USE_64BIT_DATATYPES
-
-	case CIEC_ANY::e_WSTRING:
-		if(UA_TYPES_STRING == *(paValue->type)){
-		((CIEC_WSTRING &) paDataPoint) = (paValue->data);
-	}else{
-		retVal = false;
-	}
-	break;
-#endif
-	default:
-		//TODO handle other datatypes
-		retVal = false;
-		break;
-	}
-*/
-	return retVal;
 }
 
 

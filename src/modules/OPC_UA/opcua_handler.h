@@ -29,7 +29,7 @@
 #include <stdio.h>
 #include "../../arch/devlog.h"
 #include "comlayer.h"
-
+#include "opcua_helper.h"
 
 
 class COPC_UA_Handler : public CExternalEventHandler, public CThread{
@@ -43,13 +43,6 @@ public:
 	void disableHandler(void);
 	void setPriority(int pa_nPriority);
 	int getPriority(void) const;
-
-	/* OPC_UA Server interaction */
-	UA_Server * getServer(void);
-	UA_Client * getClient(void);
-
-	UA_StatusCode getFBNodeId(const CFunctionBlock *pCFB, UA_NodeId* returnFBNodeId);		// get function block (FB) NodeId
-	UA_StatusCode getSPNodeId(const CFunctionBlock *pCFB, SConnectionPoint& sourceRD, UA_NodeId* returnSPNodeId);		// get source point (SP) NodeId
 
 	/**
 	 * For a given connection SourcePoint between two 61499 FBs add a variable Node to the OPC_UA address space.
@@ -65,20 +58,24 @@ public:
 	 */
 	UA_StatusCode createUAVariableNode(const UA_NodeId *parentNode, const char* varName, const UA_DataType* varType, void* varValue, UA_NodeId * returnVarNodeId);	// create variable node from SourcePoint Node Id
 
-	UA_StatusCode createUAObjNode(const CFunctionBlock* pCFB, UA_NodeId * returnObjNodeId);	// create object node from Parent Function Block Node Id
-	//UA_StatusCode createUAMethodNode(const CFunctionBlock* pCFB, UA_NodeId * returnMethodNodeId);
-	//UA_StatusCode assembleUANodeId(char* NodeIdString, UA_NodeId *returnNodeId);
 
 	/* OPC_UA Handler interaction */
-	UA_StatusCode updateNodeValue(UA_NodeId * pNodeId, CIEC_ANY &paDataPoint);
-	bool readBackDataPoint(const UA_Variant *pstValue, CIEC_ANY &paDataPoint);
-	UA_StatusCode registerNodeCallBack(UA_NodeId *paNodeId, forte::com_infra::CComLayer *paLayer);
-	static void onWrite(void *h, const UA_NodeId nodeid, const UA_Variant *data,
-			const UA_NumericRange *range);
-	// void handleWriteNodeCallback();		// Value Callback on write UA_Variable Node
+	UA_StatusCode updateNodeValue(const UA_NodeId *nodeId, const CIEC_ANY *data, const UA_TypeConvert *convert);
 
-	static const int scmUADataTypeMapping[];
+	/**
+	 * Register a callback routine to a Node in the Address Space that is executed
+	 * on either write or read access on the node. A handle to the caller communication layer
+	 * is passed too. This alleviates for the process of searching the
+	 * originating layer of the external event.
+	 *
+	 * @param nodeId
+	 * @param comLayer
+	 * @param convert
+	 * @return
+	 */
+	UA_StatusCode registerNodeCallBack(const UA_NodeId *nodeId, forte::com_infra::CComLayer *comLayer, const struct UA_TypeConvert* convert, unsigned int portIndex);
 
+	static void onWrite(void *h, const UA_NodeId nodeid, const UA_Variant *data, const UA_NumericRange *range);
 
 	/**
 	 * Get the node id of the node which is represented by the given path.
@@ -113,8 +110,6 @@ private:
 
 	// implementation of thread.h virtual method start
 	virtual void run();
-
-	void registerNode();
 
 	CSyncObject getNodeForPathMutex;
 

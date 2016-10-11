@@ -28,28 +28,31 @@
 				T_C *dstType = static_cast<T_C*>(dst); \
 				*dstType = *(T_FORTE_T*)(src); \
 				return true; \
+			}, \
+			set: [](const void *src, CIEC_ANY *dst) { \
+				if (dst->getDataTypeID() != CIEC_ANY::e_BOOL) \
+					return false; \
+				CIEC_BOOL *dstType = static_cast<CIEC_BOOL*>(dst); \
+				*dstType = *(UA_Boolean*)(src); \
+				return true; \
 			} \
 		}; \
     } \
  )
 
+#define UA_String_to_char_alloc(str, chars) \
+ ( \
+	{ \
+		chars = static_cast<char*>(forte_malloc(str->length+1)); \
+		memcpy(chars, str->data, str->length); \
+		chars[str->length] = 0; \
+	} \
+ )
+
 std::map<CIEC_ANY::EDataTypeID, UA_TypeConvert> COPC_UA_Helper::getTypeMappingTypeId() {
 	std::map<CIEC_ANY::EDataTypeID, UA_TypeConvert> map;
 
-
-	map[CIEC_ANY::e_BOOL] = UA_TypeConvert {
-		type: &UA_TYPES[UA_TYPES_BOOLEAN],
-		get: [](const CIEC_ANY *src, void *dst) {
-			CIEC_ANY::EDataTypeID type = src->getDataTypeID();
-			if (src->getDataTypeID() != CIEC_ANY::e_BOOL)
-				return false;
-			UA_Boolean *dstType = static_cast<UA_Boolean*>(dst);
-			*dstType = *(CIEC_BOOL*)(src);
-			return true;
-		}
-	};
-
-	//MAP_INSERT_FORTE_TO_UA(CIEC_ANY::e_BOOL, CIEC_BOOL, &UA_TYPES[UA_TYPES_BOOLEAN], UA_Boolean);
+	MAP_INSERT_FORTE_TO_UA(CIEC_ANY::e_BOOL, CIEC_BOOL, &UA_TYPES[UA_TYPES_BOOLEAN], UA_Boolean);
 	MAP_INSERT_FORTE_TO_UA(CIEC_ANY::e_SINT, CIEC_SINT,  &UA_TYPES[UA_TYPES_SBYTE], UA_SByte);
 	MAP_INSERT_FORTE_TO_UA(CIEC_ANY::e_SINT, CIEC_SINT,  &UA_TYPES[UA_TYPES_SBYTE], UA_SByte);
 	MAP_INSERT_FORTE_TO_UA(CIEC_ANY::e_INT, CIEC_INT,  &UA_TYPES[UA_TYPES_INT16], UA_Int16);
@@ -72,6 +75,13 @@ std::map<CIEC_ANY::EDataTypeID, UA_TypeConvert> COPC_UA_Helper::getTypeMappingTy
 			UA_DateTime *dstType = static_cast<UA_DateTime*>(dst);
 			*dstType = DATE_TO_DT(*(CIEC_DATE*)(src));
 			return true;
+		},
+		set: [](const void *src, CIEC_ANY *dst) {
+			if (dst->getDataTypeID() != CIEC_ANY::e_DATE)
+				return false;
+			CIEC_DATE *dstType = static_cast<CIEC_DATE*>(dst);
+			*dstType = DT_TO_DATE(*(TForteUInt64*)((const UA_DateTime*)(src)));
+			return true;
 		}
 	};
 
@@ -81,6 +91,12 @@ std::map<CIEC_ANY::EDataTypeID, UA_TypeConvert> COPC_UA_Helper::getTypeMappingTy
 			if (src->getDataTypeID() != CIEC_ANY::e_TIME_OF_DAY)
 				return false;
 			//TODO how convert TOD to DT?
+			return false;
+		},
+		set: [](const __attribute__((unused)) void *src, CIEC_ANY *dst) {
+			if (dst->getDataTypeID() != CIEC_ANY::e_TIME_OF_DAY)
+				return false;
+			//TODO how convert UA_DateTime to TOD?
 			return false;
 		}
 	};
@@ -98,6 +114,18 @@ std::map<CIEC_ANY::EDataTypeID, UA_TypeConvert> COPC_UA_Helper::getTypeMappingTy
 				UA_String *dstType = static_cast<UA_String*>(dst);
 				*dstType = UA_String_fromChars(static_cast<const CIEC_STRING*>(src)->getValue());
 				return true;
+			},
+			set: [](const void *src, CIEC_ANY *dst) {
+				if (dst->getDataTypeID() != CIEC_ANY::e_STRING)
+					return false;
+				CIEC_STRING *dstType = static_cast<CIEC_STRING*>(dst);
+
+				const UA_String *str = static_cast<const UA_String*>(src);
+				char* chars;
+				UA_String_to_char_alloc(str, chars);
+				dstType->fromString(chars);
+				forte_free(chars);
+				return true;
 			}
 	};
 
@@ -109,6 +137,19 @@ std::map<CIEC_ANY::EDataTypeID, UA_TypeConvert> COPC_UA_Helper::getTypeMappingTy
 				UA_TypeConvert conv = COPC_UA_Helper::mapForteTypeIdToOpcUa.find(CIEC_ANY::e_STRING)->second;
 				CIEC_STRING str = WSTRING_TO_STRING(*static_cast<const CIEC_WSTRING*>(src));
 				return conv.get(&str, dst);
+			},
+			set: [](const void *src, CIEC_ANY *dst) {
+				if (dst->getDataTypeID() != CIEC_ANY::e_WSTRING)
+					return false;
+				CIEC_WSTRING *dstType = static_cast<CIEC_WSTRING*>(dst);
+
+				const UA_String *str = static_cast<const UA_String*>(src);
+				char* chars;
+				UA_String_to_char_alloc(str, chars);
+				dstType->fromString(chars);
+				forte_free(chars);
+
+				return true;
 			}
 	};
 

@@ -25,6 +25,7 @@
 #pragma GCC diagnostic pop
 #include "commfb.h"
 #include "../../arch/devlog.h"
+#include "opcua_helper.h"
 
 
 class COPC_UA_Layer : public forte::com_infra::CComLayer{
@@ -38,9 +39,16 @@ public:
 	forte::com_infra::EComResponse processInterrupt();
 
 private:
+
+	struct FB_NodeIds {
+		UA_NodeId *functionBlockId;
+		UA_NodeId *variableId;
+		const UA_TypeConvert *convert;
+	};
+
 	forte::com_infra::EComResponse openConnection(char * paLayerParameter);
 
-	forte::com_infra::EComResponse createPublishNodes(const CIEC_ANY *sdArray, unsigned int numSd);
+	forte::com_infra::EComResponse createPubSubNodes(struct FB_NodeIds **nodeIds, unsigned int numPorts, bool isPub);
 
 	forte::com_infra::EComResponse mInterruptResp;
 
@@ -54,10 +62,6 @@ private:
 
 
 	UA_NodeId *fbNodeId;
-	struct FB_NodeIds {
-		UA_NodeId *functionBlockId;
-		UA_NodeId *variableId;
-	};
 	struct FB_NodeIds *sendDataNodeIds;
 	struct FB_NodeIds *readDataNodeIds;
 };
