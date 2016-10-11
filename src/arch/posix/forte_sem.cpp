@@ -18,7 +18,7 @@ namespace forte {
   namespace arch {
 
     CPThreadSemaphore::CPThreadSemaphore(unsigned int paInitialValue){
-      if(-1 == sem_init(&mSemaphore, 0, 0)){
+      if(-1 == sem_init(&mSemaphore, 0, paInitialValue)){
         DEVLOG_ERROR("Could not initialize suspend sempaphore: %s\n", strerror(errno));
       }
     }

@@ -61,10 +61,6 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
 endif()
 
   
-  #forte_add_sourcefile_hcpp(thread pctimeha sync)
-  #forte_add_sourcefile_cpp(main.cpp)
-  #forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
 forte_test_add_sourcefile_cpp(../../src/core/stringdict.cpp)
 forte_test_add_sourcefile_cpp(stringdicttests.cpp)
 forte_test_add_sourcefile_cpp(typelibdatatypetests.cpp)

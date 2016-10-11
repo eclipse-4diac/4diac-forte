@@ -66,7 +66,7 @@ CTXThread::~CTXThread() {
 void CTXThread::setDeadline(const CIEC_TIME &pa_roVal) {
   int i;
   int ii;
-  m_oDeadLine = pa_roVal;
+  mDeadLine = pa_roVal;
   //first of all check if this thread is already in the list and remove it from the list
   for (i = 0; i < scm_nThreadListSize; i++) {
     if (0 == sm_aoThreadList[i])
@@ -83,7 +83,7 @@ void CTXThread::setDeadline(const CIEC_TIME &pa_roVal) {
       }
   }
 
-  if (0 == m_oDeadLine)
+  if (0 == mDeadLine)
     setPriority(scm_nThreadListSize + 2);
   else {
     for (i = 0; i < scm_nThreadListSize; i++) {
@@ -93,7 +93,7 @@ void CTXThread::setDeadline(const CIEC_TIME &pa_roVal) {
         break;
       }
       else
-        if (m_oDeadLine < sm_aoThreadList[i]->getDeadline()) {
+        if (mDeadLine < sm_aoThreadList[i]->getDeadline()) {
           CTXThread *poRBuf, *poSBuf = sm_aoThreadList[i];
           sm_aoThreadList[i] = this;
           setPriority(i + 2);

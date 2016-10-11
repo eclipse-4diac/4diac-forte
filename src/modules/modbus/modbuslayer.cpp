@@ -17,7 +17,7 @@
 using namespace forte::com_infra;
 
 CModbusComLayer::CModbusComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB) :
-    CComLayer(pa_poUpperLayer, pa_poComFB){
+    CComLayer(pa_poUpperLayer, pa_poComFB), m_pModbusConnection(0), m_unBufFillSize(0){
   m_eConnectionState = e_Disconnected;
 }
 
@@ -390,7 +390,7 @@ EComResponse CModbusComLayer::openConnection(char *pa_acLayerParameter){
           static_cast<CModbusClientConnection*>(m_pModbusConnection)->addNewPoll(commonParams.m_nPollFrequency, commonParams.m_nFuncCode, commonParams.m_nReadStartAddress[i], commonParams.m_nReadNrAddresses[i]);
         }
         for(unsigned int i = 0; i < commonParams.m_nNrSends; i++){
-          static_cast<CModbusClientConnection*>m_pModbusConnection)->addNewSend(commonParams.m_nSendStartAddress[i], commonParams.m_nSendNrAddresses[i]);
+          static_cast<CModbusClientConnection*>(m_pModbusConnection)->addNewSend(commonParams.m_nSendStartAddress[i], commonParams.m_nSendNrAddresses[i]);
         }
 
         if(m_pModbusConnection->connect() < 0){
@@ -414,6 +414,7 @@ EComResponse CModbusComLayer::openConnection(char *pa_acLayerParameter){
 
 int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_pTcpParams, SRtuParams* pa_pRtuParams, SCommonParams* pa_pCommonParams){
   char *params = new char[strlen(pa_acLayerParams) + 1];
+  char *paramsAddress =  params;
   strcpy(params, pa_acLayerParams);
   char *chrStorage;
 
@@ -421,8 +422,10 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
   pa_pRtuParams->m_acDevice[0] = '\0';
 
   chrStorage = strchr(params, ':');
-  if(chrStorage == 0)
+  if(chrStorage == 0){
+    delete[] paramsAddress;
     return -1;
+  }
   *chrStorage = '\0';
   ++chrStorage;
 
@@ -430,8 +433,10 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
     // get rtu params
     params = chrStorage;
     chrStorage = strchr(chrStorage, ':');
-    if(chrStorage == 0)
+    if(chrStorage == 0){
+      delete[] paramsAddress;
       return -1;
+    }
     *chrStorage = '\0';
     ++chrStorage;
 
@@ -439,42 +444,52 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
     pa_pRtuParams->m_nBaud = (int) forte::core::util::strtol(chrStorage, 0, 10);
 
     chrStorage = strchr(chrStorage, ':');
-    if(chrStorage == 0)
+    if(chrStorage == 0){
+      delete[] paramsAddress;
       return -1;
+    }
     *chrStorage = '\0';
     ++chrStorage;
 
     pa_pRtuParams->m_cParity = chrStorage[0];
 
     chrStorage = strchr(chrStorage, ':');
-    if(chrStorage == 0)
+    if(chrStorage == 0){
+      delete[] paramsAddress;
       return -1;
+    }
     *chrStorage = '\0';
     ++chrStorage;
 
     pa_pRtuParams->m_nDataBit = (int) forte::core::util::strtol(chrStorage, 0, 10);
 
     chrStorage = strchr(chrStorage, ':');
-    if(chrStorage == 0)
+    if(chrStorage == 0){
+      delete[] paramsAddress;
       return -1;
+    }
     *chrStorage = '\0';
     ++chrStorage;
 
     pa_pRtuParams->m_nStopBit = (int) forte::core::util::strtol(chrStorage, 0, 10);
 
     chrStorage = strchr(chrStorage, ':');
-    if(chrStorage == 0)
+    if(chrStorage == 0){
+      delete[] paramsAddress;
       return -1;
+    }
     *chrStorage = '\0';
     ++chrStorage;
   }
   else{
-    if(strcmp(params, "tcp") == 0 || strcmp(params, "tcp") == 0){
+    if(strcmp(params, "tcp") == 0 || strcmp(params, "TCP") == 0){
       params = chrStorage;
 
       chrStorage = strchr(chrStorage, ':');
-      if(chrStorage == 0)
+      if(chrStorage == 0){
+        delete[] paramsAddress;
         return -1;
+      }
       *chrStorage = '\0';
       ++chrStorage;
     }
@@ -484,12 +499,15 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
       pa_pTcpParams->m_nPort = (unsigned int) forte::core::util::strtoul(chrStorage, 0, 10);
 
       chrStorage = strchr(chrStorage, ':');
-      if(chrStorage == 0)
+      if(chrStorage == 0){
+        delete[] paramsAddress;
         return -1;
+      }
       *chrStorage = '\0';
       ++chrStorage;
     }
     else{
+      delete[] paramsAddress;
       return -1;
     }
   }
@@ -498,16 +516,20 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
   pa_pCommonParams->m_nPollFrequency = atol(chrStorage);
 
   chrStorage = strchr(chrStorage, ':');
-  if(chrStorage == 0)
+  if(chrStorage == 0){
+    delete[] paramsAddress;
     return -1;
+  }
   *chrStorage = '\0';
   ++chrStorage;
 
   pa_pCommonParams->m_nFuncCode = (unsigned int) forte::core::util::strtoul(chrStorage, 0, 10);
 
   chrStorage = strchr(chrStorage, ':');
-  if(chrStorage == 0)
+  if(chrStorage == 0){
+    delete[] paramsAddress;
     return -1;
+  }
   *chrStorage = '\0';
   ++chrStorage;
 
@@ -525,13 +547,16 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
     }
   }
   else{
+    delete[] paramsAddress;
     return -1;
   }
 
   char *readAddresses = chrStorage;
   chrStorage = strchr(chrStorage, ':');
-  if(chrStorage == 0)
+  if(chrStorage == 0){
+    delete[] paramsAddress;
     return -1;
+  }
   *chrStorage = '\0';
   ++chrStorage;
 
@@ -591,9 +616,12 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
     pa_pCommonParams->m_nByteTimeout = (unsigned int) forte::core::util::strtoul(chrStorage, 0, 10);
   } while(0);
 
-  if(nrPolls == 0 && nrSends == 0)
+  if(nrPolls == 0 && nrSends == 0){
+    delete[] paramsAddress;
     return -1;
+  }
 
+  delete[] paramsAddress;
   return 0;
 }
 
@@ -644,7 +672,7 @@ int CModbusComLayer::findNextStopAddress(const char* pa_acParam, int pa_nStartIn
 }
 
 bool CModbusComLayer::isIp(const char* pa_acIp){
-  char* str = new char[strlen(pa_acIp)];
+  char* str = new char[strlen(pa_acIp) + 1];
   strcpy(str, pa_acIp);
   char* pch;
   int nrPeriods = 0;
@@ -653,10 +681,12 @@ bool CModbusComLayer::isIp(const char* pa_acIp){
   while(pch != NULL){
     nrPeriods++;
     if(strlen(pch) > 3){
+      delete[] str;
       return false;
     }
     for(unsigned int i = 0; i < strlen(pch); i++){
       if(!forte::core::util::isDigit(pch[i])){
+        delete[] str;
         return false;
       }
     }
@@ -664,8 +694,10 @@ bool CModbusComLayer::isIp(const char* pa_acIp){
     pch = strtok(NULL, ".");
   }
   if(nrPeriods != 4){
+    delete[] str;
     return false;
   }
 
+  delete[] str;
   return true;
 }

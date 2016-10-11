@@ -499,6 +499,10 @@ class CFunctionBlock{
 
     void freeAllData();
 
+    bool getManagesFBData(){
+      return m_bManagesFBData;
+    }
+
     const SFBInterfaceSpec* m_pstInterfaceSpec; //!< Pointer to the interface specification
     CEventConnection *mEOConns; //!< A list of event connections pointers storing for each event output the event connection. If the output event is not connected the pointer is 0.
     TDataConnectionPtr *m_apoDIConns; //!< A list of data connections pointers storing for each data input the data connection. If the data input is not connected the pointer is 0.

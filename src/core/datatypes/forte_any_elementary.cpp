@@ -153,8 +153,6 @@ int CIEC_ANY_ELEMENTARY::toString(char* pa_acValue, unsigned int pa_nBufferSize)
 int CIEC_ANY_ELEMENTARY::fromString(const char *pa_pacValue){
   int nRetVal = -1;
   const char *pacRunner = pa_pacValue;
-  int nMultiplier = 10;
-  bool bSigned = true;
 
   if((0 == pa_pacValue) || ('\0' == *pa_pacValue)){
     return -1;
@@ -166,6 +164,8 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *pa_pacValue){
   }
   else{
     const char *acHashPos = strchr(pa_pacValue, '#');
+    int nMultiplier = 10;
+    bool bSigned = true;
     if((0 != acHashPos) && (!forte::core::util::isDigit(*pa_pacValue))){
       //if we have a hash and the first character is not a digit it has to be a type identifier
       nRetVal = checkTypeSpec(pa_pacValue, acHashPos);

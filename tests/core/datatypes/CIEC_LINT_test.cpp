@@ -65,7 +65,6 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 
 	//check cast operator
 	nTest = 0;
-	strcpy(cBuffer, "");
 
 	BOOST_CHECK_EQUAL(nTest.operator TForteInt64(), 0);
 
@@ -240,7 +239,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
     BOOST_CHECK_EQUAL(nTest.fromString("-9223372036854775810"), -1);
     BOOST_CHECK_EQUAL(nTest.fromString("-9223372036854775809"), -1);
     BOOST_CHECK_EQUAL(nTest.fromString("-9223372036854775808"), 20);
-    BOOST_CHECK_EQUAL(nTest, -9223372036854775808LL);
+    BOOST_CHECK_EQUAL(nTest, -9223372036854775807LL - 1LL);
     BOOST_CHECK_EQUAL(nTest.fromString("-9223372036854775807"), 20);
     BOOST_CHECK_EQUAL(nTest, -9223372036854775807LL);
     BOOST_CHECK_EQUAL(nTest.fromString("-9223372036854775806"), 20);

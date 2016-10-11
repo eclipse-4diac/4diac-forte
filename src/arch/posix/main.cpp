@@ -12,7 +12,7 @@
 #include <fortealloc.h>
 #include <stdio.h>
 #include <signal.h>
-#include <RMT_DEV.h>
+#include "../../stdfblib/ita/RMT_DEV.h"
 
 #ifdef CONFIG_POWERLINK_USERSTACK
 #include <EplWrapper.h>
@@ -58,7 +58,9 @@ void createDev(const char *pa_acMGRID){
 
   poDev->setMGR_ID(pa_acMGRID);
   poDev->startDevice();
+  DEVLOG_INFO("FORTE is up and running\n");
   poDev->MGR.getResourceEventExecution()->joinEventChainExecutionThread();
+  DEVLOG_INFO("FORTE finished\n");
   delete poDev;
 }
 
@@ -77,21 +79,6 @@ void listHelp(){
 int main(int argc, char *arg[]){
 
   checkEndianess();
-
-  DEVLOG_INFO("Memory size CFunctionBlock : %d \n", sizeof(CFunctionBlock));
-  DEVLOG_INFO("Memory size CDevice : %d \n", sizeof(CDevice));
-  DEVLOG_INFO("Memory size CResource : %d \n", sizeof(CResource));
-  DEVLOG_INFO("Memory size CConnection : %d \n", sizeof(CConnection));
-  DEVLOG_INFO("Memory size CDataConnection : %d \n", sizeof(CDataConnection));
-  DEVLOG_INFO("Memory size CEventConnection : %d \n", sizeof(CEventConnection));
-
-  DEVLOG_INFO("Memory size int : %d \n", sizeof(int));
-  DEVLOG_INFO("Memory size long : %d \n", sizeof(long));
-
-  DEVLOG_INFO("Memory size int8_t : %d \n", sizeof(int8_t));
-  DEVLOG_INFO("Memory size int16_t : %d \n", sizeof(int16_t));
-  DEVLOG_INFO("Memory size int32_t : %d \n", sizeof(int32_t));
-  DEVLOG_INFO("Memory size int64_t : %d \n", sizeof(int64_t));
 
   if(argc <= 1){ //! Default Value (localhost:61499)
     createDev("localhost:61499");

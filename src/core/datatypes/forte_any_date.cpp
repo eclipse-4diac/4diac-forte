@@ -71,5 +71,5 @@ struct tm *CIEC_ANY_DATE::getTimeStruct() const {
 }
 
 unsigned int CIEC_ANY_DATE::getMilliSeconds() const{
-  return getTUINT64() % 1000ULL;
+  return static_cast<unsigned int>(getTUINT64() % 1000ULL);
 }

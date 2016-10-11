@@ -45,7 +45,7 @@ RMT_RES::RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_
        CResource(pa_poDevice, &scm_stRESInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData){
   addFB(CTypeLib::createFB(g_nStringIdSTART, g_nStringIdE_RESTART, this));
   addFB(CTypeLib::createFB(g_nStringIdMGR_FF, g_nStringIdE_SR, this));
-  addFB(CTypeLib::createFB(g_nStringIdKERNEL, g_nStringIdDM_KRNL, this));
+  addFB(CTypeLib::createFB(g_nStringIdMGR, g_nStringIdDEV_MGR, this));
 
   forte::core::SManagementCMD command;
 
@@ -57,7 +57,7 @@ RMT_RES::RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_
 
   command.mFirstParam.clear();
   command.mFirstParam.pushBack(g_nStringIdSTART);
-  command.mFirstParam.pushBack(g_nStringIdWARM);
+  command.mFirstParam.pushBack(g_nStringIdwARM);
   command.mSecondParam.clear();
   command.mSecondParam.pushBack(g_nStringIdMGR_FF);
   command.mSecondParam.pushBack(g_nStringIdS);
@@ -75,7 +75,7 @@ RMT_RES::RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_
   command.mFirstParam.pushBack(g_nStringIdMGR_FF);
   command.mFirstParam.pushBack(g_nStringIdEO);
   command.mSecondParam.clear();
-  command.mSecondParam.pushBack(g_nStringIdKERNEL);
+  command.mSecondParam.pushBack(g_nStringIdMGR);
   command.mSecondParam.pushBack(g_nStringIdINIT);
   createConnection(command);
 
@@ -83,14 +83,14 @@ RMT_RES::RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_
   command.mFirstParam.pushBack(g_nStringIdMGR_FF);
   command.mFirstParam.pushBack(g_nStringIdQ);
   command.mSecondParam.clear();
-  command.mSecondParam.pushBack(g_nStringIdKERNEL);
+  command.mSecondParam.pushBack(g_nStringIdMGR);
   command.mSecondParam.pushBack(g_nStringIdQI);
   createConnection(command);
 
   command.mFirstParam.clear();
   command.mFirstParam.pushBack(g_nStringIdMGR_ID);
   command.mSecondParam.clear();
-  command.mSecondParam.pushBack(g_nStringIdKERNEL);
+  command.mSecondParam.pushBack(g_nStringIdMGR);
   command.mSecondParam.pushBack(g_nStringIdID);
   createConnection(command);
   

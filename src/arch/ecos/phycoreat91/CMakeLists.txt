@@ -25,8 +25,6 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Phycore AT91")
    forte_add_sourcefile_h(../gensockhand.h)
    forte_add_sourcefile_h(../sockhand.h)
   endif(FORTE_COM_ETH)
-
-  forte_add_include_directories(../${CMAKE_CURRENT_SOURCE_DIR})
   
   forte_add_definition("-Wpointer-arith -Wundef -Woverloaded-virtual -Wno-write-strings")
   forte_add_definition("-W -Wall -Wextra -D_KERNEL -D__ECOS -DFORTE_LITTLE_ENDIAN")

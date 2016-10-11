@@ -82,7 +82,7 @@ void GEN_APPEND_STRING::executeEvent(int pa_nEIID){
 					//get number of array elements
 					nArrayElements = (static_cast<CIEC_ARRAY*>(pDataInput))->size();
 					//number of required bytes (including brackets '[' ']' and ',' separators
-					nRequiredBytes = nArrayElements * scm_maxStringBufSize + nArrayElements + static_cast<TForteUInt16>(1);
+					nRequiredBytes = static_cast<TForteUInt16>(nArrayElements * scm_maxStringBufSize + nArrayElements + 1);
 				}
 				else{
 					//size for single data values
@@ -94,12 +94,12 @@ void GEN_APPEND_STRING::executeEvent(int pa_nEIID){
 					//if data has been written to pDataOutput and input_index does not refer to first input
 					//get length and number of free bytes (unused memory)
 					nCurrentLength = (static_cast<CIEC_STRING*>(pDataOutput))->length();
-					nBytesFree = (static_cast<CIEC_STRING*>(pDataOutput))->getCapacity() - nCurrentLength;	
+					nBytesFree = static_cast<TForteUInt16>((static_cast<CIEC_STRING*>(pDataOutput))->getCapacity() - nCurrentLength);
 
 					//if there is not enough free memory ==> reserve
 					if(nBytesFree < nRequiredBytes){
 						//reserve currentLength + extension Length
-						(static_cast<CIEC_STRING*>(pDataOutput))->reserve(nCurrentLength + nRequiredBytes);
+						(static_cast<CIEC_STRING*>(pDataOutput))->reserve(static_cast<TForteUInt16>(nCurrentLength + nRequiredBytes));
 					}
 				}
 				//if first data input or no data has yet been written
@@ -116,7 +116,7 @@ void GEN_APPEND_STRING::executeEvent(int pa_nEIID){
 					//use toString to write the Data (observe offset nCurrentLength)
 					nUsedBytes = pDataInput->toString(((static_cast<CIEC_STRING*>(pDataOutput))->getValue()) + nCurrentLength, nRequiredBytes);
 					//maintain the state of the output data value string
-					(static_cast<CIEC_STRING*>(pDataOutput))->assign((static_cast<CIEC_STRING*>(pDataOutput))->getValue(), nCurrentLength + nUsedBytes);
+					(static_cast<CIEC_STRING*>(pDataOutput))->assign((static_cast<CIEC_STRING*>(pDataOutput))->getValue(), static_cast<TForteUInt16>(nCurrentLength + nUsedBytes));
 				}
 			}
 		}
@@ -135,7 +135,7 @@ bool GEN_APPEND_STRING::configureFB(const char *pa_acConfigString){
 		++pcPos;
 		if('S' != *pcPos){
 			//we have an underscore and it is not the first underscore after E
-			m_nDInputs = forte::core::util::strtoul(pcPos,0,10);
+			m_nDInputs = static_cast<int>(forte::core::util::strtoul(pcPos,0,10));
 			DEVLOG_DEBUG("DIs: %d;\n", m_nDInputs);
 		}
 		else{
@@ -177,7 +177,7 @@ bool GEN_APPEND_STRING::configureFB(const char *pa_acConfigString){
 		}
 
 		//create the interface Specification
-		SFBInterfaceSpecforGenerics *pstInterfaceSpec = new SFBInterfaceSpecforGenerics(1, scm_anEventInputNames, m_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, m_nDInputs, m_anDataInputNames, m_anDataInputTypeIds, 1, scm_anDataOutputNames, scm_anDataOutputTypeIds);
+		SFBInterfaceSpecforGenerics *pstInterfaceSpec = new SFBInterfaceSpecforGenerics(static_cast<TForteUInt8>(1), scm_anEventInputNames, m_anEIWith, scm_anEIWithIndexes, static_cast<TForteUInt8>(1), scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, static_cast<TForteUInt8>(m_nDInputs), m_anDataInputNames, m_anDataInputTypeIds, static_cast<TForteUInt8>(1), scm_anDataOutputNames, scm_anDataOutputTypeIds);
 
 		TForteByte *acFBConnData = new TForteByte[genFBConnDataSize(pstInterfaceSpec->m_nNumEOs, pstInterfaceSpec->m_nNumDIs, pstInterfaceSpec->m_nNumDOs)];
 		TForteByte *acFBVarsData = new TForteByte[genFBVarsDataSize(pstInterfaceSpec->m_nNumDIs, pstInterfaceSpec->m_nNumDOs)];

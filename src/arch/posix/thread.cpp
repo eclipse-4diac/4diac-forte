@@ -102,7 +102,7 @@ CPosixThread::~CPosixThread(){
 }
 
 void CPosixThread::setDeadline(const CIEC_TIME &pa_roVal){
-  m_oDeadline = pa_roVal;
+  mDeadline = pa_roVal;
   //under the posix pthread implemention currently it makes no sense to set any priority.
   //It will not be considered.
 }

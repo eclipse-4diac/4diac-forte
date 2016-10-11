@@ -396,7 +396,8 @@ void CMonitoringHandler::readResourceWatches(CIEC_STRING &paResponse){
   }
 }
 
-void CMonitoringHandler::getResourceWatches(CIEC_STRING &paResponse, char paQualifier){
+void CMonitoringHandler::getResourceWatches(CIEC_STRING &paResponse, char){
+   //FIXME: char pa_cQualifier is avoided in order to compile without warnings. Work in the breakpoints is needed.
   if(!mFBMonitoringList.isEmpty()){
     paResponse.append("<Resource name=\"");
     paResponse.append(mResource.getInstanceName());

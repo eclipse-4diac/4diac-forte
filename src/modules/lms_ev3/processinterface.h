@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 fortiss GmbH
+ * Copyright (c) 2015, 2016 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Alois Zoitl - initial API and implementation and/or initial documentation
+ *    Jose Cabral - expansion of capabilities
  *******************************************************************************/
 
 #ifndef _PROCESSINTERFACE_H_
@@ -17,33 +18,91 @@
 #include <string>
 #include <fstream>
 
+struct st_ButtonVariables {
+    int nmbutton;
+    int nmFd;
+};
+
+enum ETypeOfIO {
+  UNDEFINED,
+  LED,
+  SENSOR,
+  SENSORW_VALUE,
+  SENSORW_MODE,
+  BUTTON,
+  MOTOR_ENABLE,
+  MOTOR_RESET,
+  MOTOR_PWM,
+  MOTOR_SPEED,
+  MOTOR_STOP,
+  MOTOR_POSITION,
+  MOTOR_ROT,
+};
+
 class CLMSEV3ProcessInterface : public CProcessInterfaceBase{
 
-public:
- CLMSEV3ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
-        const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
+  public:
+    CLMSEV3ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
     virtual ~CLMSEV3ProcessInterface();
 
-protected:
-  bool initialise(bool paInput);
-  bool deinitialise();
-  bool writePin();
-  bool readPin();
+  protected:
+    bool initialise(bool paIsInput);
+    bool deinitialise();
+    bool writePin();
+    bool readPin();
+    bool readWord();
+    bool writeWord();
+    bool readDWord();
+    bool writeDWord();
 
-private:
+  private:
 
-  static const std::string scmLEDId;
-  static const std::string scmSensorID;
+    static const std::string scmLEDID;
+    static const std::string scmSensorID;
+    static const std::string scmSensorWID;
+    static const std::string scmButtonID;
+    static const std::string scmMotorID;
 
-  static std::string getSensorBasePath(char paSensorPortNum);
+    static const std::string scmModeID; /* Used together wuth sensorw*/
 
-  std::vector<std::string> generateParameterList();
+    /* Used together with Motor */
+    static const std::string scmEnableID;
+    static const std::string scmResetID;
+    static const std::string scmPWMID;
+    static const std::string scmSPEEDID;
+    static const std::string scmStopID;
+    static const std::string scmPositionID;
+    static const std::string scmRotID;
 
-  bool setupLEDOutput(const std::vector<std::string> &paParamList);
-  bool setupSensor(const std::string &paParam);
+    static const char * const scmOK;
+    static const char * const scmNotInitialised;
+    static const char * const scmCouldNotRead;
+    static const char * const scmCouldNotWrite;
 
-  std::fstream mFile; //!< the file to be used for this process interface instance
 
+    bool setupLED(const std::vector<std::string> &paParamList, bool paIsInput);
+    bool setupSensor(const std::vector<std::string> &paParamList, bool paIsInput);
+    bool setupSensorW(const std::vector<std::string> &paParamList, bool paIsInput);
+    bool setupMotor(const std::vector<std::string> &paParamList, bool paIsInput);
+    bool setupButton(const std::string &paParam, bool paIsInput);
+
+    /**
+     * return: 0 if no error, 1 if it is not initialized, 2 if it couldn't read
+     */
+    int readNumberFromFile(TForteInt32* paResult);
+
+    bool setupSensorMode(const std::vector<std::string> &paParamList, bool paIsInput);
+    bool setupSensorValue(const std::vector<std::string> &paParamList);
+
+
+    std::vector<std::string> generateParameterList();
+    static int findNumberFromPort(const std::string &paBasePath, const std::string &paEv3Port);
+
+    std::fstream mFile; //!< the file to be used for this process interface instance
+    int mnTypeOfIO;
+    int mnNoOfBits;
+    struct st_ButtonVariables* mstButtonVariables;
+    std::vector<std::string> mModes;
 };
 
 //tell the IX and QX FB that this is the process interface to be used

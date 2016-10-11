@@ -40,35 +40,40 @@ CIEC_ANY_STRING& CIEC_ANY_STRING::operator =(const char* const pa_pacValue){
 }
 
 void CIEC_ANY_STRING::assign(const char *pa_poData, TForteUInt16 pa_nLen) {
-  if(0 != pa_nLen){
-    if (pa_poData != getValue()) {
-      reserve(pa_nLen);
-      memcpy(getValue(), pa_poData, pa_nLen);
+  if (0 != pa_poData){
+    if(0 != pa_nLen){
+      if(pa_poData != getValue()){
+        reserve(pa_nLen);
+        memcpy(getValue(), pa_poData, pa_nLen);
+      }
     }
-  }
-  if(0 != getValue()){
-    setLength(pa_nLen);
-		getValue()[pa_nLen] = '\0'; //not really necessary, but is a stop if someone forgets that this is not a textual string
+    if(0 != getValue()){
+      setLength(pa_nLen);
+      getValue()[pa_nLen] = '\0'; //not really necessary, but is a stop if someone forgets that this is not a textual string
+    }
   }
 }
 
 void CIEC_ANY_STRING::append(const char *pa_poData) {
-  append(pa_poData, static_cast<TForteUInt16>(strlen(pa_poData)));
+  if (0 != pa_poData){
+    append(pa_poData, static_cast<TForteUInt16>(strlen(pa_poData)));
+  }
 }
 
 void CIEC_ANY_STRING::append(const char *pa_poData, TForteUInt16 pa_nLen) {
-  TForteUInt16 nLen = length();
-  if(0 != pa_nLen){
-    if ((getCapacity() - nLen) < pa_nLen) {
-      reserve(static_cast<TForteUInt16>(nLen + pa_nLen));
-    }
-    if(0 != getValue()){
+  if (0 != pa_poData){
+    TForteUInt16 nLen = length();
+    if(0 != pa_nLen){
+      if((getCapacity() - nLen) < pa_nLen){
+        reserve(static_cast<TForteUInt16>(nLen + pa_nLen));
+      }
+      if(0 != getValue()){
         memcpy(getValue() + nLen, pa_poData, pa_nLen);
         setLength(static_cast<TForteUInt16>(nLen + pa_nLen));
         getValue()[nLen + pa_nLen] = '\0'; //not really necessary, but is a stop if someone forgets that this is not a textual string
       }
+    }
   }
-
 }
 
 void CIEC_ANY_STRING::reserve(TForteUInt16 pa_nRequestedSize){
@@ -207,18 +212,18 @@ bool CIEC_ANY_STRING::parseEscapedHexNum(const char **pa_pacValue, bool pa_bWide
   if (forte::core::util::isHexDigit((*pa_pacValue)[0])){
     pa_rnValue = static_cast<TForteUInt16>(forte::core::util::charHexDigitToInt((*pa_pacValue)[0]) << 4);
     if (forte::core::util::isHexDigit((*pa_pacValue)[1])){
-      pa_rnValue |= forte::core::util::charHexDigitToInt((*pa_pacValue)[1]);
+      pa_rnValue = TForteUInt16(pa_rnValue | forte::core::util::charHexDigitToInt((*pa_pacValue)[1])); //operator | promotes operator uint16_t to int.
 
       if (pa_bWide) {
-        pa_rnValue <<= 8;
+        pa_rnValue = TForteUInt16(pa_rnValue << 8);
 
         if (forte::core::util::isHexDigit((*pa_pacValue)[2]))
-          pa_rnValue |= forte::core::util::charHexDigitToInt((*pa_pacValue)[2]) << 4;
+          pa_rnValue = TForteUInt16(pa_rnValue | forte::core::util::charHexDigitToInt((*pa_pacValue)[2]) << 4);
         else
           return false;
 
         if (forte::core::util::isHexDigit((*pa_pacValue)[3]))
-          pa_rnValue |= forte::core::util::charHexDigitToInt((*pa_pacValue)[3]);
+          pa_rnValue = TForteUInt16(pa_rnValue | forte::core::util::charHexDigitToInt((*pa_pacValue)[3]));
         else
           return false;
       }

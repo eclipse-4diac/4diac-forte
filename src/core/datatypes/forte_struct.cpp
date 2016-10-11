@@ -208,14 +208,13 @@ int CIEC_STRUCT::toString(char* pa_acValue, unsigned int pa_nBufferSize) const{
     pa_acValue++;
     pa_nBufferSize--;
     nBytesUsed = 1;
-    int nUsedBytesByElement;
     TForteUInt16 unSize = getStructSize();
     const CStringDictionary::TStringId *punMemberNameIds = elementNames();
     const CIEC_ANY *poMembers = getMembers();
 
     for(unsigned int i = 0; i < unSize; ++i, ++poMembers, ++punMemberNameIds){
       const char *acMemberName = CStringDictionary::getInstance().get(*punMemberNameIds);
-
+      int nUsedBytesByElement;
       if(strlen(acMemberName) + 2 > pa_nBufferSize){
         return -1;
       }
@@ -226,8 +225,8 @@ int CIEC_STRUCT::toString(char* pa_acValue, unsigned int pa_nBufferSize) const{
       pa_acValue++;
       *pa_acValue = '=';
       pa_acValue++;
-      pa_nBufferSize -= (strlen(acMemberName) + 2);
-      nBytesUsed += (strlen(acMemberName) + 2);
+      pa_nBufferSize -= static_cast<unsigned int>(strlen(acMemberName) + 2);
+      nBytesUsed += static_cast<int>(strlen(acMemberName) + 2);
 
       nUsedBytesByElement = poMembers->toString(pa_acValue, pa_nBufferSize);
       if(-1 == nUsedBytesByElement){

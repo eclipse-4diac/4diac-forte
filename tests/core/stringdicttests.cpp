@@ -20,9 +20,8 @@
 #include <list>
 #include <stdio.h>
 
-#ifndef _WIN32
-  //somehow required here
-  const CStringDictionary::TStringId CStringDictionary::scm_nInvalidStringId;
+#ifndef _MSC_VER //somehow required here, because visual studio gives a linker error
+const CStringDictionary::TStringId CStringDictionary::scm_nInvalidStringId;
 #endif
 
 BOOST_AUTO_TEST_SUITE(StringDictTests)

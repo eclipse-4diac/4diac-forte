@@ -12,8 +12,8 @@
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "EC_STOP_ELEM_gen.cpp"
 #endif
-#include "DEV_MGR.h"
-#include "core/device.h"
+#include "../../stdfblib/ita/DEV_MGR.h"
+#include <device.h>
 
 DEFINE_FIRMWARE_FB(FORTE_EC_STOP_ELEM, g_nStringIdEC_STOP_ELEM)
 

@@ -27,8 +27,6 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
    forte_add_sourcefile_h(sockhand.h)
   endif(FORTE_COM_ETH)
 
-  forte_add_include_directories(../${CMAKE_CURRENT_SOURCE_DIR})
-  forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
   #forte_add_link_library(pthread)
 
   forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -DFORTE_LITTLE_ENDIAN -ggdb")

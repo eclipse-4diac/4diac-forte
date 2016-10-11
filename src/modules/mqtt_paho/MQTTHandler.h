@@ -67,7 +67,7 @@ private:
     static MQTTClient client;
     static MQTTClient_connectOptions clientConnectionOptions;
 
-    CSinglyLinkedList<MQTTComLayer*> layers;
+    CSinglyLinkedList<MQTTComLayer*> mlayers;
 
 
 };

@@ -27,7 +27,7 @@ int CIEC_STRING::fromString(const char *pa_pacValue){
       nSrcCappedLength -= 7;
     }
 
-    if (nSrcLen > scm_unMaxStringLen)
+    if (static_cast<unsigned int>(nSrcLen) > scm_unMaxStringLen)
       nSrcCappedLength = scm_unMaxStringLen;
 
 
@@ -74,7 +74,7 @@ int CIEC_STRING::toString(char* pa_acValue, unsigned int pa_nBufferSize) const {
 int CIEC_STRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescape) {
   unsigned int nMaxWidth;
 
-  int nSrcLen = pa_nLen >= 0 ? pa_nLen : (pa_bUnescape ? determineEscapedStringLength(pa_pacValue, '\'') : strlen(pa_pacValue));
+  int nSrcLen = pa_nLen >= 0 ? pa_nLen : (pa_bUnescape ? determineEscapedStringLength(pa_pacValue, '\'') : static_cast<int>(strlen(pa_pacValue)));
   int nSrcCappedLength = nSrcLen;
 
   if(0 <= nSrcLen){

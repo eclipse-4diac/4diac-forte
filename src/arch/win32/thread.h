@@ -17,7 +17,6 @@
 #include <windows.h>
 #include "./threadbase.h"
 #include "../datatype.h"
-#include "../../core/datatypes/forte_time.h"
 
 
 /**  \ingroup FORTE-HAL 
@@ -49,9 +48,6 @@ class CWin32Thread : public forte::arch::CThreadBase{
     //!Set the deadline of the thread.
     void setDeadline(const CIEC_TIME &m_roVal);
 
-    //!Get the current deadline of the thread.
-    const CIEC_TIME &getDeadline(void) const;
-
     /*! \brief starts the Thread
      *
      *  By calling this method the execution in the run()-Method will be started. If necessary additional data
@@ -72,9 +68,6 @@ class CWin32Thread : public forte::arch::CThreadBase{
 
 
   private:
-    //!deadline the thread needs to be finish its execution. 0 means unconstrained.
-    CIEC_TIME m_oDeadline;
-
     /*! \brief data needed for win32 scheduling system to identify the thread.
      */
     HANDLE m_nThreadHandle;

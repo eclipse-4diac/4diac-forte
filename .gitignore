@@ -1,5 +1,2 @@
 /Debug/
-bin/
-.gitmodules
-src/modules/OPC_UA/open62541/
-
+/bin/
