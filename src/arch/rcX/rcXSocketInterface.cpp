@@ -17,7 +17,7 @@
 
 DEFINE_SINGLETON(CrcXSocketInterface);
 
-CrcXSocketInterface::CrcXSocketInterface(){ //this function is not implemented as we don't want instances of this class
+CrcXSocketInterface::CrcXSocketInterface(){
 
   RX_RESULT eRslt;
 
@@ -135,7 +135,6 @@ CrcXSocketInterface::TSocketDescriptor CrcXSocketInterface::openConnection(char 
           if(!isServer){
             m_ptDestAddr->destPort = cnfPacket->tData.ulPort;
             m_ptDestAddr->destAddress = cnfPacket->tData.ulIpAddr;
-            m_ptDestAddr->socketHandler = cnfPacket->tHead.ulDestId;
           }
           nRetVal = cnfPacket->tHead.ulDestId;
         }
@@ -200,13 +199,12 @@ CrcXSocketInterface::TSocketDescriptor CrcXSocketInterface::openConnection(char 
 }
 
 TForteUInt32 CrcXSocketInterface::stringIpToInt(char* pa_ipString){
-
   TForteUInt32 result = 0;
   char* currentCharacter;
   int currentNumber = 0;
   int ipNumberCounter = 0;
-
   currentCharacter = pa_ipString;
+
   while (1) {
     if('0' <= *currentCharacter && '9' >= *currentCharacter){
       currentNumber *= 10;
@@ -278,31 +276,92 @@ CrcXSocketInterface::FORTE_TCP_PACKET_T* CrcXSocketInterface::waitPacket(UINT32 
   return ptPck;
 }
 
-CrcXSocketInterface::TSocketDescriptor CrcXSocketInterface::acceptTCPConnection(
-    TSocketDescriptor pa_nListeningSockD){
-  //struct sockaddr client_addr;
-  TSocketDescriptor nRetVal;
-  //TODO: Implement
+int CrcXSocketInterface::sendData(TSocketDescriptor pa_nSockD, char* pa_pcData,
+    unsigned int pa_unSize, bool pa_isTCP, TUDPDestAddr *pa_ptDestAddr, void* pa_PacketData){
+
+  int nRetVal = 0;
+  //Set not changing variables in the data
+  if (pa_isTCP){
+    ((TCPIP_DATA_TCP_CMD_SEND_REQ_T*)pa_PacketData)->ulOptions = 0; /* TCP_SEND_OPT_PUSH(0x00000001) Push flag: If set, the stack send the data immediate*/
+  }else{
+    ((TCPIP_DATA_UDP_CMD_SEND_REQ_T*)pa_PacketData)->ulIpAddr = pa_ptDestAddr->destAddress;
+    ((TCPIP_DATA_UDP_CMD_SEND_REQ_T*)pa_PacketData)->ulPort = pa_ptDestAddr->destPort;
+  }
+
+  while(0 != pa_unSize){
+    bool sendResult;
+    if(pa_isTCP){
+      nRetVal = (pa_unSize > 1460) ? 1460 : pa_unSize;
+      TLR_MEMCPY(pa_pcData, &(((TCPIP_DATA_TCP_CMD_SEND_REQ_T*)pa_PacketData)->abData[0]), nRetVal);
+      sendResult = sendPacketToTCP(pa_nSockD, TCPIP_DATA_TCP_CMD_SEND_REQ_SIZE + nRetVal, TCPIP_TCP_CMD_SEND_REQ, &pa_PacketData, sizeof(UINT32) + nRetVal);
+    }
+    else{
+      nRetVal = (pa_unSize > 1472) ? 1472 : pa_unSize;
+      TLR_MEMCPY(pa_pcData, &(((TCPIP_DATA_UDP_CMD_SEND_REQ_T*)pa_PacketData)->abData[0]), nRetVal);
+      sendResult = sendPacketToTCP(pa_nSockD, TCPIP_DATA_UDP_CMD_SEND_REQ_SIZE + nRetVal, TCPIP_UDP_CMD_SEND_REQ, &pa_PacketData, sizeof(UINT32) * 3 + nRetVal);
+    }
+
+    if(sendResult){
+      FORTE_TCP_PACKET_T* cnfPacket = (FORTE_TCP_PACKET_T*) waitPacket((pa_isTCP) ? TCPIP_TCP_CMD_SEND_CNF : TCPIP_UDP_CMD_SEND_CNF);
+      if(0 != cnfPacket){
+        if(RX_OK != cnfPacket->tHead.ulSta){
+          //error sending packet
+          nRetVal = 1;
+        }
+        else{
+
+        }
+        TLR_POOL_PACKET_RELEASE(forteResources.fortePoolHandle, cnfPacket);
+      }
+      else{
+        //packet didn't arrive?
+        nRetVal = -1;
+      }
+    }
+    else{
+      //error sending packet
+      nRetVal = -1;
+    }
+    if(nRetVal <= 0){
+      DEVLOG_ERROR("TCP-Socket Send failed: %s\n", strerror(errno));
+      break;
+    }
+    pa_unSize -= nRetVal;
+    pa_pcData += nRetVal;
+  }
+
   return nRetVal;
 }
 
 int CrcXSocketInterface::sendDataOnTCP(TSocketDescriptor pa_nSockD, char* pa_pcData,
     unsigned int pa_unSize){
-  //TODO: Implement
-  // This function sends all data in the buffer before it returns!
-  int nToSend = pa_unSize;
-  int nRetVal = 0;
-
-  while(0 < nToSend){
-    //TODO: check if open connection (socket might be closed by peer)
-   // nRetVal = static_cast<int>(send(pa_nSockD, pa_pcData, nToSend, 0));
-    if(nRetVal <= 0){
-      DEVLOG_ERROR("TCP-Socket Send failed: %s\n", strerror(errno));
-      break;
-    }
-    nToSend -= nRetVal;
-    pa_pcData += nRetVal;
+  if(CrcXSocketInterface::getInstance().isInitialized()){
+    TCPIP_DATA_TCP_CMD_SEND_REQ_T tData;
+    return CrcXSocketInterface::getInstance().sendData(pa_nSockD, pa_pcData, pa_unSize, true, 0, &tData);
   }
+  else{
+    DEVLOG_ERROR("CrcXSocketInterface is not initialized\n");
+    return -1;
+  }
+}
+
+int CrcXSocketInterface::sendDataOnUDP(TSocketDescriptor pa_nSockD, TUDPDestAddr *pa_ptDestAddr,
+    char* pa_pcData, unsigned int pa_unSize){
+  if(CrcXSocketInterface::getInstance().isInitialized()){
+    TCPIP_DATA_UDP_CMD_SEND_REQ_T tData;
+    return CrcXSocketInterface::getInstance().sendData(pa_nSockD, pa_pcData, pa_unSize, false, pa_ptDestAddr, &tData);
+  }
+  else{
+    DEVLOG_ERROR("CrcXSocketInterface is not initialized\n");
+    return -1;
+  }
+}
+
+CrcXSocketInterface::TSocketDescriptor CrcXSocketInterface::acceptTCPConnection(
+    TSocketDescriptor pa_nListeningSockD){
+  //struct sockaddr client_addr;
+  TSocketDescriptor nRetVal;
+  //TODO: Implement
   return nRetVal;
 }
 
@@ -312,27 +371,6 @@ int CrcXSocketInterface::receiveDataFromTCP(TSocketDescriptor pa_nSockD, char* p
   do{
    // nRetVal = static_cast<int>(recv(pa_nSockD, pa_pcData, pa_unBufSize, 0));
   } while((-1 == nRetVal) /*&& (EINTR == errno)*/); // recv got interrupt / recieving again
-  return nRetVal;
-}
-
-int CrcXSocketInterface::sendDataOnUDP(TSocketDescriptor pa_nSockD, TUDPDestAddr *pa_ptDestAddr,
-    char* pa_pcData, unsigned int pa_unSize){
-  // This function sends all data in the buffer before it returns!
-  //TODO: Implement
-  int nToSend = pa_unSize;
-  int nRetVal = 0;
-
-  while(0 < nToSend){
-    //TODO: check if open connection (socket might be closed by peer)
-    //nRetVal = static_cast<int>(
-      //  sendto(pa_nSockD, pa_pcData, nToSend, 0, (struct sockaddr *) pa_ptDestAddr, sizeof(struct sockaddr)));
-    if(nRetVal <= 0){
-      DEVLOG_ERROR("CrcXSocketInterface: UDP-Socket Send failed: %s\n", strerror(errno));
-      break;
-    }
-    nToSend -= nRetVal;
-    pa_pcData += nRetVal;
-  }
   return nRetVal;
 }
 
@@ -347,6 +385,3 @@ int CrcXSocketInterface::receiveDataFromUDP(TSocketDescriptor pa_nSockD, char* p
   }
   return nRetVal;
 }
-
-
-

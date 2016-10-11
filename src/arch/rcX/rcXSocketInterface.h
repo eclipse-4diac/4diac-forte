@@ -31,7 +31,6 @@ class CrcXSocketInterface{
   public:
     typedef UINT32 TSocketDescriptor;
     typedef struct udpAdressStruct{
-    	TSocketDescriptor socketHandler;
         UINT32  destPort;
         UINT32  destAddress;
     }TUDPDestAddr;
@@ -78,6 +77,7 @@ class CrcXSocketInterface{
     }FORTE_TCP_PACKET_T;
 
     TSocketDescriptor openConnection(char *pa_acIPAddr, unsigned short pa_nPort, bool isTCP, bool isServer, TUDPDestAddr *m_ptDestAddr);
+    int sendData(TSocketDescriptor pa_nSockD, char* pa_pcData, unsigned int pa_unSize, bool pa_isTCP, TUDPDestAddr *pa_ptDestAddr, void* pa_PacketData);
     TForteUInt32 stringIpToInt(char* pa_ipString);
     bool sendPacketToTCP(UINT32 pa_destId, UINT32 pa_ulLen, UINT32 pa_ulCmd, void* pa_tData, UINT32 pa_dataLength);
     FORTE_TCP_PACKET_T* waitPacket(UINT32 pa_command);
