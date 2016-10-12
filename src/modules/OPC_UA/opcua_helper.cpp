@@ -30,10 +30,10 @@
 				return true; \
 			}, \
 			set: [](const void *src, CIEC_ANY *dst) { \
-				if (dst->getDataTypeID() != CIEC_ANY::e_BOOL) \
+				if (dst->getDataTypeID() != T_FORTE_E) \
 					return false; \
-				CIEC_BOOL *dstType = static_cast<CIEC_BOOL*>(dst); \
-				*dstType = *(UA_Boolean*)(src); \
+				T_FORTE_T *dstType = static_cast<T_FORTE_T*>(dst); \
+				*dstType = *(T_C*)(src); \
 				return true; \
 			} \
 		}; \

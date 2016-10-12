@@ -34,7 +34,7 @@ void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
 	m_server_config.networkLayers = &m_server_networklayer;
 }
 
-COPC_UA_Handler::COPC_UA_Handler() : m_server_config(), m_server_networklayer(), getNodeForPathMutex(){
+COPC_UA_Handler::COPC_UA_Handler() : m_server_config(), m_server_networklayer(), getNodeForPathMutex(), nodeCallbackHandles(){
 	configureUAServer(FORTE_COM_OPC_UA_PORT); 	// configure a standard server
 	mOPCUAServer = UA_Server_new(m_server_config);
 
@@ -49,11 +49,12 @@ COPC_UA_Handler::~COPC_UA_Handler() {
 	stopServerRunning();
 	UA_Server_delete(mOPCUAServer);
 	m_server_networklayer.deleteMembers(&m_server_networklayer);
+	nodeCallbackHandles.clearAll();
 }
 
 void COPC_UA_Handler::run(){
 	UA_StatusCode retVal = UA_Server_run(mOPCUAServer, mbServerRunning);	// server keeps iterating as long as running is true;
-	DEVLOG_INFO("UA_Server run status code %s", retVal);
+	DEVLOG_INFO("UA_Server run status code 0x%08x", retVal);
 }
 
 void COPC_UA_Handler::enableHandler(void){
@@ -354,26 +355,25 @@ UA_StatusCode COPC_UA_Handler::updateNodeValue(const UA_NodeId *nodeId, const CI
 	return retVal;
 }
 
-struct UA_NodeCallback_Handle {
-	forte::com_infra::CComLayer *comLayer;
-	const struct UA_TypeConvert* convert;
-	unsigned int portIndex;
-};
+
 
 UA_StatusCode COPC_UA_Handler::registerNodeCallBack(const UA_NodeId *nodeId, forte::com_infra::CComLayer *comLayer, const struct UA_TypeConvert* convert,
 													unsigned int portIndex){
-	struct UA_NodeCallback_Handle handle = {
-		comLayer: comLayer,
-		convert: convert,
-		portIndex: portIndex
-	};
+	// needs new, otherwise it will be removed as soon as registerNodecallBack exits, and thus handle is not valid in the callback
+	struct UA_NodeCallback_Handle *handle = static_cast<struct UA_NodeCallback_Handle*>(forte_malloc(sizeof(struct UA_NodeCallback_Handle)));
 
-	UA_ValueCallback callback = {static_cast<void *>(&handle), NULL, COPC_UA_Handler().getInstance().onWrite};
+	handle->convert = convert;
+	handle->comLayer = comLayer;
+	handle->portIndex = portIndex;
+	// store it in the list so we can delete it to avoid mem leaks
+	nodeCallbackHandles.push_back(handle);
+
+	UA_ValueCallback callback = {static_cast<void *>(handle), NULL, COPC_UA_Handler::getInstance().onWrite};
 	return UA_Server_setVariableNode_valueCallback(mOPCUAServer, *nodeId, callback);
 }
 
 
-void COPC_UA_Handler::onWrite(void *handleRaw, const UA_NodeId nodeid, const UA_Variant *data, const UA_NumericRange *range){
+void COPC_UA_Handler::onWrite(void *handleRaw, __attribute__((unused)) const UA_NodeId nodeid, const UA_Variant *data, __attribute__((unused)) const UA_NumericRange *range){
 
 	struct UA_NodeCallback_Handle *handle = static_cast<struct UA_NodeCallback_Handle *>(handleRaw);
 

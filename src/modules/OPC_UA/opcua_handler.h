@@ -32,6 +32,12 @@
 #include "opcua_helper.h"
 
 
+struct UA_NodeCallback_Handle {
+	forte::com_infra::CComLayer *comLayer;
+	const struct UA_TypeConvert* convert;
+	unsigned int portIndex;
+};
+
 class COPC_UA_Handler : public CExternalEventHandler, public CThread{
 	DECLARE_SINGLETON(COPC_UA_Handler);
 
@@ -112,6 +118,9 @@ private:
 	virtual void run();
 
 	CSyncObject getNodeForPathMutex;
+
+
+	CSinglyLinkedList<struct UA_NodeCallback_Handle *> nodeCallbackHandles;
 
 
 };

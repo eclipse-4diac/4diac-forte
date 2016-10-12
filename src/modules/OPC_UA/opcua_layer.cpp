@@ -80,23 +80,30 @@ EComResponse COPC_UA_Layer::openConnection(char * paLayerParameter){
 			return this->createPubSubNodes(&this->sendDataNodeIds, getCommFB()->getNumSD(), true);
 		case e_Subscriber:
 			return this->createPubSubNodes(&this->readDataNodeIds, getCommFB()->getNumRD(), false);
-		case e_Server:
-			/*
+		/*case e_Server:
+
 			int numData = getCommFB()->getNumSD();
 			CIEC_ANY* dataArray = getCommFB()->getSDs();
 			int numData = getCommFB()->getNumRD();
 			CIEC_ANY* dataArray = getCommFB()->getRDs();
-			*/
+
 			for(int i = 0; i<2; i++){
 				//COPC_UA_Handler::getInstance().updateNodeValue(m_apUANodeId[1], dataArray[1]);
 			}
-			break;
+			break;*/
 		default:
 			DEVLOG_WARNING("Invalid Comm Service Type for Function Block\n");
 	}
 	return e_InitOk;
 }
 
+/**
+ * This method is required to inline initialize the connection point.
+ */
+static const SConnectionPoint& getFirstListEntry(const CSinglyLinkedList<SConnectionPoint> &list) {
+	CSinglyLinkedList<SConnectionPoint>::Iterator it = list.begin();
+	return *it;
+}
 
 forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeIds **nodeIds, unsigned int numPorts, bool isPub) {
 	if (*nodeIds != nullptr) {
@@ -124,13 +131,9 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
 		DEVLOG_INFO("Processing %s signal %s at port %i.\n",isPub ? "publish" : "subscribe", portName, portId);
 
 		const CDataConnection* portConnection = isPub ? getCommFB()->getDIConnection(portNameId) : getCommFB()->getDOConnection(portNameId);
-
-
-		//TODO for now we assume that the connection only has one destination. Needs fix!
-
-		if (!isPub && portConnection->getDestinationList().isEmpty()) {
-			DEVLOG_ERROR("Subscriber does not have any connection.");
-			for (unsigned int j = 0; j <= i; j++) {
+		if (portConnection == nullptr) {
+			DEVLOG_ERROR("Got invalid port connection at port %d", portId);
+			for (unsigned int j = 0; j < i; j++) {
 				if ((*nodeIds)[j].functionBlockId != nullptr)
 					UA_NodeId_delete((*nodeIds)[j].functionBlockId);
 				if ((*nodeIds)[j].functionBlockId != nullptr)
@@ -141,9 +144,24 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
 			return e_InitInvalidId;
 		}
 
-		CSinglyLinkedList<SConnectionPoint>::Iterator it = portConnection->getDestinationList().begin();
 
-		const SConnectionPoint& sourceConnectionPoint(isPub ? portConnection->getSourceId() : *it);
+		//TODO for now we assume that the connection only has one destination. Needs fix!
+
+		if (!isPub && portConnection->getDestinationList().isEmpty()) {
+			DEVLOG_ERROR("Subscriber does not have any connection.");
+			for (unsigned int j = 0; j < i; j++) {
+				if ((*nodeIds)[j].functionBlockId != nullptr)
+					UA_NodeId_delete((*nodeIds)[j].functionBlockId);
+				if ((*nodeIds)[j].functionBlockId != nullptr)
+					UA_NodeId_delete((*nodeIds)[j].variableId);
+			}
+			forte_free((*nodeIds));
+			(*nodeIds) = nullptr;
+			return e_InitInvalidId;
+		}
+
+
+		const SConnectionPoint& sourceConnectionPoint(isPub ? portConnection->getSourceId() : getFirstListEntry(portConnection->getDestinationList()));
 
 
 		const CFunctionBlock* sourceFB = sourceConnectionPoint.mFB;    // pointer to Signals Source Function Block
@@ -192,7 +210,6 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
 						COPC_UA_Handler::getInstance().registerNodeCallBack((*nodeIds)[i].variableId, this, conv, i);
 					}
 				}
-
 			} // else if retVal = UA_STATUSCODE_GOOD the node already exists
 		}
 
@@ -248,10 +265,11 @@ EComResponse COPC_UA_Layer::recvData(const void * pa_pvData, __attribute__((unus
 		//TODO handle pure event subscription
 		mInterruptResp = e_ProcessDataOk;
 	}else{
-
 		if(UA_Variant_isScalar(handleRecv->data) && handleRecv->data->type == handleRecv->convert->type && handleRecv->data->data) {
-			if (handleRecv->convert->set(handleRecv->data->data, &getCommFB()->getRDs()[handleRecv->portIndex]))
+			if (handleRecv->convert->set(handleRecv->data->data, &getCommFB()->getRDs()[handleRecv->portIndex])) {
 				mInterruptResp = e_ProcessDataOk;
+				getCommFB()->interruptCommFB(this);
+			}
 		}
 	}
 
