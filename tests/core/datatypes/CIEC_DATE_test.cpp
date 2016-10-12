@@ -58,14 +58,12 @@ BOOST_AUTO_TEST_CASE(Operator_test)
 BOOST_AUTO_TEST_CASE(Conversion_test)
 {
 	CIEC_DATE nTest;
-  TForteInt32 nTZOffset;
 
 	char cBuffer[11];
 	char cBufferFail[2];
 
 	//check cast operator
 	nTest = 0;
-	strcpy(cBuffer, "");
 
 	BOOST_CHECK_EQUAL(nTest.operator TForteUInt64(), 0ULL);
 

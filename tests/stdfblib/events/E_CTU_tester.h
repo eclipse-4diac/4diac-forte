@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 ACIN, fortiss GmbH
+ * Copyright (c) 2016, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -21,7 +21,7 @@ class E_CTU_tester : public CFBTester{
   DECLARE_FB_TESTER(E_CTU_tester);
 
   public:
-    E_CTU_tester(CResource *m_poTestResource);
+    explicit E_CTU_tester(CResource *m_poTestResource);
     virtual ~E_CTU_tester(){};
   private:
     virtual void executeAllTests();

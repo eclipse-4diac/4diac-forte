@@ -90,21 +90,23 @@ bool CSysFsProcessInterface::deinitialise(){
   STATUS() = scmError;
   std::string fileName = "/sys/class/gpio/unexport";
 
-  mFile.close();
-  mFile.clear();
-  mFile.open(fileName.c_str(), std::fstream::out);
   if(mFile.is_open()){
-    mFile << PARAMS().getValue();
-    if(!mFile.fail()){
-      retVal = true;
-      STATUS() = scmOK;
+    mFile.close();
+    mFile.clear();
+    mFile.open(fileName.c_str(), std::fstream::out);
+    if(mFile.is_open()){
+      mFile << PARAMS().getValue();
+      if(!mFile.fail()){
+        retVal = true;
+        STATUS() = scmOK;
+      }
+      else{
+        DEVLOG_ERROR("Error writing PARAMS() to file %s.\n", fileName.c_str());
+      }
     }
     else{
-      DEVLOG_ERROR("Error writing PARAMS() to file %s.\n", fileName.c_str());
+      DEVLOG_ERROR("Opening file %s failed.\n", fileName.c_str());
     }
-  }
-  else{
-    DEVLOG_ERROR("Opening file %s failed.\n", fileName.c_str());
   }
 
   return retVal;

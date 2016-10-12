@@ -22,11 +22,12 @@ CAdapter::CAdapter(CResource *pa_poSrcRes,
      bool pa_bIsPlug, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
      CFunctionBlock( pa_poSrcRes,
       (pa_bIsPlug) ? pa_pstInterfaceSpecPlug : pa_pstInterfaceSpecSocket, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData),
+      m_nParentAdapterListEventID(0),
       m_bIsPlug(pa_bIsPlug),
-  m_poPeer(0),
-  m_aoLocalDIs(m_aoDIs),
-  m_poAdapterConn(0),
-  m_nParentAdapterListEventID(0){
+      m_poPeer(0),
+      m_aoLocalDIs(m_aoDIs),
+      m_poAdapterConn(0)
+  {
 
   setupEventEntryList();
 }

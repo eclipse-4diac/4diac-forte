@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
 
   //*assumes that overflow will happen when the last digit is parsed
   void strtolOverflowCheck(const char* pa_acString, long int pa_nResult){
-    strtolWrongInputCheck(pa_acString, pa_nResult, strlen(pa_acString) - 1);
+    strtolWrongInputCheck(pa_acString, pa_nResult, static_cast<unsigned int>(strlen(pa_acString) - 1));
     BOOST_CHECK_EQUAL(ERANGE, errno);
   }
 
@@ -263,7 +263,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
 
   //*assumes that overflow will happen when the last digit is parsed
   void strtoulOverflowCheck(const char* pa_acString, unsigned long int pa_unResult, int base){
-    strtoulWrongInputCheck(pa_acString, pa_unResult, strlen(pa_acString) - 1, base);
+    strtoulWrongInputCheck(pa_acString, pa_unResult, static_cast<unsigned int>(strlen(pa_acString) - 1), base);
     BOOST_CHECK_EQUAL(ERANGE, errno);
   }
 
@@ -272,7 +272,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
     const unsigned int unTestData = 7;
     std::string sTestData10[unTestData] = { "0", "255", "256", "65535", "65536", "2147483647", "4294967295" };
     std::string sTestData16[unTestData] = { "0x0", "0xFF", "0x100", "0xFFFF", "0x10000", "0x7FFFFFFF", "0xFFFFFFFF" };
-    long int sTestDataResult[unTestData] = { 0, 255, 256, 65535, 65536, 2147483647, 4294967295 };
+    unsigned long int sTestDataResult[unTestData] = { 0, 255, 256, 65535, 65536, 2147483647, 4294967295 };
 
     for(unsigned int i = 0; i < unTestData; i++){
       BOOST_CHECK_EQUAL(sTestDataResult[i], forte::core::util::strtoul(sTestData10[i].c_str(), &pacEndptr, 10));
@@ -315,7 +315,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
 
   //*assumes that overflow will happen when the last digit is parsed
   void strtollOverflowCheck(const char* pa_acString, long long int pa_nResult){
-    strtollWrongInputCheck(pa_acString, pa_nResult, strlen(pa_acString) - 1);
+    strtollWrongInputCheck(pa_acString, pa_nResult, static_cast<unsigned int>(strlen(pa_acString) - 1));
     BOOST_CHECK_EQUAL(ERANGE, errno);
   }
 
@@ -328,7 +328,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
       "-0xFF", "-0x100", "-0x101", "-0x10000", "-0x10001", "-0x80000000", "-0x100000000", "-0x100000001", "-0x8000000000000000"
     };
     long long int sTestDataResult[unTestData] ={0, 255, 256, 65535, 65536, 2147483647, 2147483648, 4294967296, 4294967297, 9223372036854775807LL,
-      -255, -256, -257, -65536, -65537, -2147483648LL, -4294967296LL, -4294967297LL, -9223372036854775808LL};
+      -255, -256, -257, -65536, -65537, -2147483648LL, -4294967296LL, -4294967297LL, -9223372036854775807LL - 1LL};
 
     for(unsigned int i = 0; i < unTestData; i++){
       BOOST_CHECK_EQUAL(sTestDataResult[i], forte::core::util::strtoll(sTestData10[i].c_str(), &pacEndptr, 10));
@@ -351,10 +351,10 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
     strtollOverflowCheck("9223372036854775810", 9223372036854775807LL);
     strtollOverflowCheck("9223372036854775811", 9223372036854775807LL);
 
-    strtollOverflowCheck("-9223372036854775809", -9223372036854775808LL);
-    strtollOverflowCheck("-9223372036854775810", -9223372036854775808LL);
-    strtollOverflowCheck("-9223372036854775811", -9223372036854775808LL);
-    strtollOverflowCheck("-9223372036854775812", -9223372036854775808LL);
+    strtollOverflowCheck("-9223372036854775809", -9223372036854775807LL - 1LL);
+    strtollOverflowCheck("-9223372036854775810", -9223372036854775807LL - 1LL);
+    strtollOverflowCheck("-9223372036854775811", -9223372036854775807LL - 1LL);
+    strtollOverflowCheck("-9223372036854775812", -9223372036854775807LL - 1LL);
 
     strtollWrongInputCheck("hansi", 0, 0);
     strtollWrongInputCheck("3267x23", 3267, 4);
@@ -370,7 +370,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
 
   //*assumes that overflow will happen when the last digit is parsed
   void strtoullOverflowCheck(const char* pa_acString, unsigned long long int pa_unResult){
-    strtoullWrongInputCheck(pa_acString, pa_unResult, strlen(pa_acString) - 1);
+    strtoullWrongInputCheck(pa_acString, pa_unResult, static_cast<unsigned int>(strlen(pa_acString) - 1));
     BOOST_CHECK_EQUAL(ERANGE, errno);
   }
 

@@ -59,17 +59,16 @@ bool COdroidProcessInterface::deinitialise(){
 bool COdroidProcessInterface::readWord(){
   bool retVal = false;
   if(mFile.is_open()){
-    char binData[6];
-    memset(binData, 0, 6);
+    std::string binData;
+
     mFile.clear();
     mFile.seekg(0, std::ios::beg);
-    mFile.read(binData, 5);
+    std::getline(mFile, binData);
     if(mFile.fail()){
       STATUS() = scmCouldNotRead;
     }
     else{
-      binData[5] = '\0';
-      if(-1 != IN_W().fromString(binData)){
+      if(-1 != IN_W().fromString(binData.c_str())){
         STATUS() = scmOK;
         retVal = true;
       } else {

@@ -21,7 +21,7 @@ class E_F_TRIG_tester  : public CFBTester{
     DECLARE_FB_TESTER(E_F_TRIG_tester);
 
   public:
-    E_F_TRIG_tester(CResource *m_poTestResource);
+    explicit E_F_TRIG_tester(CResource *m_poTestResource);
 
   private:
     virtual void executeAllTests();

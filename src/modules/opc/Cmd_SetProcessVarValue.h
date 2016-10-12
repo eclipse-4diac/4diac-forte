@@ -21,7 +21,7 @@ class COpcConnectionImpl;
 
 class CCmd_SetProcessVarValue : public ICmd{
   public:
-    CCmd_SetProcessVarValue(COpcProcessVar * pa_pOpcVar);
+    explicit CCmd_SetProcessVarValue(COpcProcessVar * pa_pOpcVar);
     virtual ~CCmd_SetProcessVarValue(void);
 
     virtual void runCommand();

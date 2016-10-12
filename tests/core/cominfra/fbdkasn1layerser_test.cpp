@@ -741,7 +741,7 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_LINT){
    BOOST_CHECK_EQUAL(nTestee.getSendDataSize(), cg_unLIntSerSize);
    BOOST_CHECK(std::equal(cg_abLInt2147483648, cg_abLInt2147483648 + cg_unLIntSerSize, ((TForteByte *)nTestee.getSendDataPtr())));
 
-   nVal = -9223372036854775808LL;
+   nVal = -9223372036854775807LL - 1LL;
    BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.sendData(&nVal, 1));
    BOOST_CHECK_EQUAL(nTestee.getSendDataSize(), cg_unLIntSerSize);
    BOOST_CHECK(std::equal(cg_abLIntm9223372036854775808, cg_abLIntm9223372036854775808 + cg_unLIntSerSize, ((TForteByte *)nTestee.getSendDataPtr())));

@@ -80,7 +80,6 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 
 	//check cast operator
 	nTest = 0;
-	strcpy(cBuffer, "");
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 	BOOST_CHECK_EQUAL(nTest.operator TForteInt64(), 0);

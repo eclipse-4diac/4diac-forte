@@ -67,7 +67,6 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 
 	//check cast operator
 	nTest = 0;
-	strcpy(cBuffer, "");
 
 	BOOST_CHECK_EQUAL(nTest.operator TForteInt16(), 0);
 
@@ -126,7 +125,6 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 
     BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
 
-    strcpy(cBuffer, "");
     BOOST_CHECK_EQUAL(nTest.fromString("16#ffff"), 7);
     BOOST_CHECK_EQUAL(nTest, -1);
 
