@@ -29,7 +29,13 @@
 class CrcXSocketInterface{
   DECLARE_SINGLETON(CrcXSocketInterface);
   public:
-    typedef UINT32 TSocketDescriptor;
+    typedef struct TSocketDescriptorStruct_t{
+      UINT32 socketNumber;
+      bool accepted;
+      UINT32 port;
+    }TSocketDescriptorStruct;
+    typedef TSocketDescriptorStruct* TSocketDescriptor;
+
     typedef struct udpAdressStruct{
         UINT32  destPort;
         UINT32  destAddress;
@@ -76,14 +82,21 @@ class CrcXSocketInterface{
       TCPIP_PACKET_UDP_CMD_SEND_CNF_T               tTcpUdpCmdSndCnf;
     }FORTE_TCP_PACKET_T;
 
-    TSocketDescriptor openConnection(char *pa_acIPAddr, unsigned short pa_nPort, bool isTCP, bool isServer, TUDPDestAddr *m_ptDestAddr);
-    int sendData(TSocketDescriptor pa_nSockD, char* pa_pcData, unsigned int pa_unSize, bool pa_isTCP, TUDPDestAddr *pa_ptDestAddr, void* pa_PacketData);
+    RX_RESULT openConnection(char *pa_acIPAddr, unsigned short pa_nPort, bool isTCP, bool isServer, TUDPDestAddr *m_ptDestAddr, TSocketDescriptor& pa_destSocket);
+    RX_RESULT sendData(TSocketDescriptor pa_nSockD, char* pa_pcData, unsigned int pa_unSize, bool pa_isTCP, TUDPDestAddr *pa_ptDestAddr, void* pa_PacketData, int* pa_result);
+    RX_RESULT close(TSocketDescriptor pa_nSockD);
+    RX_RESULT accept(TSocketDescriptor pa_listeningSocketDesc, TSocketDescriptor& pa_destSocket);
     TForteUInt32 stringIpToInt(char* pa_ipString);
-    bool sendPacketToTCP(UINT32 pa_destId, UINT32 pa_ulLen, UINT32 pa_ulCmd, void* pa_tData, UINT32 pa_dataLength);
-    FORTE_TCP_PACKET_T* waitPacket(UINT32 pa_command);
+    RX_RESULT sendPacketToTCP(UINT32 pa_destId, UINT32 pa_ulLen, UINT32 pa_ulCmd, void* pa_tData, UINT32 pa_dataLength);
+    RX_RESULT waitPacket(UINT32 pa_command, FORTE_TCP_PACKET_T** pa_packetResult);
     bool isInitialized(void);
-    tcpResources forteResources;
-    bool initialized;
+
+    TSocketDescriptor socketDescriptorAlloc(void);
+    void socketDescriptorDeAlloc(TSocketDescriptor pa_Socket);
+
+    TSocketDescriptor m_listeningSocketDescriptor;
+    tcpResources m_forteResources;
+    bool m_initialized;
 };
 
 
