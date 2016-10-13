@@ -49,14 +49,14 @@ void COPC_UA_Layer::closeConnection(){
 				UA_NodeId_delete(sendDataNodeIds[i].functionBlockId);
 				UA_NodeId_delete(sendDataNodeIds[i].variableId);
 			}
-			forte_free(sendDataNodeIds);
+			delete[](sendDataNodeIds);
 			sendDataNodeIds = nullptr;
 		} else if(readDataNodeIds != nullptr && getCommFB()->getComServiceType() == e_Subscriber){
 			for (unsigned int i=0; i<getCommFB()->getNumRD(); i++) {
 				UA_NodeId_delete(readDataNodeIds[i].functionBlockId);
 				UA_NodeId_delete(readDataNodeIds[i].variableId);
 			}
-			forte_free(readDataNodeIds);
+			delete[](readDataNodeIds);
 			readDataNodeIds = nullptr;
 		}
 	}
@@ -118,7 +118,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
 		return e_InitInvalidId;
 	}
 
-	*nodeIds = static_cast<struct FB_NodeIds*>(forte_malloc(sizeof(struct FB_NodeIds)*numPorts));
+	*nodeIds = new struct FB_NodeIds[numPorts];
 
 	for(unsigned int i = 0; i < numPorts; i++) {
 		int portId = i + 2;
@@ -127,8 +127,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
 		const SFBInterfaceSpec* interfaceSpec = getCommFB()->getFBInterfaceSpec();
 		const CStringDictionary::TStringId portNameId = isPub ? interfaceSpec->m_aunDINames[portId] : interfaceSpec->m_aunDONames[portId];
 
-		const char* portName = CStringDictionary::getInstance().get(portNameId);
-		DEVLOG_INFO("Processing %s signal %s at port %i.\n",isPub ? "publish" : "subscribe", portName, portId);
+		DEVLOG_INFO("Processing %s signal %s at port %i.\n",isPub ? "publish" : "subscribe", CStringDictionary::getInstance().get(portNameId), portId);
 
 		const CDataConnection* portConnection = isPub ? getCommFB()->getDIConnection(portNameId) : getCommFB()->getDOConnection(portNameId);
 		if (portConnection == nullptr) {
@@ -139,7 +138,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
 				if ((*nodeIds)[j].functionBlockId != nullptr)
 					UA_NodeId_delete((*nodeIds)[j].variableId);
 			}
-			forte_free((*nodeIds));
+			delete[](*nodeIds);
 			(*nodeIds) = nullptr;
 			return e_InitInvalidId;
 		}
@@ -148,14 +147,14 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
 		//TODO for now we assume that the connection only has one destination. Needs fix!
 
 		if (!isPub && portConnection->getDestinationList().isEmpty()) {
-			DEVLOG_ERROR("Subscriber does not have any connection.");
+			DEVLOG_WARNING("Subscriber does not have any connection.");
 			for (unsigned int j = 0; j < i; j++) {
 				if ((*nodeIds)[j].functionBlockId != nullptr)
 					UA_NodeId_delete((*nodeIds)[j].functionBlockId);
 				if ((*nodeIds)[j].functionBlockId != nullptr)
 					UA_NodeId_delete((*nodeIds)[j].variableId);
 			}
-			forte_free((*nodeIds));
+			delete[](*nodeIds);
 			(*nodeIds) = nullptr;
 			return e_InitInvalidId;
 		}
@@ -174,20 +173,21 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
 		{
 			// create/get node for connected FB
 			size_t len = strlen(sourceFB->getInstanceName()) + 2; // include slash and nullbyte
-			char* fbBrowseName = static_cast<char*>(forte_malloc(len));
+			char* fbBrowseName = new char[len];
 			snprintf(fbBrowseName, len, "/%s", sourceFB->getInstanceName());
 			UA_NodeId newNodeType = UA_NODEID_NUMERIC(0, UA_NS0ID_BASEOBJECTTYPE);
 			retVal = COPC_UA_Handler::getInstance().getNodeForPath(&(*nodeIds)[i].functionBlockId, fbBrowseName, true, fbNodeId, &newNodeType);
-			forte_free(fbBrowseName);
+			delete[](fbBrowseName);
 		}
 
 		if (retVal == UA_STATUSCODE_GOOD) {
 			// create/get variable node for port on connected FB
 			size_t len = strlen(sourceName) + 2; // include slash and nullbyte
-			char* sourceVarBrowseName = static_cast<char*>(forte_malloc(len));
+			char* sourceVarBrowseName = new char[len];
 			snprintf(sourceVarBrowseName, len, "/%s", sourceName);
 			retVal = COPC_UA_Handler::getInstance().getNodeForPath(&(*nodeIds)[i].variableId, sourceVarBrowseName, false,
 																   (*nodeIds)[i].functionBlockId);
+			delete[]sourceVarBrowseName;
 			if (retVal == UA_STATUSCODE_GOOD && (*nodeIds)[i].variableId == nullptr) {
 				// we need to create the variable
 
@@ -220,7 +220,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
 				if ((*nodeIds)[j].functionBlockId != nullptr)
 					UA_NodeId_delete((*nodeIds)[j].variableId);
 			}
-			forte_free((*nodeIds));
+			delete[](*nodeIds);
 			(*nodeIds) = nullptr;
 			return e_InitInvalidId;
 		}

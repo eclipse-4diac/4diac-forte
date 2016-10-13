@@ -47,14 +47,22 @@ COPC_UA_Handler::COPC_UA_Handler() : m_server_config(), m_server_networklayer(),
 
 COPC_UA_Handler::~COPC_UA_Handler() {
 	stopServerRunning();
+	end();
 	UA_Server_delete(mOPCUAServer);
 	m_server_networklayer.deleteMembers(&m_server_networklayer);
+
+	for (CSinglyLinkedList<struct UA_NodeCallback_Handle *>::Iterator iter = nodeCallbackHandles.begin(); iter != nodeCallbackHandles.end(); ++iter)
+		delete(*iter);
 	nodeCallbackHandles.clearAll();
 }
 
 void COPC_UA_Handler::run(){
 	UA_StatusCode retVal = UA_Server_run(mOPCUAServer, mbServerRunning);	// server keeps iterating as long as running is true;
-	DEVLOG_INFO("UA_Server run status code 0x%08x", retVal);
+	if (retVal != UA_STATUSCODE_GOOD) {
+		DEVLOG_ERROR("OPC UA Server exited with error: %s - %s", UA_StatusCode_name(retVal), UA_StatusCode_description(retVal));
+	} else {
+		DEVLOG_INFO("OPC UA Server successfully stopped");
+	}
 }
 
 void COPC_UA_Handler::enableHandler(void){
@@ -127,7 +135,7 @@ UA_StatusCode COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char* nod
 	{
 		UA_StatusCode retVal;
 		if((retVal = UA_Client_connect(client, localEndpoint)) != UA_STATUSCODE_GOOD) {
-			DEVLOG_ERROR("Could not connect to local OPC UA Server");
+			DEVLOG_ERROR("Could not connect to local OPC UA Server: %s - %s", UA_StatusCode_name(retVal), UA_StatusCode_description(retVal));
 			UA_Client_delete(client);
 			forte_free(fullPath);
 			return retVal;
@@ -136,7 +144,7 @@ UA_StatusCode COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char* nod
 
 
 	// for every folder (which is a BrowsePath) we want to get the node id
-	UA_BrowsePath *browsePaths = static_cast<UA_BrowsePath*>(forte_malloc(sizeof(UA_BrowsePath) * folderCnt));
+	UA_BrowsePath *browsePaths = new UA_BrowsePath[folderCnt];
 
 	for (unsigned int i=0; i<folderCnt; i++) {
 		UA_BrowsePath_init(&browsePaths[i]);
@@ -145,7 +153,7 @@ UA_StatusCode COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char* nod
 		else
 			browsePaths[i].startingNode = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
 		browsePaths[i].relativePath.elementsSize = i+1;
-		browsePaths[i].relativePath.elements = static_cast<UA_RelativePathElement*>(forte_malloc(sizeof(UA_RelativePathElement)*(i+1)));
+		browsePaths[i].relativePath.elements = new UA_RelativePathElement[i+1];
 		for (unsigned int j=0; j<=i; j++) {
 
 			if (j<i) {
@@ -194,7 +202,7 @@ UA_StatusCode COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char* nod
 
 		if (response.responseHeader.serviceResult != UA_STATUSCODE_GOOD) {
 			UA_StatusCode retVal = response.responseHeader.serviceResult;
-			DEVLOG_ERROR("Could not translate browse paths for '%s' to node IDs. Service returned: 0x%08x", fullPath, response.responseHeader.serviceResult);
+			DEVLOG_ERROR("Could not translate browse paths for '%s' to node IDs. Error: %s - %s", fullPath, UA_StatusCode_name(retVal), UA_StatusCode_description(retVal));
 			UA_TranslateBrowsePathsToNodeIdsRequest_deleteMembers(&request);
 			UA_TranslateBrowsePathsToNodeIdsResponse_deleteMembers(&response);
 			UA_Client_disconnect(client);
@@ -267,7 +275,7 @@ UA_StatusCode COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char* nod
 				UA_ObjectAttributes oAttr;
 				UA_ObjectAttributes_init(&oAttr);
 				char locale[] = "en_US";
-				char *nodeName = static_cast<char*>(forte_malloc(sizeof(char)*targetName->name.length+1));
+				char *nodeName = new char[targetName->name.length+1];
 				memcpy(nodeName, targetName->name.data, targetName->name.length);
 				nodeName[targetName->name.length] = 0;
 				oAttr.description = UA_LOCALIZEDTEXT(locale, nodeName);
@@ -275,11 +283,13 @@ UA_StatusCode COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char* nod
 				if ((retVal = UA_Server_addObjectNode(mOPCUAServer, UA_NODEID_NUMERIC(1, 0),
 										**foundNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
 										*targetName, creationType, oAttr, NULL, *foundNodeId)) != UA_STATUSCODE_GOOD) {
-					DEVLOG_ERROR("Could not addObjectNode. Status: 0x%08x", retVal );
+					DEVLOG_ERROR("Could not addObjectNode. Error: %s - %s", UA_StatusCode_name(retVal), UA_StatusCode_description(retVal));
 					forte_free(*foundNodeId);
+					delete[](nodeName);
 					*foundNodeId = nullptr;
 					break;
 				}
+				delete[](nodeName);
 			}
 		}
 
@@ -325,13 +335,16 @@ UA_StatusCode COPC_UA_Handler::createUAVariableNode(const UA_NodeId *parentNode,
 			NULL,                 // instantiation callback
 			returnNodeId);			  	  // return Node Id
 
+	UA_QualifiedName_deleteMembers(&varBrowseName);
+	UA_LocalizedText_deleteMembers(&var_attr.displayName);
 
 	if(retVal == UA_STATUSCODE_GOOD){
-		DEVLOG_INFO("UA-Server AddressSpace: New Variable Node - %s added.\n", varName);
+		DEVLOG_INFO("UA-Server AddressSpace: New Variable Node - %s added", varName);
 		retVal = UA_NodeId_copy(returnNodeId, returnVarNodeId);
 	}else{
-		DEVLOG_ERROR("UA-Server AddressSpace: Adding Variable Node %s failed. Status: 0x%08x\n", varName, retVal);
+		DEVLOG_ERROR("UA-Server AddressSpace: Adding Variable Node %s failed. Error: %s - %s", varName, UA_StatusCode_name(retVal), UA_StatusCode_description(retVal));
 	}
+	UA_NodeId_delete(returnNodeId);
 	return retVal;
 }
 
@@ -360,7 +373,7 @@ UA_StatusCode COPC_UA_Handler::updateNodeValue(const UA_NodeId *nodeId, const CI
 UA_StatusCode COPC_UA_Handler::registerNodeCallBack(const UA_NodeId *nodeId, forte::com_infra::CComLayer *comLayer, const struct UA_TypeConvert* convert,
 													unsigned int portIndex){
 	// needs new, otherwise it will be removed as soon as registerNodecallBack exits, and thus handle is not valid in the callback
-	struct UA_NodeCallback_Handle *handle = static_cast<struct UA_NodeCallback_Handle*>(forte_malloc(sizeof(struct UA_NodeCallback_Handle)));
+	struct UA_NodeCallback_Handle *handle = new struct UA_NodeCallback_Handle;
 
 	handle->convert = convert;
 	handle->comLayer = comLayer;
