@@ -531,9 +531,17 @@ template<typename T> const T MOVE(const T& pa_roIN){
   : ---|      |
  ANY --|      |
        +------+       */
+//specialisation of function for base type double.
+//TODO consider how this and similar problems can be better solved with type traits and more generically
+inline double EXPT(double pa_roIN1, double pa_roIN2){
+  return pow(pa_roIN1, pa_roIN2);
+}
+
 template<typename T> const T EXPT(const T& pa_roIN1, const T& pa_roIN2){
 	return static_cast<typename T::TValueType>(pow(pa_roIN1, pa_roIN2));
 }
+
+
 
 /*              +-----+
                 | ADD |

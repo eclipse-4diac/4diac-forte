@@ -21,7 +21,7 @@ void COpcProcessVar::sendItemData(){
   try{
     if (getIsActive())
       m_pOpcItem->writeSync(updateValue());
-  } catch (OPCException e){
+  } catch (OPCException &e){
     setIsActive(false);
   }
 }

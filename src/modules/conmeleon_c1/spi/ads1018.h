@@ -101,7 +101,7 @@ public:
 	 *
 	 * The constructor sets the default parameters to m_nBitsPerWord = 8, m_enMode = SPIMODE1 and m_nSpeed to 1 MHz.
 	 */
-	CAds1018(const char* sDevice);
+	explicit CAds1018(const char* sDevice);
 
 	/*! \fn CAds1018(const char* sDevice, unsigned int nSpeed, CONMELEON::ESpiMode enMode)
 	 * \brief creates a SPI device according to the  \a sDevice parameter

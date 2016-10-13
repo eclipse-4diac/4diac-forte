@@ -58,6 +58,8 @@ void CPosixThread::start(void){
         return;
       }
     }
+    // Detach because we don't care about the thread anymore/don't need to join. To cleanup either call pthread_detach or pthread_join
+    pthread_detach(m_stThreadID);
   }
   //wait till the thread is up and running
   do{

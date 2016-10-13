@@ -16,7 +16,7 @@
 
 class CModbusTimedEvent{
   public:
-    CModbusTimedEvent(TForteUInt32 pa_nUpdateInterval); // UpdateInterval = 0 => single shot event
+    explicit CModbusTimedEvent(TForteUInt32 pa_nUpdateInterval); // UpdateInterval = 0 => single shot event
     virtual ~CModbusTimedEvent(){
     }
 
