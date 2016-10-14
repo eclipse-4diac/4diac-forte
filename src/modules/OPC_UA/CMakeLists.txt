@@ -1,5 +1,6 @@
 #*******************************************************************************
-# * Copyright (c) 2015-2016 Florian Froschermeier <florian.froschermeier@tum.de>
+# * Copyright (c) 2015-2016 Florian Froschermeier <florian.froschermeier@tum.de>,
+# * 						fortiss GmbH
 # * All rights reserved. This program and the accompanying materials
 # * are made available under the terms of the Eclipse Public License v1.0
 # * which accompanies this distribution, and is available at
@@ -8,6 +9,8 @@
 # * Contributors:
 # *    Florian Froschermeier
 # *      - initial integration of OPC Unified Architecture into FORTE
+# *    Stefan Profanter
+# *      - refactoring and adaption to new concept
 # ******************************************************************************/
 
 #############################################################################
@@ -25,30 +28,22 @@ SET(FORTE_COM_OPC_UA_DIR "" CACHE PATH "ABSOLUTE path to OPC UA build folder or 
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-if(FORTE_COM_OPC_UA)
-	forte_add_sourcefile_hcpp( opcua_layer opcua_handler )
-	forte_add_sourcefile_hcpp( opcua_layer opcua_helper )
-	if(EXISTS ${FORTE_COM_OPC_UA_DIR})
-	    if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-    		forte_add_include_directories( ${FORTE_COM_OPC_UA_DIR})
-    		forte_add_link_directories( ${FORTE_COM_OPC_UA_DIR})
-	       	forte_add_link_library(libopen62541.so)
-	    elseif("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
-    		forte_add_include_directories( ${FORTE_COM_OPC_UA_DIR})
-    		forte_add_link_directories( ${FORTE_COM_OPC_UA_DIR})
-			forte_add_link_library( libopen62541.dll )
-	    endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-	else(EXISTS ${FORTE_COM_OPC_UA_DIR})
-		message("No OPC_UA directory given")
-    endif(EXISTS ${FORTE_COM_OPC_UA_DIR})
-endif(FORTE_COM_OPC_UA)
-
-
-# CMake for IEC 61499 based OPC-UA publish-subscribe function blocks
-set(OPCUA_FB_PATH "61499_FBs")
-forte_add_sourcefile_hcpp(${OPCUA_FB_PATH}/AOPCUANodeID ${OPCUA_FB_PATH}/GEN_SUBSCRIBEOPCUA ${OPCUA_FB_PATH}/GEN_PUBLISHOPCUA ${OPCUA_FB_PATH}/OPCUA_NodeID)
-
-#get_directory_property( DirDefs COMPILE_DEFINITIONS )
-#message( "COMPILE_DEFINITIONS = ${DirDefs}" )
+if (FORTE_COM_OPC_UA)
+    forte_add_sourcefile_hcpp(opcua_layer opcua_handler)
+    forte_add_sourcefile_hcpp(opcua_layer opcua_helper)
+    if (EXISTS ${FORTE_COM_OPC_UA_DIR})
+        if ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
+            forte_add_include_directories(${FORTE_COM_OPC_UA_DIR})
+            forte_add_link_directories(${FORTE_COM_OPC_UA_DIR})
+            forte_add_link_library(libopen62541.so)
+        elseif ("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
+            forte_add_include_directories(${FORTE_COM_OPC_UA_DIR})
+            forte_add_link_directories(${FORTE_COM_OPC_UA_DIR})
+            forte_add_link_library(libopen62541.dll)
+        endif ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
+    else (EXISTS ${FORTE_COM_OPC_UA_DIR})
+        message("No OPC UA directory given")
+    endif (EXISTS ${FORTE_COM_OPC_UA_DIR})
+endif (FORTE_COM_OPC_UA)
 
 
