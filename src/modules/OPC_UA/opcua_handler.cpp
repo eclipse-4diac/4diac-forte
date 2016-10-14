@@ -14,9 +14,8 @@
  *******************************************************************************/
 
 #include "opcua_handler.h"
-#include <commfb.h>
 #include <devexec.h>
-#include "../../core/utils/criticalregion.h"
+#include "criticalregion.h"
 
 using namespace forte::com_infra;
 
@@ -25,22 +24,22 @@ DEFINE_SINGLETON(COPC_UA_Handler);
 #define FORTE_COM_OPC_UA_PORT 4840
 
 void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
-	m_server_config = UA_ServerConfig_standard;
-	m_server_config.enableUsernamePasswordLogin = false;
-	m_server_config.networkLayersSize = 1;
-	m_server_config.logger = UA_Log_Stdout;
+	uaServerConfig = UA_ServerConfig_standard;
+	uaServerConfig.enableUsernamePasswordLogin = false;
+	uaServerConfig.networkLayersSize = 1;
+	uaServerConfig.logger = UA_Log_Stdout;
 
-	m_server_networklayer = UA_ServerNetworkLayerTCP(UA_ConnectionConfig_standard, UAServerPort);
-	m_server_config.networkLayers = &m_server_networklayer;
+	uaServerNetworkLayer = UA_ServerNetworkLayerTCP(UA_ConnectionConfig_standard, UAServerPort);
+	uaServerConfig.networkLayers = &uaServerNetworkLayer;
 }
 
-COPC_UA_Handler::COPC_UA_Handler() : m_server_config(), m_server_networklayer(), getNodeForPathMutex(), nodeCallbackHandles(){
-	configureUAServer(FORTE_COM_OPC_UA_PORT); 	// configure a standard server
-	mOPCUAServer = UA_Server_new(m_server_config);
+COPC_UA_Handler::COPC_UA_Handler() : uaServerConfig(), uaServerNetworkLayer(), getNodeForPathMutex(), nodeCallbackHandles() {
+	configureUAServer(FORTE_COM_OPC_UA_PORT);
+	uaServer = UA_Server_new(uaServerConfig);
 
-	setServerRunning();		// set server loop flag
+	setServerRunning();        // set server loop flag
 
-	if(!isAlive()){
+	if (!isAlive()) {
 		start();
 	}
 }
@@ -48,57 +47,59 @@ COPC_UA_Handler::COPC_UA_Handler() : m_server_config(), m_server_networklayer(),
 COPC_UA_Handler::~COPC_UA_Handler() {
 	stopServerRunning();
 	end();
-	UA_Server_delete(mOPCUAServer);
-	m_server_networklayer.deleteMembers(&m_server_networklayer);
+	UA_Server_delete(uaServer);
+	uaServerNetworkLayer.deleteMembers(&uaServerNetworkLayer);
 
 	for (CSinglyLinkedList<struct UA_NodeCallback_Handle *>::Iterator iter = nodeCallbackHandles.begin(); iter != nodeCallbackHandles.end(); ++iter)
-		delete(*iter);
+		delete (*iter);
 	nodeCallbackHandles.clearAll();
 }
 
-void COPC_UA_Handler::run(){
-	UA_StatusCode retVal = UA_Server_run(mOPCUAServer, mbServerRunning);	// server keeps iterating as long as running is true;
+void COPC_UA_Handler::run() {
+	DEVLOG_INFO("Starting OPC UA Server: opc.tcp://localhost:%d\n", FORTE_COM_OPC_UA_PORT);
+	UA_StatusCode retVal = UA_Server_run(uaServer, uaServerRunningFlag);    // server keeps iterating as long as running is true;
 	if (retVal != UA_STATUSCODE_GOOD) {
-		DEVLOG_ERROR("OPC UA Server exited with error: %s - %s", UA_StatusCode_name(retVal), UA_StatusCode_description(retVal));
+		DEVLOG_ERROR("OPC UA Server exited with error: %s - %s\n", UA_StatusCode_name(retVal), UA_StatusCode_description(retVal));
 	} else {
-		DEVLOG_INFO("OPC UA Server successfully stopped");
+		DEVLOG_INFO("OPC UA Server successfully stopped\n");
 	}
 }
 
-void COPC_UA_Handler::enableHandler(void){
+void COPC_UA_Handler::enableHandler(void) {
 	start();
 }
 
-void COPC_UA_Handler::disableHandler(void){
+void COPC_UA_Handler::disableHandler(void) {
 	COPC_UA_Handler::stopServerRunning();
 	end();
 }
 
-void COPC_UA_Handler::setPriority(int){
+void COPC_UA_Handler::setPriority(int) {
 
 	//currently we are doing nothing here.
 	//TODO We should adjust the thread priority.
 }
 
-int COPC_UA_Handler::getPriority(void) const{
+int COPC_UA_Handler::getPriority(void) const {
 	//the same as for setPriority
 	return 0;
 }
 
-void COPC_UA_Handler::setServerRunning(){
-	*mbServerRunning = UA_TRUE;
+void COPC_UA_Handler::setServerRunning() {
+	*uaServerRunningFlag = UA_TRUE;
 }
 
-void COPC_UA_Handler::stopServerRunning(){
-	*mbServerRunning = UA_FALSE;
+void COPC_UA_Handler::stopServerRunning() {
+	*uaServerRunningFlag = UA_FALSE;
 }
 
-UA_StatusCode COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char* nodePath, bool createIfNotFound, const UA_NodeId *startingNode, const UA_NodeId *newNodeType) {
+UA_StatusCode
+COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char *nodePath, bool createIfNotFound, const UA_NodeId *startingNode, const UA_NodeId *newNodeType) {
 
 	*foundNodeId = NULL;
 	// remove tailing slash
 	size_t pathLen = strlen(nodePath);
-	while (pathLen && nodePath[pathLen-1] == '/') {
+	while (pathLen && nodePath[pathLen - 1] == '/') {
 		nodePath[pathLen - 1] = 0;
 		pathLen--;
 	}
@@ -115,27 +116,27 @@ UA_StatusCode COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char* nod
 	}
 
 	char *fullPath = strdup(nodePath);
-	char *tok = strtok (nodePath,"/");
+	char *tok = strtok(nodePath, "/");
 	if (startingNode == NULL || (startingNode->namespaceIndex == 0 && startingNode->identifier.numeric == UA_NS0ID_OBJECTSFOLDER)) {
 		if (strcmp(tok, "Objects") != 0 && strcmp(tok, "0:Objects") != 0) {
-			DEVLOG_ERROR("Node path '%s' has to start with '/Objects'", fullPath);
+			DEVLOG_ERROR("Node path '%s' has to start with '/Objects'\n", fullPath);
 			forte_free(fullPath);
 			return UA_STATUSCODE_BADINVALIDARGUMENT;
 		}
 		folderCnt--; //remaining count without Objects folder
-		tok = strtok(NULL,"/"); // skip objects folder
+		tok = strtok(NULL, "/"); // skip objects folder
 	}
 
 	// create a client for requesting the nodes
 	UA_Client *client = UA_Client_new(UA_ClientConfig_standard);
 
 	char localEndpoint[28];
-	snprintf(localEndpoint,28, "opc.tcp://localhost:%d", FORTE_COM_OPC_UA_PORT);
+	snprintf(localEndpoint, 28, "opc.tcp://localhost:%d", FORTE_COM_OPC_UA_PORT);
 
 	{
 		UA_StatusCode retVal;
-		if((retVal = UA_Client_connect(client, localEndpoint)) != UA_STATUSCODE_GOOD) {
-			DEVLOG_ERROR("Could not connect to local OPC UA Server: %s - %s", UA_StatusCode_name(retVal), UA_StatusCode_description(retVal));
+		if ((retVal = UA_Client_connect(client, localEndpoint)) != UA_STATUSCODE_GOOD) {
+			DEVLOG_ERROR("Could not connect to local OPC UA Server: %s - %s\n", UA_StatusCode_name(retVal), UA_StatusCode_description(retVal));
 			UA_Client_delete(client);
 			forte_free(fullPath);
 			return retVal;
@@ -146,19 +147,19 @@ UA_StatusCode COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char* nod
 	// for every folder (which is a BrowsePath) we want to get the node id
 	UA_BrowsePath *browsePaths = new UA_BrowsePath[folderCnt];
 
-	for (unsigned int i=0; i<folderCnt; i++) {
+	for (unsigned int i = 0; i < folderCnt; i++) {
 		UA_BrowsePath_init(&browsePaths[i]);
 		if (startingNode != NULL)
 			browsePaths[i].startingNode = *startingNode;
 		else
 			browsePaths[i].startingNode = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
-		browsePaths[i].relativePath.elementsSize = i+1;
-		browsePaths[i].relativePath.elements = new UA_RelativePathElement[i+1];
-		for (unsigned int j=0; j<=i; j++) {
+		browsePaths[i].relativePath.elementsSize = i + 1;
+		browsePaths[i].relativePath.elements = new UA_RelativePathElement[i + 1];
+		for (unsigned int j = 0; j <= i; j++) {
 
-			if (j<i) {
+			if (j < i) {
 				// just copy from before
-				UA_RelativePathElement_copy(&browsePaths[i-1].relativePath.elements[j], &browsePaths[i].relativePath.elements[j]);
+				UA_RelativePathElement_copy(&browsePaths[i - 1].relativePath.elements[j], &browsePaths[i].relativePath.elements[j]);
 				continue;
 			}
 
@@ -184,7 +185,7 @@ UA_StatusCode COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char* nod
 			}
 			browsePaths[i].relativePath.elements[j].targetName = UA_QUALIFIEDNAME(ns, strdup(targetName));
 		}
-		tok = strtok(NULL,"/");
+		tok = strtok(NULL, "/");
 	}
 
 	UA_TranslateBrowsePathsToNodeIdsRequest request;
@@ -202,7 +203,8 @@ UA_StatusCode COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char* nod
 
 		if (response.responseHeader.serviceResult != UA_STATUSCODE_GOOD) {
 			UA_StatusCode retVal = response.responseHeader.serviceResult;
-			DEVLOG_ERROR("Could not translate browse paths for '%s' to node IDs. Error: %s - %s", fullPath, UA_StatusCode_name(retVal), UA_StatusCode_description(retVal));
+			DEVLOG_ERROR("Could not translate browse paths for '%s' to node IDs. Error: %s - %s\n", fullPath, UA_StatusCode_name(retVal),
+						 UA_StatusCode_description(retVal));
 			UA_TranslateBrowsePathsToNodeIdsRequest_deleteMembers(&request);
 			UA_TranslateBrowsePathsToNodeIdsResponse_deleteMembers(&response);
 			UA_Client_disconnect(client);
@@ -212,7 +214,7 @@ UA_StatusCode COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char* nod
 		}
 
 		if (response.resultsSize != folderCnt) {
-			DEVLOG_ERROR("Could not translate browse paths for '%s' to node IDs. resultSize (%d) != expected count (%d)", fullPath, response.resultsSize,
+			DEVLOG_ERROR("Could not translate browse paths for '%s' to node IDs. resultSize (%d) != expected count (%d)\n", fullPath, response.resultsSize,
 						 folderCnt);
 			UA_TranslateBrowsePathsToNodeIdsRequest_deleteMembers(&request);
 			UA_TranslateBrowsePathsToNodeIdsResponse_deleteMembers(&response);
@@ -225,19 +227,12 @@ UA_StatusCode COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char* nod
 		*foundNodeId = nullptr;
 		UA_StatusCode retVal = UA_STATUSCODE_GOOD;
 
-		if (response.results[folderCnt-1].statusCode == UA_STATUSCODE_GOOD) {
+		if (response.results[folderCnt - 1].statusCode == UA_STATUSCODE_GOOD) {
 			*foundNodeId = UA_NodeId_new();
-			UA_NodeId_copy(&response.results[folderCnt-1].targets[0].targetId.nodeId, *foundNodeId);
+			UA_NodeId_copy(&response.results[folderCnt - 1].targets[0].targetId.nodeId, *foundNodeId);
 		} else if (createIfNotFound) {
 			// last node does not exist, and we should create the path
 			// skip last node because we already know that it doesn't exist
-
-			UA_NodeId creationType;
-
-			if (newNodeType == NULL)
-				creationType = UA_NODEID_NUMERIC(0, UA_NS0ID_FOLDERTYPE);
-			else
-				creationType = *newNodeType;
 
 			*foundNodeId = UA_NodeId_new();
 			int i;
@@ -248,11 +243,11 @@ UA_StatusCode COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char* nod
 				}
 				// now we found the first existing node
 				if (response.results[i].targetsSize == 0) {
-					DEVLOG_ERROR("Could not translate browse paths for '%s' to node IDs. target size is 0.", fullPath);
+					DEVLOG_ERROR("Could not translate browse paths for '%s' to node IDs. target size is 0.\n", fullPath);
 					break;
 				}
 				if (response.results[i].targetsSize > 1) {
-					DEVLOG_WARNING("The given browse path '%s' has multiple results for the same path. Taking the first result.", fullPath);
+					DEVLOG_WARNING("The given browse path '%s' has multiple results for the same path. Taking the first result.\n", fullPath);
 				}
 
 				// foundNodeId contains the ID of the parent which exists
@@ -260,30 +255,38 @@ UA_StatusCode COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char* nod
 				break;
 			}
 
-			if (i==-1) {
+			if (i == -1) {
 				// no node of the path exists, thus parent is Objects folder
 				UA_NodeId_copy(&browsePaths[0].startingNode, *foundNodeId);
 			}
 			i++;
 
 			// create all the nodes on the way
-			for (unsigned int j=(unsigned int)i; j<folderCnt; j++) {
+			for (unsigned int j = (unsigned int) i; j < folderCnt; j++) {
 
 				// the last browse path contains all relativePath elements.
-				UA_QualifiedName *targetName = &request.browsePaths[folderCnt-1].relativePath.elements[j].targetName;
+				UA_QualifiedName *targetName = &request.browsePaths[folderCnt - 1].relativePath.elements[j].targetName;
 
 				UA_ObjectAttributes oAttr;
 				UA_ObjectAttributes_init(&oAttr);
 				char locale[] = "en_US";
-				char *nodeName = new char[targetName->name.length+1];
+				char *nodeName = new char[targetName->name.length + 1];
 				memcpy(nodeName, targetName->name.data, targetName->name.length);
 				nodeName[targetName->name.length] = 0;
 				oAttr.description = UA_LOCALIZEDTEXT(locale, nodeName);
 				oAttr.displayName = UA_LOCALIZEDTEXT(locale, nodeName);
-				if ((retVal = UA_Server_addObjectNode(mOPCUAServer, UA_NODEID_NUMERIC(1, 0),
-										**foundNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
-										*targetName, creationType, oAttr, NULL, *foundNodeId)) != UA_STATUSCODE_GOOD) {
-					DEVLOG_ERROR("Could not addObjectNode. Error: %s - %s", UA_StatusCode_name(retVal), UA_StatusCode_description(retVal));
+
+				UA_NodeId creationType;
+				if (newNodeType == NULL || j < folderCnt - 1)
+					// the newNodeType is only used for the last node
+					creationType = UA_NODEID_NUMERIC(0, UA_NS0ID_FOLDERTYPE);
+				else
+					creationType = *newNodeType;
+
+				if ((retVal = UA_Server_addObjectNode(uaServer, UA_NODEID_NUMERIC(1, 0),
+													  **foundNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
+													  *targetName, creationType, oAttr, NULL, *foundNodeId)) != UA_STATUSCODE_GOOD) {
+					DEVLOG_ERROR("Could not addObjectNode. Error: %s - %s\n", UA_StatusCode_name(retVal), UA_StatusCode_description(retVal));
 					forte_free(*foundNodeId);
 					delete[](nodeName);
 					*foundNodeId = nullptr;
@@ -302,7 +305,8 @@ UA_StatusCode COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char* nod
 	}
 }
 
-UA_StatusCode COPC_UA_Handler::createUAVariableNode(const UA_NodeId *parentNode, const char* varName, const UA_DataType* varType, void* varValue, UA_NodeId * returnVarNodeId){
+UA_StatusCode COPC_UA_Handler::createVariableNode(const UA_NodeId *parentNode, const char *varName, const UA_DataType *varType, void *varValue,
+												  UA_NodeId *returnVarNodeId) {
 
 
 	// set UA NodeId attributes
@@ -321,39 +325,61 @@ UA_StatusCode COPC_UA_Handler::createUAVariableNode(const UA_NodeId *parentNode,
 	var_attr.description = UA_LOCALIZEDTEXT(locale, description);
 	UA_Variant_setScalar(&var_attr.value, varValue, varType);
 
-	UA_NodeId * returnNodeId = UA_NodeId_new();
+	UA_NodeId *returnNodeId = UA_NodeId_new();
 
 	// add UA Variable Node to the server address space
 	UA_StatusCode retVal = UA_Server_addVariableNode(
-			mOPCUAServer,                 // server
-			UA_NODEID_NUMERIC(1,0),              	  // requestedNewNodeId
+			uaServer,                 // server
+			UA_NODEID_NUMERIC(1, 0),                  // requestedNewNodeId
 			*parentNode,                 // parentNodeId
-			UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),        	  // referenceTypeId   Reference to the type definition for the variable node
+			UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),              // referenceTypeId   Reference to the type definition for the variable node
 			varBrowseName,                // browseName
 			typeDefinition,               // typeDefinition
 			var_attr,                     // Variable attributes
 			NULL,                 // instantiation callback
-			returnNodeId);			  	  // return Node Id
+			returnNodeId);                  // return Node Id
 
 	UA_QualifiedName_deleteMembers(&varBrowseName);
 	UA_LocalizedText_deleteMembers(&var_attr.displayName);
 
-	if(retVal == UA_STATUSCODE_GOOD){
-		DEVLOG_INFO("UA-Server AddressSpace: New Variable Node - %s added", varName);
+	if (retVal == UA_STATUSCODE_GOOD) {
+		DEVLOG_INFO("UA-Server AddressSpace: New Variable Node - %s added\n", varName);
 		retVal = UA_NodeId_copy(returnNodeId, returnVarNodeId);
-	}else{
-		DEVLOG_ERROR("UA-Server AddressSpace: Adding Variable Node %s failed. Error: %s - %s", varName, UA_StatusCode_name(retVal), UA_StatusCode_description(retVal));
+	} else {
+		DEVLOG_ERROR("UA-Server AddressSpace: Adding Variable Node %s failed. Error: %s - %s\n", varName, UA_StatusCode_name(retVal),
+					 UA_StatusCode_description(retVal));
 	}
 	UA_NodeId_delete(returnNodeId);
 	return retVal;
 }
 
-/*
- * Update UA Address Space node value given by the data pointer to an IEC61499 data object.
- * Mapping of IEC61499 to OPC-UA types is performed by scmUADataTypeMapping array.
- */
-UA_StatusCode COPC_UA_Handler::updateNodeValue(const UA_NodeId *nodeId, const CIEC_ANY *data, const UA_TypeConvert *convert){
-	UA_Variant* nodeValue = UA_Variant_new();
+UA_StatusCode COPC_UA_Handler::createMethodNode(const UA_NodeId *parentNode, UA_UInt16 namespaceIdx, const char *methodName, UA_MethodCallback callback,
+												void *callbackHandle, unsigned int inputArgumentsSize, const UA_Argument *inputArguments,
+												unsigned int outputArgumentsSize, const UA_Argument *outputArguments, UA_NodeId *returnNodeId) {
+
+	UA_MethodAttributes methodAttributes;
+	UA_MethodAttributes_init(&methodAttributes);
+	methodAttributes.description = UA_LOCALIZEDTEXT_ALLOC("en_US", "Method which can be called");
+	methodAttributes.displayName = UA_LOCALIZEDTEXT_ALLOC("en_US", methodName);
+	methodAttributes.executable = true;
+	methodAttributes.userExecutable = true;
+	UA_QualifiedName browseName = UA_QUALIFIEDNAME_ALLOC(namespaceIdx, methodName);
+	UA_StatusCode retVal = UA_Server_addMethodNode(uaServer,
+												   UA_NODEID_NUMERIC(1, 0),
+												   *parentNode,
+												   UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
+												   browseName,
+												   methodAttributes, callback, callbackHandle,
+												   inputArgumentsSize, inputArguments,
+												   outputArgumentsSize, outputArguments, returnNodeId);
+	UA_QualifiedName_deleteMembers(&browseName);
+	UA_LocalizedText_deleteMembers(&methodAttributes.description);
+	UA_LocalizedText_deleteMembers(&methodAttributes.displayName);
+	return retVal;
+}
+
+UA_StatusCode COPC_UA_Handler::updateNodeValue(const UA_NodeId *nodeId, const CIEC_ANY *data, const UA_TypeConvert *convert) {
+	UA_Variant *nodeValue = UA_Variant_new();
 	UA_Variant_init(nodeValue);
 
 	void *varValue = UA_new(convert->type);
@@ -363,15 +389,14 @@ UA_StatusCode COPC_UA_Handler::updateNodeValue(const UA_NodeId *nodeId, const CI
 	}
 
 	UA_Variant_setScalarCopy(nodeValue, varValue, convert->type);
-	UA_StatusCode retVal = UA_Server_writeValue(mOPCUAServer, *nodeId, *nodeValue);
+	UA_StatusCode retVal = UA_Server_writeValue(uaServer, *nodeId, *nodeValue);
 	UA_delete(varValue, convert->type);
 	return retVal;
 }
 
 
-
-UA_StatusCode COPC_UA_Handler::registerNodeCallBack(const UA_NodeId *nodeId, forte::com_infra::CComLayer *comLayer, const struct UA_TypeConvert* convert,
-													unsigned int portIndex){
+UA_StatusCode COPC_UA_Handler::registerNodeCallBack(const UA_NodeId *nodeId, forte::com_infra::CComLayer *comLayer, const struct UA_TypeConvert *convert,
+													unsigned int portIndex) {
 	// needs new, otherwise it will be removed as soon as registerNodecallBack exits, and thus handle is not valid in the callback
 	struct UA_NodeCallback_Handle *handle = new struct UA_NodeCallback_Handle;
 
@@ -382,11 +407,12 @@ UA_StatusCode COPC_UA_Handler::registerNodeCallBack(const UA_NodeId *nodeId, for
 	nodeCallbackHandles.push_back(handle);
 
 	UA_ValueCallback callback = {static_cast<void *>(handle), NULL, COPC_UA_Handler::getInstance().onWrite};
-	return UA_Server_setVariableNode_valueCallback(mOPCUAServer, *nodeId, callback);
+	return UA_Server_setVariableNode_valueCallback(uaServer, *nodeId, callback);
 }
 
 
-void COPC_UA_Handler::onWrite(void *handleRaw, __attribute__((unused)) const UA_NodeId nodeid, const UA_Variant *data, __attribute__((unused)) const UA_NumericRange *range){
+void COPC_UA_Handler::onWrite(void *handleRaw, __attribute__((unused)) const UA_NodeId nodeid, const UA_Variant *data,
+							  __attribute__((unused)) const UA_NumericRange *range) {
 
 	struct UA_NodeCallback_Handle *handle = static_cast<struct UA_NodeCallback_Handle *>(handleRaw);
 
@@ -394,8 +420,8 @@ void COPC_UA_Handler::onWrite(void *handleRaw, __attribute__((unused)) const UA_
 
 	EComResponse retVal;
 
-	struct recvData_handle {
-		const struct UA_TypeConvert* convert;
+	struct {
+		const struct UA_TypeConvert *convert;
 		unsigned int portIndex;
 		const UA_Variant *data;
 	} handleRecv;
@@ -404,14 +430,14 @@ void COPC_UA_Handler::onWrite(void *handleRaw, __attribute__((unused)) const UA_
 	handleRecv.portIndex = handle->portIndex;
 	handleRecv.convert = handle->convert;
 
-	retVal = layer->recvData(static_cast<const void *>(&handleRecv), 0);	//TODO: add multidimensional data handling with 'range'.
+	retVal = layer->recvData(static_cast<const void *>(&handleRecv), 0);    //TODO: add multidimensional data handling with 'range'.
 
 	/* Handle return of receive data */
-	if(e_ProcessDataOk == retVal){
+	if (e_ProcessDataOk == retVal) {
 		//only update data in item if data could be read
 	}
 
-	if(e_Nothing != retVal){
+	if (e_Nothing != retVal) {
 		getInstance().startNewEventChain(layer->getCommFB());
 	}
 

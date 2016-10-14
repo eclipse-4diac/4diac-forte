@@ -19,78 +19,65 @@
 //#pragma GCC diagnostic ignored "-Wunused-parameter"
 //#include <src_generated/ua_namespaceinit_generated.h>
 //#pragma GCC diagnostic pop
+#include <criticalregion.h>
+#include <zconf.h>
 #include "opcua_layer.h"
 #include "opcua_handler.h"
 
 using namespace forte::com_infra;
 
+// method call timeout in seconds. Within this time the method call has to return a value
+#define METHOD_CALL_TIMEOUT 4
 
-COPC_UA_Layer::COPC_UA_Layer(CComLayer * pa_poUpperLayer, CCommFB * pa_poComFB) : CComLayer(pa_poUpperLayer, pa_poComFB),
-																				  mInterruptResp(e_Nothing), m_apUANodeId(0), fbNodeId(NULL),
-																				  sendDataNodeIds(nullptr), readDataNodeIds(nullptr)
-{
+
+COPC_UA_Layer::COPC_UA_Layer(CComLayer *pa_poUpperLayer, CCommFB *pa_poComFB) : CComLayer(pa_poUpperLayer, pa_poComFB),
+																				mInterruptResp(e_Nothing), fbNodeId(NULL), methodNodeId(NULL),
+																				sendDataNodeIds(nullptr), readDataNodeIds(nullptr),
+																				mutexServerMethodCall(), serverMethodCallResultReady(false) {
 	// constructor list initialization
 
 }
 
 
 COPC_UA_Layer::~COPC_UA_Layer() {
-	// TODO Auto-generated destructor stub
+	// all the stuff is cleaned up in closeConnection()
 }
 
 
-void COPC_UA_Layer::closeConnection(){
+void COPC_UA_Layer::closeConnection() {
 	if (fbNodeId != nullptr) {
 		UA_NodeId_delete(fbNodeId);
 		fbNodeId = nullptr;
-
-		if(sendDataNodeIds != nullptr && getCommFB()->getComServiceType() == e_Publisher){
-			for (unsigned int i=0; i<getCommFB()->getNumSD(); i++) {
-				UA_NodeId_delete(sendDataNodeIds[i].functionBlockId);
-				UA_NodeId_delete(sendDataNodeIds[i].variableId);
-			}
-			delete[](sendDataNodeIds);
-			sendDataNodeIds = nullptr;
-		} else if(readDataNodeIds != nullptr && getCommFB()->getComServiceType() == e_Subscriber){
-			for (unsigned int i=0; i<getCommFB()->getNumRD(); i++) {
-				UA_NodeId_delete(readDataNodeIds[i].functionBlockId);
-				UA_NodeId_delete(readDataNodeIds[i].variableId);
-			}
-			delete[](readDataNodeIds);
-			readDataNodeIds = nullptr;
-		}
 	}
+	if (methodNodeId != nullptr) {
+		UA_NodeId_delete(methodNodeId);
+		methodNodeId = nullptr;
+	}
+	this->deleteNodeIds(&sendDataNodeIds, getCommFB()->getNumSD());
+	this->deleteNodeIds(&readDataNodeIds, getCommFB()->getNumRD());
 }
 
 
-EComResponse COPC_UA_Layer::openConnection(char * paLayerParameter){
+EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
 
 	if (fbNodeId != nullptr) {
 		DEVLOG_WARNING("Already connected. Nothing to do.\n");
 		return e_InitTerminated;
 	}
 
-	if (COPC_UA_Handler::getInstance().getNodeForPath(&fbNodeId, paLayerParameter, true)!= UA_STATUSCODE_GOOD)
+	// Create all the nodes up to the given node (ID parameter of the FB)
+	if (COPC_UA_Handler::getInstance().getNodeForPath(&fbNodeId, paLayerParameter, true) != UA_STATUSCODE_GOOD)
 		return e_InitTerminated;
 
 
-	switch(getCommFB()->getComServiceType()) {
+	switch (getCommFB()->getComServiceType()) {
 		case e_Publisher:
 			// Make sure all the nodes exist and have the corresponding variable
 			return this->createPubSubNodes(&this->sendDataNodeIds, getCommFB()->getNumSD(), true);
 		case e_Subscriber:
 			return this->createPubSubNodes(&this->readDataNodeIds, getCommFB()->getNumRD(), false);
-		/*case e_Server:
-
-			int numData = getCommFB()->getNumSD();
-			CIEC_ANY* dataArray = getCommFB()->getSDs();
-			int numData = getCommFB()->getNumRD();
-			CIEC_ANY* dataArray = getCommFB()->getRDs();
-
-			for(int i = 0; i<2; i++){
-				//COPC_UA_Handler::getInstance().updateNodeValue(m_apUANodeId[1], dataArray[1]);
-			}
-			break;*/
+		case e_Server:
+			return this->createMethodNode();
 		default:
 			DEVLOG_WARNING("Invalid Comm Service Type for Function Block\n");
 	}
@@ -100,81 +87,104 @@ EComResponse COPC_UA_Layer::openConnection(char * paLayerParameter){
 /**
  * This method is required to inline initialize the connection point.
  */
-static const SConnectionPoint& getFirstListEntry(const CSinglyLinkedList<SConnectionPoint> &list) {
+static const SConnectionPoint& getFirstListEntry(const CSinglyLinkedList<SConnectionPoint>& list) {
 	CSinglyLinkedList<SConnectionPoint>::Iterator it = list.begin();
 	return *it;
 }
 
-forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeIds **nodeIds, unsigned int numPorts, bool isPub) {
+void COPC_UA_Layer::deleteNodeIds(struct FB_NodeIds **nodeIds, unsigned int currentSize) {
+	if (*nodeIds == nullptr)
+		return;
+	for (unsigned int j = 0; j < currentSize; j++) {
+		if ((*nodeIds)[j].functionBlockId != nullptr)
+			UA_NodeId_delete((*nodeIds)[j].functionBlockId);
+		if ((*nodeIds)[j].functionBlockId != nullptr)
+			UA_NodeId_delete((*nodeIds)[j].variableId);
+	}
+	delete[](*nodeIds);
+	(*nodeIds) = nullptr;
+}
+
+bool COPC_UA_Layer::getPortConnectionInfo(unsigned int portIndex, bool isSD, const CFunctionBlock **connectedToFb, const char **connectedToPortName,
+										  const UA_TypeConvert **convert) const {
+	int portId = portIndex + 2;
+	/* Retrieve Publisher, Connection and Signals Source Function Block Information */
+	const SFBInterfaceSpec *interfaceSpec = getCommFB()->getFBInterfaceSpec();
+	const CStringDictionary::TStringId portNameId = isSD ? interfaceSpec->m_aunDINames[portId] : interfaceSpec->m_aunDONames[portId];
+
+	DEVLOG_DEBUG("Processing %s signal %s at port %i.\n", isSD ? "publish" : "subscribe", CStringDictionary::getInstance().get(portNameId), portId);
+
+	const CDataConnection *portConnection = isSD ? getCommFB()->getDIConnection(portNameId) : getCommFB()->getDOConnection(portNameId);
+	if (portConnection == nullptr) {
+		DEVLOG_ERROR("Got invalid port connection at port %d\n", portId);
+		return false;
+	}
+
+
+	//TODO for now we assume that the subscriber connection only has one destination. Needs fix!
+
+	if (!isSD && portConnection->getDestinationList().isEmpty()) {
+		DEVLOG_WARNING("Subscriber does not have any connection.\n");
+		return false;
+	}
+
+
+	const SConnectionPoint remoteConnectionPoint = isSD ? portConnection->getSourceId() : getFirstListEntry(portConnection->getDestinationList());
+	if ((*connectedToFb = remoteConnectionPoint.mFB) == nullptr) {
+		return false;
+	}
+	const SFBInterfaceSpec *sourceInterfaceSpec = (*connectedToFb)->getFBInterfaceSpec();
+	const CStringDictionary::TStringId sourceNameId = isSD ? sourceInterfaceSpec->m_aunDONames[remoteConnectionPoint.mPortId]
+														   : sourceInterfaceSpec->m_aunDINames[remoteConnectionPoint.mPortId];
+	*connectedToPortName = CStringDictionary::getInstance().get(sourceNameId);
+
+	const CStringDictionary::TStringId connectedToType = isSD ? sourceInterfaceSpec->m_aunDODataTypeNames[remoteConnectionPoint.mPortId]
+															  : sourceInterfaceSpec->m_aunDIDataTypeNames[remoteConnectionPoint.mPortId];
+
+	auto mapType = COPC_UA_Helper::mapForteStringIdToOpcUa.find(connectedToType);
+	if (mapType == COPC_UA_Helper::mapForteStringIdToOpcUa.end()) {
+		DEVLOG_ERROR("Mapping of type %s to OPC UA not defined.\n", CStringDictionary::getInstance().get(connectedToType));
+		return false;
+	} else {
+		*convert = mapType->second;
+	}
+
+
+	return true;
+}
+
+forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeIds **nodeIds, unsigned int numPorts, bool isSD) {
 	if (*nodeIds != nullptr) {
-		DEVLOG_ERROR("Publish Nodes already initialized.");
+		DEVLOG_ERROR("Publish/Subscribe Nodes already initialized.\n");
 		return e_InitInvalidId;
 	}
 
-	if(numPorts == 0){
-		// For pure event indication
-		// TODO: add event handling stuff
-		DEVLOG_ERROR("OPC UA Publisher/Subscriber without SD/RD Signal, pure event handling");
+	if (numPorts == 0) {
+		DEVLOG_ERROR("OPC UA Publisher/Subscriber without SD/RD Signal, pure event handling\n");
 		return e_InitInvalidId;
 	}
 
 	*nodeIds = new struct FB_NodeIds[numPorts];
 
-	for(unsigned int i = 0; i < numPorts; i++) {
-		int portId = i + 2;
+	for (unsigned int i = 0; i < numPorts; i++) {
 
-		/* Retrieve Publisher, Connection and Signals Source Function Block Information */
-		const SFBInterfaceSpec* interfaceSpec = getCommFB()->getFBInterfaceSpec();
-		const CStringDictionary::TStringId portNameId = isPub ? interfaceSpec->m_aunDINames[portId] : interfaceSpec->m_aunDONames[portId];
+		const CFunctionBlock *connectedToFb = nullptr;
+		const char *connectedToName = nullptr;
+		const UA_TypeConvert *conv;
 
-		DEVLOG_INFO("Processing %s signal %s at port %i.\n",isPub ? "publish" : "subscribe", CStringDictionary::getInstance().get(portNameId), portId);
-
-		const CDataConnection* portConnection = isPub ? getCommFB()->getDIConnection(portNameId) : getCommFB()->getDOConnection(portNameId);
-		if (portConnection == nullptr) {
-			DEVLOG_ERROR("Got invalid port connection at port %d", portId);
-			for (unsigned int j = 0; j < i; j++) {
-				if ((*nodeIds)[j].functionBlockId != nullptr)
-					UA_NodeId_delete((*nodeIds)[j].functionBlockId);
-				if ((*nodeIds)[j].functionBlockId != nullptr)
-					UA_NodeId_delete((*nodeIds)[j].variableId);
-			}
-			delete[](*nodeIds);
-			(*nodeIds) = nullptr;
+		if (!getPortConnectionInfo(i, isSD, &connectedToFb, &connectedToName, &conv)) {
+			deleteNodeIds(nodeIds, i);
 			return e_InitInvalidId;
 		}
 
-
-		//TODO for now we assume that the connection only has one destination. Needs fix!
-
-		if (!isPub && portConnection->getDestinationList().isEmpty()) {
-			DEVLOG_WARNING("Subscriber does not have any connection.");
-			for (unsigned int j = 0; j < i; j++) {
-				if ((*nodeIds)[j].functionBlockId != nullptr)
-					UA_NodeId_delete((*nodeIds)[j].functionBlockId);
-				if ((*nodeIds)[j].functionBlockId != nullptr)
-					UA_NodeId_delete((*nodeIds)[j].variableId);
-			}
-			delete[](*nodeIds);
-			(*nodeIds) = nullptr;
-			return e_InitInvalidId;
-		}
-
-
-		const SConnectionPoint& sourceConnectionPoint(isPub ? portConnection->getSourceId() : getFirstListEntry(portConnection->getDestinationList()));
-
-
-		const CFunctionBlock* sourceFB = sourceConnectionPoint.mFB;    // pointer to Signals Source Function Block
-		const SFBInterfaceSpec* sourceInterfaceSpec = sourceFB->getFBInterfaceSpec();
-		const CStringDictionary::TStringId sourceNameId = isPub ? sourceInterfaceSpec->m_aunDONames[sourceConnectionPoint.mPortId] : sourceInterfaceSpec->m_aunDINames[sourceConnectionPoint.mPortId];
-		const char* sourceName = CStringDictionary::getInstance().get(sourceNameId);
 
 		UA_StatusCode retVal;
 
 		{
 			// create/get node for connected FB
-			size_t len = strlen(sourceFB->getInstanceName()) + 2; // include slash and nullbyte
-			char* fbBrowseName = new char[len];
-			snprintf(fbBrowseName, len, "/%s", sourceFB->getInstanceName());
+			size_t len = strlen(connectedToFb->getInstanceName()) + 2; // include slash and nullbyte
+			char *fbBrowseName = new char[len];
+			snprintf(fbBrowseName, len, "/%s", connectedToFb->getInstanceName());
 			UA_NodeId newNodeType = UA_NODEID_NUMERIC(0, UA_NS0ID_BASEOBJECTTYPE);
 			retVal = COPC_UA_Handler::getInstance().getNodeForPath(&(*nodeIds)[i].functionBlockId, fbBrowseName, true, fbNodeId, &newNodeType);
 			delete[](fbBrowseName);
@@ -182,65 +192,127 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
 
 		if (retVal == UA_STATUSCODE_GOOD) {
 			// create/get variable node for port on connected FB
-			size_t len = strlen(sourceName) + 2; // include slash and nullbyte
-			char* sourceVarBrowseName = new char[len];
-			snprintf(sourceVarBrowseName, len, "/%s", sourceName);
+			size_t len = strlen(connectedToName) + 2; // include slash and nullbyte
+			char *sourceVarBrowseName = new char[len];
+			snprintf(sourceVarBrowseName, len, "/%s", connectedToName);
 			retVal = COPC_UA_Handler::getInstance().getNodeForPath(&(*nodeIds)[i].variableId, sourceVarBrowseName, false,
 																   (*nodeIds)[i].functionBlockId);
 			delete[]sourceVarBrowseName;
 			if (retVal == UA_STATUSCODE_GOOD && (*nodeIds)[i].variableId == nullptr) {
 				// we need to create the variable
 
-				const CStringDictionary::TStringId varTypeId = isPub ? sourceInterfaceSpec->m_aunDODataTypeNames[sourceConnectionPoint.mPortId] : sourceInterfaceSpec->m_aunDIDataTypeNames[sourceConnectionPoint.mPortId];
-				auto mapType = COPC_UA_Helper::mapForteStringIdToOpcUa.find(varTypeId);
-				if (mapType == COPC_UA_Helper::mapForteStringIdToOpcUa.end()) {
-
-					DEVLOG_ERROR("Mapping of type %s to OPC UA not defined.", CStringDictionary::getInstance().get(varTypeId));
-					retVal = UA_STATUSCODE_BADNOTIMPLEMENTED;
-				} else {
-
-					const UA_TypeConvert *conv = (*nodeIds)[i].convert = mapType->second;
-					void *varValue = UA_new(conv->type);
-					UA_init(varValue, conv->type);
-					(*nodeIds)[i].variableId = UA_NodeId_new();
-					retVal = COPC_UA_Handler::getInstance().createUAVariableNode((*nodeIds)[i].functionBlockId, sourceName, conv->type,
-																				 varValue, (*nodeIds)[i].variableId);
-					UA_delete(varValue, conv->type);
-					if (retVal == UA_STATUSCODE_GOOD && !isPub) {
-						COPC_UA_Handler::getInstance().registerNodeCallBack((*nodeIds)[i].variableId, this, conv, i);
-					}
+				(*nodeIds)[i].convert = conv;
+				void *varValue = UA_new(conv->type);
+				UA_init(varValue, conv->type);
+				(*nodeIds)[i].variableId = UA_NodeId_new();
+				retVal = COPC_UA_Handler::getInstance().createVariableNode((*nodeIds)[i].functionBlockId, connectedToName, conv->type,
+																		   varValue, (*nodeIds)[i].variableId);
+				UA_delete(varValue, conv->type);
+				if (retVal == UA_STATUSCODE_GOOD && !isSD) {
+					COPC_UA_Handler::getInstance().registerNodeCallBack((*nodeIds)[i].variableId, this, conv, i);
 				}
 			} // else if retVal = UA_STATUSCODE_GOOD the node already exists
 		}
 
 		if (retVal != UA_STATUSCODE_GOOD) {
-			for (unsigned int j = 0; j <= i; j++) {
-				if ((*nodeIds)[j].functionBlockId != nullptr)
-					UA_NodeId_delete((*nodeIds)[j].functionBlockId);
-				if ((*nodeIds)[j].functionBlockId != nullptr)
-					UA_NodeId_delete((*nodeIds)[j].variableId);
-			}
-			delete[](*nodeIds);
-			(*nodeIds) = nullptr;
+			deleteNodeIds(nodeIds, i + 1);
 			return e_InitInvalidId;
 		}
 	}
 	return e_InitOk;
 }
 
-EComResponse COPC_UA_Layer::sendData(void *paData, unsigned int paSize){
+
+forte::com_infra::EComResponse COPC_UA_Layer::createMethodNode() {
+
+	DEVLOG_DEBUG("OPC UA creating method for %s\n", getCommFB()->getInstanceName());
+
+	if (sendDataNodeIds != nullptr || readDataNodeIds != nullptr) {
+		DEVLOG_ERROR("Method node already initialized.\n");
+		return e_InitInvalidId;
+	}
+
+	if (this->getCommFB()->getNumRD() == 0 && this->getCommFB()->getNumSD() == 0) {
+		DEVLOG_ERROR("OPC UA Method without SD/RD Signal, pure event handling\n");
+		return e_InitInvalidId;
+	}
+
+	// create the list of input arguments of the method which corresponds to the RD ports (i.e. output of the FB)
+	UA_Argument *inputArguments;
+	if (createMethodArguments(&inputArguments, getCommFB()->getNumRD(), false) != e_InitOk) {
+		return e_InitInvalidId;
+	}
+
+	UA_Argument *outputArguments;
+	if (createMethodArguments(&outputArguments, getCommFB()->getNumSD(), true) != e_InitOk) {
+		UA_Array_delete(inputArguments, getCommFB()->getNumRD(), &UA_TYPES[UA_TYPES_ARGUMENT]);
+		return e_InitInvalidId;
+	}
+
+	forte::com_infra::EComResponse result = e_InitOk;
+
+	UA_StatusCode retVal;
+	if ((retVal = COPC_UA_Handler::getInstance().createMethodNode(fbNodeId, 1, getCommFB()->getInstanceName(), COPC_UA_Layer::onServerMethodCall, this,
+																  getCommFB()->getNumRD(),
+																  inputArguments, getCommFB()->getNumSD(), outputArguments, methodNodeId)) !=
+		UA_STATUSCODE_GOOD) {
+		DEVLOG_ERROR("OPC UA could not create method node: %s - %s\n", UA_StatusCode_name(retVal), UA_StatusCode_description(retVal));
+		result = e_InitInvalidId;
+	}
+	UA_Array_delete(inputArguments, getCommFB()->getNumRD(), &UA_TYPES[UA_TYPES_ARGUMENT]);
+	UA_Array_delete(outputArguments, getCommFB()->getNumSD(), &UA_TYPES[UA_TYPES_ARGUMENT]);
+
+	return result;
+}
+
+
+forte::com_infra::EComResponse COPC_UA_Layer::createMethodArguments(UA_Argument **arguments, unsigned int numPorts, bool isSD) {
+	*arguments = static_cast<UA_Argument *>(UA_Array_new(numPorts, &UA_TYPES[UA_TYPES_ARGUMENT]));
+
+	for (unsigned int i = 0; i < numPorts; i++) {
+
+		UA_Argument *arg = &(*arguments)[i];
+		UA_Argument_init(arg);
+		arg->arrayDimensionsSize = 0;
+		arg->arrayDimensions = NULL;
+
+		const CFunctionBlock *connectedToFb = nullptr;
+		const char *connectedToName = nullptr;
+		const UA_TypeConvert *conv;
+
+		if (!getPortConnectionInfo(i, isSD, &connectedToFb, &connectedToName, &conv)) {
+			UA_Array_delete(*arguments, numPorts, &UA_TYPES[UA_TYPES_ARGUMENT]);
+			return e_InitInvalidId;
+		}
+
+		arg->dataType = conv->type->typeId;
+		arg->description = UA_LOCALIZEDTEXT_ALLOC("en_US", "Method parameter");
+		arg->name = UA_STRING_ALLOC(connectedToFb->getInstanceName());
+		arg->valueRank = -1;
+
+	}
+
+	return e_InitOk;
+}
+
+EComResponse COPC_UA_Layer::sendData(void *paData, unsigned int paSize) {
 
 	EComResponse retVal = e_ProcessDataOk;
 
-	if(0 == paSize){
-		//TODO change to an update now with out the need for a new allocation
-		// sfp_item_update_data_allocated(*mSFPItem, sfp_variant_new_null(), sfp_time_in_millis ());
-	}else {
-		const CIEC_ANY *SDs(static_cast<CIEC_ANY*>(paData));
-		for(unsigned int i = 0; i < paSize; i++){
+	if (getCommFB()->getComServiceType() == e_Server) {
+		// continue method call
+		serverMethodCallResultReady = true;
+		return retVal;
+	}
+
+	if (paSize == 0) {
+	} else {
+		const CIEC_ANY *SDs(static_cast<CIEC_ANY *>(paData));
+
+		for (unsigned int i = 0; i < paSize; i++) {
 			FB_NodeIds *ni = &this->sendDataNodeIds[i];
 			if (COPC_UA_Handler::getInstance().updateNodeValue(ni->variableId, &SDs[i], ni->convert) != UA_STATUSCODE_GOOD) {
-				DEVLOG_ERROR("Could not convert publisher value for port %d to OPC UA.", i);
+				DEVLOG_ERROR("Could not convert publisher value for port %d to OPC UA.\n", i);
 				retVal = e_ProcessDataDataTypeError;
 			}
 		}
@@ -249,23 +321,21 @@ EComResponse COPC_UA_Layer::sendData(void *paData, unsigned int paSize){
 }
 
 
-
-EComResponse COPC_UA_Layer::recvData(const void * pa_pvData, __attribute__((unused)) unsigned int pa_unSize){
+EComResponse COPC_UA_Layer::recvData(const void *pa_pvData, __attribute__((unused)) unsigned int pa_unSize) {
 	mInterruptResp = e_ProcessDataRecvFaild;
 
 	struct recvData_handle {
-		const struct UA_TypeConvert* convert;
+		const struct UA_TypeConvert *convert;
 		unsigned int portIndex;
 		const UA_Variant *data;
 	};
-	const struct recvData_handle *handleRecv = static_cast<const recvData_handle*>(pa_pvData);
+	const struct recvData_handle *handleRecv = static_cast<const recvData_handle *>(pa_pvData);
 
 
-	if(getCommFB()->getNumRD() == 0){
-		//TODO handle pure event subscription
+	if (getCommFB()->getNumRD() == 0) {
 		mInterruptResp = e_ProcessDataOk;
-	}else{
-		if(UA_Variant_isScalar(handleRecv->data) && handleRecv->data->type == handleRecv->convert->type && handleRecv->data->data) {
+	} else {
+		if (UA_Variant_isScalar(handleRecv->data) && handleRecv->data->type == handleRecv->convert->type && handleRecv->data->data) {
 			if (handleRecv->convert->set(handleRecv->data->data, &getCommFB()->getRDs()[handleRecv->portIndex])) {
 				mInterruptResp = e_ProcessDataOk;
 				getCommFB()->interruptCommFB(this);
@@ -277,8 +347,93 @@ EComResponse COPC_UA_Layer::recvData(const void * pa_pvData, __attribute__((unus
 }
 
 
-EComResponse COPC_UA_Layer::processInterrupt(){
+EComResponse COPC_UA_Layer::processInterrupt() {
 	return mInterruptResp;
+}
+
+UA_StatusCode COPC_UA_Layer::onServerMethodCall(void *methodHandle, __attribute__((unused)) const UA_NodeId objectId, size_t inputSize, const UA_Variant *input,
+												size_t outputSize,
+												UA_Variant *output) {
+
+	COPC_UA_Layer *self = static_cast<COPC_UA_Layer *>(methodHandle);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
+	// other thready may currently create nodes for the same path, thus mutex
+	CCriticalRegion criticalRegion(self->mutexServerMethodCall);
+#pragma GCC diagnostic pop
+	self->serverMethodCallResultReady = false;
+
+	if (inputSize != self->getCommFB()->getNumRD() || outputSize != self->getCommFB()->getNumSD()) {
+		DEVLOG_ERROR("OPC UA method call got invalid number of arguments. In: %d==%d, Out: %d==%d\n", self->getCommFB()->getNumRD(), inputSize,
+					 self->getCommFB()->getNumSD(), outputSize);
+		return UA_STATUSCODE_BADINVALIDARGUMENT;
+	}
+
+
+	self->mInterruptResp = e_ProcessDataOk;
+
+	// put the input values on the wire, i.e. on the RD ports
+	for (unsigned int i = 0; i < self->getCommFB()->getNumRD(); i++) {
+		if (UA_Variant_isScalar(&input[i]) && input[i].data != NULL) {
+			auto map = COPC_UA_Helper::mapForteTypeIdToOpcUa.find(self->getCommFB()->getRDs()[i].getDataTypeID());
+			if (map == COPC_UA_Helper::mapForteTypeIdToOpcUa.end()) {
+				DEVLOG_ERROR("OPC UA can not convert method inputArgument at idx %d to forte type\n", i);
+				break;
+			}
+
+			if (!map->second.set(input[i].data, &self->getCommFB()->getRDs()[i])) {
+				self->mInterruptResp = e_ProcessDataRecvFaild;
+				DEVLOG_ERROR("OPC UA can not convert method inputArgument at idx %d to forte type\n", i);
+				break;
+			}
+		}
+	}
+
+
+	if (self->mInterruptResp == e_ProcessDataOk) {
+		self->getCommFB()->interruptCommFB(self);
+		COPC_UA_Handler::getInstance().forceEventHandling(self);
+	} else {
+		return UA_STATUSCODE_BADINVALIDARGUMENT;
+	}
+
+	// wait until result is ready
+	unsigned long waitedUs = 0;
+	while (!self->serverMethodCallResultReady && waitedUs < METHOD_CALL_TIMEOUT * 1000 * 1000) {
+		usleep(10);
+		waitedUs += 10;
+	}
+	if (waitedUs >= METHOD_CALL_TIMEOUT * 1000 * 1000) {
+		DEVLOG_ERROR("OPC UA method call did not get result values within timeout.\n");
+		return UA_STATUSCODE_BADTIMEOUT;
+	}
+	self->serverMethodCallResultReady = false;
+
+	// copy SD values to output
+	for (unsigned int i = 0; i < self->getCommFB()->getNumSD(); i++) {
+		auto map = COPC_UA_Helper::mapForteTypeIdToOpcUa.find(self->getCommFB()->getSDs()[i].getDataTypeID());
+		if (map == COPC_UA_Helper::mapForteTypeIdToOpcUa.end()) {
+			DEVLOG_ERROR("OPC UA can not convert forte type to method outputArgument at idx %d\n", i);
+			break;
+		}
+
+		const UA_TypeConvert *convert = &map->second;
+
+		void *varValue = UA_new(convert->type);
+		if (!convert->get(&self->getCommFB()->getSDs()[i], varValue)) {
+			self->mInterruptResp = e_ProcessDataRecvFaild;
+			DEVLOG_ERROR("OPC UA can not convert forte type to method outputArgument at idx %d\n", i);
+		} else {
+			UA_Variant_setScalarCopy(&output[i], varValue, convert->type);
+		}
+
+		UA_delete(varValue, convert->type);
+
+		if (self->mInterruptResp != e_ProcessDataOk)
+			break;
+	}
+
+	return self->mInterruptResp == e_ProcessDataOk ? UA_STATUSCODE_GOOD : UA_STATUSCODE_BADUNEXPECTEDERROR;
 }
 
 
