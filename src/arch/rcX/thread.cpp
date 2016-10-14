@@ -18,14 +18,14 @@
 #define FORTE_TASK_TOKEN      TSK_TOK_25
 #define FORTE_TASK_PRIORITY   TSK_PRIO_25
 
-UINT CrcXThread::taskInstance = 0;
+UINT CrcXThread::smTaskInstance = 0;
 
 void CrcXThread::start(void){
   if (0 != m_pacStack){
-    if (RX_OK == rX_SysCreateTask(FORTE_TASK_NAME, threadFunction, (void*)this, m_pacStack, m_nStackSize / 4, RX_TASK_AUTO_START,
-        0, FORTE_TASK_PRIORITY, FORTE_TASK_TOKEN, CrcXThread::taskInstance, (void (*) (void*))NULL)){
-      CrcXThread::taskInstance++;
-      if(RX_OK != rX_SysIdentifyTask(FORTE_TASK_NAME, CrcXThread::taskInstance - 1, &m_stThreadID, 0, 0)){
+    if (RX_OK == rX_SysCreateTask(FORTE_TASK_NAME, threadFunction, (void*)this, m_pacStack, mStackSize / 4, RX_TASK_AUTO_START,
+        0, FORTE_TASK_PRIORITY, FORTE_TASK_TOKEN, CrcXThread::smTaskInstance, (void (*) (void*))NULL)){
+      CrcXThread::smTaskInstance++;
+      if(RX_OK != rX_SysIdentifyTask(FORTE_TASK_NAME, CrcXThread::smTaskInstance - 1, &mThreadID, 0, 0)){
         DEVLOG_ERROR("Task was created but couldn't be identified. Memory leaks might happen\n");
       }
     }else{
@@ -51,22 +51,22 @@ void CrcXThread::threadFunction(void *arguments){
 }
 
 CrcXThread::CrcXThread(long pa_nStackSize) :
-      m_stThreadID(0), m_nStackSize(pa_nStackSize), m_pacStack(0){
-	if(m_nStackSize < (128 * 4)){ // If m_nStackSize == 0, the minimum is also set.
-		m_nStackSize = 128 * 4;
+      mThreadID(0), mStackSize(pa_nStackSize), m_pacStack(0){
+	if(mStackSize < (128 * 4)){ // If m_nStackSize == 0, the minimum is also set.
+		mStackSize = 128 * 4;
 	}
 
-	m_pacStack = new char[m_nStackSize];
+	m_pacStack = new char[mStackSize];
 	if (0 == m_pacStack){
-	  DEVLOG_ERROR("Not enough memory to allocate %l bytes for creating a new thread\n", m_nStackSize);
+	  DEVLOG_ERROR("Not enough memory to allocate %l bytes for creating a new thread\n", mStackSize);
 	}
 }
 
 CrcXThread::~CrcXThread(){
-  if(0 != m_stThreadID){
+  if(0 != mThreadID){
     end();
   }
-  rX_SysDeleteTask(m_stThreadID, 0);
+  rX_SysDeleteTask(mThreadID, 0);
   delete[] m_pacStack;
 }
 
@@ -75,7 +75,7 @@ void CrcXThread::setDeadline(const CIEC_TIME &pa_roVal){
 }
 
 void CrcXThread::join(void){
-  if(0 != m_stThreadID){
+  if(0 != mThreadID){
     CCriticalRegion criticalRegion(mJoinMutex);
   }
 }

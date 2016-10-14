@@ -1,0 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2016 fortiss GmbH
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *  Jose Cabral - initial API and implementation and/or initial documentation
+ *******************************************************************************/
+ 
+#ifndef _CONFIG_RCX_H_
+#define _CONFIG_RCX_H_
+
+const unsigned int cg_forteQueueMax = ${FORTE_QUEUE_MAX}; 
+
+const unsigned int cg_forteWaitingQueueMax = ${FORTE_WAIT_QUEUE_MAX}; 
+
+const unsigned int cg_fortePoolMax = ${FORTE_POOL_MAX}; 
+
+#endif /* _CONFIG_RCX_H_ */

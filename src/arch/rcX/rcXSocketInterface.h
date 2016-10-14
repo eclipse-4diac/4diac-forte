@@ -28,20 +28,17 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
     DECLARE_SINGLETON(CrcXSocketInterface)
   public:
 
-    typedef struct TSocketDescriptorStruct_t{
+    struct SSocketDescriptor{
       UINT32 socketNumber;
       bool accepted;
       UINT32 port;
-    }TSocketDescriptorStruct;
+    };
 
-    typedef TSocketDescriptorStruct* TSocketDescriptor;
-
-    typedef struct udpAdressStruct{
+    typedef SSocketDescriptor* TSocketDescriptor;
+    struct TUDPDestAddr{
         UINT32  destPort;
         UINT32  destAddress;
-    }TUDPDestAddr;
-
-    typedef TSocketDescriptor TFileDescriptor;
+    };
 
     static const TSocketDescriptor scm_nInvalidSocketDescriptor;
 
@@ -61,8 +58,8 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
 
     /* Handler functions */
 
-    void addComCallback(TFileDescriptor pa_nFD, forte::com_infra::CComLayer *pa_poComLayer);
-    void removeComCallback(TFileDescriptor pa_nFD);
+    void addComCallback(TSocketDescriptor pa_nFD, forte::com_infra::CComLayer *pa_poComLayer);
+    void removeComCallback(TSocketDescriptor pa_nFD);
 
     /* functions needed for the external event handler interface */
     void enableHandler(void){
@@ -89,14 +86,14 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
   private:
 
     struct TConnContType{
-        TFileDescriptor m_nSockDes;
+        TSocketDescriptor m_nSockDes;
         forte::com_infra::CComLayer * m_poCallee;
     };
 
     typedef CSinglyLinkedList<TConnContType> TConnectionContainer;
 
-    void createDesciptorList(CSinglyLinkedList<TFileDescriptor>* m_panFDSet);
-    bool isSet(TFileDescriptor pa_descriptor, CSinglyLinkedList<TFileDescriptor>* m_descriptorList);
+    void createDesciptorList(CSinglyLinkedList<TSocketDescriptor>* m_panFDSet);
+    bool isSet(TSocketDescriptor pa_descriptor, CSinglyLinkedList<TSocketDescriptor>* m_descriptorList);
 
     TConnectionContainer m_lstConnectionsList;
     CSyncObject m_oSync;
@@ -108,11 +105,7 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
     static char * const scmForteWaitingQueueName;
     static char * const scmFortePoolName;
 
-		static const unsigned int scmForteQueueMax;
-		static const unsigned int scmForteWaitingQueueMax;
-		static const unsigned int scmFortePoolMax;
-
-    typedef struct tcpResourcesType{
+    struct tcpResources{
         RX_HANDLE tcpTaskHandle;
         TLR_QUE_LINK_T tcpQueueHandle;
         RX_HANDLE fortePoolHandle;
@@ -120,14 +113,14 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
         RX_HANDLE forteTask;
         RX_HANDLE forteWaitingQueue;
         UINT32 sndId;
-    } tcpResources;
+    };
 
     /* Task packet union.
      *
      * All the packets, which are used by the task to exchange data with another tasks,
      * are represented by the union.
      */
-    typedef union FORTE_TCP_PACKET_Ttag                                                            /* Task packet union */
+    union FORTE_TCP_PACKET_T                                                            /* Task packet union */
     {
       /* TLR packet header */
       TLR_PACKET_HEADER_T                           tHead;
@@ -154,7 +147,7 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
 
       TCPIP_PACKET_TCP_UDP_CMD_SHUTDOWN_IND_T       tShutdownInd;
       TCPIP_PACKET_TCP_UDP_CMD_RECEIVE_STOP_IND_T   tStopInd;
-    }FORTE_TCP_PACKET_T;
+    };
 
     RX_RESULT openConnection(char *pa_acIPAddr, unsigned short pa_nPort, bool isTCP, bool isServer, TUDPDestAddr *m_ptDestAddr, TSocketDescriptor& pa_destSocket);
     RX_RESULT sendData(TSocketDescriptor pa_nSockD, char* pa_pcData, unsigned int pa_unSize, bool pa_isTCP, TUDPDestAddr *pa_ptDestAddr, void* pa_PacketData, int* pa_result);

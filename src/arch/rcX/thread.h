@@ -49,7 +49,7 @@ class CrcXThread : public forte::arch::CThreadBase {
      *
      *  Increment task number to identify the different tasks.
      */
-    static UINT taskInstance;
+    static UINT smTaskInstance;
 
     /*!\brief Function that is given to the system thread support that should be called for the thread.
      *
@@ -61,10 +61,10 @@ class CrcXThread : public forte::arch::CThreadBase {
 
     /*! \brief data needed for posix scheduling system to identify the thread.
      */
-    RX_HANDLE m_stThreadID;
+    RX_HANDLE mThreadID;
     /*! \brief Size of the stack used by this thread.
      */
-    long m_nStackSize;
+    long mStackSize;
 
     /*! \brief Pointer to the memory to be used for this thread stack
      *

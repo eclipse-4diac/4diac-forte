@@ -17,16 +17,13 @@
 #include <criticalregion.h>
 #include <string.h>
 #include <TLR_Legacy.h>
+#include <forte_config_rcX.h>
 
 DEFINE_SINGLETON(CrcXSocketInterface);
 
 char * const CrcXSocketInterface::scmForteQueueName = "FOR_QUE";
 char * const CrcXSocketInterface::scmForteWaitingQueueName = "FOR_WAIT_QUE";
 char * const CrcXSocketInterface::scmFortePoolName = "FOR_POOL";
-
-const unsigned int CrcXSocketInterface::scmForteQueueMax = 32 ;
-const unsigned int CrcXSocketInterface::scmForteWaitingQueueMax = 32;
-const unsigned int CrcXSocketInterface::scmFortePoolMax = 32;
 
 const CrcXSocketInterface::TSocketDescriptor CrcXSocketInterface::scm_nInvalidSocketDescriptor = 0;
 
@@ -45,21 +42,21 @@ CrcXSocketInterface::CrcXSocketInterface(){
   }
 
   /* Create process queue */
-  eRslt = TLR_QUE_CREATE(scmForteQueueName, scmForteQueueMax, &m_forteResources.forteQueueHandle);
+  eRslt = TLR_QUE_CREATE(scmForteQueueName, cg_forteQueueMax, &m_forteResources.forteQueueHandle);
   if(eRslt != TLR_S_OK){
     DEVLOG_ERROR("Couldn't create queue\n");
     m_initialized = false;
   }
 
   /* Create waiting queue */
-   eRslt = TLR_QUE_CREATE(scmForteWaitingQueueName, scmForteWaitingQueueMax, &m_forteResources.forteWaitingQueue);
+   eRslt = TLR_QUE_CREATE(scmForteWaitingQueueName, cg_forteWaitingQueueMax, &m_forteResources.forteWaitingQueue);
    if(eRslt != TLR_S_OK){
      DEVLOG_ERROR("Couldn't create waiting queue\n");
      m_initialized = false;
    }
 
   /* Create resource pool for queue packets */
-  eRslt = TLR_POOL_CREATE(scmFortePoolName, scmFortePoolMax, sizeof(FORTE_TCP_PACKET_T), &m_forteResources.fortePoolHandle);
+  eRslt = TLR_POOL_CREATE(scmFortePoolName, cg_fortePoolMax, sizeof(FORTE_TCP_PACKET_T), &m_forteResources.fortePoolHandle);
   if(eRslt != TLR_S_OK){
     DEVLOG_ERROR("Couldn't create pool\n");
     m_initialized = false;
@@ -86,7 +83,7 @@ CrcXSocketInterface::~CrcXSocketInterface(){
 
 void CrcXSocketInterface::run(void){
 
-  CSinglyLinkedList<TFileDescriptor> descriptors;
+  CSinglyLinkedList<TSocketDescriptor> descriptors;
   unsigned int retVal;
 
   while(isAlive()){
@@ -104,7 +101,7 @@ void CrcXSocketInterface::run(void){
       for(TConnectionContainer::Iterator itRunner = m_lstConnectionsList.begin(); itRunner != itEnd;){
         // need to retrieve the callee as the iterator may get invalid in the recvDat function below in case of connection closing
         forte::com_infra::CComLayer *comLayer = itRunner->m_poCallee;
-        TFileDescriptor sockDes = itRunner->m_nSockDes;
+        TSocketDescriptor sockDes = itRunner->m_nSockDes;
         ++itRunner;
 
         if((isSet(sockDes, &descriptors)) && (0 != comLayer)){
@@ -123,7 +120,7 @@ void CrcXSocketInterface::run(void){
   }
 }
 
-void CrcXSocketInterface::addComCallback(TFileDescriptor pa_nFD, forte::com_infra::CComLayer *pa_poComLayer){
+void CrcXSocketInterface::addComCallback(TSocketDescriptor pa_nFD, forte::com_infra::CComLayer *pa_poComLayer){
   {
     CCriticalRegion criticalRegion(m_oSync);
     TConnContType stNewNode = { pa_nFD, pa_poComLayer };
@@ -135,7 +132,7 @@ void CrcXSocketInterface::addComCallback(TFileDescriptor pa_nFD, forte::com_infr
   }
 }
 
-void CrcXSocketInterface::removeComCallback(TFileDescriptor pa_nFD){
+void CrcXSocketInterface::removeComCallback(TSocketDescriptor pa_nFD){
   CCriticalRegion criticalRegion(m_oSync);
 
   TConnectionContainer::Iterator itRunner(m_lstConnectionsList.begin());
@@ -157,7 +154,7 @@ void CrcXSocketInterface::removeComCallback(TFileDescriptor pa_nFD){
   }
 }
 
-void CrcXSocketInterface::createDesciptorList(CSinglyLinkedList<CrcXSocketInterface::TFileDescriptor>* m_descriptorList){
+void CrcXSocketInterface::createDesciptorList(CSinglyLinkedList<CrcXSocketInterface::TSocketDescriptor>* m_descriptorList){
   m_descriptorList->clearAll();
   TConnectionContainer::Iterator itEnd(m_lstConnectionsList.end());
   for(TConnectionContainer::Iterator itRunner = m_lstConnectionsList.begin(); itRunner != itEnd; ++itRunner){
@@ -166,10 +163,10 @@ void CrcXSocketInterface::createDesciptorList(CSinglyLinkedList<CrcXSocketInterf
   m_bConnectionListChanged = false;
 }
 
-bool CrcXSocketInterface::isSet(TFileDescriptor pa_descriptor, CSinglyLinkedList<TFileDescriptor>* m_descriptorList){
+bool CrcXSocketInterface::isSet(TSocketDescriptor pa_descriptor, CSinglyLinkedList<TSocketDescriptor>* m_descriptorList){
   bool retVal = false;
-  CSinglyLinkedList<TFileDescriptor>::Iterator itEnd(m_descriptorList->end());
-  for(CSinglyLinkedList<TFileDescriptor>::Iterator itRunner = m_descriptorList->begin(); itRunner != itEnd; ++itRunner){
+  CSinglyLinkedList<TSocketDescriptor>::Iterator itEnd(m_descriptorList->end());
+  for(CSinglyLinkedList<TSocketDescriptor>::Iterator itRunner = m_descriptorList->begin(); itRunner != itEnd; ++itRunner){
     if (pa_descriptor == *itRunner){
       retVal = true;
       break;
@@ -435,7 +432,7 @@ TForteUInt32 CrcXSocketInterface::stringIpToInt(char* pa_ipString){
 }
 
 RX_RESULT CrcXSocketInterface::sendPacketToTCP(UINT32 pa_destId, UINT32 pa_ulLen, UINT32 pa_ulCmd, void* pa_tData, UINT32 pa_dataLength){
-  FORTE_TCP_PACKET_Ttag* ptPck;
+  FORTE_TCP_PACKET_T* ptPck;
   RX_RESULT retVal;
 
   retVal = TLR_POOL_PACKET_GET(m_forteResources.fortePoolHandle, &ptPck);
@@ -637,7 +634,7 @@ CrcXSocketInterface::TSocketDescriptor CrcXSocketInterface::acceptTCPConnection(
 }
 
 CrcXSocketInterface::TSocketDescriptor CrcXSocketInterface::socketDescriptorAlloc(void){
-  TSocketDescriptorStruct* returnSocket = new TSocketDescriptorStruct;
+  SSocketDescriptor* returnSocket = new SSocketDescriptor;
   if (0 != returnSocket){
     returnSocket->socketNumber = 0;
     returnSocket->accepted = false;
