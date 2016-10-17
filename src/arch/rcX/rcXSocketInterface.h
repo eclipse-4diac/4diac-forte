@@ -54,8 +54,6 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
     static int sendDataOnUDP(TSocketDescriptor pa_nSockD, TUDPDestAddr *pa_ptDestAddr, char* pa_pcData, unsigned int pa_unSize);
     static int receiveDataFromUDP(TSocketDescriptor pa_nSockD, char* pa_pcData, unsigned int pa_unBufSize);
 
-    static unsigned int select(CSinglyLinkedList<TSocketDescriptor>* m_panFDSet, unsigned int pa_usTimeout);
-
     /* Handler functions */
 
     void addComCallback(TSocketDescriptor pa_nFD, forte::com_infra::CComLayer *pa_poComLayer);
@@ -111,7 +109,6 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
         RX_HANDLE fortePoolHandle;
         RX_HANDLE forteQueueHandle;
         RX_HANDLE forteTask;
-        RX_HANDLE forteWaitingQueue;
         UINT32 sndId;
     };
 
@@ -153,7 +150,8 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
     RX_RESULT sendData(TSocketDescriptor pa_nSockD, char* pa_pcData, unsigned int pa_unSize, bool pa_isTCP, TUDPDestAddr *pa_ptDestAddr, void* pa_PacketData, int* pa_result);
     RX_RESULT close(TSocketDescriptor pa_nSockD);
     RX_RESULT accept(TSocketDescriptor pa_listeningSocketDesc, TSocketDescriptor& pa_destSocket);
-    RX_RESULT receiveData(TSocketDescriptor pa_nSockD, char* pa_pcData, unsigned int pa_unBufSize, int* pa_receivedBytes);
+    RX_RESULT receiveData(TSocketDescriptor pa_nSockD, bool isTcp, char* pa_pcData, unsigned int pa_unBufSize, int* pa_receivedBytes);
+    RX_RESULT select(CSinglyLinkedList<TSocketDescriptor>* m_paSockets, unsigned int pa_usTimeout);
     TForteUInt32 stringIpToInt(char* pa_ipString);
     RX_RESULT sendPacketToTCP(UINT32 pa_destId, UINT32 pa_ulLen, UINT32 pa_ulCmd, void* pa_tData, UINT32 pa_dataLength);
     RX_RESULT waitPacket(UINT32 pa_command, FORTE_TCP_PACKET_T** pa_packetResult);
@@ -162,9 +160,11 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
     TSocketDescriptor socketDescriptorAlloc(void);
     void socketDescriptorDeAlloc(TSocketDescriptor pa_Socket);
 
-    TSocketDescriptor m_listeningSocketDescriptor;
-    tcpResources m_forteResources;
-    bool m_initialized;
+    CSinglyLinkedList<FORTE_TCP_PACKET_T*> mWaitingList;
+    UINT32 m_unPacketsWaiting;
+    TSocketDescriptor mListeningSocketDescriptor;
+    tcpResources mForteResources;
+    bool m_bInitialized;
 };
 
 
