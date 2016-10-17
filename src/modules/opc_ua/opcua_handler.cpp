@@ -411,8 +411,7 @@ UA_StatusCode COPC_UA_Handler::registerNodeCallBack(const UA_NodeId *nodeId, for
 }
 
 
-void COPC_UA_Handler::onWrite(void *handleRaw, __attribute__((unused)) const UA_NodeId nodeid, const UA_Variant *data,
-							  __attribute__((unused)) const UA_NumericRange *range) {
+void COPC_UA_Handler::onWrite(void *handleRaw, const UA_NodeId, const UA_Variant *data, const UA_NumericRange *) {
 
 	struct UA_NodeCallback_Handle *handle = static_cast<struct UA_NodeCallback_Handle *>(handleRaw);
 

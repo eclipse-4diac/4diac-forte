@@ -20,7 +20,6 @@
 //#include <src_generated/ua_namespaceinit_generated.h>
 //#pragma GCC diagnostic pop
 #include <criticalregion.h>
-#include <zconf.h>
 #include "opcua_layer.h"
 #include "opcua_handler.h"
 
@@ -321,7 +320,7 @@ EComResponse COPC_UA_Layer::sendData(void *paData, unsigned int paSize) {
 }
 
 
-EComResponse COPC_UA_Layer::recvData(const void *pa_pvData, __attribute__((unused)) unsigned int pa_unSize) {
+EComResponse COPC_UA_Layer::recvData(const void *pa_pvData, unsigned int) {
 	mInterruptResp = e_ProcessDataRecvFaild;
 
 	struct recvData_handle {
@@ -398,14 +397,19 @@ UA_StatusCode COPC_UA_Layer::onServerMethodCall(void *methodHandle, __attribute_
 	}
 
 	// wait until result is ready
-	unsigned long waitedUs = 0;
-	while (!self->serverMethodCallResultReady && waitedUs < METHOD_CALL_TIMEOUT * 1000 * 1000) {
-		usleep(10);
-		waitedUs += 10;
-	}
-	if (waitedUs >= METHOD_CALL_TIMEOUT * 1000 * 1000) {
-		DEVLOG_ERROR("OPC UA method call did not get result values within timeout.\n");
-		return UA_STATUSCODE_BADTIMEOUT;
+	{
+		CIEC_DATE_AND_TIME startTime;
+		startTime.setCurrentTime();
+		CIEC_DATE_AND_TIME currentTime;
+		currentTime.setCurrentTime();
+		// TODO uses busy waiting. Is there a better way?
+		while (!self->serverMethodCallResultReady && currentTime.getMilliSeconds() - startTime.getMilliSeconds() < METHOD_CALL_TIMEOUT * 1000) {
+			currentTime.setCurrentTime();
+		}
+		if (currentTime.getMilliSeconds() - startTime.getMilliSeconds() >= METHOD_CALL_TIMEOUT * 1000) {
+			DEVLOG_ERROR("OPC UA method call did not get result values within timeout.\n");
+			return UA_STATUSCODE_BADTIMEOUT;
+		}
 	}
 	self->serverMethodCallResultReady = false;
 
