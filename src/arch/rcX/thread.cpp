@@ -56,7 +56,7 @@ CrcXThread::CrcXThread(long pa_nStackSize) :
 		mStackSize = 128 * 4;
 	}
 
-	m_pacStack = new char[mStackSize];
+	m_pacStack = forte_malloc(mStackSize);
 	if (0 == m_pacStack){
 	  DEVLOG_ERROR("Not enough memory to allocate %l bytes for creating a new thread\n", mStackSize);
 	}
@@ -67,7 +67,7 @@ CrcXThread::~CrcXThread(){
     end();
   }
   rX_SysDeleteTask(mThreadID, 0);
-  delete[] m_pacStack;
+  forte_free(m_pacStack);
 }
 
 void CrcXThread::setDeadline(const CIEC_TIME &pa_roVal){

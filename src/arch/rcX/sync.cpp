@@ -15,7 +15,7 @@
 #include "../devlog.h"
 
 CrcXSyncObject::CrcXSyncObject(){
-  mMutexHandle = new char[RX_MUTEX_SIZE];
+  mMutexHandle = forte_malloc(RX_MUTEX_SIZE);
   if(0 == mMutexHandle){
     DEVLOG_ERROR("Not enough memory to allocate %i bytes for creating a new mutex\n", RX_MUTEX_SIZE);
   }else{
@@ -29,5 +29,5 @@ CrcXSyncObject::CrcXSyncObject(){
 
 CrcXSyncObject::~CrcXSyncObject(){
   rX_MtxDeleteMutex(mMutexHandle);
-  delete[] mMutexHandle;
+  forte_free(mMutexHandle);
 }

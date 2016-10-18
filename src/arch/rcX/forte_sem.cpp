@@ -18,7 +18,7 @@ namespace forte {
   namespace arch {
 
     CrcXSemaphore::CrcXSemaphore(unsigned int paInitialValue){
-      mSemaphore = new char[RX_SEMAPHORE_SIZE];
+      mSemaphore = forte_malloc(RX_SEMAPHORE_SIZE);
       if(0 == mSemaphore){
         DEVLOG_ERROR("Not enough memory to allocate %i bytes for creating a new semaphore\n", RX_SEMAPHORE_SIZE);
       }else{
@@ -33,7 +33,7 @@ namespace forte {
     CrcXSemaphore::~CrcXSemaphore(){
       if(0 != mSemaphore){
         rX_SemDeleteSemaphore(mSemaphore);
-        delete[] mSemaphore;
+        forte_free(mSemaphore);
       }
     }
 

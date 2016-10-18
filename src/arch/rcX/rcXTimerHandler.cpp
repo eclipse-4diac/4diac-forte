@@ -19,7 +19,7 @@ void CTimerHandler::createTimerHandler(void){
 }
 
 CrcXTimerHandler::CrcXTimerHandler() : mTimer(0){
-  mTimer = new char[RX_TIMER_SIZE];
+  mTimer = forte_malloc(RX_TIMER_SIZE);
   if(0 == mTimer){
     DEVLOG_ERROR("Not enough memory to allocate %l bytes for creating a new timer\n", RX_TIMER_SIZE);
   }else{
@@ -31,7 +31,7 @@ CrcXTimerHandler::CrcXTimerHandler() : mTimer(0){
 CrcXTimerHandler::~CrcXTimerHandler(){
   rX_TimStopTimer(mTimer);
   rX_TimDeleteTimer(mTimer);
-  delete[] mTimer;
+  forte_free(mTimer);
 }
 
 void CrcXTimerHandler::timerCallback(void* arguments){
