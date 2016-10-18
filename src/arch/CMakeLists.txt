@@ -19,6 +19,7 @@ add_subdirectory(win32)
 add_subdirectory(be_m1)
 add_subdirectory(macos)
 add_subdirectory(rcX)
+add_subdirectory(vxworks)
 
 forte_add_sourcefile_hcpp(timerha devlog threadbase)
 
