@@ -40,14 +40,13 @@ void CVxWorksThread::threadFunction(void *arguments){
 }
 
 CVxWorksThread::CVxWorksThread(long pa_nStackSize) :
-      mThreadID(TASK_ID_ERROR), mStackSize(pa_nStackSize), m_pacStack(0){
+      mThreadID(TASK_ID_ERROR), mStackSize(pa_nStackSize){
 }
 
 CVxWorksThread::~CVxWorksThread(){
   if(0 != mThreadID){
     end();
   }
-  taskDelete(mThreadID, 0);
 }
 
 void CVxWorksThread::setDeadline(const CIEC_TIME &pa_roVal){
@@ -57,5 +56,6 @@ void CVxWorksThread::setDeadline(const CIEC_TIME &pa_roVal){
 void CVxWorksThread::join(void){
   if(0 != mThreadID){
     CCriticalRegion criticalRegion(mJoinMutex);
+    taskDelete(mThreadID, 0);
   }
 }
