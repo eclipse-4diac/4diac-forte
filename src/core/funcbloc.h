@@ -223,6 +223,8 @@ class CFunctionBlock{
 
     CDataConnection *getDOConnection(CStringDictionary::TStringId paDONameId) const;
 
+    CDataConnection *getDIConnection(CStringDictionary::TStringId paDINameId) const;
+
     /*!\brief if the data output is of generic type (i.e, ANY) this function allows an data connection to configure
      * the DO with the specific type coming from the other end of the connection
      */
@@ -273,9 +275,10 @@ class CFunctionBlock{
     void setupFBInterface(const SFBInterfaceSpec *pa_pstInterfaceSpec, TForteByte *pa_acFBConnData,
         TForteByte *pa_acFBVarsData, bool pa_bManagesFBData);
 
-    const SFBInterfaceSpec* getFBInterfaceSpec(){
+    const SFBInterfaceSpec* getFBInterfaceSpec() const{
       return m_pstInterfaceSpec;
     }
+
 
     virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
 

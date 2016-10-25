@@ -182,6 +182,15 @@ CDataConnection *CFunctionBlock::getDOConnection(CStringDictionary::TStringId pa
   return retVal;
 }
 
+CDataConnection *CFunctionBlock::getDIConnection(CStringDictionary::TStringId paDINameId) const{
+  CDataConnection *retVal = 0;
+  TPortId diPortID = getDIID(paDINameId);
+  if(cg_unInvalidPortId != diPortID){
+    retVal = m_apoDIConns[diPortID];
+  }
+  return retVal;
+}
+
 bool CFunctionBlock::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefValue){
   bool retVal = false;
 
