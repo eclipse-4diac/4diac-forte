@@ -32,7 +32,6 @@ CrcXSocketInterface::CrcXSocketInterface(){
   RX_RESULT eRslt;
   m_bInitialized = true;
   mListeningSocketDescriptor = 0;
-  m_bConnectionListChanged = false;
   m_unPacketsWaiting = 0;
   /* forte Task identification */
   //TODO: Check if it is really necessary
@@ -73,6 +72,8 @@ CrcXSocketInterface::CrcXSocketInterface(){
 
 CrcXSocketInterface::~CrcXSocketInterface(){
   this->end();
+  TLR_QUE_DELETE_CHECK(mForteResources.forteQueueHandle);
+  TLR_POOL_DELETE_CHECK(mForteResources.fortePoolHandle);
 }
 
 void CrcXSocketInterface::run(void){
@@ -83,8 +84,8 @@ void CrcXSocketInterface::run(void){
     }
 
     CSinglyLinkedList<FORTE_TCP_PACKET_T*>::Iterator itEndWaiting(mWaitingList.end());
+    m_oSync.lock();
     for(CSinglyLinkedList<FORTE_TCP_PACKET_T*>::Iterator itRunnerWaiting = mWaitingList.begin(); itRunnerWaiting != itEndWaiting;){
-      m_oSync.lock();
       TConnectionContainer::Iterator itEndConnection(m_lstConnectionsList.end());
       for(TConnectionContainer::Iterator itRunnerConnection = m_lstConnectionsList.begin(); itRunnerConnection != itEndConnection;){
         // need to retrieve the callee as the iterator may get invalid in the recvDat function below in case of connection closing
@@ -104,8 +105,8 @@ void CrcXSocketInterface::run(void){
           ++itRunnerWaiting;
         }
       }
-      m_oSync.unlock();
     }
+    m_oSync.unlock();
   }
 }
 
@@ -114,7 +115,6 @@ void CrcXSocketInterface::addComCallback(TSocketDescriptor pa_nFD, forte::com_in
     CCriticalRegion criticalRegion(m_oSync);
     TConnContType stNewNode = { pa_nFD, pa_poComLayer };
     m_lstConnectionsList.push_back(stNewNode);
-    m_bConnectionListChanged = true;
   }
   if(!isAlive()){
     this->start();
@@ -141,27 +141,6 @@ void CrcXSocketInterface::removeComCallback(TSocketDescriptor pa_nFD){
     itRefNode = itRunner;
     ++itRunner;
   }
-}
-
-void CrcXSocketInterface::createDesciptorList(CSinglyLinkedList<CrcXSocketInterface::TSocketDescriptor>* m_descriptorList){
-  m_descriptorList->clearAll();
-  TConnectionContainer::Iterator itEnd(m_lstConnectionsList.end());
-  for(TConnectionContainer::Iterator itRunner = m_lstConnectionsList.begin(); itRunner != itEnd; ++itRunner){
-    m_descriptorList->push_back(itRunner->m_nSockDes);
-  }
-  m_bConnectionListChanged = false;
-}
-
-bool CrcXSocketInterface::isSet(TSocketDescriptor pa_descriptor, CSinglyLinkedList<TSocketDescriptor>* m_descriptorList){
-  bool retVal = false;
-  CSinglyLinkedList<TSocketDescriptor>::Iterator itEnd(m_descriptorList->end());
-  for(CSinglyLinkedList<TSocketDescriptor>::Iterator itRunner = m_descriptorList->begin(); itRunner != itEnd; ++itRunner){
-    if (pa_descriptor == *itRunner){
-      retVal = true;
-      break;
-    }
-  }
-  return retVal;
 }
 
 bool CrcXSocketInterface::isInitialized(){

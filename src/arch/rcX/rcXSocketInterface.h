@@ -90,12 +90,8 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
 
     typedef CSinglyLinkedList<TConnContType> TConnectionContainer;
 
-    void createDesciptorList(CSinglyLinkedList<TSocketDescriptor>* m_panFDSet);
-    bool isSet(TSocketDescriptor pa_descriptor, CSinglyLinkedList<TSocketDescriptor>* m_descriptorList);
-
     TConnectionContainer m_lstConnectionsList;
     CSyncObject m_oSync;
-    bool m_bConnectionListChanged;
 
     /* End of Handler */
 
