@@ -144,6 +144,9 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
 
       TCPIP_PACKET_TCP_UDP_CMD_SHUTDOWN_IND_T       tShutdownInd;
       TCPIP_PACKET_TCP_UDP_CMD_RECEIVE_STOP_IND_T   tStopInd;
+
+      TCPIP_PACKET_TCP_UDP_CMD_CLOSE_ALL_REQ_T      tCloseAllReq;
+      TCPIP_PACKET_TCP_UDP_CMD_CLOSE_ALL_CNF_T      tCloseAllCnf;
     };
 
     RX_RESULT openConnection(char *pa_acIPAddr, unsigned short pa_nPort, bool isTCP, bool isServer, TUDPDestAddr *m_ptDestAddr, TSocketDescriptor& pa_destSocket);
@@ -151,10 +154,17 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
     RX_RESULT close(TSocketDescriptor pa_nSockD);
     RX_RESULT accept(TSocketDescriptor pa_listeningSocketDesc, TSocketDescriptor& pa_destSocket);
     RX_RESULT receiveData(TSocketDescriptor pa_nSockD, bool isTcp, char* pa_pcData, unsigned int pa_unBufSize, int* pa_receivedBytes);
-    RX_RESULT select(CSinglyLinkedList<TSocketDescriptor>* m_paSockets, unsigned int pa_usTimeout);
     TForteUInt32 stringIpToInt(char* pa_ipString);
     RX_RESULT sendPacketToTCP(UINT32 pa_destId, UINT32 pa_ulLen, UINT32 pa_ulCmd, void* pa_tData, UINT32 pa_dataLength);
-    RX_RESULT waitPacket(UINT32 pa_command, FORTE_TCP_PACKET_T** pa_packetResult);
+    /*!\brief Waits for packets until timeout.
+     *
+     *\param pa_command Determine specific command to store in pa_packetResult
+     *\param pa_packetResult where the packet received will be stored. If this parameter is null, the packet will be managed by default.
+     *\param pa_timeout timeout to wait packets
+     *
+     */
+    RX_RESULT waitPacket(UINT32 pa_command, FORTE_TCP_PACKET_T** pa_packetResult, UINT pa_timeout);
+    void managePacketsDefault(FORTE_TCP_PACKET_T* pa_packetResult);
     bool isInitialized(void);
 
     TSocketDescriptor socketDescriptorAlloc(void);

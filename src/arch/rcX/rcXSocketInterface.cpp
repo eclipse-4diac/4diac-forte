@@ -76,39 +76,35 @@ CrcXSocketInterface::~CrcXSocketInterface(){
 }
 
 void CrcXSocketInterface::run(void){
-  CSinglyLinkedList<TSocketDescriptor> descriptors;
 
   while(isAlive()){
-    RX_RESULT retVal;
-    // TODO: create method to prevent 100ms timeout on reconnection
-    m_oSync.lock();
-    if(true == m_bConnectionListChanged){
-      createDesciptorList(&descriptors);
+    if (mWaitingList.isEmpty()){
+      waitPacket(0, 0, 1001000); //TODO: Check the actual value for the timeout
     }
-    m_oSync.unlock();
 
-    retVal = CrcXSocketInterface::select(&descriptors, 1001000); //TODO: Check the actual value for the timeout
-    if(RX_OK == retVal){
+    CSinglyLinkedList<FORTE_TCP_PACKET_T*>::Iterator itEndWaiting(mWaitingList.end());
+    for(CSinglyLinkedList<FORTE_TCP_PACKET_T*>::Iterator itRunnerWaiting = mWaitingList.begin(); itRunnerWaiting != itEndWaiting;){
       m_oSync.lock();
-      TConnectionContainer::Iterator itEnd(m_lstConnectionsList.end());
-      for(TConnectionContainer::Iterator itRunner = m_lstConnectionsList.begin(); itRunner != itEnd;){
+      TConnectionContainer::Iterator itEndConnection(m_lstConnectionsList.end());
+      for(TConnectionContainer::Iterator itRunnerConnection = m_lstConnectionsList.begin(); itRunnerConnection != itEndConnection;){
         // need to retrieve the callee as the iterator may get invalid in the recvDat function below in case of connection closing
-        forte::com_infra::CComLayer *comLayer = itRunner->m_poCallee;
-        TSocketDescriptor sockDes = itRunner->m_nSockDes;
-        ++itRunner;
+        forte::com_infra::CComLayer *comLayer = itRunnerConnection->m_poCallee;
+        TSocketDescriptor sockDes = itRunnerConnection->m_nSockDes;
+        ++itRunnerConnection;
 
-        if((isSet(sockDes, &descriptors)) && (0 != comLayer)){
-          m_oSync.unlock();
-          if(forte::com_infra::e_Nothing != comLayer->recvData(&sockDes, 0)){
-            startNewEventChain(comLayer->getCommFB());
+        if((*itRunnerWaiting)->tHead.ulSrcId == sockDes->socketNumber){
+          ++itRunnerWaiting;
+          if(0 != comLayer){
+            if(forte::com_infra::e_Nothing != comLayer->recvData(&sockDes, 0)){
+              startNewEventChain(comLayer->getCommFB());
+            }
           }
-          m_oSync.lock();
+          break;
+        }else{
+          ++itRunnerWaiting;
         }
       }
       m_oSync.unlock();
-    }
-    else{
-      DEVLOG_ERROR("Select failed: %d", retVal);
     }
   }
 }
@@ -302,7 +298,7 @@ RX_RESULT CrcXSocketInterface::openConnection(char *pa_acIPAddr, unsigned short 
   retVal = sendPacketToTCP(0, TCPIP_DATA_TCP_UDP_CMD_OPEN_REQ_SIZE, TCPIP_TCP_UDP_CMD_OPEN_REQ, &tDataOpen, sizeof(TCPIP_DATA_TCP_UDP_CMD_OPEN_REQ_T)); //send packet to open a socket
   if(RX_OK == retVal){
     TCPIP_PACKET_TCP_UDP_CMD_OPEN_CNF_T* cnfPacket;
-    retVal = waitPacket(TCPIP_TCP_UDP_CMD_OPEN_CNF, (FORTE_TCP_PACKET_T**) &cnfPacket); //wait for CNF packet which indicates the result of the request
+    retVal = waitPacket(TCPIP_TCP_UDP_CMD_OPEN_CNF, (FORTE_TCP_PACKET_T**) &cnfPacket, RX_INFINITE); //wait for CNF packet which indicates the result of the request
     if(RX_OK == retVal){
       if(RX_OK == cnfPacket->tHead.ulSta){
         if(!isTCP){
@@ -342,7 +338,7 @@ RX_RESULT CrcXSocketInterface::openConnection(char *pa_acIPAddr, unsigned short 
               retVal = sendPacketToTCP(cnfPacket->tHead.ulDestId, TCPIP_DATA_TCP_CMD_CONNECT_REQ_SIZE, TCPIP_TCP_CMD_CONNECT_REQ, &tDataConnect, sizeof(TCPIP_DATA_TCP_CMD_CONNECT_REQ_T));
               if(RX_OK == retVal){
                 TCPIP_PACKET_TCP_CMD_CONNECT_CNF_T* connecCnftPacket;
-                retVal = waitPacket(TCPIP_TCP_CMD_CONNECT_CNF, (FORTE_TCP_PACKET_T**) &connecCnftPacket);
+                retVal = waitPacket(TCPIP_TCP_CMD_CONNECT_CNF, (FORTE_TCP_PACKET_T**) &connecCnftPacket, RX_INFINITE);
                 if(RX_OK == retVal){
                   if (RX_OK == connecCnftPacket->tHead.ulSta){
                     socketNumber = cnfPacket->tHead.ulDestId;
@@ -449,47 +445,64 @@ RX_RESULT CrcXSocketInterface::sendPacketToTCP(UINT32 pa_destId, UINT32 pa_ulLen
   return retVal;
 }
 
-RX_RESULT CrcXSocketInterface::waitPacket(UINT32 pa_command, FORTE_TCP_PACKET_T** pa_packetResult){
-  RX_RESULT retVal = RX_OK;
+RX_RESULT CrcXSocketInterface::waitPacket(UINT32 pa_command, FORTE_TCP_PACKET_T** pa_packetResult, UINT pa_timeout){
+  RX_RESULT retVal;
+  FORTE_TCP_PACKET_T* localPacket = 0;
   do{
-    retVal = TLR_QUE_WAITFORPACKET(mForteResources.forteQueueHandle, pa_packetResult, RX_INFINITE);
-    if(RX_OK == retVal){
-      if(pa_command == (*pa_packetResult)->tHead.ulCmd){
+    retVal = TLR_QUE_WAITFORPACKET(mForteResources.forteQueueHandle, &localPacket, pa_timeout);
+    if(0 != localPacket){
+      if(pa_command == localPacket->tHead.ulCmd || 0 == pa_command){
         break;
       }
       else{
-        switch ((*pa_packetResult)->tHead.ulCmd){
-          case TCPIP_TCP_UDP_CMD_RECEIVE_IND:
-          case TCPIP_TCP_UDP_CMD_RECEIVE_STOP_IND:
-          case TCPIP_TCP_UDP_CMD_SHUTDOWN_IND:
-          case TCPIP_TCP_CMD_WAIT_CONNECT_CNF:{
-            if (cg_forteWaitingQueueMax <= m_unPacketsWaiting){
-              TLS_QUE_RETURNPACKET(*pa_packetResult);
-            }else{
-              mWaitingList.push_back(*pa_packetResult);
-              m_unPacketsWaiting++;
-            }
-            break;
-          }
-          /*In the following cases, the packets shouldn't be there, so they are release or return to the sender*/
-          case TCPIP_TCP_CMD_SEND_CNF:
-          case TCPIP_UDP_CMD_SEND_CNF:
-          case TCPIP_TCP_UDP_CMD_OPEN_CNF:
-          case TCPIP_TCP_UDP_CMD_CLOSE_CNF:
-          case TCPIP_TCP_CMD_CONNECT_CNF:
-          default:{
-            TLR_QUE_PACKETDONE(mForteResources.fortePoolHandle, mForteResources.forteQueueHandle, pa_packetResult);
-            break;
-          }
-        }
+        managePacketsDefault(localPacket);
+        localPacket = 0;
       }
     }
-    else{
-      //error waiting packet?
+    else{ //error waiting packet, normally because timeout expired
+    	break;
     }
-  } while(1);
-
+  } while(RX_INFINITE != pa_timeout);
+  if (0 != pa_packetResult){
+    *pa_packetResult = localPacket;
+  }else{
+    managePacketsDefault(localPacket);
+  }
   return retVal;
+}
+
+void CrcXSocketInterface::managePacketsDefault(FORTE_TCP_PACKET_T* pa_packetResult){
+  if(0 != pa_packetResult){
+    switch (pa_packetResult->tHead.ulCmd){
+      case TCPIP_TCP_UDP_CMD_RECEIVE_STOP_IND:
+      case TCPIP_TCP_UDP_CMD_RECEIVE_IND:
+      case TCPIP_TCP_CMD_WAIT_CONNECT_CNF: {
+        if(cg_forteWaitingQueueMax <= m_unPacketsWaiting){
+          TLS_QUE_RETURNPACKET(pa_packetResult);
+        }
+        else{
+          mWaitingList.push_back(pa_packetResult);
+          m_unPacketsWaiting++;
+        }
+      }
+      case TCPIP_TCP_UDP_CMD_SHUTDOWN_IND: {
+        //close all sockets. TODO: The caller will never get notice that the socket was closed. Maybe reopen the socket when the CNF arrives
+        TCPIP_DATA_TCP_UDP_CMD_CLOSE_ALL_REQ_T tDataCloseAll;
+        tDataCloseAll.ulTimeout = 0; /* Bind socket to currently configured IP address */
+        sendPacketToTCP(0, TCPIP_DATA_TCP_UDP_CMD_CLOSE_ALL_REQ_SIZE, TCPIP_TCP_UDP_CMD_CLOSE_ALL_REQ, &tDataCloseAll, sizeof(TCPIP_DATA_TCP_UDP_CMD_CLOSE_ALL_REQ_T));
+      }
+        /*In the following cases, the packets shouldn't be there, so they are release or return to the sender*/
+      case TCPIP_TCP_CMD_SEND_CNF:
+      case TCPIP_UDP_CMD_SEND_CNF:
+      case TCPIP_TCP_UDP_CMD_OPEN_CNF:
+      case TCPIP_TCP_UDP_CMD_CLOSE_CNF:
+      case TCPIP_TCP_CMD_CONNECT_CNF:
+      case TCPIP_TCP_UDP_CMD_CLOSE_ALL_CNF:
+      default: {
+        TLR_QUE_PACKETDONE(mForteResources.fortePoolHandle, mForteResources.forteQueueHandle, pa_packetResult);
+      }
+    }
+  }
 }
 
 RX_RESULT CrcXSocketInterface::sendData(TSocketDescriptor pa_nSockD, char* pa_pcData, unsigned int pa_unSize, bool pa_isTCP, TUDPDestAddr *pa_ptDestAddr, void* pa_PacketData, int* pa_result){
@@ -522,7 +535,7 @@ RX_RESULT CrcXSocketInterface::sendData(TSocketDescriptor pa_nSockD, char* pa_pc
 
         if(RX_OK == retVal){
           FORTE_TCP_PACKET_T* cnfPacket;
-          retVal = waitPacket((pa_isTCP) ? TCPIP_TCP_CMD_SEND_CNF : TCPIP_UDP_CMD_SEND_CNF, &cnfPacket);
+          retVal = waitPacket((pa_isTCP) ? TCPIP_TCP_CMD_SEND_CNF : TCPIP_UDP_CMD_SEND_CNF, &cnfPacket, RX_INFINITE);
           if(RX_OK == retVal){
             if(RX_OK != cnfPacket->tHead.ulSta){
               //error sending packet
@@ -652,10 +665,32 @@ RX_RESULT CrcXSocketInterface::receiveData(TSocketDescriptor pa_nSockD, bool , c
     CSinglyLinkedList<FORTE_TCP_PACKET_T*>::Iterator itEndPacket(mWaitingList.end());
     for(CSinglyLinkedList<FORTE_TCP_PACKET_T*>::Iterator itRunnerPacket = mWaitingList.begin(); itRunnerPacket != itEndPacket; ){
       if((*itRunnerPacket)->tHead.ulSrcId == pa_nSockD->socketNumber){
-        if (pa_unBufSize >= ((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE)){
-          TLR_MEMCPY(&(*itRunnerPacket)->tRcvInd.tData.abData[0], pa_pcData, ((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE));
-          *pa_receivedBytes = ((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE);
-          TLS_QUE_RETURNPACKET(*itRunnerPacket);
+        bool deletePacket = false;
+        if(TCPIP_TCP_UDP_CMD_RECEIVE_STOP_IND == (*itRunnerPacket)->tHead.ulCmd){
+          *pa_receivedBytes = 0;
+          deletePacket = true;
+        }
+        else if(TCPIP_TCP_CMD_WAIT_CONNECT_CNF == (*itRunnerPacket)->tHead.ulCmd){
+          deletePacket = true;
+        }
+        else if(TCPIP_TCP_UDP_CMD_RECEIVE_IND == (*itRunnerPacket)->tHead.ulCmd){
+          if(pa_unBufSize >= ((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE)){
+            TLR_MEMCPY(&(*itRunnerPacket)->tRcvInd.tData.abData[0], pa_pcData, ((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE));
+            *pa_receivedBytes = ((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE);
+            TLS_QUE_RETURNPACKET(*itRunnerPacket);
+            deletePacket = true;
+
+          }
+          else{ //move the data not copied to the beginning of the abData field and keep the packet.
+            UINT8 buffer[((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE) - pa_unBufSize];
+            TLR_MEMCPY(&(*itRunnerPacket)->tRcvInd.tData.abData[0], pa_pcData, pa_unBufSize);
+            TLR_MEMCPY(&(*itRunnerPacket)->tRcvInd.tData.abData[pa_unBufSize], &buffer[0], ((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE) - pa_unBufSize);
+            TLR_MEMCPY(&buffer[0], &(*itRunnerPacket)->tRcvInd.tData.abData[0], ((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE) - pa_unBufSize);
+            (*itRunnerPacket)->tHead.ulLen -= pa_unBufSize;
+            *pa_receivedBytes = pa_unBufSize;
+          }
+        }
+        if(deletePacket){
           if(mWaitingList.begin() == itRunnerPacket){
             ++itRunnerPacket;
             mWaitingList.pop_front();
@@ -664,16 +699,10 @@ RX_RESULT CrcXSocketInterface::receiveData(TSocketDescriptor pa_nSockD, bool , c
             itRunnerPacket = mWaitingList.eraseAfter(prevIterator);
           }
           m_unPacketsWaiting--;
-        }else{ //move the data not copied to the beginning of the abData field and keep the packet.
-          UINT8 buffer[((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE) - pa_unBufSize];
-          TLR_MEMCPY(&(*itRunnerPacket)->tRcvInd.tData.abData[0], pa_pcData, pa_unBufSize);
-          TLR_MEMCPY(&(*itRunnerPacket)->tRcvInd.tData.abData[pa_unBufSize], &buffer[0], ((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE) - pa_unBufSize);
-          TLR_MEMCPY(&buffer[0], &(*itRunnerPacket)->tRcvInd.tData.abData[0], ((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE) - pa_unBufSize);
-          (*itRunnerPacket)->tHead.ulLen -= pa_unBufSize;
-          *pa_receivedBytes = pa_unBufSize;
         }
         break; //only check one message
-      }else{
+      }
+      else{
         prevIterator = itRunnerPacket;
         ++itRunnerPacket;
       }
@@ -704,35 +733,4 @@ int CrcXSocketInterface::receiveDataFromUDP(TSocketDescriptor pa_nSockD, char* p
     DEVLOG_ERROR("CrcXSocketInterface is not initialized\n");
   }
   return receivedBytes;
-}
-
-RX_RESULT CrcXSocketInterface::select(CSinglyLinkedList<TSocketDescriptor>* m_paSockets, unsigned int pa_usTimeout){
-  rX_SysSleepTask(pa_usTimeout / rX_SysGetSystemCycletime());
-
-  CSinglyLinkedList<TSocketDescriptor>::Iterator prevIterator = 0;
-  CSinglyLinkedList<TSocketDescriptor>::Iterator itEnd(m_paSockets->end());
-  for(CSinglyLinkedList<TSocketDescriptor>::Iterator itRunner = m_paSockets->begin(); itRunner != itEnd; ){
-    bool hasPacket = false;
-    CSinglyLinkedList<FORTE_TCP_PACKET_T*>::Iterator itEndPacket(mWaitingList.end());
-    for(CSinglyLinkedList<FORTE_TCP_PACKET_T*>::Iterator itRunnerPacket = mWaitingList.begin(); itRunnerPacket != itEndPacket; ++itRunnerPacket){
-      if ((*itRunnerPacket)->tHead.ulSrcId == itRunner->socketNumber){
-        hasPacket = true;
-        break;
-      }
-    }
-    if (hasPacket){
-      prevIterator = itRunner;
-      ++itRunner;
-    }
-    else{
-      if(m_paSockets->begin() == itRunner){ //first node
-        ++itRunner;
-        m_paSockets->pop_front();
-      }
-      else{
-        itRunner = m_paSockets->eraseAfter(prevIterator);
-      }
-    }
-  }
-  return RX_OK; //no way it could fail, for now
 }
