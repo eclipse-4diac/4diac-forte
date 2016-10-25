@@ -203,11 +203,11 @@ class CFunctionBlock{
      * \param pa_unDINameId ID of the data input name.
      * \return Pointer to the data input or 0. If 0 is returned DataInput is ANY
      */
-    CIEC_ANY* getDataInput(CStringDictionary::TStringId pa_unDINameId);
+    CIEC_ANY* getDataInput(CStringDictionary::TStringId pa_unDINameId) const;
 
     /*!\brief get the pointer to a data input using the portId as identifier
      */
-    CIEC_ANY* getDIFromPortId(TPortId paDIPortId);
+    CIEC_ANY* getDIFromPortId(TPortId paDIPortId) const;
 
     /*! \brief Gets the index of the m_acDONames array of a specific data output of a FB
      * \param pa_unDONameId  StringId of the data input name.
@@ -216,6 +216,10 @@ class CFunctionBlock{
     TPortId getDOID(CStringDictionary::TStringId pa_unDONameId) const{
       return getPortId(pa_unDONameId, m_pstInterfaceSpec->m_nNumDOs, m_pstInterfaceSpec->m_aunDONames);
     }
+
+    /*!\brief get the pointer to a data output using the portId as identifier
+     */
+    CIEC_ANY* getDOFromPortId(TPortId paDOPortId) const;
 
     CDataConnection *getDOConnection(CStringDictionary::TStringId paDONameId) const;
 
@@ -231,7 +235,7 @@ class CFunctionBlock{
      * \param pa_unDONameId StringID of the data output name.
      * \return Pointer to the data output or 0. If 0 is returned DataOutput is ANY
      */
-    CIEC_ANY* getDataOutput(CStringDictionary::TStringId pa_unDONameId);
+    CIEC_ANY* getDataOutput(CStringDictionary::TStringId pa_unDONameId) const;
 
     /*!\brief Get the pointer to a variable of the FB.
      *
@@ -456,7 +460,7 @@ class CFunctionBlock{
      * @param pa_nDINum number of the data input starting with 0
      * @return pointer to the data input
      */
-    TIEC_ANYPtr getDI(unsigned int pa_nDINum){
+    TIEC_ANYPtr getDI(unsigned int pa_nDINum) const {
       return m_aoDIs + pa_nDINum;
     }
 
@@ -466,7 +470,7 @@ class CFunctionBlock{
      * @param pa_nDONum number of the data output starting with 0
      * @return pointer to the data output
      */
-    CIEC_ANY *getDO(unsigned int pa_nDONum){
+    CIEC_ANY *getDO(unsigned int pa_nDONum) const{
       return m_aoDOs + pa_nDONum;
     }
 
@@ -478,10 +482,6 @@ class CFunctionBlock{
      */
     CDataConnection *getDOConUnchecked(TPortId paDONum){
       return mDOConns + paDONum;
-    }
-
-    const CIEC_ANY *getDO(unsigned int pa_nDONum) const{
-      return m_aoDOs + pa_nDONum;
     }
 
     /*!\brief Function to create an data type instance of given type
