@@ -205,7 +205,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
 				UA_init(varValue, conv->type);
 				(*nodeIds)[i].variableId = UA_NodeId_new();
 				retVal = COPC_UA_Handler::getInstance().createVariableNode((*nodeIds)[i].functionBlockId, connectedToName, conv->type,
-																		   varValue, (*nodeIds)[i].variableId);
+																		   varValue, (*nodeIds)[i].variableId, !isSD);
 				UA_delete(varValue, conv->type);
 				if (retVal == UA_STATUSCODE_GOOD && !isSD) {
 					COPC_UA_Handler::getInstance().registerNodeCallBack((*nodeIds)[i].variableId, this, conv, i);

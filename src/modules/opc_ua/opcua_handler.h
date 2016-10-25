@@ -67,9 +67,11 @@ public:
 	 * @param varType Datatype of the varialbe
 	 * @param varValue initial value of the variable
 	 * @param returnVarNodeId the node ID of the created variable node
+	 * @param allowWrite if set to false, writing to variable will be disabled
 	 * @return UA_STATUSCODE_GOOD on succes, the error code otherwise
 	 */
-	UA_StatusCode createVariableNode(const UA_NodeId *parentNode, const char *varName, const UA_DataType *varType, void *varValue, UA_NodeId *returnVarNodeId);
+	UA_StatusCode createVariableNode(const UA_NodeId *parentNode, const char *varName, const UA_DataType *varType, void *varValue,
+									 UA_NodeId *returnVarNodeId, bool allowWrite);
 
 	/**
 	 * Create a new method node in the OPC UA information model.

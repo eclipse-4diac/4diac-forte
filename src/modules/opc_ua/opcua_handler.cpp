@@ -306,7 +306,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char *nodePath, bool cr
 }
 
 UA_StatusCode COPC_UA_Handler::createVariableNode(const UA_NodeId *parentNode, const char *varName, const UA_DataType *varType, void *varValue,
-												  UA_NodeId *returnVarNodeId) {
+												  UA_NodeId *returnVarNodeId, bool allowWrite) {
 
 
 	// set UA NodeId attributes
@@ -323,6 +323,9 @@ UA_StatusCode COPC_UA_Handler::createVariableNode(const UA_NodeId *parentNode, c
 
 	var_attr.displayName = UA_LOCALIZEDTEXT_ALLOC(locale, varName);
 	var_attr.description = UA_LOCALIZEDTEXT(locale, description);
+	var_attr.userAccessLevel = UA_ACCESSLEVELMASK_READ;
+	if (allowWrite)
+		var_attr.userAccessLevel |= UA_ACCESSLEVELMASK_WRITE;
 	UA_Variant_setScalar(&var_attr.value, varValue, varType);
 
 	UA_NodeId *returnNodeId = UA_NodeId_new();
