@@ -21,7 +21,6 @@
 
 # option to enable OPC UA with cmake
 forte_add_network_layer(OPC_UA OFF "opc_ua" COPC_UA_Layer opcua_layer "Enable OPC UA communication layer")
-forte_add_definition(-std=c++11)
 
 # path to the build folder of the open62541 stack or the shared-object library (.so)
 SET(FORTE_COM_OPC_UA_DIR "" CACHE PATH "ABSOLUTE path to OPC UA build folder or shared object library")

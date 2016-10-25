@@ -158,7 +158,7 @@ private:
 	UA_ServerConfig uaServerConfig;
 
 	// OPC UA Client and configuration
-	volatile UA_Boolean *uaServerRunningFlag = new UA_Boolean(UA_TRUE);
+	volatile UA_Boolean *uaServerRunningFlag;
 	UA_ServerNetworkLayer uaServerNetworkLayer;
 
 	/**

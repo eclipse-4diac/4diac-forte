@@ -20,8 +20,6 @@
 
 #pragma GCC diagnostic pop
 
-#include <map>
-#include <functional>
 #include "forte_any.h"
 
 struct UA_TypeConvert {
@@ -37,27 +35,44 @@ public:
 	/**
 	 * Maps EDataTypeID to OPC UA data types
 	 */
-	static const std::map<CIEC_ANY::EDataTypeID, UA_TypeConvert> mapForteTypeIdToOpcUa;
+	static const UA_TypeConvert mapForteTypeIdToOpcUa[CIEC_ANY::e_WSTRING + 1];
 
 	/**
-	 * Maps TStringId to OPC UA data types
+	 * Check if given type ID is valid an within the range of the array.
+	 * @param typeId the type ID to check
+	 * @return true if valid
 	 */
-	static const std::map<CStringDictionary::TStringId, const UA_TypeConvert *> mapForteStringIdToOpcUa;
-
-private:
-
-	/**
-	 * Initialize the type mapping for mapForteTypeIdToOpcUa.
-	 * @return the newly initialized map
-	 */
-	static std::map<CIEC_ANY::EDataTypeID, UA_TypeConvert> getTypeMappingTypeId();
+	static inline bool isTypeIdValid(CIEC_ANY::EDataTypeID typeId) {
+		return typeId >= CIEC_ANY::e_BOOL && typeId <= CIEC_ANY::e_WSTRING;
+	}
 
 	/**
-	 * Initialize the type mapping for mapForteStringIdToOpcUa.
-	 * Since it takes values from mapForteTypeIdToOpcUa, that map has to be initialized before.
-	 * @return new newly initialized map
+	 * Convert forte DataType (CIEC_...) to the corresponding OPC UA datatype.
+	 *
+	 * @param typeId type id of the forte datatype
+	 * @param src source data
+	 * @param dst the value of src will be converted and stored in dst. It has to be initialized before.
+	 * @return false if type is not supported
 	 */
-	static std::map<CStringDictionary::TStringId, const UA_TypeConvert *> getTypeMappingStringId();
+	static inline bool convertToOpcUa_typeId(CIEC_ANY::EDataTypeID typeId, const CIEC_ANY *src, void *dst) {
+		if (!COPC_UA_Helper::isTypeIdValid(typeId))
+			return false;
+		return COPC_UA_Helper::mapForteTypeIdToOpcUa[typeId].get(src, dst);
+	}
+
+	/**
+	 * Convert OPC UA DataType to the corresponding forte DataType (CIEC_...).
+	 *
+	 * @param typeId type id of the forte datatype
+	 * @param src source data
+	 * @param dst the value of src will be converted and stored in dst. It has to be initialized before.
+	 * @return false if type is not supported
+	 */
+	static inline bool convertFromUa_typeId(CIEC_ANY::EDataTypeID typeId, const void *src, CIEC_ANY *dst) {
+		if (!COPC_UA_Helper::isTypeIdValid(typeId))
+			return false;
+		return COPC_UA_Helper::mapForteTypeIdToOpcUa[typeId].set(src, dst);
+	}
 };
 
 #endif //FORTE_OPCUA_HELPER_H

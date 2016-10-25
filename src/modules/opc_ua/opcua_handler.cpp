@@ -35,6 +35,7 @@ void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
 
 COPC_UA_Handler::COPC_UA_Handler() : uaServerConfig(), uaServerNetworkLayer(), getNodeForPathMutex(), nodeCallbackHandles() {
 	configureUAServer(FORTE_COM_OPC_UA_PORT);
+	uaServerRunningFlag = new UA_Boolean(UA_TRUE);
 	uaServer = UA_Server_new(uaServerConfig);
 
 	setServerRunning();        // set server loop flag
@@ -77,7 +78,6 @@ void COPC_UA_Handler::disableHandler(void) {
 void COPC_UA_Handler::setPriority(int) {
 
 	//currently we are doing nothing here.
-	//TODO We should adjust the thread priority.
 }
 
 int COPC_UA_Handler::getPriority(void) const {
@@ -224,7 +224,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char *nodePath, bool cr
 			return UA_STATUSCODE_BADUNEXPECTEDERROR;
 		}
 
-		*foundNodeId = nullptr;
+		*foundNodeId = NULL;
 		UA_StatusCode retVal = UA_STATUSCODE_GOOD;
 
 		if (response.results[folderCnt - 1].statusCode == UA_STATUSCODE_GOOD) {
@@ -289,7 +289,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char *nodePath, bool cr
 					DEVLOG_ERROR("Could not addObjectNode. Error: %s - %s\n", UA_StatusCode_name(retVal), UA_StatusCode_description(retVal));
 					forte_free(*foundNodeId);
 					delete[](nodeName);
-					*foundNodeId = nullptr;
+					*foundNodeId = NULL;
 					break;
 				}
 				delete[](nodeName);
