@@ -16,6 +16,7 @@
 #include "opcua_handler.h"
 #include <devexec.h>
 #include "criticalregion.h"
+#include <stdarg.h>
 
 using namespace forte::com_infra;
 
@@ -23,11 +24,46 @@ DEFINE_SINGLETON(COPC_UA_Handler);
 
 #define FORTE_COM_OPC_UA_PORT 4840
 
+const char *LogLevelNames[6] = {"trace", "debug", "info", "warning", "error", "fatal"};
+const char *LogCategoryNames[6] = {"network", "channel", "session", "server", "client", "userland"};
+
+void UA_Log_Forte(UA_LogLevel level, UA_LogCategory category, const char *msg, ...) {
+	char tmpStr[400];
+	snprintf(tmpStr, 400, "[OPC UA] %s/%s\t", LogLevelNames[level], LogCategoryNames[category]);
+	char *start = &tmpStr[strlen(tmpStr)];
+
+	va_list ap;
+	va_start(ap, msg);
+	vsprintf(start, msg, ap);
+	va_end(ap);
+
+	size_t len = strlen(tmpStr);
+	tmpStr[len] = '\n';
+	tmpStr[len+1] = '\0';
+
+	switch (level) {
+		case UA_LOGLEVEL_TRACE:
+		case UA_LOGLEVEL_DEBUG:
+			DEVLOG_DEBUG(tmpStr_);
+			break;
+		case UA_LOGLEVEL_INFO:
+			DEVLOG_INFO(tmpStr);
+			break;
+		case UA_LOGLEVEL_WARNING:
+			DEVLOG_WARNING(tmpStr);
+			break;
+		case UA_LOGLEVEL_ERROR:
+		case UA_LOGLEVEL_FATAL:
+			DEVLOG_ERROR(tmpStr);
+			break;
+	}
+}
+
 void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
 	uaServerConfig = UA_ServerConfig_standard;
 	uaServerConfig.enableUsernamePasswordLogin = false;
 	uaServerConfig.networkLayersSize = 1;
-	uaServerConfig.logger = UA_Log_Stdout;
+	uaServerConfig.logger = UA_Log_Forte;
 
 	uaServerNetworkLayer = UA_ServerNetworkLayerTCP(UA_ConnectionConfig_standard, UAServerPort);
 	uaServerConfig.networkLayers = &uaServerNetworkLayer;
@@ -346,7 +382,6 @@ UA_StatusCode COPC_UA_Handler::createVariableNode(const UA_NodeId *parentNode, c
 	UA_LocalizedText_deleteMembers(&var_attr.displayName);
 
 	if (retVal == UA_STATUSCODE_GOOD) {
-		DEVLOG_INFO("UA-Server AddressSpace: New Variable Node - %s added\n", varName);
 		retVal = UA_NodeId_copy(returnNodeId, returnVarNodeId);
 	} else {
 		DEVLOG_ERROR("UA-Server AddressSpace: Adding Variable Node %s failed. Error: %s - %s\n", varName, UA_StatusCode_name(retVal),

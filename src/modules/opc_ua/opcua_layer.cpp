@@ -65,8 +65,13 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
 	}
 
 	// Create all the nodes up to the given node (ID parameter of the FB)
-	if (COPC_UA_Handler::getInstance().getNodeForPath(&fbNodeId, paLayerParameter, true) != UA_STATUSCODE_GOOD)
-		return e_InitTerminated;
+	{
+		UA_StatusCode retVal;
+		if ((retVal = COPC_UA_Handler::getInstance().getNodeForPath(&fbNodeId, paLayerParameter, true)) != UA_STATUSCODE_GOOD) {
+			DEVLOG_ERROR("Could not get node for path: '%s': %s\n", paLayerParameter, UA_StatusCode_explanation(retVal));
+			return e_InitTerminated;
+		}
+	}
 
 
 	switch (getCommFB()->getComServiceType()) {
