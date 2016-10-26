@@ -72,8 +72,7 @@ int CIEC_STRING::toString(char* pa_acValue, unsigned int pa_nBufferSize) const {
 
 #ifdef FORTE_UNICODE_SUPPORT
 int CIEC_STRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescape) {
-  unsigned int nMaxWidth;
-
+  
   int nSrcLen = pa_nLen >= 0 ? pa_nLen : (pa_bUnescape ? determineEscapedStringLength(pa_pacValue, '\'') : static_cast<int>(strlen(pa_pacValue)));
   int nSrcCappedLength = nSrcLen;
 
@@ -90,6 +89,7 @@ int CIEC_STRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescap
       DEVLOG_WARNING("Too large string, destination will be truncated!\n");
     }
 
+    unsigned int nMaxWidth;
     int nLength = CUnicodeUtilities::checkUTF8(pa_pacValue, nSrcCappedLength, nMaxWidth);
     if (nLength < 0) {
       DEVLOG_WARNING("Invalid UTF-8 string given to fromString!\n");

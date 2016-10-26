@@ -564,8 +564,6 @@ DEV_MGR::~DEV_MGR(){
 
 #ifdef FORTE_SUPPORT_BOOT_FILE
 void DEV_MGR::loadForteBootFile(){
-  char acLineBuf[cg_unBootFileLineBufSize]; //TODO maybe move it out of the stack
-
   char* bootFileName;
   bootFileName = getenv ("FORTE_BOOT_FILE");
   FILE *bootfile = 0;
@@ -581,6 +579,7 @@ void DEV_MGR::loadForteBootFile(){
     int nLineCount = 1;
     EMGMResponse eResp;
     char *cmdStart;
+    char acLineBuf[cg_unBootFileLineBufSize]; //TODO maybe move it out of the stack
 
     while(0 != fgets(acLineBuf, cg_unBootFileLineBufSize, bootfile)){
       if('\n' != acLineBuf[strlen(acLineBuf) - 1]){
@@ -592,7 +591,6 @@ void DEV_MGR::loadForteBootFile(){
         m_poDevice.executeMGMCommand(m_stCommand);
         break;
       }
-
       cmdStart = strchr(acLineBuf, ';');
       if(0 == cmdStart){
         DEVLOG_ERROR("Boot file line does not contain separating ';'. Line: %d\n", nLineCount);
