@@ -39,6 +39,10 @@ class CModuleList{
         unsigned int m_nBitOffset;
 
         unsigned int m_nModuleNr;
+
+      private:
+        IoModule(const IoModule& obj);
+        IoModule& operator=(const IoModule& obj);
     };
 
     //std::vector<IoModule*> m_lModules;
