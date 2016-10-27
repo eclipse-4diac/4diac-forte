@@ -85,8 +85,8 @@ private:
   Container* m_poCurrentPosition;
 };
 
-// cppcheck-suppress noConstructor
 template<typename T, typename Container>
+// cppcheck-suppress noConstructor
 class CIterator<T*, Container>  {
 public:
   CIterator(Container* pa_poNode) : m_poCurrentPosition(pa_poNode)  {
