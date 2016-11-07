@@ -17,8 +17,9 @@
 
 void CVxWorksThread::start(void){
   //TODO: Check if guarding the stack is necessary
-  mThreadID = taskSpawn(0, FORTE_TASK_PRIORITY, VX_NO_STACK_FILL | VX_FP_TASK /* Needed for C++*/, mStackSize, threadFunction, (void*) this, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-  if(TASK_ID_ERROR == mThreadId){
+  mThreadID = taskSpawn(0, FORTE_TASK_PRIORITY, VX_NO_STACK_FILL | VX_FP_TASK /* Needed for C++*/, mStackSize,
+      (FUNCPTR)threadFunction, (_Vx_usr_arg_t) this, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  if(TASK_ID_ERROR == mThreadID){
     //TODO: manage error
   }
 }
@@ -56,6 +57,6 @@ void CVxWorksThread::setDeadline(const CIEC_TIME &pa_roVal){
 void CVxWorksThread::join(void){
   if(0 != mThreadID){
     CCriticalRegion criticalRegion(mJoinMutex);
-    taskDelete(mThreadID, 0);
+    taskDelete(mThreadID);
   }
 }
