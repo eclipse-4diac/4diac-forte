@@ -16,6 +16,8 @@
 #include "../core/cominfra/commfb.h"
 #include <criticalregion.h>
 
+#undef FD_ZERO
+#define FD_ZERO(p)    memset((char *)(p), 0, sizeof(*(p)))
 
 DEFINE_SINGLETON(CFDSelectHandler);
 
