@@ -804,6 +804,11 @@ template<typename T> const T CONCAT(const T& pa_rsIn1, const T& pa_rsIn2){
   return temp.getValue();
 }
 
+template<typename T, typename... Args> const T CONCAT(const T& pa_rsIn1, Args... args) {
+	return CONCAT(pa_rsIn1, CONCAT(args...));
+}
+
+
 /* Insert IN2 into IN1 after the P-th charaolcter position
  *             +--------+
  *             | INSERT |
