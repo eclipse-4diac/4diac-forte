@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *   Ingo Hegny, Alois Zoitl, Stanislav Meduna, Matthias Plasch - initial API and implementation and/or initial documentation
+ *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna, Matthias Plasch - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 
