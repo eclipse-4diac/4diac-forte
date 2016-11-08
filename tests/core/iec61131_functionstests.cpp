@@ -31,4 +31,26 @@ BOOST_AUTO_TEST_CASE(to_lower)
 	BOOST_TEST(sToLowerString.getValue() == "shall_be_to_lower");
 }
 
+BOOST_AUTO_TEST_CASE(left)
+{
+	CIEC_STRING sTestString("SHALL_BE_CROPPED_HERE_THIS_SHOULD_NOT_BE_SEEN");
+	CIEC_STRING sLeftString(LEFT(sTestString, CIEC_INT(21)));
+	BOOST_TEST(sLeftString.getValue() == "SHALL_BE_CROPPED_HERE");
+}
+
+BOOST_AUTO_TEST_CASE(right)
+{
+	CIEC_STRING sTestString("THIS_SHOULD_BE_CROPPED_THIS_SHOULD_BE_SEEN");
+	CIEC_STRING sRightString(RIGHT(sTestString, CIEC_INT(19)));
+	BOOST_TEST(sRightString.getValue() == "THIS_SHOULD_BE_SEEN");
+}
+
+BOOST_AUTO_TEST_CASE(concat)
+{
+	CIEC_STRING sFristString("THIS_IS_THE_FIRST_STRING");
+	CIEC_STRING sSecondString("_THIS_IS_THE_SECOND_STRING");
+	CIEC_STRING sConcatString(CONCAT(sFristString, sSecondString));
+	BOOST_TEST(sConcatString.getValue() == "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
