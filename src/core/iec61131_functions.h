@@ -902,13 +902,11 @@ template<typename T> CIEC_ANY_INT FIND(const T& pa_rsIn1, const T& pa_rsIn2){
  is equivalent to A := 'ABCAB' ;
  */
 template<typename T> const T TOUPPER(const T& pa_rsIn){
-  T temp;
-  temp.reserve(static_cast<TForteUInt16>(pa_rsIn.length()));
-  const char* orig = pa_rsIn.getValue();
-  char* upper = temp.getValue();
+  T temp(pa_rsIn);
+  char* current = temp.getValue();
   for (unsigned int i = 0; i <=pa_rsIn.length(); ++i)
   {
-	  upper[i] = toupper(orig[i]);
+	  current[i] = toupper(current[i]);
   }
   return temp;
 }
@@ -923,13 +921,11 @@ template<typename T> const T TOUPPER(const T& pa_rsIn){
  is equivalent to A := 'abcab' ;
  */
 template<typename T> const T TOLOWER(const T& pa_rsIn){
-  T temp;
-  temp.reserve(static_cast<TForteUInt16>(pa_rsIn.length()));
-  const char* orig = pa_rsIn.getValue();
-  char* upper = temp.getValue();
-  for (unsigned int i = 0; i <=pa_rsIn.length(); ++i)
+  T temp(pa_rsIn);
+  char* current = temp.getValue();
+  for (unsigned int i = 0; i <= pa_rsIn.length(); ++i)
   {
-	  upper[i] = tolower(orig[i]);
+    current[i] = tolower(current[i]);
   }
   return temp;
 }
