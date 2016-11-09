@@ -47,18 +47,8 @@ forte::com_infra::EComResponse CWin32SerComLayer::processInterrupt(){
   if(forte::com_infra::e_ProcessDataOk == m_eInterruptResp){
     switch (m_eConnectionState){
       case forte::com_infra::e_Connected:
-		  if (0 == m_poTopLayer)  {
-			  CIEC_ANY *apoRDs = m_poFb->getRDs();
-			  switch(apoRDs[0].getDataTypeID())  {
-			  case CIEC_ANY::e_STRING:
-				  static_cast<CIEC_STRING&>(apoRDs[0]).fromUTF8(m_acRecvBuffer, m_unBufFillSize, false);
-				  break;
-			  }
-		  }
-		  else  if((0 < m_unBufFillSize) && (0 != m_poTopLayer))  {
 			  m_eInterruptResp = m_poTopLayer->recvData(m_acRecvBuffer, m_unBufFillSize);
 			  m_unBufFillSize = 0;
-		  }
         break;
       case forte::com_infra::e_Disconnected:
       case forte::com_infra::e_Listening:
@@ -78,35 +68,64 @@ void CWin32SerComLayer::closeConnection()  {
 forte::com_infra::EComResponse CWin32SerComLayer::sendData(void *pa_pvData, unsigned int pa_unSize)
 {
   DWORD dwBytesWritten= 0, dwWaitResult = 0;
-  TConstIEC_ANYPtr apoSDs = static_cast<TConstIEC_ANYPtr > (pa_pvData);
-  for (unsigned int i = 0; i < pa_unSize; ++i)
-  {  
-	  if (apoSDs[i].getDataTypeID() == CIEC_ANY::e_STRING)  
-	  {  
-		  unsigned int nToBeSent= static_cast<const CIEC_STRING&>(apoSDs[i]).length();
-		  if(!WriteFile(m_hSerial, static_cast<const CIEC_STRING&>(apoSDs[i]).getValue(), nToBeSent, &dwBytesWritten, NULL))
-		  {
-			  return forte::com_infra::e_ProcessDataSendFailed;
-		  }
-		  if(dwBytesWritten != static_cast<const CIEC_STRING&>(apoSDs[i]).length())
-		  {
-			  return forte::com_infra::e_ProcessDataSendFailed;
-		  }
-	  }
+  char *pcData = static_cast<char*> (pa_pvData);
+  unsigned int nToBeSent = pa_unSize;
+  //Send payload
+  if(!WriteFile(m_hSerial, pcData, nToBeSent, &dwBytesWritten, NULL))
+  {
+   return forte::com_infra::e_ProcessDataSendFailed;
   }
+  if(dwBytesWritten != nToBeSent)
+  {
+    return forte::com_infra::e_ProcessDataSendFailed;
+  }
+
+  //Send termination symbol(s)
+  if (!WriteFile(m_hSerial, m_acTerminationSymbol, strlen(m_acTerminationSymbol), &dwBytesWritten, NULL))
+  {
+	  return forte::com_infra::e_ProcessDataSendFailed;
+  }
+  if (strlen(m_acTerminationSymbol) != dwBytesWritten)
+  {
+	  return forte::com_infra::e_ProcessDataSendFailed;
+  }
+
   return forte::com_infra::e_ProcessDataOk;
 }
 
 
 forte::com_infra::EComResponse CWin32SerComLayer::openConnection(char *pa_acLayerParameter)  {
   //Create Serial Com Handle
-  m_hSerial = CreateFile(pa_acLayerParameter,
+  CWin32SerComParameterParser parser(pa_acLayerParameter);
+  parser.setSeparator(',');
+  parser.parseParameters();
+
+  //TODO: Parse 61131 string
+  if (0 == strcmp("$n", parser[CWin32SerComParameterParser::eTerminationSymbol])) {
+    strcpy(m_acTerminationSymbol, "\n");
+  } else if (0 == strcmp("$r", parser[CWin32SerComParameterParser::eTerminationSymbol])) 
+  {
+	strcpy(m_acTerminationSymbol, "\r");
+  } else if (0 == strcmp("$r$n", parser[CWin32SerComParameterParser::eTerminationSymbol]))
+  {
+	strcpy(m_acTerminationSymbol, "\r\n");
+  }
+  else
+  {
+    return forte::com_infra::e_InitInvalidId;
+  }
+
+  
+
+  m_hSerial = CreateFile(
+	  parser[CWin32SerComParameterParser::eInterface],
       GENERIC_READ | GENERIC_WRITE,
       0,
       0,
       OPEN_EXISTING,
       FILE_ATTRIBUTE_NORMAL,
       0);
+
   if(INVALID_HANDLE_VALUE == m_hSerial)  {
     if(ERROR_FILE_NOT_FOUND == GetLastError())  {
       return forte::com_infra::e_ProcessDataNoSocket;
@@ -122,10 +141,85 @@ forte::com_infra::EComResponse CWin32SerComLayer::openConnection(char *pa_acLaye
     return forte::com_infra::e_ProcessDataNoSocket;
   }
 
-  dcbSerialParams.BaudRate = CBR_19200;
-  dcbSerialParams.ByteSize = 8;
-  dcbSerialParams.StopBits = ONESTOPBIT;
-  dcbSerialParams.Parity = NOPARITY;
+  //Check baud rate setting
+  DWORD nBaudRate = atoi(parser[CWin32SerComParameterParser::eBaudrate]);
+  switch (nBaudRate) {
+	//These are ok baud rates
+    case CBR_110: break;
+    case CBR_300: break;
+    case CBR_600: break;
+    case CBR_1200: break;
+    case CBR_2400: break;
+    case CBR_4800: break;
+    case CBR_9600: break;
+    case CBR_14400: break;
+    case CBR_19200: break;
+    case CBR_38400: break;
+    case CBR_56000: break;
+    case CBR_57600: break;
+    case CBR_115200: break;
+    case CBR_128000: break;
+    case CBR_256000: break;
+	//all other numbers are invalid!
+    default: return forte::com_infra::e_InitInvalidId; break;
+  }
+
+  //Check byte size setting
+  BYTE nByteSize = atoi(parser[CWin32SerComParameterParser::eByteSize]);
+  if (4 > nByteSize || 8 < nByteSize) {
+	  return forte::com_infra::e_InitInvalidId;
+  }
+
+  //Check stopbits setting
+  BYTE nStopBits = ONESTOPBIT;
+  if (0 == stricmp(parser[CWin32SerComParameterParser::eStopBits], "1"))
+  {
+	  nStopBits = ONESTOPBIT;
+  }
+  else if (0 == stricmp(parser[CWin32SerComParameterParser::eStopBits], "1.5"))
+  {
+	  nStopBits = ONE5STOPBITS;
+  }
+  else if (0 == stricmp(parser[CWin32SerComParameterParser::eStopBits], "2"))
+  {
+	  nStopBits = TWOSTOPBITS;
+  }
+  else
+  {
+	  return forte::com_infra::e_InitInvalidId;
+  }
+
+  //Check parity setting
+  BYTE nParity = NOPARITY;
+  if (0 == stricmp(parser[CWin32SerComParameterParser::eParity], "NONE") )
+  {
+    nParity = NOPARITY;
+  }
+  else if (0 == stricmp(parser[CWin32SerComParameterParser::eParity], "ODD"))
+  {
+	nParity = ODDPARITY;
+  }
+  else if (0 == stricmp(parser[CWin32SerComParameterParser::eParity], "EVEN"))
+  {
+	nParity = EVENPARITY;
+  }
+  else if (0 == stricmp(parser[CWin32SerComParameterParser::eParity], "MARK"))
+  {
+	nParity = MARKPARITY;
+  }
+  else if (0 == stricmp(parser[CWin32SerComParameterParser::eParity], "SPACE"))
+  {
+	nParity = SPACEPARITY;
+  }
+  else
+  {
+	  return forte::com_infra::e_InitInvalidId;
+  }
+
+  dcbSerialParams.BaudRate = nBaudRate;
+  dcbSerialParams.ByteSize = nByteSize;
+  dcbSerialParams.StopBits = nStopBits;
+  dcbSerialParams.Parity = nParity;
 
   if(!SetCommState(m_hSerial, &dcbSerialParams))  {
     return forte::com_infra::e_ProcessDataNoSocket;

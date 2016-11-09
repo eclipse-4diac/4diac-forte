@@ -1,0 +1,1 @@
+forte_test_add_subdirectory(win32)
