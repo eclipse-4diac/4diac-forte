@@ -24,12 +24,12 @@ DEFINE_SINGLETON(COPC_UA_Handler);
 
 #define FORTE_COM_OPC_UA_PORT 4840
 
-const char *LogLevelNames[6] = {"trace", "debug", "info", "warning", "error", "fatal"};
-const char *LogCategoryNames[6] = {"network", "channel", "session", "server", "client", "userland"};
+const char *LogsLevelNames[6] = {"trace", "debug", "info", "warning", "error", "fatal"};
+const char *LogsCategoryNames[6] = {"network", "channel", "session", "server", "client", "userland"};
 
 void UA_Log_Forte(UA_LogLevel level, UA_LogCategory category, const char *msg, ...) {
 	char tmpStr[400];
-	snprintf(tmpStr, 400, "[OPC UA] %s/%s\t", LogLevelNames[level], LogCategoryNames[category]);
+	snprintf(tmpStr, 400, "[OPC UA] %s/%s\t", LogsLevelNames[level], LogsCategoryNames[category]);
 	char *start = &tmpStr[strlen(tmpStr)];
 
 	va_list ap;
