@@ -1,0 +1,55 @@
+In the vxworks compiling the macros timesub, timeadd, timeclear and timecmp are not defined, so I copy and paste from other file.
+
+The fd_set are also different. They are an array instead of an struct, and FD_ZERO uses a bzero function instead of changind the count value of the struct
+
+
+The downloadable kernel module seems not be a vxe file, but a .out (or .o). In this case the example I used uses different flags and compilation calls to generate the file that will be downloaded. 
+All the objects are compiled as a partial_image.o. Then a nmpentium | tlcsh command is executed and the result stored in a ctdt.c file, which contains the constructors and destructors and some more stuff. This file is compile to its .o file, and then linked to the partial_image.o, generating the .out file
+
+
+Cpy and paste the .out file in the file system of the target using FTP. Then use the ld to load the module and sp funtionaName to run the funtion as a thread. The module has to be loaded everytime the system restarts
+
+
+Any VxWorks task that uses C++ must be spawned with the VX_FP_TASK option. By default, tasks spawned from host tools (such as the Wind Shell) automatically have VX_FP_TASK enabled. 
+
+The file IndraC.ini is executed at boot, so the shell commands must be put there.
+
+C++ objects that will be downloaded to kernel space in a target system (downloadable modules) must be munched. There are also several strategies available for calling static constructors and destructors in downloadable modules.
+
+For each toolchain, the following examples compile a C++ application source file, hello.cpp, run munch on the .o, compile the generated ctdt.c file, and link the application with ctdt.o to generate a downloadable module, hello.out
+
+ 
+Using the GNU Toolchain
+
+1.Compile the source code:
+
+ccppc -mcpu=604 -mstrict-align  -O2 -fno-builtin -IinstallDir/vxworks-6.1/target/h -DCPU=PPC604 -DTOOL_FAMILY=gnu -DTOOL=gnu -c hello.cpp
+
+2.Munch the object file:
+
+nmppc hello.o | wtxtcl installDir/vxworks-6.1/host/src/hutils/munch.tcl -c ppc > ctdt.c
+
+3.Compile the munch output:
+
+ccppc -mcpu=604 -mstrict-align  -fdollars-in-identifiers -O2 -fno-builtin -IinstallDir/vxworks-6.1/target/h -DCPU=PPC604 -DTOOL_FAMILY=gnu -DTOOL=gnu  -c ctdt.c
+
+4.Link the original object file with the munched object file to create a downloadable module: 
+
+ccppc -r -nostdlib -Wl,-X -T installDir/vxworks-6.1/target/h/tool/gnu/ldscripts/link.OUT -o hello.out hello.o ctdt.o
+
+NOTE:  The -r4 option collapses any COMDAT sections contained in the input files. NOTE:  The -T option collapses any linkonce sections contained in the input files. 
+
+
+The mounched part must be compiled with the C compiler insted of the C++.
+
+Missing implementations:
+
+Warning: module 0x84a4ef8 holds reference to undefined symbol timersub. //Add the definition in the files that use the function. The definition of the Macro is in the vxworkstimer, copied from the internet
+Warning: module 0x84a4ef8 holds reference to undefined symbol usleep. //change to the nanosleep function of vxworks, with the right parameters.
+Warning: module 0x84a4ef8 holds reference to undefined symbol pthread_mutexattr_settype. /* Not available for Kernel module. For now, just commented, but this might bring some errors*/
+/*pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK);*/
+Warning: module 0x84a4ef8 holds reference to undefined symbol lstat. // open the file, and use the file descriptor to call fstat (defined in vxworks)
+
+it worked after I changed some things in the code, specially the non blocking part. The fcntl wasn't working and I changed to a iotcl
+
+Then, with the wireshark I could see that the meessage to the 1883 port were outgoing but not commign to the PC. I disabled the firewall in it worked.
