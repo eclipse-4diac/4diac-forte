@@ -12,14 +12,12 @@
 #ifndef SOCKHAND_H_
 #define SOCKHAND_H_
 
-#include "vxWorks.h"
+#include <vxWorks.h>
 #include <unistd.h>
-#include <sys/types.h>
-#include <sys/select.h>
-#include <sys/socket.h>
-#include <sys/time.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+#include <sockLib.h>
+#include <selectLib.h>
+#include <inetLib.h>
+
 #include <errno.h>
 #include <string.h>
 
