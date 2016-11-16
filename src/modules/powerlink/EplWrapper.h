@@ -35,6 +35,10 @@ struct SEplMapping{
         ~SEplMappingValues(){
           delete[] m_pchCurrentValue;
         }
+
+      private:
+        SEplMappingValues(const SEplMappingValues &obj);
+        SEplMappingValues& operator=(const SEplMappingValues &obj);
     };
 
     typedef CSinglyLinkedList<SEplMappingValues*> TEplMappingList;

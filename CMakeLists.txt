@@ -184,6 +184,13 @@ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/forte_config.h.in ${CMAKE_BINARY_DIR}
 forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/forte_config.new.h ${CMAKE_BINARY_DIR}/forte_config.h)
 file(REMOVE ${CMAKE_BINARY_DIR}/forte_config.new.h)
 
+#######################################################################################
+# Check FORTE_ARCHITECTURE has a valid value
+#######################################################################################
+if("${FORTE_ARCHITECTURE}" STREQUAL "None")
+  message(FATAL_ERROR "No valid architecture chosen! Please check FORTE_ARCHITECTURE.")
+endif("${FORTE_ARCHITECTURE}" STREQUAL "None")
+
 
 #######################################################################################
 # Setup Forte-Executeable with all Functionblocks

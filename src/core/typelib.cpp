@@ -96,7 +96,7 @@ CAdapter *CTypeLib::createAdapter(CStringDictionary::TStringId pa_nInstanceNameI
   CTypeEntry *poToCreate = findType(pa_nAdapterTypeId, m_poAdapterLibStart);
   if (0 != poToCreate) {
     poNewAdapter =
-      ((CAdapterTypeEntry *)poToCreate)->createAdapterInstance(pa_nInstanceNameId,pa_poRes, pa_bIsPlug);
+      (static_cast<CAdapterTypeEntry *>(poToCreate))->createAdapterInstance(pa_nInstanceNameId,pa_poRes, pa_bIsPlug);
     if (0 == poNewAdapter)
       m_eLastErrorMSG = e_OVERFLOW;
   } //no generic adapters supported
@@ -111,7 +111,7 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId pa_nInstanceName
   //TODO: Avoid that the user can create generic blocks.
   if (0 != poToCreate) {
     poNewFB
-        = ((CFBTypeEntry *)poToCreate)->createFBInstance(pa_nInstanceNameId, pa_poRes);
+        = (static_cast<CFBTypeEntry *>(poToCreate))->createFBInstance(pa_nInstanceNameId, pa_poRes);
     if (0 == poNewFB) // we could not create the requested object
       m_eLastErrorMSG = e_OVERFLOW;
   } else { //check for parameterizable FBs (e.g. SERVER)
@@ -127,7 +127,7 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId pa_nInstanceName
       acGenFBName[cg_nIdentifierLength] = '\0';
       poToCreate = findType(CStringDictionary::getInstance().getId(acGenFBName), m_poFBLibStart);
       if (0 != poToCreate) {
-        poNewFB = ((CFBTypeEntry *)poToCreate)->createFBInstance(pa_nInstanceNameId, pa_poRes);
+        poNewFB = (static_cast<CFBTypeEntry *>(poToCreate))->createFBInstance(pa_nInstanceNameId, pa_poRes);
         if (0 == poNewFB){ // we could not create the requested object
           m_eLastErrorMSG = e_OVERFLOW;
         }
@@ -163,7 +163,7 @@ CIEC_ANY *CTypeLib::createDataTypeInstance(CStringDictionary::TStringId pa_nDTNa
   CIEC_ANY *poNewDT = 0;
   CTypeEntry *poToCreate = findType(pa_nDTNameId, m_poDTLibStart);
   if (0 != poToCreate) {
-    poNewDT = ((CDataTypeEntry *)poToCreate)->createDataTypeInstance(pa_acDataBuf);
+    poNewDT = (static_cast<CDataTypeEntry *>(poToCreate))->createDataTypeInstance(pa_acDataBuf);
     if (0 == poNewDT) // we could not create the requested object
       m_eLastErrorMSG = e_OVERFLOW;
   } else
