@@ -16,9 +16,8 @@ forte_add_architecture(MacOs)
 if("${FORTE_ARCHITECTURE}" STREQUAL "MacOs")
 
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-  forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../posix)
   
-  forte_add_sourcefile_hcpp(../posix/thread ../posix/pctimeha ../posix/sync ../posix/forte_sem)
+  forte_add_sourcefile_hcpp(../posix/thread ../posix/pctimeha sync ../posix/forte_sem)
   forte_add_sourcefile_cpp(../posix/main.cpp)
 
   if(FORTE_COM_ETH)
