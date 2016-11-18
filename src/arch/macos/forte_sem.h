@@ -8,10 +8,36 @@
  * Contributors:
  *  Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _MACOS_FORTE_SEM_H_
-#define _MACOS_FORTE_SEM_H_
 
-//just pull_in the posix semaphore
-#include "../posix/forte_sem.h"
+#ifndef SRC_ARCH_POSIX_SEMAPHORE_H_
+#define SRC_ARCH_POSIX_SEMAPHORE_H_
 
-#endif
+#include <dispatch/dispatch.h>
+
+namespace forte {
+  namespace arch {
+
+    /*!\brief counting semaphore for syncing operation in FORTE
+     *
+     * The semaphore is initialized with the value given.
+     */
+    class CPThreadSemaphore{
+      public:
+
+        explicit CPThreadSemaphore(unsigned int paInitialValue  = 0);
+        ~CPThreadSemaphore();
+
+        void semInc();
+        void semWaitIndefinitly();
+
+      private:
+        dispatch_semaphore_t mSemaphore;
+    };
+
+
+    typedef CPThreadSemaphore CSemaphore;
+
+  } /* namespace arch */
+} /* namespace forte */
+
+#endif /* SRC_ARCH_POSIX_SEMAPHORE_H_ */
