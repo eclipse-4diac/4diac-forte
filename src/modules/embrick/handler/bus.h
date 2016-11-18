@@ -40,13 +40,15 @@ enum SlaveStatus {
 class BusHandler: public CExternalEventHandler, public CThread {
 DECLARE_SINGLETON(BusHandler)
 
+	friend class Slave;
+
 public:
 	void init();
-	bool transfer(char target, Command cmd, unsigned char* dataSend = NULL,
-			int dataSendLength = 0, unsigned char* dataReceive = NULL,
-			int dataReceiveLength = 0);
 
 protected:
+	bool transfer(unsigned int target, Command cmd, unsigned char* dataSend =
+			NULL, int dataSendLength = 0, unsigned char* dataReceive = NULL,
+			int dataReceiveLength = 0);
 
 #pragma pack(push, 1) // Disable padding for protocol structs
 

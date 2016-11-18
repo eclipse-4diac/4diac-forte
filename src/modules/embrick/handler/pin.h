@@ -19,7 +19,9 @@
 namespace EmBrick {
 
 class PinHandler {
-public:
+	friend class BusHandler;
+
+protected:
 	PinHandler(unsigned int pin);
 	virtual ~PinHandler();
 
@@ -31,7 +33,6 @@ public:
 		return set(false);
 	}
 
-protected:
 	void init();
 	void deInit();
 

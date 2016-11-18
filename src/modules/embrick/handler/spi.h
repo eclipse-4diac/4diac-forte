@@ -21,14 +21,15 @@
 namespace EmBrick {
 
 class SPIHandler {
-public:
+	friend class BusHandler;
+
+protected:
 	SPIHandler();
 	virtual ~SPIHandler();
 
 	bool transfer(unsigned char* sendBuffer, unsigned char* receiveBuffer,
 			int length);
 
-protected:
 	void init();
 	void fail(const char* reason);
 	template<typename T> bool config(unsigned int config,
