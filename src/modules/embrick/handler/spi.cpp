@@ -10,14 +10,13 @@
  *******************************************************************************/
 
 #include "spi.h"
-
 #include <devlog.h>
 
 namespace EmBrick {
 
 char const SPIHandler::spiMode = SPI_CPHA;
 char const SPIHandler::spiBitOrder = 0; // MSB first
-unsigned long const SPIHandler::spiSpeed = 500000;
+unsigned long const SPIHandler::spiSpeed = 100000;
 
 const char * const SPIHandler::scmFailedToInitHandler =
 		"Failed to init spidev handler. Check if spi is enabled.";
@@ -35,18 +34,12 @@ SPIHandler::SPIHandler() {
 }
 
 SPIHandler::~SPIHandler() {
-	// TODO Auto-generated destructor stub
+	deInit();
 }
 
 void SPIHandler::init() {
 	// Init spidev
 	fd = open("/dev/spidev1.0", O_RDWR);
-
-	//if (fd < 0)
-	//	fd = open("/dev/spidev0.1", O_RDWR);
-
-	//if (fd < 0)
-	//	fd = open("/dev/spidev0.0", O_RDWR);
 
 	if (fd < 0)
 		return fail(scmFailedToInitHandler);
@@ -64,11 +57,17 @@ void SPIHandler::init() {
 		return fail(scmFailedToConfigSpeed);
 
 	// Test
-	unsigned char *testByte = { 0 };
+	unsigned char testByte[1] = { 0 };
 	if (!transfer(testByte, testByte, 1))
 		return fail(scmFailedToTestBus);
 
-	DEVLOG_INFO("emBrick: SPIController ready.\n");
+	DEVLOG_INFO("emBrick[SPIHandler]: Ready.\n");
+}
+
+void SPIHandler::deInit() {
+	// Close handler if open
+	if (fd >= 0)
+		close(fd);
 }
 
 template<typename T> bool SPIHandler::config(unsigned int config,
@@ -91,7 +90,7 @@ template<typename T> bool SPIHandler::config(unsigned int config,
 
 void SPIHandler::fail(const char* reason) {
 	// TODO Handle errors -> set error state
-	DEVLOG_ERROR("emBrick: %s\n", reason);
+	DEVLOG_ERROR("emBrick[SPIHandler]: %s\n", reason);
 }
 
 bool SPIHandler::transfer(unsigned char* sendBuffer,
