@@ -12,33 +12,13 @@
 #include "slave.h"
 
 #include "../handler/bus.h"
+#include "packages.h"
 
 namespace EmBrick {
 
-namespace Packages {
-
-SlaveInit SlaveInit::fromBuffer(unsigned char* buffer) {
-	SlaveInit pkg;
-	memcpy(&pkg, buffer, sizeof(SlaveInit));
-
-	pkg.deviceId = ntohs(pkg.deviceId);
-	pkg.manufactorId = ntohs(pkg.manufactorId);
-
-	return pkg;
-}
-
-void MasterInit::toBuffer(unsigned char* buffer) {
-	buffer[0] = slaveAddress;
-
-	uint16_t syncGapFactor = htons(this->syncGapFactor);
-	memcpy(buffer + 1, &syncGapFactor, 2);
-}
-
-} /* namespace Packages */
-
-Slave::Slave() {
+Slave::Slave(int address) :
+		address(address) {
 	// TODO Auto-generated constructor stub
-
 }
 
 Slave::~Slave() {
@@ -56,14 +36,17 @@ Slave* Slave::sendInit(int address) {
 	unsigned char receiveBuffer[sizeof(Packages::SlaveInit)];
 
 	masterInit.toBuffer(sendBuffer);
-	bus.transfer(0, Init, sendBuffer, sizeof(Packages::MasterInit), receiveBuffer,
-			sizeof(Packages::SlaveInit));
+
+	// Send init via broadcast. Due to the sequential slave select activation, only one slave will respond.
+	if (!bus.broadcast(Init, sendBuffer, sizeof(Packages::MasterInit),
+			receiveBuffer, sizeof(Packages::SlaveInit)))
+		return 0;
 	Packages::SlaveInit initPackage = Packages::SlaveInit::fromBuffer(
 			receiveBuffer);
 
 	// TODO Create slave instance from init package
 
-	return 0;
+	return new Slave(address);
 }
 
 } /* namespace EmBrick */

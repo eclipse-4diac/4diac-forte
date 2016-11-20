@@ -14,43 +14,18 @@
 
 #include <stdint.h>
 #include <cstring>
-#include <netinet/in.h>
 
 namespace EmBrick {
-
-namespace Packages {
-
-#pragma pack(push, 1) // Disable padding for protocol structs
-
-struct SlaveInit {
-	uint8_t protocolVersion;
-	uint8_t moduleVersion;
-	uint16_t deviceId;
-	uint16_t manufactorId;
-	uint8_t dataSendLength; // Amount of bytes that the slave expects from the master
-	uint8_t dataReceiveLength; // Amount of bytes that the master expects from the slave
-
-	static SlaveInit fromBuffer(unsigned char* buffer);
-};
-
-struct MasterInit {
-	uint8_t slaveAddress;
-	uint16_t syncGapFactor;
-
-	void toBuffer(unsigned char* buffer);
-};
-
-#pragma pack(pop)
-
-} /* namespace Packages */
 
 class Slave {
 public:
 	static Slave* sendInit(int address);
 	virtual ~Slave();
 
+	const unsigned int address;
+
 protected:
-	Slave();
+	Slave(int address);
 };
 
 } /* namespace EmBrick */
