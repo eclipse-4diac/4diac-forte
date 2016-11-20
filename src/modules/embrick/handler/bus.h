@@ -22,6 +22,7 @@
 #include <string>
 #include <pthread.h>
 #include "spi.h"
+#include "pin.h"
 
 namespace EmBrick {
 
@@ -47,8 +48,14 @@ public:
 
 protected:
 	bool transfer(unsigned int target, Command cmd, unsigned char* dataSend =
-			NULL, int dataSendLength = 0, unsigned char* dataReceive = NULL,
+	NULL, int dataSendLength = 0, unsigned char* dataReceive = NULL,
 			int dataReceiveLength = 0);
+	bool broadcast(Command cmd, unsigned char* dataSend =
+	NULL, int dataSendLength = 0, unsigned char* dataReceive = NULL,
+			int dataReceiveLength = 0) {
+		return transfer(0, cmd, dataSend, dataSendLength, dataReceive,
+				dataReceiveLength);
+	}
 
 #pragma pack(push, 1) // Disable padding for protocol structs
 
@@ -69,7 +76,10 @@ protected:
 	int getPriority(void) const;
 
 	unsigned long nextLoop;
+
+	// Handlers
 	SPIHandler *spi;
+	PinHandler *slaveSelect;
 
 private:
 	unsigned long millis();

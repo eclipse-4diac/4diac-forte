@@ -19,7 +19,7 @@ namespace EmBrick {
 DEFINE_SINGLETON(BusHandler)
 
 BusHandler::BusHandler() :
-		spi(NULL), nextLoop(0) {
+		nextLoop(0), spi(NULL), slaveSelect(NULL) {
 	// Set init time
 	struct timespec ts;
 	// TODO Check compile error. Had to to add rt libary to c++ make flags
@@ -29,12 +29,14 @@ BusHandler::BusHandler() :
 }
 
 BusHandler::~BusHandler() {
-
 }
 
 void BusHandler::run() {
-	// Active spi controller
+	// Start handlers
 	spi = new SPIHandler();
+	slaveSelect = new PinHandler(49);
+	// TODO Check status of handler errors
+	DEVLOG_INFO("emBrick[BusHandler]: Handlers ready.\n");
 
 	// Init bus
 	init();
@@ -49,50 +51,78 @@ void BusHandler::run() {
 			microsleep(std::min((nextLoop - ms), (unsigned long) 2) * 1000);
 
 			// TODO Check for updates of forte runtime -> maybe schedule next loop earlier
+			// DISCUSS Use cond_timed_wait pthread to wake up thread
 			ms = millis();
 		}
 
-		// send(0, Init);
+		// TODO Perform requests to slaves
+		// DISCUSS Use scheduling strategy or a cyclic routine
 
 		// Sleep till next cycle
 		unsigned long diff = millis() - ms;
-		DEVLOG_INFO("Loop %d - %d\n", ms, diff);
+		DEVLOG_INFO("emBrick[BusHandler]: Loop %d - %d\n", ms, diff);
 		ms = millis();
 		nextLoop = ms + (1000 - ms % 1000);
 	}
+
+	delete spi;
+	delete slaveSelect;
+
+	DEVLOG_INFO("emBrick[BusHandler]: Stopped.\n");
 }
 
 void BusHandler::init() {
+	// Disable slave select -> reset all slaves
+	slaveSelect->disable();
+
+	// Wait for reset
+	microsleep(1000); // TODO replace with dynamic variable
+
+	// Enable slave select -> the first slave waits for initialization
+	slaveSelect->enable();
+
+	// Wait for init
+	microsleep(1000); // TODO replace with dynamic variable
+
+	// Init the slaves sequentially. Abort if the init package is ignored -> no further slaves found.
 	int slaveCounter = 1;
 	int attempts = 0;
 	Slave *slave;
 
 	while ((slave = Slave::sendInit(slaveCounter)) != 0 || attempts++ < 3) {
 		if (slave) {
+			// TODO Add slave to list
+
+			// Activate next slave by sending the 'SelectNextSlave' command to the current slave
+			// It enables the slave select pin for the next slave on the bus
+			transfer(slave->address, SelectNextSlave);
 
 			slaveCounter++;
 		}
 	}
 }
 
-bool BusHandler::transfer(char target, Command cmd, unsigned char* dataSend,
-		int dataSendLength, unsigned char* dataReceive, int dataReceiveLength) {
+bool BusHandler::transfer(unsigned int target, Command cmd,
+		unsigned char* dataSend, int dataSendLength, unsigned char* dataReceive,
+		int dataReceiveLength) {
 	int dataLength = std::max(dataSendLength, dataReceiveLength + 1); // + 1 status byte
 
 	int bufferLength = sizeof(Header) + dataLength + 1; // + 1 checksum byte
-	unsigned char *buffer = (unsigned char*) calloc(bufferLength, 1);
+	unsigned char buffer[bufferLength];
+	unsigned char recvBuffer[bufferLength];
+	memset(buffer, 0, bufferLength);
+	memset(recvBuffer, 0, bufferLength);
 
 	Header* header = (Header*) buffer;
 
-	header->address = target;
+	header->address = (char) target;
 	header->command = cmd;
 	header->checksum = calcChecksum((unsigned char*) header, 2);
 
 	memcpy(buffer + sizeof(Header), dataSend, dataSendLength);
-	buffer[sizeof(Header) + dataSendLength] = calcChecksum(dataSend,
-			dataSendLength);
+	buffer[bufferLength - 1] = calcChecksum(dataSend, dataSendLength);
 
-	unsigned char *recvBuffer = (unsigned char*) calloc(bufferLength, 1);
+	DEVLOG_DEBUG("emBrick[BusHandler]: TX - %s\n", bytesToHex(buffer, bufferLength).c_str());
 
 	// Invert data of master
 	for (int i = 0; i < bufferLength; i++)
@@ -103,35 +133,32 @@ bool BusHandler::transfer(char target, Command cmd, unsigned char* dataSend,
 	bool ok;
 	do {
 		// Wait required microseconds between messages
-		microsleep(56);
+		microsleep(56); // TODO replace with dynamic variable
 
 		ok = spi->transfer(buffer, recvBuffer, bufferLength);
 		if (!ok) {
-			DEVLOG_ERROR("Failed to transfer buffer.\n");
+			DEVLOG_ERROR("emBrick[BusHandler]: Failed to transfer buffer.\n");
 			continue;
 		}
 
+		DEVLOG_DEBUG("emBrick[BusHandler]: RX - %s, CS - %d\n",
+				bytesToHex(recvBuffer, bufferLength).c_str(),
+				calcChecksum(recvBuffer, bufferLength));
+
 		ok = calcChecksum(recvBuffer, bufferLength) == 0;
 		if (!ok) {
-			DEVLOG_ERROR("Invalid checksum\n");
+			DEVLOG_DEBUG("emBrick[BusHandler]: Transfer - Invalid checksum\n");
 		}
 	} while (!ok && --attempts);
 
-	DEVLOG_INFO("emBrick: TX - %s\n", bytesToHex(buffer, bufferLength).c_str());
-	DEVLOG_INFO("emBrick: RX - %s\n",
-			bytesToHex(recvBuffer, bufferLength).c_str());
-
 	if (!ok) {
-		DEVLOG_ERROR("Failed to send command %d to slave %d.\n", cmd, target);
+		DEVLOG_ERROR("emBrick[BusHandler]: Failed to send command %d to slave %d.\n", cmd, target);
 		return false;
 	}
 
 	// Copy result
 	SlaveStatus status = (SlaveStatus) recvBuffer[0]; // TODO Handle slave status
-	memcpy(dataReceive, recvBuffer + 1, dataReceiveLength);
-
-	free(buffer);
-	free(recvBuffer);
+	memcpy(dataReceive, recvBuffer + sizeof(Header) + 1, dataReceiveLength);
 
 	return true;
 }
@@ -161,6 +188,7 @@ int BusHandler::getPriority() const {
 }
 
 unsigned long BusHandler::millis() {
+	// TODO Improve timing func. Maybe replace with existing forte implementation.
 	struct timespec ts;
 	clock_gettime(CLOCK_REALTIME, &ts);
 
@@ -175,6 +203,7 @@ void BusHandler::microsleep(unsigned long microseconds) {
 }
 
 std::string BusHandler::bytesToHex(unsigned char* bytes, int length) {
+	// TODO Move helper functions to helper class or general forte utils class
 	char buffer[length * 3];
 	buffer[length * 3 - 1] = 0;
 	for (int i = 0; i < length; i++)
