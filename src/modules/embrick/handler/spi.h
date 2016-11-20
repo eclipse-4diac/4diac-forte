@@ -31,6 +31,7 @@ protected:
 			int length);
 
 	void init();
+	void deInit();
 	void fail(const char* reason);
 	template<typename T> bool config(unsigned int config,
 			unsigned int configVerify, T value);

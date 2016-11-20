@@ -10,6 +10,7 @@
  *******************************************************************************/
 
 #include "pin.h"
+#include <devlog.h>
 
 namespace EmBrick {
 
@@ -55,6 +56,7 @@ void PinHandler::init() {
 
 	// Use pin as output
 	fileName = "/sys/class/gpio/gpio" + pinStr + "/direction";
+	stream.open(fileName.c_str(), std::fstream::out);
 	if (!stream.is_open())
 		return fail(scmFailedToOpenFile);
 	stream.clear();
@@ -69,6 +71,8 @@ void PinHandler::init() {
 	stream.open(fileName.c_str(), std::fstream::out);
 	if (!stream.is_open())
 		return fail(scmFailedToOpenFile);
+
+	DEVLOG_INFO("emBrick[PinHandler]: GPIO %d ready.\n", pin);
 }
 
 void PinHandler::deInit() {
@@ -91,10 +95,12 @@ void PinHandler::deInit() {
 	if (!stream.is_open())
 		return fail(scmFailedToOpenFile);
 
-	stream << pin;
+	stream << pinStr;
 	if (stream.fail())
 		return fail(scmFailedToWriteFile);
 	stream.close();
+
+	DEVLOG_INFO("emBrick[PinHandler]: GPIO %d stopped.\n", pin);
 }
 
 bool PinHandler::set(bool state) {
@@ -118,6 +124,7 @@ bool PinHandler::set(bool state) {
 
 void PinHandler::fail(const char* reason) {
 	// TODO Implement error handler
+	DEVLOG_ERROR("emBrick[PinHandler]: %s\n", reason);
 }
 
 } /* namespace EmBrick */
