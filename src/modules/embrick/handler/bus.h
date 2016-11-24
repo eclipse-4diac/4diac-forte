@@ -21,8 +21,10 @@
 #include <timerha.h>
 #include <string>
 #include <pthread.h>
+#include <fortelist.h>
 #include "spi.h"
 #include "pin.h"
+#include <slave/slave.h>
 
 namespace EmBrick {
 
@@ -30,13 +32,8 @@ enum Command {
 	Init = 2, SelectNextSlave = 3, Data = 10
 };
 
-enum SlaveStatus {
-	NotInitialized = 0, // Slave requires initialization
-	OK = 1, // Everything works as expected
-	Slow = 200, // Update frequency is too low, some errors may occurred
-	Interrupted = 201, // Slave received no master updates
-	Error = 202, // Connection has errors. Check hardware
-};
+const unsigned int SyncGapMultiplicator = 15;
+const unsigned int SyncGapDuration = (SyncGapMultiplicator - 1) * 32 + 10;
 
 class BusHandler: public CExternalEventHandler, public CThread {
 DECLARE_SINGLETON(BusHandler)
@@ -49,23 +46,13 @@ public:
 protected:
 	bool transfer(unsigned int target, Command cmd, unsigned char* dataSend =
 	NULL, int dataSendLength = 0, unsigned char* dataReceive = NULL,
-			int dataReceiveLength = 0);
+			int dataReceiveLength = 0, SlaveStatus* status = NULL);
 	bool broadcast(Command cmd, unsigned char* dataSend =
 	NULL, int dataSendLength = 0, unsigned char* dataReceive = NULL,
 			int dataReceiveLength = 0) {
 		return transfer(0, cmd, dataSend, dataSendLength, dataReceive,
 				dataReceiveLength);
 	}
-
-#pragma pack(push, 1) // Disable padding for protocol structs
-
-	struct Header {
-		char address;
-		char command;
-		char checksum;
-	};
-
-#pragma pack(pop)
 
 	virtual void run();
 
@@ -76,12 +63,18 @@ protected:
 	int getPriority(void) const;
 
 	unsigned long nextLoop;
+	uint64_t lastTransfer;
 
 	// Handlers
 	SPIHandler *spi;
 	PinHandler *slaveSelect;
 
+	// Slaves
+	typedef CSinglyLinkedList<Slave *> TSlaveList;
+	TSlaveList *slaves;
+
 private:
+	uint64_t micros();
 	unsigned long millis();
 	time_t initTime;
 	void microsleep(unsigned long microseconds);

@@ -36,6 +36,11 @@ protected:
 	template<typename T> bool config(unsigned int config,
 			unsigned int configVerify, T value);
 
+	bool ready() {
+		return error != NULL;
+	}
+	char * error;
+
 private:
 	int fd;
 

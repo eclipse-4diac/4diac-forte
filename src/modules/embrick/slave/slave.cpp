@@ -10,19 +10,24 @@
  *******************************************************************************/
 
 #include "slave.h"
-
+#include "slave2181.h"
 #include "../handler/bus.h"
-#include "packages.h"
+#include "slave2301.h"
 
 namespace EmBrick {
 
-Slave::Slave(int address) :
-		address(address) {
-	// TODO Auto-generated constructor stub
+Slave::Slave(int address, Packages::SlaveInit init) :
+		address(address), deviceId(init.deviceId), dataSendLength(
+				init.dataSendLength), dataReceiveLength(init.dataReceiveLength), status(
+				NotInitialized) {
+	bus = &BusHandler::getInstance();
+	updateSendImage = new unsigned char[dataSendLength];
+	updateReceiveImage = new unsigned char[dataReceiveLength];
 }
 
 Slave::~Slave() {
-	// TODO Auto-generated destructor stub
+	delete updateSendImage;
+	delete updateReceiveImage;
 }
 
 Slave* Slave::sendInit(int address) {
@@ -30,7 +35,7 @@ Slave* Slave::sendInit(int address) {
 
 	Packages::MasterInit masterInit;
 	masterInit.slaveAddress = (unsigned char) address;
-	masterInit.syncGapFactor = 3; // ToDo: Replace with dynamic constant
+	masterInit.syncGapMultiplicator = SyncGapMultiplicator; // ToDo: Replace with dynamic constant
 
 	unsigned char sendBuffer[sizeof(Packages::MasterInit)];
 	unsigned char receiveBuffer[sizeof(Packages::SlaveInit)];
@@ -40,13 +45,50 @@ Slave* Slave::sendInit(int address) {
 	// Send init via broadcast. Due to the sequential slave select activation, only one slave will respond.
 	if (!bus.broadcast(Init, sendBuffer, sizeof(Packages::MasterInit),
 			receiveBuffer, sizeof(Packages::SlaveInit)))
-		return 0;
+		return NULL;
+
 	Packages::SlaveInit initPackage = Packages::SlaveInit::fromBuffer(
 			receiveBuffer);
 
-	// TODO Create slave instance from init package
+	// Alter the value of data receive length -> the status byte is handled in the BusHandler
+	initPackage.dataReceiveLength--;
 
-	return new Slave(address);
+	DEVLOG_INFO(
+			"emBrick[Slave]: ID - %d, ReceiveLength - %d, SendLength - %d, Producer - %d \n",
+			initPackage.deviceId, initPackage.dataReceiveLength,
+			initPackage.dataSendLength, initPackage.producerId);
+
+	// Create slave instance based on type
+	switch ((SlaveType) initPackage.deviceId) {
+
+	case G_8Di8Do:
+		return new Slave2181(address, initPackage);
+
+	case G_2RelNo4RelCo:
+		return new Slave2301(address, initPackage);
+
+	default:
+		DEVLOG_ERROR("emBrick[Slave]: Unknown slave type %d\n",
+				initPackage.deviceId);
+	}
+
+	// Return a global slave instance
+	return new Slave(address, initPackage);
+}
+
+bool Slave::update() {
+	// Prepare the send image
+	prepareUpdate();
+
+	// Send update request to bus
+	if (!bus->transfer(address, Data, updateSendImage, dataSendLength,
+			updateReceiveImage, dataReceiveLength, &status))
+		return false;
+
+	// Handle the received image
+	handleUpdate();
+
+	return true;
 }
 
 } /* namespace EmBrick */

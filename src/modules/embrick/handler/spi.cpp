@@ -16,7 +16,7 @@ namespace EmBrick {
 
 char const SPIHandler::spiMode = SPI_CPHA;
 char const SPIHandler::spiBitOrder = 0; // MSB first
-unsigned long const SPIHandler::spiSpeed = 100000;
+unsigned long const SPIHandler::spiSpeed = 150000;
 
 const char * const SPIHandler::scmFailedToInitHandler =
 		"Failed to init spidev handler. Check if spi is enabled.";
@@ -29,7 +29,7 @@ const char * const SPIHandler::scmFailedToConfigSpeed =
 const char * const SPIHandler::scmFailedToTestBus =
 		"Failed to send test byte to spi.";
 
-SPIHandler::SPIHandler() {
+SPIHandler::SPIHandler(): error(NULL) {
 	init();
 }
 
@@ -90,6 +90,7 @@ template<typename T> bool SPIHandler::config(unsigned int config,
 
 void SPIHandler::fail(const char* reason) {
 	// TODO Handle errors -> set error state
+	error = (char*) reason;
 	DEVLOG_ERROR("emBrick[SPIHandler]: %s\n", reason);
 }
 
