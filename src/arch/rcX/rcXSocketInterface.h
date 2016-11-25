@@ -12,17 +12,18 @@
 #ifndef SRC_ARCH_RCX_RCXSOCKETINTERFACE_H_
 #define SRC_ARCH_RCX_RCXSOCKETINTERFACE_H_
 
+#include <rX_Includes.h>
+#include <TcpipConfig.h>
+#include <TcpipTcpTask_error.h>
+#include <TcpipTcpTask_Functionlist.h>
+#include <TcpipTcpTask_Public.h>
 #include "../../core/fortelist.h"
 #include "../../core/extevhan.h"
 #include "../../core/cominfra/comlayer.h"
 #include "../../core/utils/singlet.h"
 #include "thread.h"
 #include <sync.h>
-#include <rX_Includes.h>
-#include <TcpipConfig.h>
-#include <TcpipTcpTask_error.h>
-#include <TcpipTcpTask_Functionlist.h>
-#include <TcpipTcpTask_Public.h>
+
 
 class CrcXSocketInterface : public CExternalEventHandler, private CThread{
     DECLARE_SINGLETON(CrcXSocketInterface)

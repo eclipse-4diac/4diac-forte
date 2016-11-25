@@ -16,33 +16,37 @@ forte_add_architecture(rcX)
 if("${FORTE_ARCHITECTURE}" STREQUAL "rcX")
 
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-    
+
+  set(FORTE_BUILD_TYPE "STATIC_LIBRARY" CACHE STRING "Build FORTE as an executable or as a library" FORCE)
+ # message("Remeber to set FORTE_BUILD_TYPE variable to STATIC or SHARED lirary")
+
+  set(FORTE_NETX_CPU NETX51 CACHE STRING "CPU where the netx is deployed")
+  set_property(CACHE FORTE_NETX_CPU PROPERTY STRINGS NETX10 NETX50 NETX51 NETX100)
+  string(TOLOWER ${FORTE_NETX_CPU} FORTE_NETX_CPU_low)
+  string(REPLACE "x" "X" FORTE_NETX_CPU_FOLDER ${FORTE_NETX_CPU_low} )
+  
+  if ("${FORTE_NETX_CPU}" STREQUAL "NETX100")
+    set(ARCH_NETX arm926ej-s)
+  else("${FORTE_NETX_CPU}" STREQUAL "NETX10")
+    set(ARCH_NETX arm9e)
+  endif()
+  
   SET(FORTE_QUEUE_MAX "32" CACHE STRING "Max number of elements for the queue of the forte task")
-  #mark_as_advanced(FORTE_QUEUE_MAX)
-  
   SET(FORTE_WAIT_QUEUE_MAX "32" CACHE STRING "Max number of elements for the incoming buffer queue of the forte task")
-  #mark_as_advanced(FORTE_WAIT_QUEUE_MAX)
- 
   SET(FORTE_POOL_MAX "32" CACHE STRING "Max number of elements for the pool for originated messages in the forte task")
-  #mark_as_advanced(FORTE_POOL_MAX)
-  
   SET(FORTE_RCX_INCLUDES "" CACHE STRING "Folders to include from the rcX OS")
-  #mark_as_advanced(FORTE_RCX_INCLUDES)
+  #SET(FORTE_RCX_LIB_INCLUDE "" CACHE STRING "Folders to look for libraries")
   
-  SET(FORTE_RCX_LIB_INCLUDE "" CACHE STRING "Folders to look for libraries")
-  #mark_as_advanced(FORTE_RCX_INCLUDES)
-  
-  forte_add_sourcefile_hcpp(thread rcXTimerHandler rcXUtilities sync forte_sem )
-  forte_add_sourcefile_h( fortealloc.h)
-  
+  forte_add_sourcefile_hcpp(thread rcXTimerHandler rcXUtilities sync forte_sem forteMain)
+  forte_add_sourcefile_h(fortealloc.h)
+ 
   if(FORTE_COM_ETH)
    forte_add_sourcefile_hcpp(rcXSocketInterface)
    forte_add_sourcefile_h(sockhand.h)
   endif(FORTE_COM_ETH)
 
-  #forte_add_link_library(pthread)
-
-  forte_add_definition("-D__RCX__ -W -Wall -Wextra -Woverloaded-virtual -Wconversion -DFORTE_LITTLE_ENDIAN -ggdb")
+  forte_add_definition("-D__RCX__ -D__${FORTE_NETX_CPU} -c -mlong-calls -mcpu=${ARCH_NETX} -fshort-enums -gdwarf-2 -Wall -O0 -mapcs -mthumb-interwork -fsigned-char -mlittle-endian -marm -mno-apcs-frame -static-libstdc++ -static-libgcc")# -mabi=apcs-gnu -xc")
+  forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -DFORTE_LITTLE_ENDIAN -ggdb")
   
   set(FORTE_RTTI_AND_EXCEPTIONS FALSE CACHE BOOL "Enable RTTI and Exceptions")
   mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)
@@ -50,17 +54,31 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "rcX")
     forte_add_definition("-fno-rtti -fno-exceptions")
   ENDIF(NOT FORTE_RTTI_AND_EXCEPTIONS)
   
-  
-  set(FORTE_POSIX_GENERATE_MAP_FILE FALSE CACHE BOOL "Enable the generation of map files")
-  mark_as_advanced(FORTE_POSIX_GENERATE_MAP_FILE)
-  IF(FORTE_POSIX_GENERATE_MAP_FILE)
+  set(FORTE_RCX_GENERATE_MAP_FILE FALSE CACHE BOOL "Enable the generation of map files")
+  mark_as_advanced(FORTE_RCX_GENERATE_MAP_FILE)
+  IF(FORTE_RCX_GENERATE_MAP_FILE)
   	forte_add_link_flags("-Wl,-M -Wl,-Map -Wl,forte.map -Wl,-cref")
-  ENDIF(FORTE_POSIX_GENERATE_MAP_FILE)	
+  ENDIF(FORTE_RCX_GENERATE_MAP_FILE)	
   
-  forte_add_link_library("-lpthread") 
-
+  forte_add_include_directories(${FORTE_RCX_INCLUDES}/API)
+  forte_add_include_directories(${FORTE_RCX_INCLUDES}/Configuration)
+  forte_add_include_directories(${FORTE_RCX_INCLUDES}/TLR)
+  forte_add_include_directories(${FORTE_RCX_INCLUDES}/CPUs/${FORTE_NETX_CPU_FOLDER})
+  forte_add_include_directories(${FORTE_RCX_INCLUDES}/TCPIP)
+  forte_add_link_directories(${FORTE_RCX_LIB_INCLUDE})
+  forte_add_link_directories(${FORTE_RCX_LIB_INCLUDE}/${FORTE_NETX_CPU_low})
   
-  forte_add_include_directories(${FORTE_RCX_INCLUDES})
+   
+  #forte_add_link_flags("-T ${FORTE_RCX_LD_SCRIPT} -static")
+  
+  #forte_add_link_library(rcx)
+  #forte_add_link_library(rcx_${FORTE_NETX_CPU_low})
+  #forte_add_link_library(tcpip)
+  #forte_add_link_library(gcc)
+  #forte_add_link_library(m)
+  #forte_add_link_library(c)
+  
+  #forte_add_link_flags("-static -( -lrcx -lrcx_netx100_2portswitch -lrcx_mid -lrcx_netx100 -lrcx_vol -ltcpip -lgcc -lm -lc -)")
   
   CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/forte_config_rcX.h.in ${CMAKE_BINARY_DIR}/forte_config_rcX.new.h)
   forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/forte_config_rcX.new.h ${CMAKE_BINARY_DIR}/forte_config_rcX.h)

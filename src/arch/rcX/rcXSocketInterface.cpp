@@ -10,13 +10,13 @@
  *******************************************************************************/
 
 #include "rcXSocketInterface.h"
+#include <TLR_Includes.h>
 #include "bsdsocketinterf.h"
 #include "devlog.h"
 #include "../../core/devexec.h"
 #include "../core/cominfra/commfb.h"
 #include <criticalregion.h>
 #include <string.h>
-#include <TLR_Legacy.h>
 #include <forte_config_rcX.h>
 
 DEFINE_SINGLETON(CrcXSocketInterface);
