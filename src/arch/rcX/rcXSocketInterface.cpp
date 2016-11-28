@@ -71,7 +71,6 @@ CrcXSocketInterface::CrcXSocketInterface(){
 }
 
 CrcXSocketInterface::~CrcXSocketInterface(){
-  this->end();
   TLR_QUE_DELETE_CHECK(mForteResources.forteQueueHandle);
   TLR_POOL_DELETE_CHECK(mForteResources.fortePoolHandle);
 }
@@ -84,29 +83,32 @@ void CrcXSocketInterface::run(void){
     }
 
     CSinglyLinkedList<FORTE_TCP_PACKET_T*>::Iterator itEndWaiting(mWaitingList.end());
-    m_oSync.lock();
-    for(CSinglyLinkedList<FORTE_TCP_PACKET_T*>::Iterator itRunnerWaiting = mWaitingList.begin(); itRunnerWaiting != itEndWaiting;){
-      TConnectionContainer::Iterator itEndConnection(m_lstConnectionsList.end());
-      for(TConnectionContainer::Iterator itRunnerConnection = m_lstConnectionsList.begin(); itRunnerConnection != itEndConnection;){
-        // need to retrieve the callee as the iterator may get invalid in the recvDat function below in case of connection closing
-        forte::com_infra::CComLayer *comLayer = itRunnerConnection->m_poCallee;
-        TSocketDescriptor sockDes = itRunnerConnection->m_nSockDes;
-        ++itRunnerConnection;
 
-        if((*itRunnerWaiting)->tHead.ulSrcId == sockDes->socketNumber){
-          ++itRunnerWaiting;
-          if(0 != comLayer){
-            if(forte::com_infra::e_Nothing != comLayer->recvData(&sockDes, 0)){
-              startNewEventChain(comLayer->getCommFB());
+    {
+    	CCriticalRegion(m_oSync);
+      for(CSinglyLinkedList<FORTE_TCP_PACKET_T*>::Iterator itRunnerWaiting = mWaitingList.begin(); itRunnerWaiting != itEndWaiting;){
+        TConnectionContainer::Iterator itEndConnection(m_lstConnectionsList.end());
+        for(TConnectionContainer::Iterator itRunnerConnection = m_lstConnectionsList.begin(); itRunnerConnection != itEndConnection;){
+          // need to retrieve the callee as the iterator may get invalid in the recvDat function below in case of connection closing
+          forte::com_infra::CComLayer *comLayer = itRunnerConnection->m_poCallee;
+          TSocketDescriptor sockDes = itRunnerConnection->m_nSockDes;
+          ++itRunnerConnection;
+
+          if((*itRunnerWaiting)->tHead.ulSrcId == sockDes->socketNumber){
+            ++itRunnerWaiting;
+            if(0 != comLayer){
+              if(forte::com_infra::e_Nothing != comLayer->recvData(&sockDes, 0)){
+                startNewEventChain(comLayer->getCommFB());
+              }
             }
+            break;
           }
-          break;
-        }else{
-          ++itRunnerWaiting;
+          else{
+            ++itRunnerWaiting;
+          }
         }
       }
     }
-    m_oSync.unlock();
   }
 }
 
