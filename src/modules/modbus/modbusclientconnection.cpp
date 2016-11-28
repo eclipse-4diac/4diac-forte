@@ -176,9 +176,10 @@ void CModbusClientConnection::tryPolling(){
   if(dataReturned)
     CModbusHandler::getInstance().executeComCallback(m_nComCallbackId);
 
-  if(nrErrors == m_nNrOfPolls){
+  if((nrErrors == m_nNrOfPolls) && (0 != m_nNrOfPolls)){
+    modbus_close(m_pModbusConn); // in any case it is worth trying to close the socket
     m_bConnected = false;
-    m_pModbusConnEvent = new CModbusConnectionEvent(2000);
+    m_pModbusConnEvent = new CModbusConnectionEvent(1000);
     m_pModbusConnEvent->activate();
   }
 }

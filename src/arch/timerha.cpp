@@ -57,8 +57,8 @@ void CTimerHandler::addTimedFBEntry(STimedFBListEntry *pa_pstTimerListEntry) {
 
 void CTimerHandler::unregisterTimedFB(CEventSourceFB *pa_poTimedFB) {
   CCriticalRegion criticalRegion(m_oSync);
-  STimedFBListEntry *buffer = 0;
   if (0 != m_pstTimedFBList) {
+    STimedFBListEntry *buffer = 0;
     if (m_pstTimedFBList->m_poTimedFB == pa_poTimedFB) {
       buffer = m_pstTimedFBList;
       m_pstTimedFBList = m_pstTimedFBList->m_pstNext;

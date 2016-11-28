@@ -25,12 +25,11 @@ CFDSelectHandler::CFDSelectHandler(){
   // Windows Socket Startupcode
   WORD wVersionRequested;
   WSADATA wsaData;
-  int err;
 
   /* Use the MAKEWORD(lowbyte, highbyte) macro declared in Windef.h */
   wVersionRequested = MAKEWORD(2, 2);
 
-  err = WSAStartup(wVersionRequested, &wsaData);
+  WSAStartup(wVersionRequested, &wsaData);
 #endif
 }
 

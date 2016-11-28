@@ -81,7 +81,7 @@ namespace forte {
 
         /*!\brief get the FB of this layer
          */
-        CCommFB *getCommFB(){
+        CCommFB *getCommFB() const {
           return m_poFb;
         }
 

@@ -61,6 +61,7 @@ class WagoPFCProcessInterface : public CProcessInterfaceBase{
     bool checkInputData();
     std::vector<std::string> generateParameterList();
 
+    // cppcheck-suppress noConstructor
     class CKBusHandler : public CExternalEventHandler, public CThread{
       DECLARE_SINGLETON(CKBusHandler)
 

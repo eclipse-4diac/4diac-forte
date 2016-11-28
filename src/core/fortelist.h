@@ -74,7 +74,7 @@ public:
    *
    * \return iterator on position FirstNode
    */
-  const Iterator begin()  {
+  const Iterator begin() const {
     return Iterator(m_poFirstNode);
   }
 
@@ -86,7 +86,7 @@ public:
     return Iterator(0);
   }
 
-  const Iterator back() {
+  const Iterator back() const {
     return Iterator(m_poLastNode);
   }
 
