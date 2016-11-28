@@ -18,6 +18,7 @@
 #include <fortelist.h>
 #include <MQTTComLayer.h>
 #include "sync.h"
+#include <forte_string.h>
 
 extern "C" {
 #include <MQTTClient.h>
@@ -36,7 +37,7 @@ public:
 	void unregisterLayer(MQTTComLayer* paLayer);
 
 	MQTTClient& getClient(void) {
-		return client;
+		return smClient;
 	}
 
 	void mqttMessageProcessed(void);
@@ -59,13 +60,13 @@ public:
     static int mqttMessageArrived(void *context, char *topicName, int topicLen, MQTTClient_message *message);
 
 private:
-    static char* mClientId;
-    static char* mAddress;
+    static CIEC_STRING smClientId;
+    static CIEC_STRING smAddress;
 
-    static CSyncObject mLockMessageDelivery;
+    static CSyncObject smLockMessageDelivery;
 
-    static MQTTClient client;
-    static MQTTClient_connectOptions clientConnectionOptions;
+    static MQTTClient smClient;
+    static MQTTClient_connectOptions smClientConnectionOptions;
 
     CSinglyLinkedList<MQTTComLayer*> mlayers;
 

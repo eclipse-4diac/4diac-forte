@@ -63,7 +63,7 @@ class CPosixThread : public forte::arch::CThreadBase {
      */
     static void * threadFunction(void *arguments);
 
-    CPCSyncObject mJoinMutex;
+    CSyncObject mJoinMutex;
 
     /*! \brief data needed for posix scheduling system to identify the thread.
      */
