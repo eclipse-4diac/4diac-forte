@@ -10,8 +10,13 @@
  *******************************************************************************/
 #include "processinterface.h"
 #include <stdio.h>
+
+#include <mlpiGlobal.h>
+#include <mlpiApiLib.h>
 #include <mlpiLogicLib.h>
 #include <util/wchar16.h>
+//#include <util/mlpiLogicHelper.h>
+
 
 MLPIHANDLE CMLPIFaceProcessInterface::smConnection  = 0;
 bool CMLPIFaceProcessInterface::smInitialized = false;
@@ -24,25 +29,28 @@ CMLPIFaceProcessInterface::~CMLPIFaceProcessInterface(){
   deinitialise();
 }
 
+const char* const cgConnectionConfig = "localhost";
+
+void CMLPIFaceProcessInterface::connectToMLPI(){
+  smConnection = MLPI_INVALIDHANDLE;
+  DEVLOG_INFO("Before Apiconnet\n");
+  WCHAR16 *convertedConfig = new WCHAR16[strlen(cgConnectionConfig) + 1];
+  mbstowcs16(convertedConfig, cgConnectionConfig, strlen(cgConnectionConfig) + 1); //+1 for the copying the null terminator
+  //MLPIRESULT result = mlpiApiConnect("localhost -user=indraworks -password=indraworks", &smConnection);
+  MLPIRESULT result = mlpiApiConnect(convertedConfig, &smConnection);
+  if(MLPI_FAILED (result)){
+    printf("Failed to connect: 0x%08X\n", (unsigned) result);
+  } else {
+    smInitialized = true;
+  }
+}
+
 bool CMLPIFaceProcessInterface::initialise(bool ){
   bool retVal = true;
 
-  DEVLOG_INFO("Before Apiconnet\n");
-
-  if(!smInitialized){
-    MLPIHANDLE connection = 0;
-    MLPIRESULT result = mlpiApiConnect(L"192.168.0.110:5300 -user=indraworks -password=indraworks", &connection);
-    if(MLPI_FAILED (result)){
-      printf("Failed to connect: 0x%08X\n", (unsigned) result);
-      retVal = false;
-    } else {
-      smConnection = connection;
-      smInitialized = true;
-    }
-  }
   printf("Before variable name\n");
   mVariableName = new WCHAR16[PARAMS().length() + 1];
-  mbstowcs16(mVariableName, PARAMS().getValue(), PARAMS().length() + 1);
+  mbstowcs16(mVariableName, PARAMS().getValue(), PARAMS().length() + 1); //+1 for the copying the null terminator
   printf("After variable name\n");
 
 
@@ -60,13 +68,18 @@ bool CMLPIFaceProcessInterface::readPin(){
 
   IN_X() = (data != FALSE) ? true : false;
 
-  //We don't need to do anything in readPin output update is handled as part of checkInputData
-  return (result >= 0);
+  if(MLPI_FAILED (result)){
+    printf("Failed to read: 0x%08X\n", (unsigned) result);
+  }
+  return !MLPI_FAILED (result);
 }
 
 bool CMLPIFaceProcessInterface::writePin(){
   BOOL8 data = OUT_X();
   MLPIRESULT result = mlpiLogicWriteVariableBySymbolBool8(smConnection, mVariableName, data);
-  return (result >= 0);
+  if(MLPI_FAILED (result)){
+    printf("Failed to write: 0x%08X\n", (unsigned) result);
+  }
+  return !MLPI_FAILED (result);
 }
 

@@ -13,6 +13,16 @@
 #include <signal.h>
 #include "../../stdfblib/ita/RMT_DEV.h"
 
+#include <mlpiGlobal.h>
+#include <mlpiApiLib.h>
+#include <mlpiSystemLib.h>
+#include <mlpiLogicLib.h>
+#include <util/wchar16.h>
+#include <util/vxwHelper.h>
+
+#include <processinterface.h>
+
+
 #ifdef CONFIG_POWERLINK_USERSTACK
 #include <EplWrapper.h>
 #endif
@@ -76,6 +86,10 @@ void listHelp(){
 }
 
 int mainForte(){
+  enableTelnetPrintf();
+  enableFpuSupport();
+
+  CMLPIFaceProcessInterface::connectToMLPI();
 
   checkEndianess();
 

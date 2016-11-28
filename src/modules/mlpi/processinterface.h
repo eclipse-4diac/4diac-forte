@@ -23,6 +23,8 @@ class CMLPIFaceProcessInterface : public CProcessInterfaceBase{
 
     virtual ~CMLPIFaceProcessInterface();
 
+    static void connectToMLPI();
+
   protected:
     bool initialise(bool paInput);
     bool deinitialise();
