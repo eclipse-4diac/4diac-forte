@@ -85,7 +85,7 @@ void CrcXSocketInterface::run(void){
     CSinglyLinkedList<FORTE_TCP_PACKET_T*>::Iterator itEndWaiting(mWaitingList.end());
 
     {
-    	CCriticalRegion(m_oSync);
+    	CCriticalRegion region(m_oSync);
       for(CSinglyLinkedList<FORTE_TCP_PACKET_T*>::Iterator itRunnerWaiting = mWaitingList.begin(); itRunnerWaiting != itEndWaiting;){
         TConnectionContainer::Iterator itEndConnection(m_lstConnectionsList.end());
         for(TConnectionContainer::Iterator itRunnerConnection = m_lstConnectionsList.begin(); itRunnerConnection != itEndConnection;){
