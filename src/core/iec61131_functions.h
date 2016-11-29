@@ -42,6 +42,15 @@
 #include "datatypes/forte_wstring.h"
 #endif
 
+#ifdef MAX
+#undef MAX
+#endif
+
+
+#ifdef MIN
+#undef MIN
+#endif
+
 /* numeric functions
  * absolute value
  *            +----------+
