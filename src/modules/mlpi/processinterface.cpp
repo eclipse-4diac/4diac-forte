@@ -7,9 +7,9 @@
  *
  * Contributors:
  *   Monika Wenger, Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of code and error logging added
  *******************************************************************************/
 #include "processinterface.h"
-#include <stdio.h>
 
 #include <mlpiGlobal.h>
 #include <mlpiApiLib.h>
@@ -17,42 +17,75 @@
 #include <util/wchar16.h>
 //#include <util/mlpiLogicHelper.h>
 
+const char * const CMLPIFaceProcessInterface::scmOK = "OK";
+const char * const CMLPIFaceProcessInterface::scmAPINotInitialised = "API not initialized";
+const char * const CMLPIFaceProcessInterface::scmFBNotInitialised = "FB not initialized";
+const char * const CMLPIFaceProcessInterface::scmCallToApiFailed = "Call to API Failed";
 
-MLPIHANDLE CMLPIFaceProcessInterface::smConnection  = 0;
-bool CMLPIFaceProcessInterface::smInitialized = false;
+
+/*
+ * localhost doesn't connect to MLPI.
+ * 192.168.1.110 works perfectly, I had once errors saying that access not granted or something
+ * 192.168.1.110 -user=indraworks -password=indraworks works perfectly
+ * LOCALHOST -user=indraworks -password=indraworks connects to MLPI but when writing the outputs from flipflop, the PLC goes crazy, all blinking in red
+ * LOCALHOST same as before
+ * Using MLPI_LOCALHOST direclty in the APIConnect call, same as before
+ */
+
+const char* const cgConnectionConfig = "192.168.1.110 -user=indraworks -password=indraworks";
+MLPIHANDLE CMLPIFaceProcessInterface::smConnection  = MLPI_INVALIDHANDLE;
 
 CMLPIFaceProcessInterface::CMLPIFaceProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mPin(0){
+    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mVariableName(0){
 }
 
 CMLPIFaceProcessInterface::~CMLPIFaceProcessInterface(){
   deinitialise();
 }
 
-const char* const cgConnectionConfig = "localhost";
-
-void CMLPIFaceProcessInterface::connectToMLPI(){
-  smConnection = MLPI_INVALIDHANDLE;
-  DEVLOG_INFO("Before Apiconnet\n");
-  WCHAR16 *convertedConfig = new WCHAR16[strlen(cgConnectionConfig) + 1];
-  mbstowcs16(convertedConfig, cgConnectionConfig, strlen(cgConnectionConfig) + 1); //+1 for the copying the null terminator
-  //MLPIRESULT result = mlpiApiConnect("localhost -user=indraworks -password=indraworks", &smConnection);
-  MLPIRESULT result = mlpiApiConnect(convertedConfig, &smConnection);
-  if(MLPI_FAILED (result)){
-    printf("Failed to connect: 0x%08X\n", (unsigned) result);
-  } else {
-    smInitialized = true;
+void CMLPIFaceProcessInterface::disconnectFromMLPI(){
+  if(MLPI_INVALIDHANDLE != smConnection){
+    MLPIRESULT result = mlpiApiDisconnect(&smConnection);
+    if(!MLPI_FAILED(result)){
+      DEVLOG_INFO("Successfully disconnected!\n");
+    }
+    else{
+      DEVLOG_INFO("Error on disconnect from MLPI with 0x%08x\n", (unsigned ) result);
+    }
   }
 }
 
+void CMLPIFaceProcessInterface::connectToMLPI(){
+  smConnection = MLPI_INVALIDHANDLE;
+  WCHAR16 *convertedConfig = new WCHAR16[strlen(cgConnectionConfig) + 1];
+  if (-1 != mbstowcs16(convertedConfig, cgConnectionConfig, strlen(cgConnectionConfig) + 1)){ //+1 for the copying the null terminator
+    DEVLOG_INFO("Trying to connect to the Api\n");
+    //MLPIRESULT result = mlpiApiConnect("localhost -user=indraworks -password=indraworks", &smConnection);
+    MLPIRESULT result = mlpiApiConnect(convertedConfig, &smConnection);
+    if(!MLPI_FAILED(result)){
+      DEVLOG_INFO("Connection to the API succeed\n");
+    }
+    else{
+      DEVLOG_ERROR("Failed to connect to the API: 0x%08X\n", (unsigned ) result);
+    }
+  }else{
+    DEVLOG_ERROR("Fail transforming the connection name\n");
+  }
+  delete[] convertedConfig;
+}
+
 bool CMLPIFaceProcessInterface::initialise(bool ){
-  bool retVal = true;
+  bool retVal = false;
 
-  printf("Before variable name\n");
   mVariableName = new WCHAR16[PARAMS().length() + 1];
-  mbstowcs16(mVariableName, PARAMS().getValue(), PARAMS().length() + 1); //+1 for the copying the null terminator
-  printf("After variable name\n");
-
+  if(-1 != mbstowcs16(mVariableName, PARAMS().getValue(), PARAMS().length() + 1)){ //+1 for the copying the null terminator
+    STATUS() = scmOK;
+    retVal = true;
+  }
+  else{
+    DEVLOG_ERROR("Fail transforming the PARAM name\n");
+    STATUS() = scmFBNotInitialised;
+  }
 
   return retVal;
 }
@@ -63,23 +96,49 @@ bool CMLPIFaceProcessInterface::deinitialise(){
 }
 
 bool CMLPIFaceProcessInterface::readPin(){
-  BOOL8 data = FALSE;
-  MLPIRESULT result = mlpiLogicReadVariableBySymbolBool8(smConnection, mVariableName, &data);
+  bool retVal = false;
 
-  IN_X() = (data != FALSE) ? true : false;
-
-  if(MLPI_FAILED (result)){
-    printf("Failed to read: 0x%08X\n", (unsigned) result);
+  if(MLPI_INVALIDHANDLE != smConnection){
+    BOOL8 data = FALSE;
+    MLPIRESULT result = mlpiLogicReadVariableBySymbolBool8(smConnection, mVariableName, &data);
+    if(!MLPI_FAILED(result)){
+      IN_X() = (data != FALSE) ? true : false;
+      STATUS() = scmOK;
+      retVal = true;
+    }
+    else{
+      DEVLOG_ERROR("Failed to read: 0x%08X\n", (unsigned ) result);
+      STATUS() = scmCallToApiFailed;
+    }
   }
-  return !MLPI_FAILED (result);
+  else{
+    DEVLOG_ERROR("Cannot read pin. The API is not initialized.\n");
+    STATUS() = scmAPINotInitialised;
+  }
+
+  return retVal;
 }
 
 bool CMLPIFaceProcessInterface::writePin(){
-  BOOL8 data = OUT_X();
-  MLPIRESULT result = mlpiLogicWriteVariableBySymbolBool8(smConnection, mVariableName, data);
-  if(MLPI_FAILED (result)){
-    printf("Failed to write: 0x%08X\n", (unsigned) result);
+  bool retVal = false;
+
+  if(MLPI_INVALIDHANDLE != smConnection){
+    BOOL8 data = OUT_X();
+    MLPIRESULT result = mlpiLogicWriteVariableBySymbolBool8(smConnection, mVariableName, data);
+    if(!MLPI_FAILED(result)){
+      STATUS() = scmOK;
+      retVal = true;
+    }
+    else{
+      DEVLOG_ERROR("Failed to write: 0x%08X\n", (unsigned ) result);
+      STATUS() = scmCallToApiFailed;
+    }
   }
-  return !MLPI_FAILED (result);
+  else{
+    DEVLOG_ERROR("Cannot write pin. The API is not initialized.\n");
+    STATUS() = scmAPINotInitialised;
+  }
+
+  return retVal;
 }
 

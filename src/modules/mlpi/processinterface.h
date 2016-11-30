@@ -24,6 +24,7 @@ class CMLPIFaceProcessInterface : public CProcessInterfaceBase{
     virtual ~CMLPIFaceProcessInterface();
 
     static void connectToMLPI();
+    static void disconnectFromMLPI();
 
   protected:
     bool initialise(bool paInput);
@@ -31,15 +32,14 @@ class CMLPIFaceProcessInterface : public CProcessInterfaceBase{
     bool readPin();
     bool writePin();
 
-    int mPin;
-
   private:
     WCHAR16* mVariableName;
 
-
+    static const char * const scmOK;
+    static const char * const scmCallToApiFailed;
+    static const char * const scmAPINotInitialised;
+    static const char * const scmFBNotInitialised;
     static MLPIHANDLE smConnection;
-    static bool smInitialized;
-
 };
 
 //tell the IX and QX FB that this is the process interface to be used

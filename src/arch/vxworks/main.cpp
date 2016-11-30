@@ -85,7 +85,7 @@ void listHelp(){
   printf("\n");
 }
 
-int mainForte(){
+int startForte(){
   enableTelnetPrintf();
   enableFpuSupport();
 
@@ -94,6 +94,7 @@ int mainForte(){
   checkEndianess();
 
   createDev("localhost:61499");
+  CMLPIFaceProcessInterface::disconnectFromMLPI();
   return 0;
 }
 
