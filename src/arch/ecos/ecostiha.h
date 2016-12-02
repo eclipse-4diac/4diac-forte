@@ -13,7 +13,7 @@
 
 #include <cyg/kernel/kapi.h>
 #include "../timerha.h"
-#include "thread.h"
+#include "forte_thread.h"
 
 /*! \brief External event handler for the eCos Timer.
  * \ingroup ECOS-HAL

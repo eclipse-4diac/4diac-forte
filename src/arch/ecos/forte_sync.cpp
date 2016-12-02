@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 ACIN
+ * Copyright (c) 2006, 2007 ACIN
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,12 +8,13 @@
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "sync.h"
+#include "forte_sync.h"
 
-CVXWorksSyncObject::CVXWorksSyncObject(){
-  m_oSemBinary = semMCreate(SEM_Q_PRIORITY);
+CECOSSyncObject::CECOSSyncObject(){
+  cyg_mutex_init(&m_oMutexHandle);
+  cyg_mutex_set_protocol(&m_oMutexHandle, CYG_MUTEX_NONE);
 }
 
-CVXWorksSyncObject::~CVXWorksSyncObject(){
-  semDelete (m_oSemBinary);
+CECOSSyncObject::~CECOSSyncObject(){
+  cyg_mutex_destroy(&m_oMutexHandle);
 }

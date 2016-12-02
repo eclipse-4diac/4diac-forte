@@ -12,10 +12,10 @@
 #define OPCEVENTHANDLER_H_
 
 #include "extevhan.h"
-#include "thread.h"
+#include <forte_thread.h>
 #include "singlet.h"
 #include "fortelist.h"
-#include "sync.h"
+#include <forte_sync.h>
 #include "comlayer.h"
 
 #include "ICmd.h"

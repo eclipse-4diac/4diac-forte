@@ -13,7 +13,7 @@
 
 #include <extevhan.h>
 #include <singlet.h>
-#include <thread.h>
+#include <forte_thread.h>
 #include <comlayer.h>
 
 #include <eclipsescada/sfp_server.h>

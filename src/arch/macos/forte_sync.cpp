@@ -11,7 +11,7 @@
  *  Alois Zoitl  - taken this file from the Posix version and adapted it for
  *                 Mac OS
  *******************************************************************************/
-#include "sync.h"
+#include "forte_sync.h"
 #include <errno.h>
 #include <string.h>
 

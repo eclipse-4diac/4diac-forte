@@ -14,8 +14,8 @@
 
 #include <../../stdfblib/io/processinterfacebase.h>
 #include <extevhan.h>
-#include <thread.h>
-#include <sync.h>
+#include <forte_thread.h>
+#include <forte_sync.h>
 #include <fortelist.h>
 #include <singlet.h>
 #include <esfb.h>

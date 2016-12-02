@@ -9,13 +9,13 @@
  *   Alois Zoitl, Carolyn Oates - initial API and implementation and/or initial documentation
  *   Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
-#ifndef _THREAD_H_
-#define _THREAD_H_
+#ifndef _FORTE_THREAD_H_
+#define _FORTE_THREAD_H_
 
 #include <cyg/kernel/kapi.h>
 #include "../datatype.h"
 #include "../threadbase.h"
-#include "sync.h"
+#include "forte_sync.h"
 #include "../devlog.h"
 
 #define CThread CECOSThread  //allows that doxygen can generate better documentation
@@ -124,4 +124,4 @@ class CECOSThread : public forte::arch::CThreadBase {
 
 };
 
-#endif /*THREAD_H_*/
+#endif /*FORTE_THREAD_H_*/

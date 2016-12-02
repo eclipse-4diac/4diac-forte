@@ -14,7 +14,7 @@
 #include "windows.h"
 #include "Variant.h"
 #include "fortelist.h"
-#include "sync.h"
+#include <forte_sync.h>
 
 class COPCItem;
 

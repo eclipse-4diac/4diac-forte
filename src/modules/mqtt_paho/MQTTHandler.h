@@ -17,7 +17,7 @@
 #include <extevhan.h>
 #include <fortelist.h>
 #include <MQTTComLayer.h>
-#include "sync.h"
+#include <forte_sync.h>
 #include <forte_string.h>
 
 extern "C" {
