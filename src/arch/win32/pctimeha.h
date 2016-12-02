@@ -11,7 +11,7 @@
 #ifndef _PCTIMEHA_H_
 #define _PCTIMEHA_H_
 
-#include "thread.h"
+#include "forte_thread.h"
 #include "../timerha.h"
 
 /*! \ingroup win32_hal

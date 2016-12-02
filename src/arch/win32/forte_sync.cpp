@@ -8,7 +8,7 @@
  * Contributors:
  *  Alois Zoitl, Gerhard Ebenhofer - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "sync.h"
+#include "forte_sync.h"
 
 CPCSyncObject::CPCSyncObject(){
    InitializeCriticalSection(&m_oMutexHandle);

@@ -10,8 +10,8 @@
  *      implementation and/or initial documentation
  *  Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
-#ifndef _THREAD_H_
-#define _THREAD_H_
+#ifndef _FORTE_THREAD_H_
+#define _FORTE_THREAD_H_
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -84,5 +84,5 @@ class CWin32Thread : public forte::arch::CThreadBase{
 
 typedef CWin32Thread CThread;  //allows that doxygen can generate better documentation
 
-#endif /*THREAD_H_*/
+#endif /*FORTE_THREAD_H_*/
 

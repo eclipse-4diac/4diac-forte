@@ -9,13 +9,13 @@
  *  Alois Zoitl, Rene Smodic, Ingo Hegny, Martin Melik Merkiumians - initial API and implementation and/or initial documentation
  *  Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
-#ifndef _THREAD_H_
-#define _THREAD_H_
+#ifndef _FORTE_THREAD_H_
+#define _FORTE_THREAD_H_
 
 #include <pthread.h>
 #include "../threadbase.h"
 #include "../datatype.h"
-#include <sync.h>
+#include "forte_sync.h"
 
 /**  \ingroup FORTE-HAL 
  * \defgroup posix_hal PC FORTE Hardware Abstraction Layer
@@ -88,5 +88,5 @@ class CPosixThread : public forte::arch::CThreadBase {
 
 typedef CPosixThread CThread;  //allows that doxygen can generate better documentation
 
-#endif /*THREAD_H_*/
+#endif /*FORTE_THREAD_H_*/
 
