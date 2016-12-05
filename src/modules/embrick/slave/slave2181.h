@@ -17,18 +17,18 @@
 namespace EmBrick {
 
 class Slave2181: public Slave {
-	struct SendImage {
-		uint8_t DigitalOutputs;
-	};
+  struct SendImage {
+    uint8_t DigitalOutputs;
+  };
 
 public:
-	Slave2181(int address, Packages::SlaveInit init);
+  Slave2181(int address, Packages::SlaveInit init);
 
-	void set(uint8_t pin, bool state);
+  void set(uint8_t pin, bool state);
 protected:
-	SendImage* sendImage;
+  SendImage* sendImage;
 
-	virtual void prepareUpdate();
+  virtual void prepareUpdate();
 };
 
 } /* namespace EmBrick */

@@ -13,17 +13,18 @@
 
 namespace EmBrick {
 
-Slave2301::Slave2301(int address, Packages::SlaveInit init) : Slave(address, init) {
-	sendImage = reinterpret_cast<SendImage*>(updateSendImage);
-	sendImage->Relays = 0;
+Slave2301::Slave2301(int address, Packages::SlaveInit init) :
+    Slave(address, init) {
+  sendImage = reinterpret_cast<SendImage*>(updateSendImage);
+  sendImage->Relays = 0;
 }
 
 Slave2301::~Slave2301() {
-	// TODO Auto-generated destructor stub
+  // TODO Auto-generated destructor stub
 }
 
 void Slave2301::prepareUpdate() {
-	sendImage->Relays = 0x01;
+  sendImage->Relays = 0x01;
 }
 
 } /* namespace EmBrick */

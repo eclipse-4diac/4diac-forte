@@ -21,40 +21,44 @@ namespace Packages {
 #pragma pack(push, 1) // Disable padding for protocol structs
 
 struct Header {
-	char address;
-	char command;
-	char checksum;
+  char address;
+  char command;
+  char checksum;
 };
 
 struct SlaveInit {
-	uint8_t protocolVersion;
-	uint8_t moduleVersion;
-	uint16_t deviceId;
-	uint16_t producerId;
-	uint8_t dataSendLength; // Amount of bytes that the slave expects from the master
-	uint8_t dataReceiveLength; // Amount of bytes that the master expects from the slave
+  uint8_t protocolVersion;
+  uint8_t moduleVersion;
+  uint16_t deviceId;
+  uint16_t producerId;
+  uint8_t dataSendLength; // Amount of bytes that the slave expects from the master
+  uint8_t dataReceiveLength; // Amount of bytes that the master expects from the slave
 
-	static SlaveInit fromBuffer(unsigned char* buffer) {
-		SlaveInit pkg;
-		memcpy(&pkg, buffer, sizeof(SlaveInit));
+  static SlaveInit fromBuffer(unsigned char* buffer) {
+    SlaveInit pkg;
+    memcpy(&pkg, buffer, sizeof(SlaveInit));
 
-		// pkg.deviceId = ntohs(pkg.deviceId);
-		pkg.producerId = ntohs(pkg.producerId);
+    pkg.deviceId = ntohs(pkg.deviceId);
+    // Switch bytes of deviceId as it is transmitted with a different endianess
+    pkg.deviceId = ((pkg.deviceId & 0xFF00) >> 8)
+        | ((pkg.deviceId & 0xFF) << 8);
 
-		return pkg;
-	}
+    pkg.producerId = ntohs(pkg.producerId);
+
+    return pkg;
+  }
 };
 
 struct MasterInit {
-	uint8_t slaveAddress;
-	uint16_t syncGapMultiplicator;
+  uint8_t slaveAddress;
+  uint16_t syncGapMultiplicator;
 
-	void toBuffer(unsigned char* buffer) {
-		buffer[0] = slaveAddress;
+  void toBuffer(unsigned char* buffer) {
+    buffer[0] = slaveAddress;
 
-		uint16_t syncGapFactor = htons(this->syncGapMultiplicator);
-		memcpy(buffer + 1, &syncGapFactor, 2);
-	}
+    uint16_t syncGapFactor = htons(this->syncGapMultiplicator);
+    memcpy(buffer + 1, &syncGapFactor, 2);
+  }
 };
 
 #pragma pack(pop)
