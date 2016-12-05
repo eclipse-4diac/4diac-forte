@@ -21,38 +21,38 @@
 namespace EmBrick {
 
 class SPIHandler {
-	friend class BusHandler;
+  friend class BusHandler;
 
 protected:
-	SPIHandler();
-	virtual ~SPIHandler();
+  SPIHandler();
+  virtual ~SPIHandler();
 
-	bool transfer(unsigned char* sendBuffer, unsigned char* receiveBuffer,
-			int length);
+  bool transfer(unsigned char* sendBuffer, unsigned char* receiveBuffer,
+      int length);
 
-	void init();
-	void deInit();
-	void fail(const char* reason);
-	template<typename T> bool config(unsigned int config,
-			unsigned int configVerify, T value);
+  void init();
+  void deInit();
+  void fail(const char* reason);
+  template<typename T> bool config(unsigned int config,
+      unsigned int configVerify, T value);
 
-	bool ready() {
-		return error != NULL;
-	}
-	char * error;
+  bool ready() {
+    return error != NULL;
+  }
+  char * error;
 
 private:
-	int fd;
+  int fd;
 
-	static char const spiMode;
-	static char const spiBitOrder;
-	static unsigned long const spiSpeed;
+  static char const spiMode;
+  static char const spiBitOrder;
+  static unsigned long const spiSpeed;
 
-	static const char * const scmFailedToInitHandler;
-	static const char * const scmFailedToConfigMode;
-	static const char * const scmFailedToConfigBitOrder;
-	static const char * const scmFailedToConfigSpeed;
-	static const char * const scmFailedToTestBus;
+  static const char * const scmFailedToInitHandler;
+  static const char * const scmFailedToConfigMode;
+  static const char * const scmFailedToConfigBitOrder;
+  static const char * const scmFailedToConfigSpeed;
+  static const char * const scmFailedToTestBus;
 };
 
 } /* namespace EmBrick */

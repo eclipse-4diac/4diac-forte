@@ -19,32 +19,32 @@
 namespace EmBrick {
 
 class PinHandler {
-	friend class BusHandler;
+  friend class BusHandler;
 
 protected:
-	PinHandler(unsigned int pin);
-	virtual ~PinHandler();
+  PinHandler(unsigned int pin);
+  virtual ~PinHandler();
 
-	bool set(bool state);
-	bool enable() {
-		return set(true);
-	}
-	bool disable() {
-		return set(false);
-	}
+  bool set(bool state);
+  bool enable() {
+    return set(true);
+  }
+  bool disable() {
+    return set(false);
+  }
 
-	void init();
-	void deInit();
+  void init();
+  void deInit();
 
-	unsigned int pin;
-	std::fstream stream;
+  unsigned int pin;
+  std::fstream stream;
 
 private:
-	void fail(const char* reason);
+  void fail(const char* reason);
 
-	static const char * const scmFailedToOpenFile;
-	static const char * const scmFailedToWriteFile;
-	static const char * const scmNotInitialised;
+  static const char * const scmFailedToOpenFile;
+  static const char * const scmFailedToWriteFile;
+  static const char * const scmNotInitialised;
 };
 
 } /* namespace EmBrick */

@@ -29,7 +29,7 @@
 namespace EmBrick {
 
 enum Command {
-	Init = 2, SelectNextSlave = 3, Data = 10
+  Init = 2, SelectNextSlave = 3, Data = 10
 };
 
 const unsigned int SyncGapMultiplicator = 15;
@@ -38,51 +38,51 @@ const unsigned int SyncGapDuration = (SyncGapMultiplicator - 1) * 32 + 10;
 class BusHandler: public CExternalEventHandler, public CThread {
 DECLARE_SINGLETON(BusHandler)
 
-	friend class Slave;
+  friend class Slave;
 
 public:
-	void init();
+  void init();
 
 protected:
-	bool transfer(unsigned int target, Command cmd, unsigned char* dataSend =
-	NULL, int dataSendLength = 0, unsigned char* dataReceive = NULL,
-			int dataReceiveLength = 0, SlaveStatus* status = NULL);
-	bool broadcast(Command cmd, unsigned char* dataSend =
-	NULL, int dataSendLength = 0, unsigned char* dataReceive = NULL,
-			int dataReceiveLength = 0) {
-		return transfer(0, cmd, dataSend, dataSendLength, dataReceive,
-				dataReceiveLength);
-	}
+  bool transfer(unsigned int target, Command cmd, unsigned char* dataSend =
+  NULL, int dataSendLength = 0, unsigned char* dataReceive = NULL,
+      int dataReceiveLength = 0, SlaveStatus* status = NULL);
+  bool broadcast(Command cmd, unsigned char* dataSend =
+  NULL, int dataSendLength = 0, unsigned char* dataReceive = NULL,
+      int dataReceiveLength = 0) {
+    return transfer(0, cmd, dataSend, dataSendLength, dataReceive,
+        dataReceiveLength);
+  }
 
-	virtual void run();
+  virtual void run();
 
-	// Functions needed for the external event handler interface
-	void enableHandler(void);
-	void disableHandler(void);
-	void setPriority(int paPriority);
-	int getPriority(void) const;
+  // Functions needed for the external event handler interface
+  void enableHandler(void);
+  void disableHandler(void);
+  void setPriority(int paPriority);
+  int getPriority(void) const;
 
-	unsigned long nextLoop;
-	uint64_t lastTransfer;
+  unsigned long nextLoop;
+  uint64_t lastTransfer;
 
-	// Handlers
-	SPIHandler *spi;
-	PinHandler *slaveSelect;
+  // Handlers
+  SPIHandler *spi;
+  PinHandler *slaveSelect;
 
-	// Slaves
-	typedef CSinglyLinkedList<Slave *> TSlaveList;
-	TSlaveList *slaves;
+  // Slaves
+  typedef CSinglyLinkedList<Slave *> TSlaveList;
+  TSlaveList *slaves;
 
 private:
-	uint64_t micros();
-	unsigned long millis();
-	time_t initTime;
-	void microsleep(unsigned long microseconds);
-	unsigned char calcChecksum(unsigned char * data, int dataLen);
+  uint64_t micros();
+  unsigned long millis();
+  time_t initTime;
+  void microsleep(unsigned long microseconds);
+  unsigned char calcChecksum(unsigned char * data, int dataLen);
 
-	std::string bytesToHex(unsigned char* bytes, int length);
+  std::string bytesToHex(unsigned char* bytes, int length);
 
-	static const unsigned char ChecksumConstant = 0x55;
+  static const unsigned char ChecksumConstant = 0x55;
 };
 
 }
