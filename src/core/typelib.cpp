@@ -121,7 +121,7 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId pa_nInstanceName
 
     if (0 != pcUnderScore) { // We found no underscore in the type name therefore it can not be a generic type
       ptrdiff_t nCopyLen = pcUnderScore - acTypeBuf;
-      if (nCopyLen > cg_nIdentifierLength - 4)
+      if (nCopyLen > static_cast<ptrdiff_t>(cg_nIdentifierLength - 4))
         nCopyLen = cg_nIdentifierLength - 4;
       memcpy(&(acGenFBName[4]), acTypeBuf, nCopyLen);
       acGenFBName[cg_nIdentifierLength] = '\0';
