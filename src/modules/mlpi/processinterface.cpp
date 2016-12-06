@@ -55,15 +55,17 @@ void CMLPIFaceProcessInterface::disconnectFromMLPI(){
   }
 }
 
-void CMLPIFaceProcessInterface::connectToMLPI(){
+bool CMLPIFaceProcessInterface::connectToMLPI(){
   smConnection = MLPI_INVALIDHANDLE;
+  bool retVal = false;
   WCHAR16 *convertedConfig = new WCHAR16[strlen(cgConnectionConfig) + 1];
-  if (-1 != mbstowcs16(convertedConfig, cgConnectionConfig, strlen(cgConnectionConfig) + 1)){ //+1 for the copying the null terminator
+  if (0 != mbstowcs16(convertedConfig, cgConnectionConfig, strlen(cgConnectionConfig) + 1)){ //+1 for the copying the null terminator
     DEVLOG_INFO("Trying to connect to the Api\n");
     //MLPIRESULT result = mlpiApiConnect("localhost -user=indraworks -password=indraworks", &smConnection);
     MLPIRESULT result = mlpiApiConnect(convertedConfig, &smConnection);
     if(!MLPI_FAILED(result)){
       DEVLOG_INFO("Connection to the API succeed\n");
+      retVal = true;
     }
     else{
       DEVLOG_ERROR("Failed to connect to the API: 0x%08X\n", (unsigned ) result);
@@ -72,13 +74,14 @@ void CMLPIFaceProcessInterface::connectToMLPI(){
     DEVLOG_ERROR("Fail transforming the connection name\n");
   }
   delete[] convertedConfig;
+  return retVal;
 }
 
 bool CMLPIFaceProcessInterface::initialise(bool ){
   bool retVal = false;
 
   mVariableName = new WCHAR16[PARAMS().length() + 1];
-  if(-1 != mbstowcs16(mVariableName, PARAMS().getValue(), PARAMS().length() + 1)){ //+1 for the copying the null terminator
+  if(0 != mbstowcs16(mVariableName, PARAMS().getValue(), PARAMS().length() + 1)){ //+1 for the copying the null terminator
     STATUS() = scmOK;
     retVal = true;
   }

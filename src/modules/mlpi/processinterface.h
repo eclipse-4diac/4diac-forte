@@ -23,7 +23,7 @@ class CMLPIFaceProcessInterface : public CProcessInterfaceBase{
 
     virtual ~CMLPIFaceProcessInterface();
 
-    static void connectToMLPI();
+    static bool connectToMLPI();
     static void disconnectFromMLPI();
 
   protected:

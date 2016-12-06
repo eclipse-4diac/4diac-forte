@@ -89,7 +89,19 @@ int startForte(){
   enableTelnetPrintf();
   enableFpuSupport();
 
-  CMLPIFaceProcessInterface::connectToMLPI();
+  /*
+   * Starting forte at boot in the PLC has the effect of failing when connecting to the MLPI
+   * probably because the stack is not ready yet. So this waits until 10 seconds or succeed,
+   * whichever happens first, in order to continue.
+   */
+  unsigned int tries = 0;
+  bool connected;
+  connected =  CMLPIFaceProcessInterface::connectToMLPI();
+  while(false == connected && 10 > tries){
+	  sleep(1);
+	  connected =  CMLPIFaceProcessInterface::connectToMLPI();
+	  tries++;
+  }
 
   checkEndianess();
 
