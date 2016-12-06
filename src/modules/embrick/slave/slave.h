@@ -15,6 +15,9 @@
 #include <stdint.h>
 #include <cstring>
 #include "packages.h"
+#include "handle.h"
+#include <fortelist.h>
+#include <stdint.h>
 
 namespace EmBrick {
 
@@ -41,6 +44,12 @@ public:
   const unsigned int address;
 
   bool update();
+  SlaveHandle* getInputHandle(int index) {
+    return getHandle(&inputs, index);
+  }
+  SlaveHandle* getOutputHandle(int index) {
+    return getHandle(&outputs, index);
+  }
 
 protected:
   Slave(int address, Packages::SlaveInit init);
@@ -54,11 +63,12 @@ protected:
 
   unsigned char *updateSendImage;
   unsigned char *updateReceiveImage;
+  unsigned char *updateReceiveImageOld;
 
-  virtual void prepareUpdate() {
-  }
-  virtual void handleUpdate() {
-  }
+  typedef CSinglyLinkedList<SlaveHandle *> TSlaveHandleList;
+  TSlaveHandleList inputs;
+  TSlaveHandleList outputs;
+  SlaveHandle* getHandle(TSlaveHandleList* list, int index);
 };
 
 } /* namespace EmBrick */

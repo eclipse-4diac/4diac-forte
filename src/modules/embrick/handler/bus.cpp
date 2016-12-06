@@ -28,23 +28,33 @@ BusHandler::BusHandler() :
 
   initTime = ts.tv_sec;
   lastTransfer = micros();
+
+  // Sync
+  isReady = false;
+  start();
 }
 
 BusHandler::~BusHandler() {
 }
 
 void BusHandler::run() {
+  readyMutex.lock();
+
   // TODO Check status of handler errors
   DEVLOG_INFO("emBrick[BusHandler]: Handlers ready.\n");
 
   // Init bus
   init();
+  isReady = true;
+  readyMutex.unlock();
 
-  unsigned long ms, diff;
+  unsigned long ms;
+
+  unsigned long durations[10];
+  uint8_t durationIndex = 0;
+
   while (isAlive()) {
     ms = millis();
-    if (nextLoop == 0)
-      nextLoop = ms + (100 - ms % 100);
 
     while (nextLoop > ms) {
       microsleep(std::min((nextLoop - ms), (unsigned long) 2) * 1000);
@@ -62,18 +72,22 @@ void BusHandler::run() {
     }
 
     // Sleep till next cycle - pause at least a certain time to avoid blocking of the forte process
-    diff = millis() - ms;
+    durations[durationIndex] = millis() - ms;
+    durationIndex = (durationIndex + 1) % 10;
 //		DEVLOG_INFO("emBrick[BusHandler]: Loop %d - %d\n", ms, diff);
     ms = millis();
-    nextLoop = ms + std::max(20 - ms % 20, (unsigned long) 5);
+    nextLoop = ms + std::max(10 - ms % 10, (unsigned long) 2);
   }
 
-  DEVLOG_INFO("emBrick[BusHandler]: Last loop duration - %d\n", diff);
+  DEVLOG_INFO("emBrick[BusHandler]: Last loop durations:\n");
+  for (uint8_t i = 0; i < 10; i++)
+    DEVLOG_INFO("- %d\n", durations[i]);
 
   // Free memory
   TSlaveList::Iterator itEnd(slaves->end());
   for (TSlaveList::Iterator it = slaves->begin(); it != itEnd; ++it)
     delete *it;
+  delete slaves;
   delete spi;
   delete slaveSelect;
 
@@ -119,6 +133,28 @@ void BusHandler::init() {
 
     microsleep(SyncGapDuration * 2);
   } while (++attempts < 3);
+}
+
+bool BusHandler::ready() {
+  bool r = false;
+  readyMutex.lock();
+  r = isReady;
+  readyMutex.unlock();
+  return r;
+}
+
+void BusHandler::waitForInit() {
+  while (!ready())
+    sleep(1);
+}
+
+Slave* BusHandler::getSlave(int index) {
+  TSlaveList::Iterator itEnd = slaves->end();
+  int i = 0;
+  for (TSlaveList::Iterator it = slaves->begin(); it != itEnd; ++it, i++)
+    if (index == i)
+      return *it;
+  return NULL;
 }
 
 bool BusHandler::transfer(unsigned int target, Command cmd,

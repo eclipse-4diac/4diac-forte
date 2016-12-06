@@ -25,6 +25,10 @@
 #include "spi.h"
 #include "pin.h"
 #include <slave/slave.h>
+#include <forte_sem.h>
+#include <sync.h>
+
+using namespace forte::arch;
 
 namespace EmBrick {
 
@@ -42,6 +46,11 @@ DECLARE_SINGLETON(BusHandler)
 
 public:
   void init();
+
+  bool ready();
+  void waitForInit();
+
+  Slave* getSlave(int index);
 
 protected:
   bool transfer(unsigned int target, Command cmd, unsigned char* dataSend =
@@ -72,6 +81,10 @@ protected:
   // Slaves
   typedef CSinglyLinkedList<Slave *> TSlaveList;
   TSlaveList *slaves;
+
+  // Sync
+  bool isReady;
+  CSyncObject readyMutex;
 
 private:
   uint64_t micros();

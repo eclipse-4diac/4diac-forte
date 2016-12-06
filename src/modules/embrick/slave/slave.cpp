@@ -10,9 +10,7 @@
  *******************************************************************************/
 
 #include "slave.h"
-#include "slave2181.h"
 #include "../handler/bus.h"
-#include "slave2301.h"
 
 namespace EmBrick {
 
@@ -23,11 +21,20 @@ Slave::Slave(int address, Packages::SlaveInit init) :
   bus = &BusHandler::getInstance();
   updateSendImage = new unsigned char[dataSendLength];
   updateReceiveImage = new unsigned char[dataReceiveLength];
+  updateReceiveImageOld = new unsigned char[dataReceiveLength];
 }
 
 Slave::~Slave() {
   delete updateSendImage;
   delete updateReceiveImage;
+  delete updateReceiveImageOld;
+
+  TSlaveHandleList::Iterator itEnd = inputs.end();
+  for (TSlaveHandleList::Iterator it = inputs.begin(); it != itEnd; ++it)
+    delete *it;
+  itEnd = outputs.end();
+  for (TSlaveHandleList::Iterator it = outputs.begin(); it != itEnd; ++it)
+    delete *it;
 }
 
 Slave* Slave::sendInit(int address) {
@@ -58,25 +65,39 @@ Slave* Slave::sendInit(int address) {
       initPackage.deviceId, initPackage.dataReceiveLength,
       initPackage.dataSendLength, initPackage.producerId);
 
-  // Create slave instance based on type
+  // Create slave instance
+  Slave* slave = new Slave(address, initPackage);
+
+  // Init slave handles
+  // TODO Move this logic to the config
   switch ((SlaveType) initPackage.deviceId) {
 
   case G_8Di8Do:
-    return new Slave2181(address, initPackage);
+    // 8 Inputs
+    for (uint8_t pos = 0; pos < 8; pos++)
+      slave->inputs.push_back(
+          new BitSlaveHandle(slave->updateReceiveImage, pos));
+    // 8 Outputs
+    for (uint8_t pos = 0; pos < 8; pos++)
+      slave->outputs.push_back(new BitSlaveHandle(slave->updateSendImage, pos));
+    break;
 
   case G_2RelNo4RelCo:
-    return new Slave2301(address, initPackage);
+    // 6 Relays
+    for (uint8_t pos = 0; pos < 6; pos++)
+      slave->outputs.push_back(new BitSlaveHandle(slave->updateSendImage, pos));
+    break;
 
   default:
     DEVLOG_ERROR("emBrick[Slave]: Unknown slave type %d\n",
         initPackage.deviceId);
-    return NULL;
   }
+
+  return slave;
 }
 
 bool Slave::update() {
-  // Prepare the send image
-  prepareUpdate();
+  // TODO Prepare the send image
 
   // Send update request to bus
   if (!bus->transfer(address, Data, updateSendImage, dataSendLength,
@@ -84,9 +105,29 @@ bool Slave::update() {
     return false;
 
   // Handle the received image
-  handleUpdate();
+  TSlaveHandleList::Iterator itEnd = inputs.end();
+  int i = 0;
+  for (TSlaveHandleList::Iterator it = inputs.begin(); it != itEnd; ++it) {
+    i++;
+    if (!(*it)->equal(updateReceiveImageOld)) {
+      // TODO Fire event handler and send indication event
+      DEVLOG_INFO("Input changed %d\n", i);
+    }
+  }
+
+  // Clone current image to old image
+  memcpy(updateReceiveImageOld, updateReceiveImage, dataReceiveLength);
 
   return true;
+}
+
+SlaveHandle* Slave::getHandle(TSlaveHandleList* list, int index) {
+  TSlaveHandleList::Iterator itEnd = list->end();
+  int i = 0;
+  for (TSlaveHandleList::Iterator it = list->begin(); it != itEnd; ++it, i++)
+    if (index == i)
+      return *it;
+  return NULL;
 }
 
 } /* namespace EmBrick */
