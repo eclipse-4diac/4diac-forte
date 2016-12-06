@@ -18,6 +18,7 @@
 #include "handle.h"
 #include <fortelist.h>
 #include <stdint.h>
+#include <sync.h>
 
 namespace EmBrick {
 
@@ -69,6 +70,8 @@ protected:
   TSlaveHandleList inputs;
   TSlaveHandleList outputs;
   SlaveHandle* getHandle(TSlaveHandleList* list, int index);
+
+  CSyncObject syncMutex;
 };
 
 } /* namespace EmBrick */

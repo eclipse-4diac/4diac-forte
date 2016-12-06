@@ -28,14 +28,13 @@
 #include <forte_sem.h>
 #include <sync.h>
 
-using namespace forte::arch;
-
 namespace EmBrick {
 
 enum Command {
   Init = 2, SelectNextSlave = 3, Data = 10
 };
 
+const unsigned int TransferBufferLength = 150;
 const unsigned int SyncGapMultiplicator = 15;
 const unsigned int SyncGapDuration = (SyncGapMultiplicator - 1) * 32 + 10;
 
@@ -55,7 +54,8 @@ public:
 protected:
   bool transfer(unsigned int target, Command cmd, unsigned char* dataSend =
   NULL, int dataSendLength = 0, unsigned char* dataReceive = NULL,
-      int dataReceiveLength = 0, SlaveStatus* status = NULL);
+      int dataReceiveLength = 0, SlaveStatus* status = NULL,
+      CSyncObject *syncMutex = NULL);
   bool broadcast(Command cmd, unsigned char* dataSend =
   NULL, int dataSendLength = 0, unsigned char* dataReceive = NULL,
       int dataReceiveLength = 0) {
@@ -93,6 +93,8 @@ private:
   void microsleep(unsigned long microseconds);
   unsigned char calcChecksum(unsigned char * data, int dataLen);
 
+  unsigned char sendBuffer[TransferBufferLength];
+  unsigned char recvBuffer[TransferBufferLength];
   std::string bytesToHex(unsigned char* bytes, int length);
 
   static const unsigned char ChecksumConstant = 0x55;

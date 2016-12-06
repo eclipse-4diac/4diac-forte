@@ -24,7 +24,7 @@ BusHandler::BusHandler() :
   // Set init time
   struct timespec ts;
   // TODO Check compile error. Had to to add rt libary to c++ make flags
-  clock_gettime(CLOCK_REALTIME, &ts);
+  clock_gettime(CLOCK_MONOTONIC, &ts);
 
   initTime = ts.tv_sec;
   lastTransfer = micros();
@@ -74,7 +74,7 @@ void BusHandler::run() {
     // Sleep till next cycle - pause at least a certain time to avoid blocking of the forte process
     durations[durationIndex] = millis() - ms;
     durationIndex = (durationIndex + 1) % 10;
-//		DEVLOG_INFO("emBrick[BusHandler]: Loop %d - %d\n", ms, diff);
+//    DEVLOG_INFO("emBrick[BusHandler]: Loop %d\n", ms);
     ms = millis();
     nextLoop = ms + std::max(10 - ms % 10, (unsigned long) 2);
   }
@@ -159,31 +159,38 @@ Slave* BusHandler::getSlave(int index) {
 
 bool BusHandler::transfer(unsigned int target, Command cmd,
     unsigned char* dataSend, int dataSendLength, unsigned char* dataReceive,
-    int dataReceiveLength, SlaveStatus* status) {
+    int dataReceiveLength, SlaveStatus* status, CSyncObject *syncMutex) {
   int dataLength = std::max(dataSendLength, dataReceiveLength + 1); // + 1 status byte
 
-  int bufferLength = sizeof(Packages::Header) + dataLength + 1; // + 1 checksum byte
-  unsigned char buffer[bufferLength];
-  unsigned char recvBuffer[bufferLength];
-  memset(buffer, 0, bufferLength);
+  unsigned int bufferLength = sizeof(Packages::Header) + dataLength + 1; // + 1 checksum byte
+  if (bufferLength > TransferBufferLength) {
+    DEVLOG_ERROR("emBrick[BusHandler]: Transfer buffer size exceeded.\n");
+    return false;
+  }
+
+  memset(sendBuffer, 0, bufferLength);
   memset(recvBuffer, 0, bufferLength);
 
-  Packages::Header* header = (Packages::Header*) buffer;
+  Packages::Header* header = (Packages::Header*) sendBuffer;
 
   header->address = (char) target;
   header->command = cmd;
   header->checksum = calcChecksum((unsigned char*) header, 2);
 
-  memcpy(buffer + sizeof(Packages::Header), dataSend, dataSendLength);
-  buffer[sizeof(Packages::Header) + dataSendLength] = calcChecksum(dataSend,
-      dataSendLength);
+  if (syncMutex)
+    syncMutex->lock();
+  memcpy(sendBuffer + sizeof(Packages::Header), dataSend, dataSendLength);
+  if (syncMutex)
+    syncMutex->unlock();
+  sendBuffer[sizeof(Packages::Header) + dataSendLength] = calcChecksum(
+      sendBuffer + sizeof(Packages::Header), dataSendLength);
 
 //	DEVLOG_INFO("emBrick[BusHandler]: TX - %s\n",
 //			bytesToHex(buffer, bufferLength).c_str());
 
   // Invert data of master
-  for (int i = 0; i < bufferLength; i++)
-    buffer[i] = ~buffer[i];
+  for (unsigned int i = 0; i < bufferLength; i++)
+    sendBuffer[i] = (unsigned char) ~sendBuffer[i];
 
   // Send and receive buffer via SPI
   int attempts = 10;
@@ -196,7 +203,7 @@ bool BusHandler::transfer(unsigned int target, Command cmd,
     if (lastTransfer + SyncGapDuration > microTime)
       microsleep(lastTransfer + SyncGapDuration - microTime);
 
-    ok = spi->transfer(buffer, recvBuffer, bufferLength);
+    ok = spi->transfer(sendBuffer, recvBuffer, bufferLength);
     lastTransfer = micros();
     if (!ok) {
       DEVLOG_ERROR("emBrick[BusHandler]: Failed to transfer buffer.\n");
@@ -214,18 +221,23 @@ bool BusHandler::transfer(unsigned int target, Command cmd,
   } while (!ok && ++fails < attempts);
 
   if (!ok) {
-    DEVLOG_ERROR(
-        "emBrick[BusHandler]: Failed to send command %d to slave %d.\n", cmd,
-        target);
+    if (target != 0)
+      DEVLOG_ERROR(
+          "emBrick[BusHandler]: Failed to send command %d to slave %d.\n", cmd,
+          target);
     return false;
   }
 
   // Copy result
+  if (syncMutex)
+    syncMutex->lock();
   if (status)
     *status = (SlaveStatus) recvBuffer[0];
 
   memcpy(dataReceive, recvBuffer + sizeof(Packages::Header) + 1,
       dataReceiveLength);
+  if (syncMutex)
+    syncMutex->unlock();
 
   return true;
 }
@@ -256,7 +268,7 @@ int BusHandler::getPriority() const {
 
 uint64_t BusHandler::micros() {
   struct timespec ts;
-  clock_gettime(CLOCK_REALTIME, &ts);
+  clock_gettime(CLOCK_MONOTONIC, &ts);
 
   return round(ts.tv_nsec / 1.0e3) + (ts.tv_sec - initTime) * 1E6;
 }
@@ -264,7 +276,7 @@ uint64_t BusHandler::micros() {
 unsigned long BusHandler::millis() {
   // TODO Improve timing func. Maybe replace with existing forte implementation.
   struct timespec ts;
-  clock_gettime(CLOCK_REALTIME, &ts);
+  clock_gettime(CLOCK_MONOTONIC, &ts);
 
   return round(ts.tv_nsec / 1.0e6) + (ts.tv_sec - initTime) * 1000;
 }

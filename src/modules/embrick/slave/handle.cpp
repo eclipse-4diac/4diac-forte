@@ -10,32 +10,41 @@
  *******************************************************************************/
 
 #include "handle.h"
-#include <processinterface.h>
 
 namespace EmBrick {
 
-SlaveHandle::SlaveHandle(unsigned char* buffer, uint8_t length) :
-    buffer(buffer), length(length), observer(NULL) {
+SlaveHandle::SlaveHandle(unsigned char* buffer, uint8_t length,
+    CSyncObject *syncMutex) :
+    buffer(buffer), length(length), observer(NULL), syncMutex(syncMutex) {
 }
 
 SlaveHandle::~SlaveHandle() {
 }
 
-BitSlaveHandle::BitSlaveHandle(unsigned char* buffer, uint8_t position) :
-    SlaveHandle(buffer, 1), mask((uint8_t) (1 << position)) {
+BitSlaveHandle::BitSlaveHandle(unsigned char* buffer, uint8_t position,
+    CSyncObject *syncMutex) :
+    SlaveHandle(buffer, 1, syncMutex), mask((uint8_t) (1 << position)) {
 
 }
 
 void BitSlaveHandle::set(bool state) {
-  // TODO Add global slave mutex
+  syncMutex->lock();
+
   if (state)
     *buffer = (uint8_t) (*buffer | mask);
   else
     *buffer = (uint8_t) (*buffer & ~mask);
+
+  syncMutex->unlock();
 }
 
 bool BitSlaveHandle::get() {
-  return (*buffer & mask) != 0;
+  syncMutex->lock();
+
+  bool res = (*buffer & mask) != 0;
+
+  syncMutex->unlock();
+  return res;
 }
 
 bool BitSlaveHandle::equal(unsigned char* oldBuffer) {

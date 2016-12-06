@@ -11,6 +11,7 @@
 
 #include "slave.h"
 #include "../handler/bus.h"
+#include <processinterface.h>
 
 namespace EmBrick {
 
@@ -76,16 +77,19 @@ Slave* Slave::sendInit(int address) {
     // 8 Inputs
     for (uint8_t pos = 0; pos < 8; pos++)
       slave->inputs.push_back(
-          new BitSlaveHandle(slave->updateReceiveImage, pos));
+          new BitSlaveHandle(slave->updateReceiveImage, pos,
+              &slave->syncMutex));
     // 8 Outputs
     for (uint8_t pos = 0; pos < 8; pos++)
-      slave->outputs.push_back(new BitSlaveHandle(slave->updateSendImage, pos));
+      slave->outputs.push_back(
+          new BitSlaveHandle(slave->updateSendImage, pos, &slave->syncMutex));
     break;
 
   case G_2RelNo4RelCo:
     // 6 Relays
     for (uint8_t pos = 0; pos < 6; pos++)
-      slave->outputs.push_back(new BitSlaveHandle(slave->updateSendImage, pos));
+      slave->outputs.push_back(
+          new BitSlaveHandle(slave->updateSendImage, pos, &slave->syncMutex));
     break;
 
   default:
@@ -101,19 +105,18 @@ bool Slave::update() {
 
   // Send update request to bus
   if (!bus->transfer(address, Data, updateSendImage, dataSendLength,
-      updateReceiveImage, dataReceiveLength, &status))
+      updateReceiveImage, dataReceiveLength, &status, &syncMutex))
     return false;
 
   // Handle the received image
   TSlaveHandleList::Iterator itEnd = inputs.end();
-  int i = 0;
-  for (TSlaveHandleList::Iterator it = inputs.begin(); it != itEnd; ++it) {
-    i++;
-    if (!(*it)->equal(updateReceiveImageOld)) {
-      // TODO Fire event handler and send indication event
-      DEVLOG_INFO("Input changed %d\n", i);
+  for (TSlaveHandleList::Iterator it = inputs.begin(); it != itEnd; ++it)
+    if ((*it)->observer && !(*it)->equal(updateReceiveImageOld)) {
+      // Inform Process Interface about change
+      (*it)->observer->onChange();
+      // Send indication event
+      bus->startNewEventChain((*it)->observer);
     }
-  }
 
   // Clone current image to old image
   memcpy(updateReceiveImageOld, updateReceiveImage, dataReceiveLength);

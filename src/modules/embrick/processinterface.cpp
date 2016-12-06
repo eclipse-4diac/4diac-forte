@@ -22,6 +22,7 @@ ProcessInterface::ProcessInterface(CResource *paSrcRes,
     CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId,
         paFBConnData, paFBVarsData) {
   isReady = false;
+  isInput = false;
   handle = NULL;
 }
 
@@ -31,6 +32,7 @@ ProcessInterface::~ProcessInterface() {
 
 bool ProcessInterface::initialise(bool paIsInput) {
   DEVLOG_INFO("Init ProcessInterface\n");
+  isInput = paIsInput;
 
   BusHandler &bus = BusHandler::getInstance();
   if (bus.ready())
@@ -64,6 +66,10 @@ bool ProcessInterface::writePin() {
   return true;
 }
 
+void ProcessInterface::onChange() {
+  QO() = readPin();
+}
+
 bool ProcessInterface::ready() {
   if (!isReady) {
     BusHandler &bus = BusHandler::getInstance();
@@ -78,7 +84,15 @@ void ProcessInterface::setup() {
   BusHandler &bus = BusHandler::getInstance();
 
   // TODO Replace with dynamic port mapping
-  handle = bus.getSlave(2)->getOutputHandle(4);
+  if (isInput) {
+    handle = bus.getSlave(1)->getInputHandle(4);
+
+    setEventChainExecutor(m_poInvokingExecEnv);
+  } else {
+    handle = bus.getSlave(2)->getOutputHandle(2);
+  }
+
+  handle->observer = this;
 
   isReady = true;
 }

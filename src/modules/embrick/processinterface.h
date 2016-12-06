@@ -25,6 +25,8 @@ public:
       TForteByte *paFBConnData, TForteByte *paFBVarsData);
   virtual ~ProcessInterface();
 
+  void onChange();
+
 protected:
   bool initialise(bool paIsInput);
   bool deinitialise();
@@ -33,6 +35,7 @@ protected:
 
 private:
   bool isReady;
+  bool isInput;
   bool ready();
   void setup();
 
