@@ -16,7 +16,7 @@
 namespace EmBrick {
 
 Slave::Slave(int address, Packages::SlaveInit init) :
-    address(address), deviceId(init.deviceId), dataSendLength(
+    address(address), type((SlaveType) init.deviceId), dataSendLength(
         init.dataSendLength), dataReceiveLength(init.dataReceiveLength), status(
         NotInitialized) {
   bus = &BusHandler::getInstance();
@@ -66,38 +66,8 @@ Slave* Slave::sendInit(int address) {
       initPackage.deviceId, initPackage.dataReceiveLength,
       initPackage.dataSendLength, initPackage.producerId);
 
-  // Create slave instance
-  Slave* slave = new Slave(address, initPackage);
-
-  // Init slave handles
-  // TODO Move this logic to the config
-  switch ((SlaveType) initPackage.deviceId) {
-
-  case G_8Di8Do:
-    // 8 Inputs
-    for (uint8_t pos = 0; pos < 8; pos++)
-      slave->inputs.push_back(
-          new BitSlaveHandle(slave->updateReceiveImage, pos,
-              &slave->syncMutex));
-    // 8 Outputs
-    for (uint8_t pos = 0; pos < 8; pos++)
-      slave->outputs.push_back(
-          new BitSlaveHandle(slave->updateSendImage, pos, &slave->syncMutex));
-    break;
-
-  case G_2RelNo4RelCo:
-    // 6 Relays
-    for (uint8_t pos = 0; pos < 6; pos++)
-      slave->outputs.push_back(
-          new BitSlaveHandle(slave->updateSendImage, pos, &slave->syncMutex));
-    break;
-
-  default:
-    DEVLOG_ERROR("emBrick[Slave]: Unknown slave type %d\n",
-        initPackage.deviceId);
-  }
-
-  return slave;
+  // Return slave instance
+  return new Slave(address, initPackage);
 }
 
 bool Slave::update() {
@@ -113,9 +83,10 @@ bool Slave::update() {
   for (TSlaveHandleList::Iterator it = inputs.begin(); it != itEnd; ++it)
     if ((*it)->observer && !(*it)->equal(updateReceiveImageOld)) {
       // Inform Process Interface about change
-      (*it)->observer->onChange();
-      // Send indication event
-      bus->startNewEventChain((*it)->observer);
+      if ((*it)->observer->onChange()) {
+        // Send indication event
+        bus->startNewEventChain((*it)->observer);
+      }
     }
 
   // Clone current image to old image

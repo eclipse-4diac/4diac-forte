@@ -12,6 +12,7 @@
 #ifndef SRC_MODULES_EMBRICK_PROCESSINTERFACE_H_
 #define SRC_MODULES_EMBRICK_PROCESSINTERFACE_H_
 
+#include <handler/bus.h>
 #include <slave/handle.h>
 #include <../../stdfblib/io/processinterfacebase.h>
 
@@ -25,7 +26,7 @@ public:
       TForteByte *paFBConnData, TForteByte *paFBVarsData);
   virtual ~ProcessInterface();
 
-  void onChange();
+  bool onChange();
 
 protected:
   bool initialise(bool paIsInput);
@@ -39,6 +40,7 @@ private:
   bool ready();
   void setup();
 
+  BusHandler *bus;
   SlaveHandle* handle;
 };
 

@@ -19,6 +19,8 @@
 #include <fortelist.h>
 #include <stdint.h>
 #include <sync.h>
+#include <forte_wstring.h>
+#include <devlog.h>
 
 namespace EmBrick {
 
@@ -33,16 +35,18 @@ enum SlaveStatus {
 };
 
 enum SlaveType {
+  None = 0,
   G_8Di8Do = 2181, // 8x Digital-Input, 24V, p-switch, 1-wire & 8x Digital-Output, 24V, p-switch, 1-wire
   G_2RelNo4RelCo = 2301 // 2x Relay-Output, NO, potential free & 4x Relay-Output, CO, potential free
 };
 
 class Slave {
+  friend class BusHandler;
+
 public:
-  static Slave* sendInit(int address);
-  virtual ~Slave();
 
   const unsigned int address;
+  const SlaveType type;
 
   bool update();
   SlaveHandle* getInputHandle(int index) {
@@ -52,26 +56,34 @@ public:
     return getHandle(&outputs, index);
   }
 
-protected:
-  Slave(int address, Packages::SlaveInit init);
-
-  BusHandler *bus;
-
-  const uint8_t deviceId;
-  const uint8_t dataSendLength;
-  const uint8_t dataReceiveLength;
-  SlaveStatus status;
+  void addInputHandle(SlaveHandle* handle) {
+    inputs.push_back(handle);
+  }
+  void addOutputHandle(SlaveHandle* handle) {
+    outputs.push_back(handle);
+  }
 
   unsigned char *updateSendImage;
   unsigned char *updateReceiveImage;
+  CSyncObject syncMutex;
+
+protected:
+  static Slave* sendInit(int address);
+
+  Slave(int address, Packages::SlaveInit init);
+  virtual ~Slave();
+
+  BusHandler *bus;
+
+  const uint8_t dataSendLength;
+  const uint8_t dataReceiveLength;
+  SlaveStatus status;
   unsigned char *updateReceiveImageOld;
 
   typedef CSinglyLinkedList<SlaveHandle *> TSlaveHandleList;
   TSlaveHandleList inputs;
   TSlaveHandleList outputs;
   SlaveHandle* getHandle(TSlaveHandleList* list, int index);
-
-  CSyncObject syncMutex;
 };
 
 } /* namespace EmBrick */

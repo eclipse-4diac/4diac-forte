@@ -11,8 +11,6 @@
 
 #include "processinterface.h"
 
-#include "handler/bus.h"
-
 using namespace EmBrick;
 
 ProcessInterface::ProcessInterface(CResource *paSrcRes,
@@ -24,6 +22,7 @@ ProcessInterface::ProcessInterface(CResource *paSrcRes,
   isReady = false;
   isInput = false;
   handle = NULL;
+  bus = NULL;
 }
 
 ProcessInterface::~ProcessInterface() {
@@ -34,9 +33,8 @@ bool ProcessInterface::initialise(bool paIsInput) {
   DEVLOG_INFO("Init ProcessInterface\n");
   isInput = paIsInput;
 
-  BusHandler &bus = BusHandler::getInstance();
-  if (bus.ready())
-    setup();
+  bus = &BusHandler::getInstance();
+  ready();
 
   return true;
 }
@@ -66,14 +64,15 @@ bool ProcessInterface::writePin() {
   return true;
 }
 
-void ProcessInterface::onChange() {
+bool ProcessInterface::onChange() {
   QO() = readPin();
+
+  return true;
 }
 
 bool ProcessInterface::ready() {
   if (!isReady) {
-    BusHandler &bus = BusHandler::getInstance();
-    if (bus.ready())
+    if (bus->ready())
       setup();
   }
 
@@ -81,18 +80,20 @@ bool ProcessInterface::ready() {
 }
 
 void ProcessInterface::setup() {
-  BusHandler &bus = BusHandler::getInstance();
-
   // TODO Replace with dynamic port mapping
   if (isInput) {
-    handle = bus.getSlave(1)->getInputHandle(4);
+    if (bus->getSlave(0))
+      handle = bus->getSlave(0)->getInputHandle(0);
 
     setEventChainExecutor(m_poInvokingExecEnv);
   } else {
-    handle = bus.getSlave(2)->getOutputHandle(2);
+    if (bus->getSlave(1))
+      handle = bus->getSlave(1)->getOutputHandle(0);
   }
 
-  handle->observer = this;
+  if (handle) {
+    handle->observer = this;
 
-  isReady = true;
+    isReady = true;
+  }
 }
