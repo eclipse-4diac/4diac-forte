@@ -10,6 +10,7 @@
  *******************************************************************************/
 
 #include "Slave.h"
+#include <io/mapper.h>
 
 namespace EmBrick {
 namespace FunctionBlocks {
@@ -51,6 +52,27 @@ bool Slave::init(int index) {
 
   return true;
 }
+
+void Slave::addInputBitHandle(CIEC_WSTRING id, uint8_t offset, uint8_t pos) {
+  if (id == "")
+    return;
+
+  SlaveHandle* handle = new BitSlaveHandle(slave->updateReceiveImage, offset, pos, &slave->syncMutex);
+  slave->addInputHandle(handle);
+
+  IOMapper::getInstance().registerHandle(id, handle);
+}
+
+void Slave::addOutputBitHandle(CIEC_WSTRING id, uint8_t offset, uint8_t pos) {
+  if (id == "")
+    return;
+
+  SlaveHandle* handle = new BitSlaveHandle(slave->updateSendImage, offset, pos, &slave->syncMutex);
+  slave->addOutputHandle(handle);
+
+  IOMapper::getInstance().registerHandle(id, handle);
+}
+
 
 } /* namespace FunctionsBlocks */
 } /* namespace EmBrick */

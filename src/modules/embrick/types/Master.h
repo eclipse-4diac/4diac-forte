@@ -15,6 +15,7 @@
 #include <funcbloc.h>
 #include <forte_bool.h>
 #include <forte_wstring.h>
+#include <devlog.h>
 #include "BusAdapter.h"
 
 #include <handler/bus.h>
@@ -76,7 +77,7 @@ public:
   bus = NULL;
 }
 
-virtual ~Master() {};
+virtual ~Master();
 
 };
 

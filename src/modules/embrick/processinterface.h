@@ -12,13 +12,13 @@
 #ifndef SRC_MODULES_EMBRICK_PROCESSINTERFACE_H_
 #define SRC_MODULES_EMBRICK_PROCESSINTERFACE_H_
 
-#include <handler/bus.h>
+#include <io/observer.h>
 #include <slave/handle.h>
 #include <../../stdfblib/io/processinterfacebase.h>
 
 namespace EmBrick {
 
-class ProcessInterface: public CProcessInterfaceBase {
+class ProcessInterface: public CProcessInterfaceBase, public IOObserver {
 
 public:
   ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
@@ -34,14 +34,12 @@ protected:
   bool writePin();
   bool readPin();
 
+  virtual void onHandle(IOHandle *handle);
+  virtual void dropHandle();
+
 private:
   bool isReady;
   bool isInput;
-  bool ready();
-  void setup();
-
-  BusHandler *bus;
-  SlaveHandle* handle;
 };
 
 }

@@ -81,11 +81,11 @@ bool Slave::update() {
   // Handle the received image
   TSlaveHandleList::Iterator itEnd = inputs.end();
   for (TSlaveHandleList::Iterator it = inputs.begin(); it != itEnd; ++it)
-    if ((*it)->observer && !(*it)->equal(updateReceiveImageOld)) {
+    if ((*it)->hasObserver() && !(*it)->equal(updateReceiveImageOld)) {
       // Inform Process Interface about change
-      if ((*it)->observer->onChange()) {
+      if ((*it)->getObserver()->onChange()) {
         // Send indication event
-        bus->startNewEventChain((*it)->observer);
+        bus->startNewEventChain((ProcessInterface*) (*it)->getObserver());
       }
     }
 

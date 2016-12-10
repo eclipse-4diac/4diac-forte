@@ -20,7 +20,7 @@ namespace EmBrick {
 DEFINE_SINGLETON(BusHandler)
 
 BusHandler::BusHandler() :
-    nextLoop(0), lastTransfer(0), spi(NULL), slaveSelect(NULL), slaves(NULL) {
+    nextLoop(0), spi(NULL), slaveSelect(NULL), slaves(NULL) {
   // Set init time
   struct timespec ts;
   // TODO Check compile error. Had to to add rt libary to c++ make flags
@@ -31,7 +31,6 @@ BusHandler::BusHandler() :
 
   // Sync
   isReady = false;
-  start();
 }
 
 BusHandler::~BusHandler() {

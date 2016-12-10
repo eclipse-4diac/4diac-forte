@@ -50,11 +50,20 @@ const SFBInterfaceSpec Master::scm_stFBInterfaceSpec = { 1,
     scm_anDataInputNames, scm_anDataInputTypeIds, 2, scm_anDataOutputNames,
     scm_anDataOutputTypeIds, 1, scm_astAdapterInstances };
 
+Master::~Master() {
+    bus->end();
+}
+
 void Master::executeEvent(int pa_nEIID) {
   switch (pa_nEIID) {
   case scm_nEventINITID:
     // Init and wait for BusHandler
     bus = &BusHandler::getInstance();
+    if (bus->isAlive()) {
+      DEVLOG_ERROR("emBrick[Master]: BusHandler already running. Only one master function block is permitted.\n");
+      break;
+    }
+    bus->start();
     bus->waitForInit();
 
     // Init configuration

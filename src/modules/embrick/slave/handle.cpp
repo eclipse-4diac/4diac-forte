@@ -13,17 +13,17 @@
 
 namespace EmBrick {
 
-SlaveHandle::SlaveHandle(unsigned char* buffer, uint8_t length,
+SlaveHandle::SlaveHandle(unsigned char* buffer, uint8_t offset,
     CSyncObject *syncMutex) :
-    buffer(buffer), length(length), observer(NULL), syncMutex(syncMutex) {
+    IOHandle(), buffer(buffer), offset(offset), syncMutex(syncMutex) {
 }
 
 SlaveHandle::~SlaveHandle() {
 }
 
-BitSlaveHandle::BitSlaveHandle(unsigned char* buffer, uint8_t position,
-    CSyncObject *syncMutex) :
-    SlaveHandle(buffer, 1, syncMutex), mask((uint8_t) (1 << position)) {
+BitSlaveHandle::BitSlaveHandle(unsigned char* buffer, uint8_t offset,
+    uint8_t position, CSyncObject *syncMutex) :
+    SlaveHandle(buffer, offset, syncMutex), mask((uint8_t) (1 << position)) {
 
 }
 
@@ -31,9 +31,9 @@ void BitSlaveHandle::set(bool state) {
   syncMutex->lock();
 
   if (state)
-    *buffer = (uint8_t) (*buffer | mask);
+    *(buffer + offset) = (uint8_t) (*(buffer + offset) | mask);
   else
-    *buffer = (uint8_t) (*buffer & ~mask);
+    *(buffer + offset) = (uint8_t) (*(buffer + offset) & ~mask);
 
   syncMutex->unlock();
 }
@@ -41,14 +41,14 @@ void BitSlaveHandle::set(bool state) {
 bool BitSlaveHandle::get() {
   syncMutex->lock();
 
-  bool res = (*buffer & mask) != 0;
+  bool res = (*(buffer + offset) & mask) != 0;
 
   syncMutex->unlock();
   return res;
 }
 
 bool BitSlaveHandle::equal(unsigned char* oldBuffer) {
-  return (*buffer & mask) == (*oldBuffer & mask);
+  return (*(buffer + offset) & mask) == (*(oldBuffer + offset) & mask);
 }
 
 } /* namespace EmBrick */

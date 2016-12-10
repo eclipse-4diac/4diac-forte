@@ -90,7 +90,25 @@ bool Slave2181::init(int index) {
   if (!Slave::init(index))
     return false;
 
-  // TODO Init SlaveHandles
+  // 8 Inputs
+  addInputBitHandle(DigitalInput1(), 0, 0);
+  addInputBitHandle(DigitalInput2(), 0, 1);
+  addInputBitHandle(DigitalInput3(), 0, 2);
+  addInputBitHandle(DigitalInput4(), 0, 3);
+  addInputBitHandle(DigitalInput5(), 0, 4);
+  addInputBitHandle(DigitalInput6(), 0, 5);
+  addInputBitHandle(DigitalInput7(), 0, 6);
+  addInputBitHandle(DigitalInput8(), 0, 7);
+
+  // 8 Outputs
+  addOutputBitHandle(DigitalOutput1(), 0, 0);
+  addOutputBitHandle(DigitalOutput2(), 0, 1);
+  addOutputBitHandle(DigitalOutput3(), 0, 2);
+  addOutputBitHandle(DigitalOutput4(), 0, 3);
+  addOutputBitHandle(DigitalOutput5(), 0, 4);
+  addOutputBitHandle(DigitalOutput6(), 0, 5);
+  addOutputBitHandle(DigitalOutput7(), 0, 6);
+  addOutputBitHandle(DigitalOutput8(), 0, 7);
 
   return true;
 }

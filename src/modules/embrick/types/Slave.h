@@ -48,6 +48,9 @@ protected:
 
   virtual bool init(int index);
 
+  void addInputBitHandle(CIEC_WSTRING id, uint8_t offset, uint8_t pos);
+  void addOutputBitHandle(CIEC_WSTRING id, uint8_t offset, uint8_t pos);
+
 };
 
 } /* namespace FunctionsBlocks */

@@ -16,29 +16,27 @@
 #include <cstring>
 #include <sync.h>
 
+#include <io/handle.h>
+
 namespace EmBrick {
 
-class ProcessInterface;
-
-class SlaveHandle {
+class SlaveHandle: public IOHandle {
 public:
-  SlaveHandle(unsigned char* buffer, uint8_t length, CSyncObject *syncMutex);
+  SlaveHandle(unsigned char* buffer, uint8_t offset, CSyncObject *syncMutex);
   virtual ~SlaveHandle();
 
   virtual bool equal(unsigned char*) = 0;
 
-  ProcessInterface *observer;
-
 protected:
   unsigned char* buffer;
-  const uint8_t length;
+  const uint8_t offset;
   CSyncObject *syncMutex;
 };
 
 class BitSlaveHandle: public SlaveHandle {
 public:
-  BitSlaveHandle(unsigned char* buffer, uint8_t position,
-      CSyncObject *syncMutex);
+  BitSlaveHandle(unsigned char* buffer, uint8_t offset, uint8_t position,
+  CSyncObject *syncMutex);
 
   void set(bool state);
   bool get();

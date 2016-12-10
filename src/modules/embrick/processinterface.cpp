@@ -10,19 +10,18 @@
  *******************************************************************************/
 
 #include "processinterface.h"
+#include <io/mapper.h>
 
-using namespace EmBrick;
+namespace EmBrick {
 
 ProcessInterface::ProcessInterface(CResource *paSrcRes,
     const SFBInterfaceSpec *paInterfaceSpec,
     const CStringDictionary::TStringId paInstanceNameId,
     TForteByte *paFBConnData, TForteByte *paFBVarsData) :
     CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId,
-        paFBConnData, paFBVarsData) {
+        paFBConnData, paFBVarsData), IOObserver() {
   isReady = false;
   isInput = false;
-  handle = NULL;
-  bus = NULL;
 }
 
 ProcessInterface::~ProcessInterface() {
@@ -30,22 +29,23 @@ ProcessInterface::~ProcessInterface() {
 }
 
 bool ProcessInterface::initialise(bool paIsInput) {
-  DEVLOG_INFO("Init ProcessInterface\n");
   isInput = paIsInput;
 
-  bus = &BusHandler::getInstance();
-  ready();
+  // Register interface
+  IOMapper::getInstance().registerObserver(getInstanceName(), this);
 
-  return true;
+  return isReady;
 }
 
 bool ProcessInterface::deinitialise() {
-  DEVLOG_INFO("DeInit\n");
-  return true;
+  // Deregister interface
+  IOMapper::getInstance().deregisterObserver(this);
+
+  return !isReady;
 }
 
 bool ProcessInterface::readPin() {
-  if (!ready())
+  if (!isReady)
     return false;
 
   // TODO Implement for IW etc.
@@ -55,7 +55,7 @@ bool ProcessInterface::readPin() {
 }
 
 bool ProcessInterface::writePin() {
-  if (!ready())
+  if (!isReady)
     return false;
 
   // TODO Implement for QW etc.
@@ -70,30 +70,22 @@ bool ProcessInterface::onChange() {
   return true;
 }
 
-bool ProcessInterface::ready() {
-  if (!isReady) {
-    if (bus->ready())
-      setup();
+void ProcessInterface::onHandle(IOHandle* handle) {
+  IOObserver::onHandle(handle);
+
+  if (isInput) {
+    setEventChainExecutor(m_poInvokingExecEnv);
   }
 
-  return isReady;
+  QO() = true;
+  isReady = true;
 }
 
-void ProcessInterface::setup() {
-  // TODO Replace with dynamic port mapping
-  if (isInput) {
-    if (bus->getSlave(0))
-      handle = bus->getSlave(0)->getInputHandle(0);
+void ProcessInterface::dropHandle() {
+  IOObserver::dropHandle();
 
-    setEventChainExecutor(m_poInvokingExecEnv);
-  } else {
-    if (bus->getSlave(1))
-      handle = bus->getSlave(1)->getOutputHandle(0);
-  }
+  QO() = false;
+  isReady = false;
+}
 
-  if (handle) {
-    handle->observer = this;
-
-    isReady = true;
-  }
 }
