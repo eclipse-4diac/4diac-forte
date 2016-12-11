@@ -20,23 +20,34 @@ Slave::Slave(CResource *pa_poSrcRes,
     const CStringDictionary::TStringId pa_nInstanceNameId,
     TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
     CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId,
-        pa_acFBConnData, pa_acFBVarsData), type(None), slave(NULL) {
+        pa_acFBConnData, pa_acFBVarsData), type(UnknownSlave), slave(NULL), ready(false) {
 
 }
 
 void Slave::executeEvent(int pa_nEIID) {
   if (BusAdapterIn().INIT() == pa_nEIID) {
     // Init slave
-    if (init(BusAdapterIn().INDEX()))
+    QO() = ready = init(BusAdapterIn().INDEX());
+    if (QO())
       DEVLOG_INFO("emBrick[SlaveFunctionBlock]: Init slave %d success.\n",
           (int ) BusAdapterIn().INDEX());
     else
       DEVLOG_ERROR("emBrick[SlaveFunctionBlock]: Init slave %d failed.\n",
           (int ) BusAdapterIn().INDEX());
 
-    // Init next slave
-    BusAdapterOut().INDEX() = BusAdapterIn().INDEX() + 1;
-    sendAdapterEvent(scm_nBusAdapterOutAdpNum, BusAdapter::scm_nEventINITID);
+    if (BusAdapterOut().getPeer() != 0) {
+      // Init next slave
+      BusAdapterOut().INDEX() = BusAdapterIn().INDEX() + 1;
+      sendAdapterEvent(scm_nBusAdapterOutAdpNum, BusAdapter::scm_nEventINITID);
+    } else {
+      // Send confirmation of init
+      BusAdapterIn().QO() = QO();
+      sendAdapterEvent(scm_nBusAdapterInAdpNum, BusAdapter::scm_nEventINITOID);
+    }
+  } else if (BusAdapterOut().INITO() == pa_nEIID) {
+    // Forward confirmation of init
+    BusAdapterIn().QO() = BusAdapterOut().QO() && QO();
+    sendAdapterEvent(scm_nBusAdapterInAdpNum, BusAdapter::scm_nEventINITOID);
   }
 }
 
@@ -50,6 +61,8 @@ bool Slave::init(int index) {
   if (slave->type != type)
     return false;
 
+  initHandles();
+
   return true;
 }
 
@@ -57,7 +70,8 @@ void Slave::addInputBitHandle(CIEC_WSTRING id, uint8_t offset, uint8_t pos) {
   if (id == "")
     return;
 
-  SlaveHandle* handle = new BitSlaveHandle(slave->updateReceiveImage, offset, pos, &slave->syncMutex);
+  SlaveHandle* handle = new BitSlaveHandle(slave->updateReceiveImage, offset,
+      pos, &slave->syncMutex);
   slave->addInputHandle(handle);
 
   IOMapper::getInstance().registerHandle(id, handle);
@@ -67,12 +81,34 @@ void Slave::addOutputBitHandle(CIEC_WSTRING id, uint8_t offset, uint8_t pos) {
   if (id == "")
     return;
 
-  SlaveHandle* handle = new BitSlaveHandle(slave->updateSendImage, offset, pos, &slave->syncMutex);
+  SlaveHandle* handle = new BitSlaveHandle(slave->updateSendImage, offset, pos,
+      &slave->syncMutex);
   slave->addOutputHandle(handle);
 
   IOMapper::getInstance().registerHandle(id, handle);
 }
 
+void Slave::addInputAnalog10Handle(CIEC_WSTRING id, uint8_t offset) {
+  if (id == "")
+    return;
+
+  SlaveHandle* handle = new Analog10SlaveHandle(slave->updateReceiveImage,
+      offset, &slave->syncMutex);
+  slave->addInputHandle(handle);
+
+  IOMapper::getInstance().registerHandle(id, handle);
+}
+
+void Slave::addOutputAnalog10Handle(CIEC_WSTRING id, uint8_t offset) {
+  if (id == "")
+    return;
+
+  SlaveHandle* handle = new Analog10SlaveHandle(slave->updateSendImage, offset,
+      &slave->syncMutex);
+  slave->addOutputHandle(handle);
+
+  IOMapper::getInstance().registerHandle(id, handle);
+}
 
 } /* namespace FunctionsBlocks */
 } /* namespace EmBrick */

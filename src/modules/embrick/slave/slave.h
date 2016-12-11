@@ -35,7 +35,7 @@ enum SlaveStatus {
 };
 
 enum SlaveType {
-  None = 0,
+  UnknownSlave = 0,
   G_8Di8Do = 2181, // 8x Digital-Input, 24V, p-switch, 1-wire & 8x Digital-Output, 24V, p-switch, 1-wire
   G_2RelNo4RelCo = 2301 // 2x Relay-Output, NO, potential free & 4x Relay-Output, CO, potential free
 };
@@ -49,6 +49,7 @@ public:
   const SlaveType type;
 
   bool update();
+
   SlaveHandle* getInputHandle(int index) {
     return getHandle(&inputs, index);
   }
@@ -57,11 +58,13 @@ public:
   }
 
   void addInputHandle(SlaveHandle* handle) {
-    inputs.push_back(handle);
+    addHandle(&inputs, handle);
   }
   void addOutputHandle(SlaveHandle* handle) {
-    outputs.push_back(handle);
+    addHandle(&outputs, handle);
   }
+
+  void dropHandles();
 
   unsigned char *updateSendImage;
   unsigned char *updateReceiveImage;
@@ -83,6 +86,7 @@ protected:
   typedef CSinglyLinkedList<SlaveHandle *> TSlaveHandleList;
   TSlaveHandleList inputs;
   TSlaveHandleList outputs;
+  void addHandle(TSlaveHandleList* list, SlaveHandle* handle);
   SlaveHandle* getHandle(TSlaveHandleList* list, int index);
 };
 

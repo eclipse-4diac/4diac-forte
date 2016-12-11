@@ -16,7 +16,7 @@
 namespace EmBrick {
 
 IOHandle::IOHandle() :
-    observer(NULL) {
+    observer(NULL), type(AnyType) {
 
 }
 

@@ -77,19 +77,19 @@ void Slave2181::executeEvent(int pa_nEIID) {
      */
     break;
   case scm_nEventMAPID:
-    // TODO add code for MAP event!
-    /*
-     do not forget to send output event, calling e.g.
-     sendOutputEvent(scm_nEventCNFID);
-     */
+    if (!ready)
+      break;
+
+    // Drop all existing handles
+    slave->dropHandles();
+
+    if (true == QI())
+      initHandles();
     break;
   }
 }
 
-bool Slave2181::init(int index) {
-  if (!Slave::init(index))
-    return false;
-
+void Slave2181::initHandles() {
   // 8 Inputs
   addInputBitHandle(DigitalInput1(), 0, 0);
   addInputBitHandle(DigitalInput2(), 0, 1);
@@ -109,8 +109,6 @@ bool Slave2181::init(int index) {
   addOutputBitHandle(DigitalOutput6(), 0, 5);
   addOutputBitHandle(DigitalOutput7(), 0, 6);
   addOutputBitHandle(DigitalOutput8(), 0, 7);
-
-  return true;
 }
 
 } /* namespace FunctionsBlocks */

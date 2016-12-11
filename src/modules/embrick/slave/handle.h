@@ -15,6 +15,8 @@
 #include <stdint.h>
 #include <cstring>
 #include <sync.h>
+#include <forte_bool.h>
+#include <forte_dword.h>
 
 #include <io/handle.h>
 
@@ -29,22 +31,51 @@ public:
 
 protected:
   unsigned char* buffer;
-  const uint8_t offset;
-  CSyncObject *syncMutex;
+  const uint8_t offset;CSyncObject *syncMutex;
 };
 
-class BitSlaveHandle: public SlaveHandle {
+class BitSlaveHandle: public SlaveHandle, public IOHandleWrapper<CIEC_BOOL> {
 public:
   BitSlaveHandle(unsigned char* buffer, uint8_t offset, uint8_t position,
   CSyncObject *syncMutex);
 
-  void set(bool state);
-  bool get();
+  void set(CIEC_BOOL state);
+  CIEC_BOOL get();
 
   virtual bool equal(unsigned char* oldBuffer);
 
 protected:
   const uint8_t mask;
+};
+
+class Analog10SlaveHandle: public SlaveHandle,
+    public IOHandleWrapper<CIEC_DWORD> {
+public:
+  Analog10SlaveHandle(unsigned char* buffer, uint8_t offset,
+      CSyncObject *syncMutex);
+
+  void set(CIEC_DWORD value);
+  CIEC_DWORD get();
+
+  virtual bool equal(unsigned char* oldBuffer);
+
+protected:
+  CIEC_DWORD getValue(unsigned char* buffer);
+};
+
+class AnalogSlaveHandle: public SlaveHandle,
+    public IOHandleWrapper<CIEC_DWORD> {
+public:
+  AnalogSlaveHandle(unsigned char* buffer, uint8_t offset,
+      CSyncObject *syncMutex);
+
+  void set(CIEC_DWORD value);
+  CIEC_DWORD get();
+
+  virtual bool equal(unsigned char* oldBuffer);
+
+protected:
+  CIEC_DWORD getValue(unsigned char* buffer);
 };
 
 } /* namespace EmBrick */

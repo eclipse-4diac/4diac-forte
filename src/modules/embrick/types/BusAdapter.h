@@ -24,6 +24,14 @@ DECLARE_ADAPTER_TYPE(BusAdapter)
 
 private:
 private:
+  static const CStringDictionary::TStringId scm_anDataInputNames[];
+  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+public:
+  CIEC_BOOL &QO() {
+    return *static_cast<CIEC_BOOL*>((isSocket()) ? getDI(0) : getDO(0));
+  }
+
+private:
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
 public:
@@ -32,8 +40,15 @@ public:
   }
 
 public:
+  static const TEventID scm_nEventINITOID = 0;
+  int INITO() {
+    return m_nParentAdapterListEventID + scm_nEventINITOID;
+  }
 private:
   static const TForteInt16 scm_anEIWithIndexes[];
+  static const TDataIOID scm_anEIWith[];
+  static const CStringDictionary::TStringId scm_anEventInputNames[];
+
 public:
   static const TEventID scm_nEventINITID = 0;
   int INIT() {
@@ -48,7 +63,7 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpecPlug;
 
-  FORTE_ADAPTER_DATA_ARRAY(0, 1, 0, 1, 0)
+  FORTE_ADAPTER_DATA_ARRAY(1, 1, 1, 1, 0)
 
 public:
   ADAPTER_CTOR(BusAdapter){};
@@ -57,7 +72,8 @@ public:
 
 };
 
-} /* namespace FunctionsBlocks */
+}
+/* namespace FunctionsBlocks */
 } /* namespace EmBrick */
 
 #endif //close the ifdef sequence from the beginning of the file

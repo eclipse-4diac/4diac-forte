@@ -30,6 +30,10 @@ public:
   }
 
 protected:
+  CIEC_BOOL &QO() {
+    return *static_cast<CIEC_BOOL*>(getDO(0));
+  }
+
   BusAdapter& BusAdapterOut() {
     return (*static_cast<BusAdapter*>(m_apoAdapters[0]));
   }
@@ -45,12 +49,16 @@ protected:
 
   SlaveType type;
   EmBrick::Slave *slave;
+  bool ready;
 
   virtual bool init(int index);
+  virtual void initHandles() = 0;
 
   void addInputBitHandle(CIEC_WSTRING id, uint8_t offset, uint8_t pos);
   void addOutputBitHandle(CIEC_WSTRING id, uint8_t offset, uint8_t pos);
 
+  void addInputAnalog10Handle(CIEC_WSTRING id, uint8_t offset);
+  void addOutputAnalog10Handle(CIEC_WSTRING id, uint8_t offset);
 };
 
 } /* namespace FunctionsBlocks */

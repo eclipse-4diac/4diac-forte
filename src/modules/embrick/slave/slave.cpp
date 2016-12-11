@@ -30,12 +30,7 @@ Slave::~Slave() {
   delete updateReceiveImage;
   delete updateReceiveImageOld;
 
-  TSlaveHandleList::Iterator itEnd = inputs.end();
-  for (TSlaveHandleList::Iterator it = inputs.begin(); it != itEnd; ++it)
-    delete *it;
-  itEnd = outputs.end();
-  for (TSlaveHandleList::Iterator it = outputs.begin(); it != itEnd; ++it)
-    delete *it;
+  dropHandles();
 }
 
 Slave* Slave::sendInit(int address) {
@@ -78,7 +73,8 @@ bool Slave::update() {
       updateReceiveImage, dataReceiveLength, &status, &syncMutex))
     return false;
 
-  // Handle the received image
+// Handle the received image
+  syncMutex.lock();
   TSlaveHandleList::Iterator itEnd = inputs.end();
   for (TSlaveHandleList::Iterator it = inputs.begin(); it != itEnd; ++it)
     if ((*it)->hasObserver() && !(*it)->equal(updateReceiveImageOld)) {
@@ -88,11 +84,34 @@ bool Slave::update() {
         bus->startNewEventChain((ProcessInterface*) (*it)->getObserver());
       }
     }
+  syncMutex.unlock();
 
   // Clone current image to old image
   memcpy(updateReceiveImageOld, updateReceiveImage, dataReceiveLength);
 
   return true;
+}
+
+void Slave::dropHandles() {
+  syncMutex.lock();
+
+  TSlaveHandleList::Iterator itEnd = inputs.end();
+  for (TSlaveHandleList::Iterator it = inputs.begin(); it != itEnd; ++it)
+    delete *it;
+  itEnd = outputs.end();
+  for (TSlaveHandleList::Iterator it = outputs.begin(); it != itEnd; ++it)
+    delete *it;
+
+  inputs.clearAll();
+  outputs.clearAll();
+
+  syncMutex.unlock();
+}
+
+void Slave::addHandle(TSlaveHandleList* list, SlaveHandle* handle) {
+  syncMutex.lock();
+  list->push_back(handle);
+  syncMutex.unlock();
 }
 
 SlaveHandle* Slave::getHandle(TSlaveHandleList* list, int index) {

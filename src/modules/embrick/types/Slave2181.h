@@ -97,9 +97,6 @@ private:
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_BOOL &QO() {
-    return *static_cast<CIEC_BOOL*>(getDO(0));
-  }
 
   CIEC_WSTRING &STATUS() {
     return *static_cast<CIEC_WSTRING*>(getDO(1));
@@ -124,7 +121,7 @@ private:
 
   virtual void executeEvent(int pa_nEIID);
 
-  virtual bool init(int index);
+  virtual void initHandles();
 
 public:
   FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(Slave2181, Slave){

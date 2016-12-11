@@ -13,11 +13,19 @@
 #define SRC_MODULES_EMBRICK_IO_HANDLE_H_
 
 #include <cstddef>
+#include <forte_bool.h>
 
 namespace EmBrick {
 
 class IOMapper;
 class IOObserver;
+
+enum IOHandleType {
+  AnyType, // Any
+  X, // Boolean
+  W, // Word
+  D, // DoubleWord
+};
 
 class IOHandle {
   friend class IOMapper;
@@ -34,11 +42,26 @@ public:
     return observer;
   }
 
+  bool is(IOHandleType type) {
+    return this->type == type;
+  }
+
 protected:
   virtual void onObserver(IOObserver *observer);
   virtual void dropObserver();
 
   IOObserver *observer;
+  IOHandleType type;
+};
+
+template <typename T>
+class IOHandleWrapper {
+public:
+  virtual ~IOHandleWrapper() {
+
+  }
+  virtual void set(T state) = 0;
+  virtual T get() = 0;
 };
 
 } /* namespace EmBrick */

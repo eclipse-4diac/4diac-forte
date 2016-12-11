@@ -31,8 +31,12 @@ public:
 protected:
   bool initialise(bool paIsInput);
   bool deinitialise();
-  bool writePin();
   bool readPin();
+  bool writePin();
+  bool readWord();
+  bool writeWord();
+  bool readDWord();
+  bool writeDWord();
 
   virtual void onHandle(IOHandle *handle);
   virtual void dropHandle();

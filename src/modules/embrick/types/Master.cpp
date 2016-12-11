@@ -51,27 +51,44 @@ const SFBInterfaceSpec Master::scm_stFBInterfaceSpec = { 1,
     scm_anDataOutputTypeIds, 1, scm_astAdapterInstances };
 
 Master::~Master() {
+  if (bus->isAlive())
     bus->end();
 }
 
 void Master::executeEvent(int pa_nEIID) {
+  if (BusAdapterOut().INITO() == pa_nEIID) {
+    QO() = BusAdapterOut().QO();
+    sendOutputEvent(scm_nEventINITOID);
+  }
+
   switch (pa_nEIID) {
   case scm_nEventINITID:
-    // Init and wait for BusHandler
-    bus = &BusHandler::getInstance();
-    if (bus->isAlive()) {
-      DEVLOG_ERROR("emBrick[Master]: BusHandler already running. Only one master function block is permitted.\n");
-      break;
+    if (true == QI()) {
+      // Init and wait for BusHandler
+      bus = &BusHandler::getInstance();
+      if (bus->isAlive()) {
+        DEVLOG_ERROR(
+            "emBrick[Master]: BusHandler already running. Only one master function block is permitted.\n");
+
+        QO() = false;
+        sendOutputEvent(scm_nEventINITOID);
+        break;
+      }
+
+      bus->start();
+      bus->waitForInit();
+
+      // Init configuration
+      BusAdapterOut().INDEX() = 0;
+      sendAdapterEvent(scm_nBusAdapterAdpNum, BusAdapter::scm_nEventINITID);
+    } else {
+      // Stop BusHandler
+      if (bus->isAlive())
+        bus->end();
+
+      QO() = true;
+      sendOutputEvent(scm_nEventINITOID);
     }
-    bus->start();
-    bus->waitForInit();
-
-    // Init configuration
-    BusAdapterOut().INDEX() = 0;
-    sendAdapterEvent(scm_nBusAdapterAdpNum, BusAdapter::scm_nEventINITID);
-
-    // TODO Wait for end of configuration
-    sendOutputEvent(scm_nEventINITOID);
     break;
   }
 }
