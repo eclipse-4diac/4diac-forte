@@ -23,6 +23,10 @@ Slave::Slave(int address, Packages::SlaveInit init) :
   updateSendImage = new unsigned char[dataSendLength];
   updateReceiveImage = new unsigned char[dataReceiveLength];
   updateReceiveImageOld = new unsigned char[dataReceiveLength];
+
+  memset(updateSendImage, 0, dataSendLength);
+  memset(updateReceiveImage, 0, dataReceiveLength);
+  memset(updateReceiveImageOld, 0, dataReceiveLength);
 }
 
 Slave::~Slave() {

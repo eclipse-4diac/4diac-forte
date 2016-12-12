@@ -16,7 +16,7 @@
 #include <forte_wstring.h>
 #include <map>
 #include <string>
-#include <sync.h>
+#include <forte_sync.h>
 
 #include "handle.h"
 #include "observer.h"
@@ -27,10 +27,10 @@ class IOMapper {
 DECLARE_SINGLETON (IOMapper)
 
 public:
-  void registerHandle(CIEC_WSTRING id, IOHandle* handle);
+  void registerHandle(CIEC_WSTRING const &id, IOHandle* handle);
   void deregisterHandle(IOHandle* handle);
 
-  void registerObserver(CIEC_WSTRING id, IOObserver* observer);
+  void registerObserver(CIEC_WSTRING const &id, IOObserver* observer);
   void deregisterObserver(IOObserver* observer);
 
 private:

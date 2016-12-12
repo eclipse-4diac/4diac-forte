@@ -13,7 +13,6 @@
 #define SRC_MODULES_EMBRICK_BUSCONTROLLER_H_
 
 #include <extevhan.h>
-#include <thread.h>
 #include <devlog.h>
 #include <sys/time.h>
 #include <stdio.h>
@@ -26,7 +25,8 @@
 #include "pin.h"
 #include <slave/slave.h>
 #include <forte_sem.h>
-#include <sync.h>
+#include <forte_sync.h>
+#include <forte_thread.h>
 
 namespace EmBrick {
 

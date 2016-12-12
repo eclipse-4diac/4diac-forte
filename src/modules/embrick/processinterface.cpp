@@ -14,6 +14,10 @@
 
 namespace EmBrick {
 
+const char * const ProcessInterface::scmOK = "OK";
+const char * const ProcessInterface::scmMappedWrongDataType =
+    "Mapped invalid data type.";
+
 ProcessInterface::ProcessInterface(CResource *paSrcRes,
     const SFBInterfaceSpec *paInterfaceSpec,
     const CStringDictionary::TStringId paInstanceNameId,
@@ -30,6 +34,9 @@ ProcessInterface::~ProcessInterface() {
 
 bool ProcessInterface::initialise(bool paIsInput) {
   isInput = paIsInput;
+
+  isReady = false;
+  QO() = false;
 
   // Register interface
   IOMapper::getInstance().registerObserver(getInstanceName(), this);
@@ -48,11 +55,7 @@ bool ProcessInterface::readPin() {
   if (!isReady)
     return false;
 
-  if (handle->is(X)) {
-    IN_X() = ((IOHandleWrapper<CIEC_BOOL>*) handle)->get();
-  } else {
-    DEVLOG_ERROR("emBrick[PI]: Mapped wrong data type. Expected X handle.\n");
-  }
+  handle->get(IN_X());
 
   return true;
 }
@@ -61,11 +64,7 @@ bool ProcessInterface::writePin() {
   if (!isReady)
     return false;
 
-  if (handle->is(X)) {
-    ((IOHandleWrapper<CIEC_BOOL>*) handle)->set(OUT_X());
-  } else {
-    DEVLOG_ERROR("emBrick[PI]: Mapped wrong data type. Expected X handle.\n");
-  }
+  handle->set(OUT_X());
 
   return true;
 }
@@ -74,11 +73,7 @@ bool ProcessInterface::readWord() {
   if (!isReady)
     return false;
 
-  if (handle->is(W)) {
-    IN_W() = ((IOHandleWrapper<CIEC_WORD>*) handle)->get();
-  } else {
-    DEVLOG_ERROR("emBrick[PI]: Mapped wrong data type. Expected W handle.\n");
-  }
+  handle->get(IN_W());
 
   return true;
 }
@@ -87,11 +82,7 @@ bool ProcessInterface::writeWord() {
   if (!isReady)
     return false;
 
-  if (handle->is(W)) {
-    ((IOHandleWrapper<CIEC_WORD>*) handle)->set(OUT_W());
-  } else {
-    DEVLOG_ERROR("emBrick[PI]: Mapped wrong data type. Expected W handle.\n");
-  }
+  handle->set(OUT_W());
 
   return true;
 }
@@ -100,11 +91,7 @@ bool ProcessInterface::readDWord() {
   if (!isReady)
     return false;
 
-  if (handle->is(D)) {
-    IN_D() = ((IOHandleWrapper<CIEC_DWORD>*) handle)->get();
-  } else {
-    DEVLOG_ERROR("emBrick[PI]: Mapped wrong data type. Expected D handle.\n");
-  }
+  handle->get(IN_D());
 
   return true;
 }
@@ -113,21 +100,17 @@ bool ProcessInterface::writeDWord() {
   if (!isReady)
     return false;
 
-  if (handle->is(D)) {
-    ((IOHandleWrapper<CIEC_DWORD>*) handle)->set(OUT_D());
-  } else {
-    DEVLOG_ERROR("emBrick[PI]: Mapped wrong data type. Expected D handle.\n");
-  }
+  handle->set(OUT_D());
 
   return true;
 }
 
 bool ProcessInterface::onChange() {
-  if (handle->is(X)) {
+  if (handle->is(CIEC_ANY::e_BOOL)) {
     QO() = readPin();
-  } else if (handle->is(W)) {
+  } else if (handle->is(CIEC_ANY::e_WORD)) {
     QO() = readWord();
-  } else if (handle->is(D)) {
+  } else if (handle->is(CIEC_ANY::e_DWORD)) {
     QO() = readDWord();
   }
 
@@ -139,8 +122,19 @@ void ProcessInterface::onHandle(IOHandle* handle) {
 
   if (isInput) {
     setEventChainExecutor(m_poInvokingExecEnv);
+
+    if (!handle->is(getDO(2)->getDataTypeID())) {
+      STATUS() = scmMappedWrongDataType;
+      return;
+    }
+  } else {
+    if (!handle->is(getDI(2)->getDataTypeID())) {
+      STATUS() = scmMappedWrongDataType;
+      return;
+    }
   }
 
+  STATUS() = scmOK;
   QO() = true;
   isReady = true;
 }

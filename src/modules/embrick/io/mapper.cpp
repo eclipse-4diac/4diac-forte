@@ -24,11 +24,13 @@ IOMapper::~IOMapper() {
 
 }
 
-void IOMapper::registerHandle(CIEC_WSTRING id, IOHandle* handle) {
+void IOMapper::registerHandle(CIEC_WSTRING const &id, IOHandle* handle) {
   std::string idStr(id.getValue());
 
   syncMutex.lock();
 
+  // TODO Handle duplicate ids
+  // DISCUSS change IOMapper from 1-1 to n-m model
   handles.insert(std::make_pair(idStr, handle));
 
   // Check for existing observer
@@ -59,11 +61,13 @@ void IOMapper::deregisterHandle(IOHandle* handle) {
   syncMutex.unlock();
 }
 
-void IOMapper::registerObserver(CIEC_WSTRING id, IOObserver* observer) {
+void IOMapper::registerObserver(CIEC_WSTRING const &id, IOObserver* observer) {
   std::string idStr(id.getValue());
 
   syncMutex.lock();
 
+  // TODO Handle duplicate ids
+  // DISCUSS change IOMapper from 1-1 to n-m model
   observers.insert(std::make_pair(idStr, observer));
 
   // Check for existing handle

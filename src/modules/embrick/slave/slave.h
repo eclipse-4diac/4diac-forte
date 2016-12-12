@@ -18,7 +18,7 @@
 #include "handle.h"
 #include <fortelist.h>
 #include <stdint.h>
-#include <sync.h>
+#include <forte_sync.h>
 #include <forte_wstring.h>
 #include <devlog.h>
 

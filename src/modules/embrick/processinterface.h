@@ -44,6 +44,9 @@ protected:
 private:
   bool isReady;
   bool isInput;
+
+  static const char * const scmOK;
+  static const char * const scmMappedWrongDataType;
 };
 
 }
