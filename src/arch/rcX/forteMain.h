@@ -12,7 +12,7 @@
 #ifndef FORTE_MAIN_H_
 #define FORTE_MAIN_H_
 
-#ifdef _cplusplus 
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -20,7 +20,7 @@ int startForte(void);
 void endForte(int signal);
 
 
-#ifdef _cplusplus 
+#ifdef __cplusplus
 }
 #endif
 

@@ -11,13 +11,8 @@
 
 #include <forteMain.h>
 #include <fortenew.h>
-#include <stdio.h>
-#include <signal.h>
-#include "../../stdfblib/ita/RMT_DEV.h"
 
-#ifdef CONFIG_POWERLINK_USERSTACK
-#include <EplWrapper.h>
-#endif
+#include "../../stdfblib/ita/RMT_DEV.h"
 
 /*!\brief Check if the correct endianess has been configured.
  *
@@ -53,11 +48,6 @@ void endForte(int pa_nSig){
  * \param pa_acMGRID A string containing IP and Port like [IP]:[Port]
  */
 void createDev(const char *pa_acMGRID){
-
-#ifdef CONFIG_POWERLINK_USERSTACK
-  CEplStackWrapper::eplMainInit();
-#endif
-
   poDev = new RMT_DEV;
 
   poDev->setMGR_ID(pa_acMGRID);

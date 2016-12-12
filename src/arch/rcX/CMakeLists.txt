@@ -47,6 +47,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "rcX")
 
   forte_add_definition("-D__RCX__ -D__${FORTE_NETX_CPU} -c -mlong-calls -mcpu=${ARCH_NETX} -fshort-enums -gdwarf-2 -Wall -O0 -mapcs -mthumb-interwork -fsigned-char -mlittle-endian -marm -mno-apcs-frame -static-libstdc++ -static-libgcc")# -mabi=apcs-gnu -xc")
   forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -DFORTE_LITTLE_ENDIAN -ggdb")
+  forte_add_definition("-fno-threadsafe-statics")
   
   set(FORTE_RTTI_AND_EXCEPTIONS FALSE CACHE BOOL "Enable RTTI and Exceptions")
   mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)
