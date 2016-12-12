@@ -8,7 +8,7 @@
  * Contributors:
  *  Alois Zoitl, Rene Smodic - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "sync.h"
+#include "forte_sync.h"
 
 CPCSyncObject::CPCSyncObject(){
 //  m_oMutexHandle = PTHREAD_MUTEX_INITIALIZER; 

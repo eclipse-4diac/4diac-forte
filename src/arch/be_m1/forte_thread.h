@@ -9,8 +9,8 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *   Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
-#ifndef _THREAD_H_
-#define _THREAD_H_
+#ifndef _FORTE_THREAD_H_
+#define _FORTE_THREAD_H_
 
 #include <vxWorks.h>
 #include <sysLib.h>
@@ -80,5 +80,5 @@ class CBEThread : public forte::arch::CThreadBase, private BETask{
 
 };
 
-#endif /*THREAD_H_*/
+#endif /*FORTE_THREAD_H_*/
 

@@ -15,7 +15,7 @@
 #include "EplCNCallback.h"
 #include <singlet.h>
 #include <fortelist.h>
-#include <sync.h>
+#include <forte_sync.h>
 
 struct SEplMapping{
     struct SEplMappingValues{

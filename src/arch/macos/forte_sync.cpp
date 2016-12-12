@@ -11,7 +11,9 @@
  *  Alois Zoitl  - taken this file from the Posix version and adapted it for
  *                 Mac OS
  *******************************************************************************/
-#include "sync.h"
+#include "forte_sync.h"
+#include <errno.h>
+#include <string.h>
 
 CMacOsSyncObject::CMacOsSyncObject(){
   pthread_mutexattr_t attr;
@@ -20,7 +22,7 @@ CMacOsSyncObject::CMacOsSyncObject(){
   pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
   pthread_mutex_init(&m_oMutexHandle, &attr);
   //TODO handle return value
-  pthread_mutexattr_destroy(&attr);  
+  pthread_mutexattr_destroy(&attr);
 }
 
 CMacOsSyncObject::~CMacOsSyncObject(){
