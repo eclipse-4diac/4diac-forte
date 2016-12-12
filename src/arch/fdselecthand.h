@@ -16,8 +16,8 @@
 #include "../core/extevhan.h"
 #include "../core/cominfra/comlayer.h"
 #include "../core/utils/singlet.h"
-#include <thread.h>
-#include <sync.h>
+#include <forte_thread.h>
+#include <forte_sync.h>
 
 /*!\brief An external event handler for file descriptor based external events.
  *

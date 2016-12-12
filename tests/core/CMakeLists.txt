@@ -47,16 +47,16 @@
     forte_test_add_sourcefile_cpp(../../src/arch/threadbase.cpp)
      
 if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-    forte_test_add_sourcefile_cpp(../../src/arch/posix/sync.cpp)
+    forte_test_add_sourcefile_cpp(../../src/arch/posix/forte_sync.cpp)
     forte_test_add_sourcefile_cpp(../../src/arch/posix/forte_sem.cpp)
-    forte_test_add_sourcefile_cpp(../../src/arch/posix/thread.cpp)
+    forte_test_add_sourcefile_cpp(../../src/arch/posix/forte_thread.cpp)
     forte_test_add_sourcefile_cpp(../../src/arch/posix/pctimeha.cpp)
 endif()
 
 if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
-    forte_test_add_sourcefile_cpp(../../src/arch/win32/sync.cpp)
+    forte_test_add_sourcefile_cpp(../../src/arch/win32/forte_sync.cpp)
     forte_test_add_sourcefile_cpp(../../src/arch/win32/forte_sem.cpp)
-    forte_test_add_sourcefile_cpp(../../src/arch/win32/thread.cpp)
+    forte_test_add_sourcefile_cpp(../../src/arch/win32/forte_thread.cpp)
     forte_test_add_sourcefile_cpp(../../src/arch/win32/pctimeha.cpp)
 endif()
 

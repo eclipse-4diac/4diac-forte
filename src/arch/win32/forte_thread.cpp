@@ -9,7 +9,7 @@
  *  Alois Zoitl, Gerhard Ebenhofer, Thomas Strasser - initial API and implementation and/or initial documentation
  *  Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
-#include "thread.h"
+#include "forte_thread.h"
 #include "../devlog.h"
 
 DWORD WINAPI CWin32Thread::threadFunction(LPVOID arguments){

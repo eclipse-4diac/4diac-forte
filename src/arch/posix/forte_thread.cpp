@@ -10,7 +10,7 @@
  *  Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
 #include <fortealloc.h>
-#include "thread.h"
+#include "forte_thread.h"
 #include "../devlog.h"
 #include <errno.h>
 #include <cstring>

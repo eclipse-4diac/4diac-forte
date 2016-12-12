@@ -11,7 +11,7 @@
  *******************************************************************************/
 #include <fortealloc.h>
 #include <criticalregion.h>
-#include "thread.h"
+#include "forte_thread.h"
 
 TCECOSThreadPtr CECOSThread::sm_aoThreadList[CECOSThread::scm_nThreadListSize] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 CSyncObject CECOSThread::sm_oThreadListLock;

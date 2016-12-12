@@ -35,7 +35,7 @@ MQTTHandler::~MQTTHandler(){
   MQTTClient_destroy(&smClient);
 }
 
-int MQTTHandler::mqttMessageArrived(void* context, char* topicName, int topicLen, MQTTClient_message* message){
+int MQTTHandler::mqttMessageArrived(void* context, char* topicName, int , MQTTClient_message* message){
   //TODO: Check if handler allowed
 
 
@@ -117,7 +117,7 @@ void MQTTHandler::disableHandler(void){
   //TODO: Should also work empty
 }
 
-void MQTTHandler::setPriority(int pa_nPriority){
+void MQTTHandler::setPriority(int ){
   //TODO: Should also work empty
 }
 

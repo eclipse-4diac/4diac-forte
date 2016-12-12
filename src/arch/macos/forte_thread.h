@@ -8,10 +8,10 @@
  * Contributors:
  *  Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _MACOS_THREAD_H_
-#define _MACOS_THREAD_H_
+#ifndef _MACOS_FORTE_THREAD_H_
+#define _MACOS_FORTE_THREAD_H_
 
 //just pull_in the posix thread
-#include "../posix/thread.h"
+#include "../posix/forte_thread.h"
 
 #endif
