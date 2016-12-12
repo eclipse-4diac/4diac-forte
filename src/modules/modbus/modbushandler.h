@@ -14,7 +14,7 @@
 #include <forte_config.h>
 #include "extevhan.h"
 #include "singlet.h"
-#include <sync.h>
+#include <forte_sync.h>
 #include <comlayer.h>
 #include <fortelist.h>
 

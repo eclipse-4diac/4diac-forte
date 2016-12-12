@@ -16,7 +16,7 @@
 #include "../core/extevhan.h"
 #include "../core/utils/singlet.h"
 #include "../core/datatypes/forte_time.h"
-#include <sync.h>
+#include <forte_sync.h>
 
 class CEventSourceFB;
 

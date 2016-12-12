@@ -9,8 +9,8 @@
  *  Alois Zoitl, Rene Smodic, Martin Melik Merkiumians - initial API and implementation and/or initial documentation
  *  Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
-#include <fortenew.h>
-#include "thread.h"
+#include <fortealloc.h>
+#include "forte_thread.h"
 #include "../devlog.h"
 #include <errno.h>
 #include <cstring>

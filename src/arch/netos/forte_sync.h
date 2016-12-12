@@ -9,8 +9,8 @@
  *   Alois Zoitl
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _SYNC_H_
-#define _SYNC_H_
+#ifndef _FORTE_SYNC_H_
+#define _FORTE_SYNC_H_
 
 #include <threadx/tx_api.h>
 
@@ -45,4 +45,4 @@ class CTXSyncObject{
     };
 };
 
-#endif /*SYNC_H_*/
+#endif /*FORTE_SYNC_H_*/

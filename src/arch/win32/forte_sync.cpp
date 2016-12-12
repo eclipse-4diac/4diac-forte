@@ -1,19 +1,20 @@
 /*******************************************************************************
- * Copyright (c) 2012 ACIN
+ * Copyright (c) 2010, 2011 ACIN, Profactor GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *   Alois Zoitl - initial API and implementation and/or initial documentation
+ *  Alois Zoitl, Gerhard Ebenhofer - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "sync.h"
+#include "forte_sync.h"
 
-CVXWorksSyncObject::CVXWorksSyncObject(){
-  m_oSemBinary = semMCreate(SEM_Q_PRIORITY);
+CPCSyncObject::CPCSyncObject(){
+   InitializeCriticalSection(&m_oMutexHandle);
 }
 
-CVXWorksSyncObject::~CVXWorksSyncObject(){
-  semDelete (m_oSemBinary);
+CPCSyncObject::~CPCSyncObject(){
+	DeleteCriticalSection(&m_oMutexHandle);
+  //TODO handle return value
 }

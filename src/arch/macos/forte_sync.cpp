@@ -1,33 +1,31 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2010 ACIN
+ * Copyright (c) 2005 - 2010, 2016 ACIN, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *  Alois Zoitl, Rene Smodic - initial API and implementation and/or initial documentation
+ *  Alois Zoitl, Rene Smodic - initial API and implementation and/or initial
+ *                             documentation
+ *  Alois Zoitl  - taken this file from the Posix version and adapted it for
+ *                 Mac OS
  *******************************************************************************/
-#include "sync.h"
+#include "forte_sync.h"
+#include <errno.h>
+#include <string.h>
 
-CPCSyncObject::CPCSyncObject(){
-//  m_oMutexHandle = PTHREAD_MUTEX_INITIALIZER; 
-  
+CMacOsSyncObject::CMacOsSyncObject(){
   pthread_mutexattr_t attr;
   pthread_mutexattr_init(&attr);
 
-  #ifdef __CYGWIN__
   pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
-  #else
-  pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE_NP);
-  #endif
-
   pthread_mutex_init(&m_oMutexHandle, &attr);
   //TODO handle return value
-  pthread_mutexattr_destroy(&attr);  
+  pthread_mutexattr_destroy(&attr);
 }
 
-CPCSyncObject::~CPCSyncObject(){
+CMacOsSyncObject::~CMacOsSyncObject(){
   pthread_mutex_destroy(&m_oMutexHandle);
   //TODO handle return value
 }

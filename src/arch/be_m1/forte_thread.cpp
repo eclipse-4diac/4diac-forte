@@ -9,7 +9,7 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *   Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
-#include "thread.h"
+#include "forte_thread.h"
 #include "../devlog.h"
 #include <errno.h>
 #include <BEModule.hpp>

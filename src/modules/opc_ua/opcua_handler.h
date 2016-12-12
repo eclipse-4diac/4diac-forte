@@ -25,7 +25,7 @@
 #pragma GCC diagnostic pop
 
 #include <singlet.h>
-#include <thread.h>
+#include <forte_thread.h>
 #include <extevhan.h>
 #include <conn.h>
 #include "funcbloc.h"

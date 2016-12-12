@@ -8,8 +8,8 @@
  * Contributors:
  *  Alois Zoitl, Gerhard Ebenhofer, Martin Melik-Merkumians - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _SYNC_H_
-#define _SYNC_H_
+#ifndef _FORTE_SYNC_H_
+#define _FORTE_SYNC_H_
 
 #define WIN32_LEAN_AND_MEAN
  #include <windows.h>
@@ -48,4 +48,4 @@ class CPCSyncObject{
     };
 };
 
-#endif /*SYNC_H_*/
+#endif /*FORTE_SYNC_H_*/
