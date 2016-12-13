@@ -237,8 +237,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::createMethodNode() {
 	}
 
 	if (this->getCommFB()->getNumRD() == 0 && this->getCommFB()->getNumSD() == 0) {
-		DEVLOG_ERROR("OPC UA Method without SD/RD Signal, pure event handling\n");
-		return e_InitInvalidId;
+		DEVLOG_INFO("OPC UA Method without SD/RD Signal, pure event handling\n");
 	}
 
 	// create the list of input arguments of the method which corresponds to the RD ports (i.e. output of the FB)
@@ -396,19 +395,17 @@ UA_StatusCode COPC_UA_Layer::onServerMethodCall(void *methodHandle, __attribute_
 	}
 
 	// wait until result is ready
-	{
-		CIEC_DATE_AND_TIME startTime;
-		startTime.setCurrentTime();
-		CIEC_DATE_AND_TIME currentTime;
+	CIEC_DATE_AND_TIME startTime;
+	startTime.setCurrentTime();
+	CIEC_DATE_AND_TIME currentTime;
+	currentTime.setCurrentTime();
+	// TODO uses busy waiting. Is there a better way?
+	while (!self->serverMethodCallResultReady && currentTime.getMilliSeconds() - startTime.getMilliSeconds() < METHOD_CALL_TIMEOUT * 1000) {
 		currentTime.setCurrentTime();
-		// TODO uses busy waiting. Is there a better way?
-		while (!self->serverMethodCallResultReady && currentTime.getMilliSeconds() - startTime.getMilliSeconds() < METHOD_CALL_TIMEOUT * 1000) {
-			currentTime.setCurrentTime();
-		}
-		if (currentTime.getMilliSeconds() - startTime.getMilliSeconds() >= METHOD_CALL_TIMEOUT * 1000) {
-			DEVLOG_ERROR("OPC UA method call did not get result values within timeout.\n");
-			return UA_STATUSCODE_BADTIMEOUT;
-		}
+	}
+	if (currentTime.getMilliSeconds() - startTime.getMilliSeconds() >= METHOD_CALL_TIMEOUT * 1000) {
+		DEVLOG_ERROR("OPC UA method call did not get result values within timeout.\n");
+		return UA_STATUSCODE_BADTIMEOUT;
 	}
 	self->serverMethodCallResultReady = false;
 
