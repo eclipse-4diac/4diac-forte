@@ -201,7 +201,7 @@ MACRO(forte_add_module NAME DISCRIPTION)
 ENDMACRO(forte_add_module)
 
 
-FUNCTION(forte_create_modules_file FORTE_MODULE_DIR)
+FUNCTION(forte_create_modules_file FORTE_MODULE_DIR FORTE_EXTERNAL_MODULE_DIR)
   INCLUDE(${FORTE_BUILDSUPPORT_DIRECTORY}/generate_modules_cmake_file.cmake)
 ENDFUNCTION(forte_create_modules_file)
 
