@@ -14,7 +14,7 @@
 #include <string.h>
 #include <cctype>
 
-MQTTParameterParser::MQTTParameterParser(char* paParameters) : mParameters(paParameters) {
+MQTTParameterParser::MQTTParameterParser(char* paParameters) : mParameters(paParameters), mSeparator(0), parsePosition(0) {
 	mCurrentParameter = 0;
 }
 
