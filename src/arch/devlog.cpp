@@ -55,7 +55,7 @@ void printLogMessage(E_MsgLevel pa_eLevel, const char *pa_acMessage){
   fprintf(stderr, "%s", cg_acLogLevel[pa_eLevel]);
 
   if (CTimerHandler::sm_poFORTETimer != 0){
-    fprintf(stderr,": T#%d%dms: ", CTimerHandler::sm_poFORTETimer->getForteTime().m_nUpperValue, CTimerHandler::sm_poFORTETimer->getForteTime().m_nLowerValue);
+    fprintf(stderr,": T#%u%ums: ", CTimerHandler::sm_poFORTETimer->getForteTime().m_nUpperValue, CTimerHandler::sm_poFORTETimer->getForteTime().m_nLowerValue);
   }
   else{
     fprintf(stderr, "%s", ": T#notime: ");

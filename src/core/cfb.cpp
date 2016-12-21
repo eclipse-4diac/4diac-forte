@@ -75,7 +75,7 @@ bool CCompositeFB::connectDI(TPortId paDIPortId, CDataConnection *paDataCon){
   bool retVal = false;
 
   if(cgInternal2InterfaceMarker & paDIPortId){
-    paDIPortId &= cgInternal2InterfaceRemovalMask;
+    paDIPortId = static_cast<TPortId>(paDIPortId & cgInternal2InterfaceRemovalMask);
     if(paDIPortId < m_pstInterfaceSpec->m_nNumDOs){
       m_apoIn2IfDConns[paDIPortId] = paDataCon;
       retVal = true;

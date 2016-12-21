@@ -11,7 +11,7 @@
 #ifndef _MODBUSCONNECTION_H_
 #define _MODBUSCONNECTION_H_
 
-#include "thread.h"
+#include <forte_thread.h>
 #include <comlayer.h>
 #include "modbushandler.h"
 #include <errno.h>

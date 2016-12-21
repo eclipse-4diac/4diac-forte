@@ -10,8 +10,8 @@
  *    - initial API and implementation and/or initial documentation
  *  Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
-#ifndef _THREAD_H_
-#define _THREAD_H_
+#ifndef _FORTE_THREAD_H_
+#define _FORTE_THREAD_H_
 
 #include "../datatype.h"
 #include "../threadbase.h"
@@ -120,5 +120,5 @@ class CTXThread : public forte::arch::CThreadBase {
 
 };
 
-#endif /*THREAD_H_*/
+#endif /*FORTE_THREAD_H_*/
 

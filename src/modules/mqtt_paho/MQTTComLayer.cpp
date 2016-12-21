@@ -31,10 +31,7 @@ MQTTComLayer::~MQTTComLayer() {
 	// TODO Auto-generated destructor stub
 }
 
-EComResponse MQTTComLayer::sendData(void* pa_pvData,
-		unsigned int pa_unSize) {
-
-	MQTTClient_deliveryToken token;
+EComResponse MQTTComLayer::sendData(void* pa_pvData, unsigned int pa_unSize) {
 	MQTTClient_message message = MQTTClient_message_initializer;
 	message.payload = pa_pvData;
 	message.payloadlen = pa_unSize;

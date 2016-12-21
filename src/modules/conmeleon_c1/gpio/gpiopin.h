@@ -25,7 +25,7 @@
 #define GPIO_GPIOPIN_H_
 
 #include "../util/uncopyable.h"
-#include "../../../arch/posix/sync.h"
+#include "../../../arch/posix/forte_sync.h"
 #include <cstdio>
 #include <fstream>
 #include <mutex>

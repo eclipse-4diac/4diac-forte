@@ -11,8 +11,8 @@
  *  Alois Zoitl  - taken this file from the Posix version and adapted it for
  *                 Mac OS
  *******************************************************************************/
-#ifndef _SYNC_H_
-#define _SYNC_H_
+#ifndef _FORTE_SYNC_H_
+#define _FORTE_SYNC_H_
 
 #include <pthread.h>
 
@@ -48,4 +48,4 @@ class CMacOsSyncObject{
 typedef CMacOsSyncObject CSyncObject;  //allows that doxygen can generate better documenation
 
 
-#endif /*SYNC_H_*/
+#endif /*FORTE_SYNC_H_*/
