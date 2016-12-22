@@ -15,6 +15,14 @@
 namespace EmBrick {
 
 const char * const ProcessInterface::scmOK = "OK";
+const char * const ProcessInterface::scmWaitingForHandle =
+    "Waiting for handle..";
+const char * const ProcessInterface::scmFailedToRegister =
+    "Failed to register observer.";
+const char * const ProcessInterface::scmMappedWrongDirectionOutput =
+    "Mapped invalid direction. A Q block requires an output handle.";
+const char * const ProcessInterface::scmMappedWrongDirectionInput =
+    "Mapped invalid direction. An I block requires an input handle.";
 const char * const ProcessInterface::scmMappedWrongDataType =
     "Mapped invalid data type.";
 
@@ -24,6 +32,7 @@ ProcessInterface::ProcessInterface(CResource *paSrcRes,
     TForteByte *paFBConnData, TForteByte *paFBVarsData) :
     CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId,
         paFBConnData, paFBVarsData), IOObserver() {
+  isListening = false;
   isReady = false;
   isInput = false;
 }
@@ -36,17 +45,22 @@ bool ProcessInterface::initialise(bool paIsInput) {
   isInput = paIsInput;
 
   isReady = false;
-  QO() = false;
+  STATUS() = scmWaitingForHandle;
 
   // Register interface
-  IOMapper::getInstance().registerObserver(getInstanceName(), this);
+  if (!(isListening = IOMapper::getInstance().registerObserver(
+      getInstanceName(), this))) {
+    STATUS() = scmFailedToRegister;
+    return false;
+  }
 
   return isReady;
 }
 
 bool ProcessInterface::deinitialise() {
   // Deregister interface
-  IOMapper::getInstance().deregisterObserver(this);
+  if (isListening)
+    IOMapper::getInstance().deregisterObserver(this);
 
   return !isReady;
 }
@@ -112,6 +126,8 @@ bool ProcessInterface::onChange() {
     QO() = readWord();
   } else if (handle->is(CIEC_ANY::e_DWORD)) {
     QO() = readDWord();
+  } else {
+    return false;
   }
 
   return true;
@@ -121,15 +137,25 @@ void ProcessInterface::onHandle(IOHandle* handle) {
   IOObserver::onHandle(handle);
 
   if (isInput) {
-    setEventChainExecutor(m_poInvokingExecEnv);
-
     if (!handle->is(getDO(2)->getDataTypeID())) {
       STATUS() = scmMappedWrongDataType;
       return;
     }
+
+    if (!handle->is(IOHandle::Input)) {
+      STATUS() = scmMappedWrongDirectionInput;
+      return;
+    }
+
+    setEventChainExecutor(m_poInvokingExecEnv);
   } else {
     if (!handle->is(getDI(2)->getDataTypeID())) {
       STATUS() = scmMappedWrongDataType;
+      return;
+    }
+
+    if (!handle->is(IOHandle::Output)) {
+      STATUS() = scmMappedWrongDirectionOutput;
       return;
     }
   }

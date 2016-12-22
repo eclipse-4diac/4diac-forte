@@ -91,24 +91,24 @@ void Slave2181::executeEvent(int pa_nEIID) {
 
 void Slave2181::initHandles() {
   // 8 Inputs
-  addInputBitHandle(DigitalInput1(), 0, 0);
-  addInputBitHandle(DigitalInput2(), 0, 1);
-  addInputBitHandle(DigitalInput3(), 0, 2);
-  addInputBitHandle(DigitalInput4(), 0, 3);
-  addInputBitHandle(DigitalInput5(), 0, 4);
-  addInputBitHandle(DigitalInput6(), 0, 5);
-  addInputBitHandle(DigitalInput7(), 0, 6);
-  addInputBitHandle(DigitalInput8(), 0, 7);
+  addBitHandle(IOHandle::Input, DigitalInput1(), 0, 0);
+  addBitHandle(IOHandle::Input, DigitalInput2(), 0, 1);
+  addBitHandle(IOHandle::Input, DigitalInput3(), 0, 2);
+  addBitHandle(IOHandle::Input, DigitalInput4(), 0, 3);
+  addBitHandle(IOHandle::Input, DigitalInput5(), 0, 4);
+  addBitHandle(IOHandle::Input, DigitalInput6(), 0, 5);
+  addBitHandle(IOHandle::Input, DigitalInput7(), 0, 6);
+  addBitHandle(IOHandle::Input, DigitalInput8(), 0, 7);
 
   // 8 Outputs
-  addOutputBitHandle(DigitalOutput1(), 0, 0);
-  addOutputBitHandle(DigitalOutput2(), 0, 1);
-  addOutputBitHandle(DigitalOutput3(), 0, 2);
-  addOutputBitHandle(DigitalOutput4(), 0, 3);
-  addOutputBitHandle(DigitalOutput5(), 0, 4);
-  addOutputBitHandle(DigitalOutput6(), 0, 5);
-  addOutputBitHandle(DigitalOutput7(), 0, 6);
-  addOutputBitHandle(DigitalOutput8(), 0, 7);
+  addBitHandle(IOHandle::Output, DigitalOutput1(), 0, 0);
+  addBitHandle(IOHandle::Output, DigitalOutput2(), 0, 1);
+  addBitHandle(IOHandle::Output, DigitalOutput3(), 0, 2);
+  addBitHandle(IOHandle::Output, DigitalOutput4(), 0, 3);
+  addBitHandle(IOHandle::Output, DigitalOutput5(), 0, 4);
+  addBitHandle(IOHandle::Output, DigitalOutput6(), 0, 5);
+  addBitHandle(IOHandle::Output, DigitalOutput7(), 0, 6);
+  addBitHandle(IOHandle::Output, DigitalOutput8(), 0, 7);
 }
 
 } /* namespace FunctionsBlocks */

@@ -15,6 +15,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <forte_wstring.h>
 
 namespace EmBrick {
 
@@ -38,6 +39,11 @@ protected:
 
   unsigned int pin;
   std::fstream stream;
+
+  bool hasError() {
+    return error != 0;
+  }
+  const char* error;
 
 private:
   void fail(const char* reason);

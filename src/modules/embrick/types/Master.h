@@ -12,7 +12,9 @@
 #ifndef SRC_MODULES_EMBRICK_TYPES_MASTER_H_
 #define SRC_MODULES_EMBRICK_TYPES_MASTER_H_
 
-#include <funcbloc.h>
+#include <esfb.h>
+#include <resource.h>
+
 #include <forte_bool.h>
 #include <forte_wstring.h>
 #include <devlog.h>
@@ -23,7 +25,7 @@
 namespace EmBrick {
 namespace FunctionBlocks {
 
-class Master: public CFunctionBlock {
+class Master: public CEventSourceFB {
 DECLARE_FIRMWARE_FB(Master)
 
 private:
@@ -69,16 +71,27 @@ private:
 
   FORTE_FB_DATA_ARRAY(2, 2, 2, 1)
 
-  BusHandler *bus;
   void executeEvent(int pa_nEIID);
 
 public:
-  FUNCTION_BLOCK_CTOR(Master){
-  bus = NULL;
-}
+  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(Master, CEventSourceFB) {
 
-virtual ~Master();
+  }
 
+  Master(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
+      const CStringDictionary::TStringId paInstanceNameId,
+      TForteByte *paFBConnData, TForteByte *paFBVarsData);
+  virtual ~Master();
+
+private:
+  BusHandler *bus;
+  int errorCounter;
+
+  void init();
+  void onError();
+
+  static const char * const scmOK;
+  static const char * const scmFailedToInitSlaves;
 };
 
 } /* namespace FunctionsBlocks */

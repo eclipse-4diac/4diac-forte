@@ -44,14 +44,16 @@ DECLARE_SINGLETON(BusHandler)
   friend class Slave;
 
 public:
-  void init();
+  CEventSourceFB *delegate;
 
-  bool ready();
-  void waitForInit();
+  bool hasError();
+  const char* getStatus();
 
   Slave* getSlave(int index);
 
 protected:
+  bool init();
+
   bool transfer(unsigned int target, Command cmd, unsigned char* dataSend =
   NULL, int dataSendLength = 0, unsigned char* dataReceive = NULL,
       int dataReceiveLength = 0, SlaveStatus* status = NULL,
@@ -84,7 +86,10 @@ protected:
 
   // Sync
   bool isReady;
-  CSyncObject readyMutex;
+
+  // Error
+  const char* error;
+  bool checkHandlerError();
 
 private:
   uint64_t micros();
@@ -95,9 +100,14 @@ private:
 
   unsigned char sendBuffer[TransferBufferLength];
   unsigned char recvBuffer[TransferBufferLength];
-  std::string bytesToHex(unsigned char* bytes, int length);
 
   static const unsigned char ChecksumConstant = 0x55;
+
+  static const char * const scmOK;
+  static const char * const scmWaitingForInit;
+  static const char * const scmFailedToInit;
+public:
+  static std::string bytesToHex(unsigned char* bytes, int length);
 };
 
 }

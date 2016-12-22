@@ -42,10 +42,15 @@ protected:
   virtual void dropHandle();
 
 private:
+  bool isListening;
   bool isReady;
   bool isInput;
 
   static const char * const scmOK;
+  static const char * const scmWaitingForHandle;
+  static const char * const scmFailedToRegister;
+  static const char * const scmMappedWrongDirectionOutput;
+  static const char * const scmMappedWrongDirectionInput;
   static const char * const scmMappedWrongDataType;
 };
 

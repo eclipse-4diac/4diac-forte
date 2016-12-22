@@ -22,9 +22,11 @@
 
 namespace EmBrick {
 
+class Slave;
+
 class SlaveHandle: public IOHandle {
 public:
-  SlaveHandle(unsigned char* buffer, uint8_t offset, CSyncObject *syncMutex);
+  SlaveHandle(IOHandle::Direction direction, uint8_t offset, Slave *slave);
   virtual ~SlaveHandle();
 
   virtual bool equal(unsigned char*) = 0;
@@ -36,8 +38,8 @@ protected:
 
 class BitSlaveHandle: public SlaveHandle {
 public:
-  BitSlaveHandle(unsigned char* buffer, uint8_t offset, uint8_t position,
-  CSyncObject *syncMutex);
+  BitSlaveHandle(IOHandle::Direction direction, uint8_t offset,
+      uint8_t position, Slave *slave);
 
   void set(const CIEC_ANY &);
   void get(CIEC_ANY &);
@@ -50,8 +52,8 @@ protected:
 
 class Analog10SlaveHandle: public SlaveHandle {
 public:
-  Analog10SlaveHandle(unsigned char* buffer, uint8_t offset,
-  CSyncObject *syncMutex);
+  Analog10SlaveHandle(IOHandle::Direction direction, uint8_t offset,
+      Slave *slave);
 
   void set(const CIEC_ANY &);
   void get(CIEC_ANY &);
@@ -64,8 +66,8 @@ protected:
 
 class AnalogSlaveHandle: public SlaveHandle {
 public:
-  AnalogSlaveHandle(unsigned char* buffer, uint8_t offset,
-  CSyncObject *syncMutex);
+  AnalogSlaveHandle(IOHandle::Direction direction, uint8_t offset,
+      Slave *slave);
 
   void set(const CIEC_ANY &);
   void get(CIEC_ANY &);

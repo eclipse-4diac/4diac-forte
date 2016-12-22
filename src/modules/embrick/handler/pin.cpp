@@ -19,10 +19,10 @@ const char * const PinHandler::scmFailedToOpenFile =
 const char * const PinHandler::scmFailedToWriteFile =
     "Failed to write sysfs file.";
 const char * const PinHandler::scmNotInitialised =
-    "Failed to write to not initialised stream.";
+    "Failed to write to not initialised sysfs stream.";
 
 PinHandler::PinHandler(unsigned int pin) :
-    pin(pin) {
+    pin(pin), error(0) {
   // Disable buffer to avoid latency
   stream.rdbuf()->pubsetbuf(0, 0);
 
@@ -123,7 +123,7 @@ bool PinHandler::set(bool state) {
 }
 
 void PinHandler::fail(const char* reason) {
-  // TODO Implement error handler
+  error = reason;
   DEVLOG_ERROR("emBrick[PinHandler]: %s\n", reason);
 }
 

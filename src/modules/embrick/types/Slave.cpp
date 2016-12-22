@@ -61,53 +61,25 @@ bool Slave::init(int index) {
   if (slave->type != type)
     return false;
 
+  if (ready)
+    slave->dropHandles();
+
   initHandles();
 
   return true;
 }
 
-void Slave::addInputBitHandle(CIEC_WSTRING id, uint8_t offset, uint8_t pos) {
+void Slave::addBitHandle(IOHandle::Direction direction, CIEC_WSTRING id,
+    uint8_t offset, uint8_t pos) {
   if (id == "")
     return;
 
-  SlaveHandle* handle = new BitSlaveHandle(slave->updateReceiveImage, offset,
-      pos, &slave->syncMutex);
-  slave->addInputHandle(handle);
+  SlaveHandle* handle = new BitSlaveHandle(direction, offset, pos, slave);
 
-  IOMapper::getInstance().registerHandle(id, handle);
-}
-
-void Slave::addOutputBitHandle(CIEC_WSTRING id, uint8_t offset, uint8_t pos) {
-  if (id == "")
-    return;
-
-  SlaveHandle* handle = new BitSlaveHandle(slave->updateSendImage, offset, pos,
-      &slave->syncMutex);
-  slave->addOutputHandle(handle);
-
-  IOMapper::getInstance().registerHandle(id, handle);
-}
-
-void Slave::addInputAnalog10Handle(CIEC_WSTRING id, uint8_t offset) {
-  if (id == "")
-    return;
-
-  SlaveHandle* handle = new Analog10SlaveHandle(slave->updateReceiveImage,
-      offset, &slave->syncMutex);
-  slave->addInputHandle(handle);
-
-  IOMapper::getInstance().registerHandle(id, handle);
-}
-
-void Slave::addOutputAnalog10Handle(CIEC_WSTRING id, uint8_t offset) {
-  if (id == "")
-    return;
-
-  SlaveHandle* handle = new Analog10SlaveHandle(slave->updateSendImage, offset,
-      &slave->syncMutex);
-  slave->addOutputHandle(handle);
-
-  IOMapper::getInstance().registerHandle(id, handle);
+  if (IOMapper::getInstance().registerHandle(id, handle))
+    slave->addHandle(handle);
+  else
+    delete handle;
 }
 
 } /* namespace FunctionsBlocks */

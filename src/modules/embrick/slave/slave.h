@@ -57,11 +57,11 @@ public:
     return getHandle(&outputs, index);
   }
 
-  void addInputHandle(SlaveHandle* handle) {
-    addHandle(&inputs, handle);
-  }
-  void addOutputHandle(SlaveHandle* handle) {
-    addHandle(&outputs, handle);
+  void addHandle(SlaveHandle* handle) {
+    if (handle->is(IOHandle::Input))
+      addHandle(&inputs, handle);
+    else if (handle->is(IOHandle::Output))
+      addHandle(&outputs, handle);
   }
 
   void dropHandles();

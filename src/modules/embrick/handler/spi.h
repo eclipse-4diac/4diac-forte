@@ -15,6 +15,8 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <devlog.h>
+#include <forte_wstring.h>
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
 
@@ -32,27 +34,33 @@ protected:
 
   void init();
   void deInit();
-  void fail(const char* reason);
   template<typename T> bool config(unsigned int config,
       unsigned int configVerify, T value);
 
-  bool ready() {
-    return error != NULL;
+  bool hasError() {
+    return error != 0;
   }
-  char * error;
+  const char* error;
+
+  static unsigned long const DefaultSpiSpeed;
+  static unsigned long const MaxSpiSpeed;
+  void setSpeed(const unsigned long speed);
 
 private:
   int fd;
+  unsigned long spiSpeed;
 
   static char const spiMode;
   static char const spiBitOrder;
-  static unsigned long const spiSpeed;
+
+  void fail(const char* reason);
 
   static const char * const scmFailedToInitHandler;
   static const char * const scmFailedToConfigMode;
   static const char * const scmFailedToConfigBitOrder;
   static const char * const scmFailedToConfigSpeed;
   static const char * const scmFailedToTestBus;
+  static const char * const scmFailedToTransferBuffer;
 };
 
 } /* namespace EmBrick */

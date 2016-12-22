@@ -25,7 +25,13 @@ class IOHandle {
   friend class IOMapper;
 
 public:
-  IOHandle();
+  enum Direction
+    : char {
+      Input, Output
+  };
+
+public:
+  IOHandle(Direction direction);
   virtual ~IOHandle();
 
   bool hasObserver() {
@@ -40,6 +46,10 @@ public:
     return this->type == type;
   }
 
+  bool is(Direction direction) {
+    return this->direction == direction;
+  }
+
   virtual void set(const CIEC_ANY &) = 0;
   virtual void get(CIEC_ANY &) = 0;
 
@@ -49,8 +59,7 @@ protected:
 
   IOObserver *observer;
   CIEC_ANY::EDataTypeID type;
-
-  // DISCUSS Should the handle differentiate between inputs and outputs
+  Direction direction;
 };
 
 } /* namespace EmBrick */

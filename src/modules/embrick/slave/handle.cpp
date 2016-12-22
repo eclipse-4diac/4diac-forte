@@ -10,20 +10,25 @@
  *******************************************************************************/
 
 #include "handle.h"
+#include "slave.h"
 
 namespace EmBrick {
 
-SlaveHandle::SlaveHandle(unsigned char* buffer, uint8_t offset,
-CSyncObject *syncMutex) :
-    buffer(buffer), offset(offset), syncMutex(syncMutex) {
+SlaveHandle::SlaveHandle(IOHandle::Direction direction, uint8_t offset,
+    Slave *slave) :
+    IOHandle(direction), offset(offset), syncMutex(&slave->syncMutex) {
+  if (direction == IOHandle::Input)
+    buffer = slave->updateReceiveImage;
+  else if (direction == IOHandle::Output)
+    buffer = slave->updateSendImage;
 }
 
 SlaveHandle::~SlaveHandle() {
 }
 
-BitSlaveHandle::BitSlaveHandle(unsigned char* buffer, uint8_t offset,
-    uint8_t position, CSyncObject *syncMutex) :
-    SlaveHandle(buffer, offset, syncMutex), mask((uint8_t) (1 << position)) {
+BitSlaveHandle::BitSlaveHandle(IOHandle::Direction direction, uint8_t offset,
+    uint8_t position, Slave *slave) :
+    SlaveHandle(direction, offset, slave), mask((uint8_t) (1 << position)) {
   type = CIEC_ANY::e_BOOL;
 }
 
@@ -50,9 +55,9 @@ bool BitSlaveHandle::equal(unsigned char* oldBuffer) {
   return (*(buffer + offset) & mask) == (*(oldBuffer + offset) & mask);
 }
 
-Analog10SlaveHandle::Analog10SlaveHandle(unsigned char* buffer, uint8_t offset,
-CSyncObject *syncMutex) :
-    SlaveHandle(buffer, offset, syncMutex) {
+Analog10SlaveHandle::Analog10SlaveHandle(IOHandle::Direction direction,
+    uint8_t offset, Slave *slave) :
+    SlaveHandle(direction, offset, slave) {
   type = CIEC_ANY::e_DWORD;
 }
 
@@ -81,9 +86,9 @@ const CIEC_DWORD Analog10SlaveHandle::getValue(const unsigned char* buffer) {
   return (*(buffer + offset + 1) & 0x03) * 256 + *(buffer + offset);
 }
 
-AnalogSlaveHandle::AnalogSlaveHandle(unsigned char* buffer, uint8_t offset,
-CSyncObject *syncMutex) :
-    SlaveHandle(buffer, offset, syncMutex) {
+AnalogSlaveHandle::AnalogSlaveHandle(IOHandle::Direction direction,
+    uint8_t offset, Slave *slave) :
+    SlaveHandle(direction, offset, slave) {
   type = CIEC_ANY::e_DWORD;
 }
 

@@ -52,7 +52,7 @@ Slave* Slave::sendInit(int address) {
   // Send init via broadcast. Due to the sequential slave select activation, only one slave will respond.
   if (!bus.broadcast(Init, sendBuffer, sizeof(Packages::MasterInit),
       receiveBuffer, sizeof(Packages::SlaveInit)))
-    return NULL;
+    return 0;
 
   Packages::SlaveInit initPackage = Packages::SlaveInit::fromBuffer(
       receiveBuffer);
@@ -116,6 +116,8 @@ void Slave::addHandle(TSlaveHandleList* list, SlaveHandle* handle) {
   syncMutex.lock();
   list->push_back(handle);
   syncMutex.unlock();
+
+  // TODO Maybe send indication event after connecting
 }
 
 SlaveHandle* Slave::getHandle(TSlaveHandleList* list, int index) {

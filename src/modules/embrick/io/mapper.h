@@ -27,10 +27,10 @@ class IOMapper {
 DECLARE_SINGLETON (IOMapper)
 
 public:
-  void registerHandle(CIEC_WSTRING const &id, IOHandle* handle);
+  bool registerHandle(CIEC_WSTRING const &id, IOHandle* handle);
   void deregisterHandle(IOHandle* handle);
 
-  void registerObserver(CIEC_WSTRING const &id, IOObserver* observer);
+  bool registerObserver(CIEC_WSTRING const &id, IOObserver* observer);
   void deregisterObserver(IOObserver* observer);
 
 private:

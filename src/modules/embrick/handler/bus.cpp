@@ -17,10 +17,15 @@
 
 namespace EmBrick {
 
+const char * const BusHandler::scmOK = "OK";
+const char * const BusHandler::scmWaitingForInit =
+    "Waiting for initialization..";
+const char * const BusHandler::scmFailedToInit = "Failed to init BusHandler.";
+
 DEFINE_SINGLETON(BusHandler)
 
 BusHandler::BusHandler() :
-    nextLoop(0), spi(NULL), slaveSelect(NULL), slaves(NULL) {
+    delegate(0), nextLoop(0), spi(0), slaveSelect(0), slaves(0) {
   // Set init time
   struct timespec ts;
   // TODO Check compile error. Had to to add rt libary to c++ make flags
@@ -31,56 +36,82 @@ BusHandler::BusHandler() :
 
   // Sync
   isReady = false;
+  error = 0;
 }
 
 BusHandler::~BusHandler() {
 }
 
 void BusHandler::run() {
-  readyMutex.lock();
-
-  // TODO Check status of handler errors
-  DEVLOG_INFO("emBrick[BusHandler]: Handlers ready.\n");
+  isReady = false;
+  error = 0;
 
   // Init bus
-  init();
-  isReady = true;
-  readyMutex.unlock();
+  if (init()) {
+    isReady = true;
 
-  unsigned long ms;
+    DEVLOG_INFO("emBrick[BusHandler]: Ready.\n");
 
-  unsigned long durations[10];
-  uint8_t durationIndex = 0;
+    // Inform delegate
+    if (delegate != 0)
+      startNewEventChain(delegate);
 
-  while (isAlive()) {
-    ms = millis();
+    unsigned long ms;
 
-    while (nextLoop > ms) {
-      microsleep(std::min((nextLoop - ms), (unsigned long) 2) * 1000);
+    unsigned long durations[10];
+    uint8_t durationIndex = 0;
 
-      // TODO Check for updates of forte runtime -> maybe schedule next loop earlier
-      // DISCUSS Use cond_timed_wait pthread to wake up thread
+    while (isAlive()) {
       ms = millis();
+
+      while (nextLoop > ms) {
+        microsleep(std::min((nextLoop - ms), (unsigned long) 2) * 1000);
+
+        // TODO Check for updates of forte runtime -> maybe schedule next loop earlier
+        // DISCUSS Use cond_timed_wait pthread to wake up thread
+        ms = millis();
+      }
+
+      // TODO Perform requests to slaves
+      // DISCUSS Use scheduling strategy or a cyclic routine
+      TSlaveList::Iterator itEnd(slaves->end());
+      for (TSlaveList::Iterator it = slaves->begin(); it != itEnd; ++it) {
+        // TODO Add proper error handling -> allow some failures of slaves
+        if(!(*it)->update()) {
+          error = "Update failed.";
+        }
+      }
+
+      // TODO Delete debugging statements
+      durations[durationIndex] = millis() - ms;
+      durationIndex = (durationIndex + 1) % 10;
+
+      // Check for critical bus errors
+      if (checkHandlerError() || hasError()) {
+        // Inform delegate
+        if (delegate != 0)
+          startNewEventChain(delegate);
+        break;
+      }
+
+      // Sleep till next cycle - pause at least a certain time to avoid blocking of the forte process
+      ms = millis();
+      nextLoop = ms + std::max(10 - ms % 10, (unsigned long) 2);
     }
 
-    // TODO Perform requests to slaves
-    // DISCUSS Use scheduling strategy or a cyclic routine
-    TSlaveList::Iterator itEnd(slaves->end());
-    for (TSlaveList::Iterator it = slaves->begin(); it != itEnd; ++it) {
-      (*it)->update();
-    }
+    DEVLOG_INFO("emBrick[BusHandler]: Last loop durations:\n");
+    for (uint8_t i = 0; i < 10; i++)
+      DEVLOG_INFO("- %d\n", durations[i]);
+  } else {
+    if (!hasError())
+      error = scmFailedToInit;
 
-    // Sleep till next cycle - pause at least a certain time to avoid blocking of the forte process
-    durations[durationIndex] = millis() - ms;
-    durationIndex = (durationIndex + 1) % 10;
-//    DEVLOG_INFO("emBrick[BusHandler]: Loop %d\n", ms);
-    ms = millis();
-    nextLoop = ms + std::max(10 - ms % 10, (unsigned long) 2);
+    // Inform delegate
+    if (delegate != 0)
+      startNewEventChain(delegate);
   }
 
-  DEVLOG_INFO("emBrick[BusHandler]: Last loop durations:\n");
-  for (uint8_t i = 0; i < 10; i++)
-    DEVLOG_INFO("- %d\n", durations[i]);
+  isReady = false;
 
   // Free memory
   TSlaveList::Iterator itEnd(slaves->end());
@@ -91,13 +122,23 @@ void BusHandler::run() {
   delete slaveSelect;
 
   DEVLOG_INFO("emBrick[BusHandler]: Stopped.\n");
+
+  // TODO Remove statement
+  // DISCUSS The thread init fails without the statement.
+  // Is it possible that the function returns before the thread was stopped?
+  while (isAlive())
+    sleep(1);
 }
 
-void BusHandler::init() {
+bool BusHandler::init() {
   // Start handlers
   spi = new SPIHandler();
   slaveSelect = new PinHandler(49);
   slaves = new TSlaveList();
+
+  // Check handlers
+  if (checkHandlerError())
+    return false;
 
   // Disable slave select -> reset all slaves
   slaveSelect->disable();
@@ -114,12 +155,12 @@ void BusHandler::init() {
   // Init the slaves sequentially. Abort if the init package is ignored -> no further slaves found.
   int slaveCounter = 1;
   int attempts = 0;
-  Slave *slave = NULL;
+  Slave *slave = 0;
 
   do {
     slave = Slave::sendInit(slaveCounter);
 
-    if (slave != NULL) {
+    if (slave != 0) {
       slaves->push_back(slave);
 
       // Activate next slave by sending the 'SelectNextSlave' command to the current slave
@@ -132,28 +173,51 @@ void BusHandler::init() {
 
     microsleep(SyncGapDuration * 2);
   } while (++attempts < 3);
+
+  // Increase the speed of the bus for data transfers
+  spi->setSpeed(SPIHandler::MaxSpiSpeed);
+
+  return true;
 }
 
-bool BusHandler::ready() {
-  bool r = false;
-  readyMutex.lock();
-  r = isReady;
-  readyMutex.unlock();
-  return r;
+bool BusHandler::hasError() {
+  return error != 0;
 }
 
-void BusHandler::waitForInit() {
-  while (!ready())
-    sleep(1);
+bool BusHandler::checkHandlerError() {
+  if (spi->hasError()) {
+    error = spi->error;
+    return true;
+  }
+
+  if (slaveSelect->hasError()) {
+    error = slaveSelect->error;
+    return true;
+  }
+
+  return false;
+}
+
+const char* BusHandler::getStatus() {
+  if (!isReady && error == 0)
+    return scmWaitingForInit;
+
+  if (hasError())
+    return error;
+
+  return scmOK;
 }
 
 Slave* BusHandler::getSlave(int index) {
+  if (slaves == 0)
+    return 0;
+
   TSlaveList::Iterator itEnd = slaves->end();
   int i = 0;
   for (TSlaveList::Iterator it = slaves->begin(); it != itEnd; ++it, i++)
     if (index == i)
       return *it;
-  return NULL;
+  return 0;
 }
 
 bool BusHandler::transfer(unsigned int target, Command cmd,
@@ -192,7 +256,7 @@ bool BusHandler::transfer(unsigned int target, Command cmd,
     sendBuffer[i] = (unsigned char) ~sendBuffer[i];
 
   // Send and receive buffer via SPI
-  int attempts = 10;
+  int attempts = 3;
   int fails = 0;
   bool ok;
   uint64_t microTime;
@@ -204,26 +268,28 @@ bool BusHandler::transfer(unsigned int target, Command cmd,
 
     ok = spi->transfer(sendBuffer, recvBuffer, bufferLength);
     lastTransfer = micros();
-    if (!ok) {
-      DEVLOG_ERROR("emBrick[BusHandler]: Failed to transfer buffer.\n");
+
+    // Critical error of bus -> break immediately
+    if (!ok)
       break;
-    }
 
 //		DEVLOG_INFO("emBrick[BusHandler]: RX - %s, CS - %d\n",
 //				bytesToHex(recvBuffer, bufferLength).c_str(),
 //				calcChecksum(recvBuffer, bufferLength));
 
-    ok = calcChecksum(recvBuffer, bufferLength) == 0;
+    ok = calcChecksum(recvBuffer + sizeof(Packages::Header),
+        bufferLength - sizeof(Packages::Header)) == 0;
     if (!ok) {
       DEVLOG_DEBUG("emBrick[BusHandler]: Transfer - Invalid checksum\n");
     }
   } while (!ok && ++fails < attempts);
 
   if (!ok) {
-    if (target != 0)
-      DEVLOG_ERROR(
+    if (target != 0) {
+      DEVLOG_DEBUG(
           "emBrick[BusHandler]: Failed to send command %d to slave %d.\n", cmd,
           target);
+    }
     return false;
   }
 
@@ -231,7 +297,7 @@ bool BusHandler::transfer(unsigned int target, Command cmd,
   if (syncMutex)
     syncMutex->lock();
   if (status)
-    *status = (SlaveStatus) recvBuffer[0];
+    *status = (SlaveStatus) recvBuffer[sizeof(Packages::Header)];
 
   memcpy(dataReceive, recvBuffer + sizeof(Packages::Header) + 1,
       dataReceiveLength);
@@ -284,7 +350,7 @@ void BusHandler::microsleep(unsigned long microseconds) {
   struct timespec ts;
   ts.tv_sec = microseconds / (unsigned long) 1E6;
   ts.tv_nsec = microseconds * 1E3 - ts.tv_sec * 1E9;
-  nanosleep(&ts, NULL);
+  nanosleep(&ts, 0);
 }
 
 std::string BusHandler::bytesToHex(unsigned char* bytes, int length) {

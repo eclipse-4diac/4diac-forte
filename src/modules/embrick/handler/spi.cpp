@@ -10,13 +10,13 @@
  *******************************************************************************/
 
 #include "spi.h"
-#include <devlog.h>
 
 namespace EmBrick {
 
+unsigned long const SPIHandler::DefaultSpiSpeed = 300000;
+unsigned long const SPIHandler::MaxSpiSpeed = 500000;
 char const SPIHandler::spiMode = SPI_CPHA;
 char const SPIHandler::spiBitOrder = 0; // MSB first
-unsigned long const SPIHandler::spiSpeed = 180000;
 
 const char * const SPIHandler::scmFailedToInitHandler =
     "Failed to init spidev handler. Check if spi is enabled.";
@@ -28,9 +28,11 @@ const char * const SPIHandler::scmFailedToConfigSpeed =
     "Failed to config spi speed.";
 const char * const SPIHandler::scmFailedToTestBus =
     "Failed to send test byte to spi.";
+const char * const SPIHandler::scmFailedToTransferBuffer =
+    "Failed to transfer buffer via spi.";
 
 SPIHandler::SPIHandler() :
-    error(NULL) {
+    error(0) {
   init();
 }
 
@@ -54,8 +56,9 @@ void SPIHandler::init() {
     return fail(scmFailedToConfigBitOrder);
 
   // Set speed
-  if (!config(SPI_IOC_WR_MAX_SPEED_HZ, SPI_IOC_RD_MAX_SPEED_HZ, spiSpeed))
+  if (!config(SPI_IOC_WR_MAX_SPEED_HZ, SPI_IOC_RD_MAX_SPEED_HZ, MaxSpiSpeed))
     return fail(scmFailedToConfigSpeed);
+  spiSpeed = DefaultSpiSpeed;
 
   // Test
   unsigned char testByte[1] = { 0 };
@@ -90,13 +93,13 @@ template<typename T> bool SPIHandler::config(unsigned int config,
 }
 
 void SPIHandler::fail(const char* reason) {
-  // TODO Handle errors -> set error state
-  error = (char*) reason;
-  DEVLOG_ERROR("emBrick[SPIHandler]: %s\n", reason);
+  error = reason;
+  DEVLOG_ERROR("emBrick[SPIHandler]: %s\n", error);
 }
 
 bool SPIHandler::transfer(unsigned char* sendBuffer,
     unsigned char* receiveBuffer, int length) {
+
   struct spi_ioc_transfer msg;
 
   msg.tx_buf = (unsigned long) sendBuffer;
@@ -110,10 +113,16 @@ bool SPIHandler::transfer(unsigned char* sendBuffer,
 
   // Send data to spi bus
   int status = ioctl(fd, SPI_IOC_MESSAGE(1), &msg);
-  if (status < 0)
+  if (status < 0) {
+    fail(scmFailedToTransferBuffer);
     return false;
+  }
 
   return true;
+}
+
+void SPIHandler::setSpeed(const unsigned long speed) {
+  spiSpeed = speed;
 }
 
 } /* namespace EmBrick */

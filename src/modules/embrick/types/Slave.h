@@ -54,11 +54,8 @@ protected:
   virtual bool init(int index);
   virtual void initHandles() = 0;
 
-  void addInputBitHandle(CIEC_WSTRING id, uint8_t offset, uint8_t pos);
-  void addOutputBitHandle(CIEC_WSTRING id, uint8_t offset, uint8_t pos);
-
-  void addInputAnalog10Handle(CIEC_WSTRING id, uint8_t offset);
-  void addOutputAnalog10Handle(CIEC_WSTRING id, uint8_t offset);
+  void addBitHandle(IOHandle::Direction direction, CIEC_WSTRING id,
+      uint8_t offset, uint8_t pos);
 };
 
 } /* namespace FunctionsBlocks */

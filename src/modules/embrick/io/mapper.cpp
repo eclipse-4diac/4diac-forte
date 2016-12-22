@@ -24,13 +24,20 @@ IOMapper::~IOMapper() {
 
 }
 
-void IOMapper::registerHandle(CIEC_WSTRING const &id, IOHandle* handle) {
+bool IOMapper::registerHandle(CIEC_WSTRING const &id, IOHandle* handle) {
   std::string idStr(id.getValue());
 
   syncMutex.lock();
 
-  // TODO Handle duplicate ids
-  // DISCUSS change IOMapper from 1-1 to n-m model
+  // Check for duplicates
+  if (handles.find(idStr) != handles.end()) {
+    DEVLOG_WARNING("emBrick[IOMapper]: Duplicated handle entry '%s'\n",
+        id.getValue());
+    syncMutex.unlock();
+    return false;
+  }
+
+  // Insert into handles list
   handles.insert(std::make_pair(idStr, handle));
 
   // Check for existing observer
@@ -61,13 +68,20 @@ void IOMapper::deregisterHandle(IOHandle* handle) {
   syncMutex.unlock();
 }
 
-void IOMapper::registerObserver(CIEC_WSTRING const &id, IOObserver* observer) {
+bool IOMapper::registerObserver(CIEC_WSTRING const &id, IOObserver* observer) {
   std::string idStr(id.getValue());
 
   syncMutex.lock();
 
-  // TODO Handle duplicate ids
-  // DISCUSS change IOMapper from 1-1 to n-m model
+  // Check for duplicates
+  if (observers.find(idStr) != observers.end()) {
+    DEVLOG_WARNING("emBrick[IOMapper]: Duplicated observer entry '%s'\n",
+        id.getValue());
+    syncMutex.unlock();
+    return false;
+  }
+
+  // Insert into observer list
   observers.insert(std::make_pair(idStr, observer));
 
   // Check for existing handle

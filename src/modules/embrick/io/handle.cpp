@@ -15,8 +15,8 @@
 
 namespace EmBrick {
 
-IOHandle::IOHandle() :
-    observer(NULL), type(CIEC_ANY::e_ANY) {
+IOHandle::IOHandle(Direction direction) :
+    observer(NULL), type(CIEC_ANY::e_ANY), direction(direction) {
 
 }
 
