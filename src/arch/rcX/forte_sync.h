@@ -8,8 +8,8 @@
  * Contributors:
  *  Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _SYNC_H_
-#define _SYNC_H_
+#ifndef _FORTE_SYNC_H_
+#define _FORTE_SYNC_H_
 
 #include <rX_Includes.h>
 
@@ -46,4 +46,4 @@ class CrcXSyncObject{
 
 typedef CrcXSyncObject CSyncObject; //allows that doxygen can generate better documentation
 
-#endif /*SYNC_H_*/
+#endif /*FORTE_SYNC_H_*/

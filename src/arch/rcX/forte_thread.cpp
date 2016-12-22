@@ -9,8 +9,9 @@
  *  Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
+#include "forte_thread.h"
+
 #include <fortenew.h>
-#include "thread.h"
 #include "../devlog.h"
 #include <criticalregion.h>
 

@@ -21,8 +21,8 @@
 #include "../../core/extevhan.h"
 #include "../../core/cominfra/comlayer.h"
 #include "../../core/utils/singlet.h"
-#include "thread.h"
-#include <sync.h>
+#include "forte_sync.h"
+#include "forte_thread.h"
 
 
 class CrcXSocketInterface : public CExternalEventHandler, private CThread{

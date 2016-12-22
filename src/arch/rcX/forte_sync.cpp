@@ -9,8 +9,9 @@
  *  Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
+#include "forte_sync.h"
+
 #include "rcXUtilities.h"
-#include "sync.h"
 #include <fortenew.h>
 #include "../devlog.h"
 

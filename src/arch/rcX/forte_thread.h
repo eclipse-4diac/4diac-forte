@@ -8,12 +8,12 @@
  * Contributors:
  *  Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _THREAD_H_
-#define _THREAD_H_
+#ifndef _FORTE_THREAD_H_
+#define _FORTE_THREAD_H_
 
 #include <rX_Includes.h>
 #include "../threadbase.h"
-#include <sync.h>
+#include "forte_sync.h"
 
 class CrcXThread : public forte::arch::CThreadBase {
   public:
@@ -82,5 +82,5 @@ class CrcXThread : public forte::arch::CThreadBase {
 
 typedef CrcXThread CThread;  //allows that doxygen can generate better documentation
 
-#endif /*THREAD_H_*/
+#endif /*FORTE_THREAD_H_*/
 
