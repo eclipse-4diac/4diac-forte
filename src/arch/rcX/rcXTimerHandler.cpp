@@ -18,13 +18,10 @@ void CTimerHandler::createTimerHandler(void){
     sm_poFORTETimer = new CrcXTimerHandler();
 }
 
-CrcXTimerHandler::CrcXTimerHandler() : mTimer(0){
+CrcXTimerHandler::CrcXTimerHandler() : mTimer(0), mFirstTime(true){
   mTimer = forte_malloc(RX_TIMER_SIZE);
   if(0 == mTimer){
     DEVLOG_ERROR("Not enough memory to allocate %l bytes for creating a new timer\n", RX_TIMER_SIZE);
-  }else{
-    rX_TimCreateTimer(mTimer, timerCallback, (void*) &sm_poFORTETimer, RX_TIM_AUTO_RELOAD, (1000000 / rX_SysGetSystemCycletime()) / getTicksPerSecond(),
-        (1000000 / rX_SysGetSystemCycletime()) / getTicksPerSecond());
   }
 }
 
@@ -35,12 +32,18 @@ CrcXTimerHandler::~CrcXTimerHandler(){
 }
 
 void CrcXTimerHandler::timerCallback(void* arguments){
-  CTimerHandler* forteTimer = static_cast<CTimerHandler*>(arguments); //TODO: check if using directly the static sm_poFORTETimer instead of the argument is more efficient
-  forteTimer->nextTick();
+  CTimerHandler** forteTimer = static_cast<CTimerHandler**>(arguments); //TODO: check if using directly the static sm_poFORTETimer instead of the argument is more efficient
+  (*forteTimer)->nextTick();
 }
 
 void CrcXTimerHandler::enableHandler(void){
-  rX_TimResetTimer(mTimer);
+  if (mFirstTime){
+	  rX_TimCreateTimer(mTimer, timerCallback, (void*) &sm_poFORTETimer, RX_TIM_AUTO_RELOAD, (1000000 / rX_SysGetSystemCycletime()) / getTicksPerSecond(),
+	          (1000000 / rX_SysGetSystemCycletime()) / getTicksPerSecond());
+	  mFirstTime = false;
+	}else{
+	  rX_TimResetTimer(mTimer);
+	}
 }
 
 void CrcXTimerHandler::disableHandler(void){
