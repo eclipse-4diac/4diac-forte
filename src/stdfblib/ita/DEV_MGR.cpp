@@ -521,9 +521,9 @@ void DEV_MGR::generateLongResponse(EMGMResponse pa_eResp, forte::core::SManageme
       }
     }
     else if(pa_stCMD.mCMD == cg_nMGM_CMD_QUERY_FBTypes){
-      RESP().append("<FBList>\n    ");
+      RESP().append("<NameList>\n    ");
       RESP().append(pa_stCMD.mAdditionalParams.getValue());
-      RESP().append("\n  </FBList>");
+      RESP().append("\n  </NameList>");
     }
     else if(pa_stCMD.mCMD == cg_nMGM_CMD_QUERY_DTTypes){
       RESP().append("<DTList>\n    ");
@@ -531,9 +531,9 @@ void DEV_MGR::generateLongResponse(EMGMResponse pa_eResp, forte::core::SManageme
       RESP().append("\n  </DTList>");
     }
     else if(pa_stCMD.mCMD == cg_nMGM_CMD_QUERY_AdapterTypes){
-      RESP().append("<AdapterList>\n    ");
+      RESP().append("<NameList>\n    ");
       RESP().append(pa_stCMD.mAdditionalParams.getValue());
-      RESP().append("\n  </AdapterList>");
+      RESP().append("\n  </NameList>");
     }
 #endif
   }
