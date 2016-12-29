@@ -88,7 +88,7 @@ void Master::executeEvent(int pa_nEIID) {
       STATUS() = scmFailedToInitSlaves;
       DEVLOG_ERROR("emBrick[Master]: Failed to init BusHandler. Reason: %s\n",
           STATUS().getValue());
-      onError();
+      onError(false);
     }
   }
 
@@ -150,19 +150,20 @@ void Master::init() {
   bus->start();
 }
 
-void Master::onError() {
+void Master::onError(bool isFatal) {
   // TODO Replace with unblocking timer
   sleep(errorCounter);
 
   errorCounter++;
+  bool retry = errorCounter < 5;
 
   // Check if bus is running
-  if (bus->isAlive()) {
+  if ((isFatal || retry) && bus->isAlive()) {
     bus->end();
   }
 
   // ReInit Bus
-  if (errorCounter < 3) {
+  if (retry) {
     init();
   } else {
     QO() = false;

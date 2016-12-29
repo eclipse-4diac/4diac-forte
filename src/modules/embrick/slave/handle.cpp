@@ -11,12 +11,15 @@
 
 #include "handle.h"
 #include "slave.h"
+#include <handler/bus.h>
+#include <io/mapper.h>
 
 namespace EmBrick {
 
 SlaveHandle::SlaveHandle(IOHandle::Direction direction, uint8_t offset,
     Slave *slave) :
-    IOHandle(direction), offset(offset), syncMutex(&slave->syncMutex) {
+    IOHandle(direction), offset(offset), index(slave->index()), syncMutex(
+        &slave->syncMutex) {
   if (direction == IOHandle::Input)
     buffer = slave->updateReceiveImage;
   else if (direction == IOHandle::Output)
@@ -24,6 +27,10 @@ SlaveHandle::SlaveHandle(IOHandle::Direction direction, uint8_t offset,
 }
 
 SlaveHandle::~SlaveHandle() {
+}
+
+void SlaveHandle::set(const CIEC_ANY &) {
+  BusHandler::getInstance().forceUpdate(index);
 }
 
 BitSlaveHandle::BitSlaveHandle(IOHandle::Direction direction, uint8_t offset,
@@ -41,6 +48,8 @@ void BitSlaveHandle::set(const CIEC_ANY &state) {
     *(buffer + offset) = (uint8_t) (*(buffer + offset) & ~mask);
 
   syncMutex->unlock();
+
+  SlaveHandle::set(state);
 }
 
 void BitSlaveHandle::get(CIEC_ANY &state) {
@@ -68,6 +77,8 @@ void Analog10SlaveHandle::set(const CIEC_ANY &value) {
   *(buffer + offset + 1) = (static_cast<const CIEC_DWORD&>(value) / 256) & 0x03;
 
   syncMutex->unlock();
+
+  SlaveHandle::set(value);
 }
 
 void Analog10SlaveHandle::get(CIEC_ANY &value) {
@@ -99,6 +110,8 @@ void AnalogSlaveHandle::set(const CIEC_ANY &value) {
   *(buffer + offset + 1) = static_cast<const CIEC_DWORD&>(value) / 256;
 
   syncMutex->unlock();
+
+  SlaveHandle::set(value);
 }
 
 void AnalogSlaveHandle::get(CIEC_ANY &value) {

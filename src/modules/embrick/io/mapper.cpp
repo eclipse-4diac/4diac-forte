@@ -49,6 +49,8 @@ bool IOMapper::registerHandle(CIEC_WSTRING const &id, IOHandle* handle) {
   }
 
   syncMutex.unlock();
+
+  return true;
 }
 
 void IOMapper::deregisterHandle(IOHandle* handle) {
@@ -93,6 +95,8 @@ bool IOMapper::registerObserver(CIEC_WSTRING const &id, IOObserver* observer) {
   }
 
   syncMutex.unlock();
+
+  return true;
 }
 
 void IOMapper::deregisterObserver(IOObserver* observer) {

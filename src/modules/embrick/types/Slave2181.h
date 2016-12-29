@@ -27,9 +27,6 @@ DECLARE_FIRMWARE_FB(Slave2181)
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_BOOL &QI() {
-    return *static_cast<CIEC_BOOL*>(getDI(0));
-  }
 
   CIEC_WSTRING &DigitalInput1() {
     return *static_cast<CIEC_WSTRING*>(getDI(1));
@@ -101,9 +98,6 @@ private:
   CIEC_WSTRING &STATUS() {
     return *static_cast<CIEC_WSTRING*>(getDO(1));
   }
-
-  static const TEventID scm_nEventREQID = 0;
-  static const TEventID scm_nEventMAPID = 1;
   static const TForteInt16 scm_anEIWithIndexes[];
   static const TDataIOID scm_anEIWith[];
   static const CStringDictionary::TStringId scm_anEventInputNames[];
@@ -118,8 +112,6 @@ private:
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
   FORTE_FB_DATA_ARRAY(1, 17, 2, 2)
-
-  virtual void executeEvent(int pa_nEIID);
 
   virtual void initHandles();
 

@@ -15,8 +15,10 @@
 
 namespace EmBrick {
 
+const int Slave::MaxUpdateErrors = 50;
+
 Slave::Slave(int address, Packages::SlaveInit init) :
-    address(address), type((SlaveType) init.deviceId), dataSendLength(
+    delegate(0), address(address), type((SlaveType) init.deviceId), dataSendLength(
         init.dataSendLength), dataReceiveLength(init.dataReceiveLength), status(
         NotInitialized) {
   bus = &BusHandler::getInstance();
@@ -27,14 +29,19 @@ Slave::Slave(int address, Packages::SlaveInit init) :
   memset(updateSendImage, 0, dataSendLength);
   memset(updateReceiveImage, 0, dataReceiveLength);
   memset(updateReceiveImageOld, 0, dataReceiveLength);
+
+  updateErrorCounter = 0;
 }
 
 Slave::~Slave() {
+  dropHandles();
+
   delete updateSendImage;
   delete updateReceiveImage;
   delete updateReceiveImageOld;
 
-  dropHandles();
+  if (delegate != 0)
+    delegate->onSlaveDestroy();
 }
 
 Slave* Slave::sendInit(int address) {
@@ -70,12 +77,12 @@ Slave* Slave::sendInit(int address) {
 }
 
 bool Slave::update() {
-  // TODO Prepare the send image
-
   // Send update request to bus
   if (!bus->transfer(address, Data, updateSendImage, dataSendLength,
-      updateReceiveImage, dataReceiveLength, &status, &syncMutex))
-    return false;
+      updateReceiveImage, dataReceiveLength, &status, &syncMutex)) {
+    updateErrorCounter++;
+    return updateErrorCounter <= MaxUpdateErrors;
+  }
 
 // Handle the received image
   syncMutex.lock();
@@ -92,6 +99,10 @@ bool Slave::update() {
 
   // Clone current image to old image
   memcpy(updateReceiveImageOld, updateReceiveImage, dataReceiveLength);
+
+  // Reset error counter
+  if (updateErrorCounter > 0)
+    updateErrorCounter = 0;
 
   return true;
 }

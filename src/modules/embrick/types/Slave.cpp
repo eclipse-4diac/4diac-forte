@@ -20,14 +20,22 @@ Slave::Slave(CResource *pa_poSrcRes,
     const CStringDictionary::TStringId pa_nInstanceNameId,
     TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
     CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId,
-        pa_acFBConnData, pa_acFBVarsData), type(UnknownSlave), slave(NULL), ready(false) {
+        pa_acFBConnData, pa_acFBVarsData), type(UnknownSlave), slave(0), ready(
+        false) {
+
+}
+
+Slave::~Slave() {
 
 }
 
 void Slave::executeEvent(int pa_nEIID) {
   if (BusAdapterIn().INIT() == pa_nEIID) {
     // Init slave
+    slaveMutex.lock();
     QO() = ready = init(BusAdapterIn().INDEX());
+    slaveMutex.unlock();
+
     if (QO())
       DEVLOG_INFO("emBrick[SlaveFunctionBlock]: Init slave %d success.\n",
           (int ) BusAdapterIn().INDEX());
@@ -49,9 +57,35 @@ void Slave::executeEvent(int pa_nEIID) {
     BusAdapterIn().QO() = BusAdapterOut().QO() && QO();
     sendAdapterEvent(scm_nBusAdapterInAdpNum, BusAdapter::scm_nEventINITOID);
   }
+
+  switch (pa_nEIID) {
+    case scm_nEventREQID:
+      // TODO add code for REQ event!
+      /*
+       do not forget to send output event, calling e.g.
+       sendOutputEvent(scm_nEventCNFID);
+       */
+      break;
+    case scm_nEventMAPID:
+      slaveMutex.lock();
+
+      if (!ready)
+        break;
+
+      // Drop all existing handles
+      dropHandles();
+
+      if (true == QI())
+        initHandles();
+
+      slaveMutex.unlock();
+      break;
+    }
 }
 
 bool Slave::init(int index) {
+  slave = 0;
+
   BusHandler &bus = BusHandler::getInstance();
 
   slave = bus.getSlave(index);
@@ -61,12 +95,17 @@ bool Slave::init(int index) {
   if (slave->type != type)
     return false;
 
-  if (ready)
-    slave->dropHandles();
+  slave->delegate = this;
 
-  initHandles();
+  dropHandles();
+  if (true == QI())
+    initHandles();
 
   return true;
+}
+
+void Slave::dropHandles() {
+  slave->dropHandles();
 }
 
 void Slave::addBitHandle(IOHandle::Direction direction, CIEC_WSTRING id,
@@ -80,6 +119,15 @@ void Slave::addBitHandle(IOHandle::Direction direction, CIEC_WSTRING id,
     slave->addHandle(handle);
   else
     delete handle;
+}
+
+void Slave::onSlaveDestroy() {
+  slaveMutex.lock();
+
+  slave = 0;
+  QO() = ready = false;
+
+  slaveMutex.unlock();
 }
 
 } /* namespace FunctionsBlocks */

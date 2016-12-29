@@ -29,11 +29,14 @@ public:
   SlaveHandle(IOHandle::Direction direction, uint8_t offset, Slave *slave);
   virtual ~SlaveHandle();
 
+  virtual void set(const CIEC_ANY &);
   virtual bool equal(unsigned char*) = 0;
 
 protected:
   unsigned char* buffer;
-  const uint8_t offset;CSyncObject *syncMutex;
+  const uint8_t offset;
+  const int index;
+  CSyncObject *syncMutex;
 };
 
 class BitSlaveHandle: public SlaveHandle {
@@ -41,7 +44,7 @@ public:
   BitSlaveHandle(IOHandle::Direction direction, uint8_t offset,
       uint8_t position, Slave *slave);
 
-  void set(const CIEC_ANY &);
+  virtual void set(const CIEC_ANY &);
   void get(CIEC_ANY &);
 
   virtual bool equal(unsigned char* oldBuffer);
@@ -55,7 +58,7 @@ public:
   Analog10SlaveHandle(IOHandle::Direction direction, uint8_t offset,
       Slave *slave);
 
-  void set(const CIEC_ANY &);
+  virtual void set(const CIEC_ANY &);
   void get(CIEC_ANY &);
 
   virtual bool equal(unsigned char* oldBuffer);
@@ -69,7 +72,7 @@ public:
   AnalogSlaveHandle(IOHandle::Direction direction, uint8_t offset,
       Slave *slave);
 
-  void set(const CIEC_ANY &);
+  virtual void set(const CIEC_ANY &);
   void get(CIEC_ANY &);
 
   virtual bool equal(unsigned char* oldBuffer);

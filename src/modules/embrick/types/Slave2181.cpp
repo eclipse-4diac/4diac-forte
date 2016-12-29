@@ -65,30 +65,6 @@ const SFBInterfaceSpec Slave2181::scm_stFBInterfaceSpec = { 2,
     scm_anDataInputNames, scm_anDataInputTypeIds, 2, scm_anDataOutputNames,
     scm_anDataOutputTypeIds, 2, scm_astAdapterInstances };
 
-void Slave2181::executeEvent(int pa_nEIID) {
-  Slave::executeEvent(pa_nEIID);
-
-  switch (pa_nEIID) {
-  case scm_nEventREQID:
-    // TODO add code for REQ event!
-    /*
-     do not forget to send output event, calling e.g.
-     sendOutputEvent(scm_nEventCNFID);
-     */
-    break;
-  case scm_nEventMAPID:
-    if (!ready)
-      break;
-
-    // Drop all existing handles
-    slave->dropHandles();
-
-    if (true == QI())
-      initHandles();
-    break;
-  }
-}
-
 void Slave2181::initHandles() {
   // 8 Inputs
   addBitHandle(IOHandle::Input, DigitalInput1(), 0, 0);

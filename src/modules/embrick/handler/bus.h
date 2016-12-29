@@ -24,7 +24,6 @@
 #include "spi.h"
 #include "pin.h"
 #include <slave/slave.h>
-#include <forte_sem.h>
 #include <forte_sync.h>
 #include <forte_thread.h>
 
@@ -50,7 +49,7 @@ public:
   const char* getStatus();
 
   Slave* getSlave(int index);
-
+  void forceUpdate(int index);
 protected:
   bool init();
 
@@ -73,7 +72,8 @@ protected:
   void setPriority(int paPriority);
   int getPriority(void) const;
 
-  unsigned long nextLoop;
+  struct timespec lastLoop;
+  struct timespec nextLoop;
   uint64_t lastTransfer;
 
   // Handlers
@@ -83,19 +83,38 @@ protected:
   // Slaves
   typedef CSinglyLinkedList<Slave *> TSlaveList;
   TSlaveList *slaves;
+  int slaveCount;
 
   // Sync
   bool isReady;
+  pthread_cond_t loopCond;
+  pthread_mutex_t loopMutex;
+  bool loopPending;
 
   // Error
   const char* error;
   bool checkHandlerError();
+
+  // Scheduling
+  struct SEntry {
+    Slave *slave;
+    struct timespec nextDeadline;
+    uint16_t durations[5];
+    uint8_t durationI;
+    bool forced;
+  };
+  struct SEntry **sList;
+  SEntry *sNext;
+  int sNextI;
 
 private:
   uint64_t micros();
   unsigned long millis();
   time_t initTime;
   void microsleep(unsigned long microseconds);
+  void addTime(struct timespec& t, unsigned long microseconds);
+  bool cmpTime(struct timespec& t1, struct timespec& t2);
+
   unsigned char calcChecksum(unsigned char * data, int dataLen);
 
   unsigned char sendBuffer[TransferBufferLength];

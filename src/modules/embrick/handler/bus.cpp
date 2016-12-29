@@ -25,7 +25,7 @@ const char * const BusHandler::scmFailedToInit = "Failed to init BusHandler.";
 DEFINE_SINGLETON(BusHandler)
 
 BusHandler::BusHandler() :
-    delegate(0), nextLoop(0), spi(0), slaveSelect(0), slaves(0) {
+    delegate(0), spi(0), slaveSelect(0), slaves(0), slaveCount(0) {
   // Set init time
   struct timespec ts;
   // TODO Check compile error. Had to to add rt libary to c++ make flags
@@ -37,9 +37,28 @@ BusHandler::BusHandler() :
   // Sync
   isReady = false;
   error = 0;
+
+  // TODO Wrap pthread logic into helper class
+  pthread_condattr_t loopCondAttr;
+  pthread_condattr_init(&loopCondAttr);
+  pthread_condattr_setclock(&loopCondAttr, CLOCK_MONOTONIC);
+
+  pthread_cond_init(&loopCond, &loopCondAttr);
+
+  pthread_condattr_destroy(&loopCondAttr);
+
+  pthread_mutexattr_t loopMutexAttr;
+  pthread_mutexattr_init(&loopMutexAttr);
+  pthread_mutexattr_settype(&loopMutexAttr, PTHREAD_MUTEX_RECURSIVE_NP);
+
+  pthread_mutex_init(&loopMutex, &loopMutexAttr);
+
+  pthread_mutexattr_destroy(&loopMutexAttr);
 }
 
 BusHandler::~BusHandler() {
+  pthread_cond_destroy(&loopCond);
+  pthread_mutex_destroy(&loopMutex);
 }
 
 void BusHandler::run() {
@@ -56,52 +75,84 @@ void BusHandler::run() {
     if (delegate != 0)
       startNewEventChain(delegate);
 
-    unsigned long ms;
+    uint64_t ms;
+    int rc, i;
 
-    unsigned long durations[10];
-    uint8_t durationIndex = 0;
+    clock_gettime(CLOCK_MONOTONIC, &nextLoop);
 
+    // Scheduling
+    // TODO Combine slaves list and scheduling information
+    // DISCUSS Speed of array and forte_list?
+    TSlaveList::Iterator it = slaves->begin();
+    sList = (struct SEntry**) forte_malloc(sizeof(struct SEntry*) * slaveCount);
+    for (i = 0; i < slaveCount; i++) {
+      sList[i] = (struct SEntry*) forte_malloc(sizeof(struct SEntry));
+      sList[i]->slave = *it;
+      sList[i]->nextDeadline = nextLoop;
+      sList[i]->durationI = 0;
+      sList[i]->durations[0] = 0;
+      sList[i]->forced = false;
+
+      ++it;
+    }
+    sNextI = 0;
+    sNext = sList[sNextI];
+    loopPending = false;
+    SEntry *sCur = 0;
+    int sCurI = 0;
+
+    pthread_mutex_lock(&loopMutex);
     while (isAlive()) {
-      ms = millis();
+      pthread_cond_timedwait(&loopCond, &loopMutex, &sNext->nextDeadline);
 
-      while (nextLoop > ms) {
-        microsleep(std::min((nextLoop - ms), (unsigned long) 2) * 1000);
+      loopPending = true;
+      sCur = sNext;
+      sCurI = sNextI;
+      pthread_mutex_unlock(&loopMutex);
 
-        // TODO Check for updates of forte runtime -> maybe schedule next loop earlier
-        // DISCUSS Use cond_timed_wait pthread to wake up thread
-        ms = millis();
-      }
+      ms = micros();
 
-      // TODO Perform requests to slaves
-      // DISCUSS Use scheduling strategy or a cyclic routine
-      TSlaveList::Iterator itEnd(slaves->end());
-      for (TSlaveList::Iterator it = slaves->begin(); it != itEnd; ++it) {
-        // TODO Add proper error handling -> allow some failures of slaves
-        if(!(*it)->update()) {
-          error = "Update failed.";
+      // Perform update on current slave
+      if (!sCur->slave->update()) {
+        error = "Update failed.";
+        // Check for critical bus errors
+        if (checkHandlerError() || hasError()) {
+          // Inform delegate
+          if (delegate != 0)
+            startNewEventChain(delegate);
+          break;
         }
       }
 
-      // TODO Delete debugging statements
-      durations[durationIndex] = millis() - ms;
-      durationIndex = (durationIndex + 1) % 10;
+      // Set next deadline of current slave
+      clock_gettime(CLOCK_MONOTONIC, &sCur->nextDeadline);
+      // TODO Replace with dynamic configuration
+      addTime(sCur->nextDeadline, sCurI == 0 ? 3000 : 40000);
+      sCur->forced = false;
 
-      // Check for critical bus errors
-      if (checkHandlerError() || hasError()) {
-        // Inform delegate
-        if (delegate != 0)
-          startNewEventChain(delegate);
-        break;
+
+      sCur->durationI = (sCur->durationI + 1) % 5;
+      sCur->durations[sCur->durationI] = micros() - ms;
+
+//      DEVLOG_INFO("%d\n", sCurI);
+
+      // Search for next deadline
+      pthread_mutex_lock(&loopMutex);
+      loopPending = false;
+
+      for (i = 0; i < slaveCount; i++) {
+        if (cmpTime(sList[i]->nextDeadline, sNext->nextDeadline)) {
+          sNext = sList[i];
+          sNextI = i;
+        }
       }
-
-      // Sleep till next cycle - pause at least a certain time to avoid blocking of the forte process
-      ms = millis();
-      nextLoop = ms + std::max(10 - ms % 10, (unsigned long) 2);
     }
+    pthread_mutex_unlock(&loopMutex);
 
     DEVLOG_INFO("emBrick[BusHandler]: Last loop durations:\n");
-    for (uint8_t i = 0; i < 10; i++)
-      DEVLOG_INFO("- %d\n", durations[i]);
+    for (uint8_t i = 0; i < slaveCount; i++)
+      for (uint8_t j = 0; j < 5; j++)
+        DEVLOG_INFO("%d - %d\n", i, sList[i]->durations[j]);
   } else {
     if (!hasError())
       error = scmFailedToInit;
@@ -118,6 +169,9 @@ void BusHandler::run() {
   for (TSlaveList::Iterator it = slaves->begin(); it != itEnd; ++it)
     delete *it;
   delete slaves;
+  for (int i = 0; i < slaveCount; i++)
+    forte_free(sList[i]);
+  forte_free(sList);
   delete spi;
   delete slaveSelect;
 
@@ -144,7 +198,7 @@ bool BusHandler::init() {
   slaveSelect->disable();
 
   // Wait for reset
-  microsleep(SyncGapDuration * 2);
+  sleep(1);
 
   // Enable slave select -> the first slave waits for initialization
   slaveSelect->enable();
@@ -173,6 +227,8 @@ bool BusHandler::init() {
 
     microsleep(SyncGapDuration * 2);
   } while (++attempts < 3);
+
+  slaveCount = slaveCounter - 1;
 
   // Increase the speed of the bus for data transfers
   spi->setSpeed(SPIHandler::MaxSpiSpeed);
@@ -218,6 +274,32 @@ Slave* BusHandler::getSlave(int index) {
     if (index == i)
       return *it;
   return 0;
+}
+
+void BusHandler::forceUpdate(int index) {
+  pthread_mutex_lock(&loopMutex);
+
+  if (sList[index]->forced) {
+    pthread_mutex_unlock(&loopMutex);
+    return;
+  }
+
+  sList[index]->forced = true;
+  clock_gettime(CLOCK_MONOTONIC, &sList[index]->nextDeadline);
+  if (!loopPending) {
+    // Allow delay of unforced deadlines
+    struct timespec ts = sNext->nextDeadline;
+    addTime(ts, 10000); // TODO Replace with constant
+    if (cmpTime(sList[index]->nextDeadline, ts)) {
+      sNext = sList[index];
+      sNextI = index;
+    }
+
+    // Force next loop
+    pthread_cond_signal(&loopCond);
+  }
+
+  pthread_mutex_unlock(&loopMutex);
 }
 
 bool BusHandler::transfer(unsigned int target, Command cmd,
@@ -351,6 +433,22 @@ void BusHandler::microsleep(unsigned long microseconds) {
   ts.tv_sec = microseconds / (unsigned long) 1E6;
   ts.tv_nsec = microseconds * 1E3 - ts.tv_sec * 1E9;
   nanosleep(&ts, 0);
+}
+
+void BusHandler::addTime(struct timespec& ts, unsigned long microseconds) {
+  ts.tv_sec += microseconds / (unsigned long) 1E6;
+  unsigned long t = ts.tv_nsec + microseconds * (unsigned long) 1E3
+      - (microseconds / (unsigned long) 1E6) * (unsigned long) 1E9;
+  if (t >= (unsigned long) 1E9) {
+    t -= (unsigned long) 1E9;
+    ts.tv_sec++;
+  }
+  ts.tv_nsec = t;
+}
+
+bool BusHandler::cmpTime(struct timespec& t1, struct timespec& t2) {
+  return (t1.tv_nsec < t2.tv_nsec && t1.tv_sec == t2.tv_sec)
+      || t1.tv_sec < t2.tv_sec;
 }
 
 std::string BusHandler::bytesToHex(unsigned char* bytes, int length) {

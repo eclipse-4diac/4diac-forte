@@ -45,7 +45,18 @@ class Slave {
 
 public:
 
+  class Delegate {
+  public:
+    virtual void onSlaveDestroy() = 0;
+  };
+
+  Delegate* delegate;
+
   const unsigned int address;
+  unsigned int index() const {
+    return address - 1;
+  }
+
   const SlaveType type;
 
   bool update();
@@ -82,6 +93,9 @@ protected:
   const uint8_t dataReceiveLength;
   SlaveStatus status;
   unsigned char *updateReceiveImageOld;
+
+  int updateErrorCounter;
+  static const int MaxUpdateErrors;
 
   typedef CSinglyLinkedList<SlaveHandle *> TSlaveHandleList;
   TSlaveHandleList inputs;

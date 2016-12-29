@@ -13,6 +13,7 @@
 #define SRC_MODULES_EMBRICK_PROCESSINTERFACE_H_
 
 #include <io/observer.h>
+#include <forte_sync.h>
 #include <slave/handle.h>
 #include <../../stdfblib/io/processinterfacebase.h>
 
@@ -40,6 +41,8 @@ protected:
 
   virtual void onHandle(IOHandle *handle);
   virtual void dropHandle();
+
+  CSyncObject syncMutex;
 
 private:
   bool isListening;

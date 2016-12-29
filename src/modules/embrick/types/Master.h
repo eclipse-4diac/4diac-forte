@@ -88,7 +88,7 @@ private:
   int errorCounter;
 
   void init();
-  void onError();
+  void onError(bool isFatal = true);
 
   static const char * const scmOK;
   static const char * const scmFailedToInitSlaves;

@@ -47,6 +47,9 @@ bool ProcessInterface::initialise(bool paIsInput) {
   isReady = false;
   STATUS() = scmWaitingForHandle;
 
+  // Reset before initialization
+  deinitialise();
+
   // Register interface
   if (!(isListening = IOMapper::getInstance().registerObserver(
       getInstanceName(), this))) {
@@ -66,110 +69,152 @@ bool ProcessInterface::deinitialise() {
 }
 
 bool ProcessInterface::readPin() {
-  if (!isReady)
+  syncMutex.lock();
+  if (!isReady) {
+    syncMutex.unlock();
     return false;
+  }
 
   handle->get(IN_X());
 
+  syncMutex.unlock();
   return true;
 }
 
 bool ProcessInterface::writePin() {
-  if (!isReady)
+  syncMutex.lock();
+  if (!isReady) {
+    syncMutex.unlock();
     return false;
+  }
 
   handle->set(OUT_X());
 
+  syncMutex.unlock();
   return true;
 }
 
 bool ProcessInterface::readWord() {
-  if (!isReady)
+  syncMutex.lock();
+  if (!isReady) {
+    syncMutex.unlock();
     return false;
+  }
 
   handle->get(IN_W());
 
+  syncMutex.unlock();
   return true;
 }
 
 bool ProcessInterface::writeWord() {
-  if (!isReady)
+  syncMutex.lock();
+  if (!isReady) {
+    syncMutex.unlock();
     return false;
+  }
 
   handle->set(OUT_W());
 
+  syncMutex.unlock();
   return true;
 }
 
 bool ProcessInterface::readDWord() {
-  if (!isReady)
+  syncMutex.lock();
+  if (!isReady) {
+    syncMutex.unlock();
     return false;
+  }
 
   handle->get(IN_D());
 
+  syncMutex.unlock();
   return true;
 }
 
 bool ProcessInterface::writeDWord() {
-  if (!isReady)
+  syncMutex.lock();
+  if (!isReady) {
+    syncMutex.unlock();
     return false;
+  }
 
   handle->set(OUT_D());
 
+  syncMutex.unlock();
   return true;
 }
 
 bool ProcessInterface::onChange() {
-  if (handle->is(CIEC_ANY::e_BOOL)) {
-    QO() = readPin();
-  } else if (handle->is(CIEC_ANY::e_WORD)) {
-    QO() = readWord();
-  } else if (handle->is(CIEC_ANY::e_DWORD)) {
-    QO() = readDWord();
-  } else {
+  syncMutex.lock();
+  if (!isReady) {
+    syncMutex.unlock();
     return false;
   }
 
+  if (handle->is(CIEC_ANY::e_BOOL)) {
+    handle->get(IN_X());
+  } else if (handle->is(CIEC_ANY::e_WORD)) {
+    handle->get(IN_D());
+  } else if (handle->is(CIEC_ANY::e_DWORD)) {
+    handle->get(IN_W());
+  } else {
+    syncMutex.unlock();
+    return false;
+  }
+
+  QO() = true;
+
+  syncMutex.unlock();
   return true;
 }
 
 void ProcessInterface::onHandle(IOHandle* handle) {
+  syncMutex.lock();
+
   IOObserver::onHandle(handle);
 
   if (isInput) {
     if (!handle->is(getDO(2)->getDataTypeID())) {
       STATUS() = scmMappedWrongDataType;
-      return;
+      return syncMutex.unlock();
     }
 
     if (!handle->is(IOHandle::Input)) {
       STATUS() = scmMappedWrongDirectionInput;
-      return;
+      return syncMutex.unlock();
     }
 
     setEventChainExecutor(m_poInvokingExecEnv);
   } else {
     if (!handle->is(getDI(2)->getDataTypeID())) {
       STATUS() = scmMappedWrongDataType;
-      return;
+      return syncMutex.unlock();
     }
 
     if (!handle->is(IOHandle::Output)) {
       STATUS() = scmMappedWrongDirectionOutput;
-      return;
+      return syncMutex.unlock();
     }
   }
 
   STATUS() = scmOK;
   QO() = true;
   isReady = true;
+
+  syncMutex.unlock();
 }
 
 void ProcessInterface::dropHandle() {
+  syncMutex.lock();
+
   IOObserver::dropHandle();
 
   QO() = false;
   isReady = false;
+
+  syncMutex.unlock();
 }
 
 }
