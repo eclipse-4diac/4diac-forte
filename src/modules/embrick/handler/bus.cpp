@@ -37,6 +37,7 @@ BusHandler::BusHandler() :
   // Sync
   isReady = false;
   error = 0;
+  sList = 0;
 
   // TODO Wrap pthread logic into helper class
   pthread_condattr_t loopCondAttr;
@@ -76,9 +77,11 @@ void BusHandler::run() {
       startNewEventChain(delegate);
 
     uint64_t ms;
-    int rc, i;
+    int i, res;
 
     clock_gettime(CLOCK_MONOTONIC, &nextLoop);
+
+    pthread_mutex_lock(&loopMutex);
 
     // Scheduling
     // TODO Combine slaves list and scheduling information
@@ -101,7 +104,6 @@ void BusHandler::run() {
     SEntry *sCur = 0;
     int sCurI = 0;
 
-    pthread_mutex_lock(&loopMutex);
     while (isAlive()) {
       pthread_cond_timedwait(&loopCond, &loopMutex, &sNext->nextDeadline);
 
@@ -113,7 +115,8 @@ void BusHandler::run() {
       ms = micros();
 
       // Perform update on current slave
-      if (!sCur->slave->update()) {
+      res = sCur->slave->update();
+      if (res == -1) {
         error = "Update failed.";
         // Check for critical bus errors
         if (checkHandlerError() || hasError()) {
@@ -127,14 +130,11 @@ void BusHandler::run() {
       // Set next deadline of current slave
       clock_gettime(CLOCK_MONOTONIC, &sCur->nextDeadline);
       // TODO Replace with dynamic configuration
-      addTime(sCur->nextDeadline, sCurI == 0 ? 3000 : 40000);
+      addTime(sCur->nextDeadline, sCurI == 1 ? 3000 : 38000);
       sCur->forced = false;
-
 
       sCur->durationI = (sCur->durationI + 1) % 5;
       sCur->durations[sCur->durationI] = micros() - ms;
-
-//      DEVLOG_INFO("%d\n", sCurI);
 
       // Search for next deadline
       pthread_mutex_lock(&loopMutex);
@@ -172,6 +172,7 @@ void BusHandler::run() {
   for (int i = 0; i < slaveCount; i++)
     forte_free(sList[i]);
   forte_free(sList);
+  sList = 0;
   delete spi;
   delete slaveSelect;
 
@@ -279,7 +280,7 @@ Slave* BusHandler::getSlave(int index) {
 void BusHandler::forceUpdate(int index) {
   pthread_mutex_lock(&loopMutex);
 
-  if (sList[index]->forced) {
+  if (sList == 0 || slaveCount <= index || sList[index]->forced) {
     pthread_mutex_unlock(&loopMutex);
     return;
   }

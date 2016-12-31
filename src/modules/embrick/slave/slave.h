@@ -47,6 +47,7 @@ public:
 
   class Delegate {
   public:
+    virtual void onSlaveStatus(SlaveStatus status, SlaveStatus oldStatus) = 0;
     virtual void onSlaveDestroy() = 0;
   };
 
@@ -59,7 +60,7 @@ public:
 
   const SlaveType type;
 
-  bool update();
+  int update();
 
   SlaveHandle* getInputHandle(int index) {
     return getHandle(&inputs, index);
@@ -92,6 +93,7 @@ protected:
   const uint8_t dataSendLength;
   const uint8_t dataReceiveLength;
   SlaveStatus status;
+  SlaveStatus oldStatus;
   unsigned char *updateReceiveImageOld;
 
   int updateErrorCounter;

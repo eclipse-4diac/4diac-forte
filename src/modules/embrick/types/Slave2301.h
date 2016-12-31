@@ -9,8 +9,8 @@
  *    Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_MODULES_EMBRICK_TYPES_SLAVE2181_H_
-#define SRC_MODULES_EMBRICK_TYPES_SLAVE2181_H_
+#ifndef SRC_MODULES_EMBRICK_TYPES_SLAVE2301_H_
+#define SRC_MODULES_EMBRICK_TYPES_SLAVE2301_H_
 
 #include <funcbloc.h>
 #include <forte_bool.h>
@@ -21,76 +21,36 @@
 namespace EmBrick {
 namespace FunctionBlocks {
 
-class Slave2181: public Slave {
-DECLARE_FIRMWARE_FB(Slave2181)
+class Slave2301: public Slave {
+  DECLARE_FIRMWARE_FB(Slave2301)
 
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
 
-  CIEC_WSTRING &DigitalInput1() {
+  CIEC_WSTRING &Relay1() {
     return *static_cast<CIEC_WSTRING*>(getDI(1));
-  }
+  };
 
-  CIEC_WSTRING &DigitalInput2() {
+  CIEC_WSTRING &Relay2() {
     return *static_cast<CIEC_WSTRING*>(getDI(2));
-  }
+  };
 
-  CIEC_WSTRING &DigitalInput3() {
+  CIEC_WSTRING &Relay3() {
     return *static_cast<CIEC_WSTRING*>(getDI(3));
-  }
+  };
 
-  CIEC_WSTRING &DigitalInput4() {
+  CIEC_WSTRING &Relay4() {
     return *static_cast<CIEC_WSTRING*>(getDI(4));
-  }
+  };
 
-  CIEC_WSTRING &DigitalInput5() {
+  CIEC_WSTRING &Relay5() {
     return *static_cast<CIEC_WSTRING*>(getDI(5));
-  }
+  };
 
-  CIEC_WSTRING &DigitalInput6() {
+  CIEC_WSTRING &Relay6() {
     return *static_cast<CIEC_WSTRING*>(getDI(6));
-  }
-
-  CIEC_WSTRING &DigitalInput7() {
-    return *static_cast<CIEC_WSTRING*>(getDI(7));
-  }
-
-  CIEC_WSTRING &DigitalInput8() {
-    return *static_cast<CIEC_WSTRING*>(getDI(8));
-  }
-
-  CIEC_WSTRING &DigitalOutput1() {
-    return *static_cast<CIEC_WSTRING*>(getDI(9));
-  }
-
-  CIEC_WSTRING &DigitalOutput2() {
-    return *static_cast<CIEC_WSTRING*>(getDI(10));
-  }
-
-  CIEC_WSTRING &DigitalOutput3() {
-    return *static_cast<CIEC_WSTRING*>(getDI(11));
-  }
-
-  CIEC_WSTRING &DigitalOutput4() {
-    return *static_cast<CIEC_WSTRING*>(getDI(12));
-  }
-
-  CIEC_WSTRING &DigitalOutput5() {
-    return *static_cast<CIEC_WSTRING*>(getDI(13));
-  }
-
-  CIEC_WSTRING &DigitalOutput6() {
-    return *static_cast<CIEC_WSTRING*>(getDI(14));
-  }
-
-  CIEC_WSTRING &DigitalOutput7() {
-    return *static_cast<CIEC_WSTRING*>(getDI(15));
-  }
-
-  CIEC_WSTRING &DigitalOutput8() {
-    return *static_cast<CIEC_WSTRING*>(getDI(16));
-  }
+  };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
@@ -108,16 +68,16 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-  FORTE_FB_DATA_ARRAY(1, 17, 2, 2)
+   FORTE_FB_DATA_ARRAY(1, 7, 2, 2);
 
   virtual void initHandles();
 
 public:
-  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(Slave2181, Slave){
-  type = G_8Di8Do;
-};
+  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(Slave2301, Slave){
+    type = G_2RelNo4RelCo;
+  };
 
-virtual ~Slave2181() {};
+  virtual ~Slave2301(){};
 
 };
 

@@ -14,7 +14,7 @@
 namespace EmBrick {
 
 unsigned long const SPIHandler::DefaultSpiSpeed = 300000;
-unsigned long const SPIHandler::MaxSpiSpeed = 500000;
+unsigned long const SPIHandler::MaxSpiSpeed = 600000;
 char const SPIHandler::spiMode = SPI_CPHA;
 char const SPIHandler::spiBitOrder = 0; // MSB first
 

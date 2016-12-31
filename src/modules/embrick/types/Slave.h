@@ -39,6 +39,10 @@ protected:
     return *static_cast<CIEC_BOOL*>(getDO(0));
   }
 
+  CIEC_WSTRING &STATUS() {
+    return *static_cast<CIEC_WSTRING*>(getDO(1));
+  }
+
   static const TEventID scm_nEventREQID = 0;
   static const TEventID scm_nEventMAPID = 1;
 
@@ -68,7 +72,15 @@ protected:
       uint8_t offset, uint8_t pos);
 
 public:
+  void onSlaveStatus(SlaveStatus status, SlaveStatus oldStatus);
   void onSlaveDestroy();
+
+private:
+  static const char * const scmOK;
+  static const char * const scmSlow;
+  static const char * const scmInterrupted;
+  static const char * const scmError;
+  static const char * const scmUnknown;
 };
 
 } /* namespace FunctionsBlocks */

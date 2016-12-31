@@ -33,6 +33,18 @@ void SlaveHandle::set(const CIEC_ANY &) {
   BusHandler::getInstance().forceUpdate(index);
 }
 
+void SlaveHandle::onObserver(IOObserver *observer) {
+  reset();
+
+  IOHandle::onObserver(observer);
+}
+
+void SlaveHandle::dropObserver() {
+  IOHandle::dropObserver();
+
+  reset();
+}
+
 BitSlaveHandle::BitSlaveHandle(IOHandle::Direction direction, uint8_t offset,
     uint8_t position, Slave *slave) :
     SlaveHandle(direction, offset, slave), mask((uint8_t) (1 << position)) {

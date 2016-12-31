@@ -31,8 +31,14 @@ public:
 
   virtual void set(const CIEC_ANY &);
   virtual bool equal(unsigned char*) = 0;
+  virtual void reset() {
+
+  }
 
 protected:
+  virtual void onObserver(IOObserver *observer);
+  virtual void dropObserver();
+
   unsigned char* buffer;
   const uint8_t offset;
   const int index;
@@ -48,6 +54,11 @@ public:
   void get(CIEC_ANY &);
 
   virtual bool equal(unsigned char* oldBuffer);
+
+  virtual void reset() {
+    CIEC_BOOL s = false;
+    set(s);
+  }
 
 protected:
   const uint8_t mask;

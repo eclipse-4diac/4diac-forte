@@ -42,8 +42,8 @@ bool IOMapper::registerHandle(CIEC_WSTRING const &id, IOHandle* handle) {
 
   // Check for existing observer
   if (observers.find(idStr) != observers.end()) {
-    observers[idStr]->onHandle(handle);
     handle->onObserver(observers[idStr]);
+    observers[idStr]->onHandle(handle);
 
     DEVLOG_INFO("emBrick[IOMapper]: Connected %s\n", id.getValue());
   }
@@ -59,8 +59,9 @@ void IOMapper::deregisterHandle(IOHandle* handle) {
   for (THandleMap::iterator it = handles.begin(); it != handles.end(); it++)
     if (it->second == handle) {
       if (observers.find(it->first) != observers.end()) {
+        handle->dropObserver();
         observers[it->first]->dropHandle();
-        DEVLOG_INFO("emBrick[IOMapper]: Disconnected %s\n", it->first.data());
+        DEVLOG_INFO("emBrick[IOMapper]: Disconnected %s (lost handle)\n", it->first.data());
       }
 
       handles.erase(it);
@@ -107,7 +108,8 @@ void IOMapper::deregisterObserver(IOObserver* observer) {
     if (it->second == observer) {
       if (handles.find(it->first) != handles.end()) {
         handles[it->first]->dropObserver();
-        DEVLOG_INFO("emBrick[IOMapper]: Disconnected %s\n", it->first.data());
+        observer->dropHandle();
+        DEVLOG_INFO("emBrick[IOMapper]: Disconnected %s (lost observer)\n", it->first.data());
       }
 
       observers.erase(it);

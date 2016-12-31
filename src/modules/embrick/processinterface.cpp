@@ -68,85 +68,7 @@ bool ProcessInterface::deinitialise() {
   return !isReady;
 }
 
-bool ProcessInterface::readPin() {
-  syncMutex.lock();
-  if (!isReady) {
-    syncMutex.unlock();
-    return false;
-  }
-
-  handle->get(IN_X());
-
-  syncMutex.unlock();
-  return true;
-}
-
-bool ProcessInterface::writePin() {
-  syncMutex.lock();
-  if (!isReady) {
-    syncMutex.unlock();
-    return false;
-  }
-
-  handle->set(OUT_X());
-
-  syncMutex.unlock();
-  return true;
-}
-
-bool ProcessInterface::readWord() {
-  syncMutex.lock();
-  if (!isReady) {
-    syncMutex.unlock();
-    return false;
-  }
-
-  handle->get(IN_W());
-
-  syncMutex.unlock();
-  return true;
-}
-
-bool ProcessInterface::writeWord() {
-  syncMutex.lock();
-  if (!isReady) {
-    syncMutex.unlock();
-    return false;
-  }
-
-  handle->set(OUT_W());
-
-  syncMutex.unlock();
-  return true;
-}
-
-bool ProcessInterface::readDWord() {
-  syncMutex.lock();
-  if (!isReady) {
-    syncMutex.unlock();
-    return false;
-  }
-
-  handle->get(IN_D());
-
-  syncMutex.unlock();
-  return true;
-}
-
-bool ProcessInterface::writeDWord() {
-  syncMutex.lock();
-  if (!isReady) {
-    syncMutex.unlock();
-    return false;
-  }
-
-  handle->set(OUT_D());
-
-  syncMutex.unlock();
-  return true;
-}
-
-bool ProcessInterface::onChange() {
+bool ProcessInterface::read() {
   syncMutex.lock();
   if (!isReady) {
     syncMutex.unlock();
@@ -156,18 +78,42 @@ bool ProcessInterface::onChange() {
   if (handle->is(CIEC_ANY::e_BOOL)) {
     handle->get(IN_X());
   } else if (handle->is(CIEC_ANY::e_WORD)) {
-    handle->get(IN_D());
-  } else if (handle->is(CIEC_ANY::e_DWORD)) {
     handle->get(IN_W());
+  } else if (handle->is(CIEC_ANY::e_DWORD)) {
+    handle->get(IN_D());
   } else {
     syncMutex.unlock();
     return false;
   }
 
-  QO() = true;
+  syncMutex.unlock();
+  return true;
+}
+
+bool ProcessInterface::write() {
+  syncMutex.lock();
+  if (!isReady) {
+    syncMutex.unlock();
+    return false;
+  }
+
+  if (handle->is(CIEC_ANY::e_BOOL)) {
+    handle->set(OUT_X());
+  } else if (handle->is(CIEC_ANY::e_WORD)) {
+    handle->set(OUT_W());
+  } else if (handle->is(CIEC_ANY::e_DWORD)) {
+    handle->set(OUT_D());
+  } else {
+    syncMutex.unlock();
+    return false;
+  }
 
   syncMutex.unlock();
   return true;
+}
+
+bool ProcessInterface::onChange() {
+  return read();
 }
 
 void ProcessInterface::onHandle(IOHandle* handle) {
@@ -200,10 +146,15 @@ void ProcessInterface::onHandle(IOHandle* handle) {
   }
 
   STATUS() = scmOK;
-  QO() = true;
   isReady = true;
 
   syncMutex.unlock();
+
+  // Read & write current state
+  if (isInput)
+    QO() = read();
+  else
+    QO() = write();
 }
 
 void ProcessInterface::dropHandle() {
@@ -212,6 +163,7 @@ void ProcessInterface::dropHandle() {
   IOObserver::dropHandle();
 
   QO() = false;
+  STATUS() = scmWaitingForHandle;
   isReady = false;
 
   syncMutex.unlock();

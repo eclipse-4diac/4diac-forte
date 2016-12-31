@@ -10,7 +10,8 @@
  *******************************************************************************/
 
 #include "slave.h"
-#include "../handler/bus.h"
+#include <handler/bus.h>
+#include <io/mapper.h>
 #include <processinterface.h>
 
 namespace EmBrick {
@@ -20,7 +21,7 @@ const int Slave::MaxUpdateErrors = 50;
 Slave::Slave(int address, Packages::SlaveInit init) :
     delegate(0), address(address), type((SlaveType) init.deviceId), dataSendLength(
         init.dataSendLength), dataReceiveLength(init.dataReceiveLength), status(
-        NotInitialized) {
+        NotInitialized), oldStatus(NotInitialized) {
   bus = &BusHandler::getInstance();
   updateSendImage = new unsigned char[dataSendLength];
   updateReceiveImage = new unsigned char[dataReceiveLength];
@@ -76,12 +77,14 @@ Slave* Slave::sendInit(int address) {
   return new Slave(address, initPackage);
 }
 
-bool Slave::update() {
+int Slave::update() {
   // Send update request to bus
   if (!bus->transfer(address, Data, updateSendImage, dataSendLength,
       updateReceiveImage, dataReceiveLength, &status, &syncMutex)) {
     updateErrorCounter++;
-    return updateErrorCounter <= MaxUpdateErrors;
+    if (updateErrorCounter % 10 == 0)
+      DEVLOG_ERROR("%d %d\n", address, updateErrorCounter);
+    return updateErrorCounter <= MaxUpdateErrors ? 0 : -1;
   }
 
 // Handle the received image
@@ -104,18 +107,30 @@ bool Slave::update() {
   if (updateErrorCounter > 0)
     updateErrorCounter = 0;
 
-  return true;
+  // Check status
+  if (delegate != 0 && oldStatus != status) {
+    delegate->onSlaveStatus(status, oldStatus);
+    oldStatus = status;
+  }
+
+  return 1;
 }
 
 void Slave::dropHandles() {
   syncMutex.lock();
 
+  IOMapper& mapper = IOMapper::getInstance();
+
   TSlaveHandleList::Iterator itEnd = inputs.end();
-  for (TSlaveHandleList::Iterator it = inputs.begin(); it != itEnd; ++it)
+  for (TSlaveHandleList::Iterator it = inputs.begin(); it != itEnd; ++it) {
+    mapper.deregisterHandle(*it);
     delete *it;
+  }
   itEnd = outputs.end();
-  for (TSlaveHandleList::Iterator it = outputs.begin(); it != itEnd; ++it)
+  for (TSlaveHandleList::Iterator it = outputs.begin(); it != itEnd; ++it) {
+    mapper.deregisterHandle(*it);
     delete *it;
+  }
 
   inputs.clearAll();
   outputs.clearAll();

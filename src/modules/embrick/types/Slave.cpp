@@ -15,6 +15,12 @@
 namespace EmBrick {
 namespace FunctionBlocks {
 
+const char * const Slave::scmOK = "OK";
+const char * const Slave::scmSlow = "Slow";
+const char * const Slave::scmInterrupted = "Interrupted";
+const char * const Slave::scmError = "Error";
+const char * const Slave::scmUnknown = "Invalid status code";
+
 Slave::Slave(CResource *pa_poSrcRes,
     const SFBInterfaceSpec *pa_pstInterfaceSpec,
     const CStringDictionary::TStringId pa_nInstanceNameId,
@@ -59,28 +65,28 @@ void Slave::executeEvent(int pa_nEIID) {
   }
 
   switch (pa_nEIID) {
-    case scm_nEventREQID:
-      // TODO add code for REQ event!
-      /*
-       do not forget to send output event, calling e.g.
-       sendOutputEvent(scm_nEventCNFID);
-       */
+  case scm_nEventREQID:
+    // TODO add code for REQ event!
+    /*
+     do not forget to send output event, calling e.g.
+     sendOutputEvent(scm_nEventCNFID);
+     */
+    break;
+  case scm_nEventMAPID:
+    slaveMutex.lock();
+
+    if (!ready)
       break;
-    case scm_nEventMAPID:
-      slaveMutex.lock();
 
-      if (!ready)
-        break;
+    // Drop all existing handles
+    dropHandles();
 
-      // Drop all existing handles
-      dropHandles();
+    if (true == QI())
+      initHandles();
 
-      if (true == QI())
-        initHandles();
-
-      slaveMutex.unlock();
-      break;
-    }
+    slaveMutex.unlock();
+    break;
+  }
 }
 
 bool Slave::init(int index) {
@@ -119,6 +125,26 @@ void Slave::addBitHandle(IOHandle::Direction direction, CIEC_WSTRING id,
     slave->addHandle(handle);
   else
     delete handle;
+}
+
+void Slave::onSlaveStatus(SlaveStatus status, SlaveStatus) {
+  switch (status) {
+  case OK:
+    STATUS() = scmOK;
+    break;
+  case Slow:
+    STATUS() = scmSlow;
+    break;
+  case Interrupted:
+    STATUS() = scmInterrupted;
+    break;
+  case Error:
+    STATUS() = scmError;
+    break;
+  default:
+    STATUS() = scmUnknown;
+    break;
+  }
 }
 
 void Slave::onSlaveDestroy() {
