@@ -35,7 +35,11 @@ ENDFOREACH(MODULE)
 file(WRITE ${CMAKE_BINARY_DIR}/src/modules/CMakeLists_new.txt ${WRITE_FILE})
 
 #second check the external module directory
+message(STATUS "FORTE_EXTERNAL_MODULES_DIRECTORY: " ${FORTE_EXTERNAL_MODULE_DIR})
+
 IF(EXISTS  ${FORTE_EXTERNAL_MODULE_DIR})
+  message(STATUS "external modules dir exists")
+  
   FILE(GLOB_RECURSE EXT_FILES_FOUND "${FORTE_EXTERNAL_MODULE_DIR}/*CMakeLists.txt")
 
   FOREACH(FILE ${EXT_FILES_FOUND})
