@@ -17,7 +17,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
   message("Set an environment vairable WIND_BASE to any value")
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
   
-  forte_add_sourcefile_hcpp(thread vxworkstimeha sync forte_sem)
+  forte_add_sourcefile_hcpp(forte_thread vxworkstimeha forte_sync forte_sem)
   forte_add_sourcefile_cpp(main.cpp)
   
   #SET(ENV{WIND_HOME} "C:/WBOEM69_Rexroth")

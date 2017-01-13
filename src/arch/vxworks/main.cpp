@@ -13,16 +13,6 @@
 #include <signal.h>
 #include "../../stdfblib/ita/RMT_DEV.h"
 
-#include <mlpiGlobal.h>
-#include <mlpiApiLib.h>
-#include <mlpiSystemLib.h>
-#include <mlpiLogicLib.h>
-#include <util/wchar16.h>
-#include <util/vxwHelper.h>
-
-#include <processinterface.h>
-
-
 #ifdef CONFIG_POWERLINK_USERSTACK
 #include <EplWrapper.h>
 #endif
@@ -86,27 +76,10 @@ void listHelp(){
 }
 
 int startForte(){
-  enableTelnetPrintf();
-  enableFpuSupport();
-
-  /*
-   * Starting forte at boot in the PLC has the effect of failing when connecting to the MLPI
-   * probably because the stack is not ready yet. So this waits until 10 seconds or succeed,
-   * whichever happens first, in order to continue.
-   */
-  unsigned int tries = 0;
-  bool connected;
-  connected =  CMLPIFaceProcessInterface::connectToMLPI();
-  while(false == connected && 10 > tries){
-	  sleep(1);
-	  connected =  CMLPIFaceProcessInterface::connectToMLPI();
-	  tries++;
-  }
 
   checkEndianess();
 
   createDev("localhost:61499");
-  CMLPIFaceProcessInterface::disconnectFromMLPI();
   return 0;
 }
 

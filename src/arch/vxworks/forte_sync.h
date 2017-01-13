@@ -8,15 +8,30 @@
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "sync.h"
+#ifndef _FORTE_SYNC_H_
+#define _FORTE_SYNC_H_
 
-CVXWorksSyncObject::CVXWorksSyncObject(){
-  m_oSemBinary = semMCreate(SEM_Q_PRIORITY);
-  if (SEM_ID_NULL == m_oSemBinary){
-	  //TODO: check return value for out_of_memory error
-  }
-}
+#include "vxWorks.h"
+#include "semLib.h"
 
-CVXWorksSyncObject::~CVXWorksSyncObject(){
-  semDelete(m_oSemBinary);
-}
+class CVXWorksSyncObject{
+  public:
+    CVXWorksSyncObject();
+    virtual ~CVXWorksSyncObject();
+
+    void lock(void){
+      semTake(m_oSemBinary, WAIT_FOREVER);
+    }
+
+    void unlock(void){
+      semGive(m_oSemBinary);
+    }
+
+  private:
+    SEM_ID m_oSemBinary;
+
+};
+
+typedef CVXWorksSyncObject CSyncObject; //allows that doxygen can generate better documentation
+
+#endif /*FORTE_SYNC_H_*/

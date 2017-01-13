@@ -10,7 +10,7 @@
  *   Jose Cabral - Cleaning of code and error logging added
  *******************************************************************************/
 #include "processinterface.h"
-
+#include <unistd.h>
 #include <mlpiGlobal.h>
 #include <mlpiApiLib.h>
 #include <mlpiLogicLib.h>
@@ -22,7 +22,6 @@ const char * const CMLPIFaceProcessInterface::scmAPINotInitialised = "API not in
 const char * const CMLPIFaceProcessInterface::scmFBNotInitialised = "FB not initialized";
 const char * const CMLPIFaceProcessInterface::scmCallToApiFailed = "Call to API Failed";
 
-
 /*
  * localhost doesn't connect to MLPI.
  * 192.168.1.110 works perfectly, I had once errors saying that access not granted or something
@@ -32,7 +31,7 @@ const char * const CMLPIFaceProcessInterface::scmCallToApiFailed = "Call to API 
  * Using MLPI_LOCALHOST direclty in the APIConnect call, same as before
  */
 
-const char* const cgConnectionConfig = "192.168.1.110 -user=indraworks -password=indraworks";
+const char* const cgConnectionConfig = "10.200.4.120 -user=indraworks -password=indraworks";
 MLPIHANDLE CMLPIFaceProcessInterface::smConnection  = MLPI_INVALIDHANDLE;
 
 CMLPIFaceProcessInterface::CMLPIFaceProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
@@ -43,11 +42,11 @@ CMLPIFaceProcessInterface::~CMLPIFaceProcessInterface(){
   deinitialise();
 }
 
-void CMLPIFaceProcessInterface::disconnectFromMLPI(){
+void CMLPIFaceProcessInterface::disconnectFromMLPI(){ //TODO: this is never called. Where should it be?
   if(MLPI_INVALIDHANDLE != smConnection){
     MLPIRESULT result = mlpiApiDisconnect(&smConnection);
     if(!MLPI_FAILED(result)){
-      DEVLOG_INFO("Successfully disconnected!\n");
+      DEVLOG_INFO("Successfully disconnected from MLPI!\n");
     }
     else{
       DEVLOG_INFO("Error on disconnect from MLPI with 0x%08x\n", (unsigned ) result);
@@ -80,14 +79,34 @@ bool CMLPIFaceProcessInterface::connectToMLPI(){
 bool CMLPIFaceProcessInterface::initialise(bool ){
   bool retVal = false;
 
-  mVariableName = new WCHAR16[PARAMS().length() + 1];
-  if(0 != mbstowcs16(mVariableName, PARAMS().getValue(), PARAMS().length() + 1)){ //+1 for the copying the null terminator
-    STATUS() = scmOK;
-    retVal = true;
+	/*
+	 * Starting forte at boot in the PLC has the effect of failing when connecting to the MLPI
+	 * probably because the stack is not ready yet. So this waits until MAX_NUMBER_OF_RETRIES_TO_CONNECT seconds or succeed,
+	 * whichever happens first, in order to continue.
+	 */
+  if (MLPI_INVALIDHANDLE == smConnection){
+	  unsigned int connectRetries = 0;
+	  CMLPIFaceProcessInterface::connectToMLPI();
+	  while(MLPI_INVALIDHANDLE == smConnection && MAX_NUMBER_OF_RETRIES_TO_CONNECT > connectRetries){
+      sleep(1);
+      CMLPIFaceProcessInterface::connectToMLPI();
+		  connectRetries++;
+	  }
   }
-  else{
-    DEVLOG_ERROR("Fail transforming the PARAM name\n");
-    STATUS() = scmFBNotInitialised;
+
+  if (MLPI_INVALIDHANDLE != smConnection){
+    mVariableName = new WCHAR16[PARAMS().length() + 1];
+    if(0 != mbstowcs16(mVariableName, PARAMS().getValue(), PARAMS().length() + 1)){ //+1 for the copying the null terminator
+      STATUS() = scmOK;
+      retVal = true;
+    }
+    else{
+      DEVLOG_ERROR("Fail transforming the PARAM name\n");
+      STATUS() = scmFBNotInitialised;
+    }
+  }else{
+    DEVLOG_ERROR("Couldn't initialize API\n");
+    STATUS() = scmAPINotInitialised;
   }
 
   return retVal;

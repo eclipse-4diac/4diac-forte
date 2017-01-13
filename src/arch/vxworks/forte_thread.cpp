@@ -9,9 +9,9 @@
  *  Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "thread.h"
 #include "../devlog.h"
 #include <criticalregion.h>
+#include "forte_thread.h"
 
 #define FORTE_TASK_PRIORITY   25
 

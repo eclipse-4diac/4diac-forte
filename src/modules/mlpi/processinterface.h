@@ -15,6 +15,8 @@
 #include <../../stdfblib/io/processinterfacebase.h>
 #include <mlpiApiLib.h>
 
+#define MAX_NUMBER_OF_RETRIES_TO_CONNECT 10
+
 class CMLPIFaceProcessInterface : public CProcessInterfaceBase{
   public:
     CMLPIFaceProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
@@ -23,9 +25,6 @@ class CMLPIFaceProcessInterface : public CProcessInterfaceBase{
 
     virtual ~CMLPIFaceProcessInterface();
 
-    static bool connectToMLPI();
-    static void disconnectFromMLPI();
-
   protected:
     bool initialise(bool paInput);
     bool deinitialise();
@@ -33,6 +32,10 @@ class CMLPIFaceProcessInterface : public CProcessInterfaceBase{
     bool writePin();
 
   private:
+
+    bool connectToMLPI();
+    void disconnectFromMLPI();
+
     WCHAR16* mVariableName;
 
     static const char * const scmOK;
@@ -40,6 +43,7 @@ class CMLPIFaceProcessInterface : public CProcessInterfaceBase{
     static const char * const scmAPINotInitialised;
     static const char * const scmFBNotInitialised;
     static MLPIHANDLE smConnection;
+
 };
 
 //tell the IX and QX FB that this is the process interface to be used

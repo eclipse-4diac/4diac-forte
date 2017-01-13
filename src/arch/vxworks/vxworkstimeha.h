@@ -11,8 +11,8 @@
 #ifndef _PCTIMEHA_H_
 #define _PCTIMEHA_H_
 
-#include "thread.h"
 #include "../timerha.h"
+#include "forte_thread.h"
 
 class CPCTimerHandler : public CTimerHandler, private CThread{
   public:

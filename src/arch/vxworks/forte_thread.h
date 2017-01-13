@@ -8,13 +8,13 @@
  * Contributors:
  *  Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _THREAD_H_
-#define _THREAD_H_
+#ifndef _FORTE_THREAD_H_
+#define _FORTE_THREAD_H_
 
 #include "vxWorks.h"
 #include "taskLib.h"
 #include "../threadbase.h"
-#include <sync.h>
+#include "forte_sync.h"
 
 class CVxWorksThread : public forte::arch::CThreadBase {
   public:
@@ -71,5 +71,5 @@ class CVxWorksThread : public forte::arch::CThreadBase {
 
 typedef CVxWorksThread CThread;  //allows that doxygen can generate better documentation
 
-#endif /*THREAD_H_*/
+#endif /*FORTE_THREAD_H_*/
 
