@@ -28,7 +28,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "rcX")
   if ("${FORTE_NETX_CPU}" STREQUAL "NETX100")
     set(ARCH_NETX arm926ej-s)
   else("${FORTE_NETX_CPU}" STREQUAL "NETX10")
-    set(ARCH_NETX arm9e)
+    set(ARCH_NETX arm966e-s)#$set(ARCH_NETX arm9e)
   endif()
   
   SET(FORTE_QUEUE_MAX "32" CACHE STRING "Max number of elements for the queue of the forte task")
@@ -37,7 +37,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "rcX")
   SET(FORTE_RCX_INCLUDES "" CACHE STRING "Folders to include from the rcX OS")
   #SET(FORTE_RCX_LIB_INCLUDE "" CACHE STRING "Folders to look for libraries")
   
-  forte_add_sourcefile_hcpp(thread rcXTimerHandler rcXUtilities sync forte_sem forteMain)
+  forte_add_sourcefile_hcpp(forte_thread rcXTimerHandler rcXUtilities forte_sync forte_sem forteMain)
   forte_add_sourcefile_h(fortealloc.h)
  
   if(FORTE_COM_ETH)
@@ -45,7 +45,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "rcX")
    forte_add_sourcefile_h(sockhand.h)
   endif(FORTE_COM_ETH)
 
-  forte_add_definition("-D__RCX__ -D__${FORTE_NETX_CPU} -c -mlong-calls -mcpu=${ARCH_NETX} -fshort-enums -gdwarf-2 -Wall -O0 -mapcs -mthumb-interwork -fsigned-char -mlittle-endian -marm -mno-apcs-frame -static-libstdc++ -static-libgcc")# -mabi=apcs-gnu -xc")
+  forte_add_definition("-D__RCX__ -D__${FORTE_NETX_CPU} -c -mlong-calls -mcpu=${ARCH_NETX} -fshort-enums -gdwarf-2 -Wall -O0 -mapcs -mthumb-interwork -fsigned-char -mlittle-endian -marm -mno-apcs-frame    -ffunction-sections -fdata-sections -Wl,–gc-sections -msoft-float -mfpu=vfp -mfloat-abi=soft -mthumb-interwork -nostdlib -mcpu=arm966e-s -mthumb -T")# -static-libstdc++ -static-libgcc")# -mabi=apcs-gnu")# -xc")# 
   forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -DFORTE_LITTLE_ENDIAN -ggdb")
   forte_add_definition("-fno-threadsafe-statics")
   

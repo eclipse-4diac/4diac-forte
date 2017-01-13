@@ -408,17 +408,20 @@ RX_RESULT CrcXSocketInterface::sendPacketToTCP(UINT32 pa_destId, UINT32 pa_ulLen
   retVal = TLR_POOL_PACKET_GET(mForteResources.fortePoolHandle, &ptPck);
   if(TLR_S_OK == retVal){
     TLS_QUE_LINK_SET_NEW_DESTID(mForteResources.tcpQueueHandle, pa_destId);
+    mForteResources.tcpQueueHandle.ulDest = (TLR_UINT32) mForteResources.tcpQueueHandle.hQue;
+    ptPck->tHead.ulDest = (TLR_UINT32) mForteResources.tcpQueueHandle.hQue;
+    ptPck->tHead.ulDestId = pa_destId;
     ptPck->tHead.ulSrc = (TLR_UINT32)mForteResources.forteQueueHandle;
-    ptPck->tHead.ulSrcId = (TLR_UINT32)this;
+    ptPck->tHead.ulSrcId = (TLR_UINT32)1;
     ptPck->tHead.ulLen = pa_ulLen;
     ptPck->tHead.ulId = ++mForteResources.sndId;
     ptPck->tHead.ulSta = 0;
     ptPck->tHead.ulCmd = pa_ulCmd;
     ptPck->tHead.ulExt = 0;
     ptPck->tHead.ulRout = 0;
-    TLR_MEMCPY(pa_tData, &((TCPIP_PACKET_IP_CMD_SET_CONFIG_REQ_T*)&ptPck)->tData, pa_dataLength);
+    TLR_MEMCPY(&((TCPIP_PACKET_IP_CMD_SET_CONFIG_REQ_T*)&ptPck)->tData, pa_tData, pa_dataLength);
 
-    retVal = TLS_QUE_SENDPACKET_FIFO(mForteResources.tcpQueueHandle, ptPck, 100);
+    retVal = rX_QueSendPacket((void*) mForteResources.tcpQueueHandle.hQue, ptPck, 100);//TLS_QUE_SENDPACKET_FIFO(mForteResources.tcpQueueHandle, ptPck, 100);
     if (RX_OK != retVal){
       TLR_POOL_PACKET_RELEASE(mForteResources.fortePoolHandle, ptPck);
     }
@@ -430,7 +433,7 @@ RX_RESULT CrcXSocketInterface::waitPacket(UINT32 pa_command, FORTE_TCP_PACKET_T*
   RX_RESULT retVal;
   FORTE_TCP_PACKET_T* localPacket = 0;
   do{
-    retVal = TLR_QUE_WAITFORPACKET(mForteResources.forteQueueHandle, &localPacket, pa_timeout);
+    retVal = rX_QueWaitForPacket((void*)mForteResources.forteQueueHandle, (void**) &localPacket, 100); //TLR_QUE_WAITFORPACKET(mForteResources.forteQueueHandle, &localPacket, 100);//pa_timeout);
     if(0 != localPacket){
       if(pa_command == localPacket->tHead.ulCmd || 0 == pa_command){
         break;
@@ -505,12 +508,12 @@ RX_RESULT CrcXSocketInterface::sendData(TSocketDescriptor pa_nSockD, char* pa_pc
       while(0 != pa_unSize){
         if(pa_isTCP){
           *pa_result = (pa_unSize > 1460) ? 1460 : pa_unSize;
-          TLR_MEMCPY(pa_pcData, &(((TCPIP_DATA_TCP_CMD_SEND_REQ_T*) pa_PacketData)->abData[0]), *pa_result);
+          TLR_MEMCPY(&(((TCPIP_DATA_TCP_CMD_SEND_REQ_T*) pa_PacketData)->abData[0]), pa_pcData, *pa_result);
           retVal = sendPacketToTCP(pa_nSockD->socketNumber, TCPIP_DATA_TCP_CMD_SEND_REQ_SIZE + *pa_result, TCPIP_TCP_CMD_SEND_REQ, &pa_PacketData, sizeof(UINT32) + *pa_result);
         }
         else{
           *pa_result = (pa_unSize > 1472) ? 1472 : pa_unSize;
-          TLR_MEMCPY(pa_pcData, &(((TCPIP_DATA_UDP_CMD_SEND_REQ_T*) pa_PacketData)->abData[0]), *pa_result);
+          TLR_MEMCPY(&(((TCPIP_DATA_UDP_CMD_SEND_REQ_T*) pa_PacketData)->abData[0]), pa_pcData, *pa_result);
           retVal = sendPacketToTCP(pa_nSockD->socketNumber, TCPIP_DATA_UDP_CMD_SEND_REQ_SIZE + *pa_result, TCPIP_UDP_CMD_SEND_REQ, &pa_PacketData, sizeof(UINT32) * 3 + *pa_result);
         }
 
@@ -656,7 +659,7 @@ RX_RESULT CrcXSocketInterface::receiveData(TSocketDescriptor pa_nSockD, bool , c
         }
         else if(TCPIP_TCP_UDP_CMD_RECEIVE_IND == (*itRunnerPacket)->tHead.ulCmd){
           if(pa_unBufSize >= ((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE)){
-            TLR_MEMCPY(&(*itRunnerPacket)->tRcvInd.tData.abData[0], pa_pcData, ((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE));
+            TLR_MEMCPY(pa_pcData, &(*itRunnerPacket)->tRcvInd.tData.abData[0], ((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE));
             *pa_receivedBytes = ((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE);
             TLS_QUE_RETURNPACKET(*itRunnerPacket);
             deletePacket = true;
@@ -664,9 +667,9 @@ RX_RESULT CrcXSocketInterface::receiveData(TSocketDescriptor pa_nSockD, bool , c
           }
           else{ //move the data not copied to the beginning of the abData field and keep the packet.
             UINT8 buffer[((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE) - pa_unBufSize];
-            TLR_MEMCPY(&(*itRunnerPacket)->tRcvInd.tData.abData[0], pa_pcData, pa_unBufSize);
-            TLR_MEMCPY(&(*itRunnerPacket)->tRcvInd.tData.abData[pa_unBufSize], &buffer[0], ((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE) - pa_unBufSize);
-            TLR_MEMCPY(&buffer[0], &(*itRunnerPacket)->tRcvInd.tData.abData[0], ((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE) - pa_unBufSize);
+            TLR_MEMCPY(pa_pcData, &(*itRunnerPacket)->tRcvInd.tData.abData[0], pa_unBufSize);
+            TLR_MEMCPY(&buffer[0], &(*itRunnerPacket)->tRcvInd.tData.abData[pa_unBufSize], ((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE) - pa_unBufSize);
+            TLR_MEMCPY(&(*itRunnerPacket)->tRcvInd.tData.abData[0], &buffer[0], ((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE) - pa_unBufSize);
             (*itRunnerPacket)->tHead.ulLen -= pa_unBufSize;
             *pa_receivedBytes = pa_unBufSize;
           }

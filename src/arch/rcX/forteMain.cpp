@@ -11,7 +11,7 @@
 
 #include <forteMain.h>
 #include <fortenew.h>
-
+#include "rcXSocketInterface.h"
 #include "../../stdfblib/ita/RMT_DEV.h"
 
 /*!\brief Check if the correct endianess has been configured.
@@ -20,17 +20,29 @@
  */
 
 //this keeps away a lot of rtti and exception handling stuff
-//extern "C" void __cxa_pure_virtual(void){
+extern "C" void __cxa_pure_virtual(void){
   //TODO maybe add some reporting here
   //Although we should never get here
   //if we are here something very very bad has happened e.g., stack overflow or other memory corruption
 
-//}
+}
+
+void *__dso_handle = 0;
+
+extern "C" int _getpid(void) {
+  return 1;
+}
+
+extern "C" void _kill(int ) { while(1) ; }
+
+extern "C" int _exit() { return 0; }
+
 RMT_DEV *poDev = 0;
 
 void createDev(const char *pa_acMGRID);
 
 int startForte(){
+  //CrcXSocketInterface::getInstance();
   createDev("localhost:61499");
   return 0;
 }
