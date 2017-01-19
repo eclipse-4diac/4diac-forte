@@ -42,7 +42,7 @@ RMT_DEV *poDev = 0;
 void createDev(const char *pa_acMGRID);
 
 int startForte(){
-  //CrcXSocketInterface::getInstance();
+  CrcXSocketInterface::getInstance();
   createDev("localhost:61499");
   return 0;
 }

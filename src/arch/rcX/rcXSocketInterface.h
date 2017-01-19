@@ -102,9 +102,10 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
 
     struct tcpResources{
         RX_HANDLE tcpTaskHandle;
-        TLR_QUE_LINK_T tcpQueueHandle;
+        TLR_QUE_LINK_T tcpQueueLink;
         RX_HANDLE fortePoolHandle;
         RX_HANDLE forteQueueHandle;
+        TLR_QUE_LINK_SOURCE_T forteLinkSource;
         RX_HANDLE forteTask;
         UINT32 sndId;
     };

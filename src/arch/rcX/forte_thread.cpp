@@ -16,16 +16,20 @@
 #include <criticalregion.h>
 
 #define FORTE_TASK_NAME       "FORTE_TASK"
-#define FORTE_TASK_TOKEN      TSK_TOK_25
-#define FORTE_TASK_PRIORITY   TSK_PRIO_25
+#define FORTE_TASK_TOKEN      TSK_TOK_1
+#define FORTE_TASK_PRIORITY   TSK_PRIO_15
 
 UINT CrcXThread::smTaskInstance = 0;
+RX_TASK_TOKEN CrcXThread::smTaskToken = FORTE_TASK_TOKEN;
 
 void CrcXThread::start(void){
   if (0 != m_pacStack){
-    if (RX_OK == rX_SysCreateTask(FORTE_TASK_NAME, threadFunction, (void*)this, m_pacStack, mStackSize / 4, RX_TASK_AUTO_START,
-        0, FORTE_TASK_PRIORITY, FORTE_TASK_TOKEN, CrcXThread::smTaskInstance, (void (*) (void*))NULL)){
+    RX_RESULT retVal;
+    retVal = rX_SysCreateTask(FORTE_TASK_NAME, threadFunction, (void*)this, m_pacStack, mStackSize / 4, RX_TASK_AUTO_START,
+        0, FORTE_TASK_PRIORITY, CrcXThread::smTaskToken, CrcXThread::smTaskInstance, (void (*) (void*))NULL);
+    if (RX_OK == retVal){
       CrcXThread::smTaskInstance++;
+      CrcXThread::smTaskToken++;
       if(RX_OK != rX_SysIdentifyTask(FORTE_TASK_NAME, CrcXThread::smTaskInstance - 1, &mThreadID, 0, 0)){
         DEVLOG_ERROR("Task was created but couldn't be identified. Memory leaks might happen\n");
       }

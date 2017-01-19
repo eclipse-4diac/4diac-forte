@@ -35,36 +35,39 @@ CrcXSocketInterface::CrcXSocketInterface(){
   m_unPacketsWaiting = 0;
   /* forte Task identification */
   //TODO: Check if it is really necessary
-  eRslt = TLR_TSK_IDENTIFY(0, 0, &mForteResources.forteTask, 0, 0);
-  if(eRslt != TLR_S_OK){
+  eRslt = TLR_TSK_IDENTIFY(NULL, 0, &mForteResources.forteTask, 0, 0);
+  if(eRslt != RX_OK){
     DEVLOG_ERROR("Couldn't identify own task\n");
     m_bInitialized = false;
   }
 
   /* Create process queue */
   eRslt = TLR_QUE_CREATE(scmForteQueueName, cg_forteQueueMax, &mForteResources.forteQueueHandle);
-  if(eRslt != TLR_S_OK){
+  if(eRslt != RX_OK){
     DEVLOG_ERROR("Couldn't create queue\n");
     m_bInitialized = false;
   }
 
   /* Create resource pool for queue packets */
   eRslt = TLR_POOL_CREATE(scmFortePoolName, cg_fortePoolMax, sizeof(FORTE_TCP_PACKET_T), &mForteResources.fortePoolHandle);
-  if(eRslt != TLR_S_OK){
+  if(eRslt != RX_OK){
     DEVLOG_ERROR("Couldn't create pool\n");
     m_bInitialized = false;
   }
 
+  TLR_QUE_LINK_SOURCE_SET(mForteResources.forteLinkSource, mForteResources.forteQueueHandle, 1);
+  mForteResources.sndId = 0;
+
   /* Task TCP_UDP */
   //TODO: Check if it is really necessary
   eRslt = TLR_TSK_IDENTIFY(TCP_TASK_NAME, 0, &mForteResources.tcpTaskHandle, 0, 0);
-  if(eRslt != TLR_S_OK){
+  if(eRslt != RX_OK){
     DEVLOG_ERROR("Couldn't identify TCP/IP task\n");
     m_bInitialized = false;
   }
 
-  eRslt = TLS_QUE_IDENTIFY(EN_TCPUDP_PROCESS_QUEUE_NAME, 0, &mForteResources.tcpQueueHandle);
-  if(eRslt != TLR_S_OK){
+  eRslt = TLR_QUE_IDENTIFY(EN_TCPUDP_PROCESS_QUEUE_NAME, 0, &mForteResources.tcpQueueLink);
+  if(eRslt != RX_OK){
     DEVLOG_ERROR("Couldn't identify TCP/IP queue\n");
     m_bInitialized = false;
   }
@@ -403,25 +406,28 @@ TForteUInt32 CrcXSocketInterface::stringIpToInt(char* pa_ipString){
 
 RX_RESULT CrcXSocketInterface::sendPacketToTCP(UINT32 pa_destId, UINT32 pa_ulLen, UINT32 pa_ulCmd, void* pa_tData, UINT32 pa_dataLength){
   FORTE_TCP_PACKET_T* ptPck;
-  RX_RESULT retVal;
+  RX_RESULT retVal = RX_OK;
 
   retVal = TLR_POOL_PACKET_GET(mForteResources.fortePoolHandle, &ptPck);
-  if(TLR_S_OK == retVal){
-    TLS_QUE_LINK_SET_NEW_DESTID(mForteResources.tcpQueueHandle, pa_destId);
-    mForteResources.tcpQueueHandle.ulDest = (TLR_UINT32) mForteResources.tcpQueueHandle.hQue;
-    ptPck->tHead.ulDest = (TLR_UINT32) mForteResources.tcpQueueHandle.hQue;
+  if(RX_OK == retVal){
+    TLR_QUE_LINK_SET_NEW_DESTID(mForteResources.tcpQueueLink, pa_destId);
+    TLR_QUE_LINK_SET_PACKET_SRC(ptPck, mForteResources.forteLinkSource);
+
+    /*mForteResources.tcpQueueLink.ulDest = (TLR_UINT32) mForteResources.tcpQueueLink.hQue;
+    ptPck->tHead.ulDest = (TLR_UINT32) mForteResources.tcpQueueLink.hQue;
     ptPck->tHead.ulDestId = pa_destId;
     ptPck->tHead.ulSrc = (TLR_UINT32)mForteResources.forteQueueHandle;
-    ptPck->tHead.ulSrcId = (TLR_UINT32)1;
+    ptPck->tHead.ulSrcId = (TLR_UINT32)1;*/
+
     ptPck->tHead.ulLen = pa_ulLen;
     ptPck->tHead.ulId = ++mForteResources.sndId;
     ptPck->tHead.ulSta = 0;
     ptPck->tHead.ulCmd = pa_ulCmd;
     ptPck->tHead.ulExt = 0;
     ptPck->tHead.ulRout = 0;
-    TLR_MEMCPY(&((TCPIP_PACKET_IP_CMD_SET_CONFIG_REQ_T*)&ptPck)->tData, pa_tData, pa_dataLength);
+    TLR_MEMCPY(&((TCPIP_PACKET_TCP_UDP_CMD_OPEN_REQ_T*)ptPck)->tData, pa_tData, pa_dataLength);
 
-    retVal = rX_QueSendPacket((void*) mForteResources.tcpQueueHandle.hQue, ptPck, 100);//TLS_QUE_SENDPACKET_FIFO(mForteResources.tcpQueueHandle, ptPck, 100);
+    retVal = TLR_QUE_SENDPACKET_FIFO(mForteResources.tcpQueueLink, ptPck, 100); //rX_QueSendPacket((void*) mForteResources.tcpQueueLink.hQue, ptPck, 100);
     if (RX_OK != retVal){
       TLR_POOL_PACKET_RELEASE(mForteResources.fortePoolHandle, ptPck);
     }
@@ -433,7 +439,7 @@ RX_RESULT CrcXSocketInterface::waitPacket(UINT32 pa_command, FORTE_TCP_PACKET_T*
   RX_RESULT retVal;
   FORTE_TCP_PACKET_T* localPacket = 0;
   do{
-    retVal = rX_QueWaitForPacket((void*)mForteResources.forteQueueHandle, (void**) &localPacket, 100); //TLR_QUE_WAITFORPACKET(mForteResources.forteQueueHandle, &localPacket, 100);//pa_timeout);
+    retVal = TLR_QUE_WAITFORPACKET(mForteResources.forteQueueHandle, &localPacket, 100); //pa_timeout);rX_QueWaitForPacket((void*)mForteResources.forteQueueHandle, (void**) &localPacket, 100); //
     if(0 != localPacket){
       if(pa_command == localPacket->tHead.ulCmd || 0 == pa_command){
         break;
@@ -462,7 +468,7 @@ void CrcXSocketInterface::managePacketsDefault(FORTE_TCP_PACKET_T* pa_packetResu
       case TCPIP_TCP_UDP_CMD_RECEIVE_IND:
       case TCPIP_TCP_CMD_WAIT_CONNECT_CNF: {
         if(cg_forteWaitingQueueMax <= m_unPacketsWaiting){
-          TLS_QUE_RETURNPACKET(pa_packetResult);
+          TLR_QUE_RETURNPACKET(pa_packetResult);
         }
         else{
           mWaitingList.push_back(pa_packetResult);
@@ -661,7 +667,7 @@ RX_RESULT CrcXSocketInterface::receiveData(TSocketDescriptor pa_nSockD, bool , c
           if(pa_unBufSize >= ((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE)){
             TLR_MEMCPY(pa_pcData, &(*itRunnerPacket)->tRcvInd.tData.abData[0], ((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE));
             *pa_receivedBytes = ((*itRunnerPacket)->tHead.ulLen - TCPIP_DATA_TCP_UDP_CMD_RECEIVE_IND_SIZE);
-            TLS_QUE_RETURNPACKET(*itRunnerPacket);
+            TLR_QUE_RETURNPACKET(*itRunnerPacket);
             deletePacket = true;
 
           }
