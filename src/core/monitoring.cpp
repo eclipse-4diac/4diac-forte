@@ -420,16 +420,17 @@ void CMonitoringHandler::getResourceWatches(CIEC_STRING &paResponse, char){
 
 void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
     SDataWatchEntry &paDataWatchEntry){
+  int bufferSize;
+  bufferSize = paDataWatchEntry.mDataValue.getToStringBufferSize();
   appendPortTag(paResponse, paDataWatchEntry.mPortId);
   paResponse.append("<Data value=\"");
-
-  char acDataValue[80]; //TODO try to directly use the response string instead
+  char* acDataValue = new char [bufferSize]; //TODO try to directly use the response string instead
   int nConsumedBytes;
   switch (paDataWatchEntry.mDataValue.getDataTypeID()){
     case CIEC_ANY::e_WSTRING:
       case CIEC_ANY::e_STRING:
       nConsumedBytes =
-          static_cast<CIEC_WSTRING&>(paDataWatchEntry.mDataValue).toUTF8(acDataValue, sizeof(acDataValue), false);
+          static_cast<CIEC_WSTRING&>(paDataWatchEntry.mDataValue).toUTF8(acDataValue, bufferSize, false);
       break;
     default:
       nConsumedBytes = paDataWatchEntry.mDataValue.toString(acDataValue, sizeof(acDataValue));
@@ -438,7 +439,6 @@ void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
   if(-1 != nConsumedBytes){
     acDataValue[nConsumedBytes] = '\0';
   }
-
   paResponse.append(acDataValue);
   paResponse.append("\" forced=\"");
   paResponse.append(((paDataWatchEntry.mDataValue.isForced()) ? "true" : "false"));
@@ -446,6 +446,7 @@ void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
   paResponse.append("</Data>");
 
   paResponse.append("</Port>");
+  delete [] acDataValue;
 }
 
 void CMonitoringHandler::appendPortTag(CIEC_STRING &paResponse,
