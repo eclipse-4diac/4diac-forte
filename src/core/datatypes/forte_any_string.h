@@ -95,6 +95,8 @@ class CIEC_ANY_STRING : public CIEC_ANY_ELEMENTARY{
       return (0 != getGenData()) ? (*((TForteUInt16 *) (getGenData() + 2))) : static_cast<TForteUInt16>(0);
     }
 
+    virtual int getToStringBufferSize();
+
 #ifdef FORTE_UNICODE_SUPPORT
     /*! \brief Converts a UTF-8 encoded string to a variable
      *

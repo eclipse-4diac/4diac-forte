@@ -161,6 +161,10 @@ class CIEC_ANY{
      */
     static void specialCast(const CIEC_ANY &pa_roSrcValue, CIEC_ANY &pa_roDstValue);
 
+    /*! \brief calculates buffer size needed for toString conversion
+         */
+    virtual int getToStringBufferSize();
+
 #ifdef FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
     /*! \brief the following methods have to be implemented if a custom datatype is added to the forte which is not supported by the default seralize mechanism. */
     /*! \brief returns the required size for serialization */
