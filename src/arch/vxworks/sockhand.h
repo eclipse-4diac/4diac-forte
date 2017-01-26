@@ -21,6 +21,10 @@
 #include <errno.h>
 #include <string.h>
 
+//needs a specific defintion here for vxWorks
+#undef FD_ZERO
+#define FD_ZERO(p)    memset((char *)(p), 0, sizeof(*(p)))
+
 
 //these include needs to be last
 #include "../fdselecthand.h"
