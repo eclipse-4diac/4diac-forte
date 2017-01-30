@@ -247,15 +247,15 @@ bool DEV_MGR::parseWriteConnectionData(char *pa_acRequestPartLeft, forte::core::
         do{
           pa_acRequestPartLeft++;
         } while(';' != *pa_acRequestPartLeft);
-        pa_acRequestPartLeft += 2; //go beyound the ; and the following "
+        pa_acRequestPartLeft += 2; //go beyond the ; and the following "
         break;
       }
       i++;
     }
-    //char originalVal = beginOfRequest[i];
+    char originalVal = beginOfRequest[i];
     beginOfRequest[i] = '\0';
     pa_rstCommand.mAdditionalParams.assign(beginOfRequest, static_cast<TForteUInt16>(i));
-    //beginOfRequest[i] = originalVal;
+    beginOfRequest[i] = originalVal;
 
     pa_acRequestPartLeft = strchr(&(pa_acRequestPartLeft[1]), '\"');
     if(pa_acRequestPartLeft != 0){
