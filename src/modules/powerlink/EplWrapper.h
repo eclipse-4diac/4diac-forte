@@ -15,7 +15,7 @@
 #include "EplCNCallback.h"
 #include <singlet.h>
 #include <fortelist.h>
-#include <sync.h>
+#include <forte_sync.h>
 
 struct SEplMapping{
     struct SEplMappingValues{
@@ -35,6 +35,10 @@ struct SEplMapping{
         ~SEplMappingValues(){
           delete[] m_pchCurrentValue;
         }
+
+      private:
+        SEplMappingValues(const SEplMappingValues &obj);
+        SEplMappingValues& operator=(const SEplMappingValues &obj);
     };
 
     typedef CSinglyLinkedList<SEplMappingValues*> TEplMappingList;

@@ -20,7 +20,7 @@
 using namespace forte::com_infra;
 
 COpcComLayer::COpcComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB) :
-CComLayer(pa_poUpperLayer, pa_poComFB), m_bLayerParamsOK(false), m_eInterruptResp(e_Nothing){
+CComLayer(pa_poUpperLayer, pa_poComFB), m_bLayerParamsOK(false), m_eInterruptResp(e_Nothing), m_acHost(0), m_acServerName(0), m_nDeadBand(0), m_nUpdateRate(0), m_pOpcConnection(0){
   m_acOpcGroupName = m_poFb->getInstanceName();
 }
 
@@ -305,8 +305,12 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
     // Get server name
     temp = chrStorage;
     chrStorage = strchr(chrStorage, ':');
-    if(chrStorage == 0)
+    if(chrStorage == 0){
+      if (chrHost){
+        free(chrHost);
+      }
       return;
+    }
     *chrStorage = '\0';
     ++chrStorage;
     chrServer = (char*) malloc(strlen(temp) + 1);
@@ -316,24 +320,37 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
     // Get update rate
     m_nUpdateRate = atol(chrStorage);
     chrStorage = strchr(chrStorage, ':');
-    if(chrStorage == 0)
+    if(chrStorage == 0){
+      if (chrHost){
+        free(chrHost);
+      }
       return;
+    }
     *chrStorage = '\0';
     ++chrStorage;
 
     // Get dead band
     m_nDeadBand = (float) atof(chrStorage);
     chrStorage = strchr(chrStorage, ':');
-    if(chrStorage == 0)
+    if(chrStorage == 0){
+      if (chrHost){
+        free(chrHost);
+      }
       return;
+    }
+
     *chrStorage = '\0';
     ++chrStorage;
 
     // Get FB input items
     char * inputItems = chrStorage;
     chrStorage = strchr(chrStorage, ':');
-    if(chrStorage == 0)
+    if(chrStorage == 0){
+      if (chrHost){
+        free(chrHost);
+      }
       return;
+    }
     *chrStorage = '\0';
     ++chrStorage;
     int nrItems = 0;
@@ -364,7 +381,7 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
   }
 
   void COpcComLayer::convertInputData(void *pa_pData, unsigned int pa_nSize){
-    CIEC_ANY *apoSDs =  static_cast<CIEC_ANY*>(pa_pData);
+    //CIEC_ANY *apoSDs =  static_cast<CIEC_ANY*>(pa_pData);
     unsigned int nrSDs = pa_nSize;
     unsigned int sdIndex = 0;
 
@@ -372,11 +389,12 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
     TOpcProcessVarList::Iterator itEnd = m_lFBInputVars.end();
 
     while(sdIndex < nrSDs && it_var != itEnd){
-      CIEC_ANY *dataIn = &apoSDs[sdIndex];
+ //     CIEC_ANY *dataIn = &apoSDs[sdIndex];
       Variant newVariant;
-      unsigned int valueSize = 0;
+      //unsigned int valueSize = 0;
+	  
+	  //valueSize = getInputValueSize(dataIn, &newVariant);;
 
-      valueSize = getInputValueSize(dataIn, &newVariant);
       it_var->setNewValue(newVariant);
 
       ++it_var;
@@ -403,13 +421,12 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
       pa_pNewValue->set<CHAR>((CHAR) *(dynamic_cast<CIEC_SINT*>(pa_pData)));
       return sizeof(TForteInt8);
       break;
-    case CIEC_ANY::e_INT: {
+    case CIEC_ANY::e_INT: 
       CIEC_INT* tempInt = dynamic_cast<CIEC_INT*>(pa_pData);
       TForteInt16 forteInt = (TForteInt16) (*tempInt);
       pa_pNewValue->set<TForteInt16>(forteInt);
       return sizeof(TForteInt16);
       break;
-                          }
     case CIEC_ANY::e_DINT:
       pa_pNewValue->set<TForteInt32>((TForteInt32) *(dynamic_cast<CIEC_DINT*>(pa_pData)));
       return sizeof(TForteInt32);

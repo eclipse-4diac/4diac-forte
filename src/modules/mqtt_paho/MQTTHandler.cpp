@@ -17,25 +17,25 @@
 
 DEFINE_SINGLETON(MQTTHandler);
 
-MQTTClient_connectOptions MQTTHandler::clientConnectionOptions =
+MQTTClient_connectOptions MQTTHandler::smClientConnectionOptions =
 MQTTClient_connectOptions_initializer;
 
-CSyncObject MQTTHandler::mLockMessageDelivery = CSyncObject();
+CSyncObject MQTTHandler::smLockMessageDelivery = CSyncObject();
 
-MQTTClient MQTTHandler::client = 0;
-char* MQTTHandler::mClientId = 0;
-char* MQTTHandler::mAddress = 0;
+MQTTClient MQTTHandler::smClient = 0;
+CIEC_STRING MQTTHandler::smClientId;
+CIEC_STRING MQTTHandler::smAddress;
 
 MQTTHandler::MQTTHandler(){
 
 }
 
 MQTTHandler::~MQTTHandler(){
-  MQTTClient_disconnect(client, 10000);
-  MQTTClient_destroy(&client);
+  MQTTClient_disconnect(smClient, 10000);
+  MQTTClient_destroy(&smClient);
 }
 
-int MQTTHandler::mqttMessageArrived(void* context, char* topicName, int topicLen, MQTTClient_message* message){
+int MQTTHandler::mqttMessageArrived(void* context, char* topicName, int , MQTTClient_message* message){
   //TODO: Check if handler allowed
 
 
@@ -45,7 +45,7 @@ int MQTTHandler::mqttMessageArrived(void* context, char* topicName, int topicLen
     void* pPayLoad = message->payload;
     unsigned int payLoadSize = static_cast<unsigned int>(message->payloadlen);
 
-    CCriticalRegion section(mLockMessageDelivery); //Start critical section protect the list
+    CCriticalRegion section(smLockMessageDelivery); //Start critical section protect the list
     for(CSinglyLinkedList<MQTTComLayer*>::Iterator it = handler->mlayers.begin(); it != handler->mlayers.end(); ++it){
       if(0 == strcmp((*it)->getTopicName(), topicName)){
         if(forte::com_infra::e_Nothing != (*it)->recvData(pPayLoad, payLoadSize)){
@@ -62,33 +62,32 @@ int MQTTHandler::mqttMessageArrived(void* context, char* topicName, int topicLen
 }
 
 int MQTTHandler::registerLayer(char* paAddress, char* paClientId, MQTTComLayer* paLayer){
-  if(client == 0){
-    mClientId = paClientId;
-    mAddress = paAddress;
-    MQTTClient_create(&client, mAddress, mClientId,
-    MQTTCLIENT_PERSISTENCE_NONE, NULL);
-    clientConnectionOptions.keepAliveInterval = 20;
-    clientConnectionOptions.cleansession = 1;
-    int rc = MQTTClient_setCallbacks(client, this, NULL, MQTTHandler::mqttMessageArrived, NULL);
+  if(smClient == 0){
+    smClientId = paClientId;
+    smAddress = paAddress;
+    MQTTClient_create(&smClient, smAddress.getValue(), smClientId.getValue(), MQTTCLIENT_PERSISTENCE_NONE, NULL);
+    smClientConnectionOptions.keepAliveInterval = 20;
+    smClientConnectionOptions.cleansession = 1;
+    int rc = MQTTClient_setCallbacks(smClient, this, NULL, MQTTHandler::mqttMessageArrived, NULL);
     if(rc != MQTTCLIENT_SUCCESS){
       return eConnectionFailed;
     }
 
-    rc = MQTTClient_connect(client, &clientConnectionOptions);
+    rc = MQTTClient_connect(smClient, &smClientConnectionOptions);
     if(rc != MQTTCLIENT_SUCCESS){
       return eConnectionFailed;
     }
   }
-  else if((0 != strcmp(paClientId, mClientId)) || (0 != strcmp(paAddress, mAddress))){
+  else if((smClientId != paClientId) || (smAddress != paAddress)){
     return eWrongClientID;
   }
-  CCriticalRegion section(mLockMessageDelivery); //Start critical section protect the list
+  CCriticalRegion section(smLockMessageDelivery); //Start critical section protect the list
   mlayers.push_back(paLayer);
   return eRegisterLayerSucceeded;
 }
 
 void MQTTHandler::unregisterLayer(MQTTComLayer* paLayer){
-  CCriticalRegion section(mLockMessageDelivery); //Start critical section protect the list
+  CCriticalRegion section(smLockMessageDelivery); //Start critical section protect the list
 
   CSinglyLinkedList<MQTTComLayer*>::Iterator itRunner(mlayers.begin());
   CSinglyLinkedList<MQTTComLayer*>::Iterator itRefNode(mlayers.end());
@@ -118,7 +117,7 @@ void MQTTHandler::disableHandler(void){
   //TODO: Should also work empty
 }
 
-void MQTTHandler::setPriority(int pa_nPriority){
+void MQTTHandler::setPriority(int ){
   //TODO: Should also work empty
 }
 

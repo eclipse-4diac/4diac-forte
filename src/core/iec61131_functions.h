@@ -531,9 +531,17 @@ template<typename T> const T MOVE(const T& pa_roIN){
   : ---|      |
  ANY --|      |
        +------+       */
+//specialisation of function for base type double.
+//TODO consider how this and similar problems can be better solved with type traits and more generically
+inline double EXPT(double pa_roIN1, double pa_roIN2){
+  return pow(pa_roIN1, pa_roIN2);
+}
+
 template<typename T> const T EXPT(const T& pa_roIN1, const T& pa_roIN2){
 	return static_cast<typename T::TValueType>(pow(pa_roIN1, pa_roIN2));
 }
+
+
 
 /*              +-----+
                 | ADD |
@@ -796,6 +804,11 @@ template<typename T> const T CONCAT(const T& pa_rsIn1, const T& pa_rsIn2){
   return temp.getValue();
 }
 
+template<typename T, typename... Args> const T CONCAT(const T& pa_rsIn1, Args... args) {
+	return CONCAT(pa_rsIn1, CONCAT(args...));
+}
+
+
 /* Insert IN2 into IN1 after the P-th charaolcter position
  *             +--------+
  *             | INSERT |
@@ -889,13 +902,11 @@ template<typename T> CIEC_ANY_INT FIND(const T& pa_rsIn1, const T& pa_rsIn2){
  is equivalent to A := 'ABCAB' ;
  */
 template<typename T> const T TOUPPER(const T& pa_rsIn){
-  T temp;
-  temp.reserve(static_cast<TForteUInt16>(pa_rsIn.length()));
-  const char* orig = pa_rsIn.getValue();
-  char* upper = temp.getValue();
+  T temp(pa_rsIn);
+  char* current = temp.getValue();
   for (unsigned int i = 0; i <=pa_rsIn.length(); ++i)
   {
-	  upper[i] = toupper(orig[i]);
+	  current[i] = toupper(current[i]);
   }
   return temp;
 }
@@ -910,13 +921,11 @@ template<typename T> const T TOUPPER(const T& pa_rsIn){
  is equivalent to A := 'abcab' ;
  */
 template<typename T> const T TOLOWER(const T& pa_rsIn){
-  T temp;
-  temp.reserve(static_cast<TForteUInt16>(pa_rsIn.length()));
-  const char* orig = pa_rsIn.getValue();
-  char* upper = temp.getValue();
-  for (unsigned int i = 0; i <=pa_rsIn.length(); ++i)
+  T temp(pa_rsIn);
+  char* current = temp.getValue();
+  for (unsigned int i = 0; i <= pa_rsIn.length(); ++i)
   {
-	  upper[i] = tolower(orig[i]);
+    current[i] = tolower(current[i]);
   }
   return temp;
 }

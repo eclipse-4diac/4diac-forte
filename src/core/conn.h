@@ -108,6 +108,12 @@ class CConnection{
       return mSourceId;
     }
 
+    /*! \brief Get list of destinations of the connection
+     */
+    const CSinglyLinkedList<SConnectionPoint>& getDestinationList(void) const {
+        return mDestinationIds;
+    }
+
   protected:
     EMGMResponse addDestination(const SConnectionPoint &paDestPoint);
     #ifndef FORTE_CLASS_0

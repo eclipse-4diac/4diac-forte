@@ -40,17 +40,20 @@ mark_as_advanced(FORTE_BUILD_TYPE)
 #######################################################################################
 # Determine the loglevel
 #######################################################################################
-if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-    if(NOT ${FORTE_LOGLEVEL} STREQUAL "LOGINFO")
-        message("Log Level was changed due to a change in CMAKE_BUILD_TYPE.")
-    endif()
-    set(FORTE_LOGLEVEL "LOGINFO" CACHE STRING "Loglevel to use" FORCE)
-else("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-    if(NOT ${FORTE_LOGLEVEL} STREQUAL "NOLOG")
-        message("Log Level was changed due to a change in CMAKE_BUILD_TYPE.")
-    endif()
-    set(FORTE_LOGLEVEL "NOLOG" CACHE STRING "Loglevel to use" FORCE)
-endif("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+string(TOLOWER "${CMAKE_BUILD_TYPE}" BUILD_TYPE_LOWERCASE)
+if(BUILD_TYPE_LOWERCASE STREQUAL "debug")
+    if(FORTE_LOGLEVEL MATCHES "NOLOG")
+        message("Log Level is set to NOLOG and CMAKE_BUILD_TYPE is set to Debug. Are sure you don't want to log anything?")
+    endif(FORTE_LOGLEVEL MATCHES "NOLOG")
+    if(NOT DEFINED FORTE_LOGLEVEL)
+    	message("No Log Level was specified. Setting Log Level to Debug default LOGINFO.")
+        set(FORTE_LOGLEVEL "LOGINFO" CACHE STRING "Loglevel to use" FORCE)
+    endif(NOT DEFINED FORTE_LOGLEVEL)
+else(BUILD_TYPE_LOWERCASE STREQUAL "debug")
+    if(NOT (FORTE_LOGLEVEL MATCHES "NOLOG"))
+        message("According  to CMAKE_BUILD_TYPE you are not debugging, but still you have some logging info. Do you really want to log something?")
+    endif(NOT (FORTE_LOGLEVEL MATCHES "NOLOG"))
+endif(BUILD_TYPE_LOWERCASE STREQUAL "debug")
 set_property(CACHE FORTE_LOGLEVEL PROPERTY STRINGS LOGDEBUG LOGERROR LOGWARNING LOGINFO NOLOG)
  
 forte_add_definition("-D${FORTE_LOGLEVEL}")
@@ -178,6 +181,13 @@ forte_add_include_directories(${CMAKE_BINARY_DIR})
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/forte_config.h.in ${CMAKE_BINARY_DIR}/forte_config.new.h)
 forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/forte_config.new.h ${CMAKE_BINARY_DIR}/forte_config.h)
 file(REMOVE ${CMAKE_BINARY_DIR}/forte_config.new.h)
+
+#######################################################################################
+# Check FORTE_ARCHITECTURE has a valid value
+#######################################################################################
+if("${FORTE_ARCHITECTURE}" STREQUAL "None")
+  message(FATAL_ERROR "No valid architecture chosen! Please check FORTE_ARCHITECTURE.")
+endif("${FORTE_ARCHITECTURE}" STREQUAL "None")
 
 
 #######################################################################################

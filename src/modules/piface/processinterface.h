@@ -16,6 +16,7 @@
 #include <extevhan.h>
 #include <thread.h>
 #include <singlet.h>
+#include "../conmeleon_c1/spi/spidevice.h"
 
 class CPiFaceProcessInterface : public CProcessInterfaceBase{
   public:
@@ -55,11 +56,29 @@ class CPiFaceProcessInterface : public CProcessInterfaceBase{
 
       private:
         typedef CSinglyLinkedList<CPiFaceProcessInterface *> TReadFBContainer;
+
+        static const int scmPiFaceWrite = 0x40;
+        static const int scmPiFaceRead = 0x41;
+
+        enum EPiFaceRegister{
+          eIODirectionPortA = 0x00,
+          eIODirectionPortB = 0x01,
+          eIOConfiguration =  0x0A,
+          eGPIOPortA = 0x12,
+          eGPIOPortB = 0x13,
+          eGPIOPullupResistorsPortA = 0x0C,
+          eGPIOPullupResistorsPortB = 0x0D
+        };
+
         TReadFBContainer m_lstReadFBList;
         CSyncObject m_oReadFBListSync;
         TForteUInt8 mOutBuffer;
 
         virtual void run();
+
+        static void setupPiFaceIOChip(CONMELEON::CSpiDevice &paDev);
+        static TForteByte readInputs(CONMELEON::CSpiDevice &paDev);
+        static void writePiFaceRegister(CONMELEON::CSpiDevice &paDev, EPiFaceRegister paRegister, TForteByte paValue);
 
     };
 

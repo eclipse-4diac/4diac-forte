@@ -27,7 +27,7 @@
 
 #include "resource.h"
 #include "stringdict.h"
-#include "sync.h"
+#include <forte_sync.h>
 
 typedef struct{
   std::string resource;

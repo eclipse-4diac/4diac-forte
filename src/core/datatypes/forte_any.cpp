@@ -206,3 +206,7 @@ void CIEC_ANY::specialCast(const CIEC_ANY &pa_roSrcValue, CIEC_ANY &pa_roDstValu
       break;
   }
 }
+
+int CIEC_ANY::getToStringBufferSize(){
+  return strlen(scm_acAnyToStringResponse) +1;
+}

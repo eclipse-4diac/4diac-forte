@@ -14,8 +14,8 @@
 
 #include <../../stdfblib/io/processinterfacebase.h>
 #include <extevhan.h>
-#include <thread.h>
-#include <sync.h>
+#include <forte_thread.h>
+#include <forte_sync.h>
 #include <fortelist.h>
 #include <singlet.h>
 #include <esfb.h>
@@ -61,6 +61,7 @@ class WagoPFCProcessInterface : public CProcessInterfaceBase{
     bool checkInputData();
     std::vector<std::string> generateParameterList();
 
+    // cppcheck-suppress noConstructor
     class CKBusHandler : public CExternalEventHandler, public CThread{
       DECLARE_SINGLETON(CKBusHandler)
 

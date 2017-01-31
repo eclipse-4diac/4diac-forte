@@ -13,7 +13,7 @@
 
 #include "comlayer.h"
 #include "fortelist.h"
-#include "sync.h"
+#include <forte_sync.h>
 #include "windows.h"
 #include "Variant.h"
 
@@ -24,7 +24,7 @@ struct SOpcItemData{
     const char* m_acItemName;
     Variant m_oItemData;
 
-    SOpcItemData(const char* pa_acItemName) :
+    explicit SOpcItemData(const char* pa_acItemName) :
         m_acItemName(pa_acItemName){
       m_oItemData.set<SHORT>(0);
     }

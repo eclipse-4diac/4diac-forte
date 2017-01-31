@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *   Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
+ *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include <boost/test/floating_point_comparison.hpp>
@@ -94,13 +94,9 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 	BOOST_CHECK_EQUAL(nTest.fromString("-1E-37"), 6);
 	BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(nTest), -1.0E-37);
 
-#ifdef WIN32
-	BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 10), 7);
-	BOOST_CHECK_EQUAL(strcmp(cBuffer, "-1e-037"), 0);
-#else
 	BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 10), 6);
 	BOOST_CHECK_EQUAL(strcmp(cBuffer, "-1e-37"), 0);
-#endif
+
 	BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
 	strcpy(cBuffer, "");
   nTest = 0;
@@ -116,26 +112,20 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 
     BOOST_CHECK_EQUAL(nTest.fromString("3.2523E15"), 9);
     BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(nTest), 3.2523e15);
-#ifdef WIN32
-    BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 12), 11);
-    BOOST_CHECK_EQUAL(strcmp(cBuffer, "3.2523e+015"), 0);
-#else
+
     BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
     BOOST_CHECK_EQUAL(strcmp(cBuffer, "3.2523e+15"), 0);
-#endif
+
     BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
     strcpy(cBuffer, "");
     nTest = 0;
 
     BOOST_CHECK_EQUAL(nTest.fromString("1E37"), 4);
     BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(nTest), 1e37);
-#ifdef WIN32
-    BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 6);
-    BOOST_CHECK_EQUAL(strcmp(cBuffer, "1e+037"), 0);
-#else
+
     BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 5);
     BOOST_CHECK_EQUAL(strcmp(cBuffer, "1e+37"), 0);
-#endif
+
     BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
     strcpy(cBuffer, "");
     nTest = 0;

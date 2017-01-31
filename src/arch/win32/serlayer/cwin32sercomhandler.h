@@ -8,8 +8,8 @@
  * Contributors:
  *   Martin Melik-Merkumians - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include <thread.h>
-#include <sync.h>
+#include "../forte_thread.h"
+#include "../forte_sync.h"
 #include <../../../core/extevhan.h>
 #include <../../../core/utils/singlet.h>
 #include "../../../core/fortelist.h"
