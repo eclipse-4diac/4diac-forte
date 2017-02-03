@@ -147,6 +147,32 @@ char *DEV_MGR::parseRequest(char *pa_acRequestString, forte::core::SManagementCM
   return acCommandStart;
 }
 
+bool DEV_MGR::parseFBType(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand){
+  bool bRetVal = false;
+  if(!strncmp("FBType Name=\"", pa_acRequestPartLeft, 13)){
+    char *acBuf = &(pa_acRequestPartLeft[13]);
+    int i = 0;
+    if(acBuf[0] != '*'){
+      i = parseIdentifier(acBuf, pa_rstCommand.mFirstParam);
+      acBuf = (-1 == i) ? 0 : strchr(&(acBuf[i + 1]), '\"');
+    }
+    else{
+      acBuf = strchr(&(acBuf[i + 2]), '\"');
+    }
+    if(acBuf != 0 && acBuf[1] != '*'){
+      acBuf = acBuf + 2;
+      i = 0;
+      TForteUInt16 nBufLength = static_cast<TForteUInt16>(strcspn(acBuf, "<\\") + 1);
+      pa_rstCommand.mAdditionalParams.assign(acBuf, nBufLength);
+    }
+    else{
+      return false;
+    }
+    bRetVal = true;
+    }
+  return bRetVal;
+}
+
 bool DEV_MGR::parseFBData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand){
   bool bRetVal = false;
 
@@ -274,7 +300,7 @@ void DEV_MGR::parseCreateData(char *pa_acRequestPartLeft, forte::core::SManageme
           if(parseFBData(pa_acRequestPartLeft, pa_rstCommand)){
             pa_rstCommand.mCMD = cg_nMGM_CMD_Create_FBInstance;
           }
-          else{
+          else if(parseFBType(pa_acRequestPartLeft, pa_rstCommand)){
             pa_rstCommand.mCMD = cg_nMGM_CMD_Create_FBType;
           }
           break;
