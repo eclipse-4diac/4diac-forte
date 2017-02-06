@@ -63,6 +63,20 @@ void operator delete[](void* pa_pvData) throw(){
     free(pa_pvData);
 }
 
+inline
+void operator delete(void* pa_pvData, size_t) throw(){
+  //TODO first quick and dirty solution for C++11
+  if (pa_pvData)
+    free(pa_pvData);
+}
+
+inline
+void operator delete[](void* pa_pvData, size_t) throw(){
+  //TODO first quick and dirty solution for C++11
+  if (pa_pvData)
+    free(pa_pvData);
+}
+
 /*! \brief Placement new operator
  *
  * Will use the given buffer as memory region. The need size will be ignored.
