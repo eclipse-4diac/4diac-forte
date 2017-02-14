@@ -154,13 +154,10 @@ bool DEV_MGR::parseFBType(char *pa_acRequestPartLeft, forte::core::SManagementCM
     int i = 0;
     if(acBuf[0] != '*'){
       i = parseIdentifier(acBuf, pa_rstCommand.mFirstParam);
-      acBuf = (-1 == i) ? 0 : strchr(&(acBuf[i + 1]), '\"');
+      acBuf = (-1 == i) ? 0 : strchr(&(acBuf[i + 1]), '>');
     }
-    else{
-      acBuf = strchr(&(acBuf[i + 2]), '\"');
-    }
-    if(acBuf != 0 && acBuf[1] != '*'){
-      acBuf = acBuf + 2;
+    if(acBuf != 0){
+      acBuf = acBuf + 1;
       i = 0;
       TForteUInt16 nBufLength = static_cast<TForteUInt16>(strcspn(acBuf, "<\\") + 1);
       pa_rstCommand.mAdditionalParams.assign(acBuf, nBufLength);

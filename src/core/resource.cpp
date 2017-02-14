@@ -62,6 +62,11 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
         retVal = createFB(itRunner, paCommand.mSecondParam.front(), this);
       }
         break;
+      case cg_nMGM_CMD_Create_FBType: {
+        forte::core::TNameIdentifier::CIterator itRunner(paCommand.mFirstParam.begin());
+        retVal = createFBTypeFromLua(itRunner, paCommand.mAdditionalParams);
+      }
+        break;
       case cg_nMGM_CMD_Delete_FBInstance: {
         forte::core::TNameIdentifier::CIterator itRunner(paCommand.mFirstParam.begin());
         retVal = deleteFB(itRunner);
@@ -247,6 +252,14 @@ EMGMResponse CResource::queryAllFBTypes(CIEC_STRING & paValue){
 		}
 	}
 	return retVal;
+}
+
+EMGMResponse CResource::createFBTypeFromLua(forte::core::TNameIdentifier::CIterator &paNameListIt,
+    CIEC_STRING & paLuaScriptAsString){
+  EMGMResponse retVal = e_UNSUPPORTED_TYPE;
+  //TODO: implement luatpye methode here
+
+  return retVal;
 }
 
 EMGMResponse CResource::queryAllAdapterTypes(CIEC_STRING & paValue){

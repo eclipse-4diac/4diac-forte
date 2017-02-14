@@ -148,6 +148,13 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      */
     EMGMResponse queryAllAdapterTypes(CIEC_STRING & paValue);
 
+    /*!\brief create
+     *
+     * @return response of the command execution as defined in IEC 61499
+     */
+    EMGMResponse createFBTypeFromLua(forte::core::TNameIdentifier::CIterator &paNameListIt,
+        CIEC_STRING & paLuaScriptAsString);
+
     /*!\brief get the variable with the given name identifier
      *
      * @param paNameList the identifier name list of the variable to be retrieved
