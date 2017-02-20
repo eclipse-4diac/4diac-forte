@@ -34,6 +34,7 @@ void CLocalComLayer::closeConnection(){
     else{
       sm_oLocalCommGroupsManager.unregisterSubl(m_poLocalCommGroup, this);
     }
+    m_poLocalCommGroup = 0;
   }
 }
 
@@ -160,7 +161,7 @@ void CLocalComLayer::CLocalCommGroupsManager::removeListEntry(CSinglyLinkedList<
 
   while(itRunner != pa_rlstList.end()){
     if((*itRunner) == pa_poLayer){
-      if(itRevNode == pa_rlstList.end()){
+      if(itRevNode == pa_rlstList.begin()){
         pa_rlstList.pop_front();
       }
       else{
