@@ -157,11 +157,11 @@ CLocalComLayer::SLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::create
 
 void CLocalComLayer::CLocalCommGroupsManager::removeListEntry(CSinglyLinkedList<CLocalComLayer*> &pa_rlstList, CLocalComLayer *pa_poLayer){
   CSinglyLinkedList<CLocalComLayer*>::Iterator itRunner = pa_rlstList.begin();
-  CSinglyLinkedList<CLocalComLayer*>::Iterator itRevNode = pa_rlstList.begin();
+  CSinglyLinkedList<CLocalComLayer*>::Iterator itRevNode = pa_rlstList.end();
 
   while(itRunner != pa_rlstList.end()){
     if((*itRunner) == pa_poLayer){
-      if(itRevNode == pa_rlstList.begin()){
+      if(itRevNode == pa_rlstList.end()){
         pa_rlstList.pop_front();
       }
       else{
