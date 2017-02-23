@@ -42,6 +42,11 @@ namespace luatype {
   }
 }
 
+CLuaFBTypeEntry::CLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING paLuaScriptAsString, SFBInterfaceSpec& interfaceSpec,
+    SInternalVarsInformation& internalVarsInformation)
+    : CTypeLib::CFBTypeEntry(typeNameId, 0), paLuaScriptAsString(paLuaScriptAsString), interfaceSpec(interfaceSpec), internalVarsInformation(internalVarsInformation) {
+}
+
 CLuaFBTypeEntry::CLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, std::string& definitionsPath, SFBInterfaceSpec& interfaceSpec,
     SInternalVarsInformation& internalVarsInformation)
     : CTypeLib::CFBTypeEntry(typeNameId, 0), definitionsPath(definitionsPath), interfaceSpec(interfaceSpec), internalVarsInformation(internalVarsInformation) {
@@ -50,6 +55,43 @@ CLuaFBTypeEntry::CLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, std::s
 CLuaFBTypeEntry::~CLuaFBTypeEntry() {
   deleteInterfaceSpec(interfaceSpec);
   deleteInternalVarsInformation(internalVarsInformation);
+}
+
+bool CLuaFBTypeEntry::createLuaFBTypeEntryFromLuaString(CStringDictionary::TStringId typeNameId, CIEC_STRING& paLuaScriptAsString) {
+  bool retVal = false;
+  CLuaEngine luaEngine;
+  DEVLOG_INFO(paLuaScriptAsString.getValue());
+  if (!luaEngine.loadString(std::string(paLuaScriptAsString.getValue()))) {
+    return retVal;
+  }
+  //interfaceSpec
+  SFBInterfaceSpec interfaceSpec = { };
+  if (!luaEngine.pushField(-1, "interfaceSpec", LUA_TTABLE)) {
+    return retVal;
+  }
+  if (!initInterfaceSpec(interfaceSpec, &luaEngine, -1)) {
+    deleteInterfaceSpec(interfaceSpec);
+    return retVal;
+  }
+  luaEngine.pop(); //pop interfaceSpec
+  //internalVarsInformation
+  SInternalVarsInformation internalVarsInformation = { };
+  if (!luaEngine.pushField(-1, "internalVarsInformation", LUA_TTABLE)) {
+    deleteInterfaceSpec(interfaceSpec);
+    return retVal;
+  }
+  if (!initInternalVarsInformation(internalVarsInformation, &luaEngine, -1)) {
+    deleteInterfaceSpec(interfaceSpec);
+    deleteInternalVarsInformation(internalVarsInformation);
+    return retVal;
+  }
+  luaEngine.pop(); //pop internalVarsInformation
+  luaEngine.pop(); //pop loaded defs
+  if(new CLuaFBTypeEntry(typeNameId, paLuaScriptAsString, interfaceSpec, internalVarsInformation) != NULL){
+    retVal = true;
+  }
+
+  return retVal;
 }
 
 CLuaFBTypeEntry* CLuaFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, std::string& definitionsPath) {
