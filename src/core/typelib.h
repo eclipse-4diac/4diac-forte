@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2005 - 2016 ACIN, Profactor GmbH, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,7 @@
  *    Alois Zoitl, Gunnar Grabmair, Rene Smodic, Gerhard Ebenhofer,
  *    Martin Melik Merkumians, Ingo Hegny, Micheal Hofmann
  *      - initial implementation and rework communication infrastructure
+ *    Martin Jobst - adapt for LUA integration
  *******************************************************************************/
 #ifndef _TYPELIB_H_
 #define _TYPELIB_H_
@@ -138,20 +139,21 @@ public:
       CTypeEntry *m_poNext; //!< a pointer to the next element in the list. Will be used to build single linked list of type entries.
 
       explicit CTypeEntry(CStringDictionary::TStringId pa_nTypeNameId);
-      ~CTypeEntry(void);
+      virtual ~CTypeEntry(void);
 
-      CStringDictionary::TStringId getTypeNameId(void) const { return m_nTypeNameId; };
-
+      CStringDictionary::TStringId getTypeNameId(void) const { 
+	    return m_nTypeNameId; 
+	  };
   };
 
 //! The base class for all function block types entries in the type lib.
   class CFBTypeEntry : public CTypeEntry{
     public:
       CFBTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TFunctionBlockCreateFunc pa_pfuncCreateFB);
-      ~CFBTypeEntry(void);
-      CFunctionBlock *createFBInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes){
-              return m_pfuncFBCreationFunc( pa_nInstanceNameId, pa_poSrcRes);
-            }
+      virtual ~CFBTypeEntry(void);
+      virtual CFunctionBlock *createFBInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes){
+        return m_pfuncFBCreationFunc( pa_nInstanceNameId, pa_poSrcRes);
+      }
     private:
        TFunctionBlockCreateFunc m_pfuncFBCreationFunc;
   };
@@ -161,8 +163,8 @@ public:
       class CAdapterTypeEntry : public CTypeEntry{
         public:
           CAdapterTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TAdapterCreateFunc pa_pfuncCreateAdapter);
-          ~CAdapterTypeEntry(void);
-          CAdapter *createAdapterInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, bool pa_bIsPlug){
+          virtual ~CAdapterTypeEntry(void);
+          virtual CAdapter *createAdapterInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, bool pa_bIsPlug){
             return m_pfuncAdapterCreationFunc( pa_nInstanceNameId, pa_poSrcRes, pa_bIsPlug);
           }
         private:
@@ -173,8 +175,8 @@ public:
   class CDataTypeEntry : public CTypeEntry{
     public:
       CDataTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TDataTypeCreateFunc pa_pfuncDTCreateFunc);
-      ~CDataTypeEntry(void);
-      CIEC_ANY *createDataTypeInstance(TForteByte *pa_acDataBuf){
+      virtual ~CDataTypeEntry(void);
+      virtual CIEC_ANY *createDataTypeInstance(TForteByte *pa_acDataBuf){
         return m_pfuncDTCreateFunc(pa_acDataBuf);
       };
     protected:

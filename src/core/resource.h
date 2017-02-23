@@ -136,6 +136,25 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      */
     EMGMResponse readValue(forte::core::TNameIdentifier &paNameList, CIEC_STRING & paValue);
 
+    /*!\brief Read the existing fb types.
+     *
+     * @return response of the command execution as defined in IEC 61499
+     */
+    EMGMResponse queryAllFBTypes(CIEC_STRING & paValue);
+
+    /*!\brief Read the existing adapter types.
+     *
+     * @return response of the command execution as defined in IEC 61499
+     */
+    EMGMResponse queryAllAdapterTypes(CIEC_STRING & paValue);
+
+    /*!\brief create
+     *
+     * @return response of the command execution as defined in IEC 61499
+     */
+    EMGMResponse createFBTypeFromLua(forte::core::TNameIdentifier::CIterator &paNameListIt,
+        CIEC_STRING & paLuaScriptAsString);
+
     /*!\brief get the variable with the given name identifier
      *
      * @param paNameList the identifier name list of the variable to be retrieved
