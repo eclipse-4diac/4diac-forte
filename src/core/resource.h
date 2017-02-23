@@ -15,6 +15,8 @@
 #include "ecet.h"
 #include "funcbloc.h"
 #include "fbcontainer.h"
+#include "luatype.h"
+#include "luaengine.h"
 
 #ifdef FORTE_SUPPORT_MONITORING
 #include <monitoring.h>

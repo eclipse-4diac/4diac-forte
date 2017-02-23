@@ -35,6 +35,11 @@ private:
   const std::string definitionsPath;
   SFBInterfaceSpec interfaceSpec;
   SInternalVarsInformation internalVarsInformation;
+  const CIEC_STRING paLuaScriptAsString;
+
+  CLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING paLuaScriptAsString,  SFBInterfaceSpec& interfaceSpec,
+      SInternalVarsInformation& internalVarsInformation);
+
 
   CLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, std::string& definitionsPath, SFBInterfaceSpec& interfaceSpec,
       SInternalVarsInformation& internalVarsInformation);
@@ -46,6 +51,7 @@ private:
   static void deleteInternalVarsInformation(SInternalVarsInformation& internalVarsInformation);
 public:
   static CLuaFBTypeEntry* createLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, std::string& definitionsPath);
+  static bool createLuaFBTypeEntryFromLuaString(CStringDictionary::TStringId typeNameId, CIEC_STRING& paLuaScriptAsString);
 
   virtual CFunctionBlock* createFBInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
