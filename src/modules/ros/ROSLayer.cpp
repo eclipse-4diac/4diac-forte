@@ -11,6 +11,7 @@
  *******************************************************************************/
 
 #include "ROSLayer.h"
+#include "ROSManager.h"
 
 #include <std_msgs/Float64.h>
 #include <std_msgs/Int32.h>
@@ -50,7 +51,7 @@ EComResponse CROSLayer::openConnection(char *pa_acLayerParameter){
 
   if(e_Subscriber == m_eCommServiceType){
     // initialize ros manager for subscribers to start externalEventChain
-    CROSLayer::CROSManager::getInstance();
+    CROSManager::getInstance();
 
     m_NumRDs = getCommFB()->getNumRD();
 
@@ -153,7 +154,7 @@ void CROSLayer::handleReceivedValue(const boost::shared_ptr<const topic_tools::S
 
   getCommFB()->interruptCommFB(this);
 
-  CROSLayer::CROSManager::getInstance().startChain(this->getCommFB());
+  CROSManager::getInstance().startChain(this->getCommFB());
 }
 
 void CROSLayer::closeConnection(){
@@ -255,50 +256,4 @@ EComResponse CROSLayer::recvData(const void *pa_pvData, unsigned int pa_unSize){
 EComResponse CROSLayer::processInterrupt(){
   //we don't need to do anything here (only 1 layer)
   return m_eInterruptResp;
-}
-
-//	 ------------------------- CROSLayer::CROSManager -------------------------
-
-DEFINE_SINGLETON(CROSLayer::CROSManager);
-
-CROSLayer::CROSManager::CROSManager() :
-    CThread(/* long stacksize , 3500*/){
-
-  start();
-}
-
-CROSLayer::CROSManager::~CROSManager(){
-
-  end();
-}
-
-void CROSLayer::CROSManager::enableHandler(){
-
-}
-
-void CROSLayer::CROSManager::disableHandler(){
-  // nodehandle.shutdown()
-  ros::shutdown();
-}
-
-void CROSLayer::CROSManager::setPriority(int pa_prio){
-  //	FIXME adjust thread priority correctly
-}
-
-int CROSLayer::CROSManager::getPriority() const{
-  return 0;
-}
-
-void CROSLayer::CROSManager::startChain(CEventSourceFB *pa_poECStartF){
-  if(0 != pa_poECStartF){
-    //ROS_INFO("[ROSLAYER] startchain called!");
-    startNewEventChain(pa_poECStartF);
-  }
-}
-
-void CROSLayer::CROSManager::run(){
-  //	&& ros::ok()
-  while(isAlive()){
-    ros::spinOnce();
-  }
 }

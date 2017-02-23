@@ -40,8 +40,8 @@ void FORTE_TRIGGER_SERVICE_CLIENT::executeEvent(int pa_nEIID){
     case scm_nEventINITID:
       //initiate
       if(!m_Initiated && QI()){
-        m_RosNamespace = CROSActionManager::getInstance().ciecStringToStdString(NAMESPACE());
-        m_RosMsgName = CROSActionManager::getInstance().ciecStringToStdString(SRVNAME());
+        m_RosNamespace = CROSManager::getInstance().ciecStringToStdString(NAMESPACE());
+        m_RosMsgName = CROSManager::getInstance().ciecStringToStdString(SRVNAME());
         m_nh = new ros::NodeHandle(m_RosNamespace);
         m_triggerClient = m_nh->serviceClient < std_srvs::Trigger > (m_RosMsgName);
         m_Initiated = true;
@@ -72,7 +72,7 @@ void FORTE_TRIGGER_SERVICE_CLIENT::executeEvent(int pa_nEIID){
         bool srv_success = m_triggerClient.call(m_srv);
 
         SUCCESS() = m_srv.response.success;
-        MESSAGE() = CROSActionManager::getInstance().stdStringToCiecString(m_srv.response.message);
+        MESSAGE() = CROSManager::getInstance().stdStringToCiecString(m_srv.response.message);
 
         if(srv_success){
           QO() = true;

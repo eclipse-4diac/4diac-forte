@@ -52,24 +52,6 @@ class CROSLayer : public forte::com_infra::CComLayer{
     int m_NumSDs;
 
     void handleReceivedValue(const boost::shared_ptr<const topic_tools::ShapeShifter>& pa_message);
-
-    //TODO refactor ROSActionManager and CROSManager (in class CROSLayer)
-
-    class CROSManager : public CExternalEventHandler, private CThread{
-      DECLARE_SINGLETON(CROSManager)
-
-      public:
-        virtual void enableHandler();
-        virtual void disableHandler();
-        virtual void setPriority(int);
-        virtual int getPriority() const;
-
-        void startChain(CEventSourceFB *pa_poECStartF);
-
-      protected:
-        virtual void run();
-
-    };
 };
 
 #endif //_CROSLAYER_H_

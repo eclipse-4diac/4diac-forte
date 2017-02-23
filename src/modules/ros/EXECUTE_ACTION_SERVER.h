@@ -21,7 +21,6 @@
 #include <actionlib/server/simple_action_server.h>
 #include <reapp_msgs/ExecuteAction.h>
 #include <reapp_msgs/ExecuteResult.h>
-//#include <thread> //TODO do we need it?
 
 typedef boost::shared_ptr<reapp_msgs::ExecuteGoal const> ExecuteGoalConstPtr; //Warum funktioniert boost::bind mit typedef, aber nicht ohne??
 typedef actionlib::SimpleActionServer<reapp_msgs::ExecuteAction> actionServer;

@@ -18,7 +18,7 @@
 #include <forte_string.h>
 #include <ros/ros.h>
 #include <std_srvs/Trigger.h>
-#include "ROSActionManager.h"
+#include "ROSManager.h"
 
 class FORTE_TRIGGER_SERVICE_CLIENT : public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_TRIGGER_SERVICE_CLIENT)

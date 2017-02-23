@@ -24,7 +24,7 @@ forte_add_definition("-std=c++11") # execute action server needs c++11
 #############################################################################
 
 forte_add_module(ROS "Function Blocks to communicate with ROS (topics, services, actions)")
-forte_add_sourcefile_hcpp(ROSActionManager)
+forte_add_sourcefile_hcpp(ROSManager)
 forte_add_sourcefile_hcpp(EXECUTE_ACTION_CLIENT)
 forte_add_sourcefile_hcpp(EXECUTE_ACTION_SERVER)
 forte_add_sourcefile_hcpp(TRIGGER_SERVICE_CLIENT)

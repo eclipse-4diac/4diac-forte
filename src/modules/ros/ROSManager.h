@@ -1,4 +1,4 @@
-/*******************************************************************************
+#/*******************************************************************************
  * Copyright (c) 2016 - 2017 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -10,6 +10,9 @@
  *      - initial implementation and documentation
  *******************************************************************************/
 
+#ifndef CROSMANAGER_H_
+#define CROSMANAGER_H_
+
 #include <extevhan.h>
 #include <thread.h>
 #include <singlet.h>
@@ -17,8 +20,8 @@
 #include <forte_string.h>
 #include <string>
 
-class CROSActionManager : public CExternalEventHandler, private CThread{
-  DECLARE_SINGLETON(CROSActionManager)
+class CROSManager : public CExternalEventHandler, private CThread{
+  DECLARE_SINGLETON(CROSManager)
 
   public:
     virtual void enableHandler();
@@ -34,3 +37,5 @@ class CROSActionManager : public CExternalEventHandler, private CThread{
     virtual void run();
 
 };
+
+#endif

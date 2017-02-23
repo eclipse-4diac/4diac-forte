@@ -10,56 +10,56 @@
  *      - initial implementation and documentation
  *******************************************************************************/
 
-#include "ROSActionManager.h"
+#include "ROSManager.h"
 
 #include <ros/ros.h>
 
 //	 ------------------------- CROSLayer::CROSManager -------------------------
 
-DEFINE_SINGLETON(CROSActionManager);
+DEFINE_SINGLETON(CROSManager);
 
-CROSActionManager::CROSActionManager() :
+CROSManager::CROSManager() :
     CThread(/* long stacksize , 3500*/){
   start();
 }
 
-CROSActionManager::~CROSActionManager(){
+CROSManager::~CROSManager(){
   end();
 }
 
-void CROSActionManager::enableHandler(){
+void CROSManager::enableHandler(){
 
 }
 
-void CROSActionManager::disableHandler(){
+void CROSManager::disableHandler(){
   ros::shutdown();
 }
 
-void CROSActionManager::setPriority(int pa_prio){
+void CROSManager::setPriority(int pa_prio){
   //	FIXME adjust thread priority correctly
 }
 
-int CROSActionManager::getPriority() const{
+int CROSManager::getPriority() const{
   return 0;
 }
 
-void CROSActionManager::startChain(CEventSourceFB *pa_poECStartF){
+void CROSManager::startChain(CEventSourceFB *pa_poECStartF){
   if(0 != pa_poECStartF){
     startNewEventChain(pa_poECStartF);
   }
 }
 
-void CROSActionManager::run(){
+void CROSManager::run(){
   while(isAlive() && ros::ok()){
     ros::spinOnce();
   }
 }
 
-std::string CROSActionManager::ciecStringToStdString(const CIEC_STRING &pa_DataInput){
+std::string CROSManager::ciecStringToStdString(const CIEC_STRING &pa_DataInput){
   return std::string(pa_DataInput.getValue());
 }
 
-CIEC_STRING CROSActionManager::stdStringToCiecString(const std::string pa_inputString){
+CIEC_STRING CROSManager::stdStringToCiecString(const std::string pa_inputString){
   int stringLength = std::strlen(pa_inputString.c_str());
   CIEC_STRING tmpString;
   tmpString.assign(pa_inputString.c_str(), static_cast<TForteUInt16>(stringLength));

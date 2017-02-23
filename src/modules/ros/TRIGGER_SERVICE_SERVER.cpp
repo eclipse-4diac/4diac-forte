@@ -10,7 +10,7 @@
  *      - initial implementation and documentation
  *******************************************************************************/
 
-#include "ROSActionManager.h"
+#include "ROSManager.h"
 #include <ros/ros.h>
 
 #include "TRIGGER_SERVICE_SERVER.h"
@@ -44,8 +44,8 @@ void FORTE_TRIGGER_SERVICE_SERVER::executeEvent(int pa_nEIID){
       //initiate
       if(!m_Initiated && QI()){
 
-        m_RosNamespace = CROSActionManager::getInstance().ciecStringToStdString(NAMESPACE());
-        m_RosMsgName = CROSActionManager::getInstance().ciecStringToStdString(SRVNAME());
+        m_RosNamespace = CROSManager::getInstance().ciecStringToStdString(NAMESPACE());
+        m_RosMsgName = CROSManager::getInstance().ciecStringToStdString(SRVNAME());
         m_nh = new ros::NodeHandle(m_RosNamespace);
         m_triggerServer = m_nh->advertiseService < FORTE_TRIGGER_SERVICE_SERVER > (m_RosMsgName, &FORTE_TRIGGER_SERVICE_SERVER::triggerCallback, const_cast<FORTE_TRIGGER_SERVICE_SERVER*>(this));
         m_Initiated = true;
@@ -80,10 +80,10 @@ void FORTE_TRIGGER_SERVICE_SERVER::executeEvent(int pa_nEIID){
 bool FORTE_TRIGGER_SERVICE_SERVER::triggerCallback(std_srvs::Trigger::Request &pa_req, std_srvs::Trigger::Response &pa_resp){
   //write response
   pa_resp.success = SUCCESS();
-  pa_resp.message = CROSActionManager::getInstance().ciecStringToStdString(MESSAGE());
+  pa_resp.message = CROSManager::getInstance().ciecStringToStdString(MESSAGE());
 
   setEventChainExecutor(m_poInvokingExecEnv);
-  CROSActionManager::getInstance().startChain(this);
+  CROSManager::getInstance().startChain(this);
 
   ros::Rate r(2); //1Hz
 

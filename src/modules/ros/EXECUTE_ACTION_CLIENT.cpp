@@ -11,7 +11,7 @@
  *******************************************************************************/
 
 #include <ros/ros.h>
-#include "ROSActionManager.h"
+#include "ROSManager.h"
 
 #include "EXECUTE_ACTION_CLIENT.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -44,8 +44,8 @@ void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(int pa_nEIID){
       //initialize FB
       if(!m_Initiated){
 
-        //initialize one instance of the CROSActionManager which will start the externalEventChain
-        CROSActionManager::getInstance();
+        //initialize one instance of the CROSManager which will start the externalEventChain
+        CROSManager::getInstance();
         connectToActionServer();
         QO() = true;
       }
@@ -76,7 +76,7 @@ void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(int pa_nEIID){
             reapp_msgs::ExecuteGoal goal;
             goal.id1 = ID1();
             goal.id2 = ID2();
-            goal.command = CROSActionManager::getInstance().ciecStringToStdString(COMMAND());
+            goal.command = CROSManager::getInstance().ciecStringToStdString(COMMAND());
 
             m_ActionClient->sendGoal(goal, boost::bind(&FORTE_EXECUTE_ACTION_CLIENT::doneCallback, this, _1, _2), boost::bind(&FORTE_EXECUTE_ACTION_CLIENT::activeCallback, this), boost::bind(&FORTE_EXECUTE_ACTION_CLIENT::feedbackCallback, this, _1));
 
@@ -139,7 +139,7 @@ void FORTE_EXECUTE_ACTION_CLIENT::doneCallback(const actionlib::SimpleClientGoal
   ACTIONSTATUS() = getCurrentActionState().c_str();
   QO() = true;
   m_GoalActive = false;
-  CROSActionManager::getInstance().startChain(this);
+  CROSManager::getInstance().startChain(this);
 }
 
 void FORTE_EXECUTE_ACTION_CLIENT::activeCallback(){
@@ -152,7 +152,7 @@ void FORTE_EXECUTE_ACTION_CLIENT::feedbackCallback(const ExecuteFeedbackConstPtr
 
   ACTIONSTATUS() = getCurrentActionState().c_str();
   QO() = false;
-  CROSActionManager::getInstance().startChain(this);
+  CROSManager::getInstance().startChain(this);
 }
 
 std::string FORTE_EXECUTE_ACTION_CLIENT::getCurrentActionState(){
@@ -189,8 +189,8 @@ std::string FORTE_EXECUTE_ACTION_CLIENT::getCurrentActionState(){
 }
 
 void FORTE_EXECUTE_ACTION_CLIENT::connectToActionServer(){
-  m_RosNamespace = CROSActionManager::getInstance().ciecStringToStdString(ACTIONNAMESPACE());
-  m_RosMsgName = CROSActionManager::getInstance().ciecStringToStdString(ACTIONMSGNAME());
+  m_RosNamespace = CROSManager::getInstance().ciecStringToStdString(ACTIONNAMESPACE());
+  m_RosMsgName = CROSManager::getInstance().ciecStringToStdString(ACTIONMSGNAME());
   DEVLOG_DEBUG("[EXEC_CLIENT] Namespace: %s \nMessage name : %s \n", m_RosNamespace.c_str(), m_RosMsgName.c_str());
 
   nh = new ros::NodeHandle(m_RosNamespace);
