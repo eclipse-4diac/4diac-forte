@@ -78,18 +78,18 @@ void FORTE_TRIGGER_SERVICE_SERVER::executeEvent(int pa_nEIID){
 }
 
 bool FORTE_TRIGGER_SERVICE_SERVER::triggerCallback(std_srvs::Trigger::Request &pa_req, std_srvs::Trigger::Response &pa_resp){
-  //write response
-  pa_resp.success = SUCCESS();
-  pa_resp.message = CROSManager::getInstance().ciecStringToStdString(MESSAGE());
-
   setEventChainExecutor(m_poInvokingExecEnv);
   CROSManager::getInstance().startChain(this);
 
+  // is a response available
   ros::Rate r(2); //1Hz
-
   while(!mResponseAvailable){
     r.sleep();
   }
+
+  //write response
+  pa_resp.success = SUCCESS();
+  pa_resp.message = CROSManager::getInstance().ciecStringToStdString(MESSAGE());
 
   m_ResponseAvailable = false;
 

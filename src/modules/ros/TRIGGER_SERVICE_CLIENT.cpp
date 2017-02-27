@@ -10,6 +10,9 @@
  *      - initial implementation and documentation
  *******************************************************************************/
 
+#include "ServiceCallManager.h"
+#include "ROSManager.h"
+
 #include "TRIGGER_SERVICE_CLIENT.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "TRIGGER_SERVICE_CLIENT_gen.cpp"
@@ -40,50 +43,79 @@ void FORTE_TRIGGER_SERVICE_CLIENT::executeEvent(int pa_nEIID){
     case scm_nEventINITID:
       //initiate
       if(!m_Initiated && QI()){
+        setEventChainExecutor(m_poInvokingExecEnv);
         m_RosNamespace = CROSManager::getInstance().ciecStringToStdString(NAMESPACE());
         m_RosMsgName = CROSManager::getInstance().ciecStringToStdString(SRVNAME());
         m_nh = new ros::NodeHandle(m_RosNamespace);
         m_triggerClient = m_nh->serviceClient < std_srvs::Trigger > (m_RosMsgName);
-        m_Initiated = true;
         STATUS() = "Client waits for server";
-        bool connect_success = m_triggerClient.waitForExistence();
 
-        STATUS() = "Client connected to server";
-        QO() = true;
+        CServiceCallManager::getInstance().queueConnectWait(this);
       }
       //terminate
       else if(m_Initiated && !QI()){
         m_nh->shutdown();
         STATUS() = "Client terminated";
         QO() = false;
+        m_Initiated = false;
+        sendOutputEvent(scm_nEventINITOID);
       }
       //silently ignore other cases
       else{
         STATUS() = "Unknown init command sequence";
+        sendOutputEvent(scm_nEventINITOID);
       }
-      sendOutputEvent(scm_nEventINITOID);
       break;
     case scm_nEventREQID:
       //call service
       if(m_Initiated && QI()){
         STATUS() = "Request sent";
-
-        // TODO implement a non-blocking version of the client (worker-thread in handler)
-        bool srv_success = m_triggerClient.call(m_srv);
-
-        SUCCESS() = m_srv.response.success;
-        MESSAGE() = CROSManager::getInstance().stdStringToCiecString(m_srv.response.message);
-
-        if(srv_success){
-          QO() = true;
-          STATUS() = "Response received";
-        }
-        else{
-          QO() = false;
-          STATUS() = "Receiving response failed";
-        }
+        //add to queue
+        CServiceCallManager::getInstance().queueServiceCall(this);
       }
-      sendOutputEvent(scm_nEventCNFID);
+      //uninitialized or REQ-
+      else{
+        STATUS() = "Sending request not possible";
+        QO() = false;
+        sendOutputEvent(scm_nEventCNFID);
+      }
+      break;
+    case cg_nExternalEventID:
+      //waitForExistence returned
+      if(!m_Initiated){
+        m_Initiated = true;
+        STATUS() = "Client connected to server";
+        QO() = true;
+        sendOutputEvent(scm_nEventINITOID);
+      }
+      //call returned
+      else{
+        sendOutputEvent(scm_nEventCNFID);
+      }
       break;
   }
+}
+
+void FORTE_TRIGGER_SERVICE_CLIENT::callService(){
+  bool srv_success = m_triggerClient.call(m_srv);
+
+  SUCCESS() = m_srv.response.success;
+  MESSAGE() = CROSManager::getInstance().stdStringToCiecString(m_srv.response.message);
+
+  if(srv_success){
+    QO() = true;
+    STATUS() = "Response received";
+  }
+  else{
+    QO() = false;
+    STATUS() = "Receiving response failed";
+    SUCCESS() = false;
+    MESSAGE() = "failed";
+  }
+  CServiceCallManager::getInstance().startChain(this);
+}
+
+void FORTE_TRIGGER_SERVICE_CLIENT::waitForServer(){
+  bool connect_success = m_triggerClient.waitForExistence();
+  CServiceCallManager::getInstance().startChain(this);
 }

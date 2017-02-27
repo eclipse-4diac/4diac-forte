@@ -18,7 +18,8 @@
 #include <forte_string.h>
 #include <ros/ros.h>
 #include <std_srvs/Trigger.h>
-#include "ROSManager.h"
+
+class CServiceCallManager;
 
 class FORTE_TRIGGER_SERVICE_CLIENT : public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_TRIGGER_SERVICE_CLIENT)
@@ -27,8 +28,6 @@ class FORTE_TRIGGER_SERVICE_CLIENT : public CFunctionBlock{
 
     bool m_Initiated;
     ros::NodeHandle* m_nh;
-    ros::ServiceClient m_triggerClient;
-    std_srvs::Trigger m_srv;
     std::string m_RosNamespace;
     std::string m_RosMsgName;
 
@@ -91,6 +90,12 @@ class FORTE_TRIGGER_SERVICE_CLIENT : public CFunctionBlock{
     void executeEvent(int pa_nEIID);
 
   public:
+    ros::ServiceClient m_triggerClient;
+    std_srvs::Trigger m_srv;
+
+    void callService();
+    void waitForServer();
+
     FUNCTION_BLOCK_CTOR(FORTE_TRIGGER_SERVICE_CLIENT), m_Initiated(false) , m_RosNamespace(""), m_RosMsgName(""){
     };
 
