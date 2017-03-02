@@ -159,7 +159,7 @@ bool DEV_MGR::parseFBType(char *pa_acRequestPartLeft, forte::core::SManagementCM
     if(acBuf != 0){
       acBuf = acBuf + 1;
       i = 0;
-      TForteUInt16 nBufLength = static_cast<TForteUInt16>(strcspn(acBuf, "<\\") + 1);
+      TForteUInt16 nBufLength = static_cast<TForteUInt16>(strcspn(acBuf, "<"));
       pa_rstCommand.mAdditionalParams.assign(acBuf, nBufLength);
     }
     else{

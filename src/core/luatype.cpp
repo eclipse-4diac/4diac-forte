@@ -14,7 +14,6 @@
 #include "luaengine.h"
 #include "luafb.h"
 
-const CLuaFBTypeEntry::Test CLuaFBTypeEntry::testEntry;
 
 namespace luatype {
   bool getAdapterInstanceDefinition(SAdapterInstanceDef& def, CLuaEngine* luaEngine, int index) {
@@ -60,7 +59,6 @@ CLuaFBTypeEntry::~CLuaFBTypeEntry() {
 bool CLuaFBTypeEntry::createLuaFBTypeEntryFromLuaString(CStringDictionary::TStringId typeNameId, CIEC_STRING& paLuaScriptAsString) {
   bool retVal = false;
   CLuaEngine luaEngine;
-  DEVLOG_INFO(paLuaScriptAsString.getValue());
   if (!luaEngine.loadString(std::string(paLuaScriptAsString.getValue()))) {
     return retVal;
   }
@@ -128,7 +126,7 @@ CLuaFBTypeEntry* CLuaFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStrin
 CFunctionBlock* CLuaFBTypeEntry::createFBInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) {
   CLuaEngine* luaEngine = pa_poSrcRes->getLuaEngine();
   if (!luaEngine->load(this)) {
-    if (!luaEngine->loadFile(definitionsPath)) {
+    if (!luaEngine->loadString(std::string(paLuaScriptAsString.getValue()))) {
       return NULL;
     }
     luaEngine->pushField(-1, "ECC", LUA_TFUNCTION);

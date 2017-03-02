@@ -21,16 +21,6 @@
 
 class CLuaFBTypeEntry: public CTypeLib::CFBTypeEntry {
 private:
-  class Test {
-  public:
-    Test() {
-      std::string path = "../LuaFORTE/src/FlipFlop.lua";
-      createLuaFBTypeEntry(CStringDictionary::getInstance().insert("FlipFlop"), path);
-//      std::string path2 = "../LuaFORTE/src/Sort_INT.lua";
-//      createLuaFBTypeEntry(CStringDictionary::getInstance().insert("Sort_INT"), path2);
-    }
-  };
-  static const Test testEntry;
 
   const std::string definitionsPath;
   SFBInterfaceSpec interfaceSpec;
