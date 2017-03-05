@@ -17,8 +17,6 @@
 #include "adapterconn.h"
 #include "if2indco.h"
 #include "utils/criticalregion.h"
-#include "utils/fixedcapvector.h"
-
 
 CResource::CResource(CResource* pa_poDevice, const SFBInterfaceSpec *pa_pstInterfaceSpec,
     const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData,
@@ -257,16 +255,9 @@ EMGMResponse CResource::queryAllFBTypes(CIEC_STRING & paValue){
 }
 
 EMGMResponse CResource::createFBTypeFromLua(forte::core::TNameIdentifier::CIterator &paNameListIt,
-    CIEC_STRING& paLuaScriptAsString){
+    CIEC_STRING & paLuaScriptAsString){
   EMGMResponse retVal = e_UNSUPPORTED_TYPE;
- if(paNameListIt.isLastEntry()){
-   if(CLuaFBTypeEntry::createLuaFBTypeEntryFromLuaString(CStringDictionary::getInstance().insert("blablup"), paLuaScriptAsString)){
-     retVal = e_RDY;
-   }else{
-     retVal = e_INVALID_OPERATION;
-   }
-   ;
- }
+  //TODO: implement luatpye methode here
 
   return retVal;
 }
