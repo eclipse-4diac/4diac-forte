@@ -1,5 +1,5 @@
 /*******************************************************************************
-  * Copyright (c) 2015 - 2016 fortiss GmbH
+  * Copyright (c) 2015 fortiss GmbH
   * All rights reserved. This program and the accompanying materials
   * are made available under the terms of the Eclipse Public License v1.0
   * which accompanies this distribution, and is available at
@@ -8,26 +8,27 @@
   * Contributors:
   *    Alois Zoitl
   *      - initial implementation and rework communication infrastructure
-  *    Martin Jobst - adapt for LUA integration
   *******************************************************************************/
 #include "fbcontainer.h"
-#include "luaengine.h"
 
 using namespace forte::core;
 
 CFBContainer::CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer *paParent) :
-    mContainerName(paContainerName), mParent(paParent) {
-  luaEngine = new CLuaEngine();
+    mContainerName(paContainerName),
+        mParent(paParent){
+
 }
 
-CFBContainer::~CFBContainer() {
-  delete luaEngine;
-  for (TFunctionBlockList::Iterator itRunner(mFunctionBlocks.begin()); itRunner != mFunctionBlocks.end(); ++itRunner) {
+CFBContainer::~CFBContainer(){
+
+  for(TFunctionBlockList::Iterator itRunner(mFunctionBlocks.begin());
+      itRunner != mFunctionBlocks.end(); ++itRunner){
     CTypeLib::deleteFB(*itRunner);
   }
   mFunctionBlocks.clearAll();
 
-  for (TFBContainerList::Iterator itRunner(mSubContainers.begin()); itRunner != mSubContainers.end(); ++itRunner) {
+  for(TFBContainerList::Iterator itRunner(mSubContainers.begin());
+      itRunner != mSubContainers.end(); ++itRunner){
     delete (*itRunner);
   }
   mSubContainers.clearAll();

@@ -1,5 +1,5 @@
 /*******************************************************************************
-  * Copyright (c) 2016 fortiss GmbH
+  * Copyright (c) 2015 fortiss GmbH
   * All rights reserved. This program and the accompanying materials
   * are made available under the terms of the Eclipse Public License v1.0
   * which accompanies this distribution, and is available at
@@ -8,7 +8,6 @@
   * Contributors:
   *    Alois Zoitl
   *      - initial implementation and rework communication infrastructure
-  *    Martin Jobst - adapt for LUA integration
   *******************************************************************************/
 #ifndef _FBCONTAINER_H_
 #define _FBCONTAINER_H_
@@ -18,7 +17,6 @@
 #include "funcbloc.h"
 #include "mgmcmdstruct.h"
 
-class CLuaEngine;
 namespace forte {
   namespace core {
 
@@ -49,10 +47,6 @@ namespace forte {
 
         TFunctionBlockList &getFBList(){
           return mFunctionBlocks;
-        }
-
-        CLuaEngine *getLuaEngine(){
-          return luaEngine;
         }
 
       protected:
@@ -99,8 +93,6 @@ namespace forte {
 
         TFunctionBlockList mFunctionBlocks; //!< The functionblocks hold in this container
         TFBContainerList mSubContainers; //!< List of subcontainers (i.e, subapplications in this container)
-
-        CLuaEngine *luaEngine; //!< The Lua engine for this container
     };
 
   } /* namespace core */
