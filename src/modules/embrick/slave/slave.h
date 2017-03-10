@@ -21,6 +21,7 @@
 #include <forte_sync.h>
 #include <forte_wstring.h>
 #include <devlog.h>
+#include <io/mapper.h>
 
 namespace EmBrick {
 
@@ -45,12 +46,17 @@ class Slave {
 
 public:
 
+  struct Config {
+    unsigned int UpdateInterval;
+  };
+
   class Delegate {
   public:
     virtual void onSlaveStatus(SlaveStatus status, SlaveStatus oldStatus) = 0;
     virtual void onSlaveDestroy() = 0;
   };
 
+  void setConfig(Config config);
   Delegate* delegate;
 
   const unsigned int address;
@@ -61,6 +67,7 @@ public:
   const SlaveType type;
 
   int update();
+  void forceUpdate();
 
   SlaveHandle* getInputHandle(int index) {
     return getHandle(&inputs, index);
@@ -70,9 +77,9 @@ public:
   }
 
   void addHandle(SlaveHandle* handle) {
-    if (handle->is(IOHandle::Input))
+    if (handle->is(IOMapper::In))
       addHandle(&inputs, handle);
-    else if (handle->is(IOHandle::Output))
+    else if (handle->is(IOMapper::Out))
       addHandle(&outputs, handle);
   }
 
@@ -89,6 +96,8 @@ protected:
   virtual ~Slave();
 
   BusHandler *bus;
+
+  Config config;
 
   const uint8_t dataSendLength;
   const uint8_t dataReceiveLength;

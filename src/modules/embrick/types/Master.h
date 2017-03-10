@@ -35,8 +35,20 @@ private:
     return *static_cast<CIEC_BOOL*>(getDI(0));
   }
 
-  CIEC_WSTRING &PARAMS() {
-    return *static_cast<CIEC_WSTRING*>(getDI(1));
+  CIEC_UINT &BusInterface() {
+    return *static_cast<CIEC_UINT*>(getDI(1));
+  }
+
+  CIEC_UDINT &BusInitSpeed() {
+    return *static_cast<CIEC_UDINT*>(getDI(2));
+  }
+
+  CIEC_UDINT &BusLoopSpeed() {
+    return *static_cast<CIEC_UDINT*>(getDI(3));
+  }
+
+  CIEC_UINT &SlaveUpdateInterval() {
+    return *static_cast<CIEC_UINT*>(getDI(4));
   }
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
@@ -69,12 +81,14 @@ private:
   static const int scm_nBusAdapterAdpNum = 0;
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-  FORTE_FB_DATA_ARRAY(2, 2, 2, 1)
+  FORTE_FB_DATA_ARRAY(2, 5, 2, 1)
+
+  virtual void setInitialValues();
 
   void executeEvent(int pa_nEIID);
 
 public:
-  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(Master, CEventSourceFB) {
+  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(Master, CEventSourceFB){
 
   }
 
@@ -88,13 +102,15 @@ private:
   int errorCounter;
 
   void init();
+  void onBusEvent();
   void onError(bool isFatal = true);
 
   static const char * const scmOK;
   static const char * const scmFailedToInitSlaves;
 };
 
-} /* namespace FunctionsBlocks */
+}
+/* namespace FunctionsBlocks */
 } /* namespace EmBrick */
 
 #endif //close the ifdef sequence from the beginning of the file

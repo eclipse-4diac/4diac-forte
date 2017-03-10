@@ -16,22 +16,15 @@
 #include <forte_any.h>
 #include <forte_bool.h>
 
-namespace EmBrick {
+#include "mapper.h"
 
-class IOMapper;
-class IOObserver;
+namespace EmBrick {
 
 class IOHandle {
   friend class IOMapper;
 
 public:
-  enum Direction
-    : char {
-      Input, Output
-  };
-
-public:
-  IOHandle(Direction direction);
+  IOHandle(IOMapper::Direction direction);
   virtual ~IOHandle();
 
   bool hasObserver() {
@@ -46,7 +39,7 @@ public:
     return this->type == type;
   }
 
-  bool is(Direction direction) {
+  bool is(IOMapper::Direction direction) {
     return this->direction == direction;
   }
 
@@ -59,7 +52,7 @@ protected:
 
   IOObserver *observer;
   CIEC_ANY::EDataTypeID type;
-  Direction direction;
+  IOMapper::Direction direction;
 };
 
 } /* namespace EmBrick */

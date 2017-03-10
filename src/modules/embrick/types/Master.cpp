@@ -20,10 +20,12 @@ namespace FunctionBlocks {
 DEFINE_FIRMWARE_FB(Master, g_nStringIdEBMaster)
 
 const CStringDictionary::TStringId Master::scm_anDataInputNames[] = {
-    g_nStringIdQI, g_nStringIdPARAMS };
+    g_nStringIdQI, g_nStringIdBusInterface, g_nStringIdBusInitSpeed,
+    g_nStringIdBusLoopSpeed, g_nStringIdSlaveUpdateInterval };
 
 const CStringDictionary::TStringId Master::scm_anDataInputTypeIds[] = {
-    g_nStringIdBOOL, g_nStringIdWSTRING };
+    g_nStringIdBOOL, g_nStringIdUINT, g_nStringIdUDINT, g_nStringIdUDINT,
+    g_nStringIdUINT };
 
 const CStringDictionary::TStringId Master::scm_anDataOutputNames[] = {
     g_nStringIdQO, g_nStringIdSTATUS };
@@ -32,7 +34,7 @@ const CStringDictionary::TStringId Master::scm_anDataOutputTypeIds[] = {
     g_nStringIdBOOL, g_nStringIdWSTRING };
 
 const TForteInt16 Master::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID Master::scm_anEIWith[] = { 0, 1, 255 };
+const TDataIOID Master::scm_anEIWith[] = { 0, 2, 4, 3, 1, 255 };
 const CStringDictionary::TStringId Master::scm_anEventInputNames[] = {
     g_nStringIdINIT };
 
@@ -46,7 +48,7 @@ const SAdapterInstanceDef Master::scm_astAdapterInstances[] = { {
 
 const SFBInterfaceSpec Master::scm_stFBInterfaceSpec = { 1,
     scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 2,
-    scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 2,
+    scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 5,
     scm_anDataInputNames, scm_anDataInputTypeIds, 2, scm_anDataOutputNames,
     scm_anDataOutputTypeIds, 1, scm_astAdapterInstances };
 
@@ -74,6 +76,13 @@ Master::~Master() {
   }
 }
 
+void Master::setInitialValues() {
+  BusInterface() = 1;
+  BusInitSpeed() = 300000;
+  BusLoopSpeed() = 700000;
+  SlaveUpdateInterval() = 25;
+}
+
 void Master::executeEvent(int pa_nEIID) {
   if (BusAdapterOut().INITO() == pa_nEIID) {
     QO() = BusAdapterOut().QO();
@@ -95,25 +104,7 @@ void Master::executeEvent(int pa_nEIID) {
   switch (pa_nEIID) {
 
   case cg_nExternalEventID:
-    if (bus) {
-      if (bus->hasError()) {
-        STATUS() = bus->getStatus();
-        if (false == QO()) {
-          DEVLOG_ERROR(
-              "emBrick[Master]: Failed to init BusHandler. Reason: %s\n",
-              STATUS().getValue());
-        } else {
-          DEVLOG_ERROR("emBrick[Master]: Runtime error. Reason: %s\n",
-              STATUS().getValue());
-        }
-        onError();
-      } else {
-        // Init configuration
-        BusAdapterOut().INDEX() = 0;
-        sendAdapterEvent(scm_nBusAdapterAdpNum, BusAdapter::scm_nEventINITID);
-      }
-    }
-    break;
+    return onBusEvent();
 
   case scm_nEventINITID:
     if (true == QI()) {
@@ -147,7 +138,34 @@ void Master::init() {
   setEventChainExecutor(m_poInvokingExecEnv);
   bus->delegate = this;
 
+  BusHandler::Config config;
+  config.BusInterface = BusInterface();
+  config.BusInitSpeed = BusInitSpeed();
+  config.BusLoopSpeed = BusLoopSpeed();
+  bus->setConfig(config);
+
   bus->start();
+}
+
+void Master::onBusEvent() {
+  if (bus) {
+    if (bus->hasError()) {
+      STATUS() = bus->getStatus();
+      if (false == QO()) {
+        DEVLOG_ERROR("emBrick[Master]: Failed to init BusHandler. Reason: %s\n",
+            STATUS().getValue());
+      } else {
+        DEVLOG_ERROR("emBrick[Master]: Runtime error. Reason: %s\n",
+            STATUS().getValue());
+      }
+      onError();
+    } else {
+      // Init configuration
+      BusAdapterOut().INDEX() = 0;
+      BusAdapterOut().UpdateInterval() = SlaveUpdateInterval();
+      sendAdapterEvent(scm_nBusAdapterAdpNum, BusAdapter::scm_nEventINITID);
+    }
+  }
 }
 
 void Master::onError(bool isFatal) {
@@ -168,6 +186,11 @@ void Master::onError(bool isFatal) {
   } else {
     QO() = false;
     sendOutputEvent(scm_nEventINITOID);
+
+    // Reset error counter if it was not a fatal error
+    if (!isFatal) {
+      errorCounter = 0;
+    }
   }
 }
 

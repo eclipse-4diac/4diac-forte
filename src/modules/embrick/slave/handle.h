@@ -26,35 +26,36 @@ class Slave;
 
 class SlaveHandle: public IOHandle {
 public:
-  SlaveHandle(IOHandle::Direction direction, uint8_t offset, Slave *slave);
+  SlaveHandle(IOMapper::Direction direction, uint8_t offset, Slave *slave);
   virtual ~SlaveHandle();
 
   virtual void set(const CIEC_ANY &);
   virtual bool equal(unsigned char*) = 0;
+
+protected:
   virtual void reset() {
 
   }
 
-protected:
   virtual void onObserver(IOObserver *observer);
   virtual void dropObserver();
 
   unsigned char* buffer;
   const uint8_t offset;
-  const int index;
-  CSyncObject *syncMutex;
+  Slave* slave;
 };
 
 class BitSlaveHandle: public SlaveHandle {
 public:
-  BitSlaveHandle(IOHandle::Direction direction, uint8_t offset,
+  BitSlaveHandle(IOMapper::Direction direction, uint8_t offset,
       uint8_t position, Slave *slave);
 
   virtual void set(const CIEC_ANY &);
   void get(CIEC_ANY &);
 
-  virtual bool equal(unsigned char* oldBuffer);
+  bool equal(unsigned char* oldBuffer);
 
+protected:
   virtual void reset() {
     CIEC_BOOL s = false;
     set(s);
@@ -66,13 +67,13 @@ protected:
 
 class Analog10SlaveHandle: public SlaveHandle {
 public:
-  Analog10SlaveHandle(IOHandle::Direction direction, uint8_t offset,
+  Analog10SlaveHandle(IOMapper::Direction direction, uint8_t offset,
       Slave *slave);
 
   virtual void set(const CIEC_ANY &);
   void get(CIEC_ANY &);
 
-  virtual bool equal(unsigned char* oldBuffer);
+  bool equal(unsigned char* oldBuffer);
 
 protected:
   const CIEC_DWORD getValue(const unsigned char* buffer);
@@ -80,13 +81,13 @@ protected:
 
 class AnalogSlaveHandle: public SlaveHandle {
 public:
-  AnalogSlaveHandle(IOHandle::Direction direction, uint8_t offset,
+  AnalogSlaveHandle(IOMapper::Direction direction, uint8_t offset,
       Slave *slave);
 
   virtual void set(const CIEC_ANY &);
   void get(CIEC_ANY &);
 
-  virtual bool equal(unsigned char* oldBuffer);
+  bool equal(unsigned char* oldBuffer);
 
 protected:
   const CIEC_DWORD getValue(const unsigned char* buffer);

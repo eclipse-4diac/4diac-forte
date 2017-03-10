@@ -18,13 +18,19 @@
 #include <string>
 #include <forte_sync.h>
 
-#include "handle.h"
-#include "observer.h"
-
 namespace EmBrick {
+
+class IOHandle;
+class IOObserver;
 
 class IOMapper {
 DECLARE_SINGLETON (IOMapper)
+
+public:
+  enum Direction
+    : char {
+      UnknownDirection, In, Out, InOut
+  };
 
 public:
   bool registerHandle(CIEC_WSTRING const &id, IOHandle* handle);

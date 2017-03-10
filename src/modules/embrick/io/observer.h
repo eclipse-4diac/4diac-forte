@@ -14,9 +14,9 @@
 
 #include "handle.h"
 
-namespace EmBrick {
+#include "mapper.h"
 
-class IOMapper;
+namespace EmBrick {
 
 class IOObserver {
   friend class IOMapper;
@@ -32,6 +32,8 @@ protected:
   virtual void dropHandle();
 
   IOHandle* handle;
+  CIEC_ANY::EDataTypeID type;
+  IOMapper::Direction direction;
 };
 
 } /* namespace EmBrick */

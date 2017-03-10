@@ -92,6 +92,10 @@ private:
     return *static_cast<CIEC_WSTRING*>(getDI(16));
   }
 
+  CIEC_UINT &UpdateInterval() {
+    return *static_cast<CIEC_UINT*>(getDI(17));
+  }
+
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
 
@@ -99,7 +103,6 @@ private:
   static const TDataIOID scm_anEIWith[];
   static const CStringDictionary::TStringId scm_anEventInputNames[];
 
-  static const TEventID scm_nEventINDID = 0;
   static const TForteInt16 scm_anEOWithIndexes[];
   static const TDataIOID scm_anEOWith[];
   static const CStringDictionary::TStringId scm_anEventOutputNames[];
@@ -108,7 +111,7 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-  FORTE_FB_DATA_ARRAY(1, 17, 2, 2)
+  FORTE_FB_DATA_ARRAY(2, 18, 2, 2)
 
   virtual void initHandles();
 
@@ -121,7 +124,8 @@ virtual ~Slave2181() {};
 
 };
 
-} /* namespace FunctionsBlocks */
+}
+/* namespace FunctionsBlocks */
 } /* namespace EmBrick */
 
 #endif //close the ifdef sequence from the beginning of the file

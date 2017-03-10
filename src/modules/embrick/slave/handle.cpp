@@ -13,16 +13,15 @@
 #include "slave.h"
 #include <handler/bus.h>
 #include <io/mapper.h>
-
+#include <devlog.h>
 namespace EmBrick {
 
-SlaveHandle::SlaveHandle(IOHandle::Direction direction, uint8_t offset,
+SlaveHandle::SlaveHandle(IOMapper::Direction direction, uint8_t offset,
     Slave *slave) :
-    IOHandle(direction), offset(offset), index(slave->index()), syncMutex(
-        &slave->syncMutex) {
-  if (direction == IOHandle::Input)
+    IOHandle(direction), offset(offset), slave(slave) {
+  if (direction == IOMapper::In)
     buffer = slave->updateReceiveImage;
-  else if (direction == IOHandle::Output)
+  else if (direction == IOMapper::Out)
     buffer = slave->updateSendImage;
 }
 
@@ -30,7 +29,7 @@ SlaveHandle::~SlaveHandle() {
 }
 
 void SlaveHandle::set(const CIEC_ANY &) {
-  BusHandler::getInstance().forceUpdate(index);
+  slave->forceUpdate();
 }
 
 void SlaveHandle::onObserver(IOObserver *observer) {
@@ -45,60 +44,60 @@ void SlaveHandle::dropObserver() {
   reset();
 }
 
-BitSlaveHandle::BitSlaveHandle(IOHandle::Direction direction, uint8_t offset,
+BitSlaveHandle::BitSlaveHandle(IOMapper::Direction direction, uint8_t offset,
     uint8_t position, Slave *slave) :
     SlaveHandle(direction, offset, slave), mask((uint8_t) (1 << position)) {
   type = CIEC_ANY::e_BOOL;
 }
 
 void BitSlaveHandle::set(const CIEC_ANY &state) {
-  syncMutex->lock();
+  slave->syncMutex.lock();
 
   if (static_cast<const CIEC_BOOL&>(state))
     *(buffer + offset) = (uint8_t) (*(buffer + offset) | mask);
   else
     *(buffer + offset) = (uint8_t) (*(buffer + offset) & ~mask);
 
-  syncMutex->unlock();
+  slave->syncMutex.unlock();
 
   SlaveHandle::set(state);
 }
 
 void BitSlaveHandle::get(CIEC_ANY &state) {
-  syncMutex->lock();
+  slave->syncMutex.lock();
 
   static_cast<CIEC_BOOL&>(state) = (*(buffer + offset) & mask) != 0;
 
-  syncMutex->unlock();
+  slave->syncMutex.unlock();
 }
 
 bool BitSlaveHandle::equal(unsigned char* oldBuffer) {
   return (*(buffer + offset) & mask) == (*(oldBuffer + offset) & mask);
 }
 
-Analog10SlaveHandle::Analog10SlaveHandle(IOHandle::Direction direction,
+Analog10SlaveHandle::Analog10SlaveHandle(IOMapper::Direction direction,
     uint8_t offset, Slave *slave) :
     SlaveHandle(direction, offset, slave) {
   type = CIEC_ANY::e_DWORD;
 }
 
 void Analog10SlaveHandle::set(const CIEC_ANY &value) {
-  syncMutex->lock();
+  slave->syncMutex.lock();
 
-  *(buffer + offset) = static_cast<const CIEC_DWORD&>(value) % 256;
-  *(buffer + offset + 1) = (static_cast<const CIEC_DWORD&>(value) / 256) & 0x03;
+  *(buffer + offset + 1) = static_cast<const CIEC_DWORD&>(value) % 256;
+  *(buffer + offset) = (static_cast<const CIEC_DWORD&>(value) / 256) & 0x03;
 
-  syncMutex->unlock();
+  slave->syncMutex.unlock();
 
   SlaveHandle::set(value);
 }
 
 void Analog10SlaveHandle::get(CIEC_ANY &value) {
-  syncMutex->lock();
+  slave->syncMutex.lock();
 
   static_cast<CIEC_DWORD&>(value) = getValue(buffer);
 
-  syncMutex->unlock();
+  slave->syncMutex.unlock();
 }
 
 bool Analog10SlaveHandle::equal(unsigned char* oldBuffer) {
@@ -106,32 +105,33 @@ bool Analog10SlaveHandle::equal(unsigned char* oldBuffer) {
 }
 
 const CIEC_DWORD Analog10SlaveHandle::getValue(const unsigned char* buffer) {
-  return (*(buffer + offset + 1) & 0x03) * 256 + *(buffer + offset);
+  return (*(buffer + offset) & 0x03) * 256 + *(buffer + offset + 1);
 }
 
-AnalogSlaveHandle::AnalogSlaveHandle(IOHandle::Direction direction,
+AnalogSlaveHandle::AnalogSlaveHandle(IOMapper::Direction direction,
     uint8_t offset, Slave *slave) :
     SlaveHandle(direction, offset, slave) {
   type = CIEC_ANY::e_DWORD;
 }
 
 void AnalogSlaveHandle::set(const CIEC_ANY &value) {
-  syncMutex->lock();
+  slave->syncMutex.lock();
 
-  *(buffer + offset) = static_cast<const CIEC_DWORD&>(value) % 256;
-  *(buffer + offset + 1) = static_cast<const CIEC_DWORD&>(value) / 256;
+  *(buffer + offset + 1) = static_cast<const CIEC_DWORD&>(value) % 256;
+  *(buffer + offset) = (unsigned char) (static_cast<const CIEC_DWORD&>(value)
+      / 256);
 
-  syncMutex->unlock();
+  slave->syncMutex.unlock();
 
   SlaveHandle::set(value);
 }
 
 void AnalogSlaveHandle::get(CIEC_ANY &value) {
-  syncMutex->lock();
+  slave->syncMutex.lock();
 
   static_cast<CIEC_DWORD&>(value) = getValue(buffer);
 
-  syncMutex->unlock();
+  slave->syncMutex.unlock();
 }
 
 bool AnalogSlaveHandle::equal(unsigned char* oldBuffer) {
@@ -139,7 +139,7 @@ bool AnalogSlaveHandle::equal(unsigned char* oldBuffer) {
 }
 
 const CIEC_DWORD AnalogSlaveHandle::getValue(const unsigned char* buffer) {
-  return *(buffer + offset + 1) * 256 + *(buffer + offset);
+  return *(buffer + offset) * 256 + *(buffer + offset + 1);
 }
 
 } /* namespace EmBrick */

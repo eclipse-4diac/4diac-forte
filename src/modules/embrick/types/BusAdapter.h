@@ -39,6 +39,10 @@ public:
     return *static_cast<CIEC_INT*>((isSocket()) ? getDO(0) : getDI(0));
   }
 
+  CIEC_UINT &UpdateInterval() {
+    return *static_cast<CIEC_UINT*>((isSocket()) ? getDO(1) : getDI(1));
+  };
+
 public:
   static const TEventID scm_nEventINITOID = 0;
   int INITO() {
@@ -63,7 +67,7 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpecPlug;
 
-  FORTE_ADAPTER_DATA_ARRAY(1, 1, 1, 1, 0)
+  FORTE_ADAPTER_DATA_ARRAY(1, 1, 1, 2, 0)
 
 public:
   ADAPTER_CTOR(BusAdapter){};

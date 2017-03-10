@@ -32,6 +32,9 @@ Slave::Slave(int address, Packages::SlaveInit init) :
   memset(updateReceiveImageOld, 0, dataReceiveLength);
 
   updateErrorCounter = 0;
+
+  // Default config
+  config.UpdateInterval = 25;
 }
 
 Slave::~Slave() {
@@ -43,6 +46,10 @@ Slave::~Slave() {
 
   if (delegate != 0)
     delegate->onSlaveDestroy();
+}
+
+void Slave::setConfig(Config config) {
+  this->config = config;
 }
 
 Slave* Slave::sendInit(int address) {
@@ -114,6 +121,10 @@ int Slave::update() {
   }
 
   return 1;
+}
+
+void Slave::forceUpdate() {
+  return bus->forceUpdate(index());
 }
 
 void Slave::dropHandles() {

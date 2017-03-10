@@ -17,7 +17,7 @@
 namespace EmBrick {
 
 IOObserver::IOObserver() :
-    handle(NULL) {
+    handle(NULL), type(CIEC_ANY::e_ANY), direction(IOMapper::UnknownDirection) {
 
 }
 

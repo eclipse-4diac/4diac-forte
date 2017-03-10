@@ -22,7 +22,7 @@ namespace EmBrick {
 namespace FunctionBlocks {
 
 class Slave2301: public Slave {
-  DECLARE_FIRMWARE_FB(Slave2301)
+DECLARE_FIRMWARE_FB(Slave2301)
 
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
@@ -30,27 +30,31 @@ private:
 
   CIEC_WSTRING &Relay1() {
     return *static_cast<CIEC_WSTRING*>(getDI(1));
-  };
+  }
 
   CIEC_WSTRING &Relay2() {
     return *static_cast<CIEC_WSTRING*>(getDI(2));
-  };
+  }
 
   CIEC_WSTRING &Relay3() {
     return *static_cast<CIEC_WSTRING*>(getDI(3));
-  };
+  }
 
   CIEC_WSTRING &Relay4() {
     return *static_cast<CIEC_WSTRING*>(getDI(4));
-  };
+  }
 
   CIEC_WSTRING &Relay5() {
     return *static_cast<CIEC_WSTRING*>(getDI(5));
-  };
+  }
 
   CIEC_WSTRING &Relay6() {
     return *static_cast<CIEC_WSTRING*>(getDI(6));
-  };
+  }
+
+  CIEC_UINT &UpdateInterval() {
+    return *static_cast<CIEC_UINT*>(getDI(7));
+  }
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
@@ -59,7 +63,6 @@ private:
   static const TDataIOID scm_anEIWith[];
   static const CStringDictionary::TStringId scm_anEventInputNames[];
 
-  static const TEventID scm_nEventINDID = 0;
   static const TForteInt16 scm_anEOWithIndexes[];
   static const TDataIOID scm_anEOWith[];
   static const CStringDictionary::TStringId scm_anEventOutputNames[];
@@ -68,20 +71,21 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-   FORTE_FB_DATA_ARRAY(1, 7, 2, 2);
+  FORTE_FB_DATA_ARRAY(2, 8, 2, 2)
 
   virtual void initHandles();
 
 public:
   FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(Slave2301, Slave){
-    type = G_2RelNo4RelCo;
-  };
+  type = G_2RelNo4RelCo;
+};
 
-  virtual ~Slave2301(){};
+virtual ~Slave2301() {};
 
 };
 
-} /* namespace FunctionsBlocks */
+}
+/* namespace FunctionsBlocks */
 } /* namespace EmBrick */
 
 #endif //close the ifdef sequence from the beginning of the file

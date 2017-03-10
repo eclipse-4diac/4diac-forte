@@ -55,11 +55,24 @@ BusHandler::BusHandler() :
   pthread_mutex_init(&loopMutex, &loopMutexAttr);
 
   pthread_mutexattr_destroy(&loopMutexAttr);
+  // Default config
+  config.BusInterface = 1;
+  config.BusInitSpeed = SPIHandler::DefaultSpiSpeed;
+  config.BusLoopSpeed = SPIHandler::MaxSpiSpeed;
 }
 
 BusHandler::~BusHandler() {
   pthread_cond_destroy(&loopCond);
   pthread_mutex_destroy(&loopMutex);
+
+void BusHandler::setConfig(struct Config config) {
+  // Check if BusHandler is active -> config changes are not allowed
+  if (isAlive()) {
+    DEVLOG_ERROR("emBrick[BusHandler]: Cannot change config while running.\n");
+    return;
+  }
+
+  this->config = config;
 }
 
 void BusHandler::run() {

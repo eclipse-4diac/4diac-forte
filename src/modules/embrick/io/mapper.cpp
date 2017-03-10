@@ -10,6 +10,8 @@
  *******************************************************************************/
 
 #include "mapper.h"
+#include "handle.h"
+#include "observer.h"
 #include <devlog.h>
 
 namespace EmBrick {
@@ -61,7 +63,8 @@ void IOMapper::deregisterHandle(IOHandle* handle) {
       if (observers.find(it->first) != observers.end()) {
         handle->dropObserver();
         observers[it->first]->dropHandle();
-        DEVLOG_INFO("emBrick[IOMapper]: Disconnected %s (lost handle)\n", it->first.data());
+        DEVLOG_INFO("emBrick[IOMapper]: Disconnected %s (lost handle)\n",
+            it->first.data());
       }
 
       handles.erase(it);
@@ -109,7 +112,8 @@ void IOMapper::deregisterObserver(IOObserver* observer) {
       if (handles.find(it->first) != handles.end()) {
         handles[it->first]->dropObserver();
         observer->dropHandle();
-        DEVLOG_INFO("emBrick[IOMapper]: Disconnected %s (lost observer)\n", it->first.data());
+        DEVLOG_INFO("emBrick[IOMapper]: Disconnected %s (lost observer)\n",
+            it->first.data());
       }
 
       observers.erase(it);

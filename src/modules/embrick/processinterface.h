@@ -33,26 +33,29 @@ protected:
   bool initialise(bool paIsInput);
   bool deinitialise();
   bool readPin() {
-    return read();
+    return read(IN_X());
   }
   bool writePin() {
-    return write();
+    return write(OUT_X());
   }
   bool readWord() {
-    return read();
+    return read(IN_W());
   }
   bool writeWord() {
-    return write();
+    return write(OUT_W());
   }
   bool readDWord() {
-    return read();
+    return read(IN_D());
   }
   bool writeDWord() {
-    return write();
+    return write(OUT_D());
   }
 
   bool read();
   bool write();
+
+  bool read(CIEC_ANY &);
+  bool write(CIEC_ANY &);
 
   virtual void onHandle(IOHandle *handle);
   virtual void dropHandle();
@@ -62,7 +65,6 @@ protected:
 private:
   bool isListening;
   bool isReady;
-  bool isInput;
 
   static const char * const scmOK;
   static const char * const scmWaitingForHandle;

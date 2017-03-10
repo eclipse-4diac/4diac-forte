@@ -34,7 +34,6 @@ ProcessInterface::ProcessInterface(CResource *paSrcRes,
         paFBConnData, paFBVarsData), IOObserver() {
   isListening = false;
   isReady = false;
-  isInput = false;
 }
 
 ProcessInterface::~ProcessInterface() {
@@ -42,7 +41,8 @@ ProcessInterface::~ProcessInterface() {
 }
 
 bool ProcessInterface::initialise(bool paIsInput) {
-  isInput = paIsInput;
+  direction = paIsInput ? IOMapper::In : IOMapper::Out;
+  type = (paIsInput ? getDO(2) : getDI(2))->getDataTypeID();
 
   isReady = false;
   STATUS() = scmWaitingForHandle;
@@ -66,6 +66,32 @@ bool ProcessInterface::deinitialise() {
     IOMapper::getInstance().deregisterObserver(this);
 
   return !isReady;
+}
+
+bool ProcessInterface::read(CIEC_ANY &data) {
+  syncMutex.lock();
+  if (!isReady) {
+    syncMutex.unlock();
+    return false;
+  }
+
+  handle->get(data);
+
+  syncMutex.unlock();
+  return true;
+}
+
+bool ProcessInterface::write(CIEC_ANY &data) {
+  syncMutex.lock();
+    if (!isReady) {
+      syncMutex.unlock();
+      return false;
+    }
+
+    handle->set(data);
+
+    syncMutex.unlock();
+    return true;
 }
 
 bool ProcessInterface::read() {
@@ -121,29 +147,18 @@ void ProcessInterface::onHandle(IOHandle* handle) {
 
   IOObserver::onHandle(handle);
 
-  if (isInput) {
-    if (!handle->is(getDO(2)->getDataTypeID())) {
-      STATUS() = scmMappedWrongDataType;
-      return syncMutex.unlock();
-    }
-
-    if (!handle->is(IOHandle::Input)) {
-      STATUS() = scmMappedWrongDirectionInput;
-      return syncMutex.unlock();
-    }
-
-    setEventChainExecutor(m_poInvokingExecEnv);
-  } else {
-    if (!handle->is(getDI(2)->getDataTypeID())) {
-      STATUS() = scmMappedWrongDataType;
-      return syncMutex.unlock();
-    }
-
-    if (!handle->is(IOHandle::Output)) {
-      STATUS() = scmMappedWrongDirectionOutput;
-      return syncMutex.unlock();
-    }
+  if (!handle->is(type)) {
+    STATUS() = scmMappedWrongDataType;
+    return syncMutex.unlock();
   }
+
+  if (!handle->is(direction)) {
+    STATUS() = direction == IOMapper::In ? scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput;
+    return syncMutex.unlock();
+  }
+
+  if (direction == IOMapper::In)
+    setEventChainExecutor(m_poInvokingExecEnv);
 
   STATUS() = scmOK;
   isReady = true;
@@ -151,7 +166,7 @@ void ProcessInterface::onHandle(IOHandle* handle) {
   syncMutex.unlock();
 
   // Read & write current state
-  if (isInput)
+  if (direction == IOMapper::In)
     QO() = read();
   else
     QO() = write();

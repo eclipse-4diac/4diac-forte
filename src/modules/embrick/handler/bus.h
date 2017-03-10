@@ -43,6 +43,13 @@ DECLARE_SINGLETON(BusHandler)
   friend class Slave;
 
 public:
+  struct Config {
+    unsigned int BusInterface;
+    unsigned long BusInitSpeed;
+    unsigned long BusLoopSpeed;
+  };
+
+  void setConfig(struct Config config);
   CEventSourceFB *delegate;
 
   bool hasError();
@@ -71,6 +78,9 @@ protected:
   void disableHandler(void);
   void setPriority(int paPriority);
   int getPriority(void) const;
+
+  // Config
+  struct Config config;
 
   struct timespec lastLoop;
   struct timespec nextLoop;

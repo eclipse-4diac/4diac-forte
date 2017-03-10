@@ -35,6 +35,12 @@ protected:
     return *static_cast<CIEC_BOOL*>(getDI(0));
   }
 
+  bool UpdateIntervalDefault;
+  virtual CIEC_UINT &UpdateInterval() {
+    // TODO Remove
+    return *static_cast<CIEC_UINT*>(getDI(0));
+  }
+
   CIEC_BOOL &QO() {
     return *static_cast<CIEC_BOOL*>(getDO(0));
   }
@@ -43,8 +49,10 @@ protected:
     return *static_cast<CIEC_WSTRING*>(getDO(1));
   }
 
-  static const TEventID scm_nEventREQID = 0;
-  static const TEventID scm_nEventMAPID = 1;
+  static const TEventID scm_nEventMAPID = 0;
+
+  static const TEventID scm_nEventMAPOID = 0;
+  static const TEventID scm_nEventINDID = 1;
 
   BusAdapter& BusAdapterOut() {
     return (*static_cast<BusAdapter*>(m_apoAdapters[0]));
@@ -68,7 +76,7 @@ protected:
   virtual void initHandles() = 0;
   void dropHandles();
 
-  void addBitHandle(IOHandle::Direction direction, CIEC_WSTRING id,
+  void addBitHandle(IOMapper::Direction direction, CIEC_WSTRING id,
       uint8_t offset, uint8_t pos);
 
 public:
@@ -81,6 +89,8 @@ private:
   static const char * const scmInterrupted;
   static const char * const scmError;
   static const char * const scmUnknown;
+  static const char * const scmNotFound;
+  static const char * const scmIncorrectType;
 };
 
 } /* namespace FunctionsBlocks */
