@@ -21,6 +21,8 @@ const char * const BusHandler::scmOK = "OK";
 const char * const BusHandler::scmWaitingForInit =
     "Waiting for initialization..";
 const char * const BusHandler::scmFailedToInit = "Failed to init BusHandler.";
+const char * const BusHandler::scmSlaveUpdateFailed = "Update of slave failed.";
+const char * const BusHandler::scmNoSlavesFound = "No slave modules found.";
 
 DEFINE_SINGLETON(BusHandler)
 
@@ -39,22 +41,6 @@ BusHandler::BusHandler() :
   error = 0;
   sList = 0;
 
-  // TODO Wrap pthread logic into helper class
-  pthread_condattr_t loopCondAttr;
-  pthread_condattr_init(&loopCondAttr);
-  pthread_condattr_setclock(&loopCondAttr, CLOCK_MONOTONIC);
-
-  pthread_cond_init(&loopCond, &loopCondAttr);
-
-  pthread_condattr_destroy(&loopCondAttr);
-
-  pthread_mutexattr_t loopMutexAttr;
-  pthread_mutexattr_init(&loopMutexAttr);
-  pthread_mutexattr_settype(&loopMutexAttr, PTHREAD_MUTEX_RECURSIVE_NP);
-
-  pthread_mutex_init(&loopMutex, &loopMutexAttr);
-
-  pthread_mutexattr_destroy(&loopMutexAttr);
   // Default config
   config.BusInterface = 1;
   config.BusInitSpeed = SPIHandler::DefaultSpiSpeed;
@@ -62,8 +48,7 @@ BusHandler::BusHandler() :
 }
 
 BusHandler::~BusHandler() {
-  pthread_cond_destroy(&loopCond);
-  pthread_mutex_destroy(&loopMutex);
+}
 
 void BusHandler::setConfig(struct Config config) {
   // Check if BusHandler is active -> config changes are not allowed
@@ -85,107 +70,41 @@ void BusHandler::run() {
 
     DEVLOG_INFO("emBrick[BusHandler]: Ready.\n");
 
-    // Inform delegate
+    // Inform delegate about successful startup
     if (delegate != 0)
       startNewEventChain(delegate);
 
-    uint64_t ms;
-    int i, res;
+    // Lock loop before the start
+    loopSync.lock();
 
-    clock_gettime(CLOCK_MONOTONIC, &nextLoop);
+    // Prepare loop
+    prepareLoop();
 
-    pthread_mutex_lock(&loopMutex);
+    // Run main loop -> function is blocking
+    runLoop();
 
-    // Scheduling
-    // TODO Combine slaves list and scheduling information
-    // DISCUSS Speed of array and forte_list?
-    TSlaveList::Iterator it = slaves->begin();
-    sList = (struct SEntry**) forte_malloc(sizeof(struct SEntry*) * slaveCount);
-    for (i = 0; i < slaveCount; i++) {
-      sList[i] = (struct SEntry*) forte_malloc(sizeof(struct SEntry));
-      sList[i]->slave = *it;
-      sList[i]->nextDeadline = nextLoop;
-      sList[i]->durationI = 0;
-      sList[i]->durations[0] = 0;
-      sList[i]->forced = false;
+    // Clean loop
+    cleanLoop();
 
-      ++it;
-    }
-    sNextI = 0;
-    sNext = sList[sNextI];
-    loopPending = false;
-    SEntry *sCur = 0;
-    int sCurI = 0;
-
-    while (isAlive()) {
-      pthread_cond_timedwait(&loopCond, &loopMutex, &sNext->nextDeadline);
-
-      loopPending = true;
-      sCur = sNext;
-      sCurI = sNextI;
-      pthread_mutex_unlock(&loopMutex);
-
-      ms = micros();
-
-      // Perform update on current slave
-      res = sCur->slave->update();
-      if (res == -1) {
-        error = "Update failed.";
-        // Check for critical bus errors
-        if (checkHandlerError() || hasError()) {
-          // Inform delegate
-          if (delegate != 0)
-            startNewEventChain(delegate);
-          break;
-        }
-      }
-
-      // Set next deadline of current slave
-      clock_gettime(CLOCK_MONOTONIC, &sCur->nextDeadline);
-      // TODO Replace with dynamic configuration
-      addTime(sCur->nextDeadline, sCurI == 1 ? 3000 : 38000);
-      sCur->forced = false;
-
-      sCur->durationI = (sCur->durationI + 1) % 5;
-      sCur->durations[sCur->durationI] = micros() - ms;
-
-      // Search for next deadline
-      pthread_mutex_lock(&loopMutex);
-      loopPending = false;
-
-      for (i = 0; i < slaveCount; i++) {
-        if (cmpTime(sList[i]->nextDeadline, sNext->nextDeadline)) {
-          sNext = sList[i];
-          sNextI = i;
-        }
-      }
-    }
-    pthread_mutex_unlock(&loopMutex);
-
-    DEVLOG_INFO("emBrick[BusHandler]: Last loop durations:\n");
-    for (uint8_t i = 0; i < slaveCount; i++)
-      for (uint8_t j = 0; j < 5; j++)
-        DEVLOG_INFO("%d - %d\n", i, sList[i]->durations[j]);
+    // Release loop after the end
+    loopSync.unlock();
   } else {
+    // Handler occured during initialization. If no error is present, set general error
     if (!hasError())
       error = scmFailedToInit;
 
-    // Inform delegate
+    // Inform delegate about error
     if (delegate != 0)
       startNewEventChain(delegate);
   }
 
   isReady = false;
 
-  // Free memory
+  // Free memory -> delete all slave instances and hardware handlers
   TSlaveList::Iterator itEnd(slaves->end());
   for (TSlaveList::Iterator it = slaves->begin(); it != itEnd; ++it)
     delete *it;
   delete slaves;
-  for (int i = 0; i < slaveCount; i++)
-    forte_free(sList[i]);
-  forte_free(sList);
-  sList = 0;
   delete spi;
   delete slaveSelect;
 
@@ -200,13 +119,16 @@ void BusHandler::run() {
 
 bool BusHandler::init() {
   // Start handlers
-  spi = new SPIHandler();
+  spi = new SPIHandler(config.BusInterface);
   slaveSelect = new PinHandler(49);
   slaves = new TSlaveList();
 
   // Check handlers
   if (checkHandlerError())
     return false;
+
+  // Set SPI sped for intialization
+  spi->setSpeed(config.BusInitSpeed);
 
   // Disable slave select -> reset all slaves
   slaveSelect->disable();
@@ -244,10 +166,109 @@ bool BusHandler::init() {
 
   slaveCount = slaveCounter - 1;
 
+  if (slaveCount == 0) {
+    error = scmNoSlavesFound;
+    return false;
+  }
+
   // Increase the speed of the bus for data transfers
-  spi->setSpeed(SPIHandler::MaxSpiSpeed);
+  spi->setSpeed(config.BusLoopSpeed);
 
   return true;
+}
+
+void BusHandler::prepareLoop() {
+  // Get current time
+  clock_gettime(CLOCK_MONOTONIC, &nextLoop);
+
+  // Scheduling
+  // TODO Combine slaves list and scheduling information
+  // DISCUSS Speed of array and forte_list?
+  TSlaveList::Iterator it = slaves->begin();
+  sList = (struct SEntry**) forte_malloc(sizeof(struct SEntry*) * slaveCount);
+  for (int i = 0; i < slaveCount; i++) {
+    sList[i] = (struct SEntry*) forte_malloc(sizeof(struct SEntry));
+    sList[i]->slave = *it;
+    sList[i]->nextDeadline = nextLoop;
+    sList[i]->lastDuration = 0;
+    sList[i]->forced = false;
+    sList[i]->delayed = false;
+
+    ++it;
+  }
+  sNextIndex = 0;
+  sNext = sList[sNextIndex];
+  loopActive = false;
+}
+
+void BusHandler::runLoop() {
+  // Init loop variables
+  SEntry *sCur = 0;
+
+  uint64_t ms;
+  int i, res;
+
+  while (isAlive()) {
+    // Sleep till next deadline is reached or loop is waked up
+    loopSync.waitUntil(sNext->nextDeadline);
+
+    // Set current slave
+    loopActive = true;
+    sCur = sNext;
+
+    // Set next deadline of current slave
+    clock_gettime(CLOCK_MONOTONIC, &sCur->nextDeadline);
+    addTime(sCur->nextDeadline, 1000000 / sCur->slave->config.UpdateInterval);
+
+    // Remove delayed and forced flag
+    sCur->forced = false;
+    sCur->delayed = false;
+
+    // Remove lock during blocking operation -> allows forced update interrupts
+    loopSync.unlock();
+
+    ms = micros();
+
+    // Perform update on current slave
+    res = sCur->slave->update();
+    if (res == -1) {
+      error = scmSlaveUpdateFailed;
+      // Check for critical bus errors
+      if (checkHandlerError() || hasError()) {
+        // Inform delegate
+        if (delegate != 0)
+          startNewEventChain(delegate);
+        break;
+      }
+    }
+
+    // Search for next deadline -> set lock to avoid changes of list
+    loopSync.lock();
+    loopActive = false;
+
+    // Store update duration
+    sCur->lastDuration = (uint16_t) (micros() - ms);
+
+    // If current slave is forced again -> add update duration to deadline
+    if (sCur->forced)
+      addTime(sCur->nextDeadline, sCur->lastDuration);
+
+    for (i = 0; i < slaveCount; i++) {
+      if (cmpTime(sList[i]->nextDeadline, sNext->nextDeadline)) {
+        sNext = sList[i];
+        sNextIndex = i;
+      }
+    }
+  }
+
+}
+
+void BusHandler::cleanLoop() {
+  // Free memory of list
+  for (int i = 0; i < slaveCount; i++)
+    forte_free(sList[i]);
+  forte_free(sList);
+  sList = 0;
 }
 
 bool BusHandler::hasError() {
@@ -291,35 +312,41 @@ Slave* BusHandler::getSlave(int index) {
 }
 
 void BusHandler::forceUpdate(int index) {
-  pthread_mutex_lock(&loopMutex);
+  loopSync.lock();
 
   if (sList == 0 || slaveCount <= index || sList[index]->forced) {
-    pthread_mutex_unlock(&loopMutex);
+    loopSync.unlock();
     return;
   }
 
-  sList[index]->forced = true;
-  clock_gettime(CLOCK_MONOTONIC, &sList[index]->nextDeadline);
-  if (!loopPending) {
-    // Allow delay of unforced deadlines
-    struct timespec ts = sNext->nextDeadline;
-    addTime(ts, 10000); // TODO Replace with constant
-    if (cmpTime(sList[index]->nextDeadline, ts)) {
-      sNext = sList[index];
-      sNextI = index;
+  SEntry *e = sList[index];
+
+  e->forced = true;
+  clock_gettime(CLOCK_MONOTONIC, &e->nextDeadline);
+  if (!loopActive) {
+    if(!sNext->delayed && !sNext->forced) {
+      struct timespec ts = e->nextDeadline;
+      addTime(ts, e->lastDuration * 2);
+
+      if(!cmpTime(ts, sNext->nextDeadline)) {
+        sNext->delayed = true;
+      }
+
+      sNext = e;
+      sNextIndex = index;
     }
 
     // Force next loop
-    pthread_cond_signal(&loopCond);
+    loopSync.wakeUp();
   }
 
-  pthread_mutex_unlock(&loopMutex);
+  loopSync.unlock();
 }
 
 bool BusHandler::transfer(unsigned int target, Command cmd,
     unsigned char* dataSend, int dataSendLength, unsigned char* dataReceive,
     int dataReceiveLength, SlaveStatus* status, CSyncObject *syncMutex) {
-  int dataLength = std::max(dataSendLength, dataReceiveLength + 1); // + 1 status byte
+  unsigned int dataLength = std::max(dataSendLength, dataReceiveLength + 1); // + 1 status byte
 
   unsigned int bufferLength = sizeof(Packages::Header) + dataLength + 1; // + 1 checksum byte
   if (bufferLength > TransferBufferLength) {
@@ -330,6 +357,7 @@ bool BusHandler::transfer(unsigned int target, Command cmd,
   memset(sendBuffer, 0, bufferLength);
   memset(recvBuffer, 0, bufferLength);
 
+  // Prepare header
   Packages::Header* header = (Packages::Header*) sendBuffer;
 
   header->address = (char) target;
@@ -343,9 +371,6 @@ bool BusHandler::transfer(unsigned int target, Command cmd,
     syncMutex->unlock();
   sendBuffer[sizeof(Packages::Header) + dataSendLength] = calcChecksum(
       sendBuffer + sizeof(Packages::Header), dataSendLength);
-
-//	DEVLOG_INFO("emBrick[BusHandler]: TX - %s\n",
-//			bytesToHex(buffer, bufferLength).c_str());
 
   // Invert data of master
   for (unsigned int i = 0; i < bufferLength; i++)
@@ -362,6 +387,23 @@ bool BusHandler::transfer(unsigned int target, Command cmd,
     if (lastTransfer + SyncGapDuration > microTime)
       microsleep(lastTransfer + SyncGapDuration - microTime);
 
+//    // Send header
+//    ok = spi->transfer(sendBuffer, recvBuffer, sizeof(Packages::Header));
+//    lastTransfer = micros();
+//    if (!ok) {
+//      DEVLOG_ERROR("emBrick[BusHandler]: Failed to transfer buffer.\n");
+//      break;
+//    }
+//
+//    // Send data
+//    ok = spi->transfer(sendBuffer + sizeof(Packages::Header),
+//        recvBuffer + sizeof(Packages::Header),
+//        bufferLength - sizeof(Packages::Header));
+//    lastTransfer = micros();
+//    if (!ok) {
+//      DEVLOG_ERROR("emBrick[BusHandler]: Failed to transfer buffer.\n");
+//      break;
+//    }
     ok = spi->transfer(sendBuffer, recvBuffer, bufferLength);
     lastTransfer = micros();
 
@@ -369,10 +411,7 @@ bool BusHandler::transfer(unsigned int target, Command cmd,
     if (!ok)
       break;
 
-//		DEVLOG_INFO("emBrick[BusHandler]: RX - %s, CS - %d\n",
-//				bytesToHex(recvBuffer, bufferLength).c_str(),
-//				calcChecksum(recvBuffer, bufferLength));
-
+    // Check checksum
     ok = calcChecksum(recvBuffer + sizeof(Packages::Header),
         bufferLength - sizeof(Packages::Header)) == 0;
     if (!ok) {
@@ -380,6 +419,7 @@ bool BusHandler::transfer(unsigned int target, Command cmd,
     }
   } while (!ok && ++fails < attempts);
 
+  // Check if command was transmitted succesfully
   if (!ok) {
     if (target != 0) {
       DEVLOG_DEBUG(
@@ -463,16 +503,6 @@ void BusHandler::addTime(struct timespec& ts, unsigned long microseconds) {
 bool BusHandler::cmpTime(struct timespec& t1, struct timespec& t2) {
   return (t1.tv_nsec < t2.tv_nsec && t1.tv_sec == t2.tv_sec)
       || t1.tv_sec < t2.tv_sec;
-}
-
-std::string BusHandler::bytesToHex(unsigned char* bytes, int length) {
-  // TODO Move helper functions to helper class or general forte utils class
-  char buffer[length * 3];
-  buffer[length * 3 - 1] = 0;
-  for (int i = 0; i < length; i++)
-    sprintf(&buffer[3 * i], "%02X ", bytes[i]);
-
-  return buffer;
 }
 
 } /* namespace EmBrick */

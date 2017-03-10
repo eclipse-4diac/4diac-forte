@@ -19,12 +19,13 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 #############################################################################
 # emBrick FBs
 #############################################################################
-forte_add_sourcefile_hcpp(../../stdfblib/io/IX)
-forte_add_sourcefile_hcpp( ../../stdfblib/io/QX)
+forte_add_sourcefile_hcpp(../../stdfblib/io/IX ../../stdfblib/io/QX)
+forte_add_sourcefile_hcpp(../../stdfblib/io/IW ../../stdfblib/io/QW)
+forte_add_sourcefile_hcpp(../../stdfblib/io/ID ../../stdfblib/io/QD)
 
-forte_add_sourcefile_hcpp(handler/spi)
-forte_add_sourcefile_hcpp(handler/pin)
-forte_add_sourcefile_hcpp(handler/bus)
+forte_add_sourcefile_hcpp(utils/conditionSync)
+
+forte_add_sourcefile_hcpp(handler/spi handler/pin handler/bus)
 
 forte_add_sourcefile_hcpp(io/mapper io/handle io/observer)
 

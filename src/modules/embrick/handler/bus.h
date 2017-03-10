@@ -26,6 +26,7 @@
 #include <slave/slave.h>
 #include <forte_sync.h>
 #include <forte_thread.h>
+#include <utils/conditionSync.h>
 
 namespace EmBrick {
 
@@ -60,6 +61,10 @@ public:
 protected:
   bool init();
 
+  void prepareLoop();
+  void runLoop();
+  void cleanLoop();
+
   bool transfer(unsigned int target, Command cmd, unsigned char* dataSend =
   NULL, int dataSendLength = 0, unsigned char* dataReceive = NULL,
       int dataReceiveLength = 0, SlaveStatus* status = NULL,
@@ -82,6 +87,7 @@ protected:
   // Config
   struct Config config;
 
+  // Timing variables
   struct timespec lastLoop;
   struct timespec nextLoop;
   uint64_t lastTransfer;
@@ -97,9 +103,8 @@ protected:
 
   // Sync
   bool isReady;
-  pthread_cond_t loopCond;
-  pthread_mutex_t loopMutex;
-  bool loopPending;
+  bool loopActive;
+  ConditionSync loopSync;
 
   // Error
   const char* error;
@@ -107,15 +112,15 @@ protected:
 
   // Scheduling
   struct SEntry {
-    Slave *slave;
+    Slave* slave;
     struct timespec nextDeadline;
-    uint16_t durations[5];
-    uint8_t durationI;
+    uint16_t lastDuration;
     bool forced;
+    bool delayed;
   };
   struct SEntry **sList;
   SEntry *sNext;
-  int sNextI;
+  int sNextIndex;
 
 private:
   uint64_t micros();
@@ -135,8 +140,8 @@ private:
   static const char * const scmOK;
   static const char * const scmWaitingForInit;
   static const char * const scmFailedToInit;
-public:
-  static std::string bytesToHex(unsigned char* bytes, int length);
+  static const char * const scmSlaveUpdateFailed;
+  static const char * const scmNoSlavesFound;
 };
 
 }

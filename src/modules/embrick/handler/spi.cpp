@@ -10,11 +10,13 @@
  *******************************************************************************/
 
 #include "spi.h"
+#include <sstream>
+#include <string>
 
 namespace EmBrick {
 
 unsigned long const SPIHandler::DefaultSpiSpeed = 300000;
-unsigned long const SPIHandler::MaxSpiSpeed = 600000;
+unsigned long const SPIHandler::MaxSpiSpeed = 700000;
 char const SPIHandler::spiMode = SPI_CPHA;
 char const SPIHandler::spiBitOrder = 0; // MSB first
 
@@ -31,18 +33,25 @@ const char * const SPIHandler::scmFailedToTestBus =
 const char * const SPIHandler::scmFailedToTransferBuffer =
     "Failed to transfer buffer via spi.";
 
-SPIHandler::SPIHandler() :
+SPIHandler::SPIHandler(unsigned int interface) :
     error(0) {
-  init();
+  // Convert int to string
+  std::ostringstream interfaceStream;
+  interfaceStream << interface;
+  std::string interfaceStr = interfaceStream.str();
+
+  std::string spidev = "/dev/spidev" + interfaceStr + ".0";
+  init(spidev.c_str());
 }
 
 SPIHandler::~SPIHandler() {
   deInit();
 }
 
-void SPIHandler::init() {
+void SPIHandler::init(const char* spidev) {
   // Init spidev
-  fd = open("/dev/spidev1.0", O_RDWR);
+  DEVLOG_DEBUG("emBrick[SPIHandler]: Open spidev '%s'\n", spidev);
+  fd = open(spidev, O_RDWR);
 
   if (fd < 0)
     return fail(scmFailedToInitHandler);

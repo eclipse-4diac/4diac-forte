@@ -26,13 +26,13 @@ class SPIHandler {
   friend class BusHandler;
 
 protected:
-  SPIHandler();
+  SPIHandler(unsigned int interface);
   virtual ~SPIHandler();
 
   bool transfer(unsigned char* sendBuffer, unsigned char* receiveBuffer,
       int length);
 
-  void init();
+  void init(const char* spidev);
   void deInit();
   template<typename T> bool config(unsigned int config,
       unsigned int configVerify, T value);
