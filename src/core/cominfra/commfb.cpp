@@ -290,7 +290,7 @@ EComResponse CCommFB::openConnection(){
 
     char *pa_acLayerParams;
     char *acRemainingConnectionID = CComLayer::extractLayerIdAndParams(acID, &pa_acLayerParams);
-    if('\0' != acID[0]){
+    if((0 != acRemainingConnectionID) && ('\0' != acID[0])){
       m_poTopOfComStack = CComLayersManager::createCommunicationLayer(acID, 0, this);
 
       if(m_poTopOfComStack != 0){
