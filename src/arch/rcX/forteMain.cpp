@@ -12,6 +12,7 @@
 #include <forteMain.h>
 #include <fortenew.h>
 #include "rcXSocketInterface.h"
+#include "sockhand.h"
 #include "../../stdfblib/ita/RMT_DEV.h"
 
 /*!\brief Check if the correct endianess has been configured.
@@ -51,9 +52,11 @@ void endForte(int pa_nSig){
   (void) pa_nSig;
   if(0 != poDev){
     poDev->changeFBExecutionState(cg_nMGM_CMD_Kill);
+    poDev->MGR.getResourceEventExecution()->joinEventChainExecutionThread();
+    DEVLOG_INFO("FORTE finished\n");
+    delete poDev;
+    poDev = 0;
   }
-  DEVLOG_INFO("FORTE finished\n");
-  delete poDev;
 }
 
 /*!\brief Creates the Device-Object

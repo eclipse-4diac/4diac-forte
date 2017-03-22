@@ -57,8 +57,8 @@ void CrcXThread::threadFunction(void *arguments){
 
 CrcXThread::CrcXThread(long pa_nStackSize) :
       mThreadID(0), mStackSize(pa_nStackSize), m_pacStack(0){
-	if(mStackSize < (128 * 4)){ // If m_nStackSize == 0, the minimum is also set.
-		mStackSize = 128 * 4;
+	if(mStackSize < (300 * 4)){ // If m_nStackSize == 0, the minimum is also set.
+		mStackSize = 300 * 4;
 	}
 
 	m_pacStack = forte_malloc(mStackSize);
