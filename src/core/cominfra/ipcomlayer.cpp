@@ -81,8 +81,8 @@ EComResponse CIPComLayer::processInterrupt(){
         }
         break;
       case e_Disconnected:
-      case e_Listening:
-      case e_ConnectedAndListening:
+        case e_Listening:
+        case e_ConnectedAndListening:
         default:
         break;
     }
@@ -214,11 +214,6 @@ void CIPComLayer::handledConnectedDataRecv(){
         break;
       case -1:
         m_eInterruptResp = e_ProcessDataRecvFaild;
-        closeSocket (&m_nSocketID);
-        if(e_Server == m_poFb->getComServiceType()){
-          //Move server into listening mode again
-          m_eConnectionState = e_Listening;
-        }
         break;
       default:
         //we successfully received data

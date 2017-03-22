@@ -109,9 +109,7 @@ int CIEC_TIME::fromString(const char *pa_pacValue){
 
 int CIEC_TIME::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
   int nRetVal = -1;
-
-  if(pa_nBufferSize > 4){
-
+  if(pa_nBufferSize >=  csm_aStringBufferSize[e_TIME]){
 #ifdef FORTE_USE_64BIT_DATATYPES
     CIEC_LINT timeVal(getInMiliSeconds());
 #else
@@ -122,7 +120,6 @@ int CIEC_TIME::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
       pa_pacValue[0] = 'T';
       pa_pacValue[1] = '#';
       nRetVal += 2;
-
       timeVal = getInMicroSeconds();
       timeVal = timeVal % 1000; //we only want the microseconds
       if(0 != timeVal){
@@ -137,20 +134,16 @@ int CIEC_TIME::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
             ++nRetVal;
           }
         }
-
         int size = timeVal.toString(pa_pacValue + nRetVal, pa_nBufferSize - nRetVal);
         if(-1 == size){
           return size;
         }
         nRetVal += size;
       }
-
       pa_pacValue[nRetVal] = 'm';
       pa_pacValue[nRetVal + 1] = 's';
       pa_pacValue[nRetVal + 2] = '\0';
       nRetVal += 2;
-
-
     }
   }
   return nRetVal;
