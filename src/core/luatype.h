@@ -22,7 +22,6 @@
 class CLuaFBTypeEntry: public CTypeLib::CFBTypeEntry {
 private:
 
-  const std::string definitionsPath;
   SFBInterfaceSpec interfaceSpec;
   SInternalVarsInformation internalVarsInformation;
   const CIEC_STRING paLuaScriptAsString;
@@ -30,9 +29,6 @@ private:
   CLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING paLuaScriptAsString,  SFBInterfaceSpec& interfaceSpec,
       SInternalVarsInformation& internalVarsInformation);
 
-
-  CLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, std::string& definitionsPath, SFBInterfaceSpec& interfaceSpec,
-      SInternalVarsInformation& internalVarsInformation);
   virtual ~CLuaFBTypeEntry();
 
   static bool initInterfaceSpec(SFBInterfaceSpec& interfaceSpec, CLuaEngine* luaEngine, int index);
@@ -40,8 +36,7 @@ private:
   static bool initInternalVarsInformation(SInternalVarsInformation& internalVarsInformation, CLuaEngine* luaEngine, int index);
   static void deleteInternalVarsInformation(SInternalVarsInformation& internalVarsInformation);
 public:
-  static CLuaFBTypeEntry* createLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, std::string& definitionsPath);
-  static bool createLuaFBTypeEntryFromLuaString(CStringDictionary::TStringId typeNameId, CIEC_STRING& paLuaScriptAsString);
+  static CLuaFBTypeEntry* createLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING& paLuaScriptAsString);
 
   virtual CFunctionBlock* createFBInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 

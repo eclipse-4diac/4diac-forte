@@ -258,7 +258,7 @@ EMGMResponse CResource::queryAllFBTypes(CIEC_STRING & paValue){
 EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNameId,
     CIEC_STRING& paLuaScriptAsString){
   EMGMResponse retVal = e_UNSUPPORTED_TYPE;
-   if(CLuaFBTypeEntry::createLuaFBTypeEntryFromLuaString(typeNameId, paLuaScriptAsString)){
+   if(CLuaFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != NULL){
      retVal = e_RDY;
    }else{
      retVal = e_INVALID_OPERATION;

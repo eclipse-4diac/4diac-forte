@@ -70,31 +70,6 @@ bool CLuaEngine::loadString(const std::string& str) {
   return true;
 }
 
-bool CLuaEngine::loadFile(const std::string& path) {
-  int err = luaL_loadfile(luaState, path.c_str());
-  if (err) {
-    switch (err) {
-      case LUA_ERRSYNTAX:
-        DEVLOG_ERROR("Syntax error loading Lua file %s\n", path.c_str());
-        break;
-      case LUA_ERRMEM:
-        DEVLOG_ERROR("Allocation error loading Lua file %s\n", path.c_str());
-        break;
-      case LUA_ERRFILE:
-        DEVLOG_ERROR("Input/output error loading Lua file %s\n", path.c_str());
-        break;
-      default:
-        DEVLOG_ERROR("Unknown error loading Lua file %s\n", path.c_str());
-    }
-    return false;
-  }
-  if (!call(0, 1)) {
-    DEVLOG_ERROR("Error loading definitions from Lua file %s\n", path.c_str());
-    return false;
-  }
-  return true;
-}
-
 bool CLuaEngine::call(int args, int results) {
   int err = lua_pcall(luaState, args, results, 0);
   if (err) {
@@ -197,7 +172,6 @@ bool CLuaEngine::luaPushAny(lua_State *luaState, CIEC_ANY *value) {
 bool CLuaEngine::luaGetAny(lua_State *luaState, CIEC_ANY *value, int index) {
   if (!value)
     return false;
-
   switch (value->getDataTypeID()) {
     case CIEC_ANY::e_BOOL:
       *static_cast<CIEC_BOOL*>(value) = static_cast<bool>(lua_toboolean(luaState, index));
