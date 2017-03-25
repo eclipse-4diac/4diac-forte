@@ -93,8 +93,6 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
      */
     virtual int toString(char* pa_pacValue, unsigned int pa_nBufferSize) const;
 
-    static const TForteUInt16 scm_unMaxStringBufSize;
-
   private:
 };
 

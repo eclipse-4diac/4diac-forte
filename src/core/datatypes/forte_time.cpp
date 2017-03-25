@@ -28,8 +28,6 @@
 
 DEFINE_FIRMWARE_DATATYPE(TIME, g_nStringIdTIME)
 
-const TForteUInt16 CIEC_TIME::scm_unMaxStringBufSize = 100;
-
 int CIEC_TIME::fromString(const char *pa_pacValue){
   int nRetVal = -1;
   char* pcEnd;

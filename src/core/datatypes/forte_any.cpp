@@ -240,6 +240,6 @@ const TForteByte CIEC_ANY::csm_aStringBufferSize[] = {
          0 /*e_Max*/
     };
 
-int CIEC_ANY::getToStringBufferSize(){
+unsigned int CIEC_ANY::getToStringBufferSize(){
   return csm_aStringBufferSize[getDataTypeID()];
 }

@@ -15,8 +15,6 @@
 
 DEFINE_FIRMWARE_DATATYPE(BOOL, g_nStringIdBOOL)
 
-const TForteUInt16 CIEC_BOOL::scm_unMaxStringBufSize = 5;
-
 int CIEC_BOOL::fromString(const char *pa_pacValue){
   int nRetVal = 0;
 

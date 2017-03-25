@@ -165,7 +165,7 @@ class CIEC_ANY{
 
     /*! \brief calculates buffer size needed for toString conversion
          */
-    virtual int getToStringBufferSize();
+    virtual unsigned int getToStringBufferSize();
 
 #ifdef FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
     /*! \brief the following methods have to be implemented if a custom datatype is added to the forte which is not supported by the default seralize mechanism. */
