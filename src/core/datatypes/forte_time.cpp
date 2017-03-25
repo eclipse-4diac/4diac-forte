@@ -109,7 +109,7 @@ int CIEC_TIME::fromString(const char *pa_pacValue){
 
 int CIEC_TIME::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
   int nRetVal = -1;
-  if(pa_nBufferSize >=  csm_aStringBufferSize[e_TIME]){
+  if(pa_nBufferSize > 4){
 #ifdef FORTE_USE_64BIT_DATATYPES
     CIEC_LINT timeVal(getInMiliSeconds());
 #else
