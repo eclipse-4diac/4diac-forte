@@ -16,7 +16,6 @@
 #include "../core/cominfra/commfb.h"
 #include <criticalregion.h>
 
-
 DEFINE_SINGLETON(CFDSelectHandler);
 
 CFDSelectHandler::CFDSelectHandler(){

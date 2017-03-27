@@ -26,20 +26,29 @@
 #include "convert_functions.h"
 
 #ifdef VXWORKS
-#define tanf(x) tan(x)
-#define log10f(x) log10(x)
-#define logf(x) log(x)
-#define cosf(x) cos(x)
-#define atanf(x) atan(x)
-#define asinf(x) asin(x)
-#define acosf(x) acos(x)
-#define expf(x) exp(x)
-#define sinf(x) sin(x)
-#define sqrtf(x) sqrt(x)
+#define tanf(x) static_cast<TForteFloat>(tan(x))
+#define log10f(x) static_cast<TForteFloat>(log10(x))
+#define logf(x) static_cast<TForteFloat>(log(x))
+#define cosf(x) static_cast<TForteFloat>(cos(x))
+#define atanf(x) static_cast<TForteFloat>(atan(x))
+#define asinf(x) static_cast<TForteFloat>(asin(x))
+#define acosf(x) static_cast<TForteFloat>(acos(x))
+#define expf(x) static_cast<TForteFloat>(exp(x))
+#define sinf(x) static_cast<TForteFloat>(sin(x))
+#define sqrtf(x) static_cast<TForteFloat>(sqrt(x))
 #endif
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
 #include "datatypes/forte_wstring.h"
+#endif
+
+#ifdef MAX
+#undef MAX
+#endif
+
+
+#ifdef MIN
+#undef MIN
 #endif
 
 /* numeric functions

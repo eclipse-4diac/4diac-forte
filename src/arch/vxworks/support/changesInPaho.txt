@@ -1,0 +1,568 @@
+From 8fa79b674d06b890a200986908a82e9aad12fab3 Mon Sep 17 00:00:00 2001
+From: Jose Cabral <cabral@fortiss.org>
+Date: Mon, 14 Nov 2016 10:26:07 +0100
+Subject: Changes to make it run in VxWorks
+
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 0a7fc66..d211fed 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -26,7 +26,7 @@ SET(PAHO_VERSION_PATCH 3)
+ SET(CLIENT_VERSION ${PAHO_VERSION_MAJOR}.${PAHO_VERSION_MINOR}.${PAHO_VERSION_PATCH})
+ 
+ EXECUTE_PROCESS(COMMAND date -u OUTPUT_VARIABLE BUILD_TIMESTAMP)
+-STRING(STRIP ${BUILD_TIMESTAMP} BUILD_TIMESTAMP)
++STRING(STRIP "${BUILD_TIMESTAMP}" BUILD_TIMESTAMP)
+ 
+ ## build options
+ SET(PAHO_WITH_SSL FALSE CACHE BOOL "Flag that defines whether to build ssl-enabled binaries too. ")
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 1faaa92..5f313cc 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -54,10 +54,13 @@ ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
+ ENDIF()
+ 
+ ADD_EXECUTABLE(MQTTVersion MQTTVersion.c)
+-ADD_LIBRARY(paho-mqtt3c SHARED ${common_src} MQTTClient.c)
+-ADD_LIBRARY(paho-mqtt3a SHARED ${common_src} MQTTAsync.c)
+-TARGET_LINK_LIBRARIES(paho-mqtt3c pthread ${LIBS_SYSTEM}) 
+-TARGET_LINK_LIBRARIES(paho-mqtt3a pthread ${LIBS_SYSTEM})
++ADD_LIBRARY(paho-mqtt3c STATIC ${common_src} MQTTClient.c)
++ADD_LIBRARY(paho-mqtt3a STATIC ${common_src} MQTTAsync.c)
++
++#ADD_LIBRARY(paho-mqtt3c SHARED ${common_src} MQTTClient.c)
++#ADD_LIBRARY(paho-mqtt3a SHARED ${common_src} MQTTAsync.c)
++#TARGET_LINK_LIBRARIES(paho-mqtt3c pthread ${LIBS_SYSTEM}) 
++#TARGET_LINK_LIBRARIES(paho-mqtt3a pthread ${LIBS_SYSTEM})
+ TARGET_LINK_LIBRARIES(MQTTVersion paho-mqtt3a paho-mqtt3c ${LIBS_SYSTEM})
+ SET_TARGET_PROPERTIES(
+     paho-mqtt3c paho-mqtt3a PROPERTIES
+@@ -65,6 +68,7 @@ SET_TARGET_PROPERTIES(
+     SOVERSION ${PAHO_VERSION_MAJOR})
+ INSTALL(TARGETS paho-mqtt3c paho-mqtt3a MQTTVersion
+     RUNTIME DESTINATION bin
++	ARCHIVE DESTINATION lib
+     LIBRARY DESTINATION lib)
+ INSTALL(FILES MQTTAsync.h MQTTClient.h MQTTClientPersistence.h
+     DESTINATION include)
+diff --git a/src/Heap.c b/src/Heap.c
+index 3e94616..8b9ee10 100755
+--- a/src/Heap.c
++++ b/src/Heap.c
+@@ -32,7 +32,7 @@
+ #include "Thread.h"
+ char* Broker_recordFFDC(char* symptoms);
+ 
+-#include <memory.h>
++/*#include <memory.h>*/
+ #include <stdlib.h>
+ #include <string.h>
+ #include <stdio.h>
+diff --git a/src/Heap.h b/src/Heap.h
+index 06494c4..3821d1b 100755
+--- a/src/Heap.h
++++ b/src/Heap.h
+@@ -24,7 +24,7 @@
+ #endif
+ 
+ #include <stdio.h>
+-#include <memory.h>
++/*#include <memory.h>*/
+ #include <stdlib.h>
+ 
+ #if !defined(NO_HEAP_TRACKING)
+diff --git a/src/LinkedList.c b/src/LinkedList.c
+index 603a2cc..8fcc4f7 100755
+--- a/src/LinkedList.c
++++ b/src/LinkedList.c
+@@ -28,7 +28,7 @@
+ 
+ #include <stdlib.h>
+ #include <string.h>
+-#include <memory.h>
++/*#include <memory.h>*/
+ 
+ #include "Heap.h"
+ 
+diff --git a/src/MQTTAsync.c b/src/MQTTAsync.c
+index f475c27..18bdb45 100755
+--- a/src/MQTTAsync.c
++++ b/src/MQTTAsync.c
+@@ -39,6 +39,41 @@
+  */
+ 
+ #define _GNU_SOURCE /* for pthread_mutexattr_settype */
++
++#include <vxWorks.h>
++#include <pthread.h >
++
++#ifdef timersub
++#undef timersub
++#endif
++#define timersub(a, b, result)\
++    do {                                                  \
++    (result)->tv_sec = (a)->tv_sec - (b)->tv_sec;       \
++    (result)->tv_usec = (a)->tv_usec - (b)->tv_usec;    \
++    if ((result)->tv_usec < 0) {                        \
++      --(result)->tv_sec;                               \
++      (result)->tv_usec += 1000000;                     \
++    }                                                   \
++  } while (0)
++
++enum
++{
++  PTHREAD_MUTEX_TIMED_NP,
++  PTHREAD_MUTEX_RECURSIVE_NP,
++  PTHREAD_MUTEX_ERRORCHECK_NP,
++  PTHREAD_MUTEX_ADAPTIVE_NP
++  ,
++  PTHREAD_MUTEX_NORMAL = PTHREAD_MUTEX_TIMED_NP,
++  PTHREAD_MUTEX_RECURSIVE = PTHREAD_MUTEX_RECURSIVE_NP,
++  PTHREAD_MUTEX_ERRORCHECK = PTHREAD_MUTEX_ERRORCHECK_NP,
++  PTHREAD_MUTEX_DEFAULT = PTHREAD_MUTEX_NORMAL
++#ifdef __USE_GNU
++  /* For compatibility.  */
++  , PTHREAD_MUTEX_FAST_NP = PTHREAD_MUTEX_TIMED_NP
++#endif
++};
++
++
+ #include <stdlib.h>
+ #if !defined(WIN32) && !defined(WIN64)
+ 	#include <sys/time.h>
+@@ -148,7 +183,7 @@ void MQTTAsync_init()
+ 	int rc;
+ 
+ 	pthread_mutexattr_init(&attr);
+-	pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK);
++	/*pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK);*/
+ 	if ((rc = pthread_mutex_init(mqttasync_mutex, &attr)) != 0)
+ 		printf("MQTTAsync: error %d initializing async_mutex\n", rc);
+ 	if ((rc = pthread_mutex_init(mqttcommand_mutex, &attr)) != 0)
+@@ -225,7 +260,7 @@ long MQTTAsync_elapsed(struct timeval start)
+ 	struct timeval now, res;
+ 
+ 	gettimeofday(&now, NULL);
+-	timersub(&now, &start, &res);
++	timersub(&now,  &start, &res);
+ 	return (res.tv_sec)*1000 + (res.tv_usec)/1000;
+ }
+ #endif
+@@ -348,7 +383,8 @@ void MQTTAsync_sleep(long milliseconds)
+ #if defined(WIN32) || defined(WIN64)
+ 	Sleep(milliseconds);
+ #else
+-	usleep(milliseconds*1000);
++	struct timespec rqtp = {0,milliseconds*1000};
++	      nanosleep(&rqtp, NULL);
+ #endif
+ 	FUNC_EXIT;
+ }
+diff --git a/src/MQTTAsync.h b/src/MQTTAsync.h
+index fc977de..82380c9 100644
+--- a/src/MQTTAsync.h
++++ b/src/MQTTAsync.h
+@@ -1333,7 +1333,7 @@ int main(int argc, char* argv[])
+ 		#if defined(WIN32) || defined(WIN64)
+ 			Sleep(100);
+ 		#else
+-			usleep(10000L);
++			nanosleep(10000000L);
+ 		#endif
+ 
+ 	MQTTAsync_destroy(&client);
+@@ -1483,7 +1483,7 @@ int main(int argc, char* argv[])
+ 		#if defined(WIN32) || defined(WIN64)
+ 			Sleep(100);
+ 		#else
+-			usleep(10000L);
++			nanosleep(10000000L);
+ 		#endif
+ 
+ 	if (finished)
+@@ -1504,7 +1504,8 @@ int main(int argc, char* argv[])
+ 		#if defined(WIN32) || defined(WIN64)
+ 			Sleep(100);
+ 		#else
+-			usleep(10000L);
++			struct timespec rqtp = {0,10000000L};
++        nanosleep(&rqtp, NULL);
+ 		#endif
+ 
+ exit:
+diff --git a/src/MQTTClient.c b/src/MQTTClient.c
+index b26bd06..b9c3858 100644
+--- a/src/MQTTClient.c
++++ b/src/MQTTClient.c
+@@ -38,6 +38,42 @@
+  */
+ 
+ #define _GNU_SOURCE /* for pthread_mutexattr_settype */
++
++#include <vxWorks.h>
++#include <pthread.h >
++
++#ifdef timersub
++#undef timersub
++#endif
++#define timersub(a, b, result)\
++	  do {                                                  \
++    (result)->tv_sec = (a)->tv_sec - (b)->tv_sec;       \
++    (result)->tv_usec = (a)->tv_usec - (b)->tv_usec;    \
++    if ((result)->tv_usec < 0) {                        \
++      --(result)->tv_sec;                               \
++      (result)->tv_usec += 1000000;                     \
++    }                                                   \
++  } while (0)
++
++
++enum
++{
++  PTHREAD_MUTEX_TIMED_NP,
++  PTHREAD_MUTEX_RECURSIVE_NP,
++  PTHREAD_MUTEX_ERRORCHECK_NP,
++  PTHREAD_MUTEX_ADAPTIVE_NP
++  ,
++  PTHREAD_MUTEX_NORMAL = PTHREAD_MUTEX_TIMED_NP,
++  PTHREAD_MUTEX_RECURSIVE = PTHREAD_MUTEX_RECURSIVE_NP,
++  PTHREAD_MUTEX_ERRORCHECK = PTHREAD_MUTEX_ERRORCHECK_NP,
++  PTHREAD_MUTEX_DEFAULT = PTHREAD_MUTEX_NORMAL
++#ifdef __USE_GNU
++  /* For compatibility.  */
++  , PTHREAD_MUTEX_FAST_NP = PTHREAD_MUTEX_TIMED_NP
++#endif
++};
++
++
+ #include <stdlib.h>
+ #if !defined(WIN32) && !defined(WIN64)
+ 	#include <sys/time.h>
+@@ -136,7 +172,7 @@ void MQTTClient_init()
+ 	int rc;
+ 
+ 	pthread_mutexattr_init(&attr);
+-	pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK);
++	/*pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK);*/
+ 	if ((rc = pthread_mutex_init(mqttclient_mutex, &attr)) != 0)
+ 		printf("MQTTClient: error %d initializing client_mutex\n", rc);
+ 	if ((rc = pthread_mutex_init(socket_mutex, &attr)) != 0)
+@@ -203,7 +239,8 @@ void MQTTClient_sleep(long milliseconds)
+ #if defined(WIN32) || defined(WIN64)
+ 	Sleep(milliseconds);
+ #else
+-	usleep(milliseconds*1000);
++	struct timespec rqtp = {0,milliseconds*1000000};
++	        nanosleep(&rqtp, NULL);
+ #endif
+ 	FUNC_EXIT;
+ }
+@@ -785,14 +822,12 @@ void Protocol_processPublication(Publish* publish, Clients* client)
+ 	FUNC_EXIT;
+ }
+ 
+-
+ int MQTTClient_connectURIVersion(MQTTClient handle, MQTTClient_connectOptions* options, const char* serverURI, int MQTTVersion,
+ 	START_TIME_TYPE start, long millisecsTimeout)
+ {
+ 	MQTTClients* m = handle;
+ 	int rc = SOCKET_ERROR;
+ 	int sessionPresent = 0;
+-
+ 	FUNC_ENTRY;
+ 	if (m->ma && !running)
+ 	{
+diff --git a/src/MQTTPersistenceDefault.c b/src/MQTTPersistenceDefault.c
+index 0f4f163..6c24cbf 100755
+--- a/src/MQTTPersistenceDefault.c
++++ b/src/MQTTPersistenceDefault.c
+@@ -127,7 +127,7 @@ int pstmkdir( char *pPathname )
+ 	{
+ #else
+ 	/* Create a directory with read, write and execute access for the owner and read access for the group */
+-	if ( mkdir( pPathname, S_IRWXU | S_IRGRP ) != 0 )
++	if ( mkdir( pPathname/*, S_IRWXU | S_IRGRP */) != 0 )
+ 	{
+ #endif
+ 		if ( errno != EEXIST )
+@@ -402,7 +402,10 @@ int containskeyUnix(char *dirname, char *key)
+ 		{
+ 			char* filename = malloc(strlen(dirname) + strlen(dir_entry->d_name) + 2);
+ 			sprintf(filename, "%s/%s", dirname, dir_entry->d_name);
+-			lstat(filename, &stat_info);
++			int fd = open(filename, O_RDONLY, S_IRUSR);
++			fstat(fd, &stat_info);
++			close(fd);
++			/*lstat(filename, &stat_info);*/
+ 			free(filename);
+ 			if(S_ISREG(stat_info.st_mode))
+ 			{
+@@ -508,7 +511,10 @@ int clearUnix(char *dirname)
+ 	{
+ 		while((dir_entry = readdir(dp)) != NULL && rc == 0)
+ 		{
+-			lstat(dir_entry->d_name, &stat_info);
++      int fd = open(dir_entry->d_name, O_RDONLY, S_IRUSR);
++      fstat(fd, &stat_info);
++      close(fd);
++		  /*lstat(dir_entry->d_name, &stat_info);*/
+ 			if(S_ISREG(stat_info.st_mode))
+ 			{
+ 				if ( remove(dir_entry->d_name) != 0 )
+@@ -651,8 +657,12 @@ int keysUnix(char *dirname, char ***keys, int *nkeys)
+ 			char* temp = malloc(strlen(dirname)+strlen(dir_entry->d_name)+2);
+ 
+ 			sprintf(temp, "%s/%s", dirname, dir_entry->d_name);
+-			if (lstat(temp, &stat_info) == 0 && S_ISREG(stat_info.st_mode))
++      int fd = open(temp, O_RDONLY, S_IRUSR);
++
++			/*if (lstat(temp, &stat_info) == 0 && S_ISREG(stat_info.st_mode))*/
++      if(fstat(fd, &stat_info) == 0 && S_ISREG(stat_info.st_mode))
+ 				nfkeys++;
++      close(fd);
+ 			free(temp);
+ 		}
+ 		closedir(dp);
+@@ -675,7 +685,9 @@ int keysUnix(char *dirname, char ***keys, int *nkeys)
+ 				char* temp = malloc(strlen(dirname)+strlen(dir_entry->d_name)+2);
+ 	
+ 				sprintf(temp, "%s/%s", dirname, dir_entry->d_name);
+-				if (lstat(temp, &stat_info) == 0 && S_ISREG(stat_info.st_mode))
++        int fd = open(temp, O_RDONLY, S_IRUSR);
++				/*if (lstat(temp, &stat_info) == 0 && S_ISREG(stat_info.st_mode))*/
++        if(fstat(fd, &stat_info) == 0 && S_ISREG(stat_info.st_mode))
+ 				{
+ 					fkeys[i] = malloc(strlen(dir_entry->d_name) + 1);
+ 					strcpy(fkeys[i], dir_entry->d_name);
+@@ -684,6 +696,7 @@ int keysUnix(char *dirname, char ***keys, int *nkeys)
+ 						*ptraux = '\0' ;
+ 					i++;
+ 				}
++        close(fd);
+ 				free(temp);
+ 			}
+ 			closedir(dp);
+diff --git a/src/MQTTVersion.c b/src/MQTTVersion.c
+index 6976e7c..d0d01fc 100755
+--- a/src/MQTTVersion.c
++++ b/src/MQTTVersion.c
+@@ -20,7 +20,7 @@
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <sys/types.h>
+-#include <memory.h>
++/*#include <memory.h>*/
+ #include <ctype.h>
+ #include "MQTTAsync.h"
+ 
+diff --git a/src/Messages.c b/src/Messages.c
+index f17e435..30126ae 100644
+--- a/src/Messages.c
++++ b/src/Messages.c
+@@ -26,7 +26,7 @@
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
+-#include <memory.h>
++/*#include <memory.h>*/
+ #include <string.h>
+ 
+ #include "Heap.h"
+diff --git a/src/Socket.c b/src/Socket.c
+index 536fb05..6c016ff 100755
+--- a/src/Socket.c
++++ b/src/Socket.c
+@@ -73,7 +73,10 @@ int Socket_setnonblocking(int sock)
+ 	FUNC_ENTRY;
+ 	if ((flags = fcntl(sock, F_GETFL, 0)))
+ 		flags = 0;
+-	rc = fcntl(sock, F_SETFL, flags | O_NONBLOCK);
++
++	int on = TRUE;
++	rc = ioctl(sock, FIONBIO, &on);
++	/*rc = fcntl(sock, F_SETFL, flags | O_NONBLOCK);*/
+ #endif
+ 	FUNC_EXIT_RC(rc);
+ 	return rc;
+@@ -673,7 +676,7 @@ int Socket_new(char* addr, int port, int* sock)
+ 					rc = connect(*sock, (struct sockaddr*)&address6, sizeof(address6));
+ 	#endif
+ 				if (rc == SOCKET_ERROR)
+-					rc = Socket_error("connect", *sock);
++				  rc = errno;//Socket_error("connect", *sock);
+ 				if (rc == EINPROGRESS || rc == EWOULDBLOCK)
+ 				{
+ 					int* pnewSd = (int*)malloc(sizeof(int));
+diff --git a/src/Socket.h b/src/Socket.h
+index e1ab291..7ab066f 100755
+--- a/src/Socket.h
++++ b/src/Socket.h
+@@ -17,7 +17,10 @@
+ 
+ #if !defined(SOCKET_H)
+ #define SOCKET_H
+-
++#include <vxWorks.h>
++#include <sockLib.h>
++#include <selectLib.h>
++#include <inetLib.h>
+ #include <sys/types.h>
+ 
+ #if defined(WIN32) || defined(WIN64)
+@@ -38,9 +41,9 @@
+ #else
+ #define INVALID_SOCKET SOCKET_ERROR
+ #include <sys/socket.h>
+-#include <sys/param.h>
++/*include <sys/param.h>*/
+ #include <sys/time.h>
+-#include <sys/select.h>
++/*#include <sys/select.h>*/
+ #include <netinet/in.h>
+ #include <netinet/tcp.h>
+ #include <arpa/inet.h>
+@@ -50,7 +53,7 @@
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <unistd.h>
+-#include <sys/uio.h>
++/*#include <sys/uio.h>*/
+ #define ULONG size_t
+ #endif
+ 
+diff --git a/src/SocketBuffer.c b/src/SocketBuffer.c
+index e4ce756..96a9e25 100755
+--- a/src/SocketBuffer.c
++++ b/src/SocketBuffer.c
+@@ -29,7 +29,7 @@
+ 
+ #include <stdlib.h>
+ #include <stdio.h>
+-#include <memory.h>
++/*#include <memory.h>*/
+ 
+ #include "Heap.h"
+ 
+diff --git a/src/Thread.c b/src/Thread.c
+index 6741acc..40bcf47 100644
+--- a/src/Thread.c
++++ b/src/Thread.c
+@@ -44,7 +44,7 @@
+ #include <sys/stat.h>
+ #include <limits.h>
+ #endif
+-#include <memory.h>
++/*#include <memory.h>*/
+ #include <stdlib.h>
+ 
+ /**
+@@ -271,7 +271,8 @@ int Thread_wait_sem(sem_type sem, int timeout)
+ 				rc = 0;
+ 				break;
+ 			}
+-			usleep(interval); /* microseconds - .1 of a second */
++		  struct timespec rqtp = {0,interval*1000};
++		          nanosleep(&rqtp, NULL);/* microseconds - .1 of a second */
+ 		}
+ 	#else
+ 		if (clock_gettime(CLOCK_REALTIME, &ts) != -1)
+diff --git a/src/Tree.c b/src/Tree.c
+index b8c719c..13b1f39 100755
+--- a/src/Tree.c
++++ b/src/Tree.c
+@@ -28,7 +28,7 @@
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
+-#include <memory.h>
++/*#include <memory.h>*/
+ 
+ #include "Heap.h"
+ 
+diff --git a/src/samples/MQTTAsync_publish.c b/src/samples/MQTTAsync_publish.c
+index 7554810..fb29ea5 100644
+--- a/src/samples/MQTTAsync_publish.c
++++ b/src/samples/MQTTAsync_publish.c
+@@ -145,7 +145,8 @@ int main(int argc, char* argv[])
+ 		#if defined(WIN32)
+ 			Sleep(100);
+ 		#else
+-			usleep(10000L);
++	    struct timespec rqtp = {0,10000000L};
++			nanosleep(&rqtp, NULL);
+ 		#endif
+ 
+ 	MQTTAsync_destroy(&client);
+diff --git a/src/samples/MQTTAsync_subscribe.c b/src/samples/MQTTAsync_subscribe.c
+index 6b20490..aa9ae02 100644
+--- a/src/samples/MQTTAsync_subscribe.c
++++ b/src/samples/MQTTAsync_subscribe.c
+@@ -160,7 +160,8 @@ int main(int argc, char* argv[])
+ 		#if defined(WIN32)
+ 			Sleep(100);
+ 		#else
+-			usleep(10000L);
++	struct timespec rqtp = {0,10000000L};
++	      nanosleep(&rqtp, NULL);
+ 		#endif
+ 
+ 	if (finished)
+@@ -181,7 +182,8 @@ int main(int argc, char* argv[])
+ 		#if defined(WIN32)
+ 			Sleep(100);
+ 		#else
+-			usleep(10000L);
++	struct timespec rqtp = {0,10000000L};
++	      nanosleep(&rqtp, NULL);;
+ 		#endif
+ 
+ exit:
+diff --git a/src/samples/paho_c_pub.c b/src/samples/paho_c_pub.c
+index bd26fe4..f6df3fa 100644
+--- a/src/samples/paho_c_pub.c
++++ b/src/samples/paho_c_pub.c
+@@ -286,7 +286,8 @@ int main(int argc, char** argv)
+ 		#if defined(WIN32)
+ 			Sleep(100);
+ 		#else
+-			usleep(10000L);
++	struct timespec rqtp = {0,10000000L};
++	      nanosleep(&rqtp, NULL);
+ 		#endif
+ 
+ 	MQTTAsync_destroy(&client);
+diff --git a/src/samples/paho_c_sub.c b/src/samples/paho_c_sub.c
+index 4c820b6..c3c352f 100644
+--- a/src/samples/paho_c_sub.c
++++ b/src/samples/paho_c_sub.c
+@@ -325,7 +325,8 @@ int main(int argc, char** argv)
+ 		#if defined(WIN32)
+ 			Sleep(100);
+ 		#else
+-			usleep(10000L);
++	struct timespec rqtp = {0,10000000L};
++	      nanosleep(&rqtp, NULL);
+ 		#endif
+ 
+ 	if (finished)
+@@ -335,7 +336,8 @@ int main(int argc, char** argv)
+ 		#if defined(WIN32)
+ 			Sleep(100);
+ 		#else
+-			usleep(10000L);
++	struct timespec rqtp = {0,10000000L};
++	      nanosleep(&rqtp, NULL);
+ 		#endif
+ 
+ 	disc_opts.onSuccess = onDisconnect;
+@@ -349,7 +351,8 @@ int main(int argc, char** argv)
+ 		#if defined(WIN32)
+ 			Sleep(100);
+ 		#else
+-			usleep(10000L);
++	struct timespec rqtp = {0,10000000L};
++	      nanosleep(&rqtp, NULL);
+ 		#endif
+ 
+ exit:

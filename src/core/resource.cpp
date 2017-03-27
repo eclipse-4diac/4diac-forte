@@ -10,7 +10,7 @@
  *    Martin Melik Merkumians,
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#include <fortealloc.h>
+#include <fortenew.h>
 #include "resource.h"
 #include "device.h"
 #include "adapter.h"

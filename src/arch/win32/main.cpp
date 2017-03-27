@@ -8,7 +8,7 @@
  * Contributors:
  *  Alois Zoitl, Ingo Hegny, Gerhard Ebenhofer - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include <fortealloc.h>
+#include <fortenew.h>
 #include <stdio.h>
 #include <signal.h>
 #include "../../stdfblib/ita/RMT_DEV.h"

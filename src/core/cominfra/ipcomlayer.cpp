@@ -180,7 +180,9 @@ void CIPComLayer::handledConnectedDataRecv(){
 #ifdef WIN32
     Sleep(0);
 #else
+#ifndef __RCX__
     sleep(0);
+#endif
 #endif
   }
   if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != m_nSocketID){

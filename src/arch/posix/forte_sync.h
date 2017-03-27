@@ -13,8 +13,6 @@
 
 #include <pthread.h>
 
-#define CSyncObject CPCSyncObject //allows that doxygen can generate better documenation
-
 
 /*! \ingroup posix_hal
  * \brief The sync object implementation for the posix thread interface.
@@ -24,26 +22,30 @@
  */
  
 class CPCSyncObject{
-  private:
-  protected:
-  //! The posix thread mutex handle of the operating system.
-    pthread_mutex_t m_oMutexHandle;
   public:
     CPCSyncObject();
     ~CPCSyncObject();
-  /*!\brief Lock the resource coming after the lock command  
-   * 
-   * This function blocks until it will get the lock for the coming critical section.
-   */  
+
+    /*!\brief Lock the resource coming after the lock command
+     *
+     * This function blocks until it will get the lock for the coming critical section.
+     */
     void lock(void){
       pthread_mutex_lock(&m_oMutexHandle);
       //TODO handle return value
-    };
-  //!Freee the resource coming after the lock command  
+    }
+
+    //!Freee the resource coming after the lock command
     void unlock(void){
       pthread_mutex_unlock(&m_oMutexHandle);
       //TODO handle return value
-    };
+    }
+
+  private:
+    //! The posix thread mutex handle of the operating system.
+    pthread_mutex_t m_oMutexHandle;
 };
+
+typedef CPCSyncObject CSyncObject; //allows that doxygen can generate better documenation
 
 #endif /*FORTE_SYNC_H_*/

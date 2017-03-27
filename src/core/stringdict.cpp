@@ -10,7 +10,7 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "stringdict.h"
-#include <fortealloc.h>
+#include <fortenew.h>
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "stringdict_gen.cpp"
 #endif
@@ -171,10 +171,13 @@ CStringDictionary::TStringId CStringDictionary::findEntry(const char *pa_sStr, u
 bool CStringDictionary::reallocateStringIdBuf(unsigned int pa_nNewMaxNrOfStrings){
   bool bRetval = true;
   if(pa_nNewMaxNrOfStrings > m_nMaxNrOfStrings){
-    TStringId *adr = (TStringId *) forte_realloc(m_pnStringIdBufAddr, pa_nNewMaxNrOfStrings * sizeof(TStringId));
+    TStringId *adr = (TStringId *) forte_malloc(pa_nNewMaxNrOfStrings * sizeof(TStringId));
     if(0 != adr){
+      memcpy(adr, m_pnStringIdBufAddr, m_nMaxNrOfStrings * sizeof(TStringId));
+      TStringId *oldData = m_pnStringIdBufAddr;
       m_pnStringIdBufAddr = adr;
       m_nMaxNrOfStrings = pa_nNewMaxNrOfStrings;
+      forte_free(oldData);
     }
     else{
       bRetval = false;
@@ -187,10 +190,13 @@ bool CStringDictionary::reallocateStringIdBuf(unsigned int pa_nNewMaxNrOfStrings
 bool CStringDictionary::reallocateStringBuf(TForteUInt32 pa_nNewBufSize){
   bool bRetval = true;
   if(pa_nNewBufSize > m_nStringBufSize){
-    char *adr = (char *) forte_realloc(m_paStringBufAddr, pa_nNewBufSize * sizeof(char));
+    char *adr = (char *) forte_malloc(pa_nNewBufSize * sizeof(char));
     if(0 != adr){
+      memcpy(adr, m_paStringBufAddr, m_nStringBufSize * sizeof(char));
+      char *oldData = m_paStringBufAddr;
       m_paStringBufAddr = adr;
       m_nStringBufSize = pa_nNewBufSize;
+      forte_free(oldData);
     }
     else{
       bRetval = false;

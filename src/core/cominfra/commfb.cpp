@@ -10,7 +10,7 @@
   *    Patrick Smejkal
   *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
-#include <fortealloc.h>
+#include <fortenew.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
