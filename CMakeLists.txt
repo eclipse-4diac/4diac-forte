@@ -58,6 +58,7 @@ else(BUILD_TYPE_LOWERCASE STREQUAL "debug")
         message("According  to CMAKE_BUILD_TYPE you are not debugging, but still you have some logging info. Do you really want to log something?")
     endif(NOT (FORTE_LOGLEVEL MATCHES "NOLOG"))
 endif(BUILD_TYPE_LOWERCASE STREQUAL "debug")
+
 set_property(CACHE FORTE_LOGLEVEL PROPERTY STRINGS LOGDEBUG LOGERROR LOGWARNING LOGINFO NOLOG)
  
 forte_add_definition("-D${FORTE_LOGLEVEL}")

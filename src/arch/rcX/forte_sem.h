@@ -25,7 +25,7 @@ namespace forte {
     class CrcXSemaphore{
       public:
 
-        explicit CrcXSemaphore(unsigned int paInitialValue  = 0);
+        explicit CrcXSemaphore(unsigned int paInitialValue = 0);
         ~CrcXSemaphore();
 
         void semInc();

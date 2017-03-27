@@ -12,10 +12,10 @@
 #ifndef _CONFIG_RCX_H_
 #define _CONFIG_RCX_H_
 
-const unsigned int cg_forteQueueMax = ${FORTE_QUEUE_MAX}; 
+const unsigned int cg_forteQueueMax = ${FORTE_RCX_QUEUE_MAX}; 
 
-const unsigned int cg_forteWaitingQueueMax = ${FORTE_WAIT_QUEUE_MAX}; 
+const unsigned int cg_forteWaitingQueueMax = ${FORTE_RCX_WAIT_QUEUE_MAX}; 
 
-const unsigned int cg_fortePoolMax = ${FORTE_POOL_MAX}; 
+const unsigned int cg_fortePoolMax = ${FORTE_RCX_POOL_MAX}; 
 
 #endif /* _CONFIG_RCX_H_ */

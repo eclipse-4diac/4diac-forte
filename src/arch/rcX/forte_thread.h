@@ -23,7 +23,7 @@ class CrcXThread : public forte::arch::CThreadBase {
      *  Does all the necessary steps in order to get the thread running with the start()-method
      *  @param pa_nStackSize the Size in bytes of the stack the thread is allowed to use. 128 elements is the minimum, and each element has 4 bytes. A 0 sets the size to the minimum
      */
-    explicit CrcXThread(long pa_nStackSize = (128 * 4));
+    explicit CrcXThread(long pa_nStackSize = (300 * 4));
 
     /*! \brief Stops and destroys thread.
      *
@@ -50,6 +50,12 @@ class CrcXThread : public forte::arch::CThreadBase {
      *  Increment task number to identify the different tasks.
      */
     static UINT smTaskInstance;
+
+		/*! \brief Instance defined for the task
+		 *
+		 *  Increment task number to identify the different tasks.
+		 */
+    static RX_TASK_TOKEN smTaskToken;
 
     /*!\brief Function that is given to the system thread support that should be called for the thread.
      *

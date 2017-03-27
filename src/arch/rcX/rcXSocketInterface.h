@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 fortiss GmbH
+ * Copyright (c) 2016 - 2017 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,19 +27,64 @@
 
 class CrcXSocketInterface : public CExternalEventHandler, private CThread{
     DECLARE_SINGLETON(CrcXSocketInterface)
-  public:
+  private:
+
+    /* Task packet union.
+     *
+     * All the packets, which are used by the task to exchange data with another tasks,
+     * are represented by the union.
+     */
+    union FORTE_TCP_PACKET_T /* Task packet union */
+    {
+        /* TLR packet header */
+        TLR_PACKET_HEADER_T tHead;
+
+        TCPIP_PACKET_TCP_UDP_CMD_OPEN_REQ_T tOpenReq;
+        TCPIP_PACKET_TCP_UDP_CMD_OPEN_CNF_T tOpenCnf;
+
+        TCPIP_PACKET_TCP_UDP_CMD_CLOSE_REQ_T tCloseReq;
+        TCPIP_PACKET_TCP_UDP_CMD_CLOSE_CNF_T tCloseCnf;
+
+        TCPIP_PACKET_TCP_CMD_WAIT_CONNECT_REQ_T tWaitConnectReq;
+        TCPIP_PACKET_TCP_CMD_WAIT_CONNECT_CNF_T tWaitConnectCnf;
+
+        TCPIP_PACKET_TCP_CMD_CONNECT_REQ_T tConnectReq;
+        TCPIP_PACKET_TCP_CMD_CONNECT_CNF_T tConnectCnf;
+
+        TCPIP_PACKET_TCP_CMD_SEND_REQ_T tSendTcpReq;
+        TCPIP_PACKET_TCP_CMD_SEND_CNF_T tSendTcpCnf;
+
+        TCPIP_PACKET_UDP_CMD_SEND_REQ_T tSendUdpReq;
+        TCPIP_PACKET_UDP_CMD_SEND_CNF_T tSendUdpCnf;
+
+        TCPIP_PACKET_TCP_UDP_CMD_RECEIVE_IND_T tRcvInd;
+
+        TCPIP_PACKET_TCP_UDP_CMD_SHUTDOWN_IND_T tShutdownInd;
+        TCPIP_PACKET_TCP_UDP_CMD_RECEIVE_STOP_IND_T tStopInd;
+
+        TCPIP_PACKET_TCP_UDP_CMD_CLOSE_ALL_REQ_T tCloseAllReq;
+        TCPIP_PACKET_TCP_UDP_CMD_CLOSE_ALL_CNF_T tCloseAllCnf;
+
+        TCPIP_PACKET_TCP_UDP_CMD_SET_SOCK_OPTION_REQ_T tSetSocketOptionsReq;
+        TCPIP_PACKET_TCP_UDP_CMD_SET_SOCK_OPTION_CNF_T tSetSocketOptionsCnf;
+    };
 
     struct SSocketDescriptor{
       UINT32 socketNumber;
       bool accepted;
+      bool deleteMe;
       UINT32 port;
+      FORTE_TCP_PACKET_T* packetReceived;
+    };
+
+  public:
+
+    struct TUDPDestAddr{
+        UINT32 destPort;
+        UINT32 destAddress;
     };
 
     typedef SSocketDescriptor* TSocketDescriptor;
-    struct TUDPDestAddr{
-        UINT32  destPort;
-        UINT32  destAddress;
-    };
 
     static const TSocketDescriptor scm_nInvalidSocketDescriptor;
 
@@ -102,48 +147,12 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
 
     struct tcpResources{
         RX_HANDLE tcpTaskHandle;
-        TLR_QUE_LINK_T tcpQueueHandle;
+        TLR_QUE_LINK_T tcpQueueLink;
         RX_HANDLE fortePoolHandle;
         RX_HANDLE forteQueueHandle;
+        TLR_QUE_LINK_SOURCE_T forteLinkSource;
         RX_HANDLE forteTask;
         UINT32 sndId;
-    };
-
-    /* Task packet union.
-     *
-     * All the packets, which are used by the task to exchange data with another tasks,
-     * are represented by the union.
-     */
-    union FORTE_TCP_PACKET_T                                                            /* Task packet union */
-    {
-      /* TLR packet header */
-      TLR_PACKET_HEADER_T                           tHead;
-
-      TCPIP_PACKET_TCP_UDP_CMD_OPEN_REQ_T           tOpenReq;
-      TCPIP_PACKET_TCP_UDP_CMD_OPEN_CNF_T           tOpenCnf;
-
-      TCPIP_PACKET_TCP_UDP_CMD_CLOSE_REQ_T          tCloseReq;
-      TCPIP_PACKET_TCP_UDP_CMD_CLOSE_CNF_T          tCloseCnf;
-
-      TCPIP_PACKET_TCP_CMD_WAIT_CONNECT_REQ_T       tWaitConnectReq;
-      TCPIP_PACKET_TCP_CMD_WAIT_CONNECT_CNF_T       tWaitConnectCnf;
-
-      TCPIP_PACKET_TCP_CMD_CONNECT_REQ_T            tConnectReq;
-      TCPIP_PACKET_TCP_CMD_CONNECT_CNF_T            tConnectCnf;
-
-      TCPIP_PACKET_TCP_CMD_SEND_REQ_T               tSendTcpReq;
-      TCPIP_PACKET_TCP_CMD_SEND_CNF_T               tSendTcpCnf;
-
-      TCPIP_PACKET_UDP_CMD_SEND_REQ_T               tSendUdpReq;
-      TCPIP_PACKET_UDP_CMD_SEND_CNF_T               tSendUdpCnf;
-
-      TCPIP_PACKET_TCP_UDP_CMD_RECEIVE_IND_T        tRcvInd;
-
-      TCPIP_PACKET_TCP_UDP_CMD_SHUTDOWN_IND_T       tShutdownInd;
-      TCPIP_PACKET_TCP_UDP_CMD_RECEIVE_STOP_IND_T   tStopInd;
-
-      TCPIP_PACKET_TCP_UDP_CMD_CLOSE_ALL_REQ_T      tCloseAllReq;
-      TCPIP_PACKET_TCP_UDP_CMD_CLOSE_ALL_CNF_T      tCloseAllCnf;
     };
 
     RX_RESULT openConnection(char *pa_acIPAddr, unsigned short pa_nPort, bool isTCP, bool isServer, TUDPDestAddr *m_ptDestAddr, TSocketDescriptor& pa_destSocket);
@@ -162,6 +171,7 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
      */
     RX_RESULT waitPacket(UINT32 pa_command, FORTE_TCP_PACKET_T** pa_packetResult, UINT pa_timeout);
     void managePacketsDefault(FORTE_TCP_PACKET_T* pa_packetResult);
+    UINT32 getSocketIDFromPacket(FORTE_TCP_PACKET_T* pa_packet);
     bool isInitialized(void);
 
     TSocketDescriptor socketDescriptorAlloc(void);
