@@ -354,10 +354,10 @@ EComResponse COPC_UA_Layer::processInterrupt() {
 	return mInterruptResp;
 }
 
-UA_StatusCode COPC_UA_Layer::onServerMethodCall(void *methodHandle, __attribute__((unused)) const UA_NodeId objectId, size_t inputSize, const UA_Variant *input,
-												size_t outputSize,
-												UA_Variant *output) {
-
+UA_StatusCode COPC_UA_Layer::onServerMethodCall(void *methodHandle, __attribute__((unused)) const UA_NodeId *objectId,
+												__attribute__((unused)) const UA_NodeId *sessionId, __attribute__((unused))  void *sessionHandle,
+												size_t inputSize, const UA_Variant *input,
+												size_t outputSize, UA_Variant *output) {
 	COPC_UA_Layer *self = static_cast<COPC_UA_Layer *>(methodHandle);
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"

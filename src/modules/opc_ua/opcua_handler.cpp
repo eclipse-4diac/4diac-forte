@@ -27,15 +27,12 @@ DEFINE_SINGLETON(COPC_UA_Handler);
 const char *LogsLevelNames[6] = {"trace", "debug", "info", "warning", "error", "fatal"};
 const char *LogsCategoryNames[6] = {"network", "channel", "session", "server", "client", "userland"};
 
-void UA_Log_Forte(UA_LogLevel level, UA_LogCategory category, const char *msg, ...) {
+void UA_Log_Forte(UA_LogLevel level, UA_LogCategory category, const char *msg, va_list args) {
 	char tmpStr[400];
 	snprintf(tmpStr, 400, "[OPC UA] %s/%s\t", LogsLevelNames[level], LogsCategoryNames[category]);
 	char *start = &tmpStr[strlen(tmpStr)];
 
-	va_list ap;
-	va_start(ap, msg);
-	vsprintf(start, msg, ap);
-	va_end(ap);
+	vsprintf(start, msg, args);
 
 	size_t len = strlen(tmpStr);
 	tmpStr[len] = '\n';
@@ -61,7 +58,6 @@ void UA_Log_Forte(UA_LogLevel level, UA_LogCategory category, const char *msg, .
 
 void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
 	uaServerConfig = UA_ServerConfig_standard;
-	uaServerConfig.enableUsernamePasswordLogin = false;
 	uaServerConfig.networkLayersSize = 1;
 	uaServerConfig.logger = UA_Log_Forte;
 

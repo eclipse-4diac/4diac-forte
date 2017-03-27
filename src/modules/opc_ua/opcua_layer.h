@@ -145,7 +145,7 @@ private:
 	 * @param output value of output arguments. These will be read from SD ports
 	 * @return UA_STATUSCODE_GOOD on success. The return value is passed to the caller, i.e., the client.
 	 */
-	static UA_StatusCode onServerMethodCall(void *methodHandle, const UA_NodeId objectId,
+	static UA_StatusCode onServerMethodCall(void *methodHandle, const UA_NodeId *objectId, const UA_NodeId *sessionId, void *sessionHandle,
 											size_t inputSize, const UA_Variant *input, size_t outputSize, UA_Variant *output);
 
 	/**
