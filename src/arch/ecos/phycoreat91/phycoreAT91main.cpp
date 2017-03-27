@@ -8,7 +8,7 @@
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include <fortealloc.h>
+#include <fortenew.h>
 #include "../../../stdfblib/ita/RMT_DEV.h"
 #include <cyg/kernel/kapi.h>
 #include <network.h>

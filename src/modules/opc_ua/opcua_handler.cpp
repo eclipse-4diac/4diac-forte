@@ -65,6 +65,17 @@ void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
 	uaServerConfig.networkLayersSize = 1;
 	uaServerConfig.logger = UA_Log_Forte;
 
+	// TODO make sure the URI is unique, e.g. by using the application name or something else.
+	uaServerConfig.applicationDescription.applicationUri = UA_String_fromChars("org.eclipse.4diac.forte");
+	uaServerConfig.applicationDescription.applicationName.locale = UA_String_fromChars("EN");
+	uaServerConfig.applicationDescription.applicationName.text = UA_String_fromChars("FORTE");
+
+	// TODO set server capabilities
+	// See http://www.opcfoundation.org/UA/schemas/1.03/ServerCapabilities.csv
+	//config.serverCapabilitiesSize = 1;
+	//UA_String caps = UA_String_fromChars("LDS");
+	//config.serverCapabilities = &caps;
+
 	uaServerNetworkLayer = UA_ServerNetworkLayerTCP(UA_ConnectionConfig_standard, UAServerPort);
 	uaServerConfig.networkLayers = &uaServerNetworkLayer;
 }
@@ -84,6 +95,8 @@ COPC_UA_Handler::COPC_UA_Handler() : uaServerConfig(), uaServerNetworkLayer(), g
 COPC_UA_Handler::~COPC_UA_Handler() {
 	stopServerRunning();
 	end();
+	UA_String_deleteMembers(&uaServerConfig.applicationDescription.applicationUri);
+	UA_LocalizedText_deleteMembers(&uaServerConfig.applicationDescription.applicationName);
 	UA_Server_delete(uaServer);
 	uaServerNetworkLayer.deleteMembers(&uaServerNetworkLayer);
 

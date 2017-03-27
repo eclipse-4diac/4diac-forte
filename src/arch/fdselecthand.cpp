@@ -16,7 +16,6 @@
 #include "../core/cominfra/commfb.h"
 #include <criticalregion.h>
 
-
 DEFINE_SINGLETON(CFDSelectHandler);
 
 CFDSelectHandler::CFDSelectHandler(){
@@ -25,12 +24,11 @@ CFDSelectHandler::CFDSelectHandler(){
   // Windows Socket Startupcode
   WORD wVersionRequested;
   WSADATA wsaData;
-  int err;
 
   /* Use the MAKEWORD(lowbyte, highbyte) macro declared in Windef.h */
   wVersionRequested = MAKEWORD(2, 2);
 
-  err = WSAStartup(wVersionRequested, &wsaData);
+  WSAStartup(wVersionRequested, &wsaData);
 #endif
 }
 
@@ -67,6 +65,10 @@ void CFDSelectHandler::run(void){
 
     if(0 != nHighestFDID){
       retval = select(nHighestFDID + 1, &anFDSet, NULL, NULL, &tv);
+      if(!isAlive()){
+        //the thread has been closed in the meantime do not process any messages anymore
+        return;
+      }
     }
     else{
       retval = 0;

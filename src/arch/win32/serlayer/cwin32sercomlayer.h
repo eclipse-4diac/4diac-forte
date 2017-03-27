@@ -10,6 +10,7 @@
  *******************************************************************************/
 #include <comlayer.h>
 #include <commfb.h>
+#include "cwin32sercomparameterparser.h"
 
 #include <Windows.h>
 
@@ -26,7 +27,15 @@ class CWin32SerComLayer : public forte::com_infra::CComLayer{
     virtual forte::com_infra::EComResponse processInterrupt();
 
     virtual void closeConnection();
+
+    /*! \brief Perform send to serial interface
+    *   \param pa_pvData Sendable payload
+    *   \param pa_unSize Payload size in bytes
+    *
+    *   \return ComLayer response
+    */
     virtual forte::com_infra::EComResponse sendData(void *pa_pvData, unsigned int pa_unSize);
+    
     /*! \brief Perform reading from serial interface
      *
      * @return if not e_Nothing something was read and the FB should get an external event
@@ -35,6 +44,7 @@ class CWin32SerComLayer : public forte::com_infra::CComLayer{
 
   protected:
   private:
+	char m_acTerminationSymbol[3]; //**< Space for CR, LF, or CR/LF + Terminating \0
     virtual forte::com_infra::EComResponse openConnection(char *pa_acLayerParameter);
     HANDLE m_hSerial;
 	static const unsigned int m_unMaxRecvBuffer = 22;

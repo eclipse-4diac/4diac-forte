@@ -75,7 +75,7 @@ bool CCompositeFB::connectDI(TPortId paDIPortId, CDataConnection *paDataCon){
   bool retVal = false;
 
   if(cgInternal2InterfaceMarker & paDIPortId){
-    paDIPortId &= cgInternal2InterfaceRemovalMask;
+    paDIPortId = static_cast<TPortId>(paDIPortId & cgInternal2InterfaceRemovalMask);
     if(paDIPortId < m_pstInterfaceSpec->m_nNumDOs){
       m_apoIn2IfDConns[paDIPortId] = paDataCon;
       retVal = true;
@@ -207,7 +207,9 @@ void CCompositeFB::createInternalFBs(){
       m_apoInternalFBs[i] =
           CTypeLib::createFB(cm_cpoFBNData->m_pstFBInstances[i].m_nFBInstanceNameId, cm_cpoFBNData->m_pstFBInstances[i].m_nFBTypeNameId, getResourcePtr());
 #ifdef FORTE_SUPPORT_MONITORING
-      m_apoInternalFBs[i]->setContainer(this);
+      if (0 != m_apoInternalFBs[i]){
+        m_apoInternalFBs[i]->setContainer(this);
+      }
 #endif
     }
   }

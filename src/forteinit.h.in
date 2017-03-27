@@ -14,11 +14,15 @@
 #ifndef FORTEINIT_H_
 #define FORTEINIT_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-class forteInit
-{
-public:
-  static void initForte();
-};
+void initForte();
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /*FORTEINIT_H_*/

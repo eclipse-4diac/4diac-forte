@@ -247,15 +247,15 @@ bool DEV_MGR::parseWriteConnectionData(char *pa_acRequestPartLeft, forte::core::
         do{
           pa_acRequestPartLeft++;
         } while(';' != *pa_acRequestPartLeft);
-        pa_acRequestPartLeft += 2; //go beyound the ; and the following "
+        pa_acRequestPartLeft += 2; //go beyond the ; and the following "
         break;
       }
       i++;
     }
-    //char originalVal = beginOfRequest[i];
+    char originalVal = beginOfRequest[i];
     beginOfRequest[i] = '\0';
     pa_rstCommand.mAdditionalParams.assign(beginOfRequest, static_cast<TForteUInt16>(i));
-    //beginOfRequest[i] = originalVal;
+    beginOfRequest[i] = originalVal;
 
     pa_acRequestPartLeft = strchr(&(pa_acRequestPartLeft[1]), '\"');
     if(pa_acRequestPartLeft != 0){
@@ -564,8 +564,6 @@ DEV_MGR::~DEV_MGR(){
 
 #ifdef FORTE_SUPPORT_BOOT_FILE
 void DEV_MGR::loadForteBootFile(){
-  char acLineBuf[cg_unBootFileLineBufSize]; //TODO maybe move it out of the stack
-
   char* bootFileName;
   bootFileName = getenv ("FORTE_BOOT_FILE");
   FILE *bootfile = 0;
@@ -581,6 +579,7 @@ void DEV_MGR::loadForteBootFile(){
     int nLineCount = 1;
     EMGMResponse eResp;
     char *cmdStart;
+    char acLineBuf[cg_unBootFileLineBufSize]; //TODO maybe move it out of the stack
 
     while(0 != fgets(acLineBuf, cg_unBootFileLineBufSize, bootfile)){
       if('\n' != acLineBuf[strlen(acLineBuf) - 1]){
@@ -592,7 +591,6 @@ void DEV_MGR::loadForteBootFile(){
         m_poDevice.executeMGMCommand(m_stCommand);
         break;
       }
-
       cmdStart = strchr(acLineBuf, ';');
       if(0 == cmdStart){
         DEVLOG_ERROR("Boot file line does not contain separating ';'. Line: %d\n", nLineCount);

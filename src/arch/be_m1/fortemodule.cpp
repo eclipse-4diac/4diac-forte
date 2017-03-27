@@ -16,7 +16,7 @@
 
 #include "fortemodule.h"
 
-#include <fortealloc.h>
+#include <fortenew.h>
 #include "BE_RMT_DEV.h"
 #include <forteinit.h>
 

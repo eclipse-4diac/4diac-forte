@@ -9,7 +9,7 @@
   *    Martin Melik Merkumians, Alois Zoitl, Ingo Hegny,
   *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
-#include <fortealloc.h>
+#include <fortenew.h>
 #include "fortenode.h"
 #include "forteiterator.h"
 

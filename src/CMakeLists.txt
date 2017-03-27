@@ -11,8 +11,9 @@
 # *     - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
+set(FORTE_EXTERNAL_MODULES_DIRECTORY "" CACHE PATH "Path to a directory with FORTE modules located outside of the FORTE source code")
 
-forte_create_modules_file(${CMAKE_CURRENT_SOURCE_DIR}/modules/)
+forte_create_modules_file(${CMAKE_CURRENT_SOURCE_DIR}/modules/ "${FORTE_EXTERNAL_MODULES_DIRECTORY}")
 forte_add_subdirectory(arch)
 forte_add_subdirectory(core)
 forte_add_subdirectory(modules)
@@ -251,8 +252,8 @@ if(${FORTE_BUILD_TYPE} STREQUAL STATIC_LIBRARY OR ${FORTE_BUILD_TYPE} STREQUAL S
   ADD_DEPENDENCIES (forte_init_generator forte_generate_modules_cmake_files)
 endif(${FORTE_BUILD_TYPE} STREQUAL STATIC_LIBRARY OR ${FORTE_BUILD_TYPE} STREQUAL SHARED_LIBRARY)
 
-ADD_CUSTOM_TARGET(forte_generate_modules_cmake_files COMMAND ${CMAKE_COMMAND} -DFORTE_MODULE_DIR:STRING=${CMAKE_CURRENT_SOURCE_DIR}/modules/ -P ${FORTE_BUILDSUPPORT_DIRECTORY}/generate_modules_cmake_file.cmake)
 ADD_DEPENDENCIES (forte forte_generate_modules_cmake_files)
+ADD_CUSTOM_TARGET(forte_generate_modules_cmake_files COMMAND ${CMAKE_COMMAND} -DFORTE_MODULE_DIR:STRING=${CMAKE_CURRENT_SOURCE_DIR}/modules/ -DFORTE_EXTERNAL_MODULE_DIR:STRING=${FORTE_EXTERNAL_MODULES_DIRECTORY} -P ${FORTE_BUILDSUPPORT_DIRECTORY}/generate_modules_cmake_file.cmake)
 ADD_CUSTOM_TARGET(forte_stringlist_generator COMMAND ${CMAKE_COMMAND} -DFORTE_LINKED_STRINGDICT:STRING="${FORTE_LINKED_STRINGDICT}" -DFORTE_BINARY_DIR:STRING="${CMAKE_BINARY_DIR}" -DFORTE_SOURCE_DIR:STRING="${CMAKE_CURRENT_SOURCE_DIR}" -P ${FORTE_BUILDSUPPORT_DIRECTORY}/generate_stringlist.cmake)
 ADD_DEPENDENCIES (forte forte_stringlist_generator)
 ADD_DEPENDENCIES (forte_stringlist_generator forte_generate_modules_cmake_files)

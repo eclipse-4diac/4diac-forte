@@ -46,7 +46,7 @@ CComLayer::~CComLayer(){
 
 EComResponse CComLayer::openConnection(char *pa_acConnectionParams, char *pa_acRemainingConnectionID){
   EComResponse eRetVal = openConnection(pa_acConnectionParams);
-  if((!(scg_unComNegative & eRetVal)) && ('\0' != *pa_acRemainingConnectionID)){
+  if((!(scg_unComNegative & eRetVal)) && (0 != pa_acRemainingConnectionID) && ('\0' != *pa_acRemainingConnectionID)){
     //There is a connection ID left
     char *acRemainingConnectionID = extractLayerIdAndParams(pa_acRemainingConnectionID, &pa_acConnectionParams);
     if('\0' != *pa_acRemainingConnectionID){

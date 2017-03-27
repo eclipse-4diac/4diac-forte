@@ -13,7 +13,7 @@
 #ifndef _TYPELIB_H_
 #define _TYPELIB_H_
 
-#include <fortealloc.h>
+#include <fortenew.h>
 #include "mgmcmd.h"
 #include <stringlist.h>
 #include "./utils/staticassert.h"

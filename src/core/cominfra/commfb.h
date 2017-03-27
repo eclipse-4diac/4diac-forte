@@ -32,6 +32,8 @@ namespace forte {
       public:
         virtual ~CCommFB();
 
+        virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
+
         /*!\brief The getFBType method is used by the Query command to get the instances correct type name (eg. "CLIENT_3_2")
          * \return pointer to typename string
          */

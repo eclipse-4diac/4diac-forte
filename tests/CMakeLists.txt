@@ -73,6 +73,7 @@ LIST(APPEND INCLUDE_DIRECTORIES ${FORTE_TESTS_INC_DIRS})
 
 forte_test_add_sourcefile_cpp(forte_boost_tester.cpp)
 
+forte_test_add_subdirectory(arch)
 forte_test_add_subdirectory(core)
 forte_test_add_subdirectory(stdfblib)
 
@@ -139,6 +140,8 @@ ADD_DEFINITIONS (-D_CRT_NONSTDC_NO_DEPRECATE)
 ADD_DEFINITIONS (-D_SCL_SECURE_NO_WARNINGS)
 ADD_DEFINITIONS (-D_CRT_SECURE_NO_WARNINGS)
 endif("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
+
+ADD_DEFINITIONS (-DFORTE_USE_DEFAULT_NEW_AND_DELETE)
 
 LINK_DIRECTORIES(${FORTE_TEST_LINK_DIRECTORIES})
 

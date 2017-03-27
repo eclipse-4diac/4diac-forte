@@ -9,7 +9,7 @@
  *   Alois Zoitl, Thomas Strasser, Rene Smodic, Ingo Hegny
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include <fortealloc.h>
+#include <fortenew.h>
 #include "txtimeha.h"
 #include "../../core/devexec.h"
 

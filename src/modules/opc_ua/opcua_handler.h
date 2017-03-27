@@ -41,7 +41,7 @@ struct UA_NodeCallback_Handle {
 	const struct UA_TypeConvert *convert;
 	unsigned int portIndex;
 };
-
+// cppcheck-suppress noConstructor
 class COPC_UA_Handler : public CExternalEventHandler, public CThread {
 DECLARE_SINGLETON(COPC_UA_Handler);
 

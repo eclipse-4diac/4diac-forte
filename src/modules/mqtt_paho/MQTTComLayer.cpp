@@ -31,10 +31,7 @@ MQTTComLayer::~MQTTComLayer() {
 	// TODO Auto-generated destructor stub
 }
 
-EComResponse MQTTComLayer::sendData(void* pa_pvData,
-		unsigned int pa_unSize) {
-
-	MQTTClient_deliveryToken token;
+EComResponse MQTTComLayer::sendData(void* pa_pvData, unsigned int pa_unSize) {
 	MQTTClient_message message = MQTTClient_message_initializer;
 	message.payload = pa_pvData;
 	message.payloadlen = pa_unSize;
@@ -74,33 +71,34 @@ void MQTTComLayer::closeConnection() {
 }
 
 EComResponse MQTTComLayer::openConnection(char* pa_acLayerParameter) {
-	EComResponse eRetVal = e_InitTerminated;
+	EComResponse eRetVal = e_InitInvalidId;
 	MQTTParameterParser parser(pa_acLayerParameter);
 	parser.setSeparator(',');
-	parser.parseParameters();
-	mTopicName = (char*)malloc(strlen(parser[Topic]) + 1);
-	mTopicName = strcpy(mTopicName, parser[Topic]);
-	if( MQTTHandler::eRegisterLayerSucceeded ==
-			(MQTTHandler::getInstance()).registerLayer(parser[Address], parser[ClientID], this)) {
-		eRetVal = e_InitOk;
-	}
-	else eRetVal = e_InitInvalidId;
+	if(3 == parser.parseParameters()){
+		mTopicName = (char*)malloc(strlen(parser[Topic]) + 1);
+		mTopicName = strcpy(mTopicName, parser[Topic]);
+		if( MQTTHandler::eRegisterLayerSucceeded ==
+				(MQTTHandler::getInstance()).registerLayer(parser[Address], parser[ClientID], this)) {
+			eRetVal = e_InitOk;
+		}
+		else eRetVal = e_InitInvalidId;
 
-	switch (m_poFb->getComServiceType()){
-	case e_Server:
-		// TODO: Not implemented yet
-		eRetVal = e_InitTerminated;
-		break;
-	case e_Client:
-		// TODO: Not implemented yet
-		eRetVal = e_InitTerminated;
-		break;
-	case e_Publisher:
-		//is handled via sendData
-		break;
-	case e_Subscriber:
-		MQTTClient_subscribe(MQTTHandler::getInstance().getClient(), mTopicName, QOS);
-		break;
+		switch (m_poFb->getComServiceType()){
+		case e_Server:
+			// TODO: Not implemented yet
+			eRetVal = e_InitTerminated;
+			break;
+		case e_Client:
+			// TODO: Not implemented yet
+			eRetVal = e_InitTerminated;
+			break;
+		case e_Publisher:
+			//is handled via sendData
+			break;
+		case e_Subscriber:
+			MQTTClient_subscribe(MQTTHandler::getInstance().getClient(), mTopicName, QOS);
+			break;
+		}
 	}
 
 	return eRetVal;

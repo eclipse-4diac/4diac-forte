@@ -37,23 +37,23 @@ struct Variant : public VARIANT{
     Variant(){
     }
 
-    Variant(const _variant_t &value) :
+    explicit Variant(const _variant_t &value) :
         VARIANT(value){
     }
-    Variant(const VARIANT &value) :
+    explicit Variant(const VARIANT &value) :
         VARIANT(value){
     }
-    Variant(bool value){
+    explicit Variant(bool value){
       setbool(value);
     }
     explicit Variant(BOOL value){
       setbool(value != 0);
     }
-    Variant(VARIANT_BOOL value){
+    explicit Variant(VARIANT_BOOL value){
       setbool(value != 0);
     }
 
-    template<typename T> Variant(T value){
+    template<typename T> explicit Variant(T value){
       set<T>(value);
     }
 

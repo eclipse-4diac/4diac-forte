@@ -15,7 +15,7 @@
 #include "commfb.h"
 #include "../stringdict.h"
 #include "../fortelist.h"
-#include <sync.h>
+#include <forte_sync.h>
 
 namespace forte {
 

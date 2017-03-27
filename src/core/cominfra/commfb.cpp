@@ -10,7 +10,7 @@
   *    Patrick Smejkal
   *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
-#include <fortealloc.h>
+#include <fortenew.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -64,6 +64,15 @@ CCommFB::~CCommFB(){
     delete[] (m_pstInterfaceSpec->m_aunDONames);
     delete[] (m_pstInterfaceSpec->m_aunDODataTypeNames);
   }
+}
+
+EMGMResponse CCommFB::changeFBExecutionState(EMGMCommandType pa_unCommand){
+  EMGMResponse retVal = CEventSourceFB::changeFBExecutionState(pa_unCommand);
+  if((e_RDY == retVal) && (cg_nMGM_CMD_Kill == pa_unCommand)){
+    //when we are killed we'll close the connection so that it can safely be opened again after an reset
+    closeConnection();
+  }
+  return retVal;
 }
 
 void CCommFB::executeEvent(int pa_nEIID){
@@ -281,7 +290,7 @@ EComResponse CCommFB::openConnection(){
 
     char *pa_acLayerParams;
     char *acRemainingConnectionID = CComLayer::extractLayerIdAndParams(acID, &pa_acLayerParams);
-    if('\0' != acID[0]){
+    if((0 != acRemainingConnectionID) && ('\0' != acID[0])){
       m_poTopOfComStack = CComLayersManager::createCommunicationLayer(acID, 0, this);
 
       if(m_poTopOfComStack != 0){

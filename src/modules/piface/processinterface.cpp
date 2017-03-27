@@ -9,7 +9,6 @@
  *   Monika Wenger, Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "processinterface.h"
-#include "../conmeleon_c1/spi/spidevice.h"
 
 
 CPiFaceProcessInterface::CPiFaceProcessInterface(CResource *paSrcRes,
@@ -85,7 +84,9 @@ CPiFaceProcessInterface::CPiFaceIOHandler::~CPiFaceIOHandler(){
 }
 
 void CPiFaceProcessInterface::CPiFaceIOHandler::run(){
+  //this gives as the default values of Mode0, Speed 1000000, and Bitsperword 8 which wed need also for piFace
   CONMELEON::CSpiDevice spiDev("/dev/spidev0.0");  //TODO correctly setup SPI interface
+  setupPiFaceIOChip(spiDev);
 
   if(spiDev.isOpen()){
     timespec req, rem;
@@ -96,8 +97,8 @@ void CPiFaceProcessInterface::CPiFaceIOHandler::run(){
     while(isAlive()){
       nanosleep(&req, &rem);
 
-      //TODO check if the registers have to be set before writing
-      spiDev.write(&mOutBuffer, 1);
+      writePiFaceRegister(spiDev, eGPIOPortA, mOutBuffer);  //update outputs
+      inBuffer = readInputs(spiDev);
       spiDev.read(&inBuffer, 1);
       updateReadData(inBuffer);
     }
@@ -163,4 +164,24 @@ void CPiFaceProcessInterface::CPiFaceIOHandler::setPriority(int){
 
 int CPiFaceProcessInterface::CPiFaceIOHandler::getPriority(void) const{
   return 0;
+}
+
+void CPiFaceProcessInterface::CPiFaceIOHandler::setupPiFaceIOChip(CONMELEON::CSpiDevice &paDev){
+  writePiFaceRegister(paDev, eIOConfiguration, 8);
+  writePiFaceRegister(paDev, eIODirectionPortA, 0);  //set all port A pins as outputs
+  writePiFaceRegister(paDev, eIODirectionPortB, 0xFF);  //set all port B pins as inputs
+  writePiFaceRegister(paDev, eGPIOPullupResistorsPortB, 0xFF);  //enable for all port B pins the pull up resistors
+}
+
+TForteByte CPiFaceProcessInterface::CPiFaceIOHandler::readInputs(CONMELEON::CSpiDevice &paDev){
+  unsigned char txBuf[3] = {scmPiFaceWrite, eGPIOPortB, 0};
+  unsigned char rxBuf[3] = {0, 0 ,0 };
+  paDev.transfer(txBuf, rxBuf, 3);
+  return static_cast<TForteByte>(~rxBuf[2]);
+}
+
+void CPiFaceProcessInterface::CPiFaceIOHandler::writePiFaceRegister(CONMELEON::CSpiDevice &paDev, EPiFaceRegister paRegister, TForteByte paValue){
+  unsigned char txBuf[3] = {scmPiFaceWrite, paRegister, paValue};
+  unsigned char rxBuf[3];
+  paDev.transfer(txBuf, rxBuf, 3);
 }

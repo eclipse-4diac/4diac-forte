@@ -104,8 +104,6 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
      */
     static void castLRealData(const CIEC_LREAL &pa_roSrcValue, CIEC_ANY &pa_roDestValue);
 
-    static const TForteUInt16 scm_unMaxStringBufSize;
-
   protected:
 
   private:

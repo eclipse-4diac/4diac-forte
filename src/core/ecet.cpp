@@ -11,7 +11,7 @@
   *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
 #include <forte_config.h>
-#include <fortealloc.h>
+#include <fortenew.h>
 #include "ecet.h"
 #include "esfb.h"
 #include "utils/criticalregion.h"

@@ -26,20 +26,29 @@
 #include "convert_functions.h"
 
 #ifdef VXWORKS
-#define tanf(x) tan(x)
-#define log10f(x) log10(x)
-#define logf(x) log(x)
-#define cosf(x) cos(x)
-#define atanf(x) atan(x)
-#define asinf(x) asin(x)
-#define acosf(x) acos(x)
-#define expf(x) exp(x)
-#define sinf(x) sin(x)
-#define sqrtf(x) sqrt(x)
+#define tanf(x) static_cast<TForteFloat>(tan(x))
+#define log10f(x) static_cast<TForteFloat>(log10(x))
+#define logf(x) static_cast<TForteFloat>(log(x))
+#define cosf(x) static_cast<TForteFloat>(cos(x))
+#define atanf(x) static_cast<TForteFloat>(atan(x))
+#define asinf(x) static_cast<TForteFloat>(asin(x))
+#define acosf(x) static_cast<TForteFloat>(acos(x))
+#define expf(x) static_cast<TForteFloat>(exp(x))
+#define sinf(x) static_cast<TForteFloat>(sin(x))
+#define sqrtf(x) static_cast<TForteFloat>(sqrt(x))
 #endif
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
 #include "datatypes/forte_wstring.h"
+#endif
+
+#ifdef MAX
+#undef MAX
+#endif
+
+
+#ifdef MIN
+#undef MIN
 #endif
 
 /* numeric functions
@@ -531,9 +540,17 @@ template<typename T> const T MOVE(const T& pa_roIN){
   : ---|      |
  ANY --|      |
        +------+       */
+//specialisation of function for base type double.
+//TODO consider how this and similar problems can be better solved with type traits and more generically
+inline double EXPT(double pa_roIN1, double pa_roIN2){
+  return pow(pa_roIN1, pa_roIN2);
+}
+
 template<typename T> const T EXPT(const T& pa_roIN1, const T& pa_roIN2){
 	return static_cast<typename T::TValueType>(pow(pa_roIN1, pa_roIN2));
 }
+
+
 
 /*              +-----+
                 | ADD |
@@ -796,6 +813,11 @@ template<typename T> const T CONCAT(const T& pa_rsIn1, const T& pa_rsIn2){
   return temp.getValue();
 }
 
+template<typename T, typename... Args> const T CONCAT(const T& pa_rsIn1, Args... args) {
+	return CONCAT(pa_rsIn1, CONCAT(args...));
+}
+
+
 /* Insert IN2 into IN1 after the P-th charaolcter position
  *             +--------+
  *             | INSERT |
@@ -889,13 +911,11 @@ template<typename T> CIEC_ANY_INT FIND(const T& pa_rsIn1, const T& pa_rsIn2){
  is equivalent to A := 'ABCAB' ;
  */
 template<typename T> const T TOUPPER(const T& pa_rsIn){
-  T temp;
-  temp.reserve(static_cast<TForteUInt16>(pa_rsIn.length()));
-  const char* orig = pa_rsIn.getValue();
-  char* upper = temp.getValue();
+  T temp(pa_rsIn);
+  char* current = temp.getValue();
   for (unsigned int i = 0; i <=pa_rsIn.length(); ++i)
   {
-	  upper[i] = toupper(orig[i]);
+	  current[i] = toupper(current[i]);
   }
   return temp;
 }
@@ -910,13 +930,11 @@ template<typename T> const T TOUPPER(const T& pa_rsIn){
  is equivalent to A := 'abcab' ;
  */
 template<typename T> const T TOLOWER(const T& pa_rsIn){
-  T temp;
-  temp.reserve(static_cast<TForteUInt16>(pa_rsIn.length()));
-  const char* orig = pa_rsIn.getValue();
-  char* upper = temp.getValue();
-  for (unsigned int i = 0; i <=pa_rsIn.length(); ++i)
+  T temp(pa_rsIn);
+  char* current = temp.getValue();
+  for (unsigned int i = 0; i <= pa_rsIn.length(); ++i)
   {
-	  upper[i] = tolower(orig[i]);
+    current[i] = tolower(current[i]);
   }
   return temp;
 }

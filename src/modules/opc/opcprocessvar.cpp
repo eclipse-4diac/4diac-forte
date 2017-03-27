@@ -13,7 +13,7 @@
 #include "OPCItem.h"
 
 COpcProcessVar::COpcProcessVar(const char* pa_acItemGroupName, const char* pa_acItemName, EOpcProcessVarFunctions pa_eFunction) :
-    m_acItemGroupName(pa_acItemGroupName), m_acItemName(pa_acItemName), m_eFunction(pa_eFunction), m_bActive(false){
+  m_pOpcItem(0), m_acItemGroupName(pa_acItemGroupName), m_acItemName(pa_acItemName), m_eFunction(pa_eFunction), m_bActive(false){
   m_oCurrentValue.set<SHORT>(0);
 }
 
@@ -21,7 +21,7 @@ void COpcProcessVar::sendItemData(){
   try{
     if (getIsActive())
       m_pOpcItem->writeSync(updateValue());
-  } catch (OPCException e){
+  } catch (OPCException &e){
     setIsActive(false);
   }
 }

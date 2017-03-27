@@ -10,7 +10,7 @@
   *    Martin Melik Merkumians
   *      - initial implementation, rework communication infrastructure, bug fixes
   *******************************************************************************/
-#include <fortealloc.h>
+#include <fortenew.h>
 #include "fbdkasn1layer.h"
 #include "commfb.h"
 #include "../datatypes/forte_string.h"
