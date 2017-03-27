@@ -22,8 +22,6 @@
 
 DEFINE_FIRMWARE_DATATYPE(REAL, g_nStringIdREAL)
 
-const TForteUInt16 CIEC_REAL::scm_unMaxStringBufSize = 100;
-
 int CIEC_REAL::fromString(const char *pa_pacValue){
   char *pcEnd;
   const char *pacRunner = pa_pacValue;

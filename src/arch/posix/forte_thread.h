@@ -15,7 +15,7 @@
 #include <pthread.h>
 #include "../threadbase.h"
 #include "../datatype.h"
-#include "forte_sync.h"
+#include <forte_sync.h>
 
 /**  \ingroup FORTE-HAL 
  * \defgroup posix_hal PC FORTE Hardware Abstraction Layer

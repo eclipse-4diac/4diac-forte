@@ -26,15 +26,17 @@ void MQTTParameterParser::setSeparator(char paSeparator) {
 	mSeparator = paSeparator;
 }
 
-void MQTTParameterParser::parseParameters() {
+int MQTTParameterParser::parseParameters() {
 	parsePosition = mParameters;
-	for(int i = 0; i < mAmountOfParameters; ++i) {
+	int i
+	for(i = 0; ((i < mAmountOfParameters) && ('\0' != *parsePosition)); ++i) {
 		moveToPositionOfFirstNonWhiteSpaceCharacter();
 		saveStartPositionForParameterSubstring(i);
 		moveToPositionOfNextParameterSeparatorOrEndOfString();
 		trimTrailingWhiteSpacesOfParameterSubstring();
 		moveToNextParameterStart();
 	}
+	return i;
 }
 
 void MQTTParameterParser::moveToPositionOfFirstNonWhiteSpaceCharacter() {

@@ -420,8 +420,7 @@ void CMonitoringHandler::getResourceWatches(CIEC_STRING &paResponse, char){
 
 void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
     SDataWatchEntry &paDataWatchEntry){
-  int bufferSize;
-  bufferSize = paDataWatchEntry.mDataValue.getToStringBufferSize();
+  int bufferSize = paDataWatchEntry.mDataValue.getToStringBufferSize();
   appendPortTag(paResponse, paDataWatchEntry.mPortId);
   paResponse.append("<Data value=\"");
   char* acDataValue = new char [bufferSize]; //TODO try to directly use the response string instead
@@ -433,7 +432,7 @@ void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
           static_cast<CIEC_WSTRING&>(paDataWatchEntry.mDataValue).toUTF8(acDataValue, bufferSize, false);
       break;
     default:
-      nConsumedBytes = paDataWatchEntry.mDataValue.toString(acDataValue, sizeof(acDataValue));
+      nConsumedBytes = paDataWatchEntry.mDataValue.toString(acDataValue, bufferSize);
       break;
   }
   if(-1 != nConsumedBytes){

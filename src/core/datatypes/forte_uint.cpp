@@ -13,6 +13,4 @@
 
 DEFINE_FIRMWARE_DATATYPE(UINT, g_nStringIdUINT)
 
-const TForteUInt16 CIEC_UINT::scm_unMaxStringBufSize = 100;
-
 const CIEC_UINT::TValueType CIEC_UINT::scm_nMaxVal = std::numeric_limits<CIEC_UINT::TValueType>::max();

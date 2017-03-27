@@ -74,8 +74,6 @@ class CIEC_USINT : public CIEC_ANY_INT{
     virtual EDataTypeID getDataTypeID() const{
       return CIEC_ANY::e_USINT;
     }
-
-    static const TForteUInt16 scm_unMaxStringBufSize;
 };
 
 #endif /*_FORTE_USINT_H_*/

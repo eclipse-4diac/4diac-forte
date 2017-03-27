@@ -70,8 +70,6 @@ class CIEC_BYTE: public CIEC_ANY_BIT {
     virtual EDataTypeID getDataTypeID() const{
       return CIEC_ANY::e_BYTE;
     }
-
-    static const TForteUInt16 scm_unMaxStringBufSize;
 };
 
 #endif /*_FORTE_BYTE_H_*/

@@ -15,8 +15,6 @@
 
 DEFINE_FIRMWARE_DATATYPE(BOOL, g_nStringIdBOOL)
 
-const TForteUInt16 CIEC_BOOL::scm_unMaxStringBufSize = 5;
-
 int CIEC_BOOL::fromString(const char *pa_pacValue){
   int nRetVal = 0;
 
@@ -62,7 +60,7 @@ int CIEC_BOOL::fromString(const char *pa_pacValue){
 
 int CIEC_BOOL::toString(char* pa_acValue, unsigned int pa_nBufferSize)  const {
   int nRetval = -1;
-  if(pa_nBufferSize >= 6){
+  if(pa_nBufferSize >= csm_aStringBufferSize[e_BOOL]){
     if(getTBOOL8()){
       strcpy(pa_acValue, "TRUE");
       nRetval = 4;

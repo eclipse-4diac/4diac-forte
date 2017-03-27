@@ -21,7 +21,7 @@ public:
 	virtual ~MQTTParameterParser();
 
 	void setSeparator(char paSeparator);
-	void parseParameters();
+	int parseParameters();
 	void moveToNextParameter();
 	char* getCurrentParameter();
 
