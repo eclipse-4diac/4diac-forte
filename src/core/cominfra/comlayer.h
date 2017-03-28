@@ -42,7 +42,7 @@ namespace forte {
          *
          * This function will close and delete bottom layers before closing its connection.
          */
-        void rCloseConnection();
+        void disconnect();
 
         /*!\brief Take the given data and perform the necessary process for sending
          *

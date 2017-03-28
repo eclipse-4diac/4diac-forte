@@ -311,7 +311,7 @@ EComResponse CCommFB::openConnection(){
 
 void CCommFB::closeConnection(){
   if(m_poTopOfComStack != 0){
-    m_poTopOfComStack->rCloseConnection();
+    m_poTopOfComStack->disconnect();
     delete m_poTopOfComStack; // this will close the whole communication stack
     m_poTopOfComStack = 0;
   }
