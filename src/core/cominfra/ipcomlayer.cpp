@@ -30,14 +30,6 @@ CIPComLayer::CIPComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB) :
 CIPComLayer::~CIPComLayer(){
 }
 
-void CIPComLayer::closeConnection(){
-  DEVLOG_DEBUG("CSocketBaseLayer::closeConnection() \n");
-  closeSocket(&m_nSocketID);
-  closeSocket(&m_nListeningID);
-
-  m_eConnectionState = e_Disconnected;
-}
-
 EComResponse CIPComLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
   EComResponse eRetVal = e_ProcessDataOk;
 
@@ -163,6 +155,14 @@ EComResponse CIPComLayer::openConnection(char *pa_acLayerParameter){
     }
   }
   return eRetVal;
+}
+
+void CIPComLayer::closeConnection(){
+  DEVLOG_DEBUG("CSocketBaseLayer::closeConnection() \n");
+  closeSocket(&m_nSocketID);
+  closeSocket(&m_nListeningID);
+
+  m_eConnectionState = e_Disconnected;
 }
 
 void CIPComLayer::closeSocket(CIPComSocketHandler::TSocketDescriptor *pa_nSocketID){

@@ -38,12 +38,11 @@ namespace forte {
          */
         EComResponse openConnection(char *pa_acConnectionParams, char *pa_acRemainingConnectionID);
 
-        /*!\brief Close this layer.
+        /*!\brief Close the connection and delete the communication stack
          *
-         * Implementations of this function should perform the actions necessary for closing the layer and than call
-         * the closeConnection() of the bottom layer.
+         * This function will close and delete bottom layers before closing its connection.
          */
-        virtual void closeConnection() = 0;
+        void rCloseConnection();
 
         /*!\brief Take the given data and perform the necessary process for sending
          *
@@ -99,13 +98,19 @@ namespace forte {
         /*!\brief Configure the current layer and perform necessary means to setup the connection
          *
          * Depending on the layers functionality different things have to be performed here.
-         * This can range from doing nothing to establishing an TCP session.
+         * This can range from doing nothing to establishing a TCP session.
          *
          * @param pa_acLayerParameter configuration data for this layer
          * @return status of the opening process
          *      - e_InitOk of the opening process was successful
          */
         virtual EComResponse openConnection(char *pa_acLayerParameter) = 0;
+
+        /*!\brief Close this layer
+         *
+         * Implementations of this function should perform the actions necessary for closing.
+         */
+        virtual void closeConnection() = 0;
     };
 
   }

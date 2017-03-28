@@ -38,8 +38,6 @@ public:
 
 	virtual ~COPC_UA_Layer();
 
-	void closeConnection();
-
 	forte::com_infra::EComResponse sendData(void *pa_pvData, unsigned int pa_unSize);
 
 	forte::com_infra::EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize);
@@ -63,6 +61,8 @@ private:
 	void deleteNodeIds(struct FB_NodeIds **nodeIds, unsigned int maxIndex);
 
 	forte::com_infra::EComResponse openConnection(char *paLayerParameter);
+
+	void closeConnection();
 
 	/**
 	 * Get the counterpart function block and port for a given port index.

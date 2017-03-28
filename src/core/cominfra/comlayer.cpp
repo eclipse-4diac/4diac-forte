@@ -67,6 +67,15 @@ EComResponse CComLayer::openConnection(char *pa_acConnectionParams, char *pa_acR
   return eRetVal;
 }
 
+void CComLayer::rCloseConnection(){
+  if(m_poBottomLayer != 0){
+    m_poBottomLayer->rCloseConnection();
+    delete m_poBottomLayer; // this will close the whole communication stack
+    m_poBottomLayer = 0;
+  }
+  closeConnection();
+}
+
 EComResponse CComLayer::processInterrupt(){
   return e_Nothing;
 }

@@ -27,13 +27,6 @@ CComLayer(pa_poUpperLayer, pa_poComFB), m_bLayerParamsOK(false), m_eInterruptRes
 COpcComLayer::~COpcComLayer(){
 }
 
-void COpcComLayer::closeConnection(){
-  DEVLOG_DEBUG("COpcComLayer::closeConnection() \n");
-  COpcConnectionHandler::getInstance().removeOpcConnection(m_pOpcConnection->getHost(), m_pOpcConnection->getServerName(), m_acOpcGroupName);
-
-  m_eConnectionState = e_Disconnected;
-}
-
 EComResponse COpcComLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
   EComResponse eRetVal = e_ProcessDataOk;
 
@@ -209,6 +202,13 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
     }
 
     return eRetVal;
+  }
+
+  void COpcComLayer::closeConnection(){
+    DEVLOG_DEBUG("COpcComLayer::closeConnection() \n");
+    COpcConnectionHandler::getInstance().removeOpcConnection(m_pOpcConnection->getHost(), m_pOpcConnection->getServerName(), m_acOpcGroupName);
+
+    m_eConnectionState = e_Disconnected;
   }
 
   int COpcComLayer::addOpcItems(){

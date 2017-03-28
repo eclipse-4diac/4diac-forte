@@ -32,11 +32,9 @@ namespace forte {
         EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize);
         EComResponse processInterrupt();
 
-      protected:
-        void closeConnection();
-
       private:
         EComResponse openConnection(char *pa_acLayerParameter);
+        void closeConnection();
         int addOpcItems();
         void setOutputValue(CIEC_ANY *pa_pDataOut, Variant * pa_pValue);
         void processClientParams(char* pa_acLayerParams);

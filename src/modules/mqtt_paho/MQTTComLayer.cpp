@@ -66,10 +66,6 @@ EComResponse MQTTComLayer::processInterrupt() {
 	return m_eInterruptResp;
 }
 
-void MQTTComLayer::closeConnection() {
-	MQTTHandler::getInstance().unregisterLayer(this);
-}
-
 EComResponse MQTTComLayer::openConnection(char* pa_acLayerParameter) {
 	EComResponse eRetVal = e_InitInvalidId;
 	MQTTParameterParser parser(pa_acLayerParameter);
@@ -104,3 +100,6 @@ EComResponse MQTTComLayer::openConnection(char* pa_acLayerParameter) {
 	return eRetVal;
 }
 
+void MQTTComLayer::closeConnection() {
+	MQTTHandler::getInstance().unregisterLayer(this);
+}

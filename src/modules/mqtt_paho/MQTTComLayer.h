@@ -37,10 +37,6 @@ public:
 		return mTopicName;
 	}
 
-
-protected:
-	void closeConnection();
-
 private:
 	char* mTopicName;
 
@@ -49,6 +45,7 @@ private:
     EComResponse m_eInterruptResp;
 
 	EComResponse openConnection(char* pa_acLayerParameter);
+	void closeConnection();
 
 	enum Parameters {
 		Address,

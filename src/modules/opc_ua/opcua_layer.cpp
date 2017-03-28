@@ -42,21 +42,6 @@ COPC_UA_Layer::~COPC_UA_Layer() {
 	// all the stuff is cleaned up in closeConnection()
 }
 
-
-void COPC_UA_Layer::closeConnection() {
-	if (fbNodeId != NULL) {
-		UA_NodeId_delete(fbNodeId);
-		fbNodeId = NULL;
-	}
-	if (methodNodeId != NULL) {
-		UA_NodeId_delete(methodNodeId);
-		methodNodeId = NULL;
-	}
-	this->deleteNodeIds(&sendDataNodeIds, getCommFB()->getNumSD());
-	this->deleteNodeIds(&readDataNodeIds, getCommFB()->getNumRD());
-}
-
-
 EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
 
 	if (fbNodeId != NULL) {
@@ -86,6 +71,19 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
 			DEVLOG_WARNING("Invalid Comm Service Type for Function Block\n");
 	}
 	return e_InitOk;
+}
+
+void COPC_UA_Layer::closeConnection() {
+	if (fbNodeId != NULL) {
+		UA_NodeId_delete(fbNodeId);
+		fbNodeId = NULL;
+	}
+	if (methodNodeId != NULL) {
+		UA_NodeId_delete(methodNodeId);
+		methodNodeId = NULL;
+	}
+	this->deleteNodeIds(&sendDataNodeIds, getCommFB()->getNumSD());
+	this->deleteNodeIds(&readDataNodeIds, getCommFB()->getNumRD());
 }
 
 /**

@@ -61,11 +61,6 @@ forte::com_infra::EComResponse CWin32SerComLayer::processInterrupt(){
   return m_eInterruptResp;
 }
 
-void CWin32SerComLayer::closeConnection()  {
-  CWin32SerComHandler::getInstance().unregisterSerComLayer(this);
-  CloseHandle(m_hSerial);
-}
-
 forte::com_infra::EComResponse CWin32SerComLayer::sendData(void *pa_pvData, unsigned int pa_unSize)
 {
   DWORD dwBytesWritten= 0, dwWaitResult = 0;
@@ -93,7 +88,6 @@ forte::com_infra::EComResponse CWin32SerComLayer::sendData(void *pa_pvData, unsi
 
   return forte::com_infra::e_ProcessDataOk;
 }
-
 
 forte::com_infra::EComResponse CWin32SerComLayer::openConnection(char *pa_acLayerParameter)  {
   //Create Serial Com Handle
@@ -252,4 +246,9 @@ forte::com_infra::EComResponse CWin32SerComLayer::openConnection(char *pa_acLaye
 	  break;
   }
 	return forte::com_infra::e_InitOk;
+}
+
+void CWin32SerComLayer::closeConnection()  {
+  CWin32SerComHandler::getInstance().unregisterSerComLayer(this);
+  CloseHandle(m_hSerial);
 }
