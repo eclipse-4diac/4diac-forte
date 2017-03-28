@@ -27,15 +27,15 @@ bool checkEndianess();
 
 void createDev(const char *pa_acMGRID, TForteInstance* pa_resultDevice);
 
-void forte_global_initialize(void){
+void forteGlobalInitialize(void){
   CForteArchitecture::initialize();
 }
 
-void forte_global_deinitialize(void){
+void forteGlobalDeinitialize(void){
   CForteArchitecture::deinitialize();
 }
 
-int forte_start_instance(unsigned int pa_port, TForteInstance* pa_resultDevice){
+int forteStartInstance(unsigned int pa_port, TForteInstance* pa_resultDevice){
 
   if (65535 < pa_port){
     return FORTE_WRONG_PARAMETERS;
@@ -52,11 +52,11 @@ int forte_start_instance(unsigned int pa_port, TForteInstance* pa_resultDevice){
   strcat(address, port);
 
   char* arguments[] = {flag, address};
-  return forte_start_instance_generic(2, arguments, pa_resultDevice);
+  return forteStartInstanceGeneric(2, arguments, pa_resultDevice);
 }
 
 
-int forte_start_instance_generic(int argc, char *arg[], TForteInstance* pa_resultDevice){
+int forteStartInstanceGeneric(int argc, char *arg[], TForteInstance* pa_resultDevice){
 
   if(!CForteArchitecture::isInitialized()){
     return FORTE_ARCHITECTURE_NOT_READY;
@@ -89,7 +89,7 @@ int forte_start_instance_generic(int argc, char *arg[], TForteInstance* pa_resul
   return FORTE_OK;
 }
 
-void forte_stop_instance(int pa_nSig, TForteInstance pa_resultDevice){
+void forteStopInstance(int pa_nSig, TForteInstance pa_resultDevice){
   if(!CForteArchitecture::isInitialized()){
     return;
   }
