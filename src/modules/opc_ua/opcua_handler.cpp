@@ -41,7 +41,7 @@ void UA_Log_Forte(UA_LogLevel level, UA_LogCategory category, const char *msg, v
 	switch (level) {
 		case UA_LOGLEVEL_TRACE:
 		case UA_LOGLEVEL_DEBUG:
-			DEVLOG_DEBUG(tmpStr_);
+			DEVLOG_DEBUG(tmpStr);
 			break;
 		case UA_LOGLEVEL_INFO:
 			DEVLOG_INFO(tmpStr);
@@ -239,11 +239,16 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char *nodePath, bool cr
 	request.browsePathsSize = folderCnt;
 
 	{
+		
+#ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
 		// other thready may currently create nodes for the same path, thus mutex
 		CCriticalRegion criticalRegion(this->getNodeForPathMutex);
+#ifdef __GNUC__
 #pragma GCC diagnostic pop
+#endif
 		UA_TranslateBrowsePathsToNodeIdsResponse response = UA_Client_Service_translateBrowsePathsToNodeIds(client, request);
 
 		if (response.responseHeader.serviceResult != UA_STATUSCODE_GOOD) {

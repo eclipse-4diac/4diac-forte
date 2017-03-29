@@ -354,16 +354,27 @@ EComResponse COPC_UA_Layer::processInterrupt() {
 	return mInterruptResp;
 }
 
-UA_StatusCode COPC_UA_Layer::onServerMethodCall(void *methodHandle, __attribute__((unused)) const UA_NodeId *objectId,
-												__attribute__((unused)) const UA_NodeId *sessionId, __attribute__((unused))  void *sessionHandle,
-												size_t inputSize, const UA_Variant *input,
-												size_t outputSize, UA_Variant *output) {
+#ifdef FORTE_COM_OPC_UA_VERSION_0_2
+UA_StatusCode COPC_UA_Layer::onServerMethodCall(void *methodHandle, const UA_NodeId,
+						size_t inputSize, const UA_Variant *input,
+						size_t outputSize, UA_Variant *output) {
+#else
+UA_StatusCode COPC_UA_Layer::onServerMethodCall(void *methodHandle, const UA_NodeId *,
+						const UA_NodeId *, void *,
+						size_t inputSize, const UA_Variant *input,
+						size_t outputSize, UA_Variant *output) {
+#endif
+
 	COPC_UA_Layer *self = static_cast<COPC_UA_Layer *>(methodHandle);
+#ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
 	// other thready may currently create nodes for the same path, thus mutex
 	CCriticalRegion criticalRegion(self->mutexServerMethodCall);
+#ifdef __GNUC__
 #pragma GCC diagnostic pop
+#endif
 	self->serverMethodCallResultReady = false;
 
 	if (inputSize != self->getCommFB()->getNumRD() || outputSize != self->getCommFB()->getNumSD()) {
