@@ -14,7 +14,6 @@
 #define GEN_SUBL_H_
 
 #include "GEN_SUBSCRIBE.h"
-#include <localcomlayer.h>
 
 /*! \brief Implementation of the SUBL SIFB.
  *
@@ -27,11 +26,12 @@ class GEN_SUBL : public GEN_SUBSCRIBE{
 
     virtual bool configureFB(const char *pa_acConfigString);
 
+  protected:
+    static const char * const scmLocalIDPrefix;
+    static const char * const scmLocalIDSuffix;
+
   private:
-    virtual char * getDefaultIDString(){
-      return forte::com_infra::CLocalComLayer::getDefaultLocalCommIdString(ID().getValue());
-    }
-    ;
+    virtual char * getDefaultIDString(const char *paID);
 };
 
 #endif /*GEN_SUBL_H_*/

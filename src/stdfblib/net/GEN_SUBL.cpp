@@ -15,6 +15,9 @@
 DEFINE_GENERIC_FIRMWARE_FB(GEN_SUBL, g_nStringIdGEN_SUBL)
 
 
+const char * const GEN_SUBL::scmLocalIDPrefix = "loc[";
+const char * const GEN_SUBL::scmLocalIDSuffix = "]";
+
 GEN_SUBL::GEN_SUBL(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes):
           GEN_SUBSCRIBE( pa_nInstanceNameId, pa_poSrcRes){
 }
@@ -24,5 +27,9 @@ bool GEN_SUBL::configureFB(const char *pa_acConfigString){
   //subls normally don't show the QI in the tool
   QI() = true;
   return bRetVal;
+}
+
+char * GEN_SUBL::getDefaultIDString(const char *paID){
+  return buildIDString(scmLocalIDPrefix, paID, scmLocalIDSuffix);
 }
 

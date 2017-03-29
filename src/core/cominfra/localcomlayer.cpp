@@ -192,11 +192,3 @@ void CLocalComLayer::CLocalCommGroupsManager::removeCommGroup(SLocalCommGroup *p
     ++itRunner;
   }
 }
-
-char *CLocalComLayer::getDefaultLocalCommIdString(const char *pa_acIdValue){
-  char * acRetVal = new char[strlen(pa_acIdValue) + 6];
-  strcpy(acRetVal, "loc[");
-  strcat(acRetVal, pa_acIdValue);
-  strcat(acRetVal, "]");
-  return acRetVal;
-}

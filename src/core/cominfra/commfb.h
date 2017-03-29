@@ -116,6 +116,18 @@ namespace forte {
 
         CStringDictionary::TStringId m_nConfiguredFBTypeNameId;
 
+        static const char * const scmDefaultIDPrefix;
+        static const char * const scmDefaultIDSuffix;
+
+        /*!\brief Generate a layer ID formed by a root with a prefix and a suffix
+         *
+         * @param paPrefix the prefix to prepend
+         * @param paIDRoot the root which would get appended and prepended
+         * @param paSuffix the suffix to append
+         * @return ID with layer configuration
+         */
+        char * buildIDString(const char *paPrefix, const char *paIDRoot, const char *paSuffix);
+
       private:
         static const CStringDictionary::TStringId scm_aunRequesterEventInputNameIds[];
         static const CStringDictionary::TStringId scm_aunRequesterEventOutputNameIds[];
@@ -131,12 +143,15 @@ namespace forte {
         EComResponse openConnection();
         void closeConnection();
         EComResponse receiveData();
-        /*! If the ID string does not contain [] indicating that there is a layer setup given this Function is called to
-         *  to generate an default layer configuration. This function may be overwriten by special Comfbs to provide their
-         *  own default layer config. See for example GEN_PUBL or GEN_SUBL.
-         * @return id with layer configuration
+        /*!\brief Generate the default layer ID
+         *
+         *  If the ID string does not contain [], this function will be called to generate a default layer configuration.
+         *  This function may be overwritten by special Comfbs to provide their own default layer config. See for example GEN_PUBL or GEN_SUBL.
+         *
+         * @param paID original ID
+         * @return ID with layer configuration
          */
-        virtual char * getDefaultIDString();
+        virtual char * getDefaultIDString(const char *paID);
 
         forte::com_infra::EComServiceType m_eCommServiceType;
         forte::com_infra::CComLayer *m_poTopOfComStack;

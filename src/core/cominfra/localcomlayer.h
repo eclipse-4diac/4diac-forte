@@ -24,8 +24,6 @@ namespace forte {
     class CLocalComLayer : public CComLayer{
 
       public:
-        static char *getDefaultLocalCommIdString(const char *pa_acIdValue);
-
         CLocalComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poFB);
         virtual ~CLocalComLayer();
 

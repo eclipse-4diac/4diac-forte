@@ -35,6 +35,9 @@ const TForteInt16 CCommFB::scm_anEOWithIndexes[] = { 0, 3, -1 };
 
 const char * const CCommFB::scm_sResponseTexts[] = { "OK", "INVALID_ID", "TERMINATED", "INVALID_OBJECT", "DATA_TYPE_ERROR", "INHIBITED", "NO_SOCKET", "SEND_FAILED", "RECV_FAILED" };
 
+const char * const CCommFB::scmDefaultIDPrefix = "fbdk[].ip[";
+const char * const CCommFB::scmDefaultIDSuffix = "]";
+
 CCommFB::CCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, forte::com_infra::EComServiceType pa_eCommServiceType) :
     CEventSourceFB(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0), m_eCommServiceType(pa_eCommServiceType), m_poTopOfComStack(0){
   memset(m_apoInterruptQueue, 0, sizeof(m_apoInterruptQueue)); //TODO change this to  m_apoInterruptQueue{0} in the extended list when fully switching to C++11
@@ -281,7 +284,7 @@ EComResponse CCommFB::openConnection(){
     char *acID;
 
     if(0 == strchr(ID().getValue(), ']')){
-      acID = getDefaultIDString();
+      acID = getDefaultIDString(ID().getValue());
     }
     else{
       acID = new char[unLen + 1];
@@ -346,11 +349,14 @@ void CCommFB::interruptCommFB(CComLayer *pa_poComLayer){
   }
 }
 
-char * CCommFB::getDefaultIDString(){
-  const char *acOrgID = ID().getValue();
-  char * acRetVal = new char[strlen(acOrgID) + 12];
-  strcpy(acRetVal, "fbdk[].ip[");
-  strcat(acRetVal, acOrgID);
-  strcat(acRetVal, "]");
-  return acRetVal;
+char * CCommFB::buildIDString(const char *paPrefix, const char *paIDRoot, const char *paSuffix){
+  char * RetVal = new char[strlen(paPrefix) + strlen(paIDRoot) + strlen(paSuffix) + 1];
+  strcpy(RetVal, paPrefix);
+  strcat(RetVal, paIDRoot);
+  strcat(RetVal, paSuffix);
+  return RetVal;
+}
+
+char * CCommFB::getDefaultIDString(const char *paID){
+  return buildIDString(scmDefaultIDPrefix, paID, scmDefaultIDSuffix);
 }
