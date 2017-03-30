@@ -485,9 +485,9 @@ inline const CIEC_INT LREAL_TO_INT(const CIEC_LREAL &pa_roVal){
   return CIEC_INT( static_cast<CIEC_INT::TValueType>(lreal_to_xINT(pa_roVal)));
 }
 
-inline const void stringConverter(CIEC_ANY_STRING &string, const CIEC_ANY &pa_roVal){
+inline void stringConverter(CIEC_ANY_STRING &string, const CIEC_ANY &pa_roVal){
   unsigned int bufferSize = pa_roVal.csm_aStringBufferSize[pa_roVal.getDataTypeID()];
-  string.reserve(bufferSize);
+  string.reserve(static_cast<TForteUInt16>(bufferSize));
   char *pacBuffer = string.getValue();
   int nWrittenBytes = pa_roVal.toString(pacBuffer, bufferSize);
   nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
