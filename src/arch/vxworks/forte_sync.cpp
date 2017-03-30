@@ -11,7 +11,7 @@
 #include "forte_sync.h"
 
 CVXWorksSyncObject::CVXWorksSyncObject(){
-  m_oSemBinary = semMCreate(SEM_Q_PRIORITY);
+  m_oSemBinary = semMCreate(SEM_Q_FIFO);
   if (SEM_ID_NULL == m_oSemBinary){
 	  //TODO: check return value for out_of_memory error
   }
