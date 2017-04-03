@@ -119,15 +119,6 @@ namespace forte {
         static const char * const scmDefaultIDPrefix;
         static const char * const scmDefaultIDSuffix;
 
-        /*!\brief Generate a layer ID formed by a root with a prefix and a suffix
-         *
-         * @param paPrefix the prefix to prepend
-         * @param paIDRoot the root which would get appended and prepended
-         * @param paSuffix the suffix to append
-         * @return ID with layer configuration
-         */
-        char * buildIDString(const char *paPrefix, const char *paIDRoot, const char *paSuffix);
-
       private:
         static const CStringDictionary::TStringId scm_aunRequesterEventInputNameIds[];
         static const CStringDictionary::TStringId scm_aunRequesterEventOutputNameIds[];
@@ -140,21 +131,37 @@ namespace forte {
 
         static const char * const scm_sResponseTexts[];
 
+        /*!\brief Create the whole communication stack and open the connection
+         *
+         * This function will configure every layer.
+         *
+         * \return status of the opening process
+         */
         EComResponse openConnection();
+
+        /*!\brief Close the connection and delete the communication stack
+         *
+         * This function, aided by the the layer destructor, will close and
+         * delete bottom layers after closing its connection.
+         */
         void closeConnection();
+
         EComResponse receiveData();
+
         /*!\brief Generate the default layer ID
          *
-         *  If the ID string does not contain [], this function will be called to generate a default layer configuration.
-         *  This function may be overwritten by special Comfbs to provide their own default layer config. See for example GEN_PUBL or GEN_SUBL.
+         *  If the ID string does not contain [], this function will be called
+         *  to generate a default layer configuration. This function may be
+         *  overwritten by special Comfbs to provide their own default layer
+         *  config. See for example GEN_PUBL or GEN_SUBL.
          *
          * @param paID original ID
          * @return ID with layer configuration
          */
         virtual char * getDefaultIDString(const char *paID);
 
-        forte::com_infra::EComServiceType m_eCommServiceType;
-        forte::com_infra::CComLayer *m_poTopOfComStack;
+        EComServiceType m_eCommServiceType;
+        CComLayer *m_poTopOfComStack;
         unsigned int m_unComInterruptQueueCount; //!< number of triggers pending from the network
         CComLayer *m_apoInterruptQueue[cg_unCommunicationInterruptQueueSize];
     };

@@ -25,3 +25,32 @@ CComLayer* CComLayersManager::createCommunicationLayer(char *pa_acLayerIdentifie
 
   return m_poNewLayer;
 }
+
+char *CComLayersManager::extractLayerIdAndParams(char **paRemainingID, char **paLayerParams){
+  char *LayerID = *paRemainingID;
+  if('\0' != **paRemainingID){
+    *paRemainingID = strchr(*paRemainingID, '[');
+    if(0 != *paRemainingID){
+      **paRemainingID = '\0';
+      ++*paRemainingID;
+      *paLayerParams = *paRemainingID;
+      *paRemainingID = strchr(*paRemainingID, ']');
+      if(0 != *paRemainingID){
+        **paRemainingID = '\0';
+        ++*paRemainingID;
+        if('\0' != **paRemainingID){
+          ++*paRemainingID;
+        }
+      }
+    }
+  }
+  return LayerID;
+}
+
+char *CComLayersManager::buildIDString(const char *paPrefix, const char *paIDRoot, const char *paSuffix){
+  char * RetVal = new char[strlen(paPrefix) + strlen(paIDRoot) + strlen(paSuffix) + 1];
+  strcpy(RetVal, paPrefix);
+  strcat(RetVal, paIDRoot);
+  strcat(RetVal, paSuffix);
+  return RetVal;
+}

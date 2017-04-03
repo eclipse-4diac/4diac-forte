@@ -11,6 +11,7 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "GEN_PUBL.h"
+#include "comlayersmanager.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_PUBL, g_nStringIdGEN_PUBL)
 
@@ -30,7 +31,7 @@ bool GEN_PUBL::configureFB(const char *pa_acConfigString){
 }
 
 char * GEN_PUBL::getDefaultIDString(const char *paID){
-  return buildIDString(scmLocalIDPrefix, paID, scmLocalIDSuffix);
+  return CComLayersManager::buildIDString(scmLocalIDPrefix, paID, scmLocalIDSuffix);
 }
 
 

@@ -277,44 +277,76 @@ bool CCommFB::configureFB(const char *pa_acConfigString){
 }
 
 EComResponse CCommFB::openConnection(){
-  EComResponse eRetVal = e_InitInvalidId;
-
+  EComResponse RetVal;
   if(0 == m_poTopOfComStack){
-    size_t unLen = strlen(ID().getValue());
-    char *acID;
-
+    // Get the ID
+    char *RemainingID;
     if(0 == strchr(ID().getValue(), ']')){
-      acID = getDefaultIDString(ID().getValue());
+      RemainingID = getDefaultIDString(ID().getValue());
     }
     else{
-      acID = new char[unLen + 1];
-      strcpy(acID, ID().getValue());
+      RemainingID = new char[strlen(ID().getValue()) + 1];
+      strcpy(RemainingID, ID().getValue());
     }
 
-    char *pa_acLayerParams;
-    char *acRemainingConnectionID = CComLayer::extractLayerIdAndParams(acID, &pa_acLayerParams);
-    if((0 != acRemainingConnectionID) && ('\0' != acID[0])){
-      m_poTopOfComStack = CComLayersManager::createCommunicationLayer(acID, 0, this);
+    // If the ID is empty return an error
+    if('\0' == *RemainingID){
+      RetVal = e_InitInvalidId;
+    }
+    else {
+      CComLayer *NewLayer;
+      CComLayer *PreviousLayer = 0; // Reference to the previous layer as it needs to set the bottom layer
+      char *LayerParams;
+      char *LayerID;
+      // Loop until reaching the end of the ID
+      while('\0' != RemainingID){
+        // Get the next layer's ID and parameters
+        LayerID = CComLayersManager::extractLayerIdAndParams(&RemainingID, &LayerParams);
+        // If not well formated ID return an error
+        if((0 == RemainingID) && ('\0' != *LayerID)){
+          RetVal = e_InitInvalidId;
+          break;
+        }
 
-      if(m_poTopOfComStack != 0){
-        eRetVal = m_poTopOfComStack->openConnection(pa_acLayerParams, acRemainingConnectionID);
-        if(e_InitOk != eRetVal){
-          delete m_poTopOfComStack;
-          m_poTopOfComStack = 0;
+        // Create the new layer
+        NewLayer = CComLayersManager::createCommunicationLayer(LayerID, PreviousLayer, this);
+        if(0 == NewLayer){
+          // If the layer can't be created return an error
+          RetVal = e_InitInvalidId;
+          break;
+        }
+        else if(0 == m_poTopOfComStack){
+          // Assign the newly created layer to the FB
+          m_poTopOfComStack = NewLayer;
+        }
+
+        // Update the previous layer reference
+        PreviousLayer = NewLayer;
+
+        // Open the layer connection
+        RetVal = NewLayer->openConnection(LayerParams);
+        if(e_InitOk != RetVal){
+          // If it was not opened correctly return the error
+          break;
         }
       }
+
+      // If any error is going to be returned, delete the layers that were created
+      if(e_InitOk != RetVal){
+        closeConnection();
+      }
     }
-    delete[] acID;
   }
   else{
-    eRetVal = e_InitOk;
+    // If the connection was already opened return ok
+    RetVal = e_InitOk;
   }
-  return eRetVal;
+  return RetVal;
 }
 
 void CCommFB::closeConnection(){
   if(m_poTopOfComStack != 0){
-    m_poTopOfComStack->disconnect();
+    m_poTopOfComStack->closeConnection();
     delete m_poTopOfComStack; // this will close the whole communication stack
     m_poTopOfComStack = 0;
   }
@@ -349,14 +381,6 @@ void CCommFB::interruptCommFB(CComLayer *pa_poComLayer){
   }
 }
 
-char * CCommFB::buildIDString(const char *paPrefix, const char *paIDRoot, const char *paSuffix){
-  char * RetVal = new char[strlen(paPrefix) + strlen(paIDRoot) + strlen(paSuffix) + 1];
-  strcpy(RetVal, paPrefix);
-  strcat(RetVal, paIDRoot);
-  strcat(RetVal, paSuffix);
-  return RetVal;
-}
-
 char * CCommFB::getDefaultIDString(const char *paID){
-  return buildIDString(scmDefaultIDPrefix, paID, scmDefaultIDSuffix);
+  return CComLayersManager::buildIDString(scmDefaultIDPrefix, paID, scmDefaultIDSuffix);
 }

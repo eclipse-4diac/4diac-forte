@@ -11,6 +11,7 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "GEN_SUBL.h"
+#include "comlayersmanager.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_SUBL, g_nStringIdGEN_SUBL)
 
@@ -30,6 +31,6 @@ bool GEN_SUBL::configureFB(const char *pa_acConfigString){
 }
 
 char * GEN_SUBL::getDefaultIDString(const char *paID){
-  return buildIDString(scmLocalIDPrefix, paID, scmLocalIDSuffix);
+  return CComLayersManager::buildIDString(scmLocalIDPrefix, paID, scmLocalIDSuffix);
 }
 

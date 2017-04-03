@@ -25,24 +25,22 @@ namespace forte {
       public:
         virtual ~CComLayer();
 
-        /*!\brief Open the connection and create the whole communication stack
+        /*!\brief Configure the current layer and perform necessary means to setup the connection
          *
-         * This function will configure this layer and if necessary create necessary bottom layers.
+         * Depending on the layers functionality different things have to be performed here.
+         * This can range from doing nothing to establishing a TCP session.
          *
-         * \param pa_acConnectionParams configuration data for this layer
-         * \param pa_acRemainingConnectionID layer ids configuration data of layers below this one
-         *                                    if 0 or *pa_acRemainingConnectionID equals '0x00' than there is no
-         *                                    further layer below this one.
-         * \return status of the opening process
+         * @param pa_acLayerParameter configuration data for this layer
+         * @return status of the opening process
          *      - e_InitOk of the opening process was successful
          */
-        EComResponse openConnection(char *pa_acConnectionParams, char *pa_acRemainingConnectionID);
+        virtual EComResponse openConnection(char *pa_acLayerParameter) = 0;
 
-        /*!\brief Close the connection and delete the communication stack
+        /*!\brief Close this layer
          *
-         * This function will close and delete bottom layers before closing its connection.
+         * Implementations of this function should perform the actions necessary for closing.
          */
-        void disconnect();
+        virtual void closeConnection() = 0;
 
         /*!\brief Take the given data and perform the necessary process for sending
          *
@@ -77,14 +75,30 @@ namespace forte {
          */
         virtual EComResponse processInterrupt();
 
+        /*!\brief get the top layer
+         */
+        CComLayer *getTopLayer() const {
+          return m_poTopLayer;
+        }
+
+        /*!\brief get the bottom layer
+         */
+        CComLayer *getBottomLayer() const {
+          return m_poBottomLayer;
+        }
+
+        /*!\brief set the bottom layer
+         */
+        void setBottomLayer(CComLayer *layer) {
+          m_poBottomLayer = layer;
+        }
+
 
         /*!\brief get the FB of this layer
          */
         CCommFB *getCommFB() const {
           return m_poFb;
         }
-
-        static char* extractLayerIdAndParams(char *pa_acID, char **pa_pacParameter);
 
       protected:
         CComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB);
@@ -95,22 +109,6 @@ namespace forte {
         CComLayer *m_poBottomLayer;
         CCommFB *m_poFb;
       private:
-        /*!\brief Configure the current layer and perform necessary means to setup the connection
-         *
-         * Depending on the layers functionality different things have to be performed here.
-         * This can range from doing nothing to establishing a TCP session.
-         *
-         * @param pa_acLayerParameter configuration data for this layer
-         * @return status of the opening process
-         *      - e_InitOk of the opening process was successful
-         */
-        virtual EComResponse openConnection(char *pa_acLayerParameter) = 0;
-
-        /*!\brief Close this layer
-         *
-         * Implementations of this function should perform the actions necessary for closing.
-         */
-        virtual void closeConnection() = 0;
     };
 
   }
