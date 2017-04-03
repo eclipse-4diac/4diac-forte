@@ -42,18 +42,6 @@ namespace forte {
     class CComLayersManager{
       public:
         static CComLayer* createCommunicationLayer(char *pa_acLayerIdentifier, CComLayer* pa_poUpperLayer, CCommFB * pa_poComFB);
-
-        static char *extractLayerIdAndParams(char **paRemainingID, char **paLayerParams);
-
-        /*!\brief Generate a layer ID formed by a root with a prefix and a suffix
-         *
-         * @param paPrefix the prefix to prepend
-         * @param paIDRoot the root which would get appended and prepended
-         * @param paSuffix the suffix to append
-         * @return ID with layer configuration
-         */
-        static char *buildIDString(const char *paPrefix, const char *paIDRoot, const char *paSuffix);
-
       private:
         CComLayersManager(void);
         CComLayersManager(const CComLayersManager& pa_roVal);

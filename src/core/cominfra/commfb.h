@@ -119,6 +119,18 @@ namespace forte {
         static const char * const scmDefaultIDPrefix;
         static const char * const scmDefaultIDSuffix;
 
+        static char *extractLayerIdAndParams(char **paRemainingID, char **paLayerParams);
+
+         /*!\brief Generate a layer ID formed by a root with a prefix and a suffix
+          *
+          * @param paPrefix the prefix to prepend
+          * @param paIDRoot the root which would get appended and prepended
+          * @param paSuffix the suffix to append
+          * @return ID with layer configuration
+          */
+         static char *buildIDString(const char *paPrefix, const char *paIDRoot, const char *paSuffix);
+
+
       private:
         static const CStringDictionary::TStringId scm_aunRequesterEventInputNameIds[];
         static const CStringDictionary::TStringId scm_aunRequesterEventOutputNameIds[];
@@ -138,6 +150,10 @@ namespace forte {
          * \return status of the opening process
          */
         EComResponse openConnection();
+
+        /*\brief go through the given commID and create the according stack of communciation layers
+         */
+        EComResponse createComstack(char *commID);
 
         /*!\brief Close the connection and delete the communication stack
          *

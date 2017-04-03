@@ -31,6 +31,6 @@ bool GEN_SUBL::configureFB(const char *pa_acConfigString){
 }
 
 char * GEN_SUBL::getDefaultIDString(const char *paID){
-  return CComLayersManager::buildIDString(scmLocalIDPrefix, paID, scmLocalIDSuffix);
+  return buildIDString(scmLocalIDPrefix, paID, scmLocalIDSuffix);
 }
 
