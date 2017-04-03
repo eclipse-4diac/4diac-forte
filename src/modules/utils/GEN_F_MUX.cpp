@@ -167,7 +167,7 @@ bool GEN_F_MUX::configureFB(const char *pa_acConfigString){
 #ifdef WIN32
         _snprintf(&(diNames[3]), 11 - 3, "%ui_%ui", ei+1, di+1);
 #else
-        snprintf(&(diNames[3]), 11 - 3, "%ui_%ui", ei + 1, di + 1);
+        snprintf(&(diNames[3]), 11 - 3, "%u_%u", ei + 1, di + 1);
 #endif
         di_posIndex = ei * m_nDOutputs + di;
         m_anDataInputNames[di_posIndex] = CStringDictionary::getInstance().insert(diNames);
