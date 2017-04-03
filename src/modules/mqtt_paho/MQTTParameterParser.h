@@ -32,8 +32,9 @@ private:
 	static int const mAmountOfParameters = 3;
 	int mCurrentParameter;
 	char* mParameterSeparators[mAmountOfParameters];
-	char mSeparator;
+
 	char* const mParameters;
+  char mSeparator;
 
 	char* parsePosition;
 
