@@ -35,6 +35,9 @@ const TForteInt16 CCommFB::scm_anEOWithIndexes[] = { 0, 3, -1 };
 
 const char * const CCommFB::scm_sResponseTexts[] = { "OK", "INVALID_ID", "TERMINATED", "INVALID_OBJECT", "DATA_TYPE_ERROR", "INHIBITED", "NO_SOCKET", "SEND_FAILED", "RECV_FAILED" };
 
+const char * const CCommFB::scmDefaultIDPrefix = "fbdk[].ip[";
+const char * const CCommFB::scmDefaultIDSuffix = "]";
+
 CCommFB::CCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, forte::com_infra::EComServiceType pa_eCommServiceType) :
     CEventSourceFB(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0), m_eCommServiceType(pa_eCommServiceType), m_poTopOfComStack(0){
   memset(m_apoInterruptQueue, 0, sizeof(m_apoInterruptQueue)); //TODO change this to  m_apoInterruptQueue{0} in the extended list when fully switching to C++11
@@ -274,40 +277,78 @@ bool CCommFB::configureFB(const char *pa_acConfigString){
 }
 
 EComResponse CCommFB::openConnection(){
-  EComResponse eRetVal = e_InitInvalidId;
-
+  EComResponse retVal;
   if(0 == m_poTopOfComStack){
-    size_t unLen = strlen(ID().getValue());
-    char *acID;
-
+    // Get the ID
+    char *commID;
     if(0 == strchr(ID().getValue(), ']')){
-      acID = getDefaultIDString();
+      commID = getDefaultIDString(ID().getValue());
     }
     else{
-      acID = new char[unLen + 1];
-      strcpy(acID, ID().getValue());
+      commID = new char[strlen(ID().getValue()) + 1];
+      strcpy(commID, ID().getValue());
     }
 
-    char *pa_acLayerParams;
-    char *acRemainingConnectionID = CComLayer::extractLayerIdAndParams(acID, &pa_acLayerParams);
-    if((0 != acRemainingConnectionID) && ('\0' != acID[0])){
-      m_poTopOfComStack = CComLayersManager::createCommunicationLayer(acID, 0, this);
-
-      if(m_poTopOfComStack != 0){
-        eRetVal = m_poTopOfComStack->openConnection(pa_acLayerParams, acRemainingConnectionID);
-        if(e_InitOk != eRetVal){
-          delete m_poTopOfComStack;
-          m_poTopOfComStack = 0;
-        }
+    // If the ID is empty return an error
+    if('\0' == *commID){
+      retVal = e_InitInvalidId;
+    }
+    else {
+    	retVal = createComstack(commID);
+      // If any error is going to be returned, delete the layers that were created
+      if(e_InitOk != retVal){
+        closeConnection();
       }
     }
-    delete[] acID;
+    delete [] commID;
   }
   else{
-    eRetVal = e_InitOk;
+    // If the connection was already opened return ok
+    retVal = e_InitOk;
   }
-  return eRetVal;
+  return retVal;
 }
+
+EComResponse CCommFB::createComstack(char *commID){
+  EComResponse retVal;
+  CComLayer *newLayer;
+  CComLayer *previousLayer = 0; // Reference to the previous layer as it needs to set the bottom layer
+  char *layerParams;
+  // Loop until reaching the end of the ID
+  while('\0' != *commID){
+    // Get the next layer's ID and parameters
+    char * layerID = extractLayerIdAndParams(&commID, &layerParams);
+    // If not well formated ID return an error
+    if((0 == commID) && ('\0' != *layerID)){
+      retVal = e_InitInvalidId;
+      break;
+    }
+
+    // Create the new layer
+    newLayer = CComLayersManager::createCommunicationLayer(layerID, previousLayer, this);
+    if(0 == newLayer){
+      // If the layer can't be created return an error
+      retVal = e_InitInvalidId;
+      break;
+    }
+    else if(0 == m_poTopOfComStack){
+      // Assign the newly created layer to the FB
+      m_poTopOfComStack = newLayer;
+    }
+
+    // Update the previous layer reference
+    previousLayer = newLayer;
+
+    // Open the layer connection
+    retVal = newLayer->openConnection(layerParams);
+    if(e_InitOk != retVal){
+      // If it was not opened correctly return the error
+      break;
+    }
+  }
+  return retVal;
+}
+
 
 void CCommFB::closeConnection(){
   if(m_poTopOfComStack != 0){
@@ -346,11 +387,35 @@ void CCommFB::interruptCommFB(CComLayer *pa_poComLayer){
   }
 }
 
-char * CCommFB::getDefaultIDString(){
-  const char *acOrgID = ID().getValue();
-  char * acRetVal = new char[strlen(acOrgID) + 12];
-  strcpy(acRetVal, "fbdk[].ip[");
-  strcat(acRetVal, acOrgID);
-  strcat(acRetVal, "]");
-  return acRetVal;
+char *CCommFB::extractLayerIdAndParams(char **paRemainingID, char **paLayerParams){
+  char *LayerID = *paRemainingID;
+  if('\0' != **paRemainingID){
+    *paRemainingID = strchr(*paRemainingID, '[');
+    if(0 != *paRemainingID){
+      **paRemainingID = '\0';
+      ++*paRemainingID;
+      *paLayerParams = *paRemainingID;
+      *paRemainingID = strchr(*paRemainingID, ']');
+      if(0 != *paRemainingID){
+        **paRemainingID = '\0';
+        ++*paRemainingID;
+        if('\0' != **paRemainingID){
+          ++*paRemainingID;
+        }
+      }
+    }
+  }
+  return LayerID;
+}
+
+char *CCommFB::buildIDString(const char *paPrefix, const char *paIDRoot, const char *paSuffix){
+  char * RetVal = new char[strlen(paPrefix) + strlen(paIDRoot) + strlen(paSuffix) + 1];
+  strcpy(RetVal, paPrefix);
+  strcat(RetVal, paIDRoot);
+  strcat(RetVal, paSuffix);
+  return RetVal;
+}
+
+char * CCommFB::getDefaultIDString(const char *paID){
+  return buildIDString(scmDefaultIDPrefix, paID, scmDefaultIDSuffix);
 }

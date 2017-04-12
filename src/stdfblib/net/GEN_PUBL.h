@@ -14,7 +14,6 @@
 #define GEN_PUBL_H_
 
 #include "GEN_PUBLISH.h"
-#include <localcomlayer.h>
 
 /*! \brief Implementation of the PUBL SIFB.
  *
@@ -27,11 +26,12 @@ class GEN_PUBL : public GEN_PUBLISH{
 
     virtual bool configureFB(const char *pa_acConfigString);
 
-  private:
+  protected:
+    static const char * const scmLocalIDPrefix;
+    static const char * const scmLocalIDSuffix;
 
-    virtual char * getDefaultIDString(){
-      return forte::com_infra::CLocalComLayer::getDefaultLocalCommIdString(ID().getValue());
-    };
+  private:
+    virtual char * getDefaultIDString(const char *paID);
 };
 
 #endif /*GEN_PUBL_H_*/

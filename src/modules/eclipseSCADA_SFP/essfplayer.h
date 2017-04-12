@@ -19,13 +19,13 @@ class CES_SFP_Layer : public forte::com_infra::CComLayer{
     CES_SFP_Layer(forte::com_infra::CComLayer* paUpperLayer, forte::com_infra::CCommFB* paComFB);
     virtual ~CES_SFP_Layer();
 
-    virtual void closeConnection();
     virtual forte::com_infra::EComResponse sendData(void *paData, unsigned int paSize);
     virtual forte::com_infra::EComResponse recvData(const void *paData, unsigned int paSize);
     virtual forte::com_infra::EComResponse processInterrupt();
 
   private:
     virtual forte::com_infra::EComResponse openConnection(char *paLayerParameter);
+    virtual void closeConnection();
 
     forte::com_infra::EComResponse createItems(CIEC_ANY *paDataArray, int paNumData, char *paLayerParameter);
 

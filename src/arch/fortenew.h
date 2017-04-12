@@ -51,6 +51,22 @@ void operator delete[](void* pa_pvData) throw(){
     forte_free(pa_pvData);
 }
 
+#if __cplusplus >= 201402L //stdc14
+inline
+void operator delete(void* paData, std::size_t) noexcept{
+  if (paData)
+	forte_free(paData);
+}
+
+
+inline
+void operator delete[](void* paData, std::size_t) noexcept{
+  if (paData)
+	forte_free(paData);
+}
+#endif  //__cplusplus >= 201402L //stdc14
+
+
 /*! \brief Placement new operator
  *
  * Will use the given buffer as memory region. The need size will be ignored.

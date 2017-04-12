@@ -24,9 +24,7 @@ namespace forte {
     }
 
     void CRawDataComLayer::closeConnection(){
-      if(0 != m_poBottomLayer){
-        m_poBottomLayer->closeConnection();
-      }
+      //We don't need to do anything specific on closing
     }
 
     EComResponse CRawDataComLayer::sendData( void *paData, unsigned int){

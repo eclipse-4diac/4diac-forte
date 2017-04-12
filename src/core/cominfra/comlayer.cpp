@@ -10,61 +10,22 @@
   *    Michael Hofmann - rework communication infrastructure
   *******************************************************************************/
 #include "comlayer.h"
-#include "comlayersmanager.h"
 #include "commfb.h"
 
 using namespace forte::com_infra;
 
-char *CComLayer::extractLayerIdAndParams(char *pa_acID, char **pa_pacParameter){
-  char *acRunner = strchr(pa_acID, '[');
-  if(0 != acRunner){
-    *acRunner = '\0';
-    ++acRunner;
-    *pa_pacParameter = acRunner;
-    acRunner = strchr(acRunner, ']');
-    if(0 != acRunner){
-      *acRunner = '\0';
-      ++acRunner;
-
-      if('\0' != *acRunner){
-        //this is not the end of the string
-        ++acRunner; //move the pointer beyond the separating '.'
-      }
-    }
-  }
-  return acRunner;
-}
-
 CComLayer::CComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poComFB) :
   m_eConnectionState(forte::com_infra::e_Disconnected), m_poTopLayer(pa_poUpperLayer), m_poBottomLayer(0), m_poFb(pa_poComFB){
-
+  if(0 != m_poTopLayer){
+    m_poTopLayer->setBottomLayer(this);
+  }
 }
 
 CComLayer::~CComLayer(){
-  delete m_poBottomLayer;
-}
-
-EComResponse CComLayer::openConnection(char *pa_acConnectionParams, char *pa_acRemainingConnectionID){
-  EComResponse eRetVal = openConnection(pa_acConnectionParams);
-  if((!(scg_unComNegative & eRetVal)) && (0 != pa_acRemainingConnectionID) && ('\0' != *pa_acRemainingConnectionID)){
-    //There is a connection ID left
-    char *acRemainingConnectionID = extractLayerIdAndParams(pa_acRemainingConnectionID, &pa_acConnectionParams);
-    if('\0' != *pa_acRemainingConnectionID){
-      if(m_poBottomLayer == 0){
-        m_poBottomLayer = CComLayersManager::createCommunicationLayer(pa_acRemainingConnectionID, this, m_poFb); // create bottom layer
-        if(m_poBottomLayer == 0){
-          eRetVal = e_InitInvalidId;
-          return eRetVal;
-        }
-      }
-      eRetVal = m_poBottomLayer->openConnection(pa_acConnectionParams, acRemainingConnectionID);
-    }
-    else{
-      eRetVal = e_InitInvalidId;
-    }
+  if(m_poBottomLayer != 0){
+    m_poBottomLayer->closeConnection();
+    delete m_poBottomLayer;
   }
-
-  return eRetVal;
 }
 
 EComResponse CComLayer::processInterrupt(){

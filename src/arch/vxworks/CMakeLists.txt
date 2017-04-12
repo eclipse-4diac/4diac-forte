@@ -44,7 +44,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
 	#-DVXWORKS  -ansi   -D_TYPE_fpos_t=fpos_t  -include "C:/WBOEM69_Rexroth/customBosch/vxworks-6.9/target/h/vxWorks.h"
   
   #Add commands for creating target image
-  set(CMAKE_NM ${BIN_HOME}/nmpentium.exe)
+    get_filename_component(COMPILER_FOLDER ${CMAKE_CXX_COMPILER} DIRECTORY)
+  set(CMAKE_NM ${COMPILER_FOLDER}/nmpentium.exe)
   SET(FORTE_TCLSH "C:/WBOEM69_Rexroth/setup/x86-win32/bin/tclsh.exe" CACHE STRING "tclsh command")
   
   forte_add_post_build_command(COMMAND ${CMAKE_NM} forte.vxe > nmFile.txt

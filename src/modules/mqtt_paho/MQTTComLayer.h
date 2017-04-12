@@ -15,8 +15,10 @@
 
 #include "comlayer.h"
 extern "C" {
-	#include <MQTTClient.h>
+	#include <MQTTAsync.h>
 }
+
+#define QOS 0
 
 //fbdk[].mqtt[tcp://localhost:1883, ClientID, Topic]
 
@@ -37,10 +39,6 @@ public:
 		return mTopicName;
 	}
 
-
-protected:
-	void closeConnection();
-
 private:
 	char* mTopicName;
 
@@ -49,6 +47,7 @@ private:
     EComResponse m_eInterruptResp;
 
 	EComResponse openConnection(char* pa_acLayerParameter);
+	void closeConnection();
 
 	enum Parameters {
 		Address,

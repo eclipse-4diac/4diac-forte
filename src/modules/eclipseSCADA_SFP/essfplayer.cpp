@@ -24,27 +24,6 @@ CES_SFP_Layer::~CES_SFP_Layer(){
   closeConnection();
 }
 
-
-void CES_SFP_Layer::closeConnection(){
-  if(0 != mSFPItem){
-    int numData = (e_Subscriber == getCommFB()->getComServiceType()) ?
-                    getCommFB()->getNumRD() : getCommFB()->getNumSD();
-
-    if(0 == numData){
-      numData = 1;  //remove the item used for the event transmition
-    }
-
-    for(int i = 0; i < numData; i++){
-      if(0 != mSFPItem[i]){
-        CEclipseSCADASFPHandler::getInstance().unregisterDataPoint(mSFPItem[i]);
-      }
-    }
-
-    delete[] mSFPItem;
-    mSFPItem = 0;
-  }
-}
-
 EComResponse CES_SFP_Layer::sendData(void *paData, unsigned int paSize){
   EComResponse retVal = e_ProcessDataOk;
 
@@ -111,6 +90,26 @@ EComResponse CES_SFP_Layer::openConnection(char *paLayerParameter){
     }
   }
   return retVal;
+}
+
+void CES_SFP_Layer::closeConnection(){
+  if(0 != mSFPItem){
+    int numData = (e_Subscriber == getCommFB()->getComServiceType()) ?
+                    getCommFB()->getNumRD() : getCommFB()->getNumSD();
+
+    if(0 == numData){
+      numData = 1;  //remove the item used for the event transmition
+    }
+
+    for(int i = 0; i < numData; i++){
+      if(0 != mSFPItem[i]){
+        CEclipseSCADASFPHandler::getInstance().unregisterDataPoint(mSFPItem[i]);
+      }
+    }
+
+    delete[] mSFPItem;
+    mSFPItem = 0;
+  }
 }
 
 EComResponse CES_SFP_Layer::createItems(CIEC_ANY *paDataArray, int paNumData, char *paLayerParameter){

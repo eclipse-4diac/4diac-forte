@@ -11,8 +11,13 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "GEN_PUBL.h"
+#include "comlayersmanager.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_PUBL, g_nStringIdGEN_PUBL)
+
+
+const char * const GEN_PUBL::scmLocalIDPrefix = "loc[";
+const char * const GEN_PUBL::scmLocalIDSuffix = "]";
 
 GEN_PUBL::GEN_PUBL(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes):
           GEN_PUBLISH( pa_nInstanceNameId, pa_poSrcRes) {
@@ -23,6 +28,10 @@ bool GEN_PUBL::configureFB(const char *pa_acConfigString){
   //publs normally don't show the QI in the tool
   QI() = true;
   return bRetVal;
+}
+
+char * GEN_PUBL::getDefaultIDString(const char *paID){
+  return buildIDString(scmLocalIDPrefix, paID, scmLocalIDSuffix);
 }
 
 

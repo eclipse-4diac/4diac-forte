@@ -64,11 +64,7 @@ EComResponse CFBDKASN1ComLayer::openConnection(char *){
 }
 
 void CFBDKASN1ComLayer::closeConnection(){
-  // we don't need to do anything specific on closing when closing the connection
-  //so directly close the bottom layer if there
-  if(0 != m_poBottomLayer){
-    m_poBottomLayer->closeConnection();
-  }
+  //We don't need to do anything specific on closing
 }
 
 void CFBDKASN1ComLayer::resizeDeserBuffer(unsigned int pa_size){

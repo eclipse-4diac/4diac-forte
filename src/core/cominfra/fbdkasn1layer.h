@@ -39,7 +39,6 @@ namespace forte {
         CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poFB);
         virtual ~CFBDKASN1ComLayer();
 
-        void closeConnection();
         EComResponse sendData(void *pa_pvData, unsigned int pa_unSize); // top interface, called from top
         EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize); // bottom interface, called from bottom
 
@@ -208,6 +207,7 @@ namespace forte {
         static unsigned int getRequiredSerializationSize(const CIEC_ANY &pa_roCIECData);
 
         EComResponse openConnection(char *pa_acLayerParameter);
+        void closeConnection();
         void resizeDeserBuffer(unsigned int pa_size);
 
 

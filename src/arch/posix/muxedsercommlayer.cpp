@@ -32,13 +32,6 @@ CMuxedSerCommLayer::~CMuxedSerCommLayer(){
   closeConnection();
 }
 
-void CMuxedSerCommLayer::closeConnection(){
-  if(CFDSelectHandler::scm_nInvalidFileDescriptor != m_nFD){
-    sm_oMuxedSerPortsManager.removeMuxedSerLayer(m_nFD, this);
-    m_nFD = CFDSelectHandler::scm_nInvalidFileDescriptor;
-  }
-}
-
 EComResponse CMuxedSerCommLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
   if(CFDSelectHandler::scm_nInvalidFileDescriptor != m_nFD){
     //first send id
@@ -109,6 +102,13 @@ EComResponse CMuxedSerCommLayer::openConnection(char *pa_acLayerParameter){
   }
 
   return eRetVal;
+}
+
+void CMuxedSerCommLayer::closeConnection(){
+  if(CFDSelectHandler::scm_nInvalidFileDescriptor != m_nFD){
+    sm_oMuxedSerPortsManager.removeMuxedSerLayer(m_nFD, this);
+    m_nFD = CFDSelectHandler::scm_nInvalidFileDescriptor;
+  }
 }
 
 //**************************************************************************************************************************

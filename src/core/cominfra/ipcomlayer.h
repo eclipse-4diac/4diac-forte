@@ -31,12 +31,12 @@ namespace forte {
         EComResponse processInterrupt();
 
       protected:
-        void closeConnection();
 
       private:
         static void closeSocket(CIPComSocketHandler::TSocketDescriptor *pa_nSocketID);
 
         EComResponse openConnection(char *pa_acLayerParameter);
+        void closeConnection();
         void handledConnectedDataRecv();
         void handleConnectionAttemptInConnected();
 

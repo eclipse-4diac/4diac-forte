@@ -20,7 +20,6 @@ class CSerCommLayer : public forte::com_infra::CComLayer{
     CSerCommLayer(forte::com_infra::CComLayer* pa_poUpperLayer, forte::com_infra::CCommFB * pa_poFB);
     virtual ~CSerCommLayer();
 
-    virtual void closeConnection();
     virtual forte::com_infra::EComResponse sendData(void *pa_pvData, unsigned int pa_unSize);
     virtual forte::com_infra::EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize);
 
@@ -29,6 +28,7 @@ class CSerCommLayer : public forte::com_infra::CComLayer{
   protected:
   private:
     virtual forte::com_infra::EComResponse openConnection(char *pa_acLayerParameter);
+    virtual void closeConnection();
 
     CFDSelectHandler::TFileDescriptor m_nFD; //!< file descriptor for accessing the serial device
 
