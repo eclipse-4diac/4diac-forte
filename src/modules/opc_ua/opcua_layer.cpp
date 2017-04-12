@@ -77,10 +77,13 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
 	switch (getCommFB()->getComServiceType()) {
 		case e_Publisher:
 			// Make sure all the nodes exist and have the corresponding variable
+			DEVLOG_DEBUG("Creating OPC UA Nodes for publisher");
 			return this->createPubSubNodes(&this->sendDataNodeIds, getCommFB()->getNumSD(), true);
 		case e_Subscriber:
+			DEVLOG_DEBUG("Creating OPC UA Nodes for subscriber");
 			return this->createPubSubNodes(&this->readDataNodeIds, getCommFB()->getNumRD(), false);
 		case e_Server:
+			DEVLOG_DEBUG("Creating OPC UA Method for server");
 			return this->createMethodNode();
 		default:
 			DEVLOG_WARNING("Invalid Comm Service Type for Function Block\n");
@@ -168,7 +171,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
 		return e_InitInvalidId;
 	}
 
-	*nodeIds = new struct FB_NodeIds[numPorts];
+	*nodeIds = (struct FB_NodeIds *)forte_malloc(sizeof(struct FB_NodeIds)*numPorts);
 
 	for (unsigned int i = 0; i < numPorts; i++) {
 
@@ -187,21 +190,21 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
 		{
 			// create/get node for connected FB
 			size_t len = strlen(connectedToFb->getInstanceName()) + 2; // include slash and nullbyte
-			char *fbBrowseName = new char[len];
+			char *fbBrowseName = (char*)forte_malloc(sizeof(char)*len);
 			snprintf(fbBrowseName, len, "/%s", connectedToFb->getInstanceName());
 			UA_NodeId newNodeType = UA_NODEID_NUMERIC(0, UA_NS0ID_BASEOBJECTTYPE);
 			retVal = COPC_UA_Handler::getInstance().getNodeForPath(&(*nodeIds)[i].functionBlockId, fbBrowseName, true, fbNodeId, &newNodeType);
-			delete[](fbBrowseName);
+			forte_free(fbBrowseName);
 		}
 
 		if (retVal == UA_STATUSCODE_GOOD) {
 			// create/get variable node for port on connected FB
 			size_t len = strlen(connectedToName) + 2; // include slash and nullbyte
-			char *sourceVarBrowseName = new char[len];
+			char *sourceVarBrowseName = (char*)forte_malloc(sizeof(char)*len);
 			snprintf(sourceVarBrowseName, len, "/%s", connectedToName);
 			retVal = COPC_UA_Handler::getInstance().getNodeForPath(&(*nodeIds)[i].variableId, sourceVarBrowseName, false,
 																   (*nodeIds)[i].functionBlockId);
-			delete[]sourceVarBrowseName;
+			forte_free(sourceVarBrowseName);
 			if (retVal == UA_STATUSCODE_GOOD && (*nodeIds)[i].variableId == NULL) {
 				// we need to create the variable
 

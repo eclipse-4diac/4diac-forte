@@ -27,6 +27,7 @@ SET(FORTE_COM_OPC_UA_DIR "" CACHE PATH "ABSOLUTE path to OPC UA build folder or 
 
 # Version of open62541 stack
 set(FORTE_COM_OPC_UA_VERSION "0.2" CACHE STRING "Version of the open62541 stack")
+# The string must not contain spaces, valid chars: [a-Z], underscore, point
 set_property(CACHE FORTE_COM_OPC_UA_VERSION PROPERTY STRINGS 0.2 master)
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -43,8 +44,7 @@ if (FORTE_COM_OPC_UA)
 
     string(REPLACE "." "_" FORTE_COM_OPC_UA_VERSION_CLEAN ${FORTE_COM_OPC_UA_VERSION})
     forte_add_definition(-DFORTE_COM_OPC_UA_VERSION_${FORTE_COM_OPC_UA_VERSION_CLEAN})
-    forte_add_sourcefile_hcpp(opcua_layer opcua_handler)
-    forte_add_sourcefile_hcpp(opcua_layer opcua_helper)
+    forte_add_sourcefile_hcpp(opcua_layer opcua_handler opcua_helper)
     if (EXISTS ${FORTE_COM_OPC_UA_DIR})
         forte_add_include_directories(${FORTE_COM_OPC_UA_DIR})
         forte_add_link_directories(${FORTE_COM_OPC_UA_DIR})
