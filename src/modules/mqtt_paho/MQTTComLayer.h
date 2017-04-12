@@ -15,8 +15,10 @@
 
 #include "comlayer.h"
 extern "C" {
-	#include <MQTTClient.h>
+	#include <MQTTAsync.h>
 }
+
+#define QOS 0
 
 //fbdk[].mqtt[tcp://localhost:1883, ClientID, Topic]
 

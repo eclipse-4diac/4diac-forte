@@ -34,7 +34,6 @@ private:
 	char* mParameterSeparators[mAmountOfParameters];
 	char* const mParameters;
 	char mSeparator;
-
 	char* parsePosition;
 
 	void moveToPositionOfFirstNonWhiteSpaceCharacter();

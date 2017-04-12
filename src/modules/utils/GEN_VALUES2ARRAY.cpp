@@ -99,7 +99,7 @@ bool GEN_VALUES2ARRAY::configureFB(const char *pa_acConfigString){
 #ifdef WIN32
       _snprintf(&(diNames[3]), 7 - 3, "%ui", di+1);
 #else
-      snprintf(&(diNames[3]), 7 - 3, "%ui", di + 1);
+      snprintf(&(diNames[3]), 7 - 3, "%u", di + 1);
 #endif
       m_anDataInputNames[di] = CStringDictionary::getInstance().insert(diNames);
       m_anDataInputTypeIds[di] = m_ValueTypeID;
