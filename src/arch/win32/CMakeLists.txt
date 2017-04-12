@@ -41,8 +41,6 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
    forte_add_sourcefile_h(sockhand.h)
   endif(FORTE_COM_ETH)
 
-  
-  SET(CMAKE_CXX_FLAGS_RELEASE "/MT" ) 
   forte_add_definition("-DFORTE_LITTLE_ENDIAN") # -DNONAMESPACE -DWITH_NONAMESPACES)  
 
 # TODO this flag was originaly wrongly added to the definitions. May be necessary to be added as link flag. However currently working fine.
