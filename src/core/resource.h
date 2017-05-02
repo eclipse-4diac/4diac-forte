@@ -13,14 +13,21 @@
 #define _RESOURCE_H_
 
 #include "ecet.h"
-#include "funcbloc.h"
 #include "fbcontainer.h"
+#include "funcbloc.h"
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+#include "luatype.h"
+#include "luaengine.h"
+#endif
 
 #ifdef FORTE_SUPPORT_MONITORING
 #include <monitoring.h>
 #endif
 
 class CDevice;
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+class CLuaEngine;
+#endif
 
 /*! \ingroup CORE\brief Base class for all resources handling the reconfiguration management within this
  * resource and the background execution of event chains.
@@ -78,6 +85,12 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
     }
 #endif
 
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+    CLuaEngine *getLuaEngine(){
+      return luaEngine;
+    }
+#endif
+
   protected:
     CResource(const SFBInterfaceSpec *pa_pstInterfaceSpec,
         const CStringDictionary::TStringId pa_nInstanceNameId,
@@ -90,6 +103,11 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      *
      */
     EMGMResponse createConnection(forte::core::SManagementCMD &paCommand);
+
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+    CLuaEngine *luaEngine; //!< The Lua engine for this container
+#endif
+
   private:
     /*!\brief Create a new connection between source and destination
      *
@@ -136,6 +154,25 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      */
     EMGMResponse readValue(forte::core::TNameIdentifier &paNameList, CIEC_STRING & paValue);
 
+    /*!\brief Read the existing fb types.
+     *
+     * @return response of the command execution as defined in IEC 61499
+     */
+    EMGMResponse queryAllFBTypes(CIEC_STRING & paValue);
+
+    /*!\brief Read the existing adapter types.
+     *
+     * @return response of the command execution as defined in IEC 61499
+     */
+    EMGMResponse queryAllAdapterTypes(CIEC_STRING & paValue);
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+    /*!\brief create
+     *
+     * @return response of the command execution as defined in IEC 61499
+     */
+    EMGMResponse createFBTypeFromLua(CStringDictionary::TStringId typeNameId,
+        CIEC_STRING & paLuaScriptAsString);
+#endif
     /*!\brief get the variable with the given name identifier
      *
      * @param paNameList the identifier name list of the variable to be retrieved
