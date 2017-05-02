@@ -111,7 +111,35 @@ if (WIN32)
   endif(MSVC)
 endif(WIN32)
 
-
+#######################################################################################
+# dynamic type loading
+#######################################################################################
+set(FORTE_USE_LUATYPES "None" CACHE STRING "Enable Lua FB types")
+list(APPEND luas "LuaJIT" "Lua")
+set_property(CACHE FORTE_USE_LUATYPES PROPERTY STRINGS None ${luas})
+if("${FORTE_USE_LUATYPES}" STREQUAL "LuaJIT")
+  set(LUAJIT_LIBRARY "" CACHE STRING "LuaJit Library")
+  set(LUAJIT_INCLUDE_DIR "" CACHE STRING "LuaJit Include Directory")
+  set(FORTE_DYNAMIC_TYPE_LOAD ON BOOL "Enable dynamic type loading" )
+  forte_add_definition("-DFORTE_DYNAMIC_TYPE_LOAD")
+  forte_add_include_directories(${LUAJIT_INCLUDE_DIR})
+  forte_add_link_library(${LUAJIT_LIBRARY})
+  if(UNIX AND NOT APPLE)
+    set(LUAJIT_MATH_LIBRARY "" CACHE STRING "LuaJit Math Library")
+    forte_add_link_library(${LUAJIT_MATH_LIBRARY})
+  endif(UNIX AND NOT APPLE)
+elseif("${FORTE_USE_LUATYPES}" STREQUAL "Lua")
+  find_package(Lua REQUIRED)
+  forte_add_include_directories(${LUA_INCLUDE_DIR})
+  forte_add_link_library(${LUA_LIBRARIES})
+  set(FORTE_DYNAMIC_TYPE_LOAD ON "Enable dynamic type loading")
+  forte_add_definition("-DFORTE_DYNAMIC_TYPE_LOAD")
+else()
+  unset(FORTE_DYNAMIC_TYPE_LOAD)
+  unset(LUAJIT_LIBRARY CACHE)
+  unset(LUAJIT_INCLUDE_DIR CACHE)
+  unset(LUAJIT_MATH_LIBRARY CACHE)
+endif("${FORTE_USE_LUATYPES}" STREQUAL "LuaJIT")
 	
 #######################################################################################
 # Add subdirectories
@@ -154,7 +182,11 @@ mark_as_advanced(FORTE_EventChainExternalEventListSize)
 SET(FORTE_CommunicationInterruptQueueSize "10" CACHE STRING "forte Communication interrupt queue size")
 mark_as_advanced(FORTE_CommunicationInterruptQueueSize)
 
-SET(FORTE_IPLayerRecvBufferSize "1500" CACHE STRING "FORTE ip layer recv buffer size")
+if(FORTE_DYNAMIC_TYPE_LOAD)
+SET(FORTE_IPLayerRecvBufferSize "20000" CACHE STRING "FORTE ip layer recv buffer size" FORCE)
+else()
+SET(FORTE_IPLayerRecvBufferSize "1500" CACHE STRING "FORTE ip layer recv buffer size" FORCE)
+endif(FORTE_DYNAMIC_TYPE_LOAD)
 mark_as_advanced(FORTE_IPLayerRecvBufferSize)
 
 SET(FORTE_MGMCOMMANDPROTOCOL "DEV_MGR" CACHE STRING "forte management command protocol")

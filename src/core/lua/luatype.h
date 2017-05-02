@@ -15,6 +15,7 @@
 
 #include "typelib.h"
 #include "resource.h"
+#include "luaengine.h"
 #include "basicfb.h"
 
 #include <string>

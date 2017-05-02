@@ -11,17 +11,14 @@
   *    Martin Jobst - adapt for LUA integration
   *******************************************************************************/
 #include "fbcontainer.h"
-#include "luaengine.h"
 
 using namespace forte::core;
 
 CFBContainer::CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer *paParent) :
     mContainerName(paContainerName), mParent(paParent) {
-  luaEngine = new CLuaEngine();
 }
 
 CFBContainer::~CFBContainer() {
-  delete luaEngine;
   for (TFunctionBlockList::Iterator itRunner(mFunctionBlocks.begin()); itRunner != mFunctionBlocks.end(); ++itRunner) {
     CTypeLib::deleteFB(*itRunner);
   }

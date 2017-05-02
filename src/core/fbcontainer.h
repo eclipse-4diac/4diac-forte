@@ -18,7 +18,6 @@
 #include "funcbloc.h"
 #include "mgmcmdstruct.h"
 
-class CLuaEngine;
 namespace forte {
   namespace core {
 
@@ -49,10 +48,6 @@ namespace forte {
 
         TFunctionBlockList &getFBList(){
           return mFunctionBlocks;
-        }
-
-        CLuaEngine *getLuaEngine(){
-          return luaEngine;
         }
 
       protected:
@@ -99,8 +94,6 @@ namespace forte {
 
         TFunctionBlockList mFunctionBlocks; //!< The functionblocks hold in this container
         TFBContainerList mSubContainers; //!< List of subcontainers (i.e, subapplications in this container)
-
-        CLuaEngine *luaEngine; //!< The Lua engine for this container
     };
 
   } /* namespace core */
