@@ -102,7 +102,7 @@ public:
   virtual ~Master();
 
 private:
-  BusHandler *bus;
+  Handlers::Bus *bus;
   int errorCounter;
 
   void init();

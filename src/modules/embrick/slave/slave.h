@@ -25,29 +25,32 @@
 
 namespace EmBrick {
 
-class BusHandler;
+using namespace Handles;
+
+namespace Handlers {
+class Bus;
 
 enum SlaveStatus {
-  NotInitialized = 0, // Slave requires initialization
-  OK = 1, // Everything works as expected
-  Slow = 200, // Update frequency is too low, some errors may occurred
-  Interrupted = 201, // Slave received no master updates
-  Error = 202, // Connection has errors. Check hardware
+  NotInitialized = 0, //!< Slave requires initialization
+  OK = 1, //!< Everything works as expected
+  Slow = 200, //!< Update frequency is too low, some errors may occurred
+  Interrupted = 201, //!< Slave received no master updates
+  Error = 202, //!< Connection has errors. Check hardware
 };
 
 enum SlaveType {
   UnknownSlave = 0,
-  G_8Di8Do = 2181, // 8x Digital-Input, 24V, p-switch, 1-wire & 8x Digital-Output, 24V, p-switch, 1-wire
-  G_2RelNo4RelCo = 2301 // 2x Relay-Output, NO, potential free & 4x Relay-Output, CO, potential free
+  G_8Di8Do = 2181, //!< 8x Digital-Input, 24V, p-switch, 1-wire & 8x Digital-Output, 24V, p-switch, 1-wire
+  G_2RelNo4RelCo = 2301 //!< 2x Relay-Output, NO, potential free & 4x Relay-Output, CO, potential free
 };
 
 class Slave {
-  friend class BusHandler;
 
 public:
+  friend class Bus;
 
   struct Config {
-    unsigned int UpdateInterval;
+    unsigned int UpdateInterval; //!< Sets the default frequency for the data update cycle of slaves. The emBRICK slaves require at least 20 updates per minute. The default value is 25 Hz.
   };
 
   class Delegate {
@@ -77,9 +80,9 @@ public:
   }
 
   void addHandle(SlaveHandle* handle) {
-    if (handle->is(IOMapper::In))
+    if (handle->is(Mapper::In))
       addHandle(&inputs, handle);
-    else if (handle->is(IOMapper::Out))
+    else if (handle->is(Mapper::Out))
       addHandle(&outputs, handle);
   }
 
@@ -95,7 +98,7 @@ protected:
   Slave(int address, Packages::SlaveInit init);
   virtual ~Slave();
 
-  BusHandler *bus;
+  Bus * bus;
 
   Config config;
 
@@ -115,6 +118,8 @@ protected:
   SlaveHandle* getHandle(TSlaveHandleList* list, int index);
 };
 
+} /* namespace Handlers */
 } /* namespace EmBrick */
+
 
 #endif /* SRC_MODULES_EMBRICK_SLAVE_SLAVE_H_ */

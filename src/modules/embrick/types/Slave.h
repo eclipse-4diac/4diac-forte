@@ -23,7 +23,7 @@
 namespace EmBrick {
 namespace FunctionBlocks {
 
-class Slave: public CFunctionBlock, public EmBrick::Slave::Delegate {
+class Slave: public CFunctionBlock, public Handlers::Slave::Delegate {
 public:
   Slave(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
       const CStringDictionary::TStringId pa_nInstanceNameId,
@@ -67,20 +67,25 @@ protected:
 
   virtual void executeEvent(int pa_nEIID);
 
-  SlaveType type;
+  Handlers::SlaveType type;
   CSyncObject slaveMutex;
-  EmBrick::Slave *slave;
+  Handlers::Slave *slave;
   bool ready;
 
   virtual bool init(int index);
   virtual void initHandles() = 0;
   void dropHandles();
 
-  void addBitHandle(IOMapper::Direction direction, CIEC_WSTRING id,
+  void addBitHandle(Mapper::Direction direction, CIEC_WSTRING id,
       uint8_t offset, uint8_t pos);
+  void addAnalogHandle(Mapper::Direction direction, CIEC_WSTRING id,
+      uint8_t offset);
+  void addAnalog10Handle(Mapper::Direction direction, CIEC_WSTRING id,
+      uint8_t offset);
 
 public:
-  void onSlaveStatus(SlaveStatus status, SlaveStatus oldStatus);
+  void onSlaveStatus(Handlers::SlaveStatus status,
+      Handlers::SlaveStatus oldStatus);
   void onSlaveDestroy();
 
 private:

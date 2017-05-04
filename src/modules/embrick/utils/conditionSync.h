@@ -15,6 +15,7 @@
 #include <pthread.h>
 
 namespace EmBrick {
+namespace Utils {
 
 class ConditionSync {
 public:
@@ -32,6 +33,7 @@ private:
 
 };
 
+} /* namespace Utils */
 } /* namespace EmBrick */
 
 #endif /* SRC_MODULES_EMBRICK_UTILS_CONDITIONSYNC_H_ */

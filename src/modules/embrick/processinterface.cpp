@@ -10,28 +10,27 @@
  *******************************************************************************/
 
 #include "processinterface.h"
-#include <io/mapper.h>
 
 namespace EmBrick {
 
 const char * const ProcessInterface::scmOK = "OK";
 const char * const ProcessInterface::scmWaitingForHandle =
-    "Waiting for handle..";
+  "Waiting for handle..";
 const char * const ProcessInterface::scmFailedToRegister =
-    "Failed to register observer.";
+  "Failed to register observer.";
 const char * const ProcessInterface::scmMappedWrongDirectionOutput =
-    "Mapped invalid direction. A Q block requires an output handle.";
+  "Mapped invalid direction. A Q block requires an output handle.";
 const char * const ProcessInterface::scmMappedWrongDirectionInput =
-    "Mapped invalid direction. An I block requires an input handle.";
+  "Mapped invalid direction. An I block requires an input handle.";
 const char * const ProcessInterface::scmMappedWrongDataType =
-    "Mapped invalid data type.";
+  "Mapped invalid data type.";
 
 ProcessInterface::ProcessInterface(CResource *paSrcRes,
-    const SFBInterfaceSpec *paInterfaceSpec,
-    const CStringDictionary::TStringId paInstanceNameId,
-    TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId,
-        paFBConnData, paFBVarsData), IOObserver() {
+                                   const SFBInterfaceSpec *paInterfaceSpec,
+                                   const CStringDictionary::TStringId paInstanceNameId,
+                                   TForteByte *paFBConnData, TForteByte *paFBVarsData) :
+  CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId,
+                        paFBConnData, paFBVarsData), Observer() {
   isListening = false;
   isReady = false;
 }
@@ -41,7 +40,7 @@ ProcessInterface::~ProcessInterface() {
 }
 
 bool ProcessInterface::initialise(bool paIsInput) {
-  direction = paIsInput ? IOMapper::In : IOMapper::Out;
+  direction = paIsInput ? Mapper::In : Mapper::Out;
   type = (paIsInput ? getDO(2) : getDI(2))->getDataTypeID();
 
   isReady = false;
@@ -51,8 +50,8 @@ bool ProcessInterface::initialise(bool paIsInput) {
   deinitialise();
 
   // Register interface
-  if (!(isListening = IOMapper::getInstance().registerObserver(
-      getInstanceName(), this))) {
+  if (!(isListening = Mapper::getInstance().registerObserver(
+          getInstanceName(), this))) {
     STATUS() = scmFailedToRegister;
     return false;
   }
@@ -63,7 +62,7 @@ bool ProcessInterface::initialise(bool paIsInput) {
 bool ProcessInterface::deinitialise() {
   // Deregister interface
   if (isListening)
-    IOMapper::getInstance().deregisterObserver(this);
+    Mapper::getInstance().deregisterObserver(this);
 
   return !isReady;
 }
@@ -83,15 +82,15 @@ bool ProcessInterface::read(CIEC_ANY &data) {
 
 bool ProcessInterface::write(CIEC_ANY &data) {
   syncMutex.lock();
-    if (!isReady) {
-      syncMutex.unlock();
-      return false;
-    }
-
-    handle->set(data);
-
+  if (!isReady) {
     syncMutex.unlock();
-    return true;
+    return false;
+  }
+
+  handle->set(data);
+
+  syncMutex.unlock();
+  return true;
 }
 
 bool ProcessInterface::read() {
@@ -142,10 +141,10 @@ bool ProcessInterface::onChange() {
   return read();
 }
 
-void ProcessInterface::onHandle(IOHandle* handle) {
+void ProcessInterface::onHandle(Handle* handle) {
   syncMutex.lock();
 
-  IOObserver::onHandle(handle);
+  Observer::onHandle(handle);
 
   if (!handle->is(type)) {
     STATUS() = scmMappedWrongDataType;
@@ -153,11 +152,11 @@ void ProcessInterface::onHandle(IOHandle* handle) {
   }
 
   if (!handle->is(direction)) {
-    STATUS() = direction == IOMapper::In ? scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput;
+    STATUS() = direction == Mapper::In ? scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput;
     return syncMutex.unlock();
   }
 
-  if (direction == IOMapper::In)
+  if (direction == Mapper::In)
     setEventChainExecutor(m_poInvokingExecEnv);
 
   STATUS() = scmOK;
@@ -166,7 +165,7 @@ void ProcessInterface::onHandle(IOHandle* handle) {
   syncMutex.unlock();
 
   // Read & write current state
-  if (direction == IOMapper::In)
+  if (direction == Mapper::In)
     QO() = read();
   else
     QO() = write();
@@ -175,7 +174,7 @@ void ProcessInterface::onHandle(IOHandle* handle) {
 void ProcessInterface::dropHandle() {
   syncMutex.lock();
 
-  IOObserver::dropHandle();
+  Observer::dropHandle();
 
   QO() = false;
   STATUS() = scmWaitingForHandle;

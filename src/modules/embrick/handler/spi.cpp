@@ -14,26 +14,27 @@
 #include <string>
 
 namespace EmBrick {
+namespace Handlers {
 
-unsigned long const SPIHandler::DefaultSpiSpeed = 300000;
-unsigned long const SPIHandler::MaxSpiSpeed = 700000;
-char const SPIHandler::spiMode = SPI_CPHA;
-char const SPIHandler::spiBitOrder = 0; // MSB first
+unsigned long const SPI::DefaultSpiSpeed = 300000;
+unsigned long const SPI::MaxSpiSpeed = 700000;
+char const SPI::spiMode = SPI_CPHA;
+char const SPI::spiBitOrder = 0; // MSB first
 
-const char * const SPIHandler::scmFailedToInitHandler =
+const char * const SPI::scmFailedToInitHandler =
     "Failed to init spidev handler. Check if spi is enabled.";
-const char * const SPIHandler::scmFailedToConfigMode =
+const char * const SPI::scmFailedToConfigMode =
     "Failed to config spi write mode.";
-const char * const SPIHandler::scmFailedToConfigBitOrder =
+const char * const SPI::scmFailedToConfigBitOrder =
     "Failed to config spi bit order.";
-const char * const SPIHandler::scmFailedToConfigSpeed =
+const char * const SPI::scmFailedToConfigSpeed =
     "Failed to config spi speed.";
-const char * const SPIHandler::scmFailedToTestBus =
+const char * const SPI::scmFailedToTestBus =
     "Failed to send test byte to spi.";
-const char * const SPIHandler::scmFailedToTransferBuffer =
+const char * const SPI::scmFailedToTransferBuffer =
     "Failed to transfer buffer via spi.";
 
-SPIHandler::SPIHandler(unsigned int interface) :
+SPI::SPI(unsigned int interface) :
     error(0) {
   // Convert int to string
   std::ostringstream interfaceStream;
@@ -44,11 +45,11 @@ SPIHandler::SPIHandler(unsigned int interface) :
   init(spidev.c_str());
 }
 
-SPIHandler::~SPIHandler() {
+SPI::~SPI() {
   deInit();
 }
 
-void SPIHandler::init(const char* spidev) {
+void SPI::init(const char* spidev) {
   // Init spidev
   DEVLOG_DEBUG("emBrick[SPIHandler]: Open spidev '%s'\n", spidev);
   fd = open(spidev, O_RDWR);
@@ -77,13 +78,13 @@ void SPIHandler::init(const char* spidev) {
   DEVLOG_INFO("emBrick[SPIHandler]: Ready.\n");
 }
 
-void SPIHandler::deInit() {
+void SPI::deInit() {
   // Close handler if open
   if (fd >= 0)
     close(fd);
 }
 
-template<typename T> bool SPIHandler::config(unsigned int config,
+template<typename T> bool SPI::config(unsigned int config,
     unsigned int configVerify, T value) {
   int status;
 
@@ -101,12 +102,12 @@ template<typename T> bool SPIHandler::config(unsigned int config,
   return valueCheck == value;
 }
 
-void SPIHandler::fail(const char* reason) {
+void SPI::fail(const char* reason) {
   error = reason;
   DEVLOG_ERROR("emBrick[SPIHandler]: %s\n", error);
 }
 
-bool SPIHandler::transfer(unsigned char* sendBuffer,
+bool SPI::transfer(unsigned char* sendBuffer,
     unsigned char* receiveBuffer, int length) {
 
   struct spi_ioc_transfer msg;
@@ -130,8 +131,9 @@ bool SPIHandler::transfer(unsigned char* sendBuffer,
   return true;
 }
 
-void SPIHandler::setSpeed(const unsigned long speed) {
+void SPI::setSpeed(const unsigned long speed) {
   spiSpeed = speed;
 }
 
+} /* namespace Handlers */
 } /* namespace EmBrick */

@@ -127,7 +127,7 @@ void Master::init() {
   QO() = false;
 
   // Init and wait for BusHandler
-  bus = &BusHandler::getInstance();
+  bus = &Handlers::Bus::getInstance();
   if (bus->isAlive()) {
     DEVLOG_ERROR(
         "emBrick[Master]: BusHandler already running. Only one master function block is permitted.\n");
@@ -140,7 +140,7 @@ void Master::init() {
   setEventChainExecutor(m_poInvokingExecEnv);
   bus->delegate = this;
 
-  BusHandler::Config config;
+  Handlers::Bus::Config config;
   config.BusInterface = BusInterface();
   config.BusSelectPin = BusSelectPin();
   config.BusInitSpeed = BusInitSpeed();

@@ -117,7 +117,7 @@ private:
 
 public:
   FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(Slave2181, Slave){
-  type = G_8Di8Do;
+  type = Handlers::G_8Di8Do;
 };
 
 virtual ~Slave2181() {};

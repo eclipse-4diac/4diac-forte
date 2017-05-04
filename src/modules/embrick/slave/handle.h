@@ -22,11 +22,18 @@
 
 namespace EmBrick {
 
+namespace Handlers {
 class Slave;
+}
 
-class SlaveHandle: public IOHandle {
+namespace Handles {
+
+using namespace IO;
+
+class SlaveHandle: public Handle {
 public:
-  SlaveHandle(IOMapper::Direction direction, uint8_t offset, Slave *slave);
+  SlaveHandle(Mapper::Direction direction, uint8_t offset,
+      Handlers::Slave *slave);
   virtual ~SlaveHandle();
 
   virtual void set(const CIEC_ANY &);
@@ -37,62 +44,15 @@ protected:
 
   }
 
-  virtual void onObserver(IOObserver *observer);
+  virtual void onObserver(Observer *observer);
   virtual void dropObserver();
 
   unsigned char* buffer;
   const uint8_t offset;
-  Slave* slave;
+  Handlers::Slave* slave;
 };
 
-class BitSlaveHandle: public SlaveHandle {
-public:
-  BitSlaveHandle(IOMapper::Direction direction, uint8_t offset,
-      uint8_t position, Slave *slave);
-
-  virtual void set(const CIEC_ANY &);
-  void get(CIEC_ANY &);
-
-  bool equal(unsigned char* oldBuffer);
-
-protected:
-  virtual void reset() {
-    CIEC_BOOL s = false;
-    set(s);
-  }
-
-protected:
-  const uint8_t mask;
-};
-
-class Analog10SlaveHandle: public SlaveHandle {
-public:
-  Analog10SlaveHandle(IOMapper::Direction direction, uint8_t offset,
-      Slave *slave);
-
-  virtual void set(const CIEC_ANY &);
-  void get(CIEC_ANY &);
-
-  bool equal(unsigned char* oldBuffer);
-
-protected:
-  const CIEC_DWORD getValue(const unsigned char* buffer);
-};
-
-class AnalogSlaveHandle: public SlaveHandle {
-public:
-  AnalogSlaveHandle(IOMapper::Direction direction, uint8_t offset,
-      Slave *slave);
-
-  virtual void set(const CIEC_ANY &);
-  void get(CIEC_ANY &);
-
-  bool equal(unsigned char* oldBuffer);
-
-protected:
-  const CIEC_DWORD getValue(const unsigned char* buffer);
-};
-
+} /* namespace Handles */
 } /* namespace EmBrick */
 
 #endif /* SRC_MODULES_EMBRICK_SLAVE_HANDLE_H_ */

@@ -57,12 +57,12 @@ const SFBInterfaceSpec Slave2301::scm_stFBInterfaceSpec = { 1,
 
 void Slave2301::initHandles() {
   // 6 Relays
-  addBitHandle(IOMapper::Out, Relay_1(), 0, 0);
-  addBitHandle(IOMapper::Out, Relay_2(), 0, 1);
-  addBitHandle(IOMapper::Out, Relay_3(), 0, 2);
-  addBitHandle(IOMapper::Out, Relay_4(), 0, 3);
-  addBitHandle(IOMapper::Out, Relay_5(), 0, 4);
-  addBitHandle(IOMapper::Out, Relay_6(), 0, 5);
+  addBitHandle(Mapper::Out, Relay_1(), 0, 0);
+  addBitHandle(Mapper::Out, Relay_2(), 0, 1);
+  addBitHandle(Mapper::Out, Relay_3(), 0, 2);
+  addBitHandle(Mapper::Out, Relay_4(), 0, 3);
+  addBitHandle(Mapper::Out, Relay_5(), 0, 4);
+  addBitHandle(Mapper::Out, Relay_6(), 0, 5);
 }
 
 } /* namespace FunctionsBlocks */

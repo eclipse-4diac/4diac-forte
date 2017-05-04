@@ -14,19 +14,19 @@
 #include "observer.h"
 #include <devlog.h>
 
-namespace EmBrick {
+namespace IO {
 
-DEFINE_SINGLETON(IOMapper)
+DEFINE_SINGLETON(Mapper)
 
-IOMapper::IOMapper() {
-
-}
-
-IOMapper::~IOMapper() {
+Mapper::Mapper() {
 
 }
 
-bool IOMapper::registerHandle(CIEC_WSTRING const &id, IOHandle* handle) {
+Mapper::~Mapper() {
+
+}
+
+bool Mapper::registerHandle(CIEC_WSTRING const &id, Handle* handle) {
   std::string idStr(id.getValue());
 
   syncMutex.lock();
@@ -55,7 +55,7 @@ bool IOMapper::registerHandle(CIEC_WSTRING const &id, IOHandle* handle) {
   return true;
 }
 
-void IOMapper::deregisterHandle(IOHandle* handle) {
+void Mapper::deregisterHandle(Handle* handle) {
   syncMutex.lock();
 
   for (THandleMap::iterator it = handles.begin(); it != handles.end(); it++)
@@ -74,7 +74,7 @@ void IOMapper::deregisterHandle(IOHandle* handle) {
   syncMutex.unlock();
 }
 
-bool IOMapper::registerObserver(CIEC_WSTRING const &id, IOObserver* observer) {
+bool Mapper::registerObserver(CIEC_WSTRING const &id, Observer* observer) {
   std::string idStr(id.getValue());
 
   syncMutex.lock();
@@ -103,7 +103,7 @@ bool IOMapper::registerObserver(CIEC_WSTRING const &id, IOObserver* observer) {
   return true;
 }
 
-void IOMapper::deregisterObserver(IOObserver* observer) {
+void Mapper::deregisterObserver(Observer* observer) {
   syncMutex.lock();
 
   for (TObserverMap::iterator it = observers.begin(); it != observers.end();
@@ -123,4 +123,4 @@ void IOMapper::deregisterObserver(IOObserver* observer) {
   syncMutex.unlock();
 }
 
-} /* namespace EmBrick */
+} /* namespace IO */

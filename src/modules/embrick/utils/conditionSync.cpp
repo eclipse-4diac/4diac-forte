@@ -12,6 +12,7 @@
 #include "conditionSync.h"
 
 namespace EmBrick {
+namespace Utils {
 
 ConditionSync::ConditionSync() {
   pthread_condattr_t condAttr;
@@ -52,4 +53,5 @@ void ConditionSync::wakeUp() {
   pthread_cond_signal (&cond);
 }
 
+} /* namespace Utils */
 } /* namespace EmBrick */

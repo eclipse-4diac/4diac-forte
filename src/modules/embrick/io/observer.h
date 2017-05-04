@@ -16,26 +16,26 @@
 
 #include "mapper.h"
 
-namespace EmBrick {
+namespace IO {
 
-class IOObserver {
-  friend class IOMapper;
+class Observer {
+  friend class Mapper;
 
 public:
-  IOObserver();
-  virtual ~IOObserver();
+  Observer();
+  virtual ~Observer();
 
   virtual bool onChange() = 0;
 
 protected:
-  virtual void onHandle(IOHandle *handle);
+  virtual void onHandle(Handle *handle);
   virtual void dropHandle();
 
-  IOHandle* handle;
+  Handle* handle;
   CIEC_ANY::EDataTypeID type;
-  IOMapper::Direction direction;
+  Mapper::Direction direction;
 };
 
-} /* namespace EmBrick */
+} /* namespace IO */
 
 #endif /* SRC_MODULES_EMBRICK_IO_OBSERVER_H_ */

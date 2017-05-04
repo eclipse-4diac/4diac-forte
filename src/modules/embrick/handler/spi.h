@@ -21,13 +21,14 @@
 #include <linux/spi/spidev.h>
 
 namespace EmBrick {
+namespace Handlers {
 
-class SPIHandler {
-  friend class BusHandler;
+class SPI {
+  friend class Bus;
 
 protected:
-  SPIHandler(unsigned int interface);
-  virtual ~SPIHandler();
+  SPI(unsigned int interface);
+  virtual ~SPI();
 
   bool transfer(unsigned char* sendBuffer, unsigned char* receiveBuffer,
       int length);
@@ -63,6 +64,7 @@ private:
   static const char * const scmFailedToTransferBuffer;
 };
 
+} /* namespace Handlers */
 } /* namespace EmBrick */
 
 #endif /* SRC_MODULES_EMBRICK_HANDLER_SPI_H_ */

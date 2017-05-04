@@ -77,7 +77,7 @@ private:
 
 public:
   FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(Slave2301, Slave){
-  type = G_2RelNo4RelCo;
+  type = Handlers::G_2RelNo4RelCo;
 };
 
 virtual ~Slave2301() {};

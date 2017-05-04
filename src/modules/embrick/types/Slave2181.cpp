@@ -68,24 +68,24 @@ const SFBInterfaceSpec Slave2181::scm_stFBInterfaceSpec = { 1,
 
 void Slave2181::initHandles() {
   // 8 Inputs
-  addBitHandle(IOMapper::In, DigitalInput_1(), 0, 0);
-  addBitHandle(IOMapper::In, DigitalInput_2(), 0, 1);
-  addBitHandle(IOMapper::In, DigitalInput_3(), 0, 2);
-  addBitHandle(IOMapper::In, DigitalInput_4(), 0, 3);
-  addBitHandle(IOMapper::In, DigitalInput_5(), 0, 4);
-  addBitHandle(IOMapper::In, DigitalInput_6(), 0, 5);
-  addBitHandle(IOMapper::In, DigitalInput_7(), 0, 6);
-  addBitHandle(IOMapper::In, DigitalInput_8(), 0, 7);
+  addBitHandle(Mapper::In, DigitalInput_1(), 0, 0);
+  addBitHandle(Mapper::In, DigitalInput_2(), 0, 1);
+  addBitHandle(Mapper::In, DigitalInput_3(), 0, 2);
+  addBitHandle(Mapper::In, DigitalInput_4(), 0, 3);
+  addBitHandle(Mapper::In, DigitalInput_5(), 0, 4);
+  addBitHandle(Mapper::In, DigitalInput_6(), 0, 5);
+  addBitHandle(Mapper::In, DigitalInput_7(), 0, 6);
+  addBitHandle(Mapper::In, DigitalInput_8(), 0, 7);
 
   // 8 Outputs
-  addBitHandle(IOMapper::Out, DigitalOutput_1(), 0, 0);
-  addBitHandle(IOMapper::Out, DigitalOutput_2(), 0, 1);
-  addBitHandle(IOMapper::Out, DigitalOutput_3(), 0, 2);
-  addBitHandle(IOMapper::Out, DigitalOutput_4(), 0, 3);
-  addBitHandle(IOMapper::Out, DigitalOutput_5(), 0, 4);
-  addBitHandle(IOMapper::Out, DigitalOutput_6(), 0, 5);
-  addBitHandle(IOMapper::Out, DigitalOutput_7(), 0, 6);
-  addBitHandle(IOMapper::Out, DigitalOutput_8(), 0, 7);
+  addBitHandle(Mapper::Out, DigitalOutput_1(), 0, 0);
+  addBitHandle(Mapper::Out, DigitalOutput_2(), 0, 1);
+  addBitHandle(Mapper::Out, DigitalOutput_3(), 0, 2);
+  addBitHandle(Mapper::Out, DigitalOutput_4(), 0, 3);
+  addBitHandle(Mapper::Out, DigitalOutput_5(), 0, 4);
+  addBitHandle(Mapper::Out, DigitalOutput_6(), 0, 5);
+  addBitHandle(Mapper::Out, DigitalOutput_7(), 0, 6);
+  addBitHandle(Mapper::Out, DigitalOutput_8(), 0, 7);
 }
 
 } /* namespace FunctionsBlocks */

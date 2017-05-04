@@ -15,6 +15,7 @@
 #include <processinterface.h>
 
 namespace EmBrick {
+namespace Handlers {
 
 const int Slave::MaxUpdateErrors = 50;
 
@@ -22,7 +23,7 @@ Slave::Slave(int address, Packages::SlaveInit init) :
     delegate(0), address(address), type((SlaveType) init.deviceId), dataSendLength(
         init.dataSendLength), dataReceiveLength(init.dataReceiveLength), status(
         NotInitialized), oldStatus(NotInitialized) {
-  bus = &BusHandler::getInstance();
+  bus = &Bus::getInstance();
   updateSendImage = new unsigned char[dataSendLength];
   updateReceiveImage = new unsigned char[dataReceiveLength];
   updateReceiveImageOld = new unsigned char[dataReceiveLength];
@@ -53,7 +54,7 @@ void Slave::setConfig(Config config) {
 }
 
 Slave* Slave::sendInit(int address) {
-  BusHandler &bus = BusHandler::getInstance();
+  Bus & bus = Bus::getInstance();
 
   Packages::MasterInit masterInit;
   masterInit.slaveAddress = (unsigned char) address;
@@ -130,7 +131,7 @@ void Slave::forceUpdate() {
 void Slave::dropHandles() {
   syncMutex.lock();
 
-  IOMapper& mapper = IOMapper::getInstance();
+  Mapper& mapper = Mapper::getInstance();
 
   TSlaveHandleList::Iterator itEnd = inputs.end();
   for (TSlaveHandleList::Iterator it = inputs.begin(); it != itEnd; ++it) {
@@ -166,4 +167,6 @@ SlaveHandle* Slave::getHandle(TSlaveHandleList* list, int index) {
   return NULL;
 }
 
+} /* namespace Handlers */
 } /* namespace EmBrick */
+

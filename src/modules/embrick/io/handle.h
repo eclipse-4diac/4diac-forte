@@ -18,20 +18,20 @@
 
 #include "mapper.h"
 
-namespace EmBrick {
+namespace IO {
 
-class IOHandle {
-  friend class IOMapper;
+class Handle {
+  friend class Mapper;
 
 public:
-  IOHandle(IOMapper::Direction direction);
-  virtual ~IOHandle();
+  Handle(Mapper::Direction direction);
+  virtual ~Handle();
 
   bool hasObserver() {
     return !!observer;
   }
 
-  IOObserver* getObserver() {
+  Observer* getObserver() {
     return observer;
   }
 
@@ -39,7 +39,7 @@ public:
     return this->type == type;
   }
 
-  bool is(IOMapper::Direction direction) {
+  bool is(Mapper::Direction direction) {
     return this->direction == direction;
   }
 
@@ -47,14 +47,14 @@ public:
   virtual void get(CIEC_ANY &) = 0;
 
 protected:
-  virtual void onObserver(IOObserver *observer);
+  virtual void onObserver(Observer *observer);
   virtual void dropObserver();
 
-  IOObserver *observer;
+  Observer *observer;
   CIEC_ANY::EDataTypeID type;
-  IOMapper::Direction direction;
+  Mapper::Direction direction;
 };
 
-} /* namespace EmBrick */
+} /* namespace IO */
 
 #endif /* SRC_MODULES_EMBRICK_IO_HANDLE_H_ */

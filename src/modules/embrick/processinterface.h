@@ -12,6 +12,7 @@
 #ifndef SRC_MODULES_EMBRICK_PROCESSINTERFACE_H_
 #define SRC_MODULES_EMBRICK_PROCESSINTERFACE_H_
 
+#include <io/mapper.h>
 #include <io/observer.h>
 #include <forte_sync.h>
 #include <slave/handle.h>
@@ -19,7 +20,9 @@
 
 namespace EmBrick {
 
-class ProcessInterface: public CProcessInterfaceBase, public IOObserver {
+using namespace IO;
+
+class ProcessInterface: public CProcessInterfaceBase, public Observer {
 
 public:
   ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
@@ -57,7 +60,7 @@ protected:
   bool read(CIEC_ANY &);
   bool write(CIEC_ANY &);
 
-  virtual void onHandle(IOHandle *handle);
+  virtual void onHandle(Handle *handle);
   virtual void dropHandle();
 
   CSyncObject syncMutex;

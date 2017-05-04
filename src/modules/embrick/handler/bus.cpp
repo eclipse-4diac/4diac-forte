@@ -16,17 +16,18 @@
 #include <slave/packages.h>
 
 namespace EmBrick {
+namespace Handlers {
 
-const char * const BusHandler::scmOK = "OK";
-const char * const BusHandler::scmWaitingForInit =
+const char * const Bus::scmOK = "OK";
+const char * const Bus::scmWaitingForInit =
     "Waiting for initialization..";
-const char * const BusHandler::scmFailedToInit = "Failed to init BusHandler.";
-const char * const BusHandler::scmSlaveUpdateFailed = "Update of slave failed.";
-const char * const BusHandler::scmNoSlavesFound = "No slave modules found.";
+const char * const Bus::scmFailedToInit = "Failed to init BusHandler.";
+const char * const Bus::scmSlaveUpdateFailed = "Update of slave failed.";
+const char * const Bus::scmNoSlavesFound = "No slave modules found.";
 
-DEFINE_SINGLETON(BusHandler)
+DEFINE_SINGLETON(Bus)
 
-BusHandler::BusHandler() :
+Bus::Bus() :
     delegate(0), spi(0), slaveSelect(0), slaves(0), slaveCount(0) {
   // Set init time
   struct timespec ts;
@@ -44,14 +45,14 @@ BusHandler::BusHandler() :
   // Default config
   config.BusInterface = 1;
   config.BusSelectPin = 49;
-  config.BusInitSpeed = SPIHandler::DefaultSpiSpeed;
-  config.BusLoopSpeed = SPIHandler::MaxSpiSpeed;
+  config.BusInitSpeed = SPI::DefaultSpiSpeed;
+  config.BusLoopSpeed = SPI::MaxSpiSpeed;
 }
 
-BusHandler::~BusHandler() {
+Bus::~Bus() {
 }
 
-void BusHandler::setConfig(struct Config config) {
+void Bus::setConfig(struct Config config) {
   // Check if BusHandler is active -> config changes are not allowed
   if (isAlive()) {
     DEVLOG_ERROR("emBrick[BusHandler]: Cannot change config while running.\n");
@@ -61,7 +62,7 @@ void BusHandler::setConfig(struct Config config) {
   this->config = config;
 }
 
-void BusHandler::run() {
+void Bus::run() {
   isReady = false;
   error = 0;
 
@@ -118,10 +119,10 @@ void BusHandler::run() {
     sleep(1);
 }
 
-bool BusHandler::init() {
+bool Bus::init() {
   // Start handlers
-  spi = new SPIHandler(config.BusInterface);
-  slaveSelect = new PinHandler(config.BusSelectPin);
+  spi = new SPI(config.BusInterface);
+  slaveSelect = new Pin(config.BusSelectPin);
   slaves = new TSlaveList();
 
   // Check handlers
@@ -178,7 +179,7 @@ bool BusHandler::init() {
   return true;
 }
 
-void BusHandler::prepareLoop() {
+void Bus::prepareLoop() {
   // Get current time
   clock_gettime(CLOCK_MONOTONIC, &nextLoop);
 
@@ -202,7 +203,7 @@ void BusHandler::prepareLoop() {
   loopActive = false;
 }
 
-void BusHandler::runLoop() {
+void Bus::runLoop() {
   // Init loop variables
   SEntry *sCur = 0;
 
@@ -264,7 +265,7 @@ void BusHandler::runLoop() {
 
 }
 
-void BusHandler::cleanLoop() {
+void Bus::cleanLoop() {
   // Free memory of list
   for (int i = 0; i < slaveCount; i++)
     forte_free(sList[i]);
@@ -272,11 +273,11 @@ void BusHandler::cleanLoop() {
   sList = 0;
 }
 
-bool BusHandler::hasError() {
+bool Bus::hasError() {
   return error != 0;
 }
 
-bool BusHandler::checkHandlerError() {
+bool Bus::checkHandlerError() {
   if (spi->hasError()) {
     error = spi->error;
     return true;
@@ -290,7 +291,7 @@ bool BusHandler::checkHandlerError() {
   return false;
 }
 
-const char* BusHandler::getStatus() {
+const char* Bus::getStatus() {
   if (!isReady && error == 0)
     return scmWaitingForInit;
 
@@ -300,7 +301,7 @@ const char* BusHandler::getStatus() {
   return scmOK;
 }
 
-Slave* BusHandler::getSlave(int index) {
+Slave* Bus::getSlave(int index) {
   if (slaves == 0)
     return 0;
 
@@ -312,7 +313,7 @@ Slave* BusHandler::getSlave(int index) {
   return 0;
 }
 
-void BusHandler::forceUpdate(int index) {
+void Bus::forceUpdate(int index) {
   loopSync.lock();
 
   if (sList == 0 || slaveCount <= index || sList[index]->forced) {
@@ -344,7 +345,7 @@ void BusHandler::forceUpdate(int index) {
   loopSync.unlock();
 }
 
-bool BusHandler::transfer(unsigned int target, Command cmd,
+bool Bus::transfer(unsigned int target, Command cmd,
     unsigned char* dataSend, int dataSendLength, unsigned char* dataReceive,
     int dataReceiveLength, SlaveStatus* status, CSyncObject *syncMutex) {
   unsigned int dataLength = std::max(dataSendLength, dataReceiveLength + 1); // + 1 status byte
@@ -444,7 +445,7 @@ bool BusHandler::transfer(unsigned int target, Command cmd,
   return true;
 }
 
-unsigned char BusHandler::calcChecksum(unsigned char * data, int dataLen) {
+unsigned char Bus::calcChecksum(unsigned char * data, int dataLen) {
   unsigned char c = 0;
   for (int i = 0; i < dataLen; i++)
     c += data[i];
@@ -452,30 +453,30 @@ unsigned char BusHandler::calcChecksum(unsigned char * data, int dataLen) {
   return ChecksumConstant - c;
 }
 
-void BusHandler::disableHandler() {
+void Bus::disableHandler() {
 
 }
 
-void BusHandler::enableHandler() {
+void Bus::enableHandler() {
 
 }
 
-void BusHandler::setPriority(int) {
+void Bus::setPriority(int) {
 
 }
 
-int BusHandler::getPriority() const {
+int Bus::getPriority() const {
   return 0;
 }
 
-uint64_t BusHandler::micros() {
+uint64_t Bus::micros() {
   struct timespec ts;
   clock_gettime(CLOCK_MONOTONIC, &ts);
 
   return round(ts.tv_nsec / 1.0e3) + (ts.tv_sec - initTime) * 1E6;
 }
 
-unsigned long BusHandler::millis() {
+unsigned long Bus::millis() {
   // TODO Improve timing func. Maybe replace with existing forte implementation.
   struct timespec ts;
   clock_gettime(CLOCK_MONOTONIC, &ts);
@@ -483,14 +484,14 @@ unsigned long BusHandler::millis() {
   return round(ts.tv_nsec / 1.0e6) + (ts.tv_sec - initTime) * 1000;
 }
 
-void BusHandler::microsleep(unsigned long microseconds) {
+void Bus::microsleep(unsigned long microseconds) {
   struct timespec ts;
   ts.tv_sec = microseconds / (unsigned long) 1E6;
   ts.tv_nsec = microseconds * 1E3 - ts.tv_sec * 1E9;
   nanosleep(&ts, 0);
 }
 
-void BusHandler::addTime(struct timespec& ts, unsigned long microseconds) {
+void Bus::addTime(struct timespec& ts, unsigned long microseconds) {
   ts.tv_sec += microseconds / (unsigned long) 1E6;
   unsigned long t = ts.tv_nsec + microseconds * (unsigned long) 1E3
       - (microseconds / (unsigned long) 1E6) * (unsigned long) 1E9;
@@ -501,10 +502,11 @@ void BusHandler::addTime(struct timespec& ts, unsigned long microseconds) {
   ts.tv_nsec = t;
 }
 
-bool BusHandler::cmpTime(struct timespec& t1, struct timespec& t2) {
+bool Bus::cmpTime(struct timespec& t1, struct timespec& t2) {
   return (t1.tv_nsec < t2.tv_nsec && t1.tv_sec == t2.tv_sec)
       || t1.tv_sec < t2.tv_sec;
 }
 
+} /* namespace Handlers */
 } /* namespace EmBrick */
 

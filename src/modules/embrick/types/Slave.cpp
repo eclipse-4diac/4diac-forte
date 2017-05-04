@@ -12,6 +12,10 @@
 #include "Slave.h"
 #include <io/mapper.h>
 
+#include <slave/handles/bit.h>
+#include <slave/handles/analog.h>
+#include <slave/handles/analog10.h>
+
 namespace EmBrick {
 namespace FunctionBlocks {
 
@@ -28,7 +32,8 @@ Slave::Slave(CResource *pa_poSrcRes,
     const CStringDictionary::TStringId pa_nInstanceNameId,
     TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
     CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId,
-        pa_acFBConnData, pa_acFBVarsData), type(UnknownSlave), slave(0), ready(
+        pa_acFBConnData, pa_acFBVarsData), type(Handlers::UnknownSlave), slave(
+        0), ready(
         false) {
   UpdateIntervalDefault = false;
 }
@@ -98,7 +103,7 @@ void Slave::executeEvent(int pa_nEIID) {
 bool Slave::init(int index) {
   slave = 0;
 
-  BusHandler &bus = BusHandler::getInstance();
+  Handlers::Bus &bus = Handlers::Bus::getInstance();
 
   slave = bus.getSlave(index);
   if (!slave) {
@@ -113,7 +118,7 @@ bool Slave::init(int index) {
 
   slave->delegate = this;
 
-  EmBrick::Slave::Config config;
+  Handlers::Slave::Config config;
   config.UpdateInterval = UpdateInterval();
   slave->setConfig(config);
 
@@ -128,31 +133,57 @@ void Slave::dropHandles() {
   slave->dropHandles();
 }
 
-void Slave::addBitHandle(IOMapper::Direction direction, CIEC_WSTRING id,
+void Slave::addBitHandle(Mapper::Direction direction, CIEC_WSTRING id,
     uint8_t offset, uint8_t pos) {
   if (id == "")
     return;
 
   SlaveHandle* handle = new BitSlaveHandle(direction, offset, pos, slave);
 
-  if (IOMapper::getInstance().registerHandle(id, handle))
+  if (Mapper::getInstance().registerHandle(id, handle))
     slave->addHandle(handle);
   else
     delete handle;
 }
 
-void Slave::onSlaveStatus(SlaveStatus status, SlaveStatus) {
+void Slave::addAnalogHandle(Mapper::Direction direction, CIEC_WSTRING id,
+    uint8_t offset) {
+  if (id == "")
+    return;
+
+  SlaveHandle* handle = new AnalogSlaveHandle(direction, offset, slave);
+
+  if (Mapper::getInstance().registerHandle(id, handle))
+    slave->addHandle(handle);
+  else
+    delete handle;
+}
+
+void Slave::addAnalog10Handle(Mapper::Direction direction, CIEC_WSTRING id,
+    uint8_t offset) {
+  if (id == "")
+    return;
+
+  SlaveHandle* handle = new AnalogSlaveHandle(direction, offset, slave);
+
+  if (Mapper::getInstance().registerHandle(id, handle))
+    slave->addHandle(handle);
+  else
+    delete handle;
+}
+
+void Slave::onSlaveStatus(Handlers::SlaveStatus status, Handlers::SlaveStatus) {
   switch (status) {
-  case OK:
+  case Handlers::OK:
     STATUS() = scmOK;
     break;
-  case Slow:
+  case Handlers::Slow:
     STATUS() = scmSlow;
     break;
-  case Interrupted:
+  case Handlers::Interrupted:
     STATUS() = scmInterrupted;
     break;
-  case Error:
+  case Handlers::Error:
     STATUS() = scmError;
     break;
   default:

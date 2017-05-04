@@ -29,26 +29,29 @@
 #include <utils/conditionSync.h>
 
 namespace EmBrick {
+namespace Handlers {
 
 enum Command {
-  Init = 2, SelectNextSlave = 3, Data = 10
+  Init = 2,
+  SelectNextSlave = 3,
+  Data = 10,
 };
 
 const unsigned int TransferBufferLength = 150;
 const unsigned int SyncGapMultiplicator = 15;
 const unsigned int SyncGapDuration = (SyncGapMultiplicator - 1) * 32 + 10;
 
-class BusHandler: public CExternalEventHandler, public CThread {
-DECLARE_SINGLETON(BusHandler)
+class Bus : public CExternalEventHandler, public CThread {
+  DECLARE_SINGLETON(Bus)
 
   friend class Slave;
 
 public:
   struct Config {
-    unsigned int BusInterface;
-    unsigned int BusSelectPin;
-    unsigned long BusInitSpeed;
-    unsigned long BusLoopSpeed;
+    unsigned int BusInterface; //!< Selects the SPI interface for the brickBUS. The default value is 1 (selects SPI1).
+    unsigned int BusSelectPin; //!< Sets the pin, which is connect to the slave select pin of the brickBUS.
+    unsigned long BusInitSpeed; //!< Sets the SPI speed for the brickBUS during the initialization of the slaves. The default value is 300000 Hz.
+    unsigned long BusLoopSpeed; //!< Sets the maximal SPI speed for the brickBUS during the runtime updates of the slaves. The default value is 700000 Hz.
   };
 
   void setConfig(struct Config config);
@@ -67,14 +70,14 @@ protected:
   void cleanLoop();
 
   bool transfer(unsigned int target, Command cmd, unsigned char* dataSend =
-  NULL, int dataSendLength = 0, unsigned char* dataReceive = NULL,
-      int dataReceiveLength = 0, SlaveStatus* status = NULL,
-      CSyncObject *syncMutex = NULL);
+                  NULL, int dataSendLength = 0, unsigned char* dataReceive = NULL,
+                int dataReceiveLength = 0, SlaveStatus* status = NULL,
+                CSyncObject *syncMutex = NULL);
   bool broadcast(Command cmd, unsigned char* dataSend =
-  NULL, int dataSendLength = 0, unsigned char* dataReceive = NULL,
-      int dataReceiveLength = 0) {
+                   NULL, int dataSendLength = 0, unsigned char* dataReceive = NULL,
+                 int dataReceiveLength = 0) {
     return transfer(0, cmd, dataSend, dataSendLength, dataReceive,
-        dataReceiveLength);
+                    dataReceiveLength);
   }
 
   virtual void run();
@@ -94,8 +97,8 @@ protected:
   uint64_t lastTransfer;
 
   // Handlers
-  SPIHandler *spi;
-  PinHandler *slaveSelect;
+  SPI *spi;
+  Pin *slaveSelect;
 
   // Slaves
   typedef CSinglyLinkedList<Slave *> TSlaveList;
@@ -105,7 +108,7 @@ protected:
   // Sync
   bool isReady;
   bool loopActive;
-  ConditionSync loopSync;
+  Utils::ConditionSync loopSync;
 
   // Error
   const char* error;
@@ -145,6 +148,7 @@ private:
   static const char * const scmNoSlavesFound;
 };
 
-}
+} /* namespace Handlers */
+} /* namespace EmBrick */
 
 #endif /* SRC_MODULES_EMBRICK_BUSCONTROLLER_H_ */

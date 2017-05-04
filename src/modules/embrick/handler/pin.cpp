@@ -13,15 +13,16 @@
 #include <devlog.h>
 
 namespace EmBrick {
+namespace Handlers {
 
-const char * const PinHandler::scmFailedToOpenFile =
+const char * const Pin::scmFailedToOpenFile =
     "Failed to open sysfs file.";
-const char * const PinHandler::scmFailedToWriteFile =
+const char * const Pin::scmFailedToWriteFile =
     "Failed to write sysfs file.";
-const char * const PinHandler::scmNotInitialised =
+const char * const Pin::scmNotInitialised =
     "Failed to write to not initialised sysfs stream.";
 
-PinHandler::PinHandler(unsigned int pin) :
+Pin::Pin(unsigned int pin) :
     pin(pin), error(0) {
   // Disable buffer to avoid latency
   stream.rdbuf()->pubsetbuf(0, 0);
@@ -30,11 +31,11 @@ PinHandler::PinHandler(unsigned int pin) :
   init();
 }
 
-PinHandler::~PinHandler() {
+Pin::~Pin() {
   deInit();
 }
 
-void PinHandler::init() {
+void Pin::init() {
   std::string fileName;
   stream.clear();
 
@@ -75,7 +76,7 @@ void PinHandler::init() {
   DEVLOG_INFO("emBrick[PinHandler]: GPIO %d ready.\n", pin);
 }
 
-void PinHandler::deInit() {
+void Pin::deInit() {
   std::string fileName;
 
   // Prepare pin as std::string
@@ -103,7 +104,7 @@ void PinHandler::deInit() {
   DEVLOG_INFO("emBrick[PinHandler]: GPIO %d stopped.\n", pin);
 }
 
-bool PinHandler::set(bool state) {
+bool Pin::set(bool state) {
   if (!stream.is_open()) {
     fail(scmNotInitialised);
     return false;
@@ -122,9 +123,10 @@ bool PinHandler::set(bool state) {
   return true;
 }
 
-void PinHandler::fail(const char* reason) {
+void Pin::fail(const char* reason) {
   error = reason;
   DEVLOG_ERROR("emBrick[PinHandler]: %s\n", reason);
 }
 
+} /* namespace Handlers */
 } /* namespace EmBrick */

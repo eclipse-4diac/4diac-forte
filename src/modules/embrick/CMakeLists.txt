@@ -29,8 +29,8 @@ forte_add_sourcefile_hcpp(handler/spi handler/pin handler/bus)
 
 forte_add_sourcefile_hcpp(io/mapper io/handle io/observer)
 
-forte_add_sourcefile_hcpp(slave/slave)
-forte_add_sourcefile_hcpp(slave/handle)
+forte_add_sourcefile_hcpp(slave/slave slave/handle)
+forte_add_sourcefile_hcpp(slave/handles/bit slave/handles/analog slave/handles/analog10)
 
 forte_add_sourcefile_hcpp(types/BusAdapter)
 forte_add_sourcefile_hcpp(types/Master)

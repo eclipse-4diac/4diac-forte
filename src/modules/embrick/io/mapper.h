@@ -18,37 +18,36 @@
 #include <string>
 #include <forte_sync.h>
 
-namespace EmBrick {
+namespace IO {
 
-class IOHandle;
-class IOObserver;
+class Handle;
+class Observer;
 
-class IOMapper {
-DECLARE_SINGLETON (IOMapper)
+class Mapper {
+  DECLARE_SINGLETON (Mapper)
 
 public:
-  enum Direction
-    : char {
-      UnknownDirection, In, Out, InOut
+  enum Direction : char {
+    UnknownDirection, In, Out, InOut
   };
 
 public:
-  bool registerHandle(CIEC_WSTRING const &id, IOHandle* handle);
-  void deregisterHandle(IOHandle* handle);
+  bool registerHandle(CIEC_WSTRING const &id, Handle* handle);
+  void deregisterHandle(Handle* handle);
 
-  bool registerObserver(CIEC_WSTRING const &id, IOObserver* observer);
-  void deregisterObserver(IOObserver* observer);
+  bool registerObserver(CIEC_WSTRING const &id, Observer* observer);
+  void deregisterObserver(Observer* observer);
 
 private:
-  typedef std::map<std::string, IOHandle*> THandleMap;
+  typedef std::map<std::string, Handle*> THandleMap;
   THandleMap handles;
 
-  typedef std::map<std::string, IOObserver*> TObserverMap;
+  typedef std::map<std::string, Observer*> TObserverMap;
   TObserverMap observers;
 
   CSyncObject syncMutex;
 };
 
-} /* namespace EmBrick */
+} /* namespace IO */
 
 #endif /* SRC_MODULES_EMBRICK_IO_MAPPER_H_ */

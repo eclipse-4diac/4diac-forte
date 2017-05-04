@@ -18,13 +18,14 @@
 #include <forte_wstring.h>
 
 namespace EmBrick {
+namespace Handlers {
 
-class PinHandler {
-  friend class BusHandler;
+class Pin {
+  friend class Bus;
 
 protected:
-  PinHandler(unsigned int pin);
-  virtual ~PinHandler();
+  Pin(unsigned int pin);
+  virtual ~Pin();
 
   bool set(bool state);
   bool enable() {
@@ -53,6 +54,7 @@ private:
   static const char * const scmNotInitialised;
 };
 
+} /* namespace Handlers */
 } /* namespace EmBrick */
 
 #endif /* SRC_MODULES_EMBRICK_HANDLER_PIN_H_ */

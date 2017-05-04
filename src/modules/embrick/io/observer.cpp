@@ -14,23 +14,23 @@
 #include "handle.h"
 #include <devlog.h>
 
-namespace EmBrick {
+namespace IO {
 
-IOObserver::IOObserver() :
-    handle(NULL), type(CIEC_ANY::e_ANY), direction(IOMapper::UnknownDirection) {
+Observer::Observer() :
+    handle(NULL), type(CIEC_ANY::e_ANY), direction(Mapper::UnknownDirection) {
 
 }
 
-IOObserver::~IOObserver() {
-  IOMapper::getInstance().deregisterObserver(this);
+Observer::~Observer() {
+  Mapper::getInstance().deregisterObserver(this);
 }
 
-void IOObserver::onHandle(IOHandle *handle) {
+void Observer::onHandle(Handle *handle) {
   this->handle = handle;
 }
 
-void IOObserver::dropHandle() {
+void Observer::dropHandle() {
   this->handle = NULL;
 }
 
-} /* namespace EmBrick */
+} /* namespace IO */
