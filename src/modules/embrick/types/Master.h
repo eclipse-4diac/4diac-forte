@@ -39,16 +39,20 @@ private:
     return *static_cast<CIEC_UINT*>(getDI(1));
   }
 
-  CIEC_UDINT &BusInitSpeed() {
-    return *static_cast<CIEC_UDINT*>(getDI(2));
+  CIEC_UINT &BusSelectPin() {
+    return *static_cast<CIEC_UINT*>(getDI(2));
   }
 
-  CIEC_UDINT &BusLoopSpeed() {
+  CIEC_UDINT &BusInitSpeed() {
     return *static_cast<CIEC_UDINT*>(getDI(3));
   }
 
+  CIEC_UDINT &BusLoopSpeed() {
+    return *static_cast<CIEC_UDINT*>(getDI(4));
+  }
+
   CIEC_UINT &SlaveUpdateInterval() {
-    return *static_cast<CIEC_UINT*>(getDI(4));
+    return *static_cast<CIEC_UINT*>(getDI(5));
   }
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
@@ -81,7 +85,7 @@ private:
   static const int scm_nBusAdapterAdpNum = 0;
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-  FORTE_FB_DATA_ARRAY(2, 5, 2, 1)
+  FORTE_FB_DATA_ARRAY(2, 6, 2, 1)
 
   virtual void setInitialValues();
 

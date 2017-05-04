@@ -20,12 +20,13 @@ namespace FunctionBlocks {
 DEFINE_FIRMWARE_FB(Master, g_nStringIdEBMaster)
 
 const CStringDictionary::TStringId Master::scm_anDataInputNames[] = {
-    g_nStringIdQI, g_nStringIdBusInterface, g_nStringIdBusInitSpeed,
-    g_nStringIdBusLoopSpeed, g_nStringIdSlaveUpdateInterval };
+    g_nStringIdQI, g_nStringIdBusInterface, g_nStringIdBusSelectPin,
+    g_nStringIdBusInitSpeed, g_nStringIdBusLoopSpeed,
+    g_nStringIdSlaveUpdateInterval };
 
 const CStringDictionary::TStringId Master::scm_anDataInputTypeIds[] = {
-    g_nStringIdBOOL, g_nStringIdUINT, g_nStringIdUDINT, g_nStringIdUDINT,
-    g_nStringIdUINT };
+    g_nStringIdBOOL, g_nStringIdUINT, g_nStringIdUINT, g_nStringIdUDINT,
+    g_nStringIdUDINT, g_nStringIdUINT };
 
 const CStringDictionary::TStringId Master::scm_anDataOutputNames[] = {
     g_nStringIdQO, g_nStringIdSTATUS };
@@ -34,7 +35,7 @@ const CStringDictionary::TStringId Master::scm_anDataOutputTypeIds[] = {
     g_nStringIdBOOL, g_nStringIdWSTRING };
 
 const TForteInt16 Master::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID Master::scm_anEIWith[] = { 0, 2, 4, 3, 1, 255 };
+const TDataIOID Master::scm_anEIWith[] = { 0, 3, 5, 4, 1, 2, 255 };
 const CStringDictionary::TStringId Master::scm_anEventInputNames[] = {
     g_nStringIdINIT };
 
@@ -48,7 +49,7 @@ const SAdapterInstanceDef Master::scm_astAdapterInstances[] = { {
 
 const SFBInterfaceSpec Master::scm_stFBInterfaceSpec = { 1,
     scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 2,
-    scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 5,
+    scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 6,
     scm_anDataInputNames, scm_anDataInputTypeIds, 2, scm_anDataOutputNames,
     scm_anDataOutputTypeIds, 1, scm_astAdapterInstances };
 
@@ -78,6 +79,7 @@ Master::~Master() {
 
 void Master::setInitialValues() {
   BusInterface() = 1;
+  BusSelectPin() = 49;
   BusInitSpeed() = 300000;
   BusLoopSpeed() = 700000;
   SlaveUpdateInterval() = 25;
@@ -140,6 +142,7 @@ void Master::init() {
 
   BusHandler::Config config;
   config.BusInterface = BusInterface();
+  config.BusSelectPin = BusSelectPin();
   config.BusInitSpeed = BusInitSpeed();
   config.BusLoopSpeed = BusLoopSpeed();
   bus->setConfig(config);

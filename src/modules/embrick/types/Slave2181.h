@@ -28,67 +28,67 @@ private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
 
-  CIEC_WSTRING &DigitalInput1() {
+  CIEC_WSTRING &DigitalInput_1() {
     return *static_cast<CIEC_WSTRING*>(getDI(1));
   }
 
-  CIEC_WSTRING &DigitalInput2() {
+  CIEC_WSTRING &DigitalInput_2() {
     return *static_cast<CIEC_WSTRING*>(getDI(2));
   }
 
-  CIEC_WSTRING &DigitalInput3() {
+  CIEC_WSTRING &DigitalInput_3() {
     return *static_cast<CIEC_WSTRING*>(getDI(3));
   }
 
-  CIEC_WSTRING &DigitalInput4() {
+  CIEC_WSTRING &DigitalInput_4() {
     return *static_cast<CIEC_WSTRING*>(getDI(4));
   }
 
-  CIEC_WSTRING &DigitalInput5() {
+  CIEC_WSTRING &DigitalInput_5() {
     return *static_cast<CIEC_WSTRING*>(getDI(5));
   }
 
-  CIEC_WSTRING &DigitalInput6() {
+  CIEC_WSTRING &DigitalInput_6() {
     return *static_cast<CIEC_WSTRING*>(getDI(6));
   }
 
-  CIEC_WSTRING &DigitalInput7() {
+  CIEC_WSTRING &DigitalInput_7() {
     return *static_cast<CIEC_WSTRING*>(getDI(7));
   }
 
-  CIEC_WSTRING &DigitalInput8() {
+  CIEC_WSTRING &DigitalInput_8() {
     return *static_cast<CIEC_WSTRING*>(getDI(8));
   }
 
-  CIEC_WSTRING &DigitalOutput1() {
+  CIEC_WSTRING &DigitalOutput_1() {
     return *static_cast<CIEC_WSTRING*>(getDI(9));
   }
 
-  CIEC_WSTRING &DigitalOutput2() {
+  CIEC_WSTRING &DigitalOutput_2() {
     return *static_cast<CIEC_WSTRING*>(getDI(10));
   }
 
-  CIEC_WSTRING &DigitalOutput3() {
+  CIEC_WSTRING &DigitalOutput_3() {
     return *static_cast<CIEC_WSTRING*>(getDI(11));
   }
 
-  CIEC_WSTRING &DigitalOutput4() {
+  CIEC_WSTRING &DigitalOutput_4() {
     return *static_cast<CIEC_WSTRING*>(getDI(12));
   }
 
-  CIEC_WSTRING &DigitalOutput5() {
+  CIEC_WSTRING &DigitalOutput_5() {
     return *static_cast<CIEC_WSTRING*>(getDI(13));
   }
 
-  CIEC_WSTRING &DigitalOutput6() {
+  CIEC_WSTRING &DigitalOutput_6() {
     return *static_cast<CIEC_WSTRING*>(getDI(14));
   }
 
-  CIEC_WSTRING &DigitalOutput7() {
+  CIEC_WSTRING &DigitalOutput_7() {
     return *static_cast<CIEC_WSTRING*>(getDI(15));
   }
 
-  CIEC_WSTRING &DigitalOutput8() {
+  CIEC_WSTRING &DigitalOutput_8() {
     return *static_cast<CIEC_WSTRING*>(getDI(16));
   }
 

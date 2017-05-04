@@ -21,14 +21,14 @@ namespace FunctionBlocks {
 DEFINE_FIRMWARE_FB(Slave2181, g_nStringIdEBSlave2181)
 
 const CStringDictionary::TStringId Slave2181::scm_anDataInputNames[] = {
-    g_nStringIdQI, g_nStringIdDigitalInput1, g_nStringIdDigitalInput2,
-    g_nStringIdDigitalInput3, g_nStringIdDigitalInput4,
-    g_nStringIdDigitalInput5, g_nStringIdDigitalInput6,
-    g_nStringIdDigitalInput7, g_nStringIdDigitalInput8,
-    g_nStringIdDigitalOutput1, g_nStringIdDigitalOutput2,
-    g_nStringIdDigitalOutput3, g_nStringIdDigitalOutput4,
-    g_nStringIdDigitalOutput5, g_nStringIdDigitalOutput6,
-    g_nStringIdDigitalOutput7, g_nStringIdDigitalOutput8,
+    g_nStringIdQI, g_nStringIdDigitalInput_1, g_nStringIdDigitalInput_2,
+    g_nStringIdDigitalInput_3, g_nStringIdDigitalInput_4,
+    g_nStringIdDigitalInput_5, g_nStringIdDigitalInput_6,
+    g_nStringIdDigitalInput_7, g_nStringIdDigitalInput_8,
+    g_nStringIdDigitalOutput_1, g_nStringIdDigitalOutput_2,
+    g_nStringIdDigitalOutput_3, g_nStringIdDigitalOutput_4,
+    g_nStringIdDigitalOutput_5, g_nStringIdDigitalOutput_6,
+    g_nStringIdDigitalOutput_7, g_nStringIdDigitalOutput_8,
     g_nStringIdUpdateInterval };
 
 const CStringDictionary::TStringId Slave2181::scm_anDataInputTypeIds[] = {
@@ -68,24 +68,24 @@ const SFBInterfaceSpec Slave2181::scm_stFBInterfaceSpec = { 1,
 
 void Slave2181::initHandles() {
   // 8 Inputs
-  addBitHandle(IOMapper::In, DigitalInput1(), 0, 0);
-  addBitHandle(IOMapper::In, DigitalInput2(), 0, 1);
-  addBitHandle(IOMapper::In, DigitalInput3(), 0, 2);
-  addBitHandle(IOMapper::In, DigitalInput4(), 0, 3);
-  addBitHandle(IOMapper::In, DigitalInput5(), 0, 4);
-  addBitHandle(IOMapper::In, DigitalInput6(), 0, 5);
-  addBitHandle(IOMapper::In, DigitalInput7(), 0, 6);
-  addBitHandle(IOMapper::In, DigitalInput8(), 0, 7);
+  addBitHandle(IOMapper::In, DigitalInput_1(), 0, 0);
+  addBitHandle(IOMapper::In, DigitalInput_2(), 0, 1);
+  addBitHandle(IOMapper::In, DigitalInput_3(), 0, 2);
+  addBitHandle(IOMapper::In, DigitalInput_4(), 0, 3);
+  addBitHandle(IOMapper::In, DigitalInput_5(), 0, 4);
+  addBitHandle(IOMapper::In, DigitalInput_6(), 0, 5);
+  addBitHandle(IOMapper::In, DigitalInput_7(), 0, 6);
+  addBitHandle(IOMapper::In, DigitalInput_8(), 0, 7);
 
   // 8 Outputs
-  addBitHandle(IOMapper::Out, DigitalOutput1(), 0, 0);
-  addBitHandle(IOMapper::Out, DigitalOutput2(), 0, 1);
-  addBitHandle(IOMapper::Out, DigitalOutput3(), 0, 2);
-  addBitHandle(IOMapper::Out, DigitalOutput4(), 0, 3);
-  addBitHandle(IOMapper::Out, DigitalOutput5(), 0, 4);
-  addBitHandle(IOMapper::Out, DigitalOutput6(), 0, 5);
-  addBitHandle(IOMapper::Out, DigitalOutput7(), 0, 6);
-  addBitHandle(IOMapper::Out, DigitalOutput8(), 0, 7);
+  addBitHandle(IOMapper::Out, DigitalOutput_1(), 0, 0);
+  addBitHandle(IOMapper::Out, DigitalOutput_2(), 0, 1);
+  addBitHandle(IOMapper::Out, DigitalOutput_3(), 0, 2);
+  addBitHandle(IOMapper::Out, DigitalOutput_4(), 0, 3);
+  addBitHandle(IOMapper::Out, DigitalOutput_5(), 0, 4);
+  addBitHandle(IOMapper::Out, DigitalOutput_6(), 0, 5);
+  addBitHandle(IOMapper::Out, DigitalOutput_7(), 0, 6);
+  addBitHandle(IOMapper::Out, DigitalOutput_8(), 0, 7);
 }
 
 } /* namespace FunctionsBlocks */

@@ -43,6 +43,7 @@ BusHandler::BusHandler() :
 
   // Default config
   config.BusInterface = 1;
+  config.BusSelectPin = 49;
   config.BusInitSpeed = SPIHandler::DefaultSpiSpeed;
   config.BusLoopSpeed = SPIHandler::MaxSpiSpeed;
 }
@@ -120,7 +121,7 @@ void BusHandler::run() {
 bool BusHandler::init() {
   // Start handlers
   spi = new SPIHandler(config.BusInterface);
-  slaveSelect = new PinHandler(49);
+  slaveSelect = new PinHandler(config.BusSelectPin);
   slaves = new TSlaveList();
 
   // Check handlers
@@ -411,7 +412,7 @@ bool BusHandler::transfer(unsigned int target, Command cmd,
     if (!ok)
       break;
 
-    // Check checksum
+    // Validate checksum
     ok = calcChecksum(recvBuffer + sizeof(Packages::Header),
         bufferLength - sizeof(Packages::Header)) == 0;
     if (!ok) {
@@ -419,7 +420,7 @@ bool BusHandler::transfer(unsigned int target, Command cmd,
     }
   } while (!ok && ++fails < attempts);
 
-  // Check if command was transmitted succesfully
+  // Check if command was transmitted successfully
   if (!ok) {
     if (target != 0) {
       DEVLOG_DEBUG(

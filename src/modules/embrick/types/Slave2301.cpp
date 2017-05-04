@@ -20,8 +20,8 @@ namespace FunctionBlocks {
 DEFINE_FIRMWARE_FB(Slave2301, g_nStringIdEBSlave2301)
 
 const CStringDictionary::TStringId Slave2301::scm_anDataInputNames[] = {
-    g_nStringIdQI, g_nStringIdRelay1, g_nStringIdRelay2, g_nStringIdRelay3,
-    g_nStringIdRelay4, g_nStringIdRelay5, g_nStringIdRelay6,
+    g_nStringIdQI, g_nStringIdRelay_1, g_nStringIdRelay_2, g_nStringIdRelay_3,
+    g_nStringIdRelay_4, g_nStringIdRelay_5, g_nStringIdRelay_6,
     g_nStringIdUpdateInterval };
 
 const CStringDictionary::TStringId Slave2301::scm_anDataInputTypeIds[] =
@@ -56,13 +56,13 @@ const SFBInterfaceSpec Slave2301::scm_stFBInterfaceSpec = { 1,
     scm_anDataOutputTypeIds, 2, scm_astAdapterInstances };
 
 void Slave2301::initHandles() {
-  // 8 Relays
-  addBitHandle(IOMapper::Out, Relay1(), 0, 0);
-  addBitHandle(IOMapper::Out, Relay2(), 0, 1);
-  addBitHandle(IOMapper::Out, Relay3(), 0, 2);
-  addBitHandle(IOMapper::Out, Relay4(), 0, 3);
-  addBitHandle(IOMapper::Out, Relay5(), 0, 4);
-  addBitHandle(IOMapper::Out, Relay6(), 0, 5);
+  // 6 Relays
+  addBitHandle(IOMapper::Out, Relay_1(), 0, 0);
+  addBitHandle(IOMapper::Out, Relay_2(), 0, 1);
+  addBitHandle(IOMapper::Out, Relay_3(), 0, 2);
+  addBitHandle(IOMapper::Out, Relay_4(), 0, 3);
+  addBitHandle(IOMapper::Out, Relay_5(), 0, 4);
+  addBitHandle(IOMapper::Out, Relay_6(), 0, 5);
 }
 
 } /* namespace FunctionsBlocks */

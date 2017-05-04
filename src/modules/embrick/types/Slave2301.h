@@ -28,27 +28,27 @@ private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
 
-  CIEC_WSTRING &Relay1() {
+  CIEC_WSTRING &Relay_1() {
     return *static_cast<CIEC_WSTRING*>(getDI(1));
   }
 
-  CIEC_WSTRING &Relay2() {
+  CIEC_WSTRING &Relay_2() {
     return *static_cast<CIEC_WSTRING*>(getDI(2));
   }
 
-  CIEC_WSTRING &Relay3() {
+  CIEC_WSTRING &Relay_3() {
     return *static_cast<CIEC_WSTRING*>(getDI(3));
   }
 
-  CIEC_WSTRING &Relay4() {
+  CIEC_WSTRING &Relay_4() {
     return *static_cast<CIEC_WSTRING*>(getDI(4));
   }
 
-  CIEC_WSTRING &Relay5() {
+  CIEC_WSTRING &Relay_5() {
     return *static_cast<CIEC_WSTRING*>(getDI(5));
   }
 
-  CIEC_WSTRING &Relay6() {
+  CIEC_WSTRING &Relay_6() {
     return *static_cast<CIEC_WSTRING*>(getDI(6));
   }
 

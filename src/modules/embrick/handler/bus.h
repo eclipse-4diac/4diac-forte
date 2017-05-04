@@ -46,6 +46,7 @@ DECLARE_SINGLETON(BusHandler)
 public:
   struct Config {
     unsigned int BusInterface;
+    unsigned int BusSelectPin;
     unsigned long BusInitSpeed;
     unsigned long BusLoopSpeed;
   };
