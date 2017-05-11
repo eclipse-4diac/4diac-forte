@@ -21,23 +21,23 @@ AnalogSlaveHandle::AnalogSlaveHandle(Mapper::Direction direction,
 }
 
 void AnalogSlaveHandle::set(const CIEC_ANY &value) {
-  slave->syncMutex.lock();
+  updateMutex->lock();
 
   *(buffer + offset + 1) = static_cast<const CIEC_DWORD&>(value) % 256;
   *(buffer + offset) = (unsigned char) (static_cast<const CIEC_DWORD&>(value)
       / 256);
 
-  slave->syncMutex.unlock();
+  updateMutex->unlock();
 
   SlaveHandle::set(value);
 }
 
 void AnalogSlaveHandle::get(CIEC_ANY &value) {
-  slave->syncMutex.lock();
+  updateMutex->lock();
 
   static_cast<CIEC_DWORD&>(value) = getValue(buffer);
 
-  slave->syncMutex.unlock();
+  updateMutex->unlock();
 }
 
 bool AnalogSlaveHandle::equal(unsigned char* oldBuffer) {

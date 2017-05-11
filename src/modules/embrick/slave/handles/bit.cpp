@@ -21,24 +21,24 @@ BitSlaveHandle::BitSlaveHandle(Mapper::Direction direction, uint8_t offset,
 }
 
 void BitSlaveHandle::set(const CIEC_ANY &state) {
-  slave->syncMutex.lock();
+  updateMutex->lock();
 
   if (static_cast<const CIEC_BOOL&>(state))
     *(buffer + offset) = (uint8_t) (*(buffer + offset) | mask);
   else
     *(buffer + offset) = (uint8_t) (*(buffer + offset) & ~mask);
 
-  slave->syncMutex.unlock();
+  updateMutex->unlock();
 
   SlaveHandle::set(state);
 }
 
 void BitSlaveHandle::get(CIEC_ANY &state) {
-  slave->syncMutex.lock();
+  updateMutex->lock();
 
   static_cast<CIEC_BOOL&>(state) = (*(buffer + offset) & mask) != 0;
 
-  slave->syncMutex.unlock();
+  updateMutex->unlock();
 }
 
 bool BitSlaveHandle::equal(unsigned char* oldBuffer) {

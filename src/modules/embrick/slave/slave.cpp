@@ -88,15 +88,15 @@ Slave* Slave::sendInit(int address) {
 int Slave::update() {
   // Send update request to bus
   if (!bus->transfer(address, Data, updateSendImage, dataSendLength,
-      updateReceiveImage, dataReceiveLength, &status, &syncMutex)) {
+      updateReceiveImage, dataReceiveLength, &status, &updateMutex)) {
     updateErrorCounter++;
     if (updateErrorCounter % 10 == 0)
       DEVLOG_ERROR("%d %d\n", address, updateErrorCounter);
     return updateErrorCounter <= MaxUpdateErrors ? 0 : -1;
   }
 
-// Handle the received image
-  syncMutex.lock();
+  // Handle the received image
+  handleMutex.lock();
   TSlaveHandleList::Iterator itEnd = inputs.end();
   for (TSlaveHandleList::Iterator it = inputs.begin(); it != itEnd; ++it)
     if ((*it)->hasObserver() && !(*it)->equal(updateReceiveImageOld)) {
@@ -106,7 +106,7 @@ int Slave::update() {
         bus->startNewEventChain((ProcessInterface*) (*it)->getObserver());
       }
     }
-  syncMutex.unlock();
+  handleMutex.unlock();
 
   // Clone current image to old image
   memcpy(updateReceiveImageOld, updateReceiveImage, dataReceiveLength);
@@ -129,7 +129,7 @@ void Slave::forceUpdate() {
 }
 
 void Slave::dropHandles() {
-  syncMutex.lock();
+  handleMutex.lock();
 
   Mapper& mapper = Mapper::getInstance();
 
@@ -147,13 +147,13 @@ void Slave::dropHandles() {
   inputs.clearAll();
   outputs.clearAll();
 
-  syncMutex.unlock();
+  handleMutex.unlock();
 }
 
 void Slave::addHandle(TSlaveHandleList* list, SlaveHandle* handle) {
-  syncMutex.lock();
+  handleMutex.lock();
   list->push_back(handle);
-  syncMutex.unlock();
+  handleMutex.unlock();
 
   // TODO Maybe send indication event after connecting
 }

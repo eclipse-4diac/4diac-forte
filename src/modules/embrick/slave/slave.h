@@ -90,7 +90,7 @@ public:
 
   unsigned char *updateSendImage;
   unsigned char *updateReceiveImage;
-  CSyncObject syncMutex;
+  CSyncObject updateMutex;
 
 protected:
   static Slave* sendInit(int address);
@@ -111,6 +111,7 @@ protected:
   int updateErrorCounter;
   static const int MaxUpdateErrors;
 
+  CSyncObject handleMutex;
   typedef CSinglyLinkedList<SlaveHandle *> TSlaveHandleList;
   TSlaveHandleList inputs;
   TSlaveHandleList outputs;

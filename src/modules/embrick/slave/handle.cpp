@@ -18,7 +18,8 @@ namespace EmBrick {
 
 SlaveHandle::SlaveHandle(Mapper::Direction direction, uint8_t offset,
     Handlers::Slave *slave) :
-    Handle(direction), offset(offset), slave(slave) {
+    Handle(direction), offset(offset), slave(slave), updateMutex(
+        &slave->updateMutex) {
   if (direction == Mapper::In)
     buffer = slave->updateReceiveImage;
   else if (direction == Mapper::Out)

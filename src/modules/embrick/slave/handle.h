@@ -50,6 +50,7 @@ protected:
   unsigned char* buffer;
   const uint8_t offset;
   Handlers::Slave* slave;
+  CSyncObject *updateMutex;
 };
 
 } /* namespace Handles */

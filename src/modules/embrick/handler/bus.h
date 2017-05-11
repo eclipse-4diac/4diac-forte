@@ -32,8 +32,27 @@ namespace EmBrick {
 namespace Handlers {
 
 enum Command {
+  /**
+   * Initializes the slave and assigns an individual address to it.
+   * The slave provides hardware specifications and length information for the data exchange.
+   * The master sends configuration parameter to synchronize transfer timings.
+   */
   Init = 2,
+
+  /**
+   * It enables the slave select signal of the addressed slave.
+   * The subsequent slave waits for initialization.
+   */
   SelectNextSlave = 3,
+
+  /**
+   * It sets and gets the current state, called process image, of the slave.
+   * The amount of exchanged data bytes depends on the functionality of the slave.
+   * If a slave, for example, has 8 digital outputs, the master sends 1 Byte (1 Bit for each digital output) to set the slave state.
+   * Likewise if a slave reads 8 analog values, the slave sends 16 Bytes (2 Bytes for each value) to the master.
+   * The structure of the process image is specified in the emBRICK products manual.
+   * The Data command should be performed at least 20 times per second.
+   */
   Data = 10,
 };
 
