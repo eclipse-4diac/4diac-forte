@@ -249,19 +249,10 @@ EMGMResponse CResource::queryAllFBTypes(CIEC_STRING & paValue){
 	if(fbTypeRunner != 0){
 		retVal = e_RDY;
 		for(; fbTypeRunner != 0; fbTypeRunner = fbTypeRunner->m_poNext){
-			const char *acTypeBuf = CStringDictionary::getInstance().get(fbTypeRunner->getTypeNameId());
+		  paValue.append(CStringDictionary::getInstance().get(fbTypeRunner->getTypeNameId()));
 			if(fbTypeRunner->m_poNext != 0){
-				char buf[2+strlen(acTypeBuf)];
-				strcpy(buf, acTypeBuf);
-				strcat(buf, ", ");
-				paValue.append(buf);
+				paValue.append(", ");
 			}
-			else{
-				char buf[strlen(acTypeBuf)];
-				strcpy(buf, acTypeBuf);
-				paValue.append(buf);
-			}
-
 		}
 	}
 	return retVal;
@@ -286,19 +277,10 @@ EMGMResponse CResource::queryAllAdapterTypes(CIEC_STRING & paValue){
 	if(adapterTypeRunner != 0){
 		retVal = e_RDY;
 		for(; adapterTypeRunner != 0; adapterTypeRunner = adapterTypeRunner->m_poNext){
-			const char *acTypeBuf = CStringDictionary::getInstance().get(adapterTypeRunner->getTypeNameId());
+		  paValue.append(CStringDictionary::getInstance().get(adapterTypeRunner->getTypeNameId()));
 			if(adapterTypeRunner->m_poNext != 0){
-				char buf[2+strlen(acTypeBuf)];
-				strcpy(buf, acTypeBuf);
-				strcat(buf, ", ");
-				paValue.append(buf);
+				paValue.append(", ");
 			}
-			else{
-				char buf[strlen(acTypeBuf)];
-				strcpy(buf, acTypeBuf);
-				paValue.append(buf);
-			}
-
 		}
 	}
 	return retVal;
