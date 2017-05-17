@@ -13,7 +13,7 @@
 #ifndef _TRIGGER_SERVICE_CLIENT_H_
 #define _TRIGGER_SERVICE_CLIENT_H_
 
-#include <funcbloc.h>
+#include <esfb.h>
 #include <forte_bool.h>
 #include <forte_string.h>
 #include <ros/ros.h>
@@ -21,7 +21,7 @@
 
 class CServiceCallManager;
 
-class FORTE_TRIGGER_SERVICE_CLIENT : public CFunctionBlock{
+class FORTE_TRIGGER_SERVICE_CLIENT : public CEventSourceFB{
   DECLARE_FIRMWARE_FB(FORTE_TRIGGER_SERVICE_CLIENT)
 
   private:
@@ -96,7 +96,7 @@ class FORTE_TRIGGER_SERVICE_CLIENT : public CFunctionBlock{
     void callService();
     void waitForServer();
 
-    FUNCTION_BLOCK_CTOR(FORTE_TRIGGER_SERVICE_CLIENT), m_Initiated(false) , m_RosNamespace(""), m_RosMsgName(""){
+    EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_TRIGGER_SERVICE_CLIENT), m_Initiated(false) , m_RosNamespace(""), m_RosMsgName(""){
     };
 
     virtual ~FORTE_TRIGGER_SERVICE_CLIENT(){};

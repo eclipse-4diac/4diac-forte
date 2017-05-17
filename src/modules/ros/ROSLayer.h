@@ -19,7 +19,7 @@
 
 #include <comlayer.h>
 #include <extevhan.h>
-#include <thread.h>
+#include <forte_thread.h>
 #include <singlet.h>
 
 #include <string>

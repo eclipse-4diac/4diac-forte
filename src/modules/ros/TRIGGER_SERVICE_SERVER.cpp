@@ -83,7 +83,7 @@ bool FORTE_TRIGGER_SERVICE_SERVER::triggerCallback(std_srvs::Trigger::Request &p
 
   // is a response available
   ros::Rate r(2); //1Hz
-  while(!mResponseAvailable){
+  while(!m_ResponseAvailable){
     r.sleep();
   }
 
