@@ -12,8 +12,8 @@
 #ifndef SRC_STDFBLIB_IO_CONFIGFB_CONTROLLER_H_
 #define SRC_STDFBLIB_IO_CONFIGFB_CONTROLLER_H_
 
-#include <io/device/controller.h>
-#include "base.h"
+#include <io/device/io_controller.h>
+#include "io_base.h"
 
 namespace IO {
 namespace ConfigurationFB {

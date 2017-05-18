@@ -11,15 +11,11 @@
 # *******************************************************************************/
 
 #############################################################################
-# IO
+# IO Configuration FBs
 #############################################################################
 
-set(FORTE_IO OFF CACHE BOOL "Enable IO Modules")
-  if(NOT FORTE_IO)
-    return()
-  endif(NOT FORTE_IO)
+SET(SOURCE_GROUP ${SOURCE_GROUP}\\configFB)
 
-SET(SOURCE_GROUP ${SOURCE_GROUP}\\io)
-
-add_subdirectory(device)
-add_subdirectory(configFB)
+forte_add_sourcefile_hcpp(io_base io_controller)
+# forte_add_sourcefile_hcpp(multi/io_master)
+# forte_add_sourcefile_hcpp(multi/io_adapter)

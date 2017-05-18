@@ -9,7 +9,7 @@
  *    Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "../configFB/base.h"
+#include "io_base.h"
 
 namespace IO {
 namespace ConfigurationFB {
