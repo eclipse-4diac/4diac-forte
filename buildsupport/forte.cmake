@@ -200,6 +200,13 @@ MACRO(forte_add_module NAME DISCRIPTION)
   endif(NOT FORTE_MODULE_${NAME})
 ENDMACRO(forte_add_module)
 
+#MACRO(forte_add_io NAME DIRECTORY DESCRIPTION)
+MACRO(forte_add_io NAME DESCRIPTION)
+  set(FORTE_IO_${NAME} OFF CACHE BOOL "${DESCRIPTION}")
+  if(NOT FORTE_IO_${NAME})
+    return()
+  endif(NOT FORTE_IO_${NAME})
+ENDMACRO(forte_add_io)
 
 FUNCTION(forte_create_modules_file FORTE_MODULE_DIR)
   INCLUDE(${FORTE_BUILDSUPPORT_DIRECTORY}/generate_modules_cmake_file.cmake)
