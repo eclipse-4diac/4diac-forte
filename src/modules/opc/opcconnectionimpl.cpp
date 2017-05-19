@@ -72,7 +72,7 @@ void COpcConnectionImpl::OnDataChange(COPCGroup & group, CAtlMap<COPCItem *, OPC
     OPCItemData *itemData = changes.GetValueAt(pos);
     COPCItem *item = changes.GetNextKey(pos);
 
-    itemList.push_back(new SOpcItemData((LPCTSTR) (item->getName()), itemData->vDataValue));
+    itemList.push_back(new SOpcItemData((LPCTSTR) (item->getName()), (Variant) itemData->vDataValue));
   }
 
   const char *c_groupName = (const char*) group.getName();
