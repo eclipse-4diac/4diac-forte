@@ -47,7 +47,7 @@ int CIEC_LREAL::fromString(const char *pa_pacValue){
 }
 
 int CIEC_LREAL::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
-  int nRetVal = -1;
+  int nRetVal;
 #ifdef WIN32
   nRetVal = _snprintf(pa_pacValue, pa_nBufferSize, "%.*g", 15, getTDFLOAT());
 #else

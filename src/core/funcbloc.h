@@ -362,7 +362,7 @@ class CFunctionBlock{
     }
     ;
 
-    bool getUpdated(){
+    bool getUpdated() const{
       return m_updated;
     }
     ;
@@ -499,7 +499,7 @@ class CFunctionBlock{
 
     void freeAllData();
 
-    bool getManagesFBData(){
+    bool getManagesFBData() const{
       return m_bManagesFBData;
     }
 

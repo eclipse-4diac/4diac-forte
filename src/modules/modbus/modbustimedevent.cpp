@@ -40,7 +40,7 @@ void CModbusTimedEvent::deactivate(){
   m_bIsStarted = false;
 }
 
-bool CModbusTimedEvent::readyToExecute(){
+bool CModbusTimedEvent::readyToExecute() const{
   SForteTime currentTime = CTimerHandler::sm_poFORTETimer->getForteTime();
   if (m_oUpdateInterval > currentTime) {
     return false;

@@ -190,7 +190,7 @@ bool DEV_MGR::parseFBData(char *pa_acRequestPartLeft, forte::core::SManagementCM
 }
 
 int DEV_MGR::parseIdentifier(char *paIdentifierStart, forte::core::TNameIdentifier &paIdentifier){
-  for(char *runner = paIdentifierStart, *start = paIdentifierStart; '\0' != runner; ++runner){
+  for(char *runner = paIdentifierStart, *start = paIdentifierStart; '\0' != *runner; ++runner){
     if('.' == *runner){
       *runner = '\0';
       if(!paIdentifier.pushBack(CStringDictionary::getInstance().insert(start))){
@@ -578,7 +578,6 @@ void DEV_MGR::loadForteBootFile(){
     //we could open the file try to load it
     int nLineCount = 1;
     EMGMResponse eResp;
-    char *cmdStart;
     char acLineBuf[cg_unBootFileLineBufSize]; //TODO maybe move it out of the stack
 
     while(0 != fgets(acLineBuf, cg_unBootFileLineBufSize, bootfile)){
@@ -591,7 +590,7 @@ void DEV_MGR::loadForteBootFile(){
         m_poDevice.executeMGMCommand(m_stCommand);
         break;
       }
-      cmdStart = strchr(acLineBuf, ';');
+      char *cmdStart = strchr(acLineBuf, ';');
       if(0 == cmdStart){
         DEVLOG_ERROR("Boot file line does not contain separating ';'. Line: %d\n", nLineCount);
         break;
@@ -664,8 +663,8 @@ EMGMResponse DEV_MGR::parseAndExecuteMGMCommand(char *pa_acDest, char *pa_acComm
 #ifdef FORTE_SUPPORT_QUERY_CMD
         case cg_nMGM_CMD_Query_Group: // query something
           parseQueryData(acRequestPartLeft, m_stCommand);
-#endif
           break;
+#endif
         default:
           break;
       }

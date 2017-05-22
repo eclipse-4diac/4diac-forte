@@ -30,7 +30,7 @@ DWORD WINAPI CWin32Thread::threadFunction(LPVOID arguments){
 }
 
 CWin32Thread::CWin32Thread(long pa_nStackSize) :
-    m_nThreadHandle(0), m_nStackSize(pa_nStackSize), m_nThreadID(~0x0ul){
+    m_nThreadHandle(0), m_nThreadID(~0x0ul), m_nStackSize(pa_nStackSize){
 }
 
 CWin32Thread::~CWin32Thread(){

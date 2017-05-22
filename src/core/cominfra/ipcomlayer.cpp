@@ -25,6 +25,7 @@ CIPComLayer::CIPComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB) :
         m_nListeningID(CIPComSocketHandler::scm_nInvalidSocketDescriptor),
         m_eInterruptResp(e_Nothing),
         m_unBufFillSize(0){
+  memset(m_acRecvBuffer, 0, sizeof(m_acRecvBuffer)); //TODO change this to  m_acRecvBuffer{0} in the extended list when fully switching to C++11
 }
 
 CIPComLayer::~CIPComLayer(){

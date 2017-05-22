@@ -196,7 +196,7 @@ class CIEC_ANY{
     ;
 #endif
 
-    bool isForced(){
+    bool isForced() const{
       return m_bForced;
     }
 

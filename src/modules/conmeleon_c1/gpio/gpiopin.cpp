@@ -45,7 +45,7 @@ bool CGpioPin::sysfsExportPin() const {
 
 	return writeToFile(ExportFilePath, &szPinNr[0]);
 
-	m_GlobalFileMutex.unlock();
+	//m_GlobalFileMutex.unlock();
 	// TODO: if an exception is thrown within writeToFile(), the mutex might be left locked
 }
 
@@ -130,7 +130,7 @@ bool CGpioPin::read() const {
 
 			m_LocalFileMutex.unlock();
 
-			return ((sLine != "0")^m_Inverted);
+			return ((sLine != "0") ^ (m_Inverted));
 		}
 
 	}

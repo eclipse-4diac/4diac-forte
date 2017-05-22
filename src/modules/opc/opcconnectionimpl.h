@@ -57,7 +57,7 @@ class COpcConnectionImpl : public IAsynchDataCallback{
         bool m_bWriteGroupAdded;
 
         SOpcGroupSettings(const char* pa_acGroupName, unsigned long pa_nReqUpdateRate, float pa_nDeadBand) :
-            m_acGroupName(pa_acGroupName), m_nReqUpdateRate(pa_nReqUpdateRate), m_nDeadBand(pa_nDeadBand), m_bReadGroupAdded(false), m_bWriteGroupAdded(false), m_nRevisedUpdateRate(0), m_pOpcGroupRead(0), m_pOpcGroupWrite(0){
+          m_pOpcGroupRead(0), m_pOpcGroupWrite(0), m_acGroupName(pa_acGroupName), m_nReqUpdateRate(pa_nReqUpdateRate), m_nRevisedUpdateRate(0), m_nDeadBand(pa_nDeadBand), m_bReadGroupAdded(false), m_bWriteGroupAdded(false){
         }
     };
 
