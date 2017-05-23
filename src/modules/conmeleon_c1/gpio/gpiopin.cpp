@@ -13,6 +13,7 @@
 #include "../util/fileres.h"
 #include <string>
 #include <iostream>
+#include "../../../core/utils/criticalregion.h"
 
 namespace CONMELEON {
 
@@ -40,12 +41,14 @@ bool CGpioPin::sysfsExportPin() const {
 	/* protect sysfs export file from multiple access
 	 * all class instances need access to the same export file, that's why a global class mutex needs to be used
 	 */
+	bool bRet;
+	{
+      CCriticalRegion criticalRegion(m_GlobalFileMutex);
+      bRet = writeToFile(ExportFilePath, &szPinNr[0]);
+	}
 
-	m_GlobalFileMutex.lock();
+	return bRet;
 
-	return writeToFile(ExportFilePath, &szPinNr[0]);
-
-	//m_GlobalFileMutex.unlock();
 	// TODO: if an exception is thrown within writeToFile(), the mutex might be left locked
 }
 
@@ -55,13 +58,13 @@ bool CGpioPin::sysfsUnexportPin() const {
 
 	sprintf(szPinNr, "%d", m_Nr);
 
-	m_GlobalFileMutex.lock(); /* protect sysfs unexport file from multiple access */
+  bool bRet;
+  {
+    CCriticalRegion criticalRegion(m_GlobalFileMutex);
+    bRet = writeToFile(UnexportFilePath, &szPinNr[0]);
+  }
 
-	bool bRet = writeToFile(UnexportFilePath, &szPinNr[0]);
-
-	m_GlobalFileMutex.unlock();
 	return bRet;
-
 }
 
 bool CGpioPin::sysfsSetPinDirection(EPinDirection enDir) {
@@ -74,17 +77,17 @@ bool CGpioPin::sysfsSetPinDirection(EPinDirection enDir) {
 	/* only this class instance needs access to the sysfs direction file
 	 * we can use the local mutex for protection
 	 */
-	m_LocalFileMutex.lock();
+  {
+    CCriticalRegion criticalRegion(m_LocalFileMutex);
 
-	if ((enDir == input) && (writeToFile(&szFilename[0], "in"))) {
-		bRet = true;
-	}
+    if((enDir == input) && (writeToFile(&szFilename[0], "in"))){
+      bRet = true;
+    }
 
-	if ((enDir == output) && (writeToFile(&szFilename[0], "out"))) {
-		bRet = true;
-	}
-
-	m_LocalFileMutex.unlock();
+    if((enDir == output) && (writeToFile(&szFilename[0], "out"))){
+      bRet = true;
+    }
+  }
 
 	return bRet;
 }
@@ -98,11 +101,12 @@ bool CGpioPin::sysfsOpenValueFileStream(EPinDirection enDir) {
 	/* only this class instance needs access to the sysfs value file
 	 * we can use the local mutex for protection
 	 */
-	m_LocalFileMutex.lock();
+  {
+    CCriticalRegion criticalRegion(m_LocalFileMutex);
 
-	m_PinValueStream.open(szFilename, ((enDir == input) ? std::ios_base::in : std::ios_base::out));
+    m_PinValueStream.open(szFilename, ((enDir == input) ? std::ios_base::in : std::ios_base::out));
 
-	m_LocalFileMutex.unlock();
+  }
 
 	return m_PinValueStream.is_open();
 }
@@ -120,15 +124,13 @@ bool CGpioPin::read() const {
 
 			std::string sLine;
 
-			m_LocalFileMutex.lock();
+      CCriticalRegion criticalRegion(m_LocalFileMutex);
 
-			/* set to beginning of file, just to be sure */
-			m_PinValueStream.clear();
-			m_PinValueStream.seekg(0, std::ios::beg);
+      /* set to beginning of file, just to be sure */
+      m_PinValueStream.clear();
+      m_PinValueStream.seekg(0, std::ios::beg);
 
-			m_PinValueStream >> sLine;
-
-			m_LocalFileMutex.unlock();
+      m_PinValueStream >> sLine;
 
 			return ((sLine != "0") ^ (m_Inverted));
 		}
@@ -140,14 +142,10 @@ bool CGpioPin::read() const {
 void CGpioPin::write(bool bValue) {
 
 	if (m_Valid && (m_Direction == output)) {
-
-		m_LocalFileMutex.lock();
-
-		if (m_PinValueStream.is_open()) {
-			m_PinValueStream << (bValue ? "1" : "0") << std::flush;
-		}
-
-		m_LocalFileMutex.unlock();
+    CCriticalRegion criticalRegion(m_LocalFileMutex);
+    if(m_PinValueStream.is_open()){
+      m_PinValueStream << (bValue ? "1" : "0") << std::flush;
+    }
 	}
 }
 
