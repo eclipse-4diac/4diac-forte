@@ -10,7 +10,7 @@
  *  Alois Zoitl - adapted architecture class for generic use
  *******************************************************************************/
 
-#include "forte_architecture.h"
+#include "../forte_architecture.h"
 #include "forteinit.h"
 
 #include "rcXSocketInterface.h"
@@ -33,7 +33,7 @@ extern "C" void _kill(int ) { while(1) ; }
 
 extern "C" int _exit() { return 0; }
 
-bool CForteArchitecture::initialized = false;
+bool CForteArchitecture::mInitialized = false;
 
 typedef void (*func_ptr)(void);
 

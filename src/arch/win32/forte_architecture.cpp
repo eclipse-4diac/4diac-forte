@@ -12,6 +12,8 @@
 #include "../forte_architecture.h"
 #include <sockhand.h>
 
+bool CForteArchitecture::mInitialized = false;
+
 bool CForteArchitecture::initialize() {
 	if (!mInitialized) {
 		// Windows Socket Startupcode
