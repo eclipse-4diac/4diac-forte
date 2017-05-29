@@ -15,7 +15,7 @@
 
 CWin32SerComLayer::CWin32SerComLayer(forte::com_infra::CComLayer* pa_poUpperLayer,
     forte::com_infra::CCommFB * pa_poFB) :
-    forte::com_infra::CComLayer(pa_poUpperLayer, pa_poFB), m_unBufFillSize(0), m_eInterruptResp(forte::com_infra::EComResponse::e_Nothing)  {
+    forte::com_infra::CComLayer(pa_poUpperLayer, pa_poFB), m_eInterruptResp(forte::com_infra::EComResponse::e_Nothing), m_unBufFillSize(0) {
   memset(m_acRecvBuffer, 0, sizeof(m_acRecvBuffer)); //TODO change this to  m_acRecvBuffer{0} in the extended list when fully switching to C++11
   memset(m_acTerminationSymbol, 0, sizeof(m_acTerminationSymbol)); //TODO change this to  m_acTerminationSymbol{0} in the extended list when fully switching to C++11
   m_hSerial = INVALID_HANDLE_VALUE;

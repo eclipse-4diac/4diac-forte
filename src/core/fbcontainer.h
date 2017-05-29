@@ -1,5 +1,5 @@
 /*******************************************************************************
-  * Copyright (c) 2016 fortiss GmbH
+  * Copyright (c) 2015 fortiss GmbH
   * All rights reserved. This program and the accompanying materials
   * are made available under the terms of the Eclipse Public License v1.0
   * which accompanies this distribution, and is available at
@@ -8,7 +8,6 @@
   * Contributors:
   *    Alois Zoitl
   *      - initial implementation and rework communication infrastructure
-  *    Martin Jobst - adapt for LUA integration
   *******************************************************************************/
 #ifndef _FBCONTAINER_H_
 #define _FBCONTAINER_H_
@@ -26,7 +25,7 @@ namespace forte {
         CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer *paParent);
         virtual ~CFBContainer();
 
-        CStringDictionary::TStringId getName(){
+        CStringDictionary::TStringId getName() const{
           return mContainerName;
         }
 

@@ -67,7 +67,7 @@ class CExternalEventHandler{
     ;
   protected:
 
-    int getExternalEventHandlerID(){
+    int getExternalEventHandlerID() const{
       return m_nExtEvHandID;
     }
 
