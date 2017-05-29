@@ -384,6 +384,7 @@ UA_StatusCode COPC_UA_Handler::createVariableNode(const UA_NodeId *parentNode, c
 	var_attr.userAccessLevel = UA_ACCESSLEVELMASK_READ;
 	if (allowWrite)
 		var_attr.userAccessLevel |= UA_ACCESSLEVELMASK_WRITE;
+	var_attr.accessLevel = var_attr.userAccessLevel;
 	UA_Variant_setScalar(&var_attr.value, varValue, varType);
 
 	UA_NodeId *returnNodeId = UA_NodeId_new();
