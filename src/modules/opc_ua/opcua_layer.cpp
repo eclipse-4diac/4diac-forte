@@ -367,14 +367,19 @@ UA_StatusCode COPC_UA_Layer::onServerMethodCall(void *methodHandle, const UA_Nod
 #endif
 
 	COPC_UA_Layer *self = static_cast<COPC_UA_Layer *>(methodHandle);
+
+#ifndef VXWORKS
 #ifdef __GNUC__
-#pragma GCC diagnostic push
+#pragma GCC diagnostic push //TODO: are these pragmas really necessary?
 #pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
 #endif
 	// other thready may currently create nodes for the same path, thus mutex
 	CCriticalRegion criticalRegion(self->mutexServerMethodCall);
+#ifndef VXWORKS
 #ifdef __GNUC__
 #pragma GCC diagnostic pop
+#endif
 #endif
 	self->serverMethodCallResultReady = false;
 

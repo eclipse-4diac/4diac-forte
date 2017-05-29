@@ -242,16 +242,20 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char *nodePath, bool cr
 	request.browsePathsSize = folderCnt;
 
 	{
-		
+#ifndef VXWORKS
 #ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
+#endif
 		// other thready may currently create nodes for the same path, thus mutex
 		CCriticalRegion criticalRegion(this->getNodeForPathMutex);
+#ifndef VXWORKS
 #ifdef __GNUC__
 #pragma GCC diagnostic pop
 #endif
+#endif
+
 		UA_TranslateBrowsePathsToNodeIdsResponse response = UA_Client_Service_translateBrowsePathsToNodeIds(client, request);
 
 		if (response.responseHeader.serviceResult != UA_STATUSCODE_GOOD) {
