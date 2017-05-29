@@ -24,7 +24,7 @@ class CVxWorksThread : public forte::arch::CThreadBase {
      *  Does all the necessary steps in order to get the thread running with the start()-method
      *  @param pa_nStackSize the Size in bytes of the stack the thread is allowed to use. 128 elements is the minimum, and each element has 4 bytes. A 0 sets the size to the minimum
      */
-    explicit CVxWorksThread(long pa_nStackSize = 4096); //TODO: Check default value
+    explicit CVxWorksThread(long pa_nStackSize = 20000); //TODO: Check default value. Calling the mlpi connect makes the stack go up to 15796
 
     /*! \brief Stops and destroys thread.
      *

@@ -15,23 +15,12 @@
 #include <mlpiApiLib.h>
 #include <mlpiLogicLib.h>
 #include <util/wchar16.h>
-//#include <util/mlpiLogicHelper.h>
 
 const char * const CMLPIFaceProcessInterface::scmOK = "OK";
 const char * const CMLPIFaceProcessInterface::scmAPINotInitialised = "API not initialized";
 const char * const CMLPIFaceProcessInterface::scmFBNotInitialised = "FB not initialized";
 const char * const CMLPIFaceProcessInterface::scmCallToApiFailed = "Call to API Failed";
 
-/*
- * localhost doesn't connect to MLPI.
- * 192.168.1.110 works perfectly, I had once errors saying that access not granted or something
- * 192.168.1.110 -user=indraworks -password=indraworks works perfectly
- * LOCALHOST -user=indraworks -password=indraworks connects to MLPI but when writing the outputs from flipflop, the PLC goes crazy, all blinking in red
- * LOCALHOST same as before
- * Using MLPI_LOCALHOST direclty in the APIConnect call, same as before
- */
-
-const char* const cgConnectionConfig = "10.200.4.120 -user=indraworks -password=indraworks";
 MLPIHANDLE CMLPIFaceProcessInterface::smConnection  = MLPI_INVALIDHANDLE;
 
 CMLPIFaceProcessInterface::CMLPIFaceProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
@@ -57,22 +46,15 @@ void CMLPIFaceProcessInterface::disconnectFromMLPI(){ //TODO: this is never call
 bool CMLPIFaceProcessInterface::connectToMLPI(){
   smConnection = MLPI_INVALIDHANDLE;
   bool retVal = false;
-  WCHAR16 *convertedConfig = new WCHAR16[strlen(cgConnectionConfig) + 1];
-  if (0 != mbstowcs16(convertedConfig, cgConnectionConfig, strlen(cgConnectionConfig) + 1)){ //+1 for the copying the null terminator
-    DEVLOG_INFO("Trying to connect to the Api\n");
-    //MLPIRESULT result = mlpiApiConnect("localhost -user=indraworks -password=indraworks", &smConnection);
-    MLPIRESULT result = mlpiApiConnect(convertedConfig, &smConnection);
-    if(!MLPI_FAILED(result)){
-      DEVLOG_INFO("Connection to the API succeed\n");
-      retVal = true;
-    }
-    else{
-      DEVLOG_ERROR("Failed to connect to the API: 0x%08X\n", (unsigned ) result);
-    }
-  }else{
-    DEVLOG_ERROR("Fail transforming the connection name\n");
+  DEVLOG_INFO("Trying to connect to the Api\n");
+  MLPIRESULT result = mlpiApiConnect(MLPI_LOCALHOST, &smConnection);
+  if(!MLPI_FAILED(result)){
+    DEVLOG_INFO("Connection to the API succeed\n");
+    retVal = true;
   }
-  delete[] convertedConfig;
+  else{
+    DEVLOG_ERROR("Failed to connect to the API: 0x%08X\n", (unsigned ) result);
+  }
   return retVal;
 }
 

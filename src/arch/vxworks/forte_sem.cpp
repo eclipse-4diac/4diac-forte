@@ -16,7 +16,7 @@ namespace forte {
   namespace arch {
 
 		CVxWorksSemaphore::CVxWorksSemaphore(unsigned int paInitialValue){
-			m_oCountSemaphore = semCCreate(SEM_Q_PRIORITY, paInitialValue);
+			m_oCountSemaphore = semCCreate(SEM_Q_FIFO, paInitialValue);
 			if(SEM_ID_NULL == m_oCountSemaphore){
 				//TODO: check return value for out_of_memory error
 			}
