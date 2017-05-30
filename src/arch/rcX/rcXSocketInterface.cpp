@@ -433,7 +433,7 @@ TForteUInt32 CrcXSocketInterface::stringIpToInt(char* pa_ipString){
 
 RX_RESULT CrcXSocketInterface::sendPacketToTCP(UINT32 pa_destId, UINT32 pa_ulLen, UINT32 pa_ulCmd, void* pa_tData, UINT32 pa_dataLength){
   FORTE_TCP_PACKET_T* ptPck;
-  RX_RESULT retVal = RX_OK;
+  RX_RESULT retVal;
 
   retVal = TLR_POOL_PACKET_GET(mForteResources.fortePoolHandle, &ptPck);
   if(RX_OK == retVal){
