@@ -39,6 +39,14 @@ class CVxWorksThread : public forte::arch::CThreadBase {
      *
      *  By calling this method the execution in the run()-Method will be started.
      */
+
+    /*! \brief Sleep the calling thread
+     *
+     * @param pa_miliSeconds The miliseconds for the thread to sleep
+     */
+
+    static void sleepThread(unsigned int pa_miliSeconds);
+
     void start(void);
 
     virtual void join(void);

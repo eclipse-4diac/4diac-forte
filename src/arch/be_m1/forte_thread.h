@@ -68,6 +68,13 @@ class CBEThread : public forte::arch::CThreadBase, private BETask{
      */
     void start(void);
 
+    /*! \brief Sleep the calling thread
+     *
+     * @param pa_miliSeconds The miliseconds for the thread to sleep
+     */
+
+    static void sleepThread(unsigned int pa_miliSeconds);
+
     virtual void join(void);
 
   private:

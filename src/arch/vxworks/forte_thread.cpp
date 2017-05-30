@@ -12,6 +12,7 @@
 #include "../devlog.h"
 #include <criticalregion.h>
 #include "forte_thread.h"
+#include <time.h>
 
 #define FORTE_TASK_PRIORITY   25
 
@@ -52,6 +53,13 @@ CVxWorksThread::~CVxWorksThread(){
 
 void CVxWorksThread::setDeadline(const CIEC_TIME &pa_roVal){
   mDeadline = pa_roVal;
+}
+
+void CVxWorksThread::sleepThread(unsigned int pa_miliSeconds){
+  struct timespec stReq;
+  stReq.tv_sec = pa_miliSeconds / 1000;
+  stReq.tv_nsec = 1000000 * (pa_miliSeconds % 1000);
+  nanosleep(&stReq, NULL);
 }
 
 void CVxWorksThread::join(void){

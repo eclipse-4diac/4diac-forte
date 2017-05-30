@@ -16,6 +16,7 @@
 #include "../../arch/devlog.h"
 #include "commfb.h"
 #include "../../core/datatypes/forte_dint.h"
+#include <forte_thread.h>
 
 using namespace forte::com_infra;
 
@@ -178,13 +179,7 @@ void CIPComLayer::handledConnectedDataRecv(){
   // in case of fragmented packets, it can occur that the buffer is full,
   // to avoid calling receiveDataFromTCP with a buffer size of 0 wait until buffer is larger 0
   while((cg_unIPLayerRecvBufferSize - m_unBufFillSize) <= 0){
-#ifdef WIN32
-    Sleep(0);
-#else
-#ifndef __RCX__
-    sleep(0);
-#endif
-#endif
+    CThread::sleepThread(0);
   }
   if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != m_nSocketID){
     // TODO: sync buffer and bufFillSize
