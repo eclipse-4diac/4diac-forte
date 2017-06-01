@@ -17,12 +17,11 @@
 #include <devexec.h>
 #include "criticalregion.h"
 #include <stdarg.h>
+#include <forte_config_opc_ua.h>
 
 using namespace forte::com_infra;
 
 DEFINE_SINGLETON(COPC_UA_Handler);
-
-#define FORTE_COM_OPC_UA_PORT 4840
 
 const char *LogsLevelNames[6] = {"trace", "debug", "info", "warning", "error", "fatal"};
 const char *LogsCategoryNames[6] = {"network", "channel", "session", "server", "client", "userland"};
