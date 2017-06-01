@@ -20,12 +20,16 @@
 #include "comlayer.h"
 #include <forte_any.h>
 
+#ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
+#endif
 
 #include <open62541.h>
 
+#ifdef __GNUC__
 #pragma GCC diagnostic pop
+#endif
 
 #include "commfb.h"
 #include "devlog.h"
@@ -145,8 +149,14 @@ private:
 	 * @param output value of output arguments. These will be read from SD ports
 	 * @return UA_STATUSCODE_GOOD on success. The return value is passed to the caller, i.e., the client.
 	 */
+	#ifdef FORTE_COM_OPC_UA_VERSION_0_2
 	static UA_StatusCode onServerMethodCall(void *methodHandle, const UA_NodeId objectId,
 											size_t inputSize, const UA_Variant *input, size_t outputSize, UA_Variant *output);
+	#else
+	static UA_StatusCode onServerMethodCall(void *methodHandle, const UA_NodeId *objectId,
+											const UA_NodeId *sessionId, void *sessionHandle,
+											size_t inputSize, const UA_Variant *input, size_t outputSize, UA_Variant *output);
+	#endif
 
 	/**
 	 * Mutex to ensure clients can call the server method not in parallel.
