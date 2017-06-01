@@ -38,16 +38,17 @@ MQTTHandler::MQTTHandler(){
 
 MQTTHandler::~MQTTHandler(){
   if(isAlive()){
-    CCriticalRegion sectionState(smMQTTMutex);
-    setAlive(false);
-    resumeSelfSuspend();
+    {
+      CCriticalRegion sectionState(smMQTTMutex);
+      MQTTAsync_disconnectOptions disc_opts = MQTTAsync_disconnectOptions_initializer;
+      disc_opts.timeout = 10000;
+      MQTTAsync_disconnect(smClient, &disc_opts);
+      MQTTAsync_destroy(&smClient);
+      setAlive(false);
+      resumeSelfSuspend();
+    }
     end();
   }
-
-  MQTTAsync_disconnectOptions disc_opts = MQTTAsync_disconnectOptions_initializer;
-  disc_opts.timeout = 10000;
-  MQTTAsync_disconnect(smClient, &disc_opts);
-  MQTTAsync_destroy(&smClient);
 }
 
 /*
