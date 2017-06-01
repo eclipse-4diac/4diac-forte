@@ -12,7 +12,7 @@
 #include "handle.h"
 #include "slave.h"
 #include <handler/bus.h>
-#include <io/mapper.h>
+#include <io/mapper/io_mapper.h>
 #include <devlog.h>
 namespace EmBrick {
 

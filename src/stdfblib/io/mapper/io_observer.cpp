@@ -9,27 +9,26 @@
  *    Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "handle.h"
-#include "observer.h"
-#include "mapper.h"
+#include "io_observer.h"
+#include <devlog.h>
 
 namespace IO {
 
-Handle::Handle(Mapper::Direction direction) :
-    observer(NULL), type(CIEC_ANY::e_ANY), direction(direction) {
+Observer::Observer() :
+    handle(NULL), type(CIEC_ANY::e_ANY), direction(Mapper::UnknownDirection) {
 
 }
 
-Handle::~Handle() {
-  Mapper::getInstance().deregisterHandle(this);
+Observer::~Observer() {
+  Mapper::getInstance().deregisterObserver(this);
 }
 
-void Handle::onObserver(Observer *observer) {
-  this->observer = observer;
+void Observer::onHandle(Handle *handle) {
+  this->handle = handle;
 }
 
-void Handle::dropObserver() {
-  this->observer = NULL;
+void Observer::dropHandle() {
+  this->handle = NULL;
 }
 
 } /* namespace IO */

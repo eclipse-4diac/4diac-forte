@@ -9,14 +9,14 @@
  *    Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_MODULES_EMBRICK_IO_HANDLE_H_
-#define SRC_MODULES_EMBRICK_IO_HANDLE_H_
+#ifndef SRC_STDFBLIB_IO_MAPPER_HANDLE_H_
+#define SRC_STDFBLIB_IO_MAPPER_HANDLE_H_
 
 #include <cstddef>
 #include <forte_any.h>
 #include <forte_bool.h>
 
-#include "mapper.h"
+#include "io_mapper.h"
 
 namespace IO {
 
@@ -57,4 +57,4 @@ protected:
 
 } /* namespace IO */
 
-#endif /* SRC_MODULES_EMBRICK_IO_HANDLE_H_ */
+#endif /* SRC_STDFBLIB_IO_MAPPER_HANDLE_H_ */

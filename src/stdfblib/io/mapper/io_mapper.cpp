@@ -9,9 +9,9 @@
  *    Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "mapper.h"
-#include "handle.h"
-#include "observer.h"
+#include "io_mapper.h"
+#include "io_handle.h"
+#include "io_observer.h"
 #include <devlog.h>
 
 namespace IO {
@@ -33,7 +33,7 @@ bool Mapper::registerHandle(CIEC_WSTRING const &id, Handle* handle) {
 
   // Check for duplicates
   if (handles.find(idStr) != handles.end()) {
-    DEVLOG_WARNING("emBrick[IOMapper]: Duplicated handle entry '%s'\n",
+    DEVLOG_WARNING("[IO:Mapper] Duplicated handle entry '%s'\n",
         id.getValue());
     syncMutex.unlock();
     return false;
@@ -42,12 +42,14 @@ bool Mapper::registerHandle(CIEC_WSTRING const &id, Handle* handle) {
   // Insert into handles list
   handles.insert(std::make_pair(idStr, handle));
 
+  DEVLOG_DEBUG("[IO:Mapper] Register handle %s\n", id.getValue());
+
   // Check for existing observer
   if (observers.find(idStr) != observers.end()) {
     handle->onObserver(observers[idStr]);
     observers[idStr]->onHandle(handle);
 
-    DEVLOG_INFO("emBrick[IOMapper]: Connected %s\n", id.getValue());
+    DEVLOG_INFO("[IO:Mapper] Connected %s\n", id.getValue());
   }
 
   syncMutex.unlock();
@@ -63,9 +65,11 @@ void Mapper::deregisterHandle(Handle* handle) {
       if (observers.find(it->first) != observers.end()) {
         handle->dropObserver();
         observers[it->first]->dropHandle();
-        DEVLOG_INFO("emBrick[IOMapper]: Disconnected %s (lost handle)\n",
+        DEVLOG_INFO("[IO:Mapper]  Disconnected %s (lost handle)\n",
             it->first.data());
       }
+
+      DEVLOG_DEBUG("[IO:Mapper] Deregister handle %s\n", it->first.data());
 
       handles.erase(it);
       break;
@@ -81,7 +85,7 @@ bool Mapper::registerObserver(CIEC_WSTRING const &id, Observer* observer) {
 
   // Check for duplicates
   if (observers.find(idStr) != observers.end()) {
-    DEVLOG_WARNING("emBrick[IOMapper]: Duplicated observer entry '%s'\n",
+    DEVLOG_WARNING("[IO:Mapper]  Duplicated observer entry '%s'\n",
         id.getValue());
     syncMutex.unlock();
     return false;
@@ -90,12 +94,14 @@ bool Mapper::registerObserver(CIEC_WSTRING const &id, Observer* observer) {
   // Insert into observer list
   observers.insert(std::make_pair(idStr, observer));
 
+  DEVLOG_DEBUG("[IO:Mapper] Register observer %s\n", id.getValue());
+
   // Check for existing handle
   if (handles.find(idStr) != handles.end()) {
     handles[idStr]->onObserver(observer);
     observer->onHandle(handles[idStr]);
 
-    DEVLOG_INFO("emBrick[IOMapper]: Connected %s\n", id.getValue());
+    DEVLOG_INFO("[IO:Mapper]  Connected %s\n", id.getValue());
   }
 
   syncMutex.unlock();
@@ -112,9 +118,11 @@ void Mapper::deregisterObserver(Observer* observer) {
       if (handles.find(it->first) != handles.end()) {
         handles[it->first]->dropObserver();
         observer->dropHandle();
-        DEVLOG_INFO("emBrick[IOMapper]: Disconnected %s (lost observer)\n",
+        DEVLOG_INFO("[IO:Mapper]  Disconnected %s (lost observer)\n",
             it->first.data());
       }
+
+      DEVLOG_DEBUG("[IO:Mapper] Deregister observer %s\n", it->first.data());
 
       observers.erase(it);
       break;

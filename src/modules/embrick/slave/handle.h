@@ -18,7 +18,7 @@
 #include <forte_bool.h>
 #include <forte_dword.h>
 
-#include <io/handle.h>
+#include <io/mapper/io_handle.h>
 
 namespace EmBrick {
 

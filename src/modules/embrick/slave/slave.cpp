@@ -11,7 +11,7 @@
 
 #include "slave.h"
 #include <handler/bus.h>
-#include <io/mapper.h>
+#include <io/mapper/io_mapper.h>
 #include <processinterface.h>
 
 namespace EmBrick {
@@ -103,7 +103,7 @@ int Slave::update() {
       // Inform Process Interface about change
       if ((*it)->getObserver()->onChange()) {
         // Send indication event
-        bus->startNewEventChain((ProcessInterface*) (*it)->getObserver());
+        bus->startNewEventChain((CProcessInterface*) (*it)->getObserver());
       }
     }
   handleMutex.unlock();

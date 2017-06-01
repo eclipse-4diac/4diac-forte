@@ -10,7 +10,7 @@
  *******************************************************************************/
 
 #include "Slave.h"
-#include <io/mapper.h>
+#include <io/mapper/io_mapper.h>
 
 #include <slave/handles/bit.h>
 #include <slave/handles/analog.h>

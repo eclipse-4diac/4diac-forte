@@ -9,8 +9,8 @@
  *    Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_MODULES_EMBRICK_IO_MAPPER_H_
-#define SRC_MODULES_EMBRICK_IO_MAPPER_H_
+#ifndef SRC_STDFBLIB_IO_MAPPER_MAPPER_H_
+#define SRC_STDFBLIB_IO_MAPPER_MAPPER_H_
 
 #include <utils/singlet.h>
 #include <forte_wstring.h>
@@ -50,4 +50,4 @@ private:
 
 } /* namespace IO */
 
-#endif /* SRC_MODULES_EMBRICK_IO_MAPPER_H_ */
+#endif /* SRC_STDFBLIB_IO_MAPPER_MAPPER_H_ */

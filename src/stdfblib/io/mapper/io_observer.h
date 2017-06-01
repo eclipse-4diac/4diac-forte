@@ -9,12 +9,11 @@
  *    Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_MODULES_EMBRICK_IO_OBSERVER_H_
-#define SRC_MODULES_EMBRICK_IO_OBSERVER_H_
+#ifndef SRC_STDFBLIB_IO_MAPPER_OBSERVER_H_
+#define SRC_STDFBLIB_IO_MAPPER_OBSERVER_H_
 
-#include "handle.h"
-
-#include "mapper.h"
+#include "io_handle.h"
+#include "io_mapper.h"
 
 namespace IO {
 
@@ -38,4 +37,4 @@ protected:
 
 } /* namespace IO */
 
-#endif /* SRC_MODULES_EMBRICK_IO_OBSERVER_H_ */
+#endif /* SRC_STDFBLIB_IO_MAPPER_OBSERVER_H_ */

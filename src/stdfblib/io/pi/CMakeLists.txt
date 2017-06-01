@@ -11,21 +11,10 @@
 # *******************************************************************************/
 
 #############################################################################
-# IO
+# IO Mapper
 #############################################################################
 
-set(FORTE_IO OFF CACHE BOOL "Enable IO Modules")
-  if(NOT FORTE_IO)
-    return()
-  endif(NOT FORTE_IO)
+SET(SOURCE_GROUP ${SOURCE_GROUP}\\pi)
 
-SET(SOURCE_GROUP ${SOURCE_GROUP}\\io)
-
-add_subdirectory(device)
-add_subdirectory(configFB)
-add_subdirectory(mapper)
-add_subdirectory(pi)
-
-forte_add_sourcefile_hcpp(IX QX)
-forte_add_sourcefile_hcpp(IW QW)
-forte_add_sourcefile_hcpp(ID QD)
+forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+forte_add_sourcefile_hcpp(processinterface)

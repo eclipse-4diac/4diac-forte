@@ -11,7 +11,7 @@
 
 #include "processinterface.h"
 
-namespace EmBrick {
+namespace IO {
 
 const char * const ProcessInterface::scmOK = "OK";
 const char * const ProcessInterface::scmWaitingForHandle =
@@ -183,4 +183,4 @@ void ProcessInterface::dropHandle() {
   syncMutex.unlock();
 }
 
-}
+} /* namespace IO */

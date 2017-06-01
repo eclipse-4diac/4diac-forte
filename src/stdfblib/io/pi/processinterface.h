@@ -9,18 +9,16 @@
  *    Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_MODULES_EMBRICK_PROCESSINTERFACE_H_
-#define SRC_MODULES_EMBRICK_PROCESSINTERFACE_H_
+#ifndef SRC_STDFBLIB_IO_PROCESSINTERFACE_H_
+#define SRC_STDFBLIB_IO_PROCESSINTERFACE_H_
 
-#include <io/mapper.h>
-#include <io/observer.h>
+#include "../mapper/io_mapper.h"
+#include "../mapper/io_observer.h"
+
 #include <forte_sync.h>
-#include <slave/handle.h>
-#include <../../stdfblib/io/processinterfacebase.h>
+#include "../processinterfacebase.h"
 
-namespace EmBrick {
-
-using namespace IO;
+namespace IO {
 
 class ProcessInterface: public CProcessInterfaceBase, public Observer {
 
@@ -77,8 +75,8 @@ private:
   static const char * const scmMappedWrongDataType;
 };
 
-}
+} /* namespace IO */
 
-typedef EmBrick::ProcessInterface CProcessInterface;
+typedef IO::ProcessInterface CProcessInterface;
 
-#endif
+#endif /* SRC_STDFBLIB_IO_PROCESSINTERFACE_H_ */

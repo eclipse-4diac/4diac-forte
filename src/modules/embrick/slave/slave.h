@@ -21,7 +21,8 @@
 #include <forte_sync.h>
 #include <forte_wstring.h>
 #include <devlog.h>
-#include <io/mapper.h>
+
+#include <io/mapper/io_mapper.h>
 
 namespace EmBrick {
 
