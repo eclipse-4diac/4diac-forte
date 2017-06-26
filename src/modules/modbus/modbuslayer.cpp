@@ -24,16 +24,6 @@ CModbusComLayer::CModbusComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB
 CModbusComLayer::~CModbusComLayer(){
 }
 
-void CModbusComLayer::closeConnection(){
-  //TODO
-  DEVLOG_INFO("CModbusLayer::closeConnection()\n");
-
-  if(m_pModbusConnection != NULL){
-    m_pModbusConnection->disconnect();
-    delete m_pModbusConnection;
-  }
-}
-
 EComResponse CModbusComLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
   EComResponse eRetVal = e_ProcessDataOk;
 
@@ -410,6 +400,16 @@ EComResponse CModbusComLayer::openConnection(char *pa_acLayerParameter){
   }
 
   return eRetVal;
+}
+
+void CModbusComLayer::closeConnection(){
+  //TODO
+  DEVLOG_INFO("CModbusLayer::closeConnection()\n");
+
+  if(m_pModbusConnection != NULL){
+    m_pModbusConnection->disconnect();
+    delete m_pModbusConnection;
+  }
 }
 
 int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_pTcpParams, SRtuParams* pa_pRtuParams, SCommonParams* pa_pCommonParams){

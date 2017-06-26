@@ -14,7 +14,7 @@
 #include <string.h>
 #include <cctype>
 
-MQTTParameterParser::MQTTParameterParser(char* paParameters) : mParameters(paParameters) {
+MQTTParameterParser::MQTTParameterParser(char* paParameters) : mParameters(paParameters), mSeparator(0), parsePosition(0) {
 	mCurrentParameter = 0;
 }
 
@@ -26,15 +26,17 @@ void MQTTParameterParser::setSeparator(char paSeparator) {
 	mSeparator = paSeparator;
 }
 
-void MQTTParameterParser::parseParameters() {
+int MQTTParameterParser::parseParameters() {
 	parsePosition = mParameters;
-	for(int i = 0; i < mAmountOfParameters; ++i) {
+	int i;
+	for(i = 0; ((i < mAmountOfParameters) && ('\0' != *parsePosition)); ++i) {
 		moveToPositionOfFirstNonWhiteSpaceCharacter();
 		saveStartPositionForParameterSubstring(i);
 		moveToPositionOfNextParameterSeparatorOrEndOfString();
 		trimTrailingWhiteSpacesOfParameterSubstring();
 		moveToNextParameterStart();
 	}
+	return i;
 }
 
 void MQTTParameterParser::moveToPositionOfFirstNonWhiteSpaceCharacter() {

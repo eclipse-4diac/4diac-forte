@@ -26,8 +26,6 @@ class CWin32SerComLayer : public forte::com_infra::CComLayer{
 
     virtual forte::com_infra::EComResponse processInterrupt();
 
-    virtual void closeConnection();
-
     /*! \brief Perform send to serial interface
     *   \param pa_pvData Sendable payload
     *   \param pa_unSize Payload size in bytes
@@ -46,6 +44,7 @@ class CWin32SerComLayer : public forte::com_infra::CComLayer{
   private:
 	char m_acTerminationSymbol[3]; //**< Space for CR, LF, or CR/LF + Terminating \0
     virtual forte::com_infra::EComResponse openConnection(char *pa_acLayerParameter);
+    virtual void closeConnection();
     HANDLE m_hSerial;
 	static const unsigned int m_unMaxRecvBuffer = 22;
 

@@ -32,9 +32,6 @@ namespace forte {
 
         EComResponse processInterrupt();
 
-      protected:
-        void closeConnection();
-
       private:
         struct STcpParams {
           char m_acIp[15];
@@ -67,6 +64,7 @@ namespace forte {
         unsigned int convertDataInput(void *pa_poInData, unsigned int pa_nDataSize, TForteUInt16 *pa_poConvertedData);
 
         EComResponse openConnection(char *pa_acLayerParameter);
+        void closeConnection();
 
         //int processClientParams(char* pa_acLayerParams, char* pa_acIp, unsigned int &pa_nPort, long &pa_nPollFrequency, unsigned int &pa_nFuncCode, unsigned int &pa_nSlaveId, unsigned int *pa_nStartAddress, unsigned int *pa_nNrAddresses);
         int processClientParams(char* pa_acLayerParams, STcpParams* pa_pTcpParams, SRtuParams* pa_pRtuParams, SCommonParams* pa_pCommonParams);

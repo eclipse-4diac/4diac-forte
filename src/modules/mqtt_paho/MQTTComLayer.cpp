@@ -16,8 +16,6 @@
 #include "commfb.h"
 #include <unistd.h>
 
-#define QOS 1
-
 using namespace forte::com_infra;
 
 MQTTComLayer::MQTTComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poFB) : CComLayer(pa_poUpperLayer, pa_poFB),
@@ -28,16 +26,18 @@ MQTTComLayer::MQTTComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poFB) : CCom
 }
 
 MQTTComLayer::~MQTTComLayer() {
-	// TODO Auto-generated destructor stub
+	if(mTopicName){
+	  delete mTopicName;
+	}
 }
 
 EComResponse MQTTComLayer::sendData(void* pa_pvData, unsigned int pa_unSize) {
-	MQTTClient_message message = MQTTClient_message_initializer;
+	MQTTAsync_message message = MQTTAsync_message_initializer;
 	message.payload = pa_pvData;
 	message.payloadlen = pa_unSize;
 	message.qos = QOS;
 	message.retained = 0;
-	int errorCode = MQTTClient_publishMessage(MQTTHandler::getInstance().getClient(), mTopicName, &message, NULL);
+	int errorCode = MQTTAsync_sendMessage(MQTTHandler::getInstance().getClient(), mTopicName, &message, NULL);
 	if (0 != errorCode) {
 		return e_ProcessDataSendFailed;
 	}
@@ -52,7 +52,6 @@ EComResponse MQTTComLayer::recvData(const void* pa_pvData,
 	m_eInterruptResp = e_ProcessDataOk;
 	m_poFb->interruptCommFB(this);
 	return m_eInterruptResp;
-
 }
 
 EComResponse MQTTComLayer::processInterrupt() {
@@ -63,43 +62,44 @@ EComResponse MQTTComLayer::processInterrupt() {
 			//MQTTHandler::getInstance().mqttMessageProcessed();
 		}
 	}
+
 	return m_eInterruptResp;
 }
 
-void MQTTComLayer::closeConnection() {
-	MQTTHandler::getInstance().unregisterLayer(this);
-}
-
 EComResponse MQTTComLayer::openConnection(char* pa_acLayerParameter) {
-	EComResponse eRetVal = e_InitTerminated;
+	EComResponse eRetVal = e_InitInvalidId;
 	MQTTParameterParser parser(pa_acLayerParameter);
 	parser.setSeparator(',');
-	parser.parseParameters();
-	mTopicName = (char*)malloc(strlen(parser[Topic]) + 1);
-	mTopicName = strcpy(mTopicName, parser[Topic]);
-	if( MQTTHandler::eRegisterLayerSucceeded ==
-			(MQTTHandler::getInstance()).registerLayer(parser[Address], parser[ClientID], this)) {
-		eRetVal = e_InitOk;
-	}
-	else eRetVal = e_InitInvalidId;
+	if(3 == parser.parseParameters()){
+		mTopicName = new char[(strlen(parser[Topic]) + 1)];
+		mTopicName = strcpy(mTopicName, parser[Topic]);
+		if( MQTTHandler::eRegisterLayerSucceeded ==
+				(MQTTHandler::getInstance()).registerLayer(parser[Address], parser[ClientID], this)) {
+			eRetVal = e_InitOk;
+		}
+		else eRetVal = e_InitInvalidId;
 
-	switch (m_poFb->getComServiceType()){
-	case e_Server:
-		// TODO: Not implemented yet
-		eRetVal = e_InitTerminated;
-		break;
-	case e_Client:
-		// TODO: Not implemented yet
-		eRetVal = e_InitTerminated;
-		break;
-	case e_Publisher:
-		//is handled via sendData
-		break;
-	case e_Subscriber:
-		MQTTClient_subscribe(MQTTHandler::getInstance().getClient(), mTopicName, QOS);
-		break;
+		switch (m_poFb->getComServiceType()){
+		case e_Server:
+			// TODO: Not implemented yet
+			eRetVal = e_InitTerminated;
+			break;
+		case e_Client:
+			// TODO: Not implemented yet
+			eRetVal = e_InitTerminated;
+			break;
+		case e_Publisher:
+			//is handled via sendData
+			break;
+		case e_Subscriber:
+		  //handled inside the register layer function in the Handler
+			break;
+		}
 	}
 
 	return eRetVal;
 }
 
+void MQTTComLayer::closeConnection() {
+	MQTTHandler::getInstance().unregisterLayer(this);
+}

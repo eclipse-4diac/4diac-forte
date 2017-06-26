@@ -27,8 +27,6 @@
 
 DEFINE_FIRMWARE_DATATYPE(LREAL, g_nStringIdLREAL)
 
-const TForteUInt16 CIEC_LREAL::scm_unMaxStringBufSize = 100;
-
 int CIEC_LREAL::fromString(const char *pa_pacValue){
   char *pcEnd;
   const char *pacRunner = pa_pacValue;
@@ -49,7 +47,7 @@ int CIEC_LREAL::fromString(const char *pa_pacValue){
 }
 
 int CIEC_LREAL::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
-  int nRetVal = -1;
+  int nRetVal;
 #ifdef WIN32
   nRetVal = _snprintf(pa_pacValue, pa_nBufferSize, "%.*g", 15, getTDFLOAT());
 #else

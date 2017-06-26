@@ -10,8 +10,9 @@
  *******************************************************************************/
 #include "modbusconnection.h"
 
-CModbusConnection::CModbusConnection() : m_pModbusConn(NULL), m_bConnected(false), m_paIPAddress(NULL), m_chDevice(NULL),
-	 m_pModbusHandler(0), m_nComCallbackId(0), m_nPort(0), m_nBaud(0), m_cParity(0), m_nDataBit(0),
+CModbusConnection::CModbusConnection() : m_pModbusConn(NULL), m_pModbusHandler(0), m_nComCallbackId(0),
+  m_bConnected(false), m_paIPAddress(NULL), m_nPort(0),
+  m_chDevice(NULL), m_nBaud(0), m_cParity(0), m_nDataBit(0),
 	 m_nStopBit(0), m_nResponseTimeout(0), m_nByteTimeout(0){
 }
     

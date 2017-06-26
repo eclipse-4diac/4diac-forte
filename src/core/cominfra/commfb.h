@@ -32,6 +32,8 @@ namespace forte {
       public:
         virtual ~CCommFB();
 
+        virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
+
         /*!\brief The getFBType method is used by the Query command to get the instances correct type name (eg. "CLIENT_3_2")
          * \return pointer to typename string
          */
@@ -114,6 +116,21 @@ namespace forte {
 
         CStringDictionary::TStringId m_nConfiguredFBTypeNameId;
 
+        static const char * const scmDefaultIDPrefix;
+        static const char * const scmDefaultIDSuffix;
+
+        static char *extractLayerIdAndParams(char **paRemainingID, char **paLayerParams);
+
+         /*!\brief Generate a layer ID formed by a root with a prefix and a suffix
+          *
+          * @param paPrefix the prefix to prepend
+          * @param paIDRoot the root which would get appended and prepended
+          * @param paSuffix the suffix to append
+          * @return ID with layer configuration
+          */
+         static char *buildIDString(const char *paPrefix, const char *paIDRoot, const char *paSuffix);
+
+
       private:
         static const CStringDictionary::TStringId scm_aunRequesterEventInputNameIds[];
         static const CStringDictionary::TStringId scm_aunRequesterEventOutputNameIds[];
@@ -126,18 +143,41 @@ namespace forte {
 
         static const char * const scm_sResponseTexts[];
 
-        EComResponse openConnection();
-        void closeConnection();
-        EComResponse receiveData();
-        /*! If the ID string does not contain [] indicating that there is a layer setup given this Function is called to
-         *  to generate an default layer configuration. This function may be overwriten by special Comfbs to provide their
-         *  own default layer config. See for example GEN_PUBL or GEN_SUBL.
-         * @return id with layer configuration
+        /*!\brief Create the whole communication stack and open the connection
+         *
+         * This function will configure every layer.
+         *
+         * \return status of the opening process
          */
-        virtual char * getDefaultIDString();
+        EComResponse openConnection();
 
-        forte::com_infra::EComServiceType m_eCommServiceType;
-        forte::com_infra::CComLayer *m_poTopOfComStack;
+        /*\brief go through the given commID and create the according stack of communciation layers
+         */
+        EComResponse createComstack(char *commID);
+
+        /*!\brief Close the connection and delete the communication stack
+         *
+         * This function, aided by the the layer destructor, will close and
+         * delete bottom layers after closing its connection.
+         */
+        void closeConnection();
+
+        EComResponse receiveData();
+
+        /*!\brief Generate the default layer ID
+         *
+         *  If the ID string does not contain [], this function will be called
+         *  to generate a default layer configuration. This function may be
+         *  overwritten by special Comfbs to provide their own default layer
+         *  config. See for example GEN_PUBL or GEN_SUBL.
+         *
+         * @param paID original ID
+         * @return ID with layer configuration
+         */
+        virtual char * getDefaultIDString(const char *paID);
+
+        EComServiceType m_eCommServiceType;
+        CComLayer *m_poTopOfComStack;
         unsigned int m_unComInterruptQueueCount; //!< number of triggers pending from the network
         CComLayer *m_apoInterruptQueue[cg_unCommunicationInterruptQueueSize];
     };

@@ -23,4 +23,3 @@
   forte_test_add_sourcefile_cpp(devlogtestmock.cpp)
   forte_test_add_sourcefile_cpp(comlayermantestmock.cpp)
   
-  #forte_test_add_sourcefile_cpp(../../../bin/posix/core/cominfra/comlayersmanager.cpp)

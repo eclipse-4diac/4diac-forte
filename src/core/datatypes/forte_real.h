@@ -103,9 +103,6 @@ class CIEC_REAL : public CIEC_ANY_REAL{
      *  \param pa_roDestValue Destination CIEC object of the cast
      */
     static void castRealData(const CIEC_REAL &pa_roSrcValue, CIEC_ANY &pa_roDestValue);
-
-    static const TForteUInt16 scm_unMaxStringBufSize;
-
 };
 
 #endif /* #ifdef FORTE_USE_REAL_DATATYPE */

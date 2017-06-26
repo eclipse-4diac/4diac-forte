@@ -20,18 +20,11 @@
 using namespace forte::com_infra;
 
 COpcComLayer::COpcComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB) :
-CComLayer(pa_poUpperLayer, pa_poComFB), m_bLayerParamsOK(false), m_eInterruptResp(e_Nothing), m_acHost(0), m_acServerName(0), m_nDeadBand(0), m_nUpdateRate(0), m_pOpcConnection(0){
+CComLayer(pa_poUpperLayer, pa_poComFB), m_acHost(0), m_acServerName(0), m_nUpdateRate(0), m_nDeadBand(0), m_bLayerParamsOK(false), m_pOpcConnection(0), m_eInterruptResp(e_Nothing){
   m_acOpcGroupName = m_poFb->getInstanceName();
 }
 
 COpcComLayer::~COpcComLayer(){
-}
-
-void COpcComLayer::closeConnection(){
-  DEVLOG_DEBUG("COpcComLayer::closeConnection() \n");
-  COpcConnectionHandler::getInstance().removeOpcConnection(m_pOpcConnection->getHost(), m_pOpcConnection->getServerName(), m_acOpcGroupName);
-
-  m_eConnectionState = e_Disconnected;
 }
 
 EComResponse COpcComLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
@@ -209,6 +202,13 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
     }
 
     return eRetVal;
+  }
+
+  void COpcComLayer::closeConnection(){
+    DEVLOG_DEBUG("COpcComLayer::closeConnection() \n");
+    COpcConnectionHandler::getInstance().removeOpcConnection(m_pOpcConnection->getHost(), m_pOpcConnection->getServerName(), m_acOpcGroupName);
+
+    m_eConnectionState = e_Disconnected;
   }
 
   int COpcComLayer::addOpcItems(){
@@ -414,67 +414,82 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
   unsigned int COpcComLayer::getInputValueSize(CIEC_ANY* pa_pData, Variant * pa_pNewValue){
     switch (pa_pData->getDataTypeID()){
     case CIEC_ANY::e_BOOL:
+    {
       pa_pNewValue->set<bool>((bool) *(dynamic_cast<CIEC_BOOL*>(pa_pData)));
       return sizeof(bool);
-      break;
+    }
     case CIEC_ANY::e_SINT:
+    {
       pa_pNewValue->set<CHAR>((CHAR) *(dynamic_cast<CIEC_SINT*>(pa_pData)));
       return sizeof(TForteInt8);
-      break;
-    case CIEC_ANY::e_INT: 
+    }
+    case CIEC_ANY::e_INT:
+    {
       CIEC_INT* tempInt = dynamic_cast<CIEC_INT*>(pa_pData);
       TForteInt16 forteInt = (TForteInt16) (*tempInt);
       pa_pNewValue->set<TForteInt16>(forteInt);
       return sizeof(TForteInt16);
-      break;
+    }
     case CIEC_ANY::e_DINT:
+    {
       pa_pNewValue->set<TForteInt32>((TForteInt32) *(dynamic_cast<CIEC_DINT*>(pa_pData)));
       return sizeof(TForteInt32);
-      break;
+    }
     case CIEC_ANY::e_LINT:
+    {
       pa_pNewValue->set<TForteInt64>((TForteInt64) *(dynamic_cast<CIEC_LINT*>(pa_pData)));
       return sizeof(TForteInt64);
-      break;
+    }
     case CIEC_ANY::e_USINT:
+    {
       pa_pNewValue->set<TForteUInt8>((TForteUInt8) *(dynamic_cast<CIEC_USINT*>(pa_pData)));
       return sizeof(TForteUInt8);
-      break;
+    }
     case CIEC_ANY::e_UINT:
+    {
       pa_pNewValue->set<TForteUInt16>((TForteUInt16) *(dynamic_cast<CIEC_UINT*>(pa_pData)));
       return sizeof(TForteUInt16);
-      break;
+    }
     case CIEC_ANY::e_UDINT:
+    {
       pa_pNewValue->set<TForteUInt32>((TForteUInt32) *(dynamic_cast<CIEC_UDINT*>(pa_pData)));
       return sizeof(TForteUInt32);
-      break;
+    }
     case CIEC_ANY::e_ULINT:
+    {
       pa_pNewValue->set<TForteUInt64>((TForteUInt64) *(dynamic_cast<CIEC_ULINT*>(pa_pData)));
       return sizeof(TForteUInt64);
-      break;
+    }
     case CIEC_ANY::e_BYTE:
+    {
       pa_pNewValue->set<TForteByte>((TForteByte) *(dynamic_cast<CIEC_BYTE*>(pa_pData)));
       return sizeof(TForteByte);
-      break;
+    }
     case CIEC_ANY::e_WORD:
+    {
       pa_pNewValue->set<TForteWord>((TForteWord) *(dynamic_cast<CIEC_WORD*>(pa_pData)));
       return sizeof(TForteWord);
-      break;
+    }
     case CIEC_ANY::e_DWORD:
+    {
       pa_pNewValue->set<TForteDWord>((TForteDWord) *(dynamic_cast<CIEC_DWORD*>(pa_pData)));
       return sizeof(TForteDWord);
-      break;
+    }
     case CIEC_ANY::e_LWORD:
+    {
       pa_pNewValue->set<TForteLWord>((TForteLWord) *(dynamic_cast<CIEC_LWORD*>(pa_pData)));
       return sizeof(TForteLWord);
-      break;
+    }
     case CIEC_ANY::e_REAL:
+    {
       pa_pNewValue->set<TForteFloat>((TForteFloat) *(dynamic_cast<CIEC_REAL*>(pa_pData)));
       return sizeof(TForteFloat);
-      break;
+    }
     case CIEC_ANY::e_LREAL:
+    {
       pa_pNewValue->set<TForteDFloat>((TForteDFloat) *(dynamic_cast<CIEC_LREAL*>(pa_pData)));
       return sizeof(TForteDFloat);
-      break;
+    }
     default:
       //TODO
       break;

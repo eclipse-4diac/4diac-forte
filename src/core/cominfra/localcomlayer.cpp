@@ -26,17 +26,6 @@ CLocalComLayer::~CLocalComLayer(){
   closeConnection();
 }
 
-void CLocalComLayer::closeConnection(){
-  if(0 != m_poLocalCommGroup){
-    if(e_Publisher == m_poFb->getComServiceType()){
-      sm_oLocalCommGroupsManager.unregisterPubl(m_poLocalCommGroup, this);
-    }
-    else{
-      sm_oLocalCommGroupsManager.unregisterSubl(m_poLocalCommGroup, this);
-    }
-  }
-}
-
 EComResponse CLocalComLayer::sendData(void *, unsigned int){
   CCriticalRegion criticalRegion(m_poFb->getResource().m_oResDataConSync);
   CIEC_ANY *aSDs = m_poFb->getSDs();
@@ -87,6 +76,18 @@ EComResponse CLocalComLayer::openConnection(char *pa_acLayerParameter){
       break;
   }
   return (0 != m_poLocalCommGroup) ? e_InitOk : e_InitInvalidId;
+}
+
+void CLocalComLayer::closeConnection(){
+  if(0 != m_poLocalCommGroup){
+    if(e_Publisher == m_poFb->getComServiceType()){
+      sm_oLocalCommGroupsManager.unregisterPubl(m_poLocalCommGroup, this);
+    }
+    else{
+      sm_oLocalCommGroupsManager.unregisterSubl(m_poLocalCommGroup, this);
+    }
+    m_poLocalCommGroup = 0;
+  }
 }
 
 /********************** CLocalCommGroupsManager *************************************/
@@ -156,7 +157,7 @@ CLocalComLayer::SLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::create
 
 void CLocalComLayer::CLocalCommGroupsManager::removeListEntry(CSinglyLinkedList<CLocalComLayer*> &pa_rlstList, CLocalComLayer *pa_poLayer){
   CSinglyLinkedList<CLocalComLayer*>::Iterator itRunner = pa_rlstList.begin();
-  CSinglyLinkedList<CLocalComLayer*>::Iterator itRevNode = pa_rlstList.begin();
+  CSinglyLinkedList<CLocalComLayer*>::Iterator itRevNode = pa_rlstList.end();
 
   while(itRunner != pa_rlstList.end()){
     if((*itRunner) == pa_poLayer){
@@ -190,12 +191,4 @@ void CLocalComLayer::CLocalCommGroupsManager::removeCommGroup(SLocalCommGroup *p
     itRevNode = itRunner;
     ++itRunner;
   }
-}
-
-char *CLocalComLayer::getDefaultLocalCommIdString(const char *pa_acIdValue){
-  char * acRetVal = new char[strlen(pa_acIdValue) + 6];
-  strcpy(acRetVal, "loc[");
-  strcat(acRetVal, pa_acIdValue);
-  strcat(acRetVal, "]");
-  return acRetVal;
 }

@@ -16,7 +16,6 @@
 #include "../core/cominfra/commfb.h"
 #include <criticalregion.h>
 
-
 DEFINE_SINGLETON(CFDSelectHandler);
 
 CFDSelectHandler::CFDSelectHandler(){
@@ -66,6 +65,10 @@ void CFDSelectHandler::run(void){
 
     if(0 != nHighestFDID){
       retval = select(nHighestFDID + 1, &anFDSet, NULL, NULL, &tv);
+      if(!isAlive()){
+        //the thread has been closed in the meantime do not process any messages anymore
+        return;
+      }
     }
     else{
       retval = 0;

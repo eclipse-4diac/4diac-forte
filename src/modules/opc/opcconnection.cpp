@@ -19,7 +19,7 @@
 using namespace forte::com_infra;
 
 COpcConnection::COpcConnection(const char *pa_acHost, const char *pa_acServerName) :
-    m_acHost(pa_acHost), m_acServerName(pa_acServerName), m_bIsConnected(false), m_nGroupCount(0), m_eConnectionEvent(e_Disconnected), m_bBlockingConnect(false), m_acGroupName(0), m_nDeadBand(0), m_nRealUpdateRate(0), m_nReqUpdateRate(0){
+    m_nGroupCount(0), m_eConnectionEvent(e_Disconnected), m_acHost(pa_acHost), m_acServerName(pa_acServerName), m_acGroupName(0), m_nReqUpdateRate(0), m_nRealUpdateRate(0), m_nDeadBand(0), m_bIsConnected(false), m_bBlockingConnect(false) {
   m_pOpcConnectionImpl = new COpcConnectionImpl(pa_acHost, pa_acServerName, this);
 }
 

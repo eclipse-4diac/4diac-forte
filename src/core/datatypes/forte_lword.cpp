@@ -15,8 +15,6 @@
 
 DEFINE_FIRMWARE_DATATYPE(LWORD, g_nStringIdLWORD)
 
-const TForteUInt16 CIEC_LWORD::scm_unMaxStringBufSize = 100;
-
 const CIEC_LWORD::TValueType CIEC_LWORD::scm_nMaxVal = std::numeric_limits<CIEC_LWORD::TValueType>::max();
 
 #endif

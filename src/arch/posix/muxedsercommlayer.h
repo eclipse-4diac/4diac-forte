@@ -19,7 +19,6 @@ class CMuxedSerCommLayer : public forte::com_infra::CComLayer{
     CMuxedSerCommLayer(forte::com_infra::CComLayer* pa_poUpperLayer, forte::com_infra::CCommFB * pa_poFB);
     virtual ~CMuxedSerCommLayer();
 
-    virtual void closeConnection();
     virtual forte::com_infra::EComResponse sendData(void *pa_pvData, unsigned int pa_unSize);
     virtual forte::com_infra::EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize);
 
@@ -32,6 +31,7 @@ class CMuxedSerCommLayer : public forte::com_infra::CComLayer{
   protected:
   private:
     virtual forte::com_infra::EComResponse openConnection(char *pa_acLayerParameter);
+    virtual void closeConnection();
 
     forte::com_infra::EComResponse m_eInterruptResp;
     char m_acRecvBuffer[cg_unIPLayerRecvBufferSize];
@@ -51,14 +51,12 @@ class CMuxedSerCommLayer : public forte::com_infra::CComLayer{
         typedef CSinglyLinkedList<CMuxedSerCommLayer *> TConnectionContainer;
         class SSerPortEntry : public forte::com_infra::CComLayer{
           public:
-            SSerPortEntry(): forte::com_infra::CComLayer(0, 0), m_acSerPort(0){
+            SSerPortEntry(): forte::com_infra::CComLayer(0, 0), m_acSerPort(0), m_nFD(scm_nInvalidFileDescriptor){
             }
 
             char* m_acSerPort;
             CFDSelectHandler::TFileDescriptor m_nFD;
             TConnectionContainer m_lstConnectionsList;
-
-            virtual void closeConnection(){}
 
             virtual forte::com_infra::EComResponse sendData(void *, unsigned int ){
               return forte::com_infra::e_Nothing;
@@ -71,6 +69,8 @@ class CMuxedSerCommLayer : public forte::com_infra::CComLayer{
             virtual forte::com_infra::EComResponse openConnection(char *){
               return forte::com_infra::e_Nothing;
             }
+
+            virtual void closeConnection(){}
         };
 
         typedef CSinglyLinkedList<SSerPortEntry> TSerPortList;

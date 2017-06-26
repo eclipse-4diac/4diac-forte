@@ -147,6 +147,29 @@ char *DEV_MGR::parseRequest(char *pa_acRequestString, forte::core::SManagementCM
   return acCommandStart;
 }
 
+bool DEV_MGR::parseFBType(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand){
+  bool bRetVal = false;
+  if(!strncmp("FBType Name=\"", pa_acRequestPartLeft, 13)){
+    char *acBuf = &(pa_acRequestPartLeft[13]);
+    int i = 0;
+    if(acBuf[0] != '*'){
+      i = parseIdentifier(acBuf, pa_rstCommand.mFirstParam);
+      acBuf = (-1 == i) ? 0 : strchr(&(acBuf[i + 1]), '>');
+    }
+    if(acBuf != 0){
+      acBuf = acBuf + 1;
+      i = 0;
+      TForteUInt16 nBufLength = static_cast<TForteUInt16>(strcspn(acBuf, "<"));
+      pa_rstCommand.mAdditionalParams.assign(acBuf, nBufLength);
+    }
+    else{
+      return false;
+    }
+    bRetVal = true;
+    }
+  return bRetVal;
+}
+
 bool DEV_MGR::parseFBData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand){
   bool bRetVal = false;
 
@@ -247,15 +270,15 @@ bool DEV_MGR::parseWriteConnectionData(char *pa_acRequestPartLeft, forte::core::
         do{
           pa_acRequestPartLeft++;
         } while(';' != *pa_acRequestPartLeft);
-        pa_acRequestPartLeft += 2; //go beyound the ; and the following "
+        pa_acRequestPartLeft += 2; //go beyond the ; and the following "
         break;
       }
       i++;
     }
-    //char originalVal = beginOfRequest[i];
+    char originalVal = beginOfRequest[i];
     beginOfRequest[i] = '\0';
     pa_rstCommand.mAdditionalParams.assign(beginOfRequest, static_cast<TForteUInt16>(i));
-    //beginOfRequest[i] = originalVal;
+    beginOfRequest[i] = originalVal;
 
     pa_acRequestPartLeft = strchr(&(pa_acRequestPartLeft[1]), '\"');
     if(pa_acRequestPartLeft != 0){
@@ -274,7 +297,7 @@ void DEV_MGR::parseCreateData(char *pa_acRequestPartLeft, forte::core::SManageme
           if(parseFBData(pa_acRequestPartLeft, pa_rstCommand)){
             pa_rstCommand.mCMD = cg_nMGM_CMD_Create_FBInstance;
           }
-          else{
+          else if(parseFBType(pa_acRequestPartLeft, pa_rstCommand)){
             pa_rstCommand.mCMD = cg_nMGM_CMD_Create_FBType;
           }
           break;
@@ -521,9 +544,9 @@ void DEV_MGR::generateLongResponse(EMGMResponse pa_eResp, forte::core::SManageme
       }
     }
     else if(pa_stCMD.mCMD == cg_nMGM_CMD_QUERY_FBTypes){
-      RESP().append("<FBList>\n    ");
+      RESP().append("<NameList>\n    ");
       RESP().append(pa_stCMD.mAdditionalParams.getValue());
-      RESP().append("\n  </FBList>");
+      RESP().append("\n  </NameList>");
     }
     else if(pa_stCMD.mCMD == cg_nMGM_CMD_QUERY_DTTypes){
       RESP().append("<DTList>\n    ");
@@ -531,9 +554,9 @@ void DEV_MGR::generateLongResponse(EMGMResponse pa_eResp, forte::core::SManageme
       RESP().append("\n  </DTList>");
     }
     else if(pa_stCMD.mCMD == cg_nMGM_CMD_QUERY_AdapterTypes){
-      RESP().append("<AdapterList>\n    ");
+      RESP().append("<NameList>\n    ");
       RESP().append(pa_stCMD.mAdditionalParams.getValue());
-      RESP().append("\n  </AdapterList>");
+      RESP().append("\n  </NameList>");
     }
 #endif
   }

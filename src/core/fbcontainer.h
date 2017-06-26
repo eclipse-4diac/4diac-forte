@@ -25,7 +25,7 @@ namespace forte {
         CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer *paParent);
         virtual ~CFBContainer();
 
-        CStringDictionary::TStringId getName(){
+        CStringDictionary::TStringId getName() const{
           return mContainerName;
         }
 

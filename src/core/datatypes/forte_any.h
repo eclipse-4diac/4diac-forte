@@ -30,7 +30,6 @@
 
 class CIEC_ANY{
   public:
-
     /*! \ingroup COREDTS\brief Data type ID's are chosen according to IEC 61499-1 : Function Block
      *  -- Part 1 Architecture - Annex F (informative) Information exchange/F.3
      *  Transfer syntaxes (page 89).
@@ -50,6 +49,9 @@ class CIEC_ANY{
       e_External = 256, // Base for CIEC_ANY based types outside of the forte base
       e_Max = 65535 // Guarantees at least 16 bits - otherwise gcc will optimizes on some platforms
     };
+
+    // ordering of sizes is according to EDataTypeID, that the ID can be used to get the proper value, +1 for \0
+    const static TForteByte csm_aStringBufferSize[];
 
 #ifdef FORTE_USE_64BIT_DATATYPES
     typedef TForteUInt64 TLargestUIntValueType;
@@ -161,6 +163,10 @@ class CIEC_ANY{
      */
     static void specialCast(const CIEC_ANY &pa_roSrcValue, CIEC_ANY &pa_roDstValue);
 
+    /*! \brief calculates buffer size needed for toString conversion
+         */
+    virtual unsigned int getToStringBufferSize();
+
 #ifdef FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
     /*! \brief the following methods have to be implemented if a custom datatype is added to the forte which is not supported by the default seralize mechanism. */
     /*! \brief returns the required size for serialization */
@@ -190,7 +196,7 @@ class CIEC_ANY{
     ;
 #endif
 
-    bool isForced(){
+    bool isForced() const{
       return m_bForced;
     }
 

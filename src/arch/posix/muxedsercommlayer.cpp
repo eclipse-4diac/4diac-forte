@@ -23,19 +23,13 @@ using namespace forte::com_infra;
 CMuxedSerCommLayer::CMuxedSerPortsManager CMuxedSerCommLayer::sm_oMuxedSerPortsManager;
 
 CMuxedSerCommLayer::CMuxedSerCommLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poFB) :
-    CComLayer(pa_poUpperLayer, pa_poFB), m_unBufFillSize(0){
+    CComLayer(pa_poUpperLayer, pa_poFB), m_unBufFillSize(0), m_nFD(scm_nInvalidFileDescriptor),
+	m_eInterruptResp(forte::com_infra::EComResponse::e_Nothing), m_unSerMuxId(0){
 
 }
 
 CMuxedSerCommLayer::~CMuxedSerCommLayer(){
   closeConnection();
-}
-
-void CMuxedSerCommLayer::closeConnection(){
-  if(CFDSelectHandler::scm_nInvalidFileDescriptor != m_nFD){
-    sm_oMuxedSerPortsManager.removeMuxedSerLayer(m_nFD, this);
-    m_nFD = CFDSelectHandler::scm_nInvalidFileDescriptor;
-  }
 }
 
 EComResponse CMuxedSerCommLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
@@ -108,6 +102,13 @@ EComResponse CMuxedSerCommLayer::openConnection(char *pa_acLayerParameter){
   }
 
   return eRetVal;
+}
+
+void CMuxedSerCommLayer::closeConnection(){
+  if(CFDSelectHandler::scm_nInvalidFileDescriptor != m_nFD){
+    sm_oMuxedSerPortsManager.removeMuxedSerLayer(m_nFD, this);
+    m_nFD = CFDSelectHandler::scm_nInvalidFileDescriptor;
+  }
 }
 
 //**************************************************************************************************************************

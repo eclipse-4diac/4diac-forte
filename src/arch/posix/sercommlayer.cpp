@@ -29,15 +29,6 @@ CSerCommLayer::~CSerCommLayer(){
   closeConnection();
 }
 
-void CSerCommLayer::closeConnection(){
-  if(CFDSelectHandler::scm_nInvalidFileDescriptor != m_nFD){
-    CFDSelectHandler::getInstance().removeComCallback(m_nFD);
-    tcsetattr(m_nFD, TCSANOW, &m_stOldTIO);
-    close(m_nFD);
-    m_nFD = CFDSelectHandler::scm_nInvalidFileDescriptor;
-  }
-}
-
 forte::com_infra::EComResponse CSerCommLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
   if(CFDSelectHandler::scm_nInvalidFileDescriptor != m_nFD){
     ssize_t nToSend = pa_unSize;
@@ -137,5 +128,14 @@ forte::com_infra::EComResponse CSerCommLayer::openConnection(char *pa_acLayerPar
   }
 
   return eRetVal;
+}
+
+void CSerCommLayer::closeConnection(){
+  if(CFDSelectHandler::scm_nInvalidFileDescriptor != m_nFD){
+    CFDSelectHandler::getInstance().removeComCallback(m_nFD);
+    tcsetattr(m_nFD, TCSANOW, &m_stOldTIO);
+    close(m_nFD);
+    m_nFD = CFDSelectHandler::scm_nInvalidFileDescriptor;
+  }
 }
 

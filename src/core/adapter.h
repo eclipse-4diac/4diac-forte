@@ -88,7 +88,7 @@ class CAdapter: public CFunctionBlock {
     /*! provides access to the interface spec used for the specific adatpter instnace (i.e., plug or socket)
      *  Is required mainly by the anyadapter
      */
-    const SFBInterfaceSpec* getAdapterInterfaceSpec(){
+    const SFBInterfaceSpec* getAdapterInterfaceSpec() const{
       return m_pstInterfaceSpec;
     }
 

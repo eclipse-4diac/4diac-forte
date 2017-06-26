@@ -25,17 +25,10 @@ CIPComLayer::CIPComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB) :
         m_nListeningID(CIPComSocketHandler::scm_nInvalidSocketDescriptor),
         m_eInterruptResp(e_Nothing),
         m_unBufFillSize(0){
+  memset(m_acRecvBuffer, 0, sizeof(m_acRecvBuffer)); //TODO change this to  m_acRecvBuffer{0} in the extended list when fully switching to C++11
 }
 
 CIPComLayer::~CIPComLayer(){
-}
-
-void CIPComLayer::closeConnection(){
-  DEVLOG_DEBUG("CSocketBaseLayer::closeConnection() \n");
-  closeSocket(&m_nSocketID);
-  closeSocket(&m_nListeningID);
-
-  m_eConnectionState = e_Disconnected;
 }
 
 EComResponse CIPComLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
@@ -165,6 +158,14 @@ EComResponse CIPComLayer::openConnection(char *pa_acLayerParameter){
   return eRetVal;
 }
 
+void CIPComLayer::closeConnection(){
+  DEVLOG_DEBUG("CSocketBaseLayer::closeConnection() \n");
+  closeSocket(&m_nSocketID);
+  closeSocket(&m_nListeningID);
+
+  m_eConnectionState = e_Disconnected;
+}
+
 void CIPComLayer::closeSocket(CIPComSocketHandler::TSocketDescriptor *pa_nSocketID){
   if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != *pa_nSocketID){
     CIPComSocketHandler::getInstance().removeComCallback(*pa_nSocketID);
@@ -180,7 +181,9 @@ void CIPComLayer::handledConnectedDataRecv(){
 #ifdef WIN32
     Sleep(0);
 #else
+#ifndef __RCX__
     sleep(0);
+#endif
 #endif
   }
   if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != m_nSocketID){

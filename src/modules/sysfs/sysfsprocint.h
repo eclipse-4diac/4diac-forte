@@ -27,15 +27,20 @@ class CSysFsProcessInterface : public CProcessInterfaceBase{
     bool writePin();
     bool readPin();
 
-
+  private:
     std::fstream mFile;
 
+    bool exportGPIO();
+    bool setDirection(bool paIsInput);
+    bool valueGPIO(bool paIsInput);
+    
     static const char * const scmOK;
     static const char * const scmPinInUse;
     static const char * const scmNotInitialised;
     static const char * const scmError;
     static const char * const scmCouldNotRead;
     static const char * const scmCouldNotWrite;
+
 
 };
 

@@ -42,10 +42,10 @@ bool CProcessInterface::writePin(){
 
 bool CProcessInterface::readWord(){
   bool retVal = false;
-  TForteByte buffer[3];
 
   //set the register to read the analog value from
   if(1 == write(mFd, &mValueAddress, 1)){
+    TForteByte buffer[3];
     if(3 == read(mFd, buffer, 3)){
       IN_W() = static_cast<TForteWord>(((static_cast<TForteWord>(buffer[2]) << 8) & 0xFF00) | 
                  buffer[1]);
