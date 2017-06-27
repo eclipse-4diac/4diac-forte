@@ -182,7 +182,7 @@ void WagoPFCProcessInterface::CKBusHandler::run(){
   stEvent.State = ApplicationState_Running;
   if(DAL_SUCCESS == mAppDevInterface->ApplicationStateChanged(stEvent)){
     while(isAlive()){
-     usleep(10000); // wait 10 ms  TODO make this configurable
+     CThread::sleepThread(10); // wait 10 ms  TODO make this configurable
      if(!triggerKBusCycle()){
        //we have severe problem exit KBus handling thread
        //TODO check how can we recover or at least inform the user

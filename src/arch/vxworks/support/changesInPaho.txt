@@ -1,59 +1,145 @@
-From 8fa79b674d06b890a200986908a82e9aad12fab3 Mon Sep 17 00:00:00 2001
+From a7f72e0e9cdcf5b349ccb3949559f398bb723cdf Mon Sep 17 00:00:00 2001
 From: Jose Cabral <cabral@fortiss.org>
-Date: Mon, 14 Nov 2016 10:26:07 +0100
-Subject: Changes to make it run in VxWorks
+Date: Thu, 1 Jun 2017 09:06:15 +0200
+Subject: change for vxworks
 
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0a7fc66..d211fed 100644
+index 00b18b5..d75cf25 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -26,7 +26,7 @@ SET(PAHO_VERSION_PATCH 3)
- SET(CLIENT_VERSION ${PAHO_VERSION_MAJOR}.${PAHO_VERSION_MINOR}.${PAHO_VERSION_PATCH})
+@@ -38,7 +38,7 @@ IF (BUILD_TIMESTAMP STREQUAL "")
+ 	ENDIF()
+ ENDIF()
  
- EXECUTE_PROCESS(COMMAND date -u OUTPUT_VARIABLE BUILD_TIMESTAMP)
 -STRING(STRIP ${BUILD_TIMESTAMP} BUILD_TIMESTAMP)
 +STRING(STRIP "${BUILD_TIMESTAMP}" BUILD_TIMESTAMP)
+ MESSAGE(STATUS "Timestamp is ${BUILD_TIMESTAMP}")
+ 
+ 
+@@ -70,7 +70,7 @@ ENDIF()
  
  ## build options
  SET(PAHO_WITH_SSL FALSE CACHE BOOL "Flag that defines whether to build ssl-enabled binaries too. ")
+-SET(PAHO_BUILD_STATIC FALSE CACHE BOOL "Build static library")
++SET(PAHO_BUILD_STATIC TRUE CACHE BOOL "Build static library")
+ SET(PAHO_BUILD_DOCUMENTATION FALSE CACHE BOOL "Create and install the HTML based API documentation (requires Doxygen)")
+ SET(PAHO_BUILD_SAMPLES FALSE CACHE BOOL "Build sample programs")
+ 
+@@ -97,5 +97,6 @@ INCLUDE(CPack)
+ 
+ ENABLE_TESTING()
+ 
+-INCLUDE_DIRECTORIES(test src)
+-ADD_SUBDIRECTORY(test)
++INCLUDE_DIRECTORIES(src)
++#INCLUDE_DIRECTORIES(test src)
++#ADD_SUBDIRECTORY(test)
+diff --git a/src/.project b/src/.project
+new file mode 100644
+index 0000000..cb9e22e
+--- /dev/null
++++ b/src/.project
+@@ -0,0 +1,27 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<projectDescription>
++	<name>paho</name>
++	<comment></comment>
++	<projects>
++	</projects>
++	<buildSpec>
++		<buildCommand>
++			<name>org.eclipse.cdt.managedbuilder.core.genmakebuilder</name>
++			<triggers>clean,full,incremental,</triggers>
++			<arguments>
++			</arguments>
++		</buildCommand>
++		<buildCommand>
++			<name>org.eclipse.cdt.managedbuilder.core.ScannerConfigBuilder</name>
++			<triggers>full,incremental,</triggers>
++			<arguments>
++			</arguments>
++		</buildCommand>
++	</buildSpec>
++	<natures>
++		<nature>org.eclipse.cdt.core.cnature</nature>
++		<nature>org.eclipse.cdt.core.ccnature</nature>
++		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
++		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
++	</natures>
++</projectDescription>
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 1faaa92..5f313cc 100644
+index a9bad9e..a26920a 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -54,10 +54,13 @@ ELSEIF (CMAKE_SYSTEM_NAME MATCHES "Linux")
- ENDIF()
+@@ -70,34 +70,40 @@ SET_PROPERTY(TARGET common_obj PROPERTY POSITION_INDEPENDENT_CODE ON)
  
  ADD_EXECUTABLE(MQTTVersion MQTTVersion.c)
--ADD_LIBRARY(paho-mqtt3c SHARED ${common_src} MQTTClient.c)
--ADD_LIBRARY(paho-mqtt3a SHARED ${common_src} MQTTAsync.c)
--TARGET_LINK_LIBRARIES(paho-mqtt3c pthread ${LIBS_SYSTEM}) 
--TARGET_LINK_LIBRARIES(paho-mqtt3a pthread ${LIBS_SYSTEM})
-+ADD_LIBRARY(paho-mqtt3c STATIC ${common_src} MQTTClient.c)
-+ADD_LIBRARY(paho-mqtt3a STATIC ${common_src} MQTTAsync.c)
+ 
+-ADD_LIBRARY(paho-mqtt3c SHARED $<TARGET_OBJECTS:common_obj> MQTTClient.c)
+-ADD_LIBRARY(paho-mqtt3a SHARED $<TARGET_OBJECTS:common_obj> MQTTAsync.c)
++#ADD_LIBRARY(paho-mqtt3c SHARED $<TARGET_OBJECTS:common_obj> MQTTClient.c)
++#ADD_LIBRARY(paho-mqtt3a SHARED $<TARGET_OBJECTS:common_obj> MQTTAsync.c)
+ 
+-TARGET_LINK_LIBRARIES(paho-mqtt3c ${THREAD_LIBS_SYSTEM} ${LIBS_SYSTEM})
+-TARGET_LINK_LIBRARIES(paho-mqtt3a ${THREAD_LIBS_SYSTEM} ${LIBS_SYSTEM})
++#TARGET_LINK_LIBRARIES(paho-mqtt3c ${THREAD_LIBS_SYSTEM} ${LIBS_SYSTEM})
++#TARGET_LINK_LIBRARIES(paho-mqtt3a ${THREAD_LIBS_SYSTEM} ${LIBS_SYSTEM})
+ 
+-TARGET_LINK_LIBRARIES(MQTTVersion paho-mqtt3a paho-mqtt3c ${LIBS_SYSTEM})
+-SET_TARGET_PROPERTIES(
+-    paho-mqtt3c paho-mqtt3a PROPERTIES
+-    VERSION ${CLIENT_VERSION}
+-    SOVERSION ${PAHO_VERSION_MAJOR})
++#TARGET_LINK_LIBRARIES(MQTTVersion paho-mqtt3a paho-mqtt3c ${LIBS_SYSTEM})
++#SET_TARGET_PROPERTIES(
++#    paho-mqtt3c paho-mqtt3a PROPERTIES
++#    VERSION ${CLIENT_VERSION}
++#    SOVERSION ${PAHO_VERSION_MAJOR})
+ 
+-INSTALL(TARGETS paho-mqtt3c paho-mqtt3a
+-    ARCHIVE DESTINATION lib
+-    LIBRARY DESTINATION ${PAHO_LIBRARY_DIR_NAME})
+-INSTALL(TARGETS MQTTVersion
+-    RUNTIME DESTINATION bin)
++#INSTALL(TARGETS paho-mqtt3c paho-mqtt3a
++#    ARCHIVE DESTINATION lib
++#    LIBRARY DESTINATION ${PAHO_LIBRARY_DIR_NAME})
++#INSTALL(TARGETS MQTTVersion
++#    RUNTIME DESTINATION bin)
 +
-+#ADD_LIBRARY(paho-mqtt3c SHARED ${common_src} MQTTClient.c)
-+#ADD_LIBRARY(paho-mqtt3a SHARED ${common_src} MQTTAsync.c)
-+#TARGET_LINK_LIBRARIES(paho-mqtt3c pthread ${LIBS_SYSTEM}) 
-+#TARGET_LINK_LIBRARIES(paho-mqtt3a pthread ${LIBS_SYSTEM})
- TARGET_LINK_LIBRARIES(MQTTVersion paho-mqtt3a paho-mqtt3c ${LIBS_SYSTEM})
- SET_TARGET_PROPERTIES(
-     paho-mqtt3c paho-mqtt3a PROPERTIES
-@@ -65,6 +68,7 @@ SET_TARGET_PROPERTIES(
-     SOVERSION ${PAHO_VERSION_MAJOR})
- INSTALL(TARGETS paho-mqtt3c paho-mqtt3a MQTTVersion
-     RUNTIME DESTINATION bin
-+	ARCHIVE DESTINATION lib
-     LIBRARY DESTINATION lib)
- INSTALL(FILES MQTTAsync.h MQTTClient.h MQTTClientPersistence.h
-     DESTINATION include)
++SET(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} " -O2 -march=atom -mmovbe -nostdlib -fno-builtin -fno-defer-pop -fno-implicit-fp -fno-zero-initialized-in-bss -D_WRS_KERNEL -Wall -MD -MP -DCPU=_VX_ATOM -DTOOL_FAMILY=gnu -DTOOL=gnu -DIP_PORT_VXWORKS=69 -IC:/WBOEM69_Rexroth/customBosch/vxworks-6.9/target/h -IC:/WBOEM69_Rexroth/customBosch/vxworks-6.9/target/h/wrn/coreip -W -Wall -Wextra -Wconversion -DFORTE_LITTLE_ENDIAN -ggdb")
++#SET(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} " -O2 -march=atom -mmovbe -nostdlib -fno-builtin -fno-defer-pop -fno-implicit-fp -fno-zero-initialized-in-bss -D_WRS_KERNEL -Wall -MD -MP -DCPU=_VX_ATOM -DTOOL_FAMILY=gnu -DTOOL=gnu -DIP_PORT_VXWORKS=69 -D_VSB_CONFIG_FILE=\"C:/WBOEM69_Rexroth/customBosch/vxworks-6.9/target/lib/h/config/vsbConfig.h\" -IC:/WBOEM69_Rexroth/customBosch/vxworks-6.9/target/h -IC:/WBOEM69_Rexroth/customBosch/vxworks-6.9/target/h/wrn/coreip -W -Wall -Wextra -Wconversion -DFORTE_LITTLE_ENDIAN -ggdb")
+ 
+ IF (PAHO_BUILD_STATIC)
+-    ADD_LIBRARY(paho-mqtt3c-static STATIC $<TARGET_OBJECTS:common_obj> MQTTClient.c)
+-    ADD_LIBRARY(paho-mqtt3a-static STATIC $<TARGET_OBJECTS:common_obj> MQTTAsync.c)
++    #ADD_LIBRARY(paho-mqtt3c-static STATIC ${common_src} MQTTClient.c)
++    ADD_LIBRARY(paho-mqtt3a-static STATIC ${common_src} MQTTAsync.c)
++    
++    #ADD_LIBRARY(paho-mqtt3c-static STATIC $<TARGET_OBJECTS:common_obj> MQTTClient.c)
++    #ADD_LIBRARY(paho-mqtt3a-static STATIC $<TARGET_OBJECTS:common_obj> MQTTAsync.c)
+ 
+-    TARGET_LINK_LIBRARIES(paho-mqtt3c-static ${LIBS_SYSTEM})
++    #TARGET_LINK_LIBRARIES(paho-mqtt3c-static ${LIBS_SYSTEM})
+     TARGET_LINK_LIBRARIES(paho-mqtt3a-static ${LIBS_SYSTEM})
+ 
+-    INSTALL(TARGETS paho-mqtt3c-static
+-        ARCHIVE DESTINATION lib
+-        LIBRARY DESTINATION lib)
++    #INSTALL(TARGETS paho-mqtt3c-static
++    #   ARCHIVE DESTINATION lib
++    #   LIBRARY DESTINATION lib)
+     INSTALL(TARGETS paho-mqtt3a-static
+         ARCHIVE DESTINATION lib
+         LIBRARY DESTINATION lib)
 diff --git a/src/Heap.c b/src/Heap.c
-index 3e94616..8b9ee10 100755
+index f8a9ee9..801d535 100644
 --- a/src/Heap.c
 +++ b/src/Heap.c
-@@ -32,7 +32,7 @@
- #include "Thread.h"
+@@ -35,7 +35,7 @@
  char* Broker_recordFFDC(char* symptoms);
+ #endif /* HEAP_UNIT_TESTS */
  
 -#include <memory.h>
 +/*#include <memory.h>*/
@@ -61,7 +147,7 @@ index 3e94616..8b9ee10 100755
  #include <string.h>
  #include <stdio.h>
 diff --git a/src/Heap.h b/src/Heap.h
-index 06494c4..3821d1b 100755
+index 06494c4..3821d1b 100644
 --- a/src/Heap.h
 +++ b/src/Heap.h
 @@ -24,7 +24,7 @@
@@ -74,7 +160,7 @@ index 06494c4..3821d1b 100755
  
  #if !defined(NO_HEAP_TRACKING)
 diff --git a/src/LinkedList.c b/src/LinkedList.c
-index 603a2cc..8fcc4f7 100755
+index 9c81981..c346e2d 100644
 --- a/src/LinkedList.c
 +++ b/src/LinkedList.c
 @@ -28,7 +28,7 @@
@@ -87,10 +173,10 @@ index 603a2cc..8fcc4f7 100755
  #include "Heap.h"
  
 diff --git a/src/MQTTAsync.c b/src/MQTTAsync.c
-index f475c27..18bdb45 100755
+index 0989286..9899051 100644
 --- a/src/MQTTAsync.c
 +++ b/src/MQTTAsync.c
-@@ -39,6 +39,41 @@
+@@ -40,6 +40,41 @@
   */
  
  #define _GNU_SOURCE /* for pthread_mutexattr_settype */
@@ -132,7 +218,7 @@ index f475c27..18bdb45 100755
  #include <stdlib.h>
  #if !defined(WIN32) && !defined(WIN64)
  	#include <sys/time.h>
-@@ -148,7 +183,7 @@ void MQTTAsync_init()
+@@ -147,7 +182,7 @@ void MQTTAsync_init(void)
  	int rc;
  
  	pthread_mutexattr_init(&attr);
@@ -141,7 +227,7 @@ index f475c27..18bdb45 100755
  	if ((rc = pthread_mutex_init(mqttasync_mutex, &attr)) != 0)
  		printf("MQTTAsync: error %d initializing async_mutex\n", rc);
  	if ((rc = pthread_mutex_init(mqttcommand_mutex, &attr)) != 0)
-@@ -225,7 +260,7 @@ long MQTTAsync_elapsed(struct timeval start)
+@@ -216,7 +251,7 @@ long MQTTAsync_elapsed(struct timeval start)
  	struct timeval now, res;
  
  	gettimeofday(&now, NULL);
@@ -150,7 +236,7 @@ index f475c27..18bdb45 100755
  	return (res.tv_sec)*1000 + (res.tv_usec)/1000;
  }
  #endif
-@@ -348,7 +383,8 @@ void MQTTAsync_sleep(long milliseconds)
+@@ -377,7 +412,8 @@ void MQTTAsync_sleep(long milliseconds)
  #if defined(WIN32) || defined(WIN64)
  	Sleep(milliseconds);
  #else
@@ -161,7 +247,7 @@ index f475c27..18bdb45 100755
  	FUNC_EXIT;
  }
 diff --git a/src/MQTTAsync.h b/src/MQTTAsync.h
-index fc977de..82380c9 100644
+index bc467be..33c6583 100644
 --- a/src/MQTTAsync.h
 +++ b/src/MQTTAsync.h
 @@ -1333,7 +1333,7 @@ int main(int argc, char* argv[])
@@ -193,10 +279,10 @@ index fc977de..82380c9 100644
  
  exit:
 diff --git a/src/MQTTClient.c b/src/MQTTClient.c
-index b26bd06..b9c3858 100644
+index 1362470..698f769 100644
 --- a/src/MQTTClient.c
 +++ b/src/MQTTClient.c
-@@ -38,6 +38,42 @@
+@@ -39,6 +39,42 @@
   */
  
  #define _GNU_SOURCE /* for pthread_mutexattr_settype */
@@ -239,7 +325,7 @@ index b26bd06..b9c3858 100644
  #include <stdlib.h>
  #if !defined(WIN32) && !defined(WIN64)
  	#include <sys/time.h>
-@@ -136,7 +172,7 @@ void MQTTClient_init()
+@@ -137,7 +173,7 @@ void MQTTClient_init(void)
  	int rc;
  
  	pthread_mutexattr_init(&attr);
@@ -248,7 +334,7 @@ index b26bd06..b9c3858 100644
  	if ((rc = pthread_mutex_init(mqttclient_mutex, &attr)) != 0)
  		printf("MQTTClient: error %d initializing client_mutex\n", rc);
  	if ((rc = pthread_mutex_init(socket_mutex, &attr)) != 0)
-@@ -203,7 +239,8 @@ void MQTTClient_sleep(long milliseconds)
+@@ -196,7 +232,8 @@ void MQTTClient_sleep(long milliseconds)
  #if defined(WIN32) || defined(WIN64)
  	Sleep(milliseconds);
  #else
@@ -258,12 +344,12 @@ index b26bd06..b9c3858 100644
  #endif
  	FUNC_EXIT;
  }
-@@ -785,14 +822,12 @@ void Protocol_processPublication(Publish* publish, Clients* client)
+@@ -810,14 +847,12 @@ void Protocol_processPublication(Publish* publish, Clients* client)
  	FUNC_EXIT;
  }
  
 -
- int MQTTClient_connectURIVersion(MQTTClient handle, MQTTClient_connectOptions* options, const char* serverURI, int MQTTVersion,
+ static int MQTTClient_connectURIVersion(MQTTClient handle, MQTTClient_connectOptions* options, const char* serverURI, int MQTTVersion,
  	START_TIME_TYPE start, long millisecsTimeout)
  {
  	MQTTClients* m = handle;
@@ -274,7 +360,7 @@ index b26bd06..b9c3858 100644
  	if (m->ma && !running)
  	{
 diff --git a/src/MQTTPersistenceDefault.c b/src/MQTTPersistenceDefault.c
-index 0f4f163..6c24cbf 100755
+index c079ed4..61733d6 100644
 --- a/src/MQTTPersistenceDefault.c
 +++ b/src/MQTTPersistenceDefault.c
 @@ -127,7 +127,7 @@ int pstmkdir( char *pPathname )
@@ -344,7 +430,7 @@ index 0f4f163..6c24cbf 100755
  			}
  			closedir(dp);
 diff --git a/src/MQTTVersion.c b/src/MQTTVersion.c
-index 6976e7c..d0d01fc 100755
+index acd8f74..bd56461 100644
 --- a/src/MQTTVersion.c
 +++ b/src/MQTTVersion.c
 @@ -20,7 +20,7 @@
@@ -356,8 +442,26 @@ index 6976e7c..d0d01fc 100755
  #include <ctype.h>
  #include "MQTTAsync.h"
  
+@@ -30,7 +30,7 @@
+ #include <io.h>
+ #include <sys/stat.h>
+ #else
+-#include <dlfcn.h>
++//#include <dlfcn.h>
+ #include <sys/mman.h>
+ #include <unistd.h>
+ #endif
+@@ -146,7 +146,7 @@ int loadandcall(char* libname)
+ 		FreeLibrary(APILibrary);
+ 	}
+ #else
+-	void* APILibrary = dlopen(libname, RTLD_LAZY); /* Open the Library in question */
++	void* APILibrary = dlopen(libname, 1); /* Open the Library in question */
+ 	char* ErrorOutput = dlerror(); 	               /* Check it opened properly */
+ 	if (ErrorOutput != NULL)
+ 		printf("Error loading library %s, error %s\n", libname, ErrorOutput);
 diff --git a/src/Messages.c b/src/Messages.c
-index f17e435..30126ae 100644
+index 8d3c5de..70cc518 100644
 --- a/src/Messages.c
 +++ b/src/Messages.c
 @@ -26,7 +26,7 @@
@@ -370,10 +474,10 @@ index f17e435..30126ae 100644
  
  #include "Heap.h"
 diff --git a/src/Socket.c b/src/Socket.c
-index 536fb05..6c016ff 100755
+index 9273bbf..9236c99 100644
 --- a/src/Socket.c
 +++ b/src/Socket.c
-@@ -73,7 +73,10 @@ int Socket_setnonblocking(int sock)
+@@ -80,7 +80,10 @@ int Socket_setnonblocking(int sock)
  	FUNC_ENTRY;
  	if ((flags = fcntl(sock, F_GETFL, 0)))
  		flags = 0;
@@ -385,7 +489,7 @@ index 536fb05..6c016ff 100755
  #endif
  	FUNC_EXIT_RC(rc);
  	return rc;
-@@ -673,7 +676,7 @@ int Socket_new(char* addr, int port, int* sock)
+@@ -680,7 +683,7 @@ int Socket_new(char* addr, int port, int* sock)
  					rc = connect(*sock, (struct sockaddr*)&address6, sizeof(address6));
  	#endif
  				if (rc == SOCKET_ERROR)
@@ -395,7 +499,7 @@ index 536fb05..6c016ff 100755
  				{
  					int* pnewSd = (int*)malloc(sizeof(int));
 diff --git a/src/Socket.h b/src/Socket.h
-index e1ab291..7ab066f 100755
+index b548596..1d9e6af 100644
 --- a/src/Socket.h
 +++ b/src/Socket.h
 @@ -17,7 +17,10 @@
@@ -410,7 +514,7 @@ index e1ab291..7ab066f 100755
  #include <sys/types.h>
  
  #if defined(WIN32) || defined(WIN64)
-@@ -38,9 +41,9 @@
+@@ -45,9 +48,9 @@
  #else
  #define INVALID_SOCKET SOCKET_ERROR
  #include <sys/socket.h>
@@ -422,7 +526,7 @@ index e1ab291..7ab066f 100755
  #include <netinet/in.h>
  #include <netinet/tcp.h>
  #include <arpa/inet.h>
-@@ -50,7 +53,7 @@
+@@ -57,7 +60,7 @@
  #include <errno.h>
  #include <fcntl.h>
  #include <unistd.h>
@@ -432,7 +536,7 @@ index e1ab291..7ab066f 100755
  #endif
  
 diff --git a/src/SocketBuffer.c b/src/SocketBuffer.c
-index e4ce756..96a9e25 100755
+index 5bb0411..71c5ee7 100644
 --- a/src/SocketBuffer.c
 +++ b/src/SocketBuffer.c
 @@ -29,7 +29,7 @@
@@ -445,10 +549,10 @@ index e4ce756..96a9e25 100755
  #include "Heap.h"
  
 diff --git a/src/Thread.c b/src/Thread.c
-index 6741acc..40bcf47 100644
+index 4d96d89..5ac0ef2 100644
 --- a/src/Thread.c
 +++ b/src/Thread.c
-@@ -44,7 +44,7 @@
+@@ -45,7 +45,7 @@
  #include <sys/stat.h>
  #include <limits.h>
  #endif
@@ -457,7 +561,7 @@ index 6741acc..40bcf47 100644
  #include <stdlib.h>
  
  /**
-@@ -271,7 +271,8 @@ int Thread_wait_sem(sem_type sem, int timeout)
+@@ -243,7 +243,8 @@ int Thread_wait_sem(sem_type sem, int timeout)
  				rc = 0;
  				break;
  			}
@@ -468,7 +572,7 @@ index 6741acc..40bcf47 100644
  	#else
  		if (clock_gettime(CLOCK_REALTIME, &ts) != -1)
 diff --git a/src/Tree.c b/src/Tree.c
-index b8c719c..13b1f39 100755
+index 2ff9180..8469ba2 100644
 --- a/src/Tree.c
 +++ b/src/Tree.c
 @@ -28,7 +28,7 @@
@@ -519,10 +623,10 @@ index 6b20490..aa9ae02 100644
  
  exit:
 diff --git a/src/samples/paho_c_pub.c b/src/samples/paho_c_pub.c
-index bd26fe4..f6df3fa 100644
+index 760382d..348ae0d 100644
 --- a/src/samples/paho_c_pub.c
 +++ b/src/samples/paho_c_pub.c
-@@ -286,7 +286,8 @@ int main(int argc, char** argv)
+@@ -285,7 +285,8 @@ int main(int argc, char** argv)
  		#if defined(WIN32)
  			Sleep(100);
  		#else
@@ -533,10 +637,10 @@ index bd26fe4..f6df3fa 100644
  
  	MQTTAsync_destroy(&client);
 diff --git a/src/samples/paho_c_sub.c b/src/samples/paho_c_sub.c
-index 4c820b6..c3c352f 100644
+index 473bfad..b6228cd 100644
 --- a/src/samples/paho_c_sub.c
 +++ b/src/samples/paho_c_sub.c
-@@ -325,7 +325,8 @@ int main(int argc, char** argv)
+@@ -324,7 +324,8 @@ int main(int argc, char** argv)
  		#if defined(WIN32)
  			Sleep(100);
  		#else
@@ -546,7 +650,7 @@ index 4c820b6..c3c352f 100644
  		#endif
  
  	if (finished)
-@@ -335,7 +336,8 @@ int main(int argc, char** argv)
+@@ -334,7 +335,8 @@ int main(int argc, char** argv)
  		#if defined(WIN32)
  			Sleep(100);
  		#else
@@ -556,7 +660,7 @@ index 4c820b6..c3c352f 100644
  		#endif
  
  	disc_opts.onSuccess = onDisconnect;
-@@ -349,7 +351,8 @@ int main(int argc, char** argv)
+@@ -348,7 +350,8 @@ int main(int argc, char** argv)
  		#if defined(WIN32)
  			Sleep(100);
  		#else

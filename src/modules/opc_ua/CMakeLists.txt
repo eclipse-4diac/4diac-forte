@@ -22,32 +22,46 @@
 # option to enable OPC UA with cmake
 forte_add_network_layer(OPC_UA OFF "opc_ua" COPC_UA_Layer opcua_layer "Enable OPC UA communication layer")
 
-# path to the build folder of the open62541 stack or the shared-object library (.so)
-SET(FORTE_COM_OPC_UA_DIR "" CACHE PATH "ABSOLUTE path to OPC UA build folder or shared object library")
-
-
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 if (FORTE_COM_OPC_UA)
 
-# OPEN62541 library to be linked to forte
+    SET(FORTE_OPC_UA_PORT "4840" CACHE PATH "Port where the OPC_UA server will listen")
+    SET(FORTE_COM_OPC_UA_INCLUDE_DIR "" CACHE PATH "ABSOLUTE path to open62541.h file in the OPC UA project")
+    SET(FORTE_COM_OPC_UA_LIB_DIR "" CACHE PATH "ABSOLUTE path to OPC UA folder with object library FORTE_COM_OPC_UA_LIB")
+    
+    # Version of open62541 stack
+    set(FORTE_COM_OPC_UA_VERSION "0.2" CACHE STRING "Version of the open62541 stack")
+    # The string must not contain spaces, valid chars: [a-Z], underscore, point
+    set_property(CACHE FORTE_COM_OPC_UA_VERSION PROPERTY STRINGS 0.2 master)
+
+    # OPEN62541 library to be linked to forte
     IF ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
         SET(FORTE_COM_OPC_UA_LIB "libopen62541.so" CACHE STRING "OPC_UA Library file in FORTE_COM_OPC_UA_DIR to be linked to forte (normally with name libopen62541 and a extension according to the type and OS)")
     ELSEIF ("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
         SET(FORTE_COM_OPC_UA_LIB "libopen62541.dll" CACHE STRING "OPC_UA Library file in FORTE_COM_OPC_UA_DIR to be linked to forte (normally with name libopen62541 and a extension according to the type and OS)")
-    ELSE()
+    ELSE ()
         SET(FORTE_COM_OPC_UA_LIB "libopen62541.a" CACHE STRING "OPC_UA Library file in FORTE_COM_OPC_UA_DIR to be linked to forte (normally with name libopen62541 and a extension according to the type and OS)")
     ENDIF ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
+    forte_add_include_directories(${FORTE_COM_OPC_UA_INCLUDE_DIR})
+    forte_add_link_directories(${FORTE_COM_OPC_UA_LIB_DIR})
+    forte_add_link_library(${FORTE_COM_OPC_UA_LIB})
 
-    forte_add_sourcefile_hcpp(opcua_layer opcua_handler)
-    forte_add_sourcefile_hcpp(opcua_layer opcua_helper)
-    if (EXISTS ${FORTE_COM_OPC_UA_DIR})
-        forte_add_include_directories(${FORTE_COM_OPC_UA_DIR})
-        forte_add_link_directories(${FORTE_COM_OPC_UA_DIR})
-        forte_add_link_library(${FORTE_COM_OPC_UA_LIB})
-    else (EXISTS ${FORTE_COM_OPC_UA_DIR})
-        message("No OPC UA directory given")
-    endif (EXISTS ${FORTE_COM_OPC_UA_DIR})
+    string(REPLACE "." "_" FORTE_COM_OPC_UA_VERSION_CLEAN ${FORTE_COM_OPC_UA_VERSION})
+    forte_add_definition(-DFORTE_COM_OPC_UA_VERSION_${FORTE_COM_OPC_UA_VERSION_CLEAN})
+    forte_add_sourcefile_hcpp(opcua_layer opcua_handler opcua_helper)
+    
+    if(NOT EXISTS ${FORTE_COM_OPC_UA_INCLUDE_DIR})
+        message(STATUS "WARNING: The OPC UA directory for open62541.h given does not exist. This will probably make the compilation fail.")
+    endif(NOT EXISTS ${FORTE_COM_OPC_UA_INCLUDE_DIR})
+    if(NOT EXISTS ${FORTE_COM_OPC_UA_LIB_DIR})
+        message(STATUS "WARNING: The OPC UA directory for library FORTE_COM_OPC_UA_LIB given does not exist. This will probably make the linking fail.")
+    endif(NOT EXISTS ${FORTE_COM_OPC_UA_LIB_DIR})
+    
+    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/forte_config_opc_ua.h.in ${CMAKE_BINARY_DIR}/forte_config_opc_ua.new.h)
+    forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/forte_config_opc_ua.new.h ${CMAKE_BINARY_DIR}/forte_config_opc_ua.h)
+    file(REMOVE ${CMAKE_BINARY_DIR}/forte_config_opc_ua.new.h)
+    
 endif (FORTE_COM_OPC_UA)
 
 

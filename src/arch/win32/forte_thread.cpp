@@ -62,6 +62,10 @@ void CWin32Thread::start(void){
   }
 }
 
+void CWin32Thread::sleepThread(unsigned int pa_miliSeconds){
+  Sleep(pa_miliSeconds);
+}
+
 void CWin32Thread::join(void){
   //check if the thread is still running and that we are not calling join from inside the thread
   if((0 != m_nThreadHandle) && (GetCurrentThreadId() != m_nThreadID)){

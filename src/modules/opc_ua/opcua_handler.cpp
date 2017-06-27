@@ -17,25 +17,21 @@
 #include <devexec.h>
 #include "criticalregion.h"
 #include <stdarg.h>
+#include <forte_config_opc_ua.h>
 
 using namespace forte::com_infra;
 
 DEFINE_SINGLETON(COPC_UA_Handler);
 
-#define FORTE_COM_OPC_UA_PORT 4840
-
 const char *LogsLevelNames[6] = {"trace", "debug", "info", "warning", "error", "fatal"};
 const char *LogsCategoryNames[6] = {"network", "channel", "session", "server", "client", "userland"};
 
-void UA_Log_Forte(UA_LogLevel level, UA_LogCategory category, const char *msg, ...) {
+void UA_Log_Forte(UA_LogLevel level, UA_LogCategory category, const char *msg, va_list args) {
 	char tmpStr[400];
 	snprintf(tmpStr, 400, "[OPC UA] %s/%s\t", LogsLevelNames[level], LogsCategoryNames[category]);
 	char *start = &tmpStr[strlen(tmpStr)];
 
-	va_list ap;
-	va_start(ap, msg);
-	vsprintf(start, msg, ap);
-	va_end(ap);
+	vsprintf(start, msg, args);
 
 	size_t len = strlen(tmpStr);
 	tmpStr[len] = '\n';
@@ -44,7 +40,7 @@ void UA_Log_Forte(UA_LogLevel level, UA_LogCategory category, const char *msg, .
 	switch (level) {
 		case UA_LOGLEVEL_TRACE:
 		case UA_LOGLEVEL_DEBUG:
-			DEVLOG_DEBUG(tmpStr_);
+			DEVLOG_DEBUG(tmpStr);
 			break;
 		case UA_LOGLEVEL_INFO:
 			DEVLOG_INFO(tmpStr);
@@ -61,7 +57,6 @@ void UA_Log_Forte(UA_LogLevel level, UA_LogCategory category, const char *msg, .
 
 void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
 	uaServerConfig = UA_ServerConfig_standard;
-	uaServerConfig.enableUsernamePasswordLogin = false;
 	uaServerConfig.networkLayersSize = 1;
 	uaServerConfig.logger = UA_Log_Forte;
 
@@ -82,7 +77,8 @@ void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
 
 COPC_UA_Handler::COPC_UA_Handler() : uaServerConfig(), uaServerNetworkLayer(), getNodeForPathMutex(), nodeCallbackHandles() {
 	configureUAServer(FORTE_COM_OPC_UA_PORT);
-	uaServerRunningFlag = new UA_Boolean(UA_TRUE);
+	uaServerRunningFlag = UA_Boolean_new();
+	*uaServerRunningFlag = UA_TRUE;
 	uaServer = UA_Server_new(uaServerConfig);
 
 	setServerRunning();        // set server loop flag
@@ -101,7 +97,7 @@ COPC_UA_Handler::~COPC_UA_Handler() {
 	uaServerNetworkLayer.deleteMembers(&uaServerNetworkLayer);
 
 	for (CSinglyLinkedList<struct UA_NodeCallback_Handle *>::Iterator iter = nodeCallbackHandles.begin(); iter != nodeCallbackHandles.end(); ++iter)
-		delete (*iter);
+		forte_free(*iter);
 	nodeCallbackHandles.clearAll();
 }
 
@@ -194,7 +190,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char *nodePath, bool cr
 
 
 	// for every folder (which is a BrowsePath) we want to get the node id
-	UA_BrowsePath *browsePaths = new UA_BrowsePath[folderCnt];
+	UA_BrowsePath *browsePaths = (UA_BrowsePath *)UA_Array_new(folderCnt, &UA_TYPES[UA_TYPES_BROWSEPATH]);
 
 	for (unsigned int i = 0; i < folderCnt; i++) {
 		UA_BrowsePath_init(&browsePaths[i]);
@@ -203,7 +199,9 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char *nodePath, bool cr
 		else
 			browsePaths[i].startingNode = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
 		browsePaths[i].relativePath.elementsSize = i + 1;
-		browsePaths[i].relativePath.elements = new UA_RelativePathElement[i + 1];
+
+		browsePaths[i].relativePath.elements = (UA_RelativePathElement *)UA_Array_new(browsePaths[i].relativePath.elementsSize, &UA_TYPES[UA_TYPES_RELATIVEPATHELEMENT]);
+
 		for (unsigned int j = 0; j <= i; j++) {
 
 			if (j < i) {
@@ -232,7 +230,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char *nodePath, bool cr
 				ns = static_cast<UA_UInt16>(atoi(tok));
 				targetName = ++splitPos;
 			}
-			browsePaths[i].relativePath.elements[j].targetName = UA_QUALIFIEDNAME(ns, strdup(targetName));
+			browsePaths[i].relativePath.elements[j].targetName = UA_QUALIFIEDNAME_ALLOC(ns, targetName);
 		}
 		tok = strtok(NULL, "/");
 	}
@@ -243,11 +241,20 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char *nodePath, bool cr
 	request.browsePathsSize = folderCnt;
 
 	{
+#ifndef VXWORKS
+#ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
+#endif
 		// other thready may currently create nodes for the same path, thus mutex
 		CCriticalRegion criticalRegion(this->getNodeForPathMutex);
+#ifndef VXWORKS
+#ifdef __GNUC__
 #pragma GCC diagnostic pop
+#endif
+#endif
+
 		UA_TranslateBrowsePathsToNodeIdsResponse response = UA_Client_Service_translateBrowsePathsToNodeIds(client, request);
 
 		if (response.responseHeader.serviceResult != UA_STATUSCODE_GOOD) {
@@ -319,11 +326,12 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char *nodePath, bool cr
 				UA_ObjectAttributes oAttr;
 				UA_ObjectAttributes_init(&oAttr);
 				char locale[] = "en_US";
-				char *nodeName = new char[targetName->name.length + 1];
+				char *nodeName = (char*)forte_malloc(sizeof(char) * (targetName->name.length + 1));
 				memcpy(nodeName, targetName->name.data, targetName->name.length);
 				nodeName[targetName->name.length] = 0;
-				oAttr.description = UA_LOCALIZEDTEXT(locale, nodeName);
-				oAttr.displayName = UA_LOCALIZEDTEXT(locale, nodeName);
+				oAttr.description = UA_LOCALIZEDTEXT_ALLOC(locale, nodeName);
+				oAttr.displayName = UA_LOCALIZEDTEXT_ALLOC(locale, nodeName);
+				forte_free(nodeName);
 
 				UA_NodeId creationType;
 				if (newNodeType == NULL || j < folderCnt - 1)
@@ -337,11 +345,11 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, char *nodePath, bool cr
 													  *targetName, creationType, oAttr, NULL, *foundNodeId)) != UA_STATUSCODE_GOOD) {
 					DEVLOG_ERROR("Could not addObjectNode. Error: %s - %s\n", UA_StatusCode_name(retVal), UA_StatusCode_description(retVal));
 					forte_free(*foundNodeId);
-					delete[](nodeName);
+					UA_ObjectAttributes_deleteMembers(&oAttr);
 					*foundNodeId = NULL;
 					break;
 				}
-				delete[](nodeName);
+				UA_ObjectAttributes_deleteMembers(&oAttr);
 			}
 		}
 
@@ -375,6 +383,7 @@ UA_StatusCode COPC_UA_Handler::createVariableNode(const UA_NodeId *parentNode, c
 	var_attr.userAccessLevel = UA_ACCESSLEVELMASK_READ;
 	if (allowWrite)
 		var_attr.userAccessLevel |= UA_ACCESSLEVELMASK_WRITE;
+	var_attr.accessLevel = var_attr.userAccessLevel;
 	UA_Variant_setScalar(&var_attr.value, varValue, varType);
 
 	UA_NodeId *returnNodeId = UA_NodeId_new();
@@ -449,7 +458,7 @@ UA_StatusCode COPC_UA_Handler::updateNodeValue(const UA_NodeId *nodeId, const CI
 UA_StatusCode COPC_UA_Handler::registerNodeCallBack(const UA_NodeId *nodeId, forte::com_infra::CComLayer *comLayer, const struct UA_TypeConvert *convert,
 													unsigned int portIndex) {
 	// needs new, otherwise it will be removed as soon as registerNodecallBack exits, and thus handle is not valid in the callback
-	struct UA_NodeCallback_Handle *handle = new struct UA_NodeCallback_Handle;
+	struct UA_NodeCallback_Handle *handle = (UA_NodeCallback_Handle*)forte_malloc(sizeof(struct UA_NodeCallback_Handle));
 
 	handle->convert = convert;
 	handle->comLayer = comLayer;

@@ -109,6 +109,9 @@ void CPosixThread::setDeadline(const CIEC_TIME &pa_roVal){
   //It will not be considered.
 }
 
+void CPosixThread::sleepThread(unsigned int pa_miliSeconds){
+  usleep(1000 * pa_miliSeconds);
+}
 
 void CPosixThread::join(void){
   if(0 != m_stThreadID){

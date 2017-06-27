@@ -14,7 +14,6 @@
 #include "MQTTParameterParser.h"
 #include "MQTTHandler.h"
 #include "commfb.h"
-#include <unistd.h>
 
 using namespace forte::com_infra;
 

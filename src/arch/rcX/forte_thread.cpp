@@ -79,6 +79,10 @@ void CrcXThread::setDeadline(const CIEC_TIME &pa_roVal){
   mDeadline = pa_roVal;
 }
 
+void CrcXThread::sleepThread(unsigned int pa_miliSeconds){
+  rX_SysSleepTask(pa_miliSeconds * 1000 / rX_SysGetSystemCycletime());
+}
+
 void CrcXThread::join(void){
   if(0 != mThreadID){
     CCriticalRegion criticalRegion(mJoinMutex);

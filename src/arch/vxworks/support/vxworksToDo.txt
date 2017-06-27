@@ -1,55 +1,29 @@
-In the vxworks compiling the macros timesub, timeadd, timeclear and timecmp are not defined, so I copy and paste from other file.
+Usage:
 
-The fd_set are also different. They are an array instead of an struct, and FD_ZERO uses a bzero function instead of changind the count value of the struct
+To compile, place the VxWorks.cmake file in CMake\share\cmake-3.6\Modules\Platform where the first CMake folder is the installation folder. Then configure CMake for crosscompiling using the following settings:
 
+Operating System: VxWorks
+Compilers->C: $(ROOT_FOLDER)/gnu/4.3.3-vxworks-6.9/x86-win32/bin/ccpentium.exe
+Compilers->C++: $(ROOT_FOLDER)/gnu/4.3.3-vxworks-6.9/x86-win32/bin/c++pentium.exe
+Target Root: $(ROOT_FOLDER)/customBosch/vxworks-6.9
 
-The downloadable kernel module seems not be a vxe file, but a .out (or .o). In this case the example I used uses different flags and compilation calls to generate the file that will be downloaded. 
-All the objects are compiled as a partial_image.o. Then a nmpentium | tlcsh command is executed and the result stored in a ctdt.c file, which contains the constructors and destructors and some more stuff. This file is compile to its .o file, and then linked to the partial_image.o, generating the .out file
+The deployment of VxWorks was done only in one device, so the folders might change. Check ../CMakeLists.txt and change the folders according to your device and please let us know your changes so we can improve.
 
+Copy and paste the .out file in the file system of the target using FTP or somehitng else available in the device. Then use the ld to load the module and sp funtionaName to run the funtion as a thread. The module has to be loaded everytime the system restarts.
 
-Cpy and paste the .out file in the file system of the target using FTP. Then use the ld to load the module and sp funtionaName to run the funtion as a thread. The module has to be loaded everytime the system restarts
+ld 0,0,"forte.out" //loads the module
+sp startForte //starts forte
 
+MQTT:
 
-Any VxWorks task that uses C++ must be spawned with the VX_FP_TASK option. By default, tasks spawned from host tools (such as the Wind Shell) automatically have VX_FP_TASK enabled. 
+Apply the patch from the file changesInPaho.txt to the paho.mqtt.c git repository. The patch was applied to the commit 5571f9b1cdfba5e628be44e4e84962ede6497e84 with susscefull results
 
-The file IndraC.ini is executed at boot, so the shell commands must be put there.
+OPC_UA:
 
-C++ objects that will be downloaded to kernel space in a target system (downloadable modules) must be munched. There are also several strategies available for calling static constructors and destructors in downloadable modules.
+Apply the patch from the file changesInOPCUA.txt to the open62541 git repository. The patch was applied to the commit be5af5786998c3ddfc9e36858dc86cff1368cfbd with susscefull results. After applying, the open62541.h file that is generated and later included by forte must be changed by deleting the following includes:
 
-For each toolchain, the following examples compile a C++ application source file, hello.cpp, run munch on the .o, compile the generated ctdt.c file, and link the application with ctdt.o to generate a downloadable module, hello.out
+#include <vxWorks.h>
+#include <sockLib.h>
+#include <selectLib.h>
+#include <inetLib.h>
 
- 
-Using the GNU Toolchain
-
-1.Compile the source code:
-
-ccppc -mcpu=604 -mstrict-align  -O2 -fno-builtin -IinstallDir/vxworks-6.1/target/h -DCPU=PPC604 -DTOOL_FAMILY=gnu -DTOOL=gnu -c hello.cpp
-
-2.Munch the object file:
-
-nmppc hello.o | wtxtcl installDir/vxworks-6.1/host/src/hutils/munch.tcl -c ppc > ctdt.c
-
-3.Compile the munch output:
-
-ccppc -mcpu=604 -mstrict-align  -fdollars-in-identifiers -O2 -fno-builtin -IinstallDir/vxworks-6.1/target/h -DCPU=PPC604 -DTOOL_FAMILY=gnu -DTOOL=gnu  -c ctdt.c
-
-4.Link the original object file with the munched object file to create a downloadable module: 
-
-ccppc -r -nostdlib -Wl,-X -T installDir/vxworks-6.1/target/h/tool/gnu/ldscripts/link.OUT -o hello.out hello.o ctdt.o
-
-NOTE:  The -r4 option collapses any COMDAT sections contained in the input files. NOTE:  The -T option collapses any linkonce sections contained in the input files. 
-
-
-The mounched part must be compiled with the C compiler insted of the C++.
-
-Missing implementations:
-
-Warning: module 0x84a4ef8 holds reference to undefined symbol timersub. //Add the definition in the files that use the function. The definition of the Macro is in the vxworkstimer, copied from the internet
-Warning: module 0x84a4ef8 holds reference to undefined symbol usleep. //change to the nanosleep function of vxworks, with the right parameters.
-Warning: module 0x84a4ef8 holds reference to undefined symbol pthread_mutexattr_settype. /* Not available for Kernel module. For now, just commented, but this might bring some errors*/
-/*pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK);*/
-Warning: module 0x84a4ef8 holds reference to undefined symbol lstat. // open the file, and use the file descriptor to call fstat (defined in vxworks)
-
-it worked after I changed some things in the code, specially the non blocking part. The fcntl wasn't working and I changed to a iotcl
-
-Then, with the wireshark I could see that the meessage to the 1883 port were outgoing but not commign to the PC. I disabled the firewall in it worked.

@@ -15,8 +15,6 @@
 #include <criticalregion.h>
 #include <commfb.h>
 
-#include <unistd.h>
-
 DEFINE_SINGLETON(MQTTHandler);
 
 MQTTAsync_connectOptions MQTTHandler::smClientConnectionOptions =
@@ -40,16 +38,17 @@ MQTTHandler::MQTTHandler(){
 
 MQTTHandler::~MQTTHandler(){
   if(isAlive()){
-    CCriticalRegion sectionState(smMQTTMutex);
-    setAlive(false);
-    resumeSelfSuspend();
+    {
+      CCriticalRegion sectionState(smMQTTMutex);
+      MQTTAsync_disconnectOptions disc_opts = MQTTAsync_disconnectOptions_initializer;
+      disc_opts.timeout = 10000;
+      MQTTAsync_disconnect(smClient, &disc_opts);
+      MQTTAsync_destroy(&smClient);
+      setAlive(false);
+      resumeSelfSuspend();
+    }
     end();
   }
-
-  MQTTAsync_disconnectOptions disc_opts = MQTTAsync_disconnectOptions_initializer;
-  disc_opts.timeout = 10000;
-  MQTTAsync_disconnect(smClient, &disc_opts);
-  MQTTAsync_destroy(&smClient);
 }
 
 /*
@@ -291,11 +290,7 @@ void MQTTHandler::run(){
     if(needSleep){
       //sleep in case a subscribe fails while connected
       needSleep = false;
-#ifdef WIN32
-      Sleep(5000);
-#else
-      usleep(5000000);
-#endif
+      CThread::sleepThread(5000);
     }
   }
 }

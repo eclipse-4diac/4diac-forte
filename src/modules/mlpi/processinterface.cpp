@@ -70,7 +70,7 @@ bool CMLPIFaceProcessInterface::initialise(bool ){
 	  unsigned int connectRetries = 0;
 	  CMLPIFaceProcessInterface::connectToMLPI();
 	  while(MLPI_INVALIDHANDLE == smConnection && MAX_NUMBER_OF_RETRIES_TO_CONNECT > connectRetries){
-      sleep(1);
+      CThread::sleepThread(1000);
       CMLPIFaceProcessInterface::connectToMLPI();
 		  connectRetries++;
 	  }

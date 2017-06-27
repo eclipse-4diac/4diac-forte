@@ -11,6 +11,7 @@
 #include "EplWrapper.h"
 #include "ProcessImageMatrix.h"
 #include "EplXmlReader.h"
+#include <forte_thread.h>
 
 #if (TARGET_SYSTEM == _WIN32_)
 #define _WINSOCKAPI_ // prevent windows.h from including winsock.h
@@ -423,11 +424,7 @@ int CEplStackWrapper::eplStackInit(char* pa_chXmlFile, char* pa_chCdcFile, char*
   if(m_bWait == true){
     while(!waitingUntilOperational){
       // Waiting
-#if (TARGET_SYSTEM == _WIN32_)
-      Sleep(1);
-#elif (TARGET_SYSTEM == _LINUX_)
-      usleep(1);
-#endif
+      CThread::sleepThread(1);
     }
   }
 

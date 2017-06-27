@@ -61,6 +61,13 @@ class CECOSThread : public forte::arch::CThreadBase {
       cyg_thread_resume(m_stHandle);
     }
 
+    /*! \brief Sleep the calling thread
+     *
+     * @param pa_miliSeconds The miliseconds for the thread to sleep
+     */
+
+    static void sleepThread(unsigned int pa_miliSeconds);
+
     virtual void join(void);
   protected:
     void setPriority(cyg_priority_t pa_nPriority) {

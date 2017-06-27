@@ -12,6 +12,7 @@
 #include <fortenew.h>
 #include <criticalregion.h>
 #include "forte_thread.h"
+#include <unistd.h>
 
 TCECOSThreadPtr CECOSThread::sm_aoThreadList[CECOSThread::scm_nThreadListSize] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 CSyncObject CECOSThread::sm_oThreadListLock;
@@ -100,6 +101,10 @@ void CECOSThread::setDeadline(const CIEC_TIME &pa_roVal){
         }
     }      
   }  
+}
+
+void CECOSThread::sleepThread(unsigned int pa_miliSeconds){
+  usleep(1000 * pa_miliSeconds);
 }
   
 void CECOSThread::join(void){

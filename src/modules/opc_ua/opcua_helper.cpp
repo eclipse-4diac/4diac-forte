@@ -13,14 +13,11 @@
 #include "opcua_helper.h"
 #include "convert_functions.h"
 
-#define UA_String_to_char_alloc(str, chars) \
- ( \
-    { \
+#define UA_String_to_char_alloc(str, chars) { \
         chars = static_cast<char*>(forte_malloc(str->length+1)); \
         memcpy(chars, str->data, str->length); \
         chars[str->length] = 0; \
-    } \
- )
+    }
 
 template<CIEC_ANY::EDataTypeID T_FORTE_E, typename T_FORTE_T, typename T_C>
 bool map_convert_get(const CIEC_ANY *src, void *dst) {
@@ -42,16 +39,16 @@ bool map_convert_set(const void *src, CIEC_ANY *dst) {
 
 #define MAP_INSERT_CONVERT(T_FORTE_E, T_FORTE_T, T_UA, T_C) \
     { \
-        type: T_UA, \
-        get: &map_convert_get<T_FORTE_E, T_FORTE_T, T_C>, \
-        set: &map_convert_set<T_FORTE_E, T_FORTE_T, T_C> \
+        T_UA, \
+        &map_convert_get<T_FORTE_E, T_FORTE_T, T_C>, \
+        &map_convert_set<T_FORTE_E, T_FORTE_T, T_C> \
     } \
 
 #define MAP_INSERT_CONVERT_SPECIFIC(T_FORTE_T, T_UA) \
     { \
-        type: T_UA, \
-        get: &map_convert_get_##T_FORTE_T, \
-        set: &map_convert_set_##T_FORTE_T \
+        T_UA, \
+        &map_convert_get_##T_FORTE_T, \
+        &map_convert_set_##T_FORTE_T \
     } \
 
 
@@ -72,14 +69,14 @@ bool map_convert_set_CIEC_DATE(const void *src, CIEC_ANY *dst) {
 	return true;
 }
 
-bool map_convert_get_CIEC_TIME_OF_DAY(const CIEC_ANY *src, __attribute__((unused)) void *dst) {
+bool map_convert_get_CIEC_TIME_OF_DAY(const CIEC_ANY *src, void *) {
 	if (src->getDataTypeID() != CIEC_ANY::e_TIME_OF_DAY)
 		return false;
 	//TODO how convert TOD to DT?
 	return false;
 }
 
-bool map_convert_set_CIEC_TIME_OF_DAY(const __attribute__((unused)) void *src, CIEC_ANY *dst) {
+bool map_convert_set_CIEC_TIME_OF_DAY(const void *, CIEC_ANY *dst) {
 	if (dst->getDataTypeID() != CIEC_ANY::e_TIME_OF_DAY)
 		return false;
 	//TODO how convert UA_DateTime to TOD?
@@ -137,9 +134,9 @@ bool map_convert_set_CIEC_WSTRING(const void *src, CIEC_ANY *dst) {
  */
 const UA_TypeConvert COPC_UA_Helper::mapForteTypeIdToOpcUa[CIEC_ANY::e_WSTRING + 1] = {
 		{ // dummy for e_ANY
-				type: NULL,
-				get: NULL,
-				set: NULL
+			NULL,
+			NULL,
+			NULL
 		},
 		MAP_INSERT_CONVERT(CIEC_ANY::e_BOOL, CIEC_BOOL, &UA_TYPES[UA_TYPES_BOOLEAN], UA_Boolean),
 		MAP_INSERT_CONVERT(CIEC_ANY::e_SINT, CIEC_SINT, &UA_TYPES[UA_TYPES_SBYTE], UA_SByte),
