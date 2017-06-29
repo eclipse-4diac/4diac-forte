@@ -9,23 +9,28 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "io_base.h"
+#include "io_adapter.h"
 
 namespace IO {
 namespace ConfigurationFB {
+namespace Multi {
 
-Base::Base(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
+Adapter::Adapter(const TForteUInt8* const scm_slaveConfigurationIO,
+    const TForteUInt8 scm_slaveConfigurationIO_num, CResource *pa_poSrcRes,
+    const SFBInterfaceSpec *pa_pstInterfaceSpecSocket,
     const CStringDictionary::TStringId pa_nInstanceNameId,
+    const SFBInterfaceSpec *pa_pstInterfaceSpecPlug, bool pa_bIsPlug,
     TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-    CEventSourceFB(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId,
-        pa_acFBConnData, pa_acFBVarsData) {
-  // TODO Auto-generated constructor stub
-
+    CAdapter(pa_poSrcRes, pa_pstInterfaceSpecSocket, pa_nInstanceNameId,
+        pa_pstInterfaceSpecPlug, pa_bIsPlug, pa_acFBConnData, pa_acFBVarsData), scm_slaveConfigurationIO(
+        scm_slaveConfigurationIO), scm_slaveConfigurationIO_num(
+        scm_slaveConfigurationIO_num) {
 }
 
-Base::~Base() {
+Adapter::~Adapter() {
   // TODO Auto-generated destructor stub
 }
 
+} /* namespace Multi */
 } /* namespace ConfigurationFB */
 } /* namespace IO */

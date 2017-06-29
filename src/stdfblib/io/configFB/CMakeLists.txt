@@ -1,5 +1,5 @@
 #*******************************************************************************
-# * Copyright (c) 2016 Johannes Messmer (messmer@fortiss.org)
+# * Copyright (c) 2017 fortiss GmbH
 # * All rights reserved. This program and the accompanying materials
 # * are made available under the terms of the Eclipse Public License v1.0
 # * which accompanies this distribution, and is available at
@@ -17,5 +17,7 @@
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\configFB)
 
 forte_add_sourcefile_hcpp(io_base io_controller)
-# forte_add_sourcefile_hcpp(multi/io_master)
-# forte_add_sourcefile_hcpp(multi/io_adapter)
+
+forte_add_sourcefile_hcpp(multi/io_adapter)
+forte_add_sourcefile_hcpp(multi/io_master)
+forte_add_sourcefile_hcpp(multi/io_slave)

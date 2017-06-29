@@ -9,23 +9,13 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_STDFBLIB_IO_CONFIGFB_BASE_H_
-#define SRC_STDFBLIB_IO_CONFIGFB_BASE_H_
-
-#include <esfb.h>
+#include "io_controller_multi.h"
 
 namespace IO {
-namespace ConfigurationFB {
+namespace Device {
 
-class Base: public CEventSourceFB {
-public:
-  Base(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-      const CStringDictionary::TStringId pa_nInstanceNameId,
-      TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
-  virtual ~Base();
-};
+MultiController::MultiController() {
+}
 
-} /* namespace ConfigurationFB */
+} /* namespace Device */
 } /* namespace IO */
-
-#endif /* SRC_STDFBLIB_IO_CONFIGFB_BASE_H_ */

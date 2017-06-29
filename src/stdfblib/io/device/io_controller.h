@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2016 Johannes Messmer (messmer@fortiss.org)
+ * Copyright (c) 2017 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
 #ifndef SRC_STDFBLIB_IO_DEVICE_CONTROLLER_H_
@@ -69,8 +69,7 @@ public:
   virtual void setConfig(Config* config) = 0;
 
 protected:
-  Controller(ConfigurationFB::Controller *delegate);
-  virtual ~Controller();
+  Controller();
 
   /*! @brief Initializes the controller.
    *
@@ -118,6 +117,10 @@ protected:
 
 private:
   void run();
+
+  void setInitDelay(int delay);
+
+  int initDelay;
 
   // Functions needed for the external event handler interface
   void enableHandler(void) {

@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2016 Johannes Messmer (messmer@fortiss.org)
+ * Copyright (c) 2017 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
 #include "io_controller.h"
@@ -28,12 +28,13 @@ Controller::Controller(CResource *pa_poSrcRes,
     const CStringDictionary::TStringId pa_nInstanceNameId,
     TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
     Base(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData,
-        pa_acFBVarsData), starting(false), errorCounter(0), controller(0) {
+        pa_acFBVarsData), starting(false), errorCounter(0), controller(0), performRestart(
+        false) {
 
 }
 
 Controller::~Controller() {
-  deInit();
+  deInit(true);
 }
 
 void Controller::executeEvent(int pa_nEIID) {
@@ -68,21 +69,22 @@ bool Controller::handleNotification(Device::Controller::NotificationType type,
   switch (type) {
 
   case Device::Controller::Error:
+    onError();
+
     if (starting) {
       if (attachment == 0)
         attachment = scmFailedToInit;
 
+      STATUS() = (const char*) attachment;
       DEVLOG_ERROR(
           "[IO:ConfigFB:Controller] Failed to initialize controller. Reason: %s\n",
           STATUS().getValue());
     } else {
+      STATUS() = (const char*) attachment;
+
       DEVLOG_ERROR("[IO:ConfigFB:Controller] Runtime error. Reason: %s\n",
           STATUS().getValue());
     }
-
-    STATUS() = (const char*) attachment;
-
-    onError();
     return true;
 
   case Device::Controller::Success:
@@ -98,15 +100,12 @@ bool Controller::handleNotification(Device::Controller::NotificationType type,
 }
 
 void Controller::onError(bool isFatal) {
-  // TODO Add delay
-
   errorCounter++;
-  bool retry = errorCounter < MaxErrors;
+  performRestart = errorCounter < MaxErrors;
 
   // ReInit Controller
-  if (retry) {
+  if (performRestart) {
     deInit();
-    init();
   } else {
     starting = false;
     QO() = false;
@@ -121,7 +120,7 @@ void Controller::onError(bool isFatal) {
   }
 }
 
-bool Controller::init() {
+bool Controller::init(int delay) {
   if (controller != 0) {
     DEVLOG_ERROR(
         "[IO:ConfigFB:Controller] Controller has already been initialized.\n");
@@ -134,6 +133,9 @@ bool Controller::init() {
         "[IO:ConfigFB:Controller] Failed to create controller.\n");
     return false;
   }
+
+  controller->delegate = this;
+  controller->setInitDelay(delay);
 
   starting = true;
   STATUS() = scmInitializing;
@@ -166,21 +168,44 @@ void Controller::started(const char* error) {
   sendOutputEvent(scm_nEventINITOID);
 }
 
-bool Controller::deInit() {
+void Controller::onStop() {
+  stopped();
+}
+
+bool Controller::deInit(bool isDestructing) {
   if (controller == 0) {
     DEVLOG_ERROR(
         "[IO:ConfigFB:Controller] Controller has already been stopped.\n");
     return false;
   }
 
+  if (isDestructing) {
+    performRestart = false;
+
+    stopped();
+  } else {
+    onStop();
+  }
+
+  return false;
+}
+
+void Controller::stopped() {
+  controller->delegate = 0;
   if (controller->isAlive())
     controller->end();
+
+  delete controller;
   controller = 0;
   starting = false;
 
   STATUS() = scmStopped;
 
-  return false;
+  if (performRestart) {
+    performRestart = false;
+
+    init(errorCounter);
+  }
 }
 
 } /* namespace ConfigurationFB */

@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2016 Johannes Messmer (messmer@fortiss.org)
+ * Copyright (c) 2017 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
 #ifndef SRC_STDFBLIB_IO_CONFIGFB_CONTROLLER_H_
@@ -35,6 +35,10 @@ public:
       const CStringDictionary::TStringId pa_nInstanceNameId,
       TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
   virtual ~Controller();
+
+  Device::Controller* getDeviceController() {
+    return controller;
+  }
 
 protected:
 
@@ -102,19 +106,21 @@ protected:
    * It is usually called by the INIT+ event.
    * It may also be called after an error and a following recovery attempt.
    *
+   * @param delay Delay the initialization in seconds
    * @return True if the initialization was successful
    */
-  bool init();
+  bool init(int delay = 0);
 
   /*! @brief Deinitializes the configuration fb
    *
    * It is usually called by the INIT- event and after an error.
    *
+   * @param isDestructing True if the deInit is called inside the destructor
    * @return True if the deinitialization was successful
    */
-  bool deInit();
+  bool deInit(bool isDestructing = false);
 
-  /*! @brief Used for further asynchronous initialization operations
+  /*! @brief Used for (asynchronous) initialization operations
    *
    * The method is called after a successful #init call.
    * It is, for example, used for the initialization of attached configuration fbs.
@@ -129,8 +135,22 @@ protected:
    */
   void started(const char* error = 0);
 
+  /*! @brief Used for (asynchronous) deinitialization operations
+   *
+   * The method is called after the #deInit function, in case the fb is not destructed.
+   * It is, for example, used for the deinitialization of attached configuration fbs.
+   *
+   * @attention The #stopped method should be called after the deinitialization operations.
+   */
+  virtual void onStop();
+
+  /*! @brief Confirmation method of the #onStop method */
+  void stopped();
+
 private:
   void onError(bool isFatal = true);
+
+  bool performRestart;
 
   static const char * const scmOK;
   static const char * const scmInitializing;
