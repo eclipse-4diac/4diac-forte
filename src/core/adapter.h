@@ -46,14 +46,12 @@ class CAdapter: public CFunctionBlock {
     bool isPlug() const {
       return m_bIsPlug;
     }
-    ;
 
     /*!\brief Returns if Adapter instance is a Socket
      */
     bool isSocket() const {
       return !m_bIsPlug;
     }
-    ;
 
     void setParentFB(CFunctionBlock *pa_poParentFB, TForteUInt8 pa_nParentAdapterlistID);
 
@@ -123,7 +121,7 @@ class CAdapter: public CFunctionBlock {
     virtual void executeEvent(int pa_nEIID);
     void setupEventEntryList();
 
-    bool m_bIsPlug;
+    const bool m_bIsPlug;
     CAdapter *m_poPeer;
     CIEC_ANY *m_aoLocalDIs;
     CAdapterConnection *m_poAdapterConn;
