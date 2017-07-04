@@ -94,12 +94,12 @@ public:
   CSyncObject updateMutex;
 
 protected:
-  static Slave* sendInit(int address);
+  static Slave* sendInit(Bus* bus, int address);
 
-  Slave(int address, Packages::SlaveInit init);
+  Slave(Bus* bus, int address, Packages::SlaveInit init);
   virtual ~Slave();
 
-  Bus * bus;
+  Bus* bus;
 
   Config config;
 

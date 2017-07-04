@@ -66,6 +66,9 @@ const SFBInterfaceSpec Slave2181::scm_stFBInterfaceSpec = { 1,
     scm_anDataInputNames, scm_anDataInputTypeIds, 2, scm_anDataOutputNames,
     scm_anDataOutputTypeIds, 2, scm_astAdapterInstances };
 
+const TForteUInt8 Slave2181::scm_slaveConfigurationIO[] = { 17 };
+const TForteUInt8 Slave2181::scm_slaveConfigurationIO_num = 1;
+
 void Slave2181::initHandles() {
   // 8 Inputs
   addBitHandle(Mapper::In, DigitalInput_1(), 0, 0);

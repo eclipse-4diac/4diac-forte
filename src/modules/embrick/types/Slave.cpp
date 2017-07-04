@@ -19,118 +19,53 @@
 namespace EmBrick {
 namespace FunctionBlocks {
 
-const char * const Slave::scmOK = "OK";
 const char * const Slave::scmSlow = "Slow";
 const char * const Slave::scmInterrupted = "Interrupted";
 const char * const Slave::scmError = "Error";
 const char * const Slave::scmUnknown = "Invalid status code";
-const char * const Slave::scmNotFound = "Module not found";
-const char * const Slave::scmIncorrectType = "Module type is incorrect";
 
-Slave::Slave(CResource *pa_poSrcRes,
+Slave::Slave(const TForteUInt8* const scm_slaveConfigurationIO,
+    const TForteUInt8 scm_slaveConfigurationIO_num, int type,
+    CResource *pa_poSrcRes,
     const SFBInterfaceSpec *pa_pstInterfaceSpec,
     const CStringDictionary::TStringId pa_nInstanceNameId,
     TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-    CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId,
-        pa_acFBConnData, pa_acFBVarsData), type(Handlers::UnknownSlave), slave(
-        0), ready(
-        false) {
-  UpdateIntervalDefault = false;
+    IO::ConfigurationFB::Multi::Slave(
+        scm_slaveConfigurationIO,
+        scm_slaveConfigurationIO_num, type, pa_poSrcRes, pa_pstInterfaceSpec,
+        pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData), slave(0) {
 }
 
 Slave::~Slave() {
-
+  deInit();
 }
 
-void Slave::executeEvent(int pa_nEIID) {
-  if (BusAdapterIn().INIT() == pa_nEIID) {
-    // Init slave
-    slaveMutex.lock();
+const char* const Slave::init() {
+  slaveMutex.lock();
 
-    if (!UpdateIntervalDefault && !UpdateInterval())
-      UpdateIntervalDefault = true;
-
-    if (UpdateIntervalDefault)
-      UpdateInterval() = BusAdapterIn().UpdateInterval();
-
-    QO() = ready = init(BusAdapterIn().INDEX());
-    slaveMutex.unlock();
-
-    if (QO())
-      DEVLOG_INFO("emBrick[SlaveFunctionBlock]: Init slave %d success.\n",
-          (int ) BusAdapterIn().INDEX());
-    else
-      DEVLOG_ERROR("emBrick[SlaveFunctionBlock]: Init slave %d failed.\n",
-          (int ) BusAdapterIn().INDEX());
-
-    if (BusAdapterOut().getPeer() != 0) {
-      // Init next slave
-      BusAdapterOut().INDEX() = BusAdapterIn().INDEX() + 1;
-      BusAdapterOut().UpdateInterval() = BusAdapterIn().UpdateInterval();
-      sendAdapterEvent(scm_nBusAdapterOutAdpNum, BusAdapter::scm_nEventINITID);
-    } else {
-      // Send confirmation of init
-      BusAdapterIn().QO() = QO();
-      sendAdapterEvent(scm_nBusAdapterInAdpNum, BusAdapter::scm_nEventINITOID);
-    }
-  } else if (BusAdapterOut().INITO() == pa_nEIID) {
-    // Forward confirmation of init
-    BusAdapterIn().QO() = BusAdapterOut().QO() && QO();
-    sendAdapterEvent(scm_nBusAdapterInAdpNum, BusAdapter::scm_nEventINITOID);
-  }
-
-  switch (pa_nEIID) {
-  case scm_nEventMAPID:
-    slaveMutex.lock();
-
-    if (!ready)
-      break;
-
-    // Drop all existing handles
-    dropHandles();
-
-    if (true == QI())
-      initHandles();
-
-    slaveMutex.unlock();
-
-    QO() = QI();
-    sendOutputEvent(scm_nEventMAPOID);
-    break;
-  }
-}
-
-bool Slave::init(int index) {
-  slave = 0;
-
-  Handlers::Bus &bus = Handlers::Bus::getInstance();
+  Handlers::Bus &bus = *static_cast<Handlers::Bus*>(&getController());
 
   slave = bus.getSlave(index);
-  if (!slave) {
-    STATUS() = scmNotFound;
-    return false;
-  }
-
-  if (slave->type != type) {
-    STATUS() = scmIncorrectType;
-    return false;
-  }
-
   slave->delegate = this;
 
   Handlers::Slave::Config config;
   config.UpdateInterval = UpdateInterval();
   slave->setConfig(config);
 
-  dropHandles();
-  if (true == QI())
-    initHandles();
+  slaveMutex.unlock();
 
-  return true;
+  return 0;
 }
 
-void Slave::dropHandles() {
-  slave->dropHandles();
+void Slave::deInit() {
+  slaveMutex.lock();
+
+  if (slave != 0) {
+    slave->delegate = 0;
+    slave = 0;
+  }
+
+  slaveMutex.unlock();
 }
 
 void Slave::addBitHandle(Mapper::Direction direction, CIEC_WSTRING id,
@@ -138,12 +73,7 @@ void Slave::addBitHandle(Mapper::Direction direction, CIEC_WSTRING id,
   if (id == "")
     return;
 
-  SlaveHandle* handle = new BitSlaveHandle(direction, offset, pos, slave);
-
-  if (Mapper::getInstance().registerHandle(id, handle))
-    slave->addHandle(handle);
-  else
-    delete handle;
+  addHandle(id, new BitSlaveHandle(direction, offset, pos, slave));
 }
 
 void Slave::addAnalogHandle(Mapper::Direction direction, CIEC_WSTRING id,
@@ -151,12 +81,7 @@ void Slave::addAnalogHandle(Mapper::Direction direction, CIEC_WSTRING id,
   if (id == "")
     return;
 
-  SlaveHandle* handle = new AnalogSlaveHandle(direction, offset, slave);
-
-  if (Mapper::getInstance().registerHandle(id, handle))
-    slave->addHandle(handle);
-  else
-    delete handle;
+  addHandle(id, new AnalogSlaveHandle(direction, offset, slave));
 }
 
 void Slave::addAnalog10Handle(Mapper::Direction direction, CIEC_WSTRING id,
@@ -164,12 +89,7 @@ void Slave::addAnalog10Handle(Mapper::Direction direction, CIEC_WSTRING id,
   if (id == "")
     return;
 
-  SlaveHandle* handle = new AnalogSlaveHandle(direction, offset, slave);
-
-  if (Mapper::getInstance().registerHandle(id, handle))
-    slave->addHandle(handle);
-  else
-    delete handle;
+  addHandle(id, new AnalogSlaveHandle(direction, offset, slave));
 }
 
 void Slave::onSlaveStatus(Handlers::SlaveStatus status, Handlers::SlaveStatus) {
@@ -190,19 +110,17 @@ void Slave::onSlaveStatus(Handlers::SlaveStatus status, Handlers::SlaveStatus) {
     STATUS() = scmUnknown;
     break;
   }
+
   sendOutputEvent(scm_nEventINDID);
 }
 
 void Slave::onSlaveDestroy() {
-  slaveMutex.lock();
+  deInit();
 
-  slave = 0;
-  QO() = ready = false;
+  QO() = false;
   STATUS() = scmError;
-  // TODO Recognize device kill. Causes segfault otherwise
-//  sendOutputEvent(scm_nEventINDID);
 
-  slaveMutex.unlock();
+//  sendOutputEvent(scm_nEventINDID);
 }
 
 } /* namespace FunctionsBlocks */

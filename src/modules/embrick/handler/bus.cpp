@@ -18,17 +18,12 @@
 namespace EmBrick {
 namespace Handlers {
 
-const char * const Bus::scmOK = "OK";
-const char * const Bus::scmWaitingForInit =
-    "Waiting for initialization..";
-const char * const Bus::scmFailedToInit = "Failed to init BusHandler.";
 const char * const Bus::scmSlaveUpdateFailed = "Update of slave failed.";
 const char * const Bus::scmNoSlavesFound = "No slave modules found.";
 
-DEFINE_SINGLETON(Bus)
-
 Bus::Bus() :
-    delegate(0), spi(0), slaveSelect(0), slaves(0), slaveCount(0) {
+    spi(0), slaveSelect(0), slaves(0), slaveCount(
+        0), sList(0) {
   // Set init time
   struct timespec ts;
   // TODO Check compile error. Had to to add rt libary to c++ make flags
@@ -37,11 +32,6 @@ Bus::Bus() :
   initTime = ts.tv_sec;
   lastTransfer = micros();
 
-  // Sync
-  isReady = false;
-  error = 0;
-  sList = 0;
-
   // Default config
   config.BusInterface = 1;
   config.BusSelectPin = 49;
@@ -49,74 +39,15 @@ Bus::Bus() :
   config.BusLoopSpeed = SPI::MaxSpiSpeed;
 }
 
-Bus::~Bus() {
-}
-
-void Bus::setConfig(struct Config config) {
-  // Check if BusHandler is active -> config changes are not allowed
+void Bus::setConfig(struct IO::Device::Controller::Config* config) {
+  // Check if BusHandler is active -> configuration changes are not allowed
   if (isAlive()) {
-    DEVLOG_ERROR("emBrick[BusHandler]: Cannot change config while running.\n");
+    DEVLOG_ERROR(
+        "emBrick[BusHandler]: Cannot change configuration while running.\n");
     return;
   }
 
-  this->config = config;
-}
-
-void Bus::run() {
-  isReady = false;
-  error = 0;
-
-  // Init bus
-  if (init()) {
-    isReady = true;
-
-    DEVLOG_INFO("emBrick[BusHandler]: Ready.\n");
-
-    // Inform delegate about successful startup
-    if (delegate != 0)
-      startNewEventChain(delegate);
-
-    // Lock loop before the start
-    loopSync.lock();
-
-    // Prepare loop
-    prepareLoop();
-
-    // Run main loop -> function is blocking
-    runLoop();
-
-    // Clean loop
-    cleanLoop();
-
-    // Release loop after the end
-    loopSync.unlock();
-  } else {
-    // Handler occured during initialization. If no error is present, set general error
-    if (!hasError())
-      error = scmFailedToInit;
-
-    // Inform delegate about error
-    if (delegate != 0)
-      startNewEventChain(delegate);
-  }
-
-  isReady = false;
-
-  // Free memory -> delete all slave instances and hardware handlers
-  TSlaveList::Iterator itEnd(slaves->end());
-  for (TSlaveList::Iterator it = slaves->begin(); it != itEnd; ++it)
-    delete *it;
-  delete slaves;
-  delete spi;
-  delete slaveSelect;
-
-  DEVLOG_INFO("emBrick[BusHandler]: Stopped.\n");
-
-  // TODO Remove statement
-  // DISCUSS The thread init fails without the statement.
-  // Is it possible that the function returns before the thread was stopped?
-  while (isAlive())
-    sleep(1);
+  this->config = *static_cast<Config*>(config);
 }
 
 bool Bus::init() {
@@ -126,10 +57,11 @@ bool Bus::init() {
   slaves = new TSlaveList();
 
   // Check handlers
-  if (checkHandlerError())
+  if (checkHandlerError()) {
     return false;
+  }
 
-  // Set SPI sped for intialization
+  // Set SPI sped for initialization
   spi->setSpeed(config.BusInitSpeed);
 
   // Disable slave select -> reset all slaves
@@ -150,7 +82,7 @@ bool Bus::init() {
   Slave *slave = 0;
 
   do {
-    slave = Slave::sendInit(slaveCounter);
+    slave = Slave::sendInit(this, slaveCounter);
 
     if (slave != 0) {
       slaves->push_back(slave);
@@ -179,6 +111,18 @@ bool Bus::init() {
   return true;
 }
 
+void Bus::deInit() {
+  // Free memory -> delete all slave instances and hardware handlers
+  TSlaveList::Iterator itEnd(slaves->end());
+  for (TSlaveList::Iterator it = slaves->begin(); it != itEnd; ++it)
+    delete *it;
+  delete slaves;
+  slaves = 0;
+
+  delete spi;
+  delete slaveSelect;
+}
+
 void Bus::prepareLoop() {
   // Get current time
   clock_gettime(CLOCK_MONOTONIC, &nextLoop);
@@ -204,6 +148,8 @@ void Bus::prepareLoop() {
 }
 
 void Bus::runLoop() {
+  prepareLoop();
+
   // Init loop variables
   SEntry *sCur = 0;
 
@@ -236,12 +182,8 @@ void Bus::runLoop() {
     if (res == -1) {
       error = scmSlaveUpdateFailed;
       // Check for critical bus errors
-      if (checkHandlerError() || hasError()) {
-        // Inform delegate
-        if (delegate != 0)
-          startNewEventChain(delegate);
+      if (checkHandlerError() || hasError())
         break;
-      }
     }
 
     // Search for next deadline -> set lock to avoid changes of list
@@ -263,6 +205,8 @@ void Bus::runLoop() {
     }
   }
 
+  // Clean loop
+  cleanLoop();
 }
 
 void Bus::cleanLoop() {
@@ -271,10 +215,6 @@ void Bus::cleanLoop() {
     forte_free(sList[i]);
   forte_free(sList);
   sList = 0;
-}
-
-bool Bus::hasError() {
-  return error != 0;
 }
 
 bool Bus::checkHandlerError() {
@@ -291,25 +231,18 @@ bool Bus::checkHandlerError() {
   return false;
 }
 
-const char* Bus::getStatus() {
-  if (!isReady && error == 0)
-    return scmWaitingForInit;
-
-  if (hasError())
-    return error;
-
-  return scmOK;
-}
-
 Slave* Bus::getSlave(int index) {
-  if (slaves == 0)
+  if (slaves == 0) {
     return 0;
+  }
 
   TSlaveList::Iterator itEnd = slaves->end();
   int i = 0;
   for (TSlaveList::Iterator it = slaves->begin(); it != itEnd; ++it, i++)
-    if (index == i)
+    if (index == i) {
       return *it;
+    }
+
   return 0;
 }
 
@@ -343,6 +276,34 @@ void Bus::forceUpdate(int index) {
   }
 
   loopSync.unlock();
+}
+
+void Bus::addSlaveHandle(int index, Handle* handle) {
+  Slave* slave = getSlave(index);
+  if (slave == 0)
+    return;
+
+  slave->addHandle((SlaveHandle*) handle);
+}
+
+void Bus::dropSlaveHandles(int index) {
+  Slave* slave = getSlave(index);
+  if (slave == 0)
+    return;
+
+  slave->dropHandles();
+}
+
+bool Bus::isSlaveAvailable(int index) {
+  return getSlave(index) != 0;
+}
+
+bool Bus::checkSlaveType(int index, int type) {
+  Slave* slave = getSlave(index);
+  if (slave == 0)
+    return false;
+
+  return slave->type == type;
 }
 
 bool Bus::transfer(unsigned int target, Command cmd,
@@ -393,9 +354,14 @@ bool Bus::transfer(unsigned int target, Command cmd,
 //    ok = spi->transfer(sendBuffer, recvBuffer, sizeof(Packages::Header));
 //    lastTransfer = micros();
 //    if (!ok) {
-//      DEVLOG_ERROR("emBrick[BusHandler]: Failed to transfer buffer.\n");
+//      DEVLOG_ERROR("emBrick[BusHandler]: Failed to transfer header buffer.\n");
 //      break;
 //    }
+//
+//    // Wait required microseconds between messages
+//    microTime = micros();
+//    if (lastTransfer + 4 > microTime)
+//      microsleep(lastTransfer + 4 - microTime);
 //
 //    // Send data
 //    ok = spi->transfer(sendBuffer + sizeof(Packages::Header),
@@ -403,7 +369,7 @@ bool Bus::transfer(unsigned int target, Command cmd,
 //        bufferLength - sizeof(Packages::Header));
 //    lastTransfer = micros();
 //    if (!ok) {
-//      DEVLOG_ERROR("emBrick[BusHandler]: Failed to transfer buffer.\n");
+//      DEVLOG_ERROR("emBrick[BusHandler]: Failed to transfer data buffer.\n");
 //      break;
 //    }
     ok = spi->transfer(sendBuffer, recvBuffer, bufferLength);
@@ -417,13 +383,13 @@ bool Bus::transfer(unsigned int target, Command cmd,
     ok = calcChecksum(recvBuffer + sizeof(Packages::Header),
         bufferLength - sizeof(Packages::Header)) == 0;
     if (!ok) {
-      DEVLOG_DEBUG("emBrick[BusHandler]: Transfer - Invalid checksum\n");
+//      DEVLOG_DEBUG("emBrick[BusHandler]: Transfer - Invalid checksum\n");
     }
   } while (!ok && ++fails < attempts);
 
   // Check if command was transmitted successfully
   if (!ok) {
-    if (target != 0) {
+    if (target != 0 && cmd != Data) {
       DEVLOG_DEBUG(
           "emBrick[BusHandler]: Failed to send command %d to slave %d.\n", cmd,
           target);
@@ -451,22 +417,6 @@ unsigned char Bus::calcChecksum(unsigned char * data, int dataLen) {
     c += data[i];
 
   return ChecksumConstant - c;
-}
-
-void Bus::disableHandler() {
-
-}
-
-void Bus::enableHandler() {
-
-}
-
-void Bus::setPriority(int) {
-
-}
-
-int Bus::getPriority() const {
-  return 0;
 }
 
 uint64_t Bus::micros() {

@@ -23,7 +23,10 @@ const char * const Pin::scmNotInitialised =
     "Failed to write to not initialised sysfs stream.";
 
 Pin::Pin(unsigned int pin) :
-    pin(pin), error(0) {
+    error(0) {
+  // Convert pin int to string
+  pinStr = static_cast<std::ostringstream &>((std::ostringstream() << std::dec
+      << pin)).str();
   // Disable buffer to avoid latency
   stream.rdbuf()->pubsetbuf(0, 0);
 
@@ -39,18 +42,13 @@ void Pin::init() {
   std::string fileName;
   stream.clear();
 
-  // Prepare pin as std::string
-  std::ostringstream pinStream;
-  pinStream << pin;
-  std::string pinStr = pinStream.str();
-
   // Enable pin
   fileName = "/sys/class/gpio/export";
   stream.open(fileName.c_str(), std::fstream::out);
   if (!stream.is_open())
     return fail(scmFailedToOpenFile);
 
-  stream << pin;
+  stream << pinStr;
   if (stream.fail())
     return fail(scmFailedToWriteFile);
   stream.close();
@@ -73,21 +71,16 @@ void Pin::init() {
   if (!stream.is_open())
     return fail(scmFailedToOpenFile);
 
-  DEVLOG_INFO("emBrick[PinHandler]: GPIO %d ready.\n", pin);
+  DEVLOG_INFO("emBrick[PinHandler]: GPIO %s ready.\n", pinStr.data());
 }
 
 void Pin::deInit() {
   std::string fileName;
 
-  // Prepare pin as std::string
-  std::ostringstream pinStream;
-  pinStream << pin;
-  std::string pinStr = pinStream.str();
-
   // Close pin stream
   if (stream.is_open()) {
-    stream.close();
     stream.clear();
+    stream.close();
   }
 
   // Disable pin
@@ -101,7 +94,7 @@ void Pin::deInit() {
     return fail(scmFailedToWriteFile);
   stream.close();
 
-  DEVLOG_INFO("emBrick[PinHandler]: GPIO %d stopped.\n", pin);
+  DEVLOG_INFO("emBrick[PinHandler]: GPIO %s stopped.\n", pinStr.data());
 }
 
 bool Pin::set(bool state) {

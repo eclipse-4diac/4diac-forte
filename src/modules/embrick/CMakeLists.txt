@@ -10,9 +10,9 @@
 # *   - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lrt")
-
 forte_add_io(EMBRICK "Support for the modular emBRICK system")
+
+SET_PROPERTY (GLOBAL PROPERTY MODULE_LINK_LIBRARY rt)
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 

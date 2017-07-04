@@ -73,11 +73,13 @@ private:
 
   FORTE_FB_DATA_ARRAY(2, 8, 2, 2)
 
+  static const TForteUInt8 scm_slaveConfigurationIO[];
+  static const TForteUInt8 scm_slaveConfigurationIO_num;
+
   virtual void initHandles();
 
 public:
-  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(Slave2301, Slave){
-  type = Handlers::G_2RelNo4RelCo;
+  FUNCTION_BLOCK_CTOR_FOR_IO_MULTI_SLAVE(Slave2301, Slave, Handlers::G_2RelNo4RelCo){
 };
 
 virtual ~Slave2301() {};

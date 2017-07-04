@@ -12,8 +12,7 @@
 #ifndef SRC_MODULES_EMBRICK_TYPES_MASTER_H_
 #define SRC_MODULES_EMBRICK_TYPES_MASTER_H_
 
-#include <esfb.h>
-#include <resource.h>
+#include <io/configFB/multi/io_master.h>
 
 #include <forte_bool.h>
 #include <forte_wstring.h>
@@ -25,15 +24,12 @@
 namespace EmBrick {
 namespace FunctionBlocks {
 
-class Master: public CEventSourceFB {
+class Master: public IO::ConfigurationFB::Multi::Master {
 DECLARE_FIRMWARE_FB(Master)
 
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_BOOL &QI() {
-    return *static_cast<CIEC_BOOL*>(getDI(0));
-  }
 
   CIEC_UINT &BusInterface() {
     return *static_cast<CIEC_UINT*>(getDI(1));
@@ -57,21 +53,11 @@ private:
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_BOOL &QO() {
-    return *static_cast<CIEC_BOOL*>(getDO(0));
-  }
 
-  CIEC_WSTRING &STATUS() {
-    return *static_cast<CIEC_WSTRING*>(getDO(1));
-  }
-
-  static const TEventID scm_nEventINITID = 0;
   static const TForteInt16 scm_anEIWithIndexes[];
   static const TDataIOID scm_anEIWith[];
   static const CStringDictionary::TStringId scm_anEventInputNames[];
 
-  static const TEventID scm_nEventINITOID = 0;
-  static const TEventID scm_nEventINDID = 1;
   static const TForteInt16 scm_anEOWithIndexes[];
   static const TDataIOID scm_anEOWith[];
   static const CStringDictionary::TStringId scm_anEventOutputNames[];
@@ -89,28 +75,16 @@ private:
 
   virtual void setInitialValues();
 
-  void executeEvent(int pa_nEIID);
+protected:
+  Device::Controller* createDeviceController();
+
+  void setConfig();
+
+  virtual void onStartup();
 
 public:
-  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(Master, CEventSourceFB){
-
+  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(Master, IO::ConfigurationFB::Multi::Master){
   }
-
-  Master(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
-      const CStringDictionary::TStringId paInstanceNameId,
-      TForteByte *paFBConnData, TForteByte *paFBVarsData);
-  virtual ~Master();
-
-private:
-  Handlers::Bus *bus;
-  int errorCounter;
-
-  void init();
-  void onBusEvent();
-  void onError(bool isFatal = true);
-
-  static const char * const scmOK;
-  static const char * const scmFailedToInitSlaves;
 };
 
 }

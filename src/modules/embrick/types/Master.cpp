@@ -53,30 +53,6 @@ const SFBInterfaceSpec Master::scm_stFBInterfaceSpec = { 1,
     scm_anDataInputNames, scm_anDataInputTypeIds, 2, scm_anDataOutputNames,
     scm_anDataOutputTypeIds, 1, scm_astAdapterInstances };
 
-const char * const Master::scmOK = "OK";
-const char * const Master::scmFailedToInitSlaves =
-    "Failed to init slaves. Check if the configuration matches the hardware setup.";
-
-Master::Master(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
-    const CStringDictionary::TStringId paInstanceNameId,
-    TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-    CEventSourceFB(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData,
-        paFBVarsData) {
-  setEventChainExecutor(paSrcRes->getResourceEventExecution());
-
-  bus = 0;
-  errorCounter = 0;
-}
-
-Master::~Master() {
-  if (bus != 0) {
-    if (bus->isAlive())
-      bus->end();
-
-    bus->delegate = 0;
-  }
-}
-
 void Master::setInitialValues() {
   BusInterface() = 1;
   BusSelectPin() = 49;
@@ -85,116 +61,23 @@ void Master::setInitialValues() {
   SlaveUpdateInterval() = 25;
 }
 
-void Master::executeEvent(int pa_nEIID) {
-  if (BusAdapterOut().INITO() == pa_nEIID) {
-    QO() = BusAdapterOut().QO();
-
-    if (true == QO()) {
-      // Successful init
-      errorCounter = 0;
-      STATUS() = scmOK;
-
-      sendOutputEvent(scm_nEventINITOID);
-    } else {
-      STATUS() = scmFailedToInitSlaves;
-      DEVLOG_ERROR("emBrick[Master]: Failed to init BusHandler. Reason: %s\n",
-          STATUS().getValue());
-      onError(false);
-    }
-  }
-
-  switch (pa_nEIID) {
-
-  case cg_nExternalEventID:
-    return onBusEvent();
-
-  case scm_nEventINITID:
-    if (true == QI()) {
-      init();
-    } else {
-      // Stop BusHandler
-      if (bus->isAlive())
-        bus->end();
-
-      QO() = true;
-      sendOutputEvent(scm_nEventINITOID);
-    }
-    break;
-  }
+Device::Controller* Master::createDeviceController() {
+  return new Handlers::Bus();
 }
 
-void Master::init() {
-  QO() = false;
-
-  // Init and wait for BusHandler
-  bus = &Handlers::Bus::getInstance();
-  if (bus->isAlive()) {
-    DEVLOG_ERROR(
-        "emBrick[Master]: BusHandler already running. Only one master function block is permitted.\n");
-
-    QO() = false;
-    sendOutputEvent(scm_nEventINITOID);
-    return;
-  }
-
-  setEventChainExecutor(m_poInvokingExecEnv);
-  bus->delegate = this;
-
+void Master::setConfig() {
   Handlers::Bus::Config config;
   config.BusInterface = BusInterface();
   config.BusSelectPin = BusSelectPin();
   config.BusInitSpeed = BusInitSpeed();
   config.BusLoopSpeed = BusLoopSpeed();
-  bus->setConfig(config);
-
-  bus->start();
+  controller->setConfig(&config);
 }
 
-void Master::onBusEvent() {
-  if (bus) {
-    if (bus->hasError()) {
-      STATUS() = bus->getStatus();
-      if (false == QO()) {
-        DEVLOG_ERROR("emBrick[Master]: Failed to init BusHandler. Reason: %s\n",
-            STATUS().getValue());
-      } else {
-        DEVLOG_ERROR("emBrick[Master]: Runtime error. Reason: %s\n",
-            STATUS().getValue());
-      }
-      onError();
-    } else {
-      // Init configuration
-      BusAdapterOut().INDEX() = 0;
-      BusAdapterOut().UpdateInterval() = SlaveUpdateInterval();
-      sendAdapterEvent(scm_nBusAdapterAdpNum, BusAdapter::scm_nEventINITID);
-    }
-  }
-}
+void Master::onStartup() {
+  BusAdapterOut().UpdateInterval() = SlaveUpdateInterval();
 
-void Master::onError(bool isFatal) {
-  // TODO Replace with unblocking timer
-  sleep(errorCounter);
-
-  errorCounter++;
-  bool retry = errorCounter < 5;
-
-  // Check if bus is running
-  if ((isFatal || retry) && bus->isAlive()) {
-    bus->end();
-  }
-
-  // ReInit Bus
-  if (retry) {
-    init();
-  } else {
-    QO() = false;
-    sendOutputEvent(scm_nEventINITOID);
-
-    // Reset error counter if it was not a fatal error
-    if (!isFatal) {
-      errorCounter = 0;
-    }
-  }
+  IO::ConfigurationFB::Multi::Master::onStartup();
 }
 
 } /* namespace FunctionsBlocks */

@@ -55,6 +55,9 @@ const SFBInterfaceSpec Slave2301::scm_stFBInterfaceSpec = { 1,
     scm_anDataInputNames, scm_anDataInputTypeIds, 2, scm_anDataOutputNames,
     scm_anDataOutputTypeIds, 2, scm_astAdapterInstances };
 
+const TForteUInt8 Slave2301::scm_slaveConfigurationIO[] = { 7 };
+const TForteUInt8 Slave2301::scm_slaveConfigurationIO_num = 1;
+
 void Slave2301::initHandles() {
   // 6 Relays
   addBitHandle(Mapper::Out, Relay_1(), 0, 0);

@@ -9,56 +9,38 @@
  *    Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_MODULES_EMBRICK_TYPES_BUSADAPTER_H_
-#define SRC_MODULES_EMBRICK_TYPES_BUSADAPTER_H_
+#ifndef SRC_MODULES_EMBRICK_TYPES_BUSCONFIGADAPTER_H_
+#define SRC_MODULES_EMBRICK_TYPES_BUSCONFIGADAPTER_H_
 
-#include <adapter.h>
+#include <io/configFB/multi/io_adapter.h>
 #include <typelib.h>
-#include <forte_int.h>
+#include <forte_bool.h>
+#include <forte_uint.h>
 
 namespace EmBrick {
 namespace FunctionBlocks {
 
-class BusAdapter: public CAdapter {
+class BusAdapter: public IO::ConfigurationFB::Multi::Adapter {
 DECLARE_ADAPTER_TYPE(BusAdapter)
 
 private:
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-public:
-  CIEC_BOOL &QO() {
-    return *static_cast<CIEC_BOOL*>((isSocket()) ? getDI(0) : getDO(0));
-  }
 
-private:
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
 public:
-  CIEC_INT &INDEX() {
-    return *static_cast<CIEC_INT*>((isSocket()) ? getDO(0) : getDI(0));
-  }
 
   CIEC_UINT &UpdateInterval() {
-    return *static_cast<CIEC_UINT*>((isSocket()) ? getDO(1) : getDI(1));
-  };
-
-public:
-  static const TEventID scm_nEventINITOID = 0;
-  int INITO() {
-    return m_nParentAdapterListEventID + scm_nEventINITOID;
+    return *static_cast<CIEC_UINT*>((isSocket()) ? getDO(3) : getDI(3));
   }
+
 private:
   static const TForteInt16 scm_anEIWithIndexes[];
   static const TDataIOID scm_anEIWith[];
   static const CStringDictionary::TStringId scm_anEventInputNames[];
 
-public:
-  static const TEventID scm_nEventINITID = 0;
-  int INIT() {
-    return m_nParentAdapterListEventID + scm_nEventINITID;
-  }
-private:
   static const TForteInt16 scm_anEOWithIndexes[];
   static const TDataIOID scm_anEOWith[];
   static const CStringDictionary::TStringId scm_anEventOutputNames[];
@@ -67,10 +49,15 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpecPlug;
 
-  FORTE_ADAPTER_DATA_ARRAY(1, 1, 1, 2, 0)
+  FORTE_ADAPTER_DATA_ARRAY(1, 1, 1, 4, 0)
 
 public:
-  ADAPTER_CTOR(BusAdapter){};
+  ADAPTER_CTOR_FOR_IO_MULTI(BusAdapter){
+};
+
+private:
+  static const TForteUInt8 scm_slaveConfigurationIO[];
+  static const TForteUInt8 scm_slaveConfigurationIO_num;
 
   virtual ~BusAdapter() {};
 

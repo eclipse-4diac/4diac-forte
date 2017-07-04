@@ -38,7 +38,7 @@ protected:
   void init();
   void deInit();
 
-  unsigned int pin;
+  std::string pinStr;
   std::fstream stream;
 
   bool hasError() {

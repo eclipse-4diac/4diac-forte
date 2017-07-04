@@ -19,11 +19,10 @@ namespace Handlers {
 
 const int Slave::MaxUpdateErrors = 50;
 
-Slave::Slave(int address, Packages::SlaveInit init) :
-    delegate(0), address(address), type((SlaveType) init.deviceId), dataSendLength(
+Slave::Slave(Bus* bus, int address, Packages::SlaveInit init) :
+    bus(bus), delegate(0), address(address), type((SlaveType) init.deviceId), dataSendLength(
         init.dataSendLength), dataReceiveLength(init.dataReceiveLength), status(
         NotInitialized), oldStatus(NotInitialized) {
-  bus = &Bus::getInstance();
   updateSendImage = new unsigned char[dataSendLength];
   updateReceiveImage = new unsigned char[dataReceiveLength];
   updateReceiveImageOld = new unsigned char[dataReceiveLength];
@@ -50,12 +49,16 @@ Slave::~Slave() {
 }
 
 void Slave::setConfig(Config config) {
+  if (config.UpdateInterval < 20) {
+    DEVLOG_WARNING(
+        "embrick[Slave]: Configured UpdateInterval not in range (>= 20). Set to 25.\n");
+    config.UpdateInterval = 25;
+  }
+
   this->config = config;
 }
 
-Slave* Slave::sendInit(int address) {
-  Bus & bus = Bus::getInstance();
-
+Slave* Slave::sendInit(Bus* bus, int address) {
   Packages::MasterInit masterInit;
   masterInit.slaveAddress = (unsigned char) address;
   masterInit.syncGapMultiplicator = SyncGapMultiplicator;
@@ -66,7 +69,7 @@ Slave* Slave::sendInit(int address) {
   masterInit.toBuffer(sendBuffer);
 
   // Send init via broadcast. Due to the sequential slave select activation, only one slave will respond.
-  if (!bus.broadcast(Init, sendBuffer, sizeof(Packages::MasterInit),
+  if (!bus->broadcast(Init, sendBuffer, sizeof(Packages::MasterInit),
       receiveBuffer, sizeof(Packages::SlaveInit)))
     return 0;
 
@@ -82,7 +85,7 @@ Slave* Slave::sendInit(int address) {
       initPackage.dataSendLength, initPackage.producerId);
 
   // Return slave instance
-  return new Slave(address, initPackage);
+  return new Slave(bus, address, initPackage);
 }
 
 int Slave::update() {
@@ -91,7 +94,9 @@ int Slave::update() {
       updateReceiveImage, dataReceiveLength, &status, &updateMutex)) {
     updateErrorCounter++;
     if (updateErrorCounter % 10 == 0)
-      DEVLOG_ERROR("%d %d\n", address, updateErrorCounter);
+      DEVLOG_WARNING(
+          "emBrick[Slave]: Slave %d reached transfer error threshold - %d out of %d\n",
+          address, updateErrorCounter, MaxUpdateErrors);
     return updateErrorCounter <= MaxUpdateErrors ? 0 : -1;
   }
 
