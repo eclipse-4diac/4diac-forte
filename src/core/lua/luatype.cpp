@@ -43,12 +43,12 @@ namespace luatype {
 
 CLuaFBTypeEntry::CLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING paLuaScriptAsString, SFBInterfaceSpec& interfaceSpec,
     SInternalVarsInformation& internalVarsInformation)
-    : CTypeLib::CFBTypeEntry(typeNameId, 0), paLuaScriptAsString(paLuaScriptAsString), interfaceSpec(interfaceSpec), internalVarsInformation(internalVarsInformation) {
+    : CTypeLib::CFBTypeEntry(typeNameId, 0), cm_sLuaScriptAsString(paLuaScriptAsString), m_interfaceSpec(interfaceSpec), m_internalVarsInformation(internalVarsInformation) {
 }
 
 CLuaFBTypeEntry::~CLuaFBTypeEntry() {
-  deleteInterfaceSpec(interfaceSpec);
-  deleteInternalVarsInformation(internalVarsInformation);
+  deleteInterfaceSpec(m_interfaceSpec);
+  deleteInternalVarsInformation(m_internalVarsInformation);
 }
 
 CLuaFBTypeEntry* CLuaFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING& paLuaScriptAsString) {
@@ -85,16 +85,16 @@ CLuaFBTypeEntry* CLuaFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStrin
 CFunctionBlock* CLuaFBTypeEntry::createFBInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) {
   CLuaEngine* luaEngine = pa_poSrcRes->getLuaEngine();
   if (!luaEngine->load(this)) {
-    if (!luaEngine->loadString(std::string(paLuaScriptAsString.getValue()))) {
+    if (!luaEngine->loadString(std::string(cm_sLuaScriptAsString.getValue()))) {
       return NULL;
     }
     luaEngine->pushField(-1, "ECC", LUA_TFUNCTION);
     luaEngine->store(this); //store ECC
   }
   luaEngine->pop(); //pop ECC / loaded defs
-  TForteByte* connData = new TForteByte[CFunctionBlock::genFBConnDataSize(interfaceSpec.m_nNumEOs, interfaceSpec.m_nNumDIs, interfaceSpec.m_nNumDOs)];
-  TForteByte* varsData = new TForteByte[CBasicFB::genBasicFBVarsDataSize(interfaceSpec.m_nNumDIs, interfaceSpec.m_nNumDOs,
-      internalVarsInformation.m_nNumIntVars, interfaceSpec.m_nNumAdapters)];
+  TForteByte* connData = new TForteByte[CFunctionBlock::genFBConnDataSize(m_interfaceSpec.m_nNumEOs, m_interfaceSpec.m_nNumDIs, m_interfaceSpec.m_nNumDOs)];
+  TForteByte* varsData = new TForteByte[CBasicFB::genBasicFBVarsDataSize(m_interfaceSpec.m_nNumDIs, m_interfaceSpec.m_nNumDOs,
+      m_internalVarsInformation.m_nNumIntVars, m_interfaceSpec.m_nNumAdapters)];
   return new CLuaFB(pa_nInstanceNameId, this, connData, varsData, pa_poSrcRes);
 }
 
