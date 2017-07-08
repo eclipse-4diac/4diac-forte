@@ -12,8 +12,6 @@
 
 forte_add_io(EMBRICK "Support for the modular emBRICK system")
 
-forte_add_link_library("-lrt") 
-
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 #############################################################################

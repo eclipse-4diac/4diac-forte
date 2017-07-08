@@ -18,3 +18,4 @@ SET(SOURCE_GROUP ${SOURCE_GROUP}\\device)
 
 forte_add_sourcefile_hcpp(io_controller)
 forte_add_sourcefile_hcpp(io_controller_multi)
+forte_add_sourcefile_hcpp(io_controller_poll)

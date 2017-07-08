@@ -46,6 +46,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
   ENDIF(FORTE_POSIX_GENERATE_MAP_FILE)	
   
   forte_add_link_library("-lpthread") 
+  forte_add_link_library("-lrt") 
 
 
   forte_add_network_layer(SER OFF "ser" CSerCommLayer sercommlayer "Enable Forte serial line communication")
