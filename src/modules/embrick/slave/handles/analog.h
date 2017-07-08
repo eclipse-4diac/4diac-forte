@@ -20,8 +20,8 @@ namespace Handles {
 
 class AnalogSlaveHandle: public SlaveHandle {
 public:
-  AnalogSlaveHandle(Mapper::Direction direction, uint8_t offset,
-      Handlers::Slave *slave);
+  AnalogSlaveHandle(Device::Controller *controller, Mapper::Direction direction,
+      uint8_t offset, Handlers::Slave *slave);
 
   virtual void set(const CIEC_ANY &);
   void get(CIEC_ANY &);

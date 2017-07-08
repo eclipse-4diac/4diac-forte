@@ -106,10 +106,7 @@ int Slave::update() {
   for (TSlaveHandleList::Iterator it = inputs.begin(); it != itEnd; ++it)
     if ((*it)->hasObserver() && !(*it)->equal(updateReceiveImageOld)) {
       // Inform Process Interface about change
-      if ((*it)->getObserver()->onChange()) {
-        // Send indication event
-        bus->startNewEventChain((CProcessInterface*) (*it)->getObserver());
-      }
+      (*it)->onChange();
     }
   handleMutex.unlock();
 

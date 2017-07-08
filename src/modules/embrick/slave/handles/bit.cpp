@@ -14,9 +14,11 @@
 namespace EmBrick {
 namespace Handles {
 
-BitSlaveHandle::BitSlaveHandle(Mapper::Direction direction, uint8_t offset,
+BitSlaveHandle::BitSlaveHandle(Device::Controller *controller,
+    Mapper::Direction direction, uint8_t offset,
     uint8_t position, Handlers::Slave *slave) :
-    SlaveHandle(direction, offset, slave), mask((uint8_t) (1 << position)) {
+    SlaveHandle(controller, direction, offset, slave), mask(
+        (uint8_t) (1 << position)) {
   type = CIEC_ANY::e_BOOL;
 }
 

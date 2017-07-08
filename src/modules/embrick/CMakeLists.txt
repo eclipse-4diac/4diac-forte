@@ -12,14 +12,13 @@
 
 forte_add_io(EMBRICK "Support for the modular emBRICK system")
 
-SET_PROPERTY (GLOBAL PROPERTY MODULE_LINK_LIBRARY rt)
+forte_add_link_library("-lrt") 
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 #############################################################################
 # emBrick FBs
 #############################################################################
-forte_add_sourcefile_hcpp(utils/conditionSync)
 
 forte_add_sourcefile_hcpp(handler/spi handler/pin handler/bus)
 

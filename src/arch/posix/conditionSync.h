@@ -9,12 +9,11 @@
  *    Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_MODULES_EMBRICK_UTILS_CONDITIONSYNC_H_
-#define SRC_MODULES_EMBRICK_UTILS_CONDITIONSYNC_H_
+#ifndef SRC_ARCH_POSIX_CONDITIONSYNC_H_
+#define SRC_ARCH_POSIX_CONDITIONSYNC_H_
 
 #include <pthread.h>
 
-namespace EmBrick {
 namespace Utils {
 
 class ConditionSync {
@@ -23,6 +22,7 @@ public:
   virtual ~ConditionSync();
 
   void lock();
+  void wait(struct timespec& referenceTime, unsigned long addMicroseconds);
   void waitUntil(struct timespec& deadline);
   void unlock();
   void wakeUp();
@@ -31,9 +31,10 @@ private:
   pthread_cond_t cond;
   pthread_mutex_t mutex;
 
+  void addTime(struct timespec& t, unsigned long microseconds);
+
 };
 
 } /* namespace Utils */
-} /* namespace EmBrick */
 
-#endif /* SRC_MODULES_EMBRICK_UTILS_CONDITIONSYNC_H_ */
+#endif /* SRC_ARCH_POSIX_CONDITIONSYNC_H_ */

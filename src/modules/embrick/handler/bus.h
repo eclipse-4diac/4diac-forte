@@ -26,7 +26,7 @@
 #include <slave/slave.h>
 #include <forte_sync.h>
 #include <forte_thread.h>
-#include <utils/conditionSync.h>
+#include <conditionSync.h>
 
 #include <io/device/io_controller_multi.h>
 

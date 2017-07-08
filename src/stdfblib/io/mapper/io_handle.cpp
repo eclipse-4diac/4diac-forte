@@ -12,10 +12,13 @@
 #include "io_handle.h"
 #include "io_observer.h"
 
+#include <io/device/io_controller.h>
+
 namespace IO {
 
-Handle::Handle(Mapper::Direction direction) :
-    observer(NULL), type(CIEC_ANY::e_ANY), direction(direction) {
+Handle::Handle(Device::Controller *controller, Mapper::Direction direction) :
+    controller(controller), observer(0), type(CIEC_ANY::e_ANY), direction(
+        direction) {
 
 }
 
@@ -28,7 +31,15 @@ void Handle::onObserver(Observer *observer) {
 }
 
 void Handle::dropObserver() {
-  this->observer = NULL;
+  this->observer = 0;
+}
+
+void Handle::onChange() {
+  if (observer != 0) {
+    if (observer->onChange()) {
+      controller->fireIndicationEvent(observer);
+    }
+  }
 }
 
 } /* namespace IO */

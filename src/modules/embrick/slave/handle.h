@@ -32,8 +32,8 @@ using namespace IO;
 
 class SlaveHandle: public Handle {
 public:
-  SlaveHandle(Mapper::Direction direction, uint8_t offset,
-      Handlers::Slave *slave);
+  SlaveHandle(Device::Controller *controller, Mapper::Direction direction,
+      uint8_t offset, Handlers::Slave *slave);
   virtual ~SlaveHandle();
 
   virtual void set(const CIEC_ANY &);

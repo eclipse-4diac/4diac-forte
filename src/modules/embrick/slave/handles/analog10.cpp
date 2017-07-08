@@ -14,9 +14,9 @@
 namespace EmBrick {
 namespace Handles {
 
-Analog10SlaveHandle::Analog10SlaveHandle(Mapper::Direction direction,
-    uint8_t offset, Handlers::Slave *slave) :
-    SlaveHandle(direction, offset, slave) {
+Analog10SlaveHandle::Analog10SlaveHandle(Device::Controller *controller,
+    Mapper::Direction direction, uint8_t offset, Handlers::Slave *slave) :
+    SlaveHandle(controller, direction, offset, slave) {
   type = CIEC_ANY::e_DWORD;
 }
 

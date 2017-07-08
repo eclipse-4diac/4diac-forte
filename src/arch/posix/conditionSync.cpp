@@ -11,7 +11,6 @@
 
 #include "conditionSync.h"
 
-namespace EmBrick {
 namespace Utils {
 
 ConditionSync::ConditionSync() {
@@ -45,6 +44,12 @@ void ConditionSync::unlock() {
   pthread_mutex_unlock(&mutex);
 }
 
+void ConditionSync::wait(struct timespec& referenceTime,
+    unsigned long addMicroseconds) {
+  addTime(referenceTime, addMicroseconds);
+  waitUntil(referenceTime);
+}
+
 void ConditionSync::waitUntil(struct timespec& deadline) {
   pthread_cond_timedwait(&cond, &mutex, &deadline);
 }
@@ -53,5 +58,15 @@ void ConditionSync::wakeUp() {
   pthread_cond_signal (&cond);
 }
 
+void ConditionSync::addTime(struct timespec& ts, unsigned long microseconds) {
+  ts.tv_sec += microseconds / (unsigned long) 1E6;
+  unsigned long t = ts.tv_nsec + microseconds * (unsigned long) 1E3
+      - (microseconds / (unsigned long) 1E6) * (unsigned long) 1E9;
+  if (t >= (unsigned long) 1E9) {
+    t -= (unsigned long) 1E9;
+    ts.tv_sec++;
+  }
+  ts.tv_nsec = t;
+}
+
 } /* namespace Utils */
-} /* namespace EmBrick */

@@ -12,7 +12,6 @@
 #ifndef SRC_STDFBLIB_IO_MAPPER_HANDLE_H_
 #define SRC_STDFBLIB_IO_MAPPER_HANDLE_H_
 
-#include <cstddef>
 #include <forte_any.h>
 #include <forte_bool.h>
 
@@ -20,11 +19,15 @@
 
 namespace IO {
 
+namespace Device {
+class Controller;
+}
+
 class Handle {
   friend class Mapper;
 
 public:
-  Handle(Mapper::Direction direction);
+  Handle(Device::Controller *controller, Mapper::Direction direction);
   virtual ~Handle();
 
   bool hasObserver() {
@@ -46,7 +49,11 @@ public:
   virtual void set(const CIEC_ANY &) = 0;
   virtual void get(CIEC_ANY &) = 0;
 
+  void onChange();
+
 protected:
+  Device::Controller *controller;
+
   virtual void onObserver(Observer *observer);
   virtual void dropObserver();
 

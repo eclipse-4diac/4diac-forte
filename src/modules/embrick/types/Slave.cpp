@@ -73,7 +73,8 @@ void Slave::addBitHandle(Mapper::Direction direction, CIEC_WSTRING id,
   if (id == "")
     return;
 
-  addHandle(id, new BitSlaveHandle(direction, offset, pos, slave));
+  addHandle(id,
+      new BitSlaveHandle(&getController(), direction, offset, pos, slave));
 }
 
 void Slave::addAnalogHandle(Mapper::Direction direction, CIEC_WSTRING id,
@@ -81,7 +82,8 @@ void Slave::addAnalogHandle(Mapper::Direction direction, CIEC_WSTRING id,
   if (id == "")
     return;
 
-  addHandle(id, new AnalogSlaveHandle(direction, offset, slave));
+  addHandle(id,
+      new AnalogSlaveHandle(&getController(), direction, offset, slave));
 }
 
 void Slave::addAnalog10Handle(Mapper::Direction direction, CIEC_WSTRING id,
@@ -89,7 +91,8 @@ void Slave::addAnalog10Handle(Mapper::Direction direction, CIEC_WSTRING id,
   if (id == "")
     return;
 
-  addHandle(id, new AnalogSlaveHandle(direction, offset, slave));
+  addHandle(id,
+      new AnalogSlaveHandle(&getController(), direction, offset, slave));
 }
 
 void Slave::onSlaveStatus(Handlers::SlaveStatus status, Handlers::SlaveStatus) {
