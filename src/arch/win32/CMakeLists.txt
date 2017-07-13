@@ -51,6 +51,10 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   forte_add_link_library(winmm.lib)
   forte_add_link_library(Ws2_32.lib)
   forte_add_link_library(version.lib)
+  if(FORTE_COM_OPC_UA)
+	forte_add_link_library(iphlpapi.lib)
+  endif(FORTE_COM_OPC_UA)
+  
   
  
 endif()

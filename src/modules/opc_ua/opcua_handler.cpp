@@ -33,6 +33,10 @@ struct UA_ClientEndpointMap {
 	CSyncObject *clientMutex;
 };
 
+#if _MSC_VER < 1900 
+#define snprintf _snprintf
+#endif
+
 void UA_Log_Forte(UA_LogLevel level, UA_LogCategory category, const char *msg, va_list args) {
 	char tmpStr[400];
 	snprintf(tmpStr, 400, "[OPC UA] %s/%s\t", LogsLevelNames[level], LogsCategoryNames[category]);
