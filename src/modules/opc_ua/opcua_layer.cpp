@@ -33,7 +33,7 @@ struct AsyncCallPayload {
 	unsigned int variantsSize;
 };
 
-#if _MSC_VER < 1900 
+#if defined(_MSC_VER) && _MSC_VER < 1900
 #define snprintf _snprintf
 #endif
 
@@ -74,16 +74,16 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
 	switch (getCommFB()->getComServiceType()) {
 		case e_Publisher:
 			// Make sure all the nodes exist and have the corresponding variable
-			DEVLOG_DEBUG("OPC UA: Creating OPC UA Nodes for publisher\n");
+			DEVLOG_DEBUG("OPC UA: Creating OPC UA Nodes for publisher %s\n", getCommFB()->getInstanceName());
 			return this->createPubSubNodes(&this->sendDataNodeIds, getCommFB()->getNumSD(), true);
 		case e_Subscriber:
-			DEVLOG_DEBUG("OPC UA: Creating OPC UA Nodes for subscriber\n");
+			DEVLOG_DEBUG("OPC UA: Creating OPC UA Nodes for subscriber %s\n", getCommFB()->getInstanceName());
 			return this->createPubSubNodes(&this->readDataNodeIds, getCommFB()->getNumRD(), false);
 		case e_Server:
-			DEVLOG_DEBUG("OPC UA: Creating OPC UA Method for server\n");
+			DEVLOG_DEBUG("OPC UA: Creating OPC UA Method for server %s\n", getCommFB()->getInstanceName());
 			return this->createMethodNode();
 		case e_Client:
-			DEVLOG_DEBUG("OPC UA: Creating OPC UA Client\n");
+			DEVLOG_DEBUG("OPC UA: Creating OPC UA Client %s\n", getCommFB()->getInstanceName());
 			return this->createClient(paLayerParameter);
 		default:
 			DEVLOG_WARNING("OPC UA: Invalid Comm Service Type for Function Block\n");
@@ -156,7 +156,7 @@ bool COPC_UA_Layer::getPortConnectionInfo(unsigned int portIndex, bool isSD, con
 
 	const CDataConnection *portConnection = isSD ? getCommFB()->getDIConnection(portNameId) : getCommFB()->getDOConnection(portNameId);
 	if (portConnection == NULL) {
-		DEVLOG_ERROR("OPC UA: Got invalid port connection at port %d\n", portId);
+		DEVLOG_ERROR("OPC UA: Got invalid port connection on FB %s at port %s. It must be connected to another FB.\n", this->getCommFB()->getInstanceName(), CStringDictionary::getInstance().get(portNameId));
 		return false;
 	}
 
@@ -206,6 +206,8 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
 
 	*nodeIds = (struct FB_NodeIds *)forte_malloc(sizeof(struct FB_NodeIds)*numPorts);
 
+	const CIEC_ANY* initData = isSD ? getCommFB()->getSDs() : getCommFB()->getRDs();
+
 	for (unsigned int i = 0; i < numPorts; i++) {
 
 		const CFunctionBlock *connectedToFb = NULL;
@@ -245,6 +247,9 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
 				void *varValue = UA_new(conv->type);
 				UA_init(varValue, conv->type);
 				(*nodeIds)[i].variableId = UA_NodeId_new();
+				if (!conv->get(&initData[i], varValue)) {
+					DEVLOG_WARNING("OPC UA: Cannot convert value of port %d for initialization", i);
+				}
 				retVal = COPC_UA_Handler::getInstance().createVariableNode((*nodeIds)[i].functionBlockId, connectedToName, conv->type,
 																		   varValue, (*nodeIds)[i].variableId, !isSD);
 				UA_delete(varValue, conv->type);
