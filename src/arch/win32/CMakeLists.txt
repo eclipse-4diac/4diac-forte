@@ -22,7 +22,11 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   forte_add_sourcefile_hcpp(forte_thread forte_sync forte_sem)
   forte_add_sourcefile_cpp(forte_architecture.cpp)
   
-  forte_add_sourcefile_cpp(main.cpp)
+  if(${FORTE_BUILD_TYPE} STREQUAL STATIC_LIBRARY)
+    forte_add_sourcefile_hcpp(forte_instance)
+  else()
+    forte_add_sourcefile_cpp(main.cpp)
+  endif()
 
   if(${FORTE_BUILD_TYPE} STREQUAL SHARED_LIBRARY)
     set(FORTE_EXTERNAL_TIMEHA ON CACHE BOOL "Use External Time Handler")

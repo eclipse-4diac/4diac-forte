@@ -458,7 +458,7 @@ UA_StatusCode COPC_UA_Handler::updateNodeValue(const UA_NodeId *nodeId, const CI
 UA_StatusCode COPC_UA_Handler::registerNodeCallBack(const UA_NodeId *nodeId, forte::com_infra::CComLayer *comLayer, const struct UA_TypeConvert *convert,
 													unsigned int portIndex) {
 	// needs new, otherwise it will be removed as soon as registerNodecallBack exits, and thus handle is not valid in the callback
-	struct UA_NodeCallback_Handle *handle = (UA_NodeCallback_Handle*)forte_malloc(sizeof(struct UA_NodeCallback_Handle));
+	struct UA_NodeCallback_Handle *handle = static_cast<UA_NodeCallback_Handle*>(forte_malloc(sizeof(struct UA_NodeCallback_Handle)));
 
 	handle->convert = convert;
 	handle->comLayer = comLayer;

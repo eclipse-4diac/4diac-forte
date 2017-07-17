@@ -23,9 +23,9 @@
 class CLuaFBTypeEntry: public CTypeLib::CFBTypeEntry {
 private:
 
-  SFBInterfaceSpec interfaceSpec;
-  SInternalVarsInformation internalVarsInformation;
-  const CIEC_STRING paLuaScriptAsString;
+  SFBInterfaceSpec m_interfaceSpec;
+  SInternalVarsInformation m_internalVarsInformation;
+  const CIEC_STRING cm_sLuaScriptAsString;
 
   CLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING paLuaScriptAsString,  SFBInterfaceSpec& interfaceSpec,
       SInternalVarsInformation& internalVarsInformation);
@@ -42,10 +42,10 @@ public:
   virtual CFunctionBlock* createFBInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
   const SFBInterfaceSpec* getInterfaceSpec() const {
-    return &interfaceSpec;
+    return &m_interfaceSpec;
   }
   const SInternalVarsInformation* getInternalVarsInformation() const {
-    return &internalVarsInformation;
+    return &m_internalVarsInformation;
   }
 };
 

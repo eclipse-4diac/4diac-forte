@@ -11,10 +11,6 @@
  *******************************************************************************/
 #include "iec61131_functions.h"
 
-/*         +-------+
-           | TRUNC |
- ANY_REAL--|       |--ANY_INT
-           +-------+*/
 #ifdef FORTE_USE_REAL_DATATYPE
 TForteInt32 TRUNC(const CIEC_REAL& pa_roIN){
   return static_cast<TForteInt32>(pa_roIN);
@@ -28,80 +24,40 @@ TForteInt64 TRUNC(const CIEC_LREAL& pa_roIN){
 #endif
 
 #ifdef FORTE_USE_64BIT_DATATYPES
-/*       +--------------+
-         | ADD_TOD_TIME |
-  TOD ---|IN1           |--- TOD
- TIME ---|IN2           |
-         +--------------+*/
 const CIEC_TIME_OF_DAY ADD_TOD_TIME(const CIEC_TIME_OF_DAY& pa_roIN1, const CIEC_TIME& pa_roIN2){
   return static_cast<TForteUInt64>(pa_roIN1 + pa_roIN2.getInMiliSeconds());
 }
 
-/*       +-------------+
-         | ADD_DT_TIME |
-   DT ---|IN1          |--- DT
- TIME ---|IN2          |
-         +-------------+*/
 const CIEC_DATE_AND_TIME ADD_DT_TIME(const CIEC_DATE_AND_TIME& pa_roIN1, const CIEC_TIME& pa_roIN2){
   return static_cast<TForteUInt64>(pa_roIN1 + pa_roIN2.getInMiliSeconds());
 }
 
-/*       +--------------+
-         | SUB_TOD_TIME |
-  TOD ---|IN1           |--- TOD
- TIME ---|IN2           |
-         +--------------+*/
 const CIEC_TIME_OF_DAY SUB_TOD_TIME(const CIEC_TIME_OF_DAY& pa_roIN1, const CIEC_TIME& pa_roIN2){
   return static_cast<TForteUInt64>(pa_roIN1 - pa_roIN2.getInMiliSeconds());
 }
 
-/*       +-------------+
-         | SUB_DT_TIME |
-   DT ---|IN1          |--- DT
- TIME ---|IN2          |
-         +-------------+*/
 const CIEC_DATE_AND_TIME SUB_DT_TIME(const CIEC_DATE_AND_TIME& pa_roIN1, const CIEC_TIME& pa_roIN2){
   return static_cast<TForteUInt64>(pa_roIN1 - pa_roIN2.getInMiliSeconds());
 }
 
-/*       +-----------+
-         | SUB_DT_DT |
-   DT ---|IN1        |--- TIME
-   DT ---|IN2        |
-         +-----------+*/
 const CIEC_TIME SUB_DT_DT(const CIEC_DATE_AND_TIME& pa_roIN1, const CIEC_DATE_AND_TIME& pa_roIN2){
   CIEC_TIME temp;
   temp.setFromMiliSeconds(pa_roIN1 - pa_roIN2);
   return temp;
 }
 
-/*       +-------------+
-         | SUB_TOD_TOD |
-  TOD ---|IN1          |--- TIME
-  TOD ---|IN2          |
-         +-------------+*/
 const CIEC_TIME SUB_TOD_TOD(const CIEC_TIME_OF_DAY &pa_roIN1, const CIEC_TIME_OF_DAY &pa_roIN2){
   CIEC_TIME temp;
   temp.setFromMiliSeconds(pa_roIN1 - pa_roIN2);
   return temp;
 }
 
-/*       +---------------+
-         | SUB_DATE_DATE |
- DATE ---|IN1            |--- TIME
- DATE ---|IN2            |
-         +---------------+*/
 const CIEC_TIME SUB_DATE_DATE(const CIEC_DATE &pa_roIN1, const CIEC_DATE &pa_roIN2){
   CIEC_TIME temp;
   temp.setFromMiliSeconds(pa_roIN1 - pa_roIN2);
   return temp;
 }
 
-/*          +-----------------+
-            | CONCAT_DATE_TOD |
-    DATE ---|IN1              |--- DT
-     TOD ---|IN2              |
-            +-----------------+*/
 const CIEC_DATE_AND_TIME CONCAT_DATE_TOD(const CIEC_DATE& pa_roIN1, const CIEC_TIME_OF_DAY& pa_roIN2){
   CIEC_DATE_AND_TIME retVal;
 
