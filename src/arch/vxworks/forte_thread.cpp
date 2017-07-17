@@ -12,12 +12,13 @@
 #include "../devlog.h"
 #include <criticalregion.h>
 #include "forte_thread.h"
+#include <time.h>
 
 #define FORTE_TASK_PRIORITY   25
 
 void CVxWorksThread::start(void){
   //TODO: Check if guarding the stack is necessary
-  mThreadID = taskSpawn(0, FORTE_TASK_PRIORITY, VX_NO_STACK_FILL | VX_FP_TASK /* Needed for C++*/, mStackSize,
+  mThreadID = taskSpawn(0, FORTE_TASK_PRIORITY, VX_FP_TASK /* Needed for C++*/, mStackSize,
       (FUNCPTR)threadFunction, (_Vx_usr_arg_t) this, 0, 0, 0, 0, 0, 0, 0, 0, 0);
   if(TASK_ID_ERROR == mThreadID){
     //TODO: manage error
@@ -54,9 +55,15 @@ void CVxWorksThread::setDeadline(const CIEC_TIME &pa_roVal){
   mDeadline = pa_roVal;
 }
 
+void CVxWorksThread::sleepThread(unsigned int pa_miliSeconds){
+  struct timespec stReq;
+  stReq.tv_sec = pa_miliSeconds / 1000;
+  stReq.tv_nsec = 1000000 * (pa_miliSeconds % 1000);
+  nanosleep(&stReq, NULL);
+}
+
 void CVxWorksThread::join(void){
   if(0 != mThreadID){
     CCriticalRegion criticalRegion(mJoinMutex);
-    taskDelete(mThreadID);
   }
 }

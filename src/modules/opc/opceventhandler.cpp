@@ -22,7 +22,7 @@ COpcEventHandler::TCallbackDescriptor COpcEventHandler::m_nCallbackDescCount = 0
 COpcEventHandler::COpcEventHandler(){
   this->start();
   // Sleep to allow new thread to start
-  Sleep(100);
+  CThread::sleep(100);
 }
 
 COpcEventHandler::~COpcEventHandler(){

@@ -20,7 +20,13 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   
   forte_add_sourcefile_h(fortealloc.h)
   forte_add_sourcefile_hcpp(forte_thread forte_sync forte_sem)
-  forte_add_sourcefile_cpp(main.cpp)
+  forte_add_sourcefile_cpp(forte_architecture.cpp)
+  
+  if(${FORTE_BUILD_TYPE} STREQUAL STATIC_LIBRARY)
+    forte_add_sourcefile_hcpp(forte_instance)
+  else()
+    forte_add_sourcefile_cpp(main.cpp)
+  endif()
 
   if(${FORTE_BUILD_TYPE} STREQUAL SHARED_LIBRARY)
     set(FORTE_EXTERNAL_TIMEHA ON CACHE BOOL "Use External Time Handler")
@@ -41,6 +47,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
    forte_add_sourcefile_h(sockhand.h)
   endif(FORTE_COM_ETH)
 
+  
   forte_add_definition("-DFORTE_LITTLE_ENDIAN") # -DNONAMESPACE -DWITH_NONAMESPACES)  
 
 # TODO this flag was originaly wrongly added to the definitions. May be necessary to be added as link flag. However currently working fine.
@@ -51,10 +58,6 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   forte_add_link_library(winmm.lib)
   forte_add_link_library(Ws2_32.lib)
   forte_add_link_library(version.lib)
-  if(FORTE_COM_OPC_UA)
-	forte_add_link_library(iphlpapi.lib)
-  endif(FORTE_COM_OPC_UA)
-  
   
  
 endif()

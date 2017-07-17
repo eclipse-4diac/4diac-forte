@@ -17,12 +17,11 @@
 #include <devexec.h>
 #include "criticalregion.h"
 #include <stdarg.h>
+#include <forte_config_opc_ua.h>
 
 using namespace forte::com_infra;
 
 DEFINE_SINGLETON(COPC_UA_Handler);
-
-#define FORTE_COM_OPC_UA_PORT 4840
 
 const char *LogsLevelNames[6] = {"trace", "debug", "info", "warning", "error", "fatal"};
 const char *LogsCategoryNames[6] = {"network", "channel", "session", "server", "client", "userland"};
@@ -581,7 +580,7 @@ UA_StatusCode COPC_UA_Handler::updateNodeValue(const UA_NodeId *nodeId, const CI
 UA_StatusCode COPC_UA_Handler::registerNodeCallBack(const UA_NodeId *nodeId, forte::com_infra::CComLayer *comLayer, const struct UA_TypeConvert *convert,
 													unsigned int portIndex) {
 	// needs new, otherwise it will be removed as soon as registerNodecallBack exits, and thus handle is not valid in the callback
-	struct UA_NodeCallback_Handle *handle = (UA_NodeCallback_Handle*)forte_malloc(sizeof(struct UA_NodeCallback_Handle));
+	struct UA_NodeCallback_Handle *handle = static_cast<UA_NodeCallback_Handle*>(forte_malloc(sizeof(struct UA_NodeCallback_Handle)));
 
 	handle->convert = convert;
 	handle->comLayer = comLayer;

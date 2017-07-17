@@ -11,6 +11,7 @@
  *  Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
 #include "forte_thread.h"
+#include <unistd.h>
 
 const char *CTXThread::csm_cName = { "Test Name" };
 
@@ -109,6 +110,10 @@ void CTXThread::setDeadline(const CIEC_TIME &pa_roVal) {
         }
     }
   }
+}
+
+void CTXThread::sleepThread(unsigned int pa_miliSeconds){
+  usleep(1000 * pa_miliSeconds);
 }
 
 void CTXThread::join(void) {

@@ -53,6 +53,8 @@ BOOST_AUTO_TEST_CASE(concat)
 	BOOST_TEST(sConcatString.getValue() == "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING");
 }
 
+#if __cplusplus > 199711L
+//The following tests only work if we have C++ 11 or higher
 BOOST_AUTO_TEST_CASE(concat3)
 {
 	CIEC_STRING sFristString("THIS_IS_THE_FIRST_STRING");
@@ -71,5 +73,7 @@ BOOST_AUTO_TEST_CASE(concat4)
 	CIEC_STRING sConcatString(CONCAT(sFristString, sSecondString, sThirdString, sForthString));
 	BOOST_TEST(sConcatString.getValue() == "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING_THIS_IS_THE_THIRD_STRING_THIS_IS_THE_FORTH_STRING");
 }
+
+#endif
 
 BOOST_AUTO_TEST_SUITE_END()

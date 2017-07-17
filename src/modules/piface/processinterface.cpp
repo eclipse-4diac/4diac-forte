@@ -89,13 +89,10 @@ void CPiFaceProcessInterface::CPiFaceIOHandler::run(){
   setupPiFaceIOChip(spiDev);
 
   if(spiDev.isOpen()){
-    timespec req, rem;
     TForteUInt8 inBuffer;
 
-    req.tv_nsec = 10 * 1000 * 1000;  //TODO make scan cycle setable from the application
-
     while(isAlive()){
-      nanosleep(&req, &rem);
+      CThread::sleepThread(10);
 
       writePiFaceRegister(spiDev, eGPIOPortA, mOutBuffer);  //update outputs
       inBuffer = readInputs(spiDev);

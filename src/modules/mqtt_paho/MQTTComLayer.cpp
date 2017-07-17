@@ -14,7 +14,6 @@
 #include "MQTTParameterParser.h"
 #include "MQTTHandler.h"
 #include "commfb.h"
-#include <unistd.h>
 
 using namespace forte::com_infra;
 
@@ -92,7 +91,7 @@ EComResponse MQTTComLayer::openConnection(char* pa_acLayerParameter) {
 			//is handled via sendData
 			break;
 		case e_Subscriber:
-		  MQTTHandler::addLayerToSubscribe(this);
+		  //handled inside the register layer function in the Handler
 			break;
 		}
 	}

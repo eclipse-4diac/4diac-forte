@@ -11,10 +11,7 @@
 #include "modbusclientconnection.h"
 #include "devlog.h"
 #include "modbuspoll.h"
-
-#ifndef WIN32
-#include <unistd.h>
-#endif
+#include <forte_thread.h>
 
 using namespace modbus_connection_event;
 
@@ -143,11 +140,7 @@ void CModbusClientConnection::run(){
       tryConnect();
     }
 
-#ifdef WIN32
-    Sleep(1);
-#else
-    usleep(1);
-#endif
+    CThread::sleepThread(1);
   }
 }
 

@@ -36,8 +36,8 @@
  */
 struct SInternalVarsInformation{
     TPortId m_nNumIntVars; //!< Number of internal vars
-    const CStringDictionary::TStringId * const m_aunIntVarsNames; //!< List of the internalvarsnames
-    const CStringDictionary::TStringId * const m_aunIntVarsDataTypeNames; //!< List of the data type names for the internal vars
+    const CStringDictionary::TStringId * m_aunIntVarsNames; //!< List of the internalvarsnames
+    const CStringDictionary::TStringId * m_aunIntVarsDataTypeNames; //!< List of the data type names for the internal vars
 };
 
 /*!\ingroup CORE

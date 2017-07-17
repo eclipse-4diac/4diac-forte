@@ -17,6 +17,7 @@
 #include "adapterconn.h"
 #include "if2indco.h"
 #include "utils/criticalregion.h"
+#include "utils/fixedcapvector.h"
 
 CResource::CResource(CResource* pa_poDevice, const SFBInterfaceSpec *pa_pstInterfaceSpec,
     const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData,
@@ -29,6 +30,9 @@ CResource::CResource(CResource* pa_poDevice, const SFBInterfaceSpec *pa_pstInter
             , mMonitoringHandler(*this)
 #endif
 {
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+        luaEngine = new CLuaEngine();
+#endif
   initializeResIf2InConnections();
 }
 
@@ -43,10 +47,16 @@ CResource::CResource(const SFBInterfaceSpec *pa_pstInterfaceSpec,
             , mMonitoringHandler(*this)
 #endif
 {
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+    luaEngine = new CLuaEngine();
+#endif
   initializeResIf2InConnections();
 }
 
 CResource::~CResource(){
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+  delete luaEngine;
+#endif
   delete m_poResourceEventExecution;
   delete[] mResIf2InConnections;
 }
@@ -60,6 +70,14 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
       case cg_nMGM_CMD_Create_FBInstance: {
         forte::core::TNameIdentifier::CIterator itRunner(paCommand.mFirstParam.begin());
         retVal = createFB(itRunner, paCommand.mSecondParam.front(), this);
+      }
+        break;
+      case cg_nMGM_CMD_Create_FBType: {
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+        retVal = createFBTypeFromLua(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
+#else
+        retVal = e_UNSUPPORTED_CMD;
+#endif
       }
         break;
       case cg_nMGM_CMD_Delete_FBInstance: {
@@ -85,6 +103,12 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
         case cg_nMGM_CMD_Reset:
         retVal = handleExecutionStateCmd(paCommand.mCMD, paCommand.mFirstParam);
         break;
+      case cg_nMGM_CMD_QUERY_FBTypes:
+        retVal = queryAllFBTypes(paCommand.mAdditionalParams);
+        break;
+      case cg_nMGM_CMD_QUERY_AdapterTypes:
+        retVal = queryAllAdapterTypes(paCommand.mAdditionalParams);
+      	break;
       default:
         #ifdef FORTE_SUPPORT_MONITORING
         retVal = mMonitoringHandler.executeMonitoringCommand(paCommand);
@@ -216,6 +240,50 @@ EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, CIEC
     }
   }
   return retVal;
+}
+
+EMGMResponse CResource::queryAllFBTypes(CIEC_STRING & paValue){
+	EMGMResponse retVal = e_UNSUPPORTED_TYPE;
+
+	CTypeLib::CTypeEntry *fbTypeRunner = CTypeLib::getFBLibStart();
+	if(fbTypeRunner != 0){
+		retVal = e_RDY;
+		for(; fbTypeRunner != 0; fbTypeRunner = fbTypeRunner->m_poNext){
+		  paValue.append(CStringDictionary::getInstance().get(fbTypeRunner->getTypeNameId()));
+			if(fbTypeRunner->m_poNext != 0){
+				paValue.append(", ");
+			}
+		}
+	}
+	return retVal;
+}
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNameId,
+    CIEC_STRING& paLuaScriptAsString){
+  EMGMResponse retVal = e_UNSUPPORTED_TYPE;
+   if(CLuaFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != NULL){
+     retVal = e_RDY;
+   }else{
+     retVal = e_INVALID_OPERATION;
+   }
+  return retVal;
+}
+#endif
+
+EMGMResponse CResource::queryAllAdapterTypes(CIEC_STRING & paValue){
+	EMGMResponse retVal = e_UNSUPPORTED_TYPE;
+
+	CTypeLib::CTypeEntry *adapterTypeRunner = CTypeLib::getAdapterLibStart();
+	if(adapterTypeRunner != 0){
+		retVal = e_RDY;
+		for(; adapterTypeRunner != 0; adapterTypeRunner = adapterTypeRunner->m_poNext){
+		  paValue.append(CStringDictionary::getInstance().get(adapterTypeRunner->getTypeNameId()));
+			if(adapterTypeRunner->m_poNext != 0){
+				paValue.append(", ");
+			}
+		}
+	}
+	return retVal;
 }
 
 CIEC_ANY *CResource::getVariable(forte::core::TNameIdentifier &paNameList){
