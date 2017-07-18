@@ -147,6 +147,7 @@ char *DEV_MGR::parseRequest(char *pa_acRequestString, forte::core::SManagementCM
   return acCommandStart;
 }
 
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
 bool DEV_MGR::parseFBType(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand){
   bool bRetVal = false;
   if(!strncmp("FBType Name=\"", pa_acRequestPartLeft, 13)){
@@ -169,6 +170,30 @@ bool DEV_MGR::parseFBType(char *pa_acRequestPartLeft, forte::core::SManagementCM
     }
   return bRetVal;
 }
+
+bool DEV_MGR::parseAdapterType(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand){
+  bool bRetVal = false;
+  if(!strncmp("AdapterType Name=\"", pa_acRequestPartLeft, 18)){
+    char *acBuf = &(pa_acRequestPartLeft[18]);
+    int i = 0;
+    if(acBuf[0] != '*'){
+      i = parseIdentifier(acBuf, pa_rstCommand.mFirstParam);
+      acBuf = (-1 == i) ? 0 : strchr(&(acBuf[i + 1]), '>');
+    }
+    if(acBuf != 0){
+      acBuf = acBuf + 1;
+      i = 0;
+      TForteUInt16 nBufLength = static_cast<TForteUInt16>(strcspn(acBuf, "<"));
+      pa_rstCommand.mAdditionalParams.assign(acBuf, nBufLength);
+    }
+    else{
+      return false;
+    }
+    bRetVal = true;
+    }
+  return bRetVal;
+}
+#endif
 
 bool DEV_MGR::parseFBData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand){
   bool bRetVal = false;
@@ -293,13 +318,22 @@ void DEV_MGR::parseCreateData(char *pa_acRequestPartLeft, forte::core::SManageme
   pa_rstCommand.mCMD = cg_nMGM_CMD_INVALID;
   if(0 != pa_acRequestPartLeft){
       switch (pa_acRequestPartLeft[0]){
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+        case 'A': // we have an Adapter to Create
+          if(parseAdapterType(pa_acRequestPartLeft, pa_rstCommand)){
+            pa_rstCommand.mCMD = cg_nMGM_CMD_Create_AdapterType;
+          }
+          break;
+#endif
         case 'F': // we have an FB to Create
           if(parseFBData(pa_acRequestPartLeft, pa_rstCommand)){
             pa_rstCommand.mCMD = cg_nMGM_CMD_Create_FBInstance;
           }
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
           else if(parseFBType(pa_acRequestPartLeft, pa_rstCommand)){
             pa_rstCommand.mCMD = cg_nMGM_CMD_Create_FBType;
           }
+#endif
           break;
         case 'C': // we have an Connection to Create
           if(parseConnectionData(pa_acRequestPartLeft, pa_rstCommand)){

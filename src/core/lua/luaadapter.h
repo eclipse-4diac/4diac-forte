@@ -1,25 +1,25 @@
 /*******************************************************************************
- * Copyright (c) 2015 fortiss GmbH
+ * Copyright (c) 2017 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *   Martin Jobst
+ *   Monika Wenger
  *   - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_CORE_LUAFB_H_
-#define SRC_CORE_LUAFB_H_
+#ifndef SRC_CORE_LUAADAPTER_H_
+#define SRC_CORE_LUAADAPTER_H_
 
-#include "basicfb.h"
+#include "adapter.h"
 #include "luaengine.h"
 #include "forte_any.h"
 #include "forte_array.h"
 
 #include <string>
-#include "luafbtypeentry.h"
+#include "luaadaptertypeentry.h"
 
 extern "C" {
 #include <lua.h>
@@ -30,23 +30,21 @@ extern "C" {
   int CLuaFB_call(lua_State *luaState);
 }
 
-class CLuaFB: public CBasicFB {
+class CLuaAdapter: public CAdapter {
 private:
-  static const TForteUInt32 LUA_FB_STATE = 0;
-  static const TForteUInt32 LUA_FB_IN_FLAG = 8192;
-  static const TForteUInt32 LUA_FB_DI_FLAG = 16384;
-  static const TForteUInt32 LUA_FB_DO_FLAG = 32768;
-  static const TForteUInt32 LUA_FB_VAR_MAX = 4095;
+  static const TForteUInt32 LUA_Adapter_DI_FLAG = 16384;
+  static const TForteUInt32 LUA_Adapter_DO_FLAG = 32768;
+  static const TForteUInt32 LUA_Adapter_VAR_MAX = 4095;
 
-  const CLuaFBTypeEntry* typeEntry;
+  const CLuaAdapterTypeEntry* typeEntry;
 
   CIEC_ANY* getVariable(TForteUInt32 id);
 public:
   static const char LUA_NAME[];
   static const luaL_Reg LUA_FUNCS[];
 
-  CLuaFB(CStringDictionary::TStringId instanceNameId, const CLuaFBTypeEntry* typeEntry, TForteByte *connData, TForteByte *varsData, CResource *resource);
-  virtual ~CLuaFB();
+  CLuaAdapter(CStringDictionary::TStringId instanceNameId, const CLuaAdapterTypeEntry* typeEntry, bool pa_bIsPlug, TForteByte *connData, TForteByte *varsData, CResource *resource);
+  virtual ~CLuaAdapter();
 
   virtual void executeEvent(int pa_nEIID);
 
@@ -54,9 +52,9 @@ public:
     return typeEntry->getTypeNameId();
   }
 
-  friend int CLuaFB_index(lua_State *luaState);
-  friend int CLuaFB_newindex(lua_State *luaState);
-  friend int CLuaFB_call(lua_State *luaState);
+  friend int CLuaAdapter_index(lua_State *luaState);
+  friend int CLuaAdapter_newindex(lua_State *luaState);
+  friend int CLuaAdapter_call(lua_State *luaState);
 };
 
-#endif /* SRC_CORE_LUAFB_H_ */
+#endif /* SRC_CORE_LUAADAPTER_H_ */
