@@ -17,17 +17,6 @@
 #ifndef SRC_MODULES_OPC_UA_OPCUAHANDLER_H_
 #define SRC_MODULES_OPC_UA_OPCUAHANDLER_H_
 
-#ifdef __GNUC__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-#endif
-
-# include <open62541.h>
-
-#ifdef __GNUC__
-#pragma GCC diagnostic pop
-#endif
-
 #include <singlet.h>
 #include <forte_thread.h>
 #include <extevhan.h>

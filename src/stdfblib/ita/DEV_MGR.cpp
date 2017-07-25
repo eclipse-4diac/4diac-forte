@@ -213,7 +213,7 @@ bool DEV_MGR::parseFBData(char *pa_acRequestPartLeft, forte::core::SManagementCM
 }
 
 int DEV_MGR::parseIdentifier(char *paIdentifierStart, forte::core::TNameIdentifier &paIdentifier){
-  for(char *runner = paIdentifierStart, *start = paIdentifierStart; '\0' != runner; ++runner){
+  for(char *runner = paIdentifierStart, *start = paIdentifierStart; '\0' != *runner; ++runner){
     if('.' == *runner){
       *runner = '\0';
       if(!paIdentifier.pushBack(CStringDictionary::getInstance().insert(start))){
