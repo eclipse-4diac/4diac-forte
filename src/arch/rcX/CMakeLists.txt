@@ -37,8 +37,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "rcX")
   SET(FORTE_RCX_INCLUDES "" CACHE STRING "Folders to include from the rcX OS. It must have inside of it the following folders: API, Configuration, TLR, TCPIP, CPUs/netX{10,51,100,..}")
   
   forte_add_sourcefile_hcpp(forte_thread rcXTimerHandler rcXUtilities forte_sync forte_sem forte_instance)
-  forte_add_sourcefile_h(fortealloc.h)
-  forte_add_sourcefile_cpp(forte_architecture.cpp)
+  forte_add_sourcefile_h(fortealloc.h ../forte_architecture_time.h)
+  forte_add_sourcefile_cpp(forte_architecture.cpp ../genforte_printer.cpp)
  
   if(FORTE_COM_ETH)
    forte_add_sourcefile_hcpp(rcXSocketInterface)

@@ -11,15 +11,11 @@
 #ifndef _MODBUSCONNECTION_H_
 #define _MODBUSCONNECTION_H_
 
+#include <modbus.h>
 #include <forte_thread.h>
 #include <comlayer.h>
 #include "modbushandler.h"
 #include <errno.h>
-#ifdef _WIN32
-#define IN
-#define OUT
-#endif
-#include <modbus.h>
 
 class CModbusConnection : public CThread{
   public:

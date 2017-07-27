@@ -11,15 +11,13 @@
   *******************************************************************************/
 #include <stdlib.h>
 #include <math.h>
-#include <time.h>
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
 #include "forte_date.h"
 #include "../../arch/timerha.h"
-#if defined(WINCE)
-#include <wce_time.h>
-#endif
+#include <forte_printer.h>
+#include <forte_architecture_time.h>
 
 DEFINE_FIRMWARE_DATATYPE(DATE, g_nStringIdDATE)
 
@@ -77,13 +75,9 @@ int CIEC_DATE::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
   if (ptm == 0)
     return -1;
 
-#ifdef WIN32
-    nRetVal = _snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d", 1900+ptm->tm_year, ptm->tm_mon+1, ptm->tm_mday);
-#else
-    nRetVal = snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d", 1900 + ptm->tm_year, ptm->tm_mon + 1, ptm->tm_mday);
-#endif
-    if((nRetVal < -1) || (nRetVal >= (int) pa_nBufferSize)){
-      nRetVal = -1;
-    }
+  nRetVal = forte_snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d", 1900 + ptm->tm_year, ptm->tm_mon + 1, ptm->tm_mday);
+  if((nRetVal < -1) || (nRetVal >= (int) pa_nBufferSize)){
+    nRetVal = -1;
+  }
   return nRetVal;
 }

@@ -18,6 +18,7 @@
 #include "criticalregion.h"
 #include <stdarg.h>
 #include <forte_config_opc_ua.h>
+#include <forte_printer.h>
 
 using namespace forte::com_infra;
 
@@ -28,7 +29,7 @@ const char *LogsCategoryNames[6] = {"network", "channel", "session", "server", "
 
 void UA_Log_Forte(UA_LogLevel level, UA_LogCategory category, const char *msg, va_list args) {
 	char tmpStr[400];
-	snprintf(tmpStr, 400, "[OPC UA] %s/%s\t", LogsLevelNames[level], LogsCategoryNames[category]);
+	forte_snprintf(tmpStr, 400, "[OPC UA] %s/%s\t", LogsLevelNames[level], LogsCategoryNames[category]);
 	char *start = &tmpStr[strlen(tmpStr)];
 
 	vsprintf(start, msg, args);

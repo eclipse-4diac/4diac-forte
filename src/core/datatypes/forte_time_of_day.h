@@ -14,10 +14,7 @@
 #define _FORTE_TOD_H_
 
 #include "forte_any_date.h"
-#include <time.h>
-#if defined(WINCE)
-#include <wce_time.h>
-#endif
+#include <forte_architecture_time.h>
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 
@@ -115,11 +112,7 @@ class CIEC_TIME_OF_DAY : public CIEC_ANY_DATE{
     /*! \brief Set the variable to current time
      */
     void setCurrentTime(){
-#if ! defined(WINCE)
-      setTUINT64(time(0) * 1000ULL);
-#else
-      setTUINT64(wceex_time(0) * 1000ULL);
-#endif
+      setTUINT64(forte_time(0) * 1000ULL);
     }
     ;
 };
