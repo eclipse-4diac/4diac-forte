@@ -11,9 +11,9 @@
  *******************************************************************************/
 
 #include "luaengine.h"
-#include "luaadapter.h"
 #include "luaadaptertypeentry.h"
 #include "luatype.h"
+#include "luaadapter.h"
 
 CLuaAdapterTypeEntry::CLuaAdapterTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING paLuaScriptAsString,  SFBInterfaceSpec& interfaceSpec)
     : CTypeLib::CAdapterTypeEntry(typeNameId, 0), cm_sLuaScriptAsString(paLuaScriptAsString), mSocketInterfaceSpec(interfaceSpec) {
@@ -50,8 +50,15 @@ CAdapter* CLuaAdapterTypeEntry::createAdapterInstance(CStringDictionary::TString
       return NULL;
     }
   }
-  TForteByte* connData = new TForteByte[CFunctionBlock::genFBConnDataSize(mSocketInterfaceSpec.m_nNumEOs, mSocketInterfaceSpec.m_nNumDIs, mSocketInterfaceSpec.m_nNumDOs)];
-  TForteByte* varsData = new TForteByte[CAdapter::genAdapterFBConnDataSize(mSocketInterfaceSpec.m_nNumEIs, mSocketInterfaceSpec.m_nNumEOs, mSocketInterfaceSpec.m_nNumDIs, mSocketInterfaceSpec.m_nNumDOs)];
+  TForteByte* connData = 0;
+  TForteByte* varsData = 0;
+  if(pa_bIsPlug){
+    connData = new TForteByte[CAdapter::genAdapterFBConnDataSize(mPlugInterfaceSpec.m_nNumEIs, mPlugInterfaceSpec.m_nNumEOs, mPlugInterfaceSpec.m_nNumDIs, mPlugInterfaceSpec.m_nNumDOs)];
+    varsData = new TForteByte[CAdapter::genFBVarsDataSize(mPlugInterfaceSpec.m_nNumDIs, mPlugInterfaceSpec.m_nNumDOs, mPlugInterfaceSpec.m_nNumAdapters)];
+  }else{
+    connData = new TForteByte[CAdapter::genAdapterFBConnDataSize(mSocketInterfaceSpec.m_nNumEIs, mSocketInterfaceSpec.m_nNumEOs, mSocketInterfaceSpec.m_nNumDIs, mSocketInterfaceSpec.m_nNumDOs)];
+    varsData = new TForteByte[CAdapter::genFBVarsDataSize(mSocketInterfaceSpec.m_nNumDIs, mSocketInterfaceSpec.m_nNumDOs, mSocketInterfaceSpec.m_nNumAdapters)];
+  }
   return new CLuaAdapter(pa_nInstanceNameId, this, pa_bIsPlug, connData, varsData, pa_poSrcRes);
 }
 
