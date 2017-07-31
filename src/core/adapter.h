@@ -100,6 +100,12 @@ class CAdapter: public CFunctionBlock {
       return m_poAdapterConn;
     }
 
+    static size_t genAdapterFBConnDataSize(unsigned int pa_nNumEIs, unsigned int pa_nNumEOs, unsigned int pa_nNumDIs, unsigned int pa_nNumDOs){
+      return genFBConnDataSize(((pa_nNumEIs < pa_nNumEOs) ? pa_nNumEOs : pa_nNumEIs),
+          ((pa_nNumDIs < pa_nNumDOs) ? pa_nNumDOs : pa_nNumDIs),
+          ((pa_nNumDIs < pa_nNumDOs) ? pa_nNumDOs : pa_nNumDIs));   //for outputs data connections are stored in this array, as plugs and sockets have invoerted size wee need to use the max here. unfortunately not very efficient. should be reconsidered.
+    }
+
   protected:
     template<unsigned int ta_nNumEIs, unsigned int ta_nNumEOs, unsigned int ta_nNumDIs, unsigned int ta_nNumDOs>
     struct genAdapterFBConnDataSizeTemplate {
@@ -110,11 +116,6 @@ class CAdapter: public CFunctionBlock {
         };
     };
 
-    static size_t genAdapterFBConnDataSize(unsigned int pa_nNumEIs, unsigned int pa_nNumEOs, unsigned int pa_nNumDIs, unsigned int pa_nNumDOs){
-      return genFBConnDataSize(((pa_nNumEIs < pa_nNumEOs) ? pa_nNumEOs : pa_nNumEIs),
-          ((pa_nNumDIs < pa_nNumDOs) ? pa_nNumDOs : pa_nNumDIs),
-          ((pa_nNumDIs < pa_nNumDOs) ? pa_nNumDOs : pa_nNumDIs));   //for outputs data connections are stored in this array, as plugs and sockets have invoerted size wee need to use the max here. unfortunately not very efficient. should be reconsidered.
-    }
 
 
     TForteUInt16 m_nParentAdapterListEventID;

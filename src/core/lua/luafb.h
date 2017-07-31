@@ -15,12 +15,9 @@
 
 #include "basicfb.h"
 #include "luaengine.h"
-#include "luatype.h"
-
 #include "forte_any.h"
 #include "forte_array.h"
-
-#include <string>
+#include "luafbtypeentry.h"
 
 extern "C" {
 #include <lua.h>
@@ -33,15 +30,23 @@ extern "C" {
 
 class CLuaFB: public CBasicFB {
 private:
+  static const TForteUInt32 LUA_FB_VAR_MAX = 65535;
+  static const TForteUInt32 LUA_AD_VAR_MAX = 255;
+
   static const TForteUInt32 LUA_FB_STATE = 0;
-  static const TForteUInt32 LUA_FB_IN_FLAG = 8192;
-  static const TForteUInt32 LUA_FB_DI_FLAG = 16384;
-  static const TForteUInt32 LUA_FB_DO_FLAG = 32768;
-  static const TForteUInt32 LUA_FB_VAR_MAX = 4095;
+  static const TForteUInt32 LUA_FB_DI_FLAG = 1 << 25;
+  static const TForteUInt32 LUA_FB_DO_FLAG = 1 << 26;
+  static const TForteUInt32 LUA_FB_AD_FLAG = 1 << 27;
+  static const TForteUInt32 LUA_FB_IN_FLAG = 1 << 28;
 
   const CLuaFBTypeEntry* typeEntry;
 
   CIEC_ANY* getVariable(TForteUInt32 id);
+
+  int recalculateID(int pa_nEIID) {
+    return CLuaFB::LUA_FB_AD_FLAG | (pa_nEIID >> 8) - 1 | pa_nEIID & 0x00ff;
+  }
+
 public:
   static const char LUA_NAME[];
   static const luaL_Reg LUA_FUNCS[];

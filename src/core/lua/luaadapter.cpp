@@ -10,12 +10,13 @@
  *   - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_CORE_LUA_LUATYPE_H_
-#define SRC_CORE_LUA_LUATYPE_H_
+#include "luaadapter.h"
+#include "resource.h"
 
-namespace luatype {
-  bool getAdapterInstanceDefinition(SAdapterInstanceDef& def, CLuaEngine* luaEngine, int index);
-  bool getTypeNameId(CStringDictionary::TStringId& id, CLuaEngine* luaEngine, int index);
+CLuaAdapter::CLuaAdapter(CStringDictionary::TStringId instanceNameId, const CLuaAdapterTypeEntry* typeEntry, bool pa_bIsPlug, TForteByte *connData, TForteByte *varsData, CResource *resource)
+    : CAdapter(resource, typeEntry->getSocketInterfaceSpec(), instanceNameId, typeEntry->getPlugInterfaceSpec(), pa_bIsPlug, connData, varsData){
+  this->typeEntry = typeEntry;
 }
 
-#endif /* SRC_CORE_LUA_LUATYPE_H_ */
+CLuaAdapter::~CLuaAdapter() {
+}

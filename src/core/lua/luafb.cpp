@@ -17,6 +17,7 @@ extern "C" {
 #include <lualib.h>
 }
 
+// write variable to lua engine
 int CLuaFB_index(lua_State *luaState) {
   CLuaFB* luaFB = CLuaEngine::luaGetObject<CLuaFB>(luaState, 1);
   TForteUInt32 id = static_cast<TForteUInt32>(luaL_checkinteger(luaState, 2));
@@ -25,6 +26,7 @@ int CLuaFB_index(lua_State *luaState) {
   return 1;
 }
 
+// get variables from lua engine
 int CLuaFB_newindex(lua_State *luaState) {
   CLuaFB* luaFB = CLuaEngine::luaGetObject<CLuaFB>(luaState, 1);
   TForteUInt32 id = static_cast<TForteUInt32>(luaL_checkinteger(luaState, 2));
@@ -36,7 +38,11 @@ int CLuaFB_newindex(lua_State *luaState) {
 int CLuaFB_call(lua_State *luaState) {
   CLuaFB* luaFB = CLuaEngine::luaGetObject<CLuaFB>(luaState, 1);
   TForteUInt32 id = static_cast<TForteUInt32>(luaL_checkinteger(luaState, 2));
-  luaFB->sendOutputEvent(id);
+  if((id & CLuaFB::LUA_FB_AD_FLAG) != 0){
+    luaFB->sendAdapterEvent((id >> 16) & CLuaFB::LUA_AD_VAR_MAX, id & CLuaFB::LUA_FB_VAR_MAX);
+  }else{
+    luaFB->sendOutputEvent(id);
+  }
   return 0;
 }
 
@@ -58,7 +64,7 @@ void CLuaFB::executeEvent(int pa_nEIID) {
   CLuaEngine *luaEngine = getResource().getLuaEngine();
   luaEngine->load(typeEntry);
   luaEngine->load(this);
-  luaEngine->pushInteger(pa_nEIID);
+  luaEngine->pushInteger(pa_nEIID > 255 ? recalculateID(pa_nEIID) : pa_nEIID);
   if (!luaEngine->call(2, 0)) {
     DEVLOG_ERROR("Error calling function executeEvent for instance %s\n", getInstanceName());
     return;
@@ -66,18 +72,35 @@ void CLuaFB::executeEvent(int pa_nEIID) {
 }
 
 CIEC_ANY* CLuaFB::getVariable(TForteUInt32 id) {
-  CIEC_ANY* value;
   if (CLuaFB::LUA_FB_STATE == id) {
-    value = &m_nECCState;
-  } else if ((id & CLuaFB::LUA_FB_DI_FLAG) != 0) {
-    value = getDI(id & CLuaFB::LUA_FB_VAR_MAX);
-  } else if ((id & CLuaFB::LUA_FB_DO_FLAG) != 0) {
-    value = getDO(id & CLuaFB::LUA_FB_VAR_MAX);
-  } else if ((id & CLuaFB::LUA_FB_IN_FLAG) != 0) {
-    value = getVarInternal(id & CLuaFB::LUA_FB_VAR_MAX);
-  } else {
-    value = NULL;
+    return &m_nECCState;
   }
-  return value;
+  if((id & CLuaFB::LUA_FB_IN_FLAG) != 0) {
+    return getVarInternal(id & CLuaFB::LUA_FB_VAR_MAX);
+  }
+  if ((id & CLuaFB::LUA_FB_AD_FLAG) != 0) {
+    if ((id & CLuaFB::LUA_FB_DI_FLAG) != 0) {
+      if(m_apoAdapters[(id >> 16) & CLuaFB::LUA_AD_VAR_MAX]->isPlug()){
+        return m_apoAdapters[(id >> 16) & CLuaFB::LUA_AD_VAR_MAX]->getDO(id & CLuaFB::LUA_FB_VAR_MAX);
+      }else{
+        return m_apoAdapters[(id >> 16) & CLuaFB::LUA_AD_VAR_MAX]->getDO(id & CLuaFB::LUA_FB_VAR_MAX);
+      }
+    }
+    if ((id & CLuaFB::LUA_FB_DO_FLAG) != 0) {
+      if(m_apoAdapters[(id >> 16) & CLuaFB::LUA_AD_VAR_MAX]->isPlug()){
+        return m_apoAdapters[(id >> 16) & CLuaFB::LUA_AD_VAR_MAX]->getDI(id & CLuaFB::LUA_FB_VAR_MAX);
+      }else{
+        return m_apoAdapters[(id >> 16) & CLuaFB::LUA_AD_VAR_MAX]->getDI(id & CLuaFB::LUA_FB_VAR_MAX);
+      }
+    }
+    return 0;
+  }
+  if ((id & CLuaFB::LUA_FB_DI_FLAG) != 0) {
+    return getDI(id & CLuaFB::LUA_FB_VAR_MAX);
+  }
+  if ((id & CLuaFB::LUA_FB_DO_FLAG) != 0) {
+    return getDO(id & CLuaFB::LUA_FB_VAR_MAX);
+  }
+  return 0;
 }
 
