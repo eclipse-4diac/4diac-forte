@@ -197,6 +197,8 @@ private:
 
 	virtual void handleAsyncEvent();
 
+	CSinglyLinkedList<UA_NodeId *> referencedNodes;
+
 };
 
 

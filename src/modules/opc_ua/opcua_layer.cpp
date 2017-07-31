@@ -40,10 +40,11 @@ struct AsyncCallPayload {
 COPC_UA_Layer::COPC_UA_Layer(CComLayer *pa_poUpperLayer, CCommFB *pa_poComFB) : CComLayerAsync(pa_poUpperLayer, pa_poComFB),
 																				clientSdConverter(NULL), clientRdConverter(NULL),
 																				mInterruptResp(e_Nothing), fbNodeId(NULL), fbNodeIdParent(NULL),
-																				methodNodeId(NULL),	sendDataNodeIds(NULL), readDataNodeIds(NULL),
+																				methodNodeId(NULL), sendDataNodeIds(NULL), readDataNodeIds(NULL),
 																				clientEndpointUrl(NULL), clientMethodPath(NULL),
 																				clientMutex(NULL),
-																				mutexServerMethodCall(), serverMethodCallResultReady(false) {
+																				mutexServerMethodCall(), serverMethodCallResultReady(false),
+																				referencedNodes() {
 	// constructor list initialization
 
 }
@@ -55,18 +56,30 @@ COPC_UA_Layer::~COPC_UA_Layer() {
 
 EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
 
+	COPC_UA_Handler::getInstance().referencedNodesDecrement(&referencedNodes, this, true);
+	for (CSinglyLinkedList<UA_NodeId *>::Iterator iter = referencedNodes.begin(); iter != referencedNodes.end(); ++iter) {
+		UA_NodeId_delete((*iter));
+	}
+	referencedNodes.clearAll();
+
+
 	if (fbNodeId != NULL) {
 		DEVLOG_WARNING("OPC UA: Already connected. Nothing to do.\n");
 		return e_InitTerminated;
 	}
 
 	// Create all the nodes up to the given node (ID parameter of the FB)
-	if (getCommFB()->getComServiceType() != e_Client)
-	{
+	if (getCommFB()->getComServiceType() != e_Client) {
 		UA_StatusCode retVal;
-		if ((retVal = COPC_UA_Handler::getInstance().getNodeForPath(&fbNodeId, paLayerParameter, true)) != UA_STATUSCODE_GOOD) {
+		CSinglyLinkedList<UA_NodeId *> nodesAlongPath = CSinglyLinkedList<UA_NodeId *>();
+		if ((retVal = COPC_UA_Handler::getInstance().getNodeForPath(&fbNodeId, paLayerParameter, true, NULL, NULL, NULL, NULL, &nodesAlongPath)) != UA_STATUSCODE_GOOD) {
 			DEVLOG_ERROR("OPC UA: Could not get node for path: '%s': %s\n", paLayerParameter, UA_StatusCode_explanation(retVal));
 			return e_InitTerminated;
+		}
+		COPC_UA_Handler::getInstance().referencedNodesIncrement(&nodesAlongPath, this);
+
+		for (CSinglyLinkedList<UA_NodeId *>::Iterator iter = nodesAlongPath.begin(); iter != nodesAlongPath.end(); ++iter) {
+			referencedNodes.push_back((*iter));
 		}
 	}
 
@@ -92,6 +105,13 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
 }
 
 void COPC_UA_Layer::closeConnection() {
+
+	COPC_UA_Handler::getInstance().referencedNodesDecrement(&referencedNodes, this, true);
+	for (CSinglyLinkedList<UA_NodeId *>::Iterator iter = referencedNodes.begin(); iter != referencedNodes.end(); ++iter) {
+		UA_NodeId_delete((*iter));
+	}
+	referencedNodes.clearAll();
+
 	if (fbNodeId != NULL) {
 		UA_NodeId_delete(fbNodeId);
 		fbNodeId = NULL;
@@ -156,7 +176,8 @@ bool COPC_UA_Layer::getPortConnectionInfo(unsigned int portIndex, bool isSD, con
 
 	const CDataConnection *portConnection = isSD ? getCommFB()->getDIConnection(portNameId) : getCommFB()->getDOConnection(portNameId);
 	if (portConnection == NULL) {
-		DEVLOG_ERROR("OPC UA: Got invalid port connection on FB %s at port %s. It must be connected to another FB.\n", this->getCommFB()->getInstanceName(), CStringDictionary::getInstance().get(portNameId));
+		DEVLOG_ERROR("OPC UA: Got invalid port connection on FB %s at port %s. It must be connected to another FB.\n", this->getCommFB()->getInstanceName(),
+					 CStringDictionary::getInstance().get(portNameId));
 		return false;
 	}
 
@@ -204,9 +225,9 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
 		return e_InitInvalidId;
 	}
 
-	*nodeIds = (struct FB_NodeIds *)forte_malloc(sizeof(struct FB_NodeIds)*numPorts);
+	*nodeIds = (struct FB_NodeIds *) forte_malloc(sizeof(struct FB_NodeIds) * numPorts);
 
-	const CIEC_ANY* initData = isSD ? getCommFB()->getSDs() : getCommFB()->getRDs();
+	const CIEC_ANY *initData = isSD ? getCommFB()->getSDs() : getCommFB()->getRDs();
 
 	for (unsigned int i = 0; i < numPorts; i++) {
 
@@ -223,19 +244,28 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
 		UA_StatusCode retVal;
 
 		{
+			const char *subnodePath = connectedToFb->getInstanceName();
 			// create/get node for connected FB
-			size_t len = strlen(connectedToFb->getInstanceName()) + 2; // include slash and nullbyte
-			char *fbBrowseName = (char*)forte_malloc(sizeof(char)*len);
-			snprintf(fbBrowseName, len, "/%s", connectedToFb->getInstanceName());
+			size_t len = strlen(subnodePath) + 2; // include slash and nullbyte
+			char *fbBrowseName = (char *) forte_malloc(sizeof(char) * len);
+			snprintf(fbBrowseName, len, "/%s", subnodePath);
 			UA_NodeId newNodeType = UA_NODEID_NUMERIC(0, UA_NS0ID_BASEOBJECTTYPE);
-			retVal = COPC_UA_Handler::getInstance().getNodeForPath(&(*nodeIds)[i].functionBlockId, fbBrowseName, true, fbNodeId, &newNodeType);
+			CSinglyLinkedList<UA_NodeId *> nodesAlongPath = CSinglyLinkedList<UA_NodeId *>();
+			retVal = COPC_UA_Handler::getInstance().getNodeForPath(&(*nodeIds)[i].functionBlockId, fbBrowseName, true, fbNodeId, &newNodeType, NULL, NULL,
+																   &nodesAlongPath);
 			forte_free(fbBrowseName);
+
+			COPC_UA_Handler::getInstance().referencedNodesIncrement(&nodesAlongPath, this);
+
+			for (CSinglyLinkedList<UA_NodeId *>::Iterator iter = nodesAlongPath.begin(); iter != nodesAlongPath.end(); ++iter) {
+				referencedNodes.push_back((*iter));
+			}
 		}
 
 		if (retVal == UA_STATUSCODE_GOOD) {
 			// create/get variable node for port on connected FB
 			size_t len = strlen(connectedToName) + 2; // include slash and nullbyte
-			char *sourceVarBrowseName = (char*)forte_malloc(sizeof(char)*len);
+			char *sourceVarBrowseName = (char *) forte_malloc(sizeof(char) * len);
 			snprintf(sourceVarBrowseName, len, "/%s", connectedToName);
 			retVal = COPC_UA_Handler::getInstance().getNodeForPath(&(*nodeIds)[i].variableId, sourceVarBrowseName, false,
 																   (*nodeIds)[i].functionBlockId);
@@ -257,6 +287,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
 					COPC_UA_Handler::getInstance().registerNodeCallBack((*nodeIds)[i].variableId, this, conv, i);
 				}
 			} // else if retVal = UA_STATUSCODE_GOOD the node already exists
+
 		}
 
 		if (retVal != UA_STATUSCODE_GOOD) {
@@ -296,7 +327,8 @@ forte::com_infra::EComResponse COPC_UA_Layer::createMethodNode() {
 	forte::com_infra::EComResponse result = e_InitOk;
 
 	UA_StatusCode retVal;
-	if ((retVal = COPC_UA_Handler::getInstance().createMethodNode(fbNodeId, 1, getCommFB()->getInstanceName(), COPC_UA_Layer::onServerMethodCall, this,
+	const char* subnodePath = getCommFB()->getInstanceName();
+	if ((retVal = COPC_UA_Handler::getInstance().createMethodNode(fbNodeId, 1, subnodePath, COPC_UA_Layer::onServerMethodCall, this,
 																  getCommFB()->getNumRD(),
 																  inputArguments, getCommFB()->getNumSD(), outputArguments, methodNodeId)) !=
 		UA_STATUSCODE_GOOD) {
@@ -345,7 +377,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::clientCreateConverter(const UA_Typ
 		return e_InitInvalidId;
 	}
 
-	*converterList = (const UA_TypeConvert **)forte_malloc(sizeof(UA_TypeConvert*)*numPorts);
+	*converterList = (const UA_TypeConvert **) forte_malloc(sizeof(UA_TypeConvert *) * numPorts);
 
 	for (unsigned int i = 0; i < numPorts; i++) {
 
@@ -386,7 +418,8 @@ forte::com_infra::EComResponse COPC_UA_Layer::clientInit() {
 
 	UA_StatusCode retVal = COPC_UA_Handler::getInstance().getNodeForPath(&fbNodeId, clientMethodPath, false, NULL, NULL, &fbNodeIdParent, this->uaClient);
 	if (retVal != UA_STATUSCODE_GOOD) {
-		DEVLOG_ERROR("OPC UA: Could not get node for path from server '%s': '%s'. %s\n", clientEndpointUrl, clientMethodPath, UA_StatusCode_explanation(retVal));
+		DEVLOG_ERROR("OPC UA: Could not get node for path from server '%s': '%s'. %s\n", clientEndpointUrl, clientMethodPath,
+					 UA_StatusCode_explanation(retVal));
 		return e_InitTerminated;
 	}
 
@@ -403,7 +436,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::clientInit() {
 	return e_InitOk;
 }
 
-forte::com_infra::EComResponse COPC_UA_Layer::createClient(const char* paLayerParameter) {
+forte::com_infra::EComResponse COPC_UA_Layer::createClient(const char *paLayerParameter) {
 	// split the ID parameter:
 	// opc.tcp://10.100.1.0:4840#/Objects/1:Adder
 	// between the hash sign
@@ -447,9 +480,9 @@ forte::com_infra::EComResponse COPC_UA_Layer::createClient(const char* paLayerPa
 	}
 
 	// additional nullbyte in length
-	char *fullNodePath = (char*)forte_malloc(sizeof(char) * (nodePathLen+2));
+	char *fullNodePath = (char *) forte_malloc(sizeof(char) * (nodePathLen + 2));
 
-	snprintf(fullNodePath,nodePathLen+1,"%.*s", (int)nodePathLen, nodePath);
+	snprintf(fullNodePath, nodePathLen + 1, "%.*s", (int) nodePathLen, nodePath);
 
 	this->clientMethodPath = fullNodePath;
 	this->clientEndpointUrl = strdup(endpointUrl);
@@ -521,14 +554,14 @@ EComResponse COPC_UA_Layer::recvData(const void *pa_pvData, unsigned int) {
 
 forte::com_infra::EComResponse COPC_UA_Layer::clientCallMethod(const CIEC_ANY *sd, unsigned int sdSize) {
 
-	UA_Variant *inputs = (UA_Variant *)UA_Array_new(sdSize, &UA_TYPES[UA_TYPES_VARIANT]);
+	UA_Variant *inputs = (UA_Variant *) UA_Array_new(sdSize, &UA_TYPES[UA_TYPES_VARIANT]);
 
-	for (unsigned int i=0; i<sdSize; i++) {
+	for (unsigned int i = 0; i < sdSize; i++) {
 		UA_Variant_init(&inputs[i]);
 		void *varValue = UA_new(clientSdConverter[i]->type);
 		UA_init(varValue, clientSdConverter[i]->type);
 		if (!clientSdConverter[i]->get(&sd[i], varValue)) {
-			DEVLOG_ERROR("OPC UA: Client could not convert input SD_%d to OPC UA.\n", i+1);
+			DEVLOG_ERROR("OPC UA: Client could not convert input SD_%d to OPC UA.\n", i + 1);
 			UA_delete(varValue, clientSdConverter[i]->type);
 			UA_Array_delete(inputs, sdSize, &UA_TYPES[UA_TYPES_VARIANT]);
 			return e_ProcessDataDataTypeError;
@@ -537,7 +570,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::clientCallMethod(const CIEC_ANY *s
 		UA_delete(varValue, clientSdConverter[i]->type);
 	}
 
-	struct AsyncCallPayload *payload = (struct AsyncCallPayload*)forte_malloc(sizeof(AsyncCallPayload));
+	struct AsyncCallPayload *payload = (struct AsyncCallPayload *) forte_malloc(sizeof(AsyncCallPayload));
 	payload->variants = inputs;
 	payload->variantsSize = sdSize;
 	if (callAsync(payload) == 0)
@@ -557,10 +590,11 @@ UA_StatusCode COPC_UA_Layer::onServerMethodCall(void *methodHandle, const UA_Nod
 						size_t inputSize, const UA_Variant *input,
 						size_t outputSize, UA_Variant *output) {
 #else
+
 UA_StatusCode COPC_UA_Layer::onServerMethodCall(void *methodHandle, const UA_NodeId *,
-						const UA_NodeId *, void *,
-						size_t inputSize, const UA_Variant *input,
-						size_t outputSize, UA_Variant *output) {
+												const UA_NodeId *, void *,
+												size_t inputSize, const UA_Variant *input,
+												size_t outputSize, UA_Variant *output) {
 #endif
 	DEVLOG_DEBUG("OPC UA: OPC UA Server method call start.\n");
 	COPC_UA_Layer *self = static_cast<COPC_UA_Layer *>(methodHandle);
@@ -665,7 +699,7 @@ void *COPC_UA_Layer::handleAsyncCall(const unsigned int /*callId*/, void *payloa
 	if (this->clientInit() != e_InitOk)
 		return NULL;
 
-	struct AsyncCallPayload *inputData = (struct AsyncCallPayload*)payload;
+	struct AsyncCallPayload *inputData = (struct AsyncCallPayload *) payload;
 
 	size_t outputSize;
 	UA_Variant *output;
@@ -676,15 +710,15 @@ void *COPC_UA_Layer::handleAsyncCall(const unsigned int /*callId*/, void *payloa
 	UA_StatusCode retval = UA_Client_call(this->uaClient, *this->fbNodeIdParent,
 										  *this->fbNodeId, inputData->variantsSize, inputData->variants, &outputSize, &output);
 	clientMutex->unlock();
-	if(retval == UA_STATUSCODE_GOOD) {
+	if (retval == UA_STATUSCODE_GOOD) {
 		DEVLOG_DEBUG("OPC UA: Method call was successfull, and %lu returned values available.\n",
-					 (unsigned long)outputSize);
+					 (unsigned long) outputSize);
 
 		if (getCommFB()->getNumRD() != outputSize) {
 			DEVLOG_ERROR("OPC UA: The number of RD connectors of the client does not match the number of returned values from the method call.\n");
 		} else {
 
-			struct AsyncCallPayload *outputData = (struct AsyncCallPayload *)forte_malloc(sizeof(struct AsyncCallPayload));
+			struct AsyncCallPayload *outputData = (struct AsyncCallPayload *) forte_malloc(sizeof(struct AsyncCallPayload));
 
 			outputData->variants = output;
 			outputData->variantsSize = (unsigned int) outputSize;
@@ -700,18 +734,18 @@ void *COPC_UA_Layer::handleAsyncCall(const unsigned int /*callId*/, void *payloa
 
 void COPC_UA_Layer::handleAsyncCallResult(const unsigned int /*callId*/, void *payload, void *result) {
 
-	struct AsyncCallPayload *inputData = (struct AsyncCallPayload*)payload;
+	struct AsyncCallPayload *inputData = (struct AsyncCallPayload *) payload;
 	UA_Array_delete(inputData->variants, inputData->variantsSize, &UA_TYPES[UA_TYPES_VARIANT]);
 	forte_free(payload);
 
 	if (result == NULL)
 		return;
 
-	struct AsyncCallPayload *outputData = (struct AsyncCallPayload*)result;
+	struct AsyncCallPayload *outputData = (struct AsyncCallPayload *) result;
 	bool failed = false;
-	for (unsigned int i=0; i<outputData->variantsSize; i++) {
+	for (unsigned int i = 0; i < outputData->variantsSize; i++) {
 		if (!clientRdConverter[i]->set(outputData->variants[i].data, &getCommFB()->getRDs()[i])) {
-			DEVLOG_ERROR("OPC UA: Client could not convert returned data from OPC UA to RD_%d.\n", i+1);
+			DEVLOG_ERROR("OPC UA: Client could not convert returned data from OPC UA to RD_%d.\n", i + 1);
 			failed = true;
 			break;
 		}

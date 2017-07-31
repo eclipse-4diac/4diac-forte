@@ -142,7 +142,8 @@ public:
 	UA_StatusCode
 	getNodeForPath(UA_NodeId **foundNodeId, const char *nodePath, bool createIfNotFound,
 				   const UA_NodeId *startingNode = NULL, const UA_NodeId *newNodeType = NULL,
-				   UA_NodeId **parentNodeId = NULL, UA_Client *clientInitialized = NULL);
+				   UA_NodeId **parentNodeId = NULL, UA_Client *clientInitialized = NULL,
+				   CSinglyLinkedList<UA_NodeId *> *nodeIdsAlongPath = NULL);
 
 	/**
 	 * Get the opc ua client for the given endpoint url. If there exists already an OPC UA client
@@ -154,11 +155,11 @@ public:
 	 * @param createIfNotFound if true, a new client will be created if not found
 	 * @return the (new) client, or NULL of not found and not created.
 	 */
-	UA_Client*
-	getClientForEndpoint(const char* endpointUrl, bool createIfNotFound, CSyncObject **clientMutex);
+	UA_Client *
+	getClientForEndpoint(const char *endpointUrl, bool createIfNotFound, CSyncObject **clientMutex);
 
 
-	CSyncObject*
+	CSyncObject *
 	getMutexForClient(const UA_Client *client);
 
 
@@ -170,6 +171,10 @@ public:
 	void forceEventHandling(COPC_UA_Layer *layer) {
 		getInstance().startNewEventChain(layer->getCommFB());
 	}
+
+	void referencedNodesIncrement(const CSinglyLinkedList<UA_NodeId *> *nodes, const COPC_UA_Layer* layer);
+
+	void referencedNodesDecrement(const CSinglyLinkedList<UA_NodeId *> *nodes, const COPC_UA_Layer* layer, bool deleteIfLastReference);
 
 protected:
 
@@ -218,6 +223,13 @@ private:
 	 * Collector list for callback handles to be able to clean them up on destroy.
 	 */
 	CSinglyLinkedList<struct UA_ClientEndpointMap *> clients;
+
+
+	struct ReferencedNodeByLayer {
+		const UA_NodeId *nodeId;
+		CSinglyLinkedList<const COPC_UA_Layer*> referencedByLayer;
+	};
+	CSinglyLinkedList<struct ReferencedNodeByLayer*> nodeLayerReferences;
 
 };
 
