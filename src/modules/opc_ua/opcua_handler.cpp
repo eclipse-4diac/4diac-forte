@@ -452,7 +452,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
 				else
 					creationType = *newNodeType;
 
-				if ((retVal = UA_Server_addObjectNode(uaServer, UA_NODEID_NUMERIC(1, 0),
+				if ((retVal = UA_Server_addObjectNode(uaServer, UA_NODEID_NUMERIC(targetName->namespaceIndex, 0),
 													  **foundNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
 													  *targetName, creationType, oAttr, NULL, *foundNodeId)) != UA_STATUSCODE_GOOD) {
 					DEVLOG_ERROR("OPC UA: Could not addObjectNode. Error: %s - %s\n", UA_StatusCode_name(retVal), UA_StatusCode_description(retVal));

@@ -596,7 +596,6 @@ UA_StatusCode COPC_UA_Layer::onServerMethodCall(void *methodHandle, const UA_Nod
 												size_t inputSize, const UA_Variant *input,
 												size_t outputSize, UA_Variant *output) {
 #endif
-	DEVLOG_DEBUG("OPC UA: OPC UA Server method call start.\n");
 	COPC_UA_Layer *self = static_cast<COPC_UA_Layer *>(methodHandle);
 
 #if !defined(VXWORKS) && defined(__GNUC__)
@@ -638,8 +637,6 @@ UA_StatusCode COPC_UA_Layer::onServerMethodCall(void *methodHandle, const UA_Nod
 		return UA_STATUSCODE_BADINVALIDARGUMENT;
 	}
 
-	DEVLOG_DEBUG("OPC UA: server method call waiting for RSP event.\n");
-
 	// wait until result is ready
 	CIEC_DATE_AND_TIME startTime;
 	startTime.setCurrentTime();
@@ -654,7 +651,6 @@ UA_StatusCode COPC_UA_Layer::onServerMethodCall(void *methodHandle, const UA_Nod
 		return UA_STATUSCODE_BADTIMEOUT;
 	}
 
-	DEVLOG_DEBUG("OPC UA: Server method call got RSP event.\n");
 	self->serverMethodCallResultReady = false;
 
 	// copy SD values to output
@@ -682,15 +678,10 @@ UA_StatusCode COPC_UA_Layer::onServerMethodCall(void *methodHandle, const UA_Nod
 			break;
 	}
 
-	DEVLOG_DEBUG("OPC UA: Server method call end.\n");
-
 	return self->mInterruptResp == e_ProcessDataOk ? UA_STATUSCODE_GOOD : UA_STATUSCODE_BADUNEXPECTEDERROR;
 }
 
 void *COPC_UA_Layer::handleAsyncCall(const unsigned int /*callId*/, void *payload) {
-
-
-	DEVLOG_DEBUG("OPC UA: Client connecting\n");
 
 	if (this->clientInit() != e_InitOk)
 		return NULL;
@@ -700,8 +691,6 @@ void *COPC_UA_Layer::handleAsyncCall(const unsigned int /*callId*/, void *payloa
 	size_t outputSize;
 	UA_Variant *output;
 	clientMutex->lock();
-
-	DEVLOG_DEBUG("OPC UA: Calling method\n");
 
 	UA_StatusCode retval = UA_Client_call(this->uaClient, *this->fbNodeIdParent,
 										  *this->fbNodeId, inputData->variantsSize, inputData->variants, &outputSize, &output);
