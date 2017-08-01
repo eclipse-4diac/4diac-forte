@@ -231,7 +231,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
 
 
 	// for every folder (which is a BrowsePath) we want to get the node id
-	UA_BrowsePath *browsePaths = (UA_BrowsePath *) UA_Array_new(folderCnt, &UA_TYPES[UA_TYPES_BROWSEPATH]);
+	UA_BrowsePath *browsePaths = (UA_BrowsePath *) UA_Array_new(folderCnt*2, &UA_TYPES[UA_TYPES_BROWSEPATH]);
 
 	for (unsigned int i = 0; i < folderCnt; i++) {
 		UA_BrowsePath_init(&browsePaths[i]);
@@ -277,24 +277,28 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
 		tok = strtok(NULL, "/");
 	}
 
+	// same browse paths, but inverse reference, to check both directions
+	for (unsigned int i = 0; i < folderCnt; i++) {
+		UA_BrowsePath_copy(&browsePaths[i], &browsePaths[folderCnt+i]);
+		for (unsigned int j = 0; j < browsePaths[folderCnt+i].relativePath.elementsSize; j++) {
+			browsePaths[folderCnt+i].relativePath.elements[j].isInverse = !browsePaths[folderCnt+i].relativePath.elements[j].isInverse;
+		}
+	}
+
 	UA_TranslateBrowsePathsToNodeIdsRequest request;
 	UA_TranslateBrowsePathsToNodeIdsRequest_init(&request);
 	request.browsePaths = browsePaths;
-	request.browsePathsSize = folderCnt;
+	request.browsePathsSize = folderCnt*2;
 
 	{
-#ifndef VXWORKS
-#ifdef __GNUC__
+#if !defined(VXWORKS) && defined(__GNUC__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #endif
-#endif
-		// other thready may currently create nodes for the same path, thus mutex
+		// other thread may currently create nodes for the same path, thus mutex
 		CCriticalRegion criticalRegion(this->getNodeForPathMutex);
-#ifndef VXWORKS
-#ifdef __GNUC__
+#if !defined(VXWORKS) && defined(__GNUC__)
 #pragma GCC diagnostic pop
-#endif
 #endif
 
 
@@ -328,7 +332,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
 			return retVal;
 		}
 
-		if (response.resultsSize != folderCnt) {
+		if (response.resultsSize != folderCnt*2) {
 			DEVLOG_ERROR("OPC UA: Could not translate browse paths for '%s' to node IDs. resultSize (%d) != expected count (%d)\n", fullPath,
 						 response.resultsSize,
 						 folderCnt);
@@ -342,13 +346,20 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
 		*foundNodeId = NULL;
 		UA_StatusCode retVal = UA_STATUSCODE_GOOD;
 
+		int foundFolderOffset = -1;
 		if (response.results[folderCnt - 1].statusCode == UA_STATUSCODE_GOOD) {
+			foundFolderOffset = 0;
+		} else if (response.results[folderCnt*2 - 1].statusCode == UA_STATUSCODE_GOOD) {
+			foundFolderOffset = folderCnt;
+		}
+
+		if (foundFolderOffset >= 0) {
 			// all nodes exist, so just copy the node ids
 			*foundNodeId = UA_NodeId_new();
-			UA_NodeId_copy(&response.results[folderCnt - 1].targets[0].targetId.nodeId, *foundNodeId);
+			UA_NodeId_copy(&response.results[foundFolderOffset + folderCnt - 1].targets[0].targetId.nodeId, *foundNodeId);
 			if (parentNodeId && folderCnt >= 2) {
 				*parentNodeId = UA_NodeId_new();
-				UA_NodeId_copy(&response.results[folderCnt - 2].targets[0].targetId.nodeId, *parentNodeId);
+				UA_NodeId_copy(&response.results[foundFolderOffset + folderCnt - 2].targets[0].targetId.nodeId, *parentNodeId);
 			} else if (parentNodeId && !startingNode) {
 				*parentNodeId = UA_NodeId_new();
 				**parentNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
@@ -356,7 +367,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
 			if (nodeIdsAlongPath) {
 				for (unsigned int i = 0; i < folderCnt; i++) {
 					UA_NodeId *tmp = UA_NodeId_new();
-					UA_NodeId_copy(&response.results[i].targets[0].targetId.nodeId, tmp);
+					UA_NodeId_copy(&response.results[foundFolderOffset + i].targets[0].targetId.nodeId, tmp);
 					nodeIdsAlongPath->push_back(tmp);
 				}
 			}
@@ -368,26 +379,35 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
 			if (parentNodeId && folderCnt >= 2) {
 				*parentNodeId = UA_NodeId_new();
 			}
+			foundFolderOffset = 0;
 			// no unsigned, because we need to check for -1
 			int i;
 			for (i = folderCnt - 2; i >= 0; i--) {
-				if (response.results[i].statusCode != UA_STATUSCODE_GOOD) {
-					// find first existing node
-					continue;
+				// find first existing node. Check for isInverse = TRUE
+				if (response.results[i].statusCode == UA_STATUSCODE_GOOD) {
+					foundFolderOffset = 0;
+					break;
 				}
+				// and for isInverse = FALSE
+				if (response.results[folderCnt + i].statusCode == UA_STATUSCODE_GOOD) {
+					foundFolderOffset = folderCnt;
+					break;
+				}
+			}
+			for (; i >= 0; i--) {
 				// now we found the first existing node
-				if (response.results[i].targetsSize == 0) {
+				if (response.results[foundFolderOffset+i].targetsSize == 0) {
 					DEVLOG_ERROR("OPC UA: Could not translate browse paths for '%s' to node IDs. target size is 0.\n", fullPath);
 					break;
 				}
-				if (response.results[i].targetsSize > 1) {
+				if (response.results[foundFolderOffset+i].targetsSize > 1) {
 					DEVLOG_WARNING("OPC UA: The given browse path '%s' has multiple results for the same path. Taking the first result.\n", fullPath);
 				}
 
 				// foundNodeId contains the ID of the parent which exists
-				UA_NodeId_copy(&response.results[i].targets[0].targetId.nodeId, *foundNodeId);
+				UA_NodeId_copy(&response.results[foundFolderOffset+i].targets[0].targetId.nodeId, *foundNodeId);
 				if (parentNodeId && folderCnt >= 2) {
-					UA_NodeId_copy(&response.results[i].targets[0].targetId.nodeId, *parentNodeId);
+					UA_NodeId_copy(&response.results[foundFolderOffset+i].targets[0].targetId.nodeId, *parentNodeId);
 				}
 				break;
 			}
@@ -404,7 +424,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
 			if (nodeIdsAlongPath) {
 				for (int j = 0; j < i; j++) {
 					UA_NodeId *tmp = UA_NodeId_new();
-					UA_NodeId_copy(&response.results[j].targets[0].targetId.nodeId, tmp);
+					UA_NodeId_copy(&response.results[foundFolderOffset+j].targets[0].targetId.nodeId, tmp);
 					nodeIdsAlongPath->push_back(tmp);
 				}
 			}
