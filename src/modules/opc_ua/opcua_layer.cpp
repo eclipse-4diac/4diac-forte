@@ -73,7 +73,7 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
 		UA_StatusCode retVal;
 		CSinglyLinkedList<UA_NodeId *> nodesAlongPath = CSinglyLinkedList<UA_NodeId *>();
 		if ((retVal = COPC_UA_Handler::getInstance().getNodeForPath(&fbNodeId, paLayerParameter, true, NULL, NULL, NULL, NULL, &nodesAlongPath)) != UA_STATUSCODE_GOOD) {
-			DEVLOG_ERROR("OPC UA: Could not get node for path: '%s': %s\n", paLayerParameter, UA_StatusCode_explanation(retVal));
+			DEVLOG_ERROR("OPC UA: Could not get node for path: '%s': %s\n", paLayerParameter, UA_StatusCode_name(retVal));
 			return e_InitTerminated;
 		}
 		COPC_UA_Handler::getInstance().referencedNodesIncrement(&nodesAlongPath, this);
@@ -332,7 +332,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::createMethodNode() {
 																  getCommFB()->getNumRD(),
 																  inputArguments, getCommFB()->getNumSD(), outputArguments, methodNodeId)) !=
 		UA_STATUSCODE_GOOD) {
-		DEVLOG_ERROR("OPC UA: OPC UA could not create method node: %s - %s\n", UA_StatusCode_name(retVal), UA_StatusCode_description(retVal));
+		DEVLOG_ERROR("OPC UA: OPC UA could not create method node: %s\n", UA_StatusCode_name(retVal));
 		result = e_InitInvalidId;
 	}
 	UA_Array_delete(inputArguments, getCommFB()->getNumRD(), &UA_TYPES[UA_TYPES_ARGUMENT]);
@@ -410,7 +410,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::clientInit() {
 		UA_StatusCode retVal = UA_Client_connect(uaClient, clientEndpointUrl);
 
 		if (retVal != UA_STATUSCODE_GOOD) {
-			DEVLOG_ERROR("OPC UA: Could not connect client to endpoint %s. Error: %s\n", clientEndpointUrl, UA_StatusCode_description(retVal));
+			DEVLOG_ERROR("OPC UA: Could not connect client to endpoint %s. Error: %s\n", clientEndpointUrl, UA_StatusCode_name(retVal));
 			UA_Client_delete(uaClient);
 			return e_InitTerminated;
 		}
@@ -419,7 +419,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::clientInit() {
 	UA_StatusCode retVal = COPC_UA_Handler::getInstance().getNodeForPath(&fbNodeId, clientMethodPath, false, NULL, NULL, &fbNodeIdParent, this->uaClient);
 	if (retVal != UA_STATUSCODE_GOOD) {
 		DEVLOG_ERROR("OPC UA: Could not get node for path from server '%s': '%s'. %s\n", clientEndpointUrl, clientMethodPath,
-					 UA_StatusCode_explanation(retVal));
+					 UA_StatusCode_name(retVal));
 		return e_InitTerminated;
 	}
 
@@ -713,7 +713,7 @@ void *COPC_UA_Layer::handleAsyncCall(const unsigned int /*callId*/, void *payloa
 
 	}
 
-	DEVLOG_ERROR("OPC UA: Could not call method. Error: %s - %s\n", UA_StatusCode_name(retval), UA_StatusCode_description(retval));
+	DEVLOG_ERROR("OPC UA: Could not call method. Error: %s\n", UA_StatusCode_name(retval));
 	return NULL;
 }
 

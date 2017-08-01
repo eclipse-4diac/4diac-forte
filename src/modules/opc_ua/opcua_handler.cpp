@@ -133,7 +133,7 @@ void COPC_UA_Handler::run() {
 	DEVLOG_INFO("OPC UA: Starting OPC UA Server: opc.tcp://localhost:%d\n", FORTE_COM_OPC_UA_PORT);
 	UA_StatusCode retVal = UA_Server_run(uaServer, uaServerRunningFlag);    // server keeps iterating as long as running is true;
 	if (retVal != UA_STATUSCODE_GOOD) {
-		DEVLOG_ERROR("OPC UA: Server exited with error: %s - %s\n", UA_StatusCode_name(retVal), UA_StatusCode_description(retVal));
+		DEVLOG_ERROR("OPC UA: Server exited with error: %s\n", UA_StatusCode_name(retVal));
 	} else {
 		DEVLOG_INFO("OPC UA: Server successfully stopped\n");
 	}
@@ -220,7 +220,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
 		{
 			UA_StatusCode retVal;
 			if ((retVal = UA_Client_connect(client, localEndpoint)) != UA_STATUSCODE_GOOD) {
-				DEVLOG_ERROR("OPC UA: Could not connect to local OPC UA Server: %s - %s\n", UA_StatusCode_name(retVal), UA_StatusCode_description(retVal));
+				DEVLOG_ERROR("OPC UA: Could not connect to local OPC UA Server: %s\n", UA_StatusCode_name(retVal));
 				UA_Client_delete(client);
 				forte_free(fullPath);
 				forte_free(nodePath);
@@ -323,8 +323,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
 
 		if (response.responseHeader.serviceResult != UA_STATUSCODE_GOOD) {
 			UA_StatusCode retVal = response.responseHeader.serviceResult;
-			DEVLOG_ERROR("OPC UA: Could not translate browse paths for '%s' to node IDs. Error: %s - %s\n", fullPath, UA_StatusCode_name(retVal),
-						 UA_StatusCode_description(retVal));
+			DEVLOG_ERROR("OPC UA: Could not translate browse paths for '%s' to node IDs. Error: %s\n", fullPath, UA_StatusCode_name(retVal));
 			UA_TranslateBrowsePathsToNodeIdsRequest_deleteMembers(&request);
 			UA_TranslateBrowsePathsToNodeIdsResponse_deleteMembers(&response);
 			forte_free(fullPath);
@@ -334,8 +333,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
 
 		if (response.resultsSize != folderCnt*2) {
 			DEVLOG_ERROR("OPC UA: Could not translate browse paths for '%s' to node IDs. resultSize (%d) != expected count (%d)\n", fullPath,
-						 response.resultsSize,
-						 folderCnt);
+						 response.resultsSize, folderCnt);
 			UA_TranslateBrowsePathsToNodeIdsRequest_deleteMembers(&request);
 			UA_TranslateBrowsePathsToNodeIdsResponse_deleteMembers(&response);
 			forte_free(fullPath);
@@ -455,7 +453,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
 				if ((retVal = UA_Server_addObjectNode(uaServer, UA_NODEID_NUMERIC(targetName->namespaceIndex, 0),
 													  **foundNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
 													  *targetName, creationType, oAttr, NULL, *foundNodeId)) != UA_STATUSCODE_GOOD) {
-					DEVLOG_ERROR("OPC UA: Could not addObjectNode. Error: %s - %s\n", UA_StatusCode_name(retVal), UA_StatusCode_description(retVal));
+					DEVLOG_ERROR("OPC UA: Could not addObjectNode. Error: %s\n", UA_StatusCode_name(retVal));
 					UA_NodeId_delete(*foundNodeId);
 					if (parentNodeId && folderCnt >= 2) {
 						UA_NodeId_delete(*parentNodeId);
@@ -584,8 +582,7 @@ UA_StatusCode COPC_UA_Handler::createVariableNode(const UA_NodeId *parentNode, c
 	if (retVal == UA_STATUSCODE_GOOD) {
 		retVal = UA_NodeId_copy(returnNodeId, returnVarNodeId);
 	} else {
-		DEVLOG_ERROR("OPC UA: AddressSpace adding Variable Node %s failed. Error: %s - %s\n", varName, UA_StatusCode_name(retVal),
-					 UA_StatusCode_description(retVal));
+		DEVLOG_ERROR("OPC UA: AddressSpace adding Variable Node %s failed. Error: %s\n", varName, UA_StatusCode_name(retVal));
 	}
 	UA_NodeId_delete(returnNodeId);
 	return retVal;
