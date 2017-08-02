@@ -13,12 +13,12 @@
 #include <stdio.h>
 
 int forte_snprintf(char* pa_stream, size_t pa_size, const char* pa_format, ...){
-  int retval;
+  int retVal;
   va_list local_argv;
   va_start(local_argv, pa_format);
-  retval = snprintf(pa_stream, pa_size, pa_format, local_argv);
+  retVal = vsnprintf(pa_stream, pa_size, pa_format, local_argv);
   va_end(local_argv);
-  return retval;
+  return retVal;
 }
 
 int forte_vsnprintf(char* pa_stream, size_t pa_size, const char* pa_format, va_list pa_local_argv){
