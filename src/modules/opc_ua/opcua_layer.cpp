@@ -407,6 +407,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::clientInit() {
 #endif
 
 	if (UA_Client_getState(uaClient) != UA_CLIENTSTATE_CONNECTED) {
+		DEVLOG_INFO("OPC UA: Client connecting to %s\n", clientEndpointUrl);
 		UA_StatusCode retVal = UA_Client_connect(uaClient, clientEndpointUrl);
 
 		if (retVal != UA_STATUSCODE_GOOD) {

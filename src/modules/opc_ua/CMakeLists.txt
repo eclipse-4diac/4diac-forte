@@ -26,7 +26,7 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 if (FORTE_COM_OPC_UA)
 
-    SET(FORTE_OPC_UA_PORT "4840" CACHE PATH "Port where the OPC_UA server will listen")
+    SET(FORTE_COM_OPC_UA_PORT "4840" CACHE PATH "Port where the OPC_UA server will listen")
     SET(FORTE_COM_OPC_UA_INCLUDE_DIR "" CACHE PATH "ABSOLUTE path to open62541.h file in the OPC UA project")
     SET(FORTE_COM_OPC_UA_LIB_DIR "" CACHE PATH "ABSOLUTE path to OPC UA folder with object library FORTE_COM_OPC_UA_LIB")
 
