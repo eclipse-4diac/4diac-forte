@@ -80,18 +80,10 @@ CIEC_ANY* CLuaFB::getVariable(TForteUInt32 id) {
   }
   if ((id & CLuaFB::LUA_FB_AD_FLAG) != 0) {
     if ((id & CLuaFB::LUA_FB_DI_FLAG) != 0) {
-      if(m_apoAdapters[(id >> 16) & CLuaFB::LUA_AD_VAR_MAX]->isPlug()){
-        return m_apoAdapters[(id >> 16) & CLuaFB::LUA_AD_VAR_MAX]->getDO(id & CLuaFB::LUA_FB_VAR_MAX);
-      }else{
-        return m_apoAdapters[(id >> 16) & CLuaFB::LUA_AD_VAR_MAX]->getDO(id & CLuaFB::LUA_FB_VAR_MAX);
-      }
+      return m_apoAdapters[(id >> 16) & CLuaFB::LUA_AD_VAR_MAX]->getDO(id & CLuaFB::LUA_FB_VAR_MAX);
     }
     if ((id & CLuaFB::LUA_FB_DO_FLAG) != 0) {
-      if(m_apoAdapters[(id >> 16) & CLuaFB::LUA_AD_VAR_MAX]->isPlug()){
-        return m_apoAdapters[(id >> 16) & CLuaFB::LUA_AD_VAR_MAX]->getDI(id & CLuaFB::LUA_FB_VAR_MAX);
-      }else{
-        return m_apoAdapters[(id >> 16) & CLuaFB::LUA_AD_VAR_MAX]->getDI(id & CLuaFB::LUA_FB_VAR_MAX);
-      }
+      return m_apoAdapters[(id >> 16) & CLuaFB::LUA_AD_VAR_MAX]->getDI(id & CLuaFB::LUA_FB_VAR_MAX);
     }
     return 0;
   }
