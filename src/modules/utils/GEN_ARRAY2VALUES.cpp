@@ -15,6 +15,7 @@
 #endif
 
 #include <stdio.h>
+#include <forte_printer.h>
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2VALUES, g_nStringIdGEN_ARRAY2VALUES)
 
@@ -96,11 +97,7 @@ bool GEN_ARRAY2VALUES::configureFB(const char *pa_acConfigString){
 
     char doNames[cg_nIdentifierLength] = { "OUT_" };
     for(int doIndex = 0; doIndex < m_nDOutputs; doIndex = doIndex + 1){
-#ifdef WIN32
-      _snprintf(&(doNames[4]), 8 - 4, "%i", doIndex+1);
-#else
-      snprintf(&(doNames[4]), 8 - 4, "%i", doIndex + 1);
-#endif
+      forte_snprintf(&(doNames[4]), 8 - 4, "%i", doIndex + 1);
       m_anDataOutputNames[doIndex] = CStringDictionary::getInstance().insert(doNames);
       m_anDataOutputTypeIds[doIndex] = m_ValueTypeID;
     }

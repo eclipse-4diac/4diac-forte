@@ -16,7 +16,8 @@
 #include "fbcontainer.h"
 #include "funcbloc.h"
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
-#include "luatype.h"
+#include "luafbtypeentry.h"
+#include "luaadaptertypeentry.h"
 #include "luaengine.h"
 #endif
 
@@ -172,6 +173,9 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      */
     EMGMResponse createFBTypeFromLua(CStringDictionary::TStringId typeNameId,
         CIEC_STRING & paLuaScriptAsString);
+
+    EMGMResponse createAdapterTypeFromLua(CStringDictionary::TStringId typeNameId,
+            CIEC_STRING & paLuaScriptAsString);
 #endif
     /*!\brief get the variable with the given name identifier
      *

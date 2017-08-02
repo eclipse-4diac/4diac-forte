@@ -18,6 +18,8 @@
 #include "forte_real.h"
 #include "forte_lreal.h"
 
+#include <forte_printer.h>
+
 #ifdef FORTE_USE_REAL_DATATYPE
 
 DEFINE_FIRMWARE_DATATYPE(REAL, g_nStringIdREAL)
@@ -50,13 +52,7 @@ int CIEC_REAL::fromString(const char *pa_pacValue){
 
 int CIEC_REAL::toString(char* pa_acValue, unsigned int pa_nBufferSize) const{
   int nRetVal;
-
-#ifdef WIN32
-  nRetVal = _snprintf(pa_acValue, pa_nBufferSize, "%g", getTFLOAT());
-#else
-  nRetVal = snprintf(pa_acValue, pa_nBufferSize, "%g", getTFLOAT());
-#endif
-
+  nRetVal = forte_snprintf(pa_acValue, pa_nBufferSize, "%g", getTFLOAT());
   if((nRetVal < -1) || (nRetVal >= (int) pa_nBufferSize)){
     nRetVal = -1;  
   }

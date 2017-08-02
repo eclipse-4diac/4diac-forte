@@ -18,6 +18,7 @@
 #include "forte_date.h"
 #include "forte_time_of_day.h"
 #include "../../arch/timerha.h"
+#include <forte_printer.h>
 
 DEFINE_FIRMWARE_DATATYPE(DATE_AND_TIME, g_nStringIdDATE_AND_TIME)
 
@@ -110,15 +111,7 @@ int CIEC_DATE_AND_TIME::toString(char* pa_pacValue, unsigned int pa_nBufferSize)
   struct tm *ptm = getTimeStruct();
 
   if(0 != ptm){
-
-#ifdef WIN32
-    nRetVal = _snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03u", 1900+ptm->tm_year, ptm->tm_mon+1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, getMilliSeconds());
-#else
-    nRetVal =
-        snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03u", 1900
-            + ptm->tm_year, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, getMilliSeconds());
-#endif
-
+    nRetVal = forte_snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03u", 1900 + ptm->tm_year, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, getMilliSeconds());
     if((nRetVal < -1) || (nRetVal >= (int) pa_nBufferSize)){
       nRetVal = -1;
     }
@@ -129,24 +122,12 @@ int CIEC_DATE_AND_TIME::toString(char* pa_pacValue, unsigned int pa_nBufferSize)
 int CIEC_DATE_AND_TIME::toGMTString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
   TForteUInt64 nToStringBuffer = getTUINT64();
   time_t t = static_cast<time_t>(nToStringBuffer / 1000);
-#if ! defined(WINCE)
-  struct tm *ptm = gmtime(&t);
-#else
-  struct tm *ptm = wceex_gmtime(&t);
 
+  struct tm *ptm = forte_gmtime(&t);
   if (ptm == 0)
-  return -1;
+    return -1;
 
-#endif
-#ifdef WIN32
-  int nRetVal = _snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03d", 1900+ptm->tm_year, ptm->tm_mon+1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, (int) (nToStringBuffer % 1000));
-#else
-  int nRetVal =
-      snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03d", 1900
-          + ptm->tm_year, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, (int) (nToStringBuffer
-          % 1000));
-#endif
-
+  int nRetVal = forte_snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03d", 1900 + ptm->tm_year, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, (int) (nToStringBuffer % 1000));
   if((nRetVal < -1) || (nRetVal >= (int) pa_nBufferSize)){
     nRetVal = -1;
   }

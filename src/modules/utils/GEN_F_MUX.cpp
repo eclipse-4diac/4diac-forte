@@ -15,6 +15,7 @@
 #endif
 #include <ctype.h>
 #include <stdio.h>
+#include <forte_printer.h>
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_F_MUX, g_nStringIdGEN_F_MUX);
 
@@ -163,12 +164,7 @@ bool GEN_F_MUX::configureFB(const char *pa_acConfigString){
     for(unsigned int ei = 0; ei < m_nEInputs; ei = ei + 1){
 
       for(unsigned int di = 0; di < m_nDOutputs; di = di + 1){
-
-#ifdef WIN32
-        _snprintf(&(diNames[3]), 11 - 3, "%ui_%ui", ei+1, di+1);
-#else
-        snprintf(&(diNames[3]), 11 - 3, "%u_%u", ei + 1, di + 1);
-#endif
+        forte_snprintf(&(diNames[3]), 11 - 3, "%u_%u", ei + 1, di + 1);
         di_posIndex = ei * m_nDOutputs + di;
         m_anDataInputNames[di_posIndex] = CStringDictionary::getInstance().insert(diNames);
         m_anDataInputTypeIds[di_posIndex] = g_nStringIdANY;

@@ -18,9 +18,9 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   add_subdirectory ( serlayer )
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})  
   
-  forte_add_sourcefile_h(fortealloc.h)
+  forte_add_sourcefile_h(fortealloc.h ../forte_architecture_time.h)
   forte_add_sourcefile_hcpp(forte_thread forte_sync forte_sem)
-  forte_add_sourcefile_cpp(forte_architecture.cpp)
+  forte_add_sourcefile_cpp(forte_architecture.cpp winforte_printer.cpp)
   
   if(${FORTE_BUILD_TYPE} STREQUAL STATIC_LIBRARY)
     forte_add_sourcefile_hcpp(forte_instance)

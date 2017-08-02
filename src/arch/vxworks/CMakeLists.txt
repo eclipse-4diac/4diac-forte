@@ -18,7 +18,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
   
   forte_add_sourcefile_hcpp(forte_thread vxworkstimeha forte_sync forte_sem)
-  forte_add_sourcefile_cpp(main.cpp)
+  forte_add_sourcefile_cpp(main.cpp ../genforte_printer.cpp)
+  forte_add_sourcefile_h(../forte_architecture_time.h)
   
   SET(FORTE_VXWORKS_BASE_DIR "C:/WBOEM69_Rexroth/customBosch/vxworks-6.9" CACHE STRING "VxWorks base directory.")
   

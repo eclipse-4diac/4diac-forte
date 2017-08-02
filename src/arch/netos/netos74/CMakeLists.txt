@@ -55,7 +55,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "NetOs 7.4")
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/..)
   
   forte_add_sourcefile_hcpp(../forte_thread ../txtimeha ../forte_sync ../forte_sem)
-  forte_add_sourcefile_cpp(appconf_api.c ../root.cpp)
+  forte_add_sourcefile_cpp(appconf_api.c ../root.cpp ../../genforte_printer.cpp)
+  forte_add_sourcefile_h(../../forte_architecture_time.h)
 
   if(FORTE_COM_ETH)
    forte_add_sourcefile_hcpp( ../../fdselecthand ../../bsdsocketinterf)

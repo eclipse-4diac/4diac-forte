@@ -19,6 +19,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <devlog.h>
+#include <forte_printer.h>
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_ADD, g_nStringIdGEN_ADD)
 
@@ -92,12 +93,7 @@ bool GEN_ADD::configureFB(const char *pa_acConfigString) {
 		char diNames[cg_nIdentifierLength] = { "IN" };
 
 		for (int di = 0; di < m_nDInputs; di = di + 1) {
-
-#ifdef WIN32
-			_snprintf(&(diNames[2]), 5 - 2, "%i", di+1);
-#else
-			snprintf(&(diNames[2]), 5 - 2, "%i", di + 1);
-#endif
+      forte_snprintf(&(diNames[2]), 5 - 2, "%i", di + 1);
 			m_anDataInputNames[di] = CStringDictionary::getInstance().insert(diNames);
 			m_anDataInputTypeIds[di] = g_nStringIdANY_MAGNITUDE;
 		}

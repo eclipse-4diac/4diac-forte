@@ -10,12 +10,9 @@
   *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
 #include <stdlib.h>
-#include <time.h>
 #include "forte_any_date.h"
 
-#if defined(WINCE)
-#include <wce_time.h>
-#endif
+#include <forte_architecture_time.h>
 
 TForteInt32 CIEC_ANY_DATE::sm_nTimeZoneOffset = -1;
 
@@ -23,12 +20,7 @@ TForteInt32 CIEC_ANY_DATE::getTimeZoneOffset(){
   if(sm_nTimeZoneOffset == -1){
     time_t t = 24 * 60 * 60; // 2. 1. 1970 00:00:00 for UTC
 
-#if ! defined(WINCE)
-    struct tm *ptm = localtime(&t);
-#else
-    struct tm *ptm = wceex_localtime(&t);
-#endif
-
+    struct tm *ptm = forte_localtime(&t);
     if(ptm->tm_mday < 2)
       sm_nTimeZoneOffset = 60 * ptm->tm_hour + ptm->tm_min - 24 * 60;
     else
@@ -43,11 +35,7 @@ bool CIEC_ANY_DATE::setDateAndTime(struct tm &pa_rstTM, unsigned int pa_unMilliS
   pa_rstTM.tm_isdst = -1;
 
   time_t nTime;
-#if ! defined(WINCE)
-  nTime = mktime(&pa_rstTM);
-#else
-  nTime = wceex_mktime(&pa_rstTM);
-#endif
+  nTime = forte_mktime(&pa_rstTM);
 
   if(nTime == (time_t) -1)
     return false;
@@ -62,11 +50,7 @@ struct tm *CIEC_ANY_DATE::getTimeStruct() const {
 
   struct tm *pstRetVal;
 
-#if ! defined(WINCE)
-  pstRetVal = localtime(&nTime);
-#else
-  pstRetVal = wceex_localtime(&nTime);
-#endif
+  pstRetVal = forte_localtime(&nTime);
   return pstRetVal;
 }
 

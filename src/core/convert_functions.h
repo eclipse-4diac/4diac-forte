@@ -49,11 +49,7 @@
 inline const CIEC_DATE DT_TO_DATE(const CIEC_DATE_AND_TIME &pa_roVal){
   TForteUInt64 nBuffer = pa_roVal;
   time_t t = static_cast<time_t>(nBuffer / 1000);
-#if ! defined(WINCE)
-  struct tm *ptm = localtime(&t);
-#else
-  struct tm *ptm = wceex_localtime(&t);
-#endif
+  struct tm *ptm = forte_localtime(&t);
 
   if(ptm == 0)
     return CIEC_DATE(0);
@@ -62,12 +58,7 @@ inline const CIEC_DATE DT_TO_DATE(const CIEC_DATE_AND_TIME &pa_roVal){
   ptm->tm_min = 0;
   ptm->tm_sec = 0;
 
-#if ! defined(WINCE)
-  t = mktime(ptm);
-#else
-  t = wceex_mktime(ptm);
-#endif
-
+  t = forte_mktime(ptm);
   if(t == (time_t) -1)
     return CIEC_DATE(0);
 
@@ -82,11 +73,7 @@ inline const CIEC_DATE_AND_TIME DATE_TO_DT(const CIEC_DATE &pa_roVal){
 inline const CIEC_TIME_OF_DAY DT_TO_TOD(const CIEC_DATE_AND_TIME &pa_roVal){
   TForteUInt64 nBuffer = pa_roVal;
   time_t t = static_cast<time_t>(nBuffer / 1000);
-#if ! defined(WINCE)
-  struct tm *ptm = localtime(&t);
-#else
-  struct tm *ptm = wceex_localtime(&t);
-#endif
+  struct tm *ptm = forte_localtime(&t);
 
   if(ptm == 0)
     return CIEC_TIME_OF_DAY(0);
@@ -450,9 +437,7 @@ inline const CIEC_ULINT LREAL_TO_ULINT(const CIEC_LREAL &pa_roVal){
 
 inline CIEC_ANY::TLargestIntValueType lreal_to_xINT(const CIEC_LREAL &pa_roVal){
   CIEC_ANY::TLargestIntValueType temp;
-  #if defined(WIN32)
-    temp = (CIEC_ANY::TLargestIntValueType)floor(static_cast<TForteDFloat>(pa_roVal) + 0.5);
-  #elif defined(VXWORKS)
+  #if defined(WIN32) || defined(VXWORKS)
     temp = (CIEC_ANY::TLargestIntValueType)floor(static_cast<TForteDFloat>(pa_roVal) + 0.5);
   #else
     temp = lroundf(static_cast<TForteFloat>(pa_roVal));
@@ -523,9 +508,7 @@ inline const CIEC_TIME LREAL_TO_TIME(const CIEC_LREAL &pa_roVal){
 #ifdef FORTE_USE_REAL_DATATYPE
 inline CIEC_ANY::TLargestIntValueType real_to_xINT(const CIEC_REAL &pa_roVal){
   CIEC_ANY::TLargestIntValueType temp;
-  #if defined(WIN32)
-    temp = (CIEC_ANY::TLargestIntValueType)floor(static_cast<TForteFloat>(pa_roVal) + 0.5);
-  #elif defined(VXWORKS)
+  #if defined(WIN32) || defined(VXWORKS)
     temp = (CIEC_ANY::TLargestIntValueType)floor(static_cast<TForteFloat>(pa_roVal) + 0.5);
   #else
     temp = lroundf(static_cast<TForteFloat>(pa_roVal));

@@ -21,6 +21,8 @@
 #include "forte_string.h"
 #include "forte_wstring.h"
 
+#include <forte_printer.h>
+
 #ifdef FORTE_USE_REAL_DATATYPE
 
 #ifdef FORTE_USE_64BIT_DATATYPES
@@ -48,12 +50,7 @@ int CIEC_LREAL::fromString(const char *pa_pacValue){
 
 int CIEC_LREAL::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
   int nRetVal;
-#ifdef WIN32
-  nRetVal = _snprintf(pa_pacValue, pa_nBufferSize, "%.*g", 15, getTDFLOAT());
-#else
-  nRetVal = snprintf(pa_pacValue, pa_nBufferSize, "%.*g", 15, getTDFLOAT());
-#endif
-
+  nRetVal = forte_snprintf(pa_pacValue, pa_nBufferSize, "%.*g", 15, getTDFLOAT());
   if((nRetVal < -1) || (nRetVal >= (int) pa_nBufferSize)){
     nRetVal = -1;
   }
