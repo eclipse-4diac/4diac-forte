@@ -19,24 +19,12 @@
 
 #include "comlayer.h"
 #include <forte_any.h>
-
-#ifdef __GNUC__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-#endif
-
-#include <open62541.h>
-
-#ifdef __GNUC__
-#pragma GCC diagnostic pop
-#endif
-
 #include "commfb.h"
+#include "comlayer_async.h"
 #include "devlog.h"
 #include "opcua_helper.h"
 
-
-class COPC_UA_Layer : public forte::com_infra::CComLayer {
+class COPC_UA_Layer : public forte::com_infra::CComLayerAsync {
 public:
 	COPC_UA_Layer(forte::com_infra::CComLayer *pa_poUpperLayer, forte::com_infra::CCommFB *pa_poComFB);
 
@@ -46,7 +34,7 @@ public:
 
 	forte::com_infra::EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize);
 
-	forte::com_infra::EComResponse processInterrupt();
+	virtual forte::com_infra::EComResponse processInterruptChild();
 
 private:
 
@@ -111,6 +99,19 @@ private:
 	 */
 	forte::com_infra::EComResponse createMethodArguments(UA_Argument **arguments, unsigned int numPorts, bool isSD);
 
+
+	const UA_TypeConvert **clientSdConverter;
+	const UA_TypeConvert **clientRdConverter;
+	forte::com_infra::EComResponse clientCreateConverter(const UA_TypeConvert **converterList[], unsigned int numPorts, bool isSD);
+
+	/**
+	 * Creates the OPC UA client for the CLIENT function block.
+	 * The client's endpoint is defined by the ID field of the FB. Clients will be reused if they have the same endpoint url.
+	 *
+	 * @return e_InitOk on success
+	 */
+	forte::com_infra::EComResponse createClient(const char *paLayerParameter);
+
 	/**
 	 * Response for the processInterrupt() method
 	 */
@@ -120,10 +121,21 @@ private:
 	 * Node id of the folder node represented by the ID browse path setting of the FB.
 	 */
 	UA_NodeId *fbNodeId;
+
+	/**
+	 * Node id of the parent folder node represented by the ID browse path setting of the FB.
+	 */
+	UA_NodeId *fbNodeIdParent;
+
 	/**
 	 * On SERVER FB this is set to the node id of the method which is created in the information model
 	 */
 	UA_NodeId *methodNodeId;
+
+	/**
+	 * On CLIENT FB a client is created for communication with a remote OPC UA server.
+	 */
+	UA_Client *uaClient;
 
 	/**
 	 * List of node ids created for the SD ports (PUBLISHER)
@@ -158,6 +170,14 @@ private:
 											size_t inputSize, const UA_Variant *input, size_t outputSize, UA_Variant *output);
 	#endif
 
+	char *clientEndpointUrl;
+	char *clientMethodPath;
+	CSyncObject *clientMutex;
+
+	forte::com_infra::EComResponse clientInit();
+
+	forte::com_infra::EComResponse clientCallMethod(const CIEC_ANY *sd, unsigned int sdSize);
+
 	/**
 	 * Mutex to ensure clients can call the server method not in parallel.
 	 */
@@ -168,6 +188,16 @@ private:
 	 * It is set to false in the beginning. As soon as the RSP port is triggered, it is set to true and the method callback can process SD ports.
 	 */
 	bool serverMethodCallResultReady;
+
+
+
+	virtual void* handleAsyncCall(const unsigned int callId, void *payload);
+
+	virtual void handleAsyncCallResult(const unsigned int callId, void *payload, void *result);
+
+	virtual void handleAsyncEvent();
+
+	CSinglyLinkedList<UA_NodeId *> referencedNodes;
 
 };
 
