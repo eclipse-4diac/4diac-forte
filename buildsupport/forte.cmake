@@ -88,6 +88,12 @@ FUNCTION(forte_add_include_directories)
   ENDFOREACH(ARG)
 ENDFUNCTION(forte_add_include_directories)
 
+FUNCTION(forte_add_include_system_directories) #avoid warnings on included folders
+  FOREACH(ARG ${ARGV})
+    SET_PROPERTY(GLOBAL APPEND PROPERTY FORTE_INCLUDE_SYSTEM_DIRECTORIES ${ARG})
+  ENDFOREACH(ARG)
+ENDFUNCTION(forte_add_include_system_directories)
+
 FUNCTION(forte_remove_sourcefile_h)
   GET_PROPERTY(SOURCE_H       GLOBAL PROPERTY FORTE_SOURCE_H)
   GET_PROPERTY(SOURCE_H_GROUP GLOBAL PROPERTY FORTE_SOURCE_H_GROUP)

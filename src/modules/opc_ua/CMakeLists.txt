@@ -43,7 +43,7 @@ if (FORTE_COM_OPC_UA)
     ELSE ()
         SET(FORTE_COM_OPC_UA_LIB "libopen62541.a" CACHE STRING "OPC_UA Library file in FORTE_COM_OPC_UA_DIR to be linked to forte (normally with name libopen62541 and a extension according to the type and OS)")
     ENDIF ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-    forte_add_include_directories(${FORTE_COM_OPC_UA_INCLUDE_DIR})
+    forte_add_include_system_directories(${FORTE_COM_OPC_UA_INCLUDE_DIR})
     forte_add_link_directories(${FORTE_COM_OPC_UA_LIB_DIR})
     forte_add_link_library_beginning(${FORTE_COM_OPC_UA_LIB})
 

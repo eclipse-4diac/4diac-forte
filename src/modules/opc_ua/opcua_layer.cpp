@@ -15,10 +15,6 @@
 
 
 
-//#pragma GCC diagnostic push
-//#pragma GCC diagnostic ignored "-Wunused-parameter"
-//#include <src_generated/ua_namespaceinit_generated.h>
-//#pragma GCC diagnostic pop
 #include <criticalregion.h>
 #include "opcua_layer.h"
 #include "opcua_handler.h"
@@ -396,15 +392,8 @@ forte::com_infra::EComResponse COPC_UA_Layer::clientInit() {
 	if (fbNodeId != NULL || fbNodeIdParent != NULL)
 		return e_InitOk;
 
-#ifdef __GNUC__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#endif
 	// other thready may currently create nodes for the same path, thus mutex
 	CCriticalRegion criticalRegion(*this->clientMutex);
-#ifdef __GNUC__
-#pragma GCC diagnostic pop
-#endif
 
 	if (UA_Client_getState(uaClient) != UA_CLIENTSTATE_CONNECTED) {
 		DEVLOG_INFO("OPC UA: Client connecting to %s\n", clientEndpointUrl);
@@ -599,15 +588,8 @@ UA_StatusCode COPC_UA_Layer::onServerMethodCall(void *methodHandle, const UA_Nod
 #endif
 	COPC_UA_Layer *self = static_cast<COPC_UA_Layer *>(methodHandle);
 
-#if !defined(VXWORKS) && defined(__GNUC__)
-#pragma GCC diagnostic push //TODO: are these pragmas really necessary?
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#endif
 	// other thread may currently create nodes for the same path, thus mutex
 	CCriticalRegion criticalRegion(self->mutexServerMethodCall);
-#if !defined(VXWORKS) && defined(__GNUC__)
-#pragma GCC diagnostic pop
-#endif
 	self->serverMethodCallResultReady = false;
 
 	if (inputSize != self->getCommFB()->getNumRD() || outputSize != self->getCommFB()->getNumSD()) {
