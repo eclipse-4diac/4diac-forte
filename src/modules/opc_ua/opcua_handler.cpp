@@ -232,7 +232,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
 
 
 	// for every folder (which is a BrowsePath) we want to get the node id
-	UA_BrowsePath *browsePaths = (UA_BrowsePath *) UA_Array_new(folderCnt*2, &UA_TYPES[UA_TYPES_BROWSEPATH]);
+	UA_BrowsePath *browsePaths = static_cast<UA_BrowsePath *>(UA_Array_new(folderCnt*2, &UA_TYPES[UA_TYPES_BROWSEPATH]));
 
 	for (unsigned int i = 0; i < folderCnt; i++) {
 		UA_BrowsePath_init(&browsePaths[i]);
@@ -242,8 +242,8 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
 			browsePaths[i].startingNode = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
 		browsePaths[i].relativePath.elementsSize = i + 1;
 
-		browsePaths[i].relativePath.elements = (UA_RelativePathElement *) UA_Array_new(browsePaths[i].relativePath.elementsSize,
-																					   &UA_TYPES[UA_TYPES_RELATIVEPATHELEMENT]);
+		browsePaths[i].relativePath.elements = static_cast<UA_RelativePathElement *>(UA_Array_new(browsePaths[i].relativePath.elementsSize,
+																					   &UA_TYPES[UA_TYPES_RELATIVEPATHELEMENT]));
 
 		for (unsigned int j = 0; j <= i; j++) {
 
@@ -429,7 +429,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
 				UA_ObjectAttributes oAttr;
 				UA_ObjectAttributes_init(&oAttr);
 				char locale[] = "en_US";
-				char *nodeName = (char *) forte_malloc(sizeof(char) * (targetName->name.length + 1));
+				char *nodeName = static_cast<char *>(forte_malloc(sizeof(char) * (targetName->name.length + 1)));
 				memcpy(nodeName, targetName->name.data, targetName->name.length);
 				nodeName[targetName->name.length] = 0;
 				oAttr.description = UA_LOCALIZEDTEXT_ALLOC(locale, nodeName);
@@ -509,7 +509,7 @@ UA_Client *COPC_UA_Handler::getClientForEndpoint(const char *endpointUrl, bool c
 	if (!createIfNotFound)
 		return NULL;
 
-	struct UA_ClientEndpointMap *clientMap = (UA_ClientEndpointMap *) forte_malloc(sizeof(struct UA_ClientEndpointMap));
+	struct UA_ClientEndpointMap *clientMap = static_cast<UA_ClientEndpointMap *>(forte_malloc(sizeof(struct UA_ClientEndpointMap)));
 
 	UA_ClientConfig config = UA_ClientConfig_standard;
 	config.timeout = 8000;
@@ -517,9 +517,9 @@ UA_Client *COPC_UA_Handler::getClientForEndpoint(const char *endpointUrl, bool c
 	UA_Client *client = UA_Client_new(config);
 
 	clientMap->client = client;
-	clientMap->endpointUrl = (char *) forte_malloc(sizeof(char) * (strlen(endpointUrl) + 1));
+	clientMap->endpointUrl = static_cast<char *>(forte_malloc(sizeof(char) * (strlen(endpointUrl) + 1)));
 	strcpy(clientMap->endpointUrl, endpointUrl);
-	clientMap->clientMutex = (CSyncObject *) forte_malloc(sizeof(CSyncObject));
+	clientMap->clientMutex = static_cast<CSyncObject *>(forte_malloc(sizeof(CSyncObject)));
 	*clientMap->clientMutex = CSyncObject();
 
 	if (clientMutex)
@@ -682,7 +682,7 @@ void COPC_UA_Handler::referencedNodesIncrement(const CSinglyLinkedList<UA_NodeId
 			}
 		}
 		if (!found) {
-			struct ReferencedNodeByLayer *newRef = (struct ReferencedNodeByLayer *)forte_malloc(sizeof(struct ReferencedNodeByLayer));
+			struct ReferencedNodeByLayer *newRef = static_cast<struct ReferencedNodeByLayer *>(forte_malloc(sizeof(struct ReferencedNodeByLayer)));
 			UA_NodeId *newNode = UA_NodeId_new();
 			UA_NodeId_copy((*iterNode), newNode);
 			newRef->nodeId = newNode;

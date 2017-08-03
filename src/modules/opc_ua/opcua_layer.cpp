@@ -18,6 +18,7 @@
 #include <criticalregion.h>
 #include "opcua_layer.h"
 #include "opcua_handler.h"
+#include <forte_printer.h>
 
 using namespace forte::com_infra;
 
@@ -28,10 +29,6 @@ struct AsyncCallPayload {
 	UA_Variant *variants;
 	unsigned int variantsSize;
 };
-
-#if defined(_MSC_VER) && _MSC_VER < 1900
-#define snprintf _snprintf
-#endif
 
 COPC_UA_Layer::COPC_UA_Layer(CComLayer *pa_poUpperLayer, CCommFB *pa_poComFB) : CComLayerAsync(pa_poUpperLayer, pa_poComFB),
 																				clientSdConverter(NULL), clientRdConverter(NULL),
@@ -221,7 +218,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
 		return e_InitInvalidId;
 	}
 
-	*nodeIds = (struct FB_NodeIds *) forte_malloc(sizeof(struct FB_NodeIds) * numPorts);
+	*nodeIds = static_cast<struct FB_NodeIds *>(forte_malloc(sizeof(struct FB_NodeIds) * numPorts));
 
 	const CIEC_ANY *initData = isSD ? getCommFB()->getSDs() : getCommFB()->getRDs();
 
@@ -243,8 +240,8 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
 			const char *subnodePath = connectedToFb->getInstanceName();
 			// create/get node for connected FB
 			size_t len = strlen(subnodePath) + 2; // include slash and nullbyte
-			char *fbBrowseName = (char *) forte_malloc(sizeof(char) * len);
-			snprintf(fbBrowseName, len, "/%s", subnodePath);
+			char *fbBrowseName = static_cast<char *>(forte_malloc(sizeof(char) * len));
+			forte_snprintf(fbBrowseName, len, "/%s", subnodePath);
 			UA_NodeId newNodeType = UA_NODEID_NUMERIC(0, UA_NS0ID_BASEOBJECTTYPE);
 			CSinglyLinkedList<UA_NodeId *> nodesAlongPath = CSinglyLinkedList<UA_NodeId *>();
 			retVal = COPC_UA_Handler::getInstance().getNodeForPath(&(*nodeIds)[i].functionBlockId, fbBrowseName, true, fbNodeId, &newNodeType, NULL, NULL,
@@ -261,8 +258,8 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
 		if (retVal == UA_STATUSCODE_GOOD) {
 			// create/get variable node for port on connected FB
 			size_t len = strlen(connectedToName) + 2; // include slash and nullbyte
-			char *sourceVarBrowseName = (char *) forte_malloc(sizeof(char) * len);
-			snprintf(sourceVarBrowseName, len, "/%s", connectedToName);
+			char *sourceVarBrowseName = static_cast<char *>(forte_malloc(sizeof(char) * len));
+			forte_snprintf(sourceVarBrowseName, len, "/%s", connectedToName);
 			retVal = COPC_UA_Handler::getInstance().getNodeForPath(&(*nodeIds)[i].variableId, sourceVarBrowseName, false,
 																   (*nodeIds)[i].functionBlockId);
 			forte_free(sourceVarBrowseName);
@@ -373,7 +370,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::clientCreateConverter(const UA_Typ
 		return e_InitInvalidId;
 	}
 
-	*converterList = (const UA_TypeConvert **) forte_malloc(sizeof(UA_TypeConvert *) * numPorts);
+	*converterList = static_cast<const UA_TypeConvert **>(forte_malloc(sizeof(UA_TypeConvert *) * numPorts));
 
 	for (unsigned int i = 0; i < numPorts; i++) {
 
@@ -470,9 +467,9 @@ forte::com_infra::EComResponse COPC_UA_Layer::createClient(const char *paLayerPa
 	}
 
 	// additional nullbyte in length
-	char *fullNodePath = (char *) forte_malloc(sizeof(char) * (nodePathLen + 2));
+	char *fullNodePath = static_cast<char *>(forte_malloc(sizeof(char) * (nodePathLen + 2)));
 
-	snprintf(fullNodePath, nodePathLen + 1, "%.*s", (int) nodePathLen, nodePath);
+	forte_snprintf(fullNodePath, nodePathLen + 1, "%.*s", (int) nodePathLen, nodePath);
 
 	this->clientMethodPath = fullNodePath;
 	this->clientEndpointUrl = strdup(endpointUrl);
@@ -544,7 +541,7 @@ EComResponse COPC_UA_Layer::recvData(const void *pa_pvData, unsigned int) {
 
 forte::com_infra::EComResponse COPC_UA_Layer::clientCallMethod(const CIEC_ANY *sd, unsigned int sdSize) {
 
-	UA_Variant *inputs = (UA_Variant *) UA_Array_new(sdSize, &UA_TYPES[UA_TYPES_VARIANT]);
+	UA_Variant *inputs = static_cast<UA_Variant *>(UA_Array_new(sdSize, &UA_TYPES[UA_TYPES_VARIANT]));
 
 	for (unsigned int i = 0; i < sdSize; i++) {
 		UA_Variant_init(&inputs[i]);
@@ -560,7 +557,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::clientCallMethod(const CIEC_ANY *s
 		UA_delete(varValue, clientSdConverter[i]->type);
 	}
 
-	struct AsyncCallPayload *payload = (struct AsyncCallPayload *) forte_malloc(sizeof(AsyncCallPayload));
+	struct AsyncCallPayload *payload = static_cast<struct AsyncCallPayload *>(forte_malloc(sizeof(AsyncCallPayload)));
 	payload->variants = inputs;
 	payload->variantsSize = sdSize;
 	if (callAsync(payload) == 0)
@@ -669,7 +666,7 @@ void *COPC_UA_Layer::handleAsyncCall(const unsigned int /*callId*/, void *payloa
 	if (this->clientInit() != e_InitOk)
 		return NULL;
 
-	struct AsyncCallPayload *inputData = (struct AsyncCallPayload *) payload;
+	struct AsyncCallPayload *inputData = static_cast<struct AsyncCallPayload *>(payload);
 
 	size_t outputSize;
 	UA_Variant *output;
@@ -686,10 +683,10 @@ void *COPC_UA_Layer::handleAsyncCall(const unsigned int /*callId*/, void *payloa
 			DEVLOG_ERROR("OPC UA: The number of RD connectors of the client does not match the number of returned values from the method call.\n");
 		} else {
 
-			struct AsyncCallPayload *outputData = (struct AsyncCallPayload *) forte_malloc(sizeof(struct AsyncCallPayload));
+			struct AsyncCallPayload *outputData = static_cast<struct AsyncCallPayload *>(forte_malloc(sizeof(struct AsyncCallPayload)));
 
 			outputData->variants = output;
-			outputData->variantsSize = (unsigned int) outputSize;
+			outputData->variantsSize = static_cast<unsigned int>(outputSize);
 
 			return outputData;
 		}
@@ -702,14 +699,14 @@ void *COPC_UA_Layer::handleAsyncCall(const unsigned int /*callId*/, void *payloa
 
 void COPC_UA_Layer::handleAsyncCallResult(const unsigned int /*callId*/, void *payload, void *result) {
 
-	struct AsyncCallPayload *inputData = (struct AsyncCallPayload *) payload;
+	struct AsyncCallPayload *inputData = static_cast<struct AsyncCallPayload *>(payload);
 	UA_Array_delete(inputData->variants, inputData->variantsSize, &UA_TYPES[UA_TYPES_VARIANT]);
 	forte_free(payload);
 
 	if (result == NULL)
 		return;
 
-	struct AsyncCallPayload *outputData = (struct AsyncCallPayload *) result;
+	struct AsyncCallPayload *outputData = static_cast<struct AsyncCallPayload *>(result);
 	bool failed = false;
 	for (unsigned int i = 0; i < outputData->variantsSize; i++) {
 		if (!clientRdConverter[i]->set(outputData->variants[i].data, &getCommFB()->getRDs()[i])) {

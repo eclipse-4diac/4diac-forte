@@ -34,7 +34,11 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openTCPServerConnect
     struct sockaddr_in stSockAddr;
     memset(&(stSockAddr), '\0', sizeof(sockaddr_in));
     stSockAddr.sin_family = AF_INET;
+#if VXWORKS
+    stSockAddr.sin_port = static_cast<unsigned short>(htons(pa_nPort));
+#else
     stSockAddr.sin_port = htons(pa_nPort);
+#endif
     stSockAddr.sin_addr.s_addr = htonl(INADDR_ANY );
 
     int nOptVal = 1;
@@ -70,7 +74,11 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openTCPClientConnect
   if(-1 != nSocket){
     struct sockaddr_in stSockAddr;
     stSockAddr.sin_family = AF_INET;
+#if VXWORKS
+    stSockAddr.sin_port = static_cast<unsigned short>(htons(pa_nPort));
+#else
     stSockAddr.sin_port = htons(pa_nPort);
+#endif
     stSockAddr.sin_addr.s_addr = inet_addr(pa_acIPAddr);
     memset(&(stSockAddr.sin_zero), '\0', sizeof(stSockAddr.sin_zero));
 
@@ -152,7 +160,11 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPSendPort(char
 
   if(-1 != nRetVal){
     m_ptDestAddr->sin_family = AF_INET;
+#if VXWORKS
+    m_ptDestAddr->sin_port = static_cast<unsigned short>(htons(pa_nPort));
+#else
     m_ptDestAddr->sin_port = htons(pa_nPort);
+#endif
     m_ptDestAddr->sin_addr.s_addr = inet_addr(pa_acIPAddr);
     memset(&(m_ptDestAddr->sin_zero), '\0', sizeof(m_ptDestAddr->sin_zero));
 
@@ -191,7 +203,11 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPReceivePort(c
         <= setsockopt(nSocket, SOL_SOCKET, SO_REUSEADDR, (char *) &nReuseAddrVal, sizeof(nReuseAddrVal))){
       struct sockaddr_in stSockAddr;
       stSockAddr.sin_family = AF_INET;
+#if VXWORKS
+      stSockAddr.sin_port = static_cast<unsigned short>(htons(pa_nPort));
+#else
       stSockAddr.sin_port = htons(pa_nPort);
+#endif
       stSockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
       memset(&(stSockAddr.sin_zero), '\0', sizeof(stSockAddr.sin_zero));
       if(0 == bind(nSocket, (struct sockaddr *) &stSockAddr, sizeof(struct sockaddr))){

@@ -56,7 +56,7 @@ unsigned int forte::com_infra::CComLayerAsync::callAsync(void *payload) {
 		// handle overflow. Do not return 0
 		currentCallId = 1;
 
-	CComLayerAsync_Data *data = (CComLayerAsync_Data*)forte_malloc(sizeof(CComLayerAsync_Data));
+	CComLayerAsync_Data *data = static_cast<CComLayerAsync_Data*>(forte_malloc(sizeof(CComLayerAsync_Data)));
 
 	// cast away const
 	*(unsigned int *)&data->callId = currentCallId;
