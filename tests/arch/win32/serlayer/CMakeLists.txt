@@ -10,10 +10,11 @@
 # *******************************************************************************/
 
 #SET(SOURCE_GROUP ${SOURCE_GROUP}\\core)
-
+IF(FORTE_COM_SER)
   forte_test_add_inc_directories(${CMAKE_CURRENT_SOURCE_DIR})
-  forte_test_add_link_directories(${CMAKE_BINARY_DIR}/src/arch/wind32/serlayer)
+  forte_test_add_link_directories(${CMAKE_BINARY_DIR}/src/arch/win32/serlayer)
   
   forte_test_add_sourcefile_cpp(../../../../src/arch/win32/serlayer/cwin32sercomparameterparser.cpp)
   
   forte_test_add_sourcefile_cpp(win32sercomparameterparsertests.cpp)
+ENDIF(FORTE_COM_SER)

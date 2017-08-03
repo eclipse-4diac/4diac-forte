@@ -10,7 +10,7 @@
  *******************************************************************************/
 
 
-#include <CWin32SerComParameterParser.h>
+#include "cwin32sercomparameterparser.h"
 #include <string.h>
 #include <cctype>
 
