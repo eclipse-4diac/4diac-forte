@@ -14,9 +14,6 @@
 #define SRC_CORE_LUAADAPTER_H_
 
 #include "adapter.h"
-#include "luaengine.h"
-#include "forte_any.h"
-#include "forte_array.h"
 #include "luaadaptertypeentry.h"
 
 class CLuaAdapter: public CAdapter {

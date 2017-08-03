@@ -10,14 +10,14 @@
  *   - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_CORE_LUAFB_H_
-#define SRC_CORE_LUAFB_H_
+#ifndef SRC_CORE_LUABFB_H_
+#define SRC_CORE_LUABFB_H_
 
 #include "basicfb.h"
 #include "luaengine.h"
 #include "forte_any.h"
 #include "forte_array.h"
-#include "luafbtypeentry.h"
+#include "luabfbtypeentry.h"
 
 extern "C" {
 #include <lua.h>
@@ -28,7 +28,7 @@ extern "C" {
   int CLuaFB_call(lua_State *luaState);
 }
 
-class CLuaFB: public CBasicFB {
+class CLuaBFB: public CBasicFB {
 private:
   static const TForteUInt32 LUA_FB_VAR_MAX = 65535;
   static const TForteUInt32 LUA_AD_VAR_MAX = 255;
@@ -39,20 +39,20 @@ private:
   static const TForteUInt32 LUA_FB_AD_FLAG = 1 << 27;
   static const TForteUInt32 LUA_FB_IN_FLAG = 1 << 28;
 
-  const CLuaFBTypeEntry* typeEntry;
+  const CLuaBFBTypeEntry* typeEntry;
 
   CIEC_ANY* getVariable(TForteUInt32 id);
 
   int recalculateID(int pa_nEIID) {
-    return CLuaFB::LUA_FB_AD_FLAG | (pa_nEIID >> 8) - 1 | pa_nEIID & 0x00ff;
+    return CLuaBFB::LUA_FB_AD_FLAG | ((pa_nEIID >> 8) - 1) | (pa_nEIID & 0x00ff);
   }
 
 public:
   static const char LUA_NAME[];
   static const luaL_Reg LUA_FUNCS[];
 
-  CLuaFB(CStringDictionary::TStringId instanceNameId, const CLuaFBTypeEntry* typeEntry, TForteByte *connData, TForteByte *varsData, CResource *resource);
-  virtual ~CLuaFB();
+  CLuaBFB(CStringDictionary::TStringId instanceNameId, const CLuaBFBTypeEntry* typeEntry, TForteByte *connData, TForteByte *varsData, CResource *resource);
+  virtual ~CLuaBFB();
 
   virtual void executeEvent(int pa_nEIID);
 
@@ -65,4 +65,4 @@ public:
   friend int CLuaFB_call(lua_State *luaState);
 };
 
-#endif /* SRC_CORE_LUAFB_H_ */
+#endif /* SRC_CORE_LUABFB_H_ */

@@ -18,24 +18,24 @@
 #include "luaengine.h"
 #include "basicfb.h"
 
-class CLuaFBTypeEntry: public CTypeLib::CFBTypeEntry {
+class CLuaBFBTypeEntry: public CTypeLib::CFBTypeEntry {
 private:
 
   const CIEC_STRING cm_sLuaScriptAsString;
   SFBInterfaceSpec m_interfaceSpec;
   SInternalVarsInformation m_internalVarsInformation;
 
-  CLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING paLuaScriptAsString,  SFBInterfaceSpec& interfaceSpec,
+  CLuaBFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING paLuaScriptAsString,  SFBInterfaceSpec& interfaceSpec,
       SInternalVarsInformation& internalVarsInformation);
 
-  virtual ~CLuaFBTypeEntry();
+  virtual ~CLuaBFBTypeEntry();
 
   static bool initInterfaceSpec(SFBInterfaceSpec& interfaceSpec, CLuaEngine* luaEngine, int index);
   static void deleteInterfaceSpec(SFBInterfaceSpec& interfaceSpec);
   static bool initInternalVarsInformation(SInternalVarsInformation& internalVarsInformation, CLuaEngine* luaEngine, int index);
   static void deleteInternalVarsInformation(SInternalVarsInformation& internalVarsInformation);
 public:
-  static CLuaFBTypeEntry* createLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING& paLuaScriptAsString);
+  static CLuaBFBTypeEntry* createLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING& paLuaScriptAsString);
 
   virtual CFunctionBlock* createFBInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
@@ -47,4 +47,4 @@ public:
   }
 };
 
-#endif /* SRC_CORE_LUAFBTYPEENTRY_H_ */
+#endif /* SRC_CORE_LUABFBTYPEENTRY_H_ */
