@@ -11,7 +11,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "cwin32sercomparameterparser.h"
+#include <cwin32sercomparameterparser.h>
 
 #include "forte_string.h"
 

@@ -12,6 +12,6 @@
 #ifndef _CONFIG_RCX_H_
 #define _CONFIG_RCX_H_
 
-#define FORTE_COM_OPC_UA_PORT ${FORTE_OPC_UA_PORT}
+#define FORTE_COM_OPC_UA_PORT ${FORTE_COM_OPC_UA_PORT}
 
 #endif /* _CONFIG_RCX_H_ */

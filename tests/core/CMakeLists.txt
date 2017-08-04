@@ -51,6 +51,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
     forte_test_add_sourcefile_cpp(../../src/arch/posix/forte_sem.cpp)
     forte_test_add_sourcefile_cpp(../../src/arch/posix/forte_thread.cpp)
     forte_test_add_sourcefile_cpp(../../src/arch/posix/pctimeha.cpp)
+    forte_test_add_sourcefile_cpp(../../src/arch/genforte_printer.cpp)
 endif()
 
 if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
@@ -58,6 +59,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
     forte_test_add_sourcefile_cpp(../../src/arch/win32/forte_sem.cpp)
     forte_test_add_sourcefile_cpp(../../src/arch/win32/forte_thread.cpp)
     forte_test_add_sourcefile_cpp(../../src/arch/win32/pctimeha.cpp)
+    forte_test_add_sourcefile_cpp(../../src/arch/win32/winforte_printer.cpp)
 endif()
 
   

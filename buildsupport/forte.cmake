@@ -88,6 +88,12 @@ FUNCTION(forte_add_include_directories)
   ENDFOREACH(ARG)
 ENDFUNCTION(forte_add_include_directories)
 
+FUNCTION(forte_add_include_system_directories) #avoid warnings on included folders
+  FOREACH(ARG ${ARGV})
+    SET_PROPERTY(GLOBAL APPEND PROPERTY FORTE_INCLUDE_SYSTEM_DIRECTORIES ${ARG})
+  ENDFOREACH(ARG)
+ENDFUNCTION(forte_add_include_system_directories)
+
 FUNCTION(forte_remove_sourcefile_h)
   GET_PROPERTY(SOURCE_H       GLOBAL PROPERTY FORTE_SOURCE_H)
   GET_PROPERTY(SOURCE_H_GROUP GLOBAL PROPERTY FORTE_SOURCE_H_GROUP)
@@ -156,6 +162,15 @@ FUNCTION(forte_add_link_library)
     set_property(GLOBAL APPEND PROPERTY FORTE_LINK_LIBRARY ${ARG})
   ENDFOREACH(ARG)
 ENDFUNCTION(forte_add_link_library)
+
+FUNCTION(forte_add_link_library_beginning)
+  get_property(LINK_LIBRARY_1 GLOBAL PROPERTY FORTE_LINK_LIBRARY)
+  set_property(GLOBAL PROPERTY FORTE_LINK_LIBRARY "")
+  FOREACH(ARG ${ARGV})
+    set_property(GLOBAL APPEND PROPERTY FORTE_LINK_LIBRARY ${ARG})
+  ENDFOREACH(ARG)
+  forte_add_link_library(${LINK_LIBRARY_1}) 
+ENDFUNCTION(forte_add_link_library_beginning)
 
 FUNCTION(forte_add_definition)
   FOREACH(ARG ${ARGV})

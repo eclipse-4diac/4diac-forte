@@ -17,17 +17,6 @@
 #ifndef SRC_MODULES_OPC_UA_OPCUAHANDLER_H_
 #define SRC_MODULES_OPC_UA_OPCUAHANDLER_H_
 
-#ifdef __GNUC__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-#endif
-
-# include <open62541.h>
-
-#ifdef __GNUC__
-#pragma GCC diagnostic pop
-#endif
-
 #include <singlet.h>
 #include <forte_thread.h>
 #include <extevhan.h>
@@ -45,6 +34,10 @@ struct UA_NodeCallback_Handle {
 	const struct UA_TypeConvert *convert;
 	unsigned int portIndex;
 };
+
+struct UA_ClientEndpointMap;
+typedef struct UA_ClientEndpointMap UA_ClientEndpointMap;
+
 // cppcheck-suppress noConstructor
 class COPC_UA_Handler : public CExternalEventHandler, public CThread {
 DECLARE_SINGLETON(COPC_UA_Handler);
@@ -142,10 +135,33 @@ public:
 	 * 			start with '/Objects'
 	 * @param newNodeType type of the new node (only used for the last one), if it has to be created.
 	 * 			Default is FolderType which is also used for intermediate nodes, if they don't exist
+	 * @param clientInitialized optional client which should be used to get the node. The client has to be already connected if given.
+	 * 			If no client is given, a new temporary client will be created and connected to localhost
 	 * @return UA_STATUSCODE_GOOD on success or the corresponding error code.
 	 */
 	UA_StatusCode
-	getNodeForPath(UA_NodeId **foundNodeId, char *nodePath, bool createIfNotFound, const UA_NodeId *startingNode = NULL, const UA_NodeId *newNodeType = NULL);
+	getNodeForPath(UA_NodeId **foundNodeId, const char *nodePath, bool createIfNotFound,
+				   const UA_NodeId *startingNode = NULL, const UA_NodeId *newNodeType = NULL,
+				   UA_NodeId **parentNodeId = NULL, UA_Client *clientInitialized = NULL,
+				   CSinglyLinkedList<UA_NodeId *> *nodeIdsAlongPath = NULL);
+
+	/**
+	 * Get the opc ua client for the given endpoint url. If there exists already an OPC UA client
+	 * which is connected to the given URL, that one will be returned.
+	 * If createIfNotFound is false and there is no client yet, NULL will be returned. Otherwise
+	 * a new client is instantiated and connected.
+	 *
+	 * @param endpointUrl The endpoint url for the client
+	 * @param createIfNotFound if true, a new client will be created if not found
+	 * @return the (new) client, or NULL of not found and not created.
+	 */
+	UA_Client *
+	getClientForEndpoint(const char *endpointUrl, bool createIfNotFound, CSyncObject **clientMutex);
+
+
+	CSyncObject *
+	getMutexForClient(const UA_Client *client);
+
 
 	/**
 	 * Forces event handling by calling startNewEventChain.
@@ -155,6 +171,10 @@ public:
 	void forceEventHandling(COPC_UA_Layer *layer) {
 		getInstance().startNewEventChain(layer->getCommFB());
 	}
+
+	void referencedNodesIncrement(const CSinglyLinkedList<UA_NodeId *> *nodes, const COPC_UA_Layer* layer);
+
+	void referencedNodesDecrement(const CSinglyLinkedList<UA_NodeId *> *nodes, const COPC_UA_Layer* layer, bool deleteIfLastReference);
 
 protected:
 
@@ -198,6 +218,18 @@ private:
 	 * Collector list for callback handles to be able to clean them up on destroy.
 	 */
 	CSinglyLinkedList<struct UA_NodeCallback_Handle *> nodeCallbackHandles;
+
+	/**
+	 * Collector list for callback handles to be able to clean them up on destroy.
+	 */
+	CSinglyLinkedList<struct UA_ClientEndpointMap *> clients;
+
+
+	struct ReferencedNodeByLayer {
+		const UA_NodeId *nodeId;
+		CSinglyLinkedList<const COPC_UA_Layer*> referencedByLayer;
+	};
+	CSinglyLinkedList<struct ReferencedNodeByLayer*> nodeLayerReferences;
 
 };
 
