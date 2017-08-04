@@ -16,7 +16,8 @@
 #include "fbcontainer.h"
 #include "funcbloc.h"
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
-#include "luafbtypeentry.h"
+#include "luabfbtypeentry.h"
+#include "luacfbtypeentry.h"
 #include "luaadaptertypeentry.h"
 #include "luaengine.h"
 #endif

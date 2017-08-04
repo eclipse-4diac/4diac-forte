@@ -10,22 +10,23 @@
  *   - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
+#include "luabfbtypeentry.h"
+
 #include "luaengine.h"
-#include "luafb.h"
-#include "luafbtypeentry.h"
+#include "luabfb.h"
 #include "luatype.h"
 
-CLuaFBTypeEntry::CLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING paLuaScriptAsString, SFBInterfaceSpec& interfaceSpec,
+CLuaBFBTypeEntry::CLuaBFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING paLuaScriptAsString, SFBInterfaceSpec& interfaceSpec,
     SInternalVarsInformation& internalVarsInformation)
     : CTypeLib::CFBTypeEntry(typeNameId, 0), cm_sLuaScriptAsString(paLuaScriptAsString), m_interfaceSpec(interfaceSpec), m_internalVarsInformation(internalVarsInformation) {
 }
 
-CLuaFBTypeEntry::~CLuaFBTypeEntry() {
+CLuaBFBTypeEntry::~CLuaBFBTypeEntry() {
   deleteInterfaceSpec(m_interfaceSpec);
   deleteInternalVarsInformation(m_internalVarsInformation);
 }
 
-CLuaFBTypeEntry* CLuaFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING& paLuaScriptAsString) {
+CLuaBFBTypeEntry* CLuaBFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING& paLuaScriptAsString) {
   CLuaEngine luaEngine;
   if (!luaEngine.loadString(std::string(paLuaScriptAsString.getValue()))) {
     return NULL;
@@ -53,10 +54,10 @@ CLuaFBTypeEntry* CLuaFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStrin
   }
   luaEngine.pop(); //pop internalVarsInformation
   luaEngine.pop(); //pop loaded defs
-  return new CLuaFBTypeEntry(typeNameId, paLuaScriptAsString, interfaceSpec, internalVarsInformation);
+  return new CLuaBFBTypeEntry(typeNameId, paLuaScriptAsString, interfaceSpec, internalVarsInformation);
 }
 
-CFunctionBlock* CLuaFBTypeEntry::createFBInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) {
+CFunctionBlock* CLuaBFBTypeEntry::createFBInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) {
   CLuaEngine* luaEngine = pa_poSrcRes->getLuaEngine();
   if (!luaEngine->load(this)) {
     if (!luaEngine->loadString(std::string(cm_sLuaScriptAsString.getValue()))) {
@@ -69,10 +70,10 @@ CFunctionBlock* CLuaFBTypeEntry::createFBInstance(CStringDictionary::TStringId p
   TForteByte* connData = new TForteByte[CFunctionBlock::genFBConnDataSize(m_interfaceSpec.m_nNumEOs, m_interfaceSpec.m_nNumDIs, m_interfaceSpec.m_nNumDOs)];
   TForteByte* varsData = new TForteByte[CBasicFB::genBasicFBVarsDataSize(m_interfaceSpec.m_nNumDIs, m_interfaceSpec.m_nNumDOs,
       m_internalVarsInformation.m_nNumIntVars, m_interfaceSpec.m_nNumAdapters)];
-  return new CLuaFB(pa_nInstanceNameId, this, connData, varsData, pa_poSrcRes);
+  return new CLuaBFB(pa_nInstanceNameId, this, connData, varsData, pa_poSrcRes);
 }
 
-bool CLuaFBTypeEntry::initInterfaceSpec(SFBInterfaceSpec& interfaceSpec, CLuaEngine* luaEngine, int index) {
+bool CLuaBFBTypeEntry::initInterfaceSpec(SFBInterfaceSpec& interfaceSpec, CLuaEngine* luaEngine, int index) {
   //EI
   interfaceSpec.m_nNumEIs = luaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8> >(index, "numEIs");
   size_t numEIs = interfaceSpec.m_nNumEIs;
@@ -126,7 +127,7 @@ bool CLuaFBTypeEntry::initInterfaceSpec(SFBInterfaceSpec& interfaceSpec, CLuaEng
   return true;
 }
 
-void CLuaFBTypeEntry::deleteInterfaceSpec(SFBInterfaceSpec& interfaceSpec) {
+void CLuaBFBTypeEntry::deleteInterfaceSpec(SFBInterfaceSpec& interfaceSpec) {
   delete[] interfaceSpec.m_aunEINames;
   delete[] interfaceSpec.m_anEIWith;
   delete[] interfaceSpec.m_anEIWithIndexes;
@@ -140,7 +141,7 @@ void CLuaFBTypeEntry::deleteInterfaceSpec(SFBInterfaceSpec& interfaceSpec) {
   delete[] interfaceSpec.m_pstAdapterInstanceDefinition;
 }
 
-bool CLuaFBTypeEntry::initInternalVarsInformation(SInternalVarsInformation& internalVarsInformation, CLuaEngine* luaEngine, int index) {
+bool CLuaBFBTypeEntry::initInternalVarsInformation(SInternalVarsInformation& internalVarsInformation, CLuaEngine* luaEngine, int index) {
   internalVarsInformation.m_nNumIntVars = luaEngine->getField<TPortId, &CLuaEngine::getInteger<TPortId> >(index, "numIntVars");
   size_t numIntVars = internalVarsInformation.m_nNumIntVars;
   internalVarsInformation.m_aunIntVarsNames = luaEngine->getArrayField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(index, "intVarsNames",
@@ -154,7 +155,7 @@ bool CLuaFBTypeEntry::initInternalVarsInformation(SInternalVarsInformation& inte
   return true;
 }
 
-void CLuaFBTypeEntry::deleteInternalVarsInformation(SInternalVarsInformation& internalVarsInformation) {
+void CLuaBFBTypeEntry::deleteInternalVarsInformation(SInternalVarsInformation& internalVarsInformation) {
   delete[] internalVarsInformation.m_aunIntVarsNames;
   delete[] internalVarsInformation.m_aunIntVarsDataTypeNames;
 }

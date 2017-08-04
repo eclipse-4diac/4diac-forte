@@ -15,5 +15,6 @@
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 forte_add_sourcefile_hcpp(luaengine luatype)
-forte_add_sourcefile_hcpp(luafb luafbtypeentry)
+forte_add_sourcefile_hcpp(luabfb luabfbtypeentry)
 forte_add_sourcefile_hcpp(luaadapter luaadaptertypeentry)
+forte_add_sourcefile_hcpp(luacfb luacfbtypeentry)

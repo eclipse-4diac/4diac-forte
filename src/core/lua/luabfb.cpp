@@ -10,7 +10,8 @@
  *   - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "luafb.h"
+#include "luabfb.h"
+
 #include "resource.h"
 
 extern "C" {
@@ -19,7 +20,7 @@ extern "C" {
 
 // write variable to lua engine
 int CLuaFB_index(lua_State *luaState) {
-  CLuaFB* luaFB = CLuaEngine::luaGetObject<CLuaFB>(luaState, 1);
+  CLuaBFB* luaFB = CLuaEngine::luaGetObject<CLuaBFB>(luaState, 1);
   TForteUInt32 id = static_cast<TForteUInt32>(luaL_checkinteger(luaState, 2));
   CIEC_ANY* var = luaFB->getVariable(id);
   CLuaEngine::luaPushAny(luaState, var);
@@ -28,7 +29,7 @@ int CLuaFB_index(lua_State *luaState) {
 
 // get variables from lua engine
 int CLuaFB_newindex(lua_State *luaState) {
-  CLuaFB* luaFB = CLuaEngine::luaGetObject<CLuaFB>(luaState, 1);
+  CLuaBFB* luaFB = CLuaEngine::luaGetObject<CLuaBFB>(luaState, 1);
   TForteUInt32 id = static_cast<TForteUInt32>(luaL_checkinteger(luaState, 2));
   CIEC_ANY* var = luaFB->getVariable(id);
   CLuaEngine::luaGetAny(luaState, var, 3);
@@ -36,31 +37,31 @@ int CLuaFB_newindex(lua_State *luaState) {
 }
 
 int CLuaFB_call(lua_State *luaState) {
-  CLuaFB* luaFB = CLuaEngine::luaGetObject<CLuaFB>(luaState, 1);
+  CLuaBFB* luaFB = CLuaEngine::luaGetObject<CLuaBFB>(luaState, 1);
   TForteUInt32 id = static_cast<TForteUInt32>(luaL_checkinteger(luaState, 2));
-  if((id & CLuaFB::LUA_FB_AD_FLAG) != 0){
-    luaFB->sendAdapterEvent((id >> 16) & CLuaFB::LUA_AD_VAR_MAX, id & CLuaFB::LUA_FB_VAR_MAX);
+  if((id & CLuaBFB::LUA_FB_AD_FLAG) != 0){
+    luaFB->sendAdapterEvent((id >> 16) & CLuaBFB::LUA_AD_VAR_MAX, id & CLuaBFB::LUA_FB_VAR_MAX);
   }else{
     luaFB->sendOutputEvent(id);
   }
   return 0;
 }
 
-const char CLuaFB::LUA_NAME[] = "FORTE_CLuaFB";
-const luaL_Reg CLuaFB::LUA_FUNCS[] = { { "__index", CLuaFB_index }, { "__newindex", CLuaFB_newindex }, { "__call", CLuaFB_call }, { NULL, NULL } };
+const char CLuaBFB::LUA_NAME[] = "FORTE_CLuaFB";
+const luaL_Reg CLuaBFB::LUA_FUNCS[] = { { "__index", CLuaFB_index }, { "__newindex", CLuaFB_newindex }, { "__call", CLuaFB_call }, { NULL, NULL } };
 
-CLuaFB::CLuaFB(CStringDictionary::TStringId instanceNameId, const CLuaFBTypeEntry* typeEntry, TForteByte *connData, TForteByte *varsData, CResource *resource)
+CLuaBFB::CLuaBFB(CStringDictionary::TStringId instanceNameId, const CLuaBFBTypeEntry* typeEntry, TForteByte *connData, TForteByte *varsData, CResource *resource)
     : CBasicFB(resource, typeEntry->getInterfaceSpec(), instanceNameId, typeEntry->getInternalVarsInformation(), connData, varsData), typeEntry(typeEntry) {
   CLuaEngine *luaEngine = getResource().getLuaEngine();
-  luaEngine->registerType<CLuaFB>();
-  luaEngine->pushObject<CLuaFB>(this);
+  luaEngine->registerType<CLuaBFB>();
+  luaEngine->pushObject<CLuaBFB>(this);
   luaEngine->store(this);
 }
 
-CLuaFB::~CLuaFB() {
+CLuaBFB::~CLuaBFB() {
 }
 
-void CLuaFB::executeEvent(int pa_nEIID) {
+void CLuaBFB::executeEvent(int pa_nEIID) {
   CLuaEngine *luaEngine = getResource().getLuaEngine();
   luaEngine->load(typeEntry);
   luaEngine->load(this);
@@ -71,35 +72,27 @@ void CLuaFB::executeEvent(int pa_nEIID) {
   }
 }
 
-CIEC_ANY* CLuaFB::getVariable(TForteUInt32 id) {
-  if (CLuaFB::LUA_FB_STATE == id) {
+CIEC_ANY* CLuaBFB::getVariable(TForteUInt32 id) {
+  if (CLuaBFB::LUA_FB_STATE == id) {
     return &m_nECCState;
   }
-  if((id & CLuaFB::LUA_FB_IN_FLAG) != 0) {
-    return getVarInternal(id & CLuaFB::LUA_FB_VAR_MAX);
+  if((id & CLuaBFB::LUA_FB_IN_FLAG) != 0) {
+    return getVarInternal(id & CLuaBFB::LUA_FB_VAR_MAX);
   }
-  if ((id & CLuaFB::LUA_FB_AD_FLAG) != 0) {
-    if ((id & CLuaFB::LUA_FB_DI_FLAG) != 0) {
-      if(m_apoAdapters[(id >> 16) & CLuaFB::LUA_AD_VAR_MAX]->isPlug()){
-        return m_apoAdapters[(id >> 16) & CLuaFB::LUA_AD_VAR_MAX]->getDO(id & CLuaFB::LUA_FB_VAR_MAX);
-      }else{
-        return m_apoAdapters[(id >> 16) & CLuaFB::LUA_AD_VAR_MAX]->getDO(id & CLuaFB::LUA_FB_VAR_MAX);
-      }
+  if ((id & CLuaBFB::LUA_FB_AD_FLAG) != 0) {
+    if ((id & CLuaBFB::LUA_FB_DI_FLAG) != 0) {
+      return m_apoAdapters[(id >> 16) & CLuaBFB::LUA_AD_VAR_MAX]->getDO(id & CLuaBFB::LUA_FB_VAR_MAX);
     }
-    if ((id & CLuaFB::LUA_FB_DO_FLAG) != 0) {
-      if(m_apoAdapters[(id >> 16) & CLuaFB::LUA_AD_VAR_MAX]->isPlug()){
-        return m_apoAdapters[(id >> 16) & CLuaFB::LUA_AD_VAR_MAX]->getDI(id & CLuaFB::LUA_FB_VAR_MAX);
-      }else{
-        return m_apoAdapters[(id >> 16) & CLuaFB::LUA_AD_VAR_MAX]->getDI(id & CLuaFB::LUA_FB_VAR_MAX);
-      }
+    if ((id & CLuaBFB::LUA_FB_DO_FLAG) != 0) {
+      return m_apoAdapters[(id >> 16) & CLuaBFB::LUA_AD_VAR_MAX]->getDI(id & CLuaBFB::LUA_FB_VAR_MAX);
     }
     return 0;
   }
-  if ((id & CLuaFB::LUA_FB_DI_FLAG) != 0) {
-    return getDI(id & CLuaFB::LUA_FB_VAR_MAX);
+  if ((id & CLuaBFB::LUA_FB_DI_FLAG) != 0) {
+    return getDI(id & CLuaBFB::LUA_FB_VAR_MAX);
   }
-  if ((id & CLuaFB::LUA_FB_DO_FLAG) != 0) {
-    return getDO(id & CLuaFB::LUA_FB_VAR_MAX);
+  if ((id & CLuaBFB::LUA_FB_DO_FLAG) != 0) {
+    return getDO(id & CLuaBFB::LUA_FB_VAR_MAX);
   }
   return 0;
 }

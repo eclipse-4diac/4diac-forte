@@ -10,23 +10,23 @@
  *   - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_CORE_LUAADAPTER_H_
-#define SRC_CORE_LUAADAPTER_H_
+#ifndef SRC_CORE_LUACFB_H_
+#define SRC_CORE_LUACFB_H_
 
-#include "adapter.h"
-#include "luaadaptertypeentry.h"
+#include "cfb.h"
+#include "luacfbtypeentry.h"
 
-class CLuaAdapter: public CAdapter {
+class CLuaCFB: public CCompositeFB {
 private:
-  const CLuaAdapterTypeEntry* typeEntry;
+  const CLuaCFBTypeEntry* typeEntry;
 
 public:
-  CLuaAdapter(CStringDictionary::TStringId instanceNameId, const CLuaAdapterTypeEntry* typeEntry, bool pa_bIsPlug, TForteByte *connData, TForteByte *varsData, CResource *resource);
-  virtual ~CLuaAdapter();
+  CLuaCFB(CStringDictionary::TStringId instanceNameId, const CLuaCFBTypeEntry* typeEntry, SCFB_FBNData *fbnData, TForteByte *connData, TForteByte *varsData, CResource *resource);
+  virtual ~CLuaCFB();
 
   virtual CStringDictionary::TStringId getFBTypeId(void) const {
     return typeEntry->getTypeNameId();
   }
 };
 
-#endif /* SRC_CORE_LUAADAPTER_H_ */
+#endif /* SRC_CORE_LUACFB_H_ */
