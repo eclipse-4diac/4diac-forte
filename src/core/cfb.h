@@ -43,23 +43,23 @@ struct SCFB_FBFannedOutConnectionData {
 struct SCFB_FBParameter {
     unsigned int m_nFBNum;
     CStringDictionary::TStringId m_nDINameID; //!< the data input id of the input param to set
-    const char * const m_acParamValue;
+    const char * m_acParamValue;
 };
 
 struct SCFB_FBNData {
     unsigned int m_nNumFBs;
-    const SCFB_FBInstanceData * const m_pstFBInstances;
+    const SCFB_FBInstanceData * m_pstFBInstances;
     //TODO add FB parameters
     unsigned int m_nNumEventConnections;
-    const SCFB_FBConnectionData * const m_pstEventConnections;
+    const SCFB_FBConnectionData * m_pstEventConnections;
     unsigned int m_nNumFannedOutEventConnections;
-    const SCFB_FBFannedOutConnectionData * const m_pstFannedOutEventConnections;
+    const SCFB_FBFannedOutConnectionData * m_pstFannedOutEventConnections;
     unsigned int m_nNumDataConnections;
-    const SCFB_FBConnectionData * const m_pstDataConnections;
+    const SCFB_FBConnectionData * m_pstDataConnections;
     unsigned int m_nNumFannedOutDataConnections;
-    const SCFB_FBFannedOutConnectionData * const m_pstFannedOutDataConnections;
+    const SCFB_FBFannedOutConnectionData * m_pstFannedOutDataConnections;
     unsigned int m_nNumParams;
-    const SCFB_FBParameter * const m_pstParams;
+    const SCFB_FBParameter * m_pstParams;
 };
 
 //These two defines are here for legacy reasons. They allow that old CFBs can still be complied

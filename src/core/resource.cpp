@@ -270,13 +270,17 @@ EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNam
     CIEC_STRING& paLuaScriptAsString){
   EMGMResponse retVal = e_UNSUPPORTED_TYPE;
   if(NULL != strstr(paLuaScriptAsString.getValue(), "internalFBs")){// CFBType
-
+    if(CLuaCFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != NULL){
+         retVal = e_RDY;
+       }else{
+         retVal = e_INVALID_OPERATION;
+       }
   }else{// BFBType
-   if(CLuaBFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != NULL){
-     retVal = e_RDY;
-   }else{
-     retVal = e_INVALID_OPERATION;
-   }
+    if(CLuaBFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != NULL){
+      retVal = e_RDY;
+    }else{
+      retVal = e_INVALID_OPERATION;
+    }
   }
   return retVal;
 }

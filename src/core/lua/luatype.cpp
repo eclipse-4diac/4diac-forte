@@ -6,7 +6,7 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *   Monika Wenger
+ *   Martin Jobst, Monika Wenger
  *   - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "funcbloc.h"
