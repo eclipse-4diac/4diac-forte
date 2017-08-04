@@ -455,8 +455,10 @@ forte::com_infra::EComResponse COPC_UA_Layer::createClient(const char *paLayerPa
 	}
 
 	this->uaClient = COPC_UA_Handler::getInstance().getClientForEndpoint(endpointUrl, true, &clientMutex);
-	if (!this->uaClient)
-		return e_InitTerminated;
+	if (!this->uaClient){
+	  forte_free(idStr);
+	  return e_InitTerminated;
+	}
 
 	// construct node path which includes the method name, i.e., the FB name
 
