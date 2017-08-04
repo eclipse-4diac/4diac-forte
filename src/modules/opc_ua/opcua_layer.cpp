@@ -627,6 +627,7 @@ UA_StatusCode COPC_UA_Layer::onServerMethodCall(void *methodHandle, const UA_Nod
 	// TODO uses busy waiting. Is there a better way?
 	while (!self->serverMethodCallResultReady && currentTime.getMilliSeconds() - startTime.getMilliSeconds() < METHOD_CALL_TIMEOUT * 1000) {
 		currentTime.setCurrentTime();
+		sleepThread(1);
 	}
 	if (currentTime.getMilliSeconds() - startTime.getMilliSeconds() >= METHOD_CALL_TIMEOUT * 1000) {
 		DEVLOG_ERROR("OPC UA: method call did not get result values within timeout.\n");
