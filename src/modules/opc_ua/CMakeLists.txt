@@ -26,9 +26,11 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 if (FORTE_COM_OPC_UA)
 
-    SET(FORTE_COM_OPC_UA_PORT "4840" CACHE PATH "Port where the OPC_UA server will listen")
+    SET(FORTE_COM_OPC_UA_PORT "4840" CACHE NUMBER "Port where the OPC_UA server will listen")
+    SET(FORTE_COM_OPC_UA_MULTICAST OFF CACHE BOOLEAN "Enable multicast support for OPC UA and registering with LDS")
     SET(FORTE_COM_OPC_UA_INCLUDE_DIR "" CACHE PATH "ABSOLUTE path to open62541.h file in the OPC UA project")
     SET(FORTE_COM_OPC_UA_LIB_DIR "" CACHE PATH "ABSOLUTE path to OPC UA folder with object library FORTE_COM_OPC_UA_LIB")
+    SET(FORTE_COM_OPC_UA_CUSTOM_HOSTNAME CACHE STRING "Custom hostname which is used for the OPC UA app name and app uri")
 
     # Version of open62541 stack
     set(FORTE_COM_OPC_UA_VERSION "master" CACHE STRING "Version of the open62541 stack")

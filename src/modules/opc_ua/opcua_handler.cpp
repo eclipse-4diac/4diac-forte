@@ -16,9 +16,11 @@
 #include "opcua_handler.h"
 #include <devexec.h>
 #include "criticalregion.h"
-#include <stdarg.h>
-#include <forte_config_opc_ua.h>
 #include <forte_printer.h>
+
+#ifndef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
+#include <unistd.h>
+#endif
 
 using namespace forte::com_infra;
 
@@ -32,7 +34,6 @@ struct UA_ClientEndpointMap {
 	char *endpointUrl;
 	CSyncObject *clientMutex;
 };
-
 
 #if defined(_MSC_VER) && _MSC_VER < 1900
 #define snprintf _snprintf
@@ -72,10 +73,36 @@ void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
 	uaServerConfig.networkLayersSize = 1;
 	uaServerConfig.logger = UA_Log_Forte;
 
-	// TODO make sure the URI is unique, e.g. by using the application name or something else.
-	uaServerConfig.applicationDescription.applicationUri = UA_String_fromChars("org.eclipse.4diac.forte");
+	char name[255];
+	snprintf(name, 255, "forte_%d", FORTE_COM_OPC_UA_PORT);
+
+
+#ifdef FORTE_COM_OPC_UA_MULTICAST
+	uaServerConfig.applicationDescription.applicationType = UA_APPLICATIONTYPE_DISCOVERYSERVER;
+	// hostname will be added by mdns library
+	uaServerConfig.mdnsServerName = UA_String_fromChars(name);
+#endif
+
+	char hostname[256];
+#ifdef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
+	snprintf(hostname, 255, "%s-%s", FORTE_COM_OPC_UA_CUSTOM_HOSTNAME, name);
+#else
+	if(gethostname(hostname, 255) == 0) {
+		size_t offset = strlen(hostname);
+		size_t nameLen = strlen(name);
+		if (offset + nameLen +1 > 255) {
+			offset = MAX(255-nameLen-1, (size_t)0);
+		}
+		snprintf(hostname+offset, 255-offset, "-%s", name);
+	}
+#endif
+
+	char uri[255];
+	snprintf(uri, 255, "org.eclipse.4diac.%s", hostname);
+
+	uaServerConfig.applicationDescription.applicationUri = UA_String_fromChars(uri);
 	uaServerConfig.applicationDescription.applicationName.locale = UA_String_fromChars("EN");
-	uaServerConfig.applicationDescription.applicationName.text = UA_String_fromChars("FORTE");
+	uaServerConfig.applicationDescription.applicationName.text = UA_String_fromChars(hostname);
 
 	// TODO set server capabilities
 	// See http://www.opcfoundation.org/UA/schemas/1.03/ServerCapabilities.csv
@@ -85,14 +112,103 @@ void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
 
 	uaServerNetworkLayer = UA_ServerNetworkLayerTCP(UA_ConnectionConfig_standard, UAServerPort);
 	uaServerConfig.networkLayers = &uaServerNetworkLayer;
+
 }
 
+#ifdef FORTE_COM_OPC_UA_MULTICAST
+
+static void serverOnNetworkCallback(const UA_ServerOnNetwork *serverOnNetwork, UA_Boolean isServerAnnounce, UA_Boolean isTxtReceived, void* data) {
+	COPC_UA_Handler* handler = (COPC_UA_Handler*)data;
+
+	const UA_String ownDiscoverUrl = handler->getDiscoveryUrl();
+
+	if (UA_String_equal(&serverOnNetwork->discoveryUrl, &ownDiscoverUrl)) {
+		// skip self
+		return;
+	}
+
+	if (!isTxtReceived)
+		return; // we wait until the corresponding TXT record is announced.
+
+	DEVLOG_DEBUG("OPC UA: mDNS %s '%.*s' with url '%.*s'\n",isServerAnnounce?"announce":"remove", serverOnNetwork->serverName.length, serverOnNetwork->serverName.data,
+			serverOnNetwork->discoveryUrl.length, serverOnNetwork->discoveryUrl.data);
+
+	// check if server is LDS, and then register
+	UA_String ldsStr = UA_String_fromChars("LDS");
+	for (unsigned int i=0; i<serverOnNetwork->serverCapabilitiesSize; i++) {
+		if (UA_String_equal(&serverOnNetwork->serverCapabilities[i], &ldsStr)) {
+			if (isServerAnnounce)
+				handler->registerWithLds(&serverOnNetwork->discoveryUrl);
+			else
+				handler->removeLdsRegister(&serverOnNetwork->discoveryUrl);
+			break;
+		}
+	}
+	UA_String_deleteMembers(&ldsStr);
+}
+
+void COPC_UA_Handler::registerWithLds(const UA_String *discoveryUrl) {
+	// check if already registered with the given LDS
+	for (CSinglyLinkedList<const char*>::Iterator iter = registeredWithLds.begin(); iter != registeredWithLds.end(); ++iter) {
+		if (strncmp((char*)discoveryUrl->data, *iter, discoveryUrl->length) == 0)
+			return;
+	}
+
+	// will be freed when removed from list
+	char *discoveryUrlChar = (char*)malloc(sizeof(char)*discoveryUrl->length+1);
+	memcpy(discoveryUrlChar, discoveryUrl->data, discoveryUrl->length);
+	discoveryUrlChar[discoveryUrl->length] = 0;
+
+	registeredWithLds.push_front(discoveryUrlChar);
+
+	DEVLOG_INFO("OPC UA: Registering with LDS '%.*s'\n", discoveryUrl->length, discoveryUrl->data);
+	UA_StatusCode retVal = UA_Server_addPeriodicServerRegisterCallback(uaServer, discoveryUrlChar , 10 * 60 * 1000, 500, NULL);
+	if (retVal != UA_STATUSCODE_GOOD) {
+		DEVLOG_ERROR("OPC UA: Could not register with LDS. Error: %s\n", UA_StatusCode_name(retVal));
+	}
+}
+
+void COPC_UA_Handler::removeLdsRegister(const UA_String *discoveryUrl) {
+	// check if already registered with the given LDS
+	CSinglyLinkedList<const char*>::Iterator itRunner = registeredWithLds.begin();
+	CSinglyLinkedList<const char*>::Iterator itRefNode = registeredWithLds.end();
+
+	// remove entry from list
+	while(itRunner != registeredWithLds.end()){
+		if (strncmp((char*)discoveryUrl->data, *itRunner, discoveryUrl->length) == 0) {
+			if(itRefNode == registeredWithLds.end()){
+				registeredWithLds.pop_front();
+			}
+			else{
+				registeredWithLds.eraseAfter(itRefNode);
+			}
+			// dirty cast to remove const
+			forte_free((void *)(*itRunner));
+			break;
+		}
+		itRefNode = itRunner;
+		++itRunner;
+	}
+
+}
+
+#endif
+
 COPC_UA_Handler::COPC_UA_Handler() : uaServerConfig(), uaServerNetworkLayer(), getNodeForPathMutex(), nodeCallbackHandles(), clients(),
-									 nodeLayerReferences() {
+		registeredWithLds(), nodeLayerReferences() {
 	configureUAServer(FORTE_COM_OPC_UA_PORT);
 	uaServerRunningFlag = UA_Boolean_new();
 	*uaServerRunningFlag = UA_TRUE;
 	uaServer = UA_Server_new(uaServerConfig);
+
+
+#ifdef FORTE_COM_OPC_UA_MULTICAST
+#   ifndef UA_ENABLE_DISCOVERY_MULTICAST
+#       error open62541 needs to be built with UA_ENABLE_DISCOVERY_MULTICAST=ON
+#   else
+	    UA_Server_setServerOnNetworkCallback(uaServer, serverOnNetworkCallback, this);
+#   endif
+#endif
 
 	setServerRunning();        // set server loop flag
 
@@ -128,6 +244,14 @@ COPC_UA_Handler::~COPC_UA_Handler() {
 		forte_free((*iter));
 	}
 	nodeLayerReferences.clearAll();
+
+#ifdef FORTE_COM_OPC_UA_MULTICAST
+	for (CSinglyLinkedList<const char *>::Iterator iter = registeredWithLds.begin(); iter != registeredWithLds.end(); ++iter) {
+		// dirty cast to remove const
+		forte_free((void *)(*iter));
+	}
+	registeredWithLds.clearAll();
+#endif
 }
 
 void COPC_UA_Handler::run() {

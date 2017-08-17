@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include "devlog.h"
 #include "comlayer.h"
+#include <forte_config_opc_ua.h>
 #include "opcua_helper.h"
 #include "opcua_layer.h"
 
@@ -176,6 +177,14 @@ public:
 
 	void referencedNodesDecrement(const CSinglyLinkedList<UA_NodeId *> *nodes, const COPC_UA_Layer* layer, bool deleteIfLastReference);
 
+	const UA_String getDiscoveryUrl() const {
+		return uaServerNetworkLayer.discoveryUrl;
+	}
+
+#ifdef FORTE_COM_OPC_UA_MULTICAST
+	void registerWithLds(const UA_String *discoveryUrl);
+	void removeLdsRegister(const UA_String *discoveryUrl);
+#endif
 protected:
 
 private:
@@ -224,6 +233,14 @@ private:
 	 */
 	CSinglyLinkedList<struct UA_ClientEndpointMap *> clients;
 
+
+#ifdef FORTE_COM_OPC_UA_MULTICAST
+
+	/**
+	 * List of LDS servers where this instance is already registered.
+	 */
+	CSinglyLinkedList<const char *> registeredWithLds;
+#endif
 
 	struct ReferencedNodeByLayer {
 		const UA_NodeId *nodeId;
