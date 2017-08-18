@@ -36,7 +36,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
 
 
   if(FORTE_COM_ETH)
-   forte_add_sourcefile_hcpp( ../fdselecthand ../bsdsocketinterf)
+   forte_add_sourcefile_hcpp( ../fdselecthand win32socketinterf )
    forte_add_sourcefile_h(../gensockhand.h)
    forte_add_sourcefile_h(sockhand.h)
   endif(FORTE_COM_ETH)

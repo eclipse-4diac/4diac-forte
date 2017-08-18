@@ -24,9 +24,9 @@
 #include <Ws2tcpip.h>
 //these include needs to be last
 #include "../fdselecthand.h"
-#include "../bsdsocketinterf.h"
+#include "win32socketinterf.h"
 #include "../gensockhand.h"
 
-typedef CGenericIPComSocketHandler<CFDSelectHandler, CBSDSocketInterface> CIPComSocketHandler;
+typedef CGenericIPComSocketHandler<CFDSelectHandler, CWin32SocketInterface> CIPComSocketHandler;
 
 #endif /* SOCKHAND_H_ */
