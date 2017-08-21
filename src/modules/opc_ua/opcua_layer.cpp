@@ -574,18 +574,13 @@ EComResponse COPC_UA_Layer::processInterruptChild() {
 }
 
 
-#ifdef FORTE_COM_OPC_UA_VERSION_0_2
-UA_StatusCode COPC_UA_Layer::onServerMethodCall(void *methodHandle, const UA_NodeId,
-						size_t inputSize, const UA_Variant *input,
-						size_t outputSize, UA_Variant *output) {
-#else
-
-UA_StatusCode COPC_UA_Layer::onServerMethodCall(void *methodHandle, const UA_NodeId *,
+UA_StatusCode COPC_UA_Layer::onServerMethodCall(UA_Server *,
+												const UA_NodeId *,	void *,
+												const UA_NodeId *, void *methodContext,
 												const UA_NodeId *, void *,
 												size_t inputSize, const UA_Variant *input,
 												size_t outputSize, UA_Variant *output) {
-#endif
-	COPC_UA_Layer *self = static_cast<COPC_UA_Layer *>(methodHandle);
+	COPC_UA_Layer *self = static_cast<COPC_UA_Layer *>(methodContext);
 
 	// other thread may currently create nodes for the same path, thus mutex
 	CCriticalRegion criticalRegion(self->mutexServerMethodCall);

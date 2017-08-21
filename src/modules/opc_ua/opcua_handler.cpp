@@ -69,19 +69,19 @@ void UA_Log_Forte(UA_LogLevel level, UA_LogCategory category, const char *msg, v
 }
 
 void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
-	uaServerConfig = UA_ServerConfig_standard;
-	uaServerConfig.networkLayersSize = 1;
-	uaServerConfig.logger = UA_Log_Forte;
 
 	char name[255];
 	snprintf(name, 255, "forte_%d", FORTE_COM_OPC_UA_PORT);
 
+	uaServerConfig = UA_ServerConfig_new_minimal(UAServerPort, NULL);
+	uaServerConfig->logger = UA_Log_Forte;
 
-#ifdef FORTE_COM_OPC_UA_MULTICAST
-	uaServerConfig.applicationDescription.applicationType = UA_APPLICATIONTYPE_DISCOVERYSERVER;
+# ifdef FORTE_COM_OPC_UA_MULTICAST
+	uaServerConfig->applicationDescription.applicationType = UA_APPLICATIONTYPE_DISCOVERYSERVER;
 	// hostname will be added by mdns library
-	uaServerConfig.mdnsServerName = UA_String_fromChars(name);
-#endif
+	UA_String_deleteMembers(&uaServerConfig->mdnsServerName);
+	uaServerConfig->mdnsServerName = UA_String_fromChars(name);
+# endif
 
 	char hostname[256];
 #ifdef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
@@ -100,19 +100,19 @@ void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
 	char uri[255];
 	snprintf(uri, 255, "org.eclipse.4diac.%s", hostname);
 
-	uaServerConfig.applicationDescription.applicationUri = UA_String_fromChars(uri);
-	uaServerConfig.applicationDescription.applicationName.locale = UA_String_fromChars("EN");
-	uaServerConfig.applicationDescription.applicationName.text = UA_String_fromChars(hostname);
+	// delete pre-initialized values
+	UA_String_deleteMembers(&uaServerConfig->applicationDescription.applicationUri);
+	UA_LocalizedText_deleteMembers(&uaServerConfig->applicationDescription.applicationName);
+
+	uaServerConfig->applicationDescription.applicationUri = UA_String_fromChars(uri);
+	uaServerConfig->applicationDescription.applicationName.locale = UA_String_fromChars("EN");
+	uaServerConfig->applicationDescription.applicationName.text = UA_String_fromChars(hostname);
 
 	// TODO set server capabilities
 	// See http://www.opcfoundation.org/UA/schemas/1.03/ServerCapabilities.csv
 	//config.serverCapabilitiesSize = 1;
 	//UA_String caps = UA_String_fromChars("LDS");
 	//config.serverCapabilities = &caps;
-
-	uaServerNetworkLayer = UA_ServerNetworkLayerTCP(UA_ConnectionConfig_standard, UAServerPort);
-	uaServerConfig.networkLayers = &uaServerNetworkLayer;
-
 }
 
 #ifdef FORTE_COM_OPC_UA_MULTICAST
@@ -194,8 +194,12 @@ void COPC_UA_Handler::removeLdsRegister(const UA_String *discoveryUrl) {
 
 #endif
 
-COPC_UA_Handler::COPC_UA_Handler() : uaServerConfig(), uaServerNetworkLayer(), getNodeForPathMutex(), nodeCallbackHandles(), clients(),
-		registeredWithLds(), nodeLayerReferences() {
+COPC_UA_Handler::COPC_UA_Handler() : uaServerConfig(),	getNodeForPathMutex(), nodeCallbackHandles(), clients(),
+#ifdef FORTE_COM_OPC_UA_MULTICAST
+	registeredWithLds(),
+#endif
+	nodeLayerReferences()
+{
 	configureUAServer(FORTE_COM_OPC_UA_PORT);
 	uaServerRunningFlag = UA_Boolean_new();
 	*uaServerRunningFlag = UA_TRUE;
@@ -220,10 +224,8 @@ COPC_UA_Handler::COPC_UA_Handler() : uaServerConfig(), uaServerNetworkLayer(), g
 COPC_UA_Handler::~COPC_UA_Handler() {
 	stopServerRunning();
 	end();
-	UA_String_deleteMembers(&uaServerConfig.applicationDescription.applicationUri);
-	UA_LocalizedText_deleteMembers(&uaServerConfig.applicationDescription.applicationName);
+	UA_ServerConfig_delete(uaServerConfig);
 	UA_Server_delete(uaServer);
-	uaServerNetworkLayer.deleteMembers(&uaServerNetworkLayer);
 
 	for (CSinglyLinkedList<struct UA_ClientEndpointMap *>::Iterator iter = clients.begin(); iter != clients.end(); ++iter) {
 		UA_Client_disconnect((*iter)->client);
@@ -337,7 +339,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
 	if (clientInitialized) {
 		client = clientInitialized;
 	} else {
-		client = UA_Client_new(UA_ClientConfig_standard);
+		client = UA_Client_new(UA_ClientConfig_default);
 
 		char localEndpoint[28];
 		snprintf(localEndpoint, 28, "opc.tcp://localhost:%d", FORTE_COM_OPC_UA_PORT);
@@ -635,7 +637,7 @@ UA_Client *COPC_UA_Handler::getClientForEndpoint(const char *endpointUrl, bool c
 
 	struct UA_ClientEndpointMap *clientMap = static_cast<UA_ClientEndpointMap *>(forte_malloc(sizeof(struct UA_ClientEndpointMap)));
 
-	UA_ClientConfig config = UA_ClientConfig_standard;
+	UA_ClientConfig config = UA_ClientConfig_default;
 	config.timeout = 8000;
 
 	UA_Client *client = UA_Client_new(config);
@@ -721,9 +723,9 @@ UA_StatusCode COPC_UA_Handler::createMethodNode(const UA_NodeId *parentNode, UA_
 												   *parentNode,
 												   UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
 												   browseName,
-												   methodAttributes, callback, callbackHandle,
+												   methodAttributes, callback,
 												   inputArgumentsSize, inputArguments,
-												   outputArgumentsSize, outputArguments, returnNodeId);
+												   outputArgumentsSize, outputArguments, callbackHandle, returnNodeId);
 	UA_QualifiedName_deleteMembers(&browseName);
 	UA_LocalizedText_deleteMembers(&methodAttributes.description);
 	UA_LocalizedText_deleteMembers(&methodAttributes.displayName);
@@ -758,15 +760,17 @@ UA_StatusCode COPC_UA_Handler::registerNodeCallBack(const UA_NodeId *nodeId, for
 	handle->portIndex = portIndex;
 	// store it in the list so we can delete it to avoid mem leaks
 	nodeCallbackHandles.push_back(handle);
-
-	UA_ValueCallback callback = {static_cast<void *>(handle), NULL, COPC_UA_Handler::getInstance().onWrite};
+	UA_ValueCallback callback = {NULL, COPC_UA_Handler::getInstance().onWrite};
+	UA_Server_setNodeContext(uaServer, *nodeId, handle);
 	return UA_Server_setVariableNode_valueCallback(uaServer, *nodeId, callback);
 }
 
+void COPC_UA_Handler::onWrite(UA_Server *, const UA_NodeId *,
+							  void *, const UA_NodeId *,
+							  void *nodeContext, const UA_NumericRange *,
+							  const UA_DataValue *data) {
 
-void COPC_UA_Handler::onWrite(void *handleRaw, const UA_NodeId, const UA_Variant *data, const UA_NumericRange *) {
-
-	struct UA_NodeCallback_Handle *handle = static_cast<struct UA_NodeCallback_Handle *>(handleRaw);
+	struct UA_NodeCallback_Handle *handle = static_cast<struct UA_NodeCallback_Handle *>(nodeContext);
 
 	CComLayer *layer = handle->comLayer;
 
@@ -778,7 +782,7 @@ void COPC_UA_Handler::onWrite(void *handleRaw, const UA_NodeId, const UA_Variant
 		const UA_Variant *data;
 	} handleRecv;
 
-	handleRecv.data = data;
+	handleRecv.data = data->hasValue ? &data->value : NULL;
 	handleRecv.portIndex = handle->portIndex;
 	handleRecv.convert = handle->convert;
 

@@ -32,11 +32,6 @@ if (FORTE_COM_OPC_UA)
     SET(FORTE_COM_OPC_UA_LIB_DIR "" CACHE PATH "ABSOLUTE path to OPC UA folder with object library FORTE_COM_OPC_UA_LIB")
     SET(FORTE_COM_OPC_UA_CUSTOM_HOSTNAME CACHE STRING "Custom hostname which is used for the OPC UA app name and app uri")
 
-    # Version of open62541 stack
-    set(FORTE_COM_OPC_UA_VERSION "master" CACHE STRING "Version of the open62541 stack")
-    # The string must not contain spaces, valid chars: [a-Z], underscore, point
-    set_property(CACHE FORTE_COM_OPC_UA_VERSION PROPERTY STRINGS 0.2 master)
-
     # OPEN62541 library to be linked to forte
     IF ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
         SET(FORTE_COM_OPC_UA_LIB "libopen62541.so" CACHE STRING "OPC_UA Library file in FORTE_COM_OPC_UA_DIR to be linked to forte (normally with name libopen62541 and a extension according to the type and OS)")
@@ -49,8 +44,6 @@ if (FORTE_COM_OPC_UA)
     forte_add_link_directories(${FORTE_COM_OPC_UA_LIB_DIR})
     forte_add_link_library_beginning(${FORTE_COM_OPC_UA_LIB})
 
-    string(REPLACE "." "_" FORTE_COM_OPC_UA_VERSION_CLEAN ${FORTE_COM_OPC_UA_VERSION})
-    forte_add_definition(-DFORTE_COM_OPC_UA_VERSION_${FORTE_COM_OPC_UA_VERSION_CLEAN})
     forte_add_sourcefile_hcpp(opcua_layer opcua_handler opcua_helper)
     if (NOT EXISTS ${FORTE_COM_OPC_UA_INCLUDE_DIR})
         message(SEND_ERROR "FORTE_COM_OPC_UA_INCLUDE_DIR not set or does not exist")

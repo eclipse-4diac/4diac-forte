@@ -123,7 +123,10 @@ public:
 	 * @param data the new data for the variable
 	 * @param range range indicating the size of the data variant.
 	 */
-	static void onWrite(void *h, const UA_NodeId nodeid, const UA_Variant *data, const UA_NumericRange *range);
+	static void onWrite(UA_Server *server, const UA_NodeId *sessionId,
+						void *sessionContext, const UA_NodeId *nodeId,
+						void *nodeContext, const UA_NumericRange *range,
+						const UA_DataValue *data);
 
 	/**
 	 * Get the node id of the node which is represented by the given path.
@@ -178,7 +181,9 @@ public:
 	void referencedNodesDecrement(const CSinglyLinkedList<UA_NodeId *> *nodes, const COPC_UA_Layer* layer, bool deleteIfLastReference);
 
 	const UA_String getDiscoveryUrl() const {
-		return uaServerNetworkLayer.discoveryUrl;
+		if (uaServerConfig->networkLayersSize == 0)
+			return UA_STRING_NULL;
+		return uaServerConfig->networkLayers[0].discoveryUrl;
 	}
 
 #ifdef FORTE_COM_OPC_UA_MULTICAST
@@ -190,11 +195,10 @@ protected:
 private:
 	// OPC UA Server and configuration
 	UA_Server *uaServer;
-	UA_ServerConfig uaServerConfig;
+	UA_ServerConfig *uaServerConfig;
 
 	// OPC UA Client and configuration
 	volatile UA_Boolean *uaServerRunningFlag;
-	UA_ServerNetworkLayer uaServerNetworkLayer;
 
 	/**
 	 * Sets the uaServerRunningFlag to true. To start the server, you also need to call run.
