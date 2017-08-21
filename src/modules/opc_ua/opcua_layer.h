@@ -172,7 +172,7 @@ private:
 	char *clientMethodPath;
 	CSyncObject *clientMutex;
 
-	forte::com_infra::EComResponse clientInit();
+	forte::com_infra::EComResponse clientConnect();
 
 	forte::com_infra::EComResponse clientCallMethod(const CIEC_ANY *sd, unsigned int sdSize);
 

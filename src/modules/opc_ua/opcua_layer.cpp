@@ -385,20 +385,31 @@ forte::com_infra::EComResponse COPC_UA_Layer::clientCreateConverter(const UA_Typ
 	return e_InitOk;
 }
 
-forte::com_infra::EComResponse COPC_UA_Layer::clientInit() {
-	if (fbNodeId != NULL || fbNodeIdParent != NULL)
+forte::com_infra::EComResponse COPC_UA_Layer::clientConnect() {
+	UA_ClientState state =UA_Client_getState(uaClient);
+
+	if (state == UA_CLIENTSTATE_CONNECTED && fbNodeId != NULL && fbNodeIdParent != NULL)
+		// ready. Nothing to do
 		return e_InitOk;
 
-	// other thready may currently create nodes for the same path, thus mutex
+	// other thread may currently create nodes for the same path, thus mutex
 	CCriticalRegion criticalRegion(*this->clientMutex);
 
-	if (UA_Client_getState(uaClient) != UA_CLIENTSTATE_CONNECTED) {
+	if (state != UA_CLIENTSTATE_CONNECTED) {
+		if (fbNodeId != NULL) {
+			UA_NodeId_delete(fbNodeId);
+			fbNodeId = NULL;
+		}
+		if (fbNodeIdParent != NULL) {
+			UA_NodeId_delete(fbNodeIdParent);
+			fbNodeIdParent = NULL;
+		}
+
 		DEVLOG_INFO("OPC UA: Client connecting to %s\n", clientEndpointUrl);
 		UA_StatusCode retVal = UA_Client_connect(uaClient, clientEndpointUrl);
 
 		if (retVal != UA_STATUSCODE_GOOD) {
 			DEVLOG_ERROR("OPC UA: Could not connect client to endpoint %s. Error: %s\n", clientEndpointUrl, UA_StatusCode_name(retVal));
-			UA_Client_delete(uaClient);
 			return e_InitTerminated;
 		}
 	}
@@ -661,17 +672,29 @@ UA_StatusCode COPC_UA_Layer::onServerMethodCall(UA_Server *,
 
 void *COPC_UA_Layer::handleAsyncCall(const unsigned int /*callId*/, void *payload) {
 
-	if (this->clientInit() != e_InitOk)
-		return NULL;
-
 	struct AsyncCallPayload *inputData = static_cast<struct AsyncCallPayload *>(payload);
+
+	if (this->clientConnect() != e_InitOk) {
+		return NULL;
+	}
 
 	size_t outputSize;
 	UA_Variant *output;
 	clientMutex->lock();
 
-	UA_StatusCode retval = UA_Client_call(this->uaClient, *this->fbNodeIdParent,
-										  *this->fbNodeId, inputData->variantsSize, inputData->variants, &outputSize, &output);
+	UA_StatusCode retval = UA_STATUSCODE_BADCONNECTIONCLOSED;
+	// if the connection to the server is broken in the meantime, try a second time
+	for (int i=0; i<2 && retval == UA_STATUSCODE_BADCONNECTIONCLOSED; i++) {
+		retval = UA_Client_call(this->uaClient, *this->fbNodeIdParent,
+								*this->fbNodeId, inputData->variantsSize,
+								inputData->variants, &outputSize, &output);
+		if (retval == UA_STATUSCODE_BADCONNECTIONCLOSED) {
+			// try to reconnect
+			if (this->clientConnect() != e_InitOk) {
+				return NULL;
+			}
+		}
+	}
 	clientMutex->unlock();
 	if (retval == UA_STATUSCODE_GOOD) {
 		DEVLOG_DEBUG("OPC UA: Method call was successfull, and %lu returned values available.\n",
