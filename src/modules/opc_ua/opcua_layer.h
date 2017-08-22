@@ -45,6 +45,11 @@ private:
 	};
 
 	/**
+	 * set to true if we are connecting to a remote OPC UA server, i.e., we need to use a client
+	 */
+	bool useClient;
+
+	/**
 	 * Delete/free the node ids up to the given maxIndex index.
 	 *
 	 * @param nodeIds list of node ids
@@ -110,7 +115,7 @@ private:
 	 *
 	 * @return e_InitOk on success
 	 */
-	forte::com_infra::EComResponse createClient(const char *paLayerParameter);
+	forte::com_infra::EComResponse createClient(const char* endpoint, const char* nodePath);
 
 	/**
 	 * Response for the processInterrupt() method
@@ -131,6 +136,12 @@ private:
 	 * On SERVER FB this is set to the node id of the method which is created in the information model
 	 */
 	UA_NodeId *methodNodeId;
+
+	/**
+	 * Node class of the node on the remote server identified by the ID field of the FB.
+	 * Can be either Variable or Method
+	 */
+	UA_NodeClass remoteNodeClass;
 
 	/**
 	 * On CLIENT FB a client is created for communication with a remote OPC UA server.
@@ -169,12 +180,12 @@ private:
 											UA_Variant *output);
 
 	char *clientEndpointUrl;
-	char *clientMethodPath;
+	char *clientNodePath;
 	CSyncObject *clientMutex;
 
 	forte::com_infra::EComResponse clientConnect();
 
-	forte::com_infra::EComResponse clientCallMethod(const CIEC_ANY *sd, unsigned int sdSize);
+	forte::com_infra::EComResponse clientCallAsync(const CIEC_ANY *sd, unsigned int sdSize);
 
 	/**
 	 * Mutex to ensure clients can call the server method not in parallel.
@@ -196,6 +207,24 @@ private:
 	virtual void handleAsyncEvent();
 
 	CSinglyLinkedList<UA_NodeId *> referencedNodes;
+
+	/**
+	 * split the ID parameter:
+	 * opc.tcp://10.100.1.0:4840#/Objects/1:Adder
+	 * between the hash sign
+	 *
+	 * @param fullUrl The full url which is splitted. This parameter will be changed due to the use of strtok
+	 * @param endpoint the endpoint part pointing at the beginning within the returned char, or NULL if no endpoint part
+	 * @param nodePath the path part pointing at the beginning within the returned char, or NULL if no path part
+	 * @return duplicated string of fullUrl where endpoint and nodePath point to. Needs to be freed.
+	 */
+	static char* splitUrlAndPath(const char *fullUrl, const char** endpoint, const char **nodePath);
+
+	/**
+	 * Get the node class of the given node from the remote server using the already initialized uaClient member.
+	 *
+	 */
+	UA_NodeClass getNodeClass(const UA_NodeId nodeId);
 
 };
 

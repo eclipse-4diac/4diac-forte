@@ -105,8 +105,19 @@ void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
 	UA_LocalizedText_deleteMembers(&uaServerConfig->applicationDescription.applicationName);
 
 	uaServerConfig->applicationDescription.applicationUri = UA_String_fromChars(uri);
-	uaServerConfig->applicationDescription.applicationName.locale = UA_String_fromChars("EN");
+	uaServerConfig->applicationDescription.applicationName.locale = UA_STRING_NULL;
 	uaServerConfig->applicationDescription.applicationName.text = UA_String_fromChars(hostname);
+
+	for (size_t i=0; i<uaServerConfig->endpoints.count; i++) {
+		UA_String_deleteMembers(&uaServerConfig->endpoints.endpoints[i].endpointDescription.server.applicationUri);
+		UA_LocalizedText_deleteMembers(&uaServerConfig->endpoints.endpoints[i].endpointDescription.server.applicationName);
+
+		UA_String_copy(&uaServerConfig->applicationDescription.applicationUri,
+					   &uaServerConfig->endpoints.endpoints[i].endpointDescription.server.applicationUri);
+
+		UA_LocalizedText_copy(&uaServerConfig->applicationDescription.applicationName,
+							  &uaServerConfig->endpoints.endpoints[i].endpointDescription.server.applicationName);
+	}
 
 	// TODO set server capabilities
 	// See http://www.opcfoundation.org/UA/schemas/1.03/ServerCapabilities.csv
@@ -559,7 +570,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
 
 				UA_ObjectAttributes oAttr;
 				UA_ObjectAttributes_init(&oAttr);
-				char locale[] = "en_US";
+				char locale[] = "";
 				char *nodeName = static_cast<char *>(forte_malloc(sizeof(char) * (targetName->name.length + 1)));
 				memcpy(nodeName, targetName->name.data, targetName->name.length);
 				nodeName[targetName->name.length] = 0;
@@ -675,9 +686,11 @@ UA_StatusCode COPC_UA_Handler::createVariableNode(const UA_NodeId *parentNode, c
 	UA_VariableAttributes var_attr;
 	UA_VariableAttributes_init(&var_attr);
 
-	char locale[] = "en_US";
+	char locale[] = "en-US";
 	char description[] = "Digital port of Function Block";
 
+	var_attr.dataType = varType->typeId;
+	var_attr.valueRank = -1; /* value is a scalar */
 	var_attr.displayName = UA_LOCALIZEDTEXT_ALLOC(locale, varName);
 	var_attr.description = UA_LOCALIZEDTEXT(locale, description);
 	var_attr.userAccessLevel = UA_ACCESSLEVELMASK_READ;
@@ -718,8 +731,8 @@ UA_StatusCode COPC_UA_Handler::createMethodNode(const UA_NodeId *parentNode, UA_
 
 	UA_MethodAttributes methodAttributes;
 	UA_MethodAttributes_init(&methodAttributes);
-	methodAttributes.description = UA_LOCALIZEDTEXT_ALLOC("en_US", "Method which can be called");
-	methodAttributes.displayName = UA_LOCALIZEDTEXT_ALLOC("en_US", methodName);
+	methodAttributes.description = UA_LOCALIZEDTEXT_ALLOC("en-US", "Method which can be called");
+	methodAttributes.displayName = UA_LOCALIZEDTEXT_ALLOC("en-US", methodName);
 	methodAttributes.executable = true;
 	methodAttributes.userExecutable = true;
 	UA_QualifiedName browseName = UA_QUALIFIEDNAME_ALLOC(namespaceIdx, methodName);
