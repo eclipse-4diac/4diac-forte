@@ -198,17 +198,17 @@ private:
 	UA_ServerConfig *uaServerConfig;
 
 	// OPC UA Client and configuration
-	volatile UA_Boolean *uaServerRunningFlag;
+	volatile UA_Boolean uaServerRunningFlag;
 
 	/**
-	 * Sets the uaServerRunningFlag to true. To start the server, you also need to call run.
+	 * Starts the OPC UA server, if it is not already running
 	 */
-	void setServerRunning();
+	void startServer();
 
 	/**
 	 * Sets the uaServerRunningFlag to false which causes the UA Server to stop.
 	 */
-	void stopServerRunning();
+	void stopServer();
 
 	/**
 	 * Creates the configuration for the OPC UA Server.

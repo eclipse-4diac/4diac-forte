@@ -200,29 +200,11 @@ COPC_UA_Handler::COPC_UA_Handler() : uaServerConfig(),	getNodeForPathMutex(), no
 #endif
 	nodeLayerReferences()
 {
-	configureUAServer(FORTE_COM_OPC_UA_PORT);
-	uaServerRunningFlag = UA_Boolean_new();
-	*uaServerRunningFlag = UA_TRUE;
-	uaServer = UA_Server_new(uaServerConfig);
 
-
-#ifdef FORTE_COM_OPC_UA_MULTICAST
-#   ifndef UA_ENABLE_DISCOVERY_MULTICAST
-#       error open62541 needs to be built with UA_ENABLE_DISCOVERY_MULTICAST=ON
-#   else
-	    UA_Server_setServerOnNetworkCallback(uaServer, serverOnNetworkCallback, this);
-#   endif
-#endif
-
-	setServerRunning();        // set server loop flag
-
-	if (!isAlive()) {
-		start();
-	}
 }
 
 COPC_UA_Handler::~COPC_UA_Handler() {
-	stopServerRunning();
+	stopServer();
 	end();
 	UA_ServerConfig_delete(uaServerConfig);
 	UA_Server_delete(uaServer);
@@ -258,7 +240,7 @@ COPC_UA_Handler::~COPC_UA_Handler() {
 
 void COPC_UA_Handler::run() {
 	DEVLOG_INFO("OPC UA: Starting OPC UA Server: opc.tcp://localhost:%d\n", FORTE_COM_OPC_UA_PORT);
-	UA_StatusCode retVal = UA_Server_run(uaServer, uaServerRunningFlag);    // server keeps iterating as long as running is true;
+	UA_StatusCode retVal = UA_Server_run(uaServer, &uaServerRunningFlag);    // server keeps iterating as long as running is true;
 	if (retVal != UA_STATUSCODE_GOOD) {
 		DEVLOG_ERROR("OPC UA: Server exited with error: %s\n", UA_StatusCode_name(retVal));
 	} else {
@@ -267,11 +249,11 @@ void COPC_UA_Handler::run() {
 }
 
 void COPC_UA_Handler::enableHandler(void) {
-	start();
+	startServer();
 }
 
 void COPC_UA_Handler::disableHandler(void) {
-	COPC_UA_Handler::stopServerRunning();
+	COPC_UA_Handler::stopServer();
 	end();
 }
 
@@ -285,12 +267,32 @@ int COPC_UA_Handler::getPriority(void) const {
 	return 0;
 }
 
-void COPC_UA_Handler::setServerRunning() {
-	*uaServerRunningFlag = UA_TRUE;
+void COPC_UA_Handler::startServer() {
+	if (uaServerRunningFlag)
+		return;
+	uaServerRunningFlag = UA_TRUE;
+
+	if (uaServerConfig == NULL) {
+		configureUAServer(FORTE_COM_OPC_UA_PORT);
+		uaServer = UA_Server_new(uaServerConfig);
+	}
+
+
+#ifdef FORTE_COM_OPC_UA_MULTICAST
+#   ifndef UA_ENABLE_DISCOVERY_MULTICAST
+#       error open62541 needs to be built with UA_ENABLE_DISCOVERY_MULTICAST=ON
+#   else
+	UA_Server_setServerOnNetworkCallback(uaServer, serverOnNetworkCallback, this);
+#   endif
+#endif
+
+	if (!isAlive()) {
+		start();
+	}
 }
 
-void COPC_UA_Handler::stopServerRunning() {
-	*uaServerRunningFlag = UA_FALSE;
+void COPC_UA_Handler::stopServer() {
+	uaServerRunningFlag = UA_FALSE;
 }
 
 UA_StatusCode
@@ -339,6 +341,9 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
 	if (clientInitialized) {
 		client = clientInitialized;
 	} else {
+		// ensure local server is running
+		startServer();
+
 		client = UA_Client_new(UA_ClientConfig_default);
 
 		char localEndpoint[28];
