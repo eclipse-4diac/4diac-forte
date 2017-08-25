@@ -21,7 +21,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 DEFINE_FIRMWARE_FB(DEV_MGR, g_nStringIdDEV_MGR)
 
 const CStringDictionary::TStringId DEV_MGR::scm_anDataInputNames[] = {g_nStringIdQI, g_nStringIdID, g_nStringIdRESP};
@@ -50,7 +49,6 @@ const SFBInterfaceSpec DEV_MGR::scm_stFBInterfaceSpec = {
 const char * const DEV_MGR::scm_sMGMResponseTexts[13] = { "RDY", "BAD_PARAMS", "LOCAL_TERMINATION", "SYSTEM_TERMINATION", "NOT_READY", "UNSUPPORTED_CMD", "UNSUPPORTED_TYPE", "NO_SUCH_OBJECT", "INVALID_OBJECT", "INVALID_OPERATION", "INVALID_STATE", "OVERFLOW", "INVALID_DST" };
 
 void DEV_MGR::executeEvent(int pa_nEIID){
-
   if(scm_nEventINITID == pa_nEIID){
 #ifdef FORTE_SUPPORT_BOOT_FILE
     if((true == QI()) && (false == QO())){
@@ -59,16 +57,16 @@ void DEV_MGR::executeEvent(int pa_nEIID){
     }
 #endif
     CCommFB::executeEvent(pa_nEIID);  //initialize the underlying server FB
-  }
-  else if(cg_nExternalEventID == pa_nEIID){
-    //we received a message on the network let the server correctly handle it
-    CCommFB::executeEvent(pa_nEIID);
-    if(true == QI()){
-      //the message was correctly received
-      executeRQST();
-      //send response
-      CCommFB::executeEvent(CCommFB::scm_nSendNotificationEventID);
-    }
+  }else{
+    if(cg_nExternalEventID == pa_nEIID){
+	  //we received a message on the network let the server correctly handle it
+	  if(forte::com_infra::EComResponse::e_ProcessDataOk == CCommFB::receiveData()){ //
+	    //the message was correctly received
+	    executeRQST();
+	    //send response
+	    CCommFB::sendData();
+	  }
+	}
   }
 }
 
@@ -143,7 +141,6 @@ char *DEV_MGR::parseRequest(char *pa_acRequestString, forte::core::SManagementCM
       acCommandStart += scnCommandLength[pa_rstCommand.mCMD];
     }
   }
-
   return acCommandStart;
 }
 
@@ -679,7 +676,6 @@ void DEV_MGR::loadForteBootFile(){
 
 EMGMResponse DEV_MGR::parseAndExecuteMGMCommand(char *pa_acDest, char *pa_acCommand){
   EMGMResponse eResp = e_INVALID_OBJECT;
-
   if(0 != strchr(pa_acCommand, '>')){
     m_stCommand.mDestination = (strlen(pa_acDest) != 0) ? CStringDictionary::getInstance().insert(pa_acDest) : CStringDictionary::scm_nInvalidStringId;
     m_stCommand.mFirstParam.clear();
@@ -735,7 +731,6 @@ EMGMResponse DEV_MGR::parseAndExecuteMGMCommand(char *pa_acDest, char *pa_acComm
       eResp = e_UNSUPPORTED_CMD;
     }
   }
-
   return eResp;
 }
 

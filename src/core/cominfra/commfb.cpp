@@ -79,48 +79,32 @@ EMGMResponse CCommFB::changeFBExecutionState(EMGMCommandType pa_unCommand){
 }
 
 void CCommFB::executeEvent(int pa_nEIID){
-  EComResponse eResp = e_Nothing;
+  EComResponse resp = e_Nothing;
 
   switch (pa_nEIID){
     case scm_nEventINITID:
       if(true == QI()){
-        eResp = openConnection();
+        resp = openConnection();
       }
       else{
         closeConnection();
-        eResp = e_InitTerminated;
+        resp = e_InitTerminated;
       }
       break;
     case scm_nSendNotificationEventID:
-      if(true == QI()){
-        if(m_eCommServiceType != e_Subscriber){
-          if(0 != m_poTopOfComStack){
-            eResp = m_poTopOfComStack->sendData(static_cast<void*>(getSDs()), m_pstInterfaceSpec->m_nNumDIs - 2);
-            if((eResp == e_ProcessDataOk) && (m_eCommServiceType != e_Publisher)){
-              // client and server will not directly send a cnf/ind event
-              eResp = e_Nothing;
-            }
-          }
-          else{
-            eResp = e_ProcessDataNoSocket;
-          }
-        }
-      }
-      else{
-        eResp = e_ProcessDataInhibited; // we are not allowed to send data
-      }
+      resp = sendData();
       break;
     case cg_nExternalEventID:
-      eResp = receiveData();
+      resp = receiveData();
       break;
     default:
       break;
   }
 
-  if(eResp & e_Terminated){
+  if(resp & e_Terminated){
     if(m_eCommServiceType == e_Server){
       //servers will not send information on client termination and should silently start to listen again
-      eResp = e_Nothing;
+      resp = e_Nothing;
     }
     else{
       //subscribers and clients will close the connection and inform the user
@@ -128,17 +112,37 @@ void CCommFB::executeEvent(int pa_nEIID){
     }
   }
 
-  if(e_Nothing != eResp){
-    STATUS() = scm_sResponseTexts[eResp & 0xF];
-    QO() = !(eResp & scg_unComNegative);
+  if(e_Nothing != resp){
+    STATUS() = scm_sResponseTexts[resp & 0xF];
+    QO() = !(resp & scg_unComNegative);
 
-    if(scg_unINIT & eResp){
+    if(scg_unINIT & resp){
       sendOutputEvent(scm_nEventINITOID);
     }
     else{
       sendOutputEvent(scm_nReceiveNotificationEventID);
     }
   }
+}
+
+EComResponse CCommFB::sendData(){
+  EComResponse resp = e_Nothing;
+  if(true == QI()){
+    if(m_eCommServiceType != e_Subscriber){
+      if(0 != m_poTopOfComStack){
+	    resp = m_poTopOfComStack->sendData(static_cast<void*>(getSDs()), m_pstInterfaceSpec->m_nNumDIs - 2);
+	    if((resp == e_ProcessDataOk) && (m_eCommServiceType != e_Publisher)){
+	      // client and server will not directly send a cnf/ind event
+	      resp = e_Nothing;
+	    }
+      }else{
+	    resp = e_ProcessDataNoSocket;
+      }
+    }
+  }else{
+    resp = e_ProcessDataInhibited; // we are not allowed to send data
+  }
+  return resp;
 }
 
 bool CCommFB::configureFB(const char *pa_acConfigString){

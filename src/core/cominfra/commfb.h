@@ -130,6 +130,8 @@ namespace forte {
           */
          static char *buildIDString(const char *paPrefix, const char *paIDRoot, const char *paSuffix);
 
+         EComResponse receiveData();
+         EComResponse sendData();
 
       private:
         static const CStringDictionary::TStringId scm_aunRequesterEventInputNameIds[];
@@ -161,8 +163,6 @@ namespace forte {
          * delete bottom layers after closing its connection.
          */
         void closeConnection();
-
-        EComResponse receiveData();
 
         /*!\brief Generate the default layer ID
          *
