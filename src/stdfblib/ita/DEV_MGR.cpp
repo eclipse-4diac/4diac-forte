@@ -60,7 +60,7 @@ void DEV_MGR::executeEvent(int pa_nEIID){
   }else{
     if(cg_nExternalEventID == pa_nEIID){
 	  //we received a message on the network let the server correctly handle it
-	  if(forte::com_infra::EComResponse::e_ProcessDataOk == CCommFB::receiveData()){ //
+	  if(forte::com_infra::e_ProcessDataOk == CCommFB::receiveData()){ //
 	    //the message was correctly received
 	    executeRQST();
 	    //send response
