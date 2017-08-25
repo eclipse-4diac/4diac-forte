@@ -91,6 +91,8 @@ bool CLuaAdapterTypeEntry::initInterfaceSpec(SFBInterfaceSpec& interfaceSpec, CL
   size_t numDODataTypeNames = SIZE_MAX;
   interfaceSpec.m_aunDODataTypeNames = luaEngine->getCustomArrayField<CStringDictionary::TStringId, luatype::getTypeNameId>(index, "DODataTypeNames",
       numDODataTypeNames);
+  interfaceSpec.m_nNumAdapters = 0;
+  interfaceSpec.m_pstAdapterInstanceDefinition = 0;
   //checks
   if (interfaceSpec.m_aunEINames == NULL || interfaceSpec.m_anEIWith == NULL || interfaceSpec.m_anEIWithIndexes == NULL || interfaceSpec.m_aunEONames == NULL
       || interfaceSpec.m_anEOWith == NULL || interfaceSpec.m_anEOWithIndexes == NULL || interfaceSpec.m_aunDINames == NULL
@@ -129,6 +131,8 @@ bool CLuaAdapterTypeEntry::initPlugInterfaceSpec(SFBInterfaceSpec& interfaceSpec
   mPlugInterfaceSpec.m_nNumDOs = interfaceSpec.m_nNumDIs;
   mPlugInterfaceSpec.m_aunDONames = interfaceSpec.m_aunDINames;
   mPlugInterfaceSpec.m_aunDODataTypeNames = interfaceSpec.m_aunDIDataTypeNames;
+  mPlugInterfaceSpec.m_nNumAdapters = 0;
+  mPlugInterfaceSpec.m_pstAdapterInstanceDefinition = 0;
   return true;
 }
 
