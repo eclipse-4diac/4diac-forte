@@ -35,10 +35,6 @@ struct UA_ClientEndpointMap {
 	CSyncObject *clientMutex;
 };
 
-#if defined(_MSC_VER) && _MSC_VER < 1900
-#define snprintf _snprintf
-#endif
-
 void UA_Log_Forte(UA_LogLevel level, UA_LogCategory category, const char *msg, va_list args) {
 	char tmpStr[400];
 	forte_snprintf(tmpStr, 400, "[OPC UA] %s/%s\t", LogsLevelNames[level], LogsCategoryNames[category]);
@@ -71,7 +67,7 @@ void UA_Log_Forte(UA_LogLevel level, UA_LogCategory category, const char *msg, v
 void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
 
 	char name[255];
-	snprintf(name, 255, "forte_%d", FORTE_COM_OPC_UA_PORT);
+	forte_snprintf(name, 255, "forte_%d", FORTE_COM_OPC_UA_PORT);
 
 	uaServerConfig = UA_ServerConfig_new_minimal(UAServerPort, NULL);
 	uaServerConfig->logger = UA_Log_Forte;
@@ -85,7 +81,7 @@ void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
 
 	char hostname[256];
 #ifdef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
-	snprintf(hostname, 255, "%s-%s", FORTE_COM_OPC_UA_CUSTOM_HOSTNAME, name);
+	forte_snprintf(hostname, 255, "%s-%s", FORTE_COM_OPC_UA_CUSTOM_HOSTNAME, name);
 #else
 	if(gethostname(hostname, 255) == 0) {
 		size_t offset = strlen(hostname);
@@ -93,12 +89,12 @@ void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
 		if (offset + nameLen +1 > 255) {
 			offset = MAX(255-nameLen-1, (size_t)0);
 		}
-		snprintf(hostname+offset, 255-offset, "-%s", name);
+		forte_snprintf(hostname+offset, 255-offset, "-%s", name);
 	}
 #endif
 
 	char uri[255];
-	snprintf(uri, 255, "org.eclipse.4diac.%s", hostname);
+	forte_snprintf(uri, 255, "org.eclipse.4diac.%s", hostname);
 
 	// delete pre-initialized values
 	UA_String_deleteMembers(&uaServerConfig->applicationDescription.applicationUri);
@@ -358,7 +354,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
 		client = UA_Client_new(UA_ClientConfig_default);
 
 		char localEndpoint[28];
-		snprintf(localEndpoint, 28, "opc.tcp://localhost:%d", FORTE_COM_OPC_UA_PORT);
+		forte_snprintf(localEndpoint, 28, "opc.tcp://localhost:%d", FORTE_COM_OPC_UA_PORT);
 
 		{
 			UA_StatusCode retVal;
