@@ -18,8 +18,9 @@
 #include "criticalregion.h"
 #include <forte_printer.h>
 
+
 #ifndef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
-#include <unistd.h>
+#include <sockhand.h>
 #endif
 
 using namespace forte::com_infra;
