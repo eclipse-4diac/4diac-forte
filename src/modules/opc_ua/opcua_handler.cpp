@@ -129,7 +129,7 @@ void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
 #ifdef FORTE_COM_OPC_UA_MULTICAST
 
 static void serverOnNetworkCallback(const UA_ServerOnNetwork *serverOnNetwork, UA_Boolean isServerAnnounce, UA_Boolean isTxtReceived, void* data) {
-	COPC_UA_Handler* handler = (COPC_UA_Handler*)data;
+	COPC_UA_Handler* handler = static_cast<COPC_UA_Handler*>(data);
 
 	const UA_String ownDiscoverUrl = handler->getDiscoveryUrl();
 

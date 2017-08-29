@@ -104,9 +104,8 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openTCPClientCon
 CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::acceptTCPConnection(TSocketDescriptor pa_nListeningSockD){
   struct sockaddr client_addr;
   int sin_size = sizeof(struct sockaddr);
-  TSocketDescriptor nRetVal = INVALID_SOCKET;
+  TSocketDescriptor nRetVal = accept(pa_nListeningSockD, &client_addr, &sin_size);
 
-  nRetVal = accept(pa_nListeningSockD, &client_addr, &sin_size);
   if(INVALID_SOCKET == nRetVal){
     int nLastError = WSAGetLastError();
     LPSTR pacErrorMessage = getErrorMessage(nLastError);
@@ -155,9 +154,7 @@ int CWin32SocketInterface::receiveDataFromTCP(TSocketDescriptor pa_nSockD, char*
 
 CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPSendPort(char *pa_acIPAddr, unsigned short pa_nPort, TUDPDestAddr *m_ptDestAddr){
   DEVLOG_INFO("CWin32SocketInterface: Opening UDP sending connection at: %s:%d\n", pa_acIPAddr, pa_nPort);
-  TSocketDescriptor nRetVal = INVALID_SOCKET;
-
-  nRetVal = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  TSocketDescriptor nRetVal = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
   if(-1 != nRetVal){
     m_ptDestAddr->sin_family = AF_INET;

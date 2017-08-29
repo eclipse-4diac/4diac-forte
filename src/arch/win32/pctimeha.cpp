@@ -92,7 +92,7 @@ void CPCTimerHandler::run(){
 
   while(isAlive()){
     stWaittime.QuadPart *= 1000; // calculate in ms, not sec
-    stReq = (stWaittime.QuadPart / stFrequenzy.QuadPart); // calculate elapsed time in ms
+    stReq = static_cast<DWORD>(stWaittime.QuadPart / stFrequenzy.QuadPart); // calculate elapsed time in ms
 
     // dont give up the thread if we still have to do some ticks(some os have 10ms minimum threadtime)
     if(stReq > 0){

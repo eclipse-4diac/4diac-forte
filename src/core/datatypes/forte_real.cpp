@@ -36,9 +36,7 @@ int CIEC_REAL::fromString(const char *pa_pacValue){
 	}
 
   
-  #if defined(WIN32) || defined(__ECOS)
-	realval = strtod(pacRunner, &pcEnd);
-  #elif defined(VXWORKS)
+  #if defined(WIN32) || defined(__ECOS) || defined(VXWORKS)
 	realval = static_cast<TForteFloat>(strtod(pacRunner, &pcEnd));
   #else
 	realval = strtof(pacRunner, &pcEnd);
