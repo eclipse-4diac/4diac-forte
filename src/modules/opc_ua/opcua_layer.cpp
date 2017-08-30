@@ -71,24 +71,20 @@ char* COPC_UA_Layer::splitUrlAndPath(const char *fullUrl, const char** endpoint,
 	if (nodePath != NULL) {
 		*nodePath = strtok(NULL, "#");
 	}
-	if (*nodePath == NULL) {
+	if (nodePath != NULL && *nodePath == NULL) {
 		// # not found, check if it is path or endpoint
 		if (idStr[0] == '/') {
 			// full url is only node path
 			if (endpoint) {
 				*endpoint = NULL;
 			}
-			if (nodePath) {
-				*nodePath = idStr;
-			}
+			*nodePath = idStr;
 		} else {
 			// full url is only endpoint
 			if (endpoint) {
 				*endpoint = idStr;
 			}
-			if (nodePath) {
-				*nodePath = NULL;
-			}
+			*nodePath = NULL;
 		}
 	}
 

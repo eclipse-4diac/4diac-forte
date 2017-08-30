@@ -82,6 +82,7 @@ void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
 
 	char hostname[256];
 #ifdef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
+	// cppcheck-suppress ConfigurationNotChecked
 	forte_snprintf(hostname, 255, "%s-%s", FORTE_COM_OPC_UA_CUSTOM_HOSTNAME, name);
 #else
 	if(gethostname(hostname, 255) == 0) {
