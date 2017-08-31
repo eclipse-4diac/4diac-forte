@@ -1,2 +1,8 @@
 /Debug/
 /bin/
+
+# CMake intermediate files
+
+CMakeCache.txt
+CMakeFiles/
+
