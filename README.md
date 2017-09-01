@@ -14,3 +14,9 @@ files:
 
     rm -Rf CMakeCache.txt CMakeFiles/
 
+## Building a local RPM
+
+For building local RPMs you can use (tito)[https://github.com/dgoodwin/tito]
+
+    tito build --test --rpm
+
