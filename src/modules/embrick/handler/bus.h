@@ -75,6 +75,24 @@ public:
     unsigned long BusLoopSpeed; //!< Sets the maximal SPI speed for the brickBUS during the runtime updates of the slaves. The default value is 700000 Hz.
   };
 
+  enum HandleType {
+    Bit, Analog, Analog10
+  };
+
+  struct HandleDescriptor: IO::Device::MultiController::HandleDescriptor {
+    HandleType type;
+    uint8_t offset;
+    uint8_t position;
+
+    HandleDescriptor(CIEC_WSTRING const &id, IO::Mapper::Direction direction,
+        int slaveIndex, HandleType type, uint8_t offset,
+        uint8_t position) :
+        IO::Device::MultiController::HandleDescriptor(id, direction,
+            slaveIndex), type(type), offset(offset), position(position) {
+
+    }
+  };
+
   void setConfig(struct IO::Device::Controller::Config* config);
 
   Slave* getSlave(int index);
@@ -83,8 +101,11 @@ public:
   void addSlaveHandle(int index, Handle* handle);
   void dropSlaveHandles(int index);
 protected:
-  bool init();
+  const char* init();
   void deInit();
+
+  Handle* initHandle(
+      IO::Device::MultiController::HandleDescriptor *handleDescriptor);
 
   void prepareLoop();
   virtual void runLoop();
@@ -144,7 +165,7 @@ private:
   uint64_t micros();
   unsigned long millis();
   time_t initTime;
-  void microsleep(unsigned long microseconds);
+  void microsleep(uint64_t microseconds);
   void addTime(struct timespec& t, unsigned long microseconds);
   bool cmpTime(struct timespec& t1, struct timespec& t2);
 

@@ -9,8 +9,8 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_STDFBLIB_IO_CONFIGFB_BASE_H_
-#define SRC_STDFBLIB_IO_CONFIGFB_BASE_H_
+#ifndef SRC_CORE_IO_CONFIGFB_BASE_H_
+#define SRC_CORE_IO_CONFIGFB_BASE_H_
 
 #include <esfb.h>
 
@@ -28,4 +28,4 @@ public:
 } /* namespace ConfigurationFB */
 } /* namespace IO */
 
-#endif /* SRC_STDFBLIB_IO_CONFIGFB_BASE_H_ */
+#endif /* SRC_CORE_IO_CONFIGFB_BASE_H_ */

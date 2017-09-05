@@ -9,8 +9,8 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_STDFBLIB_IO_DEVICE_IO_CONTROLLER_POLL_H_
-#define SRC_STDFBLIB_IO_DEVICE_IO_CONTROLLER_POLL_H_
+#ifndef SRC_CORE_IO_DEVICE_IO_CONTROLLER_POLL_H_
+#define SRC_CORE_IO_DEVICE_IO_CONTROLLER_POLL_H_
 
 #include "io_controller.h"
 #include <conditionSync.h>
@@ -27,11 +27,7 @@ namespace Device {
 class PollController: public Controller {
 public:
 
-  /*! @brief Forces an execution of the #poll routine
-   *
-   * Should be called by the corresponding device #IO::Handle implementation after setting/changing an output handle.
-   */
-  void forcePoll();
+  virtual void handleChangeEvent(Handle *handle);
 
 protected:
   /*! @brief Constructor
@@ -48,6 +44,12 @@ protected:
    * @attention The method should perform a single update routine and not a blocking loop.
    */
   virtual void poll() = 0;
+
+  /*! @brief Forces an execution of the #poll routine
+   *
+   * Should be called by the corresponding device #IO::Handle implementation after setting/changing an output handle.
+   */
+  void forcePoll();
 
   /*! @brief Sets the polling interval in Hz (poll routines per second)
    *
@@ -71,4 +73,4 @@ private:
 } /* namespace Device */
 } /* namespace IO */
 
-#endif /* SRC_STDFBLIB_IO_DEVICE_IO_CONTROLLER_POLL_H_ */
+#endif /* SRC_CORE_IO_DEVICE_IO_CONTROLLER_POLL_H_ */

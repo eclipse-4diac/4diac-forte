@@ -9,8 +9,8 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_STDFBLIB_IO_CONFIGFB_MULTI_SLAVE_H_
-#define SRC_STDFBLIB_IO_CONFIGFB_MULTI_SLAVE_H_
+#ifndef SRC_CORE_IO_CONFIGFB_MULTI_SLAVE_H_
+#define SRC_CORE_IO_CONFIGFB_MULTI_SLAVE_H_
 
 #include "../io_base.h"
 #include "io_adapter.h"
@@ -78,12 +78,17 @@ protected:
 
   bool initialized;
 
-  virtual const char* const init() = 0;
-  virtual void deInit() = 0;
+  virtual const char* init() {
+    return 0;
+  }
+
+  virtual void deInit() {
+
+  }
 
   virtual void initHandles() = 0;
 
-  void addHandle(CIEC_WSTRING const &id, Handle* handle);
+  void initHandle(Device::MultiController::HandleDescriptor *handleDescriptor);
 
   static const char* const scmOK;
   static const char* const scmMasterNotFound;
@@ -93,7 +98,7 @@ protected:
   bool* scm_slaveConfigurationIO_isDefault;
 
 private:
-  const char* const handleInitEvent();
+  const char* handleInitEvent();
 
   static const char* const scmStopped;
   static const char* const scmNotFound;
@@ -104,4 +109,4 @@ private:
 } /* namespace ConfigurationFB */
 } /* namespace IO */
 
-#endif /* SRC_STDFBLIB_IO_CONFIGFB_MULTI_SLAVE_H_ */
+#endif /* SRC_CORE_IO_CONFIGFB_MULTI_SLAVE_H_ */

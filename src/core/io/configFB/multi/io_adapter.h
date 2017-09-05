@@ -9,8 +9,8 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_STDFBLIB_IO_CONFIGFB_MULTI_ADAPTER_H_
-#define SRC_STDFBLIB_IO_CONFIGFB_MULTI_ADAPTER_H_
+#ifndef SRC_CORE_IO_CONFIGFB_MULTI_ADAPTER_H_
+#define SRC_CORE_IO_CONFIGFB_MULTI_ADAPTER_H_
 
 #include <adapter.h>
 
@@ -73,4 +73,4 @@ public:
 } /* namespace ConfigurationFB */
 } /* namespace IO */
 
-#endif /* SRC_STDFBLIB_IO_CONFIGFB_MULTI_ADAPTER_H_ */
+#endif /* SRC_CORE_IO_CONFIGFB_MULTI_ADAPTER_H_ */

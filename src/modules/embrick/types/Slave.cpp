@@ -12,10 +12,6 @@
 #include "Slave.h"
 #include <io/mapper/io_mapper.h>
 
-#include <slave/handles/bit.h>
-#include <slave/handles/analog.h>
-#include <slave/handles/analog10.h>
-
 namespace EmBrick {
 namespace FunctionBlocks {
 
@@ -40,7 +36,7 @@ Slave::~Slave() {
   deInit();
 }
 
-const char* const Slave::init() {
+const char* Slave::init() {
   slaveMutex.lock();
 
   Handlers::Bus &bus = *static_cast<Handlers::Bus*>(&getController());
@@ -66,33 +62,6 @@ void Slave::deInit() {
   }
 
   slaveMutex.unlock();
-}
-
-void Slave::addBitHandle(Mapper::Direction direction, CIEC_WSTRING id,
-    uint8_t offset, uint8_t pos) {
-  if (id == "")
-    return;
-
-  addHandle(id,
-      new BitSlaveHandle(&getController(), direction, offset, pos, slave));
-}
-
-void Slave::addAnalogHandle(Mapper::Direction direction, CIEC_WSTRING id,
-    uint8_t offset) {
-  if (id == "")
-    return;
-
-  addHandle(id,
-      new AnalogSlaveHandle(&getController(), direction, offset, slave));
-}
-
-void Slave::addAnalog10Handle(Mapper::Direction direction, CIEC_WSTRING id,
-    uint8_t offset) {
-  if (id == "")
-    return;
-
-  addHandle(id,
-      new AnalogSlaveHandle(&getController(), direction, offset, slave));
 }
 
 void Slave::onSlaveStatus(Handlers::SlaveStatus status, Handlers::SlaveStatus) {

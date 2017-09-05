@@ -15,6 +15,10 @@
 #include <slave/slave.h>
 #include <slave/packages.h>
 
+#include <slave/handles/bit.h>
+#include <slave/handles/analog.h>
+#include <slave/handles/analog10.h>
+
 namespace EmBrick {
 namespace Handlers {
 
@@ -50,7 +54,7 @@ void Bus::setConfig(struct IO::Device::Controller::Config* config) {
   this->config = *static_cast<Config*>(config);
 }
 
-bool Bus::init() {
+const char* Bus::init() {
   // Start handlers
   spi = new SPI(config.BusInterface);
   slaveSelect = new Pin(config.BusSelectPin);
@@ -58,7 +62,7 @@ bool Bus::init() {
 
   // Check handlers
   if (checkHandlerError()) {
-    return false;
+    return error;
   }
 
   // Set SPI sped for initialization
@@ -101,14 +105,13 @@ bool Bus::init() {
   slaveCount = slaveCounter - 1;
 
   if (slaveCount == 0) {
-    error = scmNoSlavesFound;
-    return false;
+    return scmNoSlavesFound;
   }
 
   // Increase the speed of the bus for data transfers
   spi->setSpeed(config.BusLoopSpeed);
 
-  return true;
+  return 0;
 }
 
 void Bus::deInit() {
@@ -121,6 +124,27 @@ void Bus::deInit() {
 
   delete spi;
   delete slaveSelect;
+}
+
+Handle* Bus::initHandle(
+    IO::Device::MultiController::HandleDescriptor *handleDescriptor) {
+  HandleDescriptor desc = *static_cast<HandleDescriptor*>(handleDescriptor);
+
+  Slave *slave = getSlave(desc.slaveIndex);
+  if (slave == 0)
+    return 0;
+
+  switch (desc.type) {
+  case Bit:
+    return new BitSlaveHandle(this, desc.direction, desc.offset, desc.position,
+        slave);
+  case Analog:
+    return new AnalogSlaveHandle(this, desc.direction, desc.offset, slave);
+  case Analog10:
+    return new Analog10SlaveHandle(this, desc.direction, desc.offset, slave);
+  }
+
+  return 0;
 }
 
 void Bus::prepareLoop() {
@@ -348,7 +372,7 @@ bool Bus::transfer(unsigned int target, Command cmd,
     // Wait required microseconds between messages
     microTime = micros();
     if (lastTransfer + SyncGapDuration > microTime)
-      microsleep(lastTransfer + SyncGapDuration - microTime);
+      microsleep(lastTransfer + (uint64_t) SyncGapDuration - microTime);
 
 //    // Send header
 //    ok = spi->transfer(sendBuffer, recvBuffer, sizeof(Packages::Header));
@@ -434,10 +458,10 @@ unsigned long Bus::millis() {
   return round(ts.tv_nsec / 1.0e6) + (ts.tv_sec - initTime) * 1000;
 }
 
-void Bus::microsleep(unsigned long microseconds) {
+void Bus::microsleep(uint64_t microseconds) {
   struct timespec ts;
-  ts.tv_sec = microseconds / (unsigned long) 1E6;
-  ts.tv_nsec = microseconds * 1E3 - ts.tv_sec * 1E9;
+  ts.tv_sec = (long) (microseconds / (uint64_t) 1E6);
+  ts.tv_nsec = (long) microseconds * (long) 1E3 - ts.tv_sec * (long) 1E9;
   nanosleep(&ts, 0);
 }
 

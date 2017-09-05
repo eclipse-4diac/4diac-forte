@@ -9,8 +9,8 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_STDFBLIB_IO_CONFIGFB_CONTROLLER_H_
-#define SRC_STDFBLIB_IO_CONFIGFB_CONTROLLER_H_
+#ifndef SRC_CORE_IO_CONFIGFB_CONTROLLER_H_
+#define SRC_CORE_IO_CONFIGFB_CONTROLLER_H_
 
 #include <io/device/io_controller.h>
 #include "io_base.h"
@@ -111,6 +111,16 @@ protected:
    */
   bool init(int delay = 0);
 
+  /*! @brief Initializes an IO handle
+   *
+   * This method is used to forward handle descriptors to the device controller.
+   * The #IO::Device::Controller::addHandle method is called and in case the #Device::Controller::HandleDescriptor::id
+   * is not empty, the handle is initialized with the #IO::Device::Controller::initHandle method.
+   *
+   * @param handleDescriptor Descriptor of the handle
+   */
+  void initHandle(Device::Controller::HandleDescriptor *handleDescriptor);
+
   /*! @brief Deinitializes the configuration fb
    *
    * It is usually called by the INIT- event and after an error.
@@ -161,4 +171,4 @@ private:
 } /* namespace ConfigurationFB */
 } /* namespace IO */
 
-#endif /* SRC_STDFBLIB_IO_CONFIGFB_CONTROLLER_H_ */
+#endif /* SRC_CORE_IO_CONFIGFB_CONTROLLER_H_ */

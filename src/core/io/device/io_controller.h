@@ -9,8 +9,8 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_STDFBLIB_IO_DEVICE_CONTROLLER_H_
-#define SRC_STDFBLIB_IO_DEVICE_CONTROLLER_H_
+#ifndef SRC_CORE_IO_DEVICE_CONTROLLER_H_
+#define SRC_CORE_IO_DEVICE_CONTROLLER_H_
 
 #include <extevhan.h>
 #include <forte_sync.h>
@@ -52,6 +52,22 @@ public:
 
   };
 
+  /*! @brief Abstract descriptor of device handles.
+   *
+   * Used to exchange information about handles between the device controller and the corresponding configuration fb.
+   * The device implementation should extend the struct with properties, which uniquely identify the handle.
+   * The #initHandle method then creates an #Handle instance based on the handle descriptor.
+   */
+  struct HandleDescriptor {
+    CIEC_WSTRING const &id;
+    IO::Mapper::Direction direction;
+
+    HandleDescriptor(CIEC_WSTRING const &id, IO::Mapper::Direction direction) :
+        id(id), direction(direction) {
+
+    }
+  };
+
   enum NotificationType {
     UnknownNotificationType,
     //! Notifies the configuration fb about a successful operation e.g. a successful startup.
@@ -71,18 +87,9 @@ public:
    */
   virtual void setConfig(Config* config) = 0;
 
-  /*! @brief Adds an IO handle to the controller
-   *
-   * This method should be called by the corresponding configuration function block during the initialization.
-   * The handle is automatically added to the correct list (#inputHandles and #outputHandles).
-   * The handle lists should be accessed by the controller to read and write IOs.
-   *
-   * @param id Id which identifies the handle. It is used to map the handle to a corresponding observer (Process Interface). The id given is usually provided through a data input of a configuration function block.
-   * @param handle Instance of the handle
-   */
-  void addHandle(CIEC_WSTRING const &id, Handle* handle);
-
   void fireIndicationEvent(Observer *observer);
+
+  virtual void handleChangeEvent(Handle *handle);
 
 protected:
   Controller();
@@ -92,11 +99,11 @@ protected:
    * The method should initialize and startup the controller.
    * All required hardware libraries should be started and checked for errors.
    * If the system requires an initialization sequence which is executed once at startup, place it here.
-   * In case of an error, set the #error property to provide debugging information.
+   * In case of an error, return an error description.
    *
-   * @return true if the initialization was successful, false if not.
+   * @return 0/NULL if the initialization was successful. Otherwise return an error description.
    */
-  virtual bool init() = 0;
+  virtual const char* init() = 0;
 
   /*! @brief Contains the blocking run sequence.
    *
@@ -150,6 +157,25 @@ protected:
    */
   THandleList outputHandles;
 
+  /*! @brief Adds an IO handle to the controller
+   *
+   * This method is called by the corresponding configuration function block during the initialization.
+   * The handle is automatically added to the correct list (#inputHandles and #outputHandles).
+   * The handle lists should be accessed by the controller to read and write IOs.
+   *
+   * @param handleDescriptor Descriptor of the handle
+   */
+  virtual void addHandle(HandleDescriptor *handleDescriptor);
+
+  /*! @brief Initializer for all IO handles.
+   *
+   * The method is called when a configuration fb adds an handle via the #addHandle method.
+   * It should return an handle instance based on the descriptor information.
+   *
+   * @param handleDescriptor Descriptor of the handle
+   */
+  virtual Handle* initHandle(HandleDescriptor *handleDescriptor) = 0;
+
   /*! @brief Iterates over all input handles and fires an indication event in case of a change.
    *
    * The method iterates over the #inputHandles list.
@@ -197,4 +223,4 @@ private:
 } /* namespace Device */
 } /* namespace IO */
 
-#endif /* SRC_STDFBLIB_IO_DEVICE_CONTROLLER_H_ */
+#endif /* SRC_CORE_IO_DEVICE_CONTROLLER_H_ */

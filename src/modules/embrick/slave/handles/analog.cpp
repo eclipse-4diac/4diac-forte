@@ -16,8 +16,8 @@ namespace Handles {
 
 AnalogSlaveHandle::AnalogSlaveHandle(Device::Controller *controller,
     Mapper::Direction direction, uint8_t offset, Handlers::Slave *slave) :
-    SlaveHandle(controller, direction, offset, slave) {
-  type = CIEC_ANY::e_DWORD;
+    SlaveHandle(controller, direction, CIEC_ANY::e_DWORD, offset, slave) {
+
 }
 
 void AnalogSlaveHandle::set(const CIEC_ANY &value) {

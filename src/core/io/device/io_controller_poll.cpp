@@ -19,12 +19,16 @@ PollController::PollController(float PollInterval) :
 
 }
 
+void PollController::handleChangeEvent(Handle*) {
+  forcePoll();
+}
+
 void PollController::runLoop() {
   clock_gettime(CLOCK_MONOTONIC, &nextLoop);
 
   while (isAlive()) {
     if (!forcedLoop)
-      loopSync.wait(nextLoop, 1000000 / PollInterval);
+      loopSync.wait(nextLoop, (unsigned long) (1000000.0 / PollInterval));
     else
       forcedLoop = false;
 
@@ -42,7 +46,7 @@ void PollController::runLoop() {
 void PollController::setPollInterval(float PollInterval) {
   if (PollInterval <= 0) {
     DEVLOG_WARNING(
-        "[IO:PollController] Configured PolleInterval is set to an invalid value '%d'. Set to 25.\n",
+        "[IO:PollController] Configured PollInterval is set to an invalid value '%d'. Set to 25.\n",
         PollInterval);
     PollInterval = 25;
   }

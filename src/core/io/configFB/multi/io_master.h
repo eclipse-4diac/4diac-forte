@@ -9,10 +9,11 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_STDFBLIB_IO_CONFIGFB_MULTI_MASTER_H_
-#define SRC_STDFBLIB_IO_CONFIGFB_MULTI_MASTER_H_
+#ifndef SRC_CORE_IO_CONFIGFB_MULTI_MASTER_H_
+#define SRC_CORE_IO_CONFIGFB_MULTI_MASTER_H_
 
 #include "../io_controller.h"
+#include "../../device/io_controller_multi.h"
 #include "io_adapter.h"
 #include <fortelist.h>
 
@@ -31,6 +32,8 @@ public:
       TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
 
   static Master* getMasterById(TForteUInt16 id);
+
+  using Controller::initHandle;
 
 protected:
   Adapter& BusAdapterOut() {
@@ -58,4 +61,4 @@ private:
 } /* namespace ConfigurationFB */
 } /* namespace IO */
 
-#endif /* SRC_STDFBLIB_IO_CONFIGFB_MULTI_MASTER_H_ */
+#endif /* SRC_CORE_IO_CONFIGFB_MULTI_MASTER_H_ */

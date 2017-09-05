@@ -17,9 +17,9 @@ namespace Handles {
 BitSlaveHandle::BitSlaveHandle(Device::Controller *controller,
     Mapper::Direction direction, uint8_t offset,
     uint8_t position, Handlers::Slave *slave) :
-    SlaveHandle(controller, direction, offset, slave), mask(
+    SlaveHandle(controller, direction, type = CIEC_ANY::e_BOOL, offset, slave), mask(
         (uint8_t) (1 << position)) {
-  type = CIEC_ANY::e_BOOL;
+
 }
 
 void BitSlaveHandle::set(const CIEC_ANY &state) {

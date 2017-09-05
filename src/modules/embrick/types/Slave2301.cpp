@@ -14,6 +14,8 @@
 #include "Slave2301_gen.cpp"
 #endif
 
+#include "../handler/bus.h"
+
 namespace EmBrick {
 namespace FunctionBlocks {
 
@@ -59,13 +61,18 @@ const TForteUInt8 Slave2301::scm_slaveConfigurationIO[] = { 7 };
 const TForteUInt8 Slave2301::scm_slaveConfigurationIO_num = 1;
 
 void Slave2301::initHandles() {
-  // 6 Relays
-  addBitHandle(Mapper::Out, Relay_1(), 0, 0);
-  addBitHandle(Mapper::Out, Relay_2(), 0, 1);
-  addBitHandle(Mapper::Out, Relay_3(), 0, 2);
-  addBitHandle(Mapper::Out, Relay_4(), 0, 3);
-  addBitHandle(Mapper::Out, Relay_5(), 0, 4);
-  addBitHandle(Mapper::Out, Relay_6(), 0, 5);
+  // Initialize handles
+  int iCount = 0;
+  int oCount = 6;
+  int iOffset = 1;
+  int oOffset = iOffset + iCount;
+
+  for (int i = 0; i < oCount; i++) {
+    Handlers::Bus::HandleDescriptor desc = Handlers::Bus::HandleDescriptor(
+        *static_cast<CIEC_WSTRING*>(getDI(oOffset + i)), IO::Mapper::Out, index,
+        Handlers::Bus::Bit, (uint8_t) (i / 8), (uint8_t) (i % 8));
+    initHandle(&desc);
+  }
 }
 
 } /* namespace FunctionsBlocks */

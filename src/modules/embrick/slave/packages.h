@@ -40,8 +40,8 @@ struct SlaveInit {
 
     pkg.deviceId = ntohs(pkg.deviceId);
     // Switch bytes of deviceId as it is transmitted with a different endianess
-    pkg.deviceId = ((pkg.deviceId & 0xFF00) >> 8)
-        | ((pkg.deviceId & 0xFF) << 8);
+    pkg.deviceId = (uint16_t) (((pkg.deviceId & 0xFF00) >> 8)
+        | ((pkg.deviceId & 0xFF) << 8));
 
     pkg.producerId = ntohs(pkg.producerId);
 

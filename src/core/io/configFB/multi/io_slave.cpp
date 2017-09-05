@@ -55,7 +55,7 @@ void Slave::executeEvent(int pa_nEIID) {
       if (BusAdapterOut().getPeer() != 0) {
         // Initialize next slave
         BusAdapterOut().QI() = BusAdapterIn().QI();
-        BusAdapterOut().Index() = BusAdapterIn().Index() + 1;
+        BusAdapterOut().Index() = (TForteUInt16) (BusAdapterIn().Index() + 1);
         BusAdapterOut().MasterId() = BusAdapterIn().MasterId();
 
         for (int i = 0; i < BusAdapterIn().scm_slaveConfigurationIO_num; i++) {
@@ -123,14 +123,12 @@ void Slave::executeEvent(int pa_nEIID) {
   }
 }
 
-void Slave::addHandle(CIEC_WSTRING const &id, Handle* handle) {
-  if (Mapper::getInstance().registerHandle(id, handle))
-    getController().addSlaveHandle(index, handle);
-  else
-    delete handle;
+void Slave::initHandle(
+    Device::MultiController::HandleDescriptor *handleDescriptor) {
+  master->initHandle(handleDescriptor);
 }
 
-const char* const Slave::handleInitEvent() {
+const char* Slave::handleInitEvent() {
   // Get master by id
   master = Master::getMasterById(BusAdapterIn().MasterId());
   if (master == 0) {

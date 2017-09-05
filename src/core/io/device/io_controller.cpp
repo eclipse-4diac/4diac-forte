@@ -27,35 +27,46 @@ void Controller::run() {
   if (initDelay > 0)
     CThread::sleepThread(initDelay * 1000);
 
-  if (init()) {
+  error = init();
+
+  if (!hasError()) {
     notifyConfigFB(Success);
 
     runLoop();
   } else {
-    if (!hasError())
-      notifyConfigFB(Error);
-  }
-
-  if (hasError())
     notifyConfigFB(Error, error);
+  }
 
   dropHandles();
   deInit();
 
   // TODO Remove statement or add arch independent sleep method
   while (isAlive())
-    ;
+    CThread::sleepThread(10);
 }
 
-void Controller::addHandle(CIEC_WSTRING const &id, Handle* handle) {
+void Controller::addHandle(HandleDescriptor *handleDescriptor) {
+  Handle* handle = initHandle(handleDescriptor);
+
+  if (handle == 0) {
+    DEVLOG_WARNING(
+        "[IO:Device:Controller] Failed to initialize handle '%s'. Check initHandle method.\n",
+        handleDescriptor->id.getValue());
+    return;
+  }
+
   if (handle->is(Mapper::In))
-    addHandle(&inputHandles, id, handle);
+    addHandle(&inputHandles, handleDescriptor->id, handle);
   else if (handle->is(Mapper::Out))
-    addHandle(&outputHandles, id, handle);
+    addHandle(&outputHandles, handleDescriptor->id, handle);
 }
 
 void Controller::fireIndicationEvent(Observer* observer) {
   startNewEventChain((CProcessInterface*) observer);
+}
+
+void Controller::handleChangeEvent(Handle*) {
+  // EMPTY - Override
 }
 
 bool Controller::hasError() {

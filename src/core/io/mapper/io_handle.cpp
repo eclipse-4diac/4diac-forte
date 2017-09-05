@@ -16,8 +16,8 @@
 
 namespace IO {
 
-Handle::Handle(Device::Controller *controller, Mapper::Direction direction) :
-    controller(controller), observer(0), type(CIEC_ANY::e_ANY), direction(
+Handle::Handle(Device::Controller *controller, Mapper::Direction direction, CIEC_ANY::EDataTypeID type) :
+    controller(controller), observer(0), type(type), direction(
         direction) {
 
 }

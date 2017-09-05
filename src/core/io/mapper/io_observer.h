@@ -9,8 +9,8 @@
  *    Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_STDFBLIB_IO_MAPPER_OBSERVER_H_
-#define SRC_STDFBLIB_IO_MAPPER_OBSERVER_H_
+#ifndef SRC_CORE_IO_MAPPER_OBSERVER_H_
+#define SRC_CORE_IO_MAPPER_OBSERVER_H_
 
 #include "io_handle.h"
 #include "io_mapper.h"
@@ -37,4 +37,4 @@ protected:
 
 } /* namespace IO */
 
-#endif /* SRC_STDFBLIB_IO_MAPPER_OBSERVER_H_ */
+#endif /* SRC_CORE_IO_MAPPER_OBSERVER_H_ */

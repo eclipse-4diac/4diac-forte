@@ -9,14 +9,14 @@
  *    Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_STDFBLIB_IO_PROCESSINTERFACE_H_
-#define SRC_STDFBLIB_IO_PROCESSINTERFACE_H_
+#ifndef SRC_CORE_IO_PROCESSINTERFACE_H_
+#define SRC_CORE_IO_PROCESSINTERFACE_H_
 
 #include "../mapper/io_mapper.h"
 #include "../mapper/io_observer.h"
 
 #include <forte_sync.h>
-#include "../processinterfacebase.h"
+#include "../../../stdfblib/io/processinterfacebase.h"
 
 namespace IO {
 
@@ -79,4 +79,4 @@ private:
 
 typedef IO::ProcessInterface CProcessInterface;
 
-#endif /* SRC_STDFBLIB_IO_PROCESSINTERFACE_H_ */
+#endif /* SRC_CORE_IO_PROCESSINTERFACE_H_ */

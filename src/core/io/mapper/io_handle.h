@@ -9,8 +9,8 @@
  *    Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_STDFBLIB_IO_MAPPER_HANDLE_H_
-#define SRC_STDFBLIB_IO_MAPPER_HANDLE_H_
+#ifndef SRC_CORE_IO_MAPPER_HANDLE_H_
+#define SRC_CORE_IO_MAPPER_HANDLE_H_
 
 #include <forte_any.h>
 #include <forte_bool.h>
@@ -27,7 +27,7 @@ class Handle {
   friend class Mapper;
 
 public:
-  Handle(Device::Controller *controller, Mapper::Direction direction);
+  Handle(Device::Controller *controller, Mapper::Direction direction, CIEC_ANY::EDataTypeID type);
   virtual ~Handle();
 
   bool hasObserver() {
@@ -64,4 +64,4 @@ protected:
 
 } /* namespace IO */
 
-#endif /* SRC_STDFBLIB_IO_MAPPER_HANDLE_H_ */
+#endif /* SRC_CORE_IO_MAPPER_HANDLE_H_ */

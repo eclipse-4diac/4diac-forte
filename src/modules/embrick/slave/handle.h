@@ -33,7 +33,7 @@ using namespace IO;
 class SlaveHandle: public Handle {
 public:
   SlaveHandle(Device::Controller *controller, Mapper::Direction direction,
-      uint8_t offset, Handlers::Slave *slave);
+      CIEC_ANY::EDataTypeID type, uint8_t offset, Handlers::Slave *slave);
   virtual ~SlaveHandle();
 
   virtual void set(const CIEC_ANY &);

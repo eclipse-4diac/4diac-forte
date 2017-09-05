@@ -51,20 +51,13 @@ protected:
   CSyncObject slaveMutex;
   Handlers::Slave *slave;
 
-  void addBitHandle(Mapper::Direction direction, CIEC_WSTRING id,
-      uint8_t offset, uint8_t pos);
-  void addAnalogHandle(Mapper::Direction direction, CIEC_WSTRING id,
-      uint8_t offset);
-  void addAnalog10Handle(Mapper::Direction direction, CIEC_WSTRING id,
-      uint8_t offset);
-
 public:
   void onSlaveStatus(Handlers::SlaveStatus status,
       Handlers::SlaveStatus oldStatus);
   void onSlaveDestroy();
 
 private:
-  const char* const init();
+  const char* init();
   void deInit();
 
   static const char * const scmSlow;

@@ -42,7 +42,7 @@ Master* Master::getMasterById(TForteUInt16 id) {
 
 void Master::onStartup() {
   if (BusAdapterOut().getPeer() == 0) {
-    return started();
+    return Controller::onStartup();
   }
 
   BusAdapterOut().MasterId() = id;
@@ -53,7 +53,7 @@ void Master::onStartup() {
 
 void Master::onStop() {
   if (BusAdapterOut().getPeer() == 0) {
-    return stopped();
+    return Controller::onStop();
   }
 
   BusAdapterOut().QI() = false;
@@ -67,9 +67,12 @@ void Master::executeEvent(int pa_nEIID) {
     QO() = BusAdapterOut().QO();
 
     if (BusAdapterOut().QI() == true) {
-      started(BusAdapterOut().QO() ? 0 : scmFailedToInitSlaves);
+      if (BusAdapterOut().QO() == true)
+        Controller::onStartup();
+      else
+        started(scmFailedToInitSlaves);
     } else {
-      stopped();
+      Controller::onStop();
     }
   }
 

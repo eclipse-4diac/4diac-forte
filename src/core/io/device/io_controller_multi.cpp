@@ -17,5 +17,24 @@ namespace Device {
 MultiController::MultiController() {
 }
 
+void MultiController::addHandle(
+    Controller::HandleDescriptor *handleDescriptor) {
+  HandleDescriptor* desc = (HandleDescriptor*) handleDescriptor;
+  Handle* handle = initHandle(desc);
+
+  if (handle == 0) {
+    DEVLOG_WARNING(
+        "[IO:Device:MultiController] Failed to initialize handle '%s'. Check initHandle method.\n",
+        desc->id.getValue());
+    return;
+  }
+
+  if (Mapper::getInstance().registerHandle(desc->id, handle)) {
+    addSlaveHandle(desc->slaveIndex, handle);
+  } else {
+    delete handle;
+  }
+}
+
 } /* namespace Device */
 } /* namespace IO */

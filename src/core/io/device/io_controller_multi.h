@@ -9,8 +9,8 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_STDFBLIB_IO_DEVICE_IO_CONTROLLER_MULTI_H_
-#define SRC_STDFBLIB_IO_DEVICE_IO_CONTROLLER_MULTI_H_
+#ifndef SRC_CORE_IO_DEVICE_IO_CONTROLLER_MULTI_H_
+#define SRC_CORE_IO_DEVICE_IO_CONTROLLER_MULTI_H_
 
 #include "io_controller.h"
 #include <io/mapper/io_handle.h>
@@ -36,6 +36,16 @@ class MultiController: public Controller {
 
 public:
 
+  struct HandleDescriptor: Controller::HandleDescriptor {
+    int slaveIndex;
+
+    HandleDescriptor(CIEC_WSTRING const &id, IO::Mapper::Direction direction,
+        int slaveIndex) :
+        Controller::HandleDescriptor(id, direction), slaveIndex(slaveIndex) {
+
+    }
+  };
+
   /*! @brief Adds a handle for a slave
    *
    * The controller should read and write the given handle.
@@ -58,7 +68,16 @@ public:
 protected:
   MultiController();
 
+  virtual void addHandle(Controller::HandleDescriptor *handleDescriptor);
+
+  virtual Handle* initHandle(HandleDescriptor *handleDescriptor) = 0;
+
 private:
+
+  Handle* initHandle(Controller::HandleDescriptor *handleDescriptor) {
+    return initHandle(static_cast<HandleDescriptor*>(handleDescriptor));
+  }
+
   /*! @brief Checks if a slave exists at the given index
    *
    * @param index Index/Position of the modular slave
@@ -79,4 +98,4 @@ private:
 } /* namespace Device */
 } /* namespace IO */
 
-#endif /* SRC_STDFBLIB_IO_DEVICE_IO_CONTROLLER_MULTI_H_ */
+#endif /* SRC_CORE_IO_DEVICE_IO_CONTROLLER_MULTI_H_ */

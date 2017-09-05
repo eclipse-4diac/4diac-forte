@@ -14,7 +14,7 @@
 #include "Slave2181_gen.cpp"
 #endif
 
-#include <devlog.h>
+#include "../handler/bus.h"
 
 namespace EmBrick {
 namespace FunctionBlocks {
@@ -70,25 +70,25 @@ const TForteUInt8 Slave2181::scm_slaveConfigurationIO[] = { 17 };
 const TForteUInt8 Slave2181::scm_slaveConfigurationIO_num = 1;
 
 void Slave2181::initHandles() {
-  // 8 Inputs
-  addBitHandle(Mapper::In, DigitalInput_1(), 0, 0);
-  addBitHandle(Mapper::In, DigitalInput_2(), 0, 1);
-  addBitHandle(Mapper::In, DigitalInput_3(), 0, 2);
-  addBitHandle(Mapper::In, DigitalInput_4(), 0, 3);
-  addBitHandle(Mapper::In, DigitalInput_5(), 0, 4);
-  addBitHandle(Mapper::In, DigitalInput_6(), 0, 5);
-  addBitHandle(Mapper::In, DigitalInput_7(), 0, 6);
-  addBitHandle(Mapper::In, DigitalInput_8(), 0, 7);
+  // Initialize handles
+  int iCount = 8;
+  int oCount = 8;
+  int iOffset = 1;
+  int oOffset = iOffset + iCount;
 
-  // 8 Outputs
-  addBitHandle(Mapper::Out, DigitalOutput_1(), 0, 0);
-  addBitHandle(Mapper::Out, DigitalOutput_2(), 0, 1);
-  addBitHandle(Mapper::Out, DigitalOutput_3(), 0, 2);
-  addBitHandle(Mapper::Out, DigitalOutput_4(), 0, 3);
-  addBitHandle(Mapper::Out, DigitalOutput_5(), 0, 4);
-  addBitHandle(Mapper::Out, DigitalOutput_6(), 0, 5);
-  addBitHandle(Mapper::Out, DigitalOutput_7(), 0, 6);
-  addBitHandle(Mapper::Out, DigitalOutput_8(), 0, 7);
+  for (int i = 0; i < iCount; i++) {
+    Handlers::Bus::HandleDescriptor desc = Handlers::Bus::HandleDescriptor(
+        *static_cast<CIEC_WSTRING*>(getDI(iOffset + i)), IO::Mapper::In, index,
+        Handlers::Bus::Bit, (uint8_t) (i / 8), (uint8_t) (i % 8));
+    initHandle(&desc);
+  }
+
+  for (int i = 0; i < oCount; i++) {
+    Handlers::Bus::HandleDescriptor desc = Handlers::Bus::HandleDescriptor(
+        *static_cast<CIEC_WSTRING*>(getDI(oOffset + i)), IO::Mapper::Out, index,
+        Handlers::Bus::Bit, (uint8_t) (i / 8), (uint8_t) (i % 8));
+    initHandle(&desc);
+  }
 }
 
 } /* namespace FunctionsBlocks */

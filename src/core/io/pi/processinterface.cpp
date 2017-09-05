@@ -15,22 +15,22 @@ namespace IO {
 
 const char * const ProcessInterface::scmOK = "OK";
 const char * const ProcessInterface::scmWaitingForHandle =
-  "Waiting for handle..";
+    "Waiting for handle..";
 const char * const ProcessInterface::scmFailedToRegister =
-  "Failed to register observer.";
+    "Failed to register observer.";
 const char * const ProcessInterface::scmMappedWrongDirectionOutput =
-  "Mapped invalid direction. A Q block requires an output handle.";
+    "Mapped invalid direction. A Q block requires an output handle.";
 const char * const ProcessInterface::scmMappedWrongDirectionInput =
-  "Mapped invalid direction. An I block requires an input handle.";
+    "Mapped invalid direction. An I block requires an input handle.";
 const char * const ProcessInterface::scmMappedWrongDataType =
-  "Mapped invalid data type.";
+    "Mapped invalid data type.";
 
 ProcessInterface::ProcessInterface(CResource *paSrcRes,
-                                   const SFBInterfaceSpec *paInterfaceSpec,
-                                   const CStringDictionary::TStringId paInstanceNameId,
-                                   TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-  CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId,
-                        paFBConnData, paFBVarsData), Observer() {
+    const SFBInterfaceSpec *paInterfaceSpec,
+    const CStringDictionary::TStringId paInstanceNameId,
+    TForteByte *paFBConnData, TForteByte *paFBVarsData) :
+    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId,
+        paFBConnData, paFBVarsData), Observer() {
   isListening = false;
   isReady = false;
 }
@@ -50,8 +50,8 @@ bool ProcessInterface::initialise(bool paIsInput) {
   deinitialise();
 
   // Register interface
-  if (!(isListening = Mapper::getInstance().registerObserver(
-          getInstanceName(), this))) {
+  if (!(isListening = Mapper::getInstance().registerObserver(getInstanceName(),
+      this))) {
     STATUS() = scmFailedToRegister;
     return false;
   }
@@ -152,7 +152,9 @@ void ProcessInterface::onHandle(Handle* handle) {
   }
 
   if (!handle->is(direction)) {
-    STATUS() = direction == Mapper::In ? scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput;
+    STATUS() =
+        direction == Mapper::In ?
+            scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput;
     return syncMutex.unlock();
   }
 

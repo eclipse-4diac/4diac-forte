@@ -148,6 +148,15 @@ bool Controller::init(int delay) {
   return true;
 }
 
+void Controller::initHandle(
+    Device::Controller::HandleDescriptor *handleDescriptor) {
+
+  if (handleDescriptor->id == "")
+    return;
+
+  controller->addHandle(handleDescriptor);
+}
+
 void Controller::onStartup() {
   started();
 }
