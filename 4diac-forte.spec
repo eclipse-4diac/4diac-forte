@@ -10,6 +10,10 @@ Source0:  https://git.eclipse.org/c/4diac/org.eclipse.4diac.forte.git/snapshot/o
 BuildRequires: cmake, gcc-c++
 BuildRequires: systemd
 
+%if %{with opcua}
+BuildRequires: open62541-devel >= 0.2
+%endif
+
 %description
 The 4DIAC runtime environment (4DIAC-RTE, FORTE) is a small portable
 implementation of an IEC 61499 runtime environment targeting small
@@ -27,6 +31,7 @@ cd bin/posix
        -DFORTE_COM_ETH=ON \
        -DFORTE_COM_FBDK=ON \
        -DFORTE_COM_LOCAL=ON \
+       %{?_with_opcua: -DFORTE_COM_OPC_UA=ON -DFORTE_COM_OPC_UA_INCLUDE_DIR=%{_includedir}/open62541 -DFORTE_COM_OPC_UA_LIB_DIR=%{_libdir}} \
        -DFORTE_MODULE_CONVERT=ON \
        -DFORTE_MODULE_IEC61131=ON \
        %{?_with_sysfs: -DFORTE_MODULE_SysFs=ON } \
