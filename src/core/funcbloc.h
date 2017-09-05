@@ -26,7 +26,6 @@
 #include <stringlist.h>
 
 class CEventChainExecutionThread;
-class CResource;
 class CAdapter;
 
 #ifdef FORTE_SUPPORT_MONITORING
@@ -152,6 +151,10 @@ class CFunctionBlock{
     CResource *getResourcePtr(void){
       return m_poResource;
     }
+
+    /*!\brief Get the timer of the device wher the FB is contained.
+         */
+    CTimerHandler& getTimer(void);
 
     /*!\brief Returns the type of this FB instance
      */

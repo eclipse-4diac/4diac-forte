@@ -30,10 +30,10 @@ void E_RDELAY::executeEvent(int pa_nEIID){
     case csm_nEventSTARTID:
       if(m_bActive){
         //remove from the list as we want to be added with a new delay
-        CTimerHandler::sm_poFORTETimer->unregisterTimedFB(this);
+        getTimer().unregisterTimedFB(this);
       }
       setEventChainExecutor(m_poInvokingExecEnv);  // E_RDELAY will execute in the same thread on as from where it has been triggered.
-      CTimerHandler::sm_poFORTETimer->registerTimedFB( &m_stTimeListEntry, DT());
+      getTimer().registerTimedFB( &m_stTimeListEntry, DT());
       m_bActive = true;
       break;
     default:

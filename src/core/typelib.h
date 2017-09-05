@@ -19,7 +19,6 @@
 #include "./utils/staticassert.h"
 
 //forward declaration of a few classes to reduce include file dependencies
-class CDevice;
 class CFunctionBlock;
 class CResource;
 class CConnection;

@@ -11,17 +11,16 @@
   *    Matthias Plasch
   *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
-#include <string.h>
-#include <stdlib.h>
-#include "timerha.h"
 #include "funcbloc.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "funcbloc_gen.cpp"
 #endif
-#include "resource.h"
 #include "adapter.h"
+#include "device.h"
 #include "datatypes/forte_array.h"
 #include "utils/criticalregion.h"
+#include <string.h>
+#include <stdlib.h>
 
 CFunctionBlock::CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
    mEOConns(0), m_apoDIConns(0), mDOConns(0),
@@ -126,6 +125,10 @@ void CFunctionBlock::setupAdapters(const SFBInterfaceSpec *pa_pstInterfaceSpec, 
       }
     }
   }
+}
+
+CTimerHandler& CFunctionBlock::getTimer(void){
+  m_poResource->getDevice().getTimer();
 }
 
 CEventConnection *CFunctionBlock::getEOConection(CStringDictionary::TStringId paEONameId) const{
@@ -329,7 +332,7 @@ void CFunctionBlock::sendOutputEvent(int pa_nEO){
       }
       // Count Event for monitoring
       monitoringData.mEventCount++;
-      monitoringData.mTimeStamp = CTimerHandler::sm_poFORTETimer->getForteTime();
+      monitoringData.mTimeStamp = getTimer().getForteTime();
       eventMonitoring.mBufPos = (eventMonitoring.mBufPos + 1) % forte::core::cgMonitorBufferLength;
       m_updated = true;
     }  // if(forte::core::eActive != eventMonitoring.mMonitorEventData[eventMonitoring.mBufPos].mBreakpointSet){
@@ -398,7 +401,7 @@ void CFunctionBlock::receiveInputEvent(int pa_nEIID, CEventChainExecutionThread 
       }
       // Count Event for monitoring
       monitoringData.mEventCount++;
-      monitoringData.mTimeStamp = CTimerHandler::sm_poFORTETimer->getForteTime();
+      monitoringData.mTimeStamp = getTimer().getForteTime();
       eventMonitoring.mBufPos = (eventMonitoring.mBufPos + 1) % forte::core::cgMonitorBufferLength;
       m_updated = true;
 #endif //FORTE_SUPPORT_MONITORING
