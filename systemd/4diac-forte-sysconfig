@@ -1,0 +1,15 @@
+
+# Forte environment file
+
+#
+# FLAGS : arbitrary command line argument to the
+#         forte binary
+#
+
+# FLAGS=-c 0.0.0.0:61499
+
+#
+# FORTE_BOOT_FILE : The boot file to load
+#
+
+FORTE_BOOT_FILE=/etc/4diac-forte-boot

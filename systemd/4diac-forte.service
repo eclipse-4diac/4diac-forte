@@ -4,7 +4,8 @@ After=syslog.target network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/forte
+EnvironmentFile=/etc/sysconfig/4diac-forte
+ExecStart=/usr/bin/forte $FLAGS
 Restart=on-failure
 TimeoutStopSec=30s
 

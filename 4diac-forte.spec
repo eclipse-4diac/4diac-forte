@@ -42,7 +42,11 @@ make %{?_smp_mflags}
 
 %install
 mkdir -p %{buildroot}%{_unitdir}
-install systemd/4diac-forte.service %{buildroot}%{_unitdir}
+install -p systemd/4diac-forte.service %{buildroot}%{_unitdir}
+
+mkdir -p %{buildroot}%{_sysconfdir}/sysconfig
+install -p systemd/4diac-forte-sysconfig %{buildroot}%{_sysconfdir}/sysconfig/4diac-forte
+
 cd bin/posix
 %make_install
 
@@ -59,6 +63,7 @@ cd bin/posix
 %license epl-v10.html
 %{_bindir}/forte
 %{_unitdir}/4diac-forte.service
+%{_sysconfdir}/sysconfig/4diac-forte
 
 %changelog
 * Fri Sep 01 2017 Jens Reimann <jreimann@redhat.com> - 1.9.0-1
