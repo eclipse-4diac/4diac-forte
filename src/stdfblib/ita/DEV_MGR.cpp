@@ -11,6 +11,8 @@
  *    - initial API and implementation and/or initial documentation
  *   Monika Wenger
  *    - fix: apostrophes are deleted in parseWriteConnectionData
+ *   Jens Reimann
+ *    - Enhance bootfile loading behavior
  *******************************************************************************/
 #include <string.h>
 #include "DEV_MGR.h"
@@ -618,17 +620,38 @@ DEV_MGR::~DEV_MGR(){
 
 #ifdef FORTE_SUPPORT_BOOT_FILE
 void DEV_MGR::loadForteBootFile(){
-  char* bootFileName;
-  bootFileName = getenv ("FORTE_BOOT_FILE");
-  FILE *bootfile = 0;
-  if(bootFileName != 0){
-    bootfile = fopen(bootFileName, "r");
-  }else{
-    bootfile = fopen(FORTE_BOOT_FILE_LOCATION, "r");
+  const char * envBootFileName = getenv("FORTE_BOOT_FILE");
+  const char* bootFileName;
+
+  // select provided or default boot file name
+
+  if(0 != envBootFileName){
+    DEVLOG_INFO("Using provided bootfile location: %s\n", envBootFileName);
+    bootFileName = envBootFileName;
+  }
+  else{
+    DEVLOG_INFO("Using default bootfile location: %s\n", FORTE_BOOT_FILE_LOCATION);
+    bootFileName = FORTE_BOOT_FILE_LOCATION;
   }
 
+  // check if we finally have a boot file name
+
+  if(0 == bootFileName){
+    DEVLOG_INFO("No bootfile specified and no default bootfile configured during build\n");
+    return;
+  }
+
+  // check if bootfile name is empty
+
+  if(bootFileName[0]==0){
+    DEVLOG_DEBUG("Empty bootfile location\n");
+    return;
+  }
+
+  FILE *bootfile = fopen(bootFileName, "r");
+
   if(0 != bootfile){
-    DEVLOG_INFO("Boot file %s opened\n", (0 != bootFileName) ? bootFileName : FORTE_BOOT_FILE_LOCATION);
+    DEVLOG_INFO("Boot file %s opened\n", bootFileName);
     //we could open the file try to load it
     int nLineCount = 1;
     EMGMResponse eResp;
@@ -665,10 +688,12 @@ void DEV_MGR::loadForteBootFile(){
     fclose(bootfile);
   }
   else{
-    if(bootFileName != 0){
-        DEVLOG_WARNING("Boot file %s could not be opened\n", bootFileName);
-    }else{
-        DEVLOG_WARNING("Boot file forte.fboot could not be opened\n");
+    if(0!=getenv("FORTE_BOOT_FILE_FAIL_MISSING")){
+      DEVLOG_ERROR("Boot file %s could not be opened and FORTE_BOOT_FILE_FAIL_MISSING is set. Failing...\n", bootFileName);
+      exit(2);
+    }
+    else{
+      DEVLOG_WARNING("Boot file %s could not be opened. Skipping...\n", bootFileName);
     }
   }
 }
