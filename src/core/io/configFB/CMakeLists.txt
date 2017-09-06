@@ -21,3 +21,7 @@ forte_add_sourcefile_hcpp(io_base io_controller)
 forte_add_sourcefile_hcpp(multi/io_adapter)
 forte_add_sourcefile_hcpp(multi/io_master)
 forte_add_sourcefile_hcpp(multi/io_slave)
+
+forte_add_sourcefile_hcpp(split/io_adapter_split)
+forte_add_sourcefile_hcpp(split/io_controller_split)
+forte_add_sourcefile_hcpp(split/io_controller_part)

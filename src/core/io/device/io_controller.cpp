@@ -33,6 +33,9 @@ void Controller::run() {
     notifyConfigFB(Success);
 
     runLoop();
+
+    if (hasError())
+      notifyConfigFB(Error, error);
   } else {
     notifyConfigFB(Error, error);
   }

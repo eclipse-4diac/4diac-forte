@@ -38,6 +38,9 @@ void PollController::runLoop() {
     // Perform poll operation
     poll();
 
+    if (hasError())
+      break;
+
     loopSync.lock();
     loopActive = false;
   }
