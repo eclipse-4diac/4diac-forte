@@ -10,16 +10,13 @@
  *******************************************************************************/
 #include "pctimeha.h"
 #include "../../core/devexec.h"
-//#include <time.h>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
 const TForteInt32 CPCTimerHandler::csm_nTicksPerSecond = 1000;
 
-void CTimerHandler::createTimerHandler(void){
-  if(0 == sm_poFORTETimer)
-    sm_poFORTETimer = new CPCTimerHandler();
-
+CTimerHandler* CTimerHandler::createTimerHandler(){
+  return new CPCTimerHandler();
 }
 
 CPCTimerHandler::CPCTimerHandler(){

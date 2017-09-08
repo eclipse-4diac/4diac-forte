@@ -13,16 +13,14 @@
 #include "txtimeha.h"
 #include "../../core/devexec.h"
 
-
-void CTimerHandler::createTimerHandler(void){
-  if(0 == sm_poFORTETimer) 
-    sm_poFORTETimer = new CTXTimerHandler();
+CTimerHandler* CTimerHandler::createTimerHandler(){
+  return new CTXTimerHandler();
 }
 
 CTXTimerHandler::CTXTimerHandler(){
 // setup the handler for recieving the timer calls  
   //TODO handle ticks per second correctly here
-  UINT status = tx_timer_create(&m_stTimer, "FORTE timer", &timerHandlerFunc, 0, 1, 1, TX_NO_ACTIVATE); 
+  UINT status = tx_timer_create(&m_stTimer, "FORTE timer", &timerHandlerFunc, (ULONG) this, 1, 1, TX_NO_ACTIVATE);
   if (status == TX_SUCCESS)
     DEVLOG_DEBUG("Timer created\n");
   else

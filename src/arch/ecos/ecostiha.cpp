@@ -14,11 +14,8 @@
 
 cyg_sem_t CECOSTimerHandler::m_stSemaphore;
 
-void CTimerHandler::createTimerHandler(void){
-  if(0 == sm_poFORTETimer){
-    sm_poFORTETimer = new CECOSTimerHandler();
-    static_cast<CECOSTimerHandler *>(sm_poFORTETimer)->start();
-  }
+CTimerHandler* CTimerHandler::createTimerHandler(){
+  return new CECOSTimerHandler();
 }
 
 CECOSTimerHandler::CECOSTimerHandler(){
@@ -28,6 +25,7 @@ CECOSTimerHandler::CECOSTimerHandler(){
   cyg_clock_to_counter(m_stSystemclockHandle, &m_stCounterHandle);
 
   cyg_alarm_create(m_stCounterHandle, timerHandlerFunc, (cyg_addrword_t) 0, &m_stAlarmHandle, &m_stAlarm);
+  start();
 }
 
 CECOSTimerHandler::~CECOSTimerHandler(){
@@ -55,7 +53,7 @@ void CECOSTimerHandler::run(void){
   while(isAlive()){
     cyg_semaphore_wait(&m_stSemaphore);
     //FIXME add compensation code for timer activation jitter similar to the code in the posix architecture
-    sm_poFORTETimer->nextTick();
+    nextTick();
   }
 }
 

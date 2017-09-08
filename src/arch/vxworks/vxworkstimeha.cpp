@@ -49,9 +49,8 @@
    ((a)->tv_sec CMP (b)->tv_sec))
 #endif
 
-void CTimerHandler::createTimerHandler(void){
-  if(0 == sm_poFORTETimer)
-    sm_poFORTETimer = new CPCTimerHandler();
+CTimerHandler* CTimerHandler::createTimerHandler(){
+  return new CPCTimerHandler();
 }
 
 CPCTimerHandler::CPCTimerHandler(){

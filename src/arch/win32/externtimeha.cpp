@@ -25,10 +25,9 @@ unsigned int __stdcall getTicksPerSecond(){
 	return CExternTimerHandler::getExternTicksPerSecond();
 }
 
-void CTimerHandler::createTimerHandler(void){
-  if(0 == sm_poFORTETimer)
-    sm_poFORTETimer = new CExternTimerHandler();
-
+CTimerHandler* CTimerHandler::createTimerHandler(){
+  CTimerHandler::sm_poFORTETimer = new CExternTimerHandler();
+  return CTimerHandler::sm_poFORTETimer;
 }
 
 CExternTimerHandler::CExternTimerHandler(){
@@ -39,8 +38,8 @@ CExternTimerHandler::~CExternTimerHandler(){
 }
 
 void CExternTimerHandler::externNextTick(){
-  if(0 != sm_poFORTETimer){
-	  sm_poFORTETimer->nextTick();
+  if(CTimerHandler::sm_poFORTETimer){
+    CTimerHandler::sm_poFORTETimer->nextTick();
   }
 }
 
