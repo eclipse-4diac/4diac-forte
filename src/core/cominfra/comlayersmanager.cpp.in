@@ -12,14 +12,14 @@
   *******************************************************************************/
 #include <fortenew.h>
 #include "comlayersmanager.h"
-#include "commfb.h"
+#include "basecommfb.h"
 #include <string.h>
 
 ${LAYERMANAGER_INCLUDE}
 
 using namespace forte::com_infra;
 
-CComLayer* CComLayersManager::createCommunicationLayer(char *pa_acLayerIdentifier, CComLayer* pa_poUpperLayer, CCommFB * pa_poComFB){
+CComLayer* CComLayersManager::createCommunicationLayer(char *pa_acLayerIdentifier, CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poComFB){
   CComLayer* m_poNewLayer = 0;
   ${LAYERMANAGER_INSTANCE}
 

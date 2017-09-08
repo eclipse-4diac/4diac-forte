@@ -16,8 +16,8 @@
 
 namespace forte {
   namespace com_infra {
-
-    class CCommFB;
+	  
+	class CBaseCommFB;
     class CComLayer;
 
     /*!\brief Communication Layers Manager for communication with Server/Client and Publish/Subscriber
@@ -41,7 +41,7 @@ namespace forte {
 
     class CComLayersManager{
       public:
-        static CComLayer* createCommunicationLayer(char *pa_acLayerIdentifier, CComLayer* pa_poUpperLayer, CCommFB * pa_poComFB);
+        static CComLayer* createCommunicationLayer(char *pa_acLayerIdentifier, CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poComFB);
       private:
         CComLayersManager(void);
         CComLayersManager(const CComLayersManager& pa_roVal);

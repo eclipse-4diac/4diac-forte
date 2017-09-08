@@ -12,7 +12,7 @@
 #include "comlayer_async.h"
 #include "devlog.h"
 
-forte::com_infra::CComLayerAsync::CComLayerAsync(forte::com_infra::CComLayer *pa_poUpperLayer, forte::com_infra::CCommFB *pa_poComFB) :
+forte::com_infra::CComLayerAsync::CComLayerAsync(forte::com_infra::CComLayer *pa_poUpperLayer, forte::com_infra::CBaseCommFB *pa_poComFB) :
 		CComLayer(pa_poUpperLayer, pa_poComFB), currentCallId(0), asyncCalls(), asyncResults(), asyncResultsMutex() {
 
 }

@@ -18,7 +18,7 @@ using namespace forte::com_infra;
 
 CLocalComLayer::CLocalCommGroupsManager CLocalComLayer::sm_oLocalCommGroupsManager;
 
-CLocalComLayer::CLocalComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poFB) :
+CLocalComLayer::CLocalComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB) :
   CComLayer(pa_poUpperLayer, pa_poFB), m_poLocalCommGroup(0){
 }
 

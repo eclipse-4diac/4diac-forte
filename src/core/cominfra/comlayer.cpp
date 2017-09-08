@@ -14,7 +14,7 @@
 
 using namespace forte::com_infra;
 
-CComLayer::CComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poComFB) :
+CComLayer::CComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poComFB) :
   m_eConnectionState(forte::com_infra::e_Disconnected), m_poTopLayer(pa_poUpperLayer), m_poBottomLayer(0), m_poFb(pa_poComFB){
   if(0 != m_poTopLayer){
     m_poTopLayer->setBottomLayer(this);

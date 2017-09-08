@@ -36,7 +36,7 @@ namespace forte {
 
     class CFBDKASN1ComLayer : public CComLayer{
       public:
-        CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poFB);
+        CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB);
         virtual ~CFBDKASN1ComLayer();
 
         EComResponse sendData(void *pa_pvData, unsigned int pa_unSize); // top interface, called from top

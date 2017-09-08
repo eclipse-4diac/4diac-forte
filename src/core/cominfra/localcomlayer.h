@@ -24,7 +24,7 @@ namespace forte {
     class CLocalComLayer : public CComLayer{
 
       public:
-        CLocalComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poFB);
+        CLocalComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB);
         virtual ~CLocalComLayer();
 
         virtual EComResponse sendData(void *pa_pvData, unsigned int pa_unSize);

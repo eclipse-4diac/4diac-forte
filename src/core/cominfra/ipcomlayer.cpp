@@ -20,7 +20,7 @@
 
 using namespace forte::com_infra;
 
-CIPComLayer::CIPComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB) :
+CIPComLayer::CIPComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB) :
         CComLayer(pa_poUpperLayer, pa_poComFB),
         m_nSocketID(CIPComSocketHandler::scm_nInvalidSocketDescriptor),
         m_nListeningID(CIPComSocketHandler::scm_nInvalidSocketDescriptor),

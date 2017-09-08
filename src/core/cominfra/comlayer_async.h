@@ -33,7 +33,7 @@ namespace forte {
 			virtual ~CComLayerAsync();
 
 		protected:
-			CComLayerAsync(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB);
+			CComLayerAsync(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB);
 			virtual void run();
 
 			unsigned int callAsync(void *payload);
