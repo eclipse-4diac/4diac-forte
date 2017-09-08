@@ -128,7 +128,7 @@ void CFunctionBlock::setupAdapters(const SFBInterfaceSpec *pa_pstInterfaceSpec, 
 }
 
 CTimerHandler& CFunctionBlock::getTimer(void){
-  m_poResource->getDevice().getTimer();
+  return m_poResource->getDevice().getTimer();
 }
 
 CEventConnection *CFunctionBlock::getEOConection(CStringDictionary::TStringId paEONameId) const{
