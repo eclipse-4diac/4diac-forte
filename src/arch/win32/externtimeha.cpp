@@ -12,6 +12,7 @@
 #include "../../core/devexec.h"
 #include <windows.h>
 
+CExternTimerHandler *CExternTimerHandler::sm_poFORTEExtTimer = 0;
 
 const TForteInt32 CExternTimerHandler::csm_nTicksPerSecond = 1000;
 
@@ -26,8 +27,10 @@ unsigned int __stdcall getTicksPerSecond(){
 }
 
 CTimerHandler* CTimerHandler::createTimerHandler(){
-  CTimerHandler::sm_poFORTETimer = new CExternTimerHandler();
-  return CTimerHandler::sm_poFORTETimer;
+  if(!CExternTimerHandler::sm_poFORTEExtTimer){ //creating two timers is not possible
+    CExternTimerHandler::sm_poFORTEExtTimer = new CExternTimerHandler();
+  }
+  return CExternTimerHandler::sm_poFORTEExtTimer;
 }
 
 CExternTimerHandler::CExternTimerHandler(){
@@ -35,14 +38,14 @@ CExternTimerHandler::CExternTimerHandler(){
 
 CExternTimerHandler::~CExternTimerHandler(){
   disableHandler();
+  CExternTimerHandler::sm_poFORTEExtTimer = 0;
 }
 
 void CExternTimerHandler::externNextTick(){
-  if(CTimerHandler::sm_poFORTETimer){
-    CTimerHandler::sm_poFORTETimer->nextTick();
+  if(CExternTimerHandler::sm_poFORTEExtTimer){
+    CExternTimerHandler::sm_poFORTEExtTimer->nextTick();
   }
 }
-
 
 void CExternTimerHandler::enableHandler(void){
 	//TODO think on hwo to handle this.
