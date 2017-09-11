@@ -30,7 +30,7 @@ struct AsyncCallPayload {
 	unsigned int variantsSize;
 };
 
-COPC_UA_Layer::COPC_UA_Layer(CComLayer *pa_poUpperLayer, CCommFB *pa_poComFB) : CComLayerAsync(pa_poUpperLayer, pa_poComFB),
+COPC_UA_Layer::COPC_UA_Layer(CComLayer *pa_poUpperLayer, CBaseCommFB *pa_poComFB) : CComLayerAsync(pa_poUpperLayer, pa_poComFB),
 																				useClient(false),
 																				clientSdConverter(NULL), clientRdConverter(NULL),
 																				mInterruptResp(e_Nothing), fbNodeId(NULL), fbNodeIdParent(NULL),

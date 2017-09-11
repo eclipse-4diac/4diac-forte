@@ -24,7 +24,7 @@ namespace forte {
 
     class CModbusComLayer : public CComLayer{
       public:
-        CModbusComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB);
+        CModbusComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB);
         virtual ~CModbusComLayer();
 
         EComResponse sendData(void *pa_pvData, unsigned int pa_unSize); // top interface, called from top

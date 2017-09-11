@@ -16,7 +16,7 @@
 
 class CMuxedSerCommLayer : public forte::com_infra::CComLayer{
   public:
-    CMuxedSerCommLayer(forte::com_infra::CComLayer* pa_poUpperLayer, forte::com_infra::CCommFB * pa_poFB);
+    CMuxedSerCommLayer(forte::com_infra::CComLayer* pa_poUpperLayer, forte::com_infra::CBaseCommFB * pa_poFB);
     virtual ~CMuxedSerCommLayer();
 
     virtual forte::com_infra::EComResponse sendData(void *pa_pvData, unsigned int pa_unSize);

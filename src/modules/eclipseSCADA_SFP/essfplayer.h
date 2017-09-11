@@ -16,7 +16,7 @@
 
 class CES_SFP_Layer : public forte::com_infra::CComLayer{
   public:
-    CES_SFP_Layer(forte::com_infra::CComLayer* paUpperLayer, forte::com_infra::CCommFB* paComFB);
+    CES_SFP_Layer(forte::com_infra::CComLayer* paUpperLayer, forte::com_infra::CBaseCommFB* paComFB);
     virtual ~CES_SFP_Layer();
 
     virtual forte::com_infra::EComResponse sendData(void *paData, unsigned int paSize);

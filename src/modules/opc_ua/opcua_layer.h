@@ -26,7 +26,7 @@
 
 class COPC_UA_Layer : public forte::com_infra::CComLayerAsync {
 public:
-	COPC_UA_Layer(forte::com_infra::CComLayer *pa_poUpperLayer, forte::com_infra::CCommFB *pa_poComFB);
+	COPC_UA_Layer(forte::com_infra::CComLayer *pa_poUpperLayer, forte::com_infra::CBaseCommFB *pa_poComFB);
 
 	virtual ~COPC_UA_Layer();
 

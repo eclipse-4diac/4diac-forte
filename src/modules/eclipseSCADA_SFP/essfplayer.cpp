@@ -16,7 +16,7 @@ using namespace forte::com_infra;
 
 const char CES_SFP_Layer::scmParameterSeperator;
 
-CES_SFP_Layer::CES_SFP_Layer(CComLayer* paUpperLayer, CCommFB* paComFB) :
+CES_SFP_Layer::CES_SFP_Layer(CComLayer* paUpperLayer, CBaseCommFB* paComFB) :
     CComLayer(paUpperLayer, paComFB), mSFPItem(0){
 }
 

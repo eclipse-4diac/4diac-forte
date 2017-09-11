@@ -25,7 +25,7 @@ namespace forte {
 
     class COpcComLayer : public CComLayer{
       public:
-        COpcComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB);
+        COpcComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB);
         virtual ~COpcComLayer();
 
         EComResponse sendData(void *pa_pvData, unsigned int pa_unSize); // top interface, called from top

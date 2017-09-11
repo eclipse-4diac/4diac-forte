@@ -21,7 +21,7 @@ class CEventSourceFB;
 
 class CWin32SerComLayer : public forte::com_infra::CComLayer{
   public:
-    CWin32SerComLayer(forte::com_infra::CComLayer* pa_poUpperLayer, forte::com_infra::CCommFB * pa_poFB);
+    CWin32SerComLayer(forte::com_infra::CComLayer* pa_poUpperLayer, forte::com_infra::CBaseCommFB * pa_poFB);
     virtual ~CWin32SerComLayer ();
 
     virtual forte::com_infra::EComResponse processInterrupt();

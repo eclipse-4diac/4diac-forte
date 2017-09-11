@@ -22,7 +22,7 @@ using namespace forte::com_infra;
 
 CMuxedSerCommLayer::CMuxedSerPortsManager CMuxedSerCommLayer::sm_oMuxedSerPortsManager;
 
-CMuxedSerCommLayer::CMuxedSerCommLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poFB) :
+CMuxedSerCommLayer::CMuxedSerCommLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB) :
     CComLayer(pa_poUpperLayer, pa_poFB), m_unBufFillSize(0), m_nFD(scm_nInvalidFileDescriptor),
 	m_eInterruptResp(forte::com_infra::EComResponse::e_Nothing), m_unSerMuxId(0){
 

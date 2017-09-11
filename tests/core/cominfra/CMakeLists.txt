@@ -20,6 +20,7 @@
   forte_test_add_sourcefile_cpp(../../../src/core/cominfra/comlayer.cpp)
   forte_test_add_sourcefile_cpp(../../../src/core/cominfra/fbdkasn1layer.cpp)
   forte_test_add_sourcefile_cpp(../../../src/core/cominfra/commfb.cpp)
+  forte_test_add_sourcefile_cpp(../../../src/core/cominfra/basecommfb.cpp)
   forte_test_add_sourcefile_cpp(devlogtestmock.cpp)
   forte_test_add_sourcefile_cpp(comlayermantestmock.cpp)
   
