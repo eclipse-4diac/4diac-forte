@@ -48,12 +48,18 @@ FUNCTION(forte_test_add_inc_directories)
   ENDFOREACH(ARG)
 ENDFUNCTION(forte_test_add_inc_directories)
 
+FUNCTION(forte_test_add_inc_system_directories)
+  FOREACH(ARG ${ARGV})
+    SET_PROPERTY(GLOBAL APPEND PROPERTY FORTE_TEST_INC_SYSTEM_DIRECTORIES ${ARG})
+  ENDFOREACH(ARG)
+ENDFUNCTION(forte_test_add_inc_system_directories)
+
 #######################################################################################
 # set include directories
 #######################################################################################
 GET_PROPERTY(INCLUDE_DIRECTORIES GLOBAL PROPERTY FORTE_INCLUDE_DIRECTORIES)
 
-LIST(APPEND INCLUDE_DIRECTORIES ${FORTE_TESTS_INC_DIRS})
+forte_test_add_inc_system_directories(${FORTE_TESTS_INC_DIRS})
 
 #######################################################################################
 # set library path
@@ -95,7 +101,16 @@ IF(len GREATER 0)
   LIST(REMOVE_DUPLICATES INCLUDE_DIRECTORIES)
   LIST(REVERSE INCLUDE_DIRECTORIES) # bugfix, for replaced include files
 ENDIF(len GREATER 0)
+
+GET_PROPERTY(INCLUDE_TEST_SYSTEM_DIRECTORIES GLOBAL PROPERTY FORTE_TEST_INC_SYSTEM_DIRECTORIES)
+LIST(LENGTH INCLUDE_TEST_SYSTEM_DIRECTORIES len)
+IF(len GREATER 0)
+  LIST(REMOVE_DUPLICATES INCLUDE_TEST_SYSTEM_DIRECTORIES)
+  LIST(REVERSE INCLUDE_TEST_SYSTEM_DIRECTORIES) # bugfix, for replaced include files
+ENDIF(len GREATER 0)
+
 INCLUDE_DIRECTORIES(${INCLUDE_DIRECTORIES})
+INCLUDE_DIRECTORIES(SYSTEM ${INCLUDE_TEST_SYSTEM_DIRECTORIES})
 INCLUDE_DIRECTORIES(./)
 INCLUDE_DIRECTORIES(${FORTE_BINARY_DIR})
 INCLUDE_DIRECTORIES(${FORTE_BINARY_DIR}/src_gen)
