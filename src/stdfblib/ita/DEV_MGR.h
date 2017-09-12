@@ -25,6 +25,18 @@
 class DEV_MGR: public forte::com_infra::CCommFB {
   DECLARE_FIRMWARE_FB(DEV_MGR)
 
+  public:
+    /*!\brief Type for the response of MGM command messages
+     *
+     * TODO fully define all responses as defined in IEC 61499 inc. numbers.
+     */
+    static const char * const scm_sMGMResponseTexts[13];
+
+    DEV_MGR(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+    virtual ~DEV_MGR();
+
+    EMGMResponse parseAndExecuteMGMCommand(char *pa_acDest, char *pa_acCommand);
+
   private:
 
     static const CStringDictionary::TStringId scm_anDataInputNames[];
@@ -164,25 +176,7 @@ class DEV_MGR: public forte::com_infra::CCommFB {
       return *static_cast<CIEC_STRING*>(getDO(3));
     };
 
-
-  public:
-    /*!\brief Type for the response of MGM command messages
-     *
-     * TODO fully define all responses as defined in IEC 61499 inc. numbers.
-     */
-    static const char * const scm_sMGMResponseTexts[13];
-
-    DEV_MGR(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
-    virtual ~DEV_MGR();
-
-  private:
-#ifdef FORTE_SUPPORT_BOOT_FILE
-    void loadForteBootFile();
-#endif
-    EMGMResponse parseAndExecuteMGMCommand(char *pa_acDest, char *pa_acCommand);
-
     forte::core::SManagementCMD m_stCommand;
-
   };
 
 #endif /*DEV_MGR_H_*/

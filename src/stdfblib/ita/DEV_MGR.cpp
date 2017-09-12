@@ -22,6 +22,7 @@
 #include "../../core/device.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "ForteBootFileLoader.h"
 
 DEFINE_FIRMWARE_FB(DEV_MGR, g_nStringIdDEV_MGR)
 
@@ -55,7 +56,7 @@ void DEV_MGR::executeEvent(int pa_nEIID){
 #ifdef FORTE_SUPPORT_BOOT_FILE
     if((true == QI()) && (false == QO())){
       //this is the first time init is called try to load a boot file
-      loadForteBootFile();
+      ForteBootFileLoader loader(*this);
     }
 #endif
     CCommFB::executeEvent(pa_nEIID);  //initialize the underlying server FB
@@ -616,88 +617,6 @@ DEV_MGR::DEV_MGR(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_
 
 DEV_MGR::~DEV_MGR(){
 }
-
-
-#ifdef FORTE_SUPPORT_BOOT_FILE
-void DEV_MGR::loadForteBootFile(){
-  const char * envBootFileName = getenv("FORTE_BOOT_FILE");
-  const char* bootFileName;
-
-  // select provided or default boot file name
-
-  if(0 != envBootFileName){
-    DEVLOG_INFO("Using provided bootfile location: %s\n", envBootFileName);
-    bootFileName = envBootFileName;
-  }
-  else{
-    DEVLOG_INFO("Using default bootfile location: %s\n", FORTE_BOOT_FILE_LOCATION);
-    bootFileName = FORTE_BOOT_FILE_LOCATION;
-  }
-
-  // check if we finally have a boot file name
-
-  if(0 == bootFileName){
-    DEVLOG_INFO("No bootfile specified and no default bootfile configured during build\n");
-    return;
-  }
-
-  // check if bootfile name is empty
-
-  if(bootFileName[0]==0){
-    DEVLOG_DEBUG("Empty bootfile location\n");
-    return;
-  }
-
-  FILE *bootfile = fopen(bootFileName, "r");
-
-  if(0 != bootfile){
-    DEVLOG_INFO("Boot file %s opened\n", bootFileName);
-    //we could open the file try to load it
-    int nLineCount = 1;
-    EMGMResponse eResp;
-    char *cmdStart;
-    char acLineBuf[cg_unBootFileLineBufSize]; //TODO maybe move it out of the stack
-
-    while(0 != fgets(acLineBuf, cg_unBootFileLineBufSize, bootfile)){
-      if('\n' != acLineBuf[strlen(acLineBuf) - 1]){
-         //the line has been longer than our buffer
-        DEVLOG_ERROR("Boot file line longer than configured buffer size: %d\n", cg_unBootFileLineBufSize);
-        //As we were not able to load the bootfile clean any created resources and FBs and start an empty device
-        m_stCommand.mCMD = cg_nMGM_CMD_Delete_AllFBInstances;
-        m_stCommand.mDestination = CStringDictionary::scm_nInvalidStringId;
-        m_poDevice.executeMGMCommand(m_stCommand);
-        break;
-      }
-      cmdStart = strchr(acLineBuf, ';');
-      if(0 == cmdStart){
-        DEVLOG_ERROR("Boot file line does not contain separating ';'. Line: %d\n", nLineCount);
-        break;
-      }
-      *cmdStart = '\0';
-      cmdStart++;
-
-      eResp = parseAndExecuteMGMCommand(acLineBuf, cmdStart);
-      if(e_RDY != eResp){
-        //command was not successful
-        DEVLOG_ERROR("Boot file command could not be executed. Line: %d: %s, Response %s\n", nLineCount, cmdStart, scm_sMGMResponseTexts[eResp]);
-        break;
-      }
-      nLineCount++;
-    }
-
-    fclose(bootfile);
-  }
-  else{
-    if(0!=getenv("FORTE_BOOT_FILE_FAIL_MISSING")){
-      DEVLOG_ERROR("Boot file %s could not be opened and FORTE_BOOT_FILE_FAIL_MISSING is set. Failing...\n", bootFileName);
-      exit(2);
-    }
-    else{
-      DEVLOG_WARNING("Boot file %s could not be opened. Skipping...\n", bootFileName);
-    }
-  }
-}
-#endif
 
 EMGMResponse DEV_MGR::parseAndExecuteMGMCommand(char *pa_acDest, char *pa_acCommand){
   EMGMResponse eResp = e_INVALID_OBJECT;
