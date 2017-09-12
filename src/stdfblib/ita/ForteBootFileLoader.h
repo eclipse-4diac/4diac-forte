@@ -19,11 +19,11 @@
 
 class ForteBootFileLoader {
 public:
-	ForteBootFileLoader(DEV_MGR &paDevMgr);
+	explicit ForteBootFileLoader(DEV_MGR &paDevMgr);
 	~ForteBootFileLoader();
 
 private:
-	char* bootFileName;
+	const char* bootFileName;
 	FILE *bootfile;
 	DEV_MGR &paDevMgr;
 

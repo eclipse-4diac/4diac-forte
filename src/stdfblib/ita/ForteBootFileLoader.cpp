@@ -74,7 +74,6 @@ void ForteBootFileLoader::loadBootFile(){
   //we could open the file try to load it
   int nLineCount = 1;
   EMGMResponse eResp;
-  char *cmdStart;
   char acLineBuf[cg_unBootFileLineBufSize]; //TODO maybe move it out of the stack
 
   while(0 != fgets(acLineBuf, cg_unBootFileLineBufSize, bootfile)){
@@ -88,7 +87,7 @@ void ForteBootFileLoader::loadBootFile(){
       paDevMgr.getResource().getDevice().executeMGMCommand(m_stCommand);
       break;
     }
-    cmdStart = strchr(acLineBuf, ';');
+    char *cmdStart = strchr(acLineBuf, ';');
     if(0 == cmdStart){
       DEVLOG_ERROR("Boot file line does not contain separating ';'. Line: %d\n", nLineCount);
       break;

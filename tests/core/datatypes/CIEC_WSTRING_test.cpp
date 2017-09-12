@@ -216,7 +216,7 @@ BOOST_AUTO_TEST_CASE(WString_toUTF16)
   BOOST_CHECK_EQUAL(nRes, 4);
   BOOST_CHECK(! memcmp(cBuffer, cWStringTest3Result, 4));
 
-  nRes = sTest.toUTF16(cBuffer, sizeof(cWStringTest3Result)-1);
+  nRes = sTest.toUTF16(cBuffer, static_cast<unsigned int>(sizeof(cWStringTest3Result)-1));
   BOOST_CHECK_EQUAL(nRes, -1);
 }
 
