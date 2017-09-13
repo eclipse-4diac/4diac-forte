@@ -15,6 +15,7 @@
 #include <mgmcmd.h>
 #include <mgmcmdstruct.h>
 #include "../../core/device.h"
+#include <string>
 
 ForteBootFileLoader::ForteBootFileLoader(DEV_MGR &paDevMgr) : paDevMgr(paDevMgr){
   setBootFileName();
@@ -74,28 +75,16 @@ void ForteBootFileLoader::loadBootFile(){
   //we could open the file try to load it
   int nLineCount = 1;
   EMGMResponse eResp;
-  char acLineBuf[cg_unBootFileLineBufSize]; //TODO maybe move it out of the stack
-
-  while(0 != fgets(acLineBuf, cg_unBootFileLineBufSize, bootfile)){
-    if('\n' != acLineBuf[strlen(acLineBuf) - 1]){
-       //the line has been longer than our buffer
-      DEVLOG_ERROR("Boot file line longer than configured buffer size: %d\n", cg_unBootFileLineBufSize);
-      //As we were not able to load the bootfile clean any created resources and FBs and start an empty device
-      forte::core::SManagementCMD m_stCommand;
-      m_stCommand.mCMD = cg_nMGM_CMD_Delete_AllFBInstances;
-      m_stCommand.mDestination = CStringDictionary::scm_nInvalidStringId;
-      paDevMgr.getResource().getDevice().executeMGMCommand(m_stCommand);
-      break;
-    }
-    char *cmdStart = strchr(acLineBuf, ';');
+  CIEC_STRING line;
+  while(readLine(line)){
+    char *cmdStart = strchr(line.getValue(), ';');
     if(0 == cmdStart){
       DEVLOG_ERROR("Boot file line does not contain separating ';'. Line: %d\n", nLineCount);
       break;
     }
     *cmdStart = '\0';
     cmdStart++;
-
-    eResp = paDevMgr.parseAndExecuteMGMCommand(acLineBuf, cmdStart);
+    eResp = paDevMgr.parseAndExecuteMGMCommand(line.getValue(), cmdStart);
     if(e_RDY != eResp){
       //command was not successful
       DEVLOG_ERROR("Boot file command could not be executed. Line: %d: %s, Response %s\n", nLineCount, cmdStart, DEV_MGR::scm_sMGMResponseTexts[eResp]);
@@ -103,7 +92,19 @@ void ForteBootFileLoader::loadBootFile(){
     }
     nLineCount++;
   }
-
   fclose(bootfile);
 }
 
+bool ForteBootFileLoader::readLine(CIEC_STRING &line){
+  unsigned int size = 100;
+  line.clear();
+  char acLineBuf[size];
+  do{
+    if(0 != fgets(acLineBuf, size, bootfile)){
+      line.append(acLineBuf);
+    }else{
+      return 0 != line.length();
+    }
+  }while((line.getValue()[line.length() - 1] != '\n'));
+  return true;
+}

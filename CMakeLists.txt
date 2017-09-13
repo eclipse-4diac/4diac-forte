@@ -95,7 +95,6 @@ if(FORTE_SUPPORT_BOOT_FILE)
   forte_add_definition("-DFORTE_SUPPORT_BOOT_FILE")
   SET(FORTE_BootfileLocation "" CACHE STRING "Path to the bootfile, if same directory as forte executable leave empty, include trailing '/'!")
   mark_as_advanced(FORTE_BootfileLocation)
-  SET(FORTE_BOOTFILELINEBUFSIZE "300" CACHE STRING "size of the line buffer for reading boot files")
 endif(FORTE_SUPPORT_BOOT_FILE)
 
 set(FORTE_SUPPORT_MONITORING ON CACHE BOOL "Enable FORTE monitoring functionalities")

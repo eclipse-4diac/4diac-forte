@@ -31,6 +31,7 @@ private:
 	void setBootFileName();
 	bool checkBootFile();
 	void openBootFile();
+	bool readLine(CIEC_STRING &line);
 };
 
 #endif /* SRC_STDFBLIB_ITA_FORTEBOOTFILELOADER_H_ */
