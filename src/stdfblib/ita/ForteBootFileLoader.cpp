@@ -105,6 +105,14 @@ bool ForteBootFileLoader::readLine(CIEC_STRING &line){
     }else{
       return 0 != line.length();
     }
-  }while((line.getValue()[line.length() - 1] != '\n'));
+  }while(checkCommandEnding(line));
   return true;
+}
+
+bool ForteBootFileLoader::checkCommandEnding(CIEC_STRING &line){
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+  return (strcmp(line.getValue() + line.length() - 11, "</Request>\n"));
+#else
+  return line.getValue()[line.length() - 1] != '\n';
+#endif
 }

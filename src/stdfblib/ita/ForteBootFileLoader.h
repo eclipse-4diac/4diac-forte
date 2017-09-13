@@ -32,6 +32,7 @@ private:
 	bool checkBootFile();
 	void openBootFile();
 	bool readLine(CIEC_STRING &line);
+	bool checkCommandEnding(CIEC_STRING &line);
 };
 
 #endif /* SRC_STDFBLIB_ITA_FORTEBOOTFILELOADER_H_ */
