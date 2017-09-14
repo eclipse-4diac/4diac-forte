@@ -12,6 +12,9 @@
 #############################################################################
 # core/lua
 #############################################################################
+
+find_package(PkgConfig)
+
 if("${FORTE_USE_LUATYPES}" STREQUAL "LuaJIT")
   set(LUAJIT_LIBRARY "" CACHE FILEPATH "LuaJit Library")
   set(LUAJIT_INCLUDE_DIR "" CACHE PATH "LuaJit Include Directory")
@@ -22,9 +25,16 @@ if("${FORTE_USE_LUATYPES}" STREQUAL "LuaJIT")
     forte_add_link_library(${LUAJIT_MATH_LIBRARY})
   endif(UNIX AND NOT APPLE)
 elseif("${FORTE_USE_LUATYPES}" STREQUAL "Lua")
-  find_package(Lua REQUIRED)
+
+  pkg_check_modules (LUA lua)
+
+  if(NOT DEFINED LUA_FOUND)
+    find_package(Lua REQUIRED)
+  endif(NOT DEFINED LUA_FOUND)
+
   forte_add_include_directories(${LUA_INCLUDE_DIR})
   forte_add_link_library(${LUA_LIBRARIES})
+
 endif("${FORTE_USE_LUATYPES}" STREQUAL "LuaJIT")
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
