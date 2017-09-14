@@ -96,7 +96,7 @@ void ForteBootFileLoader::loadBootFile(){
 }
 
 bool ForteBootFileLoader::readLine(CIEC_STRING &line){
-  unsigned int size = 100;
+  const unsigned int size = 100;
   line.clear();
   char acLineBuf[size];
   do{
