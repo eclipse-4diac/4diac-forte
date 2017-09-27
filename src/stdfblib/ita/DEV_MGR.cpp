@@ -57,6 +57,9 @@ void DEV_MGR::executeEvent(int pa_nEIID){
     if((true == QI()) && (false == QO())){
       //this is the first time init is called try to load a boot file
       ForteBootFileLoader loader(*this);
+      if(loader.isOpen() && OK == loader.loadBootFile()){
+          DEVLOG_INFO("Bootfile correctly loaded\n");
+      }
     }
 #endif
     CCommFB::executeEvent(pa_nEIID);  //initialize the underlying server FB

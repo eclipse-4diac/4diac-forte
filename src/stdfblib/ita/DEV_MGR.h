@@ -19,10 +19,11 @@
 #include <forte_string.h>
 #include <mgmcmdstruct.h>
 #include <commfb.h>
+#include "IBootFileCallback.h"
 
 /*! \brief Implementation of the DEV_MGR FB.
  */
-class DEV_MGR: public forte::com_infra::CCommFB {
+class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
   DECLARE_FIRMWARE_FB(DEV_MGR)
 
   public:
@@ -35,9 +36,17 @@ class DEV_MGR: public forte::com_infra::CCommFB {
     DEV_MGR(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
     virtual ~DEV_MGR();
 
-    EMGMResponse parseAndExecuteMGMCommand(char *pa_acDest, char *pa_acCommand);
+    bool executeCommand(char *pa_acDest, char *pa_acCommand){
+      EMGMResponse eResp = parseAndExecuteMGMCommand(pa_acDest, pa_acCommand);
+      if(eResp != e_RDY){
+        DEVLOG_ERROR("Boot file error. DEV_MGR says error is %s\n", DEV_MGR::scm_sMGMResponseTexts[eResp]);
+      }
+      return (eResp == e_RDY);
+    }
 
   private:
+
+    EMGMResponse parseAndExecuteMGMCommand(char *pa_acDest, char *pa_acCommand);
 
     static const CStringDictionary::TStringId scm_anDataInputNames[];
     static const CStringDictionary::TStringId scm_anDataInputTypeIds[];

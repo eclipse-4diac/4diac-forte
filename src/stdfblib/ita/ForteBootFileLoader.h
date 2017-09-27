@@ -15,24 +15,46 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "DEV_MGR.h"
+#include "IBootFileCallback.h"
+#include "../../../src/core/datatypes/forte_string.h"
+
+enum LoadBootResult {
+  OK,
+  MISSING_COLON,
+  FILE_NOT_OPENED,
+  EXTERNAL_ERROR,
+};
 
 class ForteBootFileLoader {
 public:
-	explicit ForteBootFileLoader(DEV_MGR &paDevMgr);
+
+  /**
+   * Constructor which uses the the default values for the boot file location
+   * @param paCallback Object to be called for each command
+   */
+  explicit ForteBootFileLoader(IBootFileCallback &paCallback);
+
+  /**
+   * Constructor which uses a specific bootfile name instead of the default one
+   * @param paCallback Object to be called for each command
+   * @param paBootFileName Specific boot file name to be opened
+   */
+	explicit ForteBootFileLoader(IBootFileCallback &paCallback, CIEC_STRING &paBootFileName);
 	~ForteBootFileLoader();
 
-private:
-	const char* bootFileName;
-	FILE *bootfile;
-	DEV_MGR &paDevMgr;
+	LoadBootResult loadBootFile();
 
-	void loadBootFile();
-	void setBootFileName();
-	bool checkBootFile();
-	void openBootFile();
+	bool isOpen() const{
+	  return (0 != bootfile);
+	}
+
+private:
+	FILE *bootfile;
+	IBootFileCallback &mCallback; //for now with one callback is enough for all cases
+
+  bool openBootFile(CIEC_STRING* paBootFileName);
 	bool readLine(CIEC_STRING &line);
-	bool checkCommandEnding(CIEC_STRING &line);
+	bool checkCommandEnding(const CIEC_STRING &line) const;
 };
 
 #endif /* SRC_STDFBLIB_ITA_FORTEBOOTFILELOADER_H_ */
