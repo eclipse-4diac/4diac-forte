@@ -14,8 +14,6 @@
 #define _F_UDINT_TO_WORD_H_
 
 #include <funcbloc.h>
-#include <forte_word.h>
-#include <forte_udint.h>
 
 class FORTE_F_UDINT_TO_WORD: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_UDINT_TO_WORD)

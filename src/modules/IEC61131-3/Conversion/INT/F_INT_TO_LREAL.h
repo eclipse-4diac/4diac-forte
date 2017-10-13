@@ -18,8 +18,6 @@
 
 
 #include <funcbloc.h>
-#include <forte_int.h>
-#include <forte_lreal.h>
 
 class FORTE_F_INT_TO_LREAL: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_INT_TO_LREAL)

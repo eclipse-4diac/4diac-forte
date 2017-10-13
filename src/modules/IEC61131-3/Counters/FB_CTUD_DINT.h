@@ -13,9 +13,6 @@
 #define _FB_CTUD_DINT_H_
 
 #include <funcbloc.h>
-#include <forte_dint.h>
-#include <forte_bool.h>
-#include <forte_array.h>
 
 class FB_CTUD_DINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FB_CTUD_DINT)

@@ -13,8 +13,6 @@
 #define _F_TIME_TO_UDINT_H_
 
 #include <funcbloc.h>
-#include <forte_time.h>
-#include <forte_udint.h>
 
 class FORTE_F_TIME_TO_UDINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_TIME_TO_UDINT)

@@ -14,8 +14,6 @@
 #define _F_LWORD_TO_ULINT_H_
 
 #include <funcbloc.h>
-#include <forte_lword.h>
-#include <forte_ulint.h>
 
 class FORTE_F_LWORD_TO_ULINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_LWORD_TO_ULINT)

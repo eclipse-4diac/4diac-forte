@@ -14,8 +14,6 @@
 #define _F_BYTE_TO_INT_H_
 
 #include <funcbloc.h>
-#include <forte_byte.h>
-#include <forte_int.h>
 
 class FORTE_F_BYTE_TO_INT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_BYTE_TO_INT)

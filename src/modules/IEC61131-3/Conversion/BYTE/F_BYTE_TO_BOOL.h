@@ -14,8 +14,6 @@
 #define _F_BYTE_TO_BOOL_H_
 
 #include <funcbloc.h>
-#include <forte_byte.h>
-#include <forte_bool.h>
 
 class FORTE_F_BYTE_TO_BOOL: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_BYTE_TO_BOOL)

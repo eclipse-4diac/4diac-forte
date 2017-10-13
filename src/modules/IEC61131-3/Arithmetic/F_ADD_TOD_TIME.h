@@ -14,8 +14,6 @@
 #define _F_ADD_TOD_TIME_H_
 
 #include <funcbloc.h>
-#include <forte_time.h>
-#include <forte_time_of_day.h>
 
 class FORTE_F_ADD_TOD_TIME: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_ADD_TOD_TIME)

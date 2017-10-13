@@ -14,8 +14,6 @@
 #define _F_WSTRING_TO_ULINT_H_
 
 #include <funcbloc.h>
-#include <forte_wstring.h>
-#include <forte_ulint.h>
 
 class FORTE_F_WSTRING_TO_ULINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_WSTRING_TO_ULINT)

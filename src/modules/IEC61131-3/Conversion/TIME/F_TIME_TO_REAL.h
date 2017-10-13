@@ -13,8 +13,6 @@
 #define _F_TIME_TO_REAL_H_
 
 #include <funcbloc.h>
-#include <forte_real.h>
-#include <forte_time.h>
 
 class FORTE_F_TIME_TO_REAL: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_TIME_TO_REAL)
