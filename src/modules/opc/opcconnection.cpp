@@ -18,8 +18,9 @@
 
 using namespace forte::com_infra;
 
-COpcConnection::COpcConnection(const char *pa_acHost, const char *pa_acServerName) :
-    m_nGroupCount(0), m_eConnectionEvent(e_Disconnected), m_acHost(pa_acHost), m_acServerName(pa_acServerName), m_acGroupName(0), m_nReqUpdateRate(0), m_nRealUpdateRate(0), m_nDeadBand(0), m_bIsConnected(false), m_bBlockingConnect(false) {
+COpcConnection::COpcConnection(const char *pa_acHost, const char *pa_acServerName, COpcEventHandler* pa_eventHandler) :
+    m_nGroupCount(0), m_eConnectionEvent(e_Disconnected), m_acHost(pa_acHost), m_acServerName(pa_acServerName), m_acGroupName(0), m_nReqUpdateRate(0), m_nRealUpdateRate(0), m_nDeadBand(0), m_bIsConnected(false), m_bBlockingConnect(false),
+   m_eventHandler(pa_eventHandler){
   m_pOpcConnectionImpl = new COpcConnectionImpl(pa_acHost, pa_acServerName, this);
 }
 
@@ -29,7 +30,7 @@ COpcConnection::~COpcConnection(){
 
 void COpcConnection::addGroup(const char* pa_acGroupName, unsigned long pa_nReqUpdateRate, float pa_nDeadBand, CComLayer* pa_pComCallback){
   m_oSync.lock();
-  m_lOpcGroupMapList.push_back(new SOpcGroupMap(pa_acGroupName, COpcEventHandler::getInstance().addComCallback(pa_pComCallback)));
+  m_lOpcGroupMapList.push_back(new SOpcGroupMap(pa_acGroupName, m_eventHandler->addComCallback(pa_pComCallback)));
   m_oSync.unlock();
 
   m_pOpcConnectionImpl->addGroup(pa_acGroupName, pa_nReqUpdateRate, pa_nDeadBand);
@@ -71,7 +72,7 @@ int COpcConnection::send_connect(){
   switch (m_eConnectionEvent){
     case e_Disconnected:
       m_eConnectionEvent = e_Connecting;
-      COpcEventHandler::getInstance().sendCommand(new CCmd_AddConnection(m_pOpcConnectionImpl));
+      m_eventHandler->sendCommand(new CCmd_AddConnection(m_pOpcConnectionImpl));
       return 0;
     case e_Connecting:
       return 0;
@@ -129,7 +130,7 @@ int COpcConnection::send_addItem(COpcProcessVar* pa_pNewItem){
   m_oSync.unlock();
 
   if(m_eConnectionEvent == e_Connected){
-    COpcEventHandler::getInstance().sendCommand(new CCmd_AddOPCProcessVar(m_pOpcConnectionImpl, pa_pNewItem));
+    m_eventHandler->sendCommand(new CCmd_AddOPCProcessVar(m_pOpcConnectionImpl, pa_pNewItem));
 
     return 0;
   }
@@ -139,7 +140,7 @@ int COpcConnection::send_addItem(COpcProcessVar* pa_pNewItem){
 
 int COpcConnection::send_sendItemData(COpcProcessVar* pa_pItem){
   if (pa_pItem->getIsActive())
-    COpcEventHandler::getInstance().sendCommand(new CCmd_SetProcessVarValue(pa_pItem));
+    m_eventHandler->sendCommand(new CCmd_SetProcessVarValue(pa_pItem));
 
   return 0;
 }
@@ -157,7 +158,7 @@ void COpcConnection::response_connect(bool pa_bConnectionState){
 
     TOpcGroupMapList::Iterator itEnd = m_lOpcGroupMapList.end();
     for(TOpcGroupMapList::Iterator it = m_lOpcGroupMapList.begin(); it != itEnd; ++it){
-      COpcEventHandler::getInstance().executeComCallback((*it)->m_nCallbackDesc);
+      m_eventHandler->executeComCallback((*it)->m_nCallbackDesc);
     }
 
     m_oSync.unlock();
@@ -203,7 +204,7 @@ void COpcConnection::response_dataReceived(const char *pa_acGroupName, TItemData
       m_eConnectionEvent = e_DataReceived;
 
       // Notify Com Layer
-      COpcEventHandler::getInstance().executeComCallback(it_group->m_nCallbackDesc);
+      m_eventHandler->executeComCallback(it_group->m_nCallbackDesc);
       break;
     }
   }
@@ -223,7 +224,7 @@ void COpcConnection::response_itemAdded(COpcProcessVar* pa_pOpcItem){
         m_eConnectionEvent = e_ItemAddedFailed;
 
       // Notify Com Layer
-      COpcEventHandler::getInstance().executeComCallback(it_group->m_nCallbackDesc);
+      m_eventHandler->executeComCallback(it_group->m_nCallbackDesc);
       break;
     }
   }

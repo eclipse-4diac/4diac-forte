@@ -40,9 +40,9 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
     forte_add_sourcefile_hcpp(pctimeha)
   endif(${FORTE_BUILD_TYPE} STREQUAL SHARED_LIBRARY)
 
-
   if(FORTE_COM_ETH)
-   forte_add_sourcefile_hcpp( ../fdselecthand win32socketinterf )
+   forte_add_handler(CFDSelectHandler sockhand)
+   forte_add_sourcefile_hcpp(  win32socketinterf ../fdselecthand)
    forte_add_sourcefile_h(../gensockhand.h)
    forte_add_sourcefile_h(sockhand.h)
   endif(FORTE_COM_ETH)

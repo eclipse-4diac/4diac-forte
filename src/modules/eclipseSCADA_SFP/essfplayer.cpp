@@ -85,7 +85,7 @@ EComResponse CES_SFP_Layer::openConnection(char *paLayerParameter){
       }
 
       for(int i = 0; i < numData; i++){
-        CEclipseSCADASFPHandler::getInstance().registerWriteCallBack(mSFPItem[i], this);
+        GET_HANDLER_FROM_LAYER(*m_poFb, CEclipseSCADASFPHandler)->registerWriteCallBack(mSFPItem[i], this);
       }
     }
   }
@@ -103,7 +103,7 @@ void CES_SFP_Layer::closeConnection(){
 
     for(int i = 0; i < numData; i++){
       if(0 != mSFPItem[i]){
-        CEclipseSCADASFPHandler::getInstance().unregisterDataPoint(mSFPItem[i]);
+        GET_HANDLER_FROM_LAYER(*m_poFb,CEclipseSCADASFPHandler)->unregisterDataPoint(mSFPItem[i]);
       }
     }
 
@@ -118,7 +118,7 @@ EComResponse CES_SFP_Layer::createItems(CIEC_ANY *paDataArray, int paNumData, ch
   if(0 == paNumData){
     //handle pure event messages
     mSFPItem = new sfp_item *[1];
-    *mSFPItem = CEclipseSCADASFPHandler::getInstance().registerDataPoint(paLayerParameter, "Coment");
+    *mSFPItem = GET_HANDLER_FROM_LAYER(*m_poFb,CEclipseSCADASFPHandler)->registerDataPoint(paLayerParameter, "Coment");
     if(0 != *mSFPItem){
       sfp_item_update_data_allocated(*mSFPItem, sfp_variant_new_null(), sfp_time_in_millis ());
     }else{
@@ -136,7 +136,7 @@ EComResponse CES_SFP_Layer::createItems(CIEC_ANY *paDataArray, int paNumData, ch
           *nextParam = '\0';
           nextParam++;
         }
-        mSFPItem[i] = CEclipseSCADASFPHandler::getInstance().registerDataPoint(paLayerParameter, "Coment");
+        mSFPItem[i] = GET_HANDLER_FROM_LAYER(*m_poFb, CEclipseSCADASFPHandler)->registerDataPoint(paLayerParameter, "Coment");
 
         if(0 != mSFPItem[i]){
           //write the initial value to the SFP server so that the data type of the item gets set

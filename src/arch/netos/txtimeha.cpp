@@ -13,11 +13,11 @@
 #include "txtimeha.h"
 #include "../../core/devexec.h"
 
-CTimerHandler* CTimerHandler::createTimerHandler(){
-  return new CTXTimerHandler();
+CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& pa_poDeviceExecution){
+  return new CTXTimerHandler(pa_poDeviceExecution);
 }
 
-CTXTimerHandler::CTXTimerHandler(){
+CTXTimerHandler::CTXTimerHandler(CDeviceExecution& pa_poDeviceExecution) : CTimerHandler(pa_poDeviceExecution)  {
 // setup the handler for recieving the timer calls  
   //TODO handle ticks per second correctly here
   UINT status = tx_timer_create(&m_stTimer, "FORTE timer", &timerHandlerFunc, (ULONG) this, 1, 1, TX_NO_ACTIVATE);

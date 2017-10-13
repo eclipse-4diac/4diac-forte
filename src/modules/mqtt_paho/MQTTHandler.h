@@ -34,7 +34,7 @@ enum MQTTStates {
 };
 
 class MQTTHandler : public CExternalEventHandler, public CThread {
-	DECLARE_SINGLETON(MQTTHandler)
+    DECLARE_HANDLER(MQTTHandler)
 public:
 	enum RegisterLayerReturnCodes {
 		eRegisterLayerSucceeded,

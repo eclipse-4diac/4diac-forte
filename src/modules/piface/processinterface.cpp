@@ -10,7 +10,6 @@
  *******************************************************************************/
 #include "processinterface.h"
 
-
 CPiFaceProcessInterface::CPiFaceProcessInterface(CResource *paSrcRes,
     const SFBInterfaceSpec *paInterfaceSpec,
     const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData,
@@ -26,11 +25,11 @@ CPiFaceProcessInterface::~CPiFaceProcessInterface(){
 bool CPiFaceProcessInterface::initialise(bool paInput){
   bool retVal = false;
   if(paInput){
-    CPiFaceIOHandler::getInstance().registerIXFB(this);
+    GET_HANDLER_FROM_LAYER(*this, CPiFaceIOHandler)->registerIXFB(this);
   }
   QO() = QI();
-  if(!CPiFaceIOHandler::getInstance().isAlive()){
-    CPiFaceIOHandler::getInstance().start();
+  if(!GET_HANDLER_FROM_LAYER(*this, CPiFaceIOHandler)->isAlive()){
+    GET_HANDLER_FROM_LAYER(*this, CPiFaceIOHandler)->start();
   }
   CIEC_INT pinNum;
   if((-1 != pinNum.fromString(PARAMS().getValue())) && (8 > pinNum)){
@@ -41,7 +40,7 @@ bool CPiFaceProcessInterface::initialise(bool paInput){
 }
 
 bool CPiFaceProcessInterface::deinitialise(){
-  CPiFaceIOHandler::getInstance().unregisterIXFB(this);
+  GET_HANDLER_FROM_LAYER(*this, CPiFaceIOHandler)->unregisterIXFB(this);
   return true;
 }
 
@@ -55,7 +54,7 @@ bool CPiFaceProcessInterface::readPin(){
 }
 
 bool CPiFaceProcessInterface::writePin(){
-  CPiFaceIOHandler::getInstance().updateWriteData(OUT_X(), mPin);
+  GET_HANDLER_FROM_LAYER(*this, CPiFaceIOHandler)->updateWriteData(OUT_X(), mPin);
   return true;
 }
 
@@ -74,10 +73,10 @@ bool CPiFaceProcessInterface::checkInputData(long paValue){
  ***  CPiFaceProcessInterface::CPiFaceIOHandler
  ********************************************************************************************/
 
-DEFINE_SINGLETON(CPiFaceProcessInterface::CPiFaceIOHandler)
+DEFINE_HANDLER(CPiFaceProcessInterface::CPiFaceIOHandler)
 
 
-CPiFaceProcessInterface::CPiFaceIOHandler::CPiFaceIOHandler(){
+CPiFaceProcessInterface::CPiFaceIOHandler::CPiFaceIOHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution)  {
 }
 
 CPiFaceProcessInterface::CPiFaceIOHandler::~CPiFaceIOHandler(){

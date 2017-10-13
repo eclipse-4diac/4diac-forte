@@ -90,7 +90,7 @@ EComResponse CIPComLayer::recvData(const void *pa_pvData, unsigned int){
       //TODO move this to the processInterrupt()
       m_nSocketID = CIPComSocketHandler::acceptTCPConnection(m_nListeningID);
       if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != m_nSocketID){
-        CIPComSocketHandler::getInstance().addComCallback(m_nSocketID, this);
+        GET_HANDLER_FROM_LAYER(*m_poFb, CIPComSocketHandler)->addComCallback(m_nSocketID, this);
         m_eConnectionState = e_Connected;
       }
       break;
@@ -147,7 +147,7 @@ EComResponse CIPComLayer::openConnection(char *pa_acLayerParameter){
     if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != nSockDes){
       if(e_Publisher != m_poFb->getComServiceType()){
         //Publishers should not be registered for receiving data
-        CIPComSocketHandler::getInstance().addComCallback(nSockDes, this);
+        GET_HANDLER_FROM_LAYER(*m_poFb, CIPComSocketHandler)->addComCallback(nSockDes, this);
       }
       eRetVal = e_InitOk;
     }
@@ -168,7 +168,7 @@ void CIPComLayer::closeConnection(){
 
 void CIPComLayer::closeSocket(CIPComSocketHandler::TSocketDescriptor *pa_nSocketID){
   if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != *pa_nSocketID){
-    CIPComSocketHandler::getInstance().removeComCallback(*pa_nSocketID);
+    GET_HANDLER_FROM_LAYER(*m_poFb, CIPComSocketHandler)->removeComCallback(*pa_nSocketID);
     CIPComSocketHandler::closeSocket(*pa_nSocketID);
     *pa_nSocketID = CIPComSocketHandler::scm_nInvalidSocketDescriptor;
   }

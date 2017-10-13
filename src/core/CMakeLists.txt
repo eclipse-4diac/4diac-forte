@@ -28,6 +28,8 @@ forte_add_sourcefile_hcpp(extevhan   funcbloc  fbcontainer  if2indco )
 forte_add_sourcefile_hcpp(resource	stringdict typelib       ecet)
 forte_add_sourcefile_hcpp(adapterconn adapter    iec61131_functions)
 
+forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/core/deviceExecutionHandlers.cpp) # created file
+
 if(FORTE_DYNAMIC_TYPE_LOAD)
 	forte_add_subdirectory(lua)
 endif(FORTE_DYNAMIC_TYPE_LOAD)

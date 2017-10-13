@@ -20,6 +20,7 @@ SET(FORTE_ECLIPSE_SCADA_SFP_SERVER_LIB_DIR "" CACHE PATH "Path to EclipseSCADA S
 if(FORTE_COM_EclipseSCADA_SFP)
   forte_add_sourcefile_hcpp(essfphandler) 
 
+  forte_add_handler(CEclipseSCADASFPHandler essfphandler)
 
   if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
         if(EXISTS ${FORTE_ECLIPSE_SCADA_SFP_SERVER_LIB_DIR})

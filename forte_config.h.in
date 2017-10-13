@@ -78,6 +78,8 @@ const TForteUInt32 cg_unStringDictInitialStringBufSize = ${FORTE_STRINGDICTINITI
  */
 const TForteUInt32 cg_unStringDictInitialMaxNrOfStrings = ${FORTE_STRINGDICTINITIALMAXNROFSTRINGS};
 
+const TForteUInt32 cg_unNumberOfHandlers = ${FORTE_NUMBER_OF_HANDLERS};
+
 
 #ifdef FORTE_SUPPORT_BOOT_FILE
 

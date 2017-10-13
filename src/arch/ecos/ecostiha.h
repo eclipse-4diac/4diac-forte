@@ -51,7 +51,7 @@ class CECOSTimerHandler : public CTimerHandler, private CThread{
       cyg_semaphore_post(&m_stSemaphore);
     }
 
-    CECOSTimerHandler();
+    CECOSTimerHandler(CDeviceExecution& pa_poDeviceExecution);
     virtual void run(void);
 
     cyg_handle_t m_stAlarmHandle;

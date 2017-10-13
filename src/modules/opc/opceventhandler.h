@@ -21,8 +21,7 @@
 #include "ICmd.h"
 
 class COpcEventHandler : public CExternalEventHandler, private CThread{
-  DECLARE_SINGLETON(COpcEventHandler)
-    ;
+    DECLARE_HANDLER(COpcEventHandler)
   public:
     typedef int TCallbackDescriptor;
 

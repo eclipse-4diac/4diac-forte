@@ -142,6 +142,39 @@ forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/core/cominfra/comlayersmanager_
 file(REMOVE ${CMAKE_BINARY_DIR}/core/cominfra/comlayersmanager_new.cpp)
 
 #############################################################################
+# Configure Network Layers
+#############################################################################
+
+GET_PROPERTY(HANDLER_CLASS GLOBAL PROPERTY FORTE_HANDLER_CLASS)
+GET_PROPERTY(HANDLER_FILENAME GLOBAL PROPERTY FORTE_HANDLER_FILENAME)
+LIST(LENGTH HANDLER_CLASS       HANDLER_CLASS_LEN_ORIGINAL)
+math(EXPR HANDLER_CLASS_LEN           ${HANDLER_CLASS_LEN_ORIGINAL}-1)
+
+SET(HANDLERMANAGER_INCLUDE "")
+SET(HANDLERMANAGER_INSTANCE "")
+SET(HANDLERMANAGER_VARIABLES "")
+  
+SET(HANDLER_ID 1)
+FOREACH(POS RANGE ${HANDLER_CLASS_LEN}-1)
+  LIST(GET HANDLER_CLASS      ${POS} CLASS) 
+  LIST(GET HANDLER_FILENAME   ${POS} FILENAME)
+  SET(HANDLERMANAGER_INCLUDE  "${HANDLERMANAGER_INCLUDE}#include <${FILENAME}>\n")
+  
+  SET(HANDLERMANAGER_VARIABLES  "${HANDLERMANAGER_VARIABLES}const unsigned int ${CLASS}::handlerIdentifier = ${HANDLER_ID};\n")
+  SET(HANDLERMANAGER_INSTANCE "${HANDLERMANAGER_INSTANCE}  pa_DeviceExecution.mRegisteredEventHandlers[${HANDLER_ID}].m_poHandler = new ${CLASS}(pa_DeviceExecution);\n")
+  math(EXPR HANDLER_ID           ${HANDLER_ID}+1)
+ENDFOREACH(POS)
+
+math(EXPR HANDLER_CLASS_LEN_ORIGINAL ${HANDLER_CLASS_LEN_ORIGINAL}+1)
+SET(FORTE_NUMBER_OF_HANDLERS ${HANDLER_CLASS_LEN_ORIGINAL} PARENT_SCOPE)
+
+
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/core/deviceExecutionHandlers.cpp.in ${CMAKE_BINARY_DIR}/core/deviceExecutionHandlers_new.cpp)
+forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/core/deviceExecutionHandlers_new.cpp ${CMAKE_BINARY_DIR}/core/deviceExecutionHandlers.cpp)
+file(REMOVE ${CMAKE_BINARY_DIR}/core/deviceExecutionHandlers_new.cpp)
+
+
+#############################################################################
 # Load FORTE Extension Files
 #############################################################################
 

@@ -38,7 +38,7 @@ typedef struct UA_ClientEndpointMap UA_ClientEndpointMap;
 
 // cppcheck-suppress noConstructor
 class COPC_UA_Handler : public CExternalEventHandler, public CThread {
-DECLARE_SINGLETON(COPC_UA_Handler);
+    DECLARE_HANDLER(COPC_UA_Handler)
 
 public:
 

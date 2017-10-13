@@ -15,12 +15,12 @@
 using namespace forte::com_infra;
 
 
-DEFINE_SINGLETON(CEclipseSCADASFPHandler)
+DEFINE_HANDLER(CEclipseSCADASFPHandler)
 
 
 const uint16_t CEclipseSCADASFPHandler::scm_unServerPort;
 
-CEclipseSCADASFPHandler::CEclipseSCADASFPHandler(){
+CEclipseSCADASFPHandler::CEclipseSCADASFPHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution)  {
   mItemRegistry = sfp_registry_new();
   mEclipseSCADAServer = sfp_server_new(mItemRegistry);
 }
@@ -190,7 +190,7 @@ void CEclipseSCADASFPHandler::handleCellWrite(struct sfp_item * pa_pstItem, stru
   }
 
   if(e_Nothing != retVal){
-    getInstance().startNewEventChain(layer->getCommFB());
+    *static_cast<CEclipseSCADASFPHandler*>(layer->getHandler(CEclipseSCADASFPHandler::getIdentifier())).startNewEventChain(layer->getCommFB());
   }
 
 //  sfp_error_information_new(

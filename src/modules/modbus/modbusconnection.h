@@ -13,13 +13,18 @@
 
 #include <modbus.h>
 #include <forte_thread.h>
-#include <comlayer.h>
 #include "modbushandler.h"
 #include <errno.h>
 
+namespace forte{
+  namespace com_infra{
+    class CModbusComLayer;
+  }
+}
+
 class CModbusConnection : public CThread{
   public:
-    CModbusConnection();
+    CModbusConnection(CModbusHandler* pa_modbusHandler);
     ~CModbusConnection();
 
     virtual int readData(uint8_t *pa_pData) = 0;
@@ -50,7 +55,7 @@ class CModbusConnection : public CThread{
     void setResponseTimeout(unsigned int pa_nResponseTimeout);
     void setByteTimeout(unsigned int pa_nByteTimeout);
 
-    void setComCallback(forte::com_infra::CComLayer* pa_poModbusLayer);
+    void setComCallback(forte::com_infra::CModbusComLayer* pa_poModbusLayer);
 
   protected:
     modbus_t* m_pModbusConn;

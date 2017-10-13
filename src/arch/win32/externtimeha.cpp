@@ -26,14 +26,14 @@ unsigned int __stdcall getTicksPerSecond(){
 	return CExternTimerHandler::getExternTicksPerSecond();
 }
 
-CTimerHandler* CTimerHandler::createTimerHandler(){
+CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& pa_poDeviceExecution){
   if(!CExternTimerHandler::sm_poFORTEExtTimer){ //creating two timers is not possible
-    CExternTimerHandler::sm_poFORTEExtTimer = new CExternTimerHandler();
+    CExternTimerHandler::sm_poFORTEExtTimer = new CExternTimerHandler(pa_poDeviceExecution);
   }
   return CExternTimerHandler::sm_poFORTEExtTimer;
 }
 
-CExternTimerHandler::CExternTimerHandler(){
+CExternTimerHandler::CExternTimerHandler(CDeviceExecution& pa_poDeviceExecution) : CTimerHandler(pa_poDeviceExecution)  {
 }
 
 CExternTimerHandler::~CExternTimerHandler(){

@@ -63,7 +63,7 @@ class WagoPFCProcessInterface : public CProcessInterfaceBase{
 
     // cppcheck-suppress noConstructor
     class CKBusHandler : public CExternalEventHandler, public CThread{
-      DECLARE_SINGLETON(CKBusHandler)
+        DECLARE_HANDLER(CKBusHandler)
 
       public:
         //!KBus interface handling is up and running correctly

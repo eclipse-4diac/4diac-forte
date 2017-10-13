@@ -19,8 +19,7 @@
 #include <fortelist.h>
 
 class CModbusHandler : public CExternalEventHandler{
-  DECLARE_SINGLETON(CModbusHandler)
-    ;
+    DECLARE_HANDLER(CModbusHandler)
   public:
     typedef int TCallbackDescriptor;
 

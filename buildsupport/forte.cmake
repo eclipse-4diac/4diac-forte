@@ -201,6 +201,12 @@ MACRO(forte_add_network_layer NAME ONOFF CONFIGNAME CLASSNAME FILENAME DISCRIPTI
   ENDIF(FORTE_COM_${NAME})
 ENDMACRO(forte_add_network_layer)
 
+MACRO(forte_add_handler CLASSNAME FILENAME)
+    FORTE_ADD_SOURCEFILE_H(${FILENAME}.h)
+    set_property(GLOBAL APPEND PROPERTY FORTE_HANDLER_CLASS ${CLASSNAME})
+    set_property(GLOBAL APPEND PROPERTY FORTE_HANDLER_FILENAME "${FILENAME}.h")
+ENDMACRO(forte_add_handler)
+
 #MACRO(forte_add_module NAME DIRECTORY DISCRIPTION)
 # Additional parameters are interpreted as dependencies
 MACRO(forte_add_module NAME DISCRIPTION)

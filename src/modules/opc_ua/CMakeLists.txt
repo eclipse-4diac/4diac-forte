@@ -44,6 +44,7 @@ if (FORTE_COM_OPC_UA)
     forte_add_link_directories(${FORTE_COM_OPC_UA_LIB_DIR})
     forte_add_link_library_beginning(${FORTE_COM_OPC_UA_LIB})
 
+    forte_add_handler(COPC_UA_Handler opcua_handler)
     forte_add_sourcefile_hcpp(opcua_layer opcua_handler opcua_helper)
     if (NOT EXISTS ${FORTE_COM_OPC_UA_INCLUDE_DIR})
         message(SEND_ERROR "FORTE_COM_OPC_UA_INCLUDE_DIR not set or does not exist")

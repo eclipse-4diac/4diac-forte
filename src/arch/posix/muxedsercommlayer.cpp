@@ -231,7 +231,7 @@ void CMuxedSerCommLayer::CMuxedSerPortsManager::openPort(char* pa_acSerPort, SSe
   pa_pstPortEntry->m_nFD = open(pa_acSerPort, O_RDWR | O_NOCTTY);
 
   if(CFDSelectHandler::scm_nInvalidFileDescriptor != pa_pstPortEntry->m_nFD){
-    CFDSelectHandler::getInstance().addComCallback(pa_pstPortEntry->m_nFD, pa_pstPortEntry);
+    GET_HANDLER_FROM_LAYER(*m_poFb, CFDSelectHandler)->addComCallback(pa_pstPortEntry->m_nFD, pa_pstPortEntry);
   }
   else{
     DEVLOG_ERROR("CSerCommLayer: open failed: %s\n", strerror(errno));
@@ -239,7 +239,7 @@ void CMuxedSerCommLayer::CMuxedSerPortsManager::openPort(char* pa_acSerPort, SSe
 }
 
 void CMuxedSerCommLayer::CMuxedSerPortsManager::closePort(SSerPortEntry *pa_pstSerPortEntry){
-  CFDSelectHandler::getInstance().removeComCallback(pa_pstSerPortEntry->m_nFD);
+  GET_HANDLER_FROM_LAYER(*m_poFb, CFDSelectHandler)->removeComCallback(pa_pstSerPortEntry->m_nFD);
   close(pa_pstSerPortEntry->m_nFD);
 
   delete[] pa_pstSerPortEntry->m_acSerPort;

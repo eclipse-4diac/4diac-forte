@@ -36,7 +36,7 @@ EComResponse MQTTComLayer::sendData(void* pa_pvData, unsigned int pa_unSize) {
 	message.payloadlen = pa_unSize;
 	message.qos = QOS;
 	message.retained = 0;
-	int errorCode = MQTTAsync_sendMessage(MQTTHandler::getInstance().getClient(), mTopicName, &message, NULL);
+	int errorCode = MQTTAsync_sendMessage(GET_HANDLER_FROM_LAYER(*m_poFb, MQTTHandler)->getClient(), mTopicName, &message, NULL);
 	if (0 != errorCode) {
 		return e_ProcessDataSendFailed;
 	}
@@ -58,7 +58,7 @@ EComResponse MQTTComLayer::processInterrupt() {
 		if((0 < bufferSize) && (0 != m_poTopLayer)) {
 			m_eInterruptResp = m_poTopLayer->recvData(dataBuffer, bufferSize);
 			bufferSize = 0;
-			//MQTTHandler::getInstance().mqttMessageProcessed();
+			//GET_HANDLER_FROM_LAYER(*m_poFb, MQTTHandler)->mqttMessageProcessed();
 		}
 	}
 
@@ -73,7 +73,7 @@ EComResponse MQTTComLayer::openConnection(char* pa_acLayerParameter) {
 		mTopicName = new char[(strlen(parser[Topic]) + 1)];
 		mTopicName = strcpy(mTopicName, parser[Topic]);
 		if( MQTTHandler::eRegisterLayerSucceeded ==
-				(MQTTHandler::getInstance()).registerLayer(parser[Address], parser[ClientID], this)) {
+		    GET_HANDLER_FROM_LAYER(*m_poFb, MQTTHandler)->registerLayer(parser[Address], parser[ClientID], this)) {
 			eRetVal = e_InitOk;
 		}
 		else eRetVal = e_InitInvalidId;
@@ -100,5 +100,5 @@ EComResponse MQTTComLayer::openConnection(char* pa_acLayerParameter) {
 }
 
 void MQTTComLayer::closeConnection() {
-	MQTTHandler::getInstance().unregisterLayer(this);
+  GET_HANDLER_FROM_LAYER(*m_poFb, MQTTHandler)->unregisterLayer(this);
 }

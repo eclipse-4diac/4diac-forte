@@ -15,11 +15,11 @@
 
 const TForteInt32 CPCTimerHandler::csm_nTicksPerSecond = 1000;
 
-CTimerHandler* CTimerHandler::createTimerHandler(){
-  return new CPCTimerHandler();
+CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& pa_poDeviceExecution){
+  return new CPCTimerHandler(pa_poDeviceExecution);
 }
 
-CPCTimerHandler::CPCTimerHandler(){
+CPCTimerHandler::CPCTimerHandler(CDeviceExecution& pa_poDeviceExecution) : CTimerHandler(pa_poDeviceExecution)  {
 }
 
 CPCTimerHandler::~CPCTimerHandler(){

@@ -33,7 +33,7 @@ namespace forte {
       protected:
 
       private:
-        static void closeSocket(CIPComSocketHandler::TSocketDescriptor *pa_nSocketID);
+        void closeSocket(CIPComSocketHandler::TSocketDescriptor *pa_nSocketID);
 
         EComResponse openConnection(char *pa_acLayerParameter);
         void closeConnection();

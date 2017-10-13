@@ -14,11 +14,11 @@
 
 #include <ObjBase.h>
 
-DEFINE_SINGLETON(COpcEventHandler);
+DEFINE_HANDLER(COpcEventHandler);
 
 COpcEventHandler::TCallbackDescriptor COpcEventHandler::m_nCallbackDescCount = 0;
 
-COpcEventHandler::COpcEventHandler(){
+COpcEventHandler::COpcEventHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution)  {
   this->start();
   // Sleep to allow new thread to start
   CThread::sleep(100);

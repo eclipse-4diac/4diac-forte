@@ -17,9 +17,8 @@
 #include "../core/cominfra/comlayer.h"
 #include "../core/utils/criticalregion.h"
 
-DEFINE_SINGLETON(CFDSelectHandler);
-
-CFDSelectHandler::CFDSelectHandler(){
+DEFINE_HANDLER(CFDSelectHandler)
+CFDSelectHandler::CFDSelectHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution)  {
   m_bConnectionListChanged = false;
 #ifdef WIN32
   // Windows Socket Startupcode

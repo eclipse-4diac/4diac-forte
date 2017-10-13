@@ -238,7 +238,7 @@ forte::com_infra::EComResponse CWin32SerComLayer::openConnection(char *pa_acLaye
   switch (m_poFb->getComServiceType()){
   case forte::com_infra::e_Server:
   case forte::com_infra::e_Client:
-	  CWin32SerComHandler::getInstance().registerSerComLayer(this);
+    GET_HANDLER_FROM_LAYER(*m_poFb, CWin32SerComHandler)->registerSerComLayer(this);
 	  m_eConnectionState = forte::com_infra::e_Connected;
 	  break;
   case forte::com_infra::e_Publisher:
@@ -250,6 +250,6 @@ forte::com_infra::EComResponse CWin32SerComLayer::openConnection(char *pa_acLaye
 }
 
 void CWin32SerComLayer::closeConnection()  {
-  CWin32SerComHandler::getInstance().unregisterSerComLayer(this);
+  GET_HANDLER_FROM_LAYER(*m_poFb, CWin32SerComHandler)->unregisterSerComLayer(this);
   CloseHandle(m_hSerial);
 }

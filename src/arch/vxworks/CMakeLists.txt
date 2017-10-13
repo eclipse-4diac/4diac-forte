@@ -65,6 +65,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
                                COMMAND ${CMAKE_C_COMPILER} -r -nostdlib -Wl,-X -T ${FORTE_VXWORKS_BASE_DIR}/target/h/tool/${FORTE_VXWORKS_TOOL}/ldscripts/link.OUT -o forte.out ctdt.o forte.vxe)
   
   if(FORTE_COM_ETH)
+   forte_add_handler(CFDSelectHandler sockhand)
    forte_add_sourcefile_hcpp( ../fdselecthand ../bsdsocketinterf)
    forte_add_sourcefile_h(../gensockhand.h)
    forte_add_sourcefile_h(sockhand.h)

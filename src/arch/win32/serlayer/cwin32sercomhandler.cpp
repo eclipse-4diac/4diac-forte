@@ -16,9 +16,9 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-DEFINE_SINGLETON(CWin32SerComHandler);
+DEFINE_HANDLER(CWin32SerComHandler)
 
-CWin32SerComHandler::CWin32SerComHandler()  {
+CWin32SerComHandler::CWin32SerComHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution)  {
 }
 
 CWin32SerComHandler::~CWin32SerComHandler(){
@@ -63,6 +63,9 @@ void CWin32SerComHandler::run(){
 
     if(true == m_lstComLayerList.isEmpty()){
       mSem.semWaitIndefinitly();
+    }
+    if(!isAlive()){
+      break;
     }
 
     m_oSync.lock();

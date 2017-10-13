@@ -31,8 +31,7 @@ namespace forte{
  */
 
 class CFDSelectHandler : public CExternalEventHandler, private CThread{
-  DECLARE_SINGLETON(CFDSelectHandler)
-    ;
+  DECLARE_HANDLER(CFDSelectHandler)
   public:
     typedef int TFileDescriptor; //!< General type definition for a file descriptor. To be used by the callback classes.
     static const TFileDescriptor scm_nInvalidFileDescriptor = -1;

@@ -10,6 +10,7 @@
  *******************************************************************************/
 
 #include "sysfsprocint.h"
+#include "../../arch/devlog.h"
 #include <string>
 #include <forte_thread.h>
 const char * const CSysFsProcessInterface::scmOK = "OK";

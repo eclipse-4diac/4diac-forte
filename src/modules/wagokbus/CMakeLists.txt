@@ -14,6 +14,8 @@
 forte_add_module(WagoKbus "Wago Kbus interface")
 if(FORTE_MODULE_WagoKbus)
 
+forte_add_handler(WagoPFCProcessInterface::CKBusHandler processinterface)
+
 if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 
 ##All Wago depedencies are added here

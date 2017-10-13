@@ -22,6 +22,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "MacOs")
   forte_add_sourcefile_h(../forte_architecture_time.h)
 
   if(FORTE_COM_ETH)
+   forte_add_handler(CFDSelectHandler sockhand)
    forte_add_sourcefile_hcpp( ../fdselecthand ../bsdsocketinterf)
    forte_add_sourcefile_h(../gensockhand.h)
    forte_add_sourcefile_h(../posix/sockhand.h)

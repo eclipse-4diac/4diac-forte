@@ -15,7 +15,7 @@
 #include <criticalregion.h>
 #include <string.h>
 
-DEFINE_SINGLETON(MQTTHandler);
+DEFINE_HANDLER(MQTTHandler);
 
 MQTTAsync_connectOptions MQTTHandler::smClientConnectionOptions =
     MQTTAsync_connectOptions_initializer;
@@ -30,7 +30,7 @@ MQTTStates MQTTHandler::smMQTTS_STATE = NOT_CONNECTED;
 forte::arch::CSemaphore MQTTHandler::mStateSemaphore = forte::arch::CSemaphore();
 bool MQTTHandler::mIsSemaphoreEmpty = true;
 
-MQTTHandler::MQTTHandler(){
+MQTTHandler::MQTTHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution)  {
   if(!isAlive()){
     start();
   }
@@ -92,25 +92,27 @@ void MQTTHandler::onMqttConnectionLost(void* context, char* cause){
         handler->mToResubscribe.push_back((*it));
       }
     }
-    MQTTHandler::getInstance().resumeSelfSuspend();
+    handler->resumeSelfSuspend();
   }
 }
 
-void MQTTHandler::onMqttConnectionSucceed(void *, MQTTAsync_successData *){
+void MQTTHandler::onMqttConnectionSucceed(void *context, MQTTAsync_successData *){
   DEVLOG_INFO("MQTT: successfully connected\n");
   {
+    MQTTHandler *handler = static_cast<MQTTHandler *>(context);
     CCriticalRegion sectionState(smMQTTMutex);
     smMQTTS_STATE = SUBSCRIBING;
-    MQTTHandler::getInstance().resumeSelfSuspend();
+    handler->resumeSelfSuspend();
   }
 }
 
-void MQTTHandler::onMqttConnectionFailed(void *, MQTTAsync_failureData *){
+void MQTTHandler::onMqttConnectionFailed(void *context, MQTTAsync_failureData *){
   DEVLOG_ERROR("MQTT connection failed.\n");
   {
+    MQTTHandler *handler = static_cast<MQTTHandler *>(context);
     CCriticalRegion sectionState(smMQTTMutex);
     smMQTTS_STATE = NOT_CONNECTED;
-    MQTTHandler::getInstance().resumeSelfSuspend();
+    handler->resumeSelfSuspend();
   }
 }
 
@@ -118,14 +120,15 @@ void MQTTHandler::onSubscribeSucceed(void* context, MQTTAsync_successData* ){
   if(0 != context){
     CCriticalRegion sectionState(smMQTTMutex);
     MQTTComLayer* layer = static_cast<MQTTComLayer*>(context);
+    MQTTHandler* handler = GET_HANDLER_FROM_LAYER(*layer->getCommFB(), MQTTHandler);
     DEVLOG_INFO("MQTT: Subscription succeed. Topic: -%s-\n", layer->getTopicName());
 
-    MQTTHandler::getInstance().popLayerFromList(layer, &MQTTHandler::getInstance().mToResubscribe);
-    if(MQTTHandler::getInstance().mToResubscribe.isEmpty()){
+    handler->popLayerFromList(layer, &handler->mToResubscribe);
+    if(handler->mToResubscribe.isEmpty()){
       smMQTTS_STATE = ALL_SUBSCRIBED;
     }
     else{
-      MQTTHandler::getInstance().resumeSelfSuspend();
+      handler->resumeSelfSuspend();
     }
   }
 }
@@ -135,7 +138,7 @@ void MQTTHandler::onSubscribeFailed(void* context, MQTTAsync_failureData*){
     CCriticalRegion sectionState(smMQTTMutex);
     MQTTComLayer* layer = static_cast<MQTTComLayer*>(context);
     DEVLOG_ERROR("MQTT: Subscription failed. Topic: -%s-\n", layer->getTopicName());
-    MQTTHandler::getInstance().resumeSelfSuspend();
+    GET_HANDLER_FROM_LAYER(*layer->getCommFB(), MQTTHandler)->resumeSelfSuspend();
   }
 }
 
@@ -222,7 +225,7 @@ int MQTTHandler::registerLayer(char* paAddress, char* paClientId, MQTTComLayer* 
       mToResubscribe.push_back(paLayer);
       if(ALL_SUBSCRIBED == smMQTTS_STATE){
         smMQTTS_STATE = SUBSCRIBING;
-        MQTTHandler::getInstance().resumeSelfSuspend();
+        GET_HANDLER_FROM_LAYER(*paLayer->getCommFB(), MQTTHandler)->resumeSelfSuspend();
       }
     }
 
@@ -243,6 +246,8 @@ void MQTTHandler::enableHandler(void){
 
 void MQTTHandler::disableHandler(void){
   if (isAlive()){
+    setAlive(false);
+    resumeSelfSuspend();
     end();
   }
 }

@@ -12,6 +12,7 @@
 #include "comlayer.h"
 #include "commfb.h"
 
+
 using namespace forte::com_infra;
 
 CComLayer::CComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poComFB) :
@@ -31,3 +32,4 @@ CComLayer::~CComLayer(){
 EComResponse CComLayer::processInterrupt(){
   return e_Nothing;
 }
+

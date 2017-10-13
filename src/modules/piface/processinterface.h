@@ -39,7 +39,7 @@ class CPiFaceProcessInterface : public CProcessInterfaceBase{
     bool getValue(long paValue);
 
     class CPiFaceIOHandler : public CExternalEventHandler, public CThread{
-      DECLARE_SINGLETON(CPiFaceIOHandler)
+        DECLARE_HANDLER(CPiFaceIOHandler)
 
       public:
         void registerIXFB(CPiFaceProcessInterface *pa_poFB);

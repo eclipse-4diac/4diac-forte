@@ -20,6 +20,8 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 if(FORTE_COM_PAHOMQTT)
 	forte_add_sourcefile_hcpp( MQTTComLayer MQTTParameterParser MQTTHandler )
 	
+	forte_add_handler(MQTTHandler MQTTHandler)
+	
 	SET(FORTE_COM_PAHOMQTT_INCLUDE_DIR "" CACHE PATH "ABSOLUTE path to Paho MQTT src directory")
     SET(FORTE_COM_PAHOMQTT_LIB_DIR "" CACHE PATH "ABSOLUTE path to Paho MQTT library")
 	

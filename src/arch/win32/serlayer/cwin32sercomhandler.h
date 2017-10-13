@@ -21,9 +21,8 @@
 class CWin32SerComLayer;
 
 class CWin32SerComHandler : public CExternalEventHandler, public CThread{
-  DECLARE_SINGLETON(CWin32SerComHandler)
+  DECLARE_HANDLER(CWin32SerComHandler)
   public:
-
     void registerSerComLayer(CWin32SerComLayer *pa_poComLayer);
     void unregisterSerComLayer(CWin32SerComLayer *pa_poComLayer);
 
@@ -33,6 +32,8 @@ class CWin32SerComHandler : public CExternalEventHandler, public CThread{
     }
 
     void disableHandler(void){
+      setAlive(false);
+      mSem.semInc();
       end();
     }
 

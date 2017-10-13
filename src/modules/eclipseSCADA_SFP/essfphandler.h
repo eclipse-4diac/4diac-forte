@@ -28,8 +28,7 @@ struct TOpenSCADAItem{
 
 // cppcheck-suppress noConstructor
 class CEclipseSCADASFPHandler : public CExternalEventHandler, public CThread{
-  DECLARE_SINGLETON(CEclipseSCADASFPHandler)
-    ;
+    DECLARE_HANDLER(CEclipseSCADASFPHandler)
 
   public:
 

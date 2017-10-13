@@ -19,6 +19,7 @@
 
 class COpcConnectionImpl;
 class COpcProcessVar;
+class COpcEventHandler;
 
 struct SOpcItemData{
     const char* m_acItemName;
@@ -37,7 +38,7 @@ typedef CSinglyLinkedList<SOpcItemData*> TItemDataList;
 class COpcConnection{
   public:
 
-    COpcConnection(const char *pa_acHost, const char *pa_acServerName);
+    COpcConnection(const char *pa_acHost, const char *pa_acServerName, COpcEventHandler* pa_eventHandler);
     ~COpcConnection();
 
     /*** Functions for OpcConnectionHandler ****************************************/
@@ -120,6 +121,8 @@ class COpcConnection{
     bool m_bBlockingConnect;
 
     CSyncObject m_oSync;
+
+    COpcEventHandler* m_eventHandler;
 
     //we don't want COpcConnection to be copy and assignable
     COpcConnection(const COpcConnection&);

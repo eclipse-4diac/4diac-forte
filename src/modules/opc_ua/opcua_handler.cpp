@@ -27,7 +27,7 @@
 
 using namespace forte::com_infra;
 
-DEFINE_SINGLETON(COPC_UA_Handler);
+DEFINE_HANDLER(COPC_UA_Handler);
 
 const char *LogsLevelNames[6] = {"trace", "debug", "info", "warning", "error", "fatal"};
 const char *LogsCategoryNames[6] = {"network", "channel", "session", "server", "client", "userland"};
@@ -84,7 +84,6 @@ void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
 
 	char hostname[256];
 #ifdef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
-	// cppcheck-suppress ConfigurationNotChecked
 	forte_snprintf(hostname, 255, "%s-%s", FORTE_COM_OPC_UA_CUSTOM_HOSTNAME, name);
 #else
 	if(gethostname(hostname, 255) == 0) {
@@ -205,11 +204,12 @@ void COPC_UA_Handler::removeLdsRegister(const UA_String *discoveryUrl) {
 
 #endif
 
-COPC_UA_Handler::COPC_UA_Handler() : uaServerConfig(),	getNodeForPathMutex(), nodeCallbackHandles(), clients(),
+COPC_UA_Handler::COPC_UA_Handler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution),
+    uaServer(0), uaServerConfig(0), uaServerRunningFlag(UA_FALSE), getNodeForPathMutex(), nodeCallbackHandles(), clients(),
 #ifdef FORTE_COM_OPC_UA_MULTICAST
 	registeredWithLds(),
 #endif
-	nodeLayerReferences()
+	 nodeLayerReferences()
 {
 
 }
@@ -218,7 +218,9 @@ COPC_UA_Handler::~COPC_UA_Handler() {
 	stopServer();
 	end();
 	UA_ServerConfig_delete(uaServerConfig);
-	UA_Server_delete(uaServer);
+	if(0 != uaServer){
+    UA_Server_delete(uaServer);
+	}
 
 	for (CSinglyLinkedList<struct UA_ClientEndpointMap *>::Iterator iter = clients.begin(); iter != clients.end(); ++iter) {
 		UA_Client_disconnect((*iter)->client);
@@ -778,7 +780,7 @@ UA_StatusCode COPC_UA_Handler::registerNodeCallBack(const UA_NodeId *nodeId, for
 	handle->portIndex = portIndex;
 	// store it in the list so we can delete it to avoid mem leaks
 	nodeCallbackHandles.push_back(handle);
-	UA_ValueCallback callback = {NULL, COPC_UA_Handler::getInstance().onWrite};
+	UA_ValueCallback callback = {NULL, GET_HANDLER_FROM_LAYER(*comLayer->getCommFB(), COPC_UA_Handler)->onWrite};
 	UA_Server_setNodeContext(uaServer, *nodeId, handle);
 	return UA_Server_setVariableNode_valueCallback(uaServer, *nodeId, callback);
 }
@@ -812,7 +814,7 @@ void COPC_UA_Handler::onWrite(UA_Server *, const UA_NodeId *,
 	}
 
 	if (e_Nothing != retVal) {
-		getInstance().startNewEventChain(layer->getCommFB());
+	  GET_HANDLER_FROM_LAYER(*layer->getCommFB(), COPC_UA_Handler)->startNewEventChain(layer->getCommFB());
 	}
 
 }
@@ -868,6 +870,6 @@ void COPC_UA_Handler::referencedNodesDecrement(const CSinglyLinkedList<UA_NodeId
 }
 
 void COPC_UA_Handler::forceEventHandling(COPC_UA_Layer* layer){
-  getInstance().startNewEventChain(layer->getCommFB());
+  startNewEventChain(layer->getCommFB());
 }
 

@@ -12,12 +12,12 @@
 #ifndef _DEVEXEC_H
 #define _DEVEXEC_H
 
-const int cg_MaxRegisteredEventHandlers = 10;
-
 class CEventSourceFB;
 class CExternalEventHandler;
 struct SForteTime;
 class CTimerHandler;
+
+#include <forte_config.h>
 
 /**\ingroup CORE
   Handles all the IEC 61499 execution requests and aspects within one device
@@ -29,14 +29,6 @@ public:
     CDeviceExecution();
 
     ~CDeviceExecution();
-
-/*!\brief Register a new external event handler
- *
- * Prepares internal structures for the new event handler.
- * \param pa_poHandler pointer to the external event handler instance
- * \return ID of the new external event handler.
- */
-    int registerExternalEventHandler(CExternalEventHandler *pa_poHandler);
 
 /*!\brief Notifies the CExternalEventHandlerManager that one tick in the time has passed by.
  *
@@ -63,9 +55,9 @@ public:
       return true;
     };
 
-    CTimerHandler& getTimer() const{
-      return *mFORTETimer;
-    }
+    CTimerHandler& getTimer() const;
+
+    CExternalEventHandler* getHandler(unsigned int paIdentifer) const;
 
 protected:
 private:
@@ -80,11 +72,10 @@ private:
 *
 * The element 0 is always the timer event source.
 */
-  SEventHandlerElement m_astRegisteredEventHandlers [ cg_MaxRegisteredEventHandlers ];
-  int m_nNumberofExternalEventHandler; //!< number of currently used external event handlers in the m_asRegisteredEventHandlers list.
 
-  CTimerHandler *mFORTETimer;
+  static void createHandlers(CDeviceExecution& pa_DeviceExecution);
 
+  SEventHandlerElement mRegisteredEventHandlers [ cg_unNumberOfHandlers ];
 
 };
 

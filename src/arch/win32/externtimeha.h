@@ -21,7 +21,7 @@ class CExternTimerHandler : public CTimerHandler{
   public:
     static void externNextTick();
     static TForteUInt32 getExternTicksPerSecond(void){ return csm_nTicksPerSecond; };
-    CExternTimerHandler(); 
+    CExternTimerHandler(CDeviceExecution& pa_poDeviceExecution);
     	
   	virtual ~CExternTimerHandler();
 

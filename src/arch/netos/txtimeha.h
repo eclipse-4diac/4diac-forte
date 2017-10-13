@@ -52,7 +52,7 @@ class CTXTimerHandler : public CTimerHandler{
     }
     ;
 
-    CTXTimerHandler();
+    CTXTimerHandler(CDeviceExecution& pa_poDeviceExecution);
 
     TX_TIMER m_stTimer;
 

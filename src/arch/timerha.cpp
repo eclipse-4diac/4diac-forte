@@ -15,7 +15,16 @@
 #include "../core/esfb.h"
 #include "../core/utils/criticalregion.h"
 
+DEFINE_HANDLER(CTimerHandler)
+
 CTimerHandler *CTimerHandler::sm_poFORTETimer = 0;
+
+CTimerHandler::CTimerHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution),
+    m_pstTimedFBList(0){
+}
+
+CTimerHandler::~CTimerHandler(){
+}
 
 void CTimerHandler::registerTimedFB(STimedFBListEntry *pa_pstTimerListEntry, const CIEC_TIME &pa_roTimeInterval) {
   //calculate the correct interval based on time-base and timer ticks per seconds
@@ -85,14 +94,14 @@ void CTimerHandler::unregisterTimedFB(CEventSourceFB *pa_poTimedFB) {
 
 void CTimerHandler::nextTick(void) {
   ++m_stForteTime;
-  getDeviceExecution()->notifyTime(m_stForteTime); //notify the device execution that one tick passed by.
+  m_poDeviceExecution.notifyTime(m_stForteTime); //notify the device execution that one tick passed by.
   {
     CCriticalRegion criticalRegion(m_oSync);
     while (0 != m_pstTimedFBList) {
       if (m_pstTimedFBList->m_stTimeOut > m_stForteTime) {
         break;
       }
-      getDeviceExecution()->startNewEventChain(m_pstTimedFBList->m_poTimedFB);
+      m_poDeviceExecution.startNewEventChain(m_pstTimedFBList->m_poTimedFB);
       STimedFBListEntry *buffer = m_pstTimedFBList;
       m_pstTimedFBList = m_pstTimedFBList->m_pstNext;
 

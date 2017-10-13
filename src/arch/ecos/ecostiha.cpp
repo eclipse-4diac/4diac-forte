@@ -14,11 +14,11 @@
 
 cyg_sem_t CECOSTimerHandler::m_stSemaphore;
 
-CTimerHandler* CTimerHandler::createTimerHandler(){
-  return new CECOSTimerHandler();
+CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& pa_poDeviceExecution){
+  return new CECOSTimerHandler(pa_poDeviceExecution);
 }
 
-CECOSTimerHandler::CECOSTimerHandler(){
+CECOSTimerHandler::CECOSTimerHandler(CDeviceExecution& pa_poDeviceExecution) : CTimerHandler(pa_poDeviceExecution)  {
   cyg_semaphore_init(&m_stSemaphore, 0);
 
   m_stSystemclockHandle = cyg_real_time_clock();
