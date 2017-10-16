@@ -14,8 +14,9 @@
 
 #include "fortelist.h"
 #include "stringdict.h"
-#include "funcbloc.h"
 #include "mgmcmdstruct.h"
+
+class CFunctionBlock;
 
 namespace forte {
   namespace core {

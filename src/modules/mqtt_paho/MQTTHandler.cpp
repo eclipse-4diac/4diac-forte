@@ -10,10 +10,10 @@
  *******************************************************************************/
 
 
-#include <MQTTHandler.h>
-#include <string.h>
+#include "MQTTHandler.h"
+#include "../../core/cominfra/commfb.h"
 #include <criticalregion.h>
-#include <commfb.h>
+#include <string.h>
 
 DEFINE_SINGLETON(MQTTHandler);
 

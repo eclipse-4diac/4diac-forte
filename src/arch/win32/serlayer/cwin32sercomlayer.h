@@ -8,16 +8,15 @@
  * Contributors:
  *   Martin Melik-Merkumians, Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include <comlayer.h>
-#include <commfb.h>
-#include "cwin32sercomparameterparser.h"
 
+#include "../../../core/cominfra/comlayer.h"
+#include "../../../core/cominfra/commfb.h"
+
+#include <winsock2.h> //to ensure that this is first included in the commlayermanager
 #include <Windows.h>
 
 #ifndef CWIN32SERCOMLAYER_H_
 #define CWIN32SERCOMLAYER_H_
-
-class CEventSourceFB;
 
 class CWin32SerComLayer : public forte::com_infra::CComLayer{
   public:

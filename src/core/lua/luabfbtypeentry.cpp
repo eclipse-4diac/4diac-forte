@@ -15,6 +15,7 @@
 #include "luaengine.h"
 #include "luabfb.h"
 #include "luatype.h"
+#include "resource.h"
 
 CLuaBFBTypeEntry::CLuaBFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING paLuaScriptAsString, SFBInterfaceSpec& interfaceSpec,
     SInternalVarsInformation& internalVarsInformation)

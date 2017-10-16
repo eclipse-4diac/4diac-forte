@@ -18,7 +18,6 @@
 #include <anyhelper.h>
 #include <ctype.h>
 #include <stdio.h>
-#include <devlog.h>
 #include <forte_printer.h>
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_AND, g_nStringIdGEN_AND)

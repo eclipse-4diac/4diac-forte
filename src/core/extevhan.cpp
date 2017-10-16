@@ -10,7 +10,6 @@
   *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
 #include "extevhan.h"
-#include "devexec.h"
 #include <devlog.h>
 
 CDeviceExecution *CExternalEventHandler::sm_poDeviceExecution = 0;

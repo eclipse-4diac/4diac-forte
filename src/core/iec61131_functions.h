@@ -13,17 +13,11 @@
 #ifndef IEC61131_FUNCTIONS_H_
 #define IEC61131_FUNCTIONS_H_
 
-#include <math.h>
-#include <string.h>
-//#include <string>
-#include "datatypes/forte_real.h"
-#include "datatypes/forte_lreal.h"
-#include "datatypes/forte_any_int.h"
-#include "datatypes/forte_any_bit.h"
 #include "../arch/devlog.h"
-#include "datatypes/forte_string.h"
 //bring in the type conversion functions
 #include "convert_functions.h"
+#include <math.h>
+#include <string.h>
 
 #ifdef VXWORKS
 #define tanf(x) static_cast<TForteFloat>(tan(x))
@@ -36,10 +30,6 @@
 #define expf(x) static_cast<TForteFloat>(exp(x))
 #define sinf(x) static_cast<TForteFloat>(sin(x))
 #define sqrtf(x) static_cast<TForteFloat>(sqrt(x))
-#endif
-
-#ifdef FORTE_USE_WSTRING_DATATYPE
-#include "datatypes/forte_wstring.h"
 #endif
 
 #ifdef MAX

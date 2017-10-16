@@ -15,7 +15,6 @@
 #include "ipcomlayer.h"
 #include "../../arch/devlog.h"
 #include "commfb.h"
-#include "../../core/datatypes/forte_dint.h"
 #include <forte_thread.h>
 
 using namespace forte::com_infra;

@@ -13,7 +13,6 @@
 #define _USINT2USINT_H_
 
 #include <funcbloc.h>
-#include <forte_usint.h>
 
 class USINT2USINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(USINT2USINT)

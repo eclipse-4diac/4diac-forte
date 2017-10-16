@@ -10,9 +10,11 @@
   *    Patrik Smejkal - rename interrupt in interruptCCommFB
   *******************************************************************************/
 #include "localcomlayer.h"
+#include "commfb.h"
 #include "../resource.h"
 #include "../device.h"
 #include "../utils/criticalregion.h"
+
 
 using namespace forte::com_infra;
 

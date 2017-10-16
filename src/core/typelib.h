@@ -21,13 +21,7 @@
 //forward declaration of a few classes to reduce include file dependencies
 class CFunctionBlock;
 class CResource;
-class CConnection;
-class CEventConnection;
-class CDataConnection;
-class CAdapterConnection;
-class CInterface2InternalDataConnection;
 class CIEC_ANY;
-class C61499Class0ObjectHandler;
 class CAdapter;
 
 //!\ingroup CORE Type for a function pointer which allows to create a functionblock instance

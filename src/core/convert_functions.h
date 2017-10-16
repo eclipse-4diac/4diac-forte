@@ -35,7 +35,8 @@
 #include "datatypes/forte_time_of_day.h"
 #include "datatypes/forte_date_and_time.h"
 #include "datatypes/forte_date.h"
-//#include <stdio.h>
+#include "datatypes/forte_struct.h"
+#include "datatypes/forte_array.h"
 #include <math.h>
 
 /*! \file

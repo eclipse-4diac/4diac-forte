@@ -25,7 +25,6 @@
 #include <map>
 #include <algorithm>
 
-#include "resource.h"
 #include "stringdict.h"
 #include <forte_sync.h>
 
@@ -47,6 +46,7 @@ typedef T_DEVICE_MAP::iterator T_DEVICE_MAP_ITER;
 typedef T_RESOURCE_CONTAINER::iterator T_RESOURCE_CONTAINER_ITER;
 typedef std::list <T_PORT_ID> ::iterator T_FB_CONTAINER_ITER;
 
+class CResource;
 
 class CMonitor{
 public:

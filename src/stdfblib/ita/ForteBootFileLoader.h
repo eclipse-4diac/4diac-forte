@@ -15,11 +15,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "IBootFileCallback.h"
-#include "../../../src/core/datatypes/forte_string.h"
+
+class CIEC_STRING;
+class IBootFileCallback;
 
 enum LoadBootResult {
-  OK,
+  LOAD_RESULT_OK,
   MISSING_COLON,
   FILE_NOT_OPENED,
   EXTERNAL_ERROR,

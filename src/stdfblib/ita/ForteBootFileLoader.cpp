@@ -11,11 +11,12 @@
  *******************************************************************************/
 
 #include "ForteBootFileLoader.h"
-#include <devlog.h>
+#include "../../arch/devlog.h"
+#include "../../../src/core/datatypes/forte_string.h"
+#include "IBootFileCallback.h"
 #include <mgmcmd.h>
 #include <mgmcmdstruct.h>
 #include "../../core/device.h"
-#include <string>
 
 ForteBootFileLoader::ForteBootFileLoader(IBootFileCallback &paCallback) : mCallback(paCallback){
   openBootFile(0);
@@ -77,7 +78,7 @@ LoadBootResult ForteBootFileLoader::loadBootFile(){
   if(0 != bootfile){
     //we could open the file try to load it
     int nLineCount = 1;
-    eResp = OK;
+    eResp = LOAD_RESULT_OK;
     CIEC_STRING line;
     while(readLine(line)){
       char *cmdStart = strchr(line.getValue(), ';');

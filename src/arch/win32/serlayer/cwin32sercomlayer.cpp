@@ -9,9 +9,10 @@
  *   Martin Melik-Merkumians, Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "cwin32sercomlayer.h"
-#include <forte_any.h>
-#include <forte_string.h>
 #include "cwin32sercomhandler.h"
+#include "cwin32sercomparameterparser.h"
+#include "../../../core/datatypes/forte_any.h"
+#include "../../../core/datatypes/forte_string.h"
 
 CWin32SerComLayer::CWin32SerComLayer(forte::com_infra::CComLayer* pa_poUpperLayer,
     forte::com_infra::CBaseCommFB * pa_poFB) :

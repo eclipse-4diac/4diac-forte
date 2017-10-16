@@ -14,10 +14,8 @@
 #define _FORTE_THREAD_H_
 
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
 #include "./threadbase.h"
-#include "../datatype.h"
-
+#include <windows.h>
 
 /**  \ingroup FORTE-HAL 
  * \defgroup win32_hal PC FORTE Hardware Abstraction Layer

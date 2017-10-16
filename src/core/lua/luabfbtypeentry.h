@@ -14,9 +14,9 @@
 #define SRC_CORE_LUAFBTYPEENTRY_H_
 
 #include "typelib.h"
-#include "resource.h"
-#include "luaengine.h"
 #include "basicfb.h"
+
+class CLuaEngine;
 
 class CLuaBFBTypeEntry: public CTypeLib::CFBTypeEntry {
 private:

@@ -9,9 +9,7 @@
  *   Filip Andren, Patrick Smejkal, Alois Zoitl, Martin Melik-Merkumians - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "modbuslayer.h"
-#include "../../arch/devlog.h"
 #include "commfb.h"
-#include "../../core/datatypes/forte_dint.h"
 #include "modbusclientconnection.h"
 
 using namespace forte::com_infra;

@@ -13,7 +13,6 @@
 
 #include <adapter.h>
 #include <typelib.h>
-#include <forte_time.h>
 
 class FORTE_ARTimeOut: public CAdapter{
   DECLARE_ADAPTER_TYPE(FORTE_ARTimeOut)

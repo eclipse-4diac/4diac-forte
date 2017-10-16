@@ -10,6 +10,7 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "if2indco.h"
+#include "funcbloc.h"
 
 CInterface2InternalDataConnection::CInterface2InternalDataConnection() :
     CDataConnection(0, cg_unInvalidPortId, 0){

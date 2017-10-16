@@ -13,10 +13,6 @@
 #ifndef SRC_CORE_LUAENGINE_H_
 #define SRC_CORE_LUAENGINE_H_
 
-#include "devlog.h"
-#include "forte_any.h"
-#include "forte_array.h"
-
 extern "C" {
 #include <lua.h>
 #include <lualib.h>
@@ -31,6 +27,11 @@ extern "C" {
 #define lua_rawsetp(L,i,p) (lua_pushlightuserdata(L, const_cast<void*>(p)), lua_insert(L, -2), lua_rawset(L, (i)), lua_type(luaState, -1))
 #define lua_len(L,i) (lua_objlen(L, (i)))
 #endif
+
+#include "../datatypes/forte_any.h"
+
+class CIEC_ARRAY;
+
 
 class CLuaEngine {
 private:

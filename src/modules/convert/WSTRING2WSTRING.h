@@ -13,7 +13,6 @@
 #define _WSTRING2WSTRING_H_
 
 #include <funcbloc.h>
-#include <forte_wstring.h>
 
 class WSTRING2WSTRING: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(WSTRING2WSTRING)

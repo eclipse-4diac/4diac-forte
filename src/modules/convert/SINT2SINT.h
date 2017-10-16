@@ -13,8 +13,6 @@
 #define _SINT2SINT_H_
 
 #include <funcbloc.h>
-#include <forte_sint.h>
-
 
 class SINT2SINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(SINT2SINT)

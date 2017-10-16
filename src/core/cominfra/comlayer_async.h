@@ -13,11 +13,11 @@
 #ifndef FORTE_COMLAYER_ASYNC_H
 #define FORTE_COMLAYER_ASYNC_H
 
-#include <extevhan.h>
 #include "comlayer.h"
-#include "forte_thread.h"
-#include "forte_sync.h"
-#include "fortelist.h"
+#include "../extevhan.h"
+#include "../fortelist.h"
+#include <forte_thread.h>
+#include <forte_sync.h>
 
 namespace forte {
 	namespace com_infra {

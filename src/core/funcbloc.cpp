@@ -17,8 +17,8 @@
 #endif
 #include "adapter.h"
 #include "device.h"
-#include "datatypes/forte_array.h"
 #include "utils/criticalregion.h"
+#include "../arch/timerha.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -748,6 +748,14 @@ bool CFunctionBlock::forceData(CStringDictionary::TStringId pa_acName, const cha
   }
 
   return false;
+}
+
+forte::core::SMonitorEvent &CFunctionBlock::getEIMontiorData(TEventID pa_unEIID){
+  return m_nEIMonitorCount[pa_unEIID];
+}
+
+forte::core::SMonitorEvent &CFunctionBlock::getEOMontiorData(TEventID pa_unEOID){
+  return m_nEOMonitorCount[pa_unEOID];
 }
 
 #endif //FORTE_SUPPORT_MONITORING

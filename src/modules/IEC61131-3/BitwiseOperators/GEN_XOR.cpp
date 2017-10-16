@@ -18,7 +18,6 @@
 #include <anyhelper.h>
 #include <ctype.h>
 #include <stdio.h>
-#include <devlog.h>
 #include <forte_printer.h>
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_XOR, g_nStringIdGEN_XOR)

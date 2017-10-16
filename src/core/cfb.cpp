@@ -15,6 +15,7 @@
 #include "adapter.h"
 #include "resource.h"
 #include "utils/criticalregion.h"
+#include "if2indco.h"
 
 CCompositeFB::CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
     const CStringDictionary::TStringId pa_nInstanceNameId, const SCFB_FBNData * const pa_cpoFBNData,

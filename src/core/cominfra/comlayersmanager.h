@@ -12,8 +12,6 @@
 #ifndef _COMLAYERSMANAGER_H_
 #define _COMLAYERSMANAGER_H_
 
-#include "comtypes.h"
-
 namespace forte {
   namespace com_infra {
 	  

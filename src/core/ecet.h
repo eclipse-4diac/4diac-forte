@@ -12,14 +12,11 @@
 #ifndef _ECET_H_
 #define _ECET_H_
 
-#include "eventconn.h"
 #include "event.h"
 #include "datatypes/forte_time.h"
 #include <forte_thread.h>
 #include <forte_sync.h>
 #include <forte_sem.h>
-
-class CEventSourceFB;
 
 /*! \ingroup CORE\brief Class for executing one event chain.
  *

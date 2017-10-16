@@ -17,7 +17,6 @@
 #include <forte_config.h>
 #include "mgmcmd.h"
 #include "event.h"
-#include "typelib.h"
 #include "dataconn.h"
 #include "eventconn.h"
 #include "stringdict.h"
@@ -27,10 +26,16 @@
 
 class CEventChainExecutionThread;
 class CAdapter;
+class CTimerHandler;
 
 #ifdef FORTE_SUPPORT_MONITORING
 #include "mgmcmdstruct.h"
-#include "monitoring.h"
+namespace forte {
+  namespace core {
+    struct SMonitorEvent;
+    class CMonitoringHandler;
+  }
+}
 #endif //FORTE_SUPPORT_MONITORING
 
 #ifndef FORTE_FB_DATA_ARRAY  //with this check we can overwrite this define in a platform specific file (e.g., config.h)
@@ -391,13 +396,9 @@ class CFunctionBlock{
     }
     ;
 
-    forte::core::SMonitorEvent &getEIMontiorData(TEventID pa_unEIID){
-      return m_nEIMonitorCount[pa_unEIID];
-    }
+    forte::core::SMonitorEvent &getEIMontiorData(TEventID pa_unEIID);
 
-    forte::core::SMonitorEvent &getEOMontiorData(TEventID pa_unEOID){
-      return m_nEOMonitorCount[pa_unEOID];
-    }
+    forte::core::SMonitorEvent &getEOMontiorData(TEventID pa_unEOID);
 
     // DATA-Monitor-functions
     bool forceData(CStringDictionary::TStringId pa_acDOName, const char * forceValue);

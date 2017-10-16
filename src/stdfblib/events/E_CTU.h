@@ -13,8 +13,6 @@
 #define _E_CTU_H_
 
 #include <funcbloc.h>
-#include <forte_bool.h>
-#include <forte_uint.h>
 
 class E_CTU: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(E_CTU)

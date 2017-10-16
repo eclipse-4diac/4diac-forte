@@ -13,8 +13,6 @@
 #define _F_GT_H_
 
 #include <funcbloc.h>
-#include <forte_any_elementary.h>
-#include <forte_bool.h>
 
 class FORTE_F_GT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_GT)

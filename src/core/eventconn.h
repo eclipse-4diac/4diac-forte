@@ -13,8 +13,6 @@
 #define _EVENCONN_H_
 
 #include "conn.h"
-#include "event.h"
-#include "fortelist.h"
 
 class CEventChainExecutionThread;
 

@@ -9,12 +9,11 @@
  *  Alois Zoitl, Ingo Hegny, Gerhard Ebenhofer - initial API and implementation and/or initial documentation
  *  Alois Zoitl - cleaned up main, inserted new architecture initilasation api
  *******************************************************************************/
-#include <fortenew.h>
+#include "../forte_architecture.h"
+#include "../devlog.h"
+#include "../../stdfblib/ita/RMT_DEV.h"
 #include <stdio.h>
 #include <signal.h>
-#include "../../stdfblib/ita/RMT_DEV.h"
-#include "../forte_architecture.h"
-
 
 //this keeps away a lot of rtti and exception handling stuff
 extern "C" void __cxa_pure_virtual(void){
@@ -50,7 +49,7 @@ void createDev(const char *pa_acMGRID){
   poDev->setMGR_ID(pa_acMGRID);
   poDev->startDevice();
   DEVLOG_INFO("FORTE is up and running\n");
-  poDev->MGR.getResourceEventExecution()->joinEventChainExecutionThread();
+  poDev->MGR.joinResourceThread();
   DEVLOG_INFO("FORTE finished\n");
   delete poDev;
 }

@@ -14,12 +14,11 @@
 #define _DEV_MGR_H_
 
 #include <funcbloc.h>
-#include "../../core/resource.h"
-#include <forte_bool.h>
-#include <forte_string.h>
 #include <mgmcmdstruct.h>
 #include <commfb.h>
 #include "IBootFileCallback.h"
+
+class CDevice;
 
 /*! \brief Implementation of the DEV_MGR FB.
  */
@@ -36,13 +35,7 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
     DEV_MGR(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
     virtual ~DEV_MGR();
 
-    bool executeCommand(char *pa_acDest, char *pa_acCommand){
-      EMGMResponse eResp = parseAndExecuteMGMCommand(pa_acDest, pa_acCommand);
-      if(eResp != e_RDY){
-        DEVLOG_ERROR("Boot file error. DEV_MGR says error is %s\n", DEV_MGR::scm_sMGMResponseTexts[eResp]);
-      }
-      return (eResp == e_RDY);
-    }
+    bool executeCommand(char *pa_acDest, char *pa_acCommand);
 
   private:
 

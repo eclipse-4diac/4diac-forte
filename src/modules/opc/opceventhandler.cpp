@@ -10,7 +10,6 @@
  *******************************************************************************/
 #include "opceventhandler.h"
 #include "../core/devexec.h"
-#include "devlog.h"
 #include <commfb.h>
 
 #include <ObjBase.h>

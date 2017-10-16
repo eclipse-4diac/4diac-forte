@@ -18,6 +18,14 @@
 #include "if2indco.h"
 #include "utils/criticalregion.h"
 #include "utils/fixedcapvector.h"
+#include "ecet.h"
+
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+#include "lua/luaengine.h"
+#include "lua/luacfbtypeentry.h"
+#include "lua/luabfbtypeentry.h"
+#include "lua/luaadaptertypeentry.h"
+#endif
 
 CResource::CResource(CResource* pa_poDevice, const SFBInterfaceSpec *pa_pstInterfaceSpec,
     const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData,

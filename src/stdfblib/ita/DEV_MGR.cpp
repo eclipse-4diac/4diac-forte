@@ -57,7 +57,7 @@ void DEV_MGR::executeEvent(int pa_nEIID){
     if((true == QI()) && (false == QO())){
       //this is the first time init is called try to load a boot file
       ForteBootFileLoader loader(*this);
-      if(loader.isOpen() && OK == loader.loadBootFile()){
+      if(loader.isOpen() && LOAD_RESULT_OK == loader.loadBootFile()){
           DEVLOG_INFO("Bootfile correctly loaded\n");
       }
     }
@@ -754,3 +754,11 @@ void DEV_MGR::generateMonitorResponse(EMGMResponse pa_eResp, forte::core::SManag
 }
 
 #endif // FORTE_SUPPORT_MONITORING
+
+bool DEV_MGR::executeCommand(char *pa_acDest, char *pa_acCommand){
+  EMGMResponse eResp = parseAndExecuteMGMCommand(pa_acDest, pa_acCommand);
+  if(eResp != e_RDY){
+    DEVLOG_ERROR("Boot file error. DEV_MGR says error is %s\n", DEV_MGR::scm_sMGMResponseTexts[eResp]);
+  }
+  return (eResp == e_RDY);
+}

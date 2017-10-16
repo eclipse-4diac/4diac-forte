@@ -14,14 +14,8 @@
 #define _SRC_CORE_COMINFRA_BASECOMMFB_H_
 
 #include <forte_config.h>
-#include "../esfb.h"
-#include "../datatypes/forte_bool.h"
-#ifdef FORTE_USE_WSTRING_DATATYPE
-#include "../datatypes/forte_wstring.h"
-#else
-#include "../datatypes/forte_string.h"
-#endif
 #include "comtypes.h"
+#include "../esfb.h"
 
 namespace forte {
 	namespace com_infra {

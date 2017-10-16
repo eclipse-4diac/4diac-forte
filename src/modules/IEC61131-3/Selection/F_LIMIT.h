@@ -13,7 +13,6 @@
 #define _F_LIMIT_H_
 
 #include <funcbloc.h>
-#include <forte_any_elementary.h>
 
 class FORTE_F_LIMIT : public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_LIMIT)

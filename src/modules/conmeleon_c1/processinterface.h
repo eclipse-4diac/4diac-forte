@@ -14,9 +14,6 @@
 
 #include <../../stdfblib/io/processinterfacebase.h>
 #include <funcbloc.h>
-#include <forte_bool.h>
-#include <forte_string.h>
-#include <forte_word.h>
 #include "gpio/gpiopin.h"
 #include "spi/ads1018.h"
 

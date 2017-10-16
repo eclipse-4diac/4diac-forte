@@ -13,7 +13,6 @@
 #define _REAL2REAL_H_
 
 #include <funcbloc.h>
-#include <forte_real.h>
 
 #ifdef FORTE_USE_REAL_DATATYPE
 

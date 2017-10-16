@@ -12,13 +12,13 @@
 #ifndef _TIMERHA_H_
 #define _TIMERHA_H_
 
-#include <forte_config.h>
 #include "../core/extevhan.h"
 #include "../core/utils/singlet.h"
-#include "../core/datatypes/forte_time.h"
+#include <forte_config.h>
 #include <forte_sync.h>
 
 class CEventSourceFB;
+class CIEC_TIME;
 
 enum ETimerActivationType{
   e_SingleShot, e_Periodic

@@ -14,8 +14,10 @@
  *******************************************************************************/
 
 #include "opcua_handler.h"
-#include <devexec.h>
-#include "criticalregion.h"
+#include "../../core/devexec.h"
+#include "../../core/iec61131_functions.h"
+#include "../../core/cominfra/basecommfb.h"
+#include <criticalregion.h>
 #include <forte_printer.h>
 
 
@@ -865,9 +867,7 @@ void COPC_UA_Handler::referencedNodesDecrement(const CSinglyLinkedList<UA_NodeId
 	}
 }
 
-
-
-
-
-
+void COPC_UA_Handler::forceEventHandling(COPC_UA_Layer* layer){
+  getInstance().startNewEventChain(layer->getCommFB());
+}
 

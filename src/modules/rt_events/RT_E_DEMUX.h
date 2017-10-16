@@ -14,9 +14,6 @@
 
 #include <funcbloc.h>
 #include <ecet.h>
-#include <forte_time.h>
-#include <forte_uint.h>
-#include <forte_bool.h>
 
 class FORTE_RT_E_DEMUX: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_RT_E_DEMUX)

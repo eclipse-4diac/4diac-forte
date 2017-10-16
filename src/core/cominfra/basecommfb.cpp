@@ -10,17 +10,15 @@
   *    Patrick Smejkal
   *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
-#include <fortenew.h>
+
+#include "basecommfb.h"
+#include "comlayer.h"
+#include "comlayersmanager.h"
+#include "../resource.h"
+#include "../../arch/fortenew.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "commfb.h"
-#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "commfb_gen.cpp"
-#endif
-#include "../resource.h"
-#include "comlayer.h"
-#include "comlayersmanager.h"
 
 using namespace forte::com_infra;
 

@@ -15,6 +15,7 @@
 #include "ecet.h"
 #include "esfb.h"
 #include "utils/criticalregion.h"
+#include "../arch/devlog.h"
 
 CEventChainExecutionThread::CEventChainExecutionThread() :
     CThread(), mSuspendSemaphore(0), mProcessingEvents(false) {

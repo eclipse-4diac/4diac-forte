@@ -13,6 +13,11 @@
 #ifndef SRC_CORE_LUA_LUATYPE_H_
 #define SRC_CORE_LUA_LUATYPE_H_
 
+#include "../stringdict.h"
+
+class SAdapterInstanceDef;
+class CLuaEngine;
+
 namespace luatype {
   bool getAdapterInstanceDefinition(SAdapterInstanceDef& def, CLuaEngine* luaEngine, int index);
   bool getTypeNameId(CStringDictionary::TStringId& id, CLuaEngine* luaEngine, int index);

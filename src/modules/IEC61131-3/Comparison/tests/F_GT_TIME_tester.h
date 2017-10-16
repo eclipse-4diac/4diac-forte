@@ -13,7 +13,6 @@
 #define _E_SR_TESTER_H_
 
 #include "fbtester.h"
-#include <forte_time.h>
 #include "../F_GT.h"
 
 /***********************************************************************************/

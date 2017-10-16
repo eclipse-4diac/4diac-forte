@@ -13,12 +13,13 @@
  *      - refactoring and adaption to new concept
  *******************************************************************************/
 
-
-
-#include <criticalregion.h>
 #include "opcua_layer.h"
 #include "opcua_handler.h"
+#include "../../core/datatypes/forte_date_and_time.h"
+#include "../../core/cominfra/basecommfb.h"
+#include "../../arch/devlog.h"
 #include <forte_printer.h>
+#include <criticalregion.h>
 
 using namespace forte::com_infra;
 

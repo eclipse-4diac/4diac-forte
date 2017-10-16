@@ -14,8 +14,6 @@
 #define _F_LEN_H_
 
 #include <funcbloc.h>
-#include <forte_any_int.h>
-#include <forte_any_string.h>
 
 class FORTE_F_LEN: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_LEN)

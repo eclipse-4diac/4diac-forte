@@ -10,6 +10,7 @@
  *   Jose Cabral - Cleaning of code and error logging added
  *******************************************************************************/
 #include "processinterface.h"
+#include <forte_thread.h>
 #include <unistd.h>
 #include <mlpiGlobal.h>
 #include <mlpiApiLib.h>

@@ -9,7 +9,7 @@
  *   Herwig Eichler  - initial API and implementation and initial documentation
  *******************************************************************************/
 
-#include "../gpio/gpiopin.h"
+#include "gpiopin.h"
 #include "../util/fileres.h"
 #include <string>
 #include <iostream>

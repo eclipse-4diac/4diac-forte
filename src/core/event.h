@@ -15,17 +15,14 @@
 #include "../arch/datatype.h"
 
 
-//forward declaration of a few classes to reduce includefile dependencies
-class CFunctionBlock;
-
-struct SConnectionPoint;
-
 /*! \ingroup CORE\brief Datatype for holding the IDs of event inputs.
  *
  *  With the current implementation at max 255 event inputs per FB are possible.
  *  That should be enough.
  */
 typedef TForteUInt8 TEventID;
+
+struct SConnectionPoint;
 
 //!\ingroup CORE Constant for the invalid event input id
 const TEventID cg_nInvalidEventID = cg_unInvalidPortId;

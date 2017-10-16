@@ -10,10 +10,10 @@
  *******************************************************************************/
 #include "../forte_thread.h"
 #include "../forte_sync.h"
-#include <../../../core/extevhan.h>
-#include <../../../core/utils/singlet.h>
+#include "../../../core/extevhan.h"
+#include "../../../core/utils/singlet.h"
 #include "../../../core/fortelist.h"
-#include <forte_sem.h>
+#include "../forte_sem.h"
 
 #ifndef CWIN32SERCOMHANDLER_H_
 #define CWIN32SERCOMHANDLER_H_

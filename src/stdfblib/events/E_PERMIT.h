@@ -13,7 +13,6 @@
 #define _E_PERMIT_H_
 
 #include <funcbloc.h>
-#include <forte_bool.h>
 
 class E_PERMIT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(E_PERMIT)

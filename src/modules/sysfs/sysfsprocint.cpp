@@ -9,7 +9,7 @@
  *    Waldemar Eisenmenger, Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "processinterface.h"
+#include "sysfsprocint.h"
 #include <string>
 #include <forte_thread.h>
 const char * const CSysFsProcessInterface::scmOK = "OK";

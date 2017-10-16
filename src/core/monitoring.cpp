@@ -11,6 +11,7 @@
  *******************************************************************************/
 #include "monitoring.h"
 #include "resource.h"
+#include "ecet.h"
 #include "utils/criticalregion.h"
 
 using namespace forte::core;

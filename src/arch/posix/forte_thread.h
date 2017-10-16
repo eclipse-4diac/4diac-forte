@@ -12,10 +12,9 @@
 #ifndef _FORTE_THREAD_H_
 #define _FORTE_THREAD_H_
 
-#include <pthread.h>
 #include "../threadbase.h"
-#include "../datatype.h"
 #include <forte_sync.h>
+#include <pthread.h>
 
 /**  \ingroup FORTE-HAL 
  * \defgroup posix_hal PC FORTE Hardware Abstraction Layer

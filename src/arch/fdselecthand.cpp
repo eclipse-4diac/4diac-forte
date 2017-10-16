@@ -11,10 +11,11 @@
  *******************************************************************************/
 #include <sockhand.h>      //needs to be first pulls in the platform specific includes
 #include "fdselecthand.h"
-#include "../core/devexec.h"
 #include "devlog.h"
+#include "../core/devexec.h"
 #include "../core/cominfra/commfb.h"
-#include <criticalregion.h>
+#include "../core/cominfra/comlayer.h"
+#include "../core/utils/criticalregion.h"
 
 DEFINE_SINGLETON(CFDSelectHandler);
 

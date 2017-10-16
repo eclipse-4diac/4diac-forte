@@ -12,7 +12,6 @@
 #ifndef GENFORTEALLOC_H_
 #define GENFORTEALLOC_H_
 
-#include "datatype.h"
 #include <stdlib.h>
 
 

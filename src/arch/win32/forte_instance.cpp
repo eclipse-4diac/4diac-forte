@@ -33,7 +33,7 @@ extern "C"
 void shutdownFORTE(){
   if(0 != gDev){
     gDev->changeFBExecutionState(cg_nMGM_CMD_Kill);
-    gDev->MGR.getResourceEventExecution()->joinEventChainExecutionThread();
+    gDev->MGR.joinResourceThread();
     delete gDev;
     gDev = 0;
   }

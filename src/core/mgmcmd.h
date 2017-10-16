@@ -13,10 +13,6 @@
 #ifndef _MGMCMD_H_
 #define _MGMCMD_H_
 
-#include <string.h>
-#include "stringdict.h"
-#include "../arch/datatype.h"
-
 /**  \ingroup CORE \defgroup MGMCommands Management Commands Internal Representation
  * \brief In this section the FORTE representation of the management commands is described.
  */

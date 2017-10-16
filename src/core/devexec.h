@@ -12,13 +12,12 @@
 #ifndef _DEVEXEC_H
 #define _DEVEXEC_H
 
-#include "../arch/timerha.h"
-
 const int cg_MaxRegisteredEventHandlers = 10;
 
 class CEventSourceFB;
 class CExternalEventHandler;
 struct SForteTime;
+class CTimerHandler;
 
 /**\ingroup CORE
   Handles all the IEC 61499 execution requests and aspects within one device

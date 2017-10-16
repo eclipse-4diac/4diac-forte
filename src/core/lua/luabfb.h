@@ -14,10 +14,9 @@
 #define SRC_CORE_LUABFB_H_
 
 #include "basicfb.h"
-#include "luaengine.h"
-#include "forte_any.h"
-#include "forte_array.h"
 #include "luabfbtypeentry.h"
+
+class CIEC_ANY;
 
 extern "C" {
 #include <lua.h>

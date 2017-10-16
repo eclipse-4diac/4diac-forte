@@ -21,14 +21,11 @@
 #include <forte_thread.h>
 #include <extevhan.h>
 #include <conn.h>
-#include "funcbloc.h"
 #include <stdio.h>
-#include "devlog.h"
 #include "comlayer.h"
 #include <forte_config_opc_ua.h>
 #include "opcua_helper.h"
 #include "opcua_layer.h"
-
 
 struct UA_NodeCallback_Handle {
 	forte::com_infra::CComLayer *comLayer;
@@ -172,9 +169,7 @@ public:
 	 *
 	 * @param layer the layer for which the event should be handled
 	 */
-	void forceEventHandling(COPC_UA_Layer *layer) {
-		getInstance().startNewEventChain(layer->getCommFB());
-	}
+	void forceEventHandling(COPC_UA_Layer *layer);
 
 	void referencedNodesIncrement(const CSinglyLinkedList<UA_NodeId *> *nodes, const COPC_UA_Layer* layer);
 

@@ -13,9 +13,9 @@
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "GEN_F_MUX_gen.cpp"
 #endif
+#include <forte_printer.h>
 #include <ctype.h>
 #include <stdio.h>
-#include <forte_printer.h>
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_F_MUX, g_nStringIdGEN_F_MUX);
 

@@ -16,8 +16,6 @@
 
 #include "../i2c_dev/i2cprocessinterface.h"
 #include <funcbloc.h>
-#include <forte_bool.h>
-#include <forte_string.h>
 
 class CProcessInterface : public CI2CProcessInterface{
 

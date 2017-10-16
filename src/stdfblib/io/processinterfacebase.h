@@ -10,8 +10,6 @@
  *******************************************************************************/
 #include <esfb.h>
 #include <resource.h>
-#include <forte_string.h>
-#include <forte_bool.h>
 
 #ifndef PROCESSINTERFACEBASE_H_
 #define PROCESSINTERFACEBASE_H_

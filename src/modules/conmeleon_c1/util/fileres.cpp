@@ -9,7 +9,7 @@
  *   Herwig Eichler  - initial API and implementation and initial documentation
  *******************************************************************************/
 
-#include "../util/fileres.h"
+#include "fileres.h"
 #include <cstring>
 #include <cstdlib>
 #include <cstdarg>

@@ -14,7 +14,7 @@
 #define SRC_STDFBLIB_ITA_IBOOTFILECALLBACK_H_
 
 class IBootFileCallback{
-  public:
+  public: 
     virtual bool executeCommand(char *pa_acDest, char *pa_acCommand) = 0;
 };
 

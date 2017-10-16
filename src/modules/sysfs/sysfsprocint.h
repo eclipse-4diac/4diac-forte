@@ -12,7 +12,7 @@
 #ifndef _SYSFSPROCINT_H_
 #define _SYSFSPROCINT_H_
 
-#include <../../stdfblib/io/processinterfacebase.h>
+#include "../../stdfblib/io/processinterfacebase.h"
 #include <fstream>
 
 class CSysFsProcessInterface : public CProcessInterfaceBase{

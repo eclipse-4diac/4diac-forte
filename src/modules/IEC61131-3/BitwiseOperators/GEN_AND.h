@@ -14,7 +14,6 @@
 #define _GEN_AND_H_
 
 #include <funcbloc.h>
-#include <forte_any_bit.h>
 
 class GEN_AND: public CFunctionBlock {
 DECLARE_GENERIC_FIRMWARE_FB(GEN_AND)

@@ -91,7 +91,7 @@ void applicationStart(void) {
   // Starting  Runtime
   RMT_DEV dev;
   dev.startDevice();
-  dev.MGR.getResourceEventExecution()->join();
+  dev.MGR.joinResourceThread();
   tx_thread_suspend(tx_thread_identify());
 }
 

@@ -13,6 +13,7 @@
 #include "esfb.h"
 #include "ecet.h"
 #include "extevhan.h"
+#include "../arch/timerha.h"
 
 
 

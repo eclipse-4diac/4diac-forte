@@ -12,10 +12,11 @@
 #define LOCALCOMLAYER_H_
 
 #include "comlayer.h"
-#include "commfb.h"
 #include "../stringdict.h"
 #include "../fortelist.h"
 #include <forte_sync.h>
+
+class CIEC_ANY;
 
 namespace forte {
 

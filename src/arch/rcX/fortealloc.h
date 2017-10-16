@@ -11,7 +11,6 @@
 #ifndef FORTEALLOC_H_
 #define FORTEALLOC_H_
 
-#include "datatype.h"
 #include <rX_Includes.h>
 
 inline

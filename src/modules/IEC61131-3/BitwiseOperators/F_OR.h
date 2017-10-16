@@ -13,7 +13,6 @@
 #define _F_OR_H_
 
 #include <funcbloc.h>
-#include <forte_any_bit.h>
 
 class FORTE_F_OR: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_OR)

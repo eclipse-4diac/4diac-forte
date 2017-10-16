@@ -14,8 +14,6 @@
 
 #include <funcbloc.h>
 #include <ecet.h>
-#include <forte_time.h>
-#include <forte_bool.h>
 
 // cppcheck-suppress noConstructor
 class FORTE_RT_E_SPLIT: public CFunctionBlock{

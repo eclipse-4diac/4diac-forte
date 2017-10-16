@@ -9,14 +9,6 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "essfphandler.h"
-#include <forte_any.h>
-#include <forte_bool.h>
-#include <forte_dint.h>
-#include <forte_lint.h>
-#include <forte_dint.h>
-#include <forte_real.h>
-#include <forte_lreal.h>
-#include <forte_string.h>
 #include <devexec.h>
 #include <commfb.h>
 

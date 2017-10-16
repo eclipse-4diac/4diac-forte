@@ -13,8 +13,6 @@
 #define _BOOL2BOOL_H_
 
 #include <funcbloc.h>
-#include <forte_bool.h>
-
 
 class BOOL2BOOL: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(BOOL2BOOL)

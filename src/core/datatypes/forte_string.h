@@ -18,12 +18,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-namespace forte {
-  namespace com_infra {
-    class CFBDKASN1ComLayer;
-  }
-}
-
 /*!\ingroup COREDTS CIEC_STRING represents the string data type according to IEC 61131.
  */
 class CIEC_STRING : public CIEC_ANY_STRING{

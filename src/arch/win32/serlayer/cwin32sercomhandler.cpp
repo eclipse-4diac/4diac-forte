@@ -10,9 +10,9 @@
  *******************************************************************************/
 #include "cwin32sercomhandler.h"
 #include "cwin32sercomlayer.h"
-#include <criticalregion.h>
-#include <devlog.h>
-#include <devexec.h>
+#include "../devlog.h"
+#include "../../../core/utils/criticalregion.h"
+#include "../../../core/devexec.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 

@@ -12,8 +12,6 @@
 #define _E_CTUD_H_
 
 #include <basicfb.h>
-#include <forte_uint.h>
-#include <forte_bool.h>
 
 class FORTE_E_CTUD: public CBasicFB{
   DECLARE_FIRMWARE_FB(FORTE_E_CTUD)

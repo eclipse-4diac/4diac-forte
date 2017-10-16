@@ -10,10 +10,14 @@
  *   - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "luaengine.h"
 #include "luaadaptertypeentry.h"
+#include "luaengine.h"
 #include "luatype.h"
 #include "luaadapter.h"
+#include "resource.h"
+#include "adapter.h"
+
+
 
 CLuaAdapterTypeEntry::CLuaAdapterTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING paLuaScriptAsString,  SFBInterfaceSpec& interfaceSpec)
     : CTypeLib::CAdapterTypeEntry(typeNameId, 0), cm_sLuaScriptAsString(paLuaScriptAsString), mSocketInterfaceSpec(interfaceSpec) {

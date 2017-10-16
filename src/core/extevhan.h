@@ -12,7 +12,8 @@
 #ifndef _EXTEVHAN_H_
 #define _EXTEVHAN_H_
 
-class CDeviceExecution;
+#include "devexec.h"
+
 class CEventSourceFB;
 
 /**  \defgroup FORTE_HAL FORTE Hardware Abstraction Layer - FORTE-HAL

@@ -13,7 +13,6 @@
 #define _E_DEMUX_H_
 
 #include <funcbloc.h>
-#include <forte_uint.h>
 
 class E_DEMUX: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(E_DEMUX)

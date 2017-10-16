@@ -10,9 +10,10 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "timerha.h"
+#include "../core/datatypes/forte_time.h"
 #include "../core/devexec.h"
 #include "../core/esfb.h"
-#include <criticalregion.h>
+#include "../core/utils/criticalregion.h"
 
 CTimerHandler *CTimerHandler::sm_poFORTETimer = 0;
 

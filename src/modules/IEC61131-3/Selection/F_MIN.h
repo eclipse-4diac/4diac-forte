@@ -13,7 +13,6 @@
 #define _F_MIN_H_
 
 #include <funcbloc.h>
-#include <forte_any_elementary.h>
 
 class FORTE_F_MIN: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_MIN)

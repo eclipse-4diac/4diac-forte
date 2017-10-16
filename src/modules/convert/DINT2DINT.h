@@ -13,8 +13,6 @@
 #define _DINT2DINT_H_
 
 #include <funcbloc.h>
-#include <forte_dint.h>
-
 
 class DINT2DINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(DINT2DINT)

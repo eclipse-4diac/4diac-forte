@@ -14,9 +14,6 @@
 #define _I2CPROCESSINTERFACE_H_
 
 #include <../../stdfblib/io/processinterfacebase.h>
-#include <funcbloc.h>
-#include <forte_bool.h>
-#include <forte_string.h>
 #include <string>
 #include <vector>
 

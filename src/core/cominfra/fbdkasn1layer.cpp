@@ -10,13 +10,11 @@
   *    Martin Melik Merkumians
   *      - initial implementation, rework communication infrastructure, bug fixes
   *******************************************************************************/
-#include <fortenew.h>
 #include "fbdkasn1layer.h"
 #include "basecommfb.h"
-#include "../datatypes/forte_string.h"
-#include "../datatypes/forte_wstring.h"
-#include "../datatypes/forte_array.h"
 #include "../../arch/timerha.h"
+#include "../../arch/devlog.h"
+#include <fortenew.h>
 
 using namespace forte::com_infra;
 

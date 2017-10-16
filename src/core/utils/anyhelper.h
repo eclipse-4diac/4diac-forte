@@ -12,10 +12,21 @@
 #ifndef ANYELEMHELPER_H_
 #define ANYELEMHELPER_H_
 
-#include <forte_real.h>
-#include <forte_lreal.h>
-#include <forte_lint.h>
-#include <forte_dint.h>
+#include "../datatypes/forte_real.h"
+#include "../datatypes/forte_lreal.h"
+#include "../datatypes/forte_lint.h"
+#include "../datatypes/forte_dint.h"
+#include "../datatypes/forte_bool.h"
+#include "../datatypes/forte_byte.h"
+#include "../datatypes/forte_word.h"
+#include "../datatypes/forte_lword.h"
+#include "../datatypes/forte_dword.h"
+#include "../datatypes/forte_sint.h"
+#include "../datatypes/forte_ulint.h"
+#include "../datatypes/forte_uint.h"
+#include "../datatypes/forte_usint.h"
+#include "../datatypes/forte_udint.h"
+#include "../datatypes/forte_int.h"
 
 template<class T>
 void anyBitFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){

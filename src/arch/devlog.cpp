@@ -11,11 +11,11 @@
  *******************************************************************************/
 #include "devlog.h"
 #include "timerha.h"
-#include <criticalregion.h>
+#include "forte_printer.h"
+#include "../core/utils/criticalregion.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include <forte_printer.h>
 
 #ifndef NOLOG
 

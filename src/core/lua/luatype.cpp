@@ -9,6 +9,7 @@
  *   Martin Jobst, Monika Wenger
  *   - initial API and implementation and/or initial documentation
  *******************************************************************************/
+#include "luatype.h"
 #include "funcbloc.h"
 #include "luaengine.h"
 

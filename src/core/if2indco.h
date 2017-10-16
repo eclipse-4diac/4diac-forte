@@ -12,13 +12,12 @@
 #ifndef _IF2INDCO_H_
 #define _IF2INDCO_H_
 
-#include "./datatypes/forte_any.h"
 #include "dataconn.h"
-#include "funcbloc.h"
-#include "fortelist.h"
 
 /*! \ingroup CORE\brief class for handling a interface to internal data connection.
  */
+
+class CFunctionBlock;
 
 class CInterface2InternalDataConnection : public CDataConnection{
   public:

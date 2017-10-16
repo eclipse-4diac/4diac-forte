@@ -13,7 +13,6 @@
 #define _BASICFB_H_
 
 #include "funcbloc.h"
-#include "./datatypes/forte_uint.h"
 
 #ifndef FORTE_BASIC_FB_DATA_ARRAY  //with this check we can overwrite this define in a platform specific file (e.g., config.h)
 

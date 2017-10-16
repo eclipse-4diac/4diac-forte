@@ -14,7 +14,8 @@
 #define _CFB_H_
 
 #include "funcbloc.h"
-#include "if2indco.h"
+
+class CInterface2InternalDataConnection;
 
 struct SCFB_FBInstanceData {
     CStringDictionary::TStringId m_nFBInstanceNameId;

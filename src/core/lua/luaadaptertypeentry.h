@@ -14,9 +14,11 @@
 #define SRC_CORE_LUAADAPTERTYPEENTRY_H_
 
 #include "typelib.h"
-#include "resource.h"
-#include "luaengine.h"
-#include "adapter.h"
+#include "../funcbloc.h"
+
+class CResource;
+class CAdapter;
+class CLuaEngine;
 
 class CLuaAdapterTypeEntry: public CTypeLib::CAdapterTypeEntry {
 private:

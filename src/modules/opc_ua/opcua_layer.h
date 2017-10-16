@@ -19,9 +19,7 @@
 
 #include "comlayer.h"
 #include <forte_any.h>
-#include "commfb.h"
 #include "comlayer_async.h"
-#include "devlog.h"
 #include "opcua_helper.h"
 
 class COPC_UA_Layer : public forte::com_infra::CComLayerAsync {

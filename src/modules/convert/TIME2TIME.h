@@ -13,8 +13,6 @@
 #define _TIME2TIME_H_
 
 #include <funcbloc.h>
-#include <forte_time.h>
-
 
 class TIME2TIME: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(TIME2TIME)

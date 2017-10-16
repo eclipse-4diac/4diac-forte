@@ -12,24 +12,20 @@
 #ifndef _RESOURCE_H_
 #define _RESOURCE_H_
 
-#include "ecet.h"
 #include "fbcontainer.h"
 #include "funcbloc.h"
-#ifdef FORTE_DYNAMIC_TYPE_LOAD
-#include "luabfbtypeentry.h"
-#include "luacfbtypeentry.h"
-#include "luaadaptertypeentry.h"
-#include "luaengine.h"
-#endif
 
 #ifdef FORTE_SUPPORT_MONITORING
 #include <monitoring.h>
 #endif
 
-class CDevice;
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
 class CLuaEngine;
 #endif
+
+class CDevice;
+class CInterface2InternalDataConnection;
+class CEventChainExecutionThread;
 
 /*! \ingroup CORE\brief Base class for all resources handling the reconfiguration management within this
  * resource and the background execution of event chains.

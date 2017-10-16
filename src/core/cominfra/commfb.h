@@ -15,18 +15,10 @@
 
 #include <forte_config.h>
 #include "basecommfb.h"
-#include "../datatypes/forte_bool.h"
-#ifdef FORTE_USE_WSTRING_DATATYPE
-#include "../datatypes/forte_wstring.h"
-#else
-#include "../datatypes/forte_string.h"
-#endif
 #include "comtypes.h"
 
 namespace forte {
 	namespace com_infra {
-
-		class CComLayer;
 
 		class CCommFB : public CBaseCommFB {
 		public:

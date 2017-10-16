@@ -19,17 +19,12 @@
 
 // serialize includes
 #include "../datatypes/forte_any.h"
-#include "../datatypes/forte_array.h"
-#include "../datatypes/forte_wstring.h"
-#include "../datatypes/forte_string.h"
-#include "../datatypes/forte_struct.h"
-#include "../../arch/devlog.h"
 
 class CIEC_TIME;
 class CIEC_STRUCT;
-
-//forward declaration for the friend class fix (see below for explanations)
-class LMS_USB_SRV;
+class CIEC_ARRAY;
+class CIEC_STRING;
+class CIEC_WSTRING;
 
 namespace forte {
   namespace com_infra {

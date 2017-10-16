@@ -11,6 +11,7 @@
   *    Martin Jobst - adapt for LUA integration
   *******************************************************************************/
 #include "fbcontainer.h"
+#include "funcbloc.h"
 
 using namespace forte::core;
 

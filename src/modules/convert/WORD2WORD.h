@@ -13,7 +13,6 @@
 #define _WORD2WORD_H_
 
 #include <funcbloc.h>
-#include <forte_word.h>
 
 class WORD2WORD: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(WORD2WORD)
