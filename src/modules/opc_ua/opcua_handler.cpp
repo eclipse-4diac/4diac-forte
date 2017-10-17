@@ -106,15 +106,15 @@ void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
 	uaServerConfig->applicationDescription.applicationName.locale = UA_STRING_NULL;
 	uaServerConfig->applicationDescription.applicationName.text = UA_String_fromChars(hostname);
 
-	for (size_t i=0; i<uaServerConfig->endpoints.count; i++) {
-		UA_String_deleteMembers(&uaServerConfig->endpoints.endpoints[i].endpointDescription.server.applicationUri);
-		UA_LocalizedText_deleteMembers(&uaServerConfig->endpoints.endpoints[i].endpointDescription.server.applicationName);
+	for (size_t i=0; i<uaServerConfig->endpointsSize; i++) {
+		UA_String_deleteMembers(&uaServerConfig->endpoints[i].endpointDescription.server.applicationUri);
+		UA_LocalizedText_deleteMembers(&uaServerConfig->endpoints[i].endpointDescription.server.applicationName);
 
 		UA_String_copy(&uaServerConfig->applicationDescription.applicationUri,
-					   &uaServerConfig->endpoints.endpoints[i].endpointDescription.server.applicationUri);
+					   &uaServerConfig->endpoints[i].endpointDescription.server.applicationUri);
 
 		UA_LocalizedText_copy(&uaServerConfig->applicationDescription.applicationName,
-							  &uaServerConfig->endpoints.endpoints[i].endpointDescription.server.applicationName);
+							  &uaServerConfig->endpoints[i].endpointDescription.server.applicationName);
 	}
 
 	// TODO set server capabilities
