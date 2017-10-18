@@ -19,6 +19,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
   
   forte_add_sourcefile_hcpp(forte_thread pctimeha forte_sync forte_sem)
+  forte_add_sourcefile_hcpp(conditionSync)
   forte_add_sourcefile_cpp(main.cpp ../genforte_printer.cpp)
   forte_add_sourcefile_h(../forte_architecture_time.h)
 
@@ -46,6 +47,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
   ENDIF(FORTE_POSIX_GENERATE_MAP_FILE)	
   
   forte_add_link_library("-lpthread") 
+  forte_add_link_library("-lrt") 
 
 
   forte_add_network_layer(SER OFF "ser" CSerCommLayer sercommlayer "Enable Forte serial line communication")
