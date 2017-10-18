@@ -13,8 +13,6 @@
 #define _FB_F_TRIG_H_
 
 #include <funcbloc.h>
-#include <forte_bool.h>
-#include <forte_array.h>
 
 class FB_F_TRIG: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FB_F_TRIG)

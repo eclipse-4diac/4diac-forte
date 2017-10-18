@@ -14,8 +14,6 @@
 #define _F_INT_TO_LWORD_H_
 
 #include <funcbloc.h>
-#include <forte_int.h>
-#include <forte_lword.h>
 
 class FORTE_F_INT_TO_LWORD: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_INT_TO_LWORD)

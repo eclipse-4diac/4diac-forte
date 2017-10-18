@@ -14,8 +14,6 @@
 #define _F_INT_TO_STRING_H_
 
 #include <funcbloc.h>
-#include <forte_int.h>
-#include <forte_string.h>
 
 class FORTE_F_INT_TO_STRING: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_INT_TO_STRING)

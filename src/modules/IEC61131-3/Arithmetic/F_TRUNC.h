@@ -14,8 +14,6 @@
 #define _F_TRUNC_H_
 
 #include <funcbloc.h>
-#include <forte_any_int.h>
-#include <forte_any_real.h>
 
 class FORTE_F_TRUNC: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_TRUNC)

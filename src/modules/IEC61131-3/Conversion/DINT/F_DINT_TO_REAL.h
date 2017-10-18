@@ -15,8 +15,6 @@
 #ifdef FORTE_USE_REAL_DATATYPE
 
 #include <funcbloc.h>
-#include <forte_real.h>
-#include <forte_dint.h>
 
 
 

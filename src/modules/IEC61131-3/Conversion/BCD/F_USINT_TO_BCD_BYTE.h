@@ -14,8 +14,6 @@
 #define _F_USINT_TO_BCD_BYTE_H_
 
 #include <funcbloc.h>
-#include <forte_byte.h>
-#include <forte_usint.h>
 
 class FORTE_F_USINT_TO_BCD_BYTE: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_USINT_TO_BCD_BYTE)

@@ -13,10 +13,6 @@
 #define _FB_CTD_UDINT_H_
 
 #include <funcbloc.h>
-#include <forte_dint.h>
-#include <forte_udint.h>
-#include <forte_bool.h>
-#include <forte_array.h>
 
 class FB_CTD_UDINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FB_CTD_UDINT)

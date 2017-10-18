@@ -13,9 +13,6 @@
 #define _FB_CTD_H_
 
 #include <funcbloc.h>
-#include <forte_int.h>
-#include <forte_bool.h>
-#include <forte_array.h>
 
 class FB_CTD: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FB_CTD)

@@ -13,8 +13,6 @@
 #define _F_USINT_TO_SINT_H_
 
 #include <funcbloc.h>
-#include <forte_usint.h>
-#include <forte_sint.h>
 
 class FORTE_F_USINT_TO_SINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_USINT_TO_SINT)

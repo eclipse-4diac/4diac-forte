@@ -14,8 +14,6 @@
 #define _F_DT_TO_DATE_H_
 
 #include <funcbloc.h>
-#include <forte_date_and_time.h>
-#include <forte_date.h>
 
 class FORTE_F_DT_TO_DATE: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_DT_TO_DATE)
