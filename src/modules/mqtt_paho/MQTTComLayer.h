@@ -26,7 +26,7 @@ using namespace forte::com_infra;
 
 class MQTTComLayer: public forte::com_infra::CComLayer{
 public:
-	MQTTComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poFB);
+	MQTTComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB);
 	virtual ~MQTTComLayer();
 
 	EComResponse sendData(void* pa_pvData, unsigned int pa_unSize);

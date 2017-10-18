@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2016 ACIN, fortiss GmbH
+ * Copyright (c) 2005 - 2017 ACIN, fortiss GmbH, Red Hat Inc
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  * Contributors:
  *  Alois Zoitl, Rene Smodic, Martin Melik Merkiumians - initial API and implementation and/or initial documentation
  *  Alois Zoitl - extracted common functions to new base class CThreadBase
+ *  Jens Reimann - fix waiting for thread initialization
  *******************************************************************************/
 #include <fortealloc.h>
 #include "forte_thread.h"
@@ -61,11 +62,6 @@ void CPosixThread::start(void){
     // Detach because we don't care about the thread anymore/don't need to join. To cleanup either call pthread_detach or pthread_join
     pthread_detach(m_stThreadID);
   }
-  //wait till the thread is up and running
-  do{
-    //pthread_yield();
-    sleep(1);
-  }while(!isAlive());
 }
 
 void * CPosixThread::threadFunction(void *arguments){

@@ -1,2 +1,26 @@
 /Debug/
 /bin/
+
+/src_gen/
+
+# CMake intermediate files
+
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+file_list.txt
+
+# generated files (e.g. .in)
+
+/forte_config.h
+/forte_config_opc_ua.h
+/stringlist.cpp
+/stringlist.h
+/core
+
+# binaries
+
+*.a
+/src/forte
+/src/src

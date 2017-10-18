@@ -35,7 +35,7 @@ bool E_CTUD_tester::testCase_EventCU(){
   TForteUInt16 prevCV = 0;
 
   TForteUInt16 valuesToTest[] = { 10, 1, 0, 65534, 65535 };
-  unsigned int numberOfValues = sizeof(valuesToTest) / sizeof(TForteUInt16);
+  unsigned int numberOfValues = static_cast<unsigned int>(sizeof(valuesToTest) / sizeof(TForteUInt16));
 
   for(unsigned int j = 0; j < numberOfValues; j++){
     triggerEvent(2);
@@ -61,7 +61,7 @@ bool E_CTUD_tester::testCase_EventR(){
   unsigned int numberOfTries = 100;
 
   TForteUInt16 valuesToTest[] = { 10, 1, 0, 65534, 65535};
-  unsigned int numberOfValues = sizeof(valuesToTest) / sizeof(TForteUInt16);
+  unsigned int numberOfValues = static_cast<unsigned int>(sizeof(valuesToTest) / sizeof(TForteUInt16));
 
   for(unsigned int i = 0; i < numberOfTries; i++){
     for(unsigned int j = 0; j < numberOfValues; j++){
@@ -86,7 +86,7 @@ bool E_CTUD_tester::testCase_EventCD(){
   unsigned int numberOfTries = 100;
 
   TForteUInt16 valuesToTest[] = { 10, 1, 0, 65534, 65535};
-  unsigned int numberOfValues = sizeof(valuesToTest) / sizeof(TForteUInt16);
+  unsigned int numberOfValues = static_cast<unsigned int>(sizeof(valuesToTest) / sizeof(TForteUInt16));
 
   for(unsigned int i = 0; i < numberOfTries; i++){
     for(unsigned int j = 0; j < numberOfValues; j++){
@@ -110,7 +110,7 @@ bool E_CTUD_tester::testCase_EventLD(){
   unsigned int numberOfTries = 100;
 
   TForteUInt16 PVToTest[] = { 10, 1, 0, 65534, 65535 };
-  unsigned int numberOftest = sizeof(PVToTest) / sizeof(TForteUInt16);
+  unsigned int numberOftest = static_cast<unsigned int>(sizeof(PVToTest) / sizeof(TForteUInt16));
 
   for(unsigned int i = 0; i < numberOfTries; i++){
     for(unsigned int j = 0; j < numberOftest; j++){

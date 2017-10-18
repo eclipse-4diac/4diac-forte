@@ -26,7 +26,6 @@
 #include <stringlist.h>
 
 class CEventChainExecutionThread;
-class CResource;
 class CAdapter;
 
 #ifdef FORTE_SUPPORT_MONITORING
@@ -152,6 +151,10 @@ class CFunctionBlock{
     CResource *getResourcePtr(void){
       return m_poResource;
     }
+
+    /*!\brief Get the timer of the device wher the FB is contained.
+         */
+    CTimerHandler& getTimer(void);
 
     /*!\brief Returns the type of this FB instance
      */
@@ -355,6 +358,27 @@ class CFunctionBlock{
       return (sizeof(CIEC_ANY) * pa_nNumDIs + sizeof(CIEC_ANY) * pa_nNumDOs + sizeof(TAdapterPtr) * pa_nNumAdapters);
 
     }
+
+    /*! \brief Get the data input with given number
+     *
+     * Attention this function will not perform any range checks on the pa_nDINum parameter!
+     * @param pa_nDINum number of the data input starting with 0
+     * @return pointer to the data input
+     */
+    TIEC_ANYPtr getDI(unsigned int pa_nDINum) const {
+      return m_aoDIs + pa_nDINum;
+    }
+
+    /*! \brief Get the data output with given number
+     *
+     * Attention this function will not perform any range checks on the pa_nDONum parameter!
+     * @param pa_nDONum number of the data output starting with 0
+     * @return pointer to the data output
+     */
+    CIEC_ANY *getDO(unsigned int pa_nDONum) const{
+      return m_aoDOs + pa_nDONum;
+    }
+
 #ifdef FORTE_SUPPORT_MONITORING
     // public monitoring
     void setUpdated(bool updated){
@@ -452,26 +476,6 @@ class CFunctionBlock{
 
     CEventConnection *getEOConUnchecked(TPortId paEONum) const {
       return (mEOConns + paEONum);
-    }
-
-    /*! \brief Get the data input with given number
-     *
-     * Attention this function will not perform any range checks on the pa_nDINum parameter!
-     * @param pa_nDINum number of the data input starting with 0
-     * @return pointer to the data input
-     */
-    TIEC_ANYPtr getDI(unsigned int pa_nDINum) const {
-      return m_aoDIs + pa_nDINum;
-    }
-
-    /*! \brief Get the data output with given number
-     *
-     * Attention this function will not perform any range checks on the pa_nDONum parameter!
-     * @param pa_nDONum number of the data output starting with 0
-     * @return pointer to the data output
-     */
-    CIEC_ANY *getDO(unsigned int pa_nDONum) const{
-      return m_aoDOs + pa_nDONum;
     }
 
     /*! \brief Get the data output connection with given number
@@ -600,14 +604,15 @@ typedef CFunctionBlock *TFunctionBlockPtr;
  fbclass(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : \
  fbBaseClass( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData)
 
-#ifdef _WIN32
+#ifdef IN
 #undef IN
+#endif
+
+#ifdef OUT
 #undef OUT
 #endif
 
-#ifdef NET_OS
-#undef IN
-#undef OUT
+#ifdef OPTIONAL
 #undef OPTIONAL
 #endif
 

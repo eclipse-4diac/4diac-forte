@@ -36,7 +36,7 @@ namespace forte {
 
     class CFBDKASN1ComLayer : public CComLayer{
       public:
-        CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poFB);
+        CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB);
         virtual ~CFBDKASN1ComLayer();
 
         EComResponse sendData(void *pa_pvData, unsigned int pa_unSize); // top interface, called from top
@@ -106,18 +106,6 @@ namespace forte {
          *         -1 on a general error, -2 if the tag does not fit
          */
         static int deserializeValue(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_ANY &pa_roCIECData);
-        /*!\brief Serialize the Null tag into a byte array
-        *
-        * This operation will always take one byte
-        * @param pa_pcBytes destination array for the serialization
-        */
-        static void serializeNull(TForteByte* pa_pcBytes){
-          *pa_pcBytes = scm_nNull;
-        }
-
-        static bool isNull(const TForteByte* pa_pcBytes){
-          return *pa_pcBytes == scm_nNull;
-        }
 
         enum EDataTypeTags{
           e_ANY_TAG = 0, e_BOOL_TAG = 1, e_SINT_TAG = 2, e_INT_TAG = 3, e_DINT_TAG = 4, e_LINT_TAG = 5, e_USINT_TAG = 6, e_UINT_TAG = 7, e_UDINT_TAG = 8, e_ULINT_TAG = 9, e_REAL_TAG = 10, e_LREAL_TAG = 11, e_TIME_TAG = 12, e_DATE_TAG = 13, e_TIME_OF_DAY_TAG = 14, e_DATE_AND_TIME_TAG = 15, e_STRING_TAG = 16, e_BYTE_TAG = 17, e_WORD_TAG = 18, e_DWORD_TAG = 19, e_LWORD_TAG = 20, e_WSTRING_TAG = 21, e_DerivedData_TAG = 26, e_DirectlyDerivedData_TAG = 27, e_EnumeratedData_TAG = 28, e_SubrangeData_TAG = 29, e_ARRAY_TAG = 22, //according to the compliance profile
@@ -140,6 +128,19 @@ namespace forte {
 
         static const TForteByte scm_nNull = 5;
         const static TForteByte csm_aDataTags[][2];
+
+        /*!\brief Serialize the Null tag into a byte array
+         *
+         * This operation will always take one byte
+         * @param pa_pcBytes destination array for the serialization
+         */
+        static void serializeNull(TForteByte* pa_pcBytes){
+          *pa_pcBytes = scm_nNull;
+        }
+
+        static bool isNull(const TForteByte* pa_pcBytes){
+          return *pa_pcBytes == scm_nNull;
+        }
 
         /*!\brief Serialize an array of IEC data points from a FB into a byte array
          *

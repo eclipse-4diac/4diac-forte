@@ -108,15 +108,15 @@ class CTimerHandler : public CExternalEventHandler{
     }
     ;
 
-    /*!\brief Pointer to the instance of the concrete forte timer
+    /*!\brief Pointer to a general timer used for code outside FBs, like devlog, TIME() and so on
      */
     static CTimerHandler *sm_poFORTETimer;
-    /*!\brief create the timer handler and set the pointer of sm_poFORTETimer to the new timer handler.
+    /*!\brief create the timer handler and set the parameter pointer with the the new timer handler.
      *
      * This function is not implemented in the standardtimerhandler and has to be implemented in the specific implementation.
      * implementations should check that not two timerhanlders can be created.
      */
-    static void createTimerHandler(void);
+    static CTimerHandler* createTimerHandler(void);
 
     /*!\brief Sets the priority of the event source
      *

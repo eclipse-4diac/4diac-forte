@@ -12,6 +12,7 @@
 #ifndef _DEVEXEC_H
 #define _DEVEXEC_H
 
+#include "../arch/timerha.h"
 
 const int cg_MaxRegisteredEventHandlers = 10;
 
@@ -25,21 +26,6 @@ struct SForteTime;
   @author az
 */
 class CDeviceExecution{
-  private:
-/*!\brief Structure for holding the information belonging to one external event.
- *
- */
-    struct SEventHandlerElement{
-      bool m_bOccured; //!<flag indicating that the external event has occurred between the last invocation.
-      CExternalEventHandler *m_poHandler; //!< pointer to the external event handler instance.
-    };
-/*!\brief List of currently available external event sources.
- *
- * The element 0 is always the timer event source.
- */
-    SEventHandlerElement m_astRegisteredEventHandlers [ cg_MaxRegisteredEventHandlers ];
-    int m_nNumberofExternalEventHandler; //!< number of currently used external event handlers in the m_asRegisteredEventHandlers list.
-protected:
 public:
     CDeviceExecution();
 
@@ -77,6 +63,30 @@ public:
     bool extEvHandlerIsAllowed(int ){
       return true;
     };
+
+    CTimerHandler& getTimer() const{
+      return *mFORTETimer;
+    }
+
+protected:
+private:
+/*!\brief Structure for holding the information belonging to one external event.
+*
+*/
+  struct SEventHandlerElement{
+    bool m_bOccured; //!<flag indicating that the external event has occurred between the last invocation.
+    CExternalEventHandler *m_poHandler; //!< pointer to the external event handler instance.
+  };
+/*!\brief List of currently available external event sources.
+*
+* The element 0 is always the timer event source.
+*/
+  SEventHandlerElement m_astRegisteredEventHandlers [ cg_MaxRegisteredEventHandlers ];
+  int m_nNumberofExternalEventHandler; //!< number of currently used external event handlers in the m_asRegisteredEventHandlers list.
+
+  CTimerHandler *mFORTETimer;
+
+
 };
 
 #endif

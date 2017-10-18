@@ -13,17 +13,7 @@
 #ifndef FORTE_OPCUA_HELPER_H
 #define FORTE_OPCUA_HELPER_H
 
-#ifdef __GNUC__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-#endif
-
 #include <open62541.h>
-
-#ifdef __GNUC__
-#pragma GCC diagnostic pop
-#endif
-
 #include "forte_any.h"
 
 struct UA_TypeConvert {

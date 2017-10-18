@@ -60,14 +60,14 @@ void FORTE_RT_E_CYCLE::executeEvent(int pa_nEIID){
     case scm_nEventSTOPID:
       if(m_bActive){
         m_oECEO.setDeadline(static_cast<CIEC_TIME::TValueType>(0));
-        CTimerHandler::sm_poFORTETimer->unregisterTimedFB(this);
+        getTimer().unregisterTimedFB(this);
         m_bActive = false;
       }
       break;
     case scm_nEventSTARTID:
       if(!m_bActive){
         m_oECEO.setDeadline(Deadline());
-        CTimerHandler::sm_poFORTETimer->registerTimedFB( &m_stTimeListEntry, DT());
+        getTimer().registerTimedFB( &m_stTimeListEntry, DT());
         m_bActive = true;
       }
       break;

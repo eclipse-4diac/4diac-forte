@@ -34,6 +34,7 @@ enum EMGMCommandType{
 
   cg_nMGM_CMD_Create_DataType = 0x10, //!< Create a new data type definition in the FORTE.
   cg_nMGM_CMD_Create_FBType = 0x20,   //!< Create a new FB type definition in the FORTE.
+  cg_nMGM_CMD_Create_AdapterType = 0x50,   //!< Create a new Adapter type definition in the FORTE.
 
   /*! \brief Create a new FB or resource instance.
    *

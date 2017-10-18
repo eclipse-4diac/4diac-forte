@@ -20,7 +20,7 @@
 
 using namespace forte::com_infra;
 
-CSerCommLayer::CSerCommLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poFB) :
+CSerCommLayer::CSerCommLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB) :
     CComLayer(pa_poUpperLayer, pa_poFB), m_nFD(CFDSelectHandler::scm_nInvalidFileDescriptor), m_unBufFillSize(0){
 
 }

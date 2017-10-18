@@ -12,7 +12,7 @@
   *******************************************************************************/
 #include <fortenew.h>
 #include "fbdkasn1layer.h"
-#include "commfb.h"
+#include "basecommfb.h"
 #include "../datatypes/forte_string.h"
 #include "../datatypes/forte_wstring.h"
 #include "../datatypes/forte_array.h"
@@ -20,7 +20,7 @@
 
 using namespace forte::com_infra;
 
-CFBDKASN1ComLayer::CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poComFB) :
+CFBDKASN1ComLayer::CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poComFB) :
   CComLayer(pa_poUpperLayer, pa_poComFB), mStatSerBuf(0), mStatSerBufSize(0), mDeserBuf(0), mDeserBufSize(0), mDeserBufPos(0), mDIPos(0), mDOPos(0){
 
   if(0 != pa_poComFB){

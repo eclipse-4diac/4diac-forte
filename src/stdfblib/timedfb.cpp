@@ -49,13 +49,13 @@ void CTimedFB::executeEvent(int pa_nEIID){
       break;
     case csm_nEventSTOPID:
       if(m_bActive){
-        CTimerHandler::sm_poFORTETimer->unregisterTimedFB(this);
+        getTimer().unregisterTimedFB(this);
         m_bActive = false;
       }
       break;
     case csm_nEventSTARTID:
       if(!m_bActive){
-        CTimerHandler::sm_poFORTETimer->registerTimedFB( &m_stTimeListEntry, DT());
+        getTimer().registerTimedFB( &m_stTimeListEntry, DT());
         m_bActive = true;
       }
       break;
@@ -69,7 +69,7 @@ EMGMResponse CTimedFB::changeFBExecutionState(EMGMCommandType pa_unCommand){
   if((e_RDY == eRetVal) &&
      ((cg_nMGM_CMD_Stop == pa_unCommand) || (cg_nMGM_CMD_Kill == pa_unCommand))){
     if(m_bActive){
-      CTimerHandler::sm_poFORTETimer->unregisterTimedFB(this);
+      getTimer().unregisterTimedFB(this);
       m_bActive = false;
     }
   }

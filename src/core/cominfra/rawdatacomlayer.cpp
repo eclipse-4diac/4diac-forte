@@ -16,7 +16,7 @@
 namespace forte {
   namespace com_infra {
 
-    CRawDataComLayer::CRawDataComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poFB) :
+    CRawDataComLayer::CRawDataComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB) :
             CComLayer(pa_poUpperLayer, pa_poFB){
     }
 

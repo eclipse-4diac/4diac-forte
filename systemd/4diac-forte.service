@@ -1,0 +1,14 @@
+[Unit]
+Description=Eclipse 4DIAC Forte Runtime
+After=syslog.target network.target
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/sysconfig/4diac-forte
+ExecStart=/usr/bin/forte $FLAGS
+Restart=on-failure
+TimeoutStopSec=30s
+
+[Install]
+WantedBy=multi-user.target
+

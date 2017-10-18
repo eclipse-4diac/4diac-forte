@@ -11,7 +11,6 @@
   *******************************************************************************/
 #include "devexec.h"
 #include "esfb.h"
-#include "../arch/timerha.h"
 #include "ecet.h"
 #include "extevhan.h"
 
@@ -20,13 +19,21 @@
 CDeviceExecution::CDeviceExecution():
   m_nNumberofExternalEventHandler(0){
   CExternalEventHandler::setDeviceExecution(this); // let all the external event handlers know where to report events to
-  CTimerHandler::createTimerHandler();
-  CTimerHandler::sm_poFORTETimer->enableHandler(); // will result in an registration for  the timer handler (automatically it will be the first registration)
+  mFORTETimer = CTimerHandler::createTimerHandler();
+  if(mFORTETimer){
+    mFORTETimer->enableHandler(); // will result in an registration for  the timer handler (automatically it will be the first registration)
+    if(!CTimerHandler::sm_poFORTETimer){
+      CTimerHandler::sm_poFORTETimer = mFORTETimer; //used for develog, CIEC_TIME() and in Modbus
+    }
+  }
+
 }
 
 CDeviceExecution::~CDeviceExecution(){
-  delete CTimerHandler::sm_poFORTETimer;
-  CTimerHandler::sm_poFORTETimer = 0;
+  if(CTimerHandler::sm_poFORTETimer == mFORTETimer){
+    CTimerHandler::sm_poFORTETimer = 0;
+  }
+  delete mFORTETimer;
 };
 
 int CDeviceExecution::registerExternalEventHandler(CExternalEventHandler *pa_poHandler){

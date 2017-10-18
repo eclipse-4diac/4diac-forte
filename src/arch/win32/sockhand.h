@@ -19,14 +19,18 @@
 #define OUT
 #endif
 
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0600 //windows vista version, which included InetPton
+#endif
+
 #include <winsock2.h>
 #include <windows.h>
 #include <Ws2tcpip.h>
 //these include needs to be last
 #include "../fdselecthand.h"
-#include "../bsdsocketinterf.h"
+#include "win32socketinterf.h"
 #include "../gensockhand.h"
 
-typedef CGenericIPComSocketHandler<CFDSelectHandler, CBSDSocketInterface> CIPComSocketHandler;
+typedef CGenericIPComSocketHandler<CFDSelectHandler, CWin32SocketInterface> CIPComSocketHandler;
 
 #endif /* SOCKHAND_H_ */

@@ -20,7 +20,7 @@
 
 using namespace forte::com_infra;
 
-CIPComLayer::CIPComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB) :
+CIPComLayer::CIPComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB) :
         CComLayer(pa_poUpperLayer, pa_poComFB),
         m_nSocketID(CIPComSocketHandler::scm_nInvalidSocketDescriptor),
         m_nListeningID(CIPComSocketHandler::scm_nInvalidSocketDescriptor),
@@ -225,7 +225,7 @@ void CIPComLayer::handledConnectedDataRecv(){
 
 void CIPComLayer::handleConnectionAttemptInConnected(){
   //accept and immediately close the connection to tell the client that we are not available
-  //sofar the best option I've found for handling single connection servers
+  //so far the best option I've found for handling single connection servers
   CIPComSocketHandler::TSocketDescriptor socketID = CIPComSocketHandler::acceptTCPConnection(m_nListeningID);
   CIPComSocketHandler::closeSocket(socketID);
 }

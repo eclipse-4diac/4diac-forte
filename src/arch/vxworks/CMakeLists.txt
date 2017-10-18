@@ -14,11 +14,12 @@ SET(SOURCE_GROUP ${SOURCE_GROUP}\\vxworks)
 forte_add_architecture(VxWorks)
 
 if("${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
-  message("Set an environment vairable WIND_BASE to any value")
+  message(STATUS "VXWORKS: Set an environment variable WIND_BASE to any value")
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
   
   forte_add_sourcefile_hcpp(forte_thread vxworkstimeha forte_sync forte_sem)
-  forte_add_sourcefile_cpp(main.cpp)
+  forte_add_sourcefile_cpp(main.cpp ../genforte_printer.cpp)
+  forte_add_sourcefile_h(../forte_architecture_time.h)
   
   SET(FORTE_VXWORKS_BASE_DIR "C:/WBOEM69_Rexroth/customBosch/vxworks-6.9" CACHE STRING "VxWorks base directory.")
   
@@ -44,11 +45,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
     set(FORTE_VXWORKS_INCLUDE "${FORTE_VXWORKS_BASE_DIR}/target/h;${FORTE_VXWORKS_BASE_DIR}/target/h/wrn/coreip" CACHE STRING "Include directories separated by ;" FORCE)  
   endif(FORTE_VXWORKS_FIND_DIR_AUTOMATICALLY)
   
-  forte_add_include_directories(${FORTE_VXWORKS_INCLUDE})
-  
-  set(VXWORKS_INCLUDE_I "")
   foreach(ARG ${FORTE_VXWORKS_INCLUDE}) 
-    set(VXWORKS_INCLUDE_I "${VXWORKS_INCLUDE_I} -I${ARG}")
+     forte_add_include_system_directories(${ARG})
   endforeach()
   
   #Add commands for creating target image
@@ -56,16 +54,14 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
   set(CMAKE_NM ${COMPILER_FOLDER}/nmpentium.exe)
   SET(FORTE_TCLSH "C:/WBOEM69_Rexroth/setup/x86-win32/bin/tclsh.exe" CACHE STRING "tclsh command")
  
-  string(REGEX REPLACE "^[ ]+" "" VXWORKS_INCLUDE_I "${VXWORKS_INCLUDE_I}")
-  
   #for DKM
   forte_add_definition(-DVXWORKS -march=atom -mmovbe -nostdlib -fno-builtin -fno-defer-pop 
-  -fno-implicit-fp -ansi -fno-zero-initialized-in-bss -D_WRS_KERNEL -Wall -MD -MP -DCPU=_VX_${FORTE_VXWORKS_CPU} 
+  -fno-implicit-fp -ansi -fno-zero-initialized-in-bss -D_WRS_KERNEL -Wall -MD -MP -DCPU=_VX_${FORTE_VXWORKS_CPU} -D_VX_CPU=_VX_${FORTE_VXWORKS_CPU}
   -DTOOL_FAMILY=${FORTE_VXWORKS_TOOL_FAMILY} -DTOOL=${FORTE_VXWORKS_TOOL} -DIP_PORT_VXWORKS=69 -D_VSB_CONFIG_FILE=\"${FORTE_VXWORKS_VSB_CONFIG_FILE}\")
   
   forte_add_post_build_command(COMMAND ${FORTE_VXWORKS_CMAKE_NM} forte.vxe > nmFile.txt
                                COMMAND ${FORTE_VXWORKS_TCLSH} ${FORTE_VXWORKS_MUNCH_TCL} -c pentium -tags ${FORTE_VXWORKS_TAGS} < nmFile.txt 1> ctdt.c 
-                               COMMAND ${CMAKE_C_COMPILER} -march=atom -mmovbe -nostdlib -fno-builtin -fno-defer-pop -fno-implicit-fp -fdollars-in-identifiers -Wall ${VXWORKS_INCLUDE_I} -DCPU=_VX_${FORTE_VXWORKS_CPU} -DTOOL_FAMILY=${FORTE_VXWORKS_TOOL_FAMILY} -DTOOL=${FORTE_VXWORKS_TOOL} -D_WRS_KERNEL -DIP_PORT_VXWORKS=69 -D_VSB_CONFIG_FILE=\"${FORTE_VXWORKS_VSB_CONFIG_FILE}\" -o ctdt.o ctdt.c 
+                               COMMAND ${CMAKE_C_COMPILER} -march=atom -mmovbe -nostdlib -fno-builtin -fno-defer-pop -fno-implicit-fp -fdollars-in-identifiers -Wall -DCPU=_VX_${FORTE_VXWORKS_CPU} -D_VX_CPU=_VX_${FORTE_VXWORKS_CPU} -DTOOL_FAMILY=${FORTE_VXWORKS_TOOL_FAMILY} -DTOOL=${FORTE_VXWORKS_TOOL} -D_WRS_KERNEL -DIP_PORT_VXWORKS=69 -D_VSB_CONFIG_FILE=\"${FORTE_VXWORKS_VSB_CONFIG_FILE}\" -o ctdt.o ctdt.c 
                                COMMAND ${CMAKE_C_COMPILER} -r -nostdlib -Wl,-X -T ${FORTE_VXWORKS_BASE_DIR}/target/h/tool/${FORTE_VXWORKS_TOOL}/ldscripts/link.OUT -o forte.out ctdt.o forte.vxe)
   
   if(FORTE_COM_ETH)

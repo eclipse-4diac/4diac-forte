@@ -17,7 +17,7 @@
 
 class CSerCommLayer : public forte::com_infra::CComLayer{
   public:
-    CSerCommLayer(forte::com_infra::CComLayer* pa_poUpperLayer, forte::com_infra::CCommFB * pa_poFB);
+    CSerCommLayer(forte::com_infra::CComLayer* pa_poUpperLayer, forte::com_infra::CBaseCommFB * pa_poFB);
     virtual ~CSerCommLayer();
 
     virtual forte::com_infra::EComResponse sendData(void *pa_pvData, unsigned int pa_unSize);

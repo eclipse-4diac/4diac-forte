@@ -17,7 +17,7 @@
 
 using namespace forte::com_infra;
 
-MQTTComLayer::MQTTComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poFB) : CComLayer(pa_poUpperLayer, pa_poFB),
+MQTTComLayer::MQTTComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB) : CComLayer(pa_poUpperLayer, pa_poFB),
     mTopicName(0), bufferSize(0), m_eInterruptResp(e_Nothing){
   memset(dataBuffer, 0, sizeof(dataBuffer)); //TODO change this to  dataBuffer{0} in the extended list when fully switching to C++11
 	// TODO Auto-generated constructor stub

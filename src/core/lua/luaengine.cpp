@@ -275,4 +275,3 @@ bool CLuaEngine::luaGetArray(lua_State *luaState, CIEC_ARRAY* array, int index) 
   }
   return true;
 }
-

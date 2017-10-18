@@ -9,11 +9,11 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "comlayersmanager.h"
-#include "commfb.h"
+#include "basecommfb.h"
 
 using namespace forte::com_infra;
 
-CComLayer* CComLayersManager::createCommunicationLayer(char *, CComLayer* , CCommFB * ){
+CComLayer* CComLayersManager::createCommunicationLayer(char *, CComLayer* , CBaseCommFB * ){
   CComLayer* m_poNewLayer = 0;
 
   return m_poNewLayer;

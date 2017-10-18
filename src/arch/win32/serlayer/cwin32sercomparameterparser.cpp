@@ -10,11 +10,11 @@
  *******************************************************************************/
 
 
-#include <CWin32SerComParameterParser.h>
+#include "cwin32sercomparameterparser.h"
 #include <string.h>
 #include <cctype>
 
-CWin32SerComParameterParser::CWin32SerComParameterParser(char* pa_pcParameters) : m_pcParameters(pa_pcParameters), m_cSeparator(0), m_pcParsePosition(0)  {
+CWin32SerComParameterParser::CWin32SerComParameterParser(char* pa_pcParameters) : m_cSeparator(0), m_pcParameters(pa_pcParameters), m_pcParsePosition(0) {
 	m_nCurrentParameter = 0;
 	memset(m_pcParameterSeparators, 0, sizeof(m_pcParameterSeparators)); //TODO change this to  m_pcParameterSeparators{0} in the extended list when fully switching to C++11
 }

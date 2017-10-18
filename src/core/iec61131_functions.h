@@ -502,7 +502,7 @@ template<typename T> const T INSERT(const T& pa_rsIn1, const T& pa_rsIn2, const 
   return CONCAT(CONCAT(LEFT(pa_rsIn1, pa_roP), pa_rsIn2), RIGHT(pa_rsIn1, pos_right));
 }
 
-#ifdef _WIN32
+#ifdef DELETE
 #undef DELETE
 #endif
 
@@ -537,7 +537,7 @@ template<typename T> const T TOUPPER(const T& pa_rsIn){
   char* current = temp.getValue();
   for (unsigned int i = 0; i <=pa_rsIn.length(); ++i)
   {
-	  current[i] = toupper(current[i]);
+	  current[i] = static_cast<char>(toupper(current[i]));
   }
   return temp;
 }
@@ -547,7 +547,7 @@ template<typename T> const T TOLOWER(const T& pa_rsIn){
   char* current = temp.getValue();
   for (unsigned int i = 0; i <= pa_rsIn.length(); ++i)
   {
-    current[i] = tolower(current[i]);
+    current[i] = static_cast<char>(tolower(current[i]));
   }
   return temp;
 }

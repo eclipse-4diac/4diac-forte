@@ -11,6 +11,8 @@
  *    - initial API and implementation and/or initial documentation
  *   Monika Wenger
  *    - fix: apostrophes are deleted in parseWriteConnectionData
+ *   Jens Reimann
+ *    - Enhance bootfile loading behavior
  *******************************************************************************/
 #include <string.h>
 #include "DEV_MGR.h"
@@ -20,7 +22,7 @@
 #include "../../core/device.h"
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "ForteBootFileLoader.h"
 
 DEFINE_FIRMWARE_FB(DEV_MGR, g_nStringIdDEV_MGR)
 
@@ -50,25 +52,27 @@ const SFBInterfaceSpec DEV_MGR::scm_stFBInterfaceSpec = {
 const char * const DEV_MGR::scm_sMGMResponseTexts[13] = { "RDY", "BAD_PARAMS", "LOCAL_TERMINATION", "SYSTEM_TERMINATION", "NOT_READY", "UNSUPPORTED_CMD", "UNSUPPORTED_TYPE", "NO_SUCH_OBJECT", "INVALID_OBJECT", "INVALID_OPERATION", "INVALID_STATE", "OVERFLOW", "INVALID_DST" };
 
 void DEV_MGR::executeEvent(int pa_nEIID){
-
   if(scm_nEventINITID == pa_nEIID){
 #ifdef FORTE_SUPPORT_BOOT_FILE
     if((true == QI()) && (false == QO())){
       //this is the first time init is called try to load a boot file
-      loadForteBootFile();
+      ForteBootFileLoader loader(*this);
+      if(loader.isOpen() && OK == loader.loadBootFile()){
+          DEVLOG_INFO("Bootfile correctly loaded\n");
+      }
     }
 #endif
     CCommFB::executeEvent(pa_nEIID);  //initialize the underlying server FB
-  }
-  else if(cg_nExternalEventID == pa_nEIID){
-    //we received a message on the network let the server correctly handle it
-    CCommFB::executeEvent(pa_nEIID);
-    if(true == QI()){
-      //the message was correctly received
-      executeRQST();
-      //send response
-      CCommFB::executeEvent(CCommFB::scm_nSendNotificationEventID);
-    }
+  }else{
+    if(cg_nExternalEventID == pa_nEIID){
+	  //we received a message on the network let the server correctly handle it
+	  if(forte::com_infra::e_ProcessDataOk == CCommFB::receiveData()){ //
+	    //the message was correctly received
+	    executeRQST();
+	    //send response
+	    CCommFB::sendData();
+	  }
+	}
   }
 }
 
@@ -143,10 +147,10 @@ char *DEV_MGR::parseRequest(char *pa_acRequestString, forte::core::SManagementCM
       acCommandStart += scnCommandLength[pa_rstCommand.mCMD];
     }
   }
-
   return acCommandStart;
 }
 
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
 bool DEV_MGR::parseFBType(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand){
   bool bRetVal = false;
   if(!strncmp("FBType Name=\"", pa_acRequestPartLeft, 13)){
@@ -169,6 +173,30 @@ bool DEV_MGR::parseFBType(char *pa_acRequestPartLeft, forte::core::SManagementCM
     }
   return bRetVal;
 }
+
+bool DEV_MGR::parseAdapterType(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand){
+  bool bRetVal = false;
+  if(!strncmp("AdapterType Name=\"", pa_acRequestPartLeft, 18)){
+    char *acBuf = &(pa_acRequestPartLeft[18]);
+    int i = 0;
+    if(acBuf[0] != '*'){
+      i = parseIdentifier(acBuf, pa_rstCommand.mFirstParam);
+      acBuf = (-1 == i) ? 0 : strchr(&(acBuf[i + 1]), '>');
+    }
+    if(acBuf != 0){
+      acBuf = acBuf + 1;
+      i = 0;
+      TForteUInt16 nBufLength = static_cast<TForteUInt16>(strcspn(acBuf, "<"));
+      pa_rstCommand.mAdditionalParams.assign(acBuf, nBufLength);
+    }
+    else{
+      return false;
+    }
+    bRetVal = true;
+    }
+  return bRetVal;
+}
+#endif
 
 bool DEV_MGR::parseFBData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand){
   bool bRetVal = false;
@@ -213,7 +241,7 @@ bool DEV_MGR::parseFBData(char *pa_acRequestPartLeft, forte::core::SManagementCM
 }
 
 int DEV_MGR::parseIdentifier(char *paIdentifierStart, forte::core::TNameIdentifier &paIdentifier){
-  for(char *runner = paIdentifierStart, *start = paIdentifierStart; '\0' != runner; ++runner){
+  for(char *runner = paIdentifierStart, *start = paIdentifierStart; '\0' != *runner; ++runner){
     if('.' == *runner){
       *runner = '\0';
       if(!paIdentifier.pushBack(CStringDictionary::getInstance().insert(start))){
@@ -293,13 +321,22 @@ void DEV_MGR::parseCreateData(char *pa_acRequestPartLeft, forte::core::SManageme
   pa_rstCommand.mCMD = cg_nMGM_CMD_INVALID;
   if(0 != pa_acRequestPartLeft){
       switch (pa_acRequestPartLeft[0]){
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+        case 'A': // we have an Adapter to Create
+          if(parseAdapterType(pa_acRequestPartLeft, pa_rstCommand)){
+            pa_rstCommand.mCMD = cg_nMGM_CMD_Create_AdapterType;
+          }
+          break;
+#endif
         case 'F': // we have an FB to Create
           if(parseFBData(pa_acRequestPartLeft, pa_rstCommand)){
             pa_rstCommand.mCMD = cg_nMGM_CMD_Create_FBInstance;
           }
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
           else if(parseFBType(pa_acRequestPartLeft, pa_rstCommand)){
             pa_rstCommand.mCMD = cg_nMGM_CMD_Create_FBType;
           }
+#endif
           break;
         case 'C': // we have an Connection to Create
           if(parseConnectionData(pa_acRequestPartLeft, pa_rstCommand)){
@@ -584,68 +621,8 @@ DEV_MGR::DEV_MGR(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_
 DEV_MGR::~DEV_MGR(){
 }
 
-
-#ifdef FORTE_SUPPORT_BOOT_FILE
-void DEV_MGR::loadForteBootFile(){
-  char* bootFileName;
-  bootFileName = getenv ("FORTE_BOOT_FILE");
-  FILE *bootfile = 0;
-  if(bootFileName != 0){
-    bootfile = fopen(bootFileName, "r");
-  }else{
-    bootfile = fopen(FORTE_BOOT_FILE_LOCATION, "r");
-  }
-
-  if(0 != bootfile){
-    DEVLOG_INFO("Boot file %s opened\n", (0 != bootFileName) ? bootFileName : FORTE_BOOT_FILE_LOCATION);
-    //we could open the file try to load it
-    int nLineCount = 1;
-    EMGMResponse eResp;
-    char *cmdStart;
-    char acLineBuf[cg_unBootFileLineBufSize]; //TODO maybe move it out of the stack
-
-    while(0 != fgets(acLineBuf, cg_unBootFileLineBufSize, bootfile)){
-      if('\n' != acLineBuf[strlen(acLineBuf) - 1]){
-         //the line has been longer than our buffer
-        DEVLOG_ERROR("Boot file line longer than configured buffer size: %d\n", cg_unBootFileLineBufSize);
-        //As we were not able to load the bootfile clean any created resources and FBs and start an empty device
-        m_stCommand.mCMD = cg_nMGM_CMD_Delete_AllFBInstances;
-        m_stCommand.mDestination = CStringDictionary::scm_nInvalidStringId;
-        m_poDevice.executeMGMCommand(m_stCommand);
-        break;
-      }
-      cmdStart = strchr(acLineBuf, ';');
-      if(0 == cmdStart){
-        DEVLOG_ERROR("Boot file line does not contain separating ';'. Line: %d\n", nLineCount);
-        break;
-      }
-      *cmdStart = '\0';
-      cmdStart++;
-
-      eResp = parseAndExecuteMGMCommand(acLineBuf, cmdStart);
-      if(e_RDY != eResp){
-        //command was not successful
-        DEVLOG_ERROR("Boot file command could not be executed. Line: %d: %s, Response %s\n", nLineCount, cmdStart, scm_sMGMResponseTexts[eResp]);
-        break;
-      }
-      nLineCount++;
-    }
-
-    fclose(bootfile);
-  }
-  else{
-    if(bootFileName != 0){
-        DEVLOG_WARNING("Boot file %s could not be opened\n", bootFileName);
-    }else{
-        DEVLOG_WARNING("Boot file forte.fboot could not be opened\n");
-    }
-  }
-}
-#endif
-
 EMGMResponse DEV_MGR::parseAndExecuteMGMCommand(char *pa_acDest, char *pa_acCommand){
   EMGMResponse eResp = e_INVALID_OBJECT;
-
   if(0 != strchr(pa_acCommand, '>')){
     m_stCommand.mDestination = (strlen(pa_acDest) != 0) ? CStringDictionary::getInstance().insert(pa_acDest) : CStringDictionary::scm_nInvalidStringId;
     m_stCommand.mFirstParam.clear();
@@ -701,7 +678,6 @@ EMGMResponse DEV_MGR::parseAndExecuteMGMCommand(char *pa_acDest, char *pa_acComm
       eResp = e_UNSUPPORTED_CMD;
     }
   }
-
   return eResp;
 }
 

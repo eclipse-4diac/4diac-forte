@@ -19,7 +19,7 @@
 namespace forte {
   namespace com_infra {
 
-    class CCommFB;
+    class CBaseCommFB;
 
     class CComLayer{
       public:
@@ -96,18 +96,18 @@ namespace forte {
 
         /*!\brief get the FB of this layer
          */
-        CCommFB *getCommFB() const {
+		CBaseCommFB *getCommFB() const {
           return m_poFb;
         }
 
       protected:
-        CComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB);
+        CComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB);
 
         EComConnectionState m_eConnectionState;
 
         CComLayer *m_poTopLayer;
         CComLayer *m_poBottomLayer;
-        CCommFB *m_poFb;
+		CBaseCommFB *m_poFb;
       private:
     };
 

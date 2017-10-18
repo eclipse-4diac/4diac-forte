@@ -19,7 +19,7 @@
 
 using namespace forte::com_infra;
 
-COpcComLayer::COpcComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB) :
+COpcComLayer::COpcComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB) :
 CComLayer(pa_poUpperLayer, pa_poComFB), m_acHost(0), m_acServerName(0), m_nUpdateRate(0), m_nDeadBand(0), m_bLayerParamsOK(false), m_pOpcConnection(0), m_eInterruptResp(e_Nothing){
   m_acOpcGroupName = m_poFb->getInstanceName();
 }

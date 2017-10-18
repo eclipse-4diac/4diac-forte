@@ -13,10 +13,11 @@
 #include "rcXTimerHandler.h"
 #include "../devlog.h"
 
-void CTimerHandler::createTimerHandler(void){
-  if(0 == sm_poFORTETimer)
-    sm_poFORTETimer = new CrcXTimerHandler();
+
+CTimerHandler* CTimerHandler::createTimerHandler(){
+  return new CrcXTimerHandler();
 }
+
 
 CrcXTimerHandler::CrcXTimerHandler() : mTimer(0), mFirstTime(true){
   mTimer = forte_malloc(RX_TIMER_SIZE);
@@ -32,13 +33,14 @@ CrcXTimerHandler::~CrcXTimerHandler(){
 }
 
 void CrcXTimerHandler::timerCallback(void* arguments){
-  CTimerHandler** forteTimer = static_cast<CTimerHandler**>(arguments); //TODO: check if using directly the static sm_poFORTETimer instead of the argument is more efficient
-  (*forteTimer)->nextTick();
+  if(arguments){
+    static_cast<CTimerHandler*>(arguments)->nextTick();
+  }
 }
 
 void CrcXTimerHandler::enableHandler(void){
   if (mFirstTime){
-	  rX_TimCreateTimer(mTimer, timerCallback, (void*) &sm_poFORTETimer, RX_TIM_AUTO_RELOAD, (1000000 / rX_SysGetSystemCycletime()) / getTicksPerSecond(),
+	  rX_TimCreateTimer(mTimer, timerCallback, (void*) this, RX_TIM_AUTO_RELOAD, (1000000 / rX_SysGetSystemCycletime()) / getTicksPerSecond(),
 	          (1000000 / rX_SysGetSystemCycletime()) / getTicksPerSecond());
 	  mFirstTime = false;
 	}else{
