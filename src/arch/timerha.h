@@ -12,9 +12,9 @@
 #ifndef _TIMERHA_H_
 #define _TIMERHA_H_
 
+#include <forte_config.h>
 #include "../core/extevhan.h"
 #include "../core/utils/singlet.h"
-#include <forte_config.h>
 #include <forte_sync.h>
 
 class CEventSourceFB;

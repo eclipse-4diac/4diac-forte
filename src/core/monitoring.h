@@ -15,6 +15,7 @@
 #include "mgmcmdstruct.h"
 #include "fortelist.h"
 #include "event.h"
+#include "conn.h"
 #include "stringdict.h"
 #include "../arch/timerha.h"
 
