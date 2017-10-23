@@ -17,7 +17,6 @@
 #ifndef SRC_MODULES_OPC_UA_OPCUAHANDLER_H_
 #define SRC_MODULES_OPC_UA_OPCUAHANDLER_H_
 
-#include <singlet.h>
 #include <forte_thread.h>
 #include <extevhan.h>
 #include <conn.h>

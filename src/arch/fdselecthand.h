@@ -14,7 +14,6 @@
 
 #include "../core/fortelist.h"
 #include "../core/extevhan.h"
-#include "../core/utils/singlet.h"
 #include <forte_thread.h>
 #include <forte_sync.h>
 

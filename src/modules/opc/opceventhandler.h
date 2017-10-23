@@ -13,7 +13,6 @@
 
 #include "extevhan.h"
 #include <forte_thread.h>
-#include "singlet.h"
 #include "fortelist.h"
 #include <forte_sync.h>
 #include "comlayer.h"

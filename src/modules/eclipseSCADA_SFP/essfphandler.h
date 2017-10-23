@@ -12,7 +12,6 @@
 #define OPENSCADASERVERHANDLER_H_
 
 #include <extevhan.h>
-#include <singlet.h>
 #include <forte_thread.h>
 #include <comlayer.h>
 

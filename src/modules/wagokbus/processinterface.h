@@ -17,7 +17,6 @@
 #include <forte_thread.h>
 #include <forte_sync.h>
 #include <fortelist.h>
-#include <singlet.h>
 #include <esfb.h>
 #include <devexec.h>
 #include <devlog.h>

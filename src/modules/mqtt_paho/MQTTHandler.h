@@ -13,7 +13,6 @@
 #ifndef MQTTHANDLER_H_
 #define MQTTHANDLER_H_
 
-#include <singlet.h>
 #include <extevhan.h>
 #include <fortelist.h>
 #include <MQTTComLayer.h>

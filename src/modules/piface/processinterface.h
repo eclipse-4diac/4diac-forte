@@ -15,7 +15,6 @@
 #include <../../stdfblib/io/processinterfacebase.h>
 #include <extevhan.h>
 #include <forte_thread.h>
-#include <singlet.h>
 #include "../conmeleon_c1/spi/spidevice.h"
 
 class CPiFaceProcessInterface : public CProcessInterfaceBase{
