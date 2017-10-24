@@ -66,7 +66,7 @@ public:
   virtual void dropSlaveHandles(int index) = 0;
 
 protected:
-  MultiController();
+  MultiController(CDeviceExecution& paDeviceExecution);
 
   virtual void addHandle(Controller::HandleDescriptor *handleDescriptor);
 

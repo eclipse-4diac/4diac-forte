@@ -14,7 +14,7 @@
 namespace IO {
 namespace Device {
 
-MultiController::MultiController() {
+MultiController::MultiController(CDeviceExecution& paDeviceExecution) : Controller(paDeviceExecution){
 }
 
 void MultiController::addHandle(

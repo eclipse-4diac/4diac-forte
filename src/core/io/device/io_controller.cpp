@@ -17,7 +17,7 @@
 namespace IO {
 namespace Device {
 
-Controller::Controller() :
+Controller::Controller(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution),
     notificationType(UnknownNotificationType), notificationAttachment(0), notificationHandled(
         true), delegate(0), error(0), initDelay(0) {
 }

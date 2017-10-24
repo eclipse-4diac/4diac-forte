@@ -14,7 +14,7 @@
 namespace IO {
 namespace Device {
 
-PollController::PollController(float PollInterval) :
+PollController::PollController(CDeviceExecution& paDeviceExecution, float PollInterval) : Controller(paDeviceExecution),
     PollInterval(PollInterval), forcedLoop(false), loopActive(false) {
 
 }

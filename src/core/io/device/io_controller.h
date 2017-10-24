@@ -91,8 +91,13 @@ public:
 
   virtual void handleChangeEvent(Handle *handle);
 
+  //TODO: adapt this properly to the new handler model. This mockup is just to avoid the classes below to be abstract
+  virtual unsigned int getIdentifier() const{
+    return 0;
+  }
+
 protected:
-  Controller();
+  Controller(CDeviceExecution& paDeviceExecution);
 
   /*! @brief Initializes the controller.
    *

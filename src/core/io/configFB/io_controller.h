@@ -78,9 +78,10 @@ protected:
    * The method should create an instance of the hardware specific Device Controller.
    * This instance should be set as delegate in the constructor call.
    *
+   * @param paDeviceExecution Device execution needed for the external handler
    * @return Instance of the corresponding Device Controller
    */
-  virtual Device::Controller* createDeviceController() = 0;
+  virtual Device::Controller* createDeviceController(CDeviceExecution& paDeviceExecution) = 0;
 
   /*! @brief Sets the configuration of the Device Controller
    *

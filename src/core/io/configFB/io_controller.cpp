@@ -10,6 +10,8 @@
  *******************************************************************************/
 
 #include "io_controller.h"
+#include "../../resource.h"
+#include "../../device.h"
 
 namespace IO {
 namespace ConfigurationFB {
@@ -127,7 +129,7 @@ bool Controller::init(int delay) {
     return false;
   }
 
-  controller = createDeviceController();
+  controller = createDeviceController(getResource().getDevice().getDeviceExecution());
   if (controller == 0) {
     DEVLOG_ERROR(
         "[IO:ConfigFB:Controller] Failed to create controller.\n");

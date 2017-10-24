@@ -34,7 +34,7 @@ protected:
    *
    * @param PollInterval Default poll routines per seconds (Hz). Must be greater than 0. Call #setPollInterval in the #setConfig method.
    */
-  PollController(float PollInterval);
+  PollController(CDeviceExecution& paDeviceExecution, float PollInterval);
 
   /*! @brief Poll routine which updates the IO state of the device
    *
