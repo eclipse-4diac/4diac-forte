@@ -24,7 +24,7 @@ namespace forte{
 
 class CModbusConnection : public CThread{
   public:
-    CModbusConnection(CModbusHandler* pa_modbusHandler);
+    explicit CModbusConnection(CModbusHandler* pa_modbusHandler);
     ~CModbusConnection();
 
     virtual int readData(uint8_t *pa_pData) = 0;

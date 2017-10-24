@@ -16,9 +16,7 @@
 #include "../arch/timerha.h"
 
 CDeviceExecution::CDeviceExecution(){
-  for(unsigned int i = 0; i < cg_unNumberOfHandlers; i++){
-    mRegisteredEventHandlers[i].m_poHandler = 0;
-  }
+  memset(mRegisteredEventHandlers,  0, sizeof(SEventHandlerElement) * cg_unNumberOfHandlers);
 
   CDeviceExecution::createHandlers(*this);
 

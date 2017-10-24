@@ -16,11 +16,11 @@
 class CEventSourceFB;
 class CFunctionBlock;
 
-#define DECLARE_HANDLER(TypeName)                           \
-  public:                                                   \
-    static const unsigned int handlerIdentifier;            \
-    virtual unsigned int getIdentifier() const;             \
-    TypeName(CDeviceExecution& pa_poDeviceExecution);       \
+#define DECLARE_HANDLER(TypeName)                             \
+  public:                                                     \
+    static const unsigned int handlerIdentifier;              \
+    virtual unsigned int getIdentifier() const;               \
+    explicit TypeName(CDeviceExecution& pa_poDeviceExecution);\
     ~TypeName();
 
 #define DEFINE_HANDLER(TypeName)                            \
@@ -50,7 +50,7 @@ class CFunctionBlock;
 
 class CExternalEventHandler{
   public:
-    CExternalEventHandler(CDeviceExecution& pa_poDeviceExecution);
+    explicit CExternalEventHandler(CDeviceExecution& pa_poDeviceExecution);
 
     virtual ~CExternalEventHandler(){
     }

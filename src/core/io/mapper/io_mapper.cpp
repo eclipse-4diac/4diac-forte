@@ -60,7 +60,7 @@ bool Mapper::registerHandle(CIEC_WSTRING const &id, Handle* handle) {
 void Mapper::deregisterHandle(Handle* handle) {
   syncMutex.lock();
 
-  for (THandleMap::iterator it = handles.begin(); it != handles.end(); it++)
+  for (THandleMap::iterator it = handles.begin(); it != handles.end(); ++it)
     if (it->second == handle) {
       if (observers.find(it->first) != observers.end()) {
         handle->dropObserver();
@@ -113,7 +113,7 @@ void Mapper::deregisterObserver(Observer* observer) {
   syncMutex.lock();
 
   for (TObserverMap::iterator it = observers.begin(); it != observers.end();
-      it++)
+      ++it)
     if (it->second == observer) {
       if (handles.find(it->first) != handles.end()) {
         handles[it->first]->dropObserver();

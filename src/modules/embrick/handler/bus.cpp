@@ -83,10 +83,9 @@ const char* Bus::init() {
   // Init the slaves sequentially. Abort if the init package is ignored -> no further slaves found.
   int slaveCounter = 1;
   int attempts = 0;
-  Slave *slave = 0;
 
   do {
-    slave = Slave::sendInit(this, slaveCounter);
+    Slave *slave = Slave::sendInit(this, slaveCounter);
 
     if (slave != 0) {
       slaves->push_back(slave);
@@ -177,8 +176,7 @@ void Bus::runLoop() {
   // Init loop variables
   SEntry *sCur = 0;
 
-  uint64_t ms;
-  int i, res;
+  int i;
 
   while (isAlive()) {
     // Sleep till next deadline is reached or loop is waked up
@@ -199,11 +197,10 @@ void Bus::runLoop() {
     // Remove lock during blocking operation -> allows forced update interrupts
     loopSync.unlock();
 
-    ms = micros();
+    uint64_t ms = micros();
 
     // Perform update on current slave
-    res = sCur->slave->update();
-    if (res == -1) {
+    if (-1 == sCur->slave->update()) {
       error = scmSlaveUpdateFailed;
       // Check for critical bus errors
       if (checkHandlerError() || hasError())
@@ -367,10 +364,9 @@ bool Bus::transfer(unsigned int target, Command cmd,
   int attempts = 3;
   int fails = 0;
   bool ok;
-  uint64_t microTime;
   do {
     // Wait required microseconds between messages
-    microTime = micros();
+    uint64_t microTime = micros();
     if (lastTransfer + SyncGapDuration > microTime)
       microsleep(lastTransfer + (uint64_t) SyncGapDuration - microTime);
 

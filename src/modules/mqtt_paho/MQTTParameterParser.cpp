@@ -16,6 +16,7 @@
 
 MQTTParameterParser::MQTTParameterParser(char* paParameters) : mParameters(paParameters), mSeparator(0), parsePosition(0) {
 	mCurrentParameter = 0;
+	memset(mParameterSeparators, 0, sizeof(char*) * mAmountOfParameters);
 }
 
 MQTTParameterParser::~MQTTParameterParser() {

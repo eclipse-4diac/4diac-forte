@@ -42,7 +42,7 @@ class CPCTimerHandler : public CTimerHandler, private CThread{
     virtual int getPriority(void) const;
 
   private:
-    CPCTimerHandler(CDeviceExecution& pa_poDeviceExecution);
+    explicit CPCTimerHandler(CDeviceExecution& pa_poDeviceExecution);
 
     friend class CTimerHandler;
 

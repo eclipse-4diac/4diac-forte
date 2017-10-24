@@ -19,7 +19,7 @@ MultiController::MultiController() {
 
 void MultiController::addHandle(
     Controller::HandleDescriptor *handleDescriptor) {
-  HandleDescriptor* desc = (HandleDescriptor*) handleDescriptor;
+  HandleDescriptor* desc = static_cast<HandleDescriptor*>(handleDescriptor);
   Handle* handle = initHandle(desc);
 
   if (handle == 0) {

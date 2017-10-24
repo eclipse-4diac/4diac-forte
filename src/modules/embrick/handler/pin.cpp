@@ -22,11 +22,9 @@ const char * const Pin::scmFailedToWriteFile =
 const char * const Pin::scmNotInitialised =
     "Failed to write to not initialised sysfs stream.";
 
-Pin::Pin(unsigned int pin) :
+Pin::Pin(unsigned int pin) : pinStr(static_cast<std::ostringstream &>((std::ostringstream() << std::dec  // Convert pin int to string
+    << pin)).str()),
     error(0) {
-  // Convert pin int to string
-  pinStr = static_cast<std::ostringstream &>((std::ostringstream() << std::dec
-      << pin)).str();
   // Disable buffer to avoid latency
   stream.rdbuf()->pubsetbuf(0, 0);
 

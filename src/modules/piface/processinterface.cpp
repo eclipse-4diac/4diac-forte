@@ -76,7 +76,7 @@ bool CPiFaceProcessInterface::checkInputData(long paValue){
 DEFINE_HANDLER(CPiFaceProcessInterface::CPiFaceIOHandler)
 
 
-CPiFaceProcessInterface::CPiFaceIOHandler::CPiFaceIOHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution)  {
+CPiFaceProcessInterface::CPiFaceIOHandler::CPiFaceIOHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution), mOutBuffer(0){
 }
 
 CPiFaceProcessInterface::CPiFaceIOHandler::~CPiFaceIOHandler(){
