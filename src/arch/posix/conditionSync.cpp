@@ -24,8 +24,11 @@ ConditionSync::ConditionSync() {
 
   pthread_mutexattr_t mutexAttr;
   pthread_mutexattr_init(&mutexAttr);
+  #ifdef __CYGWIN__
+  pthread_mutexattr_settype(&mutexAttr, PTHREAD_MUTEX_RECURSIVE);
+  #else
   pthread_mutexattr_settype(&mutexAttr, PTHREAD_MUTEX_RECURSIVE_NP);
-
+  #endif
   pthread_mutex_init(&mutex, &mutexAttr);
 
   pthread_mutexattr_destroy(&mutexAttr);
