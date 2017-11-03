@@ -61,8 +61,9 @@ void Master::setInitialValues() {
   SlaveUpdateInterval() = 25;
 }
 
-Device::Controller* Master::createDeviceController() {
-  return new Handlers::Bus();
+
+IO::Device::Controller* Master::createDeviceController(CDeviceExecution& paDeviceExecution) {
+  return new Handlers::Bus(paDeviceExecution);
 }
 
 void Master::setConfig() {

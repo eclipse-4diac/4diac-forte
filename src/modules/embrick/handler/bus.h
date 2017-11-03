@@ -66,7 +66,7 @@ class Bus: public IO::Device::MultiController {
   friend class Slave;
 
 public:
-  Bus();
+  Bus(CDeviceExecution& paDeviceExecution);
 
   struct Config: IO::Device::Controller::Config {
     unsigned int BusInterface; //!< Selects the SPI interface for the brickBUS. The default value is 1 (selects SPI1).

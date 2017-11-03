@@ -25,9 +25,9 @@ namespace Handlers {
 const char * const Bus::scmSlaveUpdateFailed = "Update of slave failed.";
 const char * const Bus::scmNoSlavesFound = "No slave modules found.";
 
-Bus::Bus() :
+Bus::Bus(CDeviceExecution& paDeviceExecution) :
     spi(0), slaveSelect(0), slaves(0), slaveCount(
-        0), sList(0) {
+        0), sList(0), MultiController(paDeviceExecution) {
   // Set init time
   struct timespec ts;
   // TODO Check compile error. Had to to add rt libary to c++ make flags
