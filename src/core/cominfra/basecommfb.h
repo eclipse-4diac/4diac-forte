@@ -99,9 +99,6 @@ namespace forte {
 
 			CStringDictionary::TStringId m_nConfiguredFBTypeNameId;
 
-			static const char * const scmDefaultIDPrefix;
-			static const char * const scmDefaultIDSuffix;
-
 			static char *extractLayerIdAndParams(char **paRemainingID, char **paLayerParams);
 
 			/*!\brief Generate a layer ID formed by a root with a prefix and a suffix
@@ -122,15 +119,6 @@ namespace forte {
 			* delete bottom layers after closing its connection.
 			*/
 			void closeConnection();
-
-			static const CStringDictionary::TStringId scm_aunRequesterEventInputNameIds[];
-			static const CStringDictionary::TStringId scm_aunRequesterEventOutputNameIds[];
-
-			static const CStringDictionary::TStringId scm_aunResponderEventInputNameIds[];
-			static const CStringDictionary::TStringId scm_aunResponderEventOutputNameIds[];
-
-			static const TForteInt16 scm_anEIWithIndexes[];
-			static const TForteInt16 scm_anEOWithIndexes[];
 
 			static const char * const scm_sResponseTexts[];
 
@@ -156,7 +144,7 @@ namespace forte {
 			* @param paID original ID
 			* @return ID with layer configuration
 			*/
-			virtual char * getDefaultIDString(const char *paID);
+			virtual char * getDefaultIDString(const char *paID) = 0;
 
 			EComServiceType m_eCommServiceType;
 			CComLayer *m_poTopOfComStack;

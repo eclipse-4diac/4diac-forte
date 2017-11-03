@@ -24,9 +24,6 @@ using namespace forte::com_infra;
 
 const char * const CBaseCommFB::scm_sResponseTexts[] = { "OK", "INVALID_ID", "TERMINATED", "INVALID_OBJECT", "DATA_TYPE_ERROR", "INHIBITED", "NO_SOCKET", "SEND_FAILED", "RECV_FAILED" };
 
-const char * const CBaseCommFB::scmDefaultIDPrefix = "fbdk[].ip[";
-const char * const CBaseCommFB::scmDefaultIDSuffix = "]";
-
 CBaseCommFB::CBaseCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, forte::com_infra::EComServiceType pa_eCommServiceType) :
 	CEventSourceFB(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0), m_eCommServiceType(pa_eCommServiceType), m_poTopOfComStack(0) {
 	memset(m_apoInterruptQueue, 0, sizeof(m_apoInterruptQueue)); //TODO change this to  m_apoInterruptQueue{0} in the extended list when fully switching to C++11
@@ -101,10 +98,10 @@ EComResponse CBaseCommFB::openConnection() {
 }
 
 EComResponse CBaseCommFB::createComstack(char *commID) {
-	EComResponse retVal;
-	CComLayer *newLayer;
+	EComResponse retVal = e_InitInvalidId;
+	CComLayer *newLayer = 0;
 	CComLayer *previousLayer = 0; // Reference to the previous layer as it needs to set the bottom layer
-	char *layerParams;
+	char *layerParams = 0;
 	// Loop until reaching the end of the ID
 	while ('\0' != *commID) {
 		// Get the next layer's ID and parameters
@@ -186,8 +183,4 @@ char *CBaseCommFB::buildIDString(const char *paPrefix, const char *paIDRoot, con
 	strcat(RetVal, paIDRoot);
 	strcat(RetVal, paSuffix);
 	return RetVal;
-}
-
-char * CBaseCommFB::getDefaultIDString(const char *paID) {
-	return buildIDString(scmDefaultIDPrefix, paID, scmDefaultIDSuffix);
 }

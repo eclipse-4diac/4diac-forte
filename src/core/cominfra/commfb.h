@@ -49,14 +49,12 @@ namespace forte {
 			static const unsigned int scm_ID_ID = 1; //Input ID 1 for ID Input
 			static const unsigned int scm_STATUS_ID = 1; //Output ID 1 for STATUS Output
 
-
-			CStringDictionary::TStringId m_nConfiguredFBTypeNameId;
-
 			static const char * const scmDefaultIDPrefix;
 			static const char * const scmDefaultIDSuffix;
 
 			static char *extractLayerIdAndParams(char **paRemainingID, char **paLayerParams);
 
+			char *getDefaultIDString(const char *paID);
 
 			virtual EComResponse receiveData();
 			virtual EComResponse sendData();
