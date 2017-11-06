@@ -76,7 +76,7 @@ private:
   virtual void setInitialValues();
 
 protected:
-  Device::Controller* createDeviceController();
+  IO::Device::Controller* createDeviceController(CDeviceExecution& paDeviceExecution);
 
   void setConfig();
 

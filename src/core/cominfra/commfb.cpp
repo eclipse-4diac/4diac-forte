@@ -33,38 +33,17 @@ const CStringDictionary::TStringId CCommFB::scm_aunResponderEventOutputNameIds[2
 const TForteInt16 CCommFB::scm_anEIWithIndexes[] = { 0, 3 };
 const TForteInt16 CCommFB::scm_anEOWithIndexes[] = { 0, 3, -1 };
 
-const char * const CCommFB::scmDefaultIDPrefix = "fbdk[].ip[";
-const char * const CCommFB::scmDefaultIDSuffix = "]";
-
 CCommFB::CCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, forte::com_infra::EComServiceType pa_eCommServiceType) :
 	CBaseCommFB(pa_nInstanceNameId, pa_poSrcRes, pa_eCommServiceType) {
-	memset(m_apoInterruptQueue, 0, sizeof(m_apoInterruptQueue)); //TODO change this to  m_apoInterruptQueue{0} in the extended list when fully switching to C++11
-	setEventChainExecutor(getResource().getResourceEventExecution());
-	m_unComInterruptQueueCount = 0;
-	m_nConfiguredFBTypeNameId = CStringDictionary::scm_nInvalidStringId;
 }
 
 CCommFB::CCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
 	TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData, forte::com_infra::EComServiceType pa_eCommServiceType) :
 	CBaseCommFB(pa_nInstanceNameId, pa_poSrcRes, pa_pstInterfaceSpec, pa_acFBConnData, pa_acFBVarsData, pa_eCommServiceType) {
-	memset(m_apoInterruptQueue, 0, sizeof(m_apoInterruptQueue)); //TODO change this to  m_apoInterruptQueue{0} in the extended list when fully switching to C++11
-	setEventChainExecutor(getResource().getResourceEventExecution());
-	m_unComInterruptQueueCount = 0;
-	m_nConfiguredFBTypeNameId = CStringDictionary::scm_nInvalidStringId;
 }
 
 CCommFB::~CCommFB() {
-	closeConnection();
 
-	if ((getManagesFBData()) && (0 != m_pstInterfaceSpec)) {
-		//Free the memory allocated for the interface, only do this if we dynamically created it (i.e., getManagesFBData is true)
-		delete[](m_pstInterfaceSpec->m_anEIWith);
-		delete[](m_pstInterfaceSpec->m_anEOWith);
-		delete[](m_pstInterfaceSpec->m_aunDINames);
-		delete[](m_pstInterfaceSpec->m_aunDIDataTypeNames);
-		delete[](m_pstInterfaceSpec->m_aunDONames);
-		delete[](m_pstInterfaceSpec->m_aunDODataTypeNames);
-	}
 }
 
 EMGMResponse CCommFB::changeFBExecutionState(EMGMCommandType pa_unCommand) {
@@ -299,23 +278,6 @@ EComResponse CCommFB::receiveData() {
 	return eRetVal;
 }
 
-char *CCommFB::extractLayerIdAndParams(char **paRemainingID, char **paLayerParams) {
-	char *LayerID = *paRemainingID;
-	if ('\0' != **paRemainingID) {
-		*paRemainingID = strchr(*paRemainingID, '[');
-		if (0 != *paRemainingID) {
-			**paRemainingID = '\0';
-			++*paRemainingID;
-			*paLayerParams = *paRemainingID;
-			*paRemainingID = strchr(*paRemainingID, ']');
-			if (0 != *paRemainingID) {
-				**paRemainingID = '\0';
-				++*paRemainingID;
-				if ('\0' != **paRemainingID) {
-					++*paRemainingID;
-				}
-			}
-		}
-	}
-	return LayerID;
+char *CCommFB::getDefaultIDString(const char *paID) {
+	return buildIDString("fbdk[].ip[", paID, "]");
 }
