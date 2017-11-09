@@ -44,11 +44,6 @@ namespace forte {
 			static const TEventID scm_nSendNotificationEventID = 1;
 			static const TEventID scm_nReceiveNotificationEventID = 1;
 
-			static const unsigned int scm_QI_ID = 0; //Input ID 0 for QI Input
-			static const unsigned int scm_QO_ID = 0; //Output ID 0 for QO Output
-			static const unsigned int scm_ID_ID = 1; //Input ID 1 for ID Input
-			static const unsigned int scm_STATUS_ID = 1; //Output ID 1 for STATUS Output
-
 			static const char * const scmDefaultIDPrefix;
 			static const char * const scmDefaultIDSuffix;
 
