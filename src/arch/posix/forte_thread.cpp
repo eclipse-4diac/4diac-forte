@@ -20,97 +20,73 @@
 #include <unistd.h>
 #include <criticalregion.h>
 
-void CPosixThread::start(void){
-  // Get new Thread
-  if(0 == m_stThreadID){
+forte::arch::CThreadBase<pthread_t, static_cast<pthread_t>(0)>::TThreadHandleType CPosixThread::createThread(long paStackSize){
+	TThreadHandleType retVal = 0;
 
-    //If the stackSize is not 0 we have to set it
-    if(m_nStackSize){
-      pthread_attr_t stAttr;
+	if(paStackSize){
+	  pthread_attr_t stAttr;
 
-      if(pthread_attr_init(&stAttr)){
-        DEVLOG_ERROR("Error could not get the default thread attributes! %s\n", strerror(errno));
-        return;
-      }
-  #ifdef __CYGWIN__
-      if (pthread_attr_setstacksize (&stAttr, m_nStackSize)){
-        DEVLOG_ERROR("Error could not set the stacksize for the thread! %s\n", strerror(errno));
-        return;
-      }
-  #else
-      //if (pthread_attr_setstacksize(&stAttr, m_nStackSize)) {
-      if(pthread_attr_setstack(&stAttr, m_pacStack, m_nStackSize)){
-        DEVLOG_ERROR("Error could not set the stacksize for the thread! %s\n", strerror(errno));
-        return;
-      }
-  #endif
-      if(pthread_create(&m_stThreadID, &stAttr, threadFunction, this)){
-        DEVLOG_ERROR("Error could not create the thread! %s\n", strerror(errno));
-        return;
-      }
-      if(pthread_attr_destroy(&stAttr)){
-        DEVLOG_ERROR("Error could not free the thread attributes! %s\n", strerror(errno));
-        return;
-      }
-    }
-    else{
-      if(pthread_create(&m_stThreadID, NULL, threadFunction, this)){
-        DEVLOG_ERROR("Error could not create the thread! %s\n", strerror(errno));
-        return;
-      }
-    }
-    // Detach because we don't care about the thread anymore/don't need to join. To cleanup either call pthread_detach or pthread_join
-    pthread_detach(m_stThreadID);
-  }
+	  if(pthread_attr_init(&stAttr)){
+      DEVLOG_ERROR("Error could not get the default thread attributes! %s\n", strerror(errno));
+      return 0;
+	  }
+	#ifdef __CYGWIN__
+	  if (pthread_attr_setstacksize (&stAttr, paStackSize)){
+      DEVLOG_ERROR("Error could not set the stacksize for the thread! %s\n", strerror(errno));
+      return 0;
+	  }
+	#else
+	  //if (pthread_attr_setstacksize(&stAttr, m_nStackSize)) {
+	  if(pthread_attr_setstack(&stAttr, m_pacStack, m_nStackSize)){
+      DEVLOG_ERROR("Error could not set the stacksize for the thread! %s\n", strerror(errno));
+      return 0;
+	  }
+	#endif
+	  if(pthread_create(&retVal, &stAttr, threadFunction, this)){
+      DEVLOG_ERROR("Error could not create the thread! %s\n", strerror(errno));
+      return 0;
+	  }
+	  if(pthread_attr_destroy(&stAttr)){
+      DEVLOG_ERROR("Error could not free the thread attributes! %s\n", strerror(errno));
+      return 0;
+	  }
+	}
+	else{
+	  if(pthread_create(&retVal, NULL, threadFunction, this)){
+      DEVLOG_ERROR("Error could not create the thread! %s\n", strerror(errno));
+      return 0;
+	  }
+	}
+	// Detach because we don't care about the thread anymore/don't need to join. To cleanup either call pthread_detach or pthread_join
+	pthread_detach(retVal);
+
+	return retVal;
 }
 
-void * CPosixThread::threadFunction(void *arguments){
+void * CPosixThread::threadFunction(void *paArguments){
   // Get pointer to CThread object out of void pointer
-  CPosixThread *pThread = static_cast<CPosixThread *>(arguments);
-
-  // if pointer is ok
-  if(0 != pThread){
-    CCriticalRegion criticalRegion(pThread->mJoinMutex);
-    pThread->setAlive(true);
-    pThread->run();
-    pThread->setAlive(false);
-    pThread->m_stThreadID = 0;
-  }
-  else{
-    DEVLOG_ERROR("pThread pointer is 0!");
-  }
+  CThreadBase::runThread(static_cast<CPosixThread *>(paArguments));
   return 0;
 }
 
-CPosixThread::CPosixThread(long pa_nStackSize) :
-      m_stThreadID(0), m_nStackSize(pa_nStackSize), m_pacStack(0){
-
-  if(0 != m_nStackSize){
-    m_pacStack = new char[m_nStackSize];
+CPosixThread::CPosixThread(long paStackSize) : CThreadBase(paStackSize), mStack(0){
+  if(0 != paStackSize){
+    mStack = new char[paStackSize];
   }
 }
 
 CPosixThread::~CPosixThread(){
-  if(0 != m_stThreadID){
-    end();
-  }
-  if(0 != m_nStackSize){
-    delete[] m_pacStack;
+  if(0 != mStack ){
+    delete[] mStack;
   }
 }
 
-void CPosixThread::setDeadline(const CIEC_TIME &pa_roVal){
-  mDeadline = pa_roVal;
+void CPosixThread::setDeadline(const CIEC_TIME &paVal){
+  mDeadline = paVal;
   //under the posix pthread implemention currently it makes no sense to set any priority.
   //It will not be considered.
 }
 
-void CPosixThread::sleepThread(unsigned int pa_miliSeconds){
-  usleep(1000 * pa_miliSeconds);
-}
-
-void CPosixThread::join(void){
-  if(0 != m_stThreadID){
-    CCriticalRegion criticalRegion(mJoinMutex);
-  }
+void CPosixThread::sleepThread(unsigned int paMilliSeconds){
+  usleep(1000 * paMilliSeconds);
 }

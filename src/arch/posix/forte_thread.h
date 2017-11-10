@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 - 2016 ACIN, fortiss GmbH
+ * Copyright (c) 2006 - 2017 ACIN, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,7 @@
 /*! \ingroup posix_hal
  * \brief The thread implementation for the posix thread interface. 
  */
-class CPosixThread : public forte::arch::CThreadBase {
+class CPosixThread : public forte::arch::CThreadBase<pthread_t, static_cast<pthread_t>(0)> {
   public:
     /*! \brief Constructor of the Thread class
      *
@@ -35,7 +35,7 @@ class CPosixThread : public forte::arch::CThreadBase {
      *  @param pa_nStackSize the Size of the stack the thread is allowed to use. 0 means use system default stack size.
      *      If you like to set this value it is best to use the form: PTHREAD_STACK_MIN + additional bytes you need.
      */
-    explicit CPosixThread(long pa_nStackSize = 0);
+    explicit CPosixThread(long paStackSize = 0);
 
     /*! \brief Stops and destroys thread.
      *
@@ -44,51 +44,37 @@ class CPosixThread : public forte::arch::CThreadBase {
     virtual ~CPosixThread();
 
     //!Set the deadline of the thread.
-    void setDeadline(const CIEC_TIME &pa_roVal);
-
-    /*! \brief starts the Thread
-     *
-     *  By calling this method the execution in the run()-Method will be started.
-     */
-    void start(void);
+    void setDeadline(const CIEC_TIME &paVal);
 
     /*! \brief Sleep the calling thread
      *
-     * @param pa_miliSeconds The miliseconds for the thread to sleep
+     * @param paMilliSeconds The milliseconds for the thread to sleep
      */
 
-    static void sleepThread(unsigned int pa_miliSeconds);
+    static void sleepThread(unsigned int paMilliSeconds);
 
-    virtual void join(void);
   protected:
 
   private:
+    virtual TThreadHandleType createThread(long paStackSize);
+
     /*!\brief Function that is given to the system thread support that should be called for the thread.
      *
      * this function will call the run method of the thread instance.
      */
-    static void * threadFunction(void *arguments);
+    static void * threadFunction(void *paArguments);
 
-    CSyncObject mJoinMutex;
-
-    /*! \brief data needed for posix scheduling system to identify the thread.
-     */
-    pthread_t m_stThreadID;
-    /*! \brief Size of the stack used by this thread.
-     */
-    long m_nStackSize;
 
     /*! \brief Pointer to the memory to be used for this thread'm_stSuspendSemaphore stack
      *
      *  This pointer is only not 0 if m_nStackSize is not 0
      */
-    char *m_pacStack;
+    char *mStack;
 
     //we don't want that threads can be copied or assigned therefore the copy constructor and assignment operator are declared private
     //but not implemented
     CPosixThread(const CPosixThread&);
     CPosixThread& operator = (const CPosixThread &);
-
 };
 
 

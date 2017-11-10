@@ -21,5 +21,5 @@ add_subdirectory(macos)
 add_subdirectory(rcX)
 add_subdirectory(vxworks)
 
-forte_add_sourcefile_hcpp(timerha devlog threadbase)
+forte_add_sourcefile_hcpp(timerha devlog)
 
