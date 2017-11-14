@@ -194,7 +194,7 @@ void MQTTHandler::popLayerFromList(MQTTComLayer* paLayer, CSinglyLinkedList<MQTT
   }
 }
 
-int MQTTHandler::registerLayer(char* paAddress, char* paClientId, MQTTComLayer* paLayer){
+int MQTTHandler::registerLayer(const char* paAddress, const char* paClientId, MQTTComLayer* paLayer){
   if(smClient == 0){
     smClientId = paClientId;
     smAddress = paAddress;

@@ -20,7 +20,7 @@
 
 class CWin32SerComLayer : public forte::com_infra::CComLayer{
   public:
-    CWin32SerComLayer(forte::com_infra::CComLayer* pa_poUpperLayer, forte::com_infra::CBaseCommFB * pa_poFB);
+    CWin32SerComLayer(forte::com_infra::CComLayer* paUpperLayer, forte::com_infra::CBaseCommFB * paFB);
     virtual ~CWin32SerComLayer ();
 
     virtual forte::com_infra::EComResponse processInterrupt();
@@ -31,25 +31,30 @@ class CWin32SerComLayer : public forte::com_infra::CComLayer{
     *
     *   \return ComLayer response
     */
-    virtual forte::com_infra::EComResponse sendData(void *pa_pvData, unsigned int pa_unSize);
+    virtual forte::com_infra::EComResponse sendData(void *paData, unsigned int paSize);
     
     /*! \brief Perform reading from serial interface
      *
      * @return if not e_Nothing something was read and the FB should get an external event
      */
-    virtual forte::com_infra::EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize);
+    virtual forte::com_infra::EComResponse recvData(const void *paData, unsigned int paSize);
 
   protected:
   private:
-	char m_acTerminationSymbol[3]; //**< Space for CR, LF, or CR/LF + Terminating \0
-    virtual forte::com_infra::EComResponse openConnection(char *pa_acLayerParameter);
+	char mTerminationSymbol[3]; //**< Space for CR, LF, or CR/LF + Terminating \0
+    virtual forte::com_infra::EComResponse openConnection(char *paLayerParameter);
     virtual void closeConnection();
-    HANDLE m_hSerial;
-	static const unsigned int m_unMaxRecvBuffer = 22;
+    HANDLE mSerial;
+	static const unsigned int mMaxRecvBuffer = 22;
+	static const unsigned int mNoOfParameters = 6;
 
-    forte::com_infra::EComResponse m_eInterruptResp;
-    char m_acRecvBuffer[m_unMaxRecvBuffer];
-    unsigned int m_unBufFillSize;
+    forte::com_infra::EComResponse mInterruptResp;
+    char mRecvBuffer[mMaxRecvBuffer];
+    unsigned int mBufFillSize;
+
+    enum ESerComParameter{
+      eInterface = 0, eBaudrate, eByteSize, eStopBits, eParity, eTerminationSymbol
+    };
 
 };
 

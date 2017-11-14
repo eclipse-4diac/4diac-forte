@@ -11,7 +11,7 @@
 
 
 #include "MQTTComLayer.h"
-#include "MQTTParameterParser.h"
+#include "../../core/utils/parameterParser.h"
 #include "MQTTHandler.h"
 #include "commfb.h"
 
@@ -67,9 +67,8 @@ EComResponse MQTTComLayer::processInterrupt() {
 
 EComResponse MQTTComLayer::openConnection(char* pa_acLayerParameter) {
 	EComResponse eRetVal = e_InitInvalidId;
-	MQTTParameterParser parser(pa_acLayerParameter);
-	parser.setSeparator(',');
-	if(3 == parser.parseParameters()){
+	CParameterParser parser(pa_acLayerParameter, mNoOfParameters);
+	if(mNoOfParameters == parser.parseParameters()){
 		mTopicName = new char[(strlen(parser[Topic]) + 1)];
 		mTopicName = strcpy(mTopicName, parser[Topic]);
 		if( MQTTHandler::eRegisterLayerSucceeded ==

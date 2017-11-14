@@ -40,7 +40,7 @@ public:
 		eWrongClientID,
 		eConnectionFailed
 	};
-	int registerLayer(char* paAddress, char* paClientId, MQTTComLayer* paLayer);
+	int registerLayer(const char* paAddress, const char* paClientId, MQTTComLayer* paLayer);
 
 	void unregisterLayer(MQTTComLayer* paLayer);
 

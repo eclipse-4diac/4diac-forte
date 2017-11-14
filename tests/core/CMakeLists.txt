@@ -39,11 +39,13 @@
     
     forte_test_add_sourcefile_cpp(../../src/core/utils/string_utils.cpp)
     
+    forte_test_add_sourcefile_cpp(../../src/core/utils/parameterParser.cpp)
+    
     forte_test_add_sourcefile_cpp(../../src/stdfblib/ita/EMB_RES.cpp)
     
   #TODO add here architecture specific adds in order to allow testrunns also on other platforms
      forte_test_add_sourcefile_cpp(../../src/arch/timerha.cpp)
-         
+
 if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
     forte_test_add_sourcefile_cpp(../../src/arch/posix/forte_sync.cpp)
     forte_test_add_sourcefile_cpp(../../src/arch/posix/forte_sem.cpp)

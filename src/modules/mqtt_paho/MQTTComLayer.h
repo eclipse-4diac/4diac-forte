@@ -54,6 +54,8 @@ private:
 		ClientID,
 		Topic
 	};
+
+	static const unsigned int mNoOfParameters = 3;
 };
 
 #endif /* MQTTCOMLAYER_H_ */
