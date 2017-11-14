@@ -51,8 +51,8 @@ class CWin32SerComHandler : public CExternalEventHandler, public CThread{
 
     typedef CSinglyLinkedList<CWin32SerComLayer*> TCWin32SerComLayerContainer;
 
-    TCWin32SerComLayerContainer m_lstComLayerList;
-	  CSyncObject m_oSync;
+    TCWin32SerComLayerContainer mComLayerList;
+	  CSyncObject mSync;
 
 	  //!Sempahore for implementing a suspend feature similar to what we are doing in CEventChainExecutionThread
 	  forte::arch::CSemaphore mSem;

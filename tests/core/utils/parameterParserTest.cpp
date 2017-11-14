@@ -333,6 +333,5 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
     BOOST_CHECK(0 == parser[6]);
   }
 
-
 BOOST_AUTO_TEST_SUITE_END()
 

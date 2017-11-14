@@ -51,7 +51,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
   forte_add_link_library("-lrt") 
 
 
-  forte_add_network_layer(SER OFF "ser" CSerCommLayer sercommlayer "Enable Forte serial line communication")
+  forte_add_network_layer(SER OFF "ser" CPosixSerCommLayer posixsercommlayer "Enable Forte serial line communication")
   forte_add_network_layer(MUXSER OFF "muxser" CMuxedSerCommLayer muxedsercommlayer "Enable Forte multiplexed serial line communication")
   	
 endif()
