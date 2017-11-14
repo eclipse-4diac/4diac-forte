@@ -14,56 +14,29 @@
 #include "forte_thread.h"
 #include <time.h>
 
-#define FORTE_TASK_PRIORITY   25
-
-void CVxWorksThread::start(void){
+forte::arch::CThreadBase<TASK_ID, TASK_ID_ERROR>::TThreadHandleType CVxWorksThread::createThread(long paStackSize){
   //TODO: Check if guarding the stack is necessary
-  mThreadID = taskSpawn(0, FORTE_TASK_PRIORITY, VX_FP_TASK /* Needed for C++*/, mStackSize,
+  return taskSpawn(0, scmInitialTaskPriority, VX_FP_TASK /* Needed for C++*/, paStackSize,
       (FUNCPTR)threadFunction, (_Vx_usr_arg_t) this, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-  if(TASK_ID_ERROR == mThreadID){
-    //TODO: manage error
-  }
 }
 
-void CVxWorksThread::threadFunction(void *arguments){
-  // Get pointer to CThread object out of void pointer
-  CVxWorksThread *pThread = static_cast<CVxWorksThread *>(arguments);
-
-  // if pointer is ok
-  if(0 != pThread){
-    CCriticalRegion criticalRegion(pThread->mJoinMutex);
-    pThread->setAlive(true);
-    pThread->run();
-    pThread->setAlive(false);
-  }
-  else{
-    DEVLOG_ERROR("pThread pointer is 0!");
-  }
+void CVxWorksThread::threadFunction(void *paArguments){
+  CThreadBase::runThread(static_cast<CVxWorksThread *>(paArguments));
 }
 
-CVxWorksThread::CVxWorksThread(long pa_nStackSize) :
-      mThreadID(TASK_ID_ERROR), mStackSize(pa_nStackSize){
+CVxWorksThread::CVxWorksThread(long paStackSize) : CThreadBase(paStackSize){
 }
 
 CVxWorksThread::~CVxWorksThread(){
-  if(0 != mThreadID){
-    end();
-  }
 }
 
-void CVxWorksThread::setDeadline(const CIEC_TIME &pa_roVal){
-  mDeadline = pa_roVal;
+void CVxWorksThread::setDeadline(const CIEC_TIME &paVal){
+  mDeadline = paVal;
 }
 
-void CVxWorksThread::sleepThread(unsigned int pa_miliSeconds){
+void CVxWorksThread::sleepThread(unsigned int paMilliSeconds){
   struct timespec stReq;
-  stReq.tv_sec = pa_miliSeconds / 1000;
-  stReq.tv_nsec = 1000000 * (pa_miliSeconds % 1000);
+  stReq.tv_sec = paMilliSeconds / 1000;
+  stReq.tv_nsec = 1000000 * (paMilliSeconds % 1000);
   nanosleep(&stReq, NULL);
-}
-
-void CVxWorksThread::join(void){
-  if(0 != mThreadID){
-    CCriticalRegion criticalRegion(mJoinMutex);
-  }
 }
