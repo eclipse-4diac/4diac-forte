@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 ACIN, fortiss GmbH
+ * Copyright (c) 2012, 2016, 2017 ACIN, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,37 +16,31 @@
 #include <unistd.h>
 
 void CBEThread::Main(VOID){
-  setAlive(true);
-  run();
+  CThreadBase::runThread(this);  //this is a little bit an overkill but better complies to our overall rules
 }
 
-bool CBEThread::destroy(void){
-  end();
-  return true;
-}
 
-CBEThread::CBEThread() :
-    mTskName(0){
-  m_nDeadline = 0;
+CBEThread::CBEThread() : CThreadBase(0){
 }
 
 CBEThread::~CBEThread(){
-  destroy();
 }
 
-void CBEThread::setDeadline(TForteUInt32 pa_nVal){
-  m_nDeadline = pa_nVal;
+void CBEThread::setDeadline(TForteUInt32 paVal){
+  mDeadline = paVal;
   //TODO implement priority assignment similar to threadx and ecos
 }
 
-void CBEThread::start(void){
+forte::arch::CThreadBase<int>::TThreadHandleType CTXThread::CBEThread(long ){
+  int retVal = 1;
   if(Spawn(0, 0, 130, VX_FP_TASK, APP_TSK_STACK) == ERROR){
-    log_Err("test8_mod::APPLATEINIT: Error in TaskSpawn; '%s'!", "tForteTask");
+    retVal = 0;
   }
+  return retVal;
 }
 
-void CBEThread::sleepThread(unsigned int pa_miliSeconds){
-  usleep(100 * pa_miliSeconds);
+void CBEThread::sleepThread(unsigned int paMilliSeconds){
+  usleep(1000 * paMilliSeconds);
 }
 
 void CBEThread::join(void){
