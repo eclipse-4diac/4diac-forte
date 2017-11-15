@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 - 2016 ACIN, fortiss GmbH
+ * Copyright (c) 2006 - 2017 ACIN, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,12 +15,10 @@
 #include <cyg/kernel/kapi.h>
 #include "../datatype.h"
 #include "../threadbase.h"
-#include "forte_sync.h"
 #include "../devlog.h"
 
-#define CThread CECOSThread  //allows that doxygen can generate better documentation
 class CECOSThread;
-
+typedef CECOSThread CThread;  //allows that doxygen can generate better documentation
 typedef CECOSThread *TCECOSThreadPtr;
 
 /**  \defgroup ECOS-HAL eCos FORTE Hardware Abstraction Layer
@@ -32,15 +30,15 @@ typedef CECOSThread *TCECOSThreadPtr;
 /*! \ingroup ECOS-HAL
  * \brief This class is a wrapper class the eCos multitasking support 
  */
-class CECOSThread : public forte::arch::CThreadBase {
+class CECOSThread : public forte::arch::CThreadBase<cyg_handle_t> {
   public:
     /*! \brief Constructor of the Thread class
      *
      *  Does all the necessary steps in order to get the thread running with the start()-method
-     *  @param pa_nStackSize the Size of the stack the thread is allowed to use. this class will
+     *  @param paStackSize the Size of the stack the thread is allowed to use. this class will
      *         allocate the stack size in bytes from the heap
      */
-    explicit CECOSThread(long pa_nStackSize = CYGNUM_HAL_STACK_SIZE_TYPICAL);  // may need adjustment for small platforms
+    explicit CECOSThread(long paStackSize = CYGNUM_HAL_STACK_SIZE_TYPICAL);  // may need adjustment for small platforms
 
     /*! \brief Stops and destroys thread.
      *
@@ -49,30 +47,20 @@ class CECOSThread : public forte::arch::CThreadBase {
     virtual ~CECOSThread();
 
     //!Set the deadline of the thread.
-    void setDeadline(const CIEC_TIME &pa_roVal);
-
-    /*! \brief starts the Thread
-     *
-     *  By calling this method the execution in the run()-Method will be started. If necessary additional data
-     *  can be created here. Because of inheritance reasons the best place for executing create is in this method.
-     */
-    void start(void){
-      create();
-      cyg_thread_resume(m_stHandle);
-    }
+    void setDeadline(const CIEC_TIME &paVal);
 
     /*! \brief Sleep the calling thread
      *
      * @param pa_miliSeconds The miliseconds for the thread to sleep
      */
 
-    static void sleepThread(unsigned int pa_miliSeconds);
+    static void sleepThread(unsigned int paMilliSeconds);
 
     virtual void join(void);
   protected:
-    void setPriority(cyg_priority_t pa_nPriority) {
-      DEVLOG_DEBUG(">>>>Thread: Set Priority: %d\n", pa_nPriority);
-      cyg_thread_set_priority(m_stHandle, pa_nPriority);
+    void setPriority(cyg_priority_t paPriority) {
+      DEVLOG_DEBUG(">>>>Thread: Set Priority: %d\n", paPriority);
+      cyg_thread_set_priority(getThreadHandle(), paPriority);
     }
 
   private:
@@ -80,55 +68,20 @@ class CECOSThread : public forte::arch::CThreadBase {
      *
      * this function will call the run method of the thread instance.
      */
-    static void threadFunction(cyg_addrword_t data);
+    static void threadFunction(cyg_addrword_t paData);
 
-    /*! \brief Abstract method for the code to execute in the thread.
-     *
-     *  This thread class has to provide means that the code a inheriting class will add to the run()-method will
-     *  be executed in a separated thread regarding the creator of the CThread class.
-     *
-     *  The inheriting class has to fulfill the following rules when using the run method:
-     *    - To end the thread execution simple leave the run()-method
-     *    - In order to allow the deletion and stopping of the thread add frequent checks to isAlive and end the
-     *      execution if isAlive() returns false.
-     */
-    virtual void run() = 0;
-
-    /*! \brief Creates a new thread.
-     *
-     *  With this function all the setup things for a new thread are done. The Thread created is initial
-     *  suspended and with the start() method the execution of the code in the run() method is started.
-     */
-    bool create(void);
-
-    /*! \brief Destroys the thread
-     *
-     *  This function destroys all the data structures created in the creation phase. All used memory is freed.
-     */
-    bool destroy(void);
+    virtual TThreadHandleType createThread(long paStackSize);
 
 
-    static const int scm_nThreadListSize = 27;
-    static TCECOSThreadPtr sm_aoThreadList[scm_nThreadListSize];
-    static CSyncObject sm_oThreadListLock;
+    static const int scmThreadListSize = 27;
+    static TCECOSThreadPtr smThreadList[scmThreadListSize];
+    static CSyncObject smThreadListLock;
 
     /*! \brief data needed for ecos to identify the thread.
      */
-    cyg_handle_t m_stHandle;
-    cyg_thread m_stThread;
-    //! used for providing the join function
-    CSyncObject m_stResLock;
+    cyg_thread mThread;
 
-    /*! \brief Size of the stack used by this thread.
-     */
-    long m_nStackSize;
-    unsigned char *m_cStack;
-
-    //we don't want that threads can be copied or assigned therefore the copy constructor and assignment operator are declared private
-    //but not implemented
-    CECOSThread(const CECOSThread&);
-    CECOSThread& operator = (const CECOSThread &);
-
+    unsigned char *mStack;
 };
 
 #endif /*FORTE_THREAD_H_*/
