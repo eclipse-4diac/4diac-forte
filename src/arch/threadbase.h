@@ -18,7 +18,7 @@
 namespace forte {
   namespace arch {
 
-    template <typename TThreadHandle, TThreadHandle nullHandle = 0 >
+    template <typename TThreadHandle, TThreadHandle nullHandle = static_cast<TThreadHandle>(0) >
     class CThreadBase{
       public:
 

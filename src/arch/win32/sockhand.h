@@ -19,10 +19,6 @@
 #define OUT
 #endif
 
-#ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0600 //windows vista version, which included InetPton
-#endif
-
 #include <winsock2.h>
 #include <windows.h>
 #include <Ws2tcpip.h>

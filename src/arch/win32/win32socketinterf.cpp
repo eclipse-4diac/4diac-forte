@@ -9,13 +9,22 @@
  *   Alois Zoitl, Ingo Hegny, Gerhard Ebenhofer, Thomas Strasser
  *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
+
+#ifdef __GNUC__
+#ifdef __MINGW32__
+
+#ifdef _WIN32_WINNT
+#undef _WIN32_WINNT
+#endif
+#define _WIN32_WINNT 0x0600 //windows vista version, which included InepPton
+
+#endif //__MINGW32__
+#endif //__GNUC__
+
 #include <sockhand.h>      //needs to be first pulls in the platform specific includes
-#include <windows.h>
-#include <string.h>
-
 #include "win32socketinterf.h"
-
 #include "devlog.h"
+#include <string.h>
 
 void CWin32SocketInterface::closeSocket(TSocketDescriptor pa_nSockD){
   closesocket(pa_nSockD);
