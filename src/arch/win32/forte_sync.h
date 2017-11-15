@@ -12,7 +12,8 @@
 #define _FORTE_SYNC_H_
 
 #define WIN32_LEAN_AND_MEAN
- #include <windows.h>
+
+#include <windows.h>
 
 #define CSyncObject CPCSyncObject //allows that doxygen can generate better documenation
 
@@ -33,14 +34,10 @@ class CPCSyncObject{
      *
      * This function blocks until it will get the lock for the coming critical section.
      */
-    void lock(void){
-      AcquireSRWLockExclusive(&mLock);
-    }
+    void lock(void);
 
     //!Free the resource coming after the lock command
-    void unlock(void){
-      ReleaseSRWLockExclusive(&mLock);
-    }
+    void unlock(void);
 
   private:
     SRWLOCK mLock;
