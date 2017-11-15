@@ -13,7 +13,6 @@
 
 #include <fortenew.h>
 #include "../devlog.h"
-#include <criticalregion.h>
 
 #define FORTE_TASK_NAME       "FORTE_TASK"
 #define FORTE_TASK_TOKEN      TSK_TOK_1
@@ -22,69 +21,57 @@
 UINT CrcXThread::smTaskInstance = 0;
 RX_TASK_TOKEN CrcXThread::smTaskToken = FORTE_TASK_TOKEN;
 
-void CrcXThread::start(void){
-  if (0 != m_pacStack){
+forte::arch::CThreadBase<RX_HANDLE>::TThreadHandleType CrcXThread::createThread(long paStackSize){
+  TThreadHandleType retVal = 0;
+  if (0 != mStack){
     RX_RESULT retVal;
-    retVal = rX_SysCreateTask(FORTE_TASK_NAME, threadFunction, (void*)this, m_pacStack, mStackSize / 4, RX_TASK_AUTO_START,
+    retVal = rX_SysCreateTask(FORTE_TASK_NAME, threadFunction, (void*)this, mStack, paStackSize / 4, RX_TASK_AUTO_START,
         0, FORTE_TASK_PRIORITY, CrcXThread::smTaskToken, CrcXThread::smTaskInstance, (void (*) (void*))NULL);
     if (RX_OK == retVal){
       CrcXThread::smTaskInstance++;
       CrcXThread::smTaskToken++;
-      if(RX_OK != rX_SysIdentifyTask(FORTE_TASK_NAME, CrcXThread::smTaskInstance - 1, &mThreadID, 0, 0)){
+      if(RX_OK != rX_SysIdentifyTask(FORTE_TASK_NAME, CrcXThread::smTaskInstance - 1, &retVal, 0, 0)){
         DEVLOG_ERROR("Task was created but couldn't be identified. Memory leaks might happen\n");
       }
     }else{
       DEVLOG_ERROR("Couldn't create a task\n");
     }
   }
+  return retVal;
 }
 
 void CrcXThread::threadFunction(void *arguments){
-  // Get pointer to CThread object out of void pointer
-  CrcXThread *pThread = static_cast<CrcXThread *>(arguments);
-
-  // if pointer is ok
-  if(0 != pThread){
-    CCriticalRegion criticalRegion(pThread->mJoinMutex);
-    pThread->setAlive(true);
-    pThread->run();
-    pThread->setAlive(false);
-  }
-  else{
-    DEVLOG_ERROR("pThread pointer is 0!");
-  }
+  CThreadBase::runThread(static_cast<CrcXThread *>(arguments));
 }
 
-CrcXThread::CrcXThread(long pa_nStackSize) :
-      mThreadID(0), mStackSize(pa_nStackSize), m_pacStack(0){
-	if(mStackSize < (300 * 4)){ // If m_nStackSize == 0, the minimum is also set.
-		mStackSize = 300 * 4;
+CrcXThread::CrcXThread(long paStackSize) : CThreadBase(paStackSize),  mStack(0){
+	if(paStackSize < (300 * 4)){ // If m_nStackSize == 0, the minimum is also set.
+	  paStackSize = 300 * 4;
 	}
 
-	m_pacStack = forte_malloc(mStackSize);
-	if (0 == m_pacStack){
+	mStack = forte_malloc(paStackSize);
+	if (0 == mStack){
 	  DEVLOG_ERROR("Not enough memory to allocate %l bytes for creating a new thread\n", mStackSize);
 	}
 }
 
 CrcXThread::~CrcXThread(){
-  if(0 != mThreadID){
-    end();
-  }
-  rX_SysDeleteTask(mThreadID, 0);
-  forte_free(m_pacStack);
+  end();
+  forte_free(mStack);
 }
 
-void CrcXThread::setDeadline(const CIEC_TIME &pa_roVal){
-  mDeadline = pa_roVal;
+void CrcXThread::setDeadline(const CIEC_TIME &){
+  //mDeadline = paVal;
 }
 
-void CrcXThread::sleepThread(unsigned int pa_miliSeconds){
-  rX_SysSleepTask(pa_miliSeconds * 1000 / rX_SysGetSystemCycletime());
+void CrcXThread::sleepThread(unsigned int paMilliSeconds){
+  rX_SysSleepTask(paMilliSeconds * 1000 / rX_SysGetSystemCycletime());
 }
 
 void CrcXThread::join(void){
-  if(0 != mThreadID){
-    CCriticalRegion criticalRegion(mJoinMutex);
+  TThreadHandleType handle = getThreadHandle();
+  if(0 != handle){
+    CThreadBase::join();
+    rX_SysDeleteTask(handle, 0);
   }
 }

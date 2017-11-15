@@ -59,6 +59,10 @@ namespace forte {
           return mDeadline;
         }
 
+        TThreadHandleType getThreadHandle(){
+          return mThreadHandle;
+        }
+
       protected:
         CThreadBase(long paStackSize);
 

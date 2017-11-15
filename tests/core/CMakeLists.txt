@@ -43,9 +43,7 @@
     
   #TODO add here architecture specific adds in order to allow testrunns also on other platforms
      forte_test_add_sourcefile_cpp(../../src/arch/timerha.cpp)
-    
-    forte_test_add_sourcefile_cpp(../../src/arch/threadbase.cpp)
-     
+         
 if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
     forte_test_add_sourcefile_cpp(../../src/arch/posix/forte_sync.cpp)
     forte_test_add_sourcefile_cpp(../../src/arch/posix/forte_sem.cpp)
