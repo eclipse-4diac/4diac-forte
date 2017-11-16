@@ -32,11 +32,10 @@ void CECOSThread::threadFunction(cyg_addrword_t data){
 }
 
 CECOSThread::CECOSThread(long paStackSize) : CThreadBase(paStackSize){
-  paStack = new unsigned char[paStackSize];
+  mStack = new char[paStackSize];
 }
 
 CECOSThread::~CECOSThread(){
-  delete[] mStack;
 }
 
 void CECOSThread::setDeadline(const CIEC_TIME &paVal){
@@ -92,10 +91,6 @@ void CECOSThread::sleepThread(unsigned int paMilliSeconds){
   usleep(1000 * paMilliSeconds);
 }
   
-void CECOSThread::join(void){
-  TThreadHandleType handle = getThreadHandle();
-  if(0 != handle){
-    CThreadBase::join();
-    cyg_thread_delete(handle);
-  }
+void CECOSThread::deleteThread(cyg_handle_t paThreadHandle){
+  cyg_thread_delete(paThreadHandle);
 }

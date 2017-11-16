@@ -30,7 +30,7 @@ typedef CECOSThread *TCECOSThreadPtr;
 /*! \ingroup ECOS-HAL
  * \brief This class is a wrapper class the eCos multitasking support 
  */
-class CECOSThread : public forte::arch::CThreadBase<cyg_handle_t> {
+class CECOSThread : public forte::arch::CThreadBase<cyg_handle_t, 0, CECOSThread> {
   public:
     /*! \brief Constructor of the Thread class
      *
@@ -51,12 +51,12 @@ class CECOSThread : public forte::arch::CThreadBase<cyg_handle_t> {
 
     /*! \brief Sleep the calling thread
      *
-     * @param pa_miliSeconds The miliseconds for the thread to sleep
+     * @param pamilliSeconds The milliseconds for the thread to sleep
      */
-
     static void sleepThread(unsigned int paMilliSeconds);
 
-    virtual void join(void);
+    static void deleteThread(cyg_handle_t paThreadHandle);
+
   protected:
     void setPriority(cyg_priority_t paPriority) {
       DEVLOG_DEBUG(">>>>Thread: Set Priority: %d\n", paPriority);
@@ -72,7 +72,6 @@ class CECOSThread : public forte::arch::CThreadBase<cyg_handle_t> {
 
     virtual TThreadHandleType createThread(long paStackSize);
 
-
     static const int scmThreadListSize = 27;
     static TCECOSThreadPtr smThreadList[scmThreadListSize];
     static CSyncObject smThreadListLock;
@@ -80,8 +79,6 @@ class CECOSThread : public forte::arch::CThreadBase<cyg_handle_t> {
     /*! \brief data needed for ecos to identify the thread.
      */
     cyg_thread mThread;
-
-    unsigned char *mStack;
 };
 
 #endif /*FORTE_THREAD_H_*/

@@ -40,8 +40,6 @@ CTXThread::CTXThread(long paStackSize, char *paThreadName) : CThreadBase(paStack
 }
 
 CTXThread::~CTXThread() {
-  end();
-  delete[] mStack;
 }
 
 void CTXThread::setDeadline(const CIEC_TIME &paVal) {

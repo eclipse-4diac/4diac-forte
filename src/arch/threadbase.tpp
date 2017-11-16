@@ -16,7 +16,7 @@ using namespace forte::arch;
 
 template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
 CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::CThreadBase(long paStackSize) :
-    mThreadHandle(nullHandle), mStackSize(paStackSize), mStack(0), mAlive(false) {
+    mThreadHandle(nullHandle), mStack(0), mStackSize(paStackSize), mAlive(false) {
 
 }
 

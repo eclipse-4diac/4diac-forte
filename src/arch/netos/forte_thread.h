@@ -72,7 +72,6 @@ class CTXThread : public forte::arch::CThreadBase<ULONG> {
 
     TX_THREAD mThreadData;
 
-    char *mStack;
     char *mThreadName;
 
     static const int scmThreadListSize;

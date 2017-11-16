@@ -19,7 +19,6 @@ void CBEThread::Main(VOID){
   CThreadBase::runThread(this);  //this is a little bit an overkill but better complies to our overall rules
 }
 
-
 CBEThread::CBEThread() : CThreadBase(0){
 }
 
@@ -43,6 +42,6 @@ void CBEThread::sleepThread(unsigned int paMilliSeconds){
   usleep(1000 * paMilliSeconds);
 }
 
-void CBEThread::join(void){
+void CBEThread::deleteThread(int){
   Delete();
 }

@@ -14,7 +14,7 @@
 #include <rX_Includes.h>
 #include "../threadbase.h"
 
-class CrcXThread : public forte::arch::CThreadBase<RX_HANDLE> {
+class CrcXThread : public forte::arch::CThreadBase<RX_HANDLE, 0, CrcXThread> {
   public:
 
     /*! \brief Constructor of the Thread class
@@ -41,6 +41,8 @@ class CrcXThread : public forte::arch::CThreadBase<RX_HANDLE> {
      */
     static void sleepThread(unsigned int paMilliSeconds);
 
+    static void deleteThread(RX_HANDLE paThreadHandle);
+
   private:
 
     /*! \brief Instance defined for the task
@@ -63,11 +65,6 @@ class CrcXThread : public forte::arch::CThreadBase<RX_HANDLE> {
 
     virtual TThreadHandleType createThread(long paStackSize);
 
-    /*! \brief Pointer to the memory to be used for this thread stack
-     *
-     *  This pointer is only not 0 if mStackSize is not 0
-     */
-    void* mStack;
 };
 
 

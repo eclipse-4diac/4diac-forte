@@ -49,15 +49,13 @@ CrcXThread::CrcXThread(long paStackSize) : CThreadBase(paStackSize),  mStack(0){
 	  paStackSize = 300 * 4;
 	}
 
-	mStack = forte_malloc(paStackSize);
+	mStack = new char[paStackSize];
 	if (0 == mStack){
 	  DEVLOG_ERROR("Not enough memory to allocate %l bytes for creating a new thread\n", mStackSize);
 	}
 }
 
 CrcXThread::~CrcXThread(){
-  end();
-  forte_free(mStack);
 }
 
 void CrcXThread::setDeadline(const CIEC_TIME &){
@@ -68,10 +66,6 @@ void CrcXThread::sleepThread(unsigned int paMilliSeconds){
   rX_SysSleepTask(paMilliSeconds * 1000 / rX_SysGetSystemCycletime());
 }
 
-void CrcXThread::join(void){
-  TThreadHandleType handle = getThreadHandle();
-  if(0 != handle){
-    CThreadBase::join();
-    rX_SysDeleteTask(handle, 0);
-  }
+void CrcXThread::deleteThread(RX_HANDLE paThreadHandle){
+  rX_SysDeleteTask(paThreadHandle, 0);
 }
