@@ -18,7 +18,15 @@
 namespace forte {
   namespace arch {
 
-    template <typename TThreadHandle, TThreadHandle nullHandle = static_cast<TThreadHandle>(0) >
+    class EmptyThreadDeletePolicy{
+      public:
+        template <typename TThreadHandle>
+        static void deleteThread(TThreadHandle ){
+            //the empty delete policy does nothing
+        }
+    };
+
+    template <typename TThreadHandle, TThreadHandle nullHandle = static_cast<TThreadHandle>(0), typename ThreadDeletePolicy = EmptyThreadDeletePolicy >
     class CThreadBase{
       public:
 
@@ -52,7 +60,7 @@ namespace forte {
          *
          *  This function waits till the execution in the thread decides to end the execution. Blocks the caller!!!
          */
-        virtual void join();
+        void join();
 
         //!Get the current deadline of the thread.
         const CIEC_TIME &getDeadline(void) const {
@@ -86,6 +94,13 @@ namespace forte {
         //!deadline the thread needs to be finish its execution. 0 means unconstrained.
         CIEC_TIME mDeadline;
 
+        /*! \brief Pointer to the memory to be used for this thread'm_stSuspendSemaphore stack
+         *
+         *  This pointer is only not 0 if the stack is to be allocated by the architecture specific class.
+         *  This depends on the operating system. If needed it should be allocated in the derived classes constructor.
+         *  It will be deleted in the CThreadBase Destructor
+         */
+        char *mStack;
 
       private:
         /*! \brief Abstract method for the code to execute in the thread.

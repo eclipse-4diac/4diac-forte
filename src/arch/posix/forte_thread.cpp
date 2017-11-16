@@ -20,7 +20,7 @@
 #include <unistd.h>
 #include <criticalregion.h>
 
-forte::arch::CThreadBase<pthread_t, static_cast<pthread_t>(0)>::TThreadHandleType CPosixThread::createThread(long paStackSize){
+forte::arch::CThreadBase<pthread_t>::TThreadHandleType CPosixThread::createThread(long paStackSize){
 	TThreadHandleType retVal = 0;
 
 	if(paStackSize){
@@ -36,8 +36,7 @@ forte::arch::CThreadBase<pthread_t, static_cast<pthread_t>(0)>::TThreadHandleTyp
       return 0;
 	  }
 	#else
-	  //if (pthread_attr_setstacksize(&stAttr, m_nStackSize)) {
-	  if(pthread_attr_setstack(&stAttr, m_pacStack, m_nStackSize)){
+	  if(pthread_attr_setstack(&stAttr, mStack, paStackSize)){
       DEVLOG_ERROR("Error could not set the stacksize for the thread! %s\n", strerror(errno));
       return 0;
 	  }
@@ -69,16 +68,13 @@ void * CPosixThread::threadFunction(void *paArguments){
   return 0;
 }
 
-CPosixThread::CPosixThread(long paStackSize) : CThreadBase(paStackSize), mStack(0){
+CPosixThread::CPosixThread(long paStackSize) : CThreadBase(paStackSize){
   if(0 != paStackSize){
     mStack = new char[paStackSize];
   }
 }
 
 CPosixThread::~CPosixThread(){
-  if(0 != mStack ){
-    delete[] mStack;
-  }
 }
 
 void CPosixThread::setDeadline(const CIEC_TIME &paVal){

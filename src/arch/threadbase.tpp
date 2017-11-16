@@ -14,21 +14,22 @@
 
 using namespace forte::arch;
 
-template <typename TThreadHandle, TThreadHandle nullHandle>
-CThreadBase<TThreadHandle, nullHandle>::CThreadBase(long paStackSize) :
-    mThreadHandle(nullHandle), mStackSize(paStackSize), mAlive(false) {
+template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
+CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::CThreadBase(long paStackSize) :
+    mThreadHandle(nullHandle), mStackSize(paStackSize), mStack(0), mAlive(false) {
 
 }
 
-template <typename TThreadHandle, TThreadHandle nullHandle>
-CThreadBase<TThreadHandle, nullHandle>::~CThreadBase() {
-  if(nullHandle != mThreadHandle){
-     end();
-   }
+template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
+CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::~CThreadBase() {
+  end();
+  if(0 != mStack ){
+    delete[] mStack;
+  }
 }
 
-template <typename TThreadHandle, TThreadHandle nullHandle>
-void CThreadBase<TThreadHandle, nullHandle>::start(void){
+template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
+void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::start(void){
   if(nullHandle == mThreadHandle){
     mJoinMutex.lock();
     mThreadHandle = createThread(mStackSize);
@@ -38,30 +39,31 @@ void CThreadBase<TThreadHandle, nullHandle>::start(void){
   }
 }
 
-template <typename TThreadHandle, TThreadHandle nullHandle>
-void CThreadBase<TThreadHandle, nullHandle>::end(void) {
+template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
+void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::end(void) {
   if(nullHandle != mThreadHandle){
     setAlive(false);
     join();
+    ThreadDeletePolicy::deleteThread(mThreadHandle);
+    mThreadHandle = nullHandle;
   }
 }
 
-template <typename TThreadHandle, TThreadHandle nullHandle>
-void CThreadBase<TThreadHandle, nullHandle>::join(){
+template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
+void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::join(){
   if(nullHandle != mThreadHandle){
     CCriticalRegion criticalRegion(mJoinMutex);
   }
 }
 
-template <typename TThreadHandle, TThreadHandle nullHandle>
-void CThreadBase<TThreadHandle, nullHandle>::runThread(CThreadBase *paThread) {
+template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
+void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::runThread(CThreadBase *paThread) {
 	// if pointer is ok
 	if (0 != paThread) {
 		paThread->setAlive(true);
 		paThread->run();
 		paThread->setAlive(false);
 		paThread->mJoinMutex.unlock();
-		paThread->mThreadHandle = nullHandle;
 	} else {
 		DEVLOG_ERROR("pThread pointer is 0!");
 	}

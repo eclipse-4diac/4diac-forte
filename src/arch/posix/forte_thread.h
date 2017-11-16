@@ -27,12 +27,12 @@
 /*! \ingroup posix_hal
  * \brief The thread implementation for the posix thread interface. 
  */
-class CPosixThread : public forte::arch::CThreadBase<pthread_t, static_cast<pthread_t>(0)> {
+class CPosixThread : public forte::arch::CThreadBase<pthread_t> {
   public:
     /*! \brief Constructor of the Thread class
      *
      *  Does all the necessary steps in order to get the thread running with the start()-method
-     *  @param pa_nStackSize the Size of the stack the thread is allowed to use. 0 means use system default stack size.
+     *  @param paStackSize the Size of the stack the thread is allowed to use. 0 means use system default stack size.
      *      If you like to set this value it is best to use the form: PTHREAD_STACK_MIN + additional bytes you need.
      */
     explicit CPosixThread(long paStackSize = 0);
@@ -53,8 +53,6 @@ class CPosixThread : public forte::arch::CThreadBase<pthread_t, static_cast<pthr
 
     static void sleepThread(unsigned int paMilliSeconds);
 
-  protected:
-
   private:
     virtual TThreadHandleType createThread(long paStackSize);
 
@@ -63,13 +61,6 @@ class CPosixThread : public forte::arch::CThreadBase<pthread_t, static_cast<pthr
      * this function will call the run method of the thread instance.
      */
     static void * threadFunction(void *paArguments);
-
-
-    /*! \brief Pointer to the memory to be used for this thread'm_stSuspendSemaphore stack
-     *
-     *  This pointer is only not 0 if m_nStackSize is not 0
-     */
-    char *mStack;
 
     //we don't want that threads can be copied or assigned therefore the copy constructor and assignment operator are declared private
     //but not implemented
