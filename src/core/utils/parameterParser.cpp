@@ -15,8 +15,7 @@
 #include <cctype>
 
 CParameterParser::CParameterParser(const char* paParameters, unsigned int paAmountOfParameters, const char paSeparator) :
-    mAmountOfParameters(paAmountOfParameters), mSeparator(paSeparator){
-  mParameters = paParameters; //null pointer becomes an empty string
+  mParameters(paParameters), mAmountOfParameters(paAmountOfParameters), mSeparator(paSeparator){
   mParameterLocations = new char*[paAmountOfParameters];
   memset(mParameterLocations, 0, sizeof(char*)*paAmountOfParameters);
 }

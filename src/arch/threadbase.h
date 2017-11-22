@@ -72,7 +72,7 @@ namespace forte {
         }
 
       protected:
-        CThreadBase(long paStackSize);
+        explicit CThreadBase(long paStackSize);
 
         virtual ~CThreadBase();
 
