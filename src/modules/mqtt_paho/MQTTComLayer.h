@@ -20,18 +20,18 @@ extern "C" {
 
 #define QOS 0
 
-//fbdk[].mqtt[tcp://localhost:1883, ClientID, Topic]
+//raw[].mqtt[tcp://localhost:1883, ClientID, Topic]
 
 using namespace forte::com_infra;
 
 class MQTTComLayer: public forte::com_infra::CComLayer{
 public:
-	MQTTComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB);
+	MQTTComLayer(CComLayer* paUpperLayer, CBaseCommFB * paFB);
 	virtual ~MQTTComLayer();
 
-	EComResponse sendData(void* pa_pvData, unsigned int pa_unSize);
+	EComResponse sendData(void* paData, unsigned int paSize);
 
-	EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize);
+	EComResponse recvData(const void *paData, unsigned int paSize);
 
 	EComResponse processInterrupt();
 
@@ -42,11 +42,14 @@ public:
 private:
 	char* mTopicName;
 
-    char dataBuffer[255];
-    unsigned int bufferSize;
-    EComResponse m_eInterruptResp;
+  static const unsigned int mNoOfParameters = 3;
+  static const unsigned int mBufferSize = 255;
 
-	EComResponse openConnection(char* pa_acLayerParameter);
+  char mDataBuffer[mBufferSize];
+  unsigned int mUsedBuffer;
+  EComResponse mInterruptResp;
+
+	EComResponse openConnection(char* paLayerParameter);
 	void closeConnection();
 
 	enum Parameters {
@@ -55,7 +58,6 @@ private:
 		Topic
 	};
 
-	static const unsigned int mNoOfParameters = 3;
 };
 
 #endif /* MQTTCOMLAYER_H_ */

@@ -17,11 +17,9 @@
 
 using namespace forte::com_infra;
 
-MQTTComLayer::MQTTComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB) : CComLayer(pa_poUpperLayer, pa_poFB),
-    mTopicName(0), bufferSize(0), m_eInterruptResp(e_Nothing){
-  memset(dataBuffer, 0, sizeof(dataBuffer)); //TODO change this to  dataBuffer{0} in the extended list when fully switching to C++11
-	// TODO Auto-generated constructor stub
-
+MQTTComLayer::MQTTComLayer(CComLayer* paUpperLayer, CBaseCommFB * pFB) : CComLayer(paUpperLayer, pFB),
+    mTopicName(0), mUsedBuffer(0), mInterruptResp(e_Nothing){
+  memset(mDataBuffer, 0, mBufferSize); //TODO change this to  dataBuffer{0} in the extended list when fully switching to C++11
 }
 
 MQTTComLayer::~MQTTComLayer() {
@@ -30,10 +28,10 @@ MQTTComLayer::~MQTTComLayer() {
 	}
 }
 
-EComResponse MQTTComLayer::sendData(void* pa_pvData, unsigned int pa_unSize) {
+EComResponse MQTTComLayer::sendData(void* paData, unsigned int paSize) {
 	MQTTAsync_message message = MQTTAsync_message_initializer;
-	message.payload = pa_pvData;
-	message.payloadlen = pa_unSize;
+	message.payload = paData;
+	message.payloadlen = paSize;
 	message.qos = QOS;
 	message.retained = 0;
 	int errorCode = MQTTAsync_sendMessage(GET_HANDLER_FROM_LAYER(*m_poFb, MQTTHandler)->getClient(), mTopicName, &message, NULL);
@@ -44,30 +42,32 @@ EComResponse MQTTComLayer::sendData(void* pa_pvData, unsigned int pa_unSize) {
 	return e_ProcessDataOk;
 }
 
-EComResponse MQTTComLayer::recvData(const void* pa_pvData,
-		unsigned int pa_unSize) {
-	memcpy(dataBuffer, pa_pvData, pa_unSize);
-	bufferSize = pa_unSize;
-	m_eInterruptResp = e_ProcessDataOk;
+EComResponse MQTTComLayer::recvData(const void* paData,	unsigned int paSize) {
+  if(paSize > mBufferSize){
+    paSize = mBufferSize; //Rest of the message is discarded
+  }
+	memcpy(mDataBuffer, paData, paSize);
+	mUsedBuffer = paSize;
+	mInterruptResp = e_ProcessDataOk;
 	m_poFb->interruptCommFB(this);
-	return m_eInterruptResp;
+	return mInterruptResp;
 }
 
 EComResponse MQTTComLayer::processInterrupt() {
-	if(e_ProcessDataOk == m_eInterruptResp) {
-		if((0 < bufferSize) && (0 != m_poTopLayer)) {
-			m_eInterruptResp = m_poTopLayer->recvData(dataBuffer, bufferSize);
-			bufferSize = 0;
+	if(e_ProcessDataOk == mInterruptResp) {
+		if((0 < mUsedBuffer) && (0 != m_poTopLayer)) {
+			mInterruptResp = m_poTopLayer->recvData(mDataBuffer, mUsedBuffer);
+			mUsedBuffer = 0;
 			//GET_HANDLER_FROM_LAYER(*m_poFb, MQTTHandler)->mqttMessageProcessed();
 		}
 	}
 
-	return m_eInterruptResp;
+	return mInterruptResp;
 }
 
-EComResponse MQTTComLayer::openConnection(char* pa_acLayerParameter) {
+EComResponse MQTTComLayer::openConnection(char* paLayerParameter) {
 	EComResponse eRetVal = e_InitInvalidId;
-	CParameterParser parser(pa_acLayerParameter, mNoOfParameters);
+	CParameterParser parser(paLayerParameter, mNoOfParameters);
 	if(mNoOfParameters == parser.parseParameters()){
 		mTopicName = new char[(strlen(parser[Topic]) + 1)];
 		mTopicName = strcpy(mTopicName, parser[Topic]);
