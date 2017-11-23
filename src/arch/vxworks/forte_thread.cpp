@@ -9,8 +9,6 @@
  *  Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "../devlog.h"
-#include <criticalregion.h>
 #include "forte_thread.h"
 #include <time.h>
 
@@ -21,10 +19,10 @@ forte::arch::CThreadBase<TASK_ID, TASK_ID_ERROR>::TThreadHandleType CVxWorksThre
 }
 
 void CVxWorksThread::threadFunction(void *paArguments){
-  CThreadBase::runThread(static_cast<CVxWorksThread *>(paArguments));
+  forte::arch::CThreadBase<TASK_ID, TASK_ID_ERROR>::runThread(static_cast<CVxWorksThread *>(paArguments));
 }
 
-CVxWorksThread::CVxWorksThread(long paStackSize) : CThreadBase(paStackSize){
+CVxWorksThread::CVxWorksThread(long paStackSize) : forte::arch::CThreadBase<TASK_ID, TASK_ID_ERROR>(paStackSize){
 }
 
 CVxWorksThread::~CVxWorksThread(){

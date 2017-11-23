@@ -17,52 +17,54 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
   message(STATUS "VXWORKS: Set an environment variable WIND_BASE to any value")
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
   
-  forte_add_sourcefile_hcpp(forte_thread vxworkstimeha forte_sync forte_sem)
+  forte_add_sourcefile_hcpp(forte_thread  vxworkstimeha forte_sync forte_sem)
   forte_add_sourcefile_cpp(main.cpp ../genforte_printer.cpp)
   forte_add_sourcefile_h(../forte_architecture_time.h)
   
-  SET(FORTE_VXWORKS_BASE_DIR "C:/WBOEM69_Rexroth/customBosch/vxworks-6.9" CACHE STRING "VxWorks base directory.")
-  
-  SET(FORTE_VXWORKS_FIND_DIR_AUTOMATICALLY ON CACHE BOOL "Selects the rest of needed directories from the BASE_DIR")
+  SET(FORTE_VXWORKS_FIND_DIR_AUTOMATICALLY ON CACHE BOOL "Selects the rest of needed directories from the CMAKE_FIND_ROOT_PATH")
   SET(FORTE_VXWORKS_VSB_CONFIG_FILE "" CACHE STRING "VSB Configuration file")
-  SET(FORTE_VXWORKS_MUNCH_TCL "" CACHE STRING "Munch tcl utility")
-  SET(FORTE_VXWORKS_INCLUDE "" CACHE STRING "Include directories")    
+  SET(FORTE_VXWORKS_MUNCH_TCL_FILE "" CACHE STRING "Munch tcl file")
   
-  SET(FORTE_VXWORKS_TAGS "C:/WBOEM69_Rexroth/customBosch/vxworks-6.9/target/lib/tags/pentium/ATOM/common/dkm.tags" CACHE STRING "Tags file")
+  if(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Windows")
+    SET(FORTE_VXWORKS_TCL_SHELL "tclsh.exe" CACHE STRING "The tclsh shell which executes on the FORTE_VXWORKS_MUNCH_TCL_FILE. You might need to set the full path here to the executable")
+  else(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Windows")
+    SET(FORTE_VXWORKS_TCL_SHELL "tclsh" CACHE STRING "The tclsh shell which executes on the FORTE_VXWORKS_MUNCH_TCL_FILE. You might need to set the full path here to the executable")
+  endif(${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Windows")
 
-  #Add commands for creating target image
-  get_filename_component(COMPILER_FOLDER ${CMAKE_CXX_COMPILER} DIRECTORY)
-  set(FORTE_VXWORKS_CMAKE_NM "${COMPILER_FOLDER}/nmpentium.exe" CACHE STRING "Munch tcl utility")  
-  set(FORTE_VXWORKS_TCLSH "C:/WBOEM69_Rexroth/setup/x86-win32/bin/tclsh.exe" CACHE STRING "tclsh command")
-  
+  SET(FORTE_VXWORKS_INCLUDE "" CACHE STRING "Include directories")  
+  set(FORTE_VXWORKS_TAGS "" CACHE STRING "Tags file")    
+
+  set(FORTE_VXWORKS_ARCHITECTURE "pentium" CACHE STRING "Architecture of the hardware")
   set(FORTE_VXWORKS_CPU "ATOM" CACHE STRING "CPU of the hardware")
   set(FORTE_VXWORKS_TOOL_FAMILY "gnu" CACHE STRING "tool family used to compile")
   set(FORTE_VXWORKS_TOOL "gnu" CACHE STRING "tool used to compile")
   
+  string(TOLOWER ${FORTE_VXWORKS_CPU} FORTE_VXWORKS_CPU_low)
+  
   if (FORTE_VXWORKS_FIND_DIR_AUTOMATICALLY)
-    set(FORTE_VXWORKS_VSB_CONFIG_FILE "${FORTE_VXWORKS_BASE_DIR}/target/lib/h/config/vsbConfig.h" CACHE STRING "VSB Configuration file" FORCE)
-    set(FORTE_VXWORKS_MUNCH_TCL "${FORTE_VXWORKS_BASE_DIR}/host/resource/hutils/tcl/munch.tcl" CACHE STRING "Munch tcl utility" FORCE)
-    set(FORTE_VXWORKS_INCLUDE "${FORTE_VXWORKS_BASE_DIR}/target/h;${FORTE_VXWORKS_BASE_DIR}/target/h/wrn/coreip" CACHE STRING "Include directories separated by ;" FORCE)  
+    set(FORTE_VXWORKS_VSB_CONFIG_FILE "${CMAKE_FIND_ROOT_PATH}/target/lib/h/config/vsbConfig.h" CACHE STRING "VSB Configuration file" FORCE)
+    set(FORTE_VXWORKS_MUNCH_TCL_FILE "${CMAKE_FIND_ROOT_PATH}/host/resource/hutils/tcl/munch.tcl" CACHE STRING "Munch tcl utility" FORCE)
+    set(FORTE_VXWORKS_INCLUDE "${CMAKE_FIND_ROOT_PATH}/target/h;${CMAKE_FIND_ROOT_PATH}/target/h/wrn/coreip" CACHE STRING "Include directories separated by ;" FORCE)
+    set(FORTE_VXWORKS_TAGS "${CMAKE_FIND_ROOT_PATH}/target/lib/tags/${FORTE_VXWORKS_ARCHITECTURE}/${FORTE_VXWORKS_CPU}/common/dkm.tags" CACHE STRING "Tags file" FORCE)  
+    get_filename_component(COMPILER_FOLDER ${CMAKE_CXX_COMPILER} DIRECTORY)
+    set(FORTE_VXWORKS_CMAKE_NM ${COMPILER_FOLDER}/nm${FORTE_VXWORKS_ARCHITECTURE})
   endif(FORTE_VXWORKS_FIND_DIR_AUTOMATICALLY)
   
   foreach(ARG ${FORTE_VXWORKS_INCLUDE}) 
      forte_add_include_system_directories(${ARG})
   endforeach()
   
-  #Add commands for creating target image
-  get_filename_component(COMPILER_FOLDER ${CMAKE_CXX_COMPILER} DIRECTORY)
-  set(CMAKE_NM ${COMPILER_FOLDER}/nmpentium.exe)
-  SET(FORTE_TCLSH "C:/WBOEM69_Rexroth/setup/x86-win32/bin/tclsh.exe" CACHE STRING "tclsh command")
- 
   #for DKM
-  forte_add_definition(-DVXWORKS -march=atom -mmovbe -nostdlib -fno-builtin -fno-defer-pop 
+  forte_add_definition(-DVXWORKS -march=${FORTE_VXWORKS_CPU_low} -mmovbe -nostdlib -fno-builtin -fno-defer-pop 
   -fno-implicit-fp -ansi -fno-zero-initialized-in-bss -D_WRS_KERNEL -Wall -MD -MP -DCPU=_VX_${FORTE_VXWORKS_CPU} -D_VX_CPU=_VX_${FORTE_VXWORKS_CPU}
   -DTOOL_FAMILY=${FORTE_VXWORKS_TOOL_FAMILY} -DTOOL=${FORTE_VXWORKS_TOOL} -DIP_PORT_VXWORKS=69 -D_VSB_CONFIG_FILE=\"${FORTE_VXWORKS_VSB_CONFIG_FILE}\")
   
   forte_add_post_build_command(COMMAND ${FORTE_VXWORKS_CMAKE_NM} forte.vxe > nmFile.txt
-                               COMMAND ${FORTE_VXWORKS_TCLSH} ${FORTE_VXWORKS_MUNCH_TCL} -c pentium -tags ${FORTE_VXWORKS_TAGS} < nmFile.txt 1> ctdt.c 
-                               COMMAND ${CMAKE_C_COMPILER} -march=atom -mmovbe -nostdlib -fno-builtin -fno-defer-pop -fno-implicit-fp -fdollars-in-identifiers -Wall -DCPU=_VX_${FORTE_VXWORKS_CPU} -D_VX_CPU=_VX_${FORTE_VXWORKS_CPU} -DTOOL_FAMILY=${FORTE_VXWORKS_TOOL_FAMILY} -DTOOL=${FORTE_VXWORKS_TOOL} -D_WRS_KERNEL -DIP_PORT_VXWORKS=69 -D_VSB_CONFIG_FILE=\"${FORTE_VXWORKS_VSB_CONFIG_FILE}\" -o ctdt.o ctdt.c 
-                               COMMAND ${CMAKE_C_COMPILER} -r -nostdlib -Wl,-X -T ${FORTE_VXWORKS_BASE_DIR}/target/h/tool/${FORTE_VXWORKS_TOOL}/ldscripts/link.OUT -o forte.out ctdt.o forte.vxe)
+                               COMMAND ${FORTE_VXWORKS_TCL_SHELL} ${FORTE_VXWORKS_MUNCH_TCL_FILE} -c ${FORTE_VXWORKS_ARCHITECTURE} -tags ${FORTE_VXWORKS_TAGS} < nmFile.txt 1> ctdt.c 
+                               COMMAND ${CMAKE_C_COMPILER} -march=${FORTE_VXWORKS_CPU_low} -mmovbe -nostdlib -fno-builtin -fno-defer-pop -fno-implicit-fp -fdollars-in-identifiers -Wall 
+                                    -DCPU=_VX_${FORTE_VXWORKS_CPU} -D_VX_CPU=_VX_${FORTE_VXWORKS_CPU} -DTOOL_FAMILY=${FORTE_VXWORKS_TOOL_FAMILY} -DTOOL=${FORTE_VXWORKS_TOOL} -D_WRS_KERNEL 
+                                    -DIP_PORT_VXWORKS=69 -D_VSB_CONFIG_FILE=\"${FORTE_VXWORKS_VSB_CONFIG_FILE}\" -o ctdt.o ctdt.c 
+                               COMMAND ${CMAKE_C_COMPILER} -r -nostdlib -Wl,-X -T ${CMAKE_FIND_ROOT_PATH}/target/h/tool/${FORTE_VXWORKS_TOOL}/ldscripts/link.OUT -o forte.out ctdt.o forte.vxe)
   
   if(FORTE_COM_ETH)
    forte_add_handler(CFDSelectHandler sockhand)

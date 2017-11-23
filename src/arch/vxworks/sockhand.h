@@ -13,6 +13,7 @@
 #define SOCKHAND_H_
 
 #include <vxWorks.h>
+#include <hostLib.h> //for gethostname in OPCUA
 #include <unistd.h>
 #include <sockLib.h>
 #include <selectLib.h>
