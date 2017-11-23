@@ -14,6 +14,7 @@
 #define MQTTCOMLAYER_H_
 
 #include "comlayer.h"
+#include "../../core/datatypes/forte_string.h"
 extern "C" {
 	#include <MQTTAsync.h>
 }
@@ -36,11 +37,11 @@ public:
 	EComResponse processInterrupt();
 
 	char const* getTopicName() {
-		return mTopicName;
+		return mTopicName.getValue();
 	}
 
 private:
-	char* mTopicName;
+	CIEC_STRING mTopicName;
 
   static const unsigned int mNoOfParameters = 3;
   static const unsigned int mBufferSize = 255;

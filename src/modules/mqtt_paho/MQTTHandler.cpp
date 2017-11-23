@@ -37,16 +37,16 @@ MQTTHandler::MQTTHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHa
 }
 
 MQTTHandler::~MQTTHandler(){
+  CCriticalRegion sectionState(smMQTTMutex);
   if(isAlive()){
-    {
-      CCriticalRegion sectionState(smMQTTMutex);
-      MQTTAsync_disconnectOptions disconnectOptions = MQTTAsync_disconnectOptions_initializer;
-      disconnectOptions.timeout = 10000;
-      MQTTAsync_disconnect(smClient, &disconnectOptions);
-      MQTTAsync_destroy(&smClient);
-      setAlive(false);
-      resumeSelfSuspend();
-    }
+    setAlive(false);
+    resumeSelfSuspend();
+  }
+  if(0 != smClient){
+    MQTTAsync_disconnectOptions disconnectOptions = MQTTAsync_disconnectOptions_initializer;
+    disconnectOptions.timeout = 10000;
+    MQTTAsync_disconnect(smClient, &disconnectOptions);
+    MQTTAsync_destroy(&smClient);
   }
 }
 

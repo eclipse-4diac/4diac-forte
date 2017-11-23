@@ -70,23 +70,23 @@ protected:
 
 private:
 
-    int mqttSubscribe(MQTTComLayer* pa_comLayer);
+    int mqttSubscribe(MQTTComLayer* paLayer);
     int mqttConnect();
 
-    void popLayerFromList(MQTTComLayer* paLayer, CSinglyLinkedList<MQTTComLayer*> *pa_list);
+    void popLayerFromList(MQTTComLayer* paLayer, CSinglyLinkedList<MQTTComLayer*> *paList);
 
     void resumeSelfSuspend();
     void selfSuspend();
 
-    static void onMqttConnectionLost(void* context, char* cause);
+    static void onMqttConnectionLost(void* paContext, char* paCause);
 
-    static int onMqttMessageArrived(void *context, char *topicName, int topicLen, MQTTAsync_message *message);
+    static int onMqttMessageArrived(void *paContext, char *paTopicName, int paTopicLen, MQTTAsync_message *paMessage);
 
-    static void onMqttConnectionSucceed(void *context, MQTTAsync_successData *response);
-    static void onMqttConnectionFailed(void *context, MQTTAsync_failureData *response);
+    static void onMqttConnectionSucceed(void *paContext, MQTTAsync_successData *paResponse);
+    static void onMqttConnectionFailed(void *paContext, MQTTAsync_failureData *paResponse);
 
-    static void onSubscribeSucceed(void* context, MQTTAsync_successData* response);
-    static void onSubscribeFailed(void* context, MQTTAsync_failureData* response);
+    static void onSubscribeSucceed(void* paContext, MQTTAsync_successData* paResponse);
+    static void onSubscribeFailed(void* paContext, MQTTAsync_failureData* paResponse);
 
     static CIEC_STRING smClientId;
     static CIEC_STRING smAddress;

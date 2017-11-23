@@ -18,14 +18,11 @@
 using namespace forte::com_infra;
 
 MQTTComLayer::MQTTComLayer(CComLayer* paUpperLayer, CBaseCommFB * pFB) : CComLayer(paUpperLayer, pFB),
-    mTopicName(0), mUsedBuffer(0), mInterruptResp(e_Nothing){
+    mUsedBuffer(0), mInterruptResp(e_Nothing){
   memset(mDataBuffer, 0, mBufferSize); //TODO change this to  dataBuffer{0} in the extended list when fully switching to C++11
 }
 
 MQTTComLayer::~MQTTComLayer() {
-	if(mTopicName){
-	  delete mTopicName;
-	}
 }
 
 EComResponse MQTTComLayer::sendData(void* paData, unsigned int paSize) {
@@ -34,7 +31,7 @@ EComResponse MQTTComLayer::sendData(void* paData, unsigned int paSize) {
 	message.payloadlen = paSize;
 	message.qos = QOS;
 	message.retained = 0;
-	int errorCode = MQTTAsync_sendMessage(GET_HANDLER_FROM_LAYER(*m_poFb, MQTTHandler)->getClient(), mTopicName, &message, NULL);
+	int errorCode = MQTTAsync_sendMessage(GET_HANDLER_FROM_LAYER(*m_poFb, MQTTHandler)->getClient(), mTopicName.getValue(), &message, NULL);
 	if (0 != errorCode) {
 		return e_ProcessDataSendFailed;
 	}
@@ -69,8 +66,7 @@ EComResponse MQTTComLayer::openConnection(char* paLayerParameter) {
 	EComResponse eRetVal = e_InitInvalidId;
 	CParameterParser parser(paLayerParameter, mNoOfParameters);
 	if(mNoOfParameters == parser.parseParameters()){
-		mTopicName = new char[(strlen(parser[Topic]) + 1)];
-		mTopicName = strcpy(mTopicName, parser[Topic]);
+		mTopicName = parser[Topic];
 		if( MQTTHandler::eRegisterLayerSucceeded ==
 		    GET_HANDLER_FROM_LAYER(*m_poFb, MQTTHandler)->registerLayer(parser[Address], parser[ClientID], this)) {
 			eRetVal = e_InitOk;
