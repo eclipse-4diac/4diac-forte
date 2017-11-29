@@ -443,15 +443,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
 
 		if (clientInitialized) {
 
-			CSyncObject *clientMutex = this->getMutexForClient(client);
-
-			if (clientMutex) {
-				clientMutex->lock();
-			}
 			response = UA_Client_Service_translateBrowsePathsToNodeIds(client, request);
-			if (clientMutex) {
-				clientMutex->unlock();
-			}
 		} else {
 			response = UA_Client_Service_translateBrowsePathsToNodeIds(client, request);
 			UA_Client_disconnect(client);
