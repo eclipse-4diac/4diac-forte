@@ -204,7 +204,7 @@ void COPC_UA_Handler::removeLdsRegister(const UA_String *discoveryUrl) {
 
 #endif
 
-COPC_UA_Handler::COPC_UA_Handler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution),
+COPC_UA_Handler::COPC_UA_Handler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution), CThread(90000), //the start of the opcua server takes ~84K of stack
     uaServer(0), uaServerConfig(0), uaServerRunningFlag(UA_FALSE), getNodeForPathMutex(), nodeCallbackHandles(), clients(),
 #ifdef FORTE_COM_OPC_UA_MULTICAST
 	registeredWithLds(),
@@ -253,6 +253,20 @@ COPC_UA_Handler::~COPC_UA_Handler() {
 
 void COPC_UA_Handler::run() {
 	DEVLOG_INFO("OPC UA: Starting OPC UA Server: opc.tcp://localhost:%d\n", FORTE_COM_OPC_UA_PORT);
+
+  if (uaServerConfig == NULL) {
+    configureUAServer(FORTE_COM_OPC_UA_PORT);
+    uaServer = UA_Server_new(uaServerConfig);
+  }
+
+#ifdef FORTE_COM_OPC_UA_MULTICAST
+#   ifndef UA_ENABLE_DISCOVERY_MULTICAST
+#       error open62541 needs to be built with UA_ENABLE_DISCOVERY_MULTICAST=ON
+#   else
+  UA_Server_setServerOnNetworkCallback(uaServer, serverOnNetworkCallback, this);
+#   endif
+#endif
+
 	UA_StatusCode retVal = UA_Server_run(uaServer, &uaServerRunningFlag);    // server keeps iterating as long as running is true;
 	if (retVal != UA_STATUSCODE_GOOD) {
 		DEVLOG_ERROR("OPC UA: Server exited with error: %s\n", UA_StatusCode_name(retVal));
@@ -284,20 +298,6 @@ void COPC_UA_Handler::startServer() {
 	if (uaServerRunningFlag)
 		return;
 	uaServerRunningFlag = UA_TRUE;
-
-	if (uaServerConfig == NULL) {
-		configureUAServer(FORTE_COM_OPC_UA_PORT);
-		uaServer = UA_Server_new(uaServerConfig);
-	}
-
-
-#ifdef FORTE_COM_OPC_UA_MULTICAST
-#   ifndef UA_ENABLE_DISCOVERY_MULTICAST
-#       error open62541 needs to be built with UA_ENABLE_DISCOVERY_MULTICAST=ON
-#   else
-	UA_Server_setServerOnNetworkCallback(uaServer, serverOnNetworkCallback, this);
-#   endif
-#endif
 
 	if (!isAlive()) {
 		start();
