@@ -60,37 +60,38 @@ bool CMLPIFaceProcessInterface::connectToMLPI(){
 
 bool CMLPIFaceProcessInterface::initialise(bool paInput){
   bool retVal = false;
-	/*
-	 * Starting forte at boot in the PLC has the effect of failing when connecting to the MLPI
-	 * probably because the stack is not ready yet. So this waits until MAX_NUMBER_OF_RETRIES_TO_CONNECT seconds or succeed,
-	 * whichever happens first, in order to continue.
-	 */
-  if (MLPI_INVALIDHANDLE == smConnection){
-	  unsigned int connectRetries = 0;
-	  CMLPIFaceProcessInterface::connectToMLPI();
-	  while(MLPI_INVALIDHANDLE == smConnection && MAX_NUMBER_OF_RETRIES_TO_CONNECT > connectRetries){
+  /*
+   * Starting forte at boot in the PLC has the effect of failing when connecting to the MLPI
+   * probably because the stack is not ready yet. So this waits until mMaxNumberOfTriesToReconnect seconds or succeed,
+   * whichever happens first, in order to continue.
+   */
+  if(MLPI_INVALIDHANDLE == smConnection){
+    unsigned int connectRetries = 0;
+    CMLPIFaceProcessInterface::connectToMLPI();
+    while(MLPI_INVALIDHANDLE == smConnection && mMaxNumberOfTriesToReconnect > connectRetries){
       CThread::sleepThread(1000);
       CMLPIFaceProcessInterface::connectToMLPI();
-		  connectRetries++;
-	  }
+      connectRetries++;
+    }
   }
-  if (MLPI_INVALIDHANDLE != smConnection){
+  if(MLPI_INVALIDHANDLE != smConnection){
     mVariableName = new WCHAR16[PARAMS().length() + 1];
     if(0 != mbstowcs16(mVariableName, PARAMS().getValue(), PARAMS().length() + 1)){ //+1 for the copying the null terminator
       STATUS() = scmOK;
       retVal = true;
       if(paInput){
-         CIOHandler::getInstance().registerIXFB(this);
-         if(!CIOHandler::getInstance().isAlive()){
-           CIOHandler::getInstance().start();
-         }
-       }
+        GET_HANDLER_FROM_LAYER(*this, CMLPIFaceProcessInterface::CIOHandler)->registerIXFB(this);
+        if(!GET_HANDLER_FROM_LAYER(*this, CMLPIFaceProcessInterface::CIOHandler)->isAlive()){
+          GET_HANDLER_FROM_LAYER(*this, CMLPIFaceProcessInterface::CIOHandler)->start();
+        }
+      }
     }
     else{
       DEVLOG_ERROR("Fail transforming the PARAM name\n");
       STATUS() = scmFBNotInitialised;
     }
-  }else{
+  }
+  else{
     DEVLOG_ERROR("Couldn't initialize API\n");
     STATUS() = scmAPINotInitialised;
   }
@@ -98,7 +99,7 @@ bool CMLPIFaceProcessInterface::initialise(bool paInput){
 }
 
 bool CMLPIFaceProcessInterface::deinitialise(){
-  CIOHandler::getInstance().unregisterIXFB(this);
+  GET_HANDLER_FROM_LAYER(*this, CMLPIFaceProcessInterface::CIOHandler)->unregisterIXFB(this);
   delete[] mVariableName;
   STATUS() = scmAPINotInitialised;
   return true;
@@ -110,98 +111,98 @@ bool CMLPIFaceProcessInterface::readPin(){
 
 bool CMLPIFaceProcessInterface::writePin(){
   bool retVal = false;
-    if(MLPI_INVALIDHANDLE != smConnection){
-      BOOL8 data = OUT_X();
-      MLPIRESULT result = mlpiLogicWriteVariableBySymbolBool8(smConnection, mVariableName, data);
-      if(!MLPI_FAILED(result)){
-        STATUS() = scmOK;
-        retVal = true;
-      }
-      else{
-        DEVLOG_ERROR("Failed to write: 0x%08X\n", (unsigned ) result);
-        STATUS() = scmCallToApiFailed;
-      }
+  if(MLPI_INVALIDHANDLE != smConnection){
+    BOOL8 data = OUT_X();
+    MLPIRESULT result = mlpiLogicWriteVariableBySymbolBool8(smConnection, mVariableName, data);
+    if(!MLPI_FAILED(result)){
+      STATUS() = scmOK;
+      retVal = true;
     }
     else{
-      DEVLOG_ERROR("Cannot write pin. The API is not initialized.\n");
-      STATUS() = scmAPINotInitialised;
+      DEVLOG_ERROR("Failed to write: 0x%08X\n", (unsigned ) result);
+      STATUS() = scmCallToApiFailed;
     }
+  }
+  else{
+    DEVLOG_ERROR("Cannot write pin. The API is not initialized.\n");
+    STATUS() = scmAPINotInitialised;
+  }
 
-    return retVal;
+  return retVal;
 }
 
 bool CMLPIFaceProcessInterface::checkInputData(){
   bool retVal = false;
 
-    if(MLPI_INVALIDHANDLE != smConnection){
-      BOOL8 data = FALSE;
-      MLPIRESULT result = mlpiLogicReadVariableBySymbolBool8(smConnection, mVariableName, &data);
-      if(!MLPI_FAILED(result)){
-        bool newData = (data != FALSE) ? true : false;
-        if (newData != IN_X()){
-          IN_X() = newData;
-          retVal = true;
-        }
-      }
-      else{
-        DEVLOG_ERROR("Failed to read: 0x%08X\n", (unsigned ) result);
-        STATUS() = scmCallToApiFailed;
+  if(MLPI_INVALIDHANDLE != smConnection){
+    BOOL8 data = FALSE;
+    MLPIRESULT result = mlpiLogicReadVariableBySymbolBool8(smConnection, mVariableName, &data);
+    if(!MLPI_FAILED(result)){
+      bool newData = (data != FALSE) ? true : false;
+      if(newData != IN_X()){
+        IN_X() = newData;
+        retVal = true;
       }
     }
     else{
-      DEVLOG_ERROR("Cannot read pin. The API is not initialized.\n");
-      STATUS() = scmAPINotInitialised;
+      DEVLOG_ERROR("Failed to read: 0x%08X\n", (unsigned ) result);
+      STATUS() = scmCallToApiFailed;
     }
+  }
+  else{
+    DEVLOG_ERROR("Cannot read pin. The API is not initialized.\n");
+    STATUS() = scmAPINotInitialised;
+  }
 
-    return retVal;
+  return retVal;
 }
 
 
-DEFINE_SINGLETON(CMLPIFaceProcessInterface::CIOHandler)
+DEFINE_HANDLER(CMLPIFaceProcessInterface::CIOHandler)
 
-CMLPIFaceProcessInterface::CIOHandler::CIOHandler(){
+CMLPIFaceProcessInterface::CIOHandler::CIOHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution){
 }
 
 CMLPIFaceProcessInterface::CIOHandler::~CIOHandler(){
 }
 
 void CMLPIFaceProcessInterface::CIOHandler::registerIXFB(CMLPIFaceProcessInterface *pa_poFB){
-  m_oReadFBListSync.lock();
-  m_lstReadFBList.push_back(pa_poFB);
-  m_oReadFBListSync.unlock();
+  mReadFBListSync.lock();
+  mReadFBList.push_back(pa_poFB);
+  mReadFBListSync.unlock();
 }
 
 void CMLPIFaceProcessInterface::CIOHandler::unregisterIXFB(CMLPIFaceProcessInterface *pa_poFB){
-  m_oReadFBListSync.lock();
-  TReadFBContainer::Iterator itRunner(m_lstReadFBList.begin());
-  TReadFBContainer::Iterator itRefNode(m_lstReadFBList.end());
-  TReadFBContainer::Iterator itEnd(m_lstReadFBList.end());
+  mReadFBListSync.lock();
+  TReadFBContainer::Iterator itRunner(mReadFBList.begin());
+  TReadFBContainer::Iterator itRefNode(mReadFBList.end());
+  TReadFBContainer::Iterator itEnd(mReadFBList.end());
   while(itRunner != itEnd){
     if(*itRunner == pa_poFB){
       if(itRefNode == itEnd){
-        m_lstReadFBList.pop_front();
+        mReadFBList.pop_front();
       }
       else{
-        m_lstReadFBList.eraseAfter(itRefNode);
+        mReadFBList.eraseAfter(itRefNode);
       }
       break;
     }
     itRefNode = itRunner;
    ++itRunner;
   }
-  m_oReadFBListSync.unlock();
+  mReadFBListSync.unlock();
 }
 
 void CMLPIFaceProcessInterface::CIOHandler::run(){
-	while (isAlive()) {
-      CThread::sleepThread(1);
-      updateReadData();
-    }
+  while(isAlive()){
+    CThread::sleepThread(1);
+    updateReadData();
+  }
 }
 
 void CMLPIFaceProcessInterface::CIOHandler::updateReadData(){
-  TReadFBContainer::Iterator itEnd(m_lstReadFBList.end());
-  for(TReadFBContainer::Iterator itRunner = m_lstReadFBList.begin(); itRunner != itEnd; ++itRunner){
+  TReadFBContainer::Iterator itEnd(mReadFBList.end());
+  for(TReadFBContainer::Iterator itRunner = mReadFBList.begin(); itRunner != itEnd; ++itRunner){
     if((*itRunner)->checkInputData()){
       startNewEventChain(*itRunner);
     }
@@ -214,7 +215,7 @@ void CMLPIFaceProcessInterface::CIOHandler::enableHandler(void){
 void CMLPIFaceProcessInterface::CIOHandler::disableHandler(void){
 }
 
-void CMLPIFaceProcessInterface::CIOHandler::setPriority(int pa_nPriority){
+void CMLPIFaceProcessInterface::CIOHandler::setPriority(int){
 }
 
 int CMLPIFaceProcessInterface::CIOHandler::getPriority(void) const{

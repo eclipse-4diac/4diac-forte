@@ -23,7 +23,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
-#define MAX_NUMBER_OF_RETRIES_TO_CONNECT 10
 
 class CMLPIFaceProcessInterface : public CProcessInterfaceBase{
   public:
@@ -33,6 +32,24 @@ class CMLPIFaceProcessInterface : public CProcessInterfaceBase{
 
     virtual ~CMLPIFaceProcessInterface();
 
+    class CIOHandler : public CExternalEventHandler, public CThread{
+      DECLARE_HANDLER(CIOHandler)
+      private:
+        typedef CSinglyLinkedList<CMLPIFaceProcessInterface *> TReadFBContainer;
+        TReadFBContainer mReadFBList;
+        CSyncObject mReadFBListSync;
+      public:
+        virtual void run();
+        void updateReadData();
+        void registerIXFB(CMLPIFaceProcessInterface *pa_poFB);
+        void unregisterIXFB(CMLPIFaceProcessInterface *pa_poFB);
+        /* functions needed for the external event handler interface */
+        void enableHandler(void);
+        void disableHandler(void);
+        void setPriority(int paPriority);
+        int getPriority(void) const;
+    };
+
   protected:
     bool initialise(bool paInput);
     bool deinitialise();
@@ -41,24 +58,6 @@ class CMLPIFaceProcessInterface : public CProcessInterfaceBase{
     bool checkInputData();
 
   private:
-    class CIOHandler : public CExternalEventHandler, public CThread{
-        DECLARE_SINGLETON(CIOHandler)
-        private:
-          typedef CSinglyLinkedList<CMLPIFaceProcessInterface *> TReadFBContainer;
-          TReadFBContainer m_lstReadFBList;
-          CSyncObject m_oReadFBListSync;
-          uint32_t m_unTaskId;
-        public:
-          virtual void run();
-          void updateReadData();
-          void registerIXFB(CMLPIFaceProcessInterface *pa_poFB);
-          void unregisterIXFB(CMLPIFaceProcessInterface *pa_poFB);
-          /* functions needed for the external event handler interface */
-          void enableHandler(void);
-          void disableHandler(void);
-          void setPriority(int pa_nPriority);
-          int getPriority(void) const;
-      };
 
     bool connectToMLPI();
     void disconnectFromMLPI();
@@ -70,6 +69,8 @@ class CMLPIFaceProcessInterface : public CProcessInterfaceBase{
     static const char * const scmAPINotInitialised;
     static const char * const scmFBNotInitialised;
     static MLPIHANDLE smConnection;
+
+    static const unsigned int mMaxNumberOfTriesToReconnect = 10;
 
 };
 
