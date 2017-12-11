@@ -204,7 +204,7 @@ void COPC_UA_Handler::removeLdsRegister(const UA_String *discoveryUrl) {
 
 #endif
 
-COPC_UA_Handler::COPC_UA_Handler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution), CThread(90000), //the start of the opcua server takes ~84K of stack
+COPC_UA_Handler::COPC_UA_Handler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution),
     uaServer(0), uaServerConfig(0), uaServerRunningFlag(UA_FALSE), getNodeForPathMutex(), nodeCallbackHandles(), clients(),
 #ifdef FORTE_COM_OPC_UA_MULTICAST
 	registeredWithLds(),
