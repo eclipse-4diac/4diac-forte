@@ -34,7 +34,8 @@ void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::start(void){
     mJoinMutex.lock();
     mThreadHandle = createThread(mStackSize);
     if(nullHandle == mThreadHandle){
-      DEVLOG_ERROR("Error could not create the thread!");
+      DEVLOG_ERROR("Error could not create the thread!\n");
+      mJoinMutex.unlock();
     }
   }
 }
