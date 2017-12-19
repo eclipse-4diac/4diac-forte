@@ -46,7 +46,7 @@ void CFDSelectHandler::run(void){
   fd_set anFDSet;
   fd_set anFDSetMaster;
 
-  int nHighestFDID = 0;
+  TFileDescriptor nHighestFDID = scm_nInvalidFileDescriptor;
   int retval = 0;
 
   FD_ZERO(&anFDSetMaster);
@@ -63,7 +63,7 @@ void CFDSelectHandler::run(void){
     tv.tv_sec = 1; //TODO : To be set!
     tv.tv_usec = 1000;
 
-    if(0 != nHighestFDID){
+    if(scm_nInvalidFileDescriptor != nHighestFDID){
       retval = select(nHighestFDID + 1, &anFDSet, NULL, NULL, &tv);
       if(!isAlive()){
         //the thread has been closed in the meantime do not process any messages anymore
@@ -146,7 +146,7 @@ void CFDSelectHandler::removeComCallback(TFileDescriptor pa_nFD){
 }
 
 CFDSelectHandler::TFileDescriptor CFDSelectHandler::createFDSet(fd_set *m_panFDSet){
-  TFileDescriptor nRetVal = 0;
+  TFileDescriptor nRetVal = scm_nInvalidFileDescriptor;
   FD_ZERO(m_panFDSet);
   TConnectionContainer::Iterator itEnd(m_lstConnectionsList.end());
   for(TConnectionContainer::Iterator itRunner = m_lstConnectionsList.begin(); itRunner != itEnd; ++itRunner){
