@@ -84,13 +84,13 @@ class CAdapter;
       return new adapterclass(pa_nInstanceNameId, pa_poSrcRes, pa_bIsPlug);\
     }; \
     virtual CStringDictionary::TStringId getFBTypeId(void) const {return (csm_oAdapterTypeEntry_##adapterclass.getTypeNameId()); };\
+    FORTE_DUMMY_INIT_DEC \
   private:
-
-  /*   static CFunctionBlock *createFB(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes){ \*/
 
 //!\ingroup CORE This define is used to create the implementation for the above definition.
 #define DEFINE_ADAPTER_TYPE(adapterclass, adapterTypeNameId)\
-  const CTypeLib::CAdapterTypeEntry adapterclass::csm_oAdapterTypeEntry_##adapterclass((adapterTypeNameId), adapterclass::createAdapter);
+  const CTypeLib::CAdapterTypeEntry adapterclass::csm_oAdapterTypeEntry_##adapterclass((adapterTypeNameId), adapterclass::createAdapter); \
+  FORTE_DUMMY_INIT_DEF(adapterclass)
 
 //!\ingroup CORE This define is used to create the definition necessary for Firmware datatype in order to get them automatically added to the FirmwareType list.
 #define DECLARE_FIRMWARE_DATATYPE(datatypename) \
@@ -115,14 +115,8 @@ class CAdapter;
 /*!\ingroup CORE \brief Class for storing the functionblock libraries.
  */
 class CTypeLib{
-//  public:
-//    static CTypeLib &getInstance(void);
-//  private:
-//    CTypeLib();
-//    CTypeLib(const CTypeLib&);
-//    CTypeLib& operator = (const CTypeLib &);
 
-public:
+  public:
 //! The base class for all type entries in the type lib.
   class CTypeEntry{
     private:
@@ -176,7 +170,6 @@ public:
   };
 
 public:
-	//~CTypeLib();
 /*!\brief Create a new FB instance of given type and given instance name.
  *
  * \param pa_nInstanceNameId  StringId of instance name as this information can be stored within the resource
