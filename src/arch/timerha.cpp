@@ -95,7 +95,8 @@ void CTimerHandler::unregisterTimedFB(CEventSourceFB *pa_poTimedFB) {
 void CTimerHandler::nextTick(void) {
   ++m_stForteTime;
   m_poDeviceExecution.notifyTime(m_stForteTime); //notify the device execution that one tick passed by.
-  {
+  if(0 != m_pstTimedFBList){
+    //only check the list if there are entries in the list
     CCriticalRegion criticalRegion(m_oSync);
     while (0 != m_pstTimedFBList) {
       if (m_pstTimedFBList->m_stTimeOut > m_stForteTime) {
