@@ -31,11 +31,10 @@ CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::~CThreadBase() {
 template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
 void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::start(void){
   if(nullHandle == mThreadHandle){
-    mJoinMutex.lock();
     mThreadHandle = createThread(mStackSize);
     if(nullHandle == mThreadHandle){
       DEVLOG_ERROR("Error could not create the thread!\n");
-      mJoinMutex.unlock();
+      mJoinSem.semInc();
     }
   }
 }
@@ -53,7 +52,8 @@ void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::end(void) {
 template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
 void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::join(){
   if(nullHandle != mThreadHandle){
-    CCriticalRegion criticalRegion(mJoinMutex);
+    mJoinSem.semWaitIndefinitly();
+    mJoinSem.semInc(); //allow many joins
   }
 }
 
@@ -64,7 +64,7 @@ void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::runThread(CThre
 		paThread->setAlive(true);
 		paThread->run();
 		paThread->setAlive(false);
-		paThread->mJoinMutex.unlock();
+		paThread->mJoinSem.semInc();
 	} else {
 		DEVLOG_ERROR("pThread pointer is 0!");
 	}
