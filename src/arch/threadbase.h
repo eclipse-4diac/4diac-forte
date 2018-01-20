@@ -13,7 +13,7 @@
 #define _THREADBASE_H_
 
 #include "../core/datatypes/forte_time.h"
-#include <forte_sync.h>
+#include <forte_sem.h>
 
 namespace forte {
   namespace arch {
@@ -121,8 +121,8 @@ namespace forte {
          */
         virtual TThreadHandleType createThread(long paStackSize) = 0;
 
-        //! Mutex for implementing a generic join functionality. For a stable functionality this mutex must be locked during thread creation.
-        CSyncObject mJoinMutex;
+        //! Semaphore for implementing a generic join functionality. For a stable functionality this mutex must be locked during thread creation.
+        CSemaphore mJoinSem;
 
         TThreadHandle mThreadHandle;
 
