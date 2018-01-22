@@ -18,6 +18,7 @@
 #include "../fortelist.h"
 #include <forte_thread.h>
 #include <forte_sync.h>
+#include <forte_sem.h>
 
 namespace forte {
 	namespace com_infra {
@@ -55,6 +56,7 @@ namespace forte {
 			virtual EComResponse processInterrupt();
 
 			CSyncObject asyncResultsMutex;
+			CSemaphore mSuspendSemaphore;
 		};
 
 	}
