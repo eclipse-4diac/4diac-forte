@@ -7,12 +7,14 @@
  *
  * Contributors:
  *  Alois Zoitl - initial API and implementation and/or initial documentation
+ *  Martin Melik-Merkumians - updates timer handler to use monotonic clock
  *******************************************************************************/
 #include <fortenew.h>
 #include "pctimeha.h"
 #include "../../core/devexec.h"
 #include <time.h>
 #include <sys/time.h>
+#include "../utils/timespec_utils.h"
 
 CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& pa_poDeviceExecution){
   return new CPCTimerHandler(pa_poDeviceExecution);
@@ -30,30 +32,29 @@ void CPCTimerHandler::run(){
   stReq.tv_sec = 0;
   stReq.tv_nsec = (1000000 / getTicksPerSecond()) * 1000;
   
-  struct timeval stOldTime;
-  struct timeval stNewTime;
-  struct timeval stReqTime;
+  struct timespec stOldTime;
+  struct timespec stNewTime;
+  struct timespec stReqTime;
   // Timer interval is 1ms
   stReqTime.tv_sec = 0;
-  stReqTime.tv_usec = (1000 / getTicksPerSecond()) * 1000;
-  struct timeval stDiffTime;
-  struct timeval stRemainingTime;
-  timerclear(&stRemainingTime);
+  stReqTime.tv_nsec = (1000000 / getTicksPerSecond()) * 1000;
+  struct timespec stDiffTime;
+  struct timespec stRemainingTime = { 0, 0 };
 
-  gettimeofday(&stOldTime, 0);
+  clock_gettime(CLOCK_MONOTONIC, &stOldTime);
   while(isAlive()){
 
     nanosleep(&stReq, NULL);
 
-    gettimeofday(&stNewTime, 0);
+    clock_gettime(CLOCK_MONOTONIC, &stNewTime);
 
-    timersub(&stNewTime, &stOldTime, &stDiffTime);
+    timespecSub(&stNewTime, &stOldTime, &stDiffTime);
 
-    timeradd(&stRemainingTime, &stDiffTime, &stRemainingTime);
+    timespecAdd(&stRemainingTime, &stDiffTime, &stRemainingTime);
 
-    while(!timercmp(&stRemainingTime, &stReqTime, <)){
+    while(!timespecLessThan(&stRemainingTime, &stReqTime)){
       nextTick();
-      timersub(&stRemainingTime, &stReqTime, &stRemainingTime);
+      timespecSub(&stRemainingTime, &stReqTime, &stRemainingTime);
     }
     stOldTime = stNewTime;  // in c++ this should work fine
   } 
