@@ -6,7 +6,8 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *   Alois Zoitl, Rene Smodic, Gerhard Ebenhofer, Martin Melik Merkumians
+ *   Alois Zoitl, Rene Smodic, Gerhard Ebenhofer, Martin Melik Merkumians,
+ *   Matthias Plasch
  *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #ifndef _E_RESTART_H_
@@ -14,6 +15,7 @@
 
 #include "../core/esfb.h"
 #include "../core/resource.h"
+#include <forte_sem.h>
 
 /*! \brief Implementation of the E_RESTART FB.
  */
@@ -31,7 +33,8 @@ private:
 
   static const CStringDictionary::TStringId scm_aunEONameIds[];
 
-  bool m_bStartedOnce;
+  // semaphore to ensure proper handling of STOP execution state change
+  forte::arch::CSemaphore mSuspendSemaphore;
 
   TEventID mEventToSend;
 
