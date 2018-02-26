@@ -23,10 +23,6 @@
 
 #include <forte_printer.h>
 
-#ifdef FORTE_USE_REAL_DATATYPE
-
-#ifdef FORTE_USE_64BIT_DATATYPES
-
 DEFINE_FIRMWARE_DATATYPE(LREAL, g_nStringIdLREAL)
 
 int CIEC_LREAL::fromString(const char *pa_pacValue){
@@ -113,6 +109,3 @@ void CIEC_LREAL::castLRealData(const CIEC_LREAL &pa_roSrcValue, CIEC_ANY &pa_roD
       break;
   }
 }
-
-#endif //FORTE_USE_64BIT_DATATYPES
-#endif //FORTE_USE_REAL_DATATYPE

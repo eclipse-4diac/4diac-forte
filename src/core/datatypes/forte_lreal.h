@@ -15,10 +15,6 @@
 
 #include "forte_any_real.h"
 
-#ifdef FORTE_USE_REAL_DATATYPE
-
-#ifdef FORTE_USE_64BIT_DATATYPES
-
 /*!\ingroup COREDTS CIEC_LREAL represents the lreal data type according to IEC 61131.
  */
 class CIEC_LREAL : public CIEC_ANY_REAL{
@@ -136,9 +132,5 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
     ;
 
 };
-
-#endif /* #ifdef FORTE_USE_64BIT_DATATYPES */
-
-#endif /* #ifdef FORTE_USE_REAL_DATATYPE */
 
 #endif /*_FORTE_LREAL_H_*/

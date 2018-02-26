@@ -15,8 +15,6 @@
 
 #include "forte_any_real.h"
 
-#ifdef FORTE_USE_REAL_DATATYPE
-
 #include "forte_string.h"
 #include "forte_wstring.h"
 
@@ -104,7 +102,5 @@ class CIEC_REAL : public CIEC_ANY_REAL{
      */
     static void castRealData(const CIEC_REAL &pa_roSrcValue, CIEC_ANY &pa_roDestValue);
 };
-
-#endif /* #ifdef FORTE_USE_REAL_DATATYPE */
 
 #endif /*_FORTE_REAL_H_*/

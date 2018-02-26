@@ -19,6 +19,10 @@
 #include <math.h>
 #include <string.h>
 
+#ifdef CONCAT
+# undef CONCAT
+#endif
+
 #ifdef VXWORKS
 #define tanf(x) static_cast<TForteFloat>(tan(x))
 #define log10f(x) static_cast<TForteFloat>(log10(x))
@@ -364,9 +368,9 @@ template<typename T> const T DIV(const T& pa_roIN1, const T& pa_roIN2){
 
 #ifdef FORTE_USE_REAL_DATATYPE
 TForteInt32 TRUNC(const CIEC_REAL& pa_roIN);
+#endif
 #ifdef FORTE_USE_LREAL_DATATYPE
 TForteInt64 TRUNC(const CIEC_LREAL& pa_roIN);
-#endif
 #endif
 
 #ifdef FORTE_USE_64BIT_DATATYPES

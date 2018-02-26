@@ -15,12 +15,12 @@
 TForteInt32 TRUNC(const CIEC_REAL& pa_roIN){
   return static_cast<TForteInt32>(pa_roIN);
 }
+#endif
 
 #ifdef FORTE_USE_LREAL_DATATYPE
 TForteInt64 TRUNC(const CIEC_LREAL& pa_roIN){
   return static_cast<TForteInt64>(pa_roIN);
 }
-#endif
 #endif
 
 #ifdef FORTE_USE_64BIT_DATATYPES

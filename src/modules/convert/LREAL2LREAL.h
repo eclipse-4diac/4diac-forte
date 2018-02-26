@@ -14,10 +14,6 @@
 
 #include <funcbloc.h>
 
-#ifdef FORTE_USE_REAL_DATATYPE
-
-#ifdef FORTE_USE_64BIT_DATATYPES
-
 class LREAL2LREAL: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(LREAL2LREAL)
 
@@ -53,9 +49,6 @@ public:
   virtual ~LREAL2LREAL();
 
 };
-
-#endif
-#endif
 
 #endif //close the ifdef sequence from the beginning of the file
 

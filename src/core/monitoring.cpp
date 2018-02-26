@@ -461,7 +461,7 @@ void CMonitoringHandler::appendEventWatch(CIEC_STRING &paResponse,
   appendPortTag(paResponse, paEventWatchEntry.m_unPortId);
 
   CIEC_UDINT udint;
-  CIEC_ULINT ulint;
+  CIEC_ULINT ulint; //TODO: If 64bits types aren't used, this won't compile
 
   char acEventCount[10]; // the bigest number in an uint is 4294967296, TODO directly use pa_roResponse
   char acTimeStamp[21]; // the bigest number in an ulint is 18446744073709551616, TODO directly use pa_roResponse

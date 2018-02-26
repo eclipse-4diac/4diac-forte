@@ -60,7 +60,7 @@ int CIEC_BOOL::fromString(const char *pa_pacValue){
 
 int CIEC_BOOL::toString(char* pa_acValue, unsigned int pa_nBufferSize)  const {
   int nRetval = -1;
-  if(pa_nBufferSize >= csm_aStringBufferSize[e_BOOL]){
+  if(pa_nBufferSize >= csmStringBufferSize[e_BOOL]){
     if(getTBOOL8()){
       strcpy(pa_acValue, "TRUE");
       nRetval = 4;

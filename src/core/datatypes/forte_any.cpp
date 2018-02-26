@@ -18,9 +18,9 @@
 #include "forte_lreal.h"
 #include <devlog.h>
 
-const CTypeLib::CDataTypeEntry CIEC_ANY::csm_oFirmwareDataTypeEntry_CIEC_ANY(g_nStringIdANY, CIEC_ANY::createDataType);
+const CTypeLib::CDataTypeEntry CIEC_ANY::csmFirmwareDataTypeEntry_CIEC_ANY(g_nStringIdANY, CIEC_ANY::createDataType);
 
-const char * const CIEC_ANY::scm_acAnyToStringResponse = "ND (ANY)";
+const char * const CIEC_ANY::scmAnyToStringResponse = "ND (ANY)";
 
 #ifdef FORTE_STATIC_LIB
 int CIEC_ANY::dummyInit(){
@@ -94,8 +94,8 @@ CStringDictionary::TStringId CIEC_ANY::parseTypeName(const char *pa_pacValue, co
 
   int nLen = static_cast<int>(pa_pacHashPos - pa_pacValue);
 
-  if(nLen < scm_nMaxTypeNameLength){
-    char acTypeNameBuf[scm_nMaxTypeNameLength];
+  if(nLen < scmMaxTypeNameLength){
+    char acTypeNameBuf[scmMaxTypeNameLength];
     strncpy(acTypeNameBuf, pa_pacValue, nLen);
     acTypeNameBuf[nLen] = '\0';
     nRetVal = CStringDictionary::getInstance().getId(acTypeNameBuf);
@@ -105,9 +105,9 @@ CStringDictionary::TStringId CIEC_ANY::parseTypeName(const char *pa_pacValue, co
 
 int CIEC_ANY::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
   int nRetVal = -1;
-  if((strlen(scm_acAnyToStringResponse) +1) < pa_nBufferSize){
-    nRetVal = static_cast<int>(strlen(scm_acAnyToStringResponse));
-    memcpy(pa_pacValue, scm_acAnyToStringResponse, nRetVal);
+  if((strlen(scmAnyToStringResponse) +1) < pa_nBufferSize){
+    nRetVal = static_cast<int>(strlen(scmAnyToStringResponse));
+    memcpy(pa_pacValue, scmAnyToStringResponse, nRetVal);
     pa_pacValue[nRetVal] = '\0';
   }
   return nRetVal;
@@ -194,20 +194,21 @@ void CIEC_ANY::specialCast(const CIEC_ANY &pa_roSrcValue, CIEC_ANY &pa_roDstValu
     case CIEC_ANY::e_REAL:
       CIEC_REAL::castRealData(static_cast<const CIEC_REAL &>(pa_roSrcValue), pa_roDstValue);
       break;
-#ifdef FORTE_USE_64BIT_DATATYPES
+#endif
+#ifdef FORTE_USE_LREAL_DATATYPE
     case CIEC_ANY::e_LREAL:
       CIEC_LREAL::castLRealData(static_cast<const CIEC_LREAL &>(pa_roSrcValue), pa_roDstValue);
       break;
 #endif
-#endif
     default:
+      (void)pa_roDstValue; //to avoid warnings of unused parameter when real types aren't used
       //we should not be here log error
       DEVLOG_ERROR("CIEC_ANY::specialCast: special cast for unsupported source data type requested!\n");
       break;
   }
 }
 
-const TForteByte CIEC_ANY::csm_aStringBufferSize[] = {
+const TForteByte CIEC_ANY::csmStringBufferSize[] = {
          0 /*e_ANY*/,
          6 /*e_BOOL (0, 1)*/,
          5 /*e_SINT (-128, +127)*/,
@@ -241,5 +242,5 @@ const TForteByte CIEC_ANY::csm_aStringBufferSize[] = {
     };
 
 unsigned int CIEC_ANY::getToStringBufferSize(){
-  return csm_aStringBufferSize[getDataTypeID()];
+  return csmStringBufferSize[getDataTypeID()];
 }

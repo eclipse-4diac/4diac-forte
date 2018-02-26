@@ -26,7 +26,12 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openTCPServerConnect
     char *pa_acIPAddr, unsigned short pa_nPort){
   TSocketDescriptor nRetVal = -1;
 
+#ifndef LOGINFO
+  (void)pa_acIPAddr;
+#else
   DEVLOG_INFO("CBSDSocketInterface: Opening TCP-Server connection at: %s:%d\n", pa_acIPAddr, pa_nPort);
+#endif
+
 
   TSocketDescriptor nSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 

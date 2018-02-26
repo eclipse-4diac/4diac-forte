@@ -27,6 +27,8 @@
 #include "../datatypes/forte_usint.h"
 #include "../datatypes/forte_udint.h"
 #include "../datatypes/forte_int.h"
+#include <assert.h>
+#include <devlog.h>
 
 template<class T>
 void anyBitFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
@@ -57,13 +59,17 @@ void anyMagnitudeFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
     case CIEC_ANY::e_REAL:
       #ifdef FORTE_USE_REAL_DATATYPE
         pa_roFB.template calculateValue<CIEC_REAL>();
+      #else
+        DEVLOG_ERROR("REAL is not compiled in this version of forte and you are still trying to use it. Exiting");
+        assert(0);
       #endif
       break;
     case CIEC_ANY::e_LREAL:
-      #ifdef FORTE_USE_REAL_DATATYPE
-        #ifdef FORTE_USE_64BIT_DATATYPES
+      #ifdef FORTE_USE_LREAL_DATATYPE
           pa_roFB.template calculateValue<CIEC_LREAL>();
-        #endif
+      #else
+          DEVLOG_ERROR("LREAL is not compiled in this version of forte and you are still trying to use it. Exiting");
+          assert(0);
       #endif
       break;
     default:

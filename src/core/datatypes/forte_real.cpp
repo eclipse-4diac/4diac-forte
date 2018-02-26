@@ -20,8 +20,6 @@
 
 #include <forte_printer.h>
 
-#ifdef FORTE_USE_REAL_DATATYPE
-
 DEFINE_FIRMWARE_DATATYPE(REAL, g_nStringIdREAL)
 
 int CIEC_REAL::fromString(const char *pa_pacValue){
@@ -65,7 +63,7 @@ void  CIEC_REAL::setValue(const CIEC_ANY& pa_roValue){
   case e_REAL:
     setValueSimple(pa_roValue);
     break;
-#ifdef FORTE_USE_64BIT_DATATYPES
+#ifdef FORTE_USE_LREAL_DATATYPE
   case e_LREAL:
     (*this)=static_cast<TForteFloat>((CIEC_LREAL&)(pa_roValue));
     break;
@@ -94,7 +92,7 @@ void CIEC_REAL::castRealData(const CIEC_REAL &pa_roSrcValue, CIEC_ANY &pa_roDest
       static_cast<CIEC_REAL &>(pa_roDestValue) = pa_roSrcValue;
       break;
     case CIEC_ANY::e_LREAL:
-#ifdef FORTE_USE_64BIT_DATATYPES
+#ifdef FORTE_USE_LREAL_DATATYPE
       static_cast<CIEC_LREAL &>(pa_roDestValue) = pa_roSrcValue;
 #endif
       break;
@@ -119,7 +117,3 @@ void CIEC_REAL::castRealData(const CIEC_REAL &pa_roSrcValue, CIEC_ANY &pa_roDest
       break;
   }
 }
-
-#endif //FORTE_USE_REAL_DATATYPE
-
-

@@ -14,11 +14,6 @@
 #include "F_INT_TO_LREAL_gen.cpp"
 #endif
 
-#ifdef FORTE_USE_REAL_DATATYPE
-
-#ifdef FORTE_USE_64BIT_DATATYPES
-
-
 DEFINE_FIRMWARE_FB(FORTE_F_INT_TO_LREAL, g_nStringIdF_INT_TO_LREAL)
 
 const CStringDictionary::TStringId FORTE_F_INT_TO_LREAL::scm_anDataInputNames[] = {g_nStringIdIN};
@@ -51,7 +46,3 @@ void FORTE_F_INT_TO_LREAL::executeEvent(int pa_nEIID){
 	  sendOutputEvent(scm_nEventCNFID);
   }
 }
-
-#endif
-#endif
-

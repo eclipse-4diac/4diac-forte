@@ -14,9 +14,6 @@
 #include "F_DINT_TO_REAL_gen.cpp"
 #endif
 
-#ifdef FORTE_USE_REAL_DATATYPE
-
-
 DEFINE_FIRMWARE_FB(FORTE_F_DINT_TO_REAL, g_nStringIdF_DINT_TO_REAL)
 
 const CStringDictionary::TStringId FORTE_F_DINT_TO_REAL::scm_anDataInputNames[] = {g_nStringIdIN};
@@ -49,6 +46,3 @@ void FORTE_F_DINT_TO_REAL::executeEvent(int pa_nEIID){
 	  sendOutputEvent(scm_nEventCNFID);
   }
 }
-
-#endif
-

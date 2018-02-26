@@ -12,11 +12,7 @@
 #ifndef _F_DINT_TO_REAL_H_
 #define _F_DINT_TO_REAL_H_
 
-#ifdef FORTE_USE_REAL_DATATYPE
-
 #include <funcbloc.h>
-
-
 
 class FORTE_F_DINT_TO_REAL: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_DINT_TO_REAL)
@@ -57,8 +53,6 @@ public:
   virtual ~FORTE_F_DINT_TO_REAL(){};
 
 };
-
-#endif
 
 #endif //close the ifdef sequence from the beginning of the file
 
