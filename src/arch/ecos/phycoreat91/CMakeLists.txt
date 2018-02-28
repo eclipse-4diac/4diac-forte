@@ -24,7 +24,6 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Phycore AT91")
   if(FORTE_COM_ETH)
    forte_add_handler(CFDSelectHandler ../sockhand)
    forte_add_sourcefile_hcpp( ../../fdselecthand ../../bsdsocketinterf)
-   forte_add_sourcefile_h(../gensockhand.h)
    forte_add_sourcefile_h(../sockhand.h)
   endif(FORTE_COM_ETH)
   
