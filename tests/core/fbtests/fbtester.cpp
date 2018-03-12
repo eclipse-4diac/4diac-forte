@@ -103,7 +103,7 @@ void CFBTester::cleanupTestData(){
   const SFBInterfaceSpec* interfaceSpec = mFBUnderTest->getFBInterfaceSpec();
 
   for(TPortId i = 0; i < interfaceSpec->m_nNumEOs; i++){
-    CEventConnection *eventCon = mFBUnderTest->getEOConection(interfaceSpec->m_aunEONames[i]);
+    CEventConnection *eventCon = mFBUnderTest->getEOConnection(interfaceSpec->m_aunEONames[i]);
     BOOST_CHECK_EQUAL(e_RDY, eventCon->disconnect(this, interfaceSpec->m_aunEONames[i]));
   }
 
@@ -271,7 +271,7 @@ void CFBTester::createEventOutputConnections(){
   const SFBInterfaceSpec* interfaceSpec = mFBUnderTest->getFBInterfaceSpec();
 
   for(TPortId i = 0; i < interfaceSpec->m_nNumEOs; i++){
-    CEventConnection *eventCon = mFBUnderTest->getEOConection(interfaceSpec->m_aunEONames[i]);
+    CEventConnection *eventCon = mFBUnderTest->getEOConnection(interfaceSpec->m_aunEONames[i]);
     BOOST_CHECK_EQUAL(e_RDY, eventCon->connect(this, interfaceSpec->m_aunEONames[i]));
   }
 }

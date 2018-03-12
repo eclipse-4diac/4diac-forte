@@ -235,7 +235,7 @@ void CCompositeFB::createEventConnections(){
               mInterface2InternalEventCons[getEIID(cpstCurrentConn->m_nSrcId)];
         }
         else{
-          m_apoEventConnections[i] = poSrcFB->getEOConection(cpstCurrentConn->m_nSrcId);
+          m_apoEventConnections[i] = poSrcFB->getEOConnection(cpstCurrentConn->m_nSrcId);
         }
         establishConnection(m_apoEventConnections[i], poDstFB, cpstCurrentConn->m_nDstId);
       }

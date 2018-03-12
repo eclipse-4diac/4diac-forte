@@ -26,10 +26,14 @@ forte::com_infra::CComLayerAsync::~CComLayerAsync() {
 		forte_free((*iter));
 	}
 	asyncResults.clearAll();
+	setAlive(false);
+	mSuspendSemaphore.semInc();
 }
 
 void forte::com_infra::CComLayerAsync::run() {
 	while(isAlive()){
+
+	  mSuspendSemaphore.semWaitIndefinitly();
 
 		while (isAlive() && !asyncCalls.isEmpty()) {
 			CSinglyLinkedList<struct CComLayerAsync_Data*>::Iterator iter = asyncCalls.begin();
@@ -40,9 +44,7 @@ void forte::com_infra::CComLayerAsync::run() {
 			handleAsyncEvent();
 			asyncCalls.pop_front();
 		}
-		//TODO add sleep to avoid high load if list is empty all the time
 	}
-
 }
 
 unsigned int forte::com_infra::CComLayerAsync::callAsync(void *payload) {
@@ -63,6 +65,7 @@ unsigned int forte::com_infra::CComLayerAsync::callAsync(void *payload) {
 	data->payload = payload;
 
 	asyncCalls.push_back(data);
+	mSuspendSemaphore.semInc();
 
 	return currentCallId;
 }

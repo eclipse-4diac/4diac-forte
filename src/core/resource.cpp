@@ -352,7 +352,7 @@ CConnection *CResource::getConnection(forte::core::TNameIdentifier &paSrcNameLis
     CFunctionBlock *srcFB = getContainedFB(runner);
     if((0 != srcFB) && (runner.isLastEntry())){
       //only use the found result if we have really the last result in the list
-      con = srcFB->getEOConection(portName);
+      con = srcFB->getEOConnection(portName);
       if(0 == con){
         //it is not an event connection try data connection next
         con = srcFB->getDOConnection(portName);

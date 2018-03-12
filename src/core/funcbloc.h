@@ -182,7 +182,7 @@ class CFunctionBlock{
       return static_cast<TEventID>(getPortId(pa_unEONameId, m_pstInterfaceSpec->m_nNumEOs, m_pstInterfaceSpec->m_aunEONames));
     }
 
-    CEventConnection *getEOConection(CStringDictionary::TStringId paEONameId) const;
+    CEventConnection *getEOConnection(CStringDictionary::TStringId paEONameId) const;
 
     /*!\brief Connects specific data input of a FB with a specific data connection.
      *
@@ -262,7 +262,7 @@ class CFunctionBlock{
      */
     CAdapter* getAdapter(CStringDictionary::TStringId paAdapterNameId);
 
-    TPortId getAddapterPortId(CStringDictionary::TStringId paAdapterNameId);
+    TPortId getAdapterPortId(CStringDictionary::TStringId paAdapterNameId);
 
     /*!\brief Function that handles incoming events.
      *
@@ -396,9 +396,9 @@ class CFunctionBlock{
     }
     ;
 
-    forte::core::SMonitorEvent &getEIMontiorData(TEventID pa_unEIID);
+    forte::core::SMonitorEvent &getEIMonitorData(TEventID pa_unEIID);
 
-    forte::core::SMonitorEvent &getEOMontiorData(TEventID pa_unEOID);
+    forte::core::SMonitorEvent &getEOMonitorData(TEventID pa_unEOID);
 
     // DATA-Monitor-functions
     bool forceData(CStringDictionary::TStringId pa_acDOName, const char * forceValue);

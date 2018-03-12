@@ -108,8 +108,8 @@ index a9bad9e..a26920a 100644
 +#INSTALL(TARGETS MQTTVersion
 +#    RUNTIME DESTINATION bin)
 +
-+SET(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} " -O2 -march=atom -mmovbe -nostdlib -fno-builtin -fno-defer-pop -fno-implicit-fp -fno-zero-initialized-in-bss -D_WRS_KERNEL -Wall -MD -MP -DCPU=_VX_ATOM -DTOOL_FAMILY=gnu -DTOOL=gnu -DIP_PORT_VXWORKS=69 -IC:/WBOEM69_Rexroth/customBosch/vxworks-6.9/target/h -IC:/WBOEM69_Rexroth/customBosch/vxworks-6.9/target/h/wrn/coreip -W -Wall -Wextra -Wconversion -DFORTE_LITTLE_ENDIAN -ggdb")
-+#SET(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} " -O2 -march=atom -mmovbe -nostdlib -fno-builtin -fno-defer-pop -fno-implicit-fp -fno-zero-initialized-in-bss -D_WRS_KERNEL -Wall -MD -MP -DCPU=_VX_ATOM -DTOOL_FAMILY=gnu -DTOOL=gnu -DIP_PORT_VXWORKS=69 -D_VSB_CONFIG_FILE=\"C:/WBOEM69_Rexroth/customBosch/vxworks-6.9/target/lib/h/config/vsbConfig.h\" -IC:/WBOEM69_Rexroth/customBosch/vxworks-6.9/target/h -IC:/WBOEM69_Rexroth/customBosch/vxworks-6.9/target/h/wrn/coreip -W -Wall -Wextra -Wconversion -DFORTE_LITTLE_ENDIAN -ggdb")
++SET(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} " -O2 -march=atom -mmovbe -nostdlib -fno-builtin -fno-defer-pop -fno-implicit-fp -fno-zero-initialized-in-bss -D_WRS_KERNEL -Wall -MD -MP -DCPU=_VX_ATOM -DTOOL_FAMILY=gnu -DTOOL=gnu -DIP_PORT_VXWORKS=69 -IC:/WBOEM69_Rexroth/customBosch/vxworks-6.9/target/h -IC:/WBOEM69_Rexroth/customBosch/vxworks-6.9/target/h/wrn/coreip -W -Wall -Wextra -Wconversion -DFORTE_LITTLE_ENDIAN")
++#SET(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} " -O2 -march=atom -mmovbe -nostdlib -fno-builtin -fno-defer-pop -fno-implicit-fp -fno-zero-initialized-in-bss -D_WRS_KERNEL -Wall -MD -MP -DCPU=_VX_ATOM -DTOOL_FAMILY=gnu -DTOOL=gnu -DIP_PORT_VXWORKS=69 -D_VSB_CONFIG_FILE=\"C:/WBOEM69_Rexroth/customBosch/vxworks-6.9/target/lib/h/config/vsbConfig.h\" -IC:/WBOEM69_Rexroth/customBosch/vxworks-6.9/target/h -IC:/WBOEM69_Rexroth/customBosch/vxworks-6.9/target/h/wrn/coreip -W -Wall -Wextra -Wconversion -DFORTE_LITTLE_ENDIAN")
  
  IF (PAHO_BUILD_STATIC)
 -    ADD_LIBRARY(paho-mqtt3c-static STATIC $<TARGET_OBJECTS:common_obj> MQTTClient.c)

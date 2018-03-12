@@ -12,4 +12,4 @@
 
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\utils)
 
-forte_add_sourcefile_hcpp(timespec_utils)
+# currently do add anything per default

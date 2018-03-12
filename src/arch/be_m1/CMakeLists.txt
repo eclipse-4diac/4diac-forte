@@ -36,7 +36,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Bachmann M1")
    forte_add_sourcefile_h(sockhand.h)
   endif(FORTE_COM_ETH)
 
-  forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -DFORTE_LITTLE_ENDIAN  -DVXWORKS -O0 -ggdb")
+  forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -DFORTE_LITTLE_ENDIAN  -DVXWORKS")
   forte_add_definition("-fno-rtti")
   
   forte_add_link_flags("-Wl,-M -Wl,-Map -Wl,forte.map -Wl,-cref")
@@ -80,7 +80,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Bachmann M1")
                                COMMAND ${M1_SYMCONV} forte_all.o -i
                                COMMAND ${M1_NM} forte_all.o > symbols.txt
                                COMMAND ${M1_MUNCH} -c symbols.txt > ctdt.c
-                               COMMAND ${M1_CC} -Wall -Wno-pointer-sign -march=pentium -nostdinc -fno-common -O0 -fno-builtin -fno-defer-pop -DCPU_FAMILY=I80X86 -DFORTE_LITTLE_ENDIAN -D_POSIX_THREAD_ATTR_STACKSIZE -DFORTE_USE_WSTRING_DATATYPE -g  -c -o ctdt.o ctdt.c
+                               COMMAND ${M1_CC} -Wall -Wno-pointer-sign -march=pentium -nostdinc -fno-common -fno-builtin -fno-defer-pop -DCPU_FAMILY=I80X86 -DFORTE_LITTLE_ENDIAN -D_POSIX_THREAD_ATTR_STACKSIZE -DFORTE_USE_WSTRING_DATATYPE -c -o ctdt.o ctdt.c
                                COMMAND ${M1_LD} ${M1_LD_PATH} -S -r -d -o forte.o forte_all.o ctdt.o                              
                                COMMAND ${M1_MBIND} forte -c ${CMAKE_CURRENT_SOURCE_DIR}/forte.mbs)  
 

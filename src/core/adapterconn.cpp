@@ -31,7 +31,7 @@ EMGMResponse CAdapterConnection::connect(CFunctionBlock *paDstFB,
     CStringDictionary::TStringId paDstPortNameId){
   EMGMResponse retVal = e_NO_SUCH_OBJECT;
 
-  TPortId portId = paDstFB->getAddapterPortId(paDstPortNameId);
+  TPortId portId = paDstFB->getAdapterPortId(paDstPortNameId);
   if(cg_unInvalidPortId != portId){
     if(!isConnected()){
       CAdapter *socket = paDstFB->getAdapter(paDstPortNameId);
@@ -66,7 +66,7 @@ EMGMResponse CAdapterConnection::connectToCFBInterface(CFunctionBlock *, CString
 EMGMResponse CAdapterConnection::disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId){
   EMGMResponse retVal = e_NO_SUCH_OBJECT;
 
-  TPortId portId = paDstFB->getAddapterPortId(paDstPortNameId);
+  TPortId portId = paDstFB->getAdapterPortId(paDstPortNameId);
   if(cg_unInvalidPortId != portId){
     retVal = CConnection::removeDestination(SConnectionPoint(paDstFB, portId));
     if(e_RDY == retVal){

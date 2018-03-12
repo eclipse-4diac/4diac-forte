@@ -86,13 +86,13 @@ EMGMResponse CMonitoringHandler::addWatch(forte::core::TNameIdentifier &paNameLi
     else{
       TEventID unEventId = fB->getEIID(portName);
       if(cg_nInvalidEventID != unEventId){
-        addEventWatch(poFBMonitoringEntry, portName, fB->getEIMontiorData(unEventId));
+        addEventWatch(poFBMonitoringEntry, portName, fB->getEIMonitorData(unEventId));
         eRetVal = e_RDY;
       }
       else{
         unEventId = fB->getEOID(portName);
         if(cg_nInvalidEventID != unEventId){
-          addEventWatch(poFBMonitoringEntry, portName, fB->getEOMontiorData(unEventId));
+          addEventWatch(poFBMonitoringEntry, portName, fB->getEOMonitorData(unEventId));
           eRetVal = e_RDY;
         }
       }
@@ -252,12 +252,12 @@ EMGMResponse CMonitoringHandler::resetEventCount(forte::core::TNameIdentifier &p
     SMonitorEvent *pstEventMonitorData = 0;
 
     if(cg_nInvalidEventID != eventId){
-      pstEventMonitorData = &fB->getEIMontiorData(eventId);
+      pstEventMonitorData = &fB->getEIMonitorData(eventId);
     }
     else{
       eventId = fB->getEOID(portName);
       if(cg_nInvalidEventID != eventId){
-        pstEventMonitorData = &fB->getEOMontiorData(eventId);
+        pstEventMonitorData = &fB->getEOMonitorData(eventId);
       }
     }
     if(0 != pstEventMonitorData){

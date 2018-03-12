@@ -131,7 +131,7 @@ CTimerHandler& CFunctionBlock::getTimer(void){
   return m_poResource->getDevice().getTimer();
 }
 
-CEventConnection *CFunctionBlock::getEOConection(CStringDictionary::TStringId paEONameId) const{
+CEventConnection *CFunctionBlock::getEOConnection(CStringDictionary::TStringId paEONameId) const{
   CEventConnection *retVal = 0;
   TPortId portId = getPortId(paEONameId, m_pstInterfaceSpec->m_nNumEOs, m_pstInterfaceSpec->m_aunEONames);
   if(cg_unInvalidPortId != portId){
@@ -263,7 +263,7 @@ CIEC_ANY *CFunctionBlock::getVar(CStringDictionary::TStringId *paNameList,
 }
 
 CAdapter *CFunctionBlock::getAdapter(CStringDictionary::TStringId paAdapterNameId){
-  TPortId adpPortId = getAddapterPortId(paAdapterNameId);
+  TPortId adpPortId = getAdapterPortId(paAdapterNameId);
 
   if(cg_unInvalidPortId != adpPortId){
     return m_apoAdapters[adpPortId];
@@ -271,7 +271,7 @@ CAdapter *CFunctionBlock::getAdapter(CStringDictionary::TStringId paAdapterNameI
   return 0;
 }
 
-TPortId CFunctionBlock::getAddapterPortId(CStringDictionary::TStringId paAdapterNameId){
+TPortId CFunctionBlock::getAdapterPortId(CStringDictionary::TStringId paAdapterNameId){
   for(TPortId i = 0; i < m_pstInterfaceSpec->m_nNumAdapters; ++i){
     if(m_apoAdapters[i]->getInstanceNameId() == paAdapterNameId){
       return i;
@@ -750,11 +750,11 @@ bool CFunctionBlock::forceData(CStringDictionary::TStringId pa_acName, const cha
   return false;
 }
 
-forte::core::SMonitorEvent &CFunctionBlock::getEIMontiorData(TEventID pa_unEIID){
+forte::core::SMonitorEvent &CFunctionBlock::getEIMonitorData(TEventID pa_unEIID){
   return m_nEIMonitorCount[pa_unEIID];
 }
 
-forte::core::SMonitorEvent &CFunctionBlock::getEOMontiorData(TEventID pa_unEOID){
+forte::core::SMonitorEvent &CFunctionBlock::getEOMonitorData(TEventID pa_unEOID){
   return m_nEOMonitorCount[pa_unEOID];
 }
 

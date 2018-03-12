@@ -10,10 +10,10 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include <time.h>
+#include <datatype.h>
 #include <sys/time.h>
 
-static const __syscall_slong_t SecondInNanoSeconds = 1000000000ULL;
+static const TForteInt64 SecondInNanoSeconds = 1000000000LL;
 
 void timespecSub(const struct timespec * const minuend, const struct timespec * const subtrahend, struct timespec * const result){
 
@@ -21,7 +21,7 @@ void timespecSub(const struct timespec * const minuend, const struct timespec * 
   result->tv_nsec = minuend->tv_nsec - subtrahend->tv_nsec;
   if(result->tv_nsec < 0){
     result->tv_sec--;
-    result->tv_nsec +=  SecondInNanoSeconds;
+    result->tv_nsec += SecondInNanoSeconds;
   }
 }
 

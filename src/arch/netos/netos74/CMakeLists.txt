@@ -86,7 +86,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "NetOs 7.4")
   forte_add_definition(-D__GNU__ -DNETOS_GNU_TOOLS -DNETOS_GNU_CLIB_REENT -DNET_OS -DNET_WORKS -D_POSIX_SOURCE)  
   #forte_add_definition(-DBOOT_LOADER)
   forte_add_definition(-DIAM_ENABLED -DNET_OS_SPECIFIC -DFUSION=0 -DTRECK=1 -DNETWORK_STACK=1)
-  forte_add_definition(-mbig-endian -mcpu=arm7tdmi -g -O2)
+  forte_add_definition(-mbig-endian -mcpu=arm7tdmi)
   forte_add_definition(-ffunction-sections -fdata-sections -fno-threadsafe-statics -fno-rtti -fno-exceptions)
 
 
