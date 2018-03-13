@@ -14,6 +14,8 @@
 #include "DINT2DINT_gen.cpp"
 #endif
 
+#ifndef FMU
+
 DEFINE_FIRMWARE_FB(DINT2DINT, g_nStringIdDINT2DINT)
 
 const CStringDictionary::TStringId DINT2DINT::scm_anDataInputNames[] = {g_nStringIdIN};
@@ -58,5 +60,76 @@ void DINT2DINT::executeEvent(int pa_nEIID){
 DINT2DINT::~DINT2DINT(){
 }
 
+#else
+
+DEFINE_FIRMWARE_FB(DINT2DINT, g_nStringIdDINT2DINT)
+
+const CStringDictionary::TStringId DINT2DINT::scm_anDataInputNames[] = {g_nStringIdIN};
+
+const CStringDictionary::TStringId DINT2DINT::scm_anDataInputTypeIds[] = {g_nStringIdDINT};
+
+const CStringDictionary::TStringId DINT2DINT::scm_anDataOutputNames[] = {g_nStringIdOUT};
+
+const CStringDictionary::TStringId DINT2DINT::scm_anDataOutputTypeIds[] = {g_nStringIdDINT};
+
+const TForteInt16 DINT2DINT::scm_anEIWithIndexes[] = {0};
+const TDataIOID DINT2DINT::scm_anEIWith[] = {0, 255};
+const CStringDictionary::TStringId DINT2DINT::scm_anEventInputNames[] = {g_nStringIdREQ};
+
+const TDataIOID DINT2DINT::scm_anEOWith[] = {0, 255};
+const TForteInt16 DINT2DINT::scm_anEOWithIndexes[] = {0, -1};
+const CStringDictionary::TStringId DINT2DINT::scm_anEventOutputNames[] = {g_nStringIdCNF};
+
+const SFBInterfaceSpec DINT2DINT::scm_stFBInterfaceSpec = {
+  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
+  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
+  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+  0, 0
+};
+
+void DINT2DINT::alg_REQ(void){
+OUT() = IN();
+
+}
+
+
+void DINT2DINT::enterStateSTART(void){
+  m_nECCState = scm_nStateSTART;
+}
+
+void DINT2DINT::enterStateREQ(void){
+  m_nECCState = scm_nStateREQ;
+  alg_REQ();
+  sendOutputEvent( scm_nEventCNFID);
+}
+
+void DINT2DINT::executeEvent(int pa_nEIID){
+  bool bTransitionCleared;
+  do{
+    bTransitionCleared = true;
+    switch(m_nECCState){
+      case scm_nStateSTART:
+        if(scm_nEventREQID == pa_nEIID)
+          enterStateREQ();
+        else
+          bTransitionCleared  = false; //no transition cleared
+        break;
+      case scm_nStateREQ:
+        if(1)
+          enterStateSTART();
+        else
+          bTransitionCleared  = false; //no transition cleared
+        break;
+      default:
+      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 1.", m_nECCState.operator TForteUInt16 ());
+        m_nECCState = 0; //0 is always the initial state
+        break;
+    }
+    pa_nEIID = cg_nInvalidEventID;  // we have to clear the event after the first check in order to ensure correct behavior
+  }while(bTransitionCleared);
+}
+
+
+#endif
 
 
