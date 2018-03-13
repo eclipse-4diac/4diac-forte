@@ -130,6 +130,13 @@ class CEventChainExecutionThread : public CThread{
      * TODO consider surrounding the usage points of this flag with #defines such that it is only used for testing.
      */
     bool mProcessingEvents;
+#ifdef FMU
+    bool m_allowedToRun;
+  public:
+    void setAllowedToRun(bool pa_allowed){
+      m_allowedToRun = pa_allowed;
+    }
+#endif
 };
 
 #endif /*ECET_H_*/

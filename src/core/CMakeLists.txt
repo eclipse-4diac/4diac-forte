@@ -19,14 +19,15 @@ forte_add_subdirectory(cominfra)
 forte_add_subdirectory(datatypes)
 forte_add_subdirectory(utils)
 forte_add_subdirectory(io)
+forte_add_subdirectory(fmi)
 
 forte_add_sourcefile_hcpp(conn  dataconn  eventconn)     
 
-forte_add_sourcefile_h   (esfb.h      event.h    mgmcmd.h      fortenode.h fortelist.h convert_functions.h)
-forte_add_sourcefile_hcpp(basicfb     cfb        device      devexec )
-forte_add_sourcefile_hcpp(extevhan   funcbloc  fbcontainer  if2indco )
-forte_add_sourcefile_hcpp(resource	stringdict typelib       ecet)
-forte_add_sourcefile_hcpp(adapterconn adapter    iec61131_functions)
+forte_add_sourcefile_h   (esfb.h event.h mgmcmd.h fortenode.h fortelist.h convert_functions.h)
+forte_add_sourcefile_hcpp(basicfb cfb device devexec )
+forte_add_sourcefile_hcpp(extevhan funcbloc fbcontainer if2indco)
+forte_add_sourcefile_hcpp(resource stringdict typelib ecet)
+forte_add_sourcefile_hcpp(adapterconn adapter iec61131_functions)
 
 forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/core/deviceExecutionHandlers.cpp) # created file
 

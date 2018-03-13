@@ -12,6 +12,10 @@
 #ifndef _BASICFB_H_
 #define _BASICFB_H_
 
+#ifdef FMU
+#include "fmi/fmuInstance.h"
+#endif
+
 #include "funcbloc.h"
 
 #ifndef FORTE_BASIC_FB_DATA_ARRAY  //with this check we can overwrite this define in a platform specific file (e.g., config.h)
@@ -97,6 +101,10 @@ class CBasicFB : public CFunctionBlock{
     CIEC_ANY *getInternalVar(CStringDictionary::TStringId pa_nInternalName);
 
     CIEC_ANY *m_aoInternals; //!< A list of pointers to the internal variables.
+
+#ifdef FMU
+    friend class fmuInstance;
+#endif
 };
 
 #endif /*_BASICFB_H_*/

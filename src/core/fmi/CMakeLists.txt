@@ -1,0 +1,47 @@
+#*******************************************************************************
+# * Copyright (c) 2016,2017 fortiss GmbH
+# * All rights reserved. This program and the accompanying materials
+# * are made available under the terms of the Eclipse Public License v1.0
+# * which accompanies this distribution, and is available at
+# * http://www.eclipse.org/legal/epl-v10.html
+# *
+# * Contributors:
+# *   Jose Cabral
+# *    - initial API and implementation and/or initial documentation
+# *******************************************************************************/
+#############################################################################
+# core/fmi
+#############################################################################
+
+set(FORTE_ENABLE_FMU OFF CACHE BOOL "Enable FORTE FMU Export. It generates a shared library")
+
+if(FORTE_ENABLE_FMU)
+
+  set(FORTE_BUILD_SHARED_LIBRARY ON CACHE BOOL "" FORCE)
+  set(FORTE_BUILD_STATIC_LIBRARY OFF CACHE BOOL "" FORCE)
+  set(FORTE_BUILD_EXECUTABLE OFF CACHE BOOL "" FORCE)
+  
+  forte_add_definition("-DFMU") 
+  IF(BUILD_TYPE_LOWERCASE STREQUAL "debug")
+    forte_add_definition("-DFMU_DEBUG") 
+  ENDIF()
+
+  set(FORTE_FMU_INCLUDE "" CACHE STRING "Folder to include in the compilation. Specify here the location of the fmi headers")
+
+  forte_add_include_system_directories(${FORTE_FMU_INCLUDE})
+  forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR}) #for <processinterface.h>
+
+  forte_add_subdirectory(comm)
+
+  forte_set_timer(fmiTimerHandler) #this will be added after the arch timer so it will override it
+  forte_add_sourcefile_cpp(fmiInterface.cpp)
+  forte_add_sourcefile_hcpp(fmuValueContainer fmuInstance processinterface 
+    ../../stdfblib/io/IX ../../stdfblib/io/QX
+    ../../stdfblib/io/IW ../../stdfblib/io/QW
+    parameters/FMU_PARAM_BOOL
+    parameters/FMU_PARAM_INT
+    parameters/FMU_PARAM_REAL
+    parameters/FMU_PARAM_STRING)
+    
+endif(FORTE_ENABLE_FMU)
+

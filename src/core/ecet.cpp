@@ -17,9 +17,22 @@
 #include "utils/criticalregion.h"
 #include "../arch/devlog.h"
 
+#ifdef FMU
+#include "fmi/fmiTimerHandler.h"
+#endif
+
 CEventChainExecutionThread::CEventChainExecutionThread() :
-    CThread(), mSuspendSemaphore(0), mProcessingEvents(false) {
+    CThread(), mSuspendSemaphore(0), mProcessingEvents(false)
+#ifdef FMU
+, m_allowedToRun(false)
+#endif
+{
   clear();
+#ifdef FMU
+  if(CTimerHandler::sm_poFORTETimer){
+    static_cast<fmiTimerHandler*>(CTimerHandler::sm_poFORTETimer)->addExecutionThread(this);
+  }
+#endif
 }
 
 CEventChainExecutionThread::~CEventChainExecutionThread(){
@@ -27,6 +40,9 @@ CEventChainExecutionThread::~CEventChainExecutionThread(){
 
 void CEventChainExecutionThread::run(void){
   while(isAlive()){ //thread is allowed to execute
+#ifdef FMU
+    if(m_allowedToRun){
+#endif
     if(externalEventOccured()){
       transferExternalEvents();
     }
@@ -49,6 +65,11 @@ void CEventChainExecutionThread::run(void){
         mEventListStart--;
       }
     }
+#ifdef FMU
+    }else{
+      selfSuspend();
+    }
+#endif
   }
 }
 

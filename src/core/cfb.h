@@ -13,6 +13,10 @@
 #ifndef _CFB_H_
 #define _CFB_H_
 
+#ifdef FMU
+#include "fmi/fmuInstance.h"
+#endif
+
 #include "funcbloc.h"
 
 class CInterface2InternalDataConnection;
@@ -124,6 +128,10 @@ class CCompositeFB: public CFunctionBlock {
 
 #ifdef FORTE_SUPPORT_MONITORING
     virtual CFunctionBlock *getFB(forte::core::TNameIdentifier::CIterator &paNameListIt);
+#endif
+
+#ifdef FMU
+    friend class fmuInstance;
 #endif
 
   private:

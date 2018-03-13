@@ -77,6 +77,12 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 
     virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
 
+#ifdef FMU
+    virtual CStringDictionary::TStringId getFBTypeId(void) const{
+      return CStringDictionary::scm_nInvalidStringId;
+    }
+#endif
+
 #ifdef FORTE_SUPPORT_MONITORING
     forte::core::CMonitoringHandler &getMonitoringHandler(){
       return mMonitoringHandler;
