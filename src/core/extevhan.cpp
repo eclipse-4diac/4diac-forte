@@ -14,7 +14,7 @@
 #include "../device.h"
 #include <devlog.h>
 
-CExternalEventHandler::CExternalEventHandler(CDeviceExecution& ap_poDeviceExecution) : m_poDeviceExecution(ap_poDeviceExecution)
+CExternalEventHandler::CExternalEventHandler(CDeviceExecution& paDeviceExecution) : m_poDeviceExecution(paDeviceExecution)
 {
 }
 
@@ -22,10 +22,10 @@ bool CExternalEventHandler::isAllowed(){
   return m_poDeviceExecution.extEvHandlerIsAllowed(getIdentifier());
 }
 
-void CExternalEventHandler::startNewEventChain(CEventSourceFB *pa_poECStartFB){
+void CExternalEventHandler::startNewEventChain(CEventSourceFB *paECStartFB){
   if(isAllowed()){
     FORTE_TRACE("Starting EC\n");
-    m_poDeviceExecution.startNewEventChain(pa_poECStartFB);
+    m_poDeviceExecution.startNewEventChain(paECStartFB);
   }
   else{
     //TODO: handle this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

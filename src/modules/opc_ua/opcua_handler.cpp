@@ -767,7 +767,7 @@ UA_StatusCode COPC_UA_Handler::registerNodeCallBack(const UA_NodeId *nodeId, for
   handle->portIndex = portIndex;
   // store it in the list so we can delete it to avoid mem leaks
   nodeCallbackHandles.push_back(handle);
-  UA_ValueCallback callback = {NULL, GET_HANDLER_FROM_LAYER(*comLayer->getCommFB(), COPC_UA_Handler)->onWrite};
+  UA_ValueCallback callback = {NULL, this->onWrite};
   UA_Server_setNodeContext(uaServer, *nodeId, handle);
   return UA_Server_setVariableNode_valueCallback(uaServer, *nodeId, callback);
 }
@@ -800,9 +800,9 @@ void COPC_UA_Handler::onWrite(UA_Server *, const UA_NodeId *,
     //only update data in item if data could be read
   }
 
-  if (e_Nothing != retVal) {
-    GET_HANDLER_FROM_LAYER(*layer->getCommFB(), COPC_UA_Handler)->startNewEventChain(layer->getCommFB());
-  }
+	if (e_Nothing != retVal) {
+	  GET_HANDLER_FROM_FB(*layer->getCommFB(), COPC_UA_Handler)->startNewEventChain(layer->getCommFB());
+	}
 
 }
 

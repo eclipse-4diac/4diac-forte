@@ -26,8 +26,16 @@ class CFunctionBlock;
 #define DEFINE_HANDLER(TypeName)                            \
     unsigned int TypeName::getIdentifier() const { return TypeName::handlerIdentifier;}
 
-#define GET_HANDLER_FROM_LAYER(layer, type)                 \
-  static_cast<type*>(CExternalEventHandler::getHandlerFromFB(layer, type::handlerIdentifier))
+#define GET_HANDLER_FROM_FB(fb, type)                 \
+  static_cast<type*>(CExternalEventHandler::getHandlerFromFB(fb, type::handlerIdentifier))
+
+#define GET_HANDLER_FROM_THIS(type)                 \
+    GET_HANDLER_FROM_FB(*this, type)
+
+#define GET_HANDLER_FROM_COMM_LAYER(type)                 \
+    GET_HANDLER_FROM_FB(*m_poFb, type)
+
+
 
 
 /**  \defgroup FORTE_HAL FORTE Hardware Abstraction Layer - FORTE-HAL
@@ -50,7 +58,7 @@ class CFunctionBlock;
 
 class CExternalEventHandler{
   public:
-    explicit CExternalEventHandler(CDeviceExecution& pa_poDeviceExecution);
+    explicit CExternalEventHandler(CDeviceExecution& paDeviceExecution);
 
     virtual ~CExternalEventHandler(){
     }
@@ -64,9 +72,9 @@ class CExternalEventHandler{
     virtual void disableHandler(void) = 0;
     /*!\brief Sets the priority of the event source
      *
-     * \param pa_nPriority new priority of the event source
+     * \param paPriority new priority of the event source
      */
-    virtual void setPriority(int pa_nPriority) = 0;
+    virtual void setPriority(int paPriority) = 0;
     /*!\brief Get the current priority of the event source
      *
      * \return current priority
@@ -88,9 +96,9 @@ class CExternalEventHandler{
      *
      * this function checks if the external event handler is allowed to start new event chains and if yes performs the necessary actions.
      *
-     * @param pa_poECStartFB the event source function block which starts the new event chain
+     * @param paECStartFB the event source function block which starts the new event chain
      */
-    void startNewEventChain(CEventSourceFB *pa_poECStartFB);
+    void startNewEventChain(CEventSourceFB *paECStartFB);
 
     CDeviceExecution& m_poDeviceExecution;
 
