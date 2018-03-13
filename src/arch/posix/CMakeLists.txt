@@ -18,11 +18,14 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
   
-  forte_add_sourcefile_hcpp(forte_thread pctimeha forte_sync forte_sem)
+  forte_set_timer(pctimeha)
+  
+  forte_add_sourcefile_hcpp(forte_thread forte_sync forte_sem)
   forte_add_sourcefile_hcpp(conditionSync)
-  forte_add_sourcefile_cpp(main.cpp ../genforte_printer.cpp)
+  forte_add_sourcefile_cpp(../genforte_printer.cpp)
   forte_add_sourcefile_h(../forte_architecture_time.h)
   forte_add_sourcefile_hcpp(../utils/timespec_utils)
+  forte_add_to_executable_cpp(main)
   
 
   if(FORTE_COM_ETH)
@@ -36,13 +39,6 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 
   forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -DFORTE_LITTLE_ENDIAN")
   
-  set(FORTE_RTTI_AND_EXCEPTIONS FALSE CACHE BOOL "Enable RTTI and Exceptions")
-  mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)
-  IF(NOT FORTE_RTTI_AND_EXCEPTIONS)
-    forte_add_definition("-fno-rtti -fno-exceptions")
-  ENDIF(NOT FORTE_RTTI_AND_EXCEPTIONS)
-  
-  
   set(FORTE_POSIX_GENERATE_MAP_FILE FALSE CACHE BOOL "Enable the generation of map files")
   mark_as_advanced(FORTE_POSIX_GENERATE_MAP_FILE)
   IF(FORTE_POSIX_GENERATE_MAP_FILE)
@@ -55,5 +51,21 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 
   forte_add_network_layer(SER OFF "ser" CPosixSerCommLayer posixsercommlayer "Enable Forte serial line communication")
   forte_add_network_layer(MUXSER OFF "muxser" CMuxedSerCommLayer muxedsercommlayer "Enable Forte multiplexed serial line communication")
+  
+  set(FORTE_RTTI_AND_EXCEPTIONS FALSE CACHE BOOL "Enable RTTI and Exceptions")
+  mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)
+  
+  if(FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)
+    forte_add_definition("-DBOOST_TEST_DYN_LINK -DFORTE_USE_DEFAULT_NEW_AND_DELETE -g -O0 --coverage -fno-inline -fno-elide-constructors -fexceptions -fsanitize=address")
+    forte_add_link_library("-fsanitize=address")
+    forte_add_link_library("--coverage")
+  else()
+    IF(NOT FORTE_RTTI_AND_EXCEPTIONS)
+      forte_add_definition("-fno-rtti -fno-exceptions")
+    ENDIF(NOT FORTE_RTTI_AND_EXCEPTIONS)
+  endif(FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)
+  
+
+
   	
 endif()

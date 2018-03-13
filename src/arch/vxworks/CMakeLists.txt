@@ -17,8 +17,12 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
   message(STATUS "VXWORKS: Set an environment variable WIND_BASE to any value")
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
   
-  forte_add_sourcefile_hcpp(forte_thread  vxworkstimeha forte_sync forte_sem)
-  forte_add_sourcefile_cpp(main.cpp ../genforte_printer.cpp)
+  forte_set_timer(vxworkstimeha)
+
+  forte_add_to_executable_cpp(main)
+
+  forte_add_sourcefile_hcpp(forte_thread forte_sync forte_sem)
+  forte_add_sourcefile_cpp(../genforte_printer.cpp)
   forte_add_sourcefile_h(../forte_architecture_time.h)
   
   SET(FORTE_VXWORKS_FIND_DIR_AUTOMATICALLY ON CACHE BOOL "Selects the rest of needed directories from the CMAKE_FIND_ROOT_PATH")

@@ -22,11 +22,9 @@ const CTypeLib::CDataTypeEntry CIEC_ANY::csmFirmwareDataTypeEntry_CIEC_ANY(g_nSt
 
 const char * const CIEC_ANY::scmAnyToStringResponse = "ND (ANY)";
 
-#ifdef FORTE_STATIC_LIB
 int CIEC_ANY::dummyInit(){
   return 0;
 }
-#endif
 
 // A way to write binary literals (inspiration: http://www.thescripts.com/forum/thread219656.html)
 

@@ -17,9 +17,12 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "MacOs")
 
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
   
-  forte_add_sourcefile_hcpp(../posix/forte_thread ../posix/pctimeha forte_sync forte_sem)
-  forte_add_sourcefile_cpp(../posix/main.cpp ../genforte_printer.cpp)
+  forte_set_timer(../posix/pctimeha)
+  forte_add_sourcefile_hcpp(../posix/forte_thread forte_sync forte_sem)
+  forte_add_sourcefile_cpp(../genforte_printer.cpp)
   forte_add_sourcefile_h(../forte_architecture_time.h)
+  
+  forte_add_to_executable_cpp(../posix/main)
 
   if(FORTE_COM_ETH)
    forte_add_handler(CFDSelectHandler sockhand)

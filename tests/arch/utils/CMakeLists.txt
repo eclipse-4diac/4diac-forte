@@ -10,8 +10,7 @@
 # *******************************************************************************/
 
 forte_test_add_inc_directories(${CMAKE_CURRENT_SOURCE_DIR})
-forte_test_add_link_directories(${CMAKE_BINARY_DIR}/src/arch/utils)
  
-forte_test_add_sourcefile_cpp(../../../src/arch/utils/timespec_utils.cpp)
- 
-forte_test_add_sourcefile_cpp(timespec_utils_tests.cpp)
+if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
+  forte_test_add_sourcefile_cpp(timespec_utils_tests.cpp)
+endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")

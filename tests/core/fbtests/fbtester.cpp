@@ -297,7 +297,7 @@ bool CFBTester::createDataInputConnections(){
   else{
     printf(
         "*** FB test preparation: Wrong amount of input data given! Expected: %d, got: %lu\n",
-        interfaceSpec->m_nNumDIs, mInputDataBuffers.size());
+        interfaceSpec->m_nNumDIs, static_cast<long unsigned int>(mInputDataBuffers.size()));
     retVal = false;
   }
 
@@ -331,7 +331,7 @@ bool CFBTester::createDataOutputConnections(){
   }
   else{
     printf("*** FB test preparation: Wrong amount of output data given! Expected: %d, got: %lu\n",
-        interfaceSpec->m_nNumDOs, mOutputDataBuffers.size());
+        interfaceSpec->m_nNumDOs, static_cast<long unsigned int>(mOutputDataBuffers.size()));
     retVal = false;
   }
 

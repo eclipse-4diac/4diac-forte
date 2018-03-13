@@ -69,9 +69,7 @@ class CIEC_ANY{
     }
     const static CTypeLib::CDataTypeEntry csmFirmwareDataTypeEntry_CIEC_ANY;
 
-#ifdef FORTE_STATIC_LIB
     static int dummyInit();
-#endif
 
 
     virtual ~CIEC_ANY(){

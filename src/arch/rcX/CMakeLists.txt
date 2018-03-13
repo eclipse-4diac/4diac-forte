@@ -17,7 +17,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "rcX")
 
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-  set(FORTE_BUILD_TYPE "STATIC_LIBRARY" CACHE STRING "Build FORTE as an executable or as a library" FORCE)
+  set(FORTE_BUILD_STATIC_LIBRARY ON CACHE BOOL "Build FORTE as static library" FORCE)
+  set(FORTE_BUILD_EXECUTABLE OFF CACHE BOOL "Build FORTE as an executable" FORCE)
   set(FORTE_LOGLEVEL "NOLOG" CACHE STRING "Loglevel to use" FORCE)
 
   set(FORTE_RCX_NETX_CPU NETX51 CACHE STRING "CPU where the netx is deployed")
@@ -36,7 +37,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "rcX")
   SET(FORTE_RCX_POOL_MAX "32" CACHE STRING "Max number of elements for the pool for originated messages in the forte task")
   SET(FORTE_RCX_INCLUDES "" CACHE STRING "Folders to include from the rcX OS. It must have inside of it the following folders: API, Configuration, TLR, TCPIP, CPUs/netX{10,51,100,..}")
   
-  forte_add_sourcefile_hcpp(forte_thread rcXTimerHandler rcXUtilities forte_sync forte_sem forte_instance)
+  forte_set_timer(rcXTimerHandler)
+  forte_add_sourcefile_hcpp(forte_thread rcXUtilities forte_sync forte_sem forte_instance)
   forte_add_sourcefile_h(fortealloc.h ../forte_architecture_time.h)
   forte_add_sourcefile_cpp(forte_architecture.cpp ../genforte_printer.cpp)
  

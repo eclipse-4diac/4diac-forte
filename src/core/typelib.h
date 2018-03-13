@@ -34,13 +34,8 @@ class CAdapter;
 //!\ingroup CORE Type for a function pointer which allows to create a data type instance
   typedef CIEC_ANY *(*TDataTypeCreateFunc)(TForteByte *pa_acDataBuf);
 
- #ifdef FORTE_STATIC_LIB
 	#define FORTE_DUMMY_INIT_DEF(fbclass) int fbclass::dummyInit() {return 0; }
 	#define FORTE_DUMMY_INIT_DEC  static int dummyInit(); 
-#else
-	#define FORTE_DUMMY_INIT_DEF(fbclass)
-	#define FORTE_DUMMY_INIT_DEC
-#endif
 
   
 //!\ingroup CORE This define is used to create the definition necessary for generic FirmwareFunction blocks in order to get them automatically added to the FirmwareType list.

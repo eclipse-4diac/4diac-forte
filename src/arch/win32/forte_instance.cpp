@@ -13,18 +13,14 @@
 #include "forte_architecture.h"
 #include "../../stdfblib/ita/RMT_DEV.h"
 
-#ifdef FORTE_STATIC_LIB
 #include <forteinit.h>
-#endif
 
 RMT_DEV *gDev = 0;
 
 extern "C"
 void startupFORTE(){
   CForteArchitecture::initialize();
-#ifdef FORTE_STATIC_LIB
   initForte();
-#endif
   gDev = new RMT_DEV;
   gDev->startDevice();
 }
