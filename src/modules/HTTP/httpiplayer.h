@@ -36,35 +36,35 @@ namespace forte {
 
     class CHttpIPComLayer : public CComLayer {
       public:
-		CHttpIPComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB);
+    CHttpIPComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB);
         virtual ~CHttpIPComLayer();
 
-		EComResponse sendData(void *pa_pvData, unsigned int pa_unSize); // top interface, called from top
-		EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize);
+    EComResponse sendData(void *paData, unsigned int paSize); // top interface, called from top
+    EComResponse recvData(const void *paData, unsigned int paSize);
 
-		EComResponse processInterrupt();
+    EComResponse processInterrupt();
 
-	protected:
-		void closeConnection();
+  protected:
+    void closeConnection();
 
-	private:
-		static void closeSocket(CIPComSocketHandler::TSocketDescriptor *pa_nSocketID);
+  private:
+    void closeSocket(CIPComSocketHandler::TSocketDescriptor *paSocketID);
 
-		/** Connection time out in s */
-		const time_t kTimeOutS;
+    /** Connection time out in s */
+    const time_t kTimeOutS;
 
-		EComResponse openConnection(char *pa_acLayerParameter);
-		EComResponse openConnection();
-		void handledConnectedDataRecv();
+    EComResponse openConnection(char *paLayerParameter);
+    EComResponse openHTTPConnection();
+    void handledConnectedDataRecv();
 
-		CIPComSocketHandler::TSocketDescriptor m_nSocketID;
-		// CIPComSocketHandler::TSocketDescriptor m_nListeningID; //!> to be used by server type connections. there the m_nSocketID will be used for the accepted connection.
-		CIPComSocketHandler::TUDPDestAddr m_tDestAddr;
-		EComResponse m_eInterruptResp;
-		char m_acRecvBuffer[cg_unIPLayerRecvBufferSize];
-		unsigned int m_unBufFillSize;
-		/** HTTP connection parameters */
-		char mParams[CHttpComLayer::kAllocSize];
+    CIPComSocketHandler::TSocketDescriptor mSocketID;
+    // CIPComSocketHandler::TSocketDescriptor m_nListeningID; //!> to be used by server type connections. there the m_nSocketID will be used for the accepted connection.
+    CIPComSocketHandler::TUDPDestAddr mDestAddr;
+    EComResponse mInterruptResp;
+    char mRecvBuffer[cg_unIPLayerRecvBufferSize];
+    unsigned int mBufFillSize;
+    /** HTTP connection parameters */
+    char mParams[CHttpComLayer::kAllocSize];
     };
 
   }

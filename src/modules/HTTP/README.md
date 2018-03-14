@@ -46,3 +46,4 @@ http[144.12.131.2:80/rest/battery/voltage;HTTP/1.1 201 Created]
 * If the CLIENT function block has a data output, the HTTP response code (e.g., "HTTP/1.1 404 Not found") is output
   along with a "SEND_FAILED" status output in the case of an unexpected response.
   The default expected response code is "HTTP/1.1 200 OK".
+ * See https://www.eclipse.org/forums/index.php/t/1088858/ for a discussion of how the layer was implemented

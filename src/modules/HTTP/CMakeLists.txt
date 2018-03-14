@@ -15,7 +15,6 @@
 #############################################################################
 forte_add_network_layer(HTTP OFF "http" CHttpComLayer httplayer "Enable an HTTP Com Layer")
 if(FORTE_COM_HTTP)
-	forte_add_sourcefile_hcpp(httpparser
-							  httpiplayer)
-	forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+  forte_add_sourcefile_hcpp(httpparser httpiplayer)
+  forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 endif(FORTE_COM_HTTP)

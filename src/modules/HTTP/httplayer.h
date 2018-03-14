@@ -32,45 +32,44 @@ namespace forte {
 
   namespace com_infra {
 
-	class CHttpComLayer : public CComLayer{
-	  public:
-		  CHttpComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB);
-		virtual ~CHttpComLayer();
+  class CHttpComLayer : public CComLayer{
+    public:
+      CHttpComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB);
+    virtual ~CHttpComLayer();
 
-		EComResponse sendData(void *pa_pvData, unsigned int pa_unSize); // top interface, called from top
-		EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize);
+    EComResponse sendData(void *paData, unsigned int paSize); // top interface, called from top
+    EComResponse recvData(const void *paData, unsigned int paSize);
 
-		void closeConnection();
+    void closeConnection();
 
-		/** Size with which to allocate char arrays */
-		static const size_t kAllocSize = 512;
+    /** Size with which to allocate char arrays */
+    static const size_t kAllocSize = 512;
 
 
-	  private:
-		EComResponse openConnection(char *pa_acLayerParameter);
-		EComResponse openConnection();
-		/** Serializes the data to a char* */
-		bool serializeData(const CIEC_ANY& pa_roCIECData);
+    private:
+    EComResponse openConnection(char *paLayerParameter);
+    /** Serializes the data to a char* */
+    bool serializeData(const CIEC_ANY& paCIECData);
 
-		/** enum representing the HTTP request type */
-		enum ERequestType {
-			/** HTTP GET */
-			e_GET,
-			/** HTTP PUT */
-			e_PUT,
-			/** not ready */
-			e_NOTSET,
-		};
+    /** enum representing the HTTP request type */
+    enum ERequestType {
+      /** HTTP GET */
+      e_GET,
+      /** HTTP PUT */
+      e_PUT,
+      /** not ready */
+      e_NOTSET,
+    };
 
-		/** Handles the parsing of HTTP requests */
-		CHttpParser mHttpParser;
-		/** Represents the HTTP request type (0 = GET, 1 = PUT). */
-		ERequestType m_eRequestType;
-		/** HTTP connection parameters */
-		char mParams[kAllocSize];
-		/** Data to be sent */
-		char mReqData[kAllocSize];
-	};
+    /** Handles the parsing of HTTP requests */
+    CHttpParser mHttpParser;
+    /** Represents the HTTP request type (0 = GET, 1 = PUT). */
+    ERequestType mRequestType;
+    /** HTTP connection parameters */
+    char mParams[kAllocSize];
+    /** Data to be sent */
+    char mReqData[kAllocSize];
+  };
 
   }
 
