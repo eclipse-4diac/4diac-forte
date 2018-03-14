@@ -31,6 +31,8 @@ CHttpComLayer::CHttpComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB) :
   CComLayer(paUpperLayer, paComFB),
   mHttpParser(CHttpParser()),
   mRequestType(e_NOTSET) {
+  memset(mReqData, 0, sizeof(mReqData));
+  memset(mParams, 0, sizeof(mParams));
 }
 
 CHttpComLayer::~CHttpComLayer(){

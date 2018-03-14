@@ -43,6 +43,8 @@ CHttpIPComLayer::CHttpIPComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB) 
   // m_nListeningID(CIPComSocketHandler::scm_nInvalidSocketDescriptor),
   mInterruptResp(e_Nothing),
   mBufFillSize(0){
+  memset(mRecvBuffer, 0, sizeof(mRecvBuffer));
+  memset(mParams, 0, sizeof(mParams));
 }
 
 CHttpIPComLayer::~CHttpIPComLayer() {
@@ -145,7 +147,6 @@ EComResponse CHttpIPComLayer::recvData(const void *paData, unsigned int) {
     break;
   }
   return mInterruptResp;
-  return e_Nothing;
 }
 
 EComResponse CHttpIPComLayer::openConnection(char *paLayerParameter) {
@@ -190,7 +191,7 @@ EComResponse CHttpIPComLayer::openHTTPConnection() {
     if (CIPComSocketHandler::scm_nInvalidSocketDescriptor != nSockDes) {
       if (e_Publisher != m_poFb->getComServiceType()) {
         //Publishers should not be registered for receiving data
-        GET_HANDLER_FROM_LAYER(*m_poFb, CIPComSocketHandler)->addComCallback(nSockDes, this);
+        GET_HANDLER_FROM_COMM_LAYER(CIPComSocketHandler)->addComCallback(nSockDes, this);
       }
       eRetVal = e_InitOk;
     }
@@ -203,7 +204,7 @@ EComResponse CHttpIPComLayer::openHTTPConnection() {
 
 void CHttpIPComLayer::closeSocket(CIPComSocketHandler::TSocketDescriptor *paSocketID) {
   if (CIPComSocketHandler::scm_nInvalidSocketDescriptor != *paSocketID) {
-    GET_HANDLER_FROM_LAYER(*m_poFb, CIPComSocketHandler)->removeComCallback(*paSocketID);
+    GET_HANDLER_FROM_COMM_LAYER(CIPComSocketHandler)->removeComCallback(*paSocketID);
     CIPComSocketHandler::closeSocket(*paSocketID);
     *paSocketID = CIPComSocketHandler::scm_nInvalidSocketDescriptor;
   }

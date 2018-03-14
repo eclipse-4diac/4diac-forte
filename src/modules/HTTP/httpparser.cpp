@@ -69,12 +69,10 @@ bool CHttpParser::parseGetResponse(char* paDest, char* paSrc) {
   if (CHttpParser::isOKresponse(paSrc)) {
     // Extract data from HTTP GET respnse char
     char* data = strstr(paSrc, "\r\n\r\n");
-    if (strlen(data) > 6) { // \r\n\r\n + body + \r\n
-      if (0 != data) {
+    if (0 != data && strlen(data) > 6) { // \r\n\r\n + body + \r\n
         data += 4;
         sscanf(data, "%99s[^/n])", paDest);
         return true;
-      }
     }
     DEVLOG_INFO("Empty HTTP response received\n");
     // Empty response received?
