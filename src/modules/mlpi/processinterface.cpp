@@ -80,9 +80,9 @@ bool CMLPIFaceProcessInterface::initialise(bool paInput){
       STATUS() = scmOK;
       retVal = true;
       if(paInput){
-        GET_HANDLER_FROM_LAYER(*this, CMLPIFaceProcessInterface::CIOHandler)->registerIXFB(this);
-        if(!GET_HANDLER_FROM_LAYER(*this, CMLPIFaceProcessInterface::CIOHandler)->isAlive()){
-          GET_HANDLER_FROM_LAYER(*this, CMLPIFaceProcessInterface::CIOHandler)->start();
+        GET_HANDLER_FROM_THIS(CMLPIFaceProcessInterface::CIOHandler)->registerIXFB(this);
+        if(!GET_HANDLER_FROM_THIS(CMLPIFaceProcessInterface::CIOHandler)->isAlive()){
+          GET_HANDLER_FROM_THIS(CMLPIFaceProcessInterface::CIOHandler)->start();
         }
       }
     }
@@ -99,7 +99,7 @@ bool CMLPIFaceProcessInterface::initialise(bool paInput){
 }
 
 bool CMLPIFaceProcessInterface::deinitialise(){
-  GET_HANDLER_FROM_LAYER(*this, CMLPIFaceProcessInterface::CIOHandler)->unregisterIXFB(this);
+  GET_HANDLER_FROM_THIS(CMLPIFaceProcessInterface::CIOHandler)->unregisterIXFB(this);
   delete[] mVariableName;
   STATUS() = scmAPINotInitialised;
   return true;

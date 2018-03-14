@@ -41,8 +41,8 @@ class CPiFaceProcessInterface : public CProcessInterfaceBase{
         DECLARE_HANDLER(CPiFaceIOHandler)
 
       public:
-        void registerIXFB(CPiFaceProcessInterface *pa_poFB);
-        void unregisterIXFB(CPiFaceProcessInterface *pa_poFB);
+        void registerIXFB(CPiFaceProcessInterface *paFB);
+        void unregisterIXFB(CPiFaceProcessInterface *paFB);
 
         void updateReadData(TForteUInt8 paInBuffer);
         void updateWriteData(bool paValue, int paPin);
@@ -50,7 +50,7 @@ class CPiFaceProcessInterface : public CProcessInterfaceBase{
         /* functions needed for the external event handler interface */
         void enableHandler(void);
         void disableHandler(void);
-        void setPriority(int pa_nPriority);
+        void setPriority(int paPriority);
         int getPriority(void) const;
 
       private:
@@ -69,8 +69,8 @@ class CPiFaceProcessInterface : public CProcessInterfaceBase{
           eGPIOPullupResistorsPortB = 0x0D
         };
 
-        TReadFBContainer m_lstReadFBList;
-        CSyncObject m_oReadFBListSync;
+        TReadFBContainer mReadFBList;
+        CSyncObject mReadFBListSync;
         TForteUInt8 mOutBuffer;
 
         virtual void run();
