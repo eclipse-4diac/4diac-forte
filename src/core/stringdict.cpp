@@ -32,6 +32,11 @@ CStringDictionary::CStringDictionary(){
   m_nNrOfStrings = cg_nNumOfConstStrings;
   m_nNextString = g_nStringIdNextFreeId;
 #else
+  m_pnStringIdBufAddr = 0;
+  m_nStringBufSize = 0;
+  m_nMaxNrOfStrings = 0;
+  m_nNrOfStrings = 0;
+  m_nNextString = CStringDictionary::scm_nInvalidStringId;
   unsigned int nStringBufSize = cg_unStringDictInitialStringBufSize;
   if(nStringBufSize < g_nStringIdNextFreeId){
     nStringBufSize = (g_nStringIdNextFreeId * 3) >> 1;

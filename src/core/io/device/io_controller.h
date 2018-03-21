@@ -97,7 +97,7 @@ public:
   }
 
 protected:
-  Controller(CDeviceExecution& paDeviceExecution);
+  explicit Controller(CDeviceExecution& paDeviceExecution);
 
   /*! @brief Initializes the controller.
    *

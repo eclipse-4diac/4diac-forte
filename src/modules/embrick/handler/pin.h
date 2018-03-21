@@ -24,7 +24,7 @@ class Pin {
   friend class Bus;
 
 protected:
-  Pin(unsigned int pin);
+  explicit Pin(unsigned int pin);
   virtual ~Pin();
 
   bool set(bool state);

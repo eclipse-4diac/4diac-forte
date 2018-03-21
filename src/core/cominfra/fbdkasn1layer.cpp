@@ -42,8 +42,8 @@ CFBDKASN1ComLayer::CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * p
         if(typeSize != 255){
           mDeserBufSize += typeSize + 1;
         }
+        ++apoRDs;
       }
-      ++apoRDs;
     }
 
     mStatSerBuf = new TForteByte[mStatSerBufSize];
@@ -83,13 +83,12 @@ EComResponse CFBDKASN1ComLayer::sendData(void *pa_pvData, unsigned int pa_unSize
     TConstIEC_ANYPtr apoSDs = static_cast<TConstIEC_ANYPtr > (pa_pvData);
     unsigned int unNeededBufferSize = 0;
 
-    for(unsigned int i = 0; i < pa_unSize; ++i){
-      if((apoSDs + i) == 0){
-        return e_ProcessDataDataTypeError;
-      }
+    if(0 == apoSDs){
+       return e_ProcessDataDataTypeError;
+     }
 
+    for(size_t i = 0; i < pa_unSize; ++i){
       unNeededBufferSize += getRequiredSerializationSize(apoSDs[i]);
-
     }
     TForteByte *paUsedBuffer = 0;
     TForteByte *paDynSerBuffer = 0;
@@ -263,21 +262,17 @@ int CFBDKASN1ComLayer::serializeFBDataPointArray(TForteByte* pa_pcBytes, unsigne
       nRetVal = 1;
     }
     else{
+      if(0 == pa_aoData){
+        return -1;
+      }
       int nRemainingBytes = pa_nStreamSize;
-      int nBuf;
       nRetVal = 0;
       for(unsigned int i = 0; i < pa_nDataNum; i++){
-        if(0 != (pa_aoData + i)){
-          nBuf = serializeDataPoint(pa_pcBytes, nRemainingBytes, pa_aoData[i]);
-          if(0 < nBuf){
-            nRetVal += nBuf;
-            nRemainingBytes -= nBuf;
-            pa_pcBytes += nBuf;
-          }
-          else{
-            nRetVal = -1;
-            break;
-          }
+        int nBuf = serializeDataPoint(pa_pcBytes, nRemainingBytes, pa_aoData[i]);
+        if(0 < nBuf){
+          nRetVal += nBuf;
+          nRemainingBytes -= nBuf;
+          pa_pcBytes += nBuf;
         }
         else{
           nRetVal = -1;
@@ -740,9 +735,6 @@ int CFBDKASN1ComLayer::deserializeArray(const TForteByte* pa_pcBytes, int pa_nSt
     //number of elements in ARRAY must be read from the incoming message
     nRetVal = 2;
     if(nSize > 0){
-      if(pa_nStreamSize < 2){
-        return -1;
-      }
       int nValueLen;
       pa_pcBytes += 2;
       pa_nStreamSize -= 2;

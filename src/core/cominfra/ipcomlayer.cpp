@@ -26,6 +26,7 @@ CIPComLayer::CIPComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB) :
         mInterruptResp(e_Nothing),
         mBufFillSize(0){
   memset(mRecvBuffer, 0, sizeof(mRecvBuffer)); //TODO change this to  m_acRecvBuffer{0} in the extended list when fully switching to C++11
+  memset(&mDestAddr, 0, sizeof(mDestAddr));
 }
 
 CIPComLayer::~CIPComLayer(){

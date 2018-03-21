@@ -118,6 +118,10 @@ protected:
   TSlaveHandleList outputs;
   void addHandle(TSlaveHandleList* list, SlaveHandle* handle);
   SlaveHandle* getHandle(TSlaveHandleList* list, int index);
+
+private:
+  //!declared but undefined copy constructor as we don't want Slaves to be directly copied.
+  Slave(const Slave&);
 };
 
 } /* namespace Handlers */

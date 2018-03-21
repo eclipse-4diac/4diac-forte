@@ -146,6 +146,7 @@ void CEventChainExecutionThread::changeExecutionState(EMGMCommandType paCommand)
       break;
     case cg_nMGM_CMD_Kill:
       clear();
+      // fall through
     case cg_nMGM_CMD_Stop:
       setAlive(false); //end thread in both cases
       resumeSelfSuspend();

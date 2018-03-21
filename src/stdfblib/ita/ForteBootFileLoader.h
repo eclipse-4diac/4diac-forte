@@ -40,22 +40,22 @@ public:
    * @param paCallback Object to be called for each command
    * @param paBootFileName Specific boot file name to be opened
    */
-	explicit ForteBootFileLoader(IBootFileCallback &paCallback, CIEC_STRING &paBootFileName);
-	~ForteBootFileLoader();
+  explicit ForteBootFileLoader(IBootFileCallback &paCallback, CIEC_STRING &paBootFileName);
+  ~ForteBootFileLoader();
 
-	LoadBootResult loadBootFile();
+  LoadBootResult loadBootFile();
 
-	bool isOpen() const{
-	  return (0 != bootfile);
-	}
+  bool isOpen() const{
+    return (0 != mBootfile);
+  }
 
 private:
-	FILE *bootfile;
-	IBootFileCallback &mCallback; //for now with one callback is enough for all cases
+  FILE *mBootfile;
+  IBootFileCallback &mCallback; //for now with one callback is enough for all cases
 
   bool openBootFile(CIEC_STRING* paBootFileName);
-	bool readLine(CIEC_STRING &line);
-	bool checkCommandEnding(const CIEC_STRING &line) const;
+  bool readLine(CIEC_STRING &line);
+  bool checkCommandEnding(const CIEC_STRING &line) const;
 };
 
 #endif /* SRC_STDFBLIB_ITA_FORTEBOOTFILELOADER_H_ */

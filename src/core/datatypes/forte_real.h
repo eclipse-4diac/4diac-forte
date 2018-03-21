@@ -34,6 +34,9 @@ class CIEC_REAL : public CIEC_ANY_REAL{
       setValueSimple(pa_roValue);
     }
 
+    // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
+    // Maybe when we have better code generators we want to make this constructur explicit again and generate it
+    // cppcheck-suppress noExplicitConstructor
     CIEC_REAL(TForteFloat pa_fValue){
       setTFLOAT(pa_fValue);
     }

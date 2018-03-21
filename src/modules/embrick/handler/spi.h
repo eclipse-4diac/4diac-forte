@@ -27,7 +27,7 @@ class SPI {
   friend class Bus;
 
 protected:
-  SPI(unsigned int interface);
+  explicit SPI(unsigned int interface);
   virtual ~SPI();
 
   bool transfer(unsigned char* sendBuffer, unsigned char* receiveBuffer,
