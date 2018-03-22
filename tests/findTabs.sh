@@ -1,5 +1,3 @@
-#!/bin/bash
-
 
 if [ "$WORKSPACE" == "" ]
 then 
@@ -15,8 +13,8 @@ do
   echo $folder
 done
 
+FOUND_TABS=$(grep -r "$(printf '\t')" $FOLDERS) #using -P with grep gave the error: invalid UTF-8 byte sequence in input
 
-FOUND_TABS=$(grep -rP '\t' $FOLDERS)
 
 if [ "$FOUND_TABS" == "" ]
 then
