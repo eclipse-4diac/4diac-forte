@@ -21,45 +21,45 @@
 #include <forte_sem.h>
 
 namespace forte {
-	namespace com_infra {
+  namespace com_infra {
 
-		struct CComLayerAsync_Data {
-			const unsigned int callId;
-			void *payload;
-			void *result;
-		};
+    struct CComLayerAsync_Data {
+      const unsigned int callId;
+      void *payload;
+      void *result;
+    };
 
-		class CComLayerAsync: public CComLayer, protected CThread{
-		public:
-			virtual ~CComLayerAsync();
+    class CComLayerAsync: public CComLayer, protected CThread{
+    public:
+      virtual ~CComLayerAsync();
 
-		protected:
-			CComLayerAsync(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB);
-			virtual void run();
+    protected:
+      CComLayerAsync(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB);
+      virtual void run();
 
-			unsigned int callAsync(void *payload);
+      unsigned int callAsync(void *payload);
 
-			virtual void* handleAsyncCall(const unsigned int callId, void *payload) = 0;
+      virtual void* handleAsyncCall(const unsigned int callId, void *payload) = 0;
 
-			virtual void handleAsyncCallResult(const unsigned int callId, void *payload, void *result) = 0;
+      virtual void handleAsyncCallResult(const unsigned int callId, void *payload, void *result) = 0;
 
-			virtual void handleAsyncEvent() = 0;
+      virtual void handleAsyncEvent() = 0;
 
-			virtual EComResponse processInterruptChild();
+      virtual EComResponse processInterruptChild();
 
-		private:
-			unsigned int currentCallId;
+    private:
+      unsigned int currentCallId;
 
-			CSinglyLinkedList<struct CComLayerAsync_Data*> asyncCalls;
-			CSinglyLinkedList<struct CComLayerAsync_Data*> asyncResults;
+      CSinglyLinkedList<struct CComLayerAsync_Data*> asyncCalls;
+      CSinglyLinkedList<struct CComLayerAsync_Data*> asyncResults;
 
-			virtual EComResponse processInterrupt();
+      virtual EComResponse processInterrupt();
 
-			CSyncObject asyncResultsMutex;
-			CSemaphore mSuspendSemaphore;
-		};
+      CSyncObject asyncResultsMutex;
+      CSemaphore mSuspendSemaphore;
+    };
 
-	}
+  }
 }
 
 #endif //FORTE_COMLAYER_ASYNC_H

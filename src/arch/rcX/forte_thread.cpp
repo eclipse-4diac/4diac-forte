@@ -45,14 +45,14 @@ void CrcXThread::threadFunction(void *arguments){
 }
 
 CrcXThread::CrcXThread(long paStackSize) : CThreadBase(paStackSize),  mStack(0){
-	if(paStackSize < (300 * 4)){ // If m_nStackSize == 0, the minimum is also set.
-	  paStackSize = 300 * 4;
-	}
+  if(paStackSize < (300 * 4)){ // If m_nStackSize == 0, the minimum is also set.
+    paStackSize = 300 * 4;
+  }
 
-	mStack = new char[paStackSize];
-	if (0 == mStack){
-	  DEVLOG_ERROR("Not enough memory to allocate %l bytes for creating a new thread\n", mStackSize);
-	}
+  mStack = new char[paStackSize];
+  if (0 == mStack){
+    DEVLOG_ERROR("Not enough memory to allocate %l bytes for creating a new thread\n", mStackSize);
+  }
 }
 
 CrcXThread::~CrcXThread(){

@@ -43,8 +43,8 @@ const SFBInterfaceSpec FORTE_F_DWORD_TO_TIME::scm_stFBInterfaceSpec = {
 
 void FORTE_F_DWORD_TO_TIME::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-	  OUT() = DWORD_TO_TIME(IN());
-	  sendOutputEvent(scm_nEventCNFID);
+    OUT() = DWORD_TO_TIME(IN());
+    sendOutputEvent(scm_nEventCNFID);
   }
 }
 

@@ -299,20 +299,20 @@ RX_RESULT CrcXSocketInterface::openConnection(char *pa_acIPAddr, unsigned short 
               retVal = RX_MEM_INVALID;
             }
           }
-					if(0xE0000000 <= ipAddress && 0xEFFFFFFF >= ipAddress){
-						TCPIP_DATA_TCP_UDP_CMD_SET_SOCK_OPTION_REQ_T setOpt;
-						setOpt.ulMode = TCP_SOCK_ADD_MEMBERSHIP;
-						setOpt.unParam.ulMulticastGroup = ipAddress;
-						retVal = sendPacketToTCP(socketNumber, TCPIP_DATA_TCP_UDP_CMD_SET_SOCK_OPTION_REQ_SIZE, TCPIP_TCP_UDP_CMD_SET_SOCK_OPTION_REQ, &setOpt, sizeof(TCPIP_DATA_TCP_UDP_CMD_SET_SOCK_OPTION_REQ_T)); //send packet to open a socket
-						if(RX_OK == retVal){
-							TCPIP_PACKET_TCP_UDP_CMD_SET_SOCK_OPTION_CNF_T* setOptCnf;
-							retVal = waitPacket(TCPIP_TCP_UDP_CMD_SET_SOCK_OPTION_CNF, (FORTE_TCP_PACKET_T**) &setOptCnf, RX_INFINITE); //wait for CNF packet which indicates the result of the request
-							if (RX_OK == retVal){
-							  retVal = setOptCnf->tHead.ulSta;
-							}
-							TLR_QUE_PACKETDONE(mForteResources.fortePoolHandle, mForteResources.forteQueueHandle, setOptCnf);
-						}
-					}
+          if(0xE0000000 <= ipAddress && 0xEFFFFFFF >= ipAddress){
+            TCPIP_DATA_TCP_UDP_CMD_SET_SOCK_OPTION_REQ_T setOpt;
+            setOpt.ulMode = TCP_SOCK_ADD_MEMBERSHIP;
+            setOpt.unParam.ulMulticastGroup = ipAddress;
+            retVal = sendPacketToTCP(socketNumber, TCPIP_DATA_TCP_UDP_CMD_SET_SOCK_OPTION_REQ_SIZE, TCPIP_TCP_UDP_CMD_SET_SOCK_OPTION_REQ, &setOpt, sizeof(TCPIP_DATA_TCP_UDP_CMD_SET_SOCK_OPTION_REQ_T)); //send packet to open a socket
+            if(RX_OK == retVal){
+              TCPIP_PACKET_TCP_UDP_CMD_SET_SOCK_OPTION_CNF_T* setOptCnf;
+              retVal = waitPacket(TCPIP_TCP_UDP_CMD_SET_SOCK_OPTION_CNF, (FORTE_TCP_PACKET_T**) &setOptCnf, RX_INFINITE); //wait for CNF packet which indicates the result of the request
+              if (RX_OK == retVal){
+                retVal = setOptCnf->tHead.ulSta;
+              }
+              TLR_QUE_PACKETDONE(mForteResources.fortePoolHandle, mForteResources.forteQueueHandle, setOptCnf);
+            }
+          }
 
         }
         else { //TCP
@@ -471,7 +471,7 @@ RX_RESULT CrcXSocketInterface::waitPacket(UINT32 pa_command, FORTE_TCP_PACKET_T*
       }
     }
     else{ //error waiting packet, normally because timeout expired
-    	break;
+      break;
     }
   } while(1);
   if (0 != pa_packetResult){
@@ -556,7 +556,7 @@ RX_RESULT CrcXSocketInterface::sendData(TSocketDescriptor pa_nSockD, char* pa_pc
         }
 
         if (RX_OK != retVal){
-        	break;
+          break;
         }
 
         /*if(RX_OK == retVal){

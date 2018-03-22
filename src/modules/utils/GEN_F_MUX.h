@@ -18,28 +18,28 @@ class GEN_F_MUX : public CFunctionBlock{
   DECLARE_GENERIC_FIRMWARE_FB(GEN_F_MUX)
 
   private:
-	//we know for sure that there is one output event
+  //we know for sure that there is one output event
     static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
     static const TEventID scm_nEventEOID = 0;
 
     CStringDictionary::TStringId *m_anEventInputNames;
-	CStringDictionary::TStringId *m_anDataOutputNames;
-	CStringDictionary::TStringId *m_anDataInputNames;
-	CStringDictionary::TStringId *m_anDataOutputTypeIds;
-	CStringDictionary::TStringId *m_anDataInputTypeIds;
+  CStringDictionary::TStringId *m_anDataOutputNames;
+  CStringDictionary::TStringId *m_anDataInputNames;
+  CStringDictionary::TStringId *m_anDataOutputTypeIds;
+  CStringDictionary::TStringId *m_anDataInputTypeIds;
 
-	TForteInt16 *m_anEIWithIndexes;
-	TDataIOID *m_anEIWith;
+  TForteInt16 *m_anEIWithIndexes;
+  TDataIOID *m_anEIWith;
 
-	TForteInt16 *m_anEOWithIndexes;
-	TDataIOID *m_anEOWith;
+  TForteInt16 *m_anEOWithIndexes;
+  TDataIOID *m_anEOWith;
 
-	//self-defined members
-	unsigned int m_nEInputs;
-	unsigned int m_nEOutputs;
-	unsigned int m_nDInputs;
-	unsigned int m_nDOutputs;
+  //self-defined members
+  unsigned int m_nEInputs;
+  unsigned int m_nEOutputs;
+  unsigned int m_nDInputs;
+  unsigned int m_nDOutputs;
 
     CStringDictionary::TStringId m_nConfiguredFBTypeNameId;
 

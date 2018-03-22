@@ -800,9 +800,9 @@ void COPC_UA_Handler::onWrite(UA_Server *, const UA_NodeId *,
     //only update data in item if data could be read
   }
 
-	if (e_Nothing != retVal) {
-	  GET_HANDLER_FROM_FB(*layer->getCommFB(), COPC_UA_Handler)->startNewEventChain(layer->getCommFB());
-	}
+  if (e_Nothing != retVal) {
+    GET_HANDLER_FROM_FB(*layer->getCommFB(), COPC_UA_Handler)->startNewEventChain(layer->getCommFB());
+  }
 
 }
 

@@ -65,14 +65,14 @@ void DEV_MGR::executeEvent(int pa_nEIID){
     CCommFB::executeEvent(pa_nEIID);  //initialize the underlying server FB
   }else{
     if(cg_nExternalEventID == pa_nEIID){
-	  //we received a message on the network let the server correctly handle it
-	  if(forte::com_infra::e_ProcessDataOk == CCommFB::receiveData()){ //
-	    //the message was correctly received
-	    executeRQST();
-	    //send response
-	    CCommFB::sendData();
-	  }
-	}
+    //we received a message on the network let the server correctly handle it
+    if(forte::com_infra::e_ProcessDataOk == CCommFB::receiveData()){ //
+      //the message was correctly received
+      executeRQST();
+      //send response
+      CCommFB::sendData();
+    }
+  }
   }
 }
 
@@ -561,7 +561,7 @@ void DEV_MGR::generateLongResponse(EMGMResponse pa_eResp, forte::core::SManageme
       }
     }
     else if(pa_stCMD.mCMD == cg_nMGM_CMD_QUERY_FB){
-      if(!pa_stCMD.mFirstParam.isEmpty()) {	//Name != "*"
+      if(!pa_stCMD.mFirstParam.isEmpty()) {  //Name != "*"
         if(!pa_stCMD.mSecondParam.isEmpty()){ //Type != "*"
           RESP().append("<FBStatus Status=\"");
           RESP().append(pa_stCMD.mAdditionalParams.getValue());
@@ -632,7 +632,7 @@ EMGMResponse DEV_MGR::parseAndExecuteMGMCommand(char *pa_acDest, char *pa_acComm
     }
     m_stCommand.mID=0;
 #ifdef FORTE_SUPPORT_MONITORING
-	m_stCommand.mMonitorResponse.clear();
+  m_stCommand.mMonitorResponse.clear();
 #endif // FORTE_SUPPORT_MONITORING
     char *acRequestPartLeft = parseRequest(pa_acCommand, m_stCommand);
     if(0 != acRequestPartLeft){

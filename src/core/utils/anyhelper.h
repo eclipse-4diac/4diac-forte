@@ -88,22 +88,22 @@ template<class T>
 void anyIntFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
   switch (pa_eDataTypeId){
     case CIEC_ANY::e_SINT:
-    	pa_roFB.template calculateValue<CIEC_SINT>();
-    	break;
+      pa_roFB.template calculateValue<CIEC_SINT>();
+      break;
     case CIEC_ANY::e_DINT:
-    	pa_roFB.template calculateValue<CIEC_DINT>();
-    	break;
+      pa_roFB.template calculateValue<CIEC_DINT>();
+      break;
     #ifdef FORTE_USE_64BIT_DATATYPES
     case CIEC_ANY::e_LINT:
-    	pa_roFB.template calculateValue<CIEC_LINT>();
-    	break;
+      pa_roFB.template calculateValue<CIEC_LINT>();
+      break;
     case CIEC_ANY::e_ULINT:
-		pa_roFB.template calculateValue<CIEC_ULINT>();
-		break;
+    pa_roFB.template calculateValue<CIEC_ULINT>();
+    break;
     #endif
     case CIEC_ANY::e_UINT:
-    	pa_roFB.template calculateValue<CIEC_UINT>();
-    	break;
+      pa_roFB.template calculateValue<CIEC_UINT>();
+      break;
     case CIEC_ANY::e_USINT:
         pa_roFB.template calculateValue<CIEC_USINT>();
         break;
@@ -111,8 +111,8 @@ void anyIntFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
       pa_roFB.template calculateValue<CIEC_UDINT>();
       break;
     default:
-    	pa_roFB.template calculateValue<CIEC_INT>();
-    	break;
+      pa_roFB.template calculateValue<CIEC_INT>();
+      break;
   }
 }
 

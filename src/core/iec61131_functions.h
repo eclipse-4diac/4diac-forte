@@ -47,7 +47,7 @@
 
 template<typename T>
 const T ABS(const T& pa_roIN){
-	return (0 > pa_roIN) ? T(pa_roIN * (-1)) : T((pa_roIN));
+  return (0 > pa_roIN) ? T(pa_roIN * (-1)) : T((pa_roIN));
 }
 
 #ifdef FORTE_USE_REAL_DATATYPE
@@ -175,61 +175,61 @@ const T ABS(const T& pa_roIN){
 #endif //#ifdef FORTE_USE_REAL_DATATYPE
 
 #ifdef FORTE_USE_64BIT_DATATYPES
-	template<typename T> const T  ROL(const T& pa_roIn, const CIEC_ULINT& pa_roN){
-	  if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
-		return T((typename T::TValueType)((pa_roIn << pa_roN.getUnsignedValue()) | (pa_roIn >> (sizeof(typename T::TValueType)*8 - pa_roN.getUnsignedValue()))));
-	  } DEVLOG_ERROR("value of input N is less than zero");
-	  return T((typename T::TValueType)(0));
-	}
+  template<typename T> const T  ROL(const T& pa_roIn, const CIEC_ULINT& pa_roN){
+    if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
+    return T((typename T::TValueType)((pa_roIn << pa_roN.getUnsignedValue()) | (pa_roIn >> (sizeof(typename T::TValueType)*8 - pa_roN.getUnsignedValue()))));
+    } DEVLOG_ERROR("value of input N is less than zero");
+    return T((typename T::TValueType)(0));
+  }
 
-	template<typename T> const T  ROR(const T& pa_roIn, const CIEC_ULINT& pa_roN){
-	  if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
-		return T((typename T::TValueType)((pa_roIn >> pa_roN.getUnsignedValue()) | (pa_roIn << (sizeof(typename T::TValueType)*8 - pa_roN.getUnsignedValue()))));
-	  } DEVLOG_ERROR("value of input N is less than zero");
-	  return T((typename T::TValueType)(0));
-	}
+  template<typename T> const T  ROR(const T& pa_roIn, const CIEC_ULINT& pa_roN){
+    if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
+    return T((typename T::TValueType)((pa_roIn >> pa_roN.getUnsignedValue()) | (pa_roIn << (sizeof(typename T::TValueType)*8 - pa_roN.getUnsignedValue()))));
+    } DEVLOG_ERROR("value of input N is less than zero");
+    return T((typename T::TValueType)(0));
+  }
 
-	template<typename T> const T  SHL(const T& pa_roIn, const CIEC_ULINT& pa_roN){
-	  if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
-		 return T((typename T::TValueType)(pa_roIn << pa_roN.getUnsignedValue()));
-	   } DEVLOG_ERROR("value of input N is less than zero");
-	   return T((typename T::TValueType)(0));
-	}
+  template<typename T> const T  SHL(const T& pa_roIn, const CIEC_ULINT& pa_roN){
+    if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
+     return T((typename T::TValueType)(pa_roIn << pa_roN.getUnsignedValue()));
+     } DEVLOG_ERROR("value of input N is less than zero");
+     return T((typename T::TValueType)(0));
+  }
 
-	template<typename T> const T  SHR(const T& pa_roIn, const CIEC_ULINT& pa_roN){
-	  if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
-		return T((typename T::TValueType)(pa_roIn >> pa_roN.getUnsignedValue()));
-	  } DEVLOG_ERROR("value of input N is less than zero");
-	  return T((typename T::TValueType)(0));
-	}
+  template<typename T> const T  SHR(const T& pa_roIn, const CIEC_ULINT& pa_roN){
+    if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
+    return T((typename T::TValueType)(pa_roIn >> pa_roN.getUnsignedValue()));
+    } DEVLOG_ERROR("value of input N is less than zero");
+    return T((typename T::TValueType)(0));
+  }
 #else
-	template<typename T> const T  ROL(const T& pa_roIn, const CIEC_UDINT& pa_roN){
-	  if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
-		return T((typename T::TValueType)((pa_roIn << pa_roN.getUnsignedValue()) | (pa_roIn >> (sizeof(typename T::TValueType)*8 - pa_roN.getUnsignedValue()))));
-	  } DEVLOG_ERROR("value of input N is less than zero");
-	  return T((typename T::TValueType)(0));
-	}
+  template<typename T> const T  ROL(const T& pa_roIn, const CIEC_UDINT& pa_roN){
+    if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
+    return T((typename T::TValueType)((pa_roIn << pa_roN.getUnsignedValue()) | (pa_roIn >> (sizeof(typename T::TValueType)*8 - pa_roN.getUnsignedValue()))));
+    } DEVLOG_ERROR("value of input N is less than zero");
+    return T((typename T::TValueType)(0));
+  }
 
-	template<typename T> const T  ROR(const T& pa_roIn, const CIEC_UDINT& pa_roN){
-	  if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
-		return T((typename T::TValueType)((pa_roIn >> pa_roN.getUnsignedValue()) | (pa_roIn << (sizeof(typename T::TValueType)*8 - pa_roN.getUnsignedValue()))));
-	  } DEVLOG_ERROR("value of input N is less than zero");
-	  return T((typename T::TValueType)(0));
-	}
+  template<typename T> const T  ROR(const T& pa_roIn, const CIEC_UDINT& pa_roN){
+    if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
+    return T((typename T::TValueType)((pa_roIn >> pa_roN.getUnsignedValue()) | (pa_roIn << (sizeof(typename T::TValueType)*8 - pa_roN.getUnsignedValue()))));
+    } DEVLOG_ERROR("value of input N is less than zero");
+    return T((typename T::TValueType)(0));
+  }
 
-	template<typename T> const T  SHL(const T& pa_roIn, const CIEC_UDINT& pa_roN){
-	  if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
-		 return T((typename T::TValueType)(pa_roIn << pa_roN.getUnsignedValue()));
-	   } DEVLOG_ERROR("value of input N is less than zero");
-	   return T((typename T::TValueType)(0));
-	}
+  template<typename T> const T  SHL(const T& pa_roIn, const CIEC_UDINT& pa_roN){
+    if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
+     return T((typename T::TValueType)(pa_roIn << pa_roN.getUnsignedValue()));
+     } DEVLOG_ERROR("value of input N is less than zero");
+     return T((typename T::TValueType)(0));
+  }
 
-	template<typename T> const T  SHR(const T& pa_roIn, const CIEC_UDINT& pa_roN){
-	  if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
-		return T((typename T::TValueType)(pa_roIn >> pa_roN.getUnsignedValue()));
-	  } DEVLOG_ERROR("value of input N is less than zero");
-	  return T((typename T::TValueType)(0));
-	}
+  template<typename T> const T  SHR(const T& pa_roIn, const CIEC_UDINT& pa_roN){
+    if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
+    return T((typename T::TValueType)(pa_roIn >> pa_roN.getUnsignedValue()));
+    } DEVLOG_ERROR("value of input N is less than zero");
+    return T((typename T::TValueType)(0));
+  }
 #endif //#ifdef FORTE_USE_64BIT_DATATYPES
 
 template<typename T> const T AND(const T& pa_roIN1, const T& pa_roIN2){
@@ -329,13 +329,13 @@ template<typename T> const T LIMIT(const T& pa_roMN, const T& pa_roIN, const T& 
 }
 
 template<typename T> const T MOD(const T& pa_roIN1, const T& pa_roIN2){
-	if(0 == pa_roIN2){
-		return static_cast<typename T::TValueType>(0);
-	}
-	return static_cast<typename T::TValueType>(pa_roIN1.getSignedValue() % pa_roIN2.getSignedValue());
+  if(0 == pa_roIN2){
+    return static_cast<typename T::TValueType>(0);
+  }
+  return static_cast<typename T::TValueType>(pa_roIN1.getSignedValue() % pa_roIN2.getSignedValue());
 }
 template<typename T> const T MOVE(const T& pa_roIN){
-	return static_cast<typename T::TValueType>(pa_roIN);
+  return static_cast<typename T::TValueType>(pa_roIN);
 }
 
 //specialisation of function for base type double.
@@ -345,7 +345,7 @@ inline double EXPT(double pa_roIN1, double pa_roIN2){
 }
 
 template<typename T> const T EXPT(const T& pa_roIN1, const T& pa_roIN2){
-	return static_cast<typename T::TValueType>(pow(pa_roIN1, pa_roIN2));
+  return static_cast<typename T::TValueType>(pow(pa_roIN1, pa_roIN2));
 }
 
 
@@ -483,7 +483,7 @@ template<typename T> const T CONCAT(const T& pa_rsIn1, const T& pa_rsIn2){
 
 #if __cplusplus >= 201103L //stdc11
 template<typename T, typename... Args> const T CONCAT(const T& pa_rsIn1, Args... args) {
-	return CONCAT(pa_rsIn1, CONCAT(args...));
+  return CONCAT(pa_rsIn1, CONCAT(args...));
 }
 #endif
 
@@ -517,11 +517,11 @@ template<typename T> CIEC_ANY_INT FIND(const T& pa_rsIn1, const T& pa_rsIn2){
   CIEC_ANY_INT temp;
   if (NULL != pc_Find)
   {
-	  temp.setSignedValue(pc_Find - pa_rsIn1.getValue());
+    temp.setSignedValue(pc_Find - pa_rsIn1.getValue());
   } 
   else
   {
-	  temp.setSignedValue(0);
+    temp.setSignedValue(0);
   }
   return temp;
 }
@@ -531,7 +531,7 @@ template<typename T> const T TOUPPER(const T& pa_rsIn){
   char* current = temp.getValue();
   for (unsigned int i = 0; i <=pa_rsIn.length(); ++i)
   {
-	  current[i] = static_cast<char>(toupper(current[i]));
+    current[i] = static_cast<char>(toupper(current[i]));
   }
   return temp;
 }

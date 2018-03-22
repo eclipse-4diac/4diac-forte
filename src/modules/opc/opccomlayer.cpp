@@ -392,8 +392,8 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
  //     CIEC_ANY *dataIn = &apoSDs[sdIndex];
       Variant newVariant;
       //unsigned int valueSize = 0;
-	  
-	  //valueSize = getInputValueSize(dataIn, &newVariant);;
+    
+    //valueSize = getInputValueSize(dataIn, &newVariant);;
 
       it_var->setNewValue(newVariant);
 

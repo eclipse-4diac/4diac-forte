@@ -43,8 +43,8 @@ const SFBInterfaceSpec FORTE_F_BOOL_TO_LINT::scm_stFBInterfaceSpec = {
 
 void FORTE_F_BOOL_TO_LINT::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-	  OUT() = BOOL_TO_LINT(IN());
-	  sendOutputEvent(scm_nEventCNFID);
+    OUT() = BOOL_TO_LINT(IN());
+    sendOutputEvent(scm_nEventCNFID);
   }
 }
 

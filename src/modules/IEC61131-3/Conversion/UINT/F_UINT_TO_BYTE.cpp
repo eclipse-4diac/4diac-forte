@@ -42,8 +42,8 @@ const SFBInterfaceSpec FORTE_F_UINT_TO_BYTE::scm_stFBInterfaceSpec = {
 
 void FORTE_F_UINT_TO_BYTE::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-	  OUT() = UINT_TO_BYTE(IN());
-	  sendOutputEvent(scm_nEventCNFID);
+    OUT() = UINT_TO_BYTE(IN());
+    sendOutputEvent(scm_nEventCNFID);
   }
 }
 

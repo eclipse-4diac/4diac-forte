@@ -56,14 +56,14 @@ void operator delete[](void* pa_pvData) throw(){
 inline
 void operator delete(void* paData, std::size_t) noexcept{
   if (paData)
-	forte_free(paData);
+  forte_free(paData);
 }
 
 
 inline
 void operator delete[](void* paData, std::size_t) noexcept{
   if (paData)
-	forte_free(paData);
+  forte_free(paData);
 }
 #endif  //__cplusplus >= 201402L //stdc14
 

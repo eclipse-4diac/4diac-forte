@@ -124,7 +124,7 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
         break;
       case cg_nMGM_CMD_QUERY_AdapterTypes:
         retVal = queryAllAdapterTypes(paCommand.mAdditionalParams);
-      	break;
+        break;
       default:
         #ifdef FORTE_SUPPORT_MONITORING
         retVal = mMonitoringHandler.executeMonitoringCommand(paCommand);
@@ -259,19 +259,19 @@ EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, CIEC
 }
 
 EMGMResponse CResource::queryAllFBTypes(CIEC_STRING & paValue){
-	EMGMResponse retVal = e_UNSUPPORTED_TYPE;
+  EMGMResponse retVal = e_UNSUPPORTED_TYPE;
 
-	CTypeLib::CTypeEntry *fbTypeRunner = CTypeLib::getFBLibStart();
-	if(fbTypeRunner != 0){
-		retVal = e_RDY;
-		for(; fbTypeRunner != 0; fbTypeRunner = fbTypeRunner->m_poNext){
-		  paValue.append(CStringDictionary::getInstance().get(fbTypeRunner->getTypeNameId()));
-			if(fbTypeRunner->m_poNext != 0){
-				paValue.append(", ");
-			}
-		}
-	}
-	return retVal;
+  CTypeLib::CTypeEntry *fbTypeRunner = CTypeLib::getFBLibStart();
+  if(fbTypeRunner != 0){
+    retVal = e_RDY;
+    for(; fbTypeRunner != 0; fbTypeRunner = fbTypeRunner->m_poNext){
+      paValue.append(CStringDictionary::getInstance().get(fbTypeRunner->getTypeNameId()));
+      if(fbTypeRunner->m_poNext != 0){
+        paValue.append(", ");
+      }
+    }
+  }
+  return retVal;
 }
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
 EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNameId,
@@ -306,19 +306,19 @@ EMGMResponse CResource::createAdapterTypeFromLua(CStringDictionary::TStringId ty
 #endif
 
 EMGMResponse CResource::queryAllAdapterTypes(CIEC_STRING & paValue){
-	EMGMResponse retVal = e_UNSUPPORTED_TYPE;
+  EMGMResponse retVal = e_UNSUPPORTED_TYPE;
 
-	CTypeLib::CTypeEntry *adapterTypeRunner = CTypeLib::getAdapterLibStart();
-	if(adapterTypeRunner != 0){
-		retVal = e_RDY;
-		for(; adapterTypeRunner != 0; adapterTypeRunner = adapterTypeRunner->m_poNext){
-		  paValue.append(CStringDictionary::getInstance().get(adapterTypeRunner->getTypeNameId()));
-			if(adapterTypeRunner->m_poNext != 0){
-				paValue.append(", ");
-			}
-		}
-	}
-	return retVal;
+  CTypeLib::CTypeEntry *adapterTypeRunner = CTypeLib::getAdapterLibStart();
+  if(adapterTypeRunner != 0){
+    retVal = e_RDY;
+    for(; adapterTypeRunner != 0; adapterTypeRunner = adapterTypeRunner->m_poNext){
+      paValue.append(CStringDictionary::getInstance().get(adapterTypeRunner->getTypeNameId()));
+      if(adapterTypeRunner->m_poNext != 0){
+        paValue.append(", ");
+      }
+    }
+  }
+  return retVal;
 }
 
 CIEC_ANY *CResource::getVariable(forte::core::TNameIdentifier &paNameList){

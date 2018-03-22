@@ -68,8 +68,8 @@ bool CForteArchitecture::initialize(){
 }
 
 void CForteArchitecture::deinitialize(){
-	if(mInitialized){
-		initialize_destructors(); //TODO: is it really necessary? When called, _fini_array_start_forte == _fini_array_end_forte, so no function is actually called
-		mInitialized = false;
+  if(mInitialized){
+    initialize_destructors(); //TODO: is it really necessary? When called, _fini_array_start_forte == _fini_array_end_forte, so no function is actually called
+    mInitialized = false;
   }
 }

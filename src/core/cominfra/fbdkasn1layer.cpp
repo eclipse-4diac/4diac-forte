@@ -509,10 +509,10 @@ int CFBDKASN1ComLayer::serializeValueStruct(TForteByte* pa_pcBytes, int pa_nStre
     if (CIEC_ANY::e_BOOL == ro_val.getDataTypeID()) {
       //Handle BOOL-values differently, since value is encoded in tag
       nStreamUsed = serializeDataPoint(pa_pcBytes, pa_nStreamSize, ro_val);
-	  }
+    }
     else {
-	    nStreamUsed = serializeValue(pa_pcBytes, pa_nStreamSize, ro_val);
-	  }
+      nStreamUsed = serializeValue(pa_pcBytes, pa_nStreamSize, ro_val);
+    }
 
 
     if(-1 == nStreamUsed) {

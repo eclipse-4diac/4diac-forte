@@ -299,6 +299,6 @@ int CIEC_ANY_STRING::unescapeFromString(const char *pa_pacValue, char pa_cDelimi
 }
 
 unsigned int CIEC_ANY_STRING::getToStringBufferSize(){
-	return (TForteUInt32) length() + 2 + 1;
+  return (TForteUInt32) length() + 2 + 1;
 }
 

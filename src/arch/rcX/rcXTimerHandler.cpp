@@ -41,12 +41,12 @@ void CrcXTimerHandler::timerCallback(void* arguments){
 
 void CrcXTimerHandler::enableHandler(void){
   if (mFirstTime){
-	  rX_TimCreateTimer(mTimer, timerCallback, (void*) this, RX_TIM_AUTO_RELOAD, (1000000 / rX_SysGetSystemCycletime()) / getTicksPerSecond(),
-	          (1000000 / rX_SysGetSystemCycletime()) / getTicksPerSecond());
-	  mFirstTime = false;
-	}else{
-	  rX_TimResetTimer(mTimer);
-	}
+    rX_TimCreateTimer(mTimer, timerCallback, (void*) this, RX_TIM_AUTO_RELOAD, (1000000 / rX_SysGetSystemCycletime()) / getTicksPerSecond(),
+            (1000000 / rX_SysGetSystemCycletime()) / getTicksPerSecond());
+    mFirstTime = false;
+  }else{
+    rX_TimResetTimer(mTimer);
+  }
 }
 
 void CrcXTimerHandler::disableHandler(void){

@@ -56,7 +56,7 @@ public:
 
   template<typename T> void calculateValue(){
     T oIn;
-	#ifdef FORTE_USE_64BIT_DATATYPES
+  #ifdef FORTE_USE_64BIT_DATATYPES
       CIEC_ULINT oN;
     #else
       CIEC_UDINT oN;

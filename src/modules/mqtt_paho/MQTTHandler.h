@@ -35,20 +35,20 @@ enum MQTTStates {
 class MQTTHandler : public CExternalEventHandler, public CThread {
     DECLARE_HANDLER(MQTTHandler)
 public:
-	enum RegisterLayerReturnCodes {
-		eRegisterLayerSucceeded,
-		eWrongClientID,
-		eConnectionFailed
-	};
-	int registerLayer(const char* paAddress, const char* paClientId, MQTTComLayer* paLayer);
+  enum RegisterLayerReturnCodes {
+    eRegisterLayerSucceeded,
+    eWrongClientID,
+    eConnectionFailed
+  };
+  int registerLayer(const char* paAddress, const char* paClientId, MQTTComLayer* paLayer);
 
-	void unregisterLayer(MQTTComLayer* paLayer);
+  void unregisterLayer(MQTTComLayer* paLayer);
 
-	MQTTAsync& getClient(void) {
-		return smClient;
-	}
+  MQTTAsync& getClient(void) {
+    return smClient;
+  }
 
-	//void mqttMessageProcessed(void);
+  //void mqttMessageProcessed(void);
 
     virtual void enableHandler(void);
     /*!\brief Disable this event source

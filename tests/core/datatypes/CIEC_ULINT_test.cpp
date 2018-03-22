@@ -16,65 +16,65 @@ BOOST_AUTO_TEST_SUITE(CIEC_ULINT_function_test)
 
 BOOST_AUTO_TEST_CASE(Type_test)
 {
-	CIEC_ULINT nTest;
-	//check type information
-	BOOST_CHECK_EQUAL(nTest.getDataTypeID(), CIEC_ANY::e_ULINT);
-	//check operator bool data type size
-	BOOST_CHECK_EQUAL(sizeof(nTest.operator TForteUInt64()), sizeof(TForteUInt64));
+  CIEC_ULINT nTest;
+  //check type information
+  BOOST_CHECK_EQUAL(nTest.getDataTypeID(), CIEC_ANY::e_ULINT);
+  //check operator bool data type size
+  BOOST_CHECK_EQUAL(sizeof(nTest.operator TForteUInt64()), sizeof(TForteUInt64));
 
 }
 
 BOOST_AUTO_TEST_CASE(Assignment_test)
 {
-	CIEC_ULINT nTest1;
-	CIEC_ULINT nTest2;
+  CIEC_ULINT nTest1;
+  CIEC_ULINT nTest2;
 
-	//initial value must be 0
-	BOOST_CHECK_EQUAL(nTest1, 0ULL);
+  //initial value must be 0
+  BOOST_CHECK_EQUAL(nTest1, 0ULL);
 
-	nTest1 = 0ULL;
-	nTest2 = nTest1;
-	BOOST_CHECK_EQUAL(nTest1, 0ULL);
-	BOOST_CHECK_EQUAL(nTest2, 0ULL);
+  nTest1 = 0ULL;
+  nTest2 = nTest1;
+  BOOST_CHECK_EQUAL(nTest1, 0ULL);
+  BOOST_CHECK_EQUAL(nTest2, 0ULL);
 
-	nTest1 = 13546842ULL;
-	nTest2 = nTest1;
-	BOOST_CHECK_EQUAL(nTest1, 13546842ULL);
-	BOOST_CHECK_EQUAL(nTest2, 13546842ULL);
+  nTest1 = 13546842ULL;
+  nTest2 = nTest1;
+  BOOST_CHECK_EQUAL(nTest1, 13546842ULL);
+  BOOST_CHECK_EQUAL(nTest2, 13546842ULL);
 
-	nTest1 = 18446744073709551615ULL;
-	nTest2 = nTest1;
-	BOOST_CHECK_EQUAL(nTest1, 18446744073709551615ULL);
-	BOOST_CHECK_EQUAL(nTest2, 18446744073709551615ULL);
+  nTest1 = 18446744073709551615ULL;
+  nTest2 = nTest1;
+  BOOST_CHECK_EQUAL(nTest1, 18446744073709551615ULL);
+  BOOST_CHECK_EQUAL(nTest2, 18446744073709551615ULL);
 
-	//check that assignment operator does not intertwine objects
-	nTest2 = 3652584218745ULL;
-	BOOST_CHECK_EQUAL(nTest1, 18446744073709551615ULL);
-	BOOST_CHECK_EQUAL(nTest2, 3652584218745ULL);
+  //check that assignment operator does not intertwine objects
+  nTest2 = 3652584218745ULL;
+  BOOST_CHECK_EQUAL(nTest1, 18446744073709551615ULL);
+  BOOST_CHECK_EQUAL(nTest2, 3652584218745ULL);
 
 }
 
 BOOST_AUTO_TEST_CASE(Conversion_test)
 {
-	CIEC_ULINT nTest;
+  CIEC_ULINT nTest;
 
-	char cBuffer[21];
-	char cBufferFail[2];
+  char cBuffer[21];
+  char cBufferFail[2];
 
-	//check cast operator
-	nTest = 0;
-	strcpy(cBuffer, "");
+  //check cast operator
+  nTest = 0;
+  strcpy(cBuffer, "");
 
-	BOOST_CHECK_EQUAL(nTest.operator TForteUInt64(), 0ULL);
+  BOOST_CHECK_EQUAL(nTest.operator TForteUInt64(), 0ULL);
 
-	nTest = 5874125369851ULL;
-	BOOST_CHECK_EQUAL(nTest.operator TForteUInt64(), 5874125369851ULL);
+  nTest = 5874125369851ULL;
+  BOOST_CHECK_EQUAL(nTest.operator TForteUInt64(), 5874125369851ULL);
 
-	nTest = 18446744073709551615ULL;
-	BOOST_CHECK_EQUAL(nTest.operator TForteUInt64(), 18446744073709551615ULL);
+  nTest = 18446744073709551615ULL;
+  BOOST_CHECK_EQUAL(nTest.operator TForteUInt64(), 18446744073709551615ULL);
 
-	//check toString and fromString
-	BOOST_CHECK_EQUAL(nTest.fromString("0"), 1);
+  //check toString and fromString
+  BOOST_CHECK_EQUAL(nTest.fromString("0"), 1);
     BOOST_CHECK_EQUAL(nTest, 0ULL);
     BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 21), 1);
     BOOST_CHECK_EQUAL(strcmp(cBuffer, "0"), 0);
@@ -175,7 +175,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
     BOOST_CHECK_EQUAL(nTest.fromString("16#FFFFFFFFFFFFFFFF0"), -1);
     BOOST_CHECK_EQUAL(nTest.fromString("-130"), -1);
 
-	//check invalid fromString string
-	BOOST_CHECK_EQUAL(nTest.fromString("NOT A VALID STRING"), -1);
+  //check invalid fromString string
+  BOOST_CHECK_EQUAL(nTest.fromString("NOT A VALID STRING"), -1);
 }
 BOOST_AUTO_TEST_SUITE_END()

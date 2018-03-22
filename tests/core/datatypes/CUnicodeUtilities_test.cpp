@@ -31,81 +31,81 @@ BOOST_AUTO_TEST_CASE(CUnicodeUtilities_parseEncode8)
   TForteByte cBuffer[32];
 
   nRet = CUnicodeUtilities::parseUTF8Codepoint(cBOM, nValue);
-	BOOST_CHECK_EQUAL(nRet, 3);
-	BOOST_CHECK_EQUAL(nValue, CUnicodeUtilities::scm_unBOMMarker);
+  BOOST_CHECK_EQUAL(nRet, 3);
+  BOOST_CHECK_EQUAL(nValue, CUnicodeUtilities::scm_unBOMMarker);
 
   nRet = CUnicodeUtilities::parseUTF8Codepoint(cASCII1, nValue);
-	BOOST_CHECK_EQUAL(nRet, 1);
-	BOOST_CHECK_EQUAL(nValue, 0);
+  BOOST_CHECK_EQUAL(nRet, 1);
+  BOOST_CHECK_EQUAL(nValue, 0);
   nRet = CUnicodeUtilities::parseUTF8Codepoint(cASCII2, nValue);
-	BOOST_CHECK_EQUAL(nRet, 1);
-	BOOST_CHECK_EQUAL(nValue, 'A');
+  BOOST_CHECK_EQUAL(nRet, 1);
+  BOOST_CHECK_EQUAL(nValue, 'A');
   nRet = CUnicodeUtilities::parseUTF8Codepoint(cASCII3, nValue);
-	BOOST_CHECK_EQUAL(nRet, 1);
-	BOOST_CHECK_EQUAL(nValue, 0x7f);
+  BOOST_CHECK_EQUAL(nRet, 1);
+  BOOST_CHECK_EQUAL(nValue, 0x7f);
 
   nRet = CUnicodeUtilities::parseUTF8Codepoint(cUpper1, nValue);
-	BOOST_CHECK_EQUAL(nRet, 2);
-	BOOST_CHECK_EQUAL(nValue, 0xa2);
+  BOOST_CHECK_EQUAL(nRet, 2);
+  BOOST_CHECK_EQUAL(nValue, 0xa2);
   nRet = CUnicodeUtilities::parseUTF8Codepoint(cUpper2, nValue);
-	BOOST_CHECK_EQUAL(nRet, 3);
-	BOOST_CHECK_EQUAL(nValue, 0x20ac);
+  BOOST_CHECK_EQUAL(nRet, 3);
+  BOOST_CHECK_EQUAL(nValue, 0x20ac);
   nRet = CUnicodeUtilities::parseUTF8Codepoint(cUpper3, nValue);
-	BOOST_CHECK_EQUAL(nRet, 4);
-	BOOST_CHECK_EQUAL(nValue, 0x24b62);
+  BOOST_CHECK_EQUAL(nRet, 4);
+  BOOST_CHECK_EQUAL(nValue, 0x24b62);
 
   nRet = CUnicodeUtilities::parseUTF8Codepoint(cInvalid1, nValue);
-	BOOST_CHECK_EQUAL(nRet, -1);
+  BOOST_CHECK_EQUAL(nRet, -1);
   nRet = CUnicodeUtilities::parseUTF8Codepoint(cInvalid2, nValue);
-	BOOST_CHECK_EQUAL(nRet, -1);
+  BOOST_CHECK_EQUAL(nRet, -1);
 
   nRet = CUnicodeUtilities::encodeUTF8Codepoint(cBuffer, 3, CUnicodeUtilities::scm_unBOMMarker);
-	BOOST_CHECK_EQUAL(nRet, 3);
-	BOOST_CHECK(! memcmp(cBOM, cBuffer, 3));
+  BOOST_CHECK_EQUAL(nRet, 3);
+  BOOST_CHECK(! memcmp(cBOM, cBuffer, 3));
 
   nRet = CUnicodeUtilities::encodeUTF8Codepoint(cBuffer, 1, 0);
-	BOOST_CHECK_EQUAL(nRet, 1);
-	BOOST_CHECK(! memcmp(cASCII1, cBuffer, 1));
+  BOOST_CHECK_EQUAL(nRet, 1);
+  BOOST_CHECK(! memcmp(cASCII1, cBuffer, 1));
   nRet = CUnicodeUtilities::encodeUTF8Codepoint(cBuffer, 1, 'A');
-	BOOST_CHECK_EQUAL(nRet, 1);
-	BOOST_CHECK(! memcmp(cASCII2, cBuffer, 1));
+  BOOST_CHECK_EQUAL(nRet, 1);
+  BOOST_CHECK(! memcmp(cASCII2, cBuffer, 1));
   nRet = CUnicodeUtilities::encodeUTF8Codepoint(cBuffer, 1, 0x7f);
-	BOOST_CHECK_EQUAL(nRet, 1);
-	BOOST_CHECK(! memcmp(cASCII3, cBuffer, 1));
+  BOOST_CHECK_EQUAL(nRet, 1);
+  BOOST_CHECK(! memcmp(cASCII3, cBuffer, 1));
 
   nRet = CUnicodeUtilities::encodeUTF8Codepoint(cBuffer, 2, 0xa2);
-	BOOST_CHECK_EQUAL(nRet, 2);
-	BOOST_CHECK(! memcmp(cUpper1, cBuffer, 1));
+  BOOST_CHECK_EQUAL(nRet, 2);
+  BOOST_CHECK(! memcmp(cUpper1, cBuffer, 1));
   nRet = CUnicodeUtilities::encodeUTF8Codepoint(cBuffer, 3, 0x20ac);
-	BOOST_CHECK_EQUAL(nRet, 3);
-	BOOST_CHECK(! memcmp(cUpper2, cBuffer, 1));
+  BOOST_CHECK_EQUAL(nRet, 3);
+  BOOST_CHECK(! memcmp(cUpper2, cBuffer, 1));
   nRet = CUnicodeUtilities::encodeUTF8Codepoint(cBuffer, 4, 0x24b62);
-	BOOST_CHECK_EQUAL(nRet, 4);
-	BOOST_CHECK(! memcmp(cUpper3, cBuffer, 1));
+  BOOST_CHECK_EQUAL(nRet, 4);
+  BOOST_CHECK(! memcmp(cUpper3, cBuffer, 1));
 
   cBuffer[0] = '\0';
   nRet = CUnicodeUtilities::encodeUTF8Codepoint(0, 0, 0x7f);
-	BOOST_CHECK_EQUAL(nRet, 1);
-	BOOST_CHECK_EQUAL(cBuffer[0], 0);
+  BOOST_CHECK_EQUAL(nRet, 1);
+  BOOST_CHECK_EQUAL(cBuffer[0], 0);
   nRet = CUnicodeUtilities::encodeUTF8Codepoint(0, 0, 0xa2);
-	BOOST_CHECK_EQUAL(nRet, 2);
-	BOOST_CHECK_EQUAL(cBuffer[0], 0);
+  BOOST_CHECK_EQUAL(nRet, 2);
+  BOOST_CHECK_EQUAL(cBuffer[0], 0);
   nRet = CUnicodeUtilities::encodeUTF8Codepoint(0, 0, 0x20ac);
-	BOOST_CHECK_EQUAL(nRet, 3);
-	BOOST_CHECK_EQUAL(cBuffer[0], 0);
+  BOOST_CHECK_EQUAL(nRet, 3);
+  BOOST_CHECK_EQUAL(cBuffer[0], 0);
   nRet = CUnicodeUtilities::encodeUTF8Codepoint(0, 0, 0x24b62);
-	BOOST_CHECK_EQUAL(nRet, 4);
-	BOOST_CHECK_EQUAL(cBuffer[0], 0);
+  BOOST_CHECK_EQUAL(nRet, 4);
+  BOOST_CHECK_EQUAL(cBuffer[0], 0);
 
 
   nRet = CUnicodeUtilities::encodeUTF8Codepoint(cBuffer, 0, 0x7f);
-	BOOST_CHECK_EQUAL(nRet, -1);
+  BOOST_CHECK_EQUAL(nRet, -1);
   nRet = CUnicodeUtilities::encodeUTF8Codepoint(cBuffer, 1, 0xa2);
-	BOOST_CHECK_EQUAL(nRet, -1);
+  BOOST_CHECK_EQUAL(nRet, -1);
   nRet = CUnicodeUtilities::encodeUTF8Codepoint(cBuffer, 2, 0x20ac);
-	BOOST_CHECK_EQUAL(nRet, -1);
+  BOOST_CHECK_EQUAL(nRet, -1);
   nRet = CUnicodeUtilities::encodeUTF8Codepoint(cBuffer, 3, 0x24b62);
-	BOOST_CHECK_EQUAL(nRet, -1);
+  BOOST_CHECK_EQUAL(nRet, -1);
 }
 
 BOOST_AUTO_TEST_CASE(CUnicodeUtilities_parseEncode16)
@@ -128,100 +128,100 @@ BOOST_AUTO_TEST_CASE(CUnicodeUtilities_parseEncode16)
   TForteByte cBuffer[32];
 
   nRet = CUnicodeUtilities::parseUTF16Codepoint(cBOMBE, nValue, false);
-	BOOST_CHECK_EQUAL(nRet, 2);
-	BOOST_CHECK_EQUAL(nValue, CUnicodeUtilities::scm_unBOMMarker);
+  BOOST_CHECK_EQUAL(nRet, 2);
+  BOOST_CHECK_EQUAL(nValue, CUnicodeUtilities::scm_unBOMMarker);
   nRet = CUnicodeUtilities::parseUTF16Codepoint(cBOMLE, nValue, false);
-	BOOST_CHECK_EQUAL(nRet, 2);
-	BOOST_CHECK_EQUAL(nValue, CUnicodeUtilities::scm_unBOMMarkerSwapped);
+  BOOST_CHECK_EQUAL(nRet, 2);
+  BOOST_CHECK_EQUAL(nValue, CUnicodeUtilities::scm_unBOMMarkerSwapped);
   nRet = CUnicodeUtilities::parseUTF16Codepoint(cBOMBE, nValue, true);
-	BOOST_CHECK_EQUAL(nRet, 2);
-	BOOST_CHECK_EQUAL(nValue, CUnicodeUtilities::scm_unBOMMarkerSwapped);
+  BOOST_CHECK_EQUAL(nRet, 2);
+  BOOST_CHECK_EQUAL(nValue, CUnicodeUtilities::scm_unBOMMarkerSwapped);
   nRet = CUnicodeUtilities::parseUTF16Codepoint(cBOMLE, nValue, true);
-	BOOST_CHECK_EQUAL(nRet, 2);
-	BOOST_CHECK_EQUAL(nValue, CUnicodeUtilities::scm_unBOMMarker);
+  BOOST_CHECK_EQUAL(nRet, 2);
+  BOOST_CHECK_EQUAL(nValue, CUnicodeUtilities::scm_unBOMMarker);
 
   nRet = CUnicodeUtilities::parseUTF16Codepoint(cTest1BE, nValue, false);
-	BOOST_CHECK_EQUAL(nRet, 2);
-	BOOST_CHECK_EQUAL(nValue, 0x7a);
+  BOOST_CHECK_EQUAL(nRet, 2);
+  BOOST_CHECK_EQUAL(nValue, 0x7a);
   nRet = CUnicodeUtilities::parseUTF16Codepoint(cTest1LE, nValue, true);
-	BOOST_CHECK_EQUAL(nRet, 2);
-	BOOST_CHECK_EQUAL(nValue, 0x7a);
+  BOOST_CHECK_EQUAL(nRet, 2);
+  BOOST_CHECK_EQUAL(nValue, 0x7a);
 
   nRet = CUnicodeUtilities::parseUTF16Codepoint(cTest2BE, nValue, false);
-	BOOST_CHECK_EQUAL(nRet, 2);
-	BOOST_CHECK_EQUAL(nValue, 0x6c34);
+  BOOST_CHECK_EQUAL(nRet, 2);
+  BOOST_CHECK_EQUAL(nValue, 0x6c34);
   nRet = CUnicodeUtilities::parseUTF16Codepoint(cTest2LE, nValue, true);
-	BOOST_CHECK_EQUAL(nRet, 2);
-	BOOST_CHECK_EQUAL(nValue, 0x6c34);
+  BOOST_CHECK_EQUAL(nRet, 2);
+  BOOST_CHECK_EQUAL(nValue, 0x6c34);
 
   nRet = CUnicodeUtilities::parseUTF16Codepoint(cTest3BE, nValue, false);
-	BOOST_CHECK_EQUAL(nRet, 4);
-	BOOST_CHECK_EQUAL(nValue, 0x10000);
+  BOOST_CHECK_EQUAL(nRet, 4);
+  BOOST_CHECK_EQUAL(nValue, 0x10000);
   nRet = CUnicodeUtilities::parseUTF16Codepoint(cTest3LE, nValue, true);
-	BOOST_CHECK_EQUAL(nRet, 4);
-	BOOST_CHECK_EQUAL(nValue, 0x10000);
+  BOOST_CHECK_EQUAL(nRet, 4);
+  BOOST_CHECK_EQUAL(nValue, 0x10000);
 
   nRet = CUnicodeUtilities::parseUTF16Codepoint(cTest4BE, nValue, false);
-	BOOST_CHECK_EQUAL(nRet, 4);
-	BOOST_CHECK_EQUAL(nValue, 0x1d11e);
+  BOOST_CHECK_EQUAL(nRet, 4);
+  BOOST_CHECK_EQUAL(nValue, 0x1d11e);
   nRet = CUnicodeUtilities::parseUTF16Codepoint(cTest4LE, nValue, true);
-	BOOST_CHECK_EQUAL(nRet, 4);
-	BOOST_CHECK_EQUAL(nValue, 0x1d11e);
+  BOOST_CHECK_EQUAL(nRet, 4);
+  BOOST_CHECK_EQUAL(nValue, 0x1d11e);
 
   nRet = CUnicodeUtilities::parseUTF16Codepoint(cTest5BE, nValue, false);
-	BOOST_CHECK_EQUAL(nRet, 4);
-	BOOST_CHECK_EQUAL(nValue, 0x10fffd);
+  BOOST_CHECK_EQUAL(nRet, 4);
+  BOOST_CHECK_EQUAL(nValue, 0x10fffd);
   nRet = CUnicodeUtilities::parseUTF16Codepoint(cTest5LE, nValue, true);
-	BOOST_CHECK_EQUAL(nRet, 4);
-	BOOST_CHECK_EQUAL(nValue, 0x10fffd);
+  BOOST_CHECK_EQUAL(nRet, 4);
+  BOOST_CHECK_EQUAL(nValue, 0x10fffd);
 
   nRet = CUnicodeUtilities::encodeUTF16Codepoint(cBuffer, 2, 0x7a, false);
-	BOOST_CHECK_EQUAL(nRet, 2);
-	BOOST_CHECK(! memcmp(cTest1BE, cBuffer, 1));
+  BOOST_CHECK_EQUAL(nRet, 2);
+  BOOST_CHECK(! memcmp(cTest1BE, cBuffer, 1));
   nRet = CUnicodeUtilities::encodeUTF16Codepoint(cBuffer, 2, 0x7a, true);
-	BOOST_CHECK_EQUAL(nRet, 2);
-	BOOST_CHECK(! memcmp(cTest1LE, cBuffer, 1));
+  BOOST_CHECK_EQUAL(nRet, 2);
+  BOOST_CHECK(! memcmp(cTest1LE, cBuffer, 1));
 
   nRet = CUnicodeUtilities::encodeUTF16Codepoint(cBuffer, 2, 0x6c34, false);
-	BOOST_CHECK_EQUAL(nRet, 2);
-	BOOST_CHECK(! memcmp(cTest2BE, cBuffer, 1));
+  BOOST_CHECK_EQUAL(nRet, 2);
+  BOOST_CHECK(! memcmp(cTest2BE, cBuffer, 1));
   nRet = CUnicodeUtilities::encodeUTF16Codepoint(cBuffer, 2, 0x6c34, true);
-	BOOST_CHECK_EQUAL(nRet, 2);
-	BOOST_CHECK(! memcmp(cTest2LE, cBuffer, 1));
+  BOOST_CHECK_EQUAL(nRet, 2);
+  BOOST_CHECK(! memcmp(cTest2LE, cBuffer, 1));
 
   nRet = CUnicodeUtilities::encodeUTF16Codepoint(cBuffer, 4, 0x10000, false);
-	BOOST_CHECK_EQUAL(nRet, 4);
-	BOOST_CHECK(! memcmp(cTest3BE, cBuffer, 1));
+  BOOST_CHECK_EQUAL(nRet, 4);
+  BOOST_CHECK(! memcmp(cTest3BE, cBuffer, 1));
   nRet = CUnicodeUtilities::encodeUTF16Codepoint(cBuffer, 4, 0x10000, true);
-	BOOST_CHECK_EQUAL(nRet, 4);
-	BOOST_CHECK(! memcmp(cTest3LE, cBuffer, 1));
+  BOOST_CHECK_EQUAL(nRet, 4);
+  BOOST_CHECK(! memcmp(cTest3LE, cBuffer, 1));
 
   nRet = CUnicodeUtilities::encodeUTF16Codepoint(cBuffer, 4, 0x1d11e, false);
-	BOOST_CHECK_EQUAL(nRet, 4);
-	BOOST_CHECK(! memcmp(cTest4BE, cBuffer, 1));
+  BOOST_CHECK_EQUAL(nRet, 4);
+  BOOST_CHECK(! memcmp(cTest4BE, cBuffer, 1));
   nRet = CUnicodeUtilities::encodeUTF16Codepoint(cBuffer, 4, 0x1d11e, true);
-	BOOST_CHECK_EQUAL(nRet, 4);
-	BOOST_CHECK(! memcmp(cTest4LE, cBuffer, 1));
+  BOOST_CHECK_EQUAL(nRet, 4);
+  BOOST_CHECK(! memcmp(cTest4LE, cBuffer, 1));
 
   nRet = CUnicodeUtilities::encodeUTF16Codepoint(cBuffer, 4, 0x10fffd, false);
-	BOOST_CHECK_EQUAL(nRet, 4);
-	BOOST_CHECK(! memcmp(cTest5BE, cBuffer, 1));
+  BOOST_CHECK_EQUAL(nRet, 4);
+  BOOST_CHECK(! memcmp(cTest5BE, cBuffer, 1));
   nRet = CUnicodeUtilities::encodeUTF16Codepoint(cBuffer, 4, 0x10fffd, true);
-	BOOST_CHECK_EQUAL(nRet, 4);
-	BOOST_CHECK(! memcmp(cTest5LE, cBuffer, 1));
+  BOOST_CHECK_EQUAL(nRet, 4);
+  BOOST_CHECK(! memcmp(cTest5LE, cBuffer, 1));
 
   nRet = CUnicodeUtilities::encodeUTF16Codepoint(0, 0, 0x6c34, false);
-	BOOST_CHECK_EQUAL(nRet, 2);
+  BOOST_CHECK_EQUAL(nRet, 2);
   nRet = CUnicodeUtilities::encodeUTF16Codepoint(0, 0, 0x10fffd, false);
-	BOOST_CHECK_EQUAL(nRet, 4);
+  BOOST_CHECK_EQUAL(nRet, 4);
 
   cBuffer[0] = '\0';
   nRet = CUnicodeUtilities::encodeUTF16Codepoint(cBuffer, 1, 0x6c34, false);
-	BOOST_CHECK_EQUAL(nRet, -1);
-	BOOST_CHECK_EQUAL(cBuffer[0], 0);
+  BOOST_CHECK_EQUAL(nRet, -1);
+  BOOST_CHECK_EQUAL(cBuffer[0], 0);
   nRet = CUnicodeUtilities::encodeUTF16Codepoint(cBuffer, 3, 0x10fffd, false);
-	BOOST_CHECK_EQUAL(nRet, -1);
-	BOOST_CHECK_EQUAL(cBuffer[0], 0);
+  BOOST_CHECK_EQUAL(nRet, -1);
+  BOOST_CHECK_EQUAL(cBuffer[0], 0);
 }
 
 BOOST_AUTO_TEST_CASE(CUnicodeUtilities_checkUTF8)
@@ -239,72 +239,72 @@ BOOST_AUTO_TEST_CASE(CUnicodeUtilities_checkUTF8)
 
   nWidth = 0;
   nRet = CUnicodeUtilities::checkUTF8((const char *) cASCII1, -1, nWidth);
-	BOOST_CHECK_EQUAL(nRet, 0);
-	BOOST_CHECK_EQUAL(nWidth, 7);
+  BOOST_CHECK_EQUAL(nRet, 0);
+  BOOST_CHECK_EQUAL(nWidth, 7);
 
   nWidth = 0;
   nRet = CUnicodeUtilities::checkUTF8((const char *) cASCII2, -1, nWidth);
-	BOOST_CHECK_EQUAL(nRet, 1);
-	BOOST_CHECK_EQUAL(nWidth, 7);
+  BOOST_CHECK_EQUAL(nRet, 1);
+  BOOST_CHECK_EQUAL(nWidth, 7);
 
   nWidth = 0;
   nRet = CUnicodeUtilities::checkUTF8((const char *) cASCII3, -1, nWidth);
-	BOOST_CHECK_EQUAL(nRet, 1);
-	BOOST_CHECK_EQUAL(nWidth, 7);
+  BOOST_CHECK_EQUAL(nRet, 1);
+  BOOST_CHECK_EQUAL(nWidth, 7);
 
   nWidth = 0;
   nRet = CUnicodeUtilities::checkUTF8((const char *) cUpper1, -1, nWidth);
-	BOOST_CHECK_EQUAL(nRet, 1);
-	BOOST_CHECK_EQUAL(nWidth, 8);
+  BOOST_CHECK_EQUAL(nRet, 1);
+  BOOST_CHECK_EQUAL(nWidth, 8);
 
   nWidth = 0;
   nRet = CUnicodeUtilities::checkUTF8((const char *) cUpper2, -1, nWidth);
-	BOOST_CHECK_EQUAL(nRet, 1);
-	BOOST_CHECK_EQUAL(nWidth, 16);
+  BOOST_CHECK_EQUAL(nRet, 1);
+  BOOST_CHECK_EQUAL(nWidth, 16);
 
   nWidth = 0;
   nRet = CUnicodeUtilities::checkUTF8((const char *) cUpper3, -1, nWidth);
-	BOOST_CHECK_EQUAL(nRet, 1);
-	BOOST_CHECK_EQUAL(nWidth, 21);
+  BOOST_CHECK_EQUAL(nRet, 1);
+  BOOST_CHECK_EQUAL(nWidth, 21);
 
   nWidth = 0;
   nRet = CUnicodeUtilities::checkUTF8((const char *) cSeq, 1, nWidth);
-	BOOST_CHECK_EQUAL(nRet, 1);
-	BOOST_CHECK_EQUAL(nWidth, 7);
+  BOOST_CHECK_EQUAL(nRet, 1);
+  BOOST_CHECK_EQUAL(nWidth, 7);
   nWidth = 0;
   nRet = CUnicodeUtilities::checkUTF8((const char *) cSeq, 2, nWidth);
-	BOOST_CHECK_EQUAL(nRet, -1);
+  BOOST_CHECK_EQUAL(nRet, -1);
   nWidth = 0;
   nRet = CUnicodeUtilities::checkUTF8((const char *) cSeq, 3, nWidth);
-	BOOST_CHECK_EQUAL(nRet, 2);
-	BOOST_CHECK_EQUAL(nWidth, 8);
+  BOOST_CHECK_EQUAL(nRet, 2);
+  BOOST_CHECK_EQUAL(nWidth, 8);
   nWidth = 0;
   nRet = CUnicodeUtilities::checkUTF8((const char *) cSeq, 4, nWidth);
-	BOOST_CHECK_EQUAL(nRet, -1);
+  BOOST_CHECK_EQUAL(nRet, -1);
   nWidth = 0;
   nRet = CUnicodeUtilities::checkUTF8((const char *) cSeq, 5, nWidth);
-	BOOST_CHECK_EQUAL(nRet, -1);
+  BOOST_CHECK_EQUAL(nRet, -1);
   nWidth = 0;
   nRet = CUnicodeUtilities::checkUTF8((const char *) cSeq, 6, nWidth);
-	BOOST_CHECK_EQUAL(nRet, 3);
-	BOOST_CHECK_EQUAL(nWidth, 16);
+  BOOST_CHECK_EQUAL(nRet, 3);
+  BOOST_CHECK_EQUAL(nWidth, 16);
   nWidth = 0;
   nRet = CUnicodeUtilities::checkUTF8((const char *) cSeq, 7, nWidth);
-	BOOST_CHECK_EQUAL(nRet, -1);
+  BOOST_CHECK_EQUAL(nRet, -1);
   nWidth = 0;
   nRet = CUnicodeUtilities::checkUTF8((const char *) cSeq, 8, nWidth);
-	BOOST_CHECK_EQUAL(nRet, -1);
+  BOOST_CHECK_EQUAL(nRet, -1);
   nWidth = 0;
   nRet = CUnicodeUtilities::checkUTF8((const char *) cSeq, 9, nWidth);
-	BOOST_CHECK_EQUAL(nRet, -1);
+  BOOST_CHECK_EQUAL(nRet, -1);
   nWidth = 0;
   nRet = CUnicodeUtilities::checkUTF8((const char *) cSeq, 10, nWidth);
-	BOOST_CHECK_EQUAL(nRet, 4);
-	BOOST_CHECK_EQUAL(nWidth, 21);
+  BOOST_CHECK_EQUAL(nRet, 4);
+  BOOST_CHECK_EQUAL(nWidth, 21);
   nWidth = 0;
   nRet = CUnicodeUtilities::checkUTF8((const char *) cSeq, 11, nWidth);
-	BOOST_CHECK_EQUAL(nRet, 5);
-	BOOST_CHECK_EQUAL(nWidth, 21);
+  BOOST_CHECK_EQUAL(nRet, 5);
+  BOOST_CHECK_EQUAL(nWidth, 21);
 }
 
 

@@ -43,8 +43,8 @@ const SFBInterfaceSpec FORTE_F_INT_TO_SINT::scm_stFBInterfaceSpec = {
 
 void FORTE_F_INT_TO_SINT::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-	  OUT() = INT_TO_SINT(IN());
-	  sendOutputEvent(scm_nEventCNFID);
+    OUT() = INT_TO_SINT(IN());
+    sendOutputEvent(scm_nEventCNFID);
   }
 }
 

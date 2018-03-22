@@ -31,13 +31,13 @@ int CIEC_REAL::fromString(const char *pa_pacValue){
 
   if(0 == strncmp(pacRunner, "REAL#", 5)){
     pacRunner += 5;
-	}
+  }
 
   
   #if defined(WIN32) || defined(__ECOS) || defined(VXWORKS)
-	realval = static_cast<TForteFloat>(strtod(pacRunner, &pcEnd));
+  realval = static_cast<TForteFloat>(strtod(pacRunner, &pcEnd));
   #else
-	realval = strtof(pacRunner, &pcEnd);
+  realval = strtof(pacRunner, &pcEnd);
   #endif
 
   if(((fabs(realval) < TFLOAT_min) && (realval != 0)) || ((fabs(realval) > TFLOAT_max) && (realval != 0)) ||

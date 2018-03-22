@@ -43,8 +43,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "MacOs")
   set(FORTE_POSIX_GENERATE_MAP_FILE FALSE CACHE BOOL "Enable the generation of map files")
   mark_as_advanced(FORTE_POSIX_GENERATE_MAP_FILE)
   IF(FORTE_POSIX_GENERATE_MAP_FILE)
-  	forte_add_link_flags("-Wl,-M -Wl,-Map -Wl,forte.map -Wl,-cref")
-  ENDIF(FORTE_POSIX_GENERATE_MAP_FILE)	
+    forte_add_link_flags("-Wl,-M -Wl,-Map -Wl,forte.map -Wl,-cref")
+  ENDIF(FORTE_POSIX_GENERATE_MAP_FILE)  
   
   forte_add_link_library("-lpthread")  
 

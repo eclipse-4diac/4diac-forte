@@ -38,7 +38,7 @@ private:
   virtual void executeEvent(int pa_nEIID);
   
   CIEC_UINT& K() {
-   	return *static_cast<CIEC_UINT*>(getDI(0));
+     return *static_cast<CIEC_UINT*>(getDI(0));
   }
 
 public:

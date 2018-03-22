@@ -59,13 +59,13 @@ void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::join(){
 
 template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
 void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::runThread(CThreadBase *paThread) {
-	// if pointer is ok
-	if (0 != paThread) {
-		paThread->setAlive(true);
-		paThread->run();
-		paThread->setAlive(false);
-		paThread->mJoinSem.semInc();
-	} else {
-		DEVLOG_ERROR("pThread pointer is 0!");
-	}
+  // if pointer is ok
+  if (0 != paThread) {
+    paThread->setAlive(true);
+    paThread->run();
+    paThread->setAlive(false);
+    paThread->mJoinSem.semInc();
+  } else {
+    DEVLOG_ERROR("pThread pointer is 0!");
+  }
 }

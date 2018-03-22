@@ -96,7 +96,7 @@ namespace forte {
 
         /*!\brief get the FB of this layer
          */
-		CBaseCommFB *getCommFB() const {
+    CBaseCommFB *getCommFB() const {
           return m_poFb;
         }
 
@@ -107,7 +107,7 @@ namespace forte {
 
         CComLayer *m_poTopLayer;
         CComLayer *m_poBottomLayer;
-		CBaseCommFB *m_poFb;
+    CBaseCommFB *m_poFb;
 
       private:
     };

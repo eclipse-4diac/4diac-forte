@@ -19,7 +19,7 @@ forte_add_subdirectory(core)
 forte_add_subdirectory(modules)
 forte_add_subdirectory(stdfblib)
 
-SET(SOURCE_GROUP core)	
+SET(SOURCE_GROUP core)  
 forte_add_sourcefile_with_path_hcpp(${FORTE_BINARY_DIR}/stringlist)
 set_source_files_properties(${FORTE_BINARY_DIR}/stringlist.h PROPERTIES GENERATED TRUE)
 set_source_files_properties(${FORTE_BINARY_DIR}/stringlist.cpp PROPERTIES GENERATED TRUE)
@@ -192,7 +192,7 @@ LIST(LENGTH EXTENSION_FILES len)
 IF(len GREATER 0)
   LIST(REMOVE_DUPLICATES EXTENSION_FILES)
   FOREACH(FILE ${EXTENSION_FILES})
-	INCLUDE("${FILE}")
+  INCLUDE("${FILE}")
   ENDFOREACH(FILE)
 ENDIF(len GREATER 0)
 
@@ -281,7 +281,7 @@ endif(FORTE_BUILD_SHARED_LIBRARY)
 #######################################################################################
 
 #forte init is needed for the temporary forte library, which then is linked to the main.cpp
-ADD_CUSTOM_TARGET(forte_init_generator COMMAND ${CMAKE_COMMAND} -DFORTE_BINARY_DIR:STRING="${CMAKE_BINARY_DIR}" -DFORTE_SOURCE_DIR:STRING="${CMAKE_SOURCE_DIR}" -DFORTE_USE_64BIT_DATATYPES:STRING="${FORTE_USE_64BIT_DATATYPES}" -DFORTE_USE_REAL_DATATYPE:STRING="${FORTE_USE_REAL_DATATYPE}" -DFORTE_USE_LREAL_DATATYPE:STRING="${FORTE_USE_LREAL_DATATYPE}" -DFORTE_SUPPORT_ARRAYS:STRING="${FORTE_SUPPORT_ARRAYS}" -DFORTE_LITTLE_ENDIAN:STRING=${FORTE_LITTLE_ENDIAN} -DFORTE_BIG_ENDIAN:STRING=${FORTE_BIG_ENDIAN} -DFORTE_LOGLEVEL:STRING="${FORTE_LOGLEVEL}" -P ${FORTE_BUILDSUPPORT_DIRECTORY}/generate_init.cmake)	#
+ADD_CUSTOM_TARGET(forte_init_generator COMMAND ${CMAKE_COMMAND} -DFORTE_BINARY_DIR:STRING="${CMAKE_BINARY_DIR}" -DFORTE_SOURCE_DIR:STRING="${CMAKE_SOURCE_DIR}" -DFORTE_USE_64BIT_DATATYPES:STRING="${FORTE_USE_64BIT_DATATYPES}" -DFORTE_USE_REAL_DATATYPE:STRING="${FORTE_USE_REAL_DATATYPE}" -DFORTE_USE_LREAL_DATATYPE:STRING="${FORTE_USE_LREAL_DATATYPE}" -DFORTE_SUPPORT_ARRAYS:STRING="${FORTE_SUPPORT_ARRAYS}" -DFORTE_LITTLE_ENDIAN:STRING=${FORTE_LITTLE_ENDIAN} -DFORTE_BIG_ENDIAN:STRING=${FORTE_BIG_ENDIAN} -DFORTE_LOGLEVEL:STRING="${FORTE_LOGLEVEL}" -P ${FORTE_BUILDSUPPORT_DIRECTORY}/generate_init.cmake)  #
 ADD_DEPENDENCIES (forte_init_generator forte_generate_modules_cmake_files)
 ADD_DEPENDENCIES (FORTE_LITE forte_init_generator)
 
@@ -295,8 +295,8 @@ ADD_DEPENDENCIES (forte_stringlist_generator forte_generate_modules_cmake_files)
 # Generate stringlist for every source file
 #######################################################################################
 if(FORTE_LINKED_STRINGDICT)
-	set(ENABLE_GENERATED_SOURCE_CPP ON)
-	ADD_DEPENDENCIES (FORTE_LITE forte_stringlist_externals)
+  set(ENABLE_GENERATED_SOURCE_CPP ON)
+  ADD_DEPENDENCIES (FORTE_LITE forte_stringlist_externals)
 endif(FORTE_LINKED_STRINGDICT)
 
 #######################################################################################

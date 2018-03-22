@@ -39,20 +39,20 @@ private:
   void executeEvent(int pa_nEIID);
 
   CIEC_BOOL& CU() {
-   	return *static_cast<CIEC_BOOL*>(getDI(0));
+     return *static_cast<CIEC_BOOL*>(getDI(0));
   }
   CIEC_BOOL& R() {
     return *static_cast<CIEC_BOOL*>(getDI(1));
   }
   CIEC_LINT& PV() {
-   	return *static_cast<CIEC_LINT*>(getDI(2));
+     return *static_cast<CIEC_LINT*>(getDI(2));
   }
 
   CIEC_BOOL& Q() {
-   	return *static_cast<CIEC_BOOL*>(getDO(0));
+     return *static_cast<CIEC_BOOL*>(getDO(0));
   }
   CIEC_LINT& CV() {
-   	return *static_cast<CIEC_LINT*>(getDO(1));
+     return *static_cast<CIEC_LINT*>(getDO(1));
   }
 
 public:

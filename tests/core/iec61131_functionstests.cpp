@@ -19,59 +19,59 @@ BOOST_AUTO_TEST_SUITE(IEC61131_functions)
 
 BOOST_AUTO_TEST_CASE(to_upper)
 {
-	CIEC_STRING sTestString("shall_be_to_upper");
-	CIEC_STRING sToUpperString(TOUPPER(sTestString));
-	BOOST_TEST(sToUpperString.getValue() == "SHALL_BE_TO_UPPER");
+  CIEC_STRING sTestString("shall_be_to_upper");
+  CIEC_STRING sToUpperString(TOUPPER(sTestString));
+  BOOST_TEST(sToUpperString.getValue() == "SHALL_BE_TO_UPPER");
 }
 
 BOOST_AUTO_TEST_CASE(to_lower)
 {
-	CIEC_STRING sTestString("SHALL_BE_TO_LOWER");
-	CIEC_STRING sToLowerString(TOLOWER(sTestString));
-	BOOST_TEST(sToLowerString.getValue() == "shall_be_to_lower");
+  CIEC_STRING sTestString("SHALL_BE_TO_LOWER");
+  CIEC_STRING sToLowerString(TOLOWER(sTestString));
+  BOOST_TEST(sToLowerString.getValue() == "shall_be_to_lower");
 }
 
 BOOST_AUTO_TEST_CASE(left)
 {
-	CIEC_STRING sTestString("SHALL_BE_CROPPED_HERE_THIS_SHOULD_NOT_BE_SEEN");
-	CIEC_STRING sLeftString(LEFT(sTestString, CIEC_INT(21)));
-	BOOST_TEST(sLeftString.getValue() == "SHALL_BE_CROPPED_HERE");
+  CIEC_STRING sTestString("SHALL_BE_CROPPED_HERE_THIS_SHOULD_NOT_BE_SEEN");
+  CIEC_STRING sLeftString(LEFT(sTestString, CIEC_INT(21)));
+  BOOST_TEST(sLeftString.getValue() == "SHALL_BE_CROPPED_HERE");
 }
 
 BOOST_AUTO_TEST_CASE(right)
 {
-	CIEC_STRING sTestString("THIS_SHOULD_BE_CROPPED_THIS_SHOULD_BE_SEEN");
-	CIEC_STRING sRightString(RIGHT(sTestString, CIEC_INT(19)));
-	BOOST_TEST(sRightString.getValue() == "THIS_SHOULD_BE_SEEN");
+  CIEC_STRING sTestString("THIS_SHOULD_BE_CROPPED_THIS_SHOULD_BE_SEEN");
+  CIEC_STRING sRightString(RIGHT(sTestString, CIEC_INT(19)));
+  BOOST_TEST(sRightString.getValue() == "THIS_SHOULD_BE_SEEN");
 }
 
 BOOST_AUTO_TEST_CASE(concat)
 {
-	CIEC_STRING sFristString("THIS_IS_THE_FIRST_STRING");
-	CIEC_STRING sSecondString("_THIS_IS_THE_SECOND_STRING");
-	CIEC_STRING sConcatString(CONCAT(sFristString, sSecondString));
-	BOOST_TEST(sConcatString.getValue() == "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING");
+  CIEC_STRING sFristString("THIS_IS_THE_FIRST_STRING");
+  CIEC_STRING sSecondString("_THIS_IS_THE_SECOND_STRING");
+  CIEC_STRING sConcatString(CONCAT(sFristString, sSecondString));
+  BOOST_TEST(sConcatString.getValue() == "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING");
 }
 
 #if __cplusplus > 199711L
 //The following tests only work if we have C++ 11 or higher
 BOOST_AUTO_TEST_CASE(concat3)
 {
-	CIEC_STRING sFristString("THIS_IS_THE_FIRST_STRING");
-	CIEC_STRING sSecondString("_THIS_IS_THE_SECOND_STRING");
-	CIEC_STRING sThirdString("_THIS_IS_THE_THIRD_STRING");
-	CIEC_STRING sConcatString(CONCAT(sFristString, sSecondString, sThirdString));
-	BOOST_TEST(sConcatString.getValue() == "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING_THIS_IS_THE_THIRD_STRING");
+  CIEC_STRING sFristString("THIS_IS_THE_FIRST_STRING");
+  CIEC_STRING sSecondString("_THIS_IS_THE_SECOND_STRING");
+  CIEC_STRING sThirdString("_THIS_IS_THE_THIRD_STRING");
+  CIEC_STRING sConcatString(CONCAT(sFristString, sSecondString, sThirdString));
+  BOOST_TEST(sConcatString.getValue() == "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING_THIS_IS_THE_THIRD_STRING");
 }
 
 BOOST_AUTO_TEST_CASE(concat4)
 {
-	CIEC_STRING sFristString("THIS_IS_THE_FIRST_STRING");
-	CIEC_STRING sSecondString("_THIS_IS_THE_SECOND_STRING");
-	CIEC_STRING sThirdString("_THIS_IS_THE_THIRD_STRING");
-	CIEC_STRING sForthString("_THIS_IS_THE_FORTH_STRING");
-	CIEC_STRING sConcatString(CONCAT(sFristString, sSecondString, sThirdString, sForthString));
-	BOOST_TEST(sConcatString.getValue() == "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING_THIS_IS_THE_THIRD_STRING_THIS_IS_THE_FORTH_STRING");
+  CIEC_STRING sFristString("THIS_IS_THE_FIRST_STRING");
+  CIEC_STRING sSecondString("_THIS_IS_THE_SECOND_STRING");
+  CIEC_STRING sThirdString("_THIS_IS_THE_THIRD_STRING");
+  CIEC_STRING sForthString("_THIS_IS_THE_FORTH_STRING");
+  CIEC_STRING sConcatString(CONCAT(sFristString, sSecondString, sThirdString, sForthString));
+  BOOST_TEST(sConcatString.getValue() == "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING_THIS_IS_THE_THIRD_STRING_THIS_IS_THE_FORTH_STRING");
 }
 
 #endif

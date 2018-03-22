@@ -24,7 +24,7 @@ CMuxedSerCommLayer::CMuxedSerPortsManager CMuxedSerCommLayer::smMuxedSerPortsMan
 
 CMuxedSerCommLayer::CMuxedSerCommLayer(CComLayer* paUpperLayer, CBaseCommFB * paFB) :
     CComLayer(paUpperLayer, paFB), mBufFillSize(0), mFD(scm_nInvalidFileDescriptor),
-	mInterruptResp(forte::com_infra::EComResponse::e_Nothing), mSerMuxId(0){
+  mInterruptResp(forte::com_infra::EComResponse::e_Nothing), mSerMuxId(0){
 
 }
 

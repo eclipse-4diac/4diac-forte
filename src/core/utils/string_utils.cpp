@@ -39,10 +39,10 @@ long int forte::core::util::strtol(const char *nptr, char **endptr, int base) {
   }
 
   if(16 == base){
-	  if(('0' == (*nptr)) && ('x' == nptr[1])){
-	    //we have a preceding 0x step over it
-	    nptr += 2;
-	  }
+    if(('0' == (*nptr)) && ('x' == nptr[1])){
+      //we have a preceding 0x step over it
+      nptr += 2;
+    }
   }
 
   long nLimit1 = (bNegativeNumber ? -(CIEC_DINT::scm_nMinVal / base) : (CIEC_DINT::scm_nMaxVal / base));

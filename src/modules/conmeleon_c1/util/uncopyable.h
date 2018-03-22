@@ -21,11 +21,11 @@
  */
 class CUncopyable {
 protected:
-	CUncopyable() {}
-	~CUncopyable() {}
+  CUncopyable() {}
+  ~CUncopyable() {}
 private:
-	CUncopyable (const CUncopyable&);
-	CUncopyable& operator = (const CUncopyable&);
+  CUncopyable (const CUncopyable&);
+  CUncopyable& operator = (const CUncopyable&);
 };
 
 #endif /* UTIL_UNCOPYABLE_H_ */

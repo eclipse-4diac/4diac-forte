@@ -23,7 +23,7 @@ ${STRINGLIST_CPP}
   = {${scm_aunIdList_Str}};
 
 #ifdef FORTE_STRING_DICT_FIXED_MEMORY
-  char CStringDictionary::scm_acConstStringBuf[cg_unFORTE_StringDictInitialStringBufSize]
+	char CStringDictionary::scm_acConstStringBuf[cg_unFORTE_StringDictInitialStringBufSize]
 #else
   const char CStringDictionary::scm_acConstStringBuf[] 
 #endif

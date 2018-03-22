@@ -22,7 +22,7 @@ class E_SWITCH_tester : public CFBTester{
   public:
 
   private:
-	explicit E_SWITCH_tester(CResource *m_poTestResource);
+  explicit E_SWITCH_tester(CResource *m_poTestResource);
     virtual void executeAllTests();
 
     bool testCase_SingelE0();

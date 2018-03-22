@@ -22,7 +22,7 @@ class CForteArchitecture{
     static void deinitialize(void);
 
     static bool isInitialized(void){
-    	return mInitialized;
+      return mInitialized;
     }
   private:
 

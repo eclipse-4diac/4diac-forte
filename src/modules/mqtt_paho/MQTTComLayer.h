@@ -16,7 +16,7 @@
 #include "comlayer.h"
 #include "../../core/datatypes/forte_string.h"
 extern "C" {
-	#include <MQTTAsync.h>
+  #include <MQTTAsync.h>
 }
 
 #define QOS 0
@@ -27,21 +27,21 @@ using namespace forte::com_infra;
 
 class MQTTComLayer: public forte::com_infra::CComLayer{
 public:
-	MQTTComLayer(CComLayer* paUpperLayer, CBaseCommFB * paFB);
-	virtual ~MQTTComLayer();
+  MQTTComLayer(CComLayer* paUpperLayer, CBaseCommFB * paFB);
+  virtual ~MQTTComLayer();
 
-	EComResponse sendData(void* paData, unsigned int paSize);
+  EComResponse sendData(void* paData, unsigned int paSize);
 
-	EComResponse recvData(const void *paData, unsigned int paSize);
+  EComResponse recvData(const void *paData, unsigned int paSize);
 
-	EComResponse processInterrupt();
+  EComResponse processInterrupt();
 
-	char const* getTopicName() {
-		return mTopicName.getValue();
-	}
+  char const* getTopicName() {
+    return mTopicName.getValue();
+  }
 
 private:
-	CIEC_STRING mTopicName;
+  CIEC_STRING mTopicName;
 
   static const unsigned int mNoOfParameters = 3;
   static const unsigned int mBufferSize = 255;
@@ -50,14 +50,14 @@ private:
   unsigned int mUsedBuffer;
   EComResponse mInterruptResp;
 
-	EComResponse openConnection(char* paLayerParameter);
-	void closeConnection();
+  EComResponse openConnection(char* paLayerParameter);
+  void closeConnection();
 
-	enum Parameters {
-		Address,
-		ClientID,
-		Topic
-	};
+  enum Parameters {
+    Address,
+    ClientID,
+    Topic
+  };
 
 };
 

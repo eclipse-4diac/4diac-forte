@@ -17,26 +17,26 @@ SET(FORTE_COM_MODBUS_LIB_DIR "" CACHE PATH "Path to Modbus library directory (le
 if(FORTE_COM_MODBUS)
    forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
    forte_add_sourcefile_hcpp( modbushandler 
-							   modbusconnection 
-							   modbusclientconnection
-							   modbuspoll
-							   modbustimedevent )
-							   
-	forte_add_handler(CModbusHandler modbushandler)
-			forte_add_include_directories( ${FORTE_COM_MODBUS_LIB_DIR}/include )				   
-	if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-	    if(EXISTS ${FORTE_COM_MODBUS_LIB_DIR})
-    		forte_add_include_directories( ${FORTE_COM_MODBUS_LIB_DIR}/include/modbus )
-    		forte_add_link_directories( ${FORTE_COM_MODBUS_LIB_DIR}/lib )
-	    else(EXISTS ${FORTE_COM_MODBUS_LIB_DIR})
-	        forte_add_include_directories( /usr/include/modbus )
-    	endif(EXISTS ${FORTE_COM_MODBUS_LIB_DIR})
-    	forte_add_link_library( libmodbus.so )
-	elseif("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
-		forte_add_include_directories( ${FORTE_COM_MODBUS_LIB_DIR}/include )
-		forte_add_link_directories( ${FORTE_COM_MODBUS_LIB_DIR}/lib )
-		forte_add_link_library( libmodbus.lib ) 
-	endif()
-	
+                 modbusconnection 
+                 modbusclientconnection
+                 modbuspoll
+                 modbustimedevent )
+                 
+  forte_add_handler(CModbusHandler modbushandler)
+      forte_add_include_directories( ${FORTE_COM_MODBUS_LIB_DIR}/include )           
+  if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
+      if(EXISTS ${FORTE_COM_MODBUS_LIB_DIR})
+        forte_add_include_directories( ${FORTE_COM_MODBUS_LIB_DIR}/include/modbus )
+        forte_add_link_directories( ${FORTE_COM_MODBUS_LIB_DIR}/lib )
+      else(EXISTS ${FORTE_COM_MODBUS_LIB_DIR})
+          forte_add_include_directories( /usr/include/modbus )
+      endif(EXISTS ${FORTE_COM_MODBUS_LIB_DIR})
+      forte_add_link_library( libmodbus.so )
+  elseif("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
+    forte_add_include_directories( ${FORTE_COM_MODBUS_LIB_DIR}/include )
+    forte_add_link_directories( ${FORTE_COM_MODBUS_LIB_DIR}/lib )
+    forte_add_link_library( libmodbus.lib ) 
+  endif()
+  
 
 endif(FORTE_COM_MODBUS)

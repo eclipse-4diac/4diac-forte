@@ -51,10 +51,10 @@ class CrcXThread : public forte::arch::CThreadBase<RX_HANDLE, 0, CrcXThread> {
      */
     static UINT smTaskInstance;
 
-		/*! \brief Instance defined for the task
-		 *
-		 *  Increment task number to identify the different tasks.
-		 */
+    /*! \brief Instance defined for the task
+     *
+     *  Increment task number to identify the different tasks.
+     */
     static RX_TASK_TOKEN smTaskToken;
 
     /*!\brief Function that is given to the system thread support that should be called for the thread.
