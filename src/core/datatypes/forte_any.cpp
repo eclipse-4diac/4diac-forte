@@ -105,7 +105,7 @@ CStringDictionary::TStringId CIEC_ANY::parseTypeName(const char *pa_pacValue, co
 
 int CIEC_ANY::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
   int nRetVal = -1;
-  if((strlen(scm_acAnyToStringResponse) +1) < pa_nBufferSize){
+  if((strlen(scm_acAnyToStringResponse) +1) <= pa_nBufferSize){
     nRetVal = static_cast<int>(strlen(scm_acAnyToStringResponse));
     memcpy(pa_pacValue, scm_acAnyToStringResponse, nRetVal);
     pa_pacValue[nRetVal] = '\0';
@@ -208,7 +208,7 @@ void CIEC_ANY::specialCast(const CIEC_ANY &pa_roSrcValue, CIEC_ANY &pa_roDstValu
 }
 
 const TForteByte CIEC_ANY::csm_aStringBufferSize[] = {
-         0 /*e_ANY*/,
+         9 /*e_ANY*/,
          6 /*e_BOOL (0, 1)*/,
          5 /*e_SINT (-128, +127)*/,
          7 /*e_INT (-32768, +32767)*/,

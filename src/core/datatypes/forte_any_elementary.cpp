@@ -101,7 +101,7 @@ int CIEC_ANY_ELEMENTARY::toString(char* pa_acValue, unsigned int pa_nBufferSize)
     }
 #endif
     default: {
-      return -1;
+      return CIEC_ANY::toString(pa_acValue, pa_nBufferSize);
     }
   }
 
