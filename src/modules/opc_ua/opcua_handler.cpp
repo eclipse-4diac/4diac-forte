@@ -714,6 +714,10 @@ UA_StatusCode COPC_UA_Handler::createVariableNode(const UA_NodeId *parentNode, c
   return retVal;
 }
 
+UA_StatusCode COPC_UA_Handler::updateNodeUserAccessLevel(const UA_NodeId *nodeId, UA_Byte newAccessLevel) {
+	return UA_Server_writeAccessLevel(uaServer, *nodeId, newAccessLevel);
+}
+
 UA_StatusCode COPC_UA_Handler::createMethodNode(const UA_NodeId *parentNode, UA_UInt16 namespaceIdx, const char *methodName, UA_MethodCallback callback,
                         void *callbackHandle, unsigned int inputArgumentsSize, const UA_Argument *inputArguments,
                         unsigned int outputArgumentsSize, const UA_Argument *outputArguments, UA_NodeId *returnNodeId) {
