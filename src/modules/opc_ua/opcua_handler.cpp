@@ -70,7 +70,7 @@ void UA_Log_Forte(UA_LogLevel level, UA_LogCategory category, const char *msg, v
 void COPC_UA_Handler::configureUAServer(TForteUInt16 UAServerPort) {
 
   char name[255];
-  forte_snprintf(name, 255, "forte_%d", FORTE_COM_OPC_UA_PORT);
+  forte_snprintf(name, 255, "forte_%d", UAServerPort);
 
   uaServerConfig = UA_ServerConfig_new_minimal(UAServerPort, NULL);
   uaServerConfig->logger = UA_Log_Forte;

@@ -89,7 +89,7 @@ void CECOSThread::setDeadline(const CIEC_TIME &paVal){
 }
 
 void CECOSThread::sleepThread(unsigned int paMilliSeconds){
-  HAL_DELAY_US(1000 * paMilliSeconds);
+  cyg_thread_delay(1 + ((1000 * paMilliSeconds * CYGNUM_HAL_RTC_DENOMINATOR) / (CYGNUM_HAL_RTC_NUMERATOR / 1000)));
 }
   
 void CECOSThread::deleteThread(cyg_handle_t paThreadHandle){
