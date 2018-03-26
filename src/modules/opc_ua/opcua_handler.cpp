@@ -339,12 +339,11 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
     c++;
   }
 
-  CIEC_STRING fullPathString(nodePath);
-  char* fullPath = fullPathString.getValue();
+  DEVLOG_ERROR_VAR(CIEC_STRING fullPathString(nodePath));
   char *tok = strtok(nodePath, "/");
   if (startingNode == NULL || (startingNode->namespaceIndex == 0 && startingNode->identifier.numeric == UA_NS0ID_OBJECTSFOLDER)) {
     if (strcmp(tok, "Objects") != 0 && strcmp(tok, "0:Objects") != 0) {
-      DEVLOG_ERROR("OPC UA: Node path '%s' has to start with '/Objects'\n", fullPath);
+      DEVLOG_ERROR("OPC UA: Node path '%s' has to start with '/Objects'\n", fullPathString.getValue());
       return UA_STATUSCODE_BADINVALIDARGUMENT;
     }
     folderCnt--; //remaining count without Objects folder
@@ -431,11 +430,11 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
       UA_StatusCode retVal = response.responseHeader.serviceResult;
 
       if(retVal != UA_STATUSCODE_GOOD){
-        DEVLOG_ERROR("OPC UA: Could not translate browse paths for '%s' to node IDs. Error: %s\n", fullPath, UA_StatusCode_name(retVal));
+        DEVLOG_ERROR("OPC UA: Could not translate browse paths for '%s' to node IDs. Error: %s\n", fullPathString.getValue(), UA_StatusCode_name(retVal));
       }
 
       if(response.resultsSize != folderCnt * 2){
-        DEVLOG_ERROR("OPC UA: Could not translate browse paths for '%s' to node IDs. resultSize (%d) != expected count (%d)\n", fullPath, response.resultsSize, folderCnt);
+        DEVLOG_ERROR("OPC UA: Could not translate browse paths for '%s' to node IDs. resultSize (%d) != expected count (%d)\n", fullPathString.getValue(), response.resultsSize, folderCnt);
         retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
       }
 
@@ -520,11 +519,11 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
       for (; i >= 0; i--) {
         // now we found the first existing node
         if (browsePathsResults[foundFolderOffset+i].targetsSize == 0) {
-          DEVLOG_ERROR("OPC UA: Could not translate browse paths for '%s' to node IDs. target size is 0.\n", fullPath);
+          DEVLOG_ERROR("OPC UA: Could not translate browse paths for '%s' to node IDs. target size is 0.\n", fullPathString.getValue());
           break;
         }
         if (browsePathsResults[foundFolderOffset+i].targetsSize > 1) {
-          DEVLOG_WARNING("OPC UA: The given browse path '%s' has multiple results for the same path. Taking the first result.\n", fullPath);
+          DEVLOG_WARNING("OPC UA: The given browse path '%s' has multiple results for the same path. Taking the first result.\n", fullPathString.getValue());
         }
 
         // foundNodeId contains the ID of the parent which exists
@@ -715,7 +714,7 @@ UA_StatusCode COPC_UA_Handler::createVariableNode(const UA_NodeId *parentNode, c
 }
 
 UA_StatusCode COPC_UA_Handler::updateNodeUserAccessLevel(const UA_NodeId *nodeId, UA_Byte newAccessLevel) {
-	return UA_Server_writeAccessLevel(uaServer, *nodeId, newAccessLevel);
+  return UA_Server_writeAccessLevel(uaServer, *nodeId, newAccessLevel);
 }
 
 UA_StatusCode COPC_UA_Handler::createMethodNode(const UA_NodeId *parentNode, UA_UInt16 namespaceIdx, const char *methodName, UA_MethodCallback callback,

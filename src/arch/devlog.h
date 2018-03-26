@@ -38,6 +38,10 @@ enum E_MsgLevel {E_INFO, E_WARNING, E_ERROR, E_DEBUG, E_TRACE};
   #define DEVLOG_WARNING(...) logMessage(E_WARNING, __VA_ARGS__)
   #define DEVLOG_INFO(...) logMessage(E_INFO, __VA_ARGS__)
   #define DEVLOG_DEBUG(...) logMessage(E_DEBUG, __VA_ARGS__)
+  #define DEVLOG_ERROR_VAR(X) X
+  #define DEVLOG_WARNING_VAR(X) X
+  #define DEVLOG_INFO_VAR(X) X
+  #define DEVLOG_DEBUG_VAR(X) X
 #endif
 
 #ifdef LOGERROR
@@ -45,6 +49,10 @@ enum E_MsgLevel {E_INFO, E_WARNING, E_ERROR, E_DEBUG, E_TRACE};
   #define DEVLOG_WARNING(...)
   #define DEVLOG_INFO(...)
   #define DEVLOG_DEBUG(...)
+  #define DEVLOG_ERROR_VAR(X) X
+  #define DEVLOG_WARNING_VAR(X)
+  #define DEVLOG_INFO_VAR(X)
+  #define DEVLOG_DEBUG_VAR(X)
 #endif
 
 #ifdef LOGWARNING
@@ -52,6 +60,10 @@ enum E_MsgLevel {E_INFO, E_WARNING, E_ERROR, E_DEBUG, E_TRACE};
   #define DEVLOG_WARNING(...) logMessage(E_WARNING, __VA_ARGS__)
   #define DEVLOG_INFO(...)
   #define DEVLOG_DEBUG(...)
+  #define DEVLOG_ERROR_VAR(X) X
+  #define DEVLOG_WARNING_VAR(X) X
+  #define DEVLOG_INFO_VAR(X)
+  #define DEVLOG_DEBUG_VAR(X)
 #endif
 
 #ifdef LOGINFO
@@ -59,6 +71,10 @@ enum E_MsgLevel {E_INFO, E_WARNING, E_ERROR, E_DEBUG, E_TRACE};
   #define DEVLOG_WARNING(...) logMessage(E_WARNING, __VA_ARGS__)
   #define DEVLOG_INFO(...) logMessage(E_INFO, __VA_ARGS__)
   #define DEVLOG_DEBUG(...)
+  #define DEVLOG_ERROR_VAR(X) X
+  #define DEVLOG_WARNING_VAR(X) X
+  #define DEVLOG_INFO_VAR(X) X
+  #define DEVLOG_DEBUG_VAR(X)
 #endif
 
 #ifdef NOLOG
@@ -66,6 +82,10 @@ enum E_MsgLevel {E_INFO, E_WARNING, E_ERROR, E_DEBUG, E_TRACE};
   #define DEVLOG_WARNING(...)
   #define DEVLOG_ERROR(...)
   #define DEVLOG_DEBUG(...)
+  #define DEVLOG_ERROR_VAR(X)
+  #define DEVLOG_WARNING_VAR(X)
+  #define DEVLOG_INFO_VAR(X)
+  #define DEVLOG_DEBUG_VAR(X)
 #endif
 
 #if (defined(FORTE_TRACE_EVENTS) && !defined(NOLOG))

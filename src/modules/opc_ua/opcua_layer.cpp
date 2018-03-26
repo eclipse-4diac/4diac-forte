@@ -285,8 +285,8 @@ bool COPC_UA_Layer::getPortConnectionInfo(unsigned int portIndex, bool isSD, con
                     : (*connectedToFb)->getDIFromPortId(remoteConnectionPoint.mPortId);
 
   if (!COPC_UA_Helper::isTypeIdValid(remotePort->getDataTypeID())) {
-    const CStringDictionary::TStringId connectedToType = isSD ? sourceInterfaceSpec->m_aunDODataTypeNames[remoteConnectionPoint.mPortId]
-                                  : sourceInterfaceSpec->m_aunDIDataTypeNames[remoteConnectionPoint.mPortId];
+    DEVLOG_ERROR_VAR(const CStringDictionary::TStringId connectedToType = isSD ? sourceInterfaceSpec->m_aunDODataTypeNames[remoteConnectionPoint.mPortId]
+                                  : sourceInterfaceSpec->m_aunDIDataTypeNames[remoteConnectionPoint.mPortId]);
     DEVLOG_ERROR("OPC UA: Mapping of type %s to OPC UA not defined.\n", CStringDictionary::getInstance().get(connectedToType));
     return false;
   }
@@ -362,17 +362,17 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
           if (!conv->get(&initData[i], varValue)) {
             DEVLOG_WARNING("OPC UA: Cannot convert value of port %d for initialization", i);
           }
-          retVal = GET_HANDLER_FROM_LAYER(*m_poFb, COPC_UA_Handler)->createVariableNode((*nodeIds)[i].functionBlockId, connectedToName, conv->type,
+          retVal = GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Handler)->createVariableNode((*nodeIds)[i].functionBlockId, connectedToName, conv->type,
                                          varValue, (*nodeIds)[i].variableId, !isSD);
           UA_delete(varValue, conv->type);
           if (retVal == UA_STATUSCODE_GOOD && !isSD) {
-            GET_HANDLER_FROM_LAYER(*m_poFb, COPC_UA_Handler)->registerNodeCallBack((*nodeIds)[i].variableId, this, conv, i);
+            GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Handler)->registerNodeCallBack((*nodeIds)[i].variableId, this, conv, i);
           }
         } else if (!isSD) {
           // the node already exists. It could be the case that the node was previously created
           // for a subscribe FB, which sets the access to read only. Since this is now a publish FB
           // we need to change the access to read & write
-          if (UA_STATUSCODE_GOOD != GET_HANDLER_FROM_LAYER(*m_poFb,
+          if (UA_STATUSCODE_GOOD != GET_HANDLER_FROM_COMM_LAYER(
                          COPC_UA_Handler)->updateNodeUserAccessLevel((*nodeIds)[i].variableId,
                                                UA_ACCESSLEVELMASK_READ & UA_ACCESSLEVELMASK_WRITE)) {
             DEVLOG_WARNING("OPC UA: Cannot set write permission of node for port %d", i);
