@@ -131,14 +131,16 @@ LIST(LENGTH LAYER_CLASS       LAYER_CLASS_LEN)
 math(EXPR LAYER_CLASS_LEN           ${LAYER_CLASS_LEN}-1)
 
 SET(LAYERMANAGER_INCLUDE "")
-SET(LAYERMANAGER_INSTANCE "if(false){\n  }\n")
 
 FOREACH(POS RANGE ${LAYER_CLASS_LEN}-1)
   LIST(GET LAYER_CLASS      ${POS} CLASS) 
   LIST(GET LAYER_CONFIGNAME ${POS} CONFIGNAME)
   LIST(GET LAYER_FILENAME   ${POS} FILENAME)
   SET(LAYERMANAGER_INCLUDE  "${LAYERMANAGER_INCLUDE}#include<${FILENAME}>\n")
-  SET(LAYERMANAGER_INSTANCE "${LAYERMANAGER_INSTANCE}  else if(0 == strcmp(\"${CONFIGNAME}\", pa_acLayerIdentifier)){\n    m_poNewLayer = new ${CLASS}(pa_poUpperLayer, pa_poComFB);\n  }\n")
+  if("${POS}" GREATER  "0")
+    SET(LAYERMANAGER_INSTANCE "${LAYERMANAGER_INSTANCE}  else ")
+  endif()
+  SET(LAYERMANAGER_INSTANCE "${LAYERMANAGER_INSTANCE}if(0 == strcmp(\"${CONFIGNAME}\", pa_acLayerIdentifier)){\n    m_poNewLayer = new ${CLASS}(pa_poUpperLayer, pa_poComFB);\n  }\n")
 ENDFOREACH(POS)
 
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/core/cominfra/comlayersmanager.cpp.in ${CMAKE_BINARY_DIR}/core/cominfra/comlayersmanager_new.cpp)
