@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2013 ACIN
+ * Copyright (c) 2011 - 2013, 2018 ACIN, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -70,6 +70,15 @@ const CIEC_DATE_AND_TIME CONCAT_DATE_TOD(const CIEC_DATE& pa_roIN1, const CIEC_T
 
   retVal.setDateAndTime(*pstTime, pa_roIN2.getMilliSeconds());
   return retVal;
+}
+
+CIEC_ANY_INT FIND(const CIEC_ANY_STRING& pa_rsIn1, const CIEC_ANY_STRING& pa_rsIn2){
+  const char* pc_Find = strstr(pa_rsIn1.getValue(), pa_rsIn2.getValue());
+  CIEC_ANY_INT temp;
+  if (0 != pc_Find){
+    temp.setSignedValue(pc_Find - pa_rsIn1.getValue());
+  }
+  return temp;
 }
 
 #endif
