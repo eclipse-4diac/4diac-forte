@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 - 2013 ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2010 - 2013, 2018 ACIN, Profactor GmbH, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -512,19 +512,7 @@ template<typename T> const T REPLACE(const T& pa_rsIn1, const T& pa_rsIn2, const
   return CONCAT(CONCAT(LEFT(pa_rsIn1, pos_left), pa_rsIn2), RIGHT(pa_rsIn1, pos_right));
 }
 
-template<typename T> CIEC_ANY_INT FIND(const T& pa_rsIn1, const T& pa_rsIn2){
-  const char* pc_Find = strstr(pa_rsIn1.getValue(), pa_rsIn2.getValue());
-  CIEC_ANY_INT temp;
-  if (NULL != pc_Find)
-  {
-    temp.setSignedValue(pc_Find - pa_rsIn1.getValue());
-  } 
-  else
-  {
-    temp.setSignedValue(0);
-  }
-  return temp;
-}
+CIEC_ANY_INT FIND(const CIEC_ANY_STRING& pa_rsIn1, const CIEC_ANY_STRING& pa_rsIn2);
 
 template<typename T> const T TOUPPER(const T& pa_rsIn){
   T temp(pa_rsIn);

@@ -68,6 +68,15 @@ public:
                    UA_NodeId *returnVarNodeId, bool allowWrite);
 
   /**
+   * Sets the user access level attribute of the node to the given new value.
+   * @param nodeId the node for which to update the access level
+   * @param newAccessLevel new access level of the node
+   * @return UA_STATUSCODE_GOOD on succes, the error code otherwise
+   */
+  UA_StatusCode updateNodeUserAccessLevel(const UA_NodeId *nodeId, UA_Byte newAccessLevel);
+
+
+  /**
    * Create a new method node in the OPC UA information model.
    *
    * @param parentNode parent node where the method should be created

@@ -351,21 +351,32 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
       retVal = GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Handler)->getNodeForPath(&(*nodeIds)[i].variableId, sourceVarBrowseName, false,
                                          (*nodeIds)[i].functionBlockId);
       forte_free(sourceVarBrowseName);
-      if (retVal == UA_STATUSCODE_GOOD && (*nodeIds)[i].variableId == NULL) {
-        // we need to create the variable
+      if (retVal == UA_STATUSCODE_GOOD) {
+        if ((*nodeIds)[i].variableId == NULL) {
+          // we need to create the variable
 
-        (*nodeIds)[i].convert = conv;
-        void *varValue = UA_new(conv->type);
-        UA_init(varValue, conv->type);
-        (*nodeIds)[i].variableId = UA_NodeId_new();
-        if (!conv->get(&initData[i], varValue)) {
-          DEVLOG_WARNING("OPC UA: Cannot convert value of port %d for initialization", i);
-        }
-        retVal = GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Handler)->createVariableNode((*nodeIds)[i].functionBlockId, connectedToName, conv->type,
-                                               varValue, (*nodeIds)[i].variableId, !isSD);
-        UA_delete(varValue, conv->type);
-        if (retVal == UA_STATUSCODE_GOOD && !isSD) {
-          GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Handler)->registerNodeCallBack((*nodeIds)[i].variableId, this, conv, i);
+          (*nodeIds)[i].convert = conv;
+          void *varValue = UA_new(conv->type);
+          UA_init(varValue, conv->type);
+          (*nodeIds)[i].variableId = UA_NodeId_new();
+          if (!conv->get(&initData[i], varValue)) {
+            DEVLOG_WARNING("OPC UA: Cannot convert value of port %d for initialization", i);
+          }
+          retVal = GET_HANDLER_FROM_LAYER(*m_poFb, COPC_UA_Handler)->createVariableNode((*nodeIds)[i].functionBlockId, connectedToName, conv->type,
+                                         varValue, (*nodeIds)[i].variableId, !isSD);
+          UA_delete(varValue, conv->type);
+          if (retVal == UA_STATUSCODE_GOOD && !isSD) {
+            GET_HANDLER_FROM_LAYER(*m_poFb, COPC_UA_Handler)->registerNodeCallBack((*nodeIds)[i].variableId, this, conv, i);
+          }
+        } else if (!isSD) {
+          // the node already exists. It could be the case that the node was previously created
+          // for a subscribe FB, which sets the access to read only. Since this is now a publish FB
+          // we need to change the access to read & write
+          if (UA_STATUSCODE_GOOD != GET_HANDLER_FROM_LAYER(*m_poFb,
+                         COPC_UA_Handler)->updateNodeUserAccessLevel((*nodeIds)[i].variableId,
+                                               UA_ACCESSLEVELMASK_READ & UA_ACCESSLEVELMASK_WRITE)) {
+            DEVLOG_WARNING("OPC UA: Cannot set write permission of node for port %d", i);
+          }
         }
       } // else if retVal = UA_STATUSCODE_GOOD the node already exists
 

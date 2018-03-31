@@ -14,6 +14,7 @@
   forte_test_add_inc_directories(${CMAKE_CURRENT_SOURCE_DIR})
   
   forte_test_add_sourcefile_cpp(CIEC_ANY_tests.cpp)
+  forte_test_add_sourcefile_cpp(anytostringtests.cpp)
 
 #Unicode utilities
   forte_test_add_sourcefile_cpp(CUnicodeUtilities_test.cpp)
