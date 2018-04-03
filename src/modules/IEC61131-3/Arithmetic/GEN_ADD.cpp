@@ -39,7 +39,12 @@ const CStringDictionary::TStringId GEN_ADD::scm_anEventOutputNames[] = {
 
 GEN_ADD::GEN_ADD(const CStringDictionary::TStringId pa_nInstanceNameId,
     CResource *pa_poSrcRes) :
-    CFunctionBlock(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0) {
+    CFunctionBlock(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0),
+    m_anDataInputNames(0),
+    m_anDataInputTypeIds(0),
+    m_anEIWith(0),
+    m_nDInputs(0),
+    m_nConfiguredFBTypeNameId(CStringDictionary::scm_nInvalidStringId){
 }
 
 GEN_ADD::~GEN_ADD() {

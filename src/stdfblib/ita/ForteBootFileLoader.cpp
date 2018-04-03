@@ -22,7 +22,7 @@ ForteBootFileLoader::ForteBootFileLoader(IBootFileCallback &paCallback) : mBootf
   openBootFile(0);
 }
 
-ForteBootFileLoader::ForteBootFileLoader(IBootFileCallback &paCallback, CIEC_STRING &paBootFileName) : mCallback(paCallback){
+ForteBootFileLoader::ForteBootFileLoader(IBootFileCallback &paCallback, CIEC_STRING &paBootFileName) : mBootfile(0), mCallback(paCallback){
   openBootFile(&paBootFileName);
 }
 

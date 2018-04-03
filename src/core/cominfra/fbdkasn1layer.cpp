@@ -134,7 +134,7 @@ EComResponse CFBDKASN1ComLayer::recvData(const void *pa_pvData, unsigned int pa_
     TForteByte *usedBuffer = 0;
 
     // TODO: only copy if necessary
-    if(mDeserBufPos == 0){
+    if(0 == mDeserBufPos){
       usedBuffer = recvData;
       usedBufferSize = pa_unSize;
     }
@@ -153,14 +153,12 @@ EComResponse CFBDKASN1ComLayer::recvData(const void *pa_pvData, unsigned int pa_
         nBuf = 1;
       }
       else{
-        if((apoRDs + mDOPos) != 0){
-          nBuf = deserializeDataPoint(usedBuffer, usedBufferSize, apoRDs[mDOPos]);
-        }
-        else{
+        if(0 == apoRDs){
           DEVLOG_ERROR("Data type error\n");
           eRetVal = e_ProcessDataDataTypeError;
           break;
         }
+        nBuf = deserializeDataPoint(usedBuffer, usedBufferSize, apoRDs[mDOPos]);
       }
 
       // deserialize failed, copy data into buffer for next package
@@ -171,7 +169,7 @@ EComResponse CFBDKASN1ComLayer::recvData(const void *pa_pvData, unsigned int pa_
           break;
         }
         else{
-          if(usedBuffer == recvData){
+          if(0 == mDeserBufPos){ //usedBuffer == recvData
             if((mDeserBufSize) < usedBufferSize){
               resizeDeserBuffer(usedBufferSize);
             }
