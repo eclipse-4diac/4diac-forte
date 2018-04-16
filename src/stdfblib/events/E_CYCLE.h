@@ -12,6 +12,8 @@
 #ifndef _E_CYCLE_H_
 #define _E_CYCLE_H_
 
+#ifndef FMU
+
 #include "../timedfb.h"
 
 /*! \brief Implementation of the E_CYCLE FB.
@@ -25,5 +27,54 @@ public:
   };
 	virtual ~E_CYCLE() {};
 };
+
+#else
+
+#include <cfb.h>
+#include <typelib.h>
+#include <forte_time.h>
+
+class E_CYCLE: public CCompositeFB{
+  DECLARE_FIRMWARE_FB(E_CYCLE)
+
+private:
+  static const CStringDictionary::TStringId scm_anDataInputNames[];
+  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+  CIEC_TIME &DT() {
+    return *static_cast<CIEC_TIME*>(getDI(0));
+  };
+
+  static const TEventID scm_nEventSTARTID = 0;
+  static const TEventID scm_nEventSTOPID = 1;
+  static const TForteInt16 scm_anEIWithIndexes[];
+  static const TDataIOID scm_anEIWith[];
+  static const CStringDictionary::TStringId scm_anEventInputNames[];
+
+  static const TEventID scm_nEventEOID = 0;
+  static const TForteInt16 scm_anEOWithIndexes[];
+  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+
+  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+
+   FORTE_FB_DATA_ARRAY(1, 1, 0, 0);
+
+  static const SCFB_FBInstanceData scm_astInternalFBs[];
+
+  static const SCFB_FBConnectionData scm_astEventConnections[];
+
+  static const SCFB_FBFannedOutConnectionData scm_astFannedOutEventConnections[];
+
+  static const SCFB_FBConnectionData scm_astDataConnections[];
+  static const SCFB_FBNData scm_stFBNData;
+
+public:
+  COMPOSITE_FUNCTION_BLOCK_CTOR(E_CYCLE){
+  };
+
+  virtual ~E_CYCLE(){};
+
+};
+
+#endif
 
 #endif /*E_CYCLE_H_*/
