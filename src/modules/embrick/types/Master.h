@@ -61,8 +61,8 @@ private:
 
   static const SAdapterInstanceDef scm_astAdapterInstances[];
 
-  BusAdapter& BusAdapterOut() {
-    return (*static_cast<BusAdapter*>(m_apoAdapters[0]));
+  EmbrickBusAdapter& BusAdapterOut() {
+    return (*static_cast<EmbrickBusAdapter*>(m_apoAdapters[0]));
   }
 
   static const int scm_nBusAdapterAdpNum = 0;

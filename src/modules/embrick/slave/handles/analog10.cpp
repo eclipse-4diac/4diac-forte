@@ -10,6 +10,7 @@
  *******************************************************************************/
 
 #include "analog10.h"
+#include "criticalregion.h"
 
 EmbrickAnalog10SlaveHandle::EmbrickAnalog10SlaveHandle(IODeviceController *controller,
     IOMapper::Direction direction, uint8_t offset, EmbrickSlaveHandler *slave) :

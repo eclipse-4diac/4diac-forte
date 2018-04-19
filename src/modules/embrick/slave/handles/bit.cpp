@@ -10,6 +10,7 @@
  *******************************************************************************/
 
 #include "bit.h"
+#include "criticalregion.h"
 
 EmbrickBitSlaveHandle::EmbrickBitSlaveHandle(IODeviceController *controller,
     IOMapper::Direction direction, uint8_t offset,
