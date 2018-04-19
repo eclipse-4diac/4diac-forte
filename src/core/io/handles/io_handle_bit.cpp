@@ -11,19 +11,16 @@
 
 #include "io_handle_bit.h"
 
-namespace IO {
-namespace Handles {
-
-Bit::Bit(Device::Controller *controller, IO::Mapper::Direction direction,
+IOHandleBit::IOHandleBit(IODeviceController *controller, IOMapper::Direction direction,
     uint8_t offset, uint8_t position, uint8_t* image) :
-    Handle(controller, direction, CIEC_ANY::e_BOOL), image(image), offset(
+    IOHandle(controller, direction, CIEC_ANY::e_BOOL), image(image), offset(
         offset), mask((uint8_t) (1 << position)) {
 }
 
-void Bit::onObserver(IO::Observer *observer) {
-  IO::Handle::onObserver(observer);
+void IOHandleBit::onObserver(IOObserver *observer) {
+  IOHandle::onObserver(observer);
 
-  if (direction == IO::Mapper::In) {
+  if (direction == IOMapper::In) {
     CIEC_BOOL state;
     get(state);
     if (state) {
@@ -32,13 +29,13 @@ void Bit::onObserver(IO::Observer *observer) {
   }
 }
 
-void Bit::dropObserver() {
-  IO::Handle::dropObserver();
+void IOHandleBit::dropObserver() {
+  IOHandle::dropObserver();
 
   reset();
 }
 
-void Bit::set(const CIEC_ANY &state) {
+void IOHandleBit::set(const CIEC_ANY &state) {
   if (static_cast<const CIEC_BOOL&>(state))
     *(image + offset) = (uint8_t) (*(image + offset) | mask);
   else
@@ -47,13 +44,10 @@ void Bit::set(const CIEC_ANY &state) {
   controller->handleChangeEvent(this);
 }
 
-void Bit::get(CIEC_ANY &state) {
+void IOHandleBit::get(CIEC_ANY &state) {
   static_cast<CIEC_BOOL&>(state) = (*(image + offset) & mask) != 0;
 }
 
-bool Bit::equal(uint8_t* oldImage) {
+bool IOHandleBit::equal(uint8_t* oldImage) {
   return (*(image + offset) & mask) == (*(oldImage + offset) & mask);
 }
-
-} /* namespace Handles */
-} /* namespace IO */

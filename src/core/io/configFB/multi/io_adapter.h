@@ -16,21 +16,17 @@
 
 #define ADAPTER_CTOR_FOR_IO_MULTI(fbclass) \
  fbclass(CStringDictionary::TStringId pa_anAdapterInstanceName, CResource *pa_poSrcRes, bool pa_bIsPlug) : \
- IO::ConfigurationFB::Multi::Adapter( (const TForteUInt8* const) &scm_slaveConfigurationIO, scm_slaveConfigurationIO_num, pa_poSrcRes, &scm_stFBInterfaceSpecSocket, pa_anAdapterInstanceName, &scm_stFBInterfaceSpecPlug, pa_bIsPlug, m_anFBConnData, m_anFBVarsData)
+ IOConfigFBMultiAdapter( (const TForteUInt8* const) &scm_slaveConfigurationIO, scm_slaveConfigurationIO_num, pa_poSrcRes, &scm_stFBInterfaceSpecSocket, pa_anAdapterInstanceName, &scm_stFBInterfaceSpecPlug, pa_bIsPlug, m_anFBConnData, m_anFBVarsData)
 
-namespace IO {
-namespace ConfigurationFB {
-namespace Multi {
-
-class Adapter: public CAdapter {
+class IOConfigFBMultiAdapter: public CAdapter {
 public:
-  Adapter(const TForteUInt8* const scm_slaveConfigurationIO,
+  IOConfigFBMultiAdapter(const TForteUInt8* const scm_slaveConfigurationIO,
       const TForteUInt8 scm_slaveConfigurationIO_num, CResource *pa_poSrcRes,
       const SFBInterfaceSpec *pa_pstInterfaceSpecSocket,
       const CStringDictionary::TStringId pa_nInstanceNameId,
       const SFBInterfaceSpec *pa_pstInterfaceSpecPlug, bool pa_bIsPlug,
       TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
-  virtual ~Adapter();
+  virtual ~IOConfigFBMultiAdapter();
 
   CIEC_BOOL &QO() {
     return *static_cast<CIEC_BOOL*>((isSocket()) ? getDI(0) : getDO(0));
@@ -68,9 +64,5 @@ public:
             getDI(scm_slaveConfigurationIO[index]);
   }
 };
-
-} /* namespace Multi */
-} /* namespace ConfigurationFB */
-} /* namespace IO */
 
 #endif /* SRC_CORE_IO_CONFIGFB_MULTI_ADAPTER_H_ */

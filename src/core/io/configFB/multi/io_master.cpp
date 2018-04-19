@@ -11,27 +11,23 @@
 
 #include "io_master.h"
 
-namespace IO {
-namespace ConfigurationFB {
-namespace Multi {
-
-const char * const Master::scmFailedToInitSlaves =
+const char * const IOConfigFBMultiMaster::scmFailedToInitSlaves =
     "Failed to initialize slaves. Check if the configuration matches the hardware setup.";
 
-TMasterList* Master::instances = new TMasterList();
-TForteUInt16 Master::instancesIncrement = 0;
+TMasterList* IOConfigFBMultiMaster::instances = new TMasterList();
+TForteUInt16 IOConfigFBMultiMaster::instancesIncrement = 0;
 
-Master::Master(CResource *pa_poSrcRes,
+IOConfigFBMultiMaster::IOConfigFBMultiMaster(CResource *pa_poSrcRes,
     const SFBInterfaceSpec *pa_pstInterfaceSpec,
     const CStringDictionary::TStringId pa_nInstanceNameId,
     TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-    Controller(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId,
+    IOConfigFBController(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId,
         pa_acFBConnData, pa_acFBVarsData) {
   id = instancesIncrement++;
   instances->push_back(this);
 }
 
-Master* Master::getMasterById(TForteUInt16 id) {
+IOConfigFBMultiMaster* IOConfigFBMultiMaster::getMasterById(TForteUInt16 id) {
   TMasterList::Iterator itEnd = instances->end();
   int i = 0;
   for (TMasterList::Iterator it = instances->begin(); it != itEnd; ++it, i++)
@@ -40,44 +36,40 @@ Master* Master::getMasterById(TForteUInt16 id) {
   return 0;
 }
 
-void Master::onStartup() {
+void IOConfigFBMultiMaster::onStartup() {
   if (BusAdapterOut().getPeer() == 0) {
-    return Controller::onStartup();
+    return IOConfigFBController::onStartup();
   }
 
   BusAdapterOut().MasterId() = id;
   BusAdapterOut().Index() = 0;
   BusAdapterOut().QI() = true;
-  sendAdapterEvent(scm_nBusAdapterAdpNum, Adapter::scm_nEventINITID);
+  sendAdapterEvent(scm_nBusAdapterAdpNum, IOConfigFBMultiAdapter::scm_nEventINITID);
 }
 
-void Master::onStop() {
+void IOConfigFBMultiMaster::onStop() {
   if (BusAdapterOut().getPeer() == 0) {
-    return Controller::onStop();
+    return IOConfigFBController::onStop();
   }
 
   BusAdapterOut().QI() = false;
-  sendAdapterEvent(scm_nBusAdapterAdpNum, Adapter::scm_nEventINITID);
+  sendAdapterEvent(scm_nBusAdapterAdpNum, IOConfigFBMultiAdapter::scm_nEventINITID);
 }
 
-void Master::executeEvent(int pa_nEIID) {
-  Controller::executeEvent(pa_nEIID);
+void IOConfigFBMultiMaster::executeEvent(int pa_nEIID) {
+  IOConfigFBController::executeEvent(pa_nEIID);
 
   if (BusAdapterOut().INITO() == pa_nEIID) {
     QO() = BusAdapterOut().QO();
 
     if (BusAdapterOut().QI() == true) {
       if (BusAdapterOut().QO() == true)
-        Controller::onStartup();
+        IOConfigFBController::onStartup();
       else
         started(scmFailedToInitSlaves);
     } else {
-      Controller::onStop();
+      IOConfigFBController::onStop();
     }
   }
 
 }
-
-} /* namespace Multi */
-} /* namespace ConfigurationFB */
-} /* namespace IO */

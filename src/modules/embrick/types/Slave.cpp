@@ -12,70 +12,65 @@
 #include "Slave.h"
 #include <io/mapper/io_mapper.h>
 
-namespace EmBrick {
-namespace FunctionBlocks {
+const char * const EmbrickSlave::scmSlow = "Slow";
+const char * const EmbrickSlave::scmInterrupted = "Interrupted";
+const char * const EmbrickSlave::scmError = "Error";
+const char * const EmbrickSlave::scmUnknown = "Invalid status code";
 
-const char * const Slave::scmSlow = "Slow";
-const char * const Slave::scmInterrupted = "Interrupted";
-const char * const Slave::scmError = "Error";
-const char * const Slave::scmUnknown = "Invalid status code";
-
-Slave::Slave(const TForteUInt8* const scm_slaveConfigurationIO,
+EmbrickSlave::EmbrickSlave(const TForteUInt8* const scm_slaveConfigurationIO,
     const TForteUInt8 scm_slaveConfigurationIO_num, int type,
     CResource *pa_poSrcRes,
     const SFBInterfaceSpec *pa_pstInterfaceSpec,
     const CStringDictionary::TStringId pa_nInstanceNameId,
     TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-    IO::ConfigurationFB::Multi::Slave(
+    IOConfigFBMultiSlave(
         scm_slaveConfigurationIO,
         scm_slaveConfigurationIO_num, type, pa_poSrcRes, pa_pstInterfaceSpec,
         pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData), slave(0) {
 }
 
-Slave::~Slave() {
+EmbrickSlave::~EmbrickSlave() {
   deInit();
 }
 
-const char* Slave::init() {
-  slaveMutex.lock();
+const char* EmbrickSlave::init() {
+  CCriticalRegion criticalRegion(slaveMutex);
 
-  Handlers::Bus &bus = *static_cast<Handlers::Bus*>(&getController());
+  EmbrickBusHandler &bus = *static_cast<EmbrickBusHandler*>(&getController());
 
   slave = bus.getSlave(index);
   slave->delegate = this;
 
-  Handlers::Slave::Config config;
+  EmbrickSlaveHandler::Config config;
   config.UpdateInterval = UpdateInterval();
   slave->setConfig(config);
 
-  slaveMutex.unlock();
 
   return 0;
 }
 
-void Slave::deInit() {
-  slaveMutex.lock();
+void EmbrickSlave::deInit() {
+  CCriticalRegion criticalRegion(slaveMutex);
 
   if (slave != 0) {
     slave->delegate = 0;
     slave = 0;
   }
 
-  slaveMutex.unlock();
 }
 
-void Slave::onSlaveStatus(Handlers::SlaveStatus status, Handlers::SlaveStatus) {
+void EmbrickSlave::onSlaveStatus(EmbrickSlaveHandler::SlaveStatus status, EmbrickSlaveHandler::SlaveStatus) {
   switch (status) {
-  case Handlers::OK:
+  case EmbrickSlaveHandler::OK:
     STATUS() = scmOK;
     break;
-  case Handlers::Slow:
+  case EmbrickSlaveHandler::Slow:
     STATUS() = scmSlow;
     break;
-  case Handlers::Interrupted:
+  case EmbrickSlaveHandler::Interrupted:
     STATUS() = scmInterrupted;
     break;
-  case Handlers::Error:
+  case EmbrickSlaveHandler::Error:
     STATUS() = scmError;
     break;
   default:
@@ -86,7 +81,7 @@ void Slave::onSlaveStatus(Handlers::SlaveStatus status, Handlers::SlaveStatus) {
   sendOutputEvent(scm_nEventINDID);
 }
 
-void Slave::onSlaveDestroy() {
+void EmbrickSlave::onSlaveDestroy() {
   deInit();
 
   QO() = false;
@@ -95,5 +90,3 @@ void Slave::onSlaveDestroy() {
 //  sendOutputEvent(scm_nEventINDID);
 }
 
-} /* namespace FunctionsBlocks */
-} /* namespace EmBrick */

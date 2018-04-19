@@ -10,8 +10,7 @@
  *******************************************************************************/
 
 #include "processinterface.h"
-
-namespace IO {
+#include "criticalregion.h"
 
 const char * const ProcessInterface::scmOK = "OK";
 const char * const ProcessInterface::scmWaitingForHandle =
@@ -30,7 +29,7 @@ ProcessInterface::ProcessInterface(CResource *paSrcRes,
     const CStringDictionary::TStringId paInstanceNameId,
     TForteByte *paFBConnData, TForteByte *paFBVarsData) :
     CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId,
-        paFBConnData, paFBVarsData), Observer() {
+        paFBConnData, paFBVarsData), IOObserver() {
   isListening = false;
   isReady = false;
 }
@@ -40,7 +39,7 @@ ProcessInterface::~ProcessInterface() {
 }
 
 bool ProcessInterface::initialise(bool paIsInput) {
-  direction = paIsInput ? Mapper::In : Mapper::Out;
+  direction = paIsInput ? IOMapper::In : IOMapper::Out;
   type = (paIsInput ? getDO(2) : getDI(2))->getDataTypeID();
 
   isReady = false;
@@ -50,7 +49,7 @@ bool ProcessInterface::initialise(bool paIsInput) {
   deinitialise();
 
   // Register interface
-  if (!(isListening = Mapper::getInstance().registerObserver(getInstanceName(),
+  if (!(isListening = IOMapper::getInstance().registerObserver(getInstanceName(),
       this))) {
     STATUS() = scmFailedToRegister;
     return false;
@@ -62,41 +61,36 @@ bool ProcessInterface::initialise(bool paIsInput) {
 bool ProcessInterface::deinitialise() {
   // Deregister interface
   if (isListening)
-    Mapper::getInstance().deregisterObserver(this);
+    IOMapper::getInstance().deregisterObserver(this);
 
   return !isReady;
 }
 
 bool ProcessInterface::read(CIEC_ANY &data) {
-  syncMutex.lock();
+  CCriticalRegion criticalRegion(syncMutex);
   if (!isReady) {
-    syncMutex.unlock();
     return false;
   }
 
   handle->get(data);
 
-  syncMutex.unlock();
   return true;
 }
 
 bool ProcessInterface::write(CIEC_ANY &data) {
-  syncMutex.lock();
+  CCriticalRegion criticalRegion(syncMutex);
   if (!isReady) {
-    syncMutex.unlock();
     return false;
   }
 
   handle->set(data);
 
-  syncMutex.unlock();
   return true;
 }
 
 bool ProcessInterface::read() {
-  syncMutex.lock();
+  CCriticalRegion criticalRegion(syncMutex);
   if (!isReady) {
-    syncMutex.unlock();
     return false;
   }
 
@@ -107,18 +101,15 @@ bool ProcessInterface::read() {
   } else if (handle->is(CIEC_ANY::e_DWORD)) {
     handle->get(IN_D());
   } else {
-    syncMutex.unlock();
     return false;
   }
 
-  syncMutex.unlock();
   return true;
 }
 
 bool ProcessInterface::write() {
-  syncMutex.lock();
+  CCriticalRegion criticalRegion(syncMutex);
   if (!isReady) {
-    syncMutex.unlock();
     return false;
   }
 
@@ -129,11 +120,9 @@ bool ProcessInterface::write() {
   } else if (handle->is(CIEC_ANY::e_DWORD)) {
     handle->set(OUT_D());
   } else {
-    syncMutex.unlock();
     return false;
   }
 
-  syncMutex.unlock();
   return true;
 }
 
@@ -141,48 +130,42 @@ bool ProcessInterface::onChange() {
   return read();
 }
 
-void ProcessInterface::onHandle(Handle* handle) {
-  syncMutex.lock();
+void ProcessInterface::onHandle(IOHandle* handle) {
+  CCriticalRegion criticalRegion(syncMutex);
 
-  Observer::onHandle(handle);
+  IOObserver::onHandle(handle);
 
   if (!handle->is(type)) {
     STATUS() = scmMappedWrongDataType;
-    return syncMutex.unlock();
   }
 
   if (!handle->is(direction)) {
     STATUS() =
-        direction == Mapper::In ?
+        direction == IOMapper::In ?
             scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput;
-    return syncMutex.unlock();
   }
 
-  if (direction == Mapper::In)
+  if (direction == IOMapper::In)
     setEventChainExecutor(m_poInvokingExecEnv);
 
   STATUS() = scmOK;
   isReady = true;
 
-  syncMutex.unlock();
 
   // Read & write current state
-  if (direction == Mapper::In)
+  if (direction == IOMapper::In)
     QO() = read();
   else
     QO() = write();
 }
 
 void ProcessInterface::dropHandle() {
-  syncMutex.lock();
+  CCriticalRegion criticalRegion(syncMutex);
 
-  Observer::dropHandle();
+  IOObserver::dropHandle();
 
   QO() = false;
   STATUS() = scmWaitingForHandle;
   isReady = false;
 
-  syncMutex.unlock();
 }
-
-} /* namespace IO */

@@ -10,43 +10,33 @@
  *******************************************************************************/
 
 #include "analog.h"
+#include "criticalregion.h"
 
-namespace EmBrick {
-namespace Handles {
-
-AnalogSlaveHandle::AnalogSlaveHandle(Device::Controller *controller,
-    Mapper::Direction direction, uint8_t offset, Handlers::Slave *slave) :
-    SlaveHandle(controller, direction, CIEC_ANY::e_DWORD, offset, slave) {
+EmbrickAnalogSlaveHandle::EmbrickAnalogSlaveHandle(IODeviceController *controller,
+    IOMapper::Direction direction, uint8_t offset, EmbrickSlaveHandler *slave) :
+    EmbrickSlaveHandle(controller, direction, CIEC_ANY::e_DWORD, offset, slave) {
 
 }
 
-void AnalogSlaveHandle::set(const CIEC_ANY &value) {
-  updateMutex->lock();
+void EmbrickAnalogSlaveHandle::set(const CIEC_ANY &value) {
+  CCriticalRegion criticalRegion(*updateMutex);
 
   *(buffer + offset + 1) = static_cast<const CIEC_DWORD&>(value) % 256;
   *(buffer + offset) = (unsigned char) (static_cast<const CIEC_DWORD&>(value)
       / 256);
 
-  updateMutex->unlock();
-
-  SlaveHandle::set(value);
+  EmbrickSlaveHandle::set(value);
 }
 
-void AnalogSlaveHandle::get(CIEC_ANY &value) {
-  updateMutex->lock();
-
+void EmbrickAnalogSlaveHandle::get(CIEC_ANY &value) {
+  CCriticalRegion criticalRegion(*updateMutex);
   static_cast<CIEC_DWORD&>(value) = getValue(buffer);
-
-  updateMutex->unlock();
 }
 
-bool AnalogSlaveHandle::equal(unsigned char* oldBuffer) {
+bool EmbrickAnalogSlaveHandle::equal(unsigned char* oldBuffer) {
   return getValue(buffer) == getValue(oldBuffer);
 }
 
-const CIEC_DWORD AnalogSlaveHandle::getValue(const unsigned char* buffer) {
+const CIEC_DWORD EmbrickAnalogSlaveHandle::getValue(const unsigned char* buffer) {
   return *(buffer + offset) * 256 + *(buffer + offset + 1);
 }
-
-} /* namespace Handles */
-} /* namespace EmBrick */

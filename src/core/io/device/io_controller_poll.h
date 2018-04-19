@@ -15,26 +15,23 @@
 #include "io_controller.h"
 #include <conditionSync.h>
 
-namespace IO {
-namespace Device {
-
 /*! @brief Abstract Device Controller for devices which require cyclic poll operations
  *
  * IO device controller for devices which require an implementation of IOs using poll operations.
  * Offers a #poll method which performs an IO update in a configured #PollInterval.
  * Allows to force a polling routine with the #forcePoll method (e.g. can be used to set an output immediately).
  */
-class PollController: public Controller {
+class IODevicePollController: public IODeviceController {
 public:
 
-  virtual void handleChangeEvent(Handle *handle);
+  virtual void handleChangeEvent(IOHandle *handle);
 
 protected:
   /*! @brief Constructor
    *
    * @param PollInterval Default poll routines per seconds (Hz). Must be greater than 0. Call #setPollInterval in the #setConfig method.
    */
-  PollController(CDeviceExecution& paDeviceExecution, float PollInterval);
+  IODevicePollController(CDeviceExecution& paDeviceExecution, float PollInterval);
 
   /*! @brief Poll routine which updates the IO state of the device
    *
@@ -47,7 +44,7 @@ protected:
 
   /*! @brief Forces an execution of the #poll routine
    *
-   * Should be called by the corresponding device #IO::Handle implementation after setting/changing an output handle.
+   * Should be called by the corresponding device #IOHandle implementation after setting/changing an output handle.
    */
   void forcePoll();
 
@@ -69,8 +66,5 @@ private:
   bool loopActive;
   struct timespec nextLoop;
 };
-
-} /* namespace Device */
-} /* namespace IO */
 
 #endif /* SRC_CORE_IO_DEVICE_IO_CONTROLLER_POLL_H_ */

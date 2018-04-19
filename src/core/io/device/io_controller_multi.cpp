@@ -11,30 +11,25 @@
 
 #include "io_controller_multi.h"
 
-namespace IO {
-namespace Device {
-
-MultiController::MultiController(CDeviceExecution& paDeviceExecution) : Controller(paDeviceExecution){
+IODeviceMultiController::IODeviceMultiController(CDeviceExecution& paDeviceExecution) : IODeviceController(paDeviceExecution){
 }
 
-void MultiController::addHandle(
-    Controller::HandleDescriptor *handleDescriptor) {
+void IODeviceMultiController::addHandle(
+    IODeviceController::HandleDescriptor *handleDescriptor) {
   HandleDescriptor* desc = static_cast<HandleDescriptor*>(handleDescriptor);
-  Handle* handle = initHandle(desc);
+  IOHandle* handle = initHandle(desc);
 
   if (handle == 0) {
     DEVLOG_WARNING(
-        "[IO:Device:MultiController] Failed to initialize handle '%s'. Check initHandle method.\n",
+        "[IODeviceMultiController] Failed to initialize handle '%s'. Check initHandle method.\n",
         desc->id.getValue());
     return;
   }
 
-  if (Mapper::getInstance().registerHandle(desc->id, handle)) {
+  if (IOMapper::getInstance().registerHandle(desc->id, handle)) {
     addSlaveHandle(desc->slaveIndex, handle);
   } else {
     delete handle;
   }
 }
 
-} /* namespace Device */
-} /* namespace IO */

@@ -12,23 +12,20 @@
 #include "io_observer.h"
 #include <devlog.h>
 
-namespace IO {
-
-Observer::Observer() :
-    handle(NULL), type(CIEC_ANY::e_ANY), direction(Mapper::UnknownDirection) {
+IOObserver::IOObserver() :
+    handle(NULL), type(CIEC_ANY::e_ANY), direction(IOMapper::UnknownDirection) {
 
 }
 
-Observer::~Observer() {
-  Mapper::getInstance().deregisterObserver(this);
+IOObserver::~IOObserver() {
+  IOMapper::getInstance().deregisterObserver(this);
 }
 
-void Observer::onHandle(Handle *handle) {
+void IOObserver::onHandle(IOHandle *handle) {
   this->handle = handle;
 }
 
-void Observer::dropHandle() {
+void IOObserver::dropHandle() {
   this->handle = NULL;
 }
 
-} /* namespace IO */

@@ -17,24 +17,20 @@
 
 #include "io_mapper.h"
 
-namespace IO {
+class IODeviceController;
 
-namespace Device {
-class Controller;
-}
-
-class Handle {
-  friend class Mapper;
+class IOHandle {
+  friend class IOMapper;
 
 public:
-  Handle(Device::Controller *controller, Mapper::Direction direction, CIEC_ANY::EDataTypeID type);
-  virtual ~Handle();
+  IOHandle(IODeviceController *controller, IOMapper::Direction direction, CIEC_ANY::EDataTypeID type);
+  virtual ~IOHandle();
 
   bool hasObserver() {
     return !!observer;
   }
 
-  Observer* getObserver() {
+  IOObserver* getObserver() {
     return observer;
   }
 
@@ -42,7 +38,7 @@ public:
     return this->type == type;
   }
 
-  bool is(Mapper::Direction direction) {
+  bool is(IOMapper::Direction direction) {
     return this->direction == direction;
   }
 
@@ -52,16 +48,15 @@ public:
   void onChange();
 
 protected:
-  Device::Controller *controller;
+  IODeviceController *controller;
 
-  virtual void onObserver(Observer *observer);
+  virtual void onObserver(IOObserver *observer);
   virtual void dropObserver();
 
-  Observer *observer;
+  IOObserver *observer;
   CIEC_ANY::EDataTypeID type;
-  Mapper::Direction direction;
+  IOMapper::Direction direction;
 };
 
-} /* namespace IO */
 
 #endif /* SRC_CORE_IO_MAPPER_HANDLE_H_ */

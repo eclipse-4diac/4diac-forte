@@ -17,11 +17,8 @@
 #include <forte_bool.h>
 #include <forte_uint.h>
 
-namespace EmBrick {
-namespace FunctionBlocks {
-
-class BusAdapter: public IO::ConfigurationFB::Multi::Adapter {
-DECLARE_ADAPTER_TYPE(BusAdapter)
+class EmbrickBusAdapter: public IOConfigFBMultiAdapter {
+DECLARE_ADAPTER_TYPE(EmbrickBusAdapter)
 
 private:
 private:
@@ -52,20 +49,16 @@ private:
   FORTE_ADAPTER_DATA_ARRAY(1, 1, 1, 4, 0)
 
 public:
-  ADAPTER_CTOR_FOR_IO_MULTI(BusAdapter){
+  ADAPTER_CTOR_FOR_IO_MULTI(EmbrickBusAdapter){
 };
 
 private:
   static const TForteUInt8 scm_slaveConfigurationIO[];
   static const TForteUInt8 scm_slaveConfigurationIO_num;
 
-  virtual ~BusAdapter() {};
+  virtual ~EmbrickBusAdapter() {};
 
 };
-
-}
-/* namespace FunctionsBlocks */
-} /* namespace EmBrick */
 
 #endif //close the ifdef sequence from the beginning of the file
 

@@ -15,14 +15,11 @@
 #include <slave/slave.h>
 #include <slave/handle.h>
 
-namespace EmBrick {
-namespace Handles {
-
-class Analog10SlaveHandle: public SlaveHandle {
+class EmbrickAnalog10SlaveHandle: public EmbrickSlaveHandle {
 public:
-  Analog10SlaveHandle(Device::Controller *controller,
-      Mapper::Direction direction, uint8_t offset,
-      Handlers::Slave *slave);
+  EmbrickAnalog10SlaveHandle(IODeviceController *controller,
+      IOMapper::Direction direction, uint8_t offset,
+      EmbrickSlaveHandler *slave);
 
   virtual void set(const CIEC_ANY &);
   void get(CIEC_ANY &);
@@ -33,8 +30,5 @@ protected:
   const CIEC_DWORD getValue(const unsigned char* buffer);
 };
 
-
-} /* namespace Handles */
-} /* namespace EmBrick */
 
 #endif /* SRC_MODULES_EMBRICK_SLAVE_HANDLES_ANALOG10_H_ */

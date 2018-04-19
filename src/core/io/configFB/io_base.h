@@ -14,18 +14,12 @@
 
 #include <esfb.h>
 
-namespace IO {
-namespace ConfigurationFB {
-
-class Base: public CEventSourceFB {
+class IOConfigFBBase: public CEventSourceFB {
 public:
-  Base(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
+  IOConfigFBBase(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
       const CStringDictionary::TStringId pa_nInstanceNameId,
       TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
-  virtual ~Base();
+  virtual ~IOConfigFBBase();
 };
-
-} /* namespace ConfigurationFB */
-} /* namespace IO */
 
 #endif /* SRC_CORE_IO_CONFIGFB_BASE_H_ */

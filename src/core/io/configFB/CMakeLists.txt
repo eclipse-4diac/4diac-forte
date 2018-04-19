@@ -16,7 +16,7 @@
 
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\configFB)
 
-forte_add_sourcefile_hcpp(io_base io_controller)
+forte_add_sourcefile_hcpp(io_base io_configFB_controller)
 
 forte_add_sourcefile_hcpp(multi/io_adapter)
 forte_add_sourcefile_hcpp(multi/io_master)

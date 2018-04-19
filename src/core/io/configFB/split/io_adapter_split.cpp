@@ -11,10 +11,7 @@
 
 #include "io_adapter_split.h"
 
-namespace IO {
-namespace ConfigurationFB {
-
-SplitAdapter::SplitAdapter(CResource *pa_poSrcRes,
+IOConfigFBSplitAdapter::IOConfigFBSplitAdapter(CResource *pa_poSrcRes,
     const SFBInterfaceSpec *pa_pstInterfaceSpecSocket,
     const CStringDictionary::TStringId pa_nInstanceNameId,
     const SFBInterfaceSpec *pa_pstInterfaceSpecPlug, bool pa_bIsPlug,
@@ -23,9 +20,6 @@ SplitAdapter::SplitAdapter(CResource *pa_poSrcRes,
         pa_pstInterfaceSpecPlug, pa_bIsPlug, pa_acFBConnData, pa_acFBVarsData) {
 }
 
-SplitAdapter::~SplitAdapter() {
+IOConfigFBSplitAdapter::~IOConfigFBSplitAdapter() {
   // TODO Auto-generated destructor stub
 }
-
-} /* namespace ConfigurationFB */
-} /* namespace IO */

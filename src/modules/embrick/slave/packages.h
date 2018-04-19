@@ -14,19 +14,15 @@
 
 #include <netinet/in.h>
 
-namespace EmBrick {
-
-namespace Packages {
-
 #pragma pack(push, 1) // Disable padding for protocol structs
 
-struct Header {
+struct EmbrickHeaderPackage {
   char address;
   char command;
   char checksum;
 };
 
-struct SlaveInit {
+struct EmbrickSlaveInitPackage {
   uint8_t protocolVersion;
   uint8_t moduleVersion;
   uint16_t deviceId;
@@ -34,9 +30,9 @@ struct SlaveInit {
   uint8_t dataSendLength; // Amount of bytes that the slave expects from the master
   uint8_t dataReceiveLength; // Amount of bytes that the master expects from the slave
 
-  static SlaveInit fromBuffer(unsigned char* buffer) {
-    SlaveInit pkg;
-    memcpy(&pkg, buffer, sizeof(SlaveInit));
+  static EmbrickSlaveInitPackage fromBuffer(unsigned char* buffer) {
+    EmbrickSlaveInitPackage pkg;
+    memcpy(&pkg, buffer, sizeof(EmbrickSlaveInitPackage));
 
     pkg.deviceId = ntohs(pkg.deviceId);
     // Switch bytes of deviceId as it is transmitted with a different endianess
@@ -49,7 +45,7 @@ struct SlaveInit {
   }
 };
 
-struct MasterInit {
+struct EmbrickMasterInitPackage {
   uint8_t slaveAddress;
   uint16_t syncGapMultiplicator;
 
@@ -62,9 +58,5 @@ struct MasterInit {
 };
 
 #pragma pack(pop)
-
-} /* namespace Packages */
-
-}
 
 #endif /* SRC_MODULES_EMBRICK_SLAVE_PACKAGES_H_ */

@@ -15,12 +15,9 @@
 #include <io/mapper/io_handle.h>
 #include <io/device/io_controller.h>
 
-namespace IO {
-namespace Handles {
-
-class Bit: public IO::Handle {
+class IOHandleBit: public IOHandle {
 public:
-  Bit(Device::Controller *controller, IO::Mapper::Direction direction,
+  IOHandleBit(IODeviceController *controller, IOMapper::Direction direction,
       uint8_t offset,
       uint8_t position, uint8_t* image);
 
@@ -30,7 +27,7 @@ public:
   bool equal(unsigned char* oldImage);
 
 protected:
-  virtual void onObserver(IO::Observer *observer);
+  virtual void onObserver(IOObserver *observer);
 
   virtual void dropObserver();
 
@@ -43,8 +40,5 @@ protected:
   const uint8_t offset;
   const uint8_t mask;
 };
-
-} /* namespace Handles */
-} /* namespace IO */
 
 #endif /* SRC_CORE_IO_HANDLES_IO_HANDLE_BIT_H_ */

@@ -14,36 +14,34 @@
 #include <handler/bus.h>
 #include <io/mapper/io_mapper.h>
 #include <devlog.h>
-namespace EmBrick {
 
-SlaveHandle::SlaveHandle(Device::Controller *controller,
-    Mapper::Direction direction, CIEC_ANY::EDataTypeID type, uint8_t offset,
-    Handlers::Slave *slave) :
-    Handle(controller, direction, type), offset(offset), slave(slave), updateMutex(
+EmbrickSlaveHandle::EmbrickSlaveHandle(IODeviceController *controller,
+    IOMapper::Direction direction, CIEC_ANY::EDataTypeID type, uint8_t offset,
+    EmbrickSlaveHandler *slave) :
+    IOHandle(controller, direction, type), offset(offset), slave(slave), updateMutex(
         &slave->updateMutex) {
-  if (direction == Mapper::In)
+  if (direction == IOMapper::In)
     buffer = slave->updateReceiveImage;
-  else if (direction == Mapper::Out)
+  else if (direction == IOMapper::Out)
     buffer = slave->updateSendImage;
 }
 
-SlaveHandle::~SlaveHandle() {
+EmbrickSlaveHandle::~EmbrickSlaveHandle() {
 }
 
-void SlaveHandle::set(const CIEC_ANY &) {
+void EmbrickSlaveHandle::set(const CIEC_ANY &) {
   slave->forceUpdate();
 }
 
-void SlaveHandle::onObserver(Observer *observer) {
+void EmbrickSlaveHandle::onObserver(IOObserver *observer) {
   reset();
 
-  Handle::onObserver(observer);
+  IOHandle::onObserver(observer);
 }
 
-void SlaveHandle::dropObserver() {
-  Handle::dropObserver();
+void EmbrickSlaveHandle::dropObserver() {
+  IOHandle::dropObserver();
 
   reset();
 }
 
-} /* namespace EmBrick */

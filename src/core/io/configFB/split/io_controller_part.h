@@ -16,12 +16,9 @@
 #include "../io_base.h"
 #include "io_controller_split.h"
 
-namespace IO {
-namespace ConfigurationFB {
-
-class PartController: public Base {
+class IOConfigFBPartController: public IOConfigFBBase {
 public:
-  PartController(CResource *pa_poSrcRes,
+  IOConfigFBPartController(CResource *pa_poSrcRes,
       const SFBInterfaceSpec *pa_pstInterfaceSpec,
       const CStringDictionary::TStringId pa_nInstanceNameId,
       TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
@@ -39,23 +36,20 @@ protected:
 
   static const TEventID scm_nEventMAPOID = 0;
 
-  SplitAdapter& Adapter() {
-    return (*static_cast<SplitAdapter*>(m_apoAdapters[0]));
+  IOConfigFBSplitAdapter& IOConfigFBMultiAdapter() {
+    return (*static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[0]));
   }
 
   static const int scm_nSplitAdapterAdpNum = 0;
 
   virtual void executeEvent(int pa_nEIID);
 
-  SplitController* master;
+  IOConfigFBSplitController* master;
 
   virtual void initHandles() = 0;
 
-  void initHandle(Device::Controller::HandleDescriptor *handleDescriptor);
+  void initHandle(IODeviceController::HandleDescriptor *handleDescriptor);
 
 };
-
-} /* namespace ConfigurationFB */
-} /* namespace IO */
 
 #endif /* SRC_CORE_IO_CONFIGFB_SPLIT_IO_CONTROLLER_PART_H_ */

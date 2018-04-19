@@ -18,11 +18,8 @@
 #include "BusAdapter.h"
 #include "Slave.h"
 
-namespace EmBrick {
-namespace FunctionBlocks {
-
-class Slave2301: public Slave {
-DECLARE_FIRMWARE_FB(Slave2301)
+class EmbrickSlave2301: public EmbrickSlave {
+DECLARE_FIRMWARE_FB(EmbrickSlave2301)
 
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
@@ -79,16 +76,12 @@ private:
   virtual void initHandles();
 
 public:
-  FUNCTION_BLOCK_CTOR_FOR_IO_MULTI_SLAVE(Slave2301, Slave, Handlers::G_2RelNo4RelCo){
+  FUNCTION_BLOCK_CTOR_FOR_IO_MULTI_SLAVE(EmbrickSlave2301, EmbrickSlave, EmbrickSlaveHandler::G_2RelNo4RelCo){
 };
 
-virtual ~Slave2301() {};
+virtual ~EmbrickSlave2301() {};
 
 };
-
-}
-/* namespace FunctionsBlocks */
-} /* namespace EmBrick */
 
 #endif //close the ifdef sequence from the beginning of the file
 

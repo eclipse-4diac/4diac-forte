@@ -20,21 +20,13 @@
 
 #include <io/mapper/io_handle.h>
 
-namespace EmBrick {
+class EmbrickSlaveHandler;
 
-namespace Handlers {
-class Slave;
-}
-
-namespace Handles {
-
-using namespace IO;
-
-class SlaveHandle: public Handle {
+class EmbrickSlaveHandle: public IOHandle {
 public:
-  SlaveHandle(Device::Controller *controller, Mapper::Direction direction,
-      CIEC_ANY::EDataTypeID type, uint8_t offset, Handlers::Slave *slave);
-  virtual ~SlaveHandle();
+  EmbrickSlaveHandle(IODeviceController *controller, IOMapper::Direction direction,
+      CIEC_ANY::EDataTypeID type, uint8_t offset, EmbrickSlaveHandler *slave);
+  virtual ~EmbrickSlaveHandle();
 
   virtual void set(const CIEC_ANY &);
   virtual bool equal(unsigned char*) = 0;
@@ -44,16 +36,13 @@ protected:
 
   }
 
-  virtual void onObserver(Observer *observer);
+  virtual void onObserver(IOObserver *observer);
   virtual void dropObserver();
 
   unsigned char* buffer;
   const uint8_t offset;
-  Handlers::Slave* slave;
+  EmbrickSlaveHandler* slave;
   CSyncObject *updateMutex;
 };
-
-} /* namespace Handles */
-} /* namespace EmBrick */
 
 #endif /* SRC_MODULES_EMBRICK_SLAVE_HANDLE_H_ */

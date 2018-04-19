@@ -14,32 +14,28 @@
 
 #include <io/device/io_controller.h>
 
-namespace IO {
-
-Handle::Handle(Device::Controller *controller, Mapper::Direction direction, CIEC_ANY::EDataTypeID type) :
+IOHandle::IOHandle(IODeviceController *controller, IOMapper::Direction direction, CIEC_ANY::EDataTypeID type) :
     controller(controller), observer(0), type(type), direction(
         direction) {
 
 }
 
-Handle::~Handle() {
-  Mapper::getInstance().deregisterHandle(this);
+IOHandle::~IOHandle() {
+  IOMapper::getInstance().deregisterHandle(this);
 }
 
-void Handle::onObserver(Observer *observer) {
+void IOHandle::onObserver(IOObserver *observer) {
   this->observer = observer;
 }
 
-void Handle::dropObserver() {
+void IOHandle::dropObserver() {
   this->observer = 0;
 }
 
-void Handle::onChange() {
+void IOHandle::onChange() {
   if (observer != 0) {
     if (observer->onChange()) {
       controller->fireIndicationEvent(observer);
     }
   }
 }
-
-} /* namespace IO */

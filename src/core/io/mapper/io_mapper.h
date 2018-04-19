@@ -18,13 +18,11 @@
 #include <string>
 #include <forte_sync.h>
 
-namespace IO {
+class IOHandle;
+class IOObserver;
 
-class Handle;
-class Observer;
-
-class Mapper {
-  DECLARE_SINGLETON (Mapper)
+class IOMapper {
+  DECLARE_SINGLETON (IOMapper)
 
 public:
   enum Direction {
@@ -32,22 +30,20 @@ public:
   };
 
 public:
-  bool registerHandle(CIEC_WSTRING const &id, Handle* handle);
-  void deregisterHandle(Handle* handle);
+  bool registerHandle(CIEC_WSTRING const &id, IOHandle* handle);
+  void deregisterHandle(IOHandle* handle);
 
-  bool registerObserver(CIEC_WSTRING const &id, Observer* observer);
-  void deregisterObserver(Observer* observer);
+  bool registerObserver(CIEC_WSTRING const &id, IOObserver* observer);
+  void deregisterObserver(IOObserver* observer);
 
 private:
-  typedef std::map<std::string, Handle*> THandleMap;
+  typedef std::map<std::string, IOHandle*> THandleMap;
   THandleMap handles;
 
-  typedef std::map<std::string, Observer*> TObserverMap;
+  typedef std::map<std::string, IOObserver*> TObserverMap;
   TObserverMap observers;
 
   CSyncObject syncMutex;
 };
-
-} /* namespace IO */
 
 #endif /* SRC_CORE_IO_MAPPER_MAPPER_H_ */

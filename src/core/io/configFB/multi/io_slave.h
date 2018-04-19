@@ -21,19 +21,15 @@
  fbclass(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : \
  fbBaseClass( (const TForteUInt8* const) &scm_slaveConfigurationIO, scm_slaveConfigurationIO_num, type, pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData)
 
-namespace IO {
-namespace ConfigurationFB {
-namespace Multi {
-
-class Slave: public Base {
+class IOConfigFBMultiSlave: public IOConfigFBBase {
 public:
-  Slave(const TForteUInt8* const scm_slaveConfigurationIO,
+  IOConfigFBMultiSlave(const TForteUInt8* const scm_slaveConfigurationIO,
       const TForteUInt8 scm_slaveConfigurationIO_num, int type,
       CResource *pa_poSrcRes,
       const SFBInterfaceSpec *pa_pstInterfaceSpec,
       const CStringDictionary::TStringId pa_nInstanceNameId,
       TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
-  virtual ~Slave();
+  virtual ~IOConfigFBMultiSlave();
 
 protected:
   CIEC_BOOL &QI() {
@@ -53,27 +49,27 @@ protected:
   static const TEventID scm_nEventMAPOID = 0;
   static const TEventID scm_nEventINDID = 1;
 
-  Adapter& BusAdapterOut() {
-    return (*static_cast<Adapter*>(m_apoAdapters[0]));
+  IOConfigFBMultiAdapter& BusAdapterOut() {
+    return (*static_cast<IOConfigFBMultiAdapter*>(m_apoAdapters[0]));
   }
 
   static const int scm_nBusAdapterOutAdpNum = 0;
-  Adapter& BusAdapterIn() {
-    return (*static_cast<Adapter*>(m_apoAdapters[1]));
+  IOConfigFBMultiAdapter& BusAdapterIn() {
+    return (*static_cast<IOConfigFBMultiAdapter*>(m_apoAdapters[1]));
   }
 
   static const int scm_nBusAdapterInAdpNum = 1;
 
   virtual void executeEvent(int pa_nEIID);
 
-  Master* master;
+  IOConfigFBMultiMaster* master;
 
   int index;
 
   int type;
 
-  Device::MultiController& getController() {
-    return (*static_cast<Device::MultiController*>(master->getDeviceController()));
+  IODeviceMultiController& getController() {
+    return (*static_cast<IODeviceMultiController*>(master->getDeviceController()));
   }
 
   bool initialized;
@@ -88,7 +84,7 @@ protected:
 
   virtual void initHandles() = 0;
 
-  void initHandle(Device::MultiController::HandleDescriptor *handleDescriptor);
+  void initHandle(IODeviceMultiController::HandleDescriptor *handleDescriptor);
 
   static const char* const scmOK;
   static const char* const scmMasterNotFound;
@@ -104,9 +100,5 @@ private:
   static const char* const scmNotFound;
   static const char* const scmIncorrectType;
 };
-
-} /* namespace Multi */
-} /* namespace ConfigurationFB */
-} /* namespace IO */
 
 #endif /* SRC_CORE_IO_CONFIGFB_MULTI_SLAVE_H_ */

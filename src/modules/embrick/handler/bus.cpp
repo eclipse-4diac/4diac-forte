@@ -18,16 +18,14 @@
 #include <slave/handles/bit.h>
 #include <slave/handles/analog.h>
 #include <slave/handles/analog10.h>
+#include "criticalregion.h"
 
-namespace EmBrick {
-namespace Handlers {
+const char * const EmbrickBusHandler::scmSlaveUpdateFailed = "Update of slave failed.";
+const char * const EmbrickBusHandler::scmNoSlavesFound = "No slave modules found.";
 
-const char * const Bus::scmSlaveUpdateFailed = "Update of slave failed.";
-const char * const Bus::scmNoSlavesFound = "No slave modules found.";
-
-Bus::Bus(CDeviceExecution& paDeviceExecution) :
+EmbrickBusHandler::EmbrickBusHandler(CDeviceExecution& paDeviceExecution) :
     spi(0), slaveSelect(0), slaves(0), slaveCount(
-        0), sList(0), MultiController(paDeviceExecution) {
+        0), sList(0), IODeviceMultiController(paDeviceExecution) {
   // Set init time
   struct timespec ts;
   // TODO Check compile error. Had to to add rt libary to c++ make flags
@@ -39,11 +37,11 @@ Bus::Bus(CDeviceExecution& paDeviceExecution) :
   // Default config
   config.BusInterface = 1;
   config.BusSelectPin = 49;
-  config.BusInitSpeed = SPI::DefaultSpiSpeed;
-  config.BusLoopSpeed = SPI::MaxSpiSpeed;
+  config.BusInitSpeed = EmbrickSPIHandler::DefaultSpiSpeed;
+  config.BusLoopSpeed = EmbrickSPIHandler::MaxSpiSpeed;
 }
 
-void Bus::setConfig(struct IO::Device::Controller::Config* config) {
+void EmbrickBusHandler::setConfig(struct IODeviceController::Config* config) {
   // Check if BusHandler is active -> configuration changes are not allowed
   if (isAlive()) {
     DEVLOG_ERROR(
@@ -54,10 +52,10 @@ void Bus::setConfig(struct IO::Device::Controller::Config* config) {
   this->config = *static_cast<Config*>(config);
 }
 
-const char* Bus::init() {
+const char* EmbrickBusHandler::init() {
   // Start handlers
-  spi = new SPI(config.BusInterface);
-  slaveSelect = new Pin(config.BusSelectPin);
+  spi = new EmbrickSPIHandler(config.BusInterface);
+  slaveSelect = new EmbrickPinHandler(config.BusSelectPin);
   slaves = new TSlaveList();
 
   // Check handlers
@@ -85,7 +83,7 @@ const char* Bus::init() {
   int attempts = 0;
 
   do {
-    Slave *slave = Slave::sendInit(this, slaveCounter);
+    EmbrickSlaveHandler *slave = EmbrickSlaveHandler::sendInit(this, slaveCounter);
 
     if (slave != 0) {
       slaves->push_back(slave);
@@ -113,7 +111,7 @@ const char* Bus::init() {
   return 0;
 }
 
-void Bus::deInit() {
+void EmbrickBusHandler::deInit() {
   // Free memory -> delete all slave instances and hardware handlers
   TSlaveList::Iterator itEnd(slaves->end());
   for (TSlaveList::Iterator it = slaves->begin(); it != itEnd; ++it)
@@ -125,28 +123,28 @@ void Bus::deInit() {
   delete slaveSelect;
 }
 
-Handle* Bus::initHandle(
-    IO::Device::MultiController::HandleDescriptor *handleDescriptor) {
+IOHandle* EmbrickBusHandler::initHandle(
+    IODeviceMultiController::HandleDescriptor *handleDescriptor) {
   HandleDescriptor desc = *static_cast<HandleDescriptor*>(handleDescriptor);
 
-  Slave *slave = getSlave(desc.slaveIndex);
+  EmbrickSlaveHandler *slave = getSlave(desc.slaveIndex);
   if (slave == 0)
     return 0;
 
   switch (desc.type) {
   case Bit:
-    return new BitSlaveHandle(this, desc.direction, desc.offset, desc.position,
+    return new EmbrickBitSlaveHandle(this, desc.direction, desc.offset, desc.position,
         slave);
   case Analog:
-    return new AnalogSlaveHandle(this, desc.direction, desc.offset, slave);
+    return new EmbrickAnalogSlaveHandle(this, desc.direction, desc.offset, slave);
   case Analog10:
-    return new Analog10SlaveHandle(this, desc.direction, desc.offset, slave);
+    return new EmbrickAnalog10SlaveHandle(this, desc.direction, desc.offset, slave);
   }
 
   return 0;
 }
 
-void Bus::prepareLoop() {
+void EmbrickBusHandler::prepareLoop() {
   // Get current time
   clock_gettime(CLOCK_MONOTONIC, &nextLoop);
 
@@ -170,7 +168,7 @@ void Bus::prepareLoop() {
   loopActive = false;
 }
 
-void Bus::runLoop() {
+void EmbrickBusHandler::runLoop() {
   prepareLoop();
 
   // Init loop variables
@@ -230,7 +228,7 @@ void Bus::runLoop() {
   cleanLoop();
 }
 
-void Bus::cleanLoop() {
+void EmbrickBusHandler::cleanLoop() {
   // Free memory of list
   for (int i = 0; i < slaveCount; i++)
     forte_free(sList[i]);
@@ -238,7 +236,7 @@ void Bus::cleanLoop() {
   sList = 0;
 }
 
-bool Bus::checkHandlerError() {
+bool EmbrickBusHandler::checkHandlerError() {
   if (spi->hasError()) {
     error = spi->error;
     return true;
@@ -252,7 +250,7 @@ bool Bus::checkHandlerError() {
   return false;
 }
 
-Slave* Bus::getSlave(int index) {
+EmbrickSlaveHandler* EmbrickBusHandler::getSlave(int index) {
   if (slaves == 0) {
     return 0;
   }
@@ -267,7 +265,7 @@ Slave* Bus::getSlave(int index) {
   return 0;
 }
 
-void Bus::forceUpdate(int index) {
+void EmbrickBusHandler::forceUpdate(int index) {
   loopSync.lock();
 
   if (sList == 0 || slaveCount <= index || sList[index]->forced) {
@@ -299,40 +297,40 @@ void Bus::forceUpdate(int index) {
   loopSync.unlock();
 }
 
-void Bus::addSlaveHandle(int index, Handle* handle) {
-  Slave* slave = getSlave(index);
+void EmbrickBusHandler::addSlaveHandle(int index, IOHandle* handle) {
+  EmbrickSlaveHandler* slave = getSlave(index);
   if (slave == 0)
     return;
 
-  slave->addHandle((SlaveHandle*) handle);
+  slave->addHandle((EmbrickSlaveHandle*) handle);
 }
 
-void Bus::dropSlaveHandles(int index) {
-  Slave* slave = getSlave(index);
+void EmbrickBusHandler::dropSlaveHandles(int index) {
+  EmbrickSlaveHandler* slave = getSlave(index);
   if (slave == 0)
     return;
 
   slave->dropHandles();
 }
 
-bool Bus::isSlaveAvailable(int index) {
+bool EmbrickBusHandler::isSlaveAvailable(int index) {
   return getSlave(index) != 0;
 }
 
-bool Bus::checkSlaveType(int index, int type) {
-  Slave* slave = getSlave(index);
+bool EmbrickBusHandler::checkSlaveType(int index, int type) {
+  EmbrickSlaveHandler* slave = getSlave(index);
   if (slave == 0)
     return false;
 
   return slave->type == type;
 }
 
-bool Bus::transfer(unsigned int target, Command cmd,
+bool EmbrickBusHandler::transfer(unsigned int target, Command cmd,
     unsigned char* dataSend, int dataSendLength, unsigned char* dataReceive,
-    int dataReceiveLength, SlaveStatus* status, CSyncObject *syncMutex) {
+    int dataReceiveLength, EmbrickSlaveHandler::SlaveStatus* status, CSyncObject *syncMutex) {
   unsigned int dataLength = std::max(dataSendLength, dataReceiveLength + 1); // + 1 status byte
 
-  unsigned int bufferLength = sizeof(Packages::Header) + dataLength + 1; // + 1 checksum byte
+  unsigned int bufferLength = sizeof(EmbrickHeaderPackage) + dataLength + 1; // + 1 checksum byte
   if (bufferLength > TransferBufferLength) {
     DEVLOG_ERROR("emBrick[BusHandler]: Transfer buffer size exceeded.\n");
     return false;
@@ -342,7 +340,7 @@ bool Bus::transfer(unsigned int target, Command cmd,
   memset(recvBuffer, 0, bufferLength);
 
   // Prepare header
-  Packages::Header* header = (Packages::Header*) sendBuffer;
+  EmbrickHeaderPackage* header = (EmbrickHeaderPackage*) sendBuffer;
 
   header->address = (char) target;
   header->command = cmd;
@@ -350,11 +348,11 @@ bool Bus::transfer(unsigned int target, Command cmd,
 
   if (syncMutex)
     syncMutex->lock();
-  memcpy(sendBuffer + sizeof(Packages::Header), dataSend, dataSendLength);
+  memcpy(sendBuffer + sizeof(EmbrickHeaderPackage), dataSend, dataSendLength);
   if (syncMutex)
-    syncMutex->unlock();
-  sendBuffer[sizeof(Packages::Header) + dataSendLength] = calcChecksum(
-      sendBuffer + sizeof(Packages::Header), dataSendLength);
+   syncMutex->unlock();
+  sendBuffer[sizeof(EmbrickHeaderPackage) + dataSendLength] = calcChecksum(
+      sendBuffer + sizeof(EmbrickHeaderPackage), dataSendLength);
 
   // Invert data of master
   for (unsigned int i = 0; i < bufferLength; i++)
@@ -371,7 +369,7 @@ bool Bus::transfer(unsigned int target, Command cmd,
       microsleep(lastTransfer + (uint64_t) SyncGapDuration - microTime);
 
 //    // Send header
-//    ok = spi->transfer(sendBuffer, recvBuffer, sizeof(Packages::Header));
+//    ok = spi->transfer(sendBuffer, recvBuffer, sizeof(EmbrickHeaderPackage));
 //    lastTransfer = micros();
 //    if (!ok) {
 //      DEVLOG_ERROR("emBrick[BusHandler]: Failed to transfer header buffer.\n");
@@ -384,9 +382,9 @@ bool Bus::transfer(unsigned int target, Command cmd,
 //      microsleep(lastTransfer + 4 - microTime);
 //
 //    // Send data
-//    ok = spi->transfer(sendBuffer + sizeof(Packages::Header),
-//        recvBuffer + sizeof(Packages::Header),
-//        bufferLength - sizeof(Packages::Header));
+//    ok = spi->transfer(sendBuffer + sizeof(EmbrickHeaderPackage),
+//        recvBuffer + sizeof(EmbrickHeaderPackage),
+//        bufferLength - sizeof(EmbrickHeaderPackage));
 //    lastTransfer = micros();
 //    if (!ok) {
 //      DEVLOG_ERROR("emBrick[BusHandler]: Failed to transfer data buffer.\n");
@@ -400,8 +398,8 @@ bool Bus::transfer(unsigned int target, Command cmd,
       break;
 
     // Validate checksum
-    ok = calcChecksum(recvBuffer + sizeof(Packages::Header),
-        bufferLength - sizeof(Packages::Header)) == 0;
+    ok = calcChecksum(recvBuffer + sizeof(EmbrickHeaderPackage),
+        bufferLength - sizeof(EmbrickHeaderPackage)) == 0;
     if (!ok) {
 //      DEVLOG_DEBUG("emBrick[BusHandler]: Transfer - Invalid checksum\n");
     }
@@ -421,17 +419,17 @@ bool Bus::transfer(unsigned int target, Command cmd,
   if (syncMutex)
     syncMutex->lock();
   if (status)
-    *status = (SlaveStatus) recvBuffer[sizeof(Packages::Header)];
+  *status = (EmbrickSlaveHandler::SlaveStatus) recvBuffer[sizeof(EmbrickHeaderPackage)];
 
-  memcpy(dataReceive, recvBuffer + sizeof(Packages::Header) + 1,
-      dataReceiveLength);
+  memcpy(dataReceive, recvBuffer + sizeof(EmbrickHeaderPackage) + 1,
+         dataReceiveLength);
   if (syncMutex)
     syncMutex->unlock();
 
   return true;
 }
 
-unsigned char Bus::calcChecksum(unsigned char * data, int dataLen) {
+unsigned char EmbrickBusHandler::calcChecksum(unsigned char * data, int dataLen) {
   unsigned char c = 0;
   for (int i = 0; i < dataLen; i++)
     c += data[i];
@@ -439,14 +437,14 @@ unsigned char Bus::calcChecksum(unsigned char * data, int dataLen) {
   return ChecksumConstant - c;
 }
 
-uint64_t Bus::micros() {
+uint64_t EmbrickBusHandler::micros() {
   struct timespec ts;
   clock_gettime(CLOCK_MONOTONIC, &ts);
 
   return round(ts.tv_nsec / 1.0e3) + (ts.tv_sec - initTime) * 1E6;
 }
 
-unsigned long Bus::millis() {
+unsigned long EmbrickBusHandler::millis() {
   // TODO Improve timing func. Maybe replace with existing forte implementation.
   struct timespec ts;
   clock_gettime(CLOCK_MONOTONIC, &ts);
@@ -454,14 +452,14 @@ unsigned long Bus::millis() {
   return round(ts.tv_nsec / 1.0e6) + (ts.tv_sec - initTime) * 1000;
 }
 
-void Bus::microsleep(uint64_t microseconds) {
+void EmbrickBusHandler::microsleep(uint64_t microseconds) {
   struct timespec ts;
   ts.tv_sec = (long) (microseconds / (uint64_t) 1E6);
   ts.tv_nsec = (long) microseconds * (long) 1E3 - ts.tv_sec * (long) 1E9;
   nanosleep(&ts, 0);
 }
 
-void Bus::addTime(struct timespec& ts, unsigned long microseconds) {
+void EmbrickBusHandler::addTime(struct timespec& ts, unsigned long microseconds) {
   ts.tv_sec += microseconds / (unsigned long) 1E6;
   unsigned long t = ts.tv_nsec + microseconds * (unsigned long) 1E3
       - (microseconds / (unsigned long) 1E6) * (unsigned long) 1E9;
@@ -472,11 +470,7 @@ void Bus::addTime(struct timespec& ts, unsigned long microseconds) {
   ts.tv_nsec = t;
 }
 
-bool Bus::cmpTime(struct timespec& t1, struct timespec& t2) {
+bool EmbrickBusHandler::cmpTime(struct timespec& t1, struct timespec& t2) {
   return (t1.tv_nsec < t2.tv_nsec && t1.tv_sec == t2.tv_sec)
       || t1.tv_sec < t2.tv_sec;
 }
-
-} /* namespace Handlers */
-} /* namespace EmBrick */
-

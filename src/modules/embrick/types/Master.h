@@ -21,11 +21,8 @@
 
 #include <handler/bus.h>
 
-namespace EmBrick {
-namespace FunctionBlocks {
-
-class Master: public IO::ConfigurationFB::Multi::Master {
-DECLARE_FIRMWARE_FB(Master)
+class EmbrickMaster: public IOConfigFBMultiMaster {
+DECLARE_FIRMWARE_FB(EmbrickMaster)
 
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
@@ -76,20 +73,17 @@ private:
   virtual void setInitialValues();
 
 protected:
-  IO::Device::Controller* createDeviceController(CDeviceExecution& paDeviceExecution);
+  IODeviceController* createDeviceController(CDeviceExecution& paDeviceExecution);
 
   void setConfig();
 
   virtual void onStartup();
 
 public:
-  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(Master, IO::ConfigurationFB::Multi::Master){
+  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(EmbrickMaster, IOConfigFBMultiMaster){
   }
 };
 
-}
-/* namespace FunctionsBlocks */
-} /* namespace EmBrick */
 
 #endif //close the ifdef sequence from the beginning of the file
 

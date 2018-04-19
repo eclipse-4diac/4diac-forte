@@ -18,9 +18,7 @@
 #include <forte_sync.h>
 #include "../../../stdfblib/io/processinterfacebase.h"
 
-namespace IO {
-
-class ProcessInterface: public CProcessInterfaceBase, public Observer {
+class ProcessInterface: public CProcessInterfaceBase, public IOObserver {
 
 public:
   ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
@@ -58,7 +56,7 @@ protected:
   bool read(CIEC_ANY &);
   bool write(CIEC_ANY &);
 
-  virtual void onHandle(Handle *handle);
+  virtual void onHandle(IOHandle *handle);
   virtual void dropHandle();
 
   CSyncObject syncMutex;
@@ -75,8 +73,6 @@ private:
   static const char * const scmMappedWrongDataType;
 };
 
-} /* namespace IO */
-
-typedef IO::ProcessInterface CProcessInterface;
+typedef ProcessInterface CProcessInterface;
 
 #endif /* SRC_CORE_IO_PROCESSINTERFACE_H_ */

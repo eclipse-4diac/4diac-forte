@@ -11,41 +11,30 @@
 
 #include "bit.h"
 
-namespace EmBrick {
-namespace Handles {
-
-BitSlaveHandle::BitSlaveHandle(Device::Controller *controller,
-    Mapper::Direction direction, uint8_t offset,
-    uint8_t position, Handlers::Slave *slave) :
-    SlaveHandle(controller, direction, type = CIEC_ANY::e_BOOL, offset, slave), mask(
+EmbrickBitSlaveHandle::EmbrickBitSlaveHandle(IODeviceController *controller,
+    IOMapper::Direction direction, uint8_t offset,
+    uint8_t position, EmbrickSlaveHandler *slave) :
+    EmbrickSlaveHandle(controller, direction, type = CIEC_ANY::e_BOOL, offset, slave), mask(
         (uint8_t) (1 << position)) {
 
 }
 
-void BitSlaveHandle::set(const CIEC_ANY &state) {
-  updateMutex->lock();
+void EmbrickBitSlaveHandle::set(const CIEC_ANY &state) {
+  CCriticalRegion criticalRegion(*updateMutex);
 
   if (static_cast<const CIEC_BOOL&>(state))
     *(buffer + offset) = (uint8_t) (*(buffer + offset) | mask);
   else
     *(buffer + offset) = (uint8_t) (*(buffer + offset) & ~mask);
 
-  updateMutex->unlock();
-
-  SlaveHandle::set(state);
+  EmbrickSlaveHandle::set(state);
 }
 
-void BitSlaveHandle::get(CIEC_ANY &state) {
-  updateMutex->lock();
-
+void EmbrickBitSlaveHandle::get(CIEC_ANY &state) {
+  CCriticalRegion criticalRegion(*updateMutex);
   static_cast<CIEC_BOOL&>(state) = (*(buffer + offset) & mask) != 0;
-
-  updateMutex->unlock();
 }
 
-bool BitSlaveHandle::equal(unsigned char* oldBuffer) {
+bool EmbrickBitSlaveHandle::equal(unsigned char* oldBuffer) {
   return (*(buffer + offset) & mask) == (*(oldBuffer + offset) & mask);
 }
-
-} /* namespace Handles */
-} /* namespace EmBrick */

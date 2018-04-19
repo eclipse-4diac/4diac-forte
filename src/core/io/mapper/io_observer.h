@@ -15,26 +15,22 @@
 #include "io_handle.h"
 #include "io_mapper.h"
 
-namespace IO {
-
-class Observer {
-  friend class Mapper;
+class IOObserver {
+  friend class IOMapper;
 
 public:
-  Observer();
-  virtual ~Observer();
+  IOObserver();
+  virtual ~IOObserver();
 
   virtual bool onChange() = 0;
 
 protected:
-  virtual void onHandle(Handle *handle);
+  virtual void onHandle(IOHandle *handle);
   virtual void dropHandle();
 
-  Handle* handle;
+  IOHandle* handle;
   CIEC_ANY::EDataTypeID type;
-  Mapper::Direction direction;
+  IOMapper::Direction direction;
 };
-
-} /* namespace IO */
 
 #endif /* SRC_CORE_IO_MAPPER_OBSERVER_H_ */

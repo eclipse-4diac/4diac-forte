@@ -20,13 +20,7 @@
 
 #include <io/mapper/io_handle.h>
 
-namespace IO {
-
-namespace ConfigurationFB {
-class Controller;
-}
-
-namespace Device {
+class IOConfigFBController;
 
 /*! @brief Abstract Device Controller
  *
@@ -37,10 +31,10 @@ namespace Device {
  * - runs Device Controller in separate thread
  * - thread safe communication with corresponding controller configuration fb (see #notifyConfigFB)
  * - base structure for safe startups and resets (see #init, #runLoop, and #deInit)
- * - automatic error handling and restart (see #IO::ConfigurationFB::Controller)
+ * - automatic error handling and restart (see #IOConfigFBController)
  */
-class Controller: protected CExternalEventHandler, protected CThread {
-  friend class ConfigurationFB::Controller;
+class IODeviceController: protected CExternalEventHandler, protected CThread {
+  friend class IOConfigFBController;
 
 public:
   /*! @brief Abstract configuration struct.
@@ -56,13 +50,13 @@ public:
    *
    * Used to exchange information about handles between the device controller and the corresponding configuration fb.
    * The device implementation should extend the struct with properties, which uniquely identify the handle.
-   * The #initHandle method then creates an #Handle instance based on the handle descriptor.
+   * The #initHandle method then creates an #IOHandle instance based on the handle descriptor.
    */
   struct HandleDescriptor {
     CIEC_WSTRING const &id;
-    IO::Mapper::Direction direction;
+    IOMapper::Direction direction;
 
-    HandleDescriptor(CIEC_WSTRING const &id, IO::Mapper::Direction direction) :
+    HandleDescriptor(CIEC_WSTRING const &id, IOMapper::Direction direction) :
         id(id), direction(direction) {
 
     }
@@ -87,9 +81,9 @@ public:
    */
   virtual void setConfig(Config* config) = 0;
 
-  void fireIndicationEvent(Observer *observer);
+  void fireIndicationEvent(IOObserver *observer);
 
-  virtual void handleChangeEvent(Handle *handle);
+  virtual void handleChangeEvent(IOHandle *handle);
 
   //TODO: adapt this properly to the new handler model. This mockup is just to avoid the classes below to be abstract
   virtual unsigned int getIdentifier() const{
@@ -97,7 +91,7 @@ public:
   }
 
 protected:
-  explicit Controller(CDeviceExecution& paDeviceExecution);
+  explicit IODeviceController(CDeviceExecution& paDeviceExecution);
 
   /*! @brief Initializes the controller.
    *
@@ -128,7 +122,7 @@ protected:
    */
   virtual void deInit() = 0;
 
-  ConfigurationFB::Controller *delegate;
+  IOConfigFBController *delegate;
 
   bool hasError();
   const char* error;
@@ -146,7 +140,7 @@ protected:
   /*! @brief Synchronizes the access to the #inputHandles and #outputHandles. Use it for iterations over the lists. */
   CSyncObject handleMutex;
 
-  typedef CSinglyLinkedList<Handle *> THandleList;
+  typedef CSinglyLinkedList<IOHandle *> THandleList;
 
   /*! @brief All input handles of the main controller
    * The list should only contain input handles of the main controller.
@@ -179,7 +173,7 @@ protected:
    *
    * @param handleDescriptor Descriptor of the handle
    */
-  virtual Handle* initHandle(HandleDescriptor *handleDescriptor) = 0;
+  virtual IOHandle* initHandle(HandleDescriptor *handleDescriptor) = 0;
 
   /*! @brief Iterates over all input handles and fires an indication event in case of a change.
    *
@@ -192,10 +186,10 @@ protected:
 
   /*! @brief Checks if the value of a handle has changed. Used by the #checkForInputChanges method.
    *
-   * @param handle Handle which should be compared to the previous IO state
+   * @param handle IOHandle which should be compared to the previous IO state
    * @return True if the current state is equal to the previous IO state. In case it has changed, return false.
    */
-  virtual bool isHandleValueEqual(Handle* handle);
+  virtual bool isHandleValueEqual(IOHandle* handle);
 
 private:
 
@@ -211,7 +205,7 @@ private:
 
   int initDelay;
 
-  void addHandle(THandleList* list, CIEC_WSTRING const &id, Handle* handle);
+  void addHandle(THandleList* list, CIEC_WSTRING const &id, IOHandle* handle);
 
   // Functions needed for the external event handler interface
   void enableHandler(void) {
@@ -224,8 +218,5 @@ private:
     return 0;
   }
 };
-
-} /* namespace Device */
-} /* namespace IO */
 
 #endif /* SRC_CORE_IO_DEVICE_CONTROLLER_H_ */

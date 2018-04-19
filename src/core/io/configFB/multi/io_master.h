@@ -12,32 +12,28 @@
 #ifndef SRC_CORE_IO_CONFIGFB_MULTI_MASTER_H_
 #define SRC_CORE_IO_CONFIGFB_MULTI_MASTER_H_
 
-#include "../io_controller.h"
 #include "../../device/io_controller_multi.h"
 #include "io_adapter.h"
 #include <fortelist.h>
+#include "../io_configFB_controller.h"
 
-namespace IO {
-namespace ConfigurationFB {
-namespace Multi {
+class IOConfigFBMultiMaster;
 
-class Master;
+typedef CSinglyLinkedList<IOConfigFBMultiMaster*> TMasterList;
 
-typedef CSinglyLinkedList<Master*> TMasterList;
-
-class Master: public Controller {
+class IOConfigFBMultiMaster: public IOConfigFBController {
 public:
-  Master(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
+  IOConfigFBMultiMaster(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
       const CStringDictionary::TStringId pa_nInstanceNameId,
       TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
 
-  static Master* getMasterById(TForteUInt16 id);
+  static IOConfigFBMultiMaster* getMasterById(TForteUInt16 id);
 
-  using Controller::initHandle;
+  using IOConfigFBController::initHandle;
 
 protected:
-  Adapter& BusAdapterOut() {
-    return (*static_cast<Adapter*>(m_apoAdapters[0]));
+  IOConfigFBMultiAdapter& BusAdapterOut() {
+    return (*static_cast<IOConfigFBMultiAdapter*>(m_apoAdapters[0]));
   }
   static const int scm_nBusAdapterAdpNum = 0;
 
@@ -56,9 +52,5 @@ private:
 
   static const char * const scmFailedToInitSlaves;
 };
-
-} /* namespace Multi */
-} /* namespace ConfigurationFB */
-} /* namespace IO */
 
 #endif /* SRC_CORE_IO_CONFIGFB_MULTI_MASTER_H_ */

@@ -11,19 +11,16 @@
 
 #include "io_controller_poll.h"
 
-namespace IO {
-namespace Device {
-
-PollController::PollController(CDeviceExecution& paDeviceExecution, float PollInterval) : Controller(paDeviceExecution),
+IODevicePollController::IODevicePollController(CDeviceExecution& paDeviceExecution, float PollInterval) : IODeviceController(paDeviceExecution),
     PollInterval(PollInterval), forcedLoop(false), loopActive(false) {
 
 }
 
-void PollController::handleChangeEvent(Handle*) {
+void IODevicePollController::handleChangeEvent(IOHandle*) {
   forcePoll();
 }
 
-void PollController::runLoop() {
+void IODevicePollController::runLoop() {
   clock_gettime(CLOCK_MONOTONIC, &nextLoop);
 
   while (isAlive()) {
@@ -46,10 +43,10 @@ void PollController::runLoop() {
   }
 }
 
-void PollController::setPollInterval(float PollInterval) {
+void IODevicePollController::setPollInterval(float PollInterval) {
   if (PollInterval <= 0) {
     DEVLOG_WARNING(
-        "[IO:PollController] Configured PollInterval is set to an invalid value '%d'. Set to 25.\n",
+        "[IODevicePollController] Configured PollInterval is set to an invalid value '%d'. Set to 25.\n",
         PollInterval);
     PollInterval = 25;
   }
@@ -57,7 +54,7 @@ void PollController::setPollInterval(float PollInterval) {
   this->PollInterval = PollInterval;
 }
 
-void PollController::forcePoll() {
+void IODevicePollController::forcePoll() {
   loopSync.lock();
 
   clock_gettime(CLOCK_MONOTONIC, &nextLoop);
@@ -68,6 +65,3 @@ void PollController::forcePoll() {
 
   loopSync.unlock();
 }
-
-} /* namespace Device */
-} /* namespace IO */

@@ -11,11 +11,7 @@
 
 #include "io_adapter.h"
 
-namespace IO {
-namespace ConfigurationFB {
-namespace Multi {
-
-Adapter::Adapter(const TForteUInt8* const scm_slaveConfigurationIO,
+IOConfigFBMultiAdapter::IOConfigFBMultiAdapter(const TForteUInt8* const scm_slaveConfigurationIO,
     const TForteUInt8 scm_slaveConfigurationIO_num, CResource *pa_poSrcRes,
     const SFBInterfaceSpec *pa_pstInterfaceSpecSocket,
     const CStringDictionary::TStringId pa_nInstanceNameId,
@@ -27,10 +23,6 @@ Adapter::Adapter(const TForteUInt8* const scm_slaveConfigurationIO,
         scm_slaveConfigurationIO_num) {
 }
 
-Adapter::~Adapter() {
+IOConfigFBMultiAdapter::~IOConfigFBMultiAdapter() {
   // TODO Auto-generated destructor stub
 }
-
-} /* namespace Multi */
-} /* namespace ConfigurationFB */
-} /* namespace IO */

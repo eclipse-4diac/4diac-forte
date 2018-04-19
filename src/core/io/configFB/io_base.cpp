@@ -11,10 +11,7 @@
 
 #include "io_base.h"
 
-namespace IO {
-namespace ConfigurationFB {
-
-Base::Base(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
+IOConfigFBBase::IOConfigFBBase(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
     const CStringDictionary::TStringId pa_nInstanceNameId,
     TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
     CEventSourceFB(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId,
@@ -23,9 +20,6 @@ Base::Base(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
 
 }
 
-Base::~Base() {
+IOConfigFBBase::~IOConfigFBBase() {
   // TODO Auto-generated destructor stub
 }
-
-} /* namespace ConfigurationFB */
-} /* namespace IO */

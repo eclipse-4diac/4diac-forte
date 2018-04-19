@@ -15,13 +15,11 @@
 #include <slave/slave.h>
 #include <slave/handle.h>
 
-namespace EmBrick {
-namespace Handles {
 
-class BitSlaveHandle: public SlaveHandle {
+class EmbrickBitSlaveHandle: public EmbrickSlaveHandle {
 public:
-  BitSlaveHandle(Device::Controller *controller, Mapper::Direction direction,
-      uint8_t offset, uint8_t position, Handlers::Slave *slave);
+  EmbrickBitSlaveHandle(IODeviceController *controller, IOMapper::Direction direction,
+      uint8_t offset, uint8_t position, EmbrickSlaveHandler *slave);
 
   virtual void set(const CIEC_ANY &);
   void get(CIEC_ANY &);
@@ -38,7 +36,5 @@ protected:
   const uint8_t mask;
 };
 
-} /* namespace Handles */
-} /* namespace EmBrick */
 
 #endif /* SRC_MODULES_EMBRICK_SLAVE_HANDLES_BIT_H_ */

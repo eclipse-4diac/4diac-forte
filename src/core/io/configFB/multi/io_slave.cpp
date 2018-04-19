@@ -11,23 +11,19 @@
 
 #include "io_slave.h"
 
-namespace IO {
-namespace ConfigurationFB {
-namespace Multi {
+const char * const IOConfigFBMultiSlave::scmOK = "OK";
+const char * const IOConfigFBMultiSlave::scmStopped = "Stopped";
+const char * const IOConfigFBMultiSlave::scmMasterNotFound = "Master not found";
+const char * const IOConfigFBMultiSlave::scmNotFound = "Module not found";
+const char * const IOConfigFBMultiSlave::scmIncorrectType = "Module type is incorrect";
 
-const char * const Slave::scmOK = "OK";
-const char * const Slave::scmStopped = "Stopped";
-const char * const Slave::scmMasterNotFound = "Master not found";
-const char * const Slave::scmNotFound = "Module not found";
-const char * const Slave::scmIncorrectType = "Module type is incorrect";
-
-Slave::Slave(const TForteUInt8* const scm_slaveConfigurationIO,
+IOConfigFBMultiSlave::IOConfigFBMultiSlave(const TForteUInt8* const scm_slaveConfigurationIO,
     const TForteUInt8 scm_slaveConfigurationIO_num, int type,
     CResource *pa_poSrcRes,
     const SFBInterfaceSpec *pa_pstInterfaceSpec,
     const CStringDictionary::TStringId pa_nInstanceNameId,
     TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-    Base(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData,
+    IOConfigFBBase(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData,
         pa_acFBVarsData), master(0), index(-1), type(type), initialized(false), scm_slaveConfigurationIO(
         scm_slaveConfigurationIO), scm_slaveConfigurationIO_num(
         scm_slaveConfigurationIO_num), scm_slaveConfigurationIO_isDefault(
@@ -36,10 +32,10 @@ Slave::Slave(const TForteUInt8* const scm_slaveConfigurationIO,
     scm_slaveConfigurationIO_isDefault[i] = false;
 }
 
-Slave::~Slave() {
+IOConfigFBMultiSlave::~IOConfigFBMultiSlave() {
 }
 
-void Slave::executeEvent(int pa_nEIID) {
+void IOConfigFBMultiSlave::executeEvent(int pa_nEIID) {
   if (BusAdapterIn().INIT() == pa_nEIID) {
     if (BusAdapterIn().QI() == true) {
       // Handle initialization event
@@ -67,18 +63,18 @@ void Slave::executeEvent(int pa_nEIID) {
             break;
           default:
             DEVLOG_WARNING(
-                "[IO:ConfigFB:Multi:Slave] Unable to handle data type %d. Skip adapter configuration\n",
+                "[IOConfigFBMultiSlave] Unable to handle data type %d. Skip adapter configuration\n",
                 ptr->getDataTypeID());
             continue;
           }
         }
 
-        sendAdapterEvent(scm_nBusAdapterOutAdpNum, Adapter::scm_nEventINITID);
+        sendAdapterEvent(scm_nBusAdapterOutAdpNum, IOConfigFBMultiAdapter::scm_nEventINITID);
         sendOutputEvent(scm_nEventINDID);
       } else {
         // Send confirmation of init
         BusAdapterIn().QO() = QO();
-        sendAdapterEvent(scm_nBusAdapterInAdpNum, Adapter::scm_nEventINITOID);
+        sendAdapterEvent(scm_nBusAdapterInAdpNum, IOConfigFBMultiAdapter::scm_nEventINITOID);
       }
     } else {
       deInit();
@@ -90,18 +86,18 @@ void Slave::executeEvent(int pa_nEIID) {
         // DeInit next slave
         BusAdapterOut().QI() = BusAdapterIn().QI();
 
-        sendAdapterEvent(scm_nBusAdapterOutAdpNum, Adapter::scm_nEventINITID);
+        sendAdapterEvent(scm_nBusAdapterOutAdpNum, IOConfigFBMultiAdapter::scm_nEventINITID);
         sendOutputEvent(scm_nEventINDID);
       } else {
         // Send confirmation of deInit
         BusAdapterIn().QO() = QO();
-        sendAdapterEvent(scm_nBusAdapterInAdpNum, Adapter::scm_nEventINITOID);
+        sendAdapterEvent(scm_nBusAdapterInAdpNum, IOConfigFBMultiAdapter::scm_nEventINITOID);
       }
     }
   } else if (BusAdapterOut().INITO() == pa_nEIID) {
     // Forward confirmation of initialization
     BusAdapterIn().QO() = BusAdapterOut().QO() && QO();
-    sendAdapterEvent(scm_nBusAdapterInAdpNum, Adapter::scm_nEventINITOID);
+    sendAdapterEvent(scm_nBusAdapterInAdpNum, IOConfigFBMultiAdapter::scm_nEventINITOID);
   }
 
   switch (pa_nEIID) {
@@ -123,14 +119,14 @@ void Slave::executeEvent(int pa_nEIID) {
   }
 }
 
-void Slave::initHandle(
-    Device::MultiController::HandleDescriptor *handleDescriptor) {
+void IOConfigFBMultiSlave::initHandle(
+    IODeviceMultiController::HandleDescriptor *handleDescriptor) {
   master->initHandle(handleDescriptor);
 }
 
-const char* Slave::handleInitEvent() {
+const char* IOConfigFBMultiSlave::handleInitEvent() {
   // Get master by id
-  master = Master::getMasterById(BusAdapterIn().MasterId());
+  master = IOConfigFBMultiMaster::getMasterById(BusAdapterIn().MasterId());
   if (master == 0) {
     return scmMasterNotFound;
   }
@@ -147,7 +143,7 @@ const char* Slave::handleInitEvent() {
       break;
     default:
       DEVLOG_WARNING(
-          "[IO:ConfigFB:Multi:Slave] Unable to handle data type %d. Skip slave configuration\n",
+          "[IOConfigFBMultiSlave] Unable to handle data type %d. Skip slave configuration\n",
           ptr->getDataTypeID());
       continue;
     }
@@ -168,18 +164,18 @@ const char* Slave::handleInitEvent() {
     }
   }
 
-  Device::MultiController& controller = getController();
+  IODeviceMultiController& controller = getController();
 
   // Check if slave exists
   if (!controller.isSlaveAvailable(index)) {
-    DEVLOG_DEBUG("[IO:ConfigFB:Slave] No slave found at position %d\n", index);
+    DEVLOG_DEBUG("[IOConfigFBMultiSlave] No slave found at position %d\n", index);
     return scmNotFound;
   }
 
   // Check if slave type is correct
   if (!controller.checkSlaveType(index, type)) {
     DEVLOG_DEBUG(
-        "[IO:ConfigFB:Slave] Found slave with incorrect type at position %d\n",
+        "[IOConfigFBMultiSlave] Found slave with incorrect type at position %d\n",
         index);
     return scmIncorrectType;
   }
@@ -193,11 +189,7 @@ const char* Slave::handleInitEvent() {
   if (true == QI())
     initHandles();
 
-  DEVLOG_DEBUG("[IO:ConfigFB:Slave] Initialized slave at position %d\n", index);
+  DEVLOG_DEBUG("[IOConfigFBMultiSlave] Initialized slave at position %d\n", index);
 
   return 0;
 }
-
-} /* namespace Multi */
-} /* namespace ConfigurationFB */
-} /* namespace IO */

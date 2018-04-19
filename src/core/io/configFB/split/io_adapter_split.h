@@ -14,17 +14,14 @@
 
 #include <adapter.h>
 
-namespace IO {
-namespace ConfigurationFB {
-
-class SplitAdapter: public CAdapter {
+class IOConfigFBSplitAdapter: public CAdapter {
 public:
-  SplitAdapter(CResource *pa_poSrcRes,
+  IOConfigFBSplitAdapter(CResource *pa_poSrcRes,
       const SFBInterfaceSpec *pa_pstInterfaceSpecSocket,
       const CStringDictionary::TStringId pa_nInstanceNameId,
       const SFBInterfaceSpec *pa_pstInterfaceSpecPlug, bool pa_bIsPlug,
       TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
-  virtual ~SplitAdapter();
+  virtual ~IOConfigFBSplitAdapter();
 
   CIEC_BOOL &QO() {
     return *static_cast<CIEC_BOOL*>((isSocket()) ? getDI(0) : getDO(0));
@@ -48,8 +45,5 @@ public:
     return m_nParentAdapterListEventID + scm_nEventINITOID;
   }
 };
-
-} /* namespace ConfigurationFB */
-} /* namespace IO */
 
 #endif /* SRC_CORE_IO_CONFIGFB_SPLIT_ADAPTER_H_ */

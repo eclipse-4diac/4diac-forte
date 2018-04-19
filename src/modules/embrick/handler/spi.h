@@ -20,15 +20,12 @@
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
 
-namespace EmBrick {
-namespace Handlers {
-
-class SPI {
-  friend class Bus;
+class EmbrickSPIHandler {
+  friend class EmbrickBusHandler;
 
 protected:
-  explicit SPI(unsigned int interface);
-  virtual ~SPI();
+  explicit EmbrickSPIHandler(unsigned int interface);
+  virtual ~EmbrickSPIHandler();
 
   bool transfer(unsigned char* sendBuffer, unsigned char* receiveBuffer,
       int length);
@@ -63,8 +60,5 @@ private:
   static const char * const scmFailedToTestBus;
   static const char * const scmFailedToTransferBuffer;
 };
-
-} /* namespace Handlers */
-} /* namespace EmBrick */
 
 #endif /* SRC_MODULES_EMBRICK_HANDLER_SPI_H_ */

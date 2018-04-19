@@ -17,15 +17,12 @@
 #include <string>
 #include <forte_wstring.h>
 
-namespace EmBrick {
-namespace Handlers {
-
-class Pin {
-  friend class Bus;
+class EmbrickPinHandler {
+  friend class EmbrickBusHandler;
 
 protected:
-  explicit Pin(unsigned int pin);
-  virtual ~Pin();
+  explicit EmbrickPinHandler(unsigned int pin);
+  virtual ~EmbrickPinHandler();
 
   bool set(bool state);
   bool enable() {
@@ -53,8 +50,5 @@ private:
   static const char * const scmFailedToWriteFile;
   static const char * const scmNotInitialised;
 };
-
-} /* namespace Handlers */
-} /* namespace EmBrick */
 
 #endif /* SRC_MODULES_EMBRICK_HANDLER_PIN_H_ */

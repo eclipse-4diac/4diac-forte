@@ -12,31 +12,28 @@
 #ifndef SRC_CORE_IO_CONFIGFB_IO_CONTROLLER_SPLIT_H_
 #define SRC_CORE_IO_CONFIGFB_IO_CONTROLLER_SPLIT_H_
 
-#include "../io_controller.h"
+#include "../io_configFB_controller.h"
 #include "io_adapter_split.h"
 
 #define FUNCTION_BLOCK_CTOR_FOR_IO_SPLIT_CONTROLLER(fbclass) \
  fbclass(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : \
- IO::ConfigurationFB::SplitController( (const TForteUInt8* const) &scm_splitAdapter, scm_splitAdapter_num, pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData)
+ IOConfigFBSplitController( (const TForteUInt8* const) &scm_splitAdapter, scm_splitAdapter_num, pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData)
 
-namespace IO {
-namespace ConfigurationFB {
+class IOConfigFBSplitController;
 
-class SplitController;
+typedef CSinglyLinkedList<IOConfigFBSplitController*> TControllerList;
 
-typedef CSinglyLinkedList<SplitController*> TControllerList;
-
-class SplitController: public Controller {
+class IOConfigFBSplitController: public IOConfigFBController {
 public:
-  SplitController(const TForteUInt8* const scm_splitAdapter,
+  IOConfigFBSplitController(const TForteUInt8* const scm_splitAdapter,
       const TForteUInt8 scm_splitAdapter_num, CResource *pa_poSrcRes,
       const SFBInterfaceSpec *pa_pstInterfaceSpec,
       const CStringDictionary::TStringId pa_nInstanceNameId,
       TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
 
-  static SplitController* getControllerById(TForteUInt16 id);
+  static IOConfigFBSplitController* getControllerById(TForteUInt16 id);
 
-  using Controller::initHandle;
+  using IOConfigFBController::initHandle;
 
 protected:
 
@@ -60,8 +57,5 @@ private:
 
   static const char * const scmFailedToInitParts;
 };
-
-} /* namespace ConfigurationFB */
-} /* namespace IO */
 
 #endif /* SRC_CORE_IO_CONFIGFB_IO_CONTROLLER_SPLIT_H_ */
