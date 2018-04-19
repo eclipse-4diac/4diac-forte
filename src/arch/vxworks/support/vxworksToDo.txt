@@ -1,0 +1,34 @@
+Usage:
+
+1- To compile, place the VxWorks.cmake file in CMake\share\cmake-3.6\Modules\Platform where the first CMake folder is the installation folder. 
+
+2- Then configure CMake for cross-compiling using the following settings:
+
+  Operating System: VxWorks
+  Compilers->C: $(ROOT_FOLDER)/gnu/4.3.3-vxworks-6.9/x86-win32/bin/ccpentium[.exe]
+  Compilers->C++: $(ROOT_FOLDER)/gnu/4.3.3-vxworks-6.9/x86-win32/bin/c++pentium[.exe]
+  Target Root: $(ROOT_FOLDER)/customBosch/vxworks-6.9
+
+  The deployment of VxWorks was done only in one device, so the folders might change. 
+
+3- Check the variables in CMake from VXWORKS:
+
+    FORTE_VXWORKS_VSB_CONFIG_FILE, FORTE_VXWORKS_MUNCH_TCL_FILE, FORTE_VXWORKS_INCLUDE, FORTE_VXWORKS_TAGS and FORTE_VXWORKS_CMAKE_NM can be set automatically depending
+    on the other variables if FORTE_VXWORKS_FIND_DIR_AUTOMATICALLY is set ON. Turn OFF this variable and change the variable manually if you have another
+    configuration 
+
+4- Copy and paste the generated forte.out file in the file system of the target using FTP or something else available in the device. 
+
+5- Then use the ld to load the module and sp funtionaName to run the function as a thread. The module has to be loaded everytime the system restarts.
+
+  ld 0,0,"forte.out" //loads the module
+  sp startForte //starts forte
+
+MQTT:
+
+Apply the patch from the file changesInPaho.txt to the paho.mqtt.c git repository. The patch was applied to the commit 5571f9b1cdfba5e628be44e4e84962ede6497e84 with successful results
+
+OPC_UA:
+
+The code was tested successfully with the commit 0c55867ebbb9bfdbf49a7d0b2482a9dbb8de183f
+

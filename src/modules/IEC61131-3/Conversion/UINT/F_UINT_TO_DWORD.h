@@ -13,8 +13,6 @@
 #define _F_UINT_TO_DWORD_H_
 
 #include <funcbloc.h>
-#include <forte_dword.h>
-#include <forte_uint.h>
 
 class FORTE_F_UINT_TO_DWORD: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_UINT_TO_DWORD)

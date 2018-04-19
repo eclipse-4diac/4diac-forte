@@ -13,8 +13,6 @@
 #define _INT2INT_H_
 
 #include <funcbloc.h>
-#include <forte_int.h>
-
 
 class INT2INT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(INT2INT)

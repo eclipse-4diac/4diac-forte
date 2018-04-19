@@ -13,8 +13,6 @@
 #define _FB_SR_H_
 
 #include <funcbloc.h>
-#include <forte_bool.h>
-#include <forte_array.h>
 
 class FB_SR: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FB_SR)

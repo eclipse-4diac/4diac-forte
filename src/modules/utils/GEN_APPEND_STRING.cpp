@@ -15,7 +15,6 @@
 #endif
 #include <ctype.h>
 #include <stdio.h>
-#include <devlog.h>
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_APPEND_STRING, g_nStringIdGEN_APPEND_STRING);
 

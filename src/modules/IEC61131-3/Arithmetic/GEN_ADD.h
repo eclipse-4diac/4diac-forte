@@ -14,7 +14,6 @@
 #define _GEN_ADD_H_
 
 #include <funcbloc.h>
-#include <forte_any_magnitude.h>
 
 class GEN_ADD: public CFunctionBlock {
 DECLARE_GENERIC_FIRMWARE_FB(GEN_ADD)

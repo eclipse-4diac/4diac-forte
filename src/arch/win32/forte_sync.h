@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 - 2013 ACIN, Profactor GmbH
+ * Copyright (c) 2010 - 2013, 2017 ACIN, Profactor GmbH, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,8 @@
 #define _FORTE_SYNC_H_
 
 #define WIN32_LEAN_AND_MEAN
- #include <windows.h>
+
+#include <windows.h>
 
 #define CSyncObject CPCSyncObject //allows that doxygen can generate better documenation
 
@@ -25,27 +26,21 @@
  */
  
 class CPCSyncObject{
-  private:
-  protected:
-  //! The win32 CRITICAL_SECTION handle of the operating system.
-	 CRITICAL_SECTION m_oMutexHandle;
-
   public:
     CPCSyncObject();
     ~CPCSyncObject();
-  /*!\brief Lock the resource coming after the lock command  
-   * 
-   * This function blocks until it will get the lock for the coming critical section.
-   */  
-    void lock(void){
-		EnterCriticalSection(&m_oMutexHandle);
-      //TODO handle return value
-    };
-  //!Free the resource coming after the lock command  
-    void unlock(void){
-		LeaveCriticalSection(&m_oMutexHandle);
-      //TODO handle return value
-    };
+
+    /*!\brief Lock the resource coming after the lock command
+     *
+     * This function blocks until it will get the lock for the coming critical section.
+     */
+    void lock(void);
+
+    //!Free the resource coming after the lock command
+    void unlock(void);
+
+  private:
+    SRWLOCK mLock;
 };
 
 #endif /*FORTE_SYNC_H_*/

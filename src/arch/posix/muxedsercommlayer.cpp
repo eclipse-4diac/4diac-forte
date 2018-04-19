@@ -22,7 +22,7 @@ using namespace forte::com_infra;
 
 CMuxedSerCommLayer::CMuxedSerPortsManager CMuxedSerCommLayer::sm_oMuxedSerPortsManager;
 
-CMuxedSerCommLayer::CMuxedSerCommLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poFB) :
+CMuxedSerCommLayer::CMuxedSerCommLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB) :
     CComLayer(pa_poUpperLayer, pa_poFB), m_unBufFillSize(0), m_nFD(scm_nInvalidFileDescriptor),
 	m_eInterruptResp(forte::com_infra::EComResponse::e_Nothing), m_unSerMuxId(0){
 
@@ -30,13 +30,6 @@ CMuxedSerCommLayer::CMuxedSerCommLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_
 
 CMuxedSerCommLayer::~CMuxedSerCommLayer(){
   closeConnection();
-}
-
-void CMuxedSerCommLayer::closeConnection(){
-  if(CFDSelectHandler::scm_nInvalidFileDescriptor != m_nFD){
-    sm_oMuxedSerPortsManager.removeMuxedSerLayer(m_nFD, this);
-    m_nFD = CFDSelectHandler::scm_nInvalidFileDescriptor;
-  }
 }
 
 EComResponse CMuxedSerCommLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
@@ -109,6 +102,13 @@ EComResponse CMuxedSerCommLayer::openConnection(char *pa_acLayerParameter){
   }
 
   return eRetVal;
+}
+
+void CMuxedSerCommLayer::closeConnection(){
+  if(CFDSelectHandler::scm_nInvalidFileDescriptor != m_nFD){
+    sm_oMuxedSerPortsManager.removeMuxedSerLayer(m_nFD, this);
+    m_nFD = CFDSelectHandler::scm_nInvalidFileDescriptor;
+  }
 }
 
 //**************************************************************************************************************************
@@ -231,7 +231,7 @@ void CMuxedSerCommLayer::CMuxedSerPortsManager::openPort(char* pa_acSerPort, SSe
   pa_pstPortEntry->m_nFD = open(pa_acSerPort, O_RDWR | O_NOCTTY);
 
   if(CFDSelectHandler::scm_nInvalidFileDescriptor != pa_pstPortEntry->m_nFD){
-    CFDSelectHandler::getInstance().addComCallback(pa_pstPortEntry->m_nFD, pa_pstPortEntry);
+    GET_HANDLER_FROM_LAYER(*m_poFb, CFDSelectHandler)->addComCallback(pa_pstPortEntry->m_nFD, pa_pstPortEntry);
   }
   else{
     DEVLOG_ERROR("CSerCommLayer: open failed: %s\n", strerror(errno));
@@ -239,7 +239,7 @@ void CMuxedSerCommLayer::CMuxedSerPortsManager::openPort(char* pa_acSerPort, SSe
 }
 
 void CMuxedSerCommLayer::CMuxedSerPortsManager::closePort(SSerPortEntry *pa_pstSerPortEntry){
-  CFDSelectHandler::getInstance().removeComCallback(pa_pstSerPortEntry->m_nFD);
+  GET_HANDLER_FROM_LAYER(*m_poFb, CFDSelectHandler)->removeComCallback(pa_pstSerPortEntry->m_nFD);
   close(pa_pstSerPortEntry->m_nFD);
 
   delete[] pa_pstSerPortEntry->m_acSerPort;

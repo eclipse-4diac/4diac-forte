@@ -88,6 +88,12 @@ FUNCTION(forte_add_include_directories)
   ENDFOREACH(ARG)
 ENDFUNCTION(forte_add_include_directories)
 
+FUNCTION(forte_add_include_system_directories) #avoid warnings on included folders
+  FOREACH(ARG ${ARGV})
+    SET_PROPERTY(GLOBAL APPEND PROPERTY FORTE_INCLUDE_SYSTEM_DIRECTORIES ${ARG})
+  ENDFOREACH(ARG)
+ENDFUNCTION(forte_add_include_system_directories)
+
 FUNCTION(forte_remove_sourcefile_h)
   GET_PROPERTY(SOURCE_H       GLOBAL PROPERTY FORTE_SOURCE_H)
   GET_PROPERTY(SOURCE_H_GROUP GLOBAL PROPERTY FORTE_SOURCE_H_GROUP)
@@ -157,6 +163,15 @@ FUNCTION(forte_add_link_library)
   ENDFOREACH(ARG)
 ENDFUNCTION(forte_add_link_library)
 
+FUNCTION(forte_add_link_library_beginning)
+  get_property(LINK_LIBRARY_1 GLOBAL PROPERTY FORTE_LINK_LIBRARY)
+  set_property(GLOBAL PROPERTY FORTE_LINK_LIBRARY "")
+  FOREACH(ARG ${ARGV})
+    set_property(GLOBAL APPEND PROPERTY FORTE_LINK_LIBRARY ${ARG})
+  ENDFOREACH(ARG)
+  forte_add_link_library(${LINK_LIBRARY_1}) 
+ENDFUNCTION(forte_add_link_library_beginning)
+
 FUNCTION(forte_add_definition)
   FOREACH(ARG ${ARGV})
     set_property(GLOBAL APPEND PROPERTY FORTE_DEFINITION ${ARG})
@@ -186,6 +201,12 @@ MACRO(forte_add_network_layer NAME ONOFF CONFIGNAME CLASSNAME FILENAME DISCRIPTI
   ENDIF(FORTE_COM_${NAME})
 ENDMACRO(forte_add_network_layer)
 
+MACRO(forte_add_handler CLASSNAME FILENAME)
+    FORTE_ADD_SOURCEFILE_H(${FILENAME}.h)
+    set_property(GLOBAL APPEND PROPERTY FORTE_HANDLER_CLASS ${CLASSNAME})
+    set_property(GLOBAL APPEND PROPERTY FORTE_HANDLER_FILENAME "${FILENAME}.h")
+ENDMACRO(forte_add_handler)
+
 #MACRO(forte_add_module NAME DIRECTORY DISCRIPTION)
 # Additional parameters are interpreted as dependencies
 MACRO(forte_add_module NAME DISCRIPTION)
@@ -200,6 +221,13 @@ MACRO(forte_add_module NAME DISCRIPTION)
   endif(NOT FORTE_MODULE_${NAME})
 ENDMACRO(forte_add_module)
 
+#MACRO(forte_add_io NAME DIRECTORY DESCRIPTION)
+MACRO(forte_add_io NAME DESCRIPTION)
+  set(FORTE_IO_${NAME} OFF CACHE BOOL "${DESCRIPTION}")
+  if(NOT FORTE_IO_${NAME})
+    return()
+  endif(NOT FORTE_IO_${NAME})
+ENDMACRO(forte_add_io)
 
 FUNCTION(forte_create_modules_file FORTE_MODULE_DIR FORTE_EXTERNAL_MODULE_DIR)
   INCLUDE(${FORTE_BUILDSUPPORT_DIRECTORY}/generate_modules_cmake_file.cmake)

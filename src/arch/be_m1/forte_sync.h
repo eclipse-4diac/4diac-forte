@@ -11,35 +11,7 @@
 #ifndef _FORTE_SYNC_H_
 #define _FORTE_SYNC_H_
 
-#include "vxWorks.h"
-#include "taskLib.h"
-#include "semLib.h"
-
-#define CSyncObject CVXWorksSyncObject //allows that doxygen can generate better documentation
-
-/*! \ingroup bem1_hal
- * \brief The sync object implementation for the Bachmann electronic M1 interface
- *
- * In the Bachmann electronic M1 version we use a binary semaphore provided from vxWorks
- *
- */
-
-class CVXWorksSyncObject{
-  public:
-    CVXWorksSyncObject();
-    virtual ~CVXWorksSyncObject();
-
-    void lock(void){
-      semTake(m_oSemBinary, WAIT_FOREVER);
-    }
-
-    void unlock(void){
-      semGive(m_oSemBinary);
-    }
-
-  private:
-    SEM_ID m_oSemBinary;
-
-};
+//just pull_in the vxworks sync
+#include "../vxworks/forte_sync.h"
 
 #endif /*FORTE_SYNC_H_*/

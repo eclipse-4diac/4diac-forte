@@ -19,9 +19,14 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
   
   forte_add_sourcefile_hcpp(forte_thread pctimeha forte_sync forte_sem)
-  forte_add_sourcefile_cpp(main.cpp)
+  forte_add_sourcefile_hcpp(conditionSync)
+  forte_add_sourcefile_cpp(main.cpp ../genforte_printer.cpp)
+  forte_add_sourcefile_h(../forte_architecture_time.h)
+  forte_add_sourcefile_hcpp(../utils/timespec_utils)
+  
 
   if(FORTE_COM_ETH)
+   forte_add_handler(CFDSelectHandler sockhand)
    forte_add_sourcefile_hcpp( ../fdselecthand ../bsdsocketinterf)
    forte_add_sourcefile_h(../gensockhand.h)
    forte_add_sourcefile_h(sockhand.h)
@@ -29,7 +34,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 
   #forte_add_link_library(pthread)
 
-  forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -DFORTE_LITTLE_ENDIAN -ggdb")
+  forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -DFORTE_LITTLE_ENDIAN")
   
   set(FORTE_RTTI_AND_EXCEPTIONS FALSE CACHE BOOL "Enable RTTI and Exceptions")
   mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)
@@ -45,9 +50,10 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
   ENDIF(FORTE_POSIX_GENERATE_MAP_FILE)	
   
   forte_add_link_library("-lpthread") 
+  forte_add_link_library("-lrt") 
 
 
-  forte_add_network_layer(SER OFF "ser" CSerCommLayer sercommlayer "Enable Forte serial line communication")
+  forte_add_network_layer(SER OFF "ser" CPosixSerCommLayer posixsercommlayer "Enable Forte serial line communication")
   forte_add_network_layer(MUXSER OFF "muxser" CMuxedSerCommLayer muxedsercommlayer "Enable Forte multiplexed serial line communication")
   	
 endif()

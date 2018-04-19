@@ -12,7 +12,6 @@
 #ifndef _ADAPTERCONN_H_
 #define _ADAPTERCONN_H_
 
-#include "./datatypes/forte_any.h"
 #include "conn.h"
 
 class CAdapter;

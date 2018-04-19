@@ -12,10 +12,11 @@
 #define LOCALCOMLAYER_H_
 
 #include "comlayer.h"
-#include "commfb.h"
 #include "../stringdict.h"
 #include "../fortelist.h"
 #include <forte_sync.h>
+
+class CIEC_ANY;
 
 namespace forte {
 
@@ -24,12 +25,9 @@ namespace forte {
     class CLocalComLayer : public CComLayer{
 
       public:
-        static char *getDefaultLocalCommIdString(const char *pa_acIdValue);
-
-        CLocalComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poFB);
+        CLocalComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB);
         virtual ~CLocalComLayer();
 
-        virtual void closeConnection();
         virtual EComResponse sendData(void *pa_pvData, unsigned int pa_unSize);
         virtual EComResponse recvData(const void *, unsigned int ){
           return e_ProcessDataOk;
@@ -42,6 +40,7 @@ namespace forte {
       protected:
       private:
         virtual EComResponse openConnection(char *pa_acLayerParameter);
+        virtual void closeConnection();
         void setRDs(CLocalComLayer *pa_poSublLayer, CIEC_ANY *pa_aSDs, unsigned int pa_unNumSDs);
 
         struct SLocalCommGroup{

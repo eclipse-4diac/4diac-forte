@@ -9,8 +9,10 @@
  *    Waldemar Eisenmenger, Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "processinterface.h"
+#include "sysfsprocint.h"
+#include "../../arch/devlog.h"
 #include <string>
+#include <forte_thread.h>
 const char * const CSysFsProcessInterface::scmOK = "OK";
 const char * const CSysFsProcessInterface::scmPinInUse = "Pin already in use by other FB";
 const char * const CSysFsProcessInterface::scmNotInitialised = "FB not initialized";
@@ -27,61 +29,78 @@ CSysFsProcessInterface::~CSysFsProcessInterface(){
     deinitialise(); //Will unexport everything, so next time FORTE starts it won't fail to initialize.
 }
 
+bool CSysFsProcessInterface::setDirection(bool paIsInput){
+    bool retVal = false;
+    std::string fileName = "/sys/class/gpio/gpio" + std::string(PARAMS().getValue()) + "/direction";
+    std::ofstream mDirectionFile;
+    mDirectionFile.open(fileName.c_str());
+    if(mDirectionFile.is_open()){
+      if(paIsInput){
+           DEVLOG_INFO("3in\n");
+        mDirectionFile << "in";   
+      }else{
+           DEVLOG_INFO("3out\n");
+        mDirectionFile << "out";
+      }
+      retVal = true;
+    }else{
+      retVal = false;
+    }
+    
+    return retVal;
+}
+
+bool CSysFsProcessInterface::exportGPIO(){
+    bool retVal = false; 
+    std::string fileName = "/sys/class/gpio/export";
+    std::ofstream mExportFile;
+    mExportFile.open(fileName.c_str());
+  if(mExportFile.is_open()){
+    DEVLOG_INFO("1\n");
+    mExportFile << PARAMS().getValue();
+    retVal = true;
+  }else{
+    retVal = false;
+    DEVLOG_ERROR("Opening file %s failed.\n", fileName.c_str());
+  }  
+  
+  return retVal;   
+}
+
+bool CSysFsProcessInterface::valueGPIO(bool paIsInput){
+    bool retVal = false;
+    std::string fileName = "/sys/class/gpio/gpio" + std::string(PARAMS().getValue()) + "/value";
+    if(paIsInput){
+      mFile.open(fileName.c_str(), std::fstream::in); 
+      retVal = true;
+    }else{
+      mFile.open(fileName.c_str(), std::fstream::out);
+      retVal = true;
+    }
+    return retVal;
+}
+
 bool CSysFsProcessInterface::initialise(bool paIsInput){
   bool retVal = false;
   STATUS() = scmNotInitialised;
-  std::string fileName = "/sys/class/gpio/export";
-
-  mFile.clear();
-  mFile.open(fileName.c_str(), std::fstream::out);
-  if(mFile.is_open()){
-    mFile << PARAMS().getValue();
-    if(!mFile.fail()){
-      mFile.close();
-      fileName = "/sys/class/gpio/gpio" + std::string(PARAMS().getValue()) + "/direction";
-
-      mFile.open(fileName.c_str(), std::fstream::out);
-      if(mFile.is_open()){
-        mFile.clear();
-        if(paIsInput){
-          mFile << "in";
-        }
-        else{
-          mFile << "out";
-        }
-        if(!mFile.fail()){
-          mFile.close();
-          fileName = "/sys/class/gpio/gpio" + std::string(PARAMS().getValue()) + "/value";
-          if(paIsInput){
-            mFile.open(fileName.c_str(), std::fstream::in);
-          }
-          else{
-            mFile.open(fileName.c_str(), std::fstream::out);
-          }
-          if(mFile.is_open()){
-            STATUS() = scmOK;
-            retVal = true;
-          }
-          else{
-            DEVLOG_ERROR("Opening file %s failed.\n", fileName.c_str());
-          }
-        }
-        else{
-          DEVLOG_ERROR("Error writing to file %s.\n", fileName.c_str());
-        }
+  if(CSysFsProcessInterface::exportGPIO()){
+    CThread::sleepThread(1000);
+    if(CSysFsProcessInterface::setDirection(paIsInput)){
+      CThread::sleepThread(1000);
+      if(CSysFsProcessInterface::valueGPIO(paIsInput)){
+          retVal = true;
+          STATUS() = scmOK;
       }
       else{
-        DEVLOG_ERROR("Opening file %s failed.\n", fileName.c_str());
+          retVal = false;
       }
+    }else{
+        retVal = false;
     }
-    else{
-      DEVLOG_ERROR("Error writing PARAMS() to file %s.\n", fileName.c_str());
-    }
+  }else{
+      retVal = false;
   }
-  else{
-    DEVLOG_ERROR("Opening file %s failed.\n", fileName.c_str());
-  }
-
+ 
   return retVal;
 }
 
@@ -89,26 +108,22 @@ bool CSysFsProcessInterface::deinitialise(){
   bool retVal = false;
   STATUS() = scmError;
   std::string fileName = "/sys/class/gpio/unexport";
-
-  if(mFile.is_open()){
-    mFile.close();
-    mFile.clear();
-    mFile.open(fileName.c_str(), std::fstream::out);
-    if(mFile.is_open()){
-      mFile << PARAMS().getValue();
-      if(!mFile.fail()){
+  std::ofstream mUnExport;
+  
+  mUnExport.open(fileName.c_str(), std::fstream::out);
+  if(mUnExport.is_open()){
+      mUnExport << PARAMS().getValue();
+      if(!mUnExport.fail()){
         retVal = true;
         STATUS() = scmOK;
       }
       else{
         DEVLOG_ERROR("Error writing PARAMS() to file %s.\n", fileName.c_str());
       }
-    }
-    else{
-      DEVLOG_ERROR("Opening file %s failed.\n", fileName.c_str());
-    }
   }
-
+  else{
+      DEVLOG_ERROR("Opening file %s failed.\n", fileName.c_str());
+  }
   return retVal;
 }
 

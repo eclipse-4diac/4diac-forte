@@ -15,6 +15,7 @@
   forte_test_add_link_directories(${CMAKE_BINARY_DIR}/src/core/datatypes)
   
   forte_test_add_sourcefile_cpp(CIEC_ANY_tests.cpp)
+  forte_test_add_sourcefile_cpp(anytostringtests.cpp)
   forte_test_add_sourcefile_cpp(../../../src/core/datatypes/forte_any.cpp)
   forte_test_add_sourcefile_cpp(../../../src/core/datatypes/forte_any_elementary.cpp)
   forte_test_add_sourcefile_cpp(../../../src/core/datatypes/forte_any_date.cpp)

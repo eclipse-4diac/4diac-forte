@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 fortiss GmbH
+ * Copyright (c) 2016, 2017 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,12 +13,24 @@
 #define _THREADBASE_H_
 
 #include "../core/datatypes/forte_time.h"
+#include <forte_sem.h>
 
 namespace forte {
   namespace arch {
 
+    class EmptyThreadDeletePolicy{
+      public:
+        template <typename TThreadHandle>
+        static void deleteThread(TThreadHandle ){
+            //the empty delete policy does nothing
+        }
+    };
+
+    template <typename TThreadHandle, TThreadHandle nullHandle = static_cast<TThreadHandle>(0), typename ThreadDeletePolicy = EmptyThreadDeletePolicy >
     class CThreadBase{
       public:
+
+        typedef TThreadHandle TThreadHandleType;
 
         /*! \brief Indicates if the thread is allowed to execute.
          *
@@ -29,27 +41,38 @@ namespace forte {
           return mAlive;
         }
 
+        /*! \brief starts the Thread
+         *
+         *  By calling this method the execution in the run()-Method will be started. If necessary additional data
+         *  can be created here. Because of inheritance reasons the best place for executing create is in this method.
+         */
+        void start();
+
 
         /*! \brief Stops the execution of the thread
          *
          *  This function immediately stops the execution of the thread (setting alive to false) and waits till
          *  this is finished.
          */
-        virtual void end();
+        void end();
 
         /*! \brief Waits for the Thread to finish its execution.
          *
          *  This function waits till the execution in the thread decides to end the execution. Blocks the caller!!!
          */
-        virtual void join() = 0;
+        void join();
 
         //!Get the current deadline of the thread.
         const CIEC_TIME &getDeadline(void) const {
           return mDeadline;
         }
 
+        TThreadHandleType getThreadHandle(){
+          return mThreadHandle;
+        }
+
       protected:
-        CThreadBase();
+        explicit CThreadBase(long paStackSize);
 
         virtual ~CThreadBase();
 
@@ -59,6 +82,27 @@ namespace forte {
           mAlive = paVal;
         }
 
+        /*! \brief Helper method to run the thread.
+         *
+         * This method prepares the given thread and then runs it. This method will also handle everything needed for
+         * the join implementation.
+         *
+         * This method is to be called by the system specific thread function.
+         */
+        static void runThread(CThreadBase *paThread);
+
+        //!deadline the thread needs to be finish its execution. 0 means unconstrained.
+        CIEC_TIME mDeadline;
+
+        /*! \brief Pointer to the memory to be used for this thread'm_stSuspendSemaphore stack
+         *
+         *  This pointer is only not 0 if the stack is to be allocated by the architecture specific class.
+         *  This depends on the operating system. If needed it should be allocated in the derived classes constructor.
+         *  It will be deleted in the CThreadBase Destructor
+         */
+        char *mStack;
+
+      private:
         /*! \brief Abstract method for the code to execute in the thread.
          *
          *  This thread class has to provide means that the code a inheriting class will add to the run()-method will
@@ -71,10 +115,21 @@ namespace forte {
          */
         virtual void run() = 0;
 
-        //!deadline the thread needs to be finish its execution. 0 means unconstrained.
-        CIEC_TIME mDeadline;
+        /*! \brief create the thread and return a handle to it
+         *
+         * @return handle to the newly created thread
+         */
+        virtual TThreadHandleType createThread(long paStackSize) = 0;
 
-      private:
+        //! Semaphore for implementing a generic join functionality. For a stable functionality this mutex must be locked during thread creation.
+        CSemaphore mJoinSem;
+
+        TThreadHandle mThreadHandle;
+
+        /*! \brief Size of the stack used by this thread.
+         */
+        long mStackSize;
+
         /*! \brief Flag that indicates if the Thread is alive.
          *
          *  This flag has two main purposes:
@@ -92,5 +147,7 @@ namespace forte {
 
   } /* namespace arch */
 } /* namespace forte */
+
+#include "threadbase.tpp"
 
 #endif /* SRC_ARCH_THREADBASE_H_ */

@@ -1,0 +1,21 @@
+/*******************************************************************************
+ * Copyright (c) 2017 fortiss GmbH
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *  Jose Cabral - initial API and implementation and/or initial documentation
+ *******************************************************************************/
+ 
+#ifndef _CONFIG_RCX_H_
+#define _CONFIG_RCX_H_
+
+#define FORTE_COM_OPC_UA_PORT ${FORTE_COM_OPC_UA_PORT}
+
+#cmakedefine FORTE_COM_OPC_UA_MULTICAST
+
+#cmakedefine FORTE_COM_OPC_UA_CUSTOM_HOSTNAME "@FORTE_COM_OPC_UA_CUSTOM_HOSTNAME@"
+
+#endif /* _CONFIG_RCX_H_ */

@@ -14,8 +14,6 @@
 #define _F_SUB_DT_DT_H_
 
 #include <funcbloc.h>
-#include <forte_date_and_time.h>
-#include <forte_time.h>
 
 class FORTE_F_SUB_DT_DT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_SUB_DT_DT)

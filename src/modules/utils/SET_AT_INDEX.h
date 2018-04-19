@@ -13,9 +13,6 @@
 #define _SET_AT_INDEX_H_
 
 #include <funcbloc.h>
-#include <forte_bool.h>
-#include <forte_any.h>
-#include <forte_uint.h>
 
 class FORTE_SET_AT_INDEX: public CFunctionBlock{
 	DECLARE_FIRMWARE_FB(FORTE_SET_AT_INDEX)

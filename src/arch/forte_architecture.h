@@ -1,0 +1,33 @@
+/*******************************************************************************
+ * Copyright (c) 2017 fortiss GmbH
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *  Jose Cabral - initial API and implementation and/or initial documentation
+ *  Alois Zoitl - moved archictecture class to common arch folder and adapted
+ *                it for generic use
+ *******************************************************************************/
+
+#ifndef SRC_ARCH_FORTE_ARCHITECTURE_H_
+#define SRC_ARCH_FORTE_ARCHITECTURE_H_
+
+class CForteArchitecture{
+
+  public:
+    static bool initialize(void);
+
+    static void deinitialize(void);
+
+    static bool isInitialized(void){
+    	return mInitialized;
+    }
+  private:
+
+    static bool mInitialized; //in some architectures this might be used to avoid double initialization if this would produce an error
+
+};
+
+#endif /* SRC_ARCH_FORTE_ARCHITECTURE_H_ */

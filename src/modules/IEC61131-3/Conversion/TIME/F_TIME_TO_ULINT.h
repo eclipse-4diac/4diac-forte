@@ -14,8 +14,6 @@
 #define _F_TIME_TO_ULINT_H_
 
 #include <funcbloc.h>
-#include <forte_time.h>
-#include <forte_ulint.h>
 
 class FORTE_F_TIME_TO_ULINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_TIME_TO_ULINT)

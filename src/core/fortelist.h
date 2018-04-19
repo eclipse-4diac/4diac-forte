@@ -1,5 +1,5 @@
 /*******************************************************************************
-  * Copyright (c) 2009 - 2012 ACIN
+  * Copyright (c) 2009 - 2012 ACIN, 2017 fortiss GmbH
   * All rights reserved. This program and the accompanying materials
   * are made available under the terms of the Eclipse Public License v1.0
   * which accompanies this distribution, and is available at
@@ -8,8 +8,11 @@
   * Contributors:
   *    Martin Melik Merkumians, Alois Zoitl, Ingo Hegny,
   *      - initial implementation and rework communication infrastructure
+  *    Stefan Profanter
+  *      - list->begin changed to be const, and smaller bugfixes to support
+  *        const as Type
   *******************************************************************************/
-#include <fortealloc.h>
+#include <fortenew.h>
 #include "fortenode.h"
 #include "forteiterator.h"
 
@@ -74,7 +77,7 @@ public:
    *
    * \return iterator on position FirstNode
    */
-  const Iterator begin()  {
+  const Iterator begin() const {
     return Iterator(m_poFirstNode);
   }
 
@@ -86,7 +89,7 @@ public:
     return Iterator(0);
   }
 
-  const Iterator back() {
+  const Iterator back() const {
     return Iterator(m_poLastNode);
   }
 
@@ -194,8 +197,8 @@ public:
    *
    * \param pa_poElement the reference to the object to be added
    */
-  void push_front(void* const pa_poElement)  {
-    CSinglyLinkedListNode<void*>* poNewNode = new CSinglyLinkedListNode<void*>(pa_poElement, m_poFirstNode);
+  void push_front(const void* pa_poElement)  {
+    CSinglyLinkedListNode<void*>* poNewNode = new CSinglyLinkedListNode<void*>((void *)pa_poElement, m_poFirstNode);
     m_poFirstNode = poNewNode;
     if(0 == m_poLastNode){
       m_poLastNode = poNewNode;
@@ -216,6 +219,16 @@ public:
       m_poFirstNode = poNewNode;
     }
     m_poLastNode = poNewNode;
+  }
+
+  /*!\brief Returns the element at first position without deleting it
+   *
+   */
+  inline const void* peek_front() const {
+    if (m_poFirstNode != 0)
+      return m_poFirstNode->getData();
+    else
+      return 0;
   }
 
   /*!\brief Deletes the first object of the singly linked list
@@ -250,7 +263,7 @@ public:
    *
    * \return iterator on position FirstNode
    */
-  inline const Iterator begin()  {
+  inline const Iterator begin() const {
     return Iterator(m_poFirstNode);
   }
 
@@ -317,6 +330,13 @@ public:
     m_List.push_back(pa_pElement);
   }
 
+  /*!\brief Returns the element at first position without deleting it
+   *
+   */
+  inline const T* peek_front() const {
+    return (const T*) m_List.peek_front();
+  }
+
   /*!\brief Deletes the first object of the singly linked list
    *
    */
@@ -342,7 +362,7 @@ public:
    *
    * \return iterator on position FirstNode
    */
-  inline const Iterator begin()  {
+  inline const Iterator begin() const  {
     return Iterator((m_List.begin()).getPosition());
   }
 

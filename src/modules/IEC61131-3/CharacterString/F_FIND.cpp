@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2013 ACIN
+ * Copyright (c) 2013, 2018 ACIN, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *   Monika Wenger
+ *   Monika Wenger, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
@@ -44,7 +44,7 @@ const SFBInterfaceSpec FORTE_F_FIND::scm_stFBInterfaceSpec = {
 
 void FORTE_F_FIND::executeEvent(int pa_nEIID){
   if (scm_nEventREQID == pa_nEIID) {
-    anyStringFBHelper<FORTE_F_FIND>(IN1().getDataTypeID(), *this);
+    OUT().setSignedValue(FIND(IN1(),IN2()).getSignedValue());
     sendOutputEvent(scm_nEventCNFID);
   }
 }

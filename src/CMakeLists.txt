@@ -40,7 +40,16 @@ IF(len GREATER 0)
   LIST(REMOVE_DUPLICATES INCLUDE_DIRECTORIES)
   LIST(REVERSE INCLUDE_DIRECTORIES) # bugfix, for replaced include files
 ENDIF(len GREATER 0)
+
+GET_PROPERTY(INCLUDE_SYSTEM_DIRECTORIES GLOBAL PROPERTY FORTE_INCLUDE_SYSTEM_DIRECTORIES)
+LIST(LENGTH INCLUDE_SYSTEM_DIRECTORIES len)
+IF(len GREATER 0)
+  LIST(REMOVE_DUPLICATES INCLUDE_SYSTEM_DIRECTORIES)
+  LIST(REVERSE INCLUDE_SYSTEM_DIRECTORIES) # bugfix, for replaced include files
+ENDIF(len GREATER 0)
+
 INCLUDE_DIRECTORIES(${INCLUDE_DIRECTORIES})
+INCLUDE_DIRECTORIES(SYSTEM ${INCLUDE_SYSTEM_DIRECTORIES})
 INCLUDE_DIRECTORIES(./)
 INCLUDE_DIRECTORIES(${FORTE_BINARY_DIR})
 INCLUDE_DIRECTORIES(${FORTE_BINARY_DIR}/src_gen)
@@ -118,19 +127,57 @@ LIST(LENGTH LAYER_CLASS       LAYER_CLASS_LEN)
 math(EXPR LAYER_CLASS_LEN           ${LAYER_CLASS_LEN}-1)
 
 SET(LAYERMANAGER_INCLUDE "")
-SET(LAYERMANAGER_INSTANCE "if(false){}")
+SET(LAYERMANAGER_INSTANCE "if(false){\n  }\n")
 
 FOREACH(POS RANGE ${LAYER_CLASS_LEN}-1)
   LIST(GET LAYER_CLASS      ${POS} CLASS) 
   LIST(GET LAYER_CONFIGNAME ${POS} CONFIGNAME)
   LIST(GET LAYER_FILENAME   ${POS} FILENAME)
   SET(LAYERMANAGER_INCLUDE  "${LAYERMANAGER_INCLUDE}#include<${FILENAME}>\n")
-  SET(LAYERMANAGER_INSTANCE "${LAYERMANAGER_INSTANCE}\nelse if(0 == strcmp(\"${CONFIGNAME}\", pa_acLayerIdentifier)){\nm_poNewLayer = new ${CLASS}(pa_poUpperLayer, pa_poComFB);\n}\n")
+  SET(LAYERMANAGER_INSTANCE "${LAYERMANAGER_INSTANCE}  else if(0 == strcmp(\"${CONFIGNAME}\", pa_acLayerIdentifier)){\n    m_poNewLayer = new ${CLASS}(pa_poUpperLayer, pa_poComFB);\n  }\n")
 ENDFOREACH(POS)
 
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/core/cominfra/comlayersmanager.cpp.in ${CMAKE_BINARY_DIR}/core/cominfra/comlayersmanager_new.cpp)
 forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/core/cominfra/comlayersmanager_new.cpp ${CMAKE_BINARY_DIR}/core/cominfra/comlayersmanager.cpp)
 file(REMOVE ${CMAKE_BINARY_DIR}/core/cominfra/comlayersmanager_new.cpp)
+
+#############################################################################
+# Configure Network Layers
+#############################################################################
+
+GET_PROPERTY(HANDLER_CLASS GLOBAL PROPERTY FORTE_HANDLER_CLASS)
+GET_PROPERTY(HANDLER_FILENAME GLOBAL PROPERTY FORTE_HANDLER_FILENAME)
+LIST(LENGTH HANDLER_CLASS       HANDLER_CLASS_LEN_ORIGINAL)
+
+if(${HANDLER_CLASS_LEN_ORIGINAL} GREATER 0)
+
+math(EXPR HANDLER_CLASS_LEN           ${HANDLER_CLASS_LEN_ORIGINAL}-1)
+
+SET(HANDLERMANAGER_INCLUDE "")
+SET(HANDLERMANAGER_INSTANCE "")
+SET(HANDLERMANAGER_VARIABLES "")
+  
+SET(HANDLER_ID 1)
+FOREACH(POS RANGE ${HANDLER_CLASS_LEN}-1)
+  LIST(GET HANDLER_CLASS      ${POS} CLASS) 
+  LIST(GET HANDLER_FILENAME   ${POS} FILENAME)
+  SET(HANDLERMANAGER_INCLUDE  "${HANDLERMANAGER_INCLUDE}#include <${FILENAME}>\n")
+  
+  SET(HANDLERMANAGER_VARIABLES  "${HANDLERMANAGER_VARIABLES}const unsigned int ${CLASS}::handlerIdentifier = ${HANDLER_ID};\n")
+  SET(HANDLERMANAGER_INSTANCE "${HANDLERMANAGER_INSTANCE}  pa_DeviceExecution.mRegisteredEventHandlers[${HANDLER_ID}].m_poHandler = new ${CLASS}(pa_DeviceExecution);\n")
+  math(EXPR HANDLER_ID           ${HANDLER_ID}+1)
+ENDFOREACH(POS)
+
+endif(${HANDLER_CLASS_LEN_ORIGINAL} GREATER 0)
+
+math(EXPR HANDLER_CLASS_LEN_ORIGINAL ${HANDLER_CLASS_LEN_ORIGINAL}+1)
+SET(FORTE_NUMBER_OF_HANDLERS ${HANDLER_CLASS_LEN_ORIGINAL} PARENT_SCOPE)
+
+
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/core/deviceExecutionHandlers.cpp.in ${CMAKE_BINARY_DIR}/core/deviceExecutionHandlers_new.cpp)
+forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/core/deviceExecutionHandlers_new.cpp ${CMAKE_BINARY_DIR}/core/deviceExecutionHandlers.cpp)
+file(REMOVE ${CMAKE_BINARY_DIR}/core/deviceExecutionHandlers_new.cpp)
+
 
 #############################################################################
 # Load FORTE Extension Files

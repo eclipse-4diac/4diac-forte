@@ -18,9 +18,15 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   add_subdirectory ( serlayer )
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})  
   
-  forte_add_sourcefile_h(fortealloc.h)
+  forte_add_sourcefile_h(fortealloc.h ../forte_architecture_time.h)
   forte_add_sourcefile_hcpp(forte_thread forte_sync forte_sem)
-  forte_add_sourcefile_cpp(main.cpp)
+  forte_add_sourcefile_cpp(forte_architecture.cpp winforte_printer.cpp)
+  
+  if(${FORTE_BUILD_TYPE} STREQUAL STATIC_LIBRARY)
+    forte_add_sourcefile_hcpp(forte_instance)
+  else()
+    forte_add_sourcefile_cpp(main.cpp)
+  endif()
 
   if(${FORTE_BUILD_TYPE} STREQUAL SHARED_LIBRARY)
     set(FORTE_EXTERNAL_TIMEHA ON CACHE BOOL "Use External Time Handler")
@@ -34,15 +40,13 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
     forte_add_sourcefile_hcpp(pctimeha)
   endif(${FORTE_BUILD_TYPE} STREQUAL SHARED_LIBRARY)
 
-
   if(FORTE_COM_ETH)
-   forte_add_sourcefile_hcpp( ../fdselecthand ../bsdsocketinterf)
+   forte_add_handler(CFDSelectHandler sockhand)
+   forte_add_sourcefile_hcpp(  win32socketinterf ../fdselecthand)
    forte_add_sourcefile_h(../gensockhand.h)
    forte_add_sourcefile_h(sockhand.h)
   endif(FORTE_COM_ETH)
 
-  
-  SET(CMAKE_CXX_FLAGS_RELEASE "/MT" ) 
   forte_add_definition("-DFORTE_LITTLE_ENDIAN") # -DNONAMESPACE -DWITH_NONAMESPACES)  
 
 # TODO this flag was originaly wrongly added to the definitions. May be necessary to be added as link flag. However currently working fine.

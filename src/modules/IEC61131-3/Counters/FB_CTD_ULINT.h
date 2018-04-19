@@ -13,9 +13,6 @@
 #define _FB_CTD_ULINT_H_
 
 #include <funcbloc.h>
-#include <forte_ulint.h>
-#include <forte_bool.h>
-#include <forte_array.h>
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 

@@ -14,8 +14,6 @@
 #define _F_LWORD_TO_BYTE_H_
 
 #include <funcbloc.h>
-#include <forte_byte.h>
-#include <forte_lword.h>
 
 class FORTE_F_LWORD_TO_BYTE: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_LWORD_TO_BYTE)

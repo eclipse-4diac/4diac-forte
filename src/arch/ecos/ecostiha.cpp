@@ -8,26 +8,24 @@
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include <fortealloc.h>
+#include <fortenew.h>
 #include "ecostiha.h"
 #include "../../core/devexec.h"
 
 cyg_sem_t CECOSTimerHandler::m_stSemaphore;
 
-void CTimerHandler::createTimerHandler(void){
-  if(0 == sm_poFORTETimer){
-    sm_poFORTETimer = new CECOSTimerHandler();
-    static_cast<CECOSTimerHandler *>(sm_poFORTETimer)->start();
-  }
+CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& pa_poDeviceExecution){
+  return new CECOSTimerHandler(pa_poDeviceExecution);
 }
 
-CECOSTimerHandler::CECOSTimerHandler(){
+CECOSTimerHandler::CECOSTimerHandler(CDeviceExecution& pa_poDeviceExecution) : CTimerHandler(pa_poDeviceExecution)  {
   cyg_semaphore_init(&m_stSemaphore, 0);
 
   m_stSystemclockHandle = cyg_real_time_clock();
   cyg_clock_to_counter(m_stSystemclockHandle, &m_stCounterHandle);
 
   cyg_alarm_create(m_stCounterHandle, timerHandlerFunc, (cyg_addrword_t) 0, &m_stAlarmHandle, &m_stAlarm);
+  start();
 }
 
 CECOSTimerHandler::~CECOSTimerHandler(){
@@ -55,7 +53,7 @@ void CECOSTimerHandler::run(void){
   while(isAlive()){
     cyg_semaphore_wait(&m_stSemaphore);
     //FIXME add compensation code for timer activation jitter similar to the code in the posix architecture
-    sm_poFORTETimer->nextTick();
+    nextTick();
   }
 }
 

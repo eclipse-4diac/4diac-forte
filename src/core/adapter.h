@@ -20,6 +20,9 @@ class CAdapterConnection;
  fbclass(CStringDictionary::TStringId pa_anAdapterInstanceName, CResource *pa_poSrcRes, bool pa_bIsPlug) : \
  CAdapter( pa_poSrcRes, &scm_stFBInterfaceSpecSocket, pa_anAdapterInstanceName, &scm_stFBInterfaceSpecPlug, pa_bIsPlug, m_anFBConnData, m_anFBVarsData)
 
+#define ADAPTER_CTOR_WITH_BASE_CLASS(fbclass, fbBaseClass) \
+ fbclass(CStringDictionary::TStringId pa_anAdapterInstanceName, CResource *pa_poSrcRes, bool pa_bIsPlug) : \
+ fbBaseClass( pa_poSrcRes, &scm_stFBInterfaceSpecSocket, pa_anAdapterInstanceName, &scm_stFBInterfaceSpecPlug, pa_bIsPlug, m_anFBConnData, m_anFBVarsData)
 
 #define FORTE_ADAPTER_DATA_ARRAY(a_nNumEIs, a_nNumEOs, a_nNumDIs, a_nNumDOs, a_nNumAdapters) \
   union{ \
@@ -46,14 +49,12 @@ class CAdapter: public CFunctionBlock {
     bool isPlug() const {
       return m_bIsPlug;
     }
-    ;
 
     /*!\brief Returns if Adapter instance is a Socket
      */
     bool isSocket() const {
       return !m_bIsPlug;
     }
-    ;
 
     void setParentFB(CFunctionBlock *pa_poParentFB, TForteUInt8 pa_nParentAdapterlistID);
 
@@ -88,7 +89,7 @@ class CAdapter: public CFunctionBlock {
     /*! provides access to the interface spec used for the specific adatpter instnace (i.e., plug or socket)
      *  Is required mainly by the anyadapter
      */
-    const SFBInterfaceSpec* getAdapterInterfaceSpec(){
+    const SFBInterfaceSpec* getAdapterInterfaceSpec() const{
       return m_pstInterfaceSpec;
     }
 
@@ -98,6 +99,12 @@ class CAdapter: public CFunctionBlock {
 
     CAdapterConnection *getAdapterConnection() const {
       return m_poAdapterConn;
+    }
+
+    static size_t genAdapterFBConnDataSize(unsigned int pa_nNumEIs, unsigned int pa_nNumEOs, unsigned int pa_nNumDIs, unsigned int pa_nNumDOs){
+      return genFBConnDataSize(((pa_nNumEIs < pa_nNumEOs) ? pa_nNumEOs : pa_nNumEIs),
+          ((pa_nNumDIs < pa_nNumDOs) ? pa_nNumDOs : pa_nNumDIs),
+          ((pa_nNumDIs < pa_nNumDOs) ? pa_nNumDOs : pa_nNumDIs));   //for outputs data connections are stored in this array, as plugs and sockets have invoerted size wee need to use the max here. unfortunately not very efficient. should be reconsidered.
     }
 
   protected:
@@ -110,11 +117,6 @@ class CAdapter: public CFunctionBlock {
         };
     };
 
-    static size_t genAdapterFBConnDataSize(unsigned int pa_nNumEIs, unsigned int pa_nNumEOs, unsigned int pa_nNumDIs, unsigned int pa_nNumDOs){
-      return genFBConnDataSize(((pa_nNumEIs < pa_nNumEOs) ? pa_nNumEOs : pa_nNumEIs),
-          ((pa_nNumDIs < pa_nNumDOs) ? pa_nNumDOs : pa_nNumDIs),
-          ((pa_nNumDIs < pa_nNumDOs) ? pa_nNumDOs : pa_nNumDIs));   //for outputs data connections are stored in this array, as plugs and sockets have invoerted size wee need to use the max here. unfortunately not very efficient. should be reconsidered.
-    }
 
 
     TForteUInt16 m_nParentAdapterListEventID;
@@ -123,7 +125,7 @@ class CAdapter: public CFunctionBlock {
     virtual void executeEvent(int pa_nEIID);
     void setupEventEntryList();
 
-    bool m_bIsPlug;
+    const bool m_bIsPlug;
     CAdapter *m_poPeer;
     CIEC_ANY *m_aoLocalDIs;
     CAdapterConnection *m_poAdapterConn;

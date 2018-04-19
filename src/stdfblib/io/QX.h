@@ -12,9 +12,6 @@
 #define _QX_H_
 
 #include <processinterface.h> 
-#include <forte_wstring.h>
-#include <forte_string.h>
-#include <forte_bool.h>
 
 //TODO add compile time check that CProcessInterface inherits from CProcessInterfaceBase
 

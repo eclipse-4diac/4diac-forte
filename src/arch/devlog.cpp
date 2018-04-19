@@ -11,7 +11,8 @@
  *******************************************************************************/
 #include "devlog.h"
 #include "timerha.h"
-#include <criticalregion.h>
+#include "forte_printer.h"
+#include "../core/utils/criticalregion.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -41,11 +42,7 @@ void logMessage(E_MsgLevel pa_eLevel, const char *pa_acMessage, ...){
   va_list pstArgPtr;
 
   va_start(pstArgPtr, pa_acMessage);
-#ifdef WIN32
-  _vsnprintf(sm_acMsgBuf, scm_nMsgBufSize, pa_acMessage, pstArgPtr);
-#else
-  vsnprintf(sm_acMsgBuf, scm_nMsgBufSize, pa_acMessage, pstArgPtr);
-#endif
+  forte_vsnprintf(sm_acMsgBuf, scm_nMsgBufSize, pa_acMessage, pstArgPtr);
   va_end(pstArgPtr);
 
   printLogMessage(pa_eLevel, sm_acMsgBuf);

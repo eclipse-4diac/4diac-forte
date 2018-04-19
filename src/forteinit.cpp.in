@@ -21,7 +21,8 @@ ${DATATYPE_INCLUDE_STRING}
 
 ${FB_INCLUDE_STRING}
 
-void forteInit::initForte()
+extern "C"
+void initForte()
 {
 	CIEC_ANY::dummyInit();
 	${DATATYPE_FUNCTION_STRING}

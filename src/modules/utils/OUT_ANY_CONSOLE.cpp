@@ -14,8 +14,6 @@
 #include "OUT_ANY_CONSOLE_gen.cpp"
 #endif
 
-#include <forte_array.h>
-
 DEFINE_FIRMWARE_FB(FORTE_OUT_ANY_CONSOLE, g_nStringIdOUT_ANY_CONSOLE)
 
 	const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scm_anDataInputNames[] =

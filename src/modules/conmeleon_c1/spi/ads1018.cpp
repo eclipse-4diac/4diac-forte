@@ -23,7 +23,7 @@
  *	full duplex transfers and device I/O configuration are also available.
  *******************************************************************************/
 
-#include "../spi/ads1018.h"
+#include "ads1018.h"
 #include <unistd.h>
 
 namespace CONMELEON {

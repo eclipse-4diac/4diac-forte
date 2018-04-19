@@ -13,7 +13,6 @@
 #define _BASICFB_H_
 
 #include "funcbloc.h"
-#include "./datatypes/forte_uint.h"
 
 #ifndef FORTE_BASIC_FB_DATA_ARRAY  //with this check we can overwrite this define in a platform specific file (e.g., config.h)
 
@@ -36,8 +35,8 @@
  */
 struct SInternalVarsInformation{
     TPortId m_nNumIntVars; //!< Number of internal vars
-    const CStringDictionary::TStringId * const m_aunIntVarsNames; //!< List of the internalvarsnames
-    const CStringDictionary::TStringId * const m_aunIntVarsDataTypeNames; //!< List of the data type names for the internal vars
+    const CStringDictionary::TStringId * m_aunIntVarsNames; //!< List of the internalvarsnames
+    const CStringDictionary::TStringId * m_aunIntVarsDataTypeNames; //!< List of the data type names for the internal vars
 };
 
 /*!\ingroup CORE

@@ -13,9 +13,6 @@
 #define _GEN_CSV_WRITER_H_
 
 #include <funcbloc.h>
-#include <forte_any.h>
-#include <forte_string.h>
-#include <forte_bool.h>
 #include <stdio.h>
 
 class GEN_CSV_WRITER : public CFunctionBlock{

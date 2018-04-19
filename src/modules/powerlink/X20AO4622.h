@@ -12,11 +12,6 @@
 #define _X20AO4622_H_
 
 #include <funcbloc.h>
-#include <forte_usint.h>
-#include <forte_int.h>
-#include <forte_uint.h>
-#include <forte_string.h>
-#include <forte_bool.h>
 
 #include "EplCNCallback.h"
 #include "EplWrapper.h"

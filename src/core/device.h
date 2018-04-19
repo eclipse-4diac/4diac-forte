@@ -73,6 +73,10 @@ class CDevice : public CResource{
 
 //! Retrieve the device execution of this device
     CDeviceExecution &getDeviceExecution(void) {return m_oDeviceExecution; };
+
+    CTimerHandler& getTimer() const{
+      return m_oDeviceExecution.getTimer();
+    }
 };
 
 #endif

@@ -13,8 +13,6 @@
 #define _F_WORD_TO_LINT_H_
 
 #include <funcbloc.h>
-#include <forte_word.h>
-#include <forte_lint.h>
 
 class FORTE_F_WORD_TO_LINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_WORD_TO_LINT)

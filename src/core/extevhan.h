@@ -12,8 +12,23 @@
 #ifndef _EXTEVHAN_H_
 #define _EXTEVHAN_H_
 
-class CDeviceExecution;
+#include "devexec.h"
 class CEventSourceFB;
+class CFunctionBlock;
+
+#define DECLARE_HANDLER(TypeName)                             \
+  public:                                                     \
+    static const unsigned int handlerIdentifier;              \
+    virtual unsigned int getIdentifier() const;               \
+    explicit TypeName(CDeviceExecution& pa_poDeviceExecution);\
+    ~TypeName();
+
+#define DEFINE_HANDLER(TypeName)                            \
+    unsigned int TypeName::getIdentifier() const { return TypeName::handlerIdentifier;}
+
+#define GET_HANDLER_FROM_LAYER(layer, type)                 \
+  static_cast<type*>(CExternalEventHandler::getHandlerFromFB(layer, type::handlerIdentifier))
+
 
 /**  \defgroup FORTE_HAL FORTE Hardware Abstraction Layer - FORTE-HAL
  * \brief The FORTE-HAL is the abstraction of HW dependent features important
@@ -32,9 +47,10 @@ class CEventSourceFB;
  *      events (e.g. INIT+). the specific parameters depend on the ExternalEventHandler.
  *   - unregisterFB(CFunctionBlock *pa_poESFB) the ES-FB doesn't want to receive any external events any more (e.g. INIT-).
  */
+
 class CExternalEventHandler{
   public:
-    CExternalEventHandler();
+    explicit CExternalEventHandler(CDeviceExecution& pa_poDeviceExecution);
 
     virtual ~CExternalEventHandler(){
     }
@@ -57,19 +73,11 @@ class CExternalEventHandler{
      */
     virtual int getPriority(void) const = 0;
 
-    static void setDeviceExecution(CDeviceExecution *pa_poDevExec){
-      sm_poDeviceExecution = pa_poDevExec;
-    }
-    ;
-    static CDeviceExecution *getDeviceExecution(void){
-      return sm_poDeviceExecution;
-    }
-    ;
-  protected:
+    virtual unsigned int getIdentifier() const = 0;
 
-    int getExternalEventHandlerID(){
-      return m_nExtEvHandID;
-    }
+    static CExternalEventHandler* getHandlerFromFB(CFunctionBlock& paFB, unsigned int paIdentifier);
+
+  protected:
 
     /*! \brief Check if the external event handler is allowed to start event chains
      *
@@ -84,11 +92,9 @@ class CExternalEventHandler{
      */
     void startNewEventChain(CEventSourceFB *pa_poECStartFB);
 
-  private:
-    static CDeviceExecution *sm_poDeviceExecution; //!< Reference to the device execution needed for all external event handlers to ask for execution and start new event chains.
+    CDeviceExecution& m_poDeviceExecution;
 
-    //!ID for this timer callback as given by the CDeviceExecution
-    int m_nExtEvHandID;
+  private:
 
   private:
 

@@ -13,7 +13,6 @@
 #define _E_RS_H_
 
 #include <funcbloc.h>
-#include <forte_bool.h>
 
 class E_RS: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(E_RS)

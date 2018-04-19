@@ -11,6 +11,7 @@
  *******************************************************************************/
 #include "monitoring.h"
 #include "resource.h"
+#include "ecet.h"
 #include "utils/criticalregion.h"
 
 using namespace forte::core;
@@ -85,13 +86,13 @@ EMGMResponse CMonitoringHandler::addWatch(forte::core::TNameIdentifier &paNameLi
     else{
       TEventID unEventId = fB->getEIID(portName);
       if(cg_nInvalidEventID != unEventId){
-        addEventWatch(poFBMonitoringEntry, portName, fB->getEIMontiorData(unEventId));
+        addEventWatch(poFBMonitoringEntry, portName, fB->getEIMonitorData(unEventId));
         eRetVal = e_RDY;
       }
       else{
         unEventId = fB->getEOID(portName);
         if(cg_nInvalidEventID != unEventId){
-          addEventWatch(poFBMonitoringEntry, portName, fB->getEOMontiorData(unEventId));
+          addEventWatch(poFBMonitoringEntry, portName, fB->getEOMonitorData(unEventId));
           eRetVal = e_RDY;
         }
       }
@@ -251,12 +252,12 @@ EMGMResponse CMonitoringHandler::resetEventCount(forte::core::TNameIdentifier &p
     SMonitorEvent *pstEventMonitorData = 0;
 
     if(cg_nInvalidEventID != eventId){
-      pstEventMonitorData = &fB->getEIMontiorData(eventId);
+      pstEventMonitorData = &fB->getEIMonitorData(eventId);
     }
     else{
       eventId = fB->getEOID(portName);
       if(cg_nInvalidEventID != eventId){
-        pstEventMonitorData = &fB->getEOMontiorData(eventId);
+        pstEventMonitorData = &fB->getEOMonitorData(eventId);
       }
     }
     if(0 != pstEventMonitorData){
@@ -420,25 +421,24 @@ void CMonitoringHandler::getResourceWatches(CIEC_STRING &paResponse, char){
 
 void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
     SDataWatchEntry &paDataWatchEntry){
+  int bufferSize = paDataWatchEntry.mDataValue.getToStringBufferSize();
   appendPortTag(paResponse, paDataWatchEntry.mPortId);
   paResponse.append("<Data value=\"");
-
-  char acDataValue[80]; //TODO try to directly use the response string instead
+  char* acDataValue = new char [bufferSize]; //TODO try to directly use the response string instead
   int nConsumedBytes;
   switch (paDataWatchEntry.mDataValue.getDataTypeID()){
     case CIEC_ANY::e_WSTRING:
       case CIEC_ANY::e_STRING:
       nConsumedBytes =
-          static_cast<CIEC_WSTRING&>(paDataWatchEntry.mDataValue).toUTF8(acDataValue, sizeof(acDataValue), false);
+          static_cast<CIEC_WSTRING&>(paDataWatchEntry.mDataValue).toUTF8(acDataValue, bufferSize, false);
       break;
     default:
-      nConsumedBytes = paDataWatchEntry.mDataValue.toString(acDataValue, sizeof(acDataValue));
+      nConsumedBytes = paDataWatchEntry.mDataValue.toString(acDataValue, bufferSize);
       break;
   }
   if(-1 != nConsumedBytes){
     acDataValue[nConsumedBytes] = '\0';
   }
-
   paResponse.append(acDataValue);
   paResponse.append("\" forced=\"");
   paResponse.append(((paDataWatchEntry.mDataValue.isForced()) ? "true" : "false"));
@@ -446,6 +446,7 @@ void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
   paResponse.append("</Data>");
 
   paResponse.append("</Port>");
+  delete [] acDataValue;
 }
 
 void CMonitoringHandler::appendPortTag(CIEC_STRING &paResponse,

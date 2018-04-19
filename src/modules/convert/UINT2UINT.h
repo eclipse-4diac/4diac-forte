@@ -13,7 +13,6 @@
 #define _UINT2UINT_H_
 
 #include <funcbloc.h>
-#include <forte_uint.h>
 
 class UINT2UINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(UINT2UINT)

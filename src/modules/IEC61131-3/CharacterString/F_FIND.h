@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2013 ACIN
+ * Copyright (c) 2013, 2018 ACIN
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *   Monika Wenger
+ *   Monika Wenger, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
@@ -14,8 +14,6 @@
 #define _F_FIND_H_
 
 #include <funcbloc.h>
-#include <forte_any_int.h>
-#include <forte_any_string.h>
 
 class FORTE_F_FIND: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_FIND)
@@ -56,17 +54,7 @@ private:
 public:
   FUNCTION_BLOCK_CTOR(FORTE_F_FIND){
   };
-
-  template<typename T> void calculateValueString(){
-     T oIn1;
-     oIn1.saveAssign(IN1());
-     T oIn2;
-     oIn2.saveAssign(IN2());
-     OUT().saveAssign(FIND(oIn1,oIn2));
-   }
-
   virtual ~FORTE_F_FIND(){};
-
 };
 
 #endif //close the ifdef sequence from the beginning of the file

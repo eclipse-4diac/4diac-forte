@@ -11,17 +11,16 @@
   *    Matthias Plasch
   *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
-#include <string.h>
-#include <stdlib.h>
-#include "timerha.h"
 #include "funcbloc.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "funcbloc_gen.cpp"
 #endif
-#include "resource.h"
 #include "adapter.h"
-#include "datatypes/forte_array.h"
+#include "device.h"
 #include "utils/criticalregion.h"
+#include "../arch/timerha.h"
+#include <string.h>
+#include <stdlib.h>
 
 CFunctionBlock::CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
    mEOConns(0), m_apoDIConns(0), mDOConns(0),
@@ -128,7 +127,11 @@ void CFunctionBlock::setupAdapters(const SFBInterfaceSpec *pa_pstInterfaceSpec, 
   }
 }
 
-CEventConnection *CFunctionBlock::getEOConection(CStringDictionary::TStringId paEONameId) const{
+CTimerHandler& CFunctionBlock::getTimer(void){
+  return m_poResource->getDevice().getTimer();
+}
+
+CEventConnection *CFunctionBlock::getEOConnection(CStringDictionary::TStringId paEONameId) const{
   CEventConnection *retVal = 0;
   TPortId portId = getPortId(paEONameId, m_pstInterfaceSpec->m_nNumEOs, m_pstInterfaceSpec->m_aunEONames);
   if(cg_unInvalidPortId != portId){
@@ -182,6 +185,15 @@ CDataConnection *CFunctionBlock::getDOConnection(CStringDictionary::TStringId pa
   return retVal;
 }
 
+CDataConnection *CFunctionBlock::getDIConnection(CStringDictionary::TStringId paDINameId) const{
+  CDataConnection *retVal = 0;
+  TPortId diPortID = getDIID(paDINameId);
+  if(cg_unInvalidPortId != diPortID){
+    retVal = m_apoDIConns[diPortID];
+  }
+  return retVal;
+}
+
 bool CFunctionBlock::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefValue){
   bool retVal = false;
 
@@ -195,7 +207,7 @@ bool CFunctionBlock::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRe
   return retVal;
 }
 
-CIEC_ANY *CFunctionBlock::getDataOutput(CStringDictionary::TStringId pa_unDONameId){
+CIEC_ANY *CFunctionBlock::getDataOutput(CStringDictionary::TStringId pa_unDONameId) const {
   CIEC_ANY *poRetVal = 0;
   unsigned int unDID = getDOID(pa_unDONameId);
 
@@ -205,7 +217,7 @@ CIEC_ANY *CFunctionBlock::getDataOutput(CStringDictionary::TStringId pa_unDOName
   return poRetVal;
 }
 
-CIEC_ANY *CFunctionBlock::getDataInput(CStringDictionary::TStringId pa_unDINameId){
+CIEC_ANY *CFunctionBlock::getDataInput(CStringDictionary::TStringId pa_unDINameId) const {
   CIEC_ANY *poRetVal = 0;
   unsigned int unDID = getDIID(pa_unDINameId);
 
@@ -215,10 +227,18 @@ CIEC_ANY *CFunctionBlock::getDataInput(CStringDictionary::TStringId pa_unDINameI
   return poRetVal;
 }
 
-CIEC_ANY* CFunctionBlock::getDIFromPortId(TPortId paDIPortId){
+CIEC_ANY* CFunctionBlock::getDIFromPortId(TPortId paDIPortId) const{
   CIEC_ANY *retVal = 0;
   if(paDIPortId < m_pstInterfaceSpec->m_nNumDIs){
     retVal = getDI(paDIPortId);
+  }
+  return retVal;
+}
+
+CIEC_ANY* CFunctionBlock::getDOFromPortId(TPortId paDOPortId) const{
+  CIEC_ANY *retVal = 0;
+  if(paDOPortId < m_pstInterfaceSpec->m_nNumDOs){
+    retVal = getDO(paDOPortId);
   }
   return retVal;
 }
@@ -243,7 +263,7 @@ CIEC_ANY *CFunctionBlock::getVar(CStringDictionary::TStringId *paNameList,
 }
 
 CAdapter *CFunctionBlock::getAdapter(CStringDictionary::TStringId paAdapterNameId){
-  TPortId adpPortId = getAddapterPortId(paAdapterNameId);
+  TPortId adpPortId = getAdapterPortId(paAdapterNameId);
 
   if(cg_unInvalidPortId != adpPortId){
     return m_apoAdapters[adpPortId];
@@ -251,7 +271,7 @@ CAdapter *CFunctionBlock::getAdapter(CStringDictionary::TStringId paAdapterNameI
   return 0;
 }
 
-TPortId CFunctionBlock::getAddapterPortId(CStringDictionary::TStringId paAdapterNameId){
+TPortId CFunctionBlock::getAdapterPortId(CStringDictionary::TStringId paAdapterNameId){
   for(TPortId i = 0; i < m_pstInterfaceSpec->m_nNumAdapters; ++i){
     if(m_apoAdapters[i]->getInstanceNameId() == paAdapterNameId){
       return i;
@@ -312,7 +332,7 @@ void CFunctionBlock::sendOutputEvent(int pa_nEO){
       }
       // Count Event for monitoring
       monitoringData.mEventCount++;
-      monitoringData.mTimeStamp = CTimerHandler::sm_poFORTETimer->getForteTime();
+      monitoringData.mTimeStamp = getTimer().getForteTime();
       eventMonitoring.mBufPos = (eventMonitoring.mBufPos + 1) % forte::core::cgMonitorBufferLength;
       m_updated = true;
     }  // if(forte::core::eActive != eventMonitoring.mMonitorEventData[eventMonitoring.mBufPos].mBreakpointSet){
@@ -381,7 +401,7 @@ void CFunctionBlock::receiveInputEvent(int pa_nEIID, CEventChainExecutionThread 
       }
       // Count Event for monitoring
       monitoringData.mEventCount++;
-      monitoringData.mTimeStamp = CTimerHandler::sm_poFORTETimer->getForteTime();
+      monitoringData.mTimeStamp = getTimer().getForteTime();
       eventMonitoring.mBufPos = (eventMonitoring.mBufPos + 1) % forte::core::cgMonitorBufferLength;
       m_updated = true;
 #endif //FORTE_SUPPORT_MONITORING
@@ -728,6 +748,14 @@ bool CFunctionBlock::forceData(CStringDictionary::TStringId pa_acName, const cha
   }
 
   return false;
+}
+
+forte::core::SMonitorEvent &CFunctionBlock::getEIMonitorData(TEventID pa_unEIID){
+  return m_nEIMonitorCount[pa_unEIID];
+}
+
+forte::core::SMonitorEvent &CFunctionBlock::getEOMonitorData(TEventID pa_unEOID){
+  return m_nEOMonitorCount[pa_unEOID];
 }
 
 #endif //FORTE_SUPPORT_MONITORING

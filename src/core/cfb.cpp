@@ -15,6 +15,7 @@
 #include "adapter.h"
 #include "resource.h"
 #include "utils/criticalregion.h"
+#include "if2indco.h"
 
 CCompositeFB::CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
     const CStringDictionary::TStringId pa_nInstanceNameId, const SCFB_FBNData * const pa_cpoFBNData,
@@ -234,7 +235,7 @@ void CCompositeFB::createEventConnections(){
               mInterface2InternalEventCons[getEIID(cpstCurrentConn->m_nSrcId)];
         }
         else{
-          m_apoEventConnections[i] = poSrcFB->getEOConection(cpstCurrentConn->m_nSrcId);
+          m_apoEventConnections[i] = poSrcFB->getEOConnection(cpstCurrentConn->m_nSrcId);
         }
         establishConnection(m_apoEventConnections[i], poDstFB, cpstCurrentConn->m_nDstId);
       }

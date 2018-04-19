@@ -35,7 +35,8 @@
 #include "datatypes/forte_time_of_day.h"
 #include "datatypes/forte_date_and_time.h"
 #include "datatypes/forte_date.h"
-//#include <stdio.h>
+#include "datatypes/forte_struct.h"
+#include "datatypes/forte_array.h"
 #include <math.h>
 
 /*! \file
@@ -49,11 +50,7 @@
 inline const CIEC_DATE DT_TO_DATE(const CIEC_DATE_AND_TIME &pa_roVal){
   TForteUInt64 nBuffer = pa_roVal;
   time_t t = static_cast<time_t>(nBuffer / 1000);
-#if ! defined(WINCE)
-  struct tm *ptm = localtime(&t);
-#else
-  struct tm *ptm = wceex_localtime(&t);
-#endif
+  struct tm *ptm = forte_localtime(&t);
 
   if(ptm == 0)
     return CIEC_DATE(0);
@@ -62,12 +59,7 @@ inline const CIEC_DATE DT_TO_DATE(const CIEC_DATE_AND_TIME &pa_roVal){
   ptm->tm_min = 0;
   ptm->tm_sec = 0;
 
-#if ! defined(WINCE)
-  t = mktime(ptm);
-#else
-  t = wceex_mktime(ptm);
-#endif
-
+  t = forte_mktime(ptm);
   if(t == (time_t) -1)
     return CIEC_DATE(0);
 
@@ -82,11 +74,7 @@ inline const CIEC_DATE_AND_TIME DATE_TO_DT(const CIEC_DATE &pa_roVal){
 inline const CIEC_TIME_OF_DAY DT_TO_TOD(const CIEC_DATE_AND_TIME &pa_roVal){
   TForteUInt64 nBuffer = pa_roVal;
   time_t t = static_cast<time_t>(nBuffer / 1000);
-#if ! defined(WINCE)
-  struct tm *ptm = localtime(&t);
-#else
-  struct tm *ptm = wceex_localtime(&t);
-#endif
+  struct tm *ptm = forte_localtime(&t);
 
   if(ptm == 0)
     return CIEC_TIME_OF_DAY(0);
@@ -450,9 +438,7 @@ inline const CIEC_ULINT LREAL_TO_ULINT(const CIEC_LREAL &pa_roVal){
 
 inline CIEC_ANY::TLargestIntValueType lreal_to_xINT(const CIEC_LREAL &pa_roVal){
   CIEC_ANY::TLargestIntValueType temp;
-  #if defined(WIN32)
-    temp = (CIEC_ANY::TLargestIntValueType)floor(static_cast<TForteDFloat>(pa_roVal) + 0.5);
-  #elif defined(VXWORKS)
+  #if defined(WIN32) || defined(VXWORKS)
     temp = (CIEC_ANY::TLargestIntValueType)floor(static_cast<TForteDFloat>(pa_roVal) + 0.5);
   #else
     temp = lroundf(static_cast<TForteFloat>(pa_roVal));
@@ -485,24 +471,25 @@ inline const CIEC_INT LREAL_TO_INT(const CIEC_LREAL &pa_roVal){
   return CIEC_INT( static_cast<CIEC_INT::TValueType>(lreal_to_xINT(pa_roVal)));
 }
 
+inline void stringConverter(CIEC_ANY_STRING &string, const CIEC_ANY &pa_roVal){
+  TForteUInt16 bufferSize = pa_roVal.csm_aStringBufferSize[pa_roVal.getDataTypeID()];
+  string.reserve(static_cast<TForteUInt16>(bufferSize));
+  char *pacBuffer = string.getValue();
+  int nWrittenBytes = pa_roVal.toString(pacBuffer, bufferSize);
+  nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
+  string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+}
+
 inline const CIEC_STRING LREAL_TO_STRING(const CIEC_LREAL &pa_roVal){
 	CIEC_STRING string;
-	string.reserve(CIEC_LREAL::scm_unMaxStringBufSize);
-	char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_LREAL::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+	stringConverter(string, pa_roVal);
 	return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING LREAL_TO_WSTRING(const CIEC_LREAL &pa_roVal){
   CIEC_WSTRING string;
-  string.reserve(CIEC_LREAL::scm_unMaxStringBufSize);
-  char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_LREAL::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+  stringConverter(string, pa_roVal);
   return string;
 }
 #endif
@@ -522,9 +509,7 @@ inline const CIEC_TIME LREAL_TO_TIME(const CIEC_LREAL &pa_roVal){
 #ifdef FORTE_USE_REAL_DATATYPE
 inline CIEC_ANY::TLargestIntValueType real_to_xINT(const CIEC_REAL &pa_roVal){
   CIEC_ANY::TLargestIntValueType temp;
-  #if defined(WIN32)
-    temp = (CIEC_ANY::TLargestIntValueType)floor(static_cast<TForteFloat>(pa_roVal) + 0.5);
-  #elif defined(VXWORKS)
+  #if defined(WIN32) || defined(VXWORKS)
     temp = (CIEC_ANY::TLargestIntValueType)floor(static_cast<TForteFloat>(pa_roVal) + 0.5);
   #else
     temp = lroundf(static_cast<TForteFloat>(pa_roVal));
@@ -601,22 +586,14 @@ inline const CIEC_UDINT REAL_TO_UDINT(const CIEC_REAL &pa_roVal){
 
 inline const CIEC_STRING REAL_TO_STRING(const CIEC_REAL &pa_roVal){
 	CIEC_STRING string;
-	string.reserve(CIEC_REAL::scm_unMaxStringBufSize);
-	char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_REAL::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+	stringConverter(string, pa_roVal);
 	return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING REAL_TO_WSTRING(const CIEC_REAL &pa_roVal){
   CIEC_WSTRING string;
-  string.reserve(CIEC_REAL::scm_unMaxStringBufSize);
-  char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_REAL::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+  stringConverter(string, pa_roVal);
   return string;
 }
 #endif
@@ -790,22 +767,14 @@ inline const CIEC_LREAL TIME_TO_LREAL(const CIEC_TIME &pa_roVal){
 
 inline const CIEC_STRING TIME_TO_STRING(const CIEC_TIME &pa_roVal){
 	CIEC_STRING string;
-	string.reserve(CIEC_TIME::scm_unMaxStringBufSize);
-	char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_TIME::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+	stringConverter(string, pa_roVal);
 	return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING TIME_TO_WSTRING(const CIEC_TIME &pa_roVal){
   CIEC_WSTRING string;
-  string.reserve(CIEC_TIME::scm_unMaxStringBufSize);
-  char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_TIME::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+  stringConverter(string, pa_roVal);
   return string;
 }
 #endif
@@ -881,22 +850,14 @@ inline const CIEC_WORD BOOL_TO_WORD(const CIEC_BOOL &pa_roVal){
 
 inline const CIEC_STRING BOOL_TO_STRING(const CIEC_BOOL &pa_roVal){
   CIEC_STRING string;
-  string.reserve(CIEC_BYTE::scm_unMaxStringBufSize);
-  char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_BYTE::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+  stringConverter(string, pa_roVal);
   return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING BOOL_TO_WSTRING(const CIEC_BOOL &pa_roVal){
   CIEC_WSTRING string;
-  string.reserve(CIEC_BYTE::scm_unMaxStringBufSize);
-  char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_BYTE::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+  stringConverter(string, pa_roVal);
   return string;
 }
 #endif
@@ -976,22 +937,14 @@ inline const CIEC_WORD BYTE_TO_WORD(const CIEC_BYTE &pa_roVal){
 
 inline const CIEC_STRING BYTE_TO_STRING(const CIEC_BYTE &pa_roVal){
 	CIEC_STRING string;
-	string.reserve(CIEC_BYTE::scm_unMaxStringBufSize);
-	char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_BYTE::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+	stringConverter(string, pa_roVal);
 	return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING BYTE_TO_WSTRING(const CIEC_BYTE &pa_roVal){
   CIEC_WSTRING string;
-  string.reserve(CIEC_BYTE::scm_unMaxStringBufSize);
-  char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_BYTE::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+  stringConverter(string, pa_roVal);
   return string;
 }
 #endif
@@ -1125,22 +1078,14 @@ inline const CIEC_WORD DINT_TO_WORD(const CIEC_DINT &pa_roVal){
 
 inline const CIEC_STRING DINT_TO_STRING(const CIEC_DINT &pa_roVal){
 	CIEC_STRING string;
-	string.reserve(CIEC_DINT::scm_unMaxStringBufSize);
-	char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_DINT::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+	stringConverter(string, pa_roVal);
 	return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING DINT_TO_WSTRING(const CIEC_DINT &pa_roVal){
   CIEC_WSTRING string;
-  string.reserve(CIEC_DINT::scm_unMaxStringBufSize);
-  char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_DINT::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+  stringConverter(string, pa_roVal);
   return string;
 }
 #endif
@@ -1229,22 +1174,14 @@ inline const CIEC_TIME DWORD_TO_TIME(const CIEC_DWORD &pa_roVal){
 
 inline const CIEC_STRING DWORD_TO_STRING(const CIEC_DWORD &pa_roVal){
 	CIEC_STRING string;
-	string.reserve(CIEC_DWORD::scm_unMaxStringBufSize);
-	char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_DWORD::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+	stringConverter(string, pa_roVal);
 	return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING DWORD_TO_WSTRING(const CIEC_DWORD &pa_roVal){
   CIEC_WSTRING string;
-  string.reserve(CIEC_DWORD::scm_unMaxStringBufSize);
-  char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_DINT::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+  stringConverter(string, pa_roVal);
   return string;
 }
 #endif
@@ -1317,22 +1254,14 @@ inline const CIEC_WORD LWORD_TO_WORD(const CIEC_LWORD &pa_roVal){
 
 inline const CIEC_STRING LWORD_TO_STRING(const CIEC_LWORD &pa_roVal){
 	CIEC_STRING string;
-	string.reserve(CIEC_LWORD::scm_unMaxStringBufSize);
-	char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_LWORD::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+	stringConverter(string, pa_roVal);
 	return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING LWORD_TO_WSTRING(const CIEC_LWORD &pa_roVal){
   CIEC_WSTRING string;
-  string.reserve(CIEC_LWORD::scm_unMaxStringBufSize);
-  char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_LWORD::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+  stringConverter(string, pa_roVal);
   return string;
 }
 #endif
@@ -1413,22 +1342,14 @@ inline const CIEC_WORD UDINT_TO_WORD(const CIEC_UDINT &pa_roVal){
 
 inline const CIEC_STRING UDINT_TO_STRING(const CIEC_UDINT &pa_roVal){
 	CIEC_STRING string;
-	string.reserve(CIEC_UDINT::scm_unMaxStringBufSize);
-	char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_UDINT::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+	stringConverter(string, pa_roVal);
 	return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING UDINT_TO_WSTRING(const CIEC_UDINT &pa_roVal){
   CIEC_WSTRING string;
-  string.reserve(CIEC_UDINT::scm_unMaxStringBufSize);
-  char *pacBuffer = string.getValue();
-	TForteInt32 nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_UDINT::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+  stringConverter(string, pa_roVal);
   return string;
 }
 #endif
@@ -1508,22 +1429,14 @@ inline const CIEC_WORD UINT_TO_WORD(const CIEC_UINT &pa_roVal){
 
 inline const CIEC_STRING UINT_TO_STRING(const CIEC_UINT &pa_roVal){
 	CIEC_STRING string;
-	string.reserve(CIEC_UINT::scm_unMaxStringBufSize);
-	char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_UINT::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+	stringConverter(string, pa_roVal);
 	return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING UINT_TO_WSTRING(const CIEC_UINT &pa_roVal){
   CIEC_WSTRING string;
-  string.reserve(CIEC_UINT::scm_unMaxStringBufSize);
-  char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_UINT::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+  stringConverter(string, pa_roVal);
   return string;
 }
 #endif
@@ -1598,22 +1511,14 @@ inline const CIEC_WORD ULINT_TO_WORD(const CIEC_ULINT &pa_roVal){
 
 inline const CIEC_STRING ULINT_TO_STRING(const CIEC_ULINT &pa_roVal){
 	CIEC_STRING string;
-	string.reserve(CIEC_ULINT::scm_unMaxStringBufSize);
-	char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_ULINT::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+	stringConverter(string, pa_roVal);
 	return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING ULINT_TO_WSTRING(const CIEC_ULINT &pa_roVal){
   CIEC_WSTRING string;
-  string.reserve(CIEC_ULINT::scm_unMaxStringBufSize);
-  char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_ULINT::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+  stringConverter(string, pa_roVal);
   return string;
 }
 #endif
@@ -1698,22 +1603,14 @@ inline const CIEC_WORD USINT_TO_WORD(const CIEC_USINT &pa_roVal){
 
 inline const CIEC_STRING USINT_TO_STRING(const CIEC_USINT &pa_roVal){
 	CIEC_STRING string;
-	string.reserve(CIEC_USINT::scm_unMaxStringBufSize);
-	char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_USINT::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+	stringConverter(string, pa_roVal);
 	return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING USINT_TO_WSTRING(const CIEC_USINT &pa_roVal){
   CIEC_WSTRING string;
-  string.reserve(CIEC_USINT::scm_unMaxStringBufSize);
-  char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_USINT::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+  stringConverter(string, pa_roVal);
   return string;
 }
 #endif
@@ -1793,22 +1690,14 @@ inline const CIEC_UINT WORD_TO_UINT(const CIEC_WORD &pa_roVal){
 
 inline const CIEC_STRING WORD_TO_STRING(const CIEC_WORD &pa_roVal){
 	CIEC_STRING string;
-	string.reserve(CIEC_WORD::scm_unMaxStringBufSize);
-	char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_WORD::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+	stringConverter(string, pa_roVal);
 	return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING WORD_TO_WSTRING(const CIEC_WORD &pa_roVal){
   CIEC_WSTRING string;
-  string.reserve(CIEC_WORD::scm_unMaxStringBufSize);
-  char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_WORD::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+  stringConverter(string, pa_roVal);
   return string;
 }
 #endif
@@ -1915,11 +1804,7 @@ inline const CIEC_WORD INT_TO_WORD(const CIEC_INT &pa_roVal){
 
 inline const CIEC_STRING INT_TO_STRING(const CIEC_INT &pa_roVal){
 	CIEC_STRING string;
-	string.reserve(CIEC_INT::scm_unMaxStringBufSize);
-	char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_INT::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+	stringConverter(string, pa_roVal);
 	return string;
 }
 
@@ -1934,11 +1819,7 @@ inline const CIEC_TIME INT_TO_TIME(const CIEC_INT &pa_roVal){
 #ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING INT_TO_WSTRING(const CIEC_INT &pa_roVal){
   CIEC_WSTRING string;
-  string.reserve(CIEC_INT::scm_unMaxStringBufSize);
-  char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_INT::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+  stringConverter(string, pa_roVal);
   return string;
 }
 #endif
@@ -2073,22 +1954,14 @@ inline const CIEC_WORD LINT_TO_WORD(const CIEC_LINT &pa_roVal){
 
 inline const CIEC_STRING LINT_TO_STRING(const CIEC_LINT &pa_roVal){
 	CIEC_STRING string;
-	string.reserve(CIEC_LINT::scm_unMaxStringBufSize);
-	char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_LINT::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+	stringConverter(string, pa_roVal);
 	return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING LINT_TO_WSTRING(const CIEC_LINT &pa_roVal){
   CIEC_WSTRING string;
-  string.reserve(CIEC_LINT::scm_unMaxStringBufSize);
-  char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_LINT::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+  stringConverter(string, pa_roVal);
   return string;
 }
 #endif
@@ -2181,22 +2054,14 @@ inline const CIEC_WORD SINT_TO_WORD(const CIEC_SINT &pa_roVal){
 
 inline const CIEC_STRING SINT_TO_STRING(const CIEC_SINT &pa_roVal){
 	CIEC_STRING string;
-	string.reserve(CIEC_SINT::scm_unMaxStringBufSize);
-	char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_SINT::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+	stringConverter(string, pa_roVal);
 	return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING SINT_TO_WSTRING(const CIEC_SINT &pa_roVal){
   CIEC_WSTRING string;
-  string.reserve(CIEC_SINT::scm_unMaxStringBufSize);
-  char *pacBuffer = string.getValue();
-	int nWrittenBytes = pa_roVal.toString(pacBuffer, CIEC_SINT::scm_unMaxStringBufSize);
-	nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-	string.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+  stringConverter(string, pa_roVal);
   return string;
 }
 #endif

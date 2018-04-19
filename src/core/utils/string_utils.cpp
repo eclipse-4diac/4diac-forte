@@ -10,12 +10,13 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "string_utils.h"
-#include <errno.h>
-#include <string.h>
 #include <forte_dint.h>
 #include <forte_udint.h>
 #include <forte_lint.h>
 #include <forte_ulint.h>
+
+#include <errno.h>
+#include <string.h>
 
 bool forte::core::util::isAtoFChar(char pa_cValue){
   pa_cValue = static_cast<char>(toupper(pa_cValue));

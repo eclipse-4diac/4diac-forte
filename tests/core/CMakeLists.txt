@@ -39,18 +39,19 @@
     
     forte_test_add_sourcefile_cpp(../../src/core/utils/string_utils.cpp)
     
+    forte_test_add_sourcefile_cpp(../../src/core/utils/parameterParser.cpp)
+    
     forte_test_add_sourcefile_cpp(../../src/stdfblib/ita/EMB_RES.cpp)
     
   #TODO add here architecture specific adds in order to allow testrunns also on other platforms
      forte_test_add_sourcefile_cpp(../../src/arch/timerha.cpp)
-    
-    forte_test_add_sourcefile_cpp(../../src/arch/threadbase.cpp)
-     
+
 if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
     forte_test_add_sourcefile_cpp(../../src/arch/posix/forte_sync.cpp)
     forte_test_add_sourcefile_cpp(../../src/arch/posix/forte_sem.cpp)
     forte_test_add_sourcefile_cpp(../../src/arch/posix/forte_thread.cpp)
     forte_test_add_sourcefile_cpp(../../src/arch/posix/pctimeha.cpp)
+    forte_test_add_sourcefile_cpp(../../src/arch/genforte_printer.cpp)
 endif()
 
 if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
@@ -58,6 +59,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
     forte_test_add_sourcefile_cpp(../../src/arch/win32/forte_sem.cpp)
     forte_test_add_sourcefile_cpp(../../src/arch/win32/forte_thread.cpp)
     forte_test_add_sourcefile_cpp(../../src/arch/win32/pctimeha.cpp)
+    forte_test_add_sourcefile_cpp(../../src/arch/win32/winforte_printer.cpp)
 endif()
 
   
@@ -67,6 +69,17 @@ forte_test_add_sourcefile_cpp(typelibdatatypetests.cpp)
 forte_test_add_sourcefile_cpp(nameidentifiertest.cpp)
 forte_test_add_sourcefile_cpp(mgmstatemachinetest.cpp)
 forte_test_add_sourcefile_cpp(iec61131_functionstests.cpp)
+
+if("${FORTE_USE_LUATYPES}" STREQUAL "LuaJIT" OR "${FORTE_USE_LUATYPES}" STREQUAL "Lua")
+  forte_test_add_sourcefile_cpp(../../src/core/lua/luaengine.cpp)
+  forte_test_add_sourcefile_cpp(../../src/core/lua/luatype.cpp)
+  forte_test_add_sourcefile_cpp(../../src/core/lua/luabfb.cpp)
+  forte_test_add_sourcefile_cpp(../../src/core/lua/luabfbtypeentry.cpp)
+  forte_test_add_sourcefile_cpp(../../src/core/lua/luaadapter.cpp)
+  forte_test_add_sourcefile_cpp(../../src/core/lua/luaadaptertypeentry.cpp)
+  forte_test_add_sourcefile_cpp(../../src/core/lua/luacfb.cpp)
+  forte_test_add_sourcefile_cpp(../../src/core/lua/luacfbtypeentry.cpp)
+endif("${FORTE_USE_LUATYPES}" STREQUAL "LuaJIT" OR "${FORTE_USE_LUATYPES}" STREQUAL "Lua")
 
 forte_test_add_subdirectory(datatypes)
 forte_test_add_subdirectory(cominfra)

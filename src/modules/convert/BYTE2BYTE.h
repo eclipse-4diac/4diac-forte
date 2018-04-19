@@ -13,8 +13,6 @@
 #define _BYTE2BYTE_H_
 
 #include <funcbloc.h>
-#include <forte_byte.h>
-
 
 class BYTE2BYTE: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(BYTE2BYTE)

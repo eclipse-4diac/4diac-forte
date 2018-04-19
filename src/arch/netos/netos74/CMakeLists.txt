@@ -55,9 +55,11 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "NetOs 7.4")
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/..)
   
   forte_add_sourcefile_hcpp(../forte_thread ../txtimeha ../forte_sync ../forte_sem)
-  forte_add_sourcefile_cpp(appconf_api.c ../root.cpp)
+  forte_add_sourcefile_cpp(appconf_api.c ../root.cpp ../../genforte_printer.cpp)
+  forte_add_sourcefile_h(../../forte_architecture_time.h)
 
   if(FORTE_COM_ETH)
+   forte_add_handler(CFDSelectHandler ../sockhand)
    forte_add_sourcefile_hcpp( ../../fdselecthand ../../bsdsocketinterf)
    forte_add_sourcefile_h(../gensockhand.h)
    forte_add_sourcefile_h(../sockhand.h)
@@ -84,7 +86,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "NetOs 7.4")
   forte_add_definition(-D__GNU__ -DNETOS_GNU_TOOLS -DNETOS_GNU_CLIB_REENT -DNET_OS -DNET_WORKS -D_POSIX_SOURCE)  
   #forte_add_definition(-DBOOT_LOADER)
   forte_add_definition(-DIAM_ENABLED -DNET_OS_SPECIFIC -DFUSION=0 -DTRECK=1 -DNETWORK_STACK=1)
-  forte_add_definition(-mbig-endian -mcpu=arm7tdmi -g -O2)
+  forte_add_definition(-mbig-endian -mcpu=arm7tdmi)
   forte_add_definition(-ffunction-sections -fdata-sections -fno-threadsafe-statics -fno-rtti -fno-exceptions)
 
 

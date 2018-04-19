@@ -78,14 +78,14 @@ const TForteUInt32 cg_unStringDictInitialStringBufSize = ${FORTE_STRINGDICTINITI
  */
 const TForteUInt32 cg_unStringDictInitialMaxNrOfStrings = ${FORTE_STRINGDICTINITIALMAXNROFSTRINGS};
 
+const TForteUInt32 cg_unNumberOfHandlers = ${FORTE_NUMBER_OF_HANDLERS};
+
 
 #ifdef FORTE_SUPPORT_BOOT_FILE
 
 /*!Define the path to the Bootfile
  */
 #define FORTE_BOOT_FILE_LOCATION "${FORTE_BootfileLocation}forte.fboot"
-
-const unsigned int cg_unBootFileLineBufSize = ${FORTE_BOOTFILELINEBUFSIZE}; 
 
 #endif
 

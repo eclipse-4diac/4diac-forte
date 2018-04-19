@@ -12,12 +12,12 @@
 #ifndef _DEVEXEC_H
 #define _DEVEXEC_H
 
-
-const int cg_MaxRegisteredEventHandlers = 10;
-
 class CEventSourceFB;
 class CExternalEventHandler;
 struct SForteTime;
+class CTimerHandler;
+
+#include <forte_config.h>
 
 /**\ingroup CORE
   Handles all the IEC 61499 execution requests and aspects within one device
@@ -25,33 +25,10 @@ struct SForteTime;
   @author az
 */
 class CDeviceExecution{
-  private:
-/*!\brief Structure for holding the information belonging to one external event.
- *
- */
-    struct SEventHandlerElement{
-      bool m_bOccured; //!<flag indicating that the external event has occurred between the last invocation.
-      CExternalEventHandler *m_poHandler; //!< pointer to the external event handler instance.
-    };
-/*!\brief List of currently available external event sources.
- *
- * The element 0 is always the timer event source.
- */
-    SEventHandlerElement m_astRegisteredEventHandlers [ cg_MaxRegisteredEventHandlers ];
-    int m_nNumberofExternalEventHandler; //!< number of currently used external event handlers in the m_asRegisteredEventHandlers list.
-protected:
 public:
     CDeviceExecution();
 
     ~CDeviceExecution();
-
-/*!\brief Register a new external event handler
- *
- * Prepares internal structures for the new event handler.
- * \param pa_poHandler pointer to the external event handler instance
- * \return ID of the new external event handler.
- */
-    int registerExternalEventHandler(CExternalEventHandler *pa_poHandler);
 
 /*!\brief Notifies the CExternalEventHandlerManager that one tick in the time has passed by.
  *
@@ -77,6 +54,29 @@ public:
     bool extEvHandlerIsAllowed(int ){
       return true;
     };
+
+    CTimerHandler& getTimer() const;
+
+    CExternalEventHandler* getHandler(unsigned int paIdentifer) const;
+
+protected:
+private:
+/*!\brief Structure for holding the information belonging to one external event.
+*
+*/
+  struct SEventHandlerElement{
+    bool m_bOccured; //!<flag indicating that the external event has occurred between the last invocation.
+    CExternalEventHandler *m_poHandler; //!< pointer to the external event handler instance.
+  };
+/*!\brief List of currently available external event sources.
+*
+* The element 0 is always the timer event source.
+*/
+
+  static void createHandlers(CDeviceExecution& pa_DeviceExecution);
+
+  SEventHandlerElement mRegisteredEventHandlers [ cg_unNumberOfHandlers ];
+
 };
 
 #endif

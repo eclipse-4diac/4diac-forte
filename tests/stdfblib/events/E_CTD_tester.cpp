@@ -31,7 +31,7 @@ bool E_CTD_tester::testCase_EventCD(){
   unsigned int numberOfTries = 100;
 
   TForteUInt16 valuesToTest[] = { 10, 1, 0, 65534, 65535};
-  unsigned int numberOfValues = sizeof(valuesToTest) / sizeof(TForteUInt16);
+  unsigned int numberOfValues = static_cast<unsigned int>(sizeof(valuesToTest) / sizeof(TForteUInt16));
 
   for(unsigned int i = 0; i < numberOfValues; i++){
     for(unsigned int j = 0; j < numberOfTries; j++){
@@ -55,7 +55,7 @@ bool E_CTD_tester::testCase_EventLD(){
   unsigned int numberOfTries = 100;
 
   TForteUInt16 PVToTest[] = { 10, 1, 0, 65534, 65535 };
-  unsigned int numberOftest = sizeof(PVToTest) / sizeof(TForteUInt16);
+  unsigned int numberOftest = static_cast<unsigned int>(sizeof(PVToTest) / sizeof(TForteUInt16));
 
   for(unsigned int i = 0; i < numberOftest; ++i){
     for(unsigned int j = 0; j < numberOfTries; j++){

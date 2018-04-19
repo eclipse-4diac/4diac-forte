@@ -11,7 +11,6 @@
   *******************************************************************************/
 #include <string.h>
 #include "conn.h"
-#include "stringdict.h"
 
 CConnection::CConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId) :
     mSourceId(paSrcFB, paSrcPortId){

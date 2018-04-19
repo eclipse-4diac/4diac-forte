@@ -13,7 +13,6 @@
 #define _GEN_ARRAY2VALUES_H_
 
 #include <funcbloc.h>
-#include <forte_array.h>
 
 class GEN_ARRAY2VALUES : public CFunctionBlock{
   DECLARE_GENERIC_FIRMWARE_FB(GEN_ARRAY2VALUES)

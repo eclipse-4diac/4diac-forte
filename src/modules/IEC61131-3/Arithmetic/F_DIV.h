@@ -13,7 +13,6 @@
 #define _F_DIV_H_
 
 #include <funcbloc.h>
-#include <forte_any_num.h>
 
 class FORTE_F_DIV: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_DIV)

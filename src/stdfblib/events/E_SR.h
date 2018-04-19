@@ -14,7 +14,6 @@
 #define _E_SR_H_
 
 #include <funcbloc.h>
-#include <forte_bool.h>
 
 class E_SR: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(E_SR)

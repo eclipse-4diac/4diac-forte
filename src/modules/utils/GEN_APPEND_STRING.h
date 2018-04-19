@@ -13,8 +13,6 @@
 #define _GEN_APPEND_STRING_H_
 
 #include <funcbloc.h>
-#include <forte_any.h>
-#include <forte_array.h>
 
 class GEN_APPEND_STRING : public CFunctionBlock{
   DECLARE_GENERIC_FIRMWARE_FB(GEN_APPEND_STRING)

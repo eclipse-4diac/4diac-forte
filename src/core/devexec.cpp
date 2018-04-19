@@ -11,33 +11,32 @@
   *******************************************************************************/
 #include "devexec.h"
 #include "esfb.h"
-#include "../arch/timerha.h"
 #include "ecet.h"
 #include "extevhan.h"
+#include "../arch/timerha.h"
 
+CDeviceExecution::CDeviceExecution(){
+  memset(mRegisteredEventHandlers,  0, sizeof(SEventHandlerElement) * cg_unNumberOfHandlers);
 
+  CDeviceExecution::createHandlers(*this);
 
-CDeviceExecution::CDeviceExecution():
-  m_nNumberofExternalEventHandler(0){
-  CExternalEventHandler::setDeviceExecution(this); // let all the external event handlers know where to report events to
-  CTimerHandler::createTimerHandler();
-  CTimerHandler::sm_poFORTETimer->enableHandler(); // will result in an registration for  the timer handler (automatically it will be the first registration)
+  getTimer().enableHandler();
+  if(0 == CTimerHandler::sm_poFORTETimer){
+    CTimerHandler::sm_poFORTETimer = &getTimer(); //used for develog, CIEC_TIME() and in Modbus
+  }
 }
 
 CDeviceExecution::~CDeviceExecution(){
-  delete CTimerHandler::sm_poFORTETimer;
-  CTimerHandler::sm_poFORTETimer = 0;
-};
-
-int CDeviceExecution::registerExternalEventHandler(CExternalEventHandler *pa_poHandler){
-  int retval = -1;
-  if(cg_MaxRegisteredEventHandlers > m_nNumberofExternalEventHandler){
-    retval = m_nNumberofExternalEventHandler;
-    m_astRegisteredEventHandlers[retval].m_poHandler = pa_poHandler;
-    m_astRegisteredEventHandlers[retval].m_bOccured = false;
-    ++m_nNumberofExternalEventHandler;
+  if(CTimerHandler::sm_poFORTETimer == (&getTimer())){
+    CTimerHandler::sm_poFORTETimer = 0;
   }
-  return retval;
+
+  for(unsigned int i = 0; i < cg_unNumberOfHandlers; i++){
+    if(0 != mRegisteredEventHandlers[i].m_poHandler){ //for the test cases, only the timer handler is created
+      mRegisteredEventHandlers[i].m_poHandler->disableHandler();
+      delete mRegisteredEventHandlers[i].m_poHandler;
+    }
+  }
 }
 
 void CDeviceExecution::startNewEventChain(CEventSourceFB *pa_poECStartFB){
@@ -51,3 +50,10 @@ void CDeviceExecution::startNewEventChain(CEventSourceFB *pa_poECStartFB){
   }
 }
 
+CExternalEventHandler* CDeviceExecution::getHandler(unsigned int paIdentifer) const{
+  return mRegisteredEventHandlers[paIdentifer].m_poHandler;
+}
+
+CTimerHandler& CDeviceExecution::getTimer() const{
+  return *static_cast<CTimerHandler*>(mRegisteredEventHandlers[0].m_poHandler);
+}

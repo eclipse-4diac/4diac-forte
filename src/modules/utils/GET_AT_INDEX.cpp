@@ -13,8 +13,6 @@
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "GET_AT_INDEX_gen.cpp"
 #endif
-#include <forte_array.h>
-#include <devlog.h>
 
 DEFINE_FIRMWARE_FB(FORTE_GET_AT_INDEX, g_nStringIdGET_AT_INDEX)
 

@@ -10,28 +10,29 @@
   *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
 #include "extevhan.h"
-#include "devexec.h"
+#include "../resource.h"
+#include "../device.h"
 #include <devlog.h>
 
-CDeviceExecution *CExternalEventHandler::sm_poDeviceExecution = 0;
-
-CExternalEventHandler::CExternalEventHandler() :
-    m_nExtEvHandID(-1){
-  // register at the device Execution
-  m_nExtEvHandID = sm_poDeviceExecution->registerExternalEventHandler(this);
+CExternalEventHandler::CExternalEventHandler(CDeviceExecution& ap_poDeviceExecution) : m_poDeviceExecution(ap_poDeviceExecution)
+{
 }
 
 bool CExternalEventHandler::isAllowed(){
-  return getDeviceExecution()->extEvHandlerIsAllowed(m_nExtEvHandID);
+  return m_poDeviceExecution.extEvHandlerIsAllowed(getIdentifier());
 }
 
 void CExternalEventHandler::startNewEventChain(CEventSourceFB *pa_poECStartFB){
   if(isAllowed()){
     FORTE_TRACE("Starting EC\n");
-    getDeviceExecution()->startNewEventChain(pa_poECStartFB);
+    m_poDeviceExecution.startNewEventChain(pa_poECStartFB);
   }
   else{
     //TODO: handle this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     DEVLOG_DEBUG("Starting EC NOT ALLOWED !!!!!!!!!!!!!!!1\n");
   }
+}
+
+CExternalEventHandler* CExternalEventHandler::getHandlerFromFB(CFunctionBlock& paFB, unsigned int paIdentifier){
+  return paFB.getResource().getDevice().getDeviceExecution().getHandler(paIdentifier);
 }

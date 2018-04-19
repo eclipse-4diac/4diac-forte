@@ -13,7 +13,6 @@
 
 #include "extevhan.h"
 #include <forte_thread.h>
-#include "singlet.h"
 #include "fortelist.h"
 #include <forte_sync.h>
 #include "comlayer.h"
@@ -21,8 +20,7 @@
 #include "ICmd.h"
 
 class COpcEventHandler : public CExternalEventHandler, private CThread{
-  DECLARE_SINGLETON(COpcEventHandler)
-    ;
+    DECLARE_HANDLER(COpcEventHandler)
   public:
     typedef int TCallbackDescriptor;
 

@@ -28,13 +28,13 @@ void FORTE_E_TimeOut::executeEvent(int pa_nEIID){
   else if(TimeOutSocket().START() == pa_nEIID){
     if(!m_bActive){
       setEventChainExecutor(m_poInvokingExecEnv);  // delay notification should be execute in the same thread on as from where it has been triggered.
-      CTimerHandler::sm_poFORTETimer->registerTimedFB(&m_stTimeListEntry, TimeOutSocket().DT());
+      getTimer().registerTimedFB(&m_stTimeListEntry, TimeOutSocket().DT());
       m_bActive = true;
     }
   }
   else if(TimeOutSocket().STOP() == pa_nEIID){
     if(m_bActive){
-      CTimerHandler::sm_poFORTETimer->unregisterTimedFB(this);
+      getTimer().unregisterTimedFB(this);
       m_bActive = false;
     }
   }
@@ -44,7 +44,7 @@ EMGMResponse FORTE_E_TimeOut::changeFBExecutionState(EMGMCommandType pa_unComman
   EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(pa_unCommand);
   if((e_RDY == eRetVal) && ((cg_nMGM_CMD_Stop == pa_unCommand) || (cg_nMGM_CMD_Kill == pa_unCommand))){
     if(m_bActive){
-      CTimerHandler::sm_poFORTETimer->unregisterTimedFB(this);
+      getTimer().unregisterTimedFB(this);
       m_bActive = false;
     }
   }

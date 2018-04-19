@@ -14,8 +14,6 @@
 #define _F_BOOL_TO_ULINT_H_
 
 #include <funcbloc.h>
-#include <forte_ulint.h>
-#include <forte_bool.h>
 
 class FORTE_F_BOOL_TO_ULINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_BOOL_TO_ULINT)

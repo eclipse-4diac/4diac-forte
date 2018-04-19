@@ -13,10 +13,6 @@
 #define _FB_TON_H_
 
 #include <funcbloc.h>
-#include <forte_time.h>
-#include "../../arch/timerha.h"
-#include <forte_bool.h>
-#include <forte_array.h>
 
 // cppcheck-suppress noConstructor
 class FB_TON: public CFunctionBlock{

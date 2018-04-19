@@ -17,7 +17,6 @@
 #include <forte_thread.h>
 #include <forte_sync.h>
 #include <fortelist.h>
-#include <singlet.h>
 #include <esfb.h>
 #include <devexec.h>
 #include <devlog.h>
@@ -63,7 +62,7 @@ class WagoPFCProcessInterface : public CProcessInterfaceBase{
 
     // cppcheck-suppress noConstructor
     class CKBusHandler : public CExternalEventHandler, public CThread{
-      DECLARE_SINGLETON(CKBusHandler)
+        DECLARE_HANDLER(CKBusHandler)
 
       public:
         //!KBus interface handling is up and running correctly

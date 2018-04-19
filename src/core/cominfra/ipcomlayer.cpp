@@ -15,27 +15,20 @@
 #include "ipcomlayer.h"
 #include "../../arch/devlog.h"
 #include "commfb.h"
-#include "../../core/datatypes/forte_dint.h"
+#include <forte_thread.h>
 
 using namespace forte::com_infra;
 
-CIPComLayer::CIPComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB) :
+CIPComLayer::CIPComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB) :
         CComLayer(pa_poUpperLayer, pa_poComFB),
         m_nSocketID(CIPComSocketHandler::scm_nInvalidSocketDescriptor),
         m_nListeningID(CIPComSocketHandler::scm_nInvalidSocketDescriptor),
         m_eInterruptResp(e_Nothing),
         m_unBufFillSize(0){
+  memset(m_acRecvBuffer, 0, sizeof(m_acRecvBuffer)); //TODO change this to  m_acRecvBuffer{0} in the extended list when fully switching to C++11
 }
 
 CIPComLayer::~CIPComLayer(){
-}
-
-void CIPComLayer::closeConnection(){
-  DEVLOG_DEBUG("CSocketBaseLayer::closeConnection() \n");
-  closeSocket(&m_nSocketID);
-  closeSocket(&m_nListeningID);
-
-  m_eConnectionState = e_Disconnected;
 }
 
 EComResponse CIPComLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
@@ -97,7 +90,7 @@ EComResponse CIPComLayer::recvData(const void *pa_pvData, unsigned int){
       //TODO move this to the processInterrupt()
       m_nSocketID = CIPComSocketHandler::acceptTCPConnection(m_nListeningID);
       if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != m_nSocketID){
-        CIPComSocketHandler::getInstance().addComCallback(m_nSocketID, this);
+        GET_HANDLER_FROM_LAYER(*m_poFb, CIPComSocketHandler)->addComCallback(m_nSocketID, this);
         m_eConnectionState = e_Connected;
       }
       break;
@@ -154,7 +147,7 @@ EComResponse CIPComLayer::openConnection(char *pa_acLayerParameter){
     if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != nSockDes){
       if(e_Publisher != m_poFb->getComServiceType()){
         //Publishers should not be registered for receiving data
-        CIPComSocketHandler::getInstance().addComCallback(nSockDes, this);
+        GET_HANDLER_FROM_LAYER(*m_poFb, CIPComSocketHandler)->addComCallback(nSockDes, this);
       }
       eRetVal = e_InitOk;
     }
@@ -165,9 +158,17 @@ EComResponse CIPComLayer::openConnection(char *pa_acLayerParameter){
   return eRetVal;
 }
 
+void CIPComLayer::closeConnection(){
+  DEVLOG_DEBUG("CSocketBaseLayer::closeConnection() \n");
+  closeSocket(&m_nSocketID);
+  closeSocket(&m_nListeningID);
+
+  m_eConnectionState = e_Disconnected;
+}
+
 void CIPComLayer::closeSocket(CIPComSocketHandler::TSocketDescriptor *pa_nSocketID){
   if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != *pa_nSocketID){
-    CIPComSocketHandler::getInstance().removeComCallback(*pa_nSocketID);
+    GET_HANDLER_FROM_LAYER(*m_poFb, CIPComSocketHandler)->removeComCallback(*pa_nSocketID);
     CIPComSocketHandler::closeSocket(*pa_nSocketID);
     *pa_nSocketID = CIPComSocketHandler::scm_nInvalidSocketDescriptor;
   }
@@ -177,11 +178,7 @@ void CIPComLayer::handledConnectedDataRecv(){
   // in case of fragmented packets, it can occur that the buffer is full,
   // to avoid calling receiveDataFromTCP with a buffer size of 0 wait until buffer is larger 0
   while((cg_unIPLayerRecvBufferSize - m_unBufFillSize) <= 0){
-#ifdef WIN32
-    Sleep(0);
-#else
-    sleep(0);
-#endif
+    CThread::sleepThread(0);
   }
   if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != m_nSocketID){
     // TODO: sync buffer and bufFillSize
@@ -227,7 +224,7 @@ void CIPComLayer::handledConnectedDataRecv(){
 
 void CIPComLayer::handleConnectionAttemptInConnected(){
   //accept and immediately close the connection to tell the client that we are not available
-  //sofar the best option I've found for handling single connection servers
+  //so far the best option I've found for handling single connection servers
   CIPComSocketHandler::TSocketDescriptor socketID = CIPComSocketHandler::acceptTCPConnection(m_nListeningID);
   CIPComSocketHandler::closeSocket(socketID);
 }

@@ -22,7 +22,7 @@ namespace forte {
 
     class CIPComLayer : public CComLayer{
       public:
-        CIPComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB);
+        CIPComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB);
         virtual ~CIPComLayer();
 
         EComResponse sendData(void *pa_pvData, unsigned int pa_unSize); // top interface, called from top
@@ -31,12 +31,12 @@ namespace forte {
         EComResponse processInterrupt();
 
       protected:
-        void closeConnection();
 
       private:
-        static void closeSocket(CIPComSocketHandler::TSocketDescriptor *pa_nSocketID);
+        void closeSocket(CIPComSocketHandler::TSocketDescriptor *pa_nSocketID);
 
         EComResponse openConnection(char *pa_acLayerParameter);
+        void closeConnection();
         void handledConnectedDataRecv();
         void handleConnectionAttemptInConnected();
 

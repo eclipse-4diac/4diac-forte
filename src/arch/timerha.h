@@ -14,11 +14,10 @@
 
 #include <forte_config.h>
 #include "../core/extevhan.h"
-#include "../core/utils/singlet.h"
-#include "../core/datatypes/forte_time.h"
 #include <forte_sync.h>
 
 class CEventSourceFB;
+class CIEC_TIME;
 
 enum ETimerActivationType{
   e_SingleShot, e_Periodic
@@ -102,21 +101,18 @@ struct STimedFBListEntry{
  *  \ingroup EXTEVHAND
  */
 class CTimerHandler : public CExternalEventHandler{
+  DECLARE_HANDLER(CTimerHandler);
   public:
 
-    virtual ~CTimerHandler(){
-    }
-    ;
-
-    /*!\brief Pointer to the instance of the concrete forte timer
+    /*!\brief Pointer to a general timer used for code outside FBs, like devlog, TIME() and so on
      */
     static CTimerHandler *sm_poFORTETimer;
-    /*!\brief create the timer handler and set the pointer of sm_poFORTETimer to the new timer handler.
+    /*!\brief create the timer handler and set the parameter pointer with the the new timer handler.
      *
      * This function is not implemented in the standardtimerhandler and has to be implemented in the specific implementation.
      * implementations should check that not two timerhanlders can be created.
      */
-    static void createTimerHandler(void);
+    static CTimerHandler* createTimerHandler(CDeviceExecution& pa_poDeviceExecution);
 
     /*!\brief Sets the priority of the event source
      *
@@ -158,10 +154,6 @@ class CTimerHandler : public CExternalEventHandler{
   protected:
     CSyncObject m_oSync;
 
-    //! private constructor that allows that no other object can create an timerhandler
-    CTimerHandler() : m_pstTimedFBList(0){
-    }
-    ;
   private:
     /*!\brief The runtime time in tics till last reboot.
      */

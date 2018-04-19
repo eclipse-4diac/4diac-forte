@@ -13,8 +13,6 @@
 #define _UDINT2UDINT_H_
 
 #include <funcbloc.h>
-#include <forte_udint.h>
-
 
 class UDINT2UDINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(UDINT2UDINT)

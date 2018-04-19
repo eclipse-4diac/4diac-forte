@@ -14,9 +14,6 @@
 #define _ID_H_
 
 #include <processinterface.h>
-#include <forte_dword.h>
-#include <forte_string.h>
-#include <forte_bool.h>
 
 //TODO add compile time check that CWordAccess inherits from CWordAccessBase
 

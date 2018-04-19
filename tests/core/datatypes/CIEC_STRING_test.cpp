@@ -266,7 +266,7 @@ BOOST_AUTO_TEST_CASE(String_binary_interface)
 	CIEC_STRING sTest1, sTest2;
 	char cTest[] = "This is a test\0string!"; //embedded \0, length 22 without trailing \0
 	BOOST_CHECK_EQUAL(sTest1.length(), 0);
-	sTest1.assign(cTest, sizeof(cTest)-1);
+	sTest1.assign(cTest, static_cast<TForteUInt16>(sizeof(cTest)-1));
 	BOOST_CHECK_EQUAL(sTest1.length(), 22);
 	BOOST_CHECK_EQUAL(memcmp(sTest1.getValue(), cTest, 22), 0);
 

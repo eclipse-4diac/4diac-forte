@@ -14,10 +14,14 @@
 
 #include "../core/fortelist.h"
 #include "../core/extevhan.h"
-#include "../core/cominfra/comlayer.h"
-#include "../core/utils/singlet.h"
 #include <forte_thread.h>
 #include <forte_sync.h>
+
+namespace forte{
+  namespace com_infra{
+    class CComLayer;
+  }
+}
 
 /*!\brief An external event handler for file descriptor based external events.
  *
@@ -26,8 +30,7 @@
  */
 
 class CFDSelectHandler : public CExternalEventHandler, private CThread{
-  DECLARE_SINGLETON(CFDSelectHandler)
-    ;
+  DECLARE_HANDLER(CFDSelectHandler)
   public:
     typedef int TFileDescriptor; //!< General type definition for a file descriptor. To be used by the callback classes.
     static const TFileDescriptor scm_nInvalidFileDescriptor = -1;

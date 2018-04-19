@@ -13,7 +13,6 @@
 #define _STEST_END_H_
 
 #include <funcbloc.h>
-#include "../../core/resource.h"
 #include <mgmcmdstruct.h>
 
 class FORTE_STEST_END: public CFunctionBlock{

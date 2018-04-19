@@ -74,8 +74,6 @@ class CIEC_WORD : public CIEC_ANY_BIT{
     virtual EDataTypeID getDataTypeID() const{
       return CIEC_ANY::e_WORD;
     }
-
-    static const TForteUInt16 scm_unMaxStringBufSize;
 };
 
 #endif /*_FORTE_WORD_H_*/

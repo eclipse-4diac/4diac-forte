@@ -10,17 +10,15 @@
   *    Martin Melik Merkumians
   *      - initial implementation, rework communication infrastructure, bug fixes
   *******************************************************************************/
-#include <fortealloc.h>
 #include "fbdkasn1layer.h"
-#include "commfb.h"
-#include "../datatypes/forte_string.h"
-#include "../datatypes/forte_wstring.h"
-#include "../datatypes/forte_array.h"
+#include "basecommfb.h"
 #include "../../arch/timerha.h"
+#include "../../arch/devlog.h"
+#include <fortenew.h>
 
 using namespace forte::com_infra;
 
-CFBDKASN1ComLayer::CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poComFB) :
+CFBDKASN1ComLayer::CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poComFB) :
   CComLayer(pa_poUpperLayer, pa_poComFB), mStatSerBuf(0), mStatSerBufSize(0), mDeserBuf(0), mDeserBufSize(0), mDeserBufPos(0), mDIPos(0), mDOPos(0){
 
   if(0 != pa_poComFB){
@@ -64,11 +62,7 @@ EComResponse CFBDKASN1ComLayer::openConnection(char *){
 }
 
 void CFBDKASN1ComLayer::closeConnection(){
-  // we don't need to do anything specific on closing when closing the connection
-  //so directly close the bottom layer if there
-  if(0 != m_poBottomLayer){
-    m_poBottomLayer->closeConnection();
-  }
+  //We don't need to do anything specific on closing
 }
 
 void CFBDKASN1ComLayer::resizeDeserBuffer(unsigned int pa_size){

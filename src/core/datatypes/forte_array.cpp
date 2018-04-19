@@ -9,7 +9,7 @@
   *    Alois Zoitl, Ingo Hegny, Stansilav Meduna
   *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
-#include <fortealloc.h>
+#include <fortenew.h>
 #include "forte_array.h"
 #include <stdlib.h>
 
@@ -149,11 +149,10 @@ int CIEC_ARRAY::toString(char* pa_acValue, unsigned int pa_nBufferSize) const{
     pa_acValue++;
     pa_nBufferSize--;
     nBytesUsed = 1;
-    int nUsedBytesByElement;
     TForteUInt16 unSize = size();
     const CIEC_ANY *poArray = getArray();
     for(unsigned int i = 0; i < unSize; ++i, ++poArray){
-      nUsedBytesByElement = poArray->toString(pa_acValue, pa_nBufferSize);
+      int nUsedBytesByElement = poArray->toString(pa_acValue, pa_nBufferSize);
       if(-1 == nUsedBytesByElement){
         return -1;
       }
@@ -182,6 +181,14 @@ int CIEC_ARRAY::toString(char* pa_acValue, unsigned int pa_nBufferSize) const{
   }
 
   return nBytesUsed;
+}
+
+unsigned int CIEC_ARRAY::getToStringBufferSize(){
+	unsigned int retVal = 3;  // 2 bytes for the open and closing breakets one for the '\0'
+	if( 0 != getArray()){
+		retVal += size() * getArray()[-1].getToStringBufferSize();
+	}
+	return retVal;
 }
 
 #endif /* FORTE_SUPPORT_ARRAYS */

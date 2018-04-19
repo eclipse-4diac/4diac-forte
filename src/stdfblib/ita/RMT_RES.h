@@ -13,7 +13,6 @@
 #define _RMT_RES_H_
 
 #include <resource.h>
-#include <forte_wstring.h>
 
 class RMT_RES : public CResource{
   DECLARE_FIRMWARE_FB(RMT_RES)
@@ -21,6 +20,8 @@ class RMT_RES : public CResource{
   public:
     RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_roDevice);
     virtual ~RMT_RES();
+
+    void joinResourceThread();
 
   private:
     static const SFBInterfaceSpec scm_stRESInterfaceSpec;

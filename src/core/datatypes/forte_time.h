@@ -103,8 +103,6 @@ class CIEC_TIME : public CIEC_ANY_MAGNITUDE{
     void setFromSeconds(TValueType pa_nValue);
     void setFromMiliSeconds(TValueType pa_nValue);
     void setFromMicroSeconds(TValueType pa_nValue);
-
-    static const TForteUInt16 scm_unMaxStringBufSize;
 };
 
 const CIEC_TIME TIME();

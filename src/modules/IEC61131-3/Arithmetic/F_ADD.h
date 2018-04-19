@@ -13,7 +13,6 @@
 #define _F_ADD_H_
 
 #include <funcbloc.h>
-#include <forte_any_magnitude.h>
 
 class FORTE_F_ADD: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_ADD)

@@ -13,8 +13,6 @@
 #define _STRING2STRING_H_
 
 #include <funcbloc.h>
-#include <forte_string.h>
-
 
 class STRING2STRING: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(STRING2STRING)

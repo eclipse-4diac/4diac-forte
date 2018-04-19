@@ -17,7 +17,7 @@
 #include "event.h"
 #include "conn.h"
 #include "stringdict.h"
-#include <timerha.h>
+#include "../arch/timerha.h"
 
 class CFunctionBlock;
 class CResource;

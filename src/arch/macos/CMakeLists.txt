@@ -18,15 +18,17 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "MacOs")
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
   
   forte_add_sourcefile_hcpp(../posix/forte_thread ../posix/pctimeha forte_sync forte_sem)
-  forte_add_sourcefile_cpp(../posix/main.cpp)
+  forte_add_sourcefile_cpp(../posix/main.cpp ../genforte_printer.cpp)
+  forte_add_sourcefile_h(../forte_architecture_time.h)
 
   if(FORTE_COM_ETH)
+   forte_add_handler(CFDSelectHandler sockhand)
    forte_add_sourcefile_hcpp( ../fdselecthand ../bsdsocketinterf)
    forte_add_sourcefile_h(../gensockhand.h)
    forte_add_sourcefile_h(../posix/sockhand.h)
   endif(FORTE_COM_ETH)
 
-  forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -DFORTE_LITTLE_ENDIAN -ggdb")
+  forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -DFORTE_LITTLE_ENDIAN")
   
   set(FORTE_RTTI_AND_EXCEPTIONS FALSE CACHE BOOL "Enable RTTI and Exceptions")
   mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)

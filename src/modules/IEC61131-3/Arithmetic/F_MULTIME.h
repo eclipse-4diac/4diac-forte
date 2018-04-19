@@ -14,8 +14,6 @@
 #define _F_MULTIME_H_
 
 #include <funcbloc.h>
-#include <forte_time.h>
-#include <forte_any_num.h>
 
 class FORTE_F_MULTIME: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_MULTIME)

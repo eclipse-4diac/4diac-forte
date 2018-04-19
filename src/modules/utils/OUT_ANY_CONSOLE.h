@@ -13,10 +13,6 @@
 #define _OUT_ANY_CONSOLE_H_
 
 #include <funcbloc.h>
-#include <forte_any.h>
-
-#include <forte_string.h>
-#include <forte_bool.h>
 
 class FORTE_OUT_ANY_CONSOLE: public CFunctionBlock {
 	DECLARE_FIRMWARE_FB(FORTE_OUT_ANY_CONSOLE)

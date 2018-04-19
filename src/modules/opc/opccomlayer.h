@@ -25,18 +25,16 @@ namespace forte {
 
     class COpcComLayer : public CComLayer{
       public:
-        COpcComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB);
+        COpcComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB);
         virtual ~COpcComLayer();
 
         EComResponse sendData(void *pa_pvData, unsigned int pa_unSize); // top interface, called from top
         EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize);
         EComResponse processInterrupt();
 
-      protected:
-        void closeConnection();
-
       private:
         EComResponse openConnection(char *pa_acLayerParameter);
+        void closeConnection();
         int addOpcItems();
         void setOutputValue(CIEC_ANY *pa_pDataOut, Variant * pa_pValue);
         void processClientParams(char* pa_acLayerParams);

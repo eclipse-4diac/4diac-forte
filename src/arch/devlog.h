@@ -16,9 +16,6 @@
  * \brief CDeviceLog is the entity that logs messages created by the FORTE Runtime system.
  * They can be printed to a console or archived somewhere (This is implementation dependent).
  */
-#include "datatype.h"
-#include "../core/utils/singlet.h"
-#include <forte_sync.h>
 
 enum E_MsgLevel {E_INFO, E_WARNING, E_ERROR, E_DEBUG, E_TRACE};
 

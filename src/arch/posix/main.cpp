@@ -9,7 +9,7 @@
  *  Alois Zoitl, Gerhard Ebenhofer, Thomas Strasser, Rene Smodic,
  *  Martin Melik Merkumians, Ingo Hegny, Filip Andren - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include <fortealloc.h>
+#include <fortenew.h>
 #include <stdio.h>
 #include <signal.h>
 #include "../../stdfblib/ita/RMT_DEV.h"
@@ -59,7 +59,7 @@ void createDev(const char *pa_acMGRID){
   poDev->setMGR_ID(pa_acMGRID);
   poDev->startDevice();
   DEVLOG_INFO("FORTE is up and running\n");
-  poDev->MGR.getResourceEventExecution()->joinEventChainExecutionThread();
+  poDev->MGR.joinResourceThread();
   DEVLOG_INFO("FORTE finished\n");
   delete poDev;
 }

@@ -14,7 +14,6 @@
 #define _F_XOR_H_
 
 #include <funcbloc.h>
-#include <forte_any_bit.h>
 
 class FORTE_F_XOR: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_XOR)

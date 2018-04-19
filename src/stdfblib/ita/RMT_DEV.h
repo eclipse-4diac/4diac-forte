@@ -14,7 +14,6 @@
 
 #include <device.h>
 #include <if2indco.h>
-#include <forte_wstring.h>
 #include "RMT_RES.h"
 
 /*! \brief Implementation of the RMT_DEV.

@@ -105,7 +105,7 @@ CStringDictionary::TStringId CIEC_ANY::parseTypeName(const char *pa_pacValue, co
 
 int CIEC_ANY::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
   int nRetVal = -1;
-  if((strlen(scm_acAnyToStringResponse) +1) < pa_nBufferSize){
+  if((strlen(scm_acAnyToStringResponse) +1) <= pa_nBufferSize){
     nRetVal = static_cast<int>(strlen(scm_acAnyToStringResponse));
     memcpy(pa_pacValue, scm_acAnyToStringResponse, nRetVal);
     pa_pacValue[nRetVal] = '\0';
@@ -205,4 +205,41 @@ void CIEC_ANY::specialCast(const CIEC_ANY &pa_roSrcValue, CIEC_ANY &pa_roDstValu
       DEVLOG_ERROR("CIEC_ANY::specialCast: special cast for unsupported source data type requested!\n");
       break;
   }
+}
+
+const TForteByte CIEC_ANY::csm_aStringBufferSize[] = {
+         9 /*e_ANY*/,
+         6 /*e_BOOL (0, 1)*/,
+         5 /*e_SINT (-128, +127)*/,
+         7 /*e_INT (-32768, +32767)*/,
+        12 /*e_DINT (-2^31, +2^31-1)*/,
+        21 /*e_LINT (-2^63. +2^63-1)*/,
+         5 /*e_USINT (0, +255)*/,
+         7 /*e_UINT (0, +65535)*/,
+        12 /*e_UDINT (0, +2^32-1)*/,
+        22 /*e_ULINT (0, +2^64-1)*/,
+         9 /*e_BYTE (0, 16#FF)*/,
+        17 /*e_WORD (0, 16#FFFF)*/,
+        33 /*e_DWORD (0, 16#FFFF FFFF)*/,
+        65 /*e_LWORD (0, 16#FFFF FFFF FFFF FFFF)*/,
+        11 /*e_DATE (d#0001-01-01)*/,
+         9 /*e_TIME_OF_DAY (tod#00:00:00)*/,
+        20 /*e_DATE_AND_TIME (dt#0001-01-01-00:00:00)*/,
+        27 /*e_TIME (t#0)*/,
+        14 /*e_REAL (32bit = 1bit sign, 8bit exponent, 23bit fraction)*/,
+        23 /*e_LREAL (64bit = 1bit sign, 11bit exponent, 52bit fraction)*/,
+         8 /*e_STRING multiply with string length +1 for \0*/,
+        16 /*e_WSTRING multiply with string length +1 for \0*/,
+         0 /*e_DerivedData*/,
+         0 /*e_DirectlyDerivedData*/,
+         0 /*e_EnumeratedData*/,
+         0 /*e_SubrangeData*/,
+         0 /*e_ARRAY*/,
+         0 /*e_STRUCT*/,
+         0 /*e_External*/,
+         0 /*e_Max*/
+    };
+
+unsigned int CIEC_ANY::getToStringBufferSize(){
+  return csm_aStringBufferSize[getDataTypeID()];
 }
