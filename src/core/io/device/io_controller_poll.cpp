@@ -13,6 +13,7 @@
 
 IODevicePollController::IODevicePollController(CDeviceExecution& paDeviceExecution, float PollInterval) : IODeviceController(paDeviceExecution),
     PollInterval(PollInterval), forcedLoop(false), loopActive(false) {
+  memset(&nextLoop,0,sizeof(timespec));
 
 }
 
@@ -24,8 +25,10 @@ void IODevicePollController::runLoop() {
   clock_gettime(CLOCK_MONOTONIC, &nextLoop);
 
   while (isAlive()) {
+    loopSync.lock();
+    loopActive = false;
     if (!forcedLoop)
-      loopSync.wait(nextLoop, (unsigned long) (1000000.0 / PollInterval));
+      loopSync.wait(nextLoop, (unsigned long) (1000000.0 / PollInterval)); //atomically unlocks the mutex and before returning, it re-acquires mutex
     else
       forcedLoop = false;
 
@@ -38,8 +41,6 @@ void IODevicePollController::runLoop() {
     if (hasError())
       break;
 
-    loopSync.lock();
-    loopActive = false;
   }
 }
 

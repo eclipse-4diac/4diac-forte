@@ -33,6 +33,7 @@ IOConfigFBMultiSlave::IOConfigFBMultiSlave(const TForteUInt8* const scm_slaveCon
 }
 
 IOConfigFBMultiSlave::~IOConfigFBMultiSlave() {
+  delete[] scm_slaveConfigurationIO_isDefault;
 }
 
 void IOConfigFBMultiSlave::executeEvent(int pa_nEIID) {

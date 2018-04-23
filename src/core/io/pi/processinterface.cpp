@@ -131,26 +131,27 @@ bool ProcessInterface::onChange() {
 }
 
 void ProcessInterface::onHandle(IOHandle* handle) {
-  CCriticalRegion criticalRegion(syncMutex);
+  {
+    CCriticalRegion criticalRegion(syncMutex);
 
-  IOObserver::onHandle(handle);
+    IOObserver::onHandle(handle);
 
-  if (!handle->is(type)) {
-    STATUS() = scmMappedWrongDataType;
+    if(!handle->is(type)){
+      STATUS() = scmMappedWrongDataType;
+      return;
+    }
+
+    if(!handle->is(direction)){
+      STATUS() = direction == IOMapper::In ? scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput;
+      return;
+    }
+
+    if(direction == IOMapper::In)
+      setEventChainExecutor(m_poInvokingExecEnv);
+
+    STATUS() = scmOK;
+    isReady = true;
   }
-
-  if (!handle->is(direction)) {
-    STATUS() =
-        direction == IOMapper::In ?
-            scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput;
-  }
-
-  if (direction == IOMapper::In)
-    setEventChainExecutor(m_poInvokingExecEnv);
-
-  STATUS() = scmOK;
-  isReady = true;
-
 
   // Read & write current state
   if (direction == IOMapper::In)

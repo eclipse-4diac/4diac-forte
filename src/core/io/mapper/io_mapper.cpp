@@ -26,9 +26,8 @@ IOMapper::~IOMapper() {
 }
 
 bool IOMapper::registerHandle(CIEC_WSTRING const &id, IOHandle* handle) {
-  std::string idStr(id.getValue());
-
   CCriticalRegion criticalRegion(syncMutex);
+  std::string idStr(id.getValue());
 
   // Check for duplicates
   if (handles.find(idStr) != handles.end()) {
@@ -74,9 +73,8 @@ void IOMapper::deregisterHandle(IOHandle* handle) {
 }
 
 bool IOMapper::registerObserver(CIEC_WSTRING const &id, IOObserver* observer) {
-  std::string idStr(id.getValue());
-
   CCriticalRegion criticalRegion(syncMutex);
+  std::string idStr(id.getValue());
 
   // Check for duplicates
   if (observers.find(idStr) != observers.end()) {
