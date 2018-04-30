@@ -25,7 +25,7 @@ namespace forte {
     namespace IO {
 
 class EmbrickMaster: public IOConfigFBMultiMaster {
-DECLARE_FIRMWARE_FB(EmbrickMaster)
+DECLARE_FIRMWARE_FB_NAMESPACE(forte_core_io_EmbrickMaster, EmbrickMaster)
 
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];

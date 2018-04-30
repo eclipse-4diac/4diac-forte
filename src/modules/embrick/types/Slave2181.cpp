@@ -18,7 +18,7 @@
 
 using namespace forte::core::IO;
 
-DEFINE_FIRMWARE_FB(EmbrickSlave2181, g_nStringIdEBSlave2181)
+DEFINE_FIRMWARE_FB_NAMESPACE(forte_core_io_EmbrickSlave2181 ,forte::core::IO::EmbrickSlave2181, g_nStringIdEBSlave2181)
 
 const CStringDictionary::TStringId EmbrickSlave2181::scm_anDataInputNames[] = {
     g_nStringIdQI, g_nStringIdDigitalInput_1, g_nStringIdDigitalInput_2,

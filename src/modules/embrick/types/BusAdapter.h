@@ -22,7 +22,7 @@ namespace forte {
     namespace IO {
 
 class EmbrickBusAdapter: public IOConfigFBMultiAdapter {
-DECLARE_ADAPTER_TYPE(EmbrickBusAdapter)
+DECLARE_ADAPTER_TYPE_NAMESPACE(forte_core_io_EmbrickBusAdapter, EmbrickBusAdapter)
 
 private:
 private:

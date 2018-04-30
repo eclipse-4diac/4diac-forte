@@ -23,7 +23,7 @@ namespace forte {
     namespace IO {
 
 class EmbrickSlave2181: public EmbrickSlave {
-DECLARE_FIRMWARE_FB(EmbrickSlave2181)
+DECLARE_FIRMWARE_FB_NAMESPACE(forte_core_io_EmbrickSlave2181, EmbrickSlave2181)
 
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];

@@ -16,7 +16,7 @@
 
 using namespace forte::core::IO;
 
-DEFINE_ADAPTER_TYPE(EmbrickBusAdapter, g_nStringIdEBBusAdapter)
+DEFINE_ADAPTER_TYPE_NAMESPACE(forte_core_io_EmbrickBusAdapter, forte::core::IO::EmbrickBusAdapter, g_nStringIdEBBusAdapter)
 
 const CStringDictionary::TStringId EmbrickBusAdapter::scm_anDataInputNames[] =
     { g_nStringIdQO };
