@@ -14,6 +14,8 @@
 #include "BusAdapter_gen.cpp"
 #endif
 
+using namespace forte::core::IO;
+
 DEFINE_ADAPTER_TYPE(EmbrickBusAdapter, g_nStringIdEBBusAdapter)
 
 const CStringDictionary::TStringId EmbrickBusAdapter::scm_anDataInputNames[] =

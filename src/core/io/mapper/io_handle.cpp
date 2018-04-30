@@ -14,6 +14,8 @@
 
 #include <io/device/io_controller.h>
 
+using namespace forte::core::IO;
+
 IOHandle::IOHandle(IODeviceController *controller, IOMapper::Direction direction, CIEC_ANY::EDataTypeID type) :
     controller(controller), observer(0), type(type), direction(
         direction) {
@@ -39,3 +41,4 @@ void IOHandle::onChange() {
     }
   }
 }
+

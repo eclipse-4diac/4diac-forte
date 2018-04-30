@@ -9,13 +9,17 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_CORE_IO_CONFIGFB_MULTI_MASTER_H_
-#define SRC_CORE_IO_CONFIGFB_MULTI_MASTER_H_
+#ifndef SRC_CORE_IO_CONFIGFB_MASTER_MULTI_H_
+#define SRC_CORE_IO_CONFIGFB_MASTER_MULTI_H_
 
-#include "../../device/io_controller_multi.h"
-#include "io_adapter.h"
+#include "../device/io_controller_multi.h"
 #include <fortelist.h>
-#include "../io_configFB_controller.h"
+#include "io_configFB_controller.h"
+#include "io_adapter_multi.h"
+
+namespace forte {
+  namespace core {
+    namespace IO {
 
 class IOConfigFBMultiMaster;
 
@@ -53,4 +57,8 @@ private:
   static const char * const scmFailedToInitSlaves;
 };
 
-#endif /* SRC_CORE_IO_CONFIGFB_MULTI_MASTER_H_ */
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
+
+#endif /* SRC_CORE_IO_CONFIGFB_MASTER_MULTI_H_ */

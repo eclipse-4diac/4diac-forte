@@ -20,6 +20,10 @@
 
 #include <io/mapper/io_handle.h>
 
+namespace forte {
+  namespace core {
+    namespace IO {
+
 class EmbrickSlaveHandler;
 
 class EmbrickSlaveHandle: public IOHandle {
@@ -44,5 +48,9 @@ protected:
   EmbrickSlaveHandler* slave;
   CSyncObject *updateMutex;
 };
+
+    } //namespace IO
+  } //namepsace core
+} //
 
 #endif /* SRC_MODULES_EMBRICK_SLAVE_HANDLE_H_ */

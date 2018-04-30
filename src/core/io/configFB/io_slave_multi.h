@@ -9,13 +9,18 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_CORE_IO_CONFIGFB_MULTI_SLAVE_H_
-#define SRC_CORE_IO_CONFIGFB_MULTI_SLAVE_H_
+#ifndef SRC_CORE_IO_CONFIGFB_SLAVE_MULTI_H_
+#define SRC_CORE_IO_CONFIGFB_SLAVE_MULTI_H_
 
-#include "../io_base.h"
-#include "io_adapter.h"
-#include "io_master.h"
+#include "io_base.h"
 #include <io/device/io_controller_multi.h>
+#include "io_adapter_multi.h"
+#include "io_master_multi.h"
+
+
+namespace forte {
+  namespace core {
+    namespace IO {
 
 #define FUNCTION_BLOCK_CTOR_FOR_IO_MULTI_SLAVE(fbclass, fbBaseClass, type) \
  fbclass(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : \
@@ -101,4 +106,8 @@ private:
   static const char* const scmIncorrectType;
 };
 
-#endif /* SRC_CORE_IO_CONFIGFB_MULTI_SLAVE_H_ */
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
+
+#endif /* SRC_CORE_IO_CONFIGFB_SLAVE_MULTI_H_ */

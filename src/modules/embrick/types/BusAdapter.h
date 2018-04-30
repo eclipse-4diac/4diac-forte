@@ -12,10 +12,14 @@
 #ifndef SRC_MODULES_EMBRICK_TYPES_BUSCONFIGADAPTER_H_
 #define SRC_MODULES_EMBRICK_TYPES_BUSCONFIGADAPTER_H_
 
-#include <io/configFB/multi/io_adapter.h>
+#include <io/configFB/io_adapter_multi.h>
 #include <typelib.h>
 #include <forte_bool.h>
 #include <forte_uint.h>
+
+namespace forte {
+  namespace core {
+    namespace IO {
 
 class EmbrickBusAdapter: public IOConfigFBMultiAdapter {
 DECLARE_ADAPTER_TYPE(EmbrickBusAdapter)
@@ -59,6 +63,10 @@ private:
   virtual ~EmbrickBusAdapter() {};
 
 };
+
+    } //namespace IO
+  } //namepsace core
+} //
 
 #endif //close the ifdef sequence from the beginning of the file
 

@@ -15,6 +15,10 @@
 #include <slave/slave.h>
 #include <slave/handle.h>
 
+namespace forte {
+  namespace core {
+    namespace IO {
+
 
 class EmbrickBitSlaveHandle: public EmbrickSlaveHandle {
 public:
@@ -35,6 +39,10 @@ protected:
 protected:
   const uint8_t mask;
 };
+
+    } //namespace IO
+  } //namepsace core
+} //
 
 
 #endif /* SRC_MODULES_EMBRICK_SLAVE_HANDLES_BIT_H_ */

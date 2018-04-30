@@ -9,7 +9,9 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "io_master.h"
+#include "io_master_multi.h"
+
+using namespace forte::core::IO;
 
 const char * const IOConfigFBMultiMaster::scmFailedToInitSlaves =
     "Failed to initialize slaves. Check if the configuration matches the hardware setup.";
@@ -71,5 +73,5 @@ void IOConfigFBMultiMaster::executeEvent(int pa_nEIID) {
       IOConfigFBController::onStop();
     }
   }
-
 }
+

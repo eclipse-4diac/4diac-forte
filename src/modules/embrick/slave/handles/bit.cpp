@@ -12,6 +12,8 @@
 #include "bit.h"
 #include "criticalregion.h"
 
+using namespace forte::core::IO;
+
 EmbrickBitSlaveHandle::EmbrickBitSlaveHandle(IODeviceController *controller,
     IOMapper::Direction direction, uint8_t offset,
     uint8_t position, EmbrickSlaveHandler *slave) :
@@ -39,3 +41,4 @@ void EmbrickBitSlaveHandle::get(CIEC_ANY &state) {
 bool EmbrickBitSlaveHandle::equal(unsigned char* oldBuffer) {
   return (*(buffer + offset) & mask) == (*(oldBuffer + offset) & mask);
 }
+

@@ -18,6 +18,10 @@
 #include "BusAdapter.h"
 #include "Slave.h"
 
+namespace forte {
+  namespace core {
+    namespace IO {
+
 class EmbrickSlave2181: public EmbrickSlave {
 DECLARE_FIRMWARE_FB(EmbrickSlave2181)
 
@@ -122,6 +126,11 @@ public:
 virtual ~EmbrickSlave2181() {};
 
 };
+
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
+
 
 #endif //close the ifdef sequence from the beginning of the file
 

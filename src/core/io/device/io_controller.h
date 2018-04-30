@@ -20,6 +20,10 @@
 
 #include <io/mapper/io_handle.h>
 
+namespace forte {
+  namespace core {
+    namespace IO {
+
 class IOConfigFBController;
 
 /*! @brief Abstract Device Controller
@@ -218,5 +222,9 @@ private:
     return 0;
   }
 };
+
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
 
 #endif /* SRC_CORE_IO_DEVICE_CONTROLLER_H_ */

@@ -13,6 +13,8 @@
 #include <sstream>
 #include <string>
 
+using namespace forte::core::IO;
+
 unsigned long const EmbrickSPIHandler::DefaultSpiSpeed = 300000;
 unsigned long const EmbrickSPIHandler::MaxSpiSpeed = 700000;
 char const EmbrickSPIHandler::spiMode = SPI_CPHA;
@@ -131,4 +133,6 @@ bool EmbrickSPIHandler::transfer(unsigned char* sendBuffer,
 void EmbrickSPIHandler::setSpeed(const unsigned long speed) {
   spiSpeed = speed;
 }
+
+
 

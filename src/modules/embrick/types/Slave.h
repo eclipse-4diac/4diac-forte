@@ -12,13 +12,17 @@
 #ifndef SRC_MODULES_EMBRICK_TYPES_SLAVE_H_
 #define SRC_MODULES_EMBRICK_TYPES_SLAVE_H_
 
-#include <io/configFB/multi/io_slave.h>
 #include "BusAdapter.h"
 #include <forte_sync.h>
 
 #include <handler/bus.h>
 #include <slave/slave.h>
 #include <slave/handle.h>
+#include "../../../core/io/configFB/io_slave_multi.h"
+
+namespace forte {
+  namespace core {
+    namespace IO {
 
 class EmbrickSlave: public IOConfigFBMultiSlave,
     public EmbrickSlaveHandler::Delegate {
@@ -62,5 +66,10 @@ private:
   static const char * const scmError;
   static const char * const scmUnknown;
 };
+
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
+
 
 #endif /* SRC_MODULES_EMBRICK_TYPES_SLAVE_H_ */

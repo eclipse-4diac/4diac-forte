@@ -15,6 +15,8 @@
 #include <processinterface.h>
 #include "criticalregion.h"
 
+using namespace forte::core::IO;
+
 const int EmbrickSlaveHandler::MaxUpdateErrors = 50;
 
 EmbrickSlaveHandler::EmbrickSlaveHandler(EmbrickBusHandler* bus, int address, EmbrickSlaveInitPackage init) :

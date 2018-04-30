@@ -12,6 +12,8 @@
 #include "io_observer.h"
 #include <devlog.h>
 
+using namespace forte::core::IO;
+
 IOObserver::IOObserver() :
     handle(NULL), type(CIEC_ANY::e_ANY), direction(IOMapper::UnknownDirection) {
 

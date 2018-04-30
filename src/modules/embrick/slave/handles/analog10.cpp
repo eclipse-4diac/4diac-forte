@@ -12,6 +12,8 @@
 #include "analog10.h"
 #include "criticalregion.h"
 
+using namespace forte::core::IO;
+
 EmbrickAnalog10SlaveHandle::EmbrickAnalog10SlaveHandle(IODeviceController *controller,
     IOMapper::Direction direction, uint8_t offset, EmbrickSlaveHandler *slave) :
     EmbrickSlaveHandle(controller, direction, CIEC_ANY::e_DWORD, offset, slave) {
@@ -40,4 +42,6 @@ bool EmbrickAnalog10SlaveHandle::equal(unsigned char* oldBuffer) {
 const CIEC_DWORD EmbrickAnalog10SlaveHandle::getValue(const unsigned char* buffer) {
   return (*(buffer + offset) & 0x03) * 256 + *(buffer + offset + 1);
 }
+
+
 

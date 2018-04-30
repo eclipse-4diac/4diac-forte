@@ -11,6 +11,8 @@
 
 #include "io_base.h"
 
+using namespace forte::core::IO;
+
 IOConfigFBBase::IOConfigFBBase(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
     const CStringDictionary::TStringId pa_nInstanceNameId,
     TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
@@ -23,3 +25,4 @@ IOConfigFBBase::IOConfigFBBase(CResource *pa_poSrcRes, const SFBInterfaceSpec *p
 IOConfigFBBase::~IOConfigFBBase() {
   // TODO Auto-generated destructor stub
 }
+

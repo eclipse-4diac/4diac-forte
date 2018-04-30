@@ -11,6 +11,8 @@
 
 #include "io_controller_split.h"
 
+using namespace forte::core::IO;
+
 const char * const IOConfigFBSplitController::scmFailedToInitParts =
     "Failed to initialize parts.";
 

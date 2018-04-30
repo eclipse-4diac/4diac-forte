@@ -15,6 +15,10 @@
 #include "io_controller.h"
 #include <io/mapper/io_handle.h>
 
+namespace forte {
+  namespace core {
+    namespace IO {
+
 class IOConfigFBMultiSlave;
 
 /*! @brief Abstract Device Controller for modular devices
@@ -86,5 +90,9 @@ private:
   virtual bool checkSlaveType(int index, int type) = 0;
 
 };
+
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
 
 #endif /* SRC_CORE_IO_DEVICE_IO_CONTROLLER_MULTI_H_ */

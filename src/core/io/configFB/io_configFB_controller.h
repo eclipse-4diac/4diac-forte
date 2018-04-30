@@ -15,6 +15,10 @@
 #include <io/device/io_controller.h>
 #include "io_base.h"
 
+namespace forte {
+  namespace core {
+    namespace IO {
+
 /*! @brief Abstract controller configuration fb
  *
  * Base class of the controller configuration fb implementation.
@@ -165,5 +169,9 @@ private:
   static const char * const scmFailedToInit;
   static const char * const scmStopped;
 };
+
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
 
 #endif /* SRC_CORE_IO_CONFIGFB_CONTROLLER_H_ */

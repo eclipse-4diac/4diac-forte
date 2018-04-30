@@ -12,11 +12,15 @@
 #ifndef SRC_CORE_IO_PROCESSINTERFACE_H_
 #define SRC_CORE_IO_PROCESSINTERFACE_H_
 
-#include "../mapper/io_mapper.h"
-#include "../mapper/io_observer.h"
+#include "mapper/io_mapper.h"
+#include "mapper/io_observer.h"
 
 #include <forte_sync.h>
-#include "../../../stdfblib/io/processinterfacebase.h"
+#include "../../stdfblib/io/processinterfacebase.h"
+
+namespace forte {
+  namespace core {
+    namespace IO {
 
 class ProcessInterface: public CProcessInterfaceBase, public IOObserver {
 
@@ -73,6 +77,12 @@ private:
   static const char * const scmMappedWrongDataType;
 };
 
-typedef ProcessInterface CProcessInterface;
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
+
+typedef forte::core::IO::ProcessInterface CProcessInterface;
+
+
 
 #endif /* SRC_CORE_IO_PROCESSINTERFACE_H_ */

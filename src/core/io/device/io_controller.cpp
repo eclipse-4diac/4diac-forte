@@ -11,9 +11,11 @@
 
 #include "io_controller.h"
 
-#include <io/pi/processinterface.h>
+#include "../processinterface.h"
 #include "../configFB/io_configFB_controller.h"
 #include "criticalregion.h"
+
+using namespace forte::core::IO;
 
 IODeviceController::IODeviceController(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution),
     notificationType(UnknownNotificationType), notificationAttachment(0), notificationHandled(

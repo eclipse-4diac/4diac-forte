@@ -11,6 +11,8 @@
 
 #include "io_controller_multi.h"
 
+using namespace forte::core::IO;
+
 IODeviceMultiController::IODeviceMultiController(CDeviceExecution& paDeviceExecution) : IODeviceController(paDeviceExecution){
 }
 

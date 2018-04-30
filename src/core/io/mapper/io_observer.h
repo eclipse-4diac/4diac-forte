@@ -15,6 +15,10 @@
 #include "io_handle.h"
 #include "io_mapper.h"
 
+namespace forte {
+  namespace core {
+    namespace IO {
+
 class IOObserver {
   friend class IOMapper;
 
@@ -32,5 +36,9 @@ protected:
   CIEC_ANY::EDataTypeID type;
   IOMapper::Direction direction;
 };
+
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
 
 #endif /* SRC_CORE_IO_MAPPER_OBSERVER_H_ */

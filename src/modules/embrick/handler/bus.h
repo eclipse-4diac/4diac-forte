@@ -30,6 +30,10 @@
 
 #include <io/device/io_controller_multi.h>
 
+namespace forte {
+  namespace core {
+    namespace IO {
+
 const unsigned int TransferBufferLength = 150;
 const unsigned int SyncGapMultiplicator = 15;
 const unsigned int SyncGapDuration = (SyncGapMultiplicator - 1) * 32 + 10;
@@ -176,5 +180,10 @@ private:
   static const char * const scmSlaveUpdateFailed;
   static const char * const scmNoSlavesFound;
 };
+
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
+
 
 #endif /* SRC_MODULES_EMBRICK_BUSCONTROLLER_H_ */

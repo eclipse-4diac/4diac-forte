@@ -22,6 +22,10 @@
 #include <forte_wstring.h>
 #include <devlog.h>
 
+namespace forte {
+  namespace core {
+    namespace IO {
+
 #include <io/mapper/io_mapper.h>
 
 
@@ -119,6 +123,10 @@ private:
   //!declared but undefined copy constructor as we don't want Slaves to be directly copied.
   EmbrickSlaveHandler(const EmbrickSlaveHandler&);
 };
+
+    } //namespace IO
+  } //namepsace core
+} //
 
 
 #endif /* SRC_MODULES_EMBRICK_SLAVE_SLAVE_H_ */

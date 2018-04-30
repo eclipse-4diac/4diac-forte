@@ -13,6 +13,8 @@
 #include "../../device.h"
 #include "io_configFB_controller.h"
 
+using namespace forte::core::IO;
+
 int IOConfigFBController::MaxErrors = 5;
 
 const char * const IOConfigFBController::scmOK = "OK";

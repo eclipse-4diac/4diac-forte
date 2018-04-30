@@ -16,6 +16,8 @@
 
 #include "../handler/bus.h"
 
+using namespace forte::core::IO;
+
 DEFINE_FIRMWARE_FB(EmbrickSlave2301, g_nStringIdEBSlave2301)
 
 const CStringDictionary::TStringId EmbrickSlave2301::scm_anDataInputNames[] = {

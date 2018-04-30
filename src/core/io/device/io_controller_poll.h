@@ -15,6 +15,10 @@
 #include "io_controller.h"
 #include <conditionSync.h>
 
+namespace forte {
+  namespace core {
+    namespace IO {
+
 /*! @brief Abstract Device Controller for devices which require cyclic poll operations
  *
  * IO device controller for devices which require an implementation of IOs using poll operations.
@@ -66,5 +70,9 @@ private:
   bool loopActive;
   struct timespec nextLoop;
 };
+
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
 
 #endif /* SRC_CORE_IO_DEVICE_IO_CONTROLLER_POLL_H_ */

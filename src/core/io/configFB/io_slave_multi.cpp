@@ -9,7 +9,9 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "io_slave.h"
+#include "io_slave_multi.h"
+
+using namespace forte::core::IO;
 
 const char * const IOConfigFBMultiSlave::scmOK = "OK";
 const char * const IOConfigFBMultiSlave::scmStopped = "Stopped";
@@ -194,3 +196,4 @@ const char* IOConfigFBMultiSlave::handleInitEvent() {
 
   return 0;
 }
+

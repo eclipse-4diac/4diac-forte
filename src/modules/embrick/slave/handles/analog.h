@@ -15,6 +15,10 @@
 #include <slave/slave.h>
 #include <slave/handle.h>
 
+namespace forte {
+  namespace core {
+    namespace IO {
+
 class EmbrickAnalogSlaveHandle: public EmbrickSlaveHandle {
 public:
   EmbrickAnalogSlaveHandle(IODeviceController *controller, IOMapper::Direction direction,
@@ -28,5 +32,10 @@ public:
 protected:
   const CIEC_DWORD getValue(const unsigned char* buffer);
 };
+
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
+
 
 #endif /* SRC_MODULES_EMBRICK_SLAVE_HANDLES_ANALOG_H_ */

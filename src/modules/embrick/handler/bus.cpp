@@ -20,6 +20,8 @@
 #include <slave/handles/analog10.h>
 #include "criticalregion.h"
 
+using namespace forte::core::IO;
+
 const char * const EmbrickBusHandler::scmSlaveUpdateFailed = "Update of slave failed.";
 const char * const EmbrickBusHandler::scmNoSlavesFound = "No slave modules found.";
 
@@ -474,3 +476,5 @@ bool EmbrickBusHandler::cmpTime(struct timespec& t1, struct timespec& t2) {
   return (t1.tv_nsec < t2.tv_nsec && t1.tv_sec == t2.tv_sec)
       || t1.tv_sec < t2.tv_sec;
 }
+
+

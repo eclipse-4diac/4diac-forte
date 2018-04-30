@@ -17,6 +17,10 @@
 
 #include "io_mapper.h"
 
+namespace forte {
+  namespace core {
+    namespace IO {
+
 class IODeviceController;
 
 class IOHandle {
@@ -57,6 +61,10 @@ protected:
   CIEC_ANY::EDataTypeID type;
   IOMapper::Direction direction;
 };
+
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
 
 
 #endif /* SRC_CORE_IO_MAPPER_HANDLE_H_ */

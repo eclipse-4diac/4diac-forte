@@ -18,6 +18,10 @@
 #include <string>
 #include <forte_sync.h>
 
+namespace forte {
+  namespace core {
+    namespace IO {
+
 class IOHandle;
 class IOObserver;
 
@@ -45,5 +49,9 @@ private:
 
   CSyncObject syncMutex;
 };
+
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
 
 #endif /* SRC_CORE_IO_MAPPER_MAPPER_H_ */

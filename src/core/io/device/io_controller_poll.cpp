@@ -11,6 +11,8 @@
 
 #include "io_controller_poll.h"
 
+using namespace forte::core::IO;
+
 IODevicePollController::IODevicePollController(CDeviceExecution& paDeviceExecution, float PollInterval) : IODeviceController(paDeviceExecution),
     PollInterval(PollInterval), forcedLoop(false), loopActive(false) {
   memset(&nextLoop,0,sizeof(timespec));
@@ -66,3 +68,4 @@ void IODevicePollController::forcePoll() {
 
   loopSync.unlock();
 }
+

@@ -12,14 +12,17 @@
 #ifndef SRC_MODULES_EMBRICK_TYPES_MASTER_H_
 #define SRC_MODULES_EMBRICK_TYPES_MASTER_H_
 
-#include <io/configFB/multi/io_master.h>
-
 #include <forte_bool.h>
 #include <forte_wstring.h>
 #include <devlog.h>
 #include "BusAdapter.h"
 
 #include <handler/bus.h>
+#include "../../../core/io/configFB/io_master_multi.h"
+
+namespace forte {
+  namespace core {
+    namespace IO {
 
 class EmbrickMaster: public IOConfigFBMultiMaster {
 DECLARE_FIRMWARE_FB(EmbrickMaster)
@@ -83,6 +86,11 @@ public:
   FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(EmbrickMaster, IOConfigFBMultiMaster){
   }
 };
+
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
+
 
 
 #endif //close the ifdef sequence from the beginning of the file

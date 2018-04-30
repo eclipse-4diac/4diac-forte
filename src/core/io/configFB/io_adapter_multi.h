@@ -9,19 +9,28 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_CORE_IO_CONFIGFB_SPLIT_ADAPTER_H_
-#define SRC_CORE_IO_CONFIGFB_SPLIT_ADAPTER_H_
+#ifndef SRC_CORE_IO_CONFIGFB_ADAPTER_MULTI_H_
+#define SRC_CORE_IO_CONFIGFB_ADAPTER_MULTI_H_
 
 #include <adapter.h>
 
-class IOConfigFBSplitAdapter: public CAdapter {
+namespace forte {
+  namespace core {
+    namespace IO {
+
+#define ADAPTER_CTOR_FOR_IO_MULTI(fbclass) \
+ fbclass(CStringDictionary::TStringId pa_anAdapterInstanceName, CResource *pa_poSrcRes, bool pa_bIsPlug) : \
+ IOConfigFBMultiAdapter( (const TForteUInt8* const) &scm_slaveConfigurationIO, scm_slaveConfigurationIO_num, pa_poSrcRes, &scm_stFBInterfaceSpecSocket, pa_anAdapterInstanceName, &scm_stFBInterfaceSpecPlug, pa_bIsPlug, m_anFBConnData, m_anFBVarsData)
+
+class IOConfigFBMultiAdapter: public CAdapter {
 public:
-  IOConfigFBSplitAdapter(CResource *pa_poSrcRes,
+  IOConfigFBMultiAdapter(const TForteUInt8* const scm_slaveConfigurationIO,
+      const TForteUInt8 scm_slaveConfigurationIO_num, CResource *pa_poSrcRes,
       const SFBInterfaceSpec *pa_pstInterfaceSpecSocket,
       const CStringDictionary::TStringId pa_nInstanceNameId,
       const SFBInterfaceSpec *pa_pstInterfaceSpecPlug, bool pa_bIsPlug,
       TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
-  virtual ~IOConfigFBSplitAdapter();
+  virtual ~IOConfigFBMultiAdapter();
 
   CIEC_BOOL &QO() {
     return *static_cast<CIEC_BOOL*>((isSocket()) ? getDI(0) : getDO(0));
@@ -35,6 +44,10 @@ public:
     return *static_cast<CIEC_UINT*>((isSocket()) ? getDO(1) : getDI(1));
   }
 
+  CIEC_UINT &Index() {
+    return *static_cast<CIEC_UINT*>((isSocket()) ? getDO(2) : getDI(2));
+  }
+
   static const TEventID scm_nEventINITID = 0;
   int INIT() {
     return m_nParentAdapterListEventID + scm_nEventINITID;
@@ -44,6 +57,20 @@ public:
   int INITO() {
     return m_nParentAdapterListEventID + scm_nEventINITOID;
   }
+
+  const TForteUInt8* scm_slaveConfigurationIO;
+  TForteUInt8 scm_slaveConfigurationIO_num;
+
+  TIEC_ANYPtr getSlaveConfig(int index) {
+    return
+        (isSocket()) ?
+            getDO(scm_slaveConfigurationIO[index]) :
+            getDI(scm_slaveConfigurationIO[index]);
+  }
 };
 
-#endif /* SRC_CORE_IO_CONFIGFB_SPLIT_ADAPTER_H_ */
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
+
+#endif /* SRC_CORE_IO_CONFIGFB_ADAPTER_MULTI_H_ */

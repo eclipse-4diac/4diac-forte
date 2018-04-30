@@ -12,6 +12,8 @@
 #include "pin.h"
 #include <devlog.h>
 
+using namespace forte::core::IO;
+
 const char * const EmbrickPinHandler::scmFailedToOpenFile =
     "Failed to open sysfs file.";
 const char * const EmbrickPinHandler::scmFailedToWriteFile =
@@ -115,3 +117,5 @@ void EmbrickPinHandler::fail(const char* reason) {
   error = reason;
   DEVLOG_ERROR("emBrick[PinHandler]: %s\n", reason);
 }
+
+

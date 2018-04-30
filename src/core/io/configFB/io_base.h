@@ -14,6 +14,10 @@
 
 #include <esfb.h>
 
+namespace forte {
+  namespace core {
+    namespace IO {
+
 class IOConfigFBBase: public CEventSourceFB {
 public:
   IOConfigFBBase(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
@@ -21,5 +25,9 @@ public:
       TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
   virtual ~IOConfigFBBase();
 };
+
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
 
 #endif /* SRC_CORE_IO_CONFIGFB_BASE_H_ */

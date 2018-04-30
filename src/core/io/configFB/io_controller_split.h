@@ -12,8 +12,12 @@
 #ifndef SRC_CORE_IO_CONFIGFB_IO_CONTROLLER_SPLIT_H_
 #define SRC_CORE_IO_CONFIGFB_IO_CONTROLLER_SPLIT_H_
 
-#include "../io_configFB_controller.h"
+#include "io_configFB_controller.h"
 #include "io_adapter_split.h"
+
+namespace forte {
+  namespace core {
+    namespace IO {
 
 #define FUNCTION_BLOCK_CTOR_FOR_IO_SPLIT_CONTROLLER(fbclass) \
  fbclass(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : \
@@ -57,5 +61,9 @@ private:
 
   static const char * const scmFailedToInitParts;
 };
+
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
 
 #endif /* SRC_CORE_IO_CONFIGFB_IO_CONTROLLER_SPLIT_H_ */

@@ -16,6 +16,8 @@
 
 #include "../handler/bus.h"
 
+using namespace forte::core::IO;
+
 DEFINE_FIRMWARE_FB(EmbrickSlave2181, g_nStringIdEBSlave2181)
 
 const CStringDictionary::TStringId EmbrickSlave2181::scm_anDataInputNames[] = {
@@ -88,4 +90,6 @@ void EmbrickSlave2181::initHandles() {
     initHandle(&desc);
   }
 }
+
+
 

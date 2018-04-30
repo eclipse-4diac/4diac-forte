@@ -11,6 +11,8 @@
 
 #include "io_handle_bit.h"
 
+using namespace forte::core::IO;
+
 IOHandleBit::IOHandleBit(IODeviceController *controller, IOMapper::Direction direction,
     uint8_t offset, uint8_t position, uint8_t* image) :
     IOHandle(controller, direction, CIEC_ANY::e_BOOL), image(image), offset(
@@ -51,3 +53,4 @@ void IOHandleBit::get(CIEC_ANY &state) {
 bool IOHandleBit::equal(uint8_t* oldImage) {
   return (*(image + offset) & mask) == (*(oldImage + offset) & mask);
 }
+

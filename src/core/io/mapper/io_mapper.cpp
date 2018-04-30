@@ -15,6 +15,8 @@
 #include <devlog.h>
 #include "criticalregion.h"
 
+using namespace forte::core::IO;
+
 DEFINE_SINGLETON(IOMapper)
 
 IOMapper::IOMapper() {
@@ -118,4 +120,3 @@ void IOMapper::deregisterObserver(IOObserver* observer) {
       break;
     }
 }
-

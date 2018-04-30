@@ -12,6 +12,8 @@
 #include "processinterface.h"
 #include "criticalregion.h"
 
+using namespace forte::core::IO;
+
 const char * const ProcessInterface::scmOK = "OK";
 const char * const ProcessInterface::scmWaitingForHandle =
     "Waiting for handle..";
@@ -170,3 +172,4 @@ void ProcessInterface::dropHandle() {
   isReady = false;
 
 }
+

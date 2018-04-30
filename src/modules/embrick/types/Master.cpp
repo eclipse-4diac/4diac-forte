@@ -14,6 +14,8 @@
 #include "Master_gen.cpp"
 #endif
 
+using namespace forte::core::IO;
+
 DEFINE_FIRMWARE_FB(EmbrickMaster, g_nStringIdEBMaster)
 
 const CStringDictionary::TStringId EmbrickMaster::scm_anDataInputNames[] = {
@@ -77,3 +79,5 @@ void EmbrickMaster::onStartup() {
 
   IOConfigFBMultiMaster::onStartup();
 }
+
+

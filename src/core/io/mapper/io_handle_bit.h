@@ -15,6 +15,10 @@
 #include <io/mapper/io_handle.h>
 #include <io/device/io_controller.h>
 
+namespace forte {
+  namespace core {
+    namespace IO {
+
 class IOHandleBit: public IOHandle {
 public:
   IOHandleBit(IODeviceController *controller, IOMapper::Direction direction,
@@ -40,5 +44,9 @@ protected:
   const uint8_t offset;
   const uint8_t mask;
 };
+
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
 
 #endif /* SRC_CORE_IO_HANDLES_IO_HANDLE_BIT_H_ */

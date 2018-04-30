@@ -9,12 +9,16 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_CORE_IO_CONFIGFB_SPLIT_IO_CONTROLLER_PART_H_
-#define SRC_CORE_IO_CONFIGFB_SPLIT_IO_CONTROLLER_PART_H_
+#ifndef SRC_CORE_IO_CONFIGFB_IO_CONTROLLER_PART_H_
+#define SRC_CORE_IO_CONFIGFB_IO_CONTROLLER_PART_H_
 
 #include "io_adapter_split.h"
-#include "../io_base.h"
+#include "io_base.h"
 #include "io_controller_split.h"
+
+namespace forte {
+  namespace core {
+    namespace IO {
 
 class IOConfigFBPartController: public IOConfigFBBase {
 public:
@@ -52,4 +56,8 @@ protected:
 
 };
 
-#endif /* SRC_CORE_IO_CONFIGFB_SPLIT_IO_CONTROLLER_PART_H_ */
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
+
+#endif /* SRC_CORE_IO_CONFIGFB_IO_CONTROLLER_PART_H_ */

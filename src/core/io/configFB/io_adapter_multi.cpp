@@ -9,7 +9,9 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "io_adapter.h"
+#include "io_adapter_multi.h"
+
+using namespace forte::core::IO;
 
 IOConfigFBMultiAdapter::IOConfigFBMultiAdapter(const TForteUInt8* const scm_slaveConfigurationIO,
     const TForteUInt8 scm_slaveConfigurationIO_num, CResource *pa_poSrcRes,
@@ -26,3 +28,4 @@ IOConfigFBMultiAdapter::IOConfigFBMultiAdapter(const TForteUInt8* const scm_slav
 IOConfigFBMultiAdapter::~IOConfigFBMultiAdapter() {
   // TODO Auto-generated destructor stub
 }
+

@@ -11,6 +11,8 @@
 
 #include "io_adapter_split.h"
 
+using namespace forte::core::IO;
+
 IOConfigFBSplitAdapter::IOConfigFBSplitAdapter(CResource *pa_poSrcRes,
     const SFBInterfaceSpec *pa_pstInterfaceSpecSocket,
     const CStringDictionary::TStringId pa_nInstanceNameId,
@@ -23,3 +25,4 @@ IOConfigFBSplitAdapter::IOConfigFBSplitAdapter(CResource *pa_poSrcRes,
 IOConfigFBSplitAdapter::~IOConfigFBSplitAdapter() {
   // TODO Auto-generated destructor stub
 }
+

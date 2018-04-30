@@ -11,6 +11,8 @@
 
 #include "io_controller_part.h"
 
+using namespace forte::core::IO;
+
 IOConfigFBPartController::IOConfigFBPartController(CResource *pa_poSrcRes,
     const SFBInterfaceSpec *pa_pstInterfaceSpec,
     const CStringDictionary::TStringId pa_nInstanceNameId,
