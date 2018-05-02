@@ -24,7 +24,7 @@ void IODevicePollController::handleChangeEvent(IOHandle*) {
 
 void IODevicePollController::runLoop() {
   while (isAlive()) {
-    forceLoop.timedWait(PollInterval * 1E6); //If timeout occurred is a normal waiting, otherwise is a forced loop. Don't care about the return value
+    forceLoop.timedWait(static_cast<const TForteUInt64>(PollInterval * 1E6)); //If timeout occurred is a normal waiting, otherwise is a forced loop. Don't care about the return value
 
     // Perform poll operation
     poll();

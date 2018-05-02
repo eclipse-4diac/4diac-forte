@@ -11,6 +11,10 @@
  *******************************************************************************/
 #include "iec61131_functions.h"
 
+template<> const CIEC_BOOL NOT<CIEC_BOOL>(const CIEC_BOOL& pa_roIN){
+  return CIEC_BOOL((typename CIEC_BOOL::TValueType)(!pa_roIN));
+}
+
 #ifdef FORTE_USE_REAL_DATATYPE
 TForteInt32 TRUNC(const CIEC_REAL& pa_roIN){
   return static_cast<TForteInt32>(pa_roIN);

@@ -25,9 +25,8 @@
 const char * const EmbrickBusHandler::scmSlaveUpdateFailed = "Update of slave failed.";
 const char * const EmbrickBusHandler::scmNoSlavesFound = "No slave modules found.";
 
-EmbrickBusHandler::EmbrickBusHandler(CDeviceExecution& paDeviceExecution) :
-    spi(0), slaveSelect(0), slaves(0), slaveCount(
-        0), sList(0), forte::core::IO::IODeviceMultiController(paDeviceExecution) {
+EmbrickBusHandler::EmbrickBusHandler(CDeviceExecution& paDeviceExecution) : forte::core::IO::IODeviceMultiController(paDeviceExecution),
+    spi(0), slaveSelect(0), slaves(0), slaveCount(0), sList(0) {
   // Set init time
   struct timespec ts;
   // TODO Check compile error. Had to to add rt libary to c++ make flags
@@ -436,9 +435,9 @@ bool EmbrickBusHandler::transfer(unsigned int target, Command cmd,
 unsigned char EmbrickBusHandler::calcChecksum(unsigned char * data, int dataLen) {
   unsigned char c = 0;
   for (int i = 0; i < dataLen; i++)
-    c += data[i];
+    c = static_cast<unsigned char>(c + data[i]);
 
-  return ChecksumConstant - c;
+  return static_cast<unsigned char>(ChecksumConstant - c);
 }
 
 uint64_t EmbrickBusHandler::micros() {
@@ -453,7 +452,7 @@ unsigned long EmbrickBusHandler::millis() {
   struct timespec ts;
   clock_gettime(CLOCK_MONOTONIC, &ts);
 
-  return round(ts.tv_nsec / 1.0e6) + (ts.tv_sec - initTime) * 1000;
+  return static_cast<unsigned long>(round(ts.tv_nsec / 1.0e6)) + (ts.tv_sec - initTime) * 1000;
 }
 
 void EmbrickBusHandler::microsleep(uint64_t microseconds) {

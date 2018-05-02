@@ -42,7 +42,7 @@ namespace forte {
     }
 
     bool CPThreadSemaphore::timedWait(const TForteUInt64 paRelativeTimeout){
-      timespec timeoutSpec = { paRelativeTimeout / scmSecondInNanoSeconds, (paRelativeTimeout % scmSecondInNanoSeconds) };
+      timespec timeoutSpec = { static_cast<time_t>(paRelativeTimeout / scmSecondInNanoSeconds), static_cast<time_t>(paRelativeTimeout % scmSecondInNanoSeconds) };
       timespec currentTime = { 0, 0 };
       clock_gettime(CLOCK_MONOTONIC, &currentTime);
 

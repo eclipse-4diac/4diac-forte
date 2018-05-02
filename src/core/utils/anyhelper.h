@@ -54,6 +54,29 @@ void anyBitFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
 }
 
 template<class T>
+void anyBitFBHelperWithoutBool(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
+  switch (pa_eDataTypeId){
+    case CIEC_ANY::e_BYTE:
+      pa_roFB.template calculateValue<CIEC_BYTE>();
+      break;
+    case CIEC_ANY::e_WORD:
+      pa_roFB.template calculateValue<CIEC_WORD>();
+      break;
+    #ifdef FORTE_USE_64BIT_DATATYPES
+      case  CIEC_ANY::e_LWORD:
+        pa_roFB.template calculateValue<CIEC_LWORD>();
+        break;
+    #endif
+    case CIEC_ANY::e_DWORD:
+      pa_roFB.template calculateValue<CIEC_DWORD>();
+    default:
+      //if there is an invalid input we will not do anything here, could help to find this more easily when debugging the application
+      DEVLOG_ERROR("[anyBitFBHelperWithoutBool]: Wrong type usage, this function can be used only with sub-types of ANY_BIT except CIEC_BOOL");
+      break;
+  }
+}
+
+template<class T>
 void anyMagnitudeFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
   switch (pa_eDataTypeId){
     case CIEC_ANY::e_REAL:

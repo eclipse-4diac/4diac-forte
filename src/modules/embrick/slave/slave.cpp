@@ -19,7 +19,7 @@
 const int EmbrickSlaveHandler::MaxUpdateErrors = 50;
 
 EmbrickSlaveHandler::EmbrickSlaveHandler(EmbrickBusHandler* bus, int address, EmbrickSlaveInitPackage init) :
-    bus(bus), delegate(0), address(address), type((SlaveType) init.deviceId), dataSendLength(
+    delegate(0), address(address), type((SlaveType) init.deviceId), bus(bus), dataSendLength(
         init.dataSendLength), dataReceiveLength(init.dataReceiveLength), status(
         NotInitialized), oldStatus(NotInitialized) {
   updateSendImage = new unsigned char[dataSendLength];
