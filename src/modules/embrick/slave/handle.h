@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2016 Johannes Messmer (admin@jomess.com)
+ * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
 #ifndef SRC_MODULES_EMBRICK_SLAVE_HANDLE_H_
@@ -25,7 +26,7 @@ class EmbrickSlaveHandler;
 class EmbrickSlaveHandle: public forte::core::IO::IOHandle {
 public:
   EmbrickSlaveHandle(forte::core::IO::IODeviceController *controller, forte::core::IO::IOMapper::Direction direction,
-      CIEC_ANY::EDataTypeID type, uint8_t offset, EmbrickSlaveHandler *slave);
+      CIEC_ANY::EDataTypeID type, uint8_t paOffset, EmbrickSlaveHandler *paSlave);
   virtual ~EmbrickSlaveHandle();
 
   virtual void set(const CIEC_ANY &);

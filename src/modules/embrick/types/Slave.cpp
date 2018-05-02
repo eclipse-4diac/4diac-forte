@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2016 Johannes Messmer (admin@jomess.com)
+ * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
 #include "Slave.h"
@@ -17,15 +18,15 @@ const char * const EmbrickSlave::scmInterrupted = "Interrupted";
 const char * const EmbrickSlave::scmError = "Error";
 const char * const EmbrickSlave::scmUnknown = "Invalid status code";
 
-EmbrickSlave::EmbrickSlave(const TForteUInt8* const scm_slaveConfigurationIO,
-    const TForteUInt8 scm_slaveConfigurationIO_num, int type,
+EmbrickSlave::EmbrickSlave(const TForteUInt8* const paSlaveConfigurationIO,
+    const TForteUInt8 paSlaveConfigurationIO_num, int type,
     CResource *pa_poSrcRes,
     const SFBInterfaceSpec *pa_pstInterfaceSpec,
     const CStringDictionary::TStringId pa_nInstanceNameId,
     TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
     forte::core::IO::IOConfigFBMultiSlave(
-        scm_slaveConfigurationIO,
-        scm_slaveConfigurationIO_num, type, pa_poSrcRes, pa_pstInterfaceSpec,
+        paSlaveConfigurationIO,
+        paSlaveConfigurationIO_num, type, pa_poSrcRes, pa_pstInterfaceSpec,
         pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData), slave(0) {
 }
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 fortiss GmbH
+ * Copyright (c) 2017 - 2018 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
 #ifndef SRC_CORE_IO_CONFIGFB_SLAVE_MULTI_H_
@@ -28,8 +29,8 @@ namespace forte {
 
 class IOConfigFBMultiSlave: public IOConfigFBBase {
 public:
-  IOConfigFBMultiSlave(const TForteUInt8* const scm_slaveConfigurationIO,
-      const TForteUInt8 scm_slaveConfigurationIO_num, int type,
+  IOConfigFBMultiSlave(const TForteUInt8* const paSlaveConfigurationIO,
+      const TForteUInt8 paSlaveConfigurationIO_num, int type,
       CResource *pa_poSrcRes,
       const SFBInterfaceSpec *pa_pstInterfaceSpec,
       const CStringDictionary::TStringId pa_nInstanceNameId,
@@ -94,9 +95,9 @@ protected:
   static const char* const scmOK;
   static const char* const scmMasterNotFound;
 
-  const TForteUInt8* scm_slaveConfigurationIO;
-  TForteUInt8 scm_slaveConfigurationIO_num;
-  bool* scm_slaveConfigurationIO_isDefault;
+  const TForteUInt8* mSlaveConfigurationIO;
+  TForteUInt8 mSlaveConfigurationIO_num;
+  bool* mSlaveConfigurationIO_isDefault;
 
 private:
   const char* handleInitEvent();
@@ -104,6 +105,7 @@ private:
   static const char* const scmStopped;
   static const char* const scmNotFound;
   static const char* const scmIncorrectType;
+
 };
 
     } //namespace IO
