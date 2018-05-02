@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2016 Johannes Messmer (admin@jomess.com)
+ * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
 #ifndef SRC_MODULES_EMBRICK_HANDLER_PIN_H_
@@ -17,15 +18,12 @@
 #include <string>
 #include <forte_wstring.h>
 
-namespace EmBrick {
-namespace Handlers {
-
-class Pin {
-  friend class Bus;
+class EmbrickPinHandler {
+  friend class EmbrickBusHandler;
 
 protected:
-  explicit Pin(unsigned int pin);
-  virtual ~Pin();
+  explicit EmbrickPinHandler(unsigned int pin);
+  virtual ~EmbrickPinHandler();
 
   bool set(bool state);
   bool enable() {
@@ -53,8 +51,5 @@ private:
   static const char * const scmFailedToWriteFile;
   static const char * const scmNotInitialised;
 };
-
-} /* namespace Handlers */
-} /* namespace EmBrick */
 
 #endif /* SRC_MODULES_EMBRICK_HANDLER_PIN_H_ */

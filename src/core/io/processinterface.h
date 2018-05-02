@@ -1,26 +1,29 @@
 /*******************************************************************************
- * Copyright (c) 2016 Johannes Messmer (admin@jomess.com)
+ * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
 #ifndef SRC_CORE_IO_PROCESSINTERFACE_H_
 #define SRC_CORE_IO_PROCESSINTERFACE_H_
 
-#include "../mapper/io_mapper.h"
-#include "../mapper/io_observer.h"
+#include "mapper/io_mapper.h"
+#include "mapper/io_observer.h"
 
 #include <forte_sync.h>
-#include "../../../stdfblib/io/processinterfacebase.h"
+#include "../../stdfblib/io/processinterfacebase.h"
 
-namespace IO {
+namespace forte {
+  namespace core {
+    namespace IO {
 
-class ProcessInterface: public CProcessInterfaceBase, public Observer {
+class ProcessInterface: public CProcessInterfaceBase, public IOObserver {
 
 public:
   ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
@@ -58,7 +61,7 @@ protected:
   bool read(CIEC_ANY &);
   bool write(CIEC_ANY &);
 
-  virtual void onHandle(Handle *handle);
+  virtual void onHandle(IOHandle *handle);
   virtual void dropHandle();
 
   CSyncObject syncMutex;
@@ -75,8 +78,12 @@ private:
   static const char * const scmMappedWrongDataType;
 };
 
-} /* namespace IO */
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
 
-typedef IO::ProcessInterface CProcessInterface;
+typedef forte::core::IO::ProcessInterface CProcessInterface;
+
+
 
 #endif /* SRC_CORE_IO_PROCESSINTERFACE_H_ */

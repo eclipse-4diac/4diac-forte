@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 fortiss GmbH
+ * Copyright (c) 2017 - 2018 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,37 +7,38 @@
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#ifndef SRC_CORE_IO_CONFIGFB_MULTI_MASTER_H_
-#define SRC_CORE_IO_CONFIGFB_MULTI_MASTER_H_
+#ifndef SRC_CORE_IO_CONFIGFB_MASTER_MULTI_H_
+#define SRC_CORE_IO_CONFIGFB_MASTER_MULTI_H_
 
-#include "../io_controller.h"
-#include "../../device/io_controller_multi.h"
-#include "io_adapter.h"
+#include "../device/io_controller_multi.h"
 #include <fortelist.h>
+#include "io_configFB_controller.h"
+#include "io_adapter_multi.h"
 
-namespace IO {
-namespace ConfigurationFB {
-namespace Multi {
+namespace forte {
+  namespace core {
+    namespace IO {
 
-class Master;
+class IOConfigFBMultiMaster;
 
-typedef CSinglyLinkedList<Master*> TMasterList;
+typedef CSinglyLinkedList<IOConfigFBMultiMaster*> TMasterList;
 
-class Master: public Controller {
+class IOConfigFBMultiMaster: public IOConfigFBController {
 public:
-  Master(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
+  IOConfigFBMultiMaster(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
       const CStringDictionary::TStringId pa_nInstanceNameId,
       TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
 
-  static Master* getMasterById(TForteUInt16 id);
+  static IOConfigFBMultiMaster* getMasterById(TForteUInt16 id);
 
-  using Controller::initHandle;
+  using IOConfigFBController::initHandle;
 
 protected:
-  Adapter& BusAdapterOut() {
-    return (*static_cast<Adapter*>(m_apoAdapters[0]));
+  IOConfigFBMultiAdapter& BusAdapterOut() {
+    return (*static_cast<IOConfigFBMultiAdapter*>(m_apoAdapters[0]));
   }
   static const int scm_nBusAdapterAdpNum = 0;
 
@@ -57,8 +58,8 @@ private:
   static const char * const scmFailedToInitSlaves;
 };
 
-} /* namespace Multi */
-} /* namespace ConfigurationFB */
-} /* namespace IO */
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
 
-#endif /* SRC_CORE_IO_CONFIGFB_MULTI_MASTER_H_ */
+#endif /* SRC_CORE_IO_CONFIGFB_MASTER_MULTI_H_ */

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 fortiss GmbH
+ * Copyright (c) 2017 - 2018 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,21 +7,23 @@
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#ifndef SRC_CORE_IO_CONFIGFB_SPLIT_IO_CONTROLLER_PART_H_
-#define SRC_CORE_IO_CONFIGFB_SPLIT_IO_CONTROLLER_PART_H_
+#ifndef SRC_CORE_IO_CONFIGFB_IO_CONTROLLER_PART_H_
+#define SRC_CORE_IO_CONFIGFB_IO_CONTROLLER_PART_H_
 
 #include "io_adapter_split.h"
-#include "../io_base.h"
+#include "io_base.h"
 #include "io_controller_split.h"
 
-namespace IO {
-namespace ConfigurationFB {
+namespace forte {
+  namespace core {
+    namespace IO {
 
-class PartController: public Base {
+class IOConfigFBPartController: public IOConfigFBBase {
 public:
-  PartController(CResource *pa_poSrcRes,
+  IOConfigFBPartController(CResource *pa_poSrcRes,
       const SFBInterfaceSpec *pa_pstInterfaceSpec,
       const CStringDictionary::TStringId pa_nInstanceNameId,
       TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
@@ -39,23 +41,24 @@ protected:
 
   static const TEventID scm_nEventMAPOID = 0;
 
-  SplitAdapter& Adapter() {
-    return (*static_cast<SplitAdapter*>(m_apoAdapters[0]));
+  IOConfigFBSplitAdapter& IOConfigFBMultiAdapter() {
+    return (*static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[0]));
   }
 
   static const int scm_nSplitAdapterAdpNum = 0;
 
   virtual void executeEvent(int pa_nEIID);
 
-  SplitController* master;
+  IOConfigFBSplitController* master;
 
   virtual void initHandles() = 0;
 
-  void initHandle(Device::Controller::HandleDescriptor *handleDescriptor);
+  void initHandle(IODeviceController::HandleDescriptor *handleDescriptor);
 
 };
 
-} /* namespace ConfigurationFB */
-} /* namespace IO */
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
 
-#endif /* SRC_CORE_IO_CONFIGFB_SPLIT_IO_CONTROLLER_PART_H_ */
+#endif /* SRC_CORE_IO_CONFIGFB_IO_CONTROLLER_PART_H_ */

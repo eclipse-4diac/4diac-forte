@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 fortiss GmbH
+ * Copyright (c) 2017 - 2018 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,22 +7,23 @@
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
 #include "io_controller.h"
 
-#include <io/configFB/io_controller.h>
-#include <io/pi/processinterface.h>
+#include "../processinterface.h"
+#include "../configFB/io_configFB_controller.h"
+#include "criticalregion.h"
 
-namespace IO {
-namespace Device {
+using namespace forte::core::IO;
 
-Controller::Controller(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution),
+IODeviceController::IODeviceController(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution),
     notificationType(UnknownNotificationType), notificationAttachment(0), notificationHandled(
         true), delegate(0), error(0), initDelay(0) {
 }
 
-void Controller::run() {
+void IODeviceController::run() {
   // Delay initialization
   if (initDelay > 0)
     CThread::sleepThread(initDelay * 1000);
@@ -48,44 +49,44 @@ void Controller::run() {
     CThread::sleepThread(10);
 }
 
-void Controller::addHandle(HandleDescriptor *handleDescriptor) {
-  Handle* handle = initHandle(handleDescriptor);
+void IODeviceController::addHandle(HandleDescriptor *handleDescriptor) {
+  IOHandle* handle = initHandle(handleDescriptor);
 
   if (handle == 0) {
     DEVLOG_WARNING(
-        "[IO:Device:Controller] Failed to initialize handle '%s'. Check initHandle method.\n",
+        "[IODeviceController] Failed to initialize handle '%s'. Check initHandle method.\n",
         handleDescriptor->id.getValue());
     return;
   }
 
-  if (handle->is(Mapper::In))
+  if (handle->is(IOMapper::In))
     addHandle(&inputHandles, handleDescriptor->id, handle);
-  else if (handle->is(Mapper::Out))
+  else if (handle->is(IOMapper::Out))
     addHandle(&outputHandles, handleDescriptor->id, handle);
 }
 
-void Controller::fireIndicationEvent(Observer* observer) {
+void IODeviceController::fireIndicationEvent(IOObserver* observer) {
   startNewEventChain((CProcessInterface*) observer);
 }
 
-void Controller::handleChangeEvent(Handle*) {
+void IODeviceController::handleChangeEvent(IOHandle*) {
   // EMPTY - Override
 }
 
-bool Controller::hasError() {
+bool IODeviceController::hasError() {
   return error != 0;
 }
 
-void Controller::notifyConfigFB(NotificationType type, const void* attachment) {
+void IODeviceController::notifyConfigFB(NotificationType type, const void* attachment) {
   if (delegate == 0) {
     DEVLOG_WARNING(
-        "[IO:Device:Controller] No receiver for notification is available. Notification is dropped.\n");
+        "[IODeviceController] No receiver for notification is available. Notification is dropped.\n");
     return;
   }
 
   if (!notificationHandled) {
     DEVLOG_WARNING(
-        "[IO:Device:Controller] Notification has not yet been handled by the configuration fb. Notification is dropped.\n");
+        "[IODeviceController] Notification has not yet been handled by the configuration fb. Notification is dropped.\n");
     return;
   }
 
@@ -96,8 +97,8 @@ void Controller::notifyConfigFB(NotificationType type, const void* attachment) {
   startNewEventChain(delegate);
 }
 
-void Controller::checkForInputChanges() {
-  handleMutex.lock();
+void IODeviceController::checkForInputChanges() {
+  CCriticalRegion criticalRegion(handleMutex);
 
   // Iterate over input handles and check for changes
   THandleList::Iterator itEnd = inputHandles.end();
@@ -106,18 +107,16 @@ void Controller::checkForInputChanges() {
       // Inform Process Interface about change
       (*it)->onChange();
     }
-
-  handleMutex.unlock();
 }
 
-void Controller::setInitDelay(int delay) {
+void IODeviceController::setInitDelay(int delay) {
   initDelay = delay;
 }
 
-void Controller::dropHandles() {
-  handleMutex.lock();
+void IODeviceController::dropHandles() {
+  CCriticalRegion criticalRegion(handleMutex);
 
-  Mapper& mapper = Mapper::getInstance();
+  IOMapper& mapper = IOMapper::getInstance();
 
   THandleList::Iterator itEnd = inputHandles.end();
   for (THandleList::Iterator it = inputHandles.begin(); it != itEnd; ++it) {
@@ -133,23 +132,19 @@ void Controller::dropHandles() {
   inputHandles.clearAll();
   outputHandles.clearAll();
 
-  handleMutex.unlock();
 }
 
-bool Controller::isHandleValueEqual(Handle*) {
+bool IODeviceController::isHandleValueEqual(IOHandle*) {
   return true;
 }
 
-void Controller::addHandle(THandleList* list, CIEC_WSTRING const &id,
-    Handle* handle) {
-  if (id != "" && Mapper::getInstance().registerHandle(id, handle)) {
-    handleMutex.lock();
+void IODeviceController::addHandle(THandleList* list, CIEC_WSTRING const &id,
+    IOHandle* handle) {
+  if (id != "" && IOMapper::getInstance().registerHandle(id, handle)) {
+    CCriticalRegion criticalRegion(handleMutex);
     list->push_back(handle);
-    handleMutex.unlock();
   } else {
     delete handle;
   }
 }
 
-} /* namespace Device */
-} /* namespace IO */

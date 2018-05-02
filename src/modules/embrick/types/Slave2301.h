@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2016 Johannes Messmer (admin@jomess.com)
+ * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
 #ifndef SRC_MODULES_EMBRICK_TYPES_SLAVE2301_H_
@@ -18,11 +19,8 @@
 #include "BusAdapter.h"
 #include "Slave.h"
 
-namespace EmBrick {
-namespace FunctionBlocks {
-
-class Slave2301: public Slave {
-DECLARE_FIRMWARE_FB(Slave2301)
+class EmbrickSlave2301: public EmbrickSlave {
+DECLARE_FIRMWARE_FB(EmbrickSlave2301)
 
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
@@ -79,16 +77,12 @@ private:
   virtual void initHandles();
 
 public:
-  FUNCTION_BLOCK_CTOR_FOR_IO_MULTI_SLAVE(Slave2301, Slave, Handlers::G_2RelNo4RelCo){
+  FUNCTION_BLOCK_CTOR_FOR_IO_MULTI_SLAVE(EmbrickSlave2301, EmbrickSlave, EmbrickSlaveHandler::G_2RelNo4RelCo){
 };
 
-virtual ~Slave2301() {};
+virtual ~EmbrickSlave2301() {};
 
 };
-
-}
-/* namespace FunctionsBlocks */
-} /* namespace EmBrick */
 
 #endif //close the ifdef sequence from the beginning of the file
 

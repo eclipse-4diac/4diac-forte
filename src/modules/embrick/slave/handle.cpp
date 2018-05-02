@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2016 Johannes Messmer (admin@jomess.com)
+ * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
 #include "handle.h"
@@ -14,36 +15,35 @@
 #include <handler/bus.h>
 #include <io/mapper/io_mapper.h>
 #include <devlog.h>
-namespace EmBrick {
 
-SlaveHandle::SlaveHandle(Device::Controller *controller,
-    Mapper::Direction direction, CIEC_ANY::EDataTypeID type, uint8_t offset,
-    Handlers::Slave *slave) :
-    Handle(controller, direction, type), offset(offset), slave(slave), updateMutex(
+EmbrickSlaveHandle::EmbrickSlaveHandle(forte::core::IO::IODeviceController *controller,
+    forte::core::IO::IOMapper::Direction direction, CIEC_ANY::EDataTypeID type, uint8_t paOffset,
+    EmbrickSlaveHandler *paSlave) :
+    forte::core::IO::IOHandle(controller, direction, type), offset(paOffset), slave(paSlave), updateMutex(
         &slave->updateMutex) {
-  if (direction == Mapper::In)
+  if (direction == forte::core::IO::IOMapper::In)
     buffer = slave->updateReceiveImage;
-  else if (direction == Mapper::Out)
+  else if (direction == forte::core::IO::IOMapper::Out)
     buffer = slave->updateSendImage;
 }
 
-SlaveHandle::~SlaveHandle() {
+EmbrickSlaveHandle::~EmbrickSlaveHandle() {
 }
 
-void SlaveHandle::set(const CIEC_ANY &) {
+void EmbrickSlaveHandle::set(const CIEC_ANY &) {
   slave->forceUpdate();
 }
 
-void SlaveHandle::onObserver(Observer *observer) {
+void EmbrickSlaveHandle::onObserver(forte::core::IO::IOObserver *observer) {
   reset();
 
-  Handle::onObserver(observer);
+  forte::core::IO::IOHandle::onObserver(observer);
 }
 
-void SlaveHandle::dropObserver() {
-  Handle::dropObserver();
+void EmbrickSlaveHandle::dropObserver() {
+  forte::core::IO::IOHandle::dropObserver();
 
   reset();
 }
 
-} /* namespace EmBrick */
+

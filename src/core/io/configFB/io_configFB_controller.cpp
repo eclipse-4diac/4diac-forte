@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 fortiss GmbH
+ * Copyright (c) 2017 - 2018 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,46 +7,46 @@
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#include "io_controller.h"
 #include "../../resource.h"
 #include "../../device.h"
+#include "io_configFB_controller.h"
 
-namespace IO {
-namespace ConfigurationFB {
+using namespace forte::core::IO;
 
-int Controller::MaxErrors = 5;
+int IOConfigFBController::MaxErrors = 5;
 
-const char * const Controller::scmOK = "OK";
-const char * const Controller::scmInitializing =
+const char * const IOConfigFBController::scmOK = "OK";
+const char * const IOConfigFBController::scmInitializing =
     "Waiting for initialization..";
-const char * const Controller::scmFailedToInit =
+const char * const IOConfigFBController::scmFailedToInit =
     "Failed to initialize controller.";
-const char * const Controller::scmStopped = "Stopped";
+const char * const IOConfigFBController::scmStopped = "Stopped";
 
-Controller::Controller(CResource *pa_poSrcRes,
+IOConfigFBController::IOConfigFBController(CResource *pa_poSrcRes,
     const SFBInterfaceSpec *pa_pstInterfaceSpec,
     const CStringDictionary::TStringId pa_nInstanceNameId,
     TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-    Base(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData,
+    IOConfigFBBase(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData,
         pa_acFBVarsData), starting(false), errorCounter(0), controller(0), performRestart(
         false) {
 
 }
 
-Controller::~Controller() {
+IOConfigFBController::~IOConfigFBController() {
   deInit(true);
 }
 
-void Controller::executeEvent(int pa_nEIID) {
+void IOConfigFBController::executeEvent(int pa_nEIID) {
   switch (pa_nEIID) {
 
   case cg_nExternalEventID:
     if (!(controller->notificationHandled = handleNotification(
         controller->notificationType, controller->notificationAttachment))) {
       DEVLOG_ERROR(
-          "[IO:ConfigFB:Controller] Notification of type %d has not been handled.\n",
+          "[IOConfigFBController] Notification of type %d has not been handled.\n",
           controller->notificationType);
     }
     break;
@@ -65,12 +65,12 @@ void Controller::executeEvent(int pa_nEIID) {
   }
 }
 
-bool Controller::handleNotification(Device::Controller::NotificationType type,
+bool IOConfigFBController::handleNotification(IODeviceController::NotificationType type,
     const void* attachment) {
 
   switch (type) {
 
-  case Device::Controller::Error:
+  case IODeviceController::Error:
     onError();
 
     if (starting) {
@@ -79,17 +79,17 @@ bool Controller::handleNotification(Device::Controller::NotificationType type,
 
       STATUS() = (const char*) attachment;
       DEVLOG_ERROR(
-          "[IO:ConfigFB:Controller] Failed to initialize controller. Reason: %s\n",
+          "[IOConfigFBController] Failed to initialize controller. Reason: %s\n",
           STATUS().getValue());
     } else {
       STATUS() = (const char*) attachment;
 
-      DEVLOG_ERROR("[IO:ConfigFB:Controller] Runtime error. Reason: %s\n",
+      DEVLOG_ERROR("[IOConfigFBController] Runtime error. Reason: %s\n",
           STATUS().getValue());
     }
     return true;
 
-  case Device::Controller::Success:
+  case IODeviceController::Success:
     if (starting) {
       onStartup();
       return true;
@@ -101,11 +101,11 @@ bool Controller::handleNotification(Device::Controller::NotificationType type,
   }
 }
 
-void Controller::onError(bool isFatal) {
+void IOConfigFBController::onError(bool isFatal) {
   errorCounter++;
   performRestart = errorCounter < MaxErrors;
 
-  // ReInit Controller
+  // ReInit IOConfigFBController
   if (performRestart) {
     deInit();
   } else {
@@ -122,17 +122,17 @@ void Controller::onError(bool isFatal) {
   }
 }
 
-bool Controller::init(int delay) {
+bool IOConfigFBController::init(int delay) {
   if (controller != 0) {
     DEVLOG_ERROR(
-        "[IO:ConfigFB:Controller] Controller has already been initialized.\n");
+        "[IOConfigFBController] IOConfigFBController has already been initialized.\n");
     return false;
   }
 
   controller = createDeviceController(getResource().getDevice().getDeviceExecution());
   if (controller == 0) {
     DEVLOG_ERROR(
-        "[IO:ConfigFB:Controller] Failed to create controller.\n");
+        "[IOConfigFBController] Failed to create controller.\n");
     return false;
   }
 
@@ -150,8 +150,8 @@ bool Controller::init(int delay) {
   return true;
 }
 
-void Controller::initHandle(
-    Device::Controller::HandleDescriptor *handleDescriptor) {
+void IOConfigFBController::initHandle(
+    IODeviceController::HandleDescriptor *handleDescriptor) {
 
   if (handleDescriptor->id == "")
     return;
@@ -159,14 +159,14 @@ void Controller::initHandle(
   controller->addHandle(handleDescriptor);
 }
 
-void Controller::onStartup() {
+void IOConfigFBController::onStartup() {
   started();
 }
 
-void Controller::started(const char* error) {
+void IOConfigFBController::started(const char* error) {
   if (error != 0) {
     STATUS() = error;
-    DEVLOG_ERROR("[IO:ConfigFB:Controller] Failed to start. Reason: %s\n",
+    DEVLOG_ERROR("[IOConfigFBController] Failed to start. Reason: %s\n",
         STATUS().getValue());
     return onError(false);
   }
@@ -179,14 +179,14 @@ void Controller::started(const char* error) {
   sendOutputEvent(scm_nEventINITOID);
 }
 
-void Controller::onStop() {
+void IOConfigFBController::onStop() {
   stopped();
 }
 
-bool Controller::deInit(bool isDestructing) {
+bool IOConfigFBController::deInit(bool isDestructing) {
   if (controller == 0) {
     DEVLOG_ERROR(
-        "[IO:ConfigFB:Controller] Controller has already been stopped.\n");
+        "[IOConfigFBController] IOConfigFBController has already been stopped.\n");
     return false;
   }
 
@@ -201,7 +201,7 @@ bool Controller::deInit(bool isDestructing) {
   return false;
 }
 
-void Controller::stopped() {
+void IOConfigFBController::stopped() {
   controller->delegate = 0;
   if (controller->isAlive())
     controller->end();
@@ -219,5 +219,3 @@ void Controller::stopped() {
   }
 }
 
-} /* namespace ConfigurationFB */
-} /* namespace IO */

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 fortiss GmbH
+ * Copyright (c) 2017 - 2018 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,27 +7,27 @@
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
 #include "io_controller_part.h"
 
-namespace IO {
-namespace ConfigurationFB {
+using namespace forte::core::IO;
 
-PartController::PartController(CResource *pa_poSrcRes,
+IOConfigFBPartController::IOConfigFBPartController(CResource *pa_poSrcRes,
     const SFBInterfaceSpec *pa_pstInterfaceSpec,
     const CStringDictionary::TStringId pa_nInstanceNameId,
     TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-    Base(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData,
+    IOConfigFBBase(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData,
         pa_acFBVarsData), master(0) {
 
 }
 
-void PartController::executeEvent(int pa_nEIID) {
-  if (Adapter().INIT() == pa_nEIID) {
-    if (Adapter().QI() == true) {
+void IOConfigFBPartController::executeEvent(int pa_nEIID) {
+  if (IOConfigFBMultiAdapter().INIT() == pa_nEIID) {
+    if (IOConfigFBMultiAdapter().QI() == true) {
       // Get master by id
-      master = SplitController::getControllerById(Adapter().MasterId());
+      master = IOConfigFBSplitController::getControllerById(IOConfigFBMultiAdapter().MasterId());
 
       if (master == 0) {
         QO() = false;
@@ -38,24 +38,21 @@ void PartController::executeEvent(int pa_nEIID) {
         QO() = true;
       }
       // Send confirmation of init
-      Adapter().QO() = QO();
+      IOConfigFBMultiAdapter().QO() = QO();
       sendAdapterEvent(scm_nSplitAdapterAdpNum,
-          SplitAdapter::scm_nEventINITOID);
+          IOConfigFBSplitAdapter::scm_nEventINITOID);
     } else {
       QO() = false;
 
       // Send confirmation of deInit
-      Adapter().QO() = QO();
+      IOConfigFBMultiAdapter().QO() = QO();
       sendAdapterEvent(scm_nSplitAdapterAdpNum,
-          SplitAdapter::scm_nEventINITOID);
+          IOConfigFBSplitAdapter::scm_nEventINITOID);
     }
   }
 }
 
-void PartController::initHandle(
-    Device::Controller::HandleDescriptor *handleDescriptor) {
+void IOConfigFBPartController::initHandle(
+    IODeviceController::HandleDescriptor *handleDescriptor) {
   master->initHandle(handleDescriptor);
 }
-
-} /* namespace ConfigurationFB */
-} /* namespace IO */

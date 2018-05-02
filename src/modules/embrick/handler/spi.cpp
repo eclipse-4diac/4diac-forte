@@ -1,40 +1,38 @@
 /*******************************************************************************
- * Copyright (c) 2016 Johannes Messmer (admin@jomess.com)
+ * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
 #include "spi.h"
 #include <sstream>
 #include <string>
 
-namespace EmBrick {
-namespace Handlers {
+unsigned long const EmbrickSPIHandler::DefaultSpiSpeed = 300000;
+unsigned long const EmbrickSPIHandler::MaxSpiSpeed = 700000;
+char const EmbrickSPIHandler::spiMode = SPI_CPHA;
+char const EmbrickSPIHandler::spiBitOrder = 0; // MSB first
 
-unsigned long const SPI::DefaultSpiSpeed = 300000;
-unsigned long const SPI::MaxSpiSpeed = 700000;
-char const SPI::spiMode = SPI_CPHA;
-char const SPI::spiBitOrder = 0; // MSB first
-
-const char * const SPI::scmFailedToInitHandler =
+const char * const EmbrickSPIHandler::scmFailedToInitHandler =
     "Failed to init spidev handler. Check if spi is enabled.";
-const char * const SPI::scmFailedToConfigMode =
+const char * const EmbrickSPIHandler::scmFailedToConfigMode =
     "Failed to config spi write mode.";
-const char * const SPI::scmFailedToConfigBitOrder =
+const char * const EmbrickSPIHandler::scmFailedToConfigBitOrder =
     "Failed to config spi bit order.";
-const char * const SPI::scmFailedToConfigSpeed =
+const char * const EmbrickSPIHandler::scmFailedToConfigSpeed =
     "Failed to config spi speed.";
-const char * const SPI::scmFailedToTestBus =
+const char * const EmbrickSPIHandler::scmFailedToTestBus =
     "Failed to send test byte to spi.";
-const char * const SPI::scmFailedToTransferBuffer =
+const char * const EmbrickSPIHandler::scmFailedToTransferBuffer =
     "Failed to transfer buffer via spi.";
 
-SPI::SPI(unsigned int interface) :
+EmbrickSPIHandler::EmbrickSPIHandler(unsigned int interface) :
     error(0) {
   // Convert int to string
   std::ostringstream interfaceStream;
@@ -45,11 +43,11 @@ SPI::SPI(unsigned int interface) :
   init(spidev.c_str());
 }
 
-SPI::~SPI() {
+EmbrickSPIHandler::~EmbrickSPIHandler() {
   deInit();
 }
 
-void SPI::init(const char* spidev) {
+void EmbrickSPIHandler::init(const char* spidev) {
   // Init spidev
   DEVLOG_DEBUG("emBrick[SPIHandler]: Open spidev '%s'\n", spidev);
   fd = open(spidev, O_RDWR);
@@ -78,13 +76,13 @@ void SPI::init(const char* spidev) {
   DEVLOG_INFO("emBrick[SPIHandler]: Ready.\n");
 }
 
-void SPI::deInit() {
+void EmbrickSPIHandler::deInit() {
   // Close handler if open
   if (fd >= 0)
     close(fd);
 }
 
-template<typename T> bool SPI::config(unsigned int config,
+template<typename T> bool EmbrickSPIHandler::config(unsigned int config,
     unsigned int configVerify, T value) {
   int status;
 
@@ -102,12 +100,12 @@ template<typename T> bool SPI::config(unsigned int config,
   return valueCheck == value;
 }
 
-void SPI::fail(const char* reason) {
+void EmbrickSPIHandler::fail(const char* reason) {
   error = reason;
   DEVLOG_ERROR("emBrick[SPIHandler]: %s\n", error);
 }
 
-bool SPI::transfer(unsigned char* sendBuffer,
+bool EmbrickSPIHandler::transfer(unsigned char* sendBuffer,
     unsigned char* receiveBuffer, int length) {
 
   struct spi_ioc_transfer msg;
@@ -131,9 +129,9 @@ bool SPI::transfer(unsigned char* sendBuffer,
   return true;
 }
 
-void SPI::setSpeed(const unsigned long speed) {
+void EmbrickSPIHandler::setSpeed(const unsigned long speed) {
   spiSpeed = speed;
 }
 
-} /* namespace Handlers */
-} /* namespace EmBrick */
+
+

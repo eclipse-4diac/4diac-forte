@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 fortiss GmbH
+ * Copyright (c) 2017 - 2018 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
 #ifndef SRC_CORE_IO_DEVICE_IO_CONTROLLER_MULTI_H_
@@ -15,33 +16,29 @@
 #include "io_controller.h"
 #include <io/mapper/io_handle.h>
 
-namespace IO {
+namespace forte {
+  namespace core {
+    namespace IO {
 
-namespace ConfigurationFB {
-namespace Multi {
-class Slave;
-}
-}
-
-namespace Device {
+class IOConfigFBMultiSlave;
 
 /*! @brief Abstract Device Controller for modular devices
  *
- * The MultiController extends the abstract #Controller.
+ * The IODeviceMultiController extends the abstract #IODeviceController.
  * It integrates additional functionality for modular devices.
- * The controller should be used with the #IO::ConfigurationFB::Multi configuration fbs.
+ * The controller should be used with the #IOConfigFBMulti configuration fbs.
  */
-class MultiController: public Controller {
-  friend class ConfigurationFB::Multi::Slave;
+class IODeviceMultiController: public IODeviceController {
+  friend class IOConfigFBMultiSlave;
 
 public:
 
-  struct HandleDescriptor: Controller::HandleDescriptor {
+  struct HandleDescriptor: IODeviceController::HandleDescriptor {
     int slaveIndex;
 
-    HandleDescriptor(CIEC_WSTRING const &id, IO::Mapper::Direction direction,
+    HandleDescriptor(CIEC_WSTRING const &id, IOMapper::Direction direction,
         int slaveIndex) :
-        Controller::HandleDescriptor(id, direction), slaveIndex(slaveIndex) {
+        IODeviceController::HandleDescriptor(id, direction), slaveIndex(slaveIndex) {
 
     }
   };
@@ -52,9 +49,9 @@ public:
    * It should keep a list of handles and delete the provided handle in case the #dropSlaveHandles method is called.
    *
    * @param index Index/Position of the modular slave
-   * @param handle Handle object which should be updated by the controller.
+   * @param handle IOHandle object which should be updated by the controller.
    */
-  virtual void addSlaveHandle(int index, Handle* handle) = 0;
+  virtual void addSlaveHandle(int index, IOHandle* handle) = 0;
 
   /*! @brief Drop all handles of a specific slave
    *
@@ -66,15 +63,15 @@ public:
   virtual void dropSlaveHandles(int index) = 0;
 
 protected:
-  explicit MultiController(CDeviceExecution& paDeviceExecution);
+  explicit IODeviceMultiController(CDeviceExecution& paDeviceExecution);
 
-  virtual void addHandle(Controller::HandleDescriptor *handleDescriptor);
+  virtual void addHandle(IODeviceController::HandleDescriptor *handleDescriptor);
 
-  virtual Handle* initHandle(HandleDescriptor *handleDescriptor) = 0;
+  virtual IOHandle* initHandle(HandleDescriptor *handleDescriptor) = 0;
 
 private:
 
-  Handle* initHandle(Controller::HandleDescriptor *handleDescriptor) {
+  IOHandle* initHandle(IODeviceController::HandleDescriptor *handleDescriptor) {
     return initHandle(static_cast<HandleDescriptor*>(handleDescriptor));
   }
 
@@ -95,7 +92,8 @@ private:
 
 };
 
-} /* namespace Device */
-} /* namespace IO */
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
 
 #endif /* SRC_CORE_IO_DEVICE_IO_CONTROLLER_MULTI_H_ */

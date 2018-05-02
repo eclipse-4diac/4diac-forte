@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 fortiss GmbH
+ * Copyright (c) 2017 - 2018 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
 #ifndef SRC_CORE_IO_CONFIGFB_CONTROLLER_H_
@@ -15,8 +16,9 @@
 #include <io/device/io_controller.h>
 #include "io_base.h"
 
-namespace IO {
-namespace ConfigurationFB {
+namespace forte {
+  namespace core {
+    namespace IO {
 
 /*! @brief Abstract controller configuration fb
  *
@@ -26,17 +28,17 @@ namespace ConfigurationFB {
  * Features:
  * - handles the basic events of a controller configuration fb (INIT, INITO with the corresponding data outputs QI, QO, and STATUS)
  * - thread safe communication with corresponding device controller (see #handleNotification)
- * - automatic error handling and restart of the Device Controller (see #IO::Device::Controller)
+ * - automatic error handling and restart of the Device Controller (see #IODeviceController)
  */
-class Controller: public Base {
+class IOConfigFBController: public IOConfigFBBase {
 public:
-  Controller(CResource *pa_poSrcRes,
+  IOConfigFBController(CResource *pa_poSrcRes,
       const SFBInterfaceSpec *pa_pstInterfaceSpec,
       const CStringDictionary::TStringId pa_nInstanceNameId,
       TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
-  virtual ~Controller();
+  virtual ~IOConfigFBController();
 
-  Device::Controller* getDeviceController() {
+  IODeviceController* getDeviceController() {
     return controller;
   }
 
@@ -71,7 +73,7 @@ protected:
   int errorCounter;
 
   //! Instance of the corresponding Device Controller
-  Device::Controller *controller;
+  IODeviceController *controller;
 
   /*! @brief Creates an instance of the corresponding Device Controller
    *
@@ -81,12 +83,12 @@ protected:
    * @param paDeviceExecution Device execution needed for the external handler
    * @return Instance of the corresponding Device Controller
    */
-  virtual Device::Controller* createDeviceController(CDeviceExecution& paDeviceExecution) = 0;
+  virtual IODeviceController* createDeviceController(CDeviceExecution& paDeviceExecution) = 0;
 
   /*! @brief Sets the configuration of the Device Controller
    *
    * The method should create a local struct of the Device Controller Config and assign the corresponding global data inputs to it.
-   * It should call the #IO::Device::Controller::setConfig with a reference to the created config struct.
+   * It should call the #IODeviceController::setConfig with a reference to the created config struct.
    */
   virtual void setConfig() = 0;
 
@@ -99,7 +101,7 @@ protected:
    * @param attachment Reference to the attachment (e.g. a string of an error message)
    * @return True if the notification has been handled. In case it is not handled, a warning message is logged.
    */
-  virtual bool handleNotification(Device::Controller::NotificationType type,
+  virtual bool handleNotification(IODeviceController::NotificationType type,
       const void* attachment);
 
   /*! @brief Initializes the configuration fb
@@ -115,12 +117,12 @@ protected:
   /*! @brief Initializes an IO handle
    *
    * This method is used to forward handle descriptors to the device controller.
-   * The #IO::Device::Controller::addHandle method is called and in case the #Device::Controller::HandleDescriptor::id
-   * is not empty, the handle is initialized with the #IO::Device::Controller::initHandle method.
+   * The #IODeviceController::addHandle method is called and in case the #IODeviceController::HandleDescriptor::id
+   * is not empty, the handle is initialized with the #IODeviceController::initHandle method.
    *
    * @param handleDescriptor Descriptor of the handle
    */
-  void initHandle(Device::Controller::HandleDescriptor *handleDescriptor);
+  void initHandle(IODeviceController::HandleDescriptor *handleDescriptor);
 
   /*! @brief Deinitializes the configuration fb
    *
@@ -169,7 +171,8 @@ private:
   static const char * const scmStopped;
 };
 
-} /* namespace ConfigurationFB */
-} /* namespace IO */
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
 
 #endif /* SRC_CORE_IO_CONFIGFB_CONTROLLER_H_ */

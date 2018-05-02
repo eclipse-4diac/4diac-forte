@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 fortiss GmbH
+ * Copyright (c) 2017 - 2018 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,34 +7,32 @@
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
 #include "io_controller_multi.h"
 
-namespace IO {
-namespace Device {
+using namespace forte::core::IO;
 
-MultiController::MultiController(CDeviceExecution& paDeviceExecution) : Controller(paDeviceExecution){
+IODeviceMultiController::IODeviceMultiController(CDeviceExecution& paDeviceExecution) : IODeviceController(paDeviceExecution){
 }
 
-void MultiController::addHandle(
-    Controller::HandleDescriptor *handleDescriptor) {
+void IODeviceMultiController::addHandle(
+    IODeviceController::HandleDescriptor *handleDescriptor) {
   HandleDescriptor* desc = static_cast<HandleDescriptor*>(handleDescriptor);
-  Handle* handle = initHandle(desc);
+  IOHandle* handle = initHandle(desc);
 
   if (handle == 0) {
     DEVLOG_WARNING(
-        "[IO:Device:MultiController] Failed to initialize handle '%s'. Check initHandle method.\n",
+        "[IODeviceMultiController] Failed to initialize handle '%s'. Check initHandle method.\n",
         desc->id.getValue());
     return;
   }
 
-  if (Mapper::getInstance().registerHandle(desc->id, handle)) {
+  if (IOMapper::getInstance().registerHandle(desc->id, handle)) {
     addSlaveHandle(desc->slaveIndex, handle);
   } else {
     delete handle;
   }
 }
 
-} /* namespace Device */
-} /* namespace IO */
