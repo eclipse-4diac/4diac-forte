@@ -12,8 +12,6 @@
 #include "Slave.h"
 #include <io/mapper/io_mapper.h>
 
-using namespace forte::core::IO;
-
 const char * const EmbrickSlave::scmSlow = "Slow";
 const char * const EmbrickSlave::scmInterrupted = "Interrupted";
 const char * const EmbrickSlave::scmError = "Error";

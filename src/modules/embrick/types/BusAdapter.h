@@ -17,12 +17,8 @@
 #include <forte_bool.h>
 #include <forte_uint.h>
 
-namespace forte {
-  namespace core {
-    namespace IO {
-
 class EmbrickBusAdapter: public IOConfigFBMultiAdapter {
-DECLARE_ADAPTER_TYPE_NAMESPACE(forte_core_io_EmbrickBusAdapter, EmbrickBusAdapter)
+DECLARE_ADAPTER_TYPE(EmbrickBusAdapter)
 
 private:
 private:
@@ -63,10 +59,6 @@ private:
   virtual ~EmbrickBusAdapter() {};
 
 };
-
-    } //namespace IO
-  } //namepsace core
-} //
 
 #endif //close the ifdef sequence from the beginning of the file
 

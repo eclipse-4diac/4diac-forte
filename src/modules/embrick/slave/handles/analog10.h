@@ -15,10 +15,6 @@
 #include <slave/slave.h>
 #include <slave/handle.h>
 
-namespace forte {
-  namespace core {
-    namespace IO {
-
 class EmbrickAnalog10SlaveHandle: public EmbrickSlaveHandle {
 public:
   EmbrickAnalog10SlaveHandle(IODeviceController *controller,
@@ -33,11 +29,5 @@ public:
 protected:
   const CIEC_DWORD getValue(const unsigned char* buffer);
 };
-
-    } //namespace IO
-  } //namepsace core
-} //namespace forte
-
-
 
 #endif /* SRC_MODULES_EMBRICK_SLAVE_HANDLES_ANALOG10_H_ */

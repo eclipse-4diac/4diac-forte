@@ -20,12 +20,8 @@
 #include <handler/bus.h>
 #include "../../../core/io/configFB/io_master_multi.h"
 
-namespace forte {
-  namespace core {
-    namespace IO {
-
 class EmbrickMaster: public IOConfigFBMultiMaster {
-DECLARE_FIRMWARE_FB_NAMESPACE(forte_core_io_EmbrickMaster, EmbrickMaster)
+DECLARE_FIRMWARE_FB(EmbrickMaster)
 
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
@@ -86,11 +82,6 @@ public:
   FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(EmbrickMaster, IOConfigFBMultiMaster){
   }
 };
-
-    } //namespace IO
-  } //namepsace core
-} //namespace forte
-
 
 
 #endif //close the ifdef sequence from the beginning of the file

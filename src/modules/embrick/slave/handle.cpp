@@ -15,8 +15,6 @@
 #include <io/mapper/io_mapper.h>
 #include <devlog.h>
 
-using namespace forte::core::IO;
-
 EmbrickSlaveHandle::EmbrickSlaveHandle(IODeviceController *controller,
     IOMapper::Direction direction, CIEC_ANY::EDataTypeID type, uint8_t offset,
     EmbrickSlaveHandler *slave) :

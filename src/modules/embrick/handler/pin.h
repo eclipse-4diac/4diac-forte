@@ -17,10 +17,6 @@
 #include <string>
 #include <forte_wstring.h>
 
-namespace forte {
-  namespace core {
-    namespace IO {
-
 class EmbrickPinHandler {
   friend class EmbrickBusHandler;
 
@@ -54,10 +50,5 @@ private:
   static const char * const scmFailedToWriteFile;
   static const char * const scmNotInitialised;
 };
-
-    } //namespace IO
-  } //namepsace core
-} //namespace forte
-
 
 #endif /* SRC_MODULES_EMBRICK_HANDLER_PIN_H_ */

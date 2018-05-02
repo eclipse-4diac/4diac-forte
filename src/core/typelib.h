@@ -63,41 +63,11 @@ class CAdapter;
   const CTypeLib::CFBTypeEntry fbclass::csm_oFirmwareFBEntry_##fbclass((fbTypeNameId), fbclass::createFB); \
   FORTE_DUMMY_INIT_DEF(fbclass)
 
-#define DECLARE_FIRMWARE_FB_NAMESPACE(uniqueName, fbclass) \
-    DECLARE_GENERIC_FIRMWARE_FB_NAMESPACE(uniqueName, fbclass) \
-  public: \
-    virtual CStringDictionary::TStringId getFBTypeId(void) const;\
-  private:
-
-
-#define DECLARE_GENERIC_FIRMWARE_FB_NAMESPACE(uniqueName, fbclass) \
-  private: \
-    const static CTypeLib::CFBTypeEntry csm_oFirmwareFBEntry_##uniqueName; \
-  public:  \
-    static CFunctionBlock *createFB(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes){ \
-      return new fbclass( pa_nInstanceNameId, pa_poSrcRes);\
-    }; \
-    FORTE_DUMMY_INIT_DEC \
-  private:
-
 /*!\ingroup CORE This define is used to create the implementation for the above definition. The second parameter is needed for the
  * prebuild script that generates the constant string list.
  */
 #define DEFINE_FIRMWARE_FB(fbclass, fbTypeNameId) \
     DEFINE_GENERIC_FIRMWARE_FB(fbclass, fbTypeNameId) \
-    CStringDictionary::TStringId fbclass::getFBTypeId(void) const {return (fbTypeNameId); }
-
-
-#define DEFINE_GENERIC_FIRMWARE_FB_NAMESPACE(uniqueName, fbclass, fbTypeNameId)\
-  extern const CStringDictionary::TStringId g_nStringId##uniqueName; \
-  const CTypeLib::CFBTypeEntry fbclass::csm_oFirmwareFBEntry_##uniqueName((fbTypeNameId), fbclass::createFB); \
-  FORTE_DUMMY_INIT_DEF(fbclass)
-
-/*!\ingroup CORE This define is used to create the implementation for the above definition. The second parameter is needed for the
- * prebuild script that generates the constant string list.
- */
-#define DEFINE_FIRMWARE_FB_NAMESPACE(uniqueName, fbclass, fbTypeNameId) \
-    DEFINE_GENERIC_FIRMWARE_FB_NAMESPACE(uniqueName, fbclass, fbTypeNameId) \
     CStringDictionary::TStringId fbclass::getFBTypeId(void) const {return (fbTypeNameId); }
 
 //!\ingroup CORE This define is used to create the definition necessary for Adapter types.
@@ -112,24 +82,9 @@ class CAdapter;
     FORTE_DUMMY_INIT_DEC \
   private:
 
-#define DECLARE_ADAPTER_TYPE_NAMESPACE(uniqueName, adapterclass) \
-  private: \
-    const static CTypeLib::CAdapterTypeEntry csm_oAdapterTypeEntry_##uniqueName; \
-  public:  \
-  static CAdapter *createAdapter(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, bool pa_bIsPlug){\
-      return new adapterclass(pa_nInstanceNameId, pa_poSrcRes, pa_bIsPlug);\
-    }; \
-    virtual CStringDictionary::TStringId getFBTypeId(void) const {return (csm_oAdapterTypeEntry_##uniqueName.getTypeNameId()); };\
-    FORTE_DUMMY_INIT_DEC \
-  private:
-
 //!\ingroup CORE This define is used to create the implementation for the above definition.
 #define DEFINE_ADAPTER_TYPE(adapterclass, adapterTypeNameId)\
   const CTypeLib::CAdapterTypeEntry adapterclass::csm_oAdapterTypeEntry_##adapterclass((adapterTypeNameId), adapterclass::createAdapter); \
-  FORTE_DUMMY_INIT_DEF(adapterclass)
-
-#define DEFINE_ADAPTER_TYPE_NAMESPACE(uniqueName, adapterclass, adapterTypeNameId)\
-  const CTypeLib::CAdapterTypeEntry adapterclass::csm_oAdapterTypeEntry_##uniqueName((adapterTypeNameId), adapterclass::createAdapter); \
   FORTE_DUMMY_INIT_DEF(adapterclass)
 
 //!\ingroup CORE This define is used to create the definition necessary for Firmware datatype in order to get them automatically added to the FirmwareType list.

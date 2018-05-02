@@ -14,10 +14,6 @@
 
 #include <netinet/in.h>
 
-namespace forte {
-  namespace core {
-    namespace IO {
-
 #pragma pack(push, 1) // Disable padding for protocol structs
 
 struct EmbrickHeaderPackage {
@@ -62,9 +58,5 @@ struct EmbrickMasterInitPackage {
 };
 
 #pragma pack(pop)
-
-    } //namespace IO
-  } //namepsace core
-} //
 
 #endif /* SRC_MODULES_EMBRICK_SLAVE_PACKAGES_H_ */

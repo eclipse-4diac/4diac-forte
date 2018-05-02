@@ -20,10 +20,6 @@
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
 
-namespace forte {
-  namespace core {
-    namespace IO {
-
 class EmbrickSPIHandler {
   friend class EmbrickBusHandler;
 
@@ -64,10 +60,5 @@ private:
   static const char * const scmFailedToTestBus;
   static const char * const scmFailedToTransferBuffer;
 };
-
-    } //namespace IO
-  } //namepsace core
-} //namespace forte
-
 
 #endif /* SRC_MODULES_EMBRICK_HANDLER_SPI_H_ */

@@ -20,8 +20,6 @@
 #include <slave/handles/analog10.h>
 #include "criticalregion.h"
 
-using namespace forte::core::IO;
-
 const char * const EmbrickBusHandler::scmSlaveUpdateFailed = "Update of slave failed.";
 const char * const EmbrickBusHandler::scmNoSlavesFound = "No slave modules found.";
 

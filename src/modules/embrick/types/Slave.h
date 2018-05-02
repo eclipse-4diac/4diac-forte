@@ -20,10 +20,6 @@
 #include <slave/handle.h>
 #include "../../../core/io/configFB/io_slave_multi.h"
 
-namespace forte {
-  namespace core {
-    namespace IO {
-
 class EmbrickSlave: public IOConfigFBMultiSlave,
     public EmbrickSlaveHandler::Delegate {
 public:
@@ -66,10 +62,6 @@ private:
   static const char * const scmError;
   static const char * const scmUnknown;
 };
-
-    } //namespace IO
-  } //namepsace core
-} //namespace forte
 
 
 #endif /* SRC_MODULES_EMBRICK_TYPES_SLAVE_H_ */

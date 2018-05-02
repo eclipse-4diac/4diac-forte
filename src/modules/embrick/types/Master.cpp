@@ -14,9 +14,7 @@
 #include "Master_gen.cpp"
 #endif
 
-using namespace forte::core::IO;
-
-DEFINE_FIRMWARE_FB_NAMESPACE(forte_core_io_EmbrickMaster ,forte::core::IO::EmbrickMaster, g_nStringIdEBMaster)
+DEFINE_FIRMWARE_FB(EmbrickMaster, g_nStringIdEBMaster)
 
 const CStringDictionary::TStringId EmbrickMaster::scm_anDataInputNames[] = {
     g_nStringIdQI, g_nStringIdBusInterface, g_nStringIdBusSelectPin,
