@@ -17,7 +17,7 @@
 #include <forte_bool.h>
 #include <forte_uint.h>
 
-class EmbrickBusAdapter: public IOConfigFBMultiAdapter {
+class EmbrickBusAdapter: public forte::core::IO::IOConfigFBMultiAdapter {
 DECLARE_ADAPTER_TYPE(EmbrickBusAdapter)
 
 private:

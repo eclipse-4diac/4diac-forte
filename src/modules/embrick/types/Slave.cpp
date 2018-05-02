@@ -23,7 +23,7 @@ EmbrickSlave::EmbrickSlave(const TForteUInt8* const scm_slaveConfigurationIO,
     const SFBInterfaceSpec *pa_pstInterfaceSpec,
     const CStringDictionary::TStringId pa_nInstanceNameId,
     TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-    IOConfigFBMultiSlave(
+    forte::core::IO::IOConfigFBMultiSlave(
         scm_slaveConfigurationIO,
         scm_slaveConfigurationIO_num, type, pa_poSrcRes, pa_pstInterfaceSpec,
         pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData), slave(0) {

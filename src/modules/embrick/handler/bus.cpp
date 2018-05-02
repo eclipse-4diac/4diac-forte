@@ -25,7 +25,7 @@ const char * const EmbrickBusHandler::scmNoSlavesFound = "No slave modules found
 
 EmbrickBusHandler::EmbrickBusHandler(CDeviceExecution& paDeviceExecution) :
     spi(0), slaveSelect(0), slaves(0), slaveCount(
-        0), sList(0), IODeviceMultiController(paDeviceExecution) {
+        0), sList(0), forte::core::IO::IODeviceMultiController(paDeviceExecution) {
   // Set init time
   struct timespec ts;
   // TODO Check compile error. Had to to add rt libary to c++ make flags
@@ -41,7 +41,7 @@ EmbrickBusHandler::EmbrickBusHandler(CDeviceExecution& paDeviceExecution) :
   config.BusLoopSpeed = EmbrickSPIHandler::MaxSpiSpeed;
 }
 
-void EmbrickBusHandler::setConfig(struct IODeviceController::Config* config) {
+void EmbrickBusHandler::setConfig(struct forte::core::IO::IODeviceController::Config* config) {
   // Check if BusHandler is active -> configuration changes are not allowed
   if (isAlive()) {
     DEVLOG_ERROR(
@@ -123,8 +123,8 @@ void EmbrickBusHandler::deInit() {
   delete slaveSelect;
 }
 
-IOHandle* EmbrickBusHandler::initHandle(
-    IODeviceMultiController::HandleDescriptor *handleDescriptor) {
+forte::core::IO::IOHandle* EmbrickBusHandler::initHandle(
+    forte::core::IO::IODeviceMultiController::HandleDescriptor *handleDescriptor) {
   HandleDescriptor desc = *static_cast<HandleDescriptor*>(handleDescriptor);
 
   EmbrickSlaveHandler *slave = getSlave(desc.slaveIndex);
@@ -297,7 +297,7 @@ void EmbrickBusHandler::forceUpdate(int index) {
   loopSync.unlock();
 }
 
-void EmbrickBusHandler::addSlaveHandle(int index, IOHandle* handle) {
+void EmbrickBusHandler::addSlaveHandle(int index, forte::core::IO::IOHandle* handle) {
   EmbrickSlaveHandler* slave = getSlave(index);
   if (slave == 0)
     return;

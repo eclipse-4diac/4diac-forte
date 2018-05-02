@@ -20,7 +20,7 @@
 #include <slave/handle.h>
 #include "../../../core/io/configFB/io_slave_multi.h"
 
-class EmbrickSlave: public IOConfigFBMultiSlave,
+class EmbrickSlave: public forte::core::IO::IOConfigFBMultiSlave,
     public EmbrickSlaveHandler::Delegate {
 public:
   EmbrickSlave(const TForteUInt8* const scm_slaveConfigurationIO,

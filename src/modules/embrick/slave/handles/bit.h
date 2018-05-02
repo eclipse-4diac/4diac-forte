@@ -17,7 +17,7 @@
 
 class EmbrickBitSlaveHandle: public EmbrickSlaveHandle {
 public:
-  EmbrickBitSlaveHandle(IODeviceController *controller, IOMapper::Direction direction,
+  EmbrickBitSlaveHandle(forte::core::IO::IODeviceController *controller, forte::core::IO::IOMapper::Direction direction,
       uint8_t offset, uint8_t position, EmbrickSlaveHandler *slave);
 
   virtual void set(const CIEC_ANY &);

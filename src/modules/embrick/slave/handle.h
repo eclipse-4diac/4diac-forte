@@ -22,9 +22,9 @@
 
 class EmbrickSlaveHandler;
 
-class EmbrickSlaveHandle: public IOHandle {
+class EmbrickSlaveHandle: public forte::core::IO::IOHandle {
 public:
-  EmbrickSlaveHandle(IODeviceController *controller, IOMapper::Direction direction,
+  EmbrickSlaveHandle(forte::core::IO::IODeviceController *controller, forte::core::IO::IOMapper::Direction direction,
       CIEC_ANY::EDataTypeID type, uint8_t offset, EmbrickSlaveHandler *slave);
   virtual ~EmbrickSlaveHandle();
 
@@ -36,7 +36,7 @@ protected:
 
   }
 
-  virtual void onObserver(IOObserver *observer);
+  virtual void onObserver(forte::core::IO::IOObserver *observer);
   virtual void dropObserver();
 
   unsigned char* buffer;

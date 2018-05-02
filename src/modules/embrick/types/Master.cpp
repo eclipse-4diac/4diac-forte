@@ -59,7 +59,7 @@ void EmbrickMaster::setInitialValues() {
 }
 
 
-IODeviceController* EmbrickMaster::createDeviceController(CDeviceExecution& paDeviceExecution) {
+forte::core::IO::IODeviceController* EmbrickMaster::createDeviceController(CDeviceExecution& paDeviceExecution) {
   return new EmbrickBusHandler(paDeviceExecution);
 }
 
@@ -75,7 +75,7 @@ void EmbrickMaster::setConfig() {
 void EmbrickMaster::onStartup() {
   BusAdapterOut().UpdateInterval() = SlaveUpdateInterval();
 
-  IOConfigFBMultiMaster::onStartup();
+  forte::core::IO::IOConfigFBMultiMaster::onStartup();
 }
 
 

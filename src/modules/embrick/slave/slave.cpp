@@ -98,7 +98,7 @@ int EmbrickSlaveHandler::update() {
     return updateErrorCounter <= MaxUpdateErrors ? 0 : -1;
   }
 
-  // IOHandle the received image
+  // forte::core::IO::IOHandle the received image
   {
     CCriticalRegion criticalRegion(handleMutex);
     TSlaveHandleList::Iterator itEnd = inputs.end();
@@ -132,7 +132,7 @@ void EmbrickSlaveHandler::forceUpdate() {
 void EmbrickSlaveHandler::dropHandles() {
   CCriticalRegion criticalRegion(handleMutex);
 
-  IOMapper& mapper = IOMapper::getInstance();
+  forte::core::IO::IOMapper& mapper = forte::core::IO::IOMapper::getInstance();
 
   TSlaveHandleList::Iterator itEnd = inputs.end();
   for (TSlaveHandleList::Iterator it = inputs.begin(); it != itEnd; ++it) {

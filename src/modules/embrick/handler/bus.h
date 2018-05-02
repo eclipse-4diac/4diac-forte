@@ -34,7 +34,7 @@ const unsigned int TransferBufferLength = 150;
 const unsigned int SyncGapMultiplicator = 15;
 const unsigned int SyncGapDuration = (SyncGapMultiplicator - 1) * 32 + 10;
 
-class EmbrickBusHandler: public IODeviceMultiController {
+class EmbrickBusHandler: public forte::core::IO::IODeviceMultiController {
   friend class EmbrickSlaveHandler;
 
 public:
@@ -65,7 +65,7 @@ public:
     Data = 10,
   };
 
-  struct Config: IODeviceController::Config {
+  struct Config: forte::core::IO::IODeviceController::Config {
     unsigned int BusInterface; //!< Selects the SPI interface for the brickBUS. The default value is 1 (selects SPI1).
     unsigned int BusSelectPin; //!< Sets the pin, which is connect to the slave select pin of the brickBUS.
     unsigned long BusInitSpeed; //!< Sets the SPI speed for the brickBUS during the initialization of the slaves. The default value is 300000 Hz.
@@ -76,33 +76,33 @@ public:
     Bit, Analog, Analog10
   };
 
-  struct HandleDescriptor: IODeviceMultiController::HandleDescriptor {
+  struct HandleDescriptor: forte::core::IO::IODeviceMultiController::HandleDescriptor {
     HandleType type;
     uint8_t offset;
     uint8_t position;
 
-    HandleDescriptor(CIEC_WSTRING const &id, IOMapper::Direction direction,
+    HandleDescriptor(CIEC_WSTRING const &id, forte::core::IO::IOMapper::Direction direction,
         int slaveIndex, HandleType type, uint8_t offset,
         uint8_t position) :
-        IODeviceMultiController::HandleDescriptor(id, direction,
+          forte::core::IO::IODeviceMultiController::HandleDescriptor(id, direction,
             slaveIndex), type(type), offset(offset), position(position) {
 
     }
   };
 
-  void setConfig(struct IODeviceController::Config* config);
+  void setConfig(struct forte::core::IO::IODeviceController::Config* config);
 
   EmbrickSlaveHandler* getSlave(int index);
   void forceUpdate(int index);
 
-  void addSlaveHandle(int index, IOHandle* handle);
+  void addSlaveHandle(int index, forte::core::IO::IOHandle* handle);
   void dropSlaveHandles(int index);
 protected:
   const char* init();
   void deInit();
 
-  IOHandle* initHandle(
-      IODeviceMultiController::HandleDescriptor *handleDescriptor);
+  forte::core::IO::IOHandle* initHandle(
+      forte::core::IO::IODeviceMultiController::HandleDescriptor *handleDescriptor);
 
   void prepareLoop();
   virtual void runLoop();

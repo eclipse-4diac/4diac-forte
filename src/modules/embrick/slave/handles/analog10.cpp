@@ -12,8 +12,8 @@
 #include "analog10.h"
 #include "criticalregion.h"
 
-EmbrickAnalog10SlaveHandle::EmbrickAnalog10SlaveHandle(IODeviceController *controller,
-    IOMapper::Direction direction, uint8_t offset, EmbrickSlaveHandler *slave) :
+EmbrickAnalog10SlaveHandle::EmbrickAnalog10SlaveHandle(forte::core::IO::IODeviceController *controller,
+    forte::core::IO::IOMapper::Direction direction, uint8_t offset, EmbrickSlaveHandler *slave) :
     EmbrickSlaveHandle(controller, direction, CIEC_ANY::e_DWORD, offset, slave) {
 
 }

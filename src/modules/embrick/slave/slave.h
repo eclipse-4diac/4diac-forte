@@ -77,9 +77,9 @@ public:
   }
 
   void addHandle(EmbrickSlaveHandle* handle) {
-    if (handle->is(IOMapper::In))
+    if (handle->is(forte::core::IO::IOMapper::In))
       addHandle(&inputs, handle);
-    else if (handle->is(IOMapper::Out))
+    else if (handle->is(forte::core::IO::IOMapper::Out))
       addHandle(&outputs, handle);
   }
 

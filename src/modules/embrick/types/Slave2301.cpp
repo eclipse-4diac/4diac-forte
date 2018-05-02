@@ -66,7 +66,7 @@ void EmbrickSlave2301::initHandles() {
 
   for (int i = 0; i < oCount; i++) {
     EmbrickBusHandler::HandleDescriptor desc = EmbrickBusHandler::HandleDescriptor(
-        *static_cast<CIEC_WSTRING*>(getDI(oOffset + i)), IOMapper::Out, index,
+        *static_cast<CIEC_WSTRING*>(getDI(oOffset + i)), forte::core::IO::IOMapper::Out, index,
         EmbrickBusHandler::Bit, (uint8_t) (i / 8), (uint8_t) (i % 8));
     initHandle(&desc);
   }

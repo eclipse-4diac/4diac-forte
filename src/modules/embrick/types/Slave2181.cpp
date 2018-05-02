@@ -76,14 +76,14 @@ void EmbrickSlave2181::initHandles() {
 
   for (int i = 0; i < iCount; i++) {
     EmbrickBusHandler::HandleDescriptor desc = EmbrickBusHandler::HandleDescriptor(
-        *static_cast<CIEC_WSTRING*>(getDI(iOffset + i)), IOMapper::In, index,
+        *static_cast<CIEC_WSTRING*>(getDI(iOffset + i)), forte::core::IO::IOMapper::In, index,
         EmbrickBusHandler::Bit, (uint8_t) (i / 8), (uint8_t) (i % 8));
     initHandle(&desc);
   }
 
   for (int i = 0; i < oCount; i++) {
     EmbrickBusHandler::HandleDescriptor desc = EmbrickBusHandler::HandleDescriptor(
-        *static_cast<CIEC_WSTRING*>(getDI(oOffset + i)), IOMapper::Out, index,
+        *static_cast<CIEC_WSTRING*>(getDI(oOffset + i)), forte::core::IO::IOMapper::Out, index,
         EmbrickBusHandler::Bit, (uint8_t) (i / 8), (uint8_t) (i % 8));
     initHandle(&desc);
   }

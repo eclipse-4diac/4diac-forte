@@ -12,8 +12,8 @@
 #include "bit.h"
 #include "criticalregion.h"
 
-EmbrickBitSlaveHandle::EmbrickBitSlaveHandle(IODeviceController *controller,
-    IOMapper::Direction direction, uint8_t offset,
+EmbrickBitSlaveHandle::EmbrickBitSlaveHandle(forte::core::IO::IODeviceController *controller,
+    forte::core::IO::IOMapper::Direction direction, uint8_t offset,
     uint8_t position, EmbrickSlaveHandler *slave) :
     EmbrickSlaveHandle(controller, direction, type = CIEC_ANY::e_BOOL, offset, slave), mask(
         (uint8_t) (1 << position)) {
