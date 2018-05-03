@@ -55,7 +55,7 @@ private:
 
   bool openBootFile(CIEC_STRING* paBootFileName);
   bool readLine(CIEC_STRING &line);
-  bool checkCommandEnding(const CIEC_STRING &line) const;
+  bool hasCommandEnded(const CIEC_STRING &line) const;
 };
 
 #endif /* SRC_STDFBLIB_ITA_FORTEBOOTFILELOADER_H_ */

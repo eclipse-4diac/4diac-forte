@@ -113,10 +113,11 @@ bool ForteBootFileLoader::readLine(CIEC_STRING &line){
     }else{
       return 0 != line.length();
     }
-  }while(checkCommandEnding(line));
+  }while(!hasCommandEnded(line));
   return true;
 }
 
-bool ForteBootFileLoader::checkCommandEnding(const CIEC_STRING &line) const{
-  return (strcmp(line.getValue() + line.length() - 11, "</Request>\n"));
+bool ForteBootFileLoader::hasCommandEnded(const CIEC_STRING &line) const{
+  return (!strcmp(line.getValue() + line.length() - 11, "</Request>\n")
+      || !strcmp(line.getValue() + line.length() - 3, "/>\n"));
 }
