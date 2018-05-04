@@ -11,7 +11,7 @@
 #ifndef _PCTIMEHA_H_
 #define _PCTIMEHA_H_
 
-#include "forte_thread.h"
+#include <forte_thread.h>
 #include "../timerha.h"
 
 /*! \ingroup posix_hal
