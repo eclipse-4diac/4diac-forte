@@ -903,7 +903,6 @@ void COPC_UA_Layer::handleAsyncCallResult(const unsigned int /*callId*/, void *p
   forte_free(result);
   if (!failed) {
     mInterruptResp = e_ProcessDataOk;
-    getCommFB()->interruptCommFB(this);
   }
 
 }
