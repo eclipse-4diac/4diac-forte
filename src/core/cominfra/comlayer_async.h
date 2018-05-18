@@ -23,11 +23,6 @@
 namespace forte {
   namespace com_infra {
 
-    struct CComLayerAsync_Data {
-      const unsigned int callId;
-      void *payload;
-      void *result;
-    };
 
     class CComLayerAsync: public CComLayer, protected CThread{
     public:
@@ -48,14 +43,26 @@ namespace forte {
       virtual EComResponse processInterruptChild();
 
     private:
-      unsigned int currentCallId;
-
-      CSinglyLinkedList<struct CComLayerAsync_Data*> asyncCalls;
-      CSinglyLinkedList<struct CComLayerAsync_Data*> asyncResults;
-
       virtual EComResponse processInterrupt();
 
-      CSyncObject asyncResultsMutex;
+      struct SAsyncData {
+        const unsigned int mCallId;
+        void *mPayload;
+        void *mResult;
+
+        SAsyncData(unsigned int paCallId, void *paPayload, void *paResult) :
+            mCallId(paCallId), mPayload(paPayload), mResult(paResult){
+        }
+      };
+
+
+      typedef CSinglyLinkedList<SAsyncData> TAsynchDataList;
+      TAsynchDataList mAsyncCalls;
+      TAsynchDataList mAsyncResults;
+      unsigned int mCurrentCallId;
+
+
+      CSyncObject mAsyncResultsMutex;
       CSemaphore mSuspendSemaphore;
     };
 

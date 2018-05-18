@@ -57,6 +57,12 @@ public:
     return m_poCurrentPosition->getData();
   }
 
+  /*!\brief const version of dereference operator for const iterators
+   */
+  const T& operator*() const {
+      return m_poCurrentPosition->getData();
+    }
+
   /*!\brief Returns a pointer to the contained object
    * \return A Pointer to the contained object of type T
    */
