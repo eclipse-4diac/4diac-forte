@@ -1,8 +1,5 @@
 /*******************************************************************************
-*
-********************************************************************************
-*******************************************************************************
-* Copyright (c) 2017-2018 Marc Jakobi, github.com/MrcJkb
+* Copyright (c) 2017-2018 Marc Jakobi, github.com/MrcJkb, fortiss GmbH
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License v1.0
 * which accompanies this distribution, and is available at
@@ -10,13 +7,9 @@
 *
 * Contributors:
 *    Marc Jakobi - initial implementation
-*******************************************************************************
-******************************************************************************
-*
-*
-********************************************************************************
-* Class for parsing HTTP requests and responses
+*    Jose Cabral - Use CIEC_STRING instead of const char* and cleanning of functions
 ********************************************************************************/
+
 #include "httpparser.h"
 #include <stdio.h>
 #include <string.h>
@@ -25,94 +18,108 @@
 using namespace forte::com_infra;
 
 CHttpParser::CHttpParser() {
-  setExpectedRspCode("HTTP/1.1 200 OK");
 }
 
 CHttpParser::~CHttpParser(){
 }
 
-void CHttpParser::createGetRequest(char* paDest, const char* paParams) {
-  char ipParams[kAllocSize]; // address + port
-  char path[kAllocSize]; // path for HTTP request
-  sscanf(paParams, "%99[^/]/%511s[^/n]", ipParams, path);
-  strncpy(paDest, "GET /", 6);
-  strncat(paDest, path, kAllocSize);
-  CHttpParser::addHost(paDest, ipParams);
-  CHttpParser::addRequestEnding(paDest);
+void CHttpParser::createGetRequest(CIEC_STRING& paDest, const CIEC_STRING& paHost, const CIEC_STRING& paPath) {
+  CHttpParser::addCommonHeader(paDest, paHost, paPath, CHttpComLayer::e_GET);
+  CHttpParser::addHeaderEnding(paDest);
 }
 
-void CHttpParser::createPutRequest(char* paDest, const char* paParams, const char* paData) {
-  char ipParams[kAllocSize]; // address + port
-  char path[kAllocSize]; // path for HTTP request
-  sscanf(paParams, "%99[^/]/%511s[^/n]", ipParams, path);
-  strncpy(paDest, "PUT /", 6);
-  strncat(paDest, path, kAllocSize);
-  CHttpParser::addHost(paDest, ipParams);
-  strncat(paDest, "\r\nContent-type: text/html\r\nContent-length: ", 43);
-  char contentLength[kAllocSize];
-  sprintf(contentLength, "%zu", strlen(paData));
-  strncat(paDest, contentLength, kAllocSize);
-  CHttpParser::addRequestEnding(paDest);
-  strncat(paDest, paData, kAllocSize);
+void CHttpParser::createPutRequest(CIEC_STRING& paDest, const CIEC_STRING& paHost, const CIEC_STRING& paPath, const CIEC_STRING& paData) {
+  CHttpParser::addCommonHeader(paDest, paHost, paPath, CHttpComLayer::e_PUT);
+  paDest.append("\r\nContent-type: text/html\r\nContent-length: ");
+  changePutData(paDest, paData);
 }
 
-void CHttpParser::addHost(char* paDest, const char* paHost) {
-  strncat(paDest, " HTTP/1.1\r\nHost: ", 17);
-  strncat(paDest, paHost, kAllocSize);
-}
-
-void CHttpParser::addRequestEnding(char* paDest) {
-  strncat(paDest, "\r\n\r\n", 4);
-}
-
-bool CHttpParser::parseGetResponse(char* paDest, char* paSrc) {
-  if (CHttpParser::isOKresponse(paSrc)) {
-    // Extract data from HTTP GET respnse char
-    char* data = strstr(paSrc, "\r\n\r\n");
-    if (0 != data && strlen(data) > 6) { // \r\n\r\n + body + \r\n
-        data += 4;
-        sscanf(data, "%99s[^/n])", paDest);
-        return true;
-    }
-    DEVLOG_INFO("Empty HTTP response received\n");
-    // Empty response received?
-    strncpy(paDest, "0", 2);
-    return false;
-  }
-  // Bad response received?
-  DEVLOG_INFO("Unexpected HTTP GET response code\n");
-  CHttpParser::getHttpResponseCode(paDest, paSrc);
-  return false;
-}
-
-bool CHttpParser::parsePutResponse(char* paDest, char* paSrc) {
-  if (CHttpParser::isOKresponse(paSrc)) {
-    strcpy(paDest, mExpectedRspCode);
+bool CHttpParser::changePutData(CIEC_STRING& paDest, const CIEC_STRING& paData){
+  char* helperChar = strstr(paDest.getValue(), "length: ");
+  if(0 != helperChar){
+    helperChar += 8;
+    *helperChar = '\0';
+    paDest = paDest.getValue(); //will shrink the length of the string to the new ending
+    char contentLength[6]; //TODO: should this be fixed or not?
+    sprintf(contentLength, "%u", strlen(paData.getValue()));
+    paDest.append(contentLength);
+    CHttpParser::addHeaderEnding(paDest);
+    paDest.append(paData.getValue());
     return true;
   }
-  DEVLOG_INFO("Unexpected HTTP PUT response code\n");
-  CHttpParser::getHttpResponseCode(paDest, paSrc);
-  return false;
+  else{ // wrong request?
+    DEVLOG_ERROR("[HTTP Parser] PUT request was wrongly created\n");
+    return false;
+  }
 }
 
-void CHttpParser::getHttpResponseCode(char* paDest, char* paSrc) {
-  char* tmp = strtok(paSrc, "\r\n");
-  if (tmp != 0) {
-    memcpy(paDest, tmp, strlen(tmp) + 1);
+void CHttpParser::addCommonHeader(CIEC_STRING& paDest, const CIEC_STRING& paHost, const CIEC_STRING& paPath, CHttpComLayer::ERequestType paType) {
+  switch(paType){
+    case CHttpComLayer::e_GET:
+      paDest = "GET /";
+      break;
+    case CHttpComLayer::e_PUT:
+      paDest = "PUT /";
+      break;
+    default:
+      DEVLOG_ERROR("[HTTP Parser] Unexpected HTTP Type when adding header\n");
+      break;
+  }
+
+  paDest.append(paPath.getValue());
+  paDest.append(" HTTP/1.1\r\n");
+  paDest.append("Host: ");
+  paDest.append(paHost.getValue());
+}
+
+void CHttpParser::addHeaderEnding(CIEC_STRING& paDest) {
+  paDest.append("\r\n\r\n");
+}
+
+bool CHttpParser::parseGetResponse(CIEC_STRING& paDest, char* paSrc, CIEC_STRING& paExpectedCode){
+  if(CHttpParser::getHttpResponseCode(paDest, paSrc)){
+    if(paDest == paExpectedCode){
+      char* helperChar = strstr(paSrc, "\r\n\r\n"); // Extract data from HTTP GET response char
+      if(0 != helperChar){
+        helperChar += 4;
+        paDest = helperChar;
+        return true;
+      }else{ // Empty response received?
+        DEVLOG_INFO("[HTTP Parser] Empty GET content response received\n");
+        paDest = "";
+        return false;
+      }
+    }
+  }else{
+    // Bad response received?
+    DEVLOG_INFO("[HTTP Parser] Unexpected GET response code\n");
+    return false;
+  }
+}
+
+bool CHttpParser::parsePutResponse(CIEC_STRING& paDest, char* paSrc, CIEC_STRING& paExpectedCode) {
+  if(CHttpParser::getHttpResponseCode(paDest, paSrc)){
+    if(paDest == paExpectedCode){
+      return true;
+    }
+    else{
+      DEVLOG_ERROR("[HTTP Parser] Unexpected PUT response code\n");
+      return false;
+    }
+  }
+}
+
+bool CHttpParser::getHttpResponseCode(CIEC_STRING& paDest, char* paSrc) {
+  char* helperChar = strstr(paSrc, "\r\n");
+  if (helperChar != 0) {
+    *helperChar = '\0';
+    paDest = paSrc;
+    *helperChar = '\r';
+    return true;
   }
   else {
-    DEVLOG_INFO("Invalid HTTP response\n");
-    strncpy(paDest, "Invalid response", 17);
+    DEVLOG_ERROR("[HTTP Parser] Invalid HTTP response\n");
+    paDest = "Invalid response";
+    return false;
   }
-}
-
-bool CHttpParser::isOKresponse(char* paResponse) {
-  if (strnlen(paResponse, 16) > 15) {
-    return 0 != strstr(paResponse, mExpectedRspCode);
-  }
-  return false;
-}
-
-void CHttpParser::setExpectedRspCode(const char* paRsp) {
-  strcpy(mExpectedRspCode, paRsp);
 }
