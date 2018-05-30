@@ -103,14 +103,13 @@ void CEventChainExecutionThread::startEventChain(SEventEntry *paEventToAdd){
         //the list is not full
         mExternalEventListEnd = pstNextEventListElem;
       }
+      mProcessingEvents = true;
+      resumeSelfSuspend();
     }
     else{
       DEVLOG_ERROR("External event queue is full, external event dropped!\n");
     }
   } // End critical region
-
-  mProcessingEvents = true;
-  resumeSelfSuspend();
 }
 
 void CEventChainExecutionThread::addEventEntry(SEventEntry *paEventToAdd){
