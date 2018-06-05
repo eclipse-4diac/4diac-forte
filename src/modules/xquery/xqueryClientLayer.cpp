@@ -23,11 +23,11 @@ const char *CXqueryClientLayer::scmParameterSeperator = " ;:";
 
 CXqueryClientLayer::CXqueryClientLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB) : CComLayer(pa_poUpperLayer, pa_poComFB){
   sfd = -1;
+  command = NULL;
   host = NULL;
   port = NULL;
   usr = NULL;
   psw = NULL;
-  command = NULL;
   dbName = NULL;
 }
 
@@ -48,25 +48,23 @@ bool CXqueryClientLayer::parseParameters(char *pa_acLayerParameter){
 }
 
 forte::com_infra::EComResponse CXqueryClientLayer::openConnection(char *pa_acLayerParameter){
-  EComResponse retVal = e_InitOk;
+  EComResponse retVal = e_InitTerminated;
   if(e_Client == m_poFb->getComServiceType() && m_poFb->getNumRD() == 1 && m_poFb->getNumSD() == 1 && parseParameters(pa_acLayerParameter)){
     sfd = basex_connect(host, port);
     if (sfd == -1) {
       DEVLOG_ERROR("Can not connect to BaseX server.\n");
-      retVal = e_InitTerminated;
     }else{
       int rc = basex_authenticate(sfd, usr, psw);
       if (rc == -1) {
         DEVLOG_ERROR("Access to DB denied.\n");
-        retVal = e_InitTerminated;
       }else{
         m_poFb->QO() = true;
         DEVLOG_INFO("Connected to DB.\n");
         openDB();
+        retVal = e_InitOk;
       }
     }
   }else{
-     retVal = e_InitTerminated;
      DEVLOG_ERROR("[xquery] supports only CLIENT_1 with ID = xquery[IP:port; dbName; usr; psw]\n");
   }
   return retVal;

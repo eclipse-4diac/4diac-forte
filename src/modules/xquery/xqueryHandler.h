@@ -18,8 +18,6 @@
 #include <xqueryClientLayer.h>
 #include <forte_sem.h>
 
-class CXqueryClientLayer;
-
 class CXqueryHandler : public CExternalEventHandler, private CThread{
   DECLARE_HANDLER(CXqueryHandler)
 
@@ -30,7 +28,7 @@ class CXqueryHandler : public CExternalEventHandler, private CThread{
 
     static forte::arch::CSemaphore mStateSemaphore;
     static bool mIsSemaphoreEmpty;
-    void resumeSelfSuspend();
+    void resumeSuspend();
     void selfSuspend();
 
     char *result;

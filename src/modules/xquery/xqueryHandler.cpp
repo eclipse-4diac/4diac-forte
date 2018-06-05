@@ -28,17 +28,14 @@ bool CXqueryHandler::mIsSemaphoreEmpty = true;
 CXqueryHandler::CXqueryHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution){
   result = NULL;
   info = NULL;
-  if(!isAlive()){
-     start();
-   }
 }
 
 CXqueryHandler::~CXqueryHandler(){
   if(isAlive()){
     {
       CCriticalRegion sectionState(smXqueryMutex);
-      selfSuspend();
       setAlive(false);
+      resumeSuspend();
     }
     free(result);
     free(info);
@@ -54,8 +51,8 @@ void CXqueryHandler::enableHandler(){
 
 void CXqueryHandler::disableHandler(){
   if(isAlive()){
-    selfSuspend();
     setAlive(false);
+    resumeSuspend();
     end();
   }
 }
@@ -71,7 +68,7 @@ int CXqueryHandler::getPriority() const{
 int CXqueryHandler::registerLayer(CXqueryClientLayer* paLayer){
   m_lstXqueryFBList.push_back(paLayer);
   enableHandler();
-  resumeSelfSuspend();
+  resumeSuspend();
   return 0;
 }
 
@@ -80,7 +77,6 @@ void CXqueryHandler::run(){
     if(m_lstXqueryFBList.isEmpty()){
         selfSuspend();
     }else{
-      CCriticalRegion sectionState(smXqueryMutex);
       TXqueryFBContainer::Iterator it = m_lstXqueryFBList.begin();
       CXqueryClientLayer *xc = *it;
       if(xc->getSfd() > -1){
@@ -105,7 +101,7 @@ void CXqueryHandler::run(){
   }
 }
 
-void CXqueryHandler::resumeSelfSuspend(){
+void CXqueryHandler::resumeSuspend(){
   if(mIsSemaphoreEmpty){ //avoid incrementing many times
     mStateSemaphore.semInc();
     mIsSemaphoreEmpty = false;
@@ -114,8 +110,4 @@ void CXqueryHandler::resumeSelfSuspend(){
 
 void CXqueryHandler::selfSuspend(){
   mStateSemaphore.semWaitIndefinitly();
-  {
-    CCriticalRegion section(smXqueryMutex);
-    mIsSemaphoreEmpty = true;
-  }
 }
