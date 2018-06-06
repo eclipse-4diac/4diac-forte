@@ -94,6 +94,8 @@ namespace forte {
         /** Expected response code (default: HTTP/1.1 200 OK) */
         CIEC_STRING mExpectedRspCode;
 
+        CIEC_STRING mContentType;
+
         /** Ouput response is to be written to a data output */
         bool hasOutputResponse;
     };

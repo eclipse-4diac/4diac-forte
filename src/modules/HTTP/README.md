@@ -13,15 +13,18 @@ Simple HTTP Com Layer for 4diac-RTE (FORTE).
 
 # Parameters
 http[ip:port/path] <br />
-http[ip:port/path;expected_response_code]
+http[ip:port/path;expected\_response\_code;content\_type]
 * ip: The IP address
 * port: The port number
 * path: The path in the URL
-* expected_response_code (optional): The expected HTTP response code (= "HTTP/1.1 200 OK" if none is specified)
+* expected\_response\_code (optional): The expected HTTP response code (= "HTTP/1.1 200 OK" if none is specified). An empty response code will be set to default
+* content\_type (optional): The content type of a PUT request. Default is "text/html"
 
 examples: <br />
 http[144.12.131.2:80/rest/battery/voltage] <br />
 http[144.12.131.2:80/rest/battery/voltage;HTTP/1.1 201 Created]
+http[144.12.131.2:80/rest/battery/voltage;HTTP/1.1 201 Created;application/json]
+http[144.12.131.2:80/rest/battery/voltage;;application/json] --> Default reponse code
 
 # Notes
 * The project is still in its early development stages. The interface is subject to change.

@@ -36,12 +36,26 @@ EComResponse CHttpComLayer::openConnection(char *paLayerParameter){
       eRetVal = e_ProcessDataInvalidObject;
       break;
     case e_Client: {
+      bool defaultReponse = true;
+      bool defaultContent = true;
       char* helperChar = strchr(paLayerParameter, ';'); //look for expected response code
       if(0 != helperChar){
-        *helperChar++ = '\0';
+        *helperChar = '\0';
+        helperChar++;
+        char* startOfContentType = strchr(helperChar, ';'); //look for content type
+        if(0 != startOfContentType){
+          *startOfContentType = '\0';
+          mContentType = startOfContentType + 1;
+          defaultContent = false;
+        }
         mExpectedRspCode = helperChar;
-      }else{
+        defaultReponse = false;
+      }
+      if(defaultReponse){
         mExpectedRspCode = "HTTP/1.1 200 OK";
+      }
+      if(defaultContent){
+        mContentType = "text/html";
       }
       // Copy params for later use by HTTP parser ()
       helperChar = strchr(paLayerParameter, '/'); //look for path
@@ -60,7 +74,7 @@ EComResponse CHttpComLayer::openConnection(char *paLayerParameter){
           if(noOfSD > 0){ //PUT REQUEST
             if(1 == noOfSD){
               mRequestType = e_PUT;
-              CHttpParser::createPutRequest(mRequest, mHost, mPath, mReqData);
+              CHttpParser::createPutRequest(mRequest, mHost, mPath, mReqData, mContentType);
               if(1 < noOfRD){
                 DEVLOG_ERROR("[HTTP Layer] A PUT request with more than one output\n");
               }else{

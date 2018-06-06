@@ -37,7 +37,7 @@ namespace forte {
          * paPath: path to send, e.g., /example/path
          * data: Data to be written to the server location.
          */
-        static void createPutRequest(CIEC_STRING& paDest, const CIEC_STRING& paHost, const CIEC_STRING& paPath, const CIEC_STRING& paData);
+        static void createPutRequest(CIEC_STRING& paDest, const CIEC_STRING& paHost, const CIEC_STRING& paPath, const CIEC_STRING& paData, const CIEC_STRING& paContentType);
         /**
          * Extracts data from a response to a HTTP GET request stored in paSrc and writes it to dest.
          * If the response header is not as paExpectedCode, the header is copied instead.

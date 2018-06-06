@@ -28,9 +28,11 @@ void CHttpParser::createGetRequest(CIEC_STRING& paDest, const CIEC_STRING& paHos
   CHttpParser::addHeaderEnding(paDest);
 }
 
-void CHttpParser::createPutRequest(CIEC_STRING& paDest, const CIEC_STRING& paHost, const CIEC_STRING& paPath, const CIEC_STRING& paData) {
+void CHttpParser::createPutRequest(CIEC_STRING& paDest, const CIEC_STRING& paHost, const CIEC_STRING& paPath, const CIEC_STRING& paData, const CIEC_STRING& paContentType){
   CHttpParser::addCommonHeader(paDest, paHost, paPath, CHttpComLayer::e_PUT);
-  paDest.append("\r\nContent-type: text/html\r\nContent-length: ");
+  paDest.append("\r\nContent-type: ");
+  paDest.append(paContentType.getValue());
+  paDest.append("\r\nContent-length: ");
   changePutData(paDest, paData);
 }
 
