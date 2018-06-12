@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 fortiss GmbH
+ * Copyright (c) 2015, 2018 fortiss GmbH, Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -40,7 +40,7 @@ EMGMResponse CMonitoringHandler::executeMonitoringCommand(SManagementCMD &paComm
           getWatches(paCommand.mMonitorResponse, paCommand.mAdditionalParams.getValue()[0]);
       break;
     case cg_nMGM_CMD_Monitoring_Force:
-      retVal = forceValue(paCommand.mFirstParam, paCommand.mAdditionalParams);
+      retVal = mResource.writeValue(paCommand.mFirstParam, paCommand.mAdditionalParams, true);
       break;
     case cg_nMGM_CMD_Monitoring_ClearForce:
       retVal = clearForce(paCommand.mFirstParam);
@@ -179,19 +179,6 @@ EMGMResponse CMonitoringHandler::getWatches(CIEC_STRING &paResponse, char paQual
   }
 
   return e_RDY;
-}
-
-EMGMResponse CMonitoringHandler::forceValue(forte::core::TNameIdentifier &paNameList,
-    CIEC_STRING &paValue){
-  EMGMResponse eRetVal = e_NO_SUCH_OBJECT;
-  CStringDictionary::TStringId portName = paNameList.back();
-  paNameList.popBack();
-  CFunctionBlock *fB = getFB(paNameList);
-
-  if(0 != fB){
-    eRetVal = (fB->forceData(portName, paValue.getValue())) ? e_RDY : e_INVALID_DST;
-  }
-  return eRetVal;
 }
 
 EMGMResponse CMonitoringHandler::clearForce(forte::core::TNameIdentifier &paNameList){

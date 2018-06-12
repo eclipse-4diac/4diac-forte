@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2005 - 2018 ACIN, Profactor GmbH, fortiss GmbH,
+ *                           Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -219,22 +220,38 @@ EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcName
 }
 
 EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList,
-    const CIEC_STRING & paValue){
+    const CIEC_STRING & paValue, bool paForce){
   EMGMResponse retVal = e_NO_SUCH_OBJECT;
 
-  CIEC_ANY *var = getVariable(paNameList);
-  if(var != 0){
-    if(paValue.length() > 0){
-      if(paValue.length() == var->fromString(paValue.getValue())){
+  CStringDictionary::TStringId portName = paNameList.back();
+  paNameList.popBack();
+  forte::core::TNameIdentifier::CIterator runner(paNameList.begin());
+
+  CFunctionBlock *fb = this;
+  if(paNameList.size() >= 1){
+   //this is not an identifier for the resource interface
+   fb = getContainedFB(runner); // the last entry is the input name therefore reduce list here by one
+  }
+
+  if((0 != fb) && (runner.isLastEntry())){
+    CIEC_ANY *var = fb->getVar(&portName, 1);
+    if(0 != var){
+      // 0 is not supported in the fromString method
+      if((paValue.length() > 0) && (paValue.length() == var->fromString(paValue.getValue()))){
         //if we cannot parse the full value the value is not valid
+        if(paForce){
+          var->setForced(true);
+          CDataConnection *con = fb->getDOConnection(portName);
+          if(0 != con){
+            //if we have got a connection it was a DO mirror the forced value there
+            CCriticalRegion criticalRegion(m_oResDataConSync);
+            con->writeData(var);
+          }
+        }
         retVal = e_RDY;
-      }
-      else{
+      } else {
         retVal = e_BAD_PARAMS;
       }
-    }
-    else{
-      retVal = e_BAD_PARAMS; // 0 is not supported in the fromString method
     }
   }
   return retVal;

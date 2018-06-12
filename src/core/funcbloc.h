@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, nxtControl GmbH, fortiss GmbH
+ * Copyright (c) 2005 - 2018 ACIN, Profactor GmbH, nxtControl GmbH, fortiss GmbH,
+ *                           Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -399,9 +400,6 @@ class CFunctionBlock{
     forte::core::SMonitorEvent &getEIMonitorData(TEventID pa_unEIID);
 
     forte::core::SMonitorEvent &getEOMonitorData(TEventID pa_unEOID);
-
-    // DATA-Monitor-functions
-    bool forceData(CStringDictionary::TStringId pa_acDOName, const char * forceValue);
 
     bool startEIBreakpoint(TEventID p_nEventId);
     bool startEOBreakpoint(TEventID p_nEventId);
