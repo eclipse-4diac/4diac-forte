@@ -193,9 +193,6 @@ EMGMResponse CMonitoringHandler::clearForce(forte::core::TNameIdentifier &paName
       poDataVal->setForced(false);
       eRetVal = e_RDY;
     }
-    else{
-      eRetVal = e_INVALID_DST;
-    }
   }
   return eRetVal;
 }
