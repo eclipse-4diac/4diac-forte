@@ -1,5 +1,7 @@
 /*******************************************************************************
-  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
+  * Copyright (c) 2005 - 2018 Profactor GmbH, ACIN, fortiss GmbH,
+  *                           Johannes Kepler University
+  *
   * All rights reserved. This program and the accompanying materials
   * are made available under the terms of the Eclipse Public License v1.0
   * which accompanies this distribution, and is available at
@@ -734,35 +736,6 @@ CFunctionBlock *CFunctionBlock::getFB(forte::core::TNameIdentifier::CIterator &p
 //////////////////////////////////////////////////////////////////////////////
 // Data-Monitor functions
 //////////////////////////////////////////////////////////////////////////////
-bool CFunctionBlock::forceData(CStringDictionary::TStringId pa_acName, const char * forceValue){
-
-  TPortId portID = getDOID(pa_acName);
-  if(portID != cg_unInvalidPortId){
-    CIEC_ANY *poDO = getDO(portID);
-    poDO->setForced(true);
-    poDO->fromString(forceValue);
-
-
-    CDataConnection *con = getDOConUnchecked(portID);
-    if(con->isConnected()){
-      CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
-      con->writeData(poDO);
-    }
-    return true;
-  }
-
-  portID = getDIID(pa_acName);
-
-  if(portID != cg_unInvalidPortId){
-    CIEC_ANY *poDI = getDI(portID);
-    poDI->setForced(true);
-    poDI->fromString(forceValue);
-    return true;
-  }
-
-  return false;
-}
-
 forte::core::SMonitorEvent &CFunctionBlock::getEIMonitorData(TEventID pa_unEIID){
   return m_nEIMonitorCount[pa_unEIID];
 }
