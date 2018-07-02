@@ -18,6 +18,7 @@
 #include <xqueryClientLayer.h>
 #include <forte_sem.h>
 
+// cppcheck-suppress noConstructor
 class CXqueryHandler : public CExternalEventHandler, private CThread{
   DECLARE_HANDLER(CXqueryHandler)
 
