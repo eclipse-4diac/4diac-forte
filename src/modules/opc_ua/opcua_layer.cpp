@@ -242,7 +242,7 @@ void COPC_UA_Layer::deleteNodeIds(struct FB_NodeIds **nodeIds, unsigned int curr
     if ((*nodeIds)[j].functionBlockId != NULL)
       UA_NodeId_delete((*nodeIds)[j].variableId);
   }
-  delete[](*nodeIds);
+  forte_free (*nodeIds);
   (*nodeIds) = NULL;
 }
 
