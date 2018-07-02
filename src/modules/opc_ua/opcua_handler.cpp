@@ -165,7 +165,7 @@ void COPC_UA_Handler::registerWithLds(const UA_String *discoveryUrl) {
   }
 
   // will be freed when removed from list
-  char *discoveryUrlChar = (char*)malloc(sizeof(char)*discoveryUrl->length+1);
+  char *discoveryUrlChar = (char*)forte_malloc(sizeof(char)*discoveryUrl->length+1);
   memcpy(discoveryUrlChar, discoveryUrl->data, discoveryUrl->length);
   discoveryUrlChar[discoveryUrl->length] = 0;
 
