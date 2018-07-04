@@ -20,13 +20,13 @@ forte::com_infra::CComLayerAsync::CComLayerAsync(forte::com_infra::CComLayer *pa
 
 forte::com_infra::CComLayerAsync::~CComLayerAsync() {
   setAlive(false);
-  mSuspendSemaphore.semInc();
+  mSuspendSemaphore.inc();
 }
 
 void forte::com_infra::CComLayerAsync::run() {
   while(isAlive()){
 
-    mSuspendSemaphore.semWaitIndefinitly();
+    mSuspendSemaphore.waitIndefinitly();
 
     while (isAlive() && !mAsyncCalls.isEmpty()) {
       SAsyncData first(*mAsyncCalls.begin());
@@ -53,7 +53,7 @@ unsigned int forte::com_infra::CComLayerAsync::callAsync(void *payload) {
     mCurrentCallId = 1;
   }
   mAsyncCalls.push_back(SAsyncData(mCurrentCallId, payload, 0));
-  mSuspendSemaphore.semInc();
+  mSuspendSemaphore.inc();
   return mCurrentCallId;
 }
 
