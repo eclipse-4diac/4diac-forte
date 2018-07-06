@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 fortiss GmbH
+ * Copyright (c) 2016, 2018 fortiss GmbH, TU Vienna/ACIN
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,8 @@
  *
  * Contributors:
  *  Alois Zoitl - initial API and implementation and/or initial documentation
+ *  Martin Melik-Merkumians - adds timed wait and try and no wait
+ *    and documentation
  *******************************************************************************/
 
 #include "forte_sem.h"
@@ -31,6 +33,15 @@ namespace forte {
 
     void CNetOSSemaphore::semWaitIndefinitly(){
       tx_semaphore_get(&mSemaphore, TX_WAIT_FOREVER);
+    }
+
+    bool CNetOSSemaphore::timedWait(TForteUInt64 paRelativeTimeout) {
+      //TODO: Handle ticks to nanoseconds
+      return (0 == tx_semaphore_get(&mSemaphore, paRelativeTimeout));
+    }
+
+    bool tryNoWait() {
+      return (0 == tx_semaphore_get(&mSemaphore, TX_NO_WAIT));
     }
 
   } /* namespace arch */

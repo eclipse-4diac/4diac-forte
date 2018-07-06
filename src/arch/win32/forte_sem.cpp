@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 fortiss GmbH
+ * Copyright (c) 2016, 2018 fortiss GmbH, TU Vienna/ACIN
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,8 @@
  *
  * Contributors:
  *  Alois Zoitl - initial API and implementation and/or initial documentation
+ *  Peter Gsellmann, Martin Melik-Merkumians - adds timed wait and try and no wait
+ *    and documentation
  *******************************************************************************/
 
 #include "forte_sem.h"
@@ -28,12 +30,20 @@ namespace forte {
       CloseHandle(mSemaphore);
     }
 
-    void CWin32Semaphore::semInc(){
+    void CWin32Semaphore::inc(){
       ReleaseSemaphore(mSemaphore, 1, 0);
     }
 
-    void CWin32Semaphore::semWaitIndefinitly(){
+    void CWin32Semaphore::waitIndefinitly(){
       WaitForSingleObject(mSemaphore, INFINITE);
+    }
+
+    bool CWin32Semaphore::timedWait(TForteUInt64 paRelativeTimeout){
+      return (0 == WaitForSingleObject(mSemaphore, paRelativeTimeout / (DWORD)1E6));
+    }
+
+    bool CWin32Semaphore::tryNoWait(){
+      return (0 == WaitForSingleObject(mSemaphore, 0));
     }
 
   } /* namespace arch */
