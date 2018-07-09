@@ -19,29 +19,32 @@
 namespace forte {
   namespace arch {
 
-    CEcosSemaphore::CEcosSemaphore(unsigned int paInitialValue){
-      cyg_semaphore_init(&mSemaphore, paInitialValue);
+    CEcosSemaphore::CEcosSemaphore(unsigned int paInitialValue) : mSemaphore(paInitialValue > 0){
     }
 
     CEcosSemaphore::~CEcosSemaphore(){
-      cyg_semaphore_destroy(&mSemaphore);
     }
 
     void CEcosSemaphore::inc(){
-      cyg_semaphore_post(&mSemaphore);
+      mSemaphore->post();
     }
 
     void CEcosSemaphore::waitIndefinitely(){
-      cyg_semaphore_wait(&mSemaphore);
+      mSemaphore->wait();
     }
 
     bool CEcosSemaphore::timedWait(TForteUInt64 paRelativeTimeout){
       cyg_tick_count_t absWaitTime = cyg_current_time() + paRelativeTimeout * CYGNUM_HAL_RTC_NUMERATOR / CYGNUM_HAL_RTC_DENOMINATOR;
-      return (0 != cyg_semaphore_timed_wait(&mSemaphore, absWaitTime));
+      do{
+        if(true == mSemaphore->sem_trywait()){
+          return true;
+        }
+      } while(cyg_current_time() < absWaitTime);
+      return false;
     }
 
     bool CEcosSemaphore::tryNoWait(){
-      return (0 != cyg_semaphore_trywait());
+      return (0 != mSemaphore->trywait());
     }
 
   } /* namespace arch */
