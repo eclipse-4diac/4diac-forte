@@ -14,7 +14,7 @@
 #ifndef SRC_ARCH_ECOS_SEMAPHORE_H_
 #define SRC_ARCH_ECOS_SEMAPHORE_H_
 
-#include <cyg/kernel/kapi.h>
+#include <cyg/kernel/sema.hxx>
 #include "datatype.h"
 
 namespace forte {
@@ -53,7 +53,7 @@ namespace forte {
         bool tryNoWait();
 
       private:
-        cyg_sem_t mSemaphore;
+        Cyg_Binary_Semaphore::Cyg_Binary_Semaphore mSemaphore;
     };
 
 
