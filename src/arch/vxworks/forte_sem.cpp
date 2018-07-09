@@ -13,6 +13,7 @@
  *******************************************************************************/
 
 #include "forte_sem.h"
+#include <sysLib.h>
 
 namespace forte {
   namespace arch {
@@ -42,7 +43,9 @@ namespace forte {
 
     bool CVxWorksSemaphore::timedWait(TForteUInt64 paRelativeTimeout){
       //TODO: nanoseconds to timer ticks
-      return (OK == semTake(mSemaphore, paRelativeTimeout));
+      return (OK == semTake(mSemaphore, static_cast<_Vx_ticks_t>(
+          (static_cast<double>(paRelativeTimeout) / 1E9) *
+          sysClkRateGet())));
     }
 
     bool CVxWorksSemaphore::tryNoWait(){

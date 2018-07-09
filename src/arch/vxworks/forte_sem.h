@@ -16,7 +16,7 @@
 #define SRC_ARCH_RCX_SEMAPHORE_H_
 
 #include "vxWorks.h"
-#include "semBLib.h"
+#include "semLib.h"
 #include "datatype.h"
 
 namespace forte {

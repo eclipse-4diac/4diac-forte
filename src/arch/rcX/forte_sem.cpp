@@ -26,7 +26,7 @@ namespace forte {
       }else{
         char semaphoreName[8];
         getRandomString(&semaphoreName[0], 7);
-        if(RX_OK != rX_SemCreateSemaphore(&semaphoreName[0], mSemaphore, (paInitialValue > 0 ? 1 : 0)){
+        if(RX_OK != rX_SemCreateSemaphore(&semaphoreName[0], mSemaphore, (paInitialValue > 0 ? 1 : 0))){
           DEVLOG_ERROR("Could not initialize semaphore\n");
         }
       }
