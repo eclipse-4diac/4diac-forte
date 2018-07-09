@@ -156,18 +156,10 @@ EComResponse CHttpComLayer::sendData(void *paData, unsigned int){
           }
           else{
             // wait until result is ready
-            time_t start = time(0); // for timeout
-            time_t endWait = start + SEND_TIMEOUT;
-            // TODO update to timeout sempahore when ready
             // TODO: Implement detection of content-length and/or chunk detection in httplayer to break out of loop early
             // TODO: wait for server closing or just receiving?
             // TODO: Support chunked messaged?
-            while(e_Nothing == mInterruptResp && start < endWait){
-              start = time(0);
-              CThread::sleepThread(1);
-            }
-
-            if (start > endWait) {
+            if (!mSendDataReceived.timedWait(SEND_TIMEOUT * 1E9)) {
               DEVLOG_ERROR("[HTTP Layer] Response Timeout exceeded\n");
               mInterruptResp = e_ProcessDataRecvFaild;
             }else{
@@ -257,6 +249,7 @@ EComResponse CHttpComLayer::recvData(const void *paData, unsigned int){
     case e_Connected:
       if(mSocketID == *(static_cast<const CIPComSocketHandler::TSocketDescriptor *>(paData))){
         handledRecvData();
+        mSendDataReceived.inc();
       }
       break;
     case e_ConnectedAndListening:
