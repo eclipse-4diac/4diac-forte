@@ -11,14 +11,6 @@
 #ifndef SOCKHAND_H_
 #define SOCKHAND_H_
 
-#ifndef IN
-#define IN
-#endif
-
-#ifndef OUT
-#define OUT
-#endif
-
 #include <winsock2.h>
 #include <windows.h>
 #include <Ws2tcpip.h>
