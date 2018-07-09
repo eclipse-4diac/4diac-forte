@@ -40,7 +40,7 @@ COPC_UA_Layer::COPC_UA_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) : CC
                                         sendDataNodeIds(NULL), readDataNodeIds(NULL),
                                         clientEndpointUrl(NULL), clientNodePath(NULL),
                                         clientMutex(NULL),
-                                        mutexServerMethodCall(), serverMethodCallResultReady(false),
+                                        mutexServerMethodCall(),
                                         referencedNodes() {
   // constructor list initialization
 
@@ -577,7 +577,7 @@ EComResponse COPC_UA_Layer::sendData(void *paData, unsigned int paSize) {
 
   if (getCommFB()->getComServiceType() == e_Server) {
     // continue method call
-    serverMethodCallResultReady = true;
+    serverMethodCallResultReady.inc();
     return retVal;
   }
 
@@ -682,7 +682,9 @@ UA_StatusCode COPC_UA_Layer::onServerMethodCall(UA_Server *,
 
   // other thread may currently create nodes for the same path, thus mutex
   CCriticalRegion criticalRegion(self->mutexServerMethodCall);
-  self->serverMethodCallResultReady = false;
+
+  do{
+  }while(self->serverMethodCallResultReady.tryNoWait()); //get semaphore to zero before start method, since application can trigger wrongly RSP many times increasing the semaphore
 
   if (inputSize != self->getCommFB()->getNumRD() || outputSize != self->getCommFB()->getNumSD()) {
     DEVLOG_ERROR("OPC UA: method call got invalid number of arguments. In: %d==%d, Out: %d==%d\n", self->getCommFB()->getNumRD(), inputSize,
@@ -712,22 +714,10 @@ UA_StatusCode COPC_UA_Layer::onServerMethodCall(UA_Server *,
     return UA_STATUSCODE_BADINVALIDARGUMENT;
   }
 
-  // wait until result is ready
-  CIEC_DATE_AND_TIME startTime;
-  startTime.setCurrentTime();
-  CIEC_DATE_AND_TIME currentTime;
-  currentTime.setCurrentTime();
-  // TODO uses busy waiting. Is there a better way?
-  while (!self->serverMethodCallResultReady && currentTime.getMilliSeconds() - startTime.getMilliSeconds() < METHOD_CALL_TIMEOUT * 1000) {
-    currentTime.setCurrentTime();
-    sleepThread(1);
-  }
-  if (currentTime.getMilliSeconds() - startTime.getMilliSeconds() >= METHOD_CALL_TIMEOUT * 1000) {
+  if (!self->serverMethodCallResultReady.timedWait(METHOD_CALL_TIMEOUT * 1E9)){
     DEVLOG_ERROR("OPC UA: method call did not get result values within timeout.\n");
     return UA_STATUSCODE_BADTIMEOUT;
   }
-
-  self->serverMethodCallResultReady = false;
 
   // copy SD values to output
   for (unsigned int i = 0; i < self->getCommFB()->getNumSD(); i++) {

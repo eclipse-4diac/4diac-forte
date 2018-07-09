@@ -37,6 +37,7 @@ if (FORTE_COM_OPC_UA)
         SET(FORTE_COM_OPC_UA_LIB "libopen62541.so" CACHE STRING "OPC_UA Library file in FORTE_COM_OPC_UA_DIR to be linked to forte (normally with name libopen62541 and a extension according to the type and OS)")
     ELSEIF ("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
         SET(FORTE_COM_OPC_UA_LIB "open62541.lib" CACHE STRING "OPC_UA Library file in FORTE_COM_OPC_UA_DIR to be linked to forte (normally with name libopen62541 and a extension according to the type and OS)")
+        forte_add_link_library("Iphlpapi") #pubsub uses functions in this library
     ELSE ()
         SET(FORTE_COM_OPC_UA_LIB "libopen62541.a" CACHE STRING "OPC_UA Library file in FORTE_COM_OPC_UA_DIR to be linked to forte (normally with name libopen62541 and a extension according to the type and OS)")
     ENDIF ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")

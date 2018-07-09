@@ -197,7 +197,7 @@ private:
    * Flag used by the server method call to wait for the data to be ready.
    * It is set to false in the beginning. As soon as the RSP port is triggered, it is set to true and the method callback can process SD ports.
    */
-  bool serverMethodCallResultReady;
+  CSemaphore serverMethodCallResultReady;
 
 
 
