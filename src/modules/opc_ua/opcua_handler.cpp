@@ -217,10 +217,11 @@ COPC_UA_Handler::COPC_UA_Handler(CDeviceExecution& pa_poDeviceExecution) : CExte
 COPC_UA_Handler::~COPC_UA_Handler() {
   stopServer();
   end();
-  UA_ServerConfig_delete(uaServerConfig);
+
   if(0 != uaServer){
     UA_Server_delete(uaServer);
   }
+  UA_ServerConfig_delete(uaServerConfig);
 
   for (CSinglyLinkedList<struct UA_ClientEndpointMap *>::Iterator iter = clients.begin(); iter != clients.end(); ++iter) {
     UA_Client_disconnect((*iter)->client);
@@ -303,6 +304,8 @@ void COPC_UA_Handler::startServer() {
 
   if (!isAlive()) {
     start();
+    mServerStarted.waitIndefinitely();
+    mServerStarted.inc(); //in case someone else wants to wait
   }
 
 }
@@ -352,8 +355,6 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
   }
 
   startServer();
-  mServerStarted.waitIndefinitely();
-  mServerStarted.inc(); //in case someone else wants to wait
 
   // for every folder (which is a BrowsePath) we want to get the node id
   UA_BrowsePath *browsePaths = static_cast<UA_BrowsePath *>(UA_Array_new(folderCnt*2, &UA_TYPES[UA_TYPES_BROWSEPATH]));
