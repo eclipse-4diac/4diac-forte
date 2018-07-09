@@ -9,13 +9,14 @@
  *  Alois Zoitl - initial API and implementation and/or initial documentation
  *  Martin Melik-Merkumians - adds timed wait and try and no wait
  *    and documentation
+ *  Martin Melik-Merkumians - changes to binary semaphore
  *******************************************************************************/
 
 #ifndef SRC_ARCH_RCX_SEMAPHORE_H_
 #define SRC_ARCH_RCX_SEMAPHORE_H_
 
 #include "vxWorks.h"
-#include "semLib.h"
+#include "semBLib.h"
 #include "datatype.h"
 
 namespace forte {
@@ -49,7 +50,7 @@ namespace forte {
         bool tryNoWait();
 
       private:
-        SEM_ID mCountSemaphore;
+        SEM_ID mSemaphore;
     };
 
 
