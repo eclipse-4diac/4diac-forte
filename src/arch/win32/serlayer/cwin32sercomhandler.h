@@ -32,7 +32,7 @@ class CWin32SerComHandler : public CExternalEventHandler, public CThread{
 
     void disableHandler(void){
       setAlive(false);
-      mSem.semInc();
+      mSem.inc();
       end();
     }
 

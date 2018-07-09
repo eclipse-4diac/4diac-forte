@@ -27,11 +27,11 @@ namespace forte {
       tx_semaphore_delete(&mSemaphore);
     }
 
-    void CNetOSSemaphore::semInc(){
+    void CNetOSSemaphore::inc(){
       tx_semaphore_put(&mSemaphore);
     }
 
-    void CNetOSSemaphore::semWaitIndefinitly(){
+    void CNetOSSemaphore::waitIndefinitely(){
       tx_semaphore_get(&mSemaphore, TX_WAIT_FOREVER);
     }
 

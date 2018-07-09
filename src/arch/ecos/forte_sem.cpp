@@ -31,7 +31,7 @@ namespace forte {
       cyg_semaphore_post(&mSemaphore);
     }
 
-    void CEcosSemaphore::waitIndefinitly(){
+    void CEcosSemaphore::waitIndefinitely(){
       cyg_semaphore_wait(&mSemaphore);
     }
 

@@ -101,7 +101,7 @@ class CEventChainExecutionThread : public CThread{
     void transferExternalEvents();
 
     void selfSuspend(){
-      mSuspendSemaphore.waitIndefinitly();
+      mSuspendSemaphore.waitIndefinitely();
     }
 
     //@{

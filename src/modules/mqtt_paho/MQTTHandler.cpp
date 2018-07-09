@@ -301,13 +301,13 @@ void MQTTHandler::run(){
 
 void MQTTHandler::resumeSelfSuspend(){
   if(mIsSemaphoreEmpty){ //avoid incrementing many times
-    mStateSemaphore.semInc();
+    mStateSemaphore.inc();
     mIsSemaphoreEmpty = false;
   }
 }
 
 void MQTTHandler::selfSuspend(){
-  mStateSemaphore.semWaitIndefinitly();
+  mStateSemaphore.waitIndefinitely();
   {
     CCriticalRegion section(smMQTTMutex);
     mIsSemaphoreEmpty = true;

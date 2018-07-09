@@ -37,7 +37,7 @@ namespace forte {
       dispatch_semaphore_signal(mSemaphore);
     }
 
-    void CPThreadSemaphore::waitIndefinitly(){
+    void CPThreadSemaphore::waitIndefinitely(){
       dispatch_semaphore_wait(mSemaphore, DISPATCH_TIME_FOREVER);
     }
 

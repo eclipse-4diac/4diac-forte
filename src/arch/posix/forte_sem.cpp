@@ -37,7 +37,7 @@ namespace forte {
       sem_post(&mSemaphore);
     }
 
-    void CPThreadSemaphore::waitIndefinitly(){
+    void CPThreadSemaphore::waitIndefinitely(){
       while((-1 == sem_wait(&mSemaphore)) && (errno == EINTR)); //handle interrupts from signals
     }
 

@@ -33,7 +33,7 @@ namespace forte {
         /** @brief Waits until the semaphore can be locked
          *
          */
-        void waitIndefinitly();
+        void waitIndefinitely();
 
         /** @brief Checks if the semaphore is locked, and waits the specified amount of time if it is locked
          *

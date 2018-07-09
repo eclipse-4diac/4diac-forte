@@ -46,7 +46,7 @@ namespace forte {
       //be ignored if afterwards the value is not zero
     }
 
-    void CrcXSemaphore::waitIndefinitly(){
+    void CrcXSemaphore::waitIndefinitely(){
       rX_SemWaitForSemaphore(mSemaphore, RX_INFINITE);
       //FIXME what to dow if retval is not RX_OK?
     }

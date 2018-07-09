@@ -268,7 +268,7 @@ void COPC_UA_Handler::run() {
   UA_Server_setServerOnNetworkCallback(uaServer, serverOnNetworkCallback, this);
 #   endif
 #endif
-  mServerStarted.semInc();
+  mServerStarted.inc();
   UA_StatusCode retVal = UA_Server_run(uaServer, &uaServerRunningFlag);    // server keeps iterating as long as running is true;
   if (retVal != UA_STATUSCODE_GOOD) {
     DEVLOG_ERROR("OPC UA: Server exited with error: %s\n", UA_StatusCode_name(retVal));
@@ -304,6 +304,7 @@ void COPC_UA_Handler::startServer() {
   if (!isAlive()) {
     start();
   }
+
 }
 
 void COPC_UA_Handler::stopServer() {
@@ -351,8 +352,8 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
   }
 
   startServer();
-  mServerStarted.semWaitIndefinitly();
-  mServerStarted.semInc(); //in case someone else wants to wait
+  mServerStarted.waitIndefinitely();
+  mServerStarted.inc(); //in case someone else wants to wait
 
   // for every folder (which is a BrowsePath) we want to get the node id
   UA_BrowsePath *browsePaths = static_cast<UA_BrowsePath *>(UA_Array_new(folderCnt*2, &UA_TYPES[UA_TYPES_BROWSEPATH]));

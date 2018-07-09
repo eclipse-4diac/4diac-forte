@@ -34,7 +34,7 @@ namespace forte {
       ReleaseSemaphore(mSemaphore, 1, 0);
     }
 
-    void CWin32Semaphore::waitIndefinitly(){
+    void CWin32Semaphore::waitIndefinitely(){
       WaitForSingleObject(mSemaphore, INFINITE);
     }
 

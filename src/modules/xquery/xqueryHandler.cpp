@@ -103,11 +103,11 @@ void CXqueryHandler::run(){
 
 void CXqueryHandler::resumeSuspend(){
   if(mIsSemaphoreEmpty){ //avoid incrementing many times
-    mStateSemaphore.semInc();
+    mStateSemaphore.inc();
     mIsSemaphoreEmpty = false;
   }
 }
 
 void CXqueryHandler::selfSuspend(){
-  mStateSemaphore.semWaitIndefinitly();
+  mStateSemaphore.waitIndefinitely();
 }

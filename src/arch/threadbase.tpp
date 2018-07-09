@@ -53,7 +53,7 @@ void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::end(void) {
 template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
 void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::join(){
   if(nullHandle != mThreadHandle){
-    mJoinSem.waitIndefinitly();
+    mJoinSem.waitIndefinitely();
     mJoinSem.inc(); //allow many joins
   }
 }

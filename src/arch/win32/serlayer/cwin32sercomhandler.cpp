@@ -31,7 +31,7 @@ void CWin32SerComHandler::registerSerComLayer(CWin32SerComLayer *paComLayer){
   if(!isAlive()){
     this->start();
   }
-  mSem.semInc();
+  mSem.inc();
 }
 
 void CWin32SerComHandler::unregisterSerComLayer(CWin32SerComLayer *paComLayer){
@@ -61,7 +61,7 @@ void CWin32SerComHandler::run(){
   while(isAlive()){
 
     if(true == mComLayerList.isEmpty()){
-      mSem.semWaitIndefinitly();
+      mSem.waitIndefinitely();
     }
     if(!isAlive()){
       break;

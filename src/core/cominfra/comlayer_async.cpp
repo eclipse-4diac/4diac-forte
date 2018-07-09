@@ -26,7 +26,7 @@ forte::com_infra::CComLayerAsync::~CComLayerAsync() {
 void forte::com_infra::CComLayerAsync::run() {
   while(isAlive()){
 
-    mSuspendSemaphore.waitIndefinitly();
+    mSuspendSemaphore.waitIndefinitely();
 
     while (isAlive() && !mAsyncCalls.isEmpty()) {
       SAsyncData first(*mAsyncCalls.begin());

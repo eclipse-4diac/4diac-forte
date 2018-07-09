@@ -35,7 +35,7 @@ namespace forte {
       //be ignored if afterwards the value is not zero
     }
 
-    void CVxWorksSemaphore::waitIndefinitly(){
+    void CVxWorksSemaphore::waitIndefinitely(){
       semTake(mCountSemaphore, WAIT_FOREVER);
       //FIXME what to dow if retval is not RX_OK?
     }
