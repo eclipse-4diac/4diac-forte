@@ -20,6 +20,7 @@
 #include <slave/handles/analog.h>
 #include <slave/handles/analog10.h>
 #include "criticalregion.h"
+#include <timespec_utils.h>
 
 const char * const EmbrickBusHandler::scmSlaveUpdateFailed = "Update of slave failed.";
 const char * const EmbrickBusHandler::scmNoSlavesFound = "No slave modules found.";
@@ -164,8 +165,7 @@ void EmbrickBusHandler::prepareLoop() {
 
     ++it;
   }
-  sNextIndex = 0;
-  sNext = sList[sNextIndex];
+  sNext = sList[0];
   loopActive = false;
 }
 
@@ -175,11 +175,17 @@ void EmbrickBusHandler::runLoop() {
   // Init loop variables
   SEntry *sCur = 0;
 
-  int i;
-
   while (isAlive()) {
     // Sleep till next deadline is reached or loop is waked up
-    loopSync.waitUntil(sNext->nextDeadline);
+
+    struct timespec now;
+    clock_gettime(CLOCK_MONOTONIC, &now);
+
+    if(timespecLessThan(&now, &sNext->nextDeadline)){ //only wait if the deadline is in the future
+      struct timespec timeToSleep;
+      timespecSub(&sNext->nextDeadline, &now, &timeToSleep);
+      mForceLoop.timedWait(timeToSleep.tv_sec * 1E9 + timeToSleep.tv_nsec);
+    }
 
     // Set current slave
     loopActive = true;
@@ -194,7 +200,7 @@ void EmbrickBusHandler::runLoop() {
     sCur->delayed = false;
 
     // Remove lock during blocking operation -> allows forced update interrupts
-    loopSync.unlock();
+    mSyncObject.unlock();
 
     uint64_t ms = micros();
 
@@ -207,7 +213,7 @@ void EmbrickBusHandler::runLoop() {
     }
 
     // Search for next deadline -> set lock to avoid changes of list
-    loopSync.lock();
+    mSyncObject.lock();
     loopActive = false;
 
     // Store update duration
@@ -217,10 +223,9 @@ void EmbrickBusHandler::runLoop() {
     if (sCur->forced)
       addTime(sCur->nextDeadline, sCur->lastDuration);
 
-    for (i = 0; i < slaveCount; i++) {
-      if (cmpTime(sList[i]->nextDeadline, sNext->nextDeadline)) {
+    for (unsigned int i = 0; i < slaveCount; i++) {
+      if (timespecLessThan(&sList[i]->nextDeadline, &sNext->nextDeadline)) {
         sNext = sList[i];
-        sNextIndex = i;
       }
     }
   }
@@ -267,10 +272,10 @@ EmbrickSlaveHandler* EmbrickBusHandler::getSlave(int index) {
 }
 
 void EmbrickBusHandler::forceUpdate(int index) {
-  loopSync.lock();
+  mSyncObject.lock();
 
   if (sList == 0 || slaveCount <= index || sList[index]->forced) {
-    loopSync.unlock();
+    mSyncObject.unlock();
     return;
   }
 
@@ -283,19 +288,17 @@ void EmbrickBusHandler::forceUpdate(int index) {
       struct timespec ts = e->nextDeadline;
       addTime(ts, e->lastDuration * 2);
 
-      if(!cmpTime(ts, sNext->nextDeadline)) {
+      if(!timespecLessThan(&ts, &sNext->nextDeadline)) {
         sNext->delayed = true;
       }
 
       sNext = e;
-      sNextIndex = index;
     }
 
     // Force next loop
-    loopSync.wakeUp();
+    mForceLoop.inc();
   }
-
-  loopSync.unlock();
+  mSyncObject.unlock();
 }
 
 void EmbrickBusHandler::addSlaveHandle(int index, forte::core::IO::IOHandle* handle) {
@@ -470,10 +473,3 @@ void EmbrickBusHandler::addTime(struct timespec& ts, unsigned long microseconds)
   }
   ts.tv_nsec = t;
 }
-
-bool EmbrickBusHandler::cmpTime(struct timespec& t1, struct timespec& t2) {
-  return (t1.tv_nsec < t2.tv_nsec && t1.tv_sec == t2.tv_sec)
-      || t1.tv_sec < t2.tv_sec;
-}
-
-

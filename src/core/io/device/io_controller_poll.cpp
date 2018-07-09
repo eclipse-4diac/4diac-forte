@@ -15,9 +15,7 @@
 using namespace forte::core::IO;
 
 IODevicePollController::IODevicePollController(CDeviceExecution& paDeviceExecution, float PollInterval) : IODeviceController(paDeviceExecution),
-    PollInterval(PollInterval), forcedLoop(false), loopActive(false) {
-  memset(&nextLoop,0,sizeof(timespec));
-
+    PollInterval(PollInterval){
 }
 
 void IODevicePollController::handleChangeEvent(IOHandle*) {
@@ -25,18 +23,8 @@ void IODevicePollController::handleChangeEvent(IOHandle*) {
 }
 
 void IODevicePollController::runLoop() {
-  clock_gettime(CLOCK_MONOTONIC, &nextLoop);
-
   while (isAlive()) {
-    loopSync.lock();
-    loopActive = false;
-    if (!forcedLoop)
-      loopSync.wait(nextLoop, (unsigned long) (1000000.0 / PollInterval)); //atomically unlocks the mutex and before returning, it re-acquires mutex
-    else
-      forcedLoop = false;
-
-    loopActive = true;
-    loopSync.unlock();
+    forceLoop.timedWait(PollInterval * 1E6); //If timeout occurred is a normal waiting, otherwise is a forced loop. Don't care about the return value
 
     // Perform poll operation
     poll();
@@ -59,14 +47,6 @@ void IODevicePollController::setPollInterval(float PollInterval) {
 }
 
 void IODevicePollController::forcePoll() {
-  loopSync.lock();
-
-  clock_gettime(CLOCK_MONOTONIC, &nextLoop);
-  if (loopActive)
-    forcedLoop = true;
-  else
-    loopSync.wakeUp();
-
-  loopSync.unlock();
+  forceLoop.inc();
 }
 

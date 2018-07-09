@@ -26,8 +26,8 @@
 #include "pin.h"
 #include <slave/slave.h>
 #include <forte_sync.h>
+#include <forte_sem.h>
 #include <forte_thread.h>
-#include <conditionSync.h>
 
 #include <io/device/io_controller_multi.h>
 
@@ -138,8 +138,8 @@ protected:
   int slaveCount;
 
   // Sync
-  bool loopActive;
-  Utils::ConditionSync loopSync;
+  CSemaphore mForceLoop;
+  CSyncObject mSyncObject;
 
   // Error
   bool checkHandlerError();
@@ -154,7 +154,6 @@ protected:
   };
   struct SEntry **sList;
   SEntry *sNext;
-  int sNextIndex;
 
 private:
   bool isSlaveAvailable(int index);
@@ -165,7 +164,6 @@ private:
   time_t initTime;
   void microsleep(uint64_t microseconds);
   void addTime(struct timespec& t, unsigned long microseconds);
-  bool cmpTime(struct timespec& t1, struct timespec& t2);
 
   unsigned char calcChecksum(unsigned char * data, int dataLen);
 

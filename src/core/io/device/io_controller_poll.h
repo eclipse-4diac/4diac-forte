@@ -14,7 +14,7 @@
 #define SRC_CORE_IO_DEVICE_IO_CONTROLLER_POLL_H_
 
 #include "io_controller.h"
-#include <conditionSync.h>
+#include <forte_sem.h>
 
 namespace forte {
   namespace core {
@@ -66,10 +66,7 @@ private:
 
   float PollInterval;
 
-  Utils::ConditionSync loopSync;
-  bool forcedLoop;
-  bool loopActive;
-  struct timespec nextLoop;
+  CSemaphore forceLoop;
 };
 
     } //namespace IO
