@@ -9,6 +9,7 @@
  *  Alois Zoitl - initial API and implementation and/or initial documentation
  *  Martin Melik-Merkumians - adds timed wait and try and no wait
  *    and documentation
+ *  Martin Melik-Merkumians - Changes to binary semaphore
  *******************************************************************************/
 
 #include "forte_sem.h"
@@ -22,7 +23,11 @@ namespace forte {
   namespace arch {
 
     CPThreadSemaphore::CPThreadSemaphore(unsigned int paInitialValue){
-      mSemaphore = dispatch_semaphore_create(paInitialValue);
+      mSemaphore = dispatch_semaphore_create(0); //Creates binary semaphore according to developer help
+
+      if(0 == paInitialValue){ // If inital value is zero, semaphore will be claimed
+        dispatch_semaphore_wait(mSemaphore, DISPATCH_TIME_NOW);
+      }
 
       if(0 == mSemaphore){
         DEVLOG_ERROR("Could not initialize suspend sempaphore: %s\n", strerror(errno));
@@ -42,7 +47,7 @@ namespace forte {
     }
 
     bool CPThreadSemaphore::timedWait(const TForteUInt64 paRelativeTimeout){
-      struct timespec now = {0, 0};
+      struct timespec now = { 0, 0 };
       clock_gettime(CLOCK_MONOTONIC, &now);
       dispatch_time_t timeout = dispatch_walltime(&now, paRelativeTimeout)
       return (0 == dispatch_semaphore_wait(mSemaphore, timeout));
