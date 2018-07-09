@@ -26,7 +26,7 @@ namespace forte {
       }else{
         char semaphoreName[8];
         getRandomString(&semaphoreName[0], 7);
-        if(RX_OK != rX_SemCreateSemaphore(&semaphoreName[0], mSemaphore, paInitialValue)){
+        if(RX_OK != rX_SemCreateSemaphore(&semaphoreName[0], mSemaphore, (paInitialValue > 0 ? 1 : 0)){
           DEVLOG_ERROR("Could not initialize semaphore\n");
         }
       }
@@ -40,6 +40,7 @@ namespace forte {
     }
 
     void CrcXSemaphore::inc(){
+      rX_SemClearSemaphoreCount(mSemaphore); //Resets count to zero
       rX_SemPutSemaphore(mSemaphore);
       //FIXME what to dow if retval is not RX_OK?
       //for the current use in 4diac an overflow of the sem counter can
