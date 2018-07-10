@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright (c) 2011 - 2013 ACIN, nxtControl, Profactor GmbH, fortiss GmbH
+* Copyright (c) 2011 - 2013, 2018 TU Vienna/ACIN, nxtControl, Profactor GmbH, fortiss GmbH
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License v1.0
 * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
 *
 * Contributors:
 *   Martin Melik Merkumians - initial API and implementation and/or initial documentation
+*   Martin Melik-Merkumians - adds test for FIND
 *******************************************************************************/
 
 #include <boost/test/unit_test.hpp>
@@ -14,6 +15,7 @@
 #include "iec61131_functions.h"
 
 #include "forte_string.h"
+#include "forte_uint.h"
 
 BOOST_AUTO_TEST_SUITE(IEC61131_functions)
 
@@ -51,6 +53,42 @@ BOOST_AUTO_TEST_CASE(concat)
   CIEC_STRING sSecondString("_THIS_IS_THE_SECOND_STRING");
   CIEC_STRING sConcatString(CONCAT(sFristString, sSecondString));
   BOOST_TEST(sConcatString.getValue() == "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING");
+}
+
+BOOST_AUTO_TEST_CASE(find_at_begin)
+{
+  CIEC_STRING sBigString("Lorem ipsum dolor sit amet");
+  CIEC_STRING sSearchString("Lorem");
+  CIEC_UINT nIndex;
+  nIndex = FIND(sBigString, sSearchString).getUnsignedValue();
+  BOOST_TEST(1 == nIndex);
+}
+
+BOOST_AUTO_TEST_CASE(find_in_between)
+{
+  CIEC_STRING sBigString("Lorem ipsum dolor sit amet");
+  CIEC_STRING sSearchString("dolor");
+  CIEC_UINT nIndex;
+  nIndex = FIND(sBigString, sSearchString).getUnsignedValue();
+  BOOST_TEST(13 == nIndex);
+}
+
+BOOST_AUTO_TEST_CASE(find_at_the_end)
+{
+  CIEC_STRING sBigString("Lorem ipsum dolor sit");
+  CIEC_STRING sSearchString("t");
+  CIEC_UINT nIndex;
+  nIndex = FIND(sBigString, sSearchString).getUnsignedValue();
+  BOOST_TEST(21 == nIndex);
+}
+
+BOOST_AUTO_TEST_CASE(find_not_found)
+{
+  CIEC_STRING sBigString("Lorem ipsum dolor sit");
+  CIEC_STRING sSearchString("Latin");
+  CIEC_UINT nIndex;
+  nIndex = FIND(sBigString, sSearchString).getUnsignedValue();
+  BOOST_TEST(0 == nIndex);
 }
 
 #if __cplusplus > 199711L

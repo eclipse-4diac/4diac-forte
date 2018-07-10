@@ -76,7 +76,7 @@ CIEC_ANY_INT FIND(const CIEC_ANY_STRING& pa_rsIn1, const CIEC_ANY_STRING& pa_rsI
   const char* pc_Find = strstr(pa_rsIn1.getValue(), pa_rsIn2.getValue());
   CIEC_ANY_INT temp;
   if (0 != pc_Find){
-    temp.setSignedValue(pc_Find - pa_rsIn1.getValue());
+    temp.setSignedValue(pc_Find - pa_rsIn1.getValue() + 1);
   }
   return temp;
 }
