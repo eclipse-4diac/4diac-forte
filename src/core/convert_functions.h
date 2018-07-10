@@ -1,15 +1,16 @@
 /*******************************************************************************
-  * Copyright (c) 2010 - 2015 ACIN, Profactor GmbH, fortiss GmbH
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Alois Zoitl, Ingo Hegny, Monika Wenger, Carolyn Oates, Patrick Smejkal,
-  *    Matthias Plasch,
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2010 - 2015, 2018 TU Vienna/ACIN, Profactor GmbH, fortiss GmbH
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Alois Zoitl, Ingo Hegny, Monika Wenger, Carolyn Oates, Patrick Smejkal,
+ *    Matthias Plasch,
+ *      - initial implementation and rework communication infrastructure
+ *    Martin Melik-Merkumians - fixes DT_TO_TOD
+ *******************************************************************************/
 #ifndef CONVERT_FUNCTIONS_H_
 #define CONVERT_FUNCTIONS_H_
 
@@ -61,22 +62,23 @@ inline const CIEC_DATE DT_TO_DATE(const CIEC_DATE_AND_TIME &paVal){
   time_t t = static_cast<time_t>(nBuffer / 1000);
   struct tm *ptm = forte_localtime(&t);
 
-  if(ptm == 0)
+  if(0 == ptm){
     return CIEC_DATE(0);
+  }
 
   ptm->tm_hour = 0;
   ptm->tm_min = 0;
   ptm->tm_sec = 0;
 
   t = forte_mktime(ptm);
-  if(t == (time_t) -1)
+  if((time_t) -1 == t){
     return CIEC_DATE(0);
+  }
 
   return CIEC_DATE(t * 1000ULL);
 }
 
 inline const CIEC_DATE_AND_TIME DATE_TO_DT(const CIEC_DATE &paVal){
-  //this should be sufficient
   return CIEC_DATE_AND_TIME((TForteUInt64) paVal);
 }
 
@@ -85,12 +87,9 @@ inline const CIEC_TIME_OF_DAY DT_TO_TOD(const CIEC_DATE_AND_TIME &paVal){
   time_t t = static_cast<time_t>(nBuffer / 1000);
   struct tm *ptm = forte_localtime(&t);
 
-  if(ptm == 0)
+  if(0 == ptm){
     return CIEC_TIME_OF_DAY(0);
-
-  ptm->tm_hour = 0;
-  ptm->tm_min = 0;
-  ptm->tm_sec = 0;
+  }
 
   return CIEC_TIME_OF_DAY((TForteUInt64) (ptm->tm_hour * 3600 + ptm->tm_min * 60 + ptm->tm_sec) * 1000ULL + (nBuffer % 1000));
 }
@@ -100,129 +99,129 @@ inline const CIEC_TIME_OF_DAY DT_TO_TOD(const CIEC_DATE_AND_TIME &paVal){
 //   WSTRING_TO_*  functions
 //********************************************************************************************
 #ifdef FORTE_USE_WSTRING_DATATYPE
-  inline const CIEC_BOOL WSTRING_TO_BOOL(const CIEC_WSTRING &paVal){
-    CIEC_BOOL tempVal;
-    const char *pacBuffer = paVal.getValue();
-    tempVal.fromString(pacBuffer);
-    return tempVal;
-  }
+inline const CIEC_BOOL WSTRING_TO_BOOL(const CIEC_WSTRING &paVal){
+  CIEC_BOOL tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_BYTE WSTRING_TO_BYTE(const CIEC_WSTRING &paVal){
-      CIEC_BYTE tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_BYTE WSTRING_TO_BYTE(const CIEC_WSTRING &paVal){
+  CIEC_BYTE tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_DWORD WSTRING_TO_DWORD(const CIEC_WSTRING &paVal){
-      CIEC_DWORD tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_DWORD WSTRING_TO_DWORD(const CIEC_WSTRING &paVal){
+  CIEC_DWORD tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_WORD WSTRING_TO_WORD(const CIEC_WSTRING &paVal){
-    CIEC_WORD tempVal;
-    const char *pacBuffer = paVal.getValue();
-    tempVal.fromString(pacBuffer);
-    return tempVal;
-  }
+inline const CIEC_WORD WSTRING_TO_WORD(const CIEC_WSTRING &paVal){
+  CIEC_WORD tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_DINT WSTRING_TO_DINT(const CIEC_WSTRING &paVal){
-      CIEC_DINT tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_DINT WSTRING_TO_DINT(const CIEC_WSTRING &paVal){
+  CIEC_DINT tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_INT WSTRING_TO_INT(const CIEC_WSTRING &paVal){
-      CIEC_INT tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_INT WSTRING_TO_INT(const CIEC_WSTRING &paVal){
+  CIEC_INT tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_UINT WSTRING_TO_UINT(const CIEC_WSTRING &paVal){
-    CIEC_UINT tempVal;
-    const char *pacBuffer = paVal.getValue();
-    tempVal.fromString(pacBuffer);
-    return tempVal;
-  }
+inline const CIEC_UINT WSTRING_TO_UINT(const CIEC_WSTRING &paVal){
+  CIEC_UINT tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_UDINT WSTRING_TO_UDINT(const CIEC_WSTRING &paVal){
-    CIEC_UDINT tempVal;
-    const char *pacBuffer = paVal.getValue();
-    tempVal.fromString(pacBuffer);
-    return tempVal;
-  }
+inline const CIEC_UDINT WSTRING_TO_UDINT(const CIEC_WSTRING &paVal){
+  CIEC_UDINT tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_USINT WSTRING_TO_USINT(const CIEC_WSTRING &paVal){
-    CIEC_USINT tempVal;
-    const char *pacBuffer = paVal.getValue();
-    tempVal.fromString(pacBuffer);
-    return tempVal;
-  }
+inline const CIEC_USINT WSTRING_TO_USINT(const CIEC_WSTRING &paVal){
+  CIEC_USINT tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_STRING WSTRING_TO_STRING(const CIEC_WSTRING &paVal){
-      CIEC_STRING tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_STRING WSTRING_TO_STRING(const CIEC_WSTRING &paVal){
+  CIEC_STRING tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_TIME WSTRING_TO_TIME(const CIEC_WSTRING &paVal){
-      CIEC_TIME tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_TIME WSTRING_TO_TIME(const CIEC_WSTRING &paVal){
+  CIEC_TIME tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_SINT WSTRING_TO_SINT(const CIEC_WSTRING &paVal){
-      CIEC_SINT tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_SINT WSTRING_TO_SINT(const CIEC_WSTRING &paVal){
+  CIEC_SINT tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
 #ifdef FORTE_USE_REAL_DATATYPE
-  inline const CIEC_REAL WSTRING_TO_REAL(const CIEC_WSTRING &paVal){
-      CIEC_REAL tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_REAL WSTRING_TO_REAL(const CIEC_WSTRING &paVal){
+  CIEC_REAL tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 #endif
 
 #ifdef FORTE_USE_LREAL_DATATYPE
-  inline const CIEC_LREAL WSTRING_TO_LREAL(const CIEC_WSTRING &paVal){
-      CIEC_LREAL tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_LREAL WSTRING_TO_LREAL(const CIEC_WSTRING &paVal){
+  CIEC_LREAL tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 #endif
 
 #ifdef FORTE_USE_64BIT_DATATYPES
-  inline const CIEC_LINT WSTRING_TO_LINT(const CIEC_WSTRING &paVal){
-      CIEC_LINT tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_LINT WSTRING_TO_LINT(const CIEC_WSTRING &paVal){
+  CIEC_LINT tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_LWORD WSTRING_TO_LWORD(const CIEC_WSTRING &paVal){
-      CIEC_LWORD tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_LWORD WSTRING_TO_LWORD(const CIEC_WSTRING &paVal){
+  CIEC_LWORD tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_ULINT WSTRING_TO_ULINT(const CIEC_WSTRING &paVal){
-        CIEC_ULINT tempVal;
-        const char *pacBuffer = paVal.getValue();
-        tempVal.fromString(pacBuffer);
-        return tempVal;
-  }
+inline const CIEC_ULINT WSTRING_TO_ULINT(const CIEC_WSTRING &paVal){
+  CIEC_ULINT tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 #endif
 #endif
 
@@ -449,18 +448,19 @@ inline const CIEC_ULINT LREAL_TO_ULINT(const CIEC_LREAL &paVal){
 
 inline CIEC_ANY::TLargestIntValueType LREAL_TO_XINT(const CIEC_LREAL &paVal){
   CIEC_ANY::TLargestIntValueType temp;
-  #if defined(WIN32) || defined(VXWORKS)
-    temp = (CIEC_ANY::TLargestIntValueType)floor(static_cast<TForteDFloat>(paVal) + 0.5);
-  #else
-    temp = lroundf(static_cast<TForteFloat>(paVal));
-  #endif
+#if defined(WIN32) || defined(VXWORKS)
+  temp = (CIEC_ANY::TLargestIntValueType)floor(static_cast<TForteDFloat>(paVal) + 0.5);
+#else
+  temp = lroundf(static_cast<TForteFloat>(paVal));
+#endif
   if(static_cast<TForteDFloat>(paVal) > 0){
-    if(((temp % 2) != 0) && ((static_cast<TForteDFloat>(temp) - 0.5f) == static_cast<TForteDFloat>(paVal))){
-        temp = temp - 1;
+    if((0 != (temp % 2)) && ((static_cast<TForteDFloat>(temp) - 0.5f) == static_cast<TForteDFloat>(paVal))){
+      temp = temp - 1;
     }
-  }else{
-    if(((temp % 2) != 0) && ((static_cast<TForteDFloat>(temp) + 0.5f) == static_cast<TForteDFloat>(paVal))){
-         temp = temp + 1;
+  }
+  else{
+    if((0 != (temp % 2)) && ((static_cast<TForteDFloat>(temp) + 0.5f) == static_cast<TForteDFloat>(paVal))){
+      temp = temp + 1;
     }
   }
   return temp;
@@ -499,7 +499,8 @@ inline const CIEC_WSTRING LREAL_TO_WSTRING(const CIEC_LREAL &paVal){
 inline const CIEC_TIME LREAL_TO_TIME(const CIEC_LREAL &paVal){
   if(paVal > 0){
     return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal * FORTE_TIME_BASE_UNITS_PER_SECOND));
-  }else{
+  }
+  else{
     return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
   }
 }
@@ -511,18 +512,19 @@ inline const CIEC_TIME LREAL_TO_TIME(const CIEC_LREAL &paVal){
 #ifdef FORTE_USE_REAL_DATATYPE
 inline CIEC_ANY::TLargestIntValueType REAL_TO_XINT(const CIEC_REAL &paVal){
   CIEC_ANY::TLargestIntValueType temp;
-  #if defined(WIN32) || defined(VXWORKS)
-    temp = (CIEC_ANY::TLargestIntValueType)floor(static_cast<TForteFloat>(paVal) + 0.5);
-  #else
-    temp = lroundf(static_cast<TForteFloat>(paVal));
-  #endif
+#if defined(WIN32) || defined(VXWORKS)
+  temp = (CIEC_ANY::TLargestIntValueType)floor(static_cast<TForteFloat>(paVal) + 0.5);
+#else
+  temp = lroundf(static_cast<TForteFloat>(paVal));
+#endif
   if(static_cast<TForteFloat>(paVal) > 0){
-    if(((temp % 2) != 0) && ((static_cast<TForteFloat>(temp) - 0.5f) == static_cast<TForteFloat>(paVal))){
-        temp = temp - 1;
+    if((0 != (temp % 2)) && ((static_cast<TForteFloat>(temp) - 0.5f) == static_cast<TForteFloat>(paVal))){
+      temp = temp - 1;
     }
-  }else{
-    if(((temp % 2) != 0) && ((static_cast<TForteFloat>(temp) + 0.5f) == static_cast<TForteFloat>(paVal))){
-         temp = temp + 1;
+  }
+  else{
+    if((0 != (temp % 2)) && ((static_cast<TForteFloat>(temp) + 0.5f) == static_cast<TForteFloat>(paVal))){
+      temp = temp + 1;
     }
   }
   return temp;
@@ -603,7 +605,8 @@ inline const CIEC_WSTRING REAL_TO_WSTRING(const CIEC_REAL &paVal){
 inline const CIEC_TIME REAL_TO_TIME(const CIEC_REAL &paVal){
   if(paVal > 0){
     return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal * FORTE_TIME_BASE_UNITS_PER_SECOND));
-  }else{
+  }
+  else{
     return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
   }
 }
@@ -693,39 +696,39 @@ inline const CIEC_INT TIME_TO_INT(const CIEC_TIME &paVal){
 }
 #else
 inline const CIEC_BYTE TIME_TO_BYTE(const CIEC_TIME &paVal){
-  return CIEC_BYTE(static_cast<TForteByte>(static_cast<TForteFloat>(paVal.operator TForteInt32()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
+  return CIEC_BYTE(static_cast<TForteByte>(static_cast<TForteFloat>(paVal.operator TForteInt32()) / FORTE_TIME_BASE_UNITS_PER_SECOND));
 }
 
 inline const CIEC_WORD TIME_TO_WORD(const CIEC_TIME &paVal){
-  return CIEC_WORD(static_cast<TForteUInt16>(static_cast<TForteFloat>(paVal.operator TForteInt32()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
+  return CIEC_WORD(static_cast<TForteUInt16>(static_cast<TForteFloat>(paVal.operator TForteInt32()) / FORTE_TIME_BASE_UNITS_PER_SECOND));
 }
 
 inline const CIEC_DWORD TIME_TO_DWORD(const CIEC_TIME &paVal){
-  return CIEC_DWORD(static_cast<TForteUInt32>(static_cast<TForteFloat>(paVal.operator TForteInt32()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
+  return CIEC_DWORD(static_cast<TForteUInt32>(static_cast<TForteFloat>(paVal.operator TForteInt32()) / FORTE_TIME_BASE_UNITS_PER_SECOND));
 }
 
 inline const CIEC_UDINT TIME_TO_UDINT(const CIEC_TIME &paVal){
-  return CIEC_UDINT(static_cast<TForteUInt32>(static_cast<TForteFloat>(paVal.operator TForteInt32()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
+  return CIEC_UDINT(static_cast<TForteUInt32>(static_cast<TForteFloat>(paVal.operator TForteInt32()) / FORTE_TIME_BASE_UNITS_PER_SECOND));
 }
 
 inline const CIEC_UINT TIME_TO_UINT(const CIEC_TIME &paVal){
-  return CIEC_UINT(static_cast<TForteUInt16>(static_cast<TForteFloat>(paVal.operator TForteInt32()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
+  return CIEC_UINT(static_cast<TForteUInt16>(static_cast<TForteFloat>(paVal.operator TForteInt32()) / FORTE_TIME_BASE_UNITS_PER_SECOND));
 }
 
 inline const CIEC_SINT TIME_TO_SINT(const CIEC_TIME &paVal){
-  return CIEC_SINT(static_cast<TForteInt8>(static_cast<TForteFloat>(paVal.operator TForteInt32()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
+  return CIEC_SINT(static_cast<TForteInt8>(static_cast<TForteFloat>(paVal.operator TForteInt32()) / FORTE_TIME_BASE_UNITS_PER_SECOND));
 }
 
 inline const CIEC_USINT TIME_TO_USINT(const CIEC_TIME &paVal){
-  return CIEC_USINT(static_cast<TForteUInt8>(static_cast<TForteFloat>(paVal.operator TForteInt32()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
+  return CIEC_USINT(static_cast<TForteUInt8>(static_cast<TForteFloat>(paVal.operator TForteInt32()) / FORTE_TIME_BASE_UNITS_PER_SECOND));
 }
 
 inline const CIEC_DINT TIME_TO_DINT(const CIEC_TIME &paVal){
-  return CIEC_DINT(static_cast<TForteInt32>(static_cast<TForteFloat>(paVal.operator TForteInt32()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
+  return CIEC_DINT(static_cast<TForteInt32>(static_cast<TForteFloat>(paVal.operator TForteInt32()) / FORTE_TIME_BASE_UNITS_PER_SECOND));
 }
 
 inline const CIEC_INT TIME_TO_INT(const CIEC_TIME &paVal){
-  return CIEC_INT(static_cast<TForteInt16>(static_cast<TForteFloat>(paVal.operator TForteInt32()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
+  return CIEC_INT(static_cast<TForteInt16>(static_cast<TForteFloat>(paVal.operator TForteInt32()) / FORTE_TIME_BASE_UNITS_PER_SECOND));
 }
 #endif
 
@@ -735,31 +738,31 @@ inline const CIEC_BOOL TIME_TO_BOOL(const CIEC_TIME &paVal){
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LWORD TIME_TO_LWORD(const CIEC_TIME &paVal){
-  return CIEC_LWORD(static_cast<TForteLWord>(paVal.operator TForteInt64()) /FORTE_TIME_BASE_UNITS_PER_SECOND);
+  return CIEC_LWORD(static_cast<TForteLWord>(paVal.operator TForteInt64()) / FORTE_TIME_BASE_UNITS_PER_SECOND);
 }
 
 inline const CIEC_LINT TIME_TO_LINT(const CIEC_TIME &paVal){
-  return CIEC_LINT(static_cast<TForteInt64>(paVal.operator TForteInt64()) /FORTE_TIME_BASE_UNITS_PER_SECOND);
+  return CIEC_LINT(static_cast<TForteInt64>(paVal.operator TForteInt64()) / FORTE_TIME_BASE_UNITS_PER_SECOND);
 }
 
 inline const CIEC_ULINT TIME_TO_ULINT(const CIEC_TIME &paVal){
-  return CIEC_ULINT(static_cast<TForteUInt64>(paVal.operator TForteInt64()) /FORTE_TIME_BASE_UNITS_PER_SECOND);
+  return CIEC_ULINT(static_cast<TForteUInt64>(paVal.operator TForteInt64()) / FORTE_TIME_BASE_UNITS_PER_SECOND);
 }
 #endif
 
 #ifdef FORTE_USE_REAL_DATATYPE
 inline const CIEC_REAL TIME_TO_REAL(const CIEC_TIME &paVal){
 #ifdef FORTE_USE_64BIT_DATATYPES
-  return CIEC_REAL(static_cast<TForteFloat>(paVal.operator TForteInt64()) /FORTE_TIME_BASE_UNITS_PER_SECOND);
+  return CIEC_REAL(static_cast<TForteFloat>(paVal.operator TForteInt64()) / FORTE_TIME_BASE_UNITS_PER_SECOND);
 #else
-  return CIEC_REAL(static_cast<TForteFloat>(paVal.operator TForteInt32()) /FORTE_TIME_BASE_UNITS_PER_SECOND);
+  return CIEC_REAL(static_cast<TForteFloat>(paVal.operator TForteInt32()) / FORTE_TIME_BASE_UNITS_PER_SECOND);
 #endif
 }
 #endif
 
 #ifdef FORTE_USE_LREAL_DATATYPE
 inline const CIEC_LREAL TIME_TO_LREAL(const CIEC_TIME &paVal){
-  return CIEC_LREAL(static_cast<TForteDFloat>(paVal.operator TForteInt64()) /FORTE_TIME_BASE_UNITS_PER_SECOND);
+  return CIEC_LREAL(static_cast<TForteDFloat>(paVal.operator TForteInt64()) / FORTE_TIME_BASE_UNITS_PER_SECOND);
 }
 #endif
 
@@ -781,19 +784,19 @@ inline const CIEC_WSTRING TIME_TO_WSTRING(const CIEC_TIME &paVal){
 //   BOOL_TO_*  functions
 //********************************************************************************************
 inline const CIEC_BYTE BOOL_TO_BYTE(const CIEC_BOOL &paVal){
-  return CIEC_BYTE((TForteByte)((true == paVal) ? 1 : 0));
+  return CIEC_BYTE((TForteByte) ((true == paVal) ? 1 : 0));
 }
 
 inline const CIEC_DINT BOOL_TO_DINT(const CIEC_BOOL &paVal){
-  return CIEC_DINT((TForteInt32)((true == paVal) ? 1 : 0));
+  return CIEC_DINT((TForteInt32) ((true == paVal) ? 1 : 0));
 }
 
 inline const CIEC_DWORD BOOL_TO_DWORD(const CIEC_BOOL &paVal){
-  return CIEC_DWORD((TForteDWord)((true == paVal) ? 1 : 0));
+  return CIEC_DWORD((TForteDWord) ((true == paVal) ? 1 : 0));
 }
 
 inline const CIEC_INT BOOL_TO_INT(const CIEC_BOOL &paVal){
-  return CIEC_INT((TForteInt16)((true == paVal) ? 1 : 0));
+  return CIEC_INT((TForteInt16) ((true == paVal) ? 1 : 0));
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
@@ -821,7 +824,7 @@ inline const CIEC_REAL BOOL_TO_REAL(const CIEC_BOOL &paVal){
 #endif
 
 inline const CIEC_SINT BOOL_TO_SINT(const CIEC_BOOL &paVal){
-  return CIEC_SINT((TForteInt8)((true == paVal) ? 1 : 0));
+  return CIEC_SINT((TForteInt8) ((true == paVal) ? 1 : 0));
 }
 
 inline const CIEC_UDINT BOOL_TO_UDINT(const CIEC_BOOL &paVal){
@@ -829,7 +832,7 @@ inline const CIEC_UDINT BOOL_TO_UDINT(const CIEC_BOOL &paVal){
 }
 
 inline const CIEC_UINT BOOL_TO_UINT(const CIEC_BOOL &paVal){
-  return CIEC_UINT((TForteUInt16)((true == paVal) ? 1 : 0));
+  return CIEC_UINT((TForteUInt16) ((true == paVal) ? 1 : 0));
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
@@ -839,11 +842,11 @@ inline const CIEC_ULINT BOOL_TO_ULINT(const CIEC_BOOL &paVal){
 #endif
 
 inline const CIEC_USINT BOOL_TO_USINT(const CIEC_BOOL &paVal){
-  return CIEC_USINT((TForteUInt8)( (true == paVal) ? 1 : 0));
+  return CIEC_USINT((TForteUInt8) ((true == paVal) ? 1 : 0));
 }
 
 inline const CIEC_WORD BOOL_TO_WORD(const CIEC_BOOL &paVal){
-  return CIEC_WORD((TForteWord)((true == paVal) ? 1 : 0));
+  return CIEC_WORD((TForteWord) ((true == paVal) ? 1 : 0));
 }
 
 inline const CIEC_STRING BOOL_TO_STRING(const CIEC_BOOL &paVal){
@@ -868,7 +871,7 @@ inline const CIEC_TIME BOOL_TO_TIME(const CIEC_BOOL &paVal){
 //   BYTE_TO_*  functions
 //********************************************************************************************
 inline const CIEC_BOOL BYTE_TO_BOOL(const CIEC_BYTE &paVal){
-  return CIEC_BOOL((TForteByte)0 != paVal ? true : false);
+  return CIEC_BOOL((TForteByte) 0 != paVal ? true : false);
 }
 
 inline const CIEC_DINT BYTE_TO_DINT(const CIEC_BYTE &paVal){
@@ -955,7 +958,7 @@ inline const CIEC_TIME BYTE_TO_TIME(const CIEC_BYTE &paVal){
 //   DINT_TO_*  functions
 //********************************************************************************************
 inline const CIEC_BOOL DINT_TO_BOOL(const CIEC_DINT &paVal){
-  return CIEC_BOOL((TForteInt32)0 != paVal ? true : false);
+  return CIEC_BOOL((TForteInt32) 0 != paVal ? true : false);
 }
 
 inline const CIEC_BYTE DINT_TO_BYTE(const CIEC_DINT &paVal){
@@ -972,7 +975,7 @@ inline const CIEC_BYTE DINT_TO_BYTE(const CIEC_DINT &paVal){
 }
 
 inline const CIEC_DWORD DINT_TO_DWORD(const CIEC_DINT &paVal){
-  return CIEC_DWORD( ((0 < paVal) ? (TForteDWord)paVal : CIEC_DWORD::scm_nMinVal));
+  return CIEC_DWORD(((0 < paVal) ? (TForteDWord) paVal : CIEC_DWORD::scm_nMinVal));
 }
 
 inline const CIEC_INT DINT_TO_INT(const CIEC_DINT &paVal){
@@ -1026,7 +1029,7 @@ inline const CIEC_SINT DINT_TO_SINT(const CIEC_DINT &paVal){
 }
 
 inline const CIEC_UDINT DINT_TO_UDINT(const CIEC_DINT &paVal){
-  return CIEC_UDINT( (((CIEC_DINT::TValueType)CIEC_UDINT::scm_nMinVal) < paVal) ? (CIEC_UDINT::TValueType)paVal : CIEC_UDINT::scm_nMinVal);
+  return CIEC_UDINT((((CIEC_DINT::TValueType) CIEC_UDINT::scm_nMinVal) < paVal) ? (CIEC_UDINT::TValueType) paVal : CIEC_UDINT::scm_nMinVal);
 }
 
 inline const CIEC_UINT DINT_TO_UINT(const CIEC_DINT &paVal){
@@ -1091,7 +1094,8 @@ inline const CIEC_WSTRING DINT_TO_WSTRING(const CIEC_DINT &paVal){
 inline const CIEC_TIME DINT_TO_TIME(const CIEC_DINT &paVal){
   if(paVal > 0){
     return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal) * FORTE_TIME_BASE_UNITS_PER_SECOND);
-  }else{
+  }
+  else{
     return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
   }
 }
@@ -1100,7 +1104,7 @@ inline const CIEC_TIME DINT_TO_TIME(const CIEC_DINT &paVal){
 //   DWORD_TO_*  functions
 //********************************************************************************************
 inline const CIEC_BOOL DWORD_TO_BOOL(const CIEC_DWORD &paVal){
-  return CIEC_BOOL((TForteDWord)0 != paVal ? true : false);
+  return CIEC_BOOL((TForteDWord) 0 != paVal ? true : false);
 }
 
 inline const CIEC_DINT DWORD_TO_DINT(const CIEC_DWORD &paVal){
@@ -1135,8 +1139,7 @@ inline const CIEC_LWORD DWORD_TO_LWORD(const CIEC_DWORD &paVal){
 
 #ifdef FORTE_USE_REAL_DATATYPE
 inline const CIEC_REAL DWORD_TO_REAL(const CIEC_DWORD &paVal){
-  //fprintf(stderr,"DWORD_TO_REAL: %ld, %f\n", paVal.operator TForteDWord(), (TForteFloat) paVal);
-    return CIEC_REAL((TForteFloat) paVal);
+  return CIEC_REAL((TForteFloat) paVal);
 }
 #endif
 
@@ -1167,7 +1170,7 @@ inline const CIEC_WORD DWORD_TO_WORD(const CIEC_DWORD &paVal){
 }
 
 inline const CIEC_TIME DWORD_TO_TIME(const CIEC_DWORD &paVal){
-  return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal)* FORTE_TIME_BASE_UNITS_PER_SECOND);
+  return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal) * FORTE_TIME_BASE_UNITS_PER_SECOND);
 }
 
 inline const CIEC_STRING DWORD_TO_STRING(const CIEC_DWORD &paVal){
@@ -1208,7 +1211,6 @@ inline const CIEC_INT LWORD_TO_INT(const CIEC_LWORD &paVal){
 inline const CIEC_LINT LWORD_TO_LINT(const CIEC_LWORD &paVal){
   return CIEC_LINT((TForteInt64) paVal);
 }
-
 
 #ifdef FORTE_USE_LREAL_DATATYPE
 inline const CIEC_LREAL LWORD_TO_LREAL(const CIEC_LWORD &paVal){
@@ -1273,7 +1275,7 @@ inline const CIEC_TIME LWORD_TO_TIME(const CIEC_LWORD &paVal){
 //   UDINT_TO_*  functions
 //********************************************************************************************
 inline const CIEC_BOOL UDINT_TO_BOOL(const CIEC_UDINT &paVal){
-  return CIEC_BOOL((TForteUInt32)0 != paVal ? true : false);
+  return CIEC_BOOL((TForteUInt32) 0 != paVal ? true : false);
 }
 
 inline const CIEC_DINT UDINT_TO_DINT(const CIEC_UDINT &paVal){
@@ -1360,7 +1362,7 @@ inline const CIEC_TIME UDINT_TO_TIME(const CIEC_UDINT &paVal){
 //   UINT_TO_*  functions
 //********************************************************************************************
 inline const CIEC_BOOL UINT_TO_BOOL(const CIEC_UINT &paVal){
-  return CIEC_BOOL((TForteUInt16)0 != paVal ? true : false);
+  return CIEC_BOOL((TForteUInt16) 0 != paVal ? true : false);
 }
 
 inline const CIEC_DINT UINT_TO_DINT(const CIEC_UINT &paVal){
@@ -1524,7 +1526,8 @@ inline const CIEC_WSTRING ULINT_TO_WSTRING(const CIEC_ULINT &paVal){
 inline const CIEC_TIME ULINT_TO_TIME(const CIEC_ULINT &paVal){
   if(paVal > 0){
     return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal) * FORTE_TIME_BASE_UNITS_PER_SECOND);
-  }else{
+  }
+  else{
     return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
   }
 }
@@ -1534,7 +1537,7 @@ inline const CIEC_TIME ULINT_TO_TIME(const CIEC_ULINT &paVal){
 //   USINT_TO_*  functions
 //********************************************************************************************
 inline const CIEC_BOOL USINT_TO_BOOL(const CIEC_USINT &paVal){
-  return CIEC_BOOL((TForteUInt8)0 != paVal ? true : false);
+  return CIEC_BOOL((TForteUInt8) 0 != paVal ? true : false);
 }
 
 inline const CIEC_DINT USINT_TO_DINT(const CIEC_USINT &paVal){
@@ -1621,7 +1624,7 @@ inline const CIEC_TIME USINT_TO_TIME(const CIEC_USINT &paVal){
 //   WORD_TO_*  functions
 //********************************************************************************************
 inline const CIEC_BOOL WORD_TO_BOOL(const CIEC_WORD &paVal){
-  return CIEC_BOOL((TForteWord)0 != paVal ? true : false);
+  return CIEC_BOOL((TForteWord) 0 != paVal ? true : false);
 }
 
 inline const CIEC_DINT WORD_TO_DINT(const CIEC_WORD &paVal){
@@ -1708,7 +1711,7 @@ inline const CIEC_TIME WORD_TO_TIME(const CIEC_WORD &paVal){
 //   INT_TO_*  functions
 //********************************************************************************************
 inline const CIEC_BOOL INT_TO_BOOL(const CIEC_INT &paVal){
-  return CIEC_BOOL((TForteInt16)0 != paVal ? true : false);
+  return CIEC_BOOL((TForteInt16) 0 != paVal ? true : false);
 }
 
 inline const CIEC_BYTE INT_TO_BYTE(const CIEC_INT &paVal){
@@ -1807,9 +1810,10 @@ inline const CIEC_STRING INT_TO_STRING(const CIEC_INT &paVal){
 }
 
 inline const CIEC_TIME INT_TO_TIME(const CIEC_INT &paVal){
-  if(paVal > 0 ){
+  if(paVal > 0){
     return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal) * FORTE_TIME_BASE_UNITS_PER_SECOND);
-  }else{
+  }
+  else{
     return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
   }
 }
@@ -1967,7 +1971,8 @@ inline const CIEC_WSTRING LINT_TO_WSTRING(const CIEC_LINT &paVal){
 inline const CIEC_TIME LINT_TO_TIME(const CIEC_LINT &paVal){
   if(paVal > 0){
     return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal) * FORTE_TIME_BASE_UNITS_PER_SECOND);
-  }else{
+  }
+  else{
     return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
   }
 }
@@ -1977,7 +1982,7 @@ inline const CIEC_TIME LINT_TO_TIME(const CIEC_LINT &paVal){
 //   SINT_TO_*  functions
 //********************************************************************************************
 inline const CIEC_BOOL SINT_TO_BOOL(const CIEC_SINT &paVal){
-  return CIEC_BOOL((TForteInt8)0 != paVal ? true : false);
+  return CIEC_BOOL((TForteInt8) 0 != paVal ? true : false);
 }
 
 inline const CIEC_BYTE SINT_TO_BYTE(const CIEC_SINT &paVal){
@@ -1995,7 +2000,8 @@ inline const CIEC_DINT SINT_TO_DINT(const CIEC_SINT &paVal){
 inline const CIEC_TIME SINT_TO_TIME(const CIEC_SINT &paVal){
   if(paVal > 0){
     return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal) * FORTE_TIME_BASE_UNITS_PER_SECOND);
-  }else{
+  }
+  else{
     return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
   }
 }
