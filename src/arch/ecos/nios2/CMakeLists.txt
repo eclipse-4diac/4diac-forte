@@ -19,7 +19,9 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Nios2")
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/)
   
   SET(FORTE_ECOS_FOLDER "" CACHE STRING "")
-  forte_add_include_system_directories(${FORTE_ECOS_FOLDER}/include)
+  #The usage of system directories removes the warnings but also wraps the headers with extern C, 
+  #a problem for the semaphore that includes C++ headers and fails at templates
+  forte_add_include_directories(${FORTE_ECOS_FOLDER}/include) 
   forte_add_link_directories(${FORTE_ECOS_FOLDER}/lib)
   
   forte_add_sourcefile_hcpp(../forte_thread ../ecostiha ../forte_sync ../forte_sem ../forte_instance)

@@ -13,6 +13,7 @@
 
 #include "forte_sem.h"
 #include "../devlog.h"
+#include <cyg/kernel/kapi.h>
 #include <errno.h>
 #include <string.h>
 
@@ -26,17 +27,17 @@ namespace forte {
     }
 
     void CEcosSemaphore::inc(){
-      mSemaphore->post();
+      mSemaphore.post();
     }
 
     void CEcosSemaphore::waitIndefinitely(){
-      mSemaphore->wait();
+      mSemaphore.wait();
     }
 
     bool CEcosSemaphore::timedWait(TForteUInt64 paRelativeTimeout){
       cyg_tick_count_t absWaitTime = cyg_current_time() + paRelativeTimeout * CYGNUM_HAL_RTC_NUMERATOR / CYGNUM_HAL_RTC_DENOMINATOR;
       do{
-        if(true == mSemaphore->sem_trywait()){
+        if(true == mSemaphore.trywait()){
           return true;
         }
       } while(cyg_current_time() < absWaitTime);
@@ -44,7 +45,7 @@ namespace forte {
     }
 
     bool CEcosSemaphore::tryNoWait(){
-      return (0 != mSemaphore->trywait());
+      return (0 != mSemaphore.trywait());
     }
 
   } /* namespace arch */
