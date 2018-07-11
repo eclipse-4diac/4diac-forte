@@ -14,6 +14,7 @@
 #define _HTTPCOMLAYER_H_
 
 #include <forte_config.h>
+#include <forte_sem.h>
 #include "comlayer.h"
 #include <forte_string.h>
 #include "ipcomlayer.h"
@@ -98,6 +99,8 @@ namespace forte {
 
         /** Ouput response is to be written to a data output */
         bool hasOutputResponse;
+
+        CSemaphore mSendDataReceived;
     };
 
   }
