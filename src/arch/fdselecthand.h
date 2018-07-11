@@ -16,6 +16,7 @@
 #include "../core/extevhan.h"
 #include <forte_thread.h>
 #include <forte_sync.h>
+#include <sockhand.h>
 
 namespace forte{
   namespace com_infra{
@@ -32,8 +33,8 @@ namespace forte{
 class CFDSelectHandler : public CExternalEventHandler, private CThread{
   DECLARE_HANDLER(CFDSelectHandler)
   public:
-    typedef int TFileDescriptor; //!< General type definition for a file descriptor. To be used by the callback classes.
-    static const TFileDescriptor scm_nInvalidFileDescriptor = -1;
+    typedef FORTE_SOCKET_TYPE TFileDescriptor; //!< General type definition for a file descriptor. To be used by the callback classes.
+    static const TFileDescriptor scmInvalidFileDescriptor = FORTE_INVALID_SOCKET;
 
     void addComCallback(TFileDescriptor pa_nFD, forte::com_infra::CComLayer *pa_poComLayer);
     void removeComCallback(TFileDescriptor pa_nFD);

@@ -21,7 +21,7 @@ using namespace forte::com_infra;
 #define SEND_TIMEOUT 20
 
 CHttpComLayer::CHttpComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB) :
-    CComLayer(paUpperLayer, paComFB), mInterruptResp(e_Nothing), mRequestType(e_NOTSET), mBufFillSize(0), mSocketID(CIPComSocketHandler::scm_nInvalidSocketDescriptor), hasOutputResponse(false){
+    CComLayer(paUpperLayer, paComFB), mInterruptResp(e_Nothing), mRequestType(e_NOTSET), mBufFillSize(0), mSocketID(CIPComSocketHandler::scmInvalidSocketDescriptor), hasOutputResponse(false){
   memset(mRecvBuffer, 0, sizeof(mRecvBuffer));
 }
 
@@ -131,7 +131,7 @@ EComResponse CHttpComLayer::sendData(void *paData, unsigned int){
       eRetVal = e_Nothing;
       break;
     case e_Client: {
-      if(CIPComSocketHandler::scm_nInvalidSocketDescriptor == mSocketID){
+      if(CIPComSocketHandler::scmInvalidSocketDescriptor == mSocketID){
         if(e_PUT == mRequestType){
           TConstIEC_ANYPtr apoSDs = static_cast<TConstIEC_ANYPtr>(paData);
           if(!serializeData(apoSDs[0])){
@@ -268,7 +268,7 @@ void CHttpComLayer::handledRecvData(){
     DEVLOG_ERROR("[HTTP Layer] Receive buffer full\n");
     return;
   }
-  if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != mSocketID){
+  if(CIPComSocketHandler::scmInvalidSocketDescriptor != mSocketID){
     int nRetVal = -1;
     switch (m_poFb->getComServiceType()){
       case e_Server:
@@ -316,17 +316,17 @@ void CHttpComLayer::closeConnection(){
 }
 
 void CHttpComLayer::closeSocket(CIPComSocketHandler::TSocketDescriptor *paSocketID){
-  if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != *paSocketID){
+  if(CIPComSocketHandler::scmInvalidSocketDescriptor != *paSocketID){
     GET_HANDLER_FROM_COMM_LAYER(CIPComSocketHandler)->removeComCallback(*paSocketID);
     CIPComSocketHandler::closeSocket(*paSocketID);
-    *paSocketID = CIPComSocketHandler::scm_nInvalidSocketDescriptor;
+    *paSocketID = CIPComSocketHandler::scmInvalidSocketDescriptor;
     m_eConnectionState = e_Disconnected;
   }
 }
 
 EComResponse CHttpComLayer::openHTTPConnection(){
   EComResponse eRetVal = e_InitInvalidId;
-  CIPComSocketHandler::TSocketDescriptor nSockDes = CIPComSocketHandler::scm_nInvalidSocketDescriptor;
+  CIPComSocketHandler::TSocketDescriptor nSockDes = CIPComSocketHandler::scmInvalidSocketDescriptor;
   m_eConnectionState = e_Connected;
 
   switch (m_poFb->getComServiceType()){
@@ -341,7 +341,7 @@ EComResponse CHttpComLayer::openHTTPConnection(){
       break;
   }
 
-  if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != nSockDes){
+  if(CIPComSocketHandler::scmInvalidSocketDescriptor != nSockDes){
     if(e_Publisher != m_poFb->getComServiceType()){ //Publishers should not be registered for receiving data
       GET_HANDLER_FROM_COMM_LAYER(CIPComSocketHandler)->addComCallback(nSockDes, this);
     }

@@ -23,7 +23,7 @@ using namespace forte::com_infra;
 CMuxedSerCommLayer::CMuxedSerPortsManager CMuxedSerCommLayer::smMuxedSerPortsManager;
 
 CMuxedSerCommLayer::CMuxedSerCommLayer(CComLayer* paUpperLayer, CBaseCommFB * paFB) :
-    CComLayer(paUpperLayer, paFB), mBufFillSize(0), mFD(scm_nInvalidFileDescriptor),
+    CComLayer(paUpperLayer, paFB), mBufFillSize(0), mFD(scmInvalidFileDescriptor),
   mInterruptResp(forte::com_infra::EComResponse::e_Nothing), mSerMuxId(0){
 
 }
@@ -33,7 +33,7 @@ CMuxedSerCommLayer::~CMuxedSerCommLayer(){
 }
 
 EComResponse CMuxedSerCommLayer::sendData(void *paData, unsigned int paSize){
-  if(CFDSelectHandler::scm_nInvalidFileDescriptor != mFD){
+  if(CFDSelectHandler::scmInvalidFileDescriptor != mFD){
     //first send id
 
     mRecvBuffer[0] = mSerMuxId;
@@ -96,7 +96,7 @@ EComResponse CMuxedSerCommLayer::openConnection(char *paLayerParameter){
     ++acPort;
     mSerMuxId = static_cast<TForteUInt8>(forte::core::util::strtoul(acPort, 0, 10));
     mFD = smMuxedSerPortsManager.addMuxedSerLayer(paLayerParameter, this);
-    if(CFDSelectHandler::scm_nInvalidFileDescriptor != mFD){
+    if(CFDSelectHandler::scmInvalidFileDescriptor != mFD){
       eRetVal = e_InitOk;
     }
   }
@@ -105,9 +105,9 @@ EComResponse CMuxedSerCommLayer::openConnection(char *paLayerParameter){
 }
 
 void CMuxedSerCommLayer::closeConnection(){
-  if(CFDSelectHandler::scm_nInvalidFileDescriptor != mFD){
+  if(CFDSelectHandler::scmInvalidFileDescriptor != mFD){
     smMuxedSerPortsManager.removeMuxedSerLayer(mFD, this);
-    mFD = CFDSelectHandler::scm_nInvalidFileDescriptor;
+    mFD = CFDSelectHandler::scmInvalidFileDescriptor;
   }
 }
 
@@ -118,7 +118,7 @@ CMuxedSerCommLayer::CMuxedSerPortsManager::CMuxedSerPortsManager(){
 
 CFDSelectHandler::TFileDescriptor CMuxedSerCommLayer::CMuxedSerPortsManager::addMuxedSerLayer(char* paSerPort, CMuxedSerCommLayer *paComCallBack){
   CCriticalRegion criticalRegion(mSync);
-  CFDSelectHandler::TFileDescriptor nRetVal = CFDSelectHandler::scm_nInvalidFileDescriptor;
+  CFDSelectHandler::TFileDescriptor nRetVal = CFDSelectHandler::scmInvalidFileDescriptor;
   SSerPortEntry *mSerPortEntry = getSerPortEntry(paSerPort);
   if(0 != mSerPortEntry){
     mSerPortEntry->mConnectionsList.push_back(paComCallBack);
@@ -200,7 +200,7 @@ CMuxedSerCommLayer::CMuxedSerPortsManager::SSerPortEntry *CMuxedSerCommLayer::CM
   TSerPortList::Iterator itCurrent(mPortList.back());
   SSerPortEntry *pstRetVal = &(*itCurrent);
   openPort(paSerPort, pstRetVal);
-  if(CFDSelectHandler::scm_nInvalidFileDescriptor == pstRetVal->mFD){
+  if(CFDSelectHandler::scmInvalidFileDescriptor == pstRetVal->mFD){
     if(itCurrent == mPortList.begin()){
       mPortList.pop_front();
     }
@@ -230,7 +230,7 @@ CMuxedSerCommLayer::CMuxedSerPortsManager::SSerPortEntry *CMuxedSerCommLayer::CM
 void CMuxedSerCommLayer::CMuxedSerPortsManager::openPort(char* paSerPort, SSerPortEntry *paPortEntry){
   paPortEntry->mFD = open(paSerPort, O_RDWR | O_NOCTTY);
 
-  if(CFDSelectHandler::scm_nInvalidFileDescriptor != paPortEntry->mFD){
+  if(CFDSelectHandler::scmInvalidFileDescriptor != paPortEntry->mFD){
     GET_HANDLER_FROM_COMM_LAYER(CFDSelectHandler)->addComCallback(paPortEntry->mFD, paPortEntry);
   }
   else{
