@@ -142,4 +142,20 @@ BOOST_AUTO_TEST_CASE(concat4)
 
 #endif
 
+BOOST_AUTO_TEST_CASE(standard_example_insert)
+{
+  CIEC_STRING sIn1("ABC");
+  CIEC_STRING sIn2("XY");
+  CIEC_STRING sResult = INSERT(sIn1, sIn2, CIEC_UINT(2));
+  BOOST_TEST(sResult.getValue() == "ABXYC");
+}
+
+BOOST_AUTO_TEST_CASE(insert)
+{
+  CIEC_STRING sIn1("Lorem  sit");
+  CIEC_STRING sIn2("ipsum dolor");
+  CIEC_STRING sResult = INSERT(sIn1, sIn2, CIEC_UINT(6));
+  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
