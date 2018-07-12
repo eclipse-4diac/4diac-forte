@@ -43,7 +43,7 @@ bool CHttpParser::changePutData(CIEC_STRING& paDest, const CIEC_STRING& paData){
     *helperChar = '\0';
     paDest = paDest.getValue(); //will shrink the length of the string to the new ending
     char contentLength[6]; //TODO: should this be fixed or not?
-    sprintf(contentLength, "%u", strlen(paData.getValue()));
+    sprintf(contentLength, "%zu", strlen(paData.getValue()));
     paDest.append(contentLength);
     CHttpParser::addHeaderEnding(paDest);
     paDest.append(paData.getValue());
@@ -95,8 +95,8 @@ bool CHttpParser::parseGetResponse(CIEC_STRING& paDest, char* paSrc, CIEC_STRING
   }else{
     // Bad response received?
     DEVLOG_INFO("[HTTP Parser] Unexpected GET response code\n");
-    return false;
   }
+  return false;
 }
 
 bool CHttpParser::parsePutResponse(CIEC_STRING& paDest, char* paSrc, CIEC_STRING& paExpectedCode) {
@@ -106,9 +106,9 @@ bool CHttpParser::parsePutResponse(CIEC_STRING& paDest, char* paSrc, CIEC_STRING
     }
     else{
       DEVLOG_ERROR("[HTTP Parser] Unexpected PUT response code\n");
-      return false;
     }
   }
+  return false;
 }
 
 bool CHttpParser::getHttpResponseCode(CIEC_STRING& paDest, char* paSrc) {

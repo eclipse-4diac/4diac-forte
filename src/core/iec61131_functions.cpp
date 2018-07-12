@@ -12,7 +12,7 @@
 #include "iec61131_functions.h"
 
 template<> const CIEC_BOOL NOT<CIEC_BOOL>(const CIEC_BOOL& pa_roIN){
-  return CIEC_BOOL((typename CIEC_BOOL::TValueType)(!pa_roIN));
+  return CIEC_BOOL(!pa_roIN);
 }
 
 #ifdef FORTE_USE_REAL_DATATYPE

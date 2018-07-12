@@ -69,6 +69,7 @@ void anyBitFBHelperWithoutBool(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB)
     #endif
     case CIEC_ANY::e_DWORD:
       pa_roFB.template calculateValue<CIEC_DWORD>();
+      break;
     default:
       //if there is an invalid input we will not do anything here, could help to find this more easily when debugging the application
       DEVLOG_ERROR("[anyBitFBHelperWithoutBool]: Wrong type usage, this function can be used only with sub-types of ANY_BIT except CIEC_BOOL");

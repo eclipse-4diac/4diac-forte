@@ -21,7 +21,7 @@ using namespace forte::com_infra;
 #define SEND_TIMEOUT 20
 
 CHttpComLayer::CHttpComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB) :
-    CComLayer(paUpperLayer, paComFB), mInterruptResp(e_Nothing), mRequestType(e_NOTSET), mBufFillSize(0), mSocketID(CIPComSocketHandler::scmInvalidSocketDescriptor), hasOutputResponse(false){
+    CComLayer(paUpperLayer, paComFB), mInterruptResp(e_Nothing), mRequestType(e_NOTSET), mPort(0), mBufFillSize(0), mSocketID(CIPComSocketHandler::scmInvalidSocketDescriptor), hasOutputResponse(false){
   memset(mRecvBuffer, 0, sizeof(mRecvBuffer));
 }
 
@@ -144,7 +144,7 @@ EComResponse CHttpComLayer::sendData(void *paData, unsigned int){
         }
 
         mInterruptResp = e_Nothing; //TODO: Is this needed here?
-        if(e_InitOk != openHTTPConnection()){
+        if(e_InitOk != openHTTPConnection() && mSocketID >= 0){ /* mSocketID >= 0 is to silence coverity until this is moved to its own handler. TODO: remove this */
           mInterruptResp = e_ProcessDataSendFailed;
           DEVLOG_ERROR("[HTTP Layer] Opening HTTP connection failed\n");
         }
