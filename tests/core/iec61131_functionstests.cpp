@@ -135,6 +135,20 @@ BOOST_AUTO_TEST_CASE(replace)
   BOOST_TEST(sResult.getValue() == "Lorem muspi dolor sit");
 }
 
+BOOST_AUTO_TEST_CASE(standard_example_delete)
+{
+  CIEC_STRING sIn1("ABXYC");
+  CIEC_STRING sResult(DELETE(sIn1, CIEC_INT(2), CIEC_INT(3)));
+  BOOST_TEST(sResult.getValue() == "ABC");
+}
+
+BOOST_AUTO_TEST_CASE(delete_function)
+{
+  CIEC_STRING sIn1("Lorem ipsum dolor sit");
+  CIEC_STRING sResult(DELETE(sIn1, CIEC_INT(6), CIEC_INT(12)));
+  BOOST_TEST(sResult.getValue() == "Lorem ipsum sit");
+}
+
 #if __cplusplus > 199711L
 //The following tests only work if we have C++ 11 or higher
 BOOST_AUTO_TEST_CASE(concat3)
