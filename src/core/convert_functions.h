@@ -91,7 +91,7 @@ inline const CIEC_TIME_OF_DAY DT_TO_TOD(const CIEC_DATE_AND_TIME &paVal){
     return CIEC_TIME_OF_DAY(0);
   }
 
-  return CIEC_TIME_OF_DAY((TForteUInt64) (ptm->tm_hour * 3600 + ptm->tm_min * 60 + ptm->tm_sec) * 1000ULL + (nBuffer % 1000));
+  return CIEC_TIME_OF_DAY(static_cast<TForteUInt64>( (ptm->tm_hour * UINT64_C(3600) + ptm->tm_min * UINT64_C(60) + ptm->tm_sec) * UINT64_C(1000) + (nBuffer % UINT64_C(1000))));
 }
 #endif
 
