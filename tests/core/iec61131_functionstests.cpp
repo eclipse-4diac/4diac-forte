@@ -33,6 +33,13 @@ BOOST_AUTO_TEST_CASE(to_lower)
   BOOST_TEST(sToLowerString.getValue() == "shall_be_to_lower");
 }
 
+BOOST_AUTO_TEST_CASE(standard_example_left)
+{
+  CIEC_STRING sTestString("ASTR");
+  CIEC_STRING sLeftString(LEFT(sTestString, CIEC_INT(3)));
+  BOOST_TEST(sLeftString.getValue() == "AST");
+}
+
 BOOST_AUTO_TEST_CASE(left)
 {
   CIEC_STRING sTestString("SHALL_BE_CROPPED_HERE_THIS_SHOULD_NOT_BE_SEEN");
@@ -40,11 +47,32 @@ BOOST_AUTO_TEST_CASE(left)
   BOOST_TEST(sLeftString.getValue() == "SHALL_BE_CROPPED_HERE");
 }
 
+BOOST_AUTO_TEST_CASE(standard_example_right)
+{
+  CIEC_STRING sTestString("ASTR");
+  CIEC_STRING sRightString(RIGHT(sTestString, CIEC_INT(3)));
+  BOOST_TEST(sRightString.getValue() == "STR");
+}
+
 BOOST_AUTO_TEST_CASE(right)
 {
   CIEC_STRING sTestString("THIS_SHOULD_BE_CROPPED_THIS_SHOULD_BE_SEEN");
   CIEC_STRING sRightString(RIGHT(sTestString, CIEC_INT(19)));
   BOOST_TEST(sRightString.getValue() == "THIS_SHOULD_BE_SEEN");
+}
+
+BOOST_AUTO_TEST_CASE(standard_example_mid)
+{
+  CIEC_STRING sTestString("ASTR");
+  CIEC_STRING sMidString(MID(sTestString, CIEC_INT(2), CIEC_INT(2)));
+  BOOST_TEST(sMidString.getValue() == "ST");
+}
+
+BOOST_AUTO_TEST_CASE(mid)
+{
+  CIEC_STRING sTestString("THIS_SHOULD_NOT_BE_SEEN_THIS_SHALL_BE_SEEN_THIS_SHOULD_NOT_BE_SEEN");
+  CIEC_STRING sMidString(MID(sTestString,CIEC_INT(18), CIEC_INT(25)));
+  BOOST_TEST(sMidString.getValue() == "THIS_SHALL_BE_SEEN");
 }
 
 BOOST_AUTO_TEST_CASE(concat)
