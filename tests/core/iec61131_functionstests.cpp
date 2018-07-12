@@ -33,6 +33,20 @@ BOOST_AUTO_TEST_CASE(to_lower)
   BOOST_TEST(sToLowerString.getValue() == "shall_be_to_lower");
 }
 
+BOOST_AUTO_TEST_CASE(standard_example_len)
+{
+  CIEC_STRING sTestString("ASTRING");
+  CIEC_UINT nLength(LEN(sTestString));
+  BOOST_TEST(nLength == 7);
+}
+
+BOOST_AUTO_TEST_CASE(len)
+{
+  CIEC_STRING sTestString("Lorem ipsum dolor sit amet");
+  CIEC_UINT nLength(LEN(sTestString));
+  BOOST_TEST(nLength == 26);
+}
+
 BOOST_AUTO_TEST_CASE(standard_example_left)
 {
   CIEC_STRING sTestString("ASTR");
