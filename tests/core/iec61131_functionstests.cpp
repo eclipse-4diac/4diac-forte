@@ -119,6 +119,22 @@ BOOST_AUTO_TEST_CASE(find_not_found)
   BOOST_TEST(0 == nIndex);
 }
 
+BOOST_AUTO_TEST_CASE(standard_example_replace)
+{
+  CIEC_STRING sIn1("ABCDE");
+  CIEC_STRING sIn2("X");
+  CIEC_STRING sResult(REPLACE(sIn1, sIn2, CIEC_INT(2), CIEC_INT(3)));
+  BOOST_TEST(sResult.getValue() == "ABXE");
+}
+
+BOOST_AUTO_TEST_CASE(replace)
+{
+  CIEC_STRING sIn1("Lorem ipsum dolor sit");
+  CIEC_STRING sIn2("muspi");
+  CIEC_STRING sResult(REPLACE(sIn1, sIn2, CIEC_INT(5), CIEC_INT(7)));
+  BOOST_TEST(sResult.getValue() == "Lorem muspi dolor sit");
+}
+
 #if __cplusplus > 199711L
 //The following tests only work if we have C++ 11 or higher
 BOOST_AUTO_TEST_CASE(concat3)
