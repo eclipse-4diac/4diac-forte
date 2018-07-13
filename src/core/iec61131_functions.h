@@ -266,11 +266,22 @@ template<typename T, typename U> struct larger_type{
     typedef typename std::conditional<is_wider_than<T, U>::value, T, U>::type type;
 };
 
+template<typename T, typename U, template<typename A> class F, typename C> auto APPLY(const T& pa_roIN1, const U& pa_roIN2) -> decltype(auto){
+  static_assert(are_of_subtype<C, T, U>::value, "Template instantiation with incompatible types");
+  typedef typename larger_type<T, U>::type tAndType;
+  const tAndType Result(F<tAndType>::call(tAndType(pa_roIN1), tAndType(pa_roIN2)));
+  return Result;
+}
+
+template<typename T>
+struct AND_Function{
+    static const T call(const T& pa_roIN1, const T& pa_roIN2){
+      return AND(pa_roIN1, pa_roIN2);
+    }
+};
+
 template<typename T, typename U> auto AND(const T& pa_roIN1, const U& pa_roIN2) -> decltype(auto){
-  static_assert(are_of_subtype<CIEC_ANY_BIT, T, U>::value, "Template AND instantiation with incompatible types");
-  typedef typename larger_type<T,U>::type tAndType;
-   const tAndType Result(AND<tAndType>(tAndType(pa_roIN1), tAndType(pa_roIN2)));
-   return Result;
+  return APPLY<T, U, AND_Function, CIEC_ANY_BIT>(pa_roIN1, pa_roIN2);
 }
 
 #endif
