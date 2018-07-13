@@ -175,6 +175,34 @@ BOOST_AUTO_TEST_CASE(delete_function)
   BOOST_TEST(sResult.getValue() == "Lorem ipsum sit");
 }
 
+BOOST_AUTO_TEST_CASE(eq_true)
+{
+  CIEC_INT nInt1(10);
+  CIEC_INT nInt2(10);
+  BOOST_TEST(EQ(nInt1, nInt2) == true);
+}
+
+BOOST_AUTO_TEST_CASE(eq_false)
+{
+  CIEC_INT nInt1(10);
+  CIEC_INT nInt2(-10);
+  BOOST_TEST(EQ(nInt1, nInt2) == false);
+}
+
+BOOST_AUTO_TEST_CASE(ne_true)
+{
+  CIEC_INT nInt1(10);
+  CIEC_INT nInt2(10);
+  BOOST_TEST(NE(nInt1, nInt2) == false);
+}
+
+BOOST_AUTO_TEST_CASE(ne_false)
+{
+  CIEC_INT nInt1(10);
+  CIEC_INT nInt2(-10);
+  BOOST_TEST(NE(nInt1, nInt2) == true);
+}
+
 #if __cplusplus > 201103L
 
 BOOST_AUTO_TEST_CASE(and_function)
