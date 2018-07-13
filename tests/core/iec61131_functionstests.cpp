@@ -19,6 +19,18 @@
 
 BOOST_AUTO_TEST_SUITE(IEC61131_functions)
 
+BOOST_AUTO_TEST_CASE(abs)
+{
+  CIEC_SINT nNumber(-13);
+  BOOST_TEST(ABS(nNumber).getSignedValue() == 13);
+}
+
+BOOST_AUTO_TEST_CASE(sqrt)
+{
+  CIEC_REAL nNumber(4);
+  BOOST_TEST(static_cast<TForteFloat>(SQRT(nNumber)) == 2.0f);
+}
+
 BOOST_AUTO_TEST_CASE(to_upper)
 {
   CIEC_STRING sTestString("shall_be_to_upper");
@@ -163,7 +175,16 @@ BOOST_AUTO_TEST_CASE(delete_function)
   BOOST_TEST(sResult.getValue() == "Lorem ipsum sit");
 }
 
-#if __cplusplus > 199711L
+#if __cplusplus > 201103L
+
+BOOST_AUTO_TEST_CASE(and_function)
+{
+  CIEC_BYTE nByte(10);
+  CIEC_DWORD nDword(30010);
+  CIEC_DWORD nResult(AND(nByte, nDword));
+  BOOST_TEST(static_cast<TForteDWord>(nResult) == 10);
+}
+
 //The following tests only work if we have C++ 11 or higher
 BOOST_AUTO_TEST_CASE(concat3)
 {

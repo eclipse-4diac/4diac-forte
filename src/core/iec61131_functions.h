@@ -248,6 +248,33 @@ const T ABS(const T& pa_roIN){
   template<> const CIEC_BOOL SHR(const CIEC_BOOL& pa_roIn, const CIEC_UDINT& pa_roN);
 #endif //#ifdef FORTE_USE_64BIT_DATATYPES
 
+
+#if __cplusplus >= 201103L //stdc11
+template <typename T, typename U> struct is_wider_than {
+    enum {
+      value = std::numeric_limits<typename T::TValueType>::max() > std::numeric_limits<typename U::TValueType>::max() ? true : false
+    };
+};
+
+template<typename CommonSubtype, typename T, typename U> struct are_of_subtype {
+  enum {
+    value = (std::is_base_of<CommonSubtype, T>::value && std::is_base_of<CommonSubtype, U>::value)
+  };
+};
+
+template<typename T, typename U> struct larger_type{
+    typedef typename std::conditional<is_wider_than<T, U>::value, T, U>::type type;
+};
+
+template<typename T, typename U> auto AND(const T& pa_roIN1, const U& pa_roIN2) -> decltype(auto){
+  static_assert(are_of_subtype<CIEC_ANY_BIT, T, U>::value, "Template AND instantiation with incompatible types");
+  typedef typename larger_type<T,U>::type tAndType;
+   const tAndType Result(AND<tAndType>(tAndType(pa_roIN1), tAndType(pa_roIN2)));
+   return Result;
+}
+
+#endif
+
 template<typename T> const T AND(const T& pa_roIN1, const T& pa_roIN2){
   return T((typename T::TValueType)(pa_roIN1 & pa_roIN2));
 }
@@ -359,7 +386,6 @@ inline double EXPT(double pa_roIN1, double pa_roIN2){
 template<typename T> const T EXPT(const T& pa_roIN1, const T& pa_roIN2){
   return static_cast<typename T::TValueType>(pow(pa_roIN1, pa_roIN2));
 }
-
 
 template<typename T> const T ADD(const T& pa_roIN1, const T& pa_roIN2){
   return pa_roIN1 + pa_roIN2;
