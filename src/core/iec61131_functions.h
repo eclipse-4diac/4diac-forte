@@ -18,6 +18,7 @@
 #include "convert_functions.h"
 #include <math.h>
 #include <string.h>
+#include "iec61131_cast_helper.h"
 
 #ifdef CONCAT
 # undef CONCAT
@@ -44,6 +45,12 @@
 #ifdef MIN
 #undef MIN
 #endif
+
+#define GENERATE_APPLY_FUNCTION(func)  template<typename T> struct func ##_Function { \
+  static const T call(const T& pa_roIN1, const T& pa_roIN2){ \
+      return func(pa_roIN1, pa_roIN2); \
+    }; \
+};
 
 template<typename T>
 const T ABS(const T& pa_roIN){
@@ -248,40 +255,24 @@ const T ABS(const T& pa_roIN){
   template<> const CIEC_BOOL SHR(const CIEC_BOOL& pa_roIn, const CIEC_UDINT& pa_roN);
 #endif //#ifdef FORTE_USE_64BIT_DATATYPES
 
-
 #if __cplusplus >= 201103L //stdc11
-template <typename T, typename U> struct is_wider_than {
-    enum {
-      value = std::numeric_limits<typename T::TValueType>::max() > std::numeric_limits<typename U::TValueType>::max() ? true : false
-    };
-};
-
-template<typename CommonSubtype, typename T, typename U> struct are_of_subtype {
-  enum {
-    value = (std::is_base_of<CommonSubtype, T>::value && std::is_base_of<CommonSubtype, U>::value)
-  };
-};
-
-template<typename T, typename U> struct larger_type{
-    typedef typename std::conditional<is_wider_than<T, U>::value, T, U>::type type;
-};
 
 template<typename T, typename U, template<typename A> class F, typename C> auto APPLY(const T& pa_roIN1, const U& pa_roIN2) -> decltype(auto){
   static_assert(are_of_subtype<C, T, U>::value, "Template instantiation with incompatible types");
-  typedef typename larger_type<T, U>::type tAndType;
-  const tAndType Result(F<tAndType>::call(tAndType(pa_roIN1), tAndType(pa_roIN2)));
+  typedef typename get_castable_type<T, U>::type tImplicitCastType;
+  static_assert(!std::is_same<tImplicitCastType, NullType>::value, "No implicit cast possible");
+  const tImplicitCastType Result(F<tImplicitCastType>::call(tImplicitCastType(pa_roIN1), tImplicitCastType(pa_roIN2)));
   return Result;
 }
 
-template<typename T>
-struct AND_Function{
-    static const T call(const T& pa_roIN1, const T& pa_roIN2){
-      return AND(pa_roIN1, pa_roIN2);
-    }
-};
-
+GENERATE_APPLY_FUNCTION(AND)
 template<typename T, typename U> auto AND(const T& pa_roIN1, const U& pa_roIN2) -> decltype(auto){
   return APPLY<T, U, AND_Function, CIEC_ANY_BIT>(pa_roIN1, pa_roIN2);
+}
+
+GENERATE_APPLY_FUNCTION(ADD)
+template<typename T, typename U> auto ADD(const T& pa_roIN1, const U& pa_roIN2) -> decltype(auto){
+  return APPLY<T, U, ADD_Function, CIEC_ANY_NUM>(pa_roIN1, pa_roIN2);
 }
 
 #endif

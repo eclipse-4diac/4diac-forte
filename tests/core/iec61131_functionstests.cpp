@@ -205,13 +205,59 @@ BOOST_AUTO_TEST_CASE(ne_false)
 
 #if __cplusplus > 201103L
 
-BOOST_AUTO_TEST_CASE(and_function)
+BOOST_AUTO_TEST_CASE(implicit_bool_casts)
+{
+  bool bSame = std::is_same<CIEC_BOOL, implicit_cast<CIEC_BOOL, CIEC_BOOL>::type>::value;
+  BOOST_TEST(bSame);
+  bSame = std::is_same<CIEC_BYTE, implicit_cast<CIEC_BOOL, CIEC_BYTE>::type>::value;
+  BOOST_TEST(bSame);
+  bSame = std::is_same<CIEC_WORD, implicit_cast<CIEC_BOOL, CIEC_WORD>::type>::value;
+  BOOST_TEST(bSame);
+  bSame = std::is_same<CIEC_DWORD, implicit_cast<CIEC_BOOL, CIEC_DWORD>::type>::value;
+  BOOST_TEST(bSame);
+  bSame = std::is_same<CIEC_LWORD, implicit_cast<CIEC_BOOL, CIEC_LWORD>::type>::value;
+  BOOST_TEST(bSame);
+}
+
+BOOST_AUTO_TEST_CASE(and_function_BYTE_DWORD)
 {
   CIEC_BYTE nByte(10);
   CIEC_DWORD nDword(30010);
   CIEC_DWORD nResult(AND(nByte, nDword));
   BOOST_TEST(static_cast<TForteDWord>(nResult) == 10);
 }
+
+BOOST_AUTO_TEST_CASE(and_function_DWORD_BYTE)
+{
+  CIEC_BYTE nByte(10);
+  CIEC_DWORD nDword(30010);
+  CIEC_DWORD nResult(AND(nDword, nByte));
+  BOOST_TEST(static_cast<TForteDWord>(nResult) == 10);
+}
+
+BOOST_AUTO_TEST_CASE(add_function_UDINT_USINT)
+{
+  CIEC_USINT nUsint(10);
+  CIEC_UDINT nUdint(30010);
+  CIEC_UDINT nResult(ADD(nUdint, nUsint));
+  BOOST_TEST(static_cast<TForteDWord>(nResult) == 30020);
+}
+
+BOOST_AUTO_TEST_CASE(add_function_LREAL_USINT)
+{
+  CIEC_USINT nUsint(10);
+  CIEC_LREAL nLreal(30010);
+  CIEC_LREAL nResult(ADD(nLreal, nUsint));
+  BOOST_TEST(static_cast<TForteDWord>(nResult) == 30020);
+}
+
+//BOOST_AUTO_TEST_CASE(add_function_LREAL_ULINT) //should fail, currently no way to automatically test this
+//{
+//  CIEC_ULINT nUsint(10);
+//  CIEC_LREAL nLreal(30010);
+//  CIEC_LREAL nResult(ADD(nLreal, nUsint));
+//  BOOST_TEST(static_cast<TForteDWord>(nResult) == 30020);
+//}
 
 //The following tests only work if we have C++ 11 or higher
 BOOST_AUTO_TEST_CASE(concat3)
