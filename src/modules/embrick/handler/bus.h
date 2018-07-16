@@ -138,6 +138,7 @@ protected:
   int slaveCount;
 
   // Sync
+  bool mLoopActive;
   CSemaphore mForceLoop;
   CSyncObject mSyncObject;
 

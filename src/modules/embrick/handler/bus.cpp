@@ -26,7 +26,7 @@ const char * const EmbrickBusHandler::scmSlaveUpdateFailed = "Update of slave fa
 const char * const EmbrickBusHandler::scmNoSlavesFound = "No slave modules found.";
 
 EmbrickBusHandler::EmbrickBusHandler(CDeviceExecution& paDeviceExecution) : forte::core::IO::IODeviceMultiController(paDeviceExecution),
-    spi(0), slaveSelect(0), slaves(0), slaveCount(0), sList(0) {
+    spi(0), slaveSelect(0), slaves(0), slaveCount(0), mLoopActive(false), sList(0) {
   // Set init time
   struct timespec ts;
   // TODO Check compile error. Had to to add rt libary to c++ make flags
@@ -165,7 +165,7 @@ void EmbrickBusHandler::prepareLoop() {
     ++it;
   }
   sNext = sList[0];
-  loopActive = false;
+  mLoopActive = false;
 }
 
 void EmbrickBusHandler::runLoop() {
@@ -187,7 +187,7 @@ void EmbrickBusHandler::runLoop() {
     }
 
     // Set current slave
-    loopActive = true;
+    mLoopActive = true;
     sCur = sNext;
 
     // Set next deadline of current slave
@@ -213,7 +213,7 @@ void EmbrickBusHandler::runLoop() {
 
     // Search for next deadline -> set lock to avoid changes of list
     mSyncObject.lock();
-    loopActive = false;
+    mLoopActive = false;
 
     // Store update duration
     sCur->lastDuration = (uint16_t) (micros() - ms);
@@ -282,7 +282,7 @@ void EmbrickBusHandler::forceUpdate(int index) {
 
   e->forced = true;
   clock_gettime(CLOCK_MONOTONIC, &e->nextDeadline);
-  if (!loopActive) {
+  if (!mLoopActive) {
     if(!sNext->delayed && !sNext->forced) {
       struct timespec ts = e->nextDeadline;
       addTime(ts, e->lastDuration * 2);
