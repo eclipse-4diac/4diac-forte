@@ -257,7 +257,7 @@ const T ABS(const T& pa_roIN){
 
 #if __cplusplus >= 201103L //stdc11
 
-template<typename T, typename U, template<typename A> class F, typename C> auto APPLY(const T& pa_roIN1, const U& pa_roIN2) -> decltype(auto){
+template<typename T, typename U, template<typename A> class F, typename C> typename get_castable_type<T, U>::type APPLY(const T& pa_roIN1, const U& pa_roIN2){
   static_assert(are_of_subtype<C, T, U>::value, "Template instantiation with incompatible types");
   typedef typename get_castable_type<T, U>::type tImplicitCastType;
   static_assert(!std::is_same<tImplicitCastType, NullType>::value, "No implicit cast possible");
@@ -266,12 +266,12 @@ template<typename T, typename U, template<typename A> class F, typename C> auto 
 }
 
 GENERATE_APPLY_FUNCTION(AND)
-template<typename T, typename U> auto AND(const T& pa_roIN1, const U& pa_roIN2) -> decltype(auto){
+template<typename T, typename U> typename get_castable_type<T, U>::type AND(const T& pa_roIN1, const U& pa_roIN2){
   return APPLY<T, U, AND_Function, CIEC_ANY_BIT>(pa_roIN1, pa_roIN2);
 }
 
 GENERATE_APPLY_FUNCTION(ADD)
-template<typename T, typename U> auto ADD(const T& pa_roIN1, const U& pa_roIN2) -> decltype(auto){
+template<typename T, typename U> typename get_castable_type<T, U>::type ADD(const T& pa_roIN1, const U& pa_roIN2){
   return APPLY<T, U, ADD_Function, CIEC_ANY_NUM>(pa_roIN1, pa_roIN2);
 }
 
