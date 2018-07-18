@@ -8,6 +8,8 @@
 * Contributors:
 *   Martin Melik Merkumians - initial API and implementation and/or initial documentation
 *   Martin Melik-Merkumians - adds test for FIND
+*   Martin Melik-Merkumians - adds tests for LEN, LEFT, RIGHT, MID, REPLACE, DELETE,
+*     INSERT, EQ, NE, ADD, and AND
 *******************************************************************************/
 
 #include <boost/test/unit_test.hpp>
@@ -203,19 +205,17 @@ BOOST_AUTO_TEST_CASE(ne_false)
   BOOST_TEST(NE(nInt1, nInt2) == true);
 }
 
-#if __cplusplus > 201103L
-
 BOOST_AUTO_TEST_CASE(implicit_bool_casts)
 {
-  bool bSame = std::is_same<CIEC_BOOL, implicit_cast<CIEC_BOOL, CIEC_BOOL>::type>::value;
+  bool bSame = forte::core::mpl::is_same<CIEC_BOOL, forte::core::mpl::implicit_cast<CIEC_BOOL, CIEC_BOOL>::type>::value;
   BOOST_TEST(bSame);
-  bSame = std::is_same<CIEC_BYTE, implicit_cast<CIEC_BOOL, CIEC_BYTE>::type>::value;
+  bSame = forte::core::mpl::is_same<CIEC_BYTE, forte::core::mpl::implicit_cast<CIEC_BOOL, CIEC_BYTE>::type>::value;
   BOOST_TEST(bSame);
-  bSame = std::is_same<CIEC_WORD, implicit_cast<CIEC_BOOL, CIEC_WORD>::type>::value;
+  bSame = forte::core::mpl::is_same<CIEC_WORD, forte::core::mpl::implicit_cast<CIEC_BOOL, CIEC_WORD>::type>::value;
   BOOST_TEST(bSame);
-  bSame = std::is_same<CIEC_DWORD, implicit_cast<CIEC_BOOL, CIEC_DWORD>::type>::value;
+  bSame = forte::core::mpl::is_same<CIEC_DWORD, forte::core::mpl::implicit_cast<CIEC_BOOL, CIEC_DWORD>::type>::value;
   BOOST_TEST(bSame);
-  bSame = std::is_same<CIEC_LWORD, implicit_cast<CIEC_BOOL, CIEC_LWORD>::type>::value;
+  bSame = forte::core::mpl::is_same<CIEC_LWORD, forte::core::mpl::implicit_cast<CIEC_BOOL, CIEC_LWORD>::type>::value;
   BOOST_TEST(bSame);
 }
 
@@ -260,6 +260,8 @@ BOOST_AUTO_TEST_CASE(add_function_LREAL_USINT)
 //}
 
 //The following tests only work if we have C++ 11 or higher
+#if __cplusplus > 201103L
+
 BOOST_AUTO_TEST_CASE(concat3)
 {
   CIEC_STRING sFristString("THIS_IS_THE_FIRST_STRING");

@@ -1,5 +1,5 @@
 /*******************************************************************************
-  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN, nxtcontrol GmbH, fortiss GmbH
+  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN, nxtcontrol GmbH, fortiss GmbH, 2018 TU Vienna/ACIN
   * All rights reserved. This program and the accompanying materials
   * are made available under the terms of the Eclipse Public License v1.0
   * which accompanies this distribution, and is available at
@@ -9,12 +9,14 @@
   *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
   *    Ingo Hegny, Martin Melik Merkumians, Stanislav Meduna, Monika Wenger
   *      - initial implementation and rework communication infrastructure
+  *    Martin Melik Merkumians - templated cast factory function
   *******************************************************************************/
 #ifndef _ANY_H_
 #define _ANY_H_
 
 #include <string.h>
 #include "../typelib.h"
+#include "iec61131_cast_helper.h"
 
 #if (!defined FORTE_LITTLE_ENDIAN) && (!defined FORTE_BIG_ENDIAN)
 #  error "Endianess is not defined!"
@@ -27,6 +29,9 @@
  * \brief Implementation of the core IEC 61131-3 data types.
  *
  */
+
+class CIEC_ANY_REAL;
+class CIEC_ANY_BIT;
 
 class CIEC_ANY{
   public:
@@ -71,6 +76,23 @@ class CIEC_ANY{
 
     static int dummyInit();
 
+    template<typename U, typename T>
+    static typename forte::core::mpl::implicit_or_explicit_cast<T, U>::type cast(const T paFromCast){
+      U oToCast;
+      if (forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value ||
+          forte::core::mpl::is_base_of<CIEC_ANY_BIT, U>::value) {
+        oToCast.setValueSimple(paFromCast);
+      } else
+      if(forte::core::mpl::is_base_of<CIEC_ANY_REAL, T>::value){
+        specialCast(paFromCast, oToCast);
+      } else if(forte::core::mpl::is_base_of<CIEC_ANY_REAL, U>::value){
+        oToCast.setValue(paFromCast);
+      }
+      else{
+        oToCast.setValueSimple(paFromCast);
+      }
+      return oToCast;
+    }
 
     virtual ~CIEC_ANY(){
     }
