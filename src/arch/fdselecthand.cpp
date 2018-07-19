@@ -151,7 +151,7 @@ CFDSelectHandler::TFileDescriptor CFDSelectHandler::createFDSet(fd_set *m_panFDS
   TConnectionContainer::Iterator itEnd(mConnectionsList.end());
   for(TConnectionContainer::Iterator itRunner = mConnectionsList.begin(); itRunner != itEnd; ++itRunner){
     FD_SET(itRunner->mSockDes, m_panFDSet);
-    if(itRunner->mSockDes > nRetVal){
+    if(itRunner->mSockDes > nRetVal || scmInvalidFileDescriptor == nRetVal){
       nRetVal = itRunner->mSockDes;
     }
   }
