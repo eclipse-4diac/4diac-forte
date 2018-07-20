@@ -425,7 +425,7 @@ BOOST_AUTO_TEST_CASE(Explict_cast_operator_to_UDINT)
   CIEC_LWORD nLword(15);
   CIEC_BOOL bBool(true);
 
-  CIEC_UINT nResult(0);
+  CIEC_UDINT nResult(0);
 
   nResult = CIEC_ANY::cast<CIEC_UDINT>(nUsint);
   BOOST_TEST(nResult == 2);
