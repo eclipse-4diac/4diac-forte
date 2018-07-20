@@ -15,6 +15,8 @@
 #include "RMT_RES_gen.cpp"
 #endif
 
+#include "../../core/ecet.h"
+
 DEFINE_FIRMWARE_FB(RMT_RES, g_nStringIdRMT_RES);
 
 const CStringDictionary::TStringId RMT_RES::scm_aunVarInputNameIds[] = {g_nStringIdMGR_ID};
@@ -101,5 +103,6 @@ RMT_RES::RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_
 RMT_RES::~RMT_RES(){
 }
 
-
-
+void RMT_RES::joinResourceThread(){
+  getResourceEventExecution()->joinEventChainExecutionThread();
+}

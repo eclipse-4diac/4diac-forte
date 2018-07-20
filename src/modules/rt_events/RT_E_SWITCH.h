@@ -14,9 +14,6 @@
 
 #include <funcbloc.h>
 #include <ecet.h>
-#include <forte_time.h>
-#include <forte_bool.h>
-#include <forte_array.h>
 
 // cppcheck-suppress noConstructor
 class FORTE_RT_E_SWITCH: public CFunctionBlock{
@@ -83,7 +80,7 @@ private:
 
 public:
   FUNCTION_BLOCK_CTOR(FORTE_RT_E_SWITCH){
-	m_bInitialized = false;
+  m_bInitialized = false;
   };
 
   virtual ~FORTE_RT_E_SWITCH(){};

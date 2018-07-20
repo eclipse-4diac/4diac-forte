@@ -13,9 +13,6 @@
 #define _FB_CTD_ULINT_H_
 
 #include <funcbloc.h>
-#include <forte_ulint.h>
-#include <forte_bool.h>
-#include <forte_array.h>
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 
@@ -42,21 +39,21 @@ private:
   void executeEvent(int pa_nEIID);
 
   CIEC_BOOL& CD() {
-   	return *static_cast<CIEC_BOOL*>(getDI(0));
+     return *static_cast<CIEC_BOOL*>(getDI(0));
    }
    CIEC_BOOL& LD() {
-   	return *static_cast<CIEC_BOOL*>(getDI(1));
+     return *static_cast<CIEC_BOOL*>(getDI(1));
    }
    CIEC_ULINT& PV() {
-   	return *static_cast<CIEC_ULINT*>(getDI(2));
+     return *static_cast<CIEC_ULINT*>(getDI(2));
    }
 
 
    CIEC_BOOL& Q() {
-   	return *static_cast<CIEC_BOOL*>(getDO(0));
+     return *static_cast<CIEC_BOOL*>(getDO(0));
    }
    CIEC_ULINT& CV() {
-   	return *static_cast<CIEC_ULINT*>(getDO(1));
+     return *static_cast<CIEC_ULINT*>(getDO(1));
    }
 
 public:

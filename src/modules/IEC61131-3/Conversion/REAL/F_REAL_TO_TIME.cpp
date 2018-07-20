@@ -43,8 +43,8 @@ const SFBInterfaceSpec FORTE_F_REAL_TO_TIME::scm_stFBInterfaceSpec = {
 
 void FORTE_F_REAL_TO_TIME::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-	  OUT() = REAL_TO_TIME(IN());
-	  sendOutputEvent(scm_nEventCNFID);
+    OUT() = REAL_TO_TIME(IN());
+    sendOutputEvent(scm_nEventCNFID);
   }
 }
 

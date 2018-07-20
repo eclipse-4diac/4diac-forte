@@ -62,13 +62,13 @@ void FORTE_RT_E_DELAY::executeEvent(int pa_nEIID){
       break;
     case scm_nEventSTOPID:
       if(m_bActive){
-        CTimerHandler::sm_poFORTETimer->unregisterTimedFB(this);
+        getTimer().unregisterTimedFB(this);
         m_bActive = false;
       }
       break;
     case scm_nEventSTARTID:
       if((!m_bActive)&&(m_bInitialized)){
-        CTimerHandler::sm_poFORTETimer->registerTimedFB( &m_stTimeListEntry, DT());
+        getTimer().registerTimedFB( &m_stTimeListEntry, DT());
         m_bActive = true;
       }
       break;

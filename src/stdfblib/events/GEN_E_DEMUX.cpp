@@ -25,8 +25,9 @@ const TDataIOID GEN_E_DEMUX::scm_anEIWith[] = { 0, 255 };
 const CStringDictionary::TStringId GEN_E_DEMUX::scm_anEventInputNames[] = { g_nStringIdEI };
 
 GEN_E_DEMUX::GEN_E_DEMUX(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CFunctionBlock(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0){
-
+    CFunctionBlock(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0),
+    m_anEventOutputNames(0),
+    m_nConfiguredFBTypeNameId(CStringDictionary::scm_nInvalidStringId){
 }
 
 GEN_E_DEMUX::~GEN_E_DEMUX(){

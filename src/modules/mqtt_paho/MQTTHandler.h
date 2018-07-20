@@ -13,34 +13,42 @@
 #ifndef MQTTHANDLER_H_
 #define MQTTHANDLER_H_
 
-#include <singlet.h>
 #include <extevhan.h>
 #include <fortelist.h>
 #include <MQTTComLayer.h>
 #include <forte_sync.h>
 #include <forte_string.h>
+#include <forte_thread.h>
+#include <forte_sem.h>
 
 extern "C" {
-#include <MQTTClient.h>
+#include <MQTTAsync.h>
 }
 
-class MQTTHandler : public CExternalEventHandler {
-	DECLARE_SINGLETON(MQTTHandler)
+enum MQTTStates {
+  NOT_CONNECTED,
+  CONNECTION_ASKED,
+  SUBSCRIBING,
+  ALL_SUBSCRIBED,
+};
+
+class MQTTHandler : public CExternalEventHandler, public CThread {
+    DECLARE_HANDLER(MQTTHandler)
 public:
-	enum RegisterLayerReturnCodes {
-		eRegisterLayerSucceeded,
-		eWrongClientID,
-		eConnectionFailed
-	};
-	int registerLayer(char* paAddress, char* paClientId, MQTTComLayer* paLayer);
+  enum RegisterLayerReturnCodes {
+    eRegisterLayerSucceeded,
+    eWrongClientID,
+    eConnectionFailed
+  };
+  int registerLayer(const char* paAddress, const char* paClientId, MQTTComLayer* paLayer);
 
-	void unregisterLayer(MQTTComLayer* paLayer);
+  void unregisterLayer(MQTTComLayer* paLayer);
 
-	MQTTClient& getClient(void) {
-		return smClient;
-	}
+  MQTTAsync& getClient(void) {
+    return smClient;
+  }
 
-	void mqttMessageProcessed(void);
+  //void mqttMessageProcessed(void);
 
     virtual void enableHandler(void);
     /*!\brief Disable this event source
@@ -57,19 +65,46 @@ public:
      */
     virtual int getPriority(void) const;
 
-    static int mqttMessageArrived(void *context, char *topicName, int topicLen, MQTTClient_message *message);
+protected:
+    virtual void run();
 
 private:
+
+    int mqttSubscribe(MQTTComLayer* paLayer);
+    int mqttConnect();
+
+    void popLayerFromList(MQTTComLayer* paLayer, CSinglyLinkedList<MQTTComLayer*> *paList);
+
+    void resumeSelfSuspend();
+    void selfSuspend();
+
+    static void onMqttConnectionLost(void* paContext, char* paCause);
+
+    static int onMqttMessageArrived(void *paContext, char *paTopicName, int paTopicLen, MQTTAsync_message *paMessage);
+
+    static void onMqttConnectionSucceed(void *paContext, MQTTAsync_successData *paResponse);
+    static void onMqttConnectionFailed(void *paContext, MQTTAsync_failureData *paResponse);
+
+    static void onSubscribeSucceed(void* paContext, MQTTAsync_successData* paResponse);
+    static void onSubscribeFailed(void* paContext, MQTTAsync_failureData* paResponse);
+
     static CIEC_STRING smClientId;
     static CIEC_STRING smAddress;
 
-    static CSyncObject smLockMessageDelivery;
+    static CSyncObject smMQTTMutex;
 
-    static MQTTClient smClient;
-    static MQTTClient_connectOptions smClientConnectionOptions;
+    static MQTTAsync smClient;
+    static MQTTAsync_connectOptions smClientConnectionOptions;
 
     CSinglyLinkedList<MQTTComLayer*> mlayers;
 
+    CSinglyLinkedList<MQTTComLayer*> mToResubscribe;
+
+    static forte::arch::CSemaphore mStateSemaphore;
+
+    static bool mIsSemaphoreEmpty;
+
+    static MQTTStates smMQTTS_STATE;
 
 };
 

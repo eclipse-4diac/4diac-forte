@@ -9,26 +9,18 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "essfphandler.h"
-#include <forte_any.h>
-#include <forte_bool.h>
-#include <forte_dint.h>
-#include <forte_lint.h>
-#include <forte_dint.h>
-#include <forte_real.h>
-#include <forte_lreal.h>
-#include <forte_string.h>
 #include <devexec.h>
 #include <commfb.h>
 
 using namespace forte::com_infra;
 
 
-DEFINE_SINGLETON(CEclipseSCADASFPHandler)
+DEFINE_HANDLER(CEclipseSCADASFPHandler)
 
 
 const uint16_t CEclipseSCADASFPHandler::scm_unServerPort;
 
-CEclipseSCADASFPHandler::CEclipseSCADASFPHandler(){
+CEclipseSCADASFPHandler::CEclipseSCADASFPHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution)  {
   mItemRegistry = sfp_registry_new();
   mEclipseSCADAServer = sfp_server_new(mItemRegistry);
 }
@@ -198,7 +190,7 @@ void CEclipseSCADASFPHandler::handleCellWrite(struct sfp_item * pa_pstItem, stru
   }
 
   if(e_Nothing != retVal){
-    getInstance().startNewEventChain(layer->getCommFB());
+    *static_cast<CEclipseSCADASFPHandler*>(layer->getHandler(CEclipseSCADASFPHandler::getIdentifier())).startNewEventChain(layer->getCommFB());
   }
 
 //  sfp_error_information_new(

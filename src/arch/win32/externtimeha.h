@@ -18,19 +18,16 @@
  *\brief the timer handler for the pc architecture. 
 */
 class CExternTimerHandler : public CTimerHandler{
-  private:
-  /*!\brief default time base of the used timer. in useconds.
-   */
-    static const TForteInt32 csm_nTicksPerSecond;
-  /*!\brief callback function for the system timer
-   */  
-
   public:
     static void externNextTick();
-	static TForteUInt32 getExternTicksPerSecond(void){ return csm_nTicksPerSecond; };
-    CExternTimerHandler(); 
-    	
-  	virtual ~CExternTimerHandler();
+    static TForteUInt32 getExternTicksPerSecond(void){ return csm_nTicksPerSecond; };
+    explicit CExternTimerHandler(CDeviceExecution& pa_poDeviceExecution);
+      
+    virtual ~CExternTimerHandler();
+
+    /*!\brief Pointer to a general timer used for code outside FBs, like devlog, TIME() and so on
+     */
+    static CExternTimerHandler *sm_poFORTEExtTimer;
     
   
   /*!\brief Enables this event source
@@ -56,7 +53,13 @@ class CExternTimerHandler : public CTimerHandler{
    * \return internal runtime ticks per millisecond
    */ 
     virtual TForteUInt32 getTicksPerSecond(void){ return csm_nTicksPerSecond; };
-    
+
+  private:
+  /*!\brief default time base of the used timer. in useconds.
+   */
+    static const TForteInt32 csm_nTicksPerSecond;
+  /*!\brief callback function for the system timer
+   */
     
 };
 

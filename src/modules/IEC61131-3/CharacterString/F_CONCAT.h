@@ -14,7 +14,6 @@
 #define _F_CONCAT_H_
 
 #include <funcbloc.h>
-#include <forte_any_string.h>
 
 class FORTE_F_CONCAT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_CONCAT)

@@ -12,45 +12,47 @@
 #include "../../core/devexec.h"
 #include <windows.h>
 
+CExternTimerHandler *CExternTimerHandler::sm_poFORTEExtTimer = 0;
 
 const TForteInt32 CExternTimerHandler::csm_nTicksPerSecond = 1000;
 
 extern "C" __declspec(dllexport) 
 void __stdcall nextTick(void){
-	CExternTimerHandler::externNextTick();
+  CExternTimerHandler::externNextTick();
 }
 
 extern "C" __declspec(dllexport) 
 unsigned int __stdcall getTicksPerSecond(){
-	return CExternTimerHandler::getExternTicksPerSecond();
+  return CExternTimerHandler::getExternTicksPerSecond();
 }
 
-void CTimerHandler::createTimerHandler(void){
-  if(0 == sm_poFORTETimer)
-    sm_poFORTETimer = new CExternTimerHandler();
-
+CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& pa_poDeviceExecution){
+  if(!CExternTimerHandler::sm_poFORTEExtTimer){ //creating two timers is not possible
+    CExternTimerHandler::sm_poFORTEExtTimer = new CExternTimerHandler(pa_poDeviceExecution);
+  }
+  return CExternTimerHandler::sm_poFORTEExtTimer;
 }
 
-CExternTimerHandler::CExternTimerHandler(){
+CExternTimerHandler::CExternTimerHandler(CDeviceExecution& pa_poDeviceExecution) : CTimerHandler(pa_poDeviceExecution)  {
 }
 
 CExternTimerHandler::~CExternTimerHandler(){
   disableHandler();
+  CExternTimerHandler::sm_poFORTEExtTimer = 0;
 }
 
 void CExternTimerHandler::externNextTick(){
-  if(0 != sm_poFORTETimer){
-	  sm_poFORTETimer->nextTick();
+  if(CExternTimerHandler::sm_poFORTEExtTimer){
+    CExternTimerHandler::sm_poFORTEExtTimer->nextTick();
   }
 }
 
-
 void CExternTimerHandler::enableHandler(void){
-	//TODO think on hwo to handle this.
+  //TODO think on hwo to handle this.
 }
 
 void CExternTimerHandler::disableHandler(void){
-	//TODO think on hwo to handle this.
+  //TODO think on hwo to handle this.
 }
 
 void CExternTimerHandler::setPriority(int pa_nPriority){

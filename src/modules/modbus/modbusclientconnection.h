@@ -31,7 +31,7 @@ namespace modbus_connection_event {
 
 class CModbusClientConnection : public CModbusConnection{
   public:
-    CModbusClientConnection();
+    explicit CModbusClientConnection(CModbusHandler* pa_modbusHandler);
     ~CModbusClientConnection();
 
     int readData(uint8_t *pa_pData);

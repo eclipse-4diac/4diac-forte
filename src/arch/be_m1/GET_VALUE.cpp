@@ -44,27 +44,27 @@ const SFBInterfaceSpec FORTE_GET_VALUE::scm_stFBInterfaceSpec = {
 void FORTE_GET_VALUE::executeEvent(int pa_nEIID){
   switch(pa_nEIID){
     case scm_nEventINITID:
-		if (init()) {
-			sendOutputEvent(scm_nEventINITOID);
-		}
-		break;
-	case scm_nEventREQID:
-		RET_CODE() = read();
-		sendOutputEvent(scm_nEventCNFID);
-		break;
+    if (init()) {
+      sendOutputEvent(scm_nEventINITOID);
+    }
+    break;
+  case scm_nEventREQID:
+    RET_CODE() = read();
+    sendOutputEvent(scm_nEventCNFID);
+    break;
   }
 }
 
 bool FORTE_GET_VALUE::init() {
-	driverId = mio_GetDrv(static_cast<unsigned int>(MOD_NB()));
-	return driverId != NULL;
+  driverId = mio_GetDrv(static_cast<unsigned int>(MOD_NB()));
+  return driverId != NULL;
 }
 
 SINT32 FORTE_GET_VALUE::read() {
-	SINT32 myValue;
-	SINT32 retCode = mio_GetValue(driverId, CHAN_NB(), &myValue);
-	VALUE() = myValue;
-	return retCode;
+  SINT32 myValue;
+  SINT32 retCode = mio_GetValue(driverId, CHAN_NB(), &myValue);
+  VALUE() = myValue;
+  return retCode;
 }
 
 

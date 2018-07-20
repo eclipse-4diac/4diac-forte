@@ -13,7 +13,6 @@
 #define _UINT2UINT_H_
 
 #include <funcbloc.h>
-#include <forte_uint.h>
 
 class UINT2UINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(UINT2UINT)
@@ -38,11 +37,11 @@ private:
   virtual void executeEvent(int pa_nEIID);
 
   CIEC_UINT& IN() {
-  	return *static_cast<CIEC_UINT*>(getDI(0));
+    return *static_cast<CIEC_UINT*>(getDI(0));
   }
 
   CIEC_UINT& OUT() {
-  	return *static_cast<CIEC_UINT*>(getDO(0));
+    return *static_cast<CIEC_UINT*>(getDO(0));
   }
 
 public:

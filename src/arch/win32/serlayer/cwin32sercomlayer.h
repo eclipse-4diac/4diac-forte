@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 ACIN, fortiss GmbH
+ * Copyright (c) 2013, 2017 ACIN, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,25 +8,19 @@
  * Contributors:
  *   Martin Melik-Merkumians, Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include <comlayer.h>
-#include <commfb.h>
-#include "cwin32sercomparameterparser.h"
 
+#include <winsock2.h> //to ensure that this is first included in the commlayermanager
 #include <Windows.h>
+
+#include "../../../core/cominfra/serialcomlayerbase.h"
 
 #ifndef CWIN32SERCOMLAYER_H_
 #define CWIN32SERCOMLAYER_H_
 
-class CEventSourceFB;
-
-class CWin32SerComLayer : public forte::com_infra::CComLayer{
+class CWin32SerComLayer : public CSerialComLayerBase<HANDLE>{
   public:
-    CWin32SerComLayer(forte::com_infra::CComLayer* pa_poUpperLayer, forte::com_infra::CCommFB * pa_poFB);
+    CWin32SerComLayer(forte::com_infra::CComLayer* paUpperLayer, forte::com_infra::CBaseCommFB * paFB);
     virtual ~CWin32SerComLayer ();
-
-    virtual forte::com_infra::EComResponse processInterrupt();
-
-    virtual void closeConnection();
 
     /*! \brief Perform send to serial interface
     *   \param pa_pvData Sendable payload
@@ -34,25 +28,18 @@ class CWin32SerComLayer : public forte::com_infra::CComLayer{
     *
     *   \return ComLayer response
     */
-    virtual forte::com_infra::EComResponse sendData(void *pa_pvData, unsigned int pa_unSize);
+    virtual forte::com_infra::EComResponse sendData(void *paData, unsigned int paSize);
     
     /*! \brief Perform reading from serial interface
      *
      * @return if not e_Nothing something was read and the FB should get an external event
      */
-    virtual forte::com_infra::EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize);
+    virtual forte::com_infra::EComResponse recvData(const void *paData, unsigned int paSize);
 
   protected:
   private:
-	char m_acTerminationSymbol[3]; //**< Space for CR, LF, or CR/LF + Terminating \0
-    virtual forte::com_infra::EComResponse openConnection(char *pa_acLayerParameter);
-    HANDLE m_hSerial;
-	static const unsigned int m_unMaxRecvBuffer = 22;
-
-    forte::com_infra::EComResponse m_eInterruptResp;
-    char m_acRecvBuffer[m_unMaxRecvBuffer];
-    unsigned int m_unBufFillSize;
-
+    virtual forte::com_infra::EComResponse openSerialConnection(const SSerialParameters& paSerialParameters, CSerialComLayerBase<HANDLE>::TSerialHandleType* paHandleResult);
+    virtual void closeConnection();
 };
 
 #endif /* CWIN32SERCOMLAYER_H_ */

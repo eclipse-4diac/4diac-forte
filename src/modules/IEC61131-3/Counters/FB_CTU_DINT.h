@@ -13,9 +13,6 @@
 #define _FB_CTU_DINT_H_
 
 #include <funcbloc.h>
-#include <forte_dint.h>
-#include <forte_bool.h>
-#include <forte_array.h>
 
 class FB_CTU_DINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FB_CTU_DINT)
@@ -40,20 +37,20 @@ private:
   void executeEvent(int pa_nEIID);
 
   CIEC_BOOL& CU() {
-   	return *static_cast<CIEC_BOOL*>(getDI(0));
+     return *static_cast<CIEC_BOOL*>(getDI(0));
   }
   CIEC_BOOL& R() {
     return *static_cast<CIEC_BOOL*>(getDI(1));
   }
   CIEC_DINT& PV() {
-   	return *static_cast<CIEC_DINT*>(getDI(2));
+     return *static_cast<CIEC_DINT*>(getDI(2));
   }
 
   CIEC_BOOL& Q() {
-   	return *static_cast<CIEC_BOOL*>(getDO(0));
+     return *static_cast<CIEC_BOOL*>(getDO(0));
   }
   CIEC_DINT& CV() {
-   	return *static_cast<CIEC_DINT*>(getDO(1));
+     return *static_cast<CIEC_DINT*>(getDO(1));
   }
 
 

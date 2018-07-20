@@ -14,8 +14,6 @@
 
 #include <cfb.h>
 #include <typelib.h>
-#include <forte_time.h>
-#include <forte_uint.h>
 
 class FORTE_RT_E_TRAIN: public CCompositeFB{
   DECLARE_FIRMWARE_FB(FORTE_RT_E_TRAIN)

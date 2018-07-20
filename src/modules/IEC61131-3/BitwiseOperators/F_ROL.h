@@ -14,8 +14,6 @@
 #define _F_ROL_H_
 
 #include <funcbloc.h>
-#include <forte_any_int.h>
-#include <forte_any_bit.h>
 
 class FORTE_F_ROL: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_ROL)
@@ -59,11 +57,11 @@ public:
 
   template<typename T> void calculateValue(){
     T oIn;
-	#ifdef FORTE_USE_64BIT_DATATYPES
+  #ifdef FORTE_USE_64BIT_DATATYPES
       CIEC_ULINT oN;
     #else
       CIEC_UDINT oN;
-	#endif //#ifdef FORTE_USE_64BIT_DATATYPES
+  #endif //#ifdef FORTE_USE_64BIT_DATATYPES
 
 
     oIn.saveAssign(IN());

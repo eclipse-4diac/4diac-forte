@@ -13,8 +13,6 @@
 #define _FB_SR_H_
 
 #include <funcbloc.h>
-#include <forte_bool.h>
-#include <forte_array.h>
 
 class FB_SR: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FB_SR)
@@ -39,14 +37,14 @@ private:
   void executeEvent(int pa_nEIID);
 
   CIEC_BOOL& S1() {
-  	return *static_cast<CIEC_BOOL*>(getDI(0));
+    return *static_cast<CIEC_BOOL*>(getDI(0));
   }
   CIEC_BOOL& R() {
-  	return *static_cast<CIEC_BOOL*>(getDI(1));
+    return *static_cast<CIEC_BOOL*>(getDI(1));
   }
 
   CIEC_BOOL& Q1() {
-  	return *static_cast<CIEC_BOOL*>(getDO(0));
+    return *static_cast<CIEC_BOOL*>(getDO(0));
   }
 
 public:

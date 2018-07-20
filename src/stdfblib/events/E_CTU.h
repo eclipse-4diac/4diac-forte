@@ -13,8 +13,6 @@
 #define _E_CTU_H_
 
 #include <funcbloc.h>
-#include <forte_bool.h>
-#include <forte_uint.h>
 
 class E_CTU: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(E_CTU)
@@ -43,13 +41,13 @@ private:
   FORTE_FB_DATA_ARRAY(2,1,2, 0);
   
   CIEC_UINT& PV() {
-   	return *static_cast<CIEC_UINT*>(getDI(0));
+     return *static_cast<CIEC_UINT*>(getDI(0));
   }
   CIEC_BOOL& Q() {
-   	return *static_cast<CIEC_BOOL*>(getDO(0));
+     return *static_cast<CIEC_BOOL*>(getDO(0));
   }
   CIEC_UINT& CV() {
-   	return *static_cast<CIEC_UINT*>(getDO(1));
+     return *static_cast<CIEC_UINT*>(getDO(1));
   }
 
 

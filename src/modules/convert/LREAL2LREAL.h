@@ -13,11 +13,6 @@
 #define _LREAL2LREAL_H_
 
 #include <funcbloc.h>
-#include <forte_lreal.h>
-
-#ifdef FORTE_USE_REAL_DATATYPE
-
-#ifdef FORTE_USE_64BIT_DATATYPES
 
 class LREAL2LREAL: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(LREAL2LREAL)
@@ -42,11 +37,11 @@ private:
   virtual void executeEvent(int pa_nEIID);
 
   CIEC_LREAL& IN() {
-  	return *static_cast<CIEC_LREAL*>(getDI(0));
+    return *static_cast<CIEC_LREAL*>(getDI(0));
   }
 
   CIEC_LREAL& OUT() {
-  	return *static_cast<CIEC_LREAL*>(getDO(0));
+    return *static_cast<CIEC_LREAL*>(getDO(0));
   }
 
 public:
@@ -54,9 +49,6 @@ public:
   virtual ~LREAL2LREAL();
 
 };
-
-#endif
-#endif
 
 #endif //close the ifdef sequence from the beginning of the file
 

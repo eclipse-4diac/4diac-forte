@@ -13,10 +13,6 @@
 #define _FB_CTD_UDINT_H_
 
 #include <funcbloc.h>
-#include <forte_dint.h>
-#include <forte_udint.h>
-#include <forte_bool.h>
-#include <forte_array.h>
 
 class FB_CTD_UDINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FB_CTD_UDINT)
@@ -41,21 +37,21 @@ private:
   void executeEvent(int pa_nEIID);
 
   CIEC_BOOL& CD() {
-  	return *static_cast<CIEC_BOOL*>(getDI(0));
+    return *static_cast<CIEC_BOOL*>(getDI(0));
   }
   CIEC_BOOL& LD() {
-  	return *static_cast<CIEC_BOOL*>(getDI(1));
+    return *static_cast<CIEC_BOOL*>(getDI(1));
   }
   CIEC_UDINT& PV() {
-  	return *static_cast<CIEC_UDINT*>(getDI(2));
+    return *static_cast<CIEC_UDINT*>(getDI(2));
   }
 
 
   CIEC_BOOL& Q() {
-  	return *static_cast<CIEC_BOOL*>(getDO(0));
+    return *static_cast<CIEC_BOOL*>(getDO(0));
   }
   CIEC_UDINT& CV() {
-  	return *static_cast<CIEC_UDINT*>(getDO(1));
+    return *static_cast<CIEC_UDINT*>(getDO(1));
   }
 
 public:

@@ -14,6 +14,8 @@
 forte_add_module(WagoKbus "Wago Kbus interface")
 if(FORTE_MODULE_WagoKbus)
 
+forte_add_handler(WagoPFCProcessInterface::CKBusHandler processinterface)
+
 if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 
 ##All Wago depedencies are added here
@@ -23,14 +25,18 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
   forte_add_sourcefile_hcpp( ../../stdfblib/io/QW) 
   forte_add_sourcefile_hcpp( ../../stdfblib/io/IW) 
   forte_add_sourcefile_hcpp(processinterface) 
-  forte_add_link_flags("-O0 -g3  -Wall") 
-  forte_add_definition("-I../../../sysroot-target/usr/include")  
-  forte_add_definition("-I../../../sysroot-target/usr/include/OsLinux")
-  forte_add_definition("-I../../../sysroot-target/usr/include/dal") 
-  
-  forte_add_link_library(-ldal -llibloader -lpthread -lffi -ldbus-glib-1 -lglib-2.0 -lrt)
-  forte_add_link_library(-ltypelabel -loslinux -ldbuskbuscommon)    
+  forte_add_link_flags("-Wall") 
 
+  SET(FORTE_WAGO_INCLUDE_DIR "" CACHE STRING "Path where the include for wago is found") 
+  SET(FORTE_WAGO_LIB_DIR "" CACHE STRING "Path where the  libraries for wago is found") 
+
+  forte_add_include_system_directories(${FORTE_WAGO_INCLUDE_DIR})
+  forte_add_include_system_directories(${FORTE_WAGO_INCLUDE_DIR}/dal)
+  forte_add_include_system_directories(${FORTE_WAGO_INCLUDE_DIR}/OsLinux)
+  forte_add_link_directories(${FORTE_WAGO_LIB_DIR})
+  
+  forte_add_link_library(libdal.a liblibloader.so libpthread.so libffi.so libdbus-glib-1.so libglib-2.0.so librt.so)
+  forte_add_link_library(libtypelabel.so liboslinux.so libdbuskbuscommon.so)    
 
 #TODO: Further dependencies are to be checked and added later
 

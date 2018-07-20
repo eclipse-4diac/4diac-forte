@@ -10,7 +10,6 @@
  *******************************************************************************/
 #include "processinterface.h"
 
-
 CPiFaceProcessInterface::CPiFaceProcessInterface(CResource *paSrcRes,
     const SFBInterfaceSpec *paInterfaceSpec,
     const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData,
@@ -26,11 +25,11 @@ CPiFaceProcessInterface::~CPiFaceProcessInterface(){
 bool CPiFaceProcessInterface::initialise(bool paInput){
   bool retVal = false;
   if(paInput){
-    CPiFaceIOHandler::getInstance().registerIXFB(this);
+    GET_HANDLER_FROM_THIS(CPiFaceIOHandler)->registerIXFB(this);
   }
   QO() = QI();
-  if(!CPiFaceIOHandler::getInstance().isAlive()){
-    CPiFaceIOHandler::getInstance().start();
+  if(!GET_HANDLER_FROM_THIS(CPiFaceIOHandler)->isAlive()){
+    GET_HANDLER_FROM_THIS(CPiFaceIOHandler)->start();
   }
   CIEC_INT pinNum;
   if((-1 != pinNum.fromString(PARAMS().getValue())) && (8 > pinNum)){
@@ -41,7 +40,7 @@ bool CPiFaceProcessInterface::initialise(bool paInput){
 }
 
 bool CPiFaceProcessInterface::deinitialise(){
-  CPiFaceIOHandler::getInstance().unregisterIXFB(this);
+  GET_HANDLER_FROM_THIS(CPiFaceIOHandler)->unregisterIXFB(this);
   return true;
 }
 
@@ -55,7 +54,7 @@ bool CPiFaceProcessInterface::readPin(){
 }
 
 bool CPiFaceProcessInterface::writePin(){
-  CPiFaceIOHandler::getInstance().updateWriteData(OUT_X(), mPin);
+  GET_HANDLER_FROM_THIS(CPiFaceIOHandler)->updateWriteData(OUT_X(), mPin);
   return true;
 }
 
@@ -74,10 +73,10 @@ bool CPiFaceProcessInterface::checkInputData(long paValue){
  ***  CPiFaceProcessInterface::CPiFaceIOHandler
  ********************************************************************************************/
 
-DEFINE_SINGLETON(CPiFaceProcessInterface::CPiFaceIOHandler)
+DEFINE_HANDLER(CPiFaceProcessInterface::CPiFaceIOHandler)
 
 
-CPiFaceProcessInterface::CPiFaceIOHandler::CPiFaceIOHandler(){
+CPiFaceProcessInterface::CPiFaceIOHandler::CPiFaceIOHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution), mOutBuffer(0){
 }
 
 CPiFaceProcessInterface::CPiFaceIOHandler::~CPiFaceIOHandler(){
@@ -89,13 +88,10 @@ void CPiFaceProcessInterface::CPiFaceIOHandler::run(){
   setupPiFaceIOChip(spiDev);
 
   if(spiDev.isOpen()){
-    timespec req, rem;
     TForteUInt8 inBuffer;
 
-    req.tv_nsec = 10 * 1000 * 1000;  //TODO make scan cycle setable from the application
-
     while(isAlive()){
-      nanosleep(&req, &rem);
+      CThread::sleepThread(10);
 
       writePiFaceRegister(spiDev, eGPIOPortA, mOutBuffer);  //update outputs
       inBuffer = readInputs(spiDev);
@@ -108,36 +104,36 @@ void CPiFaceProcessInterface::CPiFaceIOHandler::run(){
   }
 }
 
-void CPiFaceProcessInterface::CPiFaceIOHandler::registerIXFB(CPiFaceProcessInterface *pa_poFB){
-  m_oReadFBListSync.lock();
-  m_lstReadFBList.push_back(pa_poFB);
-  m_oReadFBListSync.unlock();
+void CPiFaceProcessInterface::CPiFaceIOHandler::registerIXFB(CPiFaceProcessInterface *paFB){
+  mReadFBListSync.lock();
+  mReadFBList.push_back(paFB);
+  mReadFBListSync.unlock();
 }
 
-void CPiFaceProcessInterface::CPiFaceIOHandler::unregisterIXFB(CPiFaceProcessInterface *pa_poFB){
-  m_oReadFBListSync.lock();
-  TReadFBContainer::Iterator itRunner(m_lstReadFBList.begin());
-  TReadFBContainer::Iterator itRefNode(m_lstReadFBList.end());
-  TReadFBContainer::Iterator itEnd(m_lstReadFBList.end());
+void CPiFaceProcessInterface::CPiFaceIOHandler::unregisterIXFB(CPiFaceProcessInterface *paFB){
+  mReadFBListSync.lock();
+  TReadFBContainer::Iterator itRunner(mReadFBList.begin());
+  TReadFBContainer::Iterator itRefNode(mReadFBList.end());
+  TReadFBContainer::Iterator itEnd(mReadFBList.end());
   while(itRunner != itEnd){
-    if(*itRunner == pa_poFB){
+    if(*itRunner == paFB){
       if(itRefNode == itEnd){
-        m_lstReadFBList.pop_front();
+        mReadFBList.pop_front();
       }
       else{
-        m_lstReadFBList.eraseAfter(itRefNode);
+        mReadFBList.eraseAfter(itRefNode);
       }
       break;
     }
     itRefNode = itRunner;
     ++itRunner;
   }
-  m_oReadFBListSync.unlock();
+  mReadFBListSync.unlock();
 }
 
 void CPiFaceProcessInterface::CPiFaceIOHandler::updateReadData(TForteUInt8 paInBuffer){
-  TReadFBContainer::Iterator itEnd(m_lstReadFBList.end());
-  for(TReadFBContainer::Iterator itRunner = m_lstReadFBList.begin(); itRunner != itEnd; ++itRunner){
+  TReadFBContainer::Iterator itEnd(mReadFBList.end());
+  for(TReadFBContainer::Iterator itRunner = mReadFBList.begin(); itRunner != itEnd; ++itRunner){
     if((*itRunner)->checkInputData(paInBuffer)){
       startNewEventChain(*itRunner);
     }

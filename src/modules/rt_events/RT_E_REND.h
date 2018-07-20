@@ -13,8 +13,6 @@
 #define _RT_E_REND_H_
 
 #include "rtesingle.h"
-#include <forte_time.h>
-#include <forte_bool.h>
 
 class FORTE_RT_E_REND: public CRTEventSingle{
   DECLARE_FIRMWARE_FB(FORTE_RT_E_REND)

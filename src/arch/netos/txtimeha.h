@@ -46,11 +46,13 @@ class CTXTimerHandler : public CTimerHandler{
     /*!\brief callback function for the system timer
      */
     static void timerHandlerFunc(ULONG data){
-      sm_poFORTETimer->nextTick();
+      if(data){
+        static_cast<CTXTimerHandler*>(data)->nextTick();
+      }
     }
     ;
 
-    CTXTimerHandler();
+    explicit CTXTimerHandler(CDeviceExecution& pa_poDeviceExecution);
 
     TX_TIMER m_stTimer;
 

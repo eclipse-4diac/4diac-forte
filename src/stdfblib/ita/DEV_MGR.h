@@ -14,18 +14,32 @@
 #define _DEV_MGR_H_
 
 #include <funcbloc.h>
-#include "../../core/resource.h"
-#include <forte_bool.h>
-#include <forte_string.h>
 #include <mgmcmdstruct.h>
 #include <commfb.h>
+#include "IBootFileCallback.h"
+
+class CDevice;
 
 /*! \brief Implementation of the DEV_MGR FB.
  */
-class DEV_MGR: public forte::com_infra::CCommFB {
+class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
   DECLARE_FIRMWARE_FB(DEV_MGR)
 
+  public:
+    /*!\brief Type for the response of MGM command messages
+     *
+     * TODO fully define all responses as defined in IEC 61499 inc. numbers.
+     */
+    static const char * const scm_sMGMResponseTexts[13];
+
+    DEV_MGR(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+    virtual ~DEV_MGR();
+
+    bool executeCommand(char *pa_acDest, char *pa_acCommand);
+
   private:
+
+    EMGMResponse parseAndExecuteMGMCommand(char *pa_acDest, char *pa_acCommand);
 
     static const CStringDictionary::TStringId scm_anDataInputNames[];
     static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
@@ -66,6 +80,20 @@ class DEV_MGR: public forte::com_infra::CCommFB {
      * \return true if the FB data could be parsed
      */
     static bool parseFBData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
+    /*! \brief Parse the given request that is left after parsing the header to parse FB type
+     *
+     * \param pa_acRequestPartLeft  data of the request that has been left after parsing the header
+     * \param pa_rstCommand the command structure for holding command information
+     * \return true if the FB type could be parsed
+     */
+    static bool parseFBType(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
+    /*! \brief Parse the given request that is left after parsing the header to parse Adapter type
+     *
+     * \param pa_acRequestPartLeft  data of the request that has been left after parsing the header
+     * \param pa_rstCommand the command structure for holding command information
+     * \return true if the Adapter type could be parsed
+     */
+    static bool parseAdapterType(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
     /*! \brief Parse the given request that is left after parsing the header to parse connection data
      *
      * \param pa_acRequestPartLeft   data of the request that has been left after parsing the header
@@ -150,25 +178,7 @@ class DEV_MGR: public forte::com_infra::CCommFB {
       return *static_cast<CIEC_STRING*>(getDO(3));
     };
 
-
-  public:
-    /*!\brief Type for the response of MGM command messages
-     *
-     * TODO fully define all responses as defined in IEC 61499 inc. numbers.
-     */
-    static const char * const scm_sMGMResponseTexts[13];
-
-    DEV_MGR(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
-    virtual ~DEV_MGR();
-
-  private:
-#ifdef FORTE_SUPPORT_BOOT_FILE
-    void loadForteBootFile();
-#endif
-    EMGMResponse parseAndExecuteMGMCommand(char *pa_acDest, char *pa_acCommand);
-
     forte::core::SManagementCMD m_stCommand;
-
   };
 
 #endif /*DEV_MGR_H_*/

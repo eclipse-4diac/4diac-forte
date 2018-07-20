@@ -13,7 +13,6 @@
 #define _GEN_E_MUX_H_
 
 #include <funcbloc.h>
-#include <forte_uint.h>
 
 class GEN_E_MUX : public CFunctionBlock{
   DECLARE_GENERIC_FIRMWARE_FB(GEN_E_MUX)

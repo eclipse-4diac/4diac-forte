@@ -10,8 +10,6 @@
  *******************************************************************************/
 #include <esfb.h>
 #include <resource.h>
-#include <forte_string.h>
-#include <forte_bool.h>
 
 #ifndef PROCESSINTERFACEBASE_H_
 #define PROCESSINTERFACEBASE_H_
@@ -68,6 +66,8 @@ class CProcessInterfaceBase : public CEventSourceFB{
     CIEC_DWORD &OUT_D() {
       return *static_cast<CIEC_DWORD*>(getDI(2));
     };
+
+
 
     //TODO move pin checking and managing code into this class. Can be solved with recurring template pattern
 };

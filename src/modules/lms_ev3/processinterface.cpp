@@ -14,7 +14,6 @@
 #include <sstream>
 #include <linux/input.h>
 #include <fcntl.h>
-#include "../../arch/devlog.h"
 
 const std::string CLMSEV3ProcessInterface::scmLEDID("led");
 const std::string CLMSEV3ProcessInterface::scmSensorID("sensor");

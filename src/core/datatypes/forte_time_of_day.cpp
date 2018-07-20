@@ -16,6 +16,7 @@
 #include <ctype.h>
 #include "forte_time_of_day.h"
 #include "../../arch/timerha.h"
+#include <forte_printer.h>
 
 DEFINE_FIRMWARE_DATATYPE(TIME_OF_DAY, g_nStringIdTIME_OF_DAY)
 
@@ -92,22 +93,14 @@ int CIEC_TIME_OF_DAY::toString(char* pa_pacValue, unsigned int pa_nBufferSize) c
   TForteUInt64 ntoStingBuffer = getTUINT64();
   time_t t = static_cast<time_t>(ntoStingBuffer / 1000);
 
-#ifdef WIN32
-  int nRetVal = _snprintf(pa_pacValue, pa_nBufferSize, "%02d:%02d:%02d.%03d",
+  int nRetVal = forte_snprintf(pa_pacValue, pa_nBufferSize, "%02d:%02d:%02d.%03d",
       (int) (t / 3600),
       (int) ((t % 3600) / 60),
       (int) (t % 60),
       (int) (ntoStingBuffer % 1000));
-#else
-  int nRetVal = snprintf(pa_pacValue, pa_nBufferSize, "%02d:%02d:%02d.%03d",
-      (int) (t / 3600),
-      (int) ((t % 3600) / 60),
-      (int) (t % 60),
-      (int) (ntoStingBuffer % 1000));
-#endif
-	if((nRetVal < -1) || (nRetVal >= (int) pa_nBufferSize)){
-	  nRetVal = -1;
-	}
+  if((nRetVal < -1) || (nRetVal >= (int) pa_nBufferSize)){
+    nRetVal = -1;
+  }
   return nRetVal;
 }
 

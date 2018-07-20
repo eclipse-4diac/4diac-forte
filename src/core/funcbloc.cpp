@@ -1,5 +1,7 @@
 /*******************************************************************************
-  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
+  * Copyright (c) 2005 - 2018 Profactor GmbH, ACIN, fortiss GmbH,
+  *                           Johannes Kepler University
+  *
   * All rights reserved. This program and the accompanying materials
   * are made available under the terms of the Eclipse Public License v1.0
   * which accompanies this distribution, and is available at
@@ -11,28 +13,28 @@
   *    Matthias Plasch
   *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
-#include <string.h>
-#include <stdlib.h>
-#include "timerha.h"
 #include "funcbloc.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "funcbloc_gen.cpp"
 #endif
-#include "resource.h"
 #include "adapter.h"
-#include "datatypes/forte_array.h"
+#include "device.h"
 #include "utils/criticalregion.h"
+#include "../arch/timerha.h"
+#include <string.h>
+#include <stdlib.h>
 
 CFunctionBlock::CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
    mEOConns(0), m_apoDIConns(0), mDOConns(0),
-    m_apoAdapters(0), m_poResource(pa_poSrcRes), m_aoDIs(0), m_aoDOs(0), m_nFBInstanceName(pa_nInstanceNameId), 
+   m_poInvokingExecEnv(0), m_apoAdapters(0), m_poResource(pa_poSrcRes), m_aoDIs(0), m_aoDOs(0), m_nFBInstanceName(pa_nInstanceNameId),
     m_enFBState(e_KILLED),   //put the FB in the killed state so that reseting it after creation will correctly initialize it
     m_bDeletable(true){
 
-  #ifdef FORTE_SUPPORT_MONITORING
+#ifdef FORTE_SUPPORT_MONITORING
   m_nEIMonitorCount = 0;
   m_nEOMonitorCount = 0;
   mContainer = 0;
+  m_updated = false;
 #endif
 
   setupFBInterface(pa_pstInterfaceSpec, pa_acFBConnData, pa_acFBVarsData, false);
@@ -128,7 +130,11 @@ void CFunctionBlock::setupAdapters(const SFBInterfaceSpec *pa_pstInterfaceSpec, 
   }
 }
 
-CEventConnection *CFunctionBlock::getEOConection(CStringDictionary::TStringId paEONameId) const{
+CTimerHandler& CFunctionBlock::getTimer(void){
+  return m_poResource->getDevice().getTimer();
+}
+
+CEventConnection *CFunctionBlock::getEOConnection(CStringDictionary::TStringId paEONameId) const{
   CEventConnection *retVal = 0;
   TPortId portId = getPortId(paEONameId, m_pstInterfaceSpec->m_nNumEOs, m_pstInterfaceSpec->m_aunEONames);
   if(cg_unInvalidPortId != portId){
@@ -260,7 +266,7 @@ CIEC_ANY *CFunctionBlock::getVar(CStringDictionary::TStringId *paNameList,
 }
 
 CAdapter *CFunctionBlock::getAdapter(CStringDictionary::TStringId paAdapterNameId){
-  TPortId adpPortId = getAddapterPortId(paAdapterNameId);
+  TPortId adpPortId = getAdapterPortId(paAdapterNameId);
 
   if(cg_unInvalidPortId != adpPortId){
     return m_apoAdapters[adpPortId];
@@ -268,7 +274,7 @@ CAdapter *CFunctionBlock::getAdapter(CStringDictionary::TStringId paAdapterNameI
   return 0;
 }
 
-TPortId CFunctionBlock::getAddapterPortId(CStringDictionary::TStringId paAdapterNameId){
+TPortId CFunctionBlock::getAdapterPortId(CStringDictionary::TStringId paAdapterNameId){
   for(TPortId i = 0; i < m_pstInterfaceSpec->m_nNumAdapters; ++i){
     if(m_apoAdapters[i]->getInstanceNameId() == paAdapterNameId){
       return i;
@@ -329,7 +335,7 @@ void CFunctionBlock::sendOutputEvent(int pa_nEO){
       }
       // Count Event for monitoring
       monitoringData.mEventCount++;
-      monitoringData.mTimeStamp = CTimerHandler::sm_poFORTETimer->getForteTime();
+      monitoringData.mTimeStamp = getTimer().getForteTime();
       eventMonitoring.mBufPos = (eventMonitoring.mBufPos + 1) % forte::core::cgMonitorBufferLength;
       m_updated = true;
     }  // if(forte::core::eActive != eventMonitoring.mMonitorEventData[eventMonitoring.mBufPos].mBreakpointSet){
@@ -398,7 +404,7 @@ void CFunctionBlock::receiveInputEvent(int pa_nEIID, CEventChainExecutionThread 
       }
       // Count Event for monitoring
       monitoringData.mEventCount++;
-      monitoringData.mTimeStamp = CTimerHandler::sm_poFORTETimer->getForteTime();
+      monitoringData.mTimeStamp = getTimer().getForteTime();
       eventMonitoring.mBufPos = (eventMonitoring.mBufPos + 1) % forte::core::cgMonitorBufferLength;
       m_updated = true;
 #endif //FORTE_SUPPORT_MONITORING
@@ -551,21 +557,31 @@ TPortId CFunctionBlock::getPortId(CStringDictionary::TStringId pa_unPortNameId, 
 void CFunctionBlock::generateGenericInterfacePointNameArray(const char * const pa_acPrefix, CStringDictionary::TStringId* pa_anNamesArayStart, unsigned int pa_unNumGenericDataPoints){
   size_t unLen = strlen(pa_acPrefix);
 
-  if(cg_nIdentifierLength > unLen){
+  unsigned int noOfDigits = 0;
+  {
+    unsigned int tempNum = pa_unNumGenericDataPoints;
+    while(tempNum){
+      tempNum /= 10;
+      noOfDigits++;
+    }
+  }
+
+  if(cg_nIdentifierLength >= (unLen + noOfDigits)){
     TIdentifier acBuffer;
     memcpy(acBuffer, pa_acPrefix, unLen);
-    acBuffer[unLen + 1] = '\0';
-    acBuffer[unLen + 2] = '\0';
+    for(size_t i = 0; i <= noOfDigits; i++){
+      acBuffer[unLen + i] = '\0';
+    }
 
-		for(unsigned int i = 1; i <= pa_unNumGenericDataPoints; i++){
-			if(i < 10){ //1 digit
-				acBuffer[unLen] = static_cast<char>(0x30 + i);
-			}
-			else if(i < 100){ //2 digits
-				if(0 == i % 10){
-					acBuffer[unLen] = static_cast<char>(0x30 + (i % 100 / 10));
-				}
-				acBuffer[unLen + 1] = static_cast<char>(0x30 + i % 10);
+    for(unsigned int i = 1; i <= pa_unNumGenericDataPoints; i++){
+      if(i < 10){ //1 digit
+        acBuffer[unLen] = static_cast<char>(0x30 + i);
+      }
+      else if(i < 100){ //2 digits
+        if(0 == i % 10){
+          acBuffer[unLen] = static_cast<char>(0x30 + (i % 100 / 10));
+        }
+        acBuffer[unLen + 1] = static_cast<char>(0x30 + i % 10);
       }
       else{ //3 digits
         if(0 == i % 100){
@@ -574,11 +590,13 @@ void CFunctionBlock::generateGenericInterfacePointNameArray(const char * const p
         if(0 == i % 10){
           acBuffer[unLen + 1] = static_cast<char>(0x30 + (i % 100 / 10));
         }
-				acBuffer[unLen + 2] = static_cast<char>(0x30 + i % 10);
-			}
-			pa_anNamesArayStart[i - 1] = CStringDictionary::getInstance().insert(acBuffer);
-		}
-	}
+        acBuffer[unLen + 2] = static_cast<char>(0x30 + i % 10);
+      }
+      pa_anNamesArayStart[i - 1] = CStringDictionary::getInstance().insert(acBuffer);
+    }
+  }else{
+    DEVLOG_ERROR("CFunctionBlock::generateGenericInterfacePointNameArray won't be able to create all the generics since %s is too long to hold until %d", pa_acPrefix, pa_unNumGenericDataPoints);
+  }
 }
 
 void CFunctionBlock::generateGenericDataPointArrays(const char * const pa_acPrefix, CStringDictionary::TStringId* pa_anDataTypeNamesArrayStart, CStringDictionary::TStringId* pa_anNamesArrayStart, unsigned int pa_unNumGenericDataPoints){
@@ -718,33 +736,12 @@ CFunctionBlock *CFunctionBlock::getFB(forte::core::TNameIdentifier::CIterator &p
 //////////////////////////////////////////////////////////////////////////////
 // Data-Monitor functions
 //////////////////////////////////////////////////////////////////////////////
-bool CFunctionBlock::forceData(CStringDictionary::TStringId pa_acName, const char * forceValue){
+forte::core::SMonitorEvent &CFunctionBlock::getEIMonitorData(TEventID pa_unEIID){
+  return m_nEIMonitorCount[pa_unEIID];
+}
 
-  TPortId portID = getDOID(pa_acName);
-  if(portID != cg_unInvalidPortId){
-    CIEC_ANY *poDO = getDO(portID);
-    poDO->setForced(true);
-    poDO->fromString(forceValue);
-
-
-    CDataConnection *con = getDOConUnchecked(portID);
-    if(con->isConnected()){
-      CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
-      con->writeData(poDO);
-    }
-    return true;
-  }
-
-  portID = getDIID(pa_acName);
-
-  if(portID != cg_unInvalidPortId){
-    CIEC_ANY *poDI = getDI(portID);
-    poDI->setForced(true);
-    poDI->fromString(forceValue);
-    return true;
-  }
-
-  return false;
+forte::core::SMonitorEvent &CFunctionBlock::getEOMonitorData(TEventID pa_unEOID){
+  return m_nEOMonitorCount[pa_unEOID];
 }
 
 #endif //FORTE_SUPPORT_MONITORING

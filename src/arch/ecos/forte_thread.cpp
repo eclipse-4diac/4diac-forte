@@ -9,89 +9,75 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *   Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
-#include <fortealloc.h>
+#include <fortenew.h>
 #include <criticalregion.h>
 #include "forte_thread.h"
+#include <unistd.h>
 
-TCECOSThreadPtr CECOSThread::sm_aoThreadList[CECOSThread::scm_nThreadListSize] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-CSyncObject CECOSThread::sm_oThreadListLock;
 
-bool CECOSThread::create(void){
- // Get new Thread 
-  cyg_thread_create(scm_nThreadListSize + 2, //lowest priority in ecos 
-                    threadFunction, (cyg_addrword_t)(this), 
-                    "Test Name", m_cStack, 
-                    m_nStackSize, 
-                    &m_stHandle, 
-                    &m_stThread);
+TCECOSThreadPtr CECOSThread::smThreadList[CECOSThread::scmThreadListSize] ={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+CSyncObject CECOSThread::smThreadListLock;
 
-//setup the signals for the join implementation
-  return true;
+forte::arch::CThreadBase<cyg_handle_t>::TThreadHandleType CECOSThread::createThread(long paStackSize){
+  TThreadHandleType handle = 0;
+  char taskName[] = "Test Name"; //cyg_thread_create waits a char* instead of const char*, so this avoid a warning
+  cyg_thread_create(scmThreadListSize + 2, //lowest priority in ecos
+                    threadFunction, (cyg_addrword_t)(this),
+                    taskName, mStack, paStackSize, &handle, &mThread);
+
+  cyg_thread_resume(handle);
+  return handle;
 }
 
 void CECOSThread::threadFunction(cyg_addrword_t data){
- // Get pointer to CThread object out of void pointer
-  CECOSThread *pThread = static_cast<CECOSThread *>(data);
-
-  // if pointer is ok
-  if (pThread){
-    CCriticalRegion criticalRegion(pThread->m_stResLock);
-    pThread->setAlive(true);
-    pThread->run();
-    pThread->setAlive(false);
-  }
-  cyg_thread_exit();
+  CThreadBase::runThread(reinterpret_cast<CECOSThread *>(data));
 }
 
-CECOSThread::CECOSThread(long pa_nStackSize){
-  m_nStackSize = pa_nStackSize;
-  m_cStack = new unsigned char[m_nStackSize];
+CECOSThread::CECOSThread(long paStackSize) : CThreadBase(paStackSize){
+  mStack = new char[paStackSize];
 }
 
 CECOSThread::~CECOSThread(){
-  end();
-  delete[] m_cStack;
 }
 
-void CECOSThread::setDeadline(const CIEC_TIME &pa_roVal){
-  int i, ii;
-  CCriticalRegion criticalRegion(sm_oThreadListLock);
-  DEVLOG_DEBUG(">>>>Thread: Set Deadline: %lu\n", pa_roVal.operator TValueType ());
-  mDeadLine = pa_roVal;
+void CECOSThread::setDeadline(const CIEC_TIME &paVal){
+  CCriticalRegion criticalRegion(smThreadListLock);
+  DEVLOG_DEBUG(">>>>Thread: Set Deadline: %lu\n", paVal.operator TValueType ());
+  mDeadline = paVal;
   //first of all check if this thread is already in the list and remove it from the list
-  for(i = 0; i < scm_nThreadListSize; i++){
-    if(0 == sm_aoThreadList[i])
+  for(unsigned int i = 0; i < scmThreadListSize; i++){
+    if(0 == smThreadList[i])
       break;
     else
-      if(this == sm_aoThreadList[i]){
-        for(ii = i; ii < scm_nThreadListSize - 1; ii++){
-          if(0 == sm_aoThreadList[ii + 1])
+      if(this == smThreadList[i]){
+        for(unsigned int ii = i; ii < scmThreadListSize - 1; ii++){
+          if(0 == smThreadList[ii + 1])
             break;
-          sm_aoThreadList[ii + 1]->setPriority(ii + 2);
-          sm_aoThreadList[ii] = sm_aoThreadList[ii + 1];  
+          smThreadList[ii + 1]->setPriority(ii + 2);
+          smThreadList[ii] = smThreadList[ii + 1];
         }
         break;
       }  
   }
 
-  if(0 == mDeadLine)
-    setPriority(scm_nThreadListSize + 2); // use the lowest user priority
+  if(0 == mDeadline)
+    setPriority(scmThreadListSize + 2); // use the lowest user priority
   else{
-    for(i = 0; i < scm_nThreadListSize; i++){
-      if(0 == sm_aoThreadList[i]){
-        sm_aoThreadList[i] = this;
+    for(unsigned int i = 0; i < scmThreadListSize; i++){
+      if(0 == smThreadList[i]){
+        smThreadList[i] = this;
         setPriority( i + 2);
         break;
       }  
       else
-        if(mDeadLine < sm_aoThreadList[i]->getDeadline()){
-          CECOSThread *poRBuf, *poSBuf= sm_aoThreadList[i];
-          sm_aoThreadList[i] =  this;
+        if(mDeadline < smThreadList[i]->getDeadline()){
+          CECOSThread *poRBuf, *poSBuf= smThreadList[i];
+          smThreadList[i] =  this;
           setPriority( i + 2);
-          for(ii = i + 1; ii < scm_nThreadListSize; ii++){
+          for(unsigned int ii = i + 1; ii < scmThreadListSize; ii++){
             poSBuf->setPriority(ii + 2);
-            poRBuf = sm_aoThreadList[ii];
-            sm_aoThreadList[ii] = poSBuf;
+            poRBuf = smThreadList[ii];
+            smThreadList[ii] = poSBuf;
             if(0 == poRBuf)
               break;
             poSBuf = poRBuf;  
@@ -101,10 +87,11 @@ void CECOSThread::setDeadline(const CIEC_TIME &pa_roVal){
     }      
   }  
 }
+
+void CECOSThread::sleepThread(unsigned int paMilliSeconds){
+  cyg_thread_delay(1 + ((1000 * paMilliSeconds * CYGNUM_HAL_RTC_DENOMINATOR) / (CYGNUM_HAL_RTC_NUMERATOR / 1000)));
+}
   
-void CECOSThread::join(void){
-  if(isAlive()){
-    {CCriticalRegion criticalRegion(m_stResLock); }
-    cyg_thread_delete(m_stHandle);
-  }   
+void CECOSThread::deleteThread(cyg_handle_t paThreadHandle){
+  cyg_thread_delete(paThreadHandle);
 }

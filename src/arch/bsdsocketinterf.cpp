@@ -26,7 +26,12 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openTCPServerConnect
     char *pa_acIPAddr, unsigned short pa_nPort){
   TSocketDescriptor nRetVal = -1;
 
+#ifndef LOGINFO
+  (void)pa_acIPAddr;
+#else
   DEVLOG_INFO("CBSDSocketInterface: Opening TCP-Server connection at: %s:%d\n", pa_acIPAddr, pa_nPort);
+#endif
+
 
   TSocketDescriptor nSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 
@@ -34,7 +39,11 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openTCPServerConnect
     struct sockaddr_in stSockAddr;
     memset(&(stSockAddr), '\0', sizeof(sockaddr_in));
     stSockAddr.sin_family = AF_INET;
+#if VXWORKS
+    stSockAddr.sin_port = static_cast<unsigned short>(htons(pa_nPort));
+#else
     stSockAddr.sin_port = htons(pa_nPort);
+#endif
     stSockAddr.sin_addr.s_addr = htonl(INADDR_ANY );
 
     int nOptVal = 1;
@@ -53,6 +62,9 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openTCPServerConnect
     else{
       DEVLOG_ERROR("CBSDSocketInterface: bind() failed: %s\n", strerror(errno));
     }
+    if(-1 == nRetVal){
+      close(nSocket);
+    }
   }
   else{
     DEVLOG_ERROR("CBSDSocketInterface: Couldn't create socket: %s\n", strerror(errno));
@@ -70,11 +82,16 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openTCPClientConnect
   if(-1 != nSocket){
     struct sockaddr_in stSockAddr;
     stSockAddr.sin_family = AF_INET;
+#if VXWORKS
+    stSockAddr.sin_port = static_cast<unsigned short>(htons(pa_nPort));
+#else
     stSockAddr.sin_port = htons(pa_nPort);
+#endif
     stSockAddr.sin_addr.s_addr = inet_addr(pa_acIPAddr);
     memset(&(stSockAddr.sin_zero), '\0', sizeof(stSockAddr.sin_zero));
 
     if(-1 == connect(nSocket, (struct sockaddr *) &stSockAddr, sizeof(struct sockaddr))){
+      close(nSocket);
       DEVLOG_ERROR("CBSDSocketInterface: connect() failed: %s\n", strerror(errno));
     }
     else{
@@ -152,7 +169,11 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPSendPort(char
 
   if(-1 != nRetVal){
     m_ptDestAddr->sin_family = AF_INET;
+#if VXWORKS
+    m_ptDestAddr->sin_port = static_cast<unsigned short>(htons(pa_nPort));
+#else
     m_ptDestAddr->sin_port = htons(pa_nPort);
+#endif
     m_ptDestAddr->sin_addr.s_addr = inet_addr(pa_acIPAddr);
     memset(&(m_ptDestAddr->sin_zero), '\0', sizeof(m_ptDestAddr->sin_zero));
 
@@ -191,7 +212,11 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPReceivePort(c
         <= setsockopt(nSocket, SOL_SOCKET, SO_REUSEADDR, (char *) &nReuseAddrVal, sizeof(nReuseAddrVal))){
       struct sockaddr_in stSockAddr;
       stSockAddr.sin_family = AF_INET;
+#if VXWORKS
+      stSockAddr.sin_port = static_cast<unsigned short>(htons(pa_nPort));
+#else
       stSockAddr.sin_port = htons(pa_nPort);
+#endif
       stSockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
       memset(&(stSockAddr.sin_zero), '\0', sizeof(stSockAddr.sin_zero));
       if(0 == bind(nSocket, (struct sockaddr *) &stSockAddr, sizeof(struct sockaddr))){
@@ -199,8 +224,10 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPReceivePort(c
         struct ip_mreq stMReq;
         stMReq.imr_multiaddr.s_addr = inet_addr(pa_acIPAddr);
         stMReq.imr_interface.s_addr = htonl(INADDR_ANY);
-        setsockopt(nSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*) &stMReq, sizeof(stMReq));
-        //if this fails we may have given a non multicasting addr. For now we accept this. May need to be changed in the future.
+        if(0 > setsockopt(nSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*) &stMReq, sizeof(stMReq))){
+          //if this fails we may have given a non multicasting addr. For now we accept this. May need to be changed in the future.
+          DEVLOG_WARNING("CBSDSocketInterface: setsockopt(IP_ADD_MEMBERSHIP) failed: %s\n", strerror(errno));
+        }
 
         nRetVal = nSocket;
       }

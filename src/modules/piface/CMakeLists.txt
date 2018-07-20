@@ -15,6 +15,9 @@
 forte_add_module(PiFace "PiFace and PiFace like Raspberry PI expansion boards")
 
 if(FORTE_MODULE_PiFace)
+
+  forte_add_handler(CPiFaceProcessInterface::CPiFaceIOHandler processinterface)
+
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
   forte_add_sourcefile_hcpp(../../stdfblib/io/IX)
   forte_add_sourcefile_hcpp(../../stdfblib/io/QX)

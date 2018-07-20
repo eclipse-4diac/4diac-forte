@@ -27,9 +27,9 @@ class CPCTimerHandler : public CTimerHandler, public CThread{
    */  
 
   public:
-    CPCTimerHandler(); 
-    	
-  	virtual ~CPCTimerHandler();
+    explicit CPCTimerHandler(CDeviceExecution& pa_poDeviceExecution);
+      
+    virtual ~CPCTimerHandler();
     
     virtual void run();
   

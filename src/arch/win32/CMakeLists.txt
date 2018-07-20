@@ -18,31 +18,32 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   add_subdirectory ( serlayer )
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})  
   
-  forte_add_sourcefile_h(fortealloc.h)
+  forte_add_sourcefile_h(fortealloc.h ../forte_architecture_time.h)
   forte_add_sourcefile_hcpp(forte_thread forte_sync forte_sem)
-  forte_add_sourcefile_cpp(main.cpp)
+  forte_add_sourcefile_cpp(forte_architecture.cpp winforte_printer.cpp)
+  
+  forte_add_sourcefile_hcpp(forte_instance)
+  forte_add_to_executable_cpp(main)
 
-  if(${FORTE_BUILD_TYPE} STREQUAL SHARED_LIBRARY)
-    set(FORTE_EXTERNAL_TIMEHA ON CACHE BOOL "Use External Time Handler")
-	if(FORTE_EXTERNAL_TIMEHA)
-      forte_add_sourcefile_hcpp(externtimeha)
-	else(FORTE_EXTERNAL_TIMEHA)
-	  forte_add_sourcefile_hcpp(pctimeha)
-	endif(FORTE_EXTERNAL_TIMEHA)
-  else(${FORTE_BUILD_TYPE} STREQUAL SHARED_LIBRARY)
+  if(FORTE_BUILD_SHARED_LIBRARY)
+    set(FORTE_EXTERNAL_TIMEHA OFF CACHE BOOL "Use External Time Handler")
+  if(FORTE_EXTERNAL_TIMEHA)
+    forte_set_timer(externtimeha)
+  else(FORTE_EXTERNAL_TIMEHA)
+    forte_set_timer(pctimeha)
+  endif(FORTE_EXTERNAL_TIMEHA)
+  else(FORTE_BUILD_SHARED_LIBRARY)
     unset(FORTE_EXTERNAL_TIMEHA CACHE)
-    forte_add_sourcefile_hcpp(pctimeha)
-  endif(${FORTE_BUILD_TYPE} STREQUAL SHARED_LIBRARY)
-
+      forte_set_timer(pctimeha)
+  endif(FORTE_BUILD_SHARED_LIBRARY)
 
   if(FORTE_COM_ETH)
-   forte_add_sourcefile_hcpp( ../fdselecthand ../bsdsocketinterf)
+   forte_add_handler(CFDSelectHandler sockhand)
+   forte_add_sourcefile_hcpp(  win32socketinterf ../fdselecthand)
    forte_add_sourcefile_h(../gensockhand.h)
    forte_add_sourcefile_h(sockhand.h)
   endif(FORTE_COM_ETH)
 
-  
-  SET(CMAKE_CXX_FLAGS_RELEASE "/MT" ) 
   forte_add_definition("-DFORTE_LITTLE_ENDIAN") # -DNONAMESPACE -DWITH_NONAMESPACES)  
 
 # TODO this flag was originaly wrongly added to the definitions. May be necessary to be added as link flag. However currently working fine.
@@ -53,6 +54,17 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   forte_add_link_library(winmm.lib)
   forte_add_link_library(Ws2_32.lib)
   forte_add_link_library(version.lib)
+  
+  forte_add_definition("-D_CRT_SECURE_NO_DEPRECATE")
+  forte_add_definition("-D_CRT_NONSTDC_NO_DEPRECATE")
+  forte_add_definition("-D_SCL_SECURE_NO_WARNINGS")
+  forte_add_definition("-D_CRT_SECURE_NO_WARNINGS")
+  forte_add_definition("-D_NO_W32_PSEUDO_MODIFIERS")   #takes care of IN, OUT and OPTIONAL in mingw
+  
+  
+  if(FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)
+    forte_add_definition("-DBOOST_TEST_NO_LIB -DFORTE_USE_DEFAULT_NEW_AND_DELETE")
+  endif(FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)
   
  
 endif()

@@ -14,8 +14,6 @@
 #define _F_TIME_TO_BYTE_H_
 
 #include <funcbloc.h>
-#include <forte_time.h>
-#include <forte_byte.h>
 
 class FORTE_F_TIME_TO_BYTE: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_TIME_TO_BYTE)

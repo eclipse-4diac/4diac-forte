@@ -14,9 +14,6 @@
 #define _F_CONCAT_DATE_TOD_H_
 
 #include <funcbloc.h>
-#include <forte_date_and_time.h>
-#include <forte_time_of_day.h>
-#include <forte_date.h>
 
 class FORTE_F_CONCAT_DATE_TOD: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_CONCAT_DATE_TOD)

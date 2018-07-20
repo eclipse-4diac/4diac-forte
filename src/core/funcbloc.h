@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, nxtControl GmbH, fortiss GmbH
+ * Copyright (c) 2005 - 2018 ACIN, Profactor GmbH, nxtControl GmbH, fortiss GmbH,
+ *                           Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,7 +18,6 @@
 #include <forte_config.h>
 #include "mgmcmd.h"
 #include "event.h"
-#include "typelib.h"
 #include "dataconn.h"
 #include "eventconn.h"
 #include "stringdict.h"
@@ -26,12 +26,17 @@
 #include <stringlist.h>
 
 class CEventChainExecutionThread;
-class CResource;
 class CAdapter;
+class CTimerHandler;
 
 #ifdef FORTE_SUPPORT_MONITORING
 #include "mgmcmdstruct.h"
-#include "monitoring.h"
+namespace forte {
+  namespace core {
+    struct SMonitorEvent;
+    class CMonitoringHandler;
+  }
+}
 #endif //FORTE_SUPPORT_MONITORING
 
 #ifndef FORTE_FB_DATA_ARRAY  //with this check we can overwrite this define in a platform specific file (e.g., config.h)
@@ -153,6 +158,10 @@ class CFunctionBlock{
       return m_poResource;
     }
 
+    /*!\brief Get the timer of the device wher the FB is contained.
+         */
+    CTimerHandler& getTimer(void);
+
     /*!\brief Returns the type of this FB instance
      */
     virtual CStringDictionary::TStringId getFBTypeId(void) const = 0;
@@ -174,7 +183,7 @@ class CFunctionBlock{
       return static_cast<TEventID>(getPortId(pa_unEONameId, m_pstInterfaceSpec->m_nNumEOs, m_pstInterfaceSpec->m_aunEONames));
     }
 
-    CEventConnection *getEOConection(CStringDictionary::TStringId paEONameId) const;
+    CEventConnection *getEOConnection(CStringDictionary::TStringId paEONameId) const;
 
     /*!\brief Connects specific data input of a FB with a specific data connection.
      *
@@ -254,7 +263,7 @@ class CFunctionBlock{
      */
     CAdapter* getAdapter(CStringDictionary::TStringId paAdapterNameId);
 
-    TPortId getAddapterPortId(CStringDictionary::TStringId paAdapterNameId);
+    TPortId getAdapterPortId(CStringDictionary::TStringId paAdapterNameId);
 
     /*!\brief Function that handles incoming events.
      *
@@ -355,6 +364,27 @@ class CFunctionBlock{
       return (sizeof(CIEC_ANY) * pa_nNumDIs + sizeof(CIEC_ANY) * pa_nNumDOs + sizeof(TAdapterPtr) * pa_nNumAdapters);
 
     }
+
+    /*! \brief Get the data input with given number
+     *
+     * Attention this function will not perform any range checks on the pa_nDINum parameter!
+     * @param pa_nDINum number of the data input starting with 0
+     * @return pointer to the data input
+     */
+    TIEC_ANYPtr getDI(unsigned int pa_nDINum) const {
+      return m_aoDIs + pa_nDINum;
+    }
+
+    /*! \brief Get the data output with given number
+     *
+     * Attention this function will not perform any range checks on the pa_nDONum parameter!
+     * @param pa_nDONum number of the data output starting with 0
+     * @return pointer to the data output
+     */
+    CIEC_ANY *getDO(unsigned int pa_nDONum) const{
+      return m_aoDOs + pa_nDONum;
+    }
+
 #ifdef FORTE_SUPPORT_MONITORING
     // public monitoring
     void setUpdated(bool updated){
@@ -362,21 +392,14 @@ class CFunctionBlock{
     }
     ;
 
-    bool getUpdated(){
+    bool getUpdated() const{
       return m_updated;
     }
     ;
 
-    forte::core::SMonitorEvent &getEIMontiorData(TEventID pa_unEIID){
-      return m_nEIMonitorCount[pa_unEIID];
-    }
+    forte::core::SMonitorEvent &getEIMonitorData(TEventID pa_unEIID);
 
-    forte::core::SMonitorEvent &getEOMontiorData(TEventID pa_unEOID){
-      return m_nEOMonitorCount[pa_unEOID];
-    }
-
-    // DATA-Monitor-functions
-    bool forceData(CStringDictionary::TStringId pa_acDOName, const char * forceValue);
+    forte::core::SMonitorEvent &getEOMonitorData(TEventID pa_unEOID);
 
     bool startEIBreakpoint(TEventID p_nEventId);
     bool startEOBreakpoint(TEventID p_nEventId);
@@ -454,26 +477,6 @@ class CFunctionBlock{
       return (mEOConns + paEONum);
     }
 
-    /*! \brief Get the data input with given number
-     *
-     * Attention this function will not perform any range checks on the pa_nDINum parameter!
-     * @param pa_nDINum number of the data input starting with 0
-     * @return pointer to the data input
-     */
-    TIEC_ANYPtr getDI(unsigned int pa_nDINum) const {
-      return m_aoDIs + pa_nDINum;
-    }
-
-    /*! \brief Get the data output with given number
-     *
-     * Attention this function will not perform any range checks on the pa_nDONum parameter!
-     * @param pa_nDONum number of the data output starting with 0
-     * @return pointer to the data output
-     */
-    CIEC_ANY *getDO(unsigned int pa_nDONum) const{
-      return m_aoDOs + pa_nDONum;
-    }
-
     /*! \brief Get the data output connection with given number
      *
      * Attention this function will not perform any range checks on the pa_nDONum parameter!
@@ -499,7 +502,7 @@ class CFunctionBlock{
 
     void freeAllData();
 
-    bool getManagesFBData(){
+    bool getManagesFBData() const{
       return m_bManagesFBData;
     }
 
@@ -600,14 +603,15 @@ typedef CFunctionBlock *TFunctionBlockPtr;
  fbclass(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : \
  fbBaseClass( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData)
 
-#ifdef _WIN32
+#ifdef IN
 #undef IN
+#endif
+
+#ifdef OUT
 #undef OUT
 #endif
 
-#ifdef NET_OS
-#undef IN
-#undef OUT
+#ifdef OPTIONAL
 #undef OPTIONAL
 #endif
 

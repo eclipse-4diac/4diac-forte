@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2005 - 2018 ACIN, Profactor GmbH, fortiss GmbH, Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,15 +12,20 @@
 #ifndef _RESOURCE_H_
 #define _RESOURCE_H_
 
-#include "ecet.h"
-#include "funcbloc.h"
 #include "fbcontainer.h"
+#include "funcbloc.h"
 
 #ifdef FORTE_SUPPORT_MONITORING
 #include <monitoring.h>
 #endif
 
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+class CLuaEngine;
+#endif
+
 class CDevice;
+class CInterface2InternalDataConnection;
+class CEventChainExecutionThread;
 
 /*! \ingroup CORE\brief Base class for all resources handling the reconfiguration management within this
  * resource and the background execution of event chains.
@@ -72,9 +77,23 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 
     virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
 
+    /*!\brief Write a parameter value to a given FB-input
+     *
+     * @param paNameList the identifier name list of the parameter to be written
+     * @param paValue the value to be writen
+     * @return response of the command execution as defined in IEC 61499
+     */
+    EMGMResponse writeValue(forte::core::TNameIdentifier &paNameList, const CIEC_STRING & paValue, bool paForce = false);
+
 #ifdef FORTE_SUPPORT_MONITORING
     forte::core::CMonitoringHandler &getMonitoringHandler(){
       return mMonitoringHandler;
+    }
+#endif
+
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+    CLuaEngine *getLuaEngine(){
+      return luaEngine;
     }
 #endif
 
@@ -90,6 +109,11 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      *
      */
     EMGMResponse createConnection(forte::core::SManagementCMD &paCommand);
+
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+    CLuaEngine *luaEngine; //!< The Lua engine for this container
+#endif
+
   private:
     /*!\brief Create a new connection between source and destination
      *
@@ -120,14 +144,6 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
     EMGMResponse deleteConnection(forte::core::TNameIdentifier &paSrcNameList,
         forte::core::TNameIdentifier &paDstNameList);
 
-    /*!\brief Write a parameter value to a given FB-input
-     *
-     * @param paNameList the identifier name list of the parameter to be written
-     * @param paValue the value to be writen
-     * @return response of the command execution as defined in IEC 61499
-     */
-    EMGMResponse writeValue(forte::core::TNameIdentifier &paNameList, const CIEC_STRING & paValue);
-
     /*!\brief Read a parameter value from a given FB
      *
      * @param paNameList the identifier name list of the parameter to be read
@@ -136,6 +152,28 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      */
     EMGMResponse readValue(forte::core::TNameIdentifier &paNameList, CIEC_STRING & paValue);
 
+    /*!\brief Read the existing fb types.
+     *
+     * @return response of the command execution as defined in IEC 61499
+     */
+    EMGMResponse queryAllFBTypes(CIEC_STRING & paValue);
+
+    /*!\brief Read the existing adapter types.
+     *
+     * @return response of the command execution as defined in IEC 61499
+     */
+    EMGMResponse queryAllAdapterTypes(CIEC_STRING & paValue);
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+    /*!\brief create
+     *
+     * @return response of the command execution as defined in IEC 61499
+     */
+    EMGMResponse createFBTypeFromLua(CStringDictionary::TStringId typeNameId,
+        CIEC_STRING & paLuaScriptAsString);
+
+    EMGMResponse createAdapterTypeFromLua(CStringDictionary::TStringId typeNameId,
+            CIEC_STRING & paLuaScriptAsString);
+#endif
     /*!\brief get the variable with the given name identifier
      *
      * @param paNameList the identifier name list of the variable to be retrieved

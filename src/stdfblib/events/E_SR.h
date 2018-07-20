@@ -14,7 +14,6 @@
 #define _E_SR_H_
 
 #include <funcbloc.h>
-#include <forte_bool.h>
 
 class E_SR: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(E_SR)
@@ -39,7 +38,7 @@ private:
   FORTE_FB_DATA_ARRAY(1,0,1, 0);
 
   CIEC_BOOL& Q() {
-   	return *static_cast<CIEC_BOOL*>(getDO(0));
+     return *static_cast<CIEC_BOOL*>(getDO(0));
   }
 
 public:

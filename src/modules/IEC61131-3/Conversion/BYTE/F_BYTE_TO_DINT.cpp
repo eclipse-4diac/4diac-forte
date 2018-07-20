@@ -43,8 +43,8 @@ const SFBInterfaceSpec FORTE_F_BYTE_TO_DINT::scm_stFBInterfaceSpec = {
 
 void FORTE_F_BYTE_TO_DINT::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-	  OUT() = BYTE_TO_DINT(IN());
-	  sendOutputEvent(scm_nEventCNFID);
+    OUT() = BYTE_TO_DINT(IN());
+    sendOutputEvent(scm_nEventCNFID);
   }
 }
 

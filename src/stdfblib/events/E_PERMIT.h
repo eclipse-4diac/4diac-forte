@@ -13,7 +13,6 @@
 #define _E_PERMIT_H_
 
 #include <funcbloc.h>
-#include <forte_bool.h>
 
 class E_PERMIT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(E_PERMIT)
@@ -37,7 +36,7 @@ private:
   FORTE_FB_DATA_ARRAY(1,1,0, 0);
   
   CIEC_BOOL& PERMIT() {
-   	return *static_cast<CIEC_BOOL*>(getDI(0));
+     return *static_cast<CIEC_BOOL*>(getDI(0));
   }
 
 public:

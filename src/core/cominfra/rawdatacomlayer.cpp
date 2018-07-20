@@ -16,7 +16,7 @@
 namespace forte {
   namespace com_infra {
 
-    CRawDataComLayer::CRawDataComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poFB) :
+    CRawDataComLayer::CRawDataComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB) :
             CComLayer(pa_poUpperLayer, pa_poFB){
     }
 
@@ -24,9 +24,7 @@ namespace forte {
     }
 
     void CRawDataComLayer::closeConnection(){
-      if(0 != m_poBottomLayer){
-        m_poBottomLayer->closeConnection();
-      }
+      //We don't need to do anything specific on closing
     }
 
     EComResponse CRawDataComLayer::sendData( void *paData, unsigned int){

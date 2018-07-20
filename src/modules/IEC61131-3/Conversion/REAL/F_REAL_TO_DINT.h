@@ -13,8 +13,6 @@
 #define _F_REAL_TO_DINT_H_
 
 #include <funcbloc.h>
-#include <forte_real.h>
-#include <forte_dint.h>
 
 class FORTE_F_REAL_TO_DINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_REAL_TO_DINT)

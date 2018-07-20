@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 fortiss GmbH
+ * Copyright (c) 2015, 2018 fortiss GmbH, Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
  *******************************************************************************/
 #include "monitoring.h"
 #include "resource.h"
+#include "ecet.h"
 #include "utils/criticalregion.h"
 
 using namespace forte::core;
@@ -39,7 +40,7 @@ EMGMResponse CMonitoringHandler::executeMonitoringCommand(SManagementCMD &paComm
           getWatches(paCommand.mMonitorResponse, paCommand.mAdditionalParams.getValue()[0]);
       break;
     case cg_nMGM_CMD_Monitoring_Force:
-      retVal = forceValue(paCommand.mFirstParam, paCommand.mAdditionalParams);
+      retVal = mResource.writeValue(paCommand.mFirstParam, paCommand.mAdditionalParams, true);
       break;
     case cg_nMGM_CMD_Monitoring_ClearForce:
       retVal = clearForce(paCommand.mFirstParam);
@@ -85,13 +86,13 @@ EMGMResponse CMonitoringHandler::addWatch(forte::core::TNameIdentifier &paNameLi
     else{
       TEventID unEventId = fB->getEIID(portName);
       if(cg_nInvalidEventID != unEventId){
-        addEventWatch(poFBMonitoringEntry, portName, fB->getEIMontiorData(unEventId));
+        addEventWatch(poFBMonitoringEntry, portName, fB->getEIMonitorData(unEventId));
         eRetVal = e_RDY;
       }
       else{
         unEventId = fB->getEOID(portName);
         if(cg_nInvalidEventID != unEventId){
-          addEventWatch(poFBMonitoringEntry, portName, fB->getEOMontiorData(unEventId));
+          addEventWatch(poFBMonitoringEntry, portName, fB->getEOMonitorData(unEventId));
           eRetVal = e_RDY;
         }
       }
@@ -180,19 +181,6 @@ EMGMResponse CMonitoringHandler::getWatches(CIEC_STRING &paResponse, char paQual
   return e_RDY;
 }
 
-EMGMResponse CMonitoringHandler::forceValue(forte::core::TNameIdentifier &paNameList,
-    CIEC_STRING &paValue){
-  EMGMResponse eRetVal = e_NO_SUCH_OBJECT;
-  CStringDictionary::TStringId portName = paNameList.back();
-  paNameList.popBack();
-  CFunctionBlock *fB = getFB(paNameList);
-
-  if(0 != fB){
-    eRetVal = (fB->forceData(portName, paValue.getValue())) ? e_RDY : e_INVALID_DST;
-  }
-  return eRetVal;
-}
-
 EMGMResponse CMonitoringHandler::clearForce(forte::core::TNameIdentifier &paNameList){
   EMGMResponse eRetVal = e_NO_SUCH_OBJECT;
   CStringDictionary::TStringId portName = paNameList.back();
@@ -204,9 +192,6 @@ EMGMResponse CMonitoringHandler::clearForce(forte::core::TNameIdentifier &paName
     if(0 != poDataVal){
       poDataVal->setForced(false);
       eRetVal = e_RDY;
-    }
-    else{
-      eRetVal = e_INVALID_DST;
     }
   }
   return eRetVal;
@@ -251,12 +236,12 @@ EMGMResponse CMonitoringHandler::resetEventCount(forte::core::TNameIdentifier &p
     SMonitorEvent *pstEventMonitorData = 0;
 
     if(cg_nInvalidEventID != eventId){
-      pstEventMonitorData = &fB->getEIMontiorData(eventId);
+      pstEventMonitorData = &fB->getEIMonitorData(eventId);
     }
     else{
       eventId = fB->getEOID(portName);
       if(cg_nInvalidEventID != eventId){
-        pstEventMonitorData = &fB->getEOMontiorData(eventId);
+        pstEventMonitorData = &fB->getEOMonitorData(eventId);
       }
     }
     if(0 != pstEventMonitorData){
@@ -420,8 +405,7 @@ void CMonitoringHandler::getResourceWatches(CIEC_STRING &paResponse, char){
 
 void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
     SDataWatchEntry &paDataWatchEntry){
-  int bufferSize;
-  bufferSize = paDataWatchEntry.mDataValue.getToStringBufferSize();
+  int bufferSize = paDataWatchEntry.mDataValue.getToStringBufferSize();
   appendPortTag(paResponse, paDataWatchEntry.mPortId);
   paResponse.append("<Data value=\"");
   char* acDataValue = new char [bufferSize]; //TODO try to directly use the response string instead
@@ -433,7 +417,7 @@ void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
           static_cast<CIEC_WSTRING&>(paDataWatchEntry.mDataValue).toUTF8(acDataValue, bufferSize, false);
       break;
     default:
-      nConsumedBytes = paDataWatchEntry.mDataValue.toString(acDataValue, sizeof(acDataValue));
+      nConsumedBytes = paDataWatchEntry.mDataValue.toString(acDataValue, bufferSize);
       break;
   }
   if(-1 != nConsumedBytes){
@@ -461,7 +445,7 @@ void CMonitoringHandler::appendEventWatch(CIEC_STRING &paResponse,
   appendPortTag(paResponse, paEventWatchEntry.m_unPortId);
 
   CIEC_UDINT udint;
-  CIEC_ULINT ulint;
+  CIEC_ULINT ulint; //TODO: If 64bits types aren't used, this won't compile
 
   char acEventCount[10]; // the bigest number in an uint is 4294967296, TODO directly use pa_roResponse
   char acTimeStamp[21]; // the bigest number in an ulint is 18446744073709551616, TODO directly use pa_roResponse

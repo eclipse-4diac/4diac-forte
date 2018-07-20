@@ -13,8 +13,6 @@
 #define _F_SEL_H_
 
 #include <funcbloc.h>
-#include <forte_any.h>
-#include <forte_bool.h>
 
 class FORTE_F_SEL: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_SEL)
@@ -63,12 +61,12 @@ public:
   virtual ~FORTE_F_SEL(){};
 
   template<typename T> void calculateValue(){
-	  T oIn0;
-	  T oIn1;
-	  oIn0.saveAssign(IN0());
-	  oIn1.saveAssign(IN1());
+    T oIn0;
+    T oIn1;
+    oIn0.saveAssign(IN0());
+    oIn1.saveAssign(IN1());
 
-	  OUT().saveAssign(SEL<T> (G(), oIn0, oIn1));
+    OUT().saveAssign(SEL<T> (G(), oIn0, oIn1));
   }
 
   template<typename T> void calculateValueString(){

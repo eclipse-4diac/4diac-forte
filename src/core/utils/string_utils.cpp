@@ -10,12 +10,13 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "string_utils.h"
-#include <errno.h>
-#include <string.h>
 #include <forte_dint.h>
 #include <forte_udint.h>
 #include <forte_lint.h>
 #include <forte_ulint.h>
+
+#include <errno.h>
+#include <string.h>
 
 bool forte::core::util::isAtoFChar(char pa_cValue){
   pa_cValue = static_cast<char>(toupper(pa_cValue));
@@ -38,10 +39,10 @@ long int forte::core::util::strtol(const char *nptr, char **endptr, int base) {
   }
 
   if(16 == base){
-	  if(('0' == (*nptr)) && ('x' == nptr[1])){
-	    //we have a preceding 0x step over it
-	    nptr += 2;
-	  }
+    if(('0' == (*nptr)) && ('x' == nptr[1])){
+      //we have a preceding 0x step over it
+      nptr += 2;
+    }
   }
 
   long nLimit1 = (bNegativeNumber ? -(CIEC_DINT::scm_nMinVal / base) : (CIEC_DINT::scm_nMaxVal / base));

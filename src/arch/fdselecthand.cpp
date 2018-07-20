@@ -11,15 +11,14 @@
  *******************************************************************************/
 #include <sockhand.h>      //needs to be first pulls in the platform specific includes
 #include "fdselecthand.h"
-#include "../core/devexec.h"
 #include "devlog.h"
+#include "../core/devexec.h"
 #include "../core/cominfra/commfb.h"
-#include <criticalregion.h>
+#include "../core/cominfra/comlayer.h"
+#include "../core/utils/criticalregion.h"
 
-
-DEFINE_SINGLETON(CFDSelectHandler);
-
-CFDSelectHandler::CFDSelectHandler(){
+DEFINE_HANDLER(CFDSelectHandler)
+CFDSelectHandler::CFDSelectHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution)  {
   m_bConnectionListChanged = false;
 #ifdef WIN32
   // Windows Socket Startupcode
@@ -47,7 +46,7 @@ void CFDSelectHandler::run(void){
   fd_set anFDSet;
   fd_set anFDSetMaster;
 
-  int nHighestFDID = 0;
+  TFileDescriptor nHighestFDID = scmInvalidFileDescriptor;
   int retval = 0;
 
   FD_ZERO(&anFDSetMaster);
@@ -64,8 +63,8 @@ void CFDSelectHandler::run(void){
     tv.tv_sec = 1; //TODO : To be set!
     tv.tv_usec = 1000;
 
-    if(0 != nHighestFDID){
-      retval = select(nHighestFDID + 1, &anFDSet, NULL, NULL, &tv);
+    if(scmInvalidFileDescriptor != nHighestFDID){
+      retval = select(static_cast<int>(nHighestFDID + 1), &anFDSet, NULL, NULL, &tv);
       if(!isAlive()){
         //the thread has been closed in the meantime do not process any messages anymore
         return;
@@ -147,7 +146,7 @@ void CFDSelectHandler::removeComCallback(TFileDescriptor pa_nFD){
 }
 
 CFDSelectHandler::TFileDescriptor CFDSelectHandler::createFDSet(fd_set *m_panFDSet){
-  TFileDescriptor nRetVal = 0;
+  TFileDescriptor nRetVal = scmInvalidFileDescriptor;
   FD_ZERO(m_panFDSet);
   TConnectionContainer::Iterator itEnd(m_lstConnectionsList.end());
   for(TConnectionContainer::Iterator itRunner = m_lstConnectionsList.begin(); itRunner != itEnd; ++itRunner){

@@ -11,10 +11,7 @@
 #include "modbusclientconnection.h"
 #include "devlog.h"
 #include "modbuspoll.h"
-
-#ifndef WIN32
-#include <unistd.h>
-#endif
+#include <forte_thread.h>
 
 using namespace modbus_connection_event;
 
@@ -22,8 +19,8 @@ using namespace modbus_connection_event;
  * CModbusClientConnection class
  *************************************/
 
-CModbusClientConnection::CModbusClientConnection() :
-    CModbusConnection(), m_pModbusConnEvent(NULL), m_nNrOfPolls(0), m_nSlaveId(0xFF), m_unBufFillSize(0){
+CModbusClientConnection::CModbusClientConnection(CModbusHandler* pa_modbusHandler) :
+    CModbusConnection(pa_modbusHandler), m_pModbusConnEvent(NULL), m_nNrOfPolls(0), m_nSlaveId(0xFF), m_unBufFillSize(0){
   memset(m_anRecvBuffPosition, 0, sizeof(m_anRecvBuffPosition)); //TODO change this to  m_anRecvBuffPosition{0} in the extended list when fully switching to C++11
   memset(m_acRecvBuffer, 0, sizeof(m_acRecvBuffer)); //TODO change this to  m_acRecvBuffer{0} in the extended list when fully switching to C++11
 }
@@ -143,11 +140,7 @@ void CModbusClientConnection::run(){
       tryConnect();
     }
 
-#ifdef WIN32
-    Sleep(1);
-#else
-    usleep(1);
-#endif
+    CThread::sleepThread(1);
   }
 }
 
@@ -174,7 +167,7 @@ void CModbusClientConnection::tryPolling(){
   }
 
   if(dataReturned)
-    CModbusHandler::getInstance().executeComCallback(m_nComCallbackId);
+    m_pModbusHandler->executeComCallback(m_nComCallbackId);
 
   if((nrErrors == m_nNrOfPolls) && (0 != m_nNrOfPolls)){
     modbus_close(m_pModbusConn); // in any case it is worth trying to close the socket

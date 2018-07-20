@@ -14,7 +14,6 @@
 
 #include <device.h>
 #include <if2indco.h>
-#include <forte_wstring.h>
 #include "RMT_RES.h"
 
 /*! \brief Implementation of the RMT_DEV.
@@ -27,16 +26,16 @@ class RMT_DEV : public CDevice{
 public:
   RMT_RES MGR;
 
-	RMT_DEV();
-	virtual ~RMT_DEV();
+  RMT_DEV();
+  virtual ~RMT_DEV();
 
 /*! \brief Adds additional functionality to the originals execute func of the device.
  *
  * This is that it waits till the thread of the MGR resource has anded
  */
-	virtual int startDevice(void);
+  virtual int startDevice(void);
 
-	virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
+  virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
 
   void setMGR_ID(const char * const pa_acConn);
 
@@ -51,7 +50,7 @@ private:
   static const CStringDictionary::TStringId scm_aunDIDataTypeIds[];
 
   CIEC_WSTRING& MGR_ID() {
-   	return *static_cast<CIEC_WSTRING*>(getDI(0));
+     return *static_cast<CIEC_WSTRING*>(getDI(0));
   }
 };
 

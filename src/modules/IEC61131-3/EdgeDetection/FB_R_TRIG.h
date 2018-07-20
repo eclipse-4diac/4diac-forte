@@ -13,8 +13,6 @@
 #define _FB_R_TRIG_H_
 
 #include <funcbloc.h>
-#include <forte_bool.h>
-#include <forte_array.h>
 
 class FB_R_TRIG: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FB_R_TRIG)
@@ -41,11 +39,11 @@ private:
   void executeEvent(int pa_nEIID);
 
   CIEC_BOOL& CLK() {
-  	return *static_cast<CIEC_BOOL*>(getDI(0));
+    return *static_cast<CIEC_BOOL*>(getDI(0));
   }
 
   CIEC_BOOL& Q() {
-  	return *static_cast<CIEC_BOOL*>(getDO(0));
+    return *static_cast<CIEC_BOOL*>(getDO(0));
   }
 
 public:

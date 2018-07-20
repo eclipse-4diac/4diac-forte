@@ -18,11 +18,9 @@
 #include "forte_real.h"
 #include "forte_lreal.h"
 
-#ifdef FORTE_USE_REAL_DATATYPE
+#include <forte_printer.h>
 
 DEFINE_FIRMWARE_DATATYPE(REAL, g_nStringIdREAL)
-
-const TForteUInt16 CIEC_REAL::scm_unMaxStringBufSize = 100;
 
 int CIEC_REAL::fromString(const char *pa_pacValue){
   char *pcEnd;
@@ -33,13 +31,13 @@ int CIEC_REAL::fromString(const char *pa_pacValue){
 
   if(0 == strncmp(pacRunner, "REAL#", 5)){
     pacRunner += 5;
-	}
+  }
 
   
   #if defined(WIN32) || defined(__ECOS) || defined(VXWORKS)
-	realval = strtod(pacRunner, &pcEnd);
+  realval = static_cast<TForteFloat>(strtod(pacRunner, &pcEnd));
   #else
-	realval = strtof(pacRunner, &pcEnd);
+  realval = strtof(pacRunner, &pcEnd);
   #endif
 
   if(((fabs(realval) < TFLOAT_min) && (realval != 0)) || ((fabs(realval) > TFLOAT_max) && (realval != 0)) ||
@@ -52,13 +50,7 @@ int CIEC_REAL::fromString(const char *pa_pacValue){
 
 int CIEC_REAL::toString(char* pa_acValue, unsigned int pa_nBufferSize) const{
   int nRetVal;
-
-#ifdef WIN32
-  nRetVal = _snprintf(pa_acValue, pa_nBufferSize, "%g", getTFLOAT());
-#else
-  nRetVal = snprintf(pa_acValue, pa_nBufferSize, "%g", getTFLOAT());
-#endif
-
+  nRetVal = forte_snprintf(pa_acValue, pa_nBufferSize, "%g", getTFLOAT());
   if((nRetVal < -1) || (nRetVal >= (int) pa_nBufferSize)){
     nRetVal = -1;  
   }
@@ -71,7 +63,7 @@ void  CIEC_REAL::setValue(const CIEC_ANY& pa_roValue){
   case e_REAL:
     setValueSimple(pa_roValue);
     break;
-#ifdef FORTE_USE_64BIT_DATATYPES
+#ifdef FORTE_USE_LREAL_DATATYPE
   case e_LREAL:
     (*this)=static_cast<TForteFloat>((CIEC_LREAL&)(pa_roValue));
     break;
@@ -100,7 +92,7 @@ void CIEC_REAL::castRealData(const CIEC_REAL &pa_roSrcValue, CIEC_ANY &pa_roDest
       static_cast<CIEC_REAL &>(pa_roDestValue) = pa_roSrcValue;
       break;
     case CIEC_ANY::e_LREAL:
-#ifdef FORTE_USE_64BIT_DATATYPES
+#ifdef FORTE_USE_LREAL_DATATYPE
       static_cast<CIEC_LREAL &>(pa_roDestValue) = pa_roSrcValue;
 #endif
       break;
@@ -125,7 +117,3 @@ void CIEC_REAL::castRealData(const CIEC_REAL &pa_roSrcValue, CIEC_ANY &pa_roDest
       break;
   }
 }
-
-#endif //FORTE_USE_REAL_DATATYPE
-
-

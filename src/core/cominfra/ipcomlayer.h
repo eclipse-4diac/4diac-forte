@@ -22,30 +22,30 @@ namespace forte {
 
     class CIPComLayer : public CComLayer{
       public:
-        CIPComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB);
+        CIPComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB);
         virtual ~CIPComLayer();
 
-        EComResponse sendData(void *pa_pvData, unsigned int pa_unSize); // top interface, called from top
-        EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize);
+        EComResponse sendData(void *paData, unsigned int paSize); // top interface, called from top
+        EComResponse recvData(const void *paData, unsigned int paSize);
 
         EComResponse processInterrupt();
 
       protected:
-        void closeConnection();
 
       private:
-        static void closeSocket(CIPComSocketHandler::TSocketDescriptor *pa_nSocketID);
+        void closeSocket(CIPComSocketHandler::TSocketDescriptor *paSocketID);
 
-        EComResponse openConnection(char *pa_acLayerParameter);
+        EComResponse openConnection(char *paLayerParameter);
+        void closeConnection();
         void handledConnectedDataRecv();
         void handleConnectionAttemptInConnected();
 
-        CIPComSocketHandler::TSocketDescriptor m_nSocketID;
-        CIPComSocketHandler::TSocketDescriptor m_nListeningID; //!> to be used by server type connections. there the m_nSocketID will be used for the accepted connection.
-        CIPComSocketHandler::TUDPDestAddr m_tDestAddr;
-        EComResponse m_eInterruptResp;
-        char m_acRecvBuffer[cg_unIPLayerRecvBufferSize];
-        unsigned int m_unBufFillSize;
+        CIPComSocketHandler::TSocketDescriptor mSocketID;
+        CIPComSocketHandler::TSocketDescriptor mListeningID; //!> to be used by server type connections. there the m_nSocketID will be used for the accepted connection.
+        CIPComSocketHandler::TUDPDestAddr mDestAddr;
+        EComResponse mInterruptResp;
+        char mRecvBuffer[cg_unIPLayerRecvBufferSize];
+        unsigned int mBufFillSize;
     };
 
   }

@@ -14,8 +14,6 @@
 #define _F_MUX_2_H_
 
 #include <funcbloc.h>
-#include <forte_any.h>
-#include <forte_any_int.h>
 
 class FORTE_F_MUX_2: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_MUX_2)

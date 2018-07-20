@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2012 ACIN, nxtControl
+ * Copyright (c) 2011 - 2012 ACIN, nxtControl, 2018 TU Vienna/ACIN
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
+ *   Martin Melik Merkumians - Adds cast template tests
  *******************************************************************************/
 #ifdef FORTE_USE_REAL_DATATYPE
 
@@ -415,6 +416,47 @@ BOOST_AUTO_TEST_CASE(REAL_Castable_test)
 
   BOOST_CHECK(!CIEC_ANY::isCastable(CIEC_ANY::e_REAL, CIEC_ANY::e_STRING, bUp, bDown)); BOOST_CHECK(! bUp); BOOST_CHECK(! bDown);
   BOOST_CHECK(!CIEC_ANY::isCastable(CIEC_ANY::e_REAL, CIEC_ANY::e_WSTRING, bUp, bDown)); BOOST_CHECK(! bUp); BOOST_CHECK(! bDown);
+}
+
+BOOST_AUTO_TEST_CASE(Explict_cast_operator_to_REAL)
+{
+
+  CIEC_USINT nUsint(2);
+  CIEC_UINT nUint(3);
+  CIEC_UDINT nUdint(4);
+  CIEC_ULINT nUlint(5);
+  CIEC_SINT nSint(6);
+  CIEC_INT nInt(7);
+  CIEC_DINT nDint(8);
+  CIEC_LINT nLint(9);
+  CIEC_REAL nReal(10);
+  CIEC_LREAL nLreal(11);
+  CIEC_DWORD nDword(0x41200000);
+
+  CIEC_REAL nResult(0);
+
+  nResult = CIEC_ANY::cast<CIEC_REAL>(nUsint);
+  BOOST_TEST(nResult == 2);
+  nResult = CIEC_ANY::cast<CIEC_REAL>(nUint);
+  BOOST_TEST(nResult == 3);
+  nResult = CIEC_ANY::cast<CIEC_REAL>(nUdint);
+  BOOST_TEST(nResult == 4);
+  nResult = CIEC_ANY::cast<CIEC_REAL>(nUlint);
+  BOOST_TEST(nResult == 5);
+  nResult = CIEC_ANY::cast<CIEC_REAL>(nSint);
+  BOOST_TEST(nResult == 6);
+  nResult = CIEC_ANY::cast<CIEC_REAL>(nInt);
+  BOOST_TEST(nResult == 7);
+  nResult = CIEC_ANY::cast<CIEC_REAL>(nDint);
+  BOOST_TEST(nResult == 8);
+  nResult = CIEC_ANY::cast<CIEC_REAL>(nLint);
+  BOOST_TEST(nResult == 9);
+  nResult = CIEC_ANY::cast<CIEC_REAL>(nReal);
+  BOOST_TEST(nResult == 10);
+  nResult = CIEC_ANY::cast<CIEC_REAL>(nLreal);
+  BOOST_TEST(nResult == 11);
+  nResult = CIEC_ANY::cast<CIEC_REAL>(nDword);
+  BOOST_TEST(nResult == 10);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

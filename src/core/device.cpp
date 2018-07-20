@@ -9,10 +9,11 @@
   *    Alois Zoitl, Thomas Strasser, Gerhard Ebenhofer, Martin Melik Merkumians
   *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
-#include <string.h>
+
 #include "device.h"
-#include "resource.h"
 #include "if2indco.h"
+#include "ecet.h"
+#include <string.h>
 
 EMGMResponse CDevice::executeMGMCommand(forte::core::SManagementCMD &pa_oCommand){
   EMGMResponse retval = e_INVALID_DST;
@@ -29,5 +30,3 @@ EMGMResponse CDevice::executeMGMCommand(forte::core::SManagementCMD &pa_oCommand
   }
   return retval;
 }
-
-

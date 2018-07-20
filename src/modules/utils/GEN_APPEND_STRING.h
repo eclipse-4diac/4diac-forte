@@ -13,14 +13,12 @@
 #define _GEN_APPEND_STRING_H_
 
 #include <funcbloc.h>
-#include <forte_any.h>
-#include <forte_array.h>
 
 class GEN_APPEND_STRING : public CFunctionBlock{
   DECLARE_GENERIC_FIRMWARE_FB(GEN_APPEND_STRING)
 
   private:
-	//we know for sure that there is one output event and one input event
+  //we know for sure that there is one output event and one input event
     static const TEventID scm_nEventCNFID = 0;
     static const CStringDictionary::TStringId scm_anEventOutputNames[];
     
@@ -39,8 +37,8 @@ class GEN_APPEND_STRING : public CFunctionBlock{
     static const TForteInt16 scm_anEOWithIndexes[];
     static const TDataIOID scm_anEOWith[];
 
-	//maximum string buffer size for conversions into string values
-	static const TForteInt16 scm_maxStringBufSize;
+  //maximum string buffer size for conversions into string values
+  static const TForteInt16 scm_maxStringBufSize;
     //self-defined members
     int m_nDInputs;
 

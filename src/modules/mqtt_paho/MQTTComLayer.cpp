@@ -11,95 +11,89 @@
 
 
 #include "MQTTComLayer.h"
-#include "MQTTParameterParser.h"
+#include "../../core/utils/parameterParser.h"
 #include "MQTTHandler.h"
 #include "commfb.h"
-#include <unistd.h>
-
-#define QOS 1
 
 using namespace forte::com_infra;
 
-MQTTComLayer::MQTTComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poFB) : CComLayer(pa_poUpperLayer, pa_poFB),
-    mTopicName(0), bufferSize(0), m_eInterruptResp(e_Nothing){
-  memset(dataBuffer, 0, sizeof(dataBuffer)); //TODO change this to  dataBuffer{0} in the extended list when fully switching to C++11
-	// TODO Auto-generated constructor stub
-
+MQTTComLayer::MQTTComLayer(CComLayer* paUpperLayer, CBaseCommFB * pFB) : CComLayer(paUpperLayer, pFB),
+    mUsedBuffer(0), mInterruptResp(e_Nothing){
+  memset(mDataBuffer, 0, mBufferSize); //TODO change this to  dataBuffer{0} in the extended list when fully switching to C++11
 }
 
 MQTTComLayer::~MQTTComLayer() {
-	// TODO Auto-generated destructor stub
 }
 
-EComResponse MQTTComLayer::sendData(void* pa_pvData, unsigned int pa_unSize) {
-	MQTTClient_message message = MQTTClient_message_initializer;
-	message.payload = pa_pvData;
-	message.payloadlen = pa_unSize;
-	message.qos = QOS;
-	message.retained = 0;
-	int errorCode = MQTTClient_publishMessage(MQTTHandler::getInstance().getClient(), mTopicName, &message, NULL);
-	if (0 != errorCode) {
-		return e_ProcessDataSendFailed;
-	}
-	//while(deliveredtoken != token);
-	return e_ProcessDataOk;
+EComResponse MQTTComLayer::sendData(void* paData, unsigned int paSize) {
+  MQTTAsync_message message = MQTTAsync_message_initializer;
+  message.payload = paData;
+  message.payloadlen = paSize;
+  message.qos = QOS;
+  message.retained = 0;
+  int errorCode = MQTTAsync_sendMessage(GET_HANDLER_FROM_COMM_LAYER(MQTTHandler)->getClient(), mTopicName.getValue(), &message, NULL);
+  if (0 != errorCode) {
+    return e_ProcessDataSendFailed;
+  }
+  //while(deliveredtoken != token);
+  return e_ProcessDataOk;
 }
 
-EComResponse MQTTComLayer::recvData(const void* pa_pvData,
-		unsigned int pa_unSize) {
-	memcpy(dataBuffer, pa_pvData, pa_unSize);
-	bufferSize = pa_unSize;
-	m_eInterruptResp = e_ProcessDataOk;
-	m_poFb->interruptCommFB(this);
-	return m_eInterruptResp;
-
+EComResponse MQTTComLayer::recvData(const void* paData,  unsigned int paSize) {
+  if(paSize > mBufferSize){
+    paSize = mBufferSize; //Rest of the message is discarded
+  }
+  memcpy(mDataBuffer, paData, paSize);
+  mUsedBuffer = paSize;
+  mInterruptResp = e_ProcessDataOk;
+  m_poFb->interruptCommFB(this);
+  return mInterruptResp;
 }
 
 EComResponse MQTTComLayer::processInterrupt() {
-	if(e_ProcessDataOk == m_eInterruptResp) {
-		if((0 < bufferSize) && (0 != m_poTopLayer)) {
-			m_eInterruptResp = m_poTopLayer->recvData(dataBuffer, bufferSize);
-			bufferSize = 0;
-			//MQTTHandler::getInstance().mqttMessageProcessed();
-		}
-	}
-	return m_eInterruptResp;
+  if(e_ProcessDataOk == mInterruptResp) {
+    if((0 < mUsedBuffer) && (0 != m_poTopLayer)) {
+      mInterruptResp = m_poTopLayer->recvData(mDataBuffer, mUsedBuffer);
+      mUsedBuffer = 0;
+      //GET_HANDLER_FROM_COMM_LAYER(MQTTHandler)->mqttMessageProcessed();
+    }
+  }
+
+  return mInterruptResp;
+}
+
+EComResponse MQTTComLayer::openConnection(char* paLayerParameter) {
+  EComResponse eRetVal = e_InitInvalidId;
+  CParameterParser parser(paLayerParameter, mNoOfParameters);
+  if(mNoOfParameters == parser.parseParameters()){
+    mTopicName = parser[Topic];
+    if( MQTTHandler::eRegisterLayerSucceeded ==
+        GET_HANDLER_FROM_COMM_LAYER(MQTTHandler)->registerLayer(parser[Address], parser[ClientID], this)) {
+      eRetVal = e_InitOk;
+    }
+    else eRetVal = e_InitInvalidId;
+
+    switch (m_poFb->getComServiceType()){
+    case e_Server:
+      // TODO: Not implemented yet
+      eRetVal = e_InitTerminated;
+      break;
+    case e_Client:
+      // TODO: Not implemented yet
+      eRetVal = e_InitTerminated;
+      break;
+    case e_Publisher:
+      //is handled via sendData
+      break;
+    case e_Subscriber:
+      //handled inside the register layer function in the Handler
+      break;
+    }
+  }
+
+  return eRetVal;
 }
 
 void MQTTComLayer::closeConnection() {
-	MQTTHandler::getInstance().unregisterLayer(this);
+  GET_HANDLER_FROM_COMM_LAYER(MQTTHandler)->unregisterLayer(this);
 }
-
-EComResponse MQTTComLayer::openConnection(char* pa_acLayerParameter) {
-	EComResponse eRetVal = e_InitTerminated;
-	MQTTParameterParser parser(pa_acLayerParameter);
-	parser.setSeparator(',');
-	parser.parseParameters();
-	mTopicName = (char*)malloc(strlen(parser[Topic]) + 1);
-	mTopicName = strcpy(mTopicName, parser[Topic]);
-	if( MQTTHandler::eRegisterLayerSucceeded ==
-			(MQTTHandler::getInstance()).registerLayer(parser[Address], parser[ClientID], this)) {
-		eRetVal = e_InitOk;
-	}
-	else eRetVal = e_InitInvalidId;
-
-	switch (m_poFb->getComServiceType()){
-	case e_Server:
-		// TODO: Not implemented yet
-		eRetVal = e_InitTerminated;
-		break;
-	case e_Client:
-		// TODO: Not implemented yet
-		eRetVal = e_InitTerminated;
-		break;
-	case e_Publisher:
-		//is handled via sendData
-		break;
-	case e_Subscriber:
-		MQTTClient_subscribe(MQTTHandler::getInstance().getClient(), mTopicName, QOS);
-		break;
-	}
-
-	return eRetVal;
-}
-

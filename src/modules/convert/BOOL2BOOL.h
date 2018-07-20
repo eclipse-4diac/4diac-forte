@@ -13,8 +13,6 @@
 #define _BOOL2BOOL_H_
 
 #include <funcbloc.h>
-#include <forte_bool.h>
-
 
 class BOOL2BOOL: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(BOOL2BOOL)
@@ -40,11 +38,11 @@ private:
   virtual void executeEvent(int pa_nEIID);
 
 CIEC_BOOL& IN() {
-	return *static_cast<CIEC_BOOL*>(getDI(0));
+  return *static_cast<CIEC_BOOL*>(getDI(0));
 }
 
 CIEC_BOOL& OUT() {
-	return *static_cast<CIEC_BOOL*>(getDO(0));
+  return *static_cast<CIEC_BOOL*>(getDO(0));
 }
 
 public:

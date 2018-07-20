@@ -1,0 +1,40 @@
+#*******************************************************************************
+# * Copyright (c) 2018 fortiss GmbH
+# * All rights reserved. This program and the accompanying materials
+# * are made available under the terms of the Eclipse Public License v1.0
+# * which accompanies this distribution, and is available at
+# * http://www.eclipse.org/legal/epl-v10.html
+# *
+# * Contributors:
+# *   Jose Cabral - initial API and implementation and/or initial documentation
+# *******************************************************************************/
+
+SET(SOURCE_GROUP ${SOURCE_GROUP}\\nios2)
+
+forte_add_architecture("Nios2")
+
+if("${FORTE_ARCHITECTURE}" STREQUAL "Nios2")
+
+  forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/..)
+  forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/)
+  
+  SET(FORTE_ECOS_FOLDER "" CACHE STRING "")
+  #The usage of system directories removes the warnings but also wraps the headers with extern C, 
+  #a problem for the semaphore that includes C++ headers and fails at templates
+  forte_add_include_directories(${FORTE_ECOS_FOLDER}/include) 
+  forte_add_link_directories(${FORTE_ECOS_FOLDER}/lib)
+  
+  forte_add_sourcefile_hcpp(../forte_thread ../ecostiha ../forte_sync ../forte_sem ../forte_instance)
+  forte_add_sourcefile_cpp(../ecoscppinit.cpp ../../genforte_printer.cpp ../forte_architecture.cpp)
+  forte_add_sourcefile_h(../../forte_architecture_time.h)
+
+  if(FORTE_COM_ETH)
+   forte_add_handler(CFDSelectHandler ../sockhand)
+   forte_add_sourcefile_hcpp( ../../fdselecthand ../../bsdsocketinterf)
+   forte_add_sourcefile_h(../sockhand.h)
+  endif(FORTE_COM_ETH)
+  
+  forte_add_definition("-W -Wall -Wextra -D_KERNEL -D__ECOS -DFORTE_LITTLE_ENDIAN")
+  forte_add_definition("-Wa,-relax-all -ffunction-sections -fdata-sections -fno-threadsafe-statics -fno-rtti -fno-exceptions")
+
+endif()

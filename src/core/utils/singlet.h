@@ -27,7 +27,7 @@
     static TypeName &getInstance(void);                               \
   private:                                                            \
     TypeName();                                                       \
-    TypeName(const TypeName&);					                             	\
+    TypeName(const TypeName&);                                         \
     TypeName& operator = (const TypeName &);                          \
     ~TypeName();
 

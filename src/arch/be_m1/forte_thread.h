@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2016 ACIN, fortiss GmbH
+ * Copyright (c) 2012, 2016, 2017 ACIN, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,8 +20,6 @@
 #include "../datatype.h"
 #include "../threadbase.h"
 
-#define CThread CBEThread  //allows that doxygen can generate better documentation
-
 /**  \ingroup FORTE-HAL
  * \defgroup bem1_hal Bachmann electronic M1 FORTE Hardware Abstraction Layer
  *
@@ -33,7 +31,7 @@
  *
  * TODO implement priority assignment for realtime event chains.
  */
-class CBEThread : public forte::arch::CThreadBase, private BETask{
+class CBEThread : public forte::arch::CThreadBase<int, 0, CBEThread>, private BETask{
 
   public:
     /*! \brief Constructor of the Thread class
@@ -41,7 +39,6 @@ class CBEThread : public forte::arch::CThreadBase, private BETask{
      *  Does all the neccessary steps in order to get the thread running with the start()-method
      */
     CBEThread();
-    char * mTskName;
 
     /*! \brief Stops and destroys thread.
      *
@@ -49,36 +46,24 @@ class CBEThread : public forte::arch::CThreadBase, private BETask{
      */
     virtual ~CBEThread();
 
-    /*! \brief Indicates if the thread is allowed to execute.
-     *
-     *  This functions checks if the Thread is still executing user code in its run()-method.
-     *  \return true if there the run method is acitve.
-     */
-    bool isAlive(void);
-
-    void setDeadline(TForteUInt32 pa_nVal); //!Set the deadline of the thread.
+    void setDeadline(TForteUInt32 paVal); //!Set the deadline of the thread.
 
     virtual void Main(VOID);
 
-    /*! \brief starts the Thread
+    /*! \brief Sleep the calling thread
      *
-     *  By calling this method the execution in the run()-Method will be started. If necessary additional data
-     *  can be created here. Because of inheritance resons the best place for executing create is in this method.
-     *  For details ask AZ.
+     * @param paMilliSeconds The milliseconds for the thread to sleep
      */
-    void start(void);
+    static void sleepThread(unsigned int paMilliSeconds);
 
-    virtual void join(void);
+    static void deleteThread(int);
 
   private:
-    
-    /*! \brief Destroies the thread
-     *
-     *  This function destroies all the data structures created in the creation phase. All used memory is freed.
-     */
-    bool destroy(void);
+    virtual TThreadHandleType createThread(long paStackSize);
 
 };
+
+typedef CBEThread CThread; //allows that doxygen can generate better documentation
 
 #endif /*FORTE_THREAD_H_*/
 

@@ -13,7 +13,6 @@
 #define _F_MUL_H_
 
 #include <funcbloc.h>
-#include <forte_any_num.h>
 
 class FORTE_F_MUL: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_MUL)

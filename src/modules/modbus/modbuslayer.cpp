@@ -9,29 +9,17 @@
  *   Filip Andren, Patrick Smejkal, Alois Zoitl, Martin Melik-Merkumians - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "modbuslayer.h"
-#include "../../arch/devlog.h"
 #include "commfb.h"
-#include "../../core/datatypes/forte_dint.h"
 #include "modbusclientconnection.h"
 
 using namespace forte::com_infra;
 
-CModbusComLayer::CModbusComLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB) :
+CModbusComLayer::CModbusComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB) :
     CComLayer(pa_poUpperLayer, pa_poComFB), m_pModbusConnection(0), m_unBufFillSize(0){
   m_eConnectionState = e_Disconnected;
 }
 
 CModbusComLayer::~CModbusComLayer(){
-}
-
-void CModbusComLayer::closeConnection(){
-  //TODO
-  DEVLOG_INFO("CModbusLayer::closeConnection()\n");
-
-  if(m_pModbusConnection != NULL){
-    m_pModbusConnection->disconnect();
-    delete m_pModbusConnection;
-  }
 }
 
 EComResponse CModbusComLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
@@ -368,7 +356,7 @@ EComResponse CModbusComLayer::openConnection(char *pa_acLayerParameter){
         DEVLOG_ERROR("CModbusComLayer:: Invalid input parameters\n");
       }
       else{
-        m_pModbusConnection = new CModbusClientConnection();
+        m_pModbusConnection = new CModbusClientConnection(GET_HANDLER_FROM_COMM_LAYER(CModbusHandler));
         if(strlen(tcpParams.m_acIp) > 0){
           m_pModbusConnection->setIPAddress(tcpParams.m_acIp);
           m_pModbusConnection->setPort(tcpParams.m_nPort);
@@ -410,6 +398,16 @@ EComResponse CModbusComLayer::openConnection(char *pa_acLayerParameter){
   }
 
   return eRetVal;
+}
+
+void CModbusComLayer::closeConnection(){
+  //TODO
+  DEVLOG_INFO("CModbusLayer::closeConnection()\n");
+
+  if(m_pModbusConnection != NULL){
+    m_pModbusConnection->disconnect();
+    delete m_pModbusConnection;
+  }
 }
 
 int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_pTcpParams, SRtuParams* pa_pRtuParams, SCommonParams* pa_pCommonParams){

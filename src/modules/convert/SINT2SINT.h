@@ -13,8 +13,6 @@
 #define _SINT2SINT_H_
 
 #include <funcbloc.h>
-#include <forte_sint.h>
-
 
 class SINT2SINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(SINT2SINT)
@@ -39,11 +37,11 @@ private:
   virtual void executeEvent(int pa_nEIID);
 
   CIEC_SINT& IN() {
-  	return *static_cast<CIEC_SINT*>(getDI(0));
+    return *static_cast<CIEC_SINT*>(getDI(0));
   }
 
   CIEC_SINT& OUT() {
-  	return *static_cast<CIEC_SINT*>(getDO(0));
+    return *static_cast<CIEC_SINT*>(getDO(0));
   }
 
 

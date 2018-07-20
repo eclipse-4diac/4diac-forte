@@ -43,8 +43,8 @@ const SFBInterfaceSpec FORTE_F_LREAL_TO_BOOL::scm_stFBInterfaceSpec = {
 
 void FORTE_F_LREAL_TO_BOOL::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-	  OUT() = LREAL_TO_BOOL(IN());
-	  sendOutputEvent(scm_nEventCNFID);
+    OUT() = LREAL_TO_BOOL(IN());
+    sendOutputEvent(scm_nEventCNFID);
   }
 }
 

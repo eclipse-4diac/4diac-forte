@@ -14,9 +14,6 @@
 #include "F_DINT_TO_REAL_gen.cpp"
 #endif
 
-#ifdef FORTE_USE_REAL_DATATYPE
-
-
 DEFINE_FIRMWARE_FB(FORTE_F_DINT_TO_REAL, g_nStringIdF_DINT_TO_REAL)
 
 const CStringDictionary::TStringId FORTE_F_DINT_TO_REAL::scm_anDataInputNames[] = {g_nStringIdIN};
@@ -45,10 +42,7 @@ const SFBInterfaceSpec FORTE_F_DINT_TO_REAL::scm_stFBInterfaceSpec = {
 
 void FORTE_F_DINT_TO_REAL::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-	  OUT() = DINT_TO_REAL(IN());
-	  sendOutputEvent(scm_nEventCNFID);
+    OUT() = DINT_TO_REAL(IN());
+    sendOutputEvent(scm_nEventCNFID);
   }
 }
-
-#endif
-

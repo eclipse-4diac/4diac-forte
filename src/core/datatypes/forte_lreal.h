@@ -15,10 +15,6 @@
 
 #include "forte_any_real.h"
 
-#ifdef FORTE_USE_REAL_DATATYPE
-
-#ifdef FORTE_USE_64BIT_DATATYPES
-
 /*!\ingroup COREDTS CIEC_LREAL represents the lreal data type according to IEC 61131.
  */
 class CIEC_LREAL : public CIEC_ANY_REAL{
@@ -35,6 +31,9 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
       setValueSimple(pa_roValue);
     }
 
+    // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
+    // Maybe when we have better code generators we want to make this constructur explicit again and generate it
+    // cppcheck-suppress noExplicitConstructor
     CIEC_LREAL(TForteDFloat pa_fValue){
       setTDFLOAT(pa_fValue);
     }
@@ -104,8 +103,6 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
      */
     static void castLRealData(const CIEC_LREAL &pa_roSrcValue, CIEC_ANY &pa_roDestValue);
 
-    static const TForteUInt16 scm_unMaxStringBufSize;
-
   protected:
 
   private:
@@ -115,7 +112,9 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
      *   \return Can be the following response:
      *     - No return value.
      */
-    static void serializedouble(TForteByte* pa_pcBytes, TForteUInt64 pa_nValue){
+
+    //TODO: Can we delete this function?
+    /*static void serializedouble(TForteByte* pa_pcBytes, TForteUInt64 pa_nValue){
       pa_pcBytes[0] = (TForteByte) ((pa_nValue >> 56) & 0x00FF);
       pa_pcBytes[1] = (TForteByte) ((pa_nValue >> 48) & 0x00FF);
       pa_pcBytes[2] = (TForteByte) ((pa_nValue >> 40) & 0x00FF);
@@ -124,7 +123,7 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
       pa_pcBytes[5] = (TForteByte) ((pa_nValue >> 16) & 0x00FF);
       pa_pcBytes[6] = (TForteByte) ((pa_nValue >> 8) & 0x00FF);
       pa_pcBytes[7] = (TForteByte) (pa_nValue & 0x00FF);
-    }
+    }*/
     ;
     /*! \brief bit distortion extension for deserialization function - 64 bit values.
      *   \param pa_pcBytes  Pointer to first part of final object.
@@ -132,15 +131,12 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
      *   \return Can be the following response:
      *     - No return value.
      */
-    static void deserializedouble(const TForteByte* pa_pcBytes, TForteUInt64* pa_nValue){
+    //TODO: Can we delete this function?
+    /*static void deserializedouble(const TForteByte* pa_pcBytes, TForteUInt64* pa_nValue){
       *pa_nValue = ((((TForteUInt64) pa_pcBytes[0]) << 56) & 0xFF00000000000000ULL) + ((((TForteUInt64) pa_pcBytes[1]) << 48) & 0x00FF000000000000ULL) + ((((TForteUInt64) pa_pcBytes[2]) << 40) & 0x0000FF0000000000ULL) + ((((TForteUInt64) pa_pcBytes[3]) << 32) & 0x000000FF00000000ULL) + ((((TForteUInt64) pa_pcBytes[4]) << 24) & 0x00000000FF000000ULL) + ((((TForteUInt64) pa_pcBytes[5]) << 16) & 0x0000000000FF0000ULL) + ((((TForteUInt64) pa_pcBytes[6]) << 8) & 0x000000000000FF00ULL) + ((TForteUInt64) pa_pcBytes[7] & 0x00000000000000FFULL);
     }
-    ;
+    ;*/
 
 };
-
-#endif /* #ifdef FORTE_USE_64BIT_DATATYPES */
-
-#endif /* #ifdef FORTE_USE_REAL_DATATYPE */
 
 #endif /*_FORTE_LREAL_H_*/

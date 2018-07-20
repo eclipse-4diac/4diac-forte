@@ -14,8 +14,6 @@
 #define _F_WSTRING_TO_BYTE_H_
 
 #include <funcbloc.h>
-#include <forte_byte.h>
-#include <forte_wstring.h>
 
 class FORTE_F_WSTRING_TO_BYTE: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_WSTRING_TO_BYTE)

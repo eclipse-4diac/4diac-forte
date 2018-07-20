@@ -24,7 +24,7 @@
 BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
 BOOST_AUTO_TEST_CASE(Array_assignment_test_BOOL)
 {
-	CIEC_ARRAY nTest(3, g_nStringIdBOOL);
+  CIEC_ARRAY nTest(3, g_nStringIdBOOL);
 
   BOOST_CHECK_EQUAL(nTest.size(), 3);
   BOOST_CHECK_EQUAL(nTest.getElementDataTypeID(), CIEC_ANY::e_BOOL);

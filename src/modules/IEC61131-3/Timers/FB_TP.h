@@ -13,10 +13,6 @@
 #define _FB_TP_H_
 
 #include <funcbloc.h>
-#include <forte_time.h>
-#include "../../arch/timerha.h"
-#include <forte_bool.h>
-#include <forte_array.h>
 
 // cppcheck-suppress noConstructor
 class FB_TP: public CFunctionBlock{
@@ -45,22 +41,22 @@ private:
   void executeEvent(int pa_nEIID);
 
   CIEC_BOOL& IN() {
-   	return *static_cast<CIEC_BOOL*>(getDI(0));
+     return *static_cast<CIEC_BOOL*>(getDI(0));
   }  
 
   CIEC_TIME& PT() {
-   	return *static_cast<CIEC_TIME*>(getDI(1));
+     return *static_cast<CIEC_TIME*>(getDI(1));
   }  
 
   CIEC_BOOL& Q() {
-   	return *static_cast<CIEC_BOOL*>(getDO(0));
+     return *static_cast<CIEC_BOOL*>(getDO(0));
   }  
 
   CIEC_TIME& ET() {
-   	return *static_cast<CIEC_TIME*>(getDO(1));
+     return *static_cast<CIEC_TIME*>(getDO(1));
   }  
 public:
-  FUNCTION_BLOCK_CTOR(FB_TP){};
+  FUNCTION_BLOCK_CTOR(FB_TP), edgeFlag(false){};
   virtual ~FB_TP(){};
 
 };

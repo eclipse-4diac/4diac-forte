@@ -7,7 +7,7 @@
  *
  * Contributors:
  *   Alois Zoitl, Thomas Strasser, Rene Smodic, Gerhard Ebenhofer,
- *   Martin Melik Merkumians, Ingo Hegny
+ *   Martin Melik Merkumians, Ingo Hegny, Matthias Plasch
  *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "E_RESTART.h"
@@ -50,6 +50,8 @@ void E_RESTART::executeEvent(int pa_nEIID){
       if(csmSTOPID == mEventToSend){
         //stop event is sent put the FB finally into the stopped state
         CFunctionBlock::changeFBExecutionState(cg_nMGM_CMD_Stop);
+        // release semaphore to indicate that the stop event was sent now
+        mSuspendSemaphore.inc();
       }
     }
   }
@@ -67,6 +69,8 @@ EMGMResponse E_RESTART::changeFBExecutionState(EMGMCommandType pa_unCommand){
         mEventToSend = csmSTOPID;
         CFunctionBlock::changeFBExecutionState(cg_nMGM_CMD_Start);   //keep FB in running state until stop event is delivered.
         getResource().getDevice().getDeviceExecution().startNewEventChain(this);
+        // wait until semaphore is released, after STOP eventExecution was completed
+        mSuspendSemaphore.waitIndefinitely();
         break;
       default:
         mEventToSend = cg_nInvalidEventID;

@@ -10,19 +10,18 @@
  *******************************************************************************/
 #include "opceventhandler.h"
 #include "../core/devexec.h"
-#include "devlog.h"
 #include <commfb.h>
 
 #include <ObjBase.h>
 
-DEFINE_SINGLETON(COpcEventHandler);
+DEFINE_HANDLER(COpcEventHandler);
 
 COpcEventHandler::TCallbackDescriptor COpcEventHandler::m_nCallbackDescCount = 0;
 
-COpcEventHandler::COpcEventHandler(){
+COpcEventHandler::COpcEventHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution)  {
   this->start();
   // Sleep to allow new thread to start
-  Sleep(100);
+  CThread::sleep(100);
 }
 
 COpcEventHandler::~COpcEventHandler(){

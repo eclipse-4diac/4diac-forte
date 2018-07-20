@@ -13,9 +13,6 @@
 #define _FB_CTD_LINT_H_
 
 #include <funcbloc.h>
-#include <forte_lint.h>
-#include <forte_bool.h>
-#include <forte_array.h>
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 
@@ -43,21 +40,21 @@ private:
 
 
   CIEC_BOOL& CD() {
-  	return *static_cast<CIEC_BOOL*>(getDI(0));
+    return *static_cast<CIEC_BOOL*>(getDI(0));
   }
   CIEC_BOOL& LD() {
-  	return *static_cast<CIEC_BOOL*>(getDI(1));
+    return *static_cast<CIEC_BOOL*>(getDI(1));
   }
   CIEC_LINT& PV() {
-  	return *static_cast<CIEC_LINT*>(getDI(2));
+    return *static_cast<CIEC_LINT*>(getDI(2));
   }
 
 
   CIEC_BOOL& Q() {
-  	return *static_cast<CIEC_BOOL*>(getDO(0));
+    return *static_cast<CIEC_BOOL*>(getDO(0));
   }
   CIEC_LINT& CV() {
-  	return *static_cast<CIEC_LINT*>(getDO(1));
+    return *static_cast<CIEC_LINT*>(getDO(1));
   }
 
 public:

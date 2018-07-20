@@ -13,6 +13,7 @@
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "GEN_F_MUX_gen.cpp"
 #endif
+#include <forte_printer.h>
 #include <ctype.h>
 #include <stdio.h>
 
@@ -21,7 +22,21 @@ DEFINE_GENERIC_FIRMWARE_FB(GEN_F_MUX, g_nStringIdGEN_F_MUX);
 const CStringDictionary::TStringId GEN_F_MUX::scm_anEventOutputNames[] = { g_nStringIdEO };
 
 GEN_F_MUX::GEN_F_MUX(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CFunctionBlock(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0){
+    CFunctionBlock(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0),
+  m_anEventInputNames(0),
+  m_anDataOutputNames(0),
+  m_anDataInputNames(0),
+  m_anDataOutputTypeIds(0),
+  m_anDataInputTypeIds(0),
+  m_anEIWithIndexes(0),
+  m_anEIWith(0),
+  m_anEOWithIndexes(0),
+  m_anEOWith(0),
+  m_nEInputs(0),
+  m_nEOutputs(0),
+  m_nDInputs(0),
+  m_nDOutputs(0),
+  m_nConfiguredFBTypeNameId(CStringDictionary::scm_nInvalidStringId){
 }
 
 GEN_F_MUX::~GEN_F_MUX(){
@@ -142,7 +157,7 @@ bool GEN_F_MUX::configureFB(const char *pa_acConfigString){
 
     //return with error if there are not enough event inputs (use common merge FB instead!!)
     if(m_nEInputs < 2){
-	  DEVLOG_ERROR("At least 2 Event Inputs need to be set\n");
+      DEVLOG_ERROR("At least 2 Event Inputs need to be set\n");
       return false;
     }
   }
@@ -163,12 +178,7 @@ bool GEN_F_MUX::configureFB(const char *pa_acConfigString){
     for(unsigned int ei = 0; ei < m_nEInputs; ei = ei + 1){
 
       for(unsigned int di = 0; di < m_nDOutputs; di = di + 1){
-
-#ifdef WIN32
-        _snprintf(&(diNames[3]), 11 - 3, "%ui_%ui", ei+1, di+1);
-#else
-        snprintf(&(diNames[3]), 11 - 3, "%ui_%ui", ei + 1, di + 1);
-#endif
+        forte_snprintf(&(diNames[3]), 11 - 3, "%u_%u", ei + 1, di + 1);
         di_posIndex = ei * m_nDOutputs + di;
         m_anDataInputNames[di_posIndex] = CStringDictionary::getInstance().insert(diNames);
         m_anDataInputTypeIds[di_posIndex] = g_nStringIdANY;

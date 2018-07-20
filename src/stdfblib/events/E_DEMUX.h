@@ -13,7 +13,6 @@
 #define _E_DEMUX_H_
 
 #include <funcbloc.h>
-#include <forte_uint.h>
 
 class E_DEMUX: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(E_DEMUX)
@@ -39,7 +38,7 @@ private:
   virtual void executeEvent(int pa_nEIID);
   
   CIEC_UINT& K() {
-   	return *static_cast<CIEC_UINT*>(getDI(0));
+     return *static_cast<CIEC_UINT*>(getDI(0));
   }
 
 public:

@@ -13,7 +13,6 @@
 #define _WSTRING2WSTRING_H_
 
 #include <funcbloc.h>
-#include <forte_wstring.h>
 
 class WSTRING2WSTRING: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(WSTRING2WSTRING)
@@ -38,11 +37,11 @@ private:
   virtual void executeEvent(int pa_nEIID);
 
   CIEC_WSTRING& IN() {
-  	return *static_cast<CIEC_WSTRING*>(getDI(0));
+    return *static_cast<CIEC_WSTRING*>(getDI(0));
   }
 
   CIEC_WSTRING& OUT() {
-  	return *static_cast<CIEC_WSTRING*>(getDO(0));
+    return *static_cast<CIEC_WSTRING*>(getDO(0));
   }
 
 

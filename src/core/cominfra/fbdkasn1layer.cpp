@@ -10,17 +10,15 @@
   *    Martin Melik Merkumians
   *      - initial implementation, rework communication infrastructure, bug fixes
   *******************************************************************************/
-#include <fortealloc.h>
 #include "fbdkasn1layer.h"
-#include "commfb.h"
-#include "../datatypes/forte_string.h"
-#include "../datatypes/forte_wstring.h"
-#include "../datatypes/forte_array.h"
+#include "basecommfb.h"
 #include "../../arch/timerha.h"
+#include "../../arch/devlog.h"
+#include <fortenew.h>
 
 using namespace forte::com_infra;
 
-CFBDKASN1ComLayer::CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poComFB) :
+CFBDKASN1ComLayer::CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poComFB) :
   CComLayer(pa_poUpperLayer, pa_poComFB), mStatSerBuf(0), mStatSerBufSize(0), mDeserBuf(0), mDeserBufSize(0), mDeserBufPos(0), mDIPos(0), mDOPos(0){
 
   if(0 != pa_poComFB){
@@ -44,8 +42,8 @@ CFBDKASN1ComLayer::CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_po
         if(typeSize != 255){
           mDeserBufSize += typeSize + 1;
         }
+        ++apoRDs;
       }
-      ++apoRDs;
     }
 
     mStatSerBuf = new TForteByte[mStatSerBufSize];
@@ -64,11 +62,7 @@ EComResponse CFBDKASN1ComLayer::openConnection(char *){
 }
 
 void CFBDKASN1ComLayer::closeConnection(){
-  // we don't need to do anything specific on closing when closing the connection
-  //so directly close the bottom layer if there
-  if(0 != m_poBottomLayer){
-    m_poBottomLayer->closeConnection();
-  }
+  //We don't need to do anything specific on closing
 }
 
 void CFBDKASN1ComLayer::resizeDeserBuffer(unsigned int pa_size){
@@ -89,13 +83,12 @@ EComResponse CFBDKASN1ComLayer::sendData(void *pa_pvData, unsigned int pa_unSize
     TConstIEC_ANYPtr apoSDs = static_cast<TConstIEC_ANYPtr > (pa_pvData);
     unsigned int unNeededBufferSize = 0;
 
-    for(unsigned int i = 0; i < pa_unSize; ++i){
-      if((apoSDs + i) == 0){
-        return e_ProcessDataDataTypeError;
-      }
+    if(0 == apoSDs){
+       return e_ProcessDataDataTypeError;
+     }
 
+    for(size_t i = 0; i < pa_unSize; ++i){
       unNeededBufferSize += getRequiredSerializationSize(apoSDs[i]);
-
     }
     TForteByte *paUsedBuffer = 0;
     TForteByte *paDynSerBuffer = 0;
@@ -141,7 +134,7 @@ EComResponse CFBDKASN1ComLayer::recvData(const void *pa_pvData, unsigned int pa_
     TForteByte *usedBuffer = 0;
 
     // TODO: only copy if necessary
-    if(mDeserBufPos == 0){
+    if(0 == mDeserBufPos){
       usedBuffer = recvData;
       usedBufferSize = pa_unSize;
     }
@@ -160,14 +153,12 @@ EComResponse CFBDKASN1ComLayer::recvData(const void *pa_pvData, unsigned int pa_
         nBuf = 1;
       }
       else{
-        if((apoRDs + mDOPos) != 0){
-          nBuf = deserializeDataPoint(usedBuffer, usedBufferSize, apoRDs[mDOPos]);
-        }
-        else{
+        if(0 == apoRDs){
           DEVLOG_ERROR("Data type error\n");
           eRetVal = e_ProcessDataDataTypeError;
           break;
         }
+        nBuf = deserializeDataPoint(usedBuffer, usedBufferSize, apoRDs[mDOPos]);
       }
 
       // deserialize failed, copy data into buffer for next package
@@ -178,7 +169,7 @@ EComResponse CFBDKASN1ComLayer::recvData(const void *pa_pvData, unsigned int pa_
           break;
         }
         else{
-          if(usedBuffer == recvData){
+          if(0 == mDeserBufPos){ //usedBuffer == recvData
             if((mDeserBufSize) < usedBufferSize){
               resizeDeserBuffer(usedBufferSize);
             }
@@ -269,21 +260,17 @@ int CFBDKASN1ComLayer::serializeFBDataPointArray(TForteByte* pa_pcBytes, unsigne
       nRetVal = 1;
     }
     else{
+      if(0 == pa_aoData){
+        return -1;
+      }
       int nRemainingBytes = pa_nStreamSize;
-      int nBuf;
       nRetVal = 0;
       for(unsigned int i = 0; i < pa_nDataNum; i++){
-        if(0 != (pa_aoData + i)){
-          nBuf = serializeDataPoint(pa_pcBytes, nRemainingBytes, pa_aoData[i]);
-          if(0 < nBuf){
-            nRetVal += nBuf;
-            nRemainingBytes -= nBuf;
-            pa_pcBytes += nBuf;
-          }
-          else{
-            nRetVal = -1;
-            break;
-          }
+        int nBuf = serializeDataPoint(pa_pcBytes, nRemainingBytes, pa_aoData[i]);
+        if(0 < nBuf){
+          nRetVal += nBuf;
+          nRemainingBytes -= nBuf;
+          pa_pcBytes += nBuf;
         }
         else{
           nRetVal = -1;
@@ -520,10 +507,10 @@ int CFBDKASN1ComLayer::serializeValueStruct(TForteByte* pa_pcBytes, int pa_nStre
     if (CIEC_ANY::e_BOOL == ro_val.getDataTypeID()) {
       //Handle BOOL-values differently, since value is encoded in tag
       nStreamUsed = serializeDataPoint(pa_pcBytes, pa_nStreamSize, ro_val);
-	  }
+    }
     else {
-	    nStreamUsed = serializeValue(pa_pcBytes, pa_nStreamSize, ro_val);
-	  }
+      nStreamUsed = serializeValue(pa_pcBytes, pa_nStreamSize, ro_val);
+    }
 
 
     if(-1 == nStreamUsed) {
@@ -746,9 +733,6 @@ int CFBDKASN1ComLayer::deserializeArray(const TForteByte* pa_pcBytes, int pa_nSt
     //number of elements in ARRAY must be read from the incoming message
     nRetVal = 2;
     if(nSize > 0){
-      if(pa_nStreamSize < 2){
-        return -1;
-      }
       int nValueLen;
       pa_pcBytes += 2;
       pa_nStreamSize -= 2;

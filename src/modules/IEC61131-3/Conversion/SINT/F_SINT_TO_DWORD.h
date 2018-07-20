@@ -14,8 +14,6 @@
 #define _F_SINT_TO_DWORD_H_
 
 #include <funcbloc.h>
-#include <forte_sint.h>
-#include <forte_dword.h>
 
 class FORTE_F_SINT_TO_DWORD: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_SINT_TO_DWORD)

@@ -14,8 +14,9 @@
 
 #include "fortelist.h"
 #include "stringdict.h"
-#include "funcbloc.h"
 #include "mgmcmdstruct.h"
+
+class CFunctionBlock;
 
 namespace forte {
   namespace core {
@@ -25,7 +26,7 @@ namespace forte {
         CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer *paParent);
         virtual ~CFBContainer();
 
-        CStringDictionary::TStringId getName(){
+        CStringDictionary::TStringId getName() const{
           return mContainerName;
         }
 

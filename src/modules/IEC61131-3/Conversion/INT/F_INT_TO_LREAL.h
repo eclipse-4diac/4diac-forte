@@ -12,14 +12,7 @@
 #ifndef _F_INT_TO_LREAL_H_
 #define _F_INT_TO_LREAL_H_
 
-#ifdef FORTE_USE_REAL_DATATYPE
-
-#ifdef FORTE_USE_64BIT_DATATYPES
-
-
 #include <funcbloc.h>
-#include <forte_int.h>
-#include <forte_lreal.h>
 
 class FORTE_F_INT_TO_LREAL: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_INT_TO_LREAL)
@@ -60,9 +53,6 @@ public:
   virtual ~FORTE_F_INT_TO_LREAL(){};
 
 };
-
-#endif
-#endif
 
 #endif //close the ifdef sequence from the beginning of the file
 

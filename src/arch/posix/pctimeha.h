@@ -11,7 +11,7 @@
 #ifndef _PCTIMEHA_H_
 #define _PCTIMEHA_H_
 
-#include "forte_thread.h"
+#include <forte_thread.h>
 #include "../timerha.h"
 
 /*! \ingroup posix_hal
@@ -42,7 +42,7 @@ class CPCTimerHandler : public CTimerHandler, private CThread{
      */
     virtual int getPriority(void) const;
   private:
-    CPCTimerHandler();
+    explicit CPCTimerHandler(CDeviceExecution& pa_poDeviceExecution);
 
     friend class CTimerHandler;
 

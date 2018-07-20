@@ -14,9 +14,6 @@
 
 #include <funcbloc.h>
 #include <ecet.h>
-#include <forte_time.h>
-#include <forte_bool.h>
-#include <forte_array.h>
 
 
 /*!\brief Base class for all single output real-time event function blocks.
@@ -71,7 +68,7 @@ private:
 
 public:
 
-	
+  
   CRTEventSingle(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
         const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) : 
    CFunctionBlock( pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData)

@@ -14,8 +14,6 @@
 #define _F_LT_H_
 
 #include <funcbloc.h>
-#include <forte_any_elementary.h>
-#include <forte_bool.h>
 
 class FORTE_F_LT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_LT)

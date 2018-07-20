@@ -13,8 +13,6 @@
 #define _TIME2TIME_H_
 
 #include <funcbloc.h>
-#include <forte_time.h>
-
 
 class TIME2TIME: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(TIME2TIME)
@@ -39,11 +37,11 @@ private:
   virtual void executeEvent(int pa_nEIID);
 
   CIEC_TIME& IN() {
-  	return *static_cast<CIEC_TIME*>(getDI(0));
+    return *static_cast<CIEC_TIME*>(getDI(0));
   }
 
   CIEC_TIME& OUT() {
-  	return *static_cast<CIEC_TIME*>(getDO(0));
+    return *static_cast<CIEC_TIME*>(getDO(0));
   }
 
 

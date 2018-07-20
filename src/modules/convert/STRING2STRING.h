@@ -13,8 +13,6 @@
 #define _STRING2STRING_H_
 
 #include <funcbloc.h>
-#include <forte_string.h>
-
 
 class STRING2STRING: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(STRING2STRING)
@@ -39,11 +37,11 @@ private:
   virtual void executeEvent(int pa_nEIID);
 
   CIEC_STRING& IN() {
-  	return *static_cast<CIEC_STRING*>(getDI(0));
+    return *static_cast<CIEC_STRING*>(getDI(0));
   }
 
   CIEC_STRING& OUT() {
-  	return *static_cast<CIEC_STRING*>(getDO(0));
+    return *static_cast<CIEC_STRING*>(getDO(0));
   }
 
 

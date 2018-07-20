@@ -14,7 +14,6 @@
 #define _TIMEDFB_H_
 
 #include "../core/esfb.h"
-#include "../core/datatypes/forte_time.h"
 #include "../arch/timerha.h"
 #include "../core/resource.h"
 
@@ -48,7 +47,7 @@ protected:
   virtual void executeEvent(int pa_nEIID);
 
   CIEC_TIME& DT() {
-   	return *static_cast<CIEC_TIME*>(getDI(0));
+     return *static_cast<CIEC_TIME*>(getDI(0));
   }
 public:
   EVENT_SOURCE_FUNCTION_BLOCK_CTOR(CTimedFB){

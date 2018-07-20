@@ -33,7 +33,7 @@ bool E_CTU_tester::testCase_EventCU(){
   TForteUInt16 prevCV = 0;
 
   TForteUInt16 valuesToTest[] = { 10, 1, 0, 65534, 65535 };
-  unsigned int numberOfValues = sizeof(valuesToTest) / sizeof(TForteUInt16);
+  unsigned int numberOfValues = static_cast<unsigned int>(sizeof(valuesToTest) / sizeof(TForteUInt16));
 
   for(unsigned int j = 0; j < numberOfValues; j++){
     triggerEvent(1);
@@ -59,7 +59,7 @@ bool E_CTU_tester::testCase_EventR(){
   unsigned int numberOfTries = 100;
 
   TForteUInt16 valuesToTest[] = { 10, 1, 0, 65534, 65535};
-  unsigned int numberOfValues = sizeof(valuesToTest) / sizeof(TForteUInt16);
+  unsigned int numberOfValues = static_cast<unsigned int>(sizeof(valuesToTest) / sizeof(TForteUInt16));
 
   for(unsigned int i = 0; i < numberOfTries; i++){
     for(unsigned int j = 0; j < numberOfValues; j++){

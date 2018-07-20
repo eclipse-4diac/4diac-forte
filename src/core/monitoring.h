@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2015 fortiss GmbH
+ * Copyright (c) 2015, 2018 fortiss GmbH, Johannes Kepler University
+ *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,7 +18,7 @@
 #include "event.h"
 #include "conn.h"
 #include "stringdict.h"
-#include <timerha.h>
+#include "../arch/timerha.h"
 
 class CFunctionBlock;
 class CResource;
@@ -99,7 +100,6 @@ namespace forte {
         EMGMResponse removeWatch(forte::core::TNameIdentifier &paNameList);
         EMGMResponse readWatches(CIEC_STRING &pa_roResponse);
         EMGMResponse getWatches(CIEC_STRING &pa_roResponse, char pa_cQualifier);
-        EMGMResponse forceValue(forte::core::TNameIdentifier &paNameList, CIEC_STRING &paValue);
         EMGMResponse clearForce(forte::core::TNameIdentifier &paNameList);
         EMGMResponse triggerEvent(forte::core::TNameIdentifier &paNameList);
         EMGMResponse resetEventCount(forte::core::TNameIdentifier &paNameList);

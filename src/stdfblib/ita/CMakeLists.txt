@@ -14,3 +14,4 @@
 #############################################################################
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\ita)
 forte_add_sourcefile_hcpp(DEV_MGR  EMB_RES  RMT_DEV  RMT_RES)
+forte_add_sourcefile_hcpp(ForteBootFileLoader)

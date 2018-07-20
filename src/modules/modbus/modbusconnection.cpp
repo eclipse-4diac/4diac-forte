@@ -9,10 +9,13 @@
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "modbusconnection.h"
+#include "modbuslayer.h"
+#include "../../core/cominfra/basecommfb.h"
 
-CModbusConnection::CModbusConnection() : m_pModbusConn(NULL), m_bConnected(false), m_paIPAddress(NULL), m_chDevice(NULL),
-	 m_pModbusHandler(0), m_nComCallbackId(0), m_nPort(0), m_nBaud(0), m_cParity(0), m_nDataBit(0),
-	 m_nStopBit(0), m_nResponseTimeout(0), m_nByteTimeout(0){
+CModbusConnection::CModbusConnection(CModbusHandler* pa_modbusHandler) : m_pModbusConn(NULL), m_pModbusHandler(pa_modbusHandler), m_nComCallbackId(0),
+  m_bConnected(false), m_paIPAddress(NULL), m_nPort(0),
+  m_chDevice(NULL), m_nBaud(0), m_cParity(0), m_nDataBit(0),
+   m_nStopBit(0), m_nResponseTimeout(0), m_nByteTimeout(0){
 }
     
 CModbusConnection::~CModbusConnection(){
@@ -32,13 +35,13 @@ int CModbusConnection::connect(){
     timeval responseTimeout;
     responseTimeout.tv_sec = m_nResponseTimeout / 1000;
     responseTimeout.tv_usec = (m_nResponseTimeout % 1000)*1000;
-    modbus_set_response_timeout(m_pModbusConn, &responseTimeout);
+    //modbus_set_response_timeout(m_pModbusConn, &responseTimeout);
   }
   if(m_nByteTimeout > 0){
     timeval byteTimeout;
     byteTimeout.tv_sec = m_nByteTimeout / 1000;
     byteTimeout.tv_usec = (m_nByteTimeout % 1000)*1000;
-    modbus_set_byte_timeout(m_pModbusConn, &byteTimeout);
+    //modbus_set_byte_timeout(m_pModbusConn, &byteTimeout);
   }
 
   return 0;
@@ -84,6 +87,6 @@ void CModbusConnection::setByteTimeout(unsigned int pa_nByteTimeout){
   m_nByteTimeout = pa_nByteTimeout;
 }
 
-void CModbusConnection::setComCallback(forte::com_infra::CComLayer* pa_poModbusLayer){
-  m_nComCallbackId = CModbusHandler::getInstance().addComCallback(pa_poModbusLayer);
+void CModbusConnection::setComCallback(forte::com_infra::CModbusComLayer* pa_poModbusLayer){
+  m_nComCallbackId = m_pModbusHandler->addComCallback(pa_poModbusLayer);
 }

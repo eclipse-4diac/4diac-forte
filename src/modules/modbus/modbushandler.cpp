@@ -14,11 +14,11 @@
 #include <criticalregion.h>
 #include <commfb.h>
 
-DEFINE_SINGLETON(CModbusHandler);
+DEFINE_HANDLER(CModbusHandler);
 
 CModbusHandler::TCallbackDescriptor CModbusHandler::m_nCallbackDescCount = 0;
 
-CModbusHandler::CModbusHandler(){
+CModbusHandler::CModbusHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution)  {
 }
 
 CModbusHandler::~CModbusHandler(){

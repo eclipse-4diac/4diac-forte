@@ -19,14 +19,14 @@ namespace forte {
   namespace com_infra {
     class CRawDataComLayer : public CComLayer{
       public:
-        CRawDataComLayer(CComLayer* pa_poUpperLayer, CCommFB * pa_poFB);
+        CRawDataComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB);
         virtual ~CRawDataComLayer();
-        virtual void closeConnection();
         virtual EComResponse sendData(void *paData, unsigned int paSize);
         virtual EComResponse recvData(const void *paData, unsigned int paSize);
-        virtual EComResponse openConnection(char *pa_acLayerParameter);
 
       private:
+        virtual EComResponse openConnection(char *pa_acLayerParameter);
+        virtual void closeConnection();
     };
   } /* namespace com_infra */
 } /* namespace forte */

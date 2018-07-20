@@ -13,9 +13,6 @@
 #define _FILEWRITER_H_
 
 #include <funcbloc.h>
-#include <forte_bool.h>
-#include <forte_string.h>
-#include <forte_wstring.h>
 #include <fstream>
 
 class fileWriter: public CFunctionBlock{

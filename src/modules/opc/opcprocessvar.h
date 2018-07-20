@@ -62,7 +62,7 @@ class COpcProcessVar{
 
     const char* m_acItemGroupName;
     const char* m_acItemName;
-	  bool m_bActive;
+    bool m_bActive;
 
     Variant m_oCurrentValue;
 

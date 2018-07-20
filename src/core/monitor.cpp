@@ -52,40 +52,40 @@ EMGMResponse CMonitor::executeMonitoringCommand(CDevice *pa_poDevice, SManagemen
 
 CFunctionBlock * CMonitor::getFbPointer(CDevice *device, CStringDictionary::TStringId resourceNameId, CStringDictionary::TStringId fbNameId){
   if(device == 0){
-		return 0;
-	}
-	// Get functionblock
-	C61499Class1ObjectHandler &devObjHand = device->getObjectHandler();
-	CResource *pres = static_cast<CResource*>(devObjHand.getFB(resourceNameId));
-	if(pres == 0){
-		return 0;
-	}
-	C61499Class1ObjectHandler &resObjHand = pres->getObjectHandler();
-	CFunctionBlock *fb = resObjHand.getFB(fbNameId);
-	return fb;
+    return 0;
+  }
+  // Get functionblock
+  C61499Class1ObjectHandler &devObjHand = device->getObjectHandler();
+  CResource *pres = static_cast<CResource*>(devObjHand.getFB(resourceNameId));
+  if(pres == 0){
+    return 0;
+  }
+  C61499Class1ObjectHandler &resObjHand = pres->getObjectHandler();
+  CFunctionBlock *fb = resObjHand.getFB(fbNameId);
+  return fb;
 }
 
 
 bool CMonitor::wasTriggered(CDevice *device, CStringDictionary::TStringId resourceNameId, CStringDictionary::TStringId fbNameId) {
-	CFunctionBlock *fb = CMonitor::getFbPointer(device, resourceNameId, fbNameId);
-	if (fb == 0){ 
-		return false;
-	}
-	bool ret = fb->getUpdated();
-	if(ret) {
-		fb->setUpdated(false);
-	}
-	return ret;
+  CFunctionBlock *fb = CMonitor::getFbPointer(device, resourceNameId, fbNameId);
+  if (fb == 0){ 
+    return false;
+  }
+  bool ret = fb->getUpdated();
+  if(ret) {
+    fb->setUpdated(false);
+  }
+  return ret;
 }
 
 CResource * CMonitor::getResPointer(CDevice *device, CStringDictionary::TStringId resourceID){
-	if(device == 0){
-		return 0;
-	}
-	// Get functionblock
-	C61499Class1ObjectHandler &devObjHand = device->getObjectHandler();
-	CResource *pres = static_cast<CResource*>(devObjHand.getFB(resourceID));
-	return pres;
+  if(device == 0){
+    return 0;
+  }
+  // Get functionblock
+  C61499Class1ObjectHandler &devObjHand = device->getObjectHandler();
+  CResource *pres = static_cast<CResource*>(devObjHand.getFB(resourceID));
+  return pres;
 }
 
 
@@ -168,137 +168,137 @@ bool CMonitor::getWatches(CDevice *cDevice, SManagementCMD &pa_oCommand){
 }
 
 bool CMonitor::getEventCount(CDevice *device, CStringDictionary::TStringId resourceNameId, CStringDictionary::TStringId fbNameId, CStringDictionary::TStringId eventNameId, unsigned int & retValue){
-	CFunctionBlock *fb = getFbPointer(device, resourceNameId, fbNameId);
-	if(fb == 0){
-		return false;
-	}
+  CFunctionBlock *fb = getFbPointer(device, resourceNameId, fbNameId);
+  if(fb == 0){
+    return false;
+  }
 
-	// get Event count
-	TEventID eventId = fb->getEIID(eventNameId);
-	if(eventId != cg_nInvalidEventID){
+  // get Event count
+  TEventID eventId = fb->getEIID(eventNameId);
+  if(eventId != cg_nInvalidEventID){
     retValue = fb->m_nEIMonitorCount[eventId].eventCount[fb->m_nEIMonitorCount[eventId].bufPos];
-		return true;
-	}
+    return true;
+  }
 
-	eventId = fb->getEOID(eventNameId);
-	if(eventId != cg_nInvalidEventID){
+  eventId = fb->getEOID(eventNameId);
+  if(eventId != cg_nInvalidEventID){
     retValue = fb->m_nEOMonitorCount[eventId].eventCount[fb->m_nEOMonitorCount[eventId].bufPos];
-		return true;
-	}
-	// possibly No Event found
-	return false;
+    return true;
+  }
+  // possibly No Event found
+  return false;
 }
 
 bool CMonitor::writeData(CDevice *device, CStringDictionary::TStringId resourceNameId, CStringDictionary::TStringId fbNameId, CStringDictionary::TStringId portNameId, const char * Value){
 
-	CFunctionBlock *fb = getFbPointer(device, resourceNameId, fbNameId);
-	if(fb == 0){
-		return false;
-	}
-	// get DataInput
-	unsigned int id = fb->getDIID(portNameId);
-	CIEC_ANY *pData = fb->getDataInput(id);
-	if(pData != 0){
-		pData->fromString(Value);
-		return true;
-	}
+  CFunctionBlock *fb = getFbPointer(device, resourceNameId, fbNameId);
+  if(fb == 0){
+    return false;
+  }
+  // get DataInput
+  unsigned int id = fb->getDIID(portNameId);
+  CIEC_ANY *pData = fb->getDataInput(id);
+  if(pData != 0){
+    pData->fromString(Value);
+    return true;
+  }
 
-	// get DataOutput
-	id = fb->getDIID(portNameId);
-	pData = fb->getDataOutput(id);
-	if(pData != 0){
-		pData->fromString(Value);
-		return true;
-	}
-	return false;
+  // get DataOutput
+  id = fb->getDIID(portNameId);
+  pData = fb->getDataOutput(id);
+  if(pData != 0){
+    pData->fromString(Value);
+    return true;
+  }
+  return false;
 }
 
 bool CMonitor::startBreakpoint(CDevice *device, CStringDictionary::TStringId resourceNameId, CStringDictionary::TStringId fbNameId, CStringDictionary::TStringId portNameId){
 
-	CFunctionBlock *fb = getFbPointer(device, resourceNameId, fbNameId);
-	if(fb == 0){
-		return false;
-	}
+  CFunctionBlock *fb = getFbPointer(device, resourceNameId, fbNameId);
+  if(fb == 0){
+    return false;
+  }
 
-	// start Event counting
-	TEventID eventId = fb->getEIID(portNameId);
-	if(eventId != cg_nInvalidEventID){
-		fb->startEIBreakpoint(eventId);
-		return true;
-	}
+  // start Event counting
+  TEventID eventId = fb->getEIID(portNameId);
+  if(eventId != cg_nInvalidEventID){
+    fb->startEIBreakpoint(eventId);
+    return true;
+  }
 
-	eventId = fb->getEOID(portNameId);
-	if(eventId != cg_nInvalidEventID){
-		fb->startEOBreakpoint(eventId);
-		return true;
-	}
-	// possibly No Event found
-	return false;
+  eventId = fb->getEOID(portNameId);
+  if(eventId != cg_nInvalidEventID){
+    fb->startEOBreakpoint(eventId);
+    return true;
+  }
+  // possibly No Event found
+  return false;
 }
 bool CMonitor::stopBreakpoint(CDevice *device, CStringDictionary::TStringId resourceNameId, CStringDictionary::TStringId fbNameId, CStringDictionary::TStringId portNameId){
 
-	CFunctionBlock *fb = getFbPointer(device, resourceNameId, fbNameId);
-	if(fb == 0){
-		return false;
-	}
+  CFunctionBlock *fb = getFbPointer(device, resourceNameId, fbNameId);
+  if(fb == 0){
+    return false;
+  }
 
-	// start Event counting
-	TEventID eventId = fb->getEIID(portNameId);
-	if(eventId != cg_nInvalidEventID){
-		fb->stopEIBreakpoint(eventId);
-		return true;
-	}
+  // start Event counting
+  TEventID eventId = fb->getEIID(portNameId);
+  if(eventId != cg_nInvalidEventID){
+    fb->stopEIBreakpoint(eventId);
+    return true;
+  }
 
-	eventId = fb->getEOID(portNameId);
-	if(eventId != cg_nInvalidEventID){
-		fb->stopEOBreakpoint(eventId);
-		return true;
-	}
-	// possibly No Event found
-	return false;
+  eventId = fb->getEOID(portNameId);
+  if(eventId != cg_nInvalidEventID){
+    fb->stopEOBreakpoint(eventId);
+    return true;
+  }
+  // possibly No Event found
+  return false;
 }
 
 bool CMonitor::clearBreakpoint(CDevice *device, CStringDictionary::TStringId resourceNameId, CStringDictionary::TStringId fbNameId, CStringDictionary::TStringId portNameId){
 
-	CFunctionBlock *fb = getFbPointer(device, resourceNameId, fbNameId);
-	if(fb == 0){
-		return false;
-	}
+  CFunctionBlock *fb = getFbPointer(device, resourceNameId, fbNameId);
+  if(fb == 0){
+    return false;
+  }
 
-	// clear Breakpoint
-	TEventID eventId = fb->getEIID(portNameId);
-	if(eventId != cg_nInvalidEventID){
-		fb->clearEIBreakpoint(eventId);
-		//TODO check why trigger an event on clearing a break point
-		//triggerEvent(device, resourceNameId, fbNameId, portNameId);
-		return true;
-	}
-
-	eventId = fb->getEOID(portNameId);
-	if(eventId != cg_nInvalidEventID){
-		fb->clearEOBreakpoint(eventId);
-		//TODO check why trigger an event on clearing a break point
+  // clear Breakpoint
+  TEventID eventId = fb->getEIID(portNameId);
+  if(eventId != cg_nInvalidEventID){
+    fb->clearEIBreakpoint(eventId);
+    //TODO check why trigger an event on clearing a break point
     //triggerEvent(device, resourceNameId, fbNameId, portNameId);
-		return true;
-	}
-	// possibly No Event found
-	return false;
+    return true;
+  }
+
+  eventId = fb->getEOID(portNameId);
+  if(eventId != cg_nInvalidEventID){
+    fb->clearEOBreakpoint(eventId);
+    //TODO check why trigger an event on clearing a break point
+    //triggerEvent(device, resourceNameId, fbNameId, portNameId);
+    return true;
+  }
+  // possibly No Event found
+  return false;
 }
 
 
 bool CMonitor::addBreakpoint(CDevice *device, CStringDictionary::TStringId resourceNameId, CStringDictionary::TStringId fbNameId, CStringDictionary::TStringId portNameId){
 
 
-	T_DEVICE_MAP::iterator resIter;
-	T_RESOURCE_CONTAINER::iterator fbIter;
-	T_FB_CONTAINER_ITER portIter;
+  T_DEVICE_MAP::iterator resIter;
+  T_RESOURCE_CONTAINER::iterator fbIter;
+  T_FB_CONTAINER_ITER portIter;
 
-	if(CMonitor::startBreakpoint(device, resourceNameId, fbNameId, portNameId) == false){
-		return false;
-	}
+  if(CMonitor::startBreakpoint(device, resourceNameId, fbNameId, portNameId) == false){
+    return false;
+  }
 
-	{
-	  CCriticalRegion criticalRegion(mLockDataWatches);
+  {
+    CCriticalRegion criticalRegion(mLockDataWatches);
 
     // Test if Resource is in device, otherwise add it
     resIter = mDataWatches.find(resourceNameId);
@@ -321,61 +321,61 @@ bool CMonitor::addBreakpoint(CDevice *device, CStringDictionary::TStringId resou
     if(portIter == fbIter->second.breakpointList.end()){
       fbIter->second.breakpointList.push_back(portNameId);
     }else{} // port already inserted
-	} //End Critical region
-	return true;
+  } //End Critical region
+  return true;
 }
 void CMonitor::removeBreakpoint(CStringDictionary::TStringId fbResId, CStringDictionary::TStringId fbNameId, CStringDictionary::TStringId portNameId){
 
 
-	T_DEVICE_MAP::iterator resIter;
-	T_RESOURCE_CONTAINER::iterator fbIter;
-	T_FB_CONTAINER_ITER portIter;
+  T_DEVICE_MAP::iterator resIter;
+  T_RESOURCE_CONTAINER::iterator fbIter;
+  T_FB_CONTAINER_ITER portIter;
 
-	CCriticalRegion criticalRegion(mLockDataWatches);
+  CCriticalRegion criticalRegion(mLockDataWatches);
 
-	// Test if Resource is in device, otherwise do nothing
-	resIter = mDataWatches.find(fbResId);
-	if(resIter != mDataWatches.end()){
-		// Test if FB is in Resource, otherwise do nothing
-		fbIter = resIter->second.find(fbNameId);
-		if(fbIter != resIter->second.end()){
-			// Test if Port is in FB, otherwise do nothing
-			portIter = std::find(fbIter->second.breakpointList.begin(), fbIter->second.breakpointList.end(),portNameId);
-			if(portIter != fbIter->second.breakpointList.end()){
-				fbIter->second.breakpointList.erase(portIter);
-			}
+  // Test if Resource is in device, otherwise do nothing
+  resIter = mDataWatches.find(fbResId);
+  if(resIter != mDataWatches.end()){
+    // Test if FB is in Resource, otherwise do nothing
+    fbIter = resIter->second.find(fbNameId);
+    if(fbIter != resIter->second.end()){
+      // Test if Port is in FB, otherwise do nothing
+      portIter = std::find(fbIter->second.breakpointList.begin(), fbIter->second.breakpointList.end(),portNameId);
+      if(portIter != fbIter->second.breakpointList.end()){
+        fbIter->second.breakpointList.erase(portIter);
+      }
 
-			// clean up unused maps/lists
-			if(fbIter->second.addWatchList.size() == 0 && fbIter->second.breakpointList.size() == 0){
-				resIter->second.erase(fbIter);
-			}
-		}
-		// clean up unused maps/lists
-		//if(resIter->second.size() == 0){
-		//	mDataWatches.erase(resIter);
-		//}
-	}
+      // clean up unused maps/lists
+      if(fbIter->second.addWatchList.size() == 0 && fbIter->second.breakpointList.size() == 0){
+        resIter->second.erase(fbIter);
+      }
+    }
+    // clean up unused maps/lists
+    //if(resIter->second.size() == 0){
+    //  mDataWatches.erase(resIter);
+    //}
+  }
 }
 
 bool CMonitor::GetBreakpoint(CDevice *device, CStringDictionary::TStringId resourceNameId, CStringDictionary::TStringId fbNameId, CStringDictionary::TStringId eventNameId, bool & enabled, int & set){
-	// Read Data from FB
+  // Read Data from FB
 
-	CFunctionBlock *fb = getFbPointer(device, resourceNameId, fbNameId);
-	if(fb == 0){
-		return false;
-	}
+  CFunctionBlock *fb = getFbPointer(device, resourceNameId, fbNameId);
+  if(fb == 0){
+    return false;
+  }
 
-	// check events 
-	TEventID eventId = fb->getEIID(eventNameId);
-	if(eventId != cg_nInvalidEventID){
-		return fb->getEIBreakpoint(eventId, enabled, set);
-//		return true;
-	}
-	eventId = fb->getEOID(eventNameId);
-	if(eventId != cg_nInvalidEventID){
-		return fb->getEOBreakpoint(eventId, enabled, set);
-		//return true;
-	}
-	return false;
+  // check events 
+  TEventID eventId = fb->getEIID(eventNameId);
+  if(eventId != cg_nInvalidEventID){
+    return fb->getEIBreakpoint(eventId, enabled, set);
+//    return true;
+  }
+  eventId = fb->getEOID(eventNameId);
+  if(eventId != cg_nInvalidEventID){
+    return fb->getEOBreakpoint(eventId, enabled, set);
+    //return true;
+  }
+  return false;
 }
 

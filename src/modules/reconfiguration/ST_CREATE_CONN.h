@@ -12,8 +12,6 @@
 #define _ST_CREATE_CONN_H_
 
 #include <funcbloc.h>
-#include <forte_wstring.h>
-#include <forte_bool.h>
 #include "core/resource.h"
 
 // cppcheck-suppress noConstructor

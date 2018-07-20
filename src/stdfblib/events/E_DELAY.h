@@ -28,7 +28,7 @@ private:
   void executeEvent(int pa_nEIID);
 public:
   E_DELAY(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
-	virtual ~E_DELAY(){};
+  virtual ~E_DELAY(){};
 
 };
 

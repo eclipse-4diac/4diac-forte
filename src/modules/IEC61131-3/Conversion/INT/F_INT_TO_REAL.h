@@ -14,8 +14,6 @@
 #define _F_INT_TO_REAL_H_
 
 #include <funcbloc.h>
-#include <forte_real.h>
-#include <forte_int.h>
 
 class FORTE_F_INT_TO_REAL: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_INT_TO_REAL)

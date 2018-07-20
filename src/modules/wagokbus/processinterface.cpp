@@ -14,14 +14,14 @@
 #include <datatype.h>
 
 
-DEFINE_SINGLETON(WagoPFCProcessInterface::CKBusHandler)
+DEFINE_HANDLER(WagoPFCProcessInterface::CKBusHandler)
 
 WagoPFCProcessInterface::WagoPFCProcessInterface(CResource *paSrcRes,
     const SFBInterfaceSpec *paInterfaceSpec,
     const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData,
     TForteByte *paFBVarsData) :
     CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData),
-    mSlot(0), mChannel(0),mInitialized(false), mTerminalInfo(0){
+    mSlot(0), mChannel(0), mTerminalInfo(0), mInitialized(false){
 }
 
 
@@ -39,17 +39,17 @@ bool WagoPFCProcessInterface::initialise(bool paInput){
     mChannel= strtol(paramsList[1].c_str(),&pBuffer,10);
   }
 
-  if((CKBusHandler::getInstance().getTerminalId(mSlot))){
-    mTerminalInfo = CKBusHandler::getInstance().getTerminalInfo(mSlot);
+  if((GET_HANDLER_FROM_THIS(CKBusHandler)->getTerminalId(mSlot))){
+    mTerminalInfo = GET_HANDLER_FROM_THIS(CKBusHandler)->getTerminalInfo(mSlot);
     if(0 != mTerminalInfo){
       if((paInput) && (getDO(2)->getDataTypeID() == CIEC_ANY::e_BOOL)){
-        CKBusHandler::getInstance().registerKBusReadFB(this);
+        GET_HANDLER_FROM_THIS(CKBusHandler)->registerKBusReadFB(this);
       }
 
       QO() = QI();
 
-      if(!CKBusHandler::getInstance().isAlive()){
-        CKBusHandler::getInstance().start();
+      if(!GET_HANDLER_FROM_THIS(CKBusHandler)->isAlive()){
+        GET_HANDLER_FROM_THIS(CKBusHandler)->start();
       }
 
       mInitialized = true;
@@ -60,7 +60,7 @@ bool WagoPFCProcessInterface::initialise(bool paInput){
 }
 
 bool WagoPFCProcessInterface::deinitialise(){
-  CKBusHandler::getInstance().unregisterKBusReadFB(this);
+  GET_HANDLER_FROM_THIS(CKBusHandler)->unregisterKBusReadFB(this);
   return true;
 }
 
@@ -69,26 +69,26 @@ bool WagoPFCProcessInterface::readPin(){
 }
 
 bool WagoPFCProcessInterface::writePin(){
-  CKBusHandler::getInstance().writeOutputDataBitToKBus(mTerminalInfo, mChannel, OUT_X());
+  GET_HANDLER_FROM_THIS(CKBusHandler)->writeOutputDataBitToKBus(mTerminalInfo, mChannel, OUT_X());
   return true;
 }
 
 bool WagoPFCProcessInterface::readWord(){
   TForteWord inDataWord(0);
-  CKBusHandler::getInstance().readInputDataWordfromKBus(mTerminalInfo, mChannel, &inDataWord);
+  GET_HANDLER_FROM_THIS(CKBusHandler)->readInputDataWordfromKBus(mTerminalInfo, mChannel, &inDataWord);
   IN_W() = inDataWord;
   return true;
 }
 
 bool WagoPFCProcessInterface::writeWord(){
-  CKBusHandler::getInstance().writeOutputDataWordToKBus(mTerminalInfo, mChannel, OUT_W());
+  GET_HANDLER_FROM_THIS(CKBusHandler)->writeOutputDataWordToKBus(mTerminalInfo, mChannel, OUT_W());
   return true;
 }
 
 bool WagoPFCProcessInterface::checkInputData(){
   bool retVal = false;
   bool inDataBool(false);
-  CKBusHandler::getInstance().readInputDataBitfromKBus(mTerminalInfo, mChannel, &inDataBool);
+  GET_HANDLER_FROM_THIS(CKBusHandler)->readInputDataBitfromKBus(mTerminalInfo, mChannel, &inDataBool);
   if (inDataBool != IN_X()){
     IN_X() = inDataBool;
     retVal = true;
@@ -96,7 +96,7 @@ bool WagoPFCProcessInterface::checkInputData(){
   return retVal;
 }
 
-WagoPFCProcessInterface::CKBusHandler::CKBusHandler() :
+WagoPFCProcessInterface::CKBusHandler::CKBusHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution),
   mTaskId(0){ // 0 has been taken from example may needs to be rechecked
   tDeviceInfo deviceList[10]; // the list of devices given by the ADI
   size_t nrDevicesFound; // number of devices found
@@ -182,7 +182,7 @@ void WagoPFCProcessInterface::CKBusHandler::run(){
   stEvent.State = ApplicationState_Running;
   if(DAL_SUCCESS == mAppDevInterface->ApplicationStateChanged(stEvent)){
     while(isAlive()){
-     usleep(10000); // wait 10 ms  TODO make this configurable
+     CThread::sleepThread(10); // wait 10 ms  TODO make this configurable
      if(!triggerKBusCycle()){
        //we have severe problem exit KBus handling thread
        //TODO check how can we recover or at least inform the user

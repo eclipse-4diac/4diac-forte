@@ -10,19 +10,16 @@
  *******************************************************************************/
 #include "pctimeha.h"
 #include "../../core/devexec.h"
-//#include <time.h>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
 const TForteInt32 CPCTimerHandler::csm_nTicksPerSecond = 1000;
 
-void CTimerHandler::createTimerHandler(void){
-  if(0 == sm_poFORTETimer)
-    sm_poFORTETimer = new CPCTimerHandler();
-
+CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& pa_poDeviceExecution){
+  return new CPCTimerHandler(pa_poDeviceExecution);
 }
 
-CPCTimerHandler::CPCTimerHandler(){
+CPCTimerHandler::CPCTimerHandler(CDeviceExecution& pa_poDeviceExecution) : CTimerHandler(pa_poDeviceExecution)  {
 }
 
 CPCTimerHandler::~CPCTimerHandler(){
@@ -92,7 +89,7 @@ void CPCTimerHandler::run(){
 
   while(isAlive()){
     stWaittime.QuadPart *= 1000; // calculate in ms, not sec
-    stReq = (stWaittime.QuadPart / stFrequenzy.QuadPart); // calculate elapsed time in ms
+    stReq = static_cast<DWORD>(stWaittime.QuadPart / stFrequenzy.QuadPart); // calculate elapsed time in ms
 
     // dont give up the thread if we still have to do some ticks(some os have 10ms minimum threadtime)
     if(stReq > 0){

@@ -13,8 +13,6 @@
 #define _DWORD2DWORD_H_
 
 #include <funcbloc.h>
-#include <forte_dword.h>
-
 
 class DWORD2DWORD: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(DWORD2DWORD)
@@ -39,11 +37,11 @@ private:
   virtual void executeEvent(int pa_nEIID);
 
   CIEC_DWORD& IN() {
-  	return *static_cast<CIEC_DWORD*>(getDI(0));
+    return *static_cast<CIEC_DWORD*>(getDI(0));
   }
 
   CIEC_DWORD& OUT() {
-  	return *static_cast<CIEC_DWORD*>(getDO(0));
+    return *static_cast<CIEC_DWORD*>(getDO(0));
   }
 
 public:

@@ -30,7 +30,7 @@ COpcConnection* COpcConnectionHandler::getOpcConnection(const char *pa_acHost, c
 
   COpcConnection *newConnection = findOpcConnection(pa_acHost, pa_acServerName);
   if(newConnection == NULL){
-    newConnection = new COpcConnection(pa_acHost, pa_acServerName);
+    newConnection = new COpcConnection(pa_acHost, pa_acServerName, GET_HANDLER_FROM_FB(*pa_pComCallback->getCommFB(), COpcEventHandler));
 
     m_lOpcConnectionList.push_back(newConnection);
   }

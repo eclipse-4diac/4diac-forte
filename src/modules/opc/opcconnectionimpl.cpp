@@ -21,7 +21,7 @@
 #include "OPCItem.h"
 
 COpcConnectionImpl::COpcConnectionImpl(const char *pa_acHost, const char *pa_acServerName, COpcConnection* pa_pOpcConn) :
-    m_acHost(pa_acHost), m_acServerName(pa_acServerName), m_pOpcConn(pa_pOpcConn), m_acGroupName(0), m_nDeadBand(0), m_nRealUpdateRate(0), m_nReqUpdateRate(0), m_pOpcHost(0), m_pOpcServer(0) {
+  m_pOpcConn(pa_pOpcConn), m_pOpcHost(0), m_pOpcServer(0), m_acHost(pa_acHost), m_acServerName(pa_acServerName), m_acGroupName(0), m_nReqUpdateRate(0), m_nRealUpdateRate(0), m_nDeadBand(0) {
 }
 
 COpcConnectionImpl::~COpcConnectionImpl(){
@@ -72,7 +72,7 @@ void COpcConnectionImpl::OnDataChange(COPCGroup & group, CAtlMap<COPCItem *, OPC
     OPCItemData *itemData = changes.GetValueAt(pos);
     COPCItem *item = changes.GetNextKey(pos);
 
-    itemList.push_back(new SOpcItemData((LPCTSTR) (item->getName()), itemData->vDataValue));
+    itemList.push_back(new SOpcItemData((LPCTSTR) (item->getName()), (Variant) itemData->vDataValue));
   }
 
   const char *c_groupName = (const char*) group.getName();

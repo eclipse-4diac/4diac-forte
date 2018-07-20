@@ -11,10 +11,11 @@
   *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
 #include <forte_config.h>
-#include <fortealloc.h>
+#include <fortenew.h>
 #include "ecet.h"
 #include "esfb.h"
 #include "utils/criticalregion.h"
+#include "../arch/devlog.h"
 
 CEventChainExecutionThread::CEventChainExecutionThread() :
     CThread(), mSuspendSemaphore(0), mProcessingEvents(false) {
@@ -29,105 +30,104 @@ void CEventChainExecutionThread::run(void){
     if(externalEventOccured()){
       transferExternalEvents();
     }
-    if(m_pstEventListEnd == m_pstEventListStart){
+    if(mEventListEnd == mEventListStart){
       mProcessingEvents = false;
       selfSuspend();
       mProcessingEvents = true;  //set this flag here to true as well in case the suspend just went through and processing was not finished
     }
     else{
-      if(0 != *m_pstEventListStart){
-        (*m_pstEventListStart)->mFB->receiveInputEvent((*m_pstEventListStart)->mPortId, *this);
+      if(0 != *mEventListStart){
+        (*mEventListStart)->mFB->receiveInputEvent((*mEventListStart)->mPortId, *this);
       }
-      *m_pstEventListStart = 0;
+      *mEventListStart = 0;
 
-      if(m_pstEventListStart == &m_astEventList[0]){
+      if(mEventListStart == &mEventList[0]){
         //wrap the ringbuffer
-        m_pstEventListStart = &m_astEventList[cg_nEventChainEventListSize - 1];
+        mEventListStart = &mEventList[cg_nEventChainEventListSize - 1];
       }
       else{
-        m_pstEventListStart--;
+        mEventListStart--;
       }
     }
   }
 }
 
 void CEventChainExecutionThread::clear(void){
-  memset(m_astEventList, 0, cg_nEventChainEventListSize * sizeof(TEventEntryPtr));
-  m_pstEventListEnd = m_pstEventListStart = &m_astEventList[cg_nEventChainEventListSize - 1];
+  memset(mEventList, 0, cg_nEventChainEventListSize * sizeof(TEventEntryPtr));
+  mEventListEnd = mEventListStart = &mEventList[cg_nEventChainEventListSize - 1];
 
   {
-    CCriticalRegion criticalRegion(m_oExternalEventListSync);
-    memset(m_astExternalEventList, 0, cg_nEventChainExternalEventListSize * sizeof(TEventEntryPtr));
-    m_pstExternalEventListEnd = m_pstExternalEventListStart = &m_astExternalEventList[cg_nEventChainExternalEventListSize - 1];
+    CCriticalRegion criticalRegion(mExternalEventListSync);
+    memset(mExternalEventList, 0, cg_nEventChainExternalEventListSize * sizeof(TEventEntryPtr));
+    mExternalEventListEnd = mExternalEventListStart = &mExternalEventList[cg_nEventChainExternalEventListSize - 1];
   }
 }
 
 void CEventChainExecutionThread::transferExternalEvents(){
-  CCriticalRegion criticalRegion(m_oExternalEventListSync);
+  CCriticalRegion criticalRegion(mExternalEventListSync);
   //this while is built in a way that it checks also if we got here by accident
-  while(m_pstExternalEventListStart != m_pstExternalEventListEnd){
-    if(0 != *m_pstExternalEventListStart){
+  while(mExternalEventListStart != mExternalEventListEnd){
+    if(0 != *mExternalEventListStart){
       //add only valid entries
-      addEventEntry(*m_pstExternalEventListStart);
-      *m_pstExternalEventListStart = 0;
+      addEventEntry(*mExternalEventListStart);
+      *mExternalEventListStart = 0;
 
-      if(m_pstExternalEventListStart == &m_astExternalEventList[0]){
+      if(mExternalEventListStart == &mExternalEventList[0]){
         //wrap the ringbuffer
-        m_pstExternalEventListStart = &m_astExternalEventList[cg_nEventChainExternalEventListSize - 1];
+        mExternalEventListStart = &mExternalEventList[cg_nEventChainExternalEventListSize - 1];
       }
       else{
-        m_pstExternalEventListStart--;
+        mExternalEventListStart--;
       }
     }
   }
 }
 
-void CEventChainExecutionThread::startEventChain(SEventEntry *pa_poEventToAdd){
+void CEventChainExecutionThread::startEventChain(SEventEntry *paEventToAdd){
   FORTE_TRACE("CEventChainExecutionThread::startEventChain\n");
   {
-    CCriticalRegion criticalRegion(m_oExternalEventListSync);
-    if(0 == *m_pstExternalEventListEnd){
-      *m_pstExternalEventListEnd = pa_poEventToAdd;
+    CCriticalRegion criticalRegion(mExternalEventListSync);
+    if(0 == *mExternalEventListEnd){
+      *mExternalEventListEnd = paEventToAdd;
       TEventEntryPtr* pstNextEventListElem;
 
-      if(m_pstExternalEventListEnd == &m_astExternalEventList[0]){
+      if(mExternalEventListEnd == &mExternalEventList[0]){
         //wrap the ringbuffer
-        pstNextEventListElem = &m_astExternalEventList[cg_nEventChainExternalEventListSize - 1];
+        pstNextEventListElem = &mExternalEventList[cg_nEventChainExternalEventListSize - 1];
       }
       else{
-        pstNextEventListElem = (m_pstExternalEventListEnd - 1);
+        pstNextEventListElem = (mExternalEventListEnd - 1);
       }
 
-      if(m_pstExternalEventListStart != pstNextEventListElem){
+      if(mExternalEventListStart != pstNextEventListElem){
         //the list is not full
-        m_pstExternalEventListEnd = pstNextEventListElem;
+        mExternalEventListEnd = pstNextEventListElem;
       }
+      mProcessingEvents = true;
+      resumeSelfSuspend();
     }
     else{
       DEVLOG_ERROR("External event queue is full, external event dropped!\n");
     }
   } // End critical region
-
-  mProcessingEvents = true;
-  resumeSelfSuspend();
 }
 
-void CEventChainExecutionThread::addEventEntry(SEventEntry *pa_poEventToAdd){
-  if(0 == *m_pstEventListEnd){
-    *m_pstEventListEnd = pa_poEventToAdd;
+void CEventChainExecutionThread::addEventEntry(SEventEntry *paEventToAdd){
+  if(0 == *mEventListEnd){
+    *mEventListEnd = paEventToAdd;
     TEventEntryPtr* pstNextEventListElem;
 
-    if(m_pstEventListEnd == &m_astEventList[0]){
+    if(mEventListEnd == &mEventList[0]){
       //wrap the ringbuffer
-      pstNextEventListElem = &m_astEventList[cg_nEventChainEventListSize - 1];
+      pstNextEventListElem = &mEventList[cg_nEventChainEventListSize - 1];
     }
     else{
-      pstNextEventListElem = (m_pstEventListEnd - 1);
+      pstNextEventListElem = (mEventListEnd - 1);
     }
 
-    if(m_pstEventListStart != pstNextEventListElem){
+    if(mEventListStart != pstNextEventListElem){
       //the list is not full
-      m_pstEventListEnd = pstNextEventListElem;
+      mEventListEnd = pstNextEventListElem;
     }
   }
   else{
@@ -135,8 +135,8 @@ void CEventChainExecutionThread::addEventEntry(SEventEntry *pa_poEventToAdd){
   }
 }
 
-void CEventChainExecutionThread::changeExecutionState(EMGMCommandType pa_unCommand){
-  switch (pa_unCommand){
+void CEventChainExecutionThread::changeExecutionState(EMGMCommandType paCommand){
+  switch (paCommand){
     case cg_nMGM_CMD_Start:
       if(!isAlive()){
         //only start the thread when we are not already running
@@ -145,10 +145,10 @@ void CEventChainExecutionThread::changeExecutionState(EMGMCommandType pa_unComma
       break;
     case cg_nMGM_CMD_Kill:
       clear();
-	  end();
-      break;
+      // fall through
     case cg_nMGM_CMD_Stop:
-      end();
+      setAlive(false); //end thread in both cases
+      resumeSelfSuspend();
       break;
     default:
       break;

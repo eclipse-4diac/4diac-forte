@@ -11,6 +11,7 @@
 #include "EplWrapper.h"
 #include "ProcessImageMatrix.h"
 #include "EplXmlReader.h"
+#include <forte_thread.h>
 
 #if (TARGET_SYSTEM == _WIN32_)
 #define _WINSOCKAPI_ // prevent windows.h from including winsock.h
@@ -210,16 +211,16 @@ int CEplStackWrapper::eplStackInit(char* pa_chXmlFile, char* pa_chCdcFile, char*
   if(nice(-20) == -1) // push nice level in case we have no RTPreempt
   {
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)
-	EPL_DBGLVL_ERROR_TRACE("%s() couldn't set nice value! (%s)\n", __func__, strerror(errno));
+  EPL_DBGLVL_ERROR_TRACE("%s() couldn't set nice value! (%s)\n", __func__, strerror(errno));
 #else
     EPL_DBGLVL_ERROR_TRACE2("%s() couldn't set nice value! (%s)\n", __func__, strerror(errno));
 #endif
-	
+  
   }
   schedParam.__sched_priority = MAIN_THREAD_PRIORITY;
   if(pthread_setschedparam(pthread_self(), SCHED_RR, &schedParam) != 0){
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)  
-	EPL_DBGLVL_ERROR_TRACE("%s() couldn't set thread scheduling parameters! %d\n", __func__, schedParam.__sched_priority);
+  EPL_DBGLVL_ERROR_TRACE("%s() couldn't set thread scheduling parameters! %d\n", __func__, schedParam.__sched_priority);
 #else
     EPL_DBGLVL_ERROR_TRACE2("%s() couldn't set thread scheduling parameters! %d\n", __func__, schedParam.__sched_priority);
 #endif
@@ -423,11 +424,7 @@ int CEplStackWrapper::eplStackInit(char* pa_chXmlFile, char* pa_chCdcFile, char*
   if(m_bWait == true){
     while(!waitingUntilOperational){
       // Waiting
-#if (TARGET_SYSTEM == _WIN32_)
-      Sleep(1);
-#elif (TARGET_SYSTEM == _LINUX_)
-      usleep(1);
-#endif
+      CThread::sleepThread(1);
     }
   }
 

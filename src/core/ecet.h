@@ -12,14 +12,11 @@
 #ifndef _ECET_H_
 #define _ECET_H_
 
-#include "eventconn.h"
 #include "event.h"
 #include "datatypes/forte_time.h"
 #include <forte_thread.h>
 #include <forte_sync.h>
 #include <forte_sem.h>
-
-class CEventSourceFB;
 
 /*! \ingroup CORE\brief Class for executing one event chain.
  *
@@ -34,40 +31,34 @@ class CEventChainExecutionThread : public CThread{
      *
      * \param pa_poEventToAdd event of the EC to start
      */
-    void startEventChain(SEventEntry *pa_poEventToAdd);
+    void startEventChain(SEventEntry *paEventToAdd);
 
     /*!\brief Add an new event entry to the event chain
      *
      * \param pa_poEventToAdd new event entry
      */
-    void addEventEntry(SEventEntry *pa_poEventToAdd);
+    void addEventEntry(SEventEntry *paEventToAdd);
 
     /*!\brief allow to start, stop, and kill the execution of the event chain execution thread
      *
      * @param pa_unCommand the management command to be executed
      */
-    void changeExecutionState(EMGMCommandType pa_unCommand);
+    void changeExecutionState(EMGMCommandType paCommand);
 
     void joinEventChainExecutionThread(){
       CThread::join();
     }
 
-    void setDeadline(const CIEC_TIME &pa_roVal){
-      CThread::setDeadline(pa_roVal);
+    void setDeadline(const CIEC_TIME &paVal){
+      CThread::setDeadline(paVal);
     }
 
     bool isProcessingEvents() const {
       return mProcessingEvents;
     }
 
-    virtual void end(void){
-      setAlive(false);
-      resumeSelfSuspend();
-      CThread::end();
-    }
-
     void resumeSelfSuspend(){
-      mSuspendSemaphore.semInc();
+      mSuspendSemaphore.inc();
     }
 
   protected:
@@ -77,9 +68,9 @@ class CEventChainExecutionThread : public CThread{
      * This list stores the necessary information for all events to deliver that occurred within this event chain.
      */
 
-    TEventEntryPtr m_astEventList[cg_nEventChainEventListSize];
-    TEventEntryPtr* m_pstEventListStart;
-    TEventEntryPtr* m_pstEventListEnd;
+    TEventEntryPtr mEventList[cg_nEventChainEventListSize];
+    TEventEntryPtr* mEventListStart;
+    TEventEntryPtr* mEventListEnd;
     //@}
 
   private:
@@ -103,14 +94,14 @@ class CEventChainExecutionThread : public CThread{
        * big issue.
        * TODO perform test to verify this assumption
        */
-      return (m_pstExternalEventListStart != m_pstExternalEventListEnd);
+      return (mExternalEventListStart != mExternalEventListEnd);
     }
 
     //! Transfer elements stored in the external event list to the main event list
     void transferExternalEvents();
 
     void selfSuspend(){
-      mSuspendSemaphore.semWaitIndefinitly();
+      mSuspendSemaphore.waitIndefinitely();
     }
 
     //@{
@@ -120,13 +111,13 @@ class CEventChainExecutionThread : public CThread{
      * Event-Chain execution was sleeping. with this second list we omit the need for a mutex protection of the event
      * list. This is a great performance gain.
      */
-    TEventEntryPtr m_astExternalEventList[cg_nEventChainExternalEventListSize];
-    TEventEntryPtr* m_pstExternalEventListStart;
-    TEventEntryPtr* m_pstExternalEventListEnd;
+    TEventEntryPtr mExternalEventList[cg_nEventChainExternalEventListSize];
+    TEventEntryPtr* mExternalEventListStart;
+    TEventEntryPtr* mExternalEventListEnd;
     //@}
 
     //! SyncObject for protecting the list in regard to several accesses
-    CSyncObject m_oExternalEventListSync;
+    CSyncObject mExternalEventListSync;
 
     forte::arch::CSemaphore mSuspendSemaphore;
 

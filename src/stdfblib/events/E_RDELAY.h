@@ -22,7 +22,7 @@ private:
   void executeEvent(int pa_nEIID);
 public:
   E_RDELAY(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
-	virtual ~E_RDELAY(){};
+  virtual ~E_RDELAY(){};
 
 };
 

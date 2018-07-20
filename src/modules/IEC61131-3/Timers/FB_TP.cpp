@@ -13,7 +13,6 @@
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "FB_TP_gen.cpp"
 #endif
-#include <devlog.h>
 
 DEFINE_FIRMWARE_FB(FB_TP, g_nStringIdFB_TP)
 

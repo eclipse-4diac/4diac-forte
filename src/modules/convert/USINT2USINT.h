@@ -13,7 +13,6 @@
 #define _USINT2USINT_H_
 
 #include <funcbloc.h>
-#include <forte_usint.h>
 
 class USINT2USINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(USINT2USINT)
@@ -38,11 +37,11 @@ private:
   virtual void executeEvent(int pa_nEIID);
 
   CIEC_USINT& IN() {
-  	return *static_cast<CIEC_USINT*>(getDI(0));
+    return *static_cast<CIEC_USINT*>(getDI(0));
   }
 
   CIEC_USINT& OUT() {
-  	return *static_cast<CIEC_USINT*>(getDO(0));
+    return *static_cast<CIEC_USINT*>(getDO(0));
   }
 
 public:

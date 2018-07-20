@@ -9,9 +9,10 @@
  *    Waldemar Eisenmenger, Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "processinterface.h"
+#include "sysfsprocint.h"
+#include "../../arch/devlog.h"
 #include <string>
-#include <unistd.h>
+#include <forte_thread.h>
 const char * const CSysFsProcessInterface::scmOK = "OK";
 const char * const CSysFsProcessInterface::scmPinInUse = "Pin already in use by other FB";
 const char * const CSysFsProcessInterface::scmNotInitialised = "FB not initialized";
@@ -83,9 +84,9 @@ bool CSysFsProcessInterface::initialise(bool paIsInput){
   bool retVal = false;
   STATUS() = scmNotInitialised;
   if(CSysFsProcessInterface::exportGPIO()){
-    sleep(1);
+    CThread::sleepThread(1000);
     if(CSysFsProcessInterface::setDirection(paIsInput)){
-      sleep(1);
+      CThread::sleepThread(1000);
       if(CSysFsProcessInterface::valueGPIO(paIsInput)){
           retVal = true;
           STATUS() = scmOK;

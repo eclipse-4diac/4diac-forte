@@ -12,8 +12,6 @@
 #define _POWERLINK_MN_H_
 
 #include <funcbloc.h>
-#include <forte_string.h>
-#include <forte_bool.h>
 
 class FORTE_POWERLINK_MN : public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_POWERLINK_MN)

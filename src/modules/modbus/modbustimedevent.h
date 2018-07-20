@@ -21,7 +21,7 @@ class CModbusTimedEvent{
     }
 
     void setUpdateInterval(TForteUInt32 pa_nUpdateInterval);
-    TForteUInt32 getUpdateInterval() {
+    TForteUInt32 getUpdateInterval() const{
       return m_nUpdateInterval;
     }
 
@@ -32,7 +32,7 @@ class CModbusTimedEvent{
       return m_bIsStarted;
     }
 
-    bool readyToExecute();
+    bool readyToExecute() const;
 
     // Classes impementing this should call restartTimer in executeEvent
     virtual int executeEvent(modbus_t* pa_pModbusConn, void* pa_pRetVal) = 0;

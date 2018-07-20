@@ -13,7 +13,6 @@
 #define _E_R_TRIG_H_
 
 #include <funcbloc.h>
-#include <forte_bool.h>
 
 // cppcheck-suppress noConstructor
 class E_R_TRIG: public CFunctionBlock{
@@ -38,7 +37,7 @@ private:
   void executeEvent(int pa_nEIID);
 
   CIEC_BOOL& QI() {
-   	return *static_cast<CIEC_BOOL*>(getDI(0));
+     return *static_cast<CIEC_BOOL*>(getDI(0));
   }
 
 public:

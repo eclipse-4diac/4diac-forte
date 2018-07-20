@@ -1,0 +1,38 @@
+#*******************************************************************************
+# * Copyright (c) 2017 fortiss GmbH
+# * All rights reserved. This program and the accompanying materials
+# * are made available under the terms of the Eclipse Public License v1.0
+# * which accompanies this distribution, and is available at
+# * http://www.eclipse.org/legal/epl-v10.html
+# *
+# * Contributors:
+# *   Johannes Messmer
+# *   - initial API and implementation and/or initial documentation
+# *******************************************************************************/
+
+#############################################################################
+# IO
+#############################################################################
+
+set(FORTE_IO OFF CACHE BOOL "Enable IO Modules")
+
+if(NOT FORTE_IO)
+  return()
+endif(NOT FORTE_IO)
+
+SET(SOURCE_GROUP ${SOURCE_GROUP}\\io)
+
+forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+add_subdirectory(configFB)
+add_subdirectory(device)
+add_subdirectory(mapper)
+
+forte_add_sourcefile_hcpp(processinterface)
+
+forte_add_sourcefile_hcpp(../../stdfblib/io/IX)
+forte_add_sourcefile_hcpp(../../stdfblib/io/QX)
+forte_add_sourcefile_hcpp(../../stdfblib/io/IW)
+forte_add_sourcefile_hcpp(../../stdfblib/io/QW)
+forte_add_sourcefile_hcpp(../../stdfblib/io/ID)
+forte_add_sourcefile_hcpp(../../stdfblib/io/QD)

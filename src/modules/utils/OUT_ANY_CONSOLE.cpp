@@ -14,11 +14,9 @@
 #include "OUT_ANY_CONSOLE_gen.cpp"
 #endif
 
-#include <forte_array.h>
-
 DEFINE_FIRMWARE_FB(FORTE_OUT_ANY_CONSOLE, g_nStringIdOUT_ANY_CONSOLE)
 
-	const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scm_anDataInputNames[] =
+  const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scm_anDataInputNames[] =
 { g_nStringIdQI, g_nStringIdLABEL, g_nStringIdIN };
 
 const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scm_anDataInputTypeIds[] =
@@ -41,57 +39,57 @@ const CStringDictionary::TStringId FORTE_OUT_ANY_CONSOLE::scm_anEventOutputNames
 { g_nStringIdCNF };
 
 const SFBInterfaceSpec FORTE_OUT_ANY_CONSOLE::scm_stFBInterfaceSpec = { 1,
-	scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1,
-	scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 3,
-	scm_anDataInputNames, scm_anDataInputTypeIds, 1, scm_anDataOutputNames,
-	scm_anDataOutputTypeIds, 0, 0 };
+  scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1,
+  scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 3,
+  scm_anDataInputNames, scm_anDataInputTypeIds, 1, scm_anDataOutputNames,
+  scm_anDataOutputTypeIds, 0, 0 };
 
 //default value is set to 100 (sufficient for several data types)
 const TForteInt16 FORTE_OUT_ANY_CONSOLE::scm_maxStringBufSize = 100;
 
 void FORTE_OUT_ANY_CONSOLE::executeEvent(int pa_nEIID) {
-	switch (pa_nEIID) {
-	case scm_nEventREQID:
-		QO() = QI();
-		if (true == QI()) {
-			TForteUInt16 nRequiredBytes;
-			TForteUInt16 nUsedBytes;
-			TForteUInt16 nStringLength;
-			CIEC_WSTRING sOutput;
-			char strbuf1[scm_maxStringBufSize];
-			LABEL().toString(strbuf1, sizeof(strbuf1));
+  switch (pa_nEIID) {
+  case scm_nEventREQID:
+    QO() = QI();
+    if (true == QI()) {
+      TForteUInt16 nRequiredBytes;
+      TForteUInt16 nUsedBytes;
+      TForteUInt16 nStringLength;
+      CIEC_WSTRING sOutput;
+      char strbuf1[scm_maxStringBufSize];
+      LABEL().toString(strbuf1, sizeof(strbuf1));
 
-			if(IN().getDataTypeID() == CIEC_ANY::e_STRING || IN().getDataTypeID() == CIEC_ANY::e_WSTRING){
-				//obtain length of string value
-				nStringLength = (static_cast<CIEC_ANY_STRING*>(&IN()))->length();
-				//assign value
-				sOutput.assign((static_cast<CIEC_ANY_STRING*>(&IN()))->getValue(), nStringLength);
-			}
-			else{
-				//values other than strings
-				//for arrays
-				if(IN().getDataTypeID() == CIEC_ANY::e_ARRAY){
-					//get number of array elements
-					TForteUInt16 nArrayElements = (static_cast<CIEC_ARRAY*>(&IN()))->size();
-					//number of required bytes (including brackets '[' ']' and ',' separators
-					nRequiredBytes = static_cast<TForteUInt16>(nArrayElements * scm_maxStringBufSize +  nArrayElements + 1);
-				}
-				else{
-					//size for single data values
-					nRequiredBytes = scm_maxStringBufSize;
-				}
+      if(IN().getDataTypeID() == CIEC_ANY::e_STRING || IN().getDataTypeID() == CIEC_ANY::e_WSTRING){
+        //obtain length of string value
+        nStringLength = (static_cast<CIEC_ANY_STRING*>(&IN()))->length();
+        //assign value
+        sOutput.assign((static_cast<CIEC_ANY_STRING*>(&IN()))->getValue(), nStringLength);
+      }
+      else{
+        //values other than strings
+        //for arrays
+        if(IN().getDataTypeID() == CIEC_ANY::e_ARRAY){
+          //get number of array elements
+          TForteUInt16 nArrayElements = (static_cast<CIEC_ARRAY*>(&IN()))->size();
+          //number of required bytes (including brackets '[' ']' and ',' separators
+          nRequiredBytes = static_cast<TForteUInt16>(nArrayElements * scm_maxStringBufSize +  nArrayElements + 1);
+        }
+        else{
+          //size for single data values
+          nRequiredBytes = scm_maxStringBufSize;
+        }
 
-				sOutput.reserve(nRequiredBytes);
-				//write StringValue
-				nUsedBytes = static_cast<TForteUInt16>(IN().toString(sOutput.getValue(), nRequiredBytes));
-				//maintain the state of the output data value string
-				sOutput.assign(sOutput.getValue(), nUsedBytes);
-			}
+        sOutput.reserve(nRequiredBytes);
+        //write StringValue
+        nUsedBytes = static_cast<TForteUInt16>(IN().toString(sOutput.getValue(), nRequiredBytes));
+        //maintain the state of the output data value string
+        sOutput.assign(sOutput.getValue(), nUsedBytes);
+      }
 
-			DEVLOG_INFO(" %s = %s\n", strbuf1, sOutput.getValue());
-		}
-		sendOutputEvent(scm_nEventCNFID);
-		break;
-	}
+      DEVLOG_INFO(" %s = %s\n", strbuf1, sOutput.getValue());
+    }
+    sendOutputEvent(scm_nEventCNFID);
+    break;
+  }
 }
 

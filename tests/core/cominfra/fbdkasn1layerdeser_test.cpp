@@ -42,6 +42,8 @@
 
 #include "../../../src/core/datatypes/forte_time.h"
 
+#include "../../../src/core/datatypes/forte_array.h"
+
 #ifdef FORTE_USE_64BIT_DATATYPES
   #include "../../../src/core/datatypes/forte_lword.h"
   #include "../../../src/core/datatypes/forte_lint.h"

@@ -43,8 +43,8 @@ const SFBInterfaceSpec FORTE_F_ULINT_TO_BOOL::scm_stFBInterfaceSpec = {
 
 void FORTE_F_ULINT_TO_BOOL::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-	  OUT() = ULINT_TO_BOOL(IN());
-	  sendOutputEvent(scm_nEventCNFID);
+    OUT() = ULINT_TO_BOOL(IN());
+    sendOutputEvent(scm_nEventCNFID);
   }
 }
 

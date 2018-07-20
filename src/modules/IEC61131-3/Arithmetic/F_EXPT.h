@@ -14,8 +14,6 @@
 #define _F_EXPT_H_
 
 #include <funcbloc.h>
-#include <forte_any_real.h>
-#include <forte_any_num.h>
 
 class FORTE_F_EXPT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_EXPT)

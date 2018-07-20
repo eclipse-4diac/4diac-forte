@@ -16,7 +16,6 @@
 #include <taskLib.h>
 #include <msys_e.h>
 #include <log_e.h>
-#include <new>
 
 //--- SW-Module memory partition, needed for new operator
 extern UINT32 FORTE_MemPart;
@@ -44,56 +43,5 @@ void *forte_malloc(size_t pa_nSize){
     return pTemp;
 }
 
-inline
-void *forte_realloc(void *pa_pvData, size_t pa_nSize){
-  //FIXME add realloc implementation for BE_M1 platform
-  return realloc(pa_pvData, pa_nSize);
-}
-
-
-inline
-void* operator new(size_t pa_nSize) throw(std::bad_alloc) {
-	return forte_malloc(pa_nSize);
-}
-
-inline
-void* operator new[](size_t pa_nSize) throw(std::bad_alloc) {
-  return forte_malloc(pa_nSize);
-}
-
-inline
-void operator delete(void* pa_pvData) throw() {
-	sys_MemXFree(pa_pvData);
-}
-
-inline
-void operator delete[](void* pa_pvData) throw() {
-	sys_MemXFree(pa_pvData);
-}
-
-/*! \brief Placement new operator
- *
- * Will use the given buffer as memory region. The need size will be ignored.
- * Objects created with this new must not deleted only invoke the destructor
- *
- * @param pa_pData
- */
-inline
-void * operator new(size_t, TForteByte *pa_pData) throw() {
-	return pa_pData;
-}
-
-inline
-void * operator new[](size_t, TForteByte *pa_pData) throw() {
-	return pa_pData;
-}
-
-inline
-void operator delete(void *, TForteByte *) throw() {
-}
-
-inline
-void operator delete[](void *, TForteByte *) throw() {
-}
 
 #endif /* FORTEALLOC_H_ */

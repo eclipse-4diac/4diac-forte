@@ -13,9 +13,6 @@
 #define _FB_CTUD_H_
 
 #include <funcbloc.h>
-#include <forte_int.h>
-#include <forte_bool.h>
-#include <forte_array.h>
 
 class FB_CTUD: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FB_CTUD)
@@ -40,29 +37,29 @@ private:
   void executeEvent(int pa_nEIID);
 
   CIEC_BOOL& CU() {
-   	return *static_cast<CIEC_BOOL*>(getDI(0));
+     return *static_cast<CIEC_BOOL*>(getDI(0));
   }
   CIEC_BOOL& CD() {
-   	return *static_cast<CIEC_BOOL*>(getDI(1));
+     return *static_cast<CIEC_BOOL*>(getDI(1));
   }
   CIEC_BOOL& R() {
     return *static_cast<CIEC_BOOL*>(getDI(2));
   }
   CIEC_BOOL& LD() {
-   	return *static_cast<CIEC_BOOL*>(getDI(3));
+     return *static_cast<CIEC_BOOL*>(getDI(3));
   }
   CIEC_INT& PV() {
-   	return *static_cast<CIEC_INT*>(getDI(4));
+     return *static_cast<CIEC_INT*>(getDI(4));
   }
 
   CIEC_BOOL& QU() {
-   	return *static_cast<CIEC_BOOL*>(getDO(0));
+     return *static_cast<CIEC_BOOL*>(getDO(0));
   }
   CIEC_BOOL& QD() {
-   	return *static_cast<CIEC_BOOL*>(getDO(1));
+     return *static_cast<CIEC_BOOL*>(getDO(1));
   }
   CIEC_INT& CV() {
-   	return *static_cast<CIEC_INT*>(getDO(2));
+     return *static_cast<CIEC_INT*>(getDO(2));
   }
 
 public:
