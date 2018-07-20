@@ -28,15 +28,15 @@ void CHttpParser::createGetRequest(CIEC_STRING& paDest, const CIEC_STRING& paHos
   CHttpParser::addHeaderEnding(paDest);
 }
 
-void CHttpParser::createPutRequest(CIEC_STRING& paDest, const CIEC_STRING& paHost, const CIEC_STRING& paPath, const CIEC_STRING& paData, const CIEC_STRING& paContentType){
-  CHttpParser::addCommonHeader(paDest, paHost, paPath, CHttpComLayer::e_PUT);
+void CHttpParser::createPutPostRequest(CIEC_STRING& paDest, const CIEC_STRING& paHost, const CIEC_STRING& paPath, const CIEC_STRING& paData, const CIEC_STRING& paContentType, CHttpComLayer::ERequestType paType){
+  CHttpParser::addCommonHeader(paDest, paHost, paPath, paType);
   paDest.append("\r\nContent-type: ");
   paDest.append(paContentType.getValue());
   paDest.append("\r\nContent-length: ");
-  changePutData(paDest, paData);
+  changePutPostData(paDest, paData);
 }
 
-bool CHttpParser::changePutData(CIEC_STRING& paDest, const CIEC_STRING& paData){
+bool CHttpParser::changePutPostData(CIEC_STRING& paDest, const CIEC_STRING& paData){
   char* helperChar = strstr(paDest.getValue(), "length: ");
   if(0 != helperChar){
     helperChar += 8;
@@ -50,7 +50,7 @@ bool CHttpParser::changePutData(CIEC_STRING& paDest, const CIEC_STRING& paData){
     return true;
   }
   else{ // wrong request?
-    DEVLOG_ERROR("[HTTP Parser] PUT request was wrongly created\n");
+    DEVLOG_ERROR("[HTTP Parser] PUT/POST request was wrongly created\n");
     return false;
   }
 }
@@ -62,6 +62,9 @@ void CHttpParser::addCommonHeader(CIEC_STRING& paDest, const CIEC_STRING& paHost
       break;
     case CHttpComLayer::e_PUT:
       paDest = "PUT /";
+      break;
+    case CHttpComLayer::e_POST:
+      paDest = "POST /";
       break;
     default:
       DEVLOG_ERROR("[HTTP Parser] Unexpected HTTP Type when adding header\n");
@@ -79,8 +82,9 @@ void CHttpParser::addHeaderEnding(CIEC_STRING& paDest) {
 }
 
 bool CHttpParser::parseGetResponse(CIEC_STRING& paDest, char* paSrc, CIEC_STRING& paExpectedCode){
-  if(CHttpParser::getHttpResponseCode(paDest, paSrc)){
-    if(paDest == paExpectedCode){
+  CIEC_STRING receivedCode;
+  if(CHttpParser::getHttpResponseCode(receivedCode, paSrc)){
+    if(receivedCode == paExpectedCode || "*" == paExpectedCode){
       char* helperChar = strstr(paSrc, "\r\n\r\n"); // Extract data from HTTP GET response char
       if(0 != helperChar){
         helperChar += 4;
@@ -91,17 +95,16 @@ bool CHttpParser::parseGetResponse(CIEC_STRING& paDest, char* paSrc, CIEC_STRING
         paDest = "";
         return false;
       }
+    }else{
+      DEVLOG_INFO("[HTTP Parser] Unexpected GET response code. Expected was %s and received was: \n", paExpectedCode.getValue(), receivedCode.getValue());
     }
-  }else{
-    // Bad response received?
-    DEVLOG_INFO("[HTTP Parser] Unexpected GET response code\n");
   }
   return false;
 }
 
-bool CHttpParser::parsePutResponse(CIEC_STRING& paDest, char* paSrc, CIEC_STRING& paExpectedCode) {
+bool CHttpParser::parsePutPostResponse(CIEC_STRING& paDest, char* paSrc, CIEC_STRING& paExpectedCode) {
   if(CHttpParser::getHttpResponseCode(paDest, paSrc)){
-    if(paDest == paExpectedCode){
+    if(paDest == paExpectedCode || "*" == paExpectedCode){
       return true;
     }
     else{
@@ -125,3 +128,107 @@ bool CHttpParser::getHttpResponseCode(CIEC_STRING& paDest, char* paSrc) {
     return false;
   }
 }
+
+bool forte::com_infra::CHttpParser::parseGetRequest(CIEC_STRING& paPath, CSinglyLinkedList<CIEC_STRING>& paParameterNames, CSinglyLinkedList<CIEC_STRING>& paParameterValues, char* paData){
+  char* helperChar = strstr(paData, "GET ");
+   if (helperChar != 0) {
+     helperChar += 4;
+     char* endOfPath = strstr(helperChar, " ");
+     if (endOfPath != 0) {
+       *endOfPath = '\0';
+       char* startOfParameters = strstr(paData, "?");
+       if(startOfParameters != 0){
+         *startOfParameters = '\0';
+         startOfParameters++;
+         parseParameters(startOfParameters, paParameterNames, paParameterValues);
+       }
+       paPath = helperChar;
+     }else{
+      DEVLOG_ERROR("[HTTP Parser] Invalid HTTP Get request. No space after path found\n");
+      return false;
+     }
+     return true;
+   }
+   else {
+     DEVLOG_ERROR("[HTTP Parser] Invalid HTTP Get request. No GET string found\n");
+     return false;
+   }
+}
+
+bool forte::com_infra::CHttpParser::createReponse(CIEC_STRING& paDest, const CIEC_STRING& paResult, const CIEC_STRING& paContentType, const CIEC_STRING& paData){
+  paDest.append("HTTP/1.1 ");
+  paDest.append(paResult.getValue());
+  paDest.append("\r\nContent-type: ");
+  paDest.append(paContentType.getValue());
+  paDest.append("\r\nContent-length: ");
+  changePutPostData(paDest, paData);
+  return true;
+}
+
+unsigned int forte::com_infra::CHttpParser::parseParameters(char* paParameters, CSinglyLinkedList<CIEC_STRING>& paParameterNames, CSinglyLinkedList<CIEC_STRING>& paParameterValues){
+  paParameterNames.clearAll();
+  paParameterValues.clearAll();
+
+  unsigned int retVal = 0;
+
+  char* startOfName = paParameters;
+
+  while('\0' != *startOfName){
+    char* startOfValue = strstr(startOfName, "=");
+    if(0 != startOfValue){
+      *startOfValue = '\0';
+      startOfValue++;
+    }else{
+      paParameterNames.clearAll();
+      paParameterValues.clearAll();
+      retVal = 0;
+      break;
+    }
+    char* nextName = strstr(startOfValue, "&");
+    bool endOfParameters = false;;
+    if(0 != nextName){
+      *nextName = '\0';
+    }else{
+      endOfParameters = true;
+    }
+    paParameterNames.push_back(startOfName);
+    paParameterValues.push_back(startOfValue);
+    retVal++;
+    if(!endOfParameters){
+      startOfName = ++nextName;
+    }else{
+      break;
+    }
+
+  }
+
+  return retVal;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

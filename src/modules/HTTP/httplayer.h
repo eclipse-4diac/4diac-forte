@@ -34,7 +34,10 @@ namespace forte {
         EComResponse sendData(void *paData, unsigned int paSize); // top interface, called from top
         EComResponse recvData(const void *paData, unsigned int paSize);
 
-        EComResponse openConnection(char *paLayerParameter);
+        EComResponse recvServerData(CSinglyLinkedList<CIEC_STRING>& paParameterNames, CSinglyLinkedList<CIEC_STRING>& paParameterValues);
+
+        EComResponse openConnection(char* paLayerParameter);
+
         void closeConnection();
 
         EComResponse processInterrupt();
@@ -45,9 +48,16 @@ namespace forte {
           e_GET,
           /** HTTP PUT */
           e_PUT,
+          /** HTTP PUT */
+          e_POST,
           /** not ready */
           e_NOTSET,
         };
+
+        CIEC_STRING& getHost();
+
+        TForteUInt16 getPort();
+
 
       protected:
 
@@ -60,17 +70,8 @@ namespace forte {
          */
         EComResponse handleHTTPResponse(char *paData);
 
-        /**
-         * Copy the received data to the buffer
-         */
-        void handledRecvData();
-
         /** Serializes the data to a char* */
         bool serializeData(const CIEC_ANY& paCIECData);
-
-        void closeSocket(CIPComSocketHandler::TSocketDescriptor *paSocketID);
-
-        EComResponse openHTTPConnection();
 
         EComResponse mInterruptResp;
 
@@ -90,8 +91,6 @@ namespace forte {
         char mRecvBuffer[cg_unIPLayerRecvBufferSize];
         unsigned int mBufFillSize;
 
-        CIPComSocketHandler::TSocketDescriptor mSocketID;
-
         /** Expected response code (default: HTTP/1.1 200 OK) */
         CIEC_STRING mExpectedRspCode;
 
@@ -100,7 +99,9 @@ namespace forte {
         /** Ouput response is to be written to a data output */
         bool hasOutputResponse;
 
-        CSemaphore mSendDataReceived;
+        bool mCorrectlyInitialized;
+
+        bool mHasParameter;
     };
 
   }

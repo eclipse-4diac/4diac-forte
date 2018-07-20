@@ -17,4 +17,6 @@ forte_add_network_layer(HTTP OFF "http" CHttpComLayer httplayer "Enable an HTTP 
 if(FORTE_COM_HTTP)
   forte_add_sourcefile_hcpp(httpparser)
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+      forte_add_handler(CHTTP_Handler http_handler)
+    forte_add_sourcefile_hcpp(http_handler)
 endif(FORTE_COM_HTTP)
