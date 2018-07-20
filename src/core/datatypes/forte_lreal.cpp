@@ -99,13 +99,29 @@ void CIEC_LREAL::castLRealData(const CIEC_LREAL &pa_roSrcValue, CIEC_ANY &pa_roD
     case CIEC_ANY::e_SINT:
     case CIEC_ANY::e_INT:
     case CIEC_ANY::e_DINT:
-    case CIEC_ANY::e_LINT:
-      *((CIEC_ANY::TLargestIntValueType *) pa_roDestValue.getDataPtr()) = static_cast<CIEC_ANY::TLargestIntValueType>(pa_roSrcValue);
+    case CIEC_ANY::e_LINT: {
+      CIEC_LREAL::TValueType doubleValue = static_cast<CIEC_LREAL::TValueType>(pa_roSrcValue);
+      if(0 < doubleValue){
+        doubleValue += 0.5;
+      }
+      if(0 > doubleValue){
+        doubleValue -= 0.5;
+      }
+      *((CIEC_ANY::TLargestIntValueType *) pa_roDestValue.getDataPtr()) = static_cast<CIEC_ANY::TLargestIntValueType>(doubleValue);
+    }
       break;
-    default:
+    default: {
       //TODO maybe we should check for destination id to be in valid range (i.e., any_bit, any_unsigned_int, and time)
       //should not be necessary because of connect function, but who knows.
-      *((CIEC_ANY::TLargestUIntValueType *) pa_roDestValue.getDataPtr()) = static_cast<CIEC_ANY::TLargestUIntValueType>(pa_roSrcValue);
+      CIEC_LREAL::TValueType doubleValue = static_cast<CIEC_LREAL::TValueType>(pa_roSrcValue);
+      if(0 < doubleValue){
+        doubleValue += 0.5;
+      }
+      if(0 > doubleValue){
+        doubleValue -= 0.5;
+      }
+      *((CIEC_ANY::TLargestUIntValueType *) pa_roDestValue.getDataPtr()) = static_cast<CIEC_ANY::TLargestUIntValueType>(doubleValue);
+    }
       break;
   }
 }
