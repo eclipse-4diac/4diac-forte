@@ -16,14 +16,13 @@
 #include <esfb.h>
 #include <extevhan.h>
 #include <forte_thread.h>
-#include <singlet.h>
 
 #include <vector>
 
 class FORTE_TRIGGER_SERVICE_CLIENT;
 
 class CServiceCallManager : public CExternalEventHandler, private CThread{
-  DECLARE_SINGLETON(CServiceCallManager)
+  DECLARE_HANDLER(CServiceCallManager)
 
   private:
     std::vector<FORTE_TRIGGER_SERVICE_CLIENT*> m_callerVector;

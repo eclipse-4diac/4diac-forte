@@ -16,9 +16,9 @@
 
 //	 ------------------------- CROSLayer::CROSManager -------------------------
 
-DEFINE_SINGLETON(CROSManager);
+DEFINE_HANDLER(CROSManager);
 
-CROSManager::CROSManager() :
+CROSManager::CROSManager(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution),
     CThread(/* long stacksize , 3500*/){
   start();
 }
@@ -35,7 +35,7 @@ void CROSManager::disableHandler(){
   ros::shutdown();
 }
 
-void CROSManager::setPriority(int pa_prio){
+void CROSManager::setPriority(int){
   //	FIXME adjust thread priority correctly
 }
 
@@ -60,7 +60,7 @@ std::string CROSManager::ciecStringToStdString(const CIEC_STRING &pa_DataInput){
 }
 
 CIEC_STRING CROSManager::stdStringToCiecString(const std::string pa_inputString){
-  int stringLength = std::strlen(pa_inputString.c_str());
+  int stringLength = static_cast<int>(std::strlen(pa_inputString.c_str()));
   CIEC_STRING tmpString;
   tmpString.assign(pa_inputString.c_str(), static_cast<TForteUInt16>(stringLength));
   return tmpString;

@@ -127,7 +127,7 @@ class FORTE_EXECUTE_ACTION_SERVER : public CEventSourceFB{
     void ActionExecuteCB(const ExecuteGoalConstPtr &pa_goal);
 
   public:
-    EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_EXECUTE_ACTION_SERVER), m_Initiated(false), m_ResultAvailable(false), m_RosNamespace(""), m_RosMsgName(""){
+    EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_EXECUTE_ACTION_SERVER), m_nh(0) ,m_RosNamespace(""), m_RosMsgName(""), m_Initiated(false), m_ResultAvailable(false), m_ActionServer(0) {
     };
 
     virtual ~FORTE_EXECUTE_ACTION_SERVER(){};

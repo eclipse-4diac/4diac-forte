@@ -15,13 +15,12 @@
 
 #include <extevhan.h>
 #include <forte_thread.h>
-#include <singlet.h>
 
 #include <forte_string.h>
 #include <string>
 
 class CROSManager : public CExternalEventHandler, private CThread{
-  DECLARE_SINGLETON(CROSManager)
+  DECLARE_HANDLER(CROSManager)
 
   public:
     virtual void enableHandler();

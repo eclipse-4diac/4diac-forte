@@ -22,7 +22,7 @@
 
 using namespace forte::com_infra;
 
-CROSLayer::CROSLayer(CComLayer* pa_poUpperLayer, CCommFB* pa_poComFB) :
+CROSLayer::CROSLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB) :
     CComLayer(pa_poUpperLayer, pa_poComFB){
 
   m_eInterruptResp = e_ProcessDataOk;
@@ -46,12 +46,10 @@ EComResponse CROSLayer::openConnection(char *pa_acLayerParameter){
 
   // extract layerparams from ID input between the square brackets
   // example: ID = ros[/signal:std_msgs/Float64], layerparams = /signal:std_msgs/Float64
-  int doublePoint = layerParams.find_last_of(":");
+  int doublePoint = static_cast<int>(layerParams.find_last_of(":"));
   m_TopicName = layerParams.substr(0, doublePoint);
 
   if(e_Subscriber == m_eCommServiceType){
-    // initialize ros manager for subscribers to start externalEventChain
-    CROSManager::getInstance();
 
     m_NumRDs = getCommFB()->getNumRD();
 
@@ -137,7 +135,7 @@ void CROSLayer::handleReceivedValue(const boost::shared_ptr<const topic_tools::S
       boost::shared_ptr < std_msgs::String > instantiated = pa_Message->instantiate<std_msgs::String>();
       std::string ROSValue = instantiated->data;
 
-      int stringLength = std::strlen(ROSValue.c_str());
+      int stringLength = static_cast<int>(std::strlen(ROSValue.c_str()));
       CIEC_STRING tmpString;
       tmpString.assign(ROSValue.c_str(), static_cast<TForteUInt16>(stringLength));
 
@@ -154,14 +152,15 @@ void CROSLayer::handleReceivedValue(const boost::shared_ptr<const topic_tools::S
 
   getCommFB()->interruptCommFB(this);
 
-  CROSManager::getInstance().startChain(this->getCommFB());
+  GET_HANDLER_FROM_COMM_LAYER(CROSManager)->startChain(this->getCommFB());
 }
 
 void CROSLayer::closeConnection(){
   m_Nh.shutdown();
 }
 
-EComResponse CROSLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
+//TODO use sendData parameters instead of e.g., getCommFB()->getSDs()
+EComResponse CROSLayer::sendData(void *, unsigned int){
   EComResponse RetVal = e_ProcessDataOk;
 
   CIEC_ANY *DataArray = getCommFB()->getSDs();
@@ -249,7 +248,7 @@ EComResponse CROSLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
   return RetVal;
 }
 
-EComResponse CROSLayer::recvData(const void *pa_pvData, unsigned int pa_unSize){
+EComResponse CROSLayer::recvData(const void *, unsigned int){
   return e_ProcessDataOk;
 }
 

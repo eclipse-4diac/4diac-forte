@@ -24,6 +24,10 @@ if (FORTE_MODULE_ROS)
   # Communication Layer for ROS (publish, subscribe)
   #############################################################################
 
+  forte_add_handler(CROSManager ROSManager)
+  forte_add_handler(CServiceCallManager ServiceCallManager)
+
+
   forte_add_network_layer(ROS ON "ros" CROSLayer ROSLayer "Layer for providing and receiving data to/from ROS via publish/subscribe")
 
   forte_add_sourcefile_hcpp(ROSManager)
@@ -39,7 +43,7 @@ if (FORTE_MODULE_ROS)
       forte_add_include_directories(${catkin_INCLUDE_DIRS})
   else()
       forte_add_link_directories(/opt/ros/indigo/lib)
-      forte_add_include_directories(/opt/ros/indigo/include)
+      forte_add_include_system_directories(/opt/ros/indigo/include)
 
       set(catkin_LIBRARIES
           -lroscpp

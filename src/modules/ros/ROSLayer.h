@@ -27,7 +27,7 @@
 class CROSLayer : public forte::com_infra::CComLayer{
 
   public:
-    CROSLayer(forte::com_infra::CComLayer* pa_poUpperLayer, forte::com_infra::CCommFB* pa_poComFB);
+    CROSLayer(forte::com_infra::CComLayer* pa_poUpperLayer, forte::com_infra::CBaseCommFB* pa_poComFB);
     virtual ~CROSLayer();
 
     virtual void closeConnection();

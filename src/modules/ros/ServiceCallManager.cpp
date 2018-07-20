@@ -17,9 +17,9 @@
 
 //TODO add locking for the vector..
 
-DEFINE_SINGLETON(CServiceCallManager);
+DEFINE_HANDLER(CServiceCallManager);
 
-CServiceCallManager::CServiceCallManager() :
+CServiceCallManager::CServiceCallManager(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution),
     CThread(/* long stacksize , 3500*/){
   start();
 }
@@ -35,7 +35,7 @@ void CServiceCallManager::disableHandler(){
   ros::shutdown();
 }
 
-void CServiceCallManager::setPriority(int pa_prio){
+void CServiceCallManager::setPriority(int){
 }
 
 int CServiceCallManager::getPriority() const{

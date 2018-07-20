@@ -44,8 +44,8 @@ void FORTE_TRIGGER_SERVICE_SERVER::executeEvent(int pa_nEIID){
       //initiate
       if(!m_Initiated && QI()){
 
-        m_RosNamespace = CROSManager::getInstance().ciecStringToStdString(NAMESPACE());
-        m_RosMsgName = CROSManager::getInstance().ciecStringToStdString(SRVNAME());
+        m_RosNamespace = GET_HANDLER_FROM_THIS(CROSManager)->ciecStringToStdString(NAMESPACE());
+        m_RosMsgName = GET_HANDLER_FROM_THIS(CROSManager)->ciecStringToStdString(SRVNAME());
         m_nh = new ros::NodeHandle(m_RosNamespace);
         m_triggerServer = m_nh->advertiseService < FORTE_TRIGGER_SERVICE_SERVER > (m_RosMsgName, &FORTE_TRIGGER_SERVICE_SERVER::triggerCallback, const_cast<FORTE_TRIGGER_SERVICE_SERVER*>(this));
         m_Initiated = true;
@@ -77,9 +77,10 @@ void FORTE_TRIGGER_SERVICE_SERVER::executeEvent(int pa_nEIID){
   }
 }
 
-bool FORTE_TRIGGER_SERVICE_SERVER::triggerCallback(std_srvs::Trigger::Request &pa_req, std_srvs::Trigger::Response &pa_resp){
+//TODO use or delete first parameter
+bool FORTE_TRIGGER_SERVICE_SERVER::triggerCallback(std_srvs::Trigger::Request &, std_srvs::Trigger::Response &pa_resp){
   setEventChainExecutor(m_poInvokingExecEnv);
-  CROSManager::getInstance().startChain(this);
+  GET_HANDLER_FROM_THIS(CROSManager)->startChain(this);
 
   // is a response available
   ros::Rate r(2); //1Hz
@@ -89,7 +90,7 @@ bool FORTE_TRIGGER_SERVICE_SERVER::triggerCallback(std_srvs::Trigger::Request &p
 
   //write response
   pa_resp.success = SUCCESS();
-  pa_resp.message = CROSManager::getInstance().ciecStringToStdString(MESSAGE());
+  pa_resp.message = GET_HANDLER_FROM_THIS(CROSManager)->ciecStringToStdString(MESSAGE());
 
   m_ResponseAvailable = false;
 
