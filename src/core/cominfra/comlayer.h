@@ -15,13 +15,14 @@
 #define _COMLAYER_H_
 
 #include "comtypes.h"
+#include "comCallback.h"
 
 namespace forte {
   namespace com_infra {
 
     class CBaseCommFB;
 
-    class CComLayer{
+    class CComLayer : public CComCallback{
       public:
         virtual ~CComLayer();
 
@@ -52,22 +53,6 @@ namespace forte {
          *    - e_ProcessDataOk ... if sending process was successful
          */
         virtual EComResponse sendData(void *pa_pvData, unsigned int pa_unSize) = 0;
-
-        /*!\brief Take the given data and perform the necessary process for receiving data
-         *
-         * This function is called for processing the received data from bottom to top. Therefore
-         * if necessary invoke the top layer's receiveData function to hand on the processed data.
-         *
-         * @param pa_pvData pointer to the data received
-         * @param pa_unSize size of the data received
-         * @return status of the receiving process depends on if the layer is the bottom most layer:
-         *    - Normal Layer:
-         *        - e_ProcessDataOk ... if receiving process was successful
-         *    - Bottom most layer
-         *        - e_Nothing ...  if the processing of the data does not require to send an external event to the FB
-         *        - any other value requires that the ComFB is informed with an external event to further handle the received message
-         */
-        virtual EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize) = 0;
 
         /*!\brief Finish to process the data received in a context outside the communication interrupt i.e. within the event chain of the ComFB.
          *

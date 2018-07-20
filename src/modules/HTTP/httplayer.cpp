@@ -44,7 +44,7 @@ EComResponse CHttpComLayer::openConnection(char *paLayerParameter){
         eRetVal = e_InitOk;
       }
       else{
-        DEVLOG_ERROR("[HTTP Layer] The FB with PARAM %s coudln't be initialized since only one SD is possible in HTTP Server which is for the response\n");
+        DEVLOG_ERROR("[HTTP Layer] The FB with PARAM %s coudln't be initialized since only one SD is possible in HTTP Server which is for the response\n", mPath.getValue());
       }
       break;
     case e_Client: {
@@ -143,7 +143,10 @@ EComResponse CHttpComLayer::openConnection(char *paLayerParameter){
                 else{
                   DEVLOG_ERROR("[HTTP Layer] A GET request with more than one output\n");
                 }
+                break;
               }
+              default:
+                break;
             }
           }
           else{
@@ -348,6 +351,8 @@ void CHttpComLayer::closeConnection(){
   switch (m_poFb->getComServiceType()){
     case e_Server:
       GET_HANDLER_FROM_COMM_LAYER(CHTTP_Handler)->removeServerPath(mPath);
+      break;
+    default:
       break;
   }
   GET_HANDLER_FROM_COMM_LAYER(CHTTP_Handler)->forceClose(this);

@@ -35,6 +35,9 @@ class CFunctionBlock;
 #define GET_HANDLER_FROM_COMM_LAYER(type)                 \
     GET_HANDLER_FROM_FB(*m_poFb, type)
 
+#define GET_HANDLER_FROM_HANDLER(type)                 \
+    static_cast<type*>(m_poDeviceExecution.getHandler(type::handlerIdentifier))
+
 
 
 

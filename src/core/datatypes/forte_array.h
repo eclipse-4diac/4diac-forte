@@ -104,7 +104,7 @@ class CIEC_ARRAY : public CIEC_ANY_DERIVED{
      */
     virtual int toString(char* pa_acValue, unsigned int pa_nBufferSize) const;
 
-    virtual unsigned int getToStringBufferSize();
+    virtual unsigned int getToStringBufferSize() const;
 
   protected:
 

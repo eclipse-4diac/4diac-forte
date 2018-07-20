@@ -88,7 +88,7 @@ int CHTTP_Handler::getPriority(void) const {
   return 0;
 }
 
-forte::com_infra::EComResponse CHTTP_Handler::recvData(const void* paData, unsigned int paSize){
+forte::com_infra::EComResponse CHTTP_Handler::recvData(const void* paData, unsigned int){ //TODO: do something with the size parameter of the received data?
   CIPComSocketHandler::TSocketDescriptor socket = *(static_cast<const CIPComSocketHandler::TSocketDescriptor*>(paData));
 
   if(socket == smServerListeningSocket){
@@ -106,15 +106,15 @@ forte::com_infra::EComResponse CHTTP_Handler::recvData(const void* paData, unsig
   }else{
     { //remove socket from accepted
       CCriticalRegion criticalRegion(mAcceptedMutex);
-      CSinglyLinkedList<HTTPAcceptedSockets *>::Iterator iterFound = mAcceptedSockets.end();
+      HTTPAcceptedSockets *toDelete = 0;
       for(CSinglyLinkedList<HTTPAcceptedSockets *>::Iterator iter = mAcceptedSockets.begin(); iter != mAcceptedSockets.end(); ++iter){
         if((*iter)->mSocket == socket){
-          iterFound = iter;
+          toDelete = *iter;
           break;
         }
       }
-      if(iterFound != mAcceptedSockets.end()){
-        mAcceptedSockets.erase(iterFound);
+      if(0 != toDelete){
+        mAcceptedSockets.erase(toDelete);
       }
     }
 
@@ -129,7 +129,7 @@ forte::com_infra::EComResponse CHTTP_Handler::recvData(const void* paData, unsig
       { //check clients
         CCriticalRegion criticalRegion(mClientMutex);
         if(!mClientLayers.isEmpty()){
-          CSinglyLinkedList<HTTPClientWaiting *>::Iterator iterFound = mClientLayers.end();
+          HTTPClientWaiting * toDelete = 0;
           for(CSinglyLinkedList<HTTPClientWaiting *>::Iterator iter = mClientLayers.begin(); iter != mClientLayers.end(); ++iter){
             if((*iter)->mSocket == socket){
               if(e_ProcessDataOk == (*iter)->mLayer->recvData(sRecvBuffer, recv)){
@@ -137,14 +137,14 @@ forte::com_infra::EComResponse CHTTP_Handler::recvData(const void* paData, unsig
               }
               closeSocket(socket);
               found = true;
-              iterFound = iter;
+              toDelete = *iter;
               break;
             }
           }
 
-          if(mClientLayers.end() != iterFound){
-            delete (*iterFound);
-            mClientLayers.erase(iterFound);
+          if(0 != toDelete){
+            delete toDelete;
+            mClientLayers.erase(toDelete);
           }
         }
       }
@@ -219,7 +219,7 @@ void CHTTP_Handler::addServerPath(forte::com_infra::CHttpComLayer* paLayer, CIEC
 
 void CHTTP_Handler::removeServerPath(CIEC_STRING& paPath){
   CCriticalRegion criticalRegion(mServerMutex);
-  CSinglyLinkedList<HTTPServerWaiting *>::Iterator iterFound = mServerLayers.end();
+  HTTPServerWaiting * toDelete = 0;
   for(CSinglyLinkedList<HTTPServerWaiting *>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter){
     if((*iter)->mPath == paPath){
       for(CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor *>::Iterator iter_ = (*iter)->mSockets.begin(); iter_ != (*iter)->mSockets.end(); ++iter_){
@@ -228,13 +228,13 @@ void CHTTP_Handler::removeServerPath(CIEC_STRING& paPath){
         }
       }
       delete (*iter);
-      iterFound = iter;
+      toDelete = *iter;
       break;
     }
   }
 
-  if(iterFound != mServerLayers.end()){
-    mServerLayers.erase(iterFound);
+  if(0 != toDelete){
+    mServerLayers.erase(toDelete);
   }
 
   if(mServerLayers.isEmpty()){
@@ -288,7 +288,7 @@ void CHTTP_Handler::run() {
         for(CSinglyLinkedList<HTTPClientWaiting *>::Iterator iter = clientsToDelete.begin(); iter != clientsToDelete.end(); ++iter){
           for(CSinglyLinkedList<HTTPClientWaiting *>::Iterator iter_ = mClientLayers.begin(); iter_ != mClientLayers.end(); ++iter_){
             if(*iter_ == *iter){
-              mClientLayers.erase(iter_);
+              mClientLayers.erase(*iter_);
               break;
             }
           }
@@ -314,7 +314,7 @@ void CHTTP_Handler::run() {
         for(CSinglyLinkedList<HTTPAcceptedSockets *>::Iterator iter = acceptedToDelete.begin(); iter != acceptedToDelete.end(); ++iter){
           for(CSinglyLinkedList<HTTPAcceptedSockets *>::Iterator iter_ = mAcceptedSockets.begin(); iter_ != mAcceptedSockets.end(); ++iter_){
             if(*iter_ == *iter){
-              mAcceptedSockets.erase(iter_);
+              mAcceptedSockets.erase(*iter_);
               break;
             }
           }

@@ -100,7 +100,11 @@ public:
    */
   const Iterator eraseAfter(Iterator& it);
 
-
+  /*! \brief erases the element according to the passed pointer
+   *
+   * @param paToDelete pointer to the element to be deleted
+   */
+  void erase(T const& paToDelete);
 
 };
 
@@ -162,6 +166,29 @@ const CIterator<T,Container> CSinglyLinkedList<T,Container>::eraseAfter(Iterator
   delete pNodeToDelete;
   return Iterator((it.getPosition())->getNext());
 }
+
+template <typename T, typename Container>
+void CSinglyLinkedList<T,Container>::erase(T const& paToDelete){
+
+    Iterator itRunner(m_poFirstNode);
+    Iterator itRefNode(m_poLastNode);
+    Iterator itEnd(m_poLastNode);
+
+    while(itRunner != itEnd){
+      if(*itRunner == paToDelete){
+        if(itRefNode == itEnd){
+          pop_front();
+        }
+        else{
+          eraseAfter(itRefNode);
+        }
+        break;
+      }
+
+      itRefNode = itRunner;
+      ++itRunner;
+    }
+  }
 
 /*!\brief explicit specialization for a void* list
  *
@@ -290,6 +317,32 @@ public:
     return Iterator((it.getPosition())->getNext());
   }
 
+  /*! \brief erases the element according to the passed pointer
+   *
+   * @param paToDelete pointer to the element to be deleted
+   */
+  void erase(void* paToDelete){
+
+    Iterator itRunner(m_poFirstNode);
+    Iterator itRefNode(m_poLastNode);
+    Iterator itEnd(m_poLastNode);
+
+    while(itRunner != itEnd){
+      if(*itRunner == paToDelete){
+        if(itRefNode == itEnd){
+          pop_front();
+        }
+        else{
+          eraseAfter(itRefNode);
+        }
+        break;
+      }
+
+      itRefNode = itRunner;
+      ++itRunner;
+    }
+  }
+
 };
 
 /*!\brief partial specialization for pointer lists
@@ -382,6 +435,10 @@ public:
   const Iterator eraseAfter(Iterator& it) {
     CSinglyLinkedList<void*>::Iterator itBuff(it.getPosition());
     return Iterator((m_List.eraseAfter(itBuff)).getPosition());
+  }
+
+  void erase(T* paToDelete){
+    m_List.erase(paToDelete);
   }
 
 };

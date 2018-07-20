@@ -20,7 +20,7 @@
 
 namespace forte{
   namespace com_infra{
-    class CComLayer;
+    class CComCallback;
   }
 }
 
@@ -36,8 +36,8 @@ class CFDSelectHandler : public CExternalEventHandler, private CThread{
     typedef FORTE_SOCKET_TYPE TFileDescriptor; //!< General type definition for a file descriptor. To be used by the callback classes.
     static const TFileDescriptor scmInvalidFileDescriptor = FORTE_INVALID_SOCKET;
 
-    void addComCallback(TFileDescriptor pa_nFD, forte::com_infra::CComLayer *pa_poComLayer);
-    void removeComCallback(TFileDescriptor pa_nFD);
+    void addComCallback(TFileDescriptor paFD, forte::com_infra::CComCallback *paComLayer);
+    void removeComCallback(TFileDescriptor paFD);
 
     /* functions needed for the external event handler interface */
     void enableHandler(void){
@@ -63,17 +63,17 @@ class CFDSelectHandler : public CExternalEventHandler, private CThread{
 
   private:
     struct TConnContType{
-        TFileDescriptor m_nSockDes;
-        forte::com_infra::CComLayer * m_poCallee;
+        TFileDescriptor mSockDes;
+        forte::com_infra::CComCallback * mCallee;
     };
 
     typedef CSinglyLinkedList<TConnContType> TConnectionContainer;
 
     TFileDescriptor createFDSet(fd_set *m_panFDSet);
 
-    TConnectionContainer m_lstConnectionsList;
-    CSyncObject m_oSync;
-    bool m_bConnectionListChanged;
+    TConnectionContainer mConnectionsList;
+    CSyncObject mSync;
+    bool mConnectionListChanged;
 };
 
 #endif
