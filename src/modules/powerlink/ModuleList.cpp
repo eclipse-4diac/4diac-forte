@@ -34,7 +34,7 @@ CModuleList::~CModuleList(){
 }
 
 void CModuleList::addEntry(const char* pa_pchName, unsigned int pa_nPiOffset, unsigned int pa_nBitOffset, unsigned int pa_nModuleNr){
-  m_lModules.push_back(new IoModule(pa_pchName, pa_nPiOffset, pa_nBitOffset, pa_nModuleNr));
+  m_lModules.pushBack(new IoModule(pa_pchName, pa_nPiOffset, pa_nBitOffset, pa_nModuleNr));
 
   m_nNumberOfModules++;
 }

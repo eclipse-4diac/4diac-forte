@@ -128,7 +128,7 @@ EMGMResponse CMonitoringHandler::removeWatch(forte::core::TNameIdentifier &paNam
           //no further values are monitored so remove the entry
           if(itRefNode == mFBMonitoringList.end()){
             //we have the first entry in the list
-            mFBMonitoringList.pop_front();
+            mFBMonitoringList.popFront();
           }
           else{
             mFBMonitoringList.eraseAfter(itRefNode);
@@ -262,7 +262,7 @@ CMonitoringHandler::SFBMonitoringEntry &CMonitoringHandler::findOrCreateFBMonito
     }
   }
 
-  mFBMonitoringList.push_back(SFBMonitoringEntry());
+  mFBMonitoringList.pushBack(SFBMonitoringEntry());
   TFBMonitoringList::Iterator itLastEntry(mFBMonitoringList.back());
   itLastEntry->m_poFB = paFB;
   return *itLastEntry;
@@ -277,7 +277,7 @@ void CMonitoringHandler::addDataWatch(SFBMonitoringEntry &paFBMonitoringEntry,
       return;
     }
   }
-  paFBMonitoringEntry.m_lstWatchedDataPoints.push_back(SDataWatchEntry(paPortId, paDataVal));
+  paFBMonitoringEntry.m_lstWatchedDataPoints.pushBack(SDataWatchEntry(paPortId, paDataVal));
 }
 
 bool CMonitoringHandler::removeDataWatch(SFBMonitoringEntry &paFBMonitoringEntry,
@@ -291,7 +291,7 @@ bool CMonitoringHandler::removeDataWatch(SFBMonitoringEntry &paFBMonitoringEntry
     if(itRunner->mPortId == paPortId){
       if(itRefNode == paFBMonitoringEntry.m_lstWatchedDataPoints.end()){
         //we have the first entry in the list
-        paFBMonitoringEntry.m_lstWatchedDataPoints.pop_front();
+        paFBMonitoringEntry.m_lstWatchedDataPoints.popFront();
       }
       else{
         paFBMonitoringEntry.m_lstWatchedDataPoints.eraseAfter(itRefNode);
@@ -316,7 +316,7 @@ void CMonitoringHandler::addEventWatch(SFBMonitoringEntry &paFBMonitoringEntry,
       return;
     }
   }
-  paFBMonitoringEntry.m_lstWatchedEventPoints.push_back(SEventWatchEntry(paPortId, paEventData));
+  paFBMonitoringEntry.m_lstWatchedEventPoints.pushBack(SEventWatchEntry(paPortId, paEventData));
 }
 
 bool CMonitoringHandler::removeEventWatch(SFBMonitoringEntry &paFBMonitoringEntry,
@@ -330,7 +330,7 @@ bool CMonitoringHandler::removeEventWatch(SFBMonitoringEntry &paFBMonitoringEntr
     if(itRunner->m_unPortId == paPortId){
       if(itRefNode == paFBMonitoringEntry.m_lstWatchedEventPoints.end()){
         //we have the first entry in the list
-        paFBMonitoringEntry.m_lstWatchedEventPoints.pop_front();
+        paFBMonitoringEntry.m_lstWatchedEventPoints.popFront();
       }
       else{
         paFBMonitoringEntry.m_lstWatchedEventPoints.eraseAfter(itRefNode);

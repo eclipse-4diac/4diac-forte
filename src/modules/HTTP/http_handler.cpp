@@ -98,7 +98,7 @@ forte::com_infra::EComResponse CHTTP_Handler::recvData(const void* paData, unsig
       HTTPAcceptedSockets* accepted = new HTTPAcceptedSockets();
       accepted->mSocket = newConnection;
       accepted->mStartTime.setCurrentTime();
-      mAcceptedSockets.push_back(accepted);
+      mAcceptedSockets.pushBack(accepted);
       GET_HANDLER_FROM_HANDLER(CIPComSocketHandler)->addComCallback(newConnection, this);
     }else{
       DEVLOG_INFO("[HTTP Handler] Couldn't accept new HTTP connection\n");
@@ -158,7 +158,7 @@ forte::com_infra::EComResponse CHTTP_Handler::recvData(const void* paData, unsig
           if(CHttpParser::parseGetRequest(path, parameterNames, parameterValues, sRecvBuffer)){
             for(CSinglyLinkedList<HTTPServerWaiting *>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter){
               if((*iter)->mPath == path){
-                (*iter)->mSockets.push_back(&socket);
+                (*iter)->mSockets.pushBack(&socket);
                 if(e_ProcessDataOk == (*iter)->mLayer->recvServerData(parameterNames, parameterValues)){
                   startNewEventChain((*iter)->mLayer->getCommFB());
                 }
@@ -193,7 +193,7 @@ bool CHTTP_Handler::sendClientData(forte::com_infra::CHttpComLayer* paLayer, CIE
       toAdd->mSocket = newSocket;
       toAdd->mStartTime.setCurrentTime();
       startTimeoutThread();
-      mClientLayers.push_back(toAdd);
+      mClientLayers.pushBack(toAdd);
       GET_HANDLER_FROM_HANDLER(CIPComSocketHandler)->addComCallback(newSocket, this);
       resumeSelfsuspend();
       return true;
@@ -213,7 +213,7 @@ void CHTTP_Handler::addServerPath(forte::com_infra::CHttpComLayer* paLayer, CIEC
   HTTPServerWaiting* toAdd = new HTTPServerWaiting();
   toAdd->mLayer = paLayer;
   toAdd->mPath = paPath;
-  mServerLayers.push_back(toAdd);
+  mServerLayers.pushBack(toAdd);
   DEVLOG_INFO("[HTTP Handler]: The listening  path \"%s\" was added to the http server\n", paPath.getValue());
 }
 
@@ -281,7 +281,7 @@ void CHTTP_Handler::run() {
           if(currentTime.getMilliSeconds() - (*iter)->mStartTime.getMilliSeconds() > scmSendTimeout * 1000){
             DEVLOG_ERROR("[HTTP Handler]: Timeout at client %s:%u \n", (*iter)->mLayer->getHost().getValue(), (*iter)->mLayer->getPort());
             closeSocket((*iter)->mSocket);
-            clientsToDelete.push_back(*iter);
+            clientsToDelete.pushBack(*iter);
             (*iter)->mLayer->recvData(0, 0); //indicates timeout
           }
         }
@@ -307,7 +307,7 @@ void CHTTP_Handler::run() {
           if(currentTime.getMilliSeconds() - (*iter)->mStartTime.getMilliSeconds() > scmAcceptedTimeout * 1000){
             DEVLOG_ERROR("[HTTP Handler]: Timeout at accepted socket\n");
             closeSocket((*iter)->mSocket);
-            acceptedToDelete.push_back(*iter);
+            acceptedToDelete.pushBack(*iter);
           }
         }
 
@@ -377,12 +377,12 @@ void CHTTP_Handler::sendServerAnswerHelper(forte::com_infra::CHttpComLayer* paLa
   if(!mServerLayers.isEmpty()){
     for(CSinglyLinkedList<HTTPServerWaiting *>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter){
       if((*iter)->mLayer == paLayer){
-        CIPComSocketHandler::TSocketDescriptor socket = *(*iter)->mSockets.peek_front();
+        CIPComSocketHandler::TSocketDescriptor socket = *(*iter)->mSockets.peekFront();
         if(paAnswer.length() != CIPComSocketHandler::sendDataOnTCP(socket, paAnswer.getValue(), paAnswer.length())){
           DEVLOG_ERROR("[HTTP Handler]: Error sending back the answer %s \n", paAnswer.getValue());
         }
         closeSocket(socket);
-        (*iter)->mSockets.pop_front();
+        (*iter)->mSockets.popFront();
         break;
       }
     }
@@ -406,7 +406,7 @@ void CHTTP_Handler::forceCloseHelper(forte::com_infra::CHttpComLayer* paLayer, b
         if(!(*iter)->mSockets.isEmpty()){
           CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor*>::Iterator itSocket = (*iter)->mSockets.begin();
           closeSocket(**itSocket);
-          (*iter)->mSockets.pop_front();
+          (*iter)->mSockets.popFront();
         }
         found = true;
         break;

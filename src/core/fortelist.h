@@ -1,5 +1,5 @@
 /*******************************************************************************
-  * Copyright (c) 2009 - 2012 ACIN, 2017 fortiss GmbH
+  * Copyright (c) 2009 - 2012, 2018 TU Vienna/ACIN, 2017 fortiss GmbH
   * All rights reserved. This program and the accompanying materials
   * are made available under the terms of the Eclipse Public License v1.0
   * which accompanies this distribution, and is available at
@@ -11,6 +11,8 @@
   *    Stefan Profanter
   *      - list->begin changed to be const, and smaller bugfixes to support
   *        const as Type
+  *     Martin Melik Merkumians - fixes naming, adds missing back functions for
+  *       list specializations
   *******************************************************************************/
 #include <fortenew.h>
 #include "fortenode.h"
@@ -30,11 +32,11 @@ private:
 
   /*!\brief First element of the singly linked list
    */
-  Container* m_poFirstNode;
+  Container* mFirstNode;
 
   /*!\brief Last element of the singly linked list
    */
-  Container* m_poLastNode;
+  Container* mLastNode;
 
 public:
   CSinglyLinkedList();
@@ -46,20 +48,20 @@ public:
 
   /*!\brief Add's the given object at the start of the singly linked list
    *
-   * \param pa_roElement the reference to the object to be added
+   * \param paElement the reference to the object to be added
    */
-  void push_front(T const& pa_roElement);
+  void pushFront(T const& paElement);
 
   /*!\brief Add's the given object at the end of the singly linked list
    *
-   * \param pa_roElement the reference to the object to be added
+   * \param paElement the reference to the object to be added
    */
-  void push_back(T const& pa_roElement);
+  void pushBack(T const& paElement);
 
   /*!\brief Deletes the first object of the singly linked list
    *
    */
-  void pop_front();
+  void popFront();
 
   /*!\brief Deletes all objects in the singly linked list
    */
@@ -70,7 +72,7 @@ public:
    * \return true if the list is empty, false if not
    */
   bool isEmpty() const {
-    return (0 == m_poFirstNode);
+    return (0 == mFirstNode);
   }
 
   /*!\brief returns an iterator with it's current position set to the start of the singly linked list
@@ -78,7 +80,7 @@ public:
    * \return iterator on position FirstNode
    */
   const Iterator begin() const {
-    return Iterator(m_poFirstNode);
+    return Iterator(mFirstNode);
   }
 
   /*!\brief returns an iterator with it's current position set to 0
@@ -90,7 +92,7 @@ public:
   }
 
   const Iterator back() const {
-    return Iterator(m_poLastNode);
+    return Iterator(mLastNode);
   }
 
   /*!\brief erases the next node element after the position of the iterator
@@ -109,7 +111,7 @@ public:
 };
 
 template <typename T, typename Container>
-inline CSinglyLinkedList<T,Container>::CSinglyLinkedList() : m_poFirstNode(0), m_poLastNode(0) {
+inline CSinglyLinkedList<T,Container>::CSinglyLinkedList() : mFirstNode(0), mLastNode(0) {
 }
 
 template <typename T, typename Container>
@@ -118,41 +120,41 @@ inline CSinglyLinkedList<T,Container>::~CSinglyLinkedList() {
 }
 
 template <typename T, typename Container>
-void CSinglyLinkedList<T,Container>::push_front(T const& pa_roElement) {
-  Container* poNewNode = new Container(pa_roElement, m_poFirstNode);
-  m_poFirstNode = poNewNode;
-  if(0 == m_poLastNode){
-    m_poLastNode = poNewNode;
+void CSinglyLinkedList<T,Container>::pushFront(T const& paElement) {
+  Container* poNewNode = new Container(paElement, mFirstNode);
+  mFirstNode = poNewNode;
+  if(0 == mLastNode){
+    mLastNode = poNewNode;
   }
 }
 
 template <typename T, typename Container>
-void CSinglyLinkedList<T,Container>::push_back(T const& pa_roElement)  {
-  Container* poNewNode = new Container(pa_roElement);
+void CSinglyLinkedList<T,Container>::pushBack(T const& paElement)  {
+  Container* poNewNode = new Container(paElement);
 
-  if(0 != m_poLastNode){
-    m_poLastNode->setNext(poNewNode);
+  if(0 != mLastNode){
+    mLastNode->setNext(poNewNode);
   }
   else{
-    m_poFirstNode = poNewNode;
+    mFirstNode = poNewNode;
   }
-  m_poLastNode = poNewNode;
+  mLastNode = poNewNode;
 }
 
 template <typename T, typename Container>
-void CSinglyLinkedList<T,Container>::pop_front() {
-  Container* pNodeToDelete = m_poFirstNode;
-  m_poFirstNode = m_poFirstNode->getNext();
-  if(0 == m_poFirstNode) {
-    m_poLastNode = 0;
+void CSinglyLinkedList<T,Container>::popFront() {
+  Container* pNodeToDelete = mFirstNode;
+  mFirstNode = mFirstNode->getNext();
+  if(0 == mFirstNode) {
+    mLastNode = 0;
   }
   delete pNodeToDelete;
 }
 
 template <typename T, typename Container>
 inline void CSinglyLinkedList<T,Container>::clearAll() {
-  while(m_poFirstNode != 0)  {
-    pop_front();
+  while(mFirstNode != 0)  {
+    popFront();
   }
 }
 
@@ -161,7 +163,7 @@ const CIterator<T,Container> CSinglyLinkedList<T,Container>::eraseAfter(Iterator
   Container* pNodeToDelete = (it.getPosition())->getNext();
   it.getPosition()->setNext(pNodeToDelete->getNext());
   if(0 == it.getPosition()->getNext()) {
-    m_poLastNode = it.getPosition();
+    mLastNode = it.getPosition();
   }
   delete pNodeToDelete;
   return Iterator((it.getPosition())->getNext());
@@ -170,14 +172,14 @@ const CIterator<T,Container> CSinglyLinkedList<T,Container>::eraseAfter(Iterator
 template <typename T, typename Container>
 void CSinglyLinkedList<T,Container>::erase(T const& paToDelete){
 
-    Iterator itRunner(m_poFirstNode);
-    Iterator itRefNode(m_poLastNode);
-    Iterator itEnd(m_poLastNode);
+    Iterator itRunner = begin();
+    Iterator itRefNode = back();
+    Iterator itEnd = back();
 
     while(itRunner != itEnd){
       if(*itRunner == paToDelete){
         if(itRefNode == itEnd){
-          pop_front();
+          popFront();
         }
         else{
           eraseAfter(itRefNode);
@@ -202,14 +204,14 @@ private:
 
   /*!\brief First element of the singly linked list
    */
-  CSinglyLinkedListNode<void*>* m_poFirstNode;
+  CSinglyLinkedListNode<void*>* mFirstNode;
 
   /*!\brief Last element of the singly linked list
    */
-  CSinglyLinkedListNode<void*>* m_poLastNode;
+  CSinglyLinkedListNode<void*>* mLastNode;
 
 public:
-  CSinglyLinkedList() : m_poFirstNode(0), m_poLastNode(0) {
+  CSinglyLinkedList() : mFirstNode(0), mLastNode(0) {
 
   }
   ~CSinglyLinkedList()  {
@@ -222,13 +224,13 @@ public:
 
   /*!\brief Add's the given object at the start of the singly linked list
    *
-   * \param pa_poElement the reference to the object to be added
+   * \param paElement the reference to the object to be added
    */
-  void push_front(const void* pa_poElement)  {
-    CSinglyLinkedListNode<void*>* poNewNode = new CSinglyLinkedListNode<void*>((void *)pa_poElement, m_poFirstNode);
-    m_poFirstNode = poNewNode;
-    if(0 == m_poLastNode){
-      m_poLastNode = poNewNode;
+  void pushFront(const void* paElement)  {
+    CSinglyLinkedListNode<void*>* poNewNode = new CSinglyLinkedListNode<void*>((void *)paElement, mFirstNode);
+    mFirstNode = poNewNode;
+    if(0 == mLastNode){
+      mLastNode = poNewNode;
     }
   }
 
@@ -236,24 +238,24 @@ public:
    *
    * \param pa_poElement the reference to the object to be added
    */
-  void push_back(void* const pa_poElement) {
-    CSinglyLinkedListNode<void*>* poNewNode = new CSinglyLinkedListNode<void*>(pa_poElement);
+  void pushBack(void* const paElement) {
+    CSinglyLinkedListNode<void*>* poNewNode = new CSinglyLinkedListNode<void*>(paElement);
 
-    if(0 != m_poLastNode){
-      m_poLastNode->setNext(poNewNode);
+    if(0 != mLastNode){
+      mLastNode->setNext(poNewNode);
     }
     else{
-      m_poFirstNode = poNewNode;
+      mFirstNode = poNewNode;
     }
-    m_poLastNode = poNewNode;
+    mLastNode = poNewNode;
   }
 
   /*!\brief Returns the element at first position without deleting it
    *
    */
-  inline const void* peek_front() const {
-    if (m_poFirstNode != 0)
-      return m_poFirstNode->getData();
+  inline const void* peekFront() const {
+    if (mFirstNode != 0)
+      return mFirstNode->getData();
     else
       return 0;
   }
@@ -261,11 +263,11 @@ public:
   /*!\brief Deletes the first object of the singly linked list
    *
    */
-  inline void pop_front()  {
-    CSinglyLinkedListNode<void*>* pNodeToDelete = m_poFirstNode;
-    m_poFirstNode = m_poFirstNode->getNext();
-    if(0 == m_poFirstNode) {
-      m_poLastNode = 0;
+  inline void popFront()  {
+    CSinglyLinkedListNode<void*>* pNodeToDelete = mFirstNode;
+    mFirstNode = mFirstNode->getNext();
+    if(0 == mFirstNode) {
+      mLastNode = 0;
     }
     delete pNodeToDelete;
   }
@@ -273,8 +275,8 @@ public:
   /*!\brief Deletes all objects in the singly linked list
    */
   inline void clearAll() {
-    while(0 != m_poFirstNode)  {
-      pop_front();
+    while(0 != mFirstNode)  {
+      popFront();
     }
   }
 
@@ -283,7 +285,7 @@ public:
    * \return true if the list is empty, false if not
    */
   inline bool isEmpty() const {
-    return (0 == m_poFirstNode);
+    return (0 == mFirstNode);
   }
 
   /*!\brief returns an iterator with it's current position set to the start of the singly linked list
@@ -291,7 +293,7 @@ public:
    * \return iterator on position FirstNode
    */
   inline const Iterator begin() const {
-    return Iterator(m_poFirstNode);
+    return Iterator(mFirstNode);
   }
 
   /*!\brief returns an iterator with it's current position set to 0
@@ -300,6 +302,10 @@ public:
    */
   inline const Iterator end() const {
     return Iterator(0);
+  }
+
+  inline const Iterator back() const{
+    return Iterator(mLastNode);
   }
 
   /*!\brief erases the next node element after the position of the iterator
@@ -311,7 +317,7 @@ public:
     CSinglyLinkedListNode<void*>* pNodeToDelete = (it.getPosition())->getNext();
     it.getPosition()->setNext(pNodeToDelete->getNext());
     if(0 == it.getPosition()->getNext()) {
-      m_poLastNode = it.getPosition();
+      mLastNode = it.getPosition();
     }
     delete pNodeToDelete;
     return Iterator((it.getPosition())->getNext());
@@ -323,14 +329,14 @@ public:
    */
   void erase(void* paToDelete){
 
-    Iterator itRunner(m_poFirstNode);
-    Iterator itRefNode(m_poLastNode);
-    Iterator itEnd(m_poLastNode);
+    Iterator itRunner = begin();
+    Iterator itRefNode = back();
+    Iterator itEnd = back();
 
     while(itRunner != itEnd){
       if(*itRunner == paToDelete){
         if(itRefNode == itEnd){
-          pop_front();
+          popFront();
         }
         else{
           eraseAfter(itRefNode);
@@ -352,7 +358,7 @@ template <typename T>
 class CSinglyLinkedList<T*> {
 private:
   friend class CIterator<T*,CSinglyLinkedListNode<void*> >;
-  CSinglyLinkedList<void*> m_List;
+  CSinglyLinkedList<void*> mList;
 
 public:
   CSinglyLinkedList() {
@@ -369,38 +375,38 @@ public:
 
   /*!\brief Add's the given object at the start of the singly linked list
    *
-   * \param pa_pElement the reference to the object to be added
+   * \param paElement the reference to the object to be added
    */
-  inline void push_front(T* const pa_pElement)  {
-    m_List.push_front(pa_pElement);
+  inline void pushFront(T* const paElement)  {
+    mList.pushFront(paElement);
   }
 
   /*!\brief Add's the given object at the end of the singly linked list
    *
-   * \param pa_pElement the reference to the object to be added
+   * \param paElement the reference to the object to be added
    */
-  inline void push_back(T* const pa_pElement) {
-    m_List.push_back(pa_pElement);
+  inline void pushBack(T* const paElement) {
+    mList.pushBack(paElement);
   }
 
   /*!\brief Returns the element at first position without deleting it
    *
    */
-  inline const T* peek_front() const {
-    return (const T*) m_List.peek_front();
+  inline const T* peekFront() const {
+    return (const T*) mList.peekFront();
   }
 
   /*!\brief Deletes the first object of the singly linked list
    *
    */
-  inline void pop_front()  {
-    m_List.pop_front();
+  inline void popFront()  {
+    mList.popFront();
   }
 
   /*!\brief Deletes all objects in the singly linked list
    */
   inline void clearAll() {
-    m_List.clearAll();
+    mList.clearAll();
   }
 
   /*!\brief checks if the singly linked list is empty or not
@@ -408,7 +414,7 @@ public:
    * \return true if the list is empty, false if not
    */
   inline bool isEmpty() const {
-    return m_List.isEmpty();
+    return mList.isEmpty();
   }
 
   /*!\brief returns an iterator with it's current position set to the start of the singly linked list
@@ -416,7 +422,7 @@ public:
    * \return iterator on position FirstNode
    */
   inline const Iterator begin() const  {
-    return Iterator((m_List.begin()).getPosition());
+    return Iterator((mList.begin()).getPosition());
   }
 
   /*!\brief returns an iterator with it's current position set to 0
@@ -424,7 +430,11 @@ public:
    * \return iterator with current position 0
    */
   inline const Iterator end() const {
-    return Iterator((m_List.end()).getPosition());
+    return Iterator((mList.end()).getPosition());
+  }
+
+  inline const Iterator back() const {
+    return Iterator(mList.back().getPosition());
   }
 
   /*!\brief erases the next node element after the position of the iterator
@@ -434,11 +444,11 @@ public:
    */
   const Iterator eraseAfter(Iterator& it) {
     CSinglyLinkedList<void*>::Iterator itBuff(it.getPosition());
-    return Iterator((m_List.eraseAfter(itBuff)).getPosition());
+    return Iterator((mList.eraseAfter(itBuff)).getPosition());
   }
 
   void erase(T* paToDelete){
-    m_List.erase(paToDelete);
+    mList.erase(paToDelete);
   }
 
 };

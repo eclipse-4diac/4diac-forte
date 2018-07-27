@@ -29,7 +29,7 @@ IOConfigFBSplitController::IOConfigFBSplitController(const TForteUInt8* const sc
         pa_acFBConnData, pa_acFBVarsData), scm_splitAdapter(scm_splitAdapter), scm_splitAdapter_num(
         scm_splitAdapter_num), splitIterator(0) {
   id = instancesIncrement++;
-  instances->push_back(this);
+  instances->pushBack(this);
 }
 
 IOConfigFBSplitController* IOConfigFBSplitController::getControllerById(TForteUInt16 id) {

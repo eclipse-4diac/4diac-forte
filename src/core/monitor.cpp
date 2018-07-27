@@ -319,7 +319,7 @@ bool CMonitor::addBreakpoint(CDevice *device, CStringDictionary::TStringId resou
     // Test if Port is in FB, otherwise add it
     portIter = std::find(fbIter->second.breakpointList.begin(), fbIter->second.breakpointList.end(),portNameId);
     if(portIter == fbIter->second.breakpointList.end()){
-      fbIter->second.breakpointList.push_back(portNameId);
+      fbIter->second.breakpointList.pushBack(portNameId);
     }else{} // port already inserted
   } //End Critical region
   return true;

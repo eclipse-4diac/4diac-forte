@@ -54,7 +54,7 @@ unsigned int CFBTestsManager::runAllTests(CResource *paRessource){
 }
 
 void CFBTestsManager::addFBTester(CFBTesterEntry* pa_poFBTester){
-  m_lstroFBTesterList.push_back(pa_poFBTester);
+  m_lstroFBTesterList.pushBack(pa_poFBTester);
 }
 
 void CFBTestsManager::executeFBTests(CFBTesterEntry* pa_poFBTestEntery, CResource *paRessource){

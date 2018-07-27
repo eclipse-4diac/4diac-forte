@@ -88,7 +88,7 @@ void MQTTHandler::onMqttConnectionLost(void* paContext, char* paCause){
     handler->mToResubscribe.clearAll();
     for(CSinglyLinkedList<MQTTComLayer*>::Iterator it = handler->mlayers.begin(); it != handler->mlayers.end(); ++it){
       if(e_Subscriber == (*it)->getCommFB()->getComServiceType()){
-        handler->mToResubscribe.push_back((*it));
+        handler->mToResubscribe.pushBack((*it));
       }
     }
     handler->resumeSelfSuspend();
@@ -181,7 +181,7 @@ void MQTTHandler::popLayerFromList(MQTTComLayer* paLayer, CSinglyLinkedList<MQTT
   while(itRunner != itEnd){
     if(*itRunner == paLayer){
       if(itRefNode == itEnd){
-        paList->pop_front();
+        paList->popFront();
       }
       else{
         paList->eraseAfter(itRefNode);
@@ -219,9 +219,9 @@ int MQTTHandler::registerLayer(const char* paAddress, const char* paClientId, MQ
   }
   {
     CCriticalRegion section(smMQTTMutex);
-    mlayers.push_back(paLayer);
+    mlayers.pushBack(paLayer);
     if (e_Subscriber == paLayer->getCommFB()->getComServiceType()){
-      mToResubscribe.push_back(paLayer);
+      mToResubscribe.pushBack(paLayer);
       if(ALL_SUBSCRIBED == smMQTTS_STATE){
         smMQTTS_STATE = SUBSCRIBING;
         this->resumeSelfSuspend();

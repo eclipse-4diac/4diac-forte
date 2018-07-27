@@ -121,7 +121,7 @@ CFDSelectHandler::TFileDescriptor CMuxedSerCommLayer::CMuxedSerPortsManager::add
   CFDSelectHandler::TFileDescriptor nRetVal = CFDSelectHandler::scmInvalidFileDescriptor;
   SSerPortEntry *mSerPortEntry = getSerPortEntry(paSerPort);
   if(0 != mSerPortEntry){
-    mSerPortEntry->mConnectionsList.push_back(paComCallBack);
+    mSerPortEntry->mConnectionsList.pushBack(paComCallBack);
     nRetVal = mSerPortEntry->mFD;
   }
   return nRetVal;
@@ -138,7 +138,7 @@ void CMuxedSerCommLayer::CMuxedSerPortsManager::removeMuxedSerLayer(CFDSelectHan
     while(itRunner != itEnd){
       if((*itRunner) == paComCallBack){
         if(itRevNode == itEnd){
-          mSerPortEntry->mConnectionsList.pop_front();
+          mSerPortEntry->mConnectionsList.popFront();
         }else{
            mSerPortEntry->mConnectionsList.eraseAfter(itRevNode);
         }
@@ -196,13 +196,13 @@ CMuxedSerCommLayer::CMuxedSerPortsManager::SSerPortEntry *CMuxedSerCommLayer::CM
 
   TSerPortList::Iterator itRef(mPortList.back());
 //this port is not yet managed by us
-  mPortList.push_back(SSerPortEntry());
+  mPortList.pushBack(SSerPortEntry());
   TSerPortList::Iterator itCurrent(mPortList.back());
   SSerPortEntry *pstRetVal = &(*itCurrent);
   openPort(paSerPort, pstRetVal);
   if(CFDSelectHandler::scmInvalidFileDescriptor == pstRetVal->mFD){
     if(itCurrent == mPortList.begin()){
-      mPortList.pop_front();
+      mPortList.popFront();
     }
     else{
       mPortList.eraseAfter(itRef);
@@ -250,7 +250,7 @@ void CMuxedSerCommLayer::CMuxedSerPortsManager::closePort(SSerPortEntry *paSerPo
   while(itRunner != mPortList.end()){
     if(itRunner->mFD == paSerPortEntry->mFD){
       if(itRefNode == mPortList.end()){
-        mPortList.pop_front();
+        mPortList.popFront();
       }
       else{
         mPortList.eraseAfter(itRefNode);

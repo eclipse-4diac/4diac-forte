@@ -43,14 +43,14 @@ void FORTE_X20AI4622::executeEvent(int pa_nEIID){
         m_bInitOk = false;
         CEplStackWrapper &eplStack = CEplStackWrapper::getInstance();
 
-        // Get settings for intputs
+        // Get settings for inputs
         CProcessImageMatrix* moduleIOs = eplStack.getProcessImageMatrixOut()->getModuleEntries(CNID(), MODID());
 
         if(moduleIOs){
           // Inputs (process inputs) always start with i = 1
           // Check xap.xml if a BitUnused is present
           for(unsigned int i = 1; i < moduleIOs->getNrOfEntries() - 1; i++){
-            m_oEplMapping.m_lCurrentValues.push_back(new SEplMapping::SEplMappingValues(moduleIOs->getEntry(i)[0], moduleIOs->getEntry(i)[1], moduleIOs->getEntry(i)[2]));
+            m_oEplMapping.m_lCurrentValues.pushBack(new SEplMapping::SEplMappingValues(moduleIOs->getEntry(i)[0], moduleIOs->getEntry(i)[1], moduleIOs->getEntry(i)[2]));
           }
 
           delete moduleIOs;

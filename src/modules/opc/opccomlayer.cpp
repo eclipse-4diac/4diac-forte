@@ -66,7 +66,7 @@ EComResponse COpcComLayer::processInterrupt(){
     CCriticalRegion criticalRegion(m_oSync);
     TComResponseList::Iterator comIt(m_lComResponses.begin());
     currentComResponse = *comIt;
-    m_lComResponses.pop_front();
+    m_lComResponses.popFront();
   }
 
   switch (currentComResponse){
@@ -123,7 +123,7 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
         case COpcConnection::e_ConnectionFailed:
           {
             CCriticalRegion criticalRegion(m_oSync);
-            m_lComResponses.push_back(e_InitTerminated);
+            m_lComResponses.pushBack(e_InitTerminated);
           }
           m_poFb->interruptCommFB(this);
           eRet = e_InitTerminated;
@@ -134,7 +134,7 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
         case COpcConnection::e_ItemAddedFailed:
           {
             CCriticalRegion criticalRegion(m_oSync);
-            m_lComResponses.push_back(e_InitTerminated);
+            m_lComResponses.pushBack(e_InitTerminated);
           }
           m_poFb->interruptCommFB(this);
           eRet = e_InitTerminated;
@@ -144,7 +144,7 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
           if (nRetVal > 0) {
             //we successfully received data
             CCriticalRegion criticalRegion(m_oSync);
-            m_lComResponses.push_back(e_ProcessDataOk);
+            m_lComResponses.pushBack(e_ProcessDataOk);
           }
           m_poFb->interruptCommFB(this);
           eRet = e_ProcessDataOk;
@@ -359,7 +359,7 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
     while(pch != NULL){
       char *itemName = (char*) malloc(strlen(pch) + 1);
       strcpy(itemName, pch);
-      m_lFBInputVars.push_back(new COpcProcessVar(m_acOpcGroupName, itemName, COpcProcessVar::e_FBInput));
+      m_lFBInputVars.pushBack(new COpcProcessVar(m_acOpcGroupName, itemName, COpcProcessVar::e_FBInput));
       nrItems++;
       pch = strtok(NULL, ",");
     }
@@ -369,7 +369,7 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
     while(pch != NULL){
       char *itemName = (char*) malloc(strlen(pch) + 1);
       strcpy(itemName, pch);
-      m_lFBOutputVars.push_back(new COpcProcessVar(m_acOpcGroupName, itemName, COpcProcessVar::e_FBOutput));
+      m_lFBOutputVars.pushBack(new COpcProcessVar(m_acOpcGroupName, itemName, COpcProcessVar::e_FBOutput));
       nrItems++;
 
       pch = strtok(NULL, ",");

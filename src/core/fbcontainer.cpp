@@ -34,7 +34,7 @@ CFBContainer::~CFBContainer() {
 EMGMResponse CFBContainer::addFB(CFunctionBlock* pa_poFuncBlock){
   EMGMResponse eRetVal = e_INVALID_OBJECT;
   if(0 != pa_poFuncBlock){
-    mFunctionBlocks.push_back(pa_poFuncBlock);
+    mFunctionBlocks.pushBack(pa_poFuncBlock);
     eRetVal = e_RDY;
   }
   return eRetVal;
@@ -50,7 +50,7 @@ EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::CIterator &paN
       CFunctionBlock *newFB = CTypeLib::createFB(*paNameListIt, paTypeName, paRes);
       if(0 != newFB){
         //we could create a FB now add it to the list of contained FBs
-        mFunctionBlocks.push_back(newFB);
+        mFunctionBlocks.pushBack(newFB);
         retval = e_RDY;
       }
       else{
@@ -96,7 +96,7 @@ EMGMResponse CFBContainer::deleteFB(forte::core::TNameIdentifier::CIterator &paN
             CTypeLib::deleteFB(*itRunner);
             if(itRefNode == mFunctionBlocks.end()){
               //we have the first entry in the list
-              mFunctionBlocks.pop_front();
+              mFunctionBlocks.popFront();
             }
             else{
               mFunctionBlocks.eraseAfter(itRefNode);
@@ -168,7 +168,7 @@ CFBContainer *CFBContainer::findOrCreateContainer(CStringDictionary::TStringId p
     if(0 == getFB(paContainerName)){
       //only create it if there is no FB with the same name.
       retVal = new CFBContainer(paContainerName, this);
-      mSubContainers.push_back(retVal);
+      mSubContainers.pushBack(retVal);
     }
   }
   return retVal;

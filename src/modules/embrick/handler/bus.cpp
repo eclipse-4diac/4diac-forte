@@ -87,7 +87,7 @@ const char* EmbrickBusHandler::init() {
     EmbrickSlaveHandler *slave = EmbrickSlaveHandler::sendInit(this, slaveCounter);
 
     if (slave != 0) {
-      slaves->push_back(slave);
+      slaves->pushBack(slave);
 
       // Activate next slave by sending the 'SelectNextSlave' command to the current slave
       // It enables the slave select pin for the next slave on the bus

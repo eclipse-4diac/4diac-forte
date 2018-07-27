@@ -29,7 +29,7 @@ CModbusHandler::TCallbackDescriptor CModbusHandler::addComCallback(forte::com_in
   CCriticalRegion criticalRegion(m_oSync);
   m_nCallbackDescCount++;
   TComContainer stNewNode = { m_nCallbackDescCount, pa_pComCallback };
-  m_lstComCallbacks.push_back(stNewNode);
+  m_lstComCallbacks.pushBack(stNewNode);
 
   return m_nCallbackDescCount;
 }
@@ -40,7 +40,7 @@ void CModbusHandler::removeComCallback(CModbusHandler::TCallbackDescriptor pa_nC
   TCallbackList::Iterator itRunner(m_lstComCallbacks.begin());
 
   if(itRunner->m_nCallbackDesc == pa_nCallbackDesc){
-    m_lstComCallbacks.pop_front();
+    m_lstComCallbacks.popFront();
   }
   else{
     TCallbackList::Iterator itLastPos(itRunner);

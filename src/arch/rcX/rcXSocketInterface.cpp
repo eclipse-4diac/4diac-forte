@@ -110,7 +110,7 @@ void CrcXSocketInterface::run(void){
       }
       if(deletePacket){
         TLR_QUE_PACKETDONE(mForteResources.fortePoolHandle, mForteResources.forteQueueHandle, firstPacket);
-        mWaitingList.pop_front();
+        mWaitingList.popFront();
         m_unPacketsWaiting--;
       }
     }
@@ -121,7 +121,7 @@ void CrcXSocketInterface::addComCallback(TSocketDescriptor pa_nFD, forte::com_in
   {
     CCriticalRegion criticalRegion(m_oSync);
     TConnContType stNewNode = { pa_nFD, pa_poComLayer };
-    m_lstConnectionsList.push_back(stNewNode);
+    m_lstConnectionsList.pushBack(stNewNode);
   }
   if(!isAlive()){
     this->start();
@@ -138,7 +138,7 @@ void CrcXSocketInterface::removeComCallback(TSocketDescriptor pa_nFD){
   while(itRunner != itEnd){
     if(itRunner->m_nSockDes == pa_nFD){
       if(itRefNode ==itEnd){
-        m_lstConnectionsList.pop_front();
+        m_lstConnectionsList.popFront();
       }
       else{
         m_lstConnectionsList.eraseAfter(itRefNode);
@@ -492,7 +492,7 @@ void CrcXSocketInterface::managePacketsDefault(FORTE_TCP_PACKET_T* pa_packetResu
           TLR_QUE_RETURNPACKET(pa_packetResult);
         }
         else{
-          mWaitingList.push_back(pa_packetResult);
+          mWaitingList.pushBack(pa_packetResult);
           m_unPacketsWaiting++;
         }
       }

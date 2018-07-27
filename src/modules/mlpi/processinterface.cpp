@@ -168,7 +168,7 @@ CMLPIFaceProcessInterface::CIOHandler::~CIOHandler(){
 
 void CMLPIFaceProcessInterface::CIOHandler::registerIXFB(CMLPIFaceProcessInterface *pa_poFB){
   mReadFBListSync.lock();
-  mReadFBList.push_back(pa_poFB);
+  mReadFBList.pushBack(pa_poFB);
   mReadFBListSync.unlock();
 }
 
@@ -180,7 +180,7 @@ void CMLPIFaceProcessInterface::CIOHandler::unregisterIXFB(CMLPIFaceProcessInter
   while(itRunner != itEnd){
     if(*itRunner == pa_poFB){
       if(itRefNode == itEnd){
-        mReadFBList.pop_front();
+        mReadFBList.popFront();
       }
       else{
         mReadFBList.eraseAfter(itRefNode);

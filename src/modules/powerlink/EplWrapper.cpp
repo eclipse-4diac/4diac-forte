@@ -479,7 +479,7 @@ void CEplStackWrapper::waitUntilOperational(bool pa_bWait){
 
 void CEplStackWrapper::registerCallback(IEplCNCallback* pa_pCallback){
   m_oSync.lock();
-  m_lCallbackList.push_back(pa_pCallback);
+  m_lCallbackList.pushBack(pa_pCallback);
   m_oSync.unlock();
 }
 

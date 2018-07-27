@@ -20,7 +20,7 @@ EMGMResponse CConnection::addDestination(const SConnectionPoint &paDestPoint){
   EMGMResponse retval = e_INVALID_STATE;
 
   if(!dstExists(paDestPoint)){ // check if there is up to now no such fan out with this destination
-    mDestinationIds.push_back(paDestPoint);
+    mDestinationIds.pushBack(paDestPoint);
     retval = e_RDY;
   }
   return retval;
@@ -37,7 +37,7 @@ EMGMResponse CConnection::removeDestination(const SConnectionPoint &paDestPoint)
     if(paDestPoint == (*itRunner)){
       retval = e_RDY;
       if(itRefNode == mDestinationIds.end()){
-        mDestinationIds.pop_front();
+        mDestinationIds.popFront();
       }
       else{
         mDestinationIds.eraseAfter(itRefNode);

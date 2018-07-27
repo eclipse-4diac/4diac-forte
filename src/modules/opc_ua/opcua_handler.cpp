@@ -187,7 +187,7 @@ void COPC_UA_Handler::removeLdsRegister(const UA_String *discoveryUrl) {
   while(itRunner != registeredWithLds.end()){
     if (strncmp((char*)discoveryUrl->data, *itRunner, discoveryUrl->length) == 0) {
       if(itRefNode == registeredWithLds.end()){
-        registeredWithLds.pop_front();
+        registeredWithLds.popFront();
       }
       else{
         registeredWithLds.eraseAfter(itRefNode);
@@ -492,7 +492,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
         for (unsigned int i = 0; i < folderCnt; i++) {
           UA_NodeId *tmp = UA_NodeId_new();
           UA_NodeId_copy(&browsePathsResults[foundFolderOffset + i].targets[0].targetId.nodeId, tmp);
-          nodeIdsAlongPath->push_back(tmp);
+          nodeIdsAlongPath->pushBack(tmp);
         }
       }
     } else if (createIfNotFound) {
@@ -549,7 +549,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
         for (int j = 0; j < i; j++) {
           UA_NodeId *tmp = UA_NodeId_new();
           UA_NodeId_copy(&browsePathsResults[foundFolderOffset+j].targets[0].targetId.nodeId, tmp);
-          nodeIdsAlongPath->push_back(tmp);
+          nodeIdsAlongPath->pushBack(tmp);
         }
       }
 
@@ -593,7 +593,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **foundNodeId, const char *nodePathCon
         if (nodeIdsAlongPath) {
           UA_NodeId *tmp = UA_NodeId_new();
           UA_NodeId_copy(*foundNodeId, tmp);
-          nodeIdsAlongPath->push_back(tmp);
+          nodeIdsAlongPath->pushBack(tmp);
         }
 
         if (j == folderCnt - 1 && parentNodeId) {
@@ -658,7 +658,7 @@ UA_Client *COPC_UA_Handler::getClientForEndpoint(const char *endpointUrl, bool c
     *clientMutex = clientMap->clientMutex;
 
   // store it in the list so we can delete it to avoid mem leaks
-  clients.push_back(clientMap);
+  clients.pushBack(clientMap);
 
   return client;
 }
@@ -771,7 +771,7 @@ UA_StatusCode COPC_UA_Handler::registerNodeCallBack(const UA_NodeId *nodeId, for
   handle->comLayer = comLayer;
   handle->portIndex = portIndex;
   // store it in the list so we can delete it to avoid mem leaks
-  nodeCallbackHandles.push_back(handle);
+  nodeCallbackHandles.pushBack(handle);
   UA_ValueCallback callback = {NULL, this->onWrite};
   UA_Server_setNodeContext(uaServer, *nodeId, handle);
   return UA_Server_setVariableNode_valueCallback(uaServer, *nodeId, callback);
@@ -840,8 +840,8 @@ void COPC_UA_Handler::referencedNodesDecrement(const CSinglyLinkedList<UA_NodeId
     for (CSinglyLinkedList<struct ReferencedNodeByLayer *>::Iterator iterRef = nodeLayerReferences.begin(); iterRef != nodeLayerReferences.end(); ++iterRef) {
       if (UA_NodeId_equal((*iterRef)->nodeId, (*iterNode))) {
 
-        while ((*iterRef)->referencedByLayer.peek_front() == layer)
-          (*iterRef)->referencedByLayer.pop_front();
+        while ((*iterRef)->referencedByLayer.peekFront() == layer)
+          (*iterRef)->referencedByLayer.popFront();
 
         CSinglyLinkedList<const COPC_UA_Layer *>::Iterator iterLayerPrev = (*iterRef)->referencedByLayer.begin();
         for (CSinglyLinkedList<const COPC_UA_Layer *>::Iterator iterLayer = (*iterRef)->referencedByLayer.begin(); iterLayer != (*iterRef)->referencedByLayer.end(); ++iterLayer) {

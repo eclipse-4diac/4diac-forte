@@ -33,10 +33,10 @@ void forte::com_infra::CComLayerAsync::run() {
       first.mResult = handleAsyncCall(first.mCallId, first.mPayload);
       {
         CCriticalRegion criticalRegion(mAsyncResultsMutex);
-        mAsyncResults.push_back(first);
+        mAsyncResults.pushBack(first);
       }
       handleAsyncEvent();
-      mAsyncCalls.pop_front();
+      mAsyncCalls.popFront();
     }
   }
 }
@@ -52,7 +52,7 @@ unsigned int forte::com_infra::CComLayerAsync::callAsync(void *payload) {
     // handle overflow. Do not return 0
     mCurrentCallId = 1;
   }
-  mAsyncCalls.push_back(SAsyncData(mCurrentCallId, payload, 0));
+  mAsyncCalls.pushBack(SAsyncData(mCurrentCallId, payload, 0));
   mSuspendSemaphore.inc();
   return mCurrentCallId;
 }
@@ -65,7 +65,7 @@ forte::com_infra::EComResponse forte::com_infra::CComLayerAsync::processInterrup
   while (isAlive() && !mAsyncResults.isEmpty()) {
     const SAsyncData &value = *(mAsyncResults.begin());
     handleAsyncCallResult(value.mCallId, value.mPayload, value.mResult);
-    mAsyncResults.pop_front();
+    mAsyncResults.popFront();
   }
   return processInterruptChild();
 }

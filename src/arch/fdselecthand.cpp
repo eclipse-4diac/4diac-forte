@@ -112,7 +112,7 @@ void CFDSelectHandler::addComCallback(TFileDescriptor paFD, forte::com_infra::CC
   {
     CCriticalRegion criticalRegion(mSync);
     TConnContType stNewNode = { paFD, paComCallback };
-    mConnectionsList.push_back(stNewNode);
+    mConnectionsList.pushBack(stNewNode);
     mConnectionListChanged = true;
   }
   if(!isAlive()){
@@ -130,7 +130,7 @@ void CFDSelectHandler::removeComCallback(TFileDescriptor paFD){
   while(itRunner != itEnd){
     if(itRunner->mSockDes == paFD){
       if(itRefNode ==itEnd){
-        mConnectionsList.pop_front();
+        mConnectionsList.popFront();
       }
       else{
         mConnectionsList.eraseAfter(itRefNode);

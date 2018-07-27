@@ -1,5 +1,5 @@
 /*******************************************************************************
-  * Copyright (c) 2010 ACIN
+  * Copyright (c) 2010, 2018 TU Vienna/ACIN
   * All rights reserved. This program and the accompanying materials
   * are made available under the terms of the Eclipse Public License v1.0
   * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
   * Contributors:
   *    Martin Melik Merkumians, Alois Zoitl,
   *      - initial implementation and rework communication infrastructure
+  *    Martin Melik Merkumians - updates naming
   *******************************************************************************/
 #ifndef FORTEITERATOR_H_
 #define FORTEITERATOR_H_
@@ -28,7 +29,7 @@
 template<typename T, typename Container>
 class CIterator  {
 public:
-  explicit CIterator(Container* pa_poNode) : m_poCurrentPosition(pa_poNode)  {
+  explicit CIterator(Container* paNode) : mCurrentPosition(paNode)  {
 
   }
 
@@ -39,13 +40,13 @@ public:
    */
 
   Container* getPosition() const {
-    return m_poCurrentPosition;
+    return mCurrentPosition;
   }
 
   /*!\brief moves iterator to the next element
    */
   CIterator& operator++()  {
-    m_poCurrentPosition = m_poCurrentPosition->getNext();
+    mCurrentPosition = mCurrentPosition->getNext();
     return *this;
   }
 
@@ -54,14 +55,14 @@ public:
    * \return reference of the contained object of type T
    */
   T& operator*()  {
-    return m_poCurrentPosition->getData();
+    return mCurrentPosition->getData();
   }
 
   /*!\brief const version of dereference operator for const iterators
    */
   const T& operator*() const {
-      return m_poCurrentPosition->getData();
-    }
+    return mCurrentPosition->getData();
+  }
 
   /*!\brief Returns a pointer to the contained object
    * \return A Pointer to the contained object of type T
@@ -75,7 +76,7 @@ public:
    * \return true if position of iterators match, false if otherwise
    */
   bool operator==(CIterator const& rhs) const {
-    return m_poCurrentPosition == rhs.m_poCurrentPosition;
+    return mCurrentPosition == rhs.mCurrentPosition;
   }
 
   /*!\brief inequality operator of the iterator
@@ -88,14 +89,14 @@ public:
 
 private:
   CIterator();
-  Container* m_poCurrentPosition;
+  Container* mCurrentPosition;
 };
 
 template<typename T, typename Container>
 // cppcheck-suppress noConstructor
 class CIterator<T*, Container>  {
 public:
-  CIterator(Container* pa_poNode) : m_poCurrentPosition(pa_poNode)  {
+  CIterator(Container* paNode) : mCurrentPosition(paNode)  {
 
   }
 
@@ -107,13 +108,13 @@ public:
    */
 
   Container* getPosition() const  {
-    return m_poCurrentPosition;
+    return mCurrentPosition;
   }
 
   /*!\brief moves iterator to the next element
    */
   CIterator& operator++()  {
-    m_poCurrentPosition = m_poCurrentPosition->getNext();
+    mCurrentPosition = mCurrentPosition->getNext();
     return *this;
   }
 
@@ -122,14 +123,14 @@ public:
    * \return reference of the contained object of type T
    */
   T* operator*()  {
-    return static_cast<T*>(m_poCurrentPosition->getData());
+    return static_cast<T*>(mCurrentPosition->getData());
   }
 
   /*!\brief Returns a pointer to the contained object
    * \return A Pointer to the contained object of type T
    */
   T* operator->() {
-    return static_cast<T*>(m_poCurrentPosition->getData());
+    return static_cast<T*>(mCurrentPosition->getData());
   }
 
   /*!\brief equality operator for the iterator
@@ -137,7 +138,7 @@ public:
    * \return true if position of iterators match, false if otherwise
    */
   bool operator==(CIterator const& rhs) const  {
-    return m_poCurrentPosition == rhs.m_poCurrentPosition;
+    return mCurrentPosition == rhs.mCurrentPosition;
   }
 
   /*!\brief inequality operator of the iterator
@@ -150,7 +151,7 @@ public:
 
 private:
   CIterator();
-  Container* m_poCurrentPosition;
+  Container* mCurrentPosition;
 };
 
 #endif /* FORTEITERATOR_H_ */

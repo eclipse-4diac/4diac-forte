@@ -27,7 +27,7 @@ IOConfigFBMultiMaster::IOConfigFBMultiMaster(CResource *pa_poSrcRes,
     IOConfigFBController(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId,
         pa_acFBConnData, pa_acFBVarsData) {
   id = instancesIncrement++;
-  instances->push_back(this);
+  instances->pushBack(this);
 }
 
 IOConfigFBMultiMaster* IOConfigFBMultiMaster::getMasterById(TForteUInt16 id) {

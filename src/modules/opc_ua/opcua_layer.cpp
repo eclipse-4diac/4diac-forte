@@ -139,7 +139,7 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
     GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Handler)->referencedNodesIncrement(&nodesAlongPath, this);
 
     for (CSinglyLinkedList<UA_NodeId *>::Iterator iter = nodesAlongPath.begin(); iter != nodesAlongPath.end(); ++iter) {
-      referencedNodes.push_back((*iter));
+      referencedNodes.pushBack((*iter));
     }
   }
 
@@ -339,7 +339,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(struct FB_NodeId
       GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Handler)->referencedNodesIncrement(&nodesAlongPath, this);
 
       for (CSinglyLinkedList<UA_NodeId *>::Iterator iter = nodesAlongPath.begin(); iter != nodesAlongPath.end(); ++iter) {
-        referencedNodes.push_back((*iter));
+        referencedNodes.pushBack((*iter));
       }
     }
 

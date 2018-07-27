@@ -153,7 +153,7 @@ void EmbrickSlaveHandler::dropHandles() {
 
 void EmbrickSlaveHandler::addHandle(TSlaveHandleList* list, EmbrickSlaveHandle* handle) {
   CCriticalRegion criticalRegion(handleMutex);
-  list->push_back(handle);
+  list->pushBack(handle);
 
   // TODO Maybe send indication event after connecting
 }

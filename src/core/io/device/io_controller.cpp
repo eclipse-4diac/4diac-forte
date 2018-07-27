@@ -142,7 +142,7 @@ void IODeviceController::addHandle(THandleList* list, CIEC_WSTRING const &id,
     IOHandle* handle) {
   if (id != "" && IOMapper::getInstance().registerHandle(id, handle)) {
     CCriticalRegion criticalRegion(handleMutex);
-    list->push_back(handle);
+    list->pushBack(handle);
   } else {
     delete handle;
   }

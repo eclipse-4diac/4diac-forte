@@ -66,7 +66,7 @@ int CXqueryHandler::getPriority() const{
 }
 
 int CXqueryHandler::registerLayer(CXqueryClientLayer* paLayer){
-  m_lstXqueryFBList.push_back(paLayer);
+  m_lstXqueryFBList.pushBack(paLayer);
   enableHandler();
   resumeSuspend();
   return 0;
@@ -96,7 +96,7 @@ void CXqueryHandler::run(){
       }else{
         DEVLOG_ERROR("Connection seems to be lost, query not sent.\n");
       }
-      m_lstXqueryFBList.pop_front();
+      m_lstXqueryFBList.popFront();
     }
   }
 }

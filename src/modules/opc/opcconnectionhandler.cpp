@@ -32,7 +32,7 @@ COpcConnection* COpcConnectionHandler::getOpcConnection(const char *pa_acHost, c
   if(newConnection == NULL){
     newConnection = new COpcConnection(pa_acHost, pa_acServerName, GET_HANDLER_FROM_FB(*pa_pComCallback->getCommFB(), COpcEventHandler));
 
-    m_lOpcConnectionList.push_back(newConnection);
+    m_lOpcConnectionList.pushBack(newConnection);
   }
 
   newConnection->addGroup(pa_acGroupName, pa_nReqUpdateRate, pa_nDeadBand, pa_pComCallback);
@@ -67,7 +67,7 @@ void COpcConnectionHandler::deleteOpcConnection(const char* pa_acHost, const cha
 
   if(it != itEnd){
     if(strcmp(it->getHost(), pa_acHost) == 0 && strcmp(it->getServerName(), pa_acServerName)){
-      m_lOpcConnectionList.pop_front();
+      m_lOpcConnectionList.popFront();
       return;
     }
     ++it;

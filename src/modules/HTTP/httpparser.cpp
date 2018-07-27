@@ -191,8 +191,8 @@ unsigned int forte::com_infra::CHttpParser::parseParameters(char* paParameters, 
     }else{
       endOfParameters = true;
     }
-    paParameterNames.push_back(startOfName);
-    paParameterValues.push_back(startOfValue);
+    paParameterNames.pushBack(startOfName);
+    paParameterValues.pushBack(startOfValue);
     retVal++;
     if(!endOfParameters){
       startOfName = ++nextName;
