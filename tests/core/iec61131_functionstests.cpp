@@ -235,6 +235,38 @@ BOOST_AUTO_TEST_CASE(and_function_DWORD_BYTE)
   BOOST_TEST(static_cast<TForteDWord>(nResult) == 10);
 }
 
+BOOST_AUTO_TEST_CASE(or_function_BYTE_DWORD)
+{
+  CIEC_BYTE nByte(10);
+  CIEC_DWORD nDword(30100);
+  CIEC_DWORD nResult(OR(nByte, nDword));
+  BOOST_TEST(static_cast<TForteDWord>(nResult) == 30110);
+}
+
+BOOST_AUTO_TEST_CASE(or_function_DWORD_BYTE)
+{
+  CIEC_BYTE nByte(10);
+  CIEC_DWORD nDword(30100);
+  CIEC_DWORD nResult(OR(nDword, nByte));
+  BOOST_TEST(static_cast<TForteDWord>(nResult) == 30110);
+}
+
+BOOST_AUTO_TEST_CASE(xor_function_BYTE_DWORD)
+{
+  CIEC_BYTE nByte(10);
+  CIEC_DWORD nDword(30100);
+  CIEC_DWORD nResult(XOR(nByte, nDword));
+  BOOST_TEST(static_cast<TForteDWord>(nResult) == 30110);
+}
+
+BOOST_AUTO_TEST_CASE(xor_function_DWORD_BYTE)
+{
+  CIEC_BYTE nByte(10);
+  CIEC_DWORD nDword(30100);
+  CIEC_DWORD nResult(XOR(nDword, nByte));
+  BOOST_TEST(static_cast<TForteDWord>(nResult) == 30110);
+}
+
 BOOST_AUTO_TEST_CASE(add_function_UDINT_USINT)
 {
   CIEC_USINT nUsint(10);

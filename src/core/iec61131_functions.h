@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 - 2013, 2018 ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2010 - 2013 ACIN, Profactor GmbH, fortiss GmbH, 2018 TU Vienna/ACIN
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,12 +9,13 @@
  *    Alois Zoitl, Monika Wenger, Ingo Hegny, Patrick Smejkal, Gerhard Ebenhofer,
  *    Matthias Plasch, Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians - adds different type templates for IEC 61131-3 functions
+ *      and adds several type guards
  *******************************************************************************/
 #ifndef IEC61131_FUNCTIONS_H_
 #define IEC61131_FUNCTIONS_H_
 
 #include "../arch/devlog.h"
-//bring in the type conversion functions
 #include "convert_functions.h"
 #include <math.h>
 #include <string.h>
@@ -55,7 +56,8 @@
 
 template<typename T>
 const T ABS(const T& pa_roIN){
-  return (0 > pa_roIN) ? T(pa_roIN * (-1)) : T((pa_roIN));
+  FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_NUM, T>::value), TNotOfAnyNum);
+  return (0 > pa_roIN) ? static_cast<T>(pa_roIN * static_cast<T>(-1)) : pa_roIN;
 }
 
 #ifdef FORTE_USE_REAL_DATATYPE
@@ -184,6 +186,7 @@ const T ABS(const T& pa_roIN){
 
 #ifdef FORTE_USE_64BIT_DATATYPES
   template<typename T> const T ROL(const T& pa_roIn, const CIEC_ULINT& pa_roN){
+    FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), TNotOfAnyBit);
     if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
     return T((typename T::TValueType)((pa_roIn << pa_roN.getUnsignedValue()) | (pa_roIn >> (sizeof(typename T::TValueType)*8 - pa_roN.getUnsignedValue()))));
     } DEVLOG_ERROR("value of input N is less than zero");
@@ -191,6 +194,7 @@ const T ABS(const T& pa_roIN){
   }
 
   template<typename T> const T ROR(const T& pa_roIn, const CIEC_ULINT& pa_roN){
+    FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), TNotOfAnyBit);
     if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
     return T((typename T::TValueType)((pa_roIn >> pa_roN.getUnsignedValue()) | (pa_roIn << (sizeof(typename T::TValueType)*8 - pa_roN.getUnsignedValue()))));
     } DEVLOG_ERROR("value of input N is less than zero");
@@ -198,6 +202,7 @@ const T ABS(const T& pa_roIN){
   }
 
   template<typename T> const T SHL(const T& pa_roIn, const CIEC_ULINT& pa_roN){
+    FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), TNotOfAnyBit);
     if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
      return T((typename T::TValueType)(pa_roIn << pa_roN.getUnsignedValue()));
      } DEVLOG_ERROR("value of input N is less than zero");
@@ -205,6 +210,7 @@ const T ABS(const T& pa_roIN){
   }
 
   template<typename T> const T SHR(const T& pa_roIn, const CIEC_ULINT& pa_roN){
+    FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), TNotOfAnyBit);
     if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
     return T((typename T::TValueType)(pa_roIn >> pa_roN.getUnsignedValue()));
     } DEVLOG_ERROR("value of input N is less than zero");
@@ -220,6 +226,7 @@ const T ABS(const T& pa_roIN){
   template<> const CIEC_BOOL SHR(const CIEC_BOOL& pa_roIn, const CIEC_ULINT& pa_roN);
 #else
   template<typename T> const T ROL(const T& pa_roIn, const CIEC_UDINT& pa_roN){
+    FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), TNotOfAnyBit);
     if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
     return T((typename T::TValueType)((pa_roIn << pa_roN.getUnsignedValue()) | (pa_roIn >> (sizeof(typename T::TValueType)*8 - pa_roN.getUnsignedValue()))));
     } DEVLOG_ERROR("value of input N is less than zero");
@@ -227,6 +234,7 @@ const T ABS(const T& pa_roIN){
   }
 
   template<typename T> const T ROR(const T& pa_roIn, const CIEC_UDINT& pa_roN){
+    FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), TNotOfAnyBit);
     if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
     return T((typename T::TValueType)((pa_roIn >> pa_roN.getUnsignedValue()) | (pa_roIn << (sizeof(typename T::TValueType)*8 - pa_roN.getUnsignedValue()))));
     } DEVLOG_ERROR("value of input N is less than zero");
@@ -234,6 +242,7 @@ const T ABS(const T& pa_roIN){
   }
 
   template<typename T> const T SHL(const T& pa_roIn, const CIEC_UDINT& pa_roN){
+    FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), TNotOfAnyBit);
     if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
      return T((typename T::TValueType)(pa_roIn << pa_roN.getUnsignedValue()));
      } DEVLOG_ERROR("value of input N is less than zero");
@@ -241,6 +250,7 @@ const T ABS(const T& pa_roIN){
   }
 
   template<typename T> const T SHR(const T& pa_roIn, const CIEC_UDINT& pa_roN){
+    FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), TNotOfAnyBit);
     if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
     return T((typename T::TValueType)(pa_roIn >> pa_roN.getUnsignedValue()));
     } DEVLOG_ERROR("value of input N is less than zero");
@@ -261,7 +271,8 @@ APPLY(const T& pa_roIN1, const U& pa_roIN2){
   FORTE_STATIC_ASSERT((forte::core::mpl::are_of_subtype<C, T, U>::value), TemplateInstantiationWithIncompatibleTypes);
   typedef typename forte::core::mpl::get_castable_type<T, U>::type tImplicitCastType;
   FORTE_STATIC_ASSERT(!(forte::core::mpl::is_same<tImplicitCastType, forte::core::mpl::NullType>::value), NoImplicitCastPossible);
-  const tImplicitCastType Result(F<tImplicitCastType>::call(tImplicitCastType(pa_roIN1), tImplicitCastType(pa_roIN2)));
+  const tImplicitCastType Result(F<tImplicitCastType>::call(static_cast<tImplicitCastType>(pa_roIN1),
+                                                            static_cast<tImplicitCastType>(pa_roIN2)));
   return Result;
 }
 
@@ -270,17 +281,22 @@ template<typename T, typename U> typename forte::core::mpl::get_castable_type<T,
   return APPLY<T, U, AND_Function, CIEC_ANY_BIT>(pa_roIN1, pa_roIN2);
 }
 
-GENERATE_APPLY_FUNCTION(ADD)
-template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type ADD(const T& pa_roIN1, const U& pa_roIN2){
-  return APPLY<T, U, ADD_Function, CIEC_ANY_NUM>(pa_roIN1, pa_roIN2);
-}
-
 template<typename T> const T AND(const T& pa_roIN1, const T& pa_roIN2){
   return T((typename T::TValueType)(pa_roIN1 & pa_roIN2));
 }
 
+GENERATE_APPLY_FUNCTION(OR)
+template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type OR(const T& pa_roIN1, const U& pa_roIN2){
+  return APPLY<T, U, OR_Function, CIEC_ANY_BIT>(pa_roIN1, pa_roIN2);
+}
+
 template<typename T> const T OR(const T& pa_roIN1, const T& pa_roIN2){
   return T((typename T::TValueType)(pa_roIN1 | pa_roIN2));
+}
+
+GENERATE_APPLY_FUNCTION(XOR)
+template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type XOR(const T& pa_roIN1, const U& pa_roIN2){
+  return APPLY<T, U, XOR_Function, CIEC_ANY_BIT>(pa_roIN1, pa_roIN2);
 }
 
 template<typename T> const T XOR(const T& pa_roIN1, const T& pa_roIN2){
@@ -288,10 +304,16 @@ template<typename T> const T XOR(const T& pa_roIN1, const T& pa_roIN2){
 }
 
 template<typename T> const T NOT(const T& pa_roIN){
+  FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), NotOnlyForCiecAnyBit);
   return T((typename T::TValueType)(~pa_roIN));
 }
 
 template<> const CIEC_BOOL NOT<CIEC_BOOL>(const CIEC_BOOL& pa_roIN);
+
+GENERATE_APPLY_FUNCTION(GT)
+template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type GT(const T& pa_roIN1, const U& pa_roIN2){
+  return APPLY<T, U, GT_Function, CIEC_ANY_ELEMENTARY>(pa_roIN1, pa_roIN2);
+}
 
 template<typename T> const CIEC_BOOL GT(const T& pa_roIN1, const T& pa_roIN2){
   CIEC_BOOL temp = false;
@@ -299,6 +321,11 @@ template<typename T> const CIEC_BOOL GT(const T& pa_roIN1, const T& pa_roIN2){
     temp = true;
   }
   return temp;
+}
+
+GENERATE_APPLY_FUNCTION(EQ)
+template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type EQ(const T& pa_roIN1, const U& pa_roIN2){
+  return APPLY<T, U, EQ_Function, CIEC_ANY_ELEMENTARY>(pa_roIN1, pa_roIN2);
 }
 
 template<typename T> const CIEC_BOOL EQ(const T& pa_roIN1, const T& pa_roIN2){
@@ -309,12 +336,22 @@ template<typename T> const CIEC_BOOL EQ(const T& pa_roIN1, const T& pa_roIN2){
   return temp;
 }
 
+GENERATE_APPLY_FUNCTION(GE)
+template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type GE(const T& pa_roIN1, const U& pa_roIN2){
+  return APPLY<T, U, GE_Function, CIEC_ANY_ELEMENTARY>(pa_roIN1, pa_roIN2);
+}
+
 template<typename T> const CIEC_BOOL GE(const T& pa_roIN1, const T& pa_roIN2){
   CIEC_BOOL temp = false;
   if(pa_roIN1 >= pa_roIN2){
     temp = true;
   }
   return temp;
+}
+
+GENERATE_APPLY_FUNCTION(LE)
+template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type LE(const T& pa_roIN1, const U& pa_roIN2){
+  return APPLY<T, U, LE_Function, CIEC_ANY_ELEMENTARY>(pa_roIN1, pa_roIN2);
 }
 
 template<typename T> const CIEC_BOOL LE(const T& pa_roIN1, const T& pa_roIN2){
@@ -325,12 +362,22 @@ template<typename T> const CIEC_BOOL LE(const T& pa_roIN1, const T& pa_roIN2){
   return temp;
 }
 
+GENERATE_APPLY_FUNCTION(LT)
+template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type LT(const T& pa_roIN1, const U& pa_roIN2){
+  return APPLY<T, U, LT_Function, CIEC_ANY_ELEMENTARY>(pa_roIN1, pa_roIN2);
+}
+
 template<typename T> const CIEC_BOOL LT(const T& pa_roIN1, const T& pa_roIN2){
   CIEC_BOOL temp = false;
   if(pa_roIN1 < pa_roIN2){
     temp = true;
   }
   return temp;
+}
+
+GENERATE_APPLY_FUNCTION(NE)
+template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type NE(const T& pa_roIN1, const U& pa_roIN2){
+  return APPLY<T, U, NE_Function, CIEC_ANY_ELEMENTARY>(pa_roIN1, pa_roIN2);
 }
 
 template<typename T> const CIEC_BOOL NE(const T& pa_roIN1, const T& pa_roIN2){
@@ -341,8 +388,13 @@ template<typename T> const CIEC_BOOL NE(const T& pa_roIN1, const T& pa_roIN2){
   return temp;
 }
 
-template<typename T> const T SEL(const CIEC_BOOL &G, const T& IN0, const T& IN1){
+template<typename T, typename U> const typename forte::core::mpl::get_castable_type<T, U>::type SEL(const CIEC_BOOL &G, const T& IN0, const U& IN1){
   return (G.operator bool()) ? IN1 : IN0;
+}
+
+GENERATE_APPLY_FUNCTION(MAX)
+template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type MAX(const T& pa_roIN1, const U& pa_roIN2){
+  return APPLY<T, U, MAX_Function, CIEC_ANY_ELEMENTARY>(pa_roIN1, pa_roIN2);
 }
 
 template<typename T> const T MAX(const T& pa_roIN1, const T& pa_roIN2){
@@ -354,6 +406,11 @@ template<typename T> const T MAX(const T& pa_roIN1, const T& pa_roIN2){
   }
 }
 
+GENERATE_APPLY_FUNCTION(MIN)
+template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type MIN(const T& pa_roIN1, const U& pa_roIN2){
+  return APPLY<T, U, MAX_Function, CIEC_ANY_ELEMENTARY>(pa_roIN1, pa_roIN2);
+}
+
 template<typename T> const T MIN(const T& pa_roIN1, const T& pa_roIN2){
   if(pa_roIN1 < pa_roIN2){
     return pa_roIN1;
@@ -363,8 +420,16 @@ template<typename T> const T MIN(const T& pa_roIN1, const T& pa_roIN2){
   }
 }
 
-template<typename T> const T LIMIT(const T& pa_roMN, const T& pa_roIN, const T& pa_roMX){
-  return MIN(MAX(pa_roIN, pa_roMN), pa_roMX);
+template<typename T, typename U, typename V>
+const typename forte::core::mpl::get_castable_type<typename forte::core::mpl::get_castable_type<T, U>::type, V>::type
+LIMIT(const T& pa_roMN, const U& pa_roIN, const V& pa_roMX){
+  typedef typename forte::core::mpl::get_castable_type<typename forte::core::mpl::get_castable_type<T, U>::type, V>::type tImplicitType;
+  return MIN(MAX(static_cast<tImplicitType>(pa_roIN), static_cast<tImplicitType>(pa_roMN)), static_cast<tImplicitType>(pa_roMX));
+}
+
+GENERATE_APPLY_FUNCTION(MOD)
+template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type MOD(const T& pa_roIN1, const U& pa_roIN2){
+  return APPLY<T, U, MOD_Function, CIEC_ANY_INT>(pa_roIN1, pa_roIN2);
 }
 
 template<typename T> const T MOD(const T& pa_roIN1, const T& pa_roIN2){
@@ -377,26 +442,48 @@ template<typename T> const T MOVE(const T& pa_roIN){
   return static_cast<typename T::TValueType>(pa_roIN);
 }
 
+template<typename T, typename U> const T EXPT(const T& pa_roIN1, const U& pa_roIN2){
+  FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_REAL, T>::value), In1NotOfTypeAnyReal);
+  FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_NUM, T>::value), In1NotOfTypeAnyNum);
+  return static_cast<typename T::TValueType>(pow(pa_roIN1, pa_roIN2));
+}
+
 //specialisation of function for base type double.
 //TODO consider how this and similar problems can be better solved with type traits and more generically
 inline double EXPT(double pa_roIN1, double pa_roIN2){
   return pow(pa_roIN1, pa_roIN2);
 }
 
-template<typename T> const T EXPT(const T& pa_roIN1, const T& pa_roIN2){
-  return static_cast<typename T::TValueType>(pow(pa_roIN1, pa_roIN2));
+GENERATE_APPLY_FUNCTION(ADD)
+template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type ADD(const T& pa_roIN1, const U& pa_roIN2){
+  return APPLY<T, U, ADD_Function, CIEC_ANY_NUM>(pa_roIN1, pa_roIN2);
 }
 
 template<typename T> const T ADD(const T& pa_roIN1, const T& pa_roIN2){
   return pa_roIN1 + pa_roIN2;
 }
 
+GENERATE_APPLY_FUNCTION(MUL)
+template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type MUL(const T& pa_roIN1, const U& pa_roIN2){
+  return APPLY<T, U, MUL_Function, CIEC_ANY_NUM>(pa_roIN1, pa_roIN2);
+}
+
 template<typename T> const T MUL(const T& pa_roIN1, const T& pa_roIN2){
   return pa_roIN1 * pa_roIN2;
 }
 
+GENERATE_APPLY_FUNCTION(SUB)
+template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type SUB(const T& pa_roIN1, const U& pa_roIN2){
+  return APPLY<T, U, SUB_Function, CIEC_ANY_NUM>(pa_roIN1, pa_roIN2);
+}
+
 template<typename T> const T SUB(const T& pa_roIN1, const T& pa_roIN2){
   return pa_roIN1 - pa_roIN2;
+}
+
+GENERATE_APPLY_FUNCTION(DIV)
+template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type DIV(const T& pa_roIN1, const U& pa_roIN2){
+  return APPLY<T, U, DIV_Function, CIEC_ANY_NUM>(pa_roIN1, pa_roIN2);
 }
 
 template<typename T> const T DIV(const T& pa_roIN1, const T& pa_roIN2){
