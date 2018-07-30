@@ -49,11 +49,11 @@ void CServiceCallManager::startChain(CEventSourceFB *pa_poECStartF){
 }
 
 void CServiceCallManager::queueServiceCall(FORTE_TRIGGER_SERVICE_CLIENT* pa_serviceClientPtr){
-  m_callerVector.pushBack(pa_serviceClientPtr);
+  m_callerVector.push_back(pa_serviceClientPtr);
 }
 
 void CServiceCallManager::queueConnectWait(FORTE_TRIGGER_SERVICE_CLIENT* pa_serviceClientPtr){
-  m_connectVector.pushBack(pa_serviceClientPtr);
+  m_connectVector.push_back(pa_serviceClientPtr);
 }
 
 void CServiceCallManager::run(){
