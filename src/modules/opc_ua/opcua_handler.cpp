@@ -169,7 +169,7 @@ void COPC_UA_Handler::registerWithLds(const UA_String *discoveryUrl) {
   memcpy(discoveryUrlChar, discoveryUrl->data, discoveryUrl->length);
   discoveryUrlChar[discoveryUrl->length] = 0;
 
-  registeredWithLds.push_front(discoveryUrlChar);
+  registeredWithLds.pushFront(discoveryUrlChar);
 
   DEVLOG_INFO("OPC UA: Registering with LDS '%.*s'\n", discoveryUrl->length, discoveryUrl->data);
   UA_StatusCode retVal = UA_Server_addPeriodicServerRegisterCallback(uaServer, discoveryUrlChar , 10 * 60 * 1000, 500, NULL);
@@ -818,7 +818,7 @@ void COPC_UA_Handler::referencedNodesIncrement(const CSinglyLinkedList<UA_NodeId
     for (CSinglyLinkedList<struct ReferencedNodeByLayer *>::Iterator iterRef = nodeLayerReferences.begin(); iterRef != nodeLayerReferences.end(); ++iterRef) {
       if (UA_NodeId_equal((*iterRef)->nodeId, (*iterNode))) {
         found = true;
-        (*iterRef)->referencedByLayer.push_front(layer);
+        (*iterRef)->referencedByLayer.pushFront(layer);
         break;
       }
     }
@@ -828,8 +828,8 @@ void COPC_UA_Handler::referencedNodesIncrement(const CSinglyLinkedList<UA_NodeId
       UA_NodeId_copy((*iterNode), newNode);
       newRef->nodeId = newNode;
       newRef->referencedByLayer = CSinglyLinkedList<const COPC_UA_Layer*>();
-      newRef->referencedByLayer.push_front(layer);
-      nodeLayerReferences.push_front(newRef);
+      newRef->referencedByLayer.pushFront(layer);
+      nodeLayerReferences.pushFront(newRef);
     }
   }
 }

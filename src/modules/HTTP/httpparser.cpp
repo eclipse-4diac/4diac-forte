@@ -155,7 +155,7 @@ bool forte::com_infra::CHttpParser::parseGetRequest(CIEC_STRING& paPath, CSingly
    }
 }
 
-bool forte::com_infra::CHttpParser::createReponse(CIEC_STRING& paDest, const CIEC_STRING& paResult, const CIEC_STRING& paContentType, const CIEC_STRING& paData){
+bool forte::com_infra::CHttpParser::createResponse(CIEC_STRING& paDest, const CIEC_STRING& paResult, const CIEC_STRING& paContentType, const CIEC_STRING& paData){
   paDest.append("HTTP/1.1 ");
   paDest.append(paResult.getValue());
   paDest.append("\r\nContent-type: ");
