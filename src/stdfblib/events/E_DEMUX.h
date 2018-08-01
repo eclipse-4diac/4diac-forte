@@ -33,7 +33,7 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-  FORTE_FB_DATA_ARRAY(1,1,1, 0);
+  FORTE_FB_DATA_ARRAY(4,1,0,0);
 
   virtual void executeEvent(int pa_nEIID);
   
