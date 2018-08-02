@@ -14,6 +14,7 @@
  *******************************************************************************/
 
 #include "opcua_handler.h"
+#include "opcua_client_handler.h"
 #include "../../core/devexec.h"
 #include "../../core/iec61131_functions.h"
 #include "../../core/cominfra/basecommfb.h"
@@ -172,7 +173,7 @@ void COPC_UA_Handler::registerWithLds(const UA_String *discoveryUrl) {
   registeredWithLds.pushFront(discoveryUrlChar);
 
   DEVLOG_INFO("OPC UA: Registering with LDS '%.*s'\n", discoveryUrl->length, discoveryUrl->data);
-  UA_StatusCode retVal = UA_Server_addPeriodicServerRegisterCallback(uaServer, discoveryUrlChar , 10 * 60 * 1000, 500, NULL);
+  UA_StatusCode retVal = UA_Server_addPeriodicServerRegisterCallback(uaServer, NULL, discoveryUrlChar , 10 * 60 * 1000, 500, NULL);
   if (retVal != UA_STATUSCODE_GOOD) {
     DEVLOG_ERROR("OPC UA: Could not register with LDS. Error: %s\n", UA_StatusCode_name(retVal));
   }
