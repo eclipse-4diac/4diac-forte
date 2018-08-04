@@ -151,33 +151,11 @@ char *DEV_MGR::parseRequest(char *pa_acRequestString, forte::core::SManagementCM
 }
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
-bool DEV_MGR::parseFBType(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand){
+bool DEV_MGR::parseXType(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand, char *pa_requestType){
   bool bRetVal = false;
-  if(!strncmp("FBType Name=\"", pa_acRequestPartLeft, 13)){
-    char *acBuf = &(pa_acRequestPartLeft[13]);
-    int i = 0;
-    if(acBuf[0] != '*'){
-      i = parseIdentifier(acBuf, pa_rstCommand.mFirstParam);
-      acBuf = (-1 == i) ? 0 : strchr(&(acBuf[i + 1]), '>');
-    }
-    if(acBuf != 0){
-      acBuf = acBuf + 1;
-      i = 0;
-      TForteUInt16 nBufLength = static_cast<TForteUInt16>(strcspn(acBuf, "<"));
-      pa_rstCommand.mAdditionalParams.assign(acBuf, nBufLength);
-    }
-    else{
-      return false;
-    }
-    bRetVal = true;
-    }
-  return bRetVal;
-}
-
-bool DEV_MGR::parseAdapterType(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand){
-  bool bRetVal = false;
-  if(!strncmp("AdapterType Name=\"", pa_acRequestPartLeft, 18)){
-    char *acBuf = &(pa_acRequestPartLeft[18]);
+  int nReqLength = strlen((const char *)pa_requestType);
+  if(!strncmp(pa_requestType, pa_acRequestPartLeft, nReqLength)){
+    char *acBuf = &(pa_acRequestPartLeft[nReqLength]);
     int i = 0;
     if(acBuf[0] != '*'){
       i = parseIdentifier(acBuf, pa_rstCommand.mFirstParam);
@@ -323,7 +301,7 @@ void DEV_MGR::parseCreateData(char *pa_acRequestPartLeft, forte::core::SManageme
       switch (pa_acRequestPartLeft[0]){
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
         case 'A': // we have an Adapter to Create
-          if(parseAdapterType(pa_acRequestPartLeft, pa_rstCommand)){
+          if(parseXType(pa_acRequestPartLeft, pa_rstCommand, "AdapterType Name=\"")){
             pa_rstCommand.mCMD = cg_nMGM_CMD_Create_AdapterType;
           }
           break;
@@ -333,7 +311,7 @@ void DEV_MGR::parseCreateData(char *pa_acRequestPartLeft, forte::core::SManageme
             pa_rstCommand.mCMD = cg_nMGM_CMD_Create_FBInstance;
           }
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
-          else if(parseFBType(pa_acRequestPartLeft, pa_rstCommand)){
+          else if(parseXType(pa_acRequestPartLeft, pa_rstCommand, "FBType Name=\"")){
             pa_rstCommand.mCMD = cg_nMGM_CMD_Create_FBType;
           }
 #endif

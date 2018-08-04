@@ -80,20 +80,14 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
      * \return true if the FB data could be parsed
      */
     static bool parseFBData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
-    /*! \brief Parse the given request that is left after parsing the header to parse FB type
+    /*! \brief Parse the given request that is left after parsing the header to parse FB or Adapter type
      *
      * \param pa_acRequestPartLeft  data of the request that has been left after parsing the header
      * \param pa_rstCommand the command structure for holding command information
+     * \param pa_requestType the type that should be searched
      * \return true if the FB type could be parsed
      */
-    static bool parseFBType(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
-    /*! \brief Parse the given request that is left after parsing the header to parse Adapter type
-     *
-     * \param pa_acRequestPartLeft  data of the request that has been left after parsing the header
-     * \param pa_rstCommand the command structure for holding command information
-     * \return true if the Adapter type could be parsed
-     */
-    static bool parseAdapterType(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
+    static bool parseXType(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand, char *pa_requestType);
     /*! \brief Parse the given request that is left after parsing the header to parse connection data
      *
      * \param pa_acRequestPartLeft   data of the request that has been left after parsing the header
