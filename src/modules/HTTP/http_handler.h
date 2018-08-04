@@ -105,6 +105,9 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
     CSinglyLinkedList<HTTPAcceptedSockets*> mAcceptedSockets;
     CSyncObject mAcceptedMutex;
 
+    CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor> mSocketsToClose;
+    CSyncObject mCloseSocketsMutex;
+
     CSemaphore mSuspendSemaphore;
 
     static CIPComSocketHandler::TSocketDescriptor smServerListeningSocket;

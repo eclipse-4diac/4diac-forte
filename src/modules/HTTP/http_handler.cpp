@@ -77,6 +77,13 @@ void CHTTP_Handler::disableHandler(void) {
     }
     mAcceptedSockets.clearAll();
   }
+
+  {
+    CCriticalRegion criticalRegionClose(mCloseSocketsMutex);
+    for(CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor>::Iterator iter = mSocketsToClose.begin(); iter != mSocketsToClose.end(); ++iter){
+      closeSocket(*iter);
+    }
+  }
 }
 
 void CHTTP_Handler::setPriority(int) {
@@ -100,6 +107,7 @@ forte::com_infra::EComResponse CHTTP_Handler::recvData(const void* paData, unsig
       accepted->mStartTime.setCurrentTime();
       mAcceptedSockets.pushBack(accepted);
       GET_HANDLER_FROM_HANDLER(CIPComSocketHandler)->addComCallback(newConnection, this);
+      resumeSelfsuspend();
     }else{
       DEVLOG_INFO("[HTTP Handler] Couldn't accept new HTTP connection\n");
     }
@@ -115,15 +123,20 @@ forte::com_infra::EComResponse CHTTP_Handler::recvData(const void* paData, unsig
       }
       if(0 != toDelete){
         mAcceptedSockets.erase(toDelete);
+        delete toDelete;
       }
     }
 
     int recv = CIPComSocketHandler::receiveDataFromTCP(socket, &sRecvBuffer[sBufFillSize], cg_unIPLayerRecvBufferSize - sBufFillSize);
     if(0 == recv){
-      closeSocket(socket);
+      CCriticalRegion criticalRegionClose(mCloseSocketsMutex);
+      mSocketsToClose.pushBack(socket);
+      resumeSelfsuspend();
     }else if(-1 == recv){
+      CCriticalRegion criticalRegionClose(mCloseSocketsMutex);
       DEVLOG_ERROR("[HTTP handler] Error receiving packet\n");
-      closeSocket(socket);
+      mSocketsToClose.pushBack(socket);
+      resumeSelfsuspend();
     }else{
       bool found = false;
       { //check clients
@@ -135,7 +148,9 @@ forte::com_infra::EComResponse CHTTP_Handler::recvData(const void* paData, unsig
               if(e_ProcessDataOk == (*iter)->mLayer->recvData(sRecvBuffer, recv)){
                 startNewEventChain((*iter)->mLayer->getCommFB());
               }
-              closeSocket(socket);
+              CCriticalRegion criticalRegionClose(mCloseSocketsMutex);
+              mSocketsToClose.pushBack(socket);
+              resumeSelfsuspend();
               found = true;
               toDelete = *iter;
               break;
@@ -143,8 +158,8 @@ forte::com_infra::EComResponse CHTTP_Handler::recvData(const void* paData, unsig
           }
 
           if(0 != toDelete){
-            delete toDelete;
             mClientLayers.erase(toDelete);
+            delete toDelete;
           }
         }
       }
@@ -171,6 +186,20 @@ forte::com_infra::EComResponse CHTTP_Handler::recvData(const void* paData, unsig
           }
           if(!found){
             DEVLOG_ERROR("[HTTP Handler] Path %s has no FB registered\n", path.getValue());
+
+            CIEC_STRING toSend;
+            CIEC_STRING result = "404 Not Found";
+            CIEC_STRING mContentType = "text/html";
+            CIEC_STRING mReqData = "";
+            if(!CHttpParser::createResponse(toSend, result, mContentType, mReqData)){
+              DEVLOG_DEBUG("[HTTP Handler] Error sending response back for 404 error\n");
+            }else{
+              if(toSend.length() != CIPComSocketHandler::sendDataOnTCP(socket, toSend.getValue(), toSend.length())){
+                DEVLOG_ERROR("[HTTP Handler]: Error sending back the answer %s \n", toSend.getValue());
+              }
+            }
+            CCriticalRegion criticalRegionClose(mCloseSocketsMutex);
+            mSocketsToClose.pushBack(socket);
           }
         }
       }
@@ -227,7 +256,6 @@ void CHTTP_Handler::removeServerPath(CIEC_STRING& paPath){
           closeSocket(*(*iter_));
         }
       }
-      delete (*iter);
       toDelete = *iter;
       break;
     }
@@ -235,6 +263,7 @@ void CHTTP_Handler::removeServerPath(CIEC_STRING& paPath){
 
   if(0 != toDelete){
     mServerLayers.erase(toDelete);
+    delete toDelete;
   }
 
   if(mServerLayers.isEmpty()){
@@ -263,7 +292,7 @@ void CHTTP_Handler::run() {
 
   mThreadStarted.inc();
   while(isAlive()){
-    if(mClientLayers.isEmpty() && mAcceptedSockets.isEmpty()){
+    if(mClientLayers.isEmpty() && mAcceptedSockets.isEmpty() && mSocketsToClose.isEmpty()){
       selfSuspend();
     }
     if(!isAlive()){
@@ -289,6 +318,7 @@ void CHTTP_Handler::run() {
           for(CSinglyLinkedList<HTTPClientWaiting *>::Iterator iter_ = mClientLayers.begin(); iter_ != mClientLayers.end(); ++iter_){
             if(*iter_ == *iter){
               mClientLayers.erase(*iter_);
+              delete (*iter);
               break;
             }
           }
@@ -315,10 +345,18 @@ void CHTTP_Handler::run() {
           for(CSinglyLinkedList<HTTPAcceptedSockets *>::Iterator iter_ = mAcceptedSockets.begin(); iter_ != mAcceptedSockets.end(); ++iter_){
             if(*iter_ == *iter){
               mAcceptedSockets.erase(*iter_);
+              delete (*iter);
               break;
             }
           }
         }
+      }
+    }
+
+    {
+      CCriticalRegion criticalRegionClose(mCloseSocketsMutex);
+      for(CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor>::Iterator iter = mSocketsToClose.begin(); iter != mSocketsToClose.end(); ++iter){
+        closeSocket(*iter);
       }
     }
 
@@ -381,7 +419,12 @@ void CHTTP_Handler::sendServerAnswerHelper(forte::com_infra::CHttpComLayer* paLa
         if(paAnswer.length() != CIPComSocketHandler::sendDataOnTCP(socket, paAnswer.getValue(), paAnswer.length())){
           DEVLOG_ERROR("[HTTP Handler]: Error sending back the answer %s \n", paAnswer.getValue());
         }
-        closeSocket(socket);
+        if(paFromRecv){
+          CCriticalRegion criticalRegionClose(mCloseSocketsMutex);
+          mSocketsToClose.pushBack(socket);
+        }else{
+          closeSocket(socket);
+        }
         (*iter)->mSockets.popFront();
         break;
       }
@@ -405,7 +448,12 @@ void CHTTP_Handler::forceCloseHelper(forte::com_infra::CHttpComLayer* paLayer, b
       if((*iter)->mLayer == paLayer){
         if(!(*iter)->mSockets.isEmpty()){
           CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor*>::Iterator itSocket = (*iter)->mSockets.begin();
-          closeSocket(**itSocket);
+          if(paFromRecv){
+            CCriticalRegion criticalRegionClose(mCloseSocketsMutex);
+            mSocketsToClose.pushBack(**itSocket);
+          }else{
+            closeSocket(**itSocket);
+          }
           (*iter)->mSockets.popFront();
         }
         found = true;
@@ -420,12 +468,17 @@ void CHTTP_Handler::forceCloseHelper(forte::com_infra::CHttpComLayer* paLayer, b
   }
 
   if(!found && !mClientLayers.isEmpty()){
-     for(CSinglyLinkedList<HTTPClientWaiting *>::Iterator iter = mClientLayers.begin(); iter != mClientLayers.end(); ++iter){
-       if((*iter)->mLayer == paLayer){
-         closeSocket((*iter)->mSocket);
-       }
-     }
-   }
+    for(CSinglyLinkedList<HTTPClientWaiting *>::Iterator iter = mClientLayers.begin(); iter != mClientLayers.end(); ++iter){
+      if((*iter)->mLayer == paLayer){
+        if(paFromRecv){
+          CCriticalRegion criticalRegionClose(mCloseSocketsMutex);
+          mSocketsToClose.pushBack((*iter)->mSocket);
+        }else{
+          closeSocket((*iter)->mSocket);
+        }
+      }
+    }
+  }
 
   if(!paFromRecv){
     mClientMutex.unlock();

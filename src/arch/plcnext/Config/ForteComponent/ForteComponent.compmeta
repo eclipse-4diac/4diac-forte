@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MetaConfigurationDocument 
+  xmlns="http://www.phoenixcontact.com/schema/metaconfig" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  schemaVersion="1.0">
+
+  <Component name="ForteComponent" >
+
+
+    <!-- List of programs referenced in this component -->
+    <ProgramIncludes>
+      <Include path="ForteIOHandler/ForteIOHandler.progmeta" />
+    </ProgramIncludes>
+
+    <!-- List of outgoing ports defined by this component. -->
+    <!-- Uncomment this section and add ports 
+    <Ports>
+      
+    </Ports>
+    -->
+
+  </Component>
+
+</MetaConfigurationDocument>

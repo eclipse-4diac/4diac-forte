@@ -173,8 +173,8 @@ template <typename T, typename Container>
 void CSinglyLinkedList<T,Container>::erase(T const& paToDelete){
 
     Iterator itRunner = begin();
-    Iterator itRefNode = back();
-    Iterator itEnd = back();
+    Iterator itRefNode = end();
+    Iterator itEnd = end();
 
     while(itRunner != itEnd){
       if(*itRunner == paToDelete){
@@ -330,8 +330,8 @@ public:
   void erase(void* paToDelete){
 
     Iterator itRunner = begin();
-    Iterator itRefNode = back();
-    Iterator itEnd = back();
+    Iterator itRefNode = end();
+    Iterator itEnd = end();
 
     while(itRunner != itEnd){
       if(*itRunner == paToDelete){

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MetaConfigurationDocument 
+  xmlns="http://www.phoenixcontact.com/schema/metaconfig" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  schemaVersion="1.0">
+
+  <Program name="ForteIOHandler" >
+
+    <!-- uncomment this section to add ports
+    <Ports>
+      
+    </Ports>
+     -->
+
+  </Program>
+
+</MetaConfigurationDocument>

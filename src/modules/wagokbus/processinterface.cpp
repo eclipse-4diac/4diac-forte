@@ -223,7 +223,7 @@ std::vector<std::string> WagoPFCProcessInterface::generateParameterList(){
   std:: string segment;
 
   while(std::getline(streamBuf, segment, '.')){   //seperate the PARAMS input by '.' for easier processing
-    retVal.pushBack(segment);
+    retVal.push_back(segment);
   }
   return retVal;
 }

@@ -49,7 +49,7 @@ EComResponse CHttpComLayer::openConnection(char *paLayerParameter){
       break;
     case e_Client: {
       bool error = false;
-      bool defaultReponse = true;
+      bool defaultResponse = true;
       bool defaultContent = true;
       char* helperChar = strchr(paLayerParameter, ';'); //look for type of request
       if(0 != helperChar){
@@ -62,7 +62,7 @@ EComResponse CHttpComLayer::openConnection(char *paLayerParameter){
           if(0 != startOfResponse){
             *startOfResponse++ = '\0';
             mExpectedRspCode = startOfResponse;
-            defaultReponse = false;
+            defaultResponse = false;
           }
           mContentType = startOfContentType;
           defaultContent = false;
@@ -83,7 +83,7 @@ EComResponse CHttpComLayer::openConnection(char *paLayerParameter){
       }
 
       if(!error){
-        if(defaultReponse){
+        if(defaultResponse){
           mExpectedRspCode = "HTTP/1.1 200 OK";
         }
         if(defaultContent){
@@ -183,7 +183,7 @@ EComResponse CHttpComLayer::sendData(void *paData, unsigned int){
         if(!serializeData(apoSDs[0])){
           error = true;
         }else{
-          if(!CHttpParser::createReponse(mRequest, "200 OK", mContentType, mReqData)){
+          if(!CHttpParser::createResponse(mRequest, "200 OK", mContentType, mReqData)){
             DEVLOG_DEBUG("[HTTP Layer] Wrong Response request when changing the data\n");
             error = true;
           }
@@ -293,7 +293,7 @@ EComResponse forte::com_infra::CHttpComLayer::recvServerData(CSinglyLinkedList<C
     CIEC_STRING toSend;
     CIEC_STRING result = "400 Bad Request";
     mReqData = "";
-    if(!CHttpParser::createReponse(toSend, result, mContentType, mReqData)){
+    if(!CHttpParser::createResponse(toSend, result, mContentType, mReqData)){
       DEVLOG_DEBUG("[HTTP Layer] Wrong Response request when changing the data\n");
       GET_HANDLER_FROM_COMM_LAYER(CHTTP_Handler)->forceCloseFromRecv(this);
     }
