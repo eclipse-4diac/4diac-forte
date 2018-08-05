@@ -153,7 +153,7 @@ char *DEV_MGR::parseRequest(char *pa_acRequestString, forte::core::SManagementCM
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
 bool DEV_MGR::parseXType(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand, char *pa_requestType){
   bool bRetVal = false;
-  int nReqLength = strlen((const char *)pa_requestType);
+  size_t nReqLength = strlen((const char *)pa_requestType);
   if(!strncmp(pa_requestType, pa_acRequestPartLeft, nReqLength)){
     char *acBuf = &(pa_acRequestPartLeft[nReqLength]);
     int i = 0;

@@ -126,6 +126,14 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
       case cg_nMGM_CMD_QUERY_AdapterTypes:
         retVal = queryAllAdapterTypes(paCommand.mAdditionalParams);
         break;
+      case cg_nMGM_CMD_QUERY_FB:{
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+        retVal = queryFBs(paCommand.mAdditionalParams);
+#else
+        retVal = e_UNSUPPORTED_CMD;
+#endif
+      }
+        break;
       default:
         #ifdef FORTE_SUPPORT_MONITORING
         retVal = mMonitoringHandler.executeMonitoringCommand(paCommand);
@@ -291,6 +299,22 @@ EMGMResponse CResource::queryAllFBTypes(CIEC_STRING & paValue){
   return retVal;
 }
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
+EMGMResponse CResource::queryFBs(CIEC_STRING & paValue){
+  EMGMResponse retVal = e_UNSUPPORTED_TYPE;
+  for (TFunctionBlockList::Iterator itRunner(getFBList().begin()); itRunner != getFBList().end(); ++itRunner) {
+    paValue.append("<FB Name=\"");
+    paValue.append((static_cast<CFunctionBlock *>(*itRunner))->getInstanceName());
+    paValue.append("\" Type=\"");
+    paValue.append(CStringDictionary::getInstance().get((static_cast<CFunctionBlock *>(*itRunner))->getFBTypeId()));
+    paValue.append("\"/>");
+    if(itRunner != getFBList().end()){
+      paValue.append("\n");
+    }
+  }
+  retVal = e_RDY;
+  return retVal;
+}
+
 EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNameId,
     CIEC_STRING& paLuaScriptAsString){
   EMGMResponse retVal = e_UNSUPPORTED_TYPE;

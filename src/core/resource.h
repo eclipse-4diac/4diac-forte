@@ -173,6 +173,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 
     EMGMResponse createAdapterTypeFromLua(CStringDictionary::TStringId typeNameId,
             CIEC_STRING & paLuaScriptAsString);
+    EMGMResponse queryFBs(CIEC_STRING & paValue);
 #endif
     /*!\brief get the variable with the given name identifier
      *
