@@ -33,7 +33,6 @@ CFunctionBlock::CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *p
 #ifdef FORTE_SUPPORT_MONITORING
   m_nEIMonitorCount = 0;
   m_nEOMonitorCount = 0;
-  mContainer = 0;
   m_updated = false;
 #endif
 
@@ -121,9 +120,6 @@ void CFunctionBlock::setupAdapters(const SFBInterfaceSpec *pa_pstInterfaceSpec, 
         m_apoAdapters[i] = CTypeLib::createAdapter(pa_pstInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID, pa_pstInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterTypeNameID, getResourcePtr(), pa_pstInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_bIsPlug);
         if(0 != m_apoAdapters[i]){
           m_apoAdapters[i]->setParentFB(this, static_cast<TForteUInt8>(i));
-#ifdef FORTE_SUPPORT_MONITORING
-          m_apoAdapters[i]->setContainer(this);
-#endif
         }
       }
     }

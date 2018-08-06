@@ -87,6 +87,7 @@ namespace forte {
         typedef CSinglyLinkedList<SEventWatchEntry> TEventWatchList;
 
         struct SFBMonitoringEntry{
+            CIEC_STRING mFullFBName;
             CFunctionBlock *m_poFB;
             TDataWatchList m_lstWatchedDataPoints;
             TEventWatchList m_lstWatchedEventPoints;
@@ -104,7 +105,7 @@ namespace forte {
         EMGMResponse triggerEvent(forte::core::TNameIdentifier &paNameList);
         EMGMResponse resetEventCount(forte::core::TNameIdentifier &paNameList);
 
-        SFBMonitoringEntry &findOrCreateFBMonitoringEntry(CFunctionBlock *pa_poFB);
+        SFBMonitoringEntry &findOrCreateFBMonitoringEntry(CFunctionBlock *pa_poFB, forte::core::TNameIdentifier &paNameList);
         void addDataWatch(SFBMonitoringEntry &pa_roFBMonitoringEntry,
             CStringDictionary::TStringId pa_unPortId, CIEC_ANY &pa_poDataVal);
         bool removeDataWatch(SFBMonitoringEntry &pa_roFBMonitoringEntry,
@@ -123,7 +124,7 @@ namespace forte {
         static void appendEventWatch(CIEC_STRING &pa_roResponse,
             SEventWatchEntry &pa_roEventWatchEntry);
 
-        static void appendFBName(CIEC_STRING &paResponse, CFunctionBlock *paFB);
+        static void createFullFBName(CIEC_STRING &paFullName, forte::core::TNameIdentifier &paNameList);
 
         //!List storing all FBs which are currently monitored
         TFBMonitoringList mFBMonitoringList;

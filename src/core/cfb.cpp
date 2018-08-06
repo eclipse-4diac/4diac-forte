@@ -207,11 +207,6 @@ void CCompositeFB::createInternalFBs(){
     for(unsigned int i = 0; i < cm_cpoFBNData->m_nNumFBs; ++i){
       m_apoInternalFBs[i] =
           CTypeLib::createFB(cm_cpoFBNData->m_pstFBInstances[i].m_nFBInstanceNameId, cm_cpoFBNData->m_pstFBInstances[i].m_nFBTypeNameId, getResourcePtr());
-#ifdef FORTE_SUPPORT_MONITORING
-      if (0 != m_apoInternalFBs[i]){
-        m_apoInternalFBs[i]->setContainer(this);
-      }
-#endif
     }
   }
 }

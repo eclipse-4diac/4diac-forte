@@ -76,23 +76,23 @@ EMGMResponse CMonitoringHandler::addWatch(forte::core::TNameIdentifier &paNameLi
   CFunctionBlock *fB = getFB(paNameList);
 
   if(0 != fB){
-    SFBMonitoringEntry &poFBMonitoringEntry(findOrCreateFBMonitoringEntry(fB));
+    SFBMonitoringEntry &fbMonitoringEntry(findOrCreateFBMonitoringEntry(fB, paNameList));
 
-    CIEC_ANY *poDataVal = fB->getVar(&portName, 1);
-    if(0 != poDataVal){
-      addDataWatch(poFBMonitoringEntry, portName, *poDataVal);
+    CIEC_ANY *dataVal = fB->getVar(&portName, 1);
+    if(0 != dataVal){
+      addDataWatch(fbMonitoringEntry, portName, *dataVal);
       eRetVal = e_RDY;
     }
     else{
-      TEventID unEventId = fB->getEIID(portName);
-      if(cg_nInvalidEventID != unEventId){
-        addEventWatch(poFBMonitoringEntry, portName, fB->getEIMonitorData(unEventId));
+      TEventID eventId = fB->getEIID(portName);
+      if(cg_nInvalidEventID != eventId){
+        addEventWatch(fbMonitoringEntry, portName, fB->getEIMonitorData(eventId));
         eRetVal = e_RDY;
       }
       else{
-        unEventId = fB->getEOID(portName);
-        if(cg_nInvalidEventID != unEventId){
-          addEventWatch(poFBMonitoringEntry, portName, fB->getEOMonitorData(unEventId));
+        eventId = fB->getEOID(portName);
+        if(cg_nInvalidEventID != eventId){
+          addEventWatch(fbMonitoringEntry, portName, fB->getEOMonitorData(eventId));
           eRetVal = e_RDY;
         }
       }
@@ -254,10 +254,10 @@ EMGMResponse CMonitoringHandler::resetEventCount(forte::core::TNameIdentifier &p
 }
 
 CMonitoringHandler::SFBMonitoringEntry &CMonitoringHandler::findOrCreateFBMonitoringEntry(
-    CFunctionBlock *paFB){
+    CFunctionBlock *paFB, forte::core::TNameIdentifier &paNameList){
   for(TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin();
       itRunner != mFBMonitoringList.end(); ++itRunner){
-    if(itRunner->m_poFB->getInstanceNameId() == paFB->getInstanceNameId()){
+    if(itRunner->m_poFB == paFB){
       return *itRunner;
     }
   }
@@ -265,6 +265,7 @@ CMonitoringHandler::SFBMonitoringEntry &CMonitoringHandler::findOrCreateFBMonito
   mFBMonitoringList.pushBack(SFBMonitoringEntry());
   TFBMonitoringList::Iterator itLastEntry(mFBMonitoringList.back());
   itLastEntry->m_poFB = paFB;
+  createFullFBName(itLastEntry->mFullFBName, paNameList);
   return *itLastEntry;
 }
 
@@ -358,7 +359,7 @@ void CMonitoringHandler::readResourceWatches(CIEC_STRING &paResponse){
       for(TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin();
           itRunner != mFBMonitoringList.end(); ++itRunner){
         paResponse.append("<FB name=\"");
-        appendFBName(paResponse, itRunner->m_poFB);
+        paResponse.append(itRunner->mFullFBName.getValue());
         paResponse.append("\">");
 
         //add the data watches
@@ -391,7 +392,7 @@ void CMonitoringHandler::getResourceWatches(CIEC_STRING &paResponse, char){
     for(TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin();
         itRunner != mFBMonitoringList.end(); ++itRunner){
       paResponse.append("<FB name=\"");
-      appendFBName(paResponse, itRunner->m_poFB);
+      paResponse.append(itRunner->mFullFBName.getValue());
       paResponse.append("\">");
 
       //FIXME implement the watches
@@ -471,11 +472,12 @@ void CMonitoringHandler::appendEventWatch(CIEC_STRING &paResponse,
   paResponse.append("</Port>");
 }
 
-void CMonitoringHandler::appendFBName(CIEC_STRING &paResponse, CFunctionBlock *paFB){
-  if(0 != paFB->getContainer()){
-    appendFBName(paResponse, paFB->getContainer());
-    paResponse.append(".");
+void CMonitoringHandler::createFullFBName(CIEC_STRING &paFullName, forte::core::TNameIdentifier &paNameList){
+  for(forte::core::TNameIdentifier::CIterator runner(paNameList.begin()); runner != paNameList.end(); ++runner){
+    paFullName.append(CStringDictionary::getInstance().get(*runner));
+    if(!runner.isLastEntry()){
+      paFullName.append(".");
+    }
   }
-  paResponse.append(paFB->getInstanceName());
 }
 

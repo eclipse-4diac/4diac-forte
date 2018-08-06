@@ -417,14 +417,6 @@ class CFunctionBlock{
      */
     virtual CFunctionBlock *getFB(forte::core::TNameIdentifier::CIterator &paNameListIt);
 
-    CFunctionBlock *getContainer(){
-      return mContainer;
-    }
-
-    void setContainer(CFunctionBlock *paContainer){
-      mContainer = paContainer;
-    }
-
 #endif //FORTE_SUPPORT_MONITORING
   protected:
 
@@ -545,7 +537,6 @@ class CFunctionBlock{
     // monitoring stuff
     forte::core::SMonitorEvent *m_nEOMonitorCount;
     forte::core::SMonitorEvent *m_nEIMonitorCount;
-    CFunctionBlock *mContainer;  //!< points to the cfb this FB may be contained in
     bool m_updated;
 #endif
 
