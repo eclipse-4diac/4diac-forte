@@ -48,7 +48,7 @@ void FORTE_ST_DEL_CONN::executeEvent(int pa_nEIID){
       if(true == QI()) {
         executeRQST();
       } else {
-		  STATUS() = "Not Ready";
+      STATUS() = "Not Ready";
       }
       sendOutputEvent(scm_nEventCNFID);
       break;

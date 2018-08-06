@@ -47,7 +47,7 @@ protected:
   virtual void executeEvent(int pa_nEIID);
 
   CIEC_TIME& DT() {
-   	return *static_cast<CIEC_TIME*>(getDI(0));
+     return *static_cast<CIEC_TIME*>(getDI(0));
   }
 public:
   EVENT_SOURCE_FUNCTION_BLOCK_CTOR(CTimedFB){

@@ -22,7 +22,21 @@ DEFINE_GENERIC_FIRMWARE_FB(GEN_F_MUX, g_nStringIdGEN_F_MUX);
 const CStringDictionary::TStringId GEN_F_MUX::scm_anEventOutputNames[] = { g_nStringIdEO };
 
 GEN_F_MUX::GEN_F_MUX(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CFunctionBlock(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0){
+    CFunctionBlock(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0),
+  m_anEventInputNames(0),
+  m_anDataOutputNames(0),
+  m_anDataInputNames(0),
+  m_anDataOutputTypeIds(0),
+  m_anDataInputTypeIds(0),
+  m_anEIWithIndexes(0),
+  m_anEIWith(0),
+  m_anEOWithIndexes(0),
+  m_anEOWith(0),
+  m_nEInputs(0),
+  m_nEOutputs(0),
+  m_nDInputs(0),
+  m_nDOutputs(0),
+  m_nConfiguredFBTypeNameId(CStringDictionary::scm_nInvalidStringId){
 }
 
 GEN_F_MUX::~GEN_F_MUX(){
@@ -143,7 +157,7 @@ bool GEN_F_MUX::configureFB(const char *pa_acConfigString){
 
     //return with error if there are not enough event inputs (use common merge FB instead!!)
     if(m_nEInputs < 2){
-	  DEVLOG_ERROR("At least 2 Event Inputs need to be set\n");
+      DEVLOG_ERROR("At least 2 Event Inputs need to be set\n");
       return false;
     }
   }

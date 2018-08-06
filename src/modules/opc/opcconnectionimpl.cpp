@@ -58,7 +58,7 @@ void COpcConnectionImpl::addItem(COpcProcessVar* pa_pNewItem){
 }
 
 void COpcConnectionImpl::addGroup(const char* pa_acGroupName, unsigned long pa_nReqUpdateRate, float pa_nDeadBand){
-  m_lOpcGroupSettingsList.push_back(new SOpcGroupSettings(pa_acGroupName, pa_nReqUpdateRate, pa_nDeadBand));
+  m_lOpcGroupSettingsList.pushBack(new SOpcGroupSettings(pa_acGroupName, pa_nReqUpdateRate, pa_nDeadBand));
 }
 
 int COpcConnectionImpl::sendItemData(COpcProcessVar* pa_pNewItem){
@@ -72,7 +72,7 @@ void COpcConnectionImpl::OnDataChange(COPCGroup & group, CAtlMap<COPCItem *, OPC
     OPCItemData *itemData = changes.GetValueAt(pos);
     COPCItem *item = changes.GetNextKey(pos);
 
-    itemList.push_back(new SOpcItemData((LPCTSTR) (item->getName()), (Variant) itemData->vDataValue));
+    itemList.pushBack(new SOpcItemData((LPCTSTR) (item->getName()), (Variant) itemData->vDataValue));
   }
 
   const char *c_groupName = (const char*) group.getName();

@@ -39,11 +39,11 @@ private:
   void executeEvent(int pa_nEIID);
 
   CIEC_BOOL& CLK() {
-  	return *static_cast<CIEC_BOOL*>(getDI(0));
+    return *static_cast<CIEC_BOOL*>(getDI(0));
   }
 
   CIEC_BOOL& Q() {
-  	return *static_cast<CIEC_BOOL*>(getDO(0));
+    return *static_cast<CIEC_BOOL*>(getDO(0));
   }
 
 public:

@@ -18,12 +18,12 @@ const TForteInt32 CExternTimerHandler::csm_nTicksPerSecond = 1000;
 
 extern "C" __declspec(dllexport) 
 void __stdcall nextTick(void){
-	CExternTimerHandler::externNextTick();
+  CExternTimerHandler::externNextTick();
 }
 
 extern "C" __declspec(dllexport) 
 unsigned int __stdcall getTicksPerSecond(){
-	return CExternTimerHandler::getExternTicksPerSecond();
+  return CExternTimerHandler::getExternTicksPerSecond();
 }
 
 CTimerHandler* CTimerHandler::createTimerHandler(CDeviceExecution& pa_poDeviceExecution){
@@ -48,11 +48,11 @@ void CExternTimerHandler::externNextTick(){
 }
 
 void CExternTimerHandler::enableHandler(void){
-	//TODO think on hwo to handle this.
+  //TODO think on hwo to handle this.
 }
 
 void CExternTimerHandler::disableHandler(void){
-	//TODO think on hwo to handle this.
+  //TODO think on hwo to handle this.
 }
 
 void CExternTimerHandler::setPriority(int pa_nPriority){

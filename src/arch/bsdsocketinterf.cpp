@@ -62,6 +62,9 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openTCPServerConnect
     else{
       DEVLOG_ERROR("CBSDSocketInterface: bind() failed: %s\n", strerror(errno));
     }
+    if(-1 == nRetVal){
+      close(nSocket);
+    }
   }
   else{
     DEVLOG_ERROR("CBSDSocketInterface: Couldn't create socket: %s\n", strerror(errno));
@@ -88,6 +91,7 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openTCPClientConnect
     memset(&(stSockAddr.sin_zero), '\0', sizeof(stSockAddr.sin_zero));
 
     if(-1 == connect(nSocket, (struct sockaddr *) &stSockAddr, sizeof(struct sockaddr))){
+      close(nSocket);
       DEVLOG_ERROR("CBSDSocketInterface: connect() failed: %s\n", strerror(errno));
     }
     else{
@@ -220,8 +224,10 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPReceivePort(c
         struct ip_mreq stMReq;
         stMReq.imr_multiaddr.s_addr = inet_addr(pa_acIPAddr);
         stMReq.imr_interface.s_addr = htonl(INADDR_ANY);
-        setsockopt(nSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*) &stMReq, sizeof(stMReq));
-        //if this fails we may have given a non multicasting addr. For now we accept this. May need to be changed in the future.
+        if(0 > setsockopt(nSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*) &stMReq, sizeof(stMReq))){
+          //if this fails we may have given a non multicasting addr. For now we accept this. May need to be changed in the future.
+          DEVLOG_WARNING("CBSDSocketInterface: setsockopt(IP_ADD_MEMBERSHIP) failed: %s\n", strerror(errno));
+        }
 
         nRetVal = nSocket;
       }

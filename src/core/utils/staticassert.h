@@ -9,8 +9,8 @@
  *   Alois Zoitl
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _SATICASSERT_H_
-#define _SATICASSERT_H_
+#ifndef _STATICASSERT_H_
+#define _STATICASSERT_H_
 
 #ifdef __GNUC__
   //The latest GCC is rather picky about unused typedefs. We need this for our static assert and its ok there that it is unused there.

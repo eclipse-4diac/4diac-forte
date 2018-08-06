@@ -25,7 +25,7 @@ char * const CrcXSocketInterface::scmForteQueueName = "FOR_QUE";
 char * const CrcXSocketInterface::scmForteWaitingQueueName = "FOR_WAIT_QUE";
 char * const CrcXSocketInterface::scmFortePoolName = "FOR_POOL";
 
-const CrcXSocketInterface::TSocketDescriptor CrcXSocketInterface::scm_nInvalidSocketDescriptor = 0;
+const CrcXSocketInterface::TSocketDescriptor CrcXSocketInterface::scmInvalidSocketDescriptor = 0;
 
 CrcXSocketInterface::CrcXSocketInterface(){
 
@@ -110,7 +110,7 @@ void CrcXSocketInterface::run(void){
       }
       if(deletePacket){
         TLR_QUE_PACKETDONE(mForteResources.fortePoolHandle, mForteResources.forteQueueHandle, firstPacket);
-        mWaitingList.pop_front();
+        mWaitingList.popFront();
         m_unPacketsWaiting--;
       }
     }
@@ -121,7 +121,7 @@ void CrcXSocketInterface::addComCallback(TSocketDescriptor pa_nFD, forte::com_in
   {
     CCriticalRegion criticalRegion(m_oSync);
     TConnContType stNewNode = { pa_nFD, pa_poComLayer };
-    m_lstConnectionsList.push_back(stNewNode);
+    m_lstConnectionsList.pushBack(stNewNode);
   }
   if(!isAlive()){
     this->start();
@@ -138,7 +138,7 @@ void CrcXSocketInterface::removeComCallback(TSocketDescriptor pa_nFD){
   while(itRunner != itEnd){
     if(itRunner->m_nSockDes == pa_nFD){
       if(itRefNode ==itEnd){
-        m_lstConnectionsList.pop_front();
+        m_lstConnectionsList.popFront();
       }
       else{
         m_lstConnectionsList.eraseAfter(itRefNode);
@@ -175,7 +175,7 @@ CrcXSocketInterface::TSocketDescriptor CrcXSocketInterface::openTCPServerConnect
   else{
     DEVLOG_ERROR("CrcXSocketInterface is not initialized\n");
   }
-  return CrcXSocketInterface::scm_nInvalidSocketDescriptor;
+  return CrcXSocketInterface::scmInvalidSocketDescriptor;
 }
 
 CrcXSocketInterface::TSocketDescriptor CrcXSocketInterface::openTCPClientConnection(char *pa_acIPAddr, unsigned short pa_nPort){
@@ -199,7 +199,7 @@ CrcXSocketInterface::TSocketDescriptor CrcXSocketInterface::openTCPClientConnect
   else{
     DEVLOG_ERROR("CrcXSocketInterface is not initialized\n");
   }
-  return CrcXSocketInterface::scm_nInvalidSocketDescriptor;
+  return CrcXSocketInterface::scmInvalidSocketDescriptor;
 }
 
 CrcXSocketInterface::TSocketDescriptor CrcXSocketInterface::openUDPSendPort(char *pa_acIPAddr, unsigned short pa_nPort, TUDPDestAddr *m_ptDestAddr){
@@ -223,7 +223,7 @@ CrcXSocketInterface::TSocketDescriptor CrcXSocketInterface::openUDPSendPort(char
   else{
     DEVLOG_ERROR("CrcXSocketInterface is not initialized\n");
   }
-  return CrcXSocketInterface::scm_nInvalidSocketDescriptor;
+  return CrcXSocketInterface::scmInvalidSocketDescriptor;
 }
 
 CrcXSocketInterface::TSocketDescriptor CrcXSocketInterface::openUDPReceivePort(char *pa_acIPAddr, unsigned short pa_nPort){
@@ -247,11 +247,11 @@ CrcXSocketInterface::TSocketDescriptor CrcXSocketInterface::openUDPReceivePort(c
   else{
     DEVLOG_ERROR("CrcXSocketInterface is not initialized\n");
   }
-  return CrcXSocketInterface::scm_nInvalidSocketDescriptor;
+  return CrcXSocketInterface::scmInvalidSocketDescriptor;
 }
 
 RX_RESULT CrcXSocketInterface::close(TSocketDescriptor pa_nSockD){
-  if(scm_nInvalidSocketDescriptor != pa_nSockD){
+  if(scmInvalidSocketDescriptor != pa_nSockD){
     TCPIP_DATA_TCP_UDP_CMD_CLOSE_REQ_T tDataClose;
     tDataClose.ulTimeout = 0; /* Default timeout (13000 milliseconds). Must be zero for UDP */
     return CrcXSocketInterface::getInstance().sendPacketToTCP(pa_nSockD->socketNumber, TCPIP_DATA_TCP_UDP_CMD_CLOSE_REQ_SIZE, TCPIP_TCP_UDP_CMD_CLOSE_REQ, &tDataClose, sizeof(TCPIP_DATA_TCP_UDP_CMD_CLOSE_REQ_T));
@@ -299,20 +299,20 @@ RX_RESULT CrcXSocketInterface::openConnection(char *pa_acIPAddr, unsigned short 
               retVal = RX_MEM_INVALID;
             }
           }
-					if(0xE0000000 <= ipAddress && 0xEFFFFFFF >= ipAddress){
-						TCPIP_DATA_TCP_UDP_CMD_SET_SOCK_OPTION_REQ_T setOpt;
-						setOpt.ulMode = TCP_SOCK_ADD_MEMBERSHIP;
-						setOpt.unParam.ulMulticastGroup = ipAddress;
-						retVal = sendPacketToTCP(socketNumber, TCPIP_DATA_TCP_UDP_CMD_SET_SOCK_OPTION_REQ_SIZE, TCPIP_TCP_UDP_CMD_SET_SOCK_OPTION_REQ, &setOpt, sizeof(TCPIP_DATA_TCP_UDP_CMD_SET_SOCK_OPTION_REQ_T)); //send packet to open a socket
-						if(RX_OK == retVal){
-							TCPIP_PACKET_TCP_UDP_CMD_SET_SOCK_OPTION_CNF_T* setOptCnf;
-							retVal = waitPacket(TCPIP_TCP_UDP_CMD_SET_SOCK_OPTION_CNF, (FORTE_TCP_PACKET_T**) &setOptCnf, RX_INFINITE); //wait for CNF packet which indicates the result of the request
-							if (RX_OK == retVal){
-							  retVal = setOptCnf->tHead.ulSta;
-							}
-							TLR_QUE_PACKETDONE(mForteResources.fortePoolHandle, mForteResources.forteQueueHandle, setOptCnf);
-						}
-					}
+          if(0xE0000000 <= ipAddress && 0xEFFFFFFF >= ipAddress){
+            TCPIP_DATA_TCP_UDP_CMD_SET_SOCK_OPTION_REQ_T setOpt;
+            setOpt.ulMode = TCP_SOCK_ADD_MEMBERSHIP;
+            setOpt.unParam.ulMulticastGroup = ipAddress;
+            retVal = sendPacketToTCP(socketNumber, TCPIP_DATA_TCP_UDP_CMD_SET_SOCK_OPTION_REQ_SIZE, TCPIP_TCP_UDP_CMD_SET_SOCK_OPTION_REQ, &setOpt, sizeof(TCPIP_DATA_TCP_UDP_CMD_SET_SOCK_OPTION_REQ_T)); //send packet to open a socket
+            if(RX_OK == retVal){
+              TCPIP_PACKET_TCP_UDP_CMD_SET_SOCK_OPTION_CNF_T* setOptCnf;
+              retVal = waitPacket(TCPIP_TCP_UDP_CMD_SET_SOCK_OPTION_CNF, (FORTE_TCP_PACKET_T**) &setOptCnf, RX_INFINITE); //wait for CNF packet which indicates the result of the request
+              if (RX_OK == retVal){
+                retVal = setOptCnf->tHead.ulSta;
+              }
+              TLR_QUE_PACKETDONE(mForteResources.fortePoolHandle, mForteResources.forteQueueHandle, setOptCnf);
+            }
+          }
 
         }
         else { //TCP
@@ -375,7 +375,7 @@ RX_RESULT CrcXSocketInterface::openConnection(char *pa_acIPAddr, unsigned short 
     //error sending the packet
   }
   if(RX_OK == retVal){
-    if(scm_nInvalidSocketDescriptor != pa_destSocket){
+    if(scmInvalidSocketDescriptor != pa_destSocket){
       pa_destSocket->socketNumber = socketNumber;
       pa_destSocket->accepted = isTCP ? false : true;
       pa_destSocket->port = pa_nPort;
@@ -471,7 +471,7 @@ RX_RESULT CrcXSocketInterface::waitPacket(UINT32 pa_command, FORTE_TCP_PACKET_T*
       }
     }
     else{ //error waiting packet, normally because timeout expired
-    	break;
+      break;
     }
   } while(1);
   if (0 != pa_packetResult){
@@ -492,7 +492,7 @@ void CrcXSocketInterface::managePacketsDefault(FORTE_TCP_PACKET_T* pa_packetResu
           TLR_QUE_RETURNPACKET(pa_packetResult);
         }
         else{
-          mWaitingList.push_back(pa_packetResult);
+          mWaitingList.pushBack(pa_packetResult);
           m_unPacketsWaiting++;
         }
       }
@@ -532,7 +532,7 @@ RX_RESULT CrcXSocketInterface::sendData(TSocketDescriptor pa_nSockD, char* pa_pc
   RX_RESULT retVal = RX_OK;
   *pa_result = -1;
 
-  if(scm_nInvalidSocketDescriptor != pa_nSockD){
+  if(scmInvalidSocketDescriptor != pa_nSockD){
     if(pa_nSockD->accepted){
       //Set not changing variables in the data
       if(pa_isTCP){
@@ -556,7 +556,7 @@ RX_RESULT CrcXSocketInterface::sendData(TSocketDescriptor pa_nSockD, char* pa_pc
         }
 
         if (RX_OK != retVal){
-        	break;
+          break;
         }
 
         /*if(RX_OK == retVal){
@@ -627,7 +627,7 @@ int CrcXSocketInterface::sendDataOnUDP(TSocketDescriptor pa_nSockD, TUDPDestAddr
 RX_RESULT CrcXSocketInterface::accept(TSocketDescriptor pa_listeningSocketDesc, TSocketDescriptor& pa_destSocket){
   RX_RESULT retVal = RX_OK;
   if (mListeningSocketDescriptor == pa_listeningSocketDesc){
-    if (scm_nInvalidSocketDescriptor != pa_destSocket){
+    if (scmInvalidSocketDescriptor != pa_destSocket){
       pa_destSocket->socketNumber = pa_listeningSocketDesc->socketNumber;
       pa_destSocket->accepted = true;
       pa_destSocket->port = pa_listeningSocketDesc->port;
@@ -680,7 +680,7 @@ CrcXSocketInterface::TSocketDescriptor CrcXSocketInterface::socketDescriptorAllo
 }
 
 void CrcXSocketInterface::socketDescriptorDeAlloc(TSocketDescriptor pa_Socket){
-  if (scm_nInvalidSocketDescriptor != pa_Socket){
+  if (scmInvalidSocketDescriptor != pa_Socket){
     delete pa_Socket;
   }
 }
@@ -688,7 +688,7 @@ void CrcXSocketInterface::socketDescriptorDeAlloc(TSocketDescriptor pa_Socket){
 RX_RESULT CrcXSocketInterface::receiveData(TSocketDescriptor pa_nSockD, bool , char* pa_pcData, unsigned int pa_unBufSize, int* pa_receivedBytes){
   RX_RESULT retVal = RX_OK;
   *pa_receivedBytes = -1;
-  if(scm_nInvalidSocketDescriptor != pa_nSockD && 0 != pa_nSockD->packetReceived){
+  if(scmInvalidSocketDescriptor != pa_nSockD && 0 != pa_nSockD->packetReceived){
     pa_nSockD->deleteMe = true;
     if(TCPIP_TCP_UDP_CMD_RECEIVE_STOP_IND == pa_nSockD->packetReceived->tHead.ulCmd){
       *pa_receivedBytes = 0;

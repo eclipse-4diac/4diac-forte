@@ -183,12 +183,12 @@ int CIEC_ARRAY::toString(char* pa_acValue, unsigned int pa_nBufferSize) const{
   return nBytesUsed;
 }
 
-unsigned int CIEC_ARRAY::getToStringBufferSize(){
-	unsigned int retVal = 3;  // 2 bytes for the open and closing breakets one for the '\0'
-	if( 0 != getArray()){
-		retVal += size() * getArray()[-1].getToStringBufferSize();
-	}
-	return retVal;
+unsigned int CIEC_ARRAY::getToStringBufferSize() const{
+  unsigned int retVal = 3;  // 2 bytes for the open and closing breakets one for the '\0'
+  if( 0 != getArray()){
+    retVal += size() * getArray()[-1].getToStringBufferSize();
+  }
+  return retVal;
 }
 
 #endif /* FORTE_SUPPORT_ARRAYS */

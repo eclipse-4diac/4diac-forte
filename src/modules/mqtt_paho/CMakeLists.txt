@@ -18,15 +18,15 @@ forte_add_network_layer(PAHOMQTT OFF "mqtt" MQTTComLayer MQTTComLayer "Enable Pa
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 if(FORTE_COM_PAHOMQTT)
-	forte_add_sourcefile_hcpp( MQTTComLayer MQTTHandler)
-	
-	forte_add_handler(MQTTHandler MQTTHandler)
-	
-	SET(FORTE_COM_PAHOMQTT_INCLUDE_DIR "" CACHE PATH "ABSOLUTE path to Paho MQTT src directory")
+  forte_add_sourcefile_hcpp( MQTTComLayer MQTTHandler)
+  
+  forte_add_handler(MQTTHandler MQTTHandler)
+  
+  SET(FORTE_COM_PAHOMQTT_INCLUDE_DIR "" CACHE PATH "ABSOLUTE path to Paho MQTT src directory")
     SET(FORTE_COM_PAHOMQTT_LIB_DIR "" CACHE PATH "ABSOLUTE path to Paho MQTT library")
-	
+  
     IF("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-	  SET(FORTE_COM_PAHOMQTT_LIB "libpaho-mqtt3a.so" CACHE STRING "MQTT Library file in FORTE_COM_PAHOMQTT_LIB_DIR to be linked to forte")
+    SET(FORTE_COM_PAHOMQTT_LIB "libpaho-mqtt3a.so" CACHE STRING "MQTT Library file in FORTE_COM_PAHOMQTT_LIB_DIR to be linked to forte")
     ELSEIF("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
       SET(FORTE_COM_PAHOMQTT_LIB "paho-mqtt3a.dll" CACHE STRING "MQTT Library file in FORTE_COM_PAHOMQTT_LIB_DIR to be linked to forte. Static library is not working for windows")
       string(FIND ${FORTE_COM_PAHOMQTT_LIB} "static" DETECT)
@@ -39,7 +39,7 @@ if(FORTE_COM_PAHOMQTT)
     forte_add_include_system_directories(${FORTE_COM_PAHOMQTT_INCLUDE_DIR})
     forte_add_link_directories(${FORTE_COM_PAHOMQTT_LIB_DIR})
     forte_add_link_library_beginning(${FORTE_COM_PAHOMQTT_LIB})
-	
+  
     IF(NOT EXISTS ${FORTE_COM_PAHOMQTT_INCLUDE_DIR})
       MESSAGE(WARNING "WARNING: FORTE_COM_PAHOMQTT_INCLUDE_DIR not set or does not exist. This will probably make the compilation fail.")
     ENDIF(NOT EXISTS ${FORTE_COM_PAHOMQTT_INCLUDE_DIR})

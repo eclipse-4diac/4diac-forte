@@ -79,4 +79,4 @@ class CModbusConnection : public CThread{
     unsigned int m_nByteTimeout;
 };
 
-#endif	// _MODBUSCONNECTION_H_
+#endif  // _MODBUSCONNECTION_H_

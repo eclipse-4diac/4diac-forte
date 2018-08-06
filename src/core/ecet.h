@@ -58,7 +58,7 @@ class CEventChainExecutionThread : public CThread{
     }
 
     void resumeSelfSuspend(){
-      mSuspendSemaphore.semInc();
+      mSuspendSemaphore.inc();
     }
 
   protected:
@@ -101,7 +101,7 @@ class CEventChainExecutionThread : public CThread{
     void transferExternalEvents();
 
     void selfSuspend(){
-      mSuspendSemaphore.semWaitIndefinitly();
+      mSuspendSemaphore.waitIndefinitely();
     }
 
     //@{

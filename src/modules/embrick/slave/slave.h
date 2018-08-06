@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2016 Johannes Messmer (admin@jomess.com)
+ * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
 #ifndef SRC_MODULES_EMBRICK_SLAVE_SLAVE_H_
@@ -24,31 +25,27 @@
 
 #include <io/mapper/io_mapper.h>
 
-namespace EmBrick {
 
-using namespace Handles;
+class EmbrickBusHandler;
 
-namespace Handlers {
-class Bus;
-
-enum SlaveStatus {
-  NotInitialized = 0, //!< Slave requires initialization
-  OK = 1, //!< Everything works as expected
-  Slow = 200, //!< Update frequency is too low, some errors may occurred
-  Interrupted = 201, //!< Slave received no master updates
-  Error = 202, //!< Connection has errors. Check hardware
-};
-
-enum SlaveType {
-  UnknownSlave = 0,
-  G_8Di8Do = 2181, //!< 8x Digital-Input, 24V, p-switch, 1-wire & 8x Digital-Output, 24V, p-switch, 1-wire
-  G_2RelNo4RelCo = 2301 //!< 2x Relay-Output, NO, potential free & 4x Relay-Output, CO, potential free
-};
-
-class Slave {
+class EmbrickSlaveHandler {
 
 public:
-  friend class Bus;
+  friend class EmbrickBusHandler;
+
+  enum SlaveStatus {
+    NotInitialized = 0, //!< Slave requires initialization
+    OK = 1, //!< Everything works as expected
+    Slow = 200, //!< Update frequency is too low, some errors may occurred
+    Interrupted = 201, //!< Slave received no master updates
+    Error = 202, //!< Connection has errors. Check hardware
+  };
+
+  enum SlaveType {
+    UnknownSlave = 0,
+    G_8Di8Do = 2181, //!< 8x Digital-Input, 24V, p-switch, 1-wire & 8x Digital-Output, 24V, p-switch, 1-wire
+    G_2RelNo4RelCo = 2301 //!< 2x Relay-Output, NO, potential free & 4x Relay-Output, CO, potential free
+  };
 
   struct Config {
     unsigned int UpdateInterval; //!< Sets the default frequency for the data update cycle of slaves. The emBRICK slaves require at least 20 updates per minute. The default value is 25 Hz.
@@ -73,17 +70,17 @@ public:
   int update();
   void forceUpdate();
 
-  SlaveHandle* getInputHandle(int index) {
+  EmbrickSlaveHandle* getInputHandle(int index) {
     return getHandle(&inputs, index);
   }
-  SlaveHandle* getOutputHandle(int index) {
+  EmbrickSlaveHandle* getOutputHandle(int index) {
     return getHandle(&outputs, index);
   }
 
-  void addHandle(SlaveHandle* handle) {
-    if (handle->is(Mapper::In))
+  void addHandle(EmbrickSlaveHandle* handle) {
+    if (handle->is(forte::core::IO::IOMapper::In))
       addHandle(&inputs, handle);
-    else if (handle->is(Mapper::Out))
+    else if (handle->is(forte::core::IO::IOMapper::Out))
       addHandle(&outputs, handle);
   }
 
@@ -94,12 +91,12 @@ public:
   CSyncObject updateMutex;
 
 protected:
-  static Slave* sendInit(Bus* bus, int address);
+  static EmbrickSlaveHandler* sendInit(EmbrickBusHandler* bus, int address);
 
-  Slave(Bus* bus, int address, Packages::SlaveInit init);
-  virtual ~Slave();
+  EmbrickSlaveHandler(EmbrickBusHandler* bus, int address, EmbrickSlaveInitPackage init);
+  virtual ~EmbrickSlaveHandler();
 
-  Bus* bus;
+  EmbrickBusHandler* bus;
 
   Config config;
 
@@ -113,15 +110,15 @@ protected:
   static const int MaxUpdateErrors;
 
   CSyncObject handleMutex;
-  typedef CSinglyLinkedList<SlaveHandle *> TSlaveHandleList;
+  typedef CSinglyLinkedList<EmbrickSlaveHandle *> TSlaveHandleList;
   TSlaveHandleList inputs;
   TSlaveHandleList outputs;
-  void addHandle(TSlaveHandleList* list, SlaveHandle* handle);
-  SlaveHandle* getHandle(TSlaveHandleList* list, int index);
+  void addHandle(TSlaveHandleList* list, EmbrickSlaveHandle* handle);
+  EmbrickSlaveHandle* getHandle(TSlaveHandleList* list, int index);
+
+private:
+  //!declared but undefined copy constructor as we don't want Slaves to be directly copied.
+  EmbrickSlaveHandler(const EmbrickSlaveHandler&);
 };
-
-} /* namespace Handlers */
-} /* namespace EmBrick */
-
 
 #endif /* SRC_MODULES_EMBRICK_SLAVE_SLAVE_H_ */

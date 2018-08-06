@@ -25,7 +25,9 @@ const TDataIOID GEN_E_MUX::scm_anEOWith[] = { 0, 255 };
 const CStringDictionary::TStringId GEN_E_MUX::scm_anEventOutputNames[] = { g_nStringIdEO };
 
 GEN_E_MUX::GEN_E_MUX(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CFunctionBlock(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0){
+    CFunctionBlock(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0),
+    m_anEventInputNames(0),
+    m_nConfiguredFBTypeNameId(CStringDictionary::scm_nInvalidStringId){
 }
 
 GEN_E_MUX::~GEN_E_MUX(){
@@ -69,14 +71,14 @@ bool GEN_E_MUX::configureFB(const char *pa_acConfigString){
         setupFBInterface(pstInterfaceSpec, acFBConnData, acFBVarsData, true);
         bRetVal = true;
       }
-	  else{
-		  if(nNumEIs >= CFunctionBlock::scm_nMaxInterfaceEvents){
-			  DEVLOG_ERROR("Cannot configure FB-Instance E_MUX_%d. Number of event inputs exceeds maximum of %d.\n", nNumEIs, CFunctionBlock::scm_nMaxInterfaceEvents);
-		  }
-		  else{
-			  DEVLOG_ERROR("Cannot configure FB-Instance E_MUX_%d. Number of event inputs smaller than minimum of 2.\n", nNumEIs);
-		  }  
-	  }
+    else{
+      if(nNumEIs >= CFunctionBlock::scm_nMaxInterfaceEvents){
+        DEVLOG_ERROR("Cannot configure FB-Instance E_MUX_%d. Number of event inputs exceeds maximum of %d.\n", nNumEIs, CFunctionBlock::scm_nMaxInterfaceEvents);
+      }
+      else{
+        DEVLOG_ERROR("Cannot configure FB-Instance E_MUX_%d. Number of event inputs smaller than minimum of 2.\n", nNumEIs);
+      }
+    }
     }
   }
   return bRetVal;

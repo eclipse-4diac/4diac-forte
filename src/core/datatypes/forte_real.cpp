@@ -31,13 +31,13 @@ int CIEC_REAL::fromString(const char *pa_pacValue){
 
   if(0 == strncmp(pacRunner, "REAL#", 5)){
     pacRunner += 5;
-	}
+  }
 
   
   #if defined(WIN32) || defined(__ECOS) || defined(VXWORKS)
-	realval = static_cast<TForteFloat>(strtod(pacRunner, &pcEnd));
+  realval = static_cast<TForteFloat>(strtod(pacRunner, &pcEnd));
   #else
-	realval = strtof(pacRunner, &pcEnd);
+  realval = strtof(pacRunner, &pcEnd);
   #endif
 
   if(((fabs(realval) < TFLOAT_min) && (realval != 0)) || ((fabs(realval) > TFLOAT_max) && (realval != 0)) ||
@@ -107,13 +107,29 @@ void CIEC_REAL::castRealData(const CIEC_REAL &pa_roSrcValue, CIEC_ANY &pa_roDest
     case CIEC_ANY::e_SINT:
     case CIEC_ANY::e_INT:
     case CIEC_ANY::e_DINT:
-    case CIEC_ANY::e_LINT:
-      *((CIEC_ANY::TLargestIntValueType *) pa_roDestValue.getDataPtr()) = static_cast<CIEC_ANY::TLargestIntValueType>(pa_roSrcValue);
+    case CIEC_ANY::e_LINT: {
+      CIEC_REAL::TValueType floatValue = static_cast<CIEC_REAL::TValueType>(pa_roSrcValue);
+      if(0 < floatValue){
+        floatValue += 0.5f;
+      }
+      if(0 > floatValue){
+        floatValue -= 0.5f;
+      }
+      *((CIEC_ANY::TLargestIntValueType *) pa_roDestValue.getDataPtr()) = static_cast<CIEC_ANY::TLargestIntValueType>(floatValue);
+    }
       break;
-    default:
+    default: {
       //TODO maybe we should check for destination id to be in valid range (i.e., any_bit, any_unsigned_int, and time)
       //should not be necessary because of connect function, but who knows.
-      *((CIEC_ANY::TLargestUIntValueType *) pa_roDestValue.getDataPtr()) = static_cast<CIEC_ANY::TLargestUIntValueType>(pa_roSrcValue);
+      CIEC_REAL::TValueType floatValue = static_cast<CIEC_REAL::TValueType>(pa_roSrcValue);
+      if(0 < floatValue){
+        floatValue += 0.5f;
+      }
+      if(0 > floatValue){
+        floatValue -= 0.5f;
+      }
+      *((CIEC_ANY::TLargestUIntValueType *) pa_roDestValue.getDataPtr()) = static_cast<CIEC_ANY::TLargestUIntValueType>(floatValue);
+    }
       break;
   }
 }

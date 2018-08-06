@@ -40,9 +40,9 @@ void CTimerHandler::addTimedFBEntry(STimedFBListEntry *pa_pstTimerListEntry) {
   pa_pstTimerListEntry->m_stTimeOut += pa_pstTimerListEntry->m_nInterval; // the next activationtime of this FB
   pa_pstTimerListEntry->m_pstNext = 0;
 
-	// Correct null intervals that can lead to event queue overflow to 10 ms
-	if (pa_pstTimerListEntry->m_nInterval == 0)
-		pa_pstTimerListEntry->m_stTimeOut += getTicksPerSecond() > 100 ? getTicksPerSecond() / 100 : 1;
+  // Correct null intervals that can lead to event queue overflow to 10 ms
+  if (pa_pstTimerListEntry->m_nInterval == 0)
+    pa_pstTimerListEntry->m_stTimeOut += getTicksPerSecond() > 100 ? getTicksPerSecond() / 100 : 1;
 
   if (0 == m_pstTimedFBList) {
     m_pstTimedFBList = pa_pstTimerListEntry;

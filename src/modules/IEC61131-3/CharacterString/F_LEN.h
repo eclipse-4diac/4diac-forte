@@ -52,7 +52,7 @@ public:
   };
 
   template<typename T> void calculateValue(){
-	  OUT().saveAssign(CIEC_UDINT(0));
+    OUT().saveAssign(CIEC_UDINT(0));
   }
 
   template<typename T> void calculateValueString(){

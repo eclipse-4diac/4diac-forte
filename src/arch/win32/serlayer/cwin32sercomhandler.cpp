@@ -26,12 +26,12 @@ CWin32SerComHandler::~CWin32SerComHandler(){
 void CWin32SerComHandler::registerSerComLayer(CWin32SerComLayer *paComLayer){
   {
     CCriticalRegion region(mSync);
-    mComLayerList.push_back(paComLayer);
+    mComLayerList.pushBack(paComLayer);
   }
   if(!isAlive()){
     this->start();
   }
-  mSem.semInc();
+  mSem.inc();
 }
 
 void CWin32SerComHandler::unregisterSerComLayer(CWin32SerComLayer *paComLayer){
@@ -44,7 +44,7 @@ void CWin32SerComHandler::unregisterSerComLayer(CWin32SerComLayer *paComLayer){
   while(itRunner != itEnd){
     if(*itRunner == paComLayer){
       if(itRefNode == itEnd){
-        mComLayerList.pop_front();
+        mComLayerList.popFront();
       }
       else{
         mComLayerList.eraseAfter(itRefNode);
@@ -61,7 +61,7 @@ void CWin32SerComHandler::run(){
   while(isAlive()){
 
     if(true == mComLayerList.isEmpty()){
-      mSem.semWaitIndefinitly();
+      mSem.waitIndefinitely();
     }
     if(!isAlive()){
       break;

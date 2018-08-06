@@ -98,9 +98,9 @@ int CIEC_TIME_OF_DAY::toString(char* pa_pacValue, unsigned int pa_nBufferSize) c
       (int) ((t % 3600) / 60),
       (int) (t % 60),
       (int) (ntoStingBuffer % 1000));
-	if((nRetVal < -1) || (nRetVal >= (int) pa_nBufferSize)){
-	  nRetVal = -1;
-	}
+  if((nRetVal < -1) || (nRetVal >= (int) pa_nBufferSize)){
+    nRetVal = -1;
+  }
   return nRetVal;
 }
 

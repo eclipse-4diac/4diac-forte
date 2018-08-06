@@ -86,7 +86,7 @@ void FORTE_RT_E_DEMUX::executeEvent(int pa_nEIID){
    }
   }
   else
-	  if(scm_nEventINITID == pa_nEIID){
+    if(scm_nEventINITID == pa_nEIID){
       if(QI() == true){
         if(!m_bInitialized){
           m_oECEO0.changeExecutionState(cg_nMGM_CMD_Start);
@@ -107,7 +107,7 @@ void FORTE_RT_E_DEMUX::executeEvent(int pa_nEIID){
         m_oECEO3.changeExecutionState(cg_nMGM_CMD_Stop);
         m_bInitialized = false;
       }
-	  QO() = QI();
+    QO() = QI();
       sendOutputEvent(scm_nEventINITOID);
     }
 }

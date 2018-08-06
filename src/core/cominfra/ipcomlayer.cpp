@@ -21,11 +21,12 @@ using namespace forte::com_infra;
 
 CIPComLayer::CIPComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB) :
         CComLayer(paUpperLayer, paComFB),
-        mSocketID(CIPComSocketHandler::scm_nInvalidSocketDescriptor),
-        mListeningID(CIPComSocketHandler::scm_nInvalidSocketDescriptor),
+        mSocketID(CIPComSocketHandler::scmInvalidSocketDescriptor),
+        mListeningID(CIPComSocketHandler::scmInvalidSocketDescriptor),
         mInterruptResp(e_Nothing),
         mBufFillSize(0){
   memset(mRecvBuffer, 0, sizeof(mRecvBuffer)); //TODO change this to  m_acRecvBuffer{0} in the extended list when fully switching to C++11
+  memset(&mDestAddr, 0, sizeof(mDestAddr));
 }
 
 CIPComLayer::~CIPComLayer(){
@@ -34,7 +35,7 @@ CIPComLayer::~CIPComLayer(){
 EComResponse CIPComLayer::sendData(void *paData, unsigned int paSize){
   EComResponse eRetVal = e_ProcessDataOk;
 
-  if((0 != m_poFb) && (CIPComSocketHandler::scm_nInvalidSocketDescriptor != mSocketID)){
+  if((0 != m_poFb) && (CIPComSocketHandler::scmInvalidSocketDescriptor != mSocketID)){
     switch (m_poFb->getComServiceType()){
       case e_Server:
         if(0
@@ -89,7 +90,7 @@ EComResponse CIPComLayer::recvData(const void *paData, unsigned int){
     case e_Listening:
       //TODO move this to the processInterrupt()
       mSocketID = CIPComSocketHandler::acceptTCPConnection(mListeningID);
-      if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != mSocketID){
+      if(CIPComSocketHandler::scmInvalidSocketDescriptor != mSocketID){
         GET_HANDLER_FROM_COMM_LAYER(CIPComSocketHandler)->addComCallback(mSocketID, this);
         m_eConnectionState = e_Connected;
       }
@@ -121,7 +122,7 @@ EComResponse CIPComLayer::openConnection(char *paLayerParameter){
     TForteUInt16 nPort = static_cast<TForteUInt16>(forte::core::util::strtoul(acPort, 0, 10));
 
     CIPComSocketHandler::TSocketDescriptor nSockDes =
-        CIPComSocketHandler::scm_nInvalidSocketDescriptor;
+        CIPComSocketHandler::scmInvalidSocketDescriptor;
     m_eConnectionState = e_Connected;
 
     switch (m_poFb->getComServiceType()){
@@ -144,7 +145,7 @@ EComResponse CIPComLayer::openConnection(char *paLayerParameter){
         break;
     }
 
-    if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != nSockDes){
+    if(CIPComSocketHandler::scmInvalidSocketDescriptor != nSockDes){
       if(e_Publisher != m_poFb->getComServiceType()){
         //Publishers should not be registered for receiving data
         GET_HANDLER_FROM_COMM_LAYER(CIPComSocketHandler)->addComCallback(nSockDes, this);
@@ -167,10 +168,10 @@ void CIPComLayer::closeConnection(){
 }
 
 void CIPComLayer::closeSocket(CIPComSocketHandler::TSocketDescriptor *paSocketID){
-  if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != *paSocketID){
+  if(CIPComSocketHandler::scmInvalidSocketDescriptor != *paSocketID){
     GET_HANDLER_FROM_COMM_LAYER(CIPComSocketHandler)->removeComCallback(*paSocketID);
     CIPComSocketHandler::closeSocket(*paSocketID);
-    *paSocketID = CIPComSocketHandler::scm_nInvalidSocketDescriptor;
+    *paSocketID = CIPComSocketHandler::scmInvalidSocketDescriptor;
   }
 }
 
@@ -180,7 +181,7 @@ void CIPComLayer::handledConnectedDataRecv(){
   while((cg_unIPLayerRecvBufferSize - mBufFillSize) <= 0){
     CThread::sleepThread(0);
   }
-  if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != mSocketID){
+  if(CIPComSocketHandler::scmInvalidSocketDescriptor != mSocketID){
     // TODO: sync buffer and bufFillSize
     int nRetVal = 0;
     switch (m_poFb->getComServiceType()){
@@ -226,5 +227,7 @@ void CIPComLayer::handleConnectionAttemptInConnected(){
   //accept and immediately close the connection to tell the client that we are not available
   //so far the best option I've found for handling single connection servers
   CIPComSocketHandler::TSocketDescriptor socketID = CIPComSocketHandler::acceptTCPConnection(mListeningID);
-  CIPComSocketHandler::closeSocket(socketID);
+  if(CIPComSocketHandler::scmInvalidSocketDescriptor != socketID){
+    CIPComSocketHandler::closeSocket(socketID);
+  }
 }

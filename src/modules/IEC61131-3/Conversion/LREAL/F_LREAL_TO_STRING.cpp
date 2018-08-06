@@ -42,10 +42,10 @@ const SFBInterfaceSpec FORTE_F_LREAL_TO_STRING::scm_stFBInterfaceSpec = {
 
 
 void FORTE_F_LREAL_TO_STRING::executeEvent(int pa_nEIID){
-	if(scm_nEventREQID == pa_nEIID){
-		  OUT() = LREAL_TO_STRING(IN());
-		  sendOutputEvent(scm_nEventCNFID);
-	  }
+  if(scm_nEventREQID == pa_nEIID){
+      OUT() = LREAL_TO_STRING(IN());
+      sendOutputEvent(scm_nEventCNFID);
+    }
 }
 
 

@@ -39,11 +39,11 @@ private:
   virtual void executeEvent(int pa_nEIID);
 
   CIEC_LREAL& IN() {
-  	return *static_cast<CIEC_LREAL*>(getDI(0));
+    return *static_cast<CIEC_LREAL*>(getDI(0));
   }
 
   CIEC_LREAL& OUT() {
-  	return *static_cast<CIEC_LREAL*>(getDO(0));
+    return *static_cast<CIEC_LREAL*>(getDO(0));
   }
 
 public:

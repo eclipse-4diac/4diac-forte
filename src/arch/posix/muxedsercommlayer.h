@@ -51,7 +51,7 @@ class CMuxedSerCommLayer : public forte::com_infra::CComLayer{
         typedef CSinglyLinkedList<CMuxedSerCommLayer *> TConnectionContainer;
         class SSerPortEntry : public forte::com_infra::CComLayer{
           public:
-            SSerPortEntry(): forte::com_infra::CComLayer(0, 0), mSerPort(0), mFD(scm_nInvalidFileDescriptor){
+            SSerPortEntry(): forte::com_infra::CComLayer(0, 0), mSerPort(0), mFD(scmInvalidFileDescriptor){
             }
 
             char* mSerPort;

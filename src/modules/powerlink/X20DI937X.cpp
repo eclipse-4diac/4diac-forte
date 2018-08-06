@@ -51,7 +51,7 @@ void FORTE_X20DI937X::executeEvent(int pa_nEIID){
         m_oEplMapping.m_anBitOffsets[i] = moduleIOs->getEntry(i)[2];
 
         char* newVal = new char[m_oEplMapping.m_anDataSizes[i]]();
-        m_oEplMapping.m_lCurrentValues.push_back(newVal);
+        m_oEplMapping.m_lCurrentValues.pushBack(newVal);
       }
 
       delete moduleIOs;

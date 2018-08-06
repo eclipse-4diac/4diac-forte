@@ -60,7 +60,7 @@ private:
 
 public:
   FORTE_SVIreceive_1(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-  		 BE_SVIFB( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData){
+       BE_SVIFB( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData){
   };
   virtual ~FORTE_SVIreceive_1(){};
 

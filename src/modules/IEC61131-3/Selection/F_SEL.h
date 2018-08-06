@@ -61,12 +61,12 @@ public:
   virtual ~FORTE_F_SEL(){};
 
   template<typename T> void calculateValue(){
-	  T oIn0;
-	  T oIn1;
-	  oIn0.saveAssign(IN0());
-	  oIn1.saveAssign(IN1());
+    T oIn0;
+    T oIn1;
+    oIn0.saveAssign(IN0());
+    oIn1.saveAssign(IN1());
 
-	  OUT().saveAssign(SEL<T> (G(), oIn0, oIn1));
+    OUT().saveAssign(SEL<T> (G(), oIn0, oIn1));
   }
 
   template<typename T> void calculateValueString(){

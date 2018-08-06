@@ -25,14 +25,14 @@ ENDMACRO(forte_test_add_subdirectory)
 
 FUNCTION(forte_test_add_sourcefile_with_path_cpp)
   FOREACH(ARG ${ARGV})
-	SET_PROPERTY(GLOBAL APPEND PROPERTY FORTE_TEST_SOURCE_CPP ${ARG})
+  SET_PROPERTY(GLOBAL APPEND PROPERTY FORTE_TEST_SOURCE_CPP ${ARG})
     SET_PROPERTY(GLOBAL APPEND PROPERTY FORTE_TEST_SOURCE_CPP_GROUP ${SOURCE_GROUP})
   ENDFOREACH(ARG)
 ENDFUNCTION(forte_test_add_sourcefile_with_path_cpp)
 
 FUNCTION(forte_test_add_sourcefile_cpp)
   FOREACH(ARG ${ARGV})
-	forte_test_add_sourcefile_with_path_cpp(${CMAKE_CURRENT_SOURCE_DIR}/${ARG})
+  forte_test_add_sourcefile_with_path_cpp(${CMAKE_CURRENT_SOURCE_DIR}/${ARG})
   ENDFOREACH(ARG)
 ENDFUNCTION(forte_test_add_sourcefile_cpp)
 
@@ -146,8 +146,8 @@ add_test(forte_test ${EXECUTABLE_OUTPUT_PATH}/forte_test)
 # Generate stringlist for every source file
 #######################################################################################
 if(FORTE_LINKED_STRINGDICT)
-	set(ENABLE_GENERATED_SOURCE_CPP ON)
-	ADD_DEPENDENCIES (forte_test forte_stringlist_externals)
+  set(ENABLE_GENERATED_SOURCE_CPP ON)
+  ADD_DEPENDENCIES (forte_test forte_stringlist_externals)
 endif(FORTE_LINKED_STRINGDICT)
 
 #######################################################################################

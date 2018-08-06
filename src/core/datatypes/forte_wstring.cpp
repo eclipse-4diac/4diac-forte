@@ -245,18 +245,12 @@ int CIEC_WSTRING::toUTF8(char* pa_pacBuffer, unsigned int pa_nBufferSize, bool p
   const char *pRunner;
   char *pEncRunner = pa_pacBuffer;
   char *pDataEnd = pa_pacBuffer + pa_nBufferSize;
-  int nRes;
 
   *pEncRunner++ = '\"';
 
   pRunner = getValue();
   while(*pRunner){
-    if(pa_bEscape)
-      nRes = dollarEscapeChar(pEncRunner, *pRunner, static_cast<unsigned int>(pDataEnd - pEncRunner));
-    else{
-      *pEncRunner = *pRunner;
-      nRes = 1;
-    }
+    int nRes = dollarEscapeChar(pEncRunner, *pRunner, static_cast<unsigned int>(pDataEnd - pEncRunner));
 
     if(nRes < 0)
       return -1;

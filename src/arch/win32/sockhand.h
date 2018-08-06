@@ -11,21 +11,18 @@
 #ifndef SOCKHAND_H_
 #define SOCKHAND_H_
 
-#ifndef IN
-#define IN
-#endif
-
-#ifndef OUT
-#define OUT
-#endif
-
 #include <winsock2.h>
 #include <windows.h>
 #include <Ws2tcpip.h>
+
+#define FORTE_SOCKET_TYPE SOCKET
+#define FORTE_INVALID_SOCKET INVALID_SOCKET
+
 //these include needs to be last
+#include "../gensockhand.h"
 #include "../fdselecthand.h"
 #include "win32socketinterf.h"
-#include "../gensockhand.h"
+
 
 typedef CGenericIPComSocketHandler<CFDSelectHandler, CWin32SocketInterface> CIPComSocketHandler;
 

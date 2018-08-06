@@ -30,7 +30,7 @@ COpcEventHandler::~COpcEventHandler(){
 
 void COpcEventHandler::sendCommand(ICmd *pa_pCmd){
   m_oSync.lock();
-  m_lCommandQueue.push_back(pa_pCmd);
+  m_lCommandQueue.pushBack(pa_pCmd);
   m_oSync.unlock();
 }
 
@@ -58,7 +58,7 @@ COpcEventHandler::TCallbackDescriptor COpcEventHandler::addComCallback(forte::co
   m_oSync.lock();
   m_nCallbackDescCount++;
   TComContainer stNewNode = { m_nCallbackDescCount, pa_pComCallback };
-  m_lstComCallbacks.push_back(stNewNode);
+  m_lstComCallbacks.pushBack(stNewNode);
   m_oSync.unlock();
 
   return m_nCallbackDescCount;
@@ -70,7 +70,7 @@ void COpcEventHandler::removeComCallback(COpcEventHandler::TCallbackDescriptor p
   TCallbackList::Iterator itRunner(m_lstComCallbacks.begin());
 
   if(itRunner->m_nCallbackDesc == pa_nCallbackDesc){
-    m_lstComCallbacks.pop_front();
+    m_lstComCallbacks.popFront();
   }
   else{
     TCallbackList::Iterator itLastPos(itRunner);
@@ -113,7 +113,7 @@ ICmd* COpcEventHandler::getNextCommand(){
   TCommandQueue::Iterator itBegin = m_lCommandQueue.begin();
   if(itBegin != m_lCommandQueue.end()){
     command = (*itBegin);
-    m_lCommandQueue.pop_front();
+    m_lCommandQueue.popFront();
   }
   else
     command = NULL;

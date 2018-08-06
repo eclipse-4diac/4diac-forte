@@ -43,8 +43,8 @@ const SFBInterfaceSpec FORTE_F_DINT_TO_INT::scm_stFBInterfaceSpec = {
 
 void FORTE_F_DINT_TO_INT::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-	  OUT() = DINT_TO_INT(IN());
-	  sendOutputEvent(scm_nEventCNFID);
+    OUT() = DINT_TO_INT(IN());
+    sendOutputEvent(scm_nEventCNFID);
   }
 }
 

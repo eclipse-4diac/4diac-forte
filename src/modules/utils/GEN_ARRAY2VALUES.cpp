@@ -30,7 +30,14 @@ const CStringDictionary::TStringId GEN_ARRAY2VALUES::scm_anEventOutputNames[] = 
 
 GEN_ARRAY2VALUES::GEN_ARRAY2VALUES(const CStringDictionary::TStringId pa_nInstanceNameId,
     CResource *pa_poSrcRes) :
-    CFunctionBlock(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0){
+    CFunctionBlock(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0),
+    m_anDataOutputNames(0),
+    m_anDataOutputTypeIds(0),
+    m_anDataInputTypeIds(0),
+    m_anEOWith(0),
+    m_nDOutputs(0),
+    m_ValueTypeID(CStringDictionary::scm_nInvalidStringId),
+    m_nConfiguredFBTypeNameId(CStringDictionary::scm_nInvalidStringId){
 }
 
 GEN_ARRAY2VALUES::~GEN_ARRAY2VALUES(){

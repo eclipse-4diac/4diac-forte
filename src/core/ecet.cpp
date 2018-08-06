@@ -124,14 +124,13 @@ void CEventChainExecutionThread::startEventChain(SEventEntry *paEventToAdd){
         //the list is not full
         mExternalEventListEnd = pstNextEventListElem;
       }
+      mProcessingEvents = true;
+      resumeSelfSuspend();
     }
     else{
       DEVLOG_ERROR("External event queue is full, external event dropped!\n");
     }
   } // End critical region
-
-  mProcessingEvents = true;
-  resumeSelfSuspend();
 }
 
 void CEventChainExecutionThread::addEventEntry(SEventEntry *paEventToAdd){
@@ -167,6 +166,7 @@ void CEventChainExecutionThread::changeExecutionState(EMGMCommandType paCommand)
       break;
     case cg_nMGM_CMD_Kill:
       clear();
+      // fall through
     case cg_nMGM_CMD_Stop:
       setAlive(false); //end thread in both cases
       resumeSelfSuspend();

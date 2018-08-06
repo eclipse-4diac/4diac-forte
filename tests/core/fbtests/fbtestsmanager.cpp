@@ -54,7 +54,7 @@ unsigned int CFBTestsManager::runAllTests(CResource *paRessource){
 }
 
 void CFBTestsManager::addFBTester(CFBTesterEntry* pa_poFBTester){
-  m_lstroFBTesterList.push_back(pa_poFBTester);
+  m_lstroFBTesterList.pushBack(pa_poFBTester);
 }
 
 void CFBTestsManager::executeFBTests(CFBTesterEntry* pa_poFBTestEntery, CResource *paRessource){
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_SUITE(FBTests)
   BOOST_AUTO_TEST_CASE(runallFBTests){
     CDevice dev(&scm_stFBInterfaceSpec, CStringDictionary::scm_nInvalidStringId, 0, 0);
     //mimick the behavior provided by typelib
-	dev.changeFBExecutionState(cg_nMGM_CMD_Reset);
+  dev.changeFBExecutionState(cg_nMGM_CMD_Reset);
 
     CResource *res = (CResource *)CTypeLib::createFB(g_nStringIdEMB_RES, g_nStringIdEMB_RES, &dev);
     BOOST_CHECK(0 != res);

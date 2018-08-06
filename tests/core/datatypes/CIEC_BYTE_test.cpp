@@ -16,65 +16,65 @@ BOOST_AUTO_TEST_SUITE(CIEC_BYTE_function_test)
 
 BOOST_AUTO_TEST_CASE(Type_test)
 {
-	CIEC_BYTE nTest;
-	//check type information
-	BOOST_CHECK_EQUAL(nTest.getDataTypeID(), CIEC_ANY::e_BYTE);
-	//check operator bool data type size
-	BOOST_CHECK_EQUAL(sizeof(nTest.operator TForteByte()), sizeof(TForteByte));
+  CIEC_BYTE nTest;
+  //check type information
+  BOOST_CHECK_EQUAL(nTest.getDataTypeID(), CIEC_ANY::e_BYTE);
+  //check operator bool data type size
+  BOOST_CHECK_EQUAL(sizeof(nTest.operator TForteByte()), sizeof(TForteByte));
 
 }
 
 BOOST_AUTO_TEST_CASE(Assignment_test)
 {
-	CIEC_BYTE nTest1;
-	CIEC_BYTE nTest2;
+  CIEC_BYTE nTest1;
+  CIEC_BYTE nTest2;
 
-	//initial value must be 0
-	BOOST_CHECK_EQUAL(nTest1, 0);
+  //initial value must be 0
+  BOOST_CHECK_EQUAL(nTest1, 0);
 
-	nTest1 = 0;
-	nTest2 = nTest1;
-	BOOST_CHECK_EQUAL(nTest1, 0);
-	BOOST_CHECK_EQUAL(nTest2, 0);
+  nTest1 = 0;
+  nTest2 = nTest1;
+  BOOST_CHECK_EQUAL(nTest1, 0);
+  BOOST_CHECK_EQUAL(nTest2, 0);
 
-	nTest1 = 12;
-	nTest2 = nTest1;
-	BOOST_CHECK_EQUAL(nTest1, 12);
-	BOOST_CHECK_EQUAL(nTest2, 12);
+  nTest1 = 12;
+  nTest2 = nTest1;
+  BOOST_CHECK_EQUAL(nTest1, 12);
+  BOOST_CHECK_EQUAL(nTest2, 12);
 
-	nTest1 = 255;
-	nTest2 = nTest1;
-	BOOST_CHECK_EQUAL(nTest1, 255);
-	BOOST_CHECK_EQUAL(nTest2, 255);
+  nTest1 = 255;
+  nTest2 = nTest1;
+  BOOST_CHECK_EQUAL(nTest1, 255);
+  BOOST_CHECK_EQUAL(nTest2, 255);
 
-	//check that assignment operator does not intertwine objects
-	nTest2 = 128;
-	BOOST_CHECK_EQUAL(nTest1, 255);
-	BOOST_CHECK_EQUAL(nTest2, 128);
+  //check that assignment operator does not intertwine objects
+  nTest2 = 128;
+  BOOST_CHECK_EQUAL(nTest1, 255);
+  BOOST_CHECK_EQUAL(nTest2, 128);
 
 }
 
 BOOST_AUTO_TEST_CASE(Conversion_test)
 {
-	CIEC_BYTE nTest;
+  CIEC_BYTE nTest;
 
-	char cBuffer[4];
-	char cBufferFail[2];
+  char cBuffer[4];
+  char cBufferFail[2];
 
-	//check cast operator
-	nTest = 0;
-	strcpy(cBuffer, "");
+  //check cast operator
+  nTest = 0;
+  strcpy(cBuffer, "");
 
-	BOOST_CHECK_EQUAL(nTest.operator TForteByte(), 0);
+  BOOST_CHECK_EQUAL(nTest.operator TForteByte(), 0);
 
-	nTest = 64;
-	BOOST_CHECK_EQUAL(nTest.operator TForteByte(), 64);
+  nTest = 64;
+  BOOST_CHECK_EQUAL(nTest.operator TForteByte(), 64);
 
-	nTest = 255;
-	BOOST_CHECK_EQUAL(nTest.operator TForteByte(), 255);
+  nTest = 255;
+  BOOST_CHECK_EQUAL(nTest.operator TForteByte(), 255);
 
-	//check toString and fromString
-	BOOST_CHECK_EQUAL(nTest.fromString("0"), 1);
+  //check toString and fromString
+  BOOST_CHECK_EQUAL(nTest.fromString("0"), 1);
     BOOST_CHECK_EQUAL(nTest, 0);
     BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 4), 1);
     BOOST_CHECK_EQUAL(strcmp(cBuffer, "0"), 0);
@@ -198,8 +198,8 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
     BOOST_CHECK_EQUAL(nTest.fromString("16#12C"), -1);
     BOOST_CHECK_EQUAL(nTest.fromString("-130"), -1);
 
-	//check invalid fromString string
-	BOOST_CHECK_EQUAL(nTest.fromString("NOT A VALID STRING"), -1);
+  //check invalid fromString string
+  BOOST_CHECK_EQUAL(nTest.fromString("NOT A VALID STRING"), -1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2016 Johannes Messmer (admin@jomess.com)
+ * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
 #ifndef SRC_MODULES_EMBRICK_SLAVE_PACKAGES_H_
@@ -14,19 +15,15 @@
 
 #include <netinet/in.h>
 
-namespace EmBrick {
-
-namespace Packages {
-
 #pragma pack(push, 1) // Disable padding for protocol structs
 
-struct Header {
+struct EmbrickHeaderPackage {
   char address;
   char command;
   char checksum;
 };
 
-struct SlaveInit {
+struct EmbrickSlaveInitPackage {
   uint8_t protocolVersion;
   uint8_t moduleVersion;
   uint16_t deviceId;
@@ -34,9 +31,9 @@ struct SlaveInit {
   uint8_t dataSendLength; // Amount of bytes that the slave expects from the master
   uint8_t dataReceiveLength; // Amount of bytes that the master expects from the slave
 
-  static SlaveInit fromBuffer(unsigned char* buffer) {
-    SlaveInit pkg;
-    memcpy(&pkg, buffer, sizeof(SlaveInit));
+  static EmbrickSlaveInitPackage fromBuffer(unsigned char* buffer) {
+    EmbrickSlaveInitPackage pkg;
+    memcpy(&pkg, buffer, sizeof(EmbrickSlaveInitPackage));
 
     pkg.deviceId = ntohs(pkg.deviceId);
     // Switch bytes of deviceId as it is transmitted with a different endianess
@@ -49,7 +46,7 @@ struct SlaveInit {
   }
 };
 
-struct MasterInit {
+struct EmbrickMasterInitPackage {
   uint8_t slaveAddress;
   uint16_t syncGapMultiplicator;
 
@@ -62,9 +59,5 @@ struct MasterInit {
 };
 
 #pragma pack(pop)
-
-} /* namespace Packages */
-
-}
 
 #endif /* SRC_MODULES_EMBRICK_SLAVE_PACKAGES_H_ */

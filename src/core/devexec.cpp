@@ -40,7 +40,7 @@ CDeviceExecution::~CDeviceExecution(){
 }
 
 void CDeviceExecution::startNewEventChain(CEventSourceFB *pa_poECStartFB){
-	// maybe in the future here has to be added something for handling priority adaption and stuff like this.
+  // maybe in the future here has to be added something for handling priority adaption and stuff like this.
   if(0 != pa_poECStartFB){
     CEventChainExecutionThread *poEventChainExecutor = pa_poECStartFB->getEventChainExecutor();
     if(0 != poEventChainExecutor){

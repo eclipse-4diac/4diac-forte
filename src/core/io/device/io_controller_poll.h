@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 fortiss GmbH
+ * Copyright (c) 2017 - 2018 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,16 +7,18 @@
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
 #ifndef SRC_CORE_IO_DEVICE_IO_CONTROLLER_POLL_H_
 #define SRC_CORE_IO_DEVICE_IO_CONTROLLER_POLL_H_
 
 #include "io_controller.h"
-#include <conditionSync.h>
+#include <forte_sem.h>
 
-namespace IO {
-namespace Device {
+namespace forte {
+  namespace core {
+    namespace IO {
 
 /*! @brief Abstract Device Controller for devices which require cyclic poll operations
  *
@@ -24,17 +26,17 @@ namespace Device {
  * Offers a #poll method which performs an IO update in a configured #PollInterval.
  * Allows to force a polling routine with the #forcePoll method (e.g. can be used to set an output immediately).
  */
-class PollController: public Controller {
+class IODevicePollController: public IODeviceController {
 public:
 
-  virtual void handleChangeEvent(Handle *handle);
+  virtual void handleChangeEvent(IOHandle *handle);
 
 protected:
   /*! @brief Constructor
    *
    * @param PollInterval Default poll routines per seconds (Hz). Must be greater than 0. Call #setPollInterval in the #setConfig method.
    */
-  PollController(CDeviceExecution& paDeviceExecution, float PollInterval);
+  IODevicePollController(CDeviceExecution& paDeviceExecution, float PollInterval);
 
   /*! @brief Poll routine which updates the IO state of the device
    *
@@ -47,7 +49,7 @@ protected:
 
   /*! @brief Forces an execution of the #poll routine
    *
-   * Should be called by the corresponding device #IO::Handle implementation after setting/changing an output handle.
+   * Should be called by the corresponding device #IOHandle implementation after setting/changing an output handle.
    */
   void forcePoll();
 
@@ -64,13 +66,11 @@ private:
 
   float PollInterval;
 
-  Utils::ConditionSync loopSync;
-  bool forcedLoop;
-  bool loopActive;
-  struct timespec nextLoop;
+  CSemaphore forceLoop;
 };
 
-} /* namespace Device */
-} /* namespace IO */
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
 
 #endif /* SRC_CORE_IO_DEVICE_IO_CONTROLLER_POLL_H_ */

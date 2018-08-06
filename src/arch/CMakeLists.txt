@@ -23,6 +23,8 @@ add_subdirectory(be_m1)
 add_subdirectory(macos)
 add_subdirectory(rcX)
 add_subdirectory(vxworks)
+add_subdirectory(pikeos_posix)
+add_subdirectory(plcnext)
 
 forte_add_sourcefile_hcpp(timerha devlog)
 

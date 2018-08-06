@@ -14,12 +14,12 @@
 #include "devlog.h"
 #include "../core/devexec.h"
 #include "../core/cominfra/commfb.h"
-#include "../core/cominfra/comlayer.h"
+#include "../core/cominfra/comCallback.h"
 #include "../core/utils/criticalregion.h"
 
 DEFINE_HANDLER(CFDSelectHandler)
-CFDSelectHandler::CFDSelectHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution)  {
-  m_bConnectionListChanged = false;
+CFDSelectHandler::CFDSelectHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution)  {
+  mConnectionListChanged = false;
 #ifdef WIN32
   // Windows Socket Startupcode
   WORD wVersionRequested;
@@ -46,25 +46,25 @@ void CFDSelectHandler::run(void){
   fd_set anFDSet;
   fd_set anFDSetMaster;
 
-  TFileDescriptor nHighestFDID = scm_nInvalidFileDescriptor;
+  TFileDescriptor nHighestFDID = scmInvalidFileDescriptor;
   int retval = 0;
 
   FD_ZERO(&anFDSetMaster);
 
   while(isAlive()){
     // TODO: create method to prevent 100ms timeout on reconnection
-    m_oSync.lock();
-    if(true == m_bConnectionListChanged){
+    mSync.lock();
+    if(true == mConnectionListChanged){
       nHighestFDID = createFDSet(&anFDSetMaster);
     }
     anFDSet = anFDSetMaster;
-    m_oSync.unlock();
+    mSync.unlock();
 
     tv.tv_sec = 1; //TODO : To be set!
-    tv.tv_usec = 1000;
+    tv.tv_usec = 0;
 
-    if(scm_nInvalidFileDescriptor != nHighestFDID){
-      retval = select(nHighestFDID + 1, &anFDSet, NULL, NULL, &tv);
+    if(scmInvalidFileDescriptor != nHighestFDID){
+      retval = select(static_cast<int>(nHighestFDID + 1), &anFDSet, NULL, NULL, &tv);
       if(!isAlive()){
         //the thread has been closed in the meantime do not process any messages anymore
         return;
@@ -75,23 +75,23 @@ void CFDSelectHandler::run(void){
     }
 
     if(retval > 0){
-      m_oSync.lock();
-      TConnectionContainer::Iterator itEnd(m_lstConnectionsList.end());
-      for(TConnectionContainer::Iterator itRunner = m_lstConnectionsList.begin(); itRunner != itEnd;){
+      mSync.lock();
+      TConnectionContainer::Iterator itEnd(mConnectionsList.end());
+      for(TConnectionContainer::Iterator itRunner = mConnectionsList.begin(); itRunner != itEnd;){
         // need to retrieve the callee as the iterator may get invalid in the recvDat function below in case of connection closing
-        forte::com_infra::CComLayer *comLayer = itRunner->m_poCallee;
-        TFileDescriptor sockDes = itRunner->m_nSockDes;
+        forte::com_infra::CComCallback *callee = itRunner->mCallee;
+        TFileDescriptor sockDes = itRunner->mSockDes;
         ++itRunner;
 
-        if((0 != FD_ISSET(sockDes, &anFDSet)) && (0 != comLayer)){
-          m_oSync.unlock();
-          if(forte::com_infra::e_Nothing != comLayer->recvData(&sockDes,0)){
-            startNewEventChain(comLayer->getCommFB());
+        if((0 != FD_ISSET(sockDes, &anFDSet)) && (0 != callee)){
+          mSync.unlock();
+          if(forte::com_infra::e_Nothing != callee->recvData(&sockDes,0)){
+            startNewEventChain(callee->getCommFB());
           }
-          m_oSync.lock();
+          mSync.lock();
         }
       }
-      m_oSync.unlock();
+      mSync.unlock();
     }
     else{
       if(retval == 0){
@@ -108,32 +108,32 @@ void CFDSelectHandler::run(void){
   }
 }
 
-void CFDSelectHandler::addComCallback(TFileDescriptor pa_nFD, forte::com_infra::CComLayer *pa_poComLayer){
+void CFDSelectHandler::addComCallback(TFileDescriptor paFD, forte::com_infra::CComCallback *paComCallback){
   {
-    CCriticalRegion criticalRegion(m_oSync);
-    TConnContType stNewNode = { pa_nFD, pa_poComLayer };
-    m_lstConnectionsList.push_back(stNewNode);
-    m_bConnectionListChanged = true;
+    CCriticalRegion criticalRegion(mSync);
+    TConnContType stNewNode = { paFD, paComCallback };
+    mConnectionsList.pushBack(stNewNode);
+    mConnectionListChanged = true;
   }
   if(!isAlive()){
     this->start();
   }
 }
 
-void CFDSelectHandler::removeComCallback(TFileDescriptor pa_nFD){
-  CCriticalRegion criticalRegion(m_oSync);
+void CFDSelectHandler::removeComCallback(TFileDescriptor paFD){
+  CCriticalRegion criticalRegion(mSync);
 
-  TConnectionContainer::Iterator itRunner(m_lstConnectionsList.begin());
-  TConnectionContainer::Iterator itRefNode(m_lstConnectionsList.end());
-  TConnectionContainer::Iterator itEnd(m_lstConnectionsList.end());
+  TConnectionContainer::Iterator itRunner(mConnectionsList.begin());
+  TConnectionContainer::Iterator itRefNode(mConnectionsList.end());
+  TConnectionContainer::Iterator itEnd(mConnectionsList.end());
 
   while(itRunner != itEnd){
-    if(itRunner->m_nSockDes == pa_nFD){
+    if(itRunner->mSockDes == paFD){
       if(itRefNode ==itEnd){
-        m_lstConnectionsList.pop_front();
+        mConnectionsList.popFront();
       }
       else{
-        m_lstConnectionsList.eraseAfter(itRefNode);
+        mConnectionsList.eraseAfter(itRefNode);
       }
       break;
     }
@@ -142,19 +142,19 @@ void CFDSelectHandler::removeComCallback(TFileDescriptor pa_nFD){
     ++itRunner;
   }
 
-  m_bConnectionListChanged = true;
+  mConnectionListChanged = true;
 }
 
 CFDSelectHandler::TFileDescriptor CFDSelectHandler::createFDSet(fd_set *m_panFDSet){
-  TFileDescriptor nRetVal = scm_nInvalidFileDescriptor;
+  TFileDescriptor nRetVal = scmInvalidFileDescriptor;
   FD_ZERO(m_panFDSet);
-  TConnectionContainer::Iterator itEnd(m_lstConnectionsList.end());
-  for(TConnectionContainer::Iterator itRunner = m_lstConnectionsList.begin(); itRunner != itEnd; ++itRunner){
-    FD_SET(itRunner->m_nSockDes, m_panFDSet);
-    if(itRunner->m_nSockDes > nRetVal){
-      nRetVal = itRunner->m_nSockDes;
+  TConnectionContainer::Iterator itEnd(mConnectionsList.end());
+  for(TConnectionContainer::Iterator itRunner = mConnectionsList.begin(); itRunner != itEnd; ++itRunner){
+    FD_SET(itRunner->mSockDes, m_panFDSet);
+    if(itRunner->mSockDes > nRetVal || scmInvalidFileDescriptor == nRetVal){
+      nRetVal = itRunner->mSockDes;
     }
   }
-  m_bConnectionListChanged = false;
+  mConnectionListChanged = false;
   return nRetVal;
 }

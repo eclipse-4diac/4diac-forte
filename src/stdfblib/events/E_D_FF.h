@@ -42,11 +42,11 @@ private:
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
   
   CIEC_BOOL& D() {
-   	return *static_cast<CIEC_BOOL*>(getDI(0));
+     return *static_cast<CIEC_BOOL*>(getDI(0));
   }
 
   CIEC_BOOL& Q() {
-   	return *static_cast<CIEC_BOOL*>(getDO(0));
+     return *static_cast<CIEC_BOOL*>(getDO(0));
   }
 
 public:

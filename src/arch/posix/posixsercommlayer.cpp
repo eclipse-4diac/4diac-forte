@@ -27,7 +27,7 @@ CPosixSerCommLayer::~CPosixSerCommLayer(){
 }
 
 forte::com_infra::EComResponse CPosixSerCommLayer::sendData(void *paData, unsigned int paSize){
-  if(CFDSelectHandler::scm_nInvalidFileDescriptor != getSerialHandler()){
+  if(CFDSelectHandler::scmInvalidFileDescriptor != getSerialHandler()){
     ssize_t nToSend = paSize;
     while(0 < nToSend){
       ssize_t nSentBytes = write(getSerialHandler(), paData, nToSend);
@@ -67,13 +67,13 @@ forte::com_infra::EComResponse CPosixSerCommLayer::recvData(const void *, unsign
   return mInterruptResp;
 }
 
-forte::com_infra::EComResponse CPosixSerCommLayer::openSerialConnection(const SSerialParameters& paSerialParameters, CSerialComLayerBase<CFDSelectHandler::TFileDescriptor, CFDSelectHandler::scm_nInvalidFileDescriptor>::TSerialHandleType* paHandleResult){
+forte::com_infra::EComResponse CPosixSerCommLayer::openSerialConnection(const SSerialParameters& paSerialParameters, CSerialComLayerBase<CFDSelectHandler::TFileDescriptor, CFDSelectHandler::scmInvalidFileDescriptor>::TSerialHandleType* paHandleResult){
   forte::com_infra::EComResponse eRetVal = forte::com_infra::e_ProcessDataNoSocket;
 
   //as first shot take the serial interface device as param (e.g., /dev/ttyS0 )
   CFDSelectHandler::TFileDescriptor fileDescriptor = open(paSerialParameters.interfaceName.getValue(), O_RDWR | O_NOCTTY);
 
-  if(CFDSelectHandler::scm_nInvalidFileDescriptor != fileDescriptor){
+  if(CFDSelectHandler::scmInvalidFileDescriptor != fileDescriptor){
     tcgetattr(fileDescriptor, &mOldTIO);
     struct termios stNewTIO;
     memset(&stNewTIO, 0, sizeof(stNewTIO));
@@ -169,7 +169,7 @@ forte::com_infra::EComResponse CPosixSerCommLayer::openSerialConnection(const SS
 
 void CPosixSerCommLayer::closeConnection(){
   CFDSelectHandler::TFileDescriptor fileDescriptor = getSerialHandler();
-  if(CFDSelectHandler::scm_nInvalidFileDescriptor != fileDescriptor){
+  if(CFDSelectHandler::scmInvalidFileDescriptor != fileDescriptor){
     GET_HANDLER_FROM_COMM_LAYER(CFDSelectHandler)->removeComCallback(fileDescriptor);
     tcsetattr(fileDescriptor, TCSANOW, &mOldTIO);
     close(fileDescriptor);

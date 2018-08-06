@@ -1,14 +1,15 @@
 /*******************************************************************************
-  * Copyright (c) 2008 - 2015 ACIN, fortiss GmbH
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Ingo Hegny, Alois Zoitl, Monika Wenger
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2008 - 2015 ACIN, fortiss GmbH, 2018 TU Vienna/ACIN
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Ingo Hegny, Alois Zoitl, Monika Wenger
+ *      - initial implementation and rework communication infrastructure
+ *    Martin Melik-Merkumians - adds typifyAnyAdapter
+ *******************************************************************************/
 #ifndef _ADAPTERCONN_H_
 #define _ADAPTERCONN_H_
 
@@ -43,6 +44,8 @@ class CAdapterConnection : public CConnection{
     }
 
   private:
+
+    static void typifyAnyAdapter(CAdapter *paSocket, CAdapter *paPlug);
     void performDisconnect();
 
     CAdapter *mPlug;

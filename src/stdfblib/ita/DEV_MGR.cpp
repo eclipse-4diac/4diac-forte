@@ -65,14 +65,14 @@ void DEV_MGR::executeEvent(int pa_nEIID){
     CCommFB::executeEvent(pa_nEIID);  //initialize the underlying server FB
   }else{
     if(cg_nExternalEventID == pa_nEIID){
-	  //we received a message on the network let the server correctly handle it
-	  if(forte::com_infra::e_ProcessDataOk == CCommFB::receiveData()){ //
-	    //the message was correctly received
-	    executeRQST();
-	    //send response
-	    CCommFB::sendData();
-	  }
-	}
+    //we received a message on the network let the server correctly handle it
+    if(forte::com_infra::e_ProcessDataOk == CCommFB::receiveData()){ //
+      //the message was correctly received
+      executeRQST();
+      //send response
+      CCommFB::sendData();
+    }
+  }
   }
 }
 
@@ -151,33 +151,11 @@ char *DEV_MGR::parseRequest(char *pa_acRequestString, forte::core::SManagementCM
 }
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
-bool DEV_MGR::parseFBType(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand){
+bool DEV_MGR::parseXType(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand, char *pa_requestType){
   bool bRetVal = false;
-  if(!strncmp("FBType Name=\"", pa_acRequestPartLeft, 13)){
-    char *acBuf = &(pa_acRequestPartLeft[13]);
-    int i = 0;
-    if(acBuf[0] != '*'){
-      i = parseIdentifier(acBuf, pa_rstCommand.mFirstParam);
-      acBuf = (-1 == i) ? 0 : strchr(&(acBuf[i + 1]), '>');
-    }
-    if(acBuf != 0){
-      acBuf = acBuf + 1;
-      i = 0;
-      TForteUInt16 nBufLength = static_cast<TForteUInt16>(strcspn(acBuf, "<"));
-      pa_rstCommand.mAdditionalParams.assign(acBuf, nBufLength);
-    }
-    else{
-      return false;
-    }
-    bRetVal = true;
-    }
-  return bRetVal;
-}
-
-bool DEV_MGR::parseAdapterType(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand){
-  bool bRetVal = false;
-  if(!strncmp("AdapterType Name=\"", pa_acRequestPartLeft, 18)){
-    char *acBuf = &(pa_acRequestPartLeft[18]);
+  size_t nReqLength = strlen((const char *)pa_requestType);
+  if(!strncmp(pa_requestType, pa_acRequestPartLeft, nReqLength)){
+    char *acBuf = &(pa_acRequestPartLeft[nReqLength]);
     int i = 0;
     if(acBuf[0] != '*'){
       i = parseIdentifier(acBuf, pa_rstCommand.mFirstParam);
@@ -323,7 +301,7 @@ void DEV_MGR::parseCreateData(char *pa_acRequestPartLeft, forte::core::SManageme
       switch (pa_acRequestPartLeft[0]){
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
         case 'A': // we have an Adapter to Create
-          if(parseAdapterType(pa_acRequestPartLeft, pa_rstCommand)){
+          if(parseXType(pa_acRequestPartLeft, pa_rstCommand, "AdapterType Name=\"")){
             pa_rstCommand.mCMD = cg_nMGM_CMD_Create_AdapterType;
           }
           break;
@@ -333,7 +311,7 @@ void DEV_MGR::parseCreateData(char *pa_acRequestPartLeft, forte::core::SManageme
             pa_rstCommand.mCMD = cg_nMGM_CMD_Create_FBInstance;
           }
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
-          else if(parseFBType(pa_acRequestPartLeft, pa_rstCommand)){
+          else if(parseXType(pa_acRequestPartLeft, pa_rstCommand, "FBType Name=\"")){
             pa_rstCommand.mCMD = cg_nMGM_CMD_Create_FBType;
           }
 #endif
@@ -561,7 +539,7 @@ void DEV_MGR::generateLongResponse(EMGMResponse pa_eResp, forte::core::SManageme
       }
     }
     else if(pa_stCMD.mCMD == cg_nMGM_CMD_QUERY_FB){
-      if(!pa_stCMD.mFirstParam.isEmpty()) {	//Name != "*"
+      if(!pa_stCMD.mFirstParam.isEmpty()) {  //Name != "*"
         if(!pa_stCMD.mSecondParam.isEmpty()){ //Type != "*"
           RESP().append("<FBStatus Status=\"");
           RESP().append(pa_stCMD.mAdditionalParams.getValue());
@@ -632,7 +610,7 @@ EMGMResponse DEV_MGR::parseAndExecuteMGMCommand(char *pa_acDest, char *pa_acComm
     }
     m_stCommand.mID=0;
 #ifdef FORTE_SUPPORT_MONITORING
-	m_stCommand.mMonitorResponse.clear();
+  m_stCommand.mMonitorResponse.clear();
 #endif // FORTE_SUPPORT_MONITORING
     char *acRequestPartLeft = parseRequest(pa_acCommand, m_stCommand);
     if(0 != acRequestPartLeft){

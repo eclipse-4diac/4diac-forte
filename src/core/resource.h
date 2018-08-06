@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2005 - 2018 ACIN, Profactor GmbH, fortiss GmbH, Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -82,6 +82,13 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
       return CStringDictionary::scm_nInvalidStringId;
     }
 #endif
+    /*!\brief Write a parameter value to a given FB-input
+     *
+     * @param paNameList the identifier name list of the parameter to be written
+     * @param paValue the value to be writen
+     * @return response of the command execution as defined in IEC 61499
+     */
+    EMGMResponse writeValue(forte::core::TNameIdentifier &paNameList, const CIEC_STRING & paValue, bool paForce = false);
 
 #ifdef FORTE_SUPPORT_MONITORING
     forte::core::CMonitoringHandler &getMonitoringHandler(){
@@ -142,14 +149,6 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
     EMGMResponse deleteConnection(forte::core::TNameIdentifier &paSrcNameList,
         forte::core::TNameIdentifier &paDstNameList);
 
-    /*!\brief Write a parameter value to a given FB-input
-     *
-     * @param paNameList the identifier name list of the parameter to be written
-     * @param paValue the value to be writen
-     * @return response of the command execution as defined in IEC 61499
-     */
-    EMGMResponse writeValue(forte::core::TNameIdentifier &paNameList, const CIEC_STRING & paValue);
-
     /*!\brief Read a parameter value from a given FB
      *
      * @param paNameList the identifier name list of the parameter to be read
@@ -179,6 +178,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 
     EMGMResponse createAdapterTypeFromLua(CStringDictionary::TStringId typeNameId,
             CIEC_STRING & paLuaScriptAsString);
+    EMGMResponse queryFBs(CIEC_STRING & paValue);
 #endif
     /*!\brief get the variable with the given name identifier
      *

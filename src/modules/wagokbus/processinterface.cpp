@@ -246,7 +246,7 @@ void WagoPFCProcessInterface::CKBusHandler::updateReadData(){
 
 void WagoPFCProcessInterface::CKBusHandler::registerKBusReadFB(WagoPFCProcessInterface *paFB){
   mReadFBListSync.lock();
-  mReadFBList.push_back(paFB);
+  mReadFBList.pushBack(paFB);
   mReadFBListSync.unlock();
 }
 
@@ -259,7 +259,7 @@ void WagoPFCProcessInterface::CKBusHandler::unregisterKBusReadFB(WagoPFCProcessI
   while(itRunner != itEnd){
     if(*itRunner == paFB){
       if(itRefNode == itEnd){
-        mReadFBList.pop_front();
+        mReadFBList.popFront();
       }
       else{
         mReadFBList.eraseAfter(itRefNode);

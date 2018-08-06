@@ -62,10 +62,10 @@ private:
   };
 
   enum ECallingFBType{
-  	  enUnsupported,
-  	  enIX,
-  	  enIW,
-  	  enQX
+      enUnsupported,
+      enIX,
+      enIW,
+      enQX
     };
   // we need this to check, which FB (IX, QX, or IW) is using this instance of CProcessInterface
   ECallingFBType mCallingFB;

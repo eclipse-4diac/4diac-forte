@@ -15,7 +15,7 @@
 CModbusConnection::CModbusConnection(CModbusHandler* pa_modbusHandler) : m_pModbusConn(NULL), m_pModbusHandler(pa_modbusHandler), m_nComCallbackId(0),
   m_bConnected(false), m_paIPAddress(NULL), m_nPort(0),
   m_chDevice(NULL), m_nBaud(0), m_cParity(0), m_nDataBit(0),
-	 m_nStopBit(0), m_nResponseTimeout(0), m_nByteTimeout(0){
+   m_nStopBit(0), m_nResponseTimeout(0), m_nByteTimeout(0){
 }
     
 CModbusConnection::~CModbusConnection(){

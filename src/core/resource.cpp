@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2005 - 2018 ACIN, Profactor GmbH, fortiss GmbH,
+ *                           Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -124,7 +125,15 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
         break;
       case cg_nMGM_CMD_QUERY_AdapterTypes:
         retVal = queryAllAdapterTypes(paCommand.mAdditionalParams);
-      	break;
+        break;
+      case cg_nMGM_CMD_QUERY_FB:{
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+        retVal = queryFBs(paCommand.mAdditionalParams);
+#else
+        retVal = e_UNSUPPORTED_CMD;
+#endif
+      }
+        break;
       default:
         #ifdef FORTE_SUPPORT_MONITORING
         retVal = mMonitoringHandler.executeMonitoringCommand(paCommand);
@@ -219,22 +228,38 @@ EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcName
 }
 
 EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList,
-    const CIEC_STRING & paValue){
+    const CIEC_STRING & paValue, bool paForce){
   EMGMResponse retVal = e_NO_SUCH_OBJECT;
 
-  CIEC_ANY *var = getVariable(paNameList);
-  if(var != 0){
-    if(paValue.length() > 0){
-      if(paValue.length() == var->fromString(paValue.getValue())){
+  CStringDictionary::TStringId portName = paNameList.back();
+  paNameList.popBack();
+  forte::core::TNameIdentifier::CIterator runner(paNameList.begin());
+
+  CFunctionBlock *fb = this;
+  if(paNameList.size() >= 1){
+   //this is not an identifier for the resource interface
+   fb = getContainedFB(runner); // the last entry is the input name therefore reduce list here by one
+  }
+
+  if((0 != fb) && (runner.isLastEntry())){
+    CIEC_ANY *var = fb->getVar(&portName, 1);
+    if(0 != var){
+      // 0 is not supported in the fromString method
+      if((paValue.length() > 0) && (paValue.length() == var->fromString(paValue.getValue()))){
         //if we cannot parse the full value the value is not valid
+        if(paForce){
+          var->setForced(true);
+          CDataConnection *con = fb->getDOConnection(portName);
+          if(0 != con){
+            //if we have got a connection it was a DO mirror the forced value there
+            CCriticalRegion criticalRegion(m_oResDataConSync);
+            con->writeData(var);
+          }
+        }
         retVal = e_RDY;
-      }
-      else{
+      } else {
         retVal = e_BAD_PARAMS;
       }
-    }
-    else{
-      retVal = e_BAD_PARAMS; // 0 is not supported in the fromString method
     }
   }
   return retVal;
@@ -259,21 +284,37 @@ EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, CIEC
 }
 
 EMGMResponse CResource::queryAllFBTypes(CIEC_STRING & paValue){
-	EMGMResponse retVal = e_UNSUPPORTED_TYPE;
+  EMGMResponse retVal = e_UNSUPPORTED_TYPE;
 
-	CTypeLib::CTypeEntry *fbTypeRunner = CTypeLib::getFBLibStart();
-	if(fbTypeRunner != 0){
-		retVal = e_RDY;
-		for(; fbTypeRunner != 0; fbTypeRunner = fbTypeRunner->m_poNext){
-		  paValue.append(CStringDictionary::getInstance().get(fbTypeRunner->getTypeNameId()));
-			if(fbTypeRunner->m_poNext != 0){
-				paValue.append(", ");
-			}
-		}
-	}
-	return retVal;
+  CTypeLib::CTypeEntry *fbTypeRunner = CTypeLib::getFBLibStart();
+  if(fbTypeRunner != 0){
+    retVal = e_RDY;
+    for(; fbTypeRunner != 0; fbTypeRunner = fbTypeRunner->m_poNext){
+      paValue.append(CStringDictionary::getInstance().get(fbTypeRunner->getTypeNameId()));
+      if(fbTypeRunner->m_poNext != 0){
+        paValue.append(", ");
+      }
+    }
+  }
+  return retVal;
 }
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
+EMGMResponse CResource::queryFBs(CIEC_STRING & paValue){
+  EMGMResponse retVal = e_UNSUPPORTED_TYPE;
+  for (TFunctionBlockList::Iterator itRunner(getFBList().begin()); itRunner != getFBList().end(); ++itRunner) {
+    paValue.append("<FB Name=\"");
+    paValue.append((static_cast<CFunctionBlock *>(*itRunner))->getInstanceName());
+    paValue.append("\" Type=\"");
+    paValue.append(CStringDictionary::getInstance().get((static_cast<CFunctionBlock *>(*itRunner))->getFBTypeId()));
+    paValue.append("\"/>");
+    if(itRunner != getFBList().end()){
+      paValue.append("\n");
+    }
+  }
+  retVal = e_RDY;
+  return retVal;
+}
+
 EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNameId,
     CIEC_STRING& paLuaScriptAsString){
   EMGMResponse retVal = e_UNSUPPORTED_TYPE;
@@ -306,19 +347,19 @@ EMGMResponse CResource::createAdapterTypeFromLua(CStringDictionary::TStringId ty
 #endif
 
 EMGMResponse CResource::queryAllAdapterTypes(CIEC_STRING & paValue){
-	EMGMResponse retVal = e_UNSUPPORTED_TYPE;
+  EMGMResponse retVal = e_UNSUPPORTED_TYPE;
 
-	CTypeLib::CTypeEntry *adapterTypeRunner = CTypeLib::getAdapterLibStart();
-	if(adapterTypeRunner != 0){
-		retVal = e_RDY;
-		for(; adapterTypeRunner != 0; adapterTypeRunner = adapterTypeRunner->m_poNext){
-		  paValue.append(CStringDictionary::getInstance().get(adapterTypeRunner->getTypeNameId()));
-			if(adapterTypeRunner->m_poNext != 0){
-				paValue.append(", ");
-			}
-		}
-	}
-	return retVal;
+  CTypeLib::CTypeEntry *adapterTypeRunner = CTypeLib::getAdapterLibStart();
+  if(adapterTypeRunner != 0){
+    retVal = e_RDY;
+    for(; adapterTypeRunner != 0; adapterTypeRunner = adapterTypeRunner->m_poNext){
+      paValue.append(CStringDictionary::getInstance().get(adapterTypeRunner->getTypeNameId()));
+      if(adapterTypeRunner->m_poNext != 0){
+        paValue.append(", ");
+      }
+    }
+  }
+  return retVal;
 }
 
 CIEC_ANY *CResource::getVariable(forte::core::TNameIdentifier &paNameList){

@@ -80,7 +80,7 @@ private:
 
 public:
   FUNCTION_BLOCK_CTOR(FORTE_RT_E_SWITCH){
-	m_bInitialized = false;
+  m_bInitialized = false;
   };
 
   virtual ~FORTE_RT_E_SWITCH(){};

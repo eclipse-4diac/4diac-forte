@@ -48,7 +48,7 @@ void FORTE_ST_REC_CONN::executeEvent(int pa_nEIID){
       if(true == QI()) {
         executeRQST();
       } else {
-		  STATUS() = "Not Ready";
+      STATUS() = "Not Ready";
       }
       sendOutputEvent(scm_nEventCNFID);
       break;
@@ -68,14 +68,14 @@ void FORTE_ST_REC_CONN::executeRQST(void){
   EMGMResponse resp = m_poDevice.executeMGMCommand(theCommand);
 
   if (resp == e_RDY) {
-	  // create new connection
-	  theCommand.mDestination = CStringDictionary::getInstance().getId(DST().getValue());
-	  theCommand.mFirstParam.clear();
-	  theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(NEW_SRC_FB().getValue()));
-	  theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(NEW_SRC_FB_OUT().getValue()));
-	  theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(NEW_DST_FB().getValue()));
-	  theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(NEW_DST_FB_IN().getValue()));
-	  theCommand.mCMD = cg_nMGM_CMD_Create_Connection;
+    // create new connection
+    theCommand.mDestination = CStringDictionary::getInstance().getId(DST().getValue());
+    theCommand.mFirstParam.clear();
+    theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(NEW_SRC_FB().getValue()));
+    theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(NEW_SRC_FB_OUT().getValue()));
+    theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(NEW_DST_FB().getValue()));
+    theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(NEW_DST_FB_IN().getValue()));
+    theCommand.mCMD = cg_nMGM_CMD_Create_Connection;
     resp = m_poDevice.executeMGMCommand(theCommand);
   }
 

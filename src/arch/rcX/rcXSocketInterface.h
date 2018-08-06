@@ -86,7 +86,7 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
 
     typedef SSocketDescriptor* TSocketDescriptor;
 
-    static const TSocketDescriptor scm_nInvalidSocketDescriptor;
+    static const TSocketDescriptor scmInvalidSocketDescriptor;
 
     static void closeSocket(TSocketDescriptor pa_nSockD);
     static TSocketDescriptor openTCPServerConnection(char *pa_acIPAddr, unsigned short pa_nPort);

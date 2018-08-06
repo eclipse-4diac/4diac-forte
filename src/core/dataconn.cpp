@@ -145,7 +145,7 @@ EMGMResponse CDataConnection::establishDataConnection(CFunctionBlock *paDstFB, T
     if(e_RDY == retVal){
       if(!paDstFB->connectDI(paDstPortId, this)){
         retVal = e_INVALID_STATE;
-        mDestinationIds.pop_front(); //empty the list so that the have created connection is not here anymore
+        mDestinationIds.popFront(); //empty the list so that the have created connection is not here anymore
       }
     }
   }

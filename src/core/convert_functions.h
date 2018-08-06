@@ -1,15 +1,16 @@
 /*******************************************************************************
-  * Copyright (c) 2010 - 2015 ACIN, Profactor GmbH, fortiss GmbH
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Alois Zoitl, Ingo Hegny, Monika Wenger, Carolyn Oates, Patrick Smejkal,
-  *    Matthias Plasch,
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2010 - 2015, 2018 TU Vienna/ACIN, Profactor GmbH, fortiss GmbH
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Alois Zoitl, Ingo Hegny, Monika Wenger, Carolyn Oates, Patrick Smejkal,
+ *    Matthias Plasch,
+ *      - initial implementation and rework communication infrastructure
+ *    Martin Melik-Merkumians - fixes DT_TO_TOD
+ *******************************************************************************/
 #ifndef CONVERT_FUNCTIONS_H_
 #define CONVERT_FUNCTIONS_H_
 
@@ -61,22 +62,23 @@ inline const CIEC_DATE DT_TO_DATE(const CIEC_DATE_AND_TIME &paVal){
   time_t t = static_cast<time_t>(nBuffer / 1000);
   struct tm *ptm = forte_localtime(&t);
 
-  if(ptm == 0)
+  if(0 == ptm){
     return CIEC_DATE(0);
+  }
 
   ptm->tm_hour = 0;
   ptm->tm_min = 0;
   ptm->tm_sec = 0;
 
   t = forte_mktime(ptm);
-  if(t == (time_t) -1)
+  if((time_t) -1 == t){
     return CIEC_DATE(0);
+  }
 
   return CIEC_DATE(t * 1000ULL);
 }
 
 inline const CIEC_DATE_AND_TIME DATE_TO_DT(const CIEC_DATE &paVal){
-  //this should be sufficient
   return CIEC_DATE_AND_TIME((TForteUInt64) paVal);
 }
 
@@ -85,14 +87,11 @@ inline const CIEC_TIME_OF_DAY DT_TO_TOD(const CIEC_DATE_AND_TIME &paVal){
   time_t t = static_cast<time_t>(nBuffer / 1000);
   struct tm *ptm = forte_localtime(&t);
 
-  if(ptm == 0)
+  if(0 == ptm){
     return CIEC_TIME_OF_DAY(0);
+  }
 
-  ptm->tm_hour = 0;
-  ptm->tm_min = 0;
-  ptm->tm_sec = 0;
-
-  return CIEC_TIME_OF_DAY((TForteUInt64) (ptm->tm_hour * 3600 + ptm->tm_min * 60 + ptm->tm_sec) * 1000ULL + (nBuffer % 1000));
+  return CIEC_TIME_OF_DAY(static_cast<TForteUInt64>( (ptm->tm_hour * UINT64_C(3600) + ptm->tm_min * UINT64_C(60) + ptm->tm_sec) * UINT64_C(1000) + (nBuffer % UINT64_C(1000))));
 }
 #endif
 
@@ -100,129 +99,129 @@ inline const CIEC_TIME_OF_DAY DT_TO_TOD(const CIEC_DATE_AND_TIME &paVal){
 //   WSTRING_TO_*  functions
 //********************************************************************************************
 #ifdef FORTE_USE_WSTRING_DATATYPE
-  inline const CIEC_BOOL WSTRING_TO_BOOL(const CIEC_WSTRING &paVal){
-    CIEC_BOOL tempVal;
-    const char *pacBuffer = paVal.getValue();
-    tempVal.fromString(pacBuffer);
-    return tempVal;
-  }
+inline const CIEC_BOOL WSTRING_TO_BOOL(const CIEC_WSTRING &paVal){
+  CIEC_BOOL tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_BYTE WSTRING_TO_BYTE(const CIEC_WSTRING &paVal){
-      CIEC_BYTE tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_BYTE WSTRING_TO_BYTE(const CIEC_WSTRING &paVal){
+  CIEC_BYTE tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_DWORD WSTRING_TO_DWORD(const CIEC_WSTRING &paVal){
-      CIEC_DWORD tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_DWORD WSTRING_TO_DWORD(const CIEC_WSTRING &paVal){
+  CIEC_DWORD tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_WORD WSTRING_TO_WORD(const CIEC_WSTRING &paVal){
-    CIEC_WORD tempVal;
-    const char *pacBuffer = paVal.getValue();
-    tempVal.fromString(pacBuffer);
-    return tempVal;
-  }
+inline const CIEC_WORD WSTRING_TO_WORD(const CIEC_WSTRING &paVal){
+  CIEC_WORD tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_DINT WSTRING_TO_DINT(const CIEC_WSTRING &paVal){
-      CIEC_DINT tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_DINT WSTRING_TO_DINT(const CIEC_WSTRING &paVal){
+  CIEC_DINT tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_INT WSTRING_TO_INT(const CIEC_WSTRING &paVal){
-      CIEC_INT tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_INT WSTRING_TO_INT(const CIEC_WSTRING &paVal){
+  CIEC_INT tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_UINT WSTRING_TO_UINT(const CIEC_WSTRING &paVal){
-    CIEC_UINT tempVal;
-    const char *pacBuffer = paVal.getValue();
-    tempVal.fromString(pacBuffer);
-    return tempVal;
-  }
+inline const CIEC_UINT WSTRING_TO_UINT(const CIEC_WSTRING &paVal){
+  CIEC_UINT tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_UDINT WSTRING_TO_UDINT(const CIEC_WSTRING &paVal){
-    CIEC_UDINT tempVal;
-    const char *pacBuffer = paVal.getValue();
-    tempVal.fromString(pacBuffer);
-    return tempVal;
-  }
+inline const CIEC_UDINT WSTRING_TO_UDINT(const CIEC_WSTRING &paVal){
+  CIEC_UDINT tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_USINT WSTRING_TO_USINT(const CIEC_WSTRING &paVal){
-    CIEC_USINT tempVal;
-    const char *pacBuffer = paVal.getValue();
-    tempVal.fromString(pacBuffer);
-    return tempVal;
-  }
+inline const CIEC_USINT WSTRING_TO_USINT(const CIEC_WSTRING &paVal){
+  CIEC_USINT tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_STRING WSTRING_TO_STRING(const CIEC_WSTRING &paVal){
-      CIEC_STRING tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_STRING WSTRING_TO_STRING(const CIEC_WSTRING &paVal){
+  CIEC_STRING tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_TIME WSTRING_TO_TIME(const CIEC_WSTRING &paVal){
-      CIEC_TIME tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_TIME WSTRING_TO_TIME(const CIEC_WSTRING &paVal){
+  CIEC_TIME tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_SINT WSTRING_TO_SINT(const CIEC_WSTRING &paVal){
-      CIEC_SINT tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_SINT WSTRING_TO_SINT(const CIEC_WSTRING &paVal){
+  CIEC_SINT tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
 #ifdef FORTE_USE_REAL_DATATYPE
-  inline const CIEC_REAL WSTRING_TO_REAL(const CIEC_WSTRING &paVal){
-      CIEC_REAL tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_REAL WSTRING_TO_REAL(const CIEC_WSTRING &paVal){
+  CIEC_REAL tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 #endif
 
 #ifdef FORTE_USE_LREAL_DATATYPE
-  inline const CIEC_LREAL WSTRING_TO_LREAL(const CIEC_WSTRING &paVal){
-      CIEC_LREAL tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_LREAL WSTRING_TO_LREAL(const CIEC_WSTRING &paVal){
+  CIEC_LREAL tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 #endif
 
 #ifdef FORTE_USE_64BIT_DATATYPES
-  inline const CIEC_LINT WSTRING_TO_LINT(const CIEC_WSTRING &paVal){
-      CIEC_LINT tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_LINT WSTRING_TO_LINT(const CIEC_WSTRING &paVal){
+  CIEC_LINT tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_LWORD WSTRING_TO_LWORD(const CIEC_WSTRING &paVal){
-      CIEC_LWORD tempVal;
-      const char *pacBuffer = paVal.getValue();
-      tempVal.fromString(pacBuffer);
-      return tempVal;
-  }
+inline const CIEC_LWORD WSTRING_TO_LWORD(const CIEC_WSTRING &paVal){
+  CIEC_LWORD tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 
-  inline const CIEC_ULINT WSTRING_TO_ULINT(const CIEC_WSTRING &paVal){
-        CIEC_ULINT tempVal;
-        const char *pacBuffer = paVal.getValue();
-        tempVal.fromString(pacBuffer);
-        return tempVal;
-  }
+inline const CIEC_ULINT WSTRING_TO_ULINT(const CIEC_WSTRING &paVal){
+  CIEC_ULINT tempVal;
+  const char *pacBuffer = paVal.getValue();
+  tempVal.fromString(pacBuffer);
+  return tempVal;
+}
 #endif
 #endif
 
@@ -360,107 +359,48 @@ inline const CIEC_WSTRING STRING_TO_WSTRING(const CIEC_STRING &paVal){
 //   LREAL_TO_*  functions
 //********************************************************************************************
 #ifdef FORTE_USE_LREAL_DATATYPE
-inline const CIEC_BOOL LREAL_TO_BOOL(const CIEC_LREAL &paVal){
-	return CIEC_BOOL((TForteDFloat)0.0 != paVal ? true : false);
-}
 
 inline const CIEC_LWORD LREAL_TO_LWORD(const CIEC_LREAL &paVal){
-  return CIEC_LWORD( (0 < paVal) ? (TForteLWord)paVal : CIEC_LWORD::scm_nMinVal);
-}
-
-inline const CIEC_BYTE LREAL_TO_BYTE(const CIEC_LREAL &paVal){
-  TForteByte nBuf = static_cast<TForteByte>(paVal);
-  if(CIEC_BYTE::scm_nMaxVal < paVal){
-    nBuf = CIEC_BYTE::scm_nMaxVal;
-  }
-  else{
-    if(CIEC_BYTE::scm_nMinVal > paVal){
-      nBuf = CIEC_BYTE::scm_nMinVal;
-    }
-  }
-  return CIEC_BYTE(nBuf);
-}
-
-inline const CIEC_WORD LREAL_TO_WORD(const CIEC_LREAL &paVal){
-  TForteWord nBuf = static_cast<TForteWord>(paVal);
-  if(CIEC_WORD::scm_nMaxVal < paVal){
-    nBuf = CIEC_WORD::scm_nMaxVal;
-  }
-  else{
-    if(CIEC_WORD::scm_nMinVal > paVal){
-      nBuf = CIEC_WORD::scm_nMinVal;
-    }
-  }
-  return CIEC_WORD(nBuf);
-}
-
-inline const CIEC_DWORD LREAL_TO_DWORD(const CIEC_LREAL &paVal){
-  TForteDWord nBuf = static_cast<TForteDWord>(paVal);
-  if(CIEC_DWORD::scm_nMaxVal < paVal){
-    nBuf = CIEC_DWORD::scm_nMaxVal;
-  }
-  else{
-    if(CIEC_DWORD::scm_nMinVal > paVal){
-      nBuf = CIEC_DWORD::scm_nMinVal;
-    }
-  }
-  return CIEC_DWORD(nBuf);
+  return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 
 #ifdef FORTE_USE_REAL_DATATYPE
 inline const CIEC_REAL LREAL_TO_REAL(const CIEC_LREAL &paVal){
-  CIEC_REAL tempVal;
-  CIEC_ANY::specialCast(const_cast<CIEC_LREAL &>(paVal), tempVal);
-  return tempVal;
+  return CIEC_ANY::cast<CIEC_REAL>(paVal);
 }
 #endif
 
 inline const CIEC_USINT LREAL_TO_USINT(const CIEC_LREAL &paVal){
-  CIEC_USINT tempVal;
-  if(0 < paVal){
-    CIEC_ANY::specialCast(const_cast<CIEC_LREAL &>(paVal), tempVal);
-  }
-  return tempVal;
+  return CIEC_ANY::cast<CIEC_USINT>(paVal);
 }
 
 inline const CIEC_UDINT LREAL_TO_UDINT(const CIEC_LREAL &paVal){
-  CIEC_UDINT tempVal;
-  if(0 < paVal){
-    CIEC_ANY::specialCast(const_cast<CIEC_LREAL &>(paVal), tempVal);
-  }
-  return tempVal;
+  return CIEC_ANY::cast<CIEC_UDINT>(paVal);
 }
 
 inline const CIEC_UINT LREAL_TO_UINT(const CIEC_LREAL &paVal){
-	CIEC_UINT tempVal;
-	if(0 < paVal){
-		CIEC_ANY::specialCast(const_cast<CIEC_LREAL &>(paVal), tempVal);
-	}
-	return tempVal;
+  return CIEC_ANY::cast<CIEC_UINT>(paVal);
 }
 
 inline const CIEC_ULINT LREAL_TO_ULINT(const CIEC_LREAL &paVal){
-  CIEC_ULINT tempVal;
-  if(0 < paVal){
-    CIEC_ANY::specialCast(const_cast<CIEC_LREAL &>(paVal), tempVal);
-  }
-  return tempVal;
+  return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 
 inline CIEC_ANY::TLargestIntValueType LREAL_TO_XINT(const CIEC_LREAL &paVal){
   CIEC_ANY::TLargestIntValueType temp;
-  #if defined(WIN32) || defined(VXWORKS)
-    temp = (CIEC_ANY::TLargestIntValueType)floor(static_cast<TForteDFloat>(paVal) + 0.5);
-  #else
-    temp = lroundf(static_cast<TForteFloat>(paVal));
-  #endif
+#if defined(WIN32) || defined(VXWORKS)
+  temp = (CIEC_ANY::TLargestIntValueType)floor(static_cast<TForteDFloat>(paVal) + 0.5);
+#else
+  temp = lroundf(static_cast<TForteFloat>(paVal));
+#endif
   if(static_cast<TForteDFloat>(paVal) > 0){
-    if(((temp % 2) != 0) && ((static_cast<TForteDFloat>(temp) - 0.5f) == static_cast<TForteDFloat>(paVal))){
-        temp = temp - 1;
+    if((0 != (temp % 2)) && ((static_cast<TForteDFloat>(temp) - 0.5f) == static_cast<TForteDFloat>(paVal))){
+      temp = temp - 1;
     }
-  }else{
-    if(((temp % 2) != 0) && ((static_cast<TForteDFloat>(temp) + 0.5f) == static_cast<TForteDFloat>(paVal))){
-         temp = temp + 1;
+  }
+  else{
+    if((0 != (temp % 2)) && ((static_cast<TForteDFloat>(temp) + 0.5f) == static_cast<TForteDFloat>(paVal))){
+      temp = temp + 1;
     }
   }
   return temp;
@@ -483,9 +423,9 @@ inline const CIEC_INT LREAL_TO_INT(const CIEC_LREAL &paVal){
 }
 
 inline const CIEC_STRING LREAL_TO_STRING(const CIEC_LREAL &paVal){
-	CIEC_STRING string;
-	stringConverter(string, paVal);
-	return string;
+  CIEC_STRING string;
+  stringConverter(string, paVal);
+  return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
@@ -495,14 +435,6 @@ inline const CIEC_WSTRING LREAL_TO_WSTRING(const CIEC_LREAL &paVal){
   return string;
 }
 #endif
-
-inline const CIEC_TIME LREAL_TO_TIME(const CIEC_LREAL &paVal){
-  if(paVal > 0){
-    return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal * FORTE_TIME_BASE_UNITS_PER_SECOND));
-  }else{
-    return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
-  }
-}
 #endif
 
 //********************************************************************************************
@@ -511,18 +443,19 @@ inline const CIEC_TIME LREAL_TO_TIME(const CIEC_LREAL &paVal){
 #ifdef FORTE_USE_REAL_DATATYPE
 inline CIEC_ANY::TLargestIntValueType REAL_TO_XINT(const CIEC_REAL &paVal){
   CIEC_ANY::TLargestIntValueType temp;
-  #if defined(WIN32) || defined(VXWORKS)
-    temp = (CIEC_ANY::TLargestIntValueType)floor(static_cast<TForteFloat>(paVal) + 0.5);
-  #else
-    temp = lroundf(static_cast<TForteFloat>(paVal));
-  #endif
+#if defined(WIN32) || defined(VXWORKS)
+  temp = (CIEC_ANY::TLargestIntValueType)floor(static_cast<TForteFloat>(paVal) + 0.5);
+#else
+  temp = lroundf(static_cast<TForteFloat>(paVal));
+#endif
   if(static_cast<TForteFloat>(paVal) > 0){
-    if(((temp % 2) != 0) && ((static_cast<TForteFloat>(temp) - 0.5f) == static_cast<TForteFloat>(paVal))){
-        temp = temp - 1;
+    if((0 != (temp % 2)) && ((static_cast<TForteFloat>(temp) - 0.5f) == static_cast<TForteFloat>(paVal))){
+      temp = temp - 1;
     }
-  }else{
-    if(((temp % 2) != 0) && ((static_cast<TForteFloat>(temp) + 0.5f) == static_cast<TForteFloat>(paVal))){
-         temp = temp + 1;
+  }
+  else{
+    if((0 != (temp % 2)) && ((static_cast<TForteFloat>(temp) + 0.5f) == static_cast<TForteFloat>(paVal))){
+      temp = temp + 1;
     }
   }
   return temp;
@@ -531,10 +464,6 @@ inline CIEC_ANY::TLargestIntValueType REAL_TO_XINT(const CIEC_REAL &paVal){
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LINT REAL_TO_LINT(const CIEC_REAL &paVal){
   return CIEC_LINT( static_cast<CIEC_LINT::TValueType>(REAL_TO_XINT(paVal)) );
-}
-
-inline const CIEC_LWORD REAL_TO_LWORD(const CIEC_REAL &paVal){
-  return CIEC_LWORD( (0 < paVal) ? (TForteLWord)paVal : CIEC_LWORD::scm_nMinVal);
 }
 
 inline const CIEC_ULINT REAL_TO_ULINT(const CIEC_REAL &paVal){
@@ -587,9 +516,9 @@ inline const CIEC_UDINT REAL_TO_UDINT(const CIEC_REAL &paVal){
 }
 
 inline const CIEC_STRING REAL_TO_STRING(const CIEC_REAL &paVal){
-	CIEC_STRING string;
-	stringConverter(string, paVal);
-	return string;
+  CIEC_STRING string;
+  stringConverter(string, paVal);
+  return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
@@ -599,44 +528,6 @@ inline const CIEC_WSTRING REAL_TO_WSTRING(const CIEC_REAL &paVal){
   return string;
 }
 #endif
-
-inline const CIEC_TIME REAL_TO_TIME(const CIEC_REAL &paVal){
-  if(paVal > 0){
-    return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal * FORTE_TIME_BASE_UNITS_PER_SECOND));
-  }else{
-    return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
-  }
-}
-
-inline const CIEC_BOOL REAL_TO_BOOL(const CIEC_REAL &paVal){
-  return CIEC_BOOL((TForteFloat)0.0 != paVal ? true : false);
-}
-
-inline const CIEC_BYTE REAL_TO_BYTE(const CIEC_REAL &paVal){
-  TForteByte nBuf = static_cast<TForteByte>(paVal);
-  if(CIEC_BYTE::scm_nMaxVal < paVal){
-    nBuf = CIEC_BYTE::scm_nMaxVal;
-  }
-  else{
-    if(CIEC_BYTE::scm_nMinVal > paVal){
-      nBuf = CIEC_BYTE::scm_nMinVal;
-    }
-  }
-  return CIEC_BYTE(nBuf);
-}
-
-inline const CIEC_WORD REAL_TO_WORD(const CIEC_REAL &paVal){
-  TForteWord nBuf = static_cast<TForteWord>(paVal);
-  if(CIEC_WORD::scm_nMaxVal < paVal){
-    nBuf = CIEC_WORD::scm_nMaxVal;
-  }
-  else{
-    if(CIEC_WORD::scm_nMinVal > paVal){
-      nBuf = CIEC_WORD::scm_nMinVal;
-    }
-  }
-  return CIEC_WORD(nBuf);
-}
 
 inline const CIEC_DWORD REAL_TO_DWORD(const CIEC_REAL &paVal){
   TForteDWord nBuf = static_cast<TForteDWord>(paVal);
@@ -655,118 +546,10 @@ inline const CIEC_DWORD REAL_TO_DWORD(const CIEC_REAL &paVal){
 //********************************************************************************************
 //   TIME_TO_*  functions
 //********************************************************************************************
-#ifdef FORTE_USE_64BIT_DATATYPES
-inline const CIEC_BYTE TIME_TO_BYTE(const CIEC_TIME &paVal){
-  return CIEC_BYTE(static_cast<TForteByte>(static_cast<TForteDFloat>(paVal.operator TForteInt64()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
-}
-
-inline const CIEC_WORD TIME_TO_WORD(const CIEC_TIME &paVal){
-  return CIEC_WORD(static_cast<TForteUInt16>(static_cast<TForteDFloat>(paVal.operator TForteInt64()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
-}
-
-inline const CIEC_DWORD TIME_TO_DWORD(const CIEC_TIME &paVal){
-  return CIEC_DWORD(static_cast<TForteUInt32>(static_cast<TForteDFloat>(paVal.operator TForteInt64()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
-}
-
-inline const CIEC_UDINT TIME_TO_UDINT(const CIEC_TIME &paVal){
-  return CIEC_UDINT(static_cast<TForteUInt32>(static_cast<TForteDFloat>(paVal.operator TForteInt64()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
-}
-
-inline const CIEC_UINT TIME_TO_UINT(const CIEC_TIME &paVal){
-  return CIEC_UINT(static_cast<TForteUInt16>(static_cast<TForteDFloat>(paVal.operator TForteInt64()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
-}
-
-inline const CIEC_SINT TIME_TO_SINT(const CIEC_TIME &paVal){
-  return CIEC_SINT(static_cast<TForteInt8>(static_cast<TForteDFloat>(paVal.operator TForteInt64()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
-}
-
-inline const CIEC_USINT TIME_TO_USINT(const CIEC_TIME &paVal){
-  return CIEC_USINT(static_cast<TForteUInt8>(static_cast<TForteDFloat>(paVal.operator TForteInt64()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
-}
-
-inline const CIEC_DINT TIME_TO_DINT(const CIEC_TIME &paVal){
-  return CIEC_DINT(static_cast<TForteInt32>(static_cast<TForteDFloat>(paVal.operator TForteInt64()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
-}
-
-inline const CIEC_INT TIME_TO_INT(const CIEC_TIME &paVal){
-  return CIEC_INT(static_cast<TForteInt16>(static_cast<TForteDFloat>(paVal.operator TForteInt64()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
-}
-#else
-inline const CIEC_BYTE TIME_TO_BYTE(const CIEC_TIME &paVal){
-  return CIEC_BYTE(static_cast<TForteByte>(static_cast<TForteFloat>(paVal.operator TForteInt32()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
-}
-
-inline const CIEC_WORD TIME_TO_WORD(const CIEC_TIME &paVal){
-  return CIEC_WORD(static_cast<TForteUInt16>(static_cast<TForteFloat>(paVal.operator TForteInt32()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
-}
-
-inline const CIEC_DWORD TIME_TO_DWORD(const CIEC_TIME &paVal){
-  return CIEC_DWORD(static_cast<TForteUInt32>(static_cast<TForteFloat>(paVal.operator TForteInt32()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
-}
-
-inline const CIEC_UDINT TIME_TO_UDINT(const CIEC_TIME &paVal){
-  return CIEC_UDINT(static_cast<TForteUInt32>(static_cast<TForteFloat>(paVal.operator TForteInt32()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
-}
-
-inline const CIEC_UINT TIME_TO_UINT(const CIEC_TIME &paVal){
-  return CIEC_UINT(static_cast<TForteUInt16>(static_cast<TForteFloat>(paVal.operator TForteInt32()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
-}
-
-inline const CIEC_SINT TIME_TO_SINT(const CIEC_TIME &paVal){
-  return CIEC_SINT(static_cast<TForteInt8>(static_cast<TForteFloat>(paVal.operator TForteInt32()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
-}
-
-inline const CIEC_USINT TIME_TO_USINT(const CIEC_TIME &paVal){
-  return CIEC_USINT(static_cast<TForteUInt8>(static_cast<TForteFloat>(paVal.operator TForteInt32()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
-}
-
-inline const CIEC_DINT TIME_TO_DINT(const CIEC_TIME &paVal){
-  return CIEC_DINT(static_cast<TForteInt32>(static_cast<TForteFloat>(paVal.operator TForteInt32()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
-}
-
-inline const CIEC_INT TIME_TO_INT(const CIEC_TIME &paVal){
-  return CIEC_INT(static_cast<TForteInt16>(static_cast<TForteFloat>(paVal.operator TForteInt32()) /FORTE_TIME_BASE_UNITS_PER_SECOND));
-}
-#endif
-
-inline const CIEC_BOOL TIME_TO_BOOL(const CIEC_TIME &paVal){
-  return CIEC_BOOL(0 != paVal.getInMiliSeconds() ? true : false);
-}
-
-#ifdef FORTE_USE_64BIT_DATATYPES
-inline const CIEC_LWORD TIME_TO_LWORD(const CIEC_TIME &paVal){
-  return CIEC_LWORD(static_cast<TForteLWord>(paVal.operator TForteInt64()) /FORTE_TIME_BASE_UNITS_PER_SECOND);
-}
-
-inline const CIEC_LINT TIME_TO_LINT(const CIEC_TIME &paVal){
-  return CIEC_LINT(static_cast<TForteInt64>(paVal.operator TForteInt64()) /FORTE_TIME_BASE_UNITS_PER_SECOND);
-}
-
-inline const CIEC_ULINT TIME_TO_ULINT(const CIEC_TIME &paVal){
-  return CIEC_ULINT(static_cast<TForteUInt64>(paVal.operator TForteInt64()) /FORTE_TIME_BASE_UNITS_PER_SECOND);
-}
-#endif
-
-#ifdef FORTE_USE_REAL_DATATYPE
-inline const CIEC_REAL TIME_TO_REAL(const CIEC_TIME &paVal){
-#ifdef FORTE_USE_64BIT_DATATYPES
-  return CIEC_REAL(static_cast<TForteFloat>(paVal.operator TForteInt64()) /FORTE_TIME_BASE_UNITS_PER_SECOND);
-#else
-  return CIEC_REAL(static_cast<TForteFloat>(paVal.operator TForteInt32()) /FORTE_TIME_BASE_UNITS_PER_SECOND);
-#endif
-}
-#endif
-
-#ifdef FORTE_USE_LREAL_DATATYPE
-inline const CIEC_LREAL TIME_TO_LREAL(const CIEC_TIME &paVal){
-  return CIEC_LREAL(static_cast<TForteDFloat>(paVal.operator TForteInt64()) /FORTE_TIME_BASE_UNITS_PER_SECOND);
-}
-#endif
-
 inline const CIEC_STRING TIME_TO_STRING(const CIEC_TIME &paVal){
-	CIEC_STRING string;
-	stringConverter(string, paVal);
-	return string;
+  CIEC_STRING string;
+  stringConverter(string, paVal);
+  return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
@@ -781,69 +564,57 @@ inline const CIEC_WSTRING TIME_TO_WSTRING(const CIEC_TIME &paVal){
 //   BOOL_TO_*  functions
 //********************************************************************************************
 inline const CIEC_BYTE BOOL_TO_BYTE(const CIEC_BOOL &paVal){
-  return CIEC_BYTE((TForteByte)((true == paVal) ? 1 : 0));
+  return CIEC_ANY::cast<CIEC_BYTE>(paVal);
 }
 
 inline const CIEC_DINT BOOL_TO_DINT(const CIEC_BOOL &paVal){
-  return CIEC_DINT((TForteInt32)((true == paVal) ? 1 : 0));
+  return CIEC_ANY::cast<CIEC_DINT>(paVal);
 }
 
 inline const CIEC_DWORD BOOL_TO_DWORD(const CIEC_BOOL &paVal){
-  return CIEC_DWORD((TForteDWord)((true == paVal) ? 1 : 0));
+  return CIEC_ANY::cast<CIEC_DWORD>(paVal);
 }
 
 inline const CIEC_INT BOOL_TO_INT(const CIEC_BOOL &paVal){
-  return CIEC_INT((TForteInt16)((true == paVal) ? 1 : 0));
+  return CIEC_ANY::cast<CIEC_INT>(paVal);
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LINT BOOL_TO_LINT(const CIEC_BOOL &paVal){
-  return CIEC_LINT((TForteInt64) (true == paVal) ? 1 : 0);
-}
-#endif
-
-#ifdef FORTE_USE_LREAL_DATATYPE
-inline const CIEC_LREAL BOOL_TO_LREAL(const CIEC_BOOL &paVal){
-  return CIEC_LREAL((TForteDFloat) (true == paVal) ? 1.0 : 0.0);
+  return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LWORD BOOL_TO_LWORD(const CIEC_BOOL &paVal){
-  return CIEC_LWORD((TForteLWord) (true == paVal) ? 1 : 0);
-}
-#endif
-
-#ifdef FORTE_USE_REAL_DATATYPE
-inline const CIEC_REAL BOOL_TO_REAL(const CIEC_BOOL &paVal){
-  return CIEC_REAL((TForteFloat) (true == paVal) ? 1.0f : 0.0f);
+  return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 #endif
 
 inline const CIEC_SINT BOOL_TO_SINT(const CIEC_BOOL &paVal){
-  return CIEC_SINT((TForteInt8)((true == paVal) ? 1 : 0));
+  return CIEC_ANY::cast<CIEC_SINT>(paVal);
 }
 
 inline const CIEC_UDINT BOOL_TO_UDINT(const CIEC_BOOL &paVal){
-  return CIEC_UDINT((TForteUInt32) (true == paVal) ? 1 : 0);
+  return CIEC_ANY::cast<CIEC_UDINT>(paVal);
 }
 
 inline const CIEC_UINT BOOL_TO_UINT(const CIEC_BOOL &paVal){
-  return CIEC_UINT((TForteUInt16)((true == paVal) ? 1 : 0));
+  return CIEC_ANY::cast<CIEC_UINT>(paVal);
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_ULINT BOOL_TO_ULINT(const CIEC_BOOL &paVal){
-  return CIEC_ULINT((TForteUInt64) (true == paVal) ? 1 : 0);
+  return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 #endif
 
 inline const CIEC_USINT BOOL_TO_USINT(const CIEC_BOOL &paVal){
-  return CIEC_USINT((TForteUInt8)( (true == paVal) ? 1 : 0));
+  return CIEC_ANY::cast<CIEC_USINT>(paVal);
 }
 
 inline const CIEC_WORD BOOL_TO_WORD(const CIEC_BOOL &paVal){
-  return CIEC_WORD((TForteWord)((true == paVal) ? 1 : 0));
+  return CIEC_ANY::cast<CIEC_WORD>(paVal);
 }
 
 inline const CIEC_STRING BOOL_TO_STRING(const CIEC_BOOL &paVal){
@@ -860,83 +631,64 @@ inline const CIEC_WSTRING BOOL_TO_WSTRING(const CIEC_BOOL &paVal){
 }
 #endif
 
-inline const CIEC_TIME BOOL_TO_TIME(const CIEC_BOOL &paVal){
-  return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(true == paVal ? FORTE_TIME_BASE_UNITS_PER_SECOND : 0));
-}
-
 //********************************************************************************************
 //   BYTE_TO_*  functions
 //********************************************************************************************
-inline const CIEC_BOOL BYTE_TO_BOOL(const CIEC_BYTE &paVal){
-  return CIEC_BOOL((TForteByte)0 != paVal ? true : false);
-}
 
 inline const CIEC_DINT BYTE_TO_DINT(const CIEC_BYTE &paVal){
-  return CIEC_DINT((TForteInt32) paVal);
+  return CIEC_ANY::cast<CIEC_DINT>(paVal);
 }
 
 inline const CIEC_DWORD BYTE_TO_DWORD(const CIEC_BYTE &paVal){
-  return CIEC_DWORD((TForteDWord) paVal);
+  return CIEC_ANY::cast<CIEC_DWORD>(paVal);
 }
 
 inline const CIEC_INT BYTE_TO_INT(const CIEC_BYTE &paVal){
-  return CIEC_INT((TForteInt16) paVal);
+  return CIEC_ANY::cast<CIEC_INT>(paVal);
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LINT BYTE_TO_LINT(const CIEC_BYTE &paVal){
-  return CIEC_LINT((TForteInt64) paVal);
-}
-#endif
-
-#ifdef FORTE_USE_LREAL_DATATYPE
-inline const CIEC_LREAL BYTE_TO_LREAL(const CIEC_BYTE &paVal){
-  return CIEC_LREAL((TForteDFloat) paVal);
+  return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LWORD BYTE_TO_LWORD(const CIEC_BYTE &paVal){
-  return CIEC_LWORD((TForteLWord) paVal);
-}
-#endif
-
-#ifdef FORTE_USE_REAL_DATATYPE
-inline const CIEC_REAL BYTE_TO_REAL(const CIEC_BYTE &paVal){
-  return CIEC_REAL((TForteFloat) paVal);
+  return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 #endif
 
 inline const CIEC_SINT BYTE_TO_SINT(const CIEC_BYTE &paVal){
-  return CIEC_SINT((TForteInt8) (CIEC_SINT::scm_nMaxVal >= paVal) ? paVal : CIEC_SINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_SINT>(paVal);
 }
 
 inline const CIEC_UDINT BYTE_TO_UDINT(const CIEC_BYTE &paVal){
-  return CIEC_UDINT((TForteUInt32) paVal);
+  return CIEC_ANY::cast<CIEC_UDINT>(paVal);
 }
 
 inline const CIEC_UINT BYTE_TO_UINT(const CIEC_BYTE &paVal){
-  return CIEC_UINT((TForteUInt16) paVal);
+  return CIEC_ANY::cast<CIEC_UINT>(paVal);
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_ULINT BYTE_TO_ULINT(const CIEC_BYTE &paVal){
-  return CIEC_ULINT((TForteUInt64) paVal);
+  return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 #endif
 
 inline const CIEC_USINT BYTE_TO_USINT(const CIEC_BYTE &paVal){
-  return CIEC_USINT((TForteUInt8) paVal);
+  return CIEC_ANY::cast<CIEC_USINT>(paVal);
 }
 
 inline const CIEC_WORD BYTE_TO_WORD(const CIEC_BYTE &paVal){
-  return CIEC_WORD((TForteWord) paVal);
+  return CIEC_ANY::cast<CIEC_WORD>(paVal);
 }
 
 inline const CIEC_STRING BYTE_TO_STRING(const CIEC_BYTE &paVal){
-	CIEC_STRING string;
-	stringConverter(string, paVal);
-	return string;
+  CIEC_STRING string;
+  stringConverter(string, paVal);
+  return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
@@ -947,137 +699,74 @@ inline const CIEC_WSTRING BYTE_TO_WSTRING(const CIEC_BYTE &paVal){
 }
 #endif
 
-inline const CIEC_TIME BYTE_TO_TIME(const CIEC_BYTE &paVal){
-  return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal) * FORTE_TIME_BASE_UNITS_PER_SECOND);
-}
-
 //********************************************************************************************
 //   DINT_TO_*  functions
 //********************************************************************************************
-inline const CIEC_BOOL DINT_TO_BOOL(const CIEC_DINT &paVal){
-  return CIEC_BOOL((TForteInt32)0 != paVal ? true : false);
-}
-
 inline const CIEC_BYTE DINT_TO_BYTE(const CIEC_DINT &paVal){
-  TForteByte nBuf = static_cast<TForteByte>(paVal);
-  if(CIEC_BYTE::scm_nMaxVal < paVal){
-    nBuf = CIEC_BYTE::scm_nMaxVal;
-  }
-  else{
-    if(CIEC_BYTE::scm_nMinVal > paVal){
-      nBuf = CIEC_BYTE::scm_nMinVal;
-    }
-  }
-  return CIEC_BYTE(nBuf);
+  return CIEC_ANY::cast<CIEC_BYTE>(paVal);
 }
 
 inline const CIEC_DWORD DINT_TO_DWORD(const CIEC_DINT &paVal){
-  return CIEC_DWORD( ((0 < paVal) ? (TForteDWord)paVal : CIEC_DWORD::scm_nMinVal));
+  return CIEC_ANY::cast<CIEC_DWORD>(paVal);
 }
 
 inline const CIEC_INT DINT_TO_INT(const CIEC_DINT &paVal){
-  TForteInt16 nBuf = static_cast<TForteInt16>(paVal);
-  if(CIEC_INT::scm_nMaxVal < paVal){
-    nBuf = CIEC_INT::scm_nMaxVal;
-  }
-  else{
-    if(CIEC_INT::scm_nMinVal > paVal){
-      nBuf = CIEC_INT::scm_nMinVal;
-    }
-  }
-  return CIEC_INT(nBuf);
+  return CIEC_ANY::cast<CIEC_INT>(paVal);
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LINT DINT_TO_LINT(const CIEC_DINT &paVal){
-  return CIEC_LINT((TForteInt64) paVal);
+  return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_LREAL_DATATYPE
 inline const CIEC_LREAL DINT_TO_LREAL(const CIEC_DINT &paVal){
-  return CIEC_LREAL((TForteDFloat) paVal);
+  return CIEC_ANY::cast<CIEC_LREAL>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LWORD DINT_TO_LWORD(const CIEC_DINT &paVal){
-  return CIEC_LWORD( (0 < paVal) ? (TForteLWord)paVal : CIEC_LWORD::scm_nMinVal);
+  return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_REAL_DATATYPE
 inline const CIEC_REAL DINT_TO_REAL(const CIEC_DINT &paVal){
-  return CIEC_REAL((TForteFloat) paVal);
+  return CIEC_ANY::cast<CIEC_REAL>(paVal);
 }
 #endif
 
 inline const CIEC_SINT DINT_TO_SINT(const CIEC_DINT &paVal){
-  TForteInt8 nBuf = static_cast<TForteInt8>(paVal);
-  if(CIEC_SINT::scm_nMaxVal < paVal){
-    nBuf = CIEC_SINT::scm_nMaxVal;
-  }
-  else{
-    if(CIEC_SINT::scm_nMinVal > paVal){
-      nBuf = CIEC_SINT::scm_nMinVal;
-    }
-  }
-  return CIEC_SINT(nBuf);
-}
+  return CIEC_ANY::cast<CIEC_SINT>(paVal);}
 
 inline const CIEC_UDINT DINT_TO_UDINT(const CIEC_DINT &paVal){
-  return CIEC_UDINT( (((CIEC_DINT::TValueType)CIEC_UDINT::scm_nMinVal) < paVal) ? (CIEC_UDINT::TValueType)paVal : CIEC_UDINT::scm_nMinVal);
+  return CIEC_ANY::cast<CIEC_UDINT>(paVal);
 }
 
 inline const CIEC_UINT DINT_TO_UINT(const CIEC_DINT &paVal){
-  TForteUInt16 nBuf = static_cast<TForteUInt16>(paVal);
-  if(CIEC_UINT::scm_nMaxVal < paVal){
-    nBuf = CIEC_UINT::scm_nMaxVal;
-  }
-  else{
-    if(CIEC_UINT::scm_nMinVal > paVal){
-      nBuf = CIEC_UINT::scm_nMinVal;
-    }
-  }
-  return CIEC_UINT(nBuf);
+  return CIEC_ANY::cast<CIEC_UINT>(paVal);
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_ULINT DINT_TO_ULINT(const CIEC_DINT &paVal){
-  return CIEC_ULINT( (0 < paVal) ? (TForteUInt64)paVal : CIEC_ULINT::scm_nMinVal);
+  return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 #endif
 
 inline const CIEC_USINT DINT_TO_USINT(const CIEC_DINT &paVal){
-  TForteUInt8 nBuf = static_cast<TForteUInt8>(paVal);
-  if(CIEC_USINT::scm_nMaxVal < paVal){
-    nBuf = CIEC_USINT::scm_nMaxVal;
-  }
-  else{
-    if(CIEC_USINT::scm_nMinVal > paVal){
-      nBuf = CIEC_USINT::scm_nMinVal;
-    }
-  }
-  return CIEC_USINT(nBuf);
+  return CIEC_ANY::cast<CIEC_USINT>(paVal);
 }
 
 inline const CIEC_WORD DINT_TO_WORD(const CIEC_DINT &paVal){
-  TForteWord nBuf = static_cast<TForteWord>(paVal);
-  if(CIEC_WORD::scm_nMaxVal < paVal){
-    nBuf = CIEC_WORD::scm_nMaxVal;
-  }
-  else{
-    if(CIEC_WORD::scm_nMinVal > paVal){
-      nBuf = CIEC_WORD::scm_nMinVal;
-    }
-  }
-  return CIEC_WORD(nBuf);
+  return CIEC_ANY::cast<CIEC_WORD>(paVal);
 }
 
 inline const CIEC_STRING DINT_TO_STRING(const CIEC_DINT &paVal){
-	CIEC_STRING string;
-	stringConverter(string, paVal);
-	return string;
+  CIEC_STRING string;
+  stringConverter(string, paVal);
+  return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
@@ -1088,92 +777,69 @@ inline const CIEC_WSTRING DINT_TO_WSTRING(const CIEC_DINT &paVal){
 }
 #endif
 
-inline const CIEC_TIME DINT_TO_TIME(const CIEC_DINT &paVal){
-  if(paVal > 0){
-    return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal) * FORTE_TIME_BASE_UNITS_PER_SECOND);
-  }else{
-    return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
-  }
-}
-
 //********************************************************************************************
 //   DWORD_TO_*  functions
 //********************************************************************************************
-inline const CIEC_BOOL DWORD_TO_BOOL(const CIEC_DWORD &paVal){
-  return CIEC_BOOL((TForteDWord)0 != paVal ? true : false);
-}
-
 inline const CIEC_DINT DWORD_TO_DINT(const CIEC_DWORD &paVal){
-  return CIEC_DINT((TForteInt32) static_cast<TForteInt32>(paVal));
+  return CIEC_ANY::cast<CIEC_DINT>(paVal);
 }
 
 inline const CIEC_BYTE DWORD_TO_BYTE(const CIEC_DWORD &paVal){
-  return CIEC_BYTE((TForteByte) (static_cast<TForteDWord>(CIEC_BYTE::scm_nMaxVal) >= paVal) ? static_cast<TForteByte>(paVal) : CIEC_BYTE::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_BYTE>(paVal);
 }
 
 inline const CIEC_INT DWORD_TO_INT(const CIEC_DWORD &paVal){
-  return CIEC_INT((TForteInt16) (static_cast<TForteDWord>(CIEC_INT::scm_nMaxVal) >= paVal) ? static_cast<TForteInt16>(paVal) : CIEC_INT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_INT>(paVal);
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LINT DWORD_TO_LINT(const CIEC_DWORD &paVal){
-  return CIEC_LINT((TForteInt64) paVal);
-}
-#endif
-
-#ifdef FORTE_USE_LREAL_DATATYPE
-inline const CIEC_LREAL DWORD_TO_LREAL(const CIEC_DWORD &paVal){
-  return CIEC_LREAL((TForteDFloat) paVal);
+  return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LWORD DWORD_TO_LWORD(const CIEC_DWORD &paVal){
-  return CIEC_LWORD((TForteLWord) paVal);
+  return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_REAL_DATATYPE
 inline const CIEC_REAL DWORD_TO_REAL(const CIEC_DWORD &paVal){
-  //fprintf(stderr,"DWORD_TO_REAL: %ld, %f\n", paVal.operator TForteDWord(), (TForteFloat) paVal);
-    return CIEC_REAL((TForteFloat) paVal);
+  return CIEC_ANY::cast<CIEC_REAL>(paVal);
 }
 #endif
 
 inline const CIEC_SINT DWORD_TO_SINT(const CIEC_DWORD &paVal){
-  return CIEC_SINT((TForteInt8) (static_cast<TForteDWord>(CIEC_SINT::scm_nMaxVal) >= paVal) ? static_cast<TForteInt8>(paVal) : CIEC_SINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_SINT>(paVal);
 }
 
 inline const CIEC_UDINT DWORD_TO_UDINT(const CIEC_DWORD &paVal){
-  return CIEC_UDINT((TForteUInt32) paVal);
+  return CIEC_ANY::cast<CIEC_UDINT>(paVal);
 }
 
 inline const CIEC_UINT DWORD_TO_UINT(const CIEC_DWORD &paVal){
-  return CIEC_UINT((TForteUInt16) (static_cast<TForteDWord>(CIEC_UINT::scm_nMaxVal) >= paVal) ? static_cast<TForteUInt16>(paVal) : CIEC_UINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_UINT>(paVal);
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_ULINT DWORD_TO_ULINT(const CIEC_DWORD &paVal){
-  return CIEC_ULINT((TForteUInt64) paVal);
+  return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 #endif
 
 inline const CIEC_USINT DWORD_TO_USINT(const CIEC_DWORD &paVal){
-  return CIEC_USINT((TForteUInt8) (static_cast<TForteDWord>(CIEC_USINT::scm_nMaxVal) >= paVal) ? static_cast<TForteUInt8>(paVal) : CIEC_USINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_USINT>(paVal);
 }
 
 inline const CIEC_WORD DWORD_TO_WORD(const CIEC_DWORD &paVal){
-  return CIEC_WORD((TForteWord) (static_cast<TForteDWord>(CIEC_WORD::scm_nMaxVal) >= paVal) ? static_cast<TForteWord>(paVal) : CIEC_WORD::scm_nMaxVal);
-}
-
-inline const CIEC_TIME DWORD_TO_TIME(const CIEC_DWORD &paVal){
-  return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal)* FORTE_TIME_BASE_UNITS_PER_SECOND);
+  return CIEC_ANY::cast<CIEC_WORD>(paVal);
 }
 
 inline const CIEC_STRING DWORD_TO_STRING(const CIEC_DWORD &paVal){
-	CIEC_STRING string;
-	stringConverter(string, paVal);
-	return string;
+  CIEC_STRING string;
+  stringConverter(string, paVal);
+  return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
@@ -1189,71 +855,60 @@ inline const CIEC_WSTRING DWORD_TO_WSTRING(const CIEC_DWORD &paVal){
 //********************************************************************************************
 #ifdef FORTE_USE_64BIT_DATATYPES
 
-inline const CIEC_BOOL LWORD_TO_BOOL(const CIEC_LWORD &paVal){
-  return CIEC_BOOL((TForteLWord)0 != paVal ? true : false);
-}
-
 inline const CIEC_DINT LWORD_TO_DINT(const CIEC_LWORD &paVal){
-  return CIEC_DINT((TForteInt32) (static_cast<TForteLWord>(CIEC_DINT::scm_nMaxVal) >= paVal) ? static_cast<TForteInt32>(paVal) : CIEC_DINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_DINT>(paVal);
 }
 
 inline const CIEC_BYTE LWORD_TO_BYTE(const CIEC_LWORD &paVal){
-  return CIEC_BYTE((TForteByte) (static_cast<TForteLWord>(CIEC_BYTE::scm_nMaxVal) >= paVal) ? static_cast<TForteByte>(paVal) : CIEC_BYTE::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_BYTE>(paVal);
 }
 
 inline const CIEC_INT LWORD_TO_INT(const CIEC_LWORD &paVal){
-  return CIEC_INT((TForteInt16) (static_cast<TForteLWord>(CIEC_INT::scm_nMaxVal) >= paVal) ? static_cast<TForteInt16>(paVal) : CIEC_INT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_INT>(paVal);
 }
 
 inline const CIEC_LINT LWORD_TO_LINT(const CIEC_LWORD &paVal){
-  return CIEC_LINT((TForteInt64) paVal);
+  return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
-
 
 #ifdef FORTE_USE_LREAL_DATATYPE
 inline const CIEC_LREAL LWORD_TO_LREAL(const CIEC_LWORD &paVal){
-  return CIEC_LREAL((TForteDFloat) paVal);
+  return CIEC_ANY::cast<CIEC_LREAL>(paVal);
 }
 #endif
 
 inline const CIEC_DWORD LWORD_TO_DWORD(const CIEC_LWORD &paVal){
-  return CIEC_DWORD((TForteDWord) (static_cast<TForteLWord>(CIEC_DWORD::scm_nMaxVal) >= paVal) ? static_cast<TForteDWord>(paVal) : CIEC_DWORD::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_DWORD>(paVal);
 }
-
-#ifdef FORTE_USE_REAL_DATATYPE
-inline const CIEC_REAL LWORD_TO_REAL(const CIEC_LWORD &paVal){
-  return CIEC_REAL((TForteFloat) paVal);
-}
-#endif
 
 inline const CIEC_SINT LWORD_TO_SINT(const CIEC_LWORD &paVal){
-  return CIEC_SINT((TForteInt8) (static_cast<TForteLWord>(CIEC_SINT::scm_nMaxVal) >= paVal) ? static_cast<TForteInt8>(paVal) : CIEC_SINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_SINT>(paVal);
 }
 
 inline const CIEC_UDINT LWORD_TO_UDINT(const CIEC_LWORD &paVal){
-  return CIEC_UDINT((TForteUInt32) (static_cast<TForteLWord>(CIEC_UDINT::scm_nMaxVal) >= paVal) ? static_cast<TForteUInt32>(paVal) : CIEC_UDINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_UDINT>(paVal);
 }
 
 inline const CIEC_UINT LWORD_TO_UINT(const CIEC_LWORD &paVal){
-  return CIEC_UINT((TForteUInt16) (static_cast<TForteLWord>(CIEC_UINT::scm_nMaxVal) >= paVal) ? static_cast<TForteUInt16>(paVal) : CIEC_UINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_UINT>(paVal);
 }
 
 inline const CIEC_ULINT LWORD_TO_ULINT(const CIEC_LWORD &paVal){
-  return CIEC_ULINT((TForteUInt64) paVal);
+  return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 
 inline const CIEC_USINT LWORD_TO_USINT(const CIEC_LWORD &paVal){
-  return CIEC_USINT((TForteUInt8) (static_cast<TForteLWord>(CIEC_USINT::scm_nMaxVal) >= paVal) ? static_cast<TForteUInt8>(paVal) : CIEC_USINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_USINT>(paVal);
 }
 
 inline const CIEC_WORD LWORD_TO_WORD(const CIEC_LWORD &paVal){
-  return CIEC_WORD((TForteWord) (static_cast<TForteLWord>(CIEC_WORD::scm_nMaxVal) >= paVal) ? static_cast<TForteWord>(paVal) : CIEC_WORD::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_WORD>(paVal);
 }
 
 inline const CIEC_STRING LWORD_TO_STRING(const CIEC_LWORD &paVal){
-	CIEC_STRING string;
-	stringConverter(string, paVal);
-	return string;
+  CIEC_STRING string;
+  stringConverter(string, paVal);
+  return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
@@ -1264,84 +919,77 @@ inline const CIEC_WSTRING LWORD_TO_WSTRING(const CIEC_LWORD &paVal){
 }
 #endif
 
-inline const CIEC_TIME LWORD_TO_TIME(const CIEC_LWORD &paVal){
-  return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal) * FORTE_TIME_BASE_UNITS_PER_SECOND);
-}
 #endif
 
 //********************************************************************************************
 //   UDINT_TO_*  functions
 //********************************************************************************************
-inline const CIEC_BOOL UDINT_TO_BOOL(const CIEC_UDINT &paVal){
-	return CIEC_BOOL((TForteUInt32)0 != paVal ? true : false);
-}
-
 inline const CIEC_DINT UDINT_TO_DINT(const CIEC_UDINT &paVal){
-  return CIEC_DINT((TForteInt32) (static_cast<TForteUInt32>(CIEC_DINT::scm_nMaxVal) >= paVal) ? static_cast<TForteInt32>(paVal) : CIEC_DINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_DINT>(paVal);
 }
 
 inline const CIEC_BYTE UDINT_TO_BYTE(const CIEC_UDINT &paVal){
-  return CIEC_BYTE((TForteByte) (static_cast<TForteUInt32>(CIEC_BYTE::scm_nMaxVal) >= paVal) ? static_cast<TForteByte>(paVal) : CIEC_BYTE::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_BYTE>(paVal);
 }
 
 inline const CIEC_INT UDINT_TO_INT(const CIEC_UDINT &paVal){
-  return CIEC_INT((TForteInt16) (static_cast<TForteUInt32>(CIEC_INT::scm_nMaxVal) >= paVal) ? static_cast<TForteInt16>(paVal) : CIEC_INT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_INT>(paVal);
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LINT UDINT_TO_LINT(const CIEC_UDINT &paVal){
-  return CIEC_LINT((TForteInt64) paVal);
+  return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_LREAL_DATATYPE
 inline const CIEC_LREAL UDINT_TO_LREAL(const CIEC_UDINT &paVal){
-  return CIEC_LREAL((TForteDFloat) paVal);
+  return CIEC_ANY::cast<CIEC_LREAL>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LWORD UDINT_TO_LWORD(const CIEC_UDINT &paVal){
-  return CIEC_LWORD((TForteLWord) paVal);
+  return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_REAL_DATATYPE
 inline const CIEC_REAL UDINT_TO_REAL(const CIEC_UDINT &paVal){
-  return CIEC_REAL((TForteFloat) paVal);
+  return CIEC_ANY::cast<CIEC_REAL>(paVal);
 }
 #endif
 
 inline const CIEC_SINT UDINT_TO_SINT(const CIEC_UDINT &paVal){
-  return CIEC_SINT((TForteInt8) (static_cast<TForteUInt32>(CIEC_SINT::scm_nMaxVal) >= paVal) ? static_cast<TForteInt8>(paVal) : CIEC_SINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_SINT>(paVal);
 }
 
-inline const CIEC_UDINT UDINT_TO_DWORD(const CIEC_UDINT &paVal){
-  return CIEC_UDINT((TForteDWord) paVal);
+inline const CIEC_DWORD UDINT_TO_DWORD(const CIEC_UDINT &paVal){
+  return CIEC_ANY::cast<CIEC_DWORD>(paVal);
 }
 
 inline const CIEC_UINT UDINT_TO_UINT(const CIEC_UDINT &paVal){
-  return CIEC_UINT((TForteUInt16) (static_cast<TForteUInt32>(CIEC_UINT::scm_nMaxVal) >= paVal) ? static_cast<TForteUInt16>(paVal) : CIEC_UINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_UINT>(paVal);
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_ULINT UDINT_TO_ULINT(const CIEC_UDINT &paVal){
-  return CIEC_ULINT((TForteUInt64) paVal);
+  return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 #endif
 
 inline const CIEC_USINT UDINT_TO_USINT(const CIEC_UDINT &paVal){
-  return CIEC_USINT((TForteUInt8) (static_cast<TForteUInt32>(CIEC_USINT::scm_nMaxVal) >= paVal) ? static_cast<TForteUInt8>(paVal) : CIEC_USINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_USINT>(paVal);
 }
 
 inline const CIEC_WORD UDINT_TO_WORD(const CIEC_UDINT &paVal){
-  return CIEC_WORD((TForteWord) (static_cast<TForteUInt32>(CIEC_WORD::scm_nMaxVal) >= paVal) ? static_cast<TForteWord>(paVal) : CIEC_WORD::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_WORD>(paVal);
 }
 
 inline const CIEC_STRING UDINT_TO_STRING(const CIEC_UDINT &paVal){
-	CIEC_STRING string;
-	stringConverter(string, paVal);
-	return string;
+  CIEC_STRING string;
+  stringConverter(string, paVal);
+  return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
@@ -1352,83 +1000,75 @@ inline const CIEC_WSTRING UDINT_TO_WSTRING(const CIEC_UDINT &paVal){
 }
 #endif
 
-inline const CIEC_TIME UDINT_TO_TIME(const CIEC_UDINT &paVal){
-  return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal) * FORTE_TIME_BASE_UNITS_PER_SECOND);
-}
-
 //********************************************************************************************
 //   UINT_TO_*  functions
 //********************************************************************************************
-inline const CIEC_BOOL UINT_TO_BOOL(const CIEC_UINT &paVal){
-	return CIEC_BOOL((TForteUInt16)0 != paVal ? true : false);
-}
-
 inline const CIEC_DINT UINT_TO_DINT(const CIEC_UINT &paVal){
-  return CIEC_DINT((TForteInt32) paVal);
+  return CIEC_ANY::cast<CIEC_DINT>(paVal);
 }
 
 inline const CIEC_INT UINT_TO_INT(const CIEC_UINT &paVal){
-  return CIEC_INT((TForteInt16) (CIEC_INT::scm_nMaxVal >= paVal) ? static_cast<TForteInt16>(paVal) : CIEC_INT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_INT>(paVal);
 }
 
 inline const CIEC_BYTE UINT_TO_BYTE(const CIEC_UINT &paVal){
-  return CIEC_BYTE((TForteByte) (CIEC_BYTE::scm_nMaxVal >= paVal) ? static_cast<TForteByte>(paVal) : CIEC_BYTE::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_BYTE>(paVal);
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LINT UINT_TO_LINT(const CIEC_UINT &paVal){
-  return CIEC_LINT((TForteInt64) paVal);
+  return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_LREAL_DATATYPE
 inline const CIEC_LREAL UINT_TO_LREAL(const CIEC_UINT &paVal){
-  return CIEC_LREAL((TForteDFloat) paVal);
+  return CIEC_ANY::cast<CIEC_LREAL>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LWORD UINT_TO_LWORD(const CIEC_UINT &paVal){
-  return CIEC_LWORD((TForteLWord) paVal);
+  return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_REAL_DATATYPE
 inline const CIEC_REAL UINT_TO_REAL(const CIEC_UINT &paVal){
-  return CIEC_REAL((TForteFloat) paVal);
+  return CIEC_ANY::cast<CIEC_REAL>(paVal);
 }
 #endif
 
 inline const CIEC_SINT UINT_TO_SINT(const CIEC_UINT &paVal){
-  return CIEC_SINT((TForteInt8) (CIEC_SINT::scm_nMaxVal >= paVal) ? static_cast<TForteInt8>(paVal) : CIEC_SINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_SINT>(paVal);
 }
 
 inline const CIEC_DWORD UINT_TO_DWORD(const CIEC_UINT &paVal){
-  return CIEC_DWORD((TForteDWord) paVal);
+  return CIEC_ANY::cast<CIEC_DWORD>(paVal);
 }
 
-inline const CIEC_UINT UINT_TO_UDINT(const CIEC_UINT &paVal){
-  return CIEC_UINT((TForteUInt32) paVal);
+inline const CIEC_UDINT UINT_TO_UDINT(const CIEC_UINT &paVal){
+  return CIEC_ANY::cast<CIEC_UDINT>(paVal);
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_ULINT UINT_TO_ULINT(const CIEC_UINT &paVal){
-  return CIEC_ULINT((TForteUInt64) paVal);
+  return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 #endif
 
 inline const CIEC_USINT UINT_TO_USINT(const CIEC_UINT &paVal){
-  return CIEC_USINT((TForteUInt8) (CIEC_USINT::scm_nMaxVal >= paVal) ? static_cast<TForteUInt8>(paVal) : CIEC_USINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_USINT>(paVal);
 }
 
 inline const CIEC_WORD UINT_TO_WORD(const CIEC_UINT &paVal){
-  return CIEC_WORD((TForteWord) paVal);
+  return CIEC_ANY::cast<CIEC_WORD>(paVal);
 }
 
 inline const CIEC_STRING UINT_TO_STRING(const CIEC_UINT &paVal){
-	CIEC_STRING string;
-	stringConverter(string, paVal);
-	return string;
+  CIEC_STRING string;
+  stringConverter(string, paVal);
+  return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
@@ -1439,78 +1079,71 @@ inline const CIEC_WSTRING UINT_TO_WSTRING(const CIEC_UINT &paVal){
 }
 #endif
 
-inline const CIEC_TIME UINT_TO_TIME(const CIEC_UINT &paVal){
-  return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal) * FORTE_TIME_BASE_UNITS_PER_SECOND);
-}
-
 //********************************************************************************************
 //   ULINT_TO_*  functions
 //********************************************************************************************
 #ifdef FORTE_USE_64BIT_DATATYPES
-inline const CIEC_BOOL ULINT_TO_BOOL(const CIEC_ULINT &paVal){
-	return CIEC_BOOL((TForteUInt64)0 != paVal ? true : false);
-}
 
 inline const CIEC_DINT ULINT_TO_DINT(const CIEC_ULINT &paVal){
-  return CIEC_DINT((TForteInt32) (static_cast<TForteUInt64>(CIEC_DINT::scm_nMaxVal) >= paVal) ? static_cast<TForteInt32>(paVal) : CIEC_DINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_DINT>(paVal);
 }
 
 inline const CIEC_BYTE ULINT_TO_BYTE(const CIEC_ULINT &paVal){
-  return CIEC_BYTE((TForteByte) (static_cast<TForteUInt64>(CIEC_BYTE::scm_nMaxVal) >= paVal) ? static_cast<TForteByte>(paVal) : CIEC_BYTE::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_BYTE>(paVal);
 }
 
 inline const CIEC_INT ULINT_TO_INT(const CIEC_ULINT &paVal){
-  return CIEC_INT((TForteInt16) (static_cast<TForteUInt64>(CIEC_INT::scm_nMaxVal) >= paVal) ? static_cast<TForteInt16>(paVal) : CIEC_INT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_INT>(paVal);
 }
 
 inline const CIEC_LINT ULINT_TO_LINT(const CIEC_ULINT &paVal){
-  return CIEC_LINT((TForteInt64) paVal);
+  return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
 
 #ifdef FORTE_USE_LREAL_DATATYPE
 inline const CIEC_LREAL ULINT_TO_LREAL(const CIEC_ULINT &paVal){
-  return CIEC_LREAL((TForteDFloat) paVal);
+  return CIEC_ANY::cast<CIEC_LREAL>(paVal);
 }
 #endif
 
 inline const CIEC_DWORD ULINT_TO_DWORD(const CIEC_ULINT &paVal){
-  return CIEC_DWORD((TForteDWord) (static_cast<TForteUInt64>(CIEC_DWORD::scm_nMaxVal) >= paVal) ? static_cast<TForteDWord>(paVal) : CIEC_DWORD::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_DWORD>(paVal);
 }
 
 #ifdef FORTE_USE_REAL_DATATYPE
 inline const CIEC_REAL ULINT_TO_REAL(const CIEC_ULINT &paVal){
-  return CIEC_REAL((TForteFloat) paVal);
+  return CIEC_ANY::cast<CIEC_REAL>(paVal);
 }
 #endif
 
 inline const CIEC_SINT ULINT_TO_SINT(const CIEC_ULINT &paVal){
-  return CIEC_SINT((TForteInt8) (static_cast<TForteUInt64>(CIEC_SINT::scm_nMaxVal) >= paVal) ? static_cast<TForteInt8>(paVal) : CIEC_SINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_SINT>(paVal);
 }
 
 inline const CIEC_UDINT ULINT_TO_UDINT(const CIEC_ULINT &paVal){
-  return CIEC_UDINT((TForteUInt32) (static_cast<TForteUInt64>(CIEC_UDINT::scm_nMaxVal) >= paVal) ? static_cast<TForteUInt32>(paVal) : CIEC_UDINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_UDINT>(paVal);
 }
 
 inline const CIEC_UINT ULINT_TO_UINT(const CIEC_ULINT &paVal){
-  return CIEC_UINT((TForteUInt16) (static_cast<TForteUInt64>(CIEC_UINT::scm_nMaxVal) >= paVal) ? static_cast<TForteUInt16>(paVal) : CIEC_UINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_UINT>(paVal);
 }
 
 inline const CIEC_LWORD ULINT_TO_LWORD(const CIEC_ULINT &paVal){
-  return CIEC_LWORD((TForteUInt64) paVal);
+  return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 
 inline const CIEC_USINT ULINT_TO_USINT(const CIEC_ULINT &paVal){
-  return CIEC_USINT((TForteUInt8) (static_cast<TForteUInt64>(CIEC_USINT::scm_nMaxVal) >= paVal) ? static_cast<TForteUInt8>(paVal) : CIEC_USINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_USINT>(paVal);
 }
 
 inline const CIEC_WORD ULINT_TO_WORD(const CIEC_ULINT &paVal){
-  return CIEC_WORD((TForteWord) (static_cast<TForteUInt64>(CIEC_WORD::scm_nMaxVal) >= paVal) ? static_cast<TForteWord>(paVal) : CIEC_WORD::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_WORD>(paVal);
 }
 
 inline const CIEC_STRING ULINT_TO_STRING(const CIEC_ULINT &paVal){
-	CIEC_STRING string;
-	stringConverter(string, paVal);
-	return string;
+  CIEC_STRING string;
+  stringConverter(string, paVal);
+  return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
@@ -1521,88 +1154,77 @@ inline const CIEC_WSTRING ULINT_TO_WSTRING(const CIEC_ULINT &paVal){
 }
 #endif
 
-inline const CIEC_TIME ULINT_TO_TIME(const CIEC_ULINT &paVal){
-  if(paVal > 0){
-    return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal) * FORTE_TIME_BASE_UNITS_PER_SECOND);
-  }else{
-    return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
-  }
-}
 #endif
 
 //********************************************************************************************
 //   USINT_TO_*  functions
 //********************************************************************************************
-inline const CIEC_BOOL USINT_TO_BOOL(const CIEC_USINT &paVal){
-	return CIEC_BOOL((TForteUInt8)0 != paVal ? true : false);
-}
-
 inline const CIEC_DINT USINT_TO_DINT(const CIEC_USINT &paVal){
-  return CIEC_DINT((TForteInt32) paVal);
+  return CIEC_ANY::cast<CIEC_DINT>(paVal);
 }
 
 inline const CIEC_BYTE USINT_TO_BYTE(const CIEC_USINT &paVal){
-  return CIEC_BYTE((TForteByte) paVal);
+  return CIEC_ANY::cast<CIEC_BYTE>(paVal);
 }
 
 inline const CIEC_INT USINT_TO_INT(const CIEC_USINT &paVal){
-  return CIEC_INT((TForteInt16) paVal);
+  return CIEC_ANY::cast<CIEC_INT>(paVal);
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LINT USINT_TO_LINT(const CIEC_USINT &paVal){
-  return CIEC_LINT((TForteInt64) paVal);
+  return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_LREAL_DATATYPE
 inline const CIEC_LREAL USINT_TO_LREAL(const CIEC_USINT &paVal){
-  return CIEC_LREAL((TForteDFloat) paVal);
+  return CIEC_ANY::cast<CIEC_LREAL>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LWORD USINT_TO_LWORD(const CIEC_USINT &paVal){
-  return CIEC_LWORD((TForteLWord) paVal);
+  return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_REAL_DATATYPE
 inline const CIEC_REAL USINT_TO_REAL(const CIEC_USINT &paVal){
-  return CIEC_REAL((TForteFloat) paVal);
+  return CIEC_ANY::cast<CIEC_REAL>(paVal);
 }
 #endif
 
 inline const CIEC_SINT USINT_TO_SINT(const CIEC_USINT &paVal){
-  return CIEC_SINT((TForteInt8) (CIEC_SINT::scm_nMaxVal >= paVal) ? static_cast<TForteInt8>(paVal) : CIEC_SINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_SINT>(paVal);
 }
 
 inline const CIEC_DWORD USINT_TO_DWORD(const CIEC_USINT &paVal){
-  return CIEC_DWORD((TForteDWord) paVal);
+  return CIEC_ANY::cast<CIEC_DWORD>(paVal);
 }
 
-inline const CIEC_USINT USINT_TO_UDINT(const CIEC_USINT &paVal){
-  return CIEC_USINT((TForteUInt32) paVal);
+inline const CIEC_UDINT USINT_TO_UDINT(const CIEC_USINT &paVal){
+  return CIEC_ANY::cast<CIEC_UDINT>(paVal);
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_ULINT USINT_TO_ULINT(const CIEC_USINT &paVal){
-  return CIEC_ULINT((TForteUInt64) paVal);
+  return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 #endif
 
 inline const CIEC_UINT USINT_TO_UINT(const CIEC_USINT &paVal){
-  return CIEC_UINT((TForteUInt16) paVal);
+  return CIEC_ANY::cast<CIEC_UINT>(paVal);
 }
 
 inline const CIEC_WORD USINT_TO_WORD(const CIEC_USINT &paVal){
-  return CIEC_WORD((TForteWord) paVal);
+  return CIEC_ANY::cast<CIEC_WORD>(paVal);
 }
 
 inline const CIEC_STRING USINT_TO_STRING(const CIEC_USINT &paVal){
-	CIEC_STRING string;
-	stringConverter(string, paVal);
-	return string;
+  CIEC_STRING string;
+  stringConverter(string, paVal);
+  return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
@@ -1613,83 +1235,63 @@ inline const CIEC_WSTRING USINT_TO_WSTRING(const CIEC_USINT &paVal){
 }
 #endif
 
-inline const CIEC_TIME USINT_TO_TIME(const CIEC_USINT &paVal){
-  return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal) * FORTE_TIME_BASE_UNITS_PER_SECOND);
-}
-
 //********************************************************************************************
 //   WORD_TO_*  functions
 //********************************************************************************************
-inline const CIEC_BOOL WORD_TO_BOOL(const CIEC_WORD &paVal){
-  return CIEC_BOOL((TForteWord)0 != paVal ? true : false);
-}
-
 inline const CIEC_DINT WORD_TO_DINT(const CIEC_WORD &paVal){
-  return CIEC_DINT((TForteInt32) paVal);
+  return CIEC_ANY::cast<CIEC_DINT>(paVal);
 }
 
 inline const CIEC_BYTE WORD_TO_BYTE(const CIEC_WORD &paVal){
-  return CIEC_BYTE((TForteByte) (CIEC_BYTE::scm_nMaxVal >= paVal) ? static_cast<TForteByte>(paVal) : CIEC_BYTE::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_BYTE>(paVal);
 }
 
 inline const CIEC_INT WORD_TO_INT(const CIEC_WORD &paVal){
-  return CIEC_INT((TForteInt16) static_cast<TForteInt16>(paVal));
+  return CIEC_ANY::cast<CIEC_INT>(paVal);
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LINT WORD_TO_LINT(const CIEC_WORD &paVal){
-  return CIEC_LINT((TForteInt64) paVal);
-}
-#endif
-
-#ifdef FORTE_USE_LREAL_DATATYPE
-inline const CIEC_LREAL WORD_TO_LREAL(const CIEC_WORD &paVal){
-  return CIEC_LREAL((TForteDFloat) paVal);
+  return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LWORD WORD_TO_LWORD(const CIEC_WORD &paVal){
-  return CIEC_LWORD((TForteLWord) paVal);
-}
-#endif
-
-#ifdef FORTE_USE_REAL_DATATYPE
-inline const CIEC_REAL WORD_TO_REAL(const CIEC_WORD &paVal){
-  return CIEC_REAL((TForteFloat) paVal);
+  return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 #endif
 
 inline const CIEC_SINT WORD_TO_SINT(const CIEC_WORD &paVal){
-  return CIEC_SINT((TForteInt8) (CIEC_SINT::scm_nMaxVal >= paVal) ? static_cast<TForteInt8>(paVal) : CIEC_SINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_SINT>(paVal);
 }
 
 inline const CIEC_DWORD WORD_TO_DWORD(const CIEC_WORD &paVal){
-  return CIEC_DWORD((TForteDWord) paVal);
+  return CIEC_ANY::cast<CIEC_DWORD>(paVal);
 }
 
-inline const CIEC_WORD WORD_TO_UDINT(const CIEC_WORD &paVal){
-  return CIEC_WORD((TForteUInt32) paVal);
+inline const CIEC_UDINT WORD_TO_UDINT(const CIEC_WORD &paVal){
+  return CIEC_ANY::cast<CIEC_UDINT>(paVal);
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_ULINT WORD_TO_ULINT(const CIEC_WORD &paVal){
-  return CIEC_ULINT((TForteUInt64) paVal);
+  return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 #endif
 
 inline const CIEC_USINT WORD_TO_USINT(const CIEC_WORD &paVal){
-  return CIEC_USINT((TForteUInt8) (CIEC_USINT::scm_nMaxVal >= paVal) ? static_cast<TForteUInt8>(paVal) : CIEC_USINT::scm_nMaxVal);
+  return CIEC_ANY::cast<CIEC_USINT>(paVal);
 }
 
 inline const CIEC_UINT WORD_TO_UINT(const CIEC_WORD &paVal){
-  return CIEC_UINT((TForteUInt16) paVal);
+  return CIEC_ANY::cast<CIEC_UINT>(paVal);
 }
 
 inline const CIEC_STRING WORD_TO_STRING(const CIEC_WORD &paVal){
-	CIEC_STRING string;
-	stringConverter(string, paVal);
-	return string;
+  CIEC_STRING string;
+  stringConverter(string, paVal);
+  return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
@@ -1700,118 +1302,75 @@ inline const CIEC_WSTRING WORD_TO_WSTRING(const CIEC_WORD &paVal){
 }
 #endif
 
-inline const CIEC_TIME WORD_TO_TIME(const CIEC_WORD &paVal){
-  return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal) * FORTE_TIME_BASE_UNITS_PER_SECOND);
-}
-
 //********************************************************************************************
 //   INT_TO_*  functions
 //********************************************************************************************
-inline const CIEC_BOOL INT_TO_BOOL(const CIEC_INT &paVal){
-	return CIEC_BOOL((TForteInt16)0 != paVal ? true : false);
-}
-
 inline const CIEC_BYTE INT_TO_BYTE(const CIEC_INT &paVal){
-  TForteByte nBuf = static_cast<TForteByte>(paVal);
-  if(CIEC_BYTE::scm_nMaxVal < paVal){
-    nBuf = CIEC_BYTE::scm_nMaxVal;
-  }
-  else{
-    if(CIEC_BYTE::scm_nMinVal > paVal){
-      nBuf = CIEC_BYTE::scm_nMinVal;
-    }
-  }
-  return CIEC_BYTE(nBuf);
+  return CIEC_ANY::cast<CIEC_BYTE>(paVal);
 }
 
 inline const CIEC_DWORD INT_TO_DWORD(const CIEC_INT &paVal){
-  return CIEC_DWORD((TForteDWord) ((0 < paVal) ? static_cast<TForteDWord>(paVal) : CIEC_DWORD::scm_nMinVal));
+  return CIEC_ANY::cast<CIEC_DWORD>(paVal);
 }
 
 inline const CIEC_DINT INT_TO_DINT(const CIEC_INT &paVal){
-  return CIEC_DINT((TForteInt32) paVal);
+  return CIEC_ANY::cast<CIEC_DINT>(paVal);
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LINT INT_TO_LINT(const CIEC_INT &paVal){
-  return CIEC_LINT((TForteInt64) paVal);
+  return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_LREAL_DATATYPE
 inline const CIEC_LREAL INT_TO_LREAL(const CIEC_INT &paVal){
-  return CIEC_LREAL((TForteDFloat) paVal);
+  return CIEC_ANY::cast<CIEC_LREAL>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LWORD INT_TO_LWORD(const CIEC_INT &paVal){
-  return CIEC_LWORD((TForteLWord) (0 < paVal) ? static_cast<TForteLWord>(paVal) : CIEC_LWORD::scm_nMinVal);
+  return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_REAL_DATATYPE
 inline const CIEC_REAL INT_TO_REAL(const CIEC_INT &paVal){
-  return CIEC_REAL((TForteFloat) paVal);
+  return CIEC_ANY::cast<CIEC_REAL>(paVal);
 }
 #endif
 
 inline const CIEC_SINT INT_TO_SINT(const CIEC_INT &paVal){
-  TForteInt8 nBuf = static_cast<TForteInt8>(paVal);
-  if(CIEC_SINT::scm_nMaxVal < paVal){
-    nBuf = CIEC_SINT::scm_nMaxVal;
-  }
-  else{
-    if(CIEC_SINT::scm_nMinVal > paVal){
-      nBuf = CIEC_SINT::scm_nMinVal;
-    }
-  }
-  return CIEC_SINT(nBuf);
+  return CIEC_ANY::cast<CIEC_SINT>(paVal);
 }
 
 inline const CIEC_UDINT INT_TO_UDINT(const CIEC_INT &paVal){
-  return CIEC_UDINT((TForteUInt32) (0 < paVal) ? static_cast<TForteUInt32>(paVal) : CIEC_UDINT::scm_nMinVal);
+  return CIEC_ANY::cast<CIEC_UDINT>(paVal);
 }
 
-inline const CIEC_UINT INT_TO_UINT(const CIEC_INT &paVal){
-  return CIEC_UINT((TForteUInt16) (0 < paVal) ? static_cast<TForteUInt16>(paVal) : CIEC_UINT::scm_nMinVal);
+inline const CIEC_INT INT_TO_UINT(const CIEC_INT &paVal){
+  return CIEC_ANY::cast<CIEC_INT>(paVal);
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_ULINT INT_TO_ULINT(const CIEC_INT &paVal){
-  return CIEC_ULINT((TForteUInt64) (0 < paVal) ? static_cast<TForteUInt64>(paVal) : CIEC_ULINT::scm_nMinVal);
+  return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 #endif
 
 inline const CIEC_USINT INT_TO_USINT(const CIEC_INT &paVal){
-  TForteUInt8 nBuf = static_cast<TForteUInt8>(paVal);
-  if(CIEC_USINT::scm_nMaxVal < paVal){
-    nBuf = CIEC_USINT::scm_nMaxVal;
-  }
-  else{
-    if(CIEC_USINT::scm_nMinVal > paVal){
-      nBuf = CIEC_USINT::scm_nMinVal;
-    }
-  }
-  return CIEC_USINT(nBuf);
+  return CIEC_ANY::cast<CIEC_USINT>(paVal);
 }
 
 inline const CIEC_WORD INT_TO_WORD(const CIEC_INT &paVal){
-  return CIEC_WORD((TForteWord) static_cast<TForteWord>(paVal));
+  return CIEC_ANY::cast<CIEC_WORD>(paVal);
 }
 
 inline const CIEC_STRING INT_TO_STRING(const CIEC_INT &paVal){
-	CIEC_STRING string;
-	stringConverter(string, paVal);
-	return string;
-}
-
-inline const CIEC_TIME INT_TO_TIME(const CIEC_INT &paVal){
-  if(paVal > 0 ){
-    return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal) * FORTE_TIME_BASE_UNITS_PER_SECOND);
-  }else{
-    return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
-  }
+  CIEC_STRING string;
+  stringConverter(string, paVal);
+  return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
@@ -1827,133 +1386,63 @@ inline const CIEC_WSTRING INT_TO_WSTRING(const CIEC_INT &paVal){
 //********************************************************************************************
 #ifdef FORTE_USE_64BIT_DATATYPES
 
-inline const CIEC_BOOL LINT_TO_BOOL(const CIEC_LINT &paVal){
-	return CIEC_BOOL((TForteInt64)0 != paVal ? true : false);
-}
-
 inline const CIEC_BYTE LINT_TO_BYTE(const CIEC_LINT &paVal){
-  TForteByte nBuf = static_cast<TForteByte>(paVal);
-  if(CIEC_BYTE::scm_nMaxVal < paVal){
-    nBuf = CIEC_BYTE::scm_nMaxVal;
-  }
-  else{
-    if(CIEC_BYTE::scm_nMinVal > paVal){
-      nBuf = CIEC_BYTE::scm_nMinVal;
-    }
-  }
-  return CIEC_BYTE(nBuf);
-}
+  return CIEC_ANY::cast<CIEC_BYTE>(paVal);}
 
 inline const CIEC_DWORD LINT_TO_DWORD(const CIEC_LINT &paVal){
-  return CIEC_DWORD((TForteDWord) ((0 < paVal) ? static_cast<TForteDWord>(paVal) : CIEC_DWORD::scm_nMinVal));
+  return CIEC_ANY::cast<CIEC_DWORD>(paVal);
 }
 
 inline const CIEC_DINT LINT_TO_DINT(const CIEC_LINT &paVal){
-  return CIEC_DINT((TForteInt32) paVal);
+  return CIEC_ANY::cast<CIEC_DINT>(paVal);
 }
 
 inline const CIEC_INT LINT_TO_INT(const CIEC_LINT &paVal){
-  TForteInt16 nBuf = static_cast<TForteInt16>(paVal);
-  if(CIEC_INT::scm_nMaxVal < paVal){
-    nBuf = CIEC_INT::scm_nMaxVal;
-  }
-  else{
-    if(CIEC_INT::scm_nMinVal > paVal){
-      nBuf = CIEC_INT::scm_nMinVal;
-    }
-  }
-  return CIEC_INT(nBuf);
+  return CIEC_ANY::cast<CIEC_INT>(paVal);
 }
 
 #ifdef FORTE_USE_LREAL_DATATYPE
 inline const CIEC_LREAL LINT_TO_LREAL(const CIEC_LINT &paVal){
-  return CIEC_LREAL((TForteDFloat) paVal);
+  return CIEC_ANY::cast<CIEC_LREAL>(paVal);
 }
 #endif
 
 inline const CIEC_LWORD LINT_TO_LWORD(const CIEC_LINT &paVal){
-  return CIEC_LWORD((TForteLWord) (0 < paVal) ? static_cast<TForteLWord>(paVal) : CIEC_LWORD::scm_nMinVal);
+  return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 
 #ifdef FORTE_USE_REAL_DATATYPE
 inline const CIEC_REAL LINT_TO_REAL(const CIEC_LINT &paVal){
-  return CIEC_REAL((TForteFloat) paVal);
+  return CIEC_ANY::cast<CIEC_REAL>(paVal);
 }
 #endif
 
 inline const CIEC_SINT LINT_TO_SINT(const CIEC_LINT &paVal){
-  TForteInt8 nBuf = static_cast<TForteInt8>(paVal);
-  if(CIEC_SINT::scm_nMaxVal < paVal){
-    nBuf = CIEC_SINT::scm_nMaxVal;
-  }
-  else{
-    if(CIEC_SINT::scm_nMinVal > paVal){
-      nBuf = CIEC_SINT::scm_nMinVal;
-    }
-  }
-  return CIEC_SINT(nBuf);
+  return CIEC_ANY::cast<CIEC_SINT>(paVal);
 }
 
 inline const CIEC_UDINT LINT_TO_UDINT(const CIEC_LINT &paVal){
-  TForteUInt32 nBuf = static_cast<TForteUInt32>(paVal);
-  if(static_cast<TForteInt64>(CIEC_UDINT::scm_nMaxVal) < paVal){
-    nBuf = CIEC_UDINT::scm_nMaxVal;
-  }
-  else{
-    if(0 > paVal){
-      nBuf = CIEC_UDINT::scm_nMinVal;
-    }
-  }
-  return CIEC_UDINT(nBuf);
-}
+  return CIEC_ANY::cast<CIEC_UDINT>(paVal);}
 
 inline const CIEC_UINT LINT_TO_UINT(const CIEC_LINT &paVal){
-  TForteUInt16 nBuf = static_cast<TForteUInt16>(paVal);
-  if(CIEC_UINT::scm_nMaxVal < paVal){
-    nBuf = CIEC_UINT::scm_nMaxVal;
-  }
-  else{
-    if(CIEC_UINT::scm_nMinVal > paVal){
-      nBuf = CIEC_UINT::scm_nMinVal;
-    }
-  }
-  return CIEC_UINT(nBuf);
-}
+  return CIEC_ANY::cast<CIEC_UINT>(paVal);}
 
 inline const CIEC_ULINT LINT_TO_ULINT(const CIEC_LINT &paVal){
-  return CIEC_ULINT((TForteUInt64) (0 < paVal) ? static_cast<TForteUInt64>(paVal) : CIEC_ULINT::scm_nMinVal);
+  return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 
 inline const CIEC_USINT LINT_TO_USINT(const CIEC_LINT &paVal){
-  TForteUInt8 nBuf = static_cast<TForteUInt8>(paVal);
-  if(CIEC_USINT::scm_nMaxVal < paVal){
-    nBuf = CIEC_USINT::scm_nMaxVal;
-  }
-  else{
-    if(CIEC_USINT::scm_nMinVal > paVal){
-      nBuf = CIEC_USINT::scm_nMinVal;
-    }
-  }
-  return CIEC_USINT(nBuf);
+  return CIEC_ANY::cast<CIEC_USINT>(paVal);
 }
 
 inline const CIEC_WORD LINT_TO_WORD(const CIEC_LINT &paVal){
-  TForteWord nBuf = static_cast<TForteWord>(paVal);
-  if(CIEC_WORD::scm_nMaxVal < paVal){
-    nBuf = CIEC_WORD::scm_nMaxVal;
-  }
-  else{
-    if(CIEC_WORD::scm_nMinVal > paVal){
-      nBuf = CIEC_WORD::scm_nMinVal;
-    }
-  }
-  return CIEC_WORD(nBuf);
+  return CIEC_ANY::cast<CIEC_WORD>(paVal);
 }
 
 inline const CIEC_STRING LINT_TO_STRING(const CIEC_LINT &paVal){
-	CIEC_STRING string;
-	stringConverter(string, paVal);
-	return string;
+  CIEC_STRING string;
+  stringConverter(string, paVal);
+  return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
@@ -1964,96 +1453,77 @@ inline const CIEC_WSTRING LINT_TO_WSTRING(const CIEC_LINT &paVal){
 }
 #endif
 
-inline const CIEC_TIME LINT_TO_TIME(const CIEC_LINT &paVal){
-  if(paVal > 0){
-    return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal) * FORTE_TIME_BASE_UNITS_PER_SECOND);
-  }else{
-    return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
-  }
-}
 #endif
 
 //********************************************************************************************
 //   SINT_TO_*  functions
 //********************************************************************************************
-inline const CIEC_BOOL SINT_TO_BOOL(const CIEC_SINT &paVal){
-	return CIEC_BOOL((TForteInt8)0 != paVal ? true : false);
-}
-
 inline const CIEC_BYTE SINT_TO_BYTE(const CIEC_SINT &paVal){
-  return CIEC_BYTE((TForteByte) ((0 < paVal) ? static_cast<TForteByte>(paVal) : CIEC_BYTE::scm_nMinVal));
+  return CIEC_ANY::cast<CIEC_BYTE>(paVal);
 }
 
 inline const CIEC_DWORD SINT_TO_DWORD(const CIEC_SINT &paVal){
-  return CIEC_DWORD((TForteDWord) ((0 < paVal) ? static_cast<TForteDWord>(paVal) : CIEC_DWORD::scm_nMinVal));
+  return CIEC_ANY::cast<CIEC_DWORD>(paVal);
 }
 
 inline const CIEC_DINT SINT_TO_DINT(const CIEC_SINT &paVal){
-  return CIEC_DINT((TForteInt32) paVal);
-}
-
-inline const CIEC_TIME SINT_TO_TIME(const CIEC_SINT &paVal){
-  if(paVal > 0){
-    return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paVal) * FORTE_TIME_BASE_UNITS_PER_SECOND);
-  }else{
-    return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
-  }
+  return CIEC_ANY::cast<CIEC_DINT>(paVal);
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LINT SINT_TO_LINT(const CIEC_SINT &paVal){
-  return CIEC_LINT((TForteInt64) paVal);
+  return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_LREAL_DATATYPE
 inline const CIEC_LREAL SINT_TO_LREAL(const CIEC_SINT &paVal){
-  return CIEC_LREAL((TForteDFloat) paVal);
+  return CIEC_ANY::cast<CIEC_LREAL>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LWORD SINT_TO_LWORD(const CIEC_SINT &paVal){
-  return CIEC_LWORD((TForteLWord) (0 < paVal) ? static_cast<TForteLWord>(paVal) : CIEC_LWORD::scm_nMinVal);
+  return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 #endif
 
 #ifdef FORTE_USE_REAL_DATATYPE
 inline const CIEC_REAL SINT_TO_REAL(const CIEC_SINT &paVal){
-  return CIEC_REAL((TForteFloat) paVal);
+  return CIEC_ANY::cast<CIEC_REAL>(paVal);
 }
 #endif
 
 inline const CIEC_INT SINT_TO_INT(const CIEC_SINT &paVal){
-  return CIEC_INT((TForteInt16) paVal);
+  return CIEC_ANY::cast<CIEC_INT>(paVal);
 }
 
 inline const CIEC_UDINT SINT_TO_UDINT(const CIEC_SINT &paVal){
-  return CIEC_UDINT((TForteUInt32) (0 < paVal) ? static_cast<TForteUInt32>(paVal) : CIEC_UDINT::scm_nMinVal);
+  return CIEC_ANY::cast<CIEC_UDINT>(paVal);
 }
 
 inline const CIEC_UINT SINT_TO_UINT(const CIEC_SINT &paVal){
-  return CIEC_UINT((TForteUInt16) (0 < paVal) ? static_cast<TForteUInt16>(paVal) : CIEC_UINT::scm_nMinVal);
+  return CIEC_ANY::cast<CIEC_UINT>(paVal);
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_ULINT SINT_TO_ULINT(const CIEC_SINT &paVal){
-  return CIEC_ULINT((TForteUInt64) (0 < paVal) ? static_cast<TForteUInt64>(paVal) : CIEC_ULINT::scm_nMinVal);
+  return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 #endif
 
 inline const CIEC_USINT SINT_TO_USINT(const CIEC_SINT &paVal){
-  return CIEC_USINT((TForteUInt8) (0 < paVal) ? static_cast<TForteUInt8>(paVal) : CIEC_USINT::scm_nMinVal);
+  return CIEC_ANY::cast<CIEC_USINT>(paVal);
 }
 
 inline const CIEC_WORD SINT_TO_WORD(const CIEC_SINT &paVal){
-  return CIEC_WORD((TForteWord) (0 < paVal) ? static_cast<TForteWord>(paVal) : CIEC_WORD::scm_nMinVal);
+  return CIEC_ANY::cast<CIEC_WORD>(paVal);
 }
 
 inline const CIEC_STRING SINT_TO_STRING(const CIEC_SINT &paVal){
-	CIEC_STRING string;
-	stringConverter(string, paVal);
-	return string;
+  CIEC_STRING string;
+  stringConverter(string, paVal);
+  return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE

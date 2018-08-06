@@ -42,9 +42,9 @@ class CDataConnection : public CConnection {
  *     - FALSE ... no such data connection exists
  */
     void writeData(const CIEC_ANY *pa_poValue){
-	    if(m_poValue){
-	      m_poValue->setValue(*pa_poValue);
-		  }
+      if(m_poValue){
+        m_poValue->setValue(*pa_poValue);
+      }
     };
 
 /*! \brief Read connection data value.

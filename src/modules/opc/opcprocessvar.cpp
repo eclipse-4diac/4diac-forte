@@ -28,7 +28,7 @@ void COpcProcessVar::sendItemData(){
 
 void COpcProcessVar::setNewValue(Variant pa_oNewValue){
   m_oSync.lock();
-  m_lNewValueQueue.push_back(pa_oNewValue);
+  m_lNewValueQueue.pushBack(pa_oNewValue);
   m_oSync.unlock();
 }
 
@@ -56,7 +56,7 @@ Variant COpcProcessVar::updateValue(){
   TVariantList::Iterator itEnd = m_lNewValueQueue.end();
   if(itBegin != m_lNewValueQueue.end()){
     m_oCurrentValue = retVal = (*itBegin);
-    m_lNewValueQueue.pop_front();
+    m_lNewValueQueue.popFront();
   }
   else
     retVal = m_oCurrentValue;

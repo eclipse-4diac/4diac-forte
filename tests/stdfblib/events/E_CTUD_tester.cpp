@@ -143,11 +143,11 @@ bool E_CTUD_tester::testCase_Mix(){
     }
 
     triggerEvent(0);
-		if(!checkCU(1)){
-			return false;
-		}
+    if(!checkCU(1)){
+      return false;
+    }
 
-		triggerEvent(1);
+    triggerEvent(1);
     if(!checkCD(2)){
       return false;
     }
@@ -291,7 +291,7 @@ bool E_CTUD_tester::checkCU(TForteUInt16 pa_prevCV){
   }
 
   if (!checkBooleans()){
-	  return false;
+    return false;
   }
   return true;
 }
@@ -358,11 +358,11 @@ bool E_CTUD_tester::checkLD(TForteUInt16 pa_usedPV){
 }
 
 bool E_CTUD_tester::checkBooleans(){
-	if(m_oOut_QU != (m_oOut_CV >= m_oIn_PV) || (m_oOut_QD != (m_oOut_CV < 1))){
-	  std::cout << "m_oIn_PV\tm_oOut_CV\tm_oOut_QU\tm_oOut_QD\n";
-	  std::cout << m_oIn_PV << "\t" << m_oOut_CV << "\t" << m_oOut_QU << "\t" << m_oOut_QD << "\n";
-	  std::cout << "Boolean error\n";
-		return false;
-	}
-	return true;
+  if(m_oOut_QU != (m_oOut_CV >= m_oIn_PV) || (m_oOut_QD != (m_oOut_CV < 1))){
+    std::cout << "m_oIn_PV\tm_oOut_CV\tm_oOut_QU\tm_oOut_QD\n";
+    std::cout << m_oIn_PV << "\t" << m_oOut_CV << "\t" << m_oOut_QU << "\t" << m_oOut_QD << "\n";
+    std::cout << "Boolean error\n";
+    return false;
+  }
+  return true;
 }

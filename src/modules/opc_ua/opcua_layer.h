@@ -87,6 +87,9 @@ private:
    */
   forte::com_infra::EComResponse createPubSubNodes(struct FB_NodeIds **nodeIds, unsigned int numPorts, bool isSD);
 
+  forte::com_infra::EComResponse createSubscription(struct FB_NodeIds **nodeIds,
+      unsigned int numPorts, bool isSD, char* subnodePath);
+
   /**
    * Creates the OPC UA method node for the SERVER function block.
    * The method's name is the same as the name of the SERVER FB. The input and output arguments are initialized based on the RD (input) and SD (output) ports.
@@ -116,7 +119,7 @@ private:
    *
    * @return e_InitOk on success
    */
-  forte::com_infra::EComResponse createClient(const char* endpoint, const char* nodePath);
+  forte::com_infra::EComResponse createClient(const char* endpoint, const char* nodePath, bool subscription);
 
   /**
    * Response for the processInterrupt() method
@@ -197,7 +200,7 @@ private:
    * Flag used by the server method call to wait for the data to be ready.
    * It is set to false in the beginning. As soon as the RSP port is triggered, it is set to true and the method callback can process SD ports.
    */
-  bool serverMethodCallResultReady;
+  CSemaphore serverMethodCallResultReady;
 
 
 

@@ -106,7 +106,7 @@ void CPiFaceProcessInterface::CPiFaceIOHandler::run(){
 
 void CPiFaceProcessInterface::CPiFaceIOHandler::registerIXFB(CPiFaceProcessInterface *paFB){
   mReadFBListSync.lock();
-  mReadFBList.push_back(paFB);
+  mReadFBList.pushBack(paFB);
   mReadFBListSync.unlock();
 }
 
@@ -118,7 +118,7 @@ void CPiFaceProcessInterface::CPiFaceIOHandler::unregisterIXFB(CPiFaceProcessInt
   while(itRunner != itEnd){
     if(*itRunner == paFB){
       if(itRefNode == itEnd){
-        mReadFBList.pop_front();
+        mReadFBList.popFront();
       }
       else{
         mReadFBList.eraseAfter(itRefNode);

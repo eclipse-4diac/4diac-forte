@@ -21,45 +21,45 @@
 #include <criticalregion.h>
 
 forte::arch::CThreadBase<pthread_t>::TThreadHandleType CPosixThread::createThread(long paStackSize){
-	TThreadHandleType retVal = 0;
+  TThreadHandleType retVal = 0;
 
-	if(paStackSize){
-	  pthread_attr_t stAttr;
+  if(paStackSize){
+    pthread_attr_t stAttr;
 
-	  if(pthread_attr_init(&stAttr)){
+    if(pthread_attr_init(&stAttr)){
       DEVLOG_ERROR("Error could not get the default thread attributes! %s\n", strerror(errno));
       return 0;
-	  }
-	#ifdef __CYGWIN__
-	  if (pthread_attr_setstacksize (&stAttr, paStackSize)){
+    }
+  #ifdef __CYGWIN__
+    if (pthread_attr_setstacksize (&stAttr, paStackSize)){
       DEVLOG_ERROR("Error could not set the stacksize for the thread! %s\n", strerror(errno));
       return 0;
-	  }
-	#else
-	  if(pthread_attr_setstack(&stAttr, mStack, paStackSize)){
+    }
+  #else
+    if(pthread_attr_setstack(&stAttr, mStack, paStackSize)){
       DEVLOG_ERROR("Error could not set the stacksize for the thread! %s\n", strerror(errno));
       return 0;
-	  }
-	#endif
-	  if(pthread_create(&retVal, &stAttr, threadFunction, this)){
+    }
+  #endif
+    if(pthread_create(&retVal, &stAttr, threadFunction, this)){
       DEVLOG_ERROR("Error could not create the thread! %s\n", strerror(errno));
       return 0;
-	  }
-	  if(pthread_attr_destroy(&stAttr)){
+    }
+    if(pthread_attr_destroy(&stAttr)){
       DEVLOG_ERROR("Error could not free the thread attributes! %s\n", strerror(errno));
       return 0;
-	  }
-	}
-	else{
-	  if(pthread_create(&retVal, NULL, threadFunction, this)){
+    }
+  }
+  else{
+    if(pthread_create(&retVal, NULL, threadFunction, this)){
       DEVLOG_ERROR("Error could not create the thread! %s\n", strerror(errno));
       return 0;
-	  }
-	}
-	// Detach because we don't care about the thread anymore/don't need to join. To cleanup either call pthread_detach or pthread_join
-	pthread_detach(retVal);
+    }
+  }
+  // Detach because we don't care about the thread anymore/don't need to join. To cleanup either call pthread_detach or pthread_join
+  pthread_detach(retVal);
 
-	return retVal;
+  return retVal;
 }
 
 void * CPosixThread::threadFunction(void *paArguments){

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 fortiss GmbH
+ * Copyright (c) 2017 - 2018 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,14 +7,14 @@
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
 #include "io_base.h"
 
-namespace IO {
-namespace ConfigurationFB {
+using namespace forte::core::IO;
 
-Base::Base(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
+IOConfigFBBase::IOConfigFBBase(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
     const CStringDictionary::TStringId pa_nInstanceNameId,
     TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
     CEventSourceFB(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId,
@@ -23,9 +23,7 @@ Base::Base(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
 
 }
 
-Base::~Base() {
+IOConfigFBBase::~IOConfigFBBase() {
   // TODO Auto-generated destructor stub
 }
 
-} /* namespace ConfigurationFB */
-} /* namespace IO */

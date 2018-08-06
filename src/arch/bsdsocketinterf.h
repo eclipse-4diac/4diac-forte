@@ -11,10 +11,11 @@
 #ifndef BSDSOCKETINTERF_H_
 #define BSDSOCKETINTERF_H_
 
+#include <sockhand.h>
 
 class CBSDSocketInterface{
   public:
-    typedef int TSocketDescriptor;
+    typedef FORTE_SOCKET_TYPE TSocketDescriptor;
     typedef struct sockaddr_in TUDPDestAddr;
 
     static void closeSocket(TSocketDescriptor pa_nSockD);
