@@ -13,8 +13,6 @@
 #include "E_TimeOut_gen.cpp"
 #endif
 
-#ifndef FMU
-
 DEFINE_FIRMWARE_FB(FORTE_E_TimeOut, g_nStringIdE_TimeOut)
 
 const TForteInt16 FORTE_E_TimeOut::scm_anEOWithIndexes[] = { -1 };
@@ -52,43 +50,3 @@ EMGMResponse FORTE_E_TimeOut::changeFBExecutionState(EMGMCommandType pa_unComman
   }
   return eRetVal;
 }
-
-#else
-
-DEFINE_FIRMWARE_FB(FORTE_E_TimeOut, g_nStringIdE_TimeOut)
-
-const TForteInt16 FORTE_E_TimeOut::scm_anEOWithIndexes[] = {-1};
-const SAdapterInstanceDef FORTE_E_TimeOut::scm_astAdapterInstances[] = {
-{g_nStringIdATimeOut, g_nStringIdTimeOutSocket, false }};
-
-const SFBInterfaceSpec FORTE_E_TimeOut::scm_stFBInterfaceSpec = {
-  0,  0,  0,  0,
-  0,  0,   0, 0,  0,  0, 0,
-  0,  0, 0,
-  1,scm_astAdapterInstances};
-
-
-const SCFB_FBInstanceData FORTE_E_TimeOut::scm_astInternalFBs[] = {
-  {g_nStringIdDLY, g_nStringIdE_DELAY},
-};
-
-const SCFB_FBConnectionData FORTE_E_TimeOut::scm_astEventConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdTimeOutSocket, g_nStringIdSTART), CCompositeFB::scm_nAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdDLY, g_nStringIdSTART), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdTimeOutSocket, g_nStringIdSTOP), CCompositeFB::scm_nAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdDLY, g_nStringIdSTOP), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdDLY, g_nStringIdEO), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdTimeOutSocket, g_nStringIdTimeOut), CCompositeFB::scm_nAdapterMarker |0},
-};
-
-const SCFB_FBConnectionData FORTE_E_TimeOut::scm_astDataConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdTimeOutSocket, g_nStringIdDT), CCompositeFB::scm_nAdapterMarker |0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdDLY, g_nStringIdDT), 0},
-};
-
-const SCFB_FBNData FORTE_E_TimeOut::scm_stFBNData = {
-  1, scm_astInternalFBs,
-  3, scm_astEventConnections,
-  0, 0,
-  1, scm_astDataConnections,
-  0, 0,
-  0, 0
-};
-
-#endif

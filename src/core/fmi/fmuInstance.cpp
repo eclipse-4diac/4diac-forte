@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright (c) 2016 fortiss GmbH
+ * Copyright (c) 2016 -2018 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,52 +17,63 @@
 #endif
 #include "device.h"
 #include "./comm/fmuHandler.h"
-#include <vector>
 #include "../basicfb.h"
 #include "../cfb.h"
 #include <stdlib.h>
+#include "../utils/criticalregion.h"
+
+fmuInstance* fmuInstance::sFmuInstance = 0;
+
+CSyncObject fmuInstance::sFmuInstanceMutex;
 
 #ifdef FMU_DEBUG
 #include "criticalregion.h"
 #include <ctime>
 #include <sstream>
-unsigned int fmuInstance::intanceNo = 0;
-std::fstream fmuInstance::staticFile;
-CPCSyncObject fmuInstance::mutex;
 void fmuInstance::printToFile(const char* message){
-  CCriticalRegion criticalRegion(fmuInstance::mutex);
-  fmuInstance::staticFile << message;
-  std::flush(fmuInstance::staticFile);
+  fmuInstance::debugFile << message;
+  std::flush(fmuInstance::debugFile);
 }
 #endif
 
 fmuInstance::fmuInstance(fmi2String instanceName, fmi2String GUID, fmi2String bootFileLocation, const fmi2CallbackFunctions *callbackFunctions) :
     CDevice(0, CStringDictionary::scm_nInvalidStringId, 0, 0),
-    m_resource(CStringDictionary::scm_nInvalidStringId, this), m_state(STATE_START_END), m_stopTime(-1) {
+    mState(STATE_START_END), mStopTime(-1), mNumberOfEcets(0), mAllowEcetToRun(false) {
+
+  CCriticalRegion criticalRegion(sFmuInstanceMutex);
+  sFmuInstance = this;
+
+  mResource = new EMB_RES(CStringDictionary::scm_nInvalidStringId, this);
+
+  static_cast<fmiTimerHandler*>(getDeviceExecution().getHandler(fmiTimerHandler::handlerIdentifier))->removeExecutionThread(mResource->getResourceEventExecution());
+  mNumberOfEcets--;
 
   for (unsigned int i = 0; i < NUMBER_OF_LOG_CATEGORIES; i++){
-    m_loggingCategories[i] = fmi2False;
+    mLoggingCategories[i] = fmi2False;
   }
 
-  this->m_instanceName = instanceName;
-  this->m_GUID = GUID;
-  this->m_bootFileLocation = bootFileLocation;
-  this->m_callbackFunctions = callbackFunctions;
+  this->mInstanceName = instanceName;
+  this->mGUID = GUID;
+  this->mBootFileLocation = bootFileLocation;
+  this->mCallbackFunctions = callbackFunctions;
+  this->mState = STATE_ERROR;
 
 #ifdef FMU_DEBUG
-  if (!fmuInstance::staticFile.is_open()){
-    std::stringstream fileName;
-    fileName << "fmu4diacDebug" << ((long) time(0)) << GUID << "_" << fmuInstance::intanceNo++ << ".txt";
-    fmuInstance::staticFile.open(fileName.str().c_str(), std::fstream::out);
-  }
+  std::stringstream fileName;
+  fileName << "fmu4diacDebug1" << ((long) time(0)) << GUID << "_" << this << ".txt";
+  fmuInstance::debugFile.open(fileName.str().c_str(), std::fstream::out);
  #endif
+
+  if(loadFBs()){
+    this->mState = STATE_INSTANTIATED;
+  }
 }
 
 fmuInstance::~fmuInstance(){
   std::map<CFunctionBlock*, std::vector<fmuValueContainer*>*>* deletingMap[2] =
   { static_cast<fmuHandler*>(static_cast<fmuHandler*>(getDeviceExecution().getHandler(fmuHandler::handlerIdentifier)))->getInputMap(), static_cast<fmuHandler*>(getDeviceExecution().getHandler(fmuHandler::handlerIdentifier))->getOutputMap() };
 
-  for(std::vector<CFunctionBlock*>::iterator it = m_commFBs.begin(); it != m_commFBs.end(); ++it){
+  for(std::vector<CFunctionBlock*>::iterator it = getCommFBs().begin(); it != getCommFBs().end(); ++it){
     for(unsigned int i = 0; i < 2; i++){
       if(deletingMap[i]->end() != deletingMap[i]->find(*it)){
         for(std::vector<fmuValueContainer*>::iterator itContainer = deletingMap[i]->at(*it)->begin(); itContainer != deletingMap[i]->at(*it)->end(); ++itContainer){
@@ -73,89 +84,60 @@ fmuInstance::~fmuInstance(){
       }
     }
   }
+  delete mResource;
 }
 
 bool fmuInstance::loadFBs(){
 
-  CFunctionBlock* devMgr = CTypeLib::createFB(g_nStringIdMGR, g_nStringIdDEV_MGR, &m_resource);
+  CFunctionBlock* devMgr = CTypeLib::createFB(g_nStringIdMGR, g_nStringIdDEV_MGR, mResource);
   devMgr->getDataInput(g_nStringIdQI)->fromString("1");
   devMgr->changeFBExecutionState(cg_nMGM_CMD_Reset);
   devMgr->changeFBExecutionState(cg_nMGM_CMD_Start);
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG(MODEL_GUID << " About to load FBs from file " << m_bootFileLocation.getValue() << "\n--------------\n")
-#endif
+  FMU_DEBUG_LOG(this, MODEL_GUID << " About to load FBs from file " << getBootFileLocation().getValue() << "\n--------------\n")
   CIEC_STRING val = "FORTE_BOOT_FILE=";
-      val.append(m_bootFileLocation.getValue());
+  val.append(mBootFileLocation.getValue());
   if(!putenv(val.getValue())){
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG(MODEL_GUID << " Set env WORKED \n--------------\n")
-#endif
-  }else{
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG(MODEL_GUID << " Set env FAILED \n--------------\n")
-#endif
+    FMU_DEBUG_LOG(this, MODEL_GUID << " Set env WORKED \n--------------\n")
   }
-  devMgr->receiveInputEvent(0, *m_resource.getResourceEventExecution()); //the first 0 is the eventID.
+  else{
+    FMU_DEBUG_LOG(this, MODEL_GUID << " Set env FAILED \n--------------\n")
+  }
+  devMgr->receiveInputEvent(0, *mResource->getResourceEventExecution()); //the first 0 is the eventID.
   delete devMgr;
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG(MODEL_GUID << " Already loaded \n--------------\n")
-#endif
+  FMU_DEBUG_LOG(this, MODEL_GUID << " Already loaded \n--------------\n")
 
-  //parameters are always after all variables
-  std::vector<fmuValueContainer*> parameters;
-  populateInputsOutputs(this, &parameters);
+  populateInputsOutputs(this);
 
-  for(std::vector<fmuValueContainer*>::iterator it = parameters.begin(); it != parameters.end(); ++it){
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG("VARIABLES: PARAMETER ADDED SUCCESSFULLY\n")
-#endif
-    m_outputsAndInputs.push_back((*it));
-  }
-#ifdef FMU_DEBUG
-  FMU_DEBUG_LOG("VARIABLES: m_outputsAndInputs has " << m_outputsAndInputs.size() << " elements\n")
-#endif
+  FMU_DEBUG_LOG(this, "VARIABLES: m_outputsAndInputs has " << mOutputsAndInputs.size() << " elements\n")
 
   return true;
 }
 
-void fmuInstance::populateInputsOutputs(forte::core::CFBContainer* resource, std::vector<fmuValueContainer*>* pa_parameters){
+void fmuInstance::populateInputsOutputs(forte::core::CFBContainer* resource){
   for(forte::core::CFBContainer::TFunctionBlockList::Iterator itRunner = resource->getFBList().begin();
       itRunner != resource->getFBList().end(); ++itRunner){
-    populateInputsAndOutputsCore(*itRunner, pa_parameters);
+    populateInputsAndOutputsCore(*itRunner);
   }
 }
 
-void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock* pa_poFB, std::vector<fmuValueContainer*>* pa_parameters){
+void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock* paFB){
 
-  CStringDictionary::TStringId functionBlockType = pa_poFB->getFBTypeId();
-  bool isParameter = false;
+  CStringDictionary::TStringId functionBlockType = paFB->getFBTypeId();
   if(g_nStringIdEMB_RES == functionBlockType){
-    populateInputsOutputs(static_cast<CResource*>(pa_poFB), pa_parameters);
+    populateInputsOutputs(static_cast<CResource*>(paFB));
     return;
-  }else if(g_nStringIdFMU_PARAM_BOOL == functionBlockType || g_nStringIdFMU_PARAM_INT == functionBlockType || g_nStringIdFMU_PARAM_REAL == functionBlockType || g_nStringIdFMU_PARAM_STRING == functionBlockType){
-    m_parametersFBs.push_back(pa_poFB);
-    CIEC_ANY::EDataTypeID type = pa_poFB->getDOFromPortId(0)->getDataTypeID();
-    fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::getValueFromType(type), true);
-    newValue->setValuePointer(pa_poFB->getDOFromPortId(0)); //PARAM
-    pa_parameters->push_back(newValue);
-    isParameter = true;
-  }
-  else if(g_nStringIdIX == functionBlockType || g_nStringIdQX == functionBlockType){
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG("VARIABLES: IO: " << pa_poFB->getInstanceName() <<  " ADDED SUCCESSFULLY\n")
-#endif
+  }else if(g_nStringIdIX == functionBlockType || g_nStringIdQX == functionBlockType){
+    FMU_DEBUG_LOG(this, "VARIABLES: IO: " << paFB->getInstanceName() <<  " ADDED SUCCESSFULLY\n")
     fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::BOOL, false);
-    CFMUProcessInterface* ioFB = static_cast<CFMUProcessInterface*>(pa_poFB);
+    CFMUProcessInterface* ioFB = static_cast<CFMUProcessInterface*>(paFB);
     ioFB->setValueContainer(newValue);
-    m_outputsAndInputs.push_back(newValue);
+    mOutputsAndInputs.push_back(newValue);
   }else if(g_nStringIdIW == functionBlockType || g_nStringIdQW == functionBlockType){
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG("VARIABLES: IO: " << pa_poFB->getInstanceName() <<  " ADDED SUCCESSFULLY\n")
-#endif
+    FMU_DEBUG_LOG(this, "VARIABLES: IO: " << paFB->getInstanceName() <<  " ADDED SUCCESSFULLY\n")
     fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::INTEGER, false);
-    CFMUProcessInterface* ioFB = static_cast<CFMUProcessInterface*>(pa_poFB);
+    CFMUProcessInterface* ioFB = static_cast<CFMUProcessInterface*>(paFB);
     ioFB->setValueContainer(newValue);
-    m_outputsAndInputs.push_back(newValue);
+    mOutputsAndInputs.push_back(newValue);
   }
   else{
     //check Communication Blocks
@@ -165,49 +147,45 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock* pa_poFB, std::vec
         || strncmp(functionBlockName, "CLIENT_", 7) == 0
         || strncmp(functionBlockName, "SERVER_", 7) == 0){
 
-      if("fmu[]" == *static_cast<CIEC_STRING*>(pa_poFB->getDIFromPortId(1))){
+      if("fmu[]" == *static_cast<CIEC_STRING*>(paFB->getDIFromPortId(1))){
         CIEC_ANY::EDataTypeID type;
         std::vector<fmuValueContainer*>* outputs = new std::vector<fmuValueContainer*>;
         std::vector<fmuValueContainer*>* inputs = new std::vector<fmuValueContainer*>;
 
-        for(unsigned int i = 2; i < pa_poFB->getFBInterfaceSpec()->m_nNumDIs; i++){
-          type = getConnectedDataType(i, true, pa_poFB);
+        for(unsigned int i = 2; i < paFB->getFBInterfaceSpec()->m_nNumDIs; i++){
+          type = getConnectedDataType(i, true, paFB);
           fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::getValueFromType(type), false);
           inputs->push_back(newValue); //if an error occur, the fmuValueContainer will have the flag error to true. This must be checked by the FMI interface to kill the simulation
-          m_outputsAndInputs.push_back(newValue);
-#ifdef FMU_DEBUG
-  FMU_DEBUG_LOG("VARIABLES: COMM: " <<   pa_poFB->getInstanceName() <<  " INPUT PORT " << i << " ADDED SUCCESSFULLY\n")
-#endif
+          mOutputsAndInputs.push_back(newValue);
+          FMU_DEBUG_LOG(this, "VARIABLES: COMM: " <<   paFB->getInstanceName() <<  " INPUT PORT " << i << " ADDED SUCCESSFULLY\n")
         }
 
-        for(unsigned int i = 2; i < pa_poFB->getFBInterfaceSpec()->m_nNumDOs; i++){
-          type = getConnectedDataType(i, false, pa_poFB);
+        for(unsigned int i = 2; i < paFB->getFBInterfaceSpec()->m_nNumDOs; i++){
+          type = getConnectedDataType(i, false, paFB);
           fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::getValueFromType(type), false);
           newValue->setCallbackArgument(newValue);
           newValue->setCallback(fmuHandler::fmuMessageArrived);
           outputs->push_back(newValue); //if an error occur, the fmuValueContainer will have the flag error to true. This must be checked by the FMI interface to kill the simulation
-          m_outputsAndInputs.push_back(newValue);
-#ifdef FMU_DEBUG
-  FMU_DEBUG_LOG("VARIABLES: COMM: " <<   pa_poFB->getInstanceName() <<  " OUTPUT PORT " << i << " ADDED SUCCESSFULLY\n")
-#endif
+          mOutputsAndInputs.push_back(newValue);
+          FMU_DEBUG_LOG(this, "VARIABLES: COMM: " <<   paFB->getInstanceName() <<  " OUTPUT PORT " << i << " ADDED SUCCESSFULLY\n")
         }
 
-        static_cast<fmuHandler*>(getDeviceExecution().getHandler(fmuHandler::handlerIdentifier))->getOutputMap()->insert(std::make_pair(pa_poFB, outputs));
-        static_cast<fmuHandler*>(getDeviceExecution().getHandler(fmuHandler::handlerIdentifier))->getInputMap()->insert(std::make_pair(pa_poFB, inputs));
-        m_commFBs.push_back(pa_poFB);
+        static_cast<fmuHandler*>(getDeviceExecution().getHandler(fmuHandler::handlerIdentifier))->getOutputMap()->insert(std::make_pair(paFB, outputs));
+        static_cast<fmuHandler*>(getDeviceExecution().getHandler(fmuHandler::handlerIdentifier))->getInputMap()->insert(std::make_pair(paFB, inputs));
+        getCommFBs().push_back(paFB);
       }
     }
   }
 
-  if(!isParameter && g_nStringIdE_RESTART != functionBlockType){
+  if(g_nStringIdE_RESTART != functionBlockType){
     //Add interface of the FB as local variables to the FMU
-    fillInterfaceElementsArray(pa_poFB, true, false); //data inputs
-    fillInterfaceElementsArray(pa_poFB, false, false); //data outputs
-    fillInterfaceElementsArray(pa_poFB, true, true); //event inputs
-    fillInterfaceElementsArray(pa_poFB, false, true); //event outputs
+    fillInterfaceElementsArray(paFB, true, false); //data inputs
+    fillInterfaceElementsArray(paFB, false, false); //data outputs
+    fillInterfaceElementsArray(paFB, true, true); //event inputs
+    fillInterfaceElementsArray(paFB, false, true); //event outputs
 
-    CBasicFB* testBasic = dynamic_cast<CBasicFB*>(pa_poFB);
-    CCompositeFB* testComposite = dynamic_cast<CCompositeFB*>(pa_poFB);
+    CBasicFB* testBasic = dynamic_cast<CBasicFB*>(paFB);
+    CCompositeFB* testComposite = dynamic_cast<CCompositeFB*>(paFB);
     if(0 != testBasic){ //basic function Block
       //store internal variables
       if(0 != testBasic->cm_pstVarInternals){
@@ -217,14 +195,10 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock* pa_poFB, std::vec
           if(0 != var){
             fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::getValueFromType(var->getDataTypeID()), true);
             newValue->setValuePointer(testBasic->getVar(&varId, 1));
-            m_outputsAndInputs.push_back(newValue);
-#ifdef FMU_DEBUG
-            FMU_DEBUG_LOG("VARIABLES: INTERNAL: " << testBasic->getInstanceName() << "." << CStringDictionary::getInstance().get(varId) << " ADDED SUCCESSFULLY\n")
-#endif
+            mOutputsAndInputs.push_back(newValue);
+            FMU_DEBUG_LOG(this, "VARIABLES: INTERNAL: " << testBasic->getInstanceName() << "." << CStringDictionary::getInstance().get(varId) << " ADDED SUCCESSFULLY\n")
           }else{
-#ifdef FMU_DEBUG
-            FMU_DEBUG_LOG("--------ERROR: Unexpected behavior when getting the internal variable " <<  CStringDictionary::getInstance().get(varId) << " of Function Block: " << testBasic->getInstanceName() << ".\n");
-#endif
+            FMU_DEBUG_LOG(this, "--------ERROR: Unexpected behavior when getting the internal variable " <<  CStringDictionary::getInstance().get(varId) << " of Function Block: " << testBasic->getInstanceName() << ".\n");
           }
 
         }
@@ -237,15 +211,13 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock* pa_poFB, std::vec
         eccId = CStringDictionary::getInstance().getId("$ECC");
       }
       newValue->setValuePointer(testBasic->getVar(&eccId, 1));
-      m_outputsAndInputs.push_back(newValue);
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG("VARIABLES: INTERNAL: " << testBasic->getInstanceName() << ".ECC ADDED SUCCESSFULLY\n")
-#endif
+      mOutputsAndInputs.push_back(newValue);
+      FMU_DEBUG_LOG(this, "VARIABLES: INTERNAL: " << testBasic->getInstanceName() << ".ECC ADDED SUCCESSFULLY\n")
     }
     else if(0 != testComposite){
       //populateInputsOutputs for internal FBs
       for(unsigned int i = 0; i < testComposite->cm_cpoFBNData->m_nNumFBs; i++){
-        populateInputsAndOutputsCore(testComposite->m_apoInternalFBs[i], pa_parameters);
+        populateInputsAndOutputsCore(testComposite->m_apoInternalFBs[i]);
       }
     }
   }
@@ -260,9 +232,7 @@ CIEC_ANY::EDataTypeID fmuInstance::getConnectedDataType(unsigned int portIndex, 
   if(portConnection != NULL){
     //TODO for now we assume that the subscriber connection only has one destination. Needs fix!
     if(!pa_isInput && portConnection->getDestinationList().isEmpty()){
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG("--------ERROR: Subscriber does not have any connection.\n");
-#endif
+      FMU_DEBUG_LOG(this, "--------ERROR: Subscriber does not have any connection.\n");
     }
     else{
       CSinglyLinkedList<SConnectionPoint>::Iterator it = portConnection->getDestinationList().begin();
@@ -274,9 +244,7 @@ CIEC_ANY::EDataTypeID fmuInstance::getConnectedDataType(unsigned int portIndex, 
     }
   }
   else{
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG("--------ERROR: Got invalid port connection on FB " << pa_poFB->getInstanceName() << " at port " << CStringDictionary::getInstance().get(portNameId) << ". It must be connected to another FB.\n");
-#endif
+    FMU_DEBUG_LOG(this, "--------ERROR: Got invalid port connection on FB " << pa_poFB->getInstanceName() << " at port " << CStringDictionary::getInstance().get(portNameId) << ". It must be connected to another FB.\n");
   }
 
   return retVal;
@@ -289,48 +257,46 @@ void fmuInstance::fillInterfaceElementsArray(CFunctionBlock* pa_poFB, bool isInp
     for(unsigned int i = 0; i < noOfElements; i++){
       fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::valueType::INTEGER, true);
       newValue->setEventCounterPointer(isInput ? &(pa_poFB->getEIMonitorData(static_cast<TEventID>(i)).mMonitorEventData[0].mEventCount) : &(pa_poFB->getEOMonitorData(static_cast<TEventID>(i)).mMonitorEventData[0].mEventCount));
-      m_outputsAndInputs.push_back(newValue);
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG("VARIABLES: INTERFACE: " << pa_poFB->getInstanceName() << "." << CStringDictionary::getInstance().get(isInput ? pa_poFB->getFBInterfaceSpec()->m_aunEINames[i] : pa_poFB->getFBInterfaceSpec()->m_aunEONames[i]) << " ADDED SUCCESSFULLY\n")
-#endif
+      mOutputsAndInputs.push_back(newValue);
+      FMU_DEBUG_LOG(this, "VARIABLES: INTERFACE: " << pa_poFB->getInstanceName() << "." << CStringDictionary::getInstance().get(isInput ? pa_poFB->getFBInterfaceSpec()->m_aunEINames[i] : pa_poFB->getFBInterfaceSpec()->m_aunEONames[i]) << " ADDED SUCCESSFULLY\n")
     }
   }
   else{
     unsigned int noOfElements = isInput ? pa_poFB->getFBInterfaceSpec()->m_nNumDIs : pa_poFB->getFBInterfaceSpec()->m_nNumDOs;
     for(unsigned int i = 0; i < noOfElements; i++){
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG("VARIABLES: INTERFACE: " << pa_poFB->getInstanceName() << "." << CStringDictionary::getInstance().get(isInput ? pa_poFB->getFBInterfaceSpec()->m_aunDINames[i] : pa_poFB->getFBInterfaceSpec()->m_aunDONames[i]) << ": ");
-#endif
+      FMU_DEBUG_LOG(this, "VARIABLES: INTERFACE: " << pa_poFB->getInstanceName() << "." << CStringDictionary::getInstance().get(isInput ? pa_poFB->getFBInterfaceSpec()->m_aunDINames[i] : pa_poFB->getFBInterfaceSpec()->m_aunDONames[i]) << ": ");
       fmuValueContainer::valueType valueType = fmuValueContainer::getValueFromType(isInput ? pa_poFB->getDIFromPortId(static_cast<TPortId>(i))->getDataTypeID() : pa_poFB->getDOFromPortId(static_cast<TPortId>(i))->getDataTypeID());
       if(fmuValueContainer::valueType::WRONG == valueType){
         valueType = fmuValueContainer::getValueFromType(getConnectedDataType(i, isInput, pa_poFB));
       }
 
       if(fmuValueContainer::valueType::WRONG == valueType){
-#ifdef FMU_DEBUG
-        FMU_DEBUG_LOG(" --------ERROR: WRONG TYPE. NOT ADDED SUCCESSFULLY\n")
-#endif
+        FMU_DEBUG_LOG(this, " --------ERROR: WRONG TYPE. NOT ADDED SUCCESSFULLY\n")
         continue;
       }
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG(" ADDED SUCCESSFULLY\n")
-#endif
+      FMU_DEBUG_LOG(this, " ADDED SUCCESSFULLY\n")
       fmuValueContainer* newValue = new fmuValueContainer(valueType, true);
       newValue->setValuePointer(isInput ? pa_poFB->getDIFromPortId(static_cast<TPortId>(i)) : pa_poFB->getDOFromPortId(static_cast<TPortId>(i)));
-      m_outputsAndInputs.push_back(newValue);
+      mOutputsAndInputs.push_back(newValue);
     }
   }
 }
 
 void fmuInstance::startInstance(void){
   resetInstance();
-  (static_cast<CDevice*>(m_resource.getResourcePtr()))->changeFBExecutionState(cg_nMGM_CMD_Start);
+  (static_cast<CDevice*>(mResource->getResourcePtr()))->changeFBExecutionState(cg_nMGM_CMD_Start);
 }
 
 void fmuInstance::resetInstance(void){
-  (static_cast<CDevice*>(m_resource.getResourcePtr()))->changeFBExecutionState(cg_nMGM_CMD_Reset);
+  (static_cast<CDevice*>(mResource->getResourcePtr()))->changeFBExecutionState(cg_nMGM_CMD_Reset);
 }
 
+
 void fmuInstance::stopInstance(){
-  (static_cast<CDevice*>(m_resource.getResourcePtr()))->changeFBExecutionState(cg_nMGM_CMD_Stop);
+  //this is needed since RESTART needs the Ecet to stop
+  mAllowEcetToRun = true;
+  for(unsigned int i = 0; i < mNumberOfEcets; i++){
+    mEcetSemaphore.inc();
+  }
+  (static_cast<CDevice*>(mResource->getResourcePtr()))->changeFBExecutionState(cg_nMGM_CMD_Stop);
 }

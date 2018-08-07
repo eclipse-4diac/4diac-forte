@@ -11,8 +11,6 @@
 #ifndef _E_TIMEOUT_H_
 #define _E_TIMEOUT_H_
 
-#ifndef FMU
-
 #include <esfb.h>
 #include <typelib.h>
 #include "../arch/timerha.h"
@@ -58,41 +56,4 @@ class FORTE_E_TimeOut : public CEventSourceFB{
 
 };
 
-#else
-#include <cfb.h>
-#include <typelib.h>
-#include "ATimeOut.h"
-
-class FORTE_E_TimeOut: public CCompositeFB{
-  DECLARE_FIRMWARE_FB(FORTE_E_TimeOut)
-
-private:
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const SAdapterInstanceDef scm_astAdapterInstances[];
-
-  FORTE_ATimeOut& TimeOutSocket() {
-    return (*static_cast<FORTE_ATimeOut*>(m_apoAdapters[0]));
-  };
-  static const int scm_nTimeOutSocketAdpNum = 0;
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-
-   FORTE_FB_DATA_ARRAY(0, 0, 0, 1);
-
-  static const SCFB_FBInstanceData scm_astInternalFBs[];
-
-  static const SCFB_FBConnectionData scm_astEventConnections[];
-
-  static const SCFB_FBConnectionData scm_astDataConnections[];
-  static const SCFB_FBNData scm_stFBNData;
-
-public:
-  COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_E_TimeOut){
-  };
-
-  virtual ~FORTE_E_TimeOut(){};
-
-};
-
-#endif
-
-#endif //close the ifdef sequence from the beginning of the file
+#endif //_E_TIMEOUT_H_

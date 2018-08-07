@@ -70,18 +70,12 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
     }
     ;
 
-    CEventChainExecutionThread *getResourceEventExecution(void){
-      return m_poResourceEventExecution;
-    }
-    ;
+    CEventChainExecutionThread *getResourceEventExecution(void) const{
+      return mResourceEventExecution;
+    };
 
     virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
 
-#ifdef FMU
-    virtual CStringDictionary::TStringId getFBTypeId(void) const{
-      return CStringDictionary::scm_nInvalidStringId;
-    }
-#endif
     /*!\brief Write a parameter value to a given FB-input
      *
      * @param paNameList the identifier name list of the parameter to be written
@@ -200,7 +194,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 
     /*!\brief The event chain execution of background (low priority) event chains started within this resource
      */
-    CEventChainExecutionThread *m_poResourceEventExecution;
+    CEventChainExecutionThread *mResourceEventExecution;
 
     CInterface2InternalDataConnection *mResIf2InConnections; //!< List of all connections from the res interface to internal FBs
 

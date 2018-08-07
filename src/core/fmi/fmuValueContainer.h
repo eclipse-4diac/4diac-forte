@@ -1,9 +1,13 @@
-/*
- * fmuValueContainer.h
+/*******************************************************************************
+ * Copyright (c) 2016 -2018 fortiss GmbH
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- *  Created on: 16.08.2017
- *      Author: cabral
- */
+ * Contributors:
+ *    Jose Cabral - initial API and implementation and/or initial documentation
+ *******************************************************************************/
 
 #ifndef SRC_CORE_FMI_FMUVALUECONTAINER_H_
 #define SRC_CORE_FMI_FMUVALUECONTAINER_H_
@@ -22,8 +26,8 @@ class fmuValueContainer{
     };
 
     union UPointerToValue{
-        TForteUInt32* m_eventCounter;
-        CIEC_ANY* m_actualValue;
+        TForteUInt32* mEventCounter;
+        CIEC_ANY* mActualValue;
     };
 
     typedef void (*newValueArrived)(void*);
@@ -46,7 +50,7 @@ class fmuValueContainer{
     CIEC_STRING* getValueAsString() const;
 
     CIEC_ANY::EDataTypeID getDataTypeID() const{
-      return m_value->getDataTypeID();
+      return mValue->getDataTypeID();
     }
 
 
@@ -57,12 +61,12 @@ class fmuValueContainer{
 
 
   protected:
-    CIEC_ANY* m_value;
-    bool m_errorOcurred;
-    newValueArrived m_callback;
-    void* m_callBackArgument;
-    UPointerToValue* m_pPointerToValue;
-    bool m_isEvent;
+    CIEC_ANY* mValue;
+    bool mErrorOcurred;
+    newValueArrived mCallback;
+    void* mCallBackArgument;
+    UPointerToValue* mPointerToValue;
+    bool mIsEvent;
 
 };
 

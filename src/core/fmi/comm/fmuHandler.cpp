@@ -36,10 +36,7 @@ void fmuHandler::fmuMessageArrived(void *pa_value){
         if(pa_value == (*itInputs)){
           found = true;
           if(forte::com_infra::e_Nothing != (*it)->recvData(pa_value, 0)){
-#ifdef FMU_DEBUG
-            FMU_DEBUG_LOG("FMU: The recvData on the layer triggered a new event.\n");
             GET_HANDLER_FROM_FB(*(*it)->getCommFB(), fmuHandler)->startNewEventChain((*it)->getCommFB());
-#endif
           }
           break;
         }
@@ -53,7 +50,7 @@ void fmuHandler::fmuMessageArrived(void *pa_value){
 
 int fmuHandler::registerLayer(fmuComLayer* paLayer){
   if(paLayer != 0){
-    mlayers.push_back(paLayer);
+    mlayers.pushBack(paLayer);
     return eRegisterLayerSucceeded;
   }
   return eWrongLayer;
@@ -68,7 +65,7 @@ void fmuHandler::unregisterLayer(fmuComLayer* paLayer){
   while(itRunner != itEnd){
     if(*itRunner == paLayer){
       if(itRefNode == itEnd){
-        mlayers.pop_front();
+        mlayers.popFront();
       }
       else{
         mlayers.eraseAfter(itRefNode);

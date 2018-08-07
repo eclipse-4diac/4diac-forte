@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 fortiss GmbH
+ * Copyright (c) 2016 -2018 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,60 +15,117 @@
 #include "fmuValueContainer.h"
 #include "fmiTimerHandler.h"
 #include "../device.h"
-#include "../../stdfblib/ita/EMB_RES.h"
 #include <vector>
+#include <map>
 #include <fstream>
 #include "../device.h"
+#include "../../stdfblib/ita/EMB_RES.h"
 
 class fmuInstance : public CDevice{
 
+  public:
+    fmuInstance(fmi2String instanceName, fmi2String GUID, fmi2String bootFileLocation, const fmi2CallbackFunctions *callbackFunctions);
+    virtual ~fmuInstance();
+
 #ifdef FMU_DEBUG
-  public:
-    static unsigned int intanceNo;
+    std::fstream debugFile;
+    void printToFile(const char* message);
 #endif
-
-    //TODO: make these privates and implement getters and setters?
-  public:
-    EMB_RES m_resource;
-    CIEC_STRING m_instanceName;
-    CIEC_STRING m_GUID;
-    CIEC_STRING m_bootFileLocation;
-    const fmi2CallbackFunctions *m_callbackFunctions;
-    fmi2Boolean m_loggingCategories[NUMBER_OF_LOG_CATEGORIES];
-    coSimulationState m_state;
-    fmi2Real m_stopTime; //if the environment tries to compute past stopTime the FMU has to return fmi2Status = fmi2Error
-
-    fmiTimerHandler& getTimer(){
-      return static_cast<fmiTimerHandler&>(CDevice::getTimer());
-    }
 
     void startInstance(void);
     void resetInstance(void);
     void stopInstance(void);
     bool loadFBs();
 
-  public:
-#ifdef FMU_DEBUG
-    static std::fstream staticFile;
-    static CPCSyncObject mutex;
-    static void printToFile(const char* message);
-#endif
+    static fmuInstance* sFmuInstance;
 
-    std::vector<fmuValueContainer*> m_outputsAndInputs;
-    std::vector<fmuValueContainer*> m_internalVariables;
-    std::vector<CFunctionBlock*> m_parametersFBs;
-    std::vector<CFunctionBlock*> m_commFBs;
+    void registerEcet(CFMUEventChainExecutionThread* paExecutionThread){
+      mNumberOfEcets++;
+      paExecutionThread->setAllowedToRun(&mAllowEcetToRun);
+      paExecutionThread->setStepSemaphore(&mEcetSemaphore);
+      static_cast<fmiTimerHandler*>(&getTimer())->addExecutionThread(paExecutionThread);
+    }
 
-    fmuInstance(fmi2String instanceName, fmi2String GUID, fmi2String bootFileLocation, const fmi2CallbackFunctions *callbackFunctions);
+    bool advanceInstanceTime(CIEC_LREAL& mTime){
+      return static_cast<fmiTimerHandler&>(getTimer()).advanceTicks(mTime, &mAllowEcetToRun, &mEcetSemaphore);
+    }
 
-    static CIEC_ANY::EDataTypeID getConnectedDataType(unsigned int portIndex, bool pa_isInput, CFunctionBlock* pa_poFB);
-    void fillInterfaceElementsArray(CFunctionBlock* pa_poFB, bool isInput, bool isEvent);
+    const CIEC_STRING& getBootFileLocation() const{
+      return mBootFileLocation;
+    }
 
-    virtual ~fmuInstance();
+    const fmi2CallbackFunctions* getCallbackFunctions() const{
+      return mCallbackFunctions;
+    }
+
+    const CIEC_STRING& getGuid() const{
+      return mGUID;
+    }
+
+    const CIEC_STRING& getInstanceName() const{
+      return mInstanceName;
+    }
+
+    fmi2Boolean* getLoggingCategories(){
+      return mLoggingCategories;
+    }
+
+    const EMB_RES& getResource() const{
+      return *mResource;
+    }
+
+    coSimulationState getState() const{
+      return mState;
+    }
+
+    fmi2Real getStopTime() const{
+      return mStopTime;
+    }
+
+    void setState(coSimulationState state){
+      mState = state;
+    }
+
+    std::vector<CFunctionBlock*>& getCommFBs(){
+      return mCommFBs;
+    }
+
+    const std::vector<fmuValueContainer*>& getOutputsAndInputs() const{
+      return mOutputsAndInputs;
+    }
+
+    void setStopTime(fmi2Real stopTime){
+      mStopTime = stopTime;
+    }
+
   private:
-    void populateInputsOutputs(forte::core::CFBContainer* resource, std::vector<fmuValueContainer*>* pa_parameters);
-    void populateInputsAndOutputsCore(CFunctionBlock* pa_poFB, std::vector<fmuValueContainer*>* pa_parameters);
+    EMB_RES* mResource;
+    CIEC_STRING mInstanceName;
+    CIEC_STRING mGUID;
+    CIEC_STRING mBootFileLocation;
+    const fmi2CallbackFunctions *mCallbackFunctions;
+    fmi2Boolean mLoggingCategories[NUMBER_OF_LOG_CATEGORIES];
+    coSimulationState mState;
+    fmi2Real mStopTime; //if the environment tries to compute past stopTime the FMU has to return fmi2Status = fmi2Error
 
+    std::vector<fmuValueContainer*> mOutputsAndInputs;
+    std::vector<CFunctionBlock*> mCommFBs;
+    std::map<CDataConnection*, CIEC_ANY*> mParameters;
+
+    void populateInputsOutputs(forte::core::CFBContainer* paResource);
+    void populateInputsAndOutputsCore(CFunctionBlock* paFB);
+
+    CIEC_ANY::EDataTypeID getConnectedDataType(unsigned int paPortIndex, bool paIsInput, CFunctionBlock* paFB);
+
+    void fillInterfaceElementsArray(CFunctionBlock* paFB, bool paIsInput, bool paIsEvent);
+
+    unsigned int mNumberOfEcets;
+
+    bool mAllowEcetToRun;
+
+    forte::arch::CSemaphore mEcetSemaphore;
+
+    static CSyncObject sFmuInstanceMutex;
 
 };
 #endif /*_FMUINSTANCE_H_ */

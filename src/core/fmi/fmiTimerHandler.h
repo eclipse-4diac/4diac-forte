@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 fortiss GmbH
+ * Copyright (c) 2016 -2018 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,7 @@
 #define _FMITIMERHANDLER_H_
 
 #include "../../arch/timerha.h"
-#include "../ecet.h"
+#include "../fmuEcet.h"
 #include "../datatypes/forte_lreal.h"
 #include <vector>
 
@@ -46,18 +46,32 @@ class fmiTimerHandler : public CTimerHandler{
 
     /*!\brief Advance the ticks according of the time
      */
-    bool advanceTicks(CIEC_LREAL& time);
+    bool advanceTicks(CIEC_LREAL& time, bool* paAllowToRun, forte::arch::CSemaphore* paEcetSemaphore);
 
-    void addExecutionThread(CEventChainExecutionThread* pa_executionThread){
-      eventChainExecutions.push_back(pa_executionThread);
+    void addExecutionThread(CFMUEventChainExecutionThread* paExecutionThread){
+      eventChainExecutions.push_back(paExecutionThread);
+    }
+
+    void removeExecutionThread(CEventChainExecutionThread* paExecutionThread){
+      std::vector<CFMUEventChainExecutionThread*>::iterator toDelete = eventChainExecutions.end();
+      for(std::vector<CFMUEventChainExecutionThread*>::iterator it = eventChainExecutions.begin(); it != eventChainExecutions.end(); ++it){
+        if(paExecutionThread == (*it)){
+          toDelete = it;
+          break;
+        }
+       }
+      if(eventChainExecutions.end() != toDelete){
+        eventChainExecutions.erase(toDelete);
+      }
     }
 
   private:
-    std::vector<CEventChainExecutionThread*> eventChainExecutions;
+    std::vector<CFMUEventChainExecutionThread*> eventChainExecutions;
 
-#ifdef FMU_DEBUG
-    SForteTime m_stForteTimeFMI;
-#endif
+    bool stillSomeEvents();
+
+    void putAllEcetInWaitingStepState(bool* paAllowToRun, forte::arch::CSemaphore* paEcetSemaphore);
+
 };
 
 #endif /* _FMITIMERHANDLER_H_ */

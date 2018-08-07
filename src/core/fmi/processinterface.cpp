@@ -1,6 +1,6 @@
 
 /*******************************************************************************
- * Copyright (c) 2016 fortiss GmbH
+ * Copyright (c) 2016 -2018 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,9 +30,7 @@ CFMUProcessInterface::CFMUProcessInterface(CResource *paSrcRes, const SFBInterfa
 
 CFMUProcessInterface::CFMUProcessInterface(const CStringDictionary::TStringId paInstanceNameId, CResource *pa_poSrcRes) :
     CProcessInterfaceBase(pa_poSrcRes, 0, paInstanceNameId, 0, 0), m_bInitialized(false), m_value(0) {
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG("Someone called the wrong constructor.\n") //Why do I need this constructor?
-#endif
+  FMU_DEBUG_LOG(GET_FMU_INSTANCE_FROM_FB(this), "Someone called the wrong constructor.\n") //Why do I need this constructor?
 }
 
 CFMUProcessInterface::~CFMUProcessInterface(){
@@ -47,17 +45,14 @@ bool CFMUProcessInterface::initialise(bool paIsInput){
   if(0 != m_value){
     STATUS() = scmOK;
     m_bInitialized = true;
-#ifdef FMU_DEBUG
-  FMU_DEBUG_LOG("Input/Output Initialize\n")
-#endif
+    FMU_DEBUG_LOG(GET_FMU_INSTANCE_FROM_FB(this), "Input/Output Initialize\n")
   }
   else{
     STATUS() = scmINTERNALERROR;
-#ifdef FMU_DEBUG
-  FMU_DEBUG_LOG("ERROR: Input/Output not initialized. You should set a pointer to the fmuContainer for this IO\n")
-#endif
-    return false;
+    FMU_DEBUG_LOG(GET_FMU_INSTANCE_FROM_FB(this), "ERROR: Input/Output not initialized. You should set a pointer to the fmuContainer for this IO\n")
+    m_bInitialized =  false;
   }
+  return m_bInitialized;
 }
 
 bool CFMUProcessInterface::deinitialise(){

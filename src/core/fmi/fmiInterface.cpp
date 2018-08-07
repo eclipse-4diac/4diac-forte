@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 fortiss GmbH
+ * Copyright (c) 2016 - 2018 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,7 +12,7 @@
 #include "fmuConfig.h"
 #include "fmuInstance.h"
 
-fmi2String loggingNames[NUMBER_OF_LOG_CATEGORIES] = { "logAll", "logCalls", "logError" };
+fmi2String loggingNames[] = { "logAll", "logCalls", "logError" };
 
 extern "C" {
 
@@ -31,7 +31,7 @@ extern "C" {
     ENTRY_FUNCTION(FMI2_SET_DEBUG_LOGGING)
 
     for(unsigned int i = 0; i < NUMBER_OF_LOG_CATEGORIES; i++){
-      componentInstance->m_loggingCategories[i] = fmi2False;
+      componentInstance->getLoggingCategories()[i] = fmi2False;
     }
 
     if(fmi2True == loggingOn){
@@ -40,23 +40,23 @@ extern "C" {
           fmi2Boolean categoryFound = fmi2False;
           for(unsigned int j = 0; j < NUMBER_OF_LOG_CATEGORIES; j++){
             if(strcmp(loggingNames[j], categories[i]) == 0){
-              componentInstance->m_loggingCategories[j] = fmi2True;
+              componentInstance->getLoggingCategories()[j] = fmi2True;
               categoryFound = fmi2True;
               break;
             }
           }
           if(!categoryFound){
-            componentInstance->m_callbackFunctions->logger(componentInstance->m_callbackFunctions->componentEnvironment, componentInstance->m_instanceName.getValue(),
+            componentInstance->getCallbackFunctions()->logger(componentInstance->getCallbackFunctions()->componentEnvironment, componentInstance->getInstanceName().getValue(),
                 fmi2Warning, loggingNames[LOG_ERROR], "The category %s is not supported.", categories[i]);
           }
         }
       }
       else{
-        componentInstance->m_loggingCategories[LOG_ALL] = fmi2True;
+        componentInstance->getLoggingCategories()[LOG_ALL] = fmi2True;
       }
     }
 
-    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2SetDebugLogging - GUID = %s", componentInstance->m_GUID.getValue())
+    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2SetDebugLogging - GUID = %s", componentInstance->getGuid().getValue())
     LEAVE_FUNCTION(fmi2OK)
   }
 
@@ -82,22 +82,18 @@ extern "C" {
       functions->logger(functions->componentEnvironment, instanceName, fmi2Error, loggingNames[LOG_ERROR], "The GUID is not valid.");
       return 0;
     }
-#ifdef FMU_DEBUG
-    //TODO: MODEL_GUID is the only not fully supported characteristic by booting the instance from a file
+
     if(strcmp(fmuGUID, MODEL_GUID)){
       functions->logger(functions->componentEnvironment, instanceName, fmi2Warning, loggingNames[LOG_ERROR], "The given GUID: %s is not the same as the model's GUID: %s.", fmuGUID, MODEL_GUID);
-      //return 0;
+      //return 0; //TODO: MODEL_GUID is the only not fully supported characteristic by booting the instance from a file
     }
-#endif /* FMU_DEBUG */
 
     if(!fmuResourceLocation || 0 == strlen(fmuResourceLocation)){
       functions->logger(functions->componentEnvironment, instanceName, fmi2Error, loggingNames[LOG_ERROR], "The fmuResourceLocation string is not valid.");
       return 0;
     }
 
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG("Resource location is "<< fmuResourceLocation << "\n")
-#endif
+    functions->logger(functions->componentEnvironment, instanceName, fmi2OK, loggingNames[LOG_ALL], "Resource location is %s", fmuResourceLocation);
 
     std::string file(fmuResourceLocation);
     if(0 == file.compare(0, 6, "file:/")){
@@ -106,9 +102,7 @@ extern "C" {
       }else{
         file = file.substr(6, std::string::npos);
       }
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG("Resource location is now "<< file << "\n")
-#endif
+      functions->logger(functions->componentEnvironment, instanceName, fmi2OK, loggingNames[LOG_ALL], "Resource location is now %s", file.c_str());
     }else{
       functions->logger(functions->componentEnvironment, instanceName, fmi2Error, loggingNames[LOG_ERROR], "The fmuResourceLocation is not valid. It should start with file:/");
     }
@@ -122,35 +116,30 @@ extern "C" {
       return 0;
     }
 
-
-    //CDevice* device = new CDevice(0, CStringDictionary::scm_nInvalidStringId, 0, 0);
     componentInstance = new fmuInstance(instanceName, fmuGUID, file.c_str(), functions);
     if(!componentInstance){
         functions->logger(functions->componentEnvironment, instanceName, fmi2Error, loggingNames[LOG_ERROR], "Error creating the instance object.");
         return 0;
     }
 
-    componentInstance->m_state = STATE_INSTANTIATED;
-
-    for(unsigned int i = 0; i < NUMBER_OF_LOG_CATEGORIES; i++){
-      componentInstance->m_loggingCategories[i] = loggingOn;
-    }
-
-    if (!componentInstance->loadFBs()){
+    if(STATE_INSTANTIATED != componentInstance->getState()){
       freeInstanceInternal(componentInstance);
       functions->logger(functions->componentEnvironment, instanceName, fmi2Error, loggingNames[LOG_ERROR], "Loading the FB was not correct");
       return 0;
     }
-    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2Instantiate - GUID = %s", componentInstance->m_GUID.getValue())
+
+    for(unsigned int i = 0; i < NUMBER_OF_LOG_CATEGORIES; i++){
+      componentInstance->getLoggingCategories()[i] = loggingOn;
+    }
+
+    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2Instantiate - GUID = %s", componentInstance->getGuid().getValue())
     return componentInstance;
   }
 
   void fmi2FreeInstance(fmi2Component c){
     ENTRY_FUNCTION_NO_RETURN(FMI2_FREE_INSTANCE)
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " - fmi2FreeInstance\n" << "--------------\n")
-#endif
-    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2FreeInstance - GUID = %s", componentInstance->m_GUID.getValue())
+    FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " - fmi2FreeInstance\n" << "--------------\n")
+    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2FreeInstance - GUID = %s", componentInstance->getGuid().getValue())
     freeInstanceInternal(componentInstance);
     LEAVE_FUNCTION_NO_RETURN()
   }
@@ -160,326 +149,251 @@ extern "C" {
     NOT_USED(tolerance)
     ENTRY_FUNCTION(FMI2_SETUP_EXPERIMENT)
 
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " - fmi2SetupExperiment \n" << "--------------\n")
-#endif
+    FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " - fmi2SetupExperiment \n" << "--------------\n")
     //toleranceDefined might be ignored in co-simulation according to FMI.
     //TODO: Check if doing this with startTime is OK. The time in the timerHandler cannot be changed because is private in the base class
     CIEC_LREAL advanceTime = startTime;
-    componentInstance->getTimer().advanceTicks(advanceTime);
+    componentInstance->advanceInstanceTime(advanceTime);
 
     if(stopTimeDefined){
-      componentInstance->m_stopTime = stopTime;
+      componentInstance->setStopTime(stopTime);
     }
-    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2SetupExperiment - GUID = %s", componentInstance->m_GUID.getValue())
+    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2SetupExperiment - GUID = %s", componentInstance->getGuid().getValue())
     LEAVE_FUNCTION(fmi2OK)
   }
 
   fmi2Status fmi2EnterInitializationMode(fmi2Component c){
     ENTRY_FUNCTION(FMI2_ENTER_INITIALIZATION_MODE)
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << "fmi2EnterInitializationMode \n" << "--------------\n")
-#endif
-    componentInstance->m_state = STATE_INITIALIZATION_MODE;
-    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2EnterInitializationMode - GUID = %s", componentInstance->m_GUID.getValue())
+    FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << "fmi2EnterInitializationMode \n" << "--------------\n")
+    componentInstance->setState(STATE_INITIALIZATION_MODE);
+    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2EnterInitializationMode - GUID = %s", componentInstance->getGuid().getValue())
     LEAVE_FUNCTION(fmi2OK)
   }
 
   fmi2Status fmi2ExitInitializationMode(fmi2Component c){
     ENTRY_FUNCTION(FMI2_EXIT_INITIALIZATION_MODE)
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " - fmi2ExitInitializationMode \n" << "--------------\n")
-#endif
-    for(std::vector<CFunctionBlock*>::iterator itRunner = componentInstance->m_parametersFBs.begin(); itRunner != componentInstance->m_parametersFBs.end(); ++itRunner){
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG("Starting parameter\n")
-#endif
-      (*itRunner)->changeFBExecutionState(cg_nMGM_CMD_Start);
-      (*itRunner)->receiveInputEvent(0, *componentInstance->m_resource.getResourceEventExecution());
-      (*itRunner)->changeFBExecutionState(cg_nMGM_CMD_Stop);
-      (*itRunner)->changeFBExecutionState(cg_nMGM_CMD_Reset);
-    }
+    FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " - fmi2ExitInitializationMode \n" << "--------------\n")
     componentInstance->startInstance(); //TODO: Check where exactly this function must be called.
-    componentInstance->m_state = STATE_STEP_COMPLETE;
-    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2ExitInitializationMode - GUID = %s", componentInstance->m_GUID.getValue())
+    componentInstance->setState(STATE_STEP_COMPLETE);
+    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2ExitInitializationMode - GUID = %s", componentInstance->getGuid().getValue())
     LEAVE_FUNCTION(fmi2OK)
   }
 
   fmi2Status fmi2Terminate(fmi2Component c){
     ENTRY_FUNCTION(FMI2_TERMINATE)
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " - fmi2Terminate \n" << "--------------\n")
-#endif
+    FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " - fmi2Terminate \n" << "--------------\n")
     componentInstance->stopInstance();
-    componentInstance->m_state = STATE_TERMINATED;
-    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2Terminate - GUID = %s", componentInstance->m_GUID.getValue())
+    componentInstance->setState(STATE_TERMINATED);
+    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2Terminate - GUID = %s", componentInstance->getGuid().getValue())
     LEAVE_FUNCTION(fmi2OK)
   }
 
   fmi2Status fmi2Reset(fmi2Component c){
     ENTRY_FUNCTION(FMI2_RESET)
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " - fmi2Reset \n" << "--------------\n")
-#endif
+    FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " - fmi2Reset \n" << "--------------\n")
     componentInstance->resetInstance();
-    componentInstance->m_state = STATE_INSTANTIATED;
-    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2Reset - GUID = %s", componentInstance->m_GUID.getValue())
+    componentInstance->setState(STATE_INSTANTIATED);
+    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2Reset - GUID = %s", componentInstance->getGuid().getValue())
     LEAVE_FUNCTION(fmi2OK)
   }
 
   fmi2Status fmi2GetReal(fmi2Component c, const fmi2ValueReference vr[], size_t nvr, fmi2Real value[]){
     ENTRY_FUNCTION(FMI2_GET_REAL)
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " - fmi2GetReal \n")
-#endif
-    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2GetReal - GUID = %s", componentInstance->m_GUID.getValue())
+    FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " - fmi2GetReal \n")
+    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2GetReal - GUID = %s", componentInstance->getGuid().getValue())
     if(nvr > 0 && (!vr || !value)){
       LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "One or both of the arrays vr[] and value[] were invalid.")
-      componentInstance->m_state = STATE_ERROR;
+      componentInstance->setState(STATE_ERROR);
       LEAVE_FUNCTION(fmi2Error)
     }
 
     for(unsigned int i = 0; i < nvr; i++){
-      if(vr[i] >= componentInstance->m_outputsAndInputs.size()){
-        LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "The reference to real %d is out of range. The model supports up to %d.", vr[i], componentInstance->m_outputsAndInputs.size() - 1)
-        componentInstance->m_state = STATE_ERROR;
+      if(vr[i] >= componentInstance->getOutputsAndInputs().size()){
+        LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "The reference to real %d is out of range. The model supports up to %d.", vr[i], componentInstance->getOutputsAndInputs().size() - 1)
+        componentInstance->setState(STATE_ERROR);
         LEAVE_FUNCTION(fmi2Error)
       }
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " GetReal - vr[" << i << "] = " << vr[i] << "; and value[" << i << "] returned = ")
-#endif
-      value[i] = static_cast<fmi2Real>(*componentInstance->m_outputsAndInputs.at(vr[i])->getValueAsReal());
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG(value[i] << "\n")
-#endif
+      FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " GetReal - vr[" << i << "] = " << vr[i] << "; and value[" << i << "] returned = ")
+      value[i] = static_cast<fmi2Real>(*componentInstance->getOutputsAndInputs().at(vr[i])->getValueAsReal());
+      FMU_DEBUG_LOG((fmuInstance*)c, value[i] << "\n")
 
     }
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG("--------------\n")
-#endif
+    FMU_DEBUG_LOG((fmuInstance*)c, "--------------\n")
     LEAVE_FUNCTION(fmi2OK)
   }
 
   fmi2Status fmi2GetInteger(fmi2Component c, const fmi2ValueReference vr[], size_t nvr, fmi2Integer value[]){
     ENTRY_FUNCTION(FMI2_GET_INTEGER)
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " - fmi2GetInteger \n")
-#endif
+    FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " - fmi2GetInteger \n")
     if(nvr > 0 && (!vr || !value)){
       LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "One of both of the arrays vr[] and value[] were invalid.")
-      componentInstance->m_state = STATE_ERROR;
+      componentInstance->setState(STATE_ERROR);
       LEAVE_FUNCTION(fmi2Error)
     }
 
     for(unsigned int i = 0; i < nvr; i++){
-      if(vr[i] >= componentInstance->m_outputsAndInputs.size()){
-        LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "The reference to integer %d is out of range. The model supports up to %d.", vr[i], componentInstance->m_outputsAndInputs.size() - 1)
-        componentInstance->m_state = STATE_ERROR;
+      if(vr[i] >= componentInstance->getOutputsAndInputs().size()){
+        LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "The reference to integer %d is out of range. The model supports up to %d.", vr[i], componentInstance->getOutputsAndInputs().size() - 1)
+        componentInstance->setState(STATE_ERROR);
         LEAVE_FUNCTION(fmi2Error)
       }
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " GetInt - vr[" << i << "] = " << vr[i] << "; and the value returned is = ")
-#endif
-      value[i] = static_cast<fmi2Integer>(*componentInstance->m_outputsAndInputs.at(vr[i])->getValueAsInt());
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG(value[i] << "\n")
-#endif
+      FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " GetInt - vr[" << i << "] = " << vr[i] << "; and the value returned is = ")
+      value[i] = static_cast<fmi2Integer>(*componentInstance->getOutputsAndInputs().at(vr[i])->getValueAsInt());
+      FMU_DEBUG_LOG((fmuInstance*)c, value[i] << "\n")
     }
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG("--------------\n")
-#endif
+    FMU_DEBUG_LOG((fmuInstance*)c, "--------------\n")
 
-    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2GetInteger - GUID = %s", componentInstance->m_GUID.getValue())
+    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2GetInteger - GUID = %s", componentInstance->getGuid().getValue())
     LEAVE_FUNCTION(fmi2OK)
   }
 
   fmi2Status fmi2GetBoolean(fmi2Component c, const fmi2ValueReference vr[], size_t nvr, fmi2Boolean value[]){
     ENTRY_FUNCTION(FMI2_GET_BOOLEAN)
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " - fmi2GetBoolean \n")
-#endif
+    FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " - fmi2GetBoolean \n")
     if(nvr > 0 && (!vr || !value)){
       LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "One of both of the arrays vr[] and value[] were invalid.")
-      componentInstance->m_state = STATE_ERROR;
+      componentInstance->setState(STATE_ERROR);
       LEAVE_FUNCTION(fmi2Error)
     }
 
     for(unsigned int i = 0; i < nvr; i++){
-      if(vr[i] >= componentInstance->m_outputsAndInputs.size()){
-        LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "The reference to boolean %d is out of range. The model supports up to %d.", vr[i], componentInstance->m_outputsAndInputs.size() - 1)
-        componentInstance->m_state = STATE_ERROR;
+      if(vr[i] >= componentInstance->getOutputsAndInputs().size()){
+        LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "The reference to boolean %d is out of range. The model supports up to %d.", vr[i], componentInstance->getOutputsAndInputs().size() - 1)
+        componentInstance->setState(STATE_ERROR);
         LEAVE_FUNCTION(fmi2Error)
       }
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " GetBoolean - vr[" << i << "] = " << vr[i] << "; and value[" << i << "] returned is = ")
-#endif
-      value[i] = static_cast<fmi2Boolean>(*componentInstance->m_outputsAndInputs.at(vr[i])->getValueAsBool());
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG(value[i] << "\n")
-#endif
+      FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " GetBoolean - vr[" << i << "] = " << vr[i] << "; and value[" << i << "] returned is = ")
+      value[i] = static_cast<fmi2Boolean>(*componentInstance->getOutputsAndInputs().at(vr[i])->getValueAsBool());
+      FMU_DEBUG_LOG((fmuInstance*)c, value[i] << "\n")
     }
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG("--------------\n")
-#endif
+    FMU_DEBUG_LOG((fmuInstance*)c, "--------------\n")
 
-    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2GetBoolean - GUID = %s", componentInstance->m_GUID.getValue())
+    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2GetBoolean - GUID = %s", componentInstance->getGuid().getValue())
     LEAVE_FUNCTION(fmi2OK);
   }
 
   fmi2Status fmi2GetString(fmi2Component c, const fmi2ValueReference vr[], size_t nvr, fmi2String value[]){
     ENTRY_FUNCTION(FMI2_GET_STRING)
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " - fmi2GetString \n")
-#endif
+    FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " - fmi2GetString \n")
     if(nvr > 0 && (!vr || !value)){
       LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "One of both of the arrays vr[] and value[] were invalid.")
-      componentInstance->m_state = STATE_ERROR;
+      componentInstance->setState(STATE_ERROR);
       LEAVE_FUNCTION(fmi2Error)
     }
 
     for(unsigned int i = 0; i < nvr; i++){
-      if(vr[i] >= componentInstance->m_outputsAndInputs.size()){
-        LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "The reference to string %d is out of range. The model supports up to %d.", vr[i], componentInstance->m_outputsAndInputs.size() - 1)
-        componentInstance->m_state = STATE_ERROR;
+      if(vr[i] >= componentInstance->getOutputsAndInputs().size()){
+        LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "The reference to string %d is out of range. The model supports up to %d.", vr[i], componentInstance->getOutputsAndInputs().size() - 1)
+        componentInstance->setState(STATE_ERROR);
         LEAVE_FUNCTION(fmi2Error)
       }
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " GetString - vr[" << i << "] = " << vr[i] << "; and value[" << i << "] returned is = ")
-#endif
-      value[i] = static_cast<fmi2String>(componentInstance->m_outputsAndInputs.at(vr[i])->getValueAsString()->getValue());
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG(value[i] << "\n")
-#endif
+      FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " GetString - vr[" << i << "] = " << vr[i] << "; and value[" << i << "] returned is = ")
+      value[i] = static_cast<fmi2String>(componentInstance->getOutputsAndInputs().at(vr[i])->getValueAsString()->getValue());
+      FMU_DEBUG_LOG((fmuInstance*)c, value[i] << "\n")
     }
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG("--------------\n")
-#endif
+    FMU_DEBUG_LOG((fmuInstance*)c, "--------------\n")
 
-    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2GetString - GUID = %s", componentInstance->m_GUID.getValue())
+    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2GetString - GUID = %s", componentInstance->getGuid().getValue())
     LEAVE_FUNCTION(fmi2OK)
   }
 
   fmi2Status fmi2SetReal(fmi2Component c, const fmi2ValueReference vr[], size_t nvr, const fmi2Real value[]){
     ENTRY_FUNCTION(FMI2_SET_REAL)
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " - fmi2SetReal \n")
-#endif
+    FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " - fmi2SetReal \n")
 
     if(nvr > 0 && (!vr || !value)){
       LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "One of both of the arrays vr[] and value[] were invalid.")
-      componentInstance->m_state = STATE_ERROR;
+      componentInstance->setState(STATE_ERROR);
       LEAVE_FUNCTION(fmi2Error)
     }
 
     for(unsigned int i = 0; i < nvr; i++){
-      if(vr[i] >= componentInstance->m_outputsAndInputs.size()){
-        LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "The reference to real %d is out of range. The model supports up to %d.", vr[i], componentInstance->m_outputsAndInputs.size() - 1)
-        componentInstance->m_state = STATE_ERROR;
+      if(vr[i] >= componentInstance->getOutputsAndInputs().size()){
+        LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "The reference to real %d is out of range. The model supports up to %d.", vr[i], componentInstance->getOutputsAndInputs().size() - 1)
+        componentInstance->setState(STATE_ERROR);
         LEAVE_FUNCTION(fmi2Error)
       }
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " SetReal - vr[" << i << "] = " << vr[i] << "; and value[" << i << "] to set is = " << value[i] << "\n")
-#endif
+      FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " SetReal - vr[" << i << "] = " << vr[i] << "; and value[" << i << "] to set is = " << value[i] << "\n")
       CIEC_LREAL valToWrite(static_cast<TForteDFloat>(value[i]));
-      componentInstance->m_outputsAndInputs[vr[i]]->setValue(valToWrite);
+      componentInstance->getOutputsAndInputs()[vr[i]]->setValue(valToWrite);
     }
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG("-----------\n")
-#endif
-    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2SetReal - GUID = %s", componentInstance->m_GUID.getValue())
+    FMU_DEBUG_LOG((fmuInstance*)c, "-----------\n")
+    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2SetReal - GUID = %s", componentInstance->getGuid().getValue())
     LEAVE_FUNCTION(fmi2OK)
   }
 
   fmi2Status fmi2SetInteger(fmi2Component c, const fmi2ValueReference vr[], size_t nvr, const fmi2Integer value[]){
     ENTRY_FUNCTION(FMI2_SET_INTEGER)
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " - fmi2SetInteger \n")
-#endif
+    FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " - fmi2SetInteger \n")
     if(nvr > 0 && (!vr || !value)){
       LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "One of both of the arrays vr[] and value[] were invalid.")
-      componentInstance->m_state = STATE_ERROR;
+      componentInstance->setState(STATE_ERROR);
       LEAVE_FUNCTION(fmi2Error)
     }
 
     for(unsigned int i = 0; i < nvr; i++){
-      if(vr[i] >= componentInstance->m_outputsAndInputs.size()){
-        LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "The reference to integer %d is out of range. The model supports up to %d.", vr[i], componentInstance->m_outputsAndInputs.size() - 1)
-        componentInstance->m_state = STATE_ERROR;
+      if(vr[i] >= componentInstance->getOutputsAndInputs().size()){
+        LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "The reference to integer %d is out of range. The model supports up to %d.", vr[i], componentInstance->getOutputsAndInputs().size() - 1)
+        componentInstance->setState(STATE_ERROR);
         LEAVE_FUNCTION(fmi2Error)
       }
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " SetInt - vr[" << i << "] = " << vr[i] << "; and value[" << i << "] to set is = " << value[i] << "\n")
-#endif
+      FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " SetInt - vr[" << i << "] = " << vr[i] << "; and value[" << i << "] to set is = " << value[i] << "\n")
       CIEC_LINT valToWrite(static_cast<TForteInt64>(value[i]));
-      componentInstance->m_outputsAndInputs[vr[i]]->setValue(valToWrite);
+      componentInstance->getOutputsAndInputs()[vr[i]]->setValue(valToWrite);
     }
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG("-----------\n")
-#endif
+    FMU_DEBUG_LOG((fmuInstance*)c, "-----------\n")
 
-    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2SetInteger - GUID = %s", componentInstance->m_GUID.getValue())
+    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2SetInteger - GUID = %s", componentInstance->getGuid().getValue())
     LEAVE_FUNCTION(fmi2OK)
   }
 
   fmi2Status fmi2SetBoolean(fmi2Component c, const fmi2ValueReference vr[], size_t nvr, const fmi2Boolean value[]){
     ENTRY_FUNCTION(FMI2_SET_BOOLEAN)
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " - fmi2SetBoolean \n")
-#endif
+    FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " - fmi2SetBoolean \n")
     if(nvr > 0 && (!vr || !value)){
       LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "One of both of the arrays vr[] and value[] were invalid.")
-      componentInstance->m_state = STATE_ERROR;
+      componentInstance->setState(STATE_ERROR);
       LEAVE_FUNCTION(fmi2Error)
     }
 
     for(unsigned int i = 0; i < nvr; i++){
-      if(vr[i] >= componentInstance->m_outputsAndInputs.size()){
-        LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "The reference to boolean %d is out of range. The model supports up to %d.", vr[i], componentInstance->m_outputsAndInputs.size() - 1)
-        componentInstance->m_state = STATE_ERROR;
+      if(vr[i] >= componentInstance->getOutputsAndInputs().size()){
+        LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "The reference to boolean %d is out of range. The model supports up to %d.", vr[i], componentInstance->getOutputsAndInputs().size() - 1)
+        componentInstance->setState(STATE_ERROR);
         LEAVE_FUNCTION(fmi2Error)
       }
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " SetBoolean - vr[" << i << "] = " << vr[i] << "; and value[" << i << "] to set is = " << value[i] << "\n")
-#endif
+      FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " SetBoolean - vr[" << i << "] = " << vr[i] << "; and value[" << i << "] to set is = " << value[i] << "\n")
       CIEC_BOOL valToWrite(value[i]);
-      componentInstance->m_outputsAndInputs[vr[i]]->setValue(valToWrite);
+      componentInstance->getOutputsAndInputs()[vr[i]]->setValue(valToWrite);
     }
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG("-----------\n")
-#endif
+    FMU_DEBUG_LOG((fmuInstance*)c, "-----------\n")
 
-    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2SetBoolean - GUID = %s", componentInstance->m_GUID.getValue())
+    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2SetBoolean - GUID = %s", componentInstance->getGuid().getValue())
     LEAVE_FUNCTION(fmi2OK)
   }
 
   fmi2Status fmi2SetString(fmi2Component c, const fmi2ValueReference vr[], size_t nvr, const fmi2String value[]){
     ENTRY_FUNCTION(FMI2_SET_STRING)
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " - fmi2SetString \n")
-#endif
+    FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " - fmi2SetString \n")
     if(nvr > 0 && (!vr || !value)){
       LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "One of both of the arrays vr[] and value[] were invalid.")
-      componentInstance->m_state = STATE_ERROR;
+      componentInstance->setState(STATE_ERROR);
       LEAVE_FUNCTION(fmi2Error)
     }
 
     for(unsigned int i = 0; i < nvr; i++){
-      if(vr[i] >= componentInstance->m_outputsAndInputs.size()){
-        LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "The reference to string %d is out of range. The model supports up to %d.", vr[i], componentInstance->m_outputsAndInputs.size() - 1)
-        componentInstance->m_state = STATE_ERROR;
+      if(vr[i] >= componentInstance->getOutputsAndInputs().size()){
+        LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "The reference to string %d is out of range. The model supports up to %d.", vr[i], componentInstance->getOutputsAndInputs().size() - 1)
+        componentInstance->setState(STATE_ERROR);
         LEAVE_FUNCTION(fmi2Error)
       }
-#ifdef FMU_DEBUG
-      FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " SetString - vr[" << i << "] = " << vr[i] << "; and value[" << i << "] to set is = " << value[i] << "\n")
-#endif
+      FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " SetString - vr[" << i << "] = " << vr[i] << "; and value[" << i << "] to set is = " << value[i] << "\n")
       CIEC_STRING valToWrite(value[i]); //copies the string into the CIEC_STRING variable
-      componentInstance->m_outputsAndInputs[vr[i]]->setValue(valToWrite);
+      componentInstance->getOutputsAndInputs()[vr[i]]->setValue(valToWrite);
     }
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG("-----------\n")
-#endif
+    FMU_DEBUG_LOG((fmuInstance*)c, "-----------\n")
 
-    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2SetString - GUID = %s", componentInstance->m_GUID.getValue())
+    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2SetString - GUID = %s", componentInstance->getGuid().getValue())
     LEAVE_FUNCTION(fmi2OK)
   }
 
@@ -547,25 +461,19 @@ extern "C" {
   fmi2Status fmi2DoStep(fmi2Component c, fmi2Real currentCommunicationPoint, fmi2Real communicationStepSize, fmi2Boolean noSetFMUStatePriorToCurrentPoint){
     NOT_USED(noSetFMUStatePriorToCurrentPoint)
     ENTRY_FUNCTION(FMI2_DO_STEP)
-    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2DoStep - GUID = %s", componentInstance->m_GUID.getValue())
+    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "fmi2DoStep - GUID = %s", componentInstance->getGuid().getValue())
     CIEC_LREAL advanceTime = communicationStepSize;
 
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " - fmi2DoStep\n")
-#endif
-    if(-1 != componentInstance->m_stopTime && (currentCommunicationPoint + communicationStepSize) > componentInstance->m_stopTime){
-      LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "Computation time past stopTime: %f", componentInstance->m_stopTime)
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " - fmi2DoStep Error1 \n")
-#endif
+    FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " - fmi2DoStep\n")
+    if(-1 != componentInstance->getStopTime() && (currentCommunicationPoint + communicationStepSize) > componentInstance->getStopTime()){
+      LOG_FMU(componentInstance, fmi2Error, LOG_ERROR, "Computation time past stopTime: %f", componentInstance->getStopTime())
+      FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " - fmi2DoStep Error1 \n")
       LEAVE_FUNCTION(fmi2Error)
     }
 
-    if(!componentInstance->getTimer().advanceTicks(advanceTime)){
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG(componentInstance->m_GUID.getValue() << " - fmi2DoStep Error2 \n")
-#endif
-    LEAVE_FUNCTION(fmi2Error)
+    if(!componentInstance->advanceInstanceTime(advanceTime)){
+      FMU_DEBUG_LOG((fmuInstance*)c, componentInstance->getGuid().getValue() << " - fmi2DoStep Error2 \n")
+      LEAVE_FUNCTION(fmi2Error)
     }
     LEAVE_FUNCTION(fmi2OK)
   }
@@ -620,15 +528,13 @@ extern "C" {
     if(0 == c)
       return fmi2Error;
     fmuInstance* componentInstance = static_cast<fmuInstance*>(c);
-    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "%s - GUID = %s", functionName, componentInstance->m_GUID.getValue())
+    LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "%s - GUID = %s", functionName, componentInstance->getGuid().getValue())
     LOG_FMU(componentInstance, fmi2OK, LOG_ERROR, "Function %s is not supported.", functionName)
     return fmi2Error;
   }
 
   void freeInstanceInternal(fmi2Component c){
     fmuInstance* componentInstance = static_cast<fmuInstance*>(c);
-    //delete componentInstance->getTimer(); //when deleting the device below, the timer is deleted
-    //delete componentInstance->m_resource.getResourcePtr();
     delete componentInstance;
   }
 }

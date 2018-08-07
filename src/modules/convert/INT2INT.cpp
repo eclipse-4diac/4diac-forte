@@ -14,8 +14,6 @@
 #include "INT2INT_gen.cpp"
 #endif
 
-#ifndef FMU
-
 DEFINE_FIRMWARE_FB(INT2INT, g_nStringIdINT2INT)
 
 const CStringDictionary::TStringId INT2INT::scm_anDataInputNames[] = {g_nStringIdIN};
@@ -58,75 +56,3 @@ void INT2INT::executeEvent(int pa_nEIID){
 
 INT2INT::~INT2INT(){
 }
-
-#else
-
-DEFINE_FIRMWARE_FB(INT2INT, g_nStringIdINT2INT)
-
-const CStringDictionary::TStringId INT2INT::scm_anDataInputNames[] = {g_nStringIdIN};
-
-const CStringDictionary::TStringId INT2INT::scm_anDataInputTypeIds[] = {g_nStringIdINT};
-
-const CStringDictionary::TStringId INT2INT::scm_anDataOutputNames[] = {g_nStringIdOUT};
-
-const CStringDictionary::TStringId INT2INT::scm_anDataOutputTypeIds[] = {g_nStringIdINT};
-
-const TForteInt16 INT2INT::scm_anEIWithIndexes[] = {0};
-const TDataIOID INT2INT::scm_anEIWith[] = {0, 255};
-const CStringDictionary::TStringId INT2INT::scm_anEventInputNames[] = {g_nStringIdREQ};
-
-const TDataIOID INT2INT::scm_anEOWith[] = {0, 255};
-const TForteInt16 INT2INT::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId INT2INT::scm_anEventOutputNames[] = {g_nStringIdCNF};
-
-const SFBInterfaceSpec INT2INT::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  0, 0
-};
-
-void INT2INT::alg_REQ(void){
-OUT() = IN();
-
-}
-
-
-void INT2INT::enterStateSTART(void){
-  m_nECCState = scm_nStateSTART;
-}
-
-void INT2INT::enterStateREQ(void){
-  m_nECCState = scm_nStateREQ;
-  alg_REQ();
-  sendOutputEvent( scm_nEventCNFID);
-}
-
-void INT2INT::executeEvent(int pa_nEIID){
-  bool bTransitionCleared;
-  do{
-    bTransitionCleared = true;
-    switch(m_nECCState){
-      case scm_nStateSTART:
-        if(scm_nEventREQID == pa_nEIID)
-          enterStateREQ();
-        else
-          bTransitionCleared  = false; //no transition cleared
-        break;
-      case scm_nStateREQ:
-        if(1)
-          enterStateSTART();
-        else
-          bTransitionCleared  = false; //no transition cleared
-        break;
-      default:
-      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 1.", m_nECCState.operator TForteUInt16 ());
-        m_nECCState = 0; //0 is always the initial state
-        break;
-    }
-    pa_nEIID = cg_nInvalidEventID;  // we have to clear the event after the first check in order to ensure correct behavior
-  }while(bTransitionCleared);
-}
-
-#endif
-

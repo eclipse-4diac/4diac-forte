@@ -14,8 +14,6 @@
 #include "E_SR_gen.cpp"
 #endif
 
-#ifndef FMU
-
 DEFINE_FIRMWARE_FB(E_SR, g_nStringIdE_SR)
 
 const CStringDictionary::TStringId E_SR::scm_aunDataOutputNameIds[] = {g_nStringIdQ};
@@ -65,90 +63,3 @@ void E_SR::executeEvent(int pa_nEIID){
       break;
   }
 }
-
-#else
-
-DEFINE_FIRMWARE_FB(E_SR, g_nStringIdE_SR)
-
-const CStringDictionary::TStringId E_SR::scm_anDataOutputNames[] = {g_nStringIdQ};
-
-const CStringDictionary::TStringId E_SR::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL};
-
-const TForteInt16 E_SR::scm_anEIWithIndexes[] = {-1, -1};
-const CStringDictionary::TStringId E_SR::scm_anEventInputNames[] = {g_nStringIdS, g_nStringIdR};
-
-const TDataIOID E_SR::scm_anEOWith[] = {0, 255};
-const TForteInt16 E_SR::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId E_SR::scm_anEventOutputNames[] = {g_nStringIdEO};
-
-const SFBInterfaceSpec E_SR::scm_stFBInterfaceSpec = {
-  2,  scm_anEventInputNames,  0,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  0,  0, 0,
-  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  0, 0
-};
-
-void E_SR::alg_SET(void){
-Q() = true;
-
-}
-
-void E_SR::alg_RESET(void){
-Q() = false;
-
-}
-
-
-void E_SR::enterStateQ0(void){
-  m_nECCState = scm_nStateQ0;
-}
-
-void E_SR::enterStateRESET(void){
-  m_nECCState = scm_nStateRESET;
-  alg_RESET();
-  sendOutputEvent( scm_nEventEOID);
-}
-
-void E_SR::enterStateSET(void){
-  m_nECCState = scm_nStateSET;
-  alg_SET();
-  sendOutputEvent( scm_nEventEOID);
-}
-
-void E_SR::executeEvent(int pa_nEIID){
-  bool bTransitionCleared;
-  do{
-    bTransitionCleared = true;
-    switch(m_nECCState){
-      case scm_nStateQ0:
-        if(scm_nEventSID == pa_nEIID)
-          enterStateSET();
-        else
-          bTransitionCleared  = false; //no transition cleared
-        break;
-      case scm_nStateRESET:
-        if(scm_nEventSID == pa_nEIID)
-          enterStateSET();
-        else
-          bTransitionCleared  = false; //no transition cleared
-        break;
-      case scm_nStateSET:
-        if(scm_nEventRID == pa_nEIID)
-          enterStateRESET();
-        else
-          bTransitionCleared  = false; //no transition cleared
-        break;
-      default:
-      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 2.", m_nECCState.operator TForteUInt16 ());
-        m_nECCState = 0; //0 is always the initial state
-        break;
-    }
-    pa_nEIID = cg_nInvalidEventID;  // we have to clear the event after the first check in order to ensure correct behavior
-  }while(bTransitionCleared);
-}
-
-#endif
-
-
-
-

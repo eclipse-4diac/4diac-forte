@@ -21,9 +21,10 @@ if(FORTE_ENABLE_FMU)
   set(FORTE_BUILD_STATIC_LIBRARY OFF CACHE BOOL "" FORCE)
   set(FORTE_BUILD_EXECUTABLE OFF CACHE BOOL "" FORCE)
   
-  forte_add_definition("-DFMU") 
-  IF(BUILD_TYPE_LOWERCASE STREQUAL "debug")
+  forte_add_definition("-DFORTE_FMU") 
+  IF(NOT FORTE_LOG_LEVEL STREQUAL "NOLOG")
     forte_add_definition("-DFMU_DEBUG") 
+    message("Adding logging FMU")
   ENDIF()
 
   set(FORTE_FMU_INCLUDE "" CACHE STRING "Folder to include in the compilation. Specify here the location of the fmi headers")
@@ -35,13 +36,14 @@ if(FORTE_ENABLE_FMU)
 
   forte_set_timer(fmiTimerHandler) #this will be added after the arch timer so it will override it
   forte_add_sourcefile_cpp(fmiInterface.cpp)
-  forte_add_sourcefile_hcpp(fmuValueContainer fmuInstance processinterface 
+  forte_add_sourcefile_hcpp(fmuValueContainer fmuInstance processinterface fmuEcet
     ../../stdfblib/io/IX ../../stdfblib/io/QX
     ../../stdfblib/io/IW ../../stdfblib/io/QW
-    parameters/FMU_PARAM_BOOL
-    parameters/FMU_PARAM_INT
-    parameters/FMU_PARAM_REAL
-    parameters/FMU_PARAM_STRING)
-    
+   )
+   forte_add_sourcefile_cpp(fmuEcetFactory.cpp)
+   forte_add_sourcefile_hcpp(../../arch/utils/timespec_utils)
+   
+else(FORTE_ENABLE_FMU)
+  forte_add_sourcefile_cpp(../ecetFactory.cpp)
 endif(FORTE_ENABLE_FMU)
 

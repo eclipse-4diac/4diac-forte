@@ -577,6 +577,10 @@ class CFunctionBlock{
 #ifdef FORTE_SUPPORT_MONITORING
     friend class forte::core::CMonitoringHandler;
 #endif //FORTE_SUPPORT_MONITORING
+
+#ifdef FORTE_FMU
+    friend class fmuInstance;
+#endif //FORTE_FMU
 };
 
 template<>

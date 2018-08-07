@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 fortiss GmbH
+ * Copyright (c) 2016 -2018 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,8 @@
 #define LOG_ERROR           2
 
 #define NUMBER_OF_LOG_CATEGORIES 3
+
+extern fmi2String loggingNames[NUMBER_OF_LOG_CATEGORIES];
 
 typedef enum {
   STATE_START_END             = 1,
@@ -128,90 +130,65 @@ const unsigned int allowedStatesInFunction[] = {
     STATE_STEP_COMPLETE | STATE_STEP_IN_PROGRESS | STATE_STEP_FAILED | STATE_TERMINATED,                   //FMI2_GET_STRING_STATUS
 };
 
-#define LOG_FMU(instance, status, categoryIndex, message, ...)                                                 \
-  if (categoryIndex < NUMBER_OF_LOG_CATEGORIES                                                                 \
-        && (instance->m_loggingCategories[categoryIndex] || instance->m_loggingCategories[LOG_ALL])) {         \
-      instance->m_callbackFunctions->logger(instance->m_callbackFunctions->componentEnvironment,               \
-           instance->m_instanceName.getValue(), status, loggingNames[categoryIndex], message, ##__VA_ARGS__);  \
+#define LOG_FMU(instance, status, categoryIndex, message, ...)                                                  \
+  if (categoryIndex < NUMBER_OF_LOG_CATEGORIES                                                                  \
+        && (instance->getLoggingCategories()[categoryIndex] || instance->getLoggingCategories()[LOG_ALL])) {    \
+      instance->getCallbackFunctions()->logger(instance->getCallbackFunctions()->componentEnvironment,          \
+           instance->getInstanceName().getValue(), status, loggingNames[categoryIndex], message, ##__VA_ARGS__);\
   }
 
 
-#define ASSERT_STATE(instance, function)                                                                       \
-  if(!(instance->m_state & allowedStatesInFunction[function])) {                                               \
-    instance->m_state = STATE_ERROR;                                                                           \
-    LOG_FMU(instance, fmi2Error, LOG_ERROR, "The function cannot be called in the given state")                \
+#define ASSERT_STATE(instance, function)                                                                        \
+  if(!(instance->getState() & allowedStatesInFunction[function])) {                                             \
+    instance->setState(STATE_ERROR);                                                                            \
+    LOG_FMU(instance, fmi2Error, LOG_ERROR, "The function cannot be called in the given state")                 \
     LEAVE_FUNCTION(fmi2Error)                                            \
   }
 
-#define ASSERT_STATE_NO_RETURN(instance, function)                                                            \
-  if(!(instance->m_state & allowedStatesInFunction[function])) {                                              \
-    instance->m_state = STATE_ERROR;                                                                          \
-    LOG_FMU(instance, fmi2Error, LOG_ERROR, "The function cannot be called in the given state")               \
-    LEAVE_FUNCTION_NO_RETURN()                                                                                \
+#define ASSERT_STATE_NO_RETURN(instance, function)                                                              \
+  if(!(instance->getState() & allowedStatesInFunction[function])) {                                             \
+    instance->setState(STATE_ERROR);                                                                            \
+    LOG_FMU(instance, fmi2Error, LOG_ERROR, "The function cannot be called in the given state")                 \
+    LEAVE_FUNCTION_NO_RETURN()                                                                                  \
   }
 
 
-#if !defined(FMU_DISTRIBUTED_CLIENT)
+#define ENTRY_FUNCTION(function)                                                                                \
+    fmuInstance* componentInstance = static_cast<fmuInstance*>(c);                                              \
+    if(NULL == c) {LEAVE_FUNCTION(fmi2Error)}                                                                   \
+    ASSERT_STATE(componentInstance, function)                                                                   \
 
-#define ENTRY_FUNCTION(function)                                                                              \
-    fmuInstance* componentInstance = static_cast<fmuInstance*>(c);                                            \
-    if(NULL == c) {LEAVE_FUNCTION(fmi2Error)}                                                                 \
-    ASSERT_STATE(componentInstance, function)                                                                 \
-
-#define LEAVE_FUNCTION(returnValue)                                                                           \
+#define LEAVE_FUNCTION(returnValue)                                                                             \
    return returnValue;
 
-#define ENTRY_FUNCTION_NO_RETURN(function)                                                                    \
-    fmuInstance* componentInstance = static_cast<fmuInstance*>(c);                                            \
-    if(NULL == c) {LEAVE_FUNCTION_NO_RETURN()}                                                                \
-    ASSERT_STATE_NO_RETURN(componentInstance, function)                                                       \
+#define ENTRY_FUNCTION_NO_RETURN(function)                                                                      \
+    fmuInstance* componentInstance = static_cast<fmuInstance*>(c);                                              \
+    if(NULL == c) {LEAVE_FUNCTION_NO_RETURN()}                                                                  \
+    ASSERT_STATE_NO_RETURN(componentInstance, function)                                                         \
 
-#define LEAVE_FUNCTION_NO_RETURN()                                                                            \
-   return;
+#define LEAVE_FUNCTION_NO_RETURN()                                                                              \
 
-#else
-#define ENTRY_FUNCTION(function)                                                                              \
-    fmuInstanceDistributed* componentInstance = static_cast<fmuInstanceDistributed*>(c);                      \
-    if(NULL == c) {LEAVE_FUNCTION(fmi2Error)}                                                                 \
-    ASSERT_STATE(componentInstance, function)                                                                 \
-
-#define LEAVE_FUNCTION(returnValue)                                                                           \
-   return returnValue;
-
-#define ENTRY_FUNCTION_NO_RETURN(function)                                                                    \
-    fmuInstanceDistributed* componentInstance = static_cast<fmuInstanceDistributed*>(c);                      \
-    if(NULL == c) {LEAVE_FUNCTION_NO_RETURN()}                                                                \
-    ASSERT_STATE_NO_RETURN(componentInstance, function)                                                       \
-
-#define LEAVE_FUNCTION_NO_RETURN()                                                                            \
-   return;
-
-#endif
-
-
-#define NOT_USED(var)                                                                                         \
+#define NOT_USED(var)                                                                                           \
   (void)var;
 
 #ifdef FMU_DEBUG
-  #include <forte_sync.h>
-  #include <sstream>
-  #if !defined(FMU_DISTRIBUTED_CLIENT)
-    #include "fmuInstance.h"
-    #define FMU_DEBUG_LOG(message)                 \
-    {                                              \
-      std::stringstream ss;                        \
-      ss << message;                               \
-      fmuInstance::printToFile(ss.str().c_str());  \
-    }
-  #else
-    #include "distributed/fmuInstanceDistributed.h"
-    #define FMU_DEBUG_LOG(message)                 \
-    {                                              \
-      std::stringstream ss;                        \
-      ss << message;                               \
-      fmuInstanceDistributed::printToFile(ss.str().c_str());  \
-    }
-  #endif //FMU_DISTRIBUTED_CLIENT
+#  include <forte_sync.h>
+#  include <sstream>
+#  include "fmuInstance.h"
+#  define FMU_DEBUG_LOG(instance, message)                                                                      \
+  {                                                                                                             \
+    std::stringstream ss;                                                                                       \
+    ss << message;                                                                                              \
+    (instance)->printToFile(ss.str().c_str());                                                                    \
+  }
+#else
+# define FMU_DEBUG_LOG(instance, message)
 #endif /*FMU_DEBUG*/
+
+#define GET_FMU_INSTANCE_FROM_COMM_LAYER()   \
+    GET_FMU_INSTANCE_FROM_FB(this->getCommFB())
+
+#define GET_FMU_INSTANCE_FROM_FB(fb) \
+  ((fmuInstance*)&((fb)->getResource().getDevice()))
 
 #endif /* _FMU_CONFIG_H_ */

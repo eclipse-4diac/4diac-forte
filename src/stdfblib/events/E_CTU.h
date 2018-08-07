@@ -14,7 +14,7 @@
 
 #include <funcbloc.h>
 
-class E_CTU: public CFunctionBlock{
+class E_CTU : public CFunctionBlock{
   DECLARE_FIRMWARE_FB(E_CTU)
 
 private:
@@ -56,5 +56,6 @@ public:
   virtual ~E_CTU(){};
 
 };
-#endif //close the ifdef sequence from the beginning of the file
+
+#endif //_E_CTU_H_
 

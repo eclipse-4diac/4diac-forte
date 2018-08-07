@@ -12,9 +12,9 @@
 #ifndef _BASICFB_H_
 #define _BASICFB_H_
 
-#ifdef FMU
+#ifdef FORTE_FMU
 #include "fmi/fmuInstance.h"
-#endif
+#endif //FORTE_FMU
 
 #include "funcbloc.h"
 
@@ -102,9 +102,9 @@ class CBasicFB : public CFunctionBlock{
 
     CIEC_ANY *m_aoInternals; //!< A list of pointers to the internal variables.
 
-#ifdef FMU
+#ifdef FORTE_FMU
     friend class fmuInstance;
-#endif
+#endif //FORTE_FMU
 };
 
 #endif /*_BASICFB_H_*/

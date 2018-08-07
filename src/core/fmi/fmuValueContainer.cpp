@@ -1,125 +1,126 @@
-/*
- * fmuValueContainer.cpp
+/*******************************************************************************
+ * Copyright (c) 2016 -2018 fortiss GmbH
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- *  Created on: 16.08.2017
- *      Author: cabral
- */
+ * Contributors:
+ *    Jose Cabral - initial API and implementation and/or initial documentation
+ *******************************************************************************/
 
 #include "fmuValueContainer.h"
 #include "fmuInstance.h"
+#include "../../arch/devlog.h"
 
 fmuValueContainer::fmuValueContainer(fmuValueContainer::valueType pa_valueType, bool pa_needPointerToValue) :
-    m_errorOcurred(false), m_callback(0), m_callBackArgument(0), m_isEvent(false){
-  m_value = allocateValuePointer(pa_valueType);
+    mErrorOcurred(false), mCallback(0), mCallBackArgument(0), mIsEvent(false){
+  mValue = allocateValuePointer(pa_valueType);
   if(pa_needPointerToValue){
-    m_pPointerToValue = new UPointerToValue;
+    mPointerToValue = new UPointerToValue;
   }else{
-    m_pPointerToValue = 0;
+    mPointerToValue = 0;
   }
 }
 
 fmuValueContainer::fmuValueContainer(fmuValueContainer& pa_Source){
-  m_value = allocateValuePointer(getValueFromType(pa_Source.getDataTypeID()));
-  if(pa_Source.m_pPointerToValue){
-     m_pPointerToValue = new UPointerToValue;
-     *m_pPointerToValue = *pa_Source.m_pPointerToValue;
+  mValue = allocateValuePointer(getValueFromType(pa_Source.getDataTypeID()));
+  if(pa_Source.mPointerToValue){
+     mPointerToValue = new UPointerToValue;
+     *mPointerToValue = *pa_Source.mPointerToValue;
    }else{
-     m_pPointerToValue = 0;
+     mPointerToValue = 0;
    }
 }
 
 fmuValueContainer::~fmuValueContainer(){
-  delete m_value;
-  if(m_pPointerToValue){
-    delete m_pPointerToValue;
+  delete mValue;
+  if(mPointerToValue){
+    delete mPointerToValue;
   }
 }
 
 void fmuValueContainer::setCallback(newValueArrived pa_callback){
-  m_callback = pa_callback;
+  mCallback = pa_callback;
 }
 
 void fmuValueContainer::setCallbackArgument(void* pa_callbackArguments){
-  m_callBackArgument = pa_callbackArguments;
+  mCallBackArgument = pa_callbackArguments;
 }
 
 void fmuValueContainer::setValue(const CIEC_ANY& pa_value){
-  m_value->setValue(pa_value);
-  if(m_pPointerToValue){
-    if(m_isEvent){
+  mValue->setValue(pa_value);
+  if(mPointerToValue){
+    if(mIsEvent){
       CIEC_LINT toAssign;
       toAssign.setValue(pa_value);
-      *m_pPointerToValue->m_eventCounter = toAssign;
+      *mPointerToValue->mEventCounter = static_cast<TForteUInt32>(toAssign);
     }
     else{
-      m_pPointerToValue->m_actualValue->setValue(pa_value);
+      mPointerToValue->mActualValue->setValue(pa_value);
     }
   }
-  if(0 != m_callback){
-    m_callback(m_callBackArgument);
+  if(0 != mCallback){
+    mCallback(mCallBackArgument);
   }
 }
 
 void fmuValueContainer::setEventCounterPointer(TForteUInt32* pa_eventCounter){
-  if(m_pPointerToValue){
-    m_pPointerToValue->m_eventCounter = pa_eventCounter;
-    m_isEvent = true;
+  if(mPointerToValue){
+    mPointerToValue->mEventCounter = pa_eventCounter;
+    mIsEvent = true;
   }else{
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG("ERROR: Trying to set a event counter pointer to a container that was not constructed for it\n")
-#endif
+    DEVLOG_ERROR("[FMU] Trying to set a event counter pointer to a container that was not constructed for it\n");
   }
 }
 
 void fmuValueContainer::setValuePointer(CIEC_ANY* pa_valuePointer){
-  if(m_pPointerToValue){
-    m_pPointerToValue->m_actualValue = pa_valuePointer;
-    m_isEvent = false;
+  if(mPointerToValue){
+    mPointerToValue->mActualValue = pa_valuePointer;
+    mIsEvent = false;
   }else{
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG("ERROR: Trying to set an CIEC_ANY pointer to a container that was not constructed for it\n")
-#endif
+    DEVLOG_ERROR("[FMU] Trying to set an CIEC_ANY pointer to a container that was not constructed for it\n");
   }
 }
 
 CIEC_BOOL* fmuValueContainer::getValueAsBool() const{
-  if(0 != m_pPointerToValue && !m_isEvent){
-      m_value->setValue(*m_pPointerToValue->m_actualValue);
+  if(0 != mPointerToValue && !mIsEvent){
+      mValue->setValue(*mPointerToValue->mActualValue);
   }
-  return static_cast<CIEC_BOOL*>(m_value);
+  return static_cast<CIEC_BOOL*>(mValue);
 }
 
 CIEC_LINT* fmuValueContainer::getValueAsInt() const{
-  if(0 != m_pPointerToValue){
-    if(m_isEvent){
-      CIEC_LINT toAssign = *m_pPointerToValue->m_eventCounter;
-      m_value->setValue(toAssign);
+  if(0 != mPointerToValue){
+    if(mIsEvent){
+      CIEC_LINT toAssign = *mPointerToValue->mEventCounter;
+      mValue->setValue(toAssign);
     }else{
-      m_value->setValue(*m_pPointerToValue->m_actualValue);
+      mValue->setValue(*mPointerToValue->mActualValue);
     }
   }
-  return static_cast<CIEC_LINT*>(m_value);
+  return static_cast<CIEC_LINT*>(mValue);
 }
 
 CIEC_LREAL* fmuValueContainer::getValueAsReal() const{
-  if(0 != m_pPointerToValue && !m_isEvent){
-    switch(m_pPointerToValue->m_actualValue->getDataTypeID()){
+  if(0 != mPointerToValue && !mIsEvent){
+    switch(mPointerToValue->mActualValue->getDataTypeID()){
       case CIEC_ANY::e_REAL:
-        CIEC_REAL::castRealData(*static_cast<CIEC_REAL*>(m_pPointerToValue->m_actualValue), *static_cast<CIEC_ANY*>(m_value));
+        CIEC_REAL::castRealData(*static_cast<CIEC_REAL*>(mPointerToValue->mActualValue), *static_cast<CIEC_ANY*>(mValue));
         break;
       case CIEC_ANY::e_LREAL:
-        CIEC_LREAL::castLRealData(*static_cast<CIEC_LREAL*>(m_pPointerToValue->m_actualValue), *static_cast<CIEC_ANY*>(m_value));
+        CIEC_LREAL::castLRealData(*static_cast<CIEC_LREAL*>(mPointerToValue->mActualValue), *static_cast<CIEC_ANY*>(mValue));
         break;
       default:
-        m_value->setValue(*m_pPointerToValue->m_actualValue); //should'nt be here
+        mValue->setValue(*mPointerToValue->mActualValue); //should'nt be here
         break;
     }
   }
-  return static_cast<CIEC_LREAL*>(m_value);
+  return static_cast<CIEC_LREAL*>(mValue);
 }
 
 CIEC_STRING* fmuValueContainer::getValueAsString() const{
-  return static_cast<CIEC_STRING*>(m_value);
+  return static_cast<CIEC_STRING*>(mValue);
 }
 
 CIEC_ANY* fmuValueContainer::allocateValuePointer(fmuValueContainer::valueType pa_valueType){
@@ -140,7 +141,7 @@ CIEC_ANY* fmuValueContainer::allocateValuePointer(fmuValueContainer::valueType p
         break;
       default:
         allocatedValue = 0;
-        m_errorOcurred = true;
+        mErrorOcurred = true;
     }
 
   return allocatedValue;
@@ -164,10 +165,6 @@ fmuValueContainer::valueType fmuValueContainer::getValueFromType(CIEC_ANY::EData
     case CIEC_ANY::e_WORD:
     case CIEC_ANY::e_DWORD:
     case CIEC_ANY::e_LWORD:
-    case CIEC_ANY::e_DATE:
-    case CIEC_ANY::e_DATE_AND_TIME:
-    case CIEC_ANY::e_TIME:
-    case CIEC_ANY::e_TIME_OF_DAY:
      retVal = INTEGER;
       break;
     case CIEC_ANY::e_REAL:
@@ -176,6 +173,10 @@ fmuValueContainer::valueType fmuValueContainer::getValueFromType(CIEC_ANY::EData
       break;
     case CIEC_ANY::e_STRING:
     case CIEC_ANY::e_WSTRING:
+    case CIEC_ANY::e_DATE:
+    case CIEC_ANY::e_DATE_AND_TIME:
+    case CIEC_ANY::e_TIME:
+    case CIEC_ANY::e_TIME_OF_DAY:
      retVal = STRING;
       break;
     default:

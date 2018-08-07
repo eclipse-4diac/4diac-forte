@@ -15,8 +15,6 @@
 #endif
 #include <typelib.h>
 
-#ifndef FMU
-
 DEFINE_FIRMWARE_FB(E_R_TRIG, g_nStringIdE_R_TRIG)
 
 const CStringDictionary::TStringId E_R_TRIG::scm_anDataInputNames[] = {g_nStringIdQI};
@@ -55,56 +53,3 @@ void E_R_TRIG::executeEvent(int pa_nEIID){
     m_bOldVal = QI();
   }
 }
-
-#else
-
-DEFINE_FIRMWARE_FB(E_R_TRIG, g_nStringIdE_R_TRIG)
-
-const CStringDictionary::TStringId E_R_TRIG::scm_anDataInputNames[] = {g_nStringIdQI};
-
-const CStringDictionary::TStringId E_R_TRIG::scm_anDataInputTypeIds[] = {g_nStringIdBOOL};
-
-const TForteInt16 E_R_TRIG::scm_anEIWithIndexes[] = {0};
-const TDataIOID E_R_TRIG::scm_anEIWith[] = {0, 255};
-const CStringDictionary::TStringId E_R_TRIG::scm_anEventInputNames[] = {g_nStringIdEI};
-
-const TForteInt16 E_R_TRIG::scm_anEOWithIndexes[] = {-1, -1};
-const CStringDictionary::TStringId E_R_TRIG::scm_anEventOutputNames[] = {g_nStringIdEO};
-
-const SFBInterfaceSpec E_R_TRIG::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  0, 0,  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  0,  0, 0,
-  0, 0
-};
-
-
-const SCFB_FBInstanceData E_R_TRIG::scm_astInternalFBs[] = {
-  {g_nStringIdD, g_nStringIdE_D_FF},
-  {g_nStringIdSW, g_nStringIdE_SWITCH},
-};
-
-const SCFB_FBConnectionData E_R_TRIG::scm_astEventConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdEI), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdD, g_nStringIdCLK), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdD, g_nStringIdEO), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSW, g_nStringIdEI), 1},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSW, g_nStringIdEO1), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdEO), -1},
-};
-
-const SCFB_FBConnectionData E_R_TRIG::scm_astDataConnections[] = {
-  {GENERATE_CONNECTION_PORT_ID_1_ARG(g_nStringIdQI), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdD, g_nStringIdD), 0},
-  {GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdD, g_nStringIdQ), 0, GENERATE_CONNECTION_PORT_ID_2_ARG(g_nStringIdSW, g_nStringIdG), 1},
-};
-
-const SCFB_FBNData E_R_TRIG::scm_stFBNData = {
-  2, scm_astInternalFBs,
-  3, scm_astEventConnections,
-  0, 0,
-  2, scm_astDataConnections,
-  0, 0,
-  0, 0
-};
-
-
-
-
-#endif

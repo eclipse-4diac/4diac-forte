@@ -13,9 +13,9 @@
 #ifndef _CFB_H_
 #define _CFB_H_
 
-#ifdef FMU
+#ifdef FORTE_FMU
 #include "fmi/fmuInstance.h"
-#endif
+#endif //FORTE_FMU
 
 #include "funcbloc.h"
 
@@ -130,10 +130,6 @@ class CCompositeFB: public CFunctionBlock {
     virtual CFunctionBlock *getFB(forte::core::TNameIdentifier::CIterator &paNameListIt);
 #endif
 
-#ifdef FMU
-    friend class fmuInstance;
-#endif
-
   private:
     virtual void executeEvent(int pa_nEIID);
 
@@ -161,6 +157,9 @@ class CCompositeFB: public CFunctionBlock {
     //!Array storing the holding the connections to be used in the execute event for triggering the internal FBs
     CEventConnection **mInterface2InternalEventCons;
 
+#ifdef FORTE_FMU
+    friend class fmuInstance;
+#endif //FORTE_FMU
 };
 
 #define COMPOSITE_FUNCTION_BLOCK_CTOR(fbclass) \

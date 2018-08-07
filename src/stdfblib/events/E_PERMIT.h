@@ -12,8 +12,6 @@
 #ifndef _E_PERMIT_H_
 #define _E_PERMIT_H_
 
-#ifndef FMU
-
 #include <funcbloc.h>
 
 class E_PERMIT: public CFunctionBlock{
@@ -48,54 +46,4 @@ public:
 
 };
 
-#else
-
-#include <basicfb.h>
-#include <forte_bool.h>
-
-class E_PERMIT: public CBasicFB{
-  DECLARE_FIRMWARE_FB(E_PERMIT)
-
-private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_BOOL &PERMIT() {
-    return *static_cast<CIEC_BOOL*>(getDI(0));
-  };
-
-  static const TEventID scm_nEventEIID = 0;
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const TDataIOID scm_anEIWith[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
-
-  static const TEventID scm_nEventEOID = 0;
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
-
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-
-   FORTE_BASIC_FB_DATA_ARRAY(1, 1, 0, 0, 0);
-  static const TForteInt16 scm_nStateSTART = 0;
-  static const TForteInt16 scm_nStateEO = 1;
-  static const TForteInt16 scm_nStateNULL = 2;
-
-  void enterStateSTART(void);
-  void enterStateEO(void);
-  void enterStateNULL(void);
-
-  virtual void executeEvent(int pa_nEIID);
-
-public:
-  E_PERMIT(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-       CBasicFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId,
-              0, m_anFBConnData, m_anFBVarsData){
-  };
-
-  virtual ~E_PERMIT(){};
-
-};
-
-#endif
-
-#endif //close the ifdef sequence from the beginning of the file
-
+#endif //_E_PERMIT_H_

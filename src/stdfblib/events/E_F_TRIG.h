@@ -12,8 +12,6 @@
 #ifndef _E_F_TRIG_H_
 #define _E_F_TRIG_H_
 
-#ifndef FMU
-
 #include <funcbloc.h>
 
 // cppcheck-suppress noConstructor
@@ -52,51 +50,4 @@ public:
 
 };
 
-#else
-
-#include <cfb.h>
-#include <typelib.h>
-#include <forte_bool.h>
-
-class E_F_TRIG: public CCompositeFB{
-  DECLARE_FIRMWARE_FB(E_F_TRIG)
-
-private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_BOOL &QI() {
-    return *static_cast<CIEC_BOOL*>(getDI(0));
-  };
-
-  static const TEventID scm_nEventEIID = 0;
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const TDataIOID scm_anEIWith[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
-
-  static const TEventID scm_nEventEOID = 0;
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
-
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-
-   FORTE_FB_DATA_ARRAY(1, 1, 0, 0);
-
-  static const SCFB_FBInstanceData scm_astInternalFBs[];
-
-  static const SCFB_FBConnectionData scm_astEventConnections[];
-
-  static const SCFB_FBConnectionData scm_astDataConnections[];
-  static const SCFB_FBNData scm_stFBNData;
-
-public:
-  COMPOSITE_FUNCTION_BLOCK_CTOR(E_F_TRIG){
-  };
-
-  virtual ~E_F_TRIG(){};
-
-};
-
-#endif
-
-#endif //close the ifdef sequence from the beginning of the file
-
+#endif //_E_F_TRIG_H_

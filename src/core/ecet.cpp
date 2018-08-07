@@ -17,22 +17,10 @@
 #include "utils/criticalregion.h"
 #include "../arch/devlog.h"
 
-#ifdef FMU
-#include "fmi/fmiTimerHandler.h"
-#endif
-
 CEventChainExecutionThread::CEventChainExecutionThread() :
     CThread(), mSuspendSemaphore(0), mProcessingEvents(false)
-#ifdef FMU
-, m_allowedToRun(false)
-#endif
 {
   clear();
-#ifdef FMU
-  if(CTimerHandler::sm_poFORTETimer){
-    static_cast<fmiTimerHandler*>(CTimerHandler::sm_poFORTETimer)->addExecutionThread(this);
-  }
-#endif
 }
 
 CEventChainExecutionThread::~CEventChainExecutionThread(){
@@ -40,36 +28,32 @@ CEventChainExecutionThread::~CEventChainExecutionThread(){
 
 void CEventChainExecutionThread::run(void){
   while(isAlive()){ //thread is allowed to execute
-#ifdef FMU
-    if(m_allowedToRun){
-#endif
-    if(externalEventOccured()){
-      transferExternalEvents();
+    mainRun();
+  }
+}
+
+void CEventChainExecutionThread::mainRun(){
+  if(externalEventOccured()){
+    transferExternalEvents();
+  }
+  if(mEventListEnd == mEventListStart){
+    mProcessingEvents = false;
+    selfSuspend();
+    mProcessingEvents = true; //set this flag here to true as well in case the suspend just went through and processing was not finished
+  }
+  else{
+    if(0 != *mEventListStart){
+      (*mEventListStart)->mFB->receiveInputEvent((*mEventListStart)->mPortId, *this);
     }
-    if(mEventListEnd == mEventListStart){
-      mProcessingEvents = false;
-      selfSuspend();
-      mProcessingEvents = true;  //set this flag here to true as well in case the suspend just went through and processing was not finished
+    *mEventListStart = 0;
+
+    if(mEventListStart == &mEventList[0]){
+      //wrap the ringbuffer
+      mEventListStart = &mEventList[cg_nEventChainEventListSize - 1];
     }
     else{
-      if(0 != *mEventListStart){
-        (*mEventListStart)->mFB->receiveInputEvent((*mEventListStart)->mPortId, *this);
-      }
-      *mEventListStart = 0;
-
-      if(mEventListStart == &mEventList[0]){
-        //wrap the ringbuffer
-        mEventListStart = &mEventList[cg_nEventChainEventListSize - 1];
-      }
-      else{
-        mEventListStart--;
-      }
+      mEventListStart--;
     }
-#ifdef FMU
-    }else{
-      selfSuspend();
-    }
-#endif
   }
 }
 

@@ -12,8 +12,6 @@
 #ifndef _E_SPLIT_H_
 #define _E_SPLIT_H_
 
-#ifndef FMU
-
 #include <funcbloc.h>
 
 class E_SPLIT: public CFunctionBlock{
@@ -46,45 +44,4 @@ public:
 
 };
 
-#else
-
-#include <basicfb.h>
-
-class E_SPLIT: public CBasicFB{
-  DECLARE_FIRMWARE_FB(E_SPLIT)
-
-private:
-  static const TEventID scm_nEventEIID = 0;
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
-
-  static const TEventID scm_nEventEO1ID = 0;
-  static const TEventID scm_nEventEO2ID = 1;
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
-
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-
-   FORTE_BASIC_FB_DATA_ARRAY(2, 0, 0, 0, 0);
-  static const TForteInt16 scm_nStateSTART = 0;
-  static const TForteInt16 scm_nStateEO = 1;
-
-  void enterStateSTART(void);
-  void enterStateEO(void);
-
-  virtual void executeEvent(int pa_nEIID);
-
-public:
-  E_SPLIT(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-       CBasicFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId,
-              0, m_anFBConnData, m_anFBVarsData){
-  };
-
-  virtual ~E_SPLIT(){};
-
-};
-
-#endif
-
-#endif //close the ifdef sequence from the beginning of the file
-
+#endif //_E_SPLIT_H_

@@ -12,8 +12,6 @@
 #ifndef _DWORD2DWORD_H_
 #define _DWORD2DWORD_H_
 
-#ifndef FMU
-
 #include <funcbloc.h>
 
 class DWORD2DWORD: public CFunctionBlock{
@@ -52,60 +50,5 @@ public:
 
 };
 
-#else
-
-#include <basicfb.h>
-#include <forte_dword.h>
-
-class DWORD2DWORD: public CBasicFB{
-  DECLARE_FIRMWARE_FB(DWORD2DWORD)
-
-private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_DWORD &IN() {
-    return *static_cast<CIEC_DWORD*>(getDI(0));
-  };
-
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_DWORD &OUT() {
-    return *static_cast<CIEC_DWORD*>(getDO(0));
-  };
-
-  static const TEventID scm_nEventREQID = 0;
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const TDataIOID scm_anEIWith[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
-
-  static const TEventID scm_nEventCNFID = 0;
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
-
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-
-   FORTE_BASIC_FB_DATA_ARRAY(1, 1, 1, 0, 0);
-  void alg_REQ(void);
-  static const TForteInt16 scm_nStateSTART = 0;
-  static const TForteInt16 scm_nStateREQ = 1;
-
-  void enterStateSTART(void);
-  void enterStateREQ(void);
-
-  virtual void executeEvent(int pa_nEIID);
-
-public:
-  DWORD2DWORD(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-       CBasicFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId,
-              0, m_anFBConnData, m_anFBVarsData){
-  };
-
-  virtual ~DWORD2DWORD(){};
-
-};
-
-#endif
-
-#endif //close the ifdef sequence from the beginning of the file
+#endif //_DWORD2DWORD_H_
 

@@ -131,9 +131,7 @@ EComResponse fmuComLayer::openConnection(char* ) {
   EComResponse retVal = e_InitOk;
 
   if(this->getCommFB()->getNumRD() == 0 && this->getCommFB()->getNumSD() == 0){
-#ifdef FMU_DEBUG
-    FMU_DEBUG_LOG(MODEL_GUID << " Cannot create a communication IO wihtout inputs and outputs\n" << "--------------\n");
-#endif
+    FMU_DEBUG_LOG(GET_FMU_INSTANCE_FROM_COMM_LAYER() ,MODEL_GUID << " Cannot create a communication IO wihtout inputs and outputs\n" << "--------------\n");
   }else{
 
     if(fmuHandler::eRegisterLayerSucceeded == GET_HANDLER_FROM_COMM_LAYER(fmuHandler)->registerLayer(this)){
