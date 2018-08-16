@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+ *                      2018 Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,6 +14,7 @@
  *    - fix: apostrophes are deleted in parseWriteConnectionData
  *   Jens Reimann
  *    - Enhance bootfile loading behavior
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *******************************************************************************/
 #include <string.h>
 #include "DEV_MGR.h"
@@ -590,13 +592,16 @@ void DEV_MGR::appedIdentifierName(CIEC_STRING& paDest, forte::core::TNameIdentif
 }
 
 DEV_MGR::DEV_MGR(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CCommFB(pa_nInstanceNameId, pa_poSrcRes, &scm_stFBInterfaceSpec, m_anFBConnData, m_anFBVarsData, forte::com_infra::e_Server),
+    CCommFB(pa_nInstanceNameId, pa_poSrcRes, forte::com_infra::e_Server),
     m_poDevice(pa_poSrcRes->getDevice()) {
+  setupFBInterface(&scm_stFBInterfaceSpec, m_anFBConnData, m_anFBVarsData);
   m_stCommand.mAdditionalParams.reserve(255);
   m_stCommand.mAdditionalParams.clear();
-};
+}
 
 DEV_MGR::~DEV_MGR(){
+  freeAllData();
+  m_pstInterfaceSpec = 0;  //block any wrong cleanup in the generic fb base class of CBaseCommFB
 }
 
 EMGMResponse DEV_MGR::parseAndExecuteMGMCommand(char *pa_acDest, char *pa_acCommand){

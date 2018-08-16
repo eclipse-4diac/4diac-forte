@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2012 - 2015 Profactor GmbH, ACIN, fortiss Gmbh
+ *                      2018 Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,13 +9,14 @@
  * Contributors:
  *   Matthias Plasch, Monika Wenger, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *******************************************************************************/
 #ifndef _GEN_F_MUX_H_
 #define _GEN_F_MUX_H_
 
-#include <funcbloc.h>
+#include <genfb.h>
 
-class GEN_F_MUX : public CFunctionBlock{
+class GEN_F_MUX : public CGenFunctionBlock<CFunctionBlock> {
   DECLARE_GENERIC_FIRMWARE_FB(GEN_F_MUX)
 
   private:
@@ -41,18 +43,11 @@ class GEN_F_MUX : public CFunctionBlock{
   unsigned int m_nDInputs;
   unsigned int m_nDOutputs;
 
-    CStringDictionary::TStringId m_nConfiguredFBTypeNameId;
-
     virtual void executeEvent(int pa_nEIID);
+    virtual SFBInterfaceSpecforGenerics *createInterfaceSpec(const char *paConfigString);
 
     GEN_F_MUX(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
     virtual ~GEN_F_MUX();
   public:
-
-    CStringDictionary::TStringId getFBTypeId(void) const{
-      return m_nConfiguredFBTypeNameId;
-    }
-
-    bool configureFB(const char *pa_acConfigString);
 };
 #endif //close the ifdef sequence from the beginning of the file

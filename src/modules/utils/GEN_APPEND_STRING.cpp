@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2012 - 2014 Profactor GmbH, ACIN
+ *                      2018 Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +9,7 @@
  * Contributors:
  *   Matthias Plasch, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *******************************************************************************/
 #include "GEN_APPEND_STRING.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -33,12 +35,11 @@ const TForteInt16 GEN_APPEND_STRING::scm_anEOWithIndexes[] = {0, -1};
 const TForteInt16 GEN_APPEND_STRING::scm_maxStringBufSize = 100;
 
 GEN_APPEND_STRING::GEN_APPEND_STRING(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-  CFunctionBlock(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0),
-  m_anDataInputNames(0),
-  m_anDataInputTypeIds(0),
-  m_anEIWith(0),
-  m_nDInputs(0),
-  m_nConfiguredFBTypeNameId(CStringDictionary::scm_nInvalidStringId){
+    CGenFunctionBlock<CFunctionBlock>(pa_poSrcRes, pa_nInstanceNameId),
+    m_anDataInputNames(0),
+    m_anDataInputTypeIds(0),
+    m_anEIWith(0),
+    m_nDInputs(0){
 }
 
 GEN_APPEND_STRING::~GEN_APPEND_STRING(){
@@ -128,12 +129,9 @@ void GEN_APPEND_STRING::executeEvent(int pa_nEIID){
   }
 }
 
-bool GEN_APPEND_STRING::configureFB(const char *pa_acConfigString){
-  bool bRetVal = false;
-
-  m_nConfiguredFBTypeNameId = CStringDictionary::getInstance().insert(pa_acConfigString);
-
-  const char *pcPos = strrchr(pa_acConfigString, '_');
+SFBInterfaceSpecforGenerics *GEN_APPEND_STRING::createInterfaceSpec(const char *paConfigString) {
+  SFBInterfaceSpecforGenerics *interfaceSpec = 0;
+  const char *pcPos = strrchr(paConfigString, '_');
 
   if(0 != pcPos){
     ++pcPos;
@@ -147,12 +145,11 @@ bool GEN_APPEND_STRING::configureFB(const char *pa_acConfigString){
     }
   }
   else{
-    return false;
+    return 0;
   }
 
   if(m_nDInputs < 2){
-
-    return false;
+    return 0;
   }
 
   //now the number of needed eventInputs and dataOutputs are available in the integer array
@@ -181,13 +178,7 @@ bool GEN_APPEND_STRING::configureFB(const char *pa_acConfigString){
     }
 
     //create the interface Specification
-    SFBInterfaceSpecforGenerics *pstInterfaceSpec = new SFBInterfaceSpecforGenerics(static_cast<TForteUInt8>(1), scm_anEventInputNames, m_anEIWith, scm_anEIWithIndexes, static_cast<TForteUInt8>(1), scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, static_cast<TForteUInt8>(m_nDInputs), m_anDataInputNames, m_anDataInputTypeIds, static_cast<TForteUInt8>(1), scm_anDataOutputNames, scm_anDataOutputTypeIds);
-
-    TForteByte *acFBConnData = new TForteByte[genFBConnDataSize(pstInterfaceSpec->m_nNumEOs, pstInterfaceSpec->m_nNumDIs, pstInterfaceSpec->m_nNumDOs)];
-    TForteByte *acFBVarsData = new TForteByte[genFBVarsDataSize(pstInterfaceSpec->m_nNumDIs, pstInterfaceSpec->m_nNumDOs)];
-
-    setupFBInterface(pstInterfaceSpec, acFBConnData, acFBVarsData, true);
-    bRetVal = true;
+    interfaceSpec = new SFBInterfaceSpecforGenerics(static_cast<TForteUInt8>(1), scm_anEventInputNames, m_anEIWith, scm_anEIWithIndexes, static_cast<TForteUInt8>(1), scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, static_cast<TForteUInt8>(m_nDInputs), m_anDataInputNames, m_anDataInputTypeIds, static_cast<TForteUInt8>(1), scm_anDataOutputNames, scm_anDataOutputTypeIds);
   }
-  return bRetVal;
+  return interfaceSpec;
 }

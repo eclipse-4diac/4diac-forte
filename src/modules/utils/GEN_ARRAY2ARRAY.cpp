@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2014 - 2015 Profactor GmbH, fortiss GmbH
+ *                      2018 Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +9,7 @@
  * Contributors:
  *   Matthias Plasch, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *******************************************************************************/
 #include "GEN_ARRAY2ARRAY.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -28,12 +30,11 @@ const TForteInt16 GEN_ARRAY2ARRAY::scm_anEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scm_anEventOutputNames[] = {g_nStringIdCNF};
 
 GEN_ARRAY2ARRAY::GEN_ARRAY2ARRAY(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-  CFunctionBlock(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0),
-  m_anDataInputTypeIds(0),
-  m_anDataOutputTypeIds(0),
-  m_ValueTypeID(CStringDictionary::scm_nInvalidStringId),
-  m_nArrayLength(0),
-  m_nConfiguredFBTypeNameId(CStringDictionary::scm_nInvalidStringId){
+    CGenFunctionBlock<CFunctionBlock>(pa_poSrcRes, pa_nInstanceNameId),
+    m_anDataInputTypeIds(0),
+    m_anDataOutputTypeIds(0),
+    m_ValueTypeID(CStringDictionary::scm_nInvalidStringId),
+    m_nArrayLength(0){
 }
 
 GEN_ARRAY2ARRAY::~GEN_ARRAY2ARRAY(){
@@ -53,11 +54,9 @@ void GEN_ARRAY2ARRAY::executeEvent(int pa_nEIID){
   }
 }
 
-bool GEN_ARRAY2ARRAY::configureFB(const char *pa_acConfigString){
-  bool bRetVal = false;
-
-  m_nConfiguredFBTypeNameId = CStringDictionary::getInstance().insert(pa_acConfigString);
-  const char *dNumberPos = strchr(pa_acConfigString, '_');
+SFBInterfaceSpecforGenerics *GEN_ARRAY2ARRAY::createInterfaceSpec(const char *paConfigString) {
+  SFBInterfaceSpecforGenerics *interfaceSpec = 0;
+  const char *dNumberPos = strchr(paConfigString, '_');
 
   if(0 != dNumberPos){
     ++dNumberPos;
@@ -85,7 +84,7 @@ bool GEN_ARRAY2ARRAY::configureFB(const char *pa_acConfigString){
     }
   }
   else{
-    return false;
+    return 0;
   }
 
   if(m_ValueTypeID != CStringDictionary::scm_nInvalidStringId && m_nArrayLength >= 1){
@@ -102,15 +101,9 @@ bool GEN_ARRAY2ARRAY::configureFB(const char *pa_acConfigString){
     m_anDataOutputTypeIds[2] = m_ValueTypeID;
 
     //create the interface Specification
-    SFBInterfaceSpecforGenerics *pstInterfaceSpec = new SFBInterfaceSpecforGenerics(1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 1, scm_anDataInputNames, m_anDataInputTypeIds, 1, scm_anDataOutputNames, m_anDataOutputTypeIds);
-
-    TForteByte *acFBConnData = new TForteByte[genFBConnDataSize(pstInterfaceSpec->m_nNumEOs, pstInterfaceSpec->m_nNumDIs, pstInterfaceSpec->m_nNumDOs)];
-    TForteByte *acFBVarsData = new TForteByte[genFBVarsDataSize(pstInterfaceSpec->m_nNumDIs, pstInterfaceSpec->m_nNumDOs)];
-
-    setupFBInterface(pstInterfaceSpec, acFBConnData, acFBVarsData, true);
-    bRetVal = true;
+    interfaceSpec = new SFBInterfaceSpecforGenerics(1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 1, scm_anDataInputNames, m_anDataInputTypeIds, 1, scm_anDataOutputNames, m_anDataOutputTypeIds);
   }
 
-  return bRetVal;
+  return interfaceSpec;
 }
 

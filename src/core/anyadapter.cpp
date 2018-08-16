@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2014 fortiss GmbH, 2018 TU Vienna/ACIN
+ *                      2018 Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +10,7 @@
  *    Alois Zoitl
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians - fixes event chain initialisation, adds typifyAnyAdapter
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *******************************************************************************/
 #include "anyadapter.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -46,7 +48,7 @@ void CAnyAdapter::typifyAnyAdapter(CAdapter *pa_poPeer){
   TForteByte *acFBConnData = new TForteByte[genAdapterFBConnDataSize(m_stCurrentFBInterfaceSpec.m_nNumEIs, m_stCurrentFBInterfaceSpec.m_nNumEOs, m_stCurrentFBInterfaceSpec.m_nNumDIs, m_stCurrentFBInterfaceSpec.m_nNumDOs)];
   TForteByte *acFBVarsData = new TForteByte[genFBVarsDataSize(m_stCurrentFBInterfaceSpec.m_nNumDIs, m_stCurrentFBInterfaceSpec.m_nNumDOs)];
 
-  setupFBInterface(&m_stCurrentFBInterfaceSpec, acFBConnData, acFBVarsData, true);
+  setupFBInterface(&m_stCurrentFBInterfaceSpec, acFBConnData, acFBVarsData);
   fillEventEntryList(m_ParentFB);
 }
 
@@ -55,7 +57,7 @@ bool CAnyAdapter::disconnect(CAdapterConnection *pa_poAdConn){
 
   //clean interface data and reset to empty interface
   freeAllData();
-  setupFBInterface(&scm_stFBInterfaceSpec, 0, 0, false);
+  setupFBInterface(&scm_stFBInterfaceSpec, 0, 0);
 
   return bRetVal;
 }

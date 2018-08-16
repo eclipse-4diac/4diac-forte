@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2014 Profactor GmbH
+ *                      2018 Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,14 +9,15 @@
  * Contributors:
  *   Matthias Plasch
  *   - initial API and implementation and/or initial documentation
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *******************************************************************************/
 
 #ifndef _GEN_XOR_H_
 #define _GEN_XOR_H_
 
-#include <funcbloc.h>
+#include "../genfb.h"
 
-class GEN_XOR: public CFunctionBlock {
+class GEN_XOR: public CGenFunctionBlock<CFunctionBlock> {
 DECLARE_GENERIC_FIRMWARE_FB(GEN_XOR)
 
 private:
@@ -28,7 +30,6 @@ private:
   OUT() {
     return *static_cast<CIEC_ANY_BIT*>(getDO(0));
   }
-  ;
 
   static const TEventID scm_nEventREQID = 0;
   static const TForteInt16 scm_anEIWithIndexes[];
@@ -43,10 +44,8 @@ private:
   //self-defined members
   int m_nDInputs;
 
-  CStringDictionary::TStringId m_nConfiguredFBTypeNameId;
-
-  virtual void
-  executeEvent(int pa_nEIID);
+  virtual void executeEvent(int pa_nEIID);
+  virtual SFBInterfaceSpecforGenerics *createInterfaceSpec(const char *paConfigString);
 
   GEN_XOR(const CStringDictionary::TStringId pa_nInstanceNameId,
       CResource *pa_poSrcRes);
@@ -54,14 +53,6 @@ private:
   ~GEN_XOR();
 
 public:
-
-  CStringDictionary::TStringId getFBTypeId(void) const {
-    return m_nConfiguredFBTypeNameId;
-  }
-
-  bool
-  configureFB(const char *pa_acConfigString);
-
   template<typename T>
   void calculateValue() {
     T oIn;
