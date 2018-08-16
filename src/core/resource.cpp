@@ -302,9 +302,9 @@ EMGMResponse CResource::queryAllFBTypes(CIEC_STRING & paValue){
 EMGMResponse CResource::queryFBs(CIEC_STRING & paValue){
   EMGMResponse retVal = e_UNSUPPORTED_TYPE;
   for (TFunctionBlockList::Iterator itRunner(getFBList().begin()); itRunner != getFBList().end(); ++itRunner) {
-    paValue.append("<FB Name=\"");
+    paValue.append("<FB name=\"");
     paValue.append((static_cast<CFunctionBlock *>(*itRunner))->getInstanceName());
-    paValue.append("\" Type=\"");
+    paValue.append("\" type=\"");
     paValue.append(CStringDictionary::getInstance().get((static_cast<CFunctionBlock *>(*itRunner))->getFBTypeId()));
     paValue.append("\"/>");
     if(itRunner != getFBList().end()){
