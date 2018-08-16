@@ -30,6 +30,19 @@
  * TODO try std new with nothrow.
  */
 
+#if __cplusplus >= 201103L //stdc11
+inline
+void* operator new(size_t pa_nSize) {
+  return forte_malloc(pa_nSize);
+}
+
+inline
+void* operator new[](size_t pa_nSize) {
+  return forte_malloc(pa_nSize ? pa_nSize : 1);
+}
+
+#else
+
 inline
 void* operator new(size_t pa_nSize) throw (std::bad_alloc){
   return forte_malloc(pa_nSize);
@@ -39,6 +52,8 @@ inline
 void* operator new[](size_t pa_nSize) throw (std::bad_alloc){
   return forte_malloc(pa_nSize ? pa_nSize : 1);
 }
+
+#endif
 
 inline
 void operator delete(void* pa_pvData) throw(){

@@ -36,7 +36,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 
   #forte_add_link_library(pthread)
 
-  forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -DFORTE_LITTLE_ENDIAN")
+  forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -Wshadow -DFORTE_LITTLE_ENDIAN")
   
   set(FORTE_POSIX_GENERATE_MAP_FILE FALSE CACHE BOOL "Enable the generation of map files")
   mark_as_advanced(FORTE_POSIX_GENERATE_MAP_FILE)

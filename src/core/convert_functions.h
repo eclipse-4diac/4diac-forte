@@ -530,16 +530,8 @@ inline const CIEC_WSTRING REAL_TO_WSTRING(const CIEC_REAL &paVal){
 #endif
 
 inline const CIEC_DWORD REAL_TO_DWORD(const CIEC_REAL &paVal){
-  TForteDWord nBuf = static_cast<TForteDWord>(paVal);
-  if(CIEC_DWORD::scm_nMaxVal < paVal){
-    nBuf = CIEC_DWORD::scm_nMaxVal;
-  }
-  else{
-    if(CIEC_DWORD::scm_nMinVal > paVal){
-      nBuf = CIEC_DWORD::scm_nMinVal;
-    }
-  }
-  return CIEC_DWORD(nBuf);
+  //get the raw bit representation of the real in the DWORD
+  return CIEC_DWORD(static_cast<TForteDWord>(paVal.operator float()));
 }
 #endif
 
