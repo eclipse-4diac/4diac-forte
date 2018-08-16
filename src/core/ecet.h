@@ -61,6 +61,8 @@ class CEventChainExecutionThread : public CThread{
       mSuspendSemaphore.inc();
     }
 
+    static CEventChainExecutionThread* createEcet();
+
   protected:
     //@{
     /*! \brief List of input events to deliver.
@@ -72,6 +74,8 @@ class CEventChainExecutionThread : public CThread{
     TEventEntryPtr* mEventListStart;
     TEventEntryPtr* mEventListEnd;
     //@}
+
+    void mainRun();
 
   private:
     /*! \brief The thread run()-method where the events are sent to the FBs and the FBs are executed in.

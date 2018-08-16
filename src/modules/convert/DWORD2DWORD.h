@@ -50,5 +50,5 @@ public:
 
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+#endif //_DWORD2DWORD_H_
 

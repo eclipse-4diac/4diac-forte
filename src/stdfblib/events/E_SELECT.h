@@ -46,5 +46,5 @@ public:
   virtual ~E_SELECT(){};
 
 };
-#endif //close the ifdef sequence from the beginning of the file
 
+#endif //_E_SELECT_H_

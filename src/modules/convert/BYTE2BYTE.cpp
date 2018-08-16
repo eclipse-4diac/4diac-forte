@@ -56,6 +56,3 @@ void BYTE2BYTE::executeEvent(int pa_nEIID){
 
 BYTE2BYTE::~BYTE2BYTE(){
 }
-
-
-

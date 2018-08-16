@@ -50,5 +50,4 @@ public:
 
 };
 
-#endif //close the ifdef sequence from the beginning of the file
-
+#endif //_INT2INT_H_

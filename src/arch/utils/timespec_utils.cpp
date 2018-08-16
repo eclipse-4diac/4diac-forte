@@ -12,7 +12,6 @@
 
 #include <datatype.h>
 #include <time.h>
-#include <sys/time.h>
 
 static const TForteInt64 SecondInNanoSeconds = 1000000000LL;
 

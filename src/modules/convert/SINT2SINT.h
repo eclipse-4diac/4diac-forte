@@ -51,5 +51,5 @@ public:
 
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+#endif //_SINT2SINT_H_
 

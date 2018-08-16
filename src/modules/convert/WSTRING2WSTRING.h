@@ -51,5 +51,6 @@ public:
 
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+#endif //_WSTRING2WSTRING_H_
+
 

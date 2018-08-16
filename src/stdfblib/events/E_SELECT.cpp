@@ -59,6 +59,3 @@ void E_SELECT::executeEvent(int pa_nEIID){
       break;
   }
 }
-
-
-

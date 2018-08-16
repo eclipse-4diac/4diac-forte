@@ -56,4 +56,4 @@ class FORTE_E_TimeOut : public CEventSourceFB{
 
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+#endif //_E_TIMEOUT_H_

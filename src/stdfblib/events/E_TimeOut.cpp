@@ -50,4 +50,3 @@ EMGMResponse FORTE_E_TimeOut::changeFBExecutionState(EMGMCommandType pa_unComman
   }
   return eRetVal;
 }
-

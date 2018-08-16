@@ -56,6 +56,3 @@ void WSTRING2WSTRING::executeEvent(int pa_nEIID){
 
 WSTRING2WSTRING::~WSTRING2WSTRING(){
 }
-
-
-

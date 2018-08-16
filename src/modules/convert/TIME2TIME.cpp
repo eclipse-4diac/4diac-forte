@@ -54,6 +54,3 @@ void TIME2TIME::executeEvent(int pa_nEIID){
 
 TIME2TIME::~TIME2TIME(){
 }
-
-
-

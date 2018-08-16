@@ -43,5 +43,5 @@ public:
   virtual ~E_SPLIT(){};
 
 };
-#endif //close the ifdef sequence from the beginning of the file
 
+#endif //_E_SPLIT_H_

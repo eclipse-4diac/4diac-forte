@@ -37,4 +37,3 @@ void E_PERMIT::executeEvent(int pa_nEIID){
     sendOutputEvent(scm_nEventEOID);
   }
 }
-

@@ -33,7 +33,7 @@ CResource::CResource(CResource* pa_poDevice, const SFBInterfaceSpec *pa_pstInter
     TForteByte *pa_acFBVarsData) :
         CFunctionBlock(pa_poDevice, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData),
         forte::core::CFBContainer(CStringDictionary::scm_nInvalidStringId, 0), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
-        m_poResourceEventExecution(new CEventChainExecutionThread),
+        mResourceEventExecution(CEventChainExecutionThread::createEcet()),
         mResIf2InConnections(0)
             #ifdef FORTE_SUPPORT_MONITORING
             , mMonitoringHandler(*this)
@@ -50,7 +50,7 @@ CResource::CResource(const SFBInterfaceSpec *pa_pstInterfaceSpec,
     TForteByte *pa_acFBVarsData) :
     CFunctionBlock(0, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData),
         forte::core::CFBContainer(CStringDictionary::scm_nInvalidStringId, 0), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
-        m_poResourceEventExecution(0),
+        mResourceEventExecution(0),
         mResIf2InConnections(0)
             #ifdef FORTE_SUPPORT_MONITORING
             , mMonitoringHandler(*this)
@@ -66,7 +66,7 @@ CResource::~CResource(){
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
   delete luaEngine;
 #endif
-  delete m_poResourceEventExecution;
+  delete mResourceEventExecution;
   delete[] mResIf2InConnections;
 }
 
@@ -161,9 +161,9 @@ EMGMResponse CResource::changeFBExecutionState(EMGMCommandType pa_unCommand){
           }
         }
       }
-      if(0 != m_poResourceEventExecution){
+      if(0 != mResourceEventExecution){
         // if we have a m_poResourceEventExecution handle it
-        m_poResourceEventExecution->changeExecutionState(pa_unCommand);
+        mResourceEventExecution->changeExecutionState(pa_unCommand);
       }
     }
   }

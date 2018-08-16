@@ -61,6 +61,3 @@ void E_RS::executeEvent(int pa_nEIID){
       break;
   }
 }
-
-
-

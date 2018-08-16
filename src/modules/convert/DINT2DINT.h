@@ -51,5 +51,4 @@ public:
 
 };
 
-#endif //close the ifdef sequence from the beginning of the file
-
+#endif //_DINT2DINT_H_

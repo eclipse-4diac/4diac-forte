@@ -47,5 +47,5 @@ public:
   virtual ~E_SR(){ };
 
 };
-#endif //close the ifdef sequence from the beginning of the file
 
+#endif //_E_SR_H_

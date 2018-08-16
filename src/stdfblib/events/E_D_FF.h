@@ -54,5 +54,6 @@ public:
   virtual ~E_D_FF(){ };
 
 };
-#endif //close the ifdef sequence from the beginning of the file
+
+#endif //_E_D_FF_H_
 
