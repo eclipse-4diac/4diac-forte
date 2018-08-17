@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2011 - 2014 ACIN, fortiss, nxtControl and Profactor
+ *                      2018 Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +8,7 @@
  *
  * Contributors:
  *   Alois Zoitl, Ingo Hegny, Michael Hofmann, Stanislav Meduna - initial API and implementation and/or initial documentation
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include <algorithm>
@@ -67,7 +69,7 @@ class CDeserTestMockCommFB : public forte::com_infra::CCommFB{
       m_acFBConnData = new TForteByte[genFBConnDataSize(0, 2, pa_nNumRD + 2)];
       m_acFBVarsData = new TForteByte[genFBVarsDataSize(2, pa_nNumRD + 2)];
 
-      setupFBInterface(&m_oMockFBInterface, m_acFBConnData, m_acFBVarsData, false);
+      setupFBInterface(&m_oMockFBInterface, m_acFBConnData, m_acFBVarsData);
     }
 
     virtual ~CDeserTestMockCommFB(){

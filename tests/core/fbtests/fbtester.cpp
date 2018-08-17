@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2011 - 2015 ACIN, fortiss GmbH
+ *                      2018 Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +8,7 @@
  *
  * Contributors:
  *   Alois Zoitl  - initial API and implementation and/or initial documentation
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *******************************************************************************/
 #include "fbtester.h"
 #include <boost/test/unit_test.hpp>
@@ -51,7 +53,7 @@ class CFBTestConn : public CDataConnection{
 
 CFBTester::CFBTester(CResource *pa_poTestResource) :
     CFunctionBlock(pa_poTestResource, 0, 0, 0, 0),
-        mFBUnderTest(0), m_nNumSuccesfulTestCases(0), m_nNumUnsuccesfulTestCases(0){
+        mFBUnderTest(0), m_nNumSuccesfulTestCases(0), m_nNumUnsuccesfulTestCases(0), mFBConnData(0), mFBVarsData(0){
 
   changeFBExecutionState(cg_nMGM_CMD_Reset);
   changeFBExecutionState(cg_nMGM_CMD_Start);
@@ -60,6 +62,13 @@ CFBTester::CFBTester(CResource *pa_poTestResource) :
 }
 
 CFBTester::~CFBTester(){
+  if(0 != m_pstInterfaceSpec){
+    freeAllData();  //clean the interface and connections first.
+    delete[] mFBConnData;
+    delete[] mFBVarsData;
+    delete m_pstInterfaceSpec;
+    m_pstInterfaceSpec = 0; //this stops the base classes from any wrong clean-up
+  }
 }
 
 void CFBTester::executeTests(){
@@ -200,15 +209,13 @@ void CFBTester::performCreationTest(){
       testerInterfaceSpec->m_nNumAdapters = 0;
       testerInterfaceSpec->m_pstAdapterInstanceDefinition = 0;
 
-      setupFBInterface(testerInterfaceSpec,
-          (0 != testerInterfaceSpec->m_nNumDIs) ?
-              new TForteByte[genFBConnDataSize(testerInterfaceSpec->m_nNumEOs,
-                  testerInterfaceSpec->m_nNumDIs, testerInterfaceSpec->m_nNumDOs)] :
-              0,
-          (0 != testerInterfaceSpec->m_nNumDIs) ?
-              new TForteByte[genFBVarsDataSize(testerInterfaceSpec->m_nNumDIs, testerInterfaceSpec->m_nNumDOs)] :
-              0,
-          true);
+      mFBConnData = (0 != testerInterfaceSpec->m_nNumDIs) ?
+          new TForteByte[genFBConnDataSize(testerInterfaceSpec->m_nNumEOs,
+              testerInterfaceSpec->m_nNumDIs, testerInterfaceSpec->m_nNumDOs)] : 0;
+      mFBVarsData = (0 != testerInterfaceSpec->m_nNumDIs) ?
+          new TForteByte[genFBVarsDataSize(testerInterfaceSpec->m_nNumDIs, testerInterfaceSpec->m_nNumDOs)] : 0;
+
+      setupFBInterface(testerInterfaceSpec, mFBConnData, mFBVarsData);
       testResult = true;
     }
   }

@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2012 - 2013 Profactor GmbH, ACIN
+ *                      2018 Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +9,7 @@
  * Contributors:
  *   Matthias Plasch, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *******************************************************************************/
 #include "GEN_F_MUX.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -22,7 +24,7 @@ DEFINE_GENERIC_FIRMWARE_FB(GEN_F_MUX, g_nStringIdGEN_F_MUX);
 const CStringDictionary::TStringId GEN_F_MUX::scm_anEventOutputNames[] = { g_nStringIdEO };
 
 GEN_F_MUX::GEN_F_MUX(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CFunctionBlock(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0),
+    CGenFunctionBlock<CFunctionBlock>(pa_poSrcRes, pa_nInstanceNameId),
   m_anEventInputNames(0),
   m_anDataOutputNames(0),
   m_anDataInputNames(0),
@@ -35,8 +37,7 @@ GEN_F_MUX::GEN_F_MUX(const CStringDictionary::TStringId pa_nInstanceNameId, CRes
   m_nEInputs(0),
   m_nEOutputs(0),
   m_nDInputs(0),
-  m_nDOutputs(0),
-  m_nConfiguredFBTypeNameId(CStringDictionary::scm_nInvalidStringId){
+  m_nDOutputs(0){
 }
 
 GEN_F_MUX::~GEN_F_MUX(){
@@ -87,8 +88,8 @@ void GEN_F_MUX::executeEvent(int pa_nEIID){
   }
 }
 
-bool GEN_F_MUX::configureFB(const char *pa_acConfigString){
-  bool bRetVal = false;
+SFBInterfaceSpecforGenerics *GEN_F_MUX::createInterfaceSpec(const char *paConfigString) {
+  SFBInterfaceSpecforGenerics *interfaceSpec = 0;
 
   int index = 0;
   char *paramEI = 0;
@@ -98,9 +99,7 @@ bool GEN_F_MUX::configureFB(const char *pa_acConfigString){
   TIdentifier typeIdString;
   size_t inlength;
 
-  m_nConfiguredFBTypeNameId = CStringDictionary::getInstance().insert(pa_acConfigString);
-
-  memcpy(typeIdString, pa_acConfigString, cg_nIdentifierLength);
+   memcpy(typeIdString, paConfigString, cg_nIdentifierLength);
 
   typeIdString[cg_nIdentifierLength] = '\0'; //make a string
 
@@ -122,7 +121,7 @@ bool GEN_F_MUX::configureFB(const char *pa_acConfigString){
       }
       else{
         //error on creating the FB; this would mean that the Typename starts with "_"
-        return false;
+        return 0;
       }
 
       paramEI = paramDO = &(typeIdString[index + 1]);
@@ -143,8 +142,7 @@ bool GEN_F_MUX::configureFB(const char *pa_acConfigString){
   }
 
   if(paramDO == 0){
-
-    return false;
+    return 0;
   }
   else{
     //set the data and event port numbers
@@ -158,7 +156,7 @@ bool GEN_F_MUX::configureFB(const char *pa_acConfigString){
     //return with error if there are not enough event inputs (use common merge FB instead!!)
     if(m_nEInputs < 2){
       DEVLOG_ERROR("At least 2 Event Inputs need to be set\n");
-      return false;
+      return 0;
     }
   }
 
@@ -245,13 +243,7 @@ bool GEN_F_MUX::configureFB(const char *pa_acConfigString){
     m_anEOWith[m_nDOutputs + 2] = 255;
 
     //create the interface Specification
-    SFBInterfaceSpecforGenerics *pstInterfaceSpec = new SFBInterfaceSpecforGenerics(static_cast<TForteUInt8>(m_nEInputs), m_anEventInputNames, m_anEIWith, m_anEIWithIndexes, static_cast<TForteUInt8>(m_nEOutputs), scm_anEventOutputNames, m_anEOWith, m_anEOWithIndexes, static_cast<TForteUInt8>(m_nDInputs), m_anDataInputNames, m_anDataInputTypeIds, static_cast<TForteUInt8>(m_nDOutputs + 2), m_anDataOutputNames, m_anDataOutputTypeIds);
-
-    TForteByte *acFBConnData = new TForteByte[genFBConnDataSize(pstInterfaceSpec->m_nNumEOs, pstInterfaceSpec->m_nNumDIs, pstInterfaceSpec->m_nNumDOs)];
-    TForteByte *acFBVarsData = new TForteByte[genFBVarsDataSize(pstInterfaceSpec->m_nNumDIs, pstInterfaceSpec->m_nNumDOs)];
-
-    setupFBInterface(pstInterfaceSpec, acFBConnData, acFBVarsData, true);
-    bRetVal = true;
+    interfaceSpec = new SFBInterfaceSpecforGenerics(static_cast<TForteUInt8>(m_nEInputs), m_anEventInputNames, m_anEIWith, m_anEIWithIndexes, static_cast<TForteUInt8>(m_nEOutputs), scm_anEventOutputNames, m_anEOWith, m_anEOWithIndexes, static_cast<TForteUInt8>(m_nDInputs), m_anDataInputNames, m_anDataInputTypeIds, static_cast<TForteUInt8>(m_nDOutputs + 2), m_anDataOutputNames, m_anDataOutputTypeIds);
   }
-  return bRetVal;
+  return interfaceSpec;
 }

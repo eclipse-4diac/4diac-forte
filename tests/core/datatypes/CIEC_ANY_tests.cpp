@@ -38,96 +38,96 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
     delete poTest;
   }
 
-  void checkTypisation(CIEC_ANY &pa_roTestee, const char* pa_acString, CIEC_ANY::EDataTypeID pa_eTypeId){
-    BOOST_CHECK_EQUAL(pa_roTestee.fromString(pa_acString), strlen(pa_acString));
-    BOOST_CHECK_EQUAL(pa_roTestee.getDataTypeID(), pa_eTypeId);
+  void checkTypisation(CIEC_ANY *pa_roTestee, const char* pa_acString, CIEC_ANY::EDataTypeID pa_eTypeId){
+    BOOST_CHECK_EQUAL(pa_roTestee->fromString(pa_acString), strlen(pa_acString));
+    BOOST_CHECK_EQUAL(pa_roTestee->getDataTypeID(), pa_eTypeId);
   }
 
   BOOST_AUTO_TEST_CASE(Any_Typisation_test){
     CIEC_ANY *poTestee;
 
     poTestee = CIEC_ANY::createDataType(0);
-    checkTypisation(*poTestee, "BOOL#TRUE", CIEC_ANY::e_BOOL);
+    checkTypisation(poTestee, "BOOL#TRUE", CIEC_ANY::e_BOOL);
     delete poTestee;
 
     poTestee = CIEC_ANY::createDataType(0);
-    checkTypisation(*poTestee, "SINT#123", CIEC_ANY::e_SINT);
+    checkTypisation(poTestee, "SINT#123", CIEC_ANY::e_SINT);
     delete poTestee;
 
     poTestee = CIEC_ANY::createDataType(0);
-    checkTypisation(*poTestee, "INT#5754", CIEC_ANY::e_INT);
+    checkTypisation(poTestee, "INT#5754", CIEC_ANY::e_INT);
     delete poTestee;
 
     poTestee = CIEC_ANY::createDataType(0);
-    checkTypisation(*poTestee, "DINT#112323", CIEC_ANY::e_DINT);
+    checkTypisation(poTestee, "DINT#112323", CIEC_ANY::e_DINT);
     delete poTestee;
 
     poTestee = CIEC_ANY::createDataType(0);
-    checkTypisation(*poTestee, "USINT#255", CIEC_ANY::e_USINT);
+    checkTypisation(poTestee, "USINT#255", CIEC_ANY::e_USINT);
     delete poTestee;
 
     poTestee = CIEC_ANY::createDataType(0);
-    checkTypisation(*poTestee, "UINT#25754", CIEC_ANY::e_UINT);
+    checkTypisation(poTestee, "UINT#25754", CIEC_ANY::e_UINT);
     delete poTestee;
 
     poTestee = CIEC_ANY::createDataType(0);
-    checkTypisation(*poTestee, "UDINT#3112323", CIEC_ANY::e_UDINT);
+    checkTypisation(poTestee, "UDINT#3112323", CIEC_ANY::e_UDINT);
     delete poTestee;
 
     poTestee = CIEC_ANY::createDataType(0);
-    checkTypisation(*poTestee, "BYTE#253", CIEC_ANY::e_BYTE);
+    checkTypisation(poTestee, "BYTE#253", CIEC_ANY::e_BYTE);
     delete poTestee;
 
     poTestee = CIEC_ANY::createDataType(0);
-    checkTypisation(*poTestee, "WORD#25754", CIEC_ANY::e_WORD);
+    checkTypisation(poTestee, "WORD#25754", CIEC_ANY::e_WORD);
     delete poTestee;
 
     poTestee = CIEC_ANY::createDataType(0);
-    checkTypisation(*poTestee, "DWORD#3112323", CIEC_ANY::e_DWORD);
+    checkTypisation(poTestee, "DWORD#3112323", CIEC_ANY::e_DWORD);
     delete poTestee;
 
     poTestee = CIEC_ANY::createDataType(0);
-    checkTypisation(*poTestee, "DATE#2008-04-03", CIEC_ANY::e_DATE);
+    checkTypisation(poTestee, "DATE#2008-04-03", CIEC_ANY::e_DATE);
     delete poTestee;
 
     poTestee = CIEC_ANY::createDataType(0);
-    checkTypisation(*poTestee, "TIME_OF_DAY#15:36:55.36", CIEC_ANY::e_TIME_OF_DAY);
+    checkTypisation(poTestee, "TIME_OF_DAY#15:36:55.36", CIEC_ANY::e_TIME_OF_DAY);
     delete poTestee;
 
     poTestee = CIEC_ANY::createDataType(0);
-    checkTypisation(*poTestee, "DATE_AND_TIME#1994-06-22-14:23:54.8", CIEC_ANY::e_DATE_AND_TIME);
+    checkTypisation(poTestee, "DATE_AND_TIME#1994-06-22-14:23:54.8", CIEC_ANY::e_DATE_AND_TIME);
     delete poTestee;
 
     poTestee = CIEC_ANY::createDataType(0);
-    checkTypisation(*poTestee, "TIME#311ms", CIEC_ANY::e_TIME);
+    checkTypisation(poTestee, "TIME#311ms", CIEC_ANY::e_TIME);
     delete poTestee;
 
     poTestee = CIEC_ANY::createDataType(0);
-    checkTypisation(*poTestee, "REAL#3.125", CIEC_ANY::e_REAL);
+    checkTypisation(poTestee, "REAL#3.125", CIEC_ANY::e_REAL);
     delete poTestee;
 
     poTestee = CIEC_ANY::createDataType(0);
-    checkTypisation(*poTestee, "LREAL#3.1251234", CIEC_ANY::e_LREAL);
+    checkTypisation(poTestee, "LREAL#3.1251234", CIEC_ANY::e_LREAL);
     delete poTestee;
 
     poTestee = CIEC_ANY::createDataType(0);
-    checkTypisation(*poTestee, "STRING#Hallo FORTE user!", CIEC_ANY::e_STRING);
+    checkTypisation(poTestee, "STRING#Hallo FORTE user!", CIEC_ANY::e_STRING);
     delete poTestee;
 
     poTestee = CIEC_ANY::createDataType(0);
-    checkTypisation(*poTestee, "WSTRING#Hallo FORTE user!", CIEC_ANY::e_WSTRING);
+    checkTypisation(poTestee, "WSTRING#Hallo FORTE user!", CIEC_ANY::e_WSTRING);
     delete poTestee;
 
     poTestee = CIEC_ANY::createDataType(0);
-    checkTypisation(*poTestee, "LINT#123123123123", CIEC_ANY::e_LINT);
+    checkTypisation(poTestee, "LINT#123123123123", CIEC_ANY::e_LINT);
     delete poTestee;
 
     poTestee = CIEC_ANY::createDataType(0);
-    checkTypisation(*poTestee, "ULINT#123123123123123", CIEC_ANY::e_ULINT);
+    checkTypisation(poTestee, "ULINT#123123123123123", CIEC_ANY::e_ULINT);
     delete poTestee;
 
     poTestee = CIEC_ANY::createDataType(0);
-    checkTypisation(*poTestee, "LWORD#123123123123123", CIEC_ANY::e_LWORD);
+    checkTypisation(poTestee, "LWORD#123123123123123", CIEC_ANY::e_LWORD);
     delete poTestee;
 
   }

@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2012 - 2015 ACIN, fortiss GmbH
+ *                      2018 Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +9,7 @@
  * Contributors:
  *   Alois Zoitl
  *   - initial API and implementation and/or initial documentation
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *******************************************************************************/
 #include "GEN_CSV_WRITER.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -51,7 +53,7 @@ void GEN_CSV_WRITER::executeEvent(int pa_nEIID){
 }
 
 GEN_CSV_WRITER::GEN_CSV_WRITER(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CFunctionBlock(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0), m_pstCSVFile(0), m_anDataInputNames(0), m_anDataInputTypeIds(0), m_anEIWith(0), m_nConfiguredFBTypeNameId(CStringDictionary::scm_nInvalidStringId){
+    CGenFunctionBlock<CFunctionBlock>(pa_poSrcRes, pa_nInstanceNameId), m_pstCSVFile(0), m_anDataInputNames(0), m_anDataInputTypeIds(0), m_anEIWith(0){
 }
 
 GEN_CSV_WRITER::~GEN_CSV_WRITER(){
@@ -60,12 +62,11 @@ GEN_CSV_WRITER::~GEN_CSV_WRITER(){
   delete[] m_anEIWith;
 }
 
-bool GEN_CSV_WRITER::configureFB(const char *pa_acConfigString){
-  bool bRetVal = false;
+SFBInterfaceSpecforGenerics *GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString) {
+  SFBInterfaceSpecforGenerics *interfaceSpec = 0;
 
-  m_nConfiguredFBTypeNameId = CStringDictionary::getInstance().insert(pa_acConfigString);
 
-  const char *acPos = strrchr(pa_acConfigString, '_');
+  const char *acPos = strrchr(paConfigString, '_');
   if(0 != acPos){
     acPos++;
     int nNumDIs = static_cast<int>(forte::core::util::strtoul(acPos,0,10));
@@ -95,15 +96,9 @@ bool GEN_CSV_WRITER::configureFB(const char *pa_acConfigString){
     m_anEIWith[2 + nNumDIs] = 255;
 
     //create the interface Specification
-    SFBInterfaceSpecforGenerics *pstInterfaceSpec = new SFBInterfaceSpecforGenerics((TForteUInt8)2, scm_anEventInputNames, m_anEIWith, scm_anEIWithIndexes, (TForteUInt8)2, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, (TForteUInt8)nNumDIs, m_anDataInputNames, m_anDataInputTypeIds, (TForteUInt8)2, scm_anDataOutputNames, scm_anDataOutputTypeIds);
-
-    TForteByte *acFBConnData = new TForteByte[genFBConnDataSize(pstInterfaceSpec->m_nNumEOs, pstInterfaceSpec->m_nNumDIs, pstInterfaceSpec->m_nNumDOs)];
-    TForteByte *acFBVarsData = new TForteByte[genFBVarsDataSize(pstInterfaceSpec->m_nNumDIs, pstInterfaceSpec->m_nNumDOs)];
-
-    setupFBInterface(pstInterfaceSpec, acFBConnData, acFBVarsData, true);
-    bRetVal = true;
+    interfaceSpec = new SFBInterfaceSpecforGenerics((TForteUInt8)2, scm_anEventInputNames, m_anEIWith, scm_anEIWithIndexes, (TForteUInt8)2, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, (TForteUInt8)nNumDIs, m_anDataInputNames, m_anDataInputTypeIds, (TForteUInt8)2, scm_anDataOutputNames, scm_anDataOutputTypeIds);
   }
-  return bRetVal;
+  return interfaceSpec;
 }
 
 void GEN_CSV_WRITER::openCSVFile(){

@@ -1,5 +1,6 @@
 /*******************************************************************************
   * Copyright (c) 2006-2014 ACIN, Profactor GmbH, fortiss GmbH
+ *                      2018 Johannes Kepler University
   * All rights reserved. This program and the accompanying materials
   * are made available under the terms of the Eclipse Public License v1.0
   * which accompanies this distribution, and is available at
@@ -9,6 +10,7 @@
   *    Rene Smodic, Alois Zoitl, Michael Hofmann, Martin Melik Merkumians,
   *    Patrick Smejkal
   *      - initial implementation and rework communication infrastructure
+  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
   *******************************************************************************/
 
 #include "basecommfb.h"
@@ -25,26 +27,16 @@ using namespace forte::com_infra;
 const char * const CBaseCommFB::scm_sResponseTexts[] = { "OK", "INVALID_ID", "TERMINATED", "INVALID_OBJECT", "DATA_TYPE_ERROR", "INHIBITED", "NO_SOCKET", "SEND_FAILED", "RECV_FAILED" };
 
 CBaseCommFB::CBaseCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, forte::com_infra::EComServiceType pa_eCommServiceType) :
-  CEventSourceFB(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0), m_eCommServiceType(pa_eCommServiceType), m_poTopOfComStack(0) {
+    CGenFunctionBlock<CEventSourceFB>(pa_poSrcRes, pa_nInstanceNameId), m_eCommServiceType(pa_eCommServiceType), m_poTopOfComStack(0) {
   memset(m_apoInterruptQueue, 0, sizeof(m_apoInterruptQueue)); //TODO change this to  m_apoInterruptQueue{0} in the extended list when fully switching to C++11
   setEventChainExecutor(getResource().getResourceEventExecution());
   m_unComInterruptQueueCount = 0;
-  m_nConfiguredFBTypeNameId = CStringDictionary::scm_nInvalidStringId;
-}
-
-CBaseCommFB::CBaseCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-  TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData, forte::com_infra::EComServiceType pa_eCommServiceType) :
-  CEventSourceFB(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData), m_eCommServiceType(pa_eCommServiceType), m_poTopOfComStack(0) {
-  memset(m_apoInterruptQueue, 0, sizeof(m_apoInterruptQueue)); //TODO change this to  m_apoInterruptQueue{0} in the extended list when fully switching to C++11
-  setEventChainExecutor(getResource().getResourceEventExecution());
-  m_unComInterruptQueueCount = 0;
-  m_nConfiguredFBTypeNameId = CStringDictionary::scm_nInvalidStringId;
 }
 
 CBaseCommFB::~CBaseCommFB() {
   closeConnection();
 
-  if ((getManagesFBData()) && (0 != m_pstInterfaceSpec)) {
+  if(0 != m_pstInterfaceSpec) {
     //Free the memory allocated for the interface, only do this if we dynamically created it (i.e., getManagesFBData is true)
     delete[](m_pstInterfaceSpec->m_anEIWith);
     delete[](m_pstInterfaceSpec->m_anEOWith);

@@ -1,18 +1,19 @@
 /*******************************************************************************
-  * Copyright (c) 2005 - 2018 Profactor GmbH, ACIN, fortiss GmbH,
-  *                           Johannes Kepler University
-  *
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Thomas Strasser, Gunnar Grabmaier, Alois Zoitl, Smodic Rene, Ingo Hegny,
-  *    Gerhard Ebenhofer, Michael Hofmann, Martin Melik Merkumians, Monika Wenger, 
-  *    Matthias Plasch
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2005 - 2018 Profactor GmbH, ACIN, fortiss GmbH,
+ *                           Johannes Kepler University
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Thomas Strasser, Gunnar Grabmaier, Alois Zoitl, Smodic Rene, Ingo Hegny,
+ *    Gerhard Ebenhofer, Michael Hofmann, Martin Melik Merkumians, Monika Wenger,
+ *    Matthias Plasch
+ *      - initial implementation and rework communication infrastructure
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *******************************************************************************/
 #include "funcbloc.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "funcbloc_gen.cpp"
@@ -36,7 +37,7 @@ CFunctionBlock::CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *p
   m_updated = false;
 #endif
 
-  setupFBInterface(pa_pstInterfaceSpec, pa_acFBConnData, pa_acFBVarsData, false);
+  setupFBInterface(pa_pstInterfaceSpec, pa_acFBConnData, pa_acFBVarsData);
 }
 
 CFunctionBlock::~CFunctionBlock(){
@@ -63,51 +64,11 @@ void CFunctionBlock::freeAllData(){
     }
   }
 
-  if(m_bManagesFBData){
-    TForteByte *acFBConnData = 0;
-    TForteByte *acFBVarsData = 0;
-
-    if(0 != mEOConns){
-      //if not 0 m_apoEOConns points to the start of the connection data array
-      acFBConnData = reinterpret_cast<TForteByte *>(mEOConns);
-    }
-    else{
-      if(0 != m_apoDIConns){
-        //if not 0 m_apoDIConns points to the start of the connection data array
-        acFBConnData = reinterpret_cast<TForteByte *>(m_apoDIConns);
-      }
-      else{
-        if(0 != mDOConns){
-          //if not 0 m_apoDOConns points to the start of the connection data array
-          acFBConnData = reinterpret_cast<TForteByte *>(mDOConns);
-        }
-      }
-    }
-
-    if(0 != m_aoDIs){
-      //if not 0 m_aoDIs points to the start of the vars data array
-      acFBVarsData = reinterpret_cast<TForteByte *>(m_aoDIs);
-    }
-    else{
-      if(0 != m_aoDOs){
-        //if not 0 m_aoDOs points to the start of the vars data array
-        acFBVarsData = reinterpret_cast<TForteByte *>(m_aoDOs);
-      }
-      else{
-        if(0 != m_apoAdapters){
-          //if not 0 m_apoAdapters points to the start of the vars data array
-          acFBVarsData = reinterpret_cast<TForteByte *>(m_apoAdapters);
-        }
-      }
-    }
-
-    delete[] acFBConnData;
-    delete[] acFBVarsData;
-    delete m_pstInterfaceSpec;
-  }
 #ifdef  FORTE_SUPPORT_MONITORING
   delete[] m_nEOMonitorCount;
+  m_nEOMonitorCount = 0;
   delete[] m_nEIMonitorCount;
+  m_nEIMonitorCount = 0;
 #endif //FORTE_SUPPORT_MONITORING
 }
 
@@ -470,9 +431,8 @@ CIEC_ANY *CFunctionBlock::createDataPoint(const CStringDictionary::TStringId **p
   return poRetVal;
 }
 
-void CFunctionBlock::setupFBInterface(const SFBInterfaceSpec *pa_pstInterfaceSpec, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData, bool pa_bManagesFBData){
+void CFunctionBlock::setupFBInterface(const SFBInterfaceSpec *pa_pstInterfaceSpec, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData){
   m_pstInterfaceSpec = const_cast<SFBInterfaceSpec *>(pa_pstInterfaceSpec);
-  m_bManagesFBData = pa_bManagesFBData;
 
   if(0 != pa_pstInterfaceSpec){
     if((0 != pa_acFBConnData) && (0 != pa_acFBVarsData)){
@@ -548,59 +508,6 @@ TPortId CFunctionBlock::getPortId(CStringDictionary::TStringId pa_unPortNameId, 
     }
   }
   return cg_unInvalidPortId;
-}
-
-void CFunctionBlock::generateGenericInterfacePointNameArray(const char * const pa_acPrefix, CStringDictionary::TStringId* pa_anNamesArayStart, unsigned int pa_unNumGenericDataPoints){
-  size_t unLen = strlen(pa_acPrefix);
-
-  unsigned int noOfDigits = 0;
-  {
-    unsigned int tempNum = pa_unNumGenericDataPoints;
-    while(tempNum){
-      tempNum /= 10;
-      noOfDigits++;
-    }
-  }
-
-  if(cg_nIdentifierLength >= (unLen + noOfDigits)){
-    TIdentifier acBuffer;
-    memcpy(acBuffer, pa_acPrefix, unLen);
-    for(size_t i = 0; i <= noOfDigits; i++){
-      acBuffer[unLen + i] = '\0';
-    }
-
-    for(unsigned int i = 1; i <= pa_unNumGenericDataPoints; i++){
-      if(i < 10){ //1 digit
-        acBuffer[unLen] = static_cast<char>(0x30 + i);
-      }
-      else if(i < 100){ //2 digits
-        if(0 == i % 10){
-          acBuffer[unLen] = static_cast<char>(0x30 + (i % 100 / 10));
-        }
-        acBuffer[unLen + 1] = static_cast<char>(0x30 + i % 10);
-      }
-      else{ //3 digits
-        if(0 == i % 100){
-          acBuffer[unLen] = static_cast<char>(0x30 + (i / 100));
-        }
-        if(0 == i % 10){
-          acBuffer[unLen + 1] = static_cast<char>(0x30 + (i % 100 / 10));
-        }
-        acBuffer[unLen + 2] = static_cast<char>(0x30 + i % 10);
-      }
-      pa_anNamesArayStart[i - 1] = CStringDictionary::getInstance().insert(acBuffer);
-    }
-  }else{
-    DEVLOG_ERROR("CFunctionBlock::generateGenericInterfacePointNameArray won't be able to create all the generics since %s is too long to hold until %d", pa_acPrefix, pa_unNumGenericDataPoints);
-  }
-}
-
-void CFunctionBlock::generateGenericDataPointArrays(const char * const pa_acPrefix, CStringDictionary::TStringId* pa_anDataTypeNamesArrayStart, CStringDictionary::TStringId* pa_anNamesArrayStart, unsigned int pa_unNumGenericDataPoints){
-  generateGenericInterfacePointNameArray(pa_acPrefix, pa_anNamesArrayStart, pa_unNumGenericDataPoints);
-
-  for(unsigned int i = 0; i < pa_unNumGenericDataPoints; i++){
-    pa_anDataTypeNamesArrayStart[i] = g_nStringIdANY;
-  }
 }
 
 #ifdef FORTE_SUPPORT_MONITORING

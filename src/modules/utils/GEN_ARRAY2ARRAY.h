@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2014 - 2015 Profactor GmbH, fortiss GmbH
+ *                      2018 Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,13 +9,14 @@
  * Contributors:
  *   Matthias Plasch, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *******************************************************************************/
 #ifndef _GEN_ARRAY2ARRAY_H_
 #define _GEN_ARRAY2ARRAY_H_
 
-#include <funcbloc.h>
+#include <genfb.h>
 
-class GEN_ARRAY2ARRAY: public CFunctionBlock{
+class GEN_ARRAY2ARRAY: public CGenFunctionBlock<CFunctionBlock> {
   DECLARE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY)
 
 private:
@@ -47,18 +49,15 @@ private:
   //self-defined members
   CStringDictionary::TStringId m_ValueTypeID;
   unsigned int m_nArrayLength;
-  CStringDictionary::TStringId m_nConfiguredFBTypeNameId;
+
   virtual void executeEvent(int pa_nEIID);
+  virtual SFBInterfaceSpecforGenerics *createInterfaceSpec(const char *paConfigString);
 
   GEN_ARRAY2ARRAY(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
   virtual ~GEN_ARRAY2ARRAY();;
 
 public:
-  CStringDictionary::TStringId getFBTypeId(void) const{
-    return m_nConfiguredFBTypeNameId;
-  }
 
-  bool configureFB(const char *pa_acConfigString);
 };
 
 #endif //close the ifdef sequence from the beginning of the file

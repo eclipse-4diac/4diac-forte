@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2014 Profactor GmbH
+ *                      2018 Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,14 +9,15 @@
  * Contributors:
  *   Matthias Plasch
  *   - initial API and implementation and/or initial documentation
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *******************************************************************************/
 
 #ifndef _GEN_AND_H_
 #define _GEN_AND_H_
 
-#include <funcbloc.h>
+#include "../genfb.h"
 
-class GEN_AND: public CFunctionBlock {
+class GEN_AND: public CGenFunctionBlock<CFunctionBlock> {
 DECLARE_GENERIC_FIRMWARE_FB(GEN_AND)
 
 private:
@@ -40,23 +42,16 @@ private:
   static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
   //self-defined members
-  int m_nDInputs;
-
-  CStringDictionary::TStringId m_nConfiguredFBTypeNameId;
+  unsigned int m_nDInputs;
 
   virtual void executeEvent(int pa_nEIID);
+  virtual SFBInterfaceSpecforGenerics *createInterfaceSpec(const char *paConfigString);
 
   GEN_AND(const CStringDictionary::TStringId pa_nInstanceNameId,
       CResource *pa_poSrcRes);
   virtual ~GEN_AND();
 
 public:
-
-  CStringDictionary::TStringId getFBTypeId(void) const {
-    return m_nConfiguredFBTypeNameId;
-  }
-
-  bool configureFB(const char *pa_acConfigString);
 
   template<typename T> void calculateValue() {
     T oIn, oOut;

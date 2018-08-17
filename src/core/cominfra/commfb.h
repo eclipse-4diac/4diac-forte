@@ -1,15 +1,17 @@
 /*******************************************************************************
-* Copyright (c) 2006-2015 ACIN, Profactor GmbH, fortiss GmbH
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Eclipse Public License v1.0
-* which accompanies this distribution, and is available at
-* http://www.eclipse.org/legal/epl-v10.html
-*
-* Contributors:
-*    Rene Smodic, Thomas Strasser, Alois Zoitl, Michael Hofmann,
-*    Martin Melik-Merkumians, Ingo Hegny, Patrick Smejkal
-*      - initial implementation and rework communication infrastructure
-*******************************************************************************/
+ * Copyright (c) 2006-2015 ACIN, Profactor GmbH, fortiss GmbH
+ *                      2018 Johannes Kepler University
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Rene Smodic, Thomas Strasser, Alois Zoitl, Michael Hofmann,
+ *    Martin Melik-Merkumians, Ingo Hegny, Patrick Smejkal
+ *      - initial implementation and rework communication infrastructure
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *******************************************************************************/
 #ifndef _COMMFB_H_
 #define _COMMFB_H_
 
@@ -28,14 +30,6 @@ namespace forte {
 
     protected:
       CCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, forte::com_infra::EComServiceType pa_eCommServiceType);
-
-      CCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-        TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData, forte::com_infra::EComServiceType pa_eCommServiceType);
-
-      /*!\brief The configureFB method is used by the typelib to parametrize the number of inputs/outputs
-      * \param pa_acConfigString : the string containing the requested typename (eg. "CLIENT_3_2"
-      */
-      virtual bool configureFB(const char *pa_acConfigString);
 
       void executeEvent(int pa_nEIID);
 
@@ -63,6 +57,8 @@ namespace forte {
 
       static const TForteInt16 scm_anEIWithIndexes[];
       static const TForteInt16 scm_anEOWithIndexes[];
+
+      virtual SFBInterfaceSpecforGenerics *createInterfaceSpec(const char *paConfigString);
     };
 
   }

@@ -1,15 +1,17 @@
 /*******************************************************************************
-* Copyright (c) 2006-2014 ACIN, Profactor GmbH, fortiss GmbH
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Eclipse Public License v1.0
-* which accompanies this distribution, and is available at
-* http://www.eclipse.org/legal/epl-v10.html
-*
-* Contributors:
-*    Rene Smodic, Alois Zoitl, Michael Hofmann, Martin Melik Merkumians,
-*    Patrick Smejkal
-*      - initial implementation and rework communication infrastructure
-*******************************************************************************/
+ * Copyright (c) 2006-2014 ACIN, Profactor GmbH, fortiss GmbH
+ *                      2018 Johannes Kepler University
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Rene Smodic, Alois Zoitl, Michael Hofmann, Martin Melik Merkumians,
+ *    Patrick Smejkal
+ *      - initial implementation and rework communication infrastructure
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *******************************************************************************/
 #include <fortenew.h>
 #include <string.h>
 #include <stdio.h>
@@ -35,11 +37,6 @@ const TForteInt16 CCommFB::scm_anEOWithIndexes[] = { 0, 3, -1 };
 
 CCommFB::CCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, forte::com_infra::EComServiceType pa_eCommServiceType) :
   CBaseCommFB(pa_nInstanceNameId, pa_poSrcRes, pa_eCommServiceType) {
-}
-
-CCommFB::CCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-  TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData, forte::com_infra::EComServiceType pa_eCommServiceType) :
-  CBaseCommFB(pa_nInstanceNameId, pa_poSrcRes, pa_pstInterfaceSpec, pa_acFBConnData, pa_acFBVarsData, pa_eCommServiceType) {
 }
 
 CCommFB::~CCommFB() {
@@ -124,7 +121,7 @@ EComResponse CCommFB::sendData() {
   return resp;
 }
 
-bool CCommFB::configureFB(const char *pa_acConfigString) {
+SFBInterfaceSpecforGenerics *CCommFB::createInterfaceSpec(const char *paConfigString){
   TIdentifier tempstring;
   char *sParamA = 0;
   char *sParamB = 0;
@@ -147,9 +144,7 @@ bool CCommFB::configureFB(const char *pa_acConfigString) {
   TForteUInt8 nNumEIs = 2;
   TForteUInt8 nNumEOs = 2;
 
-  m_nConfiguredFBTypeNameId = CStringDictionary::getInstance().insert(pa_acConfigString);
-
-  memcpy(tempstring, pa_acConfigString, cg_nIdentifierLength);
+  memcpy(tempstring, paConfigString, cg_nIdentifierLength);
   tempstring[cg_nIdentifierLength] = '\0';
   inlength = strlen(tempstring);
   for (i = 0; i < inlength - 1; i++) { // search first underscore
@@ -158,7 +153,7 @@ bool CCommFB::configureFB(const char *pa_acConfigString) {
       break;
     }
   }
-  if (sParamA != 0) // search for 2nd underscore
+  if (0 != sParamA) // search for 2nd underscore
     for (i = i + 1; i < inlength - 1; i++) {
       if (tempstring[i] == '_') {
         tempstring[i] = '\0';
@@ -167,8 +162,9 @@ bool CCommFB::configureFB(const char *pa_acConfigString) {
       }
     }
 
-  if (sParamB == 0) // no underscore found
-    return false;
+  if (0 == sParamB){ // no underscore found
+    return 0;
+  }
 
   nNumDIs = 2;
   nNumDOs = 2;
@@ -254,9 +250,10 @@ bool CCommFB::configureFB(const char *pa_acConfigString) {
     }
   }
 
-  setupFBInterface(new SFBInterfaceSpecforGenerics(nNumEIs, const_cast<const CStringDictionary::TStringId * const >(paun_EINames), const_cast<const TDataIOID * const >(pan_EIWith), scm_anEIWithIndexes, nNumEOs, const_cast<const CStringDictionary::TStringId * const >(paun_EONames), const_cast<const TDataIOID * const >(pan_EOWith), scm_anEOWithIndexes, nNumDIs, const_cast<const CStringDictionary::TStringId * const >(paun_DINames), const_cast<const CStringDictionary::TStringId * const >(paun_DIDataTypeNames), nNumDOs, const_cast<const CStringDictionary::TStringId * const >(paun_DONames), const_cast<const CStringDictionary::TStringId * const >(paun_DODataTypeNames)), new TForteByte[genFBConnDataSize(nNumEOs, nNumDIs, nNumDOs)], new TForteByte[genFBVarsDataSize(nNumDIs, nNumDOs)], true //we want that the FB will delete the two data arrays
-  );
-  return true;
+  return new SFBInterfaceSpecforGenerics(nNumEIs, const_cast<const CStringDictionary::TStringId * const >(paun_EINames), const_cast<const TDataIOID * const >(pan_EIWith), scm_anEIWithIndexes,
+      nNumEOs, const_cast<const CStringDictionary::TStringId * const >(paun_EONames), const_cast<const TDataIOID * const >(pan_EOWith), scm_anEOWithIndexes,
+      nNumDIs, const_cast<const CStringDictionary::TStringId * const >(paun_DINames), const_cast<const CStringDictionary::TStringId * const >(paun_DIDataTypeNames),
+      nNumDOs, const_cast<const CStringDictionary::TStringId * const >(paun_DONames), const_cast<const CStringDictionary::TStringId * const >(paun_DODataTypeNames));
 }
 
 EComResponse CCommFB::receiveData() {

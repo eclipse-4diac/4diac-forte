@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2006-2015 ACIN, Profactor GmbH, fortiss GmbH
+ *                      2018 Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,12 +10,14 @@
  *    Rene Smodic, Thomas Strasser, Alois Zoitl, Michael Hofmann,
  *    Martin Melik-Merkumians, Ingo Hegny, Patrick Smejkal
  *      - initial implementation and rework communication infrastructure
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *******************************************************************************/
 #ifndef _SRC_CORE_COMINFRA_BASECOMMFB_H_
 #define _SRC_CORE_COMINFRA_BASECOMMFB_H_
 
 #include <forte_config.h>
 #include "comtypes.h"
+#include "../genfb.h"
 #include "../esfb.h"
 
 namespace forte {
@@ -22,18 +25,11 @@ namespace forte {
 
     class CComLayer;
 
-    class CBaseCommFB : public CEventSourceFB {
+    class CBaseCommFB : public CGenFunctionBlock<CEventSourceFB> {
     public:
       virtual ~CBaseCommFB();
 
       virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
-
-      /*!\brief The getFBType method is used by the Query command to get the instances correct type name (eg. "CLIENT_3_2")
-      * \return pointer to typename string
-      */
-      CStringDictionary::TStringId getFBTypeId(void) const {
-        return m_nConfiguredFBTypeNameId;
-      }
 
       forte::com_infra::EComServiceType getComServiceType() const {
         return m_eCommServiceType;
@@ -87,19 +83,7 @@ namespace forte {
     protected:
       CBaseCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, forte::com_infra::EComServiceType pa_eCommServiceType);
 
-      CBaseCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-        TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData, forte::com_infra::EComServiceType pa_eCommServiceType);
-
-      /*!\brief The configureFB method is used by the typelib to parametrize the number of inputs/outputs
-      * \param pa_acConfigString : the string containing the requested typename (eg. "CLIENT_3_2"
-      */
-      virtual bool configureFB(const char *pa_acConfigString) = 0;
-
-      void executeEvent(int pa_nEIID) = 0;
-
-      CStringDictionary::TStringId m_nConfiguredFBTypeNameId;
-
-      static char *extractLayerIdAndParams(char **paRemainingID, char **paLayerParams);
+       static char *extractLayerIdAndParams(char **paRemainingID, char **paLayerParams);
 
       /*!\brief Generate a layer ID formed by a root with a prefix and a suffix
       *

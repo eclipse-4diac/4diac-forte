@@ -11,6 +11,7 @@
  *    Gerhard Ebenhofer, Michael Hofmann, Martin Melik Merkumians, Ingo Hegny,
  *    Stanislav Meduna, Patrick Smejkal,
  *      - initial implementation and rework communication infrastructure
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *******************************************************************************/
 #ifndef _FUNCBLOC_H_
 #define _FUNCBLOC_H_
@@ -87,45 +88,6 @@ struct SFBInterfaceSpec{
     const SAdapterInstanceDef* m_pstAdapterInstanceDefinition; //!< List of adapter instances
 };
 
-class SFBInterfaceSpecforGenerics : public SFBInterfaceSpec{
-  public:
-    SFBInterfaceSpecforGenerics(TForteUInt8 pa_nNumEIs,
-        const CStringDictionary::TStringId * const pa_aunEINames,
-        const TDataIOID * const pa_anEIWith, const TForteInt16 * const pa_anEIWithIndexes,
-        TForteUInt8 pa_nNumEOs, const CStringDictionary::TStringId * const pa_aunEONames,
-        const TDataIOID * const pa_anEOWith, const TForteInt16 * const pa_anEOWithIndexes,
-        TForteUInt8 pa_nNumDIs, const CStringDictionary::TStringId * const pa_aunDINames,
-        const CStringDictionary::TStringId * const pa_aunDIDataTypeNames, TForteUInt8 pa_nNumDOs,
-        const CStringDictionary::TStringId * const pa_aunDONames,
-        const CStringDictionary::TStringId * const pa_aunDODataTypeNames){
-      m_nNumEIs = pa_nNumEIs;
-      m_aunEINames = pa_aunEINames;
-      m_anEIWith = pa_anEIWith;
-      m_anEIWithIndexes = pa_anEIWithIndexes;
-      m_nNumEOs = pa_nNumEOs;
-      m_aunEONames = pa_aunEONames;
-      m_anEOWith = pa_anEOWith;
-      m_anEOWithIndexes = pa_anEOWithIndexes;
-      m_nNumDIs = pa_nNumDIs;
-      m_aunDINames = pa_aunDINames;
-      m_aunDIDataTypeNames = pa_aunDIDataTypeNames;
-      m_nNumDOs = pa_nNumDOs;
-      m_aunDONames = pa_aunDONames;
-      m_aunDODataTypeNames = pa_aunDODataTypeNames;
-      m_nNumAdapters = 0;
-      m_pstAdapterInstanceDefinition = 0;
-    }
-  private:
-    SFBInterfaceSpecforGenerics();
-};
-
-#ifdef FORTE_SUPPORT_MONITORING
-namespace forte {
-  namespace core{
-    struct SMonitorEvent;
-  }
-}
-#endif // FORTE_SUPPORT_MONITORING
 /*!\ingroup CORE\brief Base class for all function blocks.
  */
 class CFunctionBlock{
@@ -281,8 +243,7 @@ class CFunctionBlock{
      */
     virtual bool configureFB(const char *pa_acConfigString);
 
-    void setupFBInterface(const SFBInterfaceSpec *pa_pstInterfaceSpec, TForteByte *pa_acFBConnData,
-        TForteByte *pa_acFBVarsData, bool pa_bManagesFBData);
+    void setupFBInterface(const SFBInterfaceSpec *pa_pstInterfaceSpec, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
 
     const SFBInterfaceSpec* getFBInterfaceSpec() const{
       return m_pstInterfaceSpec;
@@ -329,14 +290,12 @@ class CFunctionBlock{
     bool isCurrentlyDeleteable(void) const{
       return ((m_bDeletable) && (m_enFBState != e_RUNNING));
     }
-    ;
 
     /*!\brief return the current execution state of the managed object
      */
     E_FBStates getState(void) const{
       return m_enFBState;
     }
-    ;
 
     template<unsigned int ta_nNumEOs, unsigned int ta_nNumDIs, unsigned int ta_nNumDOs>
     struct genFBConnDataSizeTemplate{
@@ -395,7 +354,6 @@ class CFunctionBlock{
     bool getUpdated() const{
       return m_updated;
     }
-    ;
 
     forte::core::SMonitorEvent &getEIMonitorData(TEventID pa_unEIID);
 
@@ -443,12 +401,6 @@ class CFunctionBlock{
     static TPortId getPortId(CStringDictionary::TStringId pa_unPortNameId,
         TPortId pa_unMaxPortNames, const CStringDictionary::TStringId* pa_aunPortNames);
 
-    static void generateGenericInterfacePointNameArray(const char * const pa_acPrefix,
-        CStringDictionary::TStringId* pa_anNamesArayStart, unsigned int pa_unNumGenericDataPoints);
-    static void generateGenericDataPointArrays(const char * const pa_acPrefix,
-        CStringDictionary::TStringId* pa_anDataTypeNamesArrayStart,
-        CStringDictionary::TStringId* pa_anNamesArrayStart, unsigned int pa_unNumGenericDataPoints);
-
     /*!\brief Function to send an output event of the FB.
      *
      * \param pa_nEO Event output ID where event should be fired.
@@ -493,10 +445,6 @@ class CFunctionBlock{
         TForteByte *pa_acDataBuf);
 
     void freeAllData();
-
-    bool getManagesFBData() const{
-      return m_bManagesFBData;
-    }
 
     const SFBInterfaceSpec* m_pstInterfaceSpec; //!< Pointer to the interface specification
     CEventConnection *mEOConns; //!< A list of event connections pointers storing for each event output the event connection. If the output event is not connected the pointer is 0.
@@ -547,13 +495,6 @@ class CFunctionBlock{
      *
      */
     E_FBStates m_enFBState;
-
-    /*!\brief Flag to indicate if the FB manages the given data
-     *
-     * If true the FB will delete the data arrays given in the constructor or through the setupFBInterface function.
-     * This is especially necessary for configurable FBs which allocate the data exra on heap.
-     */
-    bool m_bManagesFBData;
 
     /*!\brief Attribute defines if runnable object can be deleted by a management command.
      *
