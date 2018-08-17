@@ -10,6 +10,7 @@
 *   Martin Melik-Merkumians - adds test for FIND
 *   Martin Melik-Merkumians - adds tests for LEN, LEFT, RIGHT, MID, REPLACE, DELETE,
 *     INSERT, EQ, NE, ADD, and AND
+*   Martin Melik-Merkumians - adds test for TRUNC
 *******************************************************************************/
 
 #include <boost/test/unit_test.hpp>
@@ -329,6 +330,15 @@ BOOST_AUTO_TEST_CASE(insert)
   CIEC_STRING sIn2("ipsum dolor");
   CIEC_STRING sResult = INSERT(sIn1, sIn2, CIEC_UINT(6));
   BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+}
+
+BOOST_AUTO_TEST_CASE(trunc)
+{
+  CIEC_REAL real(50.6f);
+  CIEC_LREAL lreal(50.6);
+
+  BOOST_TEST(TRUNC(real) == 50);
+  BOOST_TEST(TRUNC(lreal) == 50);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

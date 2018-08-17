@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2010 - 2015, 2018 TU Vienna/ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2010 - 2015 TU Vienna/ACIN, Profactor GmbH, fortiss GmbH,
+ * 	 2018 TU Vienna/ACIN
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +11,8 @@
  *    Matthias Plasch,
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik-Merkumians - fixes DT_TO_TOD
+ *    Martin Melik-Merkumians - removes invalid casts, update implementation
+ *     to use new cast function
  *******************************************************************************/
 #ifndef CONVERT_FUNCTIONS_H_
 #define CONVERT_FUNCTIONS_H_
@@ -91,7 +94,7 @@ inline const CIEC_TIME_OF_DAY DT_TO_TOD(const CIEC_DATE_AND_TIME &paVal){
     return CIEC_TIME_OF_DAY(0);
   }
 
-  return CIEC_TIME_OF_DAY(static_cast<TForteUInt64>( (ptm->tm_hour * UINT64_C(3600) + ptm->tm_min * UINT64_C(60) + ptm->tm_sec) * UINT64_C(1000) + (nBuffer % UINT64_C(1000))));
+  return CIEC_TIME_OF_DAY(static_cast<TForteUInt64>((ptm->tm_hour * UINT64_C(3600) + ptm->tm_min * UINT64_C(60) + ptm->tm_sec) * UINT64_C(1000) + (nBuffer % UINT64_C(1000))));
 }
 #endif
 
@@ -386,40 +389,20 @@ inline const CIEC_ULINT LREAL_TO_ULINT(const CIEC_LREAL &paVal){
   return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 
-inline CIEC_ANY::TLargestIntValueType LREAL_TO_XINT(const CIEC_LREAL &paVal){
-  CIEC_ANY::TLargestIntValueType temp;
-#if defined(WIN32) || defined(VXWORKS)
-  temp = (CIEC_ANY::TLargestIntValueType)floor(static_cast<TForteDFloat>(paVal) + 0.5);
-#else
-  temp = lroundf(static_cast<TForteFloat>(paVal));
-#endif
-  if(static_cast<TForteDFloat>(paVal) > 0){
-    if((0 != (temp % 2)) && ((static_cast<TForteDFloat>(temp) - 0.5f) == static_cast<TForteDFloat>(paVal))){
-      temp = temp - 1;
-    }
-  }
-  else{
-    if((0 != (temp % 2)) && ((static_cast<TForteDFloat>(temp) + 0.5f) == static_cast<TForteDFloat>(paVal))){
-      temp = temp + 1;
-    }
-  }
-  return temp;
-}
-
 inline const CIEC_LINT LREAL_TO_LINT(const CIEC_LREAL &paVal){
-  return CIEC_LINT( static_cast<CIEC_LINT::TValueType>(LREAL_TO_XINT(paVal)) );
+  return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
 
 inline const CIEC_DINT LREAL_TO_DINT(const CIEC_LREAL &paVal){
-  return CIEC_DINT( static_cast<CIEC_DINT::TValueType>(LREAL_TO_XINT(paVal)) );
+  return CIEC_ANY::cast<CIEC_DINT>(paVal);
 }
 
 inline const CIEC_SINT LREAL_TO_SINT(const CIEC_LREAL &paVal){
-  return CIEC_SINT( static_cast<CIEC_SINT::TValueType>(LREAL_TO_XINT(paVal)) );
+  return CIEC_ANY::cast<CIEC_SINT>(paVal);
 }
 
 inline const CIEC_INT LREAL_TO_INT(const CIEC_LREAL &paVal){
-  return CIEC_INT( static_cast<CIEC_INT::TValueType>(LREAL_TO_XINT(paVal)));
+  return CIEC_ANY::cast<CIEC_INT>(paVal);
 }
 
 inline const CIEC_STRING LREAL_TO_STRING(const CIEC_LREAL &paVal){
@@ -441,78 +424,42 @@ inline const CIEC_WSTRING LREAL_TO_WSTRING(const CIEC_LREAL &paVal){
 //   REAL_TO_*  functions
 //********************************************************************************************
 #ifdef FORTE_USE_REAL_DATATYPE
-inline CIEC_ANY::TLargestIntValueType REAL_TO_XINT(const CIEC_REAL &paVal){
-  CIEC_ANY::TLargestIntValueType temp;
-#if defined(WIN32) || defined(VXWORKS)
-  temp = (CIEC_ANY::TLargestIntValueType)floor(static_cast<TForteFloat>(paVal) + 0.5);
-#else
-  temp = lroundf(static_cast<TForteFloat>(paVal));
-#endif
-  if(static_cast<TForteFloat>(paVal) > 0){
-    if((0 != (temp % 2)) && ((static_cast<TForteFloat>(temp) - 0.5f) == static_cast<TForteFloat>(paVal))){
-      temp = temp - 1;
-    }
-  }
-  else{
-    if((0 != (temp % 2)) && ((static_cast<TForteFloat>(temp) + 0.5f) == static_cast<TForteFloat>(paVal))){
-      temp = temp + 1;
-    }
-  }
-  return temp;
-}
-
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LINT REAL_TO_LINT(const CIEC_REAL &paVal){
-  return CIEC_LINT( static_cast<CIEC_LINT::TValueType>(REAL_TO_XINT(paVal)) );
+  return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
 
 inline const CIEC_ULINT REAL_TO_ULINT(const CIEC_REAL &paVal){
-  CIEC_ULINT tempVal;
-  if(0 < paVal){
-    CIEC_ANY::specialCast(const_cast<CIEC_REAL &>(paVal), tempVal);
-  }
-  return tempVal;
+  return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 
 inline const CIEC_LREAL REAL_TO_LREAL(const CIEC_REAL &paVal){
-  return CIEC_LREAL((TForteDFloat) paVal);
+  return CIEC_ANY::cast<CIEC_LREAL>(paVal);
 }
 #endif
 
 inline const CIEC_DINT REAL_TO_DINT(const CIEC_REAL &paVal){
-  return CIEC_DINT( static_cast<CIEC_DINT::TValueType>(REAL_TO_XINT(paVal)) );
+  return CIEC_ANY::cast<CIEC_DINT>(paVal);
 }
 
 inline const CIEC_SINT REAL_TO_SINT(const CIEC_REAL &paVal){
-  return CIEC_SINT( static_cast<CIEC_SINT::TValueType>(REAL_TO_XINT(paVal)) );
+  return CIEC_ANY::cast<CIEC_SINT>(paVal);
 }
 
 inline const CIEC_INT REAL_TO_INT(const CIEC_REAL &paVal){
-  return CIEC_INT( static_cast<CIEC_INT::TValueType>(REAL_TO_XINT(paVal)));
+  return CIEC_ANY::cast<CIEC_INT>(paVal);
 }
 
 inline const CIEC_USINT REAL_TO_USINT(const CIEC_REAL &paVal){
-  CIEC_USINT tempVal;
-  if(0 < paVal){
-    CIEC_ANY::specialCast(const_cast<CIEC_REAL &>(paVal), tempVal);
-  }
-  return tempVal;
+  return CIEC_ANY::cast<CIEC_USINT>(paVal);
 }
 
 inline const CIEC_UINT REAL_TO_UINT(const CIEC_REAL &paVal){
-  CIEC_UINT tempVal;
-  if(0 < paVal){
-    CIEC_ANY::specialCast(const_cast<CIEC_REAL &>(paVal), tempVal);
-  }
-  return tempVal;
+  return CIEC_ANY::cast<CIEC_UINT>(paVal);
 }
 
 inline const CIEC_UDINT REAL_TO_UDINT(const CIEC_REAL &paVal){
-  CIEC_UDINT tempVal;
-  if(0 < paVal){
-    CIEC_ANY::specialCast(const_cast<CIEC_REAL &>(paVal), tempVal);
-  }
-  return tempVal;
+  return CIEC_ANY::cast<CIEC_UDINT>(paVal);
 }
 
 inline const CIEC_STRING REAL_TO_STRING(const CIEC_REAL &paVal){
@@ -530,8 +477,7 @@ inline const CIEC_WSTRING REAL_TO_WSTRING(const CIEC_REAL &paVal){
 #endif
 
 inline const CIEC_DWORD REAL_TO_DWORD(const CIEC_REAL &paVal){
-  //get the raw bit representation of the real in the DWORD
-  return CIEC_DWORD(static_cast<TForteDWord>(paVal.operator float()));
+  return CIEC_ANY::cast<CIEC_DWORD>(paVal);
 }
 #endif
 
@@ -731,7 +677,8 @@ inline const CIEC_REAL DINT_TO_REAL(const CIEC_DINT &paVal){
 #endif
 
 inline const CIEC_SINT DINT_TO_SINT(const CIEC_DINT &paVal){
-  return CIEC_ANY::cast<CIEC_SINT>(paVal);}
+  return CIEC_ANY::cast<CIEC_SINT>(paVal);
+}
 
 inline const CIEC_UDINT DINT_TO_UDINT(const CIEC_DINT &paVal){
   return CIEC_ANY::cast<CIEC_UDINT>(paVal);
@@ -1379,7 +1326,8 @@ inline const CIEC_WSTRING INT_TO_WSTRING(const CIEC_INT &paVal){
 #ifdef FORTE_USE_64BIT_DATATYPES
 
 inline const CIEC_BYTE LINT_TO_BYTE(const CIEC_LINT &paVal){
-  return CIEC_ANY::cast<CIEC_BYTE>(paVal);}
+  return CIEC_ANY::cast<CIEC_BYTE>(paVal);
+}
 
 inline const CIEC_DWORD LINT_TO_DWORD(const CIEC_LINT &paVal){
   return CIEC_ANY::cast<CIEC_DWORD>(paVal);
@@ -1414,10 +1362,12 @@ inline const CIEC_SINT LINT_TO_SINT(const CIEC_LINT &paVal){
 }
 
 inline const CIEC_UDINT LINT_TO_UDINT(const CIEC_LINT &paVal){
-  return CIEC_ANY::cast<CIEC_UDINT>(paVal);}
+  return CIEC_ANY::cast<CIEC_UDINT>(paVal);
+}
 
 inline const CIEC_UINT LINT_TO_UINT(const CIEC_LINT &paVal){
-  return CIEC_ANY::cast<CIEC_UINT>(paVal);}
+  return CIEC_ANY::cast<CIEC_UINT>(paVal);
+}
 
 inline const CIEC_ULINT LINT_TO_ULINT(const CIEC_LINT &paVal){
   return CIEC_ANY::cast<CIEC_ULINT>(paVal);
