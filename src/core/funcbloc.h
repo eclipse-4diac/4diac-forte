@@ -345,16 +345,6 @@ class CFunctionBlock{
     }
 
 #ifdef FORTE_SUPPORT_MONITORING
-    // public monitoring
-    void setUpdated(bool updated){
-      m_updated = updated;
-    }
-    ;
-
-    bool getUpdated() const{
-      return m_updated;
-    }
-
     forte::core::SMonitorEvent &getEIMonitorData(TEventID pa_unEIID);
 
     forte::core::SMonitorEvent &getEOMonitorData(TEventID pa_unEOID);
@@ -485,7 +475,6 @@ class CFunctionBlock{
     // monitoring stuff
     forte::core::SMonitorEvent *m_nEOMonitorCount;
     forte::core::SMonitorEvent *m_nEIMonitorCount;
-    bool m_updated;
 #endif
 
     //! the instance name of the object
