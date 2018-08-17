@@ -9,7 +9,6 @@
  * Contributors:
  *    Alois Zoitl - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#include "genfb.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "forte_any_gen.cpp"
 #endif
