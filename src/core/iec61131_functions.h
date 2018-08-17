@@ -57,7 +57,7 @@
 template<typename T>
 const T ABS(const T& pa_roIN){
   FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_NUM, T>::value), TNotOfAnyNum);
-  return (0 > pa_roIN) ? static_cast<T>(pa_roIN * static_cast<T>(-1)) : pa_roIN;
+  return (0 > pa_roIN) ? T(static_cast<typename T::TValueType>(pa_roIN * static_cast<typename T::TValueType>(-1))) : pa_roIN;
 }
 
 #ifdef FORTE_USE_REAL_DATATYPE
