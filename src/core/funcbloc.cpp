@@ -34,7 +34,6 @@ CFunctionBlock::CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *p
 #ifdef FORTE_SUPPORT_MONITORING
   m_nEIMonitorCount = 0;
   m_nEOMonitorCount = 0;
-  m_updated = false;
 #endif
 
   setupFBInterface(pa_pstInterfaceSpec, pa_acFBConnData, pa_acFBVarsData);
@@ -294,7 +293,6 @@ void CFunctionBlock::sendOutputEvent(int pa_nEO){
       monitoringData.mEventCount++;
       monitoringData.mTimeStamp = getTimer().getForteTime();
       eventMonitoring.mBufPos = (eventMonitoring.mBufPos + 1) % forte::core::cgMonitorBufferLength;
-      m_updated = true;
     }  // if(forte::core::eActive != eventMonitoring.mMonitorEventData[eventMonitoring.mBufPos].mBreakpointSet){
 #endif //FORTE_SUPPORT_MONITORING
   }
@@ -363,7 +361,6 @@ void CFunctionBlock::receiveInputEvent(int pa_nEIID, CEventChainExecutionThread 
       monitoringData.mEventCount++;
       monitoringData.mTimeStamp = getTimer().getForteTime();
       eventMonitoring.mBufPos = (eventMonitoring.mBufPos + 1) % forte::core::cgMonitorBufferLength;
-      m_updated = true;
 #endif //FORTE_SUPPORT_MONITORING
     }
     m_poInvokingExecEnv = &pa_poExecEnv;
