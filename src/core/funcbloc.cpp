@@ -221,7 +221,7 @@ CIEC_ANY *CFunctionBlock::getVar(CStringDictionary::TStringId *paNameList,
   return poRetVal;
 }
 
-CAdapter *CFunctionBlock::getAdapter(CStringDictionary::TStringId paAdapterNameId){
+CAdapter *CFunctionBlock::getAdapter(CStringDictionary::TStringId paAdapterNameId) const{
   TPortId adpPortId = getAdapterPortId(paAdapterNameId);
 
   if(cg_unInvalidPortId != adpPortId){
@@ -230,7 +230,7 @@ CAdapter *CFunctionBlock::getAdapter(CStringDictionary::TStringId paAdapterNameI
   return 0;
 }
 
-TPortId CFunctionBlock::getAdapterPortId(CStringDictionary::TStringId paAdapterNameId){
+TPortId CFunctionBlock::getAdapterPortId(CStringDictionary::TStringId paAdapterNameId) const{
   for(TPortId i = 0; i < m_pstInterfaceSpec->m_nNumAdapters; ++i){
     if(m_apoAdapters[i]->getInstanceNameId() == paAdapterNameId){
       return i;

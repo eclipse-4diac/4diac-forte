@@ -134,6 +134,14 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
 #endif
       }
         break;
+      case cg_nMGM_CMD_QUERY_Connection:{
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+        retVal = queryConnections(paCommand.mAdditionalParams);
+#else
+        retVal = e_UNSUPPORTED_CMD;
+#endif
+      }
+        break;
       default:
         #ifdef FORTE_SUPPORT_MONITORING
         retVal = mMonitoringHandler.executeMonitoringCommand(paCommand);
@@ -298,18 +306,97 @@ EMGMResponse CResource::queryAllFBTypes(CIEC_STRING & paValue){
   }
   return retVal;
 }
+
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
+void CResource::createEOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult){
+  const SFBInterfaceSpec *const spec = paFb.getFBInterfaceSpec();
+  if(spec->m_nNumEOs > 0){
+    for(size_t i = 0; spec->m_aunEONames[i] != spec->m_aunEONames[spec->m_nNumEOs]; i++){
+      const CEventConnection* eConn = paFb.getEOConnection(spec->m_aunEONames[i]);
+      for(CSinglyLinkedList<SConnectionPoint>::Iterator itRunnerDst(eConn->getDestinationList().begin()); itRunnerDst != eConn->getDestinationList().end(); ++itRunnerDst){
+        if(itRunnerDst != eConn->getDestinationList().begin()){
+          paReqResult.append("\n");
+        }
+        createConnectionResponseMessage(spec->m_aunEONames[i],
+          itRunnerDst->mFB->getFBInterfaceSpec()->m_aunEINames[itRunnerDst->mPortId],
+          *itRunnerDst->mFB, paFb, paReqResult);
+      }
+    }
+  }
+}
+
+void CResource::createDOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult){
+  const SFBInterfaceSpec *const spec = paFb.getFBInterfaceSpec();
+  if(spec->m_nNumDOs > 0){
+    for(size_t i = 0; spec->m_aunDONames[i] != spec->m_aunDONames[spec->m_nNumDOs]; i++){
+      const CDataConnection *const dConn = paFb.getDOConnection(spec->m_aunDONames[i]);
+      for(CSinglyLinkedList<SConnectionPoint>::Iterator itRunnerDst(dConn->getDestinationList().begin()); itRunnerDst != dConn->getDestinationList().end(); ++itRunnerDst){
+        if(itRunnerDst != dConn->getDestinationList().begin()){
+          paReqResult.append("\n");
+        }
+        createConnectionResponseMessage(spec->m_aunDONames[i],
+          itRunnerDst->mFB->getFBInterfaceSpec()->m_aunDINames[itRunnerDst->mPortId],
+          *itRunnerDst->mFB, paFb, paReqResult);
+      }
+    }
+  }
+}
+
+void CResource::createAOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult){
+  const SFBInterfaceSpec *const spec = paFb.getFBInterfaceSpec();
+  if(spec->m_nNumAdapters > 0){
+    for(size_t i = 0; i < spec->m_nNumAdapters; i++){
+      const CAdapter *const adapter = paFb.getAdapter(spec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID);
+      const CAdapterConnection* aConn = adapter->getAdapterConnection();
+      if(spec->m_pstAdapterInstanceDefinition[i].m_bIsPlug && 0 != aConn){
+        if(i != 0){
+          paReqResult.append("\n");
+        }
+        CSinglyLinkedList<SConnectionPoint>::Iterator itRunnerDst(aConn->getDestinationList().begin());
+        createConnectionResponseMessage(spec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID,
+          itRunnerDst->mFB->getFBInterfaceSpec()->m_pstAdapterInstanceDefinition[itRunnerDst->mPortId].m_nAdapterNameID,
+          *itRunnerDst->mFB, paFb, paReqResult);
+      }
+    }
+  }
+}
+
+void CResource::createConnectionResponseMessage(const CStringDictionary::TStringId srcId, const CStringDictionary::TStringId dstId,
+    const CFunctionBlock& paDstFb, const CFunctionBlock& paSrcFb, CIEC_STRING& paReqResult){
+  paReqResult.append("<Connection source=\"");
+  paReqResult.append(paSrcFb.getInstanceName());
+  paReqResult.append(".");
+  paReqResult.append(CStringDictionary::getInstance().get(srcId));
+  paReqResult.append("\" destination=\"");
+  paReqResult.append(paDstFb.getInstanceName());
+  paReqResult.append(".");
+  paReqResult.append(CStringDictionary::getInstance().get(dstId));
+  paReqResult.append("\"/>");
+}
+
+EMGMResponse CResource::queryConnections(CIEC_STRING & paReqResult){
+   EMGMResponse retVal = e_UNSUPPORTED_TYPE;
+   //TODO check container list to support subapps issue[538333]
+    for (TFunctionBlockList::Iterator itRunner(getFBList().begin()); itRunner != getFBList().end(); ++itRunner) {
+      createEOConnectionResponse(**itRunner, paReqResult);
+      createDOConnectionResponse(**itRunner, paReqResult);
+      createAOConnectionResponse(**itRunner, paReqResult);
+    }
+    retVal = e_RDY;
+    return retVal;
+}
+
 EMGMResponse CResource::queryFBs(CIEC_STRING & paValue){
   EMGMResponse retVal = e_UNSUPPORTED_TYPE;
   for (TFunctionBlockList::Iterator itRunner(getFBList().begin()); itRunner != getFBList().end(); ++itRunner) {
+    if(itRunner != getFBList().begin()){
+      paValue.append("\n");
+    }
     paValue.append("<FB name=\"");
     paValue.append((static_cast<CFunctionBlock *>(*itRunner))->getInstanceName());
     paValue.append("\" type=\"");
     paValue.append(CStringDictionary::getInstance().get((static_cast<CFunctionBlock *>(*itRunner))->getFBTypeId()));
     paValue.append("\"/>");
-    if(itRunner != getFBList().end()){
-      paValue.append("\n");
-    }
   }
   retVal = e_RDY;
   return retVal;

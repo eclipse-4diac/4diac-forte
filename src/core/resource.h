@@ -172,7 +172,15 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 
     EMGMResponse createAdapterTypeFromLua(CStringDictionary::TStringId typeNameId,
             CIEC_STRING & paLuaScriptAsString);
+
     EMGMResponse queryFBs(CIEC_STRING & paValue);
+
+    EMGMResponse queryConnections(CIEC_STRING & paValue);
+    void createEOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult);
+    void createDOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult);
+    void createAOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult);
+    void createConnectionResponseMessage(const CStringDictionary::TStringId srcId, const CStringDictionary::TStringId dstId,
+        const CFunctionBlock& paDstFb, const CFunctionBlock& paFb, CIEC_STRING& paValue);
 #endif
     /*!\brief get the variable with the given name identifier
      *

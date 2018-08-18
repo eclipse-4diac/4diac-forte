@@ -225,9 +225,9 @@ class CFunctionBlock{
      * \param pa_uAdapterNameId  StringId of the adapter name.
      * \return Pointer to the data output or 0.
      */
-    CAdapter* getAdapter(CStringDictionary::TStringId paAdapterNameId);
+    CAdapter* getAdapter(CStringDictionary::TStringId paAdapterNameId) const;
 
-    TPortId getAdapterPortId(CStringDictionary::TStringId paAdapterNameId);
+    TPortId getAdapterPortId(CStringDictionary::TStringId paAdapterNameId) const;
 
     /*!\brief Function that handles incoming events.
      *
