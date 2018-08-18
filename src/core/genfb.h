@@ -16,29 +16,29 @@
 
 class SFBInterfaceSpecforGenerics : public SFBInterfaceSpec{
   public:
-    SFBInterfaceSpecforGenerics(TForteUInt8 pa_nNumEIs,
-        const CStringDictionary::TStringId * const pa_aunEINames,
-        const TDataIOID * const pa_anEIWith, const TForteInt16 * const pa_anEIWithIndexes,
-        TForteUInt8 pa_nNumEOs, const CStringDictionary::TStringId * const pa_aunEONames,
-        const TDataIOID * const pa_anEOWith, const TForteInt16 * const pa_anEOWithIndexes,
-        TForteUInt8 pa_nNumDIs, const CStringDictionary::TStringId * const pa_aunDINames,
-        const CStringDictionary::TStringId * const pa_aunDIDataTypeNames, TForteUInt8 pa_nNumDOs,
-        const CStringDictionary::TStringId * const pa_aunDONames,
-        const CStringDictionary::TStringId * const pa_aunDODataTypeNames){
-      m_nNumEIs = pa_nNumEIs;
-      m_aunEINames = pa_aunEINames;
-      m_anEIWith = pa_anEIWith;
-      m_anEIWithIndexes = pa_anEIWithIndexes;
-      m_nNumEOs = pa_nNumEOs;
-      m_aunEONames = pa_aunEONames;
-      m_anEOWith = pa_anEOWith;
-      m_anEOWithIndexes = pa_anEOWithIndexes;
-      m_nNumDIs = pa_nNumDIs;
-      m_aunDINames = pa_aunDINames;
-      m_aunDIDataTypeNames = pa_aunDIDataTypeNames;
-      m_nNumDOs = pa_nNumDOs;
-      m_aunDONames = pa_aunDONames;
-      m_aunDODataTypeNames = pa_aunDODataTypeNames;
+    SFBInterfaceSpecforGenerics(TForteUInt8 paNumEIs,
+        const CStringDictionary::TStringId * const paEINames,
+        const TDataIOID * const paEIWith, const TForteInt16 * const paEIWithIndexes,
+        TForteUInt8 paNumEOs, const CStringDictionary::TStringId * const paEONames,
+        const TDataIOID * const paEOWith, const TForteInt16 * const paEOWithIndexes,
+        TForteUInt8 paNumDIs, const CStringDictionary::TStringId * const paDINames,
+        const CStringDictionary::TStringId * const paDIDataTypeNames, TForteUInt8 paNumDOs,
+        const CStringDictionary::TStringId * const paDONames,
+        const CStringDictionary::TStringId * const paDODataTypeNames){
+      m_nNumEIs = paNumEIs;
+      m_aunEINames = paEINames;
+      m_anEIWith = paEIWith;
+      m_anEIWithIndexes = paEIWithIndexes;
+      m_nNumEOs = paNumEOs;
+      m_aunEONames = paEONames;
+      m_anEOWith = paEOWith;
+      m_anEOWithIndexes = paEOWithIndexes;
+      m_nNumDIs = paNumDIs;
+      m_aunDINames = paDINames;
+      m_aunDIDataTypeNames = paDIDataTypeNames;
+      m_nNumDOs = paNumDOs;
+      m_aunDONames = paDONames;
+      m_aunDODataTypeNames = paDODataTypeNames;
       m_nNumAdapters = 0;
       m_pstAdapterInstanceDefinition = 0;
     }
@@ -82,6 +82,6 @@ class CGenFunctionBlock : public T {
     TForteByte *mFBVarsData;
 };
 
-#include "genfb.cpp"
+#include "genfb.tpp"
 
 #endif /* _GENFB_H_ */

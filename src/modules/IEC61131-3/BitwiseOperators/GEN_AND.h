@@ -56,7 +56,7 @@ public:
   template<typename T> void calculateValue() {
     T oIn, oOut;
 
-    for (int nInputIndex = 0; nInputIndex < m_nDInputs; nInputIndex++) {
+    for (unsigned int nInputIndex = 0; nInputIndex < m_nDInputs; nInputIndex++) {
 
       oIn.saveAssign(*static_cast<T*>(getDI(nInputIndex)));
 

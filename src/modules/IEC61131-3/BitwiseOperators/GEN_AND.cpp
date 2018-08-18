@@ -92,7 +92,7 @@ SFBInterfaceSpecforGenerics *GEN_AND::createInterfaceSpec(const char *paConfigSt
 
     char diNames[cg_nIdentifierLength] = { "IN" };
 
-    for (int di = 0; di < m_nDInputs; di = di + 1) {
+    for (unsigned int di = 0; di < m_nDInputs; di = di + 1) {
       forte_snprintf(&(diNames[2]), 5 - 2, "%i", di + 1);
       m_anDataInputNames[di] = CStringDictionary::getInstance().insert(diNames);
       m_anDataInputTypeIds[di] = g_nStringIdANY_BIT;
@@ -103,7 +103,7 @@ SFBInterfaceSpecforGenerics *GEN_AND::createInterfaceSpec(const char *paConfigSt
     m_anEIWith = new TDataIOID[m_nDInputs + 1]; //for inputs + '255' separators at the list end
 
     //in-withs
-    for (int in_with = 0; in_with < m_nDInputs + 1; in_with = in_with + 1) {
+    for (unsigned  int in_with = 0; in_with < m_nDInputs + 1; in_with = in_with + 1) {
       if (in_with == m_nDInputs) {
         //set end separator of with
         m_anEIWith[in_with] = 255;
