@@ -612,48 +612,100 @@ template<typename T, typename... Args> const T CONCAT(const T& pa_rsIn1, Args...
 }
 #endif
 
-template<typename T> const T INSERT(const T& pa_rsIn1, const T& pa_rsIn2, const CIEC_ANY_INT& pa_roP){
-  if(CIEC_UINT::scm_nMaxVal < (pa_rsIn1.length() + pa_rsIn2.length())){
+template<typename T> const T INSERT(const T& paIn1, const T& paIn2, const CIEC_ANY_INT& paP){
+  if(CIEC_UINT::scm_nMaxVal < (paIn1.length() + paIn2.length())){
     DEVLOG_ERROR("result would be longer than maximum allowed length");
-    return pa_rsIn1;
+    return paIn1;
   }
-  CIEC_INT pos_right = static_cast<TForteInt16>(pa_rsIn1.length() - pa_roP.getSignedValue());
-  return CONCAT(CONCAT(LEFT(pa_rsIn1, pa_roP), pa_rsIn2), RIGHT(pa_rsIn1, pos_right));
+  if(paP.isSigned() && paP.getSignedValue() < 0) {
+    DEVLOG_ERROR("P has to be larger than 0!\n");
+    return paIn1;
+  }
+  const CIEC_ANY::TLargestUIntValueType P = paP.isSigned() ?
+      static_cast<CIEC_ANY::TLargestUIntValueType>(paP.getSignedValue()) : paP.getUnsignedValue();
+  if(P > paIn1.length()) {
+    DEVLOG_ERROR("P exceeds input string length!\n");
+    return paIn1;
+  }
+  CIEC_INT positionRight = static_cast<TForteInt16>(paIn1.length() - paP.getSignedValue());
+  return CONCAT(CONCAT(LEFT(paIn1, paP), paIn2), RIGHT(paIn1, positionRight));
 }
 
 #ifdef DELETE
 #undef DELETE
 #endif
 
-template<typename T> const T DELETE(const T& pa_rsIn, const CIEC_ANY_INT& pa_roL, const CIEC_ANY_INT& pa_roP){
-  CIEC_INT pos_right = static_cast<TForteInt16>(pa_rsIn.length() - (pa_roL.getSignedValue() + pa_roP.getSignedValue() - 1));
-  CIEC_INT pos_left = static_cast<TForteInt16>(pa_roP.getSignedValue() - 1);
-  return CONCAT(LEFT(pa_rsIn, pos_left), RIGHT(pa_rsIn, pos_right));
+template<typename T> const T DELETE(const T& paIn, const CIEC_ANY_INT& paL, const CIEC_ANY_INT& paP){
+  if(paL.isSigned() && paL.getSignedValue() < 0) {
+    DEVLOG_ERROR("L has to be larger than 0!\n");
+    return paIn;
+  }
+
+  if(paP.isSigned() && paP.getSignedValue() < 0) {
+    DEVLOG_ERROR("P has to be larger than 0!\n");
+    return paIn;
+  }
+
+  const CIEC_ANY::TLargestUIntValueType L = paL.isSigned() ?
+      static_cast<CIEC_ANY::TLargestUIntValueType>(paL.getSignedValue()) : paL.getUnsignedValue();
+  const CIEC_ANY::TLargestUIntValueType P = paP.isSigned() ?
+      static_cast<CIEC_ANY::TLargestUIntValueType>(paP.getSignedValue()) : paP.getUnsignedValue();
+
+  if((P + L) > paIn.length()) {
+    DEVLOG_ERROR("DELETE exceeds length of string!\n");
+    return paIn;
+  }
+
+  CIEC_UINT positionRight = static_cast<CIEC_UINT::TValueType>(paIn.length() - (L + P - 1));
+  CIEC_UINT positionLeft = static_cast<CIEC_UINT::TValueType>(P - 1);
+  return CONCAT(LEFT(paIn, positionLeft), RIGHT(paIn, positionRight));
 }
 
-template<typename T> const T REPLACE(const T& pa_rsIn1, const T& pa_rsIn2, const CIEC_ANY_INT& pa_roL, const CIEC_ANY_INT& pa_roP){
-  CIEC_INT pos_right = static_cast<TForteInt16>(pa_rsIn1.length() - (pa_roL.getSignedValue() + pa_roP.getSignedValue() - 1));
-  CIEC_INT pos_left = static_cast<TForteInt16>(pa_roP.getSignedValue() - 1);
-  return CONCAT(CONCAT(LEFT(pa_rsIn1, pos_left), pa_rsIn2), RIGHT(pa_rsIn1, pos_right));
+template<typename T> const T REPLACE(const T& paIn1, const T& paIn2, const CIEC_ANY_INT& paL, const CIEC_ANY_INT& paP){
+  if(paL.isSigned() && paL.getSignedValue() < 0) {
+    DEVLOG_ERROR("L has to be larger than 0!\n");
+    return paIn1;
+  }
+
+  if(paP.isSigned() && paP.getSignedValue() < 0) {
+    DEVLOG_ERROR("P has to be larger than 0!\n");
+    return paIn1;
+  }
+
+  const CIEC_ANY::TLargestUIntValueType L = paL.isSigned() ?
+      static_cast<CIEC_ANY::TLargestUIntValueType>(paL.getSignedValue()) : paL.getUnsignedValue();
+  const CIEC_ANY::TLargestUIntValueType P = paP.isSigned() ?
+      static_cast<CIEC_ANY::TLargestUIntValueType>(paP.getSignedValue()) : paP.getUnsignedValue();
+
+  if((P + L) > paIn1.length()) {
+    DEVLOG_ERROR("REPLACE outside string boundaries!\n");
+    return paIn1;
+  }
+
+  if((P + L + paIn2.length()) > CIEC_UINT::scm_nMaxVal) {
+    DEVLOG_ERROR("REPLACE exceeds length of string!\n");
+  }
+
+  CIEC_INT positionRight = static_cast<CIEC_INT::TValueType>(paIn1.length() - (L + P - 1));
+  CIEC_INT positionLeft = static_cast<CIEC_INT::TValueType>(P - 1);
+  return CONCAT(CONCAT(LEFT(paIn1, positionLeft), paIn2), RIGHT(paIn1, positionRight));
 }
 
 CIEC_ANY_INT FIND(const CIEC_ANY_STRING& pa_rsIn1, const CIEC_ANY_STRING& pa_rsIn2);
 
-template<typename T> const T TOUPPER(const T& pa_rsIn){
-  T temp(pa_rsIn);
-  char* current = temp.getValue();
-  for (unsigned int i = 0; i <=pa_rsIn.length(); ++i)
-  {
+template<typename T> const T TOUPPER(const T& paIn){
+  T temp(paIn);
+  char *current = temp.getValue();
+  for(size_t i = 0; i <= paIn.length(); ++i) {
     current[i] = static_cast<char>(toupper(current[i]));
   }
   return temp;
 }
 
-template<typename T> const T TOLOWER(const T& pa_rsIn){
-  T temp(pa_rsIn);
-  char* current = temp.getValue();
-  for (unsigned int i = 0; i <= pa_rsIn.length(); ++i)
-  {
+template<typename T> const T TOLOWER(const T& paIn){
+  T temp(paIn);
+  char *current = temp.getValue();
+  for(size_t i = 0; i <= paIn.length(); ++i) {
     current[i] = static_cast<char>(tolower(current[i]));
   }
   return temp;
