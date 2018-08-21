@@ -337,8 +337,97 @@ BOOST_AUTO_TEST_CASE(trunc)
   CIEC_REAL real(50.6f);
   CIEC_LREAL lreal(50.6);
 
-  BOOST_TEST(TRUNC(real) == 50);
-  BOOST_TEST(TRUNC(lreal) == 50);
+  BOOST_REQUIRE_EQUAL(50, TRUNC(real));
+  BOOST_REQUIRE_EQUAL(50, TRUNC(lreal));
 }
+
+BOOST_AUTO_TEST_CASE(rol_unsigned)
+{
+  CIEC_BYTE byte(128);
+  CIEC_BYTE result;
+  CIEC_USINT usint(1);
+  CIEC_UINT uint(2);
+  CIEC_UDINT udint(3);
+  CIEC_ULINT ulint(4);
+
+  result = ROL(byte, usint);
+  BOOST_REQUIRE_EQUAL(0x1, result);
+
+  result = ROL(byte, uint);
+  BOOST_REQUIRE_EQUAL(0x2, result);
+
+  result = ROL(byte, udint);
+  BOOST_REQUIRE_EQUAL(0x4, result);
+
+  result = ROL(byte, ulint);
+  BOOST_REQUIRE_EQUAL(0x8, result);
+}
+
+BOOST_AUTO_TEST_CASE(rol_signed)
+{
+  CIEC_BYTE byte(128);
+  CIEC_BYTE result;
+  CIEC_USINT sint(5);
+  CIEC_UINT inte(6);
+  CIEC_UDINT dint(7);
+  CIEC_ULINT lint(8);
+
+  result = ROL(byte, sint);
+  BOOST_REQUIRE_EQUAL(0x10, result);
+
+  result = ROL(byte, inte);
+  BOOST_REQUIRE_EQUAL(0x20, result);
+
+  result = ROL(byte, dint);
+  BOOST_REQUIRE_EQUAL(0x40, result);
+
+  result = ROL(byte, lint);
+  BOOST_REQUIRE_EQUAL(0x80, result);
+}
+
+BOOST_AUTO_TEST_CASE(shl_unsigned)
+{
+  CIEC_BYTE byte(1);
+  CIEC_BYTE result;
+  CIEC_USINT usint(1);
+  CIEC_UINT uint(2);
+  CIEC_UDINT udint(3);
+  CIEC_ULINT ulint(4);
+
+  result = SHL(byte, usint);
+  BOOST_REQUIRE_EQUAL(0x2, result);
+
+  result = SHL(byte, uint);
+  BOOST_REQUIRE_EQUAL(0x4, result);
+
+  result = SHL(byte, udint);
+  BOOST_REQUIRE_EQUAL(0x8, result);
+
+  result = SHL(byte, ulint);
+  BOOST_REQUIRE_EQUAL(0x10, result);
+}
+
+BOOST_AUTO_TEST_CASE(shl_signed)
+{
+  CIEC_BYTE byte(1);
+  CIEC_BYTE result;
+  CIEC_USINT sint(5);
+  CIEC_UINT inte(6);
+  CIEC_UDINT dint(7);
+  CIEC_ULINT lint(8);
+
+  result = SHL(byte, sint);
+  BOOST_REQUIRE_EQUAL(0x20, result);
+
+  result = SHL(byte, inte);
+  BOOST_REQUIRE_EQUAL(0x40, result);
+
+  result = SHL(byte, dint);
+  BOOST_REQUIRE_EQUAL(0x80, result);
+
+  result = SHL(byte, lint);
+  BOOST_REQUIRE_EQUAL(0x0, result);
+}
+
 
 BOOST_AUTO_TEST_SUITE_END()

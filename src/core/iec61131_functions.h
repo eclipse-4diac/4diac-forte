@@ -184,87 +184,48 @@ const T ABS(const T& pa_roIN){
   #endif
 #endif //#ifdef FORTE_USE_REAL_DATATYPE
 
-#ifdef FORTE_USE_64BIT_DATATYPES
-  template<typename T> const T ROL(const T& pa_roIn, const CIEC_ULINT& pa_roN){
-    FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), TNotOfAnyBit);
-    if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
-    return T((typename T::TValueType)((pa_roIn << pa_roN.getUnsignedValue()) | (pa_roIn >> (sizeof(typename T::TValueType)*8 - pa_roN.getUnsignedValue()))));
-    } DEVLOG_ERROR("value of input N is less than zero");
-    return T((typename T::TValueType)(0));
+template<typename T> const T ROL(const T& paIn, const CIEC_ANY_INT& paN){
+  FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), TNotOfAnyBit);
+  if((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()){
+    return T(static_cast<typename T::TValueType>((paIn << paN.getUnsignedValue()) | (paIn >> (sizeof(typename T::TValueType) * 8 - paN.getUnsignedValue()))));
   }
+  DEVLOG_ERROR("value of input N is less than zero");
+  return T(static_cast<typename T::TValueType>(0));
+}
 
-  template<typename T> const T ROR(const T& pa_roIn, const CIEC_ULINT& pa_roN){
-    FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), TNotOfAnyBit);
-    if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
-    return T((typename T::TValueType)((pa_roIn >> pa_roN.getUnsignedValue()) | (pa_roIn << (sizeof(typename T::TValueType)*8 - pa_roN.getUnsignedValue()))));
-    } DEVLOG_ERROR("value of input N is less than zero");
-    return T((typename T::TValueType)(0));
+template<typename T> const T ROR(const T& paIn, const CIEC_ANY_INT& paN){
+  FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), TNotOfAnyBit);
+  if((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()){
+    return T(static_cast<typename T::TValueType>((paIn >> paN.getUnsignedValue()) | (paIn << (sizeof(typename T::TValueType) * 8 - paN.getUnsignedValue()))));
   }
+  DEVLOG_ERROR("value of input N is less than zero");
+  return T(static_cast<typename T::TValueType>(0));
+}
 
-  template<typename T> const T SHL(const T& pa_roIn, const CIEC_ULINT& pa_roN){
-    FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), TNotOfAnyBit);
-    if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
-     return T((typename T::TValueType)(pa_roIn << pa_roN.getUnsignedValue()));
-     } DEVLOG_ERROR("value of input N is less than zero");
-     return T((typename T::TValueType)(0));
+template<typename T> const T SHL(const T& paIn, const CIEC_ANY_INT& paN){
+  FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), TNotOfAnyBit);
+  if((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()){
+    return T(static_cast<typename T::TValueType> (paIn << paN.getUnsignedValue()));
   }
-
-  template<typename T> const T SHR(const T& pa_roIn, const CIEC_ULINT& pa_roN){
-    FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), TNotOfAnyBit);
-    if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
-    return T((typename T::TValueType)(pa_roIn >> pa_roN.getUnsignedValue()));
-    } DEVLOG_ERROR("value of input N is less than zero");
-    return T((typename T::TValueType)(0));
+  DEVLOG_ERROR("value of input N is less than zero");
+  return T(static_cast<typename T::TValueType>(0));
+}
+template<typename T> const T SHR(const T& paIn, const CIEC_ANY_INT& paN){
+  FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), TNotOfAnyBit);
+  if((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()){
+    return T(static_cast<typename T::TValueType>(paIn >> paN.getUnsignedValue()));
   }
+  DEVLOG_ERROR("value of input N is less than zero");
+  return T(static_cast<typename T::TValueType>(0));
+}
 
-  template<> const CIEC_BOOL ROL(const CIEC_BOOL& pa_roIn, const CIEC_ULINT& pa_roN);
+template<> const CIEC_BOOL ROL(const CIEC_BOOL& paIn, const CIEC_ANY_INT& paN);
 
-  template<> const CIEC_BOOL ROR(const CIEC_BOOL& pa_roIn, const CIEC_ULINT& pa_roN);
+template<> const CIEC_BOOL ROR(const CIEC_BOOL& paIn, const CIEC_ANY_INT& paN);
 
-  template<> const CIEC_BOOL SHL(const CIEC_BOOL& pa_roIn, const CIEC_ULINT& pa_roN);
+template<> const CIEC_BOOL SHL(const CIEC_BOOL& paIn, const CIEC_ANY_INT& paN);
 
-  template<> const CIEC_BOOL SHR(const CIEC_BOOL& pa_roIn, const CIEC_ULINT& pa_roN);
-#else
-  template<typename T> const T ROL(const T& pa_roIn, const CIEC_UDINT& pa_roN){
-    FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), TNotOfAnyBit);
-    if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
-    return T((typename T::TValueType)((pa_roIn << pa_roN.getUnsignedValue()) | (pa_roIn >> (sizeof(typename T::TValueType)*8 - pa_roN.getUnsignedValue()))));
-    } DEVLOG_ERROR("value of input N is less than zero");
-    return T((typename T::TValueType)(0));
-  }
-
-  template<typename T> const T ROR(const T& pa_roIn, const CIEC_UDINT& pa_roN){
-    FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), TNotOfAnyBit);
-    if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
-    return T((typename T::TValueType)((pa_roIn >> pa_roN.getUnsignedValue()) | (pa_roIn << (sizeof(typename T::TValueType)*8 - pa_roN.getUnsignedValue()))));
-    } DEVLOG_ERROR("value of input N is less than zero");
-    return T((typename T::TValueType)(0));
-  }
-
-  template<typename T> const T SHL(const T& pa_roIn, const CIEC_UDINT& pa_roN){
-    FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), TNotOfAnyBit);
-    if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
-     return T((typename T::TValueType)(pa_roIn << pa_roN.getUnsignedValue()));
-     } DEVLOG_ERROR("value of input N is less than zero");
-     return T((typename T::TValueType)(0));
-  }
-
-  template<typename T> const T SHR(const T& pa_roIn, const CIEC_UDINT& pa_roN){
-    FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), TNotOfAnyBit);
-    if((true == pa_roN.isSigned() && 0 <= pa_roN.getSignedValue()) || false == pa_roN.isSigned()){
-    return T((typename T::TValueType)(pa_roIn >> pa_roN.getUnsignedValue()));
-    } DEVLOG_ERROR("value of input N is less than zero");
-    return T((typename T::TValueType)(0));
-  }
-
-  template<> const CIEC_BOOL ROL(const CIEC_BOOL& pa_roIn, const CIEC_UDINT& pa_roN);
-
-  template<> const CIEC_BOOL ROR(const CIEC_BOOL& pa_roIn, const CIEC_UDINT& pa_roN);
-
-  template<> const CIEC_BOOL SHL(const CIEC_BOOL& pa_roIn, const CIEC_UDINT& pa_roN);
-
-  template<> const CIEC_BOOL SHR(const CIEC_BOOL& pa_roIn, const CIEC_UDINT& pa_roN);
-#endif //#ifdef FORTE_USE_64BIT_DATATYPES
+template<> const CIEC_BOOL SHR(const CIEC_BOOL& paIn, const CIEC_ANY_INT& paN);
 
 template<typename T, typename U, template<typename A> class F, typename C> typename forte::core::mpl::get_castable_type<T, U>::type
 APPLY(const T& pa_roIN1, const U& pa_roIN2){
