@@ -41,10 +41,10 @@ private:
   static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
   //self-defined members
-  int m_nDInputs;
+  unsigned int m_nDInputs;
 
-  virtual void executeEvent(int pa_nEIID);
-  virtual SFBInterfaceSpecforGenerics *createInterfaceSpec(const char *paConfigString);
+  virtual void executeEvent(int paEIID);
+  virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);
 
   GEN_ADD(const CStringDictionary::TStringId pa_nInstanceNameId,
       CResource *pa_poSrcRes);
@@ -53,9 +53,10 @@ private:
 public:
 
   template<typename T> void calculateValue() {
-    T oIn, oOut;
+    T oIn;
+    T oOut;
 
-    for (int nInputIndex = 0; nInputIndex < m_nDInputs; nInputIndex++) {
+    for (unsigned int nInputIndex = 0; nInputIndex < m_nDInputs; nInputIndex++) {
 
       oIn.saveAssign(*static_cast<T*>(getDI(nInputIndex)));
 
@@ -69,5 +70,5 @@ public:
   }
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+#endif // _GEN_ADD_H_
 

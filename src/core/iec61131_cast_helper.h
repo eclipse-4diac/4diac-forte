@@ -469,6 +469,10 @@ namespace forte {
           static const bool value = (sizeof(check(is_base_of_helper<Base, Derived>(), int())) == sizeof(yes_type));
       };
 
+      template<typename Base> struct is_base_of<Base, Base>{
+          static const bool value = true;
+      };
+
       template<typename CommonSubtype, typename T, typename U> struct are_of_subtype{
           enum {
             value = (is_base_of<CommonSubtype, T>::value && is_base_of<CommonSubtype, U>::value)

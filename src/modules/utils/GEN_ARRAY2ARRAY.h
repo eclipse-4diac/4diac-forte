@@ -50,15 +50,15 @@ private:
   CStringDictionary::TStringId m_ValueTypeID;
   unsigned int m_nArrayLength;
 
-  virtual void executeEvent(int pa_nEIID);
-  virtual SFBInterfaceSpecforGenerics *createInterfaceSpec(const char *paConfigString);
+  virtual void executeEvent(int paEIID);
+  virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);
 
-  GEN_ARRAY2ARRAY(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+  GEN_ARRAY2ARRAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
   virtual ~GEN_ARRAY2ARRAY();;
 
 public:
 
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+#endif //_GEN_ARRAY2ARRAY_H_
 

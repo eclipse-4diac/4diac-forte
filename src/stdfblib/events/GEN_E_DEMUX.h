@@ -29,16 +29,15 @@ class GEN_E_DEMUX : public CGenFunctionBlock<CFunctionBlock>{
 
     CStringDictionary::TStringId *m_anEventOutputNames;
 
-    virtual void executeEvent(int pa_nEIID);
-    virtual SFBInterfaceSpecforGenerics *createInterfaceSpec(const char *paConfigString);
+    virtual void executeEvent(int paEIID);
+    virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);
 
     CIEC_UINT& K(){
       return *static_cast<CIEC_UINT*>(getDI(0));
     }
 
-    GEN_E_DEMUX(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+    GEN_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
     virtual ~GEN_E_DEMUX();
-  public:
 
 };
-#endif //close the ifdef sequence from the beginning of the file
+#endif //_GEN_E_DEMUX_H_

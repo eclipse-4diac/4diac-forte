@@ -23,8 +23,8 @@ DEFINE_GENERIC_FIRMWARE_FB(GEN_F_MUX, g_nStringIdGEN_F_MUX);
 
 const CStringDictionary::TStringId GEN_F_MUX::scm_anEventOutputNames[] = { g_nStringIdEO };
 
-GEN_F_MUX::GEN_F_MUX(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(pa_poSrcRes, pa_nInstanceNameId),
+GEN_F_MUX::GEN_F_MUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId),
   m_anEventInputNames(0),
   m_anDataOutputNames(0),
   m_anDataInputNames(0),
@@ -52,11 +52,11 @@ GEN_F_MUX::~GEN_F_MUX(){
   delete[] m_anEOWithIndexes;
 }
 
-void GEN_F_MUX::executeEvent(int pa_nEIID){
+void GEN_F_MUX::executeEvent(int paEIID){
 
-  if(-1 < pa_nEIID && static_cast<unsigned int>(pa_nEIID) < m_nEInputs ){
+  if(-1 < paEIID && static_cast<unsigned int>(paEIID) < m_nEInputs ){
 
-    int startIndex = pa_nEIID * m_nDOutputs;
+    int startIndex = paEIID * m_nDOutputs;
     bool status = true;
 
     for(int input_index = startIndex, output_index = 2; input_index < startIndex + static_cast<int>(m_nDOutputs); input_index++, output_index++){
@@ -88,9 +88,7 @@ void GEN_F_MUX::executeEvent(int pa_nEIID){
   }
 }
 
-SFBInterfaceSpecforGenerics *GEN_F_MUX::createInterfaceSpec(const char *paConfigString) {
-  SFBInterfaceSpecforGenerics *interfaceSpec = 0;
-
+bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
   int index = 0;
   char *paramEI = 0;
   char *paramDO = 0;
@@ -99,7 +97,7 @@ SFBInterfaceSpecforGenerics *GEN_F_MUX::createInterfaceSpec(const char *paConfig
   TIdentifier typeIdString;
   size_t inlength;
 
-   memcpy(typeIdString, paConfigString, cg_nIdentifierLength);
+  memcpy(typeIdString, paConfigString, cg_nIdentifierLength);
 
   typeIdString[cg_nIdentifierLength] = '\0'; //make a string
 
@@ -121,7 +119,7 @@ SFBInterfaceSpecforGenerics *GEN_F_MUX::createInterfaceSpec(const char *paConfig
       }
       else{
         //error on creating the FB; this would mean that the Typename starts with "_"
-        return 0;
+        return false;
       }
 
       paramEI = paramDO = &(typeIdString[index + 1]);
@@ -142,7 +140,7 @@ SFBInterfaceSpecforGenerics *GEN_F_MUX::createInterfaceSpec(const char *paConfig
   }
 
   if(paramDO == 0){
-    return 0;
+    return false;
   }
   else{
     //set the data and event port numbers
@@ -228,7 +226,7 @@ SFBInterfaceSpecforGenerics *GEN_F_MUX::createInterfaceSpec(const char *paConfig
       }
 
       //set '255' separator
-      m_anEIWith[withListIndex] = 255;
+      m_anEIWith[withListIndex] = scmWithListDelimiter;
       withListIndex++;
     }
 
@@ -240,10 +238,24 @@ SFBInterfaceSpecforGenerics *GEN_F_MUX::createInterfaceSpec(const char *paConfig
       m_anEOWith[out_with] = static_cast<TForteUInt8>(out_with);
     }
     //set '255' separator
-    m_anEOWith[m_nDOutputs + 2] = 255;
+    m_anEOWith[m_nDOutputs + 2] = scmWithListDelimiter;
 
     //create the interface Specification
-    interfaceSpec = new SFBInterfaceSpecforGenerics(static_cast<TForteUInt8>(m_nEInputs), m_anEventInputNames, m_anEIWith, m_anEIWithIndexes, static_cast<TForteUInt8>(m_nEOutputs), scm_anEventOutputNames, m_anEOWith, m_anEOWithIndexes, static_cast<TForteUInt8>(m_nDInputs), m_anDataInputNames, m_anDataInputTypeIds, static_cast<TForteUInt8>(m_nDOutputs + 2), m_anDataOutputNames, m_anDataOutputTypeIds);
+    paInterfaceSpec.m_nNumEIs = static_cast<TForteUInt8>(m_nEInputs);
+    paInterfaceSpec.m_aunEINames = m_anEventInputNames;
+    paInterfaceSpec.m_anEIWith = m_anEIWith;
+    paInterfaceSpec.m_anEIWithIndexes = m_anEIWithIndexes;
+    paInterfaceSpec.m_nNumEOs = static_cast<TForteUInt8>(m_nEOutputs);
+    paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
+    paInterfaceSpec.m_anEOWith = m_anEOWith;
+    paInterfaceSpec.m_anEOWithIndexes = m_anEOWithIndexes;
+    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(m_nDInputs);
+    paInterfaceSpec.m_aunDINames = m_anDataInputNames;
+    paInterfaceSpec.m_aunDIDataTypeNames = m_anDataInputTypeIds;
+    paInterfaceSpec.m_nNumDOs = static_cast<TForteUInt8>(m_nDOutputs + 2);
+    paInterfaceSpec.m_aunDONames = m_anDataOutputNames;
+    paInterfaceSpec.m_aunDODataTypeNames = m_anDataOutputTypeIds;
+    return true;
   }
-  return interfaceSpec;
+  return false;
 }

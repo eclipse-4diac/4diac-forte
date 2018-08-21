@@ -121,32 +121,18 @@ EComResponse CCommFB::sendData() {
   return resp;
 }
 
-SFBInterfaceSpecforGenerics *CCommFB::createInterfaceSpec(const char *paConfigString){
+bool CCommFB::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec){
   TIdentifier tempstring;
   char *sParamA = 0;
   char *sParamB = 0;
-  size_t inlength;
-  unsigned int i;
 
-  TForteUInt8 nNumDIs;
-  CStringDictionary::TStringId* paun_DIDataTypeNames;
-  CStringDictionary::TStringId* paun_DINames;
-  TDataIOID* pan_EIWith;
-
-  TForteUInt8 nNumDOs;
-  CStringDictionary::TStringId* paun_DODataTypeNames;
-  CStringDictionary::TStringId* paun_DONames;
-  TDataIOID* pan_EOWith;
-
-  CStringDictionary::TStringId* paun_EINames;
-  CStringDictionary::TStringId* paun_EONames;
-
-  TForteUInt8 nNumEIs = 2;
-  TForteUInt8 nNumEOs = 2;
+  paInterfaceSpec.m_nNumEIs = 2;
+  paInterfaceSpec.m_nNumEOs = 2;
 
   memcpy(tempstring, paConfigString, cg_nIdentifierLength);
   tempstring[cg_nIdentifierLength] = '\0';
-  inlength = strlen(tempstring);
+  size_t inlength = strlen(tempstring);
+  size_t i;
   for (i = 0; i < inlength - 1; i++) { // search first underscore
     if (tempstring[i] == '_') {
       sParamA = sParamB = &(tempstring[i + 1]);
@@ -163,113 +149,138 @@ SFBInterfaceSpecforGenerics *CCommFB::createInterfaceSpec(const char *paConfigSt
     }
 
   if (0 == sParamB){ // no underscore found
-    return 0;
+    return false;
   }
 
-  nNumDIs = 2;
-  nNumDOs = 2;
-
-  if (forte::com_infra::e_DataInputs == (forte::com_infra::e_DataInputs & m_eCommServiceType)) {
-    //TODO: Check range of sParamA
-    nNumDIs = static_cast<TForteUInt8>(nNumDIs + forte::core::util::strtol(sParamA, 0, 10));
-    paun_DIDataTypeNames = new CStringDictionary::TStringId[nNumDIs];
-    paun_DINames = new CStringDictionary::TStringId[nNumDIs];
-    pan_EIWith = new TDataIOID[nNumDIs - 2 + 6];
-
-    generateGenericDataPointArrays("SD_", &(paun_DIDataTypeNames[2]), &(paun_DINames[2]), nNumDIs - 2);
-  }
-  else {
-    paun_DIDataTypeNames = new CStringDictionary::TStringId[nNumDIs];
-    paun_DINames = new CStringDictionary::TStringId[nNumDIs];
-    pan_EIWith = new TDataIOID[6]; // = m_pstInterfaceSpec->m_nNumDIs - 2 + 6
-  }
-
-  pan_EIWith[0] = 0;
-  pan_EIWith[1] = 1;
-  pan_EIWith[2] = 255;
-  pan_EIWith[3] = 0;
-  pan_EIWith[4] = 1;
-
-  for (i = 0; i < nNumDIs - 2U; i++) {
-    pan_EIWith[i + 5U] = static_cast<TForteUInt8>(i + 2U);
-  }
-  pan_EIWith[i + 5] = 255;
-
-  paun_DIDataTypeNames[0] = g_nStringIdBOOL;
-  paun_DINames[0] = g_nStringIdQI;
-#ifdef FORTE_USE_WSTRING_DATATYPE
-  paun_DIDataTypeNames[1] = g_nStringIdWSTRING;
-#else
-  paun_DIDataTypeNames[1] = g_nStringIdSTRING;
-#endif
-  paun_DINames[1] = g_nStringIdID;
-
-  if (forte::com_infra::e_DataOutputs == (forte::com_infra::e_DataOutputs & m_eCommServiceType)) {
-    //TODO: Check range of sParamA
-    nNumDOs = static_cast<TForteUInt8>(nNumDOs + forte::core::util::strtol(sParamB, 0, 10));
-    paun_DODataTypeNames = new CStringDictionary::TStringId[nNumDOs];
-    paun_DONames = new CStringDictionary::TStringId[nNumDOs];
-    pan_EOWith = new TDataIOID[nNumDOs - 2 + 6];
-
-    generateGenericDataPointArrays("RD_", &(paun_DODataTypeNames[2]), &(paun_DONames[2]), nNumDOs - 2);
-  }
-  else {
-    paun_DODataTypeNames = new CStringDictionary::TStringId[nNumDOs];
-    paun_DONames = new CStringDictionary::TStringId[nNumDOs];
-    pan_EOWith = new TDataIOID[6];
-  }
-
-  pan_EOWith[0] = 0;
-  pan_EOWith[1] = 1;
-  pan_EOWith[2] = 255;
-  pan_EOWith[3] = 0;
-  pan_EOWith[4] = 1;
-
-  for (i = 0; i < nNumDOs - 2U; i++) {
-    pan_EOWith[i + 5] = static_cast<TForteUInt8>(i + 2);
-  }
-  pan_EOWith[i + 5] = 255;
-
-  paun_DODataTypeNames[0] = g_nStringIdBOOL;
-  paun_DONames[0] = g_nStringIdQO;
-#ifdef FORTE_USE_WSTRING_DATATYPE
-  paun_DODataTypeNames[1] = g_nStringIdWSTRING;
-#else
-  paun_DODataTypeNames[1] = g_nStringIdSTRING;
-#endif
-  paun_DONames[1] = g_nStringIdSTATUS;
+  configureDIs(sParamA, paInterfaceSpec);
+  configureDOs(sParamB, paInterfaceSpec);
 
   if (forte::com_infra::e_Requester == (forte::com_infra::e_Requester & m_eCommServiceType)) {
-    paun_EINames = const_cast<CStringDictionary::TStringId*>(scm_aunRequesterEventInputNameIds);
-    paun_EONames = const_cast<CStringDictionary::TStringId*>(scm_aunRequesterEventOutputNameIds);
+    paInterfaceSpec.m_aunEINames = const_cast<CStringDictionary::TStringId*>(scm_aunRequesterEventInputNameIds);
+    paInterfaceSpec.m_aunEONames = const_cast<CStringDictionary::TStringId*>(scm_aunRequesterEventOutputNameIds);
   }
   else {
     if (forte::com_infra::e_Responder == (forte::com_infra::e_Responder & m_eCommServiceType)) {
-      paun_EINames = const_cast<CStringDictionary::TStringId*>(scm_aunResponderEventInputNameIds);
-      paun_EONames = const_cast<CStringDictionary::TStringId*>(scm_aunResponderEventOutputNameIds);
+      paInterfaceSpec.m_aunEINames = const_cast<CStringDictionary::TStringId*>(scm_aunResponderEventInputNameIds);
+      paInterfaceSpec.m_aunEONames = const_cast<CStringDictionary::TStringId*>(scm_aunResponderEventOutputNameIds);
     }
   }
+  paInterfaceSpec.m_anEIWithIndexes = scm_anEIWithIndexes;
+  paInterfaceSpec.m_anEOWithIndexes = scm_anEOWithIndexes;
 
-  return new SFBInterfaceSpecforGenerics(nNumEIs, const_cast<const CStringDictionary::TStringId * const >(paun_EINames), const_cast<const TDataIOID * const >(pan_EIWith), scm_anEIWithIndexes,
-      nNumEOs, const_cast<const CStringDictionary::TStringId * const >(paun_EONames), const_cast<const TDataIOID * const >(pan_EOWith), scm_anEOWithIndexes,
-      nNumDIs, const_cast<const CStringDictionary::TStringId * const >(paun_DINames), const_cast<const CStringDictionary::TStringId * const >(paun_DIDataTypeNames),
-      nNumDOs, const_cast<const CStringDictionary::TStringId * const >(paun_DONames), const_cast<const CStringDictionary::TStringId * const >(paun_DODataTypeNames));
+  return true;
+}
+
+void CCommFB::configureDIs(const char *paDIConfigString, SFBInterfaceSpec &paInterfaceSpec){
+  CStringDictionary::TStringId* diDataTypeNames;
+  CStringDictionary::TStringId* diNames;
+  TDataIOID* eiWith;
+
+  paInterfaceSpec.m_nNumDIs = 2;
+
+  if (forte::com_infra::e_DataInputs == (forte::com_infra::e_DataInputs & m_eCommServiceType)) {
+      //TODO: Check range of sParamA
+      paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(paInterfaceSpec.m_nNumDIs + forte::core::util::strtol(paDIConfigString, 0, 10));
+      diDataTypeNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
+      diNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
+      eiWith = new TDataIOID[paInterfaceSpec.m_nNumDIs - 2 + scmMinWithLength];
+
+      generateGenericDataPointArrays("SD_", &(diDataTypeNames[2]), &(diNames[2]), paInterfaceSpec.m_nNumDIs - 2);
+    }
+    else {
+      diDataTypeNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
+      diNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
+      eiWith = new TDataIOID[scmMinWithLength];
+    }
+    paInterfaceSpec.m_aunDIDataTypeNames = diDataTypeNames;
+    paInterfaceSpec.m_aunDINames = diNames;
+    paInterfaceSpec.m_anEIWith = eiWith;
+
+    eiWith[0] = 0;
+    eiWith[1] = 1;
+    eiWith[2] = scmWithListDelimiter;
+    eiWith[3] = 0;
+    eiWith[4] = 1;
+
+    size_t i;
+    for (i = 0; i < paInterfaceSpec.m_nNumDIs - 2U; i++) {
+      eiWith[i + 5U] = static_cast<TForteUInt8>(i + 2U);
+    }
+    eiWith[i + 5U] = scmWithListDelimiter;
+
+    diDataTypeNames[0] = g_nStringIdBOOL;
+    diNames[0] = g_nStringIdQI;
+  #ifdef FORTE_USE_WSTRING_DATATYPE
+    diDataTypeNames[1] = g_nStringIdWSTRING;
+  #else
+    diDataTypeNames[1] = g_nStringIdSTRING;
+  #endif
+    diNames[1] = g_nStringIdID;
+}
+
+void CCommFB::configureDOs(const char *paDOConfigString, SFBInterfaceSpec &paInterfaceSpec){
+  CStringDictionary::TStringId* doDataTypeNames;
+  CStringDictionary::TStringId* doNames;
+  TDataIOID* eoWith;
+
+  paInterfaceSpec.m_nNumDOs = 2;
+
+  if(forte::com_infra::e_DataOutputs == (forte::com_infra::e_DataOutputs & m_eCommServiceType)){
+    //TODO: Check range of sParamA
+    paInterfaceSpec.m_nNumDOs = static_cast<TForteUInt8>(paInterfaceSpec.m_nNumDOs + forte::core::util::strtol(paDOConfigString, 0, 10));
+    doDataTypeNames  = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDOs];
+    doNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDOs];
+    eoWith = new TDataIOID[paInterfaceSpec.m_nNumDOs - 2 + scmMinWithLength];
+
+    generateGenericDataPointArrays("RD_", &(doDataTypeNames[2]), &(doNames[2]), paInterfaceSpec.m_nNumDOs - 2);
+  }
+  else{
+    doDataTypeNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDOs];
+    doNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDOs];
+    eoWith = new TDataIOID[scmMinWithLength];
+  }
+
+  paInterfaceSpec.m_aunDONames = doNames;
+  paInterfaceSpec.m_aunDODataTypeNames = doDataTypeNames;
+  paInterfaceSpec.m_anEOWith = eoWith;
+
+  eoWith[0] = 0;
+  eoWith[1] = 1;
+  eoWith[2] = scmWithListDelimiter;
+  eoWith[3] = 0;
+  eoWith[4] = 1;
+
+  size_t i;
+  for(i = 0; i < paInterfaceSpec.m_nNumDOs - 2U; i++){
+    eoWith[i + 5U] = static_cast<TForteUInt8>(i + 2U);
+  }
+  eoWith[i + 5U] = scmWithListDelimiter;
+
+  doDataTypeNames[0] = g_nStringIdBOOL;
+  doNames[0] = g_nStringIdQO;
+#ifdef FORTE_USE_WSTRING_DATATYPE
+  doDataTypeNames[1] = g_nStringIdWSTRING;
+#else
+  doDataTypeNames[1] = g_nStringIdSTRING;
+#endif
+  doNames[1] = g_nStringIdSTATUS;
+
 }
 
 EComResponse CCommFB::receiveData() {
   EComResponse eResp;
   EComResponse eRetVal = e_Nothing;
 
-  unsigned int ComInterruptQueueCountCopy = m_unComInterruptQueueCount;
-  for (unsigned int i = 0; i < ComInterruptQueueCountCopy; ++i) {
+  const unsigned int comInterruptQueueCountCopy = m_unComInterruptQueueCount;
+  for (size_t i = 0; i < comInterruptQueueCountCopy; ++i) {
     eResp = m_apoInterruptQueue[i]->processInterrupt();
     if (eResp > eRetVal) {
       eRetVal = eResp;
     }
   }
-  m_unComInterruptQueueCount -= ComInterruptQueueCountCopy;
+  m_unComInterruptQueueCount -= comInterruptQueueCountCopy;
   for (unsigned int i = 0; i < m_unComInterruptQueueCount; ++i) {
-    m_apoInterruptQueue[i] = m_apoInterruptQueue[i + ComInterruptQueueCountCopy];
+    m_apoInterruptQueue[i] = m_apoInterruptQueue[i + comInterruptQueueCountCopy];
   }
 
   return eRetVal;

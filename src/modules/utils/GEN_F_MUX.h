@@ -20,34 +20,33 @@ class GEN_F_MUX : public CGenFunctionBlock<CFunctionBlock> {
   DECLARE_GENERIC_FIRMWARE_FB(GEN_F_MUX)
 
   private:
-  //we know for sure that there is one output event
+    //we know for sure that there is one output event
     static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
     static const TEventID scm_nEventEOID = 0;
 
     CStringDictionary::TStringId *m_anEventInputNames;
-  CStringDictionary::TStringId *m_anDataOutputNames;
-  CStringDictionary::TStringId *m_anDataInputNames;
-  CStringDictionary::TStringId *m_anDataOutputTypeIds;
-  CStringDictionary::TStringId *m_anDataInputTypeIds;
+    CStringDictionary::TStringId *m_anDataOutputNames;
+    CStringDictionary::TStringId *m_anDataInputNames;
+    CStringDictionary::TStringId *m_anDataOutputTypeIds;
+    CStringDictionary::TStringId *m_anDataInputTypeIds;
 
-  TForteInt16 *m_anEIWithIndexes;
-  TDataIOID *m_anEIWith;
+    TForteInt16 *m_anEIWithIndexes;
+    TDataIOID *m_anEIWith;
 
-  TForteInt16 *m_anEOWithIndexes;
-  TDataIOID *m_anEOWith;
+    TForteInt16 *m_anEOWithIndexes;
+    TDataIOID *m_anEOWith;
 
-  //self-defined members
-  unsigned int m_nEInputs;
-  unsigned int m_nEOutputs;
-  unsigned int m_nDInputs;
-  unsigned int m_nDOutputs;
+    //self-defined members
+    unsigned int m_nEInputs;
+    unsigned int m_nEOutputs;
+    unsigned int m_nDInputs;
+    unsigned int m_nDOutputs;
 
-    virtual void executeEvent(int pa_nEIID);
-    virtual SFBInterfaceSpecforGenerics *createInterfaceSpec(const char *paConfigString);
+    virtual void executeEvent(int paEIID);
+    virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);
 
-    GEN_F_MUX(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+    GEN_F_MUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
     virtual ~GEN_F_MUX();
-  public:
 };
-#endif //close the ifdef sequence from the beginning of the file
+#endif //_GEN_F_MUX_H_

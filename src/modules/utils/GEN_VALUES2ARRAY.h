@@ -29,7 +29,6 @@ class GEN_VALUES2ARRAY : public CGenFunctionBlock<CFunctionBlock>{
     CIEC_ARRAY &OUT_Array(){
       return *static_cast<CIEC_ARRAY *>(getDO(0));
     }
-    ;
 
     static const TEventID scm_nEventREQID = 0;
     static const TForteInt16 scm_anEIWithIndexes[];
@@ -45,15 +44,13 @@ class GEN_VALUES2ARRAY : public CGenFunctionBlock<CFunctionBlock>{
     unsigned int m_nDInputs;
     CStringDictionary::TStringId m_ValueTypeID;
 
-     virtual void executeEvent(int pa_nEIID);
-     virtual SFBInterfaceSpecforGenerics *createInterfaceSpec(const char *paConfigString);
+     virtual void executeEvent(int paEIID);
+     virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);
 
-    GEN_VALUES2ARRAY(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+    GEN_VALUES2ARRAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
     virtual ~GEN_VALUES2ARRAY();
-
-  public:
 
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+#endif //_GEN_VALUES2ARRAY_H_
 

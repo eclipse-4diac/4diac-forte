@@ -44,12 +44,12 @@ class GEN_APPEND_STRING : public CGenFunctionBlock<CFunctionBlock> {
     //self-defined members
     int m_nDInputs;
 
-     virtual void executeEvent(int pa_nEIID);
-     virtual SFBInterfaceSpecforGenerics *createInterfaceSpec(const char *paConfigString);
+     virtual void executeEvent(int paEIID);
+     virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);
 
-    GEN_APPEND_STRING(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+    GEN_APPEND_STRING(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
     virtual ~GEN_APPEND_STRING();
   public:
 
 };
-#endif //close the ifdef sequence from the beginning of the file
+#endif //_GEN_APPEND_STRING_H_

@@ -253,7 +253,7 @@ void CFunctionBlock::sendOutputEvent(int pa_nEO){
         const TDataIOID *poEOWithStart = &(m_pstInterfaceSpec->m_anEOWith[m_pstInterfaceSpec->m_anEOWithIndexes[pa_nEO]]);
         //TODO think on this lock
         CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
-        for(int i = 0; poEOWithStart[i] != 255; ++i){
+        for(int i = 0; poEOWithStart[i] != scmWithListDelimiter; ++i){
           CDataConnection *con = getDOConUnchecked(poEOWithStart[i]);
           if(con->isConnected()){
             CIEC_ANY *poDO = getDO(poEOWithStart[i]);
@@ -329,7 +329,7 @@ void CFunctionBlock::receiveInputEvent(int pa_nEIID, CEventChainExecutionThread 
 
           // TODO think on this lock
           CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
-          for(int i = 0; poEIWithStart[i] != 255; ++i){
+          for(int i = 0; poEIWithStart[i] != scmWithListDelimiter; ++i){
             if(0 != m_apoDIConns[poEIWithStart[i]]){
               CIEC_ANY *poDI = getDI(poEIWithStart[i]);
 #ifdef FORTE_SUPPORT_MONITORING

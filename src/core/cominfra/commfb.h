@@ -57,8 +57,12 @@ namespace forte {
 
       static const TForteInt16 scm_anEIWithIndexes[];
       static const TForteInt16 scm_anEOWithIndexes[];
+      static const size_t scmMinWithLength = 6;
 
-      virtual SFBInterfaceSpecforGenerics *createInterfaceSpec(const char *paConfigString);
+      virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);
+
+      void configureDIs(const char *paDIConfigString, SFBInterfaceSpec &paInterfaceSpec);
+      void configureDOs(const char *paDOConfigString, SFBInterfaceSpec &paInterfaceSpec);
     };
 
   }

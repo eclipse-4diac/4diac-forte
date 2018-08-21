@@ -45,14 +45,14 @@ class GEN_ARRAY2VALUES : public CGenFunctionBlock<CFunctionBlock> {
     int m_nDOutputs;
     CStringDictionary::TStringId m_ValueTypeID;
 
-    virtual void executeEvent(int pa_nEIID);
-    virtual SFBInterfaceSpecforGenerics *createInterfaceSpec(const char *paConfigString);
+    virtual void executeEvent(int paEIID);
+    virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);
 
-    GEN_ARRAY2VALUES(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+    GEN_ARRAY2VALUES(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
     virtual ~GEN_ARRAY2VALUES();
 
   public:
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+#endif //_GEN_ARRAY2VALUES_H_
 

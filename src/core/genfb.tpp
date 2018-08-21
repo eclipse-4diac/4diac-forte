@@ -16,9 +16,9 @@
 template<class T>
 CGenFunctionBlock<T>::CGenFunctionBlock(CResource *paSrcRes, const CStringDictionary::TStringId paInstanceNameId) :
     T(paSrcRes, 0, paInstanceNameId, 0, 0),
-    mConfiguredFBTypeNameId(CStringDictionary::scm_nInvalidStringId),
-    mFBConnData(0), mFBVarsData(0){
-  //nothing special to do here
+    mConfiguredFBTypeNameId(CStringDictionary::scm_nInvalidStringId), mGenInterfaceSpec(), mFBConnData(0), mFBVarsData(0) {
+
+    FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CFunctionBlock, T>::value), TFunctionBlock);
 }
 
 template<class T>
@@ -27,7 +27,6 @@ CGenFunctionBlock<T>::~CGenFunctionBlock(){
     T::freeAllData();  //clean the interface and connections first.
     delete[] mFBConnData;
     delete[] mFBVarsData;
-    delete T::m_pstInterfaceSpec;
     T::m_pstInterfaceSpec = 0; //this stops the base classes from any wrong clean-up
   }
 }
@@ -35,11 +34,10 @@ CGenFunctionBlock<T>::~CGenFunctionBlock(){
 template<class T>
 bool CGenFunctionBlock<T>::configureFB(const char *paConfigString){
   setConfiguredTypeNameId(CStringDictionary::getInstance().insert(paConfigString));
-  SFBInterfaceSpecforGenerics *interfaceSpec = createInterfaceSpec(paConfigString);
-  if(0 != interfaceSpec){
-    mFBConnData = new TForteByte[T::genFBConnDataSize(interfaceSpec->m_nNumEOs, interfaceSpec->m_nNumDIs, interfaceSpec->m_nNumDOs)];
-    mFBVarsData = new TForteByte[T::genFBVarsDataSize(interfaceSpec->m_nNumDIs, interfaceSpec->m_nNumDOs)];
-    T::setupFBInterface(interfaceSpec, mFBConnData, mFBVarsData);
+  if(createInterfaceSpec(paConfigString, mGenInterfaceSpec)){
+    mFBConnData = new TForteByte[T::genFBConnDataSize(mGenInterfaceSpec.m_nNumEOs, mGenInterfaceSpec.m_nNumDIs, mGenInterfaceSpec.m_nNumDOs)];
+    mFBVarsData = new TForteByte[T::genFBVarsDataSize(mGenInterfaceSpec.m_nNumDIs, mGenInterfaceSpec.m_nNumDOs)];
+    T::setupFBInterface(&mGenInterfaceSpec, mFBConnData, mFBVarsData);
     return true;
   }
   return false;

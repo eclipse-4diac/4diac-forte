@@ -52,11 +52,11 @@ class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
     static const TDataIOID scm_anEOWith[];
     static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
-    void executeEvent(int pa_nEIID);
-    virtual SFBInterfaceSpecforGenerics *createInterfaceSpec(const char *paConfigString);
+    void executeEvent(int paEIID);
+    virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);
 
   public:
-    GEN_CSV_WRITER(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+    GEN_CSV_WRITER(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
     virtual ~GEN_CSV_WRITER();
 
   private:
@@ -72,4 +72,4 @@ class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
     TDataIOID *m_anEIWith;
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+#endif //_GEN_CSV_WRITER_H_

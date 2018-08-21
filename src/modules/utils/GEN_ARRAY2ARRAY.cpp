@@ -18,23 +18,19 @@
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY, g_nStringIdGEN_ARRAY2ARRAY)
 
-const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scm_anDataInputNames[] = {g_nStringIdIN};
-const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scm_anDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scm_anDataInputNames[] = { g_nStringIdIN };
+const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scm_anDataOutputNames[] = { g_nStringIdOUT };
 
-const TForteInt16 GEN_ARRAY2ARRAY::scm_anEIWithIndexes[] = {0};
-const TDataIOID GEN_ARRAY2ARRAY::scm_anEIWith[] = {0, 255};
-const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TForteInt16 GEN_ARRAY2ARRAY::scm_anEIWithIndexes[] = { 0 };
+const TDataIOID GEN_ARRAY2ARRAY::scm_anEIWith[] = { 0, 255 };
+const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scm_anEventInputNames[] = { g_nStringIdREQ };
 
-const TDataIOID GEN_ARRAY2ARRAY::scm_anEOWith[] = {0, 255};
-const TForteInt16 GEN_ARRAY2ARRAY::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID GEN_ARRAY2ARRAY::scm_anEOWith[] = { 0, 255 };
+const TForteInt16 GEN_ARRAY2ARRAY::scm_anEOWithIndexes[] = { 0, -1 };
+const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scm_anEventOutputNames[] = { g_nStringIdCNF };
 
-GEN_ARRAY2ARRAY::GEN_ARRAY2ARRAY(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(pa_poSrcRes, pa_nInstanceNameId),
-    m_anDataInputTypeIds(0),
-    m_anDataOutputTypeIds(0),
-    m_ValueTypeID(CStringDictionary::scm_nInvalidStringId),
-    m_nArrayLength(0){
+GEN_ARRAY2ARRAY::GEN_ARRAY2ARRAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), m_anDataInputTypeIds(0), m_anDataOutputTypeIds(0), m_ValueTypeID(CStringDictionary::scm_nInvalidStringId), m_nArrayLength(0){
 }
 
 GEN_ARRAY2ARRAY::~GEN_ARRAY2ARRAY(){
@@ -42,20 +38,19 @@ GEN_ARRAY2ARRAY::~GEN_ARRAY2ARRAY(){
   delete[] m_anDataOutputTypeIds;
 }
 
-void GEN_ARRAY2ARRAY::executeEvent(int pa_nEIID){
-  switch(pa_nEIID){
-  case scm_nEventREQID:
+void GEN_ARRAY2ARRAY::executeEvent(int paEIID){
+  switch (paEIID){
+    case scm_nEventREQID:
 
-    OUT_Array().setValue(IN_Array());
+      OUT_Array().setValue(IN_Array());
 
-    sendOutputEvent(scm_nEventCNFID);
+      sendOutputEvent(scm_nEventCNFID);
 
-    break;
+      break;
   }
 }
 
-SFBInterfaceSpecforGenerics *GEN_ARRAY2ARRAY::createInterfaceSpec(const char *paConfigString) {
-  SFBInterfaceSpecforGenerics *interfaceSpec = 0;
+bool GEN_ARRAY2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec){
   const char *dNumberPos = strchr(paConfigString, '_');
 
   if(0 != dNumberPos){
@@ -65,18 +60,8 @@ SFBInterfaceSpecforGenerics *GEN_ARRAY2ARRAY::createInterfaceSpec(const char *pa
 
     if(0 != dTypePos){
       //there is a number and a data type of inputs within the typename
-      m_nArrayLength = static_cast<unsigned int>(forte::core::util::strtoul(dNumberPos,0,10));
-
-      unsigned int nLen = static_cast<unsigned int>(strlen(++dTypePos));
-      if(nLen < cg_nIdentifierLength){
-        char dTypeName[cg_nIdentifierLength + 1];
-
-        strncpy(dTypeName, dTypePos, nLen);
-        dTypeName[nLen] = '\0';
-        //get the data type id
-        m_ValueTypeID = CStringDictionary::getInstance().getId(dTypeName);
-        //DEVLOG_DEBUG("ValueType: %s, DIs: %d;\n", dTypeName, m_nDInputs);
-      }
+      m_nArrayLength = static_cast<unsigned int>(forte::core::util::strtoul(dNumberPos, 0, 10));
+      m_ValueTypeID = CStringDictionary::getInstance().getId(++dTypePos);
     }
     else{
       m_ValueTypeID = CStringDictionary::scm_nInvalidStringId;
@@ -84,7 +69,7 @@ SFBInterfaceSpecforGenerics *GEN_ARRAY2ARRAY::createInterfaceSpec(const char *pa
     }
   }
   else{
-    return 0;
+    return false;
   }
 
   if(m_ValueTypeID != CStringDictionary::scm_nInvalidStringId && m_nArrayLength >= 1){
@@ -101,9 +86,23 @@ SFBInterfaceSpecforGenerics *GEN_ARRAY2ARRAY::createInterfaceSpec(const char *pa
     m_anDataOutputTypeIds[2] = m_ValueTypeID;
 
     //create the interface Specification
-    interfaceSpec = new SFBInterfaceSpecforGenerics(1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 1, scm_anDataInputNames, m_anDataInputTypeIds, 1, scm_anDataOutputNames, m_anDataOutputTypeIds);
+    paInterfaceSpec.m_nNumEIs = 1;
+    paInterfaceSpec.m_aunEINames = scm_anEventInputNames;
+    paInterfaceSpec.m_anEIWith = scm_anEIWith;
+    paInterfaceSpec.m_anEIWithIndexes = scm_anEIWithIndexes;
+    paInterfaceSpec.m_nNumEOs = 1;
+    paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
+    paInterfaceSpec.m_anEOWith = scm_anEOWith;
+    paInterfaceSpec.m_anEOWithIndexes = scm_anEOWithIndexes;
+    paInterfaceSpec.m_nNumDIs = 1;
+    paInterfaceSpec.m_aunDINames = scm_anDataInputNames;
+    paInterfaceSpec.m_aunDIDataTypeNames = m_anDataInputTypeIds;
+    paInterfaceSpec.m_nNumDOs = 1;
+    paInterfaceSpec.m_aunDONames = scm_anDataOutputNames;
+    paInterfaceSpec.m_aunDODataTypeNames = m_anDataOutputTypeIds;
+    return true;
   }
 
-  return interfaceSpec;
+  return false;
 }
 

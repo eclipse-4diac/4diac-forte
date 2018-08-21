@@ -23,23 +23,19 @@ DEFINE_GENERIC_FIRMWARE_FB(GEN_APPEND_STRING, g_nStringIdGEN_APPEND_STRING);
 const CStringDictionary::TStringId GEN_APPEND_STRING::scm_anEventOutputNames[] = { g_nStringIdCNF };
 const CStringDictionary::TStringId GEN_APPEND_STRING::scm_anEventInputNames[] = { g_nStringIdREQ };
 
-const CStringDictionary::TStringId GEN_APPEND_STRING::scm_anDataOutputNames[] = {g_nStringIdOUT};
-const CStringDictionary::TStringId GEN_APPEND_STRING::scm_anDataOutputTypeIds[] = {g_nStringIdSTRING};
+const CStringDictionary::TStringId GEN_APPEND_STRING::scm_anDataOutputNames[] = { g_nStringIdOUT };
+const CStringDictionary::TStringId GEN_APPEND_STRING::scm_anDataOutputTypeIds[] = { g_nStringIdSTRING };
 
-const TForteInt16 GEN_APPEND_STRING::scm_anEIWithIndexes[] = {0};
+const TForteInt16 GEN_APPEND_STRING::scm_anEIWithIndexes[] = { 0 };
 
-const TDataIOID GEN_APPEND_STRING::scm_anEOWith[] = {0, 255};
-const TForteInt16 GEN_APPEND_STRING::scm_anEOWithIndexes[] = {0, -1};
+const TDataIOID GEN_APPEND_STRING::scm_anEOWith[] = { 0, 255 };
+const TForteInt16 GEN_APPEND_STRING::scm_anEOWithIndexes[] = { 0, -1 };
 
 //default value is set to 100 (sufficient for several data types)
 const TForteInt16 GEN_APPEND_STRING::scm_maxStringBufSize = 100;
 
-GEN_APPEND_STRING::GEN_APPEND_STRING(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(pa_poSrcRes, pa_nInstanceNameId),
-    m_anDataInputNames(0),
-    m_anDataInputTypeIds(0),
-    m_anEIWith(0),
-    m_nDInputs(0){
+GEN_APPEND_STRING::GEN_APPEND_STRING(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), m_anDataInputNames(0), m_anDataInputTypeIds(0), m_anEIWith(0), m_nDInputs(0){
 }
 
 GEN_APPEND_STRING::~GEN_APPEND_STRING(){
@@ -48,9 +44,9 @@ GEN_APPEND_STRING::~GEN_APPEND_STRING(){
   delete[] m_anEIWith;
 }
 
-void GEN_APPEND_STRING::executeEvent(int pa_nEIID){
+void GEN_APPEND_STRING::executeEvent(int paEIID){
 
-  if(pa_nEIID < 1 && pa_nEIID > -1){
+  if(paEIID < 1 && paEIID > -1){
     //pointers to data inputs and data output
     CIEC_ANY *pDataInput;
     CIEC_ANY *pDataOutput = getDO(0);
@@ -94,7 +90,6 @@ void GEN_APPEND_STRING::executeEvent(int pa_nEIID){
           nRequiredBytes = scm_maxStringBufSize;
         }
 
-
         if((static_cast<CIEC_STRING*>(pDataOutput))->length() != static_cast<TForteUInt16>(0) && input_index != 0){
           //if data has been written to pDataOutput and input_index does not refer to first input
           //get length and number of free bytes (unused memory)
@@ -129,15 +124,14 @@ void GEN_APPEND_STRING::executeEvent(int pa_nEIID){
   }
 }
 
-SFBInterfaceSpecforGenerics *GEN_APPEND_STRING::createInterfaceSpec(const char *paConfigString) {
-  SFBInterfaceSpecforGenerics *interfaceSpec = 0;
+bool GEN_APPEND_STRING::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec){
   const char *pcPos = strrchr(paConfigString, '_');
 
   if(0 != pcPos){
     ++pcPos;
     if('S' != *pcPos){
       //we have an underscore and it is not the first underscore after E
-      m_nDInputs = static_cast<int>(forte::core::util::strtoul(pcPos,0,10));
+      m_nDInputs = static_cast<int>(forte::core::util::strtoul(pcPos, 0, 10));
       DEVLOG_DEBUG("DIs: %d;\n", m_nDInputs);
     }
     else{
@@ -145,11 +139,11 @@ SFBInterfaceSpecforGenerics *GEN_APPEND_STRING::createInterfaceSpec(const char *
     }
   }
   else{
-    return 0;
+    return false;
   }
 
   if(m_nDInputs < 2){
-    return 0;
+    return false;
   }
 
   //now the number of needed eventInputs and dataOutputs are available in the integer array
@@ -167,18 +161,27 @@ SFBInterfaceSpecforGenerics *GEN_APPEND_STRING::createInterfaceSpec(const char *
     m_anEIWith = new TDataIOID[m_nDInputs + 1]; //for inputs + '255' separators at the list end
 
     //in-withs
-    for(int in_with = 0; in_with < m_nDInputs + 1; in_with = in_with + 1){
-      if(in_with == m_nDInputs){
-        //set end separator of with
-        m_anEIWith[in_with] = 255;
-      }
-      else{
-        m_anEIWith[in_with] = static_cast<TDataIOID>(in_with);
-      }
+    for(size_t in_with = 0; in_with < m_nDInputs; ++in_with){
+      m_anEIWith[in_with] = static_cast<TDataIOID>(in_with);
     }
+    m_anEIWith[m_nDInputs] = scmWithListDelimiter;
 
     //create the interface Specification
-    interfaceSpec = new SFBInterfaceSpecforGenerics(static_cast<TForteUInt8>(1), scm_anEventInputNames, m_anEIWith, scm_anEIWithIndexes, static_cast<TForteUInt8>(1), scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, static_cast<TForteUInt8>(m_nDInputs), m_anDataInputNames, m_anDataInputTypeIds, static_cast<TForteUInt8>(1), scm_anDataOutputNames, scm_anDataOutputTypeIds);
+    paInterfaceSpec.m_nNumEIs = 1;
+    paInterfaceSpec.m_aunEINames = scm_anEventInputNames;
+    paInterfaceSpec.m_anEIWith = m_anEIWith;
+    paInterfaceSpec.m_anEIWithIndexes = scm_anEIWithIndexes;
+    paInterfaceSpec.m_nNumEOs = 1;
+    paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
+    paInterfaceSpec.m_anEOWith = scm_anEOWith;
+    paInterfaceSpec.m_anEOWithIndexes = scm_anEOWithIndexes;
+    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(m_nDInputs);
+    paInterfaceSpec.m_aunDINames = m_anDataInputNames;
+    paInterfaceSpec.m_aunDIDataTypeNames = m_anDataInputTypeIds;
+    paInterfaceSpec.m_nNumDOs = 1;
+    paInterfaceSpec.m_aunDONames = scm_anDataOutputNames;
+    paInterfaceSpec.m_aunDODataTypeNames = scm_anDataOutputTypeIds;
+    return true;
   }
-  return interfaceSpec;
+  return false;
 }

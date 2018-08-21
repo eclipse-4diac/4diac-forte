@@ -31,8 +31,8 @@ const TDataIOID GEN_CSV_WRITER::scm_anEOWith[] = { 0, 1, 255, 0, 1, 255 };
 const TForteInt16 GEN_CSV_WRITER::scm_anEOWithIndexes[] = { 0, 3, -1 };
 const CStringDictionary::TStringId GEN_CSV_WRITER::scm_anEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF };
 
-void GEN_CSV_WRITER::executeEvent(int pa_nEIID){
-  switch (pa_nEIID){
+void GEN_CSV_WRITER::executeEvent(int paEIID){
+  switch (paEIID){
     case scm_nEventINITID:
       if(true == QI()){
         openCSVFile();
@@ -52,8 +52,8 @@ void GEN_CSV_WRITER::executeEvent(int pa_nEIID){
   }
 }
 
-GEN_CSV_WRITER::GEN_CSV_WRITER(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(pa_poSrcRes, pa_nInstanceNameId), m_pstCSVFile(0), m_anDataInputNames(0), m_anDataInputTypeIds(0), m_anEIWith(0){
+GEN_CSV_WRITER::GEN_CSV_WRITER(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), m_pstCSVFile(0), m_anDataInputNames(0), m_anDataInputTypeIds(0), m_anEIWith(0){
 }
 
 GEN_CSV_WRITER::~GEN_CSV_WRITER(){
@@ -62,43 +62,53 @@ GEN_CSV_WRITER::~GEN_CSV_WRITER(){
   delete[] m_anEIWith;
 }
 
-SFBInterfaceSpecforGenerics *GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString) {
-  SFBInterfaceSpecforGenerics *interfaceSpec = 0;
-
-
+bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
   const char *acPos = strrchr(paConfigString, '_');
   if(0 != acPos){
     acPos++;
-    int nNumDIs = static_cast<int>(forte::core::util::strtoul(acPos,0,10));
-    nNumDIs += 2; // we have in addition to the SDs a QI and FILE_NAME data inputs
+    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(forte::core::util::strtoul(acPos,0,10));
+    paInterfaceSpec.m_nNumDIs += 2U; // we have in addition to the SDs a QI and FILE_NAME data inputs
 
-    m_anDataInputNames = new CStringDictionary::TStringId[nNumDIs];
-    m_anDataInputTypeIds = new CStringDictionary::TStringId[nNumDIs];
+    m_anDataInputNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
+    m_anDataInputTypeIds = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
 
     m_anDataInputNames[0] = g_nStringIdQI;
     m_anDataInputTypeIds[0] = g_nStringIdBOOL;
     m_anDataInputNames[1] = g_nStringIdFILE_NAME;
     m_anDataInputTypeIds[1] = g_nStringIdSTRING;
 
-    generateGenericDataPointArrays("SD_", &(m_anDataInputTypeIds[2]), &(m_anDataInputNames[2]), nNumDIs - 2);
+    generateGenericDataPointArrays("SD_", &(m_anDataInputTypeIds[2]), &(m_anDataInputNames[2]), paInterfaceSpec.m_nNumDIs - 2);
 
-    m_anEIWith = new TDataIOID[3 + nNumDIs];
+    m_anEIWith = new TDataIOID[3 + paInterfaceSpec.m_nNumDIs];
 
     m_anEIWith[0] = 0;
     m_anEIWith[1] = 1;
-    m_anEIWith[2] = 255;
+    m_anEIWith[2] = scmWithListDelimiter;
     m_anEIWith[3] = 0;
 
-    for(TDataIOID i = 2; i < (nNumDIs); i++){
+    for(TDataIOID i = 2; i < paInterfaceSpec.m_nNumDIs; i++){
       m_anEIWith[i + 2] = i;
     }
 
-    m_anEIWith[2 + nNumDIs] = 255;
+    m_anEIWith[2 + paInterfaceSpec.m_nNumDIs] = scmWithListDelimiter;
 
     //create the interface Specification
-    interfaceSpec = new SFBInterfaceSpecforGenerics((TForteUInt8)2, scm_anEventInputNames, m_anEIWith, scm_anEIWithIndexes, (TForteUInt8)2, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, (TForteUInt8)nNumDIs, m_anDataInputNames, m_anDataInputTypeIds, (TForteUInt8)2, scm_anDataOutputNames, scm_anDataOutputTypeIds);
+    paInterfaceSpec.m_nNumEIs = 2;
+    paInterfaceSpec.m_aunEINames = scm_anEventInputNames;
+    paInterfaceSpec.m_anEIWith = m_anEIWith;
+    paInterfaceSpec.m_anEIWithIndexes = scm_anEIWithIndexes;
+    paInterfaceSpec.m_nNumEOs = 2;
+    paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
+    paInterfaceSpec.m_anEOWith = scm_anEOWith;
+    paInterfaceSpec.m_anEOWithIndexes = scm_anEOWithIndexes;
+    paInterfaceSpec.m_aunDINames = m_anDataInputNames;
+    paInterfaceSpec.m_aunDIDataTypeNames = m_anDataInputTypeIds;
+    paInterfaceSpec.m_nNumDOs = 2;
+    paInterfaceSpec.m_aunDONames = scm_anDataOutputNames;
+    paInterfaceSpec.m_aunDODataTypeNames = scm_anDataOutputTypeIds;
+    return true;
   }
-  return interfaceSpec;
+  return false;
 }
 
 void GEN_CSV_WRITER::openCSVFile(){
