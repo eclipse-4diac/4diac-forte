@@ -182,39 +182,35 @@ bool DEV_MGR::parseFBData(char *pa_acRequestPartLeft, forte::core::SManagementCM
   bool bRetVal = false;
 
   if(!strncmp("FB Name=\"", pa_acRequestPartLeft, 9)){
-    if(strstr("EventIn=\"", pa_acRequestPartLeft) != 0){
-      // TODO parse all parameters
+    char *acBuf = &(pa_acRequestPartLeft[9]);
+    int i = 0;
+    if(acBuf[0] != '*'){
+      i = parseIdentifier(acBuf, pa_rstCommand.mFirstParam);
+      acBuf = (-1 == i) ? 0 : strchr(&(acBuf[i + 1]), '\"');
     }
     else{
-      char *acBuf = &(pa_acRequestPartLeft[9]);
-      int i = 0;
-      if(acBuf[0] != '*'){
-        i = parseIdentifier(acBuf, pa_rstCommand.mFirstParam);
-        acBuf = (-1 == i) ? 0 : strchr(&(acBuf[i + 1]), '\"');
-      }
-      else{
-        acBuf = strchr(&(acBuf[i + 2]), '\"');
-      }
+      acBuf = strchr(&(acBuf[i + 2]), '\"');
+    }
 
-      if(acBuf != 0){
-        if(acBuf[1] != '*'){
-          ++acBuf;
-          i = parseIdentifier(acBuf, pa_rstCommand.mSecondParam);
-          if(-1 != i){
-            acBuf = strchr(&(acBuf[i + 1]), '\"');
-            if(acBuf != 0){
-              // We have an application name given
-              ++acBuf;
-              i = 0;
-              TForteUInt16 nBufLength = static_cast<TForteUInt16>(strcspn(acBuf, "\"") + 1);
-              pa_rstCommand.mAdditionalParams.assign(acBuf, nBufLength);
-            }
-          } else{
-            return false;
+    if(acBuf != 0){
+      if(acBuf[1] != '*'){
+        ++acBuf;
+        i = parseIdentifier(acBuf, pa_rstCommand.mSecondParam);
+        if(-1 != i){
+          acBuf = strchr(&(acBuf[i + 1]), '\"');
+          if(acBuf != 0){
+            // We have an application name given
+            ++acBuf;
+            i = 0;
+            TForteUInt16 nBufLength = static_cast<TForteUInt16>(strcspn(acBuf, "\"") + 1);
+            pa_rstCommand.mAdditionalParams.assign(acBuf, nBufLength);
           }
         }
-        bRetVal = true;
+        else{
+          return false;
+        }
       }
+      bRetVal = true;
     }
   }
   return bRetVal;
