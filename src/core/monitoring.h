@@ -26,8 +26,6 @@ class CResource;
 namespace forte {
   namespace core {
 
-    const TForteUInt32 cgMonitorBufferLength = 1;
-
     enum EBreakPointStatus{
         eActive = 0,    // we are comparing in the main loop against this one therefore it gets zero to make it faster
         eOnce,
@@ -35,21 +33,12 @@ namespace forte {
     };
 
     struct SMonitorEvent{
-        TForteUInt16 mBufPos;
         EBreakPointStatus mBreakpointSet;        //!< eOnce if breakpoint is active and should continue once, eInactive - currently no breakpoint active, eActive - breakpoint currently active TODO change to enum
         bool mBreakpointEnable;     //!< breakpoint activated - a breackpoint is specified for this event
 
-        struct SMonitorEventData{
-          TForteUInt32 mEventCount; //!< Event count
-          SForteTime mTimeStamp;   //!< Timestamp when the event occurred
+        TForteUInt32 mEventCount; //!< Event count
 
-          SMonitorEventData() : mEventCount(0) {
-          }
-        };
-
-        SMonitorEventData mMonitorEventData[cgMonitorBufferLength];
-
-        SMonitorEvent() : mBufPos(0), mBreakpointSet(eInactive), mBreakpointEnable(false){
+        SMonitorEvent() : mBreakpointSet(eInactive), mBreakpointEnable(false), mEventCount(0){
         }
     };
 
@@ -121,8 +110,7 @@ namespace forte {
             SDataWatchEntry &pa_roDataWatchEntry);
         static void appendPortTag(CIEC_STRING &pa_roResponse,
             CStringDictionary::TStringId pa_unPortId);
-        static void appendEventWatch(CIEC_STRING &pa_roResponse,
-            SEventWatchEntry &pa_roEventWatchEntry);
+        void appendEventWatch(CIEC_STRING &pa_roResponse, SEventWatchEntry &pa_roEventWatchEntry);
 
         static void createFullFBName(CIEC_STRING &paFullName, forte::core::TNameIdentifier &paNameList);
 

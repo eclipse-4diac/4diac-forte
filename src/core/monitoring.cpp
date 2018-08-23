@@ -11,6 +11,7 @@
  *******************************************************************************/
 #include "monitoring.h"
 #include "resource.h"
+#include "device.h"
 #include "ecet.h"
 #include "utils/criticalregion.h"
 
@@ -246,7 +247,7 @@ EMGMResponse CMonitoringHandler::resetEventCount(forte::core::TNameIdentifier &p
     }
     if(0 != pstEventMonitorData){
       CCriticalRegion criticalRegion(fB->getResource().m_oResDataConSync);
-      pstEventMonitorData->mMonitorEventData[pstEventMonitorData->mBufPos].mEventCount = 0;
+      pstEventMonitorData->mEventCount = 0;
       eRetVal = e_RDY;
     }
   }
@@ -427,10 +428,7 @@ void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
   paResponse.append(acDataValue);
   paResponse.append("\" forced=\"");
   paResponse.append(((paDataWatchEntry.mDataValue.isForced()) ? "true" : "false"));
-  paResponse.append("\">");
-  paResponse.append("</Data>");
-
-  paResponse.append("</Port>");
+  paResponse.append("\"/></Port>");
   delete [] acDataValue;
 }
 
@@ -445,31 +443,20 @@ void CMonitoringHandler::appendEventWatch(CIEC_STRING &paResponse,
     SEventWatchEntry &paEventWatchEntry){
   appendPortTag(paResponse, paEventWatchEntry.m_unPortId);
 
-  CIEC_UDINT udint;
-  CIEC_ULINT ulint; //TODO: If 64bits types aren't used, this won't compile
 
-  char acEventCount[10]; // the bigest number in an uint is 4294967296, TODO directly use pa_roResponse
-  char acTimeStamp[21]; // the bigest number in an ulint is 18446744073709551616, TODO directly use pa_roResponse
+  CIEC_UDINT udint = paEventWatchEntry.m_roEventData.mEventCount;
+  SForteTime timeStamp = mResource.getDevice().getTimer().getForteTime();  // for backwards compatibility send the the current time as timestamp
+  CIEC_ULINT ulint = ((((TForteUInt64) timeStamp.m_nUpperValue) << 32) & 0xFFFFFFFF00000000ULL) +
+      (((TForteUInt64) timeStamp.m_nLowerValue) & 0xFFFFFFFFULL);
 
-  for(TForteUInt16 i = 0; i <= paEventWatchEntry.m_roEventData.mBufPos; i++){
-    SMonitorEvent::SMonitorEventData &monitorEventData(paEventWatchEntry.m_roEventData.mMonitorEventData[i]);
-    udint = monitorEventData.mEventCount;
-    ulint = ((((TForteUInt64) monitorEventData.mTimeStamp.m_nUpperValue) << 32) & 0xFFFFFFFF00000000ULL) +
-        (((TForteUInt64) monitorEventData.mTimeStamp.m_nLowerValue) & 0xFFFFFFFFULL);
-
-    paResponse.append("<Data value=\"");
-    udint.toString(acEventCount, sizeof(acEventCount));
-    paResponse.append(acEventCount);
-    paResponse.append("\" time=\"");
-    ulint.toString(acTimeStamp, sizeof(acTimeStamp));
-    paResponse.append(acTimeStamp);
-    paResponse.append("\">");
-    paResponse.append("</Data>");
-  }
-
-  paEventWatchEntry.m_roEventData.mBufPos = 0;
-
-  paResponse.append("</Port>");
+  paResponse.append("<Data value=\"");
+  char buf[21]; // the bigest number in an ulint is 18446744073709551616, TODO directly use pa_roResponse
+  udint.toString(buf, sizeof(buf));
+  paResponse.append(buf);
+  paResponse.append("\" time=\"");
+  ulint.toString(buf, sizeof(buf));
+  paResponse.append(buf);
+  paResponse.append("\"/>\n</Port>");
 }
 
 void CMonitoringHandler::createFullFBName(CIEC_STRING &paFullName, forte::core::TNameIdentifier &paNameList){

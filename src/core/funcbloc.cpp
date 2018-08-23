@@ -239,33 +239,32 @@ TPortId CFunctionBlock::getAdapterPortId(CStringDictionary::TStringId paAdapterN
   return cg_unInvalidPortId;
 }
 
-void CFunctionBlock::sendOutputEvent(int pa_nEO){
-  FORTE_TRACE("OutputEvent: Function Block sending event: %d (maxid: %d)\n", pa_nEO, m_pstInterfaceSpec->m_nNumEOs - 1);
-  if(pa_nEO < m_pstInterfaceSpec->m_nNumEOs){
+void CFunctionBlock::sendOutputEvent(int paEO){
+  FORTE_TRACE("OutputEvent: Function Block sending event: %d (maxid: %d)\n", paEO, m_pstInterfaceSpec->m_nNumEOs - 1);
+  if((0 <= paEO) && (paEO < m_pstInterfaceSpec->m_nNumEOs)){
 #ifdef FORTE_SUPPORT_MONITORING
-    forte::core::SMonitorEvent &eventMonitoring(m_nEOMonitorCount[pa_nEO]);
-    forte::core::SMonitorEvent::SMonitorEventData &monitoringData(eventMonitoring.mMonitorEventData[eventMonitoring.mBufPos]);
+    forte::core::SMonitorEvent &eventMonitoring(m_nEOMonitorCount[paEO]);
     // breakpoint set, ignore all other events
     if(forte::core::eActive != eventMonitoring.mBreakpointSet){
 #endif //FORTE_SUPPORT_MONITORING
     if(0 != m_pstInterfaceSpec->m_anEOWithIndexes){
-      if(-1 != m_pstInterfaceSpec->m_anEOWithIndexes[pa_nEO]){
-        const TDataIOID *poEOWithStart = &(m_pstInterfaceSpec->m_anEOWith[m_pstInterfaceSpec->m_anEOWithIndexes[pa_nEO]]);
+      if(-1 != m_pstInterfaceSpec->m_anEOWithIndexes[paEO]){
+        const TDataIOID *eiWithStart = &(m_pstInterfaceSpec->m_anEOWith[m_pstInterfaceSpec->m_anEOWithIndexes[paEO]]);
         //TODO think on this lock
         CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
-        for(int i = 0; poEOWithStart[i] != scmWithListDelimiter; ++i){
-          CDataConnection *con = getDOConUnchecked(poEOWithStart[i]);
+        for(size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i){
+          CDataConnection *con = getDOConUnchecked(eiWithStart[i]);
           if(con->isConnected()){
-            CIEC_ANY *poDO = getDO(poEOWithStart[i]);
+            CIEC_ANY *dataOutput = getDO(eiWithStart[i]);
 #ifdef FORTE_SUPPORT_MONITORING
-            if(poDO->isForced() != true){
+            if(dataOutput->isForced() != true){
 #endif //FORTE_SUPPORT_MONITORING
-              con->writeData(poDO);
+              con->writeData(dataOutput);
 #ifdef FORTE_SUPPORT_MONITORING
             }
             else{
               //when forcing we write back the value from the connection to keep the forced value on the output
-              con->readData(poDO);
+              con->readData(dataOutput);
             }
 #endif //FORTE_SUPPORT_MONITORING
           }
@@ -273,7 +272,7 @@ void CFunctionBlock::sendOutputEvent(int pa_nEO){
       }
     }
 
-    getEOConUnchecked(static_cast<TPortId>(pa_nEO))->triggerEvent(*m_poInvokingExecEnv);
+    getEOConUnchecked(static_cast<TPortId>(paEO))->triggerEvent(*m_poInvokingExecEnv);
 
 #ifdef FORTE_SUPPORT_MONITORING
       // stop execution on Breakpoint
@@ -290,9 +289,7 @@ void CFunctionBlock::sendOutputEvent(int pa_nEO){
         //res.stopManagedObject();    // we cant restart it,
       }
       // Count Event for monitoring
-      monitoringData.mEventCount++;
-      monitoringData.mTimeStamp = getTimer().getForteTime();
-      eventMonitoring.mBufPos = (eventMonitoring.mBufPos + 1) % forte::core::cgMonitorBufferLength;
+      eventMonitoring.mEventCount++;
     }  // if(forte::core::eActive != eventMonitoring.mMonitorEventData[eventMonitoring.mBufPos].mBreakpointSet){
 #endif //FORTE_SUPPORT_MONITORING
   }
@@ -308,34 +305,31 @@ bool CFunctionBlock::configureFB(const char *){
   return true;
 }
 
-void CFunctionBlock::receiveInputEvent(int pa_nEIID, CEventChainExecutionThread &pa_poExecEnv){
-  FORTE_TRACE("InputEvent: Function Block (%s) got event: %d (maxid: %d)\n", CStringDictionary::getInstance().get(getInstanceNameId()), pa_nEIID, m_pstInterfaceSpec->m_nNumEIs - 1);
+void CFunctionBlock::receiveInputEvent(int paEIID, CEventChainExecutionThread &paExecEnv){
+  FORTE_TRACE("InputEvent: Function Block (%s) got event: %d (maxid: %d)\n", CStringDictionary::getInstance().get(getInstanceNameId()), paEIID, m_pstInterfaceSpec->m_nNumEIs - 1);
 
   if(e_RUNNING == getState()){
-    if(pa_nEIID < m_pstInterfaceSpec->m_nNumEIs){
+    if((0 <= paEIID) && (paEIID < m_pstInterfaceSpec->m_nNumEIs)){
 #ifdef FORTE_SUPPORT_MONITORING
-      forte::core::SMonitorEvent &eventMonitoring(m_nEIMonitorCount[pa_nEIID]);
-      forte::core::SMonitorEvent::SMonitorEventData &monitoringData(eventMonitoring.mMonitorEventData[eventMonitoring.mBufPos]);
+      forte::core::SMonitorEvent &eventMonitoring(m_nEIMonitorCount[paEIID]);
       // breakpoint set, ignore all other events
       if(forte::core::eActive == eventMonitoring.mBreakpointSet){
         return;
       }
 #endif //FORTE_SUPPORT_MONITORING
       if(0 != m_pstInterfaceSpec->m_anEIWithIndexes){
-
-        //        printf(   "Event name: %s\n", m_pstInterfaceSpec->m_acEINames[pa_nEIID]);
-        if(-1 != m_pstInterfaceSpec->m_anEIWithIndexes[pa_nEIID]){
-          const TDataIOID *poEIWithStart = &(m_pstInterfaceSpec->m_anEIWith[m_pstInterfaceSpec->m_anEIWithIndexes[pa_nEIID]]);
+        if(-1 != m_pstInterfaceSpec->m_anEIWithIndexes[paEIID]){
+          const TDataIOID *eiWithStart = &(m_pstInterfaceSpec->m_anEIWith[m_pstInterfaceSpec->m_anEIWithIndexes[paEIID]]);
 
           // TODO think on this lock
           CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
-          for(int i = 0; poEIWithStart[i] != scmWithListDelimiter; ++i){
-            if(0 != m_apoDIConns[poEIWithStart[i]]){
-              CIEC_ANY *poDI = getDI(poEIWithStart[i]);
+          for(size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i){
+            if(0 != m_apoDIConns[eiWithStart[i]]){
+              CIEC_ANY *di = getDI(eiWithStart[i]);
 #ifdef FORTE_SUPPORT_MONITORING
-              if(true != poDI->isForced()){
+              if(true != di->isForced()){
 #endif //FORTE_SUPPORT_MONITORING
-                m_apoDIConns[poEIWithStart[i]]->readData(poDI);
+                m_apoDIConns[eiWithStart[i]]->readData(di);
 #ifdef FORTE_SUPPORT_MONITORING
               }
 #endif //FORTE_SUPPORT_MONITORING
@@ -353,18 +347,13 @@ void CFunctionBlock::receiveInputEvent(int pa_nEIID, CEventChainExecutionThread 
           eventMonitoring.mBreakpointSet = forte::core::eActive;
          return;
         }
-        // Get Resource
-        //CResource &res = this->getResource();
-        //res.stopManagedObject();    // we cant restart it,
       }
       // Count Event for monitoring
-      monitoringData.mEventCount++;
-      monitoringData.mTimeStamp = getTimer().getForteTime();
-      eventMonitoring.mBufPos = (eventMonitoring.mBufPos + 1) % forte::core::cgMonitorBufferLength;
+      eventMonitoring.mEventCount++;
 #endif //FORTE_SUPPORT_MONITORING
     }
-    m_poInvokingExecEnv = &pa_poExecEnv;
-    executeEvent(pa_nEIID);
+    m_poInvokingExecEnv = &paExecEnv;
+    executeEvent(paEIID);
   }
 }
 
