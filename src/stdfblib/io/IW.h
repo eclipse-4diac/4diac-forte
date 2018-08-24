@@ -14,12 +14,18 @@
 
 #include <processinterface.h>
 
-//TODO add compile time check that CWordAccess inherits from CWordAccessBase
+#ifdef IN
+#undef IN
+#endif
+
+#ifdef OUT
+#undef OUT
+#endif
 
 /*! /brief generic class for IW function blocks providing access to one word physical input
  *
- * In order that this FB can be used implementations need to provide a class CWordAccess
- * this class needs to inherit from CWordAccessBase and provide the following functions
+ * In order that this FB can be used implementations need to provide a class CProcessInterface
+ * this class needs to inherit from CProcessInterfaceBase and provide the following functions
  *
  *   - bool initialise(bool paInput)
  *     Initialize the physical input identified with the value of the PARAMS input
