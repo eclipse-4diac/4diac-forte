@@ -32,16 +32,6 @@ CONMELEON::CGpioPin CConmeleonC1ProcessInterface::smDigitalOutputs[] = {
   {27, CONMELEON::output}
 };
 
-/*CONMELEON::CGpioPin CConmeleonC1ProcessInterface::smDI1(20, CONMELEON::input);
-CONMELEON::CGpioPin CConmeleonC1ProcessInterface::smDI2(21, CONMELEON::input);
-CONMELEON::CGpioPin CConmeleonC1ProcessInterface::smDI3(22, CONMELEON::input);
-CONMELEON::CGpioPin CConmeleonC1ProcessInterface::smDI4(23, CONMELEON::input);
-
-CONMELEON::CGpioPin CConmeleonC1ProcessInterface::smDO1(24, CONMELEON::output);
-CONMELEON::CGpioPin CConmeleonC1ProcessInterface::smDO2(25, CONMELEON::output);
-CONMELEON::CGpioPin CConmeleonC1ProcessInterface::smDO3(26, CONMELEON::output);
-CONMELEON::CGpioPin CConmeleonC1ProcessInterface::smDO4(27, CONMELEON::output);*/
-
 CONMELEON::CAds1018 CConmeleonC1ProcessInterface::smADC("/dev/spidev0.1", 1000000, CONMELEON::SPIMODE1);
 
 CConmeleonC1ProcessInterface::EIOState CConmeleonC1ProcessInterface::smAIUsage[5] = {
