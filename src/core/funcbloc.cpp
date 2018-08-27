@@ -496,6 +496,14 @@ TPortId CFunctionBlock::getPortId(CStringDictionary::TStringId pa_unPortNameId, 
   return cg_unInvalidPortId;
 }
 
+
+const CIEC_TIME CFunctionBlock::TIME(){
+  SForteTime curTime = getTimer().getForteTime();
+  TForteUInt64 temp = ((((TForteUInt64) curTime.m_nUpperValue) << 32) & 0xFFFFFFFF00000000ULL) + (((TForteUInt64) curTime.m_nLowerValue) & 0xFFFFFFFFULL);
+  return CIEC_TIME( temp * (FORTE_TIME_BASE_UNITS_PER_SECOND / cg_nForteTicksPerSecond) );
+};
+
+//********************************** below here are monitoring specific functions **********************************************************
 #ifdef FORTE_SUPPORT_MONITORING
 void CFunctionBlock::setupEventMonitoringData(){
   if(0 != m_pstInterfaceSpec->m_nNumEIs){

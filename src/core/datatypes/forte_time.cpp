@@ -191,11 +191,3 @@ void CIEC_TIME::setFromMicroSeconds(TValueType pa_nValue){
     *this = pa_nValue / (MICROSECONDS_PER_SECOND / FORTE_TIME_BASE_UNITS_PER_SECOND);
   #endif
 }
-
-const CIEC_TIME TIME(){
-  SForteTime tx = CTimerHandler::sm_poFORTETimer->getForteTime();
-  TForteUInt64 temp = ((((TForteUInt64) tx.m_nUpperValue) << 32) & 0xFFFFFFFF00000000ULL) + (((TForteUInt64) tx.m_nLowerValue) & 0xFFFFFFFFULL);
-  //fprintf(stderr,"time: %lld, %lld\n",temp, temp * (1000000 / cg_nForteTicksPerSecond));
-  return CIEC_TIME( temp * (FORTE_TIME_BASE_UNITS_PER_SECOND / cg_nForteTicksPerSecond) );
-};
-
