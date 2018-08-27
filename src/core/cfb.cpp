@@ -50,14 +50,18 @@ CCompositeFB::~CCompositeFB(){
     }
     delete[] m_apoInternalFBs;
   }
-  if(cm_cpoFBNData->m_nNumEventConnections){
-    //only delete the interface to internal event connections all other connections are managed by their source's FBs
-    for(unsigned int i = 0; i < m_pstInterfaceSpec->m_nNumEIs; ++i){
-      delete mInterface2InternalEventCons[i];
-    }
-    delete[] m_apoEventConnections;
-    delete[] mInterface2InternalEventCons;
+
+  //only delete the interface to internal event connections all other connections are managed by their source's FBs
+  //this has to be done even if we don't have any event connection to ensure correct behavior
+  for(unsigned int i = 0; i < m_pstInterfaceSpec->m_nNumEIs; ++i){
+    delete mInterface2InternalEventCons[i];
   }
+  delete[] mInterface2InternalEventCons;
+
+  if(cm_cpoFBNData->m_nNumEventConnections){
+    delete[] m_apoEventConnections;
+  }
+
   if(cm_cpoFBNData->m_nNumDataConnections){
     if(0 != m_apoDataConnections){
       delete[] m_apoDataConnections;
@@ -206,8 +210,8 @@ void CCompositeFB::createInternalFBs(){
 }
 
 void CCompositeFB::createEventConnections(){
+  prepareIf2InEventCons();  //the interface to internal event connections are needed even if they are not connected therefore we have to create them correctly in any case
   if(0 != cm_cpoFBNData->m_nNumEventConnections){
-    prepareIf2InEventCons();
     m_apoEventConnections = new CEventConnection *[cm_cpoFBNData->m_nNumEventConnections]; //TODO for a major revison this list could be ommited but requires a change in the faned out connections
 
     CFunctionBlock *poSrcFB;
