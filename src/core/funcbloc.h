@@ -231,11 +231,10 @@ class CFunctionBlock{
 
     /*!\brief Function that handles incoming events.
      *
-     * \param pa_nEIID ID if the input event that has occurred.
-     * \param pa_poExecEnv Event chain execution environment the FB will be executed in (used for adding output events).
+     * \param paEIID ID of the input event that has occurred.
+     * \param paExecEnv Event chain execution environment the FB will be executed in (used for adding output events).
      */
-    void
-    receiveInputEvent(int pa_nEIID, CEventChainExecutionThread &pa_poExecEnv);
+    void receiveInputEvent(size_t paEIID, CEventChainExecutionThread &paExecEnv);
 
     /*!\brief Configuration interface used by the typelib to parameterize generic function blocks.
      *
@@ -397,14 +396,14 @@ class CFunctionBlock{
      *
      * \param pa_nEO Event output ID where event should be fired.
      */
-    void sendOutputEvent(int pa_nEO);
+    void sendOutputEvent(size_t paEO);
 
     /*!\brief Function to send an output event via the adapter.
      *
      * \param pa_nAdapterID ID of Adapter in current FBs adapter list.
      * \param pa_nEID Event ID where event should be fired.
      */
-    void sendAdapterEvent(int pa_nAdapterID, int pa_nEID) const;
+    void sendAdapterEvent(size_t paAdapterID, size_t paEID) const;
 
     void setupAdapters(const SFBInterfaceSpec *pa_pstInterfaceSpec, TForteByte *pa_acFBData);
 

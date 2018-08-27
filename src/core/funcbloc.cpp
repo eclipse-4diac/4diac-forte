@@ -239,9 +239,9 @@ TPortId CFunctionBlock::getAdapterPortId(CStringDictionary::TStringId paAdapterN
   return cg_unInvalidPortId;
 }
 
-void CFunctionBlock::sendOutputEvent(int paEO){
+void CFunctionBlock::sendOutputEvent(size_t paEO){
   FORTE_TRACE("OutputEvent: Function Block sending event: %d (maxid: %d)\n", paEO, m_pstInterfaceSpec->m_nNumEOs - 1);
-  if((0 <= paEO) && (paEO < m_pstInterfaceSpec->m_nNumEOs)){
+  if(paEO < m_pstInterfaceSpec->m_nNumEOs){
 #ifdef FORTE_SUPPORT_MONITORING
     forte::core::SMonitorEvent &eventMonitoring(m_nEOMonitorCount[paEO]);
     // breakpoint set, ignore all other events
@@ -295,9 +295,9 @@ void CFunctionBlock::sendOutputEvent(int paEO){
   }
 }
 
-void CFunctionBlock::sendAdapterEvent(int pa_nAdapterID, int pa_nEID) const{
-  if(0 != m_apoAdapters[pa_nAdapterID]){
-    m_apoAdapters[pa_nAdapterID]->receiveInputEvent(pa_nEID, *m_poInvokingExecEnv);
+void CFunctionBlock::sendAdapterEvent(size_t paAdapterID, size_t paEID) const{
+  if((paAdapterID < m_pstInterfaceSpec->m_nNumAdapters) && (0 != m_apoAdapters[paAdapterID])){
+    m_apoAdapters[paAdapterID]->receiveInputEvent(paEID, *m_poInvokingExecEnv);
   }
 }
 
@@ -305,11 +305,11 @@ bool CFunctionBlock::configureFB(const char *){
   return true;
 }
 
-void CFunctionBlock::receiveInputEvent(int paEIID, CEventChainExecutionThread &paExecEnv){
+void CFunctionBlock::receiveInputEvent(size_t paEIID, CEventChainExecutionThread &paExecEnv){
   FORTE_TRACE("InputEvent: Function Block (%s) got event: %d (maxid: %d)\n", CStringDictionary::getInstance().get(getInstanceNameId()), paEIID, m_pstInterfaceSpec->m_nNumEIs - 1);
 
   if(e_RUNNING == getState()){
-    if((0 <= paEIID) && (paEIID < m_pstInterfaceSpec->m_nNumEIs)){
+    if(paEIID < m_pstInterfaceSpec->m_nNumEIs){
 #ifdef FORTE_SUPPORT_MONITORING
       forte::core::SMonitorEvent &eventMonitoring(m_nEIMonitorCount[paEIID]);
       // breakpoint set, ignore all other events
