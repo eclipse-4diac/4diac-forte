@@ -17,7 +17,7 @@
 #include <conn.h>
 #include <stdio.h>
 #include "comlayer.h"
-#include <forte_config_opc_ua.h>
+#include <forte_config.h>
 #include "opcua_helper.h"
 #include "opcua_layer.h"
 #include <forte_string.h>
