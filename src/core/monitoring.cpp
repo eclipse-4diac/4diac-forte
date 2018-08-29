@@ -17,10 +17,20 @@
 
 using namespace forte::core;
 
+const char* const CMonitoringHandler::scmDoubleQuoteReplacement = "&quot;";
+
+const char* const CMonitoringHandler::scmSingleQuoteReplacement = "&apos;";
+
+const char* const CMonitoringHandler::scmAmpersandReplacement = "&amp;";
+
+const char* const CMonitoringHandler::scmLessThanReplacement = "&lt;";
+
+const char* const CMonitoringHandler::scmGreaterThanReplacement = "&gt;";
+
+
 CMonitoringHandler::CMonitoringHandler(CResource &paResource) :
     mTriggerEvent(0, 0),
         mResource(paResource){
-
 }
 
 EMGMResponse CMonitoringHandler::executeMonitoringCommand(SManagementCMD &paCommand){
@@ -407,29 +417,79 @@ void CMonitoringHandler::getResourceWatches(CIEC_STRING &paResponse, char){
 
 void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
     SDataWatchEntry &paDataWatchEntry){
-  int bufferSize = paDataWatchEntry.mDataValue.getToStringBufferSize();
+  unsigned int bufferSize = paDataWatchEntry.mDataValue.getToStringBufferSize() + getExtraSizeForEscapedChars(paDataWatchEntry.mDataValue);
   appendPortTag(paResponse, paDataWatchEntry.mPortId);
   paResponse.append("<Data value=\"");
   char* acDataValue = new char [bufferSize]; //TODO try to directly use the response string instead
-  int nConsumedBytes;
+  int consumedBytes = -1;
   switch (paDataWatchEntry.mDataValue.getDataTypeID()){
     case CIEC_ANY::e_WSTRING:
-      case CIEC_ANY::e_STRING:
-      nConsumedBytes =
-          static_cast<CIEC_WSTRING&>(paDataWatchEntry.mDataValue).toUTF8(acDataValue, bufferSize, false);
+    case CIEC_ANY::e_STRING:
+      consumedBytes = static_cast<CIEC_WSTRING&>(paDataWatchEntry.mDataValue).toUTF8(acDataValue, bufferSize, false);
+      if(bufferSize != paDataWatchEntry.mDataValue.getToStringBufferSize() //avoid re-running on strings which were already proven not to have any special character
+          && 0 < consumedBytes){
+        consumedBytes += replaceSpecialCharacters(acDataValue, &acDataValue[consumedBytes]);
+      }
       break;
     default:
-      nConsumedBytes = paDataWatchEntry.mDataValue.toString(acDataValue, bufferSize);
+      consumedBytes = paDataWatchEntry.mDataValue.toString(acDataValue, bufferSize);
       break;
   }
-  if(-1 != nConsumedBytes){
-    acDataValue[nConsumedBytes] = '\0';
+  if(-1 != consumedBytes){
+    acDataValue[consumedBytes] = '\0';
   }
   paResponse.append(acDataValue);
   paResponse.append("\" forced=\"");
   paResponse.append(((paDataWatchEntry.mDataValue.isForced()) ? "true" : "false"));
   paResponse.append("\"/></Port>");
   delete [] acDataValue;
+}
+
+unsigned int CMonitoringHandler::getExtraSizeForEscapedChars(const CIEC_ANY& paDataValue){
+  unsigned int retVal = 0;
+  if(CIEC_ANY::e_WSTRING == paDataValue.getDataTypeID() || CIEC_ANY::e_STRING == paDataValue.getDataTypeID()){
+    const char* runner =  static_cast<const CIEC_WSTRING&>(paDataValue).getValue();
+    while(0 != *runner){
+      if('"' == *runner || '\'' == *runner){ //&quot;  ||  &apos;
+        retVal += 5;
+      }else if('&' == *runner){ //&amp;
+        retVal += 4;
+      }else if('<' == *runner || '>' == *runner){ //&lt; || &gt;
+        retVal += 3;
+      }
+      runner++;
+    }
+  }
+  return retVal;
+}
+
+unsigned int CMonitoringHandler::replaceSpecialCharacters(char* const paStart, char* const paEnd){
+  char* runner = paEnd;
+  unsigned int retVal = 0;
+  while(paStart != runner){
+    const char* toCopy = 0;
+    if('"' == *runner){
+      toCopy = scmDoubleQuoteReplacement;
+    }else if('\'' == *runner){
+      toCopy = scmSingleQuoteReplacement;
+    }else if('&' == *runner){
+      toCopy = scmAmpersandReplacement;
+    }else if('<' == *runner){
+      toCopy = scmLessThanReplacement;
+    }else if('>' == *runner){
+      toCopy = scmGreaterThanReplacement;
+    }
+
+    if(0 != toCopy){
+      unsigned int toMove = strlen(toCopy);
+      memmove(&runner[toMove], runner + 1, paEnd - runner + retVal);
+      memcpy(runner, toCopy, toMove);
+      retVal += toMove - 1;
+    }
+    runner--;
+  }
+
+  return retVal;
 }
 
 void CMonitoringHandler::appendPortTag(CIEC_STRING &paResponse,
