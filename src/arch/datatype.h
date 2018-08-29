@@ -18,6 +18,7 @@
 #define __STDC_LIMIT_MACROS
 
 #include <stdint.h>
+#include <stddef.h>
 
 /*! \ingroup FORTE-HAL
  *  \brief This are the device-independent data types used by FORTE.

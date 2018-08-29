@@ -14,7 +14,7 @@
 #include <timerha.h>
 ${HANDLERMANAGER_INCLUDE}
 
-const unsigned int CTimerHandler::handlerIdentifier = 0;
+const size_t CTimerHandler::mHandlerIdentifier = 0;
 ${HANDLERMANAGER_VARIABLES} 
 
 void CDeviceExecution::createHandlers(CDeviceExecution& pa_DeviceExecution){

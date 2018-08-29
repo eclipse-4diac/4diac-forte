@@ -172,8 +172,8 @@ unsigned int forte::com_infra::CHttpParser::parseParameters(char* paParameters, 
   unsigned int retVal = 0;
 
   char* startOfName = paParameters;
-
-  while('\0' != *startOfName){
+  bool endOfParameters = false;
+  while('\0' != *startOfName && !endOfParameters){
     char* startOfValue = strstr(startOfName, "=");
     if(0 != startOfValue){
       *startOfValue = '\0';
@@ -185,7 +185,7 @@ unsigned int forte::com_infra::CHttpParser::parseParameters(char* paParameters, 
       break;
     }
     char* nextName = strstr(startOfValue, "&");
-    bool endOfParameters = false;;
+    endOfParameters = false;
     if(0 != nextName){
       *nextName = '\0';
     }else{
@@ -196,10 +196,7 @@ unsigned int forte::com_infra::CHttpParser::parseParameters(char* paParameters, 
     retVal++;
     if(!endOfParameters){
       startOfName = ++nextName;
-    }else{
-      break;
     }
-
   }
 
   return retVal;

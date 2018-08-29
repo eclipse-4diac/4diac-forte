@@ -209,6 +209,10 @@ if(${FORTE_TimeBaseUnitsPerSecond} GREATER ${MAX_TimeBaseUnitsPerSecond})
  SET(FORTE_TimeBaseUnitsPerSecond ${MAX_TimeBaseUnitsPerSecond})
 endif(${FORTE_TimeBaseUnitsPerSecond} GREATER ${MAX_TimeBaseUnitsPerSecond})
 
+
+GET_PROPERTY(FORTE_CUSTOM_CONFIGURATIONS_LOCAL GLOBAL PROPERTY FORTE_CUSTOM_CONFIGURATIONS_GLOBAL)
+SET(FORTE_CUSTOM_CONFIGURATIONS ${FORTE_CUSTOM_CONFIGURATIONS_LOCAL})
+
 forte_add_include_directories(${CMAKE_BINARY_DIR})
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/forte_config.h.in ${CMAKE_BINARY_DIR}/forte_config.new.h)
 forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/forte_config.new.h ${CMAKE_BINARY_DIR}/forte_config.h)

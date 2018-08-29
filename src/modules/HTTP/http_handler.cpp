@@ -18,6 +18,7 @@
 #include "httpparser.h"
 #include <forte_printer.h>
 #include "comlayer.h"
+#include <forte_config.h>
 
 using namespace forte::com_infra;
 
@@ -52,9 +53,10 @@ void CHTTP_Handler::disableHandler(void) {
   {
     CCriticalRegion criticalRegion(mServerMutex);
     for(CSinglyLinkedList<HTTPServerWaiting *>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter){
-      for(CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor*>::Iterator iter1 = (*iter)->mSockets.begin(); iter1 != (*iter)->mSockets.end(); ++iter1){
-        closeSocket(*(*iter1));
+      for(CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor>::Iterator iter1 = (*iter)->mSockets.begin(); iter1 != (*iter)->mSockets.end(); ++iter1){
+        removeAndCloseSocket(*iter1);
       }
+      (*iter)->mSockets.clearAll();
       delete (*iter);
     }
     mServerLayers.clearAll();
@@ -63,7 +65,7 @@ void CHTTP_Handler::disableHandler(void) {
   {
     CCriticalRegion criticalRegion(mClientMutex);
     for(CSinglyLinkedList<HTTPClientWaiting *>::Iterator iter = mClientLayers.begin(); iter != mClientLayers.end(); ++iter){
-      closeSocket((*iter)->mSocket);
+      removeAndCloseSocket((*iter)->mSocket);
       delete (*iter);
     }
     mClientLayers.clearAll();
@@ -72,18 +74,12 @@ void CHTTP_Handler::disableHandler(void) {
   {
     CCriticalRegion criticalRegion(mAcceptedMutex);
     for(CSinglyLinkedList<HTTPAcceptedSockets *>::Iterator iter = mAcceptedSockets.begin(); iter != mAcceptedSockets.end(); ++iter){
-      closeSocket((*iter)->mSocket);
+      removeAndCloseSocket((*iter)->mSocket);
       delete (*iter);
     }
     mAcceptedSockets.clearAll();
   }
 
-  {
-    CCriticalRegion criticalRegionClose(mCloseSocketsMutex);
-    for(CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor>::Iterator iter = mSocketsToClose.begin(); iter != mSocketsToClose.end(); ++iter){
-      closeSocket(*iter);
-    }
-  }
 }
 
 void CHTTP_Handler::setPriority(int) {
@@ -106,110 +102,103 @@ forte::com_infra::EComResponse CHTTP_Handler::recvData(const void* paData, unsig
       accepted->mSocket = newConnection;
       accepted->mStartTime.setCurrentTime();
       mAcceptedSockets.pushBack(accepted);
-      GET_HANDLER_FROM_HANDLER(CIPComSocketHandler)->addComCallback(newConnection, this);
+      getHandlerFromHandler<CIPComSocketHandler>()->addComCallback(newConnection, this);
       resumeSelfsuspend();
     }else{
-      DEVLOG_INFO("[HTTP Handler] Couldn't accept new HTTP connection\n");
+      DEVLOG_ERROR("[HTTP Handler] Couldn't accept new HTTP connection\n");
     }
   }else{
-    { //remove socket from accepted
-      CCriticalRegion criticalRegion(mAcceptedMutex);
-      HTTPAcceptedSockets *toDelete = 0;
-      for(CSinglyLinkedList<HTTPAcceptedSockets *>::Iterator iter = mAcceptedSockets.begin(); iter != mAcceptedSockets.end(); ++iter){
-        if((*iter)->mSocket == socket){
-          toDelete = *iter;
-          break;
-        }
-      }
-      if(0 != toDelete){
-        mAcceptedSockets.erase(toDelete);
-        delete toDelete;
-      }
-    }
-
-    int recv = CIPComSocketHandler::receiveDataFromTCP(socket, &sRecvBuffer[sBufFillSize], cg_unIPLayerRecvBufferSize - sBufFillSize);
-    if(0 == recv){
-      CCriticalRegion criticalRegionClose(mCloseSocketsMutex);
-      mSocketsToClose.pushBack(socket);
-      resumeSelfsuspend();
-    }else if(-1 == recv){
-      CCriticalRegion criticalRegionClose(mCloseSocketsMutex);
+    int recvLen = CIPComSocketHandler::receiveDataFromTCP(socket, &sRecvBuffer[sBufFillSize], cg_unIPLayerRecvBufferSize - sBufFillSize);
+    if(0 == recvLen){
+      removeAndCloseSocket(socket);
+    }else if(-1 == recvLen){
+      removeAndCloseSocket(socket);
       DEVLOG_ERROR("[HTTP handler] Error receiving packet\n");
-      mSocketsToClose.pushBack(socket);
-      resumeSelfsuspend();
     }else{
-      bool found = false;
-      { //check clients
-        CCriticalRegion criticalRegion(mClientMutex);
-        if(!mClientLayers.isEmpty()){
-          HTTPClientWaiting * toDelete = 0;
-          for(CSinglyLinkedList<HTTPClientWaiting *>::Iterator iter = mClientLayers.begin(); iter != mClientLayers.end(); ++iter){
-            if((*iter)->mSocket == socket){
-              if(e_ProcessDataOk == (*iter)->mLayer->recvData(sRecvBuffer, recv)){
-                startNewEventChain((*iter)->mLayer->getCommFB());
-              }
-              CCriticalRegion criticalRegionClose(mCloseSocketsMutex);
-              mSocketsToClose.pushBack(socket);
-              resumeSelfsuspend();
-              found = true;
-              toDelete = *iter;
-              break;
-            }
-          }
-
-          if(0 != toDelete){
-            mClientLayers.erase(toDelete);
-            delete toDelete;
-          }
+      if(!recvClients(socket, recvLen)){
+        if(!recvServers(socket)){
+          DEVLOG_WARNING("[HTTP Handler]: A packet arrived to the wrong place\n");
         }
-      }
-
-      if(!found){ //check paths
-        CCriticalRegion criticalRegion(mServerMutex);
-        if(!mServerLayers.isEmpty()){
-          CIEC_STRING path;
-          CSinglyLinkedList<CIEC_STRING> parameterNames;
-          CSinglyLinkedList<CIEC_STRING> parameterValues;
-          if(CHttpParser::parseGetRequest(path, parameterNames, parameterValues, sRecvBuffer)){
-            for(CSinglyLinkedList<HTTPServerWaiting *>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter){
-              if((*iter)->mPath == path){
-                (*iter)->mSockets.pushBack(&socket);
-                if(e_ProcessDataOk == (*iter)->mLayer->recvServerData(parameterNames, parameterValues)){
-                  startNewEventChain((*iter)->mLayer->getCommFB());
-                }
-                found = true;
-                break;
-              }
-            }
-          }else{
-            DEVLOG_ERROR("[HTTP Handler] Wrong HTTP Get request\n");
-          }
-          if(!found){
-            DEVLOG_ERROR("[HTTP Handler] Path %s has no FB registered\n", path.getValue());
-
-            CIEC_STRING toSend;
-            CIEC_STRING result = "404 Not Found";
-            CIEC_STRING mContentType = "text/html";
-            CIEC_STRING mReqData = "";
-            if(!CHttpParser::createResponse(toSend, result, mContentType, mReqData)){
-              DEVLOG_DEBUG("[HTTP Handler] Error sending response back for 404 error\n");
-            }else{
-              if(toSend.length() != CIPComSocketHandler::sendDataOnTCP(socket, toSend.getValue(), toSend.length())){
-                DEVLOG_ERROR("[HTTP Handler]: Error sending back the answer %s \n", toSend.getValue());
-              }
-            }
-            CCriticalRegion criticalRegionClose(mCloseSocketsMutex);
-            mSocketsToClose.pushBack(socket);
-          }
-        }
-      }
-      if(!found){
-        DEVLOG_WARNING("[HTTP Handler]: A packet arrived to the wrong place\n");
       }
     }
   }
 
   return e_Nothing;
+}
+
+bool CHTTP_Handler::recvClients(const CIPComSocketHandler::TSocketDescriptor paSocket, const int paRecvLength) { //check clients
+  CCriticalRegion criticalRegion(mClientMutex);
+  for(CSinglyLinkedList<HTTPClientWaiting *>::Iterator iter = mClientLayers.begin(); iter != mClientLayers.end(); ++iter){
+    if((*iter)->mSocket == paSocket){
+      if(e_ProcessDataOk == (*iter)->mLayer->recvData(sRecvBuffer, paRecvLength)){
+        startNewEventChain((*iter)->mLayer->getCommFB());
+      }
+      removeAndCloseSocket(paSocket);
+      HTTPClientWaiting * toDelete = *iter;
+      mClientLayers.erase(toDelete);
+      delete toDelete;
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool CHTTP_Handler::recvServers(const CIPComSocketHandler::TSocketDescriptor paSocket) {
+  CCriticalRegion criticalRegion(mServerMutex);
+  { //remove socket from accepted
+    CCriticalRegion criticalRegion(mAcceptedMutex);
+    for(CSinglyLinkedList<HTTPAcceptedSockets *>::Iterator iter = mAcceptedSockets.begin(); iter != mAcceptedSockets.end(); ++iter){
+      if((*iter)->mSocket == paSocket){
+        HTTPAcceptedSockets *toDelete = *iter;
+        mAcceptedSockets.erase(toDelete);
+        delete toDelete;
+        break;
+      }
+    }
+  }
+
+  bool found = false;
+  if(!mServerLayers.isEmpty()){
+    CIEC_STRING path;
+    CSinglyLinkedList<CIEC_STRING> parameterNames;
+    CSinglyLinkedList<CIEC_STRING> parameterValues;
+    if(CHttpParser::parseGetRequest(path, parameterNames, parameterValues, sRecvBuffer)){
+      for(CSinglyLinkedList<HTTPServerWaiting *>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter){
+        if((*iter)->mPath == path){
+          (*iter)->mSockets.pushBack(paSocket);
+          if(e_ProcessDataOk == (*iter)->mLayer->recvServerData(parameterNames, parameterValues)){
+            startNewEventChain((*iter)->mLayer->getCommFB());
+          }
+          found = true;
+          break;
+        }
+      }
+    }
+    else{
+      DEVLOG_ERROR("[HTTP Handler] Wrong HTTP Get request\n");
+    }
+
+    if(!found){
+      DEVLOG_ERROR("[HTTP Handler] Path %s has no FB registered\n", path.getValue());
+
+      CIEC_STRING toSend;
+      CIEC_STRING result = "404 Not Found";
+      CIEC_STRING mContentType = "text/html";
+      CIEC_STRING mReqData = "";
+      if(!CHttpParser::createResponse(toSend, result, mContentType, mReqData)){
+        DEVLOG_DEBUG("[HTTP Handler] Error sending response back for 404 error\n");
+      }
+      else{
+        if(toSend.length() != CIPComSocketHandler::sendDataOnTCP(paSocket, toSend.getValue(), toSend.length())){
+          DEVLOG_ERROR("[HTTP Handler]: Error sending back the answer %s \n", toSend.getValue());
+        }
+      }
+      removeAndCloseSocket(paSocket);
+    }
+  }
+
+  return found;
 }
 
 bool CHTTP_Handler::sendClientData(forte::com_infra::CHttpComLayer* paLayer, CIEC_STRING& paToSend){
@@ -223,12 +212,12 @@ bool CHTTP_Handler::sendClientData(forte::com_infra::CHttpComLayer* paLayer, CIE
       toAdd->mStartTime.setCurrentTime();
       startTimeoutThread();
       mClientLayers.pushBack(toAdd);
-      GET_HANDLER_FROM_HANDLER(CIPComSocketHandler)->addComCallback(newSocket, this);
+      getHandlerFromHandler<CIPComSocketHandler>()->addComCallback(newSocket, this);
       resumeSelfsuspend();
       return true;
     }else{
       DEVLOG_ERROR("[HTTP Handler]: Couldn't send data to client %s:%u\n", paLayer->getHost().getValue(), paLayer->getPort());
-      closeSocket(newSocket);
+      removeAndCloseSocket(newSocket);
     }
   }else{
     DEVLOG_ERROR("[HTTP Handler]: Couldn't open client connection for %s:%u\n", paLayer->getHost().getValue(), paLayer->getPort());
@@ -248,22 +237,17 @@ void CHTTP_Handler::addServerPath(forte::com_infra::CHttpComLayer* paLayer, CIEC
 
 void CHTTP_Handler::removeServerPath(CIEC_STRING& paPath){
   CCriticalRegion criticalRegion(mServerMutex);
-  HTTPServerWaiting * toDelete = 0;
+
   for(CSinglyLinkedList<HTTPServerWaiting *>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter){
     if((*iter)->mPath == paPath){
-      for(CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor *>::Iterator iter_ = (*iter)->mSockets.begin(); iter_ != (*iter)->mSockets.end(); ++iter_){
-        if(0 != (*iter_)){
-          closeSocket(*(*iter_));
-        }
+      for(CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor>::Iterator iter_ = (*iter)->mSockets.begin(); iter_ != (*iter)->mSockets.end(); ++iter_){
+        removeAndCloseSocket(*iter_);
       }
-      toDelete = *iter;
+      HTTPServerWaiting * toDelete = *iter;
+      mServerLayers.erase(toDelete);
+      delete  toDelete;
       break;
     }
-  }
-
-  if(0 != toDelete){
-    mServerLayers.erase(toDelete);
-    delete toDelete;
   }
 
   if(mServerLayers.isEmpty()){
@@ -292,7 +276,7 @@ void CHTTP_Handler::run() {
 
   mThreadStarted.inc();
   while(isAlive()){
-    if(mClientLayers.isEmpty() && mAcceptedSockets.isEmpty() && mSocketsToClose.isEmpty()){
+    if(mClientLayers.isEmpty() && mAcceptedSockets.isEmpty()){
       selfSuspend();
     }
     if(!isAlive()){
@@ -309,7 +293,7 @@ void CHTTP_Handler::run() {
           currentTime.setCurrentTime();
           if(currentTime.getMilliSeconds() - (*iter)->mStartTime.getMilliSeconds() > scmSendTimeout * 1000){
             DEVLOG_ERROR("[HTTP Handler]: Timeout at client %s:%u \n", (*iter)->mLayer->getHost().getValue(), (*iter)->mLayer->getPort());
-            closeSocket((*iter)->mSocket);
+            removeAndCloseSocket((*iter)->mSocket);
             clientsToDelete.pushBack(*iter);
             (*iter)->mLayer->recvData(0, 0); //indicates timeout
           }
@@ -336,7 +320,7 @@ void CHTTP_Handler::run() {
           currentTime.setCurrentTime();
           if(currentTime.getMilliSeconds() - (*iter)->mStartTime.getMilliSeconds() > scmAcceptedTimeout * 1000){
             DEVLOG_ERROR("[HTTP Handler]: Timeout at accepted socket\n");
-            closeSocket((*iter)->mSocket);
+            removeAndCloseSocket((*iter)->mSocket);
             acceptedToDelete.pushBack(*iter);
           }
         }
@@ -350,13 +334,6 @@ void CHTTP_Handler::run() {
             }
           }
         }
-      }
-    }
-
-    {
-      CCriticalRegion criticalRegionClose(mCloseSocketsMutex);
-      for(CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor>::Iterator iter = mSocketsToClose.begin(); iter != mSocketsToClose.end(); ++iter){
-        closeSocket(*iter);
       }
     }
 
@@ -376,27 +353,30 @@ void CHTTP_Handler::startTimeoutThread(){
 void CHTTP_Handler::openHTTPServer(){
   if(CIPComSocketHandler::scmInvalidSocketDescriptor == smServerListeningSocket){
     char address[] = "127.0.0.1";
-    smServerListeningSocket = CIPComSocketHandler::openTCPServerConnection(address, 80);//TODO: make port configurable
+    smServerListeningSocket = CIPComSocketHandler::openTCPServerConnection(address, FORTE_COM_HTTP_LISTENING_PORT);
     if(CIPComSocketHandler::scmInvalidSocketDescriptor != smServerListeningSocket){
-      GET_HANDLER_FROM_HANDLER(CIPComSocketHandler)->addComCallback(smServerListeningSocket, this);
-      DEVLOG_INFO("[HTTP Handler] HTTP server listening on port 80\n");//TODO: make port configurable
+      getHandlerFromHandler<CIPComSocketHandler>()->addComCallback(smServerListeningSocket, this);
+      DEVLOG_INFO("[HTTP Handler] HTTP server listening on port %d\n", FORTE_COM_HTTP_LISTENING_PORT);
     }
     else{
-      DEVLOG_ERROR("[HTTP Handler] Couldn't start HTTP server\n");
+      DEVLOG_ERROR("[HTTP Handler] Couldn't start HTTP server on port %d\n", FORTE_COM_HTTP_LISTENING_PORT);
     }
   }
 }
 
 void CHTTP_Handler::closeHTTPServer(){
   if(CIPComSocketHandler::scmInvalidSocketDescriptor != smServerListeningSocket){
-    CIPComSocketHandler::closeSocket(smServerListeningSocket);
+    removeAndCloseSocket(smServerListeningSocket);
     smServerListeningSocket = CIPComSocketHandler::scmInvalidSocketDescriptor;
   }
 }
 
-void CHTTP_Handler::closeSocket(CIPComSocketHandler::TSocketDescriptor paSocket){
-  GET_HANDLER_FROM_HANDLER(CIPComSocketHandler)->removeComCallback(paSocket);
-  GET_HANDLER_FROM_HANDLER(CIPComSocketHandler)->closeSocket(paSocket);
+void CHTTP_Handler::removeAndCloseSocket(const CIPComSocketHandler::TSocketDescriptor paSocket){
+  //normally, when the device is being killed the CIPComSocketHandler is already dead, so calls to it must be avoided.
+  if(isHandlerValid(CIPComSocketHandler::mHandlerIdentifier)){
+    getHandlerFromHandler<CIPComSocketHandler>()->removeComCallback(paSocket);
+    getHandlerFromHandler<CIPComSocketHandler>()->closeSocket(paSocket);
+  }
 }
 
 void CHTTP_Handler::resumeSelfsuspend(){
@@ -412,22 +392,15 @@ void CHTTP_Handler::sendServerAnswerHelper(forte::com_infra::CHttpComLayer* paLa
     mServerMutex.lock();
   }
 
-  if(!mServerLayers.isEmpty()){
-    for(CSinglyLinkedList<HTTPServerWaiting *>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter){
-      if((*iter)->mLayer == paLayer){
-        CIPComSocketHandler::TSocketDescriptor socket = *(*iter)->mSockets.peekFront();
-        if(paAnswer.length() != CIPComSocketHandler::sendDataOnTCP(socket, paAnswer.getValue(), paAnswer.length())){
-          DEVLOG_ERROR("[HTTP Handler]: Error sending back the answer %s \n", paAnswer.getValue());
-        }
-        if(paFromRecv){
-          CCriticalRegion criticalRegionClose(mCloseSocketsMutex);
-          mSocketsToClose.pushBack(socket);
-        }else{
-          closeSocket(socket);
-        }
-        (*iter)->mSockets.popFront();
-        break;
+  for(CSinglyLinkedList<HTTPServerWaiting *>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter){
+    if((*iter)->mLayer == paLayer){
+      CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor>::Iterator iterSocket = (*iter)->mSockets.begin();
+      if(paAnswer.length() != CIPComSocketHandler::sendDataOnTCP(*iterSocket, paAnswer.getValue(), paAnswer.length())){
+        DEVLOG_ERROR("[HTTP Handler]: Error sending back the answer %s \n", paAnswer.getValue());
       }
+      removeAndCloseSocket(*iterSocket);
+      (*iter)->mSockets.popFront();
+      break;
     }
   }
 
@@ -443,22 +416,15 @@ void CHTTP_Handler::forceCloseHelper(forte::com_infra::CHttpComLayer* paLayer, b
 
   bool found = false;
 
-  if(!mServerLayers.isEmpty()){
-    for(CSinglyLinkedList<HTTPServerWaiting *>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter){
-      if((*iter)->mLayer == paLayer){
-        if(!(*iter)->mSockets.isEmpty()){
-          CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor*>::Iterator itSocket = (*iter)->mSockets.begin();
-          if(paFromRecv){
-            CCriticalRegion criticalRegionClose(mCloseSocketsMutex);
-            mSocketsToClose.pushBack(**itSocket);
-          }else{
-            closeSocket(**itSocket);
-          }
-          (*iter)->mSockets.popFront();
-        }
-        found = true;
-        break;
+  for(CSinglyLinkedList<HTTPServerWaiting *>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter){
+    if((*iter)->mLayer == paLayer){
+      if(!(*iter)->mSockets.isEmpty()){
+        CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor>::Iterator itSocket = (*iter)->mSockets.begin();
+        removeAndCloseSocket(*itSocket);
+        (*iter)->mSockets.popFront();
       }
+      found = true;
+      break;
     }
   }
 
@@ -470,12 +436,7 @@ void CHTTP_Handler::forceCloseHelper(forte::com_infra::CHttpComLayer* paLayer, b
   if(!found && !mClientLayers.isEmpty()){
     for(CSinglyLinkedList<HTTPClientWaiting *>::Iterator iter = mClientLayers.begin(); iter != mClientLayers.end(); ++iter){
       if((*iter)->mLayer == paLayer){
-        if(paFromRecv){
-          CCriticalRegion criticalRegionClose(mCloseSocketsMutex);
-          mSocketsToClose.pushBack((*iter)->mSocket);
-        }else{
-          closeSocket((*iter)->mSocket);
-        }
+        removeAndCloseSocket((*iter)->mSocket);
       }
     }
   }

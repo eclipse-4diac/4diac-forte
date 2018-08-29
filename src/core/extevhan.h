@@ -18,28 +18,22 @@ class CFunctionBlock;
 
 #define DECLARE_HANDLER(TypeName)                             \
   public:                                                     \
-    static const unsigned int handlerIdentifier;              \
-    virtual unsigned int getIdentifier() const;               \
-    explicit TypeName(CDeviceExecution& pa_poDeviceExecution);\
+    static const size_t mHandlerIdentifier;              \
+    virtual size_t getIdentifier() const;               \
+    explicit TypeName(CDeviceExecution& paDeviceExecution);\
     ~TypeName();
 
 #define DEFINE_HANDLER(TypeName)                            \
-    unsigned int TypeName::getIdentifier() const { return TypeName::handlerIdentifier;}
+    size_t TypeName::getIdentifier() const { return TypeName::mHandlerIdentifier;}
 
-#define GET_HANDLER_FROM_FB(fb, type)                 \
-  static_cast<type*>(CExternalEventHandler::getHandlerFromFB(fb, type::handlerIdentifier))
+#define GET_HANDLER_FROM_FB(fb, TypeName)                 \
+  static_cast<TypeName*>(CExternalEventHandler::getHandlerFromFB(fb, TypeName::mHandlerIdentifier))
 
-#define GET_HANDLER_FROM_THIS(type)                 \
-    GET_HANDLER_FROM_FB(*this, type)
+#define GET_HANDLER_FROM_THIS(TypeName)                 \
+    GET_HANDLER_FROM_FB(*this, TypeName)
 
-#define GET_HANDLER_FROM_COMM_LAYER(type)                 \
-    GET_HANDLER_FROM_FB(*m_poFb, type)
-
-#define GET_HANDLER_FROM_HANDLER(type)                 \
-    static_cast<type*>(m_poDeviceExecution.getHandler(type::handlerIdentifier))
-
-
-
+#define GET_HANDLER_FROM_COMM_LAYER(TypeName)                 \
+    GET_HANDLER_FROM_FB(*m_poFb, TypeName)
 
 /**  \defgroup FORTE_HAL FORTE Hardware Abstraction Layer - FORTE-HAL
  * \brief The FORTE-HAL is the abstraction of HW dependent features important
@@ -84,9 +78,9 @@ class CExternalEventHandler{
      */
     virtual int getPriority(void) const = 0;
 
-    virtual unsigned int getIdentifier() const = 0;
+    virtual size_t getIdentifier() const = 0;
 
-    static CExternalEventHandler* getHandlerFromFB(CFunctionBlock& paFB, unsigned int paIdentifier);
+    static CExternalEventHandler* getHandlerFromFB(CFunctionBlock& paFB, size_t paIdentifier);
 
   protected:
 
@@ -103,9 +97,17 @@ class CExternalEventHandler{
      */
     void startNewEventChain(CEventSourceFB *paECStartFB);
 
-    CDeviceExecution& m_poDeviceExecution;
 
-  private:
+    template<typename T>
+    T* getHandlerFromHandler(){
+      return static_cast<T*>(m_poDeviceExecution.getHandler(T::mHandlerIdentifier));
+    }
+
+    bool isHandlerValid(size_t paIdentifier){
+      return (0 != m_poDeviceExecution.getHandler(paIdentifier));
+    }
+
+    CDeviceExecution& m_poDeviceExecution;
 
   private:
 

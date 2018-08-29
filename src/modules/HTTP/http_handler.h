@@ -68,7 +68,7 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
 
     void closeHTTPServer();
 
-    void closeSocket(CIPComSocketHandler::TSocketDescriptor paSocket);
+    void removeAndCloseSocket(const CIPComSocketHandler::TSocketDescriptor paSocket);
 
     void resumeSelfsuspend();
 
@@ -78,11 +78,15 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
 
     void forceCloseHelper(forte::com_infra::CHttpComLayer* paLayer, bool paFromRecv);
 
+    bool recvClients(const CIPComSocketHandler::TSocketDescriptor paSocket, const int paRecvLength);
+
+    bool recvServers(const CIPComSocketHandler::TSocketDescriptor paSocket);
+
 
     struct HTTPServerWaiting{
         forte::com_infra::CHttpComLayer* mLayer;
         CIEC_STRING mPath;
-        CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor*> mSockets; //to handle many connections to the same path
+        CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor> mSockets; //to handle many connections to the same path
     };
 
     struct HTTPClientWaiting{
@@ -104,9 +108,6 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
 
     CSinglyLinkedList<HTTPAcceptedSockets*> mAcceptedSockets;
     CSyncObject mAcceptedMutex;
-
-    CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor> mSocketsToClose;
-    CSyncObject mCloseSocketsMutex;
 
     CSemaphore mSuspendSemaphore;
 

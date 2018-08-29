@@ -33,6 +33,6 @@ void CExternalEventHandler::startNewEventChain(CEventSourceFB *paECStartFB){
   }
 }
 
-CExternalEventHandler* CExternalEventHandler::getHandlerFromFB(CFunctionBlock& paFB, unsigned int paIdentifier){
+CExternalEventHandler* CExternalEventHandler::getHandlerFromFB(CFunctionBlock& paFB, size_t paIdentifier){
   return paFB.getResource().getDevice().getDeviceExecution().getHandler(paIdentifier);
 }

@@ -73,6 +73,12 @@ namespace forte {
         /** Serializes the data to a char* */
         bool serializeData(const CIEC_ANY& paCIECData);
 
+        void sendDataAsServer(const void *paData);
+
+        void sendDataAsClient(const void *paData);
+
+        EComResponse openClientConnection(char* paLayerParameter);
+
         EComResponse mInterruptResp;
 
         /** Represents the HTTP request type (0 = GET, 1 = PUT). */

@@ -57,7 +57,7 @@ public:
 
     CTimerHandler& getTimer() const;
 
-    CExternalEventHandler* getHandler(unsigned int paIdentifer) const;
+    CExternalEventHandler* getHandler(size_t paIdentifer) const;
 
 protected:
 private:

@@ -91,7 +91,7 @@ public:
   virtual void handleChangeEvent(IOHandle *handle);
 
   //TODO: adapt this properly to the new handler model. This mockup is just to avoid the classes below to be abstract
-  virtual unsigned int getIdentifier() const{
+  virtual size_t getIdentifier() const{
     return 0;
   }
 
