@@ -46,11 +46,11 @@ FORTE_RT_E_DELAY::FORTE_RT_E_DELAY(const CStringDictionary::TStringId pa_nInstan
   setEventChainExecutor(&m_oECEO);
   m_bActive = false;
   m_bInitialized = false;
-  //Timout value is correctly initialized by the constructor m_stTimeListEntry.m_nTimeOut = 0;
-  m_stTimeListEntry.m_nInterval = 0;
-  m_stTimeListEntry.m_pstNext = 0;
-  m_stTimeListEntry.m_poTimedFB = this;
-  m_stTimeListEntry.m_eType = e_SingleShot;
+  //Timeout value is correctly initialized by the constructor m_stTimeListEntry.m_nTimeOut = 0;
+  m_stTimeListEntry.mInterval = 0;
+  m_stTimeListEntry.mNext = 0;
+  m_stTimeListEntry.mTimedFB = this;
+  m_stTimeListEntry.mType = e_SingleShot;
   m_oECEO.changeExecutionState(cg_nMGM_CMD_Start);
 }
 

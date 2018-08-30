@@ -43,11 +43,11 @@ FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const CStringDictionary::TStringId pa_nInstan
             CEventSourceFB( pa_poSrcRes, &scm_stFBInterfaceSpec,  pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData){
   setEventChainExecutor(&m_oECEO);
   m_bActive = false;
-  //Timeout value is correctly initialized by the constructor m_stTimeListEntry.m_nTimeOut = 0;
-  m_stTimeListEntry.m_nInterval = 0;
-  m_stTimeListEntry.m_pstNext = 0;
-  m_stTimeListEntry.m_poTimedFB = this;
-  m_stTimeListEntry.m_eType = e_Periodic;
+  //Timeout value is correctly initialized by the constructor m_stTimeListEntry.mTimeOut = 0;
+  m_stTimeListEntry.mInterval = 0;
+  m_stTimeListEntry.mNext = 0;
+  m_stTimeListEntry.mTimedFB = this;
+  m_stTimeListEntry.mType = e_Periodic;
   m_oECEO.changeExecutionState(cg_nMGM_CMD_Start);
 }
 

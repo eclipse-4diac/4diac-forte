@@ -16,25 +16,25 @@
 
 DEFINE_FIRMWARE_FB(E_RDELAY, g_nStringIdE_RDELAY)
 
-E_RDELAY::E_RDELAY(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes):
-         CTimedFB( pa_nInstanceNameId, pa_poSrcRes){
-  m_stTimeListEntry.m_eType = e_SingleShot;
+E_RDELAY::E_RDELAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes):
+         CTimedFB( paInstanceNameId, paSrcRes){
+  mTimeListEntry.mType = e_SingleShot;
 }
 
 void E_RDELAY::executeEvent(int pa_nEIID){
   switch(pa_nEIID){
     case cg_nExternalEventID:
       sendOutputEvent(csm_nEOID);
-      m_bActive = false;
+      mActive = false;
       break;
     case csm_nEventSTARTID:
-      if(m_bActive){
+      if(mActive){
         //remove from the list as we want to be added with a new delay
         getTimer().unregisterTimedFB(this);
       }
       setEventChainExecutor(m_poInvokingExecEnv);  // E_RDELAY will execute in the same thread on as from where it has been triggered.
-      getTimer().registerTimedFB( &m_stTimeListEntry, DT());
-      m_bActive = true;
+      getTimer().registerTimedFB( &mTimeListEntry, DT());
+      mActive = true;
       break;
     default:
       CTimedFB::executeEvent(pa_nEIID);

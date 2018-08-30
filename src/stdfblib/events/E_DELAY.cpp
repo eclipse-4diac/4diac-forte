@@ -17,19 +17,19 @@
 
 DEFINE_FIRMWARE_FB(E_DELAY, g_nStringIdE_DELAY)
 
-E_DELAY::E_DELAY(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes):
-         CTimedFB( pa_nInstanceNameId, pa_poSrcRes){
-  m_stTimeListEntry.m_eType = e_SingleShot;
+E_DELAY::E_DELAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes):
+         CTimedFB( paInstanceNameId, paSrcRes){
+  mTimeListEntry.mType = e_SingleShot;
 }
 
 void E_DELAY::executeEvent(int pa_nEIID){
   if(cg_nExternalEventID == pa_nEIID ){
     sendOutputEvent(csm_nEOID);
-    m_bActive = false;
+    mActive = false;
   }
   else{
     if(csm_nEventSTARTID  == pa_nEIID ){
-      if(!m_bActive){
+      if(!mActive){
         setEventChainExecutor(m_poInvokingExecEnv);  // E_DELAY will execute in the same thread on as from where it has been triggered.
       }
     }

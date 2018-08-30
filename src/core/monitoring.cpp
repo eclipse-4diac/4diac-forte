@@ -481,7 +481,7 @@ unsigned int CMonitoringHandler::replaceSpecialCharacters(char* const paStart, c
     }
 
     if(0 != toCopy){
-      unsigned int toMove = strlen(toCopy);
+      size_t toMove = strlen(toCopy);
       memmove(&runner[toMove], runner + 1, paEnd - runner + retVal);
       memcpy(runner, toCopy, toMove);
       retVal += toMove - 1;
@@ -505,9 +505,7 @@ void CMonitoringHandler::appendEventWatch(CIEC_STRING &paResponse,
 
 
   CIEC_UDINT udint = paEventWatchEntry.m_roEventData.mEventCount;
-  SForteTime timeStamp = mResource.getDevice().getTimer().getForteTime();  // for backwards compatibility send the the current time as timestamp
-  CIEC_ULINT ulint = ((((TForteUInt64) timeStamp.m_nUpperValue) << 32) & 0xFFFFFFFF00000000ULL) +
-      (((TForteUInt64) timeStamp.m_nLowerValue) & 0xFFFFFFFFULL);
+  CIEC_ULINT ulint(mResource.getDevice().getTimer().getForteTime());
 
   paResponse.append("<Data value=\"");
   char buf[21]; // the bigest number in an ulint is 18446744073709551616, TODO directly use pa_roResponse
