@@ -15,31 +15,27 @@
 
 #include <io/device/io_controller.h>
 
-using namespace forte::core::IO;
+using namespace forte::core::io;
 
-IOHandle::IOHandle(IODeviceController *controller, IOMapper::Direction direction, CIEC_ANY::EDataTypeID type) :
-    controller(controller), observer(0), type(type), direction(
-        direction) {
-
+IOHandle::IOHandle(IODeviceController *paController, IOMapper::Direction paDirection, CIEC_ANY::EDataTypeID paType) :
+    mController(paController), mType(paType), mDirection(paDirection), mObserver(0) {
 }
 
 IOHandle::~IOHandle() {
   IOMapper::getInstance().deregisterHandle(this);
 }
 
-void IOHandle::onObserver(IOObserver *observer) {
-  this->observer = observer;
+void IOHandle::onObserver(IOObserver *paObserver) {
+  this->mObserver = paObserver;
 }
 
 void IOHandle::dropObserver() {
-  this->observer = 0;
+  this->mObserver = 0;
 }
 
 void IOHandle::onChange() {
-  if (observer != 0) {
-    if (observer->onChange()) {
-      controller->fireIndicationEvent(observer);
-    }
+  if(mObserver != 0 && mObserver->onChange()) {
+    mController->fireIndicationEvent(mObserver);
   }
 }
 

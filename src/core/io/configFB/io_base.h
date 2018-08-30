@@ -17,15 +17,14 @@
 
 namespace forte {
   namespace core {
-    namespace IO {
+    namespace io {
 
-class IOConfigFBBase: public CEventSourceFB {
-public:
-  IOConfigFBBase(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-      const CStringDictionary::TStringId pa_nInstanceNameId,
-      TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
-  virtual ~IOConfigFBBase();
-};
+      class IOConfigFBBase : public CEventSourceFB {
+        public:
+          IOConfigFBBase(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
+              TForteByte *paFBConnData, TForteByte *paFBVarsData);
+          virtual ~IOConfigFBBase();
+      };
 
     } //namespace IO
   } //namepsace core

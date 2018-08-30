@@ -20,52 +20,57 @@
 
 namespace forte {
   namespace core {
-    namespace IO {
+    namespace io {
 
-class IODeviceController;
+      class IODeviceController;
 
-class IOHandle {
-  friend class IOMapper;
+      class IOHandle {
+          friend class IOMapper;
 
-public:
-  IOHandle(IODeviceController *controller, IOMapper::Direction direction, CIEC_ANY::EDataTypeID type);
-  virtual ~IOHandle();
+        public:
+          IOHandle(IODeviceController *paController, IOMapper::Direction paDirection, CIEC_ANY::EDataTypeID paType);
+          virtual ~IOHandle();
 
-  bool hasObserver() {
-    return !!observer;
-  }
+          bool hasObserver() {
+            return !!mObserver;
+          }
 
-  IOObserver* getObserver() {
-    return observer;
-  }
+          IOObserver* getObserver() {
+            return mObserver;
+          }
 
-  bool is(CIEC_ANY::EDataTypeID type) {
-    return this->type == type;
-  }
+          bool is(CIEC_ANY::EDataTypeID paType) {
+            return this->mType == paType;
+          }
 
-  bool is(IOMapper::Direction direction) {
-    return this->direction == direction;
-  }
+          bool is(IOMapper::Direction paDirection) {
+            return this->mDirection == paDirection;
+          }
 
-  virtual void set(const CIEC_ANY &) = 0;
-  virtual void get(CIEC_ANY &) = 0;
+          virtual void set(const CIEC_ANY &) = 0;
+          virtual void get(CIEC_ANY &) = 0;
 
-  void onChange();
+          void onChange();
 
-protected:
-  IODeviceController *controller;
+        protected:
 
-  virtual void onObserver(IOObserver *observer);
-  virtual void dropObserver();
+          IODeviceController *mController;
+          CIEC_ANY::EDataTypeID mType;
 
-  IOObserver *observer;
-  CIEC_ANY::EDataTypeID type;
-  IOMapper::Direction direction;
-};
+          IOMapper::Direction mDirection;
+
+          virtual void onObserver(IOObserver *paObserver);
+          virtual void dropObserver();
+
+        private:
+
+          IOObserver *mObserver;
+
+
+      };
 
     } //namespace IO
   } //namepsace core
 } //namespace forte
-
 
 #endif /* SRC_CORE_IO_MAPPER_HANDLE_H_ */

@@ -12,18 +12,13 @@
 
 #include "io_base.h"
 
-using namespace forte::core::IO;
+using namespace forte::core::io;
 
-IOConfigFBBase::IOConfigFBBase(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-    const CStringDictionary::TStringId pa_nInstanceNameId,
-    TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-    CEventSourceFB(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId,
-        pa_acFBConnData, pa_acFBVarsData) {
-  // TODO Auto-generated constructor stub
-
+IOConfigFBBase::IOConfigFBBase(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
+    TForteByte *paFBConnData, TForteByte *paFBVarsData) :
+    CEventSourceFB(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData) {
 }
 
 IOConfigFBBase::~IOConfigFBBase() {
-  // TODO Auto-generated destructor stub
 }
 

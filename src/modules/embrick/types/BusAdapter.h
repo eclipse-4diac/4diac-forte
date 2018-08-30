@@ -18,7 +18,7 @@
 #include <forte_bool.h>
 #include <forte_uint.h>
 
-class EmbrickBusAdapter: public forte::core::IO::IOConfigFBMultiAdapter {
+class EmbrickBusAdapter: public forte::core::io::IOConfigFBMultiAdapter {
 DECLARE_ADAPTER_TYPE(EmbrickBusAdapter)
 
 private:
@@ -54,8 +54,8 @@ public:
 };
 
 private:
-  static const TForteUInt8 scm_slaveConfigurationIO[];
-  static const TForteUInt8 scm_slaveConfigurationIO_num;
+  static const TForteUInt8 scmSlaveConfigurationIO[];
+  static const TForteUInt8 scmSlaveConfigurationIONum;
 
   virtual ~EmbrickBusAdapter() {};
 

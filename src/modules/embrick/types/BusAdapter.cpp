@@ -52,6 +52,6 @@ const SFBInterfaceSpec EmbrickBusAdapter::scm_stFBInterfaceSpecPlug = { 1,
     scm_anDataOutputNames, scm_anDataOutputTypeIds, 1, scm_anDataInputNames,
     scm_anDataInputTypeIds, 0, 0 };
 
-const TForteUInt8 EmbrickBusAdapter::scm_slaveConfigurationIO[] = { 3 };
-const TForteUInt8 EmbrickBusAdapter::scm_slaveConfigurationIO_num = 1;
+const TForteUInt8 EmbrickBusAdapter::scmSlaveConfigurationIO[] = { 3 };
+const TForteUInt8 EmbrickBusAdapter::scmSlaveConfigurationIONum = 1;
 

@@ -12,104 +12,92 @@
 
 #include "io_controller_split.h"
 
-using namespace forte::core::IO;
+using namespace forte::core::io;
 
-const char * const IOConfigFBSplitController::scmFailedToInitParts =
-    "Failed to initialize parts.";
+const char * const IOConfigFBSplitController::scmFailedToInitParts = "Failed to initialize parts.";
 
-TControllerList* IOConfigFBSplitController::instances = new TControllerList();
-TForteUInt16 IOConfigFBSplitController::instancesIncrement = 0;
+TControllerList* IOConfigFBSplitController::mInstances = new TControllerList();
+TForteUInt16 IOConfigFBSplitController::mInstancesIncrement = 0;
 
-IOConfigFBSplitController::IOConfigFBSplitController(const TForteUInt8* const scm_splitAdapter,
-    const TForteUInt8 scm_splitAdapter_num, CResource *pa_poSrcRes,
-    const SFBInterfaceSpec *pa_pstInterfaceSpec,
-    const CStringDictionary::TStringId pa_nInstanceNameId,
-    TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-    IOConfigFBController(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId,
-        pa_acFBConnData, pa_acFBVarsData), scm_splitAdapter(scm_splitAdapter), scm_splitAdapter_num(
-        scm_splitAdapter_num), splitIterator(0) {
-  id = instancesIncrement++;
-  instances->pushBack(this);
+IOConfigFBSplitController::IOConfigFBSplitController(const TForteUInt8* const paSplitAdapter, const TForteUInt8 paSplitAdapterNum, CResource *paSrcRes,
+    const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
+    IOConfigFBController(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), scmSplitAdapter(paSplitAdapter),
+        scmSplitAdapterNum(paSplitAdapterNum), mSplitIterator(0) {
+  mId = mInstancesIncrement++;
+  mInstances->pushBack(this);
 }
 
-IOConfigFBSplitController* IOConfigFBSplitController::getControllerById(TForteUInt16 id) {
-  TControllerList::Iterator itEnd = instances->end();
+IOConfigFBSplitController* IOConfigFBSplitController::getControllerById(TForteUInt16 paId) {
+  TControllerList::Iterator itEnd = mInstances->end();
   int i = 0;
-  for (TControllerList::Iterator it = instances->begin(); it != itEnd;
-      ++it, i++)
-    if (id == i && *it != 0)
+  for(TControllerList::Iterator it = mInstances->begin(); it != itEnd; ++it, i++)
+    if(paId == i && *it != 0) {
       return *it;
+    }
   return 0;
 }
 
 void IOConfigFBSplitController::onStartup() {
-  splitIterator = 0;
+  mSplitIterator = 0;
 
-  if (!scm_splitAdapter_num) {
+  if(!scmSplitAdapterNum) {
     return IOConfigFBController::onStartup();
   }
 
-  IOConfigFBSplitAdapter *cur =
-      static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[scm_splitAdapter[splitIterator]]);
+  IOConfigFBSplitAdapter *cur = static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[scmSplitAdapter[mSplitIterator]]);
 
-  while (!cur || cur->getPeer() == 0) {
-    splitIterator++;
+  while(!cur || 0 == cur->getPeer()) {
+    mSplitIterator++;
 
-    if (splitIterator == scm_splitAdapter_num) {
+    if(mSplitIterator == scmSplitAdapterNum) {
       return IOConfigFBController::onStartup();
     }
 
-    cur =
-        static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[scm_splitAdapter[splitIterator]]);
+    cur = static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[scmSplitAdapter[mSplitIterator]]);
   }
 
-  cur->MasterId() = id;
+  cur->MasterId() = mId;
   cur->QI() = true;
-  sendAdapterEvent(scm_splitAdapter[splitIterator],
-      IOConfigFBSplitAdapter::scm_nEventINITID);
+  sendAdapterEvent(scmSplitAdapter[mSplitIterator], IOConfigFBSplitAdapter::scmEventINITID);
 }
 
 void IOConfigFBSplitController::onStop() {
-  splitIterator = 0;
+  mSplitIterator = 0;
 
-  if (!scm_splitAdapter_num) {
+  if(!scmSplitAdapterNum) {
     return IOConfigFBController::onStop();
   }
 
-  IOConfigFBSplitAdapter *cur =
-      static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[scm_splitAdapter[splitIterator]]);
+  IOConfigFBSplitAdapter *cur = static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[scmSplitAdapter[mSplitIterator]]);
 
-  while (cur->getPeer() == 0) {
-    splitIterator++;
+  while(cur->getPeer() == 0) {
+    mSplitIterator++;
 
-    if (splitIterator == scm_splitAdapter_num) {
+    if(mSplitIterator == scmSplitAdapterNum) {
       return IOConfigFBController::onStop();
     }
 
-    cur =
-        static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[scm_splitAdapter[splitIterator]]);
+    cur = static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[scmSplitAdapter[mSplitIterator]]);
   }
 
   cur->QI() = false;
-  sendAdapterEvent(scm_splitAdapter[splitIterator],
-      IOConfigFBSplitAdapter::scm_nEventINITID);
+  sendAdapterEvent(scmSplitAdapter[mSplitIterator], IOConfigFBSplitAdapter::scmEventINITID);
 }
 
-void IOConfigFBSplitController::executeEvent(int pa_nEIID) {
-  IOConfigFBController::executeEvent(pa_nEIID);
+void IOConfigFBSplitController::executeEvent(int paEIID) {
+  IOConfigFBController::executeEvent(paEIID);
 
-  if (splitIterator < scm_splitAdapter_num) {
-    IOConfigFBSplitAdapter *cur =
-        static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[scm_splitAdapter[splitIterator]]);
-    if (cur->INITO() == pa_nEIID) {
+  if(mSplitIterator < scmSplitAdapterNum) {
+    IOConfigFBSplitAdapter *cur = static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[scmSplitAdapter[mSplitIterator]]);
+    if(cur->INITO() == paEIID) {
 
       QO() = cur->QO();
 
-      splitIterator++;
+      mSplitIterator++;
 
-      if (splitIterator == scm_splitAdapter_num || (cur->QI() && !cur->QO())) {
-        if (cur->QI() == true) {
-          if (cur->QO() == true) {
+      if(mSplitIterator == scmSplitAdapterNum || (cur->QI() && !cur->QO())) {
+        if(cur->QI() == true) {
+          if(cur->QO() == true) {
             IOConfigFBController::onStartup();
           } else {
             started(scmFailedToInitParts);
@@ -118,29 +106,26 @@ void IOConfigFBSplitController::executeEvent(int pa_nEIID) {
           IOConfigFBController::onStop();
         }
       } else {
-        IOConfigFBSplitAdapter *next =
-            static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[scm_splitAdapter[splitIterator]]);
+        IOConfigFBSplitAdapter *next = static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[scmSplitAdapter[mSplitIterator]]);
 
-        while (!next || next->getPeer() == 0) {
-          splitIterator++;
+        while(!next || 0 == next->getPeer()) {
+          mSplitIterator++;
 
-          if (splitIterator == scm_splitAdapter_num) {
-            if (cur->QO() == true) {
+          if(mSplitIterator == scmSplitAdapterNum) {
+            if(cur->QO() == true) {
               return IOConfigFBController::onStartup();
             } else {
               return IOConfigFBController::onStop();
             }
           }
 
-          next =
-              static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[scm_splitAdapter[splitIterator]]);
+          next = static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[scmSplitAdapter[mSplitIterator]]);
         }
 
-        next->MasterId() = id;
+        next->MasterId() = mId;
         next->QI() = cur->QI();
 
-        sendAdapterEvent(scm_splitAdapter[splitIterator],
-            IOConfigFBSplitAdapter::scm_nEventINITID);
+        sendAdapterEvent(scmSplitAdapter[mSplitIterator], IOConfigFBSplitAdapter::scmEventINITID);
       }
     }
   }

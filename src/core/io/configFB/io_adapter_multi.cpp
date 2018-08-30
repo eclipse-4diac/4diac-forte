@@ -12,21 +12,15 @@
 
 #include "io_adapter_multi.h"
 
-using namespace forte::core::IO;
+using namespace forte::core::io;
 
-IOConfigFBMultiAdapter::IOConfigFBMultiAdapter(const TForteUInt8* const paSlaveConfigurationIO,
-    const TForteUInt8 paSlaveConfigurationIO_num, CResource *pa_poSrcRes,
-    const SFBInterfaceSpec *pa_pstInterfaceSpecSocket,
-    const CStringDictionary::TStringId pa_nInstanceNameId,
-    const SFBInterfaceSpec *pa_pstInterfaceSpecPlug, bool pa_bIsPlug,
-    TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-    CAdapter(pa_poSrcRes, pa_pstInterfaceSpecSocket, pa_nInstanceNameId,
-        pa_pstInterfaceSpecPlug, pa_bIsPlug, pa_acFBConnData, pa_acFBVarsData), mSlaveConfigurationIO(
-        paSlaveConfigurationIO), mSlaveConfigurationIO_num(
-        paSlaveConfigurationIO_num) {
+IOConfigFBMultiAdapter::IOConfigFBMultiAdapter(const TForteUInt8* const paSlaveConfigurationIO, const TForteUInt8 paSlaveConfigurationIONum,
+    CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpecSocket, const CStringDictionary::TStringId paInstanceNameId,
+    const SFBInterfaceSpec *paInterfaceSpecPlug, bool paIsPlug, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
+    CAdapter(paSrcRes, paInterfaceSpecSocket, paInstanceNameId, paInterfaceSpecPlug, paIsPlug, paFBConnData, paFBVarsData),
+        cmSlaveConfigurationIO(paSlaveConfigurationIO), mSlaveConfigurationIONum(paSlaveConfigurationIONum) {
 }
 
 IOConfigFBMultiAdapter::~IOConfigFBMultiAdapter() {
-  // TODO Auto-generated destructor stub
 }
 

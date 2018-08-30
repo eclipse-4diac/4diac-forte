@@ -12,25 +12,23 @@
 
 #include "io_controller_multi.h"
 
-using namespace forte::core::IO;
+using namespace forte::core::io;
 
-IODeviceMultiController::IODeviceMultiController(CDeviceExecution& paDeviceExecution) : IODeviceController(paDeviceExecution){
+IODeviceMultiController::IODeviceMultiController(CDeviceExecution& paDeviceExecution) :
+    IODeviceController(paDeviceExecution) {
 }
 
-void IODeviceMultiController::addHandle(
-    IODeviceController::HandleDescriptor *handleDescriptor) {
-  HandleDescriptor* desc = static_cast<HandleDescriptor*>(handleDescriptor);
+void IODeviceMultiController::addHandle(IODeviceController::HandleDescriptor *paHandleDescriptor) {
+  HandleDescriptor* desc = static_cast<HandleDescriptor*>(paHandleDescriptor);
   IOHandle* handle = initHandle(desc);
 
-  if (handle == 0) {
-    DEVLOG_WARNING(
-        "[IODeviceMultiController] Failed to initialize handle '%s'. Check initHandle method.\n",
-        desc->id.getValue());
+  if(0 == handle) {
+    DEVLOG_WARNING("[IODeviceMultiController] Failed to initialize handle '%s'. Check initHandle method.\n", desc->mId.getValue());
     return;
   }
 
-  if (IOMapper::getInstance().registerHandle(desc->id, handle)) {
-    addSlaveHandle(desc->slaveIndex, handle);
+  if(IOMapper::getInstance().registerHandle(desc->mId, handle)) {
+    addSlaveHandle(desc->mSlaveIndex, handle);
   } else {
     delete handle;
   }

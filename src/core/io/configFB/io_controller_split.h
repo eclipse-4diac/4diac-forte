@@ -18,50 +18,47 @@
 
 namespace forte {
   namespace core {
-    namespace IO {
+    namespace io {
 
 #define FUNCTION_BLOCK_CTOR_FOR_IO_SPLIT_CONTROLLER(fbclass) \
- fbclass(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : \
- IOConfigFBSplitController( (const TForteUInt8* const) &scm_splitAdapter, scm_splitAdapter_num, pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData)
+ fbclass(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) : \
+ IOConfigFBSplitController( (const TForteUInt8* const) &scmSplitAdapter, scmSplitAdapterNum, paSrcRes, &scm_stFBInterfaceSpec, paInstanceNameId, m_anFBConnData, m_anFBVarsData)
 
-class IOConfigFBSplitController;
+      class IOConfigFBSplitController;
 
-typedef CSinglyLinkedList<IOConfigFBSplitController*> TControllerList;
+      typedef CSinglyLinkedList<IOConfigFBSplitController*> TControllerList;
 
-class IOConfigFBSplitController: public IOConfigFBController {
-public:
-  IOConfigFBSplitController(const TForteUInt8* const scm_splitAdapter,
-      const TForteUInt8 scm_splitAdapter_num, CResource *pa_poSrcRes,
-      const SFBInterfaceSpec *pa_pstInterfaceSpec,
-      const CStringDictionary::TStringId pa_nInstanceNameId,
-      TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
+      class IOConfigFBSplitController : public IOConfigFBController {
+        public:
+          IOConfigFBSplitController(const TForteUInt8* const paSplitAdapter, const TForteUInt8 paSplitAdapterNum, CResource *paSrcRes,
+              const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
 
-  static IOConfigFBSplitController* getControllerById(TForteUInt16 id);
+          static IOConfigFBSplitController* getControllerById(TForteUInt16 paId);
 
-  using IOConfigFBController::initHandle;
+          using IOConfigFBController::initHandle;
 
-protected:
+        protected:
 
-  virtual void onStartup();
+          virtual void onStartup();
 
-  virtual void onStop();
+          virtual void onStop();
 
-  virtual void executeEvent(int pa_nEIID);
+          virtual void executeEvent(int paEIID);
 
-private:
-  const TForteUInt8* scm_splitAdapter;
-  const TForteUInt8 scm_splitAdapter_num;
+        private:
+          const TForteUInt8* scmSplitAdapter;
+          const TForteUInt8 scmSplitAdapterNum;
 
-  TForteUInt8 splitIterator;
+          TForteUInt8 mSplitIterator;
 
-  static TControllerList *instances;
+          static TControllerList *mInstances;
 
-  static TForteUInt16 instancesIncrement;
+          static TForteUInt16 mInstancesIncrement;
 
-  TForteUInt16 id;
+          TForteUInt16 mId;
 
-  static const char * const scmFailedToInitParts;
-};
+          static const char * const scmFailedToInitParts;
+      };
 
     } //namespace IO
   } //namepsace core

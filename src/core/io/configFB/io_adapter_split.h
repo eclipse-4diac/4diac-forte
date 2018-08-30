@@ -17,39 +17,36 @@
 
 namespace forte {
   namespace core {
-    namespace IO {
+    namespace io {
 
-class IOConfigFBSplitAdapter: public CAdapter {
-public:
-  IOConfigFBSplitAdapter(CResource *pa_poSrcRes,
-      const SFBInterfaceSpec *pa_pstInterfaceSpecSocket,
-      const CStringDictionary::TStringId pa_nInstanceNameId,
-      const SFBInterfaceSpec *pa_pstInterfaceSpecPlug, bool pa_bIsPlug,
-      TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
-  virtual ~IOConfigFBSplitAdapter();
+      class IOConfigFBSplitAdapter : public CAdapter {
+        public:
+          IOConfigFBSplitAdapter(CResource *paSrcRes, const SFBInterfaceSpec *patInterfaceSpecSocket, const CStringDictionary::TStringId paInstanceNameId,
+              const SFBInterfaceSpec *paInterfaceSpecPlug, bool paIsPlug, TForteByte *paFBConnData, TForteByte *paFBVarsData);
+          virtual ~IOConfigFBSplitAdapter();
 
-  CIEC_BOOL &QO() {
-    return *static_cast<CIEC_BOOL*>((isSocket()) ? getDI(0) : getDO(0));
-  }
+          CIEC_BOOL &QO() {
+            return *static_cast<CIEC_BOOL*>((isSocket()) ? getDI(0) : getDO(0));
+          }
 
-  CIEC_BOOL &QI() {
-    return *static_cast<CIEC_BOOL*>((isSocket()) ? getDO(0) : getDI(0));
-  }
+          CIEC_BOOL &QI() {
+            return *static_cast<CIEC_BOOL*>((isSocket()) ? getDO(0) : getDI(0));
+          }
 
-  CIEC_UINT &MasterId() {
-    return *static_cast<CIEC_UINT*>((isSocket()) ? getDO(1) : getDI(1));
-  }
+          CIEC_UINT &MasterId() {
+            return *static_cast<CIEC_UINT*>((isSocket()) ? getDO(1) : getDI(1));
+          }
 
-  static const TEventID scm_nEventINITID = 0;
-  int INIT() {
-    return m_nParentAdapterListEventID + scm_nEventINITID;
-  }
+          static const TEventID scmEventINITID = 0;
+          int INIT() {
+            return m_nParentAdapterListEventID + scmEventINITID;
+          }
 
-  static const TEventID scm_nEventINITOID = 0;
-  int INITO() {
-    return m_nParentAdapterListEventID + scm_nEventINITOID;
-  }
-};
+          static const TEventID scmEventINITOID = 0;
+          int INITO() {
+            return m_nParentAdapterListEventID + scmEventINITOID;
+          }
+      };
 
     } //namespace IO
   } //namepsace core

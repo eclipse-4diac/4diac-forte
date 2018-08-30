@@ -13,31 +13,29 @@
 #include "bit.h"
 #include "criticalregion.h"
 
-EmbrickBitSlaveHandle::EmbrickBitSlaveHandle(forte::core::IO::IODeviceController *controller,
-    forte::core::IO::IOMapper::Direction direction, uint8_t offset,
-    uint8_t position, EmbrickSlaveHandler *slave) :
-    EmbrickSlaveHandle(controller, direction, type = CIEC_ANY::e_BOOL, offset, slave), mask(
-        (uint8_t) (1 << position)) {
+EmbrickBitSlaveHandle::EmbrickBitSlaveHandle(forte::core::io::IODeviceController *paController, forte::core::io::IOMapper::Direction paDirection,
+    uint8_t paOffset, uint8_t paPosition, EmbrickSlaveHandler *paSlave) :
+    EmbrickSlaveHandle(paController, paDirection, mType = CIEC_ANY::e_BOOL, paOffset, paSlave), mMask((uint8_t) (1 << paPosition)) {
 
 }
 
-void EmbrickBitSlaveHandle::set(const CIEC_ANY &state) {
-  CCriticalRegion criticalRegion(*updateMutex);
+void EmbrickBitSlaveHandle::set(const CIEC_ANY &paState) {
+  CCriticalRegion criticalRegion(*mUpdateMutex);
 
-  if (static_cast<const CIEC_BOOL&>(state))
-    *(buffer + offset) = (uint8_t) (*(buffer + offset) | mask);
+  if(static_cast<const CIEC_BOOL&>(paState))
+    *(mBuffer + mOffset) = (uint8_t) (*(mBuffer + mOffset) | mMask);
   else
-    *(buffer + offset) = (uint8_t) (*(buffer + offset) & ~mask);
+    *(mBuffer + mOffset) = (uint8_t) (*(mBuffer + mOffset) & ~mMask);
 
-  EmbrickSlaveHandle::set(state);
+  EmbrickSlaveHandle::set(paState);
 }
 
-void EmbrickBitSlaveHandle::get(CIEC_ANY &state) {
-  CCriticalRegion criticalRegion(*updateMutex);
-  static_cast<CIEC_BOOL&>(state) = (*(buffer + offset) & mask) != 0;
+void EmbrickBitSlaveHandle::get(CIEC_ANY &paState) {
+  CCriticalRegion criticalRegion(*mUpdateMutex);
+  static_cast<CIEC_BOOL&>(paState) = (*(mBuffer + mOffset) & mMask) != 0;
 }
 
-bool EmbrickBitSlaveHandle::equal(unsigned char* oldBuffer) {
-  return (*(buffer + offset) & mask) == (*(oldBuffer + offset) & mask);
+bool EmbrickBitSlaveHandle::equal(unsigned char* paOldBuffer) {
+  return (*(mBuffer + mOffset) & mMask) == (*(paOldBuffer + mOffset) & mMask);
 }
 

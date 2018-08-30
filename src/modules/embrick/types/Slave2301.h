@@ -71,8 +71,8 @@ private:
 
   FORTE_FB_DATA_ARRAY(2, 8, 2, 2)
 
-  static const TForteUInt8 scm_slaveConfigurationIO[];
-  static const TForteUInt8 scm_slaveConfigurationIO_num;
+  static const TForteUInt8 scmSlaveConfigurationIO[];
+  static const TForteUInt8 scmSlaveConfigurationIONum;
 
   virtual void initHandles();
 

@@ -16,34 +16,32 @@
 #include <io/mapper/io_mapper.h>
 #include <devlog.h>
 
-EmbrickSlaveHandle::EmbrickSlaveHandle(forte::core::IO::IODeviceController *controller,
-    forte::core::IO::IOMapper::Direction direction, CIEC_ANY::EDataTypeID type, uint8_t paOffset,
-    EmbrickSlaveHandler *paSlave) :
-    forte::core::IO::IOHandle(controller, direction, type), offset(paOffset), slave(paSlave), updateMutex(
-        &slave->updateMutex) {
-  if (direction == forte::core::IO::IOMapper::In)
-    buffer = slave->updateReceiveImage;
-  else if (direction == forte::core::IO::IOMapper::Out)
-    buffer = slave->updateSendImage;
+EmbrickSlaveHandle::EmbrickSlaveHandle(forte::core::io::IODeviceController *paController, forte::core::io::IOMapper::Direction paDirection,
+    CIEC_ANY::EDataTypeID paType, uint8_t paOffset, EmbrickSlaveHandler *paSlave) :
+    forte::core::io::IOHandle(paController, paDirection, paType), mOffset(paOffset), mSlave(paSlave), mUpdateMutex(&mSlave->mUpdateMutex) {
+  if(paDirection == forte::core::io::IOMapper::In) {
+    mBuffer = mSlave->mUpdateReceiveImage;
+  } else if(paDirection == forte::core::io::IOMapper::Out) {
+    mBuffer = mSlave->mUpdateSendImage;
+  }
 }
 
 EmbrickSlaveHandle::~EmbrickSlaveHandle() {
 }
 
 void EmbrickSlaveHandle::set(const CIEC_ANY &) {
-  slave->forceUpdate();
+  mSlave->forceUpdate();
 }
 
-void EmbrickSlaveHandle::onObserver(forte::core::IO::IOObserver *observer) {
+void EmbrickSlaveHandle::onObserver(forte::core::io::IOObserver *paObserver) {
   reset();
 
-  forte::core::IO::IOHandle::onObserver(observer);
+  forte::core::io::IOHandle::onObserver(paObserver);
 }
 
 void EmbrickSlaveHandle::dropObserver() {
-  forte::core::IO::IOHandle::dropObserver();
+  forte::core::io::IOHandle::dropObserver();
 
   reset();
 }
-
 

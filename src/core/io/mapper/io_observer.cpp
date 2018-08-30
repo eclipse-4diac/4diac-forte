@@ -13,10 +13,10 @@
 #include "io_observer.h"
 #include <devlog.h>
 
-using namespace forte::core::IO;
+using namespace forte::core::io;
 
 IOObserver::IOObserver() :
-    handle(NULL), type(CIEC_ANY::e_ANY), direction(IOMapper::UnknownDirection) {
+    mHandle(NULL), mType(CIEC_ANY::e_ANY), mDirection(IOMapper::UnknownDirection) {
 
 }
 
@@ -24,11 +24,11 @@ IOObserver::~IOObserver() {
   IOMapper::getInstance().deregisterObserver(this);
 }
 
-void IOObserver::onHandle(IOHandle *handle) {
-  this->handle = handle;
+void IOObserver::onHandle(IOHandle *paHandle) {
+  this->mHandle = paHandle;
 }
 
 void IOObserver::dropHandle() {
-  this->handle = NULL;
+  this->mHandle = NULL;
 }
 

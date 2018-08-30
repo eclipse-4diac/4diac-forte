@@ -21,35 +21,37 @@
 
 namespace forte {
   namespace core {
-    namespace IO {
+    namespace io {
 
-class IOHandle;
-class IOObserver;
+      class IOHandle;
+      class IOObserver;
 
-class IOMapper {
-  DECLARE_SINGLETON (IOMapper)
+      class IOMapper {
+        DECLARE_SINGLETON (IOMapper)
 
-public:
-  enum Direction {
-    UnknownDirection, In, Out, InOut
-  };
+        public:
+          enum Direction {
+            UnknownDirection,
+            In,
+            Out,
+            InOut
+          };
 
-public:
-  bool registerHandle(CIEC_WSTRING const &id, IOHandle* handle);
-  void deregisterHandle(IOHandle* handle);
+          bool registerHandle(CIEC_WSTRING const &paId, IOHandle* paHandle);
+          void deregisterHandle(IOHandle* paHandle);
 
-  bool registerObserver(CIEC_WSTRING const &id, IOObserver* observer);
-  void deregisterObserver(IOObserver* observer);
+          bool registerObserver(CIEC_WSTRING const &paId, IOObserver* paObserver);
+          void deregisterObserver(IOObserver* paObserver);
 
-private:
-  typedef std::map<std::string, IOHandle*> THandleMap;
-  THandleMap handles;
+        private:
+          typedef std::map<std::string, IOHandle*> THandleMap;
+          THandleMap mHandles;
 
-  typedef std::map<std::string, IOObserver*> TObserverMap;
-  TObserverMap observers;
+          typedef std::map<std::string, IOObserver*> TObserverMap;
+          TObserverMap mObservers;
 
-  CSyncObject syncMutex;
-};
+          CSyncObject mSyncMutex;
+      };
 
     } //namespace IO
   } //namepsace core

@@ -19,43 +19,42 @@
 
 namespace forte {
   namespace core {
-    namespace IO {
+    namespace io {
 
-class IOConfigFBPartController: public IOConfigFBBase {
-public:
-  IOConfigFBPartController(CResource *pa_poSrcRes,
-      const SFBInterfaceSpec *pa_pstInterfaceSpec,
-      const CStringDictionary::TStringId pa_nInstanceNameId,
-      TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
+      class IOConfigFBPartController : public IOConfigFBBase {
+        public:
+          IOConfigFBPartController(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
+              TForteByte *paFBConnData, TForteByte *paFBVarsData);
 
-protected:
-  CIEC_BOOL &QI() {
-    return *static_cast<CIEC_BOOL*>(getDI(0));
-  }
+        protected:
+          CIEC_BOOL &QI() {
+            return *static_cast<CIEC_BOOL*>(getDI(0));
+          }
 
-  CIEC_BOOL &QO() {
-    return *static_cast<CIEC_BOOL*>(getDO(0));
-  }
+          CIEC_BOOL &QO() {
+            return *static_cast<CIEC_BOOL*>(getDO(0));
+          }
 
-  static const TEventID scm_nEventMAPID = 0;
+          static const TEventID scmEventMAPID = 0;
 
-  static const TEventID scm_nEventMAPOID = 0;
+          static const TEventID scmEventMAPOID = 0;
 
-  IOConfigFBSplitAdapter& IOConfigFBMultiAdapter() {
-    return (*static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[0]));
-  }
+          IOConfigFBSplitAdapter& IOConfigFBMultiAdapter() {
+            return (*static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[0]));
+          }
 
-  static const int scm_nSplitAdapterAdpNum = 0;
+          static const int scmSplitAdapterAdpNum = 0;
 
-  virtual void executeEvent(int pa_nEIID);
+          virtual void executeEvent(int paEIID);
 
-  IOConfigFBSplitController* master;
+          virtual void initHandles() = 0;
 
-  virtual void initHandles() = 0;
+          void initHandle(IODeviceController::HandleDescriptor *paHandleDescriptor);
 
-  void initHandle(IODeviceController::HandleDescriptor *handleDescriptor);
+        private:
+          IOConfigFBSplitController* mMaster;
 
-};
+      };
 
     } //namespace IO
   } //namepsace core

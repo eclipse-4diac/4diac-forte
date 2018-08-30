@@ -13,18 +13,15 @@
 #include "pin.h"
 #include <devlog.h>
 
-const char * const EmbrickPinHandler::scmFailedToOpenFile =
-    "Failed to open sysfs file.";
-const char * const EmbrickPinHandler::scmFailedToWriteFile =
-    "Failed to write sysfs file.";
-const char * const EmbrickPinHandler::scmNotInitialised =
-    "Failed to write to not initialised sysfs stream.";
+const char * const EmbrickPinHandler::scmFailedToOpenFile = "Failed to open sysfs file.";
+const char * const EmbrickPinHandler::scmFailedToWriteFile = "Failed to write sysfs file.";
+const char * const EmbrickPinHandler::scmNotInitialised = "Failed to write to not initialised sysfs stream.";
 
-EmbrickPinHandler::EmbrickPinHandler(unsigned int pin) : pinStr(static_cast<std::ostringstream &>((std::ostringstream() << std::dec  // Convert pin int to string
-    << pin)).str()),
-    error(0) {
+EmbrickPinHandler::EmbrickPinHandler(unsigned int paPin) :
+    paError(0), mPinStr(static_cast<std::ostringstream &>((std::ostringstream() << std::dec // Convert pin int to string
+      << paPin)).str()) {
   // Disable buffer to avoid latency
-  stream.rdbuf()->pubsetbuf(0, 0);
+  paStream.rdbuf()->pubsetbuf(0, 0);
 
   // Init pin
   init();
@@ -36,75 +33,79 @@ EmbrickPinHandler::~EmbrickPinHandler() {
 
 void EmbrickPinHandler::init() {
   std::string fileName;
-  stream.clear();
+  paStream.clear();
 
   // Enable pin
   fileName = "/sys/class/gpio/export";
-  stream.open(fileName.c_str(), std::fstream::out);
-  if (!stream.is_open())
+  paStream.open(fileName.c_str(), std::fstream::out);
+  if(!paStream.is_open()) {
     return fail(scmFailedToOpenFile);
-
-  stream << pinStr;
-  if (stream.fail())
+  }
+  paStream << mPinStr;
+  if(paStream.fail()) {
     return fail(scmFailedToWriteFile);
-  stream.close();
+  }
+  paStream.close();
 
   // Use pin as output
-  fileName = "/sys/class/gpio/gpio" + pinStr + "/direction";
-  stream.open(fileName.c_str(), std::fstream::out);
-  if (!stream.is_open())
+  fileName = "/sys/class/gpio/gpio" + mPinStr + "/direction";
+  paStream.open(fileName.c_str(), std::fstream::out);
+  if(!paStream.is_open()) {
     return fail(scmFailedToOpenFile);
-  stream.clear();
+  }
+  paStream.clear();
 
-  stream << "out";
-  if (stream.fail())
+  paStream << "out";
+  if(paStream.fail()) {
     return fail(scmFailedToWriteFile);
-  stream.close();
+  }
+  paStream.close();
 
   // Prepare pin stream for usage
-  fileName = "/sys/class/gpio/gpio" + pinStr + "/value";
-  stream.open(fileName.c_str(), std::fstream::out);
-  if (!stream.is_open())
+  fileName = "/sys/class/gpio/gpio" + mPinStr + "/value";
+  paStream.open(fileName.c_str(), std::fstream::out);
+  if(!paStream.is_open()) {
     return fail(scmFailedToOpenFile);
-
-  DEVLOG_INFO("emBrick[PinHandler]: GPIO %s ready.\n", pinStr.data());
+  }
+  DEVLOG_INFO("emBrick[PinHandler]: GPIO %s ready.\n", mPinStr.data());
 }
 
 void EmbrickPinHandler::deInit() {
   std::string fileName;
 
   // Close pin stream
-  if (stream.is_open()) {
-    stream.clear();
-    stream.close();
+  if(paStream.is_open()) {
+    paStream.clear();
+    paStream.close();
   }
 
   // Disable pin
   fileName = "/sys/class/gpio/unexport";
-  stream.open(fileName.c_str(), std::fstream::out);
-  if (!stream.is_open())
+  paStream.open(fileName.c_str(), std::fstream::out);
+  if(!paStream.is_open()) {
     return fail(scmFailedToOpenFile);
-
-  stream << pinStr;
-  if (stream.fail())
+  }
+  paStream << mPinStr;
+  if(paStream.fail()) {
     return fail(scmFailedToWriteFile);
-  stream.close();
+  }
+  paStream.close();
 
-  DEVLOG_INFO("emBrick[PinHandler]: GPIO %s stopped.\n", pinStr.data());
+  DEVLOG_INFO("emBrick[PinHandler]: GPIO %s stopped.\n", mPinStr.data());
 }
 
-bool EmbrickPinHandler::set(bool state) {
-  if (!stream.is_open()) {
+bool EmbrickPinHandler::set(bool paState) {
+  if(!paStream.is_open()) {
     fail(scmNotInitialised);
     return false;
   }
 
-  stream.clear();
-  stream.seekp(0, std::ios::beg);
+  paStream.clear();
+  paStream.seekp(0, std::ios::beg);
 
-  unsigned int val = state ? 1 : 0;
-  stream << val;
-  if (stream.fail()) {
+  unsigned int val = paState ? 1 : 0;
+  paStream << val;
+  if(paStream.fail()) {
     fail(scmFailedToWriteFile);
     return false;
   }
@@ -112,9 +113,8 @@ bool EmbrickPinHandler::set(bool state) {
   return true;
 }
 
-void EmbrickPinHandler::fail(const char* reason) {
-  error = reason;
-  DEVLOG_ERROR("emBrick[PinHandler]: %s\n", reason);
+void EmbrickPinHandler::fail(const char* paReason) {
+  paError = paReason;
+  DEVLOG_ERROR("emBrick[PinHandler]: %s\n", paReason);
 }
-
 

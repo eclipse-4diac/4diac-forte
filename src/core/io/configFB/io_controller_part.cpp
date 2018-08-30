@@ -12,24 +12,20 @@
 
 #include "io_controller_part.h"
 
-using namespace forte::core::IO;
+using namespace forte::core::io;
 
-IOConfigFBPartController::IOConfigFBPartController(CResource *pa_poSrcRes,
-    const SFBInterfaceSpec *pa_pstInterfaceSpec,
-    const CStringDictionary::TStringId pa_nInstanceNameId,
-    TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-    IOConfigFBBase(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData,
-        pa_acFBVarsData), master(0) {
-
+IOConfigFBPartController::IOConfigFBPartController(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
+    const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
+    IOConfigFBBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mMaster(0) {
 }
 
-void IOConfigFBPartController::executeEvent(int pa_nEIID) {
-  if (IOConfigFBMultiAdapter().INIT() == pa_nEIID) {
-    if (IOConfigFBMultiAdapter().QI() == true) {
+void IOConfigFBPartController::executeEvent(int paEIID) {
+  if(IOConfigFBMultiAdapter().INIT() == paEIID) {
+    if(IOConfigFBMultiAdapter().QI() == true) {
       // Get master by id
-      master = IOConfigFBSplitController::getControllerById(IOConfigFBMultiAdapter().MasterId());
+      mMaster = IOConfigFBSplitController::getControllerById(IOConfigFBMultiAdapter().MasterId());
 
-      if (master == 0) {
+      if(0 == mMaster) {
         QO() = false;
       } else {
         // Initialize handles
@@ -39,20 +35,17 @@ void IOConfigFBPartController::executeEvent(int pa_nEIID) {
       }
       // Send confirmation of init
       IOConfigFBMultiAdapter().QO() = QO();
-      sendAdapterEvent(scm_nSplitAdapterAdpNum,
-          IOConfigFBSplitAdapter::scm_nEventINITOID);
+      sendAdapterEvent(scmSplitAdapterAdpNum, IOConfigFBSplitAdapter::scmEventINITOID);
     } else {
       QO() = false;
 
       // Send confirmation of deInit
       IOConfigFBMultiAdapter().QO() = QO();
-      sendAdapterEvent(scm_nSplitAdapterAdpNum,
-          IOConfigFBSplitAdapter::scm_nEventINITOID);
+      sendAdapterEvent(scmSplitAdapterAdpNum, IOConfigFBSplitAdapter::scmEventINITOID);
     }
   }
 }
 
-void IOConfigFBPartController::initHandle(
-    IODeviceController::HandleDescriptor *handleDescriptor) {
-  master->initHandle(handleDescriptor);
+void IOConfigFBPartController::initHandle(IODeviceController::HandleDescriptor *paHandleDescriptor) {
+  mMaster->initHandle(paHandleDescriptor);
 }

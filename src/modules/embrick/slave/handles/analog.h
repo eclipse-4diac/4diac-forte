@@ -16,18 +16,18 @@
 #include <slave/slave.h>
 #include <slave/handle.h>
 
-class EmbrickAnalogSlaveHandle: public EmbrickSlaveHandle {
-public:
-  EmbrickAnalogSlaveHandle(forte::core::IO::IODeviceController *controller, forte::core::IO::IOMapper::Direction direction,
-      uint8_t offset, EmbrickSlaveHandler *slave);
+class EmbrickAnalogSlaveHandle : public EmbrickSlaveHandle {
+  public:
+    EmbrickAnalogSlaveHandle(forte::core::io::IODeviceController *paController, forte::core::io::IOMapper::Direction paDirection, uint8_t paOffset,
+        EmbrickSlaveHandler *paSlave);
 
-  virtual void set(const CIEC_ANY &);
-  void get(CIEC_ANY &);
+    virtual void set(const CIEC_ANY &);
+    void get(CIEC_ANY &);
 
-  bool equal(unsigned char* oldBuffer);
+    bool equal(unsigned char* paOldBuffer);
 
-protected:
-  const CIEC_DWORD getValue(const unsigned char* buffer);
+  protected:
+    const CIEC_DWORD getValue(const unsigned char* paBuffer);
 };
 
 #endif /* SRC_MODULES_EMBRICK_SLAVE_HANDLES_ANALOG_H_ */

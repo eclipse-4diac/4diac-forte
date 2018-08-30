@@ -13,28 +13,20 @@
 #include "processinterface.h"
 #include "criticalregion.h"
 
-using namespace forte::core::IO;
+using namespace forte::core::io;
 
 const char * const ProcessInterface::scmOK = "OK";
-const char * const ProcessInterface::scmWaitingForHandle =
-    "Waiting for handle..";
-const char * const ProcessInterface::scmFailedToRegister =
-    "Failed to register observer.";
-const char * const ProcessInterface::scmMappedWrongDirectionOutput =
-    "Mapped invalid direction. A Q block requires an output handle.";
-const char * const ProcessInterface::scmMappedWrongDirectionInput =
-    "Mapped invalid direction. An I block requires an input handle.";
-const char * const ProcessInterface::scmMappedWrongDataType =
-    "Mapped invalid data type.";
+const char * const ProcessInterface::scmWaitingForHandle = "Waiting for handle..";
+const char * const ProcessInterface::scmFailedToRegister = "Failed to register observer.";
+const char * const ProcessInterface::scmMappedWrongDirectionOutput = "Mapped invalid direction. A Q block requires an output handle.";
+const char * const ProcessInterface::scmMappedWrongDirectionInput = "Mapped invalid direction. An I block requires an input handle.";
+const char * const ProcessInterface::scmMappedWrongDataType = "Mapped invalid data type.";
 
-ProcessInterface::ProcessInterface(CResource *paSrcRes,
-    const SFBInterfaceSpec *paInterfaceSpec,
-    const CStringDictionary::TStringId paInstanceNameId,
+ProcessInterface::ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
     TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId,
-        paFBConnData, paFBVarsData), IOObserver() {
-  isListening = false;
-  isReady = false;
+    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), IOObserver() {
+  mIsListening = false;
+  mIsReady = false;
 }
 
 ProcessInterface::~ProcessInterface() {
@@ -42,67 +34,67 @@ ProcessInterface::~ProcessInterface() {
 }
 
 bool ProcessInterface::initialise(bool paIsInput) {
-  direction = paIsInput ? IOMapper::In : IOMapper::Out;
-  type = (paIsInput ? getDO(2) : getDI(2))->getDataTypeID();
+  mDirection = paIsInput ? IOMapper::In : IOMapper::Out;
+  mType = (paIsInput ? getDO(2) : getDI(2))->getDataTypeID();
 
-  isReady = false;
+  mIsReady = false;
   STATUS() = scmWaitingForHandle;
 
   // Reset before initialization
   deinitialise();
 
   // Register interface
-  if (!(isListening = IOMapper::getInstance().registerObserver(getInstanceName(),
-      this))) {
+  if(!(mIsListening = IOMapper::getInstance().registerObserver(getInstanceName(), this))) {
     STATUS() = scmFailedToRegister;
     return false;
   }
 
-  return isReady;
+  return mIsReady;
 }
 
 bool ProcessInterface::deinitialise() {
   // Deregister interface
-  if (isListening)
+  if(mIsListening) {
     IOMapper::getInstance().deregisterObserver(this);
+  }
 
-  return !isReady;
+  return !mIsReady;
 }
 
-bool ProcessInterface::read(CIEC_ANY &data) {
-  CCriticalRegion criticalRegion(syncMutex);
-  if (!isReady) {
+bool ProcessInterface::read(CIEC_ANY &paData) {
+  CCriticalRegion criticalRegion(mSyncMutex);
+  if(!mIsReady) {
     return false;
   }
 
-  handle->get(data);
+  mHandle->get(paData);
 
   return true;
 }
 
-bool ProcessInterface::write(CIEC_ANY &data) {
-  CCriticalRegion criticalRegion(syncMutex);
-  if (!isReady) {
+bool ProcessInterface::write(CIEC_ANY &paData) {
+  CCriticalRegion criticalRegion(mSyncMutex);
+  if(!mIsReady) {
     return false;
   }
 
-  handle->set(data);
+  mHandle->set(paData);
 
   return true;
 }
 
 bool ProcessInterface::read() {
-  CCriticalRegion criticalRegion(syncMutex);
-  if (!isReady) {
+  CCriticalRegion criticalRegion(mSyncMutex);
+  if(!mIsReady) {
     return false;
   }
 
-  if (handle->is(CIEC_ANY::e_BOOL)) {
-    handle->get(IN_X());
-  } else if (handle->is(CIEC_ANY::e_WORD)) {
-    handle->get(IN_W());
-  } else if (handle->is(CIEC_ANY::e_DWORD)) {
-    handle->get(IN_D());
+  if(mHandle->is(CIEC_ANY::e_BOOL)) {
+    mHandle->get(IN_X());
+  } else if(mHandle->is(CIEC_ANY::e_WORD)) {
+    mHandle->get(IN_W());
+  } else if(mHandle->is(CIEC_ANY::e_DWORD)) {
+    mHandle->get(IN_D());
   } else {
     return false;
   }
@@ -111,17 +103,17 @@ bool ProcessInterface::read() {
 }
 
 bool ProcessInterface::write() {
-  CCriticalRegion criticalRegion(syncMutex);
-  if (!isReady) {
+  CCriticalRegion criticalRegion(mSyncMutex);
+  if(!mIsReady) {
     return false;
   }
 
-  if (handle->is(CIEC_ANY::e_BOOL)) {
-    handle->set(OUT_X());
-  } else if (handle->is(CIEC_ANY::e_WORD)) {
-    handle->set(OUT_W());
-  } else if (handle->is(CIEC_ANY::e_DWORD)) {
-    handle->set(OUT_D());
+  if(mHandle->is(CIEC_ANY::e_BOOL)) {
+    mHandle->set(OUT_X());
+  } else if(mHandle->is(CIEC_ANY::e_WORD)) {
+    mHandle->set(OUT_W());
+  } else if(mHandle->is(CIEC_ANY::e_DWORD)) {
+    mHandle->set(OUT_D());
   } else {
     return false;
   }
@@ -133,44 +125,45 @@ bool ProcessInterface::onChange() {
   return read();
 }
 
-void ProcessInterface::onHandle(IOHandle* handle) {
+void ProcessInterface::onHandle(IOHandle* paHandle) {
   {
-    CCriticalRegion criticalRegion(syncMutex);
+    CCriticalRegion criticalRegion(mSyncMutex);
 
-    IOObserver::onHandle(handle);
+    IOObserver::onHandle(paHandle);
 
-    if(!handle->is(type)){
+    if(!paHandle->is(mType)) {
       STATUS() = scmMappedWrongDataType;
       return;
     }
 
-    if(!handle->is(direction)){
-      STATUS() = direction == IOMapper::In ? scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput;
+    if(!paHandle->is(mDirection)) {
+      STATUS() = mDirection == IOMapper::In ? scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput;
       return;
     }
 
-    if(direction == IOMapper::In)
+    if(mDirection == IOMapper::In) {
       setEventChainExecutor(m_poInvokingExecEnv);
+    }
 
     STATUS() = scmOK;
-    isReady = true;
+    mIsReady = true;
   }
 
   // Read & write current state
-  if (direction == IOMapper::In)
+  if(mDirection == IOMapper::In) {
     QO() = read();
-  else
+  } else {
     QO() = write();
+  }
 }
 
 void ProcessInterface::dropHandle() {
-  CCriticalRegion criticalRegion(syncMutex);
+  CCriticalRegion criticalRegion(mSyncMutex);
 
   IOObserver::dropHandle();
 
   QO() = false;
   STATUS() = scmWaitingForHandle;
-  isReady = false;
-
+  mIsReady = false;
 }
 

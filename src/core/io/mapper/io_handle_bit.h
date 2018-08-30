@@ -18,33 +18,33 @@
 
 namespace forte {
   namespace core {
-    namespace IO {
+    namespace io {
 
-class IOHandleBit: public IOHandle {
-public:
-  IOHandleBit(IODeviceController *controller, IOMapper::Direction direction,
-      uint8_t offset,
-      uint8_t position, uint8_t* image);
+      class IOHandleBit : public IOHandle {
+        public:
+          IOHandleBit(IODeviceController *paController, IOMapper::Direction paDirection, uint8_t paOffset, uint8_t paPosition, uint8_t* paImage);
 
-  virtual void set(const CIEC_ANY &);
-  void get(CIEC_ANY &);
+          virtual void set(const CIEC_ANY &);
+          void get(CIEC_ANY &);
 
-  bool equal(unsigned char* oldImage);
+          bool equal(unsigned char* paOldImage);
 
-protected:
-  virtual void onObserver(IOObserver *observer);
+        protected:
+          virtual void onObserver(IOObserver *paObserver);
 
-  virtual void dropObserver();
+          virtual void dropObserver();
 
-  virtual void reset() {
-    CIEC_BOOL s = false;
-    set(s);
-  }
+          virtual void reset() {
+            CIEC_BOOL s = false;
+            set(s);
+          }
 
-  uint8_t* image;
-  const uint8_t offset;
-  const uint8_t mask;
-};
+          const uint8_t mOffset;
+          const uint8_t mMask;
+
+        private:
+          uint8_t* mImage;
+      };
 
     } //namespace IO
   } //namepsace core

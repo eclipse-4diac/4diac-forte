@@ -18,25 +18,26 @@
 
 namespace forte {
   namespace core {
-    namespace IO {
+    namespace io {
 
-class IOObserver {
-  friend class IOMapper;
+      class IOObserver {
+          friend class IOMapper;
 
-public:
-  IOObserver();
-  virtual ~IOObserver();
+        public:
+          IOObserver();
+          virtual ~IOObserver();
 
-  virtual bool onChange() = 0;
+          virtual bool onChange() = 0;
 
-protected:
-  virtual void onHandle(IOHandle *handle);
-  virtual void dropHandle();
+        protected:
+          IOHandle* mHandle;
+          CIEC_ANY::EDataTypeID mType;
+          IOMapper::Direction mDirection;
 
-  IOHandle* handle;
-  CIEC_ANY::EDataTypeID type;
-  IOMapper::Direction direction;
-};
+          virtual void onHandle(IOHandle *paHandle);
+          virtual void dropHandle();
+
+      };
 
     } //namespace IO
   } //namepsace core

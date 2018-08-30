@@ -60,23 +60,23 @@ void EmbrickMaster::setInitialValues() {
 }
 
 
-forte::core::IO::IODeviceController* EmbrickMaster::createDeviceController(CDeviceExecution& paDeviceExecution) {
+forte::core::io::IODeviceController* EmbrickMaster::createDeviceController(CDeviceExecution& paDeviceExecution) {
   return new EmbrickBusHandler(paDeviceExecution);
 }
 
 void EmbrickMaster::setConfig() {
   EmbrickBusHandler::Config config;
-  config.BusInterface = BusInterface();
-  config.BusSelectPin = BusSelectPin();
-  config.BusInitSpeed = BusInitSpeed();
-  config.BusLoopSpeed = BusLoopSpeed();
-  controller->setConfig(&config);
+  config.mBusInterface = BusInterface();
+  config.mBusSelectPin = BusSelectPin();
+  config.mBusInitSpeed = BusInitSpeed();
+  config.mBusLoopSpeed = BusLoopSpeed();
+  getDeviceController()->setConfig(&config);
 }
 
 void EmbrickMaster::onStartup() {
   BusAdapterOut().UpdateInterval() = SlaveUpdateInterval();
 
-  forte::core::IO::IOConfigFBMultiMaster::onStartup();
+  forte::core::io::IOConfigFBMultiMaster::onStartup();
 }
 
 

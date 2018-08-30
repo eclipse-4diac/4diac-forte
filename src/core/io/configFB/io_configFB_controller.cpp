@@ -14,185 +14,158 @@
 #include "../../device.h"
 #include "io_configFB_controller.h"
 
-using namespace forte::core::IO;
+using namespace forte::core::io;
 
-int IOConfigFBController::MaxErrors = 5;
+int IOConfigFBController::smMaxErrors = 5;
 
 const char * const IOConfigFBController::scmOK = "OK";
-const char * const IOConfigFBController::scmInitializing =
-    "Waiting for initialization..";
-const char * const IOConfigFBController::scmFailedToInit =
-    "Failed to initialize controller.";
+const char * const IOConfigFBController::scmInitializing = "Waiting for initialization..";
+const char * const IOConfigFBController::scmFailedToInit = "Failed to initialize controller.";
 const char * const IOConfigFBController::scmStopped = "Stopped";
 
-IOConfigFBController::IOConfigFBController(CResource *pa_poSrcRes,
-    const SFBInterfaceSpec *pa_pstInterfaceSpec,
-    const CStringDictionary::TStringId pa_nInstanceNameId,
-    TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-    IOConfigFBBase(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData,
-        pa_acFBVarsData), starting(false), errorCounter(0), controller(0), performRestart(
-        false) {
-
+IOConfigFBController::IOConfigFBController(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
+    TForteByte *paFBConnData, TForteByte *paFBVarsData) :
+    IOConfigFBBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mStarting(false), mErrorCounter(0), mController(0),
+        mPerformRestart(false) {
 }
 
 IOConfigFBController::~IOConfigFBController() {
   deInit(true);
 }
 
-void IOConfigFBController::executeEvent(int pa_nEIID) {
-  switch (pa_nEIID) {
-
-  case cg_nExternalEventID:
-    if (!(controller->notificationHandled = handleNotification(
-        controller->notificationType, controller->notificationAttachment))) {
-      DEVLOG_ERROR(
-          "[IOConfigFBController] Notification of type %d has not been handled.\n",
-          controller->notificationType);
+void IOConfigFBController::executeEvent(int paEIID) {
+  if(cg_nExternalEventID == paEIID) {
+    if(!(mController->mNotificationHandled = handleNotification(mController->mNotificationType, mController->mNotificationAttachment))) {
+      DEVLOG_ERROR("[IOConfigFBController] Notification of type %d has not been handled.\n", mController->mNotificationType);
     }
-    break;
-
-  case scm_nEventINITID:
-    if (true == QI()) {
-      if (!init()) {
+  } else if(scmEventINITID == paEIID) {
+    if(true == QI()) {
+      if(!init()) {
         QO() = false;
-        sendOutputEvent(scm_nEventINITOID);
+        sendOutputEvent(scmEventINITOID);
       }
     } else {
       QO() = deInit();
-      sendOutputEvent(scm_nEventINITOID);
+      sendOutputEvent(scmEventINITOID);
     }
-    break;
   }
 }
 
-bool IOConfigFBController::handleNotification(IODeviceController::NotificationType type,
-    const void* attachment) {
+bool IOConfigFBController::handleNotification(IODeviceController::NotificationType paType, const void* paAttachment) {
+  switch(paType){
+    case IODeviceController::Error:
+      onError();
+      if(mStarting) {
+        if(0 == paAttachment) {
+          paAttachment = scmFailedToInit;
+        }
 
-  switch (type) {
+        STATUS() = (const char*) paAttachment;
+        DEVLOG_ERROR("[IOConfigFBController] Failed to initialize controller. Reason: %s\n", STATUS().getValue());
+      } else {
+        STATUS() = (const char*) paAttachment;
 
-  case IODeviceController::Error:
-    onError();
-
-    if (starting) {
-      if (attachment == 0)
-        attachment = scmFailedToInit;
-
-      STATUS() = (const char*) attachment;
-      DEVLOG_ERROR(
-          "[IOConfigFBController] Failed to initialize controller. Reason: %s\n",
-          STATUS().getValue());
-    } else {
-      STATUS() = (const char*) attachment;
-
-      DEVLOG_ERROR("[IOConfigFBController] Runtime error. Reason: %s\n",
-          STATUS().getValue());
-    }
-    return true;
-
-  case IODeviceController::Success:
-    if (starting) {
-      onStartup();
+        DEVLOG_ERROR("[IOConfigFBController] Runtime error. Reason: %s\n", STATUS().getValue());
+      }
       return true;
-    }
-    return false;
-
-  default:
-    return false;
+    case IODeviceController::Success:
+      if(mStarting) {
+        onStartup();
+        return true;
+      }
+      return false;
+    default:
+      return false;
   }
 }
 
-void IOConfigFBController::onError(bool isFatal) {
-  errorCounter++;
-  performRestart = errorCounter < MaxErrors;
+void IOConfigFBController::onError(bool paIsFatal) {
+  mErrorCounter++;
+  mPerformRestart = mErrorCounter < smMaxErrors;
 
   // ReInit IOConfigFBController
-  if (performRestart) {
+  if(mPerformRestart) {
     deInit();
   } else {
-    starting = false;
+    mStarting = false;
     QO() = false;
-    sendOutputEvent(scm_nEventINITOID);
+    sendOutputEvent(scmEventINITOID);
 
-    if (isFatal) {
+    if(paIsFatal) {
       deInit();
     } else {
       // Reset error counter if it was not a fatal error
-      errorCounter = 0;
+      mErrorCounter = 0;
     }
   }
 }
 
-bool IOConfigFBController::init(int delay) {
-  if (controller != 0) {
-    DEVLOG_ERROR(
-        "[IOConfigFBController] IOConfigFBController has already been initialized.\n");
+bool IOConfigFBController::init(int paDelay) {
+  if(mController != 0) {
+    DEVLOG_ERROR("[IOConfigFBController] IOConfigFBController has already been initialized.\n");
     return false;
   }
 
-  controller = createDeviceController(getResource().getDevice().getDeviceExecution());
-  if (controller == 0) {
-    DEVLOG_ERROR(
-        "[IOConfigFBController] Failed to create controller.\n");
+  mController = createDeviceController(getResource().getDevice().getDeviceExecution());
+  if(mController == 0) {
+    DEVLOG_ERROR("[IOConfigFBController] Failed to create controller.\n");
     return false;
   }
 
-  controller->delegate = this;
-  controller->setInitDelay(delay);
+  mController->mDelegate = this;
+  mController->setInitDelay(paDelay);
 
-  starting = true;
+  mStarting = true;
   STATUS() = scmInitializing;
 
   setConfig();
 
   setEventChainExecutor(m_poInvokingExecEnv);
-  controller->start();
+  mController->start();
 
   return true;
 }
 
-void IOConfigFBController::initHandle(
-    IODeviceController::HandleDescriptor *handleDescriptor) {
+void IOConfigFBController::initHandle(IODeviceController::HandleDescriptor *paHandleDescriptor) {
 
-  if (handleDescriptor->id == "")
+  if(paHandleDescriptor->mId == "") {
     return;
+  }
 
-  controller->addHandle(handleDescriptor);
+  mController->addHandle(paHandleDescriptor);
 }
 
 void IOConfigFBController::onStartup() {
   started();
 }
 
-void IOConfigFBController::started(const char* error) {
-  if (error != 0) {
-    STATUS() = error;
-    DEVLOG_ERROR("[IOConfigFBController] Failed to start. Reason: %s\n",
-        STATUS().getValue());
+void IOConfigFBController::started(const char* paError) {
+  if(paError != 0) {
+    STATUS() = paError;
+    DEVLOG_ERROR("[IOConfigFBController] Failed to start. Reason: %s\n", STATUS().getValue());
     return onError(false);
   }
 
-  errorCounter = 0;
-  starting = false;
+  mErrorCounter = 0;
+  mStarting = false;
 
   QO() = true;
   STATUS() = scmOK;
-  sendOutputEvent(scm_nEventINITOID);
+  sendOutputEvent(scmEventINITOID);
 }
 
 void IOConfigFBController::onStop() {
   stopped();
 }
 
-bool IOConfigFBController::deInit(bool isDestructing) {
-  if (controller == 0) {
-    DEVLOG_ERROR(
-        "[IOConfigFBController] IOConfigFBController has already been stopped.\n");
+bool IOConfigFBController::deInit(bool paIsDestructing) {
+  if(0 == mController) {
+    DEVLOG_ERROR("[IOConfigFBController] IOConfigFBController has already been stopped.\n");
     return false;
   }
 
-  if (isDestructing) {
-    performRestart = false;
-
+  if(paIsDestructing) {
+    mPerformRestart = false;
     stopped();
   } else {
     onStop();
@@ -202,20 +175,21 @@ bool IOConfigFBController::deInit(bool isDestructing) {
 }
 
 void IOConfigFBController::stopped() {
-  controller->delegate = 0;
-  if (controller->isAlive())
-    controller->end();
+  mController->mDelegate = 0;
+  if(mController->isAlive()) {
+    mController->end();
+  }
 
-  delete controller;
-  controller = 0;
-  starting = false;
+  delete mController;
+  mController = 0;
+  mStarting = false;
 
   STATUS() = scmStopped;
 
-  if (performRestart) {
-    performRestart = false;
+  if(mPerformRestart) {
+    mPerformRestart = false;
 
-    init(errorCounter);
+    init(mErrorCounter);
   }
 }
 
