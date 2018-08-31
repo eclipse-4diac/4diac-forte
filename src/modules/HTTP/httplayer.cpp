@@ -36,12 +36,12 @@ EComResponse CHttpComLayer::openConnection(char *paLayerParameter){
   switch (m_poFb->getComServiceType()){
     case e_Server:
       if(1 == m_poFb->getNumSD()){
-        CIEC_STRING path = paLayerParameter;
-        GET_HANDLER_FROM_COMM_LAYER(CHTTP_Handler)->addServerPath(this, path);
+        mPath = paLayerParameter;
+        GET_HANDLER_FROM_COMM_LAYER(CHTTP_Handler)->addServerPath(this, mPath);
         eRetVal = e_InitOk;
       }
       else{
-        DEVLOG_ERROR("[HTTP Layer] The FB with PARAM %s coudln't be initialized since only one SD is possible in HTTP Server which is for the response\n", mPath.getValue());
+        DEVLOG_ERROR("[HTTP Layer] The FB with PARAM %s coudln't be initialized since only one SD is possible in HTTP Server which is for the response\n", paLayerParameter);
       }
       break;
     case e_Client:
@@ -287,7 +287,7 @@ EComResponse forte::com_infra::CHttpComLayer::recvServerData(CSinglyLinkedList<C
       noOfParameters++;
     }
 
-    if(noOfParameters == m_poFb->getNumSD()){
+    if(noOfParameters == m_poFb->getNumRD()){
       noOfParameters = 0;
       for(CSinglyLinkedList<CIEC_STRING>::Iterator iter = paParameterValues.begin(); iter != paParameterValues.end(); ++iter){
         m_poFb->getRDs()[noOfParameters].setValue(*iter);
