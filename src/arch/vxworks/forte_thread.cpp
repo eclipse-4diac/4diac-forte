@@ -33,8 +33,6 @@ void CVxWorksThread::setDeadline(const CIEC_TIME &paVal){
 }
 
 void CVxWorksThread::sleepThread(unsigned int paMilliSeconds){
-  struct timespec stReq;
-  stReq.tv_sec = paMilliSeconds / 1000;
-  stReq.tv_nsec = 1000000 * (paMilliSeconds % 1000);
+  struct timespec stReq = {paMilliSeconds / 1000, 1000000 * (paMilliSeconds % 1000)};
   nanosleep(&stReq, NULL);
 }

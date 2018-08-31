@@ -84,5 +84,6 @@ void CPosixThread::setDeadline(const CIEC_TIME &paVal){
 }
 
 void CPosixThread::sleepThread(unsigned int paMilliSeconds){
-  usleep(1000 * paMilliSeconds);
+  struct timespec stReq = {paMilliSeconds / 1000, 1000000 * (paMilliSeconds % 1000)};
+  nanosleep(&stReq, NULL);
 }
