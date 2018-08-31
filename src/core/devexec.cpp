@@ -22,14 +22,14 @@ CDeviceExecution::CDeviceExecution(){
   CDeviceExecution::createHandlers(*this);
 
   getTimer().enableHandler();
-  if(0 == CTimerHandler::sm_poFORTETimer){
-    CTimerHandler::sm_poFORTETimer = &getTimer(); //used for develog, CIEC_TIME() and in Modbus
+  if(0 == CTimerHandler::smFORTETimer){
+    CTimerHandler::smFORTETimer = &getTimer(); //used for develog, CIEC_TIME() and in Modbus
   }
 }
 
 CDeviceExecution::~CDeviceExecution(){
-  if(CTimerHandler::sm_poFORTETimer == (&getTimer())){
-    CTimerHandler::sm_poFORTETimer = 0;
+  if(CTimerHandler::smFORTETimer == (&getTimer())){
+    CTimerHandler::smFORTETimer = 0;
   }
 
   for(size_t i = 0; i < cg_unNumberOfHandlers; i++){

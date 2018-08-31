@@ -38,8 +38,8 @@ protected:
 
   FORTE_FB_DATA_ARRAY(1,1,0, 0);
 
-  bool m_bActive; //!> flag to indicate that the timed fb is currently active
-  STimedFBListEntry m_stTimeListEntry; //!> The Timer list entry of this timed FB
+  bool mActive; //!> flag to indicate that the timed fb is currently active
+  STimedFBListEntry mTimeListEntry; //!> The Timer list entry of this timed FB
 /*!\brief execute the input events of timed FBs as far it is possible
  *
  * Derived Timed FBs only normaly need only the start event es this is different for each timed FB type (e.g. periodic vs. onetimeshot)
@@ -52,12 +52,11 @@ protected:
 public:
   EVENT_SOURCE_FUNCTION_BLOCK_CTOR(CTimedFB){
     setEventChainExecutor(pa_poSrcRes->getResourceEventExecution());
-    m_bActive = false;
-    m_stTimeListEntry.m_stTimeOut.m_nLowerValue = 0;
-    m_stTimeListEntry.m_stTimeOut.m_nUpperValue = 0;
-    m_stTimeListEntry.m_nInterval = 0;
-    m_stTimeListEntry.m_pstNext = 0;
-    m_stTimeListEntry.m_poTimedFB = this;
+    mActive = false;
+    mTimeListEntry.mTimeOut = 0;
+    mTimeListEntry.mInterval = 0;
+    mTimeListEntry.mNext = 0;
+    mTimeListEntry.mTimedFB = this;
   };
   virtual ~CTimedFB() {};
 

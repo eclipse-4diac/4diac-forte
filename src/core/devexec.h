@@ -32,9 +32,9 @@ public:
 
 /*!\brief Notifies the CExternalEventHandlerManager that one tick in the time has passed by.
  *
- * \param pa_nCurrentTime the current time in ticks since the last start of the runtime.
+ * \param paCurrentTime the current time in ticks since the last start of the runtime.
  */
-    void notifyTime(const SForteTime& ){
+    void notifyTime(uint_fast64_t ){
     };
 
 /*!\brief an external event occurred at an ES and a new event source is to start.

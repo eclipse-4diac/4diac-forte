@@ -48,15 +48,15 @@ void CTimedFB::executeEvent(int pa_nEIID){
       sendOutputEvent(csm_nEOID);
       break;
     case csm_nEventSTOPID:
-      if(m_bActive){
+      if(mActive){
         getTimer().unregisterTimedFB(this);
-        m_bActive = false;
+        mActive = false;
       }
       break;
     case csm_nEventSTARTID:
-      if(!m_bActive){
-        getTimer().registerTimedFB( &m_stTimeListEntry, DT());
-        m_bActive = true;
+      if(!mActive){
+        getTimer().registerTimedFB( &mTimeListEntry, DT());
+        mActive = true;
       }
       break;
     default:
@@ -68,9 +68,9 @@ EMGMResponse CTimedFB::changeFBExecutionState(EMGMCommandType pa_unCommand){
   EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(pa_unCommand);
   if((e_RDY == eRetVal) &&
      ((cg_nMGM_CMD_Stop == pa_unCommand) || (cg_nMGM_CMD_Kill == pa_unCommand))){
-    if(m_bActive){
+    if(mActive){
       getTimer().unregisterTimedFB(this);
-      m_bActive = false;
+      mActive = false;
     }
   }
   return eRetVal;
