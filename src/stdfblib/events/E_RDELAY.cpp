@@ -17,8 +17,7 @@
 DEFINE_FIRMWARE_FB(E_RDELAY, g_nStringIdE_RDELAY)
 
 E_RDELAY::E_RDELAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes):
-         CTimedFB( paInstanceNameId, paSrcRes){
-  mTimeListEntry.mType = e_SingleShot;
+    CTimedFB( paInstanceNameId, paSrcRes, e_SingleShot){
 }
 
 void E_RDELAY::executeEvent(int pa_nEIID){

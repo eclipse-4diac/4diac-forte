@@ -41,6 +41,16 @@ const SFBInterfaceSpec CTimedFB::scm_stFBInterfaceSpec = {
   0
 };
 
+CTimedFB::CTimedFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, ETimerActivationType paType) :
+      CEventSourceFB( paSrcRes, &scm_stFBInterfaceSpec, paInstanceNameId, m_anFBConnData, m_anFBVarsData){
+  setEventChainExecutor(paSrcRes->getResourceEventExecution());
+  mActive = false;
+  mTimeListEntry.mTimeOut = 0;
+  mTimeListEntry.mInterval = 0;
+  mTimeListEntry.mNext = 0;
+  mTimeListEntry.mType = paType;
+  mTimeListEntry.mTimedFB = this;
+}
 
 void CTimedFB::executeEvent(int pa_nEIID){
   switch(pa_nEIID){

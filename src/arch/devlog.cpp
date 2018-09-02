@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <inttypes.h>
 
 #ifndef NOLOG
 
@@ -52,7 +53,7 @@ void printLogMessage(E_MsgLevel pa_eLevel, const char *pa_acMessage){
   fprintf(stderr, "%s", cg_acLogLevel[pa_eLevel]);
 
   if (CTimerHandler::smFORTETimer != 0){
-    fprintf(stderr,": T#%ums: ", CTimerHandler::smFORTETimer->getForteTime());
+    fprintf(stderr, ": T#%" PRIuFAST64 ": ", CTimerHandler::smFORTETimer->getForteTime());
   }
   else{
     fprintf(stderr, "%s", ": T#notime: ");

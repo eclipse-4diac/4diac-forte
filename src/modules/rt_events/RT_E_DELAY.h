@@ -65,15 +65,15 @@ private:
 
    FORTE_FB_DATA_ARRAY(2, 5, 1, 0);
 
-  bool m_bActive; //!> flag to indicate that the timed fb is currently active
-  bool m_bInitialized;
-  STimedFBListEntry m_stTimeListEntry;
-  CEventChainExecutionThread m_oECEO;
+  bool mActive; //!> flag to indicate that the timed fb is currently active
+  bool mInitialized;
+  STimedFBListEntry mTimeListEntry;
+  CEventChainExecutionThread mECEO;
 
-  virtual void executeEvent(int pa_nEIID);
+  virtual void executeEvent(int paEIID);
 
 public:
-  FORTE_RT_E_DELAY(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+  FORTE_RT_E_DELAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
   virtual ~FORTE_RT_E_DELAY(){};
 
 };

@@ -40,50 +40,49 @@ const SFBInterfaceSpec FORTE_RT_E_DELAY::scm_stFBInterfaceSpec = {
 };
 
 
-FORTE_RT_E_DELAY::FORTE_RT_E_DELAY(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-            CEventSourceFB( pa_poSrcRes, &scm_stFBInterfaceSpec,  pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData){
-
-  setEventChainExecutor(&m_oECEO);
-  m_bActive = false;
-  m_bInitialized = false;
-  //Timeout value is correctly initialized by the constructor m_stTimeListEntry.m_nTimeOut = 0;
-  m_stTimeListEntry.mInterval = 0;
-  m_stTimeListEntry.mNext = 0;
-  m_stTimeListEntry.mTimedFB = this;
-  m_stTimeListEntry.mType = e_SingleShot;
-  m_oECEO.changeExecutionState(cg_nMGM_CMD_Start);
+FORTE_RT_E_DELAY::FORTE_RT_E_DELAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+            CEventSourceFB( paSrcRes, &scm_stFBInterfaceSpec,  paInstanceNameId, m_anFBConnData, m_anFBVarsData){
+  setEventChainExecutor(&mECEO);
+  mActive = false;
+  mInitialized = false;
+  mTimeListEntry.mTimeOut = 0;
+  mTimeListEntry.mInterval = 0;
+  mTimeListEntry.mNext = 0;
+  mTimeListEntry.mTimedFB = this;
+  mTimeListEntry.mType = e_SingleShot;
+  mECEO.changeExecutionState(cg_nMGM_CMD_Start);
 }
 
-void FORTE_RT_E_DELAY::executeEvent(int pa_nEIID){
-  switch(pa_nEIID){
+void FORTE_RT_E_DELAY::executeEvent(int paEIID){
+  switch(paEIID){
     case cg_nExternalEventID:
       sendOutputEvent(scm_nEventEOID);
-      m_bActive = false;
+      mActive = false;
       break;
     case scm_nEventSTOPID:
-      if(m_bActive){
+      if(mActive){
         getTimer().unregisterTimedFB(this);
-        m_bActive = false;
+        mActive = false;
       }
       break;
     case scm_nEventSTARTID:
-      if((!m_bActive)&&(m_bInitialized)){
-        getTimer().registerTimedFB( &m_stTimeListEntry, DT());
-        m_bActive = true;
+      if((!mActive)&&(mInitialized)){
+        getTimer().registerTimedFB( &mTimeListEntry, DT());
+        mActive = true;
       }
       break;
     case scm_nEventINITID:
       if(QI() == true){
-        if(!m_bInitialized){
+        if(!mInitialized){
           //m_oECEO.start();
-          m_bInitialized = true;
+          mInitialized = true;
         }
-        m_oECEO.setDeadline(Deadline());
+        mECEO.setDeadline(Deadline());
       }
       else{
        // m_oECEO.end();
-        m_bInitialized = false;
-        m_oECEO.setDeadline(static_cast<CIEC_TIME::TValueType>(0));
+        mInitialized = false;
+        mECEO.setDeadline(static_cast<CIEC_TIME::TValueType>(0));
       }
       QO() = QI();
       sendOutputEvent(scm_nEventINITOID);

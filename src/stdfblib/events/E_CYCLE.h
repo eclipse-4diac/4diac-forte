@@ -20,10 +20,12 @@ class E_CYCLE : public CTimedFB{
   DECLARE_FIRMWARE_FB(E_CYCLE)
 private:
 public:
-  E_CYCLE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) : CTimedFB( paInstanceNameId, paSrcRes){
-    mTimeListEntry.mType = e_Periodic;
-  };
-  virtual ~E_CYCLE() {};
+  E_CYCLE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+      CTimedFB( paInstanceNameId, paSrcRes, e_Periodic){
+  }
+
+  virtual ~E_CYCLE() {}
+
 };
 
 #endif /*E_CYCLE_H_*/

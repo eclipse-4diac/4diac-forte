@@ -50,14 +50,7 @@ protected:
      return *static_cast<CIEC_TIME*>(getDI(0));
   }
 public:
-  EVENT_SOURCE_FUNCTION_BLOCK_CTOR(CTimedFB){
-    setEventChainExecutor(pa_poSrcRes->getResourceEventExecution());
-    mActive = false;
-    mTimeListEntry.mTimeOut = 0;
-    mTimeListEntry.mInterval = 0;
-    mTimeListEntry.mNext = 0;
-    mTimeListEntry.mTimedFB = this;
-  };
+  CTimedFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, ETimerActivationType paType);
   virtual ~CTimedFB() {};
 
   virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
