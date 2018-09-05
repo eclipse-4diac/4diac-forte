@@ -13,10 +13,10 @@
 #include "timerha.h"
 #include "forte_printer.h"
 #include "../core/utils/criticalregion.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <inttypes.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstdarg>
+#include <cinttypes>
 
 #ifndef NOLOG
 
