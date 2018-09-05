@@ -34,7 +34,6 @@ class CTimerHandler;
 #include "mgmcmdstruct.h"
 namespace forte {
   namespace core {
-    struct SMonitorEvent;
     class CMonitoringHandler;
   }
 }
@@ -346,19 +345,9 @@ class CFunctionBlock{
     }
 
 #ifdef FORTE_SUPPORT_MONITORING
-    forte::core::SMonitorEvent &getEIMonitorData(TEventID pa_unEIID);
+    TForteUInt32 &getEIMonitorData(TEventID paEIID);
 
-    forte::core::SMonitorEvent &getEOMonitorData(TEventID pa_unEOID);
-
-    bool startEIBreakpoint(TEventID p_nEventId);
-    bool startEOBreakpoint(TEventID p_nEventId);
-    bool stopEIBreakpoint(TEventID p_nEventId);
-    bool stopEOBreakpoint(TEventID p_nEventId);
-    bool clearEIBreakpoint(TEventID p_nEventId);
-    bool clearEOBreakpoint(TEventID p_nEventId);
-
-    bool getEIBreakpoint(TEventID p_nEventId, bool & enable, int & set);
-    bool getEOBreakpoint(TEventID p_nEventId, bool & enable, int & set);
+    TForteUInt32 &getEOMonitorData(TEventID paEOID);
 
     /*!\brief get any internal FB referenced by the iterator to the name list
      *
@@ -481,8 +470,8 @@ class CFunctionBlock{
     void setupEventMonitoringData();
 
     // monitoring stuff
-    forte::core::SMonitorEvent *m_nEOMonitorCount;
-    forte::core::SMonitorEvent *m_nEIMonitorCount;
+    TForteUInt32 *mEOMonitorCount;
+    TForteUInt32 *mEIMonitorCount;
 #endif
 
     //! the instance name of the object

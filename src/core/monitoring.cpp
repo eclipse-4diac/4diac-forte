@@ -46,10 +46,6 @@ EMGMResponse CMonitoringHandler::executeMonitoringCommand(SManagementCMD &paComm
     case cg_nMGM_CMD_Monitoring_Read_Watches:
       retVal = readWatches(paCommand.mMonitorResponse);
       break;
-    case cg_nMGM_CMD_Monitoring_Get_Watches:
-      retVal =
-          getWatches(paCommand.mMonitorResponse, paCommand.mAdditionalParams.getValue()[0]);
-      break;
     case cg_nMGM_CMD_Monitoring_Force:
       retVal = mResource.writeValue(paCommand.mFirstParam, paCommand.mAdditionalParams, true);
       break;
@@ -174,24 +170,6 @@ EMGMResponse CMonitoringHandler::readWatches(CIEC_STRING &paResponse){
   return e_RDY;
 }
 
-EMGMResponse CMonitoringHandler::getWatches(CIEC_STRING &paResponse, char paQualifier){
-  paResponse.clear();
-  if(0 == mResource.getResourcePtr()){
-    //we are in the device
-    for(CFBContainer::TFunctionBlockList::Iterator itRunner = mResource.getFBList().begin();
-        itRunner != mResource.getFBList().end();
-        ++itRunner){
-      ((CResource*) (*itRunner))->getMonitoringHandler().getResourceWatches(paResponse, paQualifier);
-    }
-  }
-  else{
-    //we are within a resource
-    getResourceWatches(paResponse, paQualifier);
-  }
-
-  return e_RDY;
-}
-
 EMGMResponse CMonitoringHandler::clearForce(forte::core::TNameIdentifier &paNameList){
   EMGMResponse eRetVal = e_NO_SUCH_OBJECT;
   CStringDictionary::TStringId portName = paNameList.back();
@@ -244,20 +222,20 @@ EMGMResponse CMonitoringHandler::resetEventCount(forte::core::TNameIdentifier &p
   CFunctionBlock *fB = getFB(paNameList);
   if(0 != fB){
     TEventID eventId = fB->getEIID(portName);
-    SMonitorEvent *pstEventMonitorData = 0;
+    TForteUInt32 *eventMonitorData = 0;
 
     if(cg_nInvalidEventID != eventId){
-      pstEventMonitorData = &fB->getEIMonitorData(eventId);
+      eventMonitorData = &fB->getEIMonitorData(eventId);
     }
     else{
       eventId = fB->getEOID(portName);
       if(cg_nInvalidEventID != eventId){
-        pstEventMonitorData = &fB->getEOMonitorData(eventId);
+        eventMonitorData = &fB->getEOMonitorData(eventId);
       }
     }
-    if(0 != pstEventMonitorData){
+    if(0 != eventMonitorData){
       CCriticalRegion criticalRegion(fB->getResource().m_oResDataConSync);
-      pstEventMonitorData->mEventCount = 0;
+      *eventMonitorData = 0;
       eRetVal = e_RDY;
     }
   }
@@ -319,11 +297,10 @@ bool CMonitoringHandler::removeDataWatch(SFBMonitoringEntry &paFBMonitoringEntry
   return bRetVal;
 }
 
-void CMonitoringHandler::addEventWatch(SFBMonitoringEntry &paFBMonitoringEntry,
-    CStringDictionary::TStringId paPortId, SMonitorEvent &paEventData){
+void CMonitoringHandler::addEventWatch(SFBMonitoringEntry &paFBMonitoringEntry, CStringDictionary::TStringId paPortId, TForteUInt32 &paEventData){
   for(TEventWatchList::Iterator itRunner = paFBMonitoringEntry.m_lstWatchedEventPoints.begin();
       itRunner != paFBMonitoringEntry.m_lstWatchedEventPoints.end(); ++itRunner){
-    if(itRunner->m_unPortId == paPortId){
+    if(itRunner->mPortId == paPortId){
       //the event point is already in the watch list
       return;
     }
@@ -331,15 +308,14 @@ void CMonitoringHandler::addEventWatch(SFBMonitoringEntry &paFBMonitoringEntry,
   paFBMonitoringEntry.m_lstWatchedEventPoints.pushBack(SEventWatchEntry(paPortId, paEventData));
 }
 
-bool CMonitoringHandler::removeEventWatch(SFBMonitoringEntry &paFBMonitoringEntry,
-    CStringDictionary::TStringId paPortId){
+bool CMonitoringHandler::removeEventWatch(SFBMonitoringEntry &paFBMonitoringEntry, CStringDictionary::TStringId paPortId){
   bool bRetVal = false;
 
   TEventWatchList::Iterator itRunner = paFBMonitoringEntry.m_lstWatchedEventPoints.begin();
   TEventWatchList::Iterator itRefNode = paFBMonitoringEntry.m_lstWatchedEventPoints.end();
 
   while(itRunner != paFBMonitoringEntry.m_lstWatchedEventPoints.end()){
-    if(itRunner->m_unPortId == paPortId){
+    if(itRunner->mPortId == paPortId){
       if(itRefNode == paFBMonitoringEntry.m_lstWatchedEventPoints.end()){
         //we have the first entry in the list
         paFBMonitoringEntry.m_lstWatchedEventPoints.popFront();
@@ -389,28 +365,6 @@ void CMonitoringHandler::readResourceWatches(CIEC_STRING &paResponse){
         paResponse.append("</FB>");
       }
     } //end critical region
-    paResponse.append("</Resource>");
-  }
-}
-
-void CMonitoringHandler::getResourceWatches(CIEC_STRING &paResponse, char){
-   //FIXME: char pa_cQualifier is avoided in order to compile without warnings. Work in the breakpoints is needed.
-  if(!mFBMonitoringList.isEmpty()){
-    paResponse.append("<Resource name=\"");
-    paResponse.append(mResource.getInstanceName());
-    paResponse.append("\">");
-
-    for(TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin();
-        itRunner != mFBMonitoringList.end(); ++itRunner){
-      paResponse.append("<FB name=\"");
-      paResponse.append(itRunner->mFullFBName.getValue());
-      paResponse.append("\">");
-
-      //FIXME implement the watches
-
-      paResponse.append("</FB>");
-    }
-
     paResponse.append("</Resource>");
   }
 }
@@ -499,12 +453,10 @@ void CMonitoringHandler::appendPortTag(CIEC_STRING &paResponse,
   paResponse.append("\">");
 }
 
-void CMonitoringHandler::appendEventWatch(CIEC_STRING &paResponse,
-    SEventWatchEntry &paEventWatchEntry){
-  appendPortTag(paResponse, paEventWatchEntry.m_unPortId);
+void CMonitoringHandler::appendEventWatch(CIEC_STRING &paResponse, SEventWatchEntry &paEventWatchEntry){
+  appendPortTag(paResponse, paEventWatchEntry.mPortId);
 
-
-  CIEC_UDINT udint = paEventWatchEntry.m_roEventData.mEventCount;
+  CIEC_UDINT udint(paEventWatchEntry.mEventData);
   CIEC_ULINT ulint(mResource.getDevice().getTimer().getForteTime());
 
   paResponse.append("<Data value=\"");

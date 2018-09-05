@@ -32,8 +32,8 @@ CFunctionBlock::CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *p
     m_bDeletable(true){
 
 #ifdef FORTE_SUPPORT_MONITORING
-  m_nEIMonitorCount = 0;
-  m_nEOMonitorCount = 0;
+  mEIMonitorCount = 0;
+  mEOMonitorCount = 0;
 #endif
 
   setupFBInterface(pa_pstInterfaceSpec, pa_acFBConnData, pa_acFBVarsData);
@@ -64,10 +64,10 @@ void CFunctionBlock::freeAllData(){
   }
 
 #ifdef  FORTE_SUPPORT_MONITORING
-  delete[] m_nEOMonitorCount;
-  m_nEOMonitorCount = 0;
-  delete[] m_nEIMonitorCount;
-  m_nEIMonitorCount = 0;
+  delete[] mEOMonitorCount;
+  mEOMonitorCount = 0;
+  delete[] mEIMonitorCount;
+  mEIMonitorCount = 0;
 #endif //FORTE_SUPPORT_MONITORING
 }
 
@@ -242,11 +242,6 @@ TPortId CFunctionBlock::getAdapterPortId(CStringDictionary::TStringId paAdapterN
 void CFunctionBlock::sendOutputEvent(size_t paEO){
   FORTE_TRACE("OutputEvent: Function Block sending event: %d (maxid: %d)\n", paEO, m_pstInterfaceSpec->m_nNumEOs - 1);
   if(paEO < m_pstInterfaceSpec->m_nNumEOs){
-#ifdef FORTE_SUPPORT_MONITORING
-    forte::core::SMonitorEvent &eventMonitoring(m_nEOMonitorCount[paEO]);
-    // breakpoint set, ignore all other events
-    if(forte::core::eActive != eventMonitoring.mBreakpointSet){
-#endif //FORTE_SUPPORT_MONITORING
     if(0 != m_pstInterfaceSpec->m_anEOWithIndexes){
       if(-1 != m_pstInterfaceSpec->m_anEOWithIndexes[paEO]){
         const TDataIOID *eiWithStart = &(m_pstInterfaceSpec->m_anEOWith[m_pstInterfaceSpec->m_anEOWithIndexes[paEO]]);
@@ -275,22 +270,8 @@ void CFunctionBlock::sendOutputEvent(size_t paEO){
     getEOConUnchecked(static_cast<TPortId>(paEO))->triggerEvent(*m_poInvokingExecEnv);
 
 #ifdef FORTE_SUPPORT_MONITORING
-      // stop execution on Breakpoint
-      if(eventMonitoring.mBreakpointEnable){
-        if(forte::core::eOnce == eventMonitoring.mBreakpointSet){ // if < 0 -> continue called
-          eventMonitoring.mBreakpointSet = forte::core::eInactive;
-        }
-        else{
-          eventMonitoring.mBreakpointSet = forte::core::eActive;
-         return;
-        }
-        // Get Resource
-        //CResource &res = this->getResource();
-        //res.stopManagedObject();    // we cant restart it,
-      }
-      // Count Event for monitoring
-      eventMonitoring.mEventCount++;
-    }  // if(forte::core::eActive != eventMonitoring.mMonitorEventData[eventMonitoring.mBufPos].mBreakpointSet){
+    // Count Event for monitoring
+    mEOMonitorCount[paEO]++;
 #endif //FORTE_SUPPORT_MONITORING
   }
 }
@@ -310,13 +291,6 @@ void CFunctionBlock::receiveInputEvent(size_t paEIID, CEventChainExecutionThread
 
   if(e_RUNNING == getState()){
     if(paEIID < m_pstInterfaceSpec->m_nNumEIs){
-#ifdef FORTE_SUPPORT_MONITORING
-      forte::core::SMonitorEvent &eventMonitoring(m_nEIMonitorCount[paEIID]);
-      // breakpoint set, ignore all other events
-      if(forte::core::eActive == eventMonitoring.mBreakpointSet){
-        return;
-      }
-#endif //FORTE_SUPPORT_MONITORING
       if(0 != m_pstInterfaceSpec->m_anEIWithIndexes){
         if(-1 != m_pstInterfaceSpec->m_anEIWithIndexes[paEIID]){
           const TDataIOID *eiWithStart = &(m_pstInterfaceSpec->m_anEIWith[m_pstInterfaceSpec->m_anEIWithIndexes[paEIID]]);
@@ -338,18 +312,8 @@ void CFunctionBlock::receiveInputEvent(size_t paEIID, CEventChainExecutionThread
         }
       }
 #ifdef FORTE_SUPPORT_MONITORING
-      // stop execution on Breakpoint
-      if(eventMonitoring.mBreakpointEnable){
-        if(forte::core::eOnce == eventMonitoring.mBreakpointSet){ // if < 0 -> continue called
-          eventMonitoring.mBreakpointSet = forte::core::eInactive;
-        }
-        else{
-          eventMonitoring.mBreakpointSet = forte::core::eActive;
-         return;
-        }
-      }
       // Count Event for monitoring
-      eventMonitoring.mEventCount++;
+      mEIMonitorCount[paEIID]++;
 #endif //FORTE_SUPPORT_MONITORING
     }
     m_poInvokingExecEnv = &paExecEnv;
@@ -505,117 +469,16 @@ const CIEC_TIME CFunctionBlock::TIME(){
 #ifdef FORTE_SUPPORT_MONITORING
 void CFunctionBlock::setupEventMonitoringData(){
   if(0 != m_pstInterfaceSpec->m_nNumEIs){
-    m_nEIMonitorCount = new forte::core::SMonitorEvent[m_pstInterfaceSpec->m_nNumEIs];
+    mEIMonitorCount = new TForteUInt32[m_pstInterfaceSpec->m_nNumEIs];
+    memset(mEIMonitorCount, 0, sizeof(TForteUInt32) * m_pstInterfaceSpec->m_nNumEIs);
   }
 
   if(0 != m_pstInterfaceSpec->m_nNumEOs){
-    m_nEOMonitorCount = new forte::core::SMonitorEvent[m_pstInterfaceSpec->m_nNumEOs];
+    mEOMonitorCount = new TForteUInt32[m_pstInterfaceSpec->m_nNumEOs];
+    memset(mEOMonitorCount, 0, sizeof(TForteUInt32) * m_pstInterfaceSpec->m_nNumEOs);
   }
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// EO-Monitor functions
-//////////////////////////////////////////////////////////////////////////////
-bool CFunctionBlock::startEIBreakpoint(TEventID p_nEventId){
-  CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
-  if(p_nEventId < cg_unInvalidPortId){
-    m_nEIMonitorCount[p_nEventId].mBreakpointEnable = true;
-  }
-  return true;
-}
-
-bool CFunctionBlock::stopEIBreakpoint(TEventID p_nEventId){
-  CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
-  if(p_nEventId < cg_unInvalidPortId){
-    m_nEIMonitorCount[p_nEventId].mBreakpointEnable = false;
-  }
-  return true;
-}
-
-bool CFunctionBlock::clearEIBreakpoint(TEventID p_nEventId){
-  CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
-  if(p_nEventId != cg_unInvalidPortId){
-    forte::core::SMonitorEvent &monitorEventData(m_nEIMonitorCount[p_nEventId]);
-    if(monitorEventData.mBreakpointSet > 0){
-      // Get Resource
-      //CResource &res = this->getResource();
-      //res.startManagedObject();
-      if(monitorEventData.mBreakpointEnable == true){
-        monitorEventData.mBreakpointSet = forte::core::eOnce; // clear breakpoint, execute once
-      }
-      else{
-        monitorEventData.mBreakpointSet = forte::core::eInactive; // clear breakpoint
-      }
-    }
-  }
-  return true;
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// EI-Monitor functions
-//////////////////////////////////////////////////////////////////////////////
-bool CFunctionBlock::startEOBreakpoint(TEventID p_nEventId){
-  CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
-  if(p_nEventId < cg_unInvalidPortId){
-    forte::core::SMonitorEvent &monitorEventData(m_nEOMonitorCount[p_nEventId]);
-    monitorEventData.mBreakpointEnable = true;
-    monitorEventData.mBreakpointSet = forte::core::eInactive;
-  }
-  return true;
-}
-
-bool CFunctionBlock::stopEOBreakpoint(TEventID p_nEventId){
-  CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
-  if(p_nEventId < cg_unInvalidPortId){
-    forte::core::SMonitorEvent &monitorEventData(m_nEOMonitorCount[p_nEventId]);
-    monitorEventData.mBreakpointEnable = false;
-    monitorEventData.mBreakpointSet = forte::core::eInactive;
-  }
-  return true;
-}
-
-bool CFunctionBlock::clearEOBreakpoint(TEventID p_nEventId){
-  CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
-  if(p_nEventId != cg_unInvalidPortId){
-    forte::core::SMonitorEvent &monitorEventData(m_nEOMonitorCount[p_nEventId]);
-    if(monitorEventData.mBreakpointSet > 0){
-      // Get Resource
-      //CResource &res = this->getResource();
-      //res.startManagedObject();
-      if(monitorEventData.mBreakpointEnable == true){
-        monitorEventData.mBreakpointSet = forte::core::eOnce; // clear breakpoint, execute once
-      }
-      else{
-        monitorEventData.mBreakpointSet = forte::core::eInactive; // clear breakpoint
-      }
-    }
-  }
-  return true;
-}
-
-bool CFunctionBlock::getEIBreakpoint(TEventID p_nEventId, bool & enable, int & set){
-  bool ret = false;
-  CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
-  if(p_nEventId < cg_unInvalidPortId){
-    forte::core::SMonitorEvent &monitorEventData(m_nEIMonitorCount[p_nEventId]);
-    enable = monitorEventData.mBreakpointEnable;
-    set = monitorEventData.mBreakpointSet; // > 0;
-    ret = true;
-  }
-  return ret;
-}
-
-bool CFunctionBlock::getEOBreakpoint(TEventID p_nEventId, bool & enable, int & set){
-  bool ret = false;
-  CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
-  if(p_nEventId < cg_unInvalidPortId){
-    forte::core::SMonitorEvent &monitorEventData(m_nEOMonitorCount[p_nEventId]);
-    enable = monitorEventData.mBreakpointEnable;
-    set = monitorEventData.mBreakpointSet; // > 0;
-    ret = true;
-  }
-  return ret;
-}
 
 CFunctionBlock *CFunctionBlock::getFB(forte::core::TNameIdentifier::CIterator &paNameListIt){
   CFunctionBlock *retVal = 0;
@@ -628,15 +491,12 @@ CFunctionBlock *CFunctionBlock::getFB(forte::core::TNameIdentifier::CIterator &p
   return retVal;
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// Data-Monitor functions
-//////////////////////////////////////////////////////////////////////////////
-forte::core::SMonitorEvent &CFunctionBlock::getEIMonitorData(TEventID pa_unEIID){
-  return m_nEIMonitorCount[pa_unEIID];
+TForteUInt32 &CFunctionBlock::getEIMonitorData(TEventID paEIID){
+  return mEIMonitorCount[paEIID];
 }
 
-forte::core::SMonitorEvent &CFunctionBlock::getEOMonitorData(TEventID pa_unEOID){
-  return m_nEOMonitorCount[pa_unEOID];
+TForteUInt32 &CFunctionBlock::getEOMonitorData(TEventID paEOID){
+  return mEOMonitorCount[paEOID];
 }
 
 #endif //FORTE_SUPPORT_MONITORING

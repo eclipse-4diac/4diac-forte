@@ -26,23 +26,6 @@ class CResource;
 namespace forte {
   namespace core {
 
-    enum EBreakPointStatus{
-        eActive = 0,    // we are comparing in the main loop against this one therefore it gets zero to make it faster
-        eOnce,
-        eInactive
-    };
-
-    struct SMonitorEvent{
-        EBreakPointStatus mBreakpointSet;        //!< eOnce if breakpoint is active and should continue once, eInactive - currently no breakpoint active, eActive - breakpoint currently active TODO change to enum
-        bool mBreakpointEnable;     //!< breakpoint activated - a breackpoint is specified for this event
-
-        TForteUInt32 mEventCount; //!< Event count
-
-        SMonitorEvent() : mBreakpointSet(eInactive), mBreakpointEnable(false), mEventCount(0){
-        }
-    };
-
-
     /*!\brief class that handles all monitoring tasks
      *
      */
@@ -63,13 +46,13 @@ namespace forte {
         };
 
         struct SEventWatchEntry{
-            SEventWatchEntry(CStringDictionary::TStringId pa_unPortId,
-                SMonitorEvent &pa_roEventData) :
-                m_unPortId(pa_unPortId), m_roEventData(pa_roEventData){
+            SEventWatchEntry(CStringDictionary::TStringId paPortId,
+                TForteUInt32 &paEventData) :
+                mPortId(paPortId), mEventData(paEventData){
             }
 
-            CStringDictionary::TStringId m_unPortId;
-            SMonitorEvent &m_roEventData;
+            CStringDictionary::TStringId mPortId;
+            TForteUInt32 &mEventData;
         };
 
         typedef CSinglyLinkedList<SDataWatchEntry> TDataWatchList;
@@ -89,7 +72,6 @@ namespace forte {
         EMGMResponse addWatch(forte::core::TNameIdentifier &paNameList);
         EMGMResponse removeWatch(forte::core::TNameIdentifier &paNameList);
         EMGMResponse readWatches(CIEC_STRING &pa_roResponse);
-        EMGMResponse getWatches(CIEC_STRING &pa_roResponse, char pa_cQualifier);
         EMGMResponse clearForce(forte::core::TNameIdentifier &paNameList);
         EMGMResponse triggerEvent(forte::core::TNameIdentifier &paNameList);
         EMGMResponse resetEventCount(forte::core::TNameIdentifier &paNameList);
@@ -99,12 +81,10 @@ namespace forte {
             CStringDictionary::TStringId pa_unPortId, CIEC_ANY &pa_poDataVal);
         bool removeDataWatch(SFBMonitoringEntry &pa_roFBMonitoringEntry,
             CStringDictionary::TStringId pa_unPortId);
-        void addEventWatch(SFBMonitoringEntry &pa_roFBMonitoringEntry,
-            CStringDictionary::TStringId pa_unPortId, SMonitorEvent &pa_rstEventData);
+        void addEventWatch(SFBMonitoringEntry &paFBMonitoringEntry, CStringDictionary::TStringId paPortId, TForteUInt32 &paEventData);
         bool removeEventWatch(SFBMonitoringEntry &pa_roFBMonitoringEntry,
             CStringDictionary::TStringId pa_unPortId);
         void readResourceWatches(CIEC_STRING &pa_roResponse);
-        void getResourceWatches(CIEC_STRING &pa_roResponse, char pa_cQualifier);
 
         static void appendDataWatch(CIEC_STRING &pa_roResponse,
             SDataWatchEntry &pa_roDataWatchEntry);

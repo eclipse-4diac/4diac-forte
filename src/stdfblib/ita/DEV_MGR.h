@@ -126,7 +126,6 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
 #ifdef FORTE_SUPPORT_MONITORING
     static bool parseMonitoringData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
     void generateMonitorResponse(EMGMResponse pa_eResp, forte::core::SManagementCMD &pa_stCMD);
-    static bool parseConnectionStarStarData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
 #endif //FORTE_SUPPORT_MONITORING    virtual void executeEvent(int pa_nEIID);
 
     /*! \brief set the RESP output of the DEV_MGR according to the given response data

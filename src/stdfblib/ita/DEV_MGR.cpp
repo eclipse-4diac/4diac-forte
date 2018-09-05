@@ -376,12 +376,6 @@ void DEV_MGR::parseReadData(char *pa_acRequestPartLeft, forte::core::SManagement
 #ifdef FORTE_SUPPORT_MONITORING
     if('W' == pa_acRequestPartLeft[0]){
           pa_rstCommand.mCMD = cg_nMGM_CMD_Monitoring_Read_Watches;
-    } else if (!strncmp(pa_acRequestPartLeft, "Connection Source=\"*\" Destination=\"*\"", 37)) {
-        if (!parseConnectionStarStarData(pa_acRequestPartLeft + 37, pa_rstCommand)) {
-          pa_rstCommand.mCMD = cg_nMGM_CMD_INVALID;
-        } else {
-          pa_rstCommand.mCMD = cg_nMGM_CMD_Monitoring_Get_Watches;
-        }
     } else
 #endif // FORTE_SUPPORT_MONITORING
       if(parseConnectionData(pa_acRequestPartLeft, pa_rstCommand)){
@@ -662,31 +656,6 @@ EMGMResponse DEV_MGR::parseAndExecuteMGMCommand(char *pa_acDest, char *pa_acComm
 
 #ifdef FORTE_SUPPORT_MONITORING
 
-bool DEV_MGR::parseConnectionStarStarData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand){
-  bool bRetVal = false;
-
-  DEVLOG_DEBUG(pa_acRequestPartLeft);
-
-  if(!strncmp(" forced=\"", pa_acRequestPartLeft, 9)){
-    
-    if (pa_acRequestPartLeft[9]=='*' && pa_acRequestPartLeft[10] =='\"') {
-      pa_rstCommand.mAdditionalParams.assign("*",1);
-      bRetVal = true;
-    } else if (!strncmp(&pa_acRequestPartLeft[9], "true", 4)) {
-      pa_rstCommand.mAdditionalParams.assign("true", 4);
-      bRetVal = true;
-    } else if (!strncmp(&pa_acRequestPartLeft[9],"false", 5)) {
-      pa_rstCommand.mAdditionalParams.assign("false", 5);
-      bRetVal = true;
-    }
-  }
-
-  if (!bRetVal) {
-    pa_rstCommand.mAdditionalParams.clear();
-  }
-  return bRetVal;
-}
-
 bool DEV_MGR::parseMonitoringData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand){
   bool bRetVal = false;
   if(!strncmp("Watch Source=\"", pa_acRequestPartLeft, 14)){
@@ -721,8 +690,7 @@ void DEV_MGR::generateMonitorResponse(EMGMResponse pa_eResp, forte::core::SManag
     RESP().append(pa_stCMD.mID);
     RESP().append("\"");
     RESP().append(">\n  ");
-    if((pa_stCMD.mCMD == cg_nMGM_CMD_Monitoring_Read_Watches) ||
-       (pa_stCMD.mCMD == cg_nMGM_CMD_Monitoring_Get_Watches)){
+    if(pa_stCMD.mCMD == cg_nMGM_CMD_Monitoring_Read_Watches) {
       RESP().append("<Watches>\n    ");
       RESP().append(pa_stCMD.mMonitorResponse.getValue());
       RESP().append("\n  </Watches>");
