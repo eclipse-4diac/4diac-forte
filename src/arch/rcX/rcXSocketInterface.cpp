@@ -17,7 +17,7 @@
 #include "../core/cominfra/commfb.h"
 #include <criticalregion.h>
 #include <string.h>
-#include <forte_config_rcX.h>
+#include <forte_config.h>
 
 DEFINE_SINGLETON(CrcXSocketInterface);
 

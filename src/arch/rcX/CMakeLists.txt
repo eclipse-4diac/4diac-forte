@@ -69,8 +69,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "rcX")
   forte_add_include_system_directories(${FORTE_RCX_INCLUDES}/CPUs/${FORTE_RCX_NETX_CPU_FOLDER})
   forte_add_include_system_directories(${FORTE_RCX_INCLUDES}/TCPIP)
   
-  CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/forte_config_rcX.h.in ${CMAKE_BINARY_DIR}/forte_config_rcX.new.h)
-  forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/forte_config_rcX.new.h ${CMAKE_BINARY_DIR}/forte_config_rcX.h)
-  file(REMOVE ${CMAKE_BINARY_DIR}/forte_config_rcX.new.h)
+  forte_add_custom_configuration("const unsigned int cg_forteQueueMax = ${FORTE_RCX_QUEUE_MAX};")
+  forte_add_custom_configuration("const unsigned int cg_forteWaitingQueueMax = ${FORTE_RCX_WAIT_QUEUE_MAX}; ")
+  forte_add_custom_configuration("const unsigned int cg_fortePoolMax = ${FORTE_RCX_POOL_MAX}; ")
   
 endif()

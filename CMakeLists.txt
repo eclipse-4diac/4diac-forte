@@ -66,7 +66,6 @@ endif(BUILD_TYPE_LOWERCASE STREQUAL "debug")
 
 set_property(CACHE FORTE_LOGLEVEL PROPERTY STRINGS LOGDEBUG LOGERROR LOGWARNING LOGINFO NOLOG)
 
- 
 forte_add_definition("-D${FORTE_LOGLEVEL}")
 
 SET(FORTE_TRACE_EVENTS OFF CACHE BOOL "FORTE will log the events received at and sent from function blocks")
@@ -209,9 +208,15 @@ if(${FORTE_TimeBaseUnitsPerSecond} GREATER ${MAX_TimeBaseUnitsPerSecond})
  SET(FORTE_TimeBaseUnitsPerSecond ${MAX_TimeBaseUnitsPerSecond})
 endif(${FORTE_TimeBaseUnitsPerSecond} GREATER ${MAX_TimeBaseUnitsPerSecond})
 
-
 GET_PROPERTY(FORTE_CUSTOM_CONFIGURATIONS_LOCAL GLOBAL PROPERTY FORTE_CUSTOM_CONFIGURATIONS_GLOBAL)
-SET(FORTE_CUSTOM_CONFIGURATIONS ${FORTE_CUSTOM_CONFIGURATIONS_LOCAL})
+
+#Create a file with the custom configurations first and read from it
+file(WRITE ${CMAKE_BINARY_DIR}/forte_custom_config.h.in ${FORTE_CUSTOM_CONFIGURATIONS_LOCAL})
+CONFIGURE_FILE(${CMAKE_BINARY_DIR}/forte_custom_config.h.in ${CMAKE_BINARY_DIR}/forte_custom_config.h)
+file(READ ${CMAKE_BINARY_DIR}/forte_custom_config.h FORTE_CUSTOM_CONFIGURATIONS_CONFIGURED)
+file(REMOVE ${CMAKE_BINARY_DIR}/forte_custom_config.h.in)
+file(REMOVE ${CMAKE_BINARY_DIR}/forte_custom_config.h)
+SET(FORTE_CUSTOM_CONFIGURATIONS ${FORTE_CUSTOM_CONFIGURATIONS_CONFIGURED})
 
 forte_add_include_directories(${CMAKE_BINARY_DIR})
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/forte_config.h.in ${CMAKE_BINARY_DIR}/forte_config.new.h)

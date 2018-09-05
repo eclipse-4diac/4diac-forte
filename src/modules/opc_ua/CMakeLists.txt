@@ -64,10 +64,10 @@ if (FORTE_COM_OPC_UA)
     if (NOT EXISTS ${FORTE_COM_OPC_UA_LIB} AND NOT EXISTS ${FORTE_COM_OPC_UA_LIB_PATH})
         message(SEND_ERROR "OPC UA library not found '${FORTE_COM_OPC_UA_LIB}'. Check the value of FORTE_COM_OPC_UA_LIB_DIR and optionally define an absolute path for FORTE_COM_OPC_UA_LIB.")
     endif()
-
-    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/forte_config_opc_ua.h.in ${CMAKE_BINARY_DIR}/forte_config_opc_ua.new.h)
-    forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/forte_config_opc_ua.new.h ${CMAKE_BINARY_DIR}/forte_config_opc_ua.h)
-    file(REMOVE ${CMAKE_BINARY_DIR}/forte_config_opc_ua.new.h)
+    
+    forte_add_custom_configuration("#define FORTE_COM_OPC_UA_PORT ${FORTE_COM_OPC_UA_PORT}")
+    forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA_MULTICAST")
+    forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA_CUSTOM_HOSTNAME \"${FORTE_COM_OPC_UA_CUSTOM_HOSTNAME}\"")
 
 endif (FORTE_COM_OPC_UA)
 
