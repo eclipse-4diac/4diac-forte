@@ -1,19 +1,36 @@
 /*******************************************************************************
-  * Copyright (c) 2015 - 2016 fortiss GmbH
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Alois Zoitl
-  *      - initial implementation and rework communication infrastructure
-  *    Martin Jobst - adapt for LUA integration
-  *******************************************************************************/
+ * Copyright (c) 2015 - 2016 fortiss GmbH, 2018 TU Wien/ACIN
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Alois Zoitl
+ *      - initial implementation and rework communication infrastructure
+ *    Martin Jobst - adapt for LUA integration
+ *    Martin Melik Merkumians
+ *      - implementation for checkForActionEquivalentState
+ *******************************************************************************/
 #include "fbcontainer.h"
 #include "funcbloc.h"
 
 using namespace forte::core;
+
+EMGMResponse checkForActionEquivalentState(const CFunctionBlock &paFB, const EMGMCommandType paCommand){
+  CFunctionBlock::E_FBStates currentState = paFB.getState();
+  switch (paCommand){
+    case cg_nMGM_CMD_Stop:
+      return (CFunctionBlock::e_KILLED == currentState) ? e_RDY : e_INVALID_STATE;
+      break;
+    case cg_nMGM_CMD_Kill:
+      return (CFunctionBlock::e_STOPPED == currentState || CFunctionBlock::e_IDLE == currentState) ? e_RDY : e_INVALID_STATE;
+      break;
+    default:
+      break;
+  }
+  return e_INVALID_STATE;
+}
 
 CFBContainer::CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer *paParent) :
     mContainerName(paContainerName), mParent(paParent) {
@@ -188,6 +205,9 @@ EMGMResponse CFBContainer::changeContainedFBsExecutionState(EMGMCommandType paCo
         ((itRunner != mFunctionBlocks.end()) && (e_RDY == retVal));
         ++itRunner){
       retVal = (*itRunner)->changeFBExecutionState(paCommand);
+      if(e_RDY != retVal) {
+        retVal = checkForActionEquivalentState(*(*itRunner), paCommand);
+      }
     }
   }
   return retVal;
