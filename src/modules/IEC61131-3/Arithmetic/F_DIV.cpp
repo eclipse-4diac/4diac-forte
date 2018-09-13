@@ -42,7 +42,8 @@ const SFBInterfaceSpec FORTE_F_DIV::scm_stFBInterfaceSpec = {
 
 
 void FORTE_F_DIV::executeEvent(int pa_nEIID){
-  if (scm_nEventREQID == pa_nEIID) {
+  if (scm_nEventREQID == pa_nEIID && CIEC_ANY::e_ANY != IN1().getDataTypeID() &&
+      CIEC_ANY::e_ANY != IN2().getDataTypeID()) {
     anyMagnitudeFBHelper<FORTE_F_DIV>(IN1().getDataTypeID(), *this);
     sendOutputEvent(scm_nEventCNFID);
   }

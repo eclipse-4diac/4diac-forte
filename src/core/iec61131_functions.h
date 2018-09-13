@@ -448,7 +448,10 @@ template<typename T, typename U> typename forte::core::mpl::get_castable_type<T,
 }
 
 template<typename T> const T DIV(const T& pa_roIN1, const T& pa_roIN2){
-  T temp = static_cast<typename T::TValueType>(pa_roIN1) / static_cast<typename T::TValueType>(pa_roIN2);
+  T temp(0);
+  if(0 != static_cast<typename T::TValueType>(pa_roIN2)){
+    temp = static_cast<typename T::TValueType>(pa_roIN1) / static_cast<typename T::TValueType>(pa_roIN2);
+  }
   return temp;
 }
 

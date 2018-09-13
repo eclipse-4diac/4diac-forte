@@ -62,6 +62,7 @@ forte_test_add_sourcefile_cpp(forte_boost_tester.cpp)
 
 forte_test_add_subdirectory(arch)
 forte_test_add_subdirectory(core)
+forte_test_add_subdirectory(modules)
 forte_test_add_subdirectory(stdfblib)
 
 #######################################################################################
