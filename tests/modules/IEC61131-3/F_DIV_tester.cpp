@@ -6,46 +6,52 @@
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *   Martin Melik Merkumians - initial tests
+ *   Martin Melik-Merkumians - initial tests
  *******************************************************************************/
-#include "F_DIV_tester.h"
+#include "../../core/fbtests/fbtester.h"
+#include "../../modules/IEC61131-3/Arithmetic/F_DIV.h"
 
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "F_DIV_tester_gen.cpp"
 #endif
 
-DEFINE_FB_TESTER(F_DIV_tester, g_nStringIdF_DIV)
+class F_DIV_tester : public CFBTester{
+  DECLARE_FB_TESTER(F_DIV_tester)
+    ;
+  public:
 
-F_DIV_tester::F_DIV_tester(CResource *mTestResource) :
-    CFBTester(mTestResource){
+  private:
+    F_DIV_tester(CResource* mTestResource) :
+        CFBTester(mTestResource){
+      SETUP_INPUTDATA(&mIn1_DIV, &mIn2_DIV);
+      SETUP_OUTPUTDATA(&mOut_DIV);
+    }
+    virtual void executeAllTests(){
+      evaluateTestResult(testCase_validDivision(), "Valid division");
+      evaluateTestResult(testCase_divisionByZero(), "Division by zero");
+    }
 
-  SETUP_INPUTDATA(&mIn1_DIV, &mIn2_DIV);
-  SETUP_OUTPUTDATA(&mOut_DIV);
-}
+    /***********************************************************************************/
+    bool testCase_validDivision(){
+      mIn1_DIV = 30;
+      mIn2_DIV = 5;
+      /* trigger the inputevent */
+      triggerEvent(0);
+      return checkForSingleOutputEventOccurence(0);
+    }
 
-void F_DIV_tester::executeAllTests(){
-  evaluateTestResult(testCase_validDivision(), "Valid division");
-  evaluateTestResult(testCase_divisionByZero(), "Division by zero");
-}
+    bool testCase_divisionByZero(){
+      mIn1_DIV = 30;
+      mIn2_DIV = 0;
+      /* trigger the inputevent */
+      triggerEvent(0);
+      return checkForSingleOutputEventOccurence(0);
+    }
 
-/***********************************************************************************/
+    CIEC_INT mIn1_DIV; //DATA INPUT
+    CIEC_INT mIn2_DIV; //DATA INPUT
 
-bool F_DIV_tester::testCase_validDivision() {
-  mIn1_DIV = 30;
-  mIn2_DIV = 5;
-  /* trigger the inputevent */
-  triggerEvent(0);
+    CIEC_INT mOut_DIV;
+};
 
-  return checkForSingleOutputEventOccurence(0);
-
-}
-
-bool F_DIV_tester::testCase_divisionByZero() {
-  mIn1_DIV = 30;
-  mIn2_DIV = 0;
-  /* trigger the inputevent */
-  triggerEvent(0);
-
-  return checkForSingleOutputEventOccurence(0);
-
-}
+DEFINE_FB_TESTER(F_DIV_tester, g_nStringIdF_DIV);
