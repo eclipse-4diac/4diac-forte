@@ -126,13 +126,8 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
       case cg_nMGM_CMD_QUERY_AdapterTypes:
         retVal = queryAllAdapterTypes(paCommand.mAdditionalParams);
         break;
-      case cg_nMGM_CMD_QUERY_FB:{
-#ifdef FORTE_DYNAMIC_TYPE_LOAD
+      case cg_nMGM_CMD_QUERY_FB:
         retVal = queryFBs(paCommand.mAdditionalParams);
-#else
-        retVal = e_UNSUPPORTED_CMD;
-#endif
-      }
         break;
       case cg_nMGM_CMD_QUERY_Connection:{
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
@@ -307,6 +302,20 @@ EMGMResponse CResource::queryAllFBTypes(CIEC_STRING & paValue){
   return retVal;
 }
 
+EMGMResponse CResource::queryFBs(CIEC_STRING & paValue){
+  for (TFunctionBlockList::Iterator itRunner(getFBList().begin()); itRunner != getFBList().end(); ++itRunner) {
+    if(itRunner != getFBList().begin()){
+      paValue.append("\n");
+    }
+    paValue.append("<FB name=\"");
+    paValue.append((static_cast<CFunctionBlock *>(*itRunner))->getInstanceName());
+    paValue.append("\" type=\"");
+    paValue.append(CStringDictionary::getInstance().get((static_cast<CFunctionBlock *>(*itRunner))->getFBTypeId()));
+    paValue.append("\"/>");
+  }
+  return e_RDY;
+}
+
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
 void CResource::createEOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult){
   const SFBInterfaceSpec *const spec = paFb.getFBInterfaceSpec();
@@ -384,22 +393,6 @@ EMGMResponse CResource::queryConnections(CIEC_STRING & paReqResult){
     }
     retVal = e_RDY;
     return retVal;
-}
-
-EMGMResponse CResource::queryFBs(CIEC_STRING & paValue){
-  EMGMResponse retVal = e_UNSUPPORTED_TYPE;
-  for (TFunctionBlockList::Iterator itRunner(getFBList().begin()); itRunner != getFBList().end(); ++itRunner) {
-    if(itRunner != getFBList().begin()){
-      paValue.append("\n");
-    }
-    paValue.append("<FB name=\"");
-    paValue.append((static_cast<CFunctionBlock *>(*itRunner))->getInstanceName());
-    paValue.append("\" type=\"");
-    paValue.append(CStringDictionary::getInstance().get((static_cast<CFunctionBlock *>(*itRunner))->getFBTypeId()));
-    paValue.append("\"/>");
-  }
-  retVal = e_RDY;
-  return retVal;
 }
 
 EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNameId,

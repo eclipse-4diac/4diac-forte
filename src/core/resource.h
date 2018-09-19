@@ -162,7 +162,16 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      * @return response of the command execution as defined in IEC 61499
      */
     EMGMResponse queryAllAdapterTypes(CIEC_STRING & paValue);
-#ifdef FORTE_DYNAMIC_TYPE_LOAD
+
+
+    /*!\brief Retrieve the list of FB instances
+     *
+     * @param paValue the result of the query
+     * @return response of the command execution as defined in IEC 61499
+     */
+    EMGMResponse queryFBs(CIEC_STRING& paValue);
+
+ #ifdef FORTE_DYNAMIC_TYPE_LOAD
     /*!\brief create
      *
      * @return response of the command execution as defined in IEC 61499
@@ -173,7 +182,6 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
     EMGMResponse createAdapterTypeFromLua(CStringDictionary::TStringId typeNameId,
             CIEC_STRING & paLuaScriptAsString);
 
-    EMGMResponse queryFBs(CIEC_STRING & paValue);
 
     EMGMResponse queryConnections(CIEC_STRING & paValue);
     void createEOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult);
