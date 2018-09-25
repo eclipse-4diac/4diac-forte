@@ -14,6 +14,7 @@
 
 #include "fbcontainer.h"
 #include "funcbloc.h"
+#include <forte_sync.h>
 
 #ifdef FORTE_SUPPORT_MONITORING
 #include <monitoring.h>
