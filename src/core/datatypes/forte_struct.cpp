@@ -11,38 +11,41 @@
   *******************************************************************************/
 #include <fortenew.h>
 #include "forte_struct.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "forte_struct_gen.cpp"
+#endif
 #include <stdlib.h>
-//#include <stdio.h>
+#ifdef FORTE_SUPPORT_ARRAYS
+# include "forte_array.h"
+#endif
+#include "../../arch/devlog.h"
 
-CIEC_STRUCT::CIEC_STRUCT(CStringDictionary::TStringId pa_unTypeName, TForteUInt16 pa_nLength, const CStringDictionary::TStringId pa_unElementTypes[], const CStringDictionary::TStringId pa_unElementNames[], TForteUInt8 TypeID){
-  setup(pa_unTypeName, pa_nLength, pa_unElementTypes, pa_unElementNames, TypeID);
-//  printf("STRUCT() Type: %s\n",CStringDictionary::getInstance().get(getStructTypeNameID()));
+CIEC_STRUCT::CIEC_STRUCT(CStringDictionary::TStringId paTypeName, TForteUInt16 paLength, const CStringDictionary::TStringId paElementTypes[], const CStringDictionary::TStringId paElementNames[], TForteUInt8 paTypeID){
+  setup(paTypeName, paLength, paElementTypes, paElementNames, paTypeID);
 }
 
-CIEC_STRUCT::CIEC_STRUCT(const CIEC_STRUCT& pa_roValue) :
+CIEC_STRUCT::CIEC_STRUCT(const CIEC_STRUCT& paValue) :
     CIEC_ANY_DERIVED(){
-  //TODO: check if same datatype;
-  if(0 != pa_roValue.getStructSize()){
+  if(0 != paValue.getStructSize()){
     setGenData((TForteByte *) forte_malloc(
         scm_unMembersOffset +
-        pa_roValue.getStructSize() * sizeof(CIEC_ANY))); //Data
-    setStructSize(pa_roValue.getStructSize());
-    setASN1StructType(pa_roValue.getASN1StructType());
-    setElementNames((pa_roValue.elementNames()));
-    setStructTypeNameID(pa_roValue.getStructTypeNameID());
+        paValue.getStructSize() * sizeof(CIEC_ANY))); //Data
+    setStructSize(paValue.getStructSize());
+    setASN1StructType(paValue.getASN1StructType());
+    setElementNames(paValue.elementNames());
+    setStructTypeNameID(paValue.getStructTypeNameID());
   }
 
   TForteByte *acDataBuf = (TForteByte *) getMembers();
   if(0 != acDataBuf){
-    const CIEC_ANY* poSrcBuf = pa_roValue.getMembers();
+    const CIEC_ANY* poSrcBuf = paValue.getMembers();
 
     for(unsigned int i = 0; i < getStructSize(); ++i, ++poSrcBuf){
       poSrcBuf->clone(acDataBuf); //clone is faster than the CTypeLib call
       acDataBuf += sizeof(CIEC_ANY);
     }
-  }
-  else{
-//    printf("target of copy constructor is null-pointer!\n");
+  }else{
+    DEVLOG_DEBUG("[FORTE_STRUCT]: Target of copy constructor is null-pointer!\n");
   }
 }
 
@@ -50,35 +53,44 @@ CIEC_STRUCT::~CIEC_STRUCT(){
   clear();
 }
 
-void CIEC_STRUCT::setup(CStringDictionary::TStringId pa_unTypeName, TForteUInt16 pa_nLength, const CStringDictionary::TStringId pa_aunElementTypes[], const CStringDictionary::TStringId pa_aunElementNames[], TForteUInt8 pa_TypeID){
-  if(0 != pa_nLength){
+void CIEC_STRUCT::setup(CStringDictionary::TStringId paTypeName, TForteUInt16 paLength, const CStringDictionary::TStringId paElementTypes[], const CStringDictionary::TStringId paElementNames[], TForteUInt8 paTypeID){
+  if(0 != paLength){
     if(0 != getGenData()){
       clear();
     }
     setGenData((TForteByte *) forte_malloc(
         scm_unMembersOffset +
-        pa_nLength * sizeof(CIEC_ANY))); //Data (system-dependent)
-    setASN1StructType(pa_TypeID);
-    setStructSize(pa_nLength);
-    setElementNames(pa_aunElementNames);
-    setStructTypeNameID(pa_unTypeName);
+        paLength * sizeof(CIEC_ANY))); //Data (system-dependent)
+    setASN1StructType(paTypeID);
+    setStructSize(paLength);
+    setElementNames(paElementNames);
+    setStructTypeNameID(paTypeName);
     TForteByte *acDataBuf = (TForteByte *) getMembers();
 
-    for(unsigned int i = 0; i < pa_nLength; ++i){
-      CTypeLib::createDataTypeInstance(pa_aunElementTypes[i], acDataBuf);
+    for(unsigned int i = 0; i < paLength; ++i){
+      // cppcheck-suppress unreadVariable
+      CIEC_ANY *retVal = CTypeLib::createDataTypeInstance(*paElementTypes, acDataBuf);
+      ++paElementTypes;
+#ifdef FORTE_SUPPORT_ARRAYS
+      if(g_nStringIdARRAY == paElementTypes[-1]){
+        if(0 != retVal){
+          //For an array we have to do more
+          (static_cast<CIEC_ARRAY *>(retVal))->setup(static_cast<TForteUInt16>(*paElementTypes), paElementTypes[1]);
+        }
+        paElementTypes += 2;
+      }
+#endif
       acDataBuf += sizeof(CIEC_ANY);
     }
   }
 }
 
-void CIEC_STRUCT::setValue(const CIEC_ANY& pa_roValue){
-  if(pa_roValue.getDataTypeID() == e_STRUCT){
-    if(getStructTypeNameID() == static_cast<const CIEC_STRUCT&>(pa_roValue).getStructTypeNameID()){
-      CIEC_ANY *poDstBuf = getMembers();
-      const CIEC_ANY* poSrcBuf = static_cast<const CIEC_STRUCT&>(pa_roValue).getMembers();
-      for(unsigned int i = 0; i < getStructSize(); ++i, ++poSrcBuf, ++poDstBuf){
-        poDstBuf->setValue( *poSrcBuf);
-      }
+void CIEC_STRUCT::setValue(const CIEC_ANY& paValue){
+  if(paValue.getDataTypeID() == e_STRUCT && (getStructTypeNameID() == static_cast<const CIEC_STRUCT&>(paValue).getStructTypeNameID())){
+    CIEC_ANY *poDstBuf = getMembers();
+    const CIEC_ANY* poSrcBuf = static_cast<const CIEC_STRUCT&>(paValue).getMembers();
+    for(unsigned int i = 0; i < getStructSize(); ++i, ++poSrcBuf, ++poDstBuf){
+      poDstBuf->setValue(*poSrcBuf);
     }
   }
 }
@@ -96,14 +108,14 @@ void CIEC_STRUCT::clear(){
   }
 }
 
-int CIEC_STRUCT::fromString(const char *pa_pacValue){
+int CIEC_STRUCT::fromString(const char *paValue){
   int nRetVal = -1;
 
-  if('(' == pa_pacValue[0]){
-    const char *pcRunner = pa_pacValue;
-    unsigned int nElementCount = 0;    // count how much elements we could retrieve
+  if('(' == paValue[0]){
+    const char *pcRunner = paValue;
+    unsigned int nElementCount = 0;    // count how many elements we could retrieve
 
-    while((*pcRunner != '\0') && (*pcRunner != ')') && (nElementCount < getStructSize())){
+    while(('\0' != *pcRunner) && (')' != *pcRunner) && (nElementCount < getStructSize())){
       pcRunner++;
 
       //first extract the element name
@@ -135,63 +147,62 @@ int CIEC_STRUCT::fromString(const char *pa_pacValue){
         if(',' != *pcRunner){
           break;
         }
-      }
-      else{
+      }else{
         //we have an error or the end bracket
-        break;
+        return -1;
       }
     }
 
-    if((*pcRunner == ')')&& (nElementCount == getStructSize())) {
-      //structs have to and on a closing bracket
-      nRetVal = static_cast<int>(pcRunner - pa_pacValue + 1); //+1 from the closing bracket
+    if((')' == *pcRunner) && (nElementCount == getStructSize())) {
+      //structs have to have an opening and a closing round bracket
+      nRetVal = static_cast<int>(pcRunner - paValue + 1); //+1 from the closing round bracket
     }
   }
   return nRetVal;
 }
 
-CStringDictionary::TStringId CIEC_STRUCT::parseNextElementId(const char *pa_pcRunner, int &pa_nCounter){
+CStringDictionary::TStringId CIEC_STRUCT::parseNextElementId(const char *paRunner, int &paCounter){
   CStringDictionary::TStringId unElementNameId = CStringDictionary::scm_nInvalidStringId;
   TIdentifier acIdentifier;
 
   //remove any leading whitespaces before the identifier
-  while(' ' == *pa_pcRunner){
-    pa_pcRunner++;
-    pa_nCounter++;
+  while(' ' == *paRunner){
+    paRunner++;
+    paCounter++;
   }
 
-  for(unsigned int i = 0; ((*pa_pcRunner != '\0') && (*pa_pcRunner != ')')); ++i, ++pa_nCounter, ++pa_pcRunner){
+  for(unsigned int i = 0; (('\0' != *paRunner ) && (')' != *paRunner)); ++i, ++paCounter, ++paRunner){
     if(i >= cg_nIdentifierLength){
       //currently we only allow identifiers smaller that size
       return CStringDictionary::scm_nInvalidStringId;
     }
 
-    if((':' == *pa_pcRunner) || (' ' == *pa_pcRunner)){
+    if((':' == *paRunner) || (' ' == *paRunner)){
       acIdentifier[i] = '\0'; //close identifier string
       break;
     }
-    acIdentifier[i] = *pa_pcRunner;
+    acIdentifier[i] = *paRunner;
   }
   //remove any whitespaces between identifier and assignment operator
-  while(' ' == *pa_pcRunner){
-    pa_pcRunner++;
-    pa_nCounter++;
+  while(' ' == *paRunner){
+    paRunner++;
+    paCounter++;
   }
 
-  if(':' == *pa_pcRunner){
+  if(':' == *paRunner){
     //only if we have a : we have a correct identifier
-    pa_pcRunner++;
-    pa_nCounter++;
-    if('=' == *pa_pcRunner){
+    paRunner++;
+    paCounter++;
+    if('=' == *paRunner){
       unElementNameId = CStringDictionary::getInstance().getId(acIdentifier);
-      pa_pcRunner++;
-      pa_nCounter++;
+      paRunner++;
+      paCounter++;
       //remove any whitespaces between assignment operator and value
-      while(' ' == *pa_pcRunner){
-        pa_pcRunner++;
-        pa_nCounter++;
+      while(' ' == *paRunner){
+        paRunner++;
+        paCounter++;
       }
-      if(('\0' == *pa_pcRunner) || (')' == *pa_pcRunner)){
+      if(('\0' == *paRunner) || (')' == *paRunner)){
         return CStringDictionary::scm_nInvalidStringId;
       }
     }
@@ -200,13 +211,13 @@ CStringDictionary::TStringId CIEC_STRUCT::parseNextElementId(const char *pa_pcRu
   return unElementNameId;
 }
 
-int CIEC_STRUCT::toString(char* pa_acValue, unsigned int pa_nBufferSize) const{
+int CIEC_STRUCT::toString(char* paValue, unsigned int paBufferSize) const{
   int nBytesUsed = -1;
 
-  if(pa_nBufferSize){
-    *pa_acValue = '(';
-    pa_acValue++;
-    pa_nBufferSize--;
+  if(paBufferSize){
+    *paValue = '(';
+    paValue++;
+    paBufferSize--;
     nBytesUsed = 1;
     TForteUInt16 unSize = getStructSize();
     const CStringDictionary::TStringId *punMemberNameIds = elementNames();
@@ -215,57 +226,57 @@ int CIEC_STRUCT::toString(char* pa_acValue, unsigned int pa_nBufferSize) const{
     for(unsigned int i = 0; i < unSize; ++i, ++poMembers, ++punMemberNameIds){
       const char *acMemberName = CStringDictionary::getInstance().get(*punMemberNameIds);
       int nUsedBytesByElement;
-      if(strlen(acMemberName) + 2 > pa_nBufferSize){
+      if(strlen(acMemberName) + 2 > paBufferSize){
         return -1;
       }
 
-      strcpy(pa_acValue, acMemberName);
-      pa_acValue += strlen(acMemberName);
-      *pa_acValue = ':';
-      pa_acValue++;
-      *pa_acValue = '=';
-      pa_acValue++;
-      pa_nBufferSize -= static_cast<unsigned int>(strlen(acMemberName) + 2);
+      strncpy(paValue, acMemberName, strlen(acMemberName));
+      paValue += strlen(acMemberName);
+      *paValue = ':';
+      paValue++;
+      *paValue = '=';
+      paValue++;
+      paBufferSize -= static_cast<unsigned int>(strlen(acMemberName) + 2);
       nBytesUsed += static_cast<int>(strlen(acMemberName) + 2);
 
-      nUsedBytesByElement = poMembers->toString(pa_acValue, pa_nBufferSize);
+      nUsedBytesByElement = poMembers->toString(paValue, paBufferSize);
       if(-1 == nUsedBytesByElement){
         return -1;
       }
-      pa_nBufferSize -= nUsedBytesByElement;
-      pa_acValue += nUsedBytesByElement;
-      if(!pa_nBufferSize){
+      paBufferSize -= nUsedBytesByElement;
+      paValue += nUsedBytesByElement;
+      if(!paBufferSize){
         return -1;
       }
       nBytesUsed += nUsedBytesByElement;
 
       if(i != static_cast<unsigned int>(unSize - 1)){
-        *pa_acValue = ',';
-        pa_acValue++;
+        *paValue = ',';
+        paValue++;
 
         ++nBytesUsed;
-        pa_nBufferSize--;
+        paBufferSize--;
       }
     }
-    if(pa_nBufferSize < 2){
+    if(paBufferSize < 2){
       return -1;
     }
-    *pa_acValue = ')';
-    pa_acValue[1] = '\0';
+    *paValue = ')';
+    paValue[1] = '\0';
     nBytesUsed++;
   }
 
   return nBytesUsed;
 }
 
-CIEC_ANY *CIEC_STRUCT::getMemberNamed(CStringDictionary::TStringId pa_unMemberNameId){
+CIEC_ANY *CIEC_STRUCT::getMemberNamed(CStringDictionary::TStringId paMemberNameId){
   CIEC_ANY *poRetVal = 0;
 
   CIEC_ANY *poMembers = getMembers();
   const CStringDictionary::TStringId *punMemberNameIds = elementNames();
 
   for(unsigned int i = 0; i < getStructSize(); ++i, ++poMembers, ++punMemberNameIds){
-    if(*punMemberNameIds == pa_unMemberNameId){
+    if(*punMemberNameIds == paMemberNameId){
       poRetVal = poMembers;
       break;
     }
