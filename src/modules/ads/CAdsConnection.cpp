@@ -16,13 +16,13 @@ namespace forte {
   namespace ads {
 
     CAdsConnection::CAdsConnection(const std::string& paAddr, const std::string& paRemoteIpOrHostName) :
-        mRemoteIpV4OrHostName(paRemoteIpOrHostName){
+        mRemoteIpV4OrHostName(paRemoteIpOrHostName), mPort(0){
       mRemoteDevice.netId = AmsNetId(paAddr);
       mRemoteDevice.port = AMSPORT_R0_PLC_TC3;
     }
 
     CAdsConnection::CAdsConnection(const std::string& paAddr, uint16_t paPort, const std::string& paRemoteIpOrHostName) :
-        mRemoteIpV4OrHostName(paRemoteIpOrHostName){
+        mRemoteIpV4OrHostName(paRemoteIpOrHostName), mPort(0){
       mRemoteDevice.netId = AmsNetId(paAddr);
       mRemoteDevice.port = paPort;
     }

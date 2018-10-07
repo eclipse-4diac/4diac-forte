@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Martin Melik-Merkumians - initial contribution
+ *    Martin Melik-Merkumians - adds Byte and LWord functions
  *******************************************************************************/
 
 #ifndef SRC_MODULES_ADS_CADSPROCESSINTERFACE_H_
@@ -28,10 +29,16 @@ namespace forte {
         bool deinitialise();
         bool writePin();
         bool readPin();
+        bool writeByte();
+        bool readByte();
         bool writeWord();
         bool readWord();
         bool writeDWord();
         bool readDWord();
+#ifdef FORTE_USE_64BIT_DATATYPES
+        bool writeLWord();
+        bool readLWord();
+#endif /* FORTE_USE_64BIT_DATATYPES */
 
       private:
         std::string mFriendlyAdsServerName;

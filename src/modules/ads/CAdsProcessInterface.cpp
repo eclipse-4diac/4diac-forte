@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Martin Melik-Merkumians - initial contribution
+ *    Martin Melik-Merkumians - adds Byte and LWord functions
  *******************************************************************************/
 
 #include <stdint.h>
@@ -21,7 +22,6 @@ namespace forte {
   namespace ads {
     CAdsProcessInterface::CAdsProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
         CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mAdsHandle(0) {
-
     }
 
     bool CAdsProcessInterface::initialise(bool){
@@ -91,6 +91,34 @@ namespace forte {
       return true;
     }
 
+    bool CAdsProcessInterface::writeByte(){
+      CAdsConnection *connection = CAdsConnectionManager::getInstance().getConnection(mFriendlyAdsServerName);
+      const long status = AdsSyncWriteReqEx(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND, mAdsHandle, sizeof(TForteWord), OUT_B().getDataPtr());
+      if(status){
+        STATUS() = "Write Byte malfunction\n";
+        DEVLOG_ERROR("Write Byte malfunction\n");
+        return false;
+      }
+      STATUS() = "OK";
+      return true;
+    }
+
+    bool CAdsProcessInterface::readByte(){
+      CAdsConnection *connection = CAdsConnectionManager::getInstance().getConnection(mFriendlyAdsServerName);
+      uint32_t bytesRead;
+      uint_fast8_t buffer;
+      const long status = AdsSyncReadReqEx2(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND, mAdsHandle, sizeof(buffer), &buffer, &bytesRead);
+      if(status){
+        IN_B() = 0;
+        STATUS() = "Read Byte malfunction";
+        DEVLOG_ERROR("Read Byte malfunction\n");
+        return false;
+      }
+      IN_B() = buffer;
+      STATUS() = "OK";
+      return true;
+    }
+
     bool CAdsProcessInterface::writeWord(){
       CAdsConnection *connection = CAdsConnectionManager::getInstance().getConnection(mFriendlyAdsServerName);
       const long status = AdsSyncWriteReqEx(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND, mAdsHandle, sizeof(TForteWord), OUT_W().getDataPtr());
@@ -146,6 +174,36 @@ namespace forte {
       STATUS() = "OK";
       return true;
     }
+
+#ifdef FORTE_USE_64BIT_DATATYPES
+    bool CAdsProcessInterface::writeLWord(){
+      CAdsConnection *connection = CAdsConnectionManager::getInstance().getConnection(mFriendlyAdsServerName);
+      const long status = AdsSyncWriteReqEx(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND, mAdsHandle, sizeof(TForteDWord), OUT_L().getDataPtr());
+      if(status){
+        STATUS() = "Write DWord malfunction\n";
+        DEVLOG_ERROR("Write DWord malfunction\n");
+        return false;
+      }
+      STATUS() = "OK";
+      return true;
+    }
+
+    bool CAdsProcessInterface::readLWord(){
+      CAdsConnection *connection = CAdsConnectionManager::getInstance().getConnection(mFriendlyAdsServerName);
+      uint32_t bytesRead;
+      uint_fast64_t buffer;
+      const long status = AdsSyncReadReqEx2(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND, mAdsHandle, sizeof(buffer), &buffer, &bytesRead);
+      if(status){
+        IN_L() = 0;
+        STATUS() = "Read DWORD malfunction";
+        DEVLOG_ERROR("Read DWORD malfunction\n");
+        return false;
+      }
+      IN_L() = buffer;
+      STATUS() = "OK";
+      return true;
+    }
+#endif /* FORTE_USE_64BIT_DATATYPES */
 
     CAdsProcessInterface::~CAdsProcessInterface(){
       if(0 != mAdsHandle){
