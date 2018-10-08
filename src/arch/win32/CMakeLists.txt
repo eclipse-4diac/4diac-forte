@@ -52,7 +52,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   forte_add_link_library(comctl32.lib)
   forte_add_link_library(rpcrt4.lib)
   forte_add_link_library(winmm.lib)
-  forte_add_link_library(Ws2_32.lib)
+  forte_add_link_library(ws2_32.lib)
   forte_add_link_library(version.lib)
   
   forte_add_definition("-D_CRT_SECURE_NO_DEPRECATE")

@@ -13,7 +13,7 @@
 
 #include <winsock2.h>
 #include <windows.h>
-#include <Ws2tcpip.h>
+#include <ws2tcpip.h>
 
 #define FORTE_SOCKET_TYPE SOCKET
 #define FORTE_INVALID_SOCKET INVALID_SOCKET
