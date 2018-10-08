@@ -10,7 +10,7 @@
  *******************************************************************************/
 
 #include <winsock2.h> //to ensure that this is first included in the commlayermanager
-#include <Windows.h>
+#include <windows.h>
 
 #include "../../../core/cominfra/serialcomlayerbase.h"
 
