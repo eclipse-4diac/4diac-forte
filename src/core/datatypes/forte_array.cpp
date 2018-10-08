@@ -111,6 +111,9 @@ int CIEC_ARRAY::fromString(const char *pa_pacValue){
 
     while((*pcRunner != '\0') && (*pcRunner != ']')){
       pcRunner++;
+      while(' ' == *pcRunner){
+        pcRunner++;
+      }
       if(i < unArraySize){
         nValueLen = (*this)[i]->fromString(pcRunner);
       }
@@ -118,6 +121,9 @@ int CIEC_ARRAY::fromString(const char *pa_pacValue){
         if(0 == poBufVal)
           poBufVal = (getArray() - 1)->clone(0);
         nValueLen = poBufVal->fromString(pcRunner);
+      }
+      while(' ' == pcRunner[nValueLen]){
+        nValueLen++;
       }
       if((0 < nValueLen) && ((',' == pcRunner[nValueLen]) || (']' == pcRunner[nValueLen]))){
         pcRunner += nValueLen;
