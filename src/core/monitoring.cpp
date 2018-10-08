@@ -14,19 +14,9 @@
 #include "device.h"
 #include "ecet.h"
 #include "utils/criticalregion.h"
+#include "utils/string_utils.h"
 
 using namespace forte::core;
-
-const char* const CMonitoringHandler::scmDoubleQuoteReplacement = "&quot;";
-
-const char* const CMonitoringHandler::scmSingleQuoteReplacement = "&apos;";
-
-const char* const CMonitoringHandler::scmAmpersandReplacement = "&amp;";
-
-const char* const CMonitoringHandler::scmLessThanReplacement = "&lt;";
-
-const char* const CMonitoringHandler::scmGreaterThanReplacement = "&gt;";
-
 
 CMonitoringHandler::CMonitoringHandler(CResource &paResource) :
     mTriggerEvent(0, 0),
@@ -123,25 +113,19 @@ EMGMResponse CMonitoringHandler::removeWatch(forte::core::TNameIdentifier &paNam
       if(itRunner->m_poFB == fB){
         SFBMonitoringEntry &poFBMonitoringEntry(*itRunner);
 
-        if(!removeDataWatch(poFBMonitoringEntry, portName)){
-          if(!removeEventWatch(poFBMonitoringEntry, portName)){
-            //element is not watched end search and return error
-            break;
-          }
-        }
+        if(removeDataWatch(poFBMonitoringEntry, portName) || removeEventWatch(poFBMonitoringEntry, portName)){ //if element is not watched, end search and return error
 
-        if((poFBMonitoringEntry.m_lstWatchedDataPoints.isEmpty())
-            && (poFBMonitoringEntry.m_lstWatchedEventPoints.isEmpty())){
-          //no further values are monitored so remove the entry
-          if(itRefNode == mFBMonitoringList.end()){
-            //we have the first entry in the list
-            mFBMonitoringList.popFront();
+          if(poFBMonitoringEntry.m_lstWatchedDataPoints.isEmpty() && (poFBMonitoringEntry.m_lstWatchedEventPoints.isEmpty())){
+            //no further values are monitored so remove the entry
+            if(itRefNode == mFBMonitoringList.end()){
+              //we have the first entry in the list
+              mFBMonitoringList.popFront();
+            }else{
+              mFBMonitoringList.eraseAfter(itRefNode);
+            }
           }
-          else{
-            mFBMonitoringList.eraseAfter(itRefNode);
-          }
+          eRetVal = e_RDY;
         }
-        eRetVal = e_RDY;
         break;
       }
 
@@ -382,7 +366,7 @@ void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
       consumedBytes = static_cast<CIEC_WSTRING&>(paDataWatchEntry.mDataValue).toUTF8(acDataValue, bufferSize, false);
       if(bufferSize != paDataWatchEntry.mDataValue.getToStringBufferSize() //avoid re-running on strings which were already proven not to have any special character
           && 0 < consumedBytes){
-        consumedBytes += replaceSpecialCharacters(acDataValue, &acDataValue[consumedBytes]);
+        consumedBytes += forte::core::util::transformNonEscapedToEscapedXMLText(acDataValue);
       }
       break;
     default:
@@ -394,56 +378,15 @@ void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
   }
   paResponse.append(acDataValue);
   paResponse.append("\" forced=\"");
-  paResponse.append(((paDataWatchEntry.mDataValue.isForced()) ? "true" : "false"));
+  paResponse.append((paDataWatchEntry.mDataValue.isForced()) ? "true" : "false");
   paResponse.append("\"/></Port>");
   delete [] acDataValue;
 }
 
-unsigned int CMonitoringHandler::getExtraSizeForEscapedChars(const CIEC_ANY& paDataValue){
-  unsigned int retVal = 0;
-  if(CIEC_ANY::e_WSTRING == paDataValue.getDataTypeID() || CIEC_ANY::e_STRING == paDataValue.getDataTypeID()){
-    const char* runner =  static_cast<const CIEC_WSTRING&>(paDataValue).getValue();
-    while(0 != *runner){
-      if('"' == *runner || '\'' == *runner){ //&quot;  ||  &apos;
-        retVal += 5;
-      }else if('&' == *runner){ //&amp;
-        retVal += 4;
-      }else if('<' == *runner || '>' == *runner){ //&lt; || &gt;
-        retVal += 3;
-      }
-      runner++;
-    }
-  }
-  return retVal;
-}
-
-unsigned int CMonitoringHandler::replaceSpecialCharacters(char* const paStart, char* const paEnd){
-  char* runner = paEnd;
-  unsigned int retVal = 0;
-  while(paStart != runner){
-    const char* toCopy = 0;
-    if('"' == *runner){
-      toCopy = scmDoubleQuoteReplacement;
-    }else if('\'' == *runner){
-      toCopy = scmSingleQuoteReplacement;
-    }else if('&' == *runner){
-      toCopy = scmAmpersandReplacement;
-    }else if('<' == *runner){
-      toCopy = scmLessThanReplacement;
-    }else if('>' == *runner){
-      toCopy = scmGreaterThanReplacement;
-    }
-
-    if(0 != toCopy){
-      size_t toMove = strlen(toCopy);
-      memmove(&runner[toMove], runner + 1, paEnd - runner + retVal);
-      memcpy(runner, toCopy, toMove);
-      retVal += toMove - 1;
-    }
-    runner--;
-  }
-
-  return retVal;
+size_t CMonitoringHandler::getExtraSizeForEscapedChars(const CIEC_ANY& paDataValue){
+  return (CIEC_ANY::e_WSTRING == paDataValue.getDataTypeID() || CIEC_ANY::e_STRING == paDataValue.getDataTypeID()) ?
+      forte::core::util::getExtraSizeForEscapedChars(static_cast<const CIEC_WSTRING&>(paDataValue).getValue()) :
+      0;
 }
 
 void CMonitoringHandler::appendPortTag(CIEC_STRING &paResponse,
