@@ -55,6 +55,11 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   forte_add_link_library(ws2_32.lib)
   forte_add_link_library(version.lib)
   
+  if(MINGW)
+    #force MINGW to statically link libc and lib stdc++ so that no mingw dlls are needed for forte.exe
+    forte_add_link_flags("-static-libgcc -static-libstdc++")
+  endif()
+  
   forte_add_definition("-D_CRT_SECURE_NO_DEPRECATE")
   forte_add_definition("-D_CRT_NONSTDC_NO_DEPRECATE")
   forte_add_definition("-D_SCL_SECURE_NO_WARNINGS")
