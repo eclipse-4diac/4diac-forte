@@ -94,19 +94,7 @@ namespace forte {
 
         static void createFullFBName(CIEC_STRING &paFullName, forte::core::TNameIdentifier &paNameList);
 
-        static unsigned int getExtraSizeForEscapedChars(const CIEC_ANY& paDataValue);
-
-        static unsigned int replaceSpecialCharacters(char* const paString, char* const paEnd);
-
-        static const char* const scmDoubleQuoteReplacement;
-
-        static const char* const scmSingleQuoteReplacement;
-
-        static const char* const scmAmpersandReplacement;
-
-        static const char* const scmLessThanReplacement;
-
-        static const char* const scmGreaterThanReplacement;
+        static size_t getExtraSizeForEscapedChars(const CIEC_ANY& paDataValue);
 
         //!List storing all FBs which are currently monitored
         TFBMonitoringList mFBMonitoringList;
