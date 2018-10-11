@@ -73,7 +73,7 @@ class E_DEMUX_tester : public CFBTester{
       m_oIn_K = 4;
       /* trigger the inputevent */
       triggerEvent(0);
-      return !checkForSingleOutputEventOccurence(0) && !checkForSingleOutputEventOccurence(1) && !checkForSingleOutputEventOccurence(2) && !checkForSingleOutputEventOccurence(3);
+      return eventChainEmpty();
     }
 
     CIEC_UINT m_oIn_K; //DATA INPUT
