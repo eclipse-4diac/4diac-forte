@@ -13,6 +13,7 @@
 #include "timerha.h"
 #include "forte_printer.h"
 #include "../core/utils/criticalregion.h"
+#include <forte_config.h>
 #include <cstdio>
 #include <cstdlib>
 #include <cstdarg>
@@ -32,7 +33,7 @@ static const char* scLogLevel[] = { "INFO", "WARNING", "ERROR", "DEBUG", "TRACE"
  */
 void printLogMessage(E_MsgLevel paLevel, const char *paMessage);
 
-static const int scMsgBufSize = 300;
+static const int scMsgBufSize = FORTE_LOGGER_BUFFER_SIZE;
 static char sMsgBuf[scMsgBufSize]; //!<Buffer for the messages created by the variable addMsg function
 
 static CSyncObject sMessageLock;

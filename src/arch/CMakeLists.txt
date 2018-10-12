@@ -29,3 +29,7 @@ add_subdirectory(utils)
 
 forte_add_sourcefile_hcpp(timerha devlog)
 
+SET(FORTE_LOGGER_BUFFER_SIZE "300" CACHE NUMBER "Buffer's length of the logger")
+mark_as_advanced(FORTE_LOGGER_BUFFER_SIZE)
+forte_add_custom_configuration("#define FORTE_LOGGER_BUFFER_SIZE ${FORTE_LOGGER_BUFFER_SIZE}")
+
