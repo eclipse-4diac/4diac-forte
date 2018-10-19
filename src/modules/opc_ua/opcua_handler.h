@@ -13,7 +13,6 @@
  *      - refactoring and adaption to new concept
  *******************************************************************************/
 
-
 #ifndef SRC_MODULES_OPC_UA_OPCUAHANDLER_H_
 #define SRC_MODULES_OPC_UA_OPCUAHANDLER_H_
 
@@ -22,7 +21,7 @@
 #include <conn.h>
 #include <stdio.h>
 #include "comlayer.h"
-#include <forte_config.h>
+#include <forte_config_opc_ua.h>
 #include "opcua_helper.h"
 #include "opcua_layer.h"
 
@@ -36,18 +35,17 @@ struct UA_ClientEndpointMap;
 typedef struct UA_ClientEndpointMap UA_ClientEndpointMap;
 
 // cppcheck-suppress noConstructor
-class COPC_UA_Handler : public CExternalEventHandler, public CThread {
-    DECLARE_HANDLER(COPC_UA_Handler)
+class COPC_UA_Handler: public CExternalEventHandler, public CThread {
+DECLARE_HANDLER(COPC_UA_Handler)
 
 public:
-
 
   /* functions needed for the external event handler interface */
   void enableHandler(void);
 
   void disableHandler(void);
 
-  void setPriority(int pa_nPriority);
+  void setPriority(int paPriority);
 
   int getPriority(void) const;
 
@@ -64,8 +62,9 @@ public:
    * @param allowWrite if set to false, writing to variable will be disabled
    * @return UA_STATUSCODE_GOOD on succes, the error code otherwise
    */
-  UA_StatusCode createVariableNode(const UA_NodeId *parentNode, const char *varName, const UA_DataType *varType, void *varValue,
-                   UA_NodeId *returnVarNodeId, bool allowWrite);
+  UA_StatusCode createVariableNode(const UA_NodeId *paParentNode,
+      const char *paVarName, const UA_DataType *paVarType, void *paVarValue,
+      UA_NodeId *paReturnVarNodeId, bool paAllowWrite);
 
   /**
    * Sets the user access level attribute of the node to the given new value.
@@ -73,14 +72,13 @@ public:
    * @param newAccessLevel new access level of the node
    * @return UA_STATUSCODE_GOOD on succes, the error code otherwise
    */
-  UA_StatusCode updateNodeUserAccessLevel(const UA_NodeId *nodeId, UA_Byte newAccessLevel);
-
+  UA_StatusCode updateNodeUserAccessLevel(const UA_NodeId *paNodeId,
+      UA_Byte paNewAccessLevel);
 
   /**
    * Create a new method node in the OPC UA information model.
    *
    * @param parentNode parent node where the method should be created
-   * @param namespaceIdx namespace index for the new method
    * @param methodName browse name and display name of the method
    * @param callback Callback which is called when the method is invoked
    * @param callbackHandle handle passed to the callback
@@ -91,10 +89,12 @@ public:
    * @param returnNodeId node id of the newly created method
    * @return UA_STATUSCODE_GOOD on success. Error otherwise
    */
-  UA_StatusCode createMethodNode(const UA_NodeId *parentNode, UA_UInt16 namespaceIdx, const char *methodName, UA_MethodCallback callback,
-                   void *callbackHandle, unsigned int inputArgumentsSize, const UA_Argument *inputArguments,
-                   unsigned int outputArgumentsSize, const UA_Argument *outputArguments, UA_NodeId *returnNodeId);
-
+  UA_StatusCode createMethodNode(const UA_NodeId *paParentNode,
+      const char *paMethodName, UA_MethodCallback paCallback, void *paCallbackHandle,
+      unsigned int paInputArgumentsSize, const UA_Argument * const paInputArguments,
+      unsigned int paOutputArgumentsSize,
+      const UA_Argument * const paOutputArguments, UA_NodeId *paReturnNodeId,
+      bool create);
 
   /**
    * Update UA Address Space node value given by the data pointer to an IEC61499 data object.
@@ -104,7 +104,8 @@ public:
    * @param convert converter object to convert IEC61499 to OPC UA data value
    * @return UA_STATUSCODE_GOOD on success. Error otherwise
    */
-  UA_StatusCode updateNodeValue(const UA_NodeId *nodeId, const CIEC_ANY *data, const UA_TypeConvert *convert);
+  UA_StatusCode updateNodeValue(const UA_NodeId *paNodeId, const CIEC_ANY *paData,
+      const UA_TypeConvert *paConvert);
 
   /**
    * Register a callback routine to a Node in the Address Space that is executed
@@ -118,7 +119,9 @@ public:
    * @return
    */
   UA_StatusCode
-  registerNodeCallBack(const UA_NodeId *nodeId, forte::com_infra::CComLayer *comLayer, const struct UA_TypeConvert *convert, unsigned int portIndex);
+  registerNodeCallBack(const UA_NodeId *paNodeId,
+      forte::com_infra::CComLayer *paComLayer,
+      const struct UA_TypeConvert *paConvert, unsigned int paPortIndex);
 
   /**
    * Callback when an external client writes to a variable on this server.
@@ -128,10 +131,9 @@ public:
    * @param data the new data for the variable
    * @param range range indicating the size of the data variant.
    */
-  static void onWrite(UA_Server *server, const UA_NodeId *sessionId,
-            void *sessionContext, const UA_NodeId *nodeId,
-            void *nodeContext, const UA_NumericRange *range,
-            const UA_DataValue *data);
+  static void onWrite(UA_Server *paServer, const UA_NodeId *paSessionId,
+      void *paSessionContext, const UA_NodeId *paNodeId, void *paNodeContext,
+      const UA_NumericRange *paRange, const UA_DataValue *paData);
 
   /**
    * Get the node id of the node which is represented by the given path.
@@ -149,10 +151,11 @@ public:
    * @return UA_STATUSCODE_GOOD on success or the corresponding error code.
    */
   UA_StatusCode
-  getNodeForPath(UA_NodeId **foundNodeId, const char *nodePath, bool createIfNotFound,
-           const UA_NodeId *startingNode = NULL, const UA_NodeId *newNodeType = NULL,
-           UA_NodeId **parentNodeId = NULL, UA_Client *clientInitialized = NULL,
-           CSinglyLinkedList<UA_NodeId *> *nodeIdsAlongPath = NULL);
+  getNodeForPath(UA_NodeId **paFoundNodeId, const char *paNodePath,
+      bool paCreateIfNotFound, const UA_NodeId *paStartingNode = NULL,
+      const UA_NodeId *paNewNodeType = NULL, UA_NodeId **paParentNodeId = NULL,
+      UA_Client *paClientInitialized = NULL,
+      CSinglyLinkedList<UA_NodeId *> *paNodeIdsAlongPath = NULL);
 
   /**
    * Get the opc ua client for the given endpoint url. If there exists already an OPC UA client
@@ -165,23 +168,24 @@ public:
    * @return the (new) client, or NULL of not found and not created.
    */
   UA_Client *
-  getClientForEndpoint(const char *endpointUrl, bool createIfNotFound, CSyncObject **clientMutex);
-
+  getClientForEndpoint(const char *paEndpointUrl, bool paCreateIfNotFound,
+      CSyncObject **paClientMutex);
 
   CSyncObject *
-  getMutexForClient(const UA_Client *client);
-
+  getMutexForClient(const UA_Client *paClient);
 
   /**
    * Forces event handling by calling startNewEventChain.
    *
    * @param layer the layer for which the event should be handled
    */
-  void forceEventHandling(COPC_UA_Layer *layer);
+  void forceEventHandling(COPC_UA_Layer *paLayer);
 
-  void referencedNodesIncrement(const CSinglyLinkedList<UA_NodeId *> *nodes, const COPC_UA_Layer* layer);
+  void referencedNodesIncrement(const CSinglyLinkedList<UA_NodeId *> *paNodes,
+      const COPC_UA_Layer* paLayer);
 
-  void referencedNodesDecrement(const CSinglyLinkedList<UA_NodeId *> *nodes, const COPC_UA_Layer* layer, bool deleteIfLastReference);
+  void referencedNodesDecrement(const CSinglyLinkedList<UA_NodeId *> *paNodes,
+      const COPC_UA_Layer* paLayer, bool paDeleteIfLastReference);
 
   const UA_String getDiscoveryUrl() const {
     if (uaServerConfig->networkLayersSize == 0)
@@ -217,7 +221,7 @@ private:
    * Creates the configuration for the OPC UA Server.
    * @param UAServerPort port where the OPC UA Server should listen.
    */
-  void configureUAServer(TForteUInt16 UAServerPort);
+  void configureUAServer(TForteUInt16 paUAServerPort);
 
   /**
    * Overridden run() from CThread which loops the UA Server.
@@ -240,6 +244,7 @@ private:
    */
   CSinglyLinkedList<struct UA_ClientEndpointMap *> clients;
 
+  static const unsigned int scmNoOfParameters = 2;
 
 #ifdef FORTE_COM_OPC_UA_MULTICAST
 

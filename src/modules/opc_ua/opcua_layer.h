@@ -13,7 +13,6 @@
  *      - refactoring and adaption to new concept
  *******************************************************************************/
 
-
 #ifndef SRC_MODULES_OPC_UA_OPCUA_LAYER_H_
 #define SRC_MODULES_OPC_UA_OPCUA_LAYER_H_
 
@@ -22,22 +21,32 @@
 #include "comlayer_async.h"
 #include "opcua_helper.h"
 
+struct UA_ParentNodeHandler {
+  UA_NodeId *parentNodeId;
+  UA_NodeId *methodNodeId;
+  forte::com_infra::CComLayer* layer;
+};
+
 class CIEC_STRING;
 
-
-class COPC_UA_Layer : public forte::com_infra::CComLayerAsync {
+class COPC_UA_Layer: public forte::com_infra::CComLayerAsync {
 public:
-  COPC_UA_Layer(forte::com_infra::CComLayer *pa_poUpperLayer, forte::com_infra::CBaseCommFB *pa_poComFB);
+
+  COPC_UA_Layer(forte::com_infra::CComLayer *paUpperLayer,
+      forte::com_infra::CBaseCommFB *paComFB);
 
   virtual ~COPC_UA_Layer();
 
-  forte::com_infra::EComResponse sendData(void *pa_pvData, unsigned int pa_unSize);
+  forte::com_infra::EComResponse sendData(void *paData,
+      unsigned int paSize);
 
-  forte::com_infra::EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize);
+  forte::com_infra::EComResponse recvData(const void *paData,
+      unsigned int paSize);
 
   virtual forte::com_infra::EComResponse processInterruptChild();
 
 private:
+  static CSinglyLinkedList<UA_ParentNodeHandler *> parentsLayers;
 
   struct FB_NodeIds {
     UA_NodeId *functionBlockId;
@@ -48,7 +57,7 @@ private:
   /**
    * set to true if we are connecting to a remote OPC UA server, i.e., we need to use a client
    */
-  bool useClient;
+  bool mUseClient;
 
   /**
    * Delete/free the node ids up to the given maxIndex index.
@@ -56,7 +65,7 @@ private:
    * @param nodeIds list of node ids
    * @param maxIndex size of the nodeIds array to be freed
    */
-  void deleteNodeIds(struct FB_NodeIds **nodeIds, unsigned int maxIndex);
+  void deleteNodeIds(struct FB_NodeIds **paNodeIds, unsigned int paMaxIndex);
 
   forte::com_infra::EComResponse openConnection(char *paLayerParameter);
 
@@ -74,8 +83,9 @@ private:
    * @param convert convert information to convert IEC61499 to OPC UA data type based on the connected to port type
    * @return true if all the information is successfully retrieved. false otherwise. If false, some or all of the passed pointers may be nullptr
    */
-  bool getPortConnectionInfo(unsigned int portIndex, bool isSD, const CFunctionBlock **connectedToFb, const char **connectedToPortName,
-                 const UA_TypeConvert **convert) const;
+  bool getPortConnectionInfo(unsigned int paPortIndex, bool paIsSD,
+      const CFunctionBlock **paConnectedToFb, const char **paConnectedToPortName,
+      const UA_TypeConvert **paConvert) const;
 
   /**
    * Create OPC UA nodes in the information model of the server for every connected function block and port combination.
@@ -85,10 +95,14 @@ private:
    * @param isSD should the nodes be created for the RD or SD ports
    * @return e_InitOk on success
    */
-  forte::com_infra::EComResponse createPubSubNodes(struct FB_NodeIds **nodeIds, unsigned int numPorts, bool isSD);
+  forte::com_infra::EComResponse createPubSubNodes(struct FB_NodeIds **paNodeIds,
+      unsigned int paNumPorts, bool paIsSD);
 
-  forte::com_infra::EComResponse createSubscription(struct FB_NodeIds **nodeIds,
-      unsigned int numPorts, bool isSD, char* subnodePath);
+  UA_StatusCode referenceNodes(UA_NodeId **paFoundNodeId, const char *paSubnodePath,
+      bool paCreatenewNode);
+
+  forte::com_infra::EComResponse createSubscription(struct FB_NodeIds **paNodeIds,
+      unsigned int paNumPorts, bool paIsSD, const char * const paSubnodePath);
 
   /**
    * Creates the OPC UA method node for the SERVER function block.
@@ -97,7 +111,8 @@ private:
    * @return e_InitOk on success
    * @see createMethodArguments
    */
-  forte::com_infra::EComResponse createMethodNode();
+  forte::com_infra::EComResponse createMethodNode(const char * const paMethodPath,
+      const char * const paMethodName);
 
   /**
    * Called by createMethodNode to get the list of input/output arguments based on the RD (input) and SD (output) ports.
@@ -106,12 +121,13 @@ private:
    * @param isSD if true, output arguments are created, based on SD ports. If false, input arguments based on RD are created.
    * @return e_InitOk on success
    */
-  forte::com_infra::EComResponse createMethodArguments(UA_Argument **arguments, unsigned int numPorts, bool isSD);
+  forte::com_infra::EComResponse createMethodArguments(UA_Argument **paArguments,
+      unsigned int paNumPorts, bool paIsSD);
 
-
-  const UA_TypeConvert **clientSdConverter;
-  const UA_TypeConvert **clientRdConverter;
-  forte::com_infra::EComResponse clientCreateConverter(const UA_TypeConvert **converterList[], unsigned int numPorts, bool isSD);
+  const UA_TypeConvert **mClientSdConverter;
+  const UA_TypeConvert **mClientRdConverter;
+  forte::com_infra::EComResponse clientCreateConverter(
+      const UA_TypeConvert **paConverterList[], unsigned int paNumPorts, bool paIsSD);
 
   /**
    * Creates the OPC UA client for the CLIENT function block.
@@ -119,7 +135,8 @@ private:
    *
    * @return e_InitOk on success
    */
-  forte::com_infra::EComResponse createClient(const char* endpoint, const char* nodePath, bool subscription);
+  forte::com_infra::EComResponse createClient(const char* paEndpoint,
+      const char* paNodePath, bool paSubscription);
 
   /**
    * Response for the processInterrupt() method
@@ -129,38 +146,38 @@ private:
   /**
    * Node id of the folder node represented by the ID browse path setting of the FB.
    */
-  UA_NodeId *fbNodeId;
+  UA_NodeId *mFbNodeId;
 
   /**
    * Node id of the parent folder node represented by the ID browse path setting of the FB.
    */
-  UA_NodeId *fbNodeIdParent;
+  UA_NodeId *mFbNodeIdParent;
 
   /**
    * On SERVER FB this is set to the node id of the method which is created in the information model
    */
-  UA_NodeId *methodNodeId;
+  UA_NodeId *mMethodNodeId;
 
   /**
    * Node class of the node on the remote server identified by the ID field of the FB.
    * Can be either Variable or Method
    */
-  UA_NodeClass remoteNodeClass;
+  UA_NodeClass mRemoteNodeClass;
 
   /**
    * On CLIENT FB a client is created for communication with a remote OPC UA server.
    */
-  UA_Client *uaClient;
+  UA_Client *mUaClient;
 
   /**
    * List of node ids created for the SD ports (PUBLISHER)
    */
-  struct FB_NodeIds *sendDataNodeIds;
+  struct FB_NodeIds *mSendDataNodeIds;
 
   /**
    * List of node ids created for the RD ports (SUBSCRIBER)
    */
-  struct FB_NodeIds *readDataNodeIds;
+  struct FB_NodeIds *mReadDataNodeIds;
 
   /**
    * Callback for the SERVER FB method from OPC UA.
@@ -176,41 +193,40 @@ private:
    * @param output value of output arguments. These will be read from SD ports
    * @return UA_STATUSCODE_GOOD on success. The return value is passed to the caller, i.e., the client.
    */
-  static UA_StatusCode onServerMethodCall(UA_Server *server, const UA_NodeId *sessionId,
-                      void *sessionContext, const UA_NodeId *methodId,
-                      void *methodContext, const UA_NodeId *objectId,
-                      void *objectContext, size_t inputSize,
-                      const UA_Variant *input, size_t outputSize,
-                      UA_Variant *output);
+  static UA_StatusCode onServerMethodCall(UA_Server *paServer,
+      const UA_NodeId *paSessionId, void *paSessionContext,
+      const UA_NodeId *paMethodId, void *paMethodContext, const UA_NodeId *paObjectId,
+      void *paObjectContext, size_t paInputSize, const UA_Variant *paInput,
+      size_t paOutputSize, UA_Variant *paOutput);
 
-  char *clientEndpointUrl;
-  char *clientNodePath;
-  CSyncObject *clientMutex;
+  char *mClientEndpointUrl;
+  char *mClientNodePath;
+  CSyncObject *mClientMutex;
 
   forte::com_infra::EComResponse clientConnect();
 
-  forte::com_infra::EComResponse clientCallAsync(const CIEC_ANY *sd, unsigned int sdSize);
+  forte::com_infra::EComResponse clientCallAsync(const CIEC_ANY *paSd,
+      unsigned int paSdSize);
 
   /**
    * Mutex to ensure clients can call the server method not in parallel.
    */
-  CSyncObject mutexServerMethodCall;
+  CSyncObject mMutexServerMethodCall;
 
   /**
    * Flag used by the server method call to wait for the data to be ready.
    * It is set to false in the beginning. As soon as the RSP port is triggered, it is set to true and the method callback can process SD ports.
    */
-  CSemaphore serverMethodCallResultReady;
+  CSemaphore mServerMethodCallResultReady;
 
+  virtual void* handleAsyncCall(const unsigned int paCallId, void *paPayload);
 
-
-  virtual void* handleAsyncCall(const unsigned int callId, void *payload);
-
-  virtual void handleAsyncCallResult(const unsigned int callId, void *payload, void *result);
+  virtual void handleAsyncCallResult(const unsigned int paCallId, void *paPayload,
+      void *paResult);
 
   virtual void handleAsyncEvent();
 
-  CSinglyLinkedList<UA_NodeId *> referencedNodes;
+  CSinglyLinkedList<UA_NodeId *> mReferencedNodes;
 
   /**
    * split the ID parameter:
@@ -222,16 +238,16 @@ private:
    * @param nodePath the path part pointing at the beginning within the returned char, or NULL if no path part
    * @return duplicated string of fullUrl where endpoint and nodePath point to. Needs to be freed.
    */
-  static void splitUrlAndPath(const char *fullUrl, const char** endpoint, const char **nodePath, CIEC_STRING& paResult);
+  static void splitUrlAndPath(const char *paFullUrl, const char** paEndpoint,
+      const char **paNodePath, CIEC_STRING& paResult);
 
   /**
    * Get the node class of the given node from the remote server using the already initialized uaClient member.
    *
    */
-  UA_NodeClass getNodeClass(const UA_NodeId nodeId);
+  UA_NodeClass getNodeClass(const UA_NodeId paNodeId);
 
 };
-
 
 #endif /* SRC_MODULES_OPC_UA_OPCUA_LAYER_H_ */
 
