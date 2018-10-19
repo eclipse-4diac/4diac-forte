@@ -16,6 +16,7 @@
 #include "utils/criticalregion.h"
 #include "utils/string_utils.h"
 
+
 using namespace forte::core;
 
 CMonitoringHandler::CMonitoringHandler(CResource &paResource) :
@@ -364,8 +365,7 @@ void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
     case CIEC_ANY::e_WSTRING:
     case CIEC_ANY::e_STRING:
       consumedBytes = static_cast<CIEC_WSTRING&>(paDataWatchEntry.mDataValue).toUTF8(acDataValue, bufferSize, false);
-      if(bufferSize != paDataWatchEntry.mDataValue.getToStringBufferSize() //avoid re-running on strings which were already proven not to have any special character
-          && 0 < consumedBytes){
+      if(bufferSize != paDataWatchEntry.mDataValue.getToStringBufferSize() && 0 < consumedBytes) { //avoid re-running on strings which were already proven not to have any special character
         consumedBytes += forte::core::util::transformNonEscapedToEscapedXMLText(acDataValue);
       }
       break;
@@ -384,9 +384,70 @@ void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
 }
 
 size_t CMonitoringHandler::getExtraSizeForEscapedChars(const CIEC_ANY& paDataValue){
-  return (CIEC_ANY::e_WSTRING == paDataValue.getDataTypeID() || CIEC_ANY::e_STRING == paDataValue.getDataTypeID()) ?
-      forte::core::util::getExtraSizeForEscapedChars(static_cast<const CIEC_WSTRING&>(paDataValue).getValue()) :
-      0;
+  size_t retVal = 0;
+
+  switch(paDataValue.getDataTypeID()){
+    case CIEC_ANY::e_WSTRING:
+    case CIEC_ANY::e_STRING:
+      retVal = forte::core::util::getExtraSizeForEscapedChars(static_cast<const CIEC_WSTRING&>(paDataValue).getValue());
+     break;
+    case CIEC_ANY::e_ARRAY:
+      retVal = getExtraSizeForEscapedCharsArray(static_cast<const CIEC_ARRAY&>(paDataValue));
+      break;
+    case CIEC_ANY::e_STRUCT:
+      retVal = getExtraSizeForEscapedCharsStruct(static_cast<const CIEC_STRUCT&>(paDataValue));
+      break;
+    default:
+      break;
+  }
+
+  return retVal;
+}
+
+size_t CMonitoringHandler::getExtraSizeForEscapedCharsArray(const CIEC_ARRAY& paDataValue){
+  size_t retVal = 0;
+
+  switch(paDataValue[0]->getDataTypeID()){
+    case CIEC_ANY::e_WSTRING:
+    case CIEC_ANY::e_STRING:
+      for(size_t i = 0; i < paDataValue.size(); i++) {
+        retVal += forte::core::util::getExtraSizeForEscapedChars(static_cast<const CIEC_WSTRING*>(paDataValue[i])->getValue()) + 12; //for opening and closing quotes or apos
+      }
+      break;
+    case CIEC_ANY::e_STRUCT:
+      for(size_t i = 0; i < paDataValue.size(); i++) {
+        retVal += getExtraSizeForEscapedCharsStruct(*static_cast<const CIEC_STRUCT*>(paDataValue[i]));
+      }
+      break;
+    default:
+      break;
+  }
+
+  return retVal;
+}
+
+size_t CMonitoringHandler::getExtraSizeForEscapedCharsStruct(const CIEC_STRUCT& paDataValue) {
+  size_t retVal = 0;
+
+  const CIEC_ANY* members = paDataValue.getMembers();
+  for(size_t i = 0; i < paDataValue.getStructSize(); i++) {
+    switch(members[i].getDataTypeID()){
+      case CIEC_ANY::e_WSTRING:
+      case CIEC_ANY::e_STRING:
+        retVal += forte::core::util::getExtraSizeForEscapedChars(static_cast<const CIEC_WSTRING&>(members[i]).getValue()) + 12; //for opening and closing quotes or apos
+        break;
+      case CIEC_ANY::e_ARRAY:
+        retVal += getExtraSizeForEscapedCharsArray(static_cast<const CIEC_ARRAY&>(members[i]));
+        break;
+      case CIEC_ANY::e_STRUCT:
+        retVal += getExtraSizeForEscapedCharsStruct(static_cast<const CIEC_STRUCT&>(members[i]));
+        break;
+      default:
+        break;
+    }
+  }
+
+  return retVal;
 }
 
 void CMonitoringHandler::appendPortTag(CIEC_STRING &paResponse,
