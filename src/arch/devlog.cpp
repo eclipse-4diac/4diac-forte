@@ -20,46 +20,45 @@
 
 #ifndef NOLOG
 
-static const char* cg_acLogLevel[] = {"INFO", "WARNING", "ERROR", "DEBUG", "TRACE" };
+static const char* scLogLevel[] = { "INFO", "WARNING", "ERROR", "DEBUG", "TRACE" };
 
 //this define allows to provide an own log handler (see LMS for an example of this)
-#ifndef FORTE_EXTERNAL_LOG_HANDLER
+# ifndef FORTE_EXTERNAL_LOG_HANDLER
 
 /*! \brief print the given log message with the error level and a time stamp
  *
  * @param pa_ecLevel the message's log level
  * @param pa_acMessage the message to log
  */
-void printLogMessage(E_MsgLevel pa_eLevel, const char *pa_acMessage);
+void printLogMessage(E_MsgLevel paLevel, const char *paMessage);
 
-static const int scm_nMsgBufSize = 300;
-static char sm_acMsgBuf[scm_nMsgBufSize]; //!<Buffer for the messages created by the variable addMsg function
+static const int scMsgBufSize = 300;
+static char sMsgBuf[scMsgBufSize]; //!<Buffer for the messages created by the variable addMsg function
 
-static CSyncObject  sgMessageLock;
+static CSyncObject sMessageLock;
 
-
-void logMessage(E_MsgLevel pa_eLevel, const char *pa_acMessage, ...){
-  CCriticalRegion crticalRegion(sgMessageLock);
+void logMessage(E_MsgLevel paLevel, const char *paMessage, ...) {
+  CCriticalRegion crticalRegion(sMessageLock);
   va_list pstArgPtr;
 
-  va_start(pstArgPtr, pa_acMessage);
-  forte_vsnprintf(sm_acMsgBuf, scm_nMsgBufSize, pa_acMessage, pstArgPtr);
+  va_start(pstArgPtr, paMessage);
+  forte_vsnprintf(sMsgBuf, scMsgBufSize, paMessage, pstArgPtr);
   va_end(pstArgPtr);
 
-  printLogMessage(pa_eLevel, sm_acMsgBuf);
+  printLogMessage(paLevel, sMsgBuf);
 }
 
-void printLogMessage(E_MsgLevel pa_eLevel, const char *pa_acMessage){
-  fprintf(stderr, "%s", cg_acLogLevel[pa_eLevel]);
+void printLogMessage(E_MsgLevel paLevel, const char *paMessage) {
+  fprintf(stderr, "%s", scLogLevel[paLevel]);
 
-  if (CTimerHandler::smFORTETimer != 0){
+  if(0 != CTimerHandler::smFORTETimer) {
     fprintf(stderr, ": T#%" PRIuFAST64 ": ", CTimerHandler::smFORTETimer->getForteTime());
-  }
-  else{
+  } else {
     fprintf(stderr, "%s", ": T#notime: ");
   }
-  fprintf(stderr, "%s", pa_acMessage);
+  fprintf(stderr, "%s", paMessage);
 }
 
-#endif
-#endif
+# endif  /* FORTE_EXTERNAL_LOG_HANDLER */
+
+#endif  /* NOLOG */

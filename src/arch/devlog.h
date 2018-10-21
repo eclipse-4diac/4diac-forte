@@ -17,7 +17,13 @@
  * They can be printed to a console or archived somewhere (This is implementation dependent).
  */
 
-enum E_MsgLevel {E_INFO, E_WARNING, E_ERROR, E_DEBUG, E_TRACE};
+enum E_MsgLevel {
+  E_INFO,
+  E_WARNING,
+  E_ERROR,
+  E_DEBUG,
+  E_TRACE
+};
 
 // possible loglevels: NOLOG, LOGERROR, LOGWARNING, LOGINFO, LOGDEBUG
 /* Meaning:
@@ -29,78 +35,76 @@ enum E_MsgLevel {E_INFO, E_WARNING, E_ERROR, E_DEBUG, E_TRACE};
  */
 
 #if !(defined(NOLOG) || defined(LOGERROR) || defined(LOGWARNING) || defined(LOGINFO) || defined(LOGDEBUG))
-/* Set default loglevel */
-# define LOGDEBUG
+# define LOGDEBUG  /* Set default loglevel */
 #endif
 
 #ifdef LOGDEBUG
-  #define DEVLOG_ERROR(...) logMessage(E_ERROR, __VA_ARGS__)
-  #define DEVLOG_WARNING(...) logMessage(E_WARNING, __VA_ARGS__)
-  #define DEVLOG_INFO(...) logMessage(E_INFO, __VA_ARGS__)
-  #define DEVLOG_DEBUG(...) logMessage(E_DEBUG, __VA_ARGS__)
-  #define DEVLOG_ERROR_VAR(X) X
-  #define DEVLOG_WARNING_VAR(X) X
-  #define DEVLOG_INFO_VAR(X) X
-  #define DEVLOG_DEBUG_VAR(X) X
+# define DEVLOG_ERROR(...) logMessage(E_ERROR, __VA_ARGS__)
+# define DEVLOG_WARNING(...) logMessage(E_WARNING, __VA_ARGS__)
+# define DEVLOG_INFO(...) logMessage(E_INFO, __VA_ARGS__)
+# define DEVLOG_DEBUG(...) logMessage(E_DEBUG, __VA_ARGS__)
+# define DEVLOG_ERROR_VAR(X) X
+# define DEVLOG_WARNING_VAR(X) X
+# define DEVLOG_INFO_VAR(X) X
+# define DEVLOG_DEBUG_VAR(X) X
 #endif
 
 #ifdef LOGERROR
-  #define DEVLOG_ERROR(...) logMessage(E_ERROR, __VA_ARGS__)
-  #define DEVLOG_WARNING(...)
-  #define DEVLOG_INFO(...)
-  #define DEVLOG_DEBUG(...)
-  #define DEVLOG_ERROR_VAR(X) X
-  #define DEVLOG_WARNING_VAR(X)
-  #define DEVLOG_INFO_VAR(X)
-  #define DEVLOG_DEBUG_VAR(X)
+# define DEVLOG_ERROR(...) logMessage(E_ERROR, __VA_ARGS__)
+# define DEVLOG_WARNING(...)
+# define DEVLOG_INFO(...)
+# define DEVLOG_DEBUG(...)
+# define DEVLOG_ERROR_VAR(X) X
+# define DEVLOG_WARNING_VAR(X)
+# define DEVLOG_INFO_VAR(X)
+# define DEVLOG_DEBUG_VAR(X)
 #endif
 
 #ifdef LOGWARNING
-  #define DEVLOG_ERROR(...) logMessage(E_ERROR, __VA_ARGS__)
-  #define DEVLOG_WARNING(...) logMessage(E_WARNING, __VA_ARGS__)
-  #define DEVLOG_INFO(...)
-  #define DEVLOG_DEBUG(...)
-  #define DEVLOG_ERROR_VAR(X) X
-  #define DEVLOG_WARNING_VAR(X) X
-  #define DEVLOG_INFO_VAR(X)
-  #define DEVLOG_DEBUG_VAR(X)
+# define DEVLOG_ERROR(...) logMessage(E_ERROR, __VA_ARGS__)
+# define DEVLOG_WARNING(...) logMessage(E_WARNING, __VA_ARGS__)
+# define DEVLOG_INFO(...)
+# define DEVLOG_DEBUG(...)
+# define DEVLOG_ERROR_VAR(X) X
+# define DEVLOG_WARNING_VAR(X) X
+# define DEVLOG_INFO_VAR(X)
+# define DEVLOG_DEBUG_VAR(X)
 #endif
 
 #ifdef LOGINFO
- #define DEVLOG_ERROR(...) logMessage(E_ERROR, __VA_ARGS__)
-  #define DEVLOG_WARNING(...) logMessage(E_WARNING, __VA_ARGS__)
-  #define DEVLOG_INFO(...) logMessage(E_INFO, __VA_ARGS__)
-  #define DEVLOG_DEBUG(...)
-  #define DEVLOG_ERROR_VAR(X) X
-  #define DEVLOG_WARNING_VAR(X) X
-  #define DEVLOG_INFO_VAR(X) X
-  #define DEVLOG_DEBUG_VAR(X)
+# define DEVLOG_ERROR(...) logMessage(E_ERROR, __VA_ARGS__)
+# define DEVLOG_WARNING(...) logMessage(E_WARNING, __VA_ARGS__)
+# define DEVLOG_INFO(...) logMessage(E_INFO, __VA_ARGS__)
+# define DEVLOG_DEBUG(...)
+# define DEVLOG_ERROR_VAR(X) X
+# define DEVLOG_WARNING_VAR(X) X
+# define DEVLOG_INFO_VAR(X) X
+# define DEVLOG_DEBUG_VAR(X)
 #endif
 
 #ifdef NOLOG
-  #define DEVLOG_INFO(...)
-  #define DEVLOG_WARNING(...)
-  #define DEVLOG_ERROR(...)
-  #define DEVLOG_DEBUG(...)
-  #define DEVLOG_ERROR_VAR(X)
-  #define DEVLOG_WARNING_VAR(X)
-  #define DEVLOG_INFO_VAR(X)
-  #define DEVLOG_DEBUG_VAR(X)
+# define DEVLOG_INFO(...)
+# define DEVLOG_WARNING(...)
+# define DEVLOG_ERROR(...)
+# define DEVLOG_DEBUG(...)
+# define DEVLOG_ERROR_VAR(X)
+# define DEVLOG_WARNING_VAR(X)
+# define DEVLOG_INFO_VAR(X)
+# define DEVLOG_DEBUG_VAR(X)
 #endif
 
 #if (defined(FORTE_TRACE_EVENTS) && !defined(NOLOG))
-#define FORTE_TRACE(...) logMessage(E_TRACE,  __VA_ARGS__)
+# define FORTE_TRACE(...) logMessage(E_TRACE,  __VA_ARGS__)
 #else
-  #define FORTE_TRACE(...)
+# define FORTE_TRACE(...)
 #endif
-
 
 #ifndef NOLOG
 
 /*! \brief Adds an Entry to the LogBook
  *
  */
-void logMessage(E_MsgLevel pa_eLevel, const char *pa_acMessage, ...);
+void logMessage(E_MsgLevel paLevel, const char *pacMessage, ...);
 
 #endif  //#ifndef NOLOG
 
