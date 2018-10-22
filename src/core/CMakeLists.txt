@@ -26,7 +26,7 @@ forte_add_subdirectory(fmi)
 forte_add_sourcefile_hcpp(conn  dataconn  eventconn)     
 
 forte_add_sourcefile_h   (esfb.h event.h mgmcmd.h fortenode.h fortelist.h convert_functions.h genfb.h)
-forte_add_sourcefile_hcpp(basicfb cfb device devexec )
+forte_add_sourcefile_hcpp(simplefb basicfb cfb device devexec )
 forte_add_sourcefile_hcpp(extevhan funcbloc fbcontainer if2indco)
 forte_add_sourcefile_hcpp(resource stringdict typelib ecet)
 forte_add_sourcefile_hcpp(adapterconn adapter anyadapter iec61131_functions)
