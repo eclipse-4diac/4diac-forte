@@ -193,10 +193,18 @@ BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
     CIEC_TestStruct2 stStruct2;
     CIEC_TestStruct3 stStruct3;
 
+  BOOST_CHECK_EQUAL(stStruct1.getDataTypeID(), CIEC_ANY::e_STRUCT);
+  BOOST_CHECK_EQUAL(stStruct2.getDataTypeID(), CIEC_ANY::e_STRUCT);
+  BOOST_CHECK_EQUAL(stStruct3.getDataTypeID(), CIEC_ANY::e_STRUCT);
+
     //***************** Test struct 1 ********************************************************
     BOOST_CHECK_EQUAL(stStruct1.getMemberNamed(g_nStringIdVal1)->getDataTypeID(), CIEC_ANY::e_STRING);
     BOOST_CHECK_EQUAL(stStruct1.getMemberNamed(g_nStringIdVal2)->getDataTypeID(), CIEC_ANY::e_BOOL);
     BOOST_CHECK_EQUAL(stStruct1.getMemberNamed(g_nStringIdVal3)->getDataTypeID(), CIEC_ANY::e_INT);
+
+  BOOST_CHECK_EQUAL(stStruct1.getMembers()[0].getDataTypeID(), CIEC_ANY::e_STRING);
+  BOOST_CHECK_EQUAL(stStruct1.getMembers()[1].getDataTypeID(), CIEC_ANY::e_BOOL);
+  BOOST_CHECK_EQUAL(stStruct1.getMembers()[2].getDataTypeID(), CIEC_ANY::e_INT);
 
     checkTestStruct1_InitialValues(stStruct1);
 
@@ -218,9 +226,14 @@ BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
 
     //***************** Test struct 2 ********************************************************
     BOOST_CHECK_EQUAL(stStruct2.getMemberNamed(g_nStringIdVal1)->getDataTypeID(), CIEC_ANY::e_REAL);
-    BOOST_CHECK_EQUAL(stStruct2.getMemberNamed(g_nStringIdVal2)->getDataTypeID(), CIEC_ANY::e_INT);
+  BOOST_CHECK_EQUAL(stStruct2.getMemberNamed(g_nStringIdVal2)->getDataTypeID(), CIEC_ANY::e_INT);
     BOOST_CHECK_EQUAL(stStruct2.getMemberNamed(g_nStringIdVal3)->getDataTypeID(), CIEC_ANY::e_BOOL);
     BOOST_CHECK_EQUAL(stStruct2.getMemberNamed(g_nStringIdVal4)->getDataTypeID(), CIEC_ANY::e_INT);
+
+  BOOST_CHECK_EQUAL(stStruct2.getMembers()[0].getDataTypeID(), CIEC_ANY::e_REAL);
+  BOOST_CHECK_EQUAL(stStruct2.getMembers()[1].getDataTypeID(), CIEC_ANY::e_INT);
+  BOOST_CHECK_EQUAL(stStruct2.getMembers()[2].getDataTypeID(), CIEC_ANY::e_BOOL);
+  BOOST_CHECK_EQUAL(stStruct2.getMembers()[3].getDataTypeID(), CIEC_ANY::e_INT);
 
     checkTestStruct2_InitialValues(stStruct2);
 
@@ -251,14 +264,18 @@ BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
     //***************** Test struct 3 ********************************************************
     char cTest2[] = "Check string 2!";
     BOOST_CHECK_EQUAL(stStruct3.getMemberNamed(g_nStringIdVal1)->getDataTypeID(), CIEC_ANY::e_ARRAY);
+  BOOST_CHECK_EQUAL(stStruct3.getMembers()[0].getDataTypeID(), CIEC_ANY::e_ARRAY);
     for(size_t i = 0; i < CIEC_TestStruct3::sizeOfFirstArray; i++){
       BOOST_CHECK_EQUAL((*static_cast<CIEC_ARRAY *>(stStruct3.getMemberNamed(g_nStringIdVal1)))[i]->getDataTypeID(), CIEC_ANY::e_STRING);
+    BOOST_CHECK_EQUAL((*static_cast<CIEC_ARRAY *>(&stStruct3.getMembers()[0]))[i]->getDataTypeID(), CIEC_ANY::e_STRING);
     }
     BOOST_CHECK_EQUAL(stStruct3.getMemberNamed(g_nStringIdVal2)->getDataTypeID(), CIEC_ANY::e_BOOL);
+  BOOST_CHECK_EQUAL(stStruct3.getMembers()[1].getDataTypeID(), CIEC_ANY::e_BOOL);
 
     BOOST_CHECK_EQUAL(stStruct3.getMemberNamed(g_nStringIdVal3)->getDataTypeID(), CIEC_ANY::e_ARRAY);
     for(size_t i = 0; i < CIEC_TestStruct3::sizeOfSecondArray; i++){
       BOOST_CHECK_EQUAL((*static_cast<CIEC_ARRAY *>(stStruct3.getMemberNamed(g_nStringIdVal3)))[i]->getDataTypeID(), CIEC_ANY::e_INT);
+    BOOST_CHECK_EQUAL((*static_cast<CIEC_ARRAY *>(&stStruct3.getMembers()[2]))[i]->getDataTypeID(), CIEC_ANY::e_INT);
     }
 
     checkTestStruct3_InitialValues(stStruct3);
@@ -308,6 +325,10 @@ BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
     //copy struct via assignment operator
     stStruct2 = stStruct1;
     checkTestStruct1_TestDataSet1(stStruct2);
+
+  CIEC_TestStruct1 stStruct3(stStruct1);
+  checkTestStruct1_TestDataSet1 (stStruct3);
+
   }
 
   BOOST_AUTO_TEST_CASE(Struct_copy_test_teststruct2){
@@ -328,6 +349,9 @@ BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
     //copy struct via assignment operator
     stStruct2 = stStruct1;
     checkTestStruct2_TestDataSet1(stStruct2);
+
+  CIEC_TestStruct2 stStruct3(stStruct1);
+  checkTestStruct2_TestDataSet1 (stStruct3);
   }
 
   BOOST_AUTO_TEST_CASE(Struct_copy_test_teststruct3){
@@ -348,6 +372,9 @@ BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
     //copy struct via assignment operator
     stStruct2 = stStruct1;
     checkTestStruct3_TestDataSet1(stStruct2);
+
+  CIEC_TestStruct3 stStruct3(stStruct1);
+  checkTestStruct3_TestDataSet1 (stStruct3);
   }
 
   const char cTestFromString_String1[] = "String1";
@@ -373,7 +400,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
     const char cTestString8[] = { "(Val2:=true, Val3:= 23451, Val1:='String1')" };
     const char cTestString9[] = { "(Val3:= 23451, Val1:='String1', Val2:=true)" };
 
-    BOOST_CHECK_EQUAL(stStruct1.fromString(cTestString1), strlen(cTestString1));
+  BOOST_CHECK_EQUAL(stStruct1.fromString(cTestString1), strlen(cTestString1));
     checkTestStruct1_fromStringTestData(stStruct1);
     stStruct1 = stStruct2;
 
@@ -416,6 +443,16 @@ BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
     const char cTestStringNIO4[] = { "(Val4:='String1', Val2:=true, Val3:=23.3)" };
     const char cTestStringNIO5[] = { "(Val2:='String1', Val2:=true, Val3:=23451)" };
     const char cTestStringNIO6[] = { "(Val1:='String1', Val3:=true, Val1:=23451)" };
+  const char cTestStringNIO7[] = { "Val1:='String1',Val2:=true,Val3:=23451)" }; //missing opening (
+  const char cTestStringNIO8[] = { "(Val1:='String1',Val2:=true,Val3:=23451" }; //missing closing )
+  const char cTestStringNIO9[] = { "(Val1:='String1',Val2x:=true,Val3:=23451)" }; //wrong identifier
+  const char cTestStringNIO10[] = { "(Val1:='String1',Val2=true,Val3:=23451)" }; //wrong assigner
+  const char cTestStringNIO11[] = { "(Val1:='String1',Val2::true,Val3:=23451)" }; //wrong assigner 2
+  const char cTestStringNIO12[] = { "(Val1:='String1',Val123456789012345678901234567890:=true,Val3:=23451)" }; //identifier too long
+  const char cTestStringNIO13[] = { "(Val1:='String1',Val1):=true,Val3:=23451)" }; //identifier with closing )
+  const char cTestStringNIO14[] = { "(Val1:='String1',Val1:=true,Val3" }; //identifier without value
+  const char cTestStringNIO15[] = { "(Val1:='String1',Val1:=)true,Val3:=23451)" }; //closing ) after assigner
+  const char cTestStringNIO16[] = { "(Val1:='String1',Val1:=true,Val3:=" }; //end of string after assigner
 
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestStringNIO1), -1);
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestStringNIO2), -1);
@@ -423,6 +460,16 @@ BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestStringNIO4), -1);
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestStringNIO5), -1);
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestStringNIO6), -1);
+  BOOST_CHECK_EQUAL(stStruct1.fromString(cTestStringNIO7), -1);
+  BOOST_CHECK_EQUAL(stStruct1.fromString(cTestStringNIO8), -1);
+  BOOST_CHECK_EQUAL(stStruct1.fromString(cTestStringNIO9), -1);
+  BOOST_CHECK_EQUAL(stStruct1.fromString(cTestStringNIO10), -1);
+  BOOST_CHECK_EQUAL(stStruct1.fromString(cTestStringNIO11), -1);
+  BOOST_CHECK_EQUAL(stStruct1.fromString(cTestStringNIO12), -1);
+  BOOST_CHECK_EQUAL(stStruct1.fromString(cTestStringNIO13), -1);
+  BOOST_CHECK_EQUAL(stStruct1.fromString(cTestStringNIO14), -1);
+  BOOST_CHECK_EQUAL(stStruct1.fromString(cTestStringNIO15), -1);
+  BOOST_CHECK_EQUAL(stStruct1.fromString(cTestStringNIO16), -1);
 
   }
 
@@ -517,6 +564,14 @@ BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
     const char cTestString8[] = { "(Val1:=[\'String1\',\'String2\'],Val2:=TRUE, Val3:=[13])" };
     const char cTestString9[] = { "(Val1:=[\'String1\',\'String2\'], Val3:=[13], Val2:=TRUE)" };
 
+  BOOST_CHECK_EQUAL(stStruct1.getASN1StructType(), 64 + 32 + 1); //CIEC_STRUCT::e_APPLICATION + CIEC_STRUCT::e_CONSTRUCTED + 1
+  BOOST_CHECK_EQUAL(stStruct1.getStructSize(), 3);
+  const CStringDictionary::TStringId* names = stStruct1.elementNames();
+  BOOST_CHECK_EQUAL(names[0], g_nStringIdVal1);
+  BOOST_CHECK_EQUAL(names[1], g_nStringIdVal2);
+  BOOST_CHECK_EQUAL(names[2], g_nStringIdVal3);
+  BOOST_CHECK_EQUAL(stStruct1.getStructTypeNameID(), g_nStringIdTestStruct3);
+
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestString1), strlen(cTestString1));
     checkTestStruct3_fromStringTestData (stStruct1);
     stStruct1 = stStruct2;
@@ -568,6 +623,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
 
   void toStringTest_testStruct1(const char* pa_acVal1, bool pa_nVal2, int pa_nVal3, const char* pa_acResult){
     CIEC_TestStruct1 stStruct;
+  BOOST_CHECK_EQUAL(stStruct.getToStringBufferSize(), sizeof("(Val1:='',Val2:=FALSE,Val3:=+32767)"));
     int nResultLenght = static_cast<int>(strlen(pa_acResult));
     char acBuffer[50];
 
@@ -575,6 +631,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
       setDataTestStruct1(stStruct, pa_acVal1, pa_nVal2, pa_nVal3);
       BOOST_CHECK_EQUAL(stStruct.toString(acBuffer, i), nResultLenght);
       BOOST_CHECK_EQUAL(strcmp(acBuffer, pa_acResult), 0);
+    BOOST_CHECK_EQUAL(stStruct.getToStringBufferSize(), sizeof("(Val1:='',Val2:=FALSE,Val3:=+32767)") + strlen(pa_acVal1));
     }
     for(int i = 0; i <= nResultLenght; i++){
       BOOST_CHECK_EQUAL(stStruct.toString(acBuffer, i), -1);
@@ -590,6 +647,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
 
   void toStringTest_testStruct2(float pa_fVal1, int pa_nVal2, bool pa_bVal3, int pa_nVal4, const char* pa_acResult){
       CIEC_TestStruct2 stStruct;
+  BOOST_CHECK_EQUAL(stStruct.getToStringBufferSize(), sizeof("(Val1:=123456789.123,Val2:=+32767,Val3:=FALSE,Val4:=+32767)"));
       int nResultLenght = static_cast<int>(strlen(pa_acResult));
       char acBuffer[60];
 
@@ -597,6 +655,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
         setDataTestStruct2(stStruct, pa_fVal1, pa_nVal2, pa_bVal3, pa_nVal4);
         BOOST_CHECK_EQUAL(stStruct.toString(acBuffer, i), nResultLenght);
         BOOST_CHECK_EQUAL(strcmp(acBuffer, pa_acResult), 0);
+    BOOST_CHECK_EQUAL(stStruct.getToStringBufferSize(), sizeof("(Val1:=123456789.123,Val2:=+32767,Val3:=FALSE,Val4:=+32767)"));
       }
       for(int i = 0; i <= nResultLenght; i++){
         BOOST_CHECK_EQUAL(stStruct.toString(acBuffer, i), -1);
@@ -614,6 +673,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
 
   void toStringTest_testStruct3(const char* pa_acVal11, const char* pa_acVal12, bool pa_nVal2, int pa_nVal3, const char* pa_acResult){
       CIEC_TestStruct3 stStruct;
+  BOOST_CHECK_EQUAL(stStruct.getToStringBufferSize(), sizeof("(Val1:=['',''],Val2:=FALSE,Val3:=[+32767])"));
       int nResultLenght = static_cast<int>(strlen(pa_acResult));
       char acBuffer[70];
 
@@ -621,6 +681,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
         setDataTestStruct3(stStruct, pa_acVal11, pa_acVal12, pa_nVal2, pa_nVal3);
         BOOST_CHECK_EQUAL(stStruct.toString(acBuffer, i), nResultLenght);
         BOOST_CHECK_EQUAL(strcmp(acBuffer, pa_acResult), 0);
+    BOOST_CHECK_EQUAL(stStruct.getToStringBufferSize(), sizeof("(Val1:=['',''],Val2:=FALSE,Val3:=[+32767])") + strlen(pa_acVal11) + strlen(pa_acVal12));
       }
       for(int i = 0; i <= nResultLenght; i++){
         BOOST_CHECK_EQUAL(stStruct.toString(acBuffer, i), -1);
@@ -634,6 +695,25 @@ BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
       toStringTest_testStruct3("Hansi Test", "Hansi Test 2", true, 0, "(Val1:=['Hansi Test','Hansi Test 2'],Val2:=TRUE,Val3:=[0])");
       toStringTest_testStruct3("", "", true, 2345, "(Val1:=['',''],Val2:=TRUE,Val3:=[2345])");
     }
+
+BOOST_AUTO_TEST_CASE(Struct_EmptyStruct) {
+  CIEC_STRUCT nTest(0, 0, 0, 0, 0);
+
+  BOOST_CHECK_EQUAL(nTest.getASN1StructType(), 0); //CIEC_STRUCT::e_APPLICATION + CIEC_STRUCT::e_CONSTRUCTED + 1
+  BOOST_CHECK_EQUAL(nTest.getStructSize(), 0);
+  const CStringDictionary::TStringId* names = nTest.elementNames();
+  BOOST_CHECK(0 == nTest.elementNames());
+  BOOST_CHECK_EQUAL(nTest.getStructTypeNameID(), 0);
+  BOOST_CHECK_EQUAL(nTest.getDataTypeID(), CIEC_ANY::e_STRUCT);
+  BOOST_CHECK(0 == nTest.getMembers());
+  BOOST_CHECK(0 == nTest.getMemberNamed(0));
+
+  char acBuffer[3];
+  BOOST_CHECK_EQUAL(nTest.getToStringBufferSize(), sizeof("()"));
+  BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 3), 2);
+  BOOST_CHECK_EQUAL(strcmp(acBuffer, "()"), 0);
+
+}
 
   //
   BOOST_AUTO_TEST_SUITE_END()

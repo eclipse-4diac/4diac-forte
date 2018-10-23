@@ -286,3 +286,18 @@ CIEC_ANY *CIEC_STRUCT::getMemberNamed(CStringDictionary::TStringId paMemberNameI
   return poRetVal;
 }
 
+unsigned int CIEC_STRUCT::getToStringBufferSize() const {
+  unsigned int retVal = 3; // 2 bytes for the open and closing brackets one for the '\0'
+  TForteUInt16 nSize = getStructSize();
+  retVal += (nSize > 1) ? (nSize - 1) : 0; //for the commas between the elements
+  retVal += (nSize * 2); //for the := of each element
+  const CIEC_ANY *poMembers = getMembers();
+  if(0 != poMembers) {
+    for(size_t i = 0; i < nSize; i++) {
+      retVal += strlen(CStringDictionary::getInstance().get(elementNames()[i])); //element name
+      retVal += (poMembers[i].getToStringBufferSize() - 1); //length of the element itself. -1 for the included \0 in each element
+    }
+  }
+  return retVal;
+}
+
