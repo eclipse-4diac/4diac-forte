@@ -88,32 +88,28 @@ CIEC_ANY* FORTE_GET_STRUCT_VALUE::lookForMember(CIEC_STRUCT* paWhereToLook, char
   return retVal;
 }
 
-void FORTE_GET_STRUCT_VALUE::executeEvent(int pa_nEIID) {
-  switch(pa_nEIID){
-    case scm_nEventREQID:
+void FORTE_GET_STRUCT_VALUE::executeEvent(int paEIID) {
+  if(scm_nEventREQID == paEIID) {
+    QO() = 0;
+    if(CIEC_ANY::e_STRUCT == in_struct().getDataTypeID()) {
+      CIEC_STRING copyOfMember = member();
+      CIEC_ANY *foundMember = lookForMember(static_cast<CIEC_STRUCT*>(&in_struct()), copyOfMember.getValue());
+      if(0 != foundMember) {
+        if(getDOConnection(g_nStringIdoutput)->getValue() && foundMember->getDataTypeID() == getDOConnection(g_nStringIdoutput)->getValue()->getDataTypeID()) {
+          output().setValue(*foundMember);
+          QO() = 1;
+        } else {
+          DEVLOG_ERROR("[GET_STRUCT_VALUE]: In instance %s, the member %s was found but it doesn't match the output type %d or the output is not connected\n",
+            getInstanceName(), member().getValue(),
+            getDOConnection(g_nStringIdoutput)->getValue() ? getDOConnection(g_nStringIdoutput)->getValue()->getDataTypeID() : 0);
+        }
+      } //error logging was done already in the internal function
+    } else {
+      DEVLOG_ERROR("[GET_STRUCT_VALUE]: In instance %s, the input structure is not of type structure but of type %d\n", getInstanceName(),
+        in_struct().getDataTypeID());
+    }
 
-      QO() = 0;
-      if(CIEC_ANY::e_STRUCT == in_struct().getDataTypeID()) {
-        CIEC_STRING copyOfMember = member();
-        CIEC_ANY *foundMember = lookForMember(static_cast<CIEC_STRUCT*>(&in_struct()), copyOfMember.getValue());
-        if(0 != foundMember) {
-          if(getDOConnection(g_nStringIdoutput)->getValue()
-            && foundMember->getDataTypeID() == getDOConnection(g_nStringIdoutput)->getValue()->getDataTypeID()) {
-            output().setValue(*foundMember);
-            QO() = 1;
-          } else {
-            DEVLOG_ERROR("[GET_STRUCT_VALUE]: In instance %s, the member %s was found but it doesn't match the output type %d or the output is not connected\n",
-              getInstanceName(), member().getValue(),
-              getDOConnection(g_nStringIdoutput)->getValue() ? getDOConnection(g_nStringIdoutput)->getValue()->getDataTypeID() : 0);
-          }
-        } //error logging was done already in the internal function
-      } else {
-        DEVLOG_ERROR("[GET_STRUCT_VALUE]: In instance %s, the input structure is not of type structure but of type %d\n", getInstanceName(),
-          in_struct().getDataTypeID());
-      }
-
-      sendOutputEvent(scm_nEventCNFID);
-      break;
+    sendOutputEvent(scm_nEventCNFID);
   }
 }
 

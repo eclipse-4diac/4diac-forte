@@ -96,9 +96,11 @@ class GET_STRUCT_VALUE_tester_MAIN : public GET_STRUCT_VALUE_tester_generic {
       evaluateTestResult(testCase_firstLevel(), "First Level");
       evaluateTestResult(testCase_secondLevel(), "Second Level");
       evaluateTestResult(testCase_firstLevelWrongName(), "First Level Wrong Name");
+      evaluateTestResult(testCase_firstLevelWrongNameWithSecondLevel(), "First Level Wrong Name With second level");
       evaluateTestResult(testCase_secondLevelWrongName(), "Second Level Wrong Name");
       evaluateTestResult(testCase_accessNonStruct(), "Access non struct");
       evaluateTestResult(testCase_wrongOutputType(), "Wrong output type");
+      evaluateTestResult(testCase_WrongEventInput(), "Wrong input event");
     }
 
     /***********************************************************************************/
@@ -116,6 +118,12 @@ class GET_STRUCT_VALUE_tester_MAIN : public GET_STRUCT_VALUE_tester_generic {
 
     bool testCase_firstLevelWrongName() {
       mMember = "xVal1";
+      triggerEvent(0);
+      return (checkForSingleOutputEventOccurence(0) && mQO == 0);
+    }
+
+    bool testCase_firstLevelWrongNameWithSecondLevel() {
+      mMember = "xVal1.Val2";
       triggerEvent(0);
       return (checkForSingleOutputEventOccurence(0) && mQO == 0);
     }
@@ -138,16 +146,22 @@ class GET_STRUCT_VALUE_tester_MAIN : public GET_STRUCT_VALUE_tester_generic {
       return (checkForSingleOutputEventOccurence(0) && mQO == 0);
     }
 
+    bool testCase_WrongEventInput() {
+      mMember = "Val2.Val1";
+      triggerEvent(1);
+      return eventChainEmpty();
+    }
+
     CIEC_GET_STRUCT_VALUE_Struct_test2 mIn_struct;
     CIEC_INT mOut;
 };
 
 DEFINE_FB_TESTER(GET_STRUCT_VALUE_tester_MAIN, g_nStringIdGET_STRUCT_VALUE);
 
-class GET_STRUCT_VALUE_tester_WRONG_INPUT_TYPE : public GET_STRUCT_VALUE_tester_generic {
-  DECLARE_FB_TESTER(GET_STRUCT_VALUE_tester_WRONG_INPUT_TYPE)
+class GET_STRUCT_VALUE_tester_WRONG_OUTPUT_TYPE : public GET_STRUCT_VALUE_tester_generic {
+  DECLARE_FB_TESTER(GET_STRUCT_VALUE_tester_WRONG_OUTPUT_TYPE)
   private:
-    explicit GET_STRUCT_VALUE_tester_WRONG_INPUT_TYPE(CResource* mTestResource) :
+    explicit GET_STRUCT_VALUE_tester_WRONG_OUTPUT_TYPE(CResource* mTestResource) :
         GET_STRUCT_VALUE_tester_generic(mTestResource, &mIn_struct, &mOut) {
     }
 
@@ -167,4 +181,4 @@ class GET_STRUCT_VALUE_tester_WRONG_INPUT_TYPE : public GET_STRUCT_VALUE_tester_
     CIEC_INT mOut;
 };
 
-DEFINE_FB_TESTER(GET_STRUCT_VALUE_tester_WRONG_INPUT_TYPE, g_nStringIdGET_STRUCT_VALUE);
+DEFINE_FB_TESTER(GET_STRUCT_VALUE_tester_WRONG_OUTPUT_TYPE, g_nStringIdGET_STRUCT_VALUE);
