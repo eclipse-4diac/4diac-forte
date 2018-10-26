@@ -16,7 +16,11 @@
 
 class CIEC_STRUCT : public CIEC_ANY_DERIVED{
   public:
-    CIEC_STRUCT(CStringDictionary::TStringId paTypeName, TForteUInt16 paLength, const CStringDictionary::TStringId paElementTypes[], const CStringDictionary::TStringId paElementNames[], TForteUInt8 paTypeID);
+
+    typedef const char* TStructInitialValues;
+
+    CIEC_STRUCT(CStringDictionary::TStringId paTypeName, TForteUInt16 paLength, const CStringDictionary::TStringId paElementTypes[],
+        const CStringDictionary::TStringId paElementNames[], TForteUInt8 paTypeID, TStructInitialValues *paInitialValues = 0);
 
     CIEC_STRUCT(const CIEC_STRUCT& paValue);
 
@@ -119,9 +123,15 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
 
     virtual unsigned int getToStringBufferSize() const;
 
+    TStructInitialValues* getInitialValues() const {
+      return
+          (0 != getGenData()) ?
+            *reinterpret_cast<TStructInitialValues**>(const_cast<TForteByte*>(getGenData() + 2 * sizeof(TForteUInt8) + sizeof(TForteUInt16)
+              + sizeof(CStringDictionary::TStringId) + sizeof(CStringDictionary::TStringId*))) : 0;
+      }
+
   protected:
 
-    //TODO: remove? already defined in de-/serializer
     enum EASN1Tags{
       e_UNIVERSAL = 0, e_APPLICATION = 64, e_CONTEXT = 128, e_PRIVATE = 192
     };
@@ -130,7 +140,8 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
     };
 
     //!Function to configure the array if it is created via the typelib
-    void setup(CStringDictionary::TStringId paTypeName, TForteUInt16 paLength, const CStringDictionary::TStringId paElementTypes[], const CStringDictionary::TStringId paElementNames[], TForteUInt8 paTypeID);
+    void setup(CStringDictionary::TStringId paTypeName, TForteUInt16 paLength, const CStringDictionary::TStringId paElementTypes[],
+        const CStringDictionary::TStringId paElementNames[], TForteUInt8 paTypeID, TStructInitialValues *paInitialValues = 0);
 
   private:
 
@@ -148,7 +159,8 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
         2 * sizeof(TForteUInt8) +               //ASN1Type + padding (2*8bit)
         sizeof(TForteUInt16) +                  //number of elements (1x16bit)
         sizeof(CStringDictionary::TStringId) +  //StructureType name ID   (1x32bit)
-        sizeof(CStringDictionary::TStringId*);  //Pointer to const static member of specialized class, containing element names (system-dependent)
+      sizeof(CStringDictionary::TStringId*) + //Pointer to const static member of specialized class, containing element names (system-dependent)
+      sizeof(TStructInitialValues*); //InitialValues
 
      void setASN1StructType(TForteUInt16 paVal){
       TForteByte *pBuf = getGenData();
@@ -178,7 +190,25 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
       }
     }
 
+    void setInitialValues(TStructInitialValues* paInitialValue) {
+      TStructInitialValues** pBuf = (reinterpret_cast<TStructInitialValues**>((getGenData() + 2 * sizeof(TForteUInt8) + sizeof(TForteUInt16)
+        + sizeof(CStringDictionary::TStringId) + sizeof(CStringDictionary::TStringId*))));
+      if(0 != getGenData()) {
+        *pBuf = paInitialValue;
+      }
+    }
+
     void clear();
+
+    void storeNewFoundElement(CStringDictionary::TStringId* paStorage, CStringDictionary::TStringId paToStore, size_t *paPosition);
+
+    void initializeNotFoundElements(CStringDictionary::TStringId* paFoundElements, size_t paNumberOfFound);
+
+    void getNotFoundElements(CStringDictionary::TStringId* paFoundElements, size_t paNumberOfFound, CStringDictionary::TStringId* paNotFoundElements);
+
+    void initializeMemberWithInitialValue(CIEC_ANY* paToInitialize, size_t paPosition);
+
+    void findNextNonBlankSpace(const char** paRunner);
 
     static CStringDictionary::TStringId parseNextElementId(const char *paRunner, int &paCounter);
 
