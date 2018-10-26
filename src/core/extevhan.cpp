@@ -14,18 +14,18 @@
 #include "../device.h"
 #include <devlog.h>
 
-CExternalEventHandler::CExternalEventHandler(CDeviceExecution& paDeviceExecution) : m_poDeviceExecution(paDeviceExecution)
+CExternalEventHandler::CExternalEventHandler(CDeviceExecution& paDeviceExecution) : mDeviceExecution(paDeviceExecution)
 {
 }
 
 bool CExternalEventHandler::isAllowed(){
-  return m_poDeviceExecution.extEvHandlerIsAllowed(getIdentifier());
+  return mDeviceExecution.extEvHandlerIsAllowed(getIdentifier());
 }
 
 void CExternalEventHandler::startNewEventChain(CEventSourceFB *paECStartFB){
   if(isAllowed()){
     FORTE_TRACE("Starting EC\n");
-    m_poDeviceExecution.startNewEventChain(paECStartFB);
+    mDeviceExecution.startNewEventChain(paECStartFB);
   }
   else{
     //TODO: handle this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -33,6 +33,3 @@ void CExternalEventHandler::startNewEventChain(CEventSourceFB *paECStartFB){
   }
 }
 
-CExternalEventHandler* CExternalEventHandler::getHandlerFromFB(CFunctionBlock& paFB, size_t paIdentifier){
-  return paFB.getResource().getDevice().getDeviceExecution().getHandler(paIdentifier);
-}

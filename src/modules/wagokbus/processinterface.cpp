@@ -12,6 +12,7 @@
 #include "processinterface.h"
 #include <sstream>
 #include <datatype.h>
+#include <extevhandlerhelper.h>
 
 
 DEFINE_HANDLER(WagoPFCProcessInterface::CKBusHandler)
@@ -39,17 +40,17 @@ bool WagoPFCProcessInterface::initialise(bool paInput){
     mChannel= strtol(paramsList[1].c_str(),&pBuffer,10);
   }
 
-  if((GET_HANDLER_FROM_THIS(CKBusHandler)->getTerminalId(mSlot))){
-    mTerminalInfo = GET_HANDLER_FROM_THIS(CKBusHandler)->getTerminalInfo(mSlot);
+  if((getExtEvHandler<CKBusHandler>(*this).getTerminalId(mSlot))){
+    mTerminalInfo = getExtEvHandler<CKBusHandler>(*this).getTerminalInfo(mSlot);
     if(0 != mTerminalInfo){
       if((paInput) && (getDO(2)->getDataTypeID() == CIEC_ANY::e_BOOL)){
-        GET_HANDLER_FROM_THIS(CKBusHandler)->registerKBusReadFB(this);
+        getExtEvHandler<CKBusHandler>(*this).registerKBusReadFB(this);
       }
 
       QO() = QI();
 
-      if(!GET_HANDLER_FROM_THIS(CKBusHandler)->isAlive()){
-        GET_HANDLER_FROM_THIS(CKBusHandler)->start();
+      if(!getExtEvHandler<CKBusHandler>(*this).isAlive()){
+        getExtEvHandler<CKBusHandler>(*this).start();
       }
 
       mInitialized = true;
@@ -60,7 +61,7 @@ bool WagoPFCProcessInterface::initialise(bool paInput){
 }
 
 bool WagoPFCProcessInterface::deinitialise(){
-  GET_HANDLER_FROM_THIS(CKBusHandler)->unregisterKBusReadFB(this);
+  getExtEvHandler<CKBusHandler>(*this).unregisterKBusReadFB(this);
   return true;
 }
 
@@ -69,26 +70,26 @@ bool WagoPFCProcessInterface::readPin(){
 }
 
 bool WagoPFCProcessInterface::writePin(){
-  GET_HANDLER_FROM_THIS(CKBusHandler)->writeOutputDataBitToKBus(mTerminalInfo, mChannel, OUT_X());
+  getExtEvHandler<CKBusHandler>(*this).writeOutputDataBitToKBus(mTerminalInfo, mChannel, OUT_X());
   return true;
 }
 
 bool WagoPFCProcessInterface::readWord(){
   TForteWord inDataWord(0);
-  GET_HANDLER_FROM_THIS(CKBusHandler)->readInputDataWordfromKBus(mTerminalInfo, mChannel, &inDataWord);
+  getExtEvHandler<CKBusHandler>(*this).readInputDataWordfromKBus(mTerminalInfo, mChannel, &inDataWord);
   IN_W() = inDataWord;
   return true;
 }
 
 bool WagoPFCProcessInterface::writeWord(){
-  GET_HANDLER_FROM_THIS(CKBusHandler)->writeOutputDataWordToKBus(mTerminalInfo, mChannel, OUT_W());
+  getExtEvHandler<CKBusHandler>(*this).writeOutputDataWordToKBus(mTerminalInfo, mChannel, OUT_W());
   return true;
 }
 
 bool WagoPFCProcessInterface::checkInputData(){
   bool retVal = false;
   bool inDataBool(false);
-  GET_HANDLER_FROM_THIS(CKBusHandler)->readInputDataBitfromKBus(mTerminalInfo, mChannel, &inDataBool);
+  getExtEvHandler<CKBusHandler>(*this).readInputDataBitfromKBus(mTerminalInfo, mChannel, &inDataBool);
   if (inDataBool != IN_X()){
     IN_X() = inDataBool;
     retVal = true;

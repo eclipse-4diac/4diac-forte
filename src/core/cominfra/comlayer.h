@@ -16,6 +16,7 @@
 
 #include "comtypes.h"
 #include "comCallback.h"
+#include "utils/extevhandlerhelper.h"
 
 namespace forte {
   namespace com_infra {
@@ -81,18 +82,23 @@ namespace forte {
 
         /*!\brief get the FB of this layer
          */
-    CBaseCommFB *getCommFB() const {
+        CBaseCommFB *getCommFB() const {
           return m_poFb;
         }
 
       protected:
         CComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB);
 
+        template<typename T>
+        T& getExtEvHandler(){
+          return ::getExtEvHandler<T>(*m_poFb);
+        }
+
         EComConnectionState m_eConnectionState;
 
         CComLayer *m_poTopLayer;
         CComLayer *m_poBottomLayer;
-    CBaseCommFB *m_poFb;
+        CBaseCommFB *m_poFb;
 
       private:
     };

@@ -12,6 +12,7 @@
 
 #include <ros/ros.h>
 #include "ROSManager.h"
+#include <extevhandlerhelper.h>
 
 #include "EXECUTE_ACTION_CLIENT.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -74,7 +75,7 @@ void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(int pa_nEIID){
             reapp_msgs::ExecuteGoal goal;
             goal.id1 = ID1();
             goal.id2 = ID2();
-            goal.command = GET_HANDLER_FROM_THIS(CROSManager)->ciecStringToStdString(COMMAND());
+            goal.command = getExtEvHandler<CROSManager>(*this).ciecStringToStdString(COMMAND());
 
             m_ActionClient->sendGoal(goal, boost::bind(&FORTE_EXECUTE_ACTION_CLIENT::doneCallback, this, _1, _2), boost::bind(&FORTE_EXECUTE_ACTION_CLIENT::activeCallback, this), boost::bind(&FORTE_EXECUTE_ACTION_CLIENT::feedbackCallback, this, _1));
 
@@ -137,7 +138,7 @@ void FORTE_EXECUTE_ACTION_CLIENT::doneCallback(const actionlib::SimpleClientGoal
   ACTIONSTATUS() = getCurrentActionState().c_str();
   QO() = true;
   m_GoalActive = false;
-  GET_HANDLER_FROM_THIS(CROSManager)->startChain(this);
+  getExtEvHandler<CROSManager>(*this).startChain(this);
 }
 
 void FORTE_EXECUTE_ACTION_CLIENT::activeCallback(){
@@ -150,7 +151,7 @@ void FORTE_EXECUTE_ACTION_CLIENT::feedbackCallback(const ExecuteFeedbackConstPtr
 
   ACTIONSTATUS() = getCurrentActionState().c_str();
   QO() = false;
-  GET_HANDLER_FROM_THIS(CROSManager)->startChain(this);
+  getExtEvHandler<CROSManager>(*this).startChain(this);
 }
 
 std::string FORTE_EXECUTE_ACTION_CLIENT::getCurrentActionState(){
@@ -185,8 +186,8 @@ std::string FORTE_EXECUTE_ACTION_CLIENT::getCurrentActionState(){
 }
 
 void FORTE_EXECUTE_ACTION_CLIENT::connectToActionServer(){
-  m_RosNamespace = GET_HANDLER_FROM_THIS(CROSManager)->ciecStringToStdString(ACTIONNAMESPACE());
-  m_RosMsgName = GET_HANDLER_FROM_THIS(CROSManager)->ciecStringToStdString(ACTIONMSGNAME());
+  m_RosNamespace = getExtEvHandler<CROSManager>(*this).ciecStringToStdString(ACTIONNAMESPACE());
+  m_RosMsgName = getExtEvHandler<CROSManager>(*this).ciecStringToStdString(ACTIONMSGNAME());
   DEVLOG_DEBUG("[EXEC_CLIENT] Namespace: %s \nMessage name : %s \n", m_RosNamespace.c_str(), m_RosMsgName.c_str());
 
   nh = new ros::NodeHandle(m_RosNamespace);

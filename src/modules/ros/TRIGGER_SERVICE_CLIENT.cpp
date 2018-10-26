@@ -12,6 +12,7 @@
 
 #include "ServiceCallManager.h"
 #include "ROSManager.h"
+#include <extevhandlerhelper.h>
 
 #include "TRIGGER_SERVICE_CLIENT.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -44,13 +45,13 @@ void FORTE_TRIGGER_SERVICE_CLIENT::executeEvent(int pa_nEIID){
       //initiate
       if(!m_Initiated && QI()){
         setEventChainExecutor(m_poInvokingExecEnv);
-        m_RosNamespace = GET_HANDLER_FROM_THIS(CROSManager)->ciecStringToStdString(NAMESPACE());
-        m_RosMsgName = GET_HANDLER_FROM_THIS(CROSManager)->ciecStringToStdString(SRVNAME());
+        m_RosNamespace = getExtEvHandler<CROSManager>(*this).ciecStringToStdString(NAMESPACE());
+        m_RosMsgName = getExtEvHandler<CROSManager>(*this).ciecStringToStdString(SRVNAME());
         m_nh = new ros::NodeHandle(m_RosNamespace);
         m_triggerClient = m_nh->serviceClient < std_srvs::Trigger > (m_RosMsgName);
         STATUS() = "Client waits for server";
 
-        GET_HANDLER_FROM_THIS(CServiceCallManager)->queueConnectWait(this);
+        getExtEvHandler<CServiceCallManager>(*this).queueConnectWait(this);
       }
       //terminate
       else if(m_Initiated && !QI()){
@@ -71,7 +72,7 @@ void FORTE_TRIGGER_SERVICE_CLIENT::executeEvent(int pa_nEIID){
       if(m_Initiated && QI()){
         STATUS() = "Request sent";
         //add to queue
-        GET_HANDLER_FROM_THIS(CServiceCallManager)->queueServiceCall(this);
+        getExtEvHandler<CServiceCallManager>(*this).queueServiceCall(this);
       }
       //uninitialized or REQ-
       else{
@@ -100,7 +101,7 @@ void FORTE_TRIGGER_SERVICE_CLIENT::callService(){
   bool srv_success = m_triggerClient.call(m_srv);
 
   SUCCESS() = m_srv.response.success;
-  MESSAGE() = GET_HANDLER_FROM_THIS(CROSManager)->stdStringToCiecString(m_srv.response.message);
+  MESSAGE() = getExtEvHandler<CROSManager>(*this).stdStringToCiecString(m_srv.response.message);
 
   if(srv_success){
     QO() = true;
@@ -112,7 +113,7 @@ void FORTE_TRIGGER_SERVICE_CLIENT::callService(){
     SUCCESS() = false;
     MESSAGE() = "failed";
   }
-  GET_HANDLER_FROM_THIS(CServiceCallManager)->startChain(this);
+  getExtEvHandler<CServiceCallManager>(*this).startChain(this);
 }
 
 void FORTE_TRIGGER_SERVICE_CLIENT::waitForServer(){
@@ -121,6 +122,6 @@ void FORTE_TRIGGER_SERVICE_CLIENT::waitForServer(){
     DEVLOG_ERROR("[FORTE_TRIGGER_SERVICE_CLIENT] connection failed. Server not existing. \n");
   }
   else {
-    GET_HANDLER_FROM_THIS(CServiceCallManager)->startChain(this);
+    getExtEvHandler<CServiceCallManager>(*this).startChain(this);
   }
 }

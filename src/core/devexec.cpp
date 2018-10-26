@@ -33,10 +33,10 @@ CDeviceExecution::~CDeviceExecution(){
   }
 
   for(size_t i = 0; i < cg_unNumberOfHandlers; i++){
-    if(0 != mRegisteredEventHandlers[i].m_poHandler){ //for the test cases, only the timer handler is created
-      mRegisteredEventHandlers[i].m_poHandler->disableHandler();
-      delete mRegisteredEventHandlers[i].m_poHandler;
-      mRegisteredEventHandlers[i].m_poHandler = 0;
+    if(0 != mRegisteredEventHandlers[i].mHandler){ //for the test cases, only the timer handler is created
+      mRegisteredEventHandlers[i].mHandler->disableHandler();
+      delete mRegisteredEventHandlers[i].mHandler;
+      mRegisteredEventHandlers[i].mHandler = 0;
     }
   }
 }
@@ -55,10 +55,10 @@ void CDeviceExecution::startNewEventChain(CEventSourceFB *pa_poECStartFB){
   }
 }
 
-CExternalEventHandler* CDeviceExecution::getHandler(size_t paIdentifer) const{
-  return mRegisteredEventHandlers[paIdentifer].m_poHandler;
+CExternalEventHandler* CDeviceExecution::getExtEvHandler(size_t paIdentifer) const{
+  return mRegisteredEventHandlers[paIdentifer].mHandler;
 }
 
 CTimerHandler& CDeviceExecution::getTimer() const{
-  return *static_cast<CTimerHandler*>(mRegisteredEventHandlers[0].m_poHandler);
+  return *static_cast<CTimerHandler*>(mRegisteredEventHandlers[0].mHandler);
 }
