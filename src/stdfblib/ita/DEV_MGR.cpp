@@ -163,7 +163,7 @@ bool DEV_MGR::parseXType(char *paRequestPartLeft, forte::core::SManagementCMD &p
     if(0 != paRequestPartLeft){
       paRequestPartLeft++;
       char* endOfRequest = strchr(paRequestPartLeft, '<');
-      endOfRequest = '\0';
+      *endOfRequest = '\0';
       forte::core::util::transformEscapedXMLToNonEscapedText(paRequestPartLeft);
       paCommand.mAdditionalParams = paRequestPartLeft;
       retVal = true;
