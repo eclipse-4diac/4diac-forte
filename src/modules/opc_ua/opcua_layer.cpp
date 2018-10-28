@@ -96,7 +96,7 @@ void COPC_UA_Layer::splitUrlAndPath(const char *fullUrl, const char** endpoint,
 
 EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
 
-  GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Handler)->referencedNodesDecrement(&referencedNodes, this, true);
+  getExtEvHandler<COPC_UA_Handler>().referencedNodesDecrement(&referencedNodes, this, true);
   for (CSinglyLinkedList<UA_NodeId *>::Iterator iter = referencedNodes.begin(); iter != referencedNodes.end(); ++iter) {
     UA_NodeId_delete((*iter));
   }
@@ -130,11 +130,11 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
   if (!useClient) {
     UA_StatusCode retVal;
     CSinglyLinkedList<UA_NodeId *> nodesAlongPath = CSinglyLinkedList<UA_NodeId *>();
-    if ((retVal = GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Handler)->getNodeForPath(&fbNodeId, paLayerParameter, true, NULL, NULL, NULL, NULL, &nodesAlongPath)) != UA_STATUSCODE_GOOD) {
+    if ((retVal = getExtEvHandler<COPC_UA_Handler>().getNodeForPath(&fbNodeId, paLayerParameter, true, NULL, NULL, NULL, NULL, &nodesAlongPath)) != UA_STATUSCODE_GOOD) {
       DEVLOG_ERROR("OPC UA: Could not get node for path: '%s': %s\n", paLayerParameter, UA_StatusCode_name(retVal));
       return e_InitTerminated;
     }
-    GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Handler)->referencedNodesIncrement(&nodesAlongPath, this);
+    getExtEvHandler<COPC_UA_Handler>().referencedNodesIncrement(&nodesAlongPath, this);
 
     for (CSinglyLinkedList<UA_NodeId *>::Iterator iter = nodesAlongPath.begin(); iter != nodesAlongPath.end(); ++iter) {
       referencedNodes.pushBack((*iter));
@@ -197,7 +197,7 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
 
 void COPC_UA_Layer::closeConnection() {
 
-  GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Handler)->referencedNodesDecrement(&referencedNodes, this, true);
+  getExtEvHandler<COPC_UA_Handler>().referencedNodesDecrement(&referencedNodes, this, true);
   for (CSinglyLinkedList<UA_NodeId *>::Iterator iter = referencedNodes.begin(); iter != referencedNodes.end(); ++iter) {
     UA_NodeId_delete((*iter));
   }
@@ -344,7 +344,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::createSubscription(
   char *sourceVarBrowseName = static_cast<char *>(forte_malloc(
       sizeof(char) * len));
   forte_snprintf(sourceVarBrowseName, len, "%s", subnodePath);
-  UA_StatusCode retVal = GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Handler)->getNodeForPath(&fbNodeId, sourceVarBrowseName, false,
+  UA_StatusCode retVal = getExtEvHandler<COPC_UA_Handler>().getNodeForPath(&fbNodeId, sourceVarBrowseName, false,
       &objectsFolder);
   forte_free(sourceVarBrowseName);
 
@@ -353,7 +353,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::createSubscription(
   UA_init(varValue, conv->type);
 
   UA_NodeId monItem = UA_NODEID_NUMERIC(1, 50217);
-  GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Client_Handler)->addMonitoringItem(uaClient, this, monItem, conv ,0);
+  getExtEvHandler<COPC_UA_Client_Handler>().addMonitoringItem(uaClient, this, monItem, conv ,0);
 
   return e_InitOk;
 }
@@ -400,11 +400,11 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(
       UA_NodeId newNodeType = UA_NODEID_NUMERIC(0, UA_NS0ID_BASEOBJECTTYPE);
       CSinglyLinkedList<UA_NodeId *> nodesAlongPath = CSinglyLinkedList<
           UA_NodeId *>();
-      retVal = GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Handler)->getNodeForPath(&(*nodeIds)[i].functionBlockId, fbBrowseName, true, fbNodeId, &newNodeType, NULL, NULL,
+      retVal = getExtEvHandler<COPC_UA_Handler>().getNodeForPath(&(*nodeIds)[i].functionBlockId, fbBrowseName, true, fbNodeId, &newNodeType, NULL, NULL,
           &nodesAlongPath);
       forte_free(fbBrowseName);
 
-      GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Handler)->referencedNodesIncrement(&nodesAlongPath, this);
+      getExtEvHandler<COPC_UA_Handler>().referencedNodesIncrement(&nodesAlongPath, this);
 
       for (CSinglyLinkedList<UA_NodeId *>::Iterator iter =
           nodesAlongPath.begin(); iter != nodesAlongPath.end(); ++iter) {
@@ -418,7 +418,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(
       char *sourceVarBrowseName = static_cast<char *>(forte_malloc(
           sizeof(char) * len));
       forte_snprintf(sourceVarBrowseName, len, "/%s", connectedToName);
-      retVal = GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Handler)->getNodeForPath(&(*nodeIds)[i].variableId, sourceVarBrowseName, false,
+      retVal = getExtEvHandler<COPC_UA_Handler>().getNodeForPath(&(*nodeIds)[i].variableId, sourceVarBrowseName, false,
           (*nodeIds)[i].functionBlockId);
       forte_free(sourceVarBrowseName);
       if (retVal == UA_STATUSCODE_GOOD) {
@@ -434,18 +434,17 @@ forte::com_infra::EComResponse COPC_UA_Layer::createPubSubNodes(
                 "OPC UA: Cannot convert value of port %d for initialization",
                 i);
           }
-          retVal = GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Handler)->createVariableNode((*nodeIds)[i].functionBlockId, connectedToName, conv->type,
+          retVal = getExtEvHandler<COPC_UA_Handler>().createVariableNode((*nodeIds)[i].functionBlockId, connectedToName, conv->type,
               varValue, (*nodeIds)[i].variableId, !isSD);
           UA_delete(varValue, conv->type);
           if (retVal == UA_STATUSCODE_GOOD && !isSD) {
-            GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Handler)->registerNodeCallBack((*nodeIds)[i].variableId, this, conv, i);
+            getExtEvHandler<COPC_UA_Handler>().registerNodeCallBack((*nodeIds)[i].variableId, this, conv, i);
           }
         } else if (!isSD) {
           // the node already exists. It could be the case that the node was previously created
           // for a subscribe FB, which sets the access to read only. Since this is now a publish FB
           // we need to change the access to read & write
-          if (UA_STATUSCODE_GOOD != GET_HANDLER_FROM_COMM_LAYER(
-                  COPC_UA_Handler)->updateNodeUserAccessLevel((*nodeIds)[i].variableId,
+          if (UA_STATUSCODE_GOOD != getExtEvHandler<COPC_UA_Handler>().updateNodeUserAccessLevel((*nodeIds)[i].variableId,
                   UA_ACCESSLEVELMASK_READ & UA_ACCESSLEVELMASK_WRITE)) {
             DEVLOG_WARNING("OPC UA: Cannot set write permission of node for port %d", i);
           }
@@ -497,7 +496,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::createMethodNode() {
 
   UA_StatusCode retVal;
   const char* subnodePath = getCommFB()->getInstanceName();
-  if ((retVal = GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Handler)->createMethodNode(fbNodeId, 1, subnodePath, COPC_UA_Layer::onServerMethodCall, this,
+  if ((retVal = getExtEvHandler<COPC_UA_Handler>().createMethodNode(fbNodeId, 1, subnodePath, COPC_UA_Layer::onServerMethodCall, this,
       getCommFB()->getNumRD(),
       inputArguments, getCommFB()->getNumSD(), outputArguments, methodNodeId)) !=
   UA_STATUSCODE_GOOD) {
@@ -603,7 +602,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::clientConnect() {
     }
   }
 
-  UA_StatusCode retVal = GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Handler)->getNodeForPath(&fbNodeId, clientNodePath, false, NULL, NULL, &fbNodeIdParent, this->uaClient);
+  UA_StatusCode retVal = getExtEvHandler<COPC_UA_Handler>().getNodeForPath(&fbNodeId, clientNodePath, false, NULL, NULL, &fbNodeIdParent, this->uaClient);
   if (retVal != UA_STATUSCODE_GOOD) {
     DEVLOG_ERROR(
         "OPC UA: Could not get node for path from server '%s': '%s'. %s\n",
@@ -639,7 +638,7 @@ forte::com_infra::EComResponse COPC_UA_Layer::createClient(const char* endpoint,
   // start the async call thread
   this->start();
 
-  this->uaClient = GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Client_Handler)->getClientForEndpoint(endpoint, true, subscription, &clientMutex);
+  this->uaClient = getExtEvHandler<COPC_UA_Client_Handler>().getClientForEndpoint(endpoint, true, subscription, &clientMutex);
   if (!this->uaClient) {
     return e_InitTerminated;
   }
@@ -692,7 +691,7 @@ EComResponse COPC_UA_Layer::sendData(void *paData, unsigned int paSize) {
       // change variable value in locale server
       for (unsigned int i = 0; i < paSize; i++) {
         FB_NodeIds *ni = &this->sendDataNodeIds[i];
-        if (GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Handler)->updateNodeValue(ni->variableId, &SDs[i], ni->convert) != UA_STATUSCODE_GOOD) {
+        if (getExtEvHandler<COPC_UA_Handler>().updateNodeValue(ni->variableId, &SDs[i], ni->convert) != UA_STATUSCODE_GOOD) {
           DEVLOG_ERROR("OPC UA: Could not convert publisher value for port %d to OPC UA.\n", i);
           retVal = e_ProcessDataDataTypeError;
         }
@@ -838,7 +837,7 @@ UA_StatusCode COPC_UA_Layer::onServerMethodCall(UA_Server *, const UA_NodeId *,
 
   if (self->mInterruptResp == e_ProcessDataOk) {
     self->getCommFB()->interruptCommFB(self);
-    GET_HANDLER_FROM_FB(*self->getCommFB(), COPC_UA_Handler)->forceEventHandling(self);
+    getExtEvHandler<COPC_UA_Handler>(*self->getCommFB()).forceEventHandling(self);
   } else {
     return UA_STATUSCODE_BADINVALIDARGUMENT;
   }
@@ -1061,5 +1060,5 @@ void COPC_UA_Layer::handleAsyncCallResult(const unsigned int /*callId*/,
 
 void COPC_UA_Layer::handleAsyncEvent() {
   getCommFB()->interruptCommFB(this);
-  GET_HANDLER_FROM_COMM_LAYER(COPC_UA_Handler)->forceEventHandling(this);
+  getExtEvHandler<COPC_UA_Handler>().forceEventHandling(this);
 }

@@ -20,8 +20,8 @@ using namespace forte::com_infra;
 fmuComLayer::fmuComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB) : CComLayer(pa_poUpperLayer, pa_poFB),
     m_someValueChanged(false), m_eInterruptResp(e_Nothing) {
 
-  m_outputs = GET_HANDLER_FROM_COMM_LAYER(fmuHandler)->getOutputMap()->at(pa_poFB);
-  m_inputs =  GET_HANDLER_FROM_COMM_LAYER(fmuHandler)->getInputMap()->at(pa_poFB);
+  m_outputs = getExtEvHandler<fmuHandler>().getOutputMap()->at(pa_poFB);
+  m_inputs =  getExtEvHandler<fmuHandler>().getInputMap()->at(pa_poFB);
 
   if(m_outputs){
     for(unsigned int i = 0; i < m_outputs->size(); i++){
@@ -124,7 +124,7 @@ EComResponse fmuComLayer::processInterrupt() {
 }
 
 void fmuComLayer::closeConnection() {
-  GET_HANDLER_FROM_COMM_LAYER(fmuHandler)->unregisterLayer(this);
+  getExtEvHandler<fmuHandler>().unregisterLayer(this);
 }
 
 EComResponse fmuComLayer::openConnection(char* ) {
@@ -134,25 +134,12 @@ EComResponse fmuComLayer::openConnection(char* ) {
     FMU_DEBUG_LOG(GET_FMU_INSTANCE_FROM_COMM_LAYER() ,MODEL_GUID << " Cannot create a communication IO wihtout inputs and outputs\n" << "--------------\n");
   }else{
 
-    if(fmuHandler::eRegisterLayerSucceeded == GET_HANDLER_FROM_COMM_LAYER(fmuHandler)->registerLayer(this)){
+    if(fmuHandler::eRegisterLayerSucceeded == getExtEvHandler<fmuHandler>().registerLayer(this)){
       retVal = e_InitOk;
     }
     else{
       retVal = e_InitInvalidId;
     }
-
-    /*switch (m_poFb->getComServiceType()){
-      case e_Server:
-        retVal = e_InitTerminated;
-        break;
-      case e_Client:
-        retVal = e_InitTerminated;
-        break;
-      case e_Publisher:
-        break;
-      case e_Subscriber:
-        break;
-    }*/
   }
   return retVal;
 }

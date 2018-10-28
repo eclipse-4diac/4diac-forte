@@ -17,8 +17,8 @@ ${HANDLERMANAGER_INCLUDE}
 const size_t CTimerHandler::mHandlerIdentifier = 0;
 ${HANDLERMANAGER_VARIABLES} 
 
-void CDeviceExecution::createHandlers(CDeviceExecution& pa_DeviceExecution){
+void CDeviceExecution::createHandlers(CDeviceExecution& paDeviceExecution){
 
-  pa_DeviceExecution.mRegisteredEventHandlers[0].m_poHandler = CTimerHandler::createTimerHandler(pa_DeviceExecution);
+  paDeviceExecution.mRegisteredEventHandlers[0].mHandler = CTimerHandler::createTimerHandler(paDeviceExecution);
 ${HANDLERMANAGER_INSTANCE}
 }

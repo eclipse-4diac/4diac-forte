@@ -37,7 +37,7 @@ EComResponse CHttpComLayer::openConnection(char *paLayerParameter){
     case e_Server:
       if(1 == m_poFb->getNumSD()){
         mPath = paLayerParameter;
-        GET_HANDLER_FROM_COMM_LAYER(CHTTP_Handler)->addServerPath(this, mPath);
+        getExtEvHandler<CHTTP_Handler>().addServerPath(this, mPath);
         eRetVal = e_InitOk;
       }
       else{
@@ -211,11 +211,11 @@ void CHttpComLayer::sendDataAsServer(const void *paData){
     }
   }
   if(error){
-    GET_HANDLER_FROM_COMM_LAYER(CHTTP_Handler)->forceClose(this);
+    getExtEvHandler<CHTTP_Handler>().forceClose(this);
     mInterruptResp = e_ProcessDataDataTypeError;
   }
   else{
-    GET_HANDLER_FROM_COMM_LAYER(CHTTP_Handler)->sendServerAnswer(this, mRequest);
+    getExtEvHandler<CHTTP_Handler>().sendServerAnswer(this, mRequest);
     mInterruptResp = e_ProcessDataOk;
   }
 }
@@ -236,7 +236,7 @@ void CHttpComLayer::sendDataAsClient(const void *paData){
   }
 
   if(!error){
-    if(GET_HANDLER_FROM_COMM_LAYER(CHTTP_Handler)->sendClientData(this, mRequest)){
+    if(getExtEvHandler<CHTTP_Handler>().sendClientData(this, mRequest)){
       mInterruptResp = e_ProcessDataOk;
     }else{
       mInterruptResp = e_ProcessDataSendFailed;
@@ -305,10 +305,10 @@ EComResponse forte::com_infra::CHttpComLayer::recvServerData(CSinglyLinkedList<C
     mReqData = "";
     if(!CHttpParser::createResponse(toSend, result, mContentType, mReqData)){
       DEVLOG_DEBUG("[HTTP Layer] Wrong Response request when changing the data\n");
-      GET_HANDLER_FROM_COMM_LAYER(CHTTP_Handler)->forceCloseFromRecv(this);
+      getExtEvHandler<CHTTP_Handler>().forceCloseFromRecv(this);
     }
     else{
-      GET_HANDLER_FROM_COMM_LAYER(CHTTP_Handler)->sendServerAnswerFromRecv(this, toSend);
+      getExtEvHandler<CHTTP_Handler>().sendServerAnswerFromRecv(this, toSend);
     }
     mInterruptResp = e_ProcessDataDataTypeError;
   }
@@ -359,9 +359,9 @@ EComResponse CHttpComLayer::processInterrupt(){
 
 void CHttpComLayer::closeConnection(){
   if (e_Server == m_poFb->getComServiceType()){
-      GET_HANDLER_FROM_COMM_LAYER(CHTTP_Handler)->removeServerPath(mPath);
+      getExtEvHandler<CHTTP_Handler>().removeServerPath(mPath);
   }
-  GET_HANDLER_FROM_COMM_LAYER(CHTTP_Handler)->forceClose(this);
+  getExtEvHandler<CHTTP_Handler>().forceClose(this);
 }
 
 bool CHttpComLayer::serializeData(const CIEC_ANY& paCIECData){

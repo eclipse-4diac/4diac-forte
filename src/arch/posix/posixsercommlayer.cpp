@@ -154,7 +154,7 @@ forte::com_infra::EComResponse CPosixSerCommLayer::openSerialConnection(const SS
     tcflush(fileDescriptor, TCIFLUSH);
     tcsetattr(fileDescriptor, TCSANOW, &stNewTIO);
 
-    GET_HANDLER_FROM_COMM_LAYER(CFDSelectHandler)->addComCallback(fileDescriptor, this);
+    getExtEvHandler<CFDSelectHandler>().addComCallback(fileDescriptor, this);
     *paHandleResult = fileDescriptor;
     eRetVal = forte::com_infra::e_InitOk;
 
@@ -170,7 +170,7 @@ forte::com_infra::EComResponse CPosixSerCommLayer::openSerialConnection(const SS
 void CPosixSerCommLayer::closeConnection(){
   CFDSelectHandler::TFileDescriptor fileDescriptor = getSerialHandler();
   if(CFDSelectHandler::scmInvalidFileDescriptor != fileDescriptor){
-    GET_HANDLER_FROM_COMM_LAYER(CFDSelectHandler)->removeComCallback(fileDescriptor);
+    getExtEvHandler<CFDSelectHandler>().removeComCallback(fileDescriptor);
     tcsetattr(fileDescriptor, TCSANOW, &mOldTIO);
     close(fileDescriptor);
   }

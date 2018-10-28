@@ -12,6 +12,7 @@
 
 #include "ROSManager.h"
 #include <ros/ros.h>
+#include <extevhandlerhelper.h>
 
 #include "EXECUTE_ACTION_SERVER.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -44,8 +45,8 @@ void FORTE_EXECUTE_ACTION_SERVER::executeEvent(int pa_nEIID){
 
       if(QI() && !m_Initiated){
         
-        m_RosNamespace = GET_HANDLER_FROM_THIS(CROSManager)->ciecStringToStdString(ACTIONNAMESPACE());
-        m_RosMsgName = GET_HANDLER_FROM_THIS(CROSManager)->ciecStringToStdString(ACTIONMSGNAME());
+        m_RosNamespace = getExtEvHandler<CROSManager>(*this).ciecStringToStdString(ACTIONNAMESPACE());
+        m_RosMsgName = getExtEvHandler<CROSManager>(*this).ciecStringToStdString(ACTIONMSGNAME());
         DEVLOG_DEBUG("[EXEC_SERVER] Namespace: %s \n[EXEC_SERVER] Message name : %s \n", m_RosNamespace.c_str(), m_RosMsgName.c_str());
 
         m_nh = new ros::NodeHandle(m_RosNamespace);
@@ -81,7 +82,7 @@ void FORTE_EXECUTE_ACTION_SERVER::executeEvent(int pa_nEIID){
     case scm_nEventRSPID:
       //send a result (see executeCB)
       if(QI()){
-        m_Result.result = GET_HANDLER_FROM_THIS(CROSManager)->ciecStringToStdString(RESULT());
+        m_Result.result = getExtEvHandler<CROSManager>(*this).ciecStringToStdString(RESULT());
         m_Result.id = ID();
         FBSTATUS() = "Server sends result";
         m_ResultAvailable = true;
@@ -89,7 +90,7 @@ void FORTE_EXECUTE_ACTION_SERVER::executeEvent(int pa_nEIID){
       //send feedback
       else{
         // get feedback data from STATE() input
-        m_Feedback.state = GET_HANDLER_FROM_THIS(CROSManager)->ciecStringToStdString(STATE());
+        m_Feedback.state = getExtEvHandler<CROSManager>(*this).ciecStringToStdString(STATE());
         m_ActionServer->publishFeedback(m_Feedback);
       }
       break;
@@ -126,7 +127,7 @@ void FORTE_EXECUTE_ACTION_SERVER::ActionExecuteCB(const ExecuteGoalConstPtr &pa_
 
   setEventChainExecutor(m_poInvokingExecEnv);
   //DEVLOG_DEBUG("[EXEC_SERVER] Received goal is: %s \n", mGoalConstPtr->command.c_str());
-  GET_HANDLER_FROM_THIS(CROSManager)->startChain(this);
+  getExtEvHandler<CROSManager>(*this).startChain(this);
 
   // FIXME better idea as flag polling?
   //wait for an available result(mResultAvailable set in case of RSP+)

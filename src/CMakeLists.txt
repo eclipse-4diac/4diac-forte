@@ -170,7 +170,7 @@ FOREACH(POS RANGE ${HANDLER_CLASS_LEN}-1)
   SET(HANDLERMANAGER_INCLUDE  "${HANDLERMANAGER_INCLUDE}#include <${FILENAME}>\n")
   
   SET(HANDLERMANAGER_VARIABLES  "${HANDLERMANAGER_VARIABLES}const size_t ${CLASS}::mHandlerIdentifier = ${HANDLER_ID};\n")
-  SET(HANDLERMANAGER_INSTANCE "${HANDLERMANAGER_INSTANCE}  pa_DeviceExecution.mRegisteredEventHandlers[${HANDLER_ID}].m_poHandler = new ${CLASS}(pa_DeviceExecution);\n")
+  SET(HANDLERMANAGER_INSTANCE "${HANDLERMANAGER_INSTANCE}  paDeviceExecution.mRegisteredEventHandlers[${HANDLER_ID}].mHandler = new ${CLASS}(paDeviceExecution);\n")
   math(EXPR HANDLER_ID           ${HANDLER_ID}+1)
 ENDFOREACH(POS)
 
