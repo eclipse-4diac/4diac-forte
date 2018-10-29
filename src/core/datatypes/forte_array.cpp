@@ -88,9 +88,9 @@ void CIEC_ARRAY::setValue(const CIEC_ANY& pa_roValue){
 
 void CIEC_ARRAY::clear(){
   if(size()){
-    CIEC_ANY *poArray = getArray();
-    for(unsigned int i = 0; i < size(); ++i, ++poArray){
-      poArray->~CIEC_ANY();
+    CIEC_ANY *poArray = getArray() - 1;
+    for(size_t i = 0; i < size() + 1; ++i) {
+      poArray[i].~CIEC_ANY();
     }
 
     forte_free(getGenData());
