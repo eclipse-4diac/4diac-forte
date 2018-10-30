@@ -16,7 +16,11 @@
 
 class CIEC_STRUCT : public CIEC_ANY_DERIVED{
   public:
-    CIEC_STRUCT(CStringDictionary::TStringId paTypeName, TForteUInt16 paLength, const CStringDictionary::TStringId paElementTypes[], const CStringDictionary::TStringId paElementNames[], TForteUInt8 paTypeID);
+
+    typedef const char* TStructInitialValues;
+
+    CIEC_STRUCT(CStringDictionary::TStringId paTypeName, TForteUInt16 paLength, const CStringDictionary::TStringId paElementTypes[],
+        const CStringDictionary::TStringId paElementNames[], TForteUInt8 paTypeID, TStructInitialValues *paInitialValues = 0);
 
     CIEC_STRUCT(const CIEC_STRUCT& paValue);
 
@@ -36,7 +40,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      */
 
     TForteUInt8 getASN1StructType() const{
-      return (0 != getGenData()) ? (*((TForteUInt8 *) (getGenData()))) : static_cast<TForteUInt8>(0);
+      return (0 != getGenData()) ? getSpecs()->mASN1Type : static_cast<TForteUInt8>(0);
     }
 
     /*! \brief Get the Struct's size
@@ -47,7 +51,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      *   \return - the size of the struct.
      */
     TForteUInt16 getStructSize() const{
-      return (0 != getGenData()) ? (*((TForteUInt16 *) (getGenData() + 2 * sizeof(TForteUInt8)))) : static_cast<TForteUInt16>(0);
+      return (0 != getGenData()) ? getSpecs()->mNumberOfElements : static_cast<TForteUInt16>(0);
     }
 
     /*! \brief Get the Struct's elementNames
@@ -58,11 +62,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      *   \return - pointer to array of StringIds.
      */
     const CStringDictionary::TStringId* elementNames() const{
-      if(0 != getGenData()){
-        CStringDictionary::TStringId** pBuf = reinterpret_cast<CStringDictionary::TStringId**>(const_cast<TForteByte*>(getGenData() + 2 * sizeof(TForteUInt8) + sizeof(TForteUInt16) + sizeof(CStringDictionary::TStringId)));
-        return *pBuf;
-      }
-      return 0;
+      return (0 != getGenData()) ? getSpecs()->mElementNames : 0;
     }
 
     /*! \brief Get the Struct's type name
@@ -73,7 +73,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      *   \return - StringId of Struct's type name.
      */
     CStringDictionary::TStringId getStructTypeNameID() const{
-      return (0 != getGenData()) ? (*((CStringDictionary::TStringId *) (getGenData() + 2 * sizeof(TForteUInt8) + sizeof(TForteUInt16)))) : 0;
+      return (0 != getGenData()) ? getSpecs()->mStructureTypeID : 0;
     }
 
     void setValue(const CIEC_ANY& paValue);
@@ -103,11 +103,11 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
     virtual int toString(char* paValue, unsigned int paBufferSize) const;
 
     CIEC_ANY *getMembers(){
-      return (CIEC_ANY *) ((0 != getGenData()) ? (getGenData() + scm_unMembersOffset) : 0);
+      return (0 != getGenData()) ? getSpecs()->mMembers : static_cast<CIEC_ANY *>(0);
     }
 
     const CIEC_ANY *getMembers() const{
-      return (CIEC_ANY *) ((0 != getGenData()) ? (getGenData() + scm_unMembersOffset) : 0);
+      return (0 != getGenData()) ? getSpecs()->mMembers : static_cast<CIEC_ANY *>(0);
     }
 
     /*! \brief Get the struct's member var with the given name id
@@ -117,9 +117,10 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      */
     CIEC_ANY *getMemberNamed(CStringDictionary::TStringId paMemberNameId);
 
+    virtual unsigned int getToStringBufferSize() const;
+
   protected:
 
-    //TODO: remove? already defined in de-/serializer
     enum EASN1Tags{
       e_UNIVERSAL = 0, e_APPLICATION = 64, e_CONTEXT = 128, e_PRIVATE = 192
     };
@@ -128,55 +129,37 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
     };
 
     //!Function to configure the array if it is created via the typelib
-    void setup(CStringDictionary::TStringId paTypeName, TForteUInt16 paLength, const CStringDictionary::TStringId paElementTypes[], const CStringDictionary::TStringId paElementNames[], TForteUInt8 paTypeID);
+    void setup(CStringDictionary::TStringId paTypeName, TForteUInt16 paLength, const CStringDictionary::TStringId paElementTypes[],
+        const CStringDictionary::TStringId paElementNames[], TForteUInt8 paTypeID, TStructInitialValues *paInitialValues = 0);
 
   private:
 
-    /*
-     * Alignment of the struct:
-     *   ASN1-StructType (8bit)
-     *   Padding (8bit)
-     *   StructSize (number of elements) (16bit)
-     *   StructTypeNameID (32bit)
-     *   elementNames (system dependent - but aligned)
-     *   Data (system dependent - but aligned)
-     */
+    class CSTRUCT_SPECS {
+      public:
+        CSTRUCT_SPECS(CStringDictionary::TStringId paTypeName, TForteUInt16 paLength, const CStringDictionary::TStringId paElementNames[], TForteUInt8 paTypeID) :
+            mASN1Type(paTypeID), mNumberOfElements(paLength), mStructureTypeID(paTypeName), mElementNames(paElementNames) {
+          mMembers = static_cast<CIEC_ANY*>(forte_malloc(paLength * sizeof(CIEC_ANY)));
+        }
 
-    static const unsigned int scm_unMembersOffset =
-        2 * sizeof(TForteUInt8) +               //ASN1Type + padding (2*8bit)
-        sizeof(TForteUInt16) +                  //number of elements (1x16bit)
-        sizeof(CStringDictionary::TStringId) +  //StructureType name ID   (1x32bit)
-        sizeof(CStringDictionary::TStringId*);  //Pointer to const static member of specialized class, containing element names (system-dependent)
+        ~CSTRUCT_SPECS() {
+          forte_free(mMembers);
+          mMembers = 0;
+        }
 
-     void setASN1StructType(TForteUInt16 paVal){
-      TForteByte *pBuf = getGenData();
-      if(0 != pBuf){
-        *((TForteUInt16 *) (pBuf)) = paVal;
-      }
-    }
-
-    void setStructTypeNameID(const CStringDictionary::TStringId paVal){
-      TForteByte * pBuf = (getGenData() + 2 * sizeof(TForteUInt8) + sizeof(TForteUInt16));
-      if(0 != pBuf){
-        *((CStringDictionary::TStringId*) (pBuf)) = paVal;
-      }
-    }
-
-    void setStructSize(TForteUInt16 paVal){
-      TForteByte *pBuf = getGenData() + 2 * sizeof(TForteUInt8);
-      if(0 != pBuf){
-        *((TForteUInt16 *) (pBuf)) = paVal;
-      }
-    }
-
-    void setElementNames(const CStringDictionary::TStringId* paElementNames){
-      CStringDictionary::TStringId** pBuf = (reinterpret_cast<CStringDictionary::TStringId**>((getGenData() + 2 * sizeof(TForteUInt8) + sizeof(TForteUInt16) + sizeof(CStringDictionary::TStringId))));
-      if(0 != getGenData()){
-        *(pBuf) = (const_cast<CStringDictionary::TStringId*>((paElementNames)));
-      }
-    }
+        TForteUInt8 mASN1Type;
+        TForteUInt16 mNumberOfElements;
+        CStringDictionary::TStringId mStructureTypeID;
+        const CStringDictionary::TStringId *mElementNames;
+        CIEC_ANY *mMembers;
+    };
 
     void clear();
+
+    void findNextNonBlankSpace(const char** paRunner);
+
+    CSTRUCT_SPECS* getSpecs() const {
+      return reinterpret_cast<CSTRUCT_SPECS*>(const_cast<TForteByte*>(getGenData()));
+    }
 
     static CStringDictionary::TStringId parseNextElementId(const char *paRunner, int &paCounter);
 

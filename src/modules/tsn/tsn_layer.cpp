@@ -70,7 +70,7 @@ EComResponse CTSNLayer::openConnection(char *paLayerParameter){
     if(CIPComSocketHandler::scmInvalidSocketDescriptor != nSockDes && e_InitOk == eRetVal){
       if(e_Publisher != m_poFb->getComServiceType()){
         //Publishers should not be registered for receiving data
-        GET_HANDLER_FROM_COMM_LAYER(CIPComSocketHandler)->addComCallback(nSockDes, this);
+        getExtEvHandler<CIPComSocketHandler>().addComCallback(nSockDes, this);
       }
       eRetVal = e_InitOk;
     }

@@ -26,15 +26,6 @@ class CFunctionBlock;
 #define DEFINE_HANDLER(TypeName)                            \
     size_t TypeName::getIdentifier() const { return TypeName::mHandlerIdentifier;}
 
-#define GET_HANDLER_FROM_FB(fb, TypeName)                 \
-  static_cast<TypeName*>(CExternalEventHandler::getHandlerFromFB(fb, TypeName::mHandlerIdentifier))
-
-#define GET_HANDLER_FROM_THIS(TypeName)                 \
-    GET_HANDLER_FROM_FB(*this, TypeName)
-
-#define GET_HANDLER_FROM_COMM_LAYER(TypeName)                 \
-    GET_HANDLER_FROM_FB(*m_poFb, TypeName)
-
 /**  \defgroup FORTE_HAL FORTE Hardware Abstraction Layer - FORTE-HAL
  * \brief The FORTE-HAL is the abstraction of HW dependent features important
  * and needed in each port of FORTE.
@@ -80,8 +71,6 @@ class CExternalEventHandler{
 
     virtual size_t getIdentifier() const = 0;
 
-    static CExternalEventHandler* getHandlerFromFB(CFunctionBlock& paFB, size_t paIdentifier);
-
   protected:
 
     /*! \brief Check if the external event handler is allowed to start event chains
@@ -97,17 +86,12 @@ class CExternalEventHandler{
      */
     void startNewEventChain(CEventSourceFB *paECStartFB);
 
-
     template<typename T>
-    T* getHandlerFromHandler(){
-      return static_cast<T*>(m_poDeviceExecution.getHandler(T::mHandlerIdentifier));
+    T& getExtEvHandler(){
+      return mDeviceExecution.getExtEvHandler<T>();
     }
 
-    bool isHandlerValid(size_t paIdentifier){
-      return (0 != m_poDeviceExecution.getHandler(paIdentifier));
-    }
-
-    CDeviceExecution& m_poDeviceExecution;
+    CDeviceExecution& mDeviceExecution;
 
   private:
 

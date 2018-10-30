@@ -88,9 +88,9 @@ void CIEC_ARRAY::setValue(const CIEC_ANY& pa_roValue){
 
 void CIEC_ARRAY::clear(){
   if(size()){
-    CIEC_ANY *poArray = getArray();
-    for(unsigned int i = 0; i < size(); ++i, ++poArray){
-      poArray->~CIEC_ANY();
+    CIEC_ANY *poArray = getArray() - 1;
+    for(size_t i = 0; i < size() + 1; ++i) {
+      poArray[i].~CIEC_ANY();
     }
 
     forte_free(getGenData());
@@ -109,7 +109,7 @@ int CIEC_ARRAY::fromString(const char *pa_pacValue){
     TForteUInt16 unArraySize = size();
     int nValueLen;
 
-    while((*pcRunner != '\0') && (*pcRunner != ']')){
+    while(('\0' != *pcRunner) && (']' != *pcRunner)) {
       pcRunner++;
       while(' ' == *pcRunner){
         pcRunner++;
@@ -189,11 +189,28 @@ int CIEC_ARRAY::toString(char* pa_acValue, unsigned int pa_nBufferSize) const{
   return nBytesUsed;
 }
 
-unsigned int CIEC_ARRAY::getToStringBufferSize() const{
-  unsigned int retVal = 3;  // 2 bytes for the open and closing breakets one for the '\0'
-  if( 0 != getArray()){
-    retVal += size() * getArray()[-1].getToStringBufferSize();
+unsigned int CIEC_ARRAY::getToStringBufferSize() const {
+  unsigned int retVal = 3; // 2 bytes for the open and closing brackets and one for the '\0'
+  TForteUInt16 nSize = size();
+  retVal += (nSize > 1) ? (nSize - 1) : 0; //for the commas between the elements
+
+  const CIEC_ANY* members = getArray();
+  if(0 != members) {
+    switch(getElementDataTypeID()){ //in these cases, the length of the elements are not always the same
+      case CIEC_ANY::e_WSTRING:
+      case CIEC_ANY::e_STRING: //quotes or double quotes are already counted in ANY_STRING
+      case CIEC_ANY::e_ARRAY:
+      case CIEC_ANY::e_STRUCT:
+        for(size_t i = 0; i < nSize; i++) {
+          retVal += (members[i].getToStringBufferSize() - 1); //-1 since the \0 of each element is counted as just one at the beginning
+        }
+        break;
+      default:
+        retVal += nSize * (getArray()[-1].getToStringBufferSize() - 1); //-1 since the \0 of each element is counted as just one at the beginning
+        break;
+    }
   }
+
   return retVal;
 }
 

@@ -10,6 +10,7 @@
  *   Jose Cabral - Cleaning of code and error logging added
  *******************************************************************************/
 #include "processinterface.h"
+#include <extevhandlerhelper.h>
 #include <unistd.h>
 #include <mlpiGlobal.h>
 #include <mlpiApiLib.h>
@@ -80,9 +81,9 @@ bool CMLPIFaceProcessInterface::initialise(bool paInput){
       STATUS() = scmOK;
       retVal = true;
       if(paInput){
-        GET_HANDLER_FROM_THIS(CMLPIFaceProcessInterface::CIOHandler)->registerIXFB(this);
-        if(!GET_HANDLER_FROM_THIS(CMLPIFaceProcessInterface::CIOHandler)->isAlive()){
-          GET_HANDLER_FROM_THIS(CMLPIFaceProcessInterface::CIOHandler)->start();
+        getExtEvHandler<CMLPIFaceProcessInterface::CIOHandler>(*this).registerIXFB(this);
+        if(!getExtEvHandler<CMLPIFaceProcessInterface::CIOHandler>(*this).isAlive()){
+          getExtEvHandler<CMLPIFaceProcessInterface::CIOHandler>(*this).start();
         }
       }
     }
@@ -99,7 +100,7 @@ bool CMLPIFaceProcessInterface::initialise(bool paInput){
 }
 
 bool CMLPIFaceProcessInterface::deinitialise(){
-  GET_HANDLER_FROM_THIS(CMLPIFaceProcessInterface::CIOHandler)->unregisterIXFB(this);
+  getExtEvHandler<CMLPIFaceProcessInterface::CIOHandler>(*this).unregisterIXFB(this);
   delete[] mVariableName;
   STATUS() = scmAPINotInitialised;
   return true;

@@ -102,7 +102,7 @@ forte::com_infra::EComResponse CHTTP_Handler::recvData(const void* paData, unsig
       accepted->mSocket = newConnection;
       accepted->mStartTime.setCurrentTime();
       mAcceptedSockets.pushBack(accepted);
-      getHandlerFromHandler<CIPComSocketHandler>()->addComCallback(newConnection, this);
+      getExtEvHandler<CIPComSocketHandler>().addComCallback(newConnection, this);
       resumeSelfsuspend();
     }else{
       DEVLOG_ERROR("[HTTP Handler] Couldn't accept new HTTP connection\n");
@@ -212,7 +212,7 @@ bool CHTTP_Handler::sendClientData(forte::com_infra::CHttpComLayer* paLayer, CIE
       toAdd->mStartTime.setCurrentTime();
       startTimeoutThread();
       mClientLayers.pushBack(toAdd);
-      getHandlerFromHandler<CIPComSocketHandler>()->addComCallback(newSocket, this);
+      getExtEvHandler<CIPComSocketHandler>().addComCallback(newSocket, this);
       resumeSelfsuspend();
       return true;
     }else{
@@ -355,7 +355,7 @@ void CHTTP_Handler::openHTTPServer(){
     char address[] = "127.0.0.1";
     smServerListeningSocket = CIPComSocketHandler::openTCPServerConnection(address, FORTE_COM_HTTP_LISTENING_PORT);
     if(CIPComSocketHandler::scmInvalidSocketDescriptor != smServerListeningSocket){
-      getHandlerFromHandler<CIPComSocketHandler>()->addComCallback(smServerListeningSocket, this);
+      getExtEvHandler<CIPComSocketHandler>().addComCallback(smServerListeningSocket, this);
       DEVLOG_INFO("[HTTP Handler] HTTP server listening on port %d\n", FORTE_COM_HTTP_LISTENING_PORT);
     }
     else{
@@ -373,9 +373,9 @@ void CHTTP_Handler::closeHTTPServer(){
 
 void CHTTP_Handler::removeAndCloseSocket(const CIPComSocketHandler::TSocketDescriptor paSocket){
   //normally, when the device is being killed the CIPComSocketHandler is already dead, so calls to it must be avoided.
-  if(isHandlerValid(CIPComSocketHandler::mHandlerIdentifier)){
-    getHandlerFromHandler<CIPComSocketHandler>()->removeComCallback(paSocket);
-    getHandlerFromHandler<CIPComSocketHandler>()->closeSocket(paSocket);
+  if(mDeviceExecution.isExtEvHandlerValid(CIPComSocketHandler::mHandlerIdentifier)){
+    getExtEvHandler<CIPComSocketHandler>().removeComCallback(paSocket);
+    getExtEvHandler<CIPComSocketHandler>().closeSocket(paSocket);
   }
 }
 

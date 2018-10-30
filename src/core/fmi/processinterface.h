@@ -47,14 +47,23 @@ class CFMUProcessInterface : public CProcessInterfaceBase{
     bool readWord();
     bool writeWord();
 
-    bool m_bInitialized;
+    bool readDWord() {
+      return false; //not implemented
+    }
+    bool writeDWord() {
+      return false; //not implemented
+    }
 
-    fmuValueContainer* m_value;
+
 
   private:
     static const char * const scmOK;
     static const char * const scmNOTINITIALIZED;
     static const char * const scmINTERNALERROR;
+
+    bool mInitialized;
+
+    fmuValueContainer* mValue;
 };
 
 //tell the IX and QX FB that this is the process interface to be used

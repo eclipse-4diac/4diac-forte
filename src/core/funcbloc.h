@@ -525,6 +525,7 @@ typedef CFunctionBlock *TFunctionBlockPtr;
  fbclass(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : \
  fbBaseClass( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData)
 
+
 #ifdef IN
 #undef IN
 #endif

@@ -9,6 +9,7 @@
  *   Monika Wenger, Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "processinterface.h"
+#include <extevhandlerhelper.h>
 
 CPiFaceProcessInterface::CPiFaceProcessInterface(CResource *paSrcRes,
     const SFBInterfaceSpec *paInterfaceSpec,
@@ -25,11 +26,11 @@ CPiFaceProcessInterface::~CPiFaceProcessInterface(){
 bool CPiFaceProcessInterface::initialise(bool paInput){
   bool retVal = false;
   if(paInput){
-    GET_HANDLER_FROM_THIS(CPiFaceIOHandler)->registerIXFB(this);
+    getExtEvHandler<CPiFaceIOHandler>(*this).registerIXFB(this);
   }
   QO() = QI();
-  if(!GET_HANDLER_FROM_THIS(CPiFaceIOHandler)->isAlive()){
-    GET_HANDLER_FROM_THIS(CPiFaceIOHandler)->start();
+  if(!getExtEvHandler<CPiFaceIOHandler>(*this).isAlive()){
+    getExtEvHandler<CPiFaceIOHandler>(*this).start();
   }
   CIEC_INT pinNum;
   if((-1 != pinNum.fromString(PARAMS().getValue())) && (8 > pinNum)){
@@ -40,7 +41,7 @@ bool CPiFaceProcessInterface::initialise(bool paInput){
 }
 
 bool CPiFaceProcessInterface::deinitialise(){
-  GET_HANDLER_FROM_THIS(CPiFaceIOHandler)->unregisterIXFB(this);
+  getExtEvHandler<CPiFaceIOHandler>(*this).unregisterIXFB(this);
   return true;
 }
 
@@ -54,7 +55,7 @@ bool CPiFaceProcessInterface::readPin(){
 }
 
 bool CPiFaceProcessInterface::writePin(){
-  GET_HANDLER_FROM_THIS(CPiFaceIOHandler)->updateWriteData(OUT_X(), mPin);
+  getExtEvHandler<CPiFaceIOHandler>(*this).updateWriteData(OUT_X(), mPin);
   return true;
 }
 

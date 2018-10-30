@@ -31,6 +31,8 @@ namespace forte {
         EComResponse processInterrupt();
 
       protected:
+        CIPComSocketHandler::TSocketDescriptor mSocketID;
+        CIPComSocketHandler::TUDPDestAddr mDestAddr;
 
       private:
         void closeSocket(CIPComSocketHandler::TSocketDescriptor *paSocketID);
@@ -40,9 +42,7 @@ namespace forte {
         void handledConnectedDataRecv();
         void handleConnectionAttemptInConnected();
 
-        CIPComSocketHandler::TSocketDescriptor mSocketID;
         CIPComSocketHandler::TSocketDescriptor mListeningID; //!> to be used by server type connections. there the m_nSocketID will be used for the accepted connection.
-        CIPComSocketHandler::TUDPDestAddr mDestAddr;
         EComResponse mInterruptResp;
         char mRecvBuffer[cg_unIPLayerRecvBufferSize];
         unsigned int mBufFillSize;

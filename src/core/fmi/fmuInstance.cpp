@@ -45,7 +45,7 @@ fmuInstance::fmuInstance(fmi2String instanceName, fmi2String GUID, fmi2String bo
 
   mResource = new EMB_RES(CStringDictionary::scm_nInvalidStringId, this);
 
-  static_cast<fmiTimerHandler*>(getDeviceExecution().getHandler(fmiTimerHandler::handlerIdentifier))->removeExecutionThread(mResource->getResourceEventExecution());
+  getDeviceExecution().getExtEvHandler<fmiTimerHandler>().removeExecutionThread(mResource->getResourceEventExecution());
   mNumberOfEcets--;
 
   for (unsigned int i = 0; i < NUMBER_OF_LOG_CATEGORIES; i++){
@@ -62,7 +62,7 @@ fmuInstance::fmuInstance(fmi2String instanceName, fmi2String GUID, fmi2String bo
   std::stringstream fileName;
   fileName << "fmu4diacDebug1" << ((long) time(0)) << GUID << "_" << this << ".txt";
   fmuInstance::debugFile.open(fileName.str().c_str(), std::fstream::out);
- #endif
+#endif
 
   if(loadFBs()){
     this->mState = STATE_INSTANTIATED;
@@ -70,8 +70,8 @@ fmuInstance::fmuInstance(fmi2String instanceName, fmi2String GUID, fmi2String bo
 }
 
 fmuInstance::~fmuInstance(){
-  std::map<CFunctionBlock*, std::vector<fmuValueContainer*>*>* deletingMap[2] =
-  { static_cast<fmuHandler*>(static_cast<fmuHandler*>(getDeviceExecution().getHandler(fmuHandler::handlerIdentifier)))->getInputMap(), static_cast<fmuHandler*>(getDeviceExecution().getHandler(fmuHandler::handlerIdentifier))->getOutputMap() };
+  std::map<CFunctionBlock*, std::vector<fmuValueContainer*>*>* deletingMap[2] = { getDeviceExecution().getExtEvHandler<fmuHandler>().getInputMap(),
+    getDeviceExecution().getExtEvHandler<fmuHandler>().getOutputMap() };
 
   for(std::vector<CFunctionBlock*>::iterator it = getCommFBs().begin(); it != getCommFBs().end(); ++it){
     for(unsigned int i = 0; i < 2; i++){
@@ -93,22 +93,22 @@ bool fmuInstance::loadFBs(){
   devMgr->getDataInput(g_nStringIdQI)->fromString("1");
   devMgr->changeFBExecutionState(cg_nMGM_CMD_Reset);
   devMgr->changeFBExecutionState(cg_nMGM_CMD_Start);
-  FMU_DEBUG_LOG(this, MODEL_GUID << " About to load FBs from file " << getBootFileLocation().getValue() << "\n--------------\n")
+  FMU_DEBUG_LOG(this, MODEL_GUID << " About to load FBs from file " << getBootFileLocation().getValue() << "\n--------------\n");
   CIEC_STRING val = "FORTE_BOOT_FILE=";
   val.append(mBootFileLocation.getValue());
   if(!putenv(val.getValue())){
-    FMU_DEBUG_LOG(this, MODEL_GUID << " Set env WORKED \n--------------\n")
+    FMU_DEBUG_LOG(this, MODEL_GUID << " Set env WORKED \n--------------\n");
   }
   else{
-    FMU_DEBUG_LOG(this, MODEL_GUID << " Set env FAILED \n--------------\n")
+    FMU_DEBUG_LOG(this, MODEL_GUID << " Set env FAILED \n--------------\n");
   }
   devMgr->receiveInputEvent(0, *mResource->getResourceEventExecution()); //the first 0 is the eventID.
   delete devMgr;
-  FMU_DEBUG_LOG(this, MODEL_GUID << " Already loaded \n--------------\n")
+  FMU_DEBUG_LOG(this, MODEL_GUID << " Already loaded \n--------------\n");
 
   populateInputsOutputs(this);
 
-  FMU_DEBUG_LOG(this, "VARIABLES: m_outputsAndInputs has " << mOutputsAndInputs.size() << " elements\n")
+  FMU_DEBUG_LOG(this, "VARIABLES: m_outputsAndInputs has " << mOutputsAndInputs.size() << " elements\n");
 
   return true;
 }
@@ -127,13 +127,13 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock* paFB){
     populateInputsOutputs(static_cast<CResource*>(paFB));
     return;
   }else if(g_nStringIdIX == functionBlockType || g_nStringIdQX == functionBlockType){
-    FMU_DEBUG_LOG(this, "VARIABLES: IO: " << paFB->getInstanceName() <<  " ADDED SUCCESSFULLY\n")
+    FMU_DEBUG_LOG(this, "VARIABLES: IO: " << paFB->getInstanceName() << " ADDED SUCCESSFULLY\n");
     fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::BOOL, false);
     CFMUProcessInterface* ioFB = static_cast<CFMUProcessInterface*>(paFB);
     ioFB->setValueContainer(newValue);
     mOutputsAndInputs.push_back(newValue);
   }else if(g_nStringIdIW == functionBlockType || g_nStringIdQW == functionBlockType){
-    FMU_DEBUG_LOG(this, "VARIABLES: IO: " << paFB->getInstanceName() <<  " ADDED SUCCESSFULLY\n")
+    FMU_DEBUG_LOG(this, "VARIABLES: IO: " << paFB->getInstanceName() << " ADDED SUCCESSFULLY\n");
     fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::INTEGER, false);
     CFMUProcessInterface* ioFB = static_cast<CFMUProcessInterface*>(paFB);
     ioFB->setValueContainer(newValue);
@@ -170,8 +170,8 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock* paFB){
           FMU_DEBUG_LOG(this, "VARIABLES: COMM: " <<   paFB->getInstanceName() <<  " OUTPUT PORT " << i << " ADDED SUCCESSFULLY\n")
         }
 
-        static_cast<fmuHandler*>(getDeviceExecution().getHandler(fmuHandler::handlerIdentifier))->getOutputMap()->insert(std::make_pair(paFB, outputs));
-        static_cast<fmuHandler*>(getDeviceExecution().getHandler(fmuHandler::handlerIdentifier))->getInputMap()->insert(std::make_pair(paFB, inputs));
+        getDeviceExecution().getExtEvHandler<fmuHandler>().getOutputMap()->insert(std::make_pair(paFB, outputs));
+        getDeviceExecution().getExtEvHandler<fmuHandler>().getInputMap()->insert(std::make_pair(paFB, inputs));
         getCommFBs().push_back(paFB);
       }
     }
@@ -256,7 +256,8 @@ void fmuInstance::fillInterfaceElementsArray(CFunctionBlock* pa_poFB, bool isInp
     unsigned int noOfElements = isInput ? pa_poFB->getFBInterfaceSpec()->m_nNumEIs : pa_poFB->getFBInterfaceSpec()->m_nNumEOs;
     for(unsigned int i = 0; i < noOfElements; i++){
       fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::valueType::INTEGER, true);
-      newValue->setEventCounterPointer(isInput ? &(pa_poFB->getEIMonitorData(static_cast<TEventID>(i)).mMonitorEventData[0].mEventCount) : &(pa_poFB->getEOMonitorData(static_cast<TEventID>(i)).mMonitorEventData[0].mEventCount));
+      newValue->setEventCounterPointer(
+        isInput ? &(pa_poFB->getEIMonitorData(static_cast<TEventID>(i))) : &(pa_poFB->getEOMonitorData(static_cast<TEventID>(i))));
       mOutputsAndInputs.push_back(newValue);
       FMU_DEBUG_LOG(this, "VARIABLES: INTERFACE: " << pa_poFB->getInstanceName() << "." << CStringDictionary::getInstance().get(isInput ? pa_poFB->getFBInterfaceSpec()->m_aunEINames[i] : pa_poFB->getFBInterfaceSpec()->m_aunEONames[i]) << " ADDED SUCCESSFULLY\n")
     }

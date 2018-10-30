@@ -119,15 +119,15 @@ void MQTTHandler::onSubscribeSucceed(void* paContext, MQTTAsync_successData* ){
   if(0 != paContext){
     CCriticalRegion sectionState(smMQTTMutex);
     MQTTComLayer* layer = static_cast<MQTTComLayer*>(paContext);
-    MQTTHandler* handler = GET_HANDLER_FROM_FB(*layer->getCommFB(), MQTTHandler);
+    MQTTHandler& handler = ::getExtEvHandler<MQTTHandler>(*layer->getCommFB());
     DEVLOG_INFO("MQTT: Subscription succeed. Topic: -%s-\n", layer->getTopicName());
 
-    handler->popLayerFromList(layer, &handler->mToResubscribe);
-    if(handler->mToResubscribe.isEmpty()){
+    handler.popLayerFromList(layer, &handler.mToResubscribe);
+    if(handler.mToResubscribe.isEmpty()){
       smMQTTS_STATE = ALL_SUBSCRIBED;
     }
     else{
-      handler->resumeSelfSuspend();
+      handler.resumeSelfSuspend();
     }
   }
 }
@@ -137,7 +137,7 @@ void MQTTHandler::onSubscribeFailed(void* paContext, MQTTAsync_failureData*){
     CCriticalRegion sectionState(smMQTTMutex);
     MQTTComLayer* layer = static_cast<MQTTComLayer*>(paContext);
     DEVLOG_ERROR("MQTT: Subscription failed. Topic: -%s-\n", layer->getTopicName());
-    GET_HANDLER_FROM_FB(*layer->getCommFB(), MQTTHandler)->resumeSelfSuspend();
+    ::getExtEvHandler<MQTTHandler>(*layer->getCommFB()).resumeSelfSuspend();
   }
 }
 

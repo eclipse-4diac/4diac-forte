@@ -19,6 +19,8 @@
 #include "conn.h"
 #include "stringdict.h"
 #include "../arch/timerha.h"
+#include "datatypes/forte_array.h"
+#include "datatypes/forte_struct.h"
 
 class CFunctionBlock;
 class CResource;
@@ -95,6 +97,10 @@ namespace forte {
         static void createFullFBName(CIEC_STRING &paFullName, forte::core::TNameIdentifier &paNameList);
 
         static size_t getExtraSizeForEscapedChars(const CIEC_ANY& paDataValue);
+
+        static size_t getExtraSizeForEscapedCharsArray(const CIEC_ARRAY& paDataValue);
+
+        static size_t getExtraSizeForEscapedCharsStruct(const CIEC_STRUCT& paDataValue);
 
         //!List storing all FBs which are currently monitored
         TFBMonitoringList mFBMonitoringList;

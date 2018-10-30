@@ -23,7 +23,6 @@
 #include <criticalregion.h>
 #include <forte_printer.h>
 
-
 #ifndef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
 #include <sockhand.h>
 #endif
@@ -831,7 +830,7 @@ void COPC_UA_Handler::onWrite(UA_Server *, const UA_NodeId *,
   }
 
   if (e_Nothing != retVal) {
-    GET_HANDLER_FROM_FB(*layer->getCommFB(), COPC_UA_Handler)->startNewEventChain(layer->getCommFB());
+    ::getExtEvHandler<COPC_UA_Handler>(*layer->getCommFB()).startNewEventChain(layer->getCommFB());
   }
 
 }

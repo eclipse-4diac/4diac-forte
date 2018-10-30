@@ -152,7 +152,7 @@ void CROSLayer::handleReceivedValue(const boost::shared_ptr<const topic_tools::S
 
   getCommFB()->interruptCommFB(this);
 
-  GET_HANDLER_FROM_COMM_LAYER(CROSManager)->startChain(this->getCommFB());
+  getExtEvHandler<CROSManager>().startChain(this->getCommFB());
 }
 
 void CROSLayer::closeConnection(){

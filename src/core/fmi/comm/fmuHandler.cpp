@@ -36,7 +36,7 @@ void fmuHandler::fmuMessageArrived(void *pa_value){
         if(pa_value == (*itInputs)){
           found = true;
           if(forte::com_infra::e_Nothing != (*it)->recvData(pa_value, 0)){
-            GET_HANDLER_FROM_FB(*(*it)->getCommFB(), fmuHandler)->startNewEventChain((*it)->getCommFB());
+            ::getExtEvHandler<fmuHandler>(*(*it)->getCommFB()).startNewEventChain((*it)->getCommFB());
           }
           break;
         }
