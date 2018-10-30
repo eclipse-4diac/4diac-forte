@@ -25,11 +25,11 @@ const char * const CFMUProcessInterface::scmNOTINITIALIZED = "Not initialized";
 const char * const CFMUProcessInterface::scmINTERNALERROR = "Internal Error";
 
 CFMUProcessInterface::CFMUProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), m_bInitialized(false), m_value(0){
+    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mInitialized(false), mValue(0){
 }
 
 CFMUProcessInterface::CFMUProcessInterface(const CStringDictionary::TStringId paInstanceNameId, CResource *pa_poSrcRes) :
-    CProcessInterfaceBase(pa_poSrcRes, 0, paInstanceNameId, 0, 0), m_bInitialized(false), m_value(0) {
+    CProcessInterfaceBase(pa_poSrcRes, 0, paInstanceNameId, 0, 0), mInitialized(false), mValue(0) {
   FMU_DEBUG_LOG(GET_FMU_INSTANCE_FROM_FB(this), "Someone called the wrong constructor.\n") //Why do I need this constructor?
 }
 
@@ -37,33 +37,33 @@ CFMUProcessInterface::~CFMUProcessInterface(){
 }
 
 void CFMUProcessInterface::setValueContainer(fmuValueContainer* pa_valueContainer){
-  m_value = pa_valueContainer;
+  mValue = pa_valueContainer;
 }
 
 bool CFMUProcessInterface::initialise(bool paIsInput){
   NOT_USED(paIsInput)
-  if(0 != m_value){
+  if(0 != mValue){
     STATUS() = scmOK;
-    m_bInitialized = true;
+    mInitialized = true;
     FMU_DEBUG_LOG(GET_FMU_INSTANCE_FROM_FB(this), "Input/Output Initialize\n")
   }
   else{
     STATUS() = scmINTERNALERROR;
     FMU_DEBUG_LOG(GET_FMU_INSTANCE_FROM_FB(this), "ERROR: Input/Output not initialized. You should set a pointer to the fmuContainer for this IO\n")
-    m_bInitialized =  false;
+    mInitialized =  false;
   }
-  return m_bInitialized;
+  return mInitialized;
 }
 
 bool CFMUProcessInterface::deinitialise(){
   STATUS() = scmOK;
-  m_bInitialized = false;
+  mInitialized = false;
   return true;
 }
 
 bool CFMUProcessInterface::readPin(){
-  if(true == m_bInitialized){
-    IN_X() = *m_value->getValueAsBool();
+  if(true == mInitialized){
+    IN_X() = *mValue->getValueAsBool();
     STATUS() = scmOK;
     return true;
   }
@@ -72,8 +72,8 @@ bool CFMUProcessInterface::readPin(){
 }
 
 bool CFMUProcessInterface::writePin(){
-  if(true == m_bInitialized){
-    m_value->setValue(OUT_X());
+  if(true == mInitialized){
+    mValue->setValue(OUT_X());
     STATUS() = scmOK;
     return true;
   }
@@ -82,8 +82,8 @@ bool CFMUProcessInterface::writePin(){
 }
 
 bool CFMUProcessInterface::readWord(){
-  if(true == m_bInitialized){
-    IN_W() = static_cast<TForteWord>(*m_value->getValueAsInt());
+  if(true == mInitialized){
+    IN_W() = static_cast<TForteWord>(*mValue->getValueAsInt());
     STATUS() = scmOK;
     return true;
   }
@@ -92,8 +92,8 @@ bool CFMUProcessInterface::readWord(){
 }
 
 bool CFMUProcessInterface::writeWord(){
-  if(true == m_bInitialized){
-    m_value->setValue(OUT_W());
+  if(true == mInitialized){
+    mValue->setValue(OUT_W());
     STATUS() = scmOK;
     return true;
   }

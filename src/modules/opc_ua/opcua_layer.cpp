@@ -837,7 +837,7 @@ UA_StatusCode COPC_UA_Layer::onServerMethodCall(UA_Server *, const UA_NodeId *,
 
   if (self->mInterruptResp == e_ProcessDataOk) {
     self->getCommFB()->interruptCommFB(self);
-    getExtEvHandler<COPC_UA_Handler>(*self->getCommFB()).forceEventHandling(self);
+    ::getExtEvHandler<COPC_UA_Handler>(*self->getCommFB()).forceEventHandling(self);
   } else {
     return UA_STATUSCODE_BADINVALIDARGUMENT;
   }
