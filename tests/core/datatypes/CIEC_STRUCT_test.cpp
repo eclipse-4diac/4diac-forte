@@ -116,6 +116,54 @@ CIEC_TestStruct3::CIEC_TestStruct3() :
     CIEC_STRUCT(g_nStringIdTestStruct3, 3, scm_unElementTypes, scm_unElementNames, e_APPLICATION + e_CONSTRUCTED + 1, scmInitialValues) {
 }
 
+class CIEC_TestStruct4 : public CIEC_STRUCT { //undefined data types
+  DECLARE_FIRMWARE_DATATYPE(TestStruct4)
+
+    /* Struct:
+     *   val1 : String[3]
+     *   val3 : BOOL
+     *   val3 : INT
+     */
+
+  public:
+    CIEC_TestStruct4();
+
+    virtual ~CIEC_TestStruct4() {
+    }
+
+    CIEC_STRING& val11() {
+      return *static_cast<CIEC_STRING*>((*static_cast<CIEC_ARRAY *>(&getMembers()[0]))[0]);
+    }
+
+    CIEC_STRING& val12() {
+      return *static_cast<CIEC_STRING*>((*static_cast<CIEC_ARRAY *>(&getMembers()[0]))[1]);
+    }
+
+    CIEC_BOOL& val2() {
+      return *static_cast<CIEC_BOOL*>(&getMembers()[1]);
+    }
+
+    CIEC_INT& val3() {
+      return *static_cast<CIEC_INT*>(&getMembers()[1]);
+    }
+
+    static const unsigned int sizeOfFirstArray = 2;
+
+  private:
+    static const CStringDictionary::TStringId scm_unElementTypes[];
+    static const CStringDictionary::TStringId scm_unElementNames[];
+    static CIEC_STRUCT::TStructInitialValues scmInitialValues[];
+};
+
+const CStringDictionary::TStringId CIEC_TestStruct4::scm_unElementTypes[] = { g_nStringIdARRAY, sizeOfFirstArray, g_nStringIdSTRING, g_nStringIdBOOL,
+  g_nStringIdUNDEFINEDDATATYPE };
+const CStringDictionary::TStringId CIEC_TestStruct4::scm_unElementNames[] = { g_nStringIdVal1, g_nStringIdVal2, g_nStringIdVal3 };
+CIEC_STRUCT::TStructInitialValues CIEC_TestStruct4::scmInitialValues[] = { "['a', 'b', '']", 0, "9" };
+DEFINE_FIRMWARE_DATATYPE(TestStruct4, g_nStringIdTestStruct4)
+CIEC_TestStruct4::CIEC_TestStruct4() :
+    CIEC_STRUCT(g_nStringIdTestStruct4, 3, scm_unElementTypes, scm_unElementNames, e_APPLICATION + e_CONSTRUCTED + 1, scmInitialValues) {
+}
+
 BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
 
 //*********************** TESTS *************************************************************************************************/
@@ -896,6 +944,9 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
     checkEmptyStruct(nTest1);
   }
 
+  BOOST_AUTO_TEST_CASE(Struct_UndefinedDataTypes) {
+    CIEC_TestStruct4 nTest;
+    checkEmptyStruct(nTest);
+  }
 
-  //
   BOOST_AUTO_TEST_SUITE_END()
