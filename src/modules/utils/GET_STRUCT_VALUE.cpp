@@ -55,11 +55,11 @@ CIEC_ANY* FORTE_GET_STRUCT_VALUE::lookForMember(CIEC_STRUCT* paWhereToLook, char
     if('.' == *paMemberName) {
       *paMemberName = '\0';
 
-      CIEC_ANY *member = getMemberFromName(paWhereToLook, startOfName);
+      CIEC_ANY *resultMember = getMemberFromName(paWhereToLook, startOfName);
 
-      if(0 != member) {
-        if(CIEC_ANY::e_STRUCT == member->getDataTypeID()) {
-          retVal = lookForMember(static_cast<CIEC_STRUCT*>(member), paMemberName + 1);
+      if(0 != resultMember) {
+        if(CIEC_ANY::e_STRUCT == resultMember->getDataTypeID()) {
+          retVal = lookForMember(static_cast<CIEC_STRUCT*>(resultMember), paMemberName + 1);
           if(0 == retVal) {
             errorOcurred = true;
           }
@@ -95,13 +95,12 @@ void FORTE_GET_STRUCT_VALUE::executeEvent(int paEIID) {
       CIEC_STRING copyOfMember = member();
       CIEC_ANY *foundMember = lookForMember(static_cast<CIEC_STRUCT*>(&in_struct()), copyOfMember.getValue());
       if(0 != foundMember) {
-        if(getDOConnection(g_nStringIdoutput)->getValue() && foundMember->getDataTypeID() == getDOConnection(g_nStringIdoutput)->getValue()->getDataTypeID()) {
+        if(foundMember->getDataTypeID() == output().getDataTypeID()) {
           output().setValue(*foundMember);
           QO() = 1;
         } else {
-          DEVLOG_ERROR("[GET_STRUCT_VALUE]: In instance %s, the member %s was found but it doesn't match the output type %d or the output is not connected\n",
-            getInstanceName(), member().getValue(),
-            getDOConnection(g_nStringIdoutput)->getValue() ? getDOConnection(g_nStringIdoutput)->getValue()->getDataTypeID() : 0);
+          DEVLOG_ERROR("[GET_STRUCT_VALUE]: In instance %s, the member %s was found but it doesn't match the output type %d\n",
+            getInstanceName(), member().getValue(), output().getDataTypeID());
         }
       } //error logging was done already in the internal function
     } else {
