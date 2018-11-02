@@ -26,7 +26,6 @@ class CLuaEngine;
 
 class CDevice;
 class CInterface2InternalDataConnection;
-class CEventChainExecutionThread;
 
 /*! \ingroup CORE\brief Base class for all resources handling the reconfiguration management within this
  * resource and the background execution of event chains.
@@ -102,7 +101,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
         const CStringDictionary::TStringId pa_nInstanceNameId,
         TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
 
-    virtual void executeEvent(int){
+    virtual void executeEvent(int) {
     }
 
     /*!Wrapper for simplifying connection creation in resources
@@ -172,7 +171,14 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      */
     EMGMResponse queryFBs(CIEC_STRING& paValue);
 
- #ifdef FORTE_DYNAMIC_TYPE_LOAD
+    EMGMResponse queryConnections(CIEC_STRING & paValue);
+    void createEOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult);
+    void createDOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult);
+    void createAOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult);
+    void createConnectionResponseMessage(const CStringDictionary::TStringId srcId, const CStringDictionary::TStringId dstId, const CFunctionBlock& paDstFb,
+        const CFunctionBlock& paFb, CIEC_STRING& paValue);
+
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
     /*!\brief create
      *
      * @return response of the command execution as defined in IEC 61499
@@ -182,14 +188,6 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 
     EMGMResponse createAdapterTypeFromLua(CStringDictionary::TStringId typeNameId,
             CIEC_STRING & paLuaScriptAsString);
-
-
-    EMGMResponse queryConnections(CIEC_STRING & paValue);
-    void createEOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult);
-    void createDOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult);
-    void createAOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult);
-    void createConnectionResponseMessage(const CStringDictionary::TStringId srcId, const CStringDictionary::TStringId dstId,
-        const CFunctionBlock& paDstFb, const CFunctionBlock& paFb, CIEC_STRING& paValue);
 #endif
     /*!\brief get the variable with the given name identifier
      *
