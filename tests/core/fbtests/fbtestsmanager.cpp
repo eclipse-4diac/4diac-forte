@@ -16,6 +16,7 @@
 #include <boost/test/unit_test.hpp>
 #include "../../src/core/device.h"
 #include <stdio.h>
+#include <forteinit.h>
 
 CFBTesterEntry::CFBTesterEntry(CStringDictionary::TStringId pa_nTypeNameId,
     TFBTesterCreateFunc pa_pfuncCreateTester) :
@@ -39,6 +40,7 @@ unsigned int CFBTestsManager::runAllTests(CResource *paRessource){
   printf("*** Running all FB Tests!");
   printf("*** \n");
 
+  initForte();
   for(TFBTesterList::Iterator itRunner = m_lstroFBTesterList.begin();
       itRunner != m_lstroFBTesterList.end(); ++itRunner){
     executeFBTests(*itRunner, paRessource);
