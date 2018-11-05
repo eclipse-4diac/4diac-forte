@@ -10,5 +10,10 @@
 # *******************************************************************************/
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\fblib)
 
-add_subdirectory(IEC61131-3)
-add_subdirectory(utils)
+IF(FORTE_MODULE_IEC61131)
+  add_subdirectory(IEC61131-3)
+ENDIF(FORTE_MODULE_IEC61131)
+
+IF(FORTE_MODULE_UTILS)
+  add_subdirectory(utils)
+ENDIF(FORTE_MODULE_UTILS)

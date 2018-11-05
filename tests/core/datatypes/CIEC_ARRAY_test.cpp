@@ -559,36 +559,40 @@ BOOST_AUTO_TEST_CASE(Array_fromString_WStringArrayTest)
   BOOST_CHECK_EQUAL(nTest.getToStringBufferSize(), sizeof("[\" String 1 \",\" String 2 \",\" String 3 \"]"));
 }
 
+  void checkEmptyArray(CIEC_ARRAY& paEmptyArray) {
+    char acBuffer[30];
+
+    BOOST_CHECK_EQUAL(paEmptyArray.size(), 0);
+    BOOST_CHECK(0 == paEmptyArray[0]);
+    BOOST_CHECK(0 == paEmptyArray[1]);
+    BOOST_CHECK_EQUAL(paEmptyArray.getElementDataTypeID(), CIEC_ANY::e_ANY);
+    BOOST_CHECK_EQUAL(paEmptyArray.getToStringBufferSize(), sizeof("[]"));
+    BOOST_CHECK_EQUAL(paEmptyArray.toString(acBuffer, 30), 2);
+
+    CIEC_ARRAY nTest1(1, g_nStringIdINT);
+    nTest1.fromString("[2]");
+    paEmptyArray.setValue(nTest1); //shouldn't change or break anything
+
+    BOOST_CHECK_EQUAL(paEmptyArray.size(), 0);
+    BOOST_CHECK(0 == paEmptyArray[0]);
+    BOOST_CHECK(0 == paEmptyArray[1]);
+    BOOST_CHECK_EQUAL(paEmptyArray.getElementDataTypeID(), CIEC_ANY::e_ANY);
+    BOOST_CHECK_EQUAL(paEmptyArray.getToStringBufferSize(), sizeof("[]"));
+    BOOST_CHECK_EQUAL(paEmptyArray.toString(acBuffer, 30), 2);
+
+    nTest1.setValue(paEmptyArray); //shouldn't change or break anything
+
+    BOOST_CHECK_EQUAL(nTest1.size(), 1);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(*nTest1[0]), 2);
+    BOOST_CHECK(0 == nTest1[1]);
+    BOOST_CHECK_EQUAL(nTest1.getElementDataTypeID(), CIEC_ANY::e_INT);
+
+  }
+
 BOOST_AUTO_TEST_CASE(Array_emptyArray)
 {
   CIEC_ARRAY nTest(0, g_nStringIdINT);
-  char acBuffer[30];
-
-  BOOST_CHECK_EQUAL(nTest.size(), 0);
-  BOOST_CHECK(0 == nTest[0]);
-  BOOST_CHECK(0 == nTest[1]);
-  BOOST_CHECK_EQUAL(nTest.getElementDataTypeID(), CIEC_ANY::e_ANY);
-  BOOST_CHECK_EQUAL(nTest.getToStringBufferSize(), sizeof("[]"));
-  BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 30), 2);
-
-  CIEC_ARRAY nTest1(1, g_nStringIdINT);
-  nTest1.fromString("[2]");
-  nTest.setValue(nTest1); //shouldn't change or break anything
-
-  BOOST_CHECK_EQUAL(nTest.size(), 0);
-  BOOST_CHECK(0 == nTest[0]);
-  BOOST_CHECK(0 == nTest[1]);
-  BOOST_CHECK_EQUAL(nTest.getElementDataTypeID(), CIEC_ANY::e_ANY);
-  BOOST_CHECK_EQUAL(nTest.getToStringBufferSize(), sizeof("[]"));
-  BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 30), 2);
-
-  nTest1.setValue(nTest);//shouldn't change or break anything
-
-  BOOST_CHECK_EQUAL(nTest1.size(), 1);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(*nTest1[0]), 2);
-  BOOST_CHECK(0 == nTest1[1]);
-  BOOST_CHECK_EQUAL(nTest1.getElementDataTypeID(), CIEC_ANY::e_INT);
-
+    checkEmptyArray(nTest);
 }
 
 const char cTestStringData[] = "Check string!";
@@ -673,5 +677,11 @@ BOOST_AUTO_TEST_CASE(Array_arrayOfStructs)
   BOOST_CHECK_EQUAL(strcmp(acBuffer, "[(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534])]"), 0);
 
 }
+
+  BOOST_AUTO_TEST_CASE(Array_arrayOfUndefined) {
+    CIEC_ARRAY nTest(3, g_nStringIdUNDEFINEDDATATYPE);
+    checkEmptyArray(nTest);
+  }
+
 
 BOOST_AUTO_TEST_SUITE_END()
