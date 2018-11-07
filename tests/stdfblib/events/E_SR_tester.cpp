@@ -1,114 +1,73 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2014 ACIN, fortiss GmbH
+ * Copyright (c) 2011 - 2014, 2018 ACIN, fortiss GmbH
+ *               2018 Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *   Alois Zoitl  - initial API and implementation and/or initial documentation
+ *   Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Alois Zoitl - migrated fb tests to boost test infrastructure
  *******************************************************************************/
-#include "../../core/fbtests/fbtester.h"
+#include "../../core/fbtests/fbtestfixture.h"
 #include <forte_bool.h>
-#include <E_SR.h>
+
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "E_SR_tester_gen.cpp"
 #endif
 
-/***********************************************************************************/
-/***********************************************************************************/
+struct E_SR_TestFixture : public CFBTestFixtureBase{
 
-class E_SR_tester  : public CFBTester{
-    DECLARE_FB_TESTER(E_SR_tester);
-
-  public:
-    E_SR_tester(CResource* m_poTestResource) :
-        CFBTester(m_poTestResource){
-      SETUP_OUTPUTDATA(&mOut_Q);
+    E_SR_TestFixture() : CFBTestFixtureBase(g_nStringIdE_SR){
+      SETUP_OUTPUTDATA(&mOutQ);
+      CFBTestFixtureBase::setup();
     }
 
-    virtual ~E_SR_tester() {
-
-    }
-
-  private:
-    virtual void executeAllTests(){
-      evaluateTestResult(testCase_EventS(), "EventS");
-      evaluateTestResult(testCase_EventR(), "EventR");
-      evaluateTestResult(testCase_Toggle(), "Toggle");
-    }
-
-    bool testCase_EventS(){
-      bool bResult = true;
-      //Send event
-      triggerEvent(0);
-      if(!checkStateChange(true))
-        bResult = false;
-
-      for(unsigned int i = 0; i < 100; ++i){
-        triggerEvent(0);
-        if(!eventChainEmpty()){
-          bResult = false;
-          break;
-        }
-        if(mOut_Q != true){
-          bResult = false;
-          break;
-        }
-      }
-      return bResult;
-    }
-    bool testCase_EventR(){
-      bool bResult = true;
-      //Send event
-      triggerEvent(1);
-      //Test correct order of outgoing events
-      if(!checkStateChange(false))
-        bResult = false;
-
-      for(unsigned int i = 0; i < 100; ++i){
-        triggerEvent(1);
-        if(!eventChainEmpty()){
-          bResult = false;
-          break;
-        }
-        if(mOut_Q != false){
-          bResult = false;
-          break;
-        }
-      }
-      return bResult;
-    }
-    bool testCase_Toggle(){
-      bool bResult = true;
-      for(unsigned int i = 0; i < 100; ++i){
-        triggerEvent(0);
-        if(!checkStateChange(true)){
-          bResult = false;
-          break;
-        }
-        triggerEvent(1);
-        checkStateChange(false);
-      }
-      return bResult;
-    }
+    CIEC_BOOL mOutQ; //DATA OUTPUT
 
     /*\brief Check if the E_SR changed to the given target state
-     *
      */
-    bool checkStateChange(bool bTargetState){
-      bool bResult = checkForSingleOutputEventOccurence(0);
-      //verify data output
-      if(mOut_Q != bTargetState)
-        bResult = false;
-
-      return bResult;
+    bool checkStateChange(bool paTargetState){
+      return checkForSingleOutputEventOccurence(0) && (paTargetState == mOutQ);
     }
-
-    CIEC_BOOL mOut_Q; //DATA OUTPUT
 };
 
-/***********************************************************************************/
-/***********************************************************************************/
+BOOST_FIXTURE_TEST_SUITE( SRTests, E_SR_TestFixture)
 
-DEFINE_FB_TESTER(E_SR_tester, g_nStringIdE_SR);
+  BOOST_AUTO_TEST_CASE(EventS){
+    //Send event
+    triggerEvent(0);
+    BOOST_CHECK(checkStateChange(true));
+
+    for(unsigned int i = 0; i < 100; ++i){
+      triggerEvent(0);
+      BOOST_CHECK(eventChainEmpty());
+      BOOST_CHECK(mOutQ);
+    }
+  }
+
+  BOOST_AUTO_TEST_CASE(EventR){
+    triggerEvent(0); //initially SR is reset, requires a set before reset
+    BOOST_CHECK(checkStateChange(true));
+    triggerEvent(1);
+    //Test correct order of outgoing events
+    BOOST_CHECK(checkStateChange(false));
+
+    for(unsigned int i = 0; i < 100; ++i){
+      triggerEvent(1);
+      BOOST_CHECK(eventChainEmpty());
+      BOOST_CHECK_EQUAL(false, mOutQ);
+    }
+  }
+
+  BOOST_AUTO_TEST_CASE(Toggle){
+    for(unsigned int i = 0; i < 100; ++i){
+      triggerEvent(0);
+      BOOST_CHECK(checkStateChange(true));
+      triggerEvent(1);
+      BOOST_CHECK(checkStateChange(false));
+    }
+  }
+
+BOOST_AUTO_TEST_SUITE_END()

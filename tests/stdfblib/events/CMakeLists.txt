@@ -19,7 +19,6 @@
 #forte_test_add_sourcefile_cpp(E_DELAY_tester.cpp)
 
 forte_test_add_sourcefile_cpp(E_F_TRIG_tester.cpp)
-forte_test_add_sourcefile_cpp(E_DEMUX_tester.cpp)
 forte_test_add_sourcefile_cpp(E_PERMIT_tester.cpp)
 forte_test_add_sourcefile_cpp(E_R_TRIG_tester.cpp)
 forte_test_add_sourcefile_cpp(E_SR_tester.cpp)

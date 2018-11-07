@@ -10,5 +10,6 @@
 # *******************************************************************************/
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\fbtests)
 
-forte_test_add_sourcefile_cpp(fbtester.cpp)
-forte_test_add_sourcefile_cpp(fbtestsmanager.cpp)
+
+forte_test_add_sourcefile_cpp(fbtesterglobalfixture.cpp)
+forte_test_add_sourcefile_cpp(fbtestfixture.cpp)

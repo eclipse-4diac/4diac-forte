@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2018, fortiss GmbH
+ *               2018 Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,9 +8,9 @@
  *
  * Contributors:
  *   Jose Cabral - initial tests
+ *   Alois Zoitl - migrated fb tests to boost test infrastructure
  *******************************************************************************/
-#include "../../core/fbtests/fbtester.h"
-#include "../../modules/utils/GET_STRUCT_VALUE.h"
+#include "../../core/fbtests/fbtestfixture.h"
 
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "GET_STRUCT_VALUE_tester_gen.cpp"
@@ -70,119 +71,115 @@ const CStringDictionary::TStringId CIEC_GET_STRUCT_VALUE_Struct_test2::scm_unEle
 
 DEFINE_FIRMWARE_DATATYPE(GET_STRUCT_VALUE_Struct_test2, g_nStringIdGET_STRUCT_VALUE_Struct_test2)
 
-class GET_STRUCT_VALUE_tester_generic : public CFBTester {
-  protected:
-    CIEC_STRING mMember;
-    CIEC_BOOL mQO;
 
-    virtual void executeAllTests() = 0;
 
-    explicit GET_STRUCT_VALUE_tester_generic(CResource* mTestResource, CIEC_ANY *paIN_STRUCT, CIEC_ANY *paOUT) :
-        CFBTester(mTestResource) {
+struct GET_STRUCT_VALUE_GenericTestFixture : public CFBTestFixtureBase{
+
+    GET_STRUCT_VALUE_GenericTestFixture(CIEC_ANY *paIN_STRUCT, CIEC_ANY *paOUT) :
+        CFBTestFixtureBase(g_nStringIdGET_STRUCT_VALUE){
       SETUP_INPUTDATA(paIN_STRUCT, &mMember);
       SETUP_OUTPUTDATA(&mQO, paOUT);
     }
+
+    CIEC_STRING mMember;
+    CIEC_BOOL mQO;
 };
 
-class GET_STRUCT_VALUE_tester_MAIN : public GET_STRUCT_VALUE_tester_generic {
-  DECLARE_FB_TESTER(GET_STRUCT_VALUE_tester_MAIN)
-  private:
-    explicit GET_STRUCT_VALUE_tester_MAIN(CResource* mTestResource) :
-        GET_STRUCT_VALUE_tester_generic(mTestResource, &mIn_struct, &mOut) {
-    }
+struct GET_STRUCT_VALUE_Main_TestFixture : public GET_STRUCT_VALUE_GenericTestFixture{
 
-    virtual void executeAllTests() {
+    GET_STRUCT_VALUE_Main_TestFixture() :
+        GET_STRUCT_VALUE_GenericTestFixture(&mIn_struct, &mOut){
       mIn_struct.fromString("(Val1:=1,Val2:=(Val1:=['strin1','string2',''], Val2:=2))");
-      //TODO: The following two tests are not working because of a problem in the FB tester which connects the output of the FB under test to
-      // itself or something similar, so when the check of type of the output is done, they don't match because the type of the output is always
-      //ANY, something that is not the case when actually using the FB in forte. The problem is that the way in which the FBTester does the connection,
-      //it doesn't call handleAnySrcPortConnection which is the function that will then change the type of the output
-      //evaluateTestResult(testCase_firstLevel(), "First Level");
-      //evaluateTestResult(testCase_secondLevel(), "Second Level");
-      evaluateTestResult(testCase_firstLevelWrongName(), "First Level Wrong Name");
-      evaluateTestResult(testCase_firstLevelWrongNameWithSecondLevel(), "First Level Wrong Name With second level");
-      evaluateTestResult(testCase_secondLevelWrongName(), "Second Level Wrong Name");
-      evaluateTestResult(testCase_accessNonStruct(), "Access non struct");
-      evaluateTestResult(testCase_wrongOutputType(), "Wrong output type");
-      evaluateTestResult(testCase_WrongEventInput(), "Wrong input event");
-    }
-
-    /***********************************************************************************/
-    bool testCase_firstLevel() {
-      mMember = "Val1";
-      triggerEvent(0);
-      return (checkForSingleOutputEventOccurence(0) && mQO == 1 && mOut == 1);
-    }
-
-    bool testCase_secondLevel() {
-      mMember = "Val2.Val2";
-      triggerEvent(0);
-      return (checkForSingleOutputEventOccurence(0) && mQO == 1 && mOut == 2);
-    }
-
-    bool testCase_firstLevelWrongName() {
-      mMember = "xVal1";
-      triggerEvent(0);
-      return (checkForSingleOutputEventOccurence(0) && mQO == 0);
-    }
-
-    bool testCase_firstLevelWrongNameWithSecondLevel() {
-      mMember = "xVal1.Val2";
-      triggerEvent(0);
-      return (checkForSingleOutputEventOccurence(0) && mQO == 0);
-    }
-
-    bool testCase_secondLevelWrongName() {
-      mMember = "Val2.xVal2";
-      triggerEvent(0);
-      return (checkForSingleOutputEventOccurence(0) && mQO == 0);
-    }
-
-    bool testCase_accessNonStruct() {
-      mMember = "Val1.Val1";
-      triggerEvent(0);
-      return (checkForSingleOutputEventOccurence(0) && mQO == 0);
-    }
-
-    bool testCase_wrongOutputType() {
-      mMember = "Val2.Val1";
-      triggerEvent(0);
-      return (checkForSingleOutputEventOccurence(0) && mQO == 0);
-    }
-
-    bool testCase_WrongEventInput() {
-      mMember = "Val2.Val1";
-      triggerEvent(1);
-      return eventChainEmpty();
+      CFBTestFixtureBase::setup();
     }
 
     CIEC_GET_STRUCT_VALUE_Struct_test2 mIn_struct;
     CIEC_INT mOut;
 };
 
-DEFINE_FB_TESTER(GET_STRUCT_VALUE_tester_MAIN, g_nStringIdGET_STRUCT_VALUE);
+BOOST_FIXTURE_TEST_SUITE( GET_STRUCT_VALUE_MainTests, GET_STRUCT_VALUE_Main_TestFixture)
 
-class GET_STRUCT_VALUE_tester_WRONG_OUTPUT_TYPE : public GET_STRUCT_VALUE_tester_generic {
-  DECLARE_FB_TESTER(GET_STRUCT_VALUE_tester_WRONG_OUTPUT_TYPE)
-  private:
-    explicit GET_STRUCT_VALUE_tester_WRONG_OUTPUT_TYPE(CResource* mTestResource) :
-        GET_STRUCT_VALUE_tester_generic(mTestResource, &mIn_struct, &mOut) {
-    }
+  BOOST_AUTO_TEST_CASE(firstLevel) {
+    mMember = "Val1";
+    triggerEvent(0);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    BOOST_CHECK_EQUAL(true, mQO);
+    BOOST_CHECK_EQUAL(1, mOut);
+  }
 
-    virtual void executeAllTests() {
+  BOOST_AUTO_TEST_CASE(secondLevel) {
+    mMember = "Val2.Val2";
+    triggerEvent(0);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    BOOST_CHECK_EQUAL(true, mQO);
+    BOOST_CHECK_EQUAL(2, mOut);
+  }
+
+
+  BOOST_AUTO_TEST_CASE(firstLevelWrongName) {
+    mMember = "xVal1";
+    triggerEvent(0);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    BOOST_CHECK_EQUAL(false, mQO);
+  }
+
+  BOOST_AUTO_TEST_CASE(firstLevelWrongNameWithSecondLevel) {
+    mMember = "xVal1.Val2";
+    triggerEvent(0);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    BOOST_CHECK_EQUAL(false, mQO);
+  }
+
+  BOOST_AUTO_TEST_CASE(secondLevelWrongName) {
+    mMember = "Val2.xVal2";
+    triggerEvent(0);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    BOOST_CHECK_EQUAL(false, mQO);
+  }
+
+  BOOST_AUTO_TEST_CASE(accessNonStruct) {
+    mMember = "Val1.Val1";
+    triggerEvent(0);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    BOOST_CHECK_EQUAL(false, mQO);
+  }
+
+  BOOST_AUTO_TEST_CASE(wrongOutputType) {
+    mMember = "Val2.Val1";
+    triggerEvent(0);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    BOOST_CHECK_EQUAL(false, mQO);
+  }
+
+  BOOST_AUTO_TEST_CASE(WrongEventInput) {
+    mMember = "Val2.Val1";
+    triggerEvent(1);
+    BOOST_CHECK(eventChainEmpty());
+  }
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
+struct GET_STRUCT_VALUE_WRONG_OUTPUT_TYPE_TestFixture : public GET_STRUCT_VALUE_GenericTestFixture{
+
+    GET_STRUCT_VALUE_WRONG_OUTPUT_TYPE_TestFixture() :
+        GET_STRUCT_VALUE_GenericTestFixture(&mIn_struct, &mOut){
       mIn_struct = 1;
-      evaluateTestResult(testCase_wrongInputType(), "Wrong input type");
-    }
-
-    /***********************************************************************************/
-    bool testCase_wrongInputType() {
-      mMember = "Val1";
-      triggerEvent(0);
-      return (checkForSingleOutputEventOccurence(0) && mQO == 0);
+      CFBTestFixtureBase::setup();
     }
 
     CIEC_INT mIn_struct;
     CIEC_INT mOut;
 };
 
-DEFINE_FB_TESTER(GET_STRUCT_VALUE_tester_WRONG_OUTPUT_TYPE, g_nStringIdGET_STRUCT_VALUE);
+BOOST_FIXTURE_TEST_SUITE( GET_STRUCT_VALUE_WRONG_OUTPUT_TYPETests, GET_STRUCT_VALUE_WRONG_OUTPUT_TYPE_TestFixture)
+
+  BOOST_AUTO_TEST_CASE(wrongInputType) {
+    mMember = "Val1";
+    triggerEvent(0);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    BOOST_CHECK_EQUAL(false, mQO);
+  }
+
+BOOST_AUTO_TEST_SUITE_END()
+
