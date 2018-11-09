@@ -67,6 +67,7 @@ void CIEC_ARRAY::setup(TForteUInt16 paLength, CStringDictionary::TStringId paArr
         refElement->clone(reinterpret_cast<TForteByte *>(&(destArray[i]))); //clone is faster than the CTypeLib call
       }
     } else { //datatype not found, clear everything
+      getSpecs()->freeData();  //needed to clean some data, can be removed when CIEC_ANY() will get public, then this three lines should be replaced by clear()
       delete getGenData();
       setGenData(0);
     }
@@ -88,7 +89,7 @@ void CIEC_ARRAY::setValue(const CIEC_ANY& paValue){
 
 void CIEC_ARRAY::clear(){
   if(getGenData()) {
-    delete getGenData();
+    delete reinterpret_cast<CArraySpecs*>(getGenData());
     setGenData(0);
   }
 }

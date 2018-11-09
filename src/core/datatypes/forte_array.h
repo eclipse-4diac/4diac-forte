@@ -118,6 +118,10 @@ class CIEC_ARRAY : public CIEC_ANY_DERIVED{
             mArray[i].~CIEC_ANY();
           }
 
+          freeData();
+        }
+
+        void freeData(){
           forte_free(mArray);
           forte_free(mRefElement);
           mArray = 0;
@@ -153,6 +157,10 @@ class CIEC_ARRAY : public CIEC_ANY_DERIVED{
 
     const CArraySpecs* getSpecs() const {
       return reinterpret_cast<const CArraySpecs*>(getGenData());
+    }
+
+    CArraySpecs* getSpecs() {
+      return reinterpret_cast<CArraySpecs*>(getGenData());
     }
 
     void clear();

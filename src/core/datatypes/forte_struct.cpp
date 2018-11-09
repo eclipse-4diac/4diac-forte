@@ -92,7 +92,7 @@ void CIEC_STRUCT::clear(TForteUInt16 paLength) {
         localMembers[i].~CIEC_ANY();
     }
 
-    delete getGenData();
+    delete reinterpret_cast<CStructSpecs*>(getGenData());
     setGenData(0);
   }
 }
