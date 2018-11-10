@@ -94,6 +94,11 @@ class CIEC_ANY{
       return oToCast;
     }
 
+    CIEC_ANY() :
+        mForced(false){
+      setLargestUInt(0);
+    }
+
     virtual ~CIEC_ANY(){
     }
 
@@ -224,16 +229,7 @@ class CIEC_ANY{
       mForced = pa_bForced;
     }
 
-//    friend class CDataConnection;
-//    friend class CInternal2InterfaceDataConnection;
-//    friend class CIEC_ARRAY;
-
   protected:
-    CIEC_ANY() :
-        mForced(false){
-      setLargestUInt(0);
-    }
-
     /*! \brief copy the union data
      *
      * To be used for efficiently implementing assignment operators where it is

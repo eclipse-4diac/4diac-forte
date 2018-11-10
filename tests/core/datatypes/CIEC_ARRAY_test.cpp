@@ -35,9 +35,6 @@ class CIEC_ArrayOfStructTest : public CIEC_STRUCT {
   public:
     CIEC_ArrayOfStructTest();
 
-    virtual ~CIEC_ArrayOfStructTest() {
-    }
-
     CIEC_STRING& val11() {
       return *static_cast<CIEC_STRING*>((*static_cast<CIEC_ARRAY *>(&getMembers()[0]))[0]);
     }
