@@ -108,24 +108,32 @@ class CIEC_ARRAY : public CIEC_ANY_DERIVED{
       public:
         explicit CArraySpecs(TForteUInt16 paLength) :
             mLength(paLength) {
-          mArray = static_cast<CIEC_ANY*>(forte_malloc(paLength * sizeof(CIEC_ANY)));
-          mRefElement = static_cast<CIEC_ANY*>(forte_malloc(sizeof(CIEC_ANY)));
+          mArray = new CIEC_ANY[paLength + 1];  //store an additional reference element in the first place
         }
 
         ~CArraySpecs() {
-          mRefElement->~CIEC_ANY();
-          for(size_t i = 0; i < mLength; ++i) {
-            mArray[i].~CIEC_ANY();
-          }
-
-          forte_free(mArray);
-          forte_free(mRefElement);
-          mArray = 0;
-          mRefElement = 0;
+          delete[] mArray;
         }
 
         TForteUInt16 mLength;
-        CIEC_ANY *mRefElement;
+
+        CIEC_ANY *getRefElement(){
+          return mArray;
+        }
+
+        const CIEC_ANY *getRefElement() const{
+          return mArray;
+        }
+
+        CIEC_ANY *getArrayContent(){
+          return &(mArray[1]);          //the array content starts from the first entry in our array
+        }
+
+        const CIEC_ANY *getArrayContent() const {
+          return &(mArray[1]);          //the array content starts from the first entry in our array
+        }
+
+      private:
         CIEC_ANY *mArray;
     };
 
@@ -136,23 +144,27 @@ class CIEC_ARRAY : public CIEC_ANY_DERIVED{
      *
      */
     CIEC_ANY *getArray(){
-      return (0 != getSpecs()) ? getSpecs()->mArray : static_cast<CIEC_ANY *>(0);
+      return (0 != getSpecs()) ? getSpecs()->getArrayContent() : static_cast<CIEC_ANY *>(0);
     }
 
     const CIEC_ANY *getArray() const{
-      return (0 != getSpecs()) ? getSpecs()->mArray : static_cast<const CIEC_ANY *>(0);
+      return (0 != getSpecs()) ? getSpecs()->getArrayContent() : static_cast<const CIEC_ANY *>(0);
     }
 
     CIEC_ANY *getReferenceElement() {
-      return (0 != getSpecs()) ? getSpecs()->mRefElement : static_cast<CIEC_ANY *>(0);
+      return (0 != getSpecs()) ? getSpecs()->getRefElement() : static_cast<CIEC_ANY *>(0);
     }
 
     const CIEC_ANY *getReferenceElement() const {
-      return (0 != getSpecs()) ? getSpecs()->mRefElement : static_cast<CIEC_ANY *>(0);
+      return (0 != getSpecs()) ? getSpecs()->getRefElement() : static_cast<CIEC_ANY *>(0);
     }
 
     const CArraySpecs* getSpecs() const {
       return reinterpret_cast<const CArraySpecs*>(getGenData());
+    }
+
+    CArraySpecs* getSpecs() {
+      return reinterpret_cast<CArraySpecs*>(getGenData());
     }
 
     void clear();

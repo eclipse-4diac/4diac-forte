@@ -138,12 +138,11 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
       public:
         CStructSpecs(CStringDictionary::TStringId paTypeName, TForteUInt16 paLength, const CStringDictionary::TStringId paElementNames[], TForteUInt8 paTypeID) :
             mASN1Type(paTypeID), mNumberOfElements(paLength), mStructureTypeID(paTypeName), mElementNames(paElementNames) {
-          mMembers = static_cast<CIEC_ANY*>(forte_malloc(paLength * sizeof(CIEC_ANY)));
+          mMembers = new CIEC_ANY[paLength];
         }
 
         ~CStructSpecs() {
-          forte_free(mMembers);
-          mMembers = 0;
+          delete[] mMembers;
         }
 
         TForteUInt8 mASN1Type;
@@ -151,9 +150,12 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
         CStringDictionary::TStringId mStructureTypeID;
         const CStringDictionary::TStringId *mElementNames;
         CIEC_ANY *mMembers;
+      private:
+        //!declared but undefined copy constructor as we don't want these specs to be directly copied.
+        CStructSpecs(const CStructSpecs&);
     };
 
-    void clear(TForteUInt16 paLength);
+    void clear();
 
     void findNextNonBlankSpace(const char** paRunner);
 
@@ -161,6 +163,10 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
 
     const CStructSpecs* getSpecs() const {
       return reinterpret_cast<const CStructSpecs*>(getGenData());
+    }
+
+    CStructSpecs* getSpecs() {
+      return reinterpret_cast<CStructSpecs*>(getGenData());
     }
 
     static CStringDictionary::TStringId parseNextElementId(const char *paRunner, int &paCounter);

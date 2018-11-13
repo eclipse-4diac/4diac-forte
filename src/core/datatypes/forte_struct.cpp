@@ -9,7 +9,6 @@
   *    Ingo Hegny, Alois Zoitl
   *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
-#include <fortenew.h>
 #include "forte_struct.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "forte_struct_gen.cpp"
@@ -41,14 +40,12 @@ CIEC_STRUCT::CIEC_STRUCT(const CIEC_STRUCT& paValue) :
 }
 
 CIEC_STRUCT::~CIEC_STRUCT(){
-  clear(getStructSize());
+  clear();
 }
 
 void CIEC_STRUCT::setup(CStringDictionary::TStringId paTypeName, TForteUInt16 paLength, const CStringDictionary::TStringId paElementTypes[],
     const CStringDictionary::TStringId paElementNames[], TForteUInt8 paTypeID, TStructInitialValues *paInitialValues) {
   if(0 != paLength) {
-    clear(getStructSize());
-
     setGenData(reinterpret_cast<TForteByte*>(new CStructSpecs(paTypeName, paLength, paElementNames, paTypeID)));
     CIEC_ANY* localMembers = getMembers();
 
@@ -67,7 +64,7 @@ void CIEC_STRUCT::setup(CStringDictionary::TStringId paTypeName, TForteUInt16 pa
           retVal->fromString(paInitialValues[i]);
         }
       } else { //datatype not found, clear everything and return
-        clear(static_cast<TForteUInt16>(i));
+        clear();
         break;
       }
     }
@@ -84,15 +81,9 @@ void CIEC_STRUCT::setValue(const CIEC_ANY& paValue){
   }
 }
 
-void CIEC_STRUCT::clear(TForteUInt16 paLength) {
+void CIEC_STRUCT::clear() {
   if(0 != getGenData()) {
-    CIEC_ANY *localMembers = getMembers();
-
-    for(TForteUInt16 i = 0; i < paLength; ++i) {
-        localMembers[i].~CIEC_ANY();
-    }
-
-    delete getGenData();
+    delete getSpecs();
     setGenData(0);
   }
 }
