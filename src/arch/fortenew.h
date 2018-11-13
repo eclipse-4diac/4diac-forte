@@ -32,55 +32,76 @@
 
 #if __cplusplus >= 201103L //stdc11
 inline
-void* operator new(size_t pa_nSize) {
-  return forte_malloc(pa_nSize);
+void* operator new(size_t paSize) {
+  return forte_malloc(paSize);
 }
 
 inline
-void* operator new[](size_t pa_nSize) {
-  return forte_malloc(pa_nSize ? pa_nSize : 1);
-}
-
-#else
-
-inline
-void* operator new(size_t pa_nSize) throw (std::bad_alloc){
-  return forte_malloc(pa_nSize);
+void* operator new[](size_t paSize) {
+  return forte_malloc(paSize ? paSize : 1);
 }
 
 inline
-void* operator new[](size_t pa_nSize) throw (std::bad_alloc){
-  return forte_malloc(pa_nSize ? pa_nSize : 1);
-}
-
-#endif
-
-inline
-void operator delete(void* pa_pvData) throw(){
-  if (pa_pvData)
-    forte_free(pa_pvData);
+void operator delete(void* paData) noexcept{
+  if (paData) {
+    forte_free(paData);
+  }
 }
 
 inline
-void operator delete[](void* pa_pvData) throw(){
-  if (pa_pvData)
-    forte_free(pa_pvData);
+void operator delete[](void* paData) noexcept{
+  if (paData) {
+    forte_free(paData);
+  }
 }
 
-#if __cplusplus >= 201402L //stdc14
+# if __cplusplus >= 201402L //stdc14
 inline
 void operator delete(void* paData, std::size_t) noexcept{
-  if (paData)
-  forte_free(paData);
+  if (paData){
+    forte_free(paData);
+  }
 }
 
 
 inline
 void operator delete[](void* paData, std::size_t) noexcept{
-  if (paData)
-  forte_free(paData);
+  if (paData) {
+    forte_free(paData);
+  }
 }
-#endif  //__cplusplus >= 201402L //stdc14
+# endif // __cplusplus >= 201402L //stdc14
+
+
+#else  //__cplusplus >= 201103L //stdc11
+
+inline
+void* operator new(size_t paSize) throw (std::bad_alloc){
+  return forte_malloc(paSize);
+}
+
+inline
+void* operator new[](size_t paSize) throw (std::bad_alloc){
+  return forte_malloc(paSize ? paSize : 1);
+}
+
+
+inline
+void operator delete(void* paData) throw(){
+  if (pa_pvData) {
+    forte_free(paData);
+  }
+}
+
+inline
+void operator delete[](void* paData) throw(){
+  if (pa_pvData) {
+    forte_free(paData);
+  }
+}
+
+
+#endif
 
 
 /*! \brief Placement new operator
@@ -91,13 +112,13 @@ void operator delete[](void* paData, std::size_t) noexcept{
  * @param pa_pData
  */
 inline
-void * operator new(size_t, TForteByte *pa_pData){
-  return pa_pData;
+void * operator new(size_t, TForteByte *paData){
+  return paData;
 }
 
 inline
-void * operator new[](size_t, TForteByte *pa_pData){
-  return pa_pData;
+void * operator new[](size_t, TForteByte *paData){
+  return paData;
 }
 
 inline
