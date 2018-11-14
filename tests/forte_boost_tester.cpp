@@ -15,7 +15,7 @@
 #include <boost/test/included/unit_test.hpp>
 #include "core/fbtests/fbtesterglobalfixture.h"
 
-#ifdef FORTE_NO_EXCEPTIONS
+#if defined(BOOST_NO_EXCEPTIONS) && BOOST_VERSION < 106500 // At least Boost v1.65 provides a simple NO_EXCEPTION version of throw_exception
 void boost::throw_exception(std::exception const&) {
   //dummy
 }

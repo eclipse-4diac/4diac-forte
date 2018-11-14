@@ -55,7 +55,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
   mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)
   
   if(FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)
-    forte_add_definition("-DBOOST_TEST_DYN_LINK -DFORTE_USE_DEFAULT_NEW_AND_DELETE -g -O0 --coverage -fno-inline -fno-elide-constructors -fno-exceptions -fsanitize=address -DFORTE_NO_EXCEPTIONS")
+    forte_add_definition("-DBOOST_TEST_DYN_LINK -DFORTE_USE_DEFAULT_NEW_AND_DELETE -g -O0 --coverage -fno-inline -fno-elide-constructors -fno-exceptions -fsanitize=address -DBOOST_NO_EXCEPTIONS")
     forte_add_link_library("-fsanitize=address")
     forte_add_link_library("--coverage")
   else()
