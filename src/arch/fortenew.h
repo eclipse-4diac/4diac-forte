@@ -104,31 +104,6 @@ void operator delete[](void* paData) throw(){
 #endif
 
 
-/*! \brief Placement new operator
- *
- * Will use the given buffer as memory region. The need size will be ignored.
- * Objects created with this new must not deleted only invoke the destructor
- *
- * @param pa_pData
- */
-inline
-void * operator new(size_t, TForteByte *paData){
-  return paData;
-}
-
-inline
-void * operator new[](size_t, TForteByte *paData){
-  return paData;
-}
-
-inline
-void operator delete(void *, TForteByte *){
-}
-
-inline
-void operator delete[](void *, TForteByte *){
-}
-
 #endif //FORTE_USE_DEFAULT_NEW_AND_DELETE
 
 #endif /* SRC_ARCH_FORTENEW_H_ */
