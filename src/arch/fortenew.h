@@ -88,14 +88,14 @@ void* operator new[](size_t paSize) throw (std::bad_alloc){
 
 inline
 void operator delete(void* paData) throw(){
-  if (pa_pvData) {
+  if (paData) {
     forte_free(paData);
   }
 }
 
 inline
 void operator delete[](void* paData) throw(){
-  if (pa_pvData) {
+  if (paData) {
     forte_free(paData);
   }
 }

@@ -1,6 +1,6 @@
 /*******************************************************************************
   * Copyright (c) 2006-2014 ACIN, Profactor GmbH, fortiss GmbH
- *                      2018 Johannes Kepler University
+  *     2018 Johannes Kepler University, 2018 TU Wien/ACIN
   * All rights reserved. This program and the accompanying materials
   * are made available under the terms of the Eclipse Public License v1.0
   * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
   *    Patrick Smejkal
   *      - initial implementation and rework communication infrastructure
   *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+  *    Martin Melik Merkumians - removes usage of unsecure function
   *******************************************************************************/
 
 #include "basecommfb.h"
@@ -65,8 +66,10 @@ EComResponse CBaseCommFB::openConnection() {
       commID = getDefaultIDString(ID().getValue());
     }
     else {
-      commID = new char[strlen(ID().getValue()) + 1];
-      strcpy(commID, ID().getValue());
+      size_t commIdLength = strlen(ID().getValue()) + 1;
+      commID = new char[commIdLength];
+      memcpy(commID, ID().getValue(), commIdLength);
+      commID[commIdLength - 1] = '\0';
     }
 
     // If the ID is empty return an error
@@ -172,9 +175,8 @@ char *CBaseCommFB::extractLayerIdAndParams(char **paRemainingID, char **paLayerP
 }
 
 char *CBaseCommFB::buildIDString(const char *paPrefix, const char *paIDRoot, const char *paSuffix) {
-  char * RetVal = new char[strlen(paPrefix) + strlen(paIDRoot) + strlen(paSuffix) + 1];
-  strcpy(RetVal, paPrefix);
-  strcat(RetVal, paIDRoot);
-  strcat(RetVal, paSuffix);
+  size_t idStringLength = strlen(paPrefix) + strlen(paIDRoot) + strlen(paSuffix) + 1;
+  char *RetVal = new char[idStringLength];
+  snprintf(RetVal, idStringLength, "%s%s%s", paPrefix, paIDRoot, paSuffix);
   return RetVal;
 }

@@ -43,7 +43,7 @@ bool CHttpParser::changePutPostData(CIEC_STRING& paDest, const CIEC_STRING& paDa
     *helperChar = '\0';
     paDest = paDest.getValue(); //will shrink the length of the string to the new ending
     char contentLength[6]; //TODO: should this be fixed or not?
-    sprintf(contentLength, "%zu", strlen(paData.getValue()));
+    snprintf(contentLength, sizeof(contentLength), "%zu", strlen(paData.getValue()));
     paDest.append(contentLength);
     CHttpParser::addHeaderEnding(paDest);
     paDest.append(paData.getValue());
