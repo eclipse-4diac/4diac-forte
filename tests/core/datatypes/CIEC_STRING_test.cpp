@@ -547,7 +547,7 @@ BOOST_AUTO_TEST_CASE(String_toString)
 BOOST_AUTO_TEST_CASE(String_toString_faultcase_buffer_size_zero)
 {
   CIEC_STRING testString = "4diac 4 ever!";
-  size_t bufferSize = 50;
+  const size_t bufferSize = 50;
   char cStringBuffer[bufferSize];
 
   BOOST_CHECK_EQUAL(-1, testString.toString(cStringBuffer, 0));
@@ -555,9 +555,8 @@ BOOST_AUTO_TEST_CASE(String_toString_faultcase_buffer_size_zero)
 
 BOOST_AUTO_TEST_CASE(String_toString_faultcase_buffer_pointer_nullptr)
 {
-  CIEC_STRING testString = "4diac 4 ever!";
-  size_t bufferSize = 50;
-  char cStringBuffer[bufferSize];
+  CIEC_STRING testString;
+  const size_t bufferSize = 50;
 
   BOOST_CHECK_EQUAL(-1, testString.toString(0, bufferSize));
 }
@@ -566,7 +565,7 @@ BOOST_AUTO_TEST_CASE(String_toString_faultcase_buffer_not_enough_buffer_size)
 {
   const char sample_string[] = "4diac 4 ever!";
   CIEC_STRING testString(sample_string);
-  size_t bufferSize = sizeof(sample_string) + 2; // For enclosing single quotes
+  const size_t bufferSize = sizeof(sample_string) + 2; // For enclosing single quotes
   char cStringBuffer[bufferSize];
 
   for(size_t i = 0; i < bufferSize; ++i) {
