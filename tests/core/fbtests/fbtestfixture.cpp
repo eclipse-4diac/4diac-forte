@@ -16,6 +16,10 @@
 #include <criticalregion.h>
 #include <ecet.h>
 
+#ifdef WIN32
+# define usleep(x) Sleep((x)/1000)
+#endif
+
 /**Helper functor for deleting stuff in containers
  *
  */
@@ -41,9 +45,8 @@ class CFBTestConn : public CDataConnection {
 
 
 CFBTestFixtureBase::CFBTestFixtureBase(CStringDictionary::TStringId paTypeId) :
-                      CFunctionBlock(CFBTestDataGlobalFixture::getResource(), 0, 0, 0, 0),
-                      mTypeId(paTypeId),
-                      mFBUnderTest(CTypeLib::createFB(paTypeId, paTypeId, getResourcePtr())){
+    CFunctionBlock(CFBTestDataGlobalFixture::getResource(), 0, 0, 0, 0), mTypeId(paTypeId),
+        mFBUnderTest(CTypeLib::createFB(paTypeId, paTypeId, getResourcePtr())), mFBConnData(0), mFBVarsData(0) {
 
   changeFBExecutionState(cg_nMGM_CMD_Reset);
   changeFBExecutionState(cg_nMGM_CMD_Start);

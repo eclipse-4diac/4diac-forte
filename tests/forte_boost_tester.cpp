@@ -15,10 +15,11 @@
 #include <boost/test/included/unit_test.hpp>
 #include "core/fbtests/fbtesterglobalfixture.h"
 
-
+#ifdef FORTE_NO_EXCEPTIONS
 void boost::throw_exception(std::exception const&) {
   //dummy
 }
+#endif
 
 //BOOST_TEST_GLOBAL_FIXTURE(MyGlobalFixture)();
 //fix for a problem in BOOST_TEST_GLOBAL_FIXTURE, revert when fixed, issue seams to be in BOOST_JOIN
