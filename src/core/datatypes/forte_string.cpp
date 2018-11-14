@@ -1,5 +1,6 @@
 /*******************************************************************************
   * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH
+  *   2018 TU Wien/ACIN
   * All rights reserved. This program and the accompanying materials
   * are made available under the terms of the Eclipse Public License v1.0
   * which accompanies this distribution, and is available at
@@ -7,8 +8,9 @@
   *
   * Contributors:
   *    Thomas Strasser, Ingomar Müller, Rene Smodic, Alois Zoitl,
-  *    Ingo Hegny, Martin Meik Merkumians, Stanislav Meduna
+  *    Ingo Hegny, Martin Melik Merkumians, Stanislav Meduna
   *      - initial implementation and rework communication infrastructure
+  *    Maritn Melik Merkumians - fixes toString behavior for 0 size buffer
   *******************************************************************************/
 #include "forte_string.h"
 #include <devlog.h>
@@ -43,31 +45,32 @@ int CIEC_STRING::fromString(const char *pa_pacValue){
   return nSrcLen;
 }
 
-int CIEC_STRING::toString(char* pa_acValue, unsigned int pa_nBufferSize) const {
+int CIEC_STRING::toString(char* paValue, unsigned int paBufferSize) const {
   int nRetVal = -1;
-  if(static_cast<unsigned int>(length() + 2) < pa_nBufferSize){  //add 2 for the leading and closing '
-    *pa_acValue = '\'';
-    pa_acValue++;
+  if(0 != paValue && getToStringBufferSize() <= paBufferSize){
+    *paValue = '\'';
+    paValue++;
     TForteUInt16 nLen = length();
     int nUsedBytes = 0;
-    pa_nBufferSize -= 2;
+    paBufferSize -= 2;
     if(0 < nLen){
       const char * acValue = getValue();
       for(unsigned int i = 0; i < nLen; ++i){
-        if(static_cast<unsigned int >(nUsedBytes) >= pa_nBufferSize){
+        if(static_cast<unsigned int >(nUsedBytes) >= paBufferSize){
           return -1;
         }
-        nUsedBytes += dollarEscapeChar(pa_acValue+nUsedBytes, acValue[i], 2);
+        nUsedBytes += dollarEscapeChar(paValue+nUsedBytes, acValue[i], 2);
       }
 
     } else{
-      *pa_acValue = '\0';
+      *paValue = '\0';
     }
     nRetVal = nUsedBytes;
-    pa_acValue[nRetVal] = '\'';
-    pa_acValue[nRetVal + 1] = '\0';
+    paValue[nRetVal] = '\'';
+    paValue[nRetVal + 1] = '\0';
+    nRetVal += 2;
   }
-  return nRetVal + 2;
+  return nRetVal;
 }
 
 #ifdef FORTE_UNICODE_SUPPORT
