@@ -54,8 +54,4 @@ typedef TForteUInt16 TPortId;   //!<Type for holding an optimized FORTE internal
 
 const TForteUInt16 cg_unInvalidPortId = 255; //!< \ingroup CORE constant defining the max possible number of an FB Port (even or data, in or output)
 
-#if VXWORKS
-# define UINT64_C(x)   (x##ULL)
-#endif
-
 #endif // DATATYPES_H_
