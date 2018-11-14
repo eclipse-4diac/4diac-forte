@@ -58,17 +58,18 @@ int CIEC_BOOL::fromString(const char *pa_pacValue){
   return nRetVal;
 }
 
-int CIEC_BOOL::toString(char* pa_acValue, unsigned int pa_nBufferSize)  const {
+int CIEC_BOOL::toString(char* paValue, unsigned int paBufferSize)  const {
   int nRetval = -1;
-  if(pa_nBufferSize >= csmStringBufferSize[e_BOOL]){
+  if(paBufferSize >= csmStringBufferSize[e_BOOL]){
     if(getTBOOL8()){
-      strcpy(pa_acValue, "TRUE");
+      strncpy(paValue, "TRUE", paBufferSize);
       nRetval = 4;
     }
     else{
-      strcpy(pa_acValue, "FALSE");
+      strncpy(paValue, "FALSE", paBufferSize);
       nRetval = 5;
     }
+    paValue[paBufferSize - 1] = '\0';
   }
   return nRetval;
 }
