@@ -562,12 +562,12 @@ template<typename T> const T MID(const T& pa_rsIn, const CIEC_ANY_INT& pa_roL, c
   }
 }
 
-template<typename T> const T CONCAT(const T& pa_rsIn1, const T& pa_rsIn2){
-  T temp;
-  temp.reserve(static_cast<TForteUInt16>(pa_rsIn1.length() + pa_rsIn2.length()));
-  strcpy(temp.getValue(), pa_rsIn1.getValue());
-  strcat(temp.getValue(), pa_rsIn2.getValue());
-  return temp.getValue();
+template<typename T> const T CONCAT(const T& paIn1, const T& paIn2){
+  FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_STRING, T>::value), TNotOfAnyString);
+  T temp(paIn1);
+  temp.reserve(static_cast<TForteUInt16>(paIn1.length() + paIn2.length()));
+  temp.append(paIn2.getValue(), paIn2.length());
+  return temp;
 }
 
 #if __cplusplus >= 201103L //stdc11
