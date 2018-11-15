@@ -92,5 +92,10 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
   IF(FORTE_POSIX_GENERATE_MAP_FILE)
     forte_add_link_flags("-Wl,-M -Wl,-Map -Wl,forte.map -Wl,-cref")
   ENDIF(FORTE_POSIX_GENERATE_MAP_FILE)  
+  
+  forte_add_custom_configuration("#define PRIuFAST64 \"I64u\"")
+  
+  forte_add_custom_configuration("typedef unsigned long long uint_fast64_t\\\;")
+  
 
 endif()

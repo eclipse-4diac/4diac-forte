@@ -10,16 +10,27 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "devlog.h"
-#include "timerha.h"
-#include "forte_printer.h"
-#include "../core/utils/criticalregion.h"
-#include <forte_config.h>
-#include <cstdio>
-#include <cstdlib>
-#include <cstdarg>
-#include <cinttypes>
 
 #ifndef NOLOG
+
+# include "timerha.h"
+# include "forte_printer.h"
+# include "../core/utils/criticalregion.h"
+#include <forte_config.h>
+# include <cstdio>
+# include <cstdlib>
+# include <cstdarg>
+
+# if __cplusplus < 201103L // < stdc11
+#  ifndef VXWORKS //inttypes.h is not present for VXWORKS_KERNEL compilation type. PRIuFAST64 is defined in forte_config
+#   ifndef __STDC_FORMAT_MACROS
+#    define __STDC_FORMAT_MACROS
+#   endif //__STDC_FORMAT_MACROS
+#   include <inttypes.h>
+#  endif //VXWORKS
+# else //< stdc11
+#  include <cinttypes>
+# endif //< stdc11
 
 static const char* scLogLevel[] = { "INFO", "WARNING", "ERROR", "DEBUG", "TRACE" };
 
