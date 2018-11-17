@@ -24,13 +24,15 @@ class CIEC_ANY_STRING : public CIEC_ANY_ELEMENTARY{
 
     virtual ~CIEC_ANY_STRING();
 
-    CIEC_ANY_STRING(const CIEC_ANY_STRING& pa_roValue) :
+    CIEC_ANY_STRING(const CIEC_ANY_STRING& paValue) :
         CIEC_ANY_ELEMENTARY(){
-      this->assign(pa_roValue.getValue(), pa_roValue.length());
+      this->assign(paValue.getValue(), paValue.length());
     }
 
-    CIEC_ANY_STRING &operator=(const CIEC_ANY_STRING& pa_roValue){
-      this->assign(pa_roValue.getValue(), pa_roValue.length());
+    CIEC_ANY_STRING &operator=(const CIEC_ANY_STRING& paValue){
+      if( this != &paValue) {
+        this->assign(paValue.getValue(), paValue.length());
+      }
       return *this;
     }
 

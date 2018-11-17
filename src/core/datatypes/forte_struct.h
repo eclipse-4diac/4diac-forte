@@ -27,7 +27,9 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
     virtual ~CIEC_STRUCT();
 
     CIEC_STRUCT& operator =(const CIEC_STRUCT &paValue){
-      setValue(paValue);
+      if(this != &paValue) {
+        setValue(paValue);
+      }
       return *this;
     }
 
@@ -87,7 +89,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      *   This command implements a conversion function from IEC61131
      *   data type (array format) to a C++ conform type.
      *   This function is necessary for communication with a proper engineering system.
-     *   \param pa_pacValue string buffer
+     *   \param paValue string buffer
      *   \return number of bytes taken used from the buffer
      *        -1 on on error
      */
@@ -95,8 +97,8 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
     /*! \brief Converts data type value to string
      *
      *   This command implements a conversion function to C++ data type.
-     *   \param pa_acValue       Pointer to char-array
-     *   \param pa_nBufferSize   Size of the provided buffer
+     *   \param paValue       Pointer to char-array
+     *   \param paBufferSize   Size of the provided buffer
      *   \return number of bytes used in the buffer
      *           -1 on error
      */

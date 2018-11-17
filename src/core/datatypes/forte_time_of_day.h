@@ -30,16 +30,16 @@ class CIEC_TIME_OF_DAY : public CIEC_ANY_DATE{
     CIEC_TIME_OF_DAY(){
     }
 
-    CIEC_TIME_OF_DAY(const CIEC_TIME_OF_DAY& pa_roValue) :
+    CIEC_TIME_OF_DAY(const CIEC_TIME_OF_DAY& paValue) :
         CIEC_ANY_DATE(){
-      setValueSimple(pa_roValue);
+      setValueSimple(paValue);
     }
 
     // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
-    // Maybe when we have better code generators we want to make this constructur explicit again and generate it
+    // Maybe when we have better code generators we want to make this constructor explicit again and generate it
     // cppcheck-suppress noExplicitConstructor
-    CIEC_TIME_OF_DAY(TForteUInt64 pa_nValue){
-      setTUINT64(pa_nValue);
+    CIEC_TIME_OF_DAY(TForteUInt64 paValue){
+      setTUINT64(paValue);
     }
 
     virtual ~CIEC_TIME_OF_DAY(){
@@ -47,19 +47,20 @@ class CIEC_TIME_OF_DAY : public CIEC_ANY_DATE{
 
     /*! \brief Operator: CIEC_TIME_OF_DAY data type = long data type
      *
-     *   This command implements the assignment operator for the C++ datatype long long.
+     *   This command implements the assignment operator for the C++ data type long long.
      *   The parameter value is represented by a C++ variable (call by value).
-     *   \param pa_nValue  Value for assignment.
+     *   \param paValue  Value for assignment.
      *   \return Can be the following response:
      *     - Pointer to given object.
      */
-    CIEC_TIME_OF_DAY& operator =(TForteInt64 pa_nValue){
-      setTUINT64(pa_nValue);
+    CIEC_TIME_OF_DAY& operator =(TForteInt64 paValue){
+      setTUINT64(paValue);
       return *this;
     }
 
-    CIEC_TIME_OF_DAY& operator =(const CIEC_TIME_OF_DAY &pa_roValue){
-      setValueSimple(pa_roValue);
+    CIEC_TIME_OF_DAY& operator =(const CIEC_TIME_OF_DAY &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
       return *this;
     }
 
@@ -88,26 +89,26 @@ class CIEC_TIME_OF_DAY : public CIEC_ANY_DATE{
 
     /*! \brief Converts string value to data type value
      *
-     *   This command implements a conversion function from IEC61131
+     *   This command implements a conversion function from IEC 61131
      *   data type (string format) to a C++ conform type.
      *   This function is necessary for communication with a proper engineering system.
-     *   \param pa_pacValue Pointer to the given String
+     *   \param paValue Pointer to the given String
      *   \return Can be the following response:
      *   \return number of bytes taken used from the buffer
      *        -1 on on error
      */
-    virtual int fromString(const char *pa_pacValue);
+    virtual int fromString(const char *paValue);
     /*! \brief Converts data type value to string
      *
      *   This command implements a conversion function from C++ data type
-     *   to IEC61131 conform data type (string format).
+     *   to IEC 61131 conform data type (string format).
      *   This function is necessary for communication with a proper engineering system.
-     *   \param pa_pacValue Pointer to the buffer String
-     *   \param pa_nBufferSize Size of the given buffer
+     *   \param paValue Pointer to the buffer String
+     *   \param paBufferSize Size of the given buffer
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    virtual int toString(char* pa_pacValue, unsigned int pa_nBufferSize) const;
+    virtual int toString(char* paValue, unsigned int paBufferSize) const;
 
     /*! \brief Set the variable to current time
      */

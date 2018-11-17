@@ -15,37 +15,37 @@
 
 DEFINE_FIRMWARE_DATATYPE(BOOL, g_nStringIdBOOL)
 
-int CIEC_BOOL::fromString(const char *pa_pacValue){
+int CIEC_BOOL::fromString(const char *paValue){
   int nRetVal = 0;
 
-  if(0 == strncmp(pa_pacValue, "BOOL#", 5)){
-    pa_pacValue += 5;
+  if(0 == strncmp(paValue, "BOOL#", 5)){
+    paValue += 5;
     nRetVal += 5;
   }
 
-  if(pa_pacValue[0] == '1'){
+  if(paValue[0] == '1'){
     setTBOOL8(true);
     nRetVal += 1;
   }
   else{
-    if(pa_pacValue[0] == '0'){
+    if(paValue[0] == '0'){
       setTBOOL8(false);
       nRetVal += 1;
     }
     else{
-      if(((pa_pacValue[0] == 'T') || (pa_pacValue[0] == 't')) &&
-         ((pa_pacValue[1] == 'R') || (pa_pacValue[1] == 'r')) &&
-         ((pa_pacValue[2] == 'U') || (pa_pacValue[2] == 'u')) &&
-         ((pa_pacValue[3] == 'E') || (pa_pacValue[3] == 'e'))){
+      if(((paValue[0] == 'T') || (paValue[0] == 't')) &&
+         ((paValue[1] == 'R') || (paValue[1] == 'r')) &&
+         ((paValue[2] == 'U') || (paValue[2] == 'u')) &&
+         ((paValue[3] == 'E') || (paValue[3] == 'e'))){
         setTBOOL8(true);
         nRetVal += 4;
       }
       else{
-        if(((pa_pacValue[0] == 'F') || (pa_pacValue[0] == 'f')) &&
-           ((pa_pacValue[1] == 'A') || (pa_pacValue[1] == 'a')) &&
-           ((pa_pacValue[2] == 'L') || (pa_pacValue[2] == 'l')) &&
-           ((pa_pacValue[3] == 'S') || (pa_pacValue[3] == 's')) &&
-           ((pa_pacValue[4] == 'E') || (pa_pacValue[4] == 'e'))){
+        if(((paValue[0] == 'F') || (paValue[0] == 'f')) &&
+           ((paValue[1] == 'A') || (paValue[1] == 'a')) &&
+           ((paValue[2] == 'L') || (paValue[2] == 'l')) &&
+           ((paValue[3] == 'S') || (paValue[3] == 's')) &&
+           ((paValue[4] == 'E') || (paValue[4] == 'e'))){
           setTBOOL8(false);
           nRetVal += 5;
         }

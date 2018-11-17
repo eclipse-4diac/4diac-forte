@@ -21,10 +21,10 @@
 
 DEFINE_FIRMWARE_DATATYPE(DATE, g_nStringIdDATE)
 
-int CIEC_DATE::fromString(const char *pa_pacValue){
+int CIEC_DATE::fromString(const char *paValue){
   // 2007-12-21
   struct tm tm;
-  char *acBuffer = const_cast<char*>(pa_pacValue);
+  char *acBuffer = const_cast<char*>(paValue);
 
   memset(&tm, 0, sizeof(tm));
 
@@ -65,18 +65,18 @@ int CIEC_DATE::fromString(const char *pa_pacValue){
     return -1;
   }
 
-  return static_cast<unsigned int>(acBuffer - pa_pacValue);
+  return static_cast<unsigned int>(acBuffer - paValue);
 }
 
-int CIEC_DATE::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
+int CIEC_DATE::toString(char* paValue, unsigned int paBufferSize) const{
   int nRetVal = -1;
   struct tm *ptm = getTimeStruct();
 
   if (ptm == 0)
     return -1;
 
-  nRetVal = forte_snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d", 1900 + ptm->tm_year, ptm->tm_mon + 1, ptm->tm_mday);
-  if((nRetVal < -1) || (nRetVal >= (int) pa_nBufferSize)){
+  nRetVal = forte_snprintf(paValue, paBufferSize, "%04d-%02d-%02d", 1900 + ptm->tm_year, ptm->tm_mon + 1, ptm->tm_mday);
+  if((nRetVal < -1) || (nRetVal >= (int) paBufferSize)){
     nRetVal = -1;
   }
   return nRetVal;

@@ -32,15 +32,15 @@ class CIEC_ULINT : public CIEC_ANY_INT{
     CIEC_ULINT(){
     }
 
-    CIEC_ULINT(const CIEC_ULINT& pa_roValue) : CIEC_ANY_INT() {
-      setValueSimple(pa_roValue);
+    CIEC_ULINT(const CIEC_ULINT& paValue) : CIEC_ANY_INT() {
+      setValueSimple(paValue);
     }
 
     // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
-    // Maybe when we have better code generators we want to make this constructur explicit again and generate it
+    // Maybe when we have better code generators we want to make this constructor explicit again and generate it
     // cppcheck-suppress noExplicitConstructor
-   CIEC_ULINT(TForteUInt64 pa_nValue){
-      setTUINT64(pa_nValue);
+   CIEC_ULINT(TForteUInt64 paValue){
+      setTUINT64(paValue);
     }
 
     virtual ~CIEC_ULINT(){
@@ -48,19 +48,20 @@ class CIEC_ULINT : public CIEC_ANY_INT{
 
     /*! \brief Operator: CIEC_ULINT data type = unsigned long data type
      *
-     *   This command implements the assignment operator for the C++ datatype UNSIGNED LONG
+     *   This command implements the assignment operator for the C++ data type UNSIGNED LONG
      *   The parameter value is represented by a C++ variable (call by value).
-     *   \param pa_nValue  Value for assignment.
+     *   \param paValue  Value for assignment.
      *   \return Can be the following response:
      *     - Pointer to given object.
      */
-    CIEC_ULINT& operator =(TForteUInt64 pa_nValue){
-      setTUINT64(pa_nValue);
+    CIEC_ULINT& operator =(TForteUInt64 paValue){
+      setTUINT64(paValue);
       return *this;
     }
 
-    CIEC_ULINT& operator =(const CIEC_ULINT &pa_roValue){
-      setValueSimple(pa_roValue);
+    CIEC_ULINT& operator =(const CIEC_ULINT &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
       return *this;
     }
 
