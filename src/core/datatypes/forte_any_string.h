@@ -1,14 +1,17 @@
 /*******************************************************************************
-  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Thomas Strasser, Alois Zoitl, Stanislav Meduna, Monika Wenger, Ingo Hegny
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH
+ *   2018 TU Wien/ACIN
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Thomas Strasser, Alois Zoitl, Stanislav Meduna, Monika Wenger, Ingo Hegny
+ *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians
+ *      - fixes behavior for getToStringBufferSize
+ *******************************************************************************/
 #ifndef _ANY_STR_H_
 #define _ANY_STR_H_
 
@@ -17,7 +20,7 @@
 /*!\ingroup COREDTS IIEC_ANY_STRING represents any bit data types according to IEC 61131.
  */
 class CIEC_ANY_STRING : public CIEC_ANY_ELEMENTARY{
-    DECLARE_FIRMWARE_DATATYPE(ANY_STRING)
+  DECLARE_FIRMWARE_DATATYPE(ANY_STRING)
 
   public:
     static const unsigned int scm_unMaxStringLen = 65534; //save one for the \0 needed for allocated length
@@ -30,7 +33,7 @@ class CIEC_ANY_STRING : public CIEC_ANY_ELEMENTARY{
     }
 
     CIEC_ANY_STRING &operator=(const CIEC_ANY_STRING& paValue){
-      if( this != &paValue) {
+      if(this != &paValue){
         this->assign(paValue.getValue(), paValue.length());
       }
       return *this;
@@ -70,7 +73,9 @@ class CIEC_ANY_STRING : public CIEC_ANY_ELEMENTARY{
       assign("", 0);
     }
 
-    bool empty() const{return length() == 0;}
+    bool empty() const{
+      return length() == 0;
+    }
 
     /*! Assign arbitrary data (can contain '0x00')
      */
@@ -96,8 +101,6 @@ class CIEC_ANY_STRING : public CIEC_ANY_ELEMENTARY{
     TForteUInt16 getCapacity() const{
       return (0 != getGenData()) ? (*((TForteUInt16 *) (getGenData() + 2))) : static_cast<TForteUInt16>(0);
     }
-
-    virtual unsigned int getToStringBufferSize() const;
 
 #ifdef FORTE_UNICODE_SUPPORT
     /*! \brief Converts a UTF-8 encoded string to a variable
@@ -175,7 +178,7 @@ class CIEC_ANY_STRING : public CIEC_ANY_ELEMENTARY{
     }
 
     CIEC_ANY_STRING(){
-        }
+    }
 };
 
 #endif /*_MANY_STR_H_*/

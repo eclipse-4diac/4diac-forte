@@ -1,15 +1,18 @@
 /*******************************************************************************
-  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN, nxtControl GmbH,
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Ingo Hegny, Stanislav Meduna
-  *    Martin Melik Merkumians, Matthias Plasch, Monika Wenger
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN, nxtControl GmbH
+ *   2018 TU Wien/ACIN
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Ingo Hegny, Stanislav Meduna
+ *    Martin Melik Merkumians, Matthias Plasch, Monika Wenger
+ *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians
+ *      - fixes behavior for getToStringBufferSize
+ *******************************************************************************/
 #ifndef _FORTE_WSTRING_H_
 #define _FORTE_WSTRING_H_
 
@@ -129,6 +132,17 @@ class CIEC_WSTRING : public CIEC_ANY_STRING{
      *           -1 on error
      */
     virtual int toString(char* pa_acValue, unsigned int pa_nBufferSize) const;
+
+    /*! \brief Returns the amount of bytes needed to create the IEC 61131 literal string
+     *
+     * IEC 61131 literal strings needs to delimit all non Common_Char_Value literals and special
+     * symbols, like line-feed, into escaped symbol sequences. For single byte strings the special
+     * symbols are represented as dollar escaped strings followed by two hex digits. For double byte strings
+     * is is dollar followed by four hex digits, according to the IEC 61131 standard and its EBNF.
+     *
+     * \return Needed buffer size for literal string without type delarator e.g., WSTRING#
+     */
+    virtual unsigned int getToStringBufferSize() const;
 
   protected:
 
