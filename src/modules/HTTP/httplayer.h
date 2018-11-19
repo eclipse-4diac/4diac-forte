@@ -18,15 +18,13 @@
 #include "comlayer.h"
 #include <forte_string.h>
 #include "ipcomlayer.h"
-
-
-class CIEC_ANY;
+#include "../../core/utils/parameterParser.h"
 
 namespace forte {
 
   namespace com_infra {
 
-    class CHttpComLayer : public CComLayer{
+    class CHttpComLayer : public CComLayer {
       public:
         CHttpComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB);
         virtual ~CHttpComLayer();
@@ -43,7 +41,7 @@ namespace forte {
         EComResponse processInterrupt();
 
         /** enum representing the HTTP request type */
-        enum ERequestType{
+        enum ERequestType {
           /** HTTP GET */
           e_GET,
           /** HTTP PUT */
@@ -57,9 +55,6 @@ namespace forte {
         CIEC_STRING& getHost();
 
         TForteUInt16 getPort();
-
-
-      protected:
 
       private:
 
@@ -79,6 +74,16 @@ namespace forte {
 
         EComResponse openClientConnection(char* paLayerParameter);
 
+        bool checkSDInPOSTAndPUT(size_t paNoOfSD);
+
+        bool checkSDsAndRDsType();
+
+        bool handleAddress(const char* paAddress, size_t paNoOfSDs);
+
+        bool handleContentAndRequestType(CParameterParser &paParser, size_t paNoOfParameters);
+
+        bool storeRequestType(const char* paType);
+
         EComResponse mInterruptResp;
 
         /** Represents the HTTP request type (0 = GET, 1 = PUT). */
@@ -97,17 +102,11 @@ namespace forte {
         char mRecvBuffer[cg_unIPLayerRecvBufferSize];
         unsigned int mBufFillSize;
 
-        /** Expected response code (default: HTTP/1.1 200 OK) */
-        CIEC_STRING mExpectedRspCode;
-
         CIEC_STRING mContentType;
-
-        /** Ouput response is to be written to a data output */
-        bool hasOutputResponse;
 
         bool mCorrectlyInitialized;
 
-        bool mHasParameter;
+        bool mHasParameterInSD;
     };
 
   }
