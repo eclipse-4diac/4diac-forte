@@ -20,11 +20,11 @@
 
 DEFINE_FIRMWARE_DATATYPE(TIME_OF_DAY, g_nStringIdTIME_OF_DAY)
 
-int CIEC_TIME_OF_DAY::fromString(const char *pa_pacValue){
+int CIEC_TIME_OF_DAY::fromString(const char *paValue){
   // 15:00:00.000
   struct tm tm;
   int msec = 0;
-  char *acBuffer = const_cast<char*>(pa_pacValue);
+  char *acBuffer = const_cast<char*>(paValue);
 
   memset(&tm, 0, sizeof(tm));
 
@@ -86,19 +86,19 @@ int CIEC_TIME_OF_DAY::fromString(const char *pa_pacValue){
 
   setTUINT64((tm.tm_hour * 3600 + tm.tm_min * 60 + tm.tm_sec) * 1000ULL + msec);
 
-  return static_cast<int>(acBuffer - pa_pacValue);
+  return static_cast<int>(acBuffer - paValue);
 }
 
-int CIEC_TIME_OF_DAY::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
+int CIEC_TIME_OF_DAY::toString(char* paValue, unsigned int paBufferSize) const{
   TForteUInt64 ntoStingBuffer = getTUINT64();
   time_t t = static_cast<time_t>(ntoStingBuffer / 1000);
 
-  int nRetVal = forte_snprintf(pa_pacValue, pa_nBufferSize, "%02d:%02d:%02d.%03d",
+  int nRetVal = forte_snprintf(paValue, paBufferSize, "%02d:%02d:%02d.%03d",
       (int) (t / 3600),
       (int) ((t % 3600) / 60),
       (int) (t % 60),
       (int) (ntoStingBuffer % 1000));
-  if((nRetVal < -1) || (nRetVal >= (int) pa_nBufferSize)){
+  if((nRetVal < -1) || (nRetVal >= (int) paBufferSize)){
     nRetVal = -1;
   }
   return nRetVal;

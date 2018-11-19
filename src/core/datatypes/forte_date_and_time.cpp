@@ -22,10 +22,10 @@
 
 DEFINE_FIRMWARE_DATATYPE(DATE_AND_TIME, g_nStringIdDATE_AND_TIME)
 
-int CIEC_DATE_AND_TIME::fromString(const char *pa_pacValue){
+int CIEC_DATE_AND_TIME::fromString(const char *paValue){
   // 2007-12-21-15:00:00.000
   int nRetVal = -1;
-  char *acBuffer = const_cast<char*>(pa_pacValue);
+  char *acBuffer = const_cast<char*>(paValue);
 
   if('d' == tolower(*acBuffer)){
     if('t' == tolower(acBuffer[1])){
@@ -88,7 +88,7 @@ int CIEC_DATE_AND_TIME::fromString(const char *pa_pacValue){
                     msec /= 10;
                 }
               }
-              nRetVal = static_cast<int>(acBuffer - pa_pacValue);
+              nRetVal = static_cast<int>(acBuffer - paValue);
             }
           }
         }
@@ -105,21 +105,21 @@ int CIEC_DATE_AND_TIME::fromString(const char *pa_pacValue){
   return nRetVal;
 }
 
-int CIEC_DATE_AND_TIME::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
+int CIEC_DATE_AND_TIME::toString(char* paValue, unsigned int paBufferSize) const{
   int nRetVal = -1;
 
   struct tm *ptm = getTimeStruct();
 
   if(0 != ptm){
-    nRetVal = forte_snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03u", 1900 + ptm->tm_year, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, getMilliSeconds());
-    if((nRetVal < -1) || (nRetVal >= (int) pa_nBufferSize)){
+    nRetVal = forte_snprintf(paValue, paBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03u", 1900 + ptm->tm_year, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, getMilliSeconds());
+    if((nRetVal < -1) || (nRetVal >= (int) paBufferSize)){
       nRetVal = -1;
     }
   }
   return nRetVal;
 }
 
-int CIEC_DATE_AND_TIME::toGMTString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
+int CIEC_DATE_AND_TIME::toGMTString(char* paValue, unsigned int paBufferSize) const{
   TForteUInt64 nToStringBuffer = getTUINT64();
   time_t t = static_cast<time_t>(nToStringBuffer / 1000);
 
@@ -127,8 +127,8 @@ int CIEC_DATE_AND_TIME::toGMTString(char* pa_pacValue, unsigned int pa_nBufferSi
   if (ptm == 0)
     return -1;
 
-  int nRetVal = forte_snprintf(pa_pacValue, pa_nBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03d", 1900 + ptm->tm_year, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, (int) (nToStringBuffer % 1000));
-  if((nRetVal < -1) || (nRetVal >= (int) pa_nBufferSize)){
+  int nRetVal = forte_snprintf(paValue, paBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03d", 1900 + ptm->tm_year, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, (int) (nToStringBuffer % 1000));
+  if((nRetVal < -1) || (nRetVal >= (int) paBufferSize)){
     nRetVal = -1;
   }
   return nRetVal;

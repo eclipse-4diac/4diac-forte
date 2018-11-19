@@ -1,14 +1,17 @@
 /*******************************************************************************
-  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Ingo Hegny, Stanislav Meduna
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH
+ *   2018 TU Wien/ACIN
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Ingo Hegny, Stanislav Meduna
+ *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians
+ *      - fixes behavior for getToStringBufferSize
+ *******************************************************************************/
 #include "forte_wstring.h"
 #include <devlog.h>
 
@@ -266,4 +269,35 @@ int CIEC_WSTRING::toUTF8(char* pa_pacBuffer, unsigned int pa_nBufferSize, bool p
   *pEncRunner = '\0';
 
   return static_cast<int>(pEncRunner - pa_pacBuffer);
+}
+
+unsigned int CIEC_WSTRING::getToStringBufferSize() const{
+  const char * const stringValue = getValue();
+  unsigned int neededBufferSize = 0;
+  for(size_t i = 0; i < length(); ++i){
+    if(isprint(stringValue[i]) && '$' != stringValue[i] && '\"' != stringValue[i]){
+      ++neededBufferSize;
+    }
+    else{
+      switch (stringValue[i]){
+        case '$':
+        case 0x10: // line feed
+        case '\n':
+        case '\f':
+        case '\r':
+        case '\t':
+        case '\"':
+          neededBufferSize += 2;
+          break;
+        default:
+          // WSTRING are two-byte strings, so we only have to check for two byte UTF-8 symbols
+          if((stringValue[i] & 0xe0) == 0xc0 && (stringValue[i + 1] & 0xc0) == 0x80){
+            ++i;
+          }
+          neededBufferSize += 5;
+          break;
+      }
+    }
+  }
+  return neededBufferSize + 2 + 1; // For Quotes and \0
 }

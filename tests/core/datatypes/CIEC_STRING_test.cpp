@@ -1,12 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2011 - 2013 ACIN, nxtControl, Profactor GmbH, fortiss GmbH
+ *   2018 TU Wien/ACIN
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna, Matthias Plasch - initial API and implementation and/or initial documentation
+ *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna,
+ *     Matthias Plasch - initial API and implementation and/or initial documentation
+ *   Martin Melik Merkumians - adds getToStringBufferSize tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 
@@ -572,6 +575,86 @@ BOOST_AUTO_TEST_CASE(String_toString_faultcase_buffer_not_enough_buffer_size)
     BOOST_CHECK_EQUAL(-1, testString.toString(cStringBuffer, i));
   }
   BOOST_CHECK_EQUAL(bufferSize - 1, testString.toString(cStringBuffer, bufferSize)); // \0 is not counted
+}
+
+BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_NoSpecialSymbols)
+{
+  CIEC_STRING testString("4diac 4 ever!");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(13 + 2 + 1, bufferSize);
+}
+
+BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_Dollar)
+{
+  CIEC_STRING testString("$");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // '$$'\0
+}
+
+BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_SingleQuote)
+{
+  CIEC_STRING testString("\'");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // '$''\0
+}
+
+BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_DoubleQuote)
+{
+  CIEC_STRING testString("\"");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(1 + 2 + 1, bufferSize); // '"'\0
+}
+
+BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_LineFeed)
+{
+  CIEC_STRING testString("\x10");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // '$L'\0
+}
+
+BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_NewLine)
+{
+  CIEC_STRING testString("\n");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // '$N'\0
+}
+
+BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_FormFeed)
+{
+  CIEC_STRING testString("\f");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // '$P'\0
+}
+
+BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_CarriageReturn)
+{
+  CIEC_STRING testString("\r");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // '$R'\0
+}
+
+BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_Tab)
+{
+  CIEC_STRING testString("\t");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // '$T'\0
+}
+
+BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_NonCommonSymbol)
+{
+  CIEC_STRING testString("\x8A");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(3 + 2 + 1, bufferSize); // '$8A'\0
 }
 
 BOOST_AUTO_TEST_SUITE_END()

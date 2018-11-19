@@ -1,15 +1,15 @@
 /*******************************************************************************
-  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny,
-  *    Monika Wenger
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny,
+ *    Monika Wenger
+ *      - initial implementation and rework communication infrastructure
+ *******************************************************************************/
 #ifndef _FORTE_WORD_H_
 #define _FORTE_WORD_H_
 
@@ -30,13 +30,13 @@ class CIEC_WORD : public CIEC_ANY_BIT{
     CIEC_WORD(){
     }
 
-    CIEC_WORD(const CIEC_WORD& pa_roValue) :
+    CIEC_WORD(const CIEC_WORD& paValue) :
         CIEC_ANY_BIT(){
-      setValueSimple(pa_roValue);
+      setValueSimple(paValue);
     }
 
     // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
-    // Maybe when we have better code generators we want to make this constructur explicit again and generate it
+    // Maybe when we have better code generators we want to make this constructor explicit again and generate it
     // cppcheck-suppress noExplicitConstructor
     CIEC_WORD(TForteWord pa_cValue){
       setTUINT16(pa_cValue);
@@ -47,19 +47,20 @@ class CIEC_WORD : public CIEC_ANY_BIT{
 
     /*! \brief Operator: CIEC_WORD data type = unsigned short data type
      *
-     *   This command implements the assignment operator for the C++ datatype UNSIGNED SHORT
+     *   This command implements the assignment operator for the C++ data type UNSIGNED SHORT
      *   The parameter value is represented by a C++ variable (call by value).
-     *   \param pa_cValue  Value for assignment.
+     *   \param paValue  Value for assignment.
      *   \return Can be the following response:
      *     - Pointer to given object.
      */
-    CIEC_WORD& operator =(TForteWord pa_cValue){
-      setTUINT16(pa_cValue);
+    CIEC_WORD& operator =(TForteWord paValue){
+      setTUINT16(paValue);
       return *this;
     }
 
-    CIEC_WORD& operator =(const CIEC_WORD &pa_roValue){
-      setValueSimple(pa_roValue);
+    CIEC_WORD& operator =(const CIEC_WORD &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
       return *this;
     }
 

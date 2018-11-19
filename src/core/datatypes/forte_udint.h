@@ -1,15 +1,15 @@
 /*******************************************************************************
-  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
-  *    Ingo Hegny, Monika Wenger
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
+ *    Ingo Hegny, Monika Wenger
+ *      - initial implementation and rework communication infrastructure
+ *******************************************************************************/
 #ifndef _FORTE_UDINT_H_
 #define _FORTE_UDINT_H_
 
@@ -30,16 +30,16 @@ class CIEC_UDINT : public CIEC_ANY_INT{
     CIEC_UDINT(){
     }
 
-    CIEC_UDINT(const CIEC_UDINT& pa_roValue) :
+    CIEC_UDINT(const CIEC_UDINT& paValue) :
         CIEC_ANY_INT(){
-      setValueSimple(pa_roValue);
+      setValueSimple(paValue);
     }
 
     // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
-    // Maybe when we have better code generators we want to make this constructur explicit again and generate it
+    // Maybe when we have better code generators we want to make this constructor explicit again and generate it
     // cppcheck-suppress noExplicitConstructor
-    CIEC_UDINT(TForteUInt32 pa_nValue){
-      setTUINT32(pa_nValue);
+    CIEC_UDINT(TForteUInt32 paValue){
+      setTUINT32(paValue);
     }
 
     virtual ~CIEC_UDINT(){
@@ -47,19 +47,20 @@ class CIEC_UDINT : public CIEC_ANY_INT{
 
     /*! \brief Operator: CIEC_UDINT data type = unsigned long data type
      *
-     *   This command implements the assignment operator for the C++ datatype UNSIGNED LONG
+     *   This command implements the assignment operator for the C++ data type UNSIGNED LONG
      *   The parameter value is represented by a C++ variable (call by value).
-     *   \param pa_nValue  Value for assignment.
+     *   \param paValue  Value for assignment.
      *   \return Can be the following response:
      *     - Pointer to given object.
      */
-    CIEC_UDINT& operator =(TForteUInt32 pa_nValue){
-      setTUINT32(pa_nValue);
+    CIEC_UDINT& operator =(TForteUInt32 paValue){
+      setTUINT32(paValue);
       return *this;
     }
 
-    CIEC_UDINT& operator =(const CIEC_UDINT &pa_roValue){
-      setValueSimple(pa_roValue);
+    CIEC_UDINT& operator =(const CIEC_UDINT &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
       return *this;
     }
 

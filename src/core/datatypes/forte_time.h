@@ -1,15 +1,15 @@
 /*******************************************************************************
-  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
-  *    Monika Wenger, Ingo Hegny, Martin Melik Merkumians,
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
+ *    Monika Wenger, Ingo Hegny, Martin Melik Merkumians,
+ *      - initial implementation and rework communication infrastructure
+ *******************************************************************************/
 #ifndef _FORTE_TIME_H_
 #define _FORTE_TIME_H_
 
@@ -26,24 +26,24 @@ class CIEC_TIME : public CIEC_ANY_MAGNITUDE{
     CIEC_TIME(){
     }
 
-    CIEC_TIME(const CIEC_TIME& pa_roValue) :
+    CIEC_TIME(const CIEC_TIME& paValue) :
         CIEC_ANY_MAGNITUDE(){
-      setValueSimple(pa_roValue);
+      setValueSimple(paValue);
     }
 
     // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
-    // Maybe when we have better code generators we want to make this constructur explicit again and generate it
+    // Maybe when we have better code generators we want to make this constructor explicit again and generate it
     // cppcheck-suppress noExplicitConstructor
-    CIEC_TIME(TValueType pa_nValue){
-      *this = pa_nValue;
+    CIEC_TIME(TValueType paValue){
+      *this = paValue;
     }
 
     // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
-    // Maybe when we have better code generators we want to make this constructur explicit again and generate it
+    // Maybe when we have better code generators we want to make this constructor explicit again and generate it
     // cppcheck-suppress noExplicitConstructor
-    CIEC_TIME(const char *pa_pacValue){
-      if(-1 == CIEC_TIME::fromString(pa_pacValue)){  //explicitly state that you like to have the fromString of this class to avoid potential virtual function clashes in the constructor
-        //we had an error in string parsing set a default value
+    CIEC_TIME(const char *paValue){
+      if(-1 == CIEC_TIME::fromString(paValue)){ //explicitly state that you like to have the fromString of this class to avoid potential virtual function clashes in the constructor
+      //we had an error in string parsing set a default value
         *this = 0;
       }
     }
@@ -51,13 +51,14 @@ class CIEC_TIME : public CIEC_ANY_MAGNITUDE{
     virtual ~CIEC_TIME(){
     }
 
-    CIEC_TIME& operator =(TValueType pa_nValue){
-      setLargestInt(pa_nValue);
+    CIEC_TIME& operator =(TValueType paValue){
+      setLargestInt(paValue);
       return *this;
     }
 
-    CIEC_TIME& operator =(const CIEC_TIME &pa_roValue){
-      setValueSimple(pa_roValue);
+    CIEC_TIME& operator =(const CIEC_TIME &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
       return *this;
     }
 
@@ -79,30 +80,30 @@ class CIEC_TIME : public CIEC_ANY_MAGNITUDE{
      *   This command implements a conversion function from IEC61131
      *   data type (string format) to a C++ conform type.
      *   This function is necessary for communication with a proper engineering system.
-     *   \param pa_pacValue string buffer
+     *   \param paValue string buffer
      *   \return number of bytes taken used from the buffer
      *        -1 on on error
      */
-    virtual int fromString(const char *pa_pacValue);
+    virtual int fromString(const char *paValue);
     /*! \brief Converts data type value to string
      *
      *   This command implements a conversion function from C++ data type
      *   to IEC61131 conform data type (string format).
      *   This function is necessary for communication with a proper engineering system.
-     *   \param pa_pacValue Pointer to the buffer String
-     *   \param pa_nBufferSize Size of the given buffer
+     *   \param paValue Pointer to the buffer String
+     *   \param paBufferSize Size of the given buffer
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    virtual int toString(char* pa_pacValue, unsigned int pa_nBufferSize) const;
+    virtual int toString(char* paValue, unsigned int paBufferSize) const;
 
     TValueType getInSeconds() const;
     TValueType getInMiliSeconds() const;
     TValueType getInMicroSeconds() const;
 
-    void setFromSeconds(TValueType pa_nValue);
-    void setFromMiliSeconds(TValueType pa_nValue);
-    void setFromMicroSeconds(TValueType pa_nValue);
+    void setFromSeconds(TValueType paValue);
+    void setFromMiliSeconds(TValueType paValue);
+    void setFromMicroSeconds(TValueType paValue);
 };
 
 #endif /*_MTIME_H_*/

@@ -59,7 +59,9 @@ class CIEC_ARRAY : public CIEC_ANY_DERIVED{
 
 
     CIEC_ARRAY& operator =(const CIEC_ARRAY &paValue){
-      setValue(paValue);
+      if( this != &paValue) {
+        setValue(paValue);
+      }
       return *this;
     }
 

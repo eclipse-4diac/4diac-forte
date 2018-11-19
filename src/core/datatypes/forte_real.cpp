@@ -22,9 +22,9 @@
 
 DEFINE_FIRMWARE_DATATYPE(REAL, g_nStringIdREAL)
 
-int CIEC_REAL::fromString(const char *pa_pacValue){
+int CIEC_REAL::fromString(const char *paValue){
   char *pcEnd;
-  const char *pacRunner = pa_pacValue;
+  const char *pacRunner = paValue;
   TForteFloat realval = 0.0;
   const TForteFloat TFLOAT_min = 3.4e-38f; // lower precision boundary
   const TForteFloat TFLOAT_max = 3.4e38f; // upper precision boundary
@@ -45,55 +45,55 @@ int CIEC_REAL::fromString(const char *pa_pacValue){
     return -1;
 
   setTFLOAT((TForteFloat) realval);
-  return static_cast<int>(pcEnd - pa_pacValue);
+  return static_cast<int>(pcEnd - paValue);
 }
 
-int CIEC_REAL::toString(char* pa_acValue, unsigned int pa_nBufferSize) const{
+int CIEC_REAL::toString(char* paValue, unsigned int paBufferSize) const{
   int nRetVal;
-  nRetVal = forte_snprintf(pa_acValue, pa_nBufferSize, "%g", getTFLOAT());
-  if((nRetVal < -1) || (nRetVal >= (int) pa_nBufferSize)){
+  nRetVal = forte_snprintf(paValue, paBufferSize, "%g", getTFLOAT());
+  if((nRetVal < -1) || (nRetVal >= (int) paBufferSize)){
     nRetVal = -1;  
   }
   return nRetVal;
 }
 
-void  CIEC_REAL::setValue(const CIEC_ANY& pa_roValue){
-  EDataTypeID eID = pa_roValue.getDataTypeID();
+void  CIEC_REAL::setValue(const CIEC_ANY& paValue){
+  EDataTypeID eID = paValue.getDataTypeID();
   switch (eID) {
   case e_REAL:
-    setValueSimple(pa_roValue);
+    setValueSimple(paValue);
     break;
 #ifdef FORTE_USE_LREAL_DATATYPE
   case e_LREAL:
-    (*this)=static_cast<TForteFloat>((CIEC_LREAL&)(pa_roValue));
+    (*this)=static_cast<TForteFloat>((CIEC_LREAL&)(paValue));
     break;
 #endif
   case e_STRING:
-    (*this).fromString(((CIEC_STRING&)pa_roValue).getValue());
+    (*this).fromString(((CIEC_STRING&)paValue).getValue());
     break;
   case e_WSTRING:
-    (*this).fromString(((CIEC_WSTRING&)pa_roValue).getValue());
+    (*this).fromString(((CIEC_WSTRING&)paValue).getValue());
     break;
   case e_SINT:
   case e_INT:
   case e_DINT:
   case e_LINT:
-    (*this) = static_cast<TForteFloat>(*((CIEC_ANY::TLargestIntValueType *) pa_roValue.getConstDataPtr()));
+    (*this) = static_cast<TForteFloat>(*((CIEC_ANY::TLargestIntValueType *) paValue.getConstDataPtr()));
     break;
   default:
-    (*this) =  static_cast<TForteFloat>(*((CIEC_ANY::TLargestUIntValueType *) pa_roValue.getConstDataPtr()));
+    (*this) =  static_cast<TForteFloat>(*((CIEC_ANY::TLargestUIntValueType *) paValue.getConstDataPtr()));
     break;
   }
 }
 
-void CIEC_REAL::castRealData(const CIEC_REAL &pa_roSrcValue, CIEC_ANY &pa_roDestValue){
-  switch(pa_roDestValue.getDataTypeID()){
+void CIEC_REAL::castRealData(const CIEC_REAL &paSrcValue, CIEC_ANY &paDestValue){
+  switch(paDestValue.getDataTypeID()){
     case CIEC_ANY::e_REAL:
-      static_cast<CIEC_REAL &>(pa_roDestValue) = pa_roSrcValue;
+      static_cast<CIEC_REAL &>(paDestValue) = paSrcValue;
       break;
     case CIEC_ANY::e_LREAL:
 #ifdef FORTE_USE_LREAL_DATATYPE
-      static_cast<CIEC_LREAL &>(pa_roDestValue) = pa_roSrcValue;
+      static_cast<CIEC_LREAL &>(paDestValue) = paSrcValue;
 #endif
       break;
     case CIEC_ANY::e_BYTE:
@@ -101,34 +101,34 @@ void CIEC_REAL::castRealData(const CIEC_REAL &pa_roSrcValue, CIEC_ANY &pa_roDest
     case CIEC_ANY::e_DWORD:
     case CIEC_ANY::e_LWORD:
       // bit string will cast to the binary representation of the real value
-      pa_roDestValue.setValue(pa_roSrcValue);
+      paDestValue.setValue(paSrcValue);
       break;
     case CIEC_ANY::e_BOOL:    //bool works better when treated as signed so that negative numbers will be treated as true to
     case CIEC_ANY::e_SINT:
     case CIEC_ANY::e_INT:
     case CIEC_ANY::e_DINT:
     case CIEC_ANY::e_LINT: {
-      CIEC_REAL::TValueType floatValue = static_cast<CIEC_REAL::TValueType>(pa_roSrcValue);
+      CIEC_REAL::TValueType floatValue = static_cast<CIEC_REAL::TValueType>(paSrcValue);
       if(0 < floatValue){
         floatValue += 0.5f;
       }
       if(0 > floatValue){
         floatValue -= 0.5f;
       }
-      *((CIEC_ANY::TLargestIntValueType *) pa_roDestValue.getDataPtr()) = static_cast<CIEC_ANY::TLargestIntValueType>(floatValue);
+      *((CIEC_ANY::TLargestIntValueType *) paDestValue.getDataPtr()) = static_cast<CIEC_ANY::TLargestIntValueType>(floatValue);
     }
       break;
     default: {
       //TODO maybe we should check for destination id to be in valid range (i.e., any_bit, any_unsigned_int, and time)
       //should not be necessary because of connect function, but who knows.
-      CIEC_REAL::TValueType floatValue = static_cast<CIEC_REAL::TValueType>(pa_roSrcValue);
+      CIEC_REAL::TValueType floatValue = static_cast<CIEC_REAL::TValueType>(paSrcValue);
       if(0 < floatValue){
         floatValue += 0.5f;
       }
       if(0 > floatValue){
         floatValue -= 0.5f;
       }
-      *((CIEC_ANY::TLargestUIntValueType *) pa_roDestValue.getDataPtr()) = static_cast<CIEC_ANY::TLargestUIntValueType>(floatValue);
+      *((CIEC_ANY::TLargestUIntValueType *) paDestValue.getDataPtr()) = static_cast<CIEC_ANY::TLargestUIntValueType>(floatValue);
     }
       break;
   }
