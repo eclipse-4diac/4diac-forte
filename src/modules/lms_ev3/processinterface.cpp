@@ -500,7 +500,7 @@ bool CLMSEV3ProcessInterface::setupSensorMode(const std::vector<std::string> &pa
       mFile.open(helperString.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3
       if(mFile.is_open()){
         while(std::getline(mFile, helperString, ' ')){
-          mModes.pushBack(helperString);
+          mModes.push_back(helperString);
         }
         mFile.close();
         helperString = basePath + "/mode";
@@ -666,7 +666,7 @@ std::vector<std::string> CLMSEV3ProcessInterface::generateParameterList(){
   std::vector<std::string> retVal;
 
   while(std::getline(streamBuf, segment, '.')){ //seperate the PARAMS input by '.' for easier processing
-    retVal.pushBack(segment);
+    retVal.push_back(segment);
   }
   return retVal;
 }
