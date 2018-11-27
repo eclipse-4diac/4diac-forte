@@ -1,5 +1,6 @@
 /*******************************************************************************
   * Copyright (c) 2011 - 2015 nxtControl GmbH, ACIN, fortiss GmbH
+  *   2018 TU Wien/ACIN
   * All rights reserved. This program and the accompanying materials
   * are made available under the terms of the Eclipse Public License v1.0
   * which accompanies this distribution, and is available at
@@ -8,6 +9,8 @@
   * Contributors:
   *    Stansilav Meduna, Alois Zoitl, Ingo Hegny, Monika Wenger
   *      - initial implementation and rework communication infrastructure
+  *    Martin Melik Merkumians
+  *      - fixes behavior for getToStringBufferSize
   *******************************************************************************/
 #include <fortenew.h>
 #include "forte_any_string.h"
@@ -297,8 +300,3 @@ int CIEC_ANY_STRING::unescapeFromString(const char *pa_pacValue, char pa_cDelimi
 
   return nRetVal;
 }
-
-unsigned int CIEC_ANY_STRING::getToStringBufferSize() const{
-  return (TForteUInt32) length() + 2 + 1;
-}
-

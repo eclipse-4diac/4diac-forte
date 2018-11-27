@@ -1,12 +1,16 @@
 /*******************************************************************************
  * Copyright (c) 2011 - 2014 ACIN, nxtControl, Profactor GmbH, fortiss GmbH
+ *   2018 TU Wien/ACIN
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna, Matthias Plasch - initial API and implementation and/or initial documentation
+ *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl,
+ *   Stanislav Meduna, Matthias Plasch
+ *    - initial API and implementation and/or initial documentation
+ *   Martin Melik Merkumians - adds getToStringBufferSize tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 
@@ -256,7 +260,7 @@ BOOST_AUTO_TEST_CASE(WString_fromUTF8)
   BOOST_CHECK(! strcmp((const char *) cUpper2, sTest.getValue()));
 
   bRes = sTest.fromUTF8((const char *) cUpper2, 4, false);
-  BOOST_CHECK_EQUAL(4, bRes);  //as we capp to 4 we expact the number of taken bytes to be 4
+  BOOST_CHECK_EQUAL(4, bRes);  //as we cap to 4 we expect the number of taken bytes to be 4
   BOOST_CHECK(! strcmp((const char *) cUpper2Capped, sTest.getValue()));
 
   bRes = sTest.fromUTF8((const char *) cUpper3, -1, false);
@@ -481,6 +485,102 @@ BOOST_AUTO_TEST_CASE(WString_toString)
   sTestee = cWStringTestEscapedCharacterResult;
   BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cWStringTestEscapedCharacterToStringResult));
   BOOST_CHECK_EQUAL(0, strncmp(cWStringTestEscapedCharacterToStringResult, acBuffer, strlen(cWStringTestEscapedCharacterToStringResult)));
+}
+
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_NoSpecialSymbols)
+{
+  CIEC_WSTRING testString("4diac 4 ever!");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(13 + 2 + 1, bufferSize);
+}
+
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_Dollar)
+{
+  CIEC_WSTRING testString("$");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // "$$"\0
+}
+
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_SingleQuote)
+{
+  CIEC_WSTRING testString("\'");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(1 + 2 + 1, bufferSize); // "'"\0
+}
+
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_DoubleQuote)
+{
+  CIEC_WSTRING testString("\"");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // "$""\0
+}
+
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_LineFeed)
+{
+  CIEC_WSTRING testString("\x10");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // "$L"\0
+}
+
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_NewLine)
+{
+  CIEC_WSTRING testString("\n");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // "$N"\0
+}
+
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_FormFeed)
+{
+  CIEC_WSTRING testString("\f");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // "$P"\0
+}
+
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_CarriageReturn)
+{
+  CIEC_WSTRING testString("\r");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // "$R"\0
+}
+
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_Tab)
+{
+  CIEC_WSTRING testString("\t");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // "$T"\0
+}
+
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_NonCommonSymbol_1ByteUsed)
+{
+  CIEC_WSTRING testString("\x8A");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(5 + 2 + 1, bufferSize); // "$008A"\0
+}
+
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_NonCommonSymbol_2BytesUsed)
+{
+  CIEC_WSTRING testString("\xDA\x8A");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(5 + 2 + 1, bufferSize); // "$008A"\0
+}
+
+BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_NonCommonSymbol_Two_OneBytesUsed)
+{
+  CIEC_WSTRING testString("\x8B\x8A");
+
+  unsigned int bufferSize = testString.getToStringBufferSize();
+  BOOST_CHECK_EQUAL(5 + 5 + 2 + 1, bufferSize); // "$008A"\0
 }
 
 BOOST_AUTO_TEST_SUITE_END()

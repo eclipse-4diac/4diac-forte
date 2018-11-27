@@ -10,7 +10,8 @@
   *    Thomas Strasser, Ingomar Müller, Rene Smodic, Alois Zoitl,
   *    Ingo Hegny, Martin Melik Merkumians, Stanislav Meduna
   *      - initial implementation and rework communication infrastructure
-  *    Maritn Melik Merkumians - fixes toString behavior for 0 size buffer
+  *    Martin Melik Merkumians - fixes toString behavior for 0 size buffer
+  *    Martin Melik Merkumians - fixes behavior for getToStringBufferSize
   *******************************************************************************/
 #include "forte_string.h"
 #include <devlog.h>
@@ -71,6 +72,33 @@ int CIEC_STRING::toString(char* paValue, unsigned int paBufferSize) const {
     nRetVal += 2;
   }
   return nRetVal;
+}
+
+unsigned int CIEC_STRING::getToStringBufferSize() const{
+  const char * const stringValue = getValue();
+  unsigned int neededBufferSize = 0;
+  for(size_t i = 0; i < length(); ++i){
+    if(isprint(stringValue[i]) && '$' != stringValue[i] && '\'' != stringValue[i]){
+      ++neededBufferSize;
+    }
+    else{
+      switch (stringValue[i]){
+        case '$':
+        case '\'':
+        case 0x10: // line feed
+        case '\n':
+        case '\f':
+        case '\r':
+        case '\t':
+          neededBufferSize += 2;
+          break;
+        default:
+          neededBufferSize += 3;
+          break;
+      }
+    }
+  }
+  return neededBufferSize + 2 + 1; // For Quotes and \0
 }
 
 #ifdef FORTE_UNICODE_SUPPORT

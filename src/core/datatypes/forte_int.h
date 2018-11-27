@@ -1,15 +1,15 @@
 /*******************************************************************************
-  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer
-  *    Ingo Hegny, Monika Wenger
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer
+ *    Ingo Hegny, Monika Wenger
+ *      - initial implementation and rework communication infrastructure
+ *******************************************************************************/
 #ifndef _FORTE_INT_H_
 #define _FORTE_INT_H_
 
@@ -30,16 +30,16 @@ class CIEC_INT : public CIEC_ANY_INT{
     CIEC_INT(){
     }
 
-    CIEC_INT(const CIEC_INT& pa_roValue) :
+    CIEC_INT(const CIEC_INT& paValue) :
         CIEC_ANY_INT(){
-      setValueSimple(pa_roValue);
+      setValueSimple(paValue);
     }
 
     // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
-    // Maybe when we have better code generators we want to make this constructur explicit again and generate it
+    // Maybe when we have better code generators we want to make this constructor explicit again and generate it
     // cppcheck-suppress noExplicitConstructor
-    CIEC_INT(TForteInt16 pa_nValue){
-      setTINT16(pa_nValue);
+    CIEC_INT(TForteInt16 paValue){
+      setTINT16(paValue);
     }
 
     virtual ~CIEC_INT(){
@@ -47,19 +47,20 @@ class CIEC_INT : public CIEC_ANY_INT{
 
     /*! \brief Operator: CIEC_INT data type = short data type
      *
-     *   This command implements the assignment operator for the C++ datatype SHORT
+     *   This command implements the assignment operator for the C++ data type SHORT
      *   The parameter value is represented by a C++ variable (call by value).
-     *   \param pa_nValue  Value for assignment.
+     *   \param paValue  Value for assignment.
      *   \return Can be the following response:
      *     - Pointer to given object.
      */
-    CIEC_INT& operator =(TForteInt16 pa_nValue){
-      setTINT16(pa_nValue);
+    CIEC_INT& operator =(TForteInt16 paValue){
+      setTINT16(paValue);
       return *this;
     }
 
-    CIEC_INT& operator =(const CIEC_INT &pa_roValue){
-      setValueSimple(pa_roValue);
+    CIEC_INT& operator =(const CIEC_INT &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
       return *this;
     }
 

@@ -43,6 +43,14 @@
 #include "datatypes/forte_array.h"
 #include <math.h>
 
+//some compilers don't have this definition or is behind __STDC_CONSTANT_MACROS.
+//since this definition is only used here, we define it instead of enabling __STDC_CONSTANT_MACROS globally,
+//because it's not easy to detect which compilers will or not have this definition
+#ifndef UINT64_C
+# define UINT64_C(x)   (x##ULL)
+#endif
+
+
 /*! \file
  * This file implements the type conversion functions as defined by IEC 61131-3 in subclause 2.5.1.5.1
  */

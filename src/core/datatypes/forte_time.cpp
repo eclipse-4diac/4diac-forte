@@ -28,27 +28,27 @@
 
 DEFINE_FIRMWARE_DATATYPE(TIME, g_nStringIdTIME)
 
-int CIEC_TIME::fromString(const char *pa_pacValue){
+int CIEC_TIME::fromString(const char *paValue){
   int nRetVal = -1;
   char* pcEnd;
 
   TValueType nIntVal = 0;
 
-  if((pa_pacValue[0] == 'T') || (pa_pacValue[0] == 't')){
+  if((paValue[0] == 'T') || (paValue[0] == 't')){
     nRetVal = 1;
-    pa_pacValue++;
-    if(('i' == tolower(pa_pacValue[0])) && ('m' == tolower(pa_pacValue[1])) && ('e' == tolower(pa_pacValue[2]))){
-      pa_pacValue += 3;
+    paValue++;
+    if(('i' == tolower(paValue[0])) && ('m' == tolower(paValue[1])) && ('e' == tolower(paValue[2]))){
+      paValue += 3;
       nRetVal += 3;
     }
 
-    if(*pa_pacValue == '#'){ // the string has to start with T#
-      pa_pacValue++;
+    if(*paValue == '#'){ // the string has to start with T#
+      paValue++;
       nRetVal++;
       long nTimeFactor = 1;
       bool bEnd = false;
       do{
-        long nBuf = forte::core::util::strtol(pa_pacValue, &pcEnd, 10);
+        long nBuf = forte::core::util::strtol(paValue, &pcEnd, 10);
         switch (tolower(*pcEnd)){
           case 'd':
             nTimeFactor = 86400000;
@@ -75,28 +75,28 @@ int CIEC_TIME::fromString(const char *pa_pacValue){
             //ignore leading underscores
             break;
           default:
-            if(pa_pacValue == pcEnd){
+            if(paValue == pcEnd){
               //we couldn't parse anything
               return -1;
             }
             bEnd = true;
             break;
         }
-        nRetVal += static_cast<int>(pcEnd - pa_pacValue);
+        nRetVal += static_cast<int>(pcEnd - paValue);
         if(!bEnd){
           ++nRetVal;
         }
-        pa_pacValue = pcEnd + 1;
+        paValue = pcEnd + 1;
         nIntVal += (nBuf * nTimeFactor);
-      } while(('\0' != *pa_pacValue) && (!bEnd));
+      } while(('\0' != *paValue) && (!bEnd));
     }
     else{
       return -1;
     }
   }
   else{
-    nIntVal = forte::core::util::strtol(pa_pacValue, &pcEnd, 10);
-    nRetVal = static_cast<int>(pcEnd - pa_pacValue);
+    nIntVal = forte::core::util::strtol(paValue, &pcEnd, 10);
+    nRetVal = static_cast<int>(pcEnd - paValue);
   }
 
   //the intval is represented in ms
@@ -105,42 +105,42 @@ int CIEC_TIME::fromString(const char *pa_pacValue){
 
 }
 
-int CIEC_TIME::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
+int CIEC_TIME::toString(char* paValue, unsigned int paBufferSize) const{
   int nRetVal = -1;
-  if(pa_nBufferSize > 4){
+  if(paBufferSize > 4){
 #ifdef FORTE_USE_64BIT_DATATYPES
     CIEC_LINT timeVal(getInMiliSeconds());
 #else
     CIEC_DINT timeVal(getInMiliSeconds());
 #endif
-    nRetVal = timeVal.toString(pa_pacValue + 2, pa_nBufferSize - 4);
+    nRetVal = timeVal.toString(paValue + 2, paBufferSize - 4);
     if(-1 != nRetVal){
-      pa_pacValue[0] = 'T';
-      pa_pacValue[1] = '#';
+      paValue[0] = 'T';
+      paValue[1] = '#';
       nRetVal += 2;
       timeVal = getInMicroSeconds();
       timeVal = timeVal % 1000; //we only want the microseconds
       if(0 != timeVal){
         //If we have a microsecond value add it to the literal
-        pa_pacValue[nRetVal] = '.';
+        paValue[nRetVal] = '.';
         ++nRetVal;
         if(timeVal < 100){
-          pa_pacValue[nRetVal] = '0';
+          paValue[nRetVal] = '0';
           ++nRetVal;
           if(timeVal < 10){
-            pa_pacValue[nRetVal] = '0';
+            paValue[nRetVal] = '0';
             ++nRetVal;
           }
         }
-        int size = timeVal.toString(pa_pacValue + nRetVal, pa_nBufferSize - nRetVal);
+        int size = timeVal.toString(paValue + nRetVal, paBufferSize - nRetVal);
         if(-1 == size){
           return size;
         }
         nRetVal += size;
       }
-      pa_pacValue[nRetVal] = 'm';
-      pa_pacValue[nRetVal + 1] = 's';
-      pa_pacValue[nRetVal + 2] = '\0';
+      paValue[nRetVal] = 'm';
+      paValue[nRetVal + 1] = 's';
+      paValue[nRetVal + 2] = '\0';
       nRetVal += 2;
     }
   }
@@ -172,22 +172,22 @@ CIEC_TIME::TValueType CIEC_TIME::getInMicroSeconds() const{
   return nRetVal;
 }
 
-void CIEC_TIME::setFromSeconds(TValueType pa_nValue){
-  *this = pa_nValue * FORTE_TIME_BASE_UNITS_PER_SECOND;
+void CIEC_TIME::setFromSeconds(TValueType paValue){
+  *this = paValue * FORTE_TIME_BASE_UNITS_PER_SECOND;
 }
 
-void CIEC_TIME::setFromMiliSeconds(TValueType pa_nValue){
+void CIEC_TIME::setFromMiliSeconds(TValueType paValue){
   #if MILISECONDS_PER_SECOND < FORTE_TIME_BASE_UNITS_PER_SECOND
-    *this = pa_nValue * (FORTE_TIME_BASE_UNITS_PER_SECOND / MILISECONDS_PER_SECOND);
+    *this = paValue * (FORTE_TIME_BASE_UNITS_PER_SECOND / MILISECONDS_PER_SECOND);
   #else
-    *this = pa_nValue / (MILISECONDS_PER_SECOND / FORTE_TIME_BASE_UNITS_PER_SECOND);
+    *this = paValue / (MILISECONDS_PER_SECOND / FORTE_TIME_BASE_UNITS_PER_SECOND);
   #endif
 }
 
-void CIEC_TIME::setFromMicroSeconds(TValueType pa_nValue){
+void CIEC_TIME::setFromMicroSeconds(TValueType paValue){
   #if MICROSECONDS_PER_SECOND < FORTE_TIME_BASE_UNITS_PER_SECOND
-    *this = pa_nValue * (FORTE_TIME_BASE_UNITS_PER_SECOND / MICROSECONDS_PER_SECOND);
+    *this = paValue * (FORTE_TIME_BASE_UNITS_PER_SECOND / MICROSECONDS_PER_SECOND);
   #else
-    *this = pa_nValue / (MICROSECONDS_PER_SECOND / FORTE_TIME_BASE_UNITS_PER_SECOND);
+    *this = paValue / (MICROSECONDS_PER_SECOND / FORTE_TIME_BASE_UNITS_PER_SECOND);
   #endif
 }
