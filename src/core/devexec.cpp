@@ -14,6 +14,7 @@
 #include "ecet.h"
 #include "extevhan.h"
 #include "../arch/timerha.h"
+#include "../arch/devlog.h"
 
 CDeviceExecution::CDeviceExecution(){
   memset(mRegisteredEventHandlers,  0, sizeof(SEventHandlerElement) * cg_unNumberOfHandlers);
@@ -21,39 +22,43 @@ CDeviceExecution::CDeviceExecution(){
   CDeviceExecution::createHandlers(*this);
 
   getTimer().enableHandler();
-  if(0 == CTimerHandler::sm_poFORTETimer){
-    CTimerHandler::sm_poFORTETimer = &getTimer(); //used for develog, CIEC_TIME() and in Modbus
+  if(0 == CTimerHandler::smFORTETimer){
+    CTimerHandler::smFORTETimer = &getTimer(); //used for develog, CIEC_TIME() and in Modbus
   }
 }
 
 CDeviceExecution::~CDeviceExecution(){
-  if(CTimerHandler::sm_poFORTETimer == (&getTimer())){
-    CTimerHandler::sm_poFORTETimer = 0;
+  if(CTimerHandler::smFORTETimer == (&getTimer())){
+    CTimerHandler::smFORTETimer = 0;
   }
 
-  for(unsigned int i = 0; i < cg_unNumberOfHandlers; i++){
-    if(0 != mRegisteredEventHandlers[i].m_poHandler){ //for the test cases, only the timer handler is created
-      mRegisteredEventHandlers[i].m_poHandler->disableHandler();
-      delete mRegisteredEventHandlers[i].m_poHandler;
+  for(size_t i = 0; i < cg_unNumberOfHandlers; i++){
+    if(0 != mRegisteredEventHandlers[i].mHandler){ //for the test cases, only the timer handler is created
+      mRegisteredEventHandlers[i].mHandler->disableHandler();
+      delete mRegisteredEventHandlers[i].mHandler;
+      mRegisteredEventHandlers[i].mHandler = 0;
     }
   }
 }
 
 void CDeviceExecution::startNewEventChain(CEventSourceFB *pa_poECStartFB){
-	// maybe in the future here has to be added something for handling priority adaption and stuff like this.
+  // maybe in the future here has to be added something for handling priority adaption and stuff like this.
   if(0 != pa_poECStartFB){
     CEventChainExecutionThread *poEventChainExecutor = pa_poECStartFB->getEventChainExecutor();
     if(0 != poEventChainExecutor){
       poEventChainExecutor->startEventChain(pa_poECStartFB->getEventSourceEventEntry());
+    }else{
+      DEVLOG_ERROR("[CDeviceExecution] Couldn't start new event chain because the event has no CEventChainExecutionThread");
     }
-      // TODO add log output if one if these two ifs is not met
+  }else{
+    DEVLOG_ERROR("[CDeviceExecution] Couldn't start new event chain because the event source was null");
   }
 }
 
-CExternalEventHandler* CDeviceExecution::getHandler(unsigned int paIdentifer) const{
-  return mRegisteredEventHandlers[paIdentifer].m_poHandler;
+CExternalEventHandler* CDeviceExecution::getExtEvHandler(size_t paIdentifer) const{
+  return mRegisteredEventHandlers[paIdentifer].mHandler;
 }
 
 CTimerHandler& CDeviceExecution::getTimer() const{
-  return *static_cast<CTimerHandler*>(mRegisteredEventHandlers[0].m_poHandler);
+  return *static_cast<CTimerHandler*>(mRegisteredEventHandlers[0].mHandler);
 }

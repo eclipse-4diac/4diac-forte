@@ -17,12 +17,12 @@
 
 /*!\ingroup CORE CDevice represents a device according to IEC 61499. CDevice contains
       - one or more IEC 61499 compliant resources (CResource),
-      -	a device management (CDeviceAdministrator)
-      -	a function block execution environment (CFBNExecution)
-      -	a library (CTypeLib) which administrates the types the 1499 device is
+      -  a device management (CDeviceAdministrator)
+      -  a function block execution environment (CFBNExecution)
+      -  a library (CTypeLib) which administrates the types the 1499 device is
         capable of
       - External event interface for handling interrupts and other external notifications.
-      -	FORTE-HAL: FORTE Hardware Abstraction Layer
+      -  FORTE-HAL: FORTE Hardware Abstraction Layer
 
     There are different device type's available (e.g. remote device RMT_DEV)
     for different tasks which have different device configurations

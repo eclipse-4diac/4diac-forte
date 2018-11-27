@@ -47,15 +47,15 @@ void FORTE_RT_E_SWITCH::executeEvent(int pa_nEIID){
       if(G() == false){
         eoCon = getEOConUnchecked(scm_nEventEO1ID);
         if(eoCon->isConnected()){
-      	  eoCon->triggerEvent(m_oECEO1);
-      	  m_oECEO1.resumeSelfSuspend();
+          eoCon->triggerEvent(m_oECEO1);
+          m_oECEO1.resumeSelfSuspend();
         }
       }
       else{
         eoCon = getEOConUnchecked(scm_nEventEO2ID);
         if(eoCon->isConnected()){
           eoCon->triggerEvent(m_oECEO2);
-      	  m_oECEO2.resumeSelfSuspend();
+          m_oECEO2.resumeSelfSuspend();
         }
       }
     }

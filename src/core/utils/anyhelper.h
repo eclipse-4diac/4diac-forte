@@ -27,6 +27,8 @@
 #include "../datatypes/forte_usint.h"
 #include "../datatypes/forte_udint.h"
 #include "../datatypes/forte_int.h"
+#include <assert.h>
+#include <devlog.h>
 
 template<class T>
 void anyBitFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
@@ -52,18 +54,46 @@ void anyBitFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
 }
 
 template<class T>
+void anyBitFBHelperWithoutBool(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
+  switch (pa_eDataTypeId){
+    case CIEC_ANY::e_BYTE:
+      pa_roFB.template calculateValue<CIEC_BYTE>();
+      break;
+    case CIEC_ANY::e_WORD:
+      pa_roFB.template calculateValue<CIEC_WORD>();
+      break;
+    #ifdef FORTE_USE_64BIT_DATATYPES
+      case  CIEC_ANY::e_LWORD:
+        pa_roFB.template calculateValue<CIEC_LWORD>();
+        break;
+    #endif
+    case CIEC_ANY::e_DWORD:
+      pa_roFB.template calculateValue<CIEC_DWORD>();
+      break;
+    default:
+      //if there is an invalid input we will not do anything here, could help to find this more easily when debugging the application
+      DEVLOG_ERROR("[anyBitFBHelperWithoutBool]: Wrong type usage, this function can be used only with sub-types of ANY_BIT except CIEC_BOOL");
+      break;
+  }
+}
+
+template<class T>
 void anyMagnitudeFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
   switch (pa_eDataTypeId){
     case CIEC_ANY::e_REAL:
       #ifdef FORTE_USE_REAL_DATATYPE
         pa_roFB.template calculateValue<CIEC_REAL>();
+      #else
+        DEVLOG_ERROR("REAL is not compiled in this version of forte and you are still trying to use it. Exiting");
+        assert(0);
       #endif
       break;
     case CIEC_ANY::e_LREAL:
-      #ifdef FORTE_USE_REAL_DATATYPE
-        #ifdef FORTE_USE_64BIT_DATATYPES
+      #ifdef FORTE_USE_LREAL_DATATYPE
           pa_roFB.template calculateValue<CIEC_LREAL>();
-        #endif
+      #else
+          DEVLOG_ERROR("LREAL is not compiled in this version of forte and you are still trying to use it. Exiting");
+          assert(0);
       #endif
       break;
     default:
@@ -82,22 +112,22 @@ template<class T>
 void anyIntFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
   switch (pa_eDataTypeId){
     case CIEC_ANY::e_SINT:
-    	pa_roFB.template calculateValue<CIEC_SINT>();
-    	break;
+      pa_roFB.template calculateValue<CIEC_SINT>();
+      break;
     case CIEC_ANY::e_DINT:
-    	pa_roFB.template calculateValue<CIEC_DINT>();
-    	break;
+      pa_roFB.template calculateValue<CIEC_DINT>();
+      break;
     #ifdef FORTE_USE_64BIT_DATATYPES
     case CIEC_ANY::e_LINT:
-    	pa_roFB.template calculateValue<CIEC_LINT>();
-    	break;
+      pa_roFB.template calculateValue<CIEC_LINT>();
+      break;
     case CIEC_ANY::e_ULINT:
-		pa_roFB.template calculateValue<CIEC_ULINT>();
-		break;
+    pa_roFB.template calculateValue<CIEC_ULINT>();
+    break;
     #endif
     case CIEC_ANY::e_UINT:
-    	pa_roFB.template calculateValue<CIEC_UINT>();
-    	break;
+      pa_roFB.template calculateValue<CIEC_UINT>();
+      break;
     case CIEC_ANY::e_USINT:
         pa_roFB.template calculateValue<CIEC_USINT>();
         break;
@@ -105,8 +135,8 @@ void anyIntFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
       pa_roFB.template calculateValue<CIEC_UDINT>();
       break;
     default:
-    	pa_roFB.template calculateValue<CIEC_INT>();
-    	break;
+      pa_roFB.template calculateValue<CIEC_INT>();
+      break;
   }
 }
 

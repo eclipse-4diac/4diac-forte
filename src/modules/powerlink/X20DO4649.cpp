@@ -50,7 +50,7 @@ void FORTE_X20DO4649::executeEvent(int pa_nEIID){
           // Outputs (process inputs) always start with i = 0
           // Check xap.xml if a BitUnused is present
           for(unsigned int i = 0; i < moduleIOs->getNrOfEntries() - 1; i++){
-            m_oEplMapping.m_lCurrentValues.push_back(new SEplMapping::SEplMappingValues(moduleIOs->getEntry(i)[0], moduleIOs->getEntry(i)[1], moduleIOs->getEntry(i)[2]));
+            m_oEplMapping.m_lCurrentValues.pushBack(new SEplMapping::SEplMappingValues(moduleIOs->getEntry(i)[0], moduleIOs->getEntry(i)[1], moduleIOs->getEntry(i)[2]));
           }
 
           delete moduleIOs;

@@ -11,16 +11,20 @@
  *******************************************************************************/
 #include "iec61131_functions.h"
 
+template<> const CIEC_BOOL NOT<CIEC_BOOL>(const CIEC_BOOL& pa_roIN){
+  return CIEC_BOOL(!pa_roIN);
+}
+
 #ifdef FORTE_USE_REAL_DATATYPE
 TForteInt32 TRUNC(const CIEC_REAL& pa_roIN){
   return static_cast<TForteInt32>(pa_roIN);
 }
+#endif
 
 #ifdef FORTE_USE_LREAL_DATATYPE
 TForteInt64 TRUNC(const CIEC_LREAL& pa_roIN){
   return static_cast<TForteInt64>(pa_roIN);
 }
-#endif
 #endif
 
 #ifdef FORTE_USE_64BIT_DATATYPES
@@ -76,7 +80,7 @@ CIEC_ANY_INT FIND(const CIEC_ANY_STRING& pa_rsIn1, const CIEC_ANY_STRING& pa_rsI
   const char* pc_Find = strstr(pa_rsIn1.getValue(), pa_rsIn2.getValue());
   CIEC_ANY_INT temp;
   if (0 != pc_Find){
-    temp.setSignedValue(pc_Find - pa_rsIn1.getValue());
+    temp.setSignedValue(pc_Find - pa_rsIn1.getValue() + 1);
   }
   return temp;
 }

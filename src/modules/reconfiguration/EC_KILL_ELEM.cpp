@@ -48,7 +48,7 @@ void FORTE_EC_KILL_ELEM::executeEvent(int pa_nEIID){
       if(true == QI()) {
         executeRQST();
       } else {
-		  STATUS() = "Not Ready";
+      STATUS() = "Not Ready";
       }
       sendOutputEvent(scm_nEventCNFID);
       break;

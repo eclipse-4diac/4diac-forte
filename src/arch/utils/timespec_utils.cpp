@@ -12,7 +12,6 @@
 
 #include <datatype.h>
 #include <time.h>
-#include <sys/time.h>
 
 static const TForteInt64 SecondInNanoSeconds = 1000000000LL;
 
@@ -22,7 +21,7 @@ void timespecSub(const struct timespec * const minuend, const struct timespec * 
   result->tv_nsec = minuend->tv_nsec - subtrahend->tv_nsec;
   if(result->tv_nsec < 0){
     result->tv_sec--;
-    result->tv_nsec += SecondInNanoSeconds;
+    result->tv_nsec = static_cast<long int>(result->tv_nsec + SecondInNanoSeconds); //cast to avoid warnings in some compilers
   }
 }
 
@@ -31,7 +30,7 @@ void timespecAdd(const struct timespec * const start, const struct timespec * co
   (result)->tv_nsec = start->tv_nsec + end->tv_nsec;
   if((result)->tv_nsec >= SecondInNanoSeconds){
     ++(result)->tv_sec;
-    (result)->tv_nsec -= SecondInNanoSeconds;
+    (result)->tv_nsec =  static_cast<long int>(result->tv_nsec - SecondInNanoSeconds); //cast to avoid warnings in some compilers
   }
 }
 

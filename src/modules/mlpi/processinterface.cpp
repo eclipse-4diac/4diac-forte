@@ -10,6 +10,7 @@
  *   Jose Cabral - Cleaning of code and error logging added
  *******************************************************************************/
 #include "processinterface.h"
+#include <extevhandlerhelper.h>
 #include <unistd.h>
 #include <mlpiGlobal.h>
 #include <mlpiApiLib.h>
@@ -80,9 +81,9 @@ bool CMLPIFaceProcessInterface::initialise(bool paInput){
       STATUS() = scmOK;
       retVal = true;
       if(paInput){
-        GET_HANDLER_FROM_LAYER(*this, CMLPIFaceProcessInterface::CIOHandler)->registerIXFB(this);
-        if(!GET_HANDLER_FROM_LAYER(*this, CMLPIFaceProcessInterface::CIOHandler)->isAlive()){
-          GET_HANDLER_FROM_LAYER(*this, CMLPIFaceProcessInterface::CIOHandler)->start();
+        getExtEvHandler<CMLPIFaceProcessInterface::CIOHandler>(*this).registerIXFB(this);
+        if(!getExtEvHandler<CMLPIFaceProcessInterface::CIOHandler>(*this).isAlive()){
+          getExtEvHandler<CMLPIFaceProcessInterface::CIOHandler>(*this).start();
         }
       }
     }
@@ -99,7 +100,7 @@ bool CMLPIFaceProcessInterface::initialise(bool paInput){
 }
 
 bool CMLPIFaceProcessInterface::deinitialise(){
-  GET_HANDLER_FROM_LAYER(*this, CMLPIFaceProcessInterface::CIOHandler)->unregisterIXFB(this);
+  getExtEvHandler<CMLPIFaceProcessInterface::CIOHandler>(*this).unregisterIXFB(this);
   delete[] mVariableName;
   STATUS() = scmAPINotInitialised;
   return true;
@@ -168,7 +169,7 @@ CMLPIFaceProcessInterface::CIOHandler::~CIOHandler(){
 
 void CMLPIFaceProcessInterface::CIOHandler::registerIXFB(CMLPIFaceProcessInterface *pa_poFB){
   mReadFBListSync.lock();
-  mReadFBList.push_back(pa_poFB);
+  mReadFBList.pushBack(pa_poFB);
   mReadFBListSync.unlock();
 }
 
@@ -180,7 +181,7 @@ void CMLPIFaceProcessInterface::CIOHandler::unregisterIXFB(CMLPIFaceProcessInter
   while(itRunner != itEnd){
     if(*itRunner == pa_poFB){
       if(itRefNode == itEnd){
-        mReadFBList.pop_front();
+        mReadFBList.popFront();
       }
       else{
         mReadFBList.eraseAfter(itRefNode);

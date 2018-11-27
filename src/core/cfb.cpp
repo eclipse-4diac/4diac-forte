@@ -44,21 +44,24 @@ CCompositeFB::CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_ps
 }
 
 CCompositeFB::~CCompositeFB(){
-  //CTypeLib &roTypeLib(CTypeLib::getInstance());
   if(cm_cpoFBNData->m_nNumFBs){
     for(unsigned int i = 0; i < cm_cpoFBNData->m_nNumFBs; ++i){
       delete m_apoInternalFBs[i];
     }
     delete[] m_apoInternalFBs;
   }
-  if(cm_cpoFBNData->m_nNumEventConnections){
-    //only delet the interface to internal event connections all other connections are managed by their source's FBs
-    for(unsigned int i = 0; i < m_pstInterfaceSpec->m_nNumEIs; ++i){
-      delete mInterface2InternalEventCons[i];
-    }
-    delete[] m_apoEventConnections;
-    delete[] mInterface2InternalEventCons;
+
+  //only delete the interface to internal event connections all other connections are managed by their source's FBs
+  //this has to be done even if we don't have any event connection to ensure correct behavior
+  for(unsigned int i = 0; i < m_pstInterfaceSpec->m_nNumEIs; ++i){
+    delete mInterface2InternalEventCons[i];
   }
+  delete[] mInterface2InternalEventCons;
+
+  if(cm_cpoFBNData->m_nNumEventConnections){
+    delete[] m_apoEventConnections;
+  }
+
   if(cm_cpoFBNData->m_nNumDataConnections){
     if(0 != m_apoDataConnections){
       delete[] m_apoDataConnections;
@@ -97,11 +100,9 @@ bool CCompositeFB::connectDI(TPortId paDIPortId, CDataConnection *paDataCon){
 
 bool CCompositeFB::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefValue){
   bool bRetVal = CFunctionBlock::configureGenericDO(paDOPortId, paRefValue);
-  if(true == bRetVal){
-    if(0 != m_apoIn2IfDConns[paDOPortId]){
-      //issue a reconfiguration attempt so that all connection end points in this connection are also correctly configured
-      m_apoIn2IfDConns[paDOPortId]->connectToCFBInterface(this, paDOPortId);
-    }
+  if(true == bRetVal && 0 != m_apoIn2IfDConns[paDOPortId]){
+    //issue a reconfiguration attempt so that all connection end points in this connection are also correctly configured
+    m_apoIn2IfDConns[paDOPortId]->connectToCFBInterface(this, paDOPortId);
   }
   return bRetVal;
 }
@@ -171,18 +172,16 @@ void CCompositeFB::executeEvent(int pa_nEIID){
         & cgInternal2InterfaceRemovalMask));
   }
   else{
-    if(pa_nEIID < m_pstInterfaceSpec->m_nNumEIs){
-      if(0 != mInterface2InternalEventCons[pa_nEIID]){
-        mInterface2InternalEventCons[pa_nEIID]->triggerEvent(*m_poInvokingExecEnv);
-      }
+    if(pa_nEIID < m_pstInterfaceSpec->m_nNumEIs && 0 != mInterface2InternalEventCons[pa_nEIID]){
+      mInterface2InternalEventCons[pa_nEIID]->triggerEvent(*m_poInvokingExecEnv);
     }
   }
 }
 
 void CCompositeFB::sendInternal2InterfaceOutputEvent(int pa_nEOID){
   //handle sampling of internal 2 interface data connections
-  if((pa_nEOID < m_pstInterfaceSpec->m_nNumEOs) && (0 != m_pstInterfaceSpec->m_anEOWithIndexes)){
-    if(-1 != m_pstInterfaceSpec->m_anEOWithIndexes[pa_nEOID]){
+  if((pa_nEOID < m_pstInterfaceSpec->m_nNumEOs) && (0 != m_pstInterfaceSpec->m_anEOWithIndexes) &&
+    (-1 != m_pstInterfaceSpec->m_anEOWithIndexes[pa_nEOID])){
       const TDataIOID *poEOWithStart =
           &(m_pstInterfaceSpec->m_anEOWith[m_pstInterfaceSpec->m_anEOWithIndexes[pa_nEOID]]);
 
@@ -195,7 +194,6 @@ void CCompositeFB::sendInternal2InterfaceOutputEvent(int pa_nEOID){
           }
         }
       }
-    }
   }
 
   sendOutputEvent(pa_nEOID);
@@ -207,18 +205,13 @@ void CCompositeFB::createInternalFBs(){
     for(unsigned int i = 0; i < cm_cpoFBNData->m_nNumFBs; ++i){
       m_apoInternalFBs[i] =
           CTypeLib::createFB(cm_cpoFBNData->m_pstFBInstances[i].m_nFBInstanceNameId, cm_cpoFBNData->m_pstFBInstances[i].m_nFBTypeNameId, getResourcePtr());
-#ifdef FORTE_SUPPORT_MONITORING
-      if (0 != m_apoInternalFBs[i]){
-        m_apoInternalFBs[i]->setContainer(this);
-      }
-#endif
     }
   }
 }
 
 void CCompositeFB::createEventConnections(){
+  prepareIf2InEventCons();  //the interface to internal event connections are needed even if they are not connected therefore we have to create them correctly in any case
   if(0 != cm_cpoFBNData->m_nNumEventConnections){
-    prepareIf2InEventCons();
     m_apoEventConnections = new CEventConnection *[cm_cpoFBNData->m_nNumEventConnections]; //TODO for a major revison this list could be ommited but requires a change in the faned out connections
 
     CFunctionBlock *poSrcFB;

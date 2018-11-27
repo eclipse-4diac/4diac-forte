@@ -15,7 +15,7 @@
 #include "../fdselecthand.h"
 #include <termios.h>
 
-class CPosixSerCommLayer : public CSerialComLayerBase<CFDSelectHandler::TFileDescriptor, CFDSelectHandler::scm_nInvalidFileDescriptor>{
+class CPosixSerCommLayer : public CSerialComLayerBase<CFDSelectHandler::TFileDescriptor, CFDSelectHandler::scmInvalidFileDescriptor>{
   public:
     CPosixSerCommLayer(forte::com_infra::CComLayer* paUpperLayer, forte::com_infra::CBaseCommFB * paFB);
     virtual ~CPosixSerCommLayer();
@@ -25,7 +25,7 @@ class CPosixSerCommLayer : public CSerialComLayerBase<CFDSelectHandler::TFileDes
 
   protected:
   private:
-    virtual forte::com_infra::EComResponse openSerialConnection(const SSerialParameters& paSerialParameters, CSerialComLayerBase<CFDSelectHandler::TFileDescriptor, CFDSelectHandler::scm_nInvalidFileDescriptor>::TSerialHandleType* paHandleResult);
+    virtual forte::com_infra::EComResponse openSerialConnection(const SSerialParameters& paSerialParameters, CSerialComLayerBase<CFDSelectHandler::TFileDescriptor, CFDSelectHandler::scmInvalidFileDescriptor>::TSerialHandleType* paHandleResult);
     virtual void closeConnection();
 
     struct termios mOldTIO;    //!< buffer for the existing sercom settings

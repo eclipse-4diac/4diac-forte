@@ -23,7 +23,7 @@ CProcessImageMatrix::~CProcessImageMatrix(){
 
 void CProcessImageMatrix::addEntry(unsigned int pa_nCN, unsigned int pa_nModule, unsigned int pa_nIoId, unsigned int pa_nDataSize, unsigned int pa_nPiOffset, unsigned int pa_nBitOffset){
 
-  m_lMatrix.push_back(new SChannelEntry(pa_nCN, pa_nModule, pa_nIoId, pa_nDataSize, pa_nPiOffset, pa_nBitOffset));
+  m_lMatrix.pushBack(new SChannelEntry(pa_nCN, pa_nModule, pa_nIoId, pa_nDataSize, pa_nPiOffset, pa_nBitOffset));
 
   // Check if 8, 16, 32 bit aligned
   if((pa_nDataSize % 32 == 0) || (pa_nDataSize % 16 == 0) || (pa_nDataSize % 8 == 0)){
@@ -103,6 +103,6 @@ unsigned long CProcessImageMatrix::getProcessImageSize() const {
 void CProcessImageMatrix::clearAll(){
   while(!m_lMatrix.isEmpty()){
     delete *(TChannelList::Iterator) m_lMatrix.begin();
-    m_lMatrix.pop_front();
+    m_lMatrix.popFront();
   }
 }

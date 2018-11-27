@@ -21,6 +21,7 @@ CBasicFB::CBasicFB(CResource *pa_poSrcRes,
         m_nECCState(0),
         cm_pstVarInternals(pa_pstVarInternals){
 
+  m_aoInternals = 0;
   if((0 != cm_pstVarInternals) && (0 != pa_acBasicFBVarsData)){
     if(cm_pstVarInternals->m_nNumIntVars){
       pa_acBasicFBVarsData +=
@@ -34,9 +35,6 @@ CBasicFB::CBasicFB(CResource *pa_poSrcRes,
         pa_acBasicFBVarsData += sizeof(CIEC_ANY);
       }
     }
-  }
-  else{
-    m_aoInternals = 0;
   }
 }
 

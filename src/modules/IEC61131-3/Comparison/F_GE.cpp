@@ -43,10 +43,10 @@ const SFBInterfaceSpec FORTE_F_GE::scm_stFBInterfaceSpec = {
 
 
 void FORTE_F_GE::executeEvent(int pa_nEIID){
-	if (scm_nEventREQID == pa_nEIID) {
-		anyElementaryFBHelper<FORTE_F_GE>(IN1().getDataTypeID(), *this);
-		sendOutputEvent(scm_nEventCNFID);
-	}
+  if (scm_nEventREQID == pa_nEIID) {
+    anyElementaryFBHelper<FORTE_F_GE>(IN1().getDataTypeID(), *this);
+    sendOutputEvent(scm_nEventCNFID);
+  }
 }
 
 

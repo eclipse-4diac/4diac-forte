@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, nxtControl GmbH, fortiss GmbH
+ * Copyright (c) 2005 - 2018 ACIN, Profactor GmbH, nxtControl GmbH, fortiss GmbH,
+ *                           Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +11,7 @@
  *    Gerhard Ebenhofer, Michael Hofmann, Martin Melik Merkumians, Ingo Hegny,
  *    Stanislav Meduna, Patrick Smejkal,
  *      - initial implementation and rework communication infrastructure
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *******************************************************************************/
 #ifndef _FUNCBLOC_H_
 #define _FUNCBLOC_H_
@@ -32,7 +34,6 @@ class CTimerHandler;
 #include "mgmcmdstruct.h"
 namespace forte {
   namespace core {
-    struct SMonitorEvent;
     class CMonitoringHandler;
   }
 }
@@ -86,49 +87,12 @@ struct SFBInterfaceSpec{
     const SAdapterInstanceDef* m_pstAdapterInstanceDefinition; //!< List of adapter instances
 };
 
-class SFBInterfaceSpecforGenerics : public SFBInterfaceSpec{
-  public:
-    SFBInterfaceSpecforGenerics(TForteUInt8 pa_nNumEIs,
-        const CStringDictionary::TStringId * const pa_aunEINames,
-        const TDataIOID * const pa_anEIWith, const TForteInt16 * const pa_anEIWithIndexes,
-        TForteUInt8 pa_nNumEOs, const CStringDictionary::TStringId * const pa_aunEONames,
-        const TDataIOID * const pa_anEOWith, const TForteInt16 * const pa_anEOWithIndexes,
-        TForteUInt8 pa_nNumDIs, const CStringDictionary::TStringId * const pa_aunDINames,
-        const CStringDictionary::TStringId * const pa_aunDIDataTypeNames, TForteUInt8 pa_nNumDOs,
-        const CStringDictionary::TStringId * const pa_aunDONames,
-        const CStringDictionary::TStringId * const pa_aunDODataTypeNames){
-      m_nNumEIs = pa_nNumEIs;
-      m_aunEINames = pa_aunEINames;
-      m_anEIWith = pa_anEIWith;
-      m_anEIWithIndexes = pa_anEIWithIndexes;
-      m_nNumEOs = pa_nNumEOs;
-      m_aunEONames = pa_aunEONames;
-      m_anEOWith = pa_anEOWith;
-      m_anEOWithIndexes = pa_anEOWithIndexes;
-      m_nNumDIs = pa_nNumDIs;
-      m_aunDINames = pa_aunDINames;
-      m_aunDIDataTypeNames = pa_aunDIDataTypeNames;
-      m_nNumDOs = pa_nNumDOs;
-      m_aunDONames = pa_aunDONames;
-      m_aunDODataTypeNames = pa_aunDODataTypeNames;
-      m_nNumAdapters = 0;
-      m_pstAdapterInstanceDefinition = 0;
-    }
-  private:
-    SFBInterfaceSpecforGenerics();
-};
-
-#ifdef FORTE_SUPPORT_MONITORING
-namespace forte {
-  namespace core{
-    struct SMonitorEvent;
-  }
-}
-#endif // FORTE_SUPPORT_MONITORING
 /*!\ingroup CORE\brief Base class for all function blocks.
  */
 class CFunctionBlock{
   public:
+    const static TDataIOID scmWithListDelimiter = cg_unInvalidPortId;  //!< value identifying the end of a with list
+
     /*!\brief Possible states of a runable object.
      *
      */
@@ -260,17 +224,16 @@ class CFunctionBlock{
      * \param pa_uAdapterNameId  StringId of the adapter name.
      * \return Pointer to the data output or 0.
      */
-    CAdapter* getAdapter(CStringDictionary::TStringId paAdapterNameId);
+    CAdapter* getAdapter(CStringDictionary::TStringId paAdapterNameId) const;
 
-    TPortId getAdapterPortId(CStringDictionary::TStringId paAdapterNameId);
+    TPortId getAdapterPortId(CStringDictionary::TStringId paAdapterNameId) const;
 
     /*!\brief Function that handles incoming events.
      *
-     * \param pa_nEIID ID if the input event that has occurred.
-     * \param pa_poExecEnv Event chain execution environment the FB will be executed in (used for adding output events).
+     * \param paEIID ID of the input event that has occurred.
+     * \param paExecEnv Event chain execution environment the FB will be executed in (used for adding output events).
      */
-    void
-    receiveInputEvent(int pa_nEIID, CEventChainExecutionThread &pa_poExecEnv);
+    void receiveInputEvent(size_t paEIID, CEventChainExecutionThread &paExecEnv);
 
     /*!\brief Configuration interface used by the typelib to parameterize generic function blocks.
      *
@@ -280,8 +243,7 @@ class CFunctionBlock{
      */
     virtual bool configureFB(const char *pa_acConfigString);
 
-    void setupFBInterface(const SFBInterfaceSpec *pa_pstInterfaceSpec, TForteByte *pa_acFBConnData,
-        TForteByte *pa_acFBVarsData, bool pa_bManagesFBData);
+    void setupFBInterface(const SFBInterfaceSpec *pa_pstInterfaceSpec, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
 
     const SFBInterfaceSpec* getFBInterfaceSpec() const{
       return m_pstInterfaceSpec;
@@ -328,14 +290,12 @@ class CFunctionBlock{
     bool isCurrentlyDeleteable(void) const{
       return ((m_bDeletable) && (m_enFBState != e_RUNNING));
     }
-    ;
 
     /*!\brief return the current execution state of the managed object
      */
     E_FBStates getState(void) const{
       return m_enFBState;
     }
-    ;
 
     template<unsigned int ta_nNumEOs, unsigned int ta_nNumDIs, unsigned int ta_nNumDOs>
     struct genFBConnDataSizeTemplate{
@@ -385,47 +345,15 @@ class CFunctionBlock{
     }
 
 #ifdef FORTE_SUPPORT_MONITORING
-    // public monitoring
-    void setUpdated(bool updated){
-      m_updated = updated;
-    }
-    ;
+    TForteUInt32 &getEIMonitorData(TEventID paEIID);
 
-    bool getUpdated() const{
-      return m_updated;
-    }
-    ;
-
-    forte::core::SMonitorEvent &getEIMonitorData(TEventID pa_unEIID);
-
-    forte::core::SMonitorEvent &getEOMonitorData(TEventID pa_unEOID);
-
-    // DATA-Monitor-functions
-    bool forceData(CStringDictionary::TStringId pa_acDOName, const char * forceValue);
-
-    bool startEIBreakpoint(TEventID p_nEventId);
-    bool startEOBreakpoint(TEventID p_nEventId);
-    bool stopEIBreakpoint(TEventID p_nEventId);
-    bool stopEOBreakpoint(TEventID p_nEventId);
-    bool clearEIBreakpoint(TEventID p_nEventId);
-    bool clearEOBreakpoint(TEventID p_nEventId);
-
-    bool getEIBreakpoint(TEventID p_nEventId, bool & enable, int & set);
-    bool getEOBreakpoint(TEventID p_nEventId, bool & enable, int & set);
+    TForteUInt32 &getEOMonitorData(TEventID paEOID);
 
     /*!\brief get any internal FB referenced by the iterator to the name list
      *
      * This allows that also adapters and the internals of a CFB can be monitored.
      */
     virtual CFunctionBlock *getFB(forte::core::TNameIdentifier::CIterator &paNameListIt);
-
-    CFunctionBlock *getContainer(){
-      return mContainer;
-    }
-
-    void setContainer(CFunctionBlock *paContainer){
-      mContainer = paContainer;
-    }
 
 #endif //FORTE_SUPPORT_MONITORING
   protected:
@@ -453,24 +381,18 @@ class CFunctionBlock{
     static TPortId getPortId(CStringDictionary::TStringId pa_unPortNameId,
         TPortId pa_unMaxPortNames, const CStringDictionary::TStringId* pa_aunPortNames);
 
-    static void generateGenericInterfacePointNameArray(const char * const pa_acPrefix,
-        CStringDictionary::TStringId* pa_anNamesArayStart, unsigned int pa_unNumGenericDataPoints);
-    static void generateGenericDataPointArrays(const char * const pa_acPrefix,
-        CStringDictionary::TStringId* pa_anDataTypeNamesArrayStart,
-        CStringDictionary::TStringId* pa_anNamesArrayStart, unsigned int pa_unNumGenericDataPoints);
-
     /*!\brief Function to send an output event of the FB.
      *
      * \param pa_nEO Event output ID where event should be fired.
      */
-    void sendOutputEvent(int pa_nEO);
+    void sendOutputEvent(size_t paEO);
 
     /*!\brief Function to send an output event via the adapter.
      *
      * \param pa_nAdapterID ID of Adapter in current FBs adapter list.
      * \param pa_nEID Event ID where event should be fired.
      */
-    void sendAdapterEvent(int pa_nAdapterID, int pa_nEID) const;
+    void sendAdapterEvent(size_t paAdapterID, size_t paEID) const;
 
     void setupAdapters(const SFBInterfaceSpec *pa_pstInterfaceSpec, TForteByte *pa_acFBData);
 
@@ -504,9 +426,12 @@ class CFunctionBlock{
 
     void freeAllData();
 
-    bool getManagesFBData() const{
-      return m_bManagesFBData;
-    }
+    /*!\brief Get the time elapsed since forte was started
+     *
+     * This function allows algorithms to easily access the current forte time in IEC 61131-3 units.
+     * @return the time elapsed since forte was started
+     */
+    const CIEC_TIME TIME();
 
     const SFBInterfaceSpec* m_pstInterfaceSpec; //!< Pointer to the interface specification
     CEventConnection *mEOConns; //!< A list of event connections pointers storing for each event output the event connection. If the output event is not connected the pointer is 0.
@@ -545,10 +470,8 @@ class CFunctionBlock{
     void setupEventMonitoringData();
 
     // monitoring stuff
-    forte::core::SMonitorEvent *m_nEOMonitorCount;
-    forte::core::SMonitorEvent *m_nEIMonitorCount;
-    CFunctionBlock *mContainer;  //!< points to the cfb this FB may be contained in
-    bool m_updated;
+    TForteUInt32 *mEOMonitorCount;
+    TForteUInt32 *mEIMonitorCount;
 #endif
 
     //! the instance name of the object
@@ -558,13 +481,6 @@ class CFunctionBlock{
      *
      */
     E_FBStates m_enFBState;
-
-    /*!\brief Flag to indicate if the FB manages the given data
-     *
-     * If true the FB will delete the data arrays given in the constructor or through the setupFBInterface function.
-     * This is especially necessary for configurable FBs which allocate the data exra on heap.
-     */
-    bool m_bManagesFBData;
 
     /*!\brief Attribute defines if runnable object can be deleted by a management command.
      *
@@ -579,6 +495,10 @@ class CFunctionBlock{
 #ifdef FORTE_SUPPORT_MONITORING
     friend class forte::core::CMonitoringHandler;
 #endif //FORTE_SUPPORT_MONITORING
+
+#ifdef FORTE_FMU
+    friend class fmuInstance;
+#endif //FORTE_FMU
 };
 
 template<>
@@ -604,6 +524,7 @@ typedef CFunctionBlock *TFunctionBlockPtr;
 #define FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(fbclass, fbBaseClass) \
  fbclass(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : \
  fbBaseClass( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData)
+
 
 #ifdef IN
 #undef IN

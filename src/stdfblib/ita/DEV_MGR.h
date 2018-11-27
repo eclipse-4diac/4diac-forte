@@ -32,14 +32,14 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
      */
     static const char * const scm_sMGMResponseTexts[13];
 
-    DEV_MGR(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+    DEV_MGR(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
     virtual ~DEV_MGR();
 
-    bool executeCommand(char *pa_acDest, char *pa_acCommand);
+    bool executeCommand(char *paDest, char *paCommand);
 
   private:
 
-    EMGMResponse parseAndExecuteMGMCommand(char *pa_acDest, char *pa_acCommand);
+    EMGMResponse parseAndExecuteMGMCommand(char *paDest, char *paCommand);
 
     static const CStringDictionary::TStringId scm_anDataInputNames[];
     static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
@@ -68,52 +68,46 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
     void executeRQST(void);
     /*! \brief Parse the given request header to determine the ID and the requested command
      *
-     * \param pa_acRequestString data of the request
-     * \param pa_rstCommand the command structure for holding command information
+     * \param paRequestString data of the request
+     * \param paCommand the command structure for holding command information
      * \return pointer to the next part of the command zero on error
      */
-    static char* parseRequest(char *pa_acRequestString, forte::core::SManagementCMD &pa_rstCommand);
+    static char* parseRequest(char *paRequestString, forte::core::SManagementCMD &paCommand);
     /*! \brief Parse the given request that is left after parsing the header to parse FB data
      *
-     * \param pa_acRequestPartLeft  data of the request that has been left after parsing the header
-     * \param pa_rstCommand the command structure for holding command information
+     * \param paRequestPartLeft  data of the request that has been left after parsing the header
+     * \param paCommand the command structure for holding command information
      * \return true if the FB data could be parsed
      */
-    static bool parseFBData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
-    /*! \brief Parse the given request that is left after parsing the header to parse FB type
+    static bool parseFBData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand);
+    /*! \brief Parse the given request that is left after parsing the header to parse FB or Adapter type
      *
-     * \param pa_acRequestPartLeft  data of the request that has been left after parsing the header
-     * \param pa_rstCommand the command structure for holding command information
+     * \param paRequestPartLeft  data of the request that has been left after parsing the header
+     * \param paCommand the command structure for holding command information
+     * \param pa_requestType the type that should be searched
      * \return true if the FB type could be parsed
      */
-    static bool parseFBType(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
-    /*! \brief Parse the given request that is left after parsing the header to parse Adapter type
-     *
-     * \param pa_acRequestPartLeft  data of the request that has been left after parsing the header
-     * \param pa_rstCommand the command structure for holding command information
-     * \return true if the Adapter type could be parsed
-     */
-    static bool parseAdapterType(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
+    static bool parseXType(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand, char *paRequestType);
     /*! \brief Parse the given request that is left after parsing the header to parse connection data
      *
-     * \param pa_acRequestPartLeft   data of the request that has been left after parsing the header
-     * \param pa_rstCommand the command structure for holding command information
+     * \param paRequestPartLeft   data of the request that has been left after parsing the header
+     * \param paCommand the command structure for holding command information
      * \return true if the connection data could be parsed
      */
-    static bool parseConnectionData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
-    static bool parseWriteConnectionData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
+    static bool parseConnectionData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand);
+    static bool parseWriteConnectionData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand);
 
 
-    static void parseCreateData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
-    static void parseDeleteData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
+    static void parseCreateData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand);
+    static void parseDeleteData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand);
     //! Check if an FB is given for a state change command (i.e., START, STOP, KILL, RESET)
-    static void parseAdditionalStateCommandData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
-    static void parseReadData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
-    static void parseWriteData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
+    static void parseAdditionalStateCommandData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand);
+    static void parseReadData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand);
+    static void parseWriteData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand);
 
 #ifdef FORTE_SUPPORT_QUERY_CMD
-    static void parseQueryData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
-    static bool parseTypeListData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
+    static void parseQueryData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand);
+    static bool parseTypeListData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand);
 #endif
 
 
@@ -130,24 +124,23 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
     virtual void executeEvent(int pa_nEIID);
 
 #ifdef FORTE_SUPPORT_MONITORING
-    static bool parseMonitoringData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
-    void generateMonitorResponse(EMGMResponse pa_eResp, forte::core::SManagementCMD &pa_stCMD);
-    static bool parseConnectionStarStarData(char *pa_acRequestPartLeft, forte::core::SManagementCMD &pa_rstCommand);
-#endif //FORTE_SUPPORT_MONITORING    virtual void executeEvent(int pa_nEIID);
+    static bool parseMonitoringData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand);
+    void generateMonitorResponse(EMGMResponse paResp, forte::core::SManagementCMD &paCMD);
+#endif //FORTE_SUPPORT_MONITORING
 
     /*! \brief set the RESP output of the DEV_MGR according to the given response data
      *
      * \param pa_acID id of the response
      * \param pa_eResp qualifier of the response
      */
-    void generateResponse(const char *pa_acID, EMGMResponse pa_eResp);
+    void generateResponse(const char *paID, EMGMResponse paResp);
     /*! \brief set the RESP output of the DEV_MGR according to the given response data
      *
      * \param pa_acID id of the response
      * \param pa_eResp qualifier of the response
-     * \param pa_stCMD the command type
+     * \param paCMD the command type
      */
-    void generateLongResponse(EMGMResponse pa_eResp, forte::core::SManagementCMD &pa_stCMD);
+    void generateLongResponse(EMGMResponse paResp, forte::core::SManagementCMD &paCMD);
     void appedIdentifierName(CIEC_STRING& paDest, forte::core::TNameIdentifier &paIdentifier);
 
     CIEC_BOOL &QI() {
@@ -178,7 +171,7 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
       return *static_cast<CIEC_STRING*>(getDO(3));
     };
 
-    forte::core::SManagementCMD m_stCommand;
+    forte::core::SManagementCMD mCommand;
   };
 
 #endif /*DEV_MGR_H_*/

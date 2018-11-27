@@ -46,11 +46,11 @@ public:
   LoadBootResult loadBootFile();
 
   bool isOpen() const{
-    return (0 != bootfile);
+    return (0 != mBootfile);
   }
 
 private:
-  FILE *bootfile;
+  FILE *mBootfile;
   IBootFileCallback &mCallback; //for now with one callback is enough for all cases
 
   bool openBootFile(CIEC_STRING* paBootFileName);

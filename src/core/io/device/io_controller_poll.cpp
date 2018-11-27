@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 fortiss GmbH
+ * Copyright (c) 2017 - 2018 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,33 +7,24 @@
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
 #include "io_controller_poll.h"
 
-namespace IO {
-namespace Device {
+using namespace forte::core::IO;
 
-PollController::PollController(CDeviceExecution& paDeviceExecution, float PollInterval) : Controller(paDeviceExecution),
-    PollInterval(PollInterval), forcedLoop(false), loopActive(false) {
-
+IODevicePollController::IODevicePollController(CDeviceExecution& paDeviceExecution, float PollInterval) : IODeviceController(paDeviceExecution),
+    PollInterval(PollInterval){
 }
 
-void PollController::handleChangeEvent(Handle*) {
+void IODevicePollController::handleChangeEvent(IOHandle*) {
   forcePoll();
 }
 
-void PollController::runLoop() {
-  clock_gettime(CLOCK_MONOTONIC, &nextLoop);
-
+void IODevicePollController::runLoop() {
   while (isAlive()) {
-    if (!forcedLoop)
-      loopSync.wait(nextLoop, (unsigned long) (1000000.0 / PollInterval));
-    else
-      forcedLoop = false;
-
-    loopActive = true;
-    loopSync.unlock();
+    forceLoop.timedWait(static_cast<const TForteUInt64>(PollInterval * 1E6)); //If timeout occurred is a normal waiting, otherwise is a forced loop. Don't care about the return value
 
     // Perform poll operation
     poll();
@@ -41,15 +32,13 @@ void PollController::runLoop() {
     if (hasError())
       break;
 
-    loopSync.lock();
-    loopActive = false;
   }
 }
 
-void PollController::setPollInterval(float PollInterval) {
+void IODevicePollController::setPollInterval(float PollInterval) {
   if (PollInterval <= 0) {
     DEVLOG_WARNING(
-        "[IO:PollController] Configured PollInterval is set to an invalid value '%d'. Set to 25.\n",
+        "[IODevicePollController] Configured PollInterval is set to an invalid value '%d'. Set to 25.\n",
         PollInterval);
     PollInterval = 25;
   }
@@ -57,17 +46,7 @@ void PollController::setPollInterval(float PollInterval) {
   this->PollInterval = PollInterval;
 }
 
-void PollController::forcePoll() {
-  loopSync.lock();
-
-  clock_gettime(CLOCK_MONOTONIC, &nextLoop);
-  if (loopActive)
-    forcedLoop = true;
-  else
-    loopSync.wakeUp();
-
-  loopSync.unlock();
+void IODevicePollController::forcePoll() {
+  forceLoop.inc();
 }
 
-} /* namespace Device */
-} /* namespace IO */

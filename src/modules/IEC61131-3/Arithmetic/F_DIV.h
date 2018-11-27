@@ -61,14 +61,6 @@ public:
     oIn2.saveAssign(IN2());
 
     OUT().saveAssign(DIV(oIn1,oIn2));
-
-//    char strbuf1[100];
-//    char strbuf2[100];
-//    char strbuf3[100];
-//    IN1().toString(strbuf1, sizeof(strbuf1));
-//    IN2().toString(strbuf2, sizeof(strbuf2));
-//    OUT().toString(strbuf3, sizeof(strbuf3));
-//    DEVLOG_INFO_4(cg_nID_CDeviceLog, 0x10, " %s / %s = %s", strbuf1, strbuf2, strbuf3);
   }
 
   virtual ~FORTE_F_DIV(){};

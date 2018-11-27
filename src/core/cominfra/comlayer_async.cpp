@@ -10,82 +10,66 @@
   *******************************************************************************/
 
 #include "comlayer_async.h"
-#include "devlog.h"
+#include <devlog.h>
+#include <criticalregion.h>
 
 forte::com_infra::CComLayerAsync::CComLayerAsync(forte::com_infra::CComLayer *pa_poUpperLayer, forte::com_infra::CBaseCommFB *pa_poComFB) :
-		CComLayer(pa_poUpperLayer, pa_poComFB), currentCallId(0), asyncCalls(), asyncResults(), asyncResultsMutex() {
+    CComLayer(pa_poUpperLayer, pa_poComFB), mCurrentCallId(0){
 
 }
 
 forte::com_infra::CComLayerAsync::~CComLayerAsync() {
-	for (CSinglyLinkedList<CComLayerAsync_Data*>::Iterator iter = asyncCalls.begin(); iter != asyncCalls.end(); ++iter) {
-		forte_free((*iter));
-	}
-	asyncCalls.clearAll();
-	for (CSinglyLinkedList<CComLayerAsync_Data*>::Iterator iter = asyncResults.begin(); iter != asyncResults.end(); ++iter) {
-		forte_free((*iter));
-	}
-	asyncResults.clearAll();
-	setAlive(false);
-	mSuspendSemaphore.semInc();
+  setAlive(false);
+  mSuspendSemaphore.inc();
 }
 
 void forte::com_infra::CComLayerAsync::run() {
-	while(isAlive()){
+  while(isAlive()){
 
-	  mSuspendSemaphore.semWaitIndefinitly();
+    mSuspendSemaphore.waitIndefinitely();
 
-		while (isAlive() && !asyncCalls.isEmpty()) {
-			CSinglyLinkedList<struct CComLayerAsync_Data*>::Iterator iter = asyncCalls.begin();
-			(*iter)->result = handleAsyncCall((*iter)->callId, (*iter)->payload);
-			asyncResultsMutex.lock();
-			asyncResults.push_back((*iter));
-			asyncResultsMutex.unlock();
-			handleAsyncEvent();
-			asyncCalls.pop_front();
-		}
-	}
+    while (isAlive() && !mAsyncCalls.isEmpty()) {
+      SAsyncData first(*mAsyncCalls.begin());
+      first.mResult = handleAsyncCall(first.mCallId, first.mPayload);
+      {
+        CCriticalRegion criticalRegion(mAsyncResultsMutex);
+        mAsyncResults.pushBack(first);
+      }
+      handleAsyncEvent();
+      mAsyncCalls.popFront();
+    }
+  }
 }
 
 unsigned int forte::com_infra::CComLayerAsync::callAsync(void *payload) {
-	if (!isAlive()) {
-		DEVLOG_ERROR("start() has to be called before callAsync\n");
-		return 0;
-	}
+  if (!isAlive()) {
+    DEVLOG_ERROR("start() has to be called before callAsync\n");
+    return 0;
+  }
 
-	currentCallId++;
-	if (currentCallId == 0)
-		// handle overflow. Do not return 0
-		currentCallId = 1;
-
-	CComLayerAsync_Data *data = static_cast<CComLayerAsync_Data*>(forte_malloc(sizeof(CComLayerAsync_Data)));
-
-	// cast away const
-	*(unsigned int *)&data->callId = currentCallId;
-	data->payload = payload;
-
-	asyncCalls.push_back(data);
-	mSuspendSemaphore.semInc();
-
-	return currentCallId;
+  mCurrentCallId++;
+  if (mCurrentCallId == 0){
+    // handle overflow. Do not return 0
+    mCurrentCallId = 1;
+  }
+  mAsyncCalls.pushBack(SAsyncData(mCurrentCallId, payload, 0));
+  mSuspendSemaphore.inc();
+  return mCurrentCallId;
 }
 
 forte::com_infra::EComResponse forte::com_infra::CComLayerAsync::processInterrupt() {
-	if (asyncResults.isEmpty())
-		return processInterruptChild();
+  if (mAsyncResults.isEmpty())
+    return processInterruptChild();
 
-	asyncResultsMutex.lock();
-	while (isAlive() && !asyncResults.isEmpty()) {
-		CSinglyLinkedList<CComLayerAsync_Data*>::Iterator iter = asyncResults.begin();
-		handleAsyncCallResult((*iter)->callId, (*iter)->payload, (*iter)->result);
-		forte_free((*iter));
-		asyncResults.pop_front();
-	}
-	asyncResultsMutex.unlock();
-
-	return processInterruptChild();
+  CCriticalRegion criticalRegion(mAsyncResultsMutex);
+  while (isAlive() && !mAsyncResults.isEmpty()) {
+    const SAsyncData &value = *(mAsyncResults.begin());
+    handleAsyncCallResult(value.mCallId, value.mPayload, value.mResult);
+    mAsyncResults.popFront();
+  }
+  return processInterruptChild();
 }
 
 forte::com_infra::EComResponse forte::com_infra::CComLayerAsync::processInterruptChild() {
-	return e_ProcessDataOk;
+  return e_ProcessDataOk;
 }

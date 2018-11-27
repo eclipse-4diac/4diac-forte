@@ -18,7 +18,9 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Bachmann M1")
 
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
   
-  forte_add_sourcefile_hcpp(forte_thread ../posix/pctimeha ../vxworks/forte_sync ../vxworks/forte_sem)
+  forte_set_timer(../posix/pctimeha)
+  
+  forte_add_sourcefile_hcpp(forte_thread ../vxworks/forte_sync ../vxworks/forte_sem)
   forte_add_sourcefile_hcpp(fortemodule ../genforte_printer.cpp)
   forte_add_sourcefile_hcpp(../utils/timespec_utils)
   

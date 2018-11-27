@@ -413,4 +413,62 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
   }
 #endif
 
+  const char* sNonEscapedData[] = {
+      "", "A", "AB", //no escaped chars
+      "\"", "'", "&",  "<", ">", //single examples
+      "\"\"", "''", "&&",  "<<", ">>", //double examples
+      "A\"", "A'", "A&",  "A<", "A>", //one char before
+      "\"A", "'A", "&A",  "<A", ">A",  //one char after
+      "A\"B", "A'B", "A&B",  "A<B", "A>B", //one char after and before
+      "\"A\"", "'A'", "&A&",  "<A<", ">A>", //one char in the middle
+      "\"'", "\"'&", "\"'&<",  "\"'&<>", "\"A'B&C<D>EFGH" //mixed escaped chars
+  };
+
+  unsigned int sExtraSize[] = {
+      0, 0, 0, //no escaped chars
+      5, 5, 4, 3, 3, //single examples
+      10, 10, 8, 6, 6, //double examples
+      5, 5, 4, 3, 3, //one char before
+      5, 5, 4, 3, 3, //one char after
+      5, 5, 4, 3, 3, //one char after and before
+      10, 10, 8, 6, 6, //one char in the middle
+      10, 14, 17, 20, 20  }; //mixed escaped chars
+
+  const char* sEscapedData[] = {
+      "", "A", "AB", //no escaped chars
+      "&quot;", "&apos;", "&amp;",  "&lt;", "&gt;",  //single examples
+      "&quot;&quot;", "&apos;&apos;", "&amp;&amp;",  "&lt;&lt;", "&gt;&gt;", //double examples
+      "A&quot;", "A&apos;", "A&amp;",  "A&lt;", "A&gt;", //one char before
+      "&quot;A", "&apos;A", "&amp;A",  "&lt;A", "&gt;A",  //one char after
+      "A&quot;B", "A&apos;B", "A&amp;B",  "A&lt;B", "A&gt;B",  //one char after and before
+      "&quot;A&quot;", "&apos;A&apos;", "&amp;A&amp;",  "&lt;A&lt;", "&gt;A&gt;", //one char in the middle
+      "&quot;&apos;", "&quot;&apos;&amp;", "&quot;&apos;&amp;&lt;", "&quot;&apos;&amp;&lt;&gt;", "&quot;A&apos;B&amp;C&lt;D&gt;EFGH" //mixed escaped chars
+   };
+
+    BOOST_AUTO_TEST_CASE(getExtraSizeForEscapedChars){
+      for(size_t i = 0; i < sizeof(sNonEscapedData) / sizeof(const char*); i++){
+        BOOST_CHECK_EQUAL(forte::core::util::getExtraSizeForEscapedChars(sNonEscapedData[i]), sExtraSize[i]);
+      }
+    }
+
+    BOOST_AUTO_TEST_CASE(transformNonEscapedToEscapedXMLText){
+      char toTest[50];
+      for(size_t i = 0; i < sizeof(sNonEscapedData) / sizeof(const char*); i++){
+        memset(toTest, 0, 50);
+        memcpy(toTest, sNonEscapedData[i], strlen(sNonEscapedData[i]));
+        BOOST_CHECK_EQUAL(forte::core::util::transformNonEscapedToEscapedXMLText(toTest), sExtraSize[i]);
+        BOOST_CHECK_EQUAL(0, strcmp(toTest, sEscapedData[i]));
+      }
+    }
+
+    BOOST_AUTO_TEST_CASE(transformEscapedXMLToNonEscapedText){
+      char toTest[50];
+      for(size_t i = 0; i < sizeof(sNonEscapedData) / sizeof(const char*); i++){
+        memset(toTest, 0, 50);
+        memcpy(toTest, sEscapedData[i], strlen(sEscapedData[i]));
+        BOOST_CHECK_EQUAL(forte::core::util::transformEscapedXMLToNonEscapedText(toTest), sExtraSize[i]);
+        BOOST_CHECK_EQUAL(0, strcmp(toTest, sNonEscapedData[i]));
+      }
+    }
+
   BOOST_AUTO_TEST_SUITE_END()

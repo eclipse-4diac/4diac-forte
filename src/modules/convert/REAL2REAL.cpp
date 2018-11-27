@@ -14,8 +14,6 @@
 #include "REAL2REAL_gen.cpp"
 #endif
 
-#ifdef FORTE_USE_REAL_DATATYPE
-
 DEFINE_FIRMWARE_FB(REAL2REAL, g_nStringIdREAL2REAL)
 
 const CStringDictionary::TStringId REAL2REAL::scm_anDataInputNames[] = {g_nStringIdIN};
@@ -58,6 +56,3 @@ void REAL2REAL::executeEvent(int pa_nEIID){
 
 REAL2REAL::~REAL2REAL(){
 }
-
-#endif
-

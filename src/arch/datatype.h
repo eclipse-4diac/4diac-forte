@@ -18,6 +18,7 @@
 #define __STDC_LIMIT_MACROS
 
 #include <stdint.h>
+#include <stddef.h>
 
 /*! \ingroup FORTE-HAL
  *  \brief This are the device-independent data types used by FORTE.
@@ -52,5 +53,9 @@ typedef char TIdentifier[cg_nIdentifierLength + 1]; //!<Type to hold an identifi
 typedef TForteUInt16 TPortId;   //!<Type for holding an optimized FORTE internal port number.
 
 const TForteUInt16 cg_unInvalidPortId = 255; //!< \ingroup CORE constant defining the max possible number of an FB Port (even or data, in or output)
+
+#if VXWORKS
+# define UINT64_C(x)   (x##ULL)
+#endif
 
 #endif // DATATYPES_H_

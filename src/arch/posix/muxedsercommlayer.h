@@ -16,53 +16,53 @@
 
 class CMuxedSerCommLayer : public forte::com_infra::CComLayer{
   public:
-    CMuxedSerCommLayer(forte::com_infra::CComLayer* pa_poUpperLayer, forte::com_infra::CBaseCommFB * pa_poFB);
+    CMuxedSerCommLayer(forte::com_infra::CComLayer* paUpperLayer, forte::com_infra::CBaseCommFB * paFB);
     virtual ~CMuxedSerCommLayer();
 
-    virtual forte::com_infra::EComResponse sendData(void *pa_pvData, unsigned int pa_unSize);
-    virtual forte::com_infra::EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize);
+    virtual forte::com_infra::EComResponse sendData(void *paData, unsigned int paSize);
+    virtual forte::com_infra::EComResponse recvData(const void *paData, unsigned int paSize);
 
     virtual forte::com_infra::EComResponse processInterrupt();
 
     TForteUInt8 getSerMuxId() const{
-      return m_unSerMuxId;
+      return mSerMuxId;
     }
 
   protected:
   private:
-    virtual forte::com_infra::EComResponse openConnection(char *pa_acLayerParameter);
+    virtual forte::com_infra::EComResponse openConnection(char *paLayerParameter);
     virtual void closeConnection();
 
-    forte::com_infra::EComResponse m_eInterruptResp;
-    char m_acRecvBuffer[cg_unIPLayerRecvBufferSize];
-    unsigned int m_unBufFillSize;
-    TForteUInt8 m_unSerMuxId;
-    CFDSelectHandler::TFileDescriptor m_nFD; //!< file descriptor for accessing the serial device
+    forte::com_infra::EComResponse mInterruptResp;
+    char mRecvBuffer[cg_unIPLayerRecvBufferSize];
+    unsigned int mBufFillSize;
+    TForteUInt8 mSerMuxId;
+    CFDSelectHandler::TFileDescriptor mFD; //!< file descriptor for accessing the serial device
 
     class CMuxedSerPortsManager{
 
       public:
 
-        CFDSelectHandler::TFileDescriptor addMuxedSerLayer(char* pa_acSerPort, CMuxedSerCommLayer *pa_poComCallBack);
-        void removeMuxedSerLayer(CFDSelectHandler::TFileDescriptor m_nFD, CMuxedSerCommLayer *pa_poComCallBack);
+        CFDSelectHandler::TFileDescriptor addMuxedSerLayer(char* paSerPort, CMuxedSerCommLayer *paComCallBack);
+        void removeMuxedSerLayer(CFDSelectHandler::TFileDescriptor paFD, CMuxedSerCommLayer *paComCallBack);
 
       private:
 
         typedef CSinglyLinkedList<CMuxedSerCommLayer *> TConnectionContainer;
         class SSerPortEntry : public forte::com_infra::CComLayer{
           public:
-            SSerPortEntry(): forte::com_infra::CComLayer(0, 0), m_acSerPort(0), m_nFD(scm_nInvalidFileDescriptor){
+            SSerPortEntry(): forte::com_infra::CComLayer(0, 0), mSerPort(0), mFD(scmInvalidFileDescriptor){
             }
 
-            char* m_acSerPort;
-            CFDSelectHandler::TFileDescriptor m_nFD;
-            TConnectionContainer m_lstConnectionsList;
+            char* mSerPort;
+            CFDSelectHandler::TFileDescriptor mFD;
+            TConnectionContainer mConnectionsList;
 
             virtual forte::com_infra::EComResponse sendData(void *, unsigned int ){
               return forte::com_infra::e_Nothing;
             }
 
-            virtual forte::com_infra::EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize);
+            virtual forte::com_infra::EComResponse recvData(const void *paData, unsigned int paSize);
             virtual forte::com_infra::EComResponse processInterrupt();
 
           private:
@@ -76,14 +76,14 @@ class CMuxedSerCommLayer : public forte::com_infra::CComLayer{
         typedef CSinglyLinkedList<SSerPortEntry> TSerPortList;
 
         CMuxedSerPortsManager();
-        SSerPortEntry *getSerPortEntry(char* pa_acSerPort);
-        SSerPortEntry *getOpendSerPortEntry(CFDSelectHandler::TFileDescriptor pa_nFD);
-        void openPort(char* pa_acSerPort, SSerPortEntry *pa_pstPortEntry);
-        void closePort(SSerPortEntry *pa_pstSerPortEntry);
+        SSerPortEntry *getSerPortEntry(char* paSerPort);
+        SSerPortEntry *getOpendSerPortEntry(CFDSelectHandler::TFileDescriptor paFD);
+        void openPort(char* paSerPort, SSerPortEntry *paPortEntry);
+        void closePort(SSerPortEntry *paSerPortEntry);
 
-        TSerPortList m_lstPortList;
+        TSerPortList mPortList;
 
-        CSyncObject m_oSync;
+        CSyncObject mSync;
 
         //needed so that CLMSUSBLayer can have a static member variable holding the manager.
         friend class CMuxedSerCommLayer;
@@ -93,7 +93,7 @@ class CMuxedSerCommLayer : public forte::com_infra::CComLayer{
         CMuxedSerPortsManager &operator =(const CMuxedSerPortsManager&);
     };
 
-    static CMuxedSerPortsManager sm_oMuxedSerPortsManager;
+    static CMuxedSerPortsManager smMuxedSerPortsManager;
 };
 
 #endif /* MUXEDSERCOMMLAYER_H_ */

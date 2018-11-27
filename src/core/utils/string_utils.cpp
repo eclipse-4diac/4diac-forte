@@ -14,6 +14,7 @@
 #include <forte_udint.h>
 #include <forte_lint.h>
 #include <forte_ulint.h>
+#include "../../arch/devlog.h"
 
 #include <errno.h>
 #include <string.h>
@@ -38,11 +39,9 @@ long int forte::core::util::strtol(const char *nptr, char **endptr, int base) {
     ++nptr;
   }
 
-  if(16 == base){
-	  if(('0' == (*nptr)) && ('x' == nptr[1])){
-	    //we have a preceding 0x step over it
-	    nptr += 2;
-	  }
+  if(16 == base && (('0' == (*nptr)) && ('x' == nptr[1]))){
+    //we have a preceding 0x step over it
+    nptr += 2;
   }
 
   long nLimit1 = (bNegativeNumber ? -(CIEC_DINT::scm_nMinVal / base) : (CIEC_DINT::scm_nMaxVal / base));
@@ -121,17 +120,13 @@ long long int forte::core::util::strtoll(const char *nptr, char **endptr, int ba
     ++nptr;
   }
 
-  if(16 == base){
-    if(('0' == (*nptr)) && ('x' == nptr[1])){
-      //we have a preceding 0x step over it
-      nptr += 2;
-    }
+  if(16 == base && ('0' == (*nptr)) && ('x' == nptr[1])){
+    //we have a preceding 0x step over it
+    nptr += 2;
   }
 
-// The volatile magic works around an apparent optimizer bug on Visual Studio 2008. Looks like this one:
-// http://connect.microsoft.com/VisualStudio/feedback/details/267232/sign-error-in-long-integer-arithmetic
-// "The Visual C++ team has evaluated the bug and determined it does not meet the guidelines necessary to warrant a fix."
-  volatile long long nLimit1, nLimit2;
+  long long nLimit1;
+  long long nLimit2;
 
   if (bNegativeNumber){
     volatile long long nLimMinDiv = CIEC_LINT::scm_nMinVal / base;
@@ -206,3 +201,75 @@ unsigned long long int forte::core::util::strtoull(const char *nptr, char **endp
 }
 
 #endif
+
+size_t forte::core::util::getExtraSizeForEscapedChars(const char* paString){
+  size_t retVal = 0;
+  while(0 != *paString){
+    for(size_t i = 0; i < sizeof(forte::core::util::scReplacementForEscapedCharacters) / sizeof(const char* const); i++){
+      if(forte::core::util::scEscapedCharacters[i] == *paString){
+        retVal += strlen(forte::core::util::scReplacementForEscapedCharacters[i]) - 1;
+        break;
+      }
+    }
+    paString++;
+  }
+  return retVal;
+}
+
+size_t forte::core::util::transformNonEscapedToEscapedXMLText(char* const paString){
+  size_t retVal = 0;
+  char* runner = strchr(paString, '\0');
+  char* originalEnd = runner;
+  runner--;
+  while(paString <= runner){
+    const char* toCopy = 0;
+
+    for(size_t i = 0; i < sizeof(forte::core::util::scReplacementForEscapedCharacters) / sizeof(const char* const ); i++){
+      if(forte::core::util::scEscapedCharacters[i] == *runner){
+        toCopy = forte::core::util::scReplacementForEscapedCharacters[i];
+        break;
+      }
+    }
+
+    if(0 != toCopy){
+      size_t toMove = strlen(toCopy);
+      memmove(&runner[toMove], runner + 1, originalEnd - runner + retVal);
+      memcpy(runner, toCopy, toMove);
+      retVal += toMove - 1;
+    }
+    runner--;
+  }
+  return retVal;
+}
+
+size_t forte::core::util::transformEscapedXMLToNonEscapedText(char* const paString){
+  char* runner = paString;
+  char *endRunner = strchr(paString, '\0');
+  size_t retVal = 0;
+  while(runner <= endRunner){
+    if('&' == *runner){
+      char toCopy = 0;
+      size_t toMove = 0;
+
+      for(size_t i = 0; i < sizeof(forte::core::util::scReplacementForEscapedCharacters) / sizeof(const char* const ); i++){
+        if(0 == strncmp(runner, forte::core::util::scReplacementForEscapedCharacters[i], strlen(forte::core::util::scReplacementForEscapedCharacters[i]))){
+          toCopy = forte::core::util::scEscapedCharacters[i];
+          toMove = strlen(forte::core::util::scReplacementForEscapedCharacters[i]);
+          break;
+        }
+      }
+
+      if(0 != toCopy){
+        *runner = toCopy;
+        memmove(runner + 1, &runner[toMove], (endRunner - &runner[toMove]) + 1);
+        endRunner -= toMove - 1;
+        retVal += toMove - 1;
+      }
+      else{
+        DEVLOG_ERROR("[XML Transformer] The given XML text has & character but it's none of the known escaped characters");
+      }
+    }
+    runner++;
+  }
+  return retVal;
+}

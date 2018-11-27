@@ -15,13 +15,15 @@
 #define _COMLAYER_H_
 
 #include "comtypes.h"
+#include "comCallback.h"
+#include "utils/extevhandlerhelper.h"
 
 namespace forte {
   namespace com_infra {
 
     class CBaseCommFB;
 
-    class CComLayer{
+    class CComLayer : public CComCallback{
       public:
         virtual ~CComLayer();
 
@@ -53,22 +55,6 @@ namespace forte {
          */
         virtual EComResponse sendData(void *pa_pvData, unsigned int pa_unSize) = 0;
 
-        /*!\brief Take the given data and perform the necessary process for receiving data
-         *
-         * This function is called for processing the received data from bottom to top. Therefore
-         * if necessary invoke the top layer's receiveData function to hand on the processed data.
-         *
-         * @param pa_pvData pointer to the data received
-         * @param pa_unSize size of the data received
-         * @return status of the receiving process depends on if the layer is the bottom most layer:
-         *    - Normal Layer:
-         *        - e_ProcessDataOk ... if receiving process was successful
-         *    - Bottom most layer
-         *        - e_Nothing ...  if the processing of the data does not require to send an external event to the FB
-         *        - any other value requires that the ComFB is informed with an external event to further handle the received message
-         */
-        virtual EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize) = 0;
-
         /*!\brief Finish to process the data received in a context outside the communication interrupt i.e. within the event chain of the ComFB.
          *
          * This function shall be used for finishing the data reception.
@@ -96,18 +82,23 @@ namespace forte {
 
         /*!\brief get the FB of this layer
          */
-		CBaseCommFB *getCommFB() const {
+        CBaseCommFB *getCommFB() const {
           return m_poFb;
         }
 
       protected:
         CComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB);
 
+        template<typename T>
+        T& getExtEvHandler(){
+          return ::getExtEvHandler<T>(*m_poFb);
+        }
+
         EComConnectionState m_eConnectionState;
 
         CComLayer *m_poTopLayer;
         CComLayer *m_poBottomLayer;
-		CBaseCommFB *m_poFb;
+        CBaseCommFB *m_poFb;
 
       private:
     };

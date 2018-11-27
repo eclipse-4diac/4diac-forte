@@ -65,7 +65,7 @@ EComResponse CES_SFP_Layer::processInterrupt(){
 }
 
 EComResponse CES_SFP_Layer::openConnection(char *paLayerParameter){
-  int numData;
+  size_t numData;
   CIEC_ANY *dataArray;
 
   if(e_Subscriber == getCommFB()->getComServiceType()){
@@ -84,8 +84,8 @@ EComResponse CES_SFP_Layer::openConnection(char *paLayerParameter){
         numData = 1;  //register for the item used for the event transmition
       }
 
-      for(int i = 0; i < numData; i++){
-        GET_HANDLER_FROM_LAYER(*m_poFb, CEclipseSCADASFPHandler)->registerWriteCallBack(mSFPItem[i], this);
+      for(size_t i = 0; i < numData; i++){
+        getExtEvHandler<CEclipseSCADASFPHandler>().registerWriteCallBack(mSFPItem[i], this);
       }
     }
   }
@@ -103,7 +103,7 @@ void CES_SFP_Layer::closeConnection(){
 
     for(int i = 0; i < numData; i++){
       if(0 != mSFPItem[i]){
-        GET_HANDLER_FROM_LAYER(*m_poFb,CEclipseSCADASFPHandler)->unregisterDataPoint(mSFPItem[i]);
+        getExtEvHandler<CEclipseSCADASFPHandler>().unregisterDataPoint(mSFPItem[i]);
       }
     }
 
@@ -118,7 +118,7 @@ EComResponse CES_SFP_Layer::createItems(CIEC_ANY *paDataArray, int paNumData, ch
   if(0 == paNumData){
     //handle pure event messages
     mSFPItem = new sfp_item *[1];
-    *mSFPItem = GET_HANDLER_FROM_LAYER(*m_poFb,CEclipseSCADASFPHandler)->registerDataPoint(paLayerParameter, "Coment");
+    *mSFPItem = getExtEvHandler<CEclipseSCADASFPHandler>().registerDataPoint(paLayerParameter, "Coment");
     if(0 != *mSFPItem){
       sfp_item_update_data_allocated(*mSFPItem, sfp_variant_new_null(), sfp_time_in_millis ());
     }else{
@@ -136,7 +136,7 @@ EComResponse CES_SFP_Layer::createItems(CIEC_ANY *paDataArray, int paNumData, ch
           *nextParam = '\0';
           nextParam++;
         }
-        mSFPItem[i] = GET_HANDLER_FROM_LAYER(*m_poFb, CEclipseSCADASFPHandler)->registerDataPoint(paLayerParameter, "Coment");
+        mSFPItem[i] = getExtEvHandler<CEclipseSCADASFPHandler>().registerDataPoint(paLayerParameter, "Coment");
 
         if(0 != mSFPItem[i]){
           //write the initial value to the SFP server so that the data type of the item gets set

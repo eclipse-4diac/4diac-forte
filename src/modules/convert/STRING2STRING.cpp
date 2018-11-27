@@ -56,6 +56,3 @@ void STRING2STRING::executeEvent(int pa_nEIID){
 
 STRING2STRING::~STRING2STRING(){
 }
-
-
-

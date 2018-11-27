@@ -19,40 +19,41 @@
 
 using namespace forte::com_infra;
 
-CIPComLayer::CIPComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB) :
-        CComLayer(pa_poUpperLayer, pa_poComFB),
-        m_nSocketID(CIPComSocketHandler::scm_nInvalidSocketDescriptor),
-        m_nListeningID(CIPComSocketHandler::scm_nInvalidSocketDescriptor),
-        m_eInterruptResp(e_Nothing),
-        m_unBufFillSize(0){
-  memset(m_acRecvBuffer, 0, sizeof(m_acRecvBuffer)); //TODO change this to  m_acRecvBuffer{0} in the extended list when fully switching to C++11
+CIPComLayer::CIPComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB) :
+        CComLayer(paUpperLayer, paComFB),
+        mSocketID(CIPComSocketHandler::scmInvalidSocketDescriptor),
+        mListeningID(CIPComSocketHandler::scmInvalidSocketDescriptor),
+        mInterruptResp(e_Nothing),
+        mBufFillSize(0){
+  memset(mRecvBuffer, 0, sizeof(mRecvBuffer)); //TODO change this to  m_acRecvBuffer{0} in the extended list when fully switching to C++11
+  memset(&mDestAddr, 0, sizeof(mDestAddr));
 }
 
 CIPComLayer::~CIPComLayer(){
 }
 
-EComResponse CIPComLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
+EComResponse CIPComLayer::sendData(void *paData, unsigned int paSize){
   EComResponse eRetVal = e_ProcessDataOk;
 
-  if((0 != m_poFb) && (CIPComSocketHandler::scm_nInvalidSocketDescriptor != m_nSocketID)){
+  if((0 != m_poFb) && (CIPComSocketHandler::scmInvalidSocketDescriptor != mSocketID)){
     switch (m_poFb->getComServiceType()){
       case e_Server:
         if(0
-            >= CIPComSocketHandler::sendDataOnTCP(m_nSocketID, static_cast<char*>(pa_pvData), pa_unSize)){
-          closeSocket(&m_nSocketID);
+            >= CIPComSocketHandler::sendDataOnTCP(mSocketID, static_cast<char*>(paData), paSize)){
+          closeSocket(&mSocketID);
           m_eConnectionState = e_Listening;
           eRetVal = e_InitTerminated;
         }
         break;
       case e_Client:
         if(0
-            >= CIPComSocketHandler::sendDataOnTCP(m_nSocketID, static_cast<char*>(pa_pvData), pa_unSize)){
+            >= CIPComSocketHandler::sendDataOnTCP(mSocketID, static_cast<char*>(paData), paSize)){
           eRetVal = e_InitTerminated;
         }
         break;
       case e_Publisher:
         if(0
-            >= CIPComSocketHandler::sendDataOnUDP(m_nSocketID, &m_tDestAddr, static_cast<char*>(pa_pvData), pa_unSize)){
+            >= CIPComSocketHandler::sendDataOnUDP(mSocketID, &mDestAddr, static_cast<char*>(paData), paSize)){
           eRetVal = e_InitTerminated;
         }
         break;
@@ -65,12 +66,12 @@ EComResponse CIPComLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
 }
 
 EComResponse CIPComLayer::processInterrupt(){
-  if(e_ProcessDataOk == m_eInterruptResp){
+  if(e_ProcessDataOk == mInterruptResp){
     switch (m_eConnectionState){
       case e_Connected:
-        if((0 < m_unBufFillSize) && (0 != m_poTopLayer)){
-          m_eInterruptResp = m_poTopLayer->recvData(m_acRecvBuffer, m_unBufFillSize);
-          m_unBufFillSize = 0;
+        if((0 < mBufFillSize) && (0 != m_poTopLayer)){
+          mInterruptResp = m_poTopLayer->recvData(mRecvBuffer, mBufFillSize);
+          mBufFillSize = 0;
         }
         break;
       case e_Disconnected:
@@ -80,26 +81,26 @@ EComResponse CIPComLayer::processInterrupt(){
         break;
     }
   }
-  return m_eInterruptResp;
+  return mInterruptResp;
 }
 
-EComResponse CIPComLayer::recvData(const void *pa_pvData, unsigned int){
-  m_eInterruptResp = e_Nothing;
+EComResponse CIPComLayer::recvData(const void *paData, unsigned int){
+  mInterruptResp = e_Nothing;
   switch (m_eConnectionState){
     case e_Listening:
       //TODO move this to the processInterrupt()
-      m_nSocketID = CIPComSocketHandler::acceptTCPConnection(m_nListeningID);
-      if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != m_nSocketID){
-        GET_HANDLER_FROM_LAYER(*m_poFb, CIPComSocketHandler)->addComCallback(m_nSocketID, this);
+      mSocketID = CIPComSocketHandler::acceptTCPConnection(mListeningID);
+      if(CIPComSocketHandler::scmInvalidSocketDescriptor != mSocketID){
+        getExtEvHandler<CIPComSocketHandler>().addComCallback(mSocketID, this);
         m_eConnectionState = e_Connected;
       }
       break;
     case e_Connected:
-      if(m_nSocketID == *(static_cast<const CIPComSocketHandler::TSocketDescriptor *>(pa_pvData))){
+      if(mSocketID == *(static_cast<const CIPComSocketHandler::TSocketDescriptor *>(paData))){
         handledConnectedDataRecv();
       }
-      else if(m_nListeningID
-          == *(static_cast<const CIPComSocketHandler::TSocketDescriptor *>(pa_pvData))){
+      else if(mListeningID
+          == *(static_cast<const CIPComSocketHandler::TSocketDescriptor *>(paData))){
         handleConnectionAttemptInConnected();
       }
       break;
@@ -108,12 +109,12 @@ EComResponse CIPComLayer::recvData(const void *pa_pvData, unsigned int){
       default:
       break;
   }
-  return m_eInterruptResp;
+  return mInterruptResp;
 }
 
-EComResponse CIPComLayer::openConnection(char *pa_acLayerParameter){
+EComResponse CIPComLayer::openConnection(char *paLayerParameter){
   EComResponse eRetVal = e_InitInvalidId;
-  char *acPort = strchr(pa_acLayerParameter, ':');
+  char *acPort = strchr(paLayerParameter, ':');
   if(0 != acPort){
     *acPort = '\0';
     ++acPort;
@@ -121,33 +122,33 @@ EComResponse CIPComLayer::openConnection(char *pa_acLayerParameter){
     TForteUInt16 nPort = static_cast<TForteUInt16>(forte::core::util::strtoul(acPort, 0, 10));
 
     CIPComSocketHandler::TSocketDescriptor nSockDes =
-        CIPComSocketHandler::scm_nInvalidSocketDescriptor;
+        CIPComSocketHandler::scmInvalidSocketDescriptor;
     m_eConnectionState = e_Connected;
 
     switch (m_poFb->getComServiceType()){
       case e_Server:
-        nSockDes = m_nListeningID =
-            CIPComSocketHandler::openTCPServerConnection(pa_acLayerParameter, nPort);
+        nSockDes = mListeningID =
+            CIPComSocketHandler::openTCPServerConnection(paLayerParameter, nPort);
         m_eConnectionState = e_Listening;
         break;
       case e_Client:
-        nSockDes = m_nSocketID =
-            CIPComSocketHandler::openTCPClientConnection(pa_acLayerParameter, nPort);
+        nSockDes = mSocketID =
+            CIPComSocketHandler::openTCPClientConnection(paLayerParameter, nPort);
         break;
       case e_Publisher:
-        nSockDes = m_nSocketID =
-            CIPComSocketHandler::openUDPSendPort(pa_acLayerParameter, nPort, &m_tDestAddr);
+        nSockDes = mSocketID =
+            CIPComSocketHandler::openUDPSendPort(paLayerParameter, nPort, &mDestAddr);
         break;
       case e_Subscriber:
-        nSockDes = m_nSocketID =
-            CIPComSocketHandler::openUDPReceivePort(pa_acLayerParameter, nPort);
+        nSockDes = mSocketID =
+            CIPComSocketHandler::openUDPReceivePort(paLayerParameter, nPort);
         break;
     }
 
-    if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != nSockDes){
+    if(CIPComSocketHandler::scmInvalidSocketDescriptor != nSockDes){
       if(e_Publisher != m_poFb->getComServiceType()){
         //Publishers should not be registered for receiving data
-        GET_HANDLER_FROM_LAYER(*m_poFb, CIPComSocketHandler)->addComCallback(nSockDes, this);
+        getExtEvHandler<CIPComSocketHandler>().addComCallback(nSockDes, this);
       }
       eRetVal = e_InitOk;
     }
@@ -160,62 +161,62 @@ EComResponse CIPComLayer::openConnection(char *pa_acLayerParameter){
 
 void CIPComLayer::closeConnection(){
   DEVLOG_DEBUG("CSocketBaseLayer::closeConnection() \n");
-  closeSocket(&m_nSocketID);
-  closeSocket(&m_nListeningID);
+  closeSocket(&mSocketID);
+  closeSocket(&mListeningID);
 
   m_eConnectionState = e_Disconnected;
 }
 
-void CIPComLayer::closeSocket(CIPComSocketHandler::TSocketDescriptor *pa_nSocketID){
-  if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != *pa_nSocketID){
-    GET_HANDLER_FROM_LAYER(*m_poFb, CIPComSocketHandler)->removeComCallback(*pa_nSocketID);
-    CIPComSocketHandler::closeSocket(*pa_nSocketID);
-    *pa_nSocketID = CIPComSocketHandler::scm_nInvalidSocketDescriptor;
+void CIPComLayer::closeSocket(CIPComSocketHandler::TSocketDescriptor *paSocketID){
+  if(CIPComSocketHandler::scmInvalidSocketDescriptor != *paSocketID){
+    getExtEvHandler<CIPComSocketHandler>().removeComCallback(*paSocketID);
+    CIPComSocketHandler::closeSocket(*paSocketID);
+    *paSocketID = CIPComSocketHandler::scmInvalidSocketDescriptor;
   }
 }
 
 void CIPComLayer::handledConnectedDataRecv(){
   // in case of fragmented packets, it can occur that the buffer is full,
   // to avoid calling receiveDataFromTCP with a buffer size of 0 wait until buffer is larger 0
-  while((cg_unIPLayerRecvBufferSize - m_unBufFillSize) <= 0){
+  while((cg_unIPLayerRecvBufferSize - mBufFillSize) <= 0){
     CThread::sleepThread(0);
   }
-  if(CIPComSocketHandler::scm_nInvalidSocketDescriptor != m_nSocketID){
+  if(CIPComSocketHandler::scmInvalidSocketDescriptor != mSocketID){
     // TODO: sync buffer and bufFillSize
     int nRetVal = 0;
     switch (m_poFb->getComServiceType()){
       case e_Server:
         case e_Client:
         nRetVal =
-            CIPComSocketHandler::receiveDataFromTCP(m_nSocketID, &m_acRecvBuffer[m_unBufFillSize], cg_unIPLayerRecvBufferSize
-                - m_unBufFillSize);
+            CIPComSocketHandler::receiveDataFromTCP(mSocketID, &mRecvBuffer[mBufFillSize], cg_unIPLayerRecvBufferSize
+                - mBufFillSize);
         break;
       case e_Publisher:
         //do nothing as subscribers cannot receive data
         break;
       case e_Subscriber:
         nRetVal =
-            CIPComSocketHandler::receiveDataFromUDP(m_nSocketID, &m_acRecvBuffer[m_unBufFillSize], cg_unIPLayerRecvBufferSize
-                - m_unBufFillSize);
+            CIPComSocketHandler::receiveDataFromUDP(mSocketID, &mRecvBuffer[mBufFillSize], cg_unIPLayerRecvBufferSize
+                - mBufFillSize);
         break;
     }
     switch (nRetVal){
       case 0:
         DEVLOG_INFO("Connection closed by peer\n");
-        m_eInterruptResp = e_InitTerminated;
-        closeSocket (&m_nSocketID);
+        mInterruptResp = e_InitTerminated;
+        closeSocket (&mSocketID);
         if(e_Server == m_poFb->getComServiceType()){
           //Move server into listening mode again
           m_eConnectionState = e_Listening;
         }
         break;
       case -1:
-        m_eInterruptResp = e_ProcessDataRecvFaild;
+        mInterruptResp = e_ProcessDataRecvFaild;
         break;
       default:
         //we successfully received data
-        m_unBufFillSize += nRetVal;
-        m_eInterruptResp = e_ProcessDataOk;
+        mBufFillSize += nRetVal;
+        mInterruptResp = e_ProcessDataOk;
         break;
     }
     m_poFb->interruptCommFB(this);
@@ -225,6 +226,8 @@ void CIPComLayer::handledConnectedDataRecv(){
 void CIPComLayer::handleConnectionAttemptInConnected(){
   //accept and immediately close the connection to tell the client that we are not available
   //so far the best option I've found for handling single connection servers
-  CIPComSocketHandler::TSocketDescriptor socketID = CIPComSocketHandler::acceptTCPConnection(m_nListeningID);
-  CIPComSocketHandler::closeSocket(socketID);
+  CIPComSocketHandler::TSocketDescriptor socketID = CIPComSocketHandler::acceptTCPConnection(mListeningID);
+  if(CIPComSocketHandler::scmInvalidSocketDescriptor != socketID){
+    CIPComSocketHandler::closeSocket(socketID);
+  }
 }

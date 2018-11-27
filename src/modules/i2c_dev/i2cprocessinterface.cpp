@@ -141,7 +141,7 @@ std::vector<std::string> CI2CProcessInterface::generateParameterList(){
   std::vector<std::string> retVal;
 
   while(std::getline(streamBuf, segment, '.')){ //Separate the PARAMS input by '.' for easier processing
-    retVal.push_back(segment);
+    retVal.pushBack(segment);
   }
   return retVal;
 }

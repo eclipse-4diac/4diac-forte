@@ -54,7 +54,7 @@ bool CUMICProcessInterface::initialise(bool paIsInput){
   unsigned int number;
 
   while(std::getline(streamBuf, segment, '.')){ //separate the PARAMS input by '.' for easier processing
-    paramsList.push_back(segment);
+    paramsList.pushBack(segment);
   }
 
   STATUS() = scmNotInitialised;

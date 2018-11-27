@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2012 - 2015 ACIN, fortiss GmbH
+ *                      2018 Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,14 +9,15 @@
  * Contributors:
  *   Alois Zoitl, Monika Wenger
  *   - initial API and implementation and/or initial documentation
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *******************************************************************************/
 #ifndef _GEN_CSV_WRITER_H_
 #define _GEN_CSV_WRITER_H_
 
-#include <funcbloc.h>
+#include <genfb.h>
 #include <stdio.h>
 
-class GEN_CSV_WRITER : public CFunctionBlock{
+class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_CSV_WRITER)
 
   private:
@@ -50,17 +52,12 @@ class GEN_CSV_WRITER : public CFunctionBlock{
     static const TDataIOID scm_anEOWith[];
     static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int paEIID);
+    virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);
 
   public:
-    GEN_CSV_WRITER(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+    GEN_CSV_WRITER(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
     virtual ~GEN_CSV_WRITER();
-
-    virtual bool configureFB(const char *pa_acConfigString);
-
-    CStringDictionary::TStringId getFBTypeId(void) const{
-      return m_nConfiguredFBTypeNameId;
-    }
 
   private:
     void openCSVFile();
@@ -73,9 +70,6 @@ class GEN_CSV_WRITER : public CFunctionBlock{
     CStringDictionary::TStringId *m_anDataInputTypeIds;
 
     TDataIOID *m_anEIWith;
-
-    CStringDictionary::TStringId m_nConfiguredFBTypeNameId;
-
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+#endif //_GEN_CSV_WRITER_H_

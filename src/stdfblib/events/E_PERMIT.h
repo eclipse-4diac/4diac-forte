@@ -36,7 +36,7 @@ private:
   FORTE_FB_DATA_ARRAY(1,1,0, 0);
   
   CIEC_BOOL& PERMIT() {
-   	return *static_cast<CIEC_BOOL*>(getDI(0));
+     return *static_cast<CIEC_BOOL*>(getDI(0));
   }
 
 public:
@@ -45,5 +45,5 @@ public:
   virtual ~E_PERMIT(){};
 
 };
-#endif //close the ifdef sequence from the beginning of the file
 
+#endif //_E_PERMIT_H_

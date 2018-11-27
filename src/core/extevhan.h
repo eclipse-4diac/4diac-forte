@@ -18,17 +18,13 @@ class CFunctionBlock;
 
 #define DECLARE_HANDLER(TypeName)                             \
   public:                                                     \
-    static const unsigned int handlerIdentifier;              \
-    virtual unsigned int getIdentifier() const;               \
-    explicit TypeName(CDeviceExecution& pa_poDeviceExecution);\
+    static const size_t mHandlerIdentifier;              \
+    virtual size_t getIdentifier() const;               \
+    explicit TypeName(CDeviceExecution& paDeviceExecution);\
     ~TypeName();
 
 #define DEFINE_HANDLER(TypeName)                            \
-    unsigned int TypeName::getIdentifier() const { return TypeName::handlerIdentifier;}
-
-#define GET_HANDLER_FROM_LAYER(layer, type)                 \
-  static_cast<type*>(CExternalEventHandler::getHandlerFromFB(layer, type::handlerIdentifier))
-
+    size_t TypeName::getIdentifier() const { return TypeName::mHandlerIdentifier;}
 
 /**  \defgroup FORTE_HAL FORTE Hardware Abstraction Layer - FORTE-HAL
  * \brief The FORTE-HAL is the abstraction of HW dependent features important
@@ -50,7 +46,7 @@ class CFunctionBlock;
 
 class CExternalEventHandler{
   public:
-    explicit CExternalEventHandler(CDeviceExecution& pa_poDeviceExecution);
+    explicit CExternalEventHandler(CDeviceExecution& paDeviceExecution);
 
     virtual ~CExternalEventHandler(){
     }
@@ -64,18 +60,16 @@ class CExternalEventHandler{
     virtual void disableHandler(void) = 0;
     /*!\brief Sets the priority of the event source
      *
-     * \param pa_nPriority new priority of the event source
+     * \param paPriority new priority of the event source
      */
-    virtual void setPriority(int pa_nPriority) = 0;
+    virtual void setPriority(int paPriority) = 0;
     /*!\brief Get the current priority of the event source
      *
      * \return current priority
      */
     virtual int getPriority(void) const = 0;
 
-    virtual unsigned int getIdentifier() const = 0;
-
-    static CExternalEventHandler* getHandlerFromFB(CFunctionBlock& paFB, unsigned int paIdentifier);
+    virtual size_t getIdentifier() const = 0;
 
   protected:
 
@@ -88,13 +82,16 @@ class CExternalEventHandler{
      *
      * this function checks if the external event handler is allowed to start new event chains and if yes performs the necessary actions.
      *
-     * @param pa_poECStartFB the event source function block which starts the new event chain
+     * @param paECStartFB the event source function block which starts the new event chain
      */
-    void startNewEventChain(CEventSourceFB *pa_poECStartFB);
+    void startNewEventChain(CEventSourceFB *paECStartFB);
 
-    CDeviceExecution& m_poDeviceExecution;
+    template<typename T>
+    T& getExtEvHandler(){
+      return mDeviceExecution.getExtEvHandler<T>();
+    }
 
-  private:
+    CDeviceExecution& mDeviceExecution;
 
   private:
 

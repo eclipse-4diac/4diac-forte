@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 - 2015 fortiss GmbH
+ * Copyright (c) 2014 - 2015 fortiss GmbH, 2018 TU Wien/ACIN
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *   Alois Zoitl, Monika Wenger - initial API and implementation and/or initial documentation
+ *   Martin Melik-Merkumians - Adds methods for IB, QB, IL, and QL
  *******************************************************************************/
 #include <esfb.h>
 #include <resource.h>
@@ -51,9 +52,17 @@ class CProcessInterfaceBase : public CEventSourceFB{
       return *static_cast<CIEC_BOOL*>(getDI(2));
     };
 
+    CIEC_BYTE &IN_B(){
+      return *static_cast<CIEC_BYTE*>(getDO(2));
+    };
+
+    CIEC_BYTE &OUT_B() {
+      return *static_cast<CIEC_BYTE*>(getDI(2));
+    };
+
     CIEC_WORD &IN_W(){
       return *static_cast<CIEC_WORD*>(getDO(2));
-    }
+    };
 
     CIEC_WORD &OUT_W() {
       return *static_cast<CIEC_WORD*>(getDI(2));
@@ -67,7 +76,15 @@ class CProcessInterfaceBase : public CEventSourceFB{
       return *static_cast<CIEC_DWORD*>(getDI(2));
     };
 
+#ifdef FORTE_USE_64BIT_DATATYPES
+    CIEC_LWORD &IN_L(){
+      return *static_cast<CIEC_LWORD*>(getDO(2));
+    }
 
+    CIEC_LWORD &OUT_L() {
+      return *static_cast<CIEC_LWORD*>(getDI(2));
+    };
+#endif /* FORTE_USE_64BIT_DATATYPES */
 
     //TODO move pin checking and managing code into this class. Can be solved with recurring template pattern
 };

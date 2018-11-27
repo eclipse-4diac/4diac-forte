@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2011 - 2015 ACIN, fortiss GmbH
+ *                      2018 Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +8,7 @@
  *
  * Contributors:
  *   Alois Zoitl  - initial API and implementation and/or initial documentation
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *******************************************************************************/
 #ifndef FBTESTER_H_
 #define FBTESTER_H_
@@ -140,6 +142,8 @@ class CFBTester : public CFunctionBlock{
     unsigned int m_nNumSuccesfulTestCases;
     unsigned int m_nNumUnsuccesfulTestCases;
 
+    TForteByte *mFBConnData;
+    TForteByte *mFBVarsData;
 };
 
 #endif /* FBTESTER_H_ */

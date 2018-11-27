@@ -13,9 +13,10 @@
 #include "timerha.h"
 #include "forte_printer.h"
 #include "../core/utils/criticalregion.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdarg.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstdarg>
+#include <cinttypes>
 
 #ifndef NOLOG
 
@@ -51,8 +52,8 @@ void logMessage(E_MsgLevel pa_eLevel, const char *pa_acMessage, ...){
 void printLogMessage(E_MsgLevel pa_eLevel, const char *pa_acMessage){
   fprintf(stderr, "%s", cg_acLogLevel[pa_eLevel]);
 
-  if (CTimerHandler::sm_poFORTETimer != 0){
-    fprintf(stderr,": T#%u%ums: ", CTimerHandler::sm_poFORTETimer->getForteTime().m_nUpperValue, CTimerHandler::sm_poFORTETimer->getForteTime().m_nLowerValue);
+  if (CTimerHandler::smFORTETimer != 0){
+    fprintf(stderr, ": T#%" PRIuFAST64 ": ", CTimerHandler::smFORTETimer->getForteTime());
   }
   else{
     fprintf(stderr, "%s", ": T#notime: ");

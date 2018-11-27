@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2016 Johannes Messmer (admin@jomess.com)
+ * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
 #ifndef SRC_CORE_IO_MAPPER_HANDLE_H_
@@ -17,24 +18,24 @@
 
 #include "io_mapper.h"
 
-namespace IO {
+namespace forte {
+  namespace core {
+    namespace IO {
 
-namespace Device {
-class Controller;
-}
+class IODeviceController;
 
-class Handle {
-  friend class Mapper;
+class IOHandle {
+  friend class IOMapper;
 
 public:
-  Handle(Device::Controller *controller, Mapper::Direction direction, CIEC_ANY::EDataTypeID type);
-  virtual ~Handle();
+  IOHandle(IODeviceController *controller, IOMapper::Direction direction, CIEC_ANY::EDataTypeID type);
+  virtual ~IOHandle();
 
   bool hasObserver() {
     return !!observer;
   }
 
-  Observer* getObserver() {
+  IOObserver* getObserver() {
     return observer;
   }
 
@@ -42,7 +43,7 @@ public:
     return this->type == type;
   }
 
-  bool is(Mapper::Direction direction) {
+  bool is(IOMapper::Direction direction) {
     return this->direction == direction;
   }
 
@@ -52,16 +53,19 @@ public:
   void onChange();
 
 protected:
-  Device::Controller *controller;
+  IODeviceController *controller;
 
-  virtual void onObserver(Observer *observer);
+  virtual void onObserver(IOObserver *observer);
   virtual void dropObserver();
 
-  Observer *observer;
+  IOObserver *observer;
   CIEC_ANY::EDataTypeID type;
-  Mapper::Direction direction;
+  IOMapper::Direction direction;
 };
 
-} /* namespace IO */
+    } //namespace IO
+  } //namepsace core
+} //namespace forte
+
 
 #endif /* SRC_CORE_IO_MAPPER_HANDLE_H_ */

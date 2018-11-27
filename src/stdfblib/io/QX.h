@@ -11,9 +11,15 @@
 #ifndef _QX_H_
 #define _QX_H_
 
-#include <processinterface.h> 
+#include <processinterface.h>
 
-//TODO add compile time check that CProcessInterface inherits from CProcessInterfaceBase
+#ifdef IN
+#undef IN
+#endif
+
+#ifdef OUT
+#undef OUT
+#endif
 
 /*! /brief generic class for QX function blocks providing access to one boolean physical output
  *

@@ -14,10 +14,6 @@
 #include "LREAL2LREAL_gen.cpp"
 #endif
 
-#ifdef FORTE_USE_REAL_DATATYPE
-
-#ifdef FORTE_USE_64BIT_DATATYPES
-
 DEFINE_FIRMWARE_FB(LREAL2LREAL, g_nStringIdLREAL2LREAL)
 
 const CStringDictionary::TStringId LREAL2LREAL::scm_anDataInputNames[] = {g_nStringIdIN};
@@ -60,7 +56,3 @@ void LREAL2LREAL::executeEvent(int pa_nEIID){
 
 LREAL2LREAL::~LREAL2LREAL(){
 }
-
-#endif
-#endif
-

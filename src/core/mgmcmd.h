@@ -212,7 +212,6 @@ enum EMGMCommandType{
     cg_nMGM_CMD_Monitoring_Add_Watch = 0x1A,
     cg_nMGM_CMD_Monitoring_Remove_Watch = 0x2A,
     cg_nMGM_CMD_Monitoring_Read_Watches = 0x3A,
-    cg_nMGM_CMD_Monitoring_Get_Watches = 0x4A,
     cg_nMGM_CMD_Monitoring_Force = 0x5A,
     cg_nMGM_CMD_Monitoring_ClearForce = 0x6A,
     cg_nMGM_CMD_Monitoring_Trigger_Event = 0x7A,

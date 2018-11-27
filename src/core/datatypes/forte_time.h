@@ -105,6 +105,4 @@ class CIEC_TIME : public CIEC_ANY_MAGNITUDE{
     void setFromMicroSeconds(TValueType pa_nValue);
 };
 
-const CIEC_TIME TIME();
-
 #endif /*_MTIME_H_*/

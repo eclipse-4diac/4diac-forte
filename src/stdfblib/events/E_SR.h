@@ -38,7 +38,7 @@ private:
   FORTE_FB_DATA_ARRAY(1,0,1, 0);
 
   CIEC_BOOL& Q() {
-   	return *static_cast<CIEC_BOOL*>(getDO(0));
+     return *static_cast<CIEC_BOOL*>(getDO(0));
   }
 
 public:
@@ -47,5 +47,5 @@ public:
   virtual ~E_SR(){ };
 
 };
-#endif //close the ifdef sequence from the beginning of the file
 
+#endif //_E_SR_H_

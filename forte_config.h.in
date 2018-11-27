@@ -89,4 +89,6 @@ const TForteUInt32 cg_unNumberOfHandlers = ${FORTE_NUMBER_OF_HANDLERS};
 
 #endif
 
+${FORTE_CUSTOM_CONFIGURATIONS}
+
 #endif

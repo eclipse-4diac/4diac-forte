@@ -39,5 +39,3 @@ const SFBInterfaceSpec E_MERGE::scm_stFBInterfaceSpec = {
   0
 };
 
-
-

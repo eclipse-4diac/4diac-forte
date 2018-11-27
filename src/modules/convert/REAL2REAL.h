@@ -14,8 +14,6 @@
 
 #include <funcbloc.h>
 
-#ifdef FORTE_USE_REAL_DATATYPE
-
 class REAL2REAL: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(REAL2REAL)
 
@@ -39,11 +37,11 @@ private:
    virtual void executeEvent(int pa_nEIID);
 
    CIEC_REAL& IN() {
-   	return *static_cast<CIEC_REAL*>(getDI(0));
+     return *static_cast<CIEC_REAL*>(getDI(0));
    }
 
    CIEC_REAL& OUT() {
-   	return *static_cast<CIEC_REAL*>(getDO(0));
+     return *static_cast<CIEC_REAL*>(getDO(0));
    }
 
 
@@ -53,7 +51,5 @@ public:
 
 };
 
-#endif
-
-#endif //close the ifdef sequence from the beginning of the file
+#endif //_REAL2REAL_H_
 

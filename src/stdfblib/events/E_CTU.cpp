@@ -30,6 +30,23 @@ const TDataIOID E_CTU::scm_anEOWith[] = {0, 1, 255, 0, 1, 255};
 const TForteInt16 E_CTU::scm_anEOWithIndexes[] = {0, 3};
 const CStringDictionary::TStringId E_CTU::scm_anEventOutputNames[] = {g_nStringIdCUO, g_nStringIdRO};
 
+const SFBInterfaceSpec E_CTU::scm_stFBInterfaceSpec = {
+  2,
+  scm_anEventInputNames,
+  scm_anEIWith,
+  scm_anEIWithIndexes,
+  2,
+  scm_anEventOutputNames,
+  scm_anEOWith,
+  scm_anEOWithIndexes,
+  1,
+  scm_anDataInputNames, scm_aunDIDataTypeIds,
+  2,
+  scm_anDataOutputNames, scm_aunDODataTypeIds,
+  0,
+  0
+};
+
 void E_CTU::executeEvent(int pa_nEIID){
   switch(pa_nEIID){
     case scm_nEventCUID:
@@ -48,20 +65,3 @@ void E_CTU::executeEvent(int pa_nEIID){
       break;
   }
 }
-
-const SFBInterfaceSpec E_CTU::scm_stFBInterfaceSpec = {
-  2,
-  scm_anEventInputNames,
-  scm_anEIWith,
-  scm_anEIWithIndexes,
-  2,
-  scm_anEventOutputNames,
-  scm_anEOWith,
-  scm_anEOWithIndexes,
-  1,
-  scm_anDataInputNames, scm_aunDIDataTypeIds,
-  2,
-  scm_anDataOutputNames, scm_aunDODataTypeIds,
-  0,
-  0
-};

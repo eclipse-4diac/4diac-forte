@@ -30,7 +30,7 @@ COpcConnection::~COpcConnection(){
 
 void COpcConnection::addGroup(const char* pa_acGroupName, unsigned long pa_nReqUpdateRate, float pa_nDeadBand, CComLayer* pa_pComCallback){
   m_oSync.lock();
-  m_lOpcGroupMapList.push_back(new SOpcGroupMap(pa_acGroupName, m_eventHandler->addComCallback(pa_pComCallback)));
+  m_lOpcGroupMapList.pushBack(new SOpcGroupMap(pa_acGroupName, m_eventHandler->addComCallback(pa_pComCallback)));
   m_oSync.unlock();
 
   m_pOpcConnectionImpl->addGroup(pa_acGroupName, pa_nReqUpdateRate, pa_nDeadBand);
@@ -46,7 +46,7 @@ void COpcConnection::removeGroup(const char* pa_acGroupName){
 
   if(it_group != itEnd_group){
     if(strcmp(it_group->m_acGroupName, pa_acGroupName) == 0){
-      m_lOpcGroupMapList.pop_front();
+      m_lOpcGroupMapList.popFront();
       m_nGroupCount--;
       m_oSync.unlock();
       return;
@@ -107,7 +107,7 @@ int COpcConnection::send_addItem(COpcProcessVar* pa_pNewItem){
           }
         }
 
-        it_group->m_lReadItemsList.push_back(new SOpcItemData(pa_pNewItem->getItemName()));
+        it_group->m_lReadItemsList.pushBack(new SOpcItemData(pa_pNewItem->getItemName()));
         break;
 
       }
@@ -121,7 +121,7 @@ int COpcConnection::send_addItem(COpcProcessVar* pa_pNewItem){
           }
         }
 
-        it_group->m_lWriteItemsList.push_back(new SOpcItemData(pa_pNewItem->getItemName()));
+        it_group->m_lWriteItemsList.pushBack(new SOpcItemData(pa_pNewItem->getItemName()));
         break;
 
       }
@@ -186,7 +186,7 @@ void COpcConnection::response_dataReceived(const char *pa_acGroupName, TItemData
             it_item->m_oItemData = it_newItem->m_oItemData;
 
             if(it_newItem == pa_lItemDataList.begin())
-              pa_lItemDataList.pop_front();
+              pa_lItemDataList.popFront();
             else
               pa_lItemDataList.eraseAfter(itErase);
 

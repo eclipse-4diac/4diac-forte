@@ -39,36 +39,36 @@ const SFBInterfaceSpec FORTE_RT_E_CYCLE::scm_stFBInterfaceSpec = {
   0, 0
 };
 
-FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-            CEventSourceFB( pa_poSrcRes, &scm_stFBInterfaceSpec,  pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData){
-  setEventChainExecutor(&m_oECEO);
-  m_bActive = false;
-  //Timeout value is correctly initialized by the constructor m_stTimeListEntry.m_nTimeOut = 0;
-  m_stTimeListEntry.m_nInterval = 0;
-  m_stTimeListEntry.m_pstNext = 0;
-  m_stTimeListEntry.m_poTimedFB = this;
-  m_stTimeListEntry.m_eType = e_Periodic;
-  m_oECEO.changeExecutionState(cg_nMGM_CMD_Start);
+FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+            CEventSourceFB( paSrcRes, &scm_stFBInterfaceSpec,  paInstanceNameId, m_anFBConnData, m_anFBVarsData){
+  setEventChainExecutor(&mECEO);
+  mActive = false;
+  mTimeListEntry.mTimeOut = 0;
+  mTimeListEntry.mInterval = 0;
+  mTimeListEntry.mNext = 0;
+  mTimeListEntry.mTimedFB = this;
+  mTimeListEntry.mType = e_Periodic;
+  mECEO.changeExecutionState(cg_nMGM_CMD_Start);
 }
 
 
-void FORTE_RT_E_CYCLE::executeEvent(int pa_nEIID){
-  switch(pa_nEIID){
+void FORTE_RT_E_CYCLE::executeEvent(int paEIID){
+  switch(paEIID){
     case cg_nExternalEventID:
       sendOutputEvent(scm_nEventEOID);
       break;
     case scm_nEventSTOPID:
-      if(m_bActive){
-        m_oECEO.setDeadline(static_cast<CIEC_TIME::TValueType>(0));
+      if(mActive){
+        mECEO.setDeadline(static_cast<CIEC_TIME::TValueType>(0));
         getTimer().unregisterTimedFB(this);
-        m_bActive = false;
+        mActive = false;
       }
       break;
     case scm_nEventSTARTID:
-      if(!m_bActive){
-        m_oECEO.setDeadline(Deadline());
-        getTimer().registerTimedFB( &m_stTimeListEntry, DT());
-        m_bActive = true;
+      if(!mActive){
+        mECEO.setDeadline(Deadline());
+        getTimer().registerTimedFB( &mTimeListEntry, DT());
+        mActive = true;
       }
       break;
     default:

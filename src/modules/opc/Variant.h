@@ -15,7 +15,7 @@
 
 /*! \brief structure for simplified handling of the VARIANT
  *
- *	The structure simplifies the handling of the VARIANT with numeric types.
+ *  The structure simplifies the handling of the VARIANT with numeric types.
  */
 
 #include <OleAuto.h>
@@ -326,10 +326,10 @@ struct Variant : public VARIANT{
       return ((ullVal ^ other.ullVal) & mask) == 0;
     }
 
-    /*!	\brief Compiler error, when used
+    /*!  \brief Compiler error, when used
      *
-     *	This is only here to throw a compiler error when used. So the unsupported types are caught by the compiler
-     *	and not by the runtime system
+     *  This is only here to throw a compiler error when used. So the unsupported types are caught by the compiler
+     *  and not by the runtime system
      */
     template<typename T> static void constraint(){
       char a[2];

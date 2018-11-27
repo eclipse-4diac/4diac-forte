@@ -8,49 +8,55 @@
  * Contributors:
  *   Alois Zoitl  - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "E_PERMIT_tester.h"
-
+#include "../../core/fbtests/fbtester.h"
+#include <forte_bool.h>
+#include <E_PERMIT.h>
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "E_PERMIT_tester_gen.cpp"
 #endif
 
-DEFINE_FB_TESTER(E_PERMIT_tester, g_nStringIdE_PERMIT)
 
-E_PERMIT_tester::E_PERMIT_tester(CResource *m_poTestResource) :
-    CFBTester(m_poTestResource){
+class E_PERMIT_tester : public CFBTester{
+    DECLARE_FB_TESTER(E_PERMIT_tester);
+  public:
 
-  SETUP_INPUTDATA(&m_oIn_PERMIT);
-}
+    E_PERMIT_tester(CResource* m_poTestResource) :
+        CFBTester(m_poTestResource){
+      SETUP_INPUTDATA(&m_oIn_PERMIT);
+    }
+    virtual ~E_PERMIT_tester() {
 
-void E_PERMIT_tester::executeAllTests(){
-  evaluateTestResult(testCase_Permit(), "Permit");
-  evaluateTestResult(testCase_DontPermit(), "DontPermit");
-}
+    }
+  private:
+    virtual void executeAllTests(){
+      evaluateTestResult(testCase_Permit(), "Permit");
+      evaluateTestResult(testCase_DontPermit(), "DontPermit");
+    }
+
+    /***********************************************************************************/
+    bool testCase_Permit(){
+      /* prepare inputparameters */
+      m_oIn_PERMIT = true;
+      /* trigger the inputevent */
+      triggerEvent(0);
+      return checkForSingleOutputEventOccurence(0);
+    }
+    bool testCase_DontPermit(){
+      bool bTestResult = true;
+      /* prepare inputparameters */
+      m_oIn_PERMIT = false;
+      /* trigger the inputevent */
+      triggerEvent(0);
+      /* verify if there is no output event (testspecification)*/
+      if(!eventChainEmpty())
+        bTestResult = false;
+
+      return bTestResult;
+    }
+
+    CIEC_BOOL m_oIn_PERMIT; //DATA INPUT
+};
 
 /***********************************************************************************/
 
-bool E_PERMIT_tester::testCase_Permit(){
-  /* prepare inputparameters */
-  m_oIn_PERMIT = true;
-
-  /* trigger the inputevent */
-  triggerEvent(0);
-
-  return checkForSingleOutputEventOccurence(0);
-}
-
-bool E_PERMIT_tester::testCase_DontPermit(){
-  bool bTestResult = true;
-
-  /* prepare inputparameters */
-  m_oIn_PERMIT = false;
-
-  /* trigger the inputevent */
-  triggerEvent(0);
-
-  /* verify if there is no output event (testspecification)*/
-  if(!eventChainEmpty())
-    bTestResult = false;
-
-  return bTestResult;
-}
+DEFINE_FB_TESTER(E_PERMIT_tester, g_nStringIdE_PERMIT)

@@ -54,5 +54,5 @@ public:
   virtual ~E_REND() {};
 
 };
-#endif //close the ifdef sequence from the beginning of the file
 
+#endif //_E_REND_H_

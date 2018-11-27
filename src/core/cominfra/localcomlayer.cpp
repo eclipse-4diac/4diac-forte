@@ -99,7 +99,7 @@ CLocalComLayer::SLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::regist
   if(0 == poGroup){
     poGroup = createLocalCommGroup(pa_nID);
   }
-  poGroup->m_lPublList.push_back(pa_poLayer);
+  poGroup->m_lPublList.pushBack(pa_poLayer);
 
   return poGroup;
 }
@@ -120,7 +120,7 @@ CLocalComLayer::SLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::regist
   if(0 == poGroup){
     poGroup = createLocalCommGroup(pa_nID);
   }
-  poGroup->m_lSublList.push_back(pa_poLayer);
+  poGroup->m_lSublList.pushBack(pa_poLayer);
 
   return poGroup;
 }
@@ -152,7 +152,7 @@ CLocalComLayer::SLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::findLo
 }
 
 CLocalComLayer::SLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::createLocalCommGroup(CStringDictionary::TStringId pa_nID){
-  m_lstLocalCommGroups.push_front(SLocalCommGroup(pa_nID));
+  m_lstLocalCommGroups.pushFront(SLocalCommGroup(pa_nID));
   CSinglyLinkedList<SLocalCommGroup>::Iterator it = m_lstLocalCommGroups.begin();
   return &(*it);
 }
@@ -164,7 +164,7 @@ void CLocalComLayer::CLocalCommGroupsManager::removeListEntry(CSinglyLinkedList<
   while(itRunner != pa_rlstList.end()){
     if((*itRunner) == pa_poLayer){
       if(itRevNode == pa_rlstList.end()){
-        pa_rlstList.pop_front();
+        pa_rlstList.popFront();
       }
       else{
         pa_rlstList.eraseAfter(itRevNode);
@@ -183,7 +183,7 @@ void CLocalComLayer::CLocalCommGroupsManager::removeCommGroup(SLocalCommGroup *p
   while(itRunner != m_lstLocalCommGroups.end()){
     if((*itRunner).m_nGroupName == pa_poGroup->m_nGroupName){
       if(itRevNode == m_lstLocalCommGroups.end()){
-        m_lstLocalCommGroups.pop_front();
+        m_lstLocalCommGroups.popFront();
       }
       else{
         m_lstLocalCommGroups.eraseAfter(itRevNode);

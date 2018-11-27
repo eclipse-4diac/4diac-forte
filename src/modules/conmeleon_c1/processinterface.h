@@ -37,16 +37,6 @@ private:
   static CONMELEON::CGpioPin smDigitalInputs[4];
   static CONMELEON::CGpioPin smDigitalOutputs[4];
 
-  /*static CONMELEON::CGpioPin smDI1;
-  static CONMELEON::CGpioPin smDI2;
-  static CONMELEON::CGpioPin smDI3;
-  static CONMELEON::CGpioPin smDI4;
-
-  static CONMELEON::CGpioPin smDO1;
-  static CONMELEON::CGpioPin smDO2;
-  static CONMELEON::CGpioPin smDO3;
-  static CONMELEON::CGpioPin smDO4;*/
-
   static CONMELEON::CAds1018 smADC;
 
   static const char * const scmUnknownChannel;
@@ -62,10 +52,10 @@ private:
   };
 
   enum ECallingFBType{
-  	  enUnsupported,
-  	  enIX,
-  	  enIW,
-  	  enQX
+      enUnsupported,
+      enIX,
+      enIW,
+      enQX
     };
   // we need this to check, which FB (IX, QX, or IW) is using this instance of CProcessInterface
   ECallingFBType mCallingFB;

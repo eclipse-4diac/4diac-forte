@@ -1,28 +1,26 @@
 /*******************************************************************************
- * Copyright (c) 2016 Johannes Messmer (admin@jomess.com)
+ * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
 #include "pin.h"
 #include <devlog.h>
 
-namespace EmBrick {
-namespace Handlers {
-
-const char * const Pin::scmFailedToOpenFile =
+const char * const EmbrickPinHandler::scmFailedToOpenFile =
     "Failed to open sysfs file.";
-const char * const Pin::scmFailedToWriteFile =
+const char * const EmbrickPinHandler::scmFailedToWriteFile =
     "Failed to write sysfs file.";
-const char * const Pin::scmNotInitialised =
+const char * const EmbrickPinHandler::scmNotInitialised =
     "Failed to write to not initialised sysfs stream.";
 
-Pin::Pin(unsigned int pin) : pinStr(static_cast<std::ostringstream &>((std::ostringstream() << std::dec  // Convert pin int to string
+EmbrickPinHandler::EmbrickPinHandler(unsigned int pin) : pinStr(static_cast<std::ostringstream &>((std::ostringstream() << std::dec  // Convert pin int to string
     << pin)).str()),
     error(0) {
   // Disable buffer to avoid latency
@@ -32,11 +30,11 @@ Pin::Pin(unsigned int pin) : pinStr(static_cast<std::ostringstream &>((std::ostr
   init();
 }
 
-Pin::~Pin() {
+EmbrickPinHandler::~EmbrickPinHandler() {
   deInit();
 }
 
-void Pin::init() {
+void EmbrickPinHandler::init() {
   std::string fileName;
   stream.clear();
 
@@ -72,7 +70,7 @@ void Pin::init() {
   DEVLOG_INFO("emBrick[PinHandler]: GPIO %s ready.\n", pinStr.data());
 }
 
-void Pin::deInit() {
+void EmbrickPinHandler::deInit() {
   std::string fileName;
 
   // Close pin stream
@@ -95,7 +93,7 @@ void Pin::deInit() {
   DEVLOG_INFO("emBrick[PinHandler]: GPIO %s stopped.\n", pinStr.data());
 }
 
-bool Pin::set(bool state) {
+bool EmbrickPinHandler::set(bool state) {
   if (!stream.is_open()) {
     fail(scmNotInitialised);
     return false;
@@ -114,10 +112,9 @@ bool Pin::set(bool state) {
   return true;
 }
 
-void Pin::fail(const char* reason) {
+void EmbrickPinHandler::fail(const char* reason) {
   error = reason;
   DEVLOG_ERROR("emBrick[PinHandler]: %s\n", reason);
 }
 
-} /* namespace Handlers */
-} /* namespace EmBrick */
+

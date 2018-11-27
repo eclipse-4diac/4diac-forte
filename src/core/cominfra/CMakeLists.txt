@@ -8,8 +8,8 @@
   # Contributors:
   #    Alois Zoitl, Michael Hofmann
   #         - initial implementation and rework communication infrastructure
-  #	   Martin Melik-Merkumians, Monika Wenger
-  #			- add raw communication layer for ONE STRING input and ONE STRING output
+  #     Martin Melik-Merkumians, Monika Wenger
+  #      - add raw communication layer for ONE STRING input and ONE STRING output
   ################################################################################
   
 #############################################################################

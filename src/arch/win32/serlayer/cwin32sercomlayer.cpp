@@ -163,7 +163,7 @@ forte::com_infra::EComResponse CWin32SerComLayer::openSerialConnection(const SSe
   switch (m_poFb->getComServiceType()){
     case forte::com_infra::e_Server:
     case forte::com_infra::e_Client:
-      GET_HANDLER_FROM_LAYER(*m_poFb, CWin32SerComHandler)->registerSerComLayer(this);
+      getExtEvHandler<CWin32SerComHandler>().registerSerComLayer(this);
       m_eConnectionState = forte::com_infra::e_Connected;
       break;
       case forte::com_infra::e_Publisher:
@@ -178,6 +178,6 @@ forte::com_infra::EComResponse CWin32SerComLayer::openSerialConnection(const SSe
 }
 
 void CWin32SerComLayer::closeConnection()  {
-  GET_HANDLER_FROM_LAYER(*m_poFb, CWin32SerComHandler)->unregisterSerComLayer(this);
+  getExtEvHandler<CWin32SerComHandler>().unregisterSerComLayer(this);
   CloseHandle(static_cast<HANDLE>(mSerialHandle));
 }

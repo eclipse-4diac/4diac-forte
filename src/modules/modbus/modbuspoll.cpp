@@ -29,7 +29,7 @@ CModbusPoll::~CModbusPoll(){
 }
 
 void CModbusPoll::addPollAddresses(unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses){
-  m_lPolls.push_back(new SModbusPollData(pa_nStartAddress, pa_nNrAddresses));
+  m_lPolls.pushBack(new SModbusPollData(pa_nStartAddress, pa_nNrAddresses));
 }
 
 int CModbusPoll::executeEvent(modbus_t *pa_pModbusConn, void *pa_pRetVal){

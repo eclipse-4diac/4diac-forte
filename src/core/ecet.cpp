@@ -18,7 +18,8 @@
 #include "../arch/devlog.h"
 
 CEventChainExecutionThread::CEventChainExecutionThread() :
-    CThread(), mSuspendSemaphore(0), mProcessingEvents(false) {
+    CThread(), mSuspendSemaphore(0), mProcessingEvents(false)
+{
   clear();
 }
 
@@ -27,27 +28,31 @@ CEventChainExecutionThread::~CEventChainExecutionThread(){
 
 void CEventChainExecutionThread::run(void){
   while(isAlive()){ //thread is allowed to execute
-    if(externalEventOccured()){
-      transferExternalEvents();
+    mainRun();
+  }
+}
+
+void CEventChainExecutionThread::mainRun(){
+  if(externalEventOccured()){
+    transferExternalEvents();
+  }
+  if(mEventListEnd == mEventListStart){
+    mProcessingEvents = false;
+    selfSuspend();
+    mProcessingEvents = true; //set this flag here to true as well in case the suspend just went through and processing was not finished
+  }
+  else{
+    if(0 != *mEventListStart){
+      (*mEventListStart)->mFB->receiveInputEvent((*mEventListStart)->mPortId, *this);
     }
-    if(mEventListEnd == mEventListStart){
-      mProcessingEvents = false;
-      selfSuspend();
-      mProcessingEvents = true;  //set this flag here to true as well in case the suspend just went through and processing was not finished
+    *mEventListStart = 0;
+
+    if(mEventListStart == &mEventList[0]){
+      //wrap the ringbuffer
+      mEventListStart = &mEventList[cg_nEventChainEventListSize - 1];
     }
     else{
-      if(0 != *mEventListStart){
-        (*mEventListStart)->mFB->receiveInputEvent((*mEventListStart)->mPortId, *this);
-      }
-      *mEventListStart = 0;
-
-      if(mEventListStart == &mEventList[0]){
-        //wrap the ringbuffer
-        mEventListStart = &mEventList[cg_nEventChainEventListSize - 1];
-      }
-      else{
-        mEventListStart--;
-      }
+      mEventListStart--;
     }
   }
 }
@@ -103,14 +108,13 @@ void CEventChainExecutionThread::startEventChain(SEventEntry *paEventToAdd){
         //the list is not full
         mExternalEventListEnd = pstNextEventListElem;
       }
+      mProcessingEvents = true;
+      resumeSelfSuspend();
     }
     else{
       DEVLOG_ERROR("External event queue is full, external event dropped!\n");
     }
   } // End critical region
-
-  mProcessingEvents = true;
-  resumeSelfSuspend();
 }
 
 void CEventChainExecutionThread::addEventEntry(SEventEntry *paEventToAdd){
@@ -146,6 +150,7 @@ void CEventChainExecutionThread::changeExecutionState(EMGMCommandType paCommand)
       break;
     case cg_nMGM_CMD_Kill:
       clear();
+      // fall through
     case cg_nMGM_CMD_Stop:
       setAlive(false); //end thread in both cases
       resumeSelfSuspend();

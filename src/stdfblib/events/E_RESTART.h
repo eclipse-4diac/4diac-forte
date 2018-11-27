@@ -45,9 +45,9 @@ public:
         mEventToSend(cg_nInvalidEventID) {
     setEventChainExecutor(pa_poSrcRes->getResourceEventExecution());
   }
-	virtual ~E_RESTART() {};
+  virtual ~E_RESTART() {};
 
-	virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
+  virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
 };
 
 #endif /*E_RESTART_H_*/

@@ -68,7 +68,7 @@ private:
 
 public:
 
-	
+  
   CRTEventSingle(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
         const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) : 
    CFunctionBlock( pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData)

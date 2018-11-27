@@ -14,12 +14,18 @@
 
 #include <processinterface.h>
 
-//TODO add compile time check that CProcessInterface inherits from CWordAccessBase
+#ifdef IN
+#undef IN
+#endif
+
+#ifdef OUT
+#undef OUT
+#endif
 
 /*! /brief generic class for QW function blocks providing access to one word physical output
  *
- * In order that this FB can be used implementations need to provide a class CWordAccess
- * this class needs to inherit from CWordAccessBase and provide the following functions
+ * In order that this FB can be used implementations need to provide a class CProcessInterface
+ * this class needs to inherit from CProcessInterfaceBase and provide the following functions
  *
  *   - bool initialise(bool paInput)
  *     Initialize the physical output identified with the value of the PARAMS FB input

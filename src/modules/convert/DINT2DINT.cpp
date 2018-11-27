@@ -57,6 +57,3 @@ void DINT2DINT::executeEvent(int pa_nEIID){
 
 DINT2DINT::~DINT2DINT(){
 }
-
-
-

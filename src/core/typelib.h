@@ -34,13 +34,8 @@ class CAdapter;
 //!\ingroup CORE Type for a function pointer which allows to create a data type instance
   typedef CIEC_ANY *(*TDataTypeCreateFunc)(TForteByte *pa_acDataBuf);
 
- #ifdef FORTE_STATIC_LIB
-	#define FORTE_DUMMY_INIT_DEF(fbclass) int fbclass::dummyInit() {return 0; }
-	#define FORTE_DUMMY_INIT_DEC  static int dummyInit(); 
-#else
-	#define FORTE_DUMMY_INIT_DEF(fbclass)
-	#define FORTE_DUMMY_INIT_DEC
-#endif
+  #define FORTE_DUMMY_INIT_DEF(fbclass) int fbclass::dummyInit() {return 0; }
+  #define FORTE_DUMMY_INIT_DEC  static int dummyInit(); 
 
   
 //!\ingroup CORE This define is used to create the definition necessary for generic FirmwareFunction blocks in order to get them automatically added to the FirmwareType list.
@@ -57,9 +52,9 @@ class CAdapter;
 
 //!\ingroup CORE This define is used to create the definition necessary for FirmwareFunction blocks in order to get them automatically added to the FirmwareType list.
 #define DECLARE_FIRMWARE_FB(fbclass) \
-		DECLARE_GENERIC_FIRMWARE_FB(fbclass) \
-	public: \
-	  virtual CStringDictionary::TStringId getFBTypeId(void) const;\
+    DECLARE_GENERIC_FIRMWARE_FB(fbclass) \
+  public: \
+    virtual CStringDictionary::TStringId getFBTypeId(void) const;\
   private:
 
 
@@ -72,8 +67,8 @@ class CAdapter;
  * prebuild script that generates the constant string list.
  */
 #define DEFINE_FIRMWARE_FB(fbclass, fbTypeNameId) \
-		DEFINE_GENERIC_FIRMWARE_FB(fbclass, fbTypeNameId) \
-		CStringDictionary::TStringId fbclass::getFBTypeId(void) const {return (fbTypeNameId); }
+    DEFINE_GENERIC_FIRMWARE_FB(fbclass, fbTypeNameId) \
+    CStringDictionary::TStringId fbclass::getFBTypeId(void) const {return (fbTypeNameId); }
 
 //!\ingroup CORE This define is used to create the definition necessary for Adapter types.
 #define DECLARE_ADAPTER_TYPE(adapterclass) \
@@ -100,10 +95,10 @@ class CAdapter;
     }; \
     const static CTypeLib::CDataTypeEntry csm_oFirmwareDataTypeEntry_##datatypename; \
     virtual CIEC_ANY* clone(TForteByte *pa_acDataBuf) const { \
-    	FORTE_STATIC_ASSERT((sizeof(CIEC_ANY) == sizeof(CIEC_##datatypename)), DataTypeNotTheSameSizeAsANY); \
-    	return (0 != pa_acDataBuf)  ? new(pa_acDataBuf)CIEC_##datatypename(*this) : new CIEC_##datatypename(*this); } \
-	FORTE_DUMMY_INIT_DEC \
-	private:
+      FORTE_STATIC_ASSERT((sizeof(CIEC_ANY) == sizeof(CIEC_##datatypename)), DataTypeNotTheSameSizeAsANY); \
+      return (0 != pa_acDataBuf)  ? new(pa_acDataBuf)CIEC_##datatypename(*this) : new CIEC_##datatypename(*this); } \
+  FORTE_DUMMY_INIT_DEC \
+  private:
 
 //!\ingroup CORE This define is used to create the implementation for the above definition.
 #define DEFINE_FIRMWARE_DATATYPE(datatypename, datatypenameid)\
@@ -180,7 +175,7 @@ public:
  *    - e_UNSUPPORTED_TYPE   The requested FB type is not known to the typelib
  *    - e_INVALID_OPERATION The requested FB can not be created (e.g. out of memory)
  */
-	static CFunctionBlock *createFB(CStringDictionary::TStringId pa_nInstanceNameId, CStringDictionary::TStringId pa_nFBTypeId, CResource *pa_poRes);
+  static CFunctionBlock *createFB(CStringDictionary::TStringId pa_nInstanceNameId, CStringDictionary::TStringId pa_nFBTypeId, CResource *pa_poRes);
 
 
 /*\brief Delete the given FB

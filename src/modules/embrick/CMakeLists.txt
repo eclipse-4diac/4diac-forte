@@ -12,6 +12,10 @@
 
 forte_add_io(EMBRICK "Support for the modular emBRICK system")
 
+if(FORTE_IO_EMBRICK)
+
+if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
+
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 #############################################################################
@@ -26,3 +30,9 @@ forte_add_sourcefile_hcpp(slave/handles/bit slave/handles/analog slave/handles/a
 forte_add_sourcefile_hcpp(types/BusAdapter)
 forte_add_sourcefile_hcpp(types/Master)
 forte_add_sourcefile_hcpp(types/Slave types/Slave2181 types/Slave2301)
+
+else("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
+  MESSAGE(FATAL_ERROR "The emBRICK IO system is only supported for FORTE on Linux platforms!")
+endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
+
+endif(FORTE_IO_EMBRICK)

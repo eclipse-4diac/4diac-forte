@@ -49,11 +49,11 @@ void FORTE_FB_RANDOM::setInitialValues(){
 
 void FORTE_FB_RANDOM::alg_INIT(void){
 // WARNING - Don't forget to add #include <time.h>
-	if (SEED() == 0) {
-	  srand((unsigned int) time(NULL) );
-	} else {
-	  srand( SEED() );
-	}
+  if (SEED() == 0) {
+    srand((unsigned int) time(NULL) );
+  } else {
+    srand( SEED() );
+  }
 }
 
 void FORTE_FB_RANDOM::alg_REQ(void){

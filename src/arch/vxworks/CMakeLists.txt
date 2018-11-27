@@ -17,8 +17,12 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
   message(STATUS "VXWORKS: Set an environment variable WIND_BASE to any value")
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
   
-  forte_add_sourcefile_hcpp(forte_thread ../posix/pctimeha forte_sync forte_sem)
-  forte_add_sourcefile_cpp(main.cpp ../genforte_printer.cpp)
+  forte_set_timer(../posix/pctimeha)
+
+  forte_add_to_executable_cpp(main)
+
+  forte_add_sourcefile_hcpp(forte_thread forte_sync forte_sem)
+  forte_add_sourcefile_cpp(../genforte_printer.cpp)
   forte_add_sourcefile_h(../forte_architecture_time.h)
   
   forte_add_sourcefile_hcpp(../utils/timespec_utils)
@@ -86,7 +90,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
   set(FORTE_POSIX_GENERATE_MAP_FILE FALSE CACHE BOOL "Enable the generation of map files")
   mark_as_advanced(FORTE_POSIX_GENERATE_MAP_FILE)
   IF(FORTE_POSIX_GENERATE_MAP_FILE)
-  	forte_add_link_flags("-Wl,-M -Wl,-Map -Wl,forte.map -Wl,-cref")
-  ENDIF(FORTE_POSIX_GENERATE_MAP_FILE)	
+    forte_add_link_flags("-Wl,-M -Wl,-Map -Wl,forte.map -Wl,-cref")
+  ENDIF(FORTE_POSIX_GENERATE_MAP_FILE)  
 
 endif()

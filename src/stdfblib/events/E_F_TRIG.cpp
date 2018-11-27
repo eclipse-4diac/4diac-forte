@@ -53,6 +53,3 @@ void E_F_TRIG::executeEvent(int pa_nEIID){
     m_bOldVal = QI();
   }
 }
-
-
-

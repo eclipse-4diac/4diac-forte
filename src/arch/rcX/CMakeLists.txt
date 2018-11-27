@@ -17,7 +17,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "rcX")
 
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-  set(FORTE_BUILD_TYPE "STATIC_LIBRARY" CACHE STRING "Build FORTE as an executable or as a library" FORCE)
+  set(FORTE_BUILD_STATIC_LIBRARY ON CACHE BOOL "Build FORTE as static library" FORCE)
+  set(FORTE_BUILD_EXECUTABLE OFF CACHE BOOL "Build FORTE as an executable" FORCE)
   set(FORTE_LOGLEVEL "NOLOG" CACHE STRING "Loglevel to use" FORCE)
 
   set(FORTE_RCX_NETX_CPU NETX51 CACHE STRING "CPU where the netx is deployed")
@@ -36,7 +37,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "rcX")
   SET(FORTE_RCX_POOL_MAX "32" CACHE STRING "Max number of elements for the pool for originated messages in the forte task")
   SET(FORTE_RCX_INCLUDES "" CACHE STRING "Folders to include from the rcX OS. It must have inside of it the following folders: API, Configuration, TLR, TCPIP, CPUs/netX{10,51,100,..}")
   
-  forte_add_sourcefile_hcpp(forte_thread rcXTimerHandler rcXUtilities forte_sync forte_sem forte_instance)
+  forte_set_timer(rcXTimerHandler)
+  forte_add_sourcefile_hcpp(forte_thread rcXUtilities forte_sync forte_sem forte_instance)
   forte_add_sourcefile_h(fortealloc.h ../forte_architecture_time.h)
   forte_add_sourcefile_cpp(forte_architecture.cpp ../genforte_printer.cpp)
  
@@ -58,8 +60,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "rcX")
   set(FORTE_RCX_GENERATE_MAP_FILE FALSE CACHE BOOL "Enable the generation of map files")
   mark_as_advanced(FORTE_RCX_GENERATE_MAP_FILE)
   IF(FORTE_RCX_GENERATE_MAP_FILE)
-  	forte_add_link_flags("-Wl,-M -Wl,-Map -Wl,forte.map -Wl,-cref")
-  ENDIF(FORTE_RCX_GENERATE_MAP_FILE)	
+    forte_add_link_flags("-Wl,-M -Wl,-Map -Wl,forte.map -Wl,-cref")
+  ENDIF(FORTE_RCX_GENERATE_MAP_FILE)  
   
   forte_add_include_system_directories(${FORTE_RCX_INCLUDES}/API)
   forte_add_include_system_directories(${FORTE_RCX_INCLUDES}/Configuration)
@@ -67,8 +69,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "rcX")
   forte_add_include_system_directories(${FORTE_RCX_INCLUDES}/CPUs/${FORTE_RCX_NETX_CPU_FOLDER})
   forte_add_include_system_directories(${FORTE_RCX_INCLUDES}/TCPIP)
   
-  CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/forte_config_rcX.h.in ${CMAKE_BINARY_DIR}/forte_config_rcX.new.h)
-  forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/forte_config_rcX.new.h ${CMAKE_BINARY_DIR}/forte_config_rcX.h)
-  file(REMOVE ${CMAKE_BINARY_DIR}/forte_config_rcX.new.h)
+  forte_add_custom_configuration("const unsigned int cg_forteQueueMax = ${FORTE_RCX_QUEUE_MAX};")
+  forte_add_custom_configuration("const unsigned int cg_forteWaitingQueueMax = ${FORTE_RCX_WAIT_QUEUE_MAX}; ")
+  forte_add_custom_configuration("const unsigned int cg_fortePoolMax = ${FORTE_RCX_POOL_MAX}; ")
   
 endif()

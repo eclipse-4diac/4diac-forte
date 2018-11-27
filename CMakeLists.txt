@@ -33,9 +33,14 @@ INCLUDE(${FORTE_BUILDSUPPORT_DIRECTORY}/forte.cmake)
 #######################################################################################
 # Determine how to build FORTE
 #######################################################################################
-set(FORTE_BUILD_TYPE EXECUTABLE CACHE STRING "Build FORTE as an executable or as a library")
-set_property(CACHE FORTE_BUILD_TYPE PROPERTY STRINGS EXECUTABLE STATIC_LIBRARY SHARED_LIBRARY)
-mark_as_advanced(FORTE_BUILD_TYPE)
+set(FORTE_BUILD_EXECUTABLE ON CACHE BOOL "Build FORTE as an executable")
+mark_as_advanced(FORTE_BUILD_EXECUTABLE)
+
+set(FORTE_BUILD_STATIC_LIBRARY OFF CACHE BOOL "Build FORTE as static library")
+mark_as_advanced(FORTE_BUILD_EXECUTABLE)
+
+set(FORTE_BUILD_SHARED_LIBRARY OFF CACHE BOOL "Build FORTE as shared library")
+mark_as_advanced(FORTE_BUILD_EXECUTABLE)
 
 #######################################################################################
 # Determine the loglevel
@@ -46,7 +51,7 @@ if(BUILD_TYPE_LOWERCASE STREQUAL "debug")
         message("Log Level is set to NOLOG and CMAKE_BUILD_TYPE is set to Debug. Are sure you don't want to log anything?")
     endif(FORTE_LOGLEVEL MATCHES "NOLOG")
     if(NOT DEFINED FORTE_LOGLEVEL)
-        message("No Log Level was specified. Setting Log Level to Debug default LOGINFO.")
+    	message("No Log Level was specified. Setting Log Level to Debug default LOGINFO.")
         set(FORTE_LOGLEVEL "LOGINFO" CACHE STRING "Loglevel to use" FORCE)
     endif(NOT DEFINED FORTE_LOGLEVEL)
 else(BUILD_TYPE_LOWERCASE STREQUAL "debug")
@@ -60,7 +65,7 @@ else(BUILD_TYPE_LOWERCASE STREQUAL "debug")
 endif(BUILD_TYPE_LOWERCASE STREQUAL "debug")
 
 set_property(CACHE FORTE_LOGLEVEL PROPERTY STRINGS LOGDEBUG LOGERROR LOGWARNING LOGINFO NOLOG)
- 
+
 forte_add_definition("-D${FORTE_LOGLEVEL}")
 
 SET(FORTE_TRACE_EVENTS OFF CACHE BOOL "FORTE will log the events received at and sent from function blocks")
@@ -78,7 +83,8 @@ endif(FORTE_SUPPORT_QUERY_CMD)
 ######################################################################################
 set(FORTE_SYSTEM_TESTS OFF CACHE BOOL "FORTE System Tests")
 if(FORTE_SYSTEM_TESTS)
-ENABLE_TESTING()
+  ENABLE_TESTING()
+  ADD_SUBDIRECTORY(systemtests)
 endif(FORTE_SYSTEM_TESTS)
 
 #######################################################################################
@@ -130,28 +136,27 @@ else()
   unset(LUAJIT_INCLUDE_DIR CACHE)
   unset(LUAJIT_MATH_LIBRARY CACHE)
 endif(NOT ("${FORTE_USE_LUATYPES}" STREQUAL "None"))
-	
+
 #######################################################################################
 # Add subdirectories
-#######################################################################################
-ADD_SUBDIRECTORY(src)
-
-
-#######################################################################################
-# FORTE Tests
 #######################################################################################
 set(FORTE_TESTS OFF CACHE BOOL "Build Tests")
 set(FORTE_TESTS_LINK_DIRS "" CACHE PATH "Test specific library directories")
 set(FORTE_TESTS_INC_DIRS "" CACHE PATH "Test specific include directories")
 
+set(FORTE_USE_TEST_CONFIG_IN_FORTE ON CACHE BOOL "Add the test definitions and compiler options to the base forte") #this is needed for posix and win32 options
+mark_as_advanced(FORTE_USE_TEST_CONFIG_IN_FORTE)
 
+
+ADD_SUBDIRECTORY(src)
+
+#######################################################################################
+# FORTE Tests
+#######################################################################################
 IF(FORTE_TESTS)
     enable_testing()
     ADD_SUBDIRECTORY(tests)
 ENDIF(FORTE_TESTS)
-
-
-ADD_SUBDIRECTORY(systemtests)
 
 #######################################################################################
 # FORTE forte_config.h 
@@ -202,6 +207,16 @@ if(${FORTE_TimeBaseUnitsPerSecond} GREATER ${MAX_TimeBaseUnitsPerSecond})
  MESSAGE("Forced FORTE_TimeBaseUnitsPerSecond to ${MAX_TimeBaseUnitsPerSecond}")
  SET(FORTE_TimeBaseUnitsPerSecond ${MAX_TimeBaseUnitsPerSecond})
 endif(${FORTE_TimeBaseUnitsPerSecond} GREATER ${MAX_TimeBaseUnitsPerSecond})
+
+GET_PROPERTY(FORTE_CUSTOM_CONFIGURATIONS_LOCAL GLOBAL PROPERTY FORTE_CUSTOM_CONFIGURATIONS_GLOBAL)
+
+#Create a file with the custom configurations first and read from it
+file(WRITE ${CMAKE_BINARY_DIR}/forte_custom_config.h.in ${FORTE_CUSTOM_CONFIGURATIONS_LOCAL})
+CONFIGURE_FILE(${CMAKE_BINARY_DIR}/forte_custom_config.h.in ${CMAKE_BINARY_DIR}/forte_custom_config.h)
+file(READ ${CMAKE_BINARY_DIR}/forte_custom_config.h FORTE_CUSTOM_CONFIGURATIONS_CONFIGURED)
+file(REMOVE ${CMAKE_BINARY_DIR}/forte_custom_config.h.in)
+file(REMOVE ${CMAKE_BINARY_DIR}/forte_custom_config.h)
+SET(FORTE_CUSTOM_CONFIGURATIONS ${FORTE_CUSTOM_CONFIGURATIONS_CONFIGURED})
 
 forte_add_include_directories(${CMAKE_BINARY_DIR})
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/forte_config.h.in ${CMAKE_BINARY_DIR}/forte_config.new.h)
@@ -270,6 +285,16 @@ if(FORTE_LINKED_STRINGDICT)
 	ENDFOREACH(FBLIB_FILE)
   # this is a hack; add_custom_target is always run, but we only want to run builds on modified files, maybe only valid for visual studio projects
   add_library(forte_stringlist_externals STATIC ${SOURCE_FILES})
-  ADD_DEPENDENCIES (forte forte_stringlist_externals)
-	#ADD_CUSTOM_TARGET(forte_stringlist_externals SOURCES  ${SOURCE_FILES})	
+  
+  if(FORTE_BUILD_EXECUTABLE)
+      ADD_DEPENDENCIES (forte forte_stringlist_externals)
+  endif(FORTE_BUILD_EXECUTABLE)
+
+  if(FORTE_BUILD_STATIC_LIBRARY)
+      ADD_DEPENDENCIES (forte-static forte_stringlist_externals)
+  endif(FORTE_BUILD_STATIC_LIBRARY)
+  
+  if(FORTE_BUILD_SHARED_LIBRARY)
+     ADD_DEPENDENCIES (forte-shared forte_stringlist_externals)
+  endif(FORTE_BUILD_SHARED_LIBRARY)
 endif(FORTE_LINKED_STRINGDICT)

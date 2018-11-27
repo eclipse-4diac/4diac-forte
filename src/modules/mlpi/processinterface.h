@@ -41,8 +41,8 @@ class CMLPIFaceProcessInterface : public CProcessInterfaceBase{
       public:
         virtual void run();
         void updateReadData();
-        void registerIXFB(CMLPIFaceProcessInterface *pa_poFB);
-        void unregisterIXFB(CMLPIFaceProcessInterface *pa_poFB);
+        void registerIXFB(CMLPIFaceProcessInterface *paFB);
+        void unregisterIXFB(CMLPIFaceProcessInterface *paFB);
         /* functions needed for the external event handler interface */
         void enableHandler(void);
         void disableHandler(void);

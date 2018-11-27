@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2005 - 2018 ACIN, Profactor GmbH, fortiss GmbH, Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,6 +14,7 @@
 
 #include "fbcontainer.h"
 #include "funcbloc.h"
+#include <forte_sync.h>
 
 #ifdef FORTE_SUPPORT_MONITORING
 #include <monitoring.h>
@@ -25,7 +26,6 @@ class CLuaEngine;
 
 class CDevice;
 class CInterface2InternalDataConnection;
-class CEventChainExecutionThread;
 
 /*! \ingroup CORE\brief Base class for all resources handling the reconfiguration management within this
  * resource and the background execution of event chains.
@@ -70,12 +70,19 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
     }
     ;
 
-    CEventChainExecutionThread *getResourceEventExecution(void){
-      return m_poResourceEventExecution;
-    }
-    ;
+    CEventChainExecutionThread *getResourceEventExecution(void) const{
+      return mResourceEventExecution;
+    };
 
     virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
+
+    /*!\brief Write a parameter value to a given FB-input
+     *
+     * @param paNameList the identifier name list of the parameter to be written
+     * @param paValue the value to be writen
+     * @return response of the command execution as defined in IEC 61499
+     */
+    EMGMResponse writeValue(forte::core::TNameIdentifier &paNameList, const CIEC_STRING & paValue, bool paForce = false);
 
 #ifdef FORTE_SUPPORT_MONITORING
     forte::core::CMonitoringHandler &getMonitoringHandler(){
@@ -94,7 +101,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
         const CStringDictionary::TStringId pa_nInstanceNameId,
         TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
 
-    virtual void executeEvent(int){
+    virtual void executeEvent(int) {
     }
 
     /*!Wrapper for simplifying connection creation in resources
@@ -136,14 +143,6 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
     EMGMResponse deleteConnection(forte::core::TNameIdentifier &paSrcNameList,
         forte::core::TNameIdentifier &paDstNameList);
 
-    /*!\brief Write a parameter value to a given FB-input
-     *
-     * @param paNameList the identifier name list of the parameter to be written
-     * @param paValue the value to be writen
-     * @return response of the command execution as defined in IEC 61499
-     */
-    EMGMResponse writeValue(forte::core::TNameIdentifier &paNameList, const CIEC_STRING & paValue);
-
     /*!\brief Read a parameter value from a given FB
      *
      * @param paNameList the identifier name list of the parameter to be read
@@ -163,6 +162,22 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      * @return response of the command execution as defined in IEC 61499
      */
     EMGMResponse queryAllAdapterTypes(CIEC_STRING & paValue);
+
+
+    /*!\brief Retrieve the list of FB instances
+     *
+     * @param paValue the result of the query
+     * @return response of the command execution as defined in IEC 61499
+     */
+    EMGMResponse queryFBs(CIEC_STRING& paValue);
+
+    EMGMResponse queryConnections(CIEC_STRING & paValue);
+    void createEOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult);
+    void createDOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult);
+    void createAOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult);
+    void createConnectionResponseMessage(const CStringDictionary::TStringId srcId, const CStringDictionary::TStringId dstId, const CFunctionBlock& paDstFb,
+        const CFunctionBlock& paFb, CIEC_STRING& paValue);
+
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
     /*!\brief create
      *
@@ -194,7 +209,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 
     /*!\brief The event chain execution of background (low priority) event chains started within this resource
      */
-    CEventChainExecutionThread *m_poResourceEventExecution;
+    CEventChainExecutionThread *mResourceEventExecution;
 
     CInterface2InternalDataConnection *mResIf2InConnections; //!< List of all connections from the res interface to internal FBs
 

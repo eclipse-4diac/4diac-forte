@@ -10,6 +10,7 @@
  *******************************************************************************/
 #include "opcconnectionhandler.h"
 #include "opcconnection.h"
+#include <extevhandlerhelper.h>
 
 using namespace forte::com_infra;
 
@@ -30,9 +31,9 @@ COpcConnection* COpcConnectionHandler::getOpcConnection(const char *pa_acHost, c
 
   COpcConnection *newConnection = findOpcConnection(pa_acHost, pa_acServerName);
   if(newConnection == NULL){
-    newConnection = new COpcConnection(pa_acHost, pa_acServerName, GET_HANDLER_FROM_LAYER(*pa_pComCallback->getCommFB(), COpcEventHandler));
+    newConnection = new COpcConnection(pa_acHost, pa_acServerName, getExtEvHandler<COpcEventHandler>(*pa_pComCallback->getCommFB()));
 
-    m_lOpcConnectionList.push_back(newConnection);
+    m_lOpcConnectionList.pushBack(newConnection);
   }
 
   newConnection->addGroup(pa_acGroupName, pa_nReqUpdateRate, pa_nDeadBand, pa_pComCallback);
@@ -67,7 +68,7 @@ void COpcConnectionHandler::deleteOpcConnection(const char* pa_acHost, const cha
 
   if(it != itEnd){
     if(strcmp(it->getHost(), pa_acHost) == 0 && strcmp(it->getServerName(), pa_acServerName)){
-      m_lOpcConnectionList.pop_front();
+      m_lOpcConnectionList.popFront();
       return;
     }
     ++it;

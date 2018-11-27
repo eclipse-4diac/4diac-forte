@@ -14,8 +14,8 @@
 
 namespace forte {
   namespace com_infra {
-	  
-	class CBaseCommFB;
+    
+  class CBaseCommFB;
     class CComLayer;
 
     /*!\brief Communication Layers Manager for communication with Server/Client and Publish/Subscriber

@@ -39,7 +39,7 @@ private:
   virtual void executeEvent(int pa_nEIID);
   
   CIEC_BOOL& QI() {
-   	return *static_cast<CIEC_BOOL*>(getDI(0));
+     return *static_cast<CIEC_BOOL*>(getDI(0));
   }
 
 public:
@@ -50,5 +50,4 @@ public:
 
 };
 
-#endif //close the ifdef sequence from the beginning of the file
-
+#endif //_E_F_TRIG_H_

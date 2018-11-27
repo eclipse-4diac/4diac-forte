@@ -30,15 +30,6 @@ const TDataIOID E_D_FF::scm_anEOWith[] = {0, 255};
 const TForteInt16 E_D_FF::scm_anEOWithIndexes[] = {0};
 const CStringDictionary::TStringId E_D_FF::scm_anEventOutputNames[] = {g_nStringIdEO};
 
-void E_D_FF::executeEvent(int pa_nEIID){
-  if(scm_nEventCLKID == pa_nEIID){
-    if(D() != Q()){
-      Q() = D();
-      sendOutputEvent( scm_nEventEOID);
-    }
-  }
-}
-
 const SFBInterfaceSpec E_D_FF::scm_stFBInterfaceSpec = {
   1,
   scm_anEventInputNames,
@@ -56,5 +47,11 @@ const SFBInterfaceSpec E_D_FF::scm_stFBInterfaceSpec = {
   0
 };
 
-
-
+void E_D_FF::executeEvent(int pa_nEIID){
+  if(scm_nEventCLKID == pa_nEIID){
+    if(D() != Q()){
+      Q() = D();
+      sendOutputEvent( scm_nEventEOID);
+    }
+  }
+}

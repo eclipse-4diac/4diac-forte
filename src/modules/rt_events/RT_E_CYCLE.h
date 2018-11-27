@@ -55,14 +55,14 @@ private:
 
    FORTE_FB_DATA_ARRAY(1, 3, 1, 0);
 
-  bool m_bActive; //!> flag to indicate that the timed fb is currently active
-  STimedFBListEntry m_stTimeListEntry;
-  CEventChainExecutionThread m_oECEO;
+  bool mActive; //!> flag to indicate that the timed fb is currently active
+  STimedFBListEntry mTimeListEntry;
+  CEventChainExecutionThread mECEO;
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int paEIID);
 
 public:
-  FORTE_RT_E_CYCLE(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+  FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
   virtual ~FORTE_RT_E_CYCLE(){};
 

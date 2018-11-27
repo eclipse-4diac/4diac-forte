@@ -47,7 +47,7 @@ struct SEplMapping{
     ~SEplMapping(){
       while(!m_lCurrentValues.isEmpty()){
         delete *(TEplMappingList::Iterator) m_lCurrentValues.begin();
-        m_lCurrentValues.pop_front();
+        m_lCurrentValues.popFront();
       }
     }
 };

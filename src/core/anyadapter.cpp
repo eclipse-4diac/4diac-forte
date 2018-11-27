@@ -1,14 +1,17 @@
 /*******************************************************************************
-  * Copyright (c) 2013, 2014 fortiss GmbH
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Alois Zoitl
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2013, 2014 fortiss GmbH, 2018 TU Vienna/ACIN
+ *                      2018 Johannes Kepler University
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Alois Zoitl
+ *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians - fixes event chain initialisation, adds typifyAnyAdapter
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *******************************************************************************/
 #include "anyadapter.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "anyadapter_gen.cpp"
@@ -19,15 +22,14 @@ DEFINE_ADAPTER_TYPE(CAnyAdapter, g_nStringIdANY_ADAPTER)
 const SFBInterfaceSpec CAnyAdapter::scm_stFBInterfaceSpec = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 CAnyAdapter::CAnyAdapter(CStringDictionary::TStringId pa_anAdapterInstanceName, CResource *pa_poSrcRes, bool pa_bIsPlug) :
-    CAdapter(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_anAdapterInstanceName, &scm_stFBInterfaceSpec, pa_bIsPlug, 0, 0){
+    CAdapter(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_anAdapterInstanceName, &scm_stFBInterfaceSpec, pa_bIsPlug, 0, 0), m_ParentFB(0){
   memset(&m_stCurrentFBInterfaceSpec, 0, sizeof(SFBInterfaceSpec));
 }
 
 CAnyAdapter::~CAnyAdapter(){
 }
 
-bool CAnyAdapter::connect(CAdapter *pa_poPeer, CAdapterConnection *pa_poAdConn){
-  //mirror the peer's interface definition
+void CAnyAdapter::typifyAnyAdapter(CAdapter *pa_poPeer){
   m_stCurrentFBInterfaceSpec.m_nNumEIs = pa_poPeer->getAdapterInterfaceSpec()->m_nNumEOs;
   m_stCurrentFBInterfaceSpec.m_aunEINames = pa_poPeer->getAdapterInterfaceSpec()->m_aunEONames;
   m_stCurrentFBInterfaceSpec.m_anEIWith = pa_poPeer->getAdapterInterfaceSpec()->m_anEOWith;
@@ -43,13 +45,11 @@ bool CAnyAdapter::connect(CAdapter *pa_poPeer, CAdapterConnection *pa_poAdConn){
   m_stCurrentFBInterfaceSpec.m_aunDONames = pa_poPeer->getAdapterInterfaceSpec()->m_aunDINames;
   m_stCurrentFBInterfaceSpec.m_aunDODataTypeNames = pa_poPeer->getAdapterInterfaceSpec()->m_aunDIDataTypeNames;
 
-
   TForteByte *acFBConnData = new TForteByte[genAdapterFBConnDataSize(m_stCurrentFBInterfaceSpec.m_nNumEIs, m_stCurrentFBInterfaceSpec.m_nNumEOs, m_stCurrentFBInterfaceSpec.m_nNumDIs, m_stCurrentFBInterfaceSpec.m_nNumDOs)];
   TForteByte *acFBVarsData = new TForteByte[genFBVarsDataSize(m_stCurrentFBInterfaceSpec.m_nNumDIs, m_stCurrentFBInterfaceSpec.m_nNumDOs)];
 
-  setupFBInterface(&m_stCurrentFBInterfaceSpec, acFBConnData, acFBVarsData, true);
-
-  return CAdapter::connect(pa_poPeer, pa_poAdConn);
+  setupFBInterface(&m_stCurrentFBInterfaceSpec, acFBConnData, acFBVarsData);
+  fillEventEntryList(m_ParentFB);
 }
 
 bool CAnyAdapter::disconnect(CAdapterConnection *pa_poAdConn){
@@ -57,7 +57,19 @@ bool CAnyAdapter::disconnect(CAdapterConnection *pa_poAdConn){
 
   //clean interface data and reset to empty interface
   freeAllData();
-  setupFBInterface(&scm_stFBInterfaceSpec, 0, 0, false);
+  setupFBInterface(&scm_stFBInterfaceSpec, 0, 0);
 
   return bRetVal;
+}
+
+// Saves parentFB for later use
+void CAnyAdapter::setParentFB(CFunctionBlock *pa_poParentFB, TForteUInt8 pa_nParentAdapterlistID){
+  if(0 == m_ParentFB){
+    m_ParentFB = pa_poParentFB;
+  }
+  if(0 == m_nParentAdapterlistID){
+    m_nParentAdapterlistID = pa_nParentAdapterlistID;
+  }
+
+  CAdapter::setParentFB(m_ParentFB, m_nParentAdapterlistID);
 }

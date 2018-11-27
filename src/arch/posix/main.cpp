@@ -14,6 +14,10 @@
 #include <signal.h>
 #include "../../stdfblib/ita/RMT_DEV.h"
 
+#ifdef FORTE_ROS
+#include <ros/ros.h>
+#endif //FORTE_ROS
+
 #ifdef CONFIG_POWERLINK_USERSTACK
 #include <EplWrapper.h>
 #endif
@@ -81,6 +85,13 @@ int main(int argc, char *arg[]){
   checkEndianess();
 
   if(argc <= 1){ //! Default Value (localhost:61499)
+#ifdef FORTE_ROS
+    std::string rosdistro = "indigo";
+    if (rosdistro == (std::string)std::getenv("ROS_DISTRO")){
+      DEVLOG_INFO("path to forte.exe: %s \n", arg[0]);
+      ros::init(argc, arg, "ros_Functionblocks_in_FORTE");
+    }
+#endif //FORTE_ROS
     createDev("localhost:61499");
   }
   else{
@@ -112,4 +123,3 @@ void checkEndianess(){
 #endif
   }
 }
-

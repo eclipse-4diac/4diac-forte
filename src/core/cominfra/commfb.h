@@ -1,15 +1,17 @@
 /*******************************************************************************
-* Copyright (c) 2006-2015 ACIN, Profactor GmbH, fortiss GmbH
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Eclipse Public License v1.0
-* which accompanies this distribution, and is available at
-* http://www.eclipse.org/legal/epl-v10.html
-*
-* Contributors:
-*    Rene Smodic, Thomas Strasser, Alois Zoitl, Michael Hofmann,
-*    Martin Melik-Merkumians, Ingo Hegny, Patrick Smejkal
-*      - initial implementation and rework communication infrastructure
-*******************************************************************************/
+ * Copyright (c) 2006-2015 ACIN, Profactor GmbH, fortiss GmbH
+ *                      2018 Johannes Kepler University
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Rene Smodic, Thomas Strasser, Alois Zoitl, Michael Hofmann,
+ *    Martin Melik-Merkumians, Ingo Hegny, Patrick Smejkal
+ *      - initial implementation and rework communication infrastructure
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *******************************************************************************/
 #ifndef _COMMFB_H_
 #define _COMMFB_H_
 
@@ -18,54 +20,52 @@
 #include "comtypes.h"
 
 namespace forte {
-	namespace com_infra {
+  namespace com_infra {
 
-		class CCommFB : public CBaseCommFB {
-		public:
-			virtual ~CCommFB();
+    class CCommFB : public CBaseCommFB {
+    public:
+      virtual ~CCommFB();
 
-			virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
+      virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
 
-		protected:
-			CCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, forte::com_infra::EComServiceType pa_eCommServiceType);
+    protected:
+      CCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, forte::com_infra::EComServiceType pa_eCommServiceType);
 
-			CCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-				TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData, forte::com_infra::EComServiceType pa_eCommServiceType);
+      void executeEvent(int pa_nEIID);
 
-			/*!\brief The configureFB method is used by the typelib to parametrize the number of inputs/outputs
-			* \param pa_acConfigString : the string containing the requested typename (eg. "CLIENT_3_2"
-			*/
-			virtual bool configureFB(const char *pa_acConfigString);
+      static const TEventID scm_nEventINITID = 0;
+      static const TEventID scm_nEventINITOID = 0;
+      static const TEventID scm_nSendNotificationEventID = 1;
+      static const TEventID scm_nReceiveNotificationEventID = 1;
 
-			void executeEvent(int pa_nEIID);
+      static const char * const scmDefaultIDPrefix;
+      static const char * const scmDefaultIDSuffix;
 
-			static const TEventID scm_nEventINITID = 0;
-			static const TEventID scm_nEventINITOID = 0;
-			static const TEventID scm_nSendNotificationEventID = 1;
-			static const TEventID scm_nReceiveNotificationEventID = 1;
+      static char *extractLayerIdAndParams(char **paRemainingID, char **paLayerParams);
 
-			static const char * const scmDefaultIDPrefix;
-			static const char * const scmDefaultIDSuffix;
+      char *getDefaultIDString(const char *paID);
 
-			static char *extractLayerIdAndParams(char **paRemainingID, char **paLayerParams);
+      virtual EComResponse receiveData();
+      virtual EComResponse sendData();
 
-			char *getDefaultIDString(const char *paID);
+    private:
+      static const CStringDictionary::TStringId scm_aunRequesterEventInputNameIds[];
+      static const CStringDictionary::TStringId scm_aunRequesterEventOutputNameIds[];
 
-			virtual EComResponse receiveData();
-			virtual EComResponse sendData();
+      static const CStringDictionary::TStringId scm_aunResponderEventInputNameIds[];
+      static const CStringDictionary::TStringId scm_aunResponderEventOutputNameIds[];
 
-		private:
-			static const CStringDictionary::TStringId scm_aunRequesterEventInputNameIds[];
-			static const CStringDictionary::TStringId scm_aunRequesterEventOutputNameIds[];
+      static const TForteInt16 scm_anEIWithIndexes[];
+      static const TForteInt16 scm_anEOWithIndexes[];
+      static const size_t scmMinWithLength = 6;
 
-			static const CStringDictionary::TStringId scm_aunResponderEventInputNameIds[];
-			static const CStringDictionary::TStringId scm_aunResponderEventOutputNameIds[];
+      virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);
 
-			static const TForteInt16 scm_anEIWithIndexes[];
-			static const TForteInt16 scm_anEOWithIndexes[];
-		};
+      void configureDIs(const char *paDIConfigString, SFBInterfaceSpec &paInterfaceSpec);
+      void configureDOs(const char *paDOConfigString, SFBInterfaceSpec &paInterfaceSpec);
+    };
 
-	}
+  }
 }
 
 #endif //_COMMFB_H_

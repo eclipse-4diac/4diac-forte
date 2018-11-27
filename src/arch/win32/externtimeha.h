@@ -22,8 +22,8 @@ class CExternTimerHandler : public CTimerHandler{
     static void externNextTick();
     static TForteUInt32 getExternTicksPerSecond(void){ return csm_nTicksPerSecond; };
     explicit CExternTimerHandler(CDeviceExecution& pa_poDeviceExecution);
-    	
-  	virtual ~CExternTimerHandler();
+      
+    virtual ~CExternTimerHandler();
 
     /*!\brief Pointer to a general timer used for code outside FBs, like devlog, TIME() and so on
      */

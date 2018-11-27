@@ -1,5 +1,5 @@
 #*******************************************************************************
-# * Copyright (c) 2012 - 2013 ACIN
+# * Copyright (c) 2012 - 2013 ACIN, 2018 TU Vienna/ACIN
 # * All rights reserved. This program and the accompanying materials
 # * are made available under the terms of the Eclipse Public License v1.0
 # * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
 # * Contributors:
 # *   Monika Wenger
 # *   - initial API and implementation and/or initial documentation
+# *   Martin Melik Merkumians - Removes invalid casts
 # *******************************************************************************/
 #############################################################################
 # BOOL_TO_xxx Conversion
@@ -22,21 +23,12 @@ forte_add_sourcefile_hcpp(F_BOOL_TO_UINT)
 forte_add_sourcefile_hcpp(F_BOOL_TO_USINT)
 forte_add_sourcefile_hcpp(F_BOOL_TO_WORD)
 forte_add_sourcefile_hcpp(F_BOOL_TO_STRING)
-forte_add_sourcefile_hcpp(F_BOOL_TO_TIME)
 
 if(FORTE_USE_64BIT_DATATYPES)
   forte_add_sourcefile_hcpp(F_BOOL_TO_LINT)
   forte_add_sourcefile_hcpp(F_BOOL_TO_LWORD)
   forte_add_sourcefile_hcpp(F_BOOL_TO_ULINT)
 endif(FORTE_USE_64BIT_DATATYPES)
-
-if(FORTE_USE_REAL_DATATYPE)
-  forte_add_sourcefile_hcpp(F_BOOL_TO_REAL)
-endif(FORTE_USE_REAL_DATATYPE)
-
-if(FORTE_USE_LREAL_DATATYPE)
-  forte_add_sourcefile_hcpp(F_BOOL_TO_LREAL)
-endif(FORTE_USE_LREAL_DATATYPE)
 
 if(FORTE_USE_WSTRING_DATATYPE)
   forte_add_sourcefile_hcpp(F_BOOL_TO_WSTRING)

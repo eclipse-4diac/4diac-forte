@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016, 2017 fortiss GmbH
+ * Copyright (c) 2016, 2017, 2018 fortiss GmbH, TU Vienna/ACIN
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *  Alois Zoitl - initial API and implementation and/or initial documentation
+ *  Martin Melik-Merkumians - updates due to changes in CPThreadSemaphore
  *******************************************************************************/
 #include "threadbase.h"
 #include <criticalregion.h>
@@ -34,7 +35,7 @@ void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::start(void){
     mThreadHandle = createThread(mStackSize);
     if(nullHandle == mThreadHandle){
       DEVLOG_ERROR("Error could not create the thread!\n");
-      mJoinSem.semInc();
+      mJoinSem.inc();
     }
   }
 }
@@ -52,20 +53,20 @@ void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::end(void) {
 template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
 void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::join(){
   if(nullHandle != mThreadHandle){
-    mJoinSem.semWaitIndefinitly();
-    mJoinSem.semInc(); //allow many joins
+    mJoinSem.waitIndefinitely();
+    mJoinSem.inc(); //allow many joins
   }
 }
 
 template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
 void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::runThread(CThreadBase *paThread) {
-	// if pointer is ok
-	if (0 != paThread) {
-		paThread->setAlive(true);
-		paThread->run();
-		paThread->setAlive(false);
-		paThread->mJoinSem.semInc();
-	} else {
-		DEVLOG_ERROR("pThread pointer is 0!");
-	}
+  // if pointer is ok
+  if (0 != paThread) {
+    paThread->setAlive(true);
+    paThread->run();
+    paThread->setAlive(false);
+    paThread->mJoinSem.inc();
+  } else {
+    DEVLOG_ERROR("pThread pointer is 0!");
+  }
 }

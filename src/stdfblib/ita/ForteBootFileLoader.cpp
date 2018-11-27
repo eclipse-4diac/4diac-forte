@@ -18,18 +18,18 @@
 #include <mgmcmdstruct.h>
 #include "../../core/device.h"
 
-ForteBootFileLoader::ForteBootFileLoader(IBootFileCallback &paCallback) : mCallback(paCallback){
+ForteBootFileLoader::ForteBootFileLoader(IBootFileCallback &paCallback) : mBootfile(0), mCallback(paCallback){
   openBootFile(0);
 }
 
-ForteBootFileLoader::ForteBootFileLoader(IBootFileCallback &paCallback, CIEC_STRING &paBootFileName) : mCallback(paCallback){
+ForteBootFileLoader::ForteBootFileLoader(IBootFileCallback &paCallback, CIEC_STRING &paBootFileName) : mBootfile(0), mCallback(paCallback){
   openBootFile(&paBootFileName);
 }
 
 ForteBootFileLoader::~ForteBootFileLoader() {
-  if(0 != bootfile){
+  if(0 != mBootfile){
     DEVLOG_INFO("Closing bootfile\n");
-    fclose(bootfile);
+    fclose(mBootfile);
   }
 }
 
@@ -55,8 +55,8 @@ bool ForteBootFileLoader::openBootFile(CIEC_STRING* paBootFileName){
   if("" == bootFileName){
     DEVLOG_INFO("No bootfile specified and no default bootfile configured during build\n");
   }else{
-    bootfile = fopen(bootFileName.getValue(), "r");
-    if(0 != bootfile){
+    mBootfile = fopen(bootFileName.getValue(), "r");
+    if(0 != mBootfile){
       DEVLOG_INFO("Boot file %s opened\n", bootFileName.getValue());
       retVal = true;
     }
@@ -75,7 +75,7 @@ bool ForteBootFileLoader::openBootFile(CIEC_STRING* paBootFileName){
 
 LoadBootResult ForteBootFileLoader::loadBootFile(){
   LoadBootResult eResp = FILE_NOT_OPENED;
-  if(0 != bootfile){
+  if(0 != mBootfile){
     //we could open the file try to load it
     int nLineCount = 1;
     eResp = LOAD_RESULT_OK;
@@ -108,7 +108,7 @@ bool ForteBootFileLoader::readLine(CIEC_STRING &line){
   line.clear();
   char acLineBuf[size];
   do{
-    if(0 != fgets(acLineBuf, size, bootfile)){
+    if(0 != fgets(acLineBuf, size, mBootfile)){
       line.append(acLineBuf);
     }else{
       return 0 != line.length();
@@ -118,6 +118,6 @@ bool ForteBootFileLoader::readLine(CIEC_STRING &line){
 }
 
 bool ForteBootFileLoader::hasCommandEnded(const CIEC_STRING &line) const{
-  return (!strcmp(line.getValue() + line.length() - 11, "</Request>\n")
-      || !strcmp(line.getValue() + line.length() - 3, "/>\n"));
+  return ((0 == strcmp(line.getValue() + line.length() - 11, "</Request>\n")
+      || 0 == strcmp(line.getValue() + line.length() - 3, "/>\n")));
 }

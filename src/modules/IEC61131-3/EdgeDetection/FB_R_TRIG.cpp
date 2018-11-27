@@ -53,7 +53,7 @@ void FB_R_TRIG::executeEvent(int pa_nEIID){
         Q() = CLK() && !M;
         M = CLK();
         sendOutputEvent(scm_nEventCNFID);
-    	break;
+      break;
   }
 }
 

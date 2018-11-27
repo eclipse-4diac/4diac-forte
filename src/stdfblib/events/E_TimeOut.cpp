@@ -22,20 +22,20 @@ const SFBInterfaceSpec FORTE_E_TimeOut::scm_stFBInterfaceSpec = { 0, 0, 0, 0, 0,
 
 void FORTE_E_TimeOut::executeEvent(int pa_nEIID){
   if(cg_nExternalEventID == pa_nEIID){
-    m_bActive = false;
+    mActive = false;
     sendAdapterEvent(scm_nTimeOutSocketAdpNum, FORTE_ATimeOut::scm_nEventTimeOutID);
   }
   else if(TimeOutSocket().START() == pa_nEIID){
-    if(!m_bActive){
+    if(!mActive){
       setEventChainExecutor(m_poInvokingExecEnv);  // delay notification should be execute in the same thread on as from where it has been triggered.
-      getTimer().registerTimedFB(&m_stTimeListEntry, TimeOutSocket().DT());
-      m_bActive = true;
+      getTimer().registerTimedFB(&mTimeListEntry, TimeOutSocket().DT());
+      mActive = true;
     }
   }
   else if(TimeOutSocket().STOP() == pa_nEIID){
-    if(m_bActive){
+    if(mActive){
       getTimer().unregisterTimedFB(this);
-      m_bActive = false;
+      mActive = false;
     }
   }
 }
@@ -43,11 +43,10 @@ void FORTE_E_TimeOut::executeEvent(int pa_nEIID){
 EMGMResponse FORTE_E_TimeOut::changeFBExecutionState(EMGMCommandType pa_unCommand){
   EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(pa_unCommand);
   if((e_RDY == eRetVal) && ((cg_nMGM_CMD_Stop == pa_unCommand) || (cg_nMGM_CMD_Kill == pa_unCommand))){
-    if(m_bActive){
+    if(mActive){
       getTimer().unregisterTimedFB(this);
-      m_bActive = false;
+      mActive = false;
     }
   }
   return eRetVal;
 }
-

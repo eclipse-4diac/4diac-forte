@@ -1,19 +1,36 @@
 /*******************************************************************************
-  * Copyright (c) 2015 - 2016 fortiss GmbH
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Alois Zoitl
-  *      - initial implementation and rework communication infrastructure
-  *    Martin Jobst - adapt for LUA integration
-  *******************************************************************************/
+ * Copyright (c) 2015 - 2016 fortiss GmbH, 2018 TU Wien/ACIN
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Alois Zoitl
+ *      - initial implementation and rework communication infrastructure
+ *    Martin Jobst - adapt for LUA integration
+ *    Martin Melik Merkumians
+ *      - implementation for checkForActionEquivalentState
+ *******************************************************************************/
 #include "fbcontainer.h"
 #include "funcbloc.h"
 
 using namespace forte::core;
+
+EMGMResponse checkForActionEquivalentState(const CFunctionBlock &paFB, const EMGMCommandType paCommand){
+  CFunctionBlock::E_FBStates currentState = paFB.getState();
+  switch (paCommand){
+    case cg_nMGM_CMD_Stop:
+      return (CFunctionBlock::e_KILLED == currentState) ? e_RDY : e_INVALID_STATE;
+      break;
+    case cg_nMGM_CMD_Kill:
+      return (CFunctionBlock::e_STOPPED == currentState || CFunctionBlock::e_IDLE == currentState) ? e_RDY : e_INVALID_STATE;
+      break;
+    default:
+      break;
+  }
+  return e_INVALID_STATE;
+}
 
 CFBContainer::CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer *paParent) :
     mContainerName(paContainerName), mParent(paParent) {
@@ -34,7 +51,7 @@ CFBContainer::~CFBContainer() {
 EMGMResponse CFBContainer::addFB(CFunctionBlock* pa_poFuncBlock){
   EMGMResponse eRetVal = e_INVALID_OBJECT;
   if(0 != pa_poFuncBlock){
-    mFunctionBlocks.push_back(pa_poFuncBlock);
+    mFunctionBlocks.pushBack(pa_poFuncBlock);
     eRetVal = e_RDY;
   }
   return eRetVal;
@@ -50,7 +67,7 @@ EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::CIterator &paN
       CFunctionBlock *newFB = CTypeLib::createFB(*paNameListIt, paTypeName, paRes);
       if(0 != newFB){
         //we could create a FB now add it to the list of contained FBs
-        mFunctionBlocks.push_back(newFB);
+        mFunctionBlocks.pushBack(newFB);
         retval = e_RDY;
       }
       else{
@@ -96,7 +113,7 @@ EMGMResponse CFBContainer::deleteFB(forte::core::TNameIdentifier::CIterator &paN
             CTypeLib::deleteFB(*itRunner);
             if(itRefNode == mFunctionBlocks.end()){
               //we have the first entry in the list
-              mFunctionBlocks.pop_front();
+              mFunctionBlocks.popFront();
             }
             else{
               mFunctionBlocks.eraseAfter(itRefNode);
@@ -168,7 +185,7 @@ CFBContainer *CFBContainer::findOrCreateContainer(CStringDictionary::TStringId p
     if(0 == getFB(paContainerName)){
       //only create it if there is no FB with the same name.
       retVal = new CFBContainer(paContainerName, this);
-      mSubContainers.push_back(retVal);
+      mSubContainers.pushBack(retVal);
     }
   }
   return retVal;
@@ -188,6 +205,9 @@ EMGMResponse CFBContainer::changeContainedFBsExecutionState(EMGMCommandType paCo
         ((itRunner != mFunctionBlocks.end()) && (e_RDY == retVal));
         ++itRunner){
       retVal = (*itRunner)->changeFBExecutionState(paCommand);
+      if(e_RDY != retVal) {
+        retVal = checkForActionEquivalentState(*(*itRunner), paCommand);
+      }
     }
   }
   return retVal;

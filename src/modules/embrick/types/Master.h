@@ -1,18 +1,17 @@
 /*******************************************************************************
- * Copyright (c) 2016 Johannes Messmer (admin@jomess.com)
+ * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *    Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Johannes Messmer - initial API and implementation and/or initial documentation
+ *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
 #ifndef SRC_MODULES_EMBRICK_TYPES_MASTER_H_
 #define SRC_MODULES_EMBRICK_TYPES_MASTER_H_
-
-#include <io/configFB/multi/io_master.h>
 
 #include <forte_bool.h>
 #include <forte_wstring.h>
@@ -20,12 +19,10 @@
 #include "BusAdapter.h"
 
 #include <handler/bus.h>
+#include "../../../core/io/configFB/io_master_multi.h"
 
-namespace EmBrick {
-namespace FunctionBlocks {
-
-class Master: public IO::ConfigurationFB::Multi::Master {
-DECLARE_FIRMWARE_FB(Master)
+class EmbrickMaster: public forte::core::IO::IOConfigFBMultiMaster {
+DECLARE_FIRMWARE_FB(EmbrickMaster)
 
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
@@ -64,8 +61,8 @@ private:
 
   static const SAdapterInstanceDef scm_astAdapterInstances[];
 
-  BusAdapter& BusAdapterOut() {
-    return (*static_cast<BusAdapter*>(m_apoAdapters[0]));
+  EmbrickBusAdapter& BusAdapterOut() {
+    return (*static_cast<EmbrickBusAdapter*>(m_apoAdapters[0]));
   }
 
   static const int scm_nBusAdapterAdpNum = 0;
@@ -76,20 +73,17 @@ private:
   virtual void setInitialValues();
 
 protected:
-  IO::Device::Controller* createDeviceController(CDeviceExecution& paDeviceExecution);
+  forte::core::IO::IODeviceController* createDeviceController(CDeviceExecution& paDeviceExecution);
 
   void setConfig();
 
   virtual void onStartup();
 
 public:
-  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(Master, IO::ConfigurationFB::Multi::Master){
+  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(EmbrickMaster, forte::core::IO::IOConfigFBMultiMaster){
   }
 };
 
-}
-/* namespace FunctionsBlocks */
-} /* namespace EmBrick */
 
 #endif //close the ifdef sequence from the beginning of the file
 

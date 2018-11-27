@@ -58,8 +58,10 @@ class CEventChainExecutionThread : public CThread{
     }
 
     void resumeSelfSuspend(){
-      mSuspendSemaphore.semInc();
+      mSuspendSemaphore.inc();
     }
+
+    static CEventChainExecutionThread* createEcet();
 
   protected:
     //@{
@@ -72,6 +74,8 @@ class CEventChainExecutionThread : public CThread{
     TEventEntryPtr* mEventListStart;
     TEventEntryPtr* mEventListEnd;
     //@}
+
+    void mainRun();
 
   private:
     /*! \brief The thread run()-method where the events are sent to the FBs and the FBs are executed in.
@@ -101,7 +105,7 @@ class CEventChainExecutionThread : public CThread{
     void transferExternalEvents();
 
     void selfSuspend(){
-      mSuspendSemaphore.semWaitIndefinitly();
+      mSuspendSemaphore.waitIndefinitely();
     }
 
     //@{

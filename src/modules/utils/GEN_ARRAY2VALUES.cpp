@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2014 Profactor GmbH, fortiss GmbH
+ *                      2018 Johannes Kepler University
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +9,7 @@
  * Contributors:
  *   Matthias Plasch, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *******************************************************************************/
 #include "GEN_ARRAY2VALUES.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -28,9 +30,8 @@ const CStringDictionary::TStringId GEN_ARRAY2VALUES::scm_anEventInputNames[] = {
 const TForteInt16 GEN_ARRAY2VALUES::scm_anEOWithIndexes[] = { 0, -1 };
 const CStringDictionary::TStringId GEN_ARRAY2VALUES::scm_anEventOutputNames[] = { g_nStringIdCNF };
 
-GEN_ARRAY2VALUES::GEN_ARRAY2VALUES(const CStringDictionary::TStringId pa_nInstanceNameId,
-    CResource *pa_poSrcRes) :
-    CFunctionBlock(pa_poSrcRes, 0, pa_nInstanceNameId, 0, 0){
+GEN_ARRAY2VALUES::GEN_ARRAY2VALUES(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), m_anDataOutputNames(0), m_anDataOutputTypeIds(0), m_anDataInputTypeIds(0), m_anEOWith(0), m_nDOutputs(0), m_ValueTypeID(CStringDictionary::scm_nInvalidStringId){
 }
 
 GEN_ARRAY2VALUES::~GEN_ARRAY2VALUES(){
@@ -40,8 +41,8 @@ GEN_ARRAY2VALUES::~GEN_ARRAY2VALUES(){
   delete[] m_anEOWith;
 }
 
-void GEN_ARRAY2VALUES::executeEvent(int pa_nEIID){
-  switch (pa_nEIID){
+void GEN_ARRAY2VALUES::executeEvent(int paEIID){
+  switch (paEIID){
     case scm_nEventREQID:
 
       for(int output_index = 0; output_index < m_nDOutputs; output_index++){
@@ -55,11 +56,8 @@ void GEN_ARRAY2VALUES::executeEvent(int pa_nEIID){
   }
 }
 
-bool GEN_ARRAY2VALUES::configureFB(const char *pa_acConfigString){
-  bool bRetVal = false;
-
-  m_nConfiguredFBTypeNameId = CStringDictionary::getInstance().insert(pa_acConfigString);
-  const char *dNumberPos = strchr(pa_acConfigString, '_');
+bool GEN_ARRAY2VALUES::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec){
+  const char *dNumberPos = strchr(paConfigString, '_');
 
   if(0 != dNumberPos){
     ++dNumberPos;
@@ -69,17 +67,7 @@ bool GEN_ARRAY2VALUES::configureFB(const char *pa_acConfigString){
     if(0 != dTypePos){
       //there is a number and a data type of inputs within the typename
       m_nDOutputs = static_cast<int>(forte::core::util::strtoul(dNumberPos, 0, 10));
-
-      unsigned int nLen = static_cast<unsigned int>(strlen(++dTypePos));
-      if(nLen < cg_nIdentifierLength){
-        char dTypeName[cg_nIdentifierLength + 1];
-
-        strncpy(dTypeName, dTypePos, nLen);
-        dTypeName[nLen] = '\0';
-        //get the data type id
-        m_ValueTypeID = CStringDictionary::getInstance().getId(dTypeName);
-        //DEVLOG_DEBUG("ValueType: %s, DIs: %d;\n", dTypeName, m_nDInputs);
-      }
+      m_ValueTypeID = CStringDictionary::getInstance().getId(++dTypePos);
     }
     else{
       m_ValueTypeID = CStringDictionary::scm_nInvalidStringId;
@@ -96,7 +84,7 @@ bool GEN_ARRAY2VALUES::configureFB(const char *pa_acConfigString){
     m_anDataOutputTypeIds = new CStringDictionary::TStringId[m_nDOutputs];
 
     char doNames[cg_nIdentifierLength] = { "OUT_" };
-    for(int doIndex = 0; doIndex < m_nDOutputs; doIndex = doIndex + 1){
+    for(size_t doIndex = 0; doIndex < m_nDOutputs; ++doIndex){
       forte_snprintf(&(doNames[4]), 8 - 4, "%i", doIndex + 1);
       m_anDataOutputNames[doIndex] = CStringDictionary::getInstance().insert(doNames);
       m_anDataOutputTypeIds[doIndex] = m_ValueTypeID;
@@ -112,29 +100,29 @@ bool GEN_ARRAY2VALUES::configureFB(const char *pa_acConfigString){
     m_anEOWith = new TDataIOID[m_nDOutputs + 1];
 
     //in-withs
-    for(int out_with = 0; out_with < m_nDOutputs + 1; out_with = out_with + 1){
-      if(out_with == m_nDOutputs){
-        //set end separator of with
-        m_anEOWith[out_with] = 255;
-      }
-      else{
-        m_anEOWith[out_with] = static_cast<TDataIOID>(out_with);
-      }
+    for(size_t out_with = 0; out_with < m_nDOutputs; ++out_with){
+      m_anEOWith[out_with] = static_cast<TDataIOID>(out_with);
     }
+    m_anEOWith[m_nDOutputs] = scmWithListDelimiter;
 
     //create the interface Specification
-    SFBInterfaceSpecforGenerics *pstInterfaceSpec =
-        new SFBInterfaceSpecforGenerics(static_cast<TForteUInt8>(1), scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, static_cast<TForteUInt8>(1), scm_anEventOutputNames, m_anEOWith, scm_anEOWithIndexes, static_cast<TForteUInt8>(1), scm_anDataInputNames, m_anDataInputTypeIds, static_cast<TForteUInt8>(m_nDOutputs), m_anDataOutputNames, m_anDataOutputTypeIds);
-
-    TForteByte *acFBConnData =
-        new TForteByte[genFBConnDataSize(pstInterfaceSpec->m_nNumEOs, pstInterfaceSpec->m_nNumDIs, pstInterfaceSpec->m_nNumDOs)];
-    TForteByte *acFBVarsData =
-        new TForteByte[genFBVarsDataSize(pstInterfaceSpec->m_nNumDIs, pstInterfaceSpec->m_nNumDOs)];
-
-    setupFBInterface(pstInterfaceSpec, acFBConnData, acFBVarsData, true);
-    bRetVal = true;
+    paInterfaceSpec.m_nNumEIs = 1;
+    paInterfaceSpec.m_aunEINames = scm_anEventInputNames;
+    paInterfaceSpec.m_anEIWith = scm_anEIWith;
+    paInterfaceSpec.m_anEIWithIndexes = scm_anEIWithIndexes;
+    paInterfaceSpec.m_nNumEOs = 1;
+    paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
+    paInterfaceSpec.m_anEOWith = m_anEOWith;
+    paInterfaceSpec.m_anEOWithIndexes = scm_anEOWithIndexes;
+    paInterfaceSpec.m_nNumDIs = 1;
+    paInterfaceSpec.m_aunDINames = scm_anDataInputNames;
+    paInterfaceSpec.m_aunDIDataTypeNames = m_anDataInputTypeIds;
+    paInterfaceSpec.m_nNumDOs = static_cast<TForteUInt8>(m_nDOutputs);
+    paInterfaceSpec.m_aunDONames = m_anDataOutputNames;
+    paInterfaceSpec.m_aunDODataTypeNames = m_anDataOutputTypeIds;
+    return true;
   }
 
-  return bRetVal;
+  return false;
 }
 

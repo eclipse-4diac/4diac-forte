@@ -13,7 +13,7 @@
 CVXWorksSyncObject::CVXWorksSyncObject(){
   m_oSemBinary = semBCreate(SEM_Q_FIFO, SEM_FULL); //semBCreate allows to be lock/unlock by different task, needed by CThread
   if (SEM_ID_NULL == m_oSemBinary){
-	  //TODO: check return value for out_of_memory error
+    //TODO: check return value for out_of_memory error
   }
 }
 

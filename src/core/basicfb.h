@@ -97,6 +97,10 @@ class CBasicFB : public CFunctionBlock{
     CIEC_ANY *getInternalVar(CStringDictionary::TStringId pa_nInternalName);
 
     CIEC_ANY *m_aoInternals; //!< A list of pointers to the internal variables.
+
+#ifdef FORTE_FMU
+    friend class fmuInstance;
+#endif //FORTE_FMU
 };
 
 #endif /*_BASICFB_H_*/

@@ -88,7 +88,7 @@ void MQTTHandler::onMqttConnectionLost(void* paContext, char* paCause){
     handler->mToResubscribe.clearAll();
     for(CSinglyLinkedList<MQTTComLayer*>::Iterator it = handler->mlayers.begin(); it != handler->mlayers.end(); ++it){
       if(e_Subscriber == (*it)->getCommFB()->getComServiceType()){
-        handler->mToResubscribe.push_back((*it));
+        handler->mToResubscribe.pushBack((*it));
       }
     }
     handler->resumeSelfSuspend();
@@ -119,15 +119,15 @@ void MQTTHandler::onSubscribeSucceed(void* paContext, MQTTAsync_successData* ){
   if(0 != paContext){
     CCriticalRegion sectionState(smMQTTMutex);
     MQTTComLayer* layer = static_cast<MQTTComLayer*>(paContext);
-    MQTTHandler* handler = GET_HANDLER_FROM_LAYER(*layer->getCommFB(), MQTTHandler);
+    MQTTHandler& handler = ::getExtEvHandler<MQTTHandler>(*layer->getCommFB());
     DEVLOG_INFO("MQTT: Subscription succeed. Topic: -%s-\n", layer->getTopicName());
 
-    handler->popLayerFromList(layer, &handler->mToResubscribe);
-    if(handler->mToResubscribe.isEmpty()){
+    handler.popLayerFromList(layer, &handler.mToResubscribe);
+    if(handler.mToResubscribe.isEmpty()){
       smMQTTS_STATE = ALL_SUBSCRIBED;
     }
     else{
-      handler->resumeSelfSuspend();
+      handler.resumeSelfSuspend();
     }
   }
 }
@@ -137,7 +137,7 @@ void MQTTHandler::onSubscribeFailed(void* paContext, MQTTAsync_failureData*){
     CCriticalRegion sectionState(smMQTTMutex);
     MQTTComLayer* layer = static_cast<MQTTComLayer*>(paContext);
     DEVLOG_ERROR("MQTT: Subscription failed. Topic: -%s-\n", layer->getTopicName());
-    GET_HANDLER_FROM_LAYER(*layer->getCommFB(), MQTTHandler)->resumeSelfSuspend();
+    ::getExtEvHandler<MQTTHandler>(*layer->getCommFB()).resumeSelfSuspend();
   }
 }
 
@@ -181,7 +181,7 @@ void MQTTHandler::popLayerFromList(MQTTComLayer* paLayer, CSinglyLinkedList<MQTT
   while(itRunner != itEnd){
     if(*itRunner == paLayer){
       if(itRefNode == itEnd){
-        paList->pop_front();
+        paList->popFront();
       }
       else{
         paList->eraseAfter(itRefNode);
@@ -219,12 +219,12 @@ int MQTTHandler::registerLayer(const char* paAddress, const char* paClientId, MQ
   }
   {
     CCriticalRegion section(smMQTTMutex);
-    mlayers.push_back(paLayer);
+    mlayers.pushBack(paLayer);
     if (e_Subscriber == paLayer->getCommFB()->getComServiceType()){
-      mToResubscribe.push_back(paLayer);
+      mToResubscribe.pushBack(paLayer);
       if(ALL_SUBSCRIBED == smMQTTS_STATE){
         smMQTTS_STATE = SUBSCRIBING;
-        GET_HANDLER_FROM_LAYER(*paLayer->getCommFB(), MQTTHandler)->resumeSelfSuspend();
+        this->resumeSelfSuspend();
       }
     }
 
@@ -301,13 +301,13 @@ void MQTTHandler::run(){
 
 void MQTTHandler::resumeSelfSuspend(){
   if(mIsSemaphoreEmpty){ //avoid incrementing many times
-    mStateSemaphore.semInc();
+    mStateSemaphore.inc();
     mIsSemaphoreEmpty = false;
   }
 }
 
 void MQTTHandler::selfSuspend(){
-  mStateSemaphore.semWaitIndefinitly();
+  mStateSemaphore.waitIndefinitely();
   {
     CCriticalRegion section(smMQTTMutex);
     mIsSemaphoreEmpty = true;

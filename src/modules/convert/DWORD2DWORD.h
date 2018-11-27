@@ -37,11 +37,11 @@ private:
   virtual void executeEvent(int pa_nEIID);
 
   CIEC_DWORD& IN() {
-  	return *static_cast<CIEC_DWORD*>(getDI(0));
+    return *static_cast<CIEC_DWORD*>(getDI(0));
   }
 
   CIEC_DWORD& OUT() {
-  	return *static_cast<CIEC_DWORD*>(getDO(0));
+    return *static_cast<CIEC_DWORD*>(getDO(0));
   }
 
 public:
@@ -50,5 +50,5 @@ public:
 
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+#endif //_DWORD2DWORD_H_
 

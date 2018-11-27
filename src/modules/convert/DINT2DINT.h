@@ -38,11 +38,11 @@ private:
   virtual void executeEvent(int pa_nEIID);
 
   CIEC_DINT& IN() {
-  	return *static_cast<CIEC_DINT*>(getDI(0));
+    return *static_cast<CIEC_DINT*>(getDI(0));
   }
 
   CIEC_DINT& OUT() {
-  	return *static_cast<CIEC_DINT*>(getDO(0));
+    return *static_cast<CIEC_DINT*>(getDO(0));
   }
 
 public:
@@ -51,5 +51,4 @@ public:
 
 };
 
-#endif //close the ifdef sequence from the beginning of the file
-
+#endif //_DINT2DINT_H_

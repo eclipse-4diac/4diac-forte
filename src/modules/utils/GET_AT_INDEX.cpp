@@ -16,7 +16,7 @@
 
 DEFINE_FIRMWARE_FB(FORTE_GET_AT_INDEX, g_nStringIdGET_AT_INDEX)
 
-	const CStringDictionary::TStringId FORTE_GET_AT_INDEX::scm_anDataInputNames[] = {g_nStringIdIN_ARRAY, g_nStringIdINDEX};
+  const CStringDictionary::TStringId FORTE_GET_AT_INDEX::scm_anDataInputNames[] = {g_nStringIdIN_ARRAY, g_nStringIdINDEX};
 
 const CStringDictionary::TStringId FORTE_GET_AT_INDEX::scm_anDataInputTypeIds[] = {g_nStringIdANY, g_nStringIdUINT};
 
@@ -33,45 +33,45 @@ const TForteInt16 FORTE_GET_AT_INDEX::scm_anEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_GET_AT_INDEX::scm_anEventOutputNames[] = {g_nStringIdCNF};
 
 const SFBInterfaceSpec FORTE_GET_AT_INDEX::scm_stFBInterfaceSpec = {
-	1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-	1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  2,  scm_anDataInputNames, scm_anDataInputTypeIds,
-	2,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-	0, 0
+  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
+  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  2,  scm_anDataInputNames, scm_anDataInputTypeIds,
+  2,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+  0, 0
 };
 
 
 void FORTE_GET_AT_INDEX::executeEvent(int pa_nEIID){
-	switch(pa_nEIID){
-	case scm_nEventREQID:
+  switch(pa_nEIID){
+  case scm_nEventREQID:
 
-		if(CIEC_ANY::e_ARRAY == IN_ARRAY().getDataTypeID()){
-			CIEC_ARRAY &rInArray = static_cast<CIEC_ARRAY&>(IN_ARRAY());
-			//check if data types match
-			if(rInArray.getElementDataTypeID() == OUT().getDataTypeID()){
-				//now check array length of input array
-				if(INDEX() < rInArray.size()){
-					//update the output value
-					OUT().setValue(*rInArray[INDEX()]);
-					QO() = true;
-				}
-				else{
-					DEVLOG_DEBUG("Access index out of range.\n");
-					QO() = false;
-				}
-			}
-			else{
-				DEVLOG_DEBUG("Inequal element data types.\n");
-				QO() = false;
-			}
-		}
-		else{
-			DEVLOG_DEBUG("No 'Array' typed input and output data.\n");
-			QO() = false;
-		}
-		sendOutputEvent(scm_nEventCNFID);
+    if(CIEC_ANY::e_ARRAY == IN_ARRAY().getDataTypeID()){
+      CIEC_ARRAY &rInArray = static_cast<CIEC_ARRAY&>(IN_ARRAY());
+      //check if data types match
+      if(rInArray.getElementDataTypeID() == OUT().getDataTypeID()){
+        //now check array length of input array
+        if(INDEX() < rInArray.size()){
+          //update the output value
+          OUT().setValue(*rInArray[INDEX()]);
+          QO() = true;
+        }
+        else{
+          DEVLOG_DEBUG("Access index out of range.\n");
+          QO() = false;
+        }
+      }
+      else{
+        DEVLOG_DEBUG("Inequal element data types.\n");
+        QO() = false;
+      }
+    }
+    else{
+      DEVLOG_DEBUG("No 'Array' typed input and output data.\n");
+      QO() = false;
+    }
+    sendOutputEvent(scm_nEventCNFID);
 
-		break;
-	}
+    break;
+  }
 }
 
 

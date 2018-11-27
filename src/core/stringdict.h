@@ -24,10 +24,10 @@
 class CStringDictionary{
   DECLARE_SINGLETON(CStringDictionary)
 public:
-	typedef TForteUInt32 TStringId;
+  typedef TForteUInt32 TStringId;
 
-	//!\brief Invalid string id
-	static const TStringId scm_nInvalidStringId = 0xffffffff;
+  //!\brief Invalid string id
+  static const TStringId scm_nInvalidStringId = 0xffffffff;
 
 
   /*!\brief Get a string from the dictionary
@@ -35,24 +35,24 @@ public:
    * \param pa_nId String id
    * \return true the found string or 0 if not found
    */
-	const char *get(TStringId pa_nId);
+  const char *get(TStringId pa_nId);
 
   /*!\brief Insert a string into the dictionary
    *
    * \param pa_sStr String to be inserted
    * \return id of the inserted string (or the existing one if the dictionary already has it)
    */
-	TStringId insert(const char *pa_sStr);
+  TStringId insert(const char *pa_sStr);
 
   /*!\brief Retrieve the Id of a given string if it is already in the dictionary
    *
    * \param pa_sStr String to be searched for
    * \return id of the string (or scm_nInvalidStringId if it is not in the dictionary)
    */
-	TStringId getId(const char *pa_sStr) const{
-	  unsigned int nIdx;
-	  return findEntry(pa_sStr, nIdx);
-	}
+  TStringId getId(const char *pa_sStr) const{
+    unsigned int nIdx;
+    return findEntry(pa_sStr, nIdx);
+  }
 private:
   //!\brief Remove all dictionary entries
   void clear();

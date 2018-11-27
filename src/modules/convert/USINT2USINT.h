@@ -37,11 +37,11 @@ private:
   virtual void executeEvent(int pa_nEIID);
 
   CIEC_USINT& IN() {
-  	return *static_cast<CIEC_USINT*>(getDI(0));
+    return *static_cast<CIEC_USINT*>(getDI(0));
   }
 
   CIEC_USINT& OUT() {
-  	return *static_cast<CIEC_USINT*>(getDO(0));
+    return *static_cast<CIEC_USINT*>(getDO(0));
   }
 
 public:
@@ -50,5 +50,5 @@ public:
 
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+#endif //_USINT2USINT_H_
 

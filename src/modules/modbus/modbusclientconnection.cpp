@@ -97,7 +97,7 @@ void CModbusClientConnection::addNewPoll(TForteUInt32 pa_nPollInterval, unsigned
     }
   }
   if(newPoll == NULL){
-    m_lstPollList.push_back(new CModbusPoll(pa_nPollInterval, pa_nFunctionCode, pa_nStartAddress, pa_nNrAddresses));
+    m_lstPollList.pushBack(new CModbusPoll(pa_nPollInterval, pa_nFunctionCode, pa_nStartAddress, pa_nNrAddresses));
     m_nNrOfPolls++;
     m_anRecvBuffPosition[m_nNrOfPolls - 1] = m_unBufFillSize;
   }
@@ -123,7 +123,7 @@ void CModbusClientConnection::addNewPoll(TForteUInt32 pa_nPollInterval, unsigned
 void CModbusClientConnection::addNewSend(unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses) {
   SSendInformation sendInfo = {pa_nStartAddress, pa_nNrAddresses};
 
-  m_lstSendList.push_back(sendInfo);
+  m_lstSendList.pushBack(sendInfo);
 }
 
 void CModbusClientConnection::setSlaveId(unsigned int pa_nSlaveId){

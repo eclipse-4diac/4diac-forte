@@ -36,7 +36,7 @@ private:
   FORTE_FB_DATA_ARRAY(2,1,0, 0);
 
   CIEC_BOOL& G() {
-   	return *static_cast<CIEC_BOOL*>(getDI(0));
+     return *static_cast<CIEC_BOOL*>(getDI(0));
   }
 
 public:
@@ -45,5 +45,5 @@ public:
   virtual ~E_SWITCH(){};
 
 };
-#endif //close the ifdef sequence from the beginning of the file
 
+#endif //_E_SWITCH_H_

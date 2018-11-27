@@ -17,105 +17,101 @@
 
 DEFINE_HANDLER(CTimerHandler)
 
-CTimerHandler *CTimerHandler::sm_poFORTETimer = 0;
+CTimerHandler *CTimerHandler::smFORTETimer = 0;
 
-CTimerHandler::CTimerHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution),
-    m_pstTimedFBList(0){
+CTimerHandler::CTimerHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution),
+    mForteTime(0), mTimedFBList(0){
 }
 
 CTimerHandler::~CTimerHandler(){
 }
 
-void CTimerHandler::registerTimedFB(STimedFBListEntry *pa_pstTimerListEntry, const CIEC_TIME &pa_roTimeInterval) {
+void CTimerHandler::registerTimedFB(STimedFBListEntry *paTimerListEntry, const CIEC_TIME &paTimeInterval) {
   //calculate the correct interval based on time-base and timer ticks per seconds
-  pa_pstTimerListEntry->m_nInterval = static_cast<TForteUInt32>((pa_roTimeInterval * getTicksPerSecond()) / FORTE_TIME_BASE_UNITS_PER_SECOND);
+  paTimerListEntry->mInterval = static_cast<TForteUInt32>((paTimeInterval * getTicksPerSecond()) / FORTE_TIME_BASE_UNITS_PER_SECOND);
   {
-    CCriticalRegion criticalRegion(m_oSync);
-    addTimedFBEntry(pa_pstTimerListEntry);
+    CCriticalRegion criticalRegion(mSync);
+    addTimedFBEntry(paTimerListEntry);
   }
 }
 
-void CTimerHandler::addTimedFBEntry(STimedFBListEntry *pa_pstTimerListEntry) {
-  pa_pstTimerListEntry->m_stTimeOut = m_stForteTime;
-  pa_pstTimerListEntry->m_stTimeOut += pa_pstTimerListEntry->m_nInterval; // the next activationtime of this FB
-  pa_pstTimerListEntry->m_pstNext = 0;
+void CTimerHandler::addTimedFBEntry(STimedFBListEntry *paTimerListEntry) {
+  paTimerListEntry->mTimeOut = mForteTime + paTimerListEntry->mInterval; // the next activation time of this FB
+  paTimerListEntry->mNext = 0;
 
-	// Correct null intervals that can lead to event queue overflow to 10 ms
-	if (pa_pstTimerListEntry->m_nInterval == 0)
-		pa_pstTimerListEntry->m_stTimeOut += getTicksPerSecond() > 100 ? getTicksPerSecond() / 100 : 1;
+  // Correct null intervals that can lead to event queue overflow to 10 ms
+  if (paTimerListEntry->mInterval == 0)
+    paTimerListEntry->mTimeOut += (getTicksPerSecond() > 100) ? getTicksPerSecond() / 100 : 1;
 
-  if (0 == m_pstTimedFBList) {
-    m_pstTimedFBList = pa_pstTimerListEntry;
+  if (0 == mTimedFBList) {
+    mTimedFBList = paTimerListEntry;
   } else {
-    if (m_pstTimedFBList->m_stTimeOut > pa_pstTimerListEntry->m_stTimeOut) {
-      pa_pstTimerListEntry->m_pstNext = m_pstTimedFBList;
-      m_pstTimedFBList = pa_pstTimerListEntry;
+    if (mTimedFBList->mTimeOut > paTimerListEntry->mTimeOut) {
+      paTimerListEntry->mNext = mTimedFBList;
+      mTimedFBList = paTimerListEntry;
     } else {
-      STimedFBListEntry *runner = m_pstTimedFBList;
-      while (0 != runner->m_pstNext) {
-        if (runner->m_pstNext->m_stTimeOut > pa_pstTimerListEntry->m_stTimeOut) {
-          pa_pstTimerListEntry->m_pstNext = runner->m_pstNext;
-          runner->m_pstNext = pa_pstTimerListEntry;
+      STimedFBListEntry *runner = mTimedFBList;
+      while (0 != runner->mNext) {
+        if (runner->mNext->mTimeOut > paTimerListEntry->mTimeOut) {
+          paTimerListEntry->mNext = runner->mNext;
+          runner->mNext = paTimerListEntry;
           break;
         }
-        runner = runner->m_pstNext;
+        runner = runner->mNext;
       }
-      runner->m_pstNext = pa_pstTimerListEntry;
+      runner->mNext = paTimerListEntry;
     }
   }
 }
 
-void CTimerHandler::unregisterTimedFB(CEventSourceFB *pa_poTimedFB) {
-  CCriticalRegion criticalRegion(m_oSync);
-  if (0 != m_pstTimedFBList) {
+void CTimerHandler::unregisterTimedFB(CEventSourceFB *paTimedFB) {
+  CCriticalRegion criticalRegion(mSync);
+  if (0 != mTimedFBList) {
     STimedFBListEntry *buffer = 0;
-    if (m_pstTimedFBList->m_poTimedFB == pa_poTimedFB) {
-      buffer = m_pstTimedFBList;
-      m_pstTimedFBList = m_pstTimedFBList->m_pstNext;
-      buffer->m_pstNext = 0;
-      buffer->m_stTimeOut.m_nLowerValue = 0;
-      buffer->m_stTimeOut.m_nUpperValue = 0;
+    if (mTimedFBList->mTimedFB == paTimedFB) {
+      buffer = mTimedFBList;
+      mTimedFBList = mTimedFBList->mNext;
+      buffer->mNext = 0;
+      buffer->mTimeOut = 0;
     } else {
-      STimedFBListEntry *runner = m_pstTimedFBList;
-      while (0 != runner->m_pstNext) {
-        if (runner->m_pstNext->m_poTimedFB == pa_poTimedFB) {
-          buffer = runner->m_pstNext;
-          runner->m_pstNext = runner->m_pstNext->m_pstNext;
-          buffer->m_pstNext = 0;
-          buffer->m_stTimeOut.m_nLowerValue = 0;
-          buffer->m_stTimeOut.m_nUpperValue = 0;
+      STimedFBListEntry *runner = mTimedFBList;
+      while (0 != runner->mNext) {
+        if (runner->mNext->mTimedFB == paTimedFB) {
+          buffer = runner->mNext;
+          runner->mNext = runner->mNext->mNext;
+          buffer->mNext = 0;
+          buffer->mTimeOut = 0;
           break;
         }
-        runner = runner->m_pstNext;
+        runner = runner->mNext;
       }
     }
   }
 }
 
 void CTimerHandler::nextTick(void) {
-  ++m_stForteTime;
-  m_poDeviceExecution.notifyTime(m_stForteTime); //notify the device execution that one tick passed by.
-  if(0 != m_pstTimedFBList){
+  ++mForteTime;
+  mDeviceExecution.notifyTime(mForteTime); //notify the device execution that one tick passed by.
+  if(0 != mTimedFBList){
     //only check the list if there are entries in the list
-    CCriticalRegion criticalRegion(m_oSync);
-    while (0 != m_pstTimedFBList) {
-      if (m_pstTimedFBList->m_stTimeOut > m_stForteTime) {
+    CCriticalRegion criticalRegion(mSync);
+    while (0 != mTimedFBList) {
+      if (mTimedFBList->mTimeOut > mForteTime) {
         break;
       }
-      m_poDeviceExecution.startNewEventChain(m_pstTimedFBList->m_poTimedFB);
-      STimedFBListEntry *buffer = m_pstTimedFBList;
-      m_pstTimedFBList = m_pstTimedFBList->m_pstNext;
+      mDeviceExecution.startNewEventChain(mTimedFBList->mTimedFB);
+      STimedFBListEntry *buffer = mTimedFBList;
+      mTimedFBList = mTimedFBList->mNext;
 
-      switch (buffer->m_eType) {
+      switch (buffer->mType) {
         case e_Periodic:
-          addTimedFBEntry(buffer); //reregister the timed FB
+          addTimedFBEntry(buffer); //re-register the timed FB
           break;
         case e_SingleShot:
           // nothing special is to do up to now
         default:
-          buffer->m_pstNext = 0;
-          buffer->m_stTimeOut.m_nLowerValue = 0;
-          buffer->m_stTimeOut.m_nUpperValue = 0;
+          buffer->mNext = 0;
+          buffer->mTimeOut = 0;
           break;
       }
     }

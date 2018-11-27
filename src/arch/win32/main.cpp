@@ -66,11 +66,7 @@ void listHelp(){
   printf("\n");
 }
 
-#ifdef FORTE_SHARED_LIB
-extern "C" __declspec(dllexport) int __stdcall main(int argc, char *arg[]){
-#else
 int main(int argc, char *arg[]){
-#endif
 
   if(CForteArchitecture::initialize()){
     if(argc <= 1){ //! Default Value (localhost:61499)

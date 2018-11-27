@@ -12,6 +12,7 @@
 #ifndef _DEVEXEC_H
 #define _DEVEXEC_H
 
+class CFunctionBlock;
 class CEventSourceFB;
 class CExternalEventHandler;
 struct SForteTime;
@@ -32,10 +33,10 @@ public:
 
 /*!\brief Notifies the CExternalEventHandlerManager that one tick in the time has passed by.
  *
- * \param pa_nCurrentTime the current time in ticks since the last start of the runtime.
+ * \param paCurrentTime the current time in ticks since the last start of the runtime.
  */
-    void notifyTime(const SForteTime& ){
-    };
+    void notifyTime(uint_fast64_t ){
+    }
 
 /*!\brief an external event occurred at an ES and a new event source is to start.
  *
@@ -53,29 +54,37 @@ public:
  */
     bool extEvHandlerIsAllowed(int ){
       return true;
-    };
+    }
 
     CTimerHandler& getTimer() const;
 
-    CExternalEventHandler* getHandler(unsigned int paIdentifer) const;
+    template<typename T>
+    T& getExtEvHandler(){
+      return static_cast<T&>(*getExtEvHandler(T::mHandlerIdentifier));
+    }
 
-protected:
-private:
-/*!\brief Structure for holding the information belonging to one external event.
-*
-*/
-  struct SEventHandlerElement{
-    bool m_bOccured; //!<flag indicating that the external event has occurred between the last invocation.
-    CExternalEventHandler *m_poHandler; //!< pointer to the external event handler instance.
-  };
-/*!\brief List of currently available external event sources.
-*
-* The element 0 is always the timer event source.
-*/
+    bool isExtEvHandlerValid(size_t paIdentifier){
+      return (0 != getExtEvHandler(paIdentifier));
+    }
 
-  static void createHandlers(CDeviceExecution& pa_DeviceExecution);
+  protected:
+  private:
+    /*!\brief Structure for holding the information belonging to one external event.
+     */
+    struct SEventHandlerElement{
+      bool mOccured; //!<flag indicating that the external event has occurred between the last invocation.
+      CExternalEventHandler *mHandler; //!< pointer to the external event handler instance.
+    };
 
-  SEventHandlerElement mRegisteredEventHandlers [ cg_unNumberOfHandlers ];
+    CExternalEventHandler* getExtEvHandler(size_t paIdentifer) const;
+
+    static void createHandlers(CDeviceExecution& DeviceExecution);
+
+    /*!\brief List of currently available external event sources.
+      *
+      * The element 0 is always the timer event source.
+      */
+    SEventHandlerElement mRegisteredEventHandlers [ cg_unNumberOfHandlers ];
 
 };
 

@@ -39,22 +39,22 @@ const SFBInterfaceSpec FORTE_SVIsend_1::scm_stFBInterfaceSpec = {
 void FORTE_SVIsend_1::executeEvent(int pa_nEIID){
   switch(pa_nEIID){
     case scm_nEventINITID:
-    	if(true == QI()){
-    		QO() = registerSVIvar(ID(),SD_1(),SVI_F_OUT);
-    	}
+      if(true == QI()){
+        QO() = registerSVIvar(ID(),SD_1(),SVI_F_OUT);
+      }
       sendOutputEvent(scm_nEventINITOID);
-    	if (true == QO()) {
-    		printf("Alles OK send\n");
-    	} else {
-    		printf("Alles FALSCH send\n");
-    	}
+      if (true == QO()) {
+        printf("Alles OK send\n");
+      } else {
+        printf("Alles FALSCH send\n");
+      }
       break;
 
     case scm_nEventREQID:
       sendOutputEvent(scm_nEventCNFID);
       break;
     default:
-    	break;
+      break;
   }
 }
 

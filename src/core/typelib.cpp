@@ -155,7 +155,7 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId pa_nInstanceName
 }
 
 bool CTypeLib::deleteFB(CFunctionBlock *pa_poFBToDelete) {
-	delete pa_poFBToDelete;
+  delete pa_poFBToDelete;
   return true;
 }
 

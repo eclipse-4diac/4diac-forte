@@ -15,4 +15,3 @@
 #endif
 
 DEFINE_FIRMWARE_FB(E_CYCLE, g_nStringIdE_CYCLE)
-

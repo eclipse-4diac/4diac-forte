@@ -15,16 +15,24 @@
 #############################################################################
 
 set(FORTE_IO OFF CACHE BOOL "Enable IO Modules")
-  if(NOT FORTE_IO)
-    return()
-  endif(NOT FORTE_IO)
+
+if(NOT FORTE_IO)
+  return()
+endif(NOT FORTE_IO)
 
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\io)
 
-# forte_add_definition(-std=c++11)
+forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 add_subdirectory(configFB)
 add_subdirectory(device)
-add_subdirectory(handles)
 add_subdirectory(mapper)
-add_subdirectory(pi)
+
+forte_add_sourcefile_hcpp(processinterface)
+
+forte_add_sourcefile_hcpp(../../stdfblib/io/IX)
+forte_add_sourcefile_hcpp(../../stdfblib/io/QX)
+forte_add_sourcefile_hcpp(../../stdfblib/io/IW)
+forte_add_sourcefile_hcpp(../../stdfblib/io/QW)
+forte_add_sourcefile_hcpp(../../stdfblib/io/ID)
+forte_add_sourcefile_hcpp(../../stdfblib/io/QD)
