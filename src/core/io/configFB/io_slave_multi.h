@@ -78,7 +78,7 @@ namespace forte {
 
           virtual void initHandles() = 0;
 
-          void initHandle(IODeviceMultiController::HandleDescriptor *paHandleDescriptor);
+          void initHandle(IODeviceController::HandleDescriptor *paHandleDescriptor);
 
           static const char* const scmOK;
           static const char* const scmMasterNotFound;

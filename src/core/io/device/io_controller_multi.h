@@ -67,13 +67,9 @@ namespace forte {
 
           virtual void addHandle(IODeviceController::HandleDescriptor *paHandleDescriptor);
 
-          virtual IOHandle* initHandle(HandleDescriptor *paHandleDescriptor) = 0;
+          virtual IOHandle* initHandle(IODeviceController::HandleDescriptor *paHandleDescriptor) = 0;
 
         private:
-
-          IOHandle* initHandle(IODeviceController::HandleDescriptor *paHandleDescriptor) {
-            return initHandle(static_cast<HandleDescriptor*>(paHandleDescriptor));
-          }
 
           /*! @brief Checks if a slave exists at the given index
            *

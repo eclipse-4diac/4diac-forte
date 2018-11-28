@@ -111,7 +111,7 @@ void IOConfigFBMultiSlave::executeEvent(int paEIID) {
   }
 }
 
-void IOConfigFBMultiSlave::initHandle(IODeviceMultiController::HandleDescriptor *paHandleDescriptor) {
+void IOConfigFBMultiSlave::initHandle(IODeviceController::HandleDescriptor *paHandleDescriptor) {
   mMaster->initHandle(paHandleDescriptor);
 }
 
