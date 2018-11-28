@@ -48,7 +48,7 @@ namespace forte {
           virtual void executeEvent(int paEIID);
 
         private:
-          static TMasterList *mInstances;
+          static TMasterList mInstances;
 
           static TForteUInt16 mInstancesIncrement;
 

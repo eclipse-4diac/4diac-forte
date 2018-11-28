@@ -51,7 +51,7 @@ namespace forte {
 
           TForteUInt8 mSplitIterator;
 
-          static TControllerList *mInstances;
+          static TControllerList mInstances;
 
           static TForteUInt16 mInstancesIncrement;
 

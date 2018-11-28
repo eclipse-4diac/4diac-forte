@@ -16,20 +16,20 @@ using namespace forte::core::io;
 
 const char * const IOConfigFBMultiMaster::scmFailedToInitSlaves = "Failed to initialize slaves. Check if the configuration matches the hardware setup.";
 
-TMasterList* IOConfigFBMultiMaster::mInstances = new TMasterList();
+TMasterList IOConfigFBMultiMaster::mInstances;
 TForteUInt16 IOConfigFBMultiMaster::mInstancesIncrement = 0;
 
 IOConfigFBMultiMaster::IOConfigFBMultiMaster(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
     TForteByte *paFBConnData, TForteByte *paFBVarsData) :
     IOConfigFBController(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData) {
   mId = mInstancesIncrement++;
-  mInstances->pushBack(this);
+  mInstances.pushBack(this);
 }
 
 IOConfigFBMultiMaster* IOConfigFBMultiMaster::getMasterById(TForteUInt16 paId) {
-  TMasterList::Iterator itEnd = mInstances->end();
+  TMasterList::Iterator itEnd = mInstances.end();
   int i = 0;
-  for(TMasterList::Iterator it = mInstances->begin(); it != itEnd; ++it, i++)
+  for(TMasterList::Iterator it = mInstances.begin(); it != itEnd; ++it, i++)
     if(paId == i && *it != 0) {
       return *it;
     }
