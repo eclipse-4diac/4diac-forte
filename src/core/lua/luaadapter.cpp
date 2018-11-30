@@ -13,9 +13,10 @@
 #include "luaadapter.h"
 #include "resource.h"
 
-CLuaAdapter::CLuaAdapter(CStringDictionary::TStringId instanceNameId, const CLuaAdapterTypeEntry* typeEntry, bool pa_bIsPlug, TForteByte *connData, TForteByte *varsData, CResource *resource)
-    : CAdapter(resource, typeEntry->getSocketInterfaceSpec(), instanceNameId, typeEntry->getPlugInterfaceSpec(), pa_bIsPlug, connData, varsData){
-  this->typeEntry = typeEntry;
+CLuaAdapter::CLuaAdapter(CStringDictionary::TStringId paInstanceNameId, const CLuaAdapterTypeEntry* paTypeEntry, bool paIsPlug, TForteByte *paConnData,
+    TForteByte *paVarsData, CResource *paResource) :
+    CAdapter(paResource, paTypeEntry->getSocketInterfaceSpec(), paInstanceNameId, paTypeEntry->getPlugInterfaceSpec(), paIsPlug, paConnData, paVarsData),
+        mTypeEntry(paTypeEntry) {
 }
 
 CLuaAdapter::~CLuaAdapter() {

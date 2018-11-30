@@ -13,8 +13,9 @@
 #include "luacfb.h"
 #include "resource.h"
 
-CLuaCFB::CLuaCFB(CStringDictionary::TStringId instanceNameId, const CLuaCFBTypeEntry* typeEntry, SCFB_FBNData *fbnData, TForteByte *connData, TForteByte *varsData, CResource *resource)
-    : CCompositeFB(resource, typeEntry->getInterfaceSpec(), instanceNameId, fbnData, connData, varsData), typeEntry(typeEntry) {
+CLuaCFB::CLuaCFB(CStringDictionary::TStringId paInstanceNameId, const CLuaCFBTypeEntry* paTypeEntry, SCFB_FBNData *paFbnData, TForteByte *paConnData,
+    TForteByte *paVarsData, CResource *paResource) :
+    CCompositeFB(paResource, paTypeEntry->getInterfaceSpec(), paInstanceNameId, paFbnData, paConnData, paVarsData), mTypeEntry(paTypeEntry) {
 }
 
 CLuaCFB::~CLuaCFB() {

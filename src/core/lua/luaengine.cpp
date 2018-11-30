@@ -50,10 +50,10 @@ CLuaEngine::~CLuaEngine() {
   lua_close(luaState);
 }
 
-bool CLuaEngine::loadString(const std::string& str) {
-  int err = luaL_loadstring(luaState, str.c_str());
-  if (err) {
-    switch (err) {
+bool CLuaEngine::loadString(const std::string& paStr) {
+  int err = luaL_loadstring(luaState, paStr.c_str());
+  if(err) {
+    switch(err){
       case LUA_ERRSYNTAX:
         DEVLOG_ERROR("Syntax error loading Lua definitions\n");
         break;
@@ -65,17 +65,17 @@ bool CLuaEngine::loadString(const std::string& str) {
     }
     return false;
   }
-  if (!call(0, 1)) {
+  if(!call(0, 1)) {
     DEVLOG_ERROR("Error loading definitions\n");
     return false;
   }
   return true;
 }
 
-bool CLuaEngine::call(int args, int results) {
-  int err = lua_pcall(luaState, args, results, 0);
-  if (err) {
-    switch (err) {
+bool CLuaEngine::call(int paArgs, int paResults) {
+  int err = lua_pcall(luaState, paArgs, paResults, 0);
+  if(err) {
+    switch(err){
       case LUA_ERRRUN:
         DEVLOG_ERROR("Runtime error calling Lua function: %s\n", lua_tostring(luaState, -1));
         break;
@@ -93,185 +93,185 @@ bool CLuaEngine::call(int args, int results) {
   return true;
 }
 
-bool CLuaEngine::luaPushAny(lua_State *luaState, CIEC_ANY *value) {
-  if (!value)
+bool CLuaEngine::luaPushAny(lua_State *paLuaState, CIEC_ANY *paValue) {
+  if(!paValue)
     return false;
 
-  switch (value->getDataTypeID()) {
+  switch(paValue->getDataTypeID()){
     case CIEC_ANY::e_BOOL:
-      lua_pushboolean(luaState, static_cast<bool>(*static_cast<CIEC_BOOL*>(value)));
+      lua_pushboolean(paLuaState, static_cast<bool>(*static_cast<CIEC_BOOL*>(paValue)));
       break;
     case CIEC_ANY::e_SINT:
-      lua_pushinteger(luaState, static_cast<TForteInt8>(*static_cast<CIEC_SINT*>(value)));
+      lua_pushinteger(paLuaState, static_cast<TForteInt8>(*static_cast<CIEC_SINT*>(paValue)));
       break;
     case CIEC_ANY::e_INT:
-      lua_pushinteger(luaState, static_cast<TForteInt16>(*static_cast<CIEC_INT*>(value)));
+      lua_pushinteger(paLuaState, static_cast<TForteInt16>(*static_cast<CIEC_INT*>(paValue)));
       break;
     case CIEC_ANY::e_DINT:
-      lua_pushinteger(luaState, static_cast<TForteInt32>(*static_cast<CIEC_DINT*>(value)));
+      lua_pushinteger(paLuaState, static_cast<TForteInt32>(*static_cast<CIEC_DINT*>(paValue)));
       break;
     case CIEC_ANY::e_LINT:
-      lua_pushinteger(luaState, static_cast<TForteInt64>(*static_cast<CIEC_LINT*>(value)));
+      lua_pushinteger(paLuaState, static_cast<lua_Integer>(static_cast<TForteInt64>(*static_cast<CIEC_LINT*>(paValue))));
       break;
     case CIEC_ANY::e_USINT:
-      lua_pushinteger(luaState, static_cast<TForteUInt8>(*static_cast<CIEC_USINT*>(value)));
+      lua_pushinteger(paLuaState, static_cast<TForteUInt8>(*static_cast<CIEC_USINT*>(paValue)));
       break;
     case CIEC_ANY::e_UINT:
-      lua_pushinteger(luaState, static_cast<TForteUInt16>(*static_cast<CIEC_UINT*>(value)));
+      lua_pushinteger(paLuaState, static_cast<TForteUInt16>(*static_cast<CIEC_UINT*>(paValue)));
       break;
     case CIEC_ANY::e_UDINT:
-      lua_pushinteger(luaState, static_cast<TForteUInt32>(*static_cast<CIEC_UDINT*>(value)));
+      lua_pushinteger(paLuaState, static_cast<TForteUInt32>(*static_cast<CIEC_UDINT*>(paValue)));
       break;
     case CIEC_ANY::e_ULINT:
-      lua_pushinteger(luaState, static_cast<TForteUInt64>(*static_cast<CIEC_ULINT*>(value)));
+      lua_pushinteger(paLuaState, static_cast<lua_Integer>(static_cast<TForteUInt64>(*static_cast<CIEC_ULINT*>(paValue))));
       break;
     case CIEC_ANY::e_BYTE:
-      lua_pushinteger(luaState, static_cast<TForteByte>(*static_cast<CIEC_BYTE*>(value)));
+      lua_pushinteger(paLuaState, static_cast<TForteByte>(*static_cast<CIEC_BYTE*>(paValue)));
       break;
     case CIEC_ANY::e_WORD:
-      lua_pushinteger(luaState, static_cast<TForteWord>(*static_cast<CIEC_WORD*>(value)));
+      lua_pushinteger(paLuaState, static_cast<TForteWord>(*static_cast<CIEC_WORD*>(paValue)));
       break;
     case CIEC_ANY::e_DWORD:
-      lua_pushinteger(luaState, static_cast<TForteDWord>(*static_cast<CIEC_DWORD*>(value)));
+      lua_pushinteger(paLuaState, static_cast<TForteDWord>(*static_cast<CIEC_DWORD*>(paValue)));
       break;
     case CIEC_ANY::e_LWORD:
-      lua_pushinteger(luaState, static_cast<TForteLWord>(*static_cast<CIEC_LWORD*>(value)));
+      lua_pushinteger(paLuaState, static_cast<lua_Integer>(static_cast<TForteLWord>(*static_cast<CIEC_LWORD*>(paValue))));
       break;
     case CIEC_ANY::e_DATE:
-      lua_pushinteger(luaState, static_cast<TForteUInt64>(*static_cast<CIEC_DATE*>(value)));
+      lua_pushinteger(paLuaState, static_cast<lua_Integer>(static_cast<TForteUInt64>(*static_cast<CIEC_DATE*>(paValue))));
       break;
     case CIEC_ANY::e_TIME_OF_DAY:
-      lua_pushinteger(luaState, static_cast<TForteUInt64>(*static_cast<CIEC_TIME_OF_DAY*>(value)));
+      lua_pushinteger(paLuaState, static_cast<lua_Integer>(static_cast<TForteUInt64>(*static_cast<CIEC_TIME_OF_DAY*>(paValue))));
       break;
     case CIEC_ANY::e_DATE_AND_TIME:
-      lua_pushinteger(luaState, static_cast<TForteUInt64>(*static_cast<CIEC_DATE_AND_TIME*>(value)));
+      lua_pushinteger(paLuaState, static_cast<lua_Integer>(static_cast<TForteUInt64>(*static_cast<CIEC_DATE_AND_TIME*>(paValue))));
       break;
     case CIEC_ANY::e_TIME:
-      lua_pushinteger(luaState, static_cast<TForteInt64>(*static_cast<CIEC_TIME*>(value)));
+      lua_pushinteger(paLuaState, static_cast<lua_Integer>(static_cast<TForteInt64>(*static_cast<CIEC_TIME*>(paValue))));
       break;
     case CIEC_ANY::e_REAL:
-      lua_pushnumber(luaState, static_cast<TForteFloat>(*static_cast<CIEC_REAL*>(value)));
+      lua_pushnumber(paLuaState, static_cast<TForteFloat>(*static_cast<CIEC_REAL*>(paValue)));
       break;
     case CIEC_ANY::e_LREAL:
-      lua_pushnumber(luaState, static_cast<TForteDFloat>(*static_cast<CIEC_LREAL*>(value)));
+      lua_pushnumber(paLuaState, static_cast<TForteDFloat>(*static_cast<CIEC_LREAL*>(paValue)));
       break;
     case CIEC_ANY::e_STRING:
-      lua_pushstring(luaState, static_cast<CIEC_STRING*>(value)->getValue());
+      lua_pushstring(paLuaState, static_cast<CIEC_STRING*>(paValue)->getValue());
       break;
     case CIEC_ANY::e_WSTRING:
-      lua_pushstring(luaState, static_cast<CIEC_WSTRING*>(value)->getValue());
+      lua_pushstring(paLuaState, static_cast<CIEC_WSTRING*>(paValue)->getValue());
       break;
     case CIEC_ANY::e_ARRAY:
-      return luaPushArray(luaState, static_cast<CIEC_ARRAY*>(value));
+      return luaPushArray(paLuaState, static_cast<CIEC_ARRAY*>(paValue));
     default:
-      DEVLOG_ERROR("Conversion to Lua datatype unsupported for type with id %s\n", value->getDataTypeID());
-      lua_pushnil(luaState);
+      DEVLOG_ERROR("Conversion to Lua datatype unsupported for type with id %s\n", paValue->getDataTypeID());
+      lua_pushnil(paLuaState);
   }
 
   return true;
 }
 
-bool CLuaEngine::luaGetAny(lua_State *luaState, CIEC_ANY *value, int index) {
-  if (!value)
+bool CLuaEngine::luaGetAny(lua_State *paLuaState, CIEC_ANY *paValue, int paIndex) {
+  if(!paValue)
     return false;
-  switch (value->getDataTypeID()) {
+  switch(paValue->getDataTypeID()){
     case CIEC_ANY::e_BOOL:
-      *static_cast<CIEC_BOOL*>(value) = static_cast<bool>(lua_toboolean(luaState, index));
+      *static_cast<CIEC_BOOL*>(paValue) = static_cast<bool>(lua_toboolean(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_SINT:
-      *static_cast<CIEC_SINT*>(value) = static_cast<TForteInt8>(lua_tointeger(luaState, index));
+      *static_cast<CIEC_SINT*>(paValue) = static_cast<TForteInt8>(lua_tointeger(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_INT:
-      *static_cast<CIEC_INT*>(value) = static_cast<TForteInt16>(lua_tointeger(luaState, index));
+      *static_cast<CIEC_INT*>(paValue) = static_cast<TForteInt16>(lua_tointeger(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_DINT:
-      *static_cast<CIEC_DINT*>(value) = static_cast<TForteInt32>(lua_tointeger(luaState, index));
+      *static_cast<CIEC_DINT*>(paValue) = static_cast<TForteInt32>(lua_tointeger(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_LINT:
-      *static_cast<CIEC_LINT*>(value) = static_cast<TForteInt64>(lua_tointeger(luaState, index));
+      *static_cast<CIEC_LINT*>(paValue) = static_cast<TForteInt64>(lua_tointeger(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_USINT:
-      *static_cast<CIEC_USINT*>(value) = static_cast<TForteUInt8>(lua_tointeger(luaState, index));
+      *static_cast<CIEC_USINT*>(paValue) = static_cast<TForteUInt8>(lua_tointeger(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_UINT:
-      *static_cast<CIEC_UINT*>(value) = static_cast<TForteUInt16>(lua_tointeger(luaState, index));
+      *static_cast<CIEC_UINT*>(paValue) = static_cast<TForteUInt16>(lua_tointeger(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_UDINT:
-      *static_cast<CIEC_UDINT*>(value) = static_cast<TForteUInt32>(lua_tointeger(luaState, index));
+      *static_cast<CIEC_UDINT*>(paValue) = static_cast<TForteUInt32>(lua_tointeger(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_ULINT:
-      *static_cast<CIEC_ULINT*>(value) = static_cast<TForteUInt64>(lua_tointeger(luaState, index));
+      *static_cast<CIEC_ULINT*>(paValue) = static_cast<TForteUInt64>(lua_tointeger(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_BYTE:
-      *static_cast<CIEC_BYTE*>(value) = static_cast<TForteByte>(lua_tointeger(luaState, index));
+      *static_cast<CIEC_BYTE*>(paValue) = static_cast<TForteByte>(lua_tointeger(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_WORD:
-      *static_cast<CIEC_WORD*>(value) = static_cast<TForteWord>(lua_tointeger(luaState, index));
+      *static_cast<CIEC_WORD*>(paValue) = static_cast<TForteWord>(lua_tointeger(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_DWORD:
-      *static_cast<CIEC_DWORD*>(value) = static_cast<TForteDWord>(lua_tointeger(luaState, index));
+      *static_cast<CIEC_DWORD*>(paValue) = static_cast<TForteDWord>(lua_tointeger(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_LWORD:
-      *static_cast<CIEC_LWORD*>(value) = static_cast<TForteLWord>(lua_tointeger(luaState, index));
+      *static_cast<CIEC_LWORD*>(paValue) = static_cast<TForteLWord>(lua_tointeger(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_DATE:
-      *static_cast<CIEC_DATE*>(value) = static_cast<TForteUInt64>(lua_tointeger(luaState, index));
+      *static_cast<CIEC_DATE*>(paValue) = static_cast<TForteUInt64>(lua_tointeger(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_TIME_OF_DAY:
-      *static_cast<CIEC_TIME_OF_DAY*>(value) = static_cast<TForteUInt64>(lua_tointeger(luaState, index));
+      *static_cast<CIEC_TIME_OF_DAY*>(paValue) = static_cast<TForteUInt64>(lua_tointeger(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_DATE_AND_TIME:
-      *static_cast<CIEC_DATE_AND_TIME*>(value) = static_cast<TForteUInt64>(lua_tointeger(luaState, index));
+      *static_cast<CIEC_DATE_AND_TIME*>(paValue) = static_cast<TForteUInt64>(lua_tointeger(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_TIME:
-      *static_cast<CIEC_TIME*>(value) = static_cast<TForteInt64>(lua_tointeger(luaState, index));
+      *static_cast<CIEC_TIME*>(paValue) = static_cast<TForteInt64>(lua_tointeger(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_REAL:
-      *static_cast<CIEC_REAL*>(value) = static_cast<TForteFloat>(lua_tonumber(luaState, index));
+      *static_cast<CIEC_REAL*>(paValue) = static_cast<TForteFloat>(lua_tonumber(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_LREAL:
-      *static_cast<CIEC_LREAL*>(value) = static_cast<TForteDFloat>(lua_tonumber(luaState, index));
+      *static_cast<CIEC_LREAL*>(paValue) = static_cast<TForteDFloat>(lua_tonumber(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_STRING:
-      *static_cast<CIEC_STRING*>(value) = strdup(lua_tostring(luaState, index));
+      *static_cast<CIEC_STRING*>(paValue) = strdup(lua_tostring(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_WSTRING:
-      *static_cast<CIEC_WSTRING*>(value) = strdup(lua_tostring(luaState, index));
+      *static_cast<CIEC_WSTRING*>(paValue) = strdup(lua_tostring(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_ARRAY:
-      return luaGetArray(luaState, static_cast<CIEC_ARRAY*>(value), index);
+      return luaGetArray(paLuaState, static_cast<CIEC_ARRAY*>(paValue), paIndex);
     default:
-      DEVLOG_ERROR("Conversion from Lua datatype unsupported for type with id %s\n", value->getDataTypeID());
+      DEVLOG_ERROR("Conversion from Lua datatype unsupported for type with id %s\n", paValue->getDataTypeID());
       return false;
   }
 
   return true;
 }
 
-bool CLuaEngine::luaPushArray(lua_State *luaState, CIEC_ARRAY* array) {
-  if (!array) {
+bool CLuaEngine::luaPushArray(lua_State *paLuaState, CIEC_ARRAY* paArray) {
+  if(!paArray) {
     return false;
   }
-  lua_createtable(luaState, array->size(), 0);
-  for (int i = array->size(); i > 0; i--) {
-    if (!luaPushAny(luaState, (*array)[(TForteUInt16)(i - 1)])) { // index starts at 0
-      lua_pop(luaState, 1); // pop table
+  lua_createtable(paLuaState, paArray->size(), 0);
+  for(int i = paArray->size(); i > 0; i--) {
+    if(!luaPushAny(paLuaState, (*paArray)[(TForteUInt16) (i - 1)])) { // index starts at 0
+      lua_pop(paLuaState, 1); // pop table
       return false;
     }
-    lua_rawseti(luaState, -2, i); // index starts at 1
+    lua_rawseti(paLuaState, -2, i); // index starts at 1
   }
   return true;
 }
 
-bool CLuaEngine::luaGetArray(lua_State *luaState, CIEC_ARRAY* array, int index) {
-  if (!array || !lua_istable(luaState, index)) {
+bool CLuaEngine::luaGetArray(lua_State *paLuaState, CIEC_ARRAY* paArray, int paIndex) {
+  if(!paArray || !lua_istable(paLuaState, paIndex)) {
     return false;
   }
-  for (int i = array->size(); i > 0; i--) {
-    lua_rawgeti(luaState, index, i); // index starts at 1
-    bool res = luaGetAny(luaState, (*array)[(TForteUInt16)(i - 1)], -1); // index starts at 0
-    lua_pop(luaState, 1); // pop element
-    if (!res) {
+  for(int i = paArray->size(); i > 0; i--) {
+    lua_rawgeti(paLuaState, paIndex, i); // index starts at 1
+    bool res = luaGetAny(paLuaState, (*paArray)[(TForteUInt16) (i - 1)], -1); // index starts at 0
+    lua_pop(paLuaState, 1); // pop element
+    if(!res) {
       return false;
     }
   }

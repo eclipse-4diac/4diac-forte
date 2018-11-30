@@ -16,17 +16,18 @@
 #include "cfb.h"
 #include "luacfbtypeentry.h"
 
-class CLuaCFB: public CCompositeFB {
-private:
-  const CLuaCFBTypeEntry* typeEntry;
+class CLuaCFB : public CCompositeFB {
+  private:
+    const CLuaCFBTypeEntry* mTypeEntry;
 
-public:
-  CLuaCFB(CStringDictionary::TStringId instanceNameId, const CLuaCFBTypeEntry* typeEntry, SCFB_FBNData *fbnData, TForteByte *connData, TForteByte *varsData, CResource *resource);
-  virtual ~CLuaCFB();
+  public:
+    CLuaCFB(CStringDictionary::TStringId paInstanceNameId, const CLuaCFBTypeEntry* paTypeEntry, SCFB_FBNData *paFbnData, TForteByte *paConnData,
+        TForteByte *paVarsData, CResource *paResource);
+    virtual ~CLuaCFB();
 
-  virtual CStringDictionary::TStringId getFBTypeId(void) const {
-    return typeEntry->getTypeNameId();
-  }
+    virtual CStringDictionary::TStringId getFBTypeId(void) const {
+      return mTypeEntry->getTypeNameId();
+    }
 };
 
 #endif /* SRC_CORE_LUACFB_H_ */

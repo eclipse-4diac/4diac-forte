@@ -79,7 +79,7 @@ void DEV_MGR::executeEvent(int paEIID){
 void DEV_MGR::executeRQST(void){
   mCommand.mAdditionalParams.clear();
   EMGMResponse resp = parseAndExecuteMGMCommand(DST().getValue(), RQST().getValue());
-  
+
 #ifdef FORTE_SUPPORT_MONITORING
   if (0 != mCommand.mMonitorResponse.length()) {
     generateMonitorResponse(resp, mCommand);
@@ -151,9 +151,9 @@ char *DEV_MGR::parseRequest(char *paRequestString, forte::core::SManagementCMD &
 }
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
-bool DEV_MGR::parseXType(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand, char *paRequestType){
+bool DEV_MGR::parseXType(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand, const char *paRequestType) {
   bool retVal = false;
-  size_t nReqLength = strlen((const char *) paRequestType);
+  size_t nReqLength = strlen(paRequestType);
   if(!strncmp(paRequestType, paRequestPartLeft, nReqLength)){
     paRequestPartLeft = &(paRequestPartLeft[nReqLength]);
     if('*' != paRequestPartLeft[0]){

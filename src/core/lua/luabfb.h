@@ -27,41 +27,42 @@ extern "C" {
   int CLuaFB_call(lua_State *luaState);
 }
 
-class CLuaBFB: public CBasicFB {
-private:
-  static const TForteUInt32 LUA_FB_VAR_MAX = 65535;
-  static const TForteUInt32 LUA_AD_VAR_MAX = 255;
+class CLuaBFB : public CBasicFB {
+  private:
+    static const TForteUInt32 LUA_FB_VAR_MAX = 65535;
+    static const TForteUInt32 LUA_AD_VAR_MAX = 255;
 
-  static const TForteUInt32 LUA_FB_STATE = 0;
-  static const TForteUInt32 LUA_FB_DI_FLAG = 1 << 25;
-  static const TForteUInt32 LUA_FB_DO_FLAG = 1 << 26;
-  static const TForteUInt32 LUA_FB_AD_FLAG = 1 << 27;
-  static const TForteUInt32 LUA_FB_IN_FLAG = 1 << 28;
+    static const TForteUInt32 LUA_FB_STATE = 0;
+    static const TForteUInt32 LUA_FB_DI_FLAG = 1 << 25;
+    static const TForteUInt32 LUA_FB_DO_FLAG = 1 << 26;
+    static const TForteUInt32 LUA_FB_AD_FLAG = 1 << 27;
+    static const TForteUInt32 LUA_FB_IN_FLAG = 1 << 28;
 
-  const CLuaBFBTypeEntry* typeEntry;
+    const CLuaBFBTypeEntry* mTypeEntry;
 
-  CIEC_ANY* getVariable(TForteUInt32 id);
+    CIEC_ANY* getVariable(TForteUInt32 paId);
 
-  int recalculateID(int pa_nEIID) {
-    return CLuaBFB::LUA_FB_AD_FLAG | ((pa_nEIID >> 8) - 1) | (pa_nEIID & 0x00ff);
-  }
+    int recalculateID(int pa_nEIID) {
+      return CLuaBFB::LUA_FB_AD_FLAG | ((pa_nEIID >> 8) - 1) | (pa_nEIID & 0x00ff);
+    }
 
-public:
-  static const char LUA_NAME[];
-  static const luaL_Reg LUA_FUNCS[];
+  public:
+    static const char LUA_NAME[];
+    static const luaL_Reg LUA_FUNCS[];
 
-  CLuaBFB(CStringDictionary::TStringId instanceNameId, const CLuaBFBTypeEntry* typeEntry, TForteByte *connData, TForteByte *varsData, CResource *resource);
-  virtual ~CLuaBFB();
+    CLuaBFB(CStringDictionary::TStringId paInstanceNameId, const CLuaBFBTypeEntry* paTypeEntry, TForteByte *paConnData, TForteByte *paVarsData,
+        CResource *paResource);
+    virtual ~CLuaBFB();
 
-  virtual void executeEvent(int pa_nEIID);
+    virtual void executeEvent(int paEIID);
 
-  virtual CStringDictionary::TStringId getFBTypeId(void) const {
-    return typeEntry->getTypeNameId();
-  }
+    virtual CStringDictionary::TStringId getFBTypeId(void) const {
+      return mTypeEntry->getTypeNameId();
+    }
 
-  friend int CLuaFB_index(lua_State *luaState);
-  friend int CLuaFB_newindex(lua_State *luaState);
-  friend int CLuaFB_call(lua_State *luaState);
+    friend int CLuaFB_index(lua_State *paLuaState);
+    friend int CLuaFB_newindex(lua_State *paLuaState);
+    friend int CLuaFB_call(lua_State *paLuaState);
 };
 
 #endif /* SRC_CORE_LUABFB_H_ */
