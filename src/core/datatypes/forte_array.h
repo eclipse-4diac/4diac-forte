@@ -100,7 +100,7 @@ class CIEC_ARRAY : public CIEC_ANY_DERIVED{
      */
     virtual int toString(char* paValue, unsigned int paBufferSize) const;
 
-    virtual unsigned int getToStringBufferSize() const;
+    virtual size_t getToStringBufferSize() const;
 
   private:
     //This constructor is only to be used by the create instance method

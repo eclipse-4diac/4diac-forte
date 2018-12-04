@@ -270,8 +270,8 @@ CIEC_ANY *CIEC_STRUCT::getMemberNamed(CStringDictionary::TStringId paMemberNameI
   return poRetVal;
 }
 
-unsigned int CIEC_STRUCT::getToStringBufferSize() const {
-  unsigned int retVal = 3; // 2 bytes for the open and closing brackets one for the '\0'
+size_t CIEC_STRUCT::getToStringBufferSize() const {
+  size_t retVal = 3; // 2 bytes for the open and closing brackets one for the '\0'
   TForteUInt16 nSize = getStructSize();
   retVal += (nSize > 1) ? (nSize - 1) : 0; //for the commas between the elements
   retVal += (nSize * 2); //for the := of each element

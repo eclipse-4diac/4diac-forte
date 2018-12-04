@@ -356,7 +356,7 @@ void CMonitoringHandler::readResourceWatches(CIEC_STRING &paResponse){
 
 void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
     SDataWatchEntry &paDataWatchEntry){
-  unsigned int bufferSize = paDataWatchEntry.mDataValue.getToStringBufferSize() + getExtraSizeForEscapedChars(paDataWatchEntry.mDataValue);
+  size_t bufferSize = paDataWatchEntry.mDataValue.getToStringBufferSize() + getExtraSizeForEscapedChars(paDataWatchEntry.mDataValue);
   appendPortTag(paResponse, paDataWatchEntry.mPortId);
   paResponse.append("<Data value=\"");
   char* acDataValue = new char [bufferSize]; //TODO try to directly use the response string instead

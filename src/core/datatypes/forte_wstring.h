@@ -142,7 +142,7 @@ class CIEC_WSTRING : public CIEC_ANY_STRING{
      *
      * \return Needed buffer size for literal string without type delarator e.g., WSTRING#
      */
-    virtual unsigned int getToStringBufferSize() const;
+    virtual size_t getToStringBufferSize() const;
 
   protected:
 

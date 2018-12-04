@@ -271,9 +271,9 @@ int CIEC_WSTRING::toUTF8(char* pa_pacBuffer, unsigned int pa_nBufferSize, bool p
   return static_cast<int>(pEncRunner - pa_pacBuffer);
 }
 
-unsigned int CIEC_WSTRING::getToStringBufferSize() const{
+size_t CIEC_WSTRING::getToStringBufferSize() const {
   const char * const stringValue = getValue();
-  unsigned int neededBufferSize = 0;
+  size_t neededBufferSize = 0;
   for(size_t i = 0; i < length(); ++i){
     if(isprint(stringValue[i]) && '$' != stringValue[i] && '\"' != stringValue[i]){
       ++neededBufferSize;

@@ -119,7 +119,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      */
     CIEC_ANY *getMemberNamed(CStringDictionary::TStringId paMemberNameId);
 
-    virtual unsigned int getToStringBufferSize() const;
+    virtual size_t getToStringBufferSize() const;
 
   protected:
 

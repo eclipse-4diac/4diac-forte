@@ -74,9 +74,9 @@ int CIEC_STRING::toString(char* paValue, unsigned int paBufferSize) const {
   return nRetVal;
 }
 
-unsigned int CIEC_STRING::getToStringBufferSize() const{
+size_t CIEC_STRING::getToStringBufferSize() const {
   const char * const stringValue = getValue();
-  unsigned int neededBufferSize = 0;
+  size_t neededBufferSize = 0;
   for(size_t i = 0; i < length(); ++i){
     if(isprint(stringValue[i]) && '$' != stringValue[i] && '\'' != stringValue[i]){
       ++neededBufferSize;
@@ -103,7 +103,7 @@ unsigned int CIEC_STRING::getToStringBufferSize() const{
 
 #ifdef FORTE_UNICODE_SUPPORT
 int CIEC_STRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescape) {
-  
+
   int nSrcLen = pa_nLen >= 0 ? pa_nLen : (pa_bUnescape ? determineEscapedStringLength(pa_pacValue, '\'') : static_cast<int>(strlen(pa_pacValue)));
   int nSrcCappedLength = nSrcLen;
 
