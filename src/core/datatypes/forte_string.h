@@ -109,7 +109,7 @@ class CIEC_STRING : public CIEC_ANY_STRING{
      *
      * \return Needed buffer size for literal string without type delarator e.g., STRING#
      */
-    virtual unsigned int getToStringBufferSize() const;
+    virtual size_t getToStringBufferSize() const;
 
   protected:
 

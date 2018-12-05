@@ -186,8 +186,8 @@ int CIEC_ARRAY::toString(char* paValue, unsigned int paBufferSize) const {
   return nBytesUsed;
 }
 
-unsigned int CIEC_ARRAY::getToStringBufferSize() const {
-  unsigned int retVal = 3; // 2 bytes for the open and closing brackets and one for the '\0'
+size_t CIEC_ARRAY::getToStringBufferSize() const {
+  size_t retVal = 3; // 2 bytes for the open and closing brackets and one for the '\0'
   TForteUInt16 nSize = size();
   retVal += (nSize > 1) ? (nSize - 1) : 0; //for the commas between the elements
 

@@ -369,7 +369,7 @@ void CHttpComLayer::closeConnection() {
 }
 
 bool CHttpComLayer::serializeData(const CIEC_ANY& paCIECData) {
-  int bufferSize = paCIECData.getToStringBufferSize();
+  size_t bufferSize = paCIECData.getToStringBufferSize();
   char acDataValue[bufferSize];
   int nConsumedBytes;
   switch(paCIECData.getDataTypeID()){
