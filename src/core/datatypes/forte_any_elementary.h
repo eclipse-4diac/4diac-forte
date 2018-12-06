@@ -37,7 +37,7 @@ class CIEC_ANY_ELEMENTARY : public CIEC_ANY{
       return CIEC_ANY::e_ANY;
     }
 
-    virtual int toString(char* pa_acValue, unsigned int pa_nBufferSize) const;
+    virtual int toString(char* paValue, size_t paBufferSize) const;
     virtual int fromString(const char *pa_rsValue);
 
   protected:

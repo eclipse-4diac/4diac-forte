@@ -58,7 +58,7 @@ int CIEC_BOOL::fromString(const char *paValue){
   return nRetVal;
 }
 
-int CIEC_BOOL::toString(char* paValue, unsigned int paBufferSize)  const {
+int CIEC_BOOL::toString(char* paValue, size_t paBufferSize) const {
   int nRetval = -1;
   if(paBufferSize >= csmStringBufferSize[e_BOOL]){
     if(getTBOOL8()){

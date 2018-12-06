@@ -105,7 +105,7 @@ class CIEC_DATE : public CIEC_ANY_DATE{
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    virtual int toString(char* paValue, unsigned int paBufferSize) const;
+    virtual int toString(char* paValue, size_t paBufferSize) const;
 };
 
 #endif /* #ifdef FORTE_USE_64BIT_DATATYPES */

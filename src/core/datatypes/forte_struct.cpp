@@ -197,7 +197,7 @@ CStringDictionary::TStringId CIEC_STRUCT::parseNextElementId(const char *paRunne
   return unElementNameId;
 }
 
-int CIEC_STRUCT::toString(char* paValue, unsigned int paBufferSize) const{
+int CIEC_STRUCT::toString(char* paValue, size_t paBufferSize) const {
   int nBytesUsed = -1;
 
   if(paBufferSize) {
@@ -222,7 +222,7 @@ int CIEC_STRUCT::toString(char* paValue, unsigned int paBufferSize) const{
       paValue++;
       *paValue = '=';
       paValue++;
-      paBufferSize -= static_cast<unsigned int>(strlen(acMemberName) + 2);
+      paBufferSize -= strlen(acMemberName) + 2;
       nBytesUsed += static_cast<int>(strlen(acMemberName) + 2);
 
       nUsedBytesByElement = poMembers->toString(paValue, paBufferSize);

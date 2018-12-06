@@ -98,7 +98,7 @@ class CIEC_ARRAY : public CIEC_ANY_DERIVED{
      *   \return number of bytes used in the buffer
      *           -1 on error
      */
-    virtual int toString(char* paValue, unsigned int paBufferSize) const;
+    virtual int toString(char* paValue, size_t paBufferSize) const;
 
     virtual size_t getToStringBufferSize() const;
 

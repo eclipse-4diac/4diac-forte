@@ -127,7 +127,9 @@ class CIEC_ANY_STRING : public CIEC_ANY_ELEMENTARY{
      *   \return number of bytes used in the buffer
      *           -1 on error
      */
-    virtual int toUTF8(char*, unsigned int, bool) const{return 0;}
+    virtual int toUTF8(char*, size_t, bool) const {
+      return 0;
+    }
 #endif
 
   protected:

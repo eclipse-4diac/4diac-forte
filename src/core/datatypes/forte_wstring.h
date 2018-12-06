@@ -71,7 +71,7 @@ class CIEC_WSTRING : public CIEC_ANY_STRING{
      *   \return number of bytes used in the buffer
      *           -1 on error
      */
-    virtual int toUTF8(char* pa_pacBuffer, unsigned int pa_nBufferSize, bool pa_bEscape) const;
+    virtual int toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) const;
 
     /*! \brief Converts a UTF-16 encoded string to a WSTRING (UTF-8 internally)
      *
@@ -131,7 +131,7 @@ class CIEC_WSTRING : public CIEC_ANY_STRING{
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    virtual int toString(char* pa_acValue, unsigned int pa_nBufferSize) const;
+    virtual int toString(char* paValue, size_t paBufferSize) const;
 
     /*! \brief Returns the amount of bytes needed to create the IEC 61131 literal string
      *

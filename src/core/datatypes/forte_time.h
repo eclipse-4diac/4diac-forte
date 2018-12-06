@@ -95,7 +95,7 @@ class CIEC_TIME : public CIEC_ANY_MAGNITUDE{
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    virtual int toString(char* paValue, unsigned int paBufferSize) const;
+    virtual int toString(char* paValue, size_t paBufferSize) const;
 
     TValueType getInSeconds() const;
     TValueType getInMiliSeconds() const;

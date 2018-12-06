@@ -102,7 +102,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      *   \return number of bytes used in the buffer
      *           -1 on error
      */
-    virtual int toString(char* paValue, unsigned int paBufferSize) const;
+    virtual int toString(char* paValue, size_t paBufferSize) const;
 
     CIEC_ANY *getMembers(){
       return (0 != getSpecs()) ? getSpecs()->mMembers : static_cast<CIEC_ANY *>(0);

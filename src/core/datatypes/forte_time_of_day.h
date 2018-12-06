@@ -108,7 +108,7 @@ class CIEC_TIME_OF_DAY : public CIEC_ANY_DATE{
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    virtual int toString(char* paValue, unsigned int paBufferSize) const;
+    virtual int toString(char* paValue, size_t paBufferSize) const;
 
     /*! \brief Set the variable to current time
      */

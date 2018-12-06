@@ -105,7 +105,7 @@ int CIEC_TIME::fromString(const char *paValue){
 
 }
 
-int CIEC_TIME::toString(char* paValue, unsigned int paBufferSize) const{
+int CIEC_TIME::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal = -1;
   if(paBufferSize > 4){
 #ifdef FORTE_USE_64BIT_DATATYPES

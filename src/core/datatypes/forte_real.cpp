@@ -33,7 +33,7 @@ int CIEC_REAL::fromString(const char *paValue){
     pacRunner += 5;
   }
 
-  
+
   #if defined(WIN32) || defined(__ECOS) || defined(VXWORKS)
   realval = static_cast<TForteFloat>(strtod(pacRunner, &pcEnd));
   #else
@@ -48,11 +48,11 @@ int CIEC_REAL::fromString(const char *paValue){
   return static_cast<int>(pcEnd - paValue);
 }
 
-int CIEC_REAL::toString(char* paValue, unsigned int paBufferSize) const{
+int CIEC_REAL::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal;
   nRetVal = forte_snprintf(paValue, paBufferSize, "%g", getTFLOAT());
-  if((nRetVal < -1) || (nRetVal >= (int) paBufferSize)){
-    nRetVal = -1;  
+  if((nRetVal < -1) || (nRetVal >= static_cast<int>(paBufferSize))) {
+    nRetVal = -1;
   }
   return nRetVal;
 }

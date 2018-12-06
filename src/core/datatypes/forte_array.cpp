@@ -144,7 +144,7 @@ void CIEC_ARRAY::initializeFromString(TForteUInt16 paArraySize, int* paValueLen,
   }
 }
 
-int CIEC_ARRAY::toString(char* paValue, unsigned int paBufferSize) const {
+int CIEC_ARRAY::toString(char* paValue, size_t paBufferSize) const {
   int nBytesUsed = -1;
 
   if(paBufferSize) {

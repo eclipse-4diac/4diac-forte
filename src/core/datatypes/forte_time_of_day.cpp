@@ -89,7 +89,7 @@ int CIEC_TIME_OF_DAY::fromString(const char *paValue){
   return static_cast<int>(acBuffer - paValue);
 }
 
-int CIEC_TIME_OF_DAY::toString(char* paValue, unsigned int paBufferSize) const{
+int CIEC_TIME_OF_DAY::toString(char* paValue, size_t paBufferSize) const {
   TForteUInt64 ntoStingBuffer = getTUINT64();
   time_t t = static_cast<time_t>(ntoStingBuffer / 1000);
 
@@ -98,7 +98,7 @@ int CIEC_TIME_OF_DAY::toString(char* paValue, unsigned int paBufferSize) const{
       (int) ((t % 3600) / 60),
       (int) (t % 60),
       (int) (ntoStingBuffer % 1000));
-  if((nRetVal < -1) || (nRetVal >= (int) paBufferSize)){
+  if((nRetVal < -1) || (nRetVal >= static_cast<int>(paBufferSize))) {
     nRetVal = -1;
   }
   return nRetVal;

@@ -156,8 +156,8 @@ int CIEC_WSTRING::fromString(const char *pa_pacValue){
   return (-1 == nUTF8Result) ? -1 : (nRetVal + nUTF8Result);
 }
 
-int CIEC_WSTRING::toString(char* pa_acValue, unsigned int pa_nBufferSize) const{
-  return toUTF8(pa_acValue, pa_nBufferSize, true);
+int CIEC_WSTRING::toString(char* paValue, size_t paBufferSize) const {
+  return toUTF8(paValue, paBufferSize, true);
 }
 
 int CIEC_WSTRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescape){
@@ -236,18 +236,19 @@ int CIEC_WSTRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnesca
   return nSrcLen;
 }
 
-int CIEC_WSTRING::toUTF8(char* pa_pacBuffer, unsigned int pa_nBufferSize, bool pa_bEscape) const{
-  if((TForteUInt32) length() + (pa_bEscape ? 2 : 0) + 1 > pa_nBufferSize)
+int CIEC_WSTRING::toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) const {
+  if((TForteUInt32) length() + (paEscape ? 2 : 0) + 1 > paBufferSize) {
     return -1;
+  }
 
-  if(!pa_bEscape){
-    memcpy(pa_pacBuffer, getValue(), length() + 1);
+  if(!paEscape){
+    memcpy(paBuffer, getValue(), length() + 1);
     return length();
   }
 
   const char *pRunner;
-  char *pEncRunner = pa_pacBuffer;
-  char *pDataEnd = pa_pacBuffer + pa_nBufferSize;
+  char *pEncRunner = paBuffer;
+  char *pDataEnd = paBuffer + paBufferSize;
 
   *pEncRunner++ = '\"';
 
@@ -262,13 +263,14 @@ int CIEC_WSTRING::toUTF8(char* pa_pacBuffer, unsigned int pa_nBufferSize, bool p
     ++pRunner;
   }
 
-  if(pDataEnd - pEncRunner < 2)
+  if(pDataEnd - pEncRunner < 2) {
     return -1;
+  }
 
   *pEncRunner++ = '\"';
   *pEncRunner = '\0';
 
-  return static_cast<int>(pEncRunner - pa_pacBuffer);
+  return static_cast<int>(pEncRunner - paBuffer);
 }
 
 size_t CIEC_WSTRING::getToStringBufferSize() const {

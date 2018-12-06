@@ -46,18 +46,18 @@ int CIEC_STRING::fromString(const char *pa_pacValue){
   return nSrcLen;
 }
 
-int CIEC_STRING::toString(char* paValue, unsigned int paBufferSize) const {
+int CIEC_STRING::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal = -1;
   if(0 != paValue && getToStringBufferSize() <= paBufferSize){
     *paValue = '\'';
     paValue++;
     TForteUInt16 nLen = length();
-    int nUsedBytes = 0;
+    size_t nUsedBytes = 0;
     paBufferSize -= 2;
     if(0 < nLen){
       const char * acValue = getValue();
       for(unsigned int i = 0; i < nLen; ++i){
-        if(static_cast<unsigned int >(nUsedBytes) >= paBufferSize){
+        if(nUsedBytes >= paBufferSize) {
           return -1;
         }
         nUsedBytes += dollarEscapeChar(paValue+nUsedBytes, acValue[i], 2);
@@ -66,7 +66,7 @@ int CIEC_STRING::toString(char* paValue, unsigned int paBufferSize) const {
     } else{
       *paValue = '\0';
     }
-    nRetVal = nUsedBytes;
+    nRetVal = static_cast<int>(nUsedBytes);
     paValue[nRetVal] = '\'';
     paValue[nRetVal + 1] = '\0';
     nRetVal += 2;
@@ -162,9 +162,9 @@ int CIEC_STRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescap
   return nSrcLen;
 }
 
-int CIEC_STRING::toUTF8(char* pa_pacBuffer, unsigned int pa_nBufferSize, bool pa_bEscape) const {
+int CIEC_STRING::toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) const {
   // Count the needed space
-  unsigned int nNeededLength = pa_bEscape ? 2 : 0; // Leading and trailing delimiter
+  size_t nNeededLength = paEscape ? 2 : 0; // Leading and trailing delimiter
   int nRes;
 
   const unsigned char *pRunner = (const unsigned char *) getValue();
@@ -173,41 +173,46 @@ int CIEC_STRING::toUTF8(char* pa_pacBuffer, unsigned int pa_nBufferSize, bool pa
     if (nRes < 0)
       return -1;
     nNeededLength += nRes;
-    if (nRes == 1 && pa_bEscape && dollarEscapeChar(0, *pRunner, 0) == 2)
+    if (nRes == 1 && paEscape && dollarEscapeChar(0, *pRunner, 0) == 2)
       nNeededLength++;
     ++pRunner;
   }
 
-  if (pa_pacBuffer == 0)
-    return nNeededLength;
+  if(0 == paBuffer) {
+    return static_cast<int>(nNeededLength);
+  }
 
-  if (nNeededLength+1 > pa_nBufferSize)
+  if(nNeededLength + 1 > paBufferSize) {
     return -1;
+  }
 
-  char *pEncRunner = pa_pacBuffer;
-  char *pDataEnd = pa_pacBuffer + nNeededLength;
+  char *pEncRunner = paBuffer;
+  char *pDataEnd = paBuffer + nNeededLength;
 
-  if (pa_bEscape)
+  if(paEscape) {
     *pEncRunner++ = '\'';
+  }
 
   pRunner = (const unsigned char *) getValue();
   while (*pRunner) {
     nRes = CUnicodeUtilities::encodeUTF8Codepoint((TForteByte *) pEncRunner, static_cast<unsigned int>(pDataEnd - pEncRunner), (TForteUInt32) *pRunner);
-    if (nRes == 1 && pa_bEscape)
+    if(nRes == 1 && paEscape) {
       nRes = dollarEscapeChar(pEncRunner, *pRunner, static_cast<unsigned int>(pDataEnd - pEncRunner));
-
-    if (nRes < 0)
+    }
+    if(nRes < 0) {
       return -1;
+    }
 
     pEncRunner += nRes;
     ++pRunner;
   }
 
-  if (pa_bEscape)
+  if(paEscape) {
     *pEncRunner++ = '\'';
+  }
   *pEncRunner = '\0';
 
-  return static_cast<int>(pEncRunner - pa_pacBuffer);
+  return static_cast<int>(pEncRunner - paBuffer);
 }
 
 #endif

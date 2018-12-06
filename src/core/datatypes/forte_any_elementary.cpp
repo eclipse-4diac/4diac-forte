@@ -40,7 +40,7 @@ const CStringDictionary::TStringId CIEC_ANY_ELEMENTARY::scm_anTypeNameStringIds[
     CStringDictionary::scm_nInvalidStringId, //e_Max
     };
 
-int CIEC_ANY_ELEMENTARY::toString(char* pa_acValue, unsigned int pa_nBufferSize) const{
+int CIEC_ANY_ELEMENTARY::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal = 0;
 
   TLargestUIntValueType nDivisor = 0;
@@ -101,16 +101,16 @@ int CIEC_ANY_ELEMENTARY::toString(char* pa_acValue, unsigned int pa_nBufferSize)
     }
 #endif
     default: {
-      return CIEC_ANY::toString(pa_acValue, pa_nBufferSize);
+      return CIEC_ANY::toString(paValue, paBufferSize);
     }
   }
 
   if(true == bSigned){
     if(nSBuffer < 0){
-      if(nRetVal >= (int) pa_nBufferSize){
+      if(nRetVal >= static_cast<int>(paBufferSize)) {
         return -1;
       }
-      pa_acValue[nRetVal] = '-';
+      paValue[nRetVal] = '-';
       nRetVal++;
       nSBuffer *= -1;
     }
@@ -126,26 +126,26 @@ int CIEC_ANY_ELEMENTARY::toString(char* pa_acValue, unsigned int pa_nBufferSize)
     else{
       bLeadingZeros = false;
     }
-    if(nRetVal >= (int) pa_nBufferSize){
+    if(nRetVal >= static_cast<int>(paBufferSize)) {
       return -1;
     }
 
-    pa_acValue[nRetVal] = static_cast<char>(static_cast<char>(nUBuffer / nDivisor) + '0');
-    nUBuffer = nUBuffer - (pa_acValue[nRetVal] - '0') * nDivisor;
+    paValue[nRetVal] = static_cast<char>(static_cast<char>(nUBuffer / nDivisor) + '0');
+    nUBuffer = nUBuffer - (paValue[nRetVal] - '0') * nDivisor;
     nDivisor /= 10;
     nRetVal++;
   } while(nDivisor > 1);
 
-  if(nRetVal >= (int) pa_nBufferSize){
+  if(nRetVal >= static_cast<int>(paBufferSize)) {
     return -1;
   }
-  pa_acValue[nRetVal] = static_cast<char>(static_cast<char>(nUBuffer / nDivisor) + '0');
+  paValue[nRetVal] = static_cast<char>(static_cast<char>(nUBuffer / nDivisor) + '0');
   nRetVal++;
 
-  if(nRetVal >= (int) pa_nBufferSize){
+  if(nRetVal >= static_cast<int>(paBufferSize)) {
     return -1;
   }
-  pa_acValue[nRetVal] = '\0';
+  paValue[nRetVal] = '\0';
 
   return nRetVal;
 }

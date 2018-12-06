@@ -174,7 +174,7 @@ class CIEC_ANY{
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    virtual int toString(char* pa_pacValue, unsigned int pa_nBufferSize) const;
+    virtual int toString(char* paValue, size_t paBufferSize) const;
 
     /*! \brief determine whether we can cast the source to the destination and what kind of cast it is
      */
@@ -408,7 +408,7 @@ class CIEC_ANY{
 
   private:
     const static int scmMaxTypeNameLength = 14;
-    static const char * const scmAnyToStringResponse;
+    static const char scmAnyToStringResponse[];
 
     //!declared but undefined copy constructor as we don't want ANYs to be directly copied.
     CIEC_ANY(const CIEC_ANY&);

@@ -20,7 +20,7 @@
 
 const CTypeLib::CDataTypeEntry CIEC_ANY::csmFirmwareDataTypeEntry_CIEC_ANY(g_nStringIdANY, CIEC_ANY::createDataType);
 
-const char * const CIEC_ANY::scmAnyToStringResponse = "ND (ANY)";
+const char CIEC_ANY::scmAnyToStringResponse[] = "ND (ANY)";
 
 int CIEC_ANY::dummyInit(){
   return 0;
@@ -101,12 +101,14 @@ CStringDictionary::TStringId CIEC_ANY::parseTypeName(const char *pa_pacValue, co
   return nRetVal;
 }
 
-int CIEC_ANY::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
+int CIEC_ANY::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal = -1;
-  if((strlen(scmAnyToStringResponse) +1) <= pa_nBufferSize){
-    nRetVal = static_cast<int>(strlen(scmAnyToStringResponse));
-    memcpy(pa_pacValue, scmAnyToStringResponse, nRetVal);
-    pa_pacValue[nRetVal] = '\0';
+  if(sizeof(scmAnyToStringResponse) <= paBufferSize) {
+     nRetVal = sizeof(scmAnyToStringResponse) - 1;
+
+    //don't use snprintf here since it brings big usage and performance overheads
+    memcpy(paValue, scmAnyToStringResponse, nRetVal);
+    paValue[nRetVal] = '\0';
   }
   return nRetVal;
 }

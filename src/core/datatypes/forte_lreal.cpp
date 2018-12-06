@@ -44,10 +44,10 @@ int CIEC_LREAL::fromString(const char *paValue){
   return static_cast<int>(pcEnd - paValue);
 }
 
-int CIEC_LREAL::toString(char* paValue, unsigned int paBufferSize) const{
+int CIEC_LREAL::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal;
   nRetVal = forte_snprintf(paValue, paBufferSize, "%.*g", 15, getTDFLOAT());
-  if((nRetVal < -1) || (nRetVal >= (int) paBufferSize)){
+  if((nRetVal < -1) || (nRetVal >= static_cast<int>(paBufferSize))) {
     nRetVal = -1;
   }
   return nRetVal;

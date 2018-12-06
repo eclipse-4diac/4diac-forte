@@ -68,7 +68,7 @@ int CIEC_DATE::fromString(const char *paValue){
   return static_cast<unsigned int>(acBuffer - paValue);
 }
 
-int CIEC_DATE::toString(char* paValue, unsigned int paBufferSize) const{
+int CIEC_DATE::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal = -1;
   struct tm *ptm = getTimeStruct();
 
@@ -76,7 +76,7 @@ int CIEC_DATE::toString(char* paValue, unsigned int paBufferSize) const{
     return -1;
 
   nRetVal = forte_snprintf(paValue, paBufferSize, "%04d-%02d-%02d", 1900 + ptm->tm_year, ptm->tm_mon + 1, ptm->tm_mday);
-  if((nRetVal < -1) || (nRetVal >= (int) paBufferSize)){
+  if((nRetVal < -1) || (nRetVal >= static_cast<int>(paBufferSize))) {
     nRetVal = -1;
   }
   return nRetVal;
