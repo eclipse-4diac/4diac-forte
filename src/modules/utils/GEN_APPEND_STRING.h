@@ -23,13 +23,13 @@ class GEN_APPEND_STRING : public CGenFunctionBlock<CFunctionBlock> {
   //we know for sure that there is one output event and one input event
     static const TEventID scm_nEventCNFID = 0;
     static const CStringDictionary::TStringId scm_anEventOutputNames[];
-    
+
     static const TEventID scm_nEventREQID = 0;
     static const CStringDictionary::TStringId scm_anEventInputNames[];
 
     CStringDictionary::TStringId *m_anDataInputNames;
     CStringDictionary::TStringId *m_anDataInputTypeIds;
-    
+
     static const CStringDictionary::TStringId scm_anDataOutputNames[];
     static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
 
@@ -42,7 +42,7 @@ class GEN_APPEND_STRING : public CGenFunctionBlock<CFunctionBlock> {
   //maximum string buffer size for conversions into string values
   static const TForteInt16 scm_maxStringBufSize;
     //self-defined members
-    int m_nDInputs;
+    size_t mDInputs;
 
      virtual void executeEvent(int paEIID);
      virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);

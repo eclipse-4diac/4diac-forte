@@ -123,8 +123,8 @@ EComResponse CFBDKASN1ComLayer::sendData(void *pa_pvData, unsigned int pa_unSize
   return eRetVal;
 }
 
-EComResponse CFBDKASN1ComLayer::recvData(const void *pa_pvData, unsigned int pa_unSize){
-  TForteByte *recvData = (TForteByte *) pa_pvData;
+EComResponse CFBDKASN1ComLayer::recvData(const void *paData, unsigned int paSize){
+  TForteByte *receivedData = const_cast<TForteByte*>(static_cast<const TForteByte *>(paData));
   EComResponse eRetVal = e_Nothing;
 
   if(m_poFb != 0){
@@ -135,16 +135,16 @@ EComResponse CFBDKASN1ComLayer::recvData(const void *pa_pvData, unsigned int pa_
 
     // TODO: only copy if necessary
     if(0 == mDeserBufPos){
-      usedBuffer = recvData;
-      usedBufferSize = pa_unSize;
+      usedBuffer = receivedData;
+      usedBufferSize = paSize;
     }
     else{
-      if((pa_unSize + mDeserBufPos) > mDeserBufSize){
-        resizeDeserBuffer(pa_unSize + mDeserBufPos);
+      if((paSize + mDeserBufPos) > mDeserBufSize){
+        resizeDeserBuffer(paSize + mDeserBufPos);
       }
-      memcpy((mDeserBuf + mDeserBufPos), recvData, pa_unSize);
+      memcpy((mDeserBuf + mDeserBufPos), receivedData, paSize);
       usedBuffer = mDeserBuf;
-      mDeserBufPos = mDeserBufPos + pa_unSize;
+      mDeserBufPos = mDeserBufPos + paSize;
       usedBufferSize = mDeserBufPos;
     }
     int nBuf;
@@ -186,9 +186,9 @@ EComResponse CFBDKASN1ComLayer::recvData(const void *pa_pvData, unsigned int pa_
 
       usedBufferSize -= nBuf;
       usedBuffer += nBuf;
-      
-      // required if e.g. the first element is an bool and the second element is "fragmented" - otherwise the resize in the buffer will not be resized  
-      recvData += nBuf; 
+
+      // required if e.g. the first element is an bool and the second element is "fragmented" - otherwise the resize in the buffer will not be resized
+      receivedData += nBuf;
 
       if(mDOPos >= unNumRD){
         mDOPos = 0;

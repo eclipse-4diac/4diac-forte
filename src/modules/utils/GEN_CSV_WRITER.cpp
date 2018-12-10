@@ -66,8 +66,7 @@ bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfac
   const char *acPos = strrchr(paConfigString, '_');
   if(0 != acPos){
     acPos++;
-    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(forte::core::util::strtoul(acPos,0,10));
-    paInterfaceSpec.m_nNumDIs += 2U; // we have in addition to the SDs a QI and FILE_NAME data inputs
+    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(forte::core::util::strtoul(acPos, 0, 10) + 2); // we have in addition to the SDs a QI and FILE_NAME data inputs
 
     m_anDataInputNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
     m_anDataInputTypeIds = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];

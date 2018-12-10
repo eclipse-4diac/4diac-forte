@@ -38,10 +38,10 @@ class GEN_F_MUX : public CGenFunctionBlock<CFunctionBlock> {
     TDataIOID *m_anEOWith;
 
     //self-defined members
-    unsigned int m_nEInputs;
-    unsigned int m_nEOutputs;
-    unsigned int m_nDInputs;
-    unsigned int m_nDOutputs;
+    size_t mEInputs;
+    size_t mEOutputs;
+    size_t mDInputs;
+    size_t mDOutputs;
 
     virtual void executeEvent(int paEIID);
     virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);

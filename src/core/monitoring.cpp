@@ -366,14 +366,14 @@ void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
     case CIEC_ANY::e_STRING:
       consumedBytes = static_cast<CIEC_WSTRING&>(paDataWatchEntry.mDataValue).toUTF8(acDataValue, bufferSize, false);
       if(bufferSize != paDataWatchEntry.mDataValue.getToStringBufferSize() && 0 < consumedBytes) { //avoid re-running on strings which were already proven not to have any special character
-        consumedBytes += forte::core::util::transformNonEscapedToEscapedXMLText(acDataValue);
+        consumedBytes += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(acDataValue));
       }
       break;
     case CIEC_ANY::e_ARRAY:
     case CIEC_ANY::e_STRUCT:
       consumedBytes = paDataWatchEntry.mDataValue.toString(acDataValue, bufferSize);
       if(bufferSize != paDataWatchEntry.mDataValue.getToStringBufferSize() && 0 < consumedBytes) { //avoid re-running on elements which were already proven not to have any special character
-        consumedBytes += forte::core::util::transformNonEscapedToEscapedXMLText(acDataValue);
+        consumedBytes += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(acDataValue));
       }
       break;
     default:
@@ -418,12 +418,12 @@ size_t CMonitoringHandler::getExtraSizeForEscapedCharsArray(const CIEC_ARRAY& pa
     case CIEC_ANY::e_WSTRING:
     case CIEC_ANY::e_STRING:
       for(size_t i = 0; i < paDataValue.size(); i++) {
-        retVal += forte::core::util::getExtraSizeForEscapedChars(static_cast<const CIEC_WSTRING*>(paDataValue[i])->getValue()) + 10; //for opening and closing quotes or apos
+        retVal += forte::core::util::getExtraSizeForEscapedChars(static_cast<const CIEC_WSTRING*>(paDataValue[static_cast<TForteUInt16>(i)])->getValue()) + 10; //for opening and closing quotes or apos
       }
       break;
     case CIEC_ANY::e_STRUCT:
       for(size_t i = 0; i < paDataValue.size(); i++) {
-        retVal += getExtraSizeForEscapedCharsStruct(*static_cast<const CIEC_STRUCT*>(paDataValue[i]));
+        retVal += getExtraSizeForEscapedCharsStruct(*static_cast<const CIEC_STRUCT*>(paDataValue[static_cast<TForteUInt16>(i)]));
       }
       break;
     default:

@@ -13,7 +13,8 @@
 #include <basicfb.h>
 
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-# include "internalvartests_gen.cpp"
+//don't add a space between # and include so the cmake script finds the line
+#include "internalvartests_gen.cpp"
 #else
 # include "stringlist.h"
 #endif

@@ -42,8 +42,8 @@ class GEN_ARRAY2VALUES : public CGenFunctionBlock<CFunctionBlock> {
     static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
     //self-defined members
-    int m_nDOutputs;
-    CStringDictionary::TStringId m_ValueTypeID;
+    size_t mDOutputs;
+    CStringDictionary::TStringId mValueTypeID;
 
     virtual void executeEvent(int paEIID);
     virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);

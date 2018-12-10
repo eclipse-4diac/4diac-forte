@@ -34,10 +34,10 @@ GEN_F_MUX::GEN_F_MUX(const CStringDictionary::TStringId paInstanceNameId, CResou
   m_anEIWith(0),
   m_anEOWithIndexes(0),
   m_anEOWith(0),
-  m_nEInputs(0),
-  m_nEOutputs(0),
-  m_nDInputs(0),
-  m_nDOutputs(0){
+  mEInputs(0),
+  mEOutputs(0),
+  mDInputs(0),
+  mDOutputs(0){
 }
 
 GEN_F_MUX::~GEN_F_MUX(){
@@ -54,15 +54,15 @@ GEN_F_MUX::~GEN_F_MUX(){
 
 void GEN_F_MUX::executeEvent(int paEIID){
 
-  if(-1 < paEIID && static_cast<unsigned int>(paEIID) < m_nEInputs ){
+  if(-1 < paEIID && static_cast<size_t>(paEIID) < mEInputs) {
 
-    int startIndex = paEIID * m_nDOutputs;
+    size_t startIndex = paEIID * mDOutputs;
     bool status = true;
 
-    for(int input_index = startIndex, output_index = 2; input_index < startIndex + static_cast<int>(m_nDOutputs); input_index++, output_index++){
+    for(size_t input_index = startIndex, output_index = 2; input_index < startIndex + mDOutputs; input_index++, output_index++) {
 
-      CIEC_ANY *p_dataInput = getDI(input_index);
-      CIEC_ANY *p_dataOutput = getDO(output_index);
+      CIEC_ANY *p_dataInput = getDI(static_cast<unsigned int>(input_index));
+      CIEC_ANY *p_dataOutput = getDO(static_cast<unsigned int>(output_index));
 
       // check whether datatypes match
       if(p_dataInput != 0 && p_dataOutput != 0 && p_dataInput->getDataTypeID() == p_dataOutput->getDataTypeID()){
@@ -144,15 +144,15 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
   }
   else{
     //set the data and event port numbers
-    m_nEInputs = static_cast<unsigned int>(forte::core::util::strtoul(paramEI,0,10));
-    m_nDOutputs = static_cast<unsigned int>(forte::core::util::strtoul(paramDO,0,10));
-    m_nEOutputs = 1;
-    m_nDInputs = m_nEInputs * m_nDOutputs;
+    mEInputs = static_cast<size_t>(forte::core::util::strtoul(paramEI, 0, 10));
+    mDOutputs = static_cast<size_t>(forte::core::util::strtoul(paramDO, 0, 10));
+    mEOutputs = 1;
+    mDInputs = mEInputs * mDOutputs;
 
-    DEVLOG_DEBUG("EIs: %d; DIs: %d; EOs: %d; DOs: %d \n", m_nEInputs, m_nDInputs, m_nEOutputs, m_nDOutputs);
+    DEVLOG_DEBUG("EIs: %d; DIs: %d; EOs: %d; DOs: %d \n", mEInputs, mDInputs, mEOutputs, mDOutputs);
 
     //return with error if there are not enough event inputs (use common merge FB instead!!)
-    if(m_nEInputs < 2){
+    if(mEInputs < 2){
       DEVLOG_ERROR("At least 2 Event Inputs need to be set\n");
       return 0;
     }
@@ -160,30 +160,30 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
 
   //now the number of needed eventInputs and dataOutputs are available in the integer array
   //create the eventInputs
-  if(m_nEInputs < CFunctionBlock::scm_nMaxInterfaceEvents && m_nDInputs < CFunctionBlock::scm_nMaxInterfaceEvents){
+  if(mEInputs < CFunctionBlock::scm_nMaxInterfaceEvents && mDInputs < CFunctionBlock::scm_nMaxInterfaceEvents){
     //create the eventInputs
-    m_anEventInputNames = new CStringDictionary::TStringId[m_nEInputs];
+    m_anEventInputNames = new CStringDictionary::TStringId[mEInputs];
 
-    generateGenericInterfacePointNameArray("EI", m_anEventInputNames,  m_nEInputs);
+    generateGenericInterfacePointNameArray("EI", m_anEventInputNames,  mEInputs);
 
     //create the data inputs
-    m_anDataInputNames = new CStringDictionary::TStringId[m_nDInputs];
-    m_anDataInputTypeIds = new CStringDictionary::TStringId[m_nDInputs];
+    m_anDataInputNames = new CStringDictionary::TStringId[mDInputs];
+    m_anDataInputTypeIds = new CStringDictionary::TStringId[mDInputs];
     char diNames[cg_nIdentifierLength] = { "IN_" };
-    int di_posIndex = 0;
-    for(unsigned int ei = 0; ei < m_nEInputs; ei = ei + 1){
+    size_t di_posIndex = 0;
+    for(size_t ei = 0; ei < mEInputs; ei++) {
 
-      for(unsigned int di = 0; di < m_nDOutputs; di = di + 1){
+      for(size_t di = 0; di < mDOutputs; di++) {
         forte_snprintf(&(diNames[3]), 11 - 3, "%u_%u", ei + 1, di + 1);
-        di_posIndex = ei * m_nDOutputs + di;
+        di_posIndex = ei * mDOutputs + di;
         m_anDataInputNames[di_posIndex] = CStringDictionary::getInstance().insert(diNames);
         m_anDataInputTypeIds[di_posIndex] = g_nStringIdANY;
       }
     }
 
     //create the data outputs
-    m_anDataOutputNames = new CStringDictionary::TStringId[m_nDOutputs + 2];
-    m_anDataOutputTypeIds = new CStringDictionary::TStringId[m_nDOutputs + 2];
+    m_anDataOutputNames = new CStringDictionary::TStringId[mDOutputs + 2];
+    m_anDataOutputTypeIds = new CStringDictionary::TStringId[mDOutputs + 2];
 
     //data outputs for status and QO
     m_anDataOutputNames[0] = CStringDictionary::getInstance().insert("QO");
@@ -191,19 +191,19 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
     m_anDataOutputNames[1] = CStringDictionary::getInstance().insert("STATUS");
     m_anDataOutputTypeIds[1] = g_nStringIdWSTRING;
 
-    generateGenericDataPointArrays("OUT_", &(m_anDataOutputTypeIds[2]), &(m_anDataOutputNames[2]), m_nDOutputs);
+    generateGenericDataPointArrays("OUT_", &(m_anDataOutputTypeIds[2]), &(m_anDataOutputNames[2]), mDOutputs);
 
     //now create the WITH constructs...
     //first the With-Indexes Events
-    m_anEIWithIndexes = new TForteInt16[m_nEInputs];
+    m_anEIWithIndexes = new TForteInt16[mEInputs];
     m_anEOWithIndexes = new TForteInt16[2]; //contains terminating -1 value
 
-    for(unsigned int ei_index = 0; ei_index < m_nEInputs; ei_index = ei_index + 1){
+    for(size_t ei_index = 0; ei_index < mEInputs; ei_index++) {
       if(ei_index == 0){
         m_anEIWithIndexes[ei_index] = 0;
       }
       else{
-        m_anEIWithIndexes[ei_index] = static_cast<TForteInt16>(ei_index * (m_nDOutputs + 1));
+        m_anEIWithIndexes[ei_index] = static_cast<TForteInt16>(ei_index * (mDOutputs + 1));
       }
     }
 
@@ -211,15 +211,15 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
     m_anEOWithIndexes[1] = -1;
 
     //second the With-Indexes for the data variables
-    m_anEIWith = new TDataIOID[m_nDInputs + m_nEInputs]; //for inputs per event + '255' separators between withs
-    m_anEOWith = new TDataIOID[m_nDOutputs + 2 + 1]; //for outputs only one '255' separator since one output event is needed + 2 for QO and STATUS
+    m_anEIWith = new TDataIOID[mDInputs + mEInputs]; //for inputs per event + '255' separators between withs
+    m_anEOWith = new TDataIOID[mDOutputs + 2 + 1]; //for outputs only one '255' separator since one output event is needed + 2 for QO and STATUS
 
     //in-withs
     int withListIndex = 0;
     int dataIndex = 0;
-    for(unsigned int in_block = 0; in_block < m_nEInputs; in_block = in_block + 1){
+    for(size_t in_block = 0; in_block < mEInputs; in_block++) {
 
-      for(unsigned int in_with = 0; in_with < m_nDOutputs; in_with = in_with + 1){
+      for(size_t in_with = 0; in_with < mDOutputs; in_with++) {
         m_anEIWith[withListIndex] = static_cast<TDataIOID>(dataIndex);
         withListIndex++;
         dataIndex++;
@@ -234,25 +234,25 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
     m_anEOWith[0] = 0; //for QO and STATUS
     m_anEOWith[1] = 1;
 
-    for(unsigned int out_with = 2; out_with < m_nDOutputs + 2; out_with = out_with + 1){
+    for(unsigned int out_with = 2; out_with < mDOutputs + 2; out_with++) {
       m_anEOWith[out_with] = static_cast<TForteUInt8>(out_with);
     }
     //set '255' separator
-    m_anEOWith[m_nDOutputs + 2] = scmWithListDelimiter;
+    m_anEOWith[mDOutputs + 2] = scmWithListDelimiter;
 
     //create the interface Specification
-    paInterfaceSpec.m_nNumEIs = static_cast<TForteUInt8>(m_nEInputs);
+    paInterfaceSpec.m_nNumEIs = static_cast<TForteUInt8>(mEInputs);
     paInterfaceSpec.m_aunEINames = m_anEventInputNames;
     paInterfaceSpec.m_anEIWith = m_anEIWith;
     paInterfaceSpec.m_anEIWithIndexes = m_anEIWithIndexes;
-    paInterfaceSpec.m_nNumEOs = static_cast<TForteUInt8>(m_nEOutputs);
+    paInterfaceSpec.m_nNumEOs = static_cast<TForteUInt8>(mEOutputs);
     paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
     paInterfaceSpec.m_anEOWith = m_anEOWith;
     paInterfaceSpec.m_anEOWithIndexes = m_anEOWithIndexes;
-    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(m_nDInputs);
+    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(mDInputs);
     paInterfaceSpec.m_aunDINames = m_anDataInputNames;
     paInterfaceSpec.m_aunDIDataTypeNames = m_anDataInputTypeIds;
-    paInterfaceSpec.m_nNumDOs = static_cast<TForteUInt8>(m_nDOutputs + 2);
+    paInterfaceSpec.m_nNumDOs = static_cast<TForteUInt8>(mDOutputs + 2);
     paInterfaceSpec.m_aunDONames = m_anDataOutputNames;
     paInterfaceSpec.m_aunDODataTypeNames = m_anDataOutputTypeIds;
     return true;

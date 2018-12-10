@@ -35,7 +35,7 @@ const TForteInt16 GEN_APPEND_STRING::scm_anEOWithIndexes[] = { 0, -1 };
 const TForteInt16 GEN_APPEND_STRING::scm_maxStringBufSize = 100;
 
 GEN_APPEND_STRING::GEN_APPEND_STRING(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), m_anDataInputNames(0), m_anDataInputTypeIds(0), m_anEIWith(0), m_nDInputs(0){
+    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), m_anDataInputNames(0), m_anDataInputTypeIds(0), m_anEIWith(0), mDInputs(0){
 }
 
 GEN_APPEND_STRING::~GEN_APPEND_STRING(){
@@ -59,9 +59,9 @@ void GEN_APPEND_STRING::executeEvent(int paEIID){
     TForteUInt16 nStringLength = 0;
 
     //iterate over data inputs
-    for(int input_index = 0; input_index < m_nDInputs; input_index++){
+    for(size_t input_index = 0; input_index < mDInputs; input_index++) {
       //get current data input
-      pDataInput = getDI(input_index);
+      pDataInput = getDI(static_cast<unsigned int>(input_index));
 
       //for string data inputs of type CIEC_STRING or CIEC_WSTRING
       if(pDataInput->getDataTypeID() == CIEC_ANY::e_STRING || pDataInput->getDataTypeID() == CIEC_ANY::e_WSTRING){
@@ -131,40 +131,39 @@ bool GEN_APPEND_STRING::createInterfaceSpec(const char *paConfigString, SFBInter
     ++pcPos;
     if('S' != *pcPos){
       //we have an underscore and it is not the first underscore after E
-      m_nDInputs = static_cast<int>(forte::core::util::strtoul(pcPos, 0, 10));
-      DEVLOG_DEBUG("DIs: %d;\n", m_nDInputs);
+      mDInputs = static_cast<size_t>(forte::core::util::strtoul(pcPos, 0, 10));
     }
     else{
-      m_nDInputs = 0;
+      mDInputs = 0;
     }
   }
   else{
     return false;
   }
 
-  if(m_nDInputs < 2){
+  if(mDInputs < 2){
     return false;
   }
 
   //now the number of needed eventInputs and dataOutputs are available in the integer array
   //create the eventInputs
-  if(m_nDInputs < CFunctionBlock::scm_nMaxInterfaceEvents){
+  if(mDInputs < CFunctionBlock::scm_nMaxInterfaceEvents){
 
     //create the data inputs
-    m_anDataInputNames = new CStringDictionary::TStringId[m_nDInputs];
-    m_anDataInputTypeIds = new CStringDictionary::TStringId[m_nDInputs];
+    m_anDataInputNames = new CStringDictionary::TStringId[mDInputs];
+    m_anDataInputTypeIds = new CStringDictionary::TStringId[mDInputs];
 
-    generateGenericDataPointArrays("IN_", m_anDataInputTypeIds, m_anDataInputNames, m_nDInputs);
+    generateGenericDataPointArrays("IN_", m_anDataInputTypeIds, m_anDataInputNames, mDInputs);
 
     //now create the WITH constructs...
     //the With-Indexes for the data variables
-    m_anEIWith = new TDataIOID[m_nDInputs + 1]; //for inputs + '255' separators at the list end
+    m_anEIWith = new TDataIOID[mDInputs + 1]; //for inputs + '255' separators at the list end
 
     //in-withs
-    for(size_t in_with = 0; in_with < m_nDInputs; ++in_with){
+    for(size_t in_with = 0; in_with < mDInputs; ++in_with){
       m_anEIWith[in_with] = static_cast<TDataIOID>(in_with);
     }
-    m_anEIWith[m_nDInputs] = scmWithListDelimiter;
+    m_anEIWith[mDInputs] = scmWithListDelimiter;
 
     //create the interface Specification
     paInterfaceSpec.m_nNumEIs = 1;
@@ -175,7 +174,7 @@ bool GEN_APPEND_STRING::createInterfaceSpec(const char *paConfigString, SFBInter
     paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
     paInterfaceSpec.m_anEOWith = scm_anEOWith;
     paInterfaceSpec.m_anEOWithIndexes = scm_anEOWithIndexes;
-    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(m_nDInputs);
+    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(mDInputs);
     paInterfaceSpec.m_aunDINames = m_anDataInputNames;
     paInterfaceSpec.m_aunDIDataTypeNames = m_anDataInputTypeIds;
     paInterfaceSpec.m_nNumDOs = 1;

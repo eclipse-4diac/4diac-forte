@@ -52,7 +52,7 @@ public:
  * \param pa_nExtEvHandler ID of the external event handler given by the CDeviceExecution on registerExternalEvnetHandler()
  * \return true if the external event handler is allowed to start new event chains.
  */
-    bool extEvHandlerIsAllowed(int ){
+    bool extEvHandlerIsAllowed(size_t) {
       return true;
     }
 

@@ -123,7 +123,7 @@ bool CHttpComLayer::checkSDInPOSTAndPUT(size_t paNoOfSD) {
 bool CHttpComLayer::checkSDsAndRDsType() {
 
   for(size_t i = 2; i < m_poFb->getNumSD(); i++) {
-    CIEC_ANY::EDataTypeID typeToCheck = m_poFb->getDI(i)->getDataTypeID();
+    CIEC_ANY::EDataTypeID typeToCheck = m_poFb->getDI(static_cast<unsigned int>(i))->getDataTypeID();
     if(CIEC_ANY::e_ANY != typeToCheck && CIEC_ANY::e_STRING != typeToCheck && CIEC_ANY::e_WSTRING != typeToCheck) {
       DEVLOG_ERROR("[HTTP Layer] Client called %s has an invalid SD_%d\n", CStringDictionary::getInstance().get(m_poFb->getInstanceNameId()), i);
       return false;
@@ -131,7 +131,7 @@ bool CHttpComLayer::checkSDsAndRDsType() {
   }
 
   for(size_t i = 2; i < m_poFb->getNumRD(); i++) {
-    CIEC_ANY::EDataTypeID typeToCheck = m_poFb->getDO(i)->getDataTypeID();
+    CIEC_ANY::EDataTypeID typeToCheck = m_poFb->getDO(static_cast<unsigned int>(i))->getDataTypeID();
     if(CIEC_ANY::e_ANY != typeToCheck && CIEC_ANY::e_STRING != typeToCheck && CIEC_ANY::e_WSTRING != typeToCheck) {
       DEVLOG_ERROR("[HTTP Layer] Client called %s has an invalid RD_%d\n", CStringDictionary::getInstance().get(m_poFb->getInstanceNameId()), i);
       return false;

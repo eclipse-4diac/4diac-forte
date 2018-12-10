@@ -33,10 +33,11 @@ class CGenFunctionBlock : public T {
 
 
     static void generateGenericInterfacePointNameArray(const char * const paPrefix,
-        CStringDictionary::TStringId* paNamesArayStart, unsigned int paNumGenericDataPoints);
+        CStringDictionary::TStringId* paNamesArayStart,
+        size_t paNumGenericDataPoints);
     static void generateGenericDataPointArrays(const char * const paPrefix,
         CStringDictionary::TStringId* paDataTypeNamesArrayStart,
-        CStringDictionary::TStringId* paNamesArrayStart, unsigned int paNumGenericDataPoints);
+        CStringDictionary::TStringId* paNamesArrayStart, size_t paNumGenericDataPoints);
 
   private:
     /*! \brief parse the config string and generate the according interface specification

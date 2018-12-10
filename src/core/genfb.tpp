@@ -44,12 +44,13 @@ bool CGenFunctionBlock<T>::configureFB(const char *paConfigString){
 }
 
 template<class T>
-void CGenFunctionBlock<T>::generateGenericInterfacePointNameArray(const char * const paPrefix, CStringDictionary::TStringId* paNamesArayStart, unsigned int paNumGenericDataPoints){
+void CGenFunctionBlock<T>::generateGenericInterfacePointNameArray(const char * const paPrefix, CStringDictionary::TStringId* paNamesArayStart,
+    size_t paNumGenericDataPoints) {
   size_t len = strlen(paPrefix);
 
   unsigned int noOfDigits = 0;
   {
-    unsigned int tempNum = paNumGenericDataPoints;
+    size_t tempNum = paNumGenericDataPoints;
     while(tempNum){
       tempNum /= 10;
       noOfDigits++;
@@ -63,7 +64,7 @@ void CGenFunctionBlock<T>::generateGenericInterfacePointNameArray(const char * c
       acBuffer[len + i] = '\0';
     }
 
-    for(unsigned int i = 1; i <= paNumGenericDataPoints; i++){
+    for(size_t i = 1; i <= paNumGenericDataPoints; i++) {
       if(i < 10){ //1 digit
         acBuffer[len] = static_cast<char>(0x30 + i);
       }
@@ -91,7 +92,8 @@ void CGenFunctionBlock<T>::generateGenericInterfacePointNameArray(const char * c
 }
 
 template<class T>
-void CGenFunctionBlock<T>::generateGenericDataPointArrays(const char * const paPrefix, CStringDictionary::TStringId* paDataTypeNamesArrayStart, CStringDictionary::TStringId* paNamesArrayStart, unsigned int paNumGenericDataPoints){
+void CGenFunctionBlock<T>::generateGenericDataPointArrays(const char * const paPrefix, CStringDictionary::TStringId* paDataTypeNamesArrayStart,
+    CStringDictionary::TStringId* paNamesArrayStart, size_t paNumGenericDataPoints) {
   generateGenericInterfacePointNameArray(paPrefix, paNamesArrayStart, paNumGenericDataPoints);
 
   for(size_t i = 0; i < paNumGenericDataPoints; i++){
