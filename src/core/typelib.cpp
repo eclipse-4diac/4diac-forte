@@ -52,9 +52,8 @@ CTypeLib::CAdapterTypeEntry::~CAdapterTypeEntry(void){
 
 }
 
-CTypeLib::CDataTypeEntry::CDataTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TDataTypeCreateFunc pa_pfuncDTCreateFunc) :
-          CTypeEntry(pa_nTypeNameId){
-  m_pfuncDTCreateFunc = pa_pfuncDTCreateFunc;
+CTypeLib::CDataTypeEntry::CDataTypeEntry(CStringDictionary::TStringId paTypeNameId, TDataTypeCreateFunc pafuncDTCreateFunc) :
+    CTypeEntry(paTypeNameId), m_pfuncDTCreateFunc(pafuncDTCreateFunc) {
   CTypeLib::addDataType(this);
 }
 

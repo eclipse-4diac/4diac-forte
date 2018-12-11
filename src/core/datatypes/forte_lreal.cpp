@@ -60,7 +60,7 @@ void CIEC_LREAL::setValue(const CIEC_ANY& paValue){
       setValueSimple(paValue);
       break;
     case e_REAL:
-      (*this) = (((CIEC_REAL &) paValue)).operator TForteFloat();
+      (*this) = static_cast<const CIEC_REAL &>(paValue).operator TForteFloat();
       break;
     case e_STRING:
       (*this).fromString(((CIEC_STRING&) paValue).getValue());

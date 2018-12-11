@@ -27,7 +27,6 @@ CDataConnection::CDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId,
 CDataConnection::~CDataConnection(){
   if(0 != m_poValue){
     m_poValue->~CIEC_ANY();
-    ;
   }
 }
 

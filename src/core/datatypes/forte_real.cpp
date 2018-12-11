@@ -26,19 +26,19 @@ int CIEC_REAL::fromString(const char *paValue){
   char *pcEnd;
   const char *pacRunner = paValue;
   TForteFloat realval = 0.0;
-  const TForteFloat TFLOAT_min = 3.4e-38f; // lower precision boundary
-  const TForteFloat TFLOAT_max = 3.4e38f; // upper precision boundary
+  const TForteFloat TFLOAT_min = 3.4e-38F; // lower precision boundary
+  const TForteFloat TFLOAT_max = 3.4e38F; // upper precision boundary
 
   if(0 == strncmp(pacRunner, "REAL#", 5)){
     pacRunner += 5;
   }
 
 
-  #if defined(WIN32) || defined(__ECOS) || defined(VXWORKS)
+#if defined(WIN32) || defined(__ECOS) || defined(VXWORKS)
   realval = static_cast<TForteFloat>(strtod(pacRunner, &pcEnd));
-  #else
+#else //defined(WIN32) || defined(__ECOS) || defined(VXWORKS)
   realval = strtof(pacRunner, &pcEnd);
-  #endif
+#endif //defined(WIN32) || defined(__ECOS) || defined(VXWORKS)
 
   if(((fabs(realval) < TFLOAT_min) && (realval != 0)) || ((fabs(realval) > TFLOAT_max) && (realval != 0)) ||
       (pacRunner == pcEnd))
@@ -110,10 +110,10 @@ void CIEC_REAL::castRealData(const CIEC_REAL &paSrcValue, CIEC_ANY &paDestValue)
     case CIEC_ANY::e_LINT: {
       CIEC_REAL::TValueType floatValue = static_cast<CIEC_REAL::TValueType>(paSrcValue);
       if(0 < floatValue){
-        floatValue += 0.5f;
+        floatValue += 0.5F;
       }
       if(0 > floatValue){
-        floatValue -= 0.5f;
+        floatValue -= 0.5F;
       }
       *((CIEC_ANY::TLargestIntValueType *) paDestValue.getDataPtr()) = static_cast<CIEC_ANY::TLargestIntValueType>(floatValue);
     }
@@ -123,10 +123,10 @@ void CIEC_REAL::castRealData(const CIEC_REAL &paSrcValue, CIEC_ANY &paDestValue)
       //should not be necessary because of connect function, but who knows.
       CIEC_REAL::TValueType floatValue = static_cast<CIEC_REAL::TValueType>(paSrcValue);
       if(0 < floatValue){
-        floatValue += 0.5f;
+        floatValue += 0.5F;
       }
       if(0 > floatValue){
-        floatValue -= 0.5f;
+        floatValue -= 0.5F;
       }
       *((CIEC_ANY::TLargestUIntValueType *) paDestValue.getDataPtr()) = static_cast<CIEC_ANY::TLargestUIntValueType>(floatValue);
     }

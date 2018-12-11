@@ -57,11 +57,11 @@ public:
 
   template<typename T> void calculateValue(){
     T oIn;
-  #ifdef FORTE_USE_64BIT_DATATYPES
+#ifdef FORTE_USE_64BIT_DATATYPES
     CIEC_ULINT oN;
-    #else
+#else // FORTE_USE_64BIT_DATATYPES
     CIEC_UDINT oN;
-  #endif //#ifdef FORTE_USE_64BIT_DATATYPES
+#endif // FORTE_USE_64BIT_DATATYPES
     oIn.saveAssign(IN());
     oN.saveAssign(N());
     OUT().saveAssign(ROR(oIn, oN));

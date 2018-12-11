@@ -16,9 +16,9 @@
 
 /*! \ingroup posix_hal
  *\ingroup EXTEVHAND
- *\brief the timer handler for the pc architecture. 
+ *\brief the timer handler for the pc architecture.
  */
-class CPCTimerHandler : public CTimerHandler, private CThread{
+class CPCTimerHandler : public CTimerHandler, private CThread {
   public:
     virtual ~CPCTimerHandler();
 

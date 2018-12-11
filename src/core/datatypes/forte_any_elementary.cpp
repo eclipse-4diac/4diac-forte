@@ -50,59 +50,50 @@ int CIEC_ANY_ELEMENTARY::toString(char* paValue, size_t paBufferSize) const {
   bool bSigned = true;
 
   switch (getDataTypeID()){
-    case e_SINT: {
+    case e_SINT:
       nSBuffer = getTINT8();
       nDivisor = 100;
       break;
-    }
     case e_USINT:
-    case e_BYTE: {
+    case e_BYTE:
       nUBuffer = getTUINT8();
       nDivisor = 100;
       bSigned = false;
       break;
-    }
-    case e_INT: {
+    case e_INT:
       nSBuffer = getTINT16();
       nDivisor = 10000;
       break;
-    }
     case e_UINT:
-    case e_WORD: {
+    case e_WORD:
       nUBuffer = getTUINT16();
       nDivisor = 10000;
       bSigned = false;
       break;
-    }
-    case e_DINT: {
+    case e_DINT:
       nSBuffer = getTINT32();
       nDivisor = 1000000000L;
       break;
-    }
     case e_UDINT:
-    case e_DWORD: {
+    case e_DWORD:
       nUBuffer = getTUINT32();
       nDivisor = 1000000000L;
       bSigned = false;
       break;
-    }
 #ifdef FORTE_USE_64BIT_DATATYPES
-    case e_LINT: {
+      case e_LINT:
       nSBuffer = getTINT64();
       nDivisor = 1000000000000000000LL;
       break;
-    }
     case e_ULINT:
-    case e_LWORD: {
+      case e_LWORD:
       nUBuffer = getTUINT64();
       nDivisor = 10000000000000000000ULL;
       bSigned = false;
       break;
-    }
 #endif
-    default: {
+    default:
       return CIEC_ANY::toString(paValue, paBufferSize);
-    }
   }
 
   if(true == bSigned){
@@ -212,62 +203,48 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *pa_pacValue){
 
     EDataTypeID eID = getDataTypeID();
     switch (eID){
-      case e_SINT: {
+      case e_SINT:
         nSUpperBound = CIEC_SINT::scm_nMaxVal;
         nSLowerBound = CIEC_SINT::scm_nMinVal;
         break;
-      }
-      case e_INT: {
+      case e_INT:
         nSUpperBound = CIEC_INT::scm_nMaxVal;
         nSLowerBound = CIEC_INT::scm_nMinVal;
         break;
-      }
-      case e_DINT: {
+      case e_DINT:
         nSUpperBound = CIEC_DINT::scm_nMaxVal;
         nSLowerBound = CIEC_DINT::scm_nMinVal;
         break;
-      }
-
 #ifdef FORTE_USE_64BIT_DATATYPES
-      case e_LINT: {
+        case e_LINT:
         nSUpperBound = CIEC_LINT::scm_nMaxVal;
         nSLowerBound = CIEC_LINT::scm_nMinVal;
         break;
-      }
 #endif
       case e_USINT:
-      case e_BYTE: {
+      case e_BYTE:
         nUUpperBound = CIEC_USINT::scm_nMaxVal;
         bSigned = false;
         break;
-      }
-
       case e_UINT:
-      case e_WORD: {
+      case e_WORD:
         nUUpperBound = CIEC_UINT::scm_nMaxVal;
         bSigned = false;
         break;
-      }
-
       case e_UDINT:
-      case e_DWORD: {
+      case e_DWORD:
         nUUpperBound = CIEC_UDINT::scm_nMaxVal;
         bSigned = false;
         break;
-      }
-
 #ifdef FORTE_USE_64BIT_DATATYPES
       case e_ULINT:
-      case e_LWORD: {
+        case e_LWORD:
         nUUpperBound = CIEC_ULINT::scm_nMaxVal;
         bSigned = false;
         break;
-      }
 #endif
-
-      default: {
+      default:
         return false;
-      }
     }
 
     if((bSigned) && (10 != nMultiplier)){

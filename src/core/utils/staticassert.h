@@ -14,10 +14,10 @@
 
 #ifdef __GNUC__
   //The latest GCC is rather picky about unused typedefs. We need this for our static assert and its ok there that it is unused there.
-  #define FORTE_ATTRIBUTE_UNUSED __attribute__((unused))
-#else
-  #define FORTE_ATTRIBUTE_UNUSED
-#endif
+# define FORTE_ATTRIBUTE_UNUSED __attribute__((unused))
+#else //__GNUC__
+# define FORTE_ATTRIBUTE_UNUSED
+#endif //__GNUC__
 
 /*! A simple compile time assert which is based on the books:
  *    - Modern C++ Design, Andrei Alexandrescu

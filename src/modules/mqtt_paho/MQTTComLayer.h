@@ -16,7 +16,7 @@
 #include "comlayer.h"
 #include "../../core/datatypes/forte_string.h"
 extern "C" {
-  #include <MQTTAsync.h>
+#include <MQTTAsync.h>
 }
 
 #define QOS 0

@@ -210,11 +210,11 @@ void CCommFB::configureDIs(const char *paDIConfigString, SFBInterfaceSpec &paInt
 
     diDataTypeNames[0] = g_nStringIdBOOL;
     diNames[0] = g_nStringIdQI;
-  #ifdef FORTE_USE_WSTRING_DATATYPE
+#ifdef FORTE_USE_WSTRING_DATATYPE
     diDataTypeNames[1] = g_nStringIdWSTRING;
-  #else
+#else //FORTE_USE_WSTRING_DATATYPE
     diDataTypeNames[1] = g_nStringIdSTRING;
-  #endif
+#endif //FORTE_USE_WSTRING_DATATYPE
     diNames[1] = g_nStringIdID;
 }
 

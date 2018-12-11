@@ -37,14 +37,13 @@ namespace forte {
           return e_ProcessDataOk;
         }
 
-      protected:
       private:
         virtual EComResponse openConnection(char *pa_acLayerParameter);
         virtual void closeConnection();
         void setRDs(CLocalComLayer *pa_poSublLayer, CIEC_ANY *pa_aSDs, unsigned int pa_unNumSDs);
 
-        struct SLocalCommGroup{
-
+        class SLocalCommGroup {
+          public:
             explicit SLocalCommGroup(CStringDictionary::TStringId pa_nGroupName) :
                 m_nGroupName(pa_nGroupName), m_lPublList(), m_lSublList(){
             }
@@ -71,7 +70,6 @@ namespace forte {
             SLocalCommGroup* registerSubl(const CStringDictionary::TStringId pa_nID, CLocalComLayer *pa_poLayer);
             void unregisterSubl(SLocalCommGroup *pa_poGroup, CLocalComLayer *pa_poLayer);
 
-          protected:
           private:
             CLocalCommGroupsManager(){};
 

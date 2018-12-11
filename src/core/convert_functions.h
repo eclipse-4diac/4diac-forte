@@ -56,7 +56,7 @@
  */
 
 inline void stringConverter(CIEC_ANY_STRING &paString, const CIEC_ANY &paVal){
-  TForteUInt16 bufferSize = paVal.csmStringBufferSize[paVal.getDataTypeID()];
+  TForteUInt16 bufferSize = CIEC_ANY::csmStringBufferSize[paVal.getDataTypeID()];
   paString.reserve(static_cast<TForteUInt16>(bufferSize));
   char *pacBuffer = paString.getValue();
   int nWrittenBytes = paVal.toString(pacBuffer, bufferSize);

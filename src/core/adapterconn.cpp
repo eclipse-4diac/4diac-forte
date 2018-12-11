@@ -46,7 +46,7 @@ EMGMResponse CAdapterConnection::connect(CFunctionBlock *paDstFB, CStringDiction
       typifyAnyAdapter(socket, mPlug);
 
       if((socket->isSocket()) && (socket->isCompatible(mPlug))){
-        if(((mPlug->connect(socket, this)) && (socket->connect(mPlug, this)))){
+        if(mPlug->connect(socket, this) && socket->connect(mPlug, this)) {
           mSocket = socket;
           addDestination(SConnectionPoint(paDstFB, portId));
           retVal = e_RDY;

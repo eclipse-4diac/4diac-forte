@@ -29,9 +29,9 @@ class CDataConnection : public CConnection {
 
     virtual EMGMResponse connectToCFBInterface(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId);
 
-    #ifndef FORTE_CLASS_0
+#ifndef FORTE_CLASS_0
         virtual EMGMResponse disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId);
-    #endif
+#endif
 
 /*! \brief Write connection data value.
  *

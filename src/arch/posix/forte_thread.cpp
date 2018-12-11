@@ -30,17 +30,17 @@ forte::arch::CThreadBase<pthread_t>::TThreadHandleType CPosixThread::createThrea
       DEVLOG_ERROR("Error could not get the default thread attributes! %s\n", strerror(errno));
       return 0;
     }
-  #ifdef __CYGWIN__
+#ifdef __CYGWIN__
     if (pthread_attr_setstacksize (&stAttr, paStackSize)){
       DEVLOG_ERROR("Error could not set the stacksize for the thread! %s\n", strerror(errno));
       return 0;
     }
-  #else
+#else //__CYGWIN__
     if(pthread_attr_setstack(&stAttr, mStack, paStackSize)){
       DEVLOG_ERROR("Error could not set the stacksize for the thread! %s\n", strerror(errno));
       return 0;
     }
-  #endif
+#endif //__CYGWIN__
     if(pthread_create(&retVal, &stAttr, threadFunction, this)){
       DEVLOG_ERROR("Error could not create the thread! %s\n", strerror(errno));
       return 0;

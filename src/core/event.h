@@ -22,7 +22,7 @@
  */
 typedef TForteUInt8 TEventID;
 
-struct SConnectionPoint;
+class SConnectionPoint;
 
 //!\ingroup CORE Constant for the invalid event input id
 const TEventID cg_nInvalidEventID = cg_unInvalidPortId;

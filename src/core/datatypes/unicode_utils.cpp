@@ -32,7 +32,7 @@ int CUnicodeUtilities::parseUTF8Codepoint(const TForteByte *pa_pacCodepoint, TFo
     if ((pa_pacCodepoint[1] & 0xc0) != 0x80)
       return -1;
     pa_rValue = ((pa_pacCodepoint[0] & 0x1f) << 6) |
-                ((pa_pacCodepoint[1] & 0x3f)     );
+                (pa_pacCodepoint[1] & 0x3f);
     return 2;
   } else if ((pa_pacCodepoint[0] & 0xf0) == 0xe0) {
     if ((pa_pacCodepoint[1] & 0xc0) != 0x80 ||
@@ -40,7 +40,7 @@ int CUnicodeUtilities::parseUTF8Codepoint(const TForteByte *pa_pacCodepoint, TFo
       return -1;
     pa_rValue = ((pa_pacCodepoint[0] & 0x0f) << 12) |
                 ((pa_pacCodepoint[1] & 0x3f) <<  6) |
-                ((pa_pacCodepoint[2] & 0x3f)      );
+                (pa_pacCodepoint[2] & 0x3f);
     return 3;
   } else if ((pa_pacCodepoint[0] & 0xf8) == 0xf0) {
     if ((pa_pacCodepoint[1] & 0xc0) != 0x80 ||
@@ -50,7 +50,7 @@ int CUnicodeUtilities::parseUTF8Codepoint(const TForteByte *pa_pacCodepoint, TFo
     pa_rValue = ((pa_pacCodepoint[0] & 0x07) << 18) |
                 ((pa_pacCodepoint[1] & 0x3f) << 12) |
                 ((pa_pacCodepoint[2] & 0x3f) <<  6) |
-                ((pa_pacCodepoint[3] & 0x3f)      );
+                (pa_pacCodepoint[3] & 0x3f);
     return 4;
   }
 

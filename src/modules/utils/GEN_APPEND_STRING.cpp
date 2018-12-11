@@ -52,7 +52,6 @@ void GEN_APPEND_STRING::executeEvent(int paEIID){
     CIEC_ANY *pDataOutput = getDO(0);
 
     int nUsedBytes = -1;
-    TForteUInt16 nBytesFree = 0;
     TForteUInt16 nCurrentLength = 0;
     TForteUInt16 nArrayElements = 0;
     TForteUInt16 nRequiredBytes = 0;
@@ -94,7 +93,7 @@ void GEN_APPEND_STRING::executeEvent(int paEIID){
           //if data has been written to pDataOutput and input_index does not refer to first input
           //get length and number of free bytes (unused memory)
           nCurrentLength = (static_cast<CIEC_STRING*>(pDataOutput))->length();
-          nBytesFree = static_cast<TForteUInt16>((static_cast<CIEC_STRING*>(pDataOutput))->getCapacity() - nCurrentLength);
+          TForteUInt16 nBytesFree = static_cast<TForteUInt16>((static_cast<CIEC_STRING*>(pDataOutput))->getCapacity() - nCurrentLength);
 
           //if there is not enough free memory ==> reserve
           if(nBytesFree < nRequiredBytes){
@@ -106,7 +105,6 @@ void GEN_APPEND_STRING::executeEvent(int paEIID){
         else{
           //reset nCurrentLength and nBytesFree
           nCurrentLength = 0;
-          nBytesFree = 0;
           //reserve required length
           (static_cast<CIEC_STRING*>(pDataOutput))->reserve(nRequiredBytes);
         }

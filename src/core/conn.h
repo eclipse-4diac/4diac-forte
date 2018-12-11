@@ -20,7 +20,8 @@
 //forward declaration of a few classes to reduce includefile dependencies
 class CFunctionBlock;
 
-struct SConnectionPoint{
+class SConnectionPoint {
+  public:
     CFunctionBlock *mFB;
     TPortId mPortId;
 
@@ -88,7 +89,7 @@ class CConnection{
      */
     virtual EMGMResponse disconnect(CFunctionBlock *paDstFB,
         CStringDictionary::TStringId paDstPortNameId) = 0;
-    #endif
+#endif //FORTE_CLASS_0
 
     /*! \brief Check if there are destinations added to this connection
      *
@@ -116,9 +117,9 @@ class CConnection{
 
   protected:
     EMGMResponse addDestination(const SConnectionPoint &paDestPoint);
-    #ifndef FORTE_CLASS_0
+#ifndef FORTE_CLASS_0
     EMGMResponse removeDestination(const SConnectionPoint &paDestPoint);
-    #endif
+#endif //FORTE_CLASS_0
 
     void setSource(CFunctionBlock *paSrcFB, TPortId paSrcPortId);
 

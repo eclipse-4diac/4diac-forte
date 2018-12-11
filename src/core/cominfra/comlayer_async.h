@@ -23,47 +23,45 @@
 namespace forte {
   namespace com_infra {
 
+    class CComLayerAsync : public CComLayer, protected CThread {
+      public:
+        virtual ~CComLayerAsync();
 
-    class CComLayerAsync: public CComLayer, protected CThread{
-    public:
-      virtual ~CComLayerAsync();
+      protected:
+        CComLayerAsync(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB);
+        virtual void run();
 
-    protected:
-      CComLayerAsync(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB);
-      virtual void run();
+        unsigned int callAsync(void *payload);
 
-      unsigned int callAsync(void *payload);
+        virtual void* handleAsyncCall(const unsigned int callId, void *payload) = 0;
 
-      virtual void* handleAsyncCall(const unsigned int callId, void *payload) = 0;
+        virtual void handleAsyncCallResult(const unsigned int callId, void *payload, void *result) = 0;
 
-      virtual void handleAsyncCallResult(const unsigned int callId, void *payload, void *result) = 0;
+        virtual void handleAsyncEvent() = 0;
 
-      virtual void handleAsyncEvent() = 0;
+        virtual EComResponse processInterruptChild();
 
-      virtual EComResponse processInterruptChild();
+      private:
+        virtual EComResponse processInterrupt();
 
-    private:
-      virtual EComResponse processInterrupt();
+        class SAsyncData {
+          public:
+            const unsigned int mCallId;
+            void *mPayload;
+            void *mResult;
 
-      struct SAsyncData {
-        const unsigned int mCallId;
-        void *mPayload;
-        void *mResult;
+            SAsyncData(unsigned int paCallId, void *paPayload, void *paResult) :
+                mCallId(paCallId), mPayload(paPayload), mResult(paResult) {
+            }
+        };
 
-        SAsyncData(unsigned int paCallId, void *paPayload, void *paResult) :
-            mCallId(paCallId), mPayload(paPayload), mResult(paResult){
-        }
-      };
+        typedef CSinglyLinkedList<SAsyncData> TAsynchDataList;
+        TAsynchDataList mAsyncCalls;
+        TAsynchDataList mAsyncResults;
+        unsigned int mCurrentCallId;
 
-
-      typedef CSinglyLinkedList<SAsyncData> TAsynchDataList;
-      TAsynchDataList mAsyncCalls;
-      TAsynchDataList mAsyncResults;
-      unsigned int mCurrentCallId;
-
-
-      CSyncObject mAsyncResultsMutex;
-      CSemaphore mSuspendSemaphore;
+        CSyncObject mAsyncResultsMutex;
+        CSemaphore mSuspendSemaphore;
     };
 
   }

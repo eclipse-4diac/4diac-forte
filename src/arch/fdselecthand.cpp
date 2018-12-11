@@ -94,10 +94,7 @@ void CFDSelectHandler::run(void){
       mSync.unlock();
     }
     else{
-      if(retval == 0){
-//        printf(".");
-      }
-      else{
+      if(retval != 0) {
 #ifdef WIN32
         DEVLOG_ERROR("Select failed: %d", WSAGetLastError());
 #else

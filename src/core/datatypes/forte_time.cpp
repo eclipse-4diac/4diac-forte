@@ -17,9 +17,9 @@
 #include <ctype.h>
 
 #ifdef FORTE_USE_64BIT_DATATYPES
-  #include "forte_lint.h"
+# include "forte_lint.h"
 #else
-  #include "forte_dint.h"
+# include "forte_dint.h"
 #endif
 
 
@@ -110,9 +110,9 @@ int CIEC_TIME::toString(char* paValue, size_t paBufferSize) const {
   if(paBufferSize > 4){
 #ifdef FORTE_USE_64BIT_DATATYPES
     CIEC_LINT timeVal(getInMiliSeconds());
-#else
+#else //FORTE_USE_64BIT_DATATYPES
     CIEC_DINT timeVal(getInMiliSeconds());
-#endif
+#endif //FORTE_USE_64BIT_DATATYPES
     nRetVal = timeVal.toString(paValue + 2, paBufferSize - 4);
     if(-1 != nRetVal){
       paValue[0] = 'T';
@@ -151,43 +151,42 @@ CIEC_TIME::TValueType CIEC_TIME::getInSeconds() const {
   return (TValueType) *this / FORTE_TIME_BASE_UNITS_PER_SECOND;
 }
 
-CIEC_TIME::TValueType CIEC_TIME::getInMiliSeconds() const{
+CIEC_TIME::TValueType CIEC_TIME::getInMiliSeconds() const {
   TValueType nRetVal;
-  #if MILISECONDS_PER_SECOND < FORTE_TIME_BASE_UNITS_PER_SECOND
-    nRetVal = (TValueType) *this / (FORTE_TIME_BASE_UNITS_PER_SECOND / MILISECONDS_PER_SECOND);
-  #else
-    nRetVal = (TValueType) *this * (MILISECONDS_PER_SECOND / FORTE_TIME_BASE_UNITS_PER_SECOND);
-  #endif
+#if MILISECONDS_PER_SECOND < FORTE_TIME_BASE_UNITS_PER_SECOND
+  nRetVal = (TValueType) *this / (FORTE_TIME_BASE_UNITS_PER_SECOND / MILISECONDS_PER_SECOND);
+#else //MILISECONDS_PER_SECOND < FORTE_TIME_BASE_UNITS_PER_SECOND
+  nRetVal = (TValueType) *this * (MILISECONDS_PER_SECOND / FORTE_TIME_BASE_UNITS_PER_SECOND);
+#endif //MILISECONDS_PER_SECOND < FORTE_TIME_BASE_UNITS_PER_SECOND
   return nRetVal;
 }
 
-CIEC_TIME::TValueType CIEC_TIME::getInMicroSeconds() const{
+CIEC_TIME::TValueType CIEC_TIME::getInMicroSeconds() const {
   TValueType nRetVal;
-  #if MICROSECONDS_PER_SECOND < FORTE_TIME_BASE_UNITS_PER_SECOND
-    nRetVal = (TValueType) *this / (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000000);
-  #else
-    nRetVal = (TValueType) *this * (MICROSECONDS_PER_SECOND / FORTE_TIME_BASE_UNITS_PER_SECOND);
-  #endif
-    //fprintf(stderr,"time us: %lld\n",nRetVal);
+#if MICROSECONDS_PER_SECOND < FORTE_TIME_BASE_UNITS_PER_SECOND
+  nRetVal = (TValueType) *this / (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000000);
+#else //MICROSECONDS_PER_SECOND < FORTE_TIME_BASE_UNITS_PER_SECOND
+  nRetVal = (TValueType) *this * (MICROSECONDS_PER_SECOND / FORTE_TIME_BASE_UNITS_PER_SECOND);
+#endif //MICROSECONDS_PER_SECOND < FORTE_TIME_BASE_UNITS_PER_SECOND
   return nRetVal;
 }
 
-void CIEC_TIME::setFromSeconds(TValueType paValue){
+void CIEC_TIME::setFromSeconds(TValueType paValue) {
   *this = paValue * FORTE_TIME_BASE_UNITS_PER_SECOND;
 }
 
-void CIEC_TIME::setFromMiliSeconds(TValueType paValue){
-  #if MILISECONDS_PER_SECOND < FORTE_TIME_BASE_UNITS_PER_SECOND
-    *this = paValue * (FORTE_TIME_BASE_UNITS_PER_SECOND / MILISECONDS_PER_SECOND);
-  #else
-    *this = paValue / (MILISECONDS_PER_SECOND / FORTE_TIME_BASE_UNITS_PER_SECOND);
-  #endif
+void CIEC_TIME::setFromMiliSeconds(TValueType paValue) {
+#if MILISECONDS_PER_SECOND < FORTE_TIME_BASE_UNITS_PER_SECOND
+  *this = paValue * (FORTE_TIME_BASE_UNITS_PER_SECOND / MILISECONDS_PER_SECOND);
+#else //MILISECONDS_PER_SECOND < FORTE_TIME_BASE_UNITS_PER_SECOND
+  *this = paValue / (MILISECONDS_PER_SECOND / FORTE_TIME_BASE_UNITS_PER_SECOND);
+#endif //MILISECONDS_PER_SECOND < FORTE_TIME_BASE_UNITS_PER_SECOND
 }
 
-void CIEC_TIME::setFromMicroSeconds(TValueType paValue){
-  #if MICROSECONDS_PER_SECOND < FORTE_TIME_BASE_UNITS_PER_SECOND
-    *this = paValue * (FORTE_TIME_BASE_UNITS_PER_SECOND / MICROSECONDS_PER_SECOND);
-  #else
-    *this = paValue / (MICROSECONDS_PER_SECOND / FORTE_TIME_BASE_UNITS_PER_SECOND);
-  #endif
+void CIEC_TIME::setFromMicroSeconds(TValueType paValue) {
+#if MICROSECONDS_PER_SECOND < FORTE_TIME_BASE_UNITS_PER_SECOND
+  *this = paValue * (FORTE_TIME_BASE_UNITS_PER_SECOND / MICROSECONDS_PER_SECOND);
+#else //MICROSECONDS_PER_SECOND < FORTE_TIME_BASE_UNITS_PER_SECOND
+  *this = paValue / (MICROSECONDS_PER_SECOND / FORTE_TIME_BASE_UNITS_PER_SECOND);
+#endif //MICROSECONDS_PER_SECOND < FORTE_TIME_BASE_UNITS_PER_SECOND
 }

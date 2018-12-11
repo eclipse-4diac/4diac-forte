@@ -17,10 +17,10 @@
 #include <stringlist.h>
 #include <string.h>
 #include <stdlib.h>
+#include "devlog.h"
 
 DEFINE_SINGLETON(CStringDictionary)
 
-// ctor
 CStringDictionary::CStringDictionary(){
 #ifdef FORTE_STRING_DICT_FIXED_MEMORY
   m_paStringBufAddr = scm_acConstStringBuf;
@@ -135,7 +135,7 @@ CStringDictionary::TStringId CStringDictionary::insert(const char *pa_sStr){
       }
     }
     else{
-      //printf("string war länge null\n");
+      DEVLOG_WARNING("[CStringDictionary::insert] String to insert was empty\n");
     }
   }
   return nRetVal;
