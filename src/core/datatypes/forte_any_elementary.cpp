@@ -195,9 +195,9 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *pa_pacValue){
             return -1;
           }
         }
-      }
-      else
+      } else {
         return -1;
+      }
       pacRunner = pacRunner + 3;
     }
 

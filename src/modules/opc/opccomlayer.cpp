@@ -41,8 +41,9 @@ EComResponse COpcComLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
 
         TOpcProcessVarList::Iterator itEnd = m_lFBInputVars.end();
         for(TOpcProcessVarList::Iterator it = m_lFBInputVars.begin(); it != itEnd; ++it){
-          if (it->getIsActive())
-            m_pOpcConnection->send_sendItemData((*it));
+            if(it->getIsActive()) {
+              m_pOpcConnection->send_sendItemData((*it));
+            }
         }
         break;
                      }
@@ -116,9 +117,9 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
           // Successfully connected --> adding OPC items
           if(addOpcItems() < 0){
             //TODO
-          }
-          else
+          } else {
             m_eConnectionState = e_Connected;
+          }
           break;
         case COpcConnection::e_ConnectionFailed:
           {
@@ -181,7 +182,7 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
       if(m_bLayerParamsOK){
         eRetVal = e_InitOk;
         m_pOpcConnection = COpcConnectionHandler::getInstance().getOpcConnection(m_acHost, m_acServerName, m_acOpcGroupName, m_nUpdateRate, m_nDeadBand, this);
-        
+
         m_pOpcConnection->send_connect();
 
         COpcConnection::EOpcConnectionEvents connState = m_pOpcConnection->getConnectionState();
@@ -189,8 +190,9 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
           m_eConnectionState = e_Connected;
           addOpcItems();
         }
-        else if (connState == COpcConnection::e_ConnectionFailed)
+        else if(connState == COpcConnection::e_ConnectionFailed) {
           eRetVal = e_InitTerminated;
+        }
       }
       break;
     case e_Publisher:
@@ -291,16 +293,18 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
 
     // Get Host
     chrStorage = strchr(pa_acLayerParams, ':');
-    if(chrStorage == 0)
+  if(chrStorage == 0) {
       return;
+  }
     *chrStorage = '\0';
     ++chrStorage;
     chrHost = (char*) malloc(strlen(pa_acLayerParams) + 1);
     strcpy(chrHost, pa_acLayerParams);
-    if(strcmp(chrHost, "127.0.0.1") == 0 || strcmp(chrHost, "localhost") == 0)
+  if(strcmp(chrHost, "127.0.0.1") == 0 || strcmp(chrHost, "localhost") == 0) {
       m_acHost = "";
-    else
-      m_acHost = chrHost;
+  } else {
+    m_acHost = chrHost;
+  }
 
     // Get server name
     temp = chrStorage;
@@ -375,8 +379,9 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
       pch = strtok(NULL, ",");
     }
 
-    if(nrItems > 0)
-      m_bLayerParamsOK = true;
+  if(nrItems > 0) {
+    m_bLayerParamsOK = true;
+  }
 
   }
 
@@ -392,7 +397,7 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
  //     CIEC_ANY *dataIn = &apoSDs[sdIndex];
       Variant newVariant;
       //unsigned int valueSize = 0;
-    
+
     //valueSize = getInputValueSize(dataIn, &newVariant);;
 
       it_var->setNewValue(newVariant);

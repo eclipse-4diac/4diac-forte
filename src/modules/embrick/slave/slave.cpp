@@ -42,8 +42,9 @@ EmbrickSlaveHandler::~EmbrickSlaveHandler() {
   delete mUpdateReceiveImage;
   delete mUpdateReceiveImageOld;
 
-  if(mDelegate != 0)
+  if(mDelegate != 0) {
     mDelegate->onSlaveDestroy();
+  }
 }
 
 void EmbrickSlaveHandler::setConfig(Config paConfig) {
@@ -66,8 +67,9 @@ EmbrickSlaveHandler* EmbrickSlaveHandler::sendInit(EmbrickBusHandler* paBus, int
   masterInit.toBuffer(sendBuffer);
 
   // Send init via broadcast. Due to the sequential slave select activation, only one slave will respond.
-  if(!paBus->broadcast(EmbrickBusHandler::Init, sendBuffer, sizeof(EmbrickMasterInitPackage), receiveBuffer, sizeof(EmbrickSlaveInitPackage)))
+  if(!paBus->broadcast(EmbrickBusHandler::Init, sendBuffer, sizeof(EmbrickMasterInitPackage), receiveBuffer, sizeof(EmbrickSlaveInitPackage))) {
     return 0;
+  }
 
   EmbrickSlaveInitPackage initPackage = EmbrickSlaveInitPackage::fromBuffer(receiveBuffer);
 
@@ -85,9 +87,10 @@ int EmbrickSlaveHandler::update() {
   // Send update request to bus
   if(!mBus->transfer(mAddress, EmbrickBusHandler::Data, mUpdateSendImage, mDataSendLength, mUpdateReceiveImage, mDataReceiveLength, &mStatus, &mUpdateMutex)) {
     mUpdateErrorCounter++;
-    if(mUpdateErrorCounter % 10 == 0)
+    if(mUpdateErrorCounter % 10 == 0) {
       DEVLOG_WARNING("emBrick[EmbrickSlaveHandler]: Slave %d reached transfer error threshold - %d out of %d\n", mAddress, mUpdateErrorCounter,
         scmMaxUpdateErrors);
+    }
     return mUpdateErrorCounter <= scmMaxUpdateErrors ? 0 : -1;
   }
 
@@ -95,19 +98,21 @@ int EmbrickSlaveHandler::update() {
   {
     CCriticalRegion criticalRegion(mHandleMutex);
     TSlaveHandleList::Iterator itEnd = mInputs.end();
-    for(TSlaveHandleList::Iterator it = mInputs.begin(); it != itEnd; ++it)
+    for(TSlaveHandleList::Iterator it = mInputs.begin(); it != itEnd; ++it) {
       if((*it)->hasObserver() && !(*it)->equal(mUpdateReceiveImageOld)) {
         // Inform Process Interface about change
         (*it)->onChange();
       }
+    }
   }
 
   // Clone current image to old image
   memcpy(mUpdateReceiveImageOld, mUpdateReceiveImage, mDataReceiveLength);
 
   // Reset error counter
-  if(mUpdateErrorCounter > 0)
+  if(mUpdateErrorCounter > 0) {
     mUpdateErrorCounter = 0;
+  }
 
   // Check status
   if(mDelegate != 0 && mOldStatus != mStatus) {
@@ -153,9 +158,11 @@ void EmbrickSlaveHandler::addHandle(TSlaveHandleList* paList, EmbrickSlaveHandle
 EmbrickSlaveHandle* EmbrickSlaveHandler::getHandle(TSlaveHandleList* paList, int paIndex) {
   TSlaveHandleList::Iterator itEnd = paList->end();
   int i = 0;
-  for(TSlaveHandleList::Iterator it = paList->begin(); it != itEnd; ++it, i++)
-    if(paIndex == i)
+  for(TSlaveHandleList::Iterator it = paList->begin(); it != itEnd; ++it, i++) {
+    if(paIndex == i) {
       return *it;
+    }
+  }
   return NULL;
 }
 

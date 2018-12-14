@@ -96,8 +96,9 @@ CAdapter *CTypeLib::createAdapter(CStringDictionary::TStringId pa_nInstanceNameI
   if (0 != poToCreate) {
     poNewAdapter =
       (static_cast<CAdapterTypeEntry *>(poToCreate))->createAdapterInstance(pa_nInstanceNameId,pa_poRes, pa_bIsPlug);
-    if (0 == poNewAdapter)
+    if(0 == poNewAdapter) {
       m_eLastErrorMSG = e_OVERFLOW;
+    }
   } //no generic adapters supported
 
     return poNewAdapter;
@@ -111,8 +112,9 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId pa_nInstanceName
   if (0 != poToCreate) {
     poNewFB
         = (static_cast<CFBTypeEntry *>(poToCreate))->createFBInstance(pa_nInstanceNameId, pa_poRes);
-    if (0 == poNewFB) // we could not create the requested object
+    if(0 == poNewFB) { // we could not create the requested object
       m_eLastErrorMSG = e_OVERFLOW;
+    }
   } else { //check for parameterizable FBs (e.g. SERVER)
     TIdentifier acGenFBName = { "GEN_" };
     const char *acTypeBuf = CStringDictionary::getInstance().get(pa_nFBTypeId);
@@ -120,8 +122,9 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId pa_nInstanceName
 
     if (0 != pcUnderScore) { // We found no underscore in the type name therefore it can not be a generic type
       ptrdiff_t nCopyLen = pcUnderScore - acTypeBuf;
-      if (nCopyLen > static_cast<ptrdiff_t>(cg_nIdentifierLength - 4))
+      if(nCopyLen > static_cast<ptrdiff_t>(cg_nIdentifierLength - 4)) {
         nCopyLen = cg_nIdentifierLength - 4;
+      }
       memcpy(&(acGenFBName[4]), acTypeBuf, nCopyLen);
       acGenFBName[cg_nIdentifierLength] = '\0';
       poToCreate = findType(CStringDictionary::getInstance().getId(acGenFBName), m_poFBLibStart);
@@ -163,30 +166,34 @@ CIEC_ANY *CTypeLib::createDataTypeInstance(CStringDictionary::TStringId pa_nDTNa
   CTypeEntry *poToCreate = findType(pa_nDTNameId, m_poDTLibStart);
   if (0 != poToCreate) {
     poNewDT = (static_cast<CDataTypeEntry *>(poToCreate))->createDataTypeInstance(pa_acDataBuf);
-    if (0 == poNewDT) // we could not create the requested object
+    if(0 == poNewDT) { // we could not create the requested object
       m_eLastErrorMSG = e_OVERFLOW;
-  } else
+    }
+  } else {
     m_eLastErrorMSG = e_UNSUPPORTED_TYPE;
+  }
 
   return poNewDT;
 }
 
 void CTypeLib::addFBType(CFBTypeEntry *pa_poFBTypeEntry) {
   if (0 == findType(pa_poFBTypeEntry->getTypeNameId(), m_poFBLibStart)) {
-    if (m_poFBLibStart == 0)
+    if(m_poFBLibStart == 0) {
       m_poFBLibStart = pa_poFBTypeEntry;
-    else
+    } else {
       m_poFBLibEnd->m_poNext = pa_poFBTypeEntry;
+    }
     m_poFBLibEnd = pa_poFBTypeEntry;
   }
 }
 
 void CTypeLib::addAdapterType(CAdapterTypeEntry *pa_poAdapterTypeEntry) {
   if (0 == findType(pa_poAdapterTypeEntry->getTypeNameId(), m_poAdapterLibStart)) {
-    if (m_poAdapterLibStart == 0)
+    if(m_poAdapterLibStart == 0) {
       m_poAdapterLibStart = pa_poAdapterTypeEntry;
-    else
+    } else {
       m_poAdapterLibEnd->m_poNext = pa_poAdapterTypeEntry;
+    }
     m_poAdapterLibEnd = pa_poAdapterTypeEntry;
   }
 }
@@ -194,10 +201,11 @@ void CTypeLib::addAdapterType(CAdapterTypeEntry *pa_poAdapterTypeEntry) {
 
 void CTypeLib::addDataType(CDataTypeEntry *pa_poDTEntry) {
   if (0 == findType(pa_poDTEntry->getTypeNameId(), m_poDTLibStart)) {
-    if (m_poDTLibStart == 0)
+    if(m_poDTLibStart == 0) {
       m_poDTLibStart = pa_poDTEntry;
-    else
+    } else {
       m_poDTLibEnd->m_poNext = pa_poDTEntry;
+    }
     m_poDTLibEnd = pa_poDTEntry;
   }
 }

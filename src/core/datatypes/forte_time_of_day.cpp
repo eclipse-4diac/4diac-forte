@@ -63,13 +63,14 @@ int CIEC_TIME_OF_DAY::fromString(const char *paValue){
             ++nNums;
           }
 
-          if(nNums < 3){
-            for (unsigned int i=nNums; i < 3; ++i)
+          if(nNums < 3) {
+            for(unsigned int i = nNums; i < 3; ++i) {
               msec *= 10;
-          }
-          else{
-            for (unsigned int i = 0; i < (nNums - 3); ++i)
+            }
+          } else {
+            for(unsigned int i = 0; i < (nNums - 3); ++i) {
               msec /= 10;
+            }
           }
         }
       }

@@ -40,8 +40,9 @@ void COpcEventHandler::run(){
   if(result == S_OK){
     while(isAlive()){
       ICmd* nextCommand = getNextCommand();
-      if(nextCommand != NULL)
+      if(nextCommand != NULL) {
         nextCommand->runCommand();
+      }
 
       MSG msg;
       while(PeekMessage(&msg, NULL, NULL, NULL, PM_REMOVE)){
@@ -114,9 +115,9 @@ ICmd* COpcEventHandler::getNextCommand(){
   if(itBegin != m_lCommandQueue.end()){
     command = (*itBegin);
     m_lCommandQueue.popFront();
-  }
-  else
+  } else {
     command = NULL;
+  }
   m_oSync.unlock();
 
   return command;

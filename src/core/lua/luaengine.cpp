@@ -94,8 +94,9 @@ bool CLuaEngine::call(int paArgs, int paResults) {
 }
 
 bool CLuaEngine::luaPushAny(lua_State *paLuaState, CIEC_ANY *paValue) {
-  if(!paValue)
+  if(!paValue) {
     return false;
+  }
 
   switch(paValue->getDataTypeID()){
     case CIEC_ANY::e_BOOL:
@@ -172,8 +173,9 @@ bool CLuaEngine::luaPushAny(lua_State *paLuaState, CIEC_ANY *paValue) {
 }
 
 bool CLuaEngine::luaGetAny(lua_State *paLuaState, CIEC_ANY *paValue, int paIndex) {
-  if(!paValue)
+  if(!paValue) {
     return false;
+  }
   switch(paValue->getDataTypeID()){
     case CIEC_ANY::e_BOOL:
       *static_cast<CIEC_BOOL*>(paValue) = static_cast<bool>(lua_toboolean(paLuaState, paIndex));

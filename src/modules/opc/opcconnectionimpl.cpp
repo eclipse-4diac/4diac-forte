@@ -79,8 +79,9 @@ void COpcConnectionImpl::OnDataChange(COPCGroup & group, CAtlMap<COPCItem *, OPC
 
   int position = 0;
   const char * subStrRead = strstr(c_groupName, "_read");
-  if(subStrRead != NULL)
+  if(subStrRead != NULL) {
     position = subStrRead - c_groupName;
+  }
   else{
     //TODO Should not happen error
   }
@@ -113,9 +114,9 @@ COPCGroup* COpcConnectionImpl::getOpcGroup(const char* pa_acGroupName, COpcProce
             // TODO
           }
           free(groupName);
-        }
-        else
+        } else {
           retGroup = it->m_pOpcGroupRead;
+        }
       }
       else if(pa_eFunction == COpcProcessVar::e_FBInput){
         if(!(it->m_bWriteGroupAdded)){
@@ -129,9 +130,9 @@ COPCGroup* COpcConnectionImpl::getOpcGroup(const char* pa_acGroupName, COpcProce
             // TODO
           }
           free(groupName);
-        }
-        else
+        } else {
           retGroup = it->m_pOpcGroupWrite;
+        }
       }
 
       break;

@@ -40,9 +40,9 @@ void CTimerHandler::addTimedFBEntry(STimedFBListEntry *paTimerListEntry) {
   paTimerListEntry->mNext = 0;
 
   // Correct null intervals that can lead to event queue overflow to 10 ms
-  if (paTimerListEntry->mInterval == 0)
+  if(paTimerListEntry->mInterval == 0) {
     paTimerListEntry->mTimeOut += (getTicksPerSecond() > 100) ? getTicksPerSecond() / 100 : 1;
-
+  }
   if (0 == mTimedFBList) {
     mTimedFBList = paTimerListEntry;
   } else {

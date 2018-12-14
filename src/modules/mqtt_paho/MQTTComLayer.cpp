@@ -69,8 +69,9 @@ EComResponse MQTTComLayer::openConnection(char* paLayerParameter) {
     if( MQTTHandler::eRegisterLayerSucceeded ==
         getExtEvHandler<MQTTHandler>().registerLayer(parser[Address], parser[ClientID], this)) {
       eRetVal = e_InitOk;
+    } else {
+      eRetVal = e_InitInvalidId;
     }
-    else eRetVal = e_InitInvalidId;
 
     switch (m_poFb->getComServiceType()){
     case e_Server:

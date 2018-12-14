@@ -254,10 +254,7 @@ public:
    *
    */
   inline const void* peekFront() const {
-    if (mFirstNode != 0)
-      return mFirstNode->getData();
-    else
-      return 0;
+      return (mFirstNode != 0) ? mFirstNode->getData() : 0;
   }
 
   /*!\brief Deletes the first object of the singly linked list

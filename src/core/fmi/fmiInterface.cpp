@@ -525,8 +525,9 @@ extern "C" {
   }
 
   fmi2Status functionNotSupported(fmi2Component c, const char* functionName){
-    if(0 == c)
+    if(0 == c) {
       return fmi2Error;
+    }
     fmuInstance* componentInstance = static_cast<fmuInstance*>(c);
     LOG_FMU(componentInstance, fmi2OK, LOG_CALL, "%s - GUID = %s", functionName, componentInstance->getGuid().getValue())
     LOG_FMU(componentInstance, fmi2OK, LOG_ERROR, "Function %s is not supported.", functionName)

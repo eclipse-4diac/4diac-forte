@@ -57,7 +57,7 @@ bool IOMapper::registerHandle(CIEC_WSTRING const &paId, IOHandle* paHandle) {
 void IOMapper::deregisterHandle(IOHandle* paHandle) {
   CCriticalRegion criticalRegion(mSyncMutex);
 
-  for(THandleMap::iterator it = mHandles.begin(); it != mHandles.end(); ++it)
+  for(THandleMap::iterator it = mHandles.begin(); it != mHandles.end(); ++it) {
     if(it->second == paHandle) {
       if(mObservers.find(it->first) != mObservers.end()) {
         paHandle->dropObserver();
@@ -70,7 +70,7 @@ void IOMapper::deregisterHandle(IOHandle* paHandle) {
       mHandles.erase(it);
       break;
     }
-
+  }
 }
 
 bool IOMapper::registerObserver(CIEC_WSTRING const &paId, IOObserver* paObserver) {
@@ -102,7 +102,7 @@ bool IOMapper::registerObserver(CIEC_WSTRING const &paId, IOObserver* paObserver
 void IOMapper::deregisterObserver(IOObserver* paObserver) {
   CCriticalRegion criticalRegion(mSyncMutex);
 
-  for(TObserverMap::iterator it = mObservers.begin(); it != mObservers.end(); ++it)
+  for(TObserverMap::iterator it = mObservers.begin(); it != mObservers.end(); ++it) {
     if(it->second == paObserver) {
       if(mHandles.find(it->first) != mHandles.end()) {
         mHandles[it->first]->dropObserver();
@@ -115,4 +115,5 @@ void IOMapper::deregisterObserver(IOObserver* paObserver) {
       mObservers.erase(it);
       break;
     }
+  }
 }

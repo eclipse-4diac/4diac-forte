@@ -427,13 +427,13 @@ int CFBDKASN1ComLayer::serializeValueString(TForteByte* pa_pcBytes, int pa_nStre
 int CFBDKASN1ComLayer::serializeValueWString(TForteByte* pa_pcBytes, int pa_nStreamSize, const CIEC_WSTRING & pa_roWString){
   int nRetVal = -1;
 
-  if (pa_nStreamSize < 2)
+  if (pa_nStreamSize < 2) {
     return -1;
-
+  }
   nRetVal = pa_roWString.toUTF16(pa_pcBytes + 2, pa_nStreamSize - 2);
-  if (nRetVal < 0 || nRetVal > 131070)
+  if (nRetVal < 0 || nRetVal > 131070) {
     return -1;
-
+  }
   pa_pcBytes[0] = (TForteByte) ((nRetVal >> 9) & 0x00FF);
   pa_pcBytes[1] = (TForteByte) ((nRetVal >> 1) & 0x00FF);
   nRetVal += 2;
@@ -756,14 +756,16 @@ int CFBDKASN1ComLayer::deserializeArray(const TForteByte* pa_pcBytes, int pa_nSt
             nValueLen = deserializeValue(pa_pcBytes, pa_nStreamSize, *pa_roArray[i]);
           }
           else{
-            if (poBufVal == 0)
+            if(poBufVal == 0) {
               poBufVal = pa_roArray[0]->clone(0);
+            }
             nValueLen = deserializeValue(pa_pcBytes, pa_nStreamSize, *poBufVal);
           }
           //size of the elements is given by the array datatype
           if(nValueLen <= 0) {
-            if (poBufVal != 0)
+            if(poBufVal != 0) {
               delete poBufVal;
+            }
             return nValueLen;
           }
           pa_nStreamSize -= nValueLen;
@@ -846,9 +848,9 @@ unsigned int CFBDKASN1ComLayer::getRequiredSerializationSize(const CIEC_ANY &pa_
 #ifdef FORTE_SUPPORT_ARRAYS
     case CIEC_ANY::e_ARRAY:
       unRetVal += 3;
-      if (((CIEC_ARRAY&)pa_roCIECData).getElementDataTypeID() == CIEC_ANY::e_BOOL)
+      if(((CIEC_ARRAY&) pa_roCIECData).getElementDataTypeID() == CIEC_ANY::e_BOOL) {
         unRetVal += ((CIEC_ARRAY&)pa_roCIECData).size();
-      else {
+      } else {
         for(TForteUInt16 j = 0; j < ((CIEC_ARRAY&)pa_roCIECData).size(); ++j){
           unRetVal += getRequiredSerializationSize(*(((CIEC_ARRAY&)pa_roCIECData)[j]));
         }

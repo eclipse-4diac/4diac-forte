@@ -29,10 +29,11 @@ IOConfigFBMultiMaster::IOConfigFBMultiMaster(CResource *paSrcRes, const SFBInter
 IOConfigFBMultiMaster* IOConfigFBMultiMaster::getMasterById(TForteUInt16 paId) {
   TMasterList::Iterator itEnd = mInstances.end();
   int i = 0;
-  for(TMasterList::Iterator it = mInstances.begin(); it != itEnd; ++it, i++)
+  for(TMasterList::Iterator it = mInstances.begin(); it != itEnd; ++it, i++) {
     if(paId == i && *it != 0) {
       return *it;
     }
+  }
   return 0;
 }
 

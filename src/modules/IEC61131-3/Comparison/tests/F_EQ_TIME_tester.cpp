@@ -39,25 +39,25 @@ bool F_EQ_TIME_tester::testCase_Equal(){
   triggerEvent(0);
 
   //Test correct order of outgoing events
-  if(pullFirstChainEventID() != 0)
+  if(pullFirstChainEventID() != 0) {
     bResult = false;
-
+  }
   //Test if event chain is empty
-  if(!eventChainEmpty())
+  if(!eventChainEmpty()) {
     bResult = false;
-
+  }
   //verify data output as both are zero the value value should be true
-  if(m_oOut_OUT != true)
+  if(m_oOut_OUT != true) {
     bResult = false;
-
+  }
   m_oIN1.fromString("T#500ms");
   m_oIN2.fromString("T#500ms");
 
   triggerEvent(0);
 
-  if(m_oOut_OUT != true)
+  if(m_oOut_OUT != true) {
     bResult = false;
-
+  }
   return bResult;
 }
 
@@ -69,9 +69,9 @@ bool F_EQ_TIME_tester::testCase_Larger(){
 
   triggerEvent(0);
 
-  if(m_oOut_OUT != false)
+  if(m_oOut_OUT != false) {
     bResult = false;
-
+  }
   return bResult;
 }
 
@@ -83,8 +83,8 @@ bool F_EQ_TIME_tester::testCase_Smaller(){
 
   triggerEvent(0);
 
-  if(m_oOut_OUT != false)
+  if(m_oOut_OUT != false) {
     bResult = false;
-
+  }
   return bResult;
 }

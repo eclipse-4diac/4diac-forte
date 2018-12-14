@@ -115,8 +115,9 @@ const char* EmbrickBusHandler::init() {
 void EmbrickBusHandler::deInit() {
   // Free memory -> delete all slave instances and hardware handlers
   TSlaveList::Iterator itEnd(mSlaves->end());
-  for (TSlaveList::Iterator it = mSlaves->begin(); it != itEnd; ++it)
+  for(TSlaveList::Iterator it = mSlaves->begin(); it != itEnd; ++it) {
     delete *it;
+  }
   delete mSlaves;
   mSlaves = 0;
 
@@ -129,8 +130,9 @@ forte::core::io::IOHandle* EmbrickBusHandler::initHandle(
   HandleDescriptor &desc = static_cast<HandleDescriptor&>(*paHandleDescriptor);
 
   EmbrickSlaveHandler *slave = getSlave(desc.mSlaveIndex);
-  if (slave == 0)
+  if(slave == 0) {
     return 0;
+  }
 
   switch (desc.mType) {
   case Bit:
@@ -207,8 +209,9 @@ void EmbrickBusHandler::runLoop() {
     if (-1 == sCur->mSlave->update()) {
       mError = scmSlaveUpdateFailed;
       // Check for critical bus errors
-      if (checkHandlerError() || hasError())
+      if(checkHandlerError() || hasError()) {
         break;
+      }
     }
 
     // Search for next deadline -> set lock to avoid changes of list
@@ -219,8 +222,9 @@ void EmbrickBusHandler::runLoop() {
     sCur->mLastDuration = (uint16_t) (micros() - ms);
 
     // If current slave is forced again -> add update duration to deadline
-    if (sCur->mForced)
+    if(sCur->mForced) {
       addTime(sCur->mNextDeadline, sCur->mLastDuration);
+    }
 
     for (unsigned int i = 0; i < mSlaveCount; i++) {
       if (timespecLessThan(&mSList[i]->mNextDeadline, &mSNext->mNextDeadline)) {
@@ -235,8 +239,9 @@ void EmbrickBusHandler::runLoop() {
 
 void EmbrickBusHandler::cleanLoop() {
   // Free memory of list
-  for (int i = 0; i < mSlaveCount; i++)
+  for(int i = 0; i < mSlaveCount; i++) {
     forte_free(mSList[i]);
+  }
   forte_free(mSList);
   mSList = 0;
 }
@@ -262,10 +267,11 @@ EmbrickSlaveHandler* EmbrickBusHandler::getSlave(int paIndex) {
 
   TSlaveList::Iterator itEnd = mSlaves->end();
   int i = 0;
-  for (TSlaveList::Iterator it = mSlaves->begin(); it != itEnd; ++it, i++)
+  for(TSlaveList::Iterator it = mSlaves->begin(); it != itEnd; ++it, i++) {
     if (paIndex == i) {
       return *it;
     }
+  }
 
   return 0;
 }
@@ -302,16 +308,18 @@ void EmbrickBusHandler::forceUpdate(int paIndex) {
 
 void EmbrickBusHandler::addSlaveHandle(int paIndex, forte::core::io::IOHandle* paHandle) {
   EmbrickSlaveHandler* slave = getSlave(paIndex);
-  if (slave == 0)
+  if(slave == 0) {
     return;
+  }
 
   slave->addHandle((EmbrickSlaveHandle*) paHandle);
 }
 
 void EmbrickBusHandler::dropSlaveHandles(int paIndex) {
   EmbrickSlaveHandler* slave = getSlave(paIndex);
-  if (slave == 0)
+  if(slave == 0) {
     return;
+  }
 
   slave->dropHandles();
 }
@@ -322,8 +330,9 @@ bool EmbrickBusHandler::isSlaveAvailable(int paIndex) {
 
 bool EmbrickBusHandler::checkSlaveType(int paIndex, int paType) {
   EmbrickSlaveHandler* slave = getSlave(paIndex);
-  if (slave == 0)
+  if(slave == 0) {
     return false;
+  }
 
   return slave->mType == paType;
 }
@@ -360,8 +369,9 @@ bool EmbrickBusHandler::transfer(unsigned int paTarget, Command paCmd,
       mSendBuffer + sizeof(EmbrickHeaderPackage), paDataSendLength);
 
   // Invert data of master
-  for (unsigned int i = 0; i < bufferLength; i++)
+  for(unsigned int i = 0; i < bufferLength; i++) {
     mSendBuffer[i] = (unsigned char) ~mSendBuffer[i];
+  }
 
   // Send and receive buffer via SPI
   int attempts = 3;
@@ -370,15 +380,17 @@ bool EmbrickBusHandler::transfer(unsigned int paTarget, Command paCmd,
   do {
     // Wait required microseconds between messages
     uint64_t microTime = micros();
-    if (mLastTransfer + SyncGapDuration > microTime)
+    if(mLastTransfer + SyncGapDuration > microTime) {
       microsleep(mLastTransfer + (uint64_t) SyncGapDuration - microTime);
+    }
 
     ok = mSpi->transfer(mSendBuffer, mRecvBuffer, bufferLength);
     mLastTransfer = micros();
 
     // Critical error of bus -> break immediately
-    if (!ok)
+    if(!ok) {
       break;
+    }
 
     // Validate checksum
     ok = calcChecksum(mRecvBuffer + sizeof(EmbrickHeaderPackage),
@@ -418,8 +430,9 @@ bool EmbrickBusHandler::transfer(unsigned int paTarget, Command paCmd,
 
 unsigned char EmbrickBusHandler::calcChecksum(unsigned char * paData, int paDataLen) {
   unsigned char c = 0;
-  for (int i = 0; i < paDataLen; i++)
+  for(int i = 0; i < paDataLen; i++) {
     c = static_cast<unsigned char>(c + paData[i]);
+  }
 
   return static_cast<unsigned char>(scmChecksumConstant - c);
 }

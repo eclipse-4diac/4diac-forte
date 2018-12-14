@@ -81,8 +81,9 @@ CProcessImageMatrix* CProcessImageMatrix::getModuleEntries(unsigned int pa_nCN, 
   TChannelList::Iterator itEnd = m_lMatrix.end();
   for(TChannelList::Iterator it(m_lMatrix.begin()); it != itEnd; ++it){
     if(it->m_nCN == pa_nCN && it->m_nModuleId == pa_nModule){
-      if(newMatrix == NULL)
+      if(newMatrix == NULL) {
         newMatrix = new CProcessImageMatrix();
+      }
 
       newMatrix->addEntry(it->m_nCN, it->m_nModuleId, it->m_nIOid, it->m_nDataSize, it->m_nPIOffset, it->m_nBitOffset);
     }

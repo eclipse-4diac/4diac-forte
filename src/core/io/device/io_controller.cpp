@@ -101,11 +101,12 @@ void IODeviceController::checkForInputChanges() {
 
   // Iterate over input handles and check for changes
   THandleList::Iterator itEnd = mInputHandles.end();
-  for(THandleList::Iterator it = mInputHandles.begin(); it != itEnd; ++it)
+  for(THandleList::Iterator it = mInputHandles.begin(); it != itEnd; ++it) {
     if((*it)->hasObserver() && !isHandleValueEqual(*it)) {
       // Inform Process Interface about change
       (*it)->onChange();
     }
+  }
 }
 
 void IODeviceController::setInitDelay(int paDelay) {

@@ -41,8 +41,9 @@ int CIEC_REAL::fromString(const char *paValue){
 #endif //defined(WIN32) || defined(__ECOS) || defined(VXWORKS)
 
   if(((fabs(realval) < TFLOAT_min) && (realval != 0)) || ((fabs(realval) > TFLOAT_max) && (realval != 0)) ||
-      (pacRunner == pcEnd))
+      (pacRunner == pcEnd)) {
     return -1;
+  }
 
   setTFLOAT((TForteFloat) realval);
   return static_cast<int>(pcEnd - paValue);

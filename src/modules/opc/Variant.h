@@ -134,7 +134,7 @@ struct Variant : public VARIANT{
         case VT_I1:
           return cVal != 0 ? true : false;
         case VT_UI8:
-          return ullVal != 0 ? true : false; 
+          return ullVal != 0 ? true : false;
         case VT_UI4:
          return ulVal != 0 ? true : false;
         case VT_UI2:
@@ -142,7 +142,7 @@ struct Variant : public VARIANT{
         case VT_UI1:
         return bVal != 0 ? true : false;
         case VT_R8:
-        return dblVal != 0 ? true : false; 
+        return dblVal != 0 ? true : false;
         case VT_R4:
          return fltVal != 0 ? true : false;
         case VT_INT:
@@ -302,8 +302,9 @@ struct Variant : public VARIANT{
     }
 
     bool operator==(const Variant &other) const{
-      if(vt != other.vt)
+      if(vt != other.vt) {
         return false;
+      }
       ULONGLONG mask = ~0ul;
       switch (vt){
         case VT_I4:

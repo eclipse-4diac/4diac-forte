@@ -22,10 +22,11 @@ EmbrickBitSlaveHandle::EmbrickBitSlaveHandle(forte::core::io::IODeviceController
 void EmbrickBitSlaveHandle::set(const CIEC_ANY &paState) {
   CCriticalRegion criticalRegion(*mUpdateMutex);
 
-  if(static_cast<const CIEC_BOOL&>(paState))
+  if(static_cast<const CIEC_BOOL&>(paState)) {
     *(mBuffer + mOffset) = (uint8_t) (*(mBuffer + mOffset) | mMask);
-  else
+  } else {
     *(mBuffer + mOffset) = (uint8_t) (*(mBuffer + mOffset) & ~mMask);
+  }
 
   EmbrickSlaveHandle::set(paState);
 }

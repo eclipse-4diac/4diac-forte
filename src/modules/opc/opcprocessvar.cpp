@@ -19,8 +19,9 @@ COpcProcessVar::COpcProcessVar(const char* pa_acItemGroupName, const char* pa_ac
 
 void COpcProcessVar::sendItemData(){
   try{
-    if (getIsActive())
+    if(getIsActive()) {
       m_pOpcItem->writeSync(updateValue());
+    }
   } catch (OPCException &e){
     setIsActive(false);
   }
@@ -39,9 +40,9 @@ Variant COpcProcessVar::peekNewValue(){
   TVariantList::Iterator itBegin = m_lNewValueQueue.begin();
   if(itBegin != m_lNewValueQueue.end()){
     retVal = (*itBegin);
-  }
-  else
+  } else {
     retVal = m_oCurrentValue;
+  }
 
   m_oSync.unlock();
 
@@ -57,9 +58,9 @@ Variant COpcProcessVar::updateValue(){
   if(itBegin != m_lNewValueQueue.end()){
     m_oCurrentValue = retVal = (*itBegin);
     m_lNewValueQueue.popFront();
-  }
-  else
+  } else {
     retVal = m_oCurrentValue;
+  }
 
   m_oSync.unlock();
 

@@ -21,10 +21,11 @@ TForteInt32 CIEC_ANY_DATE::getTimeZoneOffset(){
     time_t t = 24 * 60 * 60; // 2. 1. 1970 00:00:00 for UTC
 
     struct tm *ptm = forte_localtime(&t);
-    if(ptm->tm_mday < 2)
+    if(ptm->tm_mday < 2) {
       sm_nTimeZoneOffset = 60 * ptm->tm_hour + ptm->tm_min - 24 * 60;
-    else
+    } else {
       sm_nTimeZoneOffset = 60 * ptm->tm_hour + ptm->tm_min;
+    }
   }
 
   return sm_nTimeZoneOffset;
@@ -37,8 +38,9 @@ bool CIEC_ANY_DATE::setDateAndTime(struct tm &pa_rstTM, unsigned int pa_unMilliS
   time_t nTime;
   nTime = forte_mktime(&pa_rstTM);
 
-  if(nTime == (time_t) -1)
+  if(nTime == (time_t) -1) {
     return false;
+  }
 
   setTUINT64(nTime * 1000ULL + pa_unMilliSec);
   return true;

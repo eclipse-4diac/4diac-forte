@@ -58,9 +58,9 @@ unsigned int forte::com_infra::CComLayerAsync::callAsync(void *payload) {
 }
 
 forte::com_infra::EComResponse forte::com_infra::CComLayerAsync::processInterrupt() {
-  if (mAsyncResults.isEmpty())
+  if(mAsyncResults.isEmpty()) {
     return processInterruptChild();
-
+  }
   CCriticalRegion criticalRegion(mAsyncResultsMutex);
   while (isAlive() && !mAsyncResults.isEmpty()) {
     const SAsyncData &value = *(mAsyncResults.begin());

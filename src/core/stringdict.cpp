@@ -88,12 +88,14 @@ void CStringDictionary::clear(){
 
 // get a string (0 if not found)
 const char *CStringDictionary::get(TStringId pa_nId){
-  if(pa_nId >= m_nNextString)
+  if(pa_nId >= m_nNextString) {
     return 0;
+  }
 
   const char *adr = getStringAddress(pa_nId);
-  if(pa_nId > 0 && adr[-1] != '\0')
+  if(pa_nId > 0 && adr[-1] != '\0') {
     return 0;
+  }
 
   return adr;
 }
@@ -144,8 +146,9 @@ CStringDictionary::TStringId CStringDictionary::insert(const char *pa_sStr){
 // Find an exact match or place to be the new index
 CStringDictionary::TStringId CStringDictionary::findEntry(const char *pa_sStr, unsigned int &pa_rnIdx) const{
   pa_rnIdx = 0;
-  if(m_nNrOfStrings == 0)
+  if(m_nNrOfStrings == 0) {
     return scm_nInvalidStringId;
+  }
 
   int r = 0;
 
@@ -160,14 +163,16 @@ CStringDictionary::TStringId CStringDictionary::findEntry(const char *pa_sStr, u
       return m_pnStringIdBufAddr[pa_rnIdx];
     }
 
-    if(r > 0)
+    if(r > 0) {
       low = pa_rnIdx + 1;
-    else
+    } else {
       high = pa_rnIdx;
+    }
   }
 
-  if(r > 0)
+  if(r > 0) {
     pa_rnIdx++;
+  }
 
   return scm_nInvalidStringId;
 }
@@ -219,8 +224,9 @@ CStringDictionary::TStringId CStringDictionary::insertAt(const char *pa_sStr, un
   p[pa_nLen] = '\0';
   m_nNextString += pa_nLen + 1;
 
-  if(pa_nIdx < m_nNrOfStrings)
+  if(pa_nIdx < m_nNrOfStrings) {
     memmove(m_pnStringIdBufAddr + pa_nIdx + 1, m_pnStringIdBufAddr + pa_nIdx, (m_nNrOfStrings - pa_nIdx) * sizeof(TStringId));
+  }
 
   m_pnStringIdBufAddr[pa_nIdx] = id;
   m_nNrOfStrings++;

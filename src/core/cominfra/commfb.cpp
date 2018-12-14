@@ -139,7 +139,7 @@ bool CCommFB::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &
       break;
     }
   }
-  if (0 != sParamA) // search for 2nd underscore
+  if(0 != sParamA) { // search for 2nd underscore
     for (i = i + 1; i < inlength - 1; i++) {
       if (tempstring[i] == '_') {
         tempstring[i] = '\0';
@@ -147,7 +147,7 @@ bool CCommFB::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &
         break;
       }
     }
-
+  }
   if (0 == sParamB){ // no underscore found
     return false;
   }

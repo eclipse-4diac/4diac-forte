@@ -235,8 +235,9 @@ int CEplXmlReader::getModuleNr(const char* pa_pchIoId){
 
   int occurences = m_oModuleListIn.getNrOfModules(dest);
   int modNr = m_oModuleListOut.getModuleNr(dest, occurences + 1);
-  if(modNr == -1)
+  if(modNr == -1) {
     cout << "ShouldNotHappenError" << endl;
+  }
 
   return modNr;
 }

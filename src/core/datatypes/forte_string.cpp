@@ -30,14 +30,16 @@ int CIEC_STRING::fromString(const char *pa_pacValue){
       nSrcCappedLength -= 7;
     }
 
-    if (static_cast<unsigned int>(nSrcLen) > scm_unMaxStringLen)
+    if(static_cast<unsigned int>(nSrcLen) > scm_unMaxStringLen) {
       nSrcCappedLength = scm_unMaxStringLen;
+    }
 
 
     if (*pa_pacValue == '\'') {
       reserve(static_cast<TForteUInt16>(nSrcCappedLength));
-      if (unescapeFromString(pa_pacValue, '\'') < 0)
+      if(unescapeFromString(pa_pacValue, '\'') < 0) {
         return -1;
+      }
     } else {
       assign(pa_pacValue, static_cast<TForteUInt16>(nSrcCappedLength));
     }
@@ -131,8 +133,9 @@ int CIEC_STRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescap
     }
 
     reserve(static_cast<TForteUInt16>(nLength));
-    if (0 == getGenData())
+    if (0 == getGenData()) {
       return -1;
+    }
 
     TForteUInt32 nCodepoint;
     const char *pRunner = pa_pacValue;
@@ -143,10 +146,12 @@ int CIEC_STRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescap
       int nRes;
       nRes = CUnicodeUtilities::parseUTF8Codepoint((const TForteByte *) pRunner, nCodepoint);
       pRunner += nRes;
-      if (nCodepoint == CUnicodeUtilities::scm_unBOMMarker)
+      if (nCodepoint == CUnicodeUtilities::scm_unBOMMarker) {
         continue;
-      if (nCodepoint >= 0x100)
+      }
+      if (nCodepoint >= 0x100) {
         nCodepoint = '?';
+      }
       *pEncRunner++ = (TForteByte) nCodepoint;
     }
 
@@ -155,8 +160,9 @@ int CIEC_STRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescap
 
     if (pa_bUnescape) {
       nLength = unescapeFromString(getValue(), '\'');
-      if (nLength < 0)
+      if (nLength < 0) {
         return -1;
+      }
     }
   }
   return nSrcLen;
@@ -170,11 +176,13 @@ int CIEC_STRING::toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) cons
   const unsigned char *pRunner = (const unsigned char *) getValue();
   while (*pRunner) {
     nRes = CUnicodeUtilities::encodeUTF8Codepoint(0, 0, (TForteUInt32) *pRunner);
-    if (nRes < 0)
+    if (nRes < 0) {
       return -1;
+    }
     nNeededLength += nRes;
-    if (nRes == 1 && paEscape && dollarEscapeChar(0, *pRunner, 0) == 2)
+    if (nRes == 1 && paEscape && dollarEscapeChar(0, *pRunner, 0) == 2) {
       nNeededLength++;
+    }
     ++pRunner;
   }
 

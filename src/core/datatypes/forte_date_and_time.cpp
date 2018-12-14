@@ -79,13 +79,14 @@ int CIEC_DATE_AND_TIME::fromString(const char *paValue){
                   ++nNums;
                 }
 
-                if(nNums < 3){
-                  for(unsigned int i = nNums; i < 3; ++i)
+                if(nNums < 3) {
+                  for(unsigned int i = nNums; i < 3; ++i) {
                     msec *= 10;
-                }
-                else{
-                  for(unsigned int i = 0; i < (nNums - 3); ++i)
+                  }
+                } else {
+                  for(unsigned int i = 0; i < (nNums - 3); ++i) {
                     msec /= 10;
+                  }
                 }
               }
               nRetVal = static_cast<int>(acBuffer - paValue);
@@ -122,9 +123,9 @@ int CIEC_DATE_AND_TIME::toGMTString(char* paValue, unsigned int paBufferSize) co
   time_t t = static_cast<time_t>(nToStringBuffer / 1000);
 
   struct tm *ptm = forte_gmtime(&t);
-  if (ptm == 0)
+  if(ptm == 0) {
     return -1;
-
+  }
   int nRetVal = forte_snprintf(paValue, paBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03d", 1900 + ptm->tm_year, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, (int) (nToStringBuffer % 1000));
   if((nRetVal < -1) || (nRetVal >= (int) paBufferSize)){
     nRetVal = -1;

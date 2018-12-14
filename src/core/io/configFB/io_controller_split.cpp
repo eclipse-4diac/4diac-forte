@@ -30,10 +30,11 @@ IOConfigFBSplitController::IOConfigFBSplitController(const TForteUInt8* const pa
 IOConfigFBSplitController* IOConfigFBSplitController::getControllerById(TForteUInt16 paId) {
   TControllerList::Iterator itEnd = mInstances.end();
   int i = 0;
-  for(TControllerList::Iterator it = mInstances.begin(); it != itEnd; ++it, i++)
+  for(TControllerList::Iterator it = mInstances.begin(); it != itEnd; ++it, i++) {
     if(paId == i && *it != 0) {
       return *it;
     }
+  }
   return 0;
 }
 

@@ -26,8 +26,9 @@ IOConfigFBMultiSlave::IOConfigFBMultiSlave(const TForteUInt8* const paSlaveConfi
     IOConfigFBBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mIndex(-1), mSlaveConfigurationIO(paSlaveConfigurationIO),
         mMaster(0), mType(paType), mInitialized(false), mSlaveConfigurationIONum(paSlaveConfigurationIONum),
         mSlaveConfigurationIOIsDefault(new bool[paSlaveConfigurationIONum]()) {
-  for(int i = 0; i < mSlaveConfigurationIONum; i++)
+  for(int i = 0; i < mSlaveConfigurationIONum; i++) {
     mSlaveConfigurationIOIsDefault[i] = false;
+  }
 }
 
 IOConfigFBMultiSlave::~IOConfigFBMultiSlave() {
