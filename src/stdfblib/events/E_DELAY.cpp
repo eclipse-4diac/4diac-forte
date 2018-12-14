@@ -27,10 +27,8 @@ void E_DELAY::executeEvent(int pa_nEIID){
     mActive = false;
   }
   else{
-    if(csm_nEventSTARTID  == pa_nEIID ){
-      if(!mActive){
-        setEventChainExecutor(m_poInvokingExecEnv);  // E_DELAY will execute in the same thread on as from where it has been triggered.
-      }
+    if(csm_nEventSTARTID == pa_nEIID && !mActive) {
+      setEventChainExecutor(m_poInvokingExecEnv); // E_DELAY will execute in the same thread on as from where it has been triggered.
     }
     CTimedFB::executeEvent(pa_nEIID);
   }

@@ -76,12 +76,9 @@ void CTimedFB::executeEvent(int pa_nEIID){
 
 EMGMResponse CTimedFB::changeFBExecutionState(EMGMCommandType pa_unCommand){
   EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(pa_unCommand);
-  if((e_RDY == eRetVal) &&
-     ((cg_nMGM_CMD_Stop == pa_unCommand) || (cg_nMGM_CMD_Kill == pa_unCommand))){
-    if(mActive){
-      getTimer().unregisterTimedFB(this);
-      mActive = false;
-    }
+  if((e_RDY == eRetVal) && ((cg_nMGM_CMD_Stop == pa_unCommand) || (cg_nMGM_CMD_Kill == pa_unCommand)) && mActive) {
+    getTimer().unregisterTimedFB(this);
+    mActive = false;
   }
   return eRetVal;
 }

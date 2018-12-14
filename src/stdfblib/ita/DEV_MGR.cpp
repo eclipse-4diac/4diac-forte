@@ -333,11 +333,9 @@ void DEV_MGR::parseDeleteData(char *paRequestPartLeft, forte::core::SManagementC
 }
 
 void DEV_MGR::parseAdditionalStateCommandData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand){
-  if(0 != paRequestPartLeft){
-    if('/' != paRequestPartLeft[0] &&  //if we have an additional xml token parse if it is an FB definition
-        !parseFBData(paRequestPartLeft, paCommand)){
-      paCommand.mCMD = cg_nMGM_CMD_INVALID;
-    }
+  if(0 != paRequestPartLeft && '/' != paRequestPartLeft[0] && //if we have an additional xml token parse if it is an FB definition
+    !parseFBData(paRequestPartLeft, paCommand)) {
+    paCommand.mCMD = cg_nMGM_CMD_INVALID;
   }
 }
 

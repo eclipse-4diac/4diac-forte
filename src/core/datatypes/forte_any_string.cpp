@@ -44,11 +44,9 @@ CIEC_ANY_STRING& CIEC_ANY_STRING::operator =(const char* const pa_pacValue){
 
 void CIEC_ANY_STRING::assign(const char *pa_poData, TForteUInt16 pa_nLen) {
   if (0 != pa_poData){
-    if(0 != pa_nLen){
-      if(pa_poData != getValue()){
-        reserve(pa_nLen);
-        memcpy(getValue(), pa_poData, pa_nLen);
-      }
+    if(0 != pa_nLen && pa_poData != getValue()) {
+      reserve(pa_nLen);
+      memcpy(getValue(), pa_poData, pa_nLen);
     }
     if(0 != getValue()){
       setLength(pa_nLen);

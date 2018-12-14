@@ -38,10 +38,8 @@ bool timespecLessThan(const struct timespec *const lhs, const struct timespec *c
   if(lhs->tv_sec > rhs->tv_sec) {
     return false;
   }
-  if(lhs->tv_sec == rhs->tv_sec) {
-    if(lhs->tv_nsec >= rhs->tv_nsec) {
-      return false;
-    }
+  if(lhs->tv_sec == rhs->tv_sec && lhs->tv_nsec >= rhs->tv_nsec) {
+    return false;
   }
   return true;
 }

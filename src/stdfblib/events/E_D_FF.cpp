@@ -48,10 +48,8 @@ const SFBInterfaceSpec E_D_FF::scm_stFBInterfaceSpec = {
 };
 
 void E_D_FF::executeEvent(int pa_nEIID){
-  if(scm_nEventCLKID == pa_nEIID){
-    if(D() != Q()){
-      Q() = D();
-      sendOutputEvent( scm_nEventEOID);
-    }
+  if(scm_nEventCLKID == pa_nEIID && D() != Q()) {
+    Q() = D();
+    sendOutputEvent(scm_nEventEOID);
   }
 }

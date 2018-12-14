@@ -96,10 +96,8 @@ int CIEC_DATE_AND_TIME::fromString(const char *paValue){
     }
   }
 
-  if(-1 != nRetVal){
-    if(!setDateAndTime(tm, msec)){
-      nRetVal = -1;
-    }
+  if(-1 != nRetVal && !setDateAndTime(tm, msec)) {
+    nRetVal = -1;
   }
 
   return nRetVal;

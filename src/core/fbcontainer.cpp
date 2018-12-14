@@ -180,13 +180,10 @@ CFBContainer *CFBContainer::getFBContainer(CStringDictionary::TStringId paContai
 
 CFBContainer *CFBContainer::findOrCreateContainer(CStringDictionary::TStringId paContainerName){
   CFBContainer *retVal = getFBContainer(paContainerName);
-  if(0 == retVal){
-    //the container with the given name does not exist create a new one
-    if(0 == getFB(paContainerName)){
-      //only create it if there is no FB with the same name.
-      retVal = new CFBContainer(paContainerName, this);
-      mSubContainers.pushBack(retVal);
-    }
+  if(0 == retVal && 0 == getFB(paContainerName)) {
+    //the container with the given name does not exist but only create it if there is no FB with the same name.
+    retVal = new CFBContainer(paContainerName, this);
+    mSubContainers.pushBack(retVal);
   }
   return retVal;
 }

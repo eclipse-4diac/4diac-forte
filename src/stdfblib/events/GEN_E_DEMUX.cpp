@@ -35,10 +35,8 @@ GEN_E_DEMUX::~GEN_E_DEMUX(){
 }
 
 void GEN_E_DEMUX::executeEvent(int paEIID){
-  if(scm_nEventEIID == paEIID){
-    if(K() < m_pstInterfaceSpec->m_nNumEOs){
-      sendOutputEvent(K()); // the value of K corresponds to the output event ID;
-    }
+  if(scm_nEventEIID == paEIID && K() < m_pstInterfaceSpec->m_nNumEOs) {
+    sendOutputEvent(K()); // the value of K corresponds to the output event ID;
   }
 }
 

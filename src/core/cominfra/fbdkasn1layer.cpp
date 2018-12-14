@@ -552,15 +552,12 @@ bool CFBDKASN1ComLayer::deserializeDataPointArray(const TForteByte* pa_pcBytes, 
 
 int CFBDKASN1ComLayer::deserializeDataPoint(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_ANY &pa_roCIECData){
   int nRetVal = -1;
-  if(0 < pa_nStreamSize){
-    if(e_APPLICATION == (pa_pcBytes[0] & e_APPLICATION)){
-      if(deserializeTag(*pa_pcBytes, pa_roCIECData)){
-        nRetVal = deserializeValue(pa_pcBytes + 1, pa_nStreamSize - 1, pa_roCIECData) + 1;
-      }
-      else{
-        DEVLOG_ERROR("Datatype error\n");
-        nRetVal = -2;
-      }
+  if(0 < pa_nStreamSize && e_APPLICATION == (pa_pcBytes[0] & e_APPLICATION)) {
+    if(deserializeTag(*pa_pcBytes, pa_roCIECData)) {
+      nRetVal = deserializeValue(pa_pcBytes + 1, pa_nStreamSize - 1, pa_roCIECData) + 1;
+    } else {
+      DEVLOG_ERROR("Datatype error\n");
+      nRetVal = -2;
     }
   }
   return nRetVal;
@@ -649,11 +646,9 @@ int CFBDKASN1ComLayer::deserializeValueSimpleDataType(const TForteByte* pa_pcByt
     *((CIEC_ANY::TLargestUIntValueType *) acDataPtr) = 0;
 
     //we only need to check for SINT, INT, and DINT as LINT will fill all bytes
-    if(pa_roIECData.getDataTypeID() <= CIEC_ANY::e_DINT){
-      if(pa_pcBytes[0] & 0x80){
-        //we received a negative number set all bits to true
-        *((CIEC_ANY::TLargestIntValueType *) acDataPtr) = -1;
-      }
+    if(pa_roIECData.getDataTypeID() <= CIEC_ANY::e_DINT && (pa_pcBytes[0] & 0x80)) {
+      //we received a negative number set all bits to true
+      *((CIEC_ANY::TLargestIntValueType *) acDataPtr) = -1;
     }
 
 #ifdef FORTE_LITTLE_ENDIAN
@@ -700,9 +695,8 @@ int CFBDKASN1ComLayer::deserializeValueWString(const TForteByte* pa_pcBytes, int
   int nRetVal = -1;
   if(pa_nStreamSize >= 2){
     TForteUInt16 unStringSize = static_cast<TForteUInt16>(((static_cast<TForteUInt16>(pa_pcBytes[0]) << 8) & 0xFF00) + (static_cast<TForteUInt16>(pa_pcBytes[1]) & 0x00FF));
-    if(pa_nStreamSize >= (unStringSize * 2 + 2)){
-      if (pa_roIECData.fromUTF16(pa_pcBytes + 2, unStringSize*2))
-        nRetVal = unStringSize * 2 + 2;
+    if(pa_nStreamSize >= (unStringSize * 2 + 2) && pa_roIECData.fromUTF16(pa_pcBytes + 2, unStringSize*2)) {
+      nRetVal = unStringSize * 2 + 2;
     }
   }
   return nRetVal;

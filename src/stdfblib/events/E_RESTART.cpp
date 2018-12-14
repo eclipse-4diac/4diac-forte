@@ -43,16 +43,14 @@ const SFBInterfaceSpec E_RESTART::scm_stFBInterfaceSpec = {
   0
 };
 
-void E_RESTART::executeEvent(int pa_nEIID){
-  if(cg_nExternalEventID == pa_nEIID){
-    if(cg_nInvalidEventID != mEventToSend){
-      sendOutputEvent(mEventToSend);
-      if(csmSTOPID == mEventToSend){
-        //stop event is sent put the FB finally into the stopped state
-        CFunctionBlock::changeFBExecutionState(cg_nMGM_CMD_Stop);
-        // release semaphore to indicate that the stop event was sent now
-        mSuspendSemaphore.inc();
-      }
+void E_RESTART::executeEvent(int pa_nEIID) {
+  if(cg_nExternalEventID == pa_nEIID && cg_nInvalidEventID != mEventToSend) {
+    sendOutputEvent(mEventToSend);
+    if(csmSTOPID == mEventToSend) {
+      //stop event is sent put the FB finally into the stopped state
+      CFunctionBlock::changeFBExecutionState(cg_nMGM_CMD_Stop);
+      // release semaphore to indicate that the stop event was sent now
+      mSuspendSemaphore.inc();
     }
   }
 }
