@@ -142,31 +142,26 @@ const unsigned int allowedStatesInFunction[] = {
   if(!(instance->getState() & allowedStatesInFunction[function])) {                                             \
     instance->setState(STATE_ERROR);                                                                            \
     LOG_FMU(instance, fmi2Error, LOG_ERROR, "The function cannot be called in the given state")                 \
-    LEAVE_FUNCTION(fmi2Error)                                            \
+    return fmi2Error;                                                                                           \
   }
 
 #define ASSERT_STATE_NO_RETURN(instance, function)                                                              \
   if(!(instance->getState() & allowedStatesInFunction[function])) {                                             \
     instance->setState(STATE_ERROR);                                                                            \
     LOG_FMU(instance, fmi2Error, LOG_ERROR, "The function cannot be called in the given state")                 \
-    LEAVE_FUNCTION_NO_RETURN()                                                                                  \
+    return;                                                                                                     \
   }
 
 
 #define ENTRY_FUNCTION(function)                                                                                \
     fmuInstance* componentInstance = static_cast<fmuInstance*>(c);                                              \
-    if(NULL == c) {LEAVE_FUNCTION(fmi2Error)}                                                                   \
+    if(NULL == c) {return fmi2Error;}                                                                           \
     ASSERT_STATE(componentInstance, function)                                                                   \
-
-#define LEAVE_FUNCTION(returnValue)                                                                             \
-   return returnValue;
 
 #define ENTRY_FUNCTION_NO_RETURN(function)                                                                      \
     fmuInstance* componentInstance = static_cast<fmuInstance*>(c);                                              \
-    if(NULL == c) {LEAVE_FUNCTION_NO_RETURN()}                                                                  \
+    if(NULL == c) {return;}                                                                                     \
     ASSERT_STATE_NO_RETURN(componentInstance, function)                                                         \
-
-#define LEAVE_FUNCTION_NO_RETURN()                                                                              \
 
 #define NOT_USED(var)                                                                                           \
   (void)var;
