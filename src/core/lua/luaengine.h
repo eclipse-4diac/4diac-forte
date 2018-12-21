@@ -70,10 +70,10 @@ public:
   void registerType() {
     // create new metatable if it doesn't exist yet (and fill if created)
     if (luaL_newmetatable(luaState, T::LUA_NAME)) {
-#if !defined LUA_VERSION_NUM || LUA_VERSION_NUM==501
-      luaL_register(luaState, NULL, T::LUA_FUNCS);
+#if LUA_VERSION_NUM > 501
+      luaL_setfuncs(luaState, T::LUA_FUNCS, 0);
 #else
-      luaL_setfuncs(luaState, functions, 0)
+      luaL_register(luaState, NULL, T::LUA_FUNCS);
 #endif
       lua_pop(luaState, 1);
     }
@@ -83,11 +83,11 @@ public:
   static void luaPushObject(lua_State* luaState, T* value) {
     T** userdata = static_cast<T**>(lua_newuserdata(luaState, sizeof(T*)));
     *userdata = value;
-#if !defined LUA_VERSION_NUM || LUA_VERSION_NUM==501
+#if LUA_VERSION_NUM > 501
+    luaL_setmetatable(luaState, T::LUA_NAME);
+#else
     luaL_getmetatable(luaState, T::LUA_NAME);
     lua_setmetatable(luaState, -2);
-#else
-    luaL_setmetatable(luaState, tname);
 #endif
   }
 
@@ -159,7 +159,11 @@ public:
     if (!lua_istable(luaState, index)) {
       return NULL;
     }
-    size_t len = lua_len(luaState, index);
+#if LUA_VERSION_NUM > 501
+    size_t len = lua_rawlen(luaState, index);
+#else
+    size_t len = lua_objlen(luaState, index);
+#endif
     if (length == SIZE_MAX) {
       length = len;
     } else if (len != length) {
@@ -180,7 +184,11 @@ public:
     if (!lua_istable(luaState, index)) {
       return NULL;
     }
-    size_t len = lua_len(luaState, index);
+#if LUA_VERSION_NUM > 501
+    size_t len = lua_rawlen(luaState, index);
+#else
+    size_t len = lua_objlen(luaState, index);
+#endif
     if (length == SIZE_MAX) {
       length = len;
     } else if (len != length) {
