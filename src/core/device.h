@@ -65,7 +65,7 @@ class CDevice : public CResource {
      *  \return 0 on success -1 on error
      */
     virtual int startDevice() {
-      changeFBExecutionState(cg_nMGM_CMD_Start);
+      changeFBExecutionState(EMGMCommandType::Start);
       return 1;
     }
 

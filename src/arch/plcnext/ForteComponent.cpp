@@ -48,7 +48,7 @@ namespace ForteLibrary {
 
   void ForteComponent::PowerDown(){
     if(0 != mDev){
-      mDev->changeFBExecutionState(cg_nMGM_CMD_Kill);
+      mDev->changeFBExecutionState(EMGMCommandType::Kill);
     }
   }
 

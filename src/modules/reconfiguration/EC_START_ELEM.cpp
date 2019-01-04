@@ -61,7 +61,7 @@ void FORTE_EC_START_ELEM::executeRQST(){
   
   theCommand.mDestination = CStringDictionary::getInstance().getId(DST().getValue());
   theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(ELEM_NAME().getValue()));
-  theCommand.mCMD = cg_nMGM_CMD_Start;
+  theCommand.mCMD = EMGMCommandType::Start;
   
   EMGMResponse resp = m_poDevice.executeMGMCommand(theCommand);
 

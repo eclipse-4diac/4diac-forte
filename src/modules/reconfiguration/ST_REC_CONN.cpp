@@ -64,7 +64,7 @@ void FORTE_ST_REC_CONN::executeRQST(){
   theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(OLD_SRC_FB_OUT().getValue()));
   theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(OLD_DST_FB().getValue()));
   theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(OLD_DST_FB_IN().getValue()));
-  theCommand.mCMD = cg_nMGM_CMD_Delete_Connection;
+  theCommand.mCMD = EMGMCommandType::DeleteConnection;
   
   EMGMResponse resp = m_poDevice.executeMGMCommand(theCommand);
 
@@ -76,7 +76,7 @@ void FORTE_ST_REC_CONN::executeRQST(){
     theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(NEW_SRC_FB_OUT().getValue()));
     theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(NEW_DST_FB().getValue()));
     theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(NEW_DST_FB_IN().getValue()));
-    theCommand.mCMD = cg_nMGM_CMD_Create_Connection;
+    theCommand.mCMD = EMGMCommandType::CreateConnection;
     resp = m_poDevice.executeMGMCommand(theCommand);
   }
 

@@ -61,7 +61,7 @@ void FORTE_ST_DEL_FB::executeRQST(){
   
   theCommand.mDestination = CStringDictionary::getInstance().getId(DST().getValue());
   theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(FB_NAME().getValue()));
-  theCommand.mCMD = cg_nMGM_CMD_Delete_FBInstance;
+  theCommand.mCMD = EMGMCommandType::DeleteFBInstance;
   
   EMGMResponse resp = m_poDevice.executeMGMCommand(theCommand);
   

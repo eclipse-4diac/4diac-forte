@@ -31,7 +31,7 @@ RMT_DEV *poDev = 0;
 void endForte(int pa_nSig){
   (void) pa_nSig;
   if(0 != poDev){
-    poDev->changeFBExecutionState(cg_nMGM_CMD_Kill);
+    poDev->changeFBExecutionState(EMGMCommandType::Kill);
   }
 }
 

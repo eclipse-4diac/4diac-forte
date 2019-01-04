@@ -24,7 +24,7 @@ F_GT_TIME_tester::F_GT_TIME_tester(CResource *m_poTestResource) :
         m_oIn_IN1_Conn(m_oTestee, g_nStringIdIN1, &m_oIN1),
         m_oIn_IN2_Conn(m_oTestee, g_nStringIdIN2, &m_oIN2),
         m_oOut_OUT_Conn(m_oTestee, g_nStringIdOUT, &m_oOut_OUT){
-  m_oTestee.changeFBExecutionState(cg_nMGM_CMD_Start);
+  m_oTestee.changeFBExecutionState(EMGMCommandType::Start);
 }
 
 void F_GT_TIME_tester::executeAllTests(){

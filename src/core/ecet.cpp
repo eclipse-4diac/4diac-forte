@@ -152,16 +152,16 @@ void CEventChainExecutionThread::addEventEntry(SEventEntry *paEventToAdd){
 
 void CEventChainExecutionThread::changeExecutionState(EMGMCommandType paCommand){
   switch (paCommand){
-    case cg_nMGM_CMD_Start:
+    case EMGMCommandType::Start:
       if(!isAlive()){
         //only start the thread when we are not already running
         start();
       }
       break;
-    case cg_nMGM_CMD_Kill:
+    case EMGMCommandType::Kill:
       clear();
       [[fallthrough]];
-    case cg_nMGM_CMD_Stop:
+    case EMGMCommandType::Stop:
       setAlive(false); //end thread in both cases
       resumeSelfSuspend();
       break;

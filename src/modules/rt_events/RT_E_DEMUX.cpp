@@ -90,10 +90,10 @@ void FORTE_RT_E_DEMUX::executeEvent(int pa_nEIID){
     if(scm_nEventINITID == pa_nEIID){
       if(QI() == true){
         if(!m_bInitialized){
-          m_oECEO0.changeExecutionState(cg_nMGM_CMD_Start);
-          m_oECEO1.changeExecutionState(cg_nMGM_CMD_Start);
-          m_oECEO2.changeExecutionState(cg_nMGM_CMD_Start);
-          m_oECEO3.changeExecutionState(cg_nMGM_CMD_Start);
+          m_oECEO0.changeExecutionState(EMGMCommandType::Start);
+          m_oECEO1.changeExecutionState(EMGMCommandType::Start);
+          m_oECEO2.changeExecutionState(EMGMCommandType::Start);
+          m_oECEO3.changeExecutionState(EMGMCommandType::Start);
           m_bInitialized = true;
         }
         m_oECEO0.setDeadline(Deadline0());
@@ -102,10 +102,10 @@ void FORTE_RT_E_DEMUX::executeEvent(int pa_nEIID){
         m_oECEO3.setDeadline(Deadline3());
       }
       else{
-        m_oECEO0.changeExecutionState(cg_nMGM_CMD_Stop);
-        m_oECEO1.changeExecutionState(cg_nMGM_CMD_Stop);
-        m_oECEO2.changeExecutionState(cg_nMGM_CMD_Stop);
-        m_oECEO3.changeExecutionState(cg_nMGM_CMD_Stop);
+        m_oECEO0.changeExecutionState(EMGMCommandType::Stop);
+        m_oECEO1.changeExecutionState(EMGMCommandType::Stop);
+        m_oECEO2.changeExecutionState(EMGMCommandType::Stop);
+        m_oECEO3.changeExecutionState(EMGMCommandType::Stop);
         m_bInitialized = false;
       }
     QO() = QI();

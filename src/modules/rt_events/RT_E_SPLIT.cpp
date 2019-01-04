@@ -61,16 +61,16 @@ void FORTE_RT_E_SPLIT::executeEvent(int pa_nEIID){
     if(scm_nEventINITID == pa_nEIID){
       if(QI() == true){
         if(!m_bInitialized){
-          m_oECEO1.changeExecutionState(cg_nMGM_CMD_Start);
-          m_oECEO2.changeExecutionState(cg_nMGM_CMD_Start);
+          m_oECEO1.changeExecutionState(EMGMCommandType::Start);
+          m_oECEO2.changeExecutionState(EMGMCommandType::Start);
           m_bInitialized = true;
         }
         m_oECEO1.setDeadline(Deadline_EO1());
         m_oECEO2.setDeadline(Deadline_EO2());
       }
       else{
-        m_oECEO1.changeExecutionState(cg_nMGM_CMD_Stop);
-        m_oECEO2.changeExecutionState(cg_nMGM_CMD_Stop);
+        m_oECEO1.changeExecutionState(EMGMCommandType::Stop);
+        m_oECEO2.changeExecutionState(EMGMCommandType::Stop);
         m_bInitialized = false;
       }
       QO() = QI();

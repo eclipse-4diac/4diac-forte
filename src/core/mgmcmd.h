@@ -14,6 +14,8 @@
 #ifndef _MGMCMD_H_
 #define _MGMCMD_H_
 
+#include <cstdint>
+
 /**  \ingroup CORE \defgroup MGMCommands Management Commands Internal Representation
  * \brief In this section the FORTE representation of the management commands is described.
  */
@@ -26,12 +28,12 @@
  *  - the higher 4 bits are counted as they are listed in the Table 8, p48 in 61499-1.
  *
  */
-enum EMGMCommandType{
-  cg_nMGM_CMD_Create_Group = 0x00, //!< Identifier for all create commands
+enum class EMGMCommandType : uint8_t {
+  CreateGroup = 0x00, //!< Identifier for all create commands
 
-  cg_nMGM_CMD_Create_DataType = 0x10, //!< Create a new data type definition in the FORTE.
-  cg_nMGM_CMD_Create_FBType = 0x20,   //!< Create a new FB type definition in the FORTE.
-  cg_nMGM_CMD_Create_AdapterType = 0x50,   //!< Create a new Adapter type definition in the FORTE.
+  CreateDataType = 0x10, //!< Create a new data type definition in the FORTE.
+  CreateFBType = 0x20,   //!< Create a new FB type definition in the FORTE.
+  CreateAdapterType = 0x50,   //!< Create a new Adapter type definition in the FORTE.
 
   /*! \brief Create a new FB or resource instance.
    *
@@ -41,7 +43,7 @@ enum EMGMCommandType{
    *    - m_sSecondParam = FB Type
    *    - m_sAdditionalParams not used
    */
-  cg_nMGM_CMD_Create_FBInstance = 0x30,
+  CreateFBInstance = 0x30,
 
   /*! \brief Create a new connection (can be event or data connection).
    *
@@ -51,11 +53,11 @@ enum EMGMCommandType{
    *    - m_sSecondParam = destination of the connection given by: "fbname.intput"
    *    - m_sAdditionalParams not used
    */
-  cg_nMGM_CMD_Create_Connection = 0x40,
+  CreateConnection = 0x40,
 
-  cg_nMGM_CMD_Delete_Group = 0x01,   //!<Identifier for all delete commands
-  cg_nMGM_CMD_Delete_DataType = 0x11,
-  cg_nMGM_CMD_Delete_FBType = 0x21,
+  DeleteGroup = 0x01,   //!<Identifier for all delete commands
+  DeleteDataType = 0x11,
+  DeleteFBType = 0x21,
 
   /*! \brief Delete a FB or resource instance.
    *
@@ -65,7 +67,7 @@ enum EMGMCommandType{
    *    - m_sSecondParam not used
    *    - m_sAdditionalParams not used
    */
-  cg_nMGM_CMD_Delete_FBInstance = 0x31,
+  DeleteFBInstance = 0x31,
 
   /*! \brief Delete a connection (can be event or data connection).
    *
@@ -75,7 +77,7 @@ enum EMGMCommandType{
    *    - m_sSecondParam = destination of the connection given by: "fbname.intput"
    *    - m_sAdditionalParams not used
    */
-  cg_nMGM_CMD_Delete_Connection = 0x41,
+  DeleteConnection = 0x41,
 
   /*! \brief Delete all FBs or resource instances.
    *
@@ -85,7 +87,7 @@ enum EMGMCommandType{
    *    - m_sSecondParam not used
    *    - m_sAdditionalParams not used
    */
-  cg_nMGM_CMD_Delete_AllFBInstances = 0x61,
+  DeleteAllFBInstances = 0x61,
 
   /*! \brief start a FB, resource or the device.
    *
@@ -95,7 +97,7 @@ enum EMGMCommandType{
    *    - m_sSecondParam = not used
    *    - m_sAdditionalParams not used
    */
-  cg_nMGM_CMD_Start = 0x02,
+  Start = 0x02,
 
   /*! \brief stop a FB, resource or the device.
    *
@@ -105,7 +107,7 @@ enum EMGMCommandType{
    *    - m_sSecondParam = not used
    *    - m_sAdditionalParams not used
    */
-  cg_nMGM_CMD_Stop = 0x03,
+  Stop = 0x03,
 
   /*! \brief Read values from FB in- and outputs or from resource inputs
    *
@@ -115,7 +117,7 @@ enum EMGMCommandType{
    *    - m_sSecondParam = CStringDictionary::scm_nInvalidStringId
    *    - m_sAdditionalParams the read value is stored here
    */
-  cg_nMGM_CMD_Read = 0x04,
+  Read = 0x04,
 
   /*! \brief Write value to a given data input or output (FB or Resource)
    *
@@ -125,7 +127,7 @@ enum EMGMCommandType{
    *    - m_sSecondParam = CStringDictionary::scm_nInvalidStringId
    *    - m_sAdditionalParams = the string converted value to be set
    */
-  cg_nMGM_CMD_Write = 0x05,
+  Write = 0x05,
 
   /*! \brief kill a FB, resource or the device.
    *
@@ -135,10 +137,10 @@ enum EMGMCommandType{
    *    - m_sSecondParam = not used
    *    - m_sAdditionalParams not used
    */
-  cg_nMGM_CMD_Kill = 0x06,
+  Kill = 0x06,
 
 #ifdef FORTE_SUPPORT_QUERY_CMD
-  cg_nMGM_CMD_Query_Group = 0x07,   //!< Identifier for all query commands
+  QueryGroup = 0x07,   //!< Identifier for all query commands
 
   /*! \brief query FBs
    *
@@ -148,7 +150,7 @@ enum EMGMCommandType{
    *    - m_sSecondParam = CStringDictionary::scm_nInvalidStringId for all FB types or type name
    *    - m_sAdditionalParams  the response value of the query
    */
-  cg_nMGM_CMD_QUERY_FB = 0x17,
+  QueryFB = 0x17,
 
   /*! \brief query connections
    *
@@ -158,7 +160,7 @@ enum EMGMCommandType{
    *    - m_sSecondParam = CStringDictionary::scm_nInvalidStringId
    *    - m_sAdditionalParams  the response value of the query - a list of event and data connections (comma separated list of end points to end points)
    */
-  cg_nMGM_CMD_QUERY_Connection = 0x27,
+  QueryConnection = 0x27,
 
   /*! \brief Read the existing fb types.
    *
@@ -168,7 +170,7 @@ enum EMGMCommandType{
    *    - m_sSecondParam = not used
    *    - m_sAdditionalParams the read value is stored here
    */
-  cg_nMGM_CMD_QUERY_FBTypes = 0x37,
+  QueryFBTypes = 0x37,
 
   /*! \brief Read the existing data types.
    *
@@ -178,7 +180,7 @@ enum EMGMCommandType{
    *    - m_sSecondParam = not used
    *    - m_sAdditionalParams the read value is stored here
    */
-  cg_nMGM_CMD_QUERY_DTTypes = 0x47,
+  QueryDTTypes = 0x47,
 
   /*! \brief Read the existing data types.
    *
@@ -188,12 +190,12 @@ enum EMGMCommandType{
    *    - m_sSecondParam = not used
    *    - m_sAdditionalParams the read value is stored here
    */
-  cg_nMGM_CMD_QUERY_AdapterTypes = 0x57,
+  QueryAdapterTypes = 0x57,
 
   /**
    * currently not implemented
    */
-  cg_nMGM_CMD_QUERY_TypeVers = 0x67,
+  QueryTypeVers = 0x67,
 
   /*! \brief Read the interface of a specific FB type.
    *
@@ -202,7 +204,7 @@ enum EMGMCommandType{
    *    - m_sSecondParam = not used
    *    - m_sAdditionalParams the read value is stored here
    */
-  cg_nMGM_CMD_QUERY_FBType = 0x77,
+  QueryFBType = 0x77,
 
   /*! \brief Read the interface of a specific adapter type.
    *
@@ -211,7 +213,7 @@ enum EMGMCommandType{
    *    - m_sSecondParam = not used
    *    - m_sAdditionalParams the read value is stored here
    */
-  cg_nMGM_CMD_QUERY_AdapterType = 0x87,
+  QueryAdapterType = 0x87,
 #endif
 
   /*! \brief reset a FB, resource or the device.
@@ -222,25 +224,25 @@ enum EMGMCommandType{
    *    - m_sSecondParam = not used
    *    - m_sAdditionalParams not used
    */
-  cg_nMGM_CMD_Reset = 0x08,
+  Reset = 0x08,
 
 
 
 #ifdef FORTE_SUPPORT_MONITORING
-  cg_nMGM_CMD_Monitoring_Group = 0x0A,
-  cg_nMGM_CMD_Monitoring_Add_Watch = 0x1A,
-  cg_nMGM_CMD_Monitoring_Remove_Watch = 0x2A,
-  cg_nMGM_CMD_Monitoring_Read_Watches = 0x3A,
-  cg_nMGM_CMD_Monitoring_Force = 0x5A,
-  cg_nMGM_CMD_Monitoring_ClearForce = 0x6A,
-  cg_nMGM_CMD_Monitoring_Trigger_Event = 0x7A,
-  cg_nMGM_CMD_Monitoring_Reset_Event_Count = 0x8A,
+  MonitoringGroup = 0x0A,
+  MonitoringAddWatch = 0x1A,
+  MonitoringRemoveWatch = 0x2A,
+  MonitoringReadWatches = 0x3A,
+  MonitoringForce = 0x5A,
+  MonitoringClearForce = 0x6A,
+  MonitoringTriggerEvent = 0x7A,
+  MonitoringResetEventCount = 0x8A,
 #endif // FORTE_SUPPORT_MONITORING
 
 
   /*! \brief invalid command: some of the data could not be parsed
      */
-  cg_nMGM_CMD_INVALID = 0xFF
+  INVALID = 0xFF
 };
 
 

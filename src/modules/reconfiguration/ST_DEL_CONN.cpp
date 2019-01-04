@@ -64,7 +64,7 @@ void FORTE_ST_DEL_CONN::executeRQST(){
   theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(SRC_FB_OUT().getValue()));
   theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(DST_FB().getValue()));
   theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(DST_FB_IN().getValue()));
-  theCommand.mCMD = cg_nMGM_CMD_Delete_Connection;
+  theCommand.mCMD = EMGMCommandType::DeleteConnection;
   
   EMGMResponse resp = m_poDevice.executeMGMCommand(theCommand);
 

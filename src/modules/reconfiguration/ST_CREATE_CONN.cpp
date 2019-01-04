@@ -65,7 +65,7 @@ void FORTE_ST_CREATE_CONN::executeRQST(){
   theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(SRC_FB_OUT().getValue()));
   theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(DST_FB().getValue()));
   theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(DST_FB_IN().getValue()));
-  theCommand.mCMD = cg_nMGM_CMD_Create_Connection;
+  theCommand.mCMD = EMGMCommandType::CreateConnection;
   
   EMGMResponse resp = m_poDevice.executeMGMCommand(theCommand);
 

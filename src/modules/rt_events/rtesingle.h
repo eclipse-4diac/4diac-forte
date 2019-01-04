@@ -50,12 +50,12 @@ private:
       } else { // we got init
         if(QI() == true) {
           if(!m_bInitialized) {
-            m_oECEO.changeExecutionState(cg_nMGM_CMD_Start);
+            m_oECEO.changeExecutionState(EMGMCommandType::Start);
             m_bInitialized = true;
           }
           m_oECEO.setDeadline(Deadline());
         } else {
-          m_oECEO.changeExecutionState(cg_nMGM_CMD_Stop);
+          m_oECEO.changeExecutionState(EMGMCommandType::Stop);
           m_bInitialized = false;
         }
         QO() = QI();

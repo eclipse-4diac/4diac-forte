@@ -98,7 +98,7 @@ RMT_RES::RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_
   createConnection(command);
   
   //Perform reset command normally done by the typelib during the creation process
-  changeFBExecutionState(cg_nMGM_CMD_Reset);
+  changeFBExecutionState(EMGMCommandType::Reset);
 }
 
 RMT_RES::~RMT_RES() = default;

@@ -34,7 +34,7 @@ EMGMResponse CDevice::executeMGMCommand(forte::core::SManagementCMD &paCommand){
 }
 
 EMGMResponse CDevice::changeFBExecutionState(EMGMCommandType paCommand){
-  if(cg_nMGM_CMD_Kill == paCommand){
+  if(EMGMCommandType::Kill == paCommand){
     mDeviceExecution.disableHandlers();
   }
   return CResource::changeFBExecutionState(paCommand);

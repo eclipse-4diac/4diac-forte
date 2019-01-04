@@ -79,65 +79,65 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
 
   if(CStringDictionary::scm_nInvalidStringId == paCommand.mDestination){
     switch (paCommand.mCMD){
-      case cg_nMGM_CMD_Create_FBInstance: {
+      case EMGMCommandType::CreateFBInstance: {
         forte::core::TNameIdentifier::CIterator itRunner(paCommand.mFirstParam.begin());
         retVal = createFB(itRunner, paCommand.mSecondParam.front(), this);
       }
         break;
-      case cg_nMGM_CMD_Create_FBType:
+      case EMGMCommandType::CreateFBType:
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
         retVal = createFBTypeFromLua(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
 #else
         retVal = e_UNSUPPORTED_CMD;
 #endif
         break;
-      case cg_nMGM_CMD_Create_AdapterType:
+      case EMGMCommandType::CreateAdapterType:
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
         retVal = createAdapterTypeFromLua(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
 #else
         retVal = e_UNSUPPORTED_CMD;
 #endif
         break;
-      case cg_nMGM_CMD_Delete_FBInstance: {
+      case EMGMCommandType::DeleteFBInstance: {
         forte::core::TNameIdentifier::CIterator itRunner(paCommand.mFirstParam.begin());
         retVal = deleteFB(itRunner);
       }
         break;
-      case cg_nMGM_CMD_Create_Connection:
+      case EMGMCommandType::CreateConnection:
         retVal = createConnection(paCommand.mFirstParam, paCommand.mSecondParam);
         break;
-      case cg_nMGM_CMD_Delete_Connection:
+      case EMGMCommandType::DeleteConnection:
         retVal = deleteConnection(paCommand.mFirstParam, paCommand.mSecondParam);
         break;
-      case cg_nMGM_CMD_Read:
+      case EMGMCommandType::Read:
         retVal = readValue(paCommand.mFirstParam, paCommand.mAdditionalParams);
         break;
-      case cg_nMGM_CMD_Write:
+      case EMGMCommandType::Write:
         retVal = writeValue(paCommand.mFirstParam, paCommand.mAdditionalParams);
         break;
-      case cg_nMGM_CMD_Start:
-      case cg_nMGM_CMD_Stop:
-      case cg_nMGM_CMD_Kill:
-      case cg_nMGM_CMD_Reset:
+      case EMGMCommandType::Start:
+      case EMGMCommandType::Stop:
+      case EMGMCommandType::Kill:
+      case EMGMCommandType::Reset:
         retVal = handleExecutionStateCmd(paCommand.mCMD, paCommand.mFirstParam);
         break;
 #ifdef FORTE_SUPPORT_QUERY_CMD
-        case cg_nMGM_CMD_QUERY_FBTypes:
+        case EMGMCommandType::QueryFBTypes:
         retVal = queryAllFBTypes(paCommand.mAdditionalParams);
         break;
-        case cg_nMGM_CMD_QUERY_AdapterTypes:
+        case EMGMCommandType::QueryAdapterTypes:
         retVal = queryAllAdapterTypes(paCommand.mAdditionalParams);
         break;
-        case cg_nMGM_CMD_QUERY_FB:
+        case EMGMCommandType::QueryFB:
         retVal = queryFBs(paCommand.mAdditionalParams);
         break;
-        case cg_nMGM_CMD_QUERY_FBType:
+        case EMGMCommandType::QueryFBType:
         retVal = createFBTypeResponseMessage(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
         break;
-        case cg_nMGM_CMD_QUERY_AdapterType:
+        case EMGMCommandType::QueryAdapterType:
         retVal = createAdapterTypeResponseMessage(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
         break;
-        case cg_nMGM_CMD_QUERY_Connection:
+        case EMGMCommandType::QueryConnection:
         retVal = queryConnections(paCommand.mAdditionalParams);
         break;
 #endif //FORTE_SUPPORT_QUERY_CMD
@@ -158,9 +158,9 @@ EMGMResponse CResource::changeFBExecutionState(EMGMCommandType pa_unCommand){
   if(e_RDY == retVal){
     retVal = changeContainedFBsExecutionState(pa_unCommand);
     if(e_RDY == retVal){
-      if(cg_nMGM_CMD_Start == pa_unCommand && nullptr != m_pstInterfaceSpec){ //on start, sample inputs
-        for(int i = 0; i < m_pstInterfaceSpec->m_nNumDIs; ++i){
-          if(nullptr != m_apoDIConns[i]){
+      if(EMGMCommandType::Start == pa_unCommand && nullptr != m_pstInterfaceSpec) { //on start, sample inputs
+        for(int i = 0; i < m_pstInterfaceSpec->m_nNumDIs; ++i) {
+          if(nullptr != m_apoDIConns[i]) {
             m_apoDIConns[i]->readData(getDI(i));
           }
         }

@@ -21,10 +21,10 @@ using namespace forte::core;
 EMGMResponse checkForActionEquivalentState(const CFunctionBlock &paFB, const EMGMCommandType paCommand){
   CFunctionBlock::E_FBStates currentState = paFB.getState();
   switch (paCommand){
-    case cg_nMGM_CMD_Stop:
+    case EMGMCommandType::Stop:
       return (CFunctionBlock::e_KILLED == currentState) ? e_RDY : e_INVALID_STATE;
       break;
-    case cg_nMGM_CMD_Kill:
+    case EMGMCommandType::Kill:
       return (CFunctionBlock::e_STOPPED == currentState || CFunctionBlock::e_IDLE == currentState) ? e_RDY : e_INVALID_STATE;
       break;
     default:

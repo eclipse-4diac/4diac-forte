@@ -52,8 +52,8 @@ CFBTestFixtureBase::CFBTestFixtureBase(CStringDictionary::TStringId paTypeId) :
     CFunctionBlock(CFBTestDataGlobalFixture::getResource(), nullptr, 0, nullptr, nullptr), mTypeId(paTypeId),
         mFBUnderTest(CTypeLib::createFB(paTypeId, paTypeId, getResourcePtr())), mFBConnData(nullptr), mFBVarsData(nullptr) {
 
-  changeFBExecutionState(cg_nMGM_CMD_Reset);
-  changeFBExecutionState(cg_nMGM_CMD_Start);
+  changeFBExecutionState(EMGMCommandType::Reset);
+  changeFBExecutionState(EMGMCommandType::Start);
   //assure that we are in running state
   BOOST_REQUIRE_EQUAL(CFunctionBlock::e_RUNNING, getState());
   BOOST_REQUIRE(nullptr != mFBUnderTest);
@@ -95,7 +95,7 @@ CFBTestFixtureBase::~CFBTestFixtureBase(){
 void CFBTestFixtureBase::performFBDeleteTests() {
   BOOST_CHECK(!mFBUnderTest->isCurrentlyDeleteable());
 
-  BOOST_CHECK_EQUAL(e_RDY, mFBUnderTest->changeFBExecutionState(cg_nMGM_CMD_Stop));
+  BOOST_CHECK_EQUAL(e_RDY, mFBUnderTest->changeFBExecutionState(EMGMCommandType::Stop));
 
   BOOST_CHECK(mFBUnderTest->isCurrentlyDeleteable());
 
@@ -111,7 +111,7 @@ void CFBTestFixtureBase::setup(const char* pa_acConfigString){
   setupTestInterface();
   performDataInterfaceTests();
 
-  mFBUnderTest->changeFBExecutionState(cg_nMGM_CMD_Start);
+  mFBUnderTest->changeFBExecutionState(EMGMCommandType::Start);
 
   createEventOutputConnections();
   createDataInputConnections();

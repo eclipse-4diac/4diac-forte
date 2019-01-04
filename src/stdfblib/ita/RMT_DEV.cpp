@@ -35,21 +35,21 @@ RMT_DEV::RMT_DEV() :
   m_oDConnMGR_ID.connect(&MGR, g_nStringIdMGR_ID);
   
   //Perform reset command normally done by the typelib during the creation process
-  changeFBExecutionState(cg_nMGM_CMD_Reset);
+  changeFBExecutionState(EMGMCommandType::Reset);
 }
 
 RMT_DEV::~RMT_DEV() = default;
 
 int RMT_DEV::startDevice(){
   CDevice::startDevice();
-  MGR.changeFBExecutionState(cg_nMGM_CMD_Start);
+  MGR.changeFBExecutionState(EMGMCommandType::Start);
   return 0;
 }
 
 EMGMResponse RMT_DEV::changeFBExecutionState(EMGMCommandType pa_unCommand){
   EMGMResponse eRetVal = CDevice::changeFBExecutionState(pa_unCommand);
-  if((e_RDY == eRetVal) && (cg_nMGM_CMD_Kill == pa_unCommand)){
-    MGR.changeFBExecutionState(cg_nMGM_CMD_Kill);
+  if((e_RDY == eRetVal) && (EMGMCommandType::Kill == pa_unCommand)){
+    MGR.changeFBExecutionState(EMGMCommandType::Kill);
   }
   return eRetVal;
 }

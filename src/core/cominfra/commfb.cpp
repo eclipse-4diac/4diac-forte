@@ -44,7 +44,7 @@ CCommFB::~CCommFB() = default;
 
 EMGMResponse CCommFB::changeFBExecutionState(EMGMCommandType pa_unCommand) {
   EMGMResponse retVal = CEventSourceFB::changeFBExecutionState(pa_unCommand);
-  if ((e_RDY == retVal) && (cg_nMGM_CMD_Kill == pa_unCommand)) {
+  if ((e_RDY == retVal) && (EMGMCommandType::Kill == pa_unCommand)) {
     //when we are killed we'll close the connection so that it can safely be opened again after an reset
     closeConnection();
   }

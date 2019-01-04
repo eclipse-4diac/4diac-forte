@@ -355,25 +355,25 @@ void CFunctionBlock::receiveInputEvent(size_t paEIID, CEventChainExecutionThread
 EMGMResponse CFunctionBlock::changeFBExecutionState(EMGMCommandType pa_unCommand){
   EMGMResponse nRetVal = e_INVALID_STATE;
   switch (pa_unCommand){
-    case cg_nMGM_CMD_Start:
+    case EMGMCommandType::Start:
       if((e_IDLE == m_enFBState) || (e_STOPPED == m_enFBState)){
         m_enFBState = e_RUNNING;
         nRetVal = e_RDY;
       }
       break;
-    case cg_nMGM_CMD_Stop:
+    case EMGMCommandType::Stop:
       if(e_RUNNING == m_enFBState){
         m_enFBState = e_STOPPED;
         nRetVal = e_RDY;
       }
       break;
-    case cg_nMGM_CMD_Kill:
+    case EMGMCommandType::Kill:
       if(e_RUNNING == m_enFBState){
         m_enFBState = e_KILLED;
         nRetVal = e_RDY;
       }
       break;
-    case cg_nMGM_CMD_Reset:
+    case EMGMCommandType::Reset:
       if((e_STOPPED == m_enFBState) || (e_KILLED == m_enFBState)){
         m_enFBState = e_IDLE;
         nRetVal = e_RDY;

@@ -63,7 +63,7 @@ void FORTE_ST_CREATE_FB::executeRQST(){
   theCommand.mDestination = CStringDictionary::getInstance().getId(DST().getValue());
   theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().insert(FB_NAME().getValue()));
   theCommand.mSecondParam.pushBack(CStringDictionary::getInstance().getId(FB_TYPE().getValue()));
-  theCommand.mCMD = cg_nMGM_CMD_Create_FBInstance;
+  theCommand.mCMD = EMGMCommandType::CreateFBInstance;
   
   EMGMResponse resp =  m_poDevice.executeMGMCommand(theCommand);
 

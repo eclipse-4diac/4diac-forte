@@ -49,7 +49,7 @@ void E_RESTART::executeEvent(int pa_nEIID) {
     sendOutputEvent(mEventToSend);
     if(csmSTOPID == mEventToSend) {
       //stop event is sent put the FB finally into the stopped state
-      CFunctionBlock::changeFBExecutionState(cg_nMGM_CMD_Stop);
+      CFunctionBlock::changeFBExecutionState(EMGMCommandType::Stop);
       // release semaphore to indicate that the stop event was sent now
       mSuspendSemaphore.inc();
     }
@@ -60,13 +60,13 @@ EMGMResponse E_RESTART::changeFBExecutionState(EMGMCommandType pa_unCommand){
   EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(pa_unCommand);
   if(e_RDY == eRetVal){
     switch(pa_unCommand){
-      case cg_nMGM_CMD_Start:
+      case EMGMCommandType::Start:
         mEventToSend = (csmSTOPID == mEventToSend) ? csmWARMID : csmCOLDID;
         getResource().getDevice().getDeviceExecution().startNewEventChain(this);
         break;
-      case cg_nMGM_CMD_Stop:
+      case EMGMCommandType::Stop:
         mEventToSend = csmSTOPID;
-        CFunctionBlock::changeFBExecutionState(cg_nMGM_CMD_Start);   //keep FB in running state until stop event is delivered.
+        CFunctionBlock::changeFBExecutionState(EMGMCommandType::Start);   //keep FB in running state until stop event is delivered.
         getResource().getDevice().getDeviceExecution().startNewEventChain(this);
         // wait until semaphore is released, after STOP eventExecution was completed
         mSuspendSemaphore.waitIndefinitely();

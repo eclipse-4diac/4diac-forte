@@ -62,7 +62,7 @@ void FORTE_EC_SET_EVT::executeRQST(){
   theCommand.mDestination = CStringDictionary::getInstance().getId(DST().getValue());
   theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(FB_NAME().getValue()));
   theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(FB_EVENT_IO().getValue()));
-  theCommand.mCMD = cg_nMGM_CMD_Monitoring_Trigger_Event;
+  theCommand.mCMD = EMGMCommandType::MonitoringTriggerEvent;
   
   EMGMResponse resp =  m_poDevice.executeMGMCommand(theCommand);
 

@@ -59,7 +59,7 @@ void FORTE_ST_SET_PARM::executeRQST() {
   theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(ELEM_NAME().getValue()));
   theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(ELEM_DATA_IN().getValue()));
   theCommand.mAdditionalParams = func_WSTRING_TO_STRING(PARM_VAL());
-  theCommand.mCMD = cg_nMGM_CMD_Write;
+  theCommand.mCMD = EMGMCommandType::Write;
 
   EMGMResponse resp = m_poDevice.executeMGMCommand(theCommand);
 

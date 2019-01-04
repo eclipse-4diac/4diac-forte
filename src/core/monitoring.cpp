@@ -32,25 +32,25 @@ EMGMResponse CMonitoringHandler::executeMonitoringCommand(SManagementCMD &paComm
   EMGMResponse retVal = e_UNSUPPORTED_CMD;
 
   switch (paCommand.mCMD){
-    case cg_nMGM_CMD_Monitoring_Add_Watch:
+    case EMGMCommandType::MonitoringAddWatch:
       retVal = addWatch(paCommand.mFirstParam);
       break;
-    case cg_nMGM_CMD_Monitoring_Remove_Watch:
+    case EMGMCommandType::MonitoringRemoveWatch:
       retVal = removeWatch(paCommand.mFirstParam);
       break;
-    case cg_nMGM_CMD_Monitoring_Read_Watches:
+    case EMGMCommandType::MonitoringReadWatches:
       retVal = readWatches(paCommand.mMonitorResponse);
       break;
-    case cg_nMGM_CMD_Monitoring_Force:
+    case EMGMCommandType::MonitoringForce:
       retVal = mResource.writeValue(paCommand.mFirstParam, paCommand.mAdditionalParams, true);
       break;
-    case cg_nMGM_CMD_Monitoring_ClearForce:
+    case EMGMCommandType::MonitoringClearForce:
       retVal = clearForce(paCommand.mFirstParam);
       break;
-    case cg_nMGM_CMD_Monitoring_Trigger_Event:
+    case EMGMCommandType::MonitoringTriggerEvent:
       retVal = triggerEvent(paCommand.mFirstParam);
       break;
-    case cg_nMGM_CMD_Monitoring_Reset_Event_Count:
+    case EMGMCommandType::MonitoringResetEventCount:
       retVal = resetEventCount(paCommand.mFirstParam);
       break;
     default:

@@ -28,7 +28,7 @@ CFBTestDataGlobalFixture::CFBTestDataGlobalFixture(){
   //setup is done in the setup so that boost_test can throw exceptions
   smTestDev = new CDevice(&gscTestDevSpec, CStringDictionary::scm_nInvalidStringId, nullptr, nullptr);
   //mimick the behavior provided by typelib
-  smTestDev->changeFBExecutionState(cg_nMGM_CMD_Reset);
+  smTestDev->changeFBExecutionState(EMGMCommandType::Reset);
 
   smTestRes = (CResource *)CTypeLib::createFB(g_nStringIdEMB_RES, g_nStringIdEMB_RES, smTestDev);
 
@@ -40,7 +40,7 @@ CFBTestDataGlobalFixture::CFBTestDataGlobalFixture(){
 
 
 CFBTestDataGlobalFixture::~CFBTestDataGlobalFixture(){
-  smTestDev->changeFBExecutionState(cg_nMGM_CMD_Stop);
+  smTestDev->changeFBExecutionState(EMGMCommandType::Stop);
   delete smTestDev;
   //we don't need to delete the res here as the res is deletes in the destructor of the device
 }
