@@ -391,7 +391,13 @@ void DEV_MGR::parseQueryData(char *paRequestPartLeft, forte::core::SManagementCM
         if(!strncmp(paRequestPartLeft, "FBT", sizeof("FBT") - 1)){
           if(parseTypeListData(paRequestPartLeft, paCommand)){
             paCommand.mCMD = cg_nMGM_CMD_QUERY_FBTypes;
-          } else {
+          }
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+          else if(parseXType(paRequestPartLeft, paCommand, "FBType Name=\"")){
+            paCommand.mCMD = cg_nMGM_CMD_QUERY_FBType;
+          }
+#endif
+          else {
             paCommand.mCMD = cg_nMGM_CMD_Query_Group;
           }
         }else if(parseFBData(paRequestPartLeft, paCommand)){
@@ -437,12 +443,12 @@ bool DEV_MGR::parseTypeListData(char *paRequestPartLeft, forte::core::SManagemen
     }
   }
   else if(!strncmp("FBType Name=\"", paRequestPartLeft, sizeof("FBType Name=\"") - 1)){
-    if(paRequestPartLeft[13] != '*'){ //does not support query for DataType-Declaration
+    if(paRequestPartLeft[13] != '*'){ //supports query for FBType-Declaration only for DynamicTypeLoad profile (LUA enabled)
       retVal = false;
     }
   }
   else if(!strncmp("AdapterType Name=\"", paRequestPartLeft, sizeof("AdapterType Name=\"") - 1)){
-    if(paRequestPartLeft[18] != '*'){ //does not support query for DataType-Declaration
+    if(paRequestPartLeft[18] != '*'){ //does not support query for AdapterType-Declaration
       retVal = false;
     }
   }
@@ -528,6 +534,11 @@ void DEV_MGR::generateLongResponse(EMGMResponse paResp, forte::core::SManagement
       RESP().append("<DTList>\n    ");
       RESP().append(paCMD.mAdditionalParams.getValue());
       RESP().append("\n  </DTList>");
+    }
+    else if(paCMD.mCMD == cg_nMGM_CMD_QUERY_FBType){
+      RESP().append("<FBType Comment=\"generated\" ");
+      RESP().append(paCMD.mAdditionalParams.getValue());
+      RESP().append("  </FBType>");
     }
 #endif
   }

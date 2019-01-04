@@ -188,6 +188,13 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 
     EMGMResponse createAdapterTypeFromLua(CStringDictionary::TStringId typeNameId,
             CIEC_STRING & paLuaScriptAsString);
+
+    EMGMResponse createFBTypeResponseMessage(const CStringDictionary::TStringId paValue, CIEC_STRING & paReqResult);
+    void createEventInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, CIEC_STRING& paReqResult);
+    void createDataInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, CIEC_STRING& paReqResult);
+    void createAdapterInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, CIEC_STRING& paReqResult);
+    void createInterfaceResponseMessages(CIEC_STRING& paReqResult, const char *paType, const CStringDictionary::TStringId* paNameList, const CStringDictionary::TStringId* paTypeList, const int pa_nNumberOfElements = 0, const TDataIOID* paEWith = 0, const TForteInt16* paEWithIndexes = 0, const CStringDictionary::TStringId* paDNameList = 0);
+    void createInterfaceResponseMessage(CIEC_STRING& paReqResult, const char* pa_pcType, const CIEC_STRING &paName, const CIEC_STRING &paType, const TDataIOID* paEWith = 0, const TForteInt16* paEWithIndexes = 0, const int pa_nIndex = 0, const CStringDictionary::TStringId* paENameList = 0);
 #endif
     /*!\brief get the variable with the given name identifier
      *

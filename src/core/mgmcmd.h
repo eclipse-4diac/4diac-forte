@@ -193,6 +193,15 @@ enum EMGMCommandType{
    * currently not implemented
    */
   cg_nMGM_CMD_QUERY_TypeVers = 0x67,
+
+  /*! \brief Read the interface of a specific FB type.
+   *
+   * When reading the FB interface the parameters of the SManagementCMD are defined as:
+   *    - m_sFirstParam = FB type name
+   *    - m_sSecondParam = not used
+   *    - m_sAdditionalParams the read value is stored here
+   */
+  cg_nMGM_CMD_QUERY_FBType = 0x77,
 #endif
 
   /*! \brief reset a FB, resource or the device.
