@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 - 2014 ACIN, Profactor GmbH, AIT, fortiss GmbH
+ * Copyright (c) 2006 - 2018 ACIN, Profactor GmbH, AIT, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,11 +8,14 @@
  * Contributors:
  *  Alois Zoitl, Gerhard Ebenhofer, Thomas Strasser, Rene Smodic,
  *  Martin Melik Merkumians, Ingo Hegny, Filip Andren - initial API and implementation and/or initial documentation
+ *  Tarik Terzimehic - make OPC UA server port setable from the command line
  *******************************************************************************/
 #include <fortenew.h>
 #include <stdio.h>
 #include <signal.h>
 #include "../../stdfblib/ita/RMT_DEV.h"
+
+#include "../utils/mainparam_utils.h"
 
 #ifdef FORTE_ROS
 #include <ros/ros.h>
@@ -68,40 +71,28 @@ void createDev(const char *pa_acMGRID){
   delete poDev;
 }
 
-/*!\brief Lists the help for FORTE
- *
- */
-void listHelp(){
-  printf("\nUsage of FORTE:\n");
-  printf("   -h\t lists this help.\n");
-  printf("\n");
-  printf("   -c\t sets the destination for the connection.\n");
-  printf("     \t Usage: forte -c <IP>:<Port>");
-  printf("\n");
-}
-
 int main(int argc, char *arg[]){
 
   checkEndianess();
 
-  if(argc <= 1){ //! Default Value (localhost:61499)
 #ifdef FORTE_ROS
+  if(argc <= 1){ //! Default Value (localhost:61499)
     std::string rosdistro = "indigo";
     if (rosdistro == (std::string)std::getenv("ROS_DISTRO")){
       DEVLOG_INFO("path to forte.exe: %s \n", arg[0]);
       ros::init(argc, arg, "ros_Functionblocks_in_FORTE");
     }
+  }
 #endif //FORTE_ROS
-    createDev("localhost:61499");
+
+  const char *pIpPort = parseCommandLineArguments(argc, arg);
+  if((0 != strlen(pIpPort)) && (NULL != strchr(pIpPort, ':'))){
+    createDev(pIpPort);
   }
-  else{
-    if(strcmp("-c", arg[1]) == 0){ //! sets the destination for the connection
-      createDev(arg[2]);
-    }
-    else{ //! Lists the help for FORTE
-      listHelp();
-    }
+  else{ //! Lists the help for FORTE
+    listHelp();
   }
+
   return 0;
 }
 

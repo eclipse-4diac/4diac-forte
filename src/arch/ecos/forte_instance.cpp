@@ -7,6 +7,7 @@
  *
  * Contributors:
  *  Jose Cabral - initial API and implementation and/or initial documentation
+ *  Tarik Terzimehic - make OPC UA server port setable from the command line
  *******************************************************************************/
 
 #include "forte_instance.h"
@@ -17,6 +18,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../../stdfblib/ita/RMT_DEV.h"
+
+#include "../utils/mainparam_utils.h"
 
 unsigned const int cgForteDefaultPort = 61499;
 
@@ -38,11 +41,11 @@ void forteGlobalDeinitialize(void){
 
 int forteStartInstance(unsigned int paPort, TForteInstance* paResultDevice){
 
-  if (65535 < paPort){
+  if(65535 < paPort){
     return FORTE_WRONG_PARAMETERS;
   }
 
-  if (0 == paPort){
+  if(0 == paPort){
     paPort = cgForteDefaultPort;
   }
 
@@ -51,10 +54,9 @@ int forteStartInstance(unsigned int paPort, TForteInstance* paResultDevice){
   forte_snprintf(port, 5, "%u", paPort);
   strcat(address, port);
 
-  char* arguments[] = {address};
+  char* arguments[] = { address };
   return forteStartInstanceGeneric(1, arguments, paResultDevice);
 }
-
 
 int forteStartInstanceGeneric(int argc, char *arg[], TForteInstance* paResultDevice){
 
@@ -66,21 +68,19 @@ int forteStartInstanceGeneric(int argc, char *arg[], TForteInstance* paResultDev
     return FORTE_WRONG_PARAMETERS;
   }
 
-  if (0 != *paResultDevice){
+  if(0 != *paResultDevice){
     return FORTE_DEVICE_ALREADY_STARTED;
   }
 
-  if (!checkEndianess()){
+  if(!checkEndianess()){
     return FORTE_WRONG_ENDIANESS;
   }
 
-  if(argc < 1){ //! Default Value (localhost:61499)
-    createDev("localhost:61499", paResultDevice);
+  const char *pIpPort = parseCommandLineArguments(argc, arg);
+  if((0 != strlen(pIpPort)) && (NULL != strchr(pIpPort, ':'))){
+    createDev(pIpPort, paResultDevice);
   }
-  else if(1 == argc){
-      createDev(arg[0], paResultDevice);
-  }
-  else{ //! Lists the help for FORTE
+  else{ //! If needed call listHelp() to list the help for FORTE
     return FORTE_WRONG_PARAMETERS;
   }
 

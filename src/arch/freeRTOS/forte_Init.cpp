@@ -1,5 +1,5 @@
 /************************************************************************************
- * Copyright (c) 2017 fortiss GmbH
+ * Copyright (c) 2017-2018 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  * Milan Vathoopan - initial API and implementation and/or initial documentation
+ * Tarik Terzimehic - make OPC UA server port setable from the command line
  ************************************************************************************/
 
 #include "forte_Init.h"
@@ -16,6 +17,8 @@
 #include <stdio.h>
 #include <string>
 #include "../../stdfblib/ita/RMT_DEV.h"
+
+#include "../utils/mainparam_utils.h"
 
 unsigned int forte_default_port = 61499;
 
@@ -74,16 +77,12 @@ int forteStartInstanceGeneric(int paArgc, char *paArgv[], TForteInstance* paResu
     return FORTE_WRONG_ENDIANESS;
   }
 
-  if(paArgc <= 1){ //! Default Value (localhost:61499)
-    createDev("localhost:61499", paResultInstance);
+  const char *pIpPort = parseCommandLineArguments(paArgc, paArgv);
+  if((0 != strlen(pIpPort)) && (NULL != strchr(pIpPort, ':'))){
+    createDev(pIpPort, paResultInstance);
   }
-  else{
-    if(strcmp("-c", paArgv[0]) == 0){ //! sets the destination for the connection
-      createDev(paArgv[1], paResultInstance);
-    }
-    else{ //! Lists the help for FORTE
-      return FORTE_WRONG_PARAMETERS;
-    }
+  else{ //! If needed call listHelp() to list the help for FORTE
+    return FORTE_WRONG_PARAMETERS;
   }
 
   return FORTE_OK;

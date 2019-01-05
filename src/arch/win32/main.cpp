@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 - 2017 ACIN, Profactor GmbH
+ * Copyright (c) 2010 - 2018 ACIN, Profactor GmbH, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,8 @@
 #include "../forte_architecture.h"
 #include "../devlog.h"
 #include "../../stdfblib/ita/RMT_DEV.h"
+#include "../utils/mainparam_utils.h"
+
 #include <stdio.h>
 #include <signal.h>
 
@@ -54,34 +56,22 @@ void createDev(const char *pa_acMGRID){
   delete poDev;
 }
 
-/*!\brief Lists the help for FORTE
- *
- */
-void listHelp(){
-  printf("\nUsage of FORTE:\n");
-  printf("   -h\t lists this help.\n");
-  printf("\n");
-  printf("   -c\t sets the destination for the connection.\n");
-  printf("     \t Usage: forte -c <IP>:<Port>");
-  printf("\n");
-}
-
 int main(int argc, char *arg[]){
 
   if(CForteArchitecture::initialize()){
-    if(argc <= 1){ //! Default Value (localhost:61499)
-      createDev("localhost:61499");
+
+    const char *pIpPort = parseCommandLineArguments(argc, arg);
+    if((0 != strlen(pIpPort)) && (NULL != strchr(pIpPort, ':'))){
+      createDev(pIpPort);
     }
-    else{
-      if(strcmp("-c", arg[1]) == 0){ //! sets the destination for the connection
-        createDev(arg[2]);
-      }
-      else{ //! Lists the help for FORTE
-        listHelp();
-      }
+    else{ //! Lists the help for FORTE
+      listHelp();
     }
+
     CForteArchitecture::deinitialize();
-  }else{
+
+  }
+  else{
     DEVLOG_ERROR("Architecture could not be initialized\n");
   }
   return 0;

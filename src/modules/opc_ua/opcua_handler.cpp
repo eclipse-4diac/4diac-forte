@@ -22,6 +22,7 @@
 #include "../../core/utils/string_utils.h"
 #include <criticalregion.h>
 #include <forte_printer.h>
+#include "../../arch/utils/mainparam_utils.h"
 
 #ifndef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
 #include <sockhand.h>
@@ -29,18 +30,18 @@
 
 using namespace forte::com_infra;
 
-DEFINE_HANDLER(COPC_UA_Handler);
+DEFINE_HANDLER (COPC_UA_Handler);
 
-const char *LogsLevelNames[6] = {"trace", "debug", "info", "warning", "error", "fatal"};
-const char *LogsCategoryNames[6] = {"network", "channel", "session", "server", "client", "userland"};
+const char *LogsLevelNames[6] = { "trace", "debug", "info", "warning", "error", "fatal" };
+const char *LogsCategoryNames[6] = { "network", "channel", "session", "server", "client", "userland" };
 
-struct UA_ClientEndpointMap {
+struct UA_ClientEndpointMap{
   UA_Client *client;
   char *endpointUrl;
   CSyncObject *clientMutex;
 };
 
-void UA_Log_Forte(UA_LogLevel level, UA_LogCategory category, const char *msg, va_list args) {
+void UA_Log_Forte(UA_LogLevel level, UA_LogCategory category, const char *msg, va_list args){
   char tmpStr[400];
   forte_snprintf(tmpStr, 400, "[OPC UA] %s/%s\t", LogsLevelNames[level], LogsCategoryNames[category]);
   char *start = &tmpStr[strlen(tmpStr)];
@@ -51,7 +52,7 @@ void UA_Log_Forte(UA_LogLevel level, UA_LogCategory category, const char *msg, v
   tmpStr[len] = '\n';
   tmpStr[len + 1] = '\0';
 
-  switch (level) {
+  switch (level){
     case UA_LOGLEVEL_TRACE:
     case UA_LOGLEVEL_DEBUG:
       DEVLOG_DEBUG(tmpStr);
@@ -69,7 +70,7 @@ void UA_Log_Forte(UA_LogLevel level, UA_LogCategory category, const char *msg, v
   }
 }
 
-void COPC_UA_Handler::configureUAServer(TForteUInt16 paUAServerPort) {
+void COPC_UA_Handler::configureUAServer(TForteUInt16 paUAServerPort){
 
   char name[255];
   forte_snprintf(name, 255, "forte_%d", paUAServerPort);
@@ -88,13 +89,13 @@ void COPC_UA_Handler::configureUAServer(TForteUInt16 paUAServerPort) {
 #ifdef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
   forte_snprintf(hostname, 255, "%s-%s", FORTE_COM_OPC_UA_CUSTOM_HOSTNAME, name);
 #else
-  if(gethostname(hostname, 255) == 0) {
+  if(gethostname(hostname, 255) == 0){
     size_t offset = strlen(hostname);
     size_t nameLen = strlen(name);
-    if (offset + nameLen +1 > 255) {
-      offset = MAX(255-nameLen-1, (size_t)0);
+    if(offset + nameLen + 1 > 255){
+      offset = MAX(255 - nameLen - 1, (size_t) 0);
     }
-    forte_snprintf(hostname+offset, 255-offset, "-%s", name);
+    forte_snprintf(hostname + offset, 255 - offset, "-%s", name);
   }
 #endif
 
@@ -109,15 +110,13 @@ void COPC_UA_Handler::configureUAServer(TForteUInt16 paUAServerPort) {
   uaServerConfig->applicationDescription.applicationName.locale = UA_STRING_NULL;
   uaServerConfig->applicationDescription.applicationName.text = UA_String_fromChars(hostname);
 
-  for (size_t i=0; i<uaServerConfig->endpointsSize; i++) {
+  for(size_t i = 0; i < uaServerConfig->endpointsSize; i++){
     UA_String_deleteMembers(&uaServerConfig->endpoints[i].endpointDescription.server.applicationUri);
     UA_LocalizedText_deleteMembers(&uaServerConfig->endpoints[i].endpointDescription.server.applicationName);
 
-    UA_String_copy(&uaServerConfig->applicationDescription.applicationUri,
-             &uaServerConfig->endpoints[i].endpointDescription.server.applicationUri);
+    UA_String_copy(&uaServerConfig->applicationDescription.applicationUri, &uaServerConfig->endpoints[i].endpointDescription.server.applicationUri);
 
-    UA_LocalizedText_copy(&uaServerConfig->applicationDescription.applicationName,
-                &uaServerConfig->endpoints[i].endpointDescription.server.applicationName);
+    UA_LocalizedText_copy(&uaServerConfig->applicationDescription.applicationName, &uaServerConfig->endpoints[i].endpointDescription.server.applicationName);
   }
 
   // TODO set server capabilities
@@ -129,41 +128,41 @@ void COPC_UA_Handler::configureUAServer(TForteUInt16 paUAServerPort) {
 
 #ifdef FORTE_COM_OPC_UA_MULTICAST
 
-static void serverOnNetworkCallback(const UA_ServerOnNetwork *serverOnNetwork, UA_Boolean isServerAnnounce, UA_Boolean isTxtReceived, void* data) {
+static void serverOnNetworkCallback(const UA_ServerOnNetwork *serverOnNetwork, UA_Boolean isServerAnnounce, UA_Boolean isTxtReceived, void* data){
   COPC_UA_Handler* handler = static_cast<COPC_UA_Handler*>(data);
 
   const UA_String ownDiscoverUrl = handler->getDiscoveryUrl();
 
-  if (UA_String_equal(&serverOnNetwork->discoveryUrl, &ownDiscoverUrl)) {
+  if (UA_String_equal(&serverOnNetwork->discoveryUrl, &ownDiscoverUrl)){
     // skip self
     return;
   }
 
   if (!isTxtReceived)
-    return; // we wait until the corresponding TXT record is announced.
+  return; // we wait until the corresponding TXT record is announced.
 
   DEVLOG_DEBUG("OPC UA: mDNS %s '%.*s' with url '%.*s'\n",isServerAnnounce?"announce":"remove", serverOnNetwork->serverName.length, serverOnNetwork->serverName.data,
       serverOnNetwork->discoveryUrl.length, serverOnNetwork->discoveryUrl.data);
 
   // check if server is LDS, and then register
   UA_String ldsStr = UA_String_fromChars("LDS");
-  for (unsigned int i=0; i<serverOnNetwork->serverCapabilitiesSize; i++) {
-    if (UA_String_equal(&serverOnNetwork->serverCapabilities[i], &ldsStr)) {
+  for (unsigned int i=0; i<serverOnNetwork->serverCapabilitiesSize; i++){
+    if (UA_String_equal(&serverOnNetwork->serverCapabilities[i], &ldsStr)){
       if (isServerAnnounce)
-        handler->registerWithLds(&serverOnNetwork->discoveryUrl);
+      handler->registerWithLds(&serverOnNetwork->discoveryUrl);
       else
-        handler->removeLdsRegister(&serverOnNetwork->discoveryUrl);
+      handler->removeLdsRegister(&serverOnNetwork->discoveryUrl);
       break;
     }
   }
   UA_String_deleteMembers(&ldsStr);
 }
 
-void COPC_UA_Handler::registerWithLds(const UA_String *discoveryUrl) {
+void COPC_UA_Handler::registerWithLds(const UA_String *discoveryUrl){
   // check if already registered with the given LDS
-  for (CSinglyLinkedList<const char*>::Iterator iter = registeredWithLds.begin(); iter != registeredWithLds.end(); ++iter) {
+  for (CSinglyLinkedList<const char*>::Iterator iter = registeredWithLds.begin(); iter != registeredWithLds.end(); ++iter){
     if (strncmp((char*)discoveryUrl->data, *iter, discoveryUrl->length) == 0)
-      return;
+    return;
   }
 
   // will be freed when removed from list
@@ -175,19 +174,19 @@ void COPC_UA_Handler::registerWithLds(const UA_String *discoveryUrl) {
 
   DEVLOG_INFO("OPC UA: Registering with LDS '%.*s'\n", discoveryUrl->length, discoveryUrl->data);
   UA_StatusCode retVal = UA_Server_addPeriodicServerRegisterCallback(uaServer, NULL, discoveryUrlChar , 10 * 60 * 1000, 500, NULL);
-  if (retVal != UA_STATUSCODE_GOOD) {
+  if (retVal != UA_STATUSCODE_GOOD){
     DEVLOG_ERROR("OPC UA: Could not register with LDS. Error: %s\n", UA_StatusCode_name(retVal));
   }
 }
 
-void COPC_UA_Handler::removeLdsRegister(const UA_String *discoveryUrl) {
+void COPC_UA_Handler::removeLdsRegister(const UA_String *discoveryUrl){
   // check if already registered with the given LDS
   CSinglyLinkedList<const char*>::Iterator itRunner = registeredWithLds.begin();
   CSinglyLinkedList<const char*>::Iterator itRefNode = registeredWithLds.end();
 
   // remove entry from list
   while(itRunner != registeredWithLds.end()){
-    if (strncmp((char*)discoveryUrl->data, *itRunner, discoveryUrl->length) == 0) {
+    if (strncmp((char*)discoveryUrl->data, *itRunner, discoveryUrl->length) == 0){
       if(itRefNode == registeredWithLds.end()){
         registeredWithLds.popFront();
       }
@@ -206,17 +205,16 @@ void COPC_UA_Handler::removeLdsRegister(const UA_String *discoveryUrl) {
 
 #endif
 
-COPC_UA_Handler::COPC_UA_Handler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution),
-    uaServer(0), uaServerConfig(0), uaServerRunningFlag(UA_FALSE), getNodeForPathMutex(), nodeCallbackHandles(), clients(),
+COPC_UA_Handler::COPC_UA_Handler(CDeviceExecution& paDeviceExecution) :
+    CExternalEventHandler(paDeviceExecution), uaServer(0), uaServerConfig(0), uaServerRunningFlag(UA_FALSE), getNodeForPathMutex(), nodeCallbackHandles(), clients(),
 #ifdef FORTE_COM_OPC_UA_MULTICAST
   registeredWithLds(),
 #endif
-   nodeLayerReferences()
-{
+  nodeLayerReferences(){
 
 }
 
-COPC_UA_Handler::~COPC_UA_Handler() {
+COPC_UA_Handler::~COPC_UA_Handler(){
   stopServer();
   end();
 
@@ -225,7 +223,7 @@ COPC_UA_Handler::~COPC_UA_Handler() {
   }
   UA_ServerConfig_delete(uaServerConfig);
 
-  for (CSinglyLinkedList<struct UA_ClientEndpointMap *>::Iterator iter = clients.begin(); iter != clients.end(); ++iter) {
+  for(CSinglyLinkedList<struct UA_ClientEndpointMap *>::Iterator iter = clients.begin(); iter != clients.end(); ++iter){
     UA_Client_disconnect((*iter)->client);
     UA_Client_delete((*iter)->client);
     forte_free((*iter)->endpointUrl);
@@ -234,7 +232,7 @@ COPC_UA_Handler::~COPC_UA_Handler() {
   }
   clients.clearAll();
 
-  for (CSinglyLinkedList<struct UA_NodeCallback_Handle *>::Iterator iter = nodeCallbackHandles.begin(); iter != nodeCallbackHandles.end(); ++iter)
+  for(CSinglyLinkedList<struct UA_NodeCallback_Handle *>::Iterator iter = nodeCallbackHandles.begin(); iter != nodeCallbackHandles.end(); ++iter)
     forte_free(*iter);
   nodeCallbackHandles.clearAll();
   {
@@ -248,7 +246,7 @@ COPC_UA_Handler::~COPC_UA_Handler() {
   }
 
 #ifdef FORTE_COM_OPC_UA_MULTICAST
-  for (CSinglyLinkedList<const char *>::Iterator iter = registeredWithLds.begin(); iter != registeredWithLds.end(); ++iter) {
+  for (CSinglyLinkedList<const char *>::Iterator iter = registeredWithLds.begin(); iter != registeredWithLds.end(); ++iter){
     // dirty cast to remove const
     forte_free((void *)(*iter));
   }
@@ -256,11 +254,12 @@ COPC_UA_Handler::~COPC_UA_Handler() {
 #endif
 }
 
-void COPC_UA_Handler::run() {
-  DEVLOG_INFO("OPC UA: Starting OPC UA Server: opc.tcp://localhost:%d\n", FORTE_COM_OPC_UA_PORT);
+void COPC_UA_Handler::run(){
+  TForteUInt16 opcuaServerPort = getOpcuaServerPort();
 
-  if (uaServerConfig == NULL) {
-    configureUAServer(FORTE_COM_OPC_UA_PORT);
+  DEVLOG_INFO("OPC UA: Starting OPC UA Server: opc.tcp://localhost:%d\n", opcuaServerPort);
+  if(uaServerConfig == NULL){
+    configureUAServer(opcuaServerPort);
     uaServer = UA_Server_new(uaServerConfig);
   }
 
@@ -272,39 +271,40 @@ void COPC_UA_Handler::run() {
 #   endif
 #endif
   mServerStarted.inc();
-  UA_StatusCode retVal = UA_Server_run(uaServer, &uaServerRunningFlag);    // server keeps iterating as long as running is true;
-  if (retVal != UA_STATUSCODE_GOOD) {
+  UA_StatusCode retVal = UA_Server_run(uaServer, &uaServerRunningFlag); // server keeps iterating as long as running is true;
+  if(retVal != UA_STATUSCODE_GOOD){
     DEVLOG_ERROR("OPC UA: Server exited with error: %s\n", UA_StatusCode_name(retVal));
-  } else {
+  }
+  else{
     DEVLOG_INFO("OPC UA: Server successfully stopped\n");
   }
 }
 
-void COPC_UA_Handler::enableHandler(void) {
+void COPC_UA_Handler::enableHandler(void){
   startServer();
 }
 
-void COPC_UA_Handler::disableHandler(void) {
+void COPC_UA_Handler::disableHandler(void){
   COPC_UA_Handler::stopServer();
   end();
 }
 
-void COPC_UA_Handler::setPriority(int) {
+void COPC_UA_Handler::setPriority(int){
 
   //currently we are doing nothing here.
 }
 
-int COPC_UA_Handler::getPriority(void) const {
+int COPC_UA_Handler::getPriority(void) const{
   //the same as for setPriority
   return 0;
 }
 
-void COPC_UA_Handler::startServer() {
-  if (uaServerRunningFlag)
+void COPC_UA_Handler::startServer(){
+  if(uaServerRunningFlag)
     return;
   uaServerRunningFlag = UA_TRUE;
 
-  if (!isAlive()) {
+  if(!isAlive()){
     start();
     mServerStarted.waitIndefinitely();
     mServerStarted.inc(); //in case someone else wants to wait
@@ -312,26 +312,22 @@ void COPC_UA_Handler::startServer() {
 
 }
 
-void COPC_UA_Handler::stopServer() {
+void COPC_UA_Handler::stopServer(){
   uaServerRunningFlag = UA_FALSE;
 }
 
-UA_StatusCode
-COPC_UA_Handler::getNodeForPath(UA_NodeId **paFoundNodeId, const char *paNodePathConst, bool paCreateIfNotFound,
-                const UA_NodeId *paStartingNode, const UA_NodeId *paNewNodeType, UA_NodeId **paParentNodeId,
-                UA_Client *paClientInitialized, CSinglyLinkedList<UA_NodeId *> *paNodeIdsAlongPath) {
+UA_StatusCode COPC_UA_Handler::getNodeForPath(UA_NodeId **paFoundNodeId, const char *paNodePathConst, bool paCreateIfNotFound, const UA_NodeId *paStartingNode, const UA_NodeId *paNewNodeType, UA_NodeId **paParentNodeId, UA_Client *paClientInitialized, CSinglyLinkedList<UA_NodeId *> *paNodeIdsAlongPath){
   *paFoundNodeId = NULL;
   CIEC_STRING nodePathString(paNodePathConst);
   char* nodePath = nodePathString.getValue();
 
-
   // remove tailing slash
   size_t pathLen = strlen(nodePath);
-  while (pathLen && nodePath[pathLen - 1] == '/') {
+  while(pathLen && nodePath[pathLen - 1] == '/'){
     nodePath[pathLen - 1] = 0;
     pathLen--;
   }
-  if (pathLen == 0) {
+  if(pathLen == 0){
     forte_free(nodePath);
     return UA_STATUSCODE_BADINVALIDARGUMENT;
   }
@@ -339,16 +335,16 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **paFoundNodeId, const char *paNodePat
   // count number of folders in node path
   unsigned int folderCnt = 0;
   char *c = nodePath;
-  while (*c) {
-    if (*c == '/')
+  while(*c){
+    if(*c == '/')
       folderCnt++;
     c++;
   }
 
   DEVLOG_ERROR_VAR(CIEC_STRING fullPathString(nodePath));
   char *tok = strtok(nodePath, "/");
-  if (paStartingNode == NULL || (paStartingNode->namespaceIndex == 0 && paStartingNode->identifier.numeric == UA_NS0ID_OBJECTSFOLDER)) {
-    if (strcmp(tok, "Objects") != 0 && strcmp(tok, "0:Objects") != 0) {
+  if(paStartingNode == NULL || (paStartingNode->namespaceIndex == 0 && paStartingNode->identifier.numeric == UA_NS0ID_OBJECTSFOLDER)){
+    if(strcmp(tok, "Objects") != 0 && strcmp(tok, "0:Objects") != 0){
       DEVLOG_ERROR("OPC UA: Node path '%s' has to start with '/Objects'\n", fullPathString.getValue());
       return UA_STATUSCODE_BADINVALIDARGUMENT;
     }
@@ -359,22 +355,21 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **paFoundNodeId, const char *paNodePat
   startServer();
 
   // for every folder (which is a BrowsePath) we want to get the node id
-  UA_BrowsePath *browsePaths = static_cast<UA_BrowsePath *>(UA_Array_new(folderCnt*2, &UA_TYPES[UA_TYPES_BROWSEPATH]));
+  UA_BrowsePath *browsePaths = static_cast<UA_BrowsePath *>(UA_Array_new(folderCnt * 2, &UA_TYPES[UA_TYPES_BROWSEPATH]));
 
-  for (unsigned int i = 0; i < folderCnt; i++) {
+  for(unsigned int i = 0; i < folderCnt; i++){
     UA_BrowsePath_init(&browsePaths[i]);
-    if (paStartingNode != NULL)
+    if(paStartingNode != NULL)
       browsePaths[i].startingNode = *paStartingNode;
     else
       browsePaths[i].startingNode = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
     browsePaths[i].relativePath.elementsSize = i + 1;
 
-    browsePaths[i].relativePath.elements = static_cast<UA_RelativePathElement *>(UA_Array_new(browsePaths[i].relativePath.elementsSize,
-                                             &UA_TYPES[UA_TYPES_RELATIVEPATHELEMENT]));
+    browsePaths[i].relativePath.elements = static_cast<UA_RelativePathElement *>(UA_Array_new(browsePaths[i].relativePath.elementsSize, &UA_TYPES[UA_TYPES_RELATIVEPATHELEMENT]));
 
-    for (unsigned int j = 0; j <= i; j++) {
+    for(unsigned int j = 0; j <= i; j++){
 
-      if (j < i) {
+      if(j < i){
         // just copy from before
         UA_RelativePathElement_copy(&browsePaths[i - 1].relativePath.elements[j], &browsePaths[i].relativePath.elements[j]);
         continue;
@@ -392,23 +387,24 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **paFoundNodeId, const char *paNodePat
       if(scmNoOfParameters == parsingResult){
         targetName = parser[1];
         ns = forte::core::util::strtol(parser[0], 0, 10);
-      } else if (1 == parsingResult) {
+      }
+      else if(1 == parsingResult){
         targetName = parser[0];
-      } else {
+      }
+      else{
         DEVLOG_ERROR("OPC UA: Error by parsing FB browse path '%s'\n", nodePath);
         return UA_STATUSCODE_BADINVALIDARGUMENT;
       }
-      browsePaths[i].relativePath.elements[j].targetName = UA_QUALIFIEDNAME_ALLOC(
-          ns, targetName.getValue());
+      browsePaths[i].relativePath.elements[j].targetName = UA_QUALIFIEDNAME_ALLOC(ns, targetName.getValue());
     }
     tok = strtok(NULL, "/");
   }
 
   // same browse paths, but inverse reference, to check both directions
-  for (unsigned int i = 0; i < folderCnt; i++) {
-    UA_BrowsePath_copy(&browsePaths[i], &browsePaths[folderCnt+i]);
-    for (unsigned int j = 0; j < browsePaths[folderCnt+i].relativePath.elementsSize; j++) {
-      browsePaths[folderCnt+i].relativePath.elements[j].isInverse = !browsePaths[folderCnt+i].relativePath.elements[j].isInverse;
+  for(unsigned int i = 0; i < folderCnt; i++){
+    UA_BrowsePath_copy(&browsePaths[i], &browsePaths[folderCnt + i]);
+    for(unsigned int j = 0; j < browsePaths[folderCnt + i].relativePath.elementsSize; j++){
+      browsePaths[folderCnt + i].relativePath.elements[j].isInverse = !browsePaths[folderCnt + i].relativePath.elements[j].isInverse;
     }
   }
 
@@ -462,7 +458,7 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **paFoundNodeId, const char *paNodePat
       }
     }
     else{
-      browsePathsResults = static_cast<UA_BrowsePathResult *>(UA_Array_new(folderCnt*2, &UA_TYPES[UA_TYPES_BROWSEPATHRESULT]));
+      browsePathsResults = static_cast<UA_BrowsePathResult *>(UA_Array_new(folderCnt * 2, &UA_TYPES[UA_TYPES_BROWSEPATHRESULT]));
       for(unsigned int i = 0; i < folderCnt * 2; i++){
         browsePathsResults[i] = UA_Server_translateBrowsePathToNodeIds(uaServer, &browsePaths[i]);
       }
@@ -472,90 +468,93 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **paFoundNodeId, const char *paNodePat
     UA_StatusCode retVal = UA_STATUSCODE_GOOD;
 
     int foundFolderOffset = -1;
-    if (browsePathsResults[folderCnt - 1].statusCode == UA_STATUSCODE_GOOD) {
+    if(browsePathsResults[folderCnt - 1].statusCode == UA_STATUSCODE_GOOD){
       foundFolderOffset = 0;
-    } else if (browsePathsResults[folderCnt*2 - 1].statusCode == UA_STATUSCODE_GOOD) {
+    }
+    else if(browsePathsResults[folderCnt * 2 - 1].statusCode == UA_STATUSCODE_GOOD){
       foundFolderOffset = folderCnt;
     }
 
-    if (foundFolderOffset >= 0) {
+    if(foundFolderOffset >= 0){
       // all nodes exist, so just copy the node ids
       *paFoundNodeId = UA_NodeId_new();
       UA_NodeId_copy(&browsePathsResults[foundFolderOffset + folderCnt - 1].targets[0].targetId.nodeId, *paFoundNodeId);
-      if (paParentNodeId && folderCnt >= 2) {
+      if(paParentNodeId && folderCnt >= 2){
         *paParentNodeId = UA_NodeId_new();
         UA_NodeId_copy(&browsePathsResults[foundFolderOffset + folderCnt - 2].targets[0].targetId.nodeId, *paParentNodeId);
-      } else if (paParentNodeId && !paStartingNode) {
+      }
+      else if(paParentNodeId && !paStartingNode){
         *paParentNodeId = UA_NodeId_new();
         **paParentNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
       }
-      if (paNodeIdsAlongPath) {
-        for (unsigned int i = 0; i < folderCnt; i++) {
+      if(paNodeIdsAlongPath){
+        for(unsigned int i = 0; i < folderCnt; i++){
           UA_NodeId *tmp = UA_NodeId_new();
           UA_NodeId_copy(&browsePathsResults[foundFolderOffset + i].targets[0].targetId.nodeId, tmp);
           paNodeIdsAlongPath->pushBack(tmp);
         }
       }
-    } else if (paCreateIfNotFound) {
+    }
+    else if(paCreateIfNotFound){
       // last node does not exist, and we should create the path
       // skip last node because we already know that it doesn't exist
 
       *paFoundNodeId = UA_NodeId_new();
-      if (paParentNodeId && folderCnt >= 2) {
+      if(paParentNodeId && folderCnt >= 2){
         *paParentNodeId = UA_NodeId_new();
       }
       foundFolderOffset = 0;
       // no unsigned, because we need to check for -1
       int i;
-      for (i = folderCnt - 2; i >= 0; i--) {
+      for(i = folderCnt - 2; i >= 0; i--){
         // find first existing node. Check for isInverse = TRUE
-        if (browsePathsResults[i].statusCode == UA_STATUSCODE_GOOD) {
+        if(browsePathsResults[i].statusCode == UA_STATUSCODE_GOOD){
           foundFolderOffset = 0;
           break;
         }
         // and for isInverse = FALSE
-        if (browsePathsResults[folderCnt + i].statusCode == UA_STATUSCODE_GOOD) {
+        if(browsePathsResults[folderCnt + i].statusCode == UA_STATUSCODE_GOOD){
           foundFolderOffset = folderCnt;
           break;
         }
       }
-      for (; i >= 0; i--) {
+      for(; i >= 0; i--){
         // now we found the first existing node
-        if (browsePathsResults[foundFolderOffset+i].targetsSize == 0) {
+        if(browsePathsResults[foundFolderOffset + i].targetsSize == 0){
           DEVLOG_ERROR("OPC UA: Could not translate browse paths for '%s' to node IDs. target size is 0.\n", fullPathString.getValue());
           break;
         }
-        if (browsePathsResults[foundFolderOffset+i].targetsSize > 1) {
+        if(browsePathsResults[foundFolderOffset + i].targetsSize > 1){
           DEVLOG_WARNING("OPC UA: The given browse path '%s' has multiple results for the same path. Taking the first result.\n", fullPathString.getValue());
         }
 
         // foundNodeId contains the ID of the parent which exists
-        UA_NodeId_copy(&browsePathsResults[foundFolderOffset+i].targets[0].targetId.nodeId, *paFoundNodeId);
-        if (paParentNodeId && folderCnt >= 2) {
-          UA_NodeId_copy(&browsePathsResults[foundFolderOffset+i].targets[0].targetId.nodeId, *paParentNodeId);
+        UA_NodeId_copy(&browsePathsResults[foundFolderOffset + i].targets[0].targetId.nodeId, *paFoundNodeId);
+        if(paParentNodeId && folderCnt >= 2){
+          UA_NodeId_copy(&browsePathsResults[foundFolderOffset + i].targets[0].targetId.nodeId, *paParentNodeId);
         }
         break;
       }
 
-      if (i == -1) {
+      if(i == -1){
         // no node of the path exists, thus parent is Objects folder
         UA_NodeId_copy(&browsePaths[0].startingNode, *paFoundNodeId);
-        if (paParentNodeId && folderCnt >= 2) {
+        if(paParentNodeId && folderCnt >= 2){
           **paParentNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
         }
       }
       i++;
 
-      if (paNodeIdsAlongPath) {
-        for (int j = 0; j < i; j++) {
+      if(paNodeIdsAlongPath){
+        for(int j = 0; j < i; j++){
           UA_NodeId *tmp = UA_NodeId_new();
-          UA_NodeId_copy(&browsePathsResults[foundFolderOffset+j].targets[0].targetId.nodeId, tmp);
+          UA_NodeId_copy(&browsePathsResults[foundFolderOffset + j].targets[0].targetId.nodeId, tmp);
           paNodeIdsAlongPath->pushBack(tmp);
         }
       }
 
       // create all the nodes on the way
-      for (unsigned int j = (unsigned int) i; j < folderCnt; j++) {
+      for(unsigned int j = (unsigned int) i; j < folderCnt; j++){
 
         // the last browse path contains all relativePath elements.
         UA_QualifiedName *targetName = &browsePaths[folderCnt - 1].relativePath.elements[j].targetName;
@@ -571,18 +570,16 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **paFoundNodeId, const char *paNodePat
         forte_free(nodeName);
 
         UA_NodeId creationType;
-        if (paNewNodeType == NULL || j < folderCnt - 1)
+        if(paNewNodeType == NULL || j < folderCnt - 1)
           // the paNewNodeType is only used for the last node
           creationType = UA_NODEID_NUMERIC(0, UA_NS0ID_FOLDERTYPE);
         else
           creationType = *paNewNodeType;
 
-        if ((retVal = UA_Server_addObjectNode(uaServer, UA_NODEID_NUMERIC(targetName->namespaceIndex, 0),
-                            **paFoundNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
-                            *targetName, creationType, oAttr, NULL, *paFoundNodeId)) != UA_STATUSCODE_GOOD) {
+        if((retVal = UA_Server_addObjectNode(uaServer, UA_NODEID_NUMERIC(targetName->namespaceIndex, 0), **paFoundNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT), *targetName, creationType, oAttr, NULL, *paFoundNodeId)) != UA_STATUSCODE_GOOD){
           DEVLOG_ERROR("OPC UA: Could not addObjectNode. Error: %s\n", UA_StatusCode_name(retVal));
           UA_NodeId_delete(*paFoundNodeId);
-          if (paParentNodeId && folderCnt >= 2) {
+          if(paParentNodeId && folderCnt >= 2){
             UA_NodeId_delete(*paParentNodeId);
           }
 
@@ -591,17 +588,16 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **paFoundNodeId, const char *paNodePat
           break;
         }
 
-        if (paNodeIdsAlongPath) {
+        if(paNodeIdsAlongPath){
           UA_NodeId *tmp = UA_NodeId_new();
           UA_NodeId_copy(*paFoundNodeId, tmp);
           paNodeIdsAlongPath->pushBack(tmp);
         }
 
-        if (j == folderCnt - 1 && paParentNodeId) {
+        if(j == folderCnt - 1 && paParentNodeId){
           // foundNodeId will be overwritten in next iteration
           UA_NodeId_copy(*paFoundNodeId, *paParentNodeId);
         }
-
 
         UA_ObjectAttributes_deleteMembers(&oAttr);
       }
@@ -614,32 +610,31 @@ COPC_UA_Handler::getNodeForPath(UA_NodeId **paFoundNodeId, const char *paNodePat
   }
 }
 
-
-CSyncObject *COPC_UA_Handler::getMutexForClient(const UA_Client *paClient) {
-  for (CSinglyLinkedList<struct UA_ClientEndpointMap *>::Iterator iter = clients.begin(); iter != clients.end(); ++iter) {
-    if ((*iter)->client == paClient)
+CSyncObject *COPC_UA_Handler::getMutexForClient(const UA_Client *paClient){
+  for(CSinglyLinkedList<struct UA_ClientEndpointMap *>::Iterator iter = clients.begin(); iter != clients.end(); ++iter){
+    if((*iter)->client == paClient)
       return (*iter)->clientMutex;
   }
   return NULL;
 }
 
-UA_Client *COPC_UA_Handler::getClientForEndpoint(const char *paEndpointUrl, bool paCreateIfNotFound, CSyncObject **paClientMutex) {
+UA_Client *COPC_UA_Handler::getClientForEndpoint(const char *paEndpointUrl, bool paCreateIfNotFound, CSyncObject **paClientMutex){
 
   // remove tailing slash
   size_t urlLen = strlen(paEndpointUrl);
-  while (urlLen && paEndpointUrl[urlLen - 1] == '/') {
+  while(urlLen && paEndpointUrl[urlLen - 1] == '/'){
     urlLen--;
   }
 
-  for (CSinglyLinkedList<struct UA_ClientEndpointMap *>::Iterator iter = clients.begin(); iter != clients.end(); ++iter) {
-    if (strncmp((*iter)->endpointUrl, paEndpointUrl, urlLen) == 0) {
-      if (paClientMutex)
+  for(CSinglyLinkedList<struct UA_ClientEndpointMap *>::Iterator iter = clients.begin(); iter != clients.end(); ++iter){
+    if(strncmp((*iter)->endpointUrl, paEndpointUrl, urlLen) == 0){
+      if(paClientMutex)
         *paClientMutex = (*iter)->clientMutex;
       return (*iter)->client;
     }
   }
 
-  if (!paCreateIfNotFound)
+  if(!paCreateIfNotFound)
     return NULL;
 
   struct UA_ClientEndpointMap *clientMap = static_cast<UA_ClientEndpointMap *>(forte_malloc(sizeof(struct UA_ClientEndpointMap)));
@@ -655,7 +650,7 @@ UA_Client *COPC_UA_Handler::getClientForEndpoint(const char *paEndpointUrl, bool
   clientMap->clientMutex = static_cast<CSyncObject *>(forte_malloc(sizeof(CSyncObject)));
   *clientMap->clientMutex = CSyncObject();
 
-  if (paClientMutex)
+  if(paClientMutex)
     *paClientMutex = clientMap->clientMutex;
 
   // store it in the list so we can delete it to avoid mem leaks
@@ -664,9 +659,7 @@ UA_Client *COPC_UA_Handler::getClientForEndpoint(const char *paEndpointUrl, bool
   return client;
 }
 
-UA_StatusCode COPC_UA_Handler::createVariableNode(const UA_NodeId *paParentNode, const char *paVarName, const UA_DataType *paVarType, void *paVarValue,
-                          UA_NodeId *paReturnVarNodeId, bool paAllowWrite) {
-
+UA_StatusCode COPC_UA_Handler::createVariableNode(const UA_NodeId *paParentNode, const char *paVarName, const UA_DataType *paVarType, void *paVarValue, UA_NodeId *paReturnVarNodeId, bool paAllowWrite){
 
   // set UA NodeId attributes
   UA_QualifiedName varBrowseName = UA_QUALIFIEDNAME_ALLOC(1, paVarName);
@@ -685,7 +678,7 @@ UA_StatusCode COPC_UA_Handler::createVariableNode(const UA_NodeId *paParentNode,
   var_attr.displayName = UA_LOCALIZEDTEXT_ALLOC(locale, paVarName);
   var_attr.description = UA_LOCALIZEDTEXT(locale, description);
   var_attr.userAccessLevel = UA_ACCESSLEVELMASK_READ;
-  if (paAllowWrite)
+  if(paAllowWrite)
     var_attr.userAccessLevel |= UA_ACCESSLEVELMASK_WRITE;
   var_attr.accessLevel = var_attr.userAccessLevel;
   UA_Variant_setScalar(&var_attr.value, paVarValue, paVarType);
@@ -693,73 +686,66 @@ UA_StatusCode COPC_UA_Handler::createVariableNode(const UA_NodeId *paParentNode,
   UA_NodeId *returnNodeId = UA_NodeId_new();
 
   // add UA Variable Node to the server address space
-  UA_StatusCode retVal = UA_Server_addVariableNode(
-      uaServer,                 // server
-      UA_NODEID_NUMERIC(1, 0),                  // requestedNewNodeId
-      *paParentNode,                 // parentNodeId
-      UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),              // referenceTypeId   Reference to the type definition for the variable node
-      varBrowseName,                // browseName
-      typeDefinition,               // typeDefinition
-      var_attr,                     // Variable attributes
-      NULL,                 // instantiation callback
-      returnNodeId);                  // return Node Id
+  UA_StatusCode retVal = UA_Server_addVariableNode(uaServer, // server
+  UA_NODEID_NUMERIC(1, 0), // requestedNewNodeId
+  *paParentNode, // parentNodeId
+  UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT), // referenceTypeId   Reference to the type definition for the variable node
+  varBrowseName, // browseName
+  typeDefinition, // typeDefinition
+  var_attr, // Variable attributes
+  NULL, // instantiation callback
+  returnNodeId); // return Node Id
 
   UA_QualifiedName_deleteMembers(&varBrowseName);
   UA_LocalizedText_deleteMembers(&var_attr.displayName);
 
-  if (retVal == UA_STATUSCODE_GOOD) {
+  if(retVal == UA_STATUSCODE_GOOD){
     retVal = UA_NodeId_copy(returnNodeId, paReturnVarNodeId);
-  } else {
+  }
+  else{
     DEVLOG_ERROR("OPC UA: AddressSpace adding Variable Node %s failed. Error: %s\n", paVarName, UA_StatusCode_name(retVal));
   }
   UA_NodeId_delete(returnNodeId);
   return retVal;
 }
 
-UA_StatusCode COPC_UA_Handler::updateNodeUserAccessLevel(const UA_NodeId *paNodeId, UA_Byte paNewAccessLevel) {
+UA_StatusCode COPC_UA_Handler::updateNodeUserAccessLevel(const UA_NodeId *paNodeId, UA_Byte paNewAccessLevel){
   return UA_Server_writeAccessLevel(uaServer, *paNodeId, paNewAccessLevel);
 }
 
-UA_StatusCode COPC_UA_Handler::createMethodNode(const UA_NodeId *paParentNode,
-    const char *paMethodName, UA_MethodCallback paCallback, void *paCallbackHandle,
-    unsigned int paInputArgumentsSize, const UA_Argument *const paInputArguments,
-    unsigned int paOutputArgumentsSize, const UA_Argument *const paOutputArguments,
-    UA_NodeId *paReturnNodeId, bool paCreate) {
+UA_StatusCode COPC_UA_Handler::createMethodNode(const UA_NodeId *paParentNode, const char *paMethodName, UA_MethodCallback paCallback, void *paCallbackHandle, unsigned int paInputArgumentsSize, const UA_Argument * const paInputArguments, unsigned int paOutputArgumentsSize, const UA_Argument * const paOutputArguments, UA_NodeId *paReturnNodeId, bool paCreate){
   UA_StatusCode retVal;
-  if (!paCreate) {
+  if(!paCreate){
     DEVLOG_INFO("Adding a paCallback for an existing method\n");
     UA_Server_setNodeContext(uaServer, *paParentNode, paCallbackHandle);
     retVal = UA_Server_setMethodNode_callback(uaServer, *paParentNode, paCallback);
     paReturnNodeId = (UA_NodeId*) paParentNode;
-  } else {
+  }
+  else{
     DEVLOG_INFO("Creating a new method\n");
     UA_UInt16 ns = 1;
     CIEC_STRING targetName;
     CParameterParser parser(paMethodName, scmNoOfParameters, ':');
     unsigned int parsingResult = parser.parseParameters();
-    if (scmNoOfParameters == parsingResult) {
+    if(scmNoOfParameters == parsingResult){
       targetName = parser[1];
       ns = forte::core::util::strtol(parser[0], 0, 10);
-    } else if (1 == parsingResult) {
+    }
+    else if(1 == parsingResult){
       targetName = parser[0];
-    } else {
+    }
+    else{
       DEVLOG_ERROR("OPC UA: Error by parsing FB browse path '%s'\n", paMethodName);
       return UA_STATUSCODE_BADINVALIDARGUMENT;
     }
     UA_MethodAttributes methodAttributes;
     UA_MethodAttributes_init(&methodAttributes);
-    methodAttributes.description = UA_LOCALIZEDTEXT_ALLOC("en-US",
-        "Method which can be called");
+    methodAttributes.description = UA_LOCALIZEDTEXT_ALLOC("en-US", "Method which can be called");
     methodAttributes.executable = true;
     methodAttributes.userExecutable = true;
-    methodAttributes.displayName = UA_LOCALIZEDTEXT_ALLOC("en-US",
-        targetName.getValue());
-    UA_QualifiedName browseName = UA_QUALIFIEDNAME_ALLOC(ns,
-        targetName.getValue());
-    retVal = UA_Server_addMethodNode(uaServer, UA_NODEID_NUMERIC(ns, 0),
-        *paParentNode, UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT), browseName,
-        methodAttributes, paCallback, paInputArgumentsSize, paInputArguments,
-        paOutputArgumentsSize, paOutputArguments, paCallbackHandle, paReturnNodeId);
+    methodAttributes.displayName = UA_LOCALIZEDTEXT_ALLOC("en-US", targetName.getValue());
+    UA_QualifiedName browseName = UA_QUALIFIEDNAME_ALLOC(ns, targetName.getValue());
+    retVal = UA_Server_addMethodNode(uaServer, UA_NODEID_NUMERIC(ns, 0), *paParentNode, UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT), browseName, methodAttributes, paCallback, paInputArgumentsSize, paInputArguments, paOutputArgumentsSize, paOutputArguments, paCallbackHandle, paReturnNodeId);
     UA_QualifiedName_deleteMembers(&browseName);
     UA_LocalizedText_deleteMembers(&methodAttributes.description);
     UA_LocalizedText_deleteMembers(&methodAttributes.displayName);
@@ -767,13 +753,12 @@ UA_StatusCode COPC_UA_Handler::createMethodNode(const UA_NodeId *paParentNode,
   return retVal;
 }
 
-
-UA_StatusCode COPC_UA_Handler::updateNodeValue(const UA_NodeId *paNodeId, const CIEC_ANY *paData, const UA_TypeConvert *paConvert) {
+UA_StatusCode COPC_UA_Handler::updateNodeValue(const UA_NodeId *paNodeId, const CIEC_ANY *paData, const UA_TypeConvert *paConvert){
   UA_Variant *nodeValue = UA_Variant_new();
   UA_Variant_init(nodeValue);
 
   void *varValue = UA_new(paConvert->type);
-  if (!paConvert->get(paData, varValue)) {
+  if(!paConvert->get(paData, varValue)){
     UA_delete(varValue, paConvert->type);
     return UA_STATUSCODE_BADUNEXPECTEDERROR;
   }
@@ -785,9 +770,7 @@ UA_StatusCode COPC_UA_Handler::updateNodeValue(const UA_NodeId *paNodeId, const 
   return retVal;
 }
 
-
-UA_StatusCode COPC_UA_Handler::registerNodeCallBack(const UA_NodeId *paNodeId, forte::com_infra::CComLayer *paComLayer, const struct UA_TypeConvert *paConvert,
-                          unsigned int paPortIndex) {
+UA_StatusCode COPC_UA_Handler::registerNodeCallBack(const UA_NodeId *paNodeId, forte::com_infra::CComLayer *paComLayer, const struct UA_TypeConvert *paConvert, unsigned int paPortIndex){
   // needs new, otherwise it will be removed as soon as registerNodecallBack exits, and thus handle is not valid in the callback
   struct UA_NodeCallback_Handle *handle = static_cast<UA_NodeCallback_Handle *>(forte_malloc(sizeof(struct UA_NodeCallback_Handle)));
 
@@ -796,15 +779,12 @@ UA_StatusCode COPC_UA_Handler::registerNodeCallBack(const UA_NodeId *paNodeId, f
   handle->portIndex = paPortIndex;
   // store it in the list so we can delete it to avoid mem leaks
   nodeCallbackHandles.pushBack(handle);
-  UA_ValueCallback callback = {NULL, this->onWrite};
+  UA_ValueCallback callback = { NULL, this->onWrite };
   UA_Server_setNodeContext(uaServer, *paNodeId, handle);
   return UA_Server_setVariableNode_valueCallback(uaServer, *paNodeId, callback);
 }
 
-void COPC_UA_Handler::onWrite(UA_Server *, const UA_NodeId *,
-                void *, const UA_NodeId *,
-                void *nodeContext, const UA_NumericRange *,
-                const UA_DataValue *data) {
+void COPC_UA_Handler::onWrite(UA_Server *, const UA_NodeId *, void *, const UA_NodeId *, void *nodeContext, const UA_NumericRange *, const UA_DataValue *data){
 
   struct UA_NodeCallback_Handle *handle = static_cast<struct UA_NodeCallback_Handle *>(nodeContext);
 
@@ -822,31 +802,31 @@ void COPC_UA_Handler::onWrite(UA_Server *, const UA_NodeId *,
   handleRecv.portIndex = handle->portIndex;
   handleRecv.convert = handle->convert;
 
-  retVal = layer->recvData(static_cast<const void *>(&handleRecv), 0);    //TODO: add multidimensional data handling with 'range'.
+  retVal = layer->recvData(static_cast<const void *>(&handleRecv), 0); //TODO: add multidimensional data handling with 'range'.
 
   /* Handle return of receive data */
-  if (e_ProcessDataOk == retVal) {
+  if(e_ProcessDataOk == retVal){
     //only update data in item if data could be read
   }
 
-  if (e_Nothing != retVal) {
+  if(e_Nothing != retVal){
     ::getExtEvHandler<COPC_UA_Handler>(*layer->getCommFB()).startNewEventChain(layer->getCommFB());
   }
 
 }
 
-void COPC_UA_Handler::referencedNodesIncrement(const CSinglyLinkedList<UA_NodeId *> *paNodes, const COPC_UA_Layer *paLayer) {
+void COPC_UA_Handler::referencedNodesIncrement(const CSinglyLinkedList<UA_NodeId *> *paNodes, const COPC_UA_Layer *paLayer){
   CCriticalRegion criticalRegion(mNodeLayerMutex);
-  for (CSinglyLinkedList<UA_NodeId *>::Iterator iterNode = paNodes->begin(); iterNode != paNodes->end(); ++iterNode) {
+  for(CSinglyLinkedList<UA_NodeId *>::Iterator iterNode = paNodes->begin(); iterNode != paNodes->end(); ++iterNode){
     bool found = false;
-    for (CSinglyLinkedList<struct ReferencedNodeByLayer *>::Iterator iterRef = nodeLayerReferences.begin(); iterRef != nodeLayerReferences.end(); ++iterRef) {
-      if (UA_NodeId_equal((*iterRef)->nodeId, (*iterNode))) {
+    for(CSinglyLinkedList<struct ReferencedNodeByLayer *>::Iterator iterRef = nodeLayerReferences.begin(); iterRef != nodeLayerReferences.end(); ++iterRef){
+      if(UA_NodeId_equal((*iterRef)->nodeId, (*iterNode))){
         found = true;
         (*iterRef)->referencedByLayer.pushFront(paLayer);
         break;
       }
     }
-    if (!found) {
+    if(!found){
       struct ReferencedNodeByLayer *newRef = static_cast<struct ReferencedNodeByLayer *>(forte_malloc(sizeof(struct ReferencedNodeByLayer)));
       UA_NodeId *newNode = UA_NodeId_new();
       UA_NodeId_copy((*iterNode), newNode);
@@ -858,26 +838,26 @@ void COPC_UA_Handler::referencedNodesIncrement(const CSinglyLinkedList<UA_NodeId
   }
 }
 
-void COPC_UA_Handler::referencedNodesDecrement(const CSinglyLinkedList<UA_NodeId *> *paNodes, const COPC_UA_Layer *paLayer, bool paDeleteIfLastReference) {
+void COPC_UA_Handler::referencedNodesDecrement(const CSinglyLinkedList<UA_NodeId *> *paNodes, const COPC_UA_Layer *paLayer, bool paDeleteIfLastReference){
   CCriticalRegion criticalRegion(mNodeLayerMutex);
-  for (CSinglyLinkedList<UA_NodeId *>::Iterator iterNode = paNodes->begin(); iterNode != paNodes->end(); ++iterNode) {
-    for (CSinglyLinkedList<struct ReferencedNodeByLayer *>::Iterator iterRef = nodeLayerReferences.begin(); iterRef != nodeLayerReferences.end(); ++iterRef) {
-      if (UA_NodeId_equal((*iterRef)->nodeId, (*iterNode))) {
+  for(CSinglyLinkedList<UA_NodeId *>::Iterator iterNode = paNodes->begin(); iterNode != paNodes->end(); ++iterNode){
+    for(CSinglyLinkedList<struct ReferencedNodeByLayer *>::Iterator iterRef = nodeLayerReferences.begin(); iterRef != nodeLayerReferences.end(); ++iterRef){
+      if(UA_NodeId_equal((*iterRef)->nodeId, (*iterNode))){
 
-        while ((*iterRef)->referencedByLayer.peekFront() == paLayer)
+        while((*iterRef)->referencedByLayer.peekFront() == paLayer)
           (*iterRef)->referencedByLayer.popFront();
 
         CSinglyLinkedList<const COPC_UA_Layer *>::Iterator iterLayerPrev = (*iterRef)->referencedByLayer.begin();
-        for (CSinglyLinkedList<const COPC_UA_Layer *>::Iterator iterLayer = (*iterRef)->referencedByLayer.begin(); iterLayer != (*iterRef)->referencedByLayer.end(); ++iterLayer) {
-          if ((*iterLayer) == paLayer) {
+        for(CSinglyLinkedList<const COPC_UA_Layer *>::Iterator iterLayer = (*iterRef)->referencedByLayer.begin(); iterLayer != (*iterRef)->referencedByLayer.end(); ++iterLayer){
+          if((*iterLayer) == paLayer){
             (*iterRef)->referencedByLayer.eraseAfter(iterLayerPrev);
             // do not break, node may be referenced multiple times
             iterLayer = iterLayerPrev;
           }
         }
 
-        if ((*iterRef)->referencedByLayer.isEmpty()) {
-          if (paDeleteIfLastReference) {
+        if((*iterRef)->referencedByLayer.isEmpty()){
+          if(paDeleteIfLastReference){
             UA_Server_deleteNode(uaServer, *(*iterRef)->nodeId, UA_TRUE);
           }
         }

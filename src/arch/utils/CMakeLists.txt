@@ -13,3 +13,4 @@
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\utils)
 
 # currently do add anything per default
+forte_add_sourcefile_hcpp(mainparam_utils)
