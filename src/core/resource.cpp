@@ -514,6 +514,7 @@ void CResource::createInterfaceResponseMessage(CIEC_STRING & paReqResult, const 
       paReqResult.append(CStringDictionary::getInstance().get(paENameList[paEWith[nStartIndex]]));
       paReqResult.append("\"/>\n      ");
     }
+    paReqResult.append("</Event>\n      ");
   }else{
     paReqResult.append("\"/>\n");
   }
