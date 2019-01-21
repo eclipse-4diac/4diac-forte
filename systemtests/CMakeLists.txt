@@ -1,12 +1,12 @@
-
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\systemtests)
 
 if(FORTE_SYSTEM_TESTS)
 
-SET(CTEST_OUTPUT_ON_FAILURE TRUE)
+  forte_add_test(TestShouldNotFail forte_test_1.fboot 5)
 
-forte_add_test(Test1 forte_test_1.fboot 5)
-set_tests_properties (Test1 PROPERTIES WILL_FAIL true)
-forte_add_test(Test2 forte_test_2.fboot 5)
+  #uncomment the following line to see an example of failing and not failing conditions
+  #forte_add_test(TestShouldFail example.fboot 5)
+  
+  #after compilation, run "make CTEST_OUTPUT_ON_FAILURE=1 test" on the binary folder
 
 endif(FORTE_SYSTEM_TESTS)

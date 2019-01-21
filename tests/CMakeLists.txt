@@ -142,7 +142,6 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
   endif() 
 endif()
 
-add_test(forte_test ${EXECUTABLE_OUTPUT_PATH}/forte_test)
 #######################################################################################
 # Generate stringlist for every source file
 #######################################################################################
