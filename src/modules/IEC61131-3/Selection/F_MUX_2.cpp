@@ -44,7 +44,7 @@ const SFBInterfaceSpec FORTE_F_MUX_2::scm_stFBInterfaceSpec = {
 void FORTE_F_MUX_2::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
     if(K().isSigned() && (K().getSignedValue() < 0 || K().getSignedValue() > 1)){
-        DEVLOG_ERROR("value of input K is not between 0 and 1");
+      DEVLOG_ERROR("value of input K is not between 0 and 1\n");
     }else{
       OUT().saveAssign(*static_cast<CIEC_ANY*>(getDI( static_cast<TForteUInt16>(K().getUnsignedValue() + 1))));
       sendOutputEvent(scm_nEventCNFID);

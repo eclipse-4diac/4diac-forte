@@ -2,10 +2,20 @@ SET(SOURCE_GROUP ${SOURCE_GROUP}\\systemtests)
 
 if(FORTE_SYSTEM_TESTS)
 
-  forte_add_test(TestShouldNotFail forte_test_1.fboot 5)
+  #hard_pass_example.fboot doesn't produce any logging error and all TEST_CONDITION FBs pass
+  #soft_pass_example.fboot produces logging error but all TEST_CONDITION FBs pass
+  #fail_example.fboot has TEST_CONDITION FBs that fail, so it always fail, no matter hard or soft
 
-  #uncomment the following line to see an example of failing and not failing conditions
-  #forte_add_test(TestShouldFail example.fboot 5)
+  forte_add_systemtest_hard(Test_Hard_Pass hard_pass_example.fboot 5)
+  
+  forte_add_systemtest_soft(Test_Soft_Pass_Clean hard_pass_example.fboot 5)
+  forte_add_systemtest_soft(Test_Soft_Pass_Dirty soft_pass_example.fboot 5) 
+  
+  #uncomment the following  lines to see examples of failing conditions
+  
+  #forte_add_systemtest_hard(Test_Soft_Example_As_Hard soft_pass_example.fboot 5)
+  #forte_add_systemtest_hard(Test_Hard_Fail_Alaways fail_example.fboot 5)
+  #forte_add_systemtest_soft(Test_Soft_Fail_Alaways fail_example.fboot 5)
   
   #after compilation, run "make CTEST_OUTPUT_ON_FAILURE=1 test" on the binary folder
 

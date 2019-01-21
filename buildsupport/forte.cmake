@@ -268,15 +268,28 @@ FUNCTION(forte_add_post_build_command)
   ENDFOREACH(ARG)
 ENDFUNCTION(forte_add_post_build_command)
 
-## forte_add_test (test_name bootfile_name timeout)
-FUNCTION(forte_add_test arg1 arg2 arg3)
+## forte_add_systemtest_hard (test_name bootfile_name timeout)
+## Fails if any error has been logged
+FUNCTION(forte_add_systemtest_hard arg1 arg2 arg3)
   ADD_TEST(NAME ${arg1} COMMAND $<TARGET_FILE:forte>)
   set_tests_properties ( ${arg1} PROPERTIES TIMEOUT ${arg3})
   FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${arg2}" file_str)
   STRING(REPLACE "\\" "\\\\" file_str ${file_str})
   set_tests_properties (${arg1} PROPERTIES ENVIRONMENT "FORTE_BOOT_FILE=${file_str}")
   SET_TESTS_PROPERTIES(${arg1} PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T")
-ENDFUNCTION(forte_add_test)
+ENDFUNCTION(forte_add_systemtest_hard)
+
+## forte_add_systemtest_soft (test_name bootfile_name timeout)
+## Fails only by TEST_CONDITION FBs. This is for the case when a FB has to be tested in all
+## its cases, and some of the cases produce logging error
+FUNCTION(forte_add_systemtest_soft arg1 arg2 arg3)
+  ADD_TEST(NAME ${arg1} COMMAND $<TARGET_FILE:forte>)
+  set_tests_properties ( ${arg1} PROPERTIES TIMEOUT ${arg3})
+  FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${arg2}" file_str)
+  STRING(REPLACE "\\" "\\\\" file_str ${file_str})
+  set_tests_properties (${arg1} PROPERTIES ENVIRONMENT "FORTE_BOOT_FILE=${file_str}")
+  SET_TESTS_PROPERTIES(${arg1} PROPERTIES FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED")
+ENDFUNCTION(forte_add_systemtest_soft)
 
 FUNCTION(forte_add_custom_configuration)
   FOREACH(ARG ${ARGV})

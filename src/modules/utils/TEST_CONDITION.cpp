@@ -41,9 +41,9 @@ void FORTE_TEST_CONDITION::executeEvent(int pa_nEIID){
   switch(pa_nEIID){
     case scm_nEventREQID:
       if(check()) {
-        DEVLOG_INFO(" ------------------------------ [TEST CONDITION] %s passed\n", getInstanceName());
+        DEVLOG_INFO(" ------------------------------ [TEST_CONDITION_PASSED] %s passed\n", getInstanceName());
       } else {
-        DEVLOG_ERROR("------------------------------ [TEST CONDITION] %s failed ------------------------------\n", getInstanceName());
+        DEVLOG_ERROR("------------------------------ [TEST_CONDITION_FAILED] %s failed ------------------------------\n", getInstanceName());
       }
       sendOutputEvent(scm_nEventCNFID);
       break;
