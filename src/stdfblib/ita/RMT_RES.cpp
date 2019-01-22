@@ -23,7 +23,7 @@ const CStringDictionary::TStringId RMT_RES::scm_aunVarInputNameIds[] = {g_nStrin
 const CStringDictionary::TStringId RMT_RES::scm_aunDIDataTypeIds[] = {g_nStringIdWSTRING};
 
 
-const SFBInterfaceSpec RMT_RES::scm_stRESInterfaceSpec = {
+const SFBInterfaceSpec RMT_RES::scm_stFBInterfaceSpec = {
   0,
   0,
   0,
@@ -44,7 +44,7 @@ const SFBInterfaceSpec RMT_RES::scm_stRESInterfaceSpec = {
 
 
 RMT_RES::RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_poDevice):
-       CResource(pa_poDevice, &scm_stRESInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData){
+       CResource(pa_poDevice, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData){
   addFB(CTypeLib::createFB(g_nStringIdSTART, g_nStringIdE_RESTART, this));
   addFB(CTypeLib::createFB(g_nStringIdMGR_FF, g_nStringIdE_SR, this));
   addFB(CTypeLib::createFB(g_nStringIdMGR, g_nStringIdDEV_MGR, this));

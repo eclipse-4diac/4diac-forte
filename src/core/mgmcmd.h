@@ -202,6 +202,15 @@ enum EMGMCommandType{
    *    - m_sAdditionalParams the read value is stored here
    */
   cg_nMGM_CMD_QUERY_FBType = 0x77,
+
+  /*! \brief Read the interface of a specific adapter type.
+   *
+   * When reading the adapter interface the parameters of the SManagementCMD are defined as:
+   *    - m_sFirstParam = adapter type name
+   *    - m_sSecondParam = not used
+   *    - m_sAdditionalParams the read value is stored here
+   */
+  cg_nMGM_CMD_QUERY_AdapterType = 0x87,
 #endif
 
   /*! \brief reset a FB, resource or the device.

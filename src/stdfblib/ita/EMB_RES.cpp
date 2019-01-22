@@ -16,8 +16,9 @@
 #endif
 
 
-DEFINE_FIRMWARE_FB(EMB_RES, g_nStringIdEMB_RES)
-;
+DEFINE_FIRMWARE_FB(EMB_RES, g_nStringIdEMB_RES);
+
+const SFBInterfaceSpec EMB_RES::scm_stFBInterfaceSpec = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 EMB_RES::EMB_RES(CStringDictionary::TStringId pa_nInstanceNameId,
     CResource* pa_poDevice) :

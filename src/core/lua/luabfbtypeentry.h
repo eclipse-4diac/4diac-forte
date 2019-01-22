@@ -25,7 +25,7 @@ private:
   SFBInterfaceSpec m_interfaceSpec;
   SInternalVarsInformation m_internalVarsInformation;
 
-  CLuaBFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING paLuaScriptAsString,  SFBInterfaceSpec& interfaceSpec,
+  CLuaBFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING paLuaScriptAsString, SFBInterfaceSpec& interfaceSpec,
       SInternalVarsInformation& internalVarsInformation);
 
   virtual ~CLuaBFBTypeEntry();
@@ -42,6 +42,7 @@ public:
   const SFBInterfaceSpec* getInterfaceSpec() const {
     return &m_interfaceSpec;
   }
+
   const SInternalVarsInformation* getInternalVarsInformation() const {
     return &m_internalVarsInformation;
   }

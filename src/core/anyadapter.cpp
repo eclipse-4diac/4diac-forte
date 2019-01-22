@@ -17,7 +17,7 @@
 #include "anyadapter_gen.cpp"
 #endif
 
-DEFINE_ADAPTER_TYPE(CAnyAdapter, g_nStringIdANY_ADAPTER)
+DEFINE_GENERIC_ADAPTER_TYPE(CAnyAdapter, g_nStringIdANY_ADAPTER)
 
 const SFBInterfaceSpec CAnyAdapter::scm_stFBInterfaceSpec = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 

@@ -18,7 +18,7 @@
 #include "adapter.h"
 
 CLuaAdapterTypeEntry::CLuaAdapterTypeEntry(CStringDictionary::TStringId paTypeNameId, CIEC_STRING paLuaScriptAsString, SFBInterfaceSpec& paInterfaceSpec) :
-    CTypeLib::CAdapterTypeEntry(paTypeNameId, 0), cm_sLuaScriptAsString(paLuaScriptAsString), mSocketInterfaceSpec(paInterfaceSpec) {
+    CTypeLib::CAdapterTypeEntry(paTypeNameId, 0, &mSocketInterfaceSpec), cm_sLuaScriptAsString(paLuaScriptAsString), mSocketInterfaceSpec(paInterfaceSpec) {
   initPlugInterfaceSpec(mSocketInterfaceSpec);
 }
 

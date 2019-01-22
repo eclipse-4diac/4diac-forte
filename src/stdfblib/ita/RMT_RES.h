@@ -24,7 +24,7 @@ class RMT_RES : public CResource{
     void joinResourceThread();
 
   private:
-    static const SFBInterfaceSpec scm_stRESInterfaceSpec;
+    static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
     FORTE_FB_DATA_ARRAY(0,1,0, 0);
 

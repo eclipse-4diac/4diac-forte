@@ -420,7 +420,13 @@ void DEV_MGR::parseQueryData(char *paRequestPartLeft, forte::core::SManagementCM
         if(!strncmp(paRequestPartLeft, "AdapterT", sizeof("AdapterT") - 1)){
           if(parseTypeListData(paRequestPartLeft, paCommand)){
             paCommand.mCMD = cg_nMGM_CMD_QUERY_AdapterTypes;
-          } else {
+          }
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+          else if(parseXType(paRequestPartLeft, paCommand, "AdapterType Name=\"")){
+            paCommand.mCMD = cg_nMGM_CMD_QUERY_AdapterType;
+          }
+#endif
+          else {
             paCommand.mCMD = cg_nMGM_CMD_Query_Group;
           }
         }
@@ -537,6 +543,11 @@ void DEV_MGR::generateLongResponse(EMGMResponse paResp, forte::core::SManagement
       RESP().append("<FBType Comment=\"generated\" ");
       RESP().append(paCMD.mAdditionalParams.getValue());
       RESP().append("  </FBType>");
+    }
+    else if(paCMD.mCMD == cg_nMGM_CMD_QUERY_AdapterType){
+      RESP().append("<AdapterType Comment=\"generated\" ");
+      RESP().append(paCMD.mAdditionalParams.getValue());
+      RESP().append("   <Service Comment=\"generated\" LeftInterface=\"SOCKET\" RightInterface=\"PLUG\"/>\n</AdapterType>");
     }
 #endif
   }

@@ -179,6 +179,8 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
         const CFunctionBlock& paFb, CIEC_STRING& paValue);
 
     EMGMResponse createFBTypeResponseMessage(const CStringDictionary::TStringId paValue, CIEC_STRING & paReqResult);
+    EMGMResponse createAdapterTypeResponseMessage(const CStringDictionary::TStringId paValue, CIEC_STRING & paReqResult);
+    EMGMResponse createXTypeResponseMessage(const CTypeLib::CSpecTypeEntry* paInterfaceSpec, const CStringDictionary::TStringId paValue, EMGMResponse retVal, CIEC_STRING& paReqResult);
     void createEventInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, CIEC_STRING& paReqResult);
     void createDataInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, CIEC_STRING& paReqResult);
     void createAdapterInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, CIEC_STRING& paReqResult);

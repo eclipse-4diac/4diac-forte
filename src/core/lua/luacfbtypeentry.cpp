@@ -61,7 +61,7 @@ namespace luatype {
 
 CLuaCFBTypeEntry::CLuaCFBTypeEntry(CStringDictionary::TStringId paTypeNameId, CIEC_STRING paLuaScriptAsString, SFBInterfaceSpec& paInterfaceSpec,
     SCFB_FBNData& paFbnSpec) :
-    CTypeLib::CFBTypeEntry(paTypeNameId, 0), cm_sLuaScriptAsString(paLuaScriptAsString), m_interfaceSpec(paInterfaceSpec), m_fbnSpec(paFbnSpec) {
+    CTypeLib::CFBTypeEntry(paTypeNameId, 0, &m_interfaceSpec), cm_sLuaScriptAsString(paLuaScriptAsString), m_interfaceSpec(paInterfaceSpec), m_fbnSpec(paFbnSpec) {
 }
 
 CLuaCFBTypeEntry::~CLuaCFBTypeEntry() {

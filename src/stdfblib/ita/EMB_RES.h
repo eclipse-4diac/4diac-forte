@@ -24,6 +24,7 @@ class EMB_RES : public CResource{
     virtual ~EMB_RES();
 
   private:
+    static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 };
 
 #endif //close the ifdef sequence from the beginning of the file

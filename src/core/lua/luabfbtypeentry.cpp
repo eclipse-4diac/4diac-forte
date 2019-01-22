@@ -19,7 +19,7 @@
 
 CLuaBFBTypeEntry::CLuaBFBTypeEntry(CStringDictionary::TStringId paTypeNameId, CIEC_STRING paLuaScriptAsString, SFBInterfaceSpec& paInterfaceSpec,
     SInternalVarsInformation& paInternalVarsInformation) :
-    CTypeLib::CFBTypeEntry(paTypeNameId, 0), cm_sLuaScriptAsString(paLuaScriptAsString), m_interfaceSpec(paInterfaceSpec),
+    CFBTypeEntry(paTypeNameId, 0, &m_interfaceSpec), cm_sLuaScriptAsString(paLuaScriptAsString), m_interfaceSpec(paInterfaceSpec),
         m_internalVarsInformation(paInternalVarsInformation) {
 }
 
@@ -115,16 +115,6 @@ bool CLuaBFBTypeEntry::initInterfaceSpec(SFBInterfaceSpec& paInterfaceSpec, CLua
     || paInterfaceSpec.m_aunDINames == NULL || paInterfaceSpec.m_aunDIDataTypeNames == NULL || paInterfaceSpec.m_aunDONames == NULL
     || paInterfaceSpec.m_aunDODataTypeNames == NULL || paInterfaceSpec.m_pstAdapterInstanceDefinition == NULL) {
     return false;
-  }
-  for(size_t i = 0; i < numEIs; i++) {
-    if(paInterfaceSpec.m_anEIWithIndexes[i] >= (TForteInt16) numEIWith) {
-      return false;
-    }
-  }
-  for(size_t i = 0; i < numEOs; i++) {
-    if(paInterfaceSpec.m_anEOWithIndexes[i] >= (TForteInt16) numEOWith) {
-      return false;
-    }
   }
   return true;
 }

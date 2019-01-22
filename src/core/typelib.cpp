@@ -21,18 +21,27 @@
 
 #ifndef FORTE_CLASS_0
 CTypeLib::CTypeEntry::CTypeEntry(CStringDictionary::TStringId pa_nTypeNameId) :
-        m_nTypeNameId(pa_nTypeNameId),
-        m_poNext(0){
-      }
+  m_nTypeNameId(pa_nTypeNameId),
+  m_poNext(0){
+}
 
 CTypeLib::CTypeEntry::~CTypeEntry(void){
 
 }
 
-CTypeLib::CFBTypeEntry::CFBTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TFunctionBlockCreateFunc pa_pfuncCreateFB):
-          CTypeEntry(pa_nTypeNameId),
-          m_pfuncFBCreationFunc(pa_pfuncCreateFB){
-  CTypeLib::addFBType(this);
+CTypeLib::CSpecTypeEntry::CSpecTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, const SFBInterfaceSpec* paSocketInterfaceSpec) :
+  CTypeEntry(pa_nTypeNameId),
+  mSocketInterfaceSpec(paSocketInterfaceSpec){
+}
+
+CTypeLib::CSpecTypeEntry::~CSpecTypeEntry(void){
+
+}
+
+CTypeLib::CFBTypeEntry::CFBTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TFunctionBlockCreateFunc pa_pfuncCreateFB, const SFBInterfaceSpec* paSocketInterfaceSpec):
+  CSpecTypeEntry(pa_nTypeNameId, paSocketInterfaceSpec),
+  m_pfuncFBCreationFunc(pa_pfuncCreateFB){
+CTypeLib::addFBType(this);
 
 }
 
@@ -41,8 +50,8 @@ CTypeLib::CFBTypeEntry::~CFBTypeEntry(void){
 
 }
 
-CTypeLib::CAdapterTypeEntry::CAdapterTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TAdapterCreateFunc pa_pfuncCreateAdapter):
-  CTypeEntry(pa_nTypeNameId),
+CTypeLib::CAdapterTypeEntry::CAdapterTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TAdapterCreateFunc pa_pfuncCreateAdapter, const SFBInterfaceSpec* paSocketInterfaceSpec):
+  CSpecTypeEntry(pa_nTypeNameId, paSocketInterfaceSpec),
   m_pfuncAdapterCreationFunc(pa_pfuncCreateAdapter){
 CTypeLib::addAdapterType(this);
 
