@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2013 ACIN
+ * Copyright (c) 2011 - 2019 ACIN, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,8 @@
  * Contributors:
  *   Monika Wenger, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
+ *   Jose Cabral:
+ *   - Fix calculateValueString to use template variable
  *******************************************************************************/
 #ifndef _F_EQ_H_
 #define _F_EQ_H_
@@ -69,7 +71,7 @@ class FORTE_F_EQ : public CFunctionBlock{
   }
 
   template<typename T> void calculateValueString() {
-    calculateValue<CIEC_STRING>();
+    calculateValue<T>();
   }
 
   virtual ~FORTE_F_EQ(){};
