@@ -36,6 +36,12 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
+    static unsigned int smExecutedTests;
+    static unsigned int smFailedTests;
+
+    static bool smfinalReportPrinted;
+
+
    FORTE_FB_DATA_ARRAY(1, 1, 0, 0);
 
   void executeEvent(int pa_nEIID);
@@ -44,7 +50,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_TEST_CONDITION){
   };
 
-  virtual ~FORTE_TEST_CONDITION(){};
+  virtual ~FORTE_TEST_CONDITION();
 
 };
 

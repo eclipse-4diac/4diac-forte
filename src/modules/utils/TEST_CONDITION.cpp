@@ -16,6 +16,11 @@
 
 #include <devlog.h>
 
+unsigned int FORTE_TEST_CONDITION::smExecutedTests = 0;
+unsigned int FORTE_TEST_CONDITION::smFailedTests = 0;
+
+bool FORTE_TEST_CONDITION::smfinalReportPrinted = false;
+
 DEFINE_FIRMWARE_FB(FORTE_TEST_CONDITION, g_nStringIdTEST_CONDITION)
 
 const CStringDictionary::TStringId FORTE_TEST_CONDITION::scm_anDataInputNames[] = {g_nStringIdcheck};
@@ -36,14 +41,30 @@ const SFBInterfaceSpec FORTE_TEST_CONDITION::scm_stFBInterfaceSpec = {
   0, 0
 };
 
+FORTE_TEST_CONDITION::~FORTE_TEST_CONDITION() {
+  if(!smfinalReportPrinted) {
+    smfinalReportPrinted = true;
+    DEVLOG_INFO(" ------------------------------------------------------------------------------\n");
+    DEVLOG_INFO(" ------------------------ [TEST_CONDITION FINAL REPORT] -----------------------\n");
+    if(smFailedTests) {
+      DEVLOG_ERROR(" ------------------------ %u tests executed, %u failed -----------------------\n", smExecutedTests, smFailedTests);
+    } else {
+      DEVLOG_INFO(" ------------------------ %u tests executed, %u failed -----------------------\n", smExecutedTests, smFailedTests);
+    }
+    DEVLOG_INFO(" ------------------------------------------------------------------------------\n");
+  }
+}
+
 
 void FORTE_TEST_CONDITION::executeEvent(int pa_nEIID){
   switch(pa_nEIID){
     case scm_nEventREQID:
+      smExecutedTests++;
       if(check()) {
         DEVLOG_INFO(" ------------------------------ [TEST_CONDITION_PASSED] %s passed\n", getInstanceName());
       } else {
         DEVLOG_ERROR("------------------------------ [TEST_CONDITION_FAILED] %s failed ------------------------------\n", getInstanceName());
+        smFailedTests++;
       }
       sendOutputEvent(scm_nEventCNFID);
       break;
