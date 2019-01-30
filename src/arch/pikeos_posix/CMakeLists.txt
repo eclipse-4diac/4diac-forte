@@ -21,6 +21,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "PikeOS_Posix")
   forte_add_sourcefile_cpp(main.cpp ../genforte_printer.cpp ../posix/forte_thread.cpp pctimeha.cpp)
   forte_add_sourcefile_h(../forte_architecture_time.h forte_thread.h pctimeha.h)
   forte_add_sourcefile_hcpp(../utils/timespec_utils)
+  forte_add_sourcefile_cpp(../genforte_realFunctions.cpp)
   
 
   if(FORTE_COM_ETH)

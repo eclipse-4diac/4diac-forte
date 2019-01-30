@@ -1,16 +1,18 @@
 /*******************************************************************************
-  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Thomas Strasser, Ingomar Müller, Alois Zoitl,
-  *    Ingo Hegny, Martin Melik Merkumians, Monika Wenger, Stanislav Meduna,
-  *    Matthias Plasch
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2005 - 2019 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Thomas Strasser, Ingomar Müller, Alois Zoitl,
+ *    Ingo Hegny, Martin Melik Merkumians, Monika Wenger, Stanislav Meduna,
+ *    Matthias Plasch
+ *      - initial implementation and rework communication infrastructure
+ *    Jose Cabral
+ *      - Move arch dependant code (strtod) to the arch folder
+ *******************************************************************************/
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
@@ -19,6 +21,7 @@
 #include "forte_lreal.h"
 
 #include <forte_printer.h>
+#include "../../arch/forte_realFunctions.h"
 
 DEFINE_FIRMWARE_DATATYPE(REAL, g_nStringIdREAL)
 
@@ -33,12 +36,7 @@ int CIEC_REAL::fromString(const char *paValue){
     pacRunner += 5;
   }
 
-
-#if defined(WIN32) || defined(__ECOS) || defined(VXWORKS)
-  realval = static_cast<TForteFloat>(strtod(pacRunner, &pcEnd));
-#else //defined(WIN32) || defined(__ECOS) || defined(VXWORKS)
-  realval = strtof(pacRunner, &pcEnd);
-#endif //defined(WIN32) || defined(__ECOS) || defined(VXWORKS)
+  realval = forte_stringToFloat(pacRunner, &pcEnd);
 
   if(((fabs(realval) < TFLOAT_min) && (realval != 0)) || ((fabs(realval) > TFLOAT_max) && (realval != 0)) ||
       (pacRunner == pcEnd)) {

@@ -59,6 +59,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "NetOs 7.4")
   forte_add_sourcefile_hcpp(../forte_thread ../forte_sync ../forte_sem)
   forte_add_sourcefile_cpp(appconf_api.c ../root.cpp ../../genforte_printer.cpp)
   forte_add_sourcefile_h(../../forte_architecture_time.h)
+  forte_add_sourcefile_cpp(../../genforte_realFunctions.cpp)
 
   if(FORTE_COM_ETH)
    forte_add_handler(CFDSelectHandler ../sockhand)

@@ -30,6 +30,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Bachmann M1")
   forte_add_sourcefile_hcpp(GET_VALUE)
   forte_add_sourcefile_hcpp(SET_VALUE)
   forte_add_sourcefile_hcpp(BE_SVIFB SVIsend_1 SVIreceive_1 BE_RMT_DEV)
+  forte_add_sourcefile_cpp(../genforte_realFunctions.cpp)
   
 
   if(FORTE_COM_ETH)
