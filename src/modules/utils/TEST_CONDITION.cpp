@@ -15,6 +15,7 @@
 #endif
 
 #include <devlog.h>
+#include <resource.h>
 
 unsigned int FORTE_TEST_CONDITION::smExecutedTests = 0;
 unsigned int FORTE_TEST_CONDITION::smFailedTests = 0;
@@ -61,9 +62,10 @@ void FORTE_TEST_CONDITION::executeEvent(int pa_nEIID){
     case scm_nEventREQID:
       smExecutedTests++;
       if(check()) {
-        DEVLOG_INFO(" ------------------------------ [TEST_CONDITION_PASSED] %s passed\n", getInstanceName());
+        DEVLOG_INFO(" ------------------------------ [TEST_CONDITION_PASSED] %s.%s passed\n", getResource().getInstanceName(), getInstanceName());
       } else {
-        DEVLOG_ERROR("------------------------------ [TEST_CONDITION_FAILED] %s failed ------------------------------\n", getInstanceName());
+        DEVLOG_ERROR("------------------------------ [TEST_CONDITION_FAILED] %s.%s failed ------------------------------\n", getResource().getInstanceName(),
+          getInstanceName());
         smFailedTests++;
       }
       sendOutputEvent(scm_nEventCNFID);
