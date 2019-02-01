@@ -388,11 +388,11 @@ void CResource::createAOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRI
 
 void CResource::createConnectionResponseMessage(const CStringDictionary::TStringId srcId, const CStringDictionary::TStringId dstId,
     const CFunctionBlock& paDstFb, const CFunctionBlock& paSrcFb, CIEC_STRING& paReqResult){
-  paReqResult.append("<Connection source=\"");
+  paReqResult.append("<Connection Source=\"");
   paReqResult.append(paSrcFb.getInstanceName());
   paReqResult.append(".");
   paReqResult.append(CStringDictionary::getInstance().get(srcId));
-  paReqResult.append("\" destination=\"");
+  paReqResult.append("\" Destination=\"");
   paReqResult.append(paDstFb.getInstanceName());
   paReqResult.append(".");
   paReqResult.append(CStringDictionary::getInstance().get(dstId));
