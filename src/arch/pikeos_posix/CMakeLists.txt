@@ -87,7 +87,7 @@ set(PIKEOS_LWIP_LIB_PATH "" CACHE PATH "Path to LWIP build that supports SO_REUS
   mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)
   
   if(FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)
-    forte_add_definition("-DBOOST_TEST_DYN_LINK -DFORTE_USE_DEFAULT_NEW_AND_DELETE -g -O0 --coverage -fno-inline -fno-elide-constructors -fexceptions -fsanitize=address")
+    forte_add_definition("-DBOOST_TEST_DYN_LINK -g -O0 --coverage -fno-inline -fno-elide-constructors -fexceptions -fsanitize=address")
     forte_add_link_library("-fsanitize=address")
     forte_add_link_library("--coverage")
   else()

@@ -21,6 +21,7 @@
 #ifndef FORTE_USE_DEFAULT_NEW_AND_DELETE
 //With this define platforms can use the default new and delete operators provided by the standard library
 //It should be set in the fortealloc.h file
+//By default, forte is built using these implementations. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=544048
 
 /*!Collection of new and delete operators used by forte for dynamically allocating memory.
  *

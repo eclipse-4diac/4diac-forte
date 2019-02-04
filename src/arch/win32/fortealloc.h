@@ -12,11 +12,6 @@
 #ifndef FORTEALLOC_H_
 #define FORTEALLOC_H_
 
-//on win32 environments use default new operator
-#ifndef FORTE_USE_DEFAULT_NEW_AND_DELETE
-  #define FORTE_USE_DEFAULT_NEW_AND_DELETE
-#endif
-
 //on win32 environments we are typically happy with the generic alloc implementation based on malloc and free
 #include "../genfortealloc.h"
 
