@@ -255,10 +255,23 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
 
 EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, CIEC_STRING & paValue){
   EMGMResponse retVal = e_NO_SUCH_OBJECT;
-
   CIEC_ANY *var = getVariable(paNameList);
   if(0 != var){
-    int nUsedChars = var->toString(paValue.getValue(), paValue.getCapacity());
+    int nUsedChars = -1;
+    switch (var->getDataTypeID()){
+      case CIEC_ANY::e_WSTRING:
+      case CIEC_ANY::e_STRING:{
+        size_t bufferSize = var->getToStringBufferSize() + forte::core::util::getExtraSizeForEscapedChars(static_cast<CIEC_WSTRING&>(*var).getValue());
+        nUsedChars = static_cast<CIEC_WSTRING&>(*var).toUTF8(paValue.getValue(), bufferSize, false);
+        if(bufferSize != var->getToStringBufferSize() && 0 < nUsedChars) { //avoid re-running on strings which were already proven not to have any special character
+          nUsedChars += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(paValue.getValue()));
+        }
+        break;
+      }
+      default:
+        nUsedChars = var->toString(paValue.getValue(), paValue.getCapacity());
+        break;
+    }
 
     if(-1 != nUsedChars){
       paValue.assign(paValue.getValue(), static_cast<TForteUInt16>(nUsedChars));
