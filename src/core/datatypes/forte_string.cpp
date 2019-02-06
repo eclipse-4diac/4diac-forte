@@ -80,7 +80,7 @@ size_t CIEC_STRING::getToStringBufferSize() const {
   const char * const stringValue = getValue();
   size_t neededBufferSize = 0;
   for(size_t i = 0; i < length(); ++i){
-    if(isprint(stringValue[i]) && '$' != stringValue[i] && '\'' != stringValue[i]){
+    if(isprint(static_cast<unsigned char>(stringValue[i])) && '$' != stringValue[i] && '\'' != stringValue[i]){
       ++neededBufferSize;
     }
     else{
