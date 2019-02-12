@@ -28,6 +28,8 @@
 #include <sockhand.h>
 #endif
 
+TForteUInt16 gOpcuaServerPort = FORTE_COM_OPC_UA_PORT;
+
 using namespace forte::com_infra;
 
 DEFINE_HANDLER (COPC_UA_Handler);
@@ -255,11 +257,9 @@ COPC_UA_Handler::~COPC_UA_Handler(){
 }
 
 void COPC_UA_Handler::run(){
-  TForteUInt16 opcuaServerPort = getOpcuaServerPort();
-
-  DEVLOG_INFO("OPC UA: Starting OPC UA Server: opc.tcp://localhost:%d\n", opcuaServerPort);
+  DEVLOG_INFO("OPC UA: Starting OPC UA Server: opc.tcp://localhost:%d\n", gOpcuaServerPort);
   if(uaServerConfig == NULL){
-    configureUAServer(opcuaServerPort);
+    configureUAServer(gOpcuaServerPort);
     uaServer = UA_Server_new(uaServerConfig);
   }
 

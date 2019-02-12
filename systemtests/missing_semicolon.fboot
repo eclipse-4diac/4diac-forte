@@ -1,0 +1,12 @@
+;<Request ID="1" Action="CREATE"><FB Name="Hard_Pass_Example" Type="EMB_RES" /></Request>
+Hard_Pass_Example;<Request ID="2" Action="CREATE"><FB Name="STEST_END" Type="STEST_END" /></Request>
+Hard_Pass_Example;<Request ID="3" Action="CREATE"><FB Name="SHOULD_NOT_FAIL" Type="TEST_CONDITION" /></Request>
+Hard_Pass_Example;<Request ID="4" Action="CREATE"><FB Name="BOOL2BOOL" Type="BOOL2BOOL" /></Request>
+Hard_Pass_Example;<Request ID="5" Action="WRITE"><Connection Source="true" Destination="BOOL2BOOL.IN" /></Request>
+Hard_Pass_Example;<Request ID="6" Action="CREATE"><Connection Source="SHOULD_NOT_FAIL.CNF" Destination="STEST_END.REQ" /></Request>
+Hard_Pass_Example;<Request ID="7" Action="CREATE"><Connection Source="BOOL2BOOL.CNF" Destination="SHOULD_NOT_FAIL.REQ" /></Request>
+Hard_Pass_Example;<Request ID="8" Action="CREATE"><Connection Source="START.COLD" Destination="BOOL2BOOL.REQ" /></Request>
+Hard_Pass_Example;<Request ID="9" Action="CREATE"><Connection Source="START.WARM" Destination="BOOL2BOOL.REQ" /></Request>
+Hard_Pass_Example;<Request ID="10" Action="CREATE"><Connection Source="BOOL2BOOL.OUT" Destination="SHOULD_NOT_FAIL.check" /></Request>
+Hard_Pass_Example;<Request ID="11" Action="START"/>
+Hard_Pass_Example<Request ID="10" Action="CREATE"><Connection Source="BOOL2BOOL.OUT" Destination="SHOULD_NOT_FAIL.check" /></Request>

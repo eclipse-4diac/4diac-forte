@@ -65,7 +65,9 @@ if (FORTE_COM_OPC_UA)
         message(SEND_ERROR "OPC UA library not found '${FORTE_COM_OPC_UA_LIB}'. Check the value of FORTE_COM_OPC_UA_LIB_DIR and optionally define an absolute path for FORTE_COM_OPC_UA_LIB.")
     endif()
     
-    forte_add_custom_configuration("#define FORTE_COM_OPC_UA_PORT ${FORTE_COM_OPC_UA_PORT}")
+    forte_add_custom_configuration("#define FORTE_COM_OPC_UA_PORT ${FORTE_COM_OPC_UA_PORT}") 
+    forte_add_custom_configuration("extern TForteUInt16 gOpcuaServerPort\;")
+    
     forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA")
     forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA_MULTICAST")
     forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA_CUSTOM_HOSTNAME \"${FORTE_COM_OPC_UA_CUSTOM_HOSTNAME}\"")

@@ -23,9 +23,5 @@ void listHelp(void);
  */
 const char *parseCommandLineArguments(int argc, char *arg[]);
 
-#ifdef FORTE_COM_OPC_UA
-// Returns OPCUA server port number entered from the command line
-TForteUInt16 getOpcuaServerPort(void);
-#endif //FORTE_COM_OPC_UA
 
 #endif /* SRC_ARCH_UTILS_MAINPARAM_UTILS_H_ */

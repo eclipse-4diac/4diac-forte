@@ -18,12 +18,10 @@
 #include <mgmcmdstruct.h>
 #include "../../core/device.h"
 
-ForteBootFileLoader::ForteBootFileLoader(IBootFileCallback &paCallback) : mBootfile(0), mCallback(paCallback){
-  openBootFile(0);
-}
+char* gCommandLineBootFile = 0;
 
-ForteBootFileLoader::ForteBootFileLoader(IBootFileCallback &paCallback, CIEC_STRING &paBootFileName) : mBootfile(0), mCallback(paCallback){
-  openBootFile(&paBootFileName);
+ForteBootFileLoader::ForteBootFileLoader(IBootFileCallback &paCallback) : mBootfile(0), mCallback(paCallback){
+  openBootFile();
 }
 
 ForteBootFileLoader::~ForteBootFileLoader() {
@@ -33,23 +31,23 @@ ForteBootFileLoader::~ForteBootFileLoader() {
   }
 }
 
-bool ForteBootFileLoader::openBootFile(CIEC_STRING* paBootFileName){
+bool ForteBootFileLoader::openBootFile() {
   bool retVal = false;
   CIEC_STRING bootFileName;
-  if(0 != paBootFileName){
-     bootFileName = *paBootFileName;
-   }else{
-     // select provided or default boot file name
-     char * envBootFileName = getenv("FORTE_BOOT_FILE");
-     if(0 != envBootFileName){
-       DEVLOG_INFO("Using provided bootfile location: %s\n", envBootFileName);
-       bootFileName = envBootFileName;
-     }
-     else{
-       DEVLOG_INFO("Using default bootfile location: %s\n", FORTE_BOOT_FILE_LOCATION);
-       bootFileName = FORTE_BOOT_FILE_LOCATION;
-     }
-   }
+  if(gCommandLineBootFile) {
+    DEVLOG_INFO("Using provided bootfile location set in the command line: %s\n", gCommandLineBootFile);
+    bootFileName = gCommandLineBootFile;
+  } else {
+    // select provided or default boot file name
+    char * envBootFileName = getenv("FORTE_BOOT_FILE");
+    if(0 != envBootFileName) {
+      DEVLOG_INFO("Using provided bootfile location from environment variable: %s\n", envBootFileName);
+      bootFileName = envBootFileName;
+    } else {
+      DEVLOG_INFO("Using provided bootfile location set in CMake: %s\n", FORTE_BOOT_FILE_LOCATION);
+      bootFileName = FORTE_BOOT_FILE_LOCATION;
+    }
+  }
 
   // check if we finally have a boot file name
   if("" == bootFileName){

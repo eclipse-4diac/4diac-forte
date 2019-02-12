@@ -96,7 +96,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
   
   forte_add_custom_configuration("#define PRIuFAST64 \"I64u\"")
   
-  forte_add_custom_configuration("typedef unsigned long long uint_fast64_t\\\;")
+  forte_add_custom_configuration("typedef unsigned long long uint_fast64_t\;")
   
 
 endif()
