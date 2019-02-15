@@ -79,7 +79,7 @@ namespace forte {
     bool CAdsProcessInterface::readPin(){
       CAdsConnection *connection = CAdsConnectionManager::getInstance().getConnection(mFriendlyAdsServerName);
       uint32_t bytesRead;
-      uint_fast8_t buffer;
+      uint8_t buffer;
       const long status = AdsSyncReadReqEx2(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND, mAdsHandle, sizeof(buffer), &buffer, &bytesRead);
       if(status){
         IN_X() = CIEC_BOOL(false);
@@ -107,7 +107,7 @@ namespace forte {
     bool CAdsProcessInterface::readByte(){
       CAdsConnection *connection = CAdsConnectionManager::getInstance().getConnection(mFriendlyAdsServerName);
       uint32_t bytesRead;
-      uint_fast8_t buffer;
+      uint8_t buffer;
       const long status = AdsSyncReadReqEx2(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND, mAdsHandle, sizeof(buffer), &buffer, &bytesRead);
       if(status){
         IN_B() = CIEC_BYTE(0);
@@ -135,7 +135,7 @@ namespace forte {
     bool CAdsProcessInterface::readWord(){
       CAdsConnection *connection = CAdsConnectionManager::getInstance().getConnection(mFriendlyAdsServerName);
       uint32_t bytesRead;
-      uint_fast16_t buffer;
+      uint16_t buffer;
       const long status = AdsSyncReadReqEx2(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND, mAdsHandle, sizeof(buffer), &buffer, &bytesRead);
       if(status){
         IN_W() = CIEC_WORD(0);
@@ -163,7 +163,7 @@ namespace forte {
     bool CAdsProcessInterface::readDWord(){
       CAdsConnection *connection = CAdsConnectionManager::getInstance().getConnection(mFriendlyAdsServerName);
       uint32_t bytesRead;
-      uint_fast32_t buffer;
+      uint32_t buffer;
       const long status = AdsSyncReadReqEx2(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND, mAdsHandle, sizeof(buffer), &buffer, &bytesRead);
       if(status){
         IN_D() = CIEC_DWORD(0);
@@ -191,7 +191,7 @@ namespace forte {
     bool CAdsProcessInterface::readLWord(){
       CAdsConnection *connection = CAdsConnectionManager::getInstance().getConnection(mFriendlyAdsServerName);
       uint32_t bytesRead;
-      uint_fast64_t buffer;
+      uint64_t buffer;
       const long status = AdsSyncReadReqEx2(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND, mAdsHandle, sizeof(buffer), &buffer, &bytesRead);
       if(status){
         IN_L() = CIEC_LWORD(0);
