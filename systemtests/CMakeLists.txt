@@ -56,6 +56,34 @@ if(FORTE_SYSTEM_TESTS)
   SET_TESTS_PROPERTIES(Test_wrong_bootfile_w_FAIL PROPERTIES PASS_REGULAR_EXPRESSION "Boot file ${file_str} could not be opened and FORTE_BOOT_FILE_FAIL_MISSING is set")
   ##############################################
   
+  #Test help parameter (-h)
+  ##############################################
+  ADD_TEST(NAME Test_help_parameter COMMAND $<TARGET_FILE:forte> -h)
+  set_tests_properties (Test_help_parameter PROPERTIES TIMEOUT 5)
+  SET_TESTS_PROPERTIES(Test_help_parameter PROPERTIES PASS_REGULAR_EXPRESSION "Usage: forte \\[options\\]")
+  ##############################################
+  
+  #Test wrong parameter (missing -)
+  ##############################################
+  ADD_TEST(NAME Test_wrong_parameter COMMAND $<TARGET_FILE:forte> f file1)
+  set_tests_properties (Test_wrong_parameter PROPERTIES TIMEOUT 5)
+  SET_TESTS_PROPERTIES(Test_wrong_parameter PROPERTIES PASS_REGULAR_EXPRESSION "Usage: forte \\[options\\]")
+  ##############################################
+  
+  #Test invalid parameter (-z)
+  ##############################################
+  ADD_TEST(NAME Test_invalid_parameter COMMAND $<TARGET_FILE:forte> -z)
+  set_tests_properties (Test_invalid_parameter PROPERTIES TIMEOUT 5)
+  SET_TESTS_PROPERTIES(Test_invalid_parameter PROPERTIES PASS_REGULAR_EXPRESSION "Usage: forte \\[options\\]")
+  ##############################################
+  
+  #Test valid and invalid parameter (-c localhost:61499 -z)
+  ##############################################
+  ADD_TEST(NAME Test_valid_invalid_parameter COMMAND $<TARGET_FILE:forte> -c localhost:61499 -z)
+  set_tests_properties (Test_valid_invalid_parameter PROPERTIES TIMEOUT 5)
+  SET_TESTS_PROPERTIES(Test_valid_invalid_parameter PROPERTIES PASS_REGULAR_EXPRESSION "Usage: forte \\[options\\]")
+  ##############################################
+  
   #uncomment the following  lines to see examples of failing conditions
   
   #forte_add_systemtest_hard(Test_Soft_Example_As_Hard soft_pass_example.fboot 5)

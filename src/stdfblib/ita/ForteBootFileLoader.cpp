@@ -78,22 +78,22 @@ LoadBootResult ForteBootFileLoader::loadBootFile(){
     int nLineCount = 1;
     eResp = LOAD_RESULT_OK;
     CIEC_STRING line;
-    while(readLine(line)){
+    while(readLine(line) && LOAD_RESULT_OK == eResp) {
       char *cmdStart = strchr(line.getValue(), ';');
       if(0 == cmdStart){
         eResp = MISSING_COLON;
         DEVLOG_ERROR("Boot file line does not contain separating ';'. Line: %d\n", nLineCount);
-        break;
+      } else {
+        *cmdStart = '\0';
+        cmdStart++;
+        if(!mCallback.executeCommand(line.getValue(), cmdStart)) {
+          //command was not successful
+          DEVLOG_ERROR("Boot file command could not be executed. Line: %d: %s\n", nLineCount, cmdStart);
+          eResp = EXTERNAL_ERROR;
+        } else {
+          nLineCount++;
+        }
       }
-      *cmdStart = '\0';
-      cmdStart++;
-      if(!mCallback.executeCommand(line.getValue(), cmdStart)){
-        //command was not successful
-        DEVLOG_ERROR("Boot file command could not be executed. Line: %d: %s\n", nLineCount, cmdStart);
-        eResp = EXTERNAL_ERROR;
-        break;
-      }
-      nLineCount++;
     }
   }else{
     DEVLOG_ERROR("Loading cannot proceed because the boot file is no opened\n");
