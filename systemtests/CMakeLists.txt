@@ -9,7 +9,8 @@ if(FORTE_SYSTEM_TESTS)
   forte_add_systemtest_hard(Test_Hard_Pass hard_pass_example.fboot 5)
   
   forte_add_systemtest_soft(Test_Soft_Pass_Clean hard_pass_example.fboot 5)
-  forte_add_systemtest_soft(Test_Soft_Pass_Dirty soft_pass_example.fboot 5) 
+  forte_add_systemtest_soft(Test_Soft_Pass_Dirty soft_pass_example.fboot 5)
+  forte_add_systemtest_hard(Test_DeInitCommFB deInit_commFb.fboot 5) #check that the de-initialization of a CommFB produce an INITO
   
   #Test using environement variable as bootfile
   ##############################################

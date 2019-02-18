@@ -52,10 +52,10 @@ EMGMResponse CCommFB::changeFBExecutionState(EMGMCommandType pa_unCommand) {
   return retVal;
 }
 
-void CCommFB::executeEvent(int pa_nEIID) {
+void CCommFB::executeEvent(int paEIID) {
   EComResponse resp = e_Nothing;
 
-  switch (pa_nEIID) {
+  switch (paEIID) {
   case scm_nEventINITID:
     if (true == QI()) {
       resp = openConnection();
@@ -75,12 +75,11 @@ void CCommFB::executeEvent(int pa_nEIID) {
     break;
   }
 
-  if (resp & e_Terminated) {
-    if (m_eCommServiceType == e_Server) {
+  if(resp & e_Terminated) {
+    if(m_eCommServiceType == e_Server && scm_nEventINITID != paEIID) { //if e_Terminated happened in INIT event, server shouldn't be silent
       //servers will not send information on client termination and should silently start to listen again
       resp = e_Nothing;
-    }
-    else {
+    } else {
       //subscribers and clients will close the connection and inform the user
       closeConnection();
     }
