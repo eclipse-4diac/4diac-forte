@@ -91,6 +91,7 @@ EComResponse CIPComLayer::recvData(const void *paData, unsigned int){
       //TODO move this to the processInterrupt()
       mSocketID = CIPComSocketHandler::acceptTCPConnection(mListeningID);
       if(CIPComSocketHandler::scmInvalidSocketDescriptor != mSocketID){
+        DEVLOG_INFO("Connection established by client\n");
         getExtEvHandler<CIPComSocketHandler>().addComCallback(mSocketID, this);
         m_eConnectionState = e_Connected;
       }
