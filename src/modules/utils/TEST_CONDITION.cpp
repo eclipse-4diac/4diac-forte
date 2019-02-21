@@ -16,6 +16,7 @@
 
 #include <devlog.h>
 #include <resource.h>
+#include <criticalregion.h>
 
 unsigned int FORTE_TEST_CONDITION::smExecutedTests = 0;
 unsigned int FORTE_TEST_CONDITION::smFailedTests = 0;
@@ -43,6 +44,7 @@ const SFBInterfaceSpec FORTE_TEST_CONDITION::scm_stFBInterfaceSpec = {
 };
 
 FORTE_TEST_CONDITION::~FORTE_TEST_CONDITION() {
+  CCriticalRegion finalReportRegion(mFinalReportMutex);
   if(!smfinalReportPrinted) {
     smfinalReportPrinted = true;
     DEVLOG_INFO(" ------------------------------------------------------------------------------\n");
@@ -57,19 +59,17 @@ FORTE_TEST_CONDITION::~FORTE_TEST_CONDITION() {
 }
 
 
-void FORTE_TEST_CONDITION::executeEvent(int pa_nEIID){
-  switch(pa_nEIID){
-    case scm_nEventREQID:
-      smExecutedTests++;
-      if(check()) {
-        DEVLOG_INFO(" ------------------------------ [TEST_CONDITION_PASSED] %s.%s passed\n", getResource().getInstanceName(), getInstanceName());
-      } else {
-        DEVLOG_ERROR("------------------------------ [TEST_CONDITION_FAILED] %s.%s failed ------------------------------\n", getResource().getInstanceName(),
-          getInstanceName());
-        smFailedTests++;
-      }
-      sendOutputEvent(scm_nEventCNFID);
-      break;
+void FORTE_TEST_CONDITION::executeEvent(int paEIID) {
+  if(scm_nEventREQID == paEIID) {
+    smExecutedTests++;
+    if(check()) {
+      DEVLOG_INFO(" ------------------------------ [TEST_CONDITION_PASSED] %s.%s passed\n", getResource().getInstanceName(), getInstanceName());
+    } else {
+      DEVLOG_ERROR("------------------------------ [TEST_CONDITION_FAILED] %s.%s failed ------------------------------\n", getResource().getInstanceName(),
+        getInstanceName());
+      smFailedTests++;
+    }
+    sendOutputEvent(scm_nEventCNFID);
   }
 }
 

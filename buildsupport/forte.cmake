@@ -289,6 +289,43 @@ FUNCTION(forte_add_systemtest_soft arg1 arg2 arg3)
   SET_TESTS_PROPERTIES(${arg1} PROPERTIES FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED")
 ENDFUNCTION(forte_add_systemtest_soft)
 
+## forte_add_2dev_systemtests (test_name bootfile_name1 bootfile_name2 extraArgs1 extraArgs2 timeout)
+## Two fortes are executed
+## The bootfiles are added to the args. The first forte is executed in port 61499 and the second in 61500
+## if extraArgs are empty
+
+FUNCTION(forte_add_2dev_systemtests test_name bootfile_name1 bootfile_name2 arg1 arg2 timeout)
+  FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${bootfile_name1}" file_str1)
+  STRING(REPLACE "\\" "\\\\" file_str1 ${file_str1})
+  
+  FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${bootfile_name2}" file_str2)
+  STRING(REPLACE "\\" "\\\\" file_str2 ${file_str2})
+  
+  FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../buildsupport/multi_test_2.cmake" scriptFile)
+  STRING(REPLACE "\\" "\\\\" scriptFile ${scriptFile})
+  
+  if (arg1 STREQUAL "")
+    set(arg1 "-c localhost:61499") 
+  endif()
+  
+  if (arg2 STREQUAL "")
+    set(arg2 "-c localhost:61500") 
+  endif()
+  
+  
+  ADD_TEST(NAME ${test_name} COMMAND ${CMAKE_COMMAND}
+         -DCMD=$<TARGET_FILE:forte>
+         -DBOOT1=${file_str1}
+         -DBOOT2=${file_str2}
+         -DARG1=${arg1}
+         -DARG2=${arg2}
+         -P ${scriptFile})
+  
+  set_tests_properties (${test_name} PROPERTIES TIMEOUT ${timeout})
+
+  SET_TESTS_PROPERTIES(${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T") 
+ENDFUNCTION(forte_add_2dev_systemtests)
+
 FUNCTION(forte_add_env_file test file)
   FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${file}" file_str)
   STRING(REPLACE "\\" "\\\\" file_str ${file_str})

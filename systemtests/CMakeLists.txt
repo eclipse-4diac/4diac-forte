@@ -12,6 +12,13 @@ if(FORTE_SYSTEM_TESTS)
   forte_add_systemtest_soft(Test_Soft_Pass_Dirty soft_pass_example.fboot 5)
   forte_add_systemtest_hard(Test_DeInitCommFB deInit_commFb.fboot 5) #check that the de-initialization of a CommFB produce an INITO
   
+  forte_add_systemtest_hard(Test_Soft_Example_As_Hard_Inverted soft_pass_example.fboot 5)
+  SET_TESTS_PROPERTIES(Test_Soft_Example_As_Hard_Inverted PROPERTIES WILL_FAIL TRUE)
+  forte_add_systemtest_hard(Test_Hard_Fail_Alaways_Inverted fail_example.fboot 5)
+  SET_TESTS_PROPERTIES(Test_Hard_Fail_Alaways_Inverted PROPERTIES WILL_FAIL TRUE)
+  forte_add_systemtest_soft(Test_Soft_Fail_Alaways_Inverted fail_example.fboot 5)
+  SET_TESTS_PROPERTIES(Test_Soft_Fail_Alaways_Inverted PROPERTIES WILL_FAIL TRUE)
+  
   #Test using environement variable as bootfile
   ##############################################
   ADD_TEST(NAME Test_Hard_Pass_ENV COMMAND $<TARGET_FILE:forte>)
@@ -84,11 +91,8 @@ if(FORTE_SYSTEM_TESTS)
   SET_TESTS_PROPERTIES(Test_valid_invalid_parameter PROPERTIES PASS_REGULAR_EXPRESSION "Usage: forte \\[options\\]")
   ##############################################
   
-  #uncomment the following  lines to see examples of failing conditions
-  
-  #forte_add_systemtest_hard(Test_Soft_Example_As_Hard soft_pass_example.fboot 5)
-  #forte_add_systemtest_hard(Test_Hard_Fail_Alaways fail_example.fboot 5)
-  #forte_add_systemtest_soft(Test_Soft_Fail_Alaways fail_example.fboot 5)
+  # Simple test with 2 devices
+  forte_add_2dev_systemtests(SimpleMultiTest simple_server.fboot simple_client.fboot "" "" 5)
   
   #after compilation, run "make CTEST_OUTPUT_ON_FAILURE=1 test" on the binary folder
 

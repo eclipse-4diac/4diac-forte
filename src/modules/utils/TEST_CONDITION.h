@@ -14,6 +14,7 @@
 
 #include <funcbloc.h>
 #include <forte_bool.h>
+#include <forte_sync.h>
 
 class FORTE_TEST_CONDITION: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_TEST_CONDITION)
@@ -45,6 +46,8 @@ private:
    FORTE_FB_DATA_ARRAY(1, 1, 0, 0);
 
   void executeEvent(int pa_nEIID);
+
+  CSyncObject mFinalReportMutex;
 
 public:
   FUNCTION_BLOCK_CTOR(FORTE_TEST_CONDITION){
