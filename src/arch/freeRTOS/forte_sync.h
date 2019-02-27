@@ -11,8 +11,8 @@
 #ifndef _SYNC_H_
 #define _SYNC_H_
 
-#include <FreeRTOS_Source/include/FreeRTOS.h>
-#include <FreeRTOS_Source/include/semphr.h>
+#include <FreeRTOS.h>
+#include <semphr.h>
 
 #define CSyncObject CFreeRTOSSyncObject //allows that doxygen can generate better documenation
 
@@ -24,26 +24,28 @@
  * Note: For Mutex implementation,  uncomment the xSemaphoreCreateMutex() function in sync.cpp
  */
 
-class CFreeRTOSSyncObject{
-  private:
-  protected:
-  //! The posix thread mutex handle of the operating system.
-  SemaphoreHandle_t mMutexHandle;
+class CFreeRTOSSyncObject {
   public:
     CFreeRTOSSyncObject();
     ~CFreeRTOSSyncObject();
-  /*!\brief Lock the resource coming after the lock command  
-   * 
-   * This function blocks until it will get the lock for the coming critical section.
-   */  
-    void lock(void){
-      xSemaphoreTake(mMutexHandle, portMAX_DELAY);
-    };
 
-  //!Free the resource coming after the lock command
-    void unlock(void){
-       xSemaphoreGive( mMutexHandle );
-    };
+    /*!\brief Lock the resource coming after the lock command
+     *
+     * This function blocks until it will get the lock for the coming critical section.
+     */
+    void lock(void) {
+      xSemaphoreTake(mMutexHandle, portMAX_DELAY);
+    }
+
+    //!Free the resource coming after the lock command
+    void unlock(void) {
+      xSemaphoreGive(mMutexHandle);
+    }
+
+  private:
+
+    //! The posix thread mutex handle of the operating system.
+    SemaphoreHandle_t mMutexHandle;
 };
 
 #endif /*SYNC_H_*/

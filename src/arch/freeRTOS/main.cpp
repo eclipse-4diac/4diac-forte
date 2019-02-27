@@ -18,8 +18,8 @@
 
 const static unsigned mainFORTE_TASK_PRIORITY = tskIDLE_PRIORITY + 1;
 
-void vForteTask( void* pvParameters ){
-  ( void ) pvParameters;
+void vForteTask(void* pvParameters) {
+  (void) pvParameters;
 
   RMT_DEV *poDev = new RMT_DEV;
 
@@ -32,13 +32,12 @@ void vForteTask( void* pvParameters ){
   vTaskDelete(NULL);
 }
 
-void vStartForteServerTask(UBaseType_t uxPriority){
+void vStartForteServerTask(UBaseType_t uxPriority) {
   /* Spawn the task. */
-  xTaskCreate( vForteTask, "forte", 2000, NULL, uxPriority, ( TaskHandle_t * ) NULL );
+  xTaskCreate(vForteTask, "forte", 2000, NULL, uxPriority, (TaskHandle_t *) NULL);
 }
 
-int main(void)
-{
+int main(void) {
 
   vStartForteServerTask(mainFORTE_TASK_PRIORITY);
 
@@ -46,5 +45,4 @@ int main(void)
 
   // Will not get here unless there is insufficient RAM.
 }
-
 

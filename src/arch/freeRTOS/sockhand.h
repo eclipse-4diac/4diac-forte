@@ -12,8 +12,6 @@
 #ifndef SRC_ARCH_FREERTOS_SOCKHAND_H_
 #define SRC_ARCH_FREERTOS_SOCKHAND_H_
 
-#define LWIP_COMPAT_SOCKETS 1
-
 #include "lwip/opt.h"
 #include "lwip/sockets.h"
 #include "lwip/api.h"
@@ -29,10 +27,10 @@
 
 #include "devlog.h"
 
-#undef connect
-//
-inline int connect(int s, const struct sockaddr *name, socklen_t namelen){
-return lwip_connect(s, name, namelen);
+#undef connect //gets confused with connect function of conn.h and childs
+
+inline int connect(int s, const struct sockaddr *name, socklen_t namelen) {
+  return lwip_connect(s, name, namelen);
 }
 
 //these include needs to be last

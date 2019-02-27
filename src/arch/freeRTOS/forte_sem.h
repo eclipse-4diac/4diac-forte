@@ -12,8 +12,8 @@
 #ifndef SRC_ARCH_FREERTOS_SEMAPHORE_H_
 #define SRC_ARCH_FREERTOS_SEMAPHORE_H_
 
-#include <FreeRTOS_Source/include/FreeRTOS.h>
-#include <FreeRTOS_Source/include/semphr.h>
+#include <FreeRTOS.h>
+#include <semphr.h>
 #include "../datatype.h"
 
 namespace forte {
@@ -23,10 +23,10 @@ namespace forte {
      *
      * The semaphore is initialized with the value given.
      */
-    class CFreeRTOSSemaphore{
+    class CFreeRTOSSemaphore {
       public:
 
-        explicit CFreeRTOSSemaphore(unsigned int paInitialValue  = 0);
+        explicit CFreeRTOSSemaphore(unsigned int paInitialValue = 0);
         ~CFreeRTOSSemaphore();
 
         void inc();
@@ -48,7 +48,6 @@ namespace forte {
       private:
         SemaphoreHandle_t mSemaphore;
     };
-
 
     typedef CFreeRTOSSemaphore CSemaphore;
 

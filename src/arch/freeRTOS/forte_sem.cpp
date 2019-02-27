@@ -17,36 +17,36 @@
 namespace forte {
   namespace arch {
 
-    CFreeRTOSSemaphore::CFreeRTOSSemaphore(unsigned int paInitialValue){
+    CFreeRTOSSemaphore::CFreeRTOSSemaphore(unsigned int paInitialValue) {
       mSemaphore = xSemaphoreCreateBinary();
     }
 
-    CFreeRTOSSemaphore::~CFreeRTOSSemaphore(){
+    CFreeRTOSSemaphore::~CFreeRTOSSemaphore() {
       vSemaphoreDelete(mSemaphore);
     }
 
-    void CFreeRTOSSemaphore::inc(){
+    void CFreeRTOSSemaphore::inc() {
       xSemaphoreGive(mSemaphore);
     }
 
-    void CFreeRTOSSemaphore::waitIndefinitely(){
-      if(mSemaphore != NULL){
+    void CFreeRTOSSemaphore::waitIndefinitely() {
+      if(mSemaphore != NULL) {
         xSemaphoreTake(mSemaphore, portMAX_DELAY);
       }
     }
 
-    bool CFreeRTOSSemaphore::timedWait(const TForteUInt64 paRelativeTimeout){
-      if(mSemaphore != NULL){
-        return xSemaphoreTake(mSemaphore, pdMS_TO_TICKS (paRelativeTimeout / 1000000));
+    bool CFreeRTOSSemaphore::timedWait(const TForteUInt64 paRelativeTimeout) {
+      if(mSemaphore != NULL) {
+        return xSemaphoreTake(mSemaphore, pdMS_TO_TICKS(paRelativeTimeout / 1000000));
       }
       return false;
     }
 
-    bool CFreeRTOSSemaphore::tryNoWait(){
-      if(mSemaphore != NULL){
+    bool CFreeRTOSSemaphore::tryNoWait() {
+      if(mSemaphore != NULL) {
         return xSemaphoreTake(mSemaphore, 0);
       }
       return false;
     }
-    } /* namespace arch */
-  } /* namespace forte */
+  } /* namespace arch */
+} /* namespace forte */

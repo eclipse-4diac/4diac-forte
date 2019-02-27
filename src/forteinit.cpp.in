@@ -29,7 +29,6 @@ void initForte()
 
   ${FB_FUNCTION_STRING}
 
-  return;
 }
 
 

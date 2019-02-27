@@ -11,10 +11,10 @@
 
 #include "forte_sync.h"
 
-CFreeRTOSSyncObject::CFreeRTOSSyncObject(){
+CFreeRTOSSyncObject::CFreeRTOSSyncObject() {
   mMutexHandle = xSemaphoreCreateMutex();
 }
 
-CFreeRTOSSyncObject::~CFreeRTOSSyncObject(){
+CFreeRTOSSyncObject::~CFreeRTOSSyncObject() {
   vSemaphoreDelete(mMutexHandle);
 }

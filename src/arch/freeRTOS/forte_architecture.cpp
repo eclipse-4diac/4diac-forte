@@ -13,18 +13,17 @@
 #include "forteinit.h"
 bool CForteArchitecture::mInitialized = false;
 
-bool CForteArchitecture::initialize(){
-  if (!mInitialized){
+bool CForteArchitecture::initialize() {
+  if(!mInitialized) {
     initForte();
     mInitialized = true;
   }
   return true;
 }
 
-void CForteArchitecture::deinitialize(){
-  if(mInitialized){
+void CForteArchitecture::deinitialize() {
+  if(mInitialized) {
     mInitialized = false;
   }
 }
-
 

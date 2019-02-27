@@ -30,6 +30,8 @@ mark_as_advanced(FORTE_BUILDSUPPORT_DIRECTORY)
 #include forte cmake-functions
 INCLUDE(${FORTE_BUILDSUPPORT_DIRECTORY}/forte.cmake)
 
+forte_add_definition("-DFORTE_COMPILATION") #Allow to tell external modules/middleware that forte is being compiled, so special defines can be added
+
 #######################################################################################
 # Determine how to build FORTE
 #######################################################################################

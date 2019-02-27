@@ -9,9 +9,9 @@
   *    Jose Cabral - initial implementation and rework handler infrastructure
   *******************************************************************************/
 
+#include <timerha.h>
 #include <devexec.h>
 
-#include <timerha.h>
 ${HANDLERMANAGER_INCLUDE}
 
 const size_t CTimerHandler::mHandlerIdentifier = 0;

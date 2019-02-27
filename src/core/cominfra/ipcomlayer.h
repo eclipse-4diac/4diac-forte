@@ -12,9 +12,10 @@
 #ifndef IPCOMLAYER_H_
 #define IPCOMLAYER_H_
 
+#include <sockhand.h>
 #include <forte_config.h>
 #include "comlayer.h"
-#include <sockhand.h>
+
 
 namespace forte {
 

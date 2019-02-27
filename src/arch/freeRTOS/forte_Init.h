@@ -18,19 +18,18 @@
  *
  */
 #ifndef FORTE_SHARED_PREFIX
-  #define FORTE_SHARED_PREFIX
+# define FORTE_SHARED_PREFIX
 #endif
 
 #ifndef FORTE_SHARED_CALL
-  #define FORTE_SHARED_CALL
+# define FORTE_SHARED_CALL
 #endif
-
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-  enum FORTE_STATUS{
+  enum FORTE_STATUS {
     FORTE_OK,
     FORTE_DEVICE_ALREADY_STARTED,
     FORTE_WRONG_ENDIANESS,
@@ -83,7 +82,5 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-
-
 
 #endif /* SRC_ARCH_FREERTOS_FORTE_INIT_H_ */
