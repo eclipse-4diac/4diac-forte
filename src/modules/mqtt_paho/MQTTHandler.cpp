@@ -156,12 +156,12 @@ int MQTTHandler::mqttConnect(){
   return rc;
 }
 
-int MQTTHandler::mqttSubscribe(MQTTComLayer* paLayer){
+int MQTTHandler::mqttSubscribe(const MQTTComLayer* paLayer){
   DEVLOG_INFO("MQTT: subscribing to topic -%s-\n", paLayer->getTopicName());
   MQTTAsync_responseOptions opts = MQTTAsync_responseOptions_initializer;
   opts.onSuccess = onSubscribeSucceed;
   opts.onFailure = onSubscribeFailed;
-  opts.context = paLayer;
+  opts.context = (void*)paLayer;
   int rc = MQTTAsync_subscribe(smClient, paLayer->getTopicName(), QOS, &opts);
   if(MQTTASYNC_SUCCESS != rc){ //call failed
     CCriticalRegion sectionState(smMQTTMutex);
@@ -277,10 +277,12 @@ void MQTTHandler::run(){
         case SUBSCRIBING:{
           if(!mToResubscribe.isEmpty()){
             //only try subscribe one at a time. There were some problems in some cases when subscribing one after the other, because the MQTTAsync_subscribe hangs.
-            CSinglyLinkedList<MQTTComLayer*>::Iterator it = mToResubscribe.begin();
-            if(MQTTASYNC_SUCCESS != mqttSubscribe(*it)){
+            const MQTTComLayer *layer = *mToResubscribe.begin();
+            smMQTTMutex.unlock();
+            if(MQTTASYNC_SUCCESS != mqttSubscribe(layer)){
               needSleep = true;
             }
+            smMQTTMutex.lock();
           }
           else{
             smMQTTS_STATE = ALL_SUBSCRIBED;

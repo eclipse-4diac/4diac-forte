@@ -126,6 +126,14 @@ public:
     return static_cast<T*>(mCurrentPosition->getData());
   }
 
+
+  /*!\brief const version of dereference operator for const iterators
+   */
+  const T* operator*() const {
+    return static_cast<T*>(mCurrentPosition->getData());
+  }
+
+
   /*!\brief Returns a pointer to the contained object
    * \return A Pointer to the contained object of type T
    */
