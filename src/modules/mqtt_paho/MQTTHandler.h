@@ -70,7 +70,7 @@ protected:
 
 private:
 
-    int mqttSubscribe(MQTTComLayer* paLayer);
+    int mqttSubscribe(const MQTTComLayer* paLayer);
     int mqttConnect();
 
     void popLayerFromList(MQTTComLayer* paLayer, CSinglyLinkedList<MQTTComLayer*> *paList);

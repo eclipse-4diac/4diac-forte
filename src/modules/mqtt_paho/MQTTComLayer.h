@@ -36,7 +36,7 @@ public:
 
   EComResponse processInterrupt();
 
-  char const* getTopicName() {
+  char const* getTopicName() const {
     return mTopicName.getValue();
   }
 
