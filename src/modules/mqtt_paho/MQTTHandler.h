@@ -73,8 +73,6 @@ private:
     int mqttSubscribe(const MQTTComLayer* paLayer);
     int mqttConnect();
 
-    void popLayerFromList(MQTTComLayer* paLayer, CSinglyLinkedList<MQTTComLayer*> *paList);
-
     void resumeSelfSuspend();
     void selfSuspend();
 
