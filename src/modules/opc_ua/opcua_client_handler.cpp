@@ -99,7 +99,7 @@ void COPC_UA_Client_Handler::run() {
             //CThread::sleepThread(1000);
             //continue;
           }else{
-            UA_Client_run_iterate((*iter)->client, 10);
+            UA_Client_runAsync((*iter)->client, 10);
           }
         }
         if(!uaClientRunningFlag){

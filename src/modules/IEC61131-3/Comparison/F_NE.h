@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 ACIN
+ * Copyright (c) 2013, 2019 ACIN, fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,8 +8,9 @@
  * Contributors:
  *   Monika Wenger
  *   - initial API and implementation and/or initial documentation
+ *   Jose Cabral:
+ *   - Fix calculateValueString to use template variable
  *******************************************************************************/
-
 #ifndef _F_NE_H_
 #define _F_NE_H_
 
@@ -64,7 +65,7 @@ public:
   }
 
   template<typename T> void calculateValueString() {
-    calculateValue<CIEC_STRING>();//TODO fill this function
+    calculateValue<T>();
   }
 
   virtual ~FORTE_F_NE(){};
