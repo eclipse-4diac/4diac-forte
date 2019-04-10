@@ -1,0 +1,19 @@
+;<Request ID="1" Action="CREATE"><FB Name="writeWithoutInit" Type="EMB_RES" /></Request>
+writeWithoutInit;<Request ID="2" Action="CREATE"><FB Name="writeWithoutInit.CSV_WRITER_1" Type="CSV_WRITER_1" /></Request>
+writeWithoutInit;<Request ID="3" Action="WRITE"><Connection Source="1" Destination="writeWithoutInit.CSV_WRITER_1.QI" /></Request>
+writeWithoutInit;<Request ID="4" Action="WRITE"><Connection Source="csvWriteTest.csv" Destination="writeWithoutInit.CSV_WRITER_1.FILE_NAME" /></Request>
+writeWithoutInit;<Request ID="5" Action="CREATE"><FB Name="writeWithoutInit.STRING2STRING" Type="STRING2STRING" /></Request>
+writeWithoutInit;<Request ID="6" Action="WRITE"><Connection Source="csvFirstValue" Destination="writeWithoutInit.STRING2STRING.IN" /></Request>
+writeWithoutInit;<Request ID="7" Action="CREATE"><FB Name="writeWithoutInit.DeInitTest" Type="TEST_CONDITION" /></Request>
+writeWithoutInit;<Request ID="8" Action="CREATE"><FB Name="writeWithoutInit.endNormal" Type="STEST_END" /></Request>
+writeWithoutInit;<Request ID="9" Action="CREATE"><FB Name="writeWithoutInit.F_NOT" Type="F_NOT" /></Request>
+writeWithoutInit;<Request ID="10" Action="CREATE"><Connection Source="writeWithoutInit.F_NOT.CNF" Destination="writeWithoutInit.DeInitTest.REQ" /></Request>
+writeWithoutInit;<Request ID="11" Action="CREATE"><Connection Source="writeWithoutInit.DeInitTest.CNF" Destination="writeWithoutInit.endNormal.REQ" /></Request>
+writeWithoutInit;<Request ID="12" Action="CREATE"><Connection Source="writeWithoutInit.STRING2STRING.CNF" Destination="writeWithoutInit.CSV_WRITER_1.REQ" /></Request>
+writeWithoutInit;<Request ID="13" Action="CREATE"><Connection Source="writeWithoutInit.CSV_WRITER_1.CNF" Destination="writeWithoutInit.F_NOT.REQ" /></Request>
+writeWithoutInit;<Request ID="14" Action="CREATE"><Connection Source="writeWithoutInit.STRING2STRING.OUT" Destination="writeWithoutInit.CSV_WRITER_1.SD_1" /></Request>
+writeWithoutInit;<Request ID="15" Action="CREATE"><Connection Source="writeWithoutInit.CSV_WRITER_1.QO" Destination="writeWithoutInit.F_NOT.IN" /></Request>
+writeWithoutInit;<Request ID="16" Action="CREATE"><Connection Source="writeWithoutInit.F_NOT.OUT" Destination="writeWithoutInit.DeInitTest.check" /></Request>
+writeWithoutInit;<Request ID="17" Action="CREATE"><Connection Source="START.WARM" Destination="writeWithoutInit.STRING2STRING.REQ" /></Request>
+writeWithoutInit;<Request ID="18" Action="CREATE"><Connection Source="START.COLD" Destination="writeWithoutInit.STRING2STRING.REQ" /></Request>
+writeWithoutInit;<Request ID="19" Action="START"/>

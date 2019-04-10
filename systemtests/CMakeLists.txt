@@ -2,6 +2,8 @@ SET(SOURCE_GROUP ${SOURCE_GROUP}\\systemtests)
 
 if(FORTE_SYSTEM_TESTS)
 
+  add_subdirectory(src)
+
   #hard_pass_example.fboot doesn't produce any logging error and all TEST_CONDITION FBs pass
   #soft_pass_example.fboot produces logging error but all TEST_CONDITION FBs pass
   #fail_example.fboot has TEST_CONDITION FBs that fail, so it always fail, no matter hard or soft

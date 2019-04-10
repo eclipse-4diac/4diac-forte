@@ -1,0 +1,24 @@
+;<Request ID="1" Action="CREATE"><FB Name="doubleInit" Type="EMB_RES" /></Request>
+doubleInit;<Request ID="2" Action="CREATE"><FB Name="DoubleInit.F_NOT_1" Type="F_NOT" /></Request>
+doubleInit;<Request ID="3" Action="CREATE"><FB Name="DoubleInit.E_SR_1" Type="E_SR" /></Request>
+doubleInit;<Request ID="4" Action="CREATE"><FB Name="DoubleInit.DoubleInit1" Type="TEST_CONDITION" /></Request>
+doubleInit;<Request ID="5" Action="CREATE"><FB Name="DoubleInit.CSV_WRITER_1_1" Type="CSV_WRITER_1" /></Request>
+doubleInit;<Request ID="6" Action="WRITE"><Connection Source="1" Destination="DoubleInit.CSV_WRITER_1_1.QI" /></Request>
+doubleInit;<Request ID="7" Action="WRITE"><Connection Source="csvWriteTest.csv" Destination="DoubleInit.CSV_WRITER_1_1.FILE_NAME" /></Request>
+doubleInit;<Request ID="8" Action="CREATE"><FB Name="DoubleInit.E_SWITCH_1" Type="E_SWITCH" /></Request>
+doubleInit;<Request ID="9" Action="CREATE"><FB Name="DoubleInit.endNormal_1" Type="STEST_END" /></Request>
+doubleInit;<Request ID="10" Action="CREATE"><FB Name="DoubleInit.DoubleInit2" Type="TEST_CONDITION" /></Request>
+doubleInit;<Request ID="11" Action="CREATE"><Connection Source="DoubleInit.E_SWITCH_1.EO0" Destination="DoubleInit.F_NOT_1.REQ" /></Request>
+doubleInit;<Request ID="12" Action="CREATE"><Connection Source="DoubleInit.F_NOT_1.CNF" Destination="DoubleInit.DoubleInit2.REQ" /></Request>
+doubleInit;<Request ID="13" Action="CREATE"><Connection Source="DoubleInit.DoubleInit1.CNF" Destination="DoubleInit.E_SR_1.R" /></Request>
+doubleInit;<Request ID="14" Action="CREATE"><Connection Source="DoubleInit.E_SR_1.EO" Destination="DoubleInit.CSV_WRITER_1_1.INIT" /></Request>
+doubleInit;<Request ID="15" Action="CREATE"><Connection Source="DoubleInit.E_SWITCH_1.EO1" Destination="DoubleInit.DoubleInit1.REQ" /></Request>
+doubleInit;<Request ID="16" Action="CREATE"><Connection Source="DoubleInit.CSV_WRITER_1_1.INITO" Destination="DoubleInit.E_SWITCH_1.EI" /></Request>
+doubleInit;<Request ID="17" Action="CREATE"><Connection Source="DoubleInit.DoubleInit2.CNF" Destination="DoubleInit.endNormal_1.REQ" /></Request>
+doubleInit;<Request ID="18" Action="CREATE"><Connection Source="DoubleInit.CSV_WRITER_1_1.QO" Destination="DoubleInit.F_NOT_1.IN" /></Request>
+doubleInit;<Request ID="19" Action="CREATE"><Connection Source="DoubleInit.F_NOT_1.OUT" Destination="DoubleInit.DoubleInit2.check" /></Request>
+doubleInit;<Request ID="20" Action="CREATE"><Connection Source="DoubleInit.E_SR_1.Q" Destination="DoubleInit.E_SWITCH_1.G" /></Request>
+doubleInit;<Request ID="21" Action="CREATE"><Connection Source="DoubleInit.CSV_WRITER_1_1.QO" Destination="DoubleInit.DoubleInit1.check" /></Request>
+doubleInit;<Request ID="22" Action="CREATE"><Connection Source="START.COLD" Destination="DoubleInit.E_SR_1.S" /></Request>
+doubleInit;<Request ID="23" Action="CREATE"><Connection Source="START.WARM" Destination="DoubleInit.E_SR_1.S" /></Request>
+doubleInit;<Request ID="24" Action="START"/>

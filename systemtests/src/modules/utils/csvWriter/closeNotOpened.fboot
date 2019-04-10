@@ -1,0 +1,16 @@
+;<Request ID="1" Action="CREATE"><FB Name="closeNotOpened" Type="EMB_RES" /></Request>
+closeNotOpened;<Request ID="2" Action="CREATE"><FB Name="closeNotOpenedFile.CSV_WRITER_1" Type="CSV_WRITER_1" /></Request>
+closeNotOpened;<Request ID="3" Action="WRITE"><Connection Source="0" Destination="closeNotOpenedFile.CSV_WRITER_1.QI" /></Request>
+closeNotOpened;<Request ID="4" Action="WRITE"><Connection Source="csvWriteTest.csv" Destination="closeNotOpenedFile.CSV_WRITER_1.FILE_NAME" /></Request>
+closeNotOpened;<Request ID="5" Action="CREATE"><FB Name="closeNotOpenedFile.DeInitTest" Type="TEST_CONDITION" /></Request>
+closeNotOpened;<Request ID="6" Action="CREATE"><FB Name="closeNotOpenedFile.endNormal" Type="STEST_END" /></Request>
+closeNotOpened;<Request ID="7" Action="CREATE"><FB Name="closeNotOpenedFile.F_NOT" Type="F_NOT" /></Request>
+closeNotOpened;<Request ID="8" Action="CREATE"><FB Name="closeNotOpenedFile.STEST_END" Type="STEST_END" /></Request>
+closeNotOpened;<Request ID="9" Action="CREATE"><Connection Source="closeNotOpenedFile.F_NOT.CNF" Destination="closeNotOpenedFile.DeInitTest.REQ" /></Request>
+closeNotOpened;<Request ID="10" Action="CREATE"><Connection Source="closeNotOpenedFile.CSV_WRITER_1.INITO" Destination="closeNotOpenedFile.F_NOT.REQ" /></Request>
+closeNotOpened;<Request ID="11" Action="CREATE"><Connection Source="closeNotOpenedFile.DeInitTest.CNF" Destination="closeNotOpenedFile.STEST_END.REQ" /></Request>
+closeNotOpened;<Request ID="12" Action="CREATE"><Connection Source="closeNotOpenedFile.F_NOT.OUT" Destination="closeNotOpenedFile.DeInitTest.check" /></Request>
+closeNotOpened;<Request ID="13" Action="CREATE"><Connection Source="closeNotOpenedFile.CSV_WRITER_1.QO" Destination="closeNotOpenedFile.F_NOT.IN" /></Request>
+closeNotOpened;<Request ID="14" Action="CREATE"><Connection Source="START.COLD" Destination="closeNotOpenedFile.CSV_WRITER_1.INIT" /></Request>
+closeNotOpened;<Request ID="15" Action="CREATE"><Connection Source="START.WARM" Destination="closeNotOpenedFile.CSV_WRITER_1.INIT" /></Request>
+closeNotOpened;<Request ID="16" Action="START"/>

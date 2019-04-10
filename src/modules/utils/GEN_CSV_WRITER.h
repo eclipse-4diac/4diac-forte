@@ -60,16 +60,24 @@ class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
     virtual ~GEN_CSV_WRITER();
 
   private:
+
     void openCSVFile();
     void closeCSVFile();
     void writeCSVFileLine();
 
-    FILE *m_pstCSVFile;
+    FILE *mCSVFile;
 
     CStringDictionary::TStringId *m_anDataInputNames;
     CStringDictionary::TStringId *m_anDataInputTypeIds;
 
     TDataIOID *m_anEIWith;
+
+    static const char * const scmOK;
+    static const char * const scmFileAlreadyOpened;
+    static const char * const scmFileNotOpened;
+
+    static const size_t scmWriteBufferSize = 100;
+
 };
 
 #endif //_GEN_CSV_WRITER_H_

@@ -1,0 +1,9 @@
+;<Request ID="1" Action="CREATE"><FB Name="openAndNoClose" Type="EMB_RES" /></Request>
+openAndNoClose;<Request ID="2" Action="CREATE"><FB Name="DontClose.CSV_WRITER_2" Type="CSV_WRITER_1" /></Request>
+openAndNoClose;<Request ID="3" Action="WRITE"><Connection Source="1" Destination="DontClose.CSV_WRITER_2.QI" /></Request>
+openAndNoClose;<Request ID="4" Action="WRITE"><Connection Source="csvWriteTest.csv" Destination="DontClose.CSV_WRITER_2.FILE_NAME" /></Request>
+openAndNoClose;<Request ID="5" Action="CREATE"><FB Name="DontClose.endNormal_1_1" Type="STEST_END" /></Request>
+openAndNoClose;<Request ID="6" Action="CREATE"><Connection Source="DontClose.CSV_WRITER_2.INITO" Destination="DontClose.endNormal_1_1.REQ" /></Request>
+openAndNoClose;<Request ID="7" Action="CREATE"><Connection Source="START.COLD" Destination="DontClose.CSV_WRITER_2.INIT" /></Request>
+openAndNoClose;<Request ID="8" Action="CREATE"><Connection Source="START.WARM" Destination="DontClose.CSV_WRITER_2.INIT" /></Request>
+openAndNoClose;<Request ID="9" Action="START"/>
