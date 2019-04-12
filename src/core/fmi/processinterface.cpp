@@ -1,6 +1,5 @@
-
 /*******************************************************************************
- * Copyright (c) 2016 -2018 fortiss GmbH
+ * Copyright (c) 2016 -2019 fortiss GmbH
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,9 +16,6 @@
 #include <iostream>
 #include "fmuInstance.h"
 
-DEFINE_FIRMWARE_FB(CFMUProcessInterface, g_nStringIdCFMUProcessInterface)
-
-
 const char * const CFMUProcessInterface::scmOK = "OK";
 const char * const CFMUProcessInterface::scmNOTINITIALIZED = "Not initialized";
 const char * const CFMUProcessInterface::scmINTERNALERROR = "Internal Error";
@@ -28,16 +24,16 @@ CFMUProcessInterface::CFMUProcessInterface(CResource *paSrcRes, const SFBInterfa
     CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mInitialized(false), mValue(0){
 }
 
-CFMUProcessInterface::CFMUProcessInterface(const CStringDictionary::TStringId paInstanceNameId, CResource *pa_poSrcRes) :
-    CProcessInterfaceBase(pa_poSrcRes, 0, paInstanceNameId, 0, 0), mInitialized(false), mValue(0) {
+CFMUProcessInterface::CFMUProcessInterface(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
+    CProcessInterfaceBase(paSrcRes, 0, paInstanceNameId, 0, 0), mInitialized(false), mValue(0) {
   FMU_DEBUG_LOG(GET_FMU_INSTANCE_FROM_FB(this), "Someone called the wrong constructor.\n") //Why do I need this constructor?
 }
 
 CFMUProcessInterface::~CFMUProcessInterface(){
 }
 
-void CFMUProcessInterface::setValueContainer(fmuValueContainer* pa_valueContainer){
-  mValue = pa_valueContainer;
+void CFMUProcessInterface::setValueContainer(fmuValueContainer* paValueContainer){
+  mValue = paValueContainer;
 }
 
 bool CFMUProcessInterface::initialise(bool paIsInput){
