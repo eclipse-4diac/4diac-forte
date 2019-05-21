@@ -47,7 +47,7 @@ forte::com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::p
 template <typename TThreadHandle, TThreadHandle nullHandle>
 forte::com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::openConnection(char *paLayerParameter)  {
   //Create Serial Com Handle
-  CParameterParser parser(paLayerParameter, mNoOfParameters);
+  CParameterParser parser(paLayerParameter, mNoOfParameters, ',');
   if(mNoOfParameters != parser.parseParameters()){
     return forte::com_infra::e_InitInvalidId;
   }

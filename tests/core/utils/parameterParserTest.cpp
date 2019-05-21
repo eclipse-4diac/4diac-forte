@@ -23,315 +23,416 @@
 // asked
 BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
 
+void testNullString(CParameterParser& paParser) {
+  BOOST_CHECK(1 == paParser.parseParameters());
+
+  BOOST_CHECK(0 == strcmp(paParser[0], ""));
+  BOOST_CHECK(0 == paParser[1]);
+}
+
   BOOST_AUTO_TEST_CASE(ParameterParser_NullString){
-    CParameterParser test2(0, 2);
+  CParameterParser test1(0, 2, ',');
+  CParameterParser test2(0, ',');
 
-    BOOST_CHECK(1 == test2.parseParameters());
-
-    BOOST_CHECK(0 == strcmp(test2[0], ""));
-    BOOST_CHECK(0 == test2[1]);
-
+  testNullString (test1);
+  testNullString (test2);
   }
+
 
   BOOST_AUTO_TEST_CASE(ParameterParser_SourceStringRemainsUntouched){
-    CIEC_STRING emptyTest = "123,456";
-    CParameterParser test2(emptyTest.getValue(), 2);
+  CIEC_STRING stringTest = "123,456";
+  CParameterParser test1(stringTest.getValue(), 2, ',');
+  CParameterParser test2(stringTest.getValue(), ',');
 
-    BOOST_CHECK(2 == test2.parseParameters());
-    BOOST_CHECK(0 == strcmp(emptyTest.getValue(), "123,456"));
+  BOOST_CHECK(2 == test1.parseParameters());
+  BOOST_CHECK(2 == test2.parseParameters());
 
+  BOOST_CHECK(0 == strcmp(stringTest.getValue(), "123,456"));
   }
+
+void testInitializedToZero(CParameterParser& paParser) {
+  BOOST_CHECK(0 == paParser[0]);
+  BOOST_CHECK(0 == paParser[1]);
+  BOOST_CHECK(0 == paParser[2]);
+  BOOST_CHECK(0 == paParser[3]);
+}
 
   BOOST_AUTO_TEST_CASE(ParameterParser_InitializedToZero){
-    CIEC_STRING emptyTest = "123,456";
-    CParameterParser test2(emptyTest.getValue(), 2);
+  CIEC_STRING stringTest = "123,456";
+  CParameterParser test1(stringTest.getValue(), 2, ',');
+  CParameterParser test2(stringTest.getValue(), ',');
 
-    BOOST_CHECK(0 == test2[0]);
-    BOOST_CHECK(0 == test2[1]);
-    BOOST_CHECK(0 == test2[2]);
-    BOOST_CHECK(0 == test2[3]);
+  testInitializedToZero (test1);
+  testInitializedToZero (test2);
   }
 
-  BOOST_AUTO_TEST_CASE(ParameterParser_RegularParamsZeroArgumentsSpecified){
-    CIEC_STRING emptyTest = "123,456";
-    CParameterParser test0(emptyTest.getValue(), 0);
+BOOST_AUTO_TEST_CASE(ParameterParser_RegularParamsZeroArgumentsSpecified) {
+  CIEC_STRING stringTest = "123,456";
+  CParameterParser test1(stringTest.getValue(), 0, ',');
 
-    BOOST_CHECK(0 == test0.parseParameters());
+  BOOST_CHECK(0 == test1.parseParameters());
 
-    BOOST_CHECK(0 == test0[0]);
-    BOOST_CHECK(0 == test0[1]);
-
-  }
-
-  BOOST_AUTO_TEST_CASE(ParameterParser_RegularParamsTooFewArgumentsSpecified){
-    CIEC_STRING emptyTest = "123,456";
-    CParameterParser test1(emptyTest.getValue(), 1);
-
-    BOOST_CHECK(1 == test1.parseParameters());
-
-    BOOST_CHECK(0 == strcmp(test1[0], "123"));
-    BOOST_CHECK(0 == test1[1]);
-    BOOST_CHECK(0 == test1[2]);
+  BOOST_CHECK(0 == test1[0]);
+  BOOST_CHECK(0 == test1[1]);
 
   }
 
-  BOOST_AUTO_TEST_CASE(ParameterParser_RegularParamsRightArgumentsSpecified){
-    CIEC_STRING emptyTest = "123,456";
-    CParameterParser test2(emptyTest.getValue(), 2);
+BOOST_AUTO_TEST_CASE(ParameterParser_RegularParamsTooFewArgumentsSpecified) {
+  CIEC_STRING stringTest = "123,456";
+  CParameterParser test1(stringTest.getValue(), 1, ',');
 
-    BOOST_CHECK(2 == test2.parseParameters());
+  BOOST_CHECK(1 == test1.parseParameters());
 
-    BOOST_CHECK(0 == strcmp(test2[0], "123"));
-    BOOST_CHECK(0 == strcmp(test2[1], "456"));
-    BOOST_CHECK(0 == test2[2]);
-    BOOST_CHECK(0 == test2[3]);
-
-  }
-
-  BOOST_AUTO_TEST_CASE(ParameterParser_RegularParamsTooManyArgumentsSpecified){
-    CIEC_STRING emptyTest = "123,456";
-    CParameterParser test3(emptyTest.getValue(), 3);
-
-    BOOST_CHECK(2 == test3.parseParameters());
-
-    BOOST_CHECK(0 == strcmp(test3[0], "123"));
-    BOOST_CHECK(0 == strcmp(test3[1], "456"));
-    BOOST_CHECK(0 == test3[3]);
+  BOOST_CHECK(0 == strcmp(test1[0], "123"));
+  BOOST_CHECK(0 == test1[1]);
+  BOOST_CHECK(0 == test1[2]);
 
   }
 
-  BOOST_AUTO_TEST_CASE(ParameterParser_EmptyStringZeroArgumentsSpecified){
-    CIEC_STRING emptyTest = "";
-    CParameterParser test0(emptyTest.getValue(), 0);
+void testRegularParamsRightArgumentsSpecified(CParameterParser& paParser) {
+  BOOST_CHECK(2 == paParser.parseParameters());
 
-    BOOST_CHECK(0 == test0.parseParameters());
+  BOOST_CHECK(0 == strcmp(paParser[0], "123"));
+  BOOST_CHECK(0 == strcmp(paParser[1], "456"));
+  BOOST_CHECK(0 == paParser[2]);
+  BOOST_CHECK(0 == paParser[3]);
+}
 
-    BOOST_CHECK(0 == test0[0]);
-    BOOST_CHECK(0 == test0[1]);
+BOOST_AUTO_TEST_CASE(ParameterParser_RegularParamsRightArgumentsSpecified) {
+  CIEC_STRING stringTest = "123,456";
+  CParameterParser test1(stringTest.getValue(), 2, ',');
+  CParameterParser test2(stringTest.getValue(), ',');
+
+  testRegularParamsRightArgumentsSpecified (test1);
+  testRegularParamsRightArgumentsSpecified (test2);
+
+  }
+
+BOOST_AUTO_TEST_CASE(ParameterParser_RegularParamsTooManyArgumentsSpecified) {
+  CIEC_STRING stringTest = "123,456";
+  CParameterParser test1(stringTest.getValue(), 3, ',');
+
+  BOOST_CHECK(2 == test1.parseParameters());
+
+  BOOST_CHECK(0 == strcmp(test1[0], "123"));
+  BOOST_CHECK(0 == strcmp(test1[1], "456"));
+  BOOST_CHECK(0 == test1[3]);
 
   }
 
-  BOOST_AUTO_TEST_CASE(ParameterParser_EmptyStringRightArgumentsSpecified){
-    CIEC_STRING emptyTest = "";
-    CParameterParser test1(emptyTest.getValue(), 1);
+BOOST_AUTO_TEST_CASE(ParameterParser_EmptyStringZeroArgumentsSpecified) {
+  CIEC_STRING stringTest = "";
+  CParameterParser test1(stringTest.getValue(), 0, ',');
 
-    BOOST_CHECK(1 == test1.parseParameters());
+  BOOST_CHECK(0 == test1.parseParameters());
 
-    BOOST_CHECK(0 == strcmp(test1[0], ""));
-    BOOST_CHECK(0 == test1[1]);
-    BOOST_CHECK(0 == test1[2]);
+  BOOST_CHECK(0 == test1[0]);
+  BOOST_CHECK(0 == test1[1]);
 
   }
+
+void testEmptyStringRightArgumentsSpecified(CParameterParser& paParser) {
+  BOOST_CHECK(1 == paParser.parseParameters());
+
+  BOOST_CHECK(0 == strcmp(paParser[0], ""));
+  BOOST_CHECK(0 == paParser[1]);
+  BOOST_CHECK(0 == paParser[2]);
+}
+
+BOOST_AUTO_TEST_CASE(ParameterParser_EmptyStringRightArgumentsSpecified) {
+  CIEC_STRING stringTest = "";
+  CParameterParser test1(stringTest.getValue(), 1, ',');
+  CParameterParser test2(stringTest.getValue(), ',');
+
+  testEmptyStringRightArgumentsSpecified (test1);
+  testEmptyStringRightArgumentsSpecified (test2);
+  }
+
 
   BOOST_AUTO_TEST_CASE(ParameterParser_EmptyStringTooManyArgumentsSpecified){
-    CIEC_STRING emptyTest = "";
-    CParameterParser test2(emptyTest.getValue(), 2);
+  CIEC_STRING stringTest = "";
+  CParameterParser test1(stringTest.getValue(), 2, ',');
 
-    BOOST_CHECK(1 == test2.parseParameters());
+  BOOST_CHECK(1 == test1.parseParameters());
 
-    BOOST_CHECK(0 == strcmp(test2[0], ""));
-    BOOST_CHECK(0 == test2[1]);
-    BOOST_CHECK(0 == test2[2]);
-    BOOST_CHECK(0 == test2[3]);
+  BOOST_CHECK(0 == strcmp(test1[0], ""));
+  BOOST_CHECK(0 == test1[1]);
+  BOOST_CHECK(0 == test1[2]);
+  BOOST_CHECK(0 == test1[3]);
+
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_BlankSpacesZeroArgumentsSpecified){
-    CIEC_STRING emptyTest = "  1  2 3 ,             4 56     ,       789              ";
-    CParameterParser test0(emptyTest.getValue(), 0);
+  CIEC_STRING stringTest = "  1  2 3 ,             4 56     ,       789              ";
+  CParameterParser test1(stringTest.getValue(), 0, ',');
 
-    BOOST_CHECK(0 == test0.parseParameters());
+  BOOST_CHECK(0 == test1.parseParameters());
 
-    BOOST_CHECK(0 == test0[0]);
-    BOOST_CHECK(0 == test0[1]);
+  BOOST_CHECK(0 == test1[0]);
+  BOOST_CHECK(0 == test1[1]);
 
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_BlankSpacesTooFewArgumentsSpecified){
-    CIEC_STRING emptyTest = "  1  2 3 ,             4 56     ,       789              ";
-    CParameterParser test2(emptyTest.getValue(), 2);
+  CIEC_STRING stringTest = "  1  2 3 ,             4 56     ,       789              ";
+  CParameterParser test1(stringTest.getValue(), 2, ',');
 
-    BOOST_CHECK(2 == test2.parseParameters());
+  BOOST_CHECK(2 == test1.parseParameters());
 
-    BOOST_CHECK(0 == strcmp(test2[0], "1  2 3"));
-    BOOST_CHECK(0 == strcmp(test2[1], "4 56"));
-    BOOST_CHECK(0 == test2[2]);
-    BOOST_CHECK(0 == test2[3]);
-
-  }
-
-  BOOST_AUTO_TEST_CASE(ParameterParser_BlankSpacesRightArgumentsSpecified){
-    CIEC_STRING emptyTest = "  1  2 3 ,             4 56     ,       789              ";
-    CParameterParser test3(emptyTest.getValue(), 3);
-
-    BOOST_CHECK(3 == test3.parseParameters());
-
-    BOOST_CHECK(0 == strcmp(test3[0], "1  2 3"));
-    BOOST_CHECK(0 == strcmp(test3[1], "4 56"));
-    BOOST_CHECK(0 == strcmp(test3[2], "789"));
-    BOOST_CHECK(0 == test3[3]);
+  BOOST_CHECK(0 == strcmp(test1[0], "1  2 3"));
+  BOOST_CHECK(0 == strcmp(test1[1], "4 56"));
+  BOOST_CHECK(0 == test1[2]);
+  BOOST_CHECK(0 == test1[3]);
 
   }
 
-  BOOST_AUTO_TEST_CASE(ParameterParser_BlankSpacesTooManyArgumentsSpecified){
-    CIEC_STRING emptyTest = "  1  2 3 ,             4 56     ,       789              ";
-    CParameterParser test4(emptyTest.getValue(), 4);
+void testBlankSpacesRightArgumentsSpecified(CParameterParser& paParser) {
+  BOOST_CHECK(3 == paParser.parseParameters());
 
-    BOOST_CHECK(3 == test4.parseParameters());
+  BOOST_CHECK(0 == strcmp(paParser[0], "1  2 3"));
+  BOOST_CHECK(0 == strcmp(paParser[1], "4 56"));
+  BOOST_CHECK(0 == strcmp(paParser[2], "789"));
+  BOOST_CHECK(0 == paParser[3]);
 
-    BOOST_CHECK(0 == strcmp(test4[0], "1  2 3"));
-    BOOST_CHECK(0 == strcmp(test4[1], "4 56"));
-    BOOST_CHECK(0 == strcmp(test4[2], "789"));
-    BOOST_CHECK(0 == test4[3]);
-    BOOST_CHECK(0 == test4[4]);
   }
+
+BOOST_AUTO_TEST_CASE(ParameterParser_BlankSpacesRightArgumentsSpecified) {
+  CIEC_STRING stringTest = "  1  2 3 ,             4 56     ,       789              ";
+  CParameterParser test1(stringTest.getValue(), 3, ',');
+  CParameterParser test2(stringTest.getValue(), ',');
+
+  testBlankSpacesRightArgumentsSpecified (test1);
+  testBlankSpacesRightArgumentsSpecified (test2);
+
+}
+
+BOOST_AUTO_TEST_CASE(ParameterParser_BlankSpacesTooManyArgumentsSpecified) {
+  CIEC_STRING stringTest = "  1  2 3 ,             4 56     ,       789              ";
+  CParameterParser test1(stringTest.getValue(), 4, ',');
+
+  BOOST_CHECK(3 == test1.parseParameters());
+
+  BOOST_CHECK(0 == strcmp(test1[0], "1  2 3"));
+  BOOST_CHECK(0 == strcmp(test1[1], "4 56"));
+  BOOST_CHECK(0 == strcmp(test1[2], "789"));
+  BOOST_CHECK(0 == test1[3]);
+  BOOST_CHECK(0 == test1[4]);
+
+}
+
+void testEmptyParameters(CParameterParser& paParser) {
+  BOOST_CHECK(6 == paParser.parseParameters());
+
+  BOOST_CHECK(0 == strcmp(paParser[0], ""));
+  BOOST_CHECK(0 == strcmp(paParser[1], "123"));
+  BOOST_CHECK(0 == strcmp(paParser[2], "456"));
+  BOOST_CHECK(0 == strcmp(paParser[3], ""));
+  BOOST_CHECK(0 == strcmp(paParser[4], "789"));
+  BOOST_CHECK(0 == strcmp(paParser[5], ""));
+  BOOST_CHECK(0 == paParser[6]);
+  BOOST_CHECK(0 == paParser[7]);
+}
 
   BOOST_AUTO_TEST_CASE(ParameterParser_EmptyParameters){
-    CIEC_STRING emptyTest = ",123,456,,789,";
-    CParameterParser test7(emptyTest.getValue(), 7);
+  CIEC_STRING stringTest = ",123,456,,789,";
+  CParameterParser test1(stringTest.getValue(), 7, ',');
+  CParameterParser test2(stringTest.getValue(), ',');
 
-    BOOST_CHECK(6 == test7.parseParameters());
-
-    BOOST_CHECK(0 == strcmp(test7[0], ""));
-    BOOST_CHECK(0 == strcmp(test7[1], "123"));
-    BOOST_CHECK(0 == strcmp(test7[2], "456"));
-    BOOST_CHECK(0 == strcmp(test7[3], ""));
-    BOOST_CHECK(0 == strcmp(test7[4], "789"));
-    BOOST_CHECK(0 == strcmp(test7[5], ""));
-    BOOST_CHECK(0 == test7[6]);
-    BOOST_CHECK(0 == test7[7]);
+  testEmptyParameters (test1);
+  testEmptyParameters (test2);
   }
+
+void testOtherSeparatorPresentInString(CParameterParser& paParser) {
+  BOOST_CHECK(2 == paParser.parseParameters());
+
+  BOOST_CHECK(0 == strcmp(paParser[0], "123, 4"));
+  BOOST_CHECK(0 == strcmp(paParser[1], "6, 789"));
+  BOOST_CHECK(0 == paParser[2]);
+}
 
   BOOST_AUTO_TEST_CASE(ParameterParser_OtherSeparatorPresentInString){
-    CIEC_STRING emptyTest = " 123, 456, 789   ";
-    CParameterParser test2(emptyTest.getValue(), 2, '5');
+  CIEC_STRING stringTest = " 123, 456, 789   ";
+  CParameterParser test1(stringTest.getValue(), 2, '5');
+  CParameterParser test2(stringTest.getValue(), '5');
 
-    BOOST_CHECK(2 == test2.parseParameters());
-
-    BOOST_CHECK(0 == strcmp(test2[0], "123, 4"));
-    BOOST_CHECK(0 == strcmp(test2[1], "6, 789"));
-    BOOST_CHECK(0 == test2[2]);
+  testOtherSeparatorPresentInString (test1);
+  testOtherSeparatorPresentInString (test2);
 
   }
+
+void testOtherSeparatorNonPresentInString(CParameterParser& paParser) {
+  BOOST_CHECK(1 == paParser.parseParameters());
+
+  BOOST_CHECK(0 == strcmp(paParser[0], "123, 456, 789"));
+  BOOST_CHECK(0 == paParser[1]);
+}
 
   BOOST_AUTO_TEST_CASE(ParameterParser_OtherSeparatorNonPresentInString){
-    CIEC_STRING emptyTest = " 123, 456, 789   ";
-    CParameterParser test1(emptyTest.getValue(), 1, ';');
+  CIEC_STRING stringTest = " 123, 456, 789   ";
+  CParameterParser test1(stringTest.getValue(), 1, ';');
+  CParameterParser test2(stringTest.getValue(), ';');
 
-    BOOST_CHECK(1 == test1.parseParameters());
-
-    BOOST_CHECK(0 == strcmp(test1[0], "123, 456, 789"));
-    BOOST_CHECK(0 == test1[1]);
-
+  testOtherSeparatorNonPresentInString (test1);
+  testOtherSeparatorNonPresentInString (test2);
   }
+
+void testBlankSpaceSeparator(CParameterParser& paParser) {
+  BOOST_CHECK(7 == paParser.parseParameters());
+
+  BOOST_CHECK(0 == strcmp(paParser[0], ""));
+  BOOST_CHECK(0 == strcmp(paParser[1], "123,"));
+  BOOST_CHECK(0 == strcmp(paParser[2], "456,"));
+  BOOST_CHECK(0 == strcmp(paParser[3], "789"));
+  BOOST_CHECK(0 == strcmp(paParser[4], ""));
+  BOOST_CHECK(0 == strcmp(paParser[5], ""));
+  BOOST_CHECK(0 == strcmp(paParser[6], ""));
+  BOOST_CHECK(0 == paParser[7]);
+}
 
   BOOST_AUTO_TEST_CASE(ParameterParser_BlankSpaceSeparator){
-    CIEC_STRING emptyTest = " 123, 456, 789   ";
-    CParameterParser test8(emptyTest.getValue(), 8, ' ');
+  CIEC_STRING stringTest = " 123, 456, 789   ";
+  CParameterParser test1(stringTest.getValue(), 8, ' ');
+  CParameterParser test2(stringTest.getValue(), ' ');
 
-    BOOST_CHECK(7 == test8.parseParameters());
-
-    BOOST_CHECK(0 == strcmp(test8[0], ""));
-    BOOST_CHECK(0 == strcmp(test8[1], "123,"));
-    BOOST_CHECK(0 == strcmp(test8[2], "456,"));
-    BOOST_CHECK(0 == strcmp(test8[3], "789"));
-    BOOST_CHECK(0 == strcmp(test8[4], ""));
-    BOOST_CHECK(0 == strcmp(test8[5], ""));
-    BOOST_CHECK(0 == strcmp(test8[6], ""));
-    BOOST_CHECK(0 == test8[7]);
+  testBlankSpaceSeparator (test1);
+  testBlankSpaceSeparator (test2);
   }
+
+void testOnlyBlankSpace(CParameterParser& paParser) {
+  BOOST_CHECK(1 == paParser.parseParameters());
+
+  BOOST_CHECK(0 == strcmp(paParser[0], ""));
+  BOOST_CHECK(0 == paParser[1]);
+}
 
   BOOST_AUTO_TEST_CASE(ParameterParser_OnlyBlankSpace){
-    CIEC_STRING emptyTest = "   "; //3 Blank Spaces
-    CParameterParser test4(emptyTest.getValue(), 4);
+  CIEC_STRING stringTest = "   "; //3 Blank Spaces
+  CParameterParser test1(stringTest.getValue(), 4, ',');
+  CParameterParser test2(stringTest.getValue(), ',');
 
-    BOOST_CHECK(1 == test4.parseParameters());
+  testOnlyBlankSpace (test1);
+  testOnlyBlankSpace (test2);
 
-    BOOST_CHECK(0 == strcmp(test4[0], ""));
-    BOOST_CHECK(0 == test4[1]);
   }
 
+void testEmptyParametersWithBlankSpace(CParameterParser& paParser) {
+  BOOST_CHECK(2 == paParser.parseParameters());
+
+  BOOST_CHECK(0 == strcmp(paParser[0], ""));
+  BOOST_CHECK(0 == strcmp(paParser[1], ""));
+  BOOST_CHECK(0 == paParser[2]);
+}
+
   BOOST_AUTO_TEST_CASE(ParameterParser_EmptyParametersWithBlankSpace){
-     CIEC_STRING emptyTest = " , ";
-     CParameterParser test4(emptyTest.getValue(), 4);
+  CIEC_STRING stringTest = " , ";
+  CParameterParser test1(stringTest.getValue(), 4, ',');
+  CParameterParser test2(stringTest.getValue(), ',');
 
-     BOOST_CHECK(2 == test4.parseParameters());
-
-     BOOST_CHECK(0 == strcmp(test4[0], ""));
-     BOOST_CHECK(0 == strcmp(test4[1], ""));
-     BOOST_CHECK(0 == test4[2]);
+  testEmptyParametersWithBlankSpace (test1);
+  testEmptyParametersWithBlankSpace (test2);
    }
+
+void testEmptyParametersWithBlankSpaceAndEndingInParameter(CParameterParser& paParser) {
+  BOOST_CHECK(3 == paParser.parseParameters());
+
+  BOOST_CHECK(0 == strcmp(paParser[0], ""));
+  BOOST_CHECK(0 == strcmp(paParser[1], ""));
+  BOOST_CHECK(0 == strcmp(paParser[2], ""));
+  BOOST_CHECK(0 == paParser[3]);
+}
 
   BOOST_AUTO_TEST_CASE(ParameterParser_EmptyParametersWithBlankSpaceAndEndingInParameter){
-     CIEC_STRING emptyTest = " , ,";
-     CParameterParser test4(emptyTest.getValue(), 4);
+  CIEC_STRING stringTest = " , ,";
+  CParameterParser test1(stringTest.getValue(), 4, ',');
+  CParameterParser test2(stringTest.getValue(), ',');
 
-     BOOST_CHECK(3 == test4.parseParameters());
-
-     BOOST_CHECK(0 == strcmp(test4[0], ""));
-     BOOST_CHECK(0 == strcmp(test4[1], ""));
-     BOOST_CHECK(0 == strcmp(test4[2], ""));
-     BOOST_CHECK(0 == test4[3]);
+  testEmptyParametersWithBlankSpaceAndEndingInParameter (test1);
+  testEmptyParametersWithBlankSpaceAndEndingInParameter (test2);
    }
 
-  BOOST_AUTO_TEST_CASE(ParameterParser_OnlySeparator){
-    CIEC_STRING emptyTest = ",,,";
-    CParameterParser test5(emptyTest.getValue(), 5);
+void testOnlySeparator(CParameterParser& paParser) {
+  BOOST_CHECK(4 == paParser.parseParameters());
 
-    BOOST_CHECK(4 == test5.parseParameters());
+  BOOST_CHECK(0 == strcmp(paParser[0], ""));
+  BOOST_CHECK(0 == strcmp(paParser[1], ""));
+  BOOST_CHECK(0 == strcmp(paParser[2], ""));
+  BOOST_CHECK(0 == strcmp(paParser[3], ""));
+  BOOST_CHECK(0 == paParser[4]);
+  BOOST_CHECK(0 == paParser[5]);
+  }
 
-    BOOST_CHECK(0 == strcmp(test5[0], ""));
-    BOOST_CHECK(0 == strcmp(test5[1], ""));
-    BOOST_CHECK(0 == strcmp(test5[2], ""));
-    BOOST_CHECK(0 == strcmp(test5[3], ""));
-    BOOST_CHECK(0 == test5[4]);
-    BOOST_CHECK(0 == test5[5]);
+BOOST_AUTO_TEST_CASE(ParameterParser_OnlySeparator) {
+  CIEC_STRING stringTest = ",,,";
+  CParameterParser test1(stringTest.getValue(), 5, ',');
+  CParameterParser test2(stringTest.getValue(), ',');
+
+  testOnlySeparator (test1);
+  testOnlySeparator (test2);
+
+}
+
+void testOnlyBlankSpaceSeparator(CParameterParser& paParser) {
+  BOOST_CHECK(4 == paParser.parseParameters());
+
+  BOOST_CHECK(0 == strcmp(paParser[0], ""));
+  BOOST_CHECK(0 == strcmp(paParser[1], ""));
+  BOOST_CHECK(0 == strcmp(paParser[2], ""));
+  BOOST_CHECK(0 == strcmp(paParser[3], ""));
+  BOOST_CHECK(0 == paParser[4]);
+  BOOST_CHECK(0 == paParser[5]);
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_OnlyBlankSpaceSeparator){
-    CIEC_STRING emptyTest = "   "; //3 Blank Spaces
-    CParameterParser test5(emptyTest.getValue(), 5, ' ');
+  CIEC_STRING stringTest = "   "; //3 Blank Spaces
+  CParameterParser test1(stringTest.getValue(), 5, ' ');
+  CParameterParser test2(stringTest.getValue(), ' ');
 
-    BOOST_CHECK(4 == test5.parseParameters());
-
-    BOOST_CHECK(0 == strcmp(test5[0], ""));
-    BOOST_CHECK(0 == strcmp(test5[1], ""));
-    BOOST_CHECK(0 == strcmp(test5[2], ""));
-    BOOST_CHECK(0 == strcmp(test5[3], ""));
-    BOOST_CHECK(0 == test5[4]);
-    BOOST_CHECK(0 == test5[5]);
+  testOnlyBlankSpaceSeparator (test1);
+  testOnlyBlankSpaceSeparator (test2);
   }
+
+void testSerialCase1(CParameterParser& paParser) {
+  BOOST_CHECK(6 == paParser.parseParameters());
+
+  BOOST_CHECK(0 == strcmp(paParser[0], "COM1"));
+  BOOST_CHECK(0 == strcmp(paParser[1], "19200"));
+  BOOST_CHECK(0 == strcmp(paParser[2], "8"));
+  BOOST_CHECK(0 == strcmp(paParser[3], "1"));
+  BOOST_CHECK(0 == strcmp(paParser[4], "NONE"));
+  BOOST_CHECK(0 == strcmp(paParser[5], "$n"));
+  BOOST_CHECK(0 == paParser[6]);
+}
 
   BOOST_AUTO_TEST_CASE(ParameterParser_SerialCase1)
   {
     CIEC_STRING sParameterString = "COM1, 19200, 8, 1, NONE, $n";
-    CParameterParser parser(sParameterString.getValue(), 6);
+  CParameterParser test1(sParameterString.getValue(), 6, ',');
+  CParameterParser test2(sParameterString.getValue(), ',');
 
-    BOOST_CHECK(6 == parser.parseParameters());
-
-    BOOST_CHECK(0 == strcmp(parser[0], "COM1"));
-    BOOST_CHECK(0 == strcmp(parser[1], "19200"));
-    BOOST_CHECK(0 == strcmp(parser[2], "8"));
-    BOOST_CHECK(0 == strcmp(parser[3], "1"));
-    BOOST_CHECK(0 == strcmp(parser[4], "NONE"));
-    BOOST_CHECK(0 == strcmp(parser[5], "$n"));
-    BOOST_CHECK(0 == parser[6]);
+  testSerialCase1 (test1);
+  testSerialCase1 (test2);
   }
+
+void testSerialCase2(CParameterParser& paParser) {
+  BOOST_CHECK(6 == paParser.parseParameters());
+
+  BOOST_CHECK(0 == strcmp(paParser[0], "COM1"));
+  BOOST_CHECK(0 == strcmp(paParser[1], "19200"));
+  BOOST_CHECK(0 == strcmp(paParser[2], "8"));
+  BOOST_CHECK(0 == strcmp(paParser[3], "1"));
+  BOOST_CHECK(0 == strcmp(paParser[4], "NONE"));
+  BOOST_CHECK(0 == strcmp(paParser[5], "$r$n"));
+  BOOST_CHECK(0 == paParser[6]);
+}
 
   BOOST_AUTO_TEST_CASE(ParameterParser_SerialCase2)
   {
     CIEC_STRING sParameterString = "COM1, 19200, 8, 1, NONE, $r$n";
-    CParameterParser parser(sParameterString.getValue(), 6);
+  CParameterParser test1(sParameterString.getValue(), 6, ',');
+  CParameterParser test2(sParameterString.getValue(), ',');
 
-    BOOST_CHECK(6 == parser.parseParameters());
-
-    BOOST_CHECK(0 == strcmp(parser[0], "COM1"));
-    BOOST_CHECK(0 == strcmp(parser[1], "19200"));
-    BOOST_CHECK(0 == strcmp(parser[2], "8"));
-    BOOST_CHECK(0 == strcmp(parser[3], "1"));
-    BOOST_CHECK(0 == strcmp(parser[4], "NONE"));
-    BOOST_CHECK(0 == strcmp(parser[5], "$r$n"));
-    BOOST_CHECK(0 == parser[6]);
+  testSerialCase2 (test1);
+  testSerialCase2 (test2);
   }
 
 BOOST_AUTO_TEST_SUITE_END()
-

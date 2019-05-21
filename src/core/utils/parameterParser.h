@@ -14,18 +14,25 @@
 #define SRC_CORE_UTILS_PARAMETERPARSER_H_
 
 #include "../datatypes/forte_string.h"
+#include <vector>
 
 class CParameterParser{
   public:
 
     /**
-     * Creates the parser object
+     * Creates the parser object with a defined numbers of parameters
      * @param paParameters Pointer to the string to be parsed. It remains untouched during the life of the object, since the string is copied. A null pointer is treated as an empty string
      * @param paAmountOfParameters Amount of parameter to look for
      * @param paSeparator Separator of the parameters
      */
-    CParameterParser(const char* paParameters, unsigned int paAmountOfParameters, const char paSeparator = ',');
-    virtual ~CParameterParser();
+    CParameterParser(const char* paParameters, size_t paAmountOfParameters, const char paSeparator);
+
+    /**
+     * Creates the parser object with undefined numbers of parameters
+     * @param paParameters Pointer to the string to be parsed. It remains untouched during the life of the object, since the string is copied. A null pointer is treated as an empty string
+     * @param paSeparator Separator of the parameters
+     */
+    CParameterParser(const char* paParameters, const char paSeparator);
 
     /**
      * Parse the string using the separator passed in the constructor
@@ -37,24 +44,25 @@ class CParameterParser{
      * An empty string is seen as a one empty parameter
      * @return Number of stored parameters
      */
-    unsigned int parseParameters();
+    size_t parseParameters();
 
     /**
      * Get the parameter at certain index
      * @param paIndex Index of the desired parameter
      * @return If the index is less than the amount of stored parameters, a pointer to the string, 0 otherwise
      */
-    const char* operator[](int const& paIndex);
+    const char* operator[](const size_t paIndex);
 
   private:
     CIEC_STRING mParameters;
-    char **mParameterLocations;
-    unsigned int const mAmountOfParameters;
+    std::vector<const char *> mParameterLocations;
+    const size_t mMaxAmountOfParameters;
+    size_t mActualAmountOfParameters;
+    const bool mAmountUndefined;
     const char mSeparator;
 
-
     void moveToPositionOfFirstNonWhiteSpaceCharacter(char** paParsePosition);
-    void saveStartPositionForParameterSubstring(int paParameterNumber, char* paParsePosition);
+    void saveStartPositionForParameterSubstring(char* paParsePosition);
     void moveToPositionOfNextParameterSeparatorOrEndOfString(char** paParsePosition);
     void trimTrailingWhiteSpacesOfParameterSubstring(char* paParsePosition, bool isSpace);
 

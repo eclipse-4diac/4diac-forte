@@ -14,35 +14,33 @@
 #include <string.h>
 #include <cctype>
 
-CParameterParser::CParameterParser(const char* paParameters, unsigned int paAmountOfParameters, const char paSeparator) :
-  mParameters(paParameters), mAmountOfParameters(paAmountOfParameters), mSeparator(paSeparator){
-  mParameterLocations = new char*[paAmountOfParameters];
-  memset(mParameterLocations, 0, sizeof(char*)*paAmountOfParameters);
+CParameterParser::CParameterParser(const char* paParameters, size_t paAmountOfParameters, const char paSeparator) :
+    mParameters(paParameters), mMaxAmountOfParameters(paAmountOfParameters), mActualAmountOfParameters(0), mAmountUndefined(false), mSeparator(paSeparator) {
+  mParameterLocations.reserve(paAmountOfParameters);
 }
 
-CParameterParser::~CParameterParser(){
-  if(0 != mParameterLocations){
-    delete[] mParameterLocations;
-  }
+CParameterParser::CParameterParser(const char* paParameters, const char paSeparator) :
+    mParameters(paParameters), mMaxAmountOfParameters(0), mActualAmountOfParameters(0), mAmountUndefined(true), mSeparator(paSeparator) {
 }
 
-unsigned int CParameterParser::parseParameters() {
+size_t CParameterParser::parseParameters() {
   char* parsePosition = mParameters.getValue();
-  unsigned int i = 0;
-  if(0 < mAmountOfParameters){
+  size_t i = 0;
+  if(0 < mMaxAmountOfParameters || mAmountUndefined) {
     if('\0' == *parsePosition){ //empty string
-      saveStartPositionForParameterSubstring(i++, parsePosition);
+      saveStartPositionForParameterSubstring(parsePosition);
+      i++;
     }else{ //non empty string
-      for(i = 0; i < mAmountOfParameters; i++){
+      for(i = 0; i < mMaxAmountOfParameters || mAmountUndefined; i++) {
         if(' ' != mSeparator){
-          moveToPositionOfFirstNonWhiteSpaceCharacter (&parsePosition);
+          moveToPositionOfFirstNonWhiteSpaceCharacter(&parsePosition);
         }
-        saveStartPositionForParameterSubstring(i, parsePosition);
+        saveStartPositionForParameterSubstring(parsePosition);
         moveToPositionOfNextParameterSeparatorOrEndOfString (&parsePosition);
         bool endOfString = ('\0' == *parsePosition);
-        if(mParameterLocations[i] < parsePosition){ //avoid going bakcwards when not needed
+        if(mParameterLocations[i] < parsePosition) { //avoid going backwards when not needed
           trimTrailingWhiteSpacesOfParameterSubstring(parsePosition, ' ' == mSeparator);
-        }else if(mParameterLocations[i] == parsePosition){
+        } else { //mParameterLocations[i] == parsePosition. parsePosition cannot be behind
           *parsePosition = '\0';
         }
         if(endOfString){
@@ -53,6 +51,7 @@ unsigned int CParameterParser::parseParameters() {
       }
     }
   }
+  mActualAmountOfParameters = i;
   return i;
 }
 
@@ -62,8 +61,8 @@ void CParameterParser::moveToPositionOfFirstNonWhiteSpaceCharacter(char** paPars
   }
 }
 
-void CParameterParser::saveStartPositionForParameterSubstring(int paParameterNumber, char* paParsePosition) {
-  mParameterLocations[paParameterNumber] = paParsePosition;
+void CParameterParser::saveStartPositionForParameterSubstring(char* paParsePosition) {
+  mParameterLocations.push_back(paParsePosition);
 }
 
 void CParameterParser::moveToPositionOfNextParameterSeparatorOrEndOfString(char** paParsePosition) {
@@ -83,7 +82,7 @@ void CParameterParser::trimTrailingWhiteSpacesOfParameterSubstring(char* paParse
   *backTraceCharacter = '\0';
 }
 
-const char* CParameterParser::operator [](const int& paIndex) {
-  const char* result = (paIndex < static_cast<int>(mAmountOfParameters)) ? mParameterLocations[paIndex] : 0;
+const char* CParameterParser::operator [](const size_t paIndex) {
+  const char* result = (paIndex < mActualAmountOfParameters) ? mParameterLocations[paIndex] : 0;
   return result;
 }
