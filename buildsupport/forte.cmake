@@ -301,7 +301,7 @@ FUNCTION(forte_add_2dev_systemtests test_name bootfile_name1 bootfile_name2 arg1
   FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${bootfile_name2}" file_str2)
   STRING(REPLACE "\\" "\\\\" file_str2 ${file_str2})
   
-  FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../buildsupport/multi_test_2.cmake" scriptFile)
+  FILE(TO_NATIVE_PATH "${CMAKE_SOURCE_DIR}/buildsupport/multi_test_2.cmake" scriptFile)
   STRING(REPLACE "\\" "\\\\" scriptFile ${scriptFile})
   
   if (arg1 STREQUAL "")
