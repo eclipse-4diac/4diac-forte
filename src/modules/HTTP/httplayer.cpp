@@ -65,7 +65,7 @@ EComResponse CHttpComLayer::openClientConnection(char* paLayerParameter) {
   unsigned int numberOfSD = m_poFb->getNumSD();
 
   if(2 == m_poFb->getNumRD()) {
-    CParameterParser parser(paLayerParameter, 3, ';'); //IP:PORT;POST|PUT|GET;[content-type]
+    CParameterParser parser(paLayerParameter, ';', 3); //IP:PORT;POST|PUT|GET;[content-type]
 
     if(handleContentAndRequestType(parser, parser.parseParameters()) && handleAddress(parser[0], numberOfSD)) {
 
@@ -175,7 +175,7 @@ bool CHttpComLayer::handleAddress(const char* paAddress, size_t paNoOfSDs) {
   bool everythingOK = true;
 
   //look for parameters
-  CParameterParser parser(paAddress, 2, '?'); //IP:PORT/PATH?PARAMETERS
+  CParameterParser parser(paAddress, '?', 2); //IP:PORT/PATH?PARAMETERS
   const char *addressToParse = paAddress;
   if(2 == parser.parseParameters() && (e_PUT == mRequestType || e_POST == mRequestType)) {
     if(0 == paNoOfSDs) { //if SDs are present, the parameters in PARAMS are ignored
@@ -185,11 +185,11 @@ bool CHttpComLayer::handleAddress(const char* paAddress, size_t paNoOfSDs) {
     addressToParse = parser[0];
   }
 
-  CParameterParser pathParser(addressToParse, 2, '/'); //IP:PORT/PATH?PARAMETERS
+  CParameterParser pathParser(addressToParse, '/', 2); //IP:PORT/PATH?PARAMETERS
 
   if(2 == pathParser.parseParameters()) {
     mPath = strchr(addressToParse, '/');
-    CParameterParser portParser(pathParser[0], 2, ':');
+    CParameterParser portParser(pathParser[0], ':', 2);
     if(2 == portParser.parseParameters()) {
       mHost = portParser[0];
       mPort = static_cast<TForteUInt16>(forte::core::util::strtoul(portParser[1], 0, 10));

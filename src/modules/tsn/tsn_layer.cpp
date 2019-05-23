@@ -31,7 +31,7 @@ EComResponse CTSNLayer::openConnection(char *paLayerParameter){
   EComResponse eRetVal = e_InitInvalidId;
 
   // complete ID for publisher: fbdk[].tsn[<ip>:<port>:<vlan_id>:<prio>] e.g., fbdk[].tsn[239.1.0.1:48401:3:5]
-  CParameterParser parser(paLayerParameter, scmNumParameters, ':');
+  CParameterParser parser(paLayerParameter, ':', scmNumParameters);
 
   if(scmNumParameters != parser.parseParameters()){
     DEVLOG_ERROR("[TSN Layer] Wrong parameters (%s)\n", paLayerParameter);

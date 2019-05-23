@@ -382,7 +382,7 @@ UA_StatusCode COPC_UA_Handler::getNodeForPath(UA_NodeId **paFoundNodeId, const c
 
       UA_UInt16 ns = 1;
       CIEC_STRING targetName;
-      CParameterParser parser(tok, scmNoOfParameters, ':');
+      CParameterParser parser(tok, ':', scmNoOfParameters);
       unsigned int parsingResult = parser.parseParameters();
       if(scmNoOfParameters == parsingResult){
         targetName = parser[1];
@@ -725,7 +725,7 @@ UA_StatusCode COPC_UA_Handler::createMethodNode(const UA_NodeId *paParentNode, c
     DEVLOG_INFO("Creating a new method\n");
     UA_UInt16 ns = 1;
     CIEC_STRING targetName;
-    CParameterParser parser(paMethodName, scmNoOfParameters, ':');
+    CParameterParser parser(paMethodName, ':', scmNoOfParameters);
     unsigned int parsingResult = parser.parseParameters();
     if(scmNoOfParameters == parsingResult){
       targetName = parser[1];

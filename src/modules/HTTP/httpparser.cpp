@@ -133,7 +133,7 @@ bool CHttpParser::getHttpResponseCode(CIEC_STRING& paDest, char* paSrc) {
   char* helperChar = strstr(paSrc, "\r\n");
   if(helperChar != 0) {
     *helperChar = '\0';
-    CParameterParser parser(paSrc, 3, ' ');
+    CParameterParser parser(paSrc, ' ', 3);
     if(3 == parser.parseParameters()) {
       paDest = parser[1];
     } else {

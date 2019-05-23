@@ -20,25 +20,16 @@ class CParameterParser{
   public:
 
     /**
-     * Creates the parser object with a defined numbers of parameters
-     * @param paParameters Pointer to the string to be parsed. It remains untouched during the life of the object, since the string is copied. A null pointer is treated as an empty string
-     * @param paAmountOfParameters Amount of parameter to look for
-     * @param paSeparator Separator of the parameters
-     */
-    CParameterParser(const char* paParameters, size_t paAmountOfParameters, const char paSeparator);
-
-    /**
-     * Creates the parser object with undefined numbers of parameters
+     * Creates the parser object
      * @param paParameters Pointer to the string to be parsed. It remains untouched during the life of the object, since the string is copied. A null pointer is treated as an empty string
      * @param paSeparator Separator of the parameters
+     * @param paExpectedNumParams Expected number of parameters if known. Not providing it, will still work, but performance is improved when provided
      */
-    CParameterParser(const char* paParameters, const char paSeparator);
+    CParameterParser(const char* paParameters, const char paSeparator, size_t paExpectedNumParams = 0);
 
     /**
      * Parse the string using the separator passed in the constructor
      * Leading and trailing blank spaces in each parameter are ignored, unless the separator is actually a blank space
-     * If the string has less parameters than the amount specified in the constructor, the parsed amount of parameters is stored
-     * If the string has more parameters than the amount specified in the constructor, the the specified amount is stored
      * If the string starts with a separator, the first parameter will be considered an empty one
      * If the string ends with a separator, the last parameter will be considered an empty one
      * An empty string is seen as a one empty parameter
@@ -56,9 +47,6 @@ class CParameterParser{
   private:
     CIEC_STRING mParameters;
     std::vector<const char *> mParameterLocations;
-    const size_t mMaxAmountOfParameters;
-    size_t mActualAmountOfParameters;
-    const bool mAmountUndefined;
     const char mSeparator;
 
     void moveToPositionOfFirstNonWhiteSpaceCharacter(char** paParsePosition);

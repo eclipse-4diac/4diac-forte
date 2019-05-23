@@ -102,7 +102,7 @@ void ArrowheadJSONHelper::transformServiceToJSON(CIEC_ArrowheadService& paSource
         first = false;
       }
 
-      CParameterParser parser(paSource.serviceMetadata()[i].getValue(), 2, '=');
+      CParameterParser parser(paSource.serviceMetadata()[i].getValue(), '=', 2);
       if(2 != parser.parseParameters()) {
         DEVLOG_ERROR("[ArrowheadJSONHelper]: wrong metadata %s. Each metadata should be in the form of key=value\n", paSource.serviceMetadata()[i].getValue());
         break;

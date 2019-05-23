@@ -25,7 +25,7 @@ namespace forte {
     }
 
     bool CAdsProcessInterface::initialise(bool){
-      CParameterParser adsParameters(PARAMS().getValue(), 2, ':');
+      CParameterParser adsParameters(PARAMS().getValue(), ':', 2);
       if(2 != adsParameters.parseParameters()) {
         STATUS() = "PARAMS could not be parsed";
         return false;

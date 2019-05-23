@@ -14,45 +14,35 @@
 #include <string.h>
 #include <cctype>
 
-CParameterParser::CParameterParser(const char* paParameters, size_t paAmountOfParameters, const char paSeparator) :
-    mParameters(paParameters), mMaxAmountOfParameters(paAmountOfParameters), mActualAmountOfParameters(0), mAmountUndefined(false), mSeparator(paSeparator) {
-  mParameterLocations.reserve(paAmountOfParameters);
-}
-
-CParameterParser::CParameterParser(const char* paParameters, const char paSeparator) :
-    mParameters(paParameters), mMaxAmountOfParameters(0), mActualAmountOfParameters(0), mAmountUndefined(true), mSeparator(paSeparator) {
+CParameterParser::CParameterParser(const char* paParameters, const char paSeparator, size_t paExpectedNumParams) :
+    mParameters(paParameters), mSeparator(paSeparator) {
+  mParameterLocations.reserve(paExpectedNumParams);
 }
 
 size_t CParameterParser::parseParameters() {
   char* parsePosition = mParameters.getValue();
-  size_t i = 0;
-  if(0 < mMaxAmountOfParameters || mAmountUndefined) {
-    if('\0' == *parsePosition){ //empty string
+  bool endOfString = ('\0' == *parsePosition);
+  if(endOfString) { //empty string
+    saveStartPositionForParameterSubstring(parsePosition);
+  } else { //non empty string
+    while(!endOfString) {
+      if(' ' != mSeparator) {
+        moveToPositionOfFirstNonWhiteSpaceCharacter(&parsePosition);
+      }
       saveStartPositionForParameterSubstring(parsePosition);
-      i++;
-    }else{ //non empty string
-      for(i = 0; i < mMaxAmountOfParameters || mAmountUndefined; i++) {
-        if(' ' != mSeparator){
-          moveToPositionOfFirstNonWhiteSpaceCharacter(&parsePosition);
-        }
-        saveStartPositionForParameterSubstring(parsePosition);
-        moveToPositionOfNextParameterSeparatorOrEndOfString (&parsePosition);
-        bool endOfString = ('\0' == *parsePosition);
-        if(mParameterLocations[i] < parsePosition) { //avoid going backwards when not needed
-          trimTrailingWhiteSpacesOfParameterSubstring(parsePosition, ' ' == mSeparator);
-        } else { //mParameterLocations[i] == parsePosition. parsePosition cannot be behind
-          *parsePosition = '\0';
-        }
-        if(endOfString){
-          i++;
-          break;
-        }
+      moveToPositionOfNextParameterSeparatorOrEndOfString(&parsePosition);
+      endOfString = ('\0' == *parsePosition);
+      if(mParameterLocations.back() < parsePosition) { //avoid going backwards when not needed
+        trimTrailingWhiteSpacesOfParameterSubstring(parsePosition, ' ' == mSeparator);
+      } else { //mParameterLocations[i] == parsePosition. parsePosition cannot be behind
+        *parsePosition = '\0';
+      }
+      if(!endOfString) {
         parsePosition++;
       }
     }
   }
-  mActualAmountOfParameters = i;
-  return i;
+  return mParameterLocations.size();
 }
 
 void CParameterParser::moveToPositionOfFirstNonWhiteSpaceCharacter(char** paParsePosition) {
@@ -83,6 +73,6 @@ void CParameterParser::trimTrailingWhiteSpacesOfParameterSubstring(char* paParse
 }
 
 const char* CParameterParser::operator [](const size_t paIndex) {
-  const char* result = (paIndex < mActualAmountOfParameters) ? mParameterLocations[paIndex] : 0;
+  const char* result = (paIndex < mParameterLocations.size()) ? mParameterLocations[paIndex] : 0;
   return result;
 }

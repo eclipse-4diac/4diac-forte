@@ -63,7 +63,7 @@ EComResponse MQTTComLayer::processInterrupt() {
 
 EComResponse MQTTComLayer::openConnection(char* paLayerParameter) {
   EComResponse eRetVal = e_InitInvalidId;
-  CParameterParser parser(paLayerParameter, mNoOfParameters, ',');
+  CParameterParser parser(paLayerParameter, ',', mNoOfParameters);
   if(mNoOfParameters == parser.parseParameters()){
     mTopicName = parser[Topic];
     if( MQTTHandler::eRegisterLayerSucceeded ==
