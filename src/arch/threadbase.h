@@ -14,6 +14,7 @@
 
 #include "../core/datatypes/forte_time.h"
 #include <forte_sem.h>
+#include <forte_sync.h>
 
 namespace forte {
   namespace arch {
@@ -138,6 +139,12 @@ namespace forte {
          *       This is important for stopping and destroying threads.
          */
         volatile  bool mAlive;
+
+        /*! \brief Mutex to avoid two different threads accessing start() or end() at the same time
+         *  If two threads call start() at the same time, the thread will be created twice. A similar problem with end().
+         *  See https://bugs.eclipse.org/bugs/show_bug.cgi?id=547620
+         */
+        CSyncObject mThreadMutex;
 
         //we don't want that threads can be copied or assigned therefore the copy constructor and assignment operator are declared private
         //but not implemented

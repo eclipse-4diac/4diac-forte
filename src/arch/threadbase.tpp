@@ -31,6 +31,7 @@ CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::~CThreadBase() {
 
 template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
 void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::start(void){
+  CCriticalRegion criticalRegion(mThreadMutex);
   if(nullHandle == mThreadHandle){
     mThreadHandle = createThread(mStackSize);
     if(nullHandle == mThreadHandle){
@@ -42,6 +43,7 @@ void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::start(void){
 
 template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
 void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::end(void) {
+  CCriticalRegion criticalRegion(mThreadMutex);
   if(nullHandle != mThreadHandle){
     setAlive(false);
     join();
