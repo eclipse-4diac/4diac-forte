@@ -13,11 +13,14 @@
 # Interface to the EclipseSCADA SFP 
 #############################################################################
 
-forte_add_network_layer(EclipseSCADA_SFP OFF "sfp" CES_SFP_Layer essfplayer "Layer for providing and receiving data to EclipseSCADA")
+forte_add_network_layer(EclipseSCADA_SFP OFF "sfp" CES_SFP_Layer essfplayer "Layer for providing and receiving data to EclipseSCADA, DEPRECATED: Layer will be removed in 4diac FORTE 1.12.0")
 
 SET(FORTE_ECLIPSE_SCADA_SFP_SERVER_LIB_DIR "" CACHE PATH "Path to EclipseSCADA SFP Server library directory (leave empty for installed source code)")
 
 if(FORTE_COM_EclipseSCADA_SFP)
+
+  message(WARNING, "EclipseSCADA_SFP communication layer is deprecated! It will be removed in the 4diac FORTE 1.12.0 release!")
+
   forte_add_sourcefile_hcpp(essfphandler) 
 
   forte_add_handler(CEclipseSCADASFPHandler essfphandler)
