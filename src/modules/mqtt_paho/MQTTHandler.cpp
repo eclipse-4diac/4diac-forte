@@ -53,6 +53,14 @@ MQTTHandler::~MQTTHandler(){
 /*
  * START OF CALLBACKS
  */
+
+/** Callback for handling message reception.
+ *
+ * For convenience and performance it would be great to have the paContext param set subscribing topic.
+ * However Paho only allows one callback per client. Therefore we have to search for the layers attached to this topic.
+ * For details see discussion in Bug 545111.
+ *
+ */
 int MQTTHandler::onMqttMessageArrived(void* paContext, char* paTopicName, int, MQTTAsync_message* paMessage){
   //TODO: Check if handler allowed
   if(0 != paContext){
