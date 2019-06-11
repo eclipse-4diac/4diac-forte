@@ -176,7 +176,7 @@ bool CHttpComLayer::handleAddress(const char* paAddress, size_t paNoOfSDs) {
 
   //look for parameters
   CParameterParser parser(paAddress, '?', 2); //IP:PORT/PATH?PARAMETERS
-  const char *addressToParse = paAddress;
+  CIEC_STRING addressToParse = paAddress;
   if(2 == parser.parseParameters() && (e_PUT == mRequestType || e_POST == mRequestType)) {
     if(0 == paNoOfSDs) { //if SDs are present, the parameters in PARAMS are ignored
       mReqData = parser[1];
@@ -185,16 +185,17 @@ bool CHttpComLayer::handleAddress(const char* paAddress, size_t paNoOfSDs) {
     addressToParse = parser[0];
   }
 
-  CParameterParser pathParser(addressToParse, '/', 2); //IP:PORT/PATH?PARAMETERS
+  char* firstSlash = strchr(addressToParse.getValue(), '/');
 
-  if(2 == pathParser.parseParameters()) {
-    mPath = strchr(addressToParse, '/');
-    CParameterParser portParser(pathParser[0], ':', 2);
+  if(firstSlash) {
+    mPath = firstSlash;
+    *firstSlash = '\0';
+    CParameterParser portParser(addressToParse.getValue(), ':', 2);
     if(2 == portParser.parseParameters()) {
       mHost = portParser[0];
       mPort = static_cast<TForteUInt16>(forte::core::util::strtoul(portParser[1], 0, 10));
     } else {
-      mHost = pathParser[0];
+      mHost = addressToParse.getValue();
       DEVLOG_INFO("[HTTP Layer] No port was found on the parameter, using default 80\n");
     }
   } else {

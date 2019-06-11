@@ -130,11 +130,12 @@ void CHttpParser::addHeaderEnding(CIEC_STRING& paDest) {
 }
 
 bool CHttpParser::getHttpResponseCode(CIEC_STRING& paDest, char* paSrc) {
+  //HTTP-Version SP Status-Code SP Reason-Phrase CRLF (SP = space)
   char* helperChar = strstr(paSrc, "\r\n");
   if(helperChar != 0) {
     *helperChar = '\0';
-    CParameterParser parser(paSrc, ' ', 3);
-    if(3 == parser.parseParameters()) {
+    CParameterParser parser(paSrc, ' ');
+    if(3 <= parser.parseParameters()) { //Reason-Phrase can contain spaces in it
       paDest = parser[1];
     } else {
       DEVLOG_ERROR("[HTTP Parser] Invalid HTTP response. The status line is not well defined\n");
