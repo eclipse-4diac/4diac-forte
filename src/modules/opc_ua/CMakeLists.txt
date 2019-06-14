@@ -26,11 +26,33 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 if (FORTE_COM_OPC_UA)
 
+   ######### Nodesets functions ####################################################    
+   #Don't use this function. This is just a private one
+   FUNCTION(forte_opcua_add_nodeset_general namespaceName directoryName)
+     forte_add_sourcefile_with_path_hc(${directoryName}/ua_namespace_${namespaceName})
+     set_property(GLOBAL APPEND PROPERTY FORTE_OPCUA_NODESETS_LIST ${namespaceName})
+   ENDFUNCTION()
+
+   #Use this function for nodesets wich have a file called ua_types_NAMESPACE_generated.c file (DI for example). directoryName should point to the directory where the files are
+   FUNCTION(forte_opcua_add_nodeset namespaceName directoryName)
+     forte_add_sourcefile_with_path_hc(${directoryName}/ua_types_${namespaceName}_generated)
+     forte_opcua_add_nodeset_general(${namespaceName} ${directoryName})
+   ENDFUNCTION()
+   
+   #Use this function for nodesets wich DON'T have a file called ua_types_NAMESPACE_generated.c file (PLC for example). directoryName should point to the directory where the files are
+   FUNCTION(forte_opcua_add_nodeset_without_generated namespaceName directoryName)
+     forte_opcua_add_nodeset_general(${namespaceName} ${directoryName})
+   ENDFUNCTION()
+
+   forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/modules/opc_ua/opcua_nodesets.cpp) # created file
+   #################################################################################
+
     SET(FORTE_COM_OPC_UA_PORT "4840" CACHE NUMBER "Port where the OPC_UA server will listen")
     SET(FORTE_COM_OPC_UA_MULTICAST OFF CACHE BOOLEAN "Enable multicast support for OPC UA and registering with LDS")
     SET(FORTE_COM_OPC_UA_INCLUDE_DIR "" CACHE PATH "ABSOLUTE path to open62541.h file in the OPC UA project")
     SET(FORTE_COM_OPC_UA_LIB_DIR "" CACHE PATH "ABSOLUTE path to OPC UA folder with object library FORTE_COM_OPC_UA_LIB")
     SET(FORTE_COM_OPC_UA_CUSTOM_HOSTNAME CACHE STRING "Custom hostname which is used for the OPC UA app name and app uri")
+    SET(FORTE_COM_OPC_UA_MASTER_BRANCH OFF CACHE BOOLEAN "Use the master branch")
 
     # OPEN62541 library to be linked to forte
     IF ("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
@@ -53,9 +75,9 @@ if (FORTE_COM_OPC_UA)
     forte_add_link_directories(${FORTE_COM_OPC_UA_LIB_DIR})
     forte_add_link_library_beginning(${FORTE_COM_OPC_UA_LIB})
 
-    forte_add_handler(COPC_UA_Handler opcua_handler)
+    forte_add_handler(COPC_UA_Local_Handler opcua_local_handler)
     forte_add_handler(COPC_UA_Client_Handler opcua_client_handler)
-    forte_add_sourcefile_hcpp(opcua_layer opcua_handler opcua_helper opcua_client_handler)
+    forte_add_sourcefile_hcpp(opcua_layer opcua_local_handler opcua_helper opcua_client_handler opcua_handler_abstract)
     if (NOT EXISTS ${FORTE_COM_OPC_UA_INCLUDE_DIR})
         message(SEND_ERROR "FORTE_COM_OPC_UA_INCLUDE_DIR not set or does not exist")
     endif (NOT EXISTS ${FORTE_COM_OPC_UA_INCLUDE_DIR})
@@ -70,6 +92,7 @@ if (FORTE_COM_OPC_UA)
     
     forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA")
     forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA_MULTICAST")
+    forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA_MASTER_BRANCH")
     forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA_CUSTOM_HOSTNAME \"${FORTE_COM_OPC_UA_CUSTOM_HOSTNAME}\"")
 
 endif (FORTE_COM_OPC_UA)

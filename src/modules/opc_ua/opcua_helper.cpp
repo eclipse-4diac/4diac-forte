@@ -12,6 +12,11 @@
 
 #include "opcua_helper.h"
 #include "convert_functions.h"
+#include "../../core/utils/parameterParser.h"
+#include <criticalregion.h>
+#include <devlog.h>
+
+CSyncObject COPC_UA_Helper::getNodeForPathMutex = CSyncObject();
 
 #define UA_String_to_char_alloc(str, chars) { \
         chars = static_cast<char*>(forte_malloc(str->length+1)); \
@@ -57,7 +62,7 @@ bool map_convert_get_CIEC_DATE(const CIEC_ANY *src, void *dst) {
   if (src->getDataTypeID() != CIEC_ANY::e_DATE)
     return false;
   UA_DateTime *dstType = static_cast<UA_DateTime *>(dst);
-  *dstType = DATE_TO_DT(*(CIEC_DATE *) (src));
+  *dstType = DATE_TO_DT(*reinterpret_cast<const CIEC_DATE*>(src));
   return true;
 }
 
@@ -65,7 +70,7 @@ bool map_convert_set_CIEC_DATE(const void *src, CIEC_ANY *dst) {
   if (dst->getDataTypeID() != CIEC_ANY::e_DATE)
     return false;
   CIEC_DATE *dstType = static_cast<CIEC_DATE *>(dst);
-  *dstType = DT_TO_DATE(*(TForteUInt64 *) ((const UA_DateTime *) (src)));
+  *dstType = DT_TO_DATE(*reinterpret_cast<const TForteUInt64*>(reinterpret_cast<const UA_DateTime*>(src)));
   return true;
 }
 
@@ -160,5 +165,178 @@ const UA_TypeConvert COPC_UA_Helper::mapForteTypeIdToOpcUa[CIEC_ANY::e_WSTRING +
     MAP_INSERT_CONVERT_SPECIFIC(CIEC_STRING, &UA_TYPES[UA_TYPES_STRING]),
     MAP_INSERT_CONVERT_SPECIFIC(CIEC_WSTRING, &UA_TYPES[UA_TYPES_STRING])
 };
+
+bool COPC_UA_Helper::isTypeIdValid(CIEC_ANY::EDataTypeID paTypeId) {
+  return paTypeId >= CIEC_ANY::e_BOOL && paTypeId <= CIEC_ANY::e_WSTRING;
+}
+
+UA_StatusCode COPC_UA_Helper::releaseBrowseArgument(UA_BrowsePath* paBrowsePaths, size_t paPathLength) {
+  UA_Array_delete(paBrowsePaths, paPathLength * 2, &UA_TYPES[UA_TYPES_BROWSEPATH]);
+  return UA_STATUSCODE_GOOD;
+}
+
+UA_StatusCode COPC_UA_Helper::prepareBrowseArgument(const char *paNodePathConst, const UA_NodeId* paParent, UA_BrowsePath** paBrowsePaths,
+    size_t* paFolderCount) {
+  CIEC_STRING nodePathString(paNodePathConst);
+  char* nodePath = nodePathString.getValue();
+
+  // remove tailing slash
+  size_t pathLen = strlen(nodePath);
+  while(pathLen && '/' == nodePath[pathLen - 1]) {
+    nodePath[pathLen - 1] = 0;
+    pathLen--;
+  }
+  if(pathLen == 0) {
+    DEVLOG_ERROR("[OPC UA HELPER]: Node path %s is wrong\n", paNodePathConst);
+    return UA_STATUSCODE_BADINVALIDARGUMENT;
+  }
+
+  // count number of folders in node path
+  (*paFolderCount) = 0;
+  char *runner = nodePath;
+  while(*runner) {
+    if('/' == *runner) {
+      (*paFolderCount)++;
+    }
+    runner++;
+  }
+
+  UA_NodeId startingNode;
+  char *tok = strtok(nodePath, "/");
+  if(!paParent) { //no parent was provided. Use Objects as it, and discard the initial Objects in the browsepath
+    if(0 != strcmp(tok, "Objects")) {
+      DEVLOG_ERROR("[OPC UA HELPER] : Node path '%s' has to start with '/Objects'\n", paNodePathConst);
+      return UA_STATUSCODE_BADINVALIDARGUMENT;
+    }
+    (*paFolderCount)--; //remaining count without Objects folder
+    tok = strtok(NULL, "/"); // skip objects folder
+    startingNode = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
+  } else {
+    UA_NodeId_copy(paParent, &startingNode);
+  }
+
+  // for every folder (which is a BrowsePath) we want to get the node id
+  *paBrowsePaths = static_cast<UA_BrowsePath *>(UA_Array_new((*paFolderCount) * 2, &UA_TYPES[UA_TYPES_BROWSEPATH]));
+  UA_BrowsePath *browsePaths = *paBrowsePaths;
+
+  for(size_t i = 0; i < (*paFolderCount); i++) {
+    UA_BrowsePath_init(&browsePaths[i]);
+    browsePaths[i].startingNode = startingNode;
+    browsePaths[i].relativePath.elementsSize = i + 1;
+
+    browsePaths[i].relativePath.elements = static_cast<UA_RelativePathElement *>(UA_Array_new(browsePaths[i].relativePath.elementsSize,
+      &UA_TYPES[UA_TYPES_RELATIVEPATHELEMENT]));
+
+    for(size_t j = 0; j <= i; j++) {
+      if(j < i) {
+        // just copy from before
+        UA_RelativePathElement_copy(&browsePaths[i - 1].relativePath.elements[j], &browsePaths[i].relativePath.elements[j]);
+        continue;
+      }
+      // the last element is a new one
+      UA_RelativePathElement_init(&browsePaths[i].relativePath.elements[j]);
+      browsePaths[i].relativePath.elements[j].isInverse = UA_FALSE;
+
+      UA_UInt16 browsenameNamespace = 1;
+      CIEC_STRING targetName;
+      CParameterParser browseNameParser(tok, ':');
+      size_t parsingResult = browseNameParser.parseParameters();
+      if(scmMaxNoOfParametersInBrowseName == parsingResult) {
+        browsenameNamespace = forte::core::util::strtol(browseNameParser[0], 0, 10);
+        targetName = browseNameParser[1];
+      } else if(1 == parsingResult) {
+        targetName = browseNameParser[0];
+      } else {
+        DEVLOG_ERROR("[OPC UA HELPER]: Error by parsing FB browse path %s\n", paNodePathConst);
+        UA_Array_delete(browsePaths, *paFolderCount * 2, &UA_TYPES[UA_TYPES_BROWSEPATH]);
+        return UA_STATUSCODE_BADINVALIDARGUMENT;
+      }
+      browsePaths[i].relativePath.elements[j].targetName = UA_QUALIFIEDNAME_ALLOC(browsenameNamespace, targetName.getValue());
+    }
+    tok = strtok(NULL, "/");
+  }
+
+  // same browse paths, but inverse reference, to check both directions
+  for(size_t i = 0; i < (*paFolderCount); i++) {
+    UA_BrowsePath_copy(&browsePaths[i], &browsePaths[(*paFolderCount) + i]);
+    for(unsigned int j = 0; j < browsePaths[(*paFolderCount) + i].relativePath.elementsSize; j++) {
+      browsePaths[(*paFolderCount) + i].relativePath.elements[j].isInverse = !browsePaths[(*paFolderCount) + i].relativePath.elements[j].isInverse;
+    }
+  }
+  return UA_STATUSCODE_GOOD;
+}
+
+UA_StatusCode COPC_UA_Helper::getRemoteNodeForPath(UA_Client *paClient, UA_NodeId **paFoundNodeId, const char *paNodePathConst, const UA_NodeId *paStartingNode,
+    UA_NodeId **paParentNodeId) {
+  *paFoundNodeId = NULL;
+  UA_BrowsePath *browsePaths = 0;
+  size_t folderCnt = 0;
+  UA_StatusCode retVal = prepareBrowseArgument(paNodePathConst, 0, &browsePaths, &folderCnt);
+  if(UA_STATUSCODE_GOOD == retVal) {
+    // other thread may currently create nodes for the same path, thus mutex
+    CCriticalRegion criticalRegion(getNodeForPathMutex);
+
+    UA_TranslateBrowsePathsToNodeIdsRequest request;
+    UA_TranslateBrowsePathsToNodeIdsResponse response;
+
+    UA_TranslateBrowsePathsToNodeIdsRequest_init(&request);
+
+    request.browsePaths = browsePaths;
+    request.browsePathsSize = folderCnt * 2;
+
+    response = UA_Client_Service_translateBrowsePathsToNodeIds(paClient, request);
+
+    retVal = response.responseHeader.serviceResult;
+    if(retVal == UA_STATUSCODE_GOOD) {
+      if(response.resultsSize == folderCnt * 2) {
+        int foundFolderOffset = getFolderOffset(response.results, folderCnt);
+
+        if(foundFolderOffset >= 0) {
+          // all nodes exist, so just copy the node ids
+          copyNodeIds(paFoundNodeId, response.results, foundFolderOffset, paParentNodeId, paStartingNode, folderCnt);
+        } else {
+          DEVLOG_ERROR("[OPC UA HELPER]: Could not translate browse paths for '%s' to node IDs. Not all nodes exist\n", paNodePathConst);
+          retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
+        }
+      } else {
+        DEVLOG_ERROR("[OPC UA HELPER]: Could not translate browse paths for '%s' to node IDs. resultSize (%d) != expected count (%d)\n", paNodePathConst,
+          response.resultsSize, folderCnt);
+        retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
+      }
+    } else {
+      DEVLOG_ERROR("[OPC UA HELPER]: Could not translate browse paths for '%s' to node IDs. Error: %s\n", paNodePathConst,
+        UA_StatusCode_name(retVal));
+    }
+
+    //browsePaths is deleted inside
+    UA_TranslateBrowsePathsToNodeIdsRequest_deleteMembers(&request);
+    UA_TranslateBrowsePathsToNodeIdsResponse_deleteMembers(&response);
+  }
+
+  return retVal;
+}
+
+int COPC_UA_Helper::getFolderOffset(UA_BrowsePathResult* browsePathsResults, size_t folderCnt) {
+  int foundFolderOffset = -1;
+  if(browsePathsResults[folderCnt - 1].statusCode == UA_STATUSCODE_GOOD) {
+    foundFolderOffset = 0;
+  } else if(browsePathsResults[folderCnt * 2 - 1].statusCode == UA_STATUSCODE_GOOD) {
+    foundFolderOffset = static_cast<int>(folderCnt);
+  }
+  return foundFolderOffset;
+}
+
+void COPC_UA_Helper::copyNodeIds(UA_NodeId **paFoundNodeId, UA_BrowsePathResult* browsePathsResults, int foundFolderOffset, UA_NodeId **paParentNodeId,
+    const UA_NodeId *paStartingNode, size_t folderCnt) {
+  *paFoundNodeId = UA_NodeId_new();
+  UA_NodeId_copy(&browsePathsResults[foundFolderOffset + folderCnt - 1].targets[0].targetId.nodeId, *paFoundNodeId);
+  if(paParentNodeId && folderCnt >= 2) {
+    *paParentNodeId = UA_NodeId_new();
+    UA_NodeId_copy(&browsePathsResults[foundFolderOffset + folderCnt - 2].targets[0].targetId.nodeId, *paParentNodeId);
+  } else if(paParentNodeId && !paStartingNode) {
+    *paParentNodeId = UA_NodeId_new();
+    **paParentNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
+  }
+}
 
 

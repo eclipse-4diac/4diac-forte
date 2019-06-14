@@ -12,3 +12,7 @@
 if(FORTE_MODULE_UTILS)
   add_subdirectory(utils)
 endif(FORTE_MODULE_UTILS)
+
+if(FORTE_COM_OPC_UA)
+  add_subdirectory(opc_ua)
+endif(FORTE_COM_OPC_UA)
