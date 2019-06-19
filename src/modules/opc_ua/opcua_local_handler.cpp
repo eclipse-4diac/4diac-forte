@@ -818,9 +818,10 @@ UA_StatusCode COPC_UA_Local_Handler::splitFoldersFromNode(const CIEC_STRING& paO
   CIEC_STRING copyOfOriginal(paOriginal);
 
   char* begin = copyOfOriginal.getValue();
-  char* runner = begin + copyOfOriginal.length() - 2;
+  char* runner = begin + copyOfOriginal.length() - 1;
 
   if('/' == *runner) { //remove trailing slash
+    *runner = '\0';
     runner--;
   }
 
@@ -904,19 +905,19 @@ UA_StatusCode COPC_UA_Local_Handler::initializeReadWrite(COPC_UA_HandlerAbstract
 
     CSinglyLinkedList<UA_NodeId*> presentNodes;
     if(getNode(0, (*itMain), presentNodes)) { //node exists
-      if(paWrite) {
+      if(!paWrite) { //If we are reading a variable, it should be writable from the outside
         retVal = updateNodeUserAccessLevel((*itMain)->mNodeId, UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE);
-        if(UA_STATUSCODE_GOOD != retVal) {
-          DEVLOG_ERROR("[OPC UA LOCAL]: Cannot set write permission of node for port %d", indexOfNodePair);
-        }
-      } else {
-        void *handle = 0;
-        if(UA_STATUSCODE_GOOD == UA_Server_getNodeContext(mUaServer, *(*itMain)->mNodeId, &handle) && handle) {
-          DEVLOG_ERROR("[OPC UA LOCAL]: At FB %s RD_%d the node %s has already a FB who is reading from it. Cannot add another one\n",
-            paInfo.getLayer()->getCommFB()->getInstanceName(), indexOfNodePair, (*itMain)->mBrowsePath.getValue());
-          retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
+        if(UA_STATUSCODE_GOOD == retVal) {
+          void *handle = 0;
+          if(UA_STATUSCODE_GOOD == UA_Server_getNodeContext(mUaServer, *(*itMain)->mNodeId, &handle) && handle) {
+            DEVLOG_ERROR("[OPC UA LOCAL]: At FB %s RD_%d the node %s has already a FB who is reading from it. Cannot add another one\n",
+              paInfo.getLayer()->getCommFB()->getInstanceName(), indexOfNodePair, (*itMain)->mBrowsePath.getValue());
+            retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
+          } else {
+            retVal = registerVariableCallBack((*itMain)->mNodeId, paInfo.getLayer(), typeConvert, indexOfNodePair);
+          }
         } else {
-          retVal = registerVariableCallBack((*itMain)->mNodeId, paInfo.getLayer(), typeConvert, indexOfNodePair);
+          DEVLOG_ERROR("[OPC UA LOCAL]: Cannot set write permission of node for port %d", indexOfNodePair);
         }
       }
 
@@ -944,7 +945,7 @@ UA_StatusCode COPC_UA_Local_Handler::initializeReadWrite(COPC_UA_HandlerAbstract
         variableInformation.mBrowseName = &browseName;
         variableInformation.mReturnedNodeId = &returnedNodeId;
         variableInformation.mTypeConvert = typeConvert;
-        variableInformation.mAllowWrite = paWrite;
+        variableInformation.mAllowWrite = !paWrite; //write FB here means that from the outside should not be possible to write and the other way around for read
         variableInformation.mInitData =
             paWrite ? &paInfo.getLayer()->getCommFB()->getSDs()[indexOfNodePair] : &paInfo.getLayer()->getCommFB()->getRDs()[indexOfNodePair];
 

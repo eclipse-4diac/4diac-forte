@@ -175,8 +175,10 @@ void COPC_UA_Client_Handler::removeAsyncCall(UA_ClientInformation* paClientInfor
 
 void COPC_UA_Client_Handler::resetSubscription(UA_ClientInformation* paClientInformation) {
   removeAsyncCall(paClientInformation);
-  paClientInformation->mSubscriptionInfo->mSubscriptionAlreadyCreated = false;
-  //TODO: add to conncetion thread
+  if(paClientInformation->mSubscriptionInfo) {
+    paClientInformation->mSubscriptionInfo->mSubscriptionAlreadyCreated = false;
+  }
+  //TODO: add to connection thread and check when exactly this could be called
 }
 
 #ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
