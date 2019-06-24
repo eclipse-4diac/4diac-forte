@@ -295,8 +295,7 @@ bool COPC_UA_HandlerAbstract::checkAction(COPC_UA_HandlerAbstract::CActionInfo& 
         } else {
           DEVLOG_ERROR(
             "[OPC UA PARAMS]: In FB %s: Local %s action is only allowed using a Subscriber FB and the amount of BrowseName,NodeId pairs should match the number of RDs\n",
-            paResult.getLayer()->getCommFB()->getInstanceName(),
-            COPC_UA_HandlerAbstract::mActionNames[eRead]);
+            paResult.getLayer()->getCommFB()->getInstanceName(), COPC_UA_HandlerAbstract::mActionNames[eRead]);
         }
       } else {
         if(forte::com_infra::EComServiceType::e_Client == fbType && noOfRDs == paResult.getNoOfNodePairs() && 0 == noOfSDs) {
@@ -304,29 +303,35 @@ bool COPC_UA_HandlerAbstract::checkAction(COPC_UA_HandlerAbstract::CActionInfo& 
         } else {
           DEVLOG_ERROR(
             "[OPC UA PARAMS]: Remote %s action is only allowed using a Client FB, the amount of BrowseName,NodeId pairs should match the number of RDs, and must have no SDs\n",
-            paResult.getLayer()->getCommFB()->getInstanceName(),
-            COPC_UA_HandlerAbstract::mActionNames[eRead]);
+            paResult.getLayer()->getCommFB()->getInstanceName(), COPC_UA_HandlerAbstract::mActionNames[eRead]);
         }
       }
       break;
     case eWrite:
-      if(forte::com_infra::EComServiceType::e_Publisher == fbType && noOfSDs == paResult.getNoOfNodePairs()) {
-        retVal = true;
+      if("" == paResult.getEndpoint()) {
+        if(forte::com_infra::EComServiceType::e_Publisher == fbType && noOfSDs == paResult.getNoOfNodePairs()) {
+          retVal = true;
+        } else {
+          DEVLOG_ERROR(
+            "[OPC UA P[OPC UA PARAMS]: In FB %s: Local action %s is only allowed using a Publisher FB and the amount of BrowseName,NodeId pairs should match the number of SDs\n",
+            paResult.getLayer()->getCommFB()->getInstanceName(), COPC_UA_HandlerAbstract::mActionNames[eWrite]);
+        }
       } else {
-        DEVLOG_ERROR(
-          "[OPC UA P[OPC UA PARAMS]: In FB %s: In FB %s:  is only allowed using a Publisher FB and the amount of BrowseName,NodeId pairs should match the number of SDs\n",
-          paResult.getLayer()->getCommFB()->getInstanceName(),
-          COPC_UA_HandlerAbstract::mActionNames[eWrite]);
+        if(forte::com_infra::EComServiceType::e_Client == fbType && noOfSDs == paResult.getNoOfNodePairs() && 0 == noOfRDs) {
+          retVal = true;
+        } else {
+          DEVLOG_ERROR(
+            "[OPC UA P[OPC UA PARAMS]: In FB %s: Remote action %s is only allowed using a Client FB, the amount of BrowseName,NodeId pairs should match the number of SDs and must have no RDs\n",
+            paResult.getLayer()->getCommFB()->getInstanceName(), COPC_UA_HandlerAbstract::mActionNames[eWrite]);
+        }
       }
       break;
     case eCreateMethod:
       if(forte::com_infra::EComServiceType::e_Server == fbType && 1 == paResult.getNoOfNodePairs()) {
         retVal = true;
       } else {
-        DEVLOG_ERROR(
-          "[OPC UA PARAMS]: In FB %s: %s action is only allowed using a Server FB, the amount of BrowseName,NodeId pairs should be 1\n",
-          paResult.getLayer()->getCommFB()->getInstanceName(),
-          COPC_UA_HandlerAbstract::mActionNames[eCreateMethod]);
+        DEVLOG_ERROR("[OPC UA PARAMS]: In FB %s: %s action is only allowed using a Server FB, the amount of BrowseName,NodeId pairs should be 1\n",
+          paResult.getLayer()->getCommFB()->getInstanceName(), COPC_UA_HandlerAbstract::mActionNames[eCreateMethod]);
       }
       break;
     case eCallMethod:
@@ -336,8 +341,7 @@ bool COPC_UA_HandlerAbstract::checkAction(COPC_UA_HandlerAbstract::CActionInfo& 
       } else {
         DEVLOG_ERROR(
           "[OPC UA PARAMS]: In FB %s: %s action is only allowed using a Client FB, the amount of BrowseName,NodeId pairs should be 1, and the browsepath shouldn't be empty\n",
-          paResult.getLayer()->getCommFB()->getInstanceName(),
-          COPC_UA_HandlerAbstract::mActionNames[eCallMethod]);
+          paResult.getLayer()->getCommFB()->getInstanceName(), COPC_UA_HandlerAbstract::mActionNames[eCallMethod]);
       }
       break;
     case eSubscribe:
@@ -346,8 +350,7 @@ bool COPC_UA_HandlerAbstract::checkAction(COPC_UA_HandlerAbstract::CActionInfo& 
       } else {
         DEVLOG_ERROR(
           "[OPC UA PARAMS]: In FB %s: %s action is only allowed using a Subscribe FB, the amount of BrowseName,NodeId pairs should match the number of RDs\n",
-          paResult.getLayer()->getCommFB()->getInstanceName(),
-          COPC_UA_HandlerAbstract::mActionNames[eSubscribe]);
+          paResult.getLayer()->getCommFB()->getInstanceName(), COPC_UA_HandlerAbstract::mActionNames[eSubscribe]);
       }
       break;
     case eCreateObject:

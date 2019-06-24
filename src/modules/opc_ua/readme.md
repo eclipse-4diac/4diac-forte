@@ -23,6 +23,12 @@
 * Ability to reference a namespace locally/remotely using the uri and not only the number
 * Add most common opc ua types in forte (LocalizedText, QualifiedName)
 * Add support for arrays
+* Replace CSingledLinkedList with vectors
+* Replace CIEC_STRING and char* with std::string
+* Return references instead of poitners where possible
+* Split initializeReadWrite and initializeCreateMethod in smaller functions
+* Use std::algorithms where possible (getNode has a iteration at the end where it could fit)
+* Store parent and nodeId for all methods. Methods from the same objectType don't work otherwise
 
 ## For users
 
@@ -100,7 +106,7 @@ ID Examples:
 | Local         | CREATE_OBJECT   | X                     | NOT IMPLEMENTED YET |
 | Local         | DELETE_OBJECT   | X                     | NOT IMPLEMENTED YET |
 | Remote        | READ            | CLIENT                | Number of Pairs should match the number of RDs and no SDs must be present. Browsename and/or NodeId must be provided. If both are provided they should match |
-| Remote        | WRITE           | PUBLISH  (Maybe this should be change to CLIENT)              | Number of Pairs should match the number of SDs. Browsename and/or NodeId must be provided. If both are provided they should match |
+| Remote        | WRITE           | CLIENT                | Number of Pairs should match the number of SDs and no RDs must be present. Browsename and/or NodeId must be provided. If both are provided they should match |
 | Remote        | CREATE_METHOD   | CLIENT                | Not allowed to create methods remotely |
 | Remote        | CALL_METHOD     | CLIENT                | Number of Pairs should be 1. Browsepath MUST be provided. NodeId is optional. If both are provided they should match |
 | Remote        | SUBSCRIBE       | SUBSCRIBE             | Number of Pairs should match the number of RDs. Browsename and/or NodeId must be provided. If both are provided they should match  |
@@ -112,7 +118,7 @@ ID Examples:
 
 The code was changed a lot. There are now two handlers, one for the local server and one for clients, and an abstract parent class for both which have common code. Most work is shifted to these handlers which offer three main functions: initialize, execute and uninitialize.  
 
-The layer pass its parameter to the abstract parent, which parses and checks that the restrictions from the table before are met. It returns an ACTION class and it from the action, it stores the local or remote (clients) handler to use it later. When sending, the execute function is performed (on the respective handler). 
+The layer pass its parameter to the abstract parent, which parses and checks that the restrictions from the table before are met. It returns an ACTION class and from the action, it stores the local or remote (clients) handler to use it later. When sending, the execute function is performed (on the respective handler). 
 
 The local handler is mostly the same as before.
 

@@ -230,6 +230,7 @@ void COPC_UA_Client_Handler::handleReadReturn(UA_Client *, void *paUserdata, UA_
       DEVLOG_ERROR("[OPC UA REMOTE]: Reading for FB %s in client %s failed because the response size is %u but the FB has %u values to read\n",
         handle->mAction->getLayer()->getCommFB()->getInstanceName(), handle->mAction->getEndpoint().getValue(), paResponse->resultsSize,
         handle->mAction->getNoOfNodePairs());
+      varHandle.mFailed = true;
     }
   } else {
     DEVLOG_ERROR("[OPC UA REMOTE]: Reading for FB %s in client %s failed with error: %s\n", handle->mAction->getLayer()->getCommFB()->getInstanceName(),
@@ -244,11 +245,9 @@ void COPC_UA_Client_Handler::handleReadReturn(UA_Client *, void *paUserdata, UA_
 }
 
 void COPC_UA_Client_Handler::handleWriteReturn(UA_Client *, void *paUserdata, UA_UInt32, UA_WriteResponse *paResponse) {
-  //write is a PUBLISH which already triggers when executed, can't trigger here
-  //only error checking is done here
-
   UA_RemoteCallHandle* handle = static_cast<UA_RemoteCallHandle*>(paUserdata);
   removeAsyncCall(handle->mClient);
+  COPC_UA_HandlerAbstract::UA_RecvVariable_handle varHandle(0);
   if(UA_STATUSCODE_GOOD == paResponse->responseHeader.serviceResult) {
     if(paResponse->resultsSize == handle->mAction->getNoOfNodePairs()) {
       for(size_t i = 0; i < paResponse->resultsSize; i++) {
@@ -256,6 +255,7 @@ void COPC_UA_Client_Handler::handleWriteReturn(UA_Client *, void *paUserdata, UA
           DEVLOG_ERROR("[OPC UA REMOTE]: Writing for FB %s in client %s failed because the response for index %u has status %s\n",
             handle->mAction->getLayer()->getCommFB()->getInstanceName(), handle->mAction->getEndpoint().getValue(), i,
             UA_StatusCode_name(paResponse->results[i]));
+          varHandle.mFailed = true;
           break;
         }
       }
@@ -263,11 +263,17 @@ void COPC_UA_Client_Handler::handleWriteReturn(UA_Client *, void *paUserdata, UA
       DEVLOG_ERROR("[OPC UA REMOTE]: Writing for FB %s in client %s failed because the response size is %u but the FB has %u values to write\n",
         handle->mAction->getLayer()->getCommFB()->getInstanceName(), handle->mAction->getEndpoint().getValue(), paResponse->resultsSize,
         handle->mAction->getNoOfNodePairs());
+      varHandle.mFailed = true;
     }
   } else {
     DEVLOG_ERROR("[OPC UA REMOTE]: Writing for FB %s in client %s failed with error: %s\n", handle->mAction->getLayer()->getCommFB()->getInstanceName(),
       handle->mAction->getEndpoint().getValue(), UA_StatusCode_name(paResponse->responseHeader.serviceResult));
+    varHandle.mFailed = true;
   }
+
+  handle->mAction->getLayer()->recvData(static_cast<const void *>(&varHandle), 0);
+  handle->mAction->getLayer()->getCommFB()->interruptCommFB(handle->mAction->getLayer());
+  ::getExtEvHandler<COPC_UA_Client_Handler>(*handle->mAction->getLayer()->getCommFB()).startNewEventChain(handle->mAction->getLayer()->getCommFB());
 
   delete handle;
 }

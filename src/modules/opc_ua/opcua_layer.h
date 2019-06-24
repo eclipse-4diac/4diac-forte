@@ -74,11 +74,6 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
     void setDataAlreadyPresentRead(bool paDataRead);
     bool getDataAlreadyPresentRead();
 
-    struct FB_NodeIds {
-        UA_NodeId *functionBlockId;
-        UA_NodeId *variableId;
-        const UA_TypeConvert *convert;
-    };
 };
 
 #endif /* SRC_MODULES_OPC_UA_OPCUA_LAYER_H_ */

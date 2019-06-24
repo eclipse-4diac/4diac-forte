@@ -21,7 +21,7 @@ forte_add_2dev_systemtests(WorkingClientServer clientWorking.fboot serverWorking
 
 forte_add_2dev_systemtests(WorkingClientNoSubsServer clientWorkingNoSubs.fboot serverWorking.fboot "" "" 30 1)
 
-forte_add_2dev_systemtests(FailingClientServer failingClient.fboot failingServer.fboot "" "" 25 0)
+forte_add_2dev_systemtests(FailingClientServer failingClient.fboot failingServer.fboot "" "" 35 0)
 
 forte_add_2dev_systemtests(DelayedWorking delayedClient.fboot delayedServer.fboot "" "" 85 0)
 
