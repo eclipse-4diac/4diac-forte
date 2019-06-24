@@ -106,7 +106,7 @@ COPC_UA_HandlerAbstract::CActionInfo* COPC_UA_HandlerAbstract::getInfoFromParams
 
 COPC_UA_HandlerAbstract::CActionInfo* COPC_UA_HandlerAbstract::COPC_UA_Params::getInfoFromParams(const char* paParams, COPC_UA_Layer* paLayer) {
   COPC_UA_HandlerAbstract::CActionInfo* retVal = 0;
-  CParameterParser mainParser(paParams, ';'); // ACTION;[ENDPOINT#];BROSENAME,NODEID;[BROSENAME,NODEID] //255 maximum browsename,nodeid
+  CParameterParser mainParser(paParams, ';'); // ACTION;[ENDPOINT#];BROWSENAME,NODEID;[BROSWENAME,NODEID] //255 maximum browsename,nodeid
   size_t amountOfParameters = mainParser.parseParameters();
 
   if(2 > amountOfParameters) { //at least two are needed

@@ -200,8 +200,8 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
 
     UA_StatusCode createObjectNode(createObjectInfo* paNodeInformation);
 
-    UA_StatusCode translateBrowseNameAndStore(const char* paBrosePath, UA_BrowsePath **paBrowsePaths, size_t *paFoldercount, size_t *paFirstNonExistingNode,
-        CSinglyLinkedList<UA_NodeId*>& paCreatedNodeIds);
+    UA_StatusCode translateBrowseNameAndStore(const char* paBrowsePath, UA_BrowsePath **paBrowsePaths, size_t *paFoldercount, size_t *paFirstNonExistingNode,
+        CSinglyLinkedList<UA_NodeId*>& paFoundNodeIds);
 
     UA_StatusCode createFolders(const char* paFolders, CSinglyLinkedList<UA_NodeId*>& paCreatedNodeIds);
 

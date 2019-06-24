@@ -394,7 +394,7 @@ UA_StatusCode COPC_UA_Local_Handler::executeCreateMethod(COPC_UA_HandlerAbstract
     call->mSendHandle->mFailed = somethingFailed;
     call->mActionInfo->getResultReady().inc();
   } else {
-    DEVLOG_ERROR("[OPC UA LOCAL]: The method being returned hasn't been called before. FB=%s\n", paInfo.getLayer()->getCommFB()->getInstanceName());
+    DEVLOG_ERROR("[OPC UA LOCAL]: The method being returned hasn't been called before of FB %s\n", paInfo.getLayer()->getCommFB()->getInstanceName());
   }
 
   return retVal;
@@ -618,6 +618,13 @@ UA_StatusCode COPC_UA_Local_Handler::createMethodNode(createMethodInfo* paMethod
     requestedNodeId = UA_NODEID_NUMERIC(paMethodInfo->mBrowseName->namespaceIndex, 0); //if not provided, let the server generate the NodeId using the namespace from the browsename
   }
 
+  UA_NodeId parentNodeId;
+  if(paMethodInfo->mParentNodeId) {
+    UA_NodeId_copy(paMethodInfo->mParentNodeId, &parentNodeId);
+  } else {
+    parentNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
+  }
+
   UA_MethodAttributes methodAttributes;
   UA_MethodAttributes_init(&methodAttributes);
   methodAttributes.description = UA_LOCALIZEDTEXT_ALLOC("en-US", "Method which can be called");
@@ -627,10 +634,11 @@ UA_StatusCode COPC_UA_Local_Handler::createMethodNode(createMethodInfo* paMethod
   UA_QualifiedName browseName = UA_QUALIFIEDNAME_ALLOC(paMethodInfo->mBrowseName->namespaceIndex,
     reinterpret_cast<const char*>(paMethodInfo->mBrowseName->name.data));
 
-  retVal = UA_Server_addMethodNode(mUaServer, requestedNodeId, *paMethodInfo->mParentNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT), browseName,
+  retVal = UA_Server_addMethodNode(mUaServer, requestedNodeId, parentNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT), browseName,
     methodAttributes, COPC_UA_Local_Handler::onServerMethodCall, paMethodInfo->mInputSize, paMethodInfo->mInputArguments, paMethodInfo->mOutputSize,
     paMethodInfo->mOutputArguments, paMethodInfo->mCallback, paMethodInfo->mReturnedNodeId);
 
+  UA_NodeId_deleteMembers(&parentNodeId);
   UA_NodeId_deleteMembers(&requestedNodeId);
   UA_QualifiedName_deleteMembers(&browseName);
   UA_MethodAttributes_deleteMembers(&methodAttributes);
@@ -644,6 +652,12 @@ UA_StatusCode COPC_UA_Local_Handler::createVariableNode(createVariableInfo* paNo
     UA_NodeId_copy(paNodeInformation->mRequestedNodeId, &requestedNodeId);
   } else {
     requestedNodeId = UA_NODEID_NUMERIC(paNodeInformation->mBrowseName->namespaceIndex, 0); //if not provided, let the server generate the NodeId using the namespace from the browsename
+  }
+  UA_NodeId parentNodeId;
+  if(paNodeInformation->mParentNodeId) {
+    UA_NodeId_copy(paNodeInformation->mParentNodeId, &parentNodeId);
+  } else {
+    parentNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
   }
 
   void *paVarValue = UA_new(paNodeInformation->mTypeConvert->type);
@@ -670,7 +684,7 @@ UA_StatusCode COPC_UA_Local_Handler::createVariableNode(createVariableInfo* paNo
   // add UA Variable Node to the server address space
   UA_StatusCode retVal = UA_Server_addVariableNode(mUaServer, // server
     requestedNodeId, // requestedNewNodeId
-    *paNodeInformation->mParentNodeId, // parentNodeId
+    parentNodeId, // parentNodeId
     UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT), // referenceTypeId   Reference to the type definition for the variable node
     *paNodeInformation->mBrowseName, // browseName
     UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), // typeDefinition
@@ -682,6 +696,7 @@ UA_StatusCode COPC_UA_Local_Handler::createVariableNode(createVariableInfo* paNo
     DEVLOG_ERROR("[OPC UA LOCAL]: AddressSpace adding Variable Node %s failed. Error: %s\n", paNodeInformation->mBrowseName->name.data,
       UA_StatusCode_name(retVal));
   }
+  UA_NodeId_deleteMembers(&parentNodeId);
   UA_NodeId_deleteMembers(&requestedNodeId);
   UA_VariableAttributes_deleteMembers(&var_attr);
   return retVal;
@@ -717,10 +732,10 @@ UA_StatusCode COPC_UA_Local_Handler::createObjectNode(createObjectInfo* paNodeIn
   return retVal;
 }
 
-UA_StatusCode COPC_UA_Local_Handler::translateBrowseNameAndStore(const char* paBrosePath, UA_BrowsePath **paBrowsePaths, size_t *paFoldercount,
-    size_t* paFirstNonExistingNode, CSinglyLinkedList<UA_NodeId*>& paCreatedNodeIds) {
+UA_StatusCode COPC_UA_Local_Handler::translateBrowseNameAndStore(const char* paBrowsePath, UA_BrowsePath **paBrowsePaths, size_t *paFoldercount,
+    size_t* paFirstNonExistingNode, CSinglyLinkedList<UA_NodeId*>& paFoundNodeIds) {
 
-  UA_StatusCode retVal = COPC_UA_Helper::prepareBrowseArgument(paBrosePath, 0, paBrowsePaths, paFoldercount);
+  UA_StatusCode retVal = COPC_UA_Helper::prepareBrowseArgument(paBrowsePath, 0, paBrowsePaths, paFoldercount);
 
   if(UA_STATUSCODE_GOOD == retVal) {
     // other thread may currently create nodes for the same path, thus mutex
@@ -738,7 +753,7 @@ UA_StatusCode COPC_UA_Local_Handler::translateBrowseNameAndStore(const char* paB
       if(UA_STATUSCODE_GOOD != retVal) {
         UA_NodeId_delete(*it);
       } else {
-        paCreatedNodeIds.pushBack(*it);
+        paFoundNodeIds.pushBack(*it);
       }
     }
 
@@ -848,26 +863,29 @@ bool COPC_UA_Local_Handler::getNode(const UA_NodeId* paParentNode, CNodePairInfo
 
   CSinglyLinkedList<UA_NodeId*> existingNodeIds;
   if(UA_STATUSCODE_GOOD == translateBrowseNameAndStore(paNodeInfo->mBrowsePath.getValue(), &browsePaths, &pathCount, &firstNonExistingNode, existingNodeIds)) {
-    if(firstNonExistingNode == pathCount) { //all nodes exist
-      retVal = true;
-      if(paNodeInfo->mNodeId) { //nodeID was provided
-        if(!UA_NodeId_equal(paNodeInfo->mNodeId, *existingNodeIds.back())) {
-          retVal = false; // the found Node has not the same NodeId.
+    if(pathCount) {
+      if(firstNonExistingNode == pathCount) { //all nodes exist
+        retVal = true;
+        if(paNodeInfo->mNodeId) { //nodeID was provided
+          if(!UA_NodeId_equal(paNodeInfo->mNodeId, *existingNodeIds.back())) {
+            retVal = false; // the found Node has not the same NodeId.
+          }
+        } else { //if no nodeID was provided, the found Node is stored in the nodePairInfo
+          paNodeInfo->mNodeId = UA_NodeId_new();
+          UA_NodeId_copy(*existingNodeIds.back(), paNodeInfo->mNodeId);
         }
-      } else { //if no nodeID was provided, the found Node is stored in the nodePairInfo
-        paNodeInfo->mNodeId = UA_NodeId_new();
-        UA_NodeId_copy(*existingNodeIds.back(), paNodeInfo->mNodeId);
       }
-    }
 
-    for(CSinglyLinkedList<UA_NodeId*>::Iterator it = existingNodeIds.begin(); it != existingNodeIds.end(); ++it) {
-      if(!retVal) {
-        UA_NodeId_delete(*it);
-      } else {
-        paFoundNodeIds.pushBack((*it));
+      for(CSinglyLinkedList<UA_NodeId*>::Iterator it = existingNodeIds.begin(); it != existingNodeIds.end(); ++it) {
+        if(!retVal) {
+          UA_NodeId_delete(*it);
+        } else {
+          paFoundNodeIds.pushBack((*it));
+        }
       }
+    } else {
+      DEVLOG_ERROR("[OPC UA LOCAL]: You're trying to access the /Objects folder. It does exist, but it's treated as error trying to access it\n");
     }
-
     COPC_UA_Helper::releaseBrowseArgument(browsePaths, pathCount);
   }
 
@@ -940,7 +958,7 @@ UA_StatusCode COPC_UA_Local_Handler::initializeReadWrite(COPC_UA_HandlerAbstract
 
         UA_NodeId returnedNodeId;
         variableInformation.mRequestedNodeId = (*itMain)->mNodeId;
-        variableInformation.mParentNodeId = *(referencedNodes.back()); //get the last created folder, which is the parent folder
+        variableInformation.mParentNodeId = referencedNodes.isEmpty() ? 0 : *(referencedNodes.back()); //get the last created folder, which is the parent folder
         UA_QualifiedName browseName = UA_QUALIFIEDNAME(1, nodeName.getValue()); //TODO: check that the nodeName can have browsename in it (and fail)
         variableInformation.mBrowseName = &browseName;
         variableInformation.mReturnedNodeId = &returnedNodeId;
@@ -1166,7 +1184,7 @@ UA_StatusCode COPC_UA_Local_Handler::initializeCreateMethod(COPC_UA_HandlerAbstr
 
       UA_NodeId returnedNodeId;
       methodInformation.mRequestedNodeId = (*it)->mNodeId;
-      methodInformation.mParentNodeId = *(referencedNodes.back());
+      methodInformation.mParentNodeId = referencedNodes.isEmpty() ? 0 : *(referencedNodes.back()); //get the last created folder, which is the parent folder
       UA_QualifiedName browseName = UA_QUALIFIEDNAME(1, nodeName.getValue());
       methodInformation.mBrowseName = &browseName;
       methodInformation.mReturnedNodeId = &returnedNodeId;
