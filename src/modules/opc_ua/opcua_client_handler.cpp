@@ -525,16 +525,13 @@ UA_StatusCode COPC_UA_Client_Handler::initializeAction(COPC_UA_HandlerAbstract::
       retVal = initialize(paInfo);
       break;
     case eCreateMethod:
-      DEVLOG_ERROR("[OPC UA REMOTE]: Cannot create a method remotely. Initialization failed\n");
-      break;
     case eCreateObject:
-      DEVLOG_ERROR("[OPC UA REMOTE]: Cannot create an object remotely. Execution failed\n");
-      break;
     case eDeleteObject:
-      DEVLOG_ERROR("[OPC UA REMOTE]: Cannot delete an object remotely. Initialization failed\n");
+      DEVLOG_ERROR("[OPC UA REMOTE]: Cannot perform action %s remotely. Initialization failed\n", COPC_UA_HandlerAbstract::mActionNames[paInfo.getAction()]);
       break;
     default:
-      DEVLOG_ERROR("[OPC UA REMOTE]: Unknown action %d to be initialized", paInfo.getAction());
+      DEVLOG_ERROR("[OPC UA REMOTE]: Unknown action %d to be initialized\n", paInfo.getAction());
+      break;
   }
   return retVal;
 }
@@ -552,28 +549,16 @@ UA_StatusCode COPC_UA_Client_Handler::executeAction(COPC_UA_HandlerAbstract::CAc
       case eWrite:
         retVal = executeWrite(paInfo, clientInfo);
         break;
-      case eCreateMethod:
-        DEVLOG_ERROR("[OPC UA REMOTE]: Cannot create a method remotely. Execution failed\n");
-        break;
       case eCallMethod:
         retVal = executeCallMethod(paInfo, clientInfo);
         break;
-      case eSubscribe:
-        DEVLOG_ERROR("[OPC UA REMOTE]: You shouldn't be here. Cannot execute a subscription. They are triggered automatically when the value changes\n");
+      default: //eCreateMethod, eCreateObject, eDeleteObject will never reach here since they weren't initialized. eSubscribe is a Subscribe FB
+        DEVLOG_ERROR("[OPC UA REMOTE]: Action %d to be executed is unknown or invalid", paInfo.getAction());
         break;
-      case eCreateObject:
-        DEVLOG_ERROR("[OPC UA REMOTE]: Cannot create an object remotely. Execution failed\n");
-        break;
-      case eDeleteObject:
-        DEVLOG_ERROR("[OPC UA REMOTE]: Cannot delete an object remotely. Execution failed\n");
-        break;
-      default:
-        DEVLOG_ERROR("[OPC UA REMOTE]: Unknown action %d to be executed", paInfo.getAction());
     }
   } else {
     DEVLOG_ERROR("[OPC UA REMOTE]: Cannot execute action from FB %s. It was not properly initialized\n", paInfo.mLayer->getCommFB()->getInstanceName());
   }
-
 
   return retVal;
 }
@@ -588,17 +573,9 @@ UA_StatusCode COPC_UA_Client_Handler::uninitializeAction(COPC_UA_HandlerAbstract
       referencedClientsDecrement(&paInfo);
       retVal = UA_STATUSCODE_GOOD;
       break;
-    case eCreateMethod:
-      DEVLOG_ERROR("[OPC UA REMOTE]: Cannot create a method remotely. Un-nitialization failed\n");
-      break;
-    case eCreateObject:
-      DEVLOG_ERROR("[OPC UA REMOTE]: Cannot create an object remotely. Un-initialization failed\n");
-      break;
-    case eDeleteObject:
-      DEVLOG_ERROR("[OPC UA REMOTE]: Cannot delete an object remotely. Un-initialization failed\n");
-      break;
     default:
-      DEVLOG_ERROR("[OPC UA REMOTE]: Unknown action %d to be uninitialized", paInfo.getAction());
+      DEVLOG_ERROR("[OPC UA REMOTE]: Action %d to be uninitialized is unknown or invalid\n", paInfo.getAction());
+      break;
   }
   return retVal;
 }
@@ -964,7 +941,7 @@ bool COPC_UA_Client_Handler::UA_ConnectionHandler::initializeAction(COPC_UA_Hand
       if(!somethingFailed) {
         if("" != (*it)->mBrowsePath) { //if browsepath was given, look for NodeId, even if NodeID was also provided
           UA_NodeId* nodeId;
-          UA_StatusCode retVal = COPC_UA_Helper::getRemoteNodeForPath(paClient->mClient, &nodeId, (*it)->mBrowsePath.getValue(), 0, 0);//we don't care about the parent nor the starting Node
+          UA_StatusCode retVal = COPC_UA_Helper::getRemoteNodeForPath(paClient->mClient, &nodeId, (*it)->mBrowsePath.getValue(), 0); //we don't care about the parent
 
           if(UA_STATUSCODE_GOOD != retVal) {
             DEVLOG_ERROR("[OPC UA REMOTE]: The index %u of the FB %s could not be initialized because the requested nodeId was not found. Error: %s\n",
@@ -1044,7 +1021,7 @@ bool COPC_UA_Client_Handler::UA_ConnectionHandler::initializeCallMethod(COPC_UA_
   UA_NodeId* methodNode;
   UA_NodeId* parentNode;
 
-  UA_StatusCode retVal = COPC_UA_Helper::getRemoteNodeForPath(paClient->mClient, &methodNode, (*nodePair)->mBrowsePath.getValue(), 0, &parentNode); //we don't care about the parent nor the starting Node
+  UA_StatusCode retVal = COPC_UA_Helper::getRemoteNodeForPath(paClient->mClient, &methodNode, (*nodePair)->mBrowsePath.getValue(), &parentNode);
 
   if(UA_STATUSCODE_GOOD != retVal) {
     DEVLOG_ERROR("[OPC UA REMOTE]: The method call from FB %s failed because the requested node was not found. Error: %s\n",

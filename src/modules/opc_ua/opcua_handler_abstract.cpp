@@ -190,7 +190,7 @@ bool COPC_UA_HandlerAbstract::COPC_UA_Params::handlePair(const char * paPair, CS
 UA_NodeId* COPC_UA_HandlerAbstract::COPC_UA_Params::parseNodeId(const char* paNodeIdString) {
   bool somethingFailed = false;
   UA_NodeId* resultNodeId = UA_NodeId_new();
-  UA_NodeId_init(resultNodeId); //will set to default namespace 0
+  UA_NodeId_init(resultNodeId); //will set to default namespace 0. When the nodeId is later used, the default namespace should come from the browsename
   unsigned int identifierPosition = 0;
 
   CParameterParser mainParser(paNodeIdString, ':'); //namespace and identifier should be divided by a colon. If first parameter is omitted, namespace 0 is assumed
@@ -261,18 +261,10 @@ bool COPC_UA_HandlerAbstract::checkNodePairInfo(COPC_UA_HandlerAbstract::CAction
   bool retVal = true;
   for(CSinglyLinkedList<COPC_UA_HandlerAbstract::CNodePairInfo*>::Iterator it = paResult.getNodePairInfo().begin(); it != paResult.getNodePairInfo().end();
       ++it) {
-    if("" == paResult.getEndpoint()) { //local
-      if("" == (*it)->mBrowsePath) { //browsePath is  mandatory in local
-        DEVLOG_ERROR("[OPC UA PARAMS]: BrowsePath is mandatory for local actions. Check FB %s\n", paResult.getLayer()->getCommFB()->getInstanceName());
-        retVal = false;
-        break;
-      }
-    } else { //remote
-      if("" == (*it)->mBrowsePath && 0 == (*it)->mNodeId) { //browsePath AND/OR NodeId must be given. If both are empty there's a problem
-        DEVLOG_ERROR("[OPC UA PARAMS]: BrowsePath and NodeId are empty in FB %s\n", paResult.getLayer()->getCommFB()->getInstanceName());
-        retVal = false;
-        break;
-      }
+    if("" == (*it)->mBrowsePath && 0 == (*it)->mNodeId) { //browsePath AND/OR NodeId must be given. If both are empty there's a problem
+      DEVLOG_ERROR("[OPC UA PARAMS]: BrowsePath and NodeId are empty in FB %s\n", paResult.getLayer()->getCommFB()->getInstanceName());
+      retVal = false;
+      break;
     }
   }
 
@@ -354,8 +346,22 @@ bool COPC_UA_HandlerAbstract::checkAction(COPC_UA_HandlerAbstract::CActionInfo& 
       }
       break;
     case eCreateObject:
+      if(forte::com_infra::EComServiceType::e_Publisher == fbType && 2 == paResult.getNoOfNodePairs() && 0 == noOfSDs) {
+        retVal = true;
+      } else {
+        DEVLOG_ERROR(
+          "[OPC UA PARAMS]: In FB %s: %s action is only allowed using a Publish FB, the amount of BrowseName,NodeId pairs should be 2, and no SD must be provided\n",
+          paResult.getLayer()->getCommFB()->getInstanceName(), COPC_UA_HandlerAbstract::mActionNames[eCreateObject]);
+      }
       break;
     case eDeleteObject:
+      if(forte::com_infra::EComServiceType::e_Publisher == fbType && 1 == paResult.getNoOfNodePairs() && 0 == noOfSDs) {
+        retVal = true;
+      } else {
+        DEVLOG_ERROR(
+          "[OPC UA PARAMS]: In FB %s: %s action is only allowed using a Publish FB, the amount of BrowseName,NodeId pairs should be 1, and no SD must be provided\n",
+          paResult.getLayer()->getCommFB()->getInstanceName(), COPC_UA_HandlerAbstract::mActionNames[eDeleteObject]);
+      }
       break;
     default:
       DEVLOG_ERROR("[OPC UA PARAMS]: Unknown action %d", paResult.getAction());

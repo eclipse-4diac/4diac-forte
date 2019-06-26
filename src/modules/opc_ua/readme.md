@@ -18,7 +18,6 @@
 
 ## Yet to be done
 
-* Ability to create objects
 * Create forte namespace and limit local server to it
 * Ability to reference a namespace locally/remotely using the uri and not only the number
 * Add most common opc ua types in forte (LocalizedText, QualifiedName)
@@ -103,15 +102,15 @@ ID Examples:
 | Local         | CREATE_METHOD   | SERVER                | Number of Pairs should be 1. Browsepath MUST be provided. NodeId is optional |
 | Local         | CALL_METHOD     | X                     | Not allowed to call local methods |
 | Local         | SUBSCRIBE       | X                     | Not allowed to subscribe to local variables |
-| Local         | CREATE_OBJECT   | X                     | NOT IMPLEMENTED YET |
-| Local         | DELETE_OBJECT   | X                     | NOT IMPLEMENTED YET |
+| Local         | CREATE_OBJECT   | PUBLISH\_0                     | Number of Pairs should be 2. The first one is for the type (Browsename and/or NodeId must be provided. If both are provided they should match). The second one is for the instance to create (Browsepath MUST be provided. NodeId is optional)  |
+| Local         | DELETE_OBJECT   | PUBLISH\_0                     | Number of Pairs should be 1. Browsepath MUST be provided. NodeId is optional |
 | Remote        | READ            | CLIENT                | Number of Pairs should match the number of RDs and no SDs must be present. Browsename and/or NodeId must be provided. If both are provided they should match |
 | Remote        | WRITE           | CLIENT                | Number of Pairs should match the number of SDs and no RDs must be present. Browsename and/or NodeId must be provided. If both are provided they should match |
 | Remote        | CREATE_METHOD   | CLIENT                | Not allowed to create methods remotely |
 | Remote        | CALL_METHOD     | CLIENT                | Number of Pairs should be 1. Browsepath MUST be provided. NodeId is optional. If both are provided they should match |
 | Remote        | SUBSCRIBE       | SUBSCRIBE             | Number of Pairs should match the number of RDs. Browsename and/or NodeId must be provided. If both are provided they should match  |
-| Remote        | CREATE_OBJECT   | X                     | NOT IMPLEMENTED YET (probably won't be) |
-| Remote        | DELETE_OBJECT   | X                     | NOT IMPLEMENTED YET (probably won't be) |
+| Remote        | CREATE_OBJECT   | X                     | Not allowed to create objects remotely |
+| Remote        | DELETE_OBJECT   | X                     | Not allowed to delete objects remotely |
 
 
 ## For developers

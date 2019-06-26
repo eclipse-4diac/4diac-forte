@@ -84,12 +84,11 @@ class COPC_UA_Helper {
      * @return UA_STATUSCODE_GOOD on success or the corresponding error code.
      */
 
-    static UA_StatusCode getRemoteNodeForPath(UA_Client *paClient, UA_NodeId **paFoundNodeId, const char *paNodePathConst, const UA_NodeId *paStartingNode =
-    NULL, UA_NodeId **paParentNodeId = NULL);
+    static UA_StatusCode getRemoteNodeForPath(UA_Client *paClient, UA_NodeId **paFoundNodeId, const char *paNodePathConst, UA_NodeId **paParentNodeId);
 
     static UA_StatusCode releaseBrowseArgument(UA_BrowsePath* paBrowsePaths, size_t paPathLength);
 
-    static UA_StatusCode prepareBrowseArgument(const char *paNodePathConst, const UA_NodeId* paParent, UA_BrowsePath** paBrowsePaths, size_t* paFolderCount);
+    static UA_StatusCode prepareBrowseArgument(const char *paNodePathConst, UA_BrowsePath** paBrowsePaths, size_t* paFolderCount);
 
   private:
 
@@ -104,7 +103,7 @@ class COPC_UA_Helper {
     static int getFolderOffset(UA_BrowsePathResult* browsePathsResults, size_t folderCnt);
 
     static void copyNodeIds(UA_NodeId **paFoundNodeId, UA_BrowsePathResult* browsePathsResults, int foundFolderOffset, UA_NodeId **paParentNodeId,
-        const UA_NodeId *paStartingNode, size_t folderCnt);
+        size_t folderCnt);
 
 };
 

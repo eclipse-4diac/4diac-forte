@@ -188,7 +188,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
 
     UA_StatusCode initializeReadWrite(COPC_UA_HandlerAbstract::CActionInfo& paInfo, bool isWrite);
 
-    bool getNode(const UA_NodeId* paParentNode, CNodePairInfo* paNodeInfo, CSinglyLinkedList<UA_NodeId*>& paCreatedNodeIds);
+    UA_StatusCode getNode(const UA_NodeId* paParentNode, CNodePairInfo* paNodeInfo, CSinglyLinkedList<UA_NodeId*>& paCreatedNodeIds, bool* paIsPresent);
 
     static const char* const mLocaleForNodes;
     static const char* const mDescriptionForVariableNodes;
@@ -218,7 +218,6 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     void referencedNodesDecrement(const COPC_UA_HandlerAbstract::CActionInfo* paLayer);
 
     void getNodesReferencedByAction(const COPC_UA_HandlerAbstract::CActionInfo *paActionInfo, CSinglyLinkedList<const UA_NodeId *>& paNodes);
-
 
     /**
      * Sets the user access level attribute of the node to the given new value.

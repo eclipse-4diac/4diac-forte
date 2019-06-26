@@ -10,12 +10,20 @@
 # *******************************************************************************/
 
 forte_add_systemtest_soft(OPCUA_WrongParams wrongParameters.fboot 5)
+
+SET_TESTS_PROPERTIES(OPCUA_WrongParams PROPERTIES FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED|==ERROR|OPC UA LOCAL") #Local server shouldn't start
  
 forte_add_systemtest_hard(OPCUA_LocalFirstRead localFirstRead.fboot 5)
 
+SET_TESTS_PROPERTIES(OPCUA_LocalFirstRead PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T|==ERROR|OPC UA REMOTE") #remote handler shouldn't start
+
 forte_add_systemtest_hard(OPCUA_LocalFirstWrite localFirstWrite.fboot 5)
 
+SET_TESTS_PROPERTIES(OPCUA_LocalFirstRead PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T|==ERROR|OPC UA REMOTE") #remote handler shouldn't start
+
 forte_add_systemtest_hard(OPCUA_LocalMethdodsCreate localMethodsCreate.fboot 5)
+
+SET_TESTS_PROPERTIES(OPCUA_LocalFirstRead PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T|==ERROR|OPC UA REMOTE") #remote handler shouldn't start
 
 forte_add_2dev_systemtests(WorkingClientServer clientWorking.fboot serverWorking.fboot "" "" 30 1)
 

@@ -175,8 +175,7 @@ UA_StatusCode COPC_UA_Helper::releaseBrowseArgument(UA_BrowsePath* paBrowsePaths
   return UA_STATUSCODE_GOOD;
 }
 
-UA_StatusCode COPC_UA_Helper::prepareBrowseArgument(const char *paNodePathConst, const UA_NodeId* paParent, UA_BrowsePath** paBrowsePaths,
-    size_t* paFolderCount) {
+UA_StatusCode COPC_UA_Helper::prepareBrowseArgument(const char *paNodePathConst, UA_BrowsePath** paBrowsePaths, size_t* paFolderCount) {
   CIEC_STRING nodePathString(paNodePathConst);
   char* nodePath = nodePathString.getValue();
 
@@ -201,19 +200,8 @@ UA_StatusCode COPC_UA_Helper::prepareBrowseArgument(const char *paNodePathConst,
     runner++;
   }
 
-  UA_NodeId startingNode;
+  UA_NodeId startingNode = UA_NODEID_NUMERIC(0, UA_NS0ID_ROOTFOLDER);
   char *tok = strtok(nodePath, "/");
-  if(!paParent) { //no parent was provided. Use Objects as it, and discard the initial Objects in the browsepath
-    if(0 != strcmp(tok, "Objects")) {
-      DEVLOG_ERROR("[OPC UA HELPER] : Node path '%s' has to start with '/Objects'\n", paNodePathConst);
-      return UA_STATUSCODE_BADINVALIDARGUMENT;
-    }
-    (*paFolderCount)--; //remaining count without Objects folder
-    tok = strtok(NULL, "/"); // skip objects folder
-    startingNode = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
-  } else {
-    UA_NodeId_copy(paParent, &startingNode);
-  }
 
   // for every folder (which is a BrowsePath) we want to get the node id
   *paBrowsePaths = static_cast<UA_BrowsePath *>(UA_Array_new((*paFolderCount) * 2, &UA_TYPES[UA_TYPES_BROWSEPATH]));
@@ -237,7 +225,7 @@ UA_StatusCode COPC_UA_Helper::prepareBrowseArgument(const char *paNodePathConst,
       UA_RelativePathElement_init(&browsePaths[i].relativePath.elements[j]);
       browsePaths[i].relativePath.elements[j].isInverse = UA_FALSE;
 
-      UA_UInt16 browsenameNamespace = 1;
+      UA_UInt16 browsenameNamespace = i ? 1 : 0; //TODO: use the fix 0 only for the first one and then take it from the server
       CIEC_STRING targetName;
       CParameterParser browseNameParser(tok, ':');
       size_t parsingResult = browseNameParser.parseParameters();
@@ -266,12 +254,11 @@ UA_StatusCode COPC_UA_Helper::prepareBrowseArgument(const char *paNodePathConst,
   return UA_STATUSCODE_GOOD;
 }
 
-UA_StatusCode COPC_UA_Helper::getRemoteNodeForPath(UA_Client *paClient, UA_NodeId **paFoundNodeId, const char *paNodePathConst, const UA_NodeId *paStartingNode,
-    UA_NodeId **paParentNodeId) {
+UA_StatusCode COPC_UA_Helper::getRemoteNodeForPath(UA_Client *paClient, UA_NodeId **paFoundNodeId, const char *paNodePathConst, UA_NodeId **paParentNodeId) {
   *paFoundNodeId = NULL;
   UA_BrowsePath *browsePaths = 0;
   size_t folderCnt = 0;
-  UA_StatusCode retVal = prepareBrowseArgument(paNodePathConst, 0, &browsePaths, &folderCnt);
+  UA_StatusCode retVal = prepareBrowseArgument(paNodePathConst, &browsePaths, &folderCnt);
   if(UA_STATUSCODE_GOOD == retVal) {
     // other thread may currently create nodes for the same path, thus mutex
     CCriticalRegion criticalRegion(getNodeForPathMutex);
@@ -293,7 +280,7 @@ UA_StatusCode COPC_UA_Helper::getRemoteNodeForPath(UA_Client *paClient, UA_NodeI
 
         if(foundFolderOffset >= 0) {
           // all nodes exist, so just copy the node ids
-          copyNodeIds(paFoundNodeId, response.results, foundFolderOffset, paParentNodeId, paStartingNode, folderCnt);
+          copyNodeIds(paFoundNodeId, response.results, foundFolderOffset, paParentNodeId, folderCnt);
         } else {
           DEVLOG_ERROR("[OPC UA HELPER]: Could not translate browse paths for '%s' to node IDs. Not all nodes exist\n", paNodePathConst);
           retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
@@ -327,13 +314,13 @@ int COPC_UA_Helper::getFolderOffset(UA_BrowsePathResult* browsePathsResults, siz
 }
 
 void COPC_UA_Helper::copyNodeIds(UA_NodeId **paFoundNodeId, UA_BrowsePathResult* browsePathsResults, int foundFolderOffset, UA_NodeId **paParentNodeId,
-    const UA_NodeId *paStartingNode, size_t folderCnt) {
+    size_t folderCnt) {
   *paFoundNodeId = UA_NodeId_new();
   UA_NodeId_copy(&browsePathsResults[foundFolderOffset + folderCnt - 1].targets[0].targetId.nodeId, *paFoundNodeId);
   if(paParentNodeId && folderCnt >= 2) {
     *paParentNodeId = UA_NodeId_new();
     UA_NodeId_copy(&browsePathsResults[foundFolderOffset + folderCnt - 2].targets[0].targetId.nodeId, *paParentNodeId);
-  } else if(paParentNodeId && !paStartingNode) {
+  } else if(paParentNodeId) {
     *paParentNodeId = UA_NodeId_new();
     **paParentNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
   }
