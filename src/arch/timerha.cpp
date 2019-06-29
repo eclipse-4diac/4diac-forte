@@ -28,7 +28,7 @@ CTimerHandler::~CTimerHandler(){
 
 void CTimerHandler::registerTimedFB(STimedFBListEntry *paTimerListEntry, const CIEC_TIME &paTimeInterval) {
   //calculate the correct interval based on time-base and timer ticks per seconds
-  paTimerListEntry->mInterval = static_cast<TForteUInt32>((paTimeInterval * getTicksPerSecond()) / FORTE_TIME_BASE_UNITS_PER_SECOND);
+  paTimerListEntry->mInterval = static_cast<TForteUInt32>((paTimeInterval * getTicksPerSecond()) / cgForteTimeBaseUnitsPerSecond);
   {
     CCriticalRegion criticalRegion(mSync);
     addTimedFBEntry(paTimerListEntry);

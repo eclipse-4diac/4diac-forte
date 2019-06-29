@@ -453,7 +453,7 @@ TPortId CFunctionBlock::getPortId(CStringDictionary::TStringId pa_unPortNameId, 
 
 
 const CIEC_TIME CFunctionBlock::TIME(){
-  return CIEC_TIME( getTimer().getForteTime() * (FORTE_TIME_BASE_UNITS_PER_SECOND / cg_nForteTicksPerSecond) );
+  return CIEC_TIME( getTimer().getForteTime() * (cgForteTimeBaseUnitsPerSecond / cg_nForteTicksPerSecond) );
 };
 
 //********************************** below here are monitoring specific functions **********************************************************

@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   strcpy(cBuffer, "");*/
 
   BOOST_CHECK_EQUAL(nTest.fromString("TIME#4h36m"), 10);
-  BOOST_CHECK_EQUAL(nTest, 16560000LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000));
+  BOOST_CHECK_EQUAL(nTest, 16560000LL * (cgForteTimeBaseUnitsPerSecond / 1000));
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#16560000ms");
@@ -123,7 +123,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = 0;
 
   BOOST_CHECK_EQUAL(nTest.fromString("time#4h36m"), 10);
-  BOOST_CHECK_EQUAL(nTest, 16560000LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000));
+  BOOST_CHECK_EQUAL(nTest, 16560000LL * (cgForteTimeBaseUnitsPerSecond / 1000));
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#16560000ms");
@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = 0;
 
   BOOST_CHECK_EQUAL(nTest.fromString("T#4h36m"), 7);
-  BOOST_CHECK_EQUAL(nTest, 16560000LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000));
+  BOOST_CHECK_EQUAL(nTest, 16560000LL * (cgForteTimeBaseUnitsPerSecond / 1000));
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#16560000ms");
@@ -139,7 +139,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = 0;
 
   BOOST_CHECK_EQUAL(nTest.fromString("t#4h36m"), 7);
-  BOOST_CHECK_EQUAL(nTest, 16560000LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000));
+  BOOST_CHECK_EQUAL(nTest, 16560000LL * (cgForteTimeBaseUnitsPerSecond / 1000));
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#16560000ms");
@@ -153,7 +153,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   strcpy(cBuffer, "");*/
 
   BOOST_CHECK_EQUAL(nTest.fromString("TIME#3s_22ms"), 12);
-  BOOST_CHECK_EQUAL(nTest, (CIEC_TIME::TValueType)(3022LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000LL)));
+  BOOST_CHECK_EQUAL(nTest, (CIEC_TIME::TValueType)(3022LL * (cgForteTimeBaseUnitsPerSecond / 1000LL)));
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 8);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#3022ms");
@@ -161,7 +161,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = 0;
 
   BOOST_CHECK_EQUAL(nTest.fromString("time#3s_22ms"), 12);
-  BOOST_CHECK_EQUAL(nTest, 3022LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000LL));
+  BOOST_CHECK_EQUAL(nTest, 3022LL * (cgForteTimeBaseUnitsPerSecond / 1000LL));
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 8);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#3022ms");
@@ -169,7 +169,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = 0;
 
   BOOST_CHECK_EQUAL(nTest.fromString("T#3s_22ms"), 9);
-  BOOST_CHECK_EQUAL(nTest, 3022LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000LL));
+  BOOST_CHECK_EQUAL(nTest, 3022LL * (cgForteTimeBaseUnitsPerSecond / 1000LL));
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 8);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#3022ms");
@@ -177,7 +177,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = 0;
 
   BOOST_CHECK_EQUAL(nTest.fromString("t#3s_22ms"), 9);
-  BOOST_CHECK_EQUAL(nTest, 3022LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000LL));
+  BOOST_CHECK_EQUAL(nTest, 3022LL * (cgForteTimeBaseUnitsPerSecond / 1000LL));
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 8);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#3022ms");
