@@ -214,14 +214,14 @@ BOOST_AUTO_TEST_CASE(time_fromString_with_microseconds_test){
 BOOST_AUTO_TEST_CASE(time_comparision_tests){
   CIEC_TIME time1, time2;
 
-  time1.setFromMiliSeconds(200);
-  time2.setFromMiliSeconds(200);
+  time1.setFromMilliSeconds(200);
+  time2.setFromMilliSeconds(200);
 
   BOOST_CHECK(time1 == time2);
   BOOST_CHECK_EQUAL(true, time1 >= time2);
   BOOST_CHECK_EQUAL(true, time1 <= time2);
 
-  time2.setFromMiliSeconds(150);
+  time2.setFromMilliSeconds(150);
 
   BOOST_CHECK_EQUAL(true, time1 > time2);
   BOOST_CHECK_EQUAL(true, time1 >= time2);
@@ -229,7 +229,7 @@ BOOST_AUTO_TEST_CASE(time_comparision_tests){
   BOOST_CHECK_EQUAL(false, time1 < time2);
   BOOST_CHECK_EQUAL(false, time1 <= time2);
 
-  time1.setFromMiliSeconds(120);
+  time1.setFromMilliSeconds(120);
   BOOST_CHECK_EQUAL(false, time1 > time2);
   BOOST_CHECK_EQUAL(false, time1 >= time2);
   BOOST_CHECK_EQUAL(true, time1 != time2);

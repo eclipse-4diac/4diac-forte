@@ -29,36 +29,36 @@ TForteInt64 TRUNC(const CIEC_LREAL& pa_roIN){
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 const CIEC_TIME_OF_DAY ADD_TOD_TIME(const CIEC_TIME_OF_DAY& pa_roIN1, const CIEC_TIME& pa_roIN2){
-  return static_cast<TForteUInt64>(pa_roIN1 + pa_roIN2.getInMiliSeconds());
+  return static_cast<TForteUInt64>(pa_roIN1 + pa_roIN2.getInMilliSeconds());
 }
 
 const CIEC_DATE_AND_TIME ADD_DT_TIME(const CIEC_DATE_AND_TIME& pa_roIN1, const CIEC_TIME& pa_roIN2){
-  return static_cast<TForteUInt64>(pa_roIN1 + pa_roIN2.getInMiliSeconds());
+  return static_cast<TForteUInt64>(pa_roIN1 + pa_roIN2.getInMilliSeconds());
 }
 
 const CIEC_TIME_OF_DAY SUB_TOD_TIME(const CIEC_TIME_OF_DAY& pa_roIN1, const CIEC_TIME& pa_roIN2){
-  return static_cast<TForteUInt64>(pa_roIN1 - pa_roIN2.getInMiliSeconds());
+  return static_cast<TForteUInt64>(pa_roIN1 - pa_roIN2.getInMilliSeconds());
 }
 
 const CIEC_DATE_AND_TIME SUB_DT_TIME(const CIEC_DATE_AND_TIME& pa_roIN1, const CIEC_TIME& pa_roIN2){
-  return static_cast<TForteUInt64>(pa_roIN1 - pa_roIN2.getInMiliSeconds());
+  return static_cast<TForteUInt64>(pa_roIN1 - pa_roIN2.getInMilliSeconds());
 }
 
 const CIEC_TIME SUB_DT_DT(const CIEC_DATE_AND_TIME& pa_roIN1, const CIEC_DATE_AND_TIME& pa_roIN2){
   CIEC_TIME temp;
-  temp.setFromMiliSeconds(pa_roIN1 - pa_roIN2);
+  temp.setFromMilliSeconds(pa_roIN1 - pa_roIN2);
   return temp;
 }
 
 const CIEC_TIME SUB_TOD_TOD(const CIEC_TIME_OF_DAY &pa_roIN1, const CIEC_TIME_OF_DAY &pa_roIN2){
   CIEC_TIME temp;
-  temp.setFromMiliSeconds(pa_roIN1 - pa_roIN2);
+  temp.setFromMilliSeconds(pa_roIN1 - pa_roIN2);
   return temp;
 }
 
 const CIEC_TIME SUB_DATE_DATE(const CIEC_DATE &pa_roIN1, const CIEC_DATE &pa_roIN2){
   CIEC_TIME temp;
-  temp.setFromMiliSeconds(pa_roIN1 - pa_roIN2);
+  temp.setFromMilliSeconds(pa_roIN1 - pa_roIN2);
   return temp;
 }
 

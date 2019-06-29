@@ -100,7 +100,7 @@ int CIEC_TIME::fromString(const char *paValue){
   }
 
   //the intval is represented in ms
-  setFromMiliSeconds(nIntVal);
+  setFromMilliSeconds(nIntVal);
   return nRetVal;
 
 }
@@ -109,9 +109,9 @@ int CIEC_TIME::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal = -1;
   if(paBufferSize > 4){
 #ifdef FORTE_USE_64BIT_DATATYPES
-    CIEC_LINT timeVal(getInMiliSeconds());
+    CIEC_LINT timeVal(getInMilliSeconds());
 #else //FORTE_USE_64BIT_DATATYPES
-    CIEC_DINT timeVal(getInMiliSeconds());
+    CIEC_DINT timeVal(getInMilliSeconds());
 #endif //FORTE_USE_64BIT_DATATYPES
     nRetVal = timeVal.toString(paValue + 2, paBufferSize - 4);
     if(-1 != nRetVal){
@@ -151,7 +151,7 @@ CIEC_TIME::TValueType CIEC_TIME::getInSeconds() const {
   return (TValueType) *this / FORTE_TIME_BASE_UNITS_PER_SECOND;
 }
 
-CIEC_TIME::TValueType CIEC_TIME::getInMiliSeconds() const {
+CIEC_TIME::TValueType CIEC_TIME::getInMilliSeconds() const {
   TValueType nRetVal;
 #if MILISECONDS_PER_SECOND < FORTE_TIME_BASE_UNITS_PER_SECOND
   nRetVal = (TValueType) *this / (FORTE_TIME_BASE_UNITS_PER_SECOND / MILISECONDS_PER_SECOND);
@@ -175,7 +175,7 @@ void CIEC_TIME::setFromSeconds(TValueType paValue) {
   *this = paValue * FORTE_TIME_BASE_UNITS_PER_SECOND;
 }
 
-void CIEC_TIME::setFromMiliSeconds(TValueType paValue) {
+void CIEC_TIME::setFromMilliSeconds(TValueType paValue) {
 #if MILISECONDS_PER_SECOND < FORTE_TIME_BASE_UNITS_PER_SECOND
   *this = paValue * (FORTE_TIME_BASE_UNITS_PER_SECOND / MILISECONDS_PER_SECOND);
 #else //MILISECONDS_PER_SECOND < FORTE_TIME_BASE_UNITS_PER_SECOND

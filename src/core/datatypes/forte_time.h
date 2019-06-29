@@ -98,11 +98,11 @@ class CIEC_TIME : public CIEC_ANY_MAGNITUDE{
     virtual int toString(char* paValue, size_t paBufferSize) const;
 
     TValueType getInSeconds() const;
-    TValueType getInMiliSeconds() const;
+    TValueType getInMilliSeconds() const;
     TValueType getInMicroSeconds() const;
 
     void setFromSeconds(TValueType paValue);
-    void setFromMiliSeconds(TValueType paValue);
+    void setFromMilliSeconds(TValueType paValue);
     void setFromMicroSeconds(TValueType paValue);
 };
 
