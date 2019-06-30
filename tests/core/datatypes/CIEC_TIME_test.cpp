@@ -185,7 +185,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = 0;
 }
 
-BOOST_AUTO_TEST_CASE(time_fromString_with_microseconds_test){
+BOOST_AUTO_TEST_CASE(toString_with_microseconds_test){
   CIEC_TIME time;
   char cBuffer[17];
 
@@ -236,6 +236,58 @@ BOOST_AUTO_TEST_CASE(time_comparision_tests){
   BOOST_CHECK_EQUAL(true, time1 < time2);
   BOOST_CHECK_EQUAL(true, time1 <= time2);
 
+}
+
+BOOST_AUTO_TEST_CASE(get_time_in_nanoseconds)
+{
+  CIEC_TIME time;
+
+  time.setFromNanoSeconds(1);
+  BOOST_CHECK(time.getInNanoSeconds() == 1);
+
+  time.setFromNanoSeconds(10);
+  BOOST_CHECK(time.getInNanoSeconds() == 10);
+
+  time.setFromNanoSeconds(999);
+  BOOST_CHECK(time.getInNanoSeconds() == 999);
+
+  time.setFromNanoSeconds(10325643);
+  BOOST_CHECK(time.getInNanoSeconds() == 10325643);
+}
+
+BOOST_AUTO_TEST_CASE(parse_time_literal_in_microseconds)
+{
+  CIEC_TIME time;
+
+  time.fromString("T#1us");
+  BOOST_CHECK(time.getInMicroSeconds() == 1);
+
+  time.fromString("T#10us");
+  BOOST_CHECK(time.getInMicroSeconds() == 10);
+
+  time.fromString("T#999us");
+  BOOST_CHECK(time.getInMicroSeconds() == 999);
+
+  time.fromString("T#10325643us");
+  BOOST_CHECK(time.getInMicroSeconds() == 10325643);
+}
+
+
+BOOST_AUTO_TEST_CASE(parse_time_literal_in_nanoseconds)
+{
+  CIEC_TIME time;
+
+  time.fromString("T#1ns");
+  BOOST_CHECK(time.getInNanoSeconds() == 1);
+
+  time.fromString("T#10ns");
+  BOOST_CHECK(time.getInNanoSeconds() == 10);
+
+  time.fromString("T#999ns");
+  BOOST_CHECK(time.getInNanoSeconds() == 999);
+
+  time.fromString("T#10325643ns");
+  BOOST_CHECK(time.getInNanoSeconds() == 10325643);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
+ * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN; 2019 TU Wien/ACIN
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,9 @@
  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
  *    Monika Wenger, Ingo Hegny, Martin Melik Merkumians,
  *      - initial implementation and rework communication infrastructure
+ *    Martin Melik-Merkumians - added getInNanoSeconds, setFromNanoSeconds,
+ *      changed defines to constants, added literal parsing for micro and
+ *      nanoseconds
  *******************************************************************************/
 #ifndef _FORTE_TIME_H_
 #define _FORTE_TIME_H_
@@ -100,10 +103,12 @@ class CIEC_TIME : public CIEC_ANY_MAGNITUDE{
     TValueType getInSeconds() const;
     TValueType getInMilliSeconds() const;
     TValueType getInMicroSeconds() const;
+    TValueType getInNanoSeconds() const;
 
     void setFromSeconds(TValueType paValue);
     void setFromMilliSeconds(TValueType paValue);
     void setFromMicroSeconds(TValueType paValue);
+    void setFromNanoSeconds(TValueType paValue);
 };
 
 #endif /*_MTIME_H_*/

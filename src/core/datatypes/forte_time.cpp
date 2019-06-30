@@ -24,6 +24,7 @@
 
 static const CIEC_TIME::TValueType cMillisecondsPerSecond = 1E3;
 static const CIEC_TIME::TValueType cMicrosecondsPerSecond = 1E6;
+static const CIEC_TIME::TValueType cNanosecondsPerSecond = 1E9;
 
 DEFINE_FIRMWARE_DATATYPE(TIME, g_nStringIdTIME)
 
@@ -50,24 +51,37 @@ int CIEC_TIME::fromString(const char *paValue) {
         long nBuf = forte::core::util::strtol(paValue, &pcEnd, 10);
         switch(tolower(*pcEnd)){
           case 'd':
-            nTimeFactor = 86400000;
+            nTimeFactor = 24 * 60 * 60 * 1E9 ;
             break;
 
           case 'h':
-            nTimeFactor = 3600000;
+            nTimeFactor = 60 * 60 * 1E9;
             break;
 
           case 'm':
-            if('s' == *(pcEnd + 1) || 'S' == *(pcEnd + 1)) {
-              nTimeFactor = 1;
+            if('s' == tolower(*(pcEnd + 1))) {
+              nTimeFactor = 1E6;
               ++pcEnd;
             } else {
-              nTimeFactor = 60000;
+              nTimeFactor = 60 *1E9;
             }
             break;
-
+          case 'n':
+            if('s' == tolower(*(pcEnd + 1))) {
+              nTimeFactor = 1;
+            } else {
+              bEnd = true;
+            }
+            break;
           case 's':
-            nTimeFactor = 1000;
+            nTimeFactor = 1E9;
+            break;
+          case 'u':
+            if('s' == tolower(*(pcEnd + 1))) {
+              nTimeFactor = 1E3;
+            } else {
+              bEnd = true;
+            }
             break;
           case '_':
             //ignore leading underscores
@@ -96,7 +110,7 @@ int CIEC_TIME::fromString(const char *paValue) {
   }
 
   //the intval is represented in ms
-  setFromMilliSeconds(nIntVal);
+  setFromNanoSeconds(nIntVal);
   return nRetVal;
 
 }
@@ -159,6 +173,12 @@ CIEC_TIME::TValueType CIEC_TIME::getInMicroSeconds() const {
         static_cast<TValueType>(*this) * (cMicrosecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
 }
 
+CIEC_TIME::TValueType CIEC_TIME::getInNanoSeconds() const {
+  return
+      (cNanosecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ? static_cast<TValueType>(*this) / (cgForteTimeBaseUnitsPerSecond / cNanosecondsPerSecond) :
+        static_cast<TValueType>(*this) * (cNanosecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
+}
+
 void CIEC_TIME::setFromSeconds(TValueType paValue) {
   *this = paValue * cgForteTimeBaseUnitsPerSecond;
 }
@@ -173,4 +193,10 @@ void CIEC_TIME::setFromMicroSeconds(TValueType paValue) {
   *this =
       (cMicrosecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ? paValue * (cgForteTimeBaseUnitsPerSecond / cMicrosecondsPerSecond) :
         paValue / (cMicrosecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
+}
+
+void CIEC_TIME::setFromNanoSeconds(TValueType paValue) {
+  *this =
+      (cNanosecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ? paValue * (cgForteTimeBaseUnitsPerSecond / cNanosecondsPerSecond) :
+        paValue / (cNanosecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
 }
