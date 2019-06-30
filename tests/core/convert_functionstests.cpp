@@ -76,10 +76,17 @@ BOOST_AUTO_TEST_SUITE(convert_functions)
     BOOST_TEST(LREAL_TO_ULINT(roundDownReal) == 50);
   }
 
+  BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_S_LINT) {
+    CIEC_TIME time("T#2d5h43m12s");
+    CIEC_LINT timeInS;
+    timeInS = TIME_IN_S_TO_LINT(time);
+    BOOST_TEST(timeInS == (INT64_C(172800) + INT64_C(18000) + INT64_C(2580) + INT64_C(12)));
+  }
+
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_MS_LINT) {
     CIEC_TIME time("T#2d5h43m12s44ms");
     CIEC_LINT timeInMs;
-    timeInMs = TIME_IN_MS_TO_CIEC_LINT(time);
+    timeInMs = TIME_IN_MS_TO_LINT(time);
     BOOST_TEST(timeInMs == (INT64_C(172800000) + INT64_C(18000000) + INT64_C(2580000) + INT64_C(12000) + INT64_C(44)));
   }
 

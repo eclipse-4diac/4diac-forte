@@ -1543,7 +1543,11 @@ inline const CIEC_LWORD ULINT_TO_BCD_LWORD(const CIEC_ULINT &paVal){
  *********************************************************************************************/
 #ifdef FORTE_USE_64BIT_DATATYPES
 
-inline const CIEC_LINT TIME_IN_MS_TO_CIEC_LINT(const CIEC_TIME &paValue) {
+inline const CIEC_LINT TIME_IN_S_TO_LINT(const CIEC_TIME &paValue) {
+  return CIEC_LINT(paValue.getInSeconds());
+}
+
+inline const CIEC_LINT TIME_IN_MS_TO_LINT(const CIEC_TIME &paValue) {
   return CIEC_LINT(paValue.getInMilliSeconds());
 }
 
