@@ -45,40 +45,40 @@ int CIEC_TIME::fromString(const char *paValue) {
     if(*paValue == '#') { // the string has to start with T#
       paValue++;
       nRetVal++;
-      long nTimeFactor = 1;
+      TValueType nTimeFactor = 1;
       bool bEnd = false;
       do {
-        long nBuf = forte::core::util::strtol(paValue, &pcEnd, 10);
+        TValueType nBuf = forte::core::util::strtol(paValue, &pcEnd, 10);
         switch(tolower(*pcEnd)){
           case 'd':
-            nTimeFactor = 24 * 60 * 60 * 1E9 ;
+            nTimeFactor = 24 * 60 * 60 * cgForteTimeBaseUnitsPerSecond ;
             break;
 
           case 'h':
-            nTimeFactor = 60 * 60 * 1E9;
+            nTimeFactor = 60 * 60 * cgForteTimeBaseUnitsPerSecond;
             break;
 
           case 'm':
             if('s' == tolower(*(pcEnd + 1))) {
-              nTimeFactor = 1E6;
+              nTimeFactor = cgForteTimeBaseUnitsPerSecond / cMillisecondsPerSecond;
               ++pcEnd;
             } else {
-              nTimeFactor = 60 *1E9;
+              nTimeFactor = 60 * cgForteTimeBaseUnitsPerSecond;
             }
             break;
           case 'n':
             if('s' == tolower(*(pcEnd + 1))) {
-              nTimeFactor = 1;
+              nTimeFactor = cgForteTimeBaseUnitsPerSecond / cNanosecondsPerSecond;
             } else {
               bEnd = true;
             }
             break;
           case 's':
-            nTimeFactor = 1E9;
+            nTimeFactor = cgForteTimeBaseUnitsPerSecond;
             break;
           case 'u':
             if('s' == tolower(*(pcEnd + 1))) {
-              nTimeFactor = 1E3;
+              nTimeFactor = cgForteTimeBaseUnitsPerSecond / cMicrosecondsPerSecond;
             } else {
               bEnd = true;
             }
@@ -109,8 +109,7 @@ int CIEC_TIME::fromString(const char *paValue) {
     nRetVal = static_cast<int>(pcEnd - paValue);
   }
 
-  //the intval is represented in ms
-  setFromNanoSeconds(nIntVal);
+  *this = nIntVal;
   return nRetVal;
 
 }
