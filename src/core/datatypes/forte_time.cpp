@@ -34,7 +34,7 @@ int CIEC_TIME::fromString(const char *paValue) {
 
   TValueType nIntVal = 0;
 
-  if((paValue[0] == 'T') || (paValue[0] == 't')) {
+  if('t' == tolower(paValue[0])) {
     nRetVal = 1;
     paValue++;
     if(('i' == tolower(paValue[0])) && ('m' == tolower(paValue[1])) && ('e' == tolower(paValue[2]))) {
@@ -42,9 +42,17 @@ int CIEC_TIME::fromString(const char *paValue) {
       nRetVal += 3;
     }
 
-    if(*paValue == '#') { // the string has to start with T#
+    if('#' == *paValue) { // the string has to start with T#
       paValue++;
       nRetVal++;
+      TValueType nTimeSignFactor = 1;
+      if('+' == *paValue || '-' == *paValue) {
+        if('-' == *paValue) {
+          nTimeSignFactor = -1;
+        }
+        paValue++;
+        nRetVal++;
+      }
       TValueType nTimeFactor = 1;
       bool bEnd = false;
       do {
@@ -99,7 +107,7 @@ int CIEC_TIME::fromString(const char *paValue) {
           ++nRetVal;
         }
         paValue = pcEnd + 1;
-        nIntVal += (nBuf * nTimeFactor);
+        nIntVal += (nBuf * nTimeFactor * nTimeSignFactor);
       } while(('\0' != *paValue) && (!bEnd));
     } else {
       return -1;
@@ -157,24 +165,24 @@ int CIEC_TIME::toString(char* paValue, size_t paBufferSize) const {
 }
 
 CIEC_TIME::TValueType CIEC_TIME::getInSeconds() const {
-  return static_cast<TValueType>(*this) / cgForteTimeBaseUnitsPerSecond;
+  return static_cast<TValueType>(*this) / static_cast<TValueType>(cgForteTimeBaseUnitsPerSecond);
 }
 
 CIEC_TIME::TValueType CIEC_TIME::getInMilliSeconds() const {
   return
-      (cMillisecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ? static_cast<TValueType>(*this) / (cgForteTimeBaseUnitsPerSecond / cMillisecondsPerSecond) :
+      (cMillisecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ? static_cast<TValueType>(*this) / (static_cast<TValueType>(cgForteTimeBaseUnitsPerSecond) / cMillisecondsPerSecond) :
         static_cast<TValueType>(*this) * (cMillisecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
 }
 
 CIEC_TIME::TValueType CIEC_TIME::getInMicroSeconds() const {
   return
-      (cMicrosecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ? static_cast<TValueType>(*this) / (cgForteTimeBaseUnitsPerSecond / cMicrosecondsPerSecond) :
+      (cMicrosecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ? static_cast<TValueType>(*this) / (static_cast<TValueType>(cgForteTimeBaseUnitsPerSecond) / cMicrosecondsPerSecond) :
         static_cast<TValueType>(*this) * (cMicrosecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
 }
 
 CIEC_TIME::TValueType CIEC_TIME::getInNanoSeconds() const {
   return
-      (cNanosecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ? static_cast<TValueType>(*this) / (cgForteTimeBaseUnitsPerSecond / cNanosecondsPerSecond) :
+      (cNanosecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ? static_cast<TValueType>(*this) / (static_cast<TValueType>(cgForteTimeBaseUnitsPerSecond) / cNanosecondsPerSecond) :
         static_cast<TValueType>(*this) * (cNanosecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
 }
 
