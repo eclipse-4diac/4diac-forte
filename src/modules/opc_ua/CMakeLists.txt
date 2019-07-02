@@ -26,26 +26,7 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 if (FORTE_COM_OPC_UA)
 
-   ######### Nodesets functions ####################################################    
-   #Don't use this function. This is just a private one
-   FUNCTION(forte_opcua_add_nodeset_general namespaceName directoryName)
-     forte_add_sourcefile_with_path_hc(${directoryName}/ua_namespace_${namespaceName})
-     set_property(GLOBAL APPEND PROPERTY FORTE_OPCUA_NODESETS_LIST ${namespaceName})
-   ENDFUNCTION()
-
-   #Use this function for nodesets wich have a file called ua_types_NAMESPACE_generated.c file (DI for example). directoryName should point to the directory where the files are
-   FUNCTION(forte_opcua_add_nodeset namespaceName directoryName)
-     forte_add_sourcefile_with_path_hc(${directoryName}/ua_types_${namespaceName}_generated)
-     forte_opcua_add_nodeset_general(${namespaceName} ${directoryName})
-   ENDFUNCTION()
-   
-   #Use this function for nodesets wich DON'T have a file called ua_types_NAMESPACE_generated.c file (PLC for example). directoryName should point to the directory where the files are
-   FUNCTION(forte_opcua_add_nodeset_without_generated namespaceName directoryName)
-     forte_opcua_add_nodeset_general(${namespaceName} ${directoryName})
-   ENDFUNCTION()
-
-   forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/modules/opc_ua/opcua_nodesets.cpp) # created file
-   #################################################################################
+    forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/modules/opc_ua/opcua_nodesets.cpp) # created file
 
     SET(FORTE_COM_OPC_UA_PORT "4840" CACHE NUMBER "Port where the OPC_UA server will listen")
     SET(FORTE_COM_OPC_UA_MULTICAST OFF CACHE BOOLEAN "Enable multicast support for OPC UA and registering with LDS")

@@ -27,7 +27,6 @@
 * Return references instead of poitners where possible
 * Split initializeReadWrite and initializeCreateMethod in smaller functions
 * Use std::algorithms where possible (getNode has a iteration at the end where it could fit)
-* Store parent and nodeId for all methods. Methods from the same objectType don't work otherwise
 
 ## For users
 
@@ -53,7 +52,7 @@ EDNPOINT: Mandatory and restricted part when using for remote actions. It must b
 
 PAIR: In the format BROWSENAME,NODE\_ID (separated by a comma ','). When possible, NODE\_ID can be omitted, in which case the comma ',' must also be omitted. If the BROWSENAME is to be omited (when possible) the ',' must be present.
 
-* BROWSENAME: Browsepath to the noded and must always start with "/Objects". A colon before the name allows to define the namespace of the browsename of the current element. Default namespace of browsename is 1
+* BROWSENAME: Browsepath to the node and must always start with a slash '/'. A colon before the name allows to define the namespace of the browsename of the current element. Default namespace of browsename is 1, except for the first part which defaults to zero. This is because in most cases the first part to access is in namespace 0. If you want to create something directly under /Root, you should then specificify your namespace, for example /1:directUnderRoot. This is valid for local and remote access
     
     * Example:  /Objects/myFolder/myNode
     * Example:  /Objects/2:myFolder/myNode -> In objects, it will look for a folder with name myFolder and namespace 2 and inside, the node with name myNode and namespace 1
@@ -81,6 +80,13 @@ PAIR: In the format BROWSENAME,NODE\_ID (separated by a comma ','). When possibl
     * /Objects/myFolder/myNode1 -> browsepath is provided, the nodeId is omitted
     * ,1:i=12345 -> browsepath is omitted, but nodeId is provided
     
+* PAIR Notes: 
+    * To decide if a node exists, the following rules apply 
+       * If only the browsepath is present, a node exists if there's a node in that browsepath 
+       * If both browsepath and nodeId are given, a node exist if a existing node in the browsepath has the same nodeId as the provided one  
+       * If only nodeId is given, a node with the provided nodeId must exist in the address space
+       * When creating  a node (only locally) browsepath should be present. 
+
  
 ID Examples:
 * opc\_ua[READ;/Objects/test1] -> read the local node /Objects/test1. Create the node if it doesn't exits with a random nodeId

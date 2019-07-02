@@ -90,9 +90,11 @@ class COPC_UA_Helper {
 
     static UA_StatusCode prepareBrowseArgument(const char *paNodePathConst, UA_BrowsePath** paBrowsePaths, size_t* paFolderCount);
 
-  private:
+    static bool checkBrowsePath(const char *paBrowsepath);
 
     static const size_t scmMaxNoOfParametersInBrowseName = 2;
+
+  private:
 
     /**
      * Mutex for making sure that getNodeForPath is only called by one layer at a time.

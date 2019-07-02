@@ -175,19 +175,39 @@ UA_StatusCode COPC_UA_Helper::releaseBrowseArgument(UA_BrowsePath* paBrowsePaths
   return UA_STATUSCODE_GOOD;
 }
 
-UA_StatusCode COPC_UA_Helper::prepareBrowseArgument(const char *paNodePathConst, UA_BrowsePath** paBrowsePaths, size_t* paFolderCount) {
-  CIEC_STRING nodePathString(paNodePathConst);
-  char* nodePath = nodePathString.getValue();
+bool COPC_UA_Helper::checkBrowsePath(const char *paBrowsepath) {
+  bool retVal = false;
 
-  // remove tailing slash
-  size_t pathLen = strlen(nodePath);
-  while(pathLen && '/' == nodePath[pathLen - 1]) {
-    nodePath[pathLen - 1] = 0;
-    pathLen--;
+  if('/' == *paBrowsepath) {
+    TForteUInt16 lenghtOfBrowsename = strlen(paBrowsepath);
+    if('/' == *(paBrowsepath + lenghtOfBrowsename - 1)) { //remove trailing slash
+      lenghtOfBrowsename--;
+    }
+
+    if(1 < lenghtOfBrowsename) {
+      retVal = true;
+    } else {
+      DEVLOG_ERROR("[OPC UA HELPER]: Browsepath %s doesn't provide  a valid nodename\n", paBrowsepath);
+    }
+  } else {
+    DEVLOG_ERROR("[OPC UA HELPER]: Browsepath %s should start with a slash\n", paBrowsepath);
   }
-  if(pathLen == 0) {
-    DEVLOG_ERROR("[OPC UA HELPER]: Node path %s is wrong\n", paNodePathConst);
+
+  return retVal;
+}
+
+UA_StatusCode COPC_UA_Helper::prepareBrowseArgument(const char *paNodePathConst, UA_BrowsePath** paBrowsePaths, size_t* paFolderCount) {
+
+  if(!checkBrowsePath(paNodePathConst)) {
     return UA_STATUSCODE_BADINVALIDARGUMENT;
+  }
+
+  CIEC_STRING copyOfOriginal(paNodePathConst);
+
+  char* nodePath = copyOfOriginal.getValue();
+
+  if('/' == nodePath[copyOfOriginal.length() - 1]) { // remove tailing slash
+    nodePath[copyOfOriginal.length() - 1] = '\0';
   }
 
   // count number of folders in node path
@@ -322,7 +342,7 @@ void COPC_UA_Helper::copyNodeIds(UA_NodeId **paFoundNodeId, UA_BrowsePathResult*
     UA_NodeId_copy(&browsePathsResults[foundFolderOffset + folderCnt - 2].targets[0].targetId.nodeId, *paParentNodeId);
   } else if(paParentNodeId) {
     *paParentNodeId = UA_NodeId_new();
-    **paParentNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
+    **paParentNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_ROOTFOLDER);
   }
 }
 

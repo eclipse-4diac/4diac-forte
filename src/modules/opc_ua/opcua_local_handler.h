@@ -62,12 +62,12 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
   private:
 
     struct UA_ParentNodeHandler {
-        UA_NodeId *parentNodeId;
-        UA_NodeId *methodNodeId;
-        forte::com_infra::CComLayer* layer;
+        UA_NodeId *mParentNodeId;
+        UA_NodeId *mMethodNodeId;
+        COPC_UA_HandlerAbstract::CLocalMethodInfo* mActionInfo;
     };
 
-    CSinglyLinkedList<UA_ParentNodeHandler *> parentsLayers;
+    static CSinglyLinkedList<UA_ParentNodeHandler *> methodsWithoutContext;
 
     struct createInfo {
         UA_NodeId* mRequestedNodeId;
@@ -267,7 +267,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     UA_StatusCode
     registerVariableCallBack(const UA_NodeId *paNodeId, COPC_UA_Layer *paComLayer, const struct UA_TypeConvert *paConvert, size_t paPortIndex);
 
-    UA_StatusCode handleExistingMethod(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
+    UA_StatusCode handleExistingMethod(COPC_UA_HandlerAbstract::CActionInfo& paInfo, UA_NodeId *paParentNode);
 
     static const size_t scmMethodCallTimeout = 4;
 
@@ -287,6 +287,9 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     void cleanMethodCalls();
 
     CLocalMethodCall* getLocalMethodCall(COPC_UA_HandlerAbstract::CLocalMethodInfo *paActionInfo);
+
+    static const UA_UInt16 scmDefaultBrowsenameNameSpace = 1;
+
 };
 
 #endif /* SRC_MODULES_OPC_UA_OPCUALOCALHANDLER_H_ */
