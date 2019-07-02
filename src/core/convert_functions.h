@@ -1555,6 +1555,10 @@ inline const CIEC_LINT TIME_IN_US_TO_LINT(const CIEC_TIME &paValue) {
   return CIEC_LINT(paValue.getInMicroSeconds());
 }
 
+inline const CIEC_LINT TIME_IN_NS_TO_LINT(const CIEC_TIME &paValue) {
+  return CIEC_LINT(paValue.getInNanoSeconds());
+}
+
 #endif /* FORTE_USE_64BIT_DATATYPES */
 
 #endif /* CONVERT_FUNCTIONS_H_ */
