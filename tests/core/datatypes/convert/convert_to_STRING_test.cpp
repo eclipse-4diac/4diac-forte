@@ -10,7 +10,7 @@
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 
-#include "../../../src/core/convert_functions.h"
+#include "convert_functions.h"
 #include "../../../src/core/datatypes/forte_string.h"
 
 //BOOLEAN
