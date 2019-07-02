@@ -115,7 +115,7 @@ const UA_String* COPC_UA_Local_Handler::getDiscoveryUrl() const {
 }
 
 void COPC_UA_Local_Handler::serverOnNetworkCallback(const UA_ServerOnNetwork *paServerOnNetwork, UA_Boolean paIsServerAnnounce, UA_Boolean paIsTxtReceived,
-    void* paData) {
+    void* paData) { //NOSONAR
   COPC_UA_Local_Handler* handler = static_cast<COPC_UA_Local_Handler*>(paData);
 
   const UA_String* ownDiscoverUrl = handler->getDiscoveryUrl();
@@ -340,11 +340,11 @@ UA_StatusCode COPC_UA_Local_Handler::registerVariableCallBack(const UA_NodeId *p
   // store it in the list so we can delete it to avoid mem leaks
   nodeCallbackHandles.pushBack(handle);
   UA_Server_setNodeContext(mUaServer, *paNodeId, handle);
-  return UA_Server_setVariableNode_valueCallback(mUaServer, *paNodeId, { 0, this->onWrite });
+  return UA_Server_setVariableNode_valueCallback(mUaServer, *paNodeId, { 0, COPC_UA_Local_Handler::onWrite });
 }
 
-void COPC_UA_Local_Handler::onWrite(UA_Server *, const UA_NodeId *, void *, const UA_NodeId *, void *nodeContext, const UA_NumericRange *,
-    const UA_DataValue *data) { //NOSONAR
+void COPC_UA_Local_Handler::onWrite(UA_Server *, const UA_NodeId *, void *, const UA_NodeId *, void *nodeContext, const UA_NumericRange *, //NOSONAR
+    const UA_DataValue *data) {
 
   struct UA_VariableCallback_Handle *handle = static_cast<struct UA_VariableCallback_Handle *>(nodeContext);
 
@@ -421,9 +421,9 @@ UA_StatusCode COPC_UA_Local_Handler::onServerMethodCall(UA_Server *, const UA_No
   if(!handle) {
     DEVLOG_ERROR("[OPC UA LOCAL]: Method doesn't have any FB referencing it\n");
   } else {
-    if(paInputSize != handle->mLayer->getCommFB()->getNumRD() || paOutputSize != handle->mLayer->getCommFB()->getNumSD()) {
-      DEVLOG_ERROR("[OPC UA LOCAL]: method call got invalid number of arguments. In: %d==%d, Out: %d==%d\n", handle->mLayer->getCommFB()->getNumRD(),
-        paInputSize, handle->mLayer->getCommFB()->getNumSD(), paOutput);
+    if(paInputSize != handle->getLayer()->getCommFB()->getNumRD() || paOutputSize != handle->getLayer()->getCommFB()->getNumSD()) {
+      DEVLOG_ERROR("[OPC UA LOCAL]: method call got invalid number of arguments. In: %d==%d, Out: %d==%d\n", handle->getLayer()->getCommFB()->getNumRD(),
+        paInputSize, handle->getLayer()->getCommFB()->getNumSD(), paOutput);
     } else {
       // other thread may currently create nodes for the same path, thus mutex
       CCriticalRegion criticalRegion(handle->getMutex()); //TODO: do we need this mutex?
@@ -439,7 +439,7 @@ UA_StatusCode COPC_UA_Local_Handler::onServerMethodCall(UA_Server *, const UA_No
         sendHandle.mData[i] = &paOutput[i];
       }
 
-      CSinglyLinkedList<UA_TypeConvert*>::Iterator itType = handle->mLayer->getTypeConveverters().begin();
+      CSinglyLinkedList<UA_TypeConvert*>::Iterator itType = handle->getLayer()->getTypeConveverters().begin();
       for(size_t i = 0; i < paOutputSize; i++, ++itType) {
         sendHandle.mConvert[i] = *itType;
       }
@@ -449,14 +449,14 @@ UA_StatusCode COPC_UA_Local_Handler::onServerMethodCall(UA_Server *, const UA_No
       }
 
       /* Handle return of receive mData */
-      if(e_ProcessDataOk == handle->mLayer->recvData(static_cast<const void *>(&recvHandle), 0)) { //TODO: add multidimensional mData handling with 'range'.
+      if(e_ProcessDataOk == handle->getLayer()->recvData(static_cast<const void *>(&recvHandle), 0)) { //TODO: add multidimensional mData handling with 'range'.
 
-        handle->mLayer->getCommFB()->interruptCommFB(handle->mLayer);
+        handle->getLayer()->getCommFB()->interruptCommFB(handle->getLayer());
 
         //when the method finishes, and RSP is triggered, sendHandle will be filled with the right information
-        CLocalMethodCall* call = ::getExtEvHandler<COPC_UA_Local_Handler>(*handle->mLayer->getCommFB()).addMethodCall(handle, &sendHandle);
+        CLocalMethodCall* call = ::getExtEvHandler<COPC_UA_Local_Handler>(*handle->getLayer()->getCommFB()).addMethodCall(handle, &sendHandle);
 
-        ::getExtEvHandler<COPC_UA_Local_Handler>(*handle->mLayer->getCommFB()).startNewEventChain(handle->mLayer->getCommFB());
+        ::getExtEvHandler<COPC_UA_Local_Handler>(*handle->getLayer()->getCommFB()).startNewEventChain(handle->getLayer()->getCommFB());
 
         //wait For semaphore, which will be released by execute Local Method in this handler
         if(!handle->getResultReady().timedWait(scmMethodCallTimeout * 1E9)) {
@@ -466,7 +466,7 @@ UA_StatusCode COPC_UA_Local_Handler::onServerMethodCall(UA_Server *, const UA_No
           retVal = sendHandle.mFailed ? UA_STATUSCODE_BADUNEXPECTEDERROR : UA_STATUSCODE_GOOD;
         }
 
-        ::getExtEvHandler<COPC_UA_Local_Handler>(*handle->mLayer->getCommFB()).removeMethodCall(call);
+        ::getExtEvHandler<COPC_UA_Local_Handler>(*handle->getLayer()->getCommFB()).removeMethodCall(call);
       }
     }
   }
@@ -1099,24 +1099,25 @@ UA_StatusCode COPC_UA_Local_Handler::initializeAction(COPC_UA_HandlerAbstract::C
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
   if(mUaServer) { //if the server failed at starting, nothing will be initialized
     switch(paInfo.getAction()){
-      case eRead:
+      case CActionInfo::eRead:
         retVal = initializeReadWrite(paInfo, false);
         break;
-      case eWrite:
+      case CActionInfo::eWrite:
         retVal = initializeReadWrite(paInfo, true);
         break;
-      case eCreateMethod:
+      case CActionInfo::eCreateMethod:
         retVal = initializeCreateMethod(paInfo);
         break;
-      case eCreateObject:
+      case CActionInfo::eCreateObject:
         retVal = initializeCreateObject(paInfo);
         break;
-      case eDeleteObject:
+      case CActionInfo::eDeleteObject:
         retVal = initializeDeleteObject(paInfo);
         break;
-      case eCallMethod:
-      case eSubscribe:
-        DEVLOG_ERROR("[OPC UA LOCAL]: Cannot perform action %s locally. Initialization failed\n", COPC_UA_HandlerAbstract::mActionNames[paInfo.getAction()]);
+      case CActionInfo::eCallMethod:
+      case CActionInfo::eSubscribe:
+        DEVLOG_ERROR("[OPC UA LOCAL]: Cannot perform action %s locally. Initialization failed\n",
+          COPC_UA_HandlerAbstract::CActionInfo::mActionNames[paInfo.getAction()]);
         break;
       default:
         DEVLOG_ERROR("[OPC UA LOCAL]: Unknown action %d to be initialized\n", paInfo.getAction());
@@ -1130,16 +1131,16 @@ UA_StatusCode COPC_UA_Local_Handler::executeAction(COPC_UA_HandlerAbstract::CAct
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
 
   switch(paInfo.getAction()){
-    case eWrite:
+    case CActionInfo::eWrite:
       retVal = executeWrite(paInfo);
       break;
-    case eCreateMethod:
+    case CActionInfo::eCreateMethod:
       retVal = executeCreateMethod(paInfo);
       break;
-    case eCreateObject:
+    case CActionInfo::eCreateObject:
       retVal = executeCreateObject(paInfo);
       break;
-    case eDeleteObject:
+    case CActionInfo::eDeleteObject:
       retVal = executeDeleteObject(paInfo);
       break;
     default: //eCallMethod, eSubscribe will never reach here since they weren't initialized. eRead is a Subscribe FB
@@ -1153,11 +1154,11 @@ UA_StatusCode COPC_UA_Local_Handler::executeAction(COPC_UA_HandlerAbstract::CAct
 UA_StatusCode COPC_UA_Local_Handler::uninitializeAction(COPC_UA_HandlerAbstract::CActionInfo & paInfo) {
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
   switch(paInfo.getAction()){
-    case eRead:
-    case eWrite:
-    case eCreateMethod:
-    case eCreateObject:
-    case eDeleteObject:
+    case CActionInfo::eRead:
+    case CActionInfo::eWrite:
+    case CActionInfo::eCreateMethod:
+    case CActionInfo::eCreateObject:
+    case CActionInfo::eDeleteObject:
       referencedNodesDecrement(&paInfo);
       retVal = UA_STATUSCODE_GOOD;
       break;

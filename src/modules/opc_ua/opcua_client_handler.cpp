@@ -198,7 +198,7 @@ void COPC_UA_Client_Handler::onAsyncCallReturn(UA_Client*paClient, void* paUserd
 }
 #endif
 
-void COPC_UA_Client_Handler::handleReadReturn(UA_Client *, void *paUserdata, UA_UInt32, UA_ReadResponse *paResponse) {
+void COPC_UA_Client_Handler::handleReadReturn(UA_Client *, void *paUserdata, UA_UInt32, UA_ReadResponse *paResponse) { //NOSONAR
   UA_RemoteCallHandle* handle = static_cast<UA_RemoteCallHandle*>(paUserdata);
   removeAsyncCall(handle->mClient);
 
@@ -244,7 +244,7 @@ void COPC_UA_Client_Handler::handleReadReturn(UA_Client *, void *paUserdata, UA_
   delete handle;
 }
 
-void COPC_UA_Client_Handler::handleWriteReturn(UA_Client *, void *paUserdata, UA_UInt32, UA_WriteResponse *paResponse) {
+void COPC_UA_Client_Handler::handleWriteReturn(UA_Client *, void *paUserdata, UA_UInt32, UA_WriteResponse *paResponse) { //NOSONAR
   UA_RemoteCallHandle* handle = static_cast<UA_RemoteCallHandle*>(paUserdata);
   removeAsyncCall(handle->mClient);
   COPC_UA_HandlerAbstract::UA_RecvVariable_handle varHandle(0);
@@ -468,7 +468,7 @@ void COPC_UA_Client_Handler::referencedClientsIncrement(COPC_UA_HandlerAbstract:
   CCriticalRegion allClientsRegion(mAllClientListMutex);
   for(CSinglyLinkedList<UA_ClientInformation *>::Iterator iterRef = mAllClients.begin(); iterRef != mAllClients.end(); ++iterRef) {
     CCriticalRegion clientRegion((*iterRef)->mClientMutex);
-    if((*iterRef)->mEndpointUrl == paActionInfo->mEndpoint) {
+    if((*iterRef)->mEndpointUrl == paActionInfo->getEndpoint()) {
       (*iterRef)->mActionsReferencingIt.pushBack(paActionInfo);
       (*iterRef)->mActionsToBeInitialized.pushBack(paActionInfo);
       addClientToConnectionList((*iterRef));
@@ -483,7 +483,7 @@ void COPC_UA_Client_Handler::referencedClientsDecrement(COPC_UA_HandlerAbstract:
   UA_ClientInformation * clientToDelete = 0;
   for(CSinglyLinkedList<UA_ClientInformation *>::Iterator iterRef = mAllClients.begin(); iterRef != mAllClients.end(); ++iterRef) {
     CCriticalRegion clientRegion((*iterRef)->mClientMutex);
-    if((*iterRef)->mEndpointUrl == paActionInfo->mEndpoint) {
+    if((*iterRef)->mEndpointUrl == paActionInfo->getEndpoint()) {
       (*iterRef)->mActionsToBeInitialized.erase(paActionInfo);
       (*iterRef)->mActionsReferencingIt.erase(paActionInfo);
       mConnectionHandler.removeAction(*iterRef, paActionInfo);
@@ -518,16 +518,17 @@ UA_StatusCode COPC_UA_Client_Handler::initializeAction(COPC_UA_HandlerAbstract::
   enableHandler();
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
   switch(paInfo.getAction()){
-    case eRead:
-    case eWrite:
-    case eCallMethod:
-    case eSubscribe:
+    case CActionInfo::eRead:
+    case CActionInfo::eWrite:
+    case CActionInfo::eCallMethod:
+    case CActionInfo::eSubscribe:
       retVal = initialize(paInfo);
       break;
-    case eCreateMethod:
-    case eCreateObject:
-    case eDeleteObject:
-      DEVLOG_ERROR("[OPC UA REMOTE]: Cannot perform action %s remotely. Initialization failed\n", COPC_UA_HandlerAbstract::mActionNames[paInfo.getAction()]);
+    case CActionInfo::eCreateMethod:
+    case CActionInfo::eCreateObject:
+    case CActionInfo::eDeleteObject:
+      DEVLOG_ERROR("[OPC UA REMOTE]: Cannot perform action %s remotely. Initialization failed\n",
+        COPC_UA_HandlerAbstract::CActionInfo::mActionNames[paInfo.getAction()]);
       break;
     default:
       DEVLOG_ERROR("[OPC UA REMOTE]: Unknown action %d to be initialized\n", paInfo.getAction());
@@ -538,18 +539,18 @@ UA_StatusCode COPC_UA_Client_Handler::initializeAction(COPC_UA_HandlerAbstract::
 
 UA_StatusCode COPC_UA_Client_Handler::executeAction(COPC_UA_HandlerAbstract::CActionInfo& paInfo) {
 
-  COPC_UA_Client_Handler::UA_ClientInformation* clientInfo = getClient(paInfo.mEndpoint);
+  COPC_UA_Client_Handler::UA_ClientInformation* clientInfo = getClient(paInfo.getEndpoint());
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
 
   if(isActionInitialized(clientInfo, &paInfo)) {
     switch(paInfo.getAction()){
-      case eRead:
+      case CActionInfo::eRead:
         retVal = executeRead(paInfo, clientInfo);
         break;
-      case eWrite:
+      case CActionInfo::eWrite:
         retVal = executeWrite(paInfo, clientInfo);
         break;
-      case eCallMethod:
+      case CActionInfo::eCallMethod:
         retVal = executeCallMethod(paInfo, clientInfo);
         break;
       default: //eCreateMethod, eCreateObject, eDeleteObject will never reach here since they weren't initialized. eSubscribe is a Subscribe FB
@@ -557,7 +558,7 @@ UA_StatusCode COPC_UA_Client_Handler::executeAction(COPC_UA_HandlerAbstract::CAc
         break;
     }
   } else {
-    DEVLOG_ERROR("[OPC UA REMOTE]: Cannot execute action from FB %s. It was not properly initialized\n", paInfo.mLayer->getCommFB()->getInstanceName());
+    DEVLOG_ERROR("[OPC UA REMOTE]: Cannot execute action from FB %s. It was not properly initialized\n", paInfo.getLayer()->getCommFB()->getInstanceName());
   }
 
   return retVal;
@@ -566,10 +567,10 @@ UA_StatusCode COPC_UA_Client_Handler::executeAction(COPC_UA_HandlerAbstract::CAc
 UA_StatusCode COPC_UA_Client_Handler::uninitializeAction(COPC_UA_HandlerAbstract::CActionInfo& paInfo) {
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
   switch(paInfo.getAction()){
-    case eRead:
-    case eWrite:
-    case eCallMethod:
-    case eSubscribe:
+    case CActionInfo::eRead:
+    case CActionInfo::eWrite:
+    case CActionInfo::eCallMethod:
+    case CActionInfo::eSubscribe:
       referencedClientsDecrement(&paInfo);
       retVal = UA_STATUSCODE_GOOD;
       break;
@@ -582,7 +583,7 @@ UA_StatusCode COPC_UA_Client_Handler::uninitializeAction(COPC_UA_HandlerAbstract
 
 UA_StatusCode COPC_UA_Client_Handler::initialize(COPC_UA_HandlerAbstract::CActionInfo& paInfo) {
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
-  COPC_UA_Client_Handler::UA_ClientInformation* clientInfo = getClient(paInfo.mEndpoint);
+  COPC_UA_Client_Handler::UA_ClientInformation* clientInfo = getClient(paInfo.getEndpoint());
   if(clientInfo) {
     referencedClientsIncrement(&paInfo);
     retVal = UA_STATUSCODE_GOOD;
@@ -929,7 +930,7 @@ bool COPC_UA_Client_Handler::UA_ConnectionHandler::initializeClient(COPC_UA_Clie
 bool COPC_UA_Client_Handler::UA_ConnectionHandler::initializeAction(COPC_UA_HandlerAbstract::CActionInfo* paAction,
     COPC_UA_Client_Handler::UA_ClientInformation* paClient) {
   bool somethingFailed = false;
-  if(eCallMethod == paAction->getAction()) {
+  if(CActionInfo::eCallMethod == paAction->getAction()) {
     if(!initializeCallMethod(paAction, paClient)) {
       somethingFailed = true;
     }
@@ -974,7 +975,7 @@ bool COPC_UA_Client_Handler::UA_ConnectionHandler::initializeAction(COPC_UA_Hand
 void COPC_UA_Client_Handler::UA_ConnectionHandler::uninitializeAction(COPC_UA_HandlerAbstract::CActionInfo* paAction,
     COPC_UA_Client_Handler::UA_ClientInformation* paClient) {
   paClient->mActionsToBeInitialized.erase(paAction); //remove in case it is still not initialized
-  if(eSubscribe == paAction->getAction()) { //only subscription has something to release
+  if(CActionInfo::eSubscribe == paAction->getAction()) { //only subscription has something to release
     uninitializeSubscription(paAction, paClient);
   }
 }
@@ -1052,7 +1053,7 @@ bool COPC_UA_Client_Handler::UA_ConnectionHandler::initializeCallMethod(COPC_UA_
 bool COPC_UA_Client_Handler::UA_ConnectionHandler::initializeSubscription(COPC_UA_HandlerAbstract::CActionInfo* paAction,
     COPC_UA_Client_Handler::UA_ClientInformation* paClient) {
   bool somethingFailed = false;
-  if(eSubscribe == paAction->getAction()) {
+  if(CActionInfo::eSubscribe == paAction->getAction()) {
 
     if(!paClient->mSubscriptionInfo) {
       paClient->mSubscriptionInfo = new UA_subscriptionInfo();

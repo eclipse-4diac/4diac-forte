@@ -18,7 +18,7 @@
 #include <forte_string.h>
 #include <fortelist.h>
 #include <forte_string.h>
-
+#include <basecommfb.h>
 
 class COPC_UA_Layer;
 
@@ -35,10 +35,9 @@ class COPC_UA_HandlerAbstract : public CExternalEventHandler {
           mConvert = new const UA_TypeConvert*[mSize];
         }
 
-        ~UA_Variables_handle() {
+        virtual ~UA_Variables_handle() {
           delete[] mConvert;
         }
-
 
         bool mFailed;
         size_t mOffset;
@@ -46,6 +45,8 @@ class COPC_UA_HandlerAbstract : public CExternalEventHandler {
         const struct UA_TypeConvert** mConvert;
       private:
         UA_Variables_handle(const UA_Variables_handle &obj);
+        UA_Variables_handle& operator=(const UA_Variables_handle& other);
+
     };
 
     class UA_RecvVariable_handle : public UA_Variables_handle {
@@ -53,14 +54,16 @@ class COPC_UA_HandlerAbstract : public CExternalEventHandler {
         explicit UA_RecvVariable_handle(size_t paSize) :
             UA_Variables_handle(paSize) {
           mData = new const UA_Variant*[mSize];
-
         }
 
-        ~UA_RecvVariable_handle() {
+        virtual ~UA_RecvVariable_handle() {
           delete[] mData;
         }
 
         const UA_Variant **mData;
+      private:
+        UA_RecvVariable_handle(const UA_RecvVariable_handle &obj);
+        UA_RecvVariable_handle& operator=(const UA_RecvVariable_handle& other);
     };
 
     class UA_SendVariable_handle : public UA_Variables_handle {
@@ -75,20 +78,10 @@ class COPC_UA_HandlerAbstract : public CExternalEventHandler {
         }
 
         UA_Variant **mData;
+      private:
+        UA_SendVariable_handle(const UA_SendVariable_handle &obj);
+        UA_SendVariable_handle& operator=(const UA_SendVariable_handle& other);
     };
-
-    enum UA_ActionType {
-      eRead,
-      eWrite,
-      eCreateMethod,
-      eCallMethod,
-      eSubscribe,
-      eCreateObject,
-      eDeleteObject,
-      eActionUnknown,
-    };
-
-    static const char* const mActionNames[eActionUnknown];
 
     struct CNodePairInfo {
         UA_NodeId *mNodeId;
@@ -101,20 +94,20 @@ class COPC_UA_HandlerAbstract : public CExternalEventHandler {
 
     class CActionInfo {
       public:
-        explicit CActionInfo(COPC_UA_Layer* paLayer) :
-            mAction(eActionUnknown), mLayer(paLayer) {
-        }
+        enum UA_ActionType {
+          eRead,
+          eWrite,
+          eCreateMethod,
+          eCallMethod,
+          eSubscribe,
+          eCreateObject,
+          eDeleteObject,
+          eActionUnknown,
+        };
 
-        ~CActionInfo() {
-          for(CSinglyLinkedList<CNodePairInfo*>::Iterator it = mNodePair.begin(); it != mNodePair.end(); ++it) {
-            if((*it)->mNodeId) {
-              UA_NodeId_deleteMembers((*it)->mNodeId);
-              UA_NodeId_delete((*it)->mNodeId);
-            }
-            delete (*it);
-          }
-          mNodePair.clearAll();
-        }
+        explicit CActionInfo(COPC_UA_Layer* paLayer, UA_ActionType paAction, CIEC_STRING& paEndpoint);
+
+        virtual ~CActionInfo();
 
         bool isRemote() {
           return ("" != mEndpoint);
@@ -132,7 +125,7 @@ class COPC_UA_HandlerAbstract : public CExternalEventHandler {
           return mNodePair;
         }
 
-        COPC_UA_HandlerAbstract::UA_ActionType getAction() {
+        UA_ActionType getAction() {
           return mAction;
         }
 
@@ -143,16 +136,34 @@ class COPC_UA_HandlerAbstract : public CExternalEventHandler {
           return noOfPairs;
         }
 
-        COPC_UA_HandlerAbstract::UA_ActionType mAction;
+        bool checkAction();
+
+        static UA_ActionType getActionFromParams(const char * paParams);
+
+        static const char* const mActionNames[eActionUnknown];
+
+      private:
+
+        UA_ActionType mAction;
         COPC_UA_Layer* mLayer;
         CIEC_STRING mEndpoint;
         CSinglyLinkedList<CNodePairInfo*> mNodePair;
+
+        bool checkNodePairInfo();
+
+        bool checkReadAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs);
+        bool checkWriteAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs);
+        bool checkCreateMethodAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs);
+        bool checkCallMethodAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs);
+        bool checkSubscribeAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs);
+        bool checkCreateObjectAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs);
+        bool checkDeleteObjectAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs);
     };
 
     class CLocalMethodInfo : public CActionInfo {
       public:
-        explicit CLocalMethodInfo(COPC_UA_Layer* paLayer) :
-            CActionInfo(paLayer) {
+        explicit CLocalMethodInfo(COPC_UA_Layer* paLayer, CIEC_STRING& paEndpoint) :
+            CActionInfo(paLayer, eCreateMethod, paEndpoint) {
         }
 
         CSyncObject& getMutex() {
@@ -182,8 +193,6 @@ class COPC_UA_HandlerAbstract : public CExternalEventHandler {
         static CActionInfo* getInfoFromParams(const char* paParams, COPC_UA_Layer* paLayer);
 
       private:
-
-        static COPC_UA_HandlerAbstract::UA_ActionType getActionFromParams(const char * paParams);
 
         static bool handlePair(const char * paPair, CSinglyLinkedList<CNodePairInfo*>& paResult);
 
@@ -223,9 +232,6 @@ class COPC_UA_HandlerAbstract : public CExternalEventHandler {
         void*,
 #endif //FORTE_COM_OPC_UA_MASTER_BRANCH
         UA_LogLevel paLevel, UA_LogCategory paCategory, const char *paMsg, va_list paArgs);
-
-    static bool checkNodePairInfo(COPC_UA_HandlerAbstract::CActionInfo& paResult);
-    static bool checkAction(COPC_UA_HandlerAbstract::CActionInfo& paResult);
 };
 
 #endif /* SRC_MODULES_OPC_UA_OPCUA_HANDLER_ABSTRACT_H_ */
