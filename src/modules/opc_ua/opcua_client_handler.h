@@ -32,9 +32,6 @@ class COPC_UA_Client_Handler : public COPC_UA_HandlerAbstract, public CThread {
 
     void disableHandler(void);
 
-    static UA_StatusCode callMethod(UA_Client *client, const UA_NodeId objectId, const UA_NodeId methodId, size_t inputSize, const UA_Variant *input,
-        size_t *outputSize, UA_Variant **output);
-
     static void stateCallback(UA_Client *client, UA_ClientState clientState);
 
     static void
@@ -46,18 +43,6 @@ class COPC_UA_Client_Handler : public COPC_UA_HandlerAbstract, public CThread {
 #else
     static void onAsyncCallReturn(UA_Client *paClient, void *paUserdata, UA_UInt32 paRequestId, void *paResponse, const UA_DataType *paResponseType);
 #endif
-    /**
-     * Get the opc ua client for the given endpoint url. If there exists already an OPC UA client
-     * which is connected to the given URL, that one will be returned.
-     * If createIfNotFound is false and there is no client yet, NULL will be returned. Otherwise
-     * a new client is instantiated and connected.
-     *
-     * @param endpointUrl The endpoint url for the client
-     * @param createIfNotFound if true, a new client will be created if not found
-     * @return the (new) client, or NULL of not found and not created.
-     */
-    UA_Client *
-    getClientForEndpoint(const char *endpointUrl, bool subscription, CSyncObject **clientMutex);
 
   protected:
     virtual UA_StatusCode initializeAction(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
@@ -240,8 +225,6 @@ class COPC_UA_Client_Handler : public COPC_UA_HandlerAbstract, public CThread {
 
     CSyncObject mAllClientListMutex;
     CSinglyLinkedList<UA_ClientInformation*> mAllClients;
-
-
 
     CSyncObject mNewClientstMutex;
     CSinglyLinkedList<UA_ClientInformation*> mNewClients;

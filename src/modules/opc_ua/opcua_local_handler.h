@@ -53,6 +53,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     void disableHandler(void);
 
   protected:
+
     virtual UA_StatusCode initializeAction(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
 
     virtual UA_StatusCode executeAction(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
@@ -60,45 +61,6 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     virtual UA_StatusCode uninitializeAction(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
 
   private:
-
-    struct UA_ParentNodeHandler {
-        UA_NodeId *mParentNodeId;
-        UA_NodeId *mMethodNodeId;
-        COPC_UA_HandlerAbstract::CLocalMethodInfo* mActionInfo;
-    };
-
-    static CSinglyLinkedList<UA_ParentNodeHandler *> methodsWithoutContext;
-
-    struct createInfo {
-        UA_NodeId* mRequestedNodeId;
-        const UA_NodeId* mParentNodeId;
-        UA_QualifiedName* mBrowseName;
-        UA_NodeId* mReturnedNodeId;
-    };
-
-    struct createObjectInfo : createInfo {
-        UA_NodeId* mTypeNodeId;
-    };
-
-    struct createVariableInfo : createInfo {
-        const UA_TypeConvert* mTypeConvert;
-        bool mAllowWrite;
-        const CIEC_ANY *mInitData;
-    };
-
-    struct createMethodInfo : createInfo {
-        UA_Argument *mInputArguments;
-        UA_Argument *mOutputArguments;
-        size_t mInputSize;
-        size_t mOutputSize;
-        COPC_UA_HandlerAbstract::CLocalMethodInfo* mCallback;
-    };
-
-    UA_StatusCode initializeRead(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
-
-    UA_StatusCode executeRead(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
-
-    UA_StatusCode initializeWrite(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
 
     UA_StatusCode executeWrite(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
 
@@ -114,14 +76,12 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
 
     UA_StatusCode executeDeleteObject(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
 
-    UA_StatusCode splitAndCreateFolders(CIEC_STRING& paBrowsePath, CIEC_STRING& paFolders, CIEC_STRING& paNodeName,
+    UA_StatusCode splitAndCreateFolders(CIEC_STRING& paBrowsePath, CIEC_STRING& paNodeName,
         CSinglyLinkedList<UA_NodeId*>& paRreferencedNodes);
 
-    // OPC UA Server and configuration
-    UA_Server *mUaServer;
+    void handlePresentNodes(CSinglyLinkedList<UA_NodeId*>& paPresentNodes, CSinglyLinkedList<UA_NodeId*>& paReferencedNodes, bool paFailed);
 
-    // OPC UA Client and configuration
-    volatile UA_Boolean mUaServerRunningFlag;
+    bool isTypeOfObjectPresent(CNodePairInfo* paNodePairInfo);
 
     /**
      * Starts the OPC UA server, if it is not already running
@@ -149,29 +109,6 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      */
     CSinglyLinkedList<struct UA_NodeCallback_Handle *> nodeCallbackHandles;
 
-    static const unsigned int scmNoOfParameters = 2;
-
-#ifdef FORTE_COM_OPC_UA_MULTICAST
-# ifndef UA_ENABLE_DISCOVERY_MULTICAST
-#  error open62541 needs to be built with UA_ENABLE_DISCOVERY_MULTICAST=ON
-# else // UA_ENABLE_DISCOVERY_MULTICAST
-#  ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-    //nothing here
-#   else
-    UA_ServerConfig* mServerConfig;
-#   endif
-    /**
-     * List of LDS servers where this instance is already registered.
-     */
-    CSinglyLinkedList<UA_String*> registeredWithLds;
-
-    const UA_String* getDiscoveryUrl() const;
-    void registerWithLds(const UA_String *paDiscoveryUrl);
-    void removeLdsRegister(const UA_String *paDiscoveryUrl);
-    static void serverOnNetworkCallback(const UA_ServerOnNetwork *paServerOnNetwork, UA_Boolean paIsServerAnnounce, UA_Boolean paIsTxtReceived, void* paData);
-# endif //UA_ENABLE_DISCOVERY_MULTICAST
-#endif //FORTE_COM_OPC_UA_MULTICAST
-
     struct nodesReferencedByActions {
         const UA_NodeId *mNodeId;
         CSinglyLinkedList<COPC_UA_HandlerAbstract::CActionInfo*> mActionsReferencingIt;
@@ -182,36 +119,110 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     CSyncObject mNodeLayerMutex;
     CSemaphore mServerStarted;
 
-    bool initializeNodesets(UA_Server* paUaServer);
+    struct UA_ParentNodeHandler {
+        UA_NodeId *mParentNodeId;
+        UA_NodeId *mMethodNodeId;
+        COPC_UA_HandlerAbstract::CLocalMethodInfo* mActionInfo;
+    };
+
+    static CSinglyLinkedList<UA_ParentNodeHandler *> methodsWithoutContext;
+
+    class CCreateInfo {
+      public:
+        CCreateInfo() :
+            mRequestedNodeId(0), mParentNodeId(0), mBrowseName(UA_QualifiedName_new()), mReturnedNodeId(UA_NodeId_new()) {
+        }
+
+        virtual ~CCreateInfo() {
+          UA_NodeId_delete(mReturnedNodeId);
+          UA_QualifiedName_delete(mBrowseName);
+        }
+
+        UA_NodeId* mRequestedNodeId;
+        const UA_NodeId* mParentNodeId;
+        UA_QualifiedName* mBrowseName;
+        UA_NodeId* mReturnedNodeId;
+
+      private:
+        CCreateInfo(CCreateInfo& other);
+        CCreateInfo& operator=(const CCreateInfo& other);
+    };
+
+    class CCreateObjectInfo : public CCreateInfo {
+      public:
+        CCreateObjectInfo() :
+            CCreateInfo(), mTypeNodeId(0) {
+
+        }
+        UA_NodeId* mTypeNodeId;
+    };
+
+    class CCreateVariableInfo : public CCreateInfo {
+      public:
+        CCreateVariableInfo() :
+            CCreateInfo(), mTypeConvert(0), mInitData(0), mAllowWrite(false) {
+
+        }
+        const UA_TypeConvert* mTypeConvert;
+        const CIEC_ANY *mInitData;
+        bool mAllowWrite;
+    };
+
+    class CCreateMethodInfo : public CCreateInfo {
+      public:
+        CCreateMethodInfo() :
+            CCreateInfo(), mInputArguments(0), mOutputArguments(0), mCallback(0), mInputSize(0), mOutputSize(0) {
+
+        }
+        ~CCreateMethodInfo() {
+          UA_Array_delete(mInputArguments, mInputSize, &UA_TYPES[UA_TYPES_ARGUMENT]);
+          UA_Array_delete(mOutputArguments, mOutputSize, &UA_TYPES[UA_TYPES_ARGUMENT]);
+        }
+
+        UA_Argument *mInputArguments;
+        UA_Argument *mOutputArguments;
+        COPC_UA_HandlerAbstract::CLocalMethodInfo* mCallback;
+        size_t mInputSize;
+        size_t mOutputSize;
+      private:
+        CCreateMethodInfo(CCreateMethodInfo& other);
+        CCreateMethodInfo& operator=(const CCreateMethodInfo& other);
+    };
 
     CSyncObject getNodeForPathMutex;
+
+    UA_StatusCode handleExistingVariable(COPC_UA_HandlerAbstract::CActionInfo& paInfo, CNodePairInfo* paNodePairInfo, UA_TypeConvert* paTypeConvert,
+        size_t paIndexOfNodePair, bool paWrite);
+
+    bool getBroswenameFromNodeName(CIEC_STRING& paNodeName, UA_QualifiedName& paBrowseName);
+
+    bool initializeNodesets(UA_Server* paUaServer);
+
+    bool initializeCreateInfo(CIEC_STRING& paNodeName, CNodePairInfo* paNodePair, const UA_NodeId* paParentNodeId, CCreateInfo& paResult);
 
     UA_StatusCode initializeReadWrite(COPC_UA_HandlerAbstract::CActionInfo& paInfo, bool isWrite);
 
     UA_StatusCode getNode(const UA_NodeId* paParentNode, CNodePairInfo* paNodeInfo, CSinglyLinkedList<UA_NodeId*>& paCreatedNodeIds, bool* paIsPresent);
 
-    static const char* const mLocaleForNodes;
-    static const char* const mDescriptionForVariableNodes;
-
-    UA_StatusCode createVariableNode(createVariableInfo* paNodeInformation);
+    UA_StatusCode createVariableNode(CCreateVariableInfo* paNodeInformation);
 
     UA_StatusCode storeAlreadyExistingNodes(UA_BrowsePathResult* mNodesReferences, size_t paFolderCnt, size_t* paFirstNonExistingNode,
         CSinglyLinkedList<UA_NodeId*>& paCreatedNodeIds);
 
-    UA_StatusCode createObjectNode(createObjectInfo* paNodeInformation);
+    UA_StatusCode createObjectNode(CCreateObjectInfo* paNodeInformation);
 
     UA_StatusCode translateBrowseNameAndStore(const char* paBrowsePath, UA_BrowsePath **paBrowsePaths, size_t *paFoldercount, size_t *paFirstNonExistingNode,
         CSinglyLinkedList<UA_NodeId*>& paFoundNodeIds);
 
     UA_StatusCode createFolders(const char* paFolders, CSinglyLinkedList<UA_NodeId*>& paCreatedNodeIds);
 
-    UA_StatusCode splitFoldersFromNode(const CIEC_STRING& paOriginal, CIEC_STRING& paFolder, CIEC_STRING& paNodeName);
+    bool splitFoldersFromNode(const CIEC_STRING& paOriginal, CIEC_STRING& paFolder, CIEC_STRING& paNodeName);
 
     static const size_t scmMaxServerNameLength = 255;
 
     void cleanNodeReferences();
 
-    void createMethodArguments(createMethodInfo * paMethodInformation, COPC_UA_HandlerAbstract::CActionInfo & paInfo, CSinglyLinkedList<CIEC_STRING> &paNames);
+    void createMethodArguments(CCreateMethodInfo * paMethodInformation, COPC_UA_HandlerAbstract::CActionInfo & paInfo);
 
     void referencedNodesIncrement(const CSinglyLinkedList<UA_NodeId *> *paNodes, COPC_UA_HandlerAbstract::CActionInfo* const paLayer);
 
@@ -241,7 +252,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param returnNodeId node id of the newly created method
      * @return UA_STATUSCODE_GOOD on success. Error otherwise
      */
-    UA_StatusCode createMethodNode(createMethodInfo* paMethodInfo);
+    UA_StatusCode createMethodNode(CCreateMethodInfo* paMethodInfo);
 
     /**
      * Update UA Address Space node value given by the data pointer to an IEC61499 data object.
@@ -288,7 +299,37 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
 
     CLocalMethodCall* getLocalMethodCall(COPC_UA_HandlerAbstract::CLocalMethodInfo *paActionInfo);
 
+    // OPC UA Server and configuration
+    UA_Server *mUaServer;
+
+    // OPC UA Client and configuration
+    volatile UA_Boolean mUaServerRunningFlag;
+
     static const UA_UInt16 scmDefaultBrowsenameNameSpace = 1;
+
+    static const char* const mEnglishLocaleForNodes;
+    static const char* const mDescriptionForVariableNodes;
+
+#ifdef FORTE_COM_OPC_UA_MULTICAST
+# ifndef UA_ENABLE_DISCOVERY_MULTICAST
+#  error open62541 needs to be built with UA_ENABLE_DISCOVERY_MULTICAST=ON
+# else // UA_ENABLE_DISCOVERY_MULTICAST
+#  ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
+    //nothing here
+#   else
+    UA_ServerConfig* mServerConfig;
+#   endif
+    /**
+     * List of LDS servers where this instance is already registered.
+     */
+    CSinglyLinkedList<UA_String*> mRegisteredWithLds;
+
+    const UA_String* getDiscoveryUrl() const;
+    void registerWithLds(const UA_String *paDiscoveryUrl);
+    void removeLdsRegister(const UA_String *paDiscoveryUrl);
+    static void serverOnNetworkCallback(const UA_ServerOnNetwork *paServerOnNetwork, UA_Boolean paIsServerAnnounce, UA_Boolean paIsTxtReceived, void* paData);
+# endif //UA_ENABLE_DISCOVERY_MULTICAST
+#endif //FORTE_COM_OPC_UA_MULTICAST
 
 };
 
