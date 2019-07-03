@@ -19,11 +19,10 @@
 #define SRC_MODULES_OPC_UA_OPCUA_LAYER_H_
 
 #include "../../core/cominfra/comlayer.h"
-#include "../../core/datatypes/forte_any.h"
+#include "opcua_helper.h"
 
-#include "opcua_handler_abstract.h"
-
-class CIEC_STRING;
+class COPC_UA_HandlerAbstract;
+class CActionInfo;
 
 class COPC_UA_Layer : public forte::com_infra::CComLayer {
   public:
@@ -38,9 +37,12 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
 
     virtual forte::com_infra::EComResponse processInterrupt();
 
-    CSinglyLinkedList<UA_TypeConvert *>& getTypeConveverters() {
+    CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>& getTypeConveverters() {
       return mConverters;
     }
+
+    void triggerNewEvent();
+
 
   private:
 
@@ -51,19 +53,19 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
 
     COPC_UA_HandlerAbstract* mHandler;
 
-    COPC_UA_HandlerAbstract::CActionInfo* mActionInfo;
+    CActionInfo* mActionInfo;
 
-    CSinglyLinkedList<UA_TypeConvert *> mConverters; //first all SDs and then RDs
+    CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *> mConverters; //first all SDs and then RDs
 
     forte::com_infra::EComResponse openConnection(char *paLayerParameter);
 
     void closeConnection();
 
-    bool getRemoteType(CIEC_ANY::EDataTypeID* paResult, const SConnectionPoint& paRemoteConnectionPoint, bool paIsSD) const;
+    bool getRemoteType(CIEC_ANY::EDataTypeID& paResult, const SConnectionPoint& paRemoteConnectionPoint, bool paIsSD) const;
 
-    bool checkFanOutTypes(const CDataConnection *paPortConnection, CIEC_ANY::EDataTypeID* paRemoteType) const;
+    bool checkFanOutTypes(const CDataConnection& paPortConnection, CIEC_ANY::EDataTypeID& paRemoteType) const;
 
-    bool getPortConnectionInfo(unsigned int paPortIndex, bool paIsSD, const UA_TypeConvert **paResult) const;
+    bool getPortConnectionInfo(unsigned int paPortIndex, bool paIsSD, const COPC_UA_Helper::UA_TypeConvert **paResult) const;
 
     bool storeTypesFromInterface();
 

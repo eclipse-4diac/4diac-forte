@@ -19,13 +19,12 @@
 #define SRC_MODULES_OPC_UA_OPCUALOCALHANDLER_H_
 
 #include <forte_thread.h>
-#include "opcua_handler_abstract.h"
 #include <conn.h>
-#include <stdio.h>
-#include "comlayer.h"
-#include <forte_config.h>
+#include <forte_sem.h>
+#include <forte_sync.h>
+#include "../../core/fortelist.h"
+#include "opcua_handler_abstract.h"
 #include "opcua_helper.h"
-#include "opcua_layer.h"
 
 // cppcheck-suppress noConstructor
 class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
@@ -54,34 +53,34 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
 
   protected:
 
-    virtual UA_StatusCode initializeAction(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
+    virtual UA_StatusCode initializeAction(CActionInfo& paActionInfo);
 
-    virtual UA_StatusCode executeAction(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
+    virtual UA_StatusCode executeAction(CActionInfo& paActionInfo);
 
-    virtual UA_StatusCode uninitializeAction(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
+    virtual UA_StatusCode uninitializeAction(CActionInfo& paActionInfo);
 
   private:
 
-    UA_StatusCode executeWrite(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
+    UA_StatusCode executeWrite(CActionInfo& paActionInfo);
 
-    UA_StatusCode initializeCreateMethod(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
+    UA_StatusCode initializeCreateMethod(CActionInfo& paActionInfo);
 
-    UA_StatusCode executeCreateMethod(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
+    UA_StatusCode executeCreateMethod(CActionInfo& paActionInfo);
 
-    UA_StatusCode initializeCreateObject(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
+    UA_StatusCode initializeCreateObject(CActionInfo& paActionInfo);
 
-    UA_StatusCode executeCreateObject(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
+    UA_StatusCode executeCreateObject(CActionInfo& paActionInfo);
 
-    UA_StatusCode initializeDeleteObject(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
+    UA_StatusCode initializeDeleteObject(CActionInfo& paActionInfo);
 
-    UA_StatusCode executeDeleteObject(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
+    UA_StatusCode executeDeleteObject(CActionInfo& paActionInfo);
 
     UA_StatusCode splitAndCreateFolders(CIEC_STRING& paBrowsePath, CIEC_STRING& paNodeName,
         CSinglyLinkedList<UA_NodeId*>& paRreferencedNodes);
 
     void handlePresentNodes(CSinglyLinkedList<UA_NodeId*>& paPresentNodes, CSinglyLinkedList<UA_NodeId*>& paReferencedNodes, bool paFailed);
 
-    bool isTypeOfObjectPresent(CNodePairInfo* paNodePairInfo);
+    bool isTypeOfObjectPresent(CActionInfo::CNodePairInfo& paNodePairInfo);
 
     /**
      * Starts the OPC UA server, if it is not already running
@@ -104,28 +103,39 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      */
     virtual void run();
 
-    /**
-     * Collector list for callback handles to be able to clean them up on destroy.
-     */
-    CSinglyLinkedList<struct UA_NodeCallback_Handle *> nodeCallbackHandles;
-
     struct nodesReferencedByActions {
         const UA_NodeId *mNodeId;
-        CSinglyLinkedList<COPC_UA_HandlerAbstract::CActionInfo*> mActionsReferencingIt;
+        CSinglyLinkedList<CActionInfo*> mActionsReferencingIt;
     };
 
     /* a map to know which layers are using the Node */
-    CSinglyLinkedList<struct nodesReferencedByActions*> mNodesReferences;
+    CSinglyLinkedList<nodesReferencedByActions*> mNodesReferences;
     CSyncObject mNodeLayerMutex;
     CSemaphore mServerStarted;
 
-    struct UA_ParentNodeHandler {
+    class UA_ParentNodeHandler {
+      public:
+        UA_ParentNodeHandler(UA_NodeId *paParentNodeId, UA_NodeId *paMethodNodeId, CLocalMethodInfo& paActionInfo) :
+            mParentNodeId(paParentNodeId), mMethodNodeId(paMethodNodeId), mActionInfo(paActionInfo) {
+        }
+        ~UA_ParentNodeHandler() {
+          UA_NodeId_delete(mParentNodeId);
+        }
+
+        UA_ParentNodeHandler(const UA_ParentNodeHandler& other) :
+            mParentNodeId(UA_NodeId_new()), mMethodNodeId(other.mMethodNodeId), mActionInfo(other.mActionInfo) {
+          UA_NodeId_copy(other.mParentNodeId, mParentNodeId);
+        }
+
         UA_NodeId *mParentNodeId;
         UA_NodeId *mMethodNodeId;
-        COPC_UA_HandlerAbstract::CLocalMethodInfo* mActionInfo;
+        CLocalMethodInfo& mActionInfo;
+
+      private:
+        UA_ParentNodeHandler& operator=(const UA_ParentNodeHandler& other);
     };
 
-    static CSinglyLinkedList<UA_ParentNodeHandler *> methodsWithoutContext;
+    static CSinglyLinkedList<UA_ParentNodeHandler> methodsWithoutContext;
 
     class CCreateInfo {
       public:
@@ -144,7 +154,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
         UA_NodeId* mReturnedNodeId;
 
       private:
-        CCreateInfo(CCreateInfo& other);
+        CCreateInfo(const CCreateInfo& other);
         CCreateInfo& operator=(const CCreateInfo& other);
     };
 
@@ -152,9 +162,15 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
       public:
         CCreateObjectInfo() :
             CCreateInfo(), mTypeNodeId(0) {
-
         }
+
+        ~CCreateObjectInfo() {
+        }
+
         UA_NodeId* mTypeNodeId;
+      private:
+        CCreateObjectInfo(const CCreateObjectInfo &paObj);
+        CCreateObjectInfo& operator=(const CCreateObjectInfo& other);
     };
 
     class CCreateVariableInfo : public CCreateInfo {
@@ -163,15 +179,22 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
             CCreateInfo(), mTypeConvert(0), mInitData(0), mAllowWrite(false) {
 
         }
-        const UA_TypeConvert* mTypeConvert;
+
+        ~CCreateVariableInfo() {
+        }
+
+        const COPC_UA_Helper::UA_TypeConvert* mTypeConvert;
         const CIEC_ANY *mInitData;
         bool mAllowWrite;
+      private:
+        CCreateVariableInfo(const CCreateVariableInfo &paObj);
+        CCreateVariableInfo& operator=(const CCreateVariableInfo& other);
     };
 
     class CCreateMethodInfo : public CCreateInfo {
       public:
-        CCreateMethodInfo() :
-            CCreateInfo(), mInputArguments(0), mOutputArguments(0), mCallback(0), mInputSize(0), mOutputSize(0) {
+        explicit CCreateMethodInfo(CLocalMethodInfo& paCallack) :
+            CCreateInfo(), mInputArguments(0), mOutputArguments(0), mLocalMethodInfo(paCallack), mInputSize(0), mOutputSize(0) {
 
         }
         ~CCreateMethodInfo() {
@@ -181,7 +204,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
 
         UA_Argument *mInputArguments;
         UA_Argument *mOutputArguments;
-        COPC_UA_HandlerAbstract::CLocalMethodInfo* mCallback;
+        CLocalMethodInfo& mLocalMethodInfo;
         size_t mInputSize;
         size_t mOutputSize;
       private:
@@ -189,27 +212,48 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
         CCreateMethodInfo& operator=(const CCreateMethodInfo& other);
     };
 
-    CSyncObject getNodeForPathMutex;
+    struct UA_VariableContext_Handle {
+        UA_VariableContext_Handle(CActionInfo& paActionInfo, const COPC_UA_Helper::UA_TypeConvert *paConvert, size_t paPortIndex) :
+            mActionInfo(paActionInfo), mConvert(paConvert), mPortIndex(paPortIndex) {
+        }
 
-    UA_StatusCode handleExistingVariable(COPC_UA_HandlerAbstract::CActionInfo& paInfo, CNodePairInfo* paNodePairInfo, UA_TypeConvert* paTypeConvert,
+        //default copy constructor should be enough
+
+        bool operator==(UA_VariableContext_Handle const& paRightObject) const {
+          return (&mActionInfo == &paRightObject.mActionInfo && mConvert == paRightObject.mConvert && mPortIndex == paRightObject.mPortIndex);
+        }
+
+        CActionInfo& mActionInfo;
+        const COPC_UA_Helper::UA_TypeConvert *mConvert;
+        size_t mPortIndex;
+    };
+
+    /**
+     * Collector list for callback handles to be able to clean them up on destroy.
+     */
+    CSinglyLinkedList<UA_VariableContext_Handle> mNodeCallbackHandles;
+
+    CSyncObject mCreateNodesMutex;
+
+    UA_StatusCode handleExistingVariable(CActionInfo& paActionInfo, CActionInfo::CNodePairInfo& paNodePairInfo, COPC_UA_Helper::UA_TypeConvert* paTypeConvert,
         size_t paIndexOfNodePair, bool paWrite);
 
     bool getBroswenameFromNodeName(CIEC_STRING& paNodeName, UA_QualifiedName& paBrowseName);
 
     bool initializeNodesets(UA_Server* paUaServer);
 
-    bool initializeCreateInfo(CIEC_STRING& paNodeName, CNodePairInfo* paNodePair, const UA_NodeId* paParentNodeId, CCreateInfo& paResult);
+    bool initializeCreateInfo(CIEC_STRING& paNodeName, CActionInfo::CNodePairInfo& paNodePairInfo, const UA_NodeId* paParentNodeId, CCreateInfo& paResult);
 
-    UA_StatusCode initializeReadWrite(COPC_UA_HandlerAbstract::CActionInfo& paInfo, bool isWrite);
+    UA_StatusCode initializeReadWrite(CActionInfo& paActionInfo, bool isWrite);
 
-    UA_StatusCode getNode(const UA_NodeId* paParentNode, CNodePairInfo* paNodeInfo, CSinglyLinkedList<UA_NodeId*>& paCreatedNodeIds, bool* paIsPresent);
+    UA_StatusCode getNode(CActionInfo::CNodePairInfo& paNodeInfo, CSinglyLinkedList<UA_NodeId*>& paCreatedNodeIds, bool* paIsPresent);
 
-    UA_StatusCode createVariableNode(CCreateVariableInfo* paNodeInformation);
+    UA_StatusCode createVariableNode(CCreateVariableInfo& paCreateVariableInfo);
 
     UA_StatusCode storeAlreadyExistingNodes(UA_BrowsePathResult* mNodesReferences, size_t paFolderCnt, size_t* paFirstNonExistingNode,
         CSinglyLinkedList<UA_NodeId*>& paCreatedNodeIds);
 
-    UA_StatusCode createObjectNode(CCreateObjectInfo* paNodeInformation);
+    UA_StatusCode createObjectNode(CCreateObjectInfo& paCreateObjectInfo);
 
     UA_StatusCode translateBrowseNameAndStore(const char* paBrowsePath, UA_BrowsePath **paBrowsePaths, size_t *paFoldercount, size_t *paFirstNonExistingNode,
         CSinglyLinkedList<UA_NodeId*>& paFoundNodeIds);
@@ -222,13 +266,13 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
 
     void cleanNodeReferences();
 
-    void createMethodArguments(CCreateMethodInfo * paMethodInformation, COPC_UA_HandlerAbstract::CActionInfo & paInfo);
+    void createMethodArguments(CCreateMethodInfo& paCreateMethodInfo, CActionInfo & paActionInfo);
 
-    void referencedNodesIncrement(const CSinglyLinkedList<UA_NodeId *> *paNodes, COPC_UA_HandlerAbstract::CActionInfo* const paLayer);
+    void referencedNodesIncrement(const CSinglyLinkedList<UA_NodeId *>& paNodes, CActionInfo& paLayer);
 
-    void referencedNodesDecrement(const COPC_UA_HandlerAbstract::CActionInfo* paLayer);
+    void referencedNodesDecrement(const CActionInfo& paLayer);
 
-    void getNodesReferencedByAction(const COPC_UA_HandlerAbstract::CActionInfo *paActionInfo, CSinglyLinkedList<const UA_NodeId *>& paNodes);
+    void getNodesReferencedByAction(const CActionInfo& paActionInfo, CSinglyLinkedList<const UA_NodeId *>& paNodes);
 
     /**
      * Sets the user access level attribute of the node to the given new value.
@@ -236,7 +280,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param newAccessLevel new access level of the node
      * @return UA_STATUSCODE_GOOD on succes, the error code otherwise
      */
-    UA_StatusCode updateNodeUserAccessLevel(const UA_NodeId *paNodeId, UA_Byte paNewAccessLevel);
+    UA_StatusCode updateNodeUserAccessLevel(const UA_NodeId& paNodeId, UA_Byte paNewAccessLevel);
 
     /**
      * Create a new method node in the OPC UA information model.
@@ -252,7 +296,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param returnNodeId node id of the newly created method
      * @return UA_STATUSCODE_GOOD on success. Error otherwise
      */
-    UA_StatusCode createMethodNode(CCreateMethodInfo* paMethodInfo);
+    UA_StatusCode createMethodNode(CCreateMethodInfo& paMethodInfo);
 
     /**
      * Update UA Address Space node value given by the data pointer to an IEC61499 data object.
@@ -262,7 +306,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param mTypeConvert converter object to mTypeConvert IEC61499 to OPC UA data value
      * @return UA_STATUSCODE_GOOD on success. Error otherwise
      */
-    UA_StatusCode updateNodeValue(const UA_NodeId *paNodeId, const CIEC_ANY *paData, const UA_TypeConvert *paConvert);
+    UA_StatusCode updateNodeValue(const UA_NodeId *paNodeId, const CIEC_ANY *paData, const COPC_UA_Helper::UA_TypeConvert *paConvert);
 
     /**
      * Register a callback routine to a Node in the Address Space that is executed
@@ -276,28 +320,38 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @return
      */
     UA_StatusCode
-    registerVariableCallBack(const UA_NodeId *paNodeId, COPC_UA_Layer *paComLayer, const struct UA_TypeConvert *paConvert, size_t paPortIndex);
+    registerVariableCallBack(const UA_NodeId& paNodeId, CActionInfo& paActionInfo, const COPC_UA_Helper::UA_TypeConvert *paConvert,
+        size_t paPortIndex);
 
-    UA_StatusCode handleExistingMethod(COPC_UA_HandlerAbstract::CActionInfo& paInfo, UA_NodeId *paParentNode);
+    UA_StatusCode handleExistingMethod(CActionInfo& paActionInfo, UA_NodeId *paParentNode);
 
     static const size_t scmMethodCallTimeout = 4;
 
     struct CLocalMethodCall {
-        COPC_UA_HandlerAbstract::CLocalMethodInfo *mActionInfo;
-        UA_SendVariable_handle* mSendHandle;
+        CLocalMethodCall(CLocalMethodInfo& paActionInfo, COPC_UA_Helper::UA_SendVariable_handle& paSendHandle) :
+            mActionInfo(paActionInfo), mSendHandle(paSendHandle) {
+        }
+
+        //default copy constructor should be enough
+
+        bool operator==(CLocalMethodCall const& rhs) const {
+          return this == &rhs;
+        }
+
+        CLocalMethodInfo& mActionInfo;
+        COPC_UA_Helper::UA_SendVariable_handle& mSendHandle;
+
     };
 
-    CSinglyLinkedList<CLocalMethodCall*> mMethodCalls;
+    CSinglyLinkedList<CLocalMethodCall> mMethodCalls;
 
     CSyncObject mMethodCallsMutex;
 
-    CLocalMethodCall* addMethodCall(COPC_UA_HandlerAbstract::CLocalMethodInfo *paActionInfo, UA_SendVariable_handle* paHandleRecv);
+    CLocalMethodCall& addMethodCall(CLocalMethodInfo& paActionInfo, COPC_UA_Helper::UA_SendVariable_handle& paHandleRecv);
 
-    void removeMethodCall(CLocalMethodCall* toDelete);
+    void removeMethodCall(CLocalMethodCall& toDelete);
 
-    void cleanMethodCalls();
-
-    CLocalMethodCall* getLocalMethodCall(COPC_UA_HandlerAbstract::CLocalMethodInfo *paActionInfo);
+    CLocalMethodCall* getLocalMethodCall(CLocalMethodInfo& paActionInfo);
 
     // OPC UA Server and configuration
     UA_Server *mUaServer;

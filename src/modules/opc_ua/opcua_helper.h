@@ -15,19 +15,73 @@
 
 #include <open62541.h>
 #include "forte_any.h"
-#include <forte_sync.h>
-#include <fortelist.h>
-
-struct UA_TypeConvert {
-    const UA_DataType *type;
-
-    bool (*get)(const CIEC_ANY *src, void *dst);
-
-    bool (*set)(const void *src, CIEC_ANY *dst);
-};
 
 class COPC_UA_Helper {
   public:
+
+    struct UA_TypeConvert {
+        const UA_DataType *type;
+
+        bool (*get)(const CIEC_ANY *src, void *dst);
+
+        bool (*set)(const void *src, CIEC_ANY *dst);
+    };
+
+    class UA_Variables_handle {
+      public:
+        explicit UA_Variables_handle(size_t paSize) :
+            mFailed(false), mOffset(0), mSize(paSize), mConvert(0) {
+          mConvert = new const UA_TypeConvert*[mSize];
+        }
+
+        virtual ~UA_Variables_handle() {
+          delete[] mConvert;
+        }
+
+        bool mFailed;
+        size_t mOffset;
+        size_t mSize;
+        const UA_TypeConvert** mConvert;
+      private:
+        UA_Variables_handle(const UA_Variables_handle &paObj);
+        UA_Variables_handle& operator=(const UA_Variables_handle& other);
+
+    };
+
+    class UA_RecvVariable_handle : public UA_Variables_handle {
+      public:
+        explicit UA_RecvVariable_handle(size_t paSize) :
+            UA_Variables_handle(paSize) {
+          mData = new const UA_Variant*[mSize];
+        }
+
+        virtual ~UA_RecvVariable_handle() {
+          delete[] mData;
+        }
+
+        const UA_Variant **mData;
+      private:
+        UA_RecvVariable_handle(const UA_RecvVariable_handle &paObj);
+        UA_RecvVariable_handle& operator=(const UA_RecvVariable_handle& other);
+    };
+
+    class UA_SendVariable_handle : public UA_Variables_handle {
+      public:
+        explicit UA_SendVariable_handle(size_t paSize) :
+            UA_Variables_handle(paSize) {
+          mData = new UA_Variant*[mSize];
+        }
+
+        ~UA_SendVariable_handle() {
+          delete[] mData;
+        }
+
+        UA_Variant **mData;
+      private:
+        UA_SendVariable_handle(const UA_SendVariable_handle &paObj);
+        UA_SendVariable_handle& operator=(const UA_SendVariable_handle& other);
+    };
+
     /**
      * Maps EDataTypeID to OPC UA data types
      */
@@ -95,12 +149,6 @@ class COPC_UA_Helper {
     static const size_t scmMaxNoOfParametersInBrowseName = 2;
 
   private:
-
-    /**
-     * Mutex for making sure that getNodeForPath is only called by one layer at a time.
-     * If a race condition would occur, two layers may try to create the same node at the same time.
-     */
-    static CSyncObject getNodeForPathMutex;
 
     static int getFolderOffset(UA_BrowsePathResult* browsePathsResults, size_t folderCnt);
 

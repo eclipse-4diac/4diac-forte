@@ -13,10 +13,7 @@
 #include "opcua_helper.h"
 #include "convert_functions.h"
 #include "../../core/utils/parameterParser.h"
-#include <criticalregion.h>
-#include <devlog.h>
-
-CSyncObject COPC_UA_Helper::getNodeForPathMutex = CSyncObject();
+#include "../../arch/devlog.h"
 
 #define UA_String_to_char_alloc(str, chars) { \
         chars = static_cast<char*>(forte_malloc(str->length+1)); \
@@ -113,7 +110,7 @@ bool map_convert_set_CIEC_STRING(const void *src, CIEC_ANY *dst) {
 bool map_convert_get_CIEC_WSTRING(const CIEC_ANY *src, void *dst) {
   if (src->getDataTypeID() != CIEC_ANY::e_WSTRING)
     return false;
-  UA_TypeConvert conv = COPC_UA_Helper::mapForteTypeIdToOpcUa[CIEC_ANY::e_STRING];
+  COPC_UA_Helper::UA_TypeConvert conv = COPC_UA_Helper::mapForteTypeIdToOpcUa[CIEC_ANY::e_STRING];
   CIEC_STRING str = WSTRING_TO_STRING(*static_cast<const CIEC_WSTRING *>(src));
   return conv.get(&str, dst);
 }
@@ -137,7 +134,7 @@ bool map_convert_set_CIEC_WSTRING(const void *src, CIEC_ANY *dst) {
  * This array has to match the enum CIEC_ANY::EDataTypeID.
  * Current maximum index is WSTRING
  */
-const UA_TypeConvert COPC_UA_Helper::mapForteTypeIdToOpcUa[CIEC_ANY::e_WSTRING + 1] = {
+const COPC_UA_Helper::UA_TypeConvert COPC_UA_Helper::mapForteTypeIdToOpcUa[CIEC_ANY::e_WSTRING + 1] = {
     { // dummy for e_ANY
       NULL,
       NULL,
@@ -179,7 +176,7 @@ bool COPC_UA_Helper::checkBrowsePath(const char *paBrowsepath) {
   bool retVal = false;
 
   if('/' == *paBrowsepath) {
-    TForteUInt16 lenghtOfBrowsename = strlen(paBrowsepath);
+    size_t lenghtOfBrowsename = strlen(paBrowsepath);
     if('/' == *(paBrowsepath + lenghtOfBrowsename - 1)) { //remove trailing slash
       lenghtOfBrowsename--;
     }
@@ -210,24 +207,18 @@ UA_StatusCode COPC_UA_Helper::prepareBrowseArgument(const char *paNodePathConst,
     nodePath[copyOfOriginal.length() - 1] = '\0';
   }
 
-  // count number of folders in node path
-  (*paFolderCount) = 0;
-  char *runner = nodePath;
-  while(*runner) {
-    if('/' == *runner) {
-      (*paFolderCount)++;
-    }
-    runner++;
-  }
+  CParameterParser folderParser(nodePath + 1, '/'); // + 1 to skip the first slash
+
+  (*paFolderCount) = folderParser.parseParameters();
 
   UA_NodeId startingNode = UA_NODEID_NUMERIC(0, UA_NS0ID_ROOTFOLDER);
-  char *tok = strtok(nodePath, "/");
 
   // for every folder (which is a BrowsePath) we want to get the node id
   *paBrowsePaths = static_cast<UA_BrowsePath *>(UA_Array_new((*paFolderCount) * 2, &UA_TYPES[UA_TYPES_BROWSEPATH]));
   UA_BrowsePath *browsePaths = *paBrowsePaths;
 
   for(size_t i = 0; i < (*paFolderCount); i++) {
+    const char *tok = folderParser[i];
     UA_BrowsePath_init(&browsePaths[i]);
     browsePaths[i].startingNode = startingNode;
     browsePaths[i].relativePath.elementsSize = i + 1;
@@ -250,7 +241,7 @@ UA_StatusCode COPC_UA_Helper::prepareBrowseArgument(const char *paNodePathConst,
       CParameterParser browseNameParser(tok, ':');
       size_t parsingResult = browseNameParser.parseParameters();
       if(scmMaxNoOfParametersInBrowseName == parsingResult) {
-        browsenameNamespace = forte::core::util::strtol(browseNameParser[0], 0, 10);
+        browsenameNamespace = static_cast<UA_UInt16>(forte::core::util::strtol(browseNameParser[0], 0, 10));
         targetName = browseNameParser[1];
       } else if(1 == parsingResult) {
         targetName = browseNameParser[0];
@@ -261,7 +252,6 @@ UA_StatusCode COPC_UA_Helper::prepareBrowseArgument(const char *paNodePathConst,
       }
       browsePaths[i].relativePath.elements[j].targetName = UA_QUALIFIEDNAME_ALLOC(browsenameNamespace, targetName.getValue());
     }
-    tok = strtok(NULL, "/");
   }
 
   // same browse paths, but inverse reference, to check both directions
@@ -280,8 +270,6 @@ UA_StatusCode COPC_UA_Helper::getRemoteNodeForPath(UA_Client *paClient, UA_NodeI
   size_t folderCnt = 0;
   UA_StatusCode retVal = prepareBrowseArgument(paNodePathConst, &browsePaths, &folderCnt);
   if(UA_STATUSCODE_GOOD == retVal) {
-    // other thread may currently create nodes for the same path, thus mutex
-    CCriticalRegion criticalRegion(getNodeForPathMutex);
 
     UA_TranslateBrowsePathsToNodeIdsRequest request;
     UA_TranslateBrowsePathsToNodeIdsResponse response;

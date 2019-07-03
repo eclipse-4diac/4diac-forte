@@ -24,8 +24,6 @@
 * Add support for arrays
 * Replace CSingledLinkedList with vectors
 * Replace CIEC_STRING and char* with std::string
-* Return references instead of poitners where possible
-* Split initializeReadWrite and initializeCreateMethod in smaller functions
 * Use std::algorithms where possible (getNode has a iteration at the end where it could fit)
 
 ## For users
@@ -92,7 +90,7 @@ ID Examples:
 * opc\_ua[READ;/Objects/test1] -> read the local node /Objects/test1. Create the node if it doesn't exits with a random nodeId
 * opc\_ua[READ;/Objects/test1,i=1] -> read the local node /Objects/test1. Create the node if it doesn't exits with a numeric node id 1 and namespace 0. If the node already exist and it has other nodeId, it will fail.
 * opc\_ua[WRITE;/Objects/test1;/Objects/test1] -> Write nodes /Objects/test1 and /Objects/test1 from values in SD\_1 and SD\_2. Will create the nodes if they don't exist with random nodeIds. If they exist, it will write to them when triggered.
- * opc\_ua[WRITE;opc.tcp://192.168.0.100:4840#/Objects/test1;/Objects/test1] -> Write nodes /Objects/test1 and /Objects/test1 on remote from values in SD\_1 and SD\_2. If nodes aren't found, 4diac FORTE will look for them after some seconds until it finds them. Remote creation is not supported
+ * opc\_ua[WRITE;opc.tcp://192.168.0.100:4840#;/Objects/test1;/Objects/test1] -> Write nodes /Objects/test1 and /Objects/test1 on remote from values in SD\_1 and SD\_2. If nodes aren't found, 4diac FORTE will look for them after some seconds until it finds them. Remote creation is not supported
 
 
 * NOTE: depending on the action being performed, browsepath and/or nodeId are mandatory/optional. See the table below

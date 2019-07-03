@@ -18,11 +18,13 @@
 #include "opcua_layer.h"
 #include "opcua_helper.h"
 #include "opcua_client_handler.h"
+#include "opcua_local_handler.h"
 #include "../../core/cominfra/basecommfb.h"
 #include "../../arch/devlog.h"
 #include <forte_string.h>
 #include <criticalregion.h>
-#include "opcua_local_handler.h"
+#include "opcua_handler_abstract.h"
+#include "opcua_action_info.h"
 
 using namespace forte::com_infra;
 
@@ -34,11 +36,15 @@ COPC_UA_Layer::COPC_UA_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
 COPC_UA_Layer::~COPC_UA_Layer() {
 }
 
+void COPC_UA_Layer::triggerNewEvent() {
+  mHandler->triggerNewEvent(*this->getCommFB());
+}
+
 EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
   EComResponse response = e_InitTerminated;
 
   if(storeTypesFromInterface()) {
-    mActionInfo = COPC_UA_HandlerAbstract::getInfoFromParams(paLayerParameter, this);
+    mActionInfo = CActionInfo::getActionInfoFromParams(paLayerParameter, *this);
     if(mActionInfo) {
       mHandler =
           (mActionInfo->isRemote()) ? static_cast<COPC_UA_HandlerAbstract*>(&getExtEvHandler<COPC_UA_Client_Handler>()) :
@@ -65,7 +71,7 @@ void COPC_UA_Layer::closeConnection() {
 EComResponse COPC_UA_Layer::recvData(const void *paData, unsigned int) {
   mInterruptResp = e_ProcessDataOk;
 
-  const COPC_UA_HandlerAbstract::UA_RecvVariable_handle *handleRecv = static_cast<const COPC_UA_HandlerAbstract::UA_RecvVariable_handle *>(paData);
+  const COPC_UA_Helper::UA_RecvVariable_handle *handleRecv = static_cast<const COPC_UA_Helper::UA_RecvVariable_handle *>(paData);
 
   if(!handleRecv->mFailed) {
     if(handleRecv->mSize) {
@@ -129,21 +135,21 @@ EComResponse COPC_UA_Layer::processInterrupt() {
 bool COPC_UA_Layer::storeTypesFromInterface() {
   bool somethingFailed = false;
   for(unsigned int i = 0; i < getCommFB()->getNumSD(); i++) {
-    const UA_TypeConvert *result;
+    const COPC_UA_Helper::UA_TypeConvert *result;
     if(!getPortConnectionInfo(i + 2, true, &result)) {
       somethingFailed = true;
       break;
     }
-    mConverters.pushBack(const_cast<UA_TypeConvert*>(result));
+    mConverters.pushBack(const_cast<COPC_UA_Helper::UA_TypeConvert*>(result));
   }
   if(!somethingFailed) {
     for(unsigned int i = 0; i < getCommFB()->getNumRD(); i++) {
-      const UA_TypeConvert *result;
+      const COPC_UA_Helper::UA_TypeConvert *result;
       if(!getPortConnectionInfo(i + 2, false, &result)) {
         somethingFailed = true;
         break;
       }
-      mConverters.pushBack(const_cast<UA_TypeConvert*>(result));
+      mConverters.pushBack(const_cast<COPC_UA_Helper::UA_TypeConvert*>(result));
     }
   }
 
@@ -153,20 +159,20 @@ bool COPC_UA_Layer::storeTypesFromInterface() {
   return !somethingFailed;
 }
 
-bool COPC_UA_Layer::checkFanOutTypes(const CDataConnection *paPortConnection, CIEC_ANY::EDataTypeID* paRemoteType) const {
+bool COPC_UA_Layer::checkFanOutTypes(const CDataConnection& paPortConnection, CIEC_ANY::EDataTypeID& paRemoteType) const {
 
-  for(CSinglyLinkedList<SConnectionPoint>::Iterator it = paPortConnection->getDestinationList().begin(); it != paPortConnection->getDestinationList().end();
+  for(CSinglyLinkedList<SConnectionPoint>::Iterator it = paPortConnection.getDestinationList().begin(); it != paPortConnection.getDestinationList().end();
       ++it) {
-    if(paPortConnection->getDestinationList().begin() == it) { //first one
+    if(paPortConnection.getDestinationList().begin() == it) { //first one
       if(!getRemoteType(paRemoteType, *it, false)) {
         return false;
       }
     } else {
       CIEC_ANY::EDataTypeID newRemoteType;
-      if(!getRemoteType(&newRemoteType, *it, false)) {
+      if(!getRemoteType(newRemoteType, *it, false)) {
         return false;
       } else {
-        if(newRemoteType != *paRemoteType) {
+        if(newRemoteType != paRemoteType) {
           DEVLOG_ERROR("[OPC UA LAYER]: FB %s has one RD which is connected to many data inputs and the types are not the same.\n",
             getCommFB()->getInstanceName());
           return false;
@@ -177,7 +183,7 @@ bool COPC_UA_Layer::checkFanOutTypes(const CDataConnection *paPortConnection, CI
   return true;
 }
 
-bool COPC_UA_Layer::getPortConnectionInfo(unsigned int paPortIndex, bool paIsSD, const UA_TypeConvert **paResult) const {
+bool COPC_UA_Layer::getPortConnectionInfo(unsigned int paPortIndex, bool paIsSD, const COPC_UA_Helper::UA_TypeConvert **paResult) const {
   const SFBInterfaceSpec *localInterfaceSpec = getCommFB()->getFBInterfaceSpec();
   const CStringDictionary::TStringId localPortNameId = paIsSD ? localInterfaceSpec->m_aunDINames[paPortIndex] : localInterfaceSpec->m_aunDONames[paPortIndex];
 
@@ -197,11 +203,11 @@ bool COPC_UA_Layer::getPortConnectionInfo(unsigned int paPortIndex, bool paIsSD,
   CIEC_ANY::EDataTypeID remoteType = CIEC_ANY::e_Max;
   if(paIsSD) {
     const SConnectionPoint& remoteConnectionPoint = portConnection->getSourceId();
-    if(!getRemoteType(&remoteType, remoteConnectionPoint, paIsSD)) {
+    if(!getRemoteType(remoteType, remoteConnectionPoint, paIsSD)) {
       return false;
     }
   } else {
-    if(!checkFanOutTypes(portConnection, &remoteType)) {
+    if(!checkFanOutTypes(*portConnection, remoteType)) {
       return false;
     }
   }
@@ -216,7 +222,7 @@ bool COPC_UA_Layer::getPortConnectionInfo(unsigned int paPortIndex, bool paIsSD,
   return true;
 }
 
-bool COPC_UA_Layer::getRemoteType(CIEC_ANY::EDataTypeID* paResult, const SConnectionPoint& paRemoteConnectionPoint, bool paIsSD) const {
+bool COPC_UA_Layer::getRemoteType(CIEC_ANY::EDataTypeID& paResult, const SConnectionPoint& paRemoteConnectionPoint, bool paIsSD) const {
   if(!paRemoteConnectionPoint.mFB) {
     DEVLOG_ERROR(
       "[OPC UA LAYER]: FB %s has a problem. The connected FB in the current data input is a null pointer. Check last debug logging for more information\n",
@@ -228,7 +234,7 @@ bool COPC_UA_Layer::getRemoteType(CIEC_ANY::EDataTypeID* paResult, const SConnec
       paIsSD ? paRemoteConnectionPoint.mFB->getDOFromPortId(paRemoteConnectionPoint.mPortId) :
         paRemoteConnectionPoint.mFB->getDIFromPortId(paRemoteConnectionPoint.mPortId);
 
-  *paResult = remotePort->getDataTypeID();
+  paResult = remotePort->getDataTypeID();
 
   return true;
 }

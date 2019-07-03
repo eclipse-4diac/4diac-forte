@@ -58,7 +58,7 @@ if (FORTE_COM_OPC_UA)
 
     forte_add_handler(COPC_UA_Local_Handler opcua_local_handler)
     forte_add_handler(COPC_UA_Client_Handler opcua_client_handler)
-    forte_add_sourcefile_hcpp(opcua_layer opcua_local_handler opcua_helper opcua_client_handler opcua_handler_abstract)
+    forte_add_sourcefile_hcpp(opcua_layer opcua_local_handler opcua_helper opcua_client_handler opcua_handler_abstract opcua_client_information opcua_action_info)
     if (NOT EXISTS ${FORTE_COM_OPC_UA_INCLUDE_DIR})
         message(SEND_ERROR "FORTE_COM_OPC_UA_INCLUDE_DIR not set or does not exist")
     endif (NOT EXISTS ${FORTE_COM_OPC_UA_INCLUDE_DIR})

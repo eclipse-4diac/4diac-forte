@@ -13,14 +13,9 @@
 #define SRC_MODULES_OPC_UA_OPCUACLIENTHANDLER_H_
 
 #include <forte_thread.h>
-#include "opcua_handler_abstract.h"
-#include <conn.h>
-#include <stdio.h>
-#include "comlayer.h"
 #include <forte_config.h>
-#include "opcua_helper.h"
-#include "opcua_layer.h"
-#include <forte_string.h>
+#include "opcua_handler_abstract.h"
+#include "opcua_client_information.h"
 
 // cppcheck-suppress noConstructor
 class COPC_UA_Client_Handler : public COPC_UA_HandlerAbstract, public CThread {
@@ -32,68 +27,18 @@ class COPC_UA_Client_Handler : public COPC_UA_HandlerAbstract, public CThread {
 
     void disableHandler(void);
 
-    static void stateCallback(UA_Client *client, UA_ClientState clientState);
-
-    static void
-    deleteSubscriptionCallback(UA_Client *client, UA_UInt32 subscriptionId, void *subscriptionContext);
-
-    static void onSubscriptionValueChanged(UA_Client *client, UA_UInt32 subId, void *subContext, UA_UInt32 monId, void *monContext, UA_DataValue *value);
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-//not used
-#else
-    static void onAsyncCallReturn(UA_Client *paClient, void *paUserdata, UA_UInt32 paRequestId, void *paResponse, const UA_DataType *paResponseType);
-#endif
+    void resumeAsyncLoop();
 
   protected:
-    virtual UA_StatusCode initializeAction(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
 
-    virtual UA_StatusCode executeAction(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
+    virtual UA_StatusCode initializeAction(CActionInfo& paActionInfo);
 
-    virtual UA_StatusCode uninitializeAction(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
+    virtual UA_StatusCode executeAction(CActionInfo& paActionInfo);
+
+    virtual UA_StatusCode uninitializeAction(CActionInfo& paActionInfo);
 
 
   private:
-
-    struct UA_MonitoringItemInfo {
-        UA_UInt32 mMonitoringItemId;
-        UA_VariableCallback_Handle mVariableInfo;
-        COPC_UA_HandlerAbstract::CActionInfo* mAction; //action who created. Used to remove when the action is uninitialized
-    };
-
-    class UA_subscriptionInfo {
-      public:
-        UA_subscriptionInfo() :
-            mSubscriptionAlreadyCreated(false), mSubscriptionId(0) {
-        }
-
-        bool mSubscriptionAlreadyCreated;
-        UA_UInt32 mSubscriptionId;
-        CSinglyLinkedList<UA_MonitoringItemInfo*> mMonitoredItems;
-    };
-
-    class UA_ClientInformation {
-      public:
-        UA_ClientInformation() :
-            mClient(0), mSubscriptionInfo(0), mMissingAsyncCalls(0), mNeedsReconnection(false), mLastTry(0) {
-        }
-
-        UA_Client *mClient;
-        CSyncObject mClientMutex;
-        UA_subscriptionInfo* mSubscriptionInfo;
-        size_t mMissingAsyncCalls;
-        CIEC_STRING mEndpointUrl;
-        CSinglyLinkedList<COPC_UA_HandlerAbstract::CActionInfo*> mActionsReferencingIt;
-        CSinglyLinkedList<COPC_UA_HandlerAbstract::CActionInfo*> mActionsToBeInitialized;
-
-        bool mNeedsReconnection;
-        uint_fast64_t mLastTry;
-
-    };
-
-    struct UA_RemoteCallHandle {
-        COPC_UA_HandlerAbstract::CActionInfo* mAction;
-        UA_ClientInformation* mClient;
-    };
 
     class UA_ConnectionHandler : public CThread {
       public:
@@ -105,47 +50,25 @@ class COPC_UA_Client_Handler : public COPC_UA_HandlerAbstract, public CThread {
 
         void stopConnectionsThread();
 
-        void addClient(UA_ClientInformation* paClientInformation);
+        void addClient(CUA_ClientInformation& paClientInformation);
 
-        void removeClient(UA_ClientInformation* paClientInformation);
-
-        void removeAction(UA_ClientInformation* paClientInformation, COPC_UA_HandlerAbstract::CActionInfo* paAction);
-
-        bool connectClient(COPC_UA_Client_Handler::UA_ClientInformation* paClient);
+        void removeClient(CUA_ClientInformation& paClientInformation);
 
       private:
 
         void run();
 
-        bool handleClientState(UA_ClientInformation* paClientInformation);
-
         bool handleClients();
-
-        bool createSubscription(UA_ClientInformation* paClientEndpoint);
-
-        bool initializeClient(COPC_UA_Client_Handler::UA_ClientInformation* paClient);
-
-        bool initializeAction(COPC_UA_HandlerAbstract::CActionInfo* paAction, COPC_UA_Client_Handler::UA_ClientInformation* paClient);
-
-        bool initializeSubscription(COPC_UA_HandlerAbstract::CActionInfo* paAction, COPC_UA_Client_Handler::UA_ClientInformation* paClient);
-
-        bool initializeCallMethod(COPC_UA_HandlerAbstract::CActionInfo* paAction, COPC_UA_Client_Handler::UA_ClientInformation* paClient);
-
-        void uninitializeAction(COPC_UA_HandlerAbstract::CActionInfo* paAction, COPC_UA_Client_Handler::UA_ClientInformation* paClient);
-
-        void uninitializeSubscription(COPC_UA_HandlerAbstract::CActionInfo* paAction, COPC_UA_Client_Handler::UA_ClientInformation* paClient);
-
-        bool addMonitoringItem(COPC_UA_Client_Handler::UA_ClientInformation* paClient, UA_MonitoringItemInfo* paMonitoringInfo, UA_NodeId* paNodeId);
 
         void updateClientList();
 
         COPC_UA_Client_Handler& mClientHandler;
 
         CSyncObject mClientstMutex;
-        CSinglyLinkedList<UA_ClientInformation*> mClients;
+        CSinglyLinkedList<CUA_ClientInformation*> mClients;
 
         CSyncObject mNewClientstMutex;
-        CSinglyLinkedList<UA_ClientInformation*> mNewClients;
+        CSinglyLinkedList<CUA_ClientInformation *> mNewClients;
 
         bool mNewClientsPresent;
 
@@ -154,21 +77,19 @@ class COPC_UA_Client_Handler : public COPC_UA_HandlerAbstract, public CThread {
         CSemaphore mThreadStarted;
 
         static const TForteUInt64 scmNanosecondsToSleep = 1000000000; //1s
-        static const uint_fast64_t scmConnectionRetryTimeoutMilli = 8000; //8s
-
     };
 
-    static void addClientToList(UA_ClientInformation* paClientInformation, CSinglyLinkedList<UA_ClientInformation*>& paList);
+    static void addClientToList(CUA_ClientInformation& paClientInformation, CSinglyLinkedList<CUA_ClientInformation *>& paList);
 
-    void addClientToInitializedList(UA_ClientInformation* paClientInformation);
+    void addClientToInitializedList(CUA_ClientInformation& paClientInformation);
 
-    void removeClientFromInitializedList(UA_ClientInformation* paClientInformation);
+    void removeClientFromInitializedList(CUA_ClientInformation& paClientInformation);
 
     bool handleClients();
 
     void cleanResources();
 
-    UA_ClientInformation* getClient(CIEC_STRING& paEndpoint);
+    CUA_ClientInformation* getClient(CIEC_STRING& paEndpoint);
     /**
      * Starts the OPC UA server, if it is not already running
      */
@@ -184,53 +105,29 @@ class COPC_UA_Client_Handler : public COPC_UA_HandlerAbstract, public CThread {
      */
     virtual void run();
 
-    UA_StatusCode initialize(COPC_UA_HandlerAbstract::CActionInfo& paInfo);
+    UA_StatusCode initializeActionInClient(CActionInfo& paActionInfo);
 
-    UA_StatusCode executeRead(COPC_UA_HandlerAbstract::CActionInfo& paInfo, COPC_UA_Client_Handler::UA_ClientInformation* paClientInfo);
+    
+    void removeClientFromAllLists(CUA_ClientInformation& paClientInformation);
 
-    UA_StatusCode executeWrite(COPC_UA_HandlerAbstract::CActionInfo& paInfo, COPC_UA_Client_Handler::UA_ClientInformation* paClientInfo);
+    void addClientToConnectionList(CUA_ClientInformation& paClientInformation);
 
-    UA_StatusCode executeCallMethod(COPC_UA_HandlerAbstract::CActionInfo& paInfo, COPC_UA_Client_Handler::UA_ClientInformation* paClientInfo);
+    void referencedClientsIncrement(CActionInfo& paActionInfo);
 
-    void cleanClient(UA_ClientInformation * paClientInformation);
-
-    void addClientToConnectionList(UA_ClientInformation* paClientInformation);
-
-    bool isActionInitialized(UA_ClientInformation * paClient, COPC_UA_HandlerAbstract::CActionInfo *paActionInfo);
-
-    void referencedClientsIncrement(COPC_UA_HandlerAbstract::CActionInfo * const paActionInfo);
-
-    void referencedClientsDecrement(COPC_UA_HandlerAbstract::CActionInfo *paActionInfo);
-
-    void addAsyncCall(UA_ClientInformation* paClientInformation);
-
-    static void removeAsyncCall(UA_ClientInformation* paClientInformation);
-
-    static void resetSubscription(UA_ClientInformation* paClientInformation);
-
-    static void handleReadReturn(UA_Client *paClient, void *paUserdata, UA_UInt32 paRequestId, UA_ReadResponse *paResponse);
-
-    static void handleWriteReturn(UA_Client *paClient, void *paUserdata, UA_UInt32 paRequestId, UA_WriteResponse *paResponse);
-
-    static void handleCallReturn(UA_Client *paClient, void *paUserdata, UA_UInt32 paRequestId,
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-        void* paResponse);
-#else
-        UA_CallResponse *paResponse);
-#endif
+    void referencedClientsDecrement(CActionInfo& paActionInfo);
 
     void updateClientList();
 
     UA_ConnectionHandler mConnectionHandler;
 
     CSyncObject mAllClientListMutex;
-    CSinglyLinkedList<UA_ClientInformation*> mAllClients;
+    CSinglyLinkedList<CUA_ClientInformation*> mAllClients;
 
     CSyncObject mNewClientstMutex;
-    CSinglyLinkedList<UA_ClientInformation*> mNewClients;
+    CSinglyLinkedList<CUA_ClientInformation *> mNewClients;
 
     CSyncObject mInitializedClientstMutex;
-    CSinglyLinkedList<UA_ClientInformation*> mInitializeClients;
+    CSinglyLinkedList<CUA_ClientInformation *> mInitializedClients;
 
     CSemaphore mAsyncIsNeeded;
 
@@ -239,8 +136,6 @@ class COPC_UA_Client_Handler : public COPC_UA_HandlerAbstract, public CThread {
     CSemaphore mClientsThreadStarted;
 
     static const TForteUInt64 scmNanosecondsToSleep = 100000000; //100ms
-
-    static const UA_UInt32 scmClientTimeoutInMilliseconds = 3000; //3s
 };
 
 #endif /* SRC_MODULES_OPC_UA_OPCUACLIENTHANDLER_H_ */
