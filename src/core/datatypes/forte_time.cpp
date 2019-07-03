@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
+ * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH,
+ *  2019 TU Wien/ACIN
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +10,7 @@
  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Ingo Hegny,
  *    Martin Melik Merkumians, Monika Wenger
  *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians - added parsing for signed time literals
  *******************************************************************************/
 #include "forte_time.h"
 
