@@ -17,20 +17,58 @@
  *********************************************************************************************/
 #ifdef FORTE_USE_64BIT_DATATYPES
 
+template<typename T>
+inline const T TIME_IN_S_TO(const CIEC_TIME &paValue) {
+  return T(static_cast<typename T::TValueType>(paValue.getInSeconds()));
+}
+
+template<typename T>
+inline const T TIME_IN_MS_TO(const CIEC_TIME &paValue) {
+  return T(static_cast<typename T::TValueType>(paValue.getInMilliSeconds()));
+}
+
+template<typename T>
+inline const T TIME_IN_US_TO(const CIEC_TIME &paValue) {
+  return T(static_cast<typename T::TValueType>(paValue.getInMicroSeconds()));
+}
+
+template<typename T>
+inline const T TIME_IN_NS_TO(const CIEC_TIME &paValue) {
+  return T(static_cast<typename T::TValueType>(paValue.getInNanoSeconds()));
+}
+
+/* TO_LINT functions */
 inline const CIEC_LINT TIME_IN_S_TO_LINT(const CIEC_TIME &paValue) {
-  return CIEC_LINT(paValue.getInSeconds());
+  return TIME_IN_S_TO<CIEC_LINT>(paValue);
 }
 
 inline const CIEC_LINT TIME_IN_MS_TO_LINT(const CIEC_TIME &paValue) {
-  return CIEC_LINT(paValue.getInMilliSeconds());
+  return TIME_IN_MS_TO<CIEC_LINT>(paValue);
 }
 
 inline const CIEC_LINT TIME_IN_US_TO_LINT(const CIEC_TIME &paValue) {
-  return CIEC_LINT(paValue.getInMicroSeconds());
+  return TIME_IN_US_TO<CIEC_LINT>(paValue);
 }
 
 inline const CIEC_LINT TIME_IN_NS_TO_LINT(const CIEC_TIME &paValue) {
-  return CIEC_LINT(paValue.getInNanoSeconds());
+  return TIME_IN_NS_TO<CIEC_LINT>(paValue);
+}
+
+/* TO_ULINT functions */
+inline const CIEC_ULINT TIME_IN_S_TO_ULINT(const CIEC_TIME &paValue) {
+  return TIME_IN_S_TO<CIEC_ULINT>(paValue);
+}
+
+inline const CIEC_ULINT TIME_IN_MS_TO_ULINT(const CIEC_TIME &paValue) {
+  return TIME_IN_MS_TO<CIEC_ULINT>(paValue);
+}
+
+inline const CIEC_ULINT TIME_IN_US_TO_ULINT(const CIEC_TIME &paValue) {
+  return TIME_IN_US_TO<CIEC_ULINT>(paValue);
+}
+
+inline const CIEC_ULINT TIME_IN_NS_TO_ULINT(const CIEC_TIME &paValue) {
+  return TIME_IN_NS_TO<CIEC_ULINT>(paValue);
 }
 
 #endif /* FORTE_USE_64BIT_DATATYPES */
