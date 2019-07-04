@@ -12,6 +12,9 @@
 #ifndef SRC_CORE_DATATYPES_CONVERT_TIMEINRESOLUTIONCONVERTFUNCTIONS_H_
 #define SRC_CORE_DATATYPES_CONVERT_TIMEINRESOLUTIONCONVERTFUNCTIONS_H_
 
+#include "iec61131_cast_helper.h"
+#include "forte_constants.h"
+
 /*********************************************************************************************
  *   TIME_IN_<RESOLUTION>_TO_* functions - custom non-standard functions
  *********************************************************************************************/
@@ -19,7 +22,12 @@
 
 template<typename T>
 inline const T TIME_IN_S_TO(const CIEC_TIME &paValue) {
-  return T(static_cast<typename T::TValueType>(paValue.getInSeconds()));
+  FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_NUM, T>::value), TNotOfAnyNum);
+  if(forte::core::mpl::is_base_of<CIEC_ANY_REAL, T>::value) {
+    return T(static_cast<typename T::TValueType>(paValue.getInNanoSeconds()) / static_cast<typename T::TValueType>(forte::core::constants::cNanosecondsPerSecond));
+  } else {
+    return T(static_cast<typename T::TValueType>(paValue.getInSeconds()));
+  }
 }
 
 template<typename T>
@@ -69,6 +77,10 @@ inline const CIEC_ULINT TIME_IN_US_TO_ULINT(const CIEC_TIME &paValue) {
 
 inline const CIEC_ULINT TIME_IN_NS_TO_ULINT(const CIEC_TIME &paValue) {
   return TIME_IN_NS_TO<CIEC_ULINT>(paValue);
+}
+
+inline const CIEC_LREAL TIME_IN_S_TO_LREAL(const CIEC_TIME &paValue) {
+  return TIME_IN_S_TO<CIEC_LREAL>(paValue);
 }
 
 #endif /* FORTE_USE_64BIT_DATATYPES */
