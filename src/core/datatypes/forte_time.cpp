@@ -18,15 +18,13 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+#include "forte_constants.h"
+
 #ifdef FORTE_USE_64BIT_DATATYPES
 # include "forte_lint.h"
 #else
 # include "forte_dint.h"
 #endif
-
-static const CIEC_TIME::TValueType cMillisecondsPerSecond = 1E3;
-static const CIEC_TIME::TValueType cMicrosecondsPerSecond = 1E6;
-static const CIEC_TIME::TValueType cNanosecondsPerSecond = 1E9;
 
 DEFINE_FIRMWARE_DATATYPE(TIME, g_nStringIdTIME)
 
@@ -61,7 +59,7 @@ int CIEC_TIME::fromString(const char *paValue) {
         TValueType nBuf = forte::core::util::strtol(paValue, &pcEnd, 10);
         switch(tolower(*pcEnd)){
           case 'd':
-            nTimeFactor = 24 * 60 * 60 * cgForteTimeBaseUnitsPerSecond ;
+            nTimeFactor = 24 * 60 * 60 * cgForteTimeBaseUnitsPerSecond;
             break;
 
           case 'h':
@@ -70,7 +68,7 @@ int CIEC_TIME::fromString(const char *paValue) {
 
           case 'm':
             if('s' == tolower(*(pcEnd + 1))) {
-              nTimeFactor = cgForteTimeBaseUnitsPerSecond / cMillisecondsPerSecond;
+              nTimeFactor = cgForteTimeBaseUnitsPerSecond / forte::core::constants::cMillisecondsPerSecond;
               ++pcEnd;
             } else {
               nTimeFactor = 60 * cgForteTimeBaseUnitsPerSecond;
@@ -78,7 +76,7 @@ int CIEC_TIME::fromString(const char *paValue) {
             break;
           case 'n':
             if('s' == tolower(*(pcEnd + 1))) {
-              nTimeFactor = cgForteTimeBaseUnitsPerSecond / cNanosecondsPerSecond;
+              nTimeFactor = cgForteTimeBaseUnitsPerSecond / forte::core::constants::cNanosecondsPerSecond;
             } else {
               bEnd = true;
             }
@@ -88,7 +86,7 @@ int CIEC_TIME::fromString(const char *paValue) {
             break;
           case 'u':
             if('s' == tolower(*(pcEnd + 1))) {
-              nTimeFactor = cgForteTimeBaseUnitsPerSecond / cMicrosecondsPerSecond;
+              nTimeFactor = cgForteTimeBaseUnitsPerSecond / forte::core::constants::cMicrosecondsPerSecond;
             } else {
               bEnd = true;
             }
@@ -172,20 +170,23 @@ CIEC_TIME::TValueType CIEC_TIME::getInSeconds() const {
 
 CIEC_TIME::TValueType CIEC_TIME::getInMilliSeconds() const {
   return
-      (cMillisecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ? static_cast<TValueType>(*this) / (static_cast<TValueType>(cgForteTimeBaseUnitsPerSecond) / cMillisecondsPerSecond) :
-        static_cast<TValueType>(*this) * (cMillisecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
+      (forte::core::constants::cMillisecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ?
+        static_cast<TValueType>(*this) / (static_cast<TValueType>(cgForteTimeBaseUnitsPerSecond) / forte::core::constants::cMillisecondsPerSecond) :
+        static_cast<TValueType>(*this) * (forte::core::constants::cMillisecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
 }
 
 CIEC_TIME::TValueType CIEC_TIME::getInMicroSeconds() const {
   return
-      (cMicrosecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ? static_cast<TValueType>(*this) / (static_cast<TValueType>(cgForteTimeBaseUnitsPerSecond) / cMicrosecondsPerSecond) :
-        static_cast<TValueType>(*this) * (cMicrosecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
+      (forte::core::constants::cMicrosecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ?
+        static_cast<TValueType>(*this) / (static_cast<TValueType>(cgForteTimeBaseUnitsPerSecond) / forte::core::constants::cMicrosecondsPerSecond) :
+        static_cast<TValueType>(*this) * (forte::core::constants::cMicrosecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
 }
 
 CIEC_TIME::TValueType CIEC_TIME::getInNanoSeconds() const {
   return
-      (cNanosecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ? static_cast<TValueType>(*this) / (static_cast<TValueType>(cgForteTimeBaseUnitsPerSecond) / cNanosecondsPerSecond) :
-        static_cast<TValueType>(*this) * (cNanosecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
+      (forte::core::constants::cNanosecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ?
+        static_cast<TValueType>(*this) / (static_cast<TValueType>(cgForteTimeBaseUnitsPerSecond) / forte::core::constants::cNanosecondsPerSecond) :
+        static_cast<TValueType>(*this) * (forte::core::constants::cNanosecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
 }
 
 void CIEC_TIME::setFromSeconds(TValueType paValue) {
@@ -194,18 +195,21 @@ void CIEC_TIME::setFromSeconds(TValueType paValue) {
 
 void CIEC_TIME::setFromMilliSeconds(TValueType paValue) {
   *this =
-      (cMillisecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ? paValue * (cgForteTimeBaseUnitsPerSecond / cMillisecondsPerSecond) :
-        paValue / (cMillisecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
+      (forte::core::constants::cMillisecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ?
+        paValue * (cgForteTimeBaseUnitsPerSecond / forte::core::constants::cMillisecondsPerSecond) :
+        paValue / (forte::core::constants::cMillisecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
 }
 
 void CIEC_TIME::setFromMicroSeconds(TValueType paValue) {
   *this =
-      (cMicrosecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ? paValue * (cgForteTimeBaseUnitsPerSecond / cMicrosecondsPerSecond) :
-        paValue / (cMicrosecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
+      (forte::core::constants::cMicrosecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ?
+        paValue * (cgForteTimeBaseUnitsPerSecond / forte::core::constants::cMicrosecondsPerSecond) :
+        paValue / (forte::core::constants::cMicrosecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
 }
 
 void CIEC_TIME::setFromNanoSeconds(TValueType paValue) {
   *this =
-      (cNanosecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ? paValue * (cgForteTimeBaseUnitsPerSecond / cNanosecondsPerSecond) :
-        paValue / (cNanosecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
+      (forte::core::constants::cNanosecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ?
+        paValue * (cgForteTimeBaseUnitsPerSecond / forte::core::constants::cNanosecondsPerSecond) :
+        paValue / (forte::core::constants::cNanosecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
 }
