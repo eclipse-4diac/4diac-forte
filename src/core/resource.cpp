@@ -349,7 +349,7 @@ void CResource::createEOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRI
   if(spec->m_nNumEOs > 0){
     for(size_t i = 0; spec->m_aunEONames[i] != spec->m_aunEONames[spec->m_nNumEOs]; i++){
       const CEventConnection* eConn = paFb.getEOConnection(spec->m_aunEONames[i]);
-      for(CSinglyLinkedList<SConnectionPoint>::Iterator itRunnerDst(eConn->getDestinationList().begin()); itRunnerDst != eConn->getDestinationList().end();
+      for(CSinglyLinkedList<CConnectionPoint>::Iterator itRunnerDst(eConn->getDestinationList().begin()); itRunnerDst != eConn->getDestinationList().end();
           ++itRunnerDst){
         if(itRunnerDst != eConn->getDestinationList().begin()){
           paReqResult.append("\n");
@@ -366,7 +366,7 @@ void CResource::createDOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRI
   if(spec->m_nNumDOs > 0){
     for(size_t i = 0; spec->m_aunDONames[i] != spec->m_aunDONames[spec->m_nNumDOs]; i++){
       const CDataConnection * const dConn = paFb.getDOConnection(spec->m_aunDONames[i]);
-      for(CSinglyLinkedList<SConnectionPoint>::Iterator itRunnerDst(dConn->getDestinationList().begin()); itRunnerDst != dConn->getDestinationList().end();
+      for(CSinglyLinkedList<CConnectionPoint>::Iterator itRunnerDst(dConn->getDestinationList().begin()); itRunnerDst != dConn->getDestinationList().end();
           ++itRunnerDst){
         if(itRunnerDst != dConn->getDestinationList().begin()){
           paReqResult.append("\n");
@@ -389,7 +389,7 @@ void CResource::createAOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRI
           paReqResult.append("\n");
         }
         if(!aConn->getDestinationList().isEmpty()){
-          CSinglyLinkedList<SConnectionPoint>::Iterator itRunnerDst(aConn->getDestinationList().begin());
+          CSinglyLinkedList<CConnectionPoint>::Iterator itRunnerDst(aConn->getDestinationList().begin());
           createConnectionResponseMessage(spec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID,
               itRunnerDst->mFB->getFBInterfaceSpec()->m_pstAdapterInstanceDefinition[itRunnerDst->mPortId].m_nAdapterNameID, *itRunnerDst->mFB, paFb,
               paReqResult);

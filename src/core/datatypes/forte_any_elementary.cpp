@@ -238,7 +238,7 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *pa_pacValue){
         break;
 #ifdef FORTE_USE_64BIT_DATATYPES
       case e_ULINT:
-        case e_LWORD:
+      case e_LWORD:
         nUUpperBound = CIEC_ULINT::scm_nMaxVal;
         bSigned = false;
         break;

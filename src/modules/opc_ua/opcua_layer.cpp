@@ -260,9 +260,9 @@ void COPC_UA_Layer::closeConnection() {
 /**
  * This method is required to inline initialize the connection point.
  */
-static const SConnectionPoint& getFirstListEntry(
-    const CSinglyLinkedList<SConnectionPoint>& list) {
-  CSinglyLinkedList<SConnectionPoint>::Iterator it = list.begin();
+static const CConnectionPoint& getFirstListEntry(
+    const CSinglyLinkedList<CConnectionPoint>& list) {
+  CSinglyLinkedList<CConnectionPoint>::Iterator it = list.begin();
   return *it;
 }
 
@@ -314,7 +314,7 @@ bool COPC_UA_Layer::getPortConnectionInfo(unsigned int paPortIndex, bool paIsSD,
     return false;
   }
 
-  const SConnectionPoint remoteConnectionPoint =
+  const CConnectionPoint remoteConnectionPoint =
       paIsSD ?
           portConnection->getSourceId() :
           getFirstListEntry(portConnection->getDestinationList());

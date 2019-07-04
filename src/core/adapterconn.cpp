@@ -48,7 +48,7 @@ EMGMResponse CAdapterConnection::connect(CFunctionBlock *paDstFB, CStringDiction
       if((socket->isSocket()) && (socket->isCompatible(mPlug))){
         if(mPlug->connect(socket, this) && socket->connect(mPlug, this)) {
           mSocket = socket;
-          addDestination(SConnectionPoint(paDstFB, portId));
+          addDestination(CConnectionPoint(paDstFB, portId));
           retVal = e_RDY;
         }
         else{
@@ -77,7 +77,7 @@ EMGMResponse CAdapterConnection::disconnect(CFunctionBlock *paDstFB, CStringDict
 
   TPortId portId = paDstFB->getAdapterPortId(paDstPortNameId);
   if(cg_unInvalidPortId != portId){
-    retVal = CConnection::removeDestination(SConnectionPoint(paDstFB, portId));
+    retVal = CConnection::removeDestination(CConnectionPoint(paDstFB, portId));
     if(e_RDY == retVal){
       performDisconnect();
     }

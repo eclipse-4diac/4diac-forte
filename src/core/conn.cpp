@@ -16,7 +16,7 @@ CConnection::CConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId) :
     mSourceId(paSrcFB, paSrcPortId){
 }
 
-EMGMResponse CConnection::addDestination(const SConnectionPoint &paDestPoint){
+EMGMResponse CConnection::addDestination(const CConnectionPoint &paDestPoint){
   EMGMResponse retval = e_INVALID_STATE;
 
   if(!dstExists(paDestPoint)){ // check if there is up to now no such fan out with this destination
@@ -26,8 +26,7 @@ EMGMResponse CConnection::addDestination(const SConnectionPoint &paDestPoint){
   return retval;
 }
 
-#ifndef FORTE_CLASS_0
-EMGMResponse CConnection::removeDestination(const SConnectionPoint &paDestPoint){
+EMGMResponse CConnection::removeDestination(const CConnectionPoint &paDestPoint){
   EMGMResponse retval = e_INVALID_STATE;
 
   TDestinationIdList::Iterator itRunner = mDestinationIds.begin();
@@ -50,14 +49,13 @@ EMGMResponse CConnection::removeDestination(const SConnectionPoint &paDestPoint)
 
   return retval;
 }
-#endif
 
 void CConnection::setSource(CFunctionBlock *paSrcFB, TPortId paSrcPortId){
   mSourceId.mFB = paSrcFB;
   mSourceId.mPortId = paSrcPortId;
 }
 
-bool CConnection::dstExists(const SConnectionPoint &paDestPoint){
+bool CConnection::dstExists(const CConnectionPoint &paDestPoint){
   bool bRetVal = false;
   for(TDestinationIdList::Iterator it = mDestinationIds.begin();
       it != mDestinationIds.end(); ++it){

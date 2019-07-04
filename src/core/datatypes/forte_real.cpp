@@ -127,7 +127,7 @@ void CIEC_REAL::castRealData(const CIEC_REAL &paSrcValue, CIEC_ANY &paDestValue)
       if(0 > floatValue){
         floatValue -= 0.5F;
       }
-      *((CIEC_ANY::TLargestUIntValueType *) paDestValue.getDataPtr()) = static_cast<CIEC_ANY::TLargestUIntValueType>(floatValue);
+      *(reinterpret_cast<CIEC_ANY::TLargestUIntValueType*>(paDestValue.getDataPtr())) = static_cast<CIEC_ANY::TLargestUIntValueType>(floatValue);
     }
       break;
   }

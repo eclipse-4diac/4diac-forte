@@ -22,7 +22,7 @@
  */
 typedef TForteUInt8 TEventID;
 
-class SConnectionPoint;
+class CConnectionPoint;
 
 //!\ingroup CORE Constant for the invalid event input id
 const TEventID cg_nInvalidEventID = cg_unInvalidPortId;
@@ -36,7 +36,7 @@ const TPortId cgInternal2InterfaceRemovalMask = 0xFF;
 
 /*!\ingroup CORE \brief Structure to hold the information needed for delivering input events to FBs.
 */
-typedef SConnectionPoint SEventEntry;
+typedef CConnectionPoint SEventEntry;
 
 typedef SEventEntry *TEventEntryPtr;
 

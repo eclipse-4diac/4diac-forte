@@ -27,9 +27,7 @@ class CAdapterConnection : public CConnection{
     virtual EMGMResponse connect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId);
     virtual EMGMResponse connectToCFBInterface(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId);
 
-#ifndef FORTE_CLASS_0
     virtual EMGMResponse disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId);
-#endif
 
     CAdapter *getPlug(){
       return mPlug;
