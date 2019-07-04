@@ -15,8 +15,11 @@
 
 const char* const CActionInfo::mActionNames[] = { "READ", "WRITE", "CREATE_METHOD", "CALL_METHOD", "SUBSCRIBE", "CREATE_OBJECT", "DELETE_OBJECT" };
 
-CActionInfo::CActionInfo(COPC_UA_Layer& paLayer, UA_ActionType paAction, CIEC_STRING& paEndpoint) :
+CActionInfo::CActionInfo(COPC_UA_Layer& paLayer, UA_ActionType paAction, CIEC_STRING& paEndpoint, CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>& paTypes) :
     mAction(paAction), mLayer(paLayer), mEndpoint(paEndpoint) {
+  for(CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>::Iterator itTypes = paTypes.begin(); itTypes != paTypes.end(); ++itTypes) {
+    mConverters.pushBack(*itTypes);
+  }
 }
 
 CActionInfo::~CActionInfo() {
@@ -28,7 +31,7 @@ CActionInfo::~CActionInfo() {
   }
 }
 
-CActionInfo* CActionInfo::getActionInfoFromParams(char* paParams, COPC_UA_Layer& paLayer) {
+CActionInfo* CActionInfo::getActionInfoFromParams(char* paParams, COPC_UA_Layer& paLayer, CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>& paTypes) {
   CActionInfo* retVal = 0;
   CParameterParser mainParser(paParams, ';'); // ACTION;[ENDPOINT#];BROWSENAME,NODEID;[BROSWENAME,NODEID] //255 maximum browsename,nodeid
   size_t amountOfParameters = mainParser.parseParameters();
@@ -47,9 +50,9 @@ CActionInfo* CActionInfo::getActionInfoFromParams(char* paParams, COPC_UA_Layer&
       }
 
       if(CActionInfo::eCreateMethod == action) {
-        retVal = new CLocalMethodInfo(paLayer, endpoint);
+        retVal = new CLocalMethodInfo(paLayer, endpoint, paTypes);
       } else {
-        retVal = new CActionInfo(paLayer, action, endpoint);
+        retVal = new CActionInfo(paLayer, action, endpoint, paTypes);
       }
 
       bool somethingFailed = false;
@@ -349,8 +352,8 @@ bool CActionInfo::CActionParser::parseIdentifier(const char* paIdentifier, UA_No
 
 // **** METHOD ACTION *****//
 
-CLocalMethodInfo::CLocalMethodInfo(COPC_UA_Layer& paLayer, CIEC_STRING& paEndpoint) :
-    CActionInfo(paLayer, eCreateMethod, paEndpoint) {
+CLocalMethodInfo::CLocalMethodInfo(COPC_UA_Layer& paLayer, CIEC_STRING& paEndpoint, CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>& paTypes) :
+    CActionInfo(paLayer, eCreateMethod, paEndpoint, paTypes) {
 }
 
 CLocalMethodInfo::~CLocalMethodInfo() {

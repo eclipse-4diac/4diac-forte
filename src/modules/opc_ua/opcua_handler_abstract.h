@@ -23,9 +23,7 @@ class COPC_UA_HandlerAbstract : public CExternalEventHandler {
 
     ~COPC_UA_HandlerAbstract();
 
-    void triggerNewEvent(CEventSourceFB &paLayer) {
-      startNewEventChain(&paLayer);
-    }
+    void triggerNewEvent(CEventSourceFB &paLayer);
 
     virtual UA_StatusCode initializeAction(CActionInfo& paActionInfo) = 0;
 

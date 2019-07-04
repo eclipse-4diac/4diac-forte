@@ -11,9 +11,13 @@
   *******************************************************************************/
 
 #include "opcua_helper.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "opcua_helper_gen.cpp"
+#endif
 #include "convert_functions.h"
 #include "../../core/utils/parameterParser.h"
 #include "../../arch/devlog.h"
+#include "types/forte_localizedtext.h"
 
 #define UA_String_to_char_alloc(str, chars) { \
         chars = static_cast<char*>(forte_malloc(str->length+1)); \
@@ -22,7 +26,7 @@
     }
 
 template<CIEC_ANY::EDataTypeID T_FORTE_E, typename T_FORTE_T, typename T_C>
-bool map_convert_get(const CIEC_ANY *src, void *dst) {
+bool mapConvertGet(const CIEC_ANY *src, void *dst) {
   if (src->getDataTypeID() != T_FORTE_E)
     return false;
   T_C *dstType = static_cast<T_C *>(dst);
@@ -31,7 +35,7 @@ bool map_convert_get(const CIEC_ANY *src, void *dst) {
 };
 
 template<CIEC_ANY::EDataTypeID T_FORTE_E, typename T_FORTE_T, typename T_C>
-bool map_convert_set(const void *src, CIEC_ANY *dst) {
+bool mapConvertSet(const void *src, CIEC_ANY *dst) {
   if (dst->getDataTypeID() != T_FORTE_E)
     return false;
   T_FORTE_T *dstType = static_cast<T_FORTE_T *>(dst);
@@ -42,20 +46,50 @@ bool map_convert_set(const void *src, CIEC_ANY *dst) {
 #define MAP_INSERT_CONVERT(T_FORTE_E, T_FORTE_T, T_UA, T_C) \
     { \
         T_UA, \
-        &map_convert_get<T_FORTE_E, T_FORTE_T, T_C>, \
-        &map_convert_set<T_FORTE_E, T_FORTE_T, T_C> \
+        &mapConvertGet<T_FORTE_E, T_FORTE_T, T_C>, \
+        &mapConvertSet<T_FORTE_E, T_FORTE_T, T_C> \
     } \
 
 #define MAP_INSERT_CONVERT_SPECIFIC(T_FORTE_T, T_UA) \
     { \
         T_UA, \
-        &map_convert_get_##T_FORTE_T, \
-        &map_convert_set_##T_FORTE_T \
+        &mapConvertGet##T_FORTE_T, \
+        &mapConvertSet##T_FORTE_T \
     } \
 
+bool mapConvertGetCIEC_LocalizedText(const CIEC_ANY * const src, void *dst) {
+  if(src->getDataTypeID() != CIEC_ANY::e_STRUCT || g_nStringIdLocalizedText != static_cast<const CIEC_STRUCT*>(src)->getStructTypeNameID()) {
+    return false;
+  }
+  CIEC_LocalizedText *iecLocalizedText = const_cast<CIEC_LocalizedText*>(reinterpret_cast<const CIEC_LocalizedText*>(src));
+  UA_LocalizedText *uaLocalizedText = static_cast<UA_LocalizedText *>(dst);
 
+  uaLocalizedText->locale = UA_String_fromChars(iecLocalizedText->locale().getValue());
+  uaLocalizedText->text = UA_String_fromChars(iecLocalizedText->text().getValue());
+  return true;
+}
 
-bool map_convert_get_CIEC_DATE(const CIEC_ANY *src, void *dst) {
+bool mapConvertSetCIEC_LocalizedText(const void * const src, CIEC_ANY *dst) {
+  if(dst->getDataTypeID() != CIEC_ANY::e_STRUCT || g_nStringIdLocalizedText != static_cast<const CIEC_STRUCT*>(dst)->getStructTypeNameID()) {
+    return false;
+  }
+  CIEC_LocalizedText *iecLocalizedText = static_cast<CIEC_LocalizedText *>(dst);
+
+  const UA_LocalizedText *uaLocalizedText = static_cast<const UA_LocalizedText *>(src);
+
+  char *chars;
+  UA_String_to_char_alloc((&uaLocalizedText->locale), chars);
+  iecLocalizedText->locale().fromString(chars);
+  forte_free(chars);
+
+  UA_String_to_char_alloc((&uaLocalizedText->text), chars);
+  iecLocalizedText->text().fromString(chars);
+  forte_free(chars);
+
+  return true;
+}
+
+bool mapConvertGetCIEC_DATE(const CIEC_ANY *src, void *dst) {
   if (src->getDataTypeID() != CIEC_ANY::e_DATE)
     return false;
   UA_DateTime *dstType = static_cast<UA_DateTime *>(dst);
@@ -63,7 +97,7 @@ bool map_convert_get_CIEC_DATE(const CIEC_ANY *src, void *dst) {
   return true;
 }
 
-bool map_convert_set_CIEC_DATE(const void *src, CIEC_ANY *dst) {
+bool mapConvertSetCIEC_DATE(const void *src, CIEC_ANY *dst) {
   if (dst->getDataTypeID() != CIEC_ANY::e_DATE)
     return false;
   CIEC_DATE *dstType = static_cast<CIEC_DATE *>(dst);
@@ -71,14 +105,14 @@ bool map_convert_set_CIEC_DATE(const void *src, CIEC_ANY *dst) {
   return true;
 }
 
-bool map_convert_get_CIEC_TIME_OF_DAY(const CIEC_ANY *src, void *) {
+bool mapConvertGetCIEC_TIME_OF_DAY(const CIEC_ANY *src, void *) {
   if (src->getDataTypeID() != CIEC_ANY::e_TIME_OF_DAY)
     return false;
   //TODO how convert TOD to DT?
   return false;
 }
 
-bool map_convert_set_CIEC_TIME_OF_DAY(const void *, CIEC_ANY *dst) {
+bool mapConvertSetCIEC_TIME_OF_DAY(const void *, CIEC_ANY *dst) {
   if (dst->getDataTypeID() != CIEC_ANY::e_TIME_OF_DAY)
     return false;
   //TODO how convert UA_DateTime to TOD?
@@ -86,7 +120,7 @@ bool map_convert_set_CIEC_TIME_OF_DAY(const void *, CIEC_ANY *dst) {
 }
 
 
-bool map_convert_get_CIEC_STRING(const CIEC_ANY *src, void *dst) {
+bool mapConvertGetCIEC_STRING(const CIEC_ANY *src, void *dst) {
   if (src->getDataTypeID() != CIEC_ANY::e_STRING)
     return false;
   UA_String *dstType = static_cast<UA_String *>(dst);
@@ -94,7 +128,7 @@ bool map_convert_get_CIEC_STRING(const CIEC_ANY *src, void *dst) {
   return true;
 }
 
-bool map_convert_set_CIEC_STRING(const void *src, CIEC_ANY *dst) {
+bool mapConvertSetCIEC_STRING(const void *src, CIEC_ANY *dst) {
   if (dst->getDataTypeID() != CIEC_ANY::e_STRING)
     return false;
   CIEC_STRING *dstType = static_cast<CIEC_STRING *>(dst);
@@ -107,7 +141,7 @@ bool map_convert_set_CIEC_STRING(const void *src, CIEC_ANY *dst) {
   return true;
 }
 
-bool map_convert_get_CIEC_WSTRING(const CIEC_ANY *src, void *dst) {
+bool mapConvertGetCIEC_WSTRING(const CIEC_ANY *src, void *dst) {
   if (src->getDataTypeID() != CIEC_ANY::e_WSTRING)
     return false;
   COPC_UA_Helper::UA_TypeConvert conv = COPC_UA_Helper::mapForteTypeIdToOpcUa[CIEC_ANY::e_STRING];
@@ -115,7 +149,7 @@ bool map_convert_get_CIEC_WSTRING(const CIEC_ANY *src, void *dst) {
   return conv.get(&str, dst);
 }
 
-bool map_convert_set_CIEC_WSTRING(const void *src, CIEC_ANY *dst) {
+bool mapConvertSetCIEC_WSTRING(const void *src, CIEC_ANY *dst) {
   if (dst->getDataTypeID() != CIEC_ANY::e_WSTRING)
     return false;
   CIEC_WSTRING *dstType = static_cast<CIEC_WSTRING *>(dst);
@@ -134,7 +168,7 @@ bool map_convert_set_CIEC_WSTRING(const void *src, CIEC_ANY *dst) {
  * This array has to match the enum CIEC_ANY::EDataTypeID.
  * Current maximum index is WSTRING
  */
-const COPC_UA_Helper::UA_TypeConvert COPC_UA_Helper::mapForteTypeIdToOpcUa[CIEC_ANY::e_WSTRING + 1] = {
+const COPC_UA_Helper::UA_TypeConvert COPC_UA_Helper::mapForteTypeIdToOpcUa[] = {
     { // dummy for e_ANY
       NULL,
       NULL,
@@ -160,11 +194,23 @@ const COPC_UA_Helper::UA_TypeConvert COPC_UA_Helper::mapForteTypeIdToOpcUa[CIEC_
     MAP_INSERT_CONVERT(CIEC_ANY::e_REAL, CIEC_REAL, &UA_TYPES[UA_TYPES_FLOAT], UA_Float),
     MAP_INSERT_CONVERT(CIEC_ANY::e_LREAL, CIEC_LREAL, &UA_TYPES[UA_TYPES_DOUBLE], UA_Double),
     MAP_INSERT_CONVERT_SPECIFIC(CIEC_STRING, &UA_TYPES[UA_TYPES_STRING]),
-    MAP_INSERT_CONVERT_SPECIFIC(CIEC_WSTRING, &UA_TYPES[UA_TYPES_STRING])
+  MAP_INSERT_CONVERT_SPECIFIC(CIEC_WSTRING, &UA_TYPES[UA_TYPES_STRING]),
+  MAP_INSERT_CONVERT_SPECIFIC(CIEC_LocalizedText, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT])
 };
 
-bool COPC_UA_Helper::isTypeIdValid(CIEC_ANY::EDataTypeID paTypeId) {
-  return paTypeId >= CIEC_ANY::e_BOOL && paTypeId <= CIEC_ANY::e_WSTRING;
+bool COPC_UA_Helper::isTypeValid(CIEC_ANY *paType) {
+  CIEC_ANY::EDataTypeID typeId = paType->getDataTypeID();
+  if(typeId >= CIEC_ANY::e_BOOL && typeId <= CIEC_ANY::e_WSTRING) {
+    return true;
+  } else if(CIEC_ANY::e_STRUCT == typeId) {
+    CStringDictionary::TStringId typeOfStructure = static_cast<CIEC_STRUCT*>(paType)->getStructTypeNameID();
+
+    //for now, only localizedText is supported. TODO: move this check to an own generated function, where the structures are added in CMake
+    if(typeOfStructure == g_nStringIdLocalizedText) {
+      return true;
+    }
+  }
+  return false;
 }
 
 UA_StatusCode COPC_UA_Helper::releaseBrowseArgument(UA_BrowsePath* paBrowsePaths, size_t paPathLength) {
@@ -236,21 +282,10 @@ UA_StatusCode COPC_UA_Helper::prepareBrowseArgument(const char *paNodePathConst,
       UA_RelativePathElement_init(&browsePaths[i].relativePath.elements[j]);
       browsePaths[i].relativePath.elements[j].isInverse = UA_FALSE;
 
-      UA_UInt16 browsenameNamespace = i ? 1 : 0; //TODO: use the fix 0 only for the first one and then take it from the server
-      CIEC_STRING targetName;
-      CParameterParser browseNameParser(tok, ':');
-      size_t parsingResult = browseNameParser.parseParameters();
-      if(scmMaxNoOfParametersInBrowseName == parsingResult) {
-        browsenameNamespace = static_cast<UA_UInt16>(forte::core::util::strtol(browseNameParser[0], 0, 10));
-        targetName = browseNameParser[1];
-      } else if(1 == parsingResult) {
-        targetName = browseNameParser[0];
-      } else {
-        DEVLOG_ERROR("[OPC UA HELPER]: Error by parsing FB browse path %s\n", paNodePathConst);
+      if(!getBrowsenameFromNodeName(tok, browsePaths[i].relativePath.elements[j].targetName, i ? 1 : 0)) { //use the fix 0 only for the first one and then take it from the server
         UA_Array_delete(browsePaths, *paFolderCount * 2, &UA_TYPES[UA_TYPES_BROWSEPATH]);
         return UA_STATUSCODE_BADINVALIDARGUMENT;
       }
-      browsePaths[i].relativePath.elements[j].targetName = UA_QUALIFIEDNAME_ALLOC(browsenameNamespace, targetName.getValue());
     }
   }
 
@@ -262,6 +297,29 @@ UA_StatusCode COPC_UA_Helper::prepareBrowseArgument(const char *paNodePathConst,
     }
   }
   return UA_STATUSCODE_GOOD;
+}
+
+bool COPC_UA_Helper::getBrowsenameFromNodeName(const char* paNodeName, UA_QualifiedName& paBrowseName, UA_UInt16 paDefaultNamespace) {
+  bool retVal = true;
+
+  UA_UInt16 browsenameNamespace = paDefaultNamespace;
+  CIEC_STRING targetName;
+  CParameterParser browseNameParser(paNodeName, ':');
+  size_t parsingResult = browseNameParser.parseParameters();
+  if(scmMaxNoOfParametersInBrowseName == parsingResult) {
+    browsenameNamespace = static_cast<UA_UInt16>(forte::core::util::strtol(browseNameParser[0], 0, 10));
+    targetName = browseNameParser[1];
+  } else if(1 == parsingResult) {
+    targetName = browseNameParser[0];
+  } else {
+    DEVLOG_ERROR("[OPC UA HELPER]: Error by parsing FB browse path %s\n", paNodeName);
+    retVal = false;
+  }
+
+  if(retVal) {
+    paBrowseName = UA_QUALIFIEDNAME_ALLOC(browsenameNamespace, targetName.getValue());
+  }
+  return retVal;
 }
 
 UA_StatusCode COPC_UA_Helper::getRemoteNodeForPath(UA_Client *paClient, UA_NodeId **paFoundNodeId, const char *paNodePathConst, UA_NodeId **paParentNodeId) {
@@ -334,4 +392,18 @@ void COPC_UA_Helper::copyNodeIds(UA_NodeId **paFoundNodeId, UA_BrowsePathResult*
   }
 }
 
+const COPC_UA_Helper::UA_TypeConvert* COPC_UA_Helper::geTypeConvertFromAny(CIEC_ANY* paAny) {
+  const UA_TypeConvert *retVal = 0;
+  CIEC_ANY::EDataTypeID typeId = paAny->getDataTypeID();
+  if(typeId >= CIEC_ANY::e_BOOL && typeId <= CIEC_ANY::e_WSTRING) {
+    retVal = &mapForteTypeIdToOpcUa[typeId];
+  } else if(CIEC_ANY::e_STRUCT == typeId) {
+    CStringDictionary::TStringId typeOfStructure = static_cast<CIEC_STRUCT*>(paAny)->getStructTypeNameID();
 
+    //for now, only localizedText is supported. TODO: move this check to an own generated function, where the structures are added in CMake
+    if(typeOfStructure == g_nStringIdLocalizedText) {
+      retVal = &mapForteTypeIdToOpcUa[CIEC_ANY::e_WSTRING + 1];
+    }
+  }
+  return retVal;
+}

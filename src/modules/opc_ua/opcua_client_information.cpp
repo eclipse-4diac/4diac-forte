@@ -275,8 +275,8 @@ bool CUA_ClientInformation::initializeSubscription(CActionInfo& paActionInfo) {
 
       CSinglyLinkedList<UA_MonitoringItemInfo>::Iterator itFirstNewMonitoringItemInfo = mSubscriptionInfo->mMonitoredItems.end();
 
-      for(CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>::Iterator itType = paActionInfo.getLayer().getTypeConveverters().begin();
-          itType != paActionInfo.getLayer().getTypeConveverters().end(); ++itType) {
+      for(CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>::Iterator itType = paActionInfo.getTypeConverters().begin();
+          itType != paActionInfo.getTypeConverters().end(); ++itType) {
         UA_MonitoringItemInfo monitoringItemInfo(UA_SubscribeContext_Handle(paActionInfo, *itType, itemsAddedToList));
         mSubscriptionInfo->mMonitoredItems.pushBack(monitoringItemInfo);
         if(itFirstNewMonitoringItemInfo == mSubscriptionInfo->mMonitoredItems.end()) { //store the first added item
@@ -436,7 +436,7 @@ UA_StatusCode CUA_ClientInformation::executeWrite(CActionInfo& paActionInfo) {
 
   bool somethingFailed = false;
   size_t indexOfNodePair = 0;
-  CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>::Iterator itType = paActionInfo.getLayer().getTypeConveverters().begin();
+  CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>::Iterator itType = paActionInfo.getTypeConverters().begin();
   for(CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itNodePair = paActionInfo.getNodePairInfo().begin();
       itNodePair != paActionInfo.getNodePairInfo().end();
       ++itNodePair, ++itType, indexOfNodePair++) {
@@ -500,7 +500,7 @@ UA_StatusCode CUA_ClientInformation::executeCallMethod(CActionInfo& paActionInfo
 
   bool somethingFailed = false;
 
-  CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>::Iterator itType = paActionInfo.getLayer().getTypeConveverters().begin();
+  CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>::Iterator itType = paActionInfo.getTypeConverters().begin();
   CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itNodePair = paActionInfo.getNodePairInfo().begin();
   UA_NodeId_copy((*itNodePair)->mNodeId, &methodRequest->methodId);
   ++itNodePair;
@@ -587,7 +587,7 @@ void CUA_ClientInformation::CUA_CallbackFunctions::readAsyncCallback(UA_Client *
 
       if(!varHandle.mFailed) {
         size_t indexOfPair = 0;
-        CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert*>::Iterator itType = remoteCallHandle->mActionInfo.getLayer().getTypeConveverters().begin();
+        CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert*>::Iterator itType = remoteCallHandle->mActionInfo.getTypeConverters().begin();
         for(CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itNodePairs = remoteCallHandle->mActionInfo.getNodePairInfo().begin();
             itNodePairs != remoteCallHandle->mActionInfo.getNodePairInfo().end(); ++itNodePairs, indexOfPair++, ++itType) {
 
@@ -713,7 +713,7 @@ void CUA_ClientInformation::CUA_CallbackFunctions::callMethodAsyncCallback(UA_Cl
     for(size_t i = 0; i < outputSize; i++) {
       varHandle.mData[i] = &paResponse->results->outputArguments[i];
     }
-    CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert*>::Iterator itType = remoteCallHandle->mActionInfo.getLayer().getTypeConveverters().begin();
+    CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert*>::Iterator itType = remoteCallHandle->mActionInfo.getTypeConverters().begin();
 
     //skip all SDs first
     for(size_t i = 0; i < remoteCallHandle->mActionInfo.getLayer().getCommFB()->getNumSD(); i++, ++itType) {

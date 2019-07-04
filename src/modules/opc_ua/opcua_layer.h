@@ -37,12 +37,7 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
 
     virtual forte::com_infra::EComResponse processInterrupt();
 
-    CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>& getTypeConveverters() {
-      return mConverters;
-    }
-
     void triggerNewEvent();
-
 
   private:
 
@@ -55,19 +50,17 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
 
     CActionInfo* mActionInfo;
 
-    CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *> mConverters; //first all SDs and then RDs
-
     forte::com_infra::EComResponse openConnection(char *paLayerParameter);
 
     void closeConnection();
 
-    bool getRemoteType(CIEC_ANY::EDataTypeID& paResult, const SConnectionPoint& paRemoteConnectionPoint, bool paIsSD) const;
+    bool getRemoteType(CIEC_ANY **paResult, const SConnectionPoint& paRemoteConnectionPoint, bool paIsSD) const;
 
-    bool checkFanOutTypes(const CDataConnection& paPortConnection, CIEC_ANY::EDataTypeID& paRemoteType) const;
+    bool checkFanOutTypes(const CDataConnection& paPortConnection, CIEC_ANY **paRemoteType) const;
 
     bool getPortConnectionInfo(unsigned int paPortIndex, bool paIsSD, const COPC_UA_Helper::UA_TypeConvert **paResult) const;
 
-    bool storeTypesFromInterface();
+    bool storeTypesFromInterface(CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>& paConverters);
 
     // These are needed because if many subscription are present in one FB, and all of them are updated, we'll get one external event for each, when
     //only one is needed.

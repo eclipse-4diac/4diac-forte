@@ -238,11 +238,12 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     UA_StatusCode handleExistingVariable(CActionInfo& paActionInfo, CActionInfo::CNodePairInfo& paNodePairInfo, COPC_UA_Helper::UA_TypeConvert* paTypeConvert,
         size_t paIndexOfNodePair, bool paWrite);
 
-    bool getBroswenameFromNodeName(CIEC_STRING& paNodeName, UA_QualifiedName& paBrowseName);
+    UA_StatusCode handleNonExistingVariable(CActionInfo& paActionInfo, CActionInfo::CNodePairInfo& paNodePairInfo,
+        COPC_UA_Helper::UA_TypeConvert* paTypeConvert, size_t paIndexOfNodePair, CSinglyLinkedList<UA_NodeId*>& paReferencedNodes, bool paWrite);
 
     bool initializeNodesets(UA_Server* paUaServer);
 
-    bool initializeCreateInfo(CIEC_STRING& paNodeName, CActionInfo::CNodePairInfo& paNodePairInfo, const UA_NodeId* paParentNodeId, CCreateInfo& paResult);
+    void initializeCreateInfo(CIEC_STRING& paNodeName, CActionInfo::CNodePairInfo& paNodePairInfo, const UA_NodeId* paParentNodeId, CCreateInfo& paResult);
 
     UA_StatusCode initializeReadWrite(CActionInfo& paActionInfo, bool isWrite);
 

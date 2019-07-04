@@ -29,6 +29,10 @@ COPC_UA_HandlerAbstract::~COPC_UA_HandlerAbstract() {
   //do nothing
 }
 
+void COPC_UA_HandlerAbstract::triggerNewEvent(CEventSourceFB &paLayer) {
+  startNewEventChain(&paLayer);
+}
+
 void COPC_UA_HandlerAbstract::setPriority(int) {
   //currently we are doing nothing here.
 }

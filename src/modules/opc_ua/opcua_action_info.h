@@ -36,7 +36,7 @@ class CActionInfo {
         CIEC_STRING mBrowsePath;
     };
 
-    explicit CActionInfo(COPC_UA_Layer &paLayer, UA_ActionType paAction, CIEC_STRING& paEndpoint);
+    explicit CActionInfo(COPC_UA_Layer &paLayer, UA_ActionType paAction, CIEC_STRING& paEndpoint, CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>& paTypes);
 
     virtual ~CActionInfo();
 
@@ -60,6 +60,10 @@ class CActionInfo {
       return ("" != mEndpoint);
     }
 
+    CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>& getTypeConverters() {
+      return mConverters;
+    }
+
     size_t getNoOfNodePairs() {
       size_t noOfPairs = 0;
       for(CSinglyLinkedList<CNodePairInfo*>::Iterator it = mNodePair.begin(); it != mNodePair.end(); ++it, noOfPairs++)
@@ -67,7 +71,7 @@ class CActionInfo {
       return noOfPairs;
     }
 
-    static CActionInfo* getActionInfoFromParams(char* paParams, COPC_UA_Layer& paLayer);
+    static CActionInfo* getActionInfoFromParams(char* paParams, COPC_UA_Layer& paLayer, CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>& paTypes);
 
     static const char* const mActionNames[eActionUnknown];
 
@@ -91,6 +95,7 @@ class CActionInfo {
     COPC_UA_Layer& mLayer;
     CIEC_STRING mEndpoint;
     CSinglyLinkedList<CNodePairInfo*> mNodePair;
+    CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *> mConverters; //first all SDs and then RDs
 
     class CActionParser {
       public:
@@ -110,7 +115,7 @@ class CActionInfo {
 
 class CLocalMethodInfo : public CActionInfo {
   public:
-    explicit CLocalMethodInfo(COPC_UA_Layer& paLayer, CIEC_STRING& paEndpoint);
+    explicit CLocalMethodInfo(COPC_UA_Layer& paLayer, CIEC_STRING& paEndpoint, CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>& paTypes);
 
     ~CLocalMethodInfo();
 

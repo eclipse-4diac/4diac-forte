@@ -85,42 +85,16 @@ class COPC_UA_Helper {
     /**
      * Maps EDataTypeID to OPC UA data types
      */
-    static const UA_TypeConvert mapForteTypeIdToOpcUa[CIEC_ANY::e_WSTRING + 1];
+
+    static const UA_TypeConvert* geTypeConvertFromAny(CIEC_ANY* paAny);
+    static const UA_TypeConvert mapForteTypeIdToOpcUa[];
 
     /**
      * Check if given type ID is valid an within the range of the array.
      * @param typeId the type ID to check
      * @return true if valid
      */
-    static bool isTypeIdValid(CIEC_ANY::EDataTypeID typeId);
-
-    /**
-     * Convert forte DataType (CIEC_...) to the corresponding OPC UA datatype.
-     *
-     * @param typeId type id of the forte datatype
-     * @param src source data
-     * @param dst the value of src will be converted and stored in dst. It has to be initialized before.
-     * @return false if type is not supported
-     */
-    static inline bool convertToOpcUa_typeId(CIEC_ANY::EDataTypeID typeId, const CIEC_ANY *src, void *dst) {
-      if(!COPC_UA_Helper::isTypeIdValid(typeId))
-        return false;
-      return COPC_UA_Helper::mapForteTypeIdToOpcUa[typeId].get(src, dst);
-    }
-
-    /**
-     * Convert OPC UA DataType to the corresponding forte DataType (CIEC_...).
-     *
-     * @param typeId type id of the forte datatype
-     * @param src source data
-     * @param dst the value of src will be converted and stored in dst. It has to be initialized before.
-     * @return false if type is not supported
-     */
-    static inline bool convertFromUa_typeId(CIEC_ANY::EDataTypeID typeId, const void *src, CIEC_ANY *dst) {
-      if(!COPC_UA_Helper::isTypeIdValid(typeId))
-        return false;
-      return COPC_UA_Helper::mapForteTypeIdToOpcUa[typeId].set(src, dst);
-    }
+    static bool isTypeValid(CIEC_ANY *typeId);
 
     /**
      * Get the node id of the node which is represented by the given path.
@@ -145,6 +119,8 @@ class COPC_UA_Helper {
     static UA_StatusCode prepareBrowseArgument(const char *paNodePathConst, UA_BrowsePath** paBrowsePaths, size_t* paFolderCount);
 
     static bool checkBrowsePath(const char *paBrowsepath);
+
+    static bool getBrowsenameFromNodeName(const char* paNodeName, UA_QualifiedName& paBrowseName, UA_UInt16 paDefaultNamespace);
 
     static const size_t scmMaxNoOfParametersInBrowseName = 2;
 

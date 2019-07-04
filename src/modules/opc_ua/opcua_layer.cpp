@@ -43,8 +43,9 @@ void COPC_UA_Layer::triggerNewEvent() {
 EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
   EComResponse response = e_InitTerminated;
 
-  if(storeTypesFromInterface()) {
-    mActionInfo = CActionInfo::getActionInfoFromParams(paLayerParameter, *this);
+  CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *> types;
+  if(storeTypesFromInterface(types)) {
+    mActionInfo = CActionInfo::getActionInfoFromParams(paLayerParameter, *this, types);
     if(mActionInfo) {
       mHandler =
           (mActionInfo->isRemote()) ? static_cast<COPC_UA_HandlerAbstract*>(&getExtEvHandler<COPC_UA_Client_Handler>()) :
@@ -65,7 +66,6 @@ void COPC_UA_Layer::closeConnection() {
     mHandler = 0;
     delete mActionInfo;
   }
-  mConverters.clearAll();
 }
 
 EComResponse COPC_UA_Layer::recvData(const void *paData, unsigned int) {
@@ -132,7 +132,7 @@ EComResponse COPC_UA_Layer::processInterrupt() {
   return mInterruptResp;
 }
 
-bool COPC_UA_Layer::storeTypesFromInterface() {
+bool COPC_UA_Layer::storeTypesFromInterface(CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>& paConverters) {
   bool somethingFailed = false;
   for(unsigned int i = 0; i < getCommFB()->getNumSD(); i++) {
     const COPC_UA_Helper::UA_TypeConvert *result;
@@ -140,7 +140,7 @@ bool COPC_UA_Layer::storeTypesFromInterface() {
       somethingFailed = true;
       break;
     }
-    mConverters.pushBack(const_cast<COPC_UA_Helper::UA_TypeConvert*>(result));
+    paConverters.pushBack(const_cast<COPC_UA_Helper::UA_TypeConvert*>(result));
   }
   if(!somethingFailed) {
     for(unsigned int i = 0; i < getCommFB()->getNumRD(); i++) {
@@ -149,30 +149,30 @@ bool COPC_UA_Layer::storeTypesFromInterface() {
         somethingFailed = true;
         break;
       }
-      mConverters.pushBack(const_cast<COPC_UA_Helper::UA_TypeConvert*>(result));
+      paConverters.pushBack(const_cast<COPC_UA_Helper::UA_TypeConvert*>(result));
     }
   }
 
   if(somethingFailed) {
-    mConverters.clearAll();
+    paConverters.clearAll();
   }
   return !somethingFailed;
 }
 
-bool COPC_UA_Layer::checkFanOutTypes(const CDataConnection& paPortConnection, CIEC_ANY::EDataTypeID& paRemoteType) const {
+bool COPC_UA_Layer::checkFanOutTypes(const CDataConnection& paPortConnection, CIEC_ANY **paResult) const {
 
   for(CSinglyLinkedList<SConnectionPoint>::Iterator it = paPortConnection.getDestinationList().begin(); it != paPortConnection.getDestinationList().end();
       ++it) {
     if(paPortConnection.getDestinationList().begin() == it) { //first one
-      if(!getRemoteType(paRemoteType, *it, false)) {
+      if(!getRemoteType(paResult, *it, false)) {
         return false;
       }
     } else {
-      CIEC_ANY::EDataTypeID newRemoteType;
-      if(!getRemoteType(newRemoteType, *it, false)) {
+      CIEC_ANY* newRemoteType;
+      if(!getRemoteType(&newRemoteType, *it, false)) {
         return false;
       } else {
-        if(newRemoteType != paRemoteType) {
+        if(newRemoteType->getDataTypeID() != (*paResult)->getDataTypeID()) {
           DEVLOG_ERROR("[OPC UA LAYER]: FB %s has one RD which is connected to many data inputs and the types are not the same.\n",
             getCommFB()->getInstanceName());
           return false;
@@ -200,29 +200,29 @@ bool COPC_UA_Layer::getPortConnectionInfo(unsigned int paPortIndex, bool paIsSD,
     return false;
   }
 
-  CIEC_ANY::EDataTypeID remoteType = CIEC_ANY::e_Max;
+  CIEC_ANY *remoteType = 0;
   if(paIsSD) {
     const SConnectionPoint& remoteConnectionPoint = portConnection->getSourceId();
-    if(!getRemoteType(remoteType, remoteConnectionPoint, paIsSD)) {
+    if(!getRemoteType(&remoteType, remoteConnectionPoint, paIsSD)) {
       return false;
     }
   } else {
-    if(!checkFanOutTypes(*portConnection, remoteType)) {
+    if(!checkFanOutTypes(*portConnection, &remoteType)) {
       return false;
     }
   }
 
-  if(!COPC_UA_Helper::isTypeIdValid(remoteType)) {
+  if(!COPC_UA_Helper::isTypeValid(remoteType)) {
     DEVLOG_ERROR("[OPC UA LAYER]: Invalid  type %d in FB %s at connection %s\n", remoteType, getCommFB()->getInstanceName(),
       CStringDictionary::getInstance().get(localPortNameId));
     return false;
   }
-  *paResult = &COPC_UA_Helper::mapForteTypeIdToOpcUa[remoteType];
+  *paResult = COPC_UA_Helper::geTypeConvertFromAny(remoteType);
 
   return true;
 }
 
-bool COPC_UA_Layer::getRemoteType(CIEC_ANY::EDataTypeID& paResult, const SConnectionPoint& paRemoteConnectionPoint, bool paIsSD) const {
+bool COPC_UA_Layer::getRemoteType(CIEC_ANY **paResult, const SConnectionPoint& paRemoteConnectionPoint, bool paIsSD) const {
   if(!paRemoteConnectionPoint.mFB) {
     DEVLOG_ERROR(
       "[OPC UA LAYER]: FB %s has a problem. The connected FB in the current data input is a null pointer. Check last debug logging for more information\n",
@@ -230,11 +230,9 @@ bool COPC_UA_Layer::getRemoteType(CIEC_ANY::EDataTypeID& paResult, const SConnec
     return false;
   }
 
-  const CIEC_ANY *remotePort =
+  *paResult =
       paIsSD ? paRemoteConnectionPoint.mFB->getDOFromPortId(paRemoteConnectionPoint.mPortId) :
         paRemoteConnectionPoint.mFB->getDIFromPortId(paRemoteConnectionPoint.mPortId);
-
-  paResult = remotePort->getDataTypeID();
 
   return true;
 }

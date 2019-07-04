@@ -76,6 +76,9 @@ if (FORTE_COM_OPC_UA)
     forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA_MASTER_BRANCH")
     forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA_CUSTOM_HOSTNAME \"${FORTE_COM_OPC_UA_CUSTOM_HOSTNAME}\"")
 
+    add_subdirectory(FBs)    
+    add_subdirectory(types)
+
 endif (FORTE_COM_OPC_UA)
 
 
