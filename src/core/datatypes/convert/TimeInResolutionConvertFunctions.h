@@ -20,6 +20,16 @@
  *********************************************************************************************/
 #ifdef FORTE_USE_64BIT_DATATYPES
 
+/**
+ * @brief template function for converting TIME in seconds to ANY_NUM type
+ *
+ * Template function for converting TIME values in seconds to a ANY_NUM type
+ * A static compile guard is checking if the goal type is a subclass of ANY_NUM
+ * to prevent invalid conversion
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in seconds
+ */
 template<typename T>
 inline const T TIME_IN_S_TO(const CIEC_TIME &paValue) {
   FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_NUM, T>::value), TNotOfAnyNum);
@@ -31,6 +41,16 @@ inline const T TIME_IN_S_TO(const CIEC_TIME &paValue) {
   }
 }
 
+/**
+ * @brief template function for converting TIME in milliseconds to ANY_NUM type
+ *
+ * Template function for converting TIME values in milliseconds to a ANY_NUM type
+ * A static compile guard is checking if the goal type is a subclass of ANY_NUM
+ * to prevent invalid conversion
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in milliseconds
+ */
 template<typename T>
 inline const T TIME_IN_MS_TO(const CIEC_TIME &paValue) {
   FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_NUM, T>::value), TNotOfAnyNum);
@@ -44,6 +64,16 @@ inline const T TIME_IN_MS_TO(const CIEC_TIME &paValue) {
   }
 }
 
+/**
+ * @brief template function for converting TIME in microseconds to ANY_NUM type
+ *
+ * Template function for converting TIME values in microseconds to a ANY_NUM type
+ * A static compile guard is checking if the goal type is a subclass of ANY_NUM
+ * to prevent invalid conversion
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in microseconds
+ */
 template<typename T>
 inline const T TIME_IN_US_TO(const CIEC_TIME &paValue) {
   FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_NUM, T>::value), TNotOfAnyNum);
@@ -57,47 +87,106 @@ inline const T TIME_IN_US_TO(const CIEC_TIME &paValue) {
   }
 }
 
+/**
+ * @brief template function for converting TIME in nanoseconds to ANY_NUM type
+ *
+ * Template function for converting TIME values in nanoseconds to a ANY_NUM type
+ * A static compile guard is checking if the goal type is a subclass of ANY_NUM
+ * to prevent invalid conversion
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in nanoseconds
+ */
 template<typename T>
 inline const T TIME_IN_NS_TO(const CIEC_TIME &paValue) {
+  FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_NUM, T>::value), TNotOfAnyNum);
   return T(static_cast<typename T::TValueType>(paValue.getInNanoSeconds()));
 }
 
 /********************************************************************
  *  TO_LINT functions
  ********************************************************************/
-
+/**
+ * @brief conversion function from TIME to LINT in seconds
+ *
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in seconds
+ */
 inline const CIEC_LINT TIME_IN_S_TO_LINT(const CIEC_TIME &paValue) {
   return TIME_IN_S_TO<CIEC_LINT>(paValue);
 }
 
+/**
+ * @brief conversion function from TIME to LINT in milliseconds
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in milliseconds
+ */
 inline const CIEC_LINT TIME_IN_MS_TO_LINT(const CIEC_TIME &paValue) {
   return TIME_IN_MS_TO<CIEC_LINT>(paValue);
 }
 
+/**
+ * @brief conversion function from TIME to LINT in microseconds
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in microseconds
+ */
 inline const CIEC_LINT TIME_IN_US_TO_LINT(const CIEC_TIME &paValue) {
   return TIME_IN_US_TO<CIEC_LINT>(paValue);
 }
 
+/**
+ * @brief conversion function from TIME to LINT in nanoseconds
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in nanoseconds
+ */
 inline const CIEC_LINT TIME_IN_NS_TO_LINT(const CIEC_TIME &paValue) {
   return TIME_IN_NS_TO<CIEC_LINT>(paValue);
 }
 
 /********************************************************************
- *  TO_UINT functions
+ *  TO_ULINT functions
  ********************************************************************/
 
+/**
+ * @brief conversion function from TIME to ULINT in seconds
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in seconds
+ */
 inline const CIEC_ULINT TIME_IN_S_TO_ULINT(const CIEC_TIME &paValue) {
   return TIME_IN_S_TO<CIEC_ULINT>(paValue);
 }
 
+/**
+ * @brief conversion function from TIME to ULINT in milliseconds
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in milliseconds
+ */
 inline const CIEC_ULINT TIME_IN_MS_TO_ULINT(const CIEC_TIME &paValue) {
   return TIME_IN_MS_TO<CIEC_ULINT>(paValue);
 }
 
+/**
+ * @brief conversion function from TIME to ULINT in microseconds
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in microseconds
+ */
 inline const CIEC_ULINT TIME_IN_US_TO_ULINT(const CIEC_TIME &paValue) {
   return TIME_IN_US_TO<CIEC_ULINT>(paValue);
 }
 
+/**
+ * @brief conversion function from TIME to ULINT in nanoseconds
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in nanoseconds
+ */
 inline const CIEC_ULINT TIME_IN_NS_TO_ULINT(const CIEC_TIME &paValue) {
   return TIME_IN_NS_TO<CIEC_ULINT>(paValue);
 }
@@ -106,16 +195,44 @@ inline const CIEC_ULINT TIME_IN_NS_TO_ULINT(const CIEC_TIME &paValue) {
  *  TO_LREAL functions
  ********************************************************************/
 
+/**
+ * @brief conversion function from TIME to LREAL in seconds
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in seconds
+ */
 inline const CIEC_LREAL TIME_IN_S_TO_LREAL(const CIEC_TIME &paValue) {
   return TIME_IN_S_TO<CIEC_LREAL>(paValue);
 }
 
+/**
+ * @brief conversion function from TIME to LREAL in milliseconds
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in milliseconds
+ */
 inline const CIEC_LREAL TIME_IN_MS_TO_LREAL(const CIEC_TIME &paValue) {
   return TIME_IN_MS_TO<CIEC_LREAL>(paValue);
 }
 
+/**
+ * @brief conversion function from TIME to LREAL in microseconds
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in microseconds
+ */
 inline const CIEC_LREAL TIME_IN_US_TO_LREAL(const CIEC_TIME &paValue) {
   return TIME_IN_US_TO<CIEC_LREAL>(paValue);
+}
+
+/**
+ * @brief conversion function from TIME to LREAL in nanoseconds
+ *
+ * @param paValue TIME value to convert
+ * @return TIME value in nanoseconds
+ */
+inline const CIEC_LREAL TIME_IN_NS_TO_LREAL(const CIEC_TIME &paValue) {
+  return TIME_IN_NS_TO<CIEC_LREAL>(paValue);
 }
 
 #endif /* FORTE_USE_64BIT_DATATYPES */
