@@ -58,9 +58,9 @@ void FB_TON::executeEvent(int pa_nEIID){
     else{
       if(risingEdge == false){
         risingEdge = true;
-        start = TIME();
+        start = NOW_MONOTONIC();
       }else{
-        count = TIME() - start;
+        count = NOW_MONOTONIC() - start;
         if(PT() <= count){
           Q() = true;
           ET() = PT();
