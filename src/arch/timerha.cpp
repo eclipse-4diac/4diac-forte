@@ -17,8 +17,6 @@
 
 DEFINE_HANDLER(CTimerHandler)
 
-CTimerHandler *CTimerHandler::smFORTETimer = 0;
-
 CTimerHandler::CTimerHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution),
     mForteTime(0), mTimedFBList(0){
 }

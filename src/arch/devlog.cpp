@@ -13,10 +13,11 @@
 
 #ifndef NOLOG
 
+# include <forte_config.h>
 # include "timerha.h"
 # include "forte_printer.h"
 # include "../core/utils/criticalregion.h"
-#include <forte_config.h>
+# include "forte_architecture_time.h"
 # include <cstdio>
 # include <cstdlib>
 # include <cstdarg>
@@ -61,14 +62,7 @@ void logMessage(E_MsgLevel paLevel, const char *paMessage, ...) {
 }
 
 void printLogMessage(E_MsgLevel paLevel, const char *paMessage) {
-  fprintf(stderr, "%s", scLogLevel[paLevel]);
-
-  if(0 != CTimerHandler::smFORTETimer) {
-    fprintf(stderr, ": T#%" PRIuFAST64 ": ", CTimerHandler::smFORTETimer->getForteTime());
-  } else {
-    fprintf(stderr, "%s", ": T#notime: ");
-  }
-  fprintf(stderr, "%s", paMessage);
+  fprintf(stderr, "%s: T#%" PRIuFAST64 ": %s", scLogLevel[paLevel], getNanoSecondsMonotonic(), paMessage);
 }
 
 # endif  /* FORTE_EXTERNAL_LOG_HANDLER */
