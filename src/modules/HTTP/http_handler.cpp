@@ -100,7 +100,7 @@ forte::com_infra::EComResponse CHTTP_Handler::recvData(const void* paData, unsig
       CCriticalRegion criticalRegion(mAcceptedMutex);
       HTTPAcceptedSockets* accepted = new HTTPAcceptedSockets();
       accepted->mSocket = newConnection;
-      accepted->mStartTime.setCurrentTime();
+      accepted->mStartTime = NOW();
       mAcceptedSockets.pushBack(accepted);
       getExtEvHandler<CIPComSocketHandler>().addComCallback(newConnection, this);
       resumeSelfsuspend();
@@ -208,7 +208,7 @@ bool CHTTP_Handler::sendClientData(forte::com_infra::CHttpComLayer* paLayer, CIE
       HTTPClientWaiting* toAdd = new HTTPClientWaiting();
       toAdd->mLayer = paLayer;
       toAdd->mSocket = newSocket;
-      toAdd->mStartTime.setCurrentTime();
+      toAdd->mStartTime = NOW();
       startTimeoutThread();
       mClientLayers.pushBack(toAdd);
       getExtEvHandler<CIPComSocketHandler>().addComCallback(newSocket, this);
@@ -304,8 +304,7 @@ void CHTTP_Handler::checkClientLayers() {
     CSinglyLinkedList<HTTPClientWaiting *> clientsToDelete;
     for(CSinglyLinkedList<HTTPClientWaiting *>::Iterator iter = mClientLayers.begin(); iter != mClientLayers.end(); ++iter) {
       // wait until result is ready
-      CIEC_DATE_AND_TIME currentTime;
-      currentTime.setCurrentTime();
+      CIEC_DATE_AND_TIME currentTime(NOW());
       if(currentTime.getMilliSeconds() - (*iter)->mStartTime.getMilliSeconds() > scmSendTimeout * 1000) {
         DEVLOG_ERROR("[HTTP Handler]: Timeout at client %s:%u \n", (*iter)->mLayer->getHost().getValue(), (*iter)->mLayer->getPort());
         removeAndCloseSocket((*iter)->mSocket);
@@ -331,8 +330,7 @@ void CHTTP_Handler::checkAcceptedSockets() {
     CSinglyLinkedList<HTTPAcceptedSockets *> acceptedToDelete;
     for(CSinglyLinkedList<HTTPAcceptedSockets *>::Iterator iter = mAcceptedSockets.begin(); iter != mAcceptedSockets.end(); ++iter) {
       // wait until result is ready
-      CIEC_DATE_AND_TIME currentTime;
-      currentTime.setCurrentTime();
+      CIEC_DATE_AND_TIME currentTime(NOW());
       if(currentTime.getMilliSeconds() - (*iter)->mStartTime.getMilliSeconds() > scmAcceptedTimeout * 1000) {
         DEVLOG_ERROR("[HTTP Handler]: Timeout at accepted socket\n");
         removeAndCloseSocket((*iter)->mSocket);

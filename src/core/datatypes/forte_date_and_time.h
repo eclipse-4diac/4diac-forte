@@ -110,12 +110,6 @@ class CIEC_DATE_AND_TIME : public CIEC_ANY_DATE {
        *           -1 on error
        */
     virtual int toGMTString(char* paValue, unsigned int paBufferSize) const ;
-
-    /*! \brief Set the variable to current time
-    */
-    void setCurrentTime(){
-      setTUINT64(forte_time(0) * 1000ULL);
-    };
 };
 
 #endif /* #ifdef FORTE_USE_64BIT_DATATYPES */
