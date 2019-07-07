@@ -674,4 +674,12 @@ template<typename T> const T TOLOWER(const T& paIn){
   }
   return temp;
 }
+
+/**
+ * @brief returns current monotonic clock value as time span in nanoseconds
+ *
+ * @return CIEC_TIME time span since monotonic clock start
+ */
+const CIEC_TIME NOW_MONOTONIC();
+
 #endif /* IEC61131_FUNCTIONS_H_ */
