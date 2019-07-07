@@ -85,4 +85,10 @@ CIEC_ANY_INT FIND(const CIEC_ANY_STRING& pa_rsIn1, const CIEC_ANY_STRING& pa_rsI
   return temp;
 }
 
+const CIEC_TIME NOW_MONOTONIC() {
+  CIEC_TIME now;
+  now.setFromNanoSeconds(getNanoSecondsMonotonic());
+  return now;
+}
+
 #endif
