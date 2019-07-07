@@ -36,8 +36,8 @@ struct tm* forte_gmtime(const time_t* pa_time){
 }
 
 inline
-time_t forte_time(time_t* pa_time){
-  return wceex_time(pa_time);
+time_t forte_time(){
+  return wceex_time(0);
 }
 
 inline uint_fast64_t getNanoSecondsMonotonic() {
@@ -68,8 +68,8 @@ struct tm* forte_gmtime(const time_t* pa_time){
 }
 
 inline
-time_t forte_time(time_t* pa_time){
-  return time(pa_time);
+time_t forte_time(){
+  return time(0);
 }
 
 inline uint_fast64_t getNanoSecondsMonotonic() {
