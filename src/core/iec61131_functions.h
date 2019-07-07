@@ -682,4 +682,11 @@ template<typename T> const T TOLOWER(const T& paIn){
  */
 const CIEC_TIME NOW_MONOTONIC();
 
+/**
+ * @brief returns current local date and time - may be subject to time jumps
+ *
+ * @return CIEC_DATE_AND_TIME of the current local time
+ */
+const CIEC_DATE_AND_TIME NOW();
+
 #endif /* IEC61131_FUNCTIONS_H_ */
