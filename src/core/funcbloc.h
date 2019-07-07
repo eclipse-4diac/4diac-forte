@@ -426,13 +426,6 @@ class CFunctionBlock{
 
     void freeAllData();
 
-    /*!\brief Get the time elapsed since forte was started
-     *
-     * This function allows algorithms to easily access the current forte time in IEC 61131-3 units.
-     * @return the time elapsed since forte was started
-     */
-    const CIEC_TIME TIME();
-
     const SFBInterfaceSpec* m_pstInterfaceSpec; //!< Pointer to the interface specification
     CEventConnection *mEOConns; //!< A list of event connections pointers storing for each event output the event connection. If the output event is not connected the pointer is 0.
     TDataConnectionPtr *m_apoDIConns; //!< A list of data connections pointers storing for each data input the data connection. If the data input is not connected the pointer is 0.

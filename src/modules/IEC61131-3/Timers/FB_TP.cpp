@@ -55,7 +55,7 @@ void FB_TP::executeEvent(int pa_nEIID){
           edgeFlag = false;
           DEVLOG_DEBUG("top\n");
         }else{
-          ET() = TIME() - start;
+          ET() = NOW_MONOTONIC() - start;
           DEVLOG_DEBUG("rising\n");
         }
       }
@@ -63,7 +63,7 @@ void FB_TP::executeEvent(int pa_nEIID){
         if(IN() == true && ET() == 0){
           Q() = true;
           edgeFlag = true;
-          start = TIME();
+          start = NOW_MONOTONIC();
           DEVLOG_DEBUG("start\n");
         }
         else

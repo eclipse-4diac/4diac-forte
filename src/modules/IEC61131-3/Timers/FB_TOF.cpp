@@ -60,10 +60,10 @@ void FB_TOF::executeEvent(int pa_nEIID){
       if(true == notFirstRisingEdge){
         if(fallingEdge == false){
           fallingEdge = true;
-          start = TIME();
+          start = NOW_MONOTONIC();
         }
         else{
-          count = TIME() - start;
+          count = NOW_MONOTONIC() - start;
           if(PT() <= count){
             Q() = false;
             ET() = PT();
