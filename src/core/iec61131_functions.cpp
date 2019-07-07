@@ -92,7 +92,7 @@ const CIEC_TIME NOW_MONOTONIC() {
 }
 
 const CIEC_DATE_AND_TIME NOW() {
-  return CIEC_DATE_AND_TIME(forte_time(0) * 1000ULL);
+  return CIEC_DATE_AND_TIME(forte_time() * 1000ULL);
 }
 
 #endif
