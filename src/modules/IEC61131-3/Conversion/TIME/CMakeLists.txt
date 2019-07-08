@@ -15,6 +15,13 @@
 #############################################################################
 forte_add_sourcefile_hcpp(F_TIME_TO_STRING)
 
+if(FORTE_USE_64BIT_DATATYPES)
+  forte_add_sourcefile_hcpp(F_TIME_IN_S_TO_LINT)
+  forte_add_sourcefile_hcpp(F_TIME_IN_MS_TO_LINT)
+  forte_add_sourcefile_hcpp(F_TIME_IN_US_TO_LINT)
+  forte_add_sourcefile_hcpp(F_TIME_IN_NS_TO_LINT)
+endif()
+
 if(FORTE_USE_WSTRING_DATATYPE)
   forte_add_sourcefile_hcpp(F_TIME_TO_WSTRING)
 endif(FORTE_USE_WSTRING_DATATYPE)
