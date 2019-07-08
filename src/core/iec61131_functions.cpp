@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2013, 2018 ACIN, fortiss GmbH
+ * Copyright (c) 2011 - 2013, 2018 ACIN, fortiss GmbH, 2019 TU Wien/ACIN
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,8 +8,11 @@
  * Contributors:
  *    Alois Zoitl, Monika Wenger
  *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians - adds NOW and NOW_MONOTONIC functions
  *******************************************************************************/
 #include "iec61131_functions.h"
+
+#include "forte_architecture_time.h"
 
 template<> const CIEC_BOOL NOT<CIEC_BOOL>(const CIEC_BOOL& pa_roIN){
   return CIEC_BOOL(!pa_roIN);

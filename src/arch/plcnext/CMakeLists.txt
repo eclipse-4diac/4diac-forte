@@ -23,7 +23,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "PLCnext")
   forte_add_sourcefile_cpp(../genforte_printer.cpp)
   forte_add_sourcefile_h(../forte_architecture_time.h)
   forte_add_sourcefile_hcpp(../utils/timespec_utils)
-  forte_add_sourcefile_cpp(../genforte_realFunctions.cpp)
+  forte_add_sourcefile_cpp(../genforte_realFunctions.cpp ../posix/forte_architecture_time.cpp)
   
   
   forte_add_sourcefile_hcpp(ForteComponent ForteComponentProgramProvider ForteIOHandler ForteLibrary)

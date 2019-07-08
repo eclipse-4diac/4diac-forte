@@ -27,7 +27,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Nios2")
   forte_add_sourcefile_hcpp(../forte_thread ../ecostiha ../forte_sync ../forte_sem ../forte_instance)
   forte_add_sourcefile_cpp(../ecoscppinit.cpp ../../genforte_printer.cpp ../forte_architecture.cpp)
   forte_add_sourcefile_h(../../forte_architecture_time.h)
-  forte_add_sourcefile_cpp(../../genforte_realFunctions.cpp)
+  forte_add_sourcefile_cpp(../../genforte_realFunctions.cpp ../../posix/forte_architecture_time.cpp)
 
   if(FORTE_COM_ETH)
    forte_add_handler(CFDSelectHandler ../sockhand)

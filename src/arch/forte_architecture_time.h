@@ -40,16 +40,6 @@ time_t forte_time(){
   return wceex_time(0);
 }
 
-inline uint_fast64_t getNanoSecondsMonotonic() {
-  LARGE_INTEGER performance_counter;
-  LARGE_INTEGER performance_frequency;
-
-  QueryPerformanceCounter(&performance_counter);
-  QueryPerformanceFrequency(&performance_frequency);
-
-  return static_cast<uint_fast64_t>(performance_counter.QuadPart * forte::core::constants::cNanosecondsPerSecond
-                         / performance_frequency.QuadPart);
-}
 #else
 
 inline
@@ -72,12 +62,8 @@ time_t forte_time(){
   return time(0);
 }
 
-inline uint_fast64_t getNanoSecondsMonotonic() {
-  struct timespec now;
-  clock_gettime(CLOCK_MONOTONIC, &now);
-  return now.tv_nsec + now.tv_sec * forte::core::constants::cNanosecondsPerSecond;
-}
-
 #endif
+
+uint_fast64_t getNanoSecondsMonotonic();
 
 #endif /* SRC_ARCH_FORTE_ARCHITECTURE_TIME_H_ */
