@@ -15,17 +15,12 @@
 
 
 CUA_ClientInformation::CUA_ClientInformation(CIEC_STRING& paEndpoint) :
-    mClient(0), mSubscriptionInfo(0), mMissingAsyncCalls(0), mEndpointUrl(paEndpoint), mNeedsReconnection(false), mLastTry(0), mNeedsAlreadyAsync(false),
-        mSomeActionWasInitialized(false) {
+    mClient(0), mSubscriptionInfo(0), mMissingAsyncCalls(0), mEndpointUrl(paEndpoint), mWaitToInitializeActions(false), mNeedsReconnection(false),
+        mLastReconnectionTry(0), mLastActionInitializationTry(0), mSomeActionWasInitialized(false) {
 }
 
 CUA_ClientInformation::~CUA_ClientInformation() {
-  for(CSinglyLinkedList<CActionInfo *>::Iterator itActionInfo = mActionsReferencingIt.begin(); itActionInfo != mActionsReferencingIt.end(); ++itActionInfo) {
-    uninitializeAction(**itActionInfo); //will uninitialize everything and delete the subscriptions
-  }
-  UA_Client_disconnect(mClient);
-  UA_Client_delete(mClient);
-  delete mSubscriptionInfo;
+  uninitializeClient();
 }
 
 bool CUA_ClientInformation::initialize() {
@@ -63,22 +58,30 @@ bool CUA_ClientInformation::executeAsyncCalls() {
 bool CUA_ClientInformation::handleClientState() {
 
   mSomeActionWasInitialized = false;
-  mNeedsAlreadyAsync = false;
   bool noMoreChangesNeeded = false;
   bool tryAnotherChangeImmediately = true;
 
   if(mNeedsReconnection) {
     uint_fast64_t now = CTimerHandler::smFORTETimer->getForteTime();
-    if((now - mLastTry) < scmConnectionRetryTimeoutMilli) { //if connection timeout didn't happen, return that more changes are still needed
+    if((now - mLastReconnectionTry) < scmConnectionRetryTimeoutMilli) { //if connection timeout didn't happen, return that more changes are still needed
+      tryAnotherChangeImmediately = false;
+    }
+  } else if(mWaitToInitializeActions) {
+    uint_fast64_t now = CTimerHandler::smFORTETimer->getForteTime();
+    if((now - mLastActionInitializationTry) < scmInitializeActionRetry) { //if an action failed, wait scmInitializeActionRetry until next retry to initialize them
       tryAnotherChangeImmediately = false;
     }
   }
+  
 
   while(tryAnotherChangeImmediately) {
     UA_ClientState currentState = UA_Client_getState(mClient);
     if(UA_CLIENTSTATE_SESSION == currentState) {
       if(initializeClient()) {
         noMoreChangesNeeded = true;
+      } else {
+        mWaitToInitializeActions = true;
+        mLastActionInitializationTry = CTimerHandler::smFORTETimer->getForteTime();
       }
       tryAnotherChangeImmediately = false;
     } else if(UA_CLIENTSTATE_SESSION_RENEWED == currentState) {
@@ -89,7 +92,7 @@ bool CUA_ClientInformation::handleClientState() {
         DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't connect to endpoint %s. Forte will try to reconnect in %d seconds\n", mEndpointUrl.getValue(),
           scmConnectionRetryTimeoutMilli / 1000);
         mNeedsReconnection = true;
-        mLastTry = CTimerHandler::smFORTETimer->getForteTime();
+        mLastReconnectionTry = CTimerHandler::smFORTETimer->getForteTime();
       } else { //if connection succeeded, don't break the while and try to handle subscriptions immediately
         mNeedsReconnection = false;
         DEVLOG_INFO("[OPC UA CLIENT]: Client connected to endpoint %s\n", mEndpointUrl.getValue());
@@ -109,8 +112,8 @@ bool CUA_ClientInformation::initializeClient() {
   bool somethingFailed = false;
 
   CSinglyLinkedList<CActionInfo *> initializedActions;
-  for(CSinglyLinkedList<CActionInfo *>::Iterator itActionInfo = mActionsToBeInitialized.begin();
-      itActionInfo != mActionsToBeInitialized.end(); ++itActionInfo) {
+  for(CSinglyLinkedList<CActionInfo *>::Iterator itActionInfo = mActionsToBeInitialized.begin(); itActionInfo != mActionsToBeInitialized.end();
+      ++itActionInfo) {
 
     if(!initializeAction(**itActionInfo)) {
       initializedActions.pushBack(*itActionInfo);
@@ -130,9 +133,29 @@ bool CUA_ClientInformation::initializeClient() {
   return !somethingFailed;
 }
 
+void CUA_ClientInformation::uninitializeClient() {
+  DEVLOG_INFO("[OPC UA CLIENT]: Uninitializing client %s\n", mEndpointUrl.getValue());
+  mActionsToBeInitialized.clearAll();
+  for(CSinglyLinkedList<CActionInfo *>::Iterator itReferencingActions = mActionsReferencingIt.begin(); itReferencingActions != mActionsReferencingIt.end();
+      ++itReferencingActions) {
+    uninitializeAction(**itReferencingActions);
+    mActionsToBeInitialized.pushBack(*itReferencingActions);
+  }
+  UA_Client_disconnect(mClient);
+  UA_Client_delete(mClient);
+  mClient = 0;
+  mWaitToInitializeActions = false;
+  mNeedsReconnection = false;
+  mSomeActionWasInitialized = false;
+  mLastReconnectionTry = 0;
+  mLastActionInitializationTry = 0;
+  mMissingAsyncCalls = 0;
+}
+
 void CUA_ClientInformation::addAction(CActionInfo& paActionInfo) {
   mActionsReferencingIt.pushBack(&paActionInfo);
   mActionsToBeInitialized.pushBack(&paActionInfo);
+  mWaitToInitializeActions = false;
 }
 
 void CUA_ClientInformation::removeAction(CActionInfo& paActionInfo) {
@@ -209,15 +232,9 @@ void CUA_ClientInformation::uninitializeSubscription(CActionInfo& paActionInfo) 
 
       mSubscriptionInfo->mMonitoredItems.erase(*itMonitoringItemInfo);
     }
-    if(mSubscriptionInfo->mMonitoredItems.isEmpty()) {
-      UA_StatusCode retval = UA_Client_Subscriptions_deleteSingle(mClient, mSubscriptionInfo->mSubscriptionId);
 
-      if(UA_STATUSCODE_GOOD != retval) {
-        DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete subscription %u. Failed with error %s. No further actions will be taken\n",
-          mSubscriptionInfo->mSubscriptionId, UA_StatusCode_name(retval));
-      }
-      delete mSubscriptionInfo;
-      mSubscriptionInfo = 0;
+    if(mSubscriptionInfo->mMonitoredItems.isEmpty()) {
+      resetSubscription(true);
     }
   }
 }
@@ -258,63 +275,65 @@ bool CUA_ClientInformation::initializeCallMethod(CActionInfo& paActionInfo) {
   return !somethingFailed;
 }
 
+bool CUA_ClientInformation::allocAndCreateSubscription() {
+  bool somethingFailed = false;
+  if(!mSubscriptionInfo) {
+    mSubscriptionInfo = new UA_subscriptionInfo();
+    if(!createSubscription()) {
+      delete mSubscriptionInfo;
+      mSubscriptionInfo = 0;
+      somethingFailed = true;
+    }
+  }
+  return !somethingFailed;
+}
+
 bool CUA_ClientInformation::initializeSubscription(CActionInfo& paActionInfo) {
   bool somethingFailed = false;
-  if(CActionInfo::eSubscribe == paActionInfo.getAction()) {
+  if(CActionInfo::eSubscribe == paActionInfo.getAction() && allocAndCreateSubscription()) {
 
-    if(!mSubscriptionInfo) {
-      mSubscriptionInfo = new UA_subscriptionInfo();
+    size_t itemsAddedToList = 0;
+
+    CSinglyLinkedList<UA_MonitoringItemInfo>::Iterator itFirstNewMonitoringItemInfo = mSubscriptionInfo->mMonitoredItems.end();
+
+    for(CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>::Iterator itType = paActionInfo.getTypeConverters().begin();
+        itType != paActionInfo.getTypeConverters().end(); ++itType) {
+      UA_MonitoringItemInfo monitoringItemInfo(UA_SubscribeContext_Handle(paActionInfo, *itType, itemsAddedToList));
+      mSubscriptionInfo->mMonitoredItems.pushBack(monitoringItemInfo);
+      if(itFirstNewMonitoringItemInfo == mSubscriptionInfo->mMonitoredItems.end()) { //store the first added item
+        itFirstNewMonitoringItemInfo = mSubscriptionInfo->mMonitoredItems.back();
+      }
+      itemsAddedToList++;
     }
 
-    if(!mSubscriptionInfo->mSubscriptionAlreadyCreated && !createSubscription()) {
-      somethingFailed = true;
+    CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itNodePairInfo = paActionInfo.getNodePairInfo().begin();
+    size_t itemsAddedToLibrary = 0;
+
+    CSinglyLinkedList<UA_MonitoringItemInfo>::Iterator itAddedMonitoringItemInfo = itFirstNewMonitoringItemInfo;
+
+    for(itemsAddedToLibrary = 0; itemsAddedToLibrary < itemsAddedToList; ++itAddedMonitoringItemInfo, ++itNodePairInfo) {
+      if(!addMonitoringItem(*itAddedMonitoringItemInfo, *(*itNodePairInfo)->mNodeId)) {
+        somethingFailed = true;
+        break;
+      }
+      itemsAddedToLibrary++;
     }
 
     if(!somethingFailed) {
-      size_t itemsAddedToList = 0;
+      addAsyncCall();
+    } else { //if something failed, remove added monitoring items and fail the whole action
 
-      CSinglyLinkedList<UA_MonitoringItemInfo>::Iterator itFirstNewMonitoringItemInfo = mSubscriptionInfo->mMonitoredItems.end();
-
-      for(CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>::Iterator itType = paActionInfo.getTypeConverters().begin();
-          itType != paActionInfo.getTypeConverters().end(); ++itType) {
-        UA_MonitoringItemInfo monitoringItemInfo(UA_SubscribeContext_Handle(paActionInfo, *itType, itemsAddedToList));
-        mSubscriptionInfo->mMonitoredItems.pushBack(monitoringItemInfo);
-        if(itFirstNewMonitoringItemInfo == mSubscriptionInfo->mMonitoredItems.end()) { //store the first added item
-          itFirstNewMonitoringItemInfo = mSubscriptionInfo->mMonitoredItems.back();
-        }
-        itemsAddedToList++;
-      }
-
-      CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itNodePairInfo = paActionInfo.getNodePairInfo().begin();
-      size_t itemsAddedToLibrary = 0;
-
-      CSinglyLinkedList<UA_MonitoringItemInfo>::Iterator itAddedMonitoringItemInfo = itFirstNewMonitoringItemInfo;
-
-      for(itemsAddedToLibrary = 0; itemsAddedToLibrary < itemsAddedToList; ++itAddedMonitoringItemInfo, ++itNodePairInfo) {
-        if(!addMonitoringItem(*itAddedMonitoringItemInfo, *(*itNodePairInfo)->mNodeId)) {
-          somethingFailed = true;
-          break;
-        }
-        itemsAddedToLibrary++;
-      }
-
-      if(!somethingFailed) {
-        mNeedsAlreadyAsync = true;
-        addAsyncCall();
-      } else { //if something failed, remove added monitoring items and fail the whole action
-
-        for(size_t i = 0; i < itemsAddedToList; i++) {
-          if(i < itemsAddedToLibrary) { //remove items from the library
-            UA_StatusCode retVal = UA_Client_MonitoredItems_deleteSingle(mClient, mSubscriptionInfo->mSubscriptionId,
-              (*itFirstNewMonitoringItemInfo).mMonitoringItemId);
-            if(UA_STATUSCODE_GOOD != retVal) {
-              DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete recently added monitored item %u\n", (*itFirstNewMonitoringItemInfo).mMonitoringItemId);
-            }
+      for(size_t i = 0; i < itemsAddedToList; i++) {
+        if(i < itemsAddedToLibrary) { //remove items from the library
+          UA_StatusCode retVal = UA_Client_MonitoredItems_deleteSingle(mClient, mSubscriptionInfo->mSubscriptionId,
+            (*itFirstNewMonitoringItemInfo).mMonitoringItemId);
+          if(UA_STATUSCODE_GOOD != retVal) {
+            DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete recently added monitored item %u\n", (*itFirstNewMonitoringItemInfo).mMonitoringItemId);
           }
-          itAddedMonitoringItemInfo = itFirstNewMonitoringItemInfo;
-          ++itFirstNewMonitoringItemInfo;
-          mSubscriptionInfo->mMonitoredItems.erase(*itAddedMonitoringItemInfo);
         }
+        itAddedMonitoringItemInfo = itFirstNewMonitoringItemInfo;
+        ++itFirstNewMonitoringItemInfo;
+        mSubscriptionInfo->mMonitoredItems.erase(*itAddedMonitoringItemInfo);
       }
     }
   }
@@ -327,12 +346,12 @@ bool CUA_ClientInformation::createSubscription() {
   if(UA_STATUSCODE_GOOD == response.responseHeader.serviceResult) {
     DEVLOG_INFO("[OPC UA CLIENT]: Create subscription to %s succeeded, id %u\n", mEndpointUrl.getValue(), response.subscriptionId);
     mSubscriptionInfo->mSubscriptionId = response.subscriptionId;
-    mSubscriptionInfo->mSubscriptionAlreadyCreated = true;
+    return true;
   } else {
     DEVLOG_ERROR("[OPC UA CLIENT]: Create subscription to %s failed, %s\n", mEndpointUrl.getValue(), UA_StatusCode_name(response.responseHeader.serviceResult));
   }
 
-  return mSubscriptionInfo->mSubscriptionAlreadyCreated;
+  return false;
 }
 
 bool CUA_ClientInformation::addMonitoringItem(UA_MonitoringItemInfo& paMonitoringInfo, UA_NodeId& paNodeId) {
@@ -375,12 +394,21 @@ void CUA_ClientInformation::removeAsyncCall() {
   mMissingAsyncCalls--;
 }
 
-void CUA_ClientInformation::resetSubscription() {
-  removeAsyncCall();
+void CUA_ClientInformation::resetSubscription(bool paDeleteSubscription) {
   if(mSubscriptionInfo) {
-    mSubscriptionInfo->mSubscriptionAlreadyCreated = false;
+    removeAsyncCall();
+    if(paDeleteSubscription) {
+      UA_StatusCode retval = UA_Client_Subscriptions_deleteSingle(mClient, mSubscriptionInfo->mSubscriptionId);
+
+      if(UA_STATUSCODE_GOOD != retval) {
+        DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete subscription %u. Failed with error %s. No further actions will be taken\n",
+          mSubscriptionInfo->mSubscriptionId, UA_StatusCode_name(retval));
+      }
+    }
+
+    delete mSubscriptionInfo;
+    mSubscriptionInfo = 0;
   }
-  //TODO: add to connection thread and check when exactly this could be called
 }
 
 UA_StatusCode CUA_ClientInformation::executeRead(CActionInfo& paActionInfo) {
@@ -753,15 +781,15 @@ void CUA_ClientInformation::CUA_CallbackFunctions::subscriptionValueChangedCallb
   }
 }
 
-void CUA_ClientInformation::CUA_CallbackFunctions::deleteSubscriptionCallback(UA_Client *, UA_UInt32 subscriptionId, void *subscriptionContext) { //NOSONAR
-  DEVLOG_INFO("[OPC UA CLIENT]: Subscription Id %u was deleted in client with endpoint %s\n", subscriptionId,
-    static_cast<CUA_ClientInformation*>(subscriptionContext)->mEndpointUrl.getValue());
-  static_cast<CUA_ClientInformation*>(subscriptionContext)->resetSubscription();
+void CUA_ClientInformation::CUA_CallbackFunctions::deleteSubscriptionCallback(UA_Client *, UA_UInt32 paSubscriptionId, void *paSubscriptionContext) { //NOSONAR
+  DEVLOG_INFO("[OPC UA CLIENT]: Subscription Id %u was deleted in client with endpoint %s\n", paSubscriptionId,
+    static_cast<CUA_ClientInformation*>(paSubscriptionContext)->mEndpointUrl.getValue());
+  static_cast<CUA_ClientInformation*>(paSubscriptionContext)->resetSubscription(false);
 }
 
-void CUA_ClientInformation::CUA_CallbackFunctions::clientStateChangeCallback(UA_Client *, UA_ClientState clientState) {
-//TODO: check in which state should we renovate the susbcription
-  switch(clientState){
+void CUA_ClientInformation::CUA_CallbackFunctions::clientStateChangeCallback(UA_Client *, UA_ClientState paClientState) {
+  //Don't do anything here. If the subscription is deleted, deleteSubscriptionCallback will be called and handled there
+  switch(paClientState){
     case UA_CLIENTSTATE_DISCONNECTED:
       DEVLOG_INFO("[OPC UA CLIENT]: The client is disconnected\n");
       break;
@@ -778,7 +806,7 @@ void CUA_ClientInformation::CUA_CallbackFunctions::clientStateChangeCallback(UA_
       DEVLOG_INFO("[OPC UA CLIENT]: A session with the server is open (renewed)\n");
       break;
     default:
-      DEVLOG_ERROR("[OPC UA CLIENT]: Unknown state of client %d\n", clientState);
+      DEVLOG_ERROR("[OPC UA CLIENT]: Unknown state of client %d\n", paClientState);
   }
   return;
 }

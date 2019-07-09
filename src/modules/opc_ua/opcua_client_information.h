@@ -25,6 +25,8 @@ class CUA_ClientInformation {
 
     bool initialize();
 
+    void uninitializeClient();
+
     bool handleClientState();
 
     bool executeAsyncCalls();
@@ -33,11 +35,7 @@ class CUA_ClientInformation {
       return (0 != mMissingAsyncCalls);
     }
 
-    void resetMissingAsyncCalls() {
-      mMissingAsyncCalls = 0;
-    }
-
-    CIEC_STRING getEndpoint() {
+    CIEC_STRING& getEndpoint() {
       return mEndpointUrl;
     }
 
@@ -46,11 +44,7 @@ class CUA_ClientInformation {
     }
 
     bool hasActions() {
-      return mActionsReferencingIt.isEmpty();
-    }
-
-    bool needsAlreadyAsync() {
-      return mNeedsAlreadyAsync;
+      return !mActionsReferencingIt.isEmpty();
     }
 
     bool someActionWasInitialized() {
@@ -69,10 +63,15 @@ class CUA_ClientInformation {
 
     bool isActionInitialized(CActionInfo& paActionInfo);
 
-    void resetSubscription();
+    void resetSubscription(bool paDeleteSubscription);
 
     class CUA_CallbackFunctions {
       public:
+#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
+        //not used
+#else
+        static void anyAsyncCallback(UA_Client *paClient, void *paUserdata, UA_UInt32 paRequestId, void *paResponse, const UA_DataType *paResponseType);
+#endif
         static void readAsyncCallback(UA_Client *paClient, void *paUserdata, UA_UInt32 paRequestId, UA_ReadResponse *paResponse);
 
         static void writeAsyncCallback(UA_Client *paClient, void *paUserdata, UA_UInt32 paRequestId, UA_WriteResponse *paResponse);
@@ -84,17 +83,13 @@ class CUA_ClientInformation {
             UA_CallResponse *paResponse);
 #endif
 
-        static void clientStateChangeCallback(UA_Client *client, UA_ClientState clientState);
+        static void subscriptionValueChangedCallback(UA_Client *paClient, UA_UInt32 paSubId, void *paSubContext, UA_UInt32 paMonId, void *paMonContext,
+            UA_DataValue *paValue);
 
         static void
-        deleteSubscriptionCallback(UA_Client *client, UA_UInt32 subscriptionId, void *subscriptionContext);
+        deleteSubscriptionCallback(UA_Client *paClient, UA_UInt32 paSubscriptionId, void *paSubscriptionContext);
 
-        static void subscriptionValueChangedCallback(UA_Client *client, UA_UInt32 subId, void *subContext, UA_UInt32 monId, void *monContext, UA_DataValue *value);
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-        //not used
-#else
-        static void anyAsyncCallback(UA_Client *paClient, void *paUserdata, UA_UInt32 paRequestId, void *paResponse, const UA_DataType *paResponseType);
-#endif
+        static void clientStateChangeCallback(UA_Client *paClient, UA_ClientState paClientState);
     };
 
   private:
@@ -134,10 +129,9 @@ class CUA_ClientInformation {
 
     struct UA_subscriptionInfo {
         UA_subscriptionInfo() :
-            mSubscriptionAlreadyCreated(false), mSubscriptionId(0) {
+            mSubscriptionId(0) {
         }
 
-        bool mSubscriptionAlreadyCreated;
         UA_UInt32 mSubscriptionId;
         CSinglyLinkedList<UA_MonitoringItemInfo> mMonitoredItems;
     };
@@ -164,7 +158,7 @@ class CUA_ClientInformation {
 
     bool connectClient();
 
-    bool createSubscription();
+
 
     bool initializeClient();
 
@@ -175,6 +169,10 @@ class CUA_ClientInformation {
     bool initializeAction(CActionInfo& paActionInfo);
 
     bool initializeSubscription(CActionInfo& paActionInfo);
+
+    bool allocAndCreateSubscription();
+
+    bool createSubscription();
 
     bool initializeCallMethod(CActionInfo& paActionInfo);
 
@@ -188,19 +186,23 @@ class CUA_ClientInformation {
     CSyncObject mClientMutex;
     UA_subscriptionInfo* mSubscriptionInfo;
     size_t mMissingAsyncCalls;
-    CIEC_STRING& mEndpointUrl;
+    CIEC_STRING mEndpointUrl;
     CSinglyLinkedList<CActionInfo *> mActionsReferencingIt;
     CSinglyLinkedList<CActionInfo *> mActionsToBeInitialized;
 
+    bool mWaitToInitializeActions;
     bool mNeedsReconnection;
-    uint_fast64_t mLastTry;
+    uint_fast64_t mLastReconnectionTry;
 
-    bool mNeedsAlreadyAsync;
+    uint_fast64_t mLastActionInitializationTry;
+
     bool mSomeActionWasInitialized;
 
     static const uint_fast64_t scmConnectionRetryTimeoutMilli = 8000; //8s
 
-    static const UA_UInt32 scmClientTimeoutInMilliseconds = 3000; //3s
+    static const UA_UInt32 scmInitializeActionRetry = 3000; //3s
+
+    static const UA_UInt32 scmClientTimeoutInMilliseconds = 5000; //5s
 
 };
 

@@ -21,7 +21,7 @@ class COPC_UA_HandlerAbstract : public CExternalEventHandler {
 
     explicit COPC_UA_HandlerAbstract(CDeviceExecution& paDeviceExecution);
 
-    ~COPC_UA_HandlerAbstract();
+    virtual ~COPC_UA_HandlerAbstract();
 
     void triggerNewEvent(CEventSourceFB &paLayer);
 

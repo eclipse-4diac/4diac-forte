@@ -20,12 +20,95 @@ using namespace forte::com_infra;
 
 DEFINE_HANDLER(COPC_UA_Client_Handler);
 
+COPC_UA_Client_IterationList::COPC_UA_Client_IterationList() :
+    mNewClientsPresent(false) {
+}
+
+COPC_UA_Client_IterationList::~COPC_UA_Client_IterationList() {
+}
+
+void COPC_UA_Client_IterationList::startIterationThread() {
+  if(!isAlive()) {
+    start();
+    mClientsThreadStarted.waitIndefinitely();
+  }
+}
+
+void COPC_UA_Client_IterationList::stopIterationThread() {
+  setAlive(false);
+  resumeIterationLoop();
+  end();
+}
+
+void COPC_UA_Client_IterationList::resumeIterationLoop() {
+  mNeedsIteration.inc();
+}
+
+void COPC_UA_Client_IterationList::addClient(CUA_ClientInformation& paClientInformation) {
+  CCriticalRegion iterationListRegion(mNewClientsMutex);
+  addClientToList(paClientInformation, mNewClients);
+  mNeedsIteration.inc();
+  mNewClientsPresent = true;
+}
+
+void COPC_UA_Client_IterationList::removeClient(CUA_ClientInformation& paClientInformation) {
+  CCriticalRegion iterationListRegion(mIterationClientsMutex);
+  CCriticalRegion newClientsRegion(mNewClientsMutex);
+  mNewClients.erase(&paClientInformation); //client could still be in the newList
+  mIterationClients.erase(&paClientInformation);
+}
+
+void COPC_UA_Client_IterationList::run() {
+  mClientsThreadStarted.inc();
+  while(isAlive()) {
+
+    if(mNewClientsPresent) {
+      updateClientList();
+    }
+    bool needsRetry = handleClients();
+    if(isAlive()) {
+      if(needsRetry) {
+        mNeedsIteration.timedWait(scmNanosecondsToSleep);
+      } else {
+        mNeedsIteration.waitIndefinitely();
+      }
+    }
+  }
+}
+
+void COPC_UA_Client_IterationList::addClientToList(CUA_ClientInformation& paClientInformation, CSinglyLinkedList<CUA_ClientInformation*>& paList) {
+  bool elementAlreadyPresent = false;
+  for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = paList.begin(); itClientInformation != paList.end(); ++itClientInformation) {
+    if(&paClientInformation == (*itClientInformation)) {
+      elementAlreadyPresent = true;
+      break;
+    }
+  }
+
+  if(!elementAlreadyPresent) {
+    paList.pushBack(&paClientInformation);
+  }
+}
+
+void COPC_UA_Client_IterationList::updateClientList() {
+  CCriticalRegion iterationListRegion(mIterationClientsMutex);
+  CCriticalRegion newClientsRegion(mNewClientsMutex);
+  for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = mNewClients.begin(); itClientInformation != mNewClients.end();
+      ++itClientInformation) {
+    addClientToList(**itClientInformation, mIterationClients);
+  }
+  mNewClients.clearAll();
+  mNewClientsPresent = false;
+}
+
+// ***************** CLIENT HANDLER ************* //
+
 COPC_UA_Client_Handler::COPC_UA_Client_Handler(CDeviceExecution& paDeviceExecution) :
-    COPC_UA_HandlerAbstract(paDeviceExecution), mConnectionHandler(*this), mNewClientsPresent(false) {
+    COPC_UA_HandlerAbstract(paDeviceExecution), mConnectionHandler(*this) {
 }
 
 COPC_UA_Client_Handler::~COPC_UA_Client_Handler() {
-  stopLoops();
+  disableHandler();
   cleanResources();
 }
 
@@ -34,97 +117,31 @@ void COPC_UA_Client_Handler::cleanResources() {
   for(CSinglyLinkedList<CUA_ClientInformation*>::Iterator itClientInformation = mAllClients.begin(); itClientInformation != mAllClients.end();
       ++itClientInformation) {
     mConnectionHandler.removeClient(**itClientInformation);
-    removeClientFromInitializedList(**itClientInformation);
+    removeClient(**itClientInformation);
     delete *itClientInformation;
   }
   mAllClients.clearAll();
 }
 
 void COPC_UA_Client_Handler::enableHandler(void) {
-  startLoops();
+  startIterationThread();
+  mConnectionHandler.startIterationThread();
 }
 
 void COPC_UA_Client_Handler::disableHandler(void) {
-  stopLoops();
-}
-
-void COPC_UA_Client_Handler::resumeAsyncLoop() {
-  mAsyncIsNeeded.inc();
-}
-
-void COPC_UA_Client_Handler::startLoops() {
-  if(!isAlive()) {
-    start();
-    mClientsThreadStarted.waitIndefinitely();
-  }
-  mConnectionHandler.startConnectionsThread();
-}
-
-void COPC_UA_Client_Handler::stopLoops() {
-  mConnectionHandler.stopConnectionsThread();
-  setAlive(false);
-  resumeAsyncLoop();
-  end();
-}
-
-void COPC_UA_Client_Handler::addClientToInitializedList(CUA_ClientInformation& paClientInformation) {
-  CCriticalRegion connectionListRegion(mNewClientstMutex);
-  addClientToList(paClientInformation, mNewClients);
-  if(paClientInformation.isAsyncNeeded()) { //for subscription the missing calls will be set already, for others not
-    resumeAsyncLoop();
-  }
-  mNewClientsPresent = true;
-}
-
-void COPC_UA_Client_Handler::removeClientFromInitializedList(CUA_ClientInformation& paClientInformation) {
-  CCriticalRegion iniitalizedClientsRegion(mInitializedClientstMutex);
-  CCriticalRegion newClientsRegion(mNewClientstMutex);
-  mNewClients.erase(&paClientInformation); //client could still be in the newList
-  mInitializedClients.erase(&paClientInformation);
-}
-
-void COPC_UA_Client_Handler::updateClientList() {
-  CCriticalRegion iniitalizedClientsRegion(mInitializedClientstMutex);
-  CCriticalRegion newClientsRegion(mNewClientstMutex);
-  for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = mNewClients.begin(); itClientInformation != mNewClients.end();
-      ++itClientInformation) {
-    addClientToList(**itClientInformation, mInitializedClients);
-  }
-  mNewClients.clearAll();
-  mNewClientsPresent = false;
+  mConnectionHandler.stopIterationThread();
+  stopIterationThread();
 }
 
 void COPC_UA_Client_Handler::addClientToConnectionList(CUA_ClientInformation& paClientInformation) {
   mConnectionHandler.addClient(paClientInformation);
 }
 
-void COPC_UA_Client_Handler::run() {
-  DEVLOG_INFO("[OPC UA REMOTE]: Starting OPC UA Client handler\n");
-
-  mClientsThreadStarted.inc();
-  while(isAlive()) {
-
-    if(mNewClientsPresent) {
-      updateClientList();
-    }
-
-    bool needsAsync = handleClients();
-    if(isAlive()) {
-      if(needsAsync) {
-        mAsyncIsNeeded.timedWait(scmNanosecondsToSleep);
-      } else {
-        mAsyncIsNeeded.waitIndefinitely();
-      }
-    }
-  }
-  DEVLOG_INFO("[OPC UA REMOTE]: Stopping OPC UA Client handler\n");
-}
-
 bool COPC_UA_Client_Handler::handleClients() {
-  CCriticalRegion iniitalizedClientsRegion(mInitializedClientstMutex); //this is needed because removing a client from the list could cause trouble
+  CCriticalRegion iterationCriticalRegion(mIterationClientsMutex); //this is needed because removing a client from the list could cause trouble
   CSinglyLinkedList<CUA_ClientInformation *> failedClients;
   bool asyncIsNeeded = false;
-  for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = mInitializedClients.begin(); itClientInformation != mInitializedClients.end();
+  for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = mIterationClients.begin(); itClientInformation != mIterationClients.end();
       ++itClientInformation) {
     CCriticalRegion criticalRegionClienMutex((*itClientInformation)->getMutex());
     if((*itClientInformation)->isAsyncNeeded() && (*itClientInformation)->executeAsyncCalls()) {
@@ -141,33 +158,89 @@ bool COPC_UA_Client_Handler::handleClients() {
     for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = failedClients.begin(); itClientInformation != failedClients.end();
         ++itClientInformation) {
       DEVLOG_ERROR("[OPC UA REMOTE]: There was a problem checking remote %s.\n", (*itClientInformation)->getEndpoint().getValue());
-      (*itClientInformation)->resetMissingAsyncCalls();
-      mInitializedClients.erase(*itClientInformation);
+      mIterationClients.erase(*itClientInformation);
+      (*itClientInformation)->uninitializeClient(); //reset all in client and pass it back to the connection handler
       addClientToConnectionList(**itClientInformation);
     }
   }
   return asyncIsNeeded;
 }
 
-void COPC_UA_Client_Handler::addClientToList(CUA_ClientInformation& paClientInformation, CSinglyLinkedList<CUA_ClientInformation *>& paList) {
-  bool elementAlreadyPresent = false;
-  for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = paList.begin(); itClientInformation != paList.end(); ++itClientInformation) {
-    if(&paClientInformation == (*itClientInformation)) {
-      elementAlreadyPresent = true;
+UA_StatusCode COPC_UA_Client_Handler::initializeAction(CActionInfo& paActionInfo) {
+  enableHandler();
+  UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
+  switch(paActionInfo.getAction()){
+    case CActionInfo::eRead:
+    case CActionInfo::eWrite:
+    case CActionInfo::eCallMethod:
+    case CActionInfo::eSubscribe:
+      retVal = initializeActionInClient(paActionInfo);
       break;
+    case CActionInfo::eCreateMethod:
+    case CActionInfo::eCreateObject:
+    case CActionInfo::eDeleteObject:
+      DEVLOG_ERROR("[OPC UA REMOTE]: Cannot perform action %s remotely. Initialization failed\n", CActionInfo::mActionNames[paActionInfo.getAction()]);
+      break;
+    default:
+      DEVLOG_ERROR("[OPC UA REMOTE]: Unknown action %d to be initialized\n", paActionInfo.getAction());
+      break;
+  }
+  return retVal;
+}
+
+UA_StatusCode COPC_UA_Client_Handler::executeAction(CActionInfo& paActionInfo) {
+
+  CUA_ClientInformation* clientInfo = getClient(paActionInfo.getEndpoint());
+  UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
+
+  if(clientInfo && clientInfo->isActionInitialized(paActionInfo)) {
+    switch(paActionInfo.getAction()){
+      case CActionInfo::eRead:
+        retVal = clientInfo->executeRead(paActionInfo);
+        break;
+      case CActionInfo::eWrite:
+        retVal = clientInfo->executeWrite(paActionInfo);
+        break;
+      case CActionInfo::eCallMethod:
+        retVal = clientInfo->executeCallMethod(paActionInfo);
+        break;
+      default: //eCreateMethod, eCreateObject, eDeleteObject will never reach here since they weren't initialized. eSubscribe is a Subscribe FB
+        DEVLOG_ERROR("[OPC UA REMOTE]: Action %d to be executed is unknown or invalid", paActionInfo.getAction());
+        break;
     }
+  } else {
+    DEVLOG_ERROR("[OPC UA REMOTE]: Cannot execute action from FB %s. It was not properly initialized\n",
+      paActionInfo.getLayer().getCommFB()->getInstanceName());
   }
 
-  if(!elementAlreadyPresent) {
-    paList.pushBack(&paClientInformation);
+  if(UA_STATUSCODE_GOOD == retVal) {
+    resumeIterationLoop();
   }
+
+  return retVal;
+}
+
+UA_StatusCode COPC_UA_Client_Handler::uninitializeAction(CActionInfo& paActionInfo) {
+  UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
+  switch(paActionInfo.getAction()){
+    case CActionInfo::eRead:
+    case CActionInfo::eWrite:
+    case CActionInfo::eCallMethod:
+    case CActionInfo::eSubscribe:
+      referencedClientsDecrement(paActionInfo);
+      retVal = UA_STATUSCODE_GOOD;
+      break;
+    default:
+      DEVLOG_ERROR("[OPC UA REMOTE]: Action %d to be uninitialized is unknown or invalid\n", paActionInfo.getAction());
+      break;
+  }
+  return retVal;
 }
 
 CUA_ClientInformation* COPC_UA_Client_Handler::getClient(CIEC_STRING& paEndpoint) {
   CCriticalRegion allClientsRegion(mAllClientListMutex);
 
   CUA_ClientInformation* client = 0;
-
   for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = mAllClients.begin(); itClientInformation != mAllClients.end();
       ++itClientInformation) {
     if((*itClientInformation)->getEndpoint() == paEndpoint) {
@@ -176,7 +249,6 @@ CUA_ClientInformation* COPC_UA_Client_Handler::getClient(CIEC_STRING& paEndpoint
     }
   }
   if(!client) {
-
     client = new CUA_ClientInformation(paEndpoint);
     if(client->initialize()) {
       mAllClients.pushBack(client);
@@ -223,81 +295,9 @@ void COPC_UA_Client_Handler::referencedClientsDecrement(CActionInfo& paActionInf
 
 void COPC_UA_Client_Handler::removeClientFromAllLists(CUA_ClientInformation& paClientInformation) {
   mConnectionHandler.removeClient(paClientInformation);
-  removeClientFromInitializedList(paClientInformation);
+  removeClient(paClientInformation);
   mAllClients.erase(&paClientInformation);
   delete &paClientInformation;
-}
-
-UA_StatusCode COPC_UA_Client_Handler::initializeAction(CActionInfo& paActionInfo) {
-  enableHandler();
-  UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
-  switch(paActionInfo.getAction()){
-    case CActionInfo::eRead:
-    case CActionInfo::eWrite:
-    case CActionInfo::eCallMethod:
-    case CActionInfo::eSubscribe:
-      retVal = initializeActionInClient(paActionInfo);
-      break;
-    case CActionInfo::eCreateMethod:
-    case CActionInfo::eCreateObject:
-    case CActionInfo::eDeleteObject:
-      DEVLOG_ERROR("[OPC UA REMOTE]: Cannot perform action %s remotely. Initialization failed\n",
-        CActionInfo::mActionNames[paActionInfo.getAction()]);
-      break;
-    default:
-      DEVLOG_ERROR("[OPC UA REMOTE]: Unknown action %d to be initialized\n", paActionInfo.getAction());
-      break;
-  }
-  return retVal;
-}
-
-UA_StatusCode COPC_UA_Client_Handler::executeAction(CActionInfo& paActionInfo) {
-
-  CUA_ClientInformation* clientInfo = getClient(paActionInfo.getEndpoint());
-  UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
-
-  if(clientInfo && clientInfo->isActionInitialized(paActionInfo)) {
-    switch(paActionInfo.getAction()){
-      case CActionInfo::eRead:
-        retVal = clientInfo->executeRead(paActionInfo);
-        break;
-      case CActionInfo::eWrite:
-        retVal = clientInfo->executeWrite(paActionInfo);
-        break;
-      case CActionInfo::eCallMethod:
-        retVal = clientInfo->executeCallMethod(paActionInfo);
-        break;
-      default: //eCreateMethod, eCreateObject, eDeleteObject will never reach here since they weren't initialized. eSubscribe is a Subscribe FB
-        DEVLOG_ERROR("[OPC UA REMOTE]: Action %d to be executed is unknown or invalid", paActionInfo.getAction());
-        break;
-    }
-  } else {
-    DEVLOG_ERROR("[OPC UA REMOTE]: Cannot execute action from FB %s. It was not properly initialized\n",
-      paActionInfo.getLayer().getCommFB()->getInstanceName());
-  }
-
-  if(UA_STATUSCODE_GOOD == retVal) {
-    resumeAsyncLoop();
-  }
-
-  return retVal;
-}
-
-UA_StatusCode COPC_UA_Client_Handler::uninitializeAction(CActionInfo& paActionInfo) {
-  UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
-  switch(paActionInfo.getAction()){
-    case CActionInfo::eRead:
-    case CActionInfo::eWrite:
-    case CActionInfo::eCallMethod:
-    case CActionInfo::eSubscribe:
-      referencedClientsDecrement(paActionInfo);
-      retVal = UA_STATUSCODE_GOOD;
-      break;
-    default:
-      DEVLOG_ERROR("[OPC UA REMOTE]: Action %d to be uninitialized is unknown or invalid\n", paActionInfo.getAction());
-      break;
-  }
-  return retVal;
 }
 
 UA_StatusCode COPC_UA_Client_Handler::initializeActionInClient(CActionInfo& paActionInfo) {
@@ -310,79 +310,21 @@ UA_StatusCode COPC_UA_Client_Handler::initializeActionInClient(CActionInfo& paAc
   return retVal;
 }
 
-/* CONECTION HANDLER */
+//************************** CONECTION HANDLER ************** //
 
 COPC_UA_Client_Handler::UA_ConnectionHandler::UA_ConnectionHandler(COPC_UA_Client_Handler& paClientHandler) :
-    mClientHandler(paClientHandler), mNewClientsPresent(false) {
+    mClientHandler(paClientHandler) {
 }
 
 COPC_UA_Client_Handler::UA_ConnectionHandler::~UA_ConnectionHandler() {
   //do nothing
 }
 
-void COPC_UA_Client_Handler::UA_ConnectionHandler::startConnectionsThread() {
-  if(!isAlive()) {
-    start();
-    mThreadStarted.waitIndefinitely();
-  }
-}
-
-void COPC_UA_Client_Handler::UA_ConnectionHandler::stopConnectionsThread() {
-  setAlive(false);
-  mClientPresent.inc();
-  end();
-}
-
-void COPC_UA_Client_Handler::UA_ConnectionHandler::addClient(CUA_ClientInformation& paClientInformation) {
-  CCriticalRegion connectionListRegion(mNewClientstMutex);
-  addClientToList(paClientInformation, mNewClients);
-  mClientPresent.inc();
-  mNewClientsPresent = true;
-}
-
-void COPC_UA_Client_Handler::UA_ConnectionHandler::removeClient(CUA_ClientInformation& paClientInformation) {
-  CCriticalRegion connectionListRegion(mClientstMutex);
-  CCriticalRegion newClientsRegion(mNewClientstMutex);
-  mNewClients.erase(&paClientInformation); //client could still be in the newList
-  mClients.erase(&paClientInformation);
-}
-
-void COPC_UA_Client_Handler::UA_ConnectionHandler::updateClientList() {
-  CCriticalRegion clientsClientsRegion(mClientstMutex);
-  CCriticalRegion connectionListRegion(mNewClientstMutex);
-  for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = mNewClients.begin(); itClientInformation != mNewClients.end();
-      ++itClientInformation) {
-    addClientToList(**itClientInformation, mClients);
-  }
-  mNewClients.clearAll();
-  mNewClientsPresent = false;
-}
-
-void COPC_UA_Client_Handler::UA_ConnectionHandler::run() {
-  DEVLOG_INFO("[OPC UA REMOTE]: Starting OPC UA Connection handler\n");
-  mThreadStarted.inc();
-  while(isAlive()) {
-
-    if(mNewClientsPresent) {
-      updateClientList();
-    }
-    bool needsRetry = handleClients();
-    if(isAlive()) {
-      if(needsRetry) {
-        mClientPresent.timedWait(scmNanosecondsToSleep);
-      } else {
-        mClientPresent.waitIndefinitely();
-      }
-    }
-  }
-  DEVLOG_INFO("[OPC UA REMOTE]: Stopping OPC UA Connection handler\n");
-}
-
 bool COPC_UA_Client_Handler::UA_ConnectionHandler::handleClients() {
-  CCriticalRegion clientsClientsRegion(mClientstMutex);
+  CCriticalRegion clientsClientsRegion(mIterationClientsMutex);
   CSinglyLinkedList<CUA_ClientInformation *> clientsToRemove;
   bool needsRetry = false;
-  for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = mClients.begin(); itClientInformation != mClients.end();
+  for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = mIterationClients.begin(); itClientInformation != mIterationClients.end();
       ++itClientInformation) {
     CCriticalRegion clientRegion((*itClientInformation)->getMutex());
     if((*itClientInformation)->handleClientState()) {
@@ -391,10 +333,7 @@ bool COPC_UA_Client_Handler::UA_ConnectionHandler::handleClients() {
       needsRetry = true;
     }
     if((*itClientInformation)->someActionWasInitialized()) {
-      mClientHandler.addClientToInitializedList(**itClientInformation);
-    }
-    if((*itClientInformation)->needsAlreadyAsync()) {
-      mClientHandler.resumeAsyncLoop();
+      mClientHandler.addClient(**itClientInformation);
     }
     if(!isAlive()) {
       break;
@@ -404,7 +343,7 @@ bool COPC_UA_Client_Handler::UA_ConnectionHandler::handleClients() {
   if(isAlive() && !clientsToRemove.isEmpty()) {
     for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = clientsToRemove.begin(); itClientInformation != clientsToRemove.end();
         ++itClientInformation) {
-      mClients.erase(*itClientInformation);
+      mIterationClients.erase(*itClientInformation);
     }
   }
   return needsRetry;
