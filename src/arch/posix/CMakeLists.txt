@@ -50,7 +50,6 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 
 
   forte_add_network_layer(SER OFF "ser" CPosixSerCommLayer posixsercommlayer "Enable Forte serial line communication")
-  forte_add_network_layer(MUXSER OFF "muxser" CMuxedSerCommLayer muxedsercommlayer "Enable Forte multiplexed serial line communication")
   
   set(FORTE_RTTI_AND_EXCEPTIONS FALSE CACHE BOOL "Enable RTTI and Exceptions")
   mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)

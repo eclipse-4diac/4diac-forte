@@ -81,7 +81,6 @@ set(PIKEOS_LWIP_LIB_PATH "" CACHE PATH "Path to LWIP build that supports SO_REUS
   ENDIF(FORTE_POSIX_GENERATE_MAP_FILE)  
  
   forte_add_network_layer(SER OFF "ser" CPosixSerCommLayer ../posix/posixsercommlayer "Enable Forte serial line communication")
-  forte_add_network_layer(MUXSER OFF "muxser" CMuxedSerCommLayer ../posix/muxedsercommlayer "Enable Forte multiplexed serial line communication")
   
   set(FORTE_RTTI_AND_EXCEPTIONS FALSE CACHE BOOL "Enable RTTI and Exceptions")
   mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)
