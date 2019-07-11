@@ -41,14 +41,14 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "rcX")
   forte_add_sourcefile_hcpp(forte_thread rcXUtilities forte_sync forte_sem forte_instance)
   forte_add_sourcefile_h(fortealloc.h ../forte_architecture_time.h)
   forte_add_sourcefile_cpp(forte_architecture.cpp ../genforte_printer.cpp)
-  forte_add_sourcefile_cpp(../genforte_realFunctions.cpp)
+  forte_add_sourcefile_cpp(../genforte_realFunctions.cpp forte_architecture_time.cpp)
  
   if(FORTE_COM_ETH)
    forte_add_sourcefile_hcpp(rcXSocketInterface)
    forte_add_sourcefile_h(sockhand.h)
   endif(FORTE_COM_ETH)
 
-  forte_add_definition("-D__RCX__ -D__${FORTE_NETX_CPU} -c -mlong-calls -mcpu=${ARCH_NETX} -fshort-enums -gdwarf-2 -Wall -O0 -mapcs -mthumb-interwork -fsigned-char -mlittle-endian -marm -mno-apcs-frame    -ffunction-sections -fdata-sections -Wl,–gc-sections -msoft-float -mfpu=vfp -mfloat-abi=soft -mthumb-interwork -nostdlib -mcpu=arm966e-s -mthumb -T")# -static-libstdc++ -static-libgcc")# -mabi=apcs-gnu")# -xc")# 
+  forte_add_definition("-D__RCX__ -D__${FORTE_NETX_CPU} -c -mlong-calls -mcpu=${ARCH_NETX} -fshort-enums -gdwarf-2 -Wall -O0 -mapcs -mthumb-interwork -fsigned-char -mlittle-endian -marm -mno-apcs-frame    -ffunction-sections -fdata-sections -Wl,-gc-sections -msoft-float -mfpu=vfp -mfloat-abi=soft -mthumb-interwork -nostdlib -mcpu=arm966e-s -mthumb -T")# -static-libstdc++ -static-libgcc")# -mabi=apcs-gnu")# -xc")# 
   forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -DFORTE_LITTLE_ENDIAN -ggdb")
   forte_add_definition("-fno-threadsafe-statics")
   

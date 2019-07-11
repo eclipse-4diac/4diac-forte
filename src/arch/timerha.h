@@ -39,9 +39,6 @@ class CTimerHandler : public CExternalEventHandler{
   DECLARE_HANDLER(CTimerHandler);
   public:
 
-    /*!\brief Pointer to a general timer used for code outside FBs, like devlog, TIME() and so on
-     */
-    static CTimerHandler *smFORTETimer;
     /*!\brief create the timer handler and set the parameter pointer with the the new timer handler.
      *
      * This function is not implemented in the standardtimerhandler and has to be implemented in the specific implementation.

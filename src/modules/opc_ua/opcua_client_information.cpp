@@ -9,6 +9,7 @@
  *    Jose Cabral - initial implementation
  *******************************************************************************/
 
+#include <forte_architecture_time.h>
 #include "opcua_client_information.h"
 #include <basecommfb.h>
 #include "opcua_handler_abstract.h" //for logger
@@ -34,12 +35,12 @@ bool CUA_ClientInformation::initialize() {
   }
   configPointer->stateCallback = CUA_CallbackFunctions::clientStateChangeCallback;
   configPointer->logger = COPC_UA_HandlerAbstract::getLogger();
-  configPointer->timeout = scmClientTimeoutInMilliseconds;
+  configPointer->timeout = scmClientTimeoutInMilli;
 #else //FORTE_COM_OPC_UA_MASTER_BRANCH
   UA_ClientConfig config = UA_ClientConfig_default;
   config.stateCallback = CUA_CallbackFunctions::clientStateChangeCallback;
   config.logger = COPC_UA_HandlerAbstract::getLogger();
-  config.timeout = scmClientTimeoutInMilliseconds;
+  config.timeout = scmClientTimeoutInMilli;
   mClient = UA_Client_new(config);
 #endif //FORTE_COM_OPC_UA_MASTER_BRANCH
   return true;
@@ -62,13 +63,13 @@ bool CUA_ClientInformation::handleClientState() {
   bool tryAnotherChangeImmediately = true;
 
   if(mNeedsReconnection) {
-    uint_fast64_t now = CTimerHandler::smFORTETimer->getForteTime();
-    if((now - mLastReconnectionTry) < scmConnectionRetryTimeoutMilli) { //if connection timeout didn't happen, return that more changes are still needed
+    uint_fast64_t now = getNanoSecondsMonotonic();
+    if((now - mLastReconnectionTry) < scmConnectionRetryTimeoutNano) { //if connection timeout didn't happen, return that more changes are still needed
       tryAnotherChangeImmediately = false;
     }
   } else if(mWaitToInitializeActions) {
-    uint_fast64_t now = CTimerHandler::smFORTETimer->getForteTime();
-    if((now - mLastActionInitializationTry) < scmInitializeActionRetry) { //if an action failed, wait scmInitializeActionRetry until next retry to initialize them
+    uint_fast64_t now = getNanoSecondsMonotonic();
+    if((now - mLastActionInitializationTry) < scmInitializeActionRetryNano) { //if an action failed, wait scmInitializeActionRetryNano until next retry to initialize them
       tryAnotherChangeImmediately = false;
     }
   }
@@ -81,7 +82,7 @@ bool CUA_ClientInformation::handleClientState() {
         noMoreChangesNeeded = true;
       } else {
         mWaitToInitializeActions = true;
-        mLastActionInitializationTry = CTimerHandler::smFORTETimer->getForteTime();
+        mLastActionInitializationTry = getNanoSecondsMonotonic();
       }
       tryAnotherChangeImmediately = false;
     } else if(UA_CLIENTSTATE_SESSION_RENEWED == currentState) {
@@ -90,9 +91,9 @@ bool CUA_ClientInformation::handleClientState() {
       if(!connectClient()) {
         tryAnotherChangeImmediately = false;
         DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't connect to endpoint %s. Forte will try to reconnect in %d seconds\n", mEndpointUrl.getValue(),
-          scmConnectionRetryTimeoutMilli / 1000);
+          scmConnectionRetryTimeoutNano / 1000);
         mNeedsReconnection = true;
-        mLastReconnectionTry = CTimerHandler::smFORTETimer->getForteTime();
+        mLastReconnectionTry = getNanoSecondsMonotonic();
       } else { //if connection succeeded, don't break the while and try to handle subscriptions immediately
         mNeedsReconnection = false;
         DEVLOG_INFO("[OPC UA CLIENT]: Client connected to endpoint %s\n", mEndpointUrl.getValue());

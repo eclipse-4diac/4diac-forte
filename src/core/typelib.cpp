@@ -19,7 +19,6 @@
 #include "if2indco.h"
 #include <stddef.h>
 
-#ifndef FORTE_CLASS_0
 CTypeLib::CTypeEntry::CTypeEntry(CStringDictionary::TStringId pa_nTypeNameId) :
   m_nTypeNameId(pa_nTypeNameId),
   m_poNext(0){
@@ -81,11 +80,6 @@ CTypeLib::CAdapterTypeEntry *CTypeLib::m_poAdapterLibEnd = 0;
 
 CTypeLib::CDataTypeEntry *CTypeLib::m_poDTLibStart = 0;
 CTypeLib::CDataTypeEntry *CTypeLib::m_poDTLibEnd = 0;
-
-//CTypeLib::~CTypeLib() {
-//  //TODO free memory of fblibrary (maybe not necessary as typelib is deleted at the end of the program)
-//  //TODO free memory of RESlibrary (maybe not necessary as typelib is deleted at the end of the program)
-//}
 
 CTypeLib::CTypeEntry *CTypeLib::findType(CStringDictionary::TStringId pa_nTypeId, CTypeLib::CTypeEntry *pa_poListStart) {
   CTypeEntry *retval = 0;
@@ -236,9 +230,4 @@ const char *CTypeLib::getFirstNonTypeNameUnderscorePos(const char *pa_acTypeName
 
   return acRetVal;
 }
-
-
-
-#endif
-
 

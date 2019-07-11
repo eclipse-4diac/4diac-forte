@@ -26,7 +26,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
   forte_add_sourcefile_h(../forte_architecture_time.h)
   
   forte_add_sourcefile_hcpp(../utils/timespec_utils)
-  forte_add_sourcefile_cpp(../genforte_realFunctions.cpp)
+  forte_add_sourcefile_cpp(../genforte_realFunctions.cpp forte_architecture_time.cpp)
   
   SET(FORTE_VXWORKS_FIND_DIR_AUTOMATICALLY ON CACHE BOOL "Selects the rest of needed directories from the CMAKE_FIND_ROOT_PATH")
   SET(FORTE_VXWORKS_VSB_CONFIG_FILE "" CACHE STRING "VSB Configuration file")

@@ -235,8 +235,8 @@ CIEC_ANY::EDataTypeID fmuInstance::getConnectedDataType(unsigned int portIndex, 
       FMU_DEBUG_LOG(this, "--------ERROR: Subscriber does not have any connection.\n");
     }
     else{
-      CSinglyLinkedList<SConnectionPoint>::Iterator it = portConnection->getDestinationList().begin();
-      const SConnectionPoint remoteConnectionPoint = pa_isInput ? portConnection->getSourceId() : *it;
+      CSinglyLinkedList<CConnectionPoint>::Iterator it = portConnection->getDestinationList().begin();
+      const CConnectionPoint remoteConnectionPoint = pa_isInput ? portConnection->getSourceId() : *it;
 
       const CIEC_ANY *remotePort = pa_isInput ? remoteConnectionPoint.mFB->getDOFromPortId(remoteConnectionPoint.mPortId) : remoteConnectionPoint.mFB->getDIFromPortId(remoteConnectionPoint.mPortId);
 

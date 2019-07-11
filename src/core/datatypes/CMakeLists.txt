@@ -16,6 +16,8 @@
 #############################################################################
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+forte_add_subdirectory(convert)
+
 forte_add_sourcefile_hcpp(forte_any_elementary       forte_int   forte_sint)
 forte_add_sourcefile_hcpp(forte_dint    forte_udint forte_uint)
 forte_add_sourcefile_hcpp(forte_usint   forte_dword forte_word)

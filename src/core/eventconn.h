@@ -29,9 +29,7 @@ class CEventConnection : public CConnection{
 
     virtual EMGMResponse connectToCFBInterface(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId);
 
-#ifndef FORTE_CLASS_0
     virtual EMGMResponse disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId);
-#endif
 
     /*! \brief Triggers the event connection and all destinations are notified.
      *

@@ -54,7 +54,7 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
 
     void closeConnection();
 
-    bool getRemoteType(CIEC_ANY **paResult, const SConnectionPoint& paRemoteConnectionPoint, bool paIsSD) const;
+    bool getRemoteType(CIEC_ANY **paResult, const CConnectionPoint& paRemoteConnectionPoint, bool paIsSD) const;
 
     bool checkFanOutTypes(const CDataConnection& paPortConnection, CIEC_ANY **paRemoteType) const;
 

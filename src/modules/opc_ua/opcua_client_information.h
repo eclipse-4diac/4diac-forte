@@ -198,11 +198,11 @@ class CUA_ClientInformation {
 
     bool mSomeActionWasInitialized;
 
-    static const uint_fast64_t scmConnectionRetryTimeoutMilli = 8000; //8s
+    static const uint_fast64_t scmConnectionRetryTimeoutNano = 8E9; //8s
 
-    static const UA_UInt32 scmInitializeActionRetry = 3000; //3s
+    static const uint_fast64_t scmInitializeActionRetryNano = 3E9; //3s
 
-    static const UA_UInt32 scmClientTimeoutInMilliseconds = 5000; //5s
+    static const UA_UInt32 scmClientTimeoutInMilli = 5E3; //5s
 
 };
 

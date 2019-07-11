@@ -80,10 +80,5 @@ ENDIF(FORTE_SUPPORT_ARRAYS)
   forte_test_add_sourcefile_cpp(CIEC_TIME_OF_DAY_test.cpp)
   
   forte_test_add_sourcefile_cpp(CIEC_STRUCT_test.cpp)
-  
-# convert functions for TO_(W)STRING conversions
-  forte_test_add_sourcefile_cpp(convert_to_STRING_test.cpp)
-
-IF(FORTE_USE_WSTRING_DATATYPE)
-  forte_test_add_sourcefile_cpp(convert_to_WSTRING_test.cpp)
-ENDIF(FORTE_USE_WSTRING_DATATYPE)
+ 
+ forte_test_add_subdirectory(convert)

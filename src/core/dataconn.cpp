@@ -70,14 +70,13 @@ void CDataConnection::handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint)
   }
 }
 
-#ifndef FORTE_CLASS_0
 EMGMResponse
 CDataConnection::disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId){
   EMGMResponse retval = e_NO_SUCH_OBJECT;
   TPortId dstPortId = paDstFB->getDIID(paDstPortNameId);
 
   if(cg_unInvalidPortId != dstPortId){
-    retval = CConnection::removeDestination(SConnectionPoint(paDstFB, dstPortId));
+    retval = CConnection::removeDestination(CConnectionPoint(paDstFB, dstPortId));
     if(e_RDY == retval){
       // the CConnection class didn't respond an error
       paDstFB->connectDI(dstPortId, 0);
@@ -85,7 +84,6 @@ CDataConnection::disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringI
   }
   return retval;
 }
-#endif
 
 void CDataConnection::readData(CIEC_ANY *pa_poValue) const{
   if(m_poValue){
@@ -140,7 +138,7 @@ EMGMResponse CDataConnection::establishDataConnection(CFunctionBlock *paDstFB, T
   }
 
   if(e_RDY == retVal){
-    retVal = CConnection::addDestination(SConnectionPoint(paDstFB, paDstPortId));
+    retVal = CConnection::addDestination(CConnectionPoint(paDstFB, paDstPortId));
     if(e_RDY == retVal && !paDstFB->connectDI(paDstPortId, this)) {
       retVal = e_INVALID_STATE;
       mDestinationIds.popFront(); //empty the list so that the have created connection is not here anymore

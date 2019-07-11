@@ -161,7 +161,7 @@ bool COPC_UA_Layer::storeTypesFromInterface(CSinglyLinkedList<COPC_UA_Helper::UA
 
 bool COPC_UA_Layer::checkFanOutTypes(const CDataConnection& paPortConnection, CIEC_ANY **paResult) const {
 
-  for(CSinglyLinkedList<SConnectionPoint>::Iterator it = paPortConnection.getDestinationList().begin(); it != paPortConnection.getDestinationList().end();
+  for(CSinglyLinkedList<CConnectionPoint>::Iterator it = paPortConnection.getDestinationList().begin(); it != paPortConnection.getDestinationList().end();
       ++it) {
     if(paPortConnection.getDestinationList().begin() == it) { //first one
       if(!getRemoteType(paResult, *it, false)) {
@@ -202,7 +202,7 @@ bool COPC_UA_Layer::getPortConnectionInfo(unsigned int paPortIndex, bool paIsSD,
 
   CIEC_ANY *remoteType = 0;
   if(paIsSD) {
-    const SConnectionPoint& remoteConnectionPoint = portConnection->getSourceId();
+    const CConnectionPoint& remoteConnectionPoint = portConnection->getSourceId();
     if(!getRemoteType(&remoteType, remoteConnectionPoint, paIsSD)) {
       return false;
     }
@@ -222,7 +222,7 @@ bool COPC_UA_Layer::getPortConnectionInfo(unsigned int paPortIndex, bool paIsSD,
   return true;
 }
 
-bool COPC_UA_Layer::getRemoteType(CIEC_ANY **paResult, const SConnectionPoint& paRemoteConnectionPoint, bool paIsSD) const {
+bool COPC_UA_Layer::getRemoteType(CIEC_ANY **paResult, const CConnectionPoint& paRemoteConnectionPoint, bool paIsSD) const {
   if(!paRemoteConnectionPoint.mFB) {
     DEVLOG_ERROR(
       "[OPC UA LAYER]: FB %s has a problem. The connected FB in the current data input is a null pointer. Check last debug logging for more information\n",

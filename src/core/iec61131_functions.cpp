@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2013, 2018 ACIN, fortiss GmbH
+ * Copyright (c) 2011 - 2013, 2018 ACIN, fortiss GmbH, 2019 TU Wien/ACIN
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,8 +8,11 @@
  * Contributors:
  *    Alois Zoitl, Monika Wenger
  *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians - adds NOW and NOW_MONOTONIC functions
  *******************************************************************************/
 #include "iec61131_functions.h"
+
+#include "forte_architecture_time.h"
 
 template<> const CIEC_BOOL NOT<CIEC_BOOL>(const CIEC_BOOL& pa_roIN){
   return CIEC_BOOL(!pa_roIN);
@@ -29,36 +32,36 @@ TForteInt64 TRUNC(const CIEC_LREAL& pa_roIN){
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 const CIEC_TIME_OF_DAY ADD_TOD_TIME(const CIEC_TIME_OF_DAY& pa_roIN1, const CIEC_TIME& pa_roIN2){
-  return static_cast<TForteUInt64>(pa_roIN1 + pa_roIN2.getInMiliSeconds());
+  return static_cast<TForteUInt64>(pa_roIN1 + pa_roIN2.getInMilliSeconds());
 }
 
 const CIEC_DATE_AND_TIME ADD_DT_TIME(const CIEC_DATE_AND_TIME& pa_roIN1, const CIEC_TIME& pa_roIN2){
-  return static_cast<TForteUInt64>(pa_roIN1 + pa_roIN2.getInMiliSeconds());
+  return static_cast<TForteUInt64>(pa_roIN1 + pa_roIN2.getInMilliSeconds());
 }
 
 const CIEC_TIME_OF_DAY SUB_TOD_TIME(const CIEC_TIME_OF_DAY& pa_roIN1, const CIEC_TIME& pa_roIN2){
-  return static_cast<TForteUInt64>(pa_roIN1 - pa_roIN2.getInMiliSeconds());
+  return static_cast<TForteUInt64>(pa_roIN1 - pa_roIN2.getInMilliSeconds());
 }
 
 const CIEC_DATE_AND_TIME SUB_DT_TIME(const CIEC_DATE_AND_TIME& pa_roIN1, const CIEC_TIME& pa_roIN2){
-  return static_cast<TForteUInt64>(pa_roIN1 - pa_roIN2.getInMiliSeconds());
+  return static_cast<TForteUInt64>(pa_roIN1 - pa_roIN2.getInMilliSeconds());
 }
 
 const CIEC_TIME SUB_DT_DT(const CIEC_DATE_AND_TIME& pa_roIN1, const CIEC_DATE_AND_TIME& pa_roIN2){
   CIEC_TIME temp;
-  temp.setFromMiliSeconds(pa_roIN1 - pa_roIN2);
+  temp.setFromMilliSeconds(pa_roIN1 - pa_roIN2);
   return temp;
 }
 
 const CIEC_TIME SUB_TOD_TOD(const CIEC_TIME_OF_DAY &pa_roIN1, const CIEC_TIME_OF_DAY &pa_roIN2){
   CIEC_TIME temp;
-  temp.setFromMiliSeconds(pa_roIN1 - pa_roIN2);
+  temp.setFromMilliSeconds(pa_roIN1 - pa_roIN2);
   return temp;
 }
 
 const CIEC_TIME SUB_DATE_DATE(const CIEC_DATE &pa_roIN1, const CIEC_DATE &pa_roIN2){
   CIEC_TIME temp;
-  temp.setFromMiliSeconds(pa_roIN1 - pa_roIN2);
+  temp.setFromMilliSeconds(pa_roIN1 - pa_roIN2);
   return temp;
 }
 
@@ -83,6 +86,16 @@ CIEC_ANY_INT FIND(const CIEC_ANY_STRING& pa_rsIn1, const CIEC_ANY_STRING& pa_rsI
     temp.setSignedValue(pc_Find - pa_rsIn1.getValue() + 1);
   }
   return temp;
+}
+
+const CIEC_TIME NOW_MONOTONIC() {
+  CIEC_TIME now;
+  now.setFromNanoSeconds(getNanoSecondsMonotonic());
+  return now;
+}
+
+const CIEC_DATE_AND_TIME NOW() {
+  return CIEC_DATE_AND_TIME(forte_time() * 1000ULL);
 }
 
 #endif

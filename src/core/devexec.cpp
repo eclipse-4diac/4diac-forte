@@ -22,16 +22,9 @@ CDeviceExecution::CDeviceExecution() {
   CDeviceExecution::createHandlers(*this);
 
   getTimer().enableHandler();
-  if(0 == CTimerHandler::smFORTETimer) {
-    CTimerHandler::smFORTETimer = &getTimer(); //used for develog, CIEC_TIME() and in Modbus
-  }
 }
 
 CDeviceExecution::~CDeviceExecution() {
-  if(CTimerHandler::smFORTETimer == (&getTimer())) {
-    CTimerHandler::smFORTETimer = 0;
-  }
-
   for(size_t i = 0; i < cg_unNumberOfHandlers; i++) {
     if(0 != mRegisteredEventHandlers[i].mHandler) { //for the test cases, only the timer handler is created
       mRegisteredEventHandlers[i].mHandler->disableHandler();

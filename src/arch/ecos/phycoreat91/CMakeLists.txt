@@ -21,7 +21,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Phycore AT91")
   forte_add_sourcefile_cpp(../../genforte_printer.cpp)
   forte_add_sourcefile_h(../../forte_architecture_time.h)
   forte_add_to_executable_cpp(main)
-  forte_add_sourcefile_cpp(../../genforte_realFunctions.cpp)
+  forte_add_sourcefile_cpp(../../genforte_realFunctions.cpp ../../posix/forte_architecture_time.cpp)
   
 
   if(FORTE_COM_ETH)
