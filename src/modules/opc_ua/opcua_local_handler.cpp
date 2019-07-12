@@ -31,8 +31,6 @@
 
 const char* const COPC_UA_Local_Handler::mEnglishLocaleForNodes = "en-US";
 const char* const COPC_UA_Local_Handler::mDescriptionForVariableNodes = "Digital port of Function Block";
-CSinglyLinkedList<COPC_UA_Local_Handler::UA_ParentNodeHandler> COPC_UA_Local_Handler::methodsWithoutContext = CSinglyLinkedList<
-    COPC_UA_Local_Handler::UA_ParentNodeHandler>();
 
 TForteUInt16 gOpcuaServerPort = FORTE_COM_OPC_UA_PORT;
 
@@ -204,17 +202,12 @@ COPC_UA_Local_Handler::COPC_UA_Local_Handler(CDeviceExecution& paDeviceExecution
 COPC_UA_Local_Handler::~COPC_UA_Local_Handler() {
   stopServer();
 
-  mNodeCallbackHandles.clearAll();
   cleanNodeReferences();
-
-  methodsWithoutContext.clearAll();
-  mMethodCalls.clearAll();
 
 #ifdef FORTE_COM_OPC_UA_MULTICAST
   for(CSinglyLinkedList<UA_String*>::Iterator iter = mRegisteredWithLds.begin(); iter != mRegisteredWithLds.end(); ++iter) {
     UA_String_delete(*iter);
   }
-  mRegisteredWithLds.clearAll();
 #endif //FORTE_COM_OPC_UA_MULTICAST
 }
 
@@ -410,14 +403,11 @@ UA_StatusCode COPC_UA_Local_Handler::onServerMethodCall(UA_Server *, const UA_No
 
   UA_StatusCode retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
   CLocalMethodInfo *localMethodHandle = 0;
-  if(paMethodContext) {
-    localMethodHandle = static_cast<CLocalMethodInfo *>(paMethodContext);
-  } else { //methods without context are the ones craeted with CreateObject. The "context" are stored in the list
-    for(CSinglyLinkedList<UA_ParentNodeHandler>::Iterator iter = methodsWithoutContext.begin(); iter != methodsWithoutContext.end(); ++iter) {
-      if(UA_NodeId_equal(paParentNodeId, (*iter).mParentNodeId) && UA_NodeId_equal(paMethodNodeId, (*iter).mMethodNodeId)) {
-        localMethodHandle = &(*iter).mActionInfo;
-        break;
-      }
+  CSinglyLinkedList<UA_ParentNodeHandler>* methodsContexts = static_cast<CSinglyLinkedList<UA_ParentNodeHandler>*>(paMethodContext);
+  for(CSinglyLinkedList<UA_ParentNodeHandler>::Iterator iter = methodsContexts->begin(); iter != methodsContexts->end(); ++iter) {
+    if(UA_NodeId_equal(paParentNodeId, (*iter).mParentNodeId) && UA_NodeId_equal(paMethodNodeId, (*iter).mMethodNodeId)) {
+      localMethodHandle = &(*iter).mActionInfo;
+      break;
     }
   }
 
@@ -632,7 +622,7 @@ void COPC_UA_Local_Handler::createMethodArguments(CCreateMethodInfo& paCreateMet
   }
 }
 
-UA_StatusCode COPC_UA_Local_Handler::createMethodNode(CCreateMethodInfo& paCreateMethodInfo) {
+UA_StatusCode COPC_UA_Local_Handler::createMethodNode(CCreateMethodInfo& paCreateMethodInfo, UA_NodeId **paNodeId) {
 
   UA_NodeId requestedNodeId;
   if(paCreateMethodInfo.mRequestedNodeId) {
@@ -663,8 +653,22 @@ UA_StatusCode COPC_UA_Local_Handler::createMethodNode(CCreateMethodInfo& paCreat
     *paCreateMethodInfo.mBrowseName,
     methodAttributes,
     COPC_UA_Local_Handler::onServerMethodCall, paCreateMethodInfo.mInputSize,
-    paCreateMethodInfo.mInputArguments, paCreateMethodInfo.mOutputSize, paCreateMethodInfo.mOutputArguments, &paCreateMethodInfo.mLocalMethodInfo,
+    paCreateMethodInfo.mInputArguments, paCreateMethodInfo.mOutputSize, paCreateMethodInfo.mOutputArguments, &mMethodsContexts,
     paCreateMethodInfo.mReturnedNodeId);
+
+  if(UA_STATUSCODE_GOOD == retVal) {
+    if(!*paNodeId) {
+      *paNodeId = UA_NodeId_new();
+      UA_NodeId_copy(paCreateMethodInfo.mReturnedNodeId, *paNodeId);
+    }
+
+    UA_ParentNodeHandler parentNodeContext(&parentNodeId, *paNodeId, paCreateMethodInfo.mLocalMethodInfo);
+    mMethodsContexts.pushBack(parentNodeContext);
+  } else {
+    DEVLOG_ERROR("[OPC UA LOCAL]: OPC UA could not create method at %s. Error: %s\n",
+      paCreateMethodInfo.mLocalMethodInfo.getLayer().getCommFB()->getInstanceName(),
+      UA_StatusCode_name(retVal));
+  }
 
   UA_NodeId_deleteMembers(&parentNodeId);
   UA_NodeId_deleteMembers(&requestedNodeId);
@@ -1164,48 +1168,38 @@ UA_StatusCode COPC_UA_Local_Handler::executeWrite(CActionInfo & paActionInfo) {
 
 UA_StatusCode COPC_UA_Local_Handler::handleExistingMethod(CActionInfo& paActionInfo, UA_NodeId *paParentNode) {
   CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator it = paActionInfo.getNodePairInfo().begin();
+  UA_StatusCode retVal = UA_STATUSCODE_GOOD;
 
   DEVLOG_INFO("[OPC UA LOCAL]: Adding a callback for an existing method at %s\n", (*it)->mBrowsePath.getValue());
 
-  //TODO: check types of existing method to this layer
-  void *handle = 0;
-  UA_StatusCode retVal = UA_Server_getNodeContext(mUaServer, *(*it)->mNodeId, &handle);
-  if(UA_STATUSCODE_GOOD == retVal) {
-    if(!handle) {
-      //check if the method was already referenced by another FB
-      for(CSinglyLinkedList<UA_ParentNodeHandler>::Iterator iter = methodsWithoutContext.begin(); iter != methodsWithoutContext.end(); ++iter) {
-        if(UA_NodeId_equal(paParentNode, (*iter).mParentNodeId) && UA_NodeId_equal((*it)->mNodeId, (*iter).mMethodNodeId)) {
-          DEVLOG_ERROR(
-            "[OPC UA LOCAL]: The FB %s is trying to reference a local method (created through an object) at %s which has already a FB who is referencing it. Cannot add another one\n",
-            paActionInfo.getLayer().getCommFB()->getInstanceName(), (*it)->mBrowsePath.getValue());
-          retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
-          break;
-        }
-      }
-
-      if(UA_STATUSCODE_GOOD == retVal) {
-        UA_ParentNodeHandler parentNodeContext(UA_NodeId_new(), (*it)->mNodeId,
-            static_cast<CLocalMethodInfo&>(paActionInfo));
-
-        UA_NodeId_copy(paParentNode, parentNodeContext.mParentNodeId);
-
-        methodsWithoutContext.pushBack(parentNodeContext);
-
-        retVal = UA_Server_setMethodNode_callback(mUaServer, *(*it)->mNodeId, COPC_UA_Local_Handler::onServerMethodCall);
-        if(UA_STATUSCODE_GOOD != retVal) {
-          DEVLOG_ERROR("[OPC UA LOCAL]: Could not set callback function for method at %s. Error: %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName(),
-            UA_StatusCode_name(retVal));
-        }
-      }
-    } else {
+  //check if the method was already referenced by another FB
+  for(CSinglyLinkedList<UA_ParentNodeHandler>::Iterator iter = mMethodsContexts.begin(); iter != mMethodsContexts.end(); ++iter) {
+    if(UA_NodeId_equal(paParentNode, (*iter).mParentNodeId) && UA_NodeId_equal((*it)->mNodeId, (*iter).mMethodNodeId)) {
       DEVLOG_ERROR(
         "[OPC UA LOCAL]: The FB %s is trying to reference a local method at %s which has already a FB who is referencing it. Cannot add another one\n",
         paActionInfo.getLayer().getCommFB()->getInstanceName(), (*it)->mBrowsePath.getValue());
       retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
+      break;
     }
-  } else {
-    DEVLOG_ERROR("[OPC UA LOCAL]: At FB %s the node %s could not retrieve context. Error: %s\n",
-        paActionInfo.getLayer().getCommFB()->getInstanceName(), (*it)->mBrowsePath.getValue()), UA_StatusCode_name(retVal);
+  }
+
+  //TODO: check types of existing method to this layer
+
+  if(UA_STATUSCODE_GOOD == retVal) {
+    retVal = UA_Server_setMethodNode_callback(mUaServer, *(*it)->mNodeId, COPC_UA_Local_Handler::onServerMethodCall);
+    if(UA_STATUSCODE_GOOD == retVal) {
+      retVal = UA_Server_setNodeContext(mUaServer, *(*it)->mNodeId, &mMethodsContexts);
+      if(UA_STATUSCODE_GOOD == retVal) {
+        UA_ParentNodeHandler parentNodeContext(paParentNode, (*it)->mNodeId, static_cast<CLocalMethodInfo&>(paActionInfo));
+        mMethodsContexts.pushBack(parentNodeContext);
+      } else {
+        DEVLOG_ERROR("[OPC UA LOCAL]: Could not set context function for method at %s. Error: %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName(),
+          UA_StatusCode_name(retVal));
+      }
+    } else {
+      DEVLOG_ERROR("[OPC UA LOCAL]: Could not set callback function for method at %s. Error: %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName(),
+        UA_StatusCode_name(retVal));
+    }
   }
   return retVal;
 }
@@ -1262,20 +1256,11 @@ UA_StatusCode COPC_UA_Local_Handler::initializeCreateMethod(CActionInfo & paActi
         methodInformation.mOutputSize = paActionInfo.getLayer().getCommFB()->getNumSD();
         methodInformation.mInputSize = paActionInfo.getLayer().getCommFB()->getNumRD();
 
-        retVal = createMethodNode(methodInformation);
-
+        retVal = createMethodNode(methodInformation, &(*itMethodNodePairInfo)->mNodeId);
         if(UA_STATUSCODE_GOOD == retVal) {
           UA_NodeId *tmp = UA_NodeId_new();
           UA_NodeId_copy(methodInformation.mReturnedNodeId, tmp);
           referencedNodes.pushBack(tmp);
-
-          if(!(*itMethodNodePairInfo)->mNodeId) {
-            (*itMethodNodePairInfo)->mNodeId = UA_NodeId_new();
-            UA_NodeId_copy(methodInformation.mReturnedNodeId, (*itMethodNodePairInfo)->mNodeId);
-          }
-        } else {
-          DEVLOG_ERROR("[OPC UA LOCAL]: OPC UA could not create method at %s. Error: %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName(),
-            UA_StatusCode_name(retVal));
         }
       }
     }

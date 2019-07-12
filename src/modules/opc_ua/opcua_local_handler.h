@@ -116,7 +116,8 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     class UA_ParentNodeHandler {
       public:
         UA_ParentNodeHandler(UA_NodeId *paParentNodeId, UA_NodeId *paMethodNodeId, CLocalMethodInfo& paActionInfo) :
-            mParentNodeId(paParentNodeId), mMethodNodeId(paMethodNodeId), mActionInfo(paActionInfo) {
+            mParentNodeId(UA_NodeId_new()), mMethodNodeId(paMethodNodeId), mActionInfo(paActionInfo) {
+          UA_NodeId_copy(paParentNodeId, mParentNodeId);
         }
         ~UA_ParentNodeHandler() {
           UA_NodeId_delete(mParentNodeId);
@@ -135,7 +136,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
         UA_ParentNodeHandler& operator=(const UA_ParentNodeHandler& other);
     };
 
-    static CSinglyLinkedList<UA_ParentNodeHandler> methodsWithoutContext;
+    CSinglyLinkedList<UA_ParentNodeHandler> mMethodsContexts;
 
     class CCreateInfo {
       public:
@@ -234,6 +235,8 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     CSinglyLinkedList<UA_VariableContext_Handle> mNodeCallbackHandles;
 
     CSyncObject mCreateNodesMutex;
+    
+    
 
     UA_StatusCode handleExistingVariable(CActionInfo& paActionInfo, CActionInfo::CNodePairInfo& paNodePairInfo, COPC_UA_Helper::UA_TypeConvert* paTypeConvert,
         size_t paIndexOfNodePair, bool paWrite);
@@ -297,7 +300,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param returnNodeId node id of the newly created method
      * @return UA_STATUSCODE_GOOD on success. Error otherwise
      */
-    UA_StatusCode createMethodNode(CCreateMethodInfo& paMethodInfo);
+    UA_StatusCode createMethodNode(CCreateMethodInfo& paMethodInfo, UA_NodeId **paNodeId);
 
     /**
      * Update UA Address Space node value given by the data pointer to an IEC61499 data object.
