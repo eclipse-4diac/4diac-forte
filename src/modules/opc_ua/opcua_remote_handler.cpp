@@ -9,7 +9,7 @@
  *    Jose Cabral, Kirill Dorofeev - initial implementation
  *******************************************************************************/
 
-#include "opcua_client_handler.h"
+#include "opcua_remote_handler.h"
 #include "../../core/devexec.h"
 #include "../../core/iec61131_functions.h"
 #include "../../core/cominfra/basecommfb.h"
@@ -18,7 +18,7 @@
 
 using namespace forte::com_infra;
 
-DEFINE_HANDLER(COPC_UA_Client_Handler);
+DEFINE_HANDLER(COPC_UA_Remote_Handler);
 
 COPC_UA_Client_IterationList::COPC_UA_Client_IterationList() :
     mNewClientsPresent(false) {
@@ -38,10 +38,6 @@ void COPC_UA_Client_IterationList::stopIterationThread() {
   setAlive(false);
   resumeIterationLoop();
   end();
-}
-
-void COPC_UA_Client_IterationList::resumeIterationLoop() {
-  mNeedsIteration.inc();
 }
 
 void COPC_UA_Client_IterationList::addClient(CUA_ClientInformation& paClientInformation) {
@@ -76,6 +72,10 @@ void COPC_UA_Client_IterationList::run() {
   }
 }
 
+void COPC_UA_Client_IterationList::resumeIterationLoop() {
+  mNeedsIteration.inc();
+}
+
 void COPC_UA_Client_IterationList::addClientToList(CUA_ClientInformation& paClientInformation, CSinglyLinkedList<CUA_ClientInformation*>& paList) {
   bool elementAlreadyPresent = false;
   for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = paList.begin(); itClientInformation != paList.end(); ++itClientInformation) {
@@ -103,70 +103,26 @@ void COPC_UA_Client_IterationList::updateClientList() {
 
 // ***************** CLIENT HANDLER ************* //
 
-COPC_UA_Client_Handler::COPC_UA_Client_Handler(CDeviceExecution& paDeviceExecution) :
+COPC_UA_Remote_Handler::COPC_UA_Remote_Handler(CDeviceExecution& paDeviceExecution) :
     COPC_UA_HandlerAbstract(paDeviceExecution), mConnectionHandler(*this) {
 }
 
-COPC_UA_Client_Handler::~COPC_UA_Client_Handler() {
+COPC_UA_Remote_Handler::~COPC_UA_Remote_Handler() {
   disableHandler();
   cleanResources();
 }
 
-void COPC_UA_Client_Handler::cleanResources() {
-  CCriticalRegion criticalRegion(mAllClientListMutex);
-  for(CSinglyLinkedList<CUA_ClientInformation*>::Iterator itClientInformation = mAllClients.begin(); itClientInformation != mAllClients.end();
-      ++itClientInformation) {
-    mConnectionHandler.removeClient(**itClientInformation);
-    removeClient(**itClientInformation);
-    delete *itClientInformation;
-  }
-  mAllClients.clearAll();
-}
-
-void COPC_UA_Client_Handler::enableHandler(void) {
+void COPC_UA_Remote_Handler::enableHandler(void) {
   startIterationThread();
   mConnectionHandler.startIterationThread();
 }
 
-void COPC_UA_Client_Handler::disableHandler(void) {
+void COPC_UA_Remote_Handler::disableHandler(void) {
   mConnectionHandler.stopIterationThread();
   stopIterationThread();
 }
 
-void COPC_UA_Client_Handler::addClientToConnectionList(CUA_ClientInformation& paClientInformation) {
-  mConnectionHandler.addClient(paClientInformation);
-}
-
-bool COPC_UA_Client_Handler::handleClients() {
-  CCriticalRegion iterationCriticalRegion(mIterationClientsMutex); //this is needed because removing a client from the list could cause trouble
-  CSinglyLinkedList<CUA_ClientInformation *> failedClients;
-  bool asyncIsNeeded = false;
-  for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = mIterationClients.begin(); itClientInformation != mIterationClients.end();
-      ++itClientInformation) {
-    CCriticalRegion criticalRegionClienMutex((*itClientInformation)->getMutex());
-    if((*itClientInformation)->isAsyncNeeded() && (*itClientInformation)->executeAsyncCalls()) {
-      failedClients.pushBack(*itClientInformation);
-    } else {
-      asyncIsNeeded = (*itClientInformation)->isAsyncNeeded();
-    }
-    if(!isAlive()) {
-      break;
-    }
-  }
-
-  if(isAlive() && !failedClients.isEmpty()) {
-    for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = failedClients.begin(); itClientInformation != failedClients.end();
-        ++itClientInformation) {
-      DEVLOG_ERROR("[OPC UA REMOTE]: There was a problem checking remote %s.\n", (*itClientInformation)->getEndpoint().getValue());
-      mIterationClients.erase(*itClientInformation);
-      (*itClientInformation)->uninitializeClient(); //reset all in client and pass it back to the connection handler
-      addClientToConnectionList(**itClientInformation);
-    }
-  }
-  return asyncIsNeeded;
-}
-
-UA_StatusCode COPC_UA_Client_Handler::initializeAction(CActionInfo& paActionInfo) {
+UA_StatusCode COPC_UA_Remote_Handler::initializeAction(CActionInfo& paActionInfo) {
   enableHandler();
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
   switch(paActionInfo.getAction()){
@@ -174,7 +130,7 @@ UA_StatusCode COPC_UA_Client_Handler::initializeAction(CActionInfo& paActionInfo
     case CActionInfo::eWrite:
     case CActionInfo::eCallMethod:
     case CActionInfo::eSubscribe:
-      retVal = initializeActionInClient(paActionInfo);
+      retVal = getClientAndAddAction(paActionInfo);
       break;
     case CActionInfo::eCreateMethod:
     case CActionInfo::eCreateObject:
@@ -188,9 +144,9 @@ UA_StatusCode COPC_UA_Client_Handler::initializeAction(CActionInfo& paActionInfo
   return retVal;
 }
 
-UA_StatusCode COPC_UA_Client_Handler::executeAction(CActionInfo& paActionInfo) {
+UA_StatusCode COPC_UA_Remote_Handler::executeAction(CActionInfo& paActionInfo) {
 
-  CUA_ClientInformation* clientInfo = getClient(paActionInfo.getEndpoint());
+  CUA_ClientInformation *clientInfo = getClient(paActionInfo.getEndpoint());
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
 
   if(clientInfo && clientInfo->isActionInitialized(paActionInfo)) {
@@ -220,14 +176,14 @@ UA_StatusCode COPC_UA_Client_Handler::executeAction(CActionInfo& paActionInfo) {
   return retVal;
 }
 
-UA_StatusCode COPC_UA_Client_Handler::uninitializeAction(CActionInfo& paActionInfo) {
+UA_StatusCode COPC_UA_Remote_Handler::uninitializeAction(CActionInfo& paActionInfo) {
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
   switch(paActionInfo.getAction()){
     case CActionInfo::eRead:
     case CActionInfo::eWrite:
     case CActionInfo::eCallMethod:
     case CActionInfo::eSubscribe:
-      referencedClientsDecrement(paActionInfo);
+      removeActionFromClient(paActionInfo);
       retVal = UA_STATUSCODE_GOOD;
       break;
     default:
@@ -237,10 +193,31 @@ UA_StatusCode COPC_UA_Client_Handler::uninitializeAction(CActionInfo& paActionIn
   return retVal;
 }
 
-CUA_ClientInformation* COPC_UA_Client_Handler::getClient(CIEC_STRING& paEndpoint) {
+void COPC_UA_Remote_Handler::cleanResources() {
+  CCriticalRegion criticalRegion(mAllClientListMutex);
+  for(CSinglyLinkedList<CUA_ClientInformation*>::Iterator itClientInformation = mAllClients.begin(); itClientInformation != mAllClients.end();
+      ++itClientInformation) {
+    mConnectionHandler.removeClient(**itClientInformation);
+    removeClient(**itClientInformation);
+    delete *itClientInformation;
+  }
+  mAllClients.clearAll();
+}
+
+UA_StatusCode COPC_UA_Remote_Handler::getClientAndAddAction(CActionInfo& paActionInfo) {
+  UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
+  CUA_ClientInformation *clientInfo = getClient(paActionInfo.getEndpoint());
+  if(clientInfo) {
+    addActionToClient(paActionInfo);
+    retVal = UA_STATUSCODE_GOOD;
+  }
+  return retVal;
+}
+
+CUA_ClientInformation* COPC_UA_Remote_Handler::getClient(const CIEC_STRING &paEndpoint) {
   CCriticalRegion allClientsRegion(mAllClientListMutex);
 
-  CUA_ClientInformation* client = 0;
+  CUA_ClientInformation *client = 0;
   for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = mAllClients.begin(); itClientInformation != mAllClients.end();
       ++itClientInformation) {
     if((*itClientInformation)->getEndpoint() == paEndpoint) {
@@ -250,7 +227,7 @@ CUA_ClientInformation* COPC_UA_Client_Handler::getClient(CIEC_STRING& paEndpoint
   }
   if(!client) {
     client = new CUA_ClientInformation(paEndpoint);
-    if(client->initialize()) {
+    if(client->configureClient()) {
       mAllClients.pushBack(client);
     } else {
       delete client;
@@ -261,23 +238,23 @@ CUA_ClientInformation* COPC_UA_Client_Handler::getClient(CIEC_STRING& paEndpoint
   return client;
 }
 
-void COPC_UA_Client_Handler::referencedClientsIncrement(CActionInfo& paActionInfo) {
+void COPC_UA_Remote_Handler::addActionToClient(CActionInfo& paActionInfo) {
   CCriticalRegion allClientsRegion(mAllClientListMutex);
   for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = mAllClients.begin(); itClientInformation != mAllClients.end();
       ++itClientInformation) {
     CCriticalRegion clientRegion((*itClientInformation)->getMutex());
     if((*itClientInformation)->getEndpoint() == paActionInfo.getEndpoint()) {
       (*itClientInformation)->addAction(paActionInfo);
-      addClientToConnectionList(**itClientInformation);
+      addClientToConnectionHandler(**itClientInformation);
       break;
     }
   }
 }
 
-void COPC_UA_Client_Handler::referencedClientsDecrement(CActionInfo& paActionInfo) {
+void COPC_UA_Remote_Handler::removeActionFromClient(CActionInfo& paActionInfo) {
   CCriticalRegion allClientsRegion(mAllClientListMutex);
 
-  CUA_ClientInformation * clientToDelete = 0;
+  CUA_ClientInformation *clientToDelete = 0;
   for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = mAllClients.begin(); itClientInformation != mAllClients.end();
       ++itClientInformation) {
     CCriticalRegion clientRegion((*itClientInformation)->getMutex());
@@ -293,34 +270,63 @@ void COPC_UA_Client_Handler::referencedClientsDecrement(CActionInfo& paActionInf
   }
 }
 
-void COPC_UA_Client_Handler::removeClientFromAllLists(CUA_ClientInformation& paClientInformation) {
+void COPC_UA_Remote_Handler::removeClientFromAllLists(CUA_ClientInformation& paClientInformation) {
   mConnectionHandler.removeClient(paClientInformation);
   removeClient(paClientInformation);
   mAllClients.erase(&paClientInformation);
   delete &paClientInformation;
 }
 
-UA_StatusCode COPC_UA_Client_Handler::initializeActionInClient(CActionInfo& paActionInfo) {
-  UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
-  CUA_ClientInformation* clientInfo = getClient(paActionInfo.getEndpoint());
-  if(clientInfo) {
-    referencedClientsIncrement(paActionInfo);
-    retVal = UA_STATUSCODE_GOOD;
+void COPC_UA_Remote_Handler::addClientToConnectionHandler(CUA_ClientInformation& paClientInformation) {
+  mConnectionHandler.addClient(paClientInformation);
+}
+
+bool COPC_UA_Remote_Handler::handleClients() {
+  CCriticalRegion iterationCriticalRegion(mIterationClientsMutex); //this is needed because removing a client from the list could cause trouble
+  CSinglyLinkedList<CUA_ClientInformation *> failedClients;
+  bool asyncIsNeeded = false;
+  for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = mIterationClients.begin(); itClientInformation != mIterationClients.end();
+      ++itClientInformation) {
+    CCriticalRegion criticalRegionClienMutex((*itClientInformation)->getMutex());
+    if((*itClientInformation)->isAsyncNeeded()) {
+      if(!(*itClientInformation)->executeAsyncCalls()) {
+        failedClients.pushBack(*itClientInformation);
+      } else {
+        asyncIsNeeded = (*itClientInformation)->isAsyncNeeded();
+      }
+    }
+    if(!isAlive()) {
+      break;
+    }
   }
-  return retVal;
+
+  if(isAlive() && !failedClients.isEmpty()) {
+    for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = failedClients.begin(); itClientInformation != failedClients.end();
+        ++itClientInformation) {
+      DEVLOG_ERROR("[OPC UA REMOTE]: There was a problem checking remote %s.\n", (*itClientInformation)->getEndpoint().getValue());
+
+      //we cannot use COPC_UA_Client_IterationList::remove here because it locks mIterationClientsMutex
+      CCriticalRegion newClientsRegion(mNewClientsMutex);
+      CCriticalRegion criticalRegionClienMutex((*itClientInformation)->getMutex());
+      mIterationClients.erase(*itClientInformation);
+      mNewClients.erase(*itClientInformation); //client could still be in the newList
+      (*itClientInformation)->uninitializeClient(); //reset all in client and pass it back to the connection handler
+      addClientToConnectionHandler(**itClientInformation);
+    }
+  }
+  return asyncIsNeeded;
 }
 
 //************************** CONECTION HANDLER ************** //
 
-COPC_UA_Client_Handler::UA_ConnectionHandler::UA_ConnectionHandler(COPC_UA_Client_Handler& paClientHandler) :
+COPC_UA_Remote_Handler::UA_ConnectionHandler::UA_ConnectionHandler(COPC_UA_Remote_Handler& paClientHandler) :
     mClientHandler(paClientHandler) {
 }
 
-COPC_UA_Client_Handler::UA_ConnectionHandler::~UA_ConnectionHandler() {
-  //do nothing
+COPC_UA_Remote_Handler::UA_ConnectionHandler::~UA_ConnectionHandler() {
 }
 
-bool COPC_UA_Client_Handler::UA_ConnectionHandler::handleClients() {
+bool COPC_UA_Remote_Handler::UA_ConnectionHandler::handleClients() {
   CCriticalRegion clientsClientsRegion(mIterationClientsMutex);
   CSinglyLinkedList<CUA_ClientInformation *> clientsToRemove;
   bool needsRetry = false;

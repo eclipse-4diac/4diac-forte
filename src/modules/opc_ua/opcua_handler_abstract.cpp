@@ -56,11 +56,11 @@ void COPC_UA_HandlerAbstract::UA_Log_Forte(
 #endif //FORTE_COM_OPC_UA_MASTER_BRANCH
     UA_LogLevel paLevel, UA_LogCategory paCategory, const char *paMsg, va_list paArgs) {
 
-  char tmpStr[mMaxLogLenght];
-  forte_snprintf(tmpStr, mMaxLogLenght, "[OPC UA LOGGER] %s/%s\t", LogLevelNames[paLevel], LogCategoryNames[paCategory]);
+  char tmpStr[mMaxLogLength];
+  forte_snprintf(tmpStr, mMaxLogLength, "[OPC UA LOGGER] %s/%s\t", LogLevelNames[paLevel], LogCategoryNames[paCategory]);
   char *start = &tmpStr[strlen(tmpStr)];
 
-  forte_vsnprintf(start, mMaxLogLenght, paMsg, paArgs);
+  forte_vsnprintf(start, mMaxLogLength, paMsg, paArgs);
 
   size_t len = strlen(tmpStr);
   tmpStr[len] = '\n';

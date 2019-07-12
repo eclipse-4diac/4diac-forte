@@ -340,23 +340,4 @@ FUNCTION(forte_add_custom_configuration arg1)
   SET_PROPERTY(GLOBAL APPEND_STRING PROPERTY FORTE_CUSTOM_CONFIGURATIONS_GLOBAL "${arg1}" \n\n)
 ENDFUNCTION(forte_add_custom_configuration)
 
-######### Nodesets functions ####################################################    
-#Don't use this function. This is just a private one
-FUNCTION(forte_opcua_add_nodeset_general namespaceName directoryName)
-  forte_add_sourcefile_with_path_hc(${directoryName}/ua_namespace_${namespaceName})
-  set_property(GLOBAL APPEND PROPERTY FORTE_OPCUA_NODESETS_LIST ${namespaceName})
-ENDFUNCTION()
-  
-#Use this function for nodesets wich have a file called ua_types_NAMESPACE_generated.c file (DI for example). directoryName should point to the directory where the files are
-FUNCTION(forte_opcua_add_nodeset namespaceName directoryName)
-  forte_add_sourcefile_with_path_hc(${directoryName}/ua_types_${namespaceName}_generated)
-  forte_opcua_add_nodeset_general(${namespaceName} ${directoryName})
-ENDFUNCTION()
-     
-#Use this function for nodesets wich DON'T have a file called ua_types_NAMESPACE_generated.c file (PLC for example). directoryName should point to the directory where the files are
-FUNCTION(forte_opcua_add_nodeset_without_generated namespaceName directoryName)
-  forte_opcua_add_nodeset_general(${namespaceName} ${directoryName})
-  forte_add_include_directories(${directoryName})
-ENDFUNCTION()
-  
-     #################################################################################
+INCLUDE(${FORTE_BUILDSUPPORT_DIRECTORY}/opcua.cmake)

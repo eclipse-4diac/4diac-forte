@@ -304,26 +304,5 @@ if(FORTE_LINKED_STRINGDICT)
 endif(FORTE_LINKED_STRINGDICT)
 
 if(FORTE_COM_OPC_UA)
-  GET_PROPERTY(FORTE_OPCUA_NODESETS GLOBAL PROPERTY FORTE_OPCUA_NODESETS_LIST)
-  LIST(LENGTH FORTE_OPCUA_NODESETS FORTE_OPCUA_NODESETS_LEN)
-  math(EXPR FORTE_OPCUA_NODESETS_LEN ${FORTE_OPCUA_NODESETS_LEN}-1)
-    
-  SET(FORTE_OPCUA_NODESETS_INCLUDE "")
-  SET(FORTE_OPCUA_NODESETS_CODE "")
-
-  FOREACH(POS RANGE ${FORTE_OPCUA_NODESETS_LEN})
-    LIST(GET FORTE_OPCUA_NODESETS ${POS} FORTE_OPCUA_NODESET)
-    IF(NOT ${FORTE_OPCUA_NODESET} EQUAL "")
-      SET(FORTE_OPCUA_NODESETS_INCLUDE "${FORTE_OPCUA_NODESETS_INCLUDE} #include \"ua_namespace_${FORTE_OPCUA_NODESET}.h\"\n")
-      SET(FORTE_OPCUA_NODESETS_CODE "${FORTE_OPCUA_NODESETS_CODE}  if(UA_STATUSCODE_GOOD != ua_namespace_${FORTE_OPCUA_NODESET}(paUaServer)) return false;\n")
-	ELSE()  
-      SET(FORTE_OPCUA_NODESETS_CODE "(void)paUaServer;\n") #to silence warning
-    ENDIF()
-  ENDFOREACH(POS)
-
-  set(FORTE_OPCUA_MODULE_DIR "src/modules/opc_ua")
-
-  CONFIGURE_FILE(${FORTE_OPCUA_MODULE_DIR}/opcua_nodesets.cpp.in ${CMAKE_BINARY_DIR}/modules/opc_ua/opcua_nodesets_new.cpp)
-  forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/modules/opc_ua/opcua_nodesets_new.cpp ${CMAKE_BINARY_DIR}/modules/opc_ua/opcua_nodesets.cpp)
-  file(REMOVE ${CMAKE_BINARY_DIR}/modules/opc_ua/opcua_nodesets_new.cpp)
+  forte_opcua_configure_nodesets()
 endif()

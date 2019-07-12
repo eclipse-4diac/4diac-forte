@@ -15,7 +15,7 @@ extern "C" {
 ${FORTE_OPCUA_NODESETS_INCLUDE}
 }
 
-bool COPC_UA_Local_Handler::initializeNodesets(UA_Server* paUaServer){
+bool COPC_UA_Local_Handler::initializeNodesets(UA_Server &paUaServer){
 ${FORTE_OPCUA_NODESETS_CODE}
   return true;
 }
