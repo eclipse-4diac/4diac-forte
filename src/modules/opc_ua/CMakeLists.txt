@@ -27,6 +27,8 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 if (FORTE_COM_OPC_UA)
 
     forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/modules/opc_ua/opcua_nodesets.cpp) # created file
+    
+    forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/modules/opc_ua/opcua_types.cpp) # created file
 
     SET(FORTE_COM_OPC_UA_PORT "4840" CACHE NUMBER "Port where the OPC_UA server will listen")
     SET(FORTE_COM_OPC_UA_MULTICAST OFF CACHE BOOLEAN "Enable multicast support for OPC UA and registering with LDS")
@@ -75,6 +77,8 @@ if (FORTE_COM_OPC_UA)
     forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA_MULTICAST")
     forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA_MASTER_BRANCH")
     forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA_CUSTOM_HOSTNAME \"${FORTE_COM_OPC_UA_CUSTOM_HOSTNAME}\"")
+    
+    forte_opcua_add_type(forte_localizedtext LocalizedText UA_TYPES_LOCALIZEDTEXT)
 
     add_subdirectory(FBs)    
     add_subdirectory(types)

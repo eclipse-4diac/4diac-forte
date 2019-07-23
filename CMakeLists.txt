@@ -304,5 +304,5 @@ if(FORTE_LINKED_STRINGDICT)
 endif(FORTE_LINKED_STRINGDICT)
 
 if(FORTE_COM_OPC_UA)
-  forte_opcua_configure_nodesets()
+  forte_opcua_configure()
 endif()

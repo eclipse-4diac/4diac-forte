@@ -14,217 +14,160 @@
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "opcua_helper_gen.cpp"
 #endif
-#include "convert_functions.h"
 #include "../../core/utils/parameterParser.h"
 #include "../../arch/devlog.h"
-#include "types/forte_localizedtext.h"
+#include "convert_functions.h"
+#include <forte_struct.h>
+#include <forte_array.h>
 
-#define UA_String_to_char_alloc(str, chars) { \
-        chars = static_cast<char*>(forte_malloc(str->length+1)); \
-        memcpy(chars, str->data, str->length); \
-        chars[str->length] = 0; \
-    }
-
-template<CIEC_ANY::EDataTypeID T_FORTE_E, typename T_FORTE_T, typename T_C>
-bool mapConvertGet(const CIEC_ANY *src, void *dst) {
-  if(src->getDataTypeID() != T_FORTE_E)
-    return false;
-  T_C *dstType = static_cast<T_C *>(dst);
-  *dstType = *(T_FORTE_T *) (src);
-  return true;
-}
-;
-
-template<CIEC_ANY::EDataTypeID T_FORTE_E, typename T_FORTE_T, typename T_C>
-bool mapConvertSet(const void *src, CIEC_ANY *dst) {
-  if(dst->getDataTypeID() != T_FORTE_E)
-    return false;
-  T_FORTE_T *dstType = static_cast<T_FORTE_T *>(dst);
-  *dstType = *(T_C *) (src);
-  return true;
-}
-;
-
-#define MAP_INSERT_CONVERT(T_FORTE_E, T_FORTE_T, T_UA, T_C) \
-    { \
-        T_UA, \
-        &mapConvertGet<T_FORTE_E, T_FORTE_T, T_C>, \
-        &mapConvertSet<T_FORTE_E, T_FORTE_T, T_C> \
-    } \
-
-#define MAP_INSERT_CONVERT_SPECIFIC(T_FORTE_T, T_UA) \
-    { \
-        T_UA, \
-        &mapConvertGet##T_FORTE_T, \
-        &mapConvertSet##T_FORTE_T \
-    } \
-
-bool mapConvertGetCIEC_LocalizedText(const CIEC_ANY * const src, void *dst) {
-  if(src->getDataTypeID() != CIEC_ANY::e_STRUCT || g_nStringIdLocalizedText != static_cast<const CIEC_STRUCT*>(src)->getStructTypeNameID()) {
-    return false;
-  }
-  CIEC_LocalizedText *iecLocalizedText = const_cast<CIEC_LocalizedText*>(reinterpret_cast<const CIEC_LocalizedText*>(src));
-  UA_LocalizedText *uaLocalizedText = static_cast<UA_LocalizedText *>(dst);
-
-  uaLocalizedText->locale = UA_String_fromChars(iecLocalizedText->locale().getValue());
-  uaLocalizedText->text = UA_String_fromChars(iecLocalizedText->text().getValue());
-  return true;
+template<typename T_FORTE_TYPE, typename T_OPCUA_TYPE>
+size_t convertFromIECToOPCUASpecific(const CIEC_ANY &paSrc, void *paDest) {
+  *static_cast<T_OPCUA_TYPE *>(paDest) = static_cast<const T_FORTE_TYPE &>(paSrc);
+  return sizeof(T_OPCUA_TYPE);
 }
 
-bool mapConvertSetCIEC_LocalizedText(const void * const src, CIEC_ANY *dst) {
-  if(dst->getDataTypeID() != CIEC_ANY::e_STRUCT || g_nStringIdLocalizedText != static_cast<const CIEC_STRUCT*>(dst)->getStructTypeNameID()) {
-    return false;
-  }
-  CIEC_LocalizedText *iecLocalizedText = static_cast<CIEC_LocalizedText *>(dst);
-
-  const UA_LocalizedText *uaLocalizedText = static_cast<const UA_LocalizedText *>(src);
-
-  char *chars;
-  UA_String_to_char_alloc((&uaLocalizedText->locale), chars);
-  iecLocalizedText->locale().fromString(chars);
-  forte_free(chars);
-
-  UA_String_to_char_alloc((&uaLocalizedText->text), chars);
-  iecLocalizedText->text().fromString(chars);
-  forte_free(chars);
-
-  return true;
+template<typename T_FORTE_TYPE, typename T_OPCUA_TYPE>
+size_t convertFromOPCUAToIECSpecific(const void *paSrc, CIEC_ANY &paDest) {
+  static_cast<T_FORTE_TYPE &>(paDest) = *static_cast<const T_OPCUA_TYPE *>(paSrc);
+  return sizeof(T_OPCUA_TYPE);
 }
 
-bool mapConvertGetCIEC_DATE(const CIEC_ANY *src, void *dst) {
-  if(src->getDataTypeID() != CIEC_ANY::e_DATE)
-    return false;
-  UA_DateTime *dstType = static_cast<UA_DateTime *>(dst);
-  *dstType = DATE_TO_DT(*reinterpret_cast<const CIEC_DATE*>(src));
-  return true;
+template<>
+size_t convertFromIECToOPCUASpecific<CIEC_DATE, UA_DateTime>(const CIEC_ANY & paSrc, void *paDest) {
+  *static_cast<UA_DateTime *>(paDest) = DATE_TO_DT(static_cast<const CIEC_DATE&>(paSrc));
+  return sizeof(UA_DateTime);
 }
 
-bool mapConvertSetCIEC_DATE(const void *src, CIEC_ANY *dst) {
-  if(dst->getDataTypeID() != CIEC_ANY::e_DATE)
-    return false;
-  CIEC_DATE *dstType = static_cast<CIEC_DATE *>(dst);
-  *dstType = DT_TO_DATE(*reinterpret_cast<const TForteUInt64*>(reinterpret_cast<const UA_DateTime*>(src)));
-  return true;
+template<>
+size_t convertFromOPCUAToIECSpecific<CIEC_DATE, UA_DateTime>(const void *paSrc, CIEC_ANY &paDest) {
+  static_cast<CIEC_DATE &>(paDest) = DT_TO_DATE(*reinterpret_cast<const TForteUInt64*>(static_cast<const UA_DateTime*>(paSrc)));
+  return sizeof(UA_DateTime);
 }
 
-bool mapConvertGetCIEC_TIME_OF_DAY(const CIEC_ANY *src, void *) {
-  if(src->getDataTypeID() != CIEC_ANY::e_TIME_OF_DAY)
-    return false;
-  //TODO how convert TOD to DT?
-  return false;
+template<>
+size_t convertFromIECToOPCUASpecific<CIEC_TIME_OF_DAY, UA_DateTime>(const CIEC_ANY & paSrc, void *paDest) {
+  //TODO how convert TOD to UA_DateTime?
+  return 0;
 }
 
-bool mapConvertSetCIEC_TIME_OF_DAY(const void *, CIEC_ANY *dst) {
-  if(dst->getDataTypeID() != CIEC_ANY::e_TIME_OF_DAY)
-    return false;
+template<>
+size_t convertFromOPCUAToIECSpecific<CIEC_TIME_OF_DAY, UA_DateTime>(const void *paSrc, CIEC_ANY &paDest) {
   //TODO how convert UA_DateTime to TOD?
-  return false;
+  return 0;
 }
 
-bool mapConvertGetCIEC_STRING(const CIEC_ANY *src, void *dst) {
-  if(src->getDataTypeID() != CIEC_ANY::e_STRING)
-    return false;
-  UA_String *dstType = static_cast<UA_String *>(dst);
-  *dstType = UA_String_fromChars(static_cast<const CIEC_STRING *>(src)->getValue());
-  return true;
+template<>
+size_t convertFromIECToOPCUASpecific<CIEC_STRING, UA_String>(const CIEC_ANY &paSrc, void *paDest) {
+  *static_cast<UA_String *>(paDest) = UA_String_fromChars(static_cast<const CIEC_STRING &>(paSrc).getValue());
+  return sizeof(UA_String);
 }
 
-bool mapConvertSetCIEC_STRING(const void *src, CIEC_ANY *dst) {
-  if(dst->getDataTypeID() != CIEC_ANY::e_STRING)
-    return false;
-  CIEC_STRING *dstType = static_cast<CIEC_STRING *>(dst);
-
-  const UA_String *str = static_cast<const UA_String *>(src);
-  char *chars;
-  UA_String_to_char_alloc(str, chars);
-  dstType->fromString(chars);
-  forte_free(chars);
-  return true;
+template<>
+size_t convertFromOPCUAToIECSpecific<CIEC_STRING, UA_String>(const void *paSrc, CIEC_ANY &paDest) {
+  const UA_String *str = static_cast<const UA_String *>(paSrc);
+  static_cast<CIEC_STRING &>(paDest).assign(reinterpret_cast<const char*>(str->data), static_cast<TForteUInt16>(str->length));
+  return sizeof(UA_String);
 }
 
-bool mapConvertGetCIEC_WSTRING(const CIEC_ANY *src, void *dst) {
-  if(src->getDataTypeID() != CIEC_ANY::e_WSTRING)
-    return false;
-  COPC_UA_Helper::UA_TypeConvert conv = COPC_UA_Helper::mapForteTypeIdToOpcUa[CIEC_ANY::e_STRING];
-  CIEC_STRING str = WSTRING_TO_STRING(*static_cast<const CIEC_WSTRING *>(src));
-  return conv.get(&str, dst);
+template<>
+size_t convertFromIECToOPCUASpecific<CIEC_WSTRING, UA_String>(const CIEC_ANY &paSrc, void *paDest) {
+  CIEC_STRING str = WSTRING_TO_STRING(static_cast<const CIEC_WSTRING &>(paSrc));
+  return convertFromIECToOPCUASpecific<CIEC_STRING, UA_String>(str, paDest);
 }
 
-bool mapConvertSetCIEC_WSTRING(const void *src, CIEC_ANY *dst) {
-  if(dst->getDataTypeID() != CIEC_ANY::e_WSTRING)
-    return false;
-  CIEC_WSTRING *dstType = static_cast<CIEC_WSTRING *>(dst);
-
-  const UA_String *str = static_cast<const UA_String *>(src);
-  char *chars;
-  UA_String_to_char_alloc(str, chars);
-  dstType->fromString(chars);
-  forte_free(chars);
-
-  return true;
+template<>
+size_t convertFromOPCUAToIECSpecific<CIEC_WSTRING, UA_String>(const void *paSrc, CIEC_ANY &paDest) {
+  const UA_String *str = static_cast<const UA_String *>(paSrc);
+  static_cast<CIEC_WSTRING &>(paDest).assign(reinterpret_cast<const char*>(str->data), static_cast<TForteUInt16>(str->length));
+  return sizeof(UA_String);
 }
 
-/**
- * ATTENTION:
- * This array has to match the enum CIEC_ANY::EDataTypeID.
- * Current maximum index is WSTRING
- */
-const COPC_UA_Helper::UA_TypeConvert COPC_UA_Helper::mapForteTypeIdToOpcUa[] = { { // dummy for e_ANY
-  NULL,
-  NULL,
-  NULL },
-  MAP_INSERT_CONVERT(CIEC_ANY::e_BOOL, CIEC_BOOL, &UA_TYPES[UA_TYPES_BOOLEAN], UA_Boolean),
-  MAP_INSERT_CONVERT(CIEC_ANY::e_SINT, CIEC_SINT, &UA_TYPES[UA_TYPES_SBYTE], UA_SByte),
-  MAP_INSERT_CONVERT(CIEC_ANY::e_INT, CIEC_INT, &UA_TYPES[UA_TYPES_INT16], UA_Int16),
-  MAP_INSERT_CONVERT(CIEC_ANY::e_DINT, CIEC_DINT, &UA_TYPES[UA_TYPES_INT32], UA_Int32),
-  MAP_INSERT_CONVERT(CIEC_ANY::e_LINT, CIEC_LINT, &UA_TYPES[UA_TYPES_INT64], UA_Int64),
-  MAP_INSERT_CONVERT(CIEC_ANY::e_USINT, CIEC_USINT, &UA_TYPES[UA_TYPES_BYTE], UA_Byte),
-  MAP_INSERT_CONVERT(CIEC_ANY::e_UINT, CIEC_UINT, &UA_TYPES[UA_TYPES_UINT16], UA_UInt16),
-  MAP_INSERT_CONVERT(CIEC_ANY::e_UDINT, CIEC_UDINT, &UA_TYPES[UA_TYPES_UINT32], UA_UInt32),
-  MAP_INSERT_CONVERT(CIEC_ANY::e_ULINT, CIEC_ULINT, &UA_TYPES[UA_TYPES_UINT64], UA_UInt64),
-  MAP_INSERT_CONVERT(CIEC_ANY::e_BYTE, CIEC_BYTE, &UA_TYPES[UA_TYPES_BYTE], UA_Byte),
-  MAP_INSERT_CONVERT(CIEC_ANY::e_WORD, CIEC_WORD, &UA_TYPES[UA_TYPES_UINT16], UA_UInt16),
-  MAP_INSERT_CONVERT(CIEC_ANY::e_DWORD, CIEC_DWORD, &UA_TYPES[UA_TYPES_UINT32], UA_UInt32),
-  MAP_INSERT_CONVERT(CIEC_ANY::e_LWORD, CIEC_LWORD, &UA_TYPES[UA_TYPES_UINT64], UA_UInt64),
-  MAP_INSERT_CONVERT_SPECIFIC(CIEC_DATE, &UA_TYPES[UA_TYPES_DATETIME]),
-  MAP_INSERT_CONVERT_SPECIFIC(CIEC_TIME_OF_DAY, &UA_TYPES[UA_TYPES_DATETIME]),
-  MAP_INSERT_CONVERT(CIEC_ANY::e_DATE_AND_TIME, CIEC_DATE_AND_TIME, &UA_TYPES[UA_TYPES_DATETIME], UA_DateTime),
-  MAP_INSERT_CONVERT(CIEC_ANY::e_TIME, CIEC_TIME, &UA_TYPES[UA_TYPES_DOUBLE], UA_Int64),
-  MAP_INSERT_CONVERT(CIEC_ANY::e_REAL, CIEC_REAL, &UA_TYPES[UA_TYPES_FLOAT], UA_Float),
-  MAP_INSERT_CONVERT(CIEC_ANY::e_LREAL, CIEC_LREAL, &UA_TYPES[UA_TYPES_DOUBLE], UA_Double),
-  MAP_INSERT_CONVERT_SPECIFIC(CIEC_STRING, &UA_TYPES[UA_TYPES_STRING]),
-  MAP_INSERT_CONVERT_SPECIFIC(CIEC_WSTRING, &UA_TYPES[UA_TYPES_STRING]),
-  MAP_INSERT_CONVERT_SPECIFIC(CIEC_LocalizedText, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT]) };
+const COPC_UA_Helper::UA_TypeConvert COPC_UA_Helper::scmMapForteTypeIdToOpcUa[] = {
+  UA_TypeConvert(0, 0, 0), // dummy for e_ANY
+  UA_TypeConvert(&UA_TYPES[UA_TYPES_BOOLEAN], &convertFromIECToOPCUASpecific<CIEC_BOOL, UA_Boolean>, &convertFromOPCUAToIECSpecific<CIEC_BOOL, UA_Boolean>),
+  UA_TypeConvert(&UA_TYPES[UA_TYPES_SBYTE], &convertFromIECToOPCUASpecific<CIEC_SINT, UA_SByte>, &convertFromOPCUAToIECSpecific<CIEC_SINT, UA_SByte>),
+  UA_TypeConvert(&UA_TYPES[UA_TYPES_INT16], &convertFromIECToOPCUASpecific<CIEC_INT, UA_Int16>, &convertFromOPCUAToIECSpecific<CIEC_INT, UA_Int16>),
+  UA_TypeConvert(&UA_TYPES[UA_TYPES_INT32], &convertFromIECToOPCUASpecific<CIEC_DINT, UA_Int32>, &convertFromOPCUAToIECSpecific<CIEC_DINT, UA_Int32>),
+  UA_TypeConvert(&UA_TYPES[UA_TYPES_INT64], &convertFromIECToOPCUASpecific<CIEC_LINT, UA_Int64>, &convertFromOPCUAToIECSpecific<CIEC_LINT, UA_Int64>),
+  UA_TypeConvert(&UA_TYPES[UA_TYPES_BYTE], &convertFromIECToOPCUASpecific<CIEC_USINT, UA_Byte>, &convertFromOPCUAToIECSpecific<CIEC_USINT, UA_Byte>),
+  UA_TypeConvert(&UA_TYPES[UA_TYPES_UINT16], &convertFromIECToOPCUASpecific<CIEC_UINT, UA_UInt16>, &convertFromOPCUAToIECSpecific<CIEC_UINT, UA_UInt16>),
+  UA_TypeConvert(&UA_TYPES[UA_TYPES_UINT32], &convertFromIECToOPCUASpecific<CIEC_UDINT, UA_UInt32>, &convertFromOPCUAToIECSpecific<CIEC_UDINT, UA_UInt32>),
+  UA_TypeConvert(&UA_TYPES[UA_TYPES_UINT64], &convertFromIECToOPCUASpecific<CIEC_ULINT, UA_UInt64>, &convertFromOPCUAToIECSpecific<CIEC_ULINT, UA_UInt64>),
+  UA_TypeConvert(&UA_TYPES[UA_TYPES_BYTE], &convertFromIECToOPCUASpecific<CIEC_BYTE, UA_Byte>, &convertFromOPCUAToIECSpecific<CIEC_ULINT, UA_Byte>),
+  UA_TypeConvert(&UA_TYPES[UA_TYPES_UINT16], &convertFromIECToOPCUASpecific<CIEC_WORD, UA_UInt16>, &convertFromOPCUAToIECSpecific<CIEC_WORD, UA_UInt16>),
+  UA_TypeConvert(&UA_TYPES[UA_TYPES_UINT32], &convertFromIECToOPCUASpecific<CIEC_DWORD, UA_UInt32>, &convertFromOPCUAToIECSpecific<CIEC_DWORD, UA_UInt32>),
+  UA_TypeConvert(&UA_TYPES[UA_TYPES_UINT64], &convertFromIECToOPCUASpecific<CIEC_LWORD, UA_UInt64>, &convertFromOPCUAToIECSpecific<CIEC_LWORD, UA_UInt64>),
+  UA_TypeConvert(&UA_TYPES[UA_TYPES_DATETIME], &convertFromIECToOPCUASpecific<CIEC_DATE, UA_DateTime>, &convertFromOPCUAToIECSpecific<CIEC_DATE, UA_DateTime>),
+  UA_TypeConvert(&UA_TYPES[UA_TYPES_DATETIME], &convertFromIECToOPCUASpecific<CIEC_TIME_OF_DAY, UA_DateTime>,
+    &convertFromOPCUAToIECSpecific<CIEC_TIME_OF_DAY, UA_DateTime>),
+  UA_TypeConvert(&UA_TYPES[UA_TYPES_UINT64], &convertFromIECToOPCUASpecific<CIEC_LWORD, UA_UInt64>, &convertFromOPCUAToIECSpecific<CIEC_LWORD, UA_UInt64>),
+  UA_TypeConvert(&UA_TYPES[UA_TYPES_DATETIME], &convertFromIECToOPCUASpecific<CIEC_DATE_AND_TIME, UA_DateTime>,
+    &convertFromOPCUAToIECSpecific<CIEC_DATE_AND_TIME, UA_DateTime>),
+  UA_TypeConvert(&UA_TYPES[UA_TYPES_FLOAT], &convertFromIECToOPCUASpecific<CIEC_REAL, UA_Float>, &convertFromOPCUAToIECSpecific<CIEC_REAL, UA_Float>),
+  UA_TypeConvert(&UA_TYPES[UA_TYPES_DOUBLE], &convertFromIECToOPCUASpecific<CIEC_LREAL, UA_Double>, &convertFromOPCUAToIECSpecific<CIEC_LREAL, UA_Double>),
+    UA_TypeConvert(&UA_TYPES[UA_TYPES_STRING], &convertFromIECToOPCUASpecific<CIEC_STRING, UA_String>, &convertFromOPCUAToIECSpecific<CIEC_STRING, UA_String>),
+    UA_TypeConvert(&UA_TYPES[UA_TYPES_STRING], &convertFromIECToOPCUASpecific<CIEC_WSTRING, UA_String>, &convertFromOPCUAToIECSpecific<CIEC_WSTRING, UA_String>), };
 
-bool COPC_UA_Helper::isTypeValid(CIEC_ANY *paAny) {
-  CIEC_ANY::EDataTypeID typeId = paAny->getDataTypeID();
-  if(typeId >= CIEC_ANY::e_BOOL && typeId <= CIEC_ANY::e_WSTRING) {
-    return true;
-  } else if(CIEC_ANY::e_STRUCT == typeId) {
-    CStringDictionary::TStringId typeOfStructure = static_cast<CIEC_STRUCT*>(paAny)->getStructTypeNameID();
 
-    //for now, only localizedText is supported. TODO: move this check to an own generated function, where the structures are added in CMake
-    if(typeOfStructure == g_nStringIdLocalizedText) {
-      return true;
-    }
+const UA_DataType *COPC_UA_Helper::getOPCUATypeFromAny(const CIEC_ANY& paAnyType) {
+  CIEC_ANY::EDataTypeID typeId = paAnyType.getDataTypeID();
+  if(typeId >= CIEC_ANY::e_BOOL && typeId <= CIEC_ANY::e_WSTRING) { //basic type
+    return scmMapForteTypeIdToOpcUa[typeId].mType;
+  } else if(CIEC_ANY::e_ARRAY == typeId) {
+    return getOPCUATypeFromAny(*static_cast<const CIEC_ARRAY&>(paAnyType)[0]);
+  } else {
+    return getExternalOPCUATypeFromAny(paAnyType);
   }
-  return false;
+  return 0;
 }
 
-const COPC_UA_Helper::UA_TypeConvert* COPC_UA_Helper::geTypeConvertFromAny(CIEC_ANY* paAny) {
-  const UA_TypeConvert *retVal = 0;
-  CIEC_ANY::EDataTypeID typeId = paAny->getDataTypeID();
-  if(typeId >= CIEC_ANY::e_BOOL && typeId <= CIEC_ANY::e_WSTRING) {
-    retVal = &mapForteTypeIdToOpcUa[typeId];
-  } else if(CIEC_ANY::e_STRUCT == typeId) {
-    CStringDictionary::TStringId typeOfStructure = static_cast<CIEC_STRUCT*>(paAny)->getStructTypeNameID();
+size_t COPC_UA_Helper::convertToOPCUAType(const CIEC_ANY& paSrcAny, void *paDest) {
+  size_t retVal = 0;
 
-    //for now, only localizedText is supported. TODO: move this check to an own generated function, where the structures are added in CMake
-    if(typeOfStructure == g_nStringIdLocalizedText) {
-      retVal = &mapForteTypeIdToOpcUa[CIEC_ANY::e_WSTRING + 1];
+  CIEC_ANY::EDataTypeID typeId = paSrcAny.getDataTypeID();
+  if(typeId >= CIEC_ANY::e_BOOL && typeId <= CIEC_ANY::e_WSTRING) { //basic type
+    retVal = scmMapForteTypeIdToOpcUa[typeId].mToOPCUA(paSrcAny, paDest);
+  } else if(CIEC_ANY::e_ARRAY == typeId) {
+    for(size_t i = 0; i < static_cast<const CIEC_ARRAY&>(paSrcAny).size(); i++) {
+      retVal += convertToOPCUAType(*static_cast<const CIEC_ARRAY&>(paSrcAny)[static_cast<TForteUInt16>(i)], static_cast<char*>(paDest) + retVal);
+    }
+  } else if(CIEC_ANY::e_STRUCT == typeId) {
+    const CIEC_ANY *members = static_cast<const CIEC_STRUCT&>(paSrcAny).getMembers();
+    for(size_t i = 0; i < static_cast<const CIEC_STRUCT&>(paSrcAny).getStructSize(); i++) {
+      retVal += convertToOPCUAType(members[i], static_cast<char*>(paDest) + retVal);
     }
   }
   return retVal;
+}
+
+size_t COPC_UA_Helper::convertFromOPCUAType(const void *paSrc, CIEC_ANY &paDestAny) {
+  size_t retVal = 0;
+
+  CIEC_ANY::EDataTypeID typeId = paDestAny.getDataTypeID();
+  if(typeId >= CIEC_ANY::e_BOOL && typeId <= CIEC_ANY::e_WSTRING) { //basic type
+    retVal = scmMapForteTypeIdToOpcUa[typeId].mFromOPCUA(paSrc, paDestAny);
+  } else if(CIEC_ANY::e_ARRAY == typeId) {
+    for(size_t i = 0; i < static_cast<CIEC_ARRAY&>(paDestAny).size(); i++) {
+      retVal += convertFromOPCUAType(static_cast<const char*>(paSrc) + retVal, *static_cast<CIEC_ARRAY&>(paDestAny)[static_cast<TForteUInt16>(i)]);
+    }
+  } else if(CIEC_ANY::e_STRUCT == typeId) {
+    CIEC_ANY *members = static_cast<CIEC_STRUCT&>(paDestAny).getMembers();
+    for(size_t i = 0; i < static_cast<CIEC_STRUCT&>(paDestAny).getStructSize(); i++) {
+      retVal += convertFromOPCUAType(static_cast<const char*>(paSrc) + retVal, members[i]);
+    }
+  }
+  return retVal;
+}
+
+void COPC_UA_Helper::fillVariant(UA_Variant &paVariant, const CIEC_ANY &paDataSource) {
+  UA_Variant_init(&paVariant);
+  paVariant.type = COPC_UA_Helper::getOPCUATypeFromAny(paDataSource);
+  void *varValue = UA_new(paVariant.type);
+  UA_init(varValue, paVariant.type);
+  COPC_UA_Helper::convertToOPCUAType(paDataSource, varValue);
+  UA_Variant_setScalarCopy(&paVariant, varValue, paVariant.type);
+  paVariant.storageType = UA_VARIANT_DATA;
+  UA_delete(varValue, paVariant.type);
 }
 
 bool COPC_UA_Helper::isBrowsePathValid(const char *paBrowsepath) {

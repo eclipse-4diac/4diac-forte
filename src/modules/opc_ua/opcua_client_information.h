@@ -196,18 +196,17 @@ class CUA_ClientInformation {
      *  since there's always some include issue
      */
     struct UA_SubscribeContext_Handle {
-        UA_SubscribeContext_Handle(CActionInfo& paActionInfo, const COPC_UA_Helper::UA_TypeConvert *paConvert, size_t paPortIndex) :
-            mActionInfo(paActionInfo), mConvert(paConvert), mPortIndex(paPortIndex) {
+        UA_SubscribeContext_Handle(CActionInfo& paActionInfo, size_t paPortIndex) :
+            mActionInfo(paActionInfo), mPortIndex(paPortIndex) {
         }
 
         //default copy constructor should be enough
 
         bool operator==(UA_SubscribeContext_Handle const& paRightObject) const {
-          return (&mActionInfo == &paRightObject.mActionInfo && mConvert == paRightObject.mConvert && mPortIndex == paRightObject.mPortIndex);
+          return (&mActionInfo == &paRightObject.mActionInfo && mPortIndex == paRightObject.mPortIndex);
         }
 
         CActionInfo& mActionInfo;
-        const struct COPC_UA_Helper::UA_TypeConvert *mConvert;
         size_t mPortIndex;
     };
 
@@ -341,7 +340,6 @@ class CUA_ClientInformation {
      * @param paDeleteSubscription The subscription must be deleted from the OPC UA stack
      */
     void resetSubscription(bool paDeleteSubscription);
-
 
     /**
      * Copy constructor is private and not defined to avoid its usage

@@ -53,9 +53,8 @@ class CActionInfo {
      * @param paLayer The layer that creates and executes the action
      * @param paAction The action to be executed
      * @param paEndpoint The endpoint of a remote OPC UA in case the action is to be executed remotely. An empty endpoint means that the action is to be executed locally
-     * @param paTypes A list of type converters of the connections of the FB of the action (SDs/RDs)
      */
-    explicit CActionInfo(COPC_UA_Layer &paLayer, UA_ActionType paAction, CIEC_STRING &paEndpoint, CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *> &paTypes);
+    explicit CActionInfo(COPC_UA_Layer &paLayer, UA_ActionType paAction, CIEC_STRING &paEndpoint);
 
     /**
      * Destructor of the class
@@ -95,14 +94,6 @@ class CActionInfo {
     }
 
     /**
-     * Getter of the list of type converters of the action
-     * @return List of type converters
-     */
-    CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>& getTypeConverters() {
-      return mConverters;
-    }
-
-    /**
      * Gets the amount of node pair in the action
      * @return Amount of node pair in the action
      */
@@ -126,7 +117,31 @@ class CActionInfo {
      * @param paTypes A list of type converters of the connections of the FB of the action (SDs/RDs)
      * @return
      */
-    static CActionInfo* getActionInfoFromParams(const char *paParams, COPC_UA_Layer &paLayer, CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *> &paTypes);
+    static CActionInfo* getActionInfoFromParams(const char *paParams, COPC_UA_Layer &paLayer);
+
+    /**
+     * Retrieves the array of CIEC_ANY to be sent
+     * @return the array of CIEC_ANY to be sent
+     */
+    const CIEC_ANY *getDataToSend();
+
+    /**
+     * Retrieves the array of CIEC_ANY where to receive the data
+     * @return array of CIEC_ANY where to receive the data
+     */
+    CIEC_ANY *getDataToReceive();
+
+    /**
+     * Retrieves the size of the array to send
+     * @return size of the array to send
+     */
+    size_t getSendSize();
+
+    /**
+     * Retrieves the size of the array to receive
+     * @return size of the array to receive
+     */
+    size_t getReceiveSize();
 
     /**
      * String representations of the actions and which should be provided as the first part of the ID
@@ -240,11 +255,6 @@ class CActionInfo {
      */
     CSinglyLinkedList<CNodePairInfo*> mNodePair;
 
-    /**
-     * List of type converters of the nodes the actions is accessing
-     */
-    CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *> mConverters; //first all SDs and then RDs
-
     static const size_t scmMinimumAmounOfParameters = 2; //at least two are needed
 
     enum IDPositions {
@@ -338,7 +348,7 @@ class CLocalMethodInfo : public CActionInfo {
      * @param paEndpoint The endpoint of a remote OPC UA in case the action is to be executed remotely. An empty endpoint means that the action is to be executed locally
      * @param paTypes A list of type converters of the connections of the FB of the action (SDs/RDs)
      */
-    explicit CLocalMethodInfo(COPC_UA_Layer& paLayer, CIEC_STRING& paEndpoint, CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>& paTypes);
+    explicit CLocalMethodInfo(COPC_UA_Layer& paLayer, CIEC_STRING& paEndpoint);
 
     /**
      * Destructor of the class

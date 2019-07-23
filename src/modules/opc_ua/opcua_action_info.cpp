@@ -15,11 +15,8 @@
 
 const char * const CActionInfo::mActionNames[] = { "READ", "WRITE", "CREATE_METHOD", "CALL_METHOD", "SUBSCRIBE", "CREATE_OBJECT", "DELETE_OBJECT" };
 
-CActionInfo::CActionInfo(COPC_UA_Layer &paLayer, UA_ActionType paAction, CIEC_STRING &paEndpoint, CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *> &paTypes) :
+CActionInfo::CActionInfo(COPC_UA_Layer &paLayer, UA_ActionType paAction, CIEC_STRING &paEndpoint) :
     mAction(paAction), mLayer(paLayer), mEndpoint(paEndpoint) {
-  for(CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>::Iterator itTypes = paTypes.begin(); itTypes != paTypes.end(); ++itTypes) {
-    mConverters.pushBack(*itTypes);
-  }
 }
 
 CActionInfo::~CActionInfo() {
@@ -35,7 +32,7 @@ bool CActionInfo::isRemote() {
   return ("" != mEndpoint);
 }
 
-CActionInfo* CActionInfo::getActionInfoFromParams(const char* paParams, COPC_UA_Layer &paLayer, CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *> &paTypes) {
+CActionInfo* CActionInfo::getActionInfoFromParams(const char* paParams, COPC_UA_Layer &paLayer) {
   CActionInfo *retVal = 0;
   CParameterParser mainParser(paParams, ';');
   size_t amountOfParameters = mainParser.parseParameters();
@@ -52,9 +49,9 @@ CActionInfo* CActionInfo::getActionInfoFromParams(const char* paParams, COPC_UA_
       }
 
       if(CActionInfo::eCreateMethod == action) {
-        retVal = new CLocalMethodInfo(paLayer, endpoint, paTypes);
+        retVal = new CLocalMethodInfo(paLayer, endpoint);
       } else {
-        retVal = new CActionInfo(paLayer, action, endpoint, paTypes);
+        retVal = new CActionInfo(paLayer, action, endpoint);
       }
 
       bool somethingFailed = false;
@@ -80,6 +77,22 @@ CActionInfo* CActionInfo::getActionInfoFromParams(const char* paParams, COPC_UA_
   }
 
   return retVal;
+}
+
+const CIEC_ANY *CActionInfo::getDataToSend() {
+  return mLayer.getCommFB()->getSDs();
+}
+
+CIEC_ANY *CActionInfo::getDataToReceive() {
+  return mLayer.getCommFB()->getRDs();
+}
+
+size_t CActionInfo::getSendSize() {
+  return static_cast<size_t>(mLayer.getCommFB()->getNumSD());
+}
+
+size_t CActionInfo::getReceiveSize() {
+  return static_cast<size_t>(mLayer.getCommFB()->getNumRD());
 }
 
 bool CActionInfo::checkAction() {
@@ -357,8 +370,8 @@ bool CActionInfo::CActionParser::parseIdentifier(const char *paIdentifier, UA_No
 
 // **** METHOD ACTION *****//
 
-CLocalMethodInfo::CLocalMethodInfo(COPC_UA_Layer &paLayer, CIEC_STRING &paEndpoint, CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *> &paTypes) :
-    CActionInfo(paLayer, eCreateMethod, paEndpoint, paTypes) {
+CLocalMethodInfo::CLocalMethodInfo(COPC_UA_Layer &paLayer, CIEC_STRING &paEndpoint) :
+    CActionInfo(paLayer, eCreateMethod, paEndpoint) {
 }
 
 CLocalMethodInfo::~CLocalMethodInfo() {

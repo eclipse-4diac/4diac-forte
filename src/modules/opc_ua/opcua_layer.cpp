@@ -37,9 +37,8 @@ COPC_UA_Layer::~COPC_UA_Layer() {
 EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
   EComResponse response = e_InitTerminated;
 
-  CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *> types;
-  if(storeTypesFromInterface(types)) {
-    mActionInfo = CActionInfo::getActionInfoFromParams(paLayerParameter, *this, types);
+  if(checkTypesFromInterface()) {
+    mActionInfo = CActionInfo::getActionInfoFromParams(paLayerParameter, *this);
     if(mActionInfo) {
       mHandler =
           (mActionInfo->isRemote()) ? static_cast<COPC_UA_HandlerAbstract*>(&getExtEvHandler<COPC_UA_Remote_Handler>()) :
@@ -70,15 +69,13 @@ EComResponse COPC_UA_Layer::recvData(const void *paData, unsigned int) {
   if(!handleRecv->mFailed) {
     if(handleRecv->mSize) {
       if(handleRecv->mSize + handleRecv->mOffset <= getCommFB()->getNumRD()) {
+        CIEC_ANY *RDs = getCommFB()->getRDs() + handleRecv->mOffset;
         for(size_t i = 0; i < handleRecv->mSize; i++) {
-          if(UA_Variant_isScalar(handleRecv->mData[i]) && handleRecv->mData[i]->data && handleRecv->mData[i]->type == handleRecv->mConvert[i]->type) {
-            if(!handleRecv->mConvert[i]->set(handleRecv->mData[i]->data, &getCommFB()->getRDs()[handleRecv->mOffset + i])) {
-              DEVLOG_ERROR("[OPC UA LAYER]: Couldn't store variable into RD_%d of FB %s\n", handleRecv->mOffset + i, getCommFB()->getInstanceName());
-              mInterruptResp = e_ProcessDataRecvFaild;
-              break;
-            }
+          if(UA_Variant_isScalar(handleRecv->mData[i]) && handleRecv->mData[i]->data
+            && handleRecv->mData[i]->type == COPC_UA_Helper::getOPCUATypeFromAny(RDs[i])) {
+            COPC_UA_Helper::convertFromOPCUAType(handleRecv->mData[i]->data, RDs[i]);
           } else {
-            DEVLOG_ERROR("[OPC UA LAYER]: RD_%d of FB %s has no data, is not a scalar or there is a type missmatch\n", handleRecv->mOffset + i,
+            DEVLOG_ERROR("[OPC UA LAYER]: RD_%d of FB %s has no data, is not a scalar or there is a type mismatch\n", handleRecv->mOffset + i,
               getCommFB()->getInstanceName());
             mInterruptResp = e_ProcessDataRecvFaild;
             break;
@@ -122,34 +119,27 @@ void COPC_UA_Layer::triggerNewEvent() {
   mHandler->triggerNewEvent(*this->getCommFB());
 }
 
-bool COPC_UA_Layer::storeTypesFromInterface(CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>& paConverters) {
+bool COPC_UA_Layer::checkTypesFromInterface() {
   bool somethingFailed = false;
   for(unsigned int i = 0; i < getCommFB()->getNumSD(); i++) {
-    const COPC_UA_Helper::UA_TypeConvert *result;
-    if(!getPortConnectionInfo(i + 2, true, &result)) {
+    if(!checkPortConnectionInfo(i + 2, true)) {
       somethingFailed = true;
       break;
     }
-    paConverters.pushBack(const_cast<COPC_UA_Helper::UA_TypeConvert*>(result));
   }
   if(!somethingFailed) {
     for(unsigned int i = 0; i < getCommFB()->getNumRD(); i++) {
-      const COPC_UA_Helper::UA_TypeConvert *result;
-      if(!getPortConnectionInfo(i + 2, false, &result)) {
+      if(!checkPortConnectionInfo(i + 2, false)) {
         somethingFailed = true;
         break;
       }
-      paConverters.pushBack(const_cast<COPC_UA_Helper::UA_TypeConvert*>(result));
     }
   }
 
-  if(somethingFailed) {
-    paConverters.clearAll();
-  }
   return !somethingFailed;
 }
 
-bool COPC_UA_Layer::getPortConnectionInfo(unsigned int paPortIndex, bool paIsSD, const COPC_UA_Helper::UA_TypeConvert **paResult) const {
+bool COPC_UA_Layer::checkPortConnectionInfo(unsigned int paPortIndex, bool paIsSD) const {
   const SFBInterfaceSpec *localInterfaceSpec = getCommFB()->getFBInterfaceSpec();
   const CStringDictionary::TStringId localPortNameId = paIsSD ? localInterfaceSpec->m_aunDINames[paPortIndex] : localInterfaceSpec->m_aunDONames[paPortIndex];
 
@@ -178,12 +168,11 @@ bool COPC_UA_Layer::getPortConnectionInfo(unsigned int paPortIndex, bool paIsSD,
     }
   }
 
-  if(!COPC_UA_Helper::isTypeValid(remoteType)) {
+  if(!COPC_UA_Helper::getOPCUATypeFromAny(*remoteType)) {
     DEVLOG_ERROR("[OPC UA LAYER]: Invalid  type %d in FB %s at connection %s\n", remoteType, getCommFB()->getInstanceName(),
       CStringDictionary::getInstance().get(localPortNameId));
     return false;
   }
-  *paResult = COPC_UA_Helper::geTypeConvertFromAny(remoteType);
 
   return true;
 }

@@ -16,7 +16,7 @@
 
 
 CUA_ClientInformation::CUA_ClientInformation(const CIEC_STRING &paEndpoint) :
-    mClient(0), mSubscriptionInfo(0), mMissingAsyncCalls(0), mEndpointUrl(paEndpoint), mWaitToInitializeActions(false), mNeedsReconnection(false),
+    mEndpointUrl(paEndpoint), mClient(0), mSubscriptionInfo(0), mMissingAsyncCalls(0), mNeedsReconnection(false), mWaitToInitializeActions(false),
         mLastReconnectionTry(0), mLastActionInitializationTry(0), mSomeActionWasInitialized(false) {
 }
 
@@ -172,48 +172,32 @@ UA_StatusCode CUA_ClientInformation::executeWrite(CActionInfo& paActionInfo) {
   UA_WriteValue *ids = static_cast<UA_WriteValue *>(UA_Array_new(request.nodesToWriteSize, &UA_TYPES[UA_TYPES_WRITEVALUE]));
   request.nodesToWrite = ids;
 
-  bool somethingFailed = false;
   size_t indexOfNodePair = 0;
-  CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>::Iterator itType = paActionInfo.getTypeConverters().begin();
+  const CIEC_ANY *dataToSend = paActionInfo.getDataToSend();
   for(CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itNodePair = paActionInfo.getNodePairInfo().begin();
-      itNodePair != paActionInfo.getNodePairInfo().end(); ++itNodePair, ++itType, indexOfNodePair++) {
+      itNodePair != paActionInfo.getNodePairInfo().end(); ++itNodePair, indexOfNodePair++) {
+
     UA_WriteValue_init(&ids[indexOfNodePair]);
     ids[indexOfNodePair].attributeId = UA_ATTRIBUTEID_VALUE;
     UA_NodeId_copy((*itNodePair)->mNodeId, &ids[indexOfNodePair].nodeId);
-
-    UA_Variant_init(&ids[indexOfNodePair].value.value);
     ids[indexOfNodePair].value.hasValue = true;
-    ids[indexOfNodePair].value.value.type = (*itType)->type;
 
-    void *varValue = UA_new((*itType)->type);
-    UA_init(varValue, (*itType)->type);
-    if(!(*itType)->get(&paActionInfo.getLayer().getCommFB()->getSDs()[indexOfNodePair], varValue)) {
-      DEVLOG_ERROR("[OPC UA CLIENT]: The index %d of the FB %s could not be converted\n", indexOfNodePair,
-        paActionInfo.getLayer().getCommFB()->getInstanceName());
-      somethingFailed = true;
-      break;
-    } else {
-      UA_Variant_setScalarCopy(&ids[indexOfNodePair].value.value, varValue, (*itType)->type);
-      ids[indexOfNodePair].value.value.storageType = UA_VARIANT_DATA;
-    }
-    UA_delete(varValue, (*itType)->type);
+    COPC_UA_Helper::fillVariant(ids[indexOfNodePair].value.value, dataToSend[indexOfNodePair]);
   }
 
-  if(!somethingFailed) {
-    UA_RemoteCallHandle *remoteCallHandle = new UA_RemoteCallHandle(paActionInfo, *this);
-    retVal =
+  UA_RemoteCallHandle *remoteCallHandle = new UA_RemoteCallHandle(paActionInfo, *this);
+  retVal =
 #ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-      UA_Client_sendAsyncWriteRequest(mClient, &request, CUA_RemoteCallbackFunctions::writeAsyncCallback, remoteCallHandle, 0);
+    UA_Client_sendAsyncWriteRequest(mClient, &request, CUA_RemoteCallbackFunctions::writeAsyncCallback, remoteCallHandle, 0);
 #else
     UA_Client_AsyncService_write(mClient, &request, CUA_RemoteCallbackFunctions::anyAsyncCallback, remoteCallHandle, 0);
 #endif
 
-    if(UA_STATUSCODE_GOOD != retVal) {
-      DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch write action for FB  %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName());
-      delete remoteCallHandle;
-    } else {
-      addAsyncCall();
-    }
+  if(UA_STATUSCODE_GOOD != retVal) {
+    DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch write action for FB  %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName());
+    delete remoteCallHandle;
+  } else {
+    addAsyncCall();
   }
 
   UA_WriteRequest_deleteMembers(&request);
@@ -232,51 +216,35 @@ UA_StatusCode CUA_ClientInformation::executeCallMethod(CActionInfo& paActionInfo
 
   UA_CallMethodRequest *methodRequest = &request.methodsToCall[0];
 
-  methodRequest->inputArgumentsSize = paActionInfo.getLayer().getCommFB()->getNumSD();
+  methodRequest->inputArgumentsSize = paActionInfo.getSendSize();
   methodRequest->inputArguments = static_cast<UA_Variant *>(UA_Array_new(methodRequest->inputArgumentsSize, &UA_TYPES[UA_TYPES_VARIANT]));
 
-  bool somethingFailed = false;
+  const CIEC_ANY *dataToSend = paActionInfo.getDataToSend();
 
-  CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>::Iterator itType = paActionInfo.getTypeConverters().begin();
   CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itNodePair = paActionInfo.getNodePairInfo().begin();
   UA_NodeId_copy((*itNodePair)->mNodeId, &methodRequest->methodId);
   ++itNodePair;
   UA_NodeId_copy((*itNodePair)->mNodeId, &methodRequest->objectId);
 
-  for(size_t i = 0; i < methodRequest->inputArgumentsSize; ++itType, i++) {
-    UA_Variant_init(&methodRequest->inputArguments[i]);
-    methodRequest->inputArguments[i].type = (*itType)->type;
-
-    void *varValue = UA_new((*itType)->type);
-    UA_init(varValue, (*itType)->type);
-    if(!(*itType)->get(&paActionInfo.getLayer().getCommFB()->getSDs()[i], varValue)) {
-      DEVLOG_ERROR("[OPC UA CLIENT]: The index %d of the FB %s could not be converted\n", i, paActionInfo.getLayer().getCommFB()->getInstanceName());
-      somethingFailed = true;
-      break;
-    } else {
-      UA_Variant_setScalarCopy(&methodRequest->inputArguments[i], varValue, (*itType)->type);
-      methodRequest->inputArguments[i].storageType = UA_VARIANT_DATA;
-    }
-    UA_delete(varValue, (*itType)->type);
+  for(size_t i = 0; i < methodRequest->inputArgumentsSize; i++) {
+    COPC_UA_Helper::fillVariant(methodRequest->inputArguments[i], dataToSend[i]);
   }
 
-  if(!somethingFailed) {
-    UA_RemoteCallHandle *remoteCallHandle = new UA_RemoteCallHandle(paActionInfo, *this);
-    retVal =
+  UA_RemoteCallHandle *remoteCallHandle = new UA_RemoteCallHandle(paActionInfo, *this);
+  retVal =
 
 #ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-      UA_Client_sendAsyncRequest(mClient, &request, &UA_TYPES[UA_TYPES_CALLREQUEST], CUA_RemoteCallbackFunctions::callMethodAsyncCallback,
+    UA_Client_sendAsyncRequest(mClient, &request, &UA_TYPES[UA_TYPES_CALLREQUEST], CUA_RemoteCallbackFunctions::callMethodAsyncCallback,
         &UA_TYPES[UA_TYPES_CALLRESPONSE], remoteCallHandle, 0);
 #else
     UA_Client_AsyncService_call(mClient, &request, CUA_RemoteCallbackFunctions::anyAsyncCallback, remoteCallHandle, 0);
 #endif
 
-    if(UA_STATUSCODE_GOOD != retVal) {
-      DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch call action for FB  %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName());
-      delete remoteCallHandle;
-    } else {
-      addAsyncCall();
-    }
+  if(UA_STATUSCODE_GOOD != retVal) {
+    DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch call action for FB  %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName());
+    delete remoteCallHandle;
+  } else {
+    addAsyncCall();
   }
 
   UA_CallRequest_deleteMembers(&request);
@@ -426,9 +394,8 @@ bool CUA_ClientInformation::initializeSubscription(CActionInfo& paActionInfo) {
 
     CSinglyLinkedList<UA_MonitoringItemInfo>::Iterator itFirstNewMonitoringItemInfo = mSubscriptionInfo->mMonitoredItems.end();
 
-    for(CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *>::Iterator itType = paActionInfo.getTypeConverters().begin();
-        itType != paActionInfo.getTypeConverters().end(); ++itType) {
-      UA_MonitoringItemInfo monitoringItemInfo(UA_SubscribeContext_Handle(paActionInfo, *itType, itemsAddedToList));
+    for(size_t i = 0; i < paActionInfo.getNoOfNodePairs(); i++) {
+      UA_MonitoringItemInfo monitoringItemInfo(UA_SubscribeContext_Handle(paActionInfo, itemsAddedToList));
       mSubscriptionInfo->mMonitoredItems.pushBack(monitoringItemInfo);
       if(itFirstNewMonitoringItemInfo == mSubscriptionInfo->mMonitoredItems.end()) { //store the first added item
         itFirstNewMonitoringItemInfo = mSubscriptionInfo->mMonitoredItems.back();
@@ -611,12 +578,9 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::readAsyncCallback(UA_Cl
 
       if(!varHandle.mFailed) {
         size_t indexOfPair = 0;
-        CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert*>::Iterator itType = remoteCallHandle->mActionInfo.getTypeConverters().begin();
         for(CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itNodePairs = remoteCallHandle->mActionInfo.getNodePairInfo().begin();
-            itNodePairs != remoteCallHandle->mActionInfo.getNodePairInfo().end(); ++itNodePairs, indexOfPair++, ++itType) {
-
+            itNodePairs != remoteCallHandle->mActionInfo.getNodePairInfo().end(); ++itNodePairs, indexOfPair++) {
           varHandle.mData[indexOfPair] = &paResponse->results[indexOfPair].value;
-          varHandle.mConvert[indexOfPair] = *itType;
         }
       }
     } else {
@@ -737,15 +701,6 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::callMethodAsyncCallback
     for(size_t i = 0; i < outputSize; i++) {
       varHandle.mData[i] = &paResponse->results->outputArguments[i];
     }
-    CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert*>::Iterator itType = remoteCallHandle->mActionInfo.getTypeConverters().begin();
-
-    //skip all SDs first
-    for(size_t i = 0; i < remoteCallHandle->mActionInfo.getLayer().getCommFB()->getNumSD(); i++, ++itType) {
-    }
-
-    for(size_t i = 0; i < paResponse->results->outputArgumentsSize; i++, ++itType) {
-      varHandle.mConvert[i] = *itType;
-    }
   }
 
   remoteCallHandle->mActionInfo.getLayer().recvData(static_cast<const void *>(&varHandle), 0);
@@ -766,7 +721,6 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::subscriptionValueChange
     const UA_Variant *value = &paData->value;
     handleRecv.mData[0] = value;
     handleRecv.mOffset = variableContextHandle->mPortIndex;
-    handleRecv.mConvert[0] = variableContextHandle->mConvert;
 
     forte::com_infra::EComResponse retVal = variableContextHandle->mActionInfo.getLayer().recvData(static_cast<const void *>(&handleRecv), 0);
 

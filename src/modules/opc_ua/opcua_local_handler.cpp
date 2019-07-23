@@ -446,9 +446,9 @@ UA_StatusCode COPC_UA_Local_Handler::initializeVariable(CActionInfo &paActionInf
 
   size_t indexOfNodePair = 0;
   CSinglyLinkedList<UA_NodeId*> referencedNodes;
-  CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert*>::Iterator itTypeConvert = paActionInfo.getTypeConverters().begin();
+  const CIEC_ANY *variables = paWrite ? paActionInfo.getDataToSend() : paActionInfo.getDataToReceive();
   for(CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itMain = paActionInfo.getNodePairInfo().begin();
-      itMain != paActionInfo.getNodePairInfo().end() && UA_STATUSCODE_GOOD == retVal; ++itMain, ++itTypeConvert, indexOfNodePair++) {
+      itMain != paActionInfo.getNodePairInfo().end() && UA_STATUSCODE_GOOD == retVal; ++itMain, indexOfNodePair++) {
 
     CSinglyLinkedList<UA_NodeId*> presentNodes;
     bool isNodePresent = false;
@@ -456,12 +456,12 @@ UA_StatusCode COPC_UA_Local_Handler::initializeVariable(CActionInfo &paActionInf
 
     if(UA_STATUSCODE_GOOD == retVal) {
       if(isNodePresent) {
-        retVal = handleExistingVariable(paActionInfo, **itMain, *itTypeConvert, indexOfNodePair, paWrite);
+        retVal = handleExistingVariable(paActionInfo, **itMain, variables[indexOfNodePair], indexOfNodePair, paWrite);
 
         handlePresentNodes(presentNodes, referencedNodes, UA_STATUSCODE_GOOD != retVal);
       } else { //node does not exist
         //presentNodes shouldn't have any allocated NodeId at this point
-        retVal = handleNonExistingVariable(paActionInfo, **itMain, *itTypeConvert, indexOfNodePair, referencedNodes, paWrite);
+        retVal = handleNonExistingVariable(paActionInfo, **itMain, variables[indexOfNodePair], indexOfNodePair, referencedNodes, paWrite);
       }
     }
   }
@@ -481,36 +481,51 @@ UA_StatusCode COPC_UA_Local_Handler::initializeVariable(CActionInfo &paActionInf
   return retVal;
 }
 
-UA_StatusCode COPC_UA_Local_Handler::handleExistingVariable(CActionInfo &paActionInfo, CActionInfo::CNodePairInfo &paNodePairInfo,
-    COPC_UA_Helper::UA_TypeConvert *paTypeConvert, size_t paIndexOfNodePair, bool paWrite) {
-  UA_StatusCode retVal = UA_STATUSCODE_GOOD;
-  if(!paWrite) { //If we are reading a variable, it should be writable from the outside
-    retVal = addWritePermission(*paNodePairInfo.mNodeId);
-    if(UA_STATUSCODE_GOOD == retVal) {
-      void *handle = 0;
-      retVal = UA_Server_getNodeContext(mUaServer, *paNodePairInfo.mNodeId, &handle);
-      if(UA_STATUSCODE_GOOD == retVal) {
-        if(!handle) {
-          retVal = registerVariableCallBack(*paNodePairInfo.mNodeId, paActionInfo, paTypeConvert, paIndexOfNodePair);
+UA_StatusCode COPC_UA_Local_Handler::handleExistingVariable(CActionInfo &paActionInfo, CActionInfo::CNodePairInfo &paNodePairInfo, const CIEC_ANY &paVariable,
+    size_t paIndexOfNodePair, bool paWrite) {
+
+  UA_NodeId outDataType;
+  UA_StatusCode retVal = UA_Server_readDataType(mUaServer, *paNodePairInfo.mNodeId, &outDataType);
+
+  if(UA_STATUSCODE_GOOD == retVal) {
+    if(UA_NodeId_equal(&outDataType, &COPC_UA_Helper::getOPCUATypeFromAny(paVariable)->typeId)) {
+      if(!paWrite) { //If we are reading a variable, it should be writable from the outside
+        retVal = addWritePermission(*paNodePairInfo.mNodeId);
+        if(UA_STATUSCODE_GOOD == retVal) {
+          void *handle = 0;
+          retVal = UA_Server_getNodeContext(mUaServer, *paNodePairInfo.mNodeId, &handle);
+          if(UA_STATUSCODE_GOOD == retVal) {
+            if(!handle) {
+              retVal = registerVariableCallBack(*paNodePairInfo.mNodeId, paActionInfo, paIndexOfNodePair);
+            } else {
+              DEVLOG_ERROR("[OPC UA LOCAL]: At FB %s RD_%d the node %s has already a FB who is reading from it. Cannot add another one\n",
+                paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair, paNodePairInfo.mBrowsePath.getValue());
+              retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
+            }
+          } else {
+            DEVLOG_ERROR("[OPC UA LOCAL]: At FB %s RD_%d the node %s could not retrieve context. Error: %s\n",
+                paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair, paNodePairInfo.mBrowsePath.getValue()), UA_StatusCode_name(retVal);
+          }
         } else {
-          DEVLOG_ERROR("[OPC UA LOCAL]: At FB %s RD_%d the node %s has already a FB who is reading from it. Cannot add another one\n",
-            paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair, paNodePairInfo.mBrowsePath.getValue());
-          retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
+          DEVLOG_ERROR("[OPC UA LOCAL]: Cannot set write permission of node for port %d", paIndexOfNodePair);
         }
-      } else {
-        DEVLOG_ERROR("[OPC UA LOCAL]: At FB %s RD_%d the node %s could not retrieve context. Error: %s\n",
-            paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair, paNodePairInfo.mBrowsePath.getValue()), UA_StatusCode_name(retVal);
       }
     } else {
-      DEVLOG_ERROR("[OPC UA LOCAL]: Cannot set write permission of node for port %d", paIndexOfNodePair);
+      DEVLOG_ERROR("[OPC UA LOCAL]: At FB %s index %d there was the type of the existing node doesn't match the new one",
+        paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair);
+      retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
     }
+
+  } else {
+    DEVLOG_ERROR("[OPC UA LOCAL]: At FB %s index %d there was a problem reading the type of the existing node",
+      paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair);
   }
 
   return retVal;
 }
 
 UA_StatusCode COPC_UA_Local_Handler::handleNonExistingVariable(CActionInfo &paActionInfo, CActionInfo::CNodePairInfo &paNodePairInfo,
-    COPC_UA_Helper::UA_TypeConvert *paTypeConvert, size_t paIndexOfNodePair, CSinglyLinkedList<UA_NodeId*> &paReferencedNodes, bool paWrite) {
+    const CIEC_ANY &paVariable, size_t paIndexOfNodePair, CSinglyLinkedList<UA_NodeId*> &paReferencedNodes, bool paWrite) {
 
   CIEC_STRING nodeName;
   UA_StatusCode retVal = splitAndCreateFolders(paNodePairInfo.mBrowsePath, nodeName, paReferencedNodes);
@@ -518,9 +533,8 @@ UA_StatusCode COPC_UA_Local_Handler::handleNonExistingVariable(CActionInfo &paAc
     CCreateVariableInfo variableInformation;
     initializeCreateInfo(nodeName, paNodePairInfo, paReferencedNodes.isEmpty() ? 0 : *(paReferencedNodes.back()), variableInformation);
 
-    variableInformation.mTypeConvert = paTypeConvert;
-    variableInformation.mInitData =
-        paWrite ? &paActionInfo.getLayer().getCommFB()->getSDs()[paIndexOfNodePair] : &paActionInfo.getLayer().getCommFB()->getRDs()[paIndexOfNodePair];
+    variableInformation.mTypeConvert = COPC_UA_Helper::getOPCUATypeFromAny(paVariable);
+    variableInformation.mInitData = &paVariable;
     variableInformation.mAllowWrite = !paWrite; // write FB here means that from the outside should not be possible to write and the other way around for read
 
     retVal = createVariableNode(variableInformation);
@@ -529,7 +543,7 @@ UA_StatusCode COPC_UA_Local_Handler::handleNonExistingVariable(CActionInfo &paAc
       UA_NodeId_copy(variableInformation.mReturnedNodeId, tmp);
       paReferencedNodes.pushBack(tmp);
       if(!paWrite) {
-        retVal = registerVariableCallBack(*variableInformation.mReturnedNodeId, paActionInfo, paTypeConvert, paIndexOfNodePair);
+        retVal = registerVariableCallBack(*variableInformation.mReturnedNodeId, paActionInfo, paIndexOfNodePair);
       }
       if(UA_STATUSCODE_GOOD == retVal) {
         if(!paNodePairInfo.mNodeId) {
@@ -561,18 +575,15 @@ UA_StatusCode COPC_UA_Local_Handler::createVariableNode(CCreateVariableInfo &paC
       paCreateVariableInfo.mBrowseName->name.length, reinterpret_cast<const char*>(paCreateVariableInfo.mBrowseName->name.data));
   }
 
-  void *paVarValue = UA_new(paCreateVariableInfo.mTypeConvert->type);
+  void *paVarValue = UA_new(paCreateVariableInfo.mTypeConvert);
 
-  UA_init(paVarValue, paCreateVariableInfo.mTypeConvert->type);
-  if(!paCreateVariableInfo.mTypeConvert->get(paCreateVariableInfo.mInitData, paVarValue)) {
-    DEVLOG_WARNING("[OPC UA LOCAL]: Cannot convert initial value for variable %.*s", paCreateVariableInfo.mBrowseName->name.length,
-      reinterpret_cast<const char*>(paCreateVariableInfo.mBrowseName->name.data));
-  }
+  UA_init(paVarValue, paCreateVariableInfo.mTypeConvert);
+  COPC_UA_Helper::convertToOPCUAType(*paCreateVariableInfo.mInitData, paVarValue);
 
   // create variable attributes
   UA_VariableAttributes variableAttributes;
   UA_VariableAttributes_init(&variableAttributes);
-  variableAttributes.dataType = paCreateVariableInfo.mTypeConvert->type->typeId;
+  variableAttributes.dataType = paCreateVariableInfo.mTypeConvert->typeId;
   variableAttributes.valueRank = -1; // value is a scalar
   variableAttributes.displayName.locale = UA_STRING_ALLOC(mEnglishLocaleForNodes);
   UA_String_copy(&paCreateVariableInfo.mBrowseName->name, &variableAttributes.displayName.text);
@@ -582,7 +593,7 @@ UA_StatusCode COPC_UA_Local_Handler::createVariableNode(CCreateVariableInfo &paC
     variableAttributes.userAccessLevel |= UA_ACCESSLEVELMASK_WRITE;
   }
   variableAttributes.accessLevel = variableAttributes.userAccessLevel;
-  UA_Variant_setScalar(&variableAttributes.value, paVarValue, paCreateVariableInfo.mTypeConvert->type);
+  UA_Variant_setScalar(&variableAttributes.value, paVarValue, paCreateVariableInfo.mTypeConvert);
 
   UA_StatusCode retVal = UA_Server_addVariableNode(mUaServer, // server
     requestedNodeId, // requestedNewNodeId
@@ -604,30 +615,26 @@ UA_StatusCode COPC_UA_Local_Handler::createVariableNode(CCreateVariableInfo &paC
   return retVal;
 }
 
-UA_StatusCode COPC_UA_Local_Handler::updateNodeValue(const UA_NodeId &paNodeId, const CIEC_ANY *paData, const COPC_UA_Helper::UA_TypeConvert *paConvert) {
+UA_StatusCode COPC_UA_Local_Handler::updateNodeValue(const UA_NodeId &paNodeId, const CIEC_ANY *paData) {
   UA_Variant *nodeValue = UA_Variant_new();
   UA_Variant_init(nodeValue);
 
-  void *varValue = UA_new(paConvert->type);
-  if(!paConvert->get(paData, varValue)) {
-    UA_delete(varValue, paConvert->type);
-    return UA_STATUSCODE_BADUNEXPECTEDERROR;
-  }
-
-  UA_Variant_setScalarCopy(nodeValue, varValue, paConvert->type);
+  const UA_DataType* dataType = COPC_UA_Helper::getOPCUATypeFromAny(*paData);
+  void *varValue = UA_new(dataType);
+  COPC_UA_Helper::convertToOPCUAType(*paData, varValue);
+  UA_Variant_setScalarCopy(nodeValue, varValue, dataType);
   UA_StatusCode retVal = UA_Server_writeValue(mUaServer, paNodeId, *nodeValue);
-  UA_delete(varValue, paConvert->type);
+  UA_delete(varValue, dataType);
   UA_Variant_delete(nodeValue);
   return retVal;
 }
 
-UA_StatusCode COPC_UA_Local_Handler::registerVariableCallBack(const UA_NodeId &paNodeId, CActionInfo &paActionInfo,
-    const COPC_UA_Helper::UA_TypeConvert *paConvert, size_t paPortIndex) {
+UA_StatusCode COPC_UA_Local_Handler::registerVariableCallBack(const UA_NodeId &paNodeId, CActionInfo &paActionInfo, size_t paPortIndex) {
 
   UA_StatusCode retVal = UA_Server_setVariableNode_valueCallback(mUaServer, paNodeId, { 0, COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onWrite });
   if(UA_STATUSCODE_GOOD == retVal) {
 
-    UA_VariableContext_Handle variableContext(paActionInfo, paConvert, paPortIndex);
+    UA_VariableContext_Handle variableContext(paActionInfo, paPortIndex);
     mNodeCallbackHandles.pushFront(variableContext);
     CSinglyLinkedList<UA_VariableContext_Handle>::Iterator contextIterator = mNodeCallbackHandles.begin();
 
@@ -688,10 +695,10 @@ UA_StatusCode COPC_UA_Local_Handler::initializeCreateMethod(CActionInfo &paActio
         CCreateMethodInfo methodInformation(static_cast<CLocalMethodInfo&>(paActionInfo));
         initializeCreateInfo(nodeName, (**itMethodNodePairInfo), referencedNodes.isEmpty() ? 0 : *(referencedNodes.back()), methodInformation);
 
-        createMethodArguments(paActionInfo, methodInformation);
+        methodInformation.mOutputSize = paActionInfo.getSendSize();
+        methodInformation.mInputSize = paActionInfo.getReceiveSize();
 
-        methodInformation.mOutputSize = paActionInfo.getLayer().getCommFB()->getNumSD();
-        methodInformation.mInputSize = paActionInfo.getLayer().getCommFB()->getNumRD();
+        createMethodArguments(paActionInfo, methodInformation);
 
         retVal = createMethodNode(methodInformation, &(*itMethodNodePairInfo)->mNodeId);
         if(UA_STATUSCODE_GOOD == retVal) {
@@ -759,28 +766,28 @@ UA_StatusCode COPC_UA_Local_Handler::handleExistingMethod(CActionInfo &paActionI
 void COPC_UA_Local_Handler::createMethodArguments(CActionInfo &paActionInfo, CCreateMethodInfo &paCreateMethodInfo) {
   const SFBInterfaceSpec *interfaceFB = paActionInfo.getLayer().getCommFB()->getFBInterfaceSpec();
 
-  size_t noOfSDs = paActionInfo.getLayer().getCommFB()->getNumSD();
+  const CIEC_ANY *dataToSend = paActionInfo.getDataToSend();
+  CIEC_ANY *dataToReceive = paActionInfo.getDataToReceive();
 
-  paCreateMethodInfo.mOutputArguments = static_cast<UA_Argument *>(UA_Array_new(noOfSDs, &UA_TYPES[UA_TYPES_ARGUMENT]));
-  paCreateMethodInfo.mInputArguments = static_cast<UA_Argument *>(UA_Array_new(paActionInfo.getLayer().getCommFB()->getNumRD(), &UA_TYPES[UA_TYPES_ARGUMENT]));
+  paCreateMethodInfo.mOutputArguments = static_cast<UA_Argument *>(UA_Array_new(paCreateMethodInfo.mOutputSize, &UA_TYPES[UA_TYPES_ARGUMENT]));
+  paCreateMethodInfo.mInputArguments = static_cast<UA_Argument *>(UA_Array_new(paCreateMethodInfo.mInputSize, &UA_TYPES[UA_TYPES_ARGUMENT]));
 
-  size_t counterHelper = 0; //use to count the current amount of outputs
-  for(CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert*>::Iterator it = paActionInfo.getTypeConverters().begin(); it != paActionInfo.getTypeConverters().end();
-      ++it, counterHelper++) {
+  for(size_t i = 0; i < paCreateMethodInfo.mOutputSize + paCreateMethodInfo.mInputSize; i++) {
     UA_Argument *arg;
-    if(counterHelper < noOfSDs) {
-      arg = &(paCreateMethodInfo.mOutputArguments)[counterHelper];
+    if(i < paCreateMethodInfo.mOutputSize) {
+      arg = &(paCreateMethodInfo.mOutputArguments)[i];
       UA_Argument_init(arg);
-      arg->name = UA_STRING_ALLOC(CStringDictionary::getInstance().get(interfaceFB->m_aunDINames[counterHelper + 2])); //we store the names of the SDs/RDs as names for the arguments names. Not so nice. + 2 skips the QI and ID
+      arg->name = UA_STRING_ALLOC(CStringDictionary::getInstance().get(interfaceFB->m_aunDINames[i + 2])); //we store the names of the SDs/RDs as names for the arguments names. Not so nice. + 2 skips the QI and ID
+      arg->dataType = COPC_UA_Helper::getOPCUATypeFromAny(dataToSend[i])->typeId;
     } else {
-      arg = &(paCreateMethodInfo.mInputArguments)[counterHelper - noOfSDs];
+      arg = &(paCreateMethodInfo.mInputArguments)[i - paCreateMethodInfo.mOutputSize];
       UA_Argument_init(arg);
-      arg->name = UA_STRING_ALLOC(CStringDictionary::getInstance().get(interfaceFB->m_aunDONames[counterHelper - noOfSDs + 2])); // + 2 skips the QO and STATUS
+      arg->name = UA_STRING_ALLOC(CStringDictionary::getInstance().get(interfaceFB->m_aunDONames[i - paCreateMethodInfo.mOutputSize + 2])); // + 2 skips the QO and STATUS
+      arg->dataType = COPC_UA_Helper::getOPCUATypeFromAny(dataToReceive[i - paCreateMethodInfo.mOutputSize])->typeId;
     }
 
     arg->arrayDimensionsSize = 0;
     arg->arrayDimensions = 0;
-    arg->dataType = (*it)->type->typeId;
     arg->description = UA_LOCALIZEDTEXT_ALLOC(mEnglishLocaleForNodes, "Method parameter");
     arg->valueRank = -1;
   }
@@ -857,13 +864,12 @@ UA_StatusCode COPC_UA_Local_Handler::initializeDeleteObject(CActionInfo &) {
 
 UA_StatusCode COPC_UA_Local_Handler::executeWrite(CActionInfo &paActionInfo) {
   UA_StatusCode retVal = UA_STATUSCODE_GOOD;
-  const CIEC_ANY *SDs = paActionInfo.getLayer().getCommFB()->getSDs();
+  const CIEC_ANY *dataToSend = paActionInfo.getDataToSend();
   size_t indexOfNodePair = 0;
-  CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert*>::Iterator itType = paActionInfo.getTypeConverters().begin();
   for(CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator it = paActionInfo.getNodePairInfo().begin(); it != paActionInfo.getNodePairInfo().end();
-      ++it, indexOfNodePair++, ++itType) {
+      ++it, indexOfNodePair++) {
 
-    if(UA_STATUSCODE_GOOD != updateNodeValue(*(*it)->mNodeId, &SDs[indexOfNodePair], *itType)) {
+    if(UA_STATUSCODE_GOOD != updateNodeValue(*(*it)->mNodeId, &dataToSend[indexOfNodePair])) {
       DEVLOG_ERROR("[OPC UA LOCAL]: Could not convert value to write for port %d at FB %s.\n", indexOfNodePair,
         paActionInfo.getLayer().getCommFB()->getInstanceName());
       retVal = UA_STATUSCODE_BADINTERNALERROR;
@@ -880,32 +886,14 @@ UA_StatusCode COPC_UA_Local_Handler::executeCreateMethod(CActionInfo &paActionIn
   UA_StatusCode retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
   CLocalMethodCall *localMethodCall = getLocalMethodCall(static_cast<CLocalMethodInfo&>(paActionInfo));
   if(localMethodCall) {
-    bool somethingFailed = false;
+    const CIEC_ANY *dataToSend = paActionInfo.getDataToSend();
     // copy SD values to output
     for(size_t i = 0; i < localMethodCall->mSendHandle.mSize; i++) {
-
-      void *varValue = UA_new(localMethodCall->mSendHandle.mConvert[i]->type);
-      if(!localMethodCall->mSendHandle.mConvert[i]->get(&paActionInfo.getLayer().getCommFB()->getSDs()[i], varValue)) {
-        DEVLOG_ERROR("[OPC UA LOCAL]: can not convert forte type to method outputArgument at idx %d of FB %s\n", i,
-          paActionInfo.getLayer().getCommFB()->getInstanceName());
-        somethingFailed = true;
-      } else {
-        UA_Variant_setScalarCopy(localMethodCall->mSendHandle.mData[i], varValue, localMethodCall->mSendHandle.mConvert[i]->type);
-        localMethodCall->mSendHandle.mData[i]->storageType = UA_VARIANT_DATA;
-      }
-
-      UA_delete(varValue, localMethodCall->mSendHandle.mConvert[i]->type);
-
-      if(somethingFailed) {
-        break;
-      }
+      COPC_UA_Helper::fillVariant(*localMethodCall->mSendHandle.mData[i], dataToSend[i]);
     }
 
-    if(!somethingFailed) {
-      retVal = UA_STATUSCODE_GOOD;
-    }
-    localMethodCall->mSendHandle.mFailed = somethingFailed;
     localMethodCall->mActionInfo.getResultReady().inc();
+    retVal = UA_STATUSCODE_GOOD;
   } else {
     DEVLOG_ERROR("[OPC UA LOCAL]: The method being returned hasn't been called before of FB %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName());
   }
@@ -1345,9 +1333,9 @@ UA_StatusCode COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onServerMethodC
   if(!localMethodHandle) {
     DEVLOG_ERROR("[OPC UA LOCAL]: Method doesn't have any FB referencing it\n");
   } else {
-    if(paInputSize != localMethodHandle->getLayer().getCommFB()->getNumRD() || paOutputSize != localMethodHandle->getLayer().getCommFB()->getNumSD()) {
-      DEVLOG_ERROR("[OPC UA LOCAL]: method call got invalid number of arguments. In: %d==%d, Out: %d==%d\n",
-        localMethodHandle->getLayer().getCommFB()->getNumRD(), paInputSize, localMethodHandle->getLayer().getCommFB()->getNumSD(), paOutput);
+    if(paInputSize != localMethodHandle->getReceiveSize() || paOutputSize != localMethodHandle->getSendSize()) {
+      DEVLOG_ERROR("[OPC UA LOCAL]: method call got invalid number of arguments. In: %d==%d, Out: %d==%d\n", localMethodHandle->getReceiveSize(), paInputSize,
+        localMethodHandle->getSendSize(), paOutput);
     } else {
       // other thread may currently create nodes for the same path, thus mutex
       CCriticalRegion criticalRegion(localMethodHandle->getMutex()); //TODO: do we need this mutex?
@@ -1361,15 +1349,6 @@ UA_StatusCode COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onServerMethodC
 
       for(size_t i = 0; i < paOutputSize; i++) {
         sendHandle.mData[i] = &paOutput[i];
-      }
-
-      CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert*>::Iterator itType = localMethodHandle->getTypeConverters().begin();
-      for(size_t i = 0; i < paOutputSize; i++, ++itType) {
-        sendHandle.mConvert[i] = *itType;
-      }
-
-      for(size_t i = 0; i < paInputSize; i++, ++itType) {
-        recvHandle.mConvert[i] = *itType;
       }
 
       // Handle return of receive mData
@@ -1398,9 +1377,8 @@ UA_StatusCode COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onServerMethodC
   return retVal;
 }
 
-void COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onWrite(UA_Server *, const UA_NodeId *, void *, const UA_NodeId *, void *nodeContext,
-    const UA_NumericRange *, //NOSONAR
-    const UA_DataValue *data) {
+void COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onWrite(UA_Server *, const UA_NodeId *, void *, const UA_NodeId *, void *nodeContext, //NOSONAR
+    const UA_NumericRange *, const UA_DataValue *data) {
 
   UA_VariableContext_Handle *variableCallbackHandle = static_cast<UA_VariableContext_Handle *>(nodeContext);
 
@@ -1408,7 +1386,6 @@ void COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onWrite(UA_Server *, con
 
   handleRecv.mData[0] = data->hasValue ? &data->value : 0; //TODO: check this empty data
   handleRecv.mOffset = variableCallbackHandle->mPortIndex;
-  handleRecv.mConvert[0] = variableCallbackHandle->mConvert;
 
   EComResponse retVal = variableCallbackHandle->mActionInfo.getLayer().recvData(static_cast<const void *>(&handleRecv), 0); //TODO: add multidimensional mData handling with 'range'.
 

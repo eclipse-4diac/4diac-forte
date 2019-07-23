@@ -231,7 +231,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
         ~CCreateVariableInfo() {
         }
 
-        const COPC_UA_Helper::UA_TypeConvert *mTypeConvert;
+        const UA_DataType *mTypeConvert;
         const CIEC_ANY *mInitData;
         bool mAllowWrite;
       private:
@@ -281,18 +281,17 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * declare/define this class. If someone can manage to use the same class both in the CUA_ClientInformation and here, it can be deleted
      */
     struct UA_VariableContext_Handle {
-        UA_VariableContext_Handle(CActionInfo &paActionInfo, const COPC_UA_Helper::UA_TypeConvert *paConvert, size_t paPortIndex) :
-            mActionInfo(paActionInfo), mConvert(paConvert), mPortIndex(paPortIndex) {
+        UA_VariableContext_Handle(CActionInfo &paActionInfo, size_t paPortIndex) :
+            mActionInfo(paActionInfo), mPortIndex(paPortIndex) {
         }
 
         //default copy constructor should be enough
 
         bool operator==(UA_VariableContext_Handle const &paRightObject) const {
-          return (&mActionInfo == &paRightObject.mActionInfo && mConvert == paRightObject.mConvert && mPortIndex == paRightObject.mPortIndex);
+          return (&mActionInfo == &paRightObject.mActionInfo && mPortIndex == paRightObject.mPortIndex);
         }
 
         CActionInfo &mActionInfo;
-        const COPC_UA_Helper::UA_TypeConvert *mConvert;
         size_t mPortIndex;
     };
 
@@ -356,26 +355,26 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * to the variable and set the action as a callback context
      * @param paActionInfo Action accessing the existing variable
      * @param paNodePairInfo Information about the variable being accessed
-     * @param paTypeConvert The type of the variable being accessed
+     * @param paVariable Variable to check the type
      * @param paIndexOfNodePair Information about on which RD the variable will be read
      * @param paWrite True if the action is to write a variable, false if it's for reading
      * @return UA_STATUSCODE_GOOD on success, other value otherwise
      */
-    UA_StatusCode handleExistingVariable(CActionInfo &paActionInfo, CActionInfo::CNodePairInfo &paNodePairInfo, COPC_UA_Helper::UA_TypeConvert *paTypeConvert,
+    UA_StatusCode handleExistingVariable(CActionInfo &paActionInfo, CActionInfo::CNodePairInfo &paNodePairInfo, const CIEC_ANY &paVariable,
         size_t paIndexOfNodePair, bool paWrite);
 
     /**
      * Creates the variable in the OPC UA server. If the folders in the path to the variable don't exist, it will create them with random nodeIds
      * @param paActionInfo Action creating the variable
      * @param paNodePairInfo Information about the variable node being created
-     * @param paTypeConvert The type of the variable being created
+     * @param paVariable Variable to get the type from
      * @param paIndexOfNodePair Information about which RD/SD should be used to read/write the variable
      * @param paReferencedNodes Place to store the nodes being references by the action (the variable node and folders)
      * @param paWrite True if the action is to write a variable, false if it's for reading
      * @return UA_STATUSCODE_GOOD on success, other value otherwise
      */
-    UA_StatusCode handleNonExistingVariable(CActionInfo &paActionInfo, CActionInfo::CNodePairInfo &paNodePairInfo,
-        COPC_UA_Helper::UA_TypeConvert *paTypeConvert, size_t paIndexOfNodePair, CSinglyLinkedList<UA_NodeId*> &paReferencedNodes, bool paWrite);
+    UA_StatusCode handleNonExistingVariable(CActionInfo &paActionInfo, CActionInfo::CNodePairInfo &paNodePairInfo, const CIEC_ANY &paVariable,
+        size_t paIndexOfNodePair, CSinglyLinkedList<UA_NodeId*> &paReferencedNodes, bool paWrite);
 
     /**
      * Creates a variable in the OPC UA server using directly the API from the passed information
@@ -388,21 +387,19 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * Update a variable node value from a IEC61499 data object.
      * @param paNodeId Node Id of the node to be updated
      * @param paData Source data for the new value
-     * @param paConvert Type of the data to be updated
      * @return UA_STATUSCODE_GOOD on success, other value otherwise
      */
-    UA_StatusCode updateNodeValue(const UA_NodeId &paNodeId, const CIEC_ANY *paData, const COPC_UA_Helper::UA_TypeConvert *paConvert);
+    UA_StatusCode updateNodeValue(const UA_NodeId &paNodeId, const CIEC_ANY *paData);
 
     /**
      * Register the onWrite function as callback routine when a variable is written and also the context that is passed back
      * @param paNodeId Node ID of the node where to register the callback function and context
      * @param paActionInfo The action executing the register
-     * @param paConvert The type of the variable node
      * @param paPortIndex Which RD is requesting the callback
      * @return UA_STATUSCODE_GOOD on success, other value otherwise
      */
     UA_StatusCode
-    registerVariableCallBack(const UA_NodeId &paNodeId, CActionInfo &paActionInfo, const COPC_UA_Helper::UA_TypeConvert *paConvert, size_t paPortIndex);
+    registerVariableCallBack(const UA_NodeId &paNodeId, CActionInfo &paActionInfo, size_t paPortIndex);
 
     /**
      * Adds write permission to a node

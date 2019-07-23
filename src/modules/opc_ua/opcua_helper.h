@@ -20,15 +20,34 @@ class COPC_UA_Helper {
   public:
 
     /**
-     * Class that encapsulates, for each 61499 type, the map to the OPC UA type, and a transform to and from functions
+     * Returns the OPC UA data type that correspond to the IEC 61131-3 type
+     * @param paAnyType IEC 61131-3 type
+     * @return The OPC UA type pointer, or 0 if not found
      */
-    struct UA_TypeConvert {
-        const UA_DataType *type;
+    static const UA_DataType *getOPCUATypeFromAny(const CIEC_ANY& paAnyType);
 
-        bool (*get)(const CIEC_ANY *src, void *dst);
+    /**
+     * Converts any IEC 61131-3 type to its OPC UA Type
+     * @param paSrcAny Input to be converted
+     * @param paDest Already allocated memory where to store
+     * @return The size in the destination it was used
+     */
+    static size_t convertToOPCUAType(const CIEC_ANY& paSrcAny, void* paDest);
 
-        bool (*set)(const void *src, CIEC_ANY *dst);
-    };
+    /**
+     * Converts an OPC UA Type into its IEC 61131-3 type
+     * @param paSrc Input to be converted
+     * @param paDestAny Place to store
+     * @return The size of the source that was used
+     */
+    static size_t convertFromOPCUAType(const void *paSrc, CIEC_ANY &paDestAny);
+
+    /**
+     * Fills a variant using the information from a CIEC_ANY type
+     * @param paDataValue variant to fill
+     * @param paDataSource source of information
+     */
+    static void fillVariant(UA_Variant &paVariant, const CIEC_ANY &paDataSource);
 
     /**
      * Parent class with the information for exchanging data between the layer and the handlers.
@@ -39,18 +58,15 @@ class COPC_UA_Helper {
     class UA_Variables_handle {
       public:
         explicit UA_Variables_handle(size_t paSize) :
-            mFailed(false), mOffset(0), mSize(paSize), mConvert(0) {
-          mConvert = new const UA_TypeConvert*[mSize];
+            mFailed(false), mOffset(0), mSize(paSize) {
         }
 
         virtual ~UA_Variables_handle() {
-          delete[] mConvert;
         }
 
         bool mFailed;
         size_t mOffset;
         size_t mSize;
-        const UA_TypeConvert **mConvert;
       private:
         UA_Variables_handle(const UA_Variables_handle &paObj);
         UA_Variables_handle& operator=(const UA_Variables_handle& other);
@@ -97,20 +113,6 @@ class COPC_UA_Helper {
         UA_SendVariable_handle& operator=(const UA_SendVariable_handle& other);
     };
 
-    /**
-     * Checks if a  IEC 61499 type has a type converter
-     * @param paAny IEC 61499 type to check
-     * @return True if valid, false otherwise
-     */
-    static bool isTypeValid(CIEC_ANY *paAny);
-
-    /**
-     * Get the corresponding type conversion from an IEC 61499 type
-     * @param paAny IEC 61499 type
-     * @return The corresponding type converter or 0 if there's none
-     */
-    static const UA_TypeConvert* geTypeConvertFromAny(CIEC_ANY *paAny);
-    static const UA_TypeConvert mapForteTypeIdToOpcUa[];
 
     /**
      * Check if a browsepath is valid
@@ -164,6 +166,54 @@ class COPC_UA_Helper {
   private:
 
     /**
+     * Function pointer definition to convert a IEC 61131-3 type to an OPC UA Type
+     */
+    typedef size_t (*convertFromIECToOPCUA)(const CIEC_ANY &, void *);
+
+    /**
+     * Function pointer definition to convert an OPC UA type to an IEC 61131-3 Type
+     */
+    typedef size_t (*convertFromOPCUAToIEC)(const void *, CIEC_ANY &);
+
+    /**
+     * Class that encapsulates, for each 61131-3 type, the map to the OPC UA type, and a transform to and from functions
+     */
+    class UA_TypeConvert {
+      public:
+        UA_TypeConvert(const UA_DataType *paType, convertFromIECToOPCUA paToOPCUA, convertFromOPCUAToIEC paFromOPCUA) :
+            mType(paType), mToOPCUA(paToOPCUA), mFromOPCUA(paFromOPCUA) {
+        }
+        const UA_DataType *mType;
+        convertFromIECToOPCUA mToOPCUA;
+        convertFromOPCUAToIEC mFromOPCUA;
+    };
+    class UA_TypeConvert_external {
+      public:
+        UA_TypeConvert_external(const UA_DataType *paType, const CStringDictionary::TStringId paStringId) :
+            mType(paType), mStringId(paStringId) {
+        }
+        const UA_DataType *mType;
+        const CStringDictionary::TStringId mStringId;
+    };
+
+    /**
+     * Array of all conversion functions for the basic types
+     */
+    static const UA_TypeConvert scmMapForteTypeIdToOpcUa[];
+
+    /**
+     * Array of conversion functions for added types
+     */
+    static const UA_TypeConvert_external scmExternalMapForteTypeIdToOpcUa[];
+
+    /**
+     * If the type being looked for is not a basic one, it will look in the externally added types
+     * @param paAnyType IEC 61131-3 container which is used to look for the corresponding OPC UA type
+     * @return The OPC UA type pointer, or 0 if not found
+     */
+    static const UA_DataType *getExternalOPCUATypeFromAny(const CIEC_ANY& paAnyType);
+
+    /**
      * Look for the first occurrence of an existing node from a browse path result
      * @param paBrowsePathsResults Result of browse path service
      * @param folderCnt Number of folders in the paBrowsePathsResults
@@ -181,7 +231,6 @@ class COPC_UA_Helper {
      */
     static void copyNodeIds(UA_BrowsePathResult *paBrowsePathsResults, size_t paFolderCnt, int paFoundFolderOffset, UA_NodeId **paParentNodeId,
         UA_NodeId **paFoundNodeId);
-
 };
 
 #endif //FORTE_OPCUA_HELPER_H

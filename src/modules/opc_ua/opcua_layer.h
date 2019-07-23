@@ -101,20 +101,18 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
     void closeConnection();
 
     /**
-     * Store all types converters of the SDs/RDs of the FBs. First all SD are stored, and then the RDs
-     * @param paConverters Place to store the type converters
+     * Check that all types of the SDs/RDs of the FBs are correct
      * @return True if no problem occurred, false otherwise
      */
-    bool storeTypesFromInterface(CSinglyLinkedList<COPC_UA_Helper::UA_TypeConvert *> &paConverters);
+    bool checkTypesFromInterface();
 
     /**
-     * Get the type converter for a specific data input or output of the FB
+     * Check the type for a specific data input or output of the FB
      * @param paPortIndex Index of the port to be gotten
      * @param paIsSD True if the port to get is an SD, false othewise
-     * @param paResult Place to store the result
      * @return True if no error ocurred while looking for the type, false otherwise
      */
-    bool getPortConnectionInfo(unsigned int paPortIndex, bool paIsSD, const COPC_UA_Helper::UA_TypeConvert **paResult) const;
+    bool checkPortConnectionInfo(unsigned int paPortIndex, bool paIsSD) const;
 
     /**
      * Get the remote data input/output
