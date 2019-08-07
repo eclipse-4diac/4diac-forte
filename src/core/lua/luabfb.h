@@ -43,7 +43,7 @@ class CLuaBFB : public CBasicFB {
     CIEC_ANY* getVariable(TForteUInt32 paId);
 
     int recalculateID(int pa_nEIID) {
-      return CLuaBFB::LUA_FB_AD_FLAG | ((pa_nEIID >> 8) - 1) | (pa_nEIID & 0x00ff);
+      return CLuaBFB::LUA_FB_AD_FLAG | ((((pa_nEIID >> 8) - 1) << 16) & 0xFF00) | (pa_nEIID & 0x00FF);
     }
 
   public:
