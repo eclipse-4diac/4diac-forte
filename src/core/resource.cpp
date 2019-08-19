@@ -402,6 +402,7 @@ EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNam
       retVal = e_INVALID_OPERATION;
     }
   }
+  paLuaScriptAsString.clear();
   return retVal;
 }
 
@@ -413,6 +414,7 @@ EMGMResponse CResource::createAdapterTypeFromLua(CStringDictionary::TStringId ty
    }else{
      retVal = e_INVALID_OPERATION;
    }
+   paLuaScriptAsString.clear();
   return retVal;
 }
 #endif //FORTE_DYNAMIC_TYPE_LOAD

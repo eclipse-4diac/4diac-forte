@@ -64,4 +64,4 @@ namespace forte {
   } /* namespace arch */
 } /* namespace forte */
 
-#endif /* SRC_ARCH_POSIX_SEMAPHORE_H_ */
+#endif /* SRC_ARCH_WIN32_SEMAPHORE_H_ */
