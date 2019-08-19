@@ -17,6 +17,9 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "MacOs")
 
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
   
+  # on MacOs linked string dict is currently not working, turn it off per default
+  SET(FORTE_LINKED_STRINGDICT OFF CACHE BOOL "" FORCE)
+  
   forte_set_timer(../posix/pctimeha)
   forte_add_sourcefile_hcpp(../posix/forte_thread forte_sync forte_sem)
   forte_add_sourcefile_cpp(../genforte_printer.cpp)

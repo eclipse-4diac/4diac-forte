@@ -552,6 +552,7 @@ EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNam
       retVal = e_INVALID_OPERATION;
     }
   }
+  paLuaScriptAsString.clear();
   return retVal;
 }
 
@@ -559,13 +560,14 @@ EMGMResponse CResource::createAdapterTypeFromLua(CStringDictionary::TStringId ty
     CIEC_STRING& paLuaScriptAsString){
   EMGMResponse retVal = e_UNSUPPORTED_TYPE;
   if(CLuaAdapterTypeEntry::createLuaAdapterTypeEntry(typeNameId, paLuaScriptAsString) != NULL){
-    retVal = e_RDY;
-  }
-  else{
-    retVal = e_INVALID_OPERATION;
-  }
+     retVal = e_RDY;
+   }else{
+     retVal = e_INVALID_OPERATION;
+   }
+   paLuaScriptAsString.clear();
   return retVal;
 }
+
 #endif //FORTE_DYNAMIC_TYPE_LOAD
 
 CIEC_ANY *CResource::getVariable(forte::core::TNameIdentifier &paNameList){
