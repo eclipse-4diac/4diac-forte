@@ -1,13 +1,14 @@
 #*******************************************************************************
-# * Copyright (c) 2010 - 2016 Profactor GmbH, ACIN, fortiss GmbH
+# Copyright (c) 2010 - 2016 Profactor GmbH, ACIN, fortiss GmbH
 # *                      2018 Johannes Kepler University
-# * All rights reserved. This program and the accompanying materials
-# * are made available under the terms of the Eclipse Public License v1.0
-# * which accompanies this distribution, and is available at
-# * http://www.eclipse.org/legal/epl-v10.html
-# *
-# * Contributors:
-# *    Micheal Hofmann, Alois Zoitl, Gerhard Ebenhofer, Monika Wenger
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0.
+#
+# SPDX-License-Identifier: EPL-2.0
+# 
+# Contributors:
+#     Micheal Hofmann, Alois Zoitl, Gerhard Ebenhofer, Monika Wenger
 # *      - initial implementation and rework communication infrastructure
 # *    Martin Jobst - adapt for LUA integration
 # *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs

@@ -65,7 +65,7 @@ cd bin/posix
 %systemd_postun_with_restart 4diac-forte.service
 
 %files
-%license epl-v10.html
+%license epl-20.html
 %{_bindir}/forte
 %{_unitdir}/4diac-forte.service
 %{_sysconfdir}/sysconfig/4diac-forte

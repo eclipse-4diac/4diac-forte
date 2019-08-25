@@ -1,17 +1,19 @@
 /*******************************************************************************
-  * Copyright (c) 2010-2013 fortiss, TU Wien ACIN and others.
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Alois Zoitl - initial implementation and rework communication infrastructure, bug fixes
-  *    Michael Hofmann - option for custom datatypes send by fbdkasn1layer
-  *    Monika Wenger - rename datatype files to forte_datatype
-  *    Ingo Hegny - serialize/deserialize for STRUCT, changed datatype for IP-communication
-  *    Stanislav Meduna - make serializeNull and isNull public
-  *******************************************************************************/
+ * Copyright (c) 2010-2013 fortiss, TU Wien ACIN and others.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Alois Zoitl - initial implementation and rework communication infrastructure, bug fixes
+ *    Michael Hofmann - option for custom datatypes send by fbdkasn1layer
+ *    Monika Wenger - rename datatype files to forte_datatype
+ *    Ingo Hegny - serialize/deserialize for STRUCT, changed datatype for IP-communication
+ *    Stanislav Meduna - make serializeNull and isNull public
+ *******************************************************************************/
 #ifndef _FBDKASN1LAYER_H_
 #define _FBDKASN1LAYER_H_
 

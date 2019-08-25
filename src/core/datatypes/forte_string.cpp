@@ -1,18 +1,20 @@
 /*******************************************************************************
-  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH
-  *   2018 TU Wien/ACIN
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Thomas Strasser, Ingomar Müller, Rene Smodic, Alois Zoitl,
-  *    Ingo Hegny, Martin Melik Merkumians, Stanislav Meduna
-  *      - initial implementation and rework communication infrastructure
-  *    Martin Melik Merkumians - fixes toString behavior for 0 size buffer
-  *    Martin Melik Merkumians - fixes behavior for getToStringBufferSize
-  *******************************************************************************/
+ * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH
+ *               2018 TU Wien/ACIN
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Thomas Strasser, Ingomar Müller, Rene Smodic, Alois Zoitl,
+ *    Ingo Hegny, Martin Melik Merkumians, Stanislav Meduna
+ *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians - fixes toString behavior for 0 size buffer
+ *    Martin Melik Merkumians - fixes behavior for getToStringBufferSize
+ *******************************************************************************/
 #include "forte_string.h"
 #include <devlog.h>
 #include "forte_uint.h"
