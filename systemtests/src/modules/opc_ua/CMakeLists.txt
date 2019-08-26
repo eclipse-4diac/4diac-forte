@@ -35,5 +35,7 @@ forte_add_2dev_systemtests(DelayedWorking delayedClient.fboot delayedServer.fboo
 
 forte_add_2dev_systemtests(TypesWorking typesClient.fboot typesServer.fboot "" "" 10 1)
 
+forte_add_2dev_systemtests(FailActions clientFailAction.fboot localFailAction.fboot "" "" 20 0)
+
 forte_opcua_add_nodeset_without_generated(fordiacNamespace ${CMAKE_CURRENT_SOURCE_DIR}/nodespaceTest)
 

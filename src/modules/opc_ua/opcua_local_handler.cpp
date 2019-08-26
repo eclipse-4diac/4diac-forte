@@ -85,7 +85,7 @@ void COPC_UA_Local_Handler::run() {
   mUaServer = UA_Server_new();
   if(mUaServer) {
     uaServerConfig = UA_Server_getConfig(mUaServer);
-    UA_ServerConfig_setDefault(uaServerConfig);
+    UA_ServerConfig_setMinimal(uaServerConfig, gOpcuaServerPort, 0);
     configureUAServer(gOpcuaServerPort, *uaServerConfig);
 #else
   uaServerConfig = UA_ServerConfig_new_minimal(gOpcuaServerPort, 0);
@@ -106,8 +106,8 @@ void COPC_UA_Local_Handler::run() {
       mUaServerRunningFlag = UA_TRUE;
       mServerStarted.inc();
       UA_StatusCode retVal = UA_Server_run(mUaServer, &mUaServerRunningFlag); // server keeps iterating as long as running is true
-      if(retVal != UA_STATUSCODE_GOOD) {
-        DEVLOG_ERROR("[OPC UA LOCAL]: Server exited with error: %s\n", UA_StatusCode_name(retVal));
+      if(UA_STATUSCODE_GOOD != retVal) {
+        DEVLOG_ERROR("[OPC UA LOCAL]: Server exited. Error: %s\n", UA_StatusCode_name(retVal));
       } else {
         DEVLOG_INFO("[OPC UA LOCAL]: Server successfully stopped\n");
       }
@@ -507,18 +507,17 @@ UA_StatusCode COPC_UA_Local_Handler::handleExistingVariable(CActionInfo &paActio
                 paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair, paNodePairInfo.mBrowsePath.getValue()), UA_StatusCode_name(retVal);
           }
         } else {
-          DEVLOG_ERROR("[OPC UA LOCAL]: Cannot set write permission of node for port %d", paIndexOfNodePair);
+          DEVLOG_ERROR("[OPC UA LOCAL]: Cannot set write permission of node for port %d. Error: %s\n", paIndexOfNodePair, UA_StatusCode_name(retVal));
         }
       }
     } else {
-      DEVLOG_ERROR("[OPC UA LOCAL]: At FB %s index %d there was the type of the existing node doesn't match the new one",
+      DEVLOG_ERROR("[OPC UA LOCAL]: At FB %s index %d there was the type of the existing node doesn't match the new one\n",
         paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair);
       retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
     }
-
   } else {
-    DEVLOG_ERROR("[OPC UA LOCAL]: At FB %s index %d there was a problem reading the type of the existing node",
-      paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair);
+    DEVLOG_ERROR("[OPC UA LOCAL]: At FB %s index %d there was a problem reading the type of the existing node. Error: %s\n",
+      paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair, UA_StatusCode_name(retVal));
   }
 
   return retVal;
@@ -638,7 +637,8 @@ UA_StatusCode COPC_UA_Local_Handler::registerVariableCallBack(const UA_NodeId &p
     mNodeCallbackHandles.pushFront(variableContext);
     CSinglyLinkedList<UA_VariableContext_Handle>::Iterator contextIterator = mNodeCallbackHandles.begin();
 
-    if(UA_STATUSCODE_GOOD != UA_Server_setNodeContext(mUaServer, paNodeId, &(*contextIterator))) {
+    retVal = UA_Server_setNodeContext(mUaServer, paNodeId, &(*contextIterator));
+    if(UA_STATUSCODE_GOOD != retVal) {
       DEVLOG_ERROR("[OPC UA LOCAL]: Could not set callback context for node. Error: %s\n", UA_StatusCode_name(retVal));
       mNodeCallbackHandles.popFront();
       retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
@@ -653,7 +653,7 @@ UA_StatusCode COPC_UA_Local_Handler::registerVariableCallBack(const UA_NodeId &p
 UA_StatusCode COPC_UA_Local_Handler::addWritePermission(const UA_NodeId &paNodeId) {
   UA_StatusCode retVal = UA_Server_writeAccessLevel(mUaServer, paNodeId, UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE);
   if(UA_STATUSCODE_GOOD != retVal) {
-    DEVLOG_WARNING("[OPC UA LOCAL]: Cannot set write permission of node\n");
+    DEVLOG_WARNING("[OPC UA LOCAL]: Cannot set write permission of node. Error: %s\n", UA_StatusCode_name(retVal));
   }
   return retVal;
 }
@@ -869,10 +869,10 @@ UA_StatusCode COPC_UA_Local_Handler::executeWrite(CActionInfo &paActionInfo) {
   for(CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator it = paActionInfo.getNodePairInfo().begin(); it != paActionInfo.getNodePairInfo().end();
       ++it, indexOfNodePair++) {
 
-    if(UA_STATUSCODE_GOOD != updateNodeValue(*(*it)->mNodeId, &dataToSend[indexOfNodePair])) {
-      DEVLOG_ERROR("[OPC UA LOCAL]: Could not convert value to write for port %d at FB %s.\n", indexOfNodePair,
-        paActionInfo.getLayer().getCommFB()->getInstanceName());
-      retVal = UA_STATUSCODE_BADINTERNALERROR;
+    retVal = updateNodeValue(*(*it)->mNodeId, &dataToSend[indexOfNodePair]);
+    if(UA_STATUSCODE_GOOD != retVal) {
+      DEVLOG_ERROR("[OPC UA LOCAL]: Could not convert value to write for port %d at FB %s. Error: %s\n", indexOfNodePair,
+        paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
       break;
     }
 
@@ -1364,7 +1364,7 @@ UA_StatusCode COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onServerMethodC
 
         //wait For semaphore, which will be released by execute Local Method in this handler
         if(!localMethodHandle->getResultReady().timedWait(scmMethodCallTimeoutInNanoSeconds)) {
-          DEVLOG_ERROR("[OPC UA LOCAL]: method call did not get result values within timeout of %d seconds.\n", scmMethodCallTimeoutInNanoSeconds);
+          DEVLOG_ERROR("[OPC UA LOCAL]: method call did not get result values within timeout of %u nanoseconds.\n", scmMethodCallTimeoutInNanoSeconds);
           retVal = UA_STATUSCODE_BADTIMEOUT;
         } else {
           retVal = sendHandle.mFailed ? UA_STATUSCODE_BADUNEXPECTEDERROR : UA_STATUSCODE_GOOD;

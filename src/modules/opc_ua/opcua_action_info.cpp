@@ -126,7 +126,7 @@ bool CActionInfo::checkAction() {
         retVal = checkDeleteObjectAction(fbType, noOfRDs, noOfSDs);
         break;
       default:
-        DEVLOG_ERROR("[OPC UA ACTION]: Unknown action %d", mAction);
+        DEVLOG_ERROR("[OPC UA ACTION]: Unknown action %d\n", mAction);
     }
   }
 

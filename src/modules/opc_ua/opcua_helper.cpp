@@ -209,7 +209,7 @@ UA_StatusCode COPC_UA_Helper::getRemoteNodeForPath(UA_Client &paClient, const ch
     response = UA_Client_Service_translateBrowsePathsToNodeIds(&paClient, request);
 
     retVal = response.responseHeader.serviceResult;
-    if(retVal == UA_STATUSCODE_GOOD) {
+    if(UA_STATUSCODE_GOOD == retVal) {
       if(response.resultsSize == folderCnt * 2) {
         int foundFolderOffset = getFolderOffset(response.results, folderCnt);
 
@@ -327,9 +327,9 @@ bool COPC_UA_Helper::getBrowsenameFromNodeName(const char *paNodeName, UA_UInt16
 
 int COPC_UA_Helper::getFolderOffset(UA_BrowsePathResult *paBrowsePathsResults, size_t paFolderCnt) {
   int foundFolderOffset = -1;
-  if(paBrowsePathsResults[paFolderCnt - 1].statusCode == UA_STATUSCODE_GOOD) {
+  if(UA_STATUSCODE_GOOD == paBrowsePathsResults[paFolderCnt - 1].statusCode) {
     foundFolderOffset = 0;
-  } else if(paBrowsePathsResults[paFolderCnt * 2 - 1].statusCode == UA_STATUSCODE_GOOD) {
+  } else if(UA_STATUSCODE_GOOD == paBrowsePathsResults[paFolderCnt * 2 - 1].statusCode) {
     foundFolderOffset = static_cast<int>(paFolderCnt);
   }
   return foundFolderOffset;

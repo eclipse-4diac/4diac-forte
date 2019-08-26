@@ -161,7 +161,7 @@ UA_StatusCode COPC_UA_Remote_Handler::executeAction(CActionInfo& paActionInfo) {
         retVal = clientInfo->executeCallMethod(paActionInfo);
         break;
       default: //eCreateMethod, eCreateObject, eDeleteObject will never reach here since they weren't initialized. eSubscribe is a Subscribe FB
-        DEVLOG_ERROR("[OPC UA REMOTE]: Action %d to be executed is unknown or invalid", paActionInfo.getAction());
+        DEVLOG_ERROR("[OPC UA REMOTE]: Action %d to be executed is unknown or invalid\n", paActionInfo.getAction());
         break;
     }
   } else {
@@ -311,6 +311,7 @@ bool COPC_UA_Remote_Handler::handleClients() {
       mIterationClients.erase(*itClientInformation);
       mNewClients.erase(*itClientInformation); //client could still be in the newList
       (*itClientInformation)->uninitializeClient(); //reset all in client and pass it back to the connection handler
+      (*itClientInformation)->configureClient();
       addClientToConnectionHandler(**itClientInformation);
     }
   }

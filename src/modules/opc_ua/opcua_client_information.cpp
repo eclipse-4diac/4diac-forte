@@ -28,8 +28,9 @@ bool CUA_ClientInformation::configureClient() {
 #ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
   mClient = UA_Client_new();
   UA_ClientConfig *configPointer = UA_Client_getConfig(mClient);
-  if(UA_STATUSCODE_GOOD != UA_ClientConfig_setDefault(configPointer)) {
-    DEVLOG_ERROR("[OPC UA CLIENT]: Error setting default client config\n");
+  UA_StatusCode retVal = UA_ClientConfig_setDefault(configPointer);
+  if(UA_STATUSCODE_GOOD != retVal) {
+    DEVLOG_ERROR("[OPC UA CLIENT]: Error setting default client config. Error: %s\n", UA_StatusCode_name(retVal));
     UA_Client_delete(mClient);
     return false;
   }
@@ -98,8 +99,8 @@ bool CUA_ClientInformation::handleClientState() {
     } else {
       if(!connectClient()) {
         tryAnotherChangeImmediately = false;
-        DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't connect to endpoint %s. Forte will try to reconnect in %d seconds\n", mEndpointUrl.getValue(),
-          scmConnectionRetryTimeoutNano / 1000);
+        DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't connect to endpoint %s. Forte will try to reconnect in %u nanoseconds\n", mEndpointUrl.getValue(),
+          scmConnectionRetryTimeoutNano);
         mNeedsReconnection = true;
         mLastReconnectionTry = getNanoSecondsMonotonic();
       } else { //if connection succeeded, don't break the while and try to handle subscriptions immediately
@@ -150,8 +151,12 @@ UA_StatusCode CUA_ClientInformation::executeRead(CActionInfo& paActionInfo) {
 #endif
 
   if(UA_STATUSCODE_GOOD != retVal) {
-    DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch read action for FB  %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName());
+    DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch read action for FB %s. Error: %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
+#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
     delete remoteCallHandle;
+#else
+    // v0.3.0 is calling the callback when dispatch fails, where the remoteCallHandle is deleted
+#endif
   } else {
     addAsyncCall();
   }
@@ -194,8 +199,12 @@ UA_StatusCode CUA_ClientInformation::executeWrite(CActionInfo& paActionInfo) {
 #endif
 
   if(UA_STATUSCODE_GOOD != retVal) {
-    DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch write action for FB  %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName());
+    DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch write action for FB %s. Error: %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
+#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
     delete remoteCallHandle;
+#else
+    // v0.3.0 is calling the callback when dispatch fails, where the remoteCallHandle is deleted
+#endif
   } else {
     addAsyncCall();
   }
@@ -241,8 +250,12 @@ UA_StatusCode CUA_ClientInformation::executeCallMethod(CActionInfo& paActionInfo
 #endif
 
   if(UA_STATUSCODE_GOOD != retVal) {
-    DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch call action for FB  %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName());
+    DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch call action for FB %s. Error %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
+#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
     delete remoteCallHandle;
+#else
+    // v0.3.0 is calling the callback when dispatch fails, where the remoteCallHandle is deleted
+#endif
   } else {
     addAsyncCall();
   }
@@ -425,7 +438,7 @@ bool CUA_ClientInformation::initializeSubscription(CActionInfo& paActionInfo) {
           UA_StatusCode retVal = UA_Client_MonitoredItems_deleteSingle(mClient, mSubscriptionInfo->mSubscriptionId,
             (*itFirstNewMonitoringItemInfo).mMonitoringItemId);
           if(UA_STATUSCODE_GOOD != retVal) {
-            DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete recently added monitored item %u\n", (*itFirstNewMonitoringItemInfo).mMonitoringItemId);
+            DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete recently added monitored item %u. Error: %s\n", (*itFirstNewMonitoringItemInfo).mMonitoringItemId, UA_StatusCode_name(retVal));
           }
         }
         itAddedMonitoringItemInfo = itFirstNewMonitoringItemInfo;
@@ -458,7 +471,7 @@ bool CUA_ClientInformation::createSubscription() {
     mSubscriptionInfo->mSubscriptionId = response.subscriptionId;
     return true;
   } else {
-    DEVLOG_ERROR("[OPC UA CLIENT]: Create subscription to %s failed, %s\n", mEndpointUrl.getValue(), UA_StatusCode_name(response.responseHeader.serviceResult));
+    DEVLOG_ERROR("[OPC UA CLIENT]: Create subscription to %s failed. Error: %s\n", mEndpointUrl.getValue(), UA_StatusCode_name(response.responseHeader.serviceResult));
   }
 
   return false;
@@ -475,7 +488,7 @@ bool CUA_ClientInformation::addMonitoringItem(UA_MonitoringItemInfo& paMonitorin
       monResponse.monitoredItemId);
     paMonitoringInfo.mMonitoringItemId = monResponse.monitoredItemId;
   } else {
-    DEVLOG_ERROR("[OPC UA CLIENT]: Monitoring of FB %s at index %u failed with error: %s\n",
+    DEVLOG_ERROR("[OPC UA CLIENT]: Monitoring of FB %s at index %u failed. Error: %s\n",
       paMonitoringInfo.mVariableInfo.mActionInfo.getLayer().getCommFB()->getInstanceName(), paMonitoringInfo.mVariableInfo.mPortIndex,
       UA_StatusCode_name(monResponse.statusCode));
   }
@@ -509,8 +522,10 @@ void CUA_ClientInformation::uninitializeSubscription(CActionInfo& paActionInfo) 
     }
     for(CSinglyLinkedList<UA_MonitoringItemInfo>::Iterator itMonitoringItemInfo = toDelete.begin(); itMonitoringItemInfo != toDelete.end();
         ++itMonitoringItemInfo) {
-      if(UA_STATUSCODE_GOOD != UA_Client_MonitoredItems_deleteSingle(mClient, mSubscriptionInfo->mSubscriptionId, (*itMonitoringItemInfo).mMonitoringItemId)) {
-        DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete monitored item %u. No further actions will be taken\n", (*itMonitoringItemInfo).mMonitoringItemId);
+      UA_StatusCode retVal = UA_Client_MonitoredItems_deleteSingle(mClient, mSubscriptionInfo->mSubscriptionId, (*itMonitoringItemInfo).mMonitoringItemId);
+      if(UA_STATUSCODE_GOOD != retVal) {
+        DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete monitored item %u. No further actions will be taken. Error: %s\n",
+          (*itMonitoringItemInfo).mMonitoringItemId, UA_StatusCode_name(retVal));
       }
 
       mSubscriptionInfo->mMonitoredItems.erase(*itMonitoringItemInfo);
@@ -527,7 +542,6 @@ void CUA_ClientInformation::resetSubscription(bool paDeleteSubscription) {
     removeAsyncCall();
     if(paDeleteSubscription) {
       UA_StatusCode retval = UA_Client_Subscriptions_deleteSingle(mClient, mSubscriptionInfo->mSubscriptionId);
-
       if(UA_STATUSCODE_GOOD != retval) {
         DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete subscription %u. Failed with error %s. No further actions will be taken\n",
           mSubscriptionInfo->mSubscriptionId, UA_StatusCode_name(retval));
@@ -590,7 +604,7 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::readAsyncCallback(UA_Cl
       varHandle.mFailed = true;
     }
   } else {
-    DEVLOG_ERROR("[OPC UA CLIENT]: Reading for FB %s in client %s failed with error: %s\n",
+    DEVLOG_ERROR("[OPC UA CLIENT]: Reading for FB %s in client %s failed. Error: %s\n",
       remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().getValue(),
       UA_StatusCode_name(paResponse->responseHeader.serviceResult));
     varHandle.mFailed = true;
@@ -624,7 +638,7 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::writeAsyncCallback(UA_C
       varHandle.mFailed = true;
     }
   } else {
-    DEVLOG_ERROR("[OPC UA CLIENT]: Writing for FB %s in client %s failed with error: %s\n",
+    DEVLOG_ERROR("[OPC UA CLIENT]: Writing for FB %s in client %s failed. Error: %s\n",
       remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().getValue(),
       UA_StatusCode_name(paResponse->responseHeader.serviceResult));
     varHandle.mFailed = true;
