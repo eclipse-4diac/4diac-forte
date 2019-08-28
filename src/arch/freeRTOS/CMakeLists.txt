@@ -29,7 +29,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "FreeRTOSLwIP")
   forte_add_sourcefile_h(fortealloc.h)
   forte_add_sourcefile_hcpp(forte_thread forte_sync freertostiha forte_sem forte_Init)
   forte_add_sourcefile_cpp(forte_architecture.cpp ../genforte_printer.cpp)
-  forte_add_sourcefile_cpp(../genforte_realFunctions.cpp ../posix/forte_architecture_time.cpp)
+  forte_add_sourcefile_cpp(../genforte_realFunctions.cpp ./forte_architecture_time.cpp)
   
   forte_add_to_executable_cpp(main)
   
