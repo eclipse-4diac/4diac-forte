@@ -109,11 +109,27 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     void stopServer();
 
     /**
+     * Structure to contain all needed strings to configure the server
+     */
+    struct UA_ServerStrings {
+        CIEC_STRING mHostname;
+        CIEC_STRING mAppURI;
+        CIEC_STRING mDiscoveryUrl;
+    };
+
+    /**
+     * Generate the hostname and the application URI that will be used to configure the server
+     * @param paUAServerPort Port where the OPC UA server will listen
+     * @param paServerStrings Place to store the generated strings
+     */
+    void generateServerStrings(TForteUInt16 paUAServerPort, UA_ServerStrings &paServerStrings);
+    /**
      *  Creates the configuration for the OPC UA Server.
      * @param paUAServerPort Port where the OPC UA server will listen
+     * @param paServerStrings Strings needed to configure the server
      * @param paUaServerConfig Place to store all the configurations
      */
-    void configureUAServer(TForteUInt16 paUAServerPort, UA_ServerConfig &paUaServerConfig);
+    void configureUAServer(TForteUInt16 paUAServerPort, UA_ServerStrings &paServerStrings, UA_ServerConfig &paUaServerConfig);
 
     /**
      * Handler of the OPC UA stack server

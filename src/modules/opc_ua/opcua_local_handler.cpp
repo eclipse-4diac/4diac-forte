@@ -81,15 +81,17 @@ void COPC_UA_Local_Handler::run() {
 
   UA_ServerConfig *uaServerConfig = 0;
 
+  UA_ServerStrings serverStrings;
+  generateServerStrings(gOpcuaServerPort, serverStrings);
 #ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
   mUaServer = UA_Server_new();
   if(mUaServer) {
     uaServerConfig = UA_Server_getConfig(mUaServer);
     UA_ServerConfig_setMinimal(uaServerConfig, gOpcuaServerPort, 0);
-    configureUAServer(gOpcuaServerPort, *uaServerConfig);
+    configureUAServer(gOpcuaServerPort, serverStrings, *uaServerConfig);
 #else
   uaServerConfig = UA_ServerConfig_new_minimal(gOpcuaServerPort, 0);
-  configureUAServer(gOpcuaServerPort, *uaServerConfig);
+  configureUAServer(gOpcuaServerPort, serverStrings, *uaServerConfig);
   mUaServer = UA_Server_new(uaServerConfig);
   if(mUaServer) {
 #endif
@@ -137,23 +139,9 @@ void COPC_UA_Local_Handler::stopServer() {
   end();
 }
 
-void COPC_UA_Local_Handler::configureUAServer(TForteUInt16 paUAServerPort, UA_ServerConfig &paUaServerConfig) {
+void COPC_UA_Local_Handler::generateServerStrings(TForteUInt16 paUAServerPort, UA_ServerStrings &paServerStrings) {
   char helperBuffer[scmMaxServerNameLength + 1];
   forte_snprintf(helperBuffer, scmMaxServerNameLength, "forte_%d", paUAServerPort);
-
-  paUaServerConfig.logger = COPC_UA_HandlerAbstract::getLogger();
-
-#ifdef FORTE_COM_OPC_UA_MULTICAST
-  paUaServerConfig.applicationDescription.applicationType = UA_APPLICATIONTYPE_DISCOVERYSERVER;
-  // hostname will be added by mdns library
-# ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-  UA_String_deleteMembers(&paUaServerConfig.discovery.mdns.mdnsServerName);
-  paUaServerConfig.discovery.mdns.mdnsServerName = UA_String_fromChars(helperBuffer);
-# else //FORTE_COM_OPC_UA_MASTER_BRANCH
-  UA_String_deleteMembers(&paUaServerConfig.mdnsServerName);
-  paUaServerConfig.mdnsServerName = UA_String_fromChars(helperBuffer);
-# endif//FORTE_COM_OPC_UA_MASTER_BRANCH
-#endif //FORTE_COM_OPC_UA_MULTICAST
 
   char hostname[scmMaxServerNameLength + 1];
 #ifdef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
@@ -171,13 +159,46 @@ void COPC_UA_Local_Handler::configureUAServer(TForteUInt16 paUAServerPort, UA_Se
 
   forte_snprintf(helperBuffer, scmMaxServerNameLength, "org.eclipse.4diac.%s", hostname);
 
-  // delete pre-initialized values
-  UA_String_deleteMembers(&paUaServerConfig.applicationDescription.applicationUri);
-  UA_LocalizedText_deleteMembers(&paUaServerConfig.applicationDescription.applicationName);
+  paServerStrings.mAppURI = helperBuffer;
 
-  paUaServerConfig.applicationDescription.applicationUri = UA_String_fromChars(helperBuffer);
+  forte_snprintf(helperBuffer, scmMaxServerNameLength, "opc.tcp://%s:%d/", hostname, paUAServerPort);
+
+  paServerStrings.mHostname = hostname;
+  paServerStrings.mDiscoveryUrl = helperBuffer;
+}
+
+void COPC_UA_Local_Handler::configureUAServer(TForteUInt16 paUAServerPort, UA_ServerStrings &paServerStrings, UA_ServerConfig &paUaServerConfig) {
+
+  paUaServerConfig.logger = COPC_UA_HandlerAbstract::getLogger();
+
+#ifdef FORTE_COM_OPC_UA_MULTICAST
+  paUaServerConfig.applicationDescription.applicationType = UA_APPLICATIONTYPE_DISCOVERYSERVER;
+  // hostname will be added by mdns library
+# ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
+  UA_String_deleteMembers(&paUaServerConfig.discovery.mdns.mdnsServerName);
+  paUaServerConfig.discovery.mdns.mdnsServerName = UA_String_fromChars(helperBuffer);
+# else //FORTE_COM_OPC_UA_MASTER_BRANCH
+  UA_String_deleteMembers(&paUaServerConfig.mdnsServerName);
+  paUaServerConfig.mdnsServerName = UA_String_fromChars(helperBuffer);
+# endif//FORTE_COM_OPC_UA_MASTER_BRANCH
+#endif //FORTE_COM_OPC_UA_MULTICAST
+
+#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
+  //this code is already executed in the master branch in the UA_ServerConfig_setMinimal function
+#else //FORTE_COM_OPC_UA_MASTER_BRANCH
+  paUaServerConfig.applicationDescription.discoveryUrlsSize = 1;
+  paUaServerConfig.applicationDescription.discoveryUrls = static_cast<UA_String *>(UA_Array_new(1, &UA_TYPES[UA_TYPES_STRING]));
+#endif //FORTE_COM_OPC_UA_MASTER_BRANCH
+
+  // delete pre-initialized values
+  UA_LocalizedText_deleteMembers(&paUaServerConfig.applicationDescription.applicationName);
+  UA_String_deleteMembers(&paUaServerConfig.applicationDescription.applicationUri);
+  UA_String_deleteMembers(&paUaServerConfig.applicationDescription.discoveryUrls[0]);
+
+  paUaServerConfig.applicationDescription.applicationUri = UA_String_fromChars(paServerStrings.mAppURI.getValue());
   paUaServerConfig.applicationDescription.applicationName.locale = UA_STRING_NULL;
-  paUaServerConfig.applicationDescription.applicationName.text = UA_String_fromChars(hostname);
+  paUaServerConfig.applicationDescription.applicationName.text = UA_String_fromChars(paServerStrings.mHostname.getValue());
+  paUaServerConfig.applicationDescription.discoveryUrls[0] = UA_String_fromChars(paServerStrings.mDiscoveryUrl.getValue());
 
   for(size_t i = 0; i < paUaServerConfig.endpointsSize; i++) {
 #ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
@@ -504,7 +525,7 @@ UA_StatusCode COPC_UA_Local_Handler::handleExistingVariable(CActionInfo &paActio
             }
           } else {
             DEVLOG_ERROR("[OPC UA LOCAL]: At FB %s RD_%d the node %s could not retrieve context. Error: %s\n",
-                paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair, paNodePairInfo.mBrowsePath.getValue()), UA_StatusCode_name(retVal);
+              paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair, paNodePairInfo.mBrowsePath.getValue(), UA_StatusCode_name(retVal));
           }
         } else {
           DEVLOG_ERROR("[OPC UA LOCAL]: Cannot set write permission of node for port %d. Error: %s\n", paIndexOfNodePair, UA_StatusCode_name(retVal));
