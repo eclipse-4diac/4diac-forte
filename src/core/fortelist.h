@@ -1,19 +1,21 @@
 /*******************************************************************************
-  * Copyright (c) 2009 - 2012, 2018 TU Vienna/ACIN, 2017 fortiss GmbH
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Martin Melik Merkumians, Alois Zoitl, Ingo Hegny,
-  *      - initial implementation and rework communication infrastructure
-  *    Stefan Profanter
-  *      - list->begin changed to be const, and smaller bugfixes to support
-  *        const as Type
-  *     Martin Melik Merkumians - fixes naming, adds missing back functions for
-  *       list specializations
-  *******************************************************************************/
+ * Copyright (c) 2009 - 2012, 2018 TU Vienna/ACIN, 2017 fortiss GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Martin Melik Merkumians, Alois Zoitl, Ingo Hegny,
+ *      - initial implementation and rework communication infrastructure
+ *    Stefan Profanter
+ *      - list->begin changed to be const, and smaller bugfixes to support
+ *        const as Type
+ *     Martin Melik Merkumians - fixes naming, adds missing back functions for
+ *       list specializations
+ *******************************************************************************/
 #include <fortenew.h>
 #include "fortenode.h"
 #include "forteiterator.h"

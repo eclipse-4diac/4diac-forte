@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Martin Jobst
@@ -43,7 +44,7 @@ class CLuaBFB : public CBasicFB {
     CIEC_ANY* getVariable(TForteUInt32 paId);
 
     int recalculateID(int pa_nEIID) {
-      return CLuaBFB::LUA_FB_AD_FLAG | ((pa_nEIID >> 8) - 1) | (pa_nEIID & 0x00ff);
+      return CLuaBFB::LUA_FB_AD_FLAG | ((((pa_nEIID >> 8) - 1) << 16) & 0xFF00) | (pa_nEIID & 0x00FF);
     }
 
   public:

@@ -1,15 +1,17 @@
 /*******************************************************************************
-  * Copyright (c) 2010, 2018 TU Vienna/ACIN
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Martin Melik Merkumians, Alois Zoitl,
-  *      - initial implementation and rework communication infrastructure
-  *    Martin Melik Merkumians - updates naming
-  *******************************************************************************/
+ * Copyright (c) 2010, 2018 TU Vienna/ACIN
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Martin Melik Merkumians, Alois Zoitl,
+ *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians - updates naming
+ *******************************************************************************/
 #ifndef FORTEITERATOR_H_
 #define FORTEITERATOR_H_
 

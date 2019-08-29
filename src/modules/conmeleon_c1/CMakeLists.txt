@@ -1,12 +1,13 @@
 #*******************************************************************************
-# * Copyright (c) 2016 fortiss GmbH and Herwig Eichler, www.conmeleon.org
-# * All rights reserved. This program and the accompanying materials
-# * are made available under the terms of the Eclipse Public License v1.0
-# * which accompanies this distribution, and is available at
-# * http://www.eclipse.org/legal/epl-v10.html
-# *
-# * Contributors:
-# *    Alois Zoitl and Herwig Eichler
+# Copyright (c) 2016 fortiss GmbH and Herwig Eichler, www.conmeleon.org
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0.
+#
+# SPDX-License-Identifier: EPL-2.0
+# 
+# Contributors:
+#     Alois Zoitl and Herwig Eichler
 # *******************************************************************************/ 
  
 forte_add_module(CONMELEON_C1 "Interacting with the CONMELEON C1 IO board")

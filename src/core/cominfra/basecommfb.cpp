@@ -1,18 +1,20 @@
 /*******************************************************************************
-  * Copyright (c) 2006-2014 ACIN, Profactor GmbH, fortiss GmbH
-  *     2018 Johannes Kepler University, 2018 TU Wien/ACIN
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Rene Smodic, Alois Zoitl, Michael Hofmann, Martin Melik Merkumians,
-  *    Patrick Smejkal
-  *      - initial implementation and rework communication infrastructure
-  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
-  *    Martin Melik Merkumians - removes usage of unsecure function
-  *******************************************************************************/
+ * Copyright (c) 2006-2014 ACIN, Profactor GmbH, fortiss GmbH
+ *     2018 Johannes Kepler University, 2018 TU Wien/ACIN
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Rene Smodic, Alois Zoitl, Michael Hofmann, Martin Melik Merkumians,
+ *    Patrick Smejkal
+ *      - initial implementation and rework communication infrastructure
+ *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *    Martin Melik Merkumians - removes usage of unsecure function
+ *******************************************************************************/
 
 #include "basecommfb.h"
 #include "comlayer.h"

@@ -1,17 +1,19 @@
 /*******************************************************************************
-  * Copyright (c) 2010-2014 fortiss, TU Wien ACIN and others.
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Alois Zoitl - initial implementation, rework communication infrastructureand bug fixes
-  *    Ingo Hegny - changed datatype for IP-communication
-  *    Martin Melik-Merkumians -  fix typo in forte::com_infra::EComConnectionState, serial communication support for WIN32
-  *    Michael Hofmann - fix for fragmented packets
-  *    Patrik Smejkal - rename interrupt in interruptCCommFB
-  *******************************************************************************/
+ * Copyright (c) 2010-2014 fortiss, TU Wien ACIN and others.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Alois Zoitl - initial implementation, rework communication infrastructure and bug fixes
+ *    Ingo Hegny - changed datatype for IP-communication
+ *    Martin Melik-Merkumians -  fix typo in forte::com_infra::EComConnectionState, serial communication support for WIN32
+ *    Michael Hofmann - fix for fragmented packets
+ *    Patrik Smejkal - rename interrupt in interruptCCommFB
+ *******************************************************************************/
 #include "ipcomlayer.h"
 #include "../../arch/devlog.h"
 #include "commfb.h"

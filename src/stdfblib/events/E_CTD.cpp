@@ -1,12 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2014 ACIN
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ *               2019 Johannes Kepler University Linz
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Monika Wenger - initial API and implementation and/or initial documentation
+ *   Alois Zoitl - fixed bug in down counting
  *******************************************************************************/
 #include "E_CTD.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -39,16 +42,13 @@ const SFBInterfaceSpec FORTE_E_CTD::scm_stFBInterfaceSpec = {
 };
 
 void FORTE_E_CTD::alg_CD(void){
-CV() = static_cast<TForteUInt16>(CV() - 1);
-Q() = ((CV() <= 0));
-
-
+CV() = static_cast<TForteUInt16>(CV()-1);
+Q() = ((CV() == 0));
 }
 
 void FORTE_E_CTD::alg_LD(void){
 CV() = PV();
-Q() = ((CV() <= 0));
-
+Q() = ((CV() == 0));
 }
 
 
@@ -74,7 +74,7 @@ void FORTE_E_CTD::executeEvent(int pa_nEIID){
     bTransitionCleared = true;
     switch(m_nECCState){
       case scm_nStateSTART:
-        if((scm_nEventCDID == pa_nEIID) && (((CV() >= 1))))
+        if((scm_nEventCDID == pa_nEIID) && (((CV() > 0))))
           enterStateCU();
         else
         if(scm_nEventLDID == pa_nEIID)

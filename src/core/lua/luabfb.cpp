@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Martin Jobst
@@ -82,10 +83,10 @@ CIEC_ANY* CLuaBFB::getVariable(TForteUInt32 paId) {
     return getVarInternal(paId & CLuaBFB::LUA_FB_VAR_MAX);
   }
   if((paId & CLuaBFB::LUA_FB_AD_FLAG) != 0) {
-    if((paId & CLuaBFB::LUA_FB_DI_FLAG) != 0) {
+    if((paId & CLuaBFB::LUA_FB_DO_FLAG) != 0) {
       return m_apoAdapters[(paId >> 16) & CLuaBFB::LUA_AD_VAR_MAX]->getDO(paId & CLuaBFB::LUA_FB_VAR_MAX);
     }
-    if((paId & CLuaBFB::LUA_FB_DO_FLAG) != 0) {
+    if((paId & CLuaBFB::LUA_FB_DI_FLAG) != 0) {
       return m_apoAdapters[(paId >> 16) & CLuaBFB::LUA_AD_VAR_MAX]->getDI(paId & CLuaBFB::LUA_FB_VAR_MAX);
     }
     return 0;

@@ -1,17 +1,19 @@
 /*******************************************************************************
-  * Copyright (c) 2011 - 2015 nxtControl GmbH, ACIN, fortiss GmbH
-  *   2018 TU Wien/ACIN
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Stansilav Meduna, Alois Zoitl, Ingo Hegny, Monika Wenger
-  *      - initial implementation and rework communication infrastructure
-  *    Martin Melik Merkumians
-  *      - fixes behavior for getToStringBufferSize
-  *******************************************************************************/
+ * Copyright (c) 2011 - 2015 nxtControl GmbH, ACIN, fortiss GmbH
+ *               2018 TU Wien/ACIN
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Stansilav Meduna, Alois Zoitl, Ingo Hegny, Monika Wenger
+ *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians
+ *      - fixes behavior for getToStringBufferSize
+ *******************************************************************************/
 #include <fortenew.h>
 #include "forte_any_string.h"
 #include "unicode_utils.h"

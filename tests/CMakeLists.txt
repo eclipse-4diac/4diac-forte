@@ -1,12 +1,13 @@
 #*******************************************************************************
-# * Copyright (c) 2011 - 2018 ACIN, nxtControl, Profactor GmbH, fortiss GmbH
-# * All rights reserved. This program and the accompanying materials
-# * are made available under the terms of the Eclipse Public License v1.0
-# * which accompanies this distribution, and is available at
-# * http://www.eclipse.org/legal/epl-v10.html
-# *
-# * Contributors:
-# *   Ingo Hegny, Alois Zoitl, Stanislav Meduna, Micheal Hofmann, 
+# Copyright (c) 2011 - 2018 ACIN, nxtControl, Profactor GmbH, fortiss GmbH
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0.
+#
+# SPDX-License-Identifier: EPL-2.0
+# 
+# Contributors:
+#    Ingo Hegny, Alois Zoitl, Stanislav Meduna, Micheal Hofmann, 
 # *   Martin Melik-Merkumians  - initial API and implementation and/or initial documentation
 # *   Martin Melik-Merkumians  - adds subdirectory for arch tests
 # *******************************************************************************/

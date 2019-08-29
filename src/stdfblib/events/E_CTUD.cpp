@@ -1,12 +1,15 @@
 /*******************************************************************************
  * Copyright (c) 2013 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ *               2019 Johannes Kepler University Linz
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Alois Zoitl - fixed bug in down counting
  *******************************************************************************/
 #include "E_CTUD.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -55,7 +58,7 @@ CV() = PV();
 
 void FORTE_E_CTUD::alg_UpdateQUQD(void){
 QU() = ((CV() >= PV()));
-QD() = ((CV() <= 0));
+QD() = ((CV() == 0));
 }
 
 void FORTE_E_CTUD::alg_CountDown(void){
@@ -107,7 +110,7 @@ void FORTE_E_CTUD::executeEvent(int pa_nEIID){
         if(scm_nEventRID == pa_nEIID)
           enterStateR();
         else
-        if((scm_nEventCDID == pa_nEIID) && (((CV() >= 1))))
+        if((scm_nEventCDID == pa_nEIID) && (((((CV() > 0))))))
           enterStateCD();
         else
         if(scm_nEventLDID == pa_nEIID)

@@ -1,10 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2018 ACIN, Profactor GmbH, fortiss GmbH,
  *                           Johannes Kepler University
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Alois Zoitl, Rene Smodic, Gerhard Ebenhofer, Thomas Strasser,
@@ -552,6 +553,7 @@ EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNam
       retVal = e_INVALID_OPERATION;
     }
   }
+  paLuaScriptAsString.clear();
   return retVal;
 }
 
@@ -559,13 +561,14 @@ EMGMResponse CResource::createAdapterTypeFromLua(CStringDictionary::TStringId ty
     CIEC_STRING& paLuaScriptAsString){
   EMGMResponse retVal = e_UNSUPPORTED_TYPE;
   if(CLuaAdapterTypeEntry::createLuaAdapterTypeEntry(typeNameId, paLuaScriptAsString) != NULL){
-    retVal = e_RDY;
-  }
-  else{
-    retVal = e_INVALID_OPERATION;
-  }
+     retVal = e_RDY;
+   }else{
+     retVal = e_INVALID_OPERATION;
+   }
+   paLuaScriptAsString.clear();
   return retVal;
 }
+
 #endif //FORTE_DYNAMIC_TYPE_LOAD
 
 CIEC_ANY *CResource::getVariable(forte::core::TNameIdentifier &paNameList){
