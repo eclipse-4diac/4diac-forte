@@ -276,7 +276,7 @@ FUNCTION(forte_add_systemtest_hard arg1 arg2 arg3)
   STRING(REPLACE "\\" "\\\\" file_str ${file_str})
   ADD_TEST(NAME ${arg1} COMMAND $<TARGET_FILE:forte> -f ${file_str})
   set_tests_properties (${arg1} PROPERTIES TIMEOUT ${arg3})
-  SET_TESTS_PROPERTIES(${arg1} PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T")
+  SET_TESTS_PROPERTIES(${arg1} PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T|==ERROR") #==ERROR is the output when memore leak happens
 ENDFUNCTION(forte_add_systemtest_hard)
 
 ## forte_add_systemtest_soft (test_name bootfile_name timeout)
@@ -287,7 +287,7 @@ FUNCTION(forte_add_systemtest_soft arg1 arg2 arg3)
   STRING(REPLACE "\\" "\\\\" file_str ${file_str})
   ADD_TEST(NAME ${arg1} COMMAND $<TARGET_FILE:forte> -f ${file_str})
   set_tests_properties (${arg1} PROPERTIES TIMEOUT ${arg3})
-  SET_TESTS_PROPERTIES(${arg1} PROPERTIES FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED")
+  SET_TESTS_PROPERTIES(${arg1} PROPERTIES FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED|==ERROR") #==ERROR is the output when memore leak happens
 ENDFUNCTION(forte_add_systemtest_soft)
 
 ## forte_add_2dev_systemtests (test_name bootfile_name1 bootfile_name2 extraArgs1 extraArgs2 timeout)
@@ -295,7 +295,7 @@ ENDFUNCTION(forte_add_systemtest_soft)
 ## The bootfiles are added to the args. The first forte is executed in port 61499 and the second in 61500
 ## if extraArgs are empty
 
-FUNCTION(forte_add_2dev_systemtests test_name bootfile_name1 bootfile_name2 arg1 arg2 timeout)
+FUNCTION(forte_add_2dev_systemtests test_name bootfile_name1 bootfile_name2 arg1 arg2 timeout isHard)
   FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${bootfile_name1}" file_str1)
   STRING(REPLACE "\\" "\\\\" file_str1 ${file_str1})
   
@@ -324,7 +324,11 @@ FUNCTION(forte_add_2dev_systemtests test_name bootfile_name1 bootfile_name2 arg1
   
   set_tests_properties (${test_name} PROPERTIES TIMEOUT ${timeout})
 
-  SET_TESTS_PROPERTIES(${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T") 
+  IF(${isHard})
+    SET_TESTS_PROPERTIES(${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T|==ERROR") #==ERROR is the output when memore leak happens
+  ELSE(${isHard})
+    SET_TESTS_PROPERTIES(${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED|==ERROR") #==ERROR is the output when memore leak happens
+  ENDIF(${isHard}) 
 ENDFUNCTION(forte_add_2dev_systemtests)
 
 FUNCTION(forte_add_env_file test file)
@@ -336,3 +340,5 @@ ENDFUNCTION(forte_add_env_file)
 FUNCTION(forte_add_custom_configuration arg1)
   SET_PROPERTY(GLOBAL APPEND_STRING PROPERTY FORTE_CUSTOM_CONFIGURATIONS_GLOBAL "${arg1}" \n\n)
 ENDFUNCTION(forte_add_custom_configuration)
+
+INCLUDE(${FORTE_BUILDSUPPORT_DIRECTORY}/opcua.cmake)

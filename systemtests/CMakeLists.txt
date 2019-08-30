@@ -94,7 +94,7 @@ if(FORTE_SYSTEM_TESTS)
   ##############################################
   
   # Simple test with 2 devices
-  forte_add_2dev_systemtests(SimpleMultiTest simple_server.fboot simple_client.fboot "" "" 5)
+  forte_add_2dev_systemtests(SimpleMultiTest simple_server.fboot simple_client.fboot "" "" 5 1)
   
   #after compilation, run "make CTEST_OUTPUT_ON_FAILURE=1 test" on the binary folder
 

@@ -10,5 +10,5 @@ execute_process(
                 RESULT_VARIABLE result)
 
 if(${result})
-  message("TEST_CONDITION_FAILED: The result of the pipe was ${result}")
+  message("ERROR: TEST_CONDITION_FAILED: The result of the pipe was ${result}")
 endif(${result})

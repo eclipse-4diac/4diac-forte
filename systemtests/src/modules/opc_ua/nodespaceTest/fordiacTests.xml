@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModelDesign
+xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:OpcUa="http://opcfoundation.org/UA/"
+  xmlns:fordiacTest="https://git.eclipse.org/4diac/org.eclipse.4diac"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  TargetNamespace="https://git.eclipse.org/4diac/org.eclipse.4diac"
+  TargetXmlNamespace="https://git.eclipse.org/4diac/org.eclipse.4diac"
+  TargetVersion="1.02"
+  TargetPublicationDate="2019-05-01T00:00:00Z"
+  xmlns="http://opcfoundation.org/UA/ModelDesign.xsd">
+
+
+	<Namespaces>
+		<Namespace Name="fordiacNamespace" Prefix="fordiacNamespace"
+			XmlNamespace="https://git.eclipse.org/4diac/org.eclipse.4diac"
+			XmlPrefix="fordiacNamespace">https://git.eclipse.org/4diac/org.eclipse.4diac</Namespace>
+		<Namespace Name="OpcUa" Prefix="Opc.Ua" InternalPrefix="Opc.Ua.Server" XmlNamespace="http://opcfoundation.org/UA/2008/02/Types.xsd" XmlPrefix="OpcUa">http://opcfoundation.org/UA/</Namespace>
+	</Namespaces>
+	
+	<ObjectType 
+	SymbolicName="fordiacTest:TestObject" NumericId="1005"
+		BaseType="OpcUa:BaseObjectType" SupportsEvents="true">
+		<Description>Object to test in 4diac</Description>
+		<Children>
+		
+			<Variable SymbolicName="fordiacTest:Variable1" DataType="OpcUa:Int32"
+				ValueRank="Scalar" ModellingRule="Mandatory">
+				<Description>Variable 1</Description>
+			</Variable>
+
+			<Variable SymbolicName="fordiacTest:Variable2" DataType="OpcUa:Int32"
+				ValueRank="Scalar" ModellingRule="Mandatory">
+				<Description>Variable 2</Description>
+			</Variable>
+
+			<Method SymbolicName="fordiacTest:TestMethod" TypeDefinition="fordiacTest:TestMethodType" />
+			
+			<Method SymbolicName="fordiacTest:TestMethod2" TypeDefinition="fordiacTest:TestMethodType" />
+
+
+		</Children>
+	</ObjectType>
+	
+	<Method SymbolicName="fordiacTest:TestMethodType">
+
+		<InputArguments>
+			<Argument Name="InputArgument" DataType="OpcUa:Int32" />
+		</InputArguments>
+
+		<OutputArguments>
+			<Argument Name="OutputArgument" DataType="OpcUa:Int32" />
+		</OutputArguments>
+
+	</Method>
+</ModelDesign>

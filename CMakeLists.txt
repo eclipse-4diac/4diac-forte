@@ -303,3 +303,7 @@ if(FORTE_LINKED_STRINGDICT)
      ADD_DEPENDENCIES (forte-shared forte_stringlist_externals)
   endif(FORTE_BUILD_SHARED_LIBRARY)
 endif(FORTE_LINKED_STRINGDICT)
+
+if(FORTE_COM_OPC_UA)
+  forte_opcua_configure()
+endif()
