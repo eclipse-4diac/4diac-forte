@@ -1,6 +1,6 @@
-#*******************************************************************************
-# Copyright (c) 2015-2016 Florian Froschermeier <florian.froschermeier@tum.de>,
-# *                         fortiss GmbH
+#*******************************************************************************************
+
+# Copyright (c) 2015-2016 Florian Froschermeier <florian.froschermeier@tum.de>, fortiss GmbH
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -9,10 +9,10 @@
 # 
 # Contributors:
 #     Florian Froschermeier
-# *      - initial integration of OPC Unified Architecture into FORTE
-# *    Stefan Profanter
-# *      - refactoring and adaption to new concept
-# ******************************************************************************/
+#       - initial integration of OPC Unified Architecture into FORTE
+#     Stefan Profanter
+#       - refactoring and adaption to new concept
+# ******************************************************************************************
 
 #############################################################################
 # OPC Unified Architecture (UA) integration.
