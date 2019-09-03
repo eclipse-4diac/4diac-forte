@@ -116,7 +116,6 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     struct UA_ServerStrings {
         CIEC_STRING mHostname;
         CIEC_STRING mAppURI;
-        CIEC_STRING mDiscoveryUrl;
     };
 
     /**
