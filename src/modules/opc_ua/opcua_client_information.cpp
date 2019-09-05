@@ -467,6 +467,7 @@ bool CUA_ClientInformation::allocAndCreateSubscription() {
 
 bool CUA_ClientInformation::createSubscription() {
   UA_CreateSubscriptionRequest request = UA_CreateSubscriptionRequest_default();
+  request.requestedPublishingInterval = FORTE_COM_OPC_UA_CLIENT_PUB_INTERVAL;
   UA_CreateSubscriptionResponse response = UA_Client_Subscriptions_create(mClient, request, this, 0, CUA_RemoteCallbackFunctions::deleteSubscriptionCallback);
   if(UA_STATUSCODE_GOOD == response.responseHeader.serviceResult) {
     DEVLOG_INFO("[OPC UA CLIENT]: Create subscription to %s succeeded, id %u\n", mEndpointUrl.getValue(), response.subscriptionId);
