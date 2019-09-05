@@ -195,6 +195,7 @@ void COPC_UA_Local_Handler::configureUAServer(TForteUInt16 paUAServerPort, UA_Se
   paUaServerConfig.applicationDescription.applicationUri = UA_String_fromChars(paServerStrings.mAppURI.getValue());
   paUaServerConfig.applicationDescription.applicationName.locale = UA_STRING_NULL;
   paUaServerConfig.applicationDescription.applicationName.text = UA_String_fromChars(paServerStrings.mHostname.getValue());
+  paUaServerConfig.publishingIntervalLimits.min = FORTE_COM_OPC_UA_SERVER_PUB_INTERVAL;
 
   for(size_t i = 0; i < paUaServerConfig.endpointsSize; i++) {
 #ifdef FORTE_COM_OPC_UA_MASTER_BRANCH

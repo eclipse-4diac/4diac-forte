@@ -132,7 +132,7 @@ class COPC_UA_Client_IterationList : public CThread {
     /**
      * Cyclic time to sleep if another iteration is needed. This is the period at which the iteration occurs normally
      */
-    static const TForteUInt64 scmNanosecondsToSleep = 100000000; //100ms
+    static const TForteUInt64 scmNanosecondsToSleep = FORTE_COM_OPC_UA_CLIENT_PUB_INTERVAL * 1000000; //ms to nanoseconds
 };
 
 /**
