@@ -225,7 +225,7 @@ const TForteByte CIEC_ANY::csmStringBufferSize[] = {
         65 /*e_LWORD (0, 16#FFFF FFFF FFFF FFFF)*/,
         11 /*e_DATE (d#0001-01-01)*/,
          9 /*e_TIME_OF_DAY (tod#00:00:00)*/,
-        20 /*e_DATE_AND_TIME (dt#0001-01-01-00:00:00)*/,
+        24 /*e_DATE_AND_TIME (dt#0001-01-01-00:00:00.000)*/,
         27 /*e_TIME (t#0)*/,
         14 /*e_REAL (32bit = 1bit sign, 8bit exponent, 23bit fraction)*/,
         23 /*e_LREAL (64bit = 1bit sign, 11bit exponent, 52bit fraction)*/,
