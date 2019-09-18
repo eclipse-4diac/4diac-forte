@@ -162,11 +162,7 @@ void COPC_UA_Local_Handler::generateServerStrings(TForteUInt16 paUAServerPort, U
   forte_snprintf(helperBuffer, scmMaxServerNameLength, "org.eclipse.4diac.%s", hostname);
 
   paServerStrings.mAppURI = helperBuffer;
-
-  forte_snprintf(helperBuffer, scmMaxServerNameLength, "opc.tcp://%s:%d/", hostname, paUAServerPort);
-
   paServerStrings.mHostname = hostname;
-  paServerStrings.mDiscoveryUrl = helperBuffer;
 }
 
 void COPC_UA_Local_Handler::configureUAServer(TForteUInt16 paUAServerPort, UA_ServerStrings &paServerStrings, UA_ServerConfig &paUaServerConfig) {
@@ -185,22 +181,21 @@ void COPC_UA_Local_Handler::configureUAServer(TForteUInt16 paUAServerPort, UA_Se
 # endif//FORTE_COM_OPC_UA_MASTER_BRANCH
 #endif //FORTE_COM_OPC_UA_MULTICAST
 
+  UA_String customHost = UA_STRING(paServerStrings.mHostname.getValue());
 #ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-  //this code is already executed in the master branch in the UA_ServerConfig_setMinimal function
+  UA_ServerConfig_setCustomHostname(&paUaServerConfig, customHost);
 #else //FORTE_COM_OPC_UA_MASTER_BRANCH
-  paUaServerConfig.applicationDescription.discoveryUrlsSize = 1;
-  paUaServerConfig.applicationDescription.discoveryUrls = static_cast<UA_String *>(UA_Array_new(1, &UA_TYPES[UA_TYPES_STRING]));
-#endif //FORTE_COM_OPC_UA_MASTER_BRANCH
+  UA_ServerConfig_set_customHostname(&paUaServerConfig, customHost);
+#endif//FORTE_COM_OPC_UA_MASTER_BRANCH
 
   // delete pre-initialized values
   UA_LocalizedText_deleteMembers(&paUaServerConfig.applicationDescription.applicationName);
   UA_String_deleteMembers(&paUaServerConfig.applicationDescription.applicationUri);
-  UA_String_deleteMembers(&paUaServerConfig.applicationDescription.discoveryUrls[0]);
 
   paUaServerConfig.applicationDescription.applicationUri = UA_String_fromChars(paServerStrings.mAppURI.getValue());
   paUaServerConfig.applicationDescription.applicationName.locale = UA_STRING_NULL;
   paUaServerConfig.applicationDescription.applicationName.text = UA_String_fromChars(paServerStrings.mHostname.getValue());
-  paUaServerConfig.applicationDescription.discoveryUrls[0] = UA_String_fromChars(paServerStrings.mDiscoveryUrl.getValue());
+  paUaServerConfig.publishingIntervalLimits.min = FORTE_COM_OPC_UA_SERVER_PUB_INTERVAL;
 
   for(size_t i = 0; i < paUaServerConfig.endpointsSize; i++) {
 #ifdef FORTE_COM_OPC_UA_MASTER_BRANCH

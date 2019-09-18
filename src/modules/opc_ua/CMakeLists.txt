@@ -32,6 +32,8 @@ if (FORTE_COM_OPC_UA)
     forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/modules/opc_ua/opcua_types.cpp) # created file
 
     SET(FORTE_COM_OPC_UA_PORT "4840" CACHE NUMBER "Port where the OPC_UA server will listen")
+    SET(FORTE_COM_OPC_UA_SERVER_PUB_INTERVAL "100.0" CACHE NUMBER "OPC UA Server publishing interval in ms")
+    SET(FORTE_COM_OPC_UA_CLIENT_PUB_INTERVAL "100.0" CACHE NUMBER "OPC UA Client requested publishing interval via OPC UA data subscription in ms")
     SET(FORTE_COM_OPC_UA_MULTICAST OFF CACHE BOOLEAN "Enable multicast support for OPC UA and registering with LDS")
     SET(FORTE_COM_OPC_UA_INCLUDE_DIR "" CACHE PATH "ABSOLUTE path to open62541.h file in the OPC UA project")
     SET(FORTE_COM_OPC_UA_LIB_DIR "" CACHE PATH "ABSOLUTE path to OPC UA folder with object library FORTE_COM_OPC_UA_LIB")
@@ -73,6 +75,8 @@ if (FORTE_COM_OPC_UA)
     
     forte_add_custom_configuration("#define FORTE_COM_OPC_UA_PORT ${FORTE_COM_OPC_UA_PORT}") 
     forte_add_custom_configuration("extern TForteUInt16 gOpcuaServerPort\;")
+    forte_add_custom_configuration("#define FORTE_COM_OPC_UA_SERVER_PUB_INTERVAL ${FORTE_COM_OPC_UA_SERVER_PUB_INTERVAL}")
+    forte_add_custom_configuration("#define FORTE_COM_OPC_UA_CLIENT_PUB_INTERVAL ${FORTE_COM_OPC_UA_CLIENT_PUB_INTERVAL}")
     
     forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA")
     forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA_MULTICAST")
