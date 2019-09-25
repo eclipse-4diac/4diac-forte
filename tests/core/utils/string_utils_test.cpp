@@ -448,7 +448,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
 
     BOOST_AUTO_TEST_CASE(getExtraSizeForEscapedChars){
       for(size_t i = 0; i < sizeof(sNonEscapedData) / sizeof(const char*); i++){
-        BOOST_CHECK_EQUAL(forte::core::util::getExtraSizeForEscapedChars(sNonEscapedData[i]), sExtraSize[i]);
+        BOOST_CHECK_EQUAL(forte::core::util::getExtraSizeForXMLEscapedChars(sNonEscapedData[i]), sExtraSize[i]);
       }
     }
 

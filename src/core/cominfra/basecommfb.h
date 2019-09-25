@@ -84,6 +84,15 @@ namespace forte {
     protected:
       CBaseCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, forte::com_infra::EComServiceType pa_eCommServiceType);
 
+      /*!\brief Extract the id and the parameter and the ID. The format is ID[PARAMS] where the opening and closing brackets are actually a opening and a closing brackets. They can be escaped using the $ sign.
+       * The opening bracket should only be escaped if it's part of the ID (although not recommended).
+       * The closing bracket should only be escaped if part of PARAMS.
+       * The $ sign should always be escaped
+       *
+       * @param paRemainingID The string to be analyzed. After return, it is already positioned for the next layer
+       * @param paLayerParams pointer to the found PARAMS
+       * @return ID with layer configuration
+       */
        static char *extractLayerIdAndParams(char **paRemainingID, char **paLayerParams);
 
       /*!\brief Generate a layer ID formed by a root with a prefix and a suffix
@@ -135,6 +144,12 @@ namespace forte {
       CComLayer *m_poTopOfComStack;
       unsigned int m_unComInterruptQueueCount; //!< number of triggers pending from the network
       CComLayer *m_apoInterruptQueue[cg_unCommunicationInterruptQueueSize];
+
+      private:
+        //we don't want that CBaseCommFB can be copied or assigned therefore the copy constructor and assignment operator are declared private
+        //but not implemented
+        CBaseCommFB(const CBaseCommFB&);
+        CBaseCommFB& operator=(const CBaseCommFB& paOther);
     };
 
   }

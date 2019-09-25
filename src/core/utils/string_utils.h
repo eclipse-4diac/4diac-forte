@@ -50,16 +50,16 @@ namespace forte {
 #endif
 
 
-      const char scEscapedCharacters[] = { '"', '\'', '&', '<', '>'};
+      const char scXMLEscapedCharacters[] = { '"', '\'', '&', '<', '>'};
 
-      const char* const scReplacementForEscapedCharacters[sizeof(scEscapedCharacters)] = {"&quot;", "&apos;", "&amp;",  "&lt;", "&gt;"};
+      const char* const scReplacementForXMLEscapedCharacters[sizeof(scXMLEscapedCharacters)] = {"&quot;", "&apos;", "&amp;",  "&lt;", "&gt;"};
 
       /**
        * Gets the extra space needed in a string for escaped chars.
        * @param paString The null ended C-string that's being checked for chars that need to be escaped
        * @return Extra number of chars needed to allocated the chars once they are escaped
        */
-      size_t getExtraSizeForEscapedChars(const char* const paString);
+      size_t getExtraSizeForXMLEscapedChars(const char* const paString);
 
       /**
        * Transforms a string with escaped chars (&apos;) into a string with the original chars (').
@@ -74,6 +74,11 @@ namespace forte {
        * @return Extra number of chars now present in the string comparing to the original one
        */
       size_t transformNonEscapedToEscapedXMLText(char* const paString);
+
+
+      char *lookForNonEscapedChar(char **paString, char paChar, char paEscapingChar);
+      bool isEscaped(char *paChar, char *paBeginLimit, char paEscapingChar);
+      void removeEscapedSigns(char **paString, char paEscapingChar);
 
     }
   }

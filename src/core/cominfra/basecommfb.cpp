@@ -24,6 +24,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <devlog.h>
+#include "core/utils/string_utils.h"
 
 using namespace forte::com_infra;
 
@@ -99,37 +101,24 @@ EComResponse CBaseCommFB::createComstack(char *commID) {
   CComLayer *newLayer = 0;
   CComLayer *previousLayer = 0; // Reference to the previous layer as it needs to set the bottom layer
   char *layerParams = 0;
-  // Loop until reaching the end of the ID
-  while ('\0' != *commID) {
-    // Get the next layer's ID and parameters
-    char * layerID = extractLayerIdAndParams(&commID, &layerParams);
-    // If not well formated ID return an error
-    if(0 == commID){
-      if('\0' != *layerID) {
-        retVal = e_InitInvalidId;
-      }
-      break;
-    }
+  while('\0' != *commID) { // Loop until reaching the end of the ID
+    retVal = e_InitInvalidId;
+    char * layerID = extractLayerIdAndParams(&commID, &layerParams); // Get the next layer's ID and parameters
 
+    if(0 != layerID && '\0' != *layerID) { // If well formated ID, keep going
     // Create the new layer
-    newLayer = CComLayersManager::createCommunicationLayer(layerID, previousLayer, this);
-    if (0 == newLayer) {
-      // If the layer can't be created return an error
-      retVal = e_InitInvalidId;
-      break;
-    }
-    else if (0 == m_poTopOfComStack) {
-      // Assign the newly created layer to the FB
-      m_poTopOfComStack = newLayer;
+      newLayer = CComLayersManager::createCommunicationLayer(layerID, previousLayer, this);
+      if(0 != newLayer) { // If the layer could be created, keep going
+        if(0 == m_poTopOfComStack) {
+          m_poTopOfComStack = newLayer; // Assign the newly created layer to the FB
+        }
+
+        previousLayer = newLayer; // Update the previous layer reference
+        retVal = newLayer->openConnection(layerParams); // Open the layer connection
+      }
     }
 
-    // Update the previous layer reference
-    previousLayer = newLayer;
-
-    // Open the layer connection
-    retVal = newLayer->openConnection(layerParams);
-    if (e_InitOk != retVal) {
-      // If it was not opened correctly return the error
+    if(e_InitOk != retVal) {  // If it was not opened correctly return the error
       break;
     }
   }
@@ -156,24 +145,33 @@ void CBaseCommFB::interruptCommFB(CComLayer *pa_poComLayer) {
 }
 
 char *CBaseCommFB::extractLayerIdAndParams(char **paRemainingID, char **paLayerParams) {
-  char *LayerID = *paRemainingID;
-  if ('\0' != **paRemainingID) {
-    *paRemainingID = strchr(*paRemainingID, '[');
-    if (0 != *paRemainingID) {
-      **paRemainingID = '\0';
+  char *layerID = 0;
+  if('\0' != **paRemainingID) {
+    char *possibleLayerId = *paRemainingID;
+    *paRemainingID = forte::core::util::lookForNonEscapedChar(paRemainingID, '[', '\\');
+    if(0 != *paRemainingID) {
       ++*paRemainingID;
-      *paLayerParams = *paRemainingID;
-      *paRemainingID = strchr(*paRemainingID, ']');
-      if (0 != *paRemainingID) {
-        **paRemainingID = '\0';
+      char *possibleLayerParams = *paRemainingID;
+      *paRemainingID = forte::core::util::lookForNonEscapedChar(paRemainingID, ']', '\\');
+      if(0 != *paRemainingID) { //both [ and ] were found so the ID is correct
         ++*paRemainingID;
-        if ('\0' != **paRemainingID) {
+        if('\0' != **paRemainingID) {
           ++*paRemainingID;
         }
+
+        layerID = possibleLayerId;
+        *paLayerParams = possibleLayerParams;
+        forte::core::util::removeEscapedSigns(paLayerParams, '\\');
+      } else {
+        DEVLOG_ERROR("[CBaseCommFB]: No valid closing bracket was found\n");
       }
+    } else {
+      DEVLOG_ERROR("[CBaseCommFB]: No valid opening bracket was found\n");
     }
+  } else {
+    DEVLOG_ERROR("[CBaseCommFB]: The id of the layer is empty\n");
   }
-  return LayerID;
+  return layerID;
 }
 
 char *CBaseCommFB::buildIDString(const char *paPrefix, const char *paIDRoot, const char *paSuffix) {
