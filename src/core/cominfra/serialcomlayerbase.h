@@ -66,6 +66,7 @@ class CSerialComLayerBase : public forte::com_infra::CComLayer{
       e115200 = 115200,
       e128000 = 128000,
       e256000 = 256000,
+      e1000000 = 1000000,
     };
 
     enum EForteSerialByteSize{
@@ -101,11 +102,12 @@ class CSerialComLayerBase : public forte::com_infra::CComLayer{
     char mTerminationSymbol[3]; //**< Space for CR, LF, or CR/LF + Terminating \0
     forte::com_infra::EComResponse openConnection(char *paLayerParameter);
     virtual forte::com_infra::EComResponse openSerialConnection(const SSerialParameters& paSerialParameters, TSerialHandle* paHandleResult) = 0;
-    static const unsigned int mMaxRecvBuffer = 22;
+    static const unsigned int mMaxRecvBuffer = 1000;
 
     forte::com_infra::EComResponse mInterruptResp;
     char mRecvBuffer[mMaxRecvBuffer];
     unsigned int mBufFillSize;
+    CSyncObject mRecvLock;
 
     TSerialHandle mSerialHandle;
     TSerialHandle getSerialHandler(){

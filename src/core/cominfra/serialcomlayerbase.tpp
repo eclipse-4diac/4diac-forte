@@ -12,6 +12,7 @@
 
 #include "serialcomlayerbase.h"
 #include "../utils/parameterParser.h"
+#include <criticalregion.h>
 
 template <typename TThreadHandle, TThreadHandle nullHandle>
 CSerialComLayerBase<TThreadHandle, nullHandle>::CSerialComLayerBase(forte::com_infra::CComLayer* paUpperLayer,
@@ -28,6 +29,7 @@ CSerialComLayerBase<TThreadHandle, nullHandle>::~CSerialComLayerBase() {
 template <typename TThreadHandle, TThreadHandle nullHandle>
 forte::com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::processInterrupt(){
   if(forte::com_infra::e_ProcessDataOk == mInterruptResp){
+    CCriticalRegion lock(mRecvLock);
     switch (m_eConnectionState){
       case forte::com_infra::e_Connected:
         if(0 != m_poTopLayer){
@@ -80,6 +82,7 @@ forte::com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::o
     case e115200: break;
     case e128000: break;
     case e256000: break;
+    case e1000000: break;
     //all other numbers are invalid!
     default: return forte::com_infra::e_InitInvalidId; break;
   }
@@ -137,5 +140,9 @@ forte::com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::o
     return forte::com_infra::e_InitInvalidId;
   }
 
-  return openSerialConnection(parsedParameters, &mSerialHandle);
+  forte::com_infra::EComResponse resp = openSerialConnection(parsedParameters, &mSerialHandle);
+  if(forte::com_infra::e_InitOk == resp){
+    m_eConnectionState = forte::com_infra::e_Connected;
+  }
+  return resp;
 }
