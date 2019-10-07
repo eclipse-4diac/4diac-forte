@@ -1,17 +1,19 @@
 /*******************************************************************************
-  * Copyright (c) 2010-2013 fortiss, TU Wien ACIN and others.
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Alois Zoitl - initial implementation and rework communication infrastructure, bug fixes
-  *    Michael Hofmann - option for custom datatypes send by fbdkasn1layer
-  *    Monika Wenger - rename datatype files to forte_datatype
-  *    Ingo Hegny - serialize/deserialize for STRUCT, changed datatype for IP-communication
-  *    Stanislav Meduna - make serializeNull and isNull public
-  *******************************************************************************/
+ * Copyright (c) 2010-2013 fortiss, TU Wien ACIN and others.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Alois Zoitl - initial implementation and rework communication infrastructure, bug fixes
+ *    Michael Hofmann - option for custom datatypes send by fbdkasn1layer
+ *    Monika Wenger - rename datatype files to forte_datatype
+ *    Ingo Hegny - serialize/deserialize for STRUCT, changed datatype for IP-communication
+ *    Stanislav Meduna - make serializeNull and isNull public
+ *******************************************************************************/
 #ifndef _FBDKASN1LAYER_H_
 #define _FBDKASN1LAYER_H_
 
@@ -166,11 +168,11 @@ namespace forte {
         static int serializeValueString(TForteByte* pa_pcBytes, int pa_nStreamSize, const CIEC_STRING & pa_roString);
 #ifdef FORTE_USE_WSTRING_DATATYPE
         static int serializeValueWString(TForteByte* pa_pcBytes, int pa_nStreamSize, const CIEC_WSTRING & pa_roWString);
-#endif
+#endif //FORTE_USE_WSTRING_DATATYPE
         static int serializeValueStruct(TForteByte* pa_pcBytes, int pa_nStreamSize, const CIEC_STRUCT & pa_roWString);
-      #ifdef FORTE_SUPPORT_ARRAYS
+#ifdef FORTE_SUPPORT_ARRAYS
         static int serializeArray(TForteByte* pa_pcBytes, int pa_nStreamSize, const CIEC_ARRAY &pa_roArray);
-      #endif
+#endif //FORTE_SUPPORT_ARRAYS
         /**@}*/
 
 
@@ -191,12 +193,12 @@ namespace forte {
         static int deserializeValueTime(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_TIME &pa_roIECData);
 #ifdef FORTE_USE_WSTRING_DATATYPE
         static int deserializeValueWString(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_WSTRING &pa_roIECData);
-#endif
+#endif //FORTE_USE_WSTRING_DATATYPE
         static int deserializeValueString(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_STRING &pa_roIECData);
 #ifdef FORTE_SUPPORT_ARRAYS
         static int deserializeArray(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_ARRAY &pa_roArray);
         static int deserializeValueBoolArray(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_ARRAY &pa_roArray, TForteUInt16 pa_unDecodedArraySize);
-#endif
+#endif //FORTE_SUPPORT_ARRAYS
         static int deserializeValueStruct(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_STRUCT &pa_roIECData);
         /**@}*/
 

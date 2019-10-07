@@ -1,12 +1,13 @@
 #*******************************************************************************
-# * Copyright (c) 2011, 2014 ACIN, fortiss GmbH
-# * All rights reserved. This program and the accompanying materials
-# * are made available under the terms of the Eclipse Public License v1.0
-# * which accompanies this distribution, and is available at
-# * http://www.eclipse.org/legal/epl-v10.html
-# *
-# * Contributors:
-# *   Alois Zoitl, Patrick Smejkal - initial API and implementation and/or initial documentation
+# Copyright (c) 2011, 2014 ACIN, fortiss GmbH
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0.
+#
+# SPDX-License-Identifier: EPL-2.0
+# 
+# Contributors:
+#    Alois Zoitl, Patrick Smejkal - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\netos74)
@@ -59,6 +60,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "NetOs 7.4")
   forte_add_sourcefile_hcpp(../forte_thread ../forte_sync ../forte_sem)
   forte_add_sourcefile_cpp(appconf_api.c ../root.cpp ../../genforte_printer.cpp)
   forte_add_sourcefile_h(../../forte_architecture_time.h)
+  forte_add_sourcefile_cpp(../../genforte_realFunctions.cpp)
 
   if(FORTE_COM_ETH)
    forte_add_handler(CFDSelectHandler ../sockhand)

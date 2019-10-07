@@ -1,13 +1,15 @@
 /*******************************************************************************
-  * Copyright (c) 2008 - 2013 nxtControl GmbH, ACIN, fortiss GmbH
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Stanislav Meduna, Alois Zoitl, Martin Melik Merkumians, Monika Wenger
-  *      - initial implementation and rework communication infrastructure
+ * Copyright (c) 2008 - 2013 nxtControl GmbH, ACIN, fortiss GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Stanislav Meduna, Alois Zoitl, Martin Melik Merkumians, Monika Wenger
+ *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
 #ifndef _FORTE_DATE_AND_TIME_H_
 #define _FORTE_DATE_AND_TIME_H_
@@ -101,7 +103,7 @@ class CIEC_DATE_AND_TIME : public CIEC_ANY_DATE {
        *   \return number of bytes used in the buffer without trailing 0x00
        *           -1 on error
        */
-    virtual int toString(char* paValue, unsigned int paBufferSize) const ;
+    virtual int toString(char* paValue, size_t paBufferSize) const;
 
       /*! \brief Converts data type value to string - use GMT time
        *   \param paValue Pointer to the provided buffer
@@ -110,12 +112,6 @@ class CIEC_DATE_AND_TIME : public CIEC_ANY_DATE {
        *           -1 on error
        */
     virtual int toGMTString(char* paValue, unsigned int paBufferSize) const ;
-
-    /*! \brief Set the variable to current time
-    */
-    void setCurrentTime(){
-      setTUINT64(forte_time(0) * 1000ULL);
-    };
 };
 
 #endif /* #ifdef FORTE_USE_64BIT_DATATYPES */

@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2017 ACIN, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *  Alois Zoitl - initial API and implementation and/or initial documentation
@@ -12,10 +13,10 @@
 #define _SERCOMMLAYER_H_
 
 #include "../../core/cominfra/serialcomlayerbase.h"
-#include "../fdselecthand.h"
+#include "../gensockhand.h"
 #include <termios.h>
 
-class CPosixSerCommLayer : public CSerialComLayerBase<CFDSelectHandler::TFileDescriptor, CFDSelectHandler::scmInvalidFileDescriptor>{
+class CPosixSerCommLayer : public CSerialComLayerBase<FORTE_SOCKET_TYPE, FORTE_INVALID_SOCKET>{
   public:
     CPosixSerCommLayer(forte::com_infra::CComLayer* paUpperLayer, forte::com_infra::CBaseCommFB * paFB);
     virtual ~CPosixSerCommLayer();
@@ -25,7 +26,7 @@ class CPosixSerCommLayer : public CSerialComLayerBase<CFDSelectHandler::TFileDes
 
   protected:
   private:
-    virtual forte::com_infra::EComResponse openSerialConnection(const SSerialParameters& paSerialParameters, CSerialComLayerBase<CFDSelectHandler::TFileDescriptor, CFDSelectHandler::scmInvalidFileDescriptor>::TSerialHandleType* paHandleResult);
+    virtual forte::com_infra::EComResponse openSerialConnection(const SSerialParameters& paSerialParameters, CSerialComLayerBase<FORTE_SOCKET_TYPE, FORTE_INVALID_SOCKET>::TSerialHandleType* paHandleResult);
     virtual void closeConnection();
 
     struct termios mOldTIO;    //!< buffer for the existing sercom settings

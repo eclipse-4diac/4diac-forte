@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012 AIT, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
@@ -81,8 +82,9 @@ CProcessImageMatrix* CProcessImageMatrix::getModuleEntries(unsigned int pa_nCN, 
   TChannelList::Iterator itEnd = m_lMatrix.end();
   for(TChannelList::Iterator it(m_lMatrix.begin()); it != itEnd; ++it){
     if(it->m_nCN == pa_nCN && it->m_nModuleId == pa_nModule){
-      if(newMatrix == NULL)
+      if(newMatrix == NULL) {
         newMatrix = new CProcessImageMatrix();
+      }
 
       newMatrix->addEntry(it->m_nCN, it->m_nModuleId, it->m_nIOid, it->m_nDataSize, it->m_nPIOffset, it->m_nBitOffset);
     }

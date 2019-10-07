@@ -1,90 +1,66 @@
 /*******************************************************************************
  * Copyright (c) 2014 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ *               2018 Johannes Kepler University
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Alois Zoitl  - initial API and implementation and/or initial documentation
+ *   Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Alois Zoitl - migrated fb tests to boost test infrastructure
  *******************************************************************************/
-#include "../../core/fbtests/fbtester.h"
-#include <E_R_TRIG.h>
+#include "../../core/fbtests/fbtestfixture.h"
+
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "E_R_TRIG_tester_gen.cpp"
 #endif
 
-/***********************************************************************************/
-/***********************************************************************************/
+struct E_R_TRIG_TestFixture : public CFBTestFixtureBase{
 
-class E_R_TRIG_tester  : public CFBTester{
-    DECLARE_FB_TESTER(E_R_TRIG_tester);
-
-  public:
-    E_R_TRIG_tester(CResource* m_poTestResource) :
-        CFBTester(m_poTestResource){
-      SETUP_INPUTDATA(&m_oIn_QI);
+    E_R_TRIG_TestFixture() : CFBTestFixtureBase(g_nStringIdE_R_TRIG){
+      SETUP_INPUTDATA(&mInQI);
+      CFBTestFixtureBase::setup();
     }
 
-    virtual ~E_R_TRIG_tester(){
-
-    }
-
-  private:
-    virtual void executeAllTests(){
-      evaluateTestResult(testCase_RaisingEdge(), "Raising Edge");
-      evaluateTestResult(testCase_FallingEdge(), "Falling Edge");
-      evaluateTestResult(testCase_StableHigh(), "Stable High");
-      evaluateTestResult(testCase_StableLow(), "Stable Low");
-    }
-
-    bool testCase_RaisingEdge(){
-      m_oIn_QI = true;
-      triggerEvent(0);
-      return checkForSingleOutputEventOccurence(0);
-    }
-    bool testCase_FallingEdge(){
-      bool bResult = true;
-      m_oIn_QI = true;
-      triggerEvent(0);
-      m_oIn_QI = false;
-      triggerEvent(0);
-      if(!eventChainEmpty()){
-        bResult = false;
-      }
-      return bResult;
-    }
-    bool testCase_StableHigh(){
-      bool bResult = true;
-      m_oIn_QI = true;
-      triggerEvent(0);
-      pullFirstChainEventID();
-      for(unsigned int i = 0; i < 1000; i++){
-        triggerEvent(0);
-        if(!eventChainEmpty()){
-          bResult = false;
-          break;
-        }
-      }
-      return bResult;
-    }
-    bool testCase_StableLow(){
-      bool bResult = true;
-      m_oIn_QI = false;
-      for(unsigned int i = 0; i < 1000; i++){
-        triggerEvent(0);
-        if(!eventChainEmpty()){
-          bResult = false;
-          break;
-        }
-      }
-      return bResult;
-    }
-
-    CIEC_BOOL m_oIn_QI; //DATA INPUT
+    CIEC_BOOL mInQI; //DATA INPUT
 };
 
-/***********************************************************************************/
-/***********************************************************************************/
 
-DEFINE_FB_TESTER(E_R_TRIG_tester, g_nStringIdE_R_TRIG)
+BOOST_FIXTURE_TEST_SUITE( RTrigTests, E_R_TRIG_TestFixture)
+
+  BOOST_AUTO_TEST_CASE(RaisingEdge){
+    mInQI = true;
+    triggerEvent(0);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+  }
+
+  BOOST_AUTO_TEST_CASE(FallingEdge){
+    mInQI = true;
+    triggerEvent(0);
+    clearEventChain();
+    mInQI = false;
+    triggerEvent(0);
+    BOOST_CHECK(eventChainEmpty());
+  }
+
+  BOOST_AUTO_TEST_CASE(StableHigh){
+    mInQI = true;
+    triggerEvent(0);
+    pullFirstChainEventID();
+    for(unsigned int i = 0; i < 1000; i++){
+      triggerEvent(0);
+      BOOST_CHECK(eventChainEmpty());
+    }
+  }
+
+  BOOST_AUTO_TEST_CASE(StableLow){
+    mInQI = false;
+    for(unsigned int i = 0; i < 1000; i++){
+      triggerEvent(0);
+      BOOST_CHECK(eventChainEmpty());
+    }
+  }
+
+BOOST_AUTO_TEST_SUITE_END()

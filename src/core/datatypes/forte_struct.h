@@ -1,14 +1,16 @@
 /*******************************************************************************
-  * Copyright (c) 2010 - 2013 ACIN
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Ingo Hegny, Alois Zoitl, Monika Wenger
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2010 - 2013 ACIN
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Ingo Hegny, Alois Zoitl, Monika Wenger
+ *      - initial implementation and rework communication infrastructure
+ *******************************************************************************/
 #ifndef _FORTE_STRUCT_H_
 #define _FORTE_STRUCT_H_
 
@@ -102,7 +104,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      *   \return number of bytes used in the buffer
      *           -1 on error
      */
-    virtual int toString(char* paValue, unsigned int paBufferSize) const;
+    virtual int toString(char* paValue, size_t paBufferSize) const;
 
     CIEC_ANY *getMembers(){
       return (0 != getSpecs()) ? getSpecs()->mMembers : static_cast<CIEC_ANY *>(0);
@@ -119,7 +121,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      */
     CIEC_ANY *getMemberNamed(CStringDictionary::TStringId paMemberNameId);
 
-    virtual unsigned int getToStringBufferSize() const;
+    virtual size_t getToStringBufferSize() const;
 
   protected:
 

@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2014 ACIN, Profactor GmbH, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Alois Zoitl, Gerhard Ebenhofer
@@ -27,10 +28,8 @@ void E_DELAY::executeEvent(int pa_nEIID){
     mActive = false;
   }
   else{
-    if(csm_nEventSTARTID  == pa_nEIID ){
-      if(!mActive){
-        setEventChainExecutor(m_poInvokingExecEnv);  // E_DELAY will execute in the same thread on as from where it has been triggered.
-      }
+    if(csm_nEventSTARTID == pa_nEIID && !mActive) {
+      setEventChainExecutor(m_poInvokingExecEnv); // E_DELAY will execute in the same thread on as from where it has been triggered.
     }
     CTimedFB::executeEvent(pa_nEIID);
   }

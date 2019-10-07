@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 - 2016 ACIN, nxtcontrol GmbH, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Alois Zoitl, Stanislav Meduna, Monika Wenger
@@ -21,6 +22,7 @@
 #ifndef FORTE_USE_DEFAULT_NEW_AND_DELETE
 //With this define platforms can use the default new and delete operators provided by the standard library
 //It should be set in the fortealloc.h file
+//By default, forte is built using these implementations. See https://bugs.eclipse.org/bugs/show_bug.cgi?id=544048
 
 /*!Collection of new and delete operators used by forte for dynamically allocating memory.
  *

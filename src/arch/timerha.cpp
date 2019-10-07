@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Alois Zoitl, Rene Smodic, Thomas Strasser, Ingo Hegny
@@ -17,8 +18,6 @@
 
 DEFINE_HANDLER(CTimerHandler)
 
-CTimerHandler *CTimerHandler::smFORTETimer = 0;
-
 CTimerHandler::CTimerHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution),
     mForteTime(0), mTimedFBList(0){
 }
@@ -28,7 +27,7 @@ CTimerHandler::~CTimerHandler(){
 
 void CTimerHandler::registerTimedFB(STimedFBListEntry *paTimerListEntry, const CIEC_TIME &paTimeInterval) {
   //calculate the correct interval based on time-base and timer ticks per seconds
-  paTimerListEntry->mInterval = static_cast<TForteUInt32>((paTimeInterval * getTicksPerSecond()) / FORTE_TIME_BASE_UNITS_PER_SECOND);
+  paTimerListEntry->mInterval = static_cast<TForteUInt32>((paTimeInterval * getTicksPerSecond()) / cgForteTimeBaseUnitsPerSecond);
   {
     CCriticalRegion criticalRegion(mSync);
     addTimedFBEntry(paTimerListEntry);
@@ -40,9 +39,9 @@ void CTimerHandler::addTimedFBEntry(STimedFBListEntry *paTimerListEntry) {
   paTimerListEntry->mNext = 0;
 
   // Correct null intervals that can lead to event queue overflow to 10 ms
-  if (paTimerListEntry->mInterval == 0)
+  if(paTimerListEntry->mInterval == 0) {
     paTimerListEntry->mTimeOut += (getTicksPerSecond() > 100) ? getTicksPerSecond() / 100 : 1;
-
+  }
   if (0 == mTimedFBList) {
     mTimedFBList = paTimerListEntry;
   } else {

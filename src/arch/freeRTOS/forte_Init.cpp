@@ -1,12 +1,14 @@
 /************************************************************************************
- * Copyright (c) 2017 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2017-2018 fortiss GmbH
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  * Milan Vathoopan - initial API and implementation and/or initial documentation
+ * Tarik Terzimehic - make OPC UA server port setable from the command line
  ************************************************************************************/
 
 #include "forte_Init.h"
@@ -16,6 +18,8 @@
 #include <stdio.h>
 #include <string>
 #include "../../stdfblib/ita/RMT_DEV.h"
+
+#include "../utils/mainparam_utils.h"
 
 unsigned int forte_default_port = 61499;
 
@@ -27,21 +31,21 @@ unsigned int forte_default_port = 61499;
 bool checkEndianess();
 void createDev(const char *paMGRID, TForteInstance* paResultInstance);
 
-void forteGlobalInitialize(void){
+void forteGlobalInitialize(void) {
   CForteArchitecture::initialize();
 }
 
-void forteGlobalDeinitialize(void){
+void forteGlobalDeinitialize(void) {
   CForteArchitecture::deinitialize();
 }
 
-int forteStartInstance(unsigned int paPort, TForteInstance* paResultInstance){
+int forteStartInstance(unsigned int paPort, TForteInstance* paResultInstance) {
 
-  if (65535 < paPort){
+  if(65535 < paPort) {
     return FORTE_WRONG_PARAMETERS;
   }
 
-  if (0 == paPort){
+  if(0 == paPort) {
     paPort = forte_default_port;
   }
 
@@ -51,58 +55,52 @@ int forteStartInstance(unsigned int paPort, TForteInstance* paResultInstance){
   sprintf(port, "%u", paPort);
   strcat(address, port);
 
-  char* arguments[] = {flag, address};
+  char* arguments[] = { flag, address };
   return forteStartInstanceGeneric(2, arguments, paResultInstance);
 }
 
+int forteStartInstanceGeneric(int paArgc, char *paArgv[], TForteInstance* paResultInstance) {
 
-int forteStartInstanceGeneric(int paArgc, char *paArgv[], TForteInstance* paResultInstance){
-
-  if(!CForteArchitecture::isInitialized()){
+  if(!CForteArchitecture::isInitialized()) {
     return FORTE_ARCHITECTURE_NOT_READY;
   }
 
-  if(0 == paResultInstance){
+  if(0 == paResultInstance) {
     return FORTE_WRONG_PARAMETERS;
   }
 
-  if (0 != *paResultInstance){
+  if(0 != *paResultInstance) {
     return FORTE_DEVICE_ALREADY_STARTED;
   }
 
-  if (!checkEndianess()){
+  if(!checkEndianess()) {
     return FORTE_WRONG_ENDIANESS;
   }
 
-  if(paArgc <= 1){ //! Default Value (localhost:61499)
-    createDev("localhost:61499", paResultInstance);
-  }
-  else{
-    if(strcmp("-c", paArgv[0]) == 0){ //! sets the destination for the connection
-      createDev(paArgv[1], paResultInstance);
-    }
-    else{ //! Lists the help for FORTE
-      return FORTE_WRONG_PARAMETERS;
-    }
+  const char *pIpPort = parseCommandLineArguments(paArgc, paArgv);
+  if((0 != strlen(pIpPort)) && (NULL != strchr(pIpPort, ':'))) {
+    createDev(pIpPort, paResultInstance);
+  } else { //! If needed call listHelp() to list the help for FORTE
+    return FORTE_WRONG_PARAMETERS;
   }
 
   return FORTE_OK;
 }
 
-void forteJoinInstance(TForteInstance paInstance){
+void forteJoinInstance(TForteInstance paInstance) {
   RMT_DEV *poDev = static_cast<RMT_DEV*>(paInstance);
-  if(0 != poDev){
+  if(0 != poDev) {
     poDev->MGR.joinResourceThread();
   }
 }
 
-void forteStopInstance(int paSig, TForteInstance paInstance){
-  if(!CForteArchitecture::isInitialized()){
+void forteStopInstance(int paSig, TForteInstance paInstance) {
+  if(!CForteArchitecture::isInitialized()) {
     return;
   }
   (void) paSig;
   RMT_DEV *poDev = static_cast<RMT_DEV*>(paInstance);
-  if(0 != poDev){
+  if(0 != poDev) {
     poDev->changeFBExecutionState(cg_nMGM_CMD_Kill);
     poDev->MGR.joinResourceThread();
     DEVLOG_INFO("FORTE finished\n");
@@ -114,7 +112,7 @@ void forteStopInstance(int paSig, TForteInstance paInstance){
  * \param pa_acMGRID A string containing IP and Port like [IP]:[Port]
  * \param The result
  */
-void createDev(const char *paMGRID, TForteInstance* paInstance){
+void createDev(const char *paMGRID, TForteInstance* paInstance) {
   RMT_DEV *device = new RMT_DEV;
   device->setMGR_ID(paMGRID);
   device->startDevice();
@@ -122,17 +120,16 @@ void createDev(const char *paMGRID, TForteInstance* paInstance){
   DEVLOG_INFO("FORTE is up and running\n");
 }
 
-bool checkEndianess(){
+bool checkEndianess() {
   int i = 1;
   char *p = (char *) &i;
-  if(p[0] == 1){
+  if(p[0] == 1) {
     //we are on a little endian platform
 #ifdef FORTE_BIG_ENDIAN
     DEVLOG_ERROR("Wrong endianess configured! You are on a little endian platform and have configured big endian!\n");
     return false;
 #endif
-  }
-  else{
+  } else {
     //we are on a big endian platform
 #ifdef FORTE_LITTLE_ENDIAN
     DEVLOG_ERROR("Wrong endianess configured! You are on a big endian platform and have configured little endian!\n");

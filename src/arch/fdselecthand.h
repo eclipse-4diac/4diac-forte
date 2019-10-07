@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 - 2014 ACIN, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Alois Zoitl, Patrick Smejkal
@@ -30,7 +31,7 @@ namespace forte{
  * data reception. Examples for possible file descriptors are sockets or com re
  */
 
-class CFDSelectHandler : public CExternalEventHandler, private CThread{
+class CFDSelectHandler : public CExternalEventHandler, private CThread {
   DECLARE_HANDLER(CFDSelectHandler)
   public:
     typedef FORTE_SOCKET_TYPE TFileDescriptor; //!< General type definition for a file descriptor. To be used by the callback classes.

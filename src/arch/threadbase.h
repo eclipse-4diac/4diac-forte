@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016, 2017 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *  Alois Zoitl - initial API and implementation and/or initial documentation
@@ -14,6 +15,7 @@
 
 #include "../core/datatypes/forte_time.h"
 #include <forte_sem.h>
+#include <forte_sync.h>
 
 namespace forte {
   namespace arch {
@@ -138,6 +140,12 @@ namespace forte {
          *       This is important for stopping and destroying threads.
          */
         volatile  bool mAlive;
+
+        /*! \brief Mutex to avoid two different threads accessing start() or end() at the same time
+         *  If two threads call start() at the same time, the thread will be created twice. A similar problem with end().
+         *  See https://bugs.eclipse.org/bugs/show_bug.cgi?id=547620
+         */
+        CSyncObject mThreadMutex;
 
         //we don't want that threads can be copied or assigned therefore the copy constructor and assignment operator are declared private
         //but not implemented

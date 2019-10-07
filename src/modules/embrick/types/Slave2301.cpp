@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
@@ -55,8 +56,8 @@ const SFBInterfaceSpec EmbrickSlave2301::scm_stFBInterfaceSpec = { 1,
     scm_anDataInputNames, scm_anDataInputTypeIds, 2, scm_anDataOutputNames,
     scm_anDataOutputTypeIds, 2, scm_astAdapterInstances };
 
-const TForteUInt8 EmbrickSlave2301::scm_slaveConfigurationIO[] = { 7 };
-const TForteUInt8 EmbrickSlave2301::scm_slaveConfigurationIO_num = 1;
+const TForteUInt8 EmbrickSlave2301::scmSlaveConfigurationIO[] = { 7 };
+const TForteUInt8 EmbrickSlave2301::scmSlaveConfigurationIONum = 1;
 
 void EmbrickSlave2301::initHandles() {
   // Initialize handles
@@ -67,7 +68,7 @@ void EmbrickSlave2301::initHandles() {
 
   for (int i = 0; i < oCount; i++) {
     EmbrickBusHandler::HandleDescriptor desc = EmbrickBusHandler::HandleDescriptor(
-        *static_cast<CIEC_WSTRING*>(getDI(oOffset + i)), forte::core::IO::IOMapper::Out, index,
+        *static_cast<CIEC_WSTRING*>(getDI(oOffset + i)), forte::core::io::IOMapper::Out, mIndex,
         EmbrickBusHandler::Bit, (uint8_t) (i / 8), (uint8_t) (i % 8));
     initHandle(&desc);
   }

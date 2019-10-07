@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2015 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Martin Jobst
@@ -25,7 +26,7 @@ private:
   SFBInterfaceSpec m_interfaceSpec;
   SInternalVarsInformation m_internalVarsInformation;
 
-  CLuaBFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING paLuaScriptAsString,  SFBInterfaceSpec& interfaceSpec,
+  CLuaBFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING paLuaScriptAsString, SFBInterfaceSpec& interfaceSpec,
       SInternalVarsInformation& internalVarsInformation);
 
   virtual ~CLuaBFBTypeEntry();
@@ -42,6 +43,7 @@ public:
   const SFBInterfaceSpec* getInterfaceSpec() const {
     return &m_interfaceSpec;
   }
+
   const SInternalVarsInformation* getInternalVarsInformation() const {
     return &m_internalVarsInformation;
   }

@@ -1,16 +1,19 @@
 /*******************************************************************************
-  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Thomas Strasser, Ingomar Müller, Alois Zoitl,
-  *    Ingo Hegny, Martin Melik Merkumians, Monika Wenger, Stanislav Meduna,
-  *    Matthias Plasch
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2005 - 2019 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Thomas Strasser, Ingomar Müller, Alois Zoitl,
+ *    Ingo Hegny, Martin Melik Merkumians, Monika Wenger, Stanislav Meduna,
+ *    Matthias Plasch
+ *      - initial implementation and rework communication infrastructure
+ *    Jose Cabral
+ *      - Move arch dependant code (strtod) to the arch folder
+ *******************************************************************************/
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
@@ -19,6 +22,7 @@
 #include "forte_lreal.h"
 
 #include <forte_printer.h>
+#include "../../arch/forte_realFunctions.h"
 
 DEFINE_FIRMWARE_DATATYPE(REAL, g_nStringIdREAL)
 
@@ -26,33 +30,29 @@ int CIEC_REAL::fromString(const char *paValue){
   char *pcEnd;
   const char *pacRunner = paValue;
   TForteFloat realval = 0.0;
-  const TForteFloat TFLOAT_min = 3.4e-38f; // lower precision boundary
-  const TForteFloat TFLOAT_max = 3.4e38f; // upper precision boundary
+  const TForteFloat TFLOAT_min = 3.4e-38F; // lower precision boundary
+  const TForteFloat TFLOAT_max = 3.4e38F; // upper precision boundary
 
   if(0 == strncmp(pacRunner, "REAL#", 5)){
     pacRunner += 5;
   }
 
-  
-  #if defined(WIN32) || defined(__ECOS) || defined(VXWORKS)
-  realval = static_cast<TForteFloat>(strtod(pacRunner, &pcEnd));
-  #else
-  realval = strtof(pacRunner, &pcEnd);
-  #endif
+  realval = forte_stringToFloat(pacRunner, &pcEnd);
 
   if(((fabs(realval) < TFLOAT_min) && (realval != 0)) || ((fabs(realval) > TFLOAT_max) && (realval != 0)) ||
-      (pacRunner == pcEnd))
+      (pacRunner == pcEnd)) {
     return -1;
+  }
 
   setTFLOAT((TForteFloat) realval);
   return static_cast<int>(pcEnd - paValue);
 }
 
-int CIEC_REAL::toString(char* paValue, unsigned int paBufferSize) const{
+int CIEC_REAL::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal;
   nRetVal = forte_snprintf(paValue, paBufferSize, "%g", getTFLOAT());
-  if((nRetVal < -1) || (nRetVal >= (int) paBufferSize)){
-    nRetVal = -1;  
+  if((nRetVal < -1) || (nRetVal >= static_cast<int>(paBufferSize))) {
+    nRetVal = -1;
   }
   return nRetVal;
 }
@@ -110,10 +110,10 @@ void CIEC_REAL::castRealData(const CIEC_REAL &paSrcValue, CIEC_ANY &paDestValue)
     case CIEC_ANY::e_LINT: {
       CIEC_REAL::TValueType floatValue = static_cast<CIEC_REAL::TValueType>(paSrcValue);
       if(0 < floatValue){
-        floatValue += 0.5f;
+        floatValue += 0.5F;
       }
       if(0 > floatValue){
-        floatValue -= 0.5f;
+        floatValue -= 0.5F;
       }
       *((CIEC_ANY::TLargestIntValueType *) paDestValue.getDataPtr()) = static_cast<CIEC_ANY::TLargestIntValueType>(floatValue);
     }
@@ -123,12 +123,12 @@ void CIEC_REAL::castRealData(const CIEC_REAL &paSrcValue, CIEC_ANY &paDestValue)
       //should not be necessary because of connect function, but who knows.
       CIEC_REAL::TValueType floatValue = static_cast<CIEC_REAL::TValueType>(paSrcValue);
       if(0 < floatValue){
-        floatValue += 0.5f;
+        floatValue += 0.5F;
       }
       if(0 > floatValue){
-        floatValue -= 0.5f;
+        floatValue -= 0.5F;
       }
-      *((CIEC_ANY::TLargestUIntValueType *) paDestValue.getDataPtr()) = static_cast<CIEC_ANY::TLargestUIntValueType>(floatValue);
+      *(reinterpret_cast<CIEC_ANY::TLargestUIntValueType*>(paDestValue.getDataPtr())) = static_cast<CIEC_ANY::TLargestUIntValueType>(floatValue);
     }
       break;
   }

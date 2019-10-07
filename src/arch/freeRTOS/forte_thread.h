@@ -1,9 +1,10 @@
 /************************************************************************************
  * Copyright (c) 2016 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  * Milan Vathoopan, Guru Chandrasekhara - initial API and implementation and/or initial documentation
@@ -13,16 +14,19 @@
 #ifndef SRC_ARCH_FREERTOS_THREAD_H_
 #define SRC_ARCH_FREERTOS_THREAD_H_
 
+#include <FreeRTOS.h>
+#include <task.h>
+
 #include "../datatype.h"
 #include "../devlog.h"
 #include "../../core/datatypes/forte_time.h"
 #include "../threadbase.h"
 #include "forte_sync.h"
 
-extern "C" {
-#include <FreeRTOS_Source/include/FreeRTOS.h>
-#include <FreeRTOS_Source/include/task.h>
-}
+//Allow to set a special stack size for forte threads
+#ifndef configMINIMAL_STACK_SIZE_FORTE
+# define configMINIMAL_STACK_SIZE_FORTE configMINIMAL_STACK_SIZE
+#endif
 
 #define CThread     CFreeRTOSThread  //allows that doxygen can generate better documenation
 class CFreeRTOSThread;
@@ -47,7 +51,7 @@ class CFreeRTOSThread : public forte::arch::CThreadBase<TaskHandle_t> {
      *  @param pa_nStackSize the Size of the stack the thread is allowed to use. this class will
      *         allocate the stack size in bytes from the heap
      */
-    explicit CFreeRTOSThread(long paStackSize = configMINIMAL_STACK_SIZE);
+    explicit CFreeRTOSThread(long paStackSize = configMINIMAL_STACK_SIZE_FORTE);
 
     /*! \brief Stops and destroys thread.
      *
@@ -67,7 +71,7 @@ class CFreeRTOSThread : public forte::arch::CThreadBase<TaskHandle_t> {
 
   protected:
 
-    void setPriority(int paPriority){
+    void setPriority(int paPriority) {
       DEVLOG_DEBUG(">>>>Thread: Set Priority: %d\n", paPriority);
       vTaskPrioritySet(getThreadHandle(), paPriority);
     }
@@ -90,6 +94,5 @@ class CFreeRTOSThread : public forte::arch::CThreadBase<TaskHandle_t> {
     static const int scmForteTaskPriority;
 
 };
-
 
 #endif /* SRC_ARCH_FREERTOS_THREAD_H_ */

@@ -1,13 +1,15 @@
 /*******************************************************************************
-  * Copyright (c) 2011-2014 fortiss and TU Wien ACIN.
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Alois Zoitl - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2011-2014 fortiss and TU Wien ACIN.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Alois Zoitl - initial implementation and rework communication infrastructure
+ *******************************************************************************/
 #ifndef LOCALCOMLAYER_H_
 #define LOCALCOMLAYER_H_
 
@@ -37,23 +39,22 @@ namespace forte {
           return e_ProcessDataOk;
         }
 
-      protected:
       private:
         virtual EComResponse openConnection(char *pa_acLayerParameter);
         virtual void closeConnection();
         void setRDs(CLocalComLayer *pa_poSublLayer, CIEC_ANY *pa_aSDs, unsigned int pa_unNumSDs);
 
-        struct SLocalCommGroup{
-
-            explicit SLocalCommGroup(CStringDictionary::TStringId pa_nGroupName) :
+        class CLocalCommGroup {
+          public:
+            explicit CLocalCommGroup(CStringDictionary::TStringId pa_nGroupName) :
                 m_nGroupName(pa_nGroupName), m_lPublList(), m_lSublList(){
             }
 
-            SLocalCommGroup(const SLocalCommGroup& pa_roLocalCommGroup) :
+            CLocalCommGroup(const CLocalCommGroup& pa_roLocalCommGroup) :
                 m_nGroupName(pa_roLocalCommGroup.m_nGroupName), m_lPublList(), m_lSublList(){
             }
 
-            ~SLocalCommGroup(){
+            ~CLocalCommGroup(){
             }
 
             CStringDictionary::TStringId m_nGroupName;
@@ -65,19 +66,18 @@ namespace forte {
 
           public:
 
-            SLocalCommGroup* registerPubl(const CStringDictionary::TStringId pa_nID, CLocalComLayer *pa_poLayer);
-            void unregisterPubl(SLocalCommGroup *pa_poGroup, CLocalComLayer *pa_poLayer);
+            CLocalCommGroup* registerPubl(const CStringDictionary::TStringId pa_nID, CLocalComLayer *pa_poLayer);
+            void unregisterPubl(CLocalCommGroup *pa_poGroup, CLocalComLayer *pa_poLayer);
 
-            SLocalCommGroup* registerSubl(const CStringDictionary::TStringId pa_nID, CLocalComLayer *pa_poLayer);
-            void unregisterSubl(SLocalCommGroup *pa_poGroup, CLocalComLayer *pa_poLayer);
+            CLocalCommGroup* registerSubl(const CStringDictionary::TStringId pa_nID, CLocalComLayer *pa_poLayer);
+            void unregisterSubl(CLocalCommGroup *pa_poGroup, CLocalComLayer *pa_poLayer);
 
-          protected:
           private:
             CLocalCommGroupsManager(){};
 
-            SLocalCommGroup* findLocalCommGroup(CStringDictionary::TStringId pa_nID);
-            SLocalCommGroup* createLocalCommGroup(CStringDictionary::TStringId pa_nID);
-            void removeCommGroup(SLocalCommGroup *pa_poGroup);
+            CLocalCommGroup* findLocalCommGroup(CStringDictionary::TStringId pa_nID);
+            CLocalCommGroup* createLocalCommGroup(CStringDictionary::TStringId pa_nID);
+            void removeCommGroup(CLocalCommGroup *pa_poGroup);
 
             static void removeListEntry(CSinglyLinkedList<CLocalComLayer*>  &pa_rlstList, CLocalComLayer *pa_poLayer);
 
@@ -85,7 +85,7 @@ namespace forte {
              */
             CSyncObject m_oSync;
 
-            CSinglyLinkedList<SLocalCommGroup> m_lstLocalCommGroups;
+            CSinglyLinkedList<CLocalCommGroup> m_lstLocalCommGroups;
 
             friend class CLocalComLayer;
 
@@ -97,7 +97,7 @@ namespace forte {
         static CLocalCommGroupsManager sm_oLocalCommGroupsManager;
 
 
-        SLocalCommGroup *m_poLocalCommGroup;
+        CLocalCommGroup *m_poLocalCommGroup;
     };
   }
 

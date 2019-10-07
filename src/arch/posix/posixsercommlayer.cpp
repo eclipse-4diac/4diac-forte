@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012, 2017 ACIN, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *  Alois Zoitl - initial API and implementation and/or initial documentation
@@ -17,6 +18,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <sockhand.h>
+#include <criticalregion.h>
 
 CPosixSerCommLayer::CPosixSerCommLayer(forte::com_infra::CComLayer* paUpperLayer, forte::com_infra::CBaseCommFB* paFB) :
    CSerialComLayerBase(paUpperLayer, paFB){
@@ -44,6 +47,7 @@ forte::com_infra::EComResponse CPosixSerCommLayer::sendData(void *paData, unsign
 }
 
 forte::com_infra::EComResponse CPosixSerCommLayer::recvData(const void *, unsigned int){
+  CCriticalRegion lock(mRecvLock);
   ssize_t nReadCount = read(getSerialHandler(), &mRecvBuffer[mBufFillSize], cg_unIPLayerRecvBufferSize - mBufFillSize);
 
   switch (nReadCount){
@@ -67,7 +71,7 @@ forte::com_infra::EComResponse CPosixSerCommLayer::recvData(const void *, unsign
   return mInterruptResp;
 }
 
-forte::com_infra::EComResponse CPosixSerCommLayer::openSerialConnection(const SSerialParameters& paSerialParameters, CSerialComLayerBase<CFDSelectHandler::TFileDescriptor, CFDSelectHandler::scmInvalidFileDescriptor>::TSerialHandleType* paHandleResult){
+forte::com_infra::EComResponse CPosixSerCommLayer::openSerialConnection(const SSerialParameters& paSerialParameters, CSerialComLayerBase<FORTE_SOCKET_TYPE, FORTE_INVALID_SOCKET>::TSerialHandleType* paHandleResult){
   forte::com_infra::EComResponse eRetVal = forte::com_infra::e_ProcessDataNoSocket;
 
   //as first shot take the serial interface device as param (e.g., /dev/ttyS0 )
@@ -78,6 +82,7 @@ forte::com_infra::EComResponse CPosixSerCommLayer::openSerialConnection(const SS
     struct termios stNewTIO;
     memset(&stNewTIO, 0, sizeof(stNewTIO));
 
+    stNewTIO.c_line = mOldTIO.c_line;
 
     switch (paSerialParameters.baudRate) {
       case e50: stNewTIO.c_cflag |= B50;  break;
@@ -97,8 +102,12 @@ forte::com_infra::EComResponse CPosixSerCommLayer::openSerialConnection(const SS
       case e38400: stNewTIO.c_cflag |= B38400; break;
       case e57600: stNewTIO.c_cflag |= B57600; break;
       case e115200: stNewTIO.c_cflag |= B115200; break;
+      case e1000000: stNewTIO.c_cflag |= B1000000; break;
       default: return forte::com_infra::e_InitInvalidId; break;
     }
+
+    stNewTIO.c_ispeed = mOldTIO.c_ispeed;
+    stNewTIO.c_ospeed = mOldTIO.c_ospeed;
 
     switch (paSerialParameters.byteSize) {
       case e5: stNewTIO.c_cflag |= CS5;  break;
@@ -115,7 +124,9 @@ forte::com_infra::EComResponse CPosixSerCommLayer::openSerialConnection(const SS
      }
 
     switch(paSerialParameters.parity){
-      case eNoParity: stNewTIO.c_cflag &= ~PARENB;  break;
+      case eNoParity:
+        stNewTIO.c_cflag &= ~(PARENB | PARODD | CMSPAR);
+        break;
       case eODD: stNewTIO.c_cflag |= PARENB | PARODD;  break;
       case eEven:
         stNewTIO.c_cflag |= PARENB;
@@ -124,32 +135,38 @@ forte::com_infra::EComResponse CPosixSerCommLayer::openSerialConnection(const SS
       default: return forte::com_infra::e_InitInvalidId; break;
     }
 
+    stNewTIO.c_cflag &= ~CRTSCTS;  // no hardware flow control
 
-    stNewTIO.c_cflag = CLOCAL | CREAD; /* Local line - do not change "owner" of port |  Enable receiver*/
+    stNewTIO.c_cflag |= (CLOCAL | CREAD); /* Local line - do not change "owner" of port |  Enable receiver*/
 
-    stNewTIO.c_iflag = ICRNL; /* Map CR to NL | IGNPAR (was here before)  Ignore parity error. TODO: Should we delete this? It was on the old code*/ ;
+    stNewTIO.c_iflag = mOldTIO.c_iflag;
+    stNewTIO.c_iflag |= IGNPAR; /* Map CR to NL | IGNPAR (was here before)  Ignore parity error. TODO: Should we delete this? It was on the old code*/ ;
+    stNewTIO.c_iflag &= ~(IXON | IXOFF | IXANY); // Turn off s/w flow ctrl
+    stNewTIO.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | INPCK | IUCLC); // Disable any special handling of received bytes
 
-    stNewTIO.c_oflag = 0; //raw output
+    stNewTIO.c_oflag = mOldTIO.c_oflag;
+    stNewTIO.c_oflag &= ~(OPOST | ONLCR | OCRNL);
 
-    stNewTIO.c_lflag = ICANON; // enable canonical input, disable echo func and don't send signals to calling programm
+    stNewTIO.c_lflag = mOldTIO.c_lflag;
+    stNewTIO.c_lflag &= ~(ICANON| ECHO | ECHOE| ECHONL | ECHOK | ISIG | IEXTEN | CRTSCTS);
 
-    stNewTIO.c_cc[VINTR] = 0; /* Ctrl-c */
-    stNewTIO.c_cc[VQUIT] = 0; /* Ctrl-\ */
-    stNewTIO.c_cc[VERASE] = 0; /* del */
-    stNewTIO.c_cc[VKILL] = 0; /* @ */
-    stNewTIO.c_cc[VEOF] = 4; /* Ctrl-d */
-    stNewTIO.c_cc[VTIME] = 0; /* inter-character timer unused */
+    stNewTIO.c_cc[VINTR] = _POSIX_VDISABLE; /* Ctrl-c */
+    stNewTIO.c_cc[VQUIT] = _POSIX_VDISABLE; /* Ctrl-\ */
+    stNewTIO.c_cc[VERASE] = _POSIX_VDISABLE; /* del */
+    stNewTIO.c_cc[VKILL] = _POSIX_VDISABLE; /* @ */
+    stNewTIO.c_cc[VEOF] = _POSIX_VDISABLE; /* Ctrl-d */
+    stNewTIO.c_cc[VTIME] = 10; /* inter-character timer unused */
     stNewTIO.c_cc[VMIN] = 1; /* blocking read until 1 character arrives */
-    stNewTIO.c_cc[VSWTC] = 0; /* '\0' */
-    stNewTIO.c_cc[VSTART] = 0; /* Ctrl-q */
-    stNewTIO.c_cc[VSTOP] = 0; /* Ctrl-s */
-    stNewTIO.c_cc[VSUSP] = 0; /* Ctrl-z */
-    stNewTIO.c_cc[VEOL] = 0; /* '\0' */
-    stNewTIO.c_cc[VREPRINT] = 0; /* Ctrl-r */
-    stNewTIO.c_cc[VDISCARD] = 0; /* Ctrl-u */
-    stNewTIO.c_cc[VWERASE] = 0; /* Ctrl-w */
-    stNewTIO.c_cc[VLNEXT] = 0; /* Ctrl-v */
-    stNewTIO.c_cc[VEOL2] = 0; /* '\0' */
+    stNewTIO.c_cc[VSWTC] = _POSIX_VDISABLE; /* '\0' */
+    stNewTIO.c_cc[VSTART] = _POSIX_VDISABLE; /* Ctrl-q */
+    stNewTIO.c_cc[VSTOP] = _POSIX_VDISABLE; /* Ctrl-s */
+    stNewTIO.c_cc[VSUSP] = _POSIX_VDISABLE; /* Ctrl-z */
+    stNewTIO.c_cc[VEOL] = _POSIX_VDISABLE; /* '\0' */
+    stNewTIO.c_cc[VREPRINT] = _POSIX_VDISABLE; /* Ctrl-r */
+    stNewTIO.c_cc[VDISCARD] = _POSIX_VDISABLE; /* Ctrl-u */
+    stNewTIO.c_cc[VWERASE] = _POSIX_VDISABLE; /* Ctrl-w */
+    stNewTIO.c_cc[VLNEXT] = _POSIX_VDISABLE; /* Ctrl-v */
+    stNewTIO.c_cc[VEOL2] = _POSIX_VDISABLE; /* '\0' */
 
     tcflush(fileDescriptor, TCIFLUSH);
     tcsetattr(fileDescriptor, TCSANOW, &stNewTIO);

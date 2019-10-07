@@ -1,9 +1,10 @@
 /************************************************************************************
  * Copyright (c) 2017 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  * Milan Vathoopan - initial API and implementation and/or initial documentation
@@ -18,19 +19,18 @@
  *
  */
 #ifndef FORTE_SHARED_PREFIX
-  #define FORTE_SHARED_PREFIX
+# define FORTE_SHARED_PREFIX
 #endif
 
 #ifndef FORTE_SHARED_CALL
-  #define FORTE_SHARED_CALL
+# define FORTE_SHARED_CALL
 #endif
-
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-  enum FORTE_STATUS{
+  enum FORTE_STATUS {
     FORTE_OK,
     FORTE_DEVICE_ALREADY_STARTED,
     FORTE_WRONG_ENDIANESS,
@@ -83,7 +83,5 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-
-
 
 #endif /* SRC_ARCH_FREERTOS_FORTE_INIT_H_ */

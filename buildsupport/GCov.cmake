@@ -1,12 +1,13 @@
 #*******************************************************************************
-# * Copyright (c) 2014 ACIN and fortiss GmbH
-# * All rights reserved. This program and the accompanying materials
-# * are made available under the terms of the Eclipse Public License v1.0
-# * which accompanies this distribution, and is available at
-# * http://www.eclipse.org/legal/epl-v10.html
-# *
-# * Contributors:
-# *    Martin Melik-Merkumians, Alois Zoitl - initial API and implementation and/or initial documentation
+# Copyright (c) 2014 ACIN and fortiss GmbH
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0.
+#
+# SPDX-License-Identifier: EPL-2.0
+# 
+# Contributors:
+#     Martin Melik-Merkumians, Alois Zoitl - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
 IF(NOT GCOV_PATH)
@@ -42,7 +43,7 @@ FUNCTION(SETUP_GCOV targetName testRunner outputName)
         ADD_CUSTOM_TARGET(${targetName}
                 COMMAND ${LCOV_PATH} --directory . --zerocounters
                 
-                COMMAND ${testRunner} --log_format=HRF --log_level=test_suite --report_level=no ${ARGV3}
+                COMMAND ${testRunner} --verbose --log_format=HRF --log_level=test_suite --report_level=no ${ARGV3}
                 
                 COMMAND ${LCOV_PATH} --directory . --capture --gcov-tool ${GCOV_PATH} --output-file ${outputName}.info --rc lcov_branch_coverage=1
                 COMMAND ${LCOV_PATH} --remove ${outputName}.info '*tests*' '/usr/*' '*boost*' --output-file ${outputName}.info.cleaned --rc lcov_branch_coverage=1

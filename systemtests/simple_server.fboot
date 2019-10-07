@@ -1,0 +1,25 @@
+;<Request ID="1" Action="CREATE"><FB Name="simpleServerTest" Type="EMB_RES" /></Request>
+simpleServerTest;<Request ID="2" Action="CREATE"><FB Name="PUBLISH_1" Type="PUBLISH_1" /></Request>
+simpleServerTest;<Request ID="3" Action="WRITE"><Connection Source="1" Destination="PUBLISH_1.QI" /></Request>
+simpleServerTest;<Request ID="4" Action="WRITE"><Connection Source="239.192.0.2:61500" Destination="PUBLISH_1.ID" /></Request>
+simpleServerTest;<Request ID="5" Action="CREATE"><FB Name="SUBSCRIBE_1" Type="SUBSCRIBE_1" /></Request>
+simpleServerTest;<Request ID="6" Action="WRITE"><Connection Source="1" Destination="SUBSCRIBE_1.QI" /></Request>
+simpleServerTest;<Request ID="7" Action="WRITE"><Connection Source="239.192.0.2:61499" Destination="SUBSCRIBE_1.ID" /></Request>
+simpleServerTest;<Request ID="8" Action="CREATE"><FB Name="F_EQ_1" Type="F_EQ" /></Request>
+simpleServerTest;<Request ID="9" Action="WRITE"><Connection Source="DINT#26" Destination="F_EQ_1.IN2" /></Request>
+simpleServerTest;<Request ID="10" Action="CREATE"><FB Name="ReceivedDINTOK" Type="TEST_CONDITION" /></Request>
+simpleServerTest;<Request ID="11" Action="CREATE"><FB Name="DINT2DINT_1" Type="DINT2DINT" /></Request>
+simpleServerTest;<Request ID="12" Action="CREATE"><FB Name="STEST_END_1" Type="STEST_END" /></Request>
+simpleServerTest;<Request ID="13" Action="CREATE"><Connection Source="START.COLD" Destination="SUBSCRIBE_1.INIT" /></Request>
+simpleServerTest;<Request ID="14" Action="CREATE"><Connection Source="START.WARM" Destination="SUBSCRIBE_1.INIT" /></Request>
+simpleServerTest;<Request ID="15" Action="CREATE"><Connection Source="SUBSCRIBE_1.INITO" Destination="PUBLISH_1.INIT" /></Request>
+simpleServerTest;<Request ID="16" Action="CREATE"><Connection Source="F_EQ_1.CNF" Destination="ReceivedDINTOK.REQ" /></Request>
+simpleServerTest;<Request ID="17" Action="CREATE"><Connection Source="DINT2DINT_1.CNF" Destination="F_EQ_1.REQ" /></Request>
+simpleServerTest;<Request ID="18" Action="CREATE"><Connection Source="SUBSCRIBE_1.IND" Destination="DINT2DINT_1.REQ" /></Request>
+simpleServerTest;<Request ID="19" Action="CREATE"><Connection Source="ReceivedDINTOK.CNF" Destination="PUBLISH_1.REQ" /></Request>
+simpleServerTest;<Request ID="20" Action="CREATE"><Connection Source="PUBLISH_1.CNF" Destination="STEST_END_1.REQ" /></Request>
+simpleServerTest;<Request ID="21" Action="CREATE"><Connection Source="F_EQ_1.OUT" Destination="ReceivedDINTOK.check" /></Request>
+simpleServerTest;<Request ID="22" Action="CREATE"><Connection Source="DINT2DINT_1.OUT" Destination="F_EQ_1.IN1" /></Request>
+simpleServerTest;<Request ID="23" Action="CREATE"><Connection Source="SUBSCRIBE_1.RD_1" Destination="DINT2DINT_1.IN" /></Request>
+simpleServerTest;<Request ID="24" Action="CREATE"><Connection Source="DINT2DINT_1.OUT" Destination="PUBLISH_1.SD_1" /></Request>
+simpleServerTest;<Request ID="25" Action="START"/>

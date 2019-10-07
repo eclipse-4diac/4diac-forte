@@ -1,12 +1,13 @@
 #*******************************************************************************
-# * Copyright (c) 2010 - 2015 ACIN, Profactor GmbH, fortiss GmbH
-# * All rights reserved. This program and the accompanying materials
-# * are made available under the terms of the Eclipse Public License v1.0
-# * which accompanies this distribution, and is available at
-# * http://www.eclipse.org/legal/epl-v10.html
-# *
-# * Contributors:
-# *  Alois Zoitl, Gerhard Ebenhofer, Martin Melik-Merkumians - initial API and implementation and/or initial documentation
+# Copyright (c) 2010 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0.
+#
+# SPDX-License-Identifier: EPL-2.0
+# 
+# Contributors:
+#   Alois Zoitl, Gerhard Ebenhofer, Martin Melik-Merkumians - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\win32)
@@ -20,7 +21,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   
   forte_add_sourcefile_h(fortealloc.h ../forte_architecture_time.h)
   forte_add_sourcefile_hcpp(forte_thread forte_sync forte_sem)
-  forte_add_sourcefile_cpp(forte_architecture.cpp winforte_printer.cpp)
+  forte_add_sourcefile_cpp(forte_architecture.cpp forte_architecture_time.cpp winforte_printer.cpp)
+  forte_add_sourcefile_cpp(../genforte_realFunctions.cpp)
   
   forte_add_sourcefile_hcpp(forte_instance)
   forte_add_to_executable_cpp(main)
@@ -58,6 +60,9 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   if(MINGW)
     #force MINGW to statically link libc and lib stdc++ so that no mingw dlls are needed for forte.exe
     forte_add_link_flags("-static-libgcc -static-libstdc++")
+  elseif(MSVC)
+    forte_add_definition("-wd4595")  #warning 4595: 'operator delete/delete[]': non-member operator new or delete functions may not be declared inline
+    forte_add_definition("-wd4290")  #warning 4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow). A function is declared using exception specification, which Visual C++ accepts but does not implement. (from new/delete warning)
   endif()
   
   forte_add_definition("-D_CRT_SECURE_NO_DEPRECATE")
@@ -65,10 +70,10 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   forte_add_definition("-D_SCL_SECURE_NO_WARNINGS")
   forte_add_definition("-D_CRT_SECURE_NO_WARNINGS")
   forte_add_definition("-D_NO_W32_PSEUDO_MODIFIERS")   #takes care of IN, OUT and OPTIONAL in mingw
-  
+
   
   if(FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)
-    forte_add_definition("-DBOOST_TEST_NO_LIB -DFORTE_USE_DEFAULT_NEW_AND_DELETE")
+    forte_add_definition("-DBOOST_TEST_NO_LIB")
   endif(FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)
   
  

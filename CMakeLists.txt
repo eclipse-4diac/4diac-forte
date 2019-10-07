@@ -1,12 +1,13 @@
  #*******************************************************************************
-# * Copyright (c) 2010 - 2015 ACIN, Profactor GmbH, AIT, fortiss GmbH
-# * All rights reserved. This program and the accompanying materials
-# * are made available under the terms of the Eclipse Public License v1.0
-# * which accompanies this distribution, and is available at
-# * http://www.eclipse.org/legal/epl-v10.html
-# *
-# * Contributors:
-# *   Michael Hofmann, Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny, Thomas Strasser,
+# Copyright (c) 2010 - 2015 ACIN, Profactor GmbH, AIT, fortiss GmbH
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0.
+#
+# SPDX-License-Identifier: EPL-2.0
+# 
+# Contributors:
+#    Michael Hofmann, Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny, Thomas Strasser,
 # *   Martin Melik Merkumians
 # *     - initial API and implementation and/or initial documentation
 # *******************************************************************************/
@@ -29,6 +30,8 @@ mark_as_advanced(FORTE_BUILDSUPPORT_DIRECTORY)
 
 #include forte cmake-functions
 INCLUDE(${FORTE_BUILDSUPPORT_DIRECTORY}/forte.cmake)
+
+forte_add_definition("-DFORTE_COMPILATION") #Allow to tell external modules/middleware that forte is being compiled, so special defines can be added
 
 #######################################################################################
 # Determine how to build FORTE
@@ -99,7 +102,9 @@ set(FORTE_SUPPORT_BOOT_FILE ON CACHE BOOL "Enable FORTE boot file loading on FOR
 mark_as_advanced(FORTE_SUPPORT_BOOT_FILE)
 if(FORTE_SUPPORT_BOOT_FILE)
   forte_add_definition("-DFORTE_SUPPORT_BOOT_FILE")
-  SET(FORTE_BootfileLocation "" CACHE STRING "Path to the bootfile, if same directory as forte executable leave empty, include trailing '/'!")
+  SET(FORTE_BootfileLocation "forte.fboot" CACHE STRING "Path to the bootfile")
+  forte_add_custom_configuration("#define FORTE_BOOT_FILE_LOCATION \"${FORTE_BootfileLocation}\"")
+  forte_add_custom_configuration("extern char* gCommandLineBootFile\;")
   mark_as_advanced(FORTE_BootfileLocation)
 endif(FORTE_SUPPORT_BOOT_FILE)
 
@@ -298,3 +303,7 @@ if(FORTE_LINKED_STRINGDICT)
      ADD_DEPENDENCIES (forte-shared forte_stringlist_externals)
   endif(FORTE_BUILD_SHARED_LIBRARY)
 endif(FORTE_LINKED_STRINGDICT)
+
+if(FORTE_COM_OPC_UA)
+  forte_opcua_configure()
+endif()

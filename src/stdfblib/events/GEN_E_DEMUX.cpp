@@ -1,10 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2011 - 2015 ACIN, Profactor GmbH, fortiss GmbH
  *                      2018 Johannes Kepler University
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Alois Zoitl, Matthias Plasch
@@ -35,10 +36,8 @@ GEN_E_DEMUX::~GEN_E_DEMUX(){
 }
 
 void GEN_E_DEMUX::executeEvent(int paEIID){
-  if(scm_nEventEIID == paEIID){
-    if(K() < m_pstInterfaceSpec->m_nNumEOs){
-      sendOutputEvent(K()); // the value of K corresponds to the output event ID;
-    }
+  if(scm_nEventEIID == paEIID && K() < m_pstInterfaceSpec->m_nNumEOs) {
+    sendOutputEvent(K()); // the value of K corresponds to the output event ID;
   }
 }
 

@@ -1,12 +1,13 @@
 #*******************************************************************************
-# * Copyright (c) 2010 - 2014 ACIN, fortiss GmbH
-# * All rights reserved. This program and the accompanying materials
-# * are made available under the terms of the Eclipse Public License v1.0
-# * which accompanies this distribution, and is available at
-# * http://www.eclipse.org/legal/epl-v10.html
-# *
-# * Contributors:
-# *   Alois Zoitl, Monika Wenger
+# Copyright (c) 2010 - 2014 ACIN, fortiss GmbH
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0.
+#
+# SPDX-License-Identifier: EPL-2.0
+# 
+# Contributors:
+#    Alois Zoitl, Monika Wenger
 # *     - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
@@ -22,4 +23,4 @@ forte_add_sourcefile_hcpp( E_REND   E_RS     E_SELECT  E_SR)
 forte_add_sourcefile_hcpp(E_CYCLE   E_DEMUX  E_F_TRIG  E_PERMIT) 
 forte_add_sourcefile_hcpp(E_RDELAY   E_RESTART E_R_TRIG E_SPLIT   E_SWITCH)
 forte_add_sourcefile_hcpp(GEN_E_DEMUX GEN_E_MUX)
-forte_add_sourcefile_hcpp(ATimeOut E_TimeOut ARTimeOut E_RTimeOut)
+forte_add_sourcefile_hcpp(ATimeOut E_TimeOut ARTimeOut E_RTimeOut E_T_FF)

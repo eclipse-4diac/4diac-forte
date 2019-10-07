@@ -1,9 +1,10 @@
 /************************************************************************************
  * Copyright (c) 2016 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  * Milan Vathoopan, Guru Chandrasekhara - initial API and implementation and/or initial documentation
@@ -18,8 +19,8 @@
 
 const static unsigned mainFORTE_TASK_PRIORITY = tskIDLE_PRIORITY + 1;
 
-void vForteTask( void* pvParameters ){
-  ( void ) pvParameters;
+void vForteTask(void* pvParameters) {
+  (void) pvParameters;
 
   RMT_DEV *poDev = new RMT_DEV;
 
@@ -32,13 +33,12 @@ void vForteTask( void* pvParameters ){
   vTaskDelete(NULL);
 }
 
-void vStartForteServerTask(UBaseType_t uxPriority){
+void vStartForteServerTask(UBaseType_t uxPriority) {
   /* Spawn the task. */
-  xTaskCreate( vForteTask, "forte", 2000, NULL, uxPriority, ( TaskHandle_t * ) NULL );
+  xTaskCreate(vForteTask, "forte", 2000, NULL, uxPriority, (TaskHandle_t *) NULL);
 }
 
-int main(void)
-{
+int main(void) {
 
   vStartForteServerTask(mainFORTE_TASK_PRIORITY);
 
@@ -46,5 +46,4 @@ int main(void)
 
   // Will not get here unless there is insufficient RAM.
 }
-
 

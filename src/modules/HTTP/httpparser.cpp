@@ -1,14 +1,15 @@
 /*******************************************************************************
-* Copyright (c) 2017-2018 Marc Jakobi, github.com/MrcJkb, fortiss GmbH
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Eclipse Public License v1.0
-* which accompanies this distribution, and is available at
-* http://www.eclipse.org/legal/epl-v10.html
-*
-* Contributors:
-*    Marc Jakobi - initial implementation
-*    Jose Cabral - Use CIEC_STRING instead of const char* and cleanning of functions
-********************************************************************************/
+ * Copyright (c) 2017-2018 Marc Jakobi, github.com/MrcJkb, fortiss GmbH
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Marc Jakobi - initial implementation
+ *    Jose Cabral - Use CIEC_STRING instead of const char* and cleanning of functions
+ ********************************************************************************/
 
 #include "httpparser.h"
 #include <stdio.h>
@@ -17,18 +18,13 @@
 
 using namespace forte::com_infra;
 
-CHttpParser::CHttpParser() {
-}
-
-CHttpParser::~CHttpParser(){
-}
-
 void CHttpParser::createGetRequest(CIEC_STRING& paDest, const CIEC_STRING& paHost, const CIEC_STRING& paPath) {
   CHttpParser::addCommonHeader(paDest, paHost, paPath, CHttpComLayer::e_GET);
   CHttpParser::addHeaderEnding(paDest);
 }
 
-void CHttpParser::createPutPostRequest(CIEC_STRING& paDest, const CIEC_STRING& paHost, const CIEC_STRING& paPath, const CIEC_STRING& paData, const CIEC_STRING& paContentType, CHttpComLayer::ERequestType paType){
+void CHttpParser::createPutPostRequest(CIEC_STRING& paDest, const CIEC_STRING& paHost, const CIEC_STRING& paPath, const CIEC_STRING& paData,
+    const CIEC_STRING& paContentType, CHttpComLayer::ERequestType paType) {
   CHttpParser::addCommonHeader(paDest, paHost, paPath, paType);
   paDest.append("\r\nContent-type: ");
   paDest.append(paContentType.getValue());
@@ -36,35 +32,88 @@ void CHttpParser::createPutPostRequest(CIEC_STRING& paDest, const CIEC_STRING& p
   changePutPostData(paDest, paData);
 }
 
-bool CHttpParser::changePutPostData(CIEC_STRING& paDest, const CIEC_STRING& paData){
+bool CHttpParser::changePutPostData(CIEC_STRING& paDest, const CIEC_STRING& paData) {
   char* helperChar = strstr(paDest.getValue(), "length: ");
-  if(0 != helperChar){
+  if(0 != helperChar) {
     helperChar += 8;
     *helperChar = '\0';
     paDest = paDest.getValue(); //will shrink the length of the string to the new ending
-    char contentLength[6]; //TODO: should this be fixed or not?
+    char contentLength[scmMaxLengthOfContent];
     snprintf(contentLength, sizeof(contentLength), "%zu", strlen(paData.getValue()));
     paDest.append(contentLength);
     CHttpParser::addHeaderEnding(paDest);
     paDest.append(paData.getValue());
     return true;
-  }
-  else{ // wrong request?
+  } else { // wrong request?
     DEVLOG_ERROR("[HTTP Parser] PUT/POST request was wrongly created\n");
     return false;
+  }
+}
+
+bool CHttpParser::parseResponse(CIEC_STRING& paBody, CIEC_STRING& paResponseCode, char* paSrc) {
+  if(CHttpParser::getHttpResponseCode(paResponseCode, paSrc)) {
+    char* helperChar = strstr(paSrc, "\r\n\r\n"); // Extract data from HTTP response char
+    if(0 != helperChar) {
+      helperChar += 4;
+      paBody = helperChar;
+    } else { // Empty response received
+      DEVLOG_INFO("[HTTP Parser] Empty content response received\n");
+      paBody = "";
+    }
+    return true;
+  }
+  return false;
+}
+
+bool forte::com_infra::CHttpParser::parseGetRequest(CIEC_STRING& paPath, CSinglyLinkedList<CIEC_STRING>& paParameterNames,
+    CSinglyLinkedList<CIEC_STRING>& paParameterValues, char* paData) {
+  char* helperChar = strstr(paData, "GET ");
+  if(helperChar != 0) {
+    helperChar += 4;
+    char* endOfPath = strstr(helperChar, " ");
+    if(endOfPath != 0) {
+      *endOfPath = '\0';
+      char* startOfParameters = strstr(paData, "?");
+      if(startOfParameters != 0) {
+        *startOfParameters = '\0';
+        startOfParameters++;
+        parseGETParameters(startOfParameters, paParameterNames, paParameterValues);
+      }
+      paPath = helperChar;
+    } else {
+      DEVLOG_ERROR("[HTTP Parser] Invalid HTTP Get request. No space after path found\n");
+      return false;
+    }
+    return true;
+  } else {
+    DEVLOG_ERROR("[HTTP Parser] Invalid HTTP Get request. No GET string found\n");
+    return false;
+  }
+}
+
+void forte::com_infra::CHttpParser::createResponse(CIEC_STRING& paDest, const CIEC_STRING& paResult, const CIEC_STRING& paContentType,
+    const CIEC_STRING& paData) {
+  paDest = paResult;
+  if(paData.empty()) {
+    paDest.append("\r\n");
+  } else {
+    paDest.append("\r\nContent-type: ");
+    paDest.append(paContentType.getValue());
+    paDest.append("\r\nContent-length: ");
+    changePutPostData(paDest, paData);
   }
 }
 
 void CHttpParser::addCommonHeader(CIEC_STRING& paDest, const CIEC_STRING& paHost, const CIEC_STRING& paPath, CHttpComLayer::ERequestType paType) {
   switch(paType){
     case CHttpComLayer::e_GET:
-      paDest = "GET /";
+      paDest = "GET ";
       break;
     case CHttpComLayer::e_PUT:
-      paDest = "PUT /";
+      paDest = "PUT ";
       break;
     case CHttpComLayer::e_POST:
-      paDest = "POST /";
+      paDest = "POST ";
       break;
     default:
       DEVLOG_ERROR("[HTTP Parser] Unexpected HTTP Type when adding header\n");
@@ -81,91 +130,28 @@ void CHttpParser::addHeaderEnding(CIEC_STRING& paDest) {
   paDest.append("\r\n\r\n");
 }
 
-bool CHttpParser::parseGetResponse(CIEC_STRING& paDest, char* paSrc, CIEC_STRING& paExpectedCode){
-  CIEC_STRING receivedCode;
-  if(CHttpParser::getHttpResponseCode(receivedCode, paSrc)){
-    if(receivedCode == paExpectedCode || "*" == paExpectedCode){
-      char* helperChar = strstr(paSrc, "\r\n\r\n"); // Extract data from HTTP GET response char
-      if(0 != helperChar){
-        helperChar += 4;
-        paDest = helperChar;
-        return true;
-      }else{ // Empty response received?
-        DEVLOG_INFO("[HTTP Parser] Empty GET content response received\n");
-        paDest = "";
-        return false;
-      }
-    }else{
-      DEVLOG_INFO("[HTTP Parser] Unexpected GET response code. Expected was %s and received was: \n", paExpectedCode.getValue(), receivedCode.getValue());
-    }
-  }
-  return false;
-}
-
-bool CHttpParser::parsePutPostResponse(CIEC_STRING& paDest, char* paSrc, CIEC_STRING& paExpectedCode) {
-  if(CHttpParser::getHttpResponseCode(paDest, paSrc)){
-    if(paDest == paExpectedCode || "*" == paExpectedCode){
-      return true;
-    }
-    else{
-      DEVLOG_ERROR("[HTTP Parser] Unexpected PUT response code\n");
-    }
-  }
-  return false;
-}
-
 bool CHttpParser::getHttpResponseCode(CIEC_STRING& paDest, char* paSrc) {
+  //HTTP-Version SP Status-Code SP Reason-Phrase CRLF (SP = space)
   char* helperChar = strstr(paSrc, "\r\n");
-  if (helperChar != 0) {
+  if(helperChar != 0) {
     *helperChar = '\0';
-    paDest = paSrc;
+    CParameterParser parser(paSrc, ' ');
+    if(3 <= parser.parseParameters()) { //Reason-Phrase can contain spaces in it
+      paDest = parser[1];
+    } else {
+      DEVLOG_ERROR("[HTTP Parser] Invalid HTTP response. The status line is not well defined\n");
+      return false;
+    }
     *helperChar = '\r';
     return true;
-  }
-  else {
-    DEVLOG_ERROR("[HTTP Parser] Invalid HTTP response\n");
-    paDest = "Invalid response";
+  } else {
+    DEVLOG_ERROR("[HTTP Parser] Invalid HTTP response. No line ending was found.\n");
     return false;
   }
 }
 
-bool forte::com_infra::CHttpParser::parseGetRequest(CIEC_STRING& paPath, CSinglyLinkedList<CIEC_STRING>& paParameterNames, CSinglyLinkedList<CIEC_STRING>& paParameterValues, char* paData){
-  char* helperChar = strstr(paData, "GET ");
-   if (helperChar != 0) {
-     helperChar += 4;
-     char* endOfPath = strstr(helperChar, " ");
-     if (endOfPath != 0) {
-       *endOfPath = '\0';
-       char* startOfParameters = strstr(paData, "?");
-       if(startOfParameters != 0){
-         *startOfParameters = '\0';
-         startOfParameters++;
-         parseParameters(startOfParameters, paParameterNames, paParameterValues);
-       }
-       paPath = helperChar;
-     }else{
-      DEVLOG_ERROR("[HTTP Parser] Invalid HTTP Get request. No space after path found\n");
-      return false;
-     }
-     return true;
-   }
-   else {
-     DEVLOG_ERROR("[HTTP Parser] Invalid HTTP Get request. No GET string found\n");
-     return false;
-   }
-}
-
-bool forte::com_infra::CHttpParser::createResponse(CIEC_STRING& paDest, const CIEC_STRING& paResult, const CIEC_STRING& paContentType, const CIEC_STRING& paData){
-  paDest.append("HTTP/1.1 ");
-  paDest.append(paResult.getValue());
-  paDest.append("\r\nContent-type: ");
-  paDest.append(paContentType.getValue());
-  paDest.append("\r\nContent-length: ");
-  changePutPostData(paDest, paData);
-  return true;
-}
-
-unsigned int forte::com_infra::CHttpParser::parseParameters(char* paParameters, CSinglyLinkedList<CIEC_STRING>& paParameterNames, CSinglyLinkedList<CIEC_STRING>& paParameterValues){
+unsigned int forte::com_infra::CHttpParser::parseGETParameters(char* paParameters, CSinglyLinkedList<CIEC_STRING>& paParameterNames,
+    CSinglyLinkedList<CIEC_STRING>& paParameterValues) {
   paParameterNames.clearAll();
   paParameterValues.clearAll();
 
@@ -173,12 +159,12 @@ unsigned int forte::com_infra::CHttpParser::parseParameters(char* paParameters, 
 
   char* startOfName = paParameters;
   bool endOfParameters = false;
-  while('\0' != *startOfName && !endOfParameters){
+  while('\0' != *startOfName && !endOfParameters) {
     char* startOfValue = strstr(startOfName, "=");
-    if(0 != startOfValue){
+    if(0 != startOfValue) {
       *startOfValue = '\0';
       startOfValue++;
-    }else{
+    } else {
       paParameterNames.clearAll();
       paParameterValues.clearAll();
       retVal = 0;
@@ -186,46 +172,18 @@ unsigned int forte::com_infra::CHttpParser::parseParameters(char* paParameters, 
     }
     char* nextName = strstr(startOfValue, "&");
     endOfParameters = false;
-    if(0 != nextName){
+    if(0 != nextName) {
       *nextName = '\0';
-    }else{
+    } else {
       endOfParameters = true;
     }
     paParameterNames.pushBack(startOfName);
     paParameterValues.pushBack(startOfValue);
     retVal++;
-    if(!endOfParameters){
+    if(!endOfParameters) {
       startOfName = ++nextName;
     }
   }
 
   return retVal;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

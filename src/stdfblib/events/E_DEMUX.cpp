@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2006 - 2013 ACIN, Profactor GmbH, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Alois Zoitl, Gerhard Ebenhofer, Martin Melik Merkumians, Ingo Hegny
@@ -44,11 +45,10 @@ const SFBInterfaceSpec E_DEMUX::scm_stFBInterfaceSpec = {
 };
 
 void E_DEMUX::executeEvent(int pa_nEIID){
-  if(scm_nEventEIID == pa_nEIID){
-    if(K() <= 3){
-      sendOutputEvent( K()); // the value of K corresponds to the outputevent ID;
-                          // as a result of this we could make a generic E_DEMUX
-                          // and even a generic E_MUX
-    }
+  if(scm_nEventEIID == pa_nEIID && K() <= 3) {
+    sendOutputEvent(K());
+    // the value of K corresponds to the outputevent ID;
+    // as a result of this we could make a generic E_DEMUX
+    // and even a generic E_MUX
   }
 }

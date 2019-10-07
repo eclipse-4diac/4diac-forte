@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 - 2014 ACIN, Profactor GmbH, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny
@@ -94,10 +95,7 @@ void CFDSelectHandler::run(void){
       mSync.unlock();
     }
     else{
-      if(retval == 0){
-//        printf(".");
-      }
-      else{
+      if(retval != 0) {
 #ifdef WIN32
         DEVLOG_ERROR("Select failed: %d", WSAGetLastError());
 #else

@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2010 - 2015 ACIN, Profactor GmbH, AIT, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Alois Zoitl, Ingo Hegny, Gerhard Ebenhofer, Thomas Strasser
@@ -15,7 +16,7 @@
 #include <string.h>
 
 void CBSDSocketInterface::closeSocket(TSocketDescriptor pa_nSockD){
-#if defined(WIN32) || defined(NET_OS)
+#if defined(NET_OS)
   closesocket(pa_nSockD);
 #else
   close(pa_nSockD);
@@ -110,7 +111,7 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::acceptTCPConnection(
   int sin_size = sizeof(struct sockaddr);
   TSocketDescriptor nRetVal;
 
-#if defined(WIN32) || defined(NET_OS) || defined (VXWORKS)
+#if defined(NET_OS) || defined (VXWORKS)
   nRetVal = accept(pa_nListeningSockD, &client_addr, &sin_size);
 #else
   nRetVal = accept(pa_nListeningSockD, &client_addr, (socklen_t*) &sin_size);
@@ -142,20 +143,10 @@ int CBSDSocketInterface::receiveDataFromTCP(TSocketDescriptor pa_nSockD, char* p
   int nRetVal;
   do{
     nRetVal = static_cast<int>(recv(pa_nSockD, pa_pcData, pa_unBufSize, 0));
-#ifdef WIN32
-  }while((-1 == nRetVal) && (WSAEINTR == h_errno)); // recv got interrupt / recieving again
-#else
   } while((-1 == nRetVal) && (EINTR == errno)); // recv got interrupt / recieving again
-#endif
+
   if(nRetVal == -1){
-#ifdef WIN32
-    DEVLOG_ERROR("CBSDSocketInterface: TCP-Socket recv() failed: %d\n", WSAGetLastError());
-    if(WSAECONNRESET == WSAGetLastError()){
-      nRetVal = 0; //inform higher levels that the peer closed connection
-    }
-#else
     DEVLOG_ERROR("CBSDSocketInterface: TCP-Socket recv() failed: %s\n", strerror(errno));
-#endif
   }
   return nRetVal;
 }
@@ -270,11 +261,8 @@ int CBSDSocketInterface::receiveDataFromUDP(TSocketDescriptor pa_nSockD, char* p
   int nRetVal;
   do{
     nRetVal = static_cast<int>(recvfrom(pa_nSockD, pa_pcData, pa_unBufSize, 0, 0, 0));
-#ifdef WIN32
-  }while((-1 == nRetVal) && (WSAEINTR == h_errno)); // recv got interrupt / recieving again
-#else
   } while((-1 == nRetVal) && (EINTR == errno)); // recv got interrupt / recieving again
-#endif
+
   if(nRetVal == -1){ //
     DEVLOG_ERROR("CBSDSocketInterface: UDP-Socket recvfrom() failed: %s\n", strerror(errno));
   }

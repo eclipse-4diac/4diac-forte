@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2018 fortiss GmbH.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Ben Schneider - Initial contribution; vlan and prio configuration to support tsn for pub/sub
@@ -31,7 +32,7 @@ EComResponse CTSNLayer::openConnection(char *paLayerParameter){
   EComResponse eRetVal = e_InitInvalidId;
 
   // complete ID for publisher: fbdk[].tsn[<ip>:<port>:<vlan_id>:<prio>] e.g., fbdk[].tsn[239.1.0.1:48401:3:5]
-  CParameterParser parser(paLayerParameter, scmNumParameters, ':');
+  CParameterParser parser(paLayerParameter, ':', scmNumParameters);
 
   if(scmNumParameters != parser.parseParameters()){
     DEVLOG_ERROR("[TSN Layer] Wrong parameters (%s)\n", paLayerParameter);

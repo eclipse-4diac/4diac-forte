@@ -1,10 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2012 - 2015 ACIN, fortiss GmbH
  *                      2018 Johannes Kepler University
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Alois Zoitl
@@ -17,6 +18,7 @@
 #endif
 #include <string.h>
 #include <errno.h>
+#include <devlog.h>
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_CSV_WRITER, g_nStringIdGEN_CSV_WRITER);
 
@@ -31,43 +33,44 @@ const TDataIOID GEN_CSV_WRITER::scm_anEOWith[] = { 0, 1, 255, 0, 1, 255 };
 const TForteInt16 GEN_CSV_WRITER::scm_anEOWithIndexes[] = { 0, 3, -1 };
 const CStringDictionary::TStringId GEN_CSV_WRITER::scm_anEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF };
 
-void GEN_CSV_WRITER::executeEvent(int paEIID){
-  switch (paEIID){
-    case scm_nEventINITID:
-      if(true == QI()){
-        openCSVFile();
-      }
-      else{
-        closeCSVFile();
-      }
-      sendOutputEvent(scm_nEventINITOID);
-      break;
-    case scm_nEventREQID:
-      QO() = QI();
-      if(true == QI()){
-        writeCSVFileLine();
-      }
-      sendOutputEvent(scm_nEventREQID);
-      break;
+
+const char * const GEN_CSV_WRITER::scmOK = "OK";
+const char * const GEN_CSV_WRITER::scmFileAlreadyOpened = "File already opened";
+const char * const GEN_CSV_WRITER::scmFileNotOpened = "File not opened";
+
+void GEN_CSV_WRITER::executeEvent(int paEIID) {
+  if(scm_nEventINITID == paEIID) {
+    if(QI()) {
+      openCSVFile();
+    } else {
+      closeCSVFile();
+    }
+    sendOutputEvent(scm_nEventINITOID);
+  } else if(scm_nEventREQID == paEIID) {
+    QO() = QI();
+    if(QI()) {
+      writeCSVFileLine();
+    }
+    sendOutputEvent(scm_nEventCNFID);
   }
 }
 
 GEN_CSV_WRITER::GEN_CSV_WRITER(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), m_pstCSVFile(0), m_anDataInputNames(0), m_anDataInputTypeIds(0), m_anEIWith(0){
+    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), mCSVFile(0), m_anDataInputNames(0), m_anDataInputTypeIds(0), m_anEIWith(0){
 }
 
 GEN_CSV_WRITER::~GEN_CSV_WRITER(){
   delete[] m_anDataInputNames;
   delete[] m_anDataInputTypeIds;
   delete[] m_anEIWith;
+  closeCSVFile();
 }
 
 bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
   const char *acPos = strrchr(paConfigString, '_');
   if(0 != acPos){
     acPos++;
-    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(forte::core::util::strtoul(acPos,0,10));
-    paInterfaceSpec.m_nNumDIs += 2U; // we have in addition to the SDs a QI and FILE_NAME data inputs
+    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(forte::core::util::strtoul(acPos, 0, 10) + 2); // we have in addition to the SDs a QI and FILE_NAME data inputs
 
     m_anDataInputNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
     m_anDataInputTypeIds = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
@@ -111,49 +114,50 @@ bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfac
   return false;
 }
 
-void GEN_CSV_WRITER::openCSVFile(){
+void GEN_CSV_WRITER::openCSVFile() {
   QO() = false;
-  if(0 == m_pstCSVFile){
-    m_pstCSVFile = fopen(FILE_NAME().getValue(), "w+");
-    if(0 != m_pstCSVFile){
-      STATUS() = "OK";
+  if(0 == mCSVFile) {
+    mCSVFile = fopen(FILE_NAME().getValue(), "w+");
+    if(0 != mCSVFile) {
       QO() = true;
-    }
-    else{
+      STATUS() = scmOK;
+      DEVLOG_INFO("[GEN_CSV_WRITER]: File %s successfully opened\n", FILE_NAME().getValue());
+    } else {
       STATUS() = strerror(errno);
+      DEVLOG_ERROR("[GEN_CSV_WRITER]: Couldn't open file %s. Error: %s\n", FILE_NAME().getValue(), STATUS().getValue());
     }
-  }
-  else{
-    STATUS() = "File already open";
+  } else {
+    STATUS() = scmFileAlreadyOpened;
+    DEVLOG_ERROR("[GEN_CSV_WRITER]: Can't open file %s since it is already opened\n", FILE_NAME().getValue());
   }
 }
 
-void GEN_CSV_WRITER::closeCSVFile(){
+void GEN_CSV_WRITER::closeCSVFile() {
   QO() = false;
-  if(0 != m_pstCSVFile){
-    if(0 == fclose(m_pstCSVFile)){
-      STATUS() = "OK";
-    }
-    else{
+  if(0 != mCSVFile) {
+    if(0 == fclose(mCSVFile)) {
+      STATUS() = scmOK;
+      DEVLOG_INFO("[GEN_CSV_WRITER]: File %s successfully closed\n", FILE_NAME().getValue());
+    } else {
       STATUS() = strerror(errno);
+      DEVLOG_ERROR("[GEN_CSV_WRITER]: Couldn't close file %s. Error: %s\n", FILE_NAME().getValue(), STATUS().getValue());
     }
-    m_pstCSVFile = 0;
+    mCSVFile = 0;
   }
 }
 
-void GEN_CSV_WRITER::writeCSVFileLine(){
-  if(0 != m_pstCSVFile){
-    char acBuffer[100];
-    for(int i = 2; i < m_pstInterfaceSpec->m_nNumDIs; i++){
-      int nLen = getDI(i)->toString(acBuffer, 100);
-      fwrite(acBuffer, 1, nLen, m_pstCSVFile);
-      fwrite("; ", 1, 2, m_pstCSVFile);
+void GEN_CSV_WRITER::writeCSVFileLine() {
+  if(0 != mCSVFile) {
+    char acBuffer[scmWriteBufferSize];
+    for(int i = 2; i < m_pstInterfaceSpec->m_nNumDIs; i++) {
+      int nLen = getDI(i)->toString(acBuffer, scmWriteBufferSize);
+      fwrite(acBuffer, 1, nLen, mCSVFile);
+      fwrite("; ", 1, 2, mCSVFile);
     }
-    fwrite("\n", 1, 1, m_pstCSVFile);
-  }
-  else{
+    fwrite("\n", 1, 1, mCSVFile);
+  } else {
     QO() = false;
-    STATUS() = "File not opened";
+    STATUS() = scmFileNotOpened;
+    DEVLOG_ERROR("[GEN_CSV_WRITER]: Can't write to file %s since it is not opened\n", FILE_NAME().getValue());
   }
 }
-

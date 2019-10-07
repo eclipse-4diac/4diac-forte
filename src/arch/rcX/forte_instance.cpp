@@ -1,9 +1,10 @@
 /*******************************************************************************
- * Copyright (c) 2017 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2017-2018 fortiss GmbH
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *  Jose Cabral - initial API and implementation and/or initial documentation
@@ -16,6 +17,8 @@
 #include <stdio.h>
 #include <string>
 #include "../../stdfblib/ita/RMT_DEV.h"
+
+#include "../utils/mainparam_utils.h"
 
 unsigned int forte_default_port = 61499;
 
@@ -74,16 +77,12 @@ int forteStartInstanceGeneric(int argc, char *arg[], TForteInstance* pa_resultDe
     return FORTE_WRONG_ENDIANESS;
   }
 
-  if(argc <= 1){ //! Default Value (localhost:61499)
-    createDev("localhost:61499", pa_resultDevice);
+  const char *pIpPort = parseCommandLineArguments(argc, arg);
+  if((0 != strlen(pIpPort)) && (NULL != strchr(pIpPort, ':'))){
+    createDev(pIpPort, pa_resultDevice);
   }
-  else{
-    if(strcmp("-c", arg[0]) == 0){ //! sets the destination for the connection
-      createDev(arg[1], pa_resultDevice);
-    }
-    else{ //! Lists the help for FORTE
-      return FORTE_WRONG_PARAMETERS;
-    }
+  else{ //! If needed call listHelp() to list the help for FORTE
+    return FORTE_WRONG_PARAMETERS;
   }
 
   return FORTE_OK;

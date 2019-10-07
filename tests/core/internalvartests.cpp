@@ -1,19 +1,22 @@
 /*******************************************************************************
-* Copyright (c) 2018 Johannes Kepler University
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Eclipse Public License v1.0
-* which accompanies this distribution, and is available at
-* http://www.eclipse.org/legal/epl-v10.html
-*
-* Contributors:
-*   Alois Zoitl - initial API and implementation and/or initial documentation
-*******************************************************************************/
+ * Copyright (c) 2018 Johannes Kepler University
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Alois Zoitl - initial API and implementation and/or initial documentation
+ *******************************************************************************/
 
 #include <boost/test/unit_test.hpp>
 #include <basicfb.h>
 
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-# include "internalvartests_gen.cpp"
+//don't add a space between # and include so the cmake script finds the line
+#include "internalvartests_gen.cpp"
 #else
 # include "stringlist.h"
 #endif

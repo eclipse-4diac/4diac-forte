@@ -1,0 +1,18 @@
+;<Request ID="1" Action="CREATE"><FB Name="Soft_Pass_Example" Type="EMB_RES" /></Request>
+Soft_Pass_Example;<Request ID="2" Action="CREATE"><FB Name="NOT_ZERO" Type="TEST_CONDITION" /></Request>
+Soft_Pass_Example;<Request ID="3" Action="CREATE"><FB Name="F_NOT" Type="F_NOT" /></Request>
+Soft_Pass_Example;<Request ID="4" Action="CREATE"><FB Name="BOOL2BOOL" Type="BOOL2BOOL" /></Request>
+Soft_Pass_Example;<Request ID="5" Action="CREATE"><FB Name="STEST_END_0_1" Type="STEST_END" /></Request>
+Soft_Pass_Example;<Request ID="6" Action="CREATE"><FB Name="F_MUX_2" Type="F_MUX_2" /></Request>
+Soft_Pass_Example;<Request ID="7" Action="WRITE"><Connection Source="UINT#2" Destination="F_MUX_2.K" /></Request>
+Soft_Pass_Example;<Request ID="8" Action="CREATE"><Connection Source="F_NOT.CNF" Destination="NOT_ZERO.REQ" /></Request>
+Soft_Pass_Example;<Request ID="9" Action="CREATE"><Connection Source="BOOL2BOOL.CNF" Destination="F_NOT.REQ" /></Request>
+Soft_Pass_Example;<Request ID="10" Action="CREATE"><Connection Source="NOT_ZERO.CNF" Destination="STEST_END_0_1.REQ" /></Request>
+Soft_Pass_Example;<Request ID="11" Action="CREATE"><Connection Source="START.COLD" Destination="F_MUX_2.REQ" /></Request>
+Soft_Pass_Example;<Request ID="12" Action="CREATE"><Connection Source="START.WARM" Destination="F_MUX_2.REQ" /></Request>
+Soft_Pass_Example;<Request ID="13" Action="CREATE"><Connection Source="START.COLD" Destination="BOOL2BOOL.REQ" /></Request>
+Soft_Pass_Example;<Request ID="14" Action="CREATE"><Connection Source="START.WARM" Destination="BOOL2BOOL.REQ" /></Request>
+Soft_Pass_Example;<Request ID="15" Action="CREATE"><Connection Source="F_NOT.OUT" Destination="NOT_ZERO.check" /></Request>
+Soft_Pass_Example;<Request ID="16" Action="CREATE"><Connection Source="BOOL2BOOL.OUT" Destination="F_NOT.IN" /></Request>
+Soft_Pass_Example;<Request ID="17" Action="CREATE"><Connection Source="F_MUX_2.OUT" Destination="BOOL2BOOL.IN" /></Request>
+Soft_Pass_Example;<Request ID="18" Action="START"/>

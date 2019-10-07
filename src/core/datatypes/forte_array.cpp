@@ -1,13 +1,15 @@
 /*******************************************************************************
-  * Copyright (c) 2007 - 2015 ACIN, nxtControl GmbH, fortiss GmbH
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Alois Zoitl, Ingo Hegny, Stansilav Meduna
-  *      - initial implementation and rework communication infrastructure
+ * Copyright (c) 2007 - 2015 ACIN, nxtControl GmbH, fortiss GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Alois Zoitl, Ingo Hegny, Stansilav Meduna
+ *      - initial implementation and rework communication infrastructure
   *******************************************************************************/
 #include "forte_array.h"
 #include <stdlib.h>
@@ -144,7 +146,7 @@ void CIEC_ARRAY::initializeFromString(TForteUInt16 paArraySize, int* paValueLen,
   }
 }
 
-int CIEC_ARRAY::toString(char* paValue, unsigned int paBufferSize) const {
+int CIEC_ARRAY::toString(char* paValue, size_t paBufferSize) const {
   int nBytesUsed = -1;
 
   if(paBufferSize) {
@@ -186,8 +188,8 @@ int CIEC_ARRAY::toString(char* paValue, unsigned int paBufferSize) const {
   return nBytesUsed;
 }
 
-unsigned int CIEC_ARRAY::getToStringBufferSize() const {
-  unsigned int retVal = 3; // 2 bytes for the open and closing brackets and one for the '\0'
+size_t CIEC_ARRAY::getToStringBufferSize() const {
+  size_t retVal = 3; // 2 bytes for the open and closing brackets and one for the '\0'
   TForteUInt16 nSize = size();
   retVal += (nSize > 1) ? (nSize - 1) : 0; //for the commas between the elements
 

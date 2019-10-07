@@ -1,14 +1,16 @@
 /*******************************************************************************
-  * Copyright (c) 2010 - 2015 ACIN, fortiss GmbH
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Ingo Hegny, Alois Zoitl
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2010 - 2015 ACIN, fortiss GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Ingo Hegny, Alois Zoitl
+ *      - initial implementation and rework communication infrastructure
+ *******************************************************************************/
 #include "forte_struct.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "forte_struct_gen.cpp"
@@ -197,7 +199,7 @@ CStringDictionary::TStringId CIEC_STRUCT::parseNextElementId(const char *paRunne
   return unElementNameId;
 }
 
-int CIEC_STRUCT::toString(char* paValue, unsigned int paBufferSize) const{
+int CIEC_STRUCT::toString(char* paValue, size_t paBufferSize) const {
   int nBytesUsed = -1;
 
   if(paBufferSize) {
@@ -222,7 +224,7 @@ int CIEC_STRUCT::toString(char* paValue, unsigned int paBufferSize) const{
       paValue++;
       *paValue = '=';
       paValue++;
-      paBufferSize -= static_cast<unsigned int>(strlen(acMemberName) + 2);
+      paBufferSize -= strlen(acMemberName) + 2;
       nBytesUsed += static_cast<int>(strlen(acMemberName) + 2);
 
       nUsedBytesByElement = poMembers->toString(paValue, paBufferSize);
@@ -270,8 +272,8 @@ CIEC_ANY *CIEC_STRUCT::getMemberNamed(CStringDictionary::TStringId paMemberNameI
   return poRetVal;
 }
 
-unsigned int CIEC_STRUCT::getToStringBufferSize() const {
-  unsigned int retVal = 3; // 2 bytes for the open and closing brackets one for the '\0'
+size_t CIEC_STRUCT::getToStringBufferSize() const {
+  size_t retVal = 3; // 2 bytes for the open and closing brackets one for the '\0'
   TForteUInt16 nSize = getStructSize();
   retVal += (nSize > 1) ? (nSize - 1) : 0; //for the commas between the elements
   retVal += (nSize * 2); //for the := of each element

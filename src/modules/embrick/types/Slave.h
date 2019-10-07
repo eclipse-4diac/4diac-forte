@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
@@ -21,48 +22,41 @@
 #include <slave/handle.h>
 #include "../../../core/io/configFB/io_slave_multi.h"
 
-class EmbrickSlave: public forte::core::IO::IOConfigFBMultiSlave,
-    public EmbrickSlaveHandler::Delegate {
-public:
-  EmbrickSlave(const TForteUInt8* const paSlaveConfigurationIO,
-      const TForteUInt8 paSlaveConfigurationIO_num, int type,
-      CResource *pa_poSrcRes,
-      const SFBInterfaceSpec *pa_pstInterfaceSpec,
-      const CStringDictionary::TStringId pa_nInstanceNameId,
-      TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
-  virtual ~EmbrickSlave();
+class EmbrickSlave : public forte::core::io::IOConfigFBMultiSlave, public EmbrickSlaveHandler::Delegate {
+  public:
+    EmbrickSlave(const TForteUInt8* const paSlaveConfigurationIO, const TForteUInt8 paSlaveConfigurationIO_num, int paType, CResource *paSrcRes,
+        const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
+    virtual ~EmbrickSlave();
 
-protected:
-  virtual CIEC_UINT &UpdateInterval() {
-    // TODO Remove
-    return *static_cast<CIEC_UINT*>(getDI(0));
-  }
+  protected:
+    virtual CIEC_UINT &UpdateInterval() {
+      // TODO Remove
+      return *static_cast<CIEC_UINT*>(getDI(0));
+    }
 
-  EmbrickBusAdapter& BusAdapterOut() {
-    return (*static_cast<EmbrickBusAdapter*>(m_apoAdapters[0]));
-  }
+    EmbrickBusAdapter& BusAdapterOut() {
+      return (*static_cast<EmbrickBusAdapter*>(m_apoAdapters[0]));
+    }
 
-  EmbrickBusAdapter& BusAdapterIn() {
-    return (*static_cast<EmbrickBusAdapter*>(m_apoAdapters[1]));
-  }
+    EmbrickBusAdapter& BusAdapterIn() {
+      return (*static_cast<EmbrickBusAdapter*>(m_apoAdapters[1]));
+    }
 
-  CSyncObject slaveMutex;
-  EmbrickSlaveHandler *slave;
+    CSyncObject mSlaveMutex;
+    EmbrickSlaveHandler *mSlave;
 
-public:
-  void onSlaveStatus(EmbrickSlaveHandler::SlaveStatus status,
-      EmbrickSlaveHandler::SlaveStatus oldStatus);
-  void onSlaveDestroy();
+  public:
+    void onSlaveStatus(EmbrickSlaveHandler::SlaveStatus paStatus, EmbrickSlaveHandler::SlaveStatus paOldStatus);
+    void onSlaveDestroy();
 
-private:
-  const char* init();
-  void deInit();
+  private:
+    const char* init();
+    void deInit();
 
-  static const char * const scmSlow;
-  static const char * const scmInterrupted;
-  static const char * const scmError;
-  static const char * const scmUnknown;
+    static const char * const scmSlow;
+    static const char * const scmInterrupted;
+    static const char * const scmError;
+    static const char * const scmUnknown;
 };
-
 
 #endif /* SRC_MODULES_EMBRICK_TYPES_SLAVE_H_ */

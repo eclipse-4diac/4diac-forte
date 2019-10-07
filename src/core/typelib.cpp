@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Alois Zoitl, Thomas Strasser, Smodic Rene, Gerhard Ebenhofer,
@@ -19,20 +20,28 @@
 #include "if2indco.h"
 #include <stddef.h>
 
-#ifndef FORTE_CLASS_0
 CTypeLib::CTypeEntry::CTypeEntry(CStringDictionary::TStringId pa_nTypeNameId) :
-        m_nTypeNameId(pa_nTypeNameId),
-        m_poNext(0){
-      }
+  m_nTypeNameId(pa_nTypeNameId),
+  m_poNext(0){
+}
 
 CTypeLib::CTypeEntry::~CTypeEntry(void){
 
 }
 
-CTypeLib::CFBTypeEntry::CFBTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TFunctionBlockCreateFunc pa_pfuncCreateFB):
-          CTypeEntry(pa_nTypeNameId),
-          m_pfuncFBCreationFunc(pa_pfuncCreateFB){
-  CTypeLib::addFBType(this);
+CTypeLib::CSpecTypeEntry::CSpecTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, const SFBInterfaceSpec* paSocketInterfaceSpec) :
+  CTypeEntry(pa_nTypeNameId),
+  mSocketInterfaceSpec(paSocketInterfaceSpec){
+}
+
+CTypeLib::CSpecTypeEntry::~CSpecTypeEntry(void){
+
+}
+
+CTypeLib::CFBTypeEntry::CFBTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TFunctionBlockCreateFunc pa_pfuncCreateFB, const SFBInterfaceSpec* paSocketInterfaceSpec):
+  CSpecTypeEntry(pa_nTypeNameId, paSocketInterfaceSpec),
+  m_pfuncFBCreationFunc(pa_pfuncCreateFB){
+CTypeLib::addFBType(this);
 
 }
 
@@ -41,8 +50,8 @@ CTypeLib::CFBTypeEntry::~CFBTypeEntry(void){
 
 }
 
-CTypeLib::CAdapterTypeEntry::CAdapterTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TAdapterCreateFunc pa_pfuncCreateAdapter):
-  CTypeEntry(pa_nTypeNameId),
+CTypeLib::CAdapterTypeEntry::CAdapterTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TAdapterCreateFunc pa_pfuncCreateAdapter, const SFBInterfaceSpec* paSocketInterfaceSpec):
+  CSpecTypeEntry(pa_nTypeNameId, paSocketInterfaceSpec),
   m_pfuncAdapterCreationFunc(pa_pfuncCreateAdapter){
 CTypeLib::addAdapterType(this);
 
@@ -52,9 +61,8 @@ CTypeLib::CAdapterTypeEntry::~CAdapterTypeEntry(void){
 
 }
 
-CTypeLib::CDataTypeEntry::CDataTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TDataTypeCreateFunc pa_pfuncDTCreateFunc) :
-          CTypeEntry(pa_nTypeNameId){
-  m_pfuncDTCreateFunc = pa_pfuncDTCreateFunc;
+CTypeLib::CDataTypeEntry::CDataTypeEntry(CStringDictionary::TStringId paTypeNameId, TDataTypeCreateFunc pafuncDTCreateFunc) :
+    CTypeEntry(paTypeNameId), m_pfuncDTCreateFunc(pafuncDTCreateFunc) {
   CTypeLib::addDataType(this);
 }
 
@@ -74,11 +82,6 @@ CTypeLib::CAdapterTypeEntry *CTypeLib::m_poAdapterLibEnd = 0;
 CTypeLib::CDataTypeEntry *CTypeLib::m_poDTLibStart = 0;
 CTypeLib::CDataTypeEntry *CTypeLib::m_poDTLibEnd = 0;
 
-//CTypeLib::~CTypeLib() {
-//  //TODO free memory of fblibrary (maybe not necessary as typelib is deleted at the end of the program)
-//  //TODO free memory of RESlibrary (maybe not necessary as typelib is deleted at the end of the program)
-//}
-
 CTypeLib::CTypeEntry *CTypeLib::findType(CStringDictionary::TStringId pa_nTypeId, CTypeLib::CTypeEntry *pa_poListStart) {
   CTypeEntry *retval = 0;
   for (CTypeEntry *poRunner = pa_poListStart; poRunner != 0; poRunner
@@ -97,8 +100,9 @@ CAdapter *CTypeLib::createAdapter(CStringDictionary::TStringId pa_nInstanceNameI
   if (0 != poToCreate) {
     poNewAdapter =
       (static_cast<CAdapterTypeEntry *>(poToCreate))->createAdapterInstance(pa_nInstanceNameId,pa_poRes, pa_bIsPlug);
-    if (0 == poNewAdapter)
+    if(0 == poNewAdapter) {
       m_eLastErrorMSG = e_OVERFLOW;
+    }
   } //no generic adapters supported
 
     return poNewAdapter;
@@ -112,8 +116,9 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId pa_nInstanceName
   if (0 != poToCreate) {
     poNewFB
         = (static_cast<CFBTypeEntry *>(poToCreate))->createFBInstance(pa_nInstanceNameId, pa_poRes);
-    if (0 == poNewFB) // we could not create the requested object
+    if(0 == poNewFB) { // we could not create the requested object
       m_eLastErrorMSG = e_OVERFLOW;
+    }
   } else { //check for parameterizable FBs (e.g. SERVER)
     TIdentifier acGenFBName = { "GEN_" };
     const char *acTypeBuf = CStringDictionary::getInstance().get(pa_nFBTypeId);
@@ -121,8 +126,9 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId pa_nInstanceName
 
     if (0 != pcUnderScore) { // We found no underscore in the type name therefore it can not be a generic type
       ptrdiff_t nCopyLen = pcUnderScore - acTypeBuf;
-      if (nCopyLen > static_cast<ptrdiff_t>(cg_nIdentifierLength - 4))
+      if(nCopyLen > static_cast<ptrdiff_t>(cg_nIdentifierLength - 4)) {
         nCopyLen = cg_nIdentifierLength - 4;
+      }
       memcpy(&(acGenFBName[4]), acTypeBuf, nCopyLen);
       acGenFBName[cg_nIdentifierLength] = '\0';
       poToCreate = findType(CStringDictionary::getInstance().getId(acGenFBName), m_poFBLibStart);
@@ -164,30 +170,34 @@ CIEC_ANY *CTypeLib::createDataTypeInstance(CStringDictionary::TStringId pa_nDTNa
   CTypeEntry *poToCreate = findType(pa_nDTNameId, m_poDTLibStart);
   if (0 != poToCreate) {
     poNewDT = (static_cast<CDataTypeEntry *>(poToCreate))->createDataTypeInstance(pa_acDataBuf);
-    if (0 == poNewDT) // we could not create the requested object
+    if(0 == poNewDT) { // we could not create the requested object
       m_eLastErrorMSG = e_OVERFLOW;
-  } else
+    }
+  } else {
     m_eLastErrorMSG = e_UNSUPPORTED_TYPE;
+  }
 
   return poNewDT;
 }
 
 void CTypeLib::addFBType(CFBTypeEntry *pa_poFBTypeEntry) {
   if (0 == findType(pa_poFBTypeEntry->getTypeNameId(), m_poFBLibStart)) {
-    if (m_poFBLibStart == 0)
+    if(m_poFBLibStart == 0) {
       m_poFBLibStart = pa_poFBTypeEntry;
-    else
+    } else {
       m_poFBLibEnd->m_poNext = pa_poFBTypeEntry;
+    }
     m_poFBLibEnd = pa_poFBTypeEntry;
   }
 }
 
 void CTypeLib::addAdapterType(CAdapterTypeEntry *pa_poAdapterTypeEntry) {
   if (0 == findType(pa_poAdapterTypeEntry->getTypeNameId(), m_poAdapterLibStart)) {
-    if (m_poAdapterLibStart == 0)
+    if(m_poAdapterLibStart == 0) {
       m_poAdapterLibStart = pa_poAdapterTypeEntry;
-    else
+    } else {
       m_poAdapterLibEnd->m_poNext = pa_poAdapterTypeEntry;
+    }
     m_poAdapterLibEnd = pa_poAdapterTypeEntry;
   }
 }
@@ -195,10 +205,11 @@ void CTypeLib::addAdapterType(CAdapterTypeEntry *pa_poAdapterTypeEntry) {
 
 void CTypeLib::addDataType(CDataTypeEntry *pa_poDTEntry) {
   if (0 == findType(pa_poDTEntry->getTypeNameId(), m_poDTLibStart)) {
-    if (m_poDTLibStart == 0)
+    if(m_poDTLibStart == 0) {
       m_poDTLibStart = pa_poDTEntry;
-    else
+    } else {
       m_poDTLibEnd->m_poNext = pa_poDTEntry;
+    }
     m_poDTLibEnd = pa_poDTEntry;
   }
 }
@@ -220,9 +231,4 @@ const char *CTypeLib::getFirstNonTypeNameUnderscorePos(const char *pa_acTypeName
 
   return acRetVal;
 }
-
-
-
-#endif
-
 

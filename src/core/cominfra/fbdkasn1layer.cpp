@@ -1,15 +1,17 @@
 /*******************************************************************************
-  * Copyright (c) 2010-2013 TU Wien ACIN, Profactor GmbH, nxtControl GmbH
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Alois Zoitl, Ingo Hegny, Michael Hofmann, Stanislav Meduna,
-  *    Martin Melik Merkumians
-  *      - initial implementation, rework communication infrastructure, bug fixes
-  *******************************************************************************/
+ * Copyright (c) 2010-2013 TU Wien ACIN, Profactor GmbH, nxtControl GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Alois Zoitl, Ingo Hegny, Michael Hofmann, Stanislav Meduna,
+ *    Martin Melik Merkumians
+ *      - initial implementation, rework communication infrastructure, bug fixes
+ *******************************************************************************/
 #include "fbdkasn1layer.h"
 #include "basecommfb.h"
 #include "../../arch/timerha.h"
@@ -123,8 +125,8 @@ EComResponse CFBDKASN1ComLayer::sendData(void *pa_pvData, unsigned int pa_unSize
   return eRetVal;
 }
 
-EComResponse CFBDKASN1ComLayer::recvData(const void *pa_pvData, unsigned int pa_unSize){
-  TForteByte *recvData = (TForteByte *) pa_pvData;
+EComResponse CFBDKASN1ComLayer::recvData(const void *paData, unsigned int paSize){
+  TForteByte *receivedData = const_cast<TForteByte*>(static_cast<const TForteByte *>(paData));
   EComResponse eRetVal = e_Nothing;
 
   if(m_poFb != 0){
@@ -135,16 +137,16 @@ EComResponse CFBDKASN1ComLayer::recvData(const void *pa_pvData, unsigned int pa_
 
     // TODO: only copy if necessary
     if(0 == mDeserBufPos){
-      usedBuffer = recvData;
-      usedBufferSize = pa_unSize;
+      usedBuffer = receivedData;
+      usedBufferSize = paSize;
     }
     else{
-      if((pa_unSize + mDeserBufPos) > mDeserBufSize){
-        resizeDeserBuffer(pa_unSize + mDeserBufPos);
+      if((paSize + mDeserBufPos) > mDeserBufSize){
+        resizeDeserBuffer(paSize + mDeserBufPos);
       }
-      memcpy((mDeserBuf + mDeserBufPos), recvData, pa_unSize);
+      memcpy((mDeserBuf + mDeserBufPos), receivedData, paSize);
       usedBuffer = mDeserBuf;
-      mDeserBufPos = mDeserBufPos + pa_unSize;
+      mDeserBufPos = mDeserBufPos + paSize;
       usedBufferSize = mDeserBufPos;
     }
     int nBuf;
@@ -186,9 +188,9 @@ EComResponse CFBDKASN1ComLayer::recvData(const void *pa_pvData, unsigned int pa_
 
       usedBufferSize -= nBuf;
       usedBuffer += nBuf;
-      
-      // required if e.g. the first element is an bool and the second element is "fragmented" - otherwise the resize in the buffer will not be resized  
-      recvData += nBuf; 
+
+      // required if e.g. the first element is an bool and the second element is "fragmented" - otherwise the resize in the buffer will not be resized
+      receivedData += nBuf;
 
       if(mDOPos >= unNumRD){
         mDOPos = 0;
@@ -359,21 +361,21 @@ int CFBDKASN1ComLayer::serializeValueSimpleDataType(TForteByte* pa_pcBytes, int 
   if(nRetVal <= pa_nStreamSize){
     const TForteByte* acDataPtr = pa_roDataPoint.getConstDataPtr();
 
-    #ifdef FORTE_LITTLE_ENDIAN
-      #if defined(__ARMEL__) && ! defined(__VFP_FP__) // Little endian ARM with old mixed endian FPA float ABI needs to swap
+#ifdef FORTE_LITTLE_ENDIAN
+# if defined(__ARMEL__) && ! defined(__VFP_FP__) // Little endian ARM with old mixed endian FPA float ABI needs to swap
         if(CIEC_ANY::e_LREAL == pa_roDataPoint.getDataTypeID()) {
           TForteUInt32 anSwapped[2];
           anSwapped[0] = reinterpret_cast<const TForteUInt32 *>(acDataPtr)[1];
           anSwapped[1] = reinterpret_cast<const TForteUInt32 *>(acDataPtr)[0];
           acDataPtr = reinterpret_cast<const TForteByte*>(&anSwapped[0]);
         }
-      #endif
+# endif //defined(__ARMEL__) && ! defined(__VFP_FP__)
       for(int i = 0; i < nRetVal; i++){
         pa_pcBytes[(nRetVal - 1) - i] = acDataPtr[i];
       }
-    #endif
+#endif //FORTE_LITTLE_ENDIAN
 
-    #ifdef FORTE_BIG_ENDIAN
+#ifdef FORTE_BIG_ENDIAN
       if(CIEC_ANY::e_REAL != pa_roDataPoint.getDataTypeID()){
         for (int i = 0; i < nRetVal; i++){
           pa_pcBytes[(nRetVal - 1) - i] = acDataPtr[(sizeof(CIEC_ANY::TLargestUIntValueType) - 1)-i];
@@ -384,7 +386,7 @@ int CFBDKASN1ComLayer::serializeValueSimpleDataType(TForteByte* pa_pcBytes, int 
           pa_pcBytes[(nRetVal - 1) - i] = acDataPtr[(sizeof(TForteFloat) - 1) - i];
         }
       }
-    #endif
+#endif //FORTE_BIG_ENDIAN
   }
   else{
     nRetVal = -1;
@@ -427,13 +429,13 @@ int CFBDKASN1ComLayer::serializeValueString(TForteByte* pa_pcBytes, int pa_nStre
 int CFBDKASN1ComLayer::serializeValueWString(TForteByte* pa_pcBytes, int pa_nStreamSize, const CIEC_WSTRING & pa_roWString){
   int nRetVal = -1;
 
-  if (pa_nStreamSize < 2)
+  if (pa_nStreamSize < 2) {
     return -1;
-
+  }
   nRetVal = pa_roWString.toUTF16(pa_pcBytes + 2, pa_nStreamSize - 2);
-  if (nRetVal < 0 || nRetVal > 131070)
+  if (nRetVal < 0 || nRetVal > 131070) {
     return -1;
-
+  }
   pa_pcBytes[0] = (TForteByte) ((nRetVal >> 9) & 0x00FF);
   pa_pcBytes[1] = (TForteByte) ((nRetVal >> 1) & 0x00FF);
   nRetVal += 2;
@@ -552,15 +554,12 @@ bool CFBDKASN1ComLayer::deserializeDataPointArray(const TForteByte* pa_pcBytes, 
 
 int CFBDKASN1ComLayer::deserializeDataPoint(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_ANY &pa_roCIECData){
   int nRetVal = -1;
-  if(0 < pa_nStreamSize){
-    if(e_APPLICATION == (pa_pcBytes[0] & e_APPLICATION)){
-      if(deserializeTag(*pa_pcBytes, pa_roCIECData)){
-        nRetVal = deserializeValue(pa_pcBytes + 1, pa_nStreamSize - 1, pa_roCIECData) + 1;
-      }
-      else{
-        DEVLOG_ERROR("Datatype error\n");
-        nRetVal = -2;
-      }
+  if(0 < pa_nStreamSize && e_APPLICATION == (pa_pcBytes[0] & e_APPLICATION)) {
+    if(deserializeTag(*pa_pcBytes, pa_roCIECData)) {
+      nRetVal = deserializeValue(pa_pcBytes + 1, pa_nStreamSize - 1, pa_roCIECData) + 1;
+    } else {
+      DEVLOG_ERROR("Datatype error\n");
+      nRetVal = -2;
     }
   }
   return nRetVal;
@@ -649,26 +648,24 @@ int CFBDKASN1ComLayer::deserializeValueSimpleDataType(const TForteByte* pa_pcByt
     *((CIEC_ANY::TLargestUIntValueType *) acDataPtr) = 0;
 
     //we only need to check for SINT, INT, and DINT as LINT will fill all bytes
-    if(pa_roIECData.getDataTypeID() <= CIEC_ANY::e_DINT){
-      if(pa_pcBytes[0] & 0x80){
-        //we received a negative number set all bits to true
-        *((CIEC_ANY::TLargestIntValueType *) acDataPtr) = -1;
-      }
+    if(pa_roIECData.getDataTypeID() <= CIEC_ANY::e_DINT && (pa_pcBytes[0] & 0x80)) {
+      //we received a negative number set all bits to true
+      *((CIEC_ANY::TLargestIntValueType *) acDataPtr) = -1;
     }
 
-    #ifdef FORTE_LITTLE_ENDIAN
+#ifdef FORTE_LITTLE_ENDIAN
       for(int i = 0; i < nValueSize; i++){
         acDataPtr[i] = pa_pcBytes[(nValueSize - 1) - i];
       }
-      #if defined(__ARMEL__) && ! defined(__VFP_FP__) // Little endian ARM with old mixed endian FPA float ABI needs to swap
+# if defined(__ARMEL__) && ! defined(__VFP_FP__) // Little endian ARM with old mixed endian FPA float ABI needs to swap
         if(CIEC_ANY::e_LREAL == pa_roIECData.getDataTypeID()) {
           TForteUInt32 nTmp = reinterpret_cast<const TForteUInt32 *>(acDataPtr)[1];
           ((TForteUInt32 *) acDataPtr)[1] = reinterpret_cast<const TForteUInt32 *>(acDataPtr)[0];
           reinterpret_cast<TForteUInt32 *>(acDataPtr)[0] = nTmp;
         }
-      #endif
-    #endif
-    #ifdef FORTE_BIG_ENDIAN
+# endif //defined(__ARMEL__) && ! defined(__VFP_FP__)
+#endif //FORTE_LITTLE_ENDIAN
+#ifdef FORTE_BIG_ENDIAN
       if(CIEC_ANY:: e_REAL != pa_roIECData.getDataTypeID()){
         for (unsigned int i=0; i < nValueSize;i++){
           acDataPtr[(sizeof(CIEC_ANY::TLargestUIntValueType) - 1) - i] = pa_pcBytes[(nValueSize - 1) - i];
@@ -679,7 +676,7 @@ int CFBDKASN1ComLayer::deserializeValueSimpleDataType(const TForteByte* pa_pcByt
           acDataPtr[(sizeof(TForteFloat) - 1) - i] = pa_pcBytes[(nValueSize - 1) - i];
         }
       }
-    #endif
+#endif //FORTE_BIG_ENDIAN
     nRetVal = nValueSize;
   }
   return nRetVal;
@@ -700,9 +697,8 @@ int CFBDKASN1ComLayer::deserializeValueWString(const TForteByte* pa_pcBytes, int
   int nRetVal = -1;
   if(pa_nStreamSize >= 2){
     TForteUInt16 unStringSize = static_cast<TForteUInt16>(((static_cast<TForteUInt16>(pa_pcBytes[0]) << 8) & 0xFF00) + (static_cast<TForteUInt16>(pa_pcBytes[1]) & 0x00FF));
-    if(pa_nStreamSize >= (unStringSize * 2 + 2)){
-      if (pa_roIECData.fromUTF16(pa_pcBytes + 2, unStringSize*2))
-        nRetVal = unStringSize * 2 + 2;
+    if(pa_nStreamSize >= (unStringSize * 2 + 2) && pa_roIECData.fromUTF16(pa_pcBytes + 2, unStringSize*2)) {
+      nRetVal = unStringSize * 2 + 2;
     }
   }
   return nRetVal;
@@ -714,7 +710,6 @@ int CFBDKASN1ComLayer::deserializeValueString(const TForteByte* pa_pcBytes, int 
   if(pa_nStreamSize >= 2){
     TForteUInt16 unStringSize = static_cast<TForteUInt16>(((((TForteUInt16) pa_pcBytes[0]) << 8) & 0xFF00) + ((TForteUInt16) pa_pcBytes[1] & 0x00FF));
     if(pa_nStreamSize >= (unStringSize + 2)){
-//      DEVLOG_INFO("reserve %i - pa_pcBytes[0]: 0x%x    pa_pcBytes[1]: 0x%x \n", unStringSize, pa_pcBytes[0], pa_pcBytes[1]);
       pa_roIECData.assign((const char*)&(pa_pcBytes[2]), unStringSize);
       nRetVal = 2 + unStringSize;
     }
@@ -763,14 +758,16 @@ int CFBDKASN1ComLayer::deserializeArray(const TForteByte* pa_pcBytes, int pa_nSt
             nValueLen = deserializeValue(pa_pcBytes, pa_nStreamSize, *pa_roArray[i]);
           }
           else{
-            if (poBufVal == 0)
+            if(poBufVal == 0) {
               poBufVal = pa_roArray[0]->clone(0);
+            }
             nValueLen = deserializeValue(pa_pcBytes, pa_nStreamSize, *poBufVal);
           }
           //size of the elements is given by the array datatype
           if(nValueLen <= 0) {
-            if (poBufVal != 0)
+            if(poBufVal != 0) {
               delete poBufVal;
+            }
             return nValueLen;
           }
           pa_nStreamSize -= nValueLen;
@@ -853,9 +850,9 @@ unsigned int CFBDKASN1ComLayer::getRequiredSerializationSize(const CIEC_ANY &pa_
 #ifdef FORTE_SUPPORT_ARRAYS
     case CIEC_ANY::e_ARRAY:
       unRetVal += 3;
-      if (((CIEC_ARRAY&)pa_roCIECData).getElementDataTypeID() == CIEC_ANY::e_BOOL)
+      if(((CIEC_ARRAY&) pa_roCIECData).getElementDataTypeID() == CIEC_ANY::e_BOOL) {
         unRetVal += ((CIEC_ARRAY&)pa_roCIECData).size();
-      else {
+      } else {
         for(TForteUInt16 j = 0; j < ((CIEC_ARRAY&)pa_roCIECData).size(); ++j){
           unRetVal += getRequiredSerializationSize(*(((CIEC_ARRAY&)pa_roCIECData)[j]));
         }

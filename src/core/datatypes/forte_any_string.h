@@ -1,10 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH
  *   2018 TU Wien/ACIN
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Thomas Strasser, Alois Zoitl, Stanislav Meduna, Monika Wenger, Ingo Hegny
@@ -127,7 +128,9 @@ class CIEC_ANY_STRING : public CIEC_ANY_ELEMENTARY{
      *   \return number of bytes used in the buffer
      *           -1 on error
      */
-    virtual int toUTF8(char*, unsigned int, bool) const{return 0;}
+    virtual int toUTF8(char*, size_t, bool) const {
+      return 0;
+    }
 #endif
 
   protected:

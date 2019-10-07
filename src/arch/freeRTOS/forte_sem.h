@@ -1,9 +1,10 @@
 /************************************************************************************
  * Copyright (c) 2016 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  * Milan Vathoopan, Guru Chandrasekhara - initial API and implementation and/or initial documentation
@@ -12,8 +13,8 @@
 #ifndef SRC_ARCH_FREERTOS_SEMAPHORE_H_
 #define SRC_ARCH_FREERTOS_SEMAPHORE_H_
 
-#include <FreeRTOS_Source/include/FreeRTOS.h>
-#include <FreeRTOS_Source/include/semphr.h>
+#include <FreeRTOS.h>
+#include <semphr.h>
 #include "../datatype.h"
 
 namespace forte {
@@ -23,10 +24,10 @@ namespace forte {
      *
      * The semaphore is initialized with the value given.
      */
-    class CFreeRTOSSemaphore{
+    class CFreeRTOSSemaphore {
       public:
 
-        explicit CFreeRTOSSemaphore(unsigned int paInitialValue  = 0);
+        explicit CFreeRTOSSemaphore(unsigned int paInitialValue = 0);
         ~CFreeRTOSSemaphore();
 
         void inc();
@@ -48,7 +49,6 @@ namespace forte {
       private:
         SemaphoreHandle_t mSemaphore;
     };
-
 
     typedef CFreeRTOSSemaphore CSemaphore;
 

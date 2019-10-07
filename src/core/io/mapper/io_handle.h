@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
@@ -20,52 +21,57 @@
 
 namespace forte {
   namespace core {
-    namespace IO {
+    namespace io {
 
-class IODeviceController;
+      class IODeviceController;
 
-class IOHandle {
-  friend class IOMapper;
+      class IOHandle {
+          friend class IOMapper;
 
-public:
-  IOHandle(IODeviceController *controller, IOMapper::Direction direction, CIEC_ANY::EDataTypeID type);
-  virtual ~IOHandle();
+        public:
+          IOHandle(IODeviceController *paController, IOMapper::Direction paDirection, CIEC_ANY::EDataTypeID paType);
+          virtual ~IOHandle();
 
-  bool hasObserver() {
-    return !!observer;
-  }
+          bool hasObserver() {
+            return !!mObserver;
+          }
 
-  IOObserver* getObserver() {
-    return observer;
-  }
+          IOObserver* getObserver() {
+            return mObserver;
+          }
 
-  bool is(CIEC_ANY::EDataTypeID type) {
-    return this->type == type;
-  }
+          bool is(CIEC_ANY::EDataTypeID paType) {
+            return this->mType == paType;
+          }
 
-  bool is(IOMapper::Direction direction) {
-    return this->direction == direction;
-  }
+          bool is(IOMapper::Direction paDirection) {
+            return this->mDirection == paDirection;
+          }
 
-  virtual void set(const CIEC_ANY &) = 0;
-  virtual void get(CIEC_ANY &) = 0;
+          virtual void set(const CIEC_ANY &) = 0;
+          virtual void get(CIEC_ANY &) = 0;
 
-  void onChange();
+          void onChange();
 
-protected:
-  IODeviceController *controller;
+        protected:
 
-  virtual void onObserver(IOObserver *observer);
-  virtual void dropObserver();
+          IODeviceController *mController;
+          CIEC_ANY::EDataTypeID mType;
 
-  IOObserver *observer;
-  CIEC_ANY::EDataTypeID type;
-  IOMapper::Direction direction;
-};
+          IOMapper::Direction mDirection;
+
+          virtual void onObserver(IOObserver *paObserver);
+          virtual void dropObserver();
+
+        private:
+
+          IOObserver *mObserver;
+
+
+      };
 
     } //namespace IO
   } //namepsace core
 } //namespace forte
-
 
 #endif /* SRC_CORE_IO_MAPPER_HANDLE_H_ */

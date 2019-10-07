@@ -1,10 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH
  *   2018 TU Wien/ACIN
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Ingo Hegny, Stanislav Meduna
@@ -36,8 +37,9 @@ bool CIEC_WSTRING::fromUTF16(const TForteByte *pa_pacBuffer, unsigned int pa_nBu
 
   // Check the BOM, default to big endian
   nRes = CUnicodeUtilities::parseUTF16Codepoint(pa_pacBuffer, nCodepoint, false);
-  if(nRes < 0)
+  if(nRes < 0) {
     return false;
+  }
   if(nRes == 2){
     if(nCodepoint == CUnicodeUtilities::scm_unBOMMarkerSwapped){
       bLittleEndian = true;
@@ -56,23 +58,27 @@ bool CIEC_WSTRING::fromUTF16(const TForteByte *pa_pacBuffer, unsigned int pa_nBu
   unsigned int nNeededLength = 0;
   while(i < nRemLen){
     nRes = CUnicodeUtilities::parseUTF16Codepoint(pRunner, nCodepoint, bLittleEndian);
-    if(nRes < 0 || nRes + i > nRemLen)
+    if(nRes < 0 || nRes + i > nRemLen) {
       return false;
+    }
     i += nRes;
     pRunner += nRes;
     nRes = CUnicodeUtilities::encodeUTF8Codepoint(0, 0, nCodepoint);
-    if(nRes < 0)
+    if(nRes < 0) {
       return false;
+    }
     nNeededLength += nRes;
   }
 
-  if(nNeededLength > scm_unMaxStringLen)
+  if(nNeededLength > scm_unMaxStringLen) {
     return false;
+  }
 
   // Reserve and encode
   reserve(static_cast<TForteUInt16>(nNeededLength));
-  if(getGenData() == 0)
+  if(getGenData() == 0) {
     return false;
+  }
 
   TForteByte *pEncRunner = (TForteByte *) getValue();
   TForteByte *pDataEnd = pEncRunner + nNeededLength;
@@ -102,24 +108,28 @@ int CIEC_WSTRING::toUTF16(TForteByte* pa_pacBuffer, unsigned int pa_nBufferSize)
 
   while(i < nRemLen){
     nRes = CUnicodeUtilities::parseUTF8Codepoint(pRunner, nCodepoint);
-    if(nRes < 0 || nRes + i > nRemLen)
+    if(nRes < 0 || nRes + i > nRemLen) {
       return -1;
+    }
     i += nRes;
     pRunner += nRes;
     // Skip the BOM if present
     if(nCodepoint != CUnicodeUtilities::scm_unBOMMarker){
       nRes = CUnicodeUtilities::encodeUTF16Codepoint(0, 0, nCodepoint, false);
-      if(nRes < 0)
+      if(nRes < 0) {
         return -1;
+      }
       nNeededLength += nRes;
     }
   }
 
-  if(pa_pacBuffer == 0)
+  if(pa_pacBuffer == 0) {
     return nNeededLength;
+  }
 
-  if(nNeededLength > pa_nBufferSize)
+  if(nNeededLength > pa_nBufferSize) {
     return -1;
+  }
 
   TForteByte *pEncRunner = pa_pacBuffer;
   TForteByte *pDataEnd = pa_pacBuffer + nNeededLength;
@@ -129,14 +139,16 @@ int CIEC_WSTRING::toUTF16(TForteByte* pa_pacBuffer, unsigned int pa_nBufferSize)
   i = 0;
   while(i < nRemLen){
     nRes = CUnicodeUtilities::parseUTF8Codepoint(pRunner, nCodepoint);
-    if(nRes < 0 || nRes + i > nRemLen)
+    if(nRes < 0 || nRes + i > nRemLen) {
       return -1;
+    }
     i += nRes;
     pRunner += nRes;
     if(nCodepoint != CUnicodeUtilities::scm_unBOMMarker){
       nRes = CUnicodeUtilities::encodeUTF16Codepoint(pEncRunner, static_cast<unsigned int>(pDataEnd - pEncRunner), nCodepoint, false);
-      if(nRes < 0)
+      if(nRes < 0) {
         return -1;
+      }
       pEncRunner += nRes;
     }
   }
@@ -156,8 +168,8 @@ int CIEC_WSTRING::fromString(const char *pa_pacValue){
   return (-1 == nUTF8Result) ? -1 : (nRetVal + nUTF8Result);
 }
 
-int CIEC_WSTRING::toString(char* pa_acValue, unsigned int pa_nBufferSize) const{
-  return toUTF8(pa_acValue, pa_nBufferSize, true);
+int CIEC_WSTRING::toString(char* paValue, size_t paBufferSize) const {
+  return toUTF8(paValue, paBufferSize, true);
 }
 
 int CIEC_WSTRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescape){
@@ -212,13 +224,16 @@ int CIEC_WSTRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnesca
         int nRes;
         nRes = CUnicodeUtilities::parseUTF8Codepoint(pRunner, nCodepoint);
         pRunner += nRes;
-        if(nCodepoint == CUnicodeUtilities::scm_unBOMMarker)
+        if(nCodepoint == CUnicodeUtilities::scm_unBOMMarker) {
           continue;
-        if(nCodepoint >= 0x10000)
+        }
+        if(nCodepoint >= 0x10000) {
           nCodepoint = '?';
+        }
         nRes = CUnicodeUtilities::encodeUTF8Codepoint(pEncRunner, static_cast<unsigned int>(nSrcCappedLength - (pEncRunner - pEncBuffer)), nCodepoint);
-        if(nRes < 1)
+        if(nRes < 1) {
           break;
+        }
         pEncRunner += nRes;
       }
 
@@ -236,18 +251,19 @@ int CIEC_WSTRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnesca
   return nSrcLen;
 }
 
-int CIEC_WSTRING::toUTF8(char* pa_pacBuffer, unsigned int pa_nBufferSize, bool pa_bEscape) const{
-  if((TForteUInt32) length() + (pa_bEscape ? 2 : 0) + 1 > pa_nBufferSize)
+int CIEC_WSTRING::toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) const {
+  if((TForteUInt32) length() + (paEscape ? 2 : 0) + 1 > paBufferSize) {
     return -1;
+  }
 
-  if(!pa_bEscape){
-    memcpy(pa_pacBuffer, getValue(), length() + 1);
+  if(!paEscape){
+    memcpy(paBuffer, getValue(), length() + 1);
     return length();
   }
 
   const char *pRunner;
-  char *pEncRunner = pa_pacBuffer;
-  char *pDataEnd = pa_pacBuffer + pa_nBufferSize;
+  char *pEncRunner = paBuffer;
+  char *pDataEnd = paBuffer + paBufferSize;
 
   *pEncRunner++ = '\"';
 
@@ -255,25 +271,27 @@ int CIEC_WSTRING::toUTF8(char* pa_pacBuffer, unsigned int pa_nBufferSize, bool p
   while(*pRunner){
     int nRes = dollarEscapeChar(pEncRunner, *pRunner, static_cast<unsigned int>(pDataEnd - pEncRunner));
 
-    if(nRes < 0)
+    if(nRes < 0) {
       return -1;
+    }
 
     pEncRunner += nRes;
     ++pRunner;
   }
 
-  if(pDataEnd - pEncRunner < 2)
+  if(pDataEnd - pEncRunner < 2) {
     return -1;
+  }
 
   *pEncRunner++ = '\"';
   *pEncRunner = '\0';
 
-  return static_cast<int>(pEncRunner - pa_pacBuffer);
+  return static_cast<int>(pEncRunner - paBuffer);
 }
 
-unsigned int CIEC_WSTRING::getToStringBufferSize() const{
+size_t CIEC_WSTRING::getToStringBufferSize() const {
   const char * const stringValue = getValue();
-  unsigned int neededBufferSize = 0;
+  size_t neededBufferSize = 0;
   for(size_t i = 0; i < length(); ++i){
     if(isprint(static_cast<unsigned char>(stringValue[i])) && '$' != stringValue[i] && '\"' != stringValue[i]){
       ++neededBufferSize;

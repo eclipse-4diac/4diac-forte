@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2006 - 2015 ACIN, Profactor GmbH, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny
@@ -37,40 +38,36 @@ private:
   * \return if true the succeeding EC part will be activated.
   */
   virtual bool checkActivation(int pa_nEIID) = 0;
-  virtual void executeEvent(int pa_nEIID){
-    if(0 != pa_nEIID){  //it is not the init event
-      if(m_bInitialized){
-        if(checkActivation(pa_nEIID)){
+    virtual void executeEvent(int pa_nEIID) {
+      if(0 != pa_nEIID) { //it is not the init event
+        if(m_bInitialized && checkActivation(pa_nEIID)) {
           CEventConnection *eoCon = getEOConUnchecked(1);
-          if(eoCon->isConnected()){
+          if(eoCon->isConnected()) {
             eoCon->triggerEvent(m_oECEO);
             m_oECEO.resumeSelfSuspend();
           }
         }
-      }
-    }
-    else{ // we got init
-      if(QI() == true){
-        if(!m_bInitialized){
-          m_oECEO.changeExecutionState(cg_nMGM_CMD_Start);
-          m_bInitialized = true;
+      } else { // we got init
+        if(QI() == true) {
+          if(!m_bInitialized) {
+            m_oECEO.changeExecutionState(cg_nMGM_CMD_Start);
+            m_bInitialized = true;
+          }
+          m_oECEO.setDeadline(Deadline());
+        } else {
+          m_oECEO.changeExecutionState(cg_nMGM_CMD_Stop);
+          m_bInitialized = false;
         }
-        m_oECEO.setDeadline(Deadline());
+        QO() = QI();
+        sendOutputEvent(0);
       }
-      else{
-        m_oECEO.changeExecutionState(cg_nMGM_CMD_Stop);
-        m_bInitialized = false;
-      }
-     QO() = QI();
-      sendOutputEvent(0);
     }
-  }
 
 public:
 
-  
+
   CRTEventSingle(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-        const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) : 
+        const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
    CFunctionBlock( pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData)
   {
       m_bInitialized = false;

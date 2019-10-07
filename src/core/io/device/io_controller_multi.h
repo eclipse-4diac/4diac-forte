@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2017 - 2018 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
@@ -18,79 +19,75 @@
 
 namespace forte {
   namespace core {
-    namespace IO {
+    namespace io {
 
-class IOConfigFBMultiSlave;
+      class IOConfigFBMultiSlave;
 
-/*! @brief Abstract Device Controller for modular devices
- *
- * The IODeviceMultiController extends the abstract #IODeviceController.
- * It integrates additional functionality for modular devices.
- * The controller should be used with the #IOConfigFBMulti configuration fbs.
- */
-class IODeviceMultiController: public IODeviceController {
-  friend class IOConfigFBMultiSlave;
+      /*! @brief Abstract Device Controller for modular devices
+       *
+       * The IODeviceMultiController extends the abstract #IODeviceController.
+       * It integrates additional functionality for modular devices.
+       * The controller should be used with the #IOConfigFBMulti configuration fbs.
+       */
+      class IODeviceMultiController : public IODeviceController {
+          friend class IOConfigFBMultiSlave;
 
-public:
+        public:
 
-  struct HandleDescriptor: IODeviceController::HandleDescriptor {
-    int slaveIndex;
+          class HandleDescriptor : public IODeviceController::HandleDescriptor {
+            public:
+              int mSlaveIndex;
 
-    HandleDescriptor(CIEC_WSTRING const &id, IOMapper::Direction direction,
-        int slaveIndex) :
-        IODeviceController::HandleDescriptor(id, direction), slaveIndex(slaveIndex) {
+              HandleDescriptor(CIEC_WSTRING const &paId, IOMapper::Direction paDirection, int paSlaveIndex) :
+                  IODeviceController::HandleDescriptor(paId, paDirection), mSlaveIndex(paSlaveIndex) {
 
-    }
-  };
+              }
+          };
 
-  /*! @brief Adds a handle for a slave
-   *
-   * The controller should read and write the given handle.
-   * It should keep a list of handles and delete the provided handle in case the #dropSlaveHandles method is called.
-   *
-   * @param index Index/Position of the modular slave
-   * @param handle IOHandle object which should be updated by the controller.
-   */
-  virtual void addSlaveHandle(int index, IOHandle* handle) = 0;
+          /*! @brief Adds a handle for a slave
+           *
+           * The controller should read and write the given handle.
+           * It should keep a list of handles and delete the provided handle in case the #dropSlaveHandles method is called.
+           *
+           * @param paIndex Index/Position of the modular slave
+           * @param paHandle IOHandle object which should be updated by the controller.
+           */
+          virtual void addSlaveHandle(int paIndex, IOHandle* paHandle) = 0;
 
-  /*! @brief Drop all handles of a specific slave
-   *
-   * The method should delete all handles of the indexed slave.
-   * All handles which were added by the #addSlaveHandle method should be deleted.
-   *
-   * @param index Index/Position of the modular slave
-   */
-  virtual void dropSlaveHandles(int index) = 0;
+          /*! @brief Drop all handles of a specific slave
+           *
+           * The method should delete all handles of the indexed slave.
+           * All handles which were added by the #addSlaveHandle method should be deleted.
+           *
+           * @param paIndex Index/Position of the modular slave
+           */
+          virtual void dropSlaveHandles(int paIndex) = 0;
 
-protected:
-  explicit IODeviceMultiController(CDeviceExecution& paDeviceExecution);
+        protected:
+          explicit IODeviceMultiController(CDeviceExecution& paDeviceExecution);
 
-  virtual void addHandle(IODeviceController::HandleDescriptor *handleDescriptor);
+          virtual void addHandle(IODeviceController::HandleDescriptor *paHandleDescriptor);
 
-  virtual IOHandle* initHandle(HandleDescriptor *handleDescriptor) = 0;
+          virtual IOHandle* initHandle(IODeviceController::HandleDescriptor *paHandleDescriptor) = 0;
 
-private:
+        private:
 
-  IOHandle* initHandle(IODeviceController::HandleDescriptor *handleDescriptor) {
-    return initHandle(static_cast<HandleDescriptor*>(handleDescriptor));
-  }
+          /*! @brief Checks if a slave exists at the given index
+           *
+           * @param paIndex Index/Position of the modular slave
+           * @return True in case a slave was found at the given position
+           */
+          virtual bool isSlaveAvailable(int paIndex) = 0;
 
-  /*! @brief Checks if a slave exists at the given index
-   *
-   * @param index Index/Position of the modular slave
-   * @return True in case a slave was found at the given position
-   */
-  virtual bool isSlaveAvailable(int index) = 0;
+          /*! @brief Checks if the slave type matches the configured type
+           *
+           * @param paIndex Index/Position of the modular slave
+           * @param paType Type identifier which describes the modular slave
+           * @return True in case the slave at the index has the given type
+           */
+          virtual bool checkSlaveType(int paIndex, int paType) = 0;
 
-  /*! @brief Checks if the slave type matches the configured type
-   *
-   * @param index Index/Position of the modular slave
-   * @param type Type identifier which describes the modular slave
-   * @return True in case the slave at the index has the given type
-   */
-  virtual bool checkSlaveType(int index, int type) = 0;
-
-};
+      };
 
     } //namespace IO
   } //namepsace core

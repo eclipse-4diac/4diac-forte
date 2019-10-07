@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2017 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Monika Wenger
@@ -27,35 +28,29 @@ enum LoadBootResult {
 };
 
 class ForteBootFileLoader {
-public:
+  public:
 
-  /**
-   * Constructor which uses the the default values for the boot file location
-   * @param paCallback Object to be called for each command
-   */
-  explicit ForteBootFileLoader(IBootFileCallback &paCallback);
+    /**
+     * Constructor which uses the the default values for the boot file location
+     * @param paCallback Object to be called for each command
+     */
+    explicit ForteBootFileLoader(IBootFileCallback &paCallback);
 
-  /**
-   * Constructor which uses a specific bootfile name instead of the default one
-   * @param paCallback Object to be called for each command
-   * @param paBootFileName Specific boot file name to be opened
-   */
-  explicit ForteBootFileLoader(IBootFileCallback &paCallback, CIEC_STRING &paBootFileName);
-  ~ForteBootFileLoader();
+    ~ForteBootFileLoader();
 
-  LoadBootResult loadBootFile();
+    LoadBootResult loadBootFile();
 
-  bool isOpen() const{
-    return (0 != mBootfile);
-  }
+    bool isOpen() const {
+      return (0 != mBootfile);
+    }
 
-private:
-  FILE *mBootfile;
-  IBootFileCallback &mCallback; //for now with one callback is enough for all cases
+  private:
+    FILE *mBootfile;
+    IBootFileCallback &mCallback; //for now with one callback is enough for all cases
 
-  bool openBootFile(CIEC_STRING* paBootFileName);
-  bool readLine(CIEC_STRING &line);
-  bool hasCommandEnded(const CIEC_STRING &line) const;
+    bool openBootFile();
+    bool readLine(CIEC_STRING &line);
+    bool hasCommandEnded(const CIEC_STRING &line) const;
 };
 
 #endif /* SRC_STDFBLIB_ITA_FORTEBOOTFILELOADER_H_ */

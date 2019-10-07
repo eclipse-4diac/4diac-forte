@@ -1,10 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2014 fortiss GmbH, 2018 TU Vienna/ACIN
  *                      2018 Johannes Kepler University
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Alois Zoitl
@@ -17,12 +18,13 @@
 #include "anyadapter_gen.cpp"
 #endif
 
-DEFINE_ADAPTER_TYPE(CAnyAdapter, g_nStringIdANY_ADAPTER)
+DEFINE_GENERIC_ADAPTER_TYPE(CAnyAdapter, g_nStringIdANY_ADAPTER)
 
 const SFBInterfaceSpec CAnyAdapter::scm_stFBInterfaceSpec = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 CAnyAdapter::CAnyAdapter(CStringDictionary::TStringId pa_anAdapterInstanceName, CResource *pa_poSrcRes, bool pa_bIsPlug) :
-    CAdapter(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_anAdapterInstanceName, &scm_stFBInterfaceSpec, pa_bIsPlug, 0, 0), m_ParentFB(0){
+    CAdapter(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_anAdapterInstanceName, &scm_stFBInterfaceSpec, pa_bIsPlug, 0, 0), m_ParentFB(0),
+    m_nParentAdapterlistID(0){
   memset(&m_stCurrentFBInterfaceSpec, 0, sizeof(SFBInterfaceSpec));
 }
 

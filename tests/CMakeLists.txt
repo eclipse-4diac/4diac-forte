@@ -1,12 +1,13 @@
 #*******************************************************************************
-# * Copyright (c) 2011 - 2018 ACIN, nxtControl, Profactor GmbH, fortiss GmbH
-# * All rights reserved. This program and the accompanying materials
-# * are made available under the terms of the Eclipse Public License v1.0
-# * which accompanies this distribution, and is available at
-# * http://www.eclipse.org/legal/epl-v10.html
-# *
-# * Contributors:
-# *   Ingo Hegny, Alois Zoitl, Stanislav Meduna, Micheal Hofmann, 
+# Copyright (c) 2011 - 2018 ACIN, nxtControl, Profactor GmbH, fortiss GmbH
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0.
+#
+# SPDX-License-Identifier: EPL-2.0
+# 
+# Contributors:
+#    Ingo Hegny, Alois Zoitl, Stanislav Meduna, Micheal Hofmann, 
 # *   Martin Melik-Merkumians  - initial API and implementation and/or initial documentation
 # *   Martin Melik-Merkumians  - adds subdirectory for arch tests
 # *******************************************************************************/
@@ -133,16 +134,18 @@ endif()
 
 GET_PROPERTY(link_flags_test GLOBAL PROPERTY FORTE_TEST_LINK_FLAGS)
 
+#add forte_test to the list of test to be executed by ctest
+add_test(forte_test ${EXECUTABLE_OUTPUT_PATH}/forte_test)
+
 if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
   set(FORTE_TEST_CODE_COVERAGE_ANALYSIS OFF CACHE BOOL "Perform code coverage analyis with GCOV and presentation with LCOV")
   mark_as_advanced(FORTE_TEST_CODE_COVERAGE_ANALYSIS)
   if(FORTE_TEST_CODE_COVERAGE_ANALYSIS)
       INCLUDE(${FORTE_BUILDSUPPORT_DIRECTORY}/GCov.cmake)    
-      SETUP_GCOV(TestCoverage forte_test coverage)
+      SETUP_GCOV(TestCoverage ctest coverage)
   endif() 
 endif()
 
-add_test(forte_test ${EXECUTABLE_OUTPUT_PATH}/forte_test)
 #######################################################################################
 # Generate stringlist for every source file
 #######################################################################################

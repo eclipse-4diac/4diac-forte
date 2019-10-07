@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
@@ -16,18 +17,18 @@
 #include <slave/slave.h>
 #include <slave/handle.h>
 
-class EmbrickAnalogSlaveHandle: public EmbrickSlaveHandle {
-public:
-  EmbrickAnalogSlaveHandle(forte::core::IO::IODeviceController *controller, forte::core::IO::IOMapper::Direction direction,
-      uint8_t offset, EmbrickSlaveHandler *slave);
+class EmbrickAnalogSlaveHandle : public EmbrickSlaveHandle {
+  public:
+    EmbrickAnalogSlaveHandle(forte::core::io::IODeviceController *paController, forte::core::io::IOMapper::Direction paDirection, uint8_t paOffset,
+        EmbrickSlaveHandler *paSlave);
 
-  virtual void set(const CIEC_ANY &);
-  void get(CIEC_ANY &);
+    virtual void set(const CIEC_ANY &);
+    void get(CIEC_ANY &);
 
-  bool equal(unsigned char* oldBuffer);
+    bool equal(unsigned char* paOldBuffer);
 
-protected:
-  const CIEC_DWORD getValue(const unsigned char* buffer);
+  protected:
+    const CIEC_DWORD getValue(const unsigned char* paBuffer);
 };
 
 #endif /* SRC_MODULES_EMBRICK_SLAVE_HANDLES_ANALOG_H_ */

@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012 -2014 AIT, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
@@ -46,16 +47,18 @@ void COpcConnectionHandler::removeOpcConnection(const char *pa_acHost, const cha
   if(existingCon != NULL){
     existingCon->removeGroup(pa_acGroupName);
 
-    if(existingCon->getGroupCount() == 0)
+    if(existingCon->getGroupCount() == 0) {
       deleteOpcConnection(pa_acHost, pa_acServerName);
+    }
   }
 }
 
 COpcConnection* COpcConnectionHandler::findOpcConnection(const char* pa_acHost, const char* pa_acServerName){
   TOpcConnectionList::Iterator itEnd = m_lOpcConnectionList.end();
   for(TOpcConnectionList::Iterator it = m_lOpcConnectionList.begin(); it != itEnd; ++it){
-    if(strcmp(it->getHost(), pa_acHost) == 0 && strcmp(it->getServerName(), pa_acServerName) == 0)
+    if(strcmp(it->getHost(), pa_acHost) == 0 && strcmp(it->getServerName(), pa_acServerName) == 0) {
       return (*it);
+    }
   }
 
   return NULL;

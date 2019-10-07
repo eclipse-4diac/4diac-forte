@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Alois Zoitl, Gunnar Grabmaier, Thomas Strasser, Gerhard Ebenhofer,
@@ -193,6 +194,24 @@ enum EMGMCommandType{
    * currently not implemented
    */
   cg_nMGM_CMD_QUERY_TypeVers = 0x67,
+
+  /*! \brief Read the interface of a specific FB type.
+   *
+   * When reading the FB interface the parameters of the SManagementCMD are defined as:
+   *    - m_sFirstParam = FB type name
+   *    - m_sSecondParam = not used
+   *    - m_sAdditionalParams the read value is stored here
+   */
+  cg_nMGM_CMD_QUERY_FBType = 0x77,
+
+  /*! \brief Read the interface of a specific adapter type.
+   *
+   * When reading the adapter interface the parameters of the SManagementCMD are defined as:
+   *    - m_sFirstParam = adapter type name
+   *    - m_sSecondParam = not used
+   *    - m_sAdditionalParams the read value is stored here
+   */
+  cg_nMGM_CMD_QUERY_AdapterType = 0x87,
 #endif
 
   /*! \brief reset a FB, resource or the device.
@@ -207,16 +226,16 @@ enum EMGMCommandType{
 
 
 
-  #ifdef FORTE_SUPPORT_MONITORING
-    cg_nMGM_CMD_Monitoring_Group = 0x0A,
-    cg_nMGM_CMD_Monitoring_Add_Watch = 0x1A,
-    cg_nMGM_CMD_Monitoring_Remove_Watch = 0x2A,
-    cg_nMGM_CMD_Monitoring_Read_Watches = 0x3A,
-    cg_nMGM_CMD_Monitoring_Force = 0x5A,
-    cg_nMGM_CMD_Monitoring_ClearForce = 0x6A,
-    cg_nMGM_CMD_Monitoring_Trigger_Event = 0x7A,
-    cg_nMGM_CMD_Monitoring_Reset_Event_Count = 0x8A,
-  #endif // FORTE_SUPPORT_MONITORING
+#ifdef FORTE_SUPPORT_MONITORING
+  cg_nMGM_CMD_Monitoring_Group = 0x0A,
+  cg_nMGM_CMD_Monitoring_Add_Watch = 0x1A,
+  cg_nMGM_CMD_Monitoring_Remove_Watch = 0x2A,
+  cg_nMGM_CMD_Monitoring_Read_Watches = 0x3A,
+  cg_nMGM_CMD_Monitoring_Force = 0x5A,
+  cg_nMGM_CMD_Monitoring_ClearForce = 0x6A,
+  cg_nMGM_CMD_Monitoring_Trigger_Event = 0x7A,
+  cg_nMGM_CMD_Monitoring_Reset_Event_Count = 0x8A,
+#endif // FORTE_SUPPORT_MONITORING
 
 
   /*! \brief invalid command: some of the data could not be parsed

@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2017 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Monika Wenger
@@ -13,8 +14,9 @@
 #include "luacfb.h"
 #include "resource.h"
 
-CLuaCFB::CLuaCFB(CStringDictionary::TStringId instanceNameId, const CLuaCFBTypeEntry* typeEntry, SCFB_FBNData *fbnData, TForteByte *connData, TForteByte *varsData, CResource *resource)
-    : CCompositeFB(resource, typeEntry->getInterfaceSpec(), instanceNameId, fbnData, connData, varsData), typeEntry(typeEntry) {
+CLuaCFB::CLuaCFB(CStringDictionary::TStringId paInstanceNameId, const CLuaCFBTypeEntry* paTypeEntry, SCFB_FBNData *paFbnData, TForteByte *paConnData,
+    TForteByte *paVarsData, CResource *paResource) :
+    CCompositeFB(paResource, paTypeEntry->getInterfaceSpec(), paInstanceNameId, paFbnData, paConnData, paVarsData), mTypeEntry(paTypeEntry) {
 }
 
 CLuaCFB::~CLuaCFB() {

@@ -1,10 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
  *                      2018 Johannes Kepler University
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Alois Zoitl, Rene Smodic, Thomas Strasser, Gerhard Ebenhofer,
@@ -79,7 +80,7 @@ void DEV_MGR::executeEvent(int paEIID){
 void DEV_MGR::executeRQST(void){
   mCommand.mAdditionalParams.clear();
   EMGMResponse resp = parseAndExecuteMGMCommand(DST().getValue(), RQST().getValue());
-  
+
 #ifdef FORTE_SUPPORT_MONITORING
   if (0 != mCommand.mMonitorResponse.length()) {
     generateMonitorResponse(resp, mCommand);
@@ -151,9 +152,9 @@ char *DEV_MGR::parseRequest(char *paRequestString, forte::core::SManagementCMD &
 }
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
-bool DEV_MGR::parseXType(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand, char *paRequestType){
+bool DEV_MGR::parseXType(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand, const char *paRequestType) {
   bool retVal = false;
-  size_t nReqLength = strlen((const char *) paRequestType);
+  size_t nReqLength = strlen(paRequestType);
   if(!strncmp(paRequestType, paRequestPartLeft, nReqLength)){
     paRequestPartLeft = &(paRequestPartLeft[nReqLength]);
     if('*' != paRequestPartLeft[0]){
@@ -258,7 +259,7 @@ bool DEV_MGR::parseWriteConnectionData(char *paRequestPartLeft, forte::core::SMa
     *endOfSource = '\0';
     forte::core::util::transformEscapedXMLToNonEscapedText(paRequestPartLeft);
     paCommand.mAdditionalParams = paRequestPartLeft;
-    *endOfSource = '"';  // restore the string
+    *endOfSource = '"'; // restore the string
     paRequestPartLeft = strchr(endOfSource + 1, '\"');
     if(0 != paRequestPartLeft){
       retVal = (-1 != parseIdentifier(&paRequestPartLeft[1], paCommand.mFirstParam));
@@ -334,11 +335,9 @@ void DEV_MGR::parseDeleteData(char *paRequestPartLeft, forte::core::SManagementC
 }
 
 void DEV_MGR::parseAdditionalStateCommandData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand){
-  if(0 != paRequestPartLeft){
-    if('/' != paRequestPartLeft[0] &&  //if we have an additional xml token parse if it is an FB definition
-        !parseFBData(paRequestPartLeft, paCommand)){
-      paCommand.mCMD = cg_nMGM_CMD_INVALID;
-    }
+  if(0 != paRequestPartLeft && '/' != paRequestPartLeft[0] && //if we have an additional xml token parse if it is an FB definition
+    !parseFBData(paRequestPartLeft, paCommand)) {
+    paCommand.mCMD = cg_nMGM_CMD_INVALID;
   }
 }
 
@@ -392,7 +391,13 @@ void DEV_MGR::parseQueryData(char *paRequestPartLeft, forte::core::SManagementCM
         if(!strncmp(paRequestPartLeft, "FBT", sizeof("FBT") - 1)){
           if(parseTypeListData(paRequestPartLeft, paCommand)){
             paCommand.mCMD = cg_nMGM_CMD_QUERY_FBTypes;
-          } else {
+          }
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+          else if(parseXType(paRequestPartLeft, paCommand, "FBType Name=\"")){
+            paCommand.mCMD = cg_nMGM_CMD_QUERY_FBType;
+          }
+#endif
+          else {
             paCommand.mCMD = cg_nMGM_CMD_Query_Group;
           }
         }else if(parseFBData(paRequestPartLeft, paCommand)){
@@ -417,7 +422,13 @@ void DEV_MGR::parseQueryData(char *paRequestPartLeft, forte::core::SManagementCM
         if(!strncmp(paRequestPartLeft, "AdapterT", sizeof("AdapterT") - 1)){
           if(parseTypeListData(paRequestPartLeft, paCommand)){
             paCommand.mCMD = cg_nMGM_CMD_QUERY_AdapterTypes;
-          } else {
+          }
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+          else if(parseXType(paRequestPartLeft, paCommand, "AdapterType Name=\"")){
+            paCommand.mCMD = cg_nMGM_CMD_QUERY_AdapterType;
+          }
+#endif
+          else {
             paCommand.mCMD = cg_nMGM_CMD_Query_Group;
           }
         }
@@ -438,12 +449,12 @@ bool DEV_MGR::parseTypeListData(char *paRequestPartLeft, forte::core::SManagemen
     }
   }
   else if(!strncmp("FBType Name=\"", paRequestPartLeft, sizeof("FBType Name=\"") - 1)){
-    if(paRequestPartLeft[13] != '*'){ //does not support query for DataType-Declaration
+    if(paRequestPartLeft[13] != '*'){ //supports query for FBType-Declaration only for DynamicTypeLoad profile (LUA enabled)
       retVal = false;
     }
   }
   else if(!strncmp("AdapterType Name=\"", paRequestPartLeft, sizeof("AdapterType Name=\"") - 1)){
-    if(paRequestPartLeft[18] != '*'){ //does not support query for DataType-Declaration
+    if(paRequestPartLeft[18] != '*'){ //does not support query for AdapterType-Declaration
       retVal = false;
     }
   }
@@ -529,6 +540,16 @@ void DEV_MGR::generateLongResponse(EMGMResponse paResp, forte::core::SManagement
       RESP().append("<DTList>\n    ");
       RESP().append(paCMD.mAdditionalParams.getValue());
       RESP().append("\n  </DTList>");
+    }
+    else if(paCMD.mCMD == cg_nMGM_CMD_QUERY_FBType){
+      RESP().append("<FBType Comment=\"generated\" ");
+      RESP().append(paCMD.mAdditionalParams.getValue());
+      RESP().append("  </FBType>");
+    }
+    else if(paCMD.mCMD == cg_nMGM_CMD_QUERY_AdapterType){
+      RESP().append("<AdapterType Comment=\"generated\" ");
+      RESP().append(paCMD.mAdditionalParams.getValue());
+      RESP().append("   <Service Comment=\"generated\" LeftInterface=\"SOCKET\" RightInterface=\"PLUG\"/>\n</AdapterType>");
     }
 #endif
   }

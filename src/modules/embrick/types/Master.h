@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
@@ -21,7 +22,7 @@
 #include <handler/bus.h>
 #include "../../../core/io/configFB/io_master_multi.h"
 
-class EmbrickMaster: public forte::core::IO::IOConfigFBMultiMaster {
+class EmbrickMaster: public forte::core::io::IOConfigFBMultiMaster {
 DECLARE_FIRMWARE_FB(EmbrickMaster)
 
 private:
@@ -73,14 +74,14 @@ private:
   virtual void setInitialValues();
 
 protected:
-  forte::core::IO::IODeviceController* createDeviceController(CDeviceExecution& paDeviceExecution);
+  forte::core::io::IODeviceController* createDeviceController(CDeviceExecution& paDeviceExecution);
 
   void setConfig();
 
   virtual void onStartup();
 
 public:
-  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(EmbrickMaster, forte::core::IO::IOConfigFBMultiMaster){
+  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(EmbrickMaster, forte::core::io::IOConfigFBMultiMaster){
   }
 };
 

@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
@@ -19,37 +20,37 @@
 #include <forte_wstring.h>
 
 class EmbrickPinHandler {
-  friend class EmbrickBusHandler;
+    friend class EmbrickBusHandler;
 
-protected:
-  explicit EmbrickPinHandler(unsigned int pin);
-  virtual ~EmbrickPinHandler();
+  protected:
+    explicit EmbrickPinHandler(unsigned int paPin);
+    virtual ~EmbrickPinHandler();
 
-  bool set(bool state);
-  bool enable() {
-    return set(true);
-  }
-  bool disable() {
-    return set(false);
-  }
+    bool set(bool paState);
+    bool enable() {
+      return set(true);
+    }
+    bool disable() {
+      return set(false);
+    }
 
-  void init();
-  void deInit();
+    void init();
+    void deInit();
 
-  std::string pinStr;
-  std::fstream stream;
+    bool hasError() {
+      return paError != 0;
+    }
+    const char* paError;
 
-  bool hasError() {
-    return error != 0;
-  }
-  const char* error;
+  private:
+    std::string mPinStr;
+    std::fstream paStream;
 
-private:
-  void fail(const char* reason);
+    void fail(const char* paReason);
 
-  static const char * const scmFailedToOpenFile;
-  static const char * const scmFailedToWriteFile;
-  static const char * const scmNotInitialised;
+    static const char * const scmFailedToOpenFile;
+    static const char * const scmFailedToWriteFile;
+    static const char * const scmNotInitialised;
 };
 
 #endif /* SRC_MODULES_EMBRICK_HANDLER_PIN_H_ */

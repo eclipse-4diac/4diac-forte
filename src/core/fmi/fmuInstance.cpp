@@ -1,10 +1,11 @@
 
 /*******************************************************************************
  * Copyright (c) 2016 -2018 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Jose Cabral - initial API and implementation and/or initial documentation
@@ -235,8 +236,8 @@ CIEC_ANY::EDataTypeID fmuInstance::getConnectedDataType(unsigned int portIndex, 
       FMU_DEBUG_LOG(this, "--------ERROR: Subscriber does not have any connection.\n");
     }
     else{
-      CSinglyLinkedList<SConnectionPoint>::Iterator it = portConnection->getDestinationList().begin();
-      const SConnectionPoint remoteConnectionPoint = pa_isInput ? portConnection->getSourceId() : *it;
+      CSinglyLinkedList<CConnectionPoint>::Iterator it = portConnection->getDestinationList().begin();
+      const CConnectionPoint remoteConnectionPoint = pa_isInput ? portConnection->getSourceId() : *it;
 
       const CIEC_ANY *remotePort = pa_isInput ? remoteConnectionPoint.mFB->getDOFromPortId(remoteConnectionPoint.mPortId) : remoteConnectionPoint.mFB->getDIFromPortId(remoteConnectionPoint.mPortId);
 

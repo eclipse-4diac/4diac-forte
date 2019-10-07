@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Alois Zoitl, Rene Smodic, Thomas Strasser, Gerhard Ebenhofer,
@@ -87,7 +88,7 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
      * \param pa_requestType the type that should be searched
      * \return true if the FB type could be parsed
      */
-    static bool parseXType(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand, char *paRequestType);
+    static bool parseXType(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand, const char *paRequestType);
     /*! \brief Parse the given request that is left after parsing the header to parse connection data
      *
      * \param paRequestPartLeft   data of the request that has been left after parsing the header
@@ -120,7 +121,7 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
      * @return number of bytes used from the character array or -1 if the identifier could not be parsed
      */
     static int parseIdentifier(char *paIdentifierStart, forte::core::TNameIdentifier &paIdentifier);
-  
+
     virtual void executeEvent(int pa_nEIID);
 
 #ifdef FORTE_SUPPORT_MONITORING

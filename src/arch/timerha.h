@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Alois Zoitl, Thomas Strasser, Rene Smodic, Monika Wenger, Ingo Hegny
@@ -39,9 +40,6 @@ class CTimerHandler : public CExternalEventHandler{
   DECLARE_HANDLER(CTimerHandler);
   public:
 
-    /*!\brief Pointer to a general timer used for code outside FBs, like devlog, TIME() and so on
-     */
-    static CTimerHandler *smFORTETimer;
     /*!\brief create the timer handler and set the parameter pointer with the the new timer handler.
      *
      * This function is not implemented in the standardtimerhandler and has to be implemented in the specific implementation.

@@ -1,14 +1,16 @@
 /*******************************************************************************
-  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Thomas Strasser, Alois Zoitl,
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Thomas Strasser, Alois Zoitl,
+ *      - initial implementation and rework communication infrastructure
+ *******************************************************************************/
 #ifndef _EVENCONN_H_
 #define _EVENCONN_H_
 
@@ -29,9 +31,7 @@ class CEventConnection : public CConnection{
 
     virtual EMGMResponse connectToCFBInterface(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId);
 
-#ifndef FORTE_CLASS_0
     virtual EMGMResponse disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId);
-#endif
 
     /*! \brief Triggers the event connection and all destinations are notified.
      *

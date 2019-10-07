@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
@@ -23,27 +24,27 @@
 
 class EmbrickSlaveHandler;
 
-class EmbrickSlaveHandle: public forte::core::IO::IOHandle {
-public:
-  EmbrickSlaveHandle(forte::core::IO::IODeviceController *controller, forte::core::IO::IOMapper::Direction direction,
-      CIEC_ANY::EDataTypeID type, uint8_t paOffset, EmbrickSlaveHandler *paSlave);
-  virtual ~EmbrickSlaveHandle();
+class EmbrickSlaveHandle : public forte::core::io::IOHandle {
+  public:
+    EmbrickSlaveHandle(forte::core::io::IODeviceController *paController, forte::core::io::IOMapper::Direction paDirection, CIEC_ANY::EDataTypeID type,
+        uint8_t paOffset, EmbrickSlaveHandler *paSlave);
+    virtual ~EmbrickSlaveHandle();
 
-  virtual void set(const CIEC_ANY &);
-  virtual bool equal(unsigned char*) = 0;
+    virtual void set(const CIEC_ANY &);
+    virtual bool equal(unsigned char*) = 0;
 
-protected:
-  virtual void reset() {
+  protected:
+    virtual void reset() {
 
-  }
+    }
 
-  virtual void onObserver(forte::core::IO::IOObserver *observer);
-  virtual void dropObserver();
+    virtual void onObserver(forte::core::io::IOObserver *paObserver);
+    virtual void dropObserver();
 
-  unsigned char* buffer;
-  const uint8_t offset;
-  EmbrickSlaveHandler* slave;
-  CSyncObject *updateMutex;
+    unsigned char* mBuffer;
+    const uint8_t mOffset;
+    EmbrickSlaveHandler* mSlave;
+    CSyncObject *mUpdateMutex;
 };
 
 #endif /* SRC_MODULES_EMBRICK_SLAVE_HANDLE_H_ */

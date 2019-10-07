@@ -1,12 +1,13 @@
 #/*******************************************************************************
-# * Copyright (c) 2016 fortiss GmbH
-# * All rights reserved. This program and the accompanying materials
-# * are made available under the terms of the Eclipse Public License v1.0
-# * which accompanies this distribution, and is available at
-# * http://www.eclipse.org/legal/epl-v10.html
-# *
-# * Contributors:
-# *  Jose Cabral - initial API and implementation and/or initial documentation
+# Copyright (c) 2016 fortiss GmbH
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0.
+#
+# SPDX-License-Identifier: EPL-2.0
+# 
+# Contributors:
+#   Jose Cabral - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\vxworks)
@@ -26,6 +27,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
   forte_add_sourcefile_h(../forte_architecture_time.h)
   
   forte_add_sourcefile_hcpp(../utils/timespec_utils)
+  forte_add_sourcefile_cpp(../genforte_realFunctions.cpp forte_architecture_time.cpp)
   
   SET(FORTE_VXWORKS_FIND_DIR_AUTOMATICALLY ON CACHE BOOL "Selects the rest of needed directories from the CMAKE_FIND_ROOT_PATH")
   SET(FORTE_VXWORKS_VSB_CONFIG_FILE "" CACHE STRING "VSB Configuration file")
@@ -95,7 +97,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
   
   forte_add_custom_configuration("#define PRIuFAST64 \"I64u\"")
   
-  forte_add_custom_configuration("typedef unsigned long long uint_fast64_t\\\;")
+  forte_add_custom_configuration("typedef unsigned long long uint_fast64_t\;")
   
 
 endif()

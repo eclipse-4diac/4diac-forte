@@ -1,17 +1,19 @@
 /*******************************************************************************
-* Copyright (c) 2011 - 2013, 2018 TU Vienna/ACIN, nxtControl, Profactor GmbH, fortiss GmbH
-* All rights reserved. This program and the accompanying materials
-* are made available under the terms of the Eclipse Public License v1.0
-* which accompanies this distribution, and is available at
-* http://www.eclipse.org/legal/epl-v10.html
-*
-* Contributors:
-*   Martin Melik Merkumians - initial API and implementation and/or initial documentation
-*   Martin Melik-Merkumians - adds test for FIND
-*   Martin Melik-Merkumians - adds tests for LEN, LEFT, RIGHT, MID, REPLACE, DELETE,
-*     INSERT, EQ, NE, ADD, and AND
-*   Martin Melik-Merkumians - adds test for TRUNC
-*******************************************************************************/
+ * Copyright (c) 2011 - 2013, 2018 TU Vienna/ACIN, nxtControl, Profactor GmbH, fortiss GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Martin Melik Merkumians - initial API and implementation and/or initial documentation
+ *   Martin Melik-Merkumians - adds test for FIND
+ *   Martin Melik-Merkumians - adds tests for LEN, LEFT, RIGHT, MID, REPLACE, DELETE,
+ *     INSERT, EQ, NE, ADD, and AND
+ *   Martin Melik-Merkumians - adds test for TRUNC
+ *******************************************************************************/
 
 #include <boost/test/unit_test.hpp>
 

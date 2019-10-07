@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Alois Zoitl, Gunnar Grabmair, Rene Smodic, Gerhard Ebenhofer,
@@ -34,10 +35,10 @@ class CAdapter;
 //!\ingroup CORE Type for a function pointer which allows to create a data type instance
   typedef CIEC_ANY *(*TDataTypeCreateFunc)(TForteByte *pa_acDataBuf);
 
-  #define FORTE_DUMMY_INIT_DEF(fbclass) int fbclass::dummyInit() {return 0; }
-  #define FORTE_DUMMY_INIT_DEC  static int dummyInit(); 
+#define FORTE_DUMMY_INIT_DEF(fbclass) int fbclass::dummyInit() {return 0; }
+#define FORTE_DUMMY_INIT_DEC  static int dummyInit();
 
-  
+
 //!\ingroup CORE This define is used to create the definition necessary for generic FirmwareFunction blocks in order to get them automatically added to the FirmwareType list.
 #define DECLARE_GENERIC_FIRMWARE_FB(fbclass) \
   private: \
@@ -60,14 +61,16 @@ class CAdapter;
 
 #define DEFINE_GENERIC_FIRMWARE_FB(fbclass, fbTypeNameId)\
   extern const CStringDictionary::TStringId g_nStringId##fbclass; \
-  const CTypeLib::CFBTypeEntry fbclass::csm_oFirmwareFBEntry_##fbclass((fbTypeNameId), fbclass::createFB); \
+  const CTypeLib::CFBTypeEntry fbclass::csm_oFirmwareFBEntry_##fbclass((fbTypeNameId), fbclass::createFB, 0); \
   FORTE_DUMMY_INIT_DEF(fbclass)
 
 /*!\ingroup CORE This define is used to create the implementation for the above definition. The second parameter is needed for the
  * prebuild script that generates the constant string list.
  */
 #define DEFINE_FIRMWARE_FB(fbclass, fbTypeNameId) \
-    DEFINE_GENERIC_FIRMWARE_FB(fbclass, fbTypeNameId) \
+    extern const CStringDictionary::TStringId g_nStringId##fbclass; \
+    const CTypeLib::CFBTypeEntry fbclass::csm_oFirmwareFBEntry_##fbclass((fbTypeNameId), fbclass::createFB, &(fbclass::scm_stFBInterfaceSpec)); \
+    FORTE_DUMMY_INIT_DEF(fbclass) \
     CStringDictionary::TStringId fbclass::getFBTypeId(void) const {return (fbTypeNameId); }
 
 //!\ingroup CORE This define is used to create the definition necessary for Adapter types.
@@ -75,7 +78,7 @@ class CAdapter;
   private: \
     const static CTypeLib::CAdapterTypeEntry csm_oAdapterTypeEntry_##adapterclass; \
   public:  \
-  static CAdapter *createAdapter(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, bool pa_bIsPlug){\
+    static CAdapter *createAdapter(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, bool pa_bIsPlug){\
       return new adapterclass(pa_nInstanceNameId, pa_poSrcRes, pa_bIsPlug);\
     }; \
     virtual CStringDictionary::TStringId getFBTypeId(void) const {return (csm_oAdapterTypeEntry_##adapterclass.getTypeNameId()); };\
@@ -84,7 +87,11 @@ class CAdapter;
 
 //!\ingroup CORE This define is used to create the implementation for the above definition.
 #define DEFINE_ADAPTER_TYPE(adapterclass, adapterTypeNameId)\
-  const CTypeLib::CAdapterTypeEntry adapterclass::csm_oAdapterTypeEntry_##adapterclass((adapterTypeNameId), adapterclass::createAdapter); \
+  const CTypeLib::CAdapterTypeEntry adapterclass::csm_oAdapterTypeEntry_##adapterclass((adapterTypeNameId), adapterclass::createAdapter, &(adapterclass::scm_stFBInterfaceSpecSocket)); \
+  FORTE_DUMMY_INIT_DEF(adapterclass)
+
+#define DEFINE_GENERIC_ADAPTER_TYPE(adapterclass, adapterTypeNameId)\
+  const CTypeLib::CAdapterTypeEntry adapterclass::csm_oAdapterTypeEntry_##adapterclass((adapterTypeNameId), adapterclass::createAdapter, 0); \
   FORTE_DUMMY_INIT_DEF(adapterclass)
 
 //!\ingroup CORE This define is used to create the definition necessary for Firmware datatype in order to get them automatically added to the FirmwareType list.
@@ -106,6 +113,7 @@ class CAdapter;
   const CTypeLib::CDataTypeEntry CIEC_##datatypename::csm_oFirmwareDataTypeEntry_##datatypename((datatypenameid), CIEC_##datatypename::createDataType);\
   FORTE_DUMMY_INIT_DEF(CIEC_##datatypename)
 
+struct SFBInterfaceSpec;
 
 /*!\ingroup CORE \brief Class for storing the functionblock libraries.
  */
@@ -116,6 +124,7 @@ class CTypeLib{
   class CTypeEntry{
     private:
       CStringDictionary::TStringId m_nTypeNameId;
+
     public:
       CTypeEntry *m_poNext; //!< a pointer to the next element in the list. Will be used to build single linked list of type entries.
 
@@ -123,13 +132,21 @@ class CTypeLib{
       virtual ~CTypeEntry(void);
 
       CStringDictionary::TStringId getTypeNameId(void) const { return m_nTypeNameId; };
+  };
 
+  class CSpecTypeEntry : public CTypeEntry {
+    private:
+      const SFBInterfaceSpec* mSocketInterfaceSpec;
+    public:
+      CSpecTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, const SFBInterfaceSpec* paSocketInterfaceSpec);
+      virtual ~CSpecTypeEntry(void);
+      const SFBInterfaceSpec* getInterfaceSpec() const{ return mSocketInterfaceSpec; }
   };
 
 //! The base class for all function block types entries in the type lib.
-  class CFBTypeEntry : public CTypeEntry{
+  class CFBTypeEntry : public CSpecTypeEntry{
     public:
-      CFBTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TFunctionBlockCreateFunc pa_pfuncCreateFB);
+      CFBTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TFunctionBlockCreateFunc pa_pfuncCreateFB, const SFBInterfaceSpec* paSocketInterfaceSpec);
       virtual ~CFBTypeEntry(void);
       virtual CFunctionBlock *createFBInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes){
               return m_pfuncFBCreationFunc( pa_nInstanceNameId, pa_poSrcRes);
@@ -140,9 +157,9 @@ class CTypeLib{
 
 /*!\brief Class for adapter type entries in the type lib.
  */
-      class CAdapterTypeEntry : public CTypeEntry{
+      class CAdapterTypeEntry : public CSpecTypeEntry{
         public:
-          CAdapterTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TAdapterCreateFunc pa_pfuncCreateAdapter);
+          CAdapterTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TAdapterCreateFunc pa_pfuncCreateAdapter, const SFBInterfaceSpec* paSocketInterfaceSpec);
           virtual ~CAdapterTypeEntry(void);
           virtual CAdapter *createAdapterInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, bool pa_bIsPlug){
             return m_pfuncAdapterCreationFunc( pa_nInstanceNameId, pa_poSrcRes, pa_bIsPlug);
@@ -176,7 +193,6 @@ public:
  *    - e_INVALID_OPERATION The requested FB can not be created (e.g. out of memory)
  */
   static CFunctionBlock *createFB(CStringDictionary::TStringId pa_nInstanceNameId, CStringDictionary::TStringId pa_nFBTypeId, CResource *pa_poRes);
-
 
 /*\brief Delete the given FB
  */
@@ -223,6 +239,8 @@ public:
  */
   static CTypeEntry *getDTLibStart() { return m_poDTLibStart; }
 
+  static CTypeEntry *findType(CStringDictionary::TStringId pa_nTypeId, CTypeEntry *pa_poListStart);
+
 protected:
 private:
 
@@ -239,11 +257,8 @@ private:
   static CDataTypeEntry *m_poDTLibStart, //!< pointer to the begin of the data type library
                  *m_poDTLibEnd; //!< pointer to the end of the data type library
 
-  static CTypeEntry *findType(CStringDictionary::TStringId pa_nTypeId, CTypeEntry *pa_poListStart);
-
   //! find the position of the first underscore that marks the end of the type name and the beginning of the generic part
   static const char* getFirstNonTypeNameUnderscorePos(const char* pa_acTypeName);
-
 };
 
 #endif /*TYPELIB_H_*/

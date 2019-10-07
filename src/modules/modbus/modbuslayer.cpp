@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012 -2014 AIT, ACIN, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Filip Andren, Patrick Smejkal, Alois Zoitl, Martin Melik-Merkumians - initial API and implementation and/or initial documentation
@@ -314,8 +315,9 @@ T CModbusComLayer::convertFBOutput(TForteByte *pa_acDataArray, unsigned int pa_n
       TForteUInt16 *destAr = new TForteUInt16[nrUint16s];
       TForteUInt16 *sourceAr = (TForteUInt16*) pa_acDataArray;
 
-      for(unsigned int i = 0; i < nrUint16s; i++)
+      for(unsigned int i = 0; i < nrUint16s; i++) {
         destAr[i] = sourceAr[nrUint16s - 1 - i];
+      }
 
       retVal = *((T*) destAr);
 
@@ -323,15 +325,17 @@ T CModbusComLayer::convertFBOutput(TForteByte *pa_acDataArray, unsigned int pa_n
     }
     else{
       TForteByte *tempAr = new TForteByte[currentDataSize];
-      for(unsigned int j = 0; j < currentDataSize; j++)
+      for(unsigned int j = 0; j < currentDataSize; j++) {
         tempAr[j] = pa_acDataArray[j];
+      }
 
       retVal = *((T*) tempAr);
       delete[] tempAr;
     }
   }
-  else
+  else {
     retVal = 0;
+  }
 
   return retVal;
 }
@@ -644,8 +648,9 @@ int CModbusComLayer::findNextStartAddress(const char* pa_acParam, int pa_nStartI
   const char *pch = strchr(&pa_acParam[pa_nStartIndex], ',');
 
   if(pch != NULL){
-    if(pch - &pa_acParam[pa_nStartIndex] < strLength - 1)
+    if(pch - &pa_acParam[pa_nStartIndex] < strLength - 1) {
       return pch - &pa_acParam[0] + 1;
+    }
 
   }
 
@@ -657,14 +662,15 @@ int CModbusComLayer::findNextStopAddress(const char* pa_acParam, int pa_nStartIn
   const char *pchComma = strchr(&pa_acParam[pa_nStartIndex], ',');
   const char *pchDot = strchr(&pa_acParam[pa_nStartIndex], '.');
 
-  if(pchComma != NULL && pchDot != NULL){
-    if(pchDot < pchComma)
-      if(pchDot - &pa_acParam[pa_nStartIndex] < strLength - 2)
-        return pchDot - &pa_acParam[0] + 2;
-  }
-  else if(pchDot != NULL)
-    if(pchDot - &pa_acParam[pa_nStartIndex] < strLength - 2)
+  if(pchComma != NULL && pchDot != NULL) {
+    if(pchDot < pchComma && (pchDot - &pa_acParam[pa_nStartIndex] < strLength - 2)) {
       return pchDot - &pa_acParam[0] + 2;
+    }
+  } else if(pchDot != NULL) {
+    if(pchDot - &pa_acParam[pa_nStartIndex] < strLength - 2) {
+      return pchDot - &pa_acParam[0] + 2;
+    }
+  }
 
   return pa_nStartIndex;
 }

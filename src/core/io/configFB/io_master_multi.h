@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2017 - 2018 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
@@ -20,43 +21,42 @@
 
 namespace forte {
   namespace core {
-    namespace IO {
+    namespace io {
 
-class IOConfigFBMultiMaster;
+      class IOConfigFBMultiMaster;
 
-typedef CSinglyLinkedList<IOConfigFBMultiMaster*> TMasterList;
+      typedef CSinglyLinkedList<IOConfigFBMultiMaster*> TMasterList;
 
-class IOConfigFBMultiMaster: public IOConfigFBController {
-public:
-  IOConfigFBMultiMaster(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-      const CStringDictionary::TStringId pa_nInstanceNameId,
-      TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
+      class IOConfigFBMultiMaster : public IOConfigFBController {
+        public:
+          IOConfigFBMultiMaster(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
+              TForteByte *paFBConnData, TForteByte *paFBVarsData);
 
-  static IOConfigFBMultiMaster* getMasterById(TForteUInt16 id);
+          static IOConfigFBMultiMaster* getMasterById(TForteUInt16 paId);
 
-  using IOConfigFBController::initHandle;
+          using IOConfigFBController::initHandle;
 
-protected:
-  IOConfigFBMultiAdapter& BusAdapterOut() {
-    return (*static_cast<IOConfigFBMultiAdapter*>(m_apoAdapters[0]));
-  }
-  static const int scm_nBusAdapterAdpNum = 0;
+        protected:
+          IOConfigFBMultiAdapter& BusAdapterOut() {
+            return (*static_cast<IOConfigFBMultiAdapter*>(m_apoAdapters[0]));
+          }
+          static const int scmBusAdapterAdpNum = 0;
 
-  virtual void onStartup();
+          virtual void onStartup();
 
-  virtual void onStop();
+          virtual void onStop();
 
-  virtual void executeEvent(int pa_nEIID);
+          virtual void executeEvent(int paEIID);
 
-private:
-  static TMasterList *instances;
+        private:
+          static TMasterList mInstances;
 
-  static TForteUInt16 instancesIncrement;
+          static TForteUInt16 mInstancesIncrement;
 
-  TForteUInt16 id;
+          TForteUInt16 mId;
 
-  static const char * const scmFailedToInitSlaves;
-};
+          static const char * const scmFailedToInitSlaves;
+      };
 
     } //namespace IO
   } //namepsace core

@@ -1,15 +1,17 @@
 /*******************************************************************************
-  * Copyright (c) 2007 - 2013 ACIN, nxtcontrol GmbH, Profactor GmbH, fortiss GmbH
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Alois Zoitl, Ingo Hegny, Martin Melik Merkumians, Stanislav Meduna,
-  *    Monika Wenger, Matthias Plasch
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2007 - 2013 ACIN, nxtcontrol GmbH, Profactor GmbH, fortiss GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Alois Zoitl, Ingo Hegny, Martin Melik Merkumians, Stanislav Meduna,
+ *    Monika Wenger, Matthias Plasch
+ *      - initial implementation and rework communication infrastructure
+ *******************************************************************************/
 #include "forte_any.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "forte_any_gen.cpp"
@@ -20,7 +22,7 @@
 
 const CTypeLib::CDataTypeEntry CIEC_ANY::csmFirmwareDataTypeEntry_CIEC_ANY(g_nStringIdANY, CIEC_ANY::createDataType);
 
-const char * const CIEC_ANY::scmAnyToStringResponse = "ND (ANY)";
+const char CIEC_ANY::scmAnyToStringResponse[] = "ND (ANY)";
 
 int CIEC_ANY::dummyInit(){
   return 0;
@@ -73,13 +75,11 @@ int CIEC_ANY::fromString(const char *pa_pacValue){
     const char *acHashPos = strchr(pa_pacValue, '#');
     if(0 != acHashPos){
       CStringDictionary::TStringId nTypeNameId = parseTypeName(pa_pacValue, acHashPos);
-      if(CStringDictionary::scm_nInvalidStringId != nTypeNameId){
-        if(0 != CTypeLib::createDataTypeInstance(nTypeNameId, (TForteByte *) this)){
-          nRetVal = fromString(pa_pacValue);    //some of the datatypes require the type upfront for correct parsing e.g., time
-          if(0 > nRetVal){
-            //if it didn't work change us back to an any
-            CIEC_ANY::createDataType((TForteByte *)this);
-          }
+      if(CStringDictionary::scm_nInvalidStringId != nTypeNameId && 0 != CTypeLib::createDataTypeInstance(nTypeNameId, (TForteByte *) this)) {
+        nRetVal = fromString(pa_pacValue); //some of the datatypes require the type upfront for correct parsing e.g., time
+        if(0 > nRetVal) {
+          //if it didn't work change us back to an any
+          CIEC_ANY::createDataType((TForteByte *) this);
         }
       }
     }
@@ -101,12 +101,14 @@ CStringDictionary::TStringId CIEC_ANY::parseTypeName(const char *pa_pacValue, co
   return nRetVal;
 }
 
-int CIEC_ANY::toString(char* pa_pacValue, unsigned int pa_nBufferSize) const{
+int CIEC_ANY::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal = -1;
-  if((strlen(scmAnyToStringResponse) +1) <= pa_nBufferSize){
-    nRetVal = static_cast<int>(strlen(scmAnyToStringResponse));
-    memcpy(pa_pacValue, scmAnyToStringResponse, nRetVal);
-    pa_pacValue[nRetVal] = '\0';
+  if(sizeof(scmAnyToStringResponse) <= paBufferSize) {
+     nRetVal = sizeof(scmAnyToStringResponse) - 1;
+
+    //don't use snprintf here since it brings big usage and performance overheads
+    memcpy(paValue, scmAnyToStringResponse, nRetVal);
+    paValue[nRetVal] = '\0';
   }
   return nRetVal;
 }
@@ -223,7 +225,7 @@ const TForteByte CIEC_ANY::csmStringBufferSize[] = {
         65 /*e_LWORD (0, 16#FFFF FFFF FFFF FFFF)*/,
         11 /*e_DATE (d#0001-01-01)*/,
          9 /*e_TIME_OF_DAY (tod#00:00:00)*/,
-        20 /*e_DATE_AND_TIME (dt#0001-01-01-00:00:00)*/,
+        24 /*e_DATE_AND_TIME (dt#0001-01-01-00:00:00.000)*/,
         27 /*e_TIME (t#0)*/,
         14 /*e_REAL (32bit = 1bit sign, 8bit exponent, 23bit fraction)*/,
         23 /*e_LREAL (64bit = 1bit sign, 11bit exponent, 52bit fraction)*/,
@@ -239,6 +241,6 @@ const TForteByte CIEC_ANY::csmStringBufferSize[] = {
          0 /*e_Max*/
     };
 
-unsigned int CIEC_ANY::getToStringBufferSize() const{
+size_t CIEC_ANY::getToStringBufferSize() const {
   return csmStringBufferSize[getDataTypeID()];
 }

@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Milan Vathoopan, Alois Zoitl - initial API and implementation and/or initial documentation
@@ -32,69 +33,64 @@ extern "C" {
 #include <ldkc_kbus_register_communication.h>
 }
 
-class WagoPFCProcessInterface : public CProcessInterfaceBase{
+class WagoPFCProcessInterface : public CProcessInterfaceBase {
   public:
     // wago PFC process interface declaration
-    WagoPFCProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
-        const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData,
-        TForteByte *paFBVarsData);
+    WagoPFCProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
+        TForteByte *paFBConnData, TForteByte *paFBVarsData);
     virtual ~WagoPFCProcessInterface();
 
     // cppcheck-suppress noConstructor
-        class CKBusHandler : public CExternalEventHandler, public CThread{
-            DECLARE_HANDLER(CKBusHandler)
+    class CKBusHandler : public CExternalEventHandler, public CThread {
+      DECLARE_HANDLER(CKBusHandler)
 
-        public:
-          //!KBus interface handling is up and running correctly
-          bool isKBusRunning();
-          //bool onKBusCylce(WagoPFCProcessInterface &pa_roKBusHandler); can be used for more complex kbus handling
-          bool getTerminalId(TForteUInt8 paSlot);
-          tldkc_KbusInfo_TerminalInfo *getTerminalInfo(TForteUInt8 paSlot);
-          void registerKBusReadFB(WagoPFCProcessInterface *paFB);
-          void unregisterKBusReadFB(WagoPFCProcessInterface *paFB);
-          void writeOutputDataBitToKBus(tldkc_KbusInfo_TerminalInfo *paTerminal, TForteUInt32,
-              bool paOutDataBool);
-          void writeOutputDataWordToKBus(tldkc_KbusInfo_TerminalInfo *paTerminal,
-              TForteUInt32 paChannel, TForteWord paOutDataWord);
-          void readInputDataBitfromKBus(tldkc_KbusInfo_TerminalInfo *paTerminal,
-              TForteUInt32 paChannel, bool *paInDataBool);
-          void readInputDataWordfromKBus(tldkc_KbusInfo_TerminalInfo *paTerminal,
-              TForteUInt32 paChannel, TForteWord *paInDataWord);
-          virtual void run();
-          /*!Go through the read list notifying the registered FBs on the new cycle allowing
-           * them to update their data and if necessary activate an event chain*/
+      public:
+        //!KBus interface handling is up and running correctly
+        bool isKBusRunning();
+        //bool onKBusCylce(WagoPFCProcessInterface &pa_roKBusHandler); can be used for more complex kbus handling
+        bool isIdValid(TForteUInt8 paSlot);
+        tldkc_KbusInfo_TerminalInfo *getTerminalInfo(TForteUInt8 paSlot);
+        void registerKBusReadFB(WagoPFCProcessInterface *paFB);
+        void unregisterKBusReadFB(WagoPFCProcessInterface *paFB);
+        void writeOutputDataBitToKBus(tldkc_KbusInfo_TerminalInfo *paTerminal, TForteUInt32, bool paOutDataBool);
+        void writeOutputDataWordToKBus(tldkc_KbusInfo_TerminalInfo *paTerminal, TForteUInt32 paChannel, TForteWord paOutDataWord);
+        void readInputDataBitfromKBus(tldkc_KbusInfo_TerminalInfo *paTerminal, TForteUInt32 paChannel, bool *paInDataBool);
+        void readInputDataWordfromKBus(tldkc_KbusInfo_TerminalInfo *paTerminal, TForteUInt32 paChannel, TForteWord *paInDataWord);
+        virtual void run();
+        /*!Go through the read list notifying the registered FBs on the new cycle allowing
+         * them to update their data and if necessary activate an event chain*/
 
-          /* functions needed for the external event handler interface */
-          void enableHandler(void);
-          void disableHandler(void);
-          void setPriority(int paPriority);
-          int getPriority(void) const;
+        /* functions needed for the external event handler interface */
+        void enableHandler(void);
+        void disableHandler(void);
+        void setPriority(int paPriority);
+        int getPriority(void) const;
 
-        private:
-          // Private methods
-          void updateReadData();
-          void closeKBusInterface();
-          bool triggerKBusCycle();
-          bool loadTerminalInformation();
+      private:
+        // Private methods
+        void updateReadData();
+        void closeKBusInterface();
+        bool triggerKBusCycle();
+        bool loadTerminalInformation();
 
-          //Valid device ids are always greater than 0
-          typedef CSinglyLinkedList<WagoPFCProcessInterface *> TReadFBContainer;
+        //Valid device ids are always greater than 0
+        typedef CSinglyLinkedList<WagoPFCProcessInterface *> TReadFBContainer;
 
-          static const tDeviceId scmInvalidDeviceId = -1;
+        static const tDeviceId scmInvalidDeviceId = -1;
 
-          TReadFBContainer mReadFBList;
-          CSyncObject mReadFBListSync;
+        TReadFBContainer mReadFBList;
+        CSyncObject mReadFBListSync;
 
-          //Data types for KBus Search
-          tApplicationDeviceInterface * mAppDevInterface;
-          uint32_t mTaskId;
-          tDeviceId mKBusDeviceId;
+        //Data types for KBus Search
+        tApplicationDeviceInterface * mAppDevInterface;
+        uint32_t mTaskId;
+        tDeviceId mKBusDeviceId;
 
-          /*KBus Terminal information */
-          size_t mTerminalCount;
-          u16 mTerminalIds[LDKC_KBUS_TERMINAL_COUNT_MAX];
-          tldkc_KbusInfo_TerminalInfo mTerminalDescription[LDKC_KBUS_TERMINAL_COUNT_MAX];
-      };
+        /*KBus Terminal information */
+        size_t mTerminalCount;
+        u16 mTerminalIds[LDKC_KBUS_TERMINAL_COUNT_MAX];
+        tldkc_KbusInfo_TerminalInfo mTerminalDescription[LDKC_KBUS_TERMINAL_COUNT_MAX];
+    };
 
   protected:
     // Protected member variables

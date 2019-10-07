@@ -1,10 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2018 ACIN, Profactor GmbH, nxtControl GmbH, fortiss GmbH,
  *                           Johannes Kepler University
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Alois Zoitl, Thomas Strasser, Gunnar Grabmaier, Smodic Rene,
@@ -71,11 +72,11 @@ struct SAdapterInstanceDef{
 struct SFBInterfaceSpec{
     TForteUInt8 m_nNumEIs; //!< Number of event inputs (max 254)
     const CStringDictionary::TStringId* m_aunEINames; //!< List of the event input names
-    const TDataIOID* m_anEIWith; //!< Input WITH reference list. This list contains an array of input data ids. For each input event the assiciated data inputs are listed. The start for each input event is specified in the m_anEIWithIndexes field. The end is defined trough the value 255.
+    const TDataIOID* m_anEIWith; //!< Input WITH reference list. This list contains an array of input data ids. For each input event the associated data inputs are listed. The start for each input event is specified in the m_anEIWithIndexes field. The end is defined trough the value 255.
     const TForteInt16* m_anEIWithIndexes; //!< Index list for each input event. This list gives for each input event an entry in the m_anEIWith. Input events are numbered starting from 0. if the input event has no assciated data inputs -1 is the entry at this event inputs postion.
     TForteUInt8 m_nNumEOs; //!< Number of event outputs (max 254)
     const CStringDictionary::TStringId* m_aunEONames; //!< List of the event output names
-    const TDataIOID* m_anEOWith; //!< Output WITH reference list. This list contains an array of output data ids. For each output event the assiciated data outputs are listed. The start for each output event is specified in the m_anEOWithIndexes field. The end is defined trough the value 255.
+    const TDataIOID* m_anEOWith; //!< Output WITH reference list. This list contains an array of output data ids. For each output event the associated data outputs are listed. The start for each output event is specified in the m_anEOWithIndexes field. The end is defined trough the value 255.
     const TForteInt16* m_anEOWithIndexes; //!< Index list for each output event. This list gives for each output event an entry in the m_anEOWith. Output events are numbered starting from 0. if the output event has no assciated data outputs -1 is the entry at this event outputs postion. Additionally at the postion m_nNumEOs in this list an index to an own list in the m_anEOWith list is stored specifying all output data port that are not associated with any output event. That values will be updated on every FB invocation.
     TForteUInt8 m_nNumDIs; //!< Number of data inputs (max 254)
     const CStringDictionary::TStringId* m_aunDINames; //!< List of the data input names
@@ -425,13 +426,6 @@ class CFunctionBlock{
         TForteByte *pa_acDataBuf);
 
     void freeAllData();
-
-    /*!\brief Get the time elapsed since forte was started
-     *
-     * This function allows algorithms to easily access the current forte time in IEC 61131-3 units.
-     * @return the time elapsed since forte was started
-     */
-    const CIEC_TIME TIME();
 
     const SFBInterfaceSpec* m_pstInterfaceSpec; //!< Pointer to the interface specification
     CEventConnection *mEOConns; //!< A list of event connections pointers storing for each event output the event connection. If the output event is not connected the pointer is 0.

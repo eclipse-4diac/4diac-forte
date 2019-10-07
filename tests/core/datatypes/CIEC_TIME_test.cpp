@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011, 2103 ACIN, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl - initial API and implementation and/or initial documentation
@@ -115,7 +116,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   strcpy(cBuffer, "");*/
 
   BOOST_CHECK_EQUAL(nTest.fromString("TIME#4h36m"), 10);
-  BOOST_CHECK_EQUAL(nTest, 16560000LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000));
+  BOOST_CHECK_EQUAL(nTest, 16560000LL * (cgForteTimeBaseUnitsPerSecond / 1000));
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#16560000ms");
@@ -123,7 +124,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = 0;
 
   BOOST_CHECK_EQUAL(nTest.fromString("time#4h36m"), 10);
-  BOOST_CHECK_EQUAL(nTest, 16560000LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000));
+  BOOST_CHECK_EQUAL(nTest, 16560000LL * (cgForteTimeBaseUnitsPerSecond / 1000));
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#16560000ms");
@@ -131,7 +132,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = 0;
 
   BOOST_CHECK_EQUAL(nTest.fromString("T#4h36m"), 7);
-  BOOST_CHECK_EQUAL(nTest, 16560000LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000));
+  BOOST_CHECK_EQUAL(nTest, 16560000LL * (cgForteTimeBaseUnitsPerSecond / 1000));
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#16560000ms");
@@ -139,7 +140,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = 0;
 
   BOOST_CHECK_EQUAL(nTest.fromString("t#4h36m"), 7);
-  BOOST_CHECK_EQUAL(nTest, 16560000LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000));
+  BOOST_CHECK_EQUAL(nTest, 16560000LL * (cgForteTimeBaseUnitsPerSecond / 1000));
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#16560000ms");
@@ -153,7 +154,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   strcpy(cBuffer, "");*/
 
   BOOST_CHECK_EQUAL(nTest.fromString("TIME#3s_22ms"), 12);
-  BOOST_CHECK_EQUAL(nTest, (CIEC_TIME::TValueType)(3022LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000LL)));
+  BOOST_CHECK_EQUAL(nTest, (CIEC_TIME::TValueType)(3022LL * (cgForteTimeBaseUnitsPerSecond / 1000LL)));
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 8);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#3022ms");
@@ -161,7 +162,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = 0;
 
   BOOST_CHECK_EQUAL(nTest.fromString("time#3s_22ms"), 12);
-  BOOST_CHECK_EQUAL(nTest, 3022LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000LL));
+  BOOST_CHECK_EQUAL(nTest, 3022LL * (cgForteTimeBaseUnitsPerSecond / 1000LL));
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 8);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#3022ms");
@@ -169,7 +170,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = 0;
 
   BOOST_CHECK_EQUAL(nTest.fromString("T#3s_22ms"), 9);
-  BOOST_CHECK_EQUAL(nTest, 3022LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000LL));
+  BOOST_CHECK_EQUAL(nTest, 3022LL * (cgForteTimeBaseUnitsPerSecond / 1000LL));
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 8);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#3022ms");
@@ -177,7 +178,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = 0;
 
   BOOST_CHECK_EQUAL(nTest.fromString("t#3s_22ms"), 9);
-  BOOST_CHECK_EQUAL(nTest, 3022LL * (FORTE_TIME_BASE_UNITS_PER_SECOND / 1000LL));
+  BOOST_CHECK_EQUAL(nTest, 3022LL * (cgForteTimeBaseUnitsPerSecond / 1000LL));
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 8);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#3022ms");
@@ -185,7 +186,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = 0;
 }
 
-BOOST_AUTO_TEST_CASE(time_fromString_with_microseconds_test){
+BOOST_AUTO_TEST_CASE(toString_with_microseconds_test){
   CIEC_TIME time;
   char cBuffer[17];
 
@@ -214,14 +215,14 @@ BOOST_AUTO_TEST_CASE(time_fromString_with_microseconds_test){
 BOOST_AUTO_TEST_CASE(time_comparision_tests){
   CIEC_TIME time1, time2;
 
-  time1.setFromMiliSeconds(200);
-  time2.setFromMiliSeconds(200);
+  time1.setFromMilliSeconds(200);
+  time2.setFromMilliSeconds(200);
 
   BOOST_CHECK(time1 == time2);
   BOOST_CHECK_EQUAL(true, time1 >= time2);
   BOOST_CHECK_EQUAL(true, time1 <= time2);
 
-  time2.setFromMiliSeconds(150);
+  time2.setFromMilliSeconds(150);
 
   BOOST_CHECK_EQUAL(true, time1 > time2);
   BOOST_CHECK_EQUAL(true, time1 >= time2);
@@ -229,13 +230,149 @@ BOOST_AUTO_TEST_CASE(time_comparision_tests){
   BOOST_CHECK_EQUAL(false, time1 < time2);
   BOOST_CHECK_EQUAL(false, time1 <= time2);
 
-  time1.setFromMiliSeconds(120);
+  time1.setFromMilliSeconds(120);
   BOOST_CHECK_EQUAL(false, time1 > time2);
   BOOST_CHECK_EQUAL(false, time1 >= time2);
   BOOST_CHECK_EQUAL(true, time1 != time2);
   BOOST_CHECK_EQUAL(true, time1 < time2);
   BOOST_CHECK_EQUAL(true, time1 <= time2);
 
+}
+
+BOOST_AUTO_TEST_CASE(get_time_in_nanoseconds)
+{
+  CIEC_TIME time;
+
+  time.setFromNanoSeconds(1);
+  BOOST_CHECK(time.getInNanoSeconds() == 1);
+
+  time.setFromNanoSeconds(10);
+  BOOST_CHECK(time.getInNanoSeconds() == 10);
+
+  time.setFromNanoSeconds(999);
+  BOOST_CHECK(time.getInNanoSeconds() == 999);
+
+  time.setFromNanoSeconds(10325643);
+  BOOST_CHECK(time.getInNanoSeconds() == 10325643);
+}
+
+BOOST_AUTO_TEST_CASE(parse_time_literal_in_milliseconds)
+{
+  CIEC_TIME time;
+
+  time.fromString("T#1ms");
+  BOOST_CHECK_EQUAL(time.getInMilliSeconds(), 1);
+
+  time.fromString("T#10ms");
+  BOOST_CHECK_EQUAL(time.getInMilliSeconds(), 10);
+
+  time.fromString("T#999ms");
+  BOOST_CHECK_EQUAL(time.getInMilliSeconds(), 999);
+
+  time.fromString("T#10325643ms");
+  BOOST_CHECK_EQUAL(time.getInMilliSeconds(), 10325643);
+}
+
+BOOST_AUTO_TEST_CASE(parse_positive_signed_time_literal_in_milliseconds)
+{
+  CIEC_TIME time;
+
+  time.fromString("T#+1ms");
+  BOOST_CHECK_EQUAL(time.getInMilliSeconds(), 1);
+
+  time.fromString("T#+10ms");
+  BOOST_CHECK_EQUAL(time.getInMilliSeconds(), 10);
+
+  time.fromString("T#+999ms");
+  BOOST_CHECK_EQUAL(time.getInMilliSeconds(), 999);
+
+  time.fromString("T#+10325643ms");
+  BOOST_CHECK_EQUAL(time.getInMilliSeconds(), 10325643);
+}
+
+BOOST_AUTO_TEST_CASE(parse_negative_signed_time_literal_in_milliseconds)
+{
+  CIEC_TIME time;
+
+  time.fromString("T#-1ms");
+  BOOST_CHECK_EQUAL(time.getInMilliSeconds(), -1);
+
+  time.fromString("T#-10ms");
+  BOOST_CHECK_EQUAL(time.getInMilliSeconds(), -10);
+
+  time.fromString("T#-999ms");
+  BOOST_CHECK_EQUAL(time.getInMilliSeconds(), -999);
+
+  time.fromString("T#-10325643ms");
+  BOOST_CHECK_EQUAL(time.getInMilliSeconds(), -10325643);
+}
+
+BOOST_AUTO_TEST_CASE(parse_time_literal_in_microseconds)
+{
+  CIEC_TIME time;
+
+  time.fromString("T#1us");
+  BOOST_CHECK_EQUAL(time.getInMicroSeconds(), 1);
+
+  time.fromString("T#10us");
+  BOOST_CHECK_EQUAL(time.getInMicroSeconds(), 10);
+
+  time.fromString("T#999us");
+  BOOST_CHECK_EQUAL(time.getInMicroSeconds(), 999);
+
+  time.fromString("T#10325643us");
+  BOOST_CHECK_EQUAL(time.getInMicroSeconds(), 10325643);
+}
+
+BOOST_AUTO_TEST_CASE(parse_negative_signed_time_literal_in_microseconds)
+{
+  CIEC_TIME time;
+
+  time.fromString("T#-1us");
+  BOOST_CHECK_EQUAL(time.getInMicroSeconds(), -1);
+
+  time.fromString("T#-10us");
+  BOOST_CHECK_EQUAL(time.getInMicroSeconds(), -10);
+
+  time.fromString("T#-999us");
+  BOOST_CHECK_EQUAL(time.getInMicroSeconds(), -999);
+
+  time.fromString("T#-10325643us");
+  BOOST_CHECK_EQUAL(time.getInMicroSeconds(), -10325643);
+}
+
+BOOST_AUTO_TEST_CASE(parse_time_literal_in_nanoseconds)
+{
+  CIEC_TIME time;
+
+  time.fromString("T#1ns");
+  BOOST_CHECK_EQUAL(time.getInNanoSeconds(), 1);
+
+  time.fromString("T#10ns");
+  BOOST_CHECK_EQUAL(time.getInNanoSeconds(), 10);
+
+  time.fromString("T#999ns");
+  BOOST_CHECK_EQUAL(time.getInNanoSeconds(), 999);
+
+  time.fromString("T#10325643ns");
+  BOOST_CHECK_EQUAL(time.getInNanoSeconds(), 10325643);
+}
+
+BOOST_AUTO_TEST_CASE(parse_negative_signed_time_literal_in_nanoseconds)
+{
+  CIEC_TIME time;
+
+  time.fromString("T#-1ns");
+  BOOST_CHECK_EQUAL(time.getInNanoSeconds(), -1);
+
+  time.fromString("T#-10ns");
+  BOOST_CHECK_EQUAL(time.getInNanoSeconds(), -10);
+
+  time.fromString("T#-999ns");
+  BOOST_CHECK_EQUAL(time.getInNanoSeconds(), -999);
+
+  time.fromString("T#-10325643ns");
+  BOOST_CHECK_EQUAL(time.getInNanoSeconds(), -10325643);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

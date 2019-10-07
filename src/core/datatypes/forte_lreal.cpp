@@ -1,15 +1,17 @@
 /*******************************************************************************
-  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Thomas Strasser, Ingomar Müller, Alois Zoitl,
-  *    Ingo Hegny, Martin Melik Merkumians, Monika Wenger
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Thomas Strasser, Ingomar Müller, Alois Zoitl,
+ *    Ingo Hegny, Martin Melik Merkumians, Monika Wenger
+ *      - initial implementation and rework communication infrastructure
+ *******************************************************************************/
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
@@ -44,10 +46,10 @@ int CIEC_LREAL::fromString(const char *paValue){
   return static_cast<int>(pcEnd - paValue);
 }
 
-int CIEC_LREAL::toString(char* paValue, unsigned int paBufferSize) const{
+int CIEC_LREAL::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal;
   nRetVal = forte_snprintf(paValue, paBufferSize, "%.*g", 15, getTDFLOAT());
-  if((nRetVal < -1) || (nRetVal >= (int) paBufferSize)){
+  if((nRetVal < -1) || (nRetVal >= static_cast<int>(paBufferSize))) {
     nRetVal = -1;
   }
   return nRetVal;
@@ -60,13 +62,13 @@ void CIEC_LREAL::setValue(const CIEC_ANY& paValue){
       setValueSimple(paValue);
       break;
     case e_REAL:
-      (*this) = (((CIEC_REAL &) paValue)).operator TForteFloat();
+      (*this) = static_cast<const CIEC_REAL &>(paValue).operator TForteFloat();
       break;
     case e_STRING:
-      (*this).fromString(((CIEC_STRING&) paValue).getValue());
+      (*this).fromString(reinterpret_cast<const CIEC_STRING&>(paValue).getValue());
       break;
     case e_WSTRING:
-      (*this).fromString(((CIEC_WSTRING&) paValue).getValue());
+      (*this).fromString(reinterpret_cast<const CIEC_WSTRING&>(paValue).getValue());
       break;
     case e_SINT:
     case e_INT:

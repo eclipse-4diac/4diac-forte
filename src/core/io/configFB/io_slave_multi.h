@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2017 - 2018 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
@@ -18,95 +19,93 @@
 #include "io_adapter_multi.h"
 #include "io_master_multi.h"
 
-
 namespace forte {
   namespace core {
-    namespace IO {
+    namespace io {
 
 #define FUNCTION_BLOCK_CTOR_FOR_IO_MULTI_SLAVE(fbclass, fbBaseClass, type) \
- fbclass(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : \
- fbBaseClass( (const TForteUInt8* const) &scm_slaveConfigurationIO, scm_slaveConfigurationIO_num, type, pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData)
+ fbclass(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) : \
+ fbBaseClass( (const TForteUInt8* const) &scmSlaveConfigurationIO, scmSlaveConfigurationIONum, type, paSrcRes, &scm_stFBInterfaceSpec, paInstanceNameId, m_anFBConnData, m_anFBVarsData)
 
-class IOConfigFBMultiSlave: public IOConfigFBBase {
-public:
-  IOConfigFBMultiSlave(const TForteUInt8* const paSlaveConfigurationIO,
-      const TForteUInt8 paSlaveConfigurationIO_num, int type,
-      CResource *pa_poSrcRes,
-      const SFBInterfaceSpec *pa_pstInterfaceSpec,
-      const CStringDictionary::TStringId pa_nInstanceNameId,
-      TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
-  virtual ~IOConfigFBMultiSlave();
+      class IOConfigFBMultiSlave : public IOConfigFBBase {
+        public:
+          IOConfigFBMultiSlave(const TForteUInt8* const paSlaveConfigurationIO, const TForteUInt8 paSlaveConfigurationIONum, int paType, CResource *paSrcRes,
+              const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData,
+              TForteByte *paFBVarsData);
+          virtual ~IOConfigFBMultiSlave();
 
-protected:
-  CIEC_BOOL &QI() {
-    return *static_cast<CIEC_BOOL*>(getDI(0));
-  }
+        protected:
+          CIEC_BOOL &QI() {
+            return *static_cast<CIEC_BOOL*>(getDI(0));
+          }
 
-  CIEC_BOOL &QO() {
-    return *static_cast<CIEC_BOOL*>(getDO(0));
-  }
+          CIEC_BOOL &QO() {
+            return *static_cast<CIEC_BOOL*>(getDO(0));
+          }
 
-  CIEC_WSTRING &STATUS() {
-    return *static_cast<CIEC_WSTRING*>(getDO(1));
-  }
+          CIEC_WSTRING &STATUS() {
+            return *static_cast<CIEC_WSTRING*>(getDO(1));
+          }
 
-  static const TEventID scm_nEventMAPID = 0;
+          static const TEventID scm_nEventMAPID = 0;
 
-  static const TEventID scm_nEventMAPOID = 0;
-  static const TEventID scm_nEventINDID = 1;
+          static const TEventID scm_nEventMAPOID = 0;
+          static const TEventID scm_nEventINDID = 1;
 
-  IOConfigFBMultiAdapter& BusAdapterOut() {
-    return (*static_cast<IOConfigFBMultiAdapter*>(m_apoAdapters[0]));
-  }
+          IOConfigFBMultiAdapter& BusAdapterOut() {
+            return (*static_cast<IOConfigFBMultiAdapter*>(m_apoAdapters[0]));
+          }
 
-  static const int scm_nBusAdapterOutAdpNum = 0;
-  IOConfigFBMultiAdapter& BusAdapterIn() {
-    return (*static_cast<IOConfigFBMultiAdapter*>(m_apoAdapters[1]));
-  }
+          static const int scm_nBusAdapterOutAdpNum = 0;
+          IOConfigFBMultiAdapter& BusAdapterIn() {
+            return (*static_cast<IOConfigFBMultiAdapter*>(m_apoAdapters[1]));
+          }
 
-  static const int scm_nBusAdapterInAdpNum = 1;
+          static const int scm_nBusAdapterInAdpNum = 1;
 
-  virtual void executeEvent(int pa_nEIID);
+          virtual void executeEvent(int paEIID);
 
-  IOConfigFBMultiMaster* master;
+          IODeviceMultiController& getController() {
+            return (*static_cast<IODeviceMultiController*>(mMaster->getDeviceController()));
+          }
 
-  int index;
+          virtual const char* init() {
+            return 0;
+          }
 
-  int type;
+          virtual void deInit() {
+            //do nothing
+          }
 
-  IODeviceMultiController& getController() {
-    return (*static_cast<IODeviceMultiController*>(master->getDeviceController()));
-  }
+          virtual void initHandles() = 0;
 
-  bool initialized;
+          void initHandle(IODeviceController::HandleDescriptor *paHandleDescriptor);
 
-  virtual const char* init() {
-    return 0;
-  }
+          static const char* const scmOK;
+          static const char* const scmMasterNotFound;
 
-  virtual void deInit() {
+          int mIndex;
 
-  }
+          const TForteUInt8* mSlaveConfigurationIO;
 
-  virtual void initHandles() = 0;
+        private:
 
-  void initHandle(IODeviceMultiController::HandleDescriptor *handleDescriptor);
+          IOConfigFBMultiMaster* mMaster;
 
-  static const char* const scmOK;
-  static const char* const scmMasterNotFound;
+          int mType;
 
-  const TForteUInt8* mSlaveConfigurationIO;
-  TForteUInt8 mSlaveConfigurationIO_num;
-  bool* mSlaveConfigurationIO_isDefault;
+          bool mInitialized;
 
-private:
-  const char* handleInitEvent();
+          TForteUInt8 mSlaveConfigurationIONum;
+          bool* mSlaveConfigurationIOIsDefault;
 
-  static const char* const scmStopped;
-  static const char* const scmNotFound;
-  static const char* const scmIncorrectType;
+          const char* handleInitEvent();
 
-};
+          static const char* const scmStopped;
+          static const char* const scmNotFound;
+          static const char* const scmIncorrectType;
+
+      };
 
     } //namespace IO
   } //namepsace core

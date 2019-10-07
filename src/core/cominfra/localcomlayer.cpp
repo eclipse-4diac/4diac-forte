@@ -1,14 +1,16 @@
 /*******************************************************************************
-  * Copyright (c) 2011-2014 fortiss and TU Wien ACIN.
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Alois Zoitl - initial implementation and bug fixes
-  *    Patrik Smejkal - rename interrupt in interruptCCommFB
-  *******************************************************************************/
+ * Copyright (c) 2011-2014 fortiss and TU Wien ACIN.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Alois Zoitl - initial implementation and bug fixes
+ *    Patrik Smejkal - rename interrupt in interruptCCommFB
+ *******************************************************************************/
 #include "localcomlayer.h"
 #include "commfb.h"
 #include "../resource.h"
@@ -93,9 +95,9 @@ void CLocalComLayer::closeConnection(){
 }
 
 /********************** CLocalCommGroupsManager *************************************/
-CLocalComLayer::SLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::registerPubl(const CStringDictionary::TStringId pa_nID, CLocalComLayer *pa_poLayer){
+CLocalComLayer::CLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::registerPubl(const CStringDictionary::TStringId pa_nID, CLocalComLayer *pa_poLayer){
   CCriticalRegion criticalRegion(m_oSync);
-  SLocalCommGroup *poGroup = findLocalCommGroup(pa_nID);
+  CLocalCommGroup *poGroup = findLocalCommGroup(pa_nID);
   if(0 == poGroup){
     poGroup = createLocalCommGroup(pa_nID);
   }
@@ -104,7 +106,7 @@ CLocalComLayer::SLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::regist
   return poGroup;
 }
 
-void CLocalComLayer::CLocalCommGroupsManager::unregisterPubl(SLocalCommGroup *pa_poGroup, CLocalComLayer *pa_poLayer){
+void CLocalComLayer::CLocalCommGroupsManager::unregisterPubl(CLocalCommGroup *pa_poGroup, CLocalComLayer *pa_poLayer){
   CCriticalRegion criticalRegion(m_oSync);
   removeListEntry(pa_poGroup->m_lPublList, pa_poLayer);
 
@@ -114,9 +116,9 @@ void CLocalComLayer::CLocalCommGroupsManager::unregisterPubl(SLocalCommGroup *pa
 
 }
 
-CLocalComLayer::SLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::registerSubl(const CStringDictionary::TStringId pa_nID, CLocalComLayer *pa_poLayer){
+CLocalComLayer::CLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::registerSubl(const CStringDictionary::TStringId pa_nID, CLocalComLayer *pa_poLayer){
   CCriticalRegion criticalRegion(m_oSync);
-  SLocalCommGroup *poGroup = findLocalCommGroup(pa_nID);
+  CLocalCommGroup *poGroup = findLocalCommGroup(pa_nID);
   if(0 == poGroup){
     poGroup = createLocalCommGroup(pa_nID);
   }
@@ -125,7 +127,7 @@ CLocalComLayer::SLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::regist
   return poGroup;
 }
 
-void CLocalComLayer::CLocalCommGroupsManager::unregisterSubl(SLocalCommGroup *pa_poGroup, CLocalComLayer *pa_poLayer){
+void CLocalComLayer::CLocalCommGroupsManager::unregisterSubl(CLocalCommGroup *pa_poGroup, CLocalComLayer *pa_poLayer){
   CCriticalRegion criticalRegion(m_oSync);
   removeListEntry(pa_poGroup->m_lSublList, pa_poLayer);
 
@@ -134,11 +136,11 @@ void CLocalComLayer::CLocalCommGroupsManager::unregisterSubl(SLocalCommGroup *pa
   }
 }
 
-CLocalComLayer::SLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::findLocalCommGroup(CStringDictionary::TStringId pa_nID){
-  SLocalCommGroup *poGroup = 0;
+CLocalComLayer::CLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::findLocalCommGroup(CStringDictionary::TStringId pa_nID){
+  CLocalCommGroup *poGroup = 0;
 
   if(!m_lstLocalCommGroups.isEmpty()){
-    CSinglyLinkedList<SLocalCommGroup>::Iterator it = m_lstLocalCommGroups.begin();
+    CSinglyLinkedList<CLocalCommGroup>::Iterator it = m_lstLocalCommGroups.begin();
     while(it != m_lstLocalCommGroups.end()){
       if((*it).m_nGroupName == pa_nID){
         poGroup = &(*it);
@@ -151,9 +153,9 @@ CLocalComLayer::SLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::findLo
   return poGroup;
 }
 
-CLocalComLayer::SLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::createLocalCommGroup(CStringDictionary::TStringId pa_nID){
-  m_lstLocalCommGroups.pushFront(SLocalCommGroup(pa_nID));
-  CSinglyLinkedList<SLocalCommGroup>::Iterator it = m_lstLocalCommGroups.begin();
+CLocalComLayer::CLocalCommGroup* CLocalComLayer::CLocalCommGroupsManager::createLocalCommGroup(CStringDictionary::TStringId pa_nID){
+  m_lstLocalCommGroups.pushFront(CLocalCommGroup(pa_nID));
+  CSinglyLinkedList<CLocalCommGroup>::Iterator it = m_lstLocalCommGroups.begin();
   return &(*it);
 }
 
@@ -176,9 +178,9 @@ void CLocalComLayer::CLocalCommGroupsManager::removeListEntry(CSinglyLinkedList<
   }
 }
 
-void CLocalComLayer::CLocalCommGroupsManager::removeCommGroup(SLocalCommGroup *pa_poGroup){
-  CSinglyLinkedList<SLocalCommGroup>::Iterator itRunner = m_lstLocalCommGroups.begin();
-  CSinglyLinkedList<SLocalCommGroup>::Iterator itRevNode = m_lstLocalCommGroups.end();
+void CLocalComLayer::CLocalCommGroupsManager::removeCommGroup(CLocalCommGroup *pa_poGroup){
+  CSinglyLinkedList<CLocalCommGroup>::Iterator itRunner = m_lstLocalCommGroups.begin();
+  CSinglyLinkedList<CLocalCommGroup>::Iterator itRevNode = m_lstLocalCommGroups.end();
 
   while(itRunner != m_lstLocalCommGroups.end()){
     if((*itRunner).m_nGroupName == pa_poGroup->m_nGroupName){

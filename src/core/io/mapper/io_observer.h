@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
@@ -18,25 +19,26 @@
 
 namespace forte {
   namespace core {
-    namespace IO {
+    namespace io {
 
-class IOObserver {
-  friend class IOMapper;
+      class IOObserver {
+          friend class IOMapper;
 
-public:
-  IOObserver();
-  virtual ~IOObserver();
+        public:
+          IOObserver();
+          virtual ~IOObserver();
 
-  virtual bool onChange() = 0;
+          virtual bool onChange() = 0;
 
-protected:
-  virtual void onHandle(IOHandle *handle);
-  virtual void dropHandle();
+        protected:
+          IOHandle* mHandle;
+          CIEC_ANY::EDataTypeID mType;
+          IOMapper::Direction mDirection;
 
-  IOHandle* handle;
-  CIEC_ANY::EDataTypeID type;
-  IOMapper::Direction direction;
-};
+          virtual void onHandle(IOHandle *paHandle);
+          virtual void dropHandle();
+
+      };
 
     } //namespace IO
   } //namepsace core

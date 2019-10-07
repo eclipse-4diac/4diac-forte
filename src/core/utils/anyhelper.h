@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2011 - 2013 ACIN, Profactor GmbH, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Alois Zoitl, Monika Wenger, Matthias Plasch
@@ -42,11 +43,11 @@ void anyBitFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
     case CIEC_ANY::e_WORD:
       pa_roFB.template calculateValue<CIEC_WORD>();
       break;
-    #ifdef FORTE_USE_64BIT_DATATYPES
+#ifdef FORTE_USE_64BIT_DATATYPES
       case  CIEC_ANY::e_LWORD:
         pa_roFB.template calculateValue<CIEC_LWORD>();
         break;
-    #endif
+#endif //FORTE_USE_64BIT_DATATYPES
     default:
       pa_roFB.template calculateValue<CIEC_DWORD>();
       break;
@@ -62,11 +63,11 @@ void anyBitFBHelperWithoutBool(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB)
     case CIEC_ANY::e_WORD:
       pa_roFB.template calculateValue<CIEC_WORD>();
       break;
-    #ifdef FORTE_USE_64BIT_DATATYPES
+#ifdef FORTE_USE_64BIT_DATATYPES
       case  CIEC_ANY::e_LWORD:
         pa_roFB.template calculateValue<CIEC_LWORD>();
         break;
-    #endif
+#endif //FORTE_USE_64BIT_DATATYPES
     case CIEC_ANY::e_DWORD:
       pa_roFB.template calculateValue<CIEC_DWORD>();
       break;
@@ -81,28 +82,28 @@ template<class T>
 void anyMagnitudeFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
   switch (pa_eDataTypeId){
     case CIEC_ANY::e_REAL:
-      #ifdef FORTE_USE_REAL_DATATYPE
+#ifdef FORTE_USE_REAL_DATATYPE
         pa_roFB.template calculateValue<CIEC_REAL>();
-      #else
+#else //FORTE_USE_REAL_DATATYPE
         DEVLOG_ERROR("REAL is not compiled in this version of forte and you are still trying to use it. Exiting");
         assert(0);
-      #endif
+#endif //FORTE_USE_REAL_DATATYPE
       break;
     case CIEC_ANY::e_LREAL:
-      #ifdef FORTE_USE_LREAL_DATATYPE
+#ifdef FORTE_USE_LREAL_DATATYPE
           pa_roFB.template calculateValue<CIEC_LREAL>();
-      #else
+#else //FORTE_USE_LREAL_DATATYPE
           DEVLOG_ERROR("LREAL is not compiled in this version of forte and you are still trying to use it. Exiting");
           assert(0);
-      #endif
+#endif //FORTE_USE_LREAL_DATATYPE
       break;
     default:
       if(pa_eDataTypeId <= CIEC_ANY::e_TIME){
-        #ifdef FORTE_USE_64BIT_DATATYPES
+#ifdef FORTE_USE_64BIT_DATATYPES
           pa_roFB.template calculateValue<CIEC_LINT>();
-        #else
+#else //FORTE_USE_64BIT_DATATYPES
           pa_roFB.template calculateValue<CIEC_DINT>();
-        #endif
+#endif //FORTE_USE_64BIT_DATATYPES
       }
       break;
   }
@@ -117,14 +118,14 @@ void anyIntFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
     case CIEC_ANY::e_DINT:
       pa_roFB.template calculateValue<CIEC_DINT>();
       break;
-    #ifdef FORTE_USE_64BIT_DATATYPES
+#ifdef FORTE_USE_64BIT_DATATYPES
     case CIEC_ANY::e_LINT:
       pa_roFB.template calculateValue<CIEC_LINT>();
       break;
     case CIEC_ANY::e_ULINT:
     pa_roFB.template calculateValue<CIEC_ULINT>();
     break;
-    #endif
+#endif //FORTE_USE_64BIT_DATATYPES
     case CIEC_ANY::e_UINT:
       pa_roFB.template calculateValue<CIEC_UINT>();
       break;
@@ -144,14 +145,14 @@ template<class T>
 void anyRealFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
   switch (pa_eDataTypeId){
     case CIEC_ANY::e_REAL:
-      #ifdef FORTE_USE_REAL_DATATYPE
+#ifdef FORTE_USE_REAL_DATATYPE
         pa_roFB.template calculateValue<CIEC_REAL>();
-      #endif
+#endif //FORTE_USE_REAL_DATATYPE
       break;
     case CIEC_ANY::e_LREAL:
-      #ifdef FORTE_USE_LREAL_DATATYPE
+#ifdef FORTE_USE_LREAL_DATATYPE
         pa_roFB.template calculateValue<CIEC_LREAL>();
-      #endif
+#endif //FORTE_USE_LREAL_DATATYPE
       break;
     default:
       break;

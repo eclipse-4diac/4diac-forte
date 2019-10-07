@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
@@ -18,44 +19,43 @@
 #pragma pack(push, 1) // Disable padding for protocol structs
 
 struct EmbrickHeaderPackage {
-  char address;
-  char command;
-  char checksum;
+    char mAddress;
+    char mCommand;
+    char mChecksum;
 };
 
 struct EmbrickSlaveInitPackage {
-  uint8_t protocolVersion;
-  uint8_t moduleVersion;
-  uint16_t deviceId;
-  uint16_t producerId;
-  uint8_t dataSendLength; // Amount of bytes that the slave expects from the master
-  uint8_t dataReceiveLength; // Amount of bytes that the master expects from the slave
+    uint8_t mProtocolVersion;
+    uint8_t mModuleVersion;
+    uint16_t mDeviceId;
+    uint16_t mProducerId;
+    uint8_t mDataSendLength; // Amount of bytes that the slave expects from the master
+    uint8_t mDataReceiveLength; // Amount of bytes that the master expects from the slave
 
-  static EmbrickSlaveInitPackage fromBuffer(unsigned char* buffer) {
-    EmbrickSlaveInitPackage pkg;
-    memcpy(&pkg, buffer, sizeof(EmbrickSlaveInitPackage));
+    static EmbrickSlaveInitPackage fromBuffer(unsigned char* paBuffer) {
+      EmbrickSlaveInitPackage pkg;
+      memcpy(&pkg, paBuffer, sizeof(EmbrickSlaveInitPackage));
 
-    pkg.deviceId = ntohs(pkg.deviceId);
-    // Switch bytes of deviceId as it is transmitted with a different endianess
-    pkg.deviceId = (uint16_t) (((pkg.deviceId & 0xFF00) >> 8)
-        | ((pkg.deviceId & 0xFF) << 8));
+      pkg.mDeviceId = ntohs(pkg.mDeviceId);
+      // Switch bytes of deviceId as it is transmitted with a different endianess
+      pkg.mDeviceId = (uint16_t) (((pkg.mDeviceId & 0xFF00) >> 8) | ((pkg.mDeviceId & 0xFF) << 8));
 
-    pkg.producerId = ntohs(pkg.producerId);
+      pkg.mProducerId = ntohs(pkg.mProducerId);
 
-    return pkg;
-  }
+      return pkg;
+    }
 };
 
 struct EmbrickMasterInitPackage {
-  uint8_t slaveAddress;
-  uint16_t syncGapMultiplicator;
+    uint8_t mSlaveAddress;
+    uint16_t mSyncGapMultiplicator;
 
-  void toBuffer(unsigned char* buffer) {
-    buffer[0] = slaveAddress;
+    void toBuffer(unsigned char* paBuffer) {
+      paBuffer[0] = mSlaveAddress;
 
-    uint16_t syncGapFactor = htons(this->syncGapMultiplicator);
-    memcpy(buffer + 1, &syncGapFactor, 2);
-  }
+      uint16_t syncGapFactor = htons(this->mSyncGapMultiplicator);
+      memcpy(paBuffer + 1, &syncGapFactor, 2);
+    }
 };
 
 #pragma pack(pop)

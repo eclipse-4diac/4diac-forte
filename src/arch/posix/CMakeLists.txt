@@ -1,12 +1,13 @@
 #*******************************************************************************
-# * Copyright (c) 2010 - 2015 ACIN, Profactor GmbH, fortiss GmbH
-# * All rights reserved. This program and the accompanying materials
-# * are made available under the terms of the Eclipse Public License v1.0
-# * which accompanies this distribution, and is available at
-# * http://www.eclipse.org/legal/epl-v10.html
-# *
-# * Contributors:
-# *  Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny, Martin Melik Merkumians
+# Copyright (c) 2010 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0.
+#
+# SPDX-License-Identifier: EPL-2.0
+# 
+# Contributors:
+#   Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny, Martin Melik Merkumians
 # *      - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
@@ -24,6 +25,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
   forte_add_sourcefile_cpp(../genforte_printer.cpp)
   forte_add_sourcefile_h(../forte_architecture_time.h)
   forte_add_sourcefile_hcpp(../utils/timespec_utils)
+  forte_add_sourcefile_cpp(../genforte_realFunctions.cpp forte_architecture_time.cpp)
   forte_add_to_executable_cpp(main)
   
 
@@ -49,13 +51,12 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 
 
   forte_add_network_layer(SER OFF "ser" CPosixSerCommLayer posixsercommlayer "Enable Forte serial line communication")
-  forte_add_network_layer(MUXSER OFF "muxser" CMuxedSerCommLayer muxedsercommlayer "Enable Forte multiplexed serial line communication")
   
   set(FORTE_RTTI_AND_EXCEPTIONS FALSE CACHE BOOL "Enable RTTI and Exceptions")
   mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)
   
   if(FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)
-    forte_add_definition("-DBOOST_TEST_DYN_LINK -DFORTE_USE_DEFAULT_NEW_AND_DELETE -g -O0 --coverage -fno-inline -fno-elide-constructors -fexceptions -fsanitize=address")
+    forte_add_definition("-DBOOST_TEST_DYN_LINK -g -O0 --coverage -fno-inline -fno-elide-constructors -fno-exceptions -fsanitize=address -DBOOST_NO_EXCEPTIONS")
     forte_add_link_library("-fsanitize=address")
     forte_add_link_library("--coverage")
   else()

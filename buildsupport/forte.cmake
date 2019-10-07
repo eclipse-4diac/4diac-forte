@@ -1,12 +1,13 @@
 #*******************************************************************************
-# * Copyright (c) 2010 -2014 Profactor GmbH, ACIN, fortiss GmbH
-# * All rights reserved. This program and the accompanying materials
-# * are made available under the terms of the Eclipse Public License v1.0
-# * which accompanies this distribution, and is available at
-# * http://www.eclipse.org/legal/epl-v10.html
-# *
-# * Contributors:
-# *    Michael Hofmann, Alois Zoitl, Gerhard Ebenhofer, Matthias Plash, Patrick Smejkal - initial API and implementation and/or initial documentation
+# Copyright (c) 2010 -2014 Profactor GmbH, ACIN, fortiss GmbH
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0.
+#
+# SPDX-License-Identifier: EPL-2.0
+# 
+# Contributors:
+#     Michael Hofmann, Alois Zoitl, Gerhard Ebenhofer, Matthias Plash, Patrick Smejkal - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
 MACRO(forte_add_subdirectory DIRECTORY)
@@ -268,18 +269,76 @@ FUNCTION(forte_add_post_build_command)
   ENDFOREACH(ARG)
 ENDFUNCTION(forte_add_post_build_command)
 
-## forte_add_test (test_name file_name will_fail)
-FUNCTION(forte_add_test arg1 arg2 arg3)
-  ADD_TEST(NAME ${arg1} COMMAND $<TARGET_FILE:forte>)
-  set_tests_properties ( ${arg1} PROPERTIES TIMEOUT ${arg3})
+## forte_add_systemtest_hard (test_name bootfile_name timeout)
+## Fails if any error has been logged
+FUNCTION(forte_add_systemtest_hard arg1 arg2 arg3)
   FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${arg2}" file_str)
   STRING(REPLACE "\\" "\\\\" file_str ${file_str})
-  set_tests_properties (${arg1} PROPERTIES ENVIRONMENT "FORTE_BOOT_FILE=${file_str};FORTE_VCD_FILE=${arg1}.vcd")
-  SET_TESTS_PROPERTIES(${arg1} PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T")
-ENDFUNCTION(forte_add_test)
+  ADD_TEST(NAME ${arg1} COMMAND $<TARGET_FILE:forte> -f ${file_str})
+  set_tests_properties (${arg1} PROPERTIES TIMEOUT ${arg3})
+  SET_TESTS_PROPERTIES(${arg1} PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T|==ERROR") #==ERROR is the output when memore leak happens
+ENDFUNCTION(forte_add_systemtest_hard)
 
-FUNCTION(forte_add_custom_configuration)
-  FOREACH(ARG ${ARGV})
-    SET_PROPERTY(GLOBAL APPEND_STRING PROPERTY FORTE_CUSTOM_CONFIGURATIONS_GLOBAL "${ARG}" \n\n)
-  ENDFOREACH(ARG)
+## forte_add_systemtest_soft (test_name bootfile_name timeout)
+## Fails only by TEST_CONDITION FBs. This is for the case when a FB has to be tested in all
+## its cases, and some of the cases produce logging error
+FUNCTION(forte_add_systemtest_soft arg1 arg2 arg3)
+  FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${arg2}" file_str)
+  STRING(REPLACE "\\" "\\\\" file_str ${file_str})
+  ADD_TEST(NAME ${arg1} COMMAND $<TARGET_FILE:forte> -f ${file_str})
+  set_tests_properties (${arg1} PROPERTIES TIMEOUT ${arg3})
+  SET_TESTS_PROPERTIES(${arg1} PROPERTIES FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED|==ERROR") #==ERROR is the output when memore leak happens
+ENDFUNCTION(forte_add_systemtest_soft)
+
+## forte_add_2dev_systemtests (test_name bootfile_name1 bootfile_name2 extraArgs1 extraArgs2 timeout)
+## Two fortes are executed
+## The bootfiles are added to the args. The first forte is executed in port 61499 and the second in 61500
+## if extraArgs are empty
+
+FUNCTION(forte_add_2dev_systemtests test_name bootfile_name1 bootfile_name2 arg1 arg2 timeout isHard)
+  FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${bootfile_name1}" file_str1)
+  STRING(REPLACE "\\" "\\\\" file_str1 ${file_str1})
+  
+  FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${bootfile_name2}" file_str2)
+  STRING(REPLACE "\\" "\\\\" file_str2 ${file_str2})
+  
+  FILE(TO_NATIVE_PATH "${CMAKE_SOURCE_DIR}/buildsupport/multi_test_2.cmake" scriptFile)
+  STRING(REPLACE "\\" "\\\\" scriptFile ${scriptFile})
+  
+  if (arg1 STREQUAL "")
+    set(arg1 "-c localhost:61499") 
+  endif()
+  
+  if (arg2 STREQUAL "")
+    set(arg2 "-c localhost:61500") 
+  endif()
+  
+  
+  ADD_TEST(NAME ${test_name} COMMAND ${CMAKE_COMMAND}
+         -DCMD=$<TARGET_FILE:forte>
+         -DBOOT1=${file_str1}
+         -DBOOT2=${file_str2}
+         -DARG1=${arg1}
+         -DARG2=${arg2}
+         -P ${scriptFile})
+  
+  set_tests_properties (${test_name} PROPERTIES TIMEOUT ${timeout})
+
+  IF(${isHard})
+    SET_TESTS_PROPERTIES(${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T|==ERROR") #==ERROR is the output when memore leak happens
+  ELSE(${isHard})
+    SET_TESTS_PROPERTIES(${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED|==ERROR") #==ERROR is the output when memore leak happens
+  ENDIF(${isHard}) 
+ENDFUNCTION(forte_add_2dev_systemtests)
+
+FUNCTION(forte_add_env_file test file)
+  FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${file}" file_str)
+  STRING(REPLACE "\\" "\\\\" file_str ${file_str})
+  set_tests_properties(${test} PROPERTIES ENVIRONMENT "FORTE_BOOT_FILE=${file_str}")
+ENDFUNCTION(forte_add_env_file)
+
+FUNCTION(forte_add_custom_configuration arg1)
+  SET_PROPERTY(GLOBAL APPEND_STRING PROPERTY FORTE_CUSTOM_CONFIGURATIONS_GLOBAL "${arg1}" \n\n)
 ENDFUNCTION(forte_add_custom_configuration)
+
+INCLUDE(${FORTE_BUILDSUPPORT_DIRECTORY}/opcua.cmake)

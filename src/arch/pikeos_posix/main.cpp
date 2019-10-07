@@ -1,12 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2006 - 2014, 2018 ACIN, Profactor GmbH, AIT, fortiss GmbH, SYSGO AG
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2006 - 2018 ACIN, Profactor GmbH, AIT, fortiss GmbH, SYSGO AG
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *  Alois Zoitl, Gerhard Ebenhofer, Thomas Strasser, Rene Smodic,
+ *  Alois Zoitl, Gerhard Ebenhofer, Thomas Strasser, Rene Smodic
  *  Martin Melik Merkumians, Ingo Hegny, Filip Andren - initial API and implementation and/or initial documentation
  *  Agostino Mascitti - Adaption to PikeOS 4.2
  *******************************************************************************/
@@ -14,6 +15,9 @@
 #include <stdio.h>
 #include <signal.h>
 #include "../../stdfblib/ita/RMT_DEV.h"
+
+#include "../utils/mainparam_utils.h"
+
 
 #ifdef CONFIG_POWERLINK_USERSTACK
 #include <EplWrapper.h>
@@ -72,46 +76,29 @@ void createDev(const char *pa_acMGRID){
   delete poDev;
 }
 
-/*!\brief Lists the help for FORTE
- *
- */
-void listHelp(){
-  printf("\nUsage of FORTE:\n");
-  printf("   -h\t lists this help.\n");
-  printf("\n");
-  printf("   -c\t sets the destination for the connection.\n");
-  printf("     \t Usage: forte -c <IP>:<Port>");
-  printf("\n");
-}
-
 int main(int argc, char *arg[]){
 
   checkEndianess();
   DEVLOG_INFO("FORTE starting\n");
 
-  #ifdef POSIX_LWIP
+#ifdef POSIX_LWIP
   /* Initialize the lwIP stack. */
   if (_lwip_init() != 0) {
     DEVLOG_ERROR("Initialization of lwIP stack failed.\n");
     exit(-1);
   }
-  #endif
-
-
+#endif
 
   //gdb_breakpoint();
 
-  if(argc <= 1){ //! Default Value (localhost:61499)
-    createDev("localhost:61499");
+  const char *pIpPort = parseCommandLineArguments(argc, arg);
+  if((0 != strlen(pIpPort)) && (NULL != strchr(pIpPort, ':'))){
+    createDev(pIpPort);
   }
-  else{
-    if(strcmp("-c", arg[1]) == 0){ //! sets the destination for the connection
-      createDev(arg[2]);
-    }
-    else{ //! Lists the help for FORTE
-      listHelp();
-    }
+  else{ //! Lists the help for FORTE
+    listHelp();
   }
+
   return 0;
 }
 

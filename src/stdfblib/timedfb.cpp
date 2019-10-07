@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2013 ACIN, Profactor GmbH, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Alois Zoitl, Gunnar Grabmair, Ingo Hegny, GErhard Ebenhofer
@@ -76,12 +77,9 @@ void CTimedFB::executeEvent(int pa_nEIID){
 
 EMGMResponse CTimedFB::changeFBExecutionState(EMGMCommandType pa_unCommand){
   EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(pa_unCommand);
-  if((e_RDY == eRetVal) &&
-     ((cg_nMGM_CMD_Stop == pa_unCommand) || (cg_nMGM_CMD_Kill == pa_unCommand))){
-    if(mActive){
-      getTimer().unregisterTimedFB(this);
-      mActive = false;
-    }
+  if((e_RDY == eRetVal) && ((cg_nMGM_CMD_Stop == pa_unCommand) || (cg_nMGM_CMD_Kill == pa_unCommand)) && mActive) {
+    getTimer().unregisterTimedFB(this);
+    mActive = false;
   }
   return eRetVal;
 }

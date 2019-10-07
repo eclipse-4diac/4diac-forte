@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013 ACIN
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Monika Wenger
@@ -44,7 +45,7 @@ const SFBInterfaceSpec FORTE_F_MUX_2::scm_stFBInterfaceSpec = {
 void FORTE_F_MUX_2::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
     if(K().isSigned() && (K().getSignedValue() < 0 || K().getSignedValue() > 1)){
-        DEVLOG_ERROR("value of input K is not between 0 and 1");
+      DEVLOG_ERROR("value of input K is not between 0 and 1\n");
     }else{
       OUT().saveAssign(*static_cast<CIEC_ANY*>(getDI( static_cast<TForteUInt16>(K().getUnsignedValue() + 1))));
       sendOutputEvent(scm_nEventCNFID);

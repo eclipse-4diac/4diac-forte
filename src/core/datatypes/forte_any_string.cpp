@@ -1,17 +1,19 @@
 /*******************************************************************************
-  * Copyright (c) 2011 - 2015 nxtControl GmbH, ACIN, fortiss GmbH
-  *   2018 TU Wien/ACIN
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Stansilav Meduna, Alois Zoitl, Ingo Hegny, Monika Wenger
-  *      - initial implementation and rework communication infrastructure
-  *    Martin Melik Merkumians
-  *      - fixes behavior for getToStringBufferSize
-  *******************************************************************************/
+ * Copyright (c) 2011 - 2015 nxtControl GmbH, ACIN, fortiss GmbH
+ *               2018 TU Wien/ACIN
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Stansilav Meduna, Alois Zoitl, Ingo Hegny, Monika Wenger
+ *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians
+ *      - fixes behavior for getToStringBufferSize
+ *******************************************************************************/
 #include <fortenew.h>
 #include "forte_any_string.h"
 #include "unicode_utils.h"
@@ -44,11 +46,9 @@ CIEC_ANY_STRING& CIEC_ANY_STRING::operator =(const char* const pa_pacValue){
 
 void CIEC_ANY_STRING::assign(const char *pa_poData, TForteUInt16 pa_nLen) {
   if (0 != pa_poData){
-    if(0 != pa_nLen){
-      if(pa_poData != getValue()){
-        reserve(pa_nLen);
-        memcpy(getValue(), pa_poData, pa_nLen);
-      }
+    if(0 != pa_nLen && pa_poData != getValue()) {
+      reserve(pa_nLen);
+      memcpy(getValue(), pa_poData, pa_nLen);
     }
     if(0 != getValue()){
       setLength(pa_nLen);
@@ -113,8 +113,9 @@ int CIEC_ANY_STRING::determineEscapedStringLength(const char *pa_pacValue, char 
     if('$' == *pacRunner){
       TForteUInt16 nDummy;
       ++pacRunner;
-      if (*pacRunner == '\0')
+      if(*pacRunner == '\0') {
         break;
+      }
       if(!handleDollarEscapedChar(&pacRunner, (pa_cDelimiter == '"'), nDummy)){
         continue; // It is invalid but we need the real end
       }
@@ -227,15 +228,16 @@ bool CIEC_ANY_STRING::parseEscapedHexNum(const char **pa_pacValue, bool pa_bWide
       if (pa_bWide) {
         pa_rnValue = TForteUInt16(pa_rnValue << 8);
 
-        if (forte::core::util::isHexDigit((*pa_pacValue)[2]))
+        if(forte::core::util::isHexDigit((*pa_pacValue)[2])) {
           pa_rnValue = TForteUInt16(pa_rnValue | forte::core::util::charHexDigitToInt((*pa_pacValue)[2]) << 4);
-        else
+        } else {
           return false;
-
-        if (forte::core::util::isHexDigit((*pa_pacValue)[3]))
+        }
+        if(forte::core::util::isHexDigit((*pa_pacValue)[3])) {
           pa_rnValue = TForteUInt16(pa_rnValue | forte::core::util::charHexDigitToInt((*pa_pacValue)[3]));
-        else
+        } else {
           return false;
+        }
       }
 
       *pa_pacValue += pa_bWide ? 3 : 1;
@@ -261,24 +263,26 @@ int CIEC_ANY_STRING::unescapeFromString(const char *pa_pacValue, char pa_cDelimi
   while((*pacRunner != '\0') && (nLen != scm_unMaxStringLen)){
     if('$' == *pacRunner){
       ++pacRunner;
-      if (*pacRunner == '\0')
+      if(*pacRunner == '\0') {
         break;
+      }
       if(!handleDollarEscapedChar(&pacRunner, bWide, nValue)){
         return -1;
       }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
       if (! bWide)
-#endif
+#endif //FORTE_USE_WSTRING_DATATYPE
         acValue[nLen] = (char) nValue;
 #ifdef FORTE_USE_WSTRING_DATATYPE
       else {
         int nEncLen = CUnicodeUtilities::encodeUTF8Codepoint(reinterpret_cast<TForteByte *>(acValue + nLen), 3, nValue);
-        if (nEncLen < 0)
+        if (nEncLen < 0) {
           return -1;
+        }
         nLen = static_cast<TForteUInt16>(nLen + nEncLen - 1);
       }
-#endif
+#endif //FORTE_USE_WSTRING_DATATYPE
     }
     else{
       if(pa_cDelimiter == *pacRunner){

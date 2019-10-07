@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012 -2014 AIT, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
@@ -139,18 +140,19 @@ int COpcConnection::send_addItem(COpcProcessVar* pa_pNewItem){
 }
 
 int COpcConnection::send_sendItemData(COpcProcessVar* pa_pItem){
-  if (pa_pItem->getIsActive())
+  if(pa_pItem->getIsActive()) {
     m_eventHandler->sendCommand(new CCmd_SetProcessVarValue(pa_pItem));
-
+  }
   return 0;
 }
 
 void COpcConnection::response_connect(bool pa_bConnectionState){
   m_bIsConnected = pa_bConnectionState;
-  if(pa_bConnectionState)
+  if(pa_bConnectionState) {
     m_eConnectionEvent = e_Connected;
-  else
+  } else {
     m_eConnectionEvent = e_ConnectionFailed;
+  }
     //m_eConnectionEvent = e_Disconnected;
 
   if(!m_bBlockingConnect){
@@ -185,19 +187,22 @@ void COpcConnection::response_dataReceived(const char *pa_acGroupName, TItemData
           if(strcmp(it_newItem->m_acItemName, it_item->m_acItemName) == 0){
             it_item->m_oItemData = it_newItem->m_oItemData;
 
-            if(it_newItem == pa_lItemDataList.begin())
+            if(it_newItem == pa_lItemDataList.begin()) {
               pa_lItemDataList.popFront();
-            else
+            } else {
               pa_lItemDataList.eraseAfter(itErase);
+            }
 
             break;
           }
 
-          if(it_newItem != pa_lItemDataList.begin())
+          if(it_newItem != pa_lItemDataList.begin()) {
             ++itErase;
+          }
         }
-        if(pa_lItemDataList.isEmpty())
-          break;
+          if(pa_lItemDataList.isEmpty()) {
+            break;
+          }
       }
 
       // Change state
@@ -218,11 +223,11 @@ void COpcConnection::response_itemAdded(COpcProcessVar* pa_pOpcItem){
   for(TOpcGroupMapList::Iterator it_group = m_lOpcGroupMapList.begin(); it_group != itEnd_group; ++it_group){
     if(strcmp(it_group->m_acGroupName, pa_pOpcItem->getItemGroupName()) == 0){
       // Change state
-      if (pa_pOpcItem->getIsActive())
+      if (pa_pOpcItem->getIsActive()) {
         m_eConnectionEvent = e_ItemAddedOk;
-      else
+      } else {
         m_eConnectionEvent = e_ItemAddedFailed;
-
+      }
       // Notify Com Layer
       m_eventHandler->executeComCallback(it_group->m_nCallbackDesc);
       break;

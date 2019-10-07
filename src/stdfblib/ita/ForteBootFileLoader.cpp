@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2017 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Monika Wenger
@@ -18,12 +19,10 @@
 #include <mgmcmdstruct.h>
 #include "../../core/device.h"
 
-ForteBootFileLoader::ForteBootFileLoader(IBootFileCallback &paCallback) : mBootfile(0), mCallback(paCallback){
-  openBootFile(0);
-}
+char* gCommandLineBootFile = 0;
 
-ForteBootFileLoader::ForteBootFileLoader(IBootFileCallback &paCallback, CIEC_STRING &paBootFileName) : mBootfile(0), mCallback(paCallback){
-  openBootFile(&paBootFileName);
+ForteBootFileLoader::ForteBootFileLoader(IBootFileCallback &paCallback) : mBootfile(0), mCallback(paCallback){
+  openBootFile();
 }
 
 ForteBootFileLoader::~ForteBootFileLoader() {
@@ -33,23 +32,23 @@ ForteBootFileLoader::~ForteBootFileLoader() {
   }
 }
 
-bool ForteBootFileLoader::openBootFile(CIEC_STRING* paBootFileName){
+bool ForteBootFileLoader::openBootFile() {
   bool retVal = false;
   CIEC_STRING bootFileName;
-  if(0 != paBootFileName){
-     bootFileName = *paBootFileName;
-   }else{
-     // select provided or default boot file name
-     char * envBootFileName = getenv("FORTE_BOOT_FILE");
-     if(0 != envBootFileName){
-       DEVLOG_INFO("Using provided bootfile location: %s\n", envBootFileName);
-       bootFileName = envBootFileName;
-     }
-     else{
-       DEVLOG_INFO("Using default bootfile location: %s\n", FORTE_BOOT_FILE_LOCATION);
-       bootFileName = FORTE_BOOT_FILE_LOCATION;
-     }
-   }
+  if(gCommandLineBootFile) {
+    DEVLOG_INFO("Using provided bootfile location set in the command line: %s\n", gCommandLineBootFile);
+    bootFileName = gCommandLineBootFile;
+  } else {
+    // select provided or default boot file name
+    char * envBootFileName = getenv("FORTE_BOOT_FILE");
+    if(0 != envBootFileName) {
+      DEVLOG_INFO("Using provided bootfile location from environment variable: %s\n", envBootFileName);
+      bootFileName = envBootFileName;
+    } else {
+      DEVLOG_INFO("Using provided bootfile location set in CMake: %s\n", FORTE_BOOT_FILE_LOCATION);
+      bootFileName = FORTE_BOOT_FILE_LOCATION;
+    }
+  }
 
   // check if we finally have a boot file name
   if("" == bootFileName){
@@ -80,22 +79,22 @@ LoadBootResult ForteBootFileLoader::loadBootFile(){
     int nLineCount = 1;
     eResp = LOAD_RESULT_OK;
     CIEC_STRING line;
-    while(readLine(line)){
+    while(readLine(line) && LOAD_RESULT_OK == eResp) {
       char *cmdStart = strchr(line.getValue(), ';');
       if(0 == cmdStart){
         eResp = MISSING_COLON;
         DEVLOG_ERROR("Boot file line does not contain separating ';'. Line: %d\n", nLineCount);
-        break;
+      } else {
+        *cmdStart = '\0';
+        cmdStart++;
+        if(!mCallback.executeCommand(line.getValue(), cmdStart)) {
+          //command was not successful
+          DEVLOG_ERROR("Boot file command could not be executed. Line: %d: %s\n", nLineCount, cmdStart);
+          eResp = EXTERNAL_ERROR;
+        } else {
+          nLineCount++;
+        }
       }
-      *cmdStart = '\0';
-      cmdStart++;
-      if(!mCallback.executeCommand(line.getValue(), cmdStart)){
-        //command was not successful
-        DEVLOG_ERROR("Boot file command could not be executed. Line: %d: %s\n", nLineCount, cmdStart);
-        eResp = EXTERNAL_ERROR;
-        break;
-      }
-      nLineCount++;
     }
   }else{
     DEVLOG_ERROR("Loading cannot proceed because the boot file is no opened\n");
@@ -118,6 +117,5 @@ bool ForteBootFileLoader::readLine(CIEC_STRING &line){
 }
 
 bool ForteBootFileLoader::hasCommandEnded(const CIEC_STRING &line) const{
-  return ((0 == strcmp(line.getValue() + line.length() - 11, "</Request>\n")
-      || 0 == strcmp(line.getValue() + line.length() - 3, "/>\n")));
+  return (0 == strcmp(line.getValue() + line.length() - 11, "</Request>\n") || 0 == strcmp(line.getValue() + line.length() - 3, "/>\n"));
 }

@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012 AIT, ACIN
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
@@ -79,8 +80,9 @@ void COpcConnectionImpl::OnDataChange(COPCGroup & group, CAtlMap<COPCItem *, OPC
 
   int position = 0;
   const char * subStrRead = strstr(c_groupName, "_read");
-  if(subStrRead != NULL)
+  if(subStrRead != NULL) {
     position = subStrRead - c_groupName;
+  }
   else{
     //TODO Should not happen error
   }
@@ -113,9 +115,9 @@ COPCGroup* COpcConnectionImpl::getOpcGroup(const char* pa_acGroupName, COpcProce
             // TODO
           }
           free(groupName);
-        }
-        else
+        } else {
           retGroup = it->m_pOpcGroupRead;
+        }
       }
       else if(pa_eFunction == COpcProcessVar::e_FBInput){
         if(!(it->m_bWriteGroupAdded)){
@@ -129,9 +131,9 @@ COPCGroup* COpcConnectionImpl::getOpcGroup(const char* pa_acGroupName, COpcProce
             // TODO
           }
           free(groupName);
-        }
-        else
+        } else {
           retGroup = it->m_pOpcGroupWrite;
+        }
       }
 
       break;

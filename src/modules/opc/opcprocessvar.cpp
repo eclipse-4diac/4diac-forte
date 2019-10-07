@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012 AIT
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Filip Andren - initial API and implementation and/or initial documentation
@@ -19,8 +20,9 @@ COpcProcessVar::COpcProcessVar(const char* pa_acItemGroupName, const char* pa_ac
 
 void COpcProcessVar::sendItemData(){
   try{
-    if (getIsActive())
+    if(getIsActive()) {
       m_pOpcItem->writeSync(updateValue());
+    }
   } catch (OPCException &e){
     setIsActive(false);
   }
@@ -39,9 +41,9 @@ Variant COpcProcessVar::peekNewValue(){
   TVariantList::Iterator itBegin = m_lNewValueQueue.begin();
   if(itBegin != m_lNewValueQueue.end()){
     retVal = (*itBegin);
-  }
-  else
+  } else {
     retVal = m_oCurrentValue;
+  }
 
   m_oSync.unlock();
 
@@ -57,9 +59,9 @@ Variant COpcProcessVar::updateValue(){
   if(itBegin != m_lNewValueQueue.end()){
     m_oCurrentValue = retVal = (*itBegin);
     m_lNewValueQueue.popFront();
-  }
-  else
+  } else {
     retVal = m_oCurrentValue;
+  }
 
   m_oSync.unlock();
 

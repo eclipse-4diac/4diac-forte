@@ -1,10 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2018 Johannes Kepler University
  *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Alois Zoitl - initial implementation and rework communication infrastructure
@@ -33,10 +34,11 @@ class CGenFunctionBlock : public T {
 
 
     static void generateGenericInterfacePointNameArray(const char * const paPrefix,
-        CStringDictionary::TStringId* paNamesArayStart, unsigned int paNumGenericDataPoints);
+        CStringDictionary::TStringId* paNamesArayStart,
+        size_t paNumGenericDataPoints);
     static void generateGenericDataPointArrays(const char * const paPrefix,
         CStringDictionary::TStringId* paDataTypeNamesArrayStart,
-        CStringDictionary::TStringId* paNamesArrayStart, unsigned int paNumGenericDataPoints);
+        CStringDictionary::TStringId* paNamesArrayStart, size_t paNumGenericDataPoints);
 
   private:
     /*! \brief parse the config string and generate the according interface specification

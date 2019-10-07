@@ -1,18 +1,20 @@
 /*******************************************************************************
-  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH
-  *   2018 TU Wien/ACIN
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Thomas Strasser, Ingomar Müller, Rene Smodic, Alois Zoitl,
-  *    Ingo Hegny, Martin Melik Merkumians, Stanislav Meduna
-  *      - initial implementation and rework communication infrastructure
-  *    Martin Melik Merkumians - fixes toString behavior for 0 size buffer
-  *    Martin Melik Merkumians - fixes behavior for getToStringBufferSize
-  *******************************************************************************/
+ * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, nxtControl GmbH, fortiss GmbH
+ *               2018 TU Wien/ACIN
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Thomas Strasser, Ingomar Müller, Rene Smodic, Alois Zoitl,
+ *    Ingo Hegny, Martin Melik Merkumians, Stanislav Meduna
+ *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians - fixes toString behavior for 0 size buffer
+ *    Martin Melik Merkumians - fixes behavior for getToStringBufferSize
+ *******************************************************************************/
 #include "forte_string.h"
 #include <devlog.h>
 #include "forte_uint.h"
@@ -30,14 +32,16 @@ int CIEC_STRING::fromString(const char *pa_pacValue){
       nSrcCappedLength -= 7;
     }
 
-    if (static_cast<unsigned int>(nSrcLen) > scm_unMaxStringLen)
+    if(static_cast<unsigned int>(nSrcLen) > scm_unMaxStringLen) {
       nSrcCappedLength = scm_unMaxStringLen;
+    }
 
 
     if (*pa_pacValue == '\'') {
       reserve(static_cast<TForteUInt16>(nSrcCappedLength));
-      if (unescapeFromString(pa_pacValue, '\'') < 0)
+      if(unescapeFromString(pa_pacValue, '\'') < 0) {
         return -1;
+      }
     } else {
       assign(pa_pacValue, static_cast<TForteUInt16>(nSrcCappedLength));
     }
@@ -46,18 +50,18 @@ int CIEC_STRING::fromString(const char *pa_pacValue){
   return nSrcLen;
 }
 
-int CIEC_STRING::toString(char* paValue, unsigned int paBufferSize) const {
+int CIEC_STRING::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal = -1;
   if(0 != paValue && getToStringBufferSize() <= paBufferSize){
     *paValue = '\'';
     paValue++;
     TForteUInt16 nLen = length();
-    int nUsedBytes = 0;
+    size_t nUsedBytes = 0;
     paBufferSize -= 2;
     if(0 < nLen){
       const char * acValue = getValue();
       for(unsigned int i = 0; i < nLen; ++i){
-        if(static_cast<unsigned int >(nUsedBytes) >= paBufferSize){
+        if(nUsedBytes >= paBufferSize) {
           return -1;
         }
         nUsedBytes += dollarEscapeChar(paValue+nUsedBytes, acValue[i], 2);
@@ -66,7 +70,7 @@ int CIEC_STRING::toString(char* paValue, unsigned int paBufferSize) const {
     } else{
       *paValue = '\0';
     }
-    nRetVal = nUsedBytes;
+    nRetVal = static_cast<int>(nUsedBytes);
     paValue[nRetVal] = '\'';
     paValue[nRetVal + 1] = '\0';
     nRetVal += 2;
@@ -74,9 +78,9 @@ int CIEC_STRING::toString(char* paValue, unsigned int paBufferSize) const {
   return nRetVal;
 }
 
-unsigned int CIEC_STRING::getToStringBufferSize() const{
+size_t CIEC_STRING::getToStringBufferSize() const {
   const char * const stringValue = getValue();
-  unsigned int neededBufferSize = 0;
+  size_t neededBufferSize = 0;
   for(size_t i = 0; i < length(); ++i){
     if(isprint(static_cast<unsigned char>(stringValue[i])) && '$' != stringValue[i] && '\'' != stringValue[i]){
       ++neededBufferSize;
@@ -103,7 +107,7 @@ unsigned int CIEC_STRING::getToStringBufferSize() const{
 
 #ifdef FORTE_UNICODE_SUPPORT
 int CIEC_STRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescape) {
-  
+
   int nSrcLen = pa_nLen >= 0 ? pa_nLen : (pa_bUnescape ? determineEscapedStringLength(pa_pacValue, '\'') : static_cast<int>(strlen(pa_pacValue)));
   int nSrcCappedLength = nSrcLen;
 
@@ -131,8 +135,9 @@ int CIEC_STRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescap
     }
 
     reserve(static_cast<TForteUInt16>(nLength));
-    if (0 == getGenData())
+    if (0 == getGenData()) {
       return -1;
+    }
 
     TForteUInt32 nCodepoint;
     const char *pRunner = pa_pacValue;
@@ -143,10 +148,12 @@ int CIEC_STRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescap
       int nRes;
       nRes = CUnicodeUtilities::parseUTF8Codepoint((const TForteByte *) pRunner, nCodepoint);
       pRunner += nRes;
-      if (nCodepoint == CUnicodeUtilities::scm_unBOMMarker)
+      if (nCodepoint == CUnicodeUtilities::scm_unBOMMarker) {
         continue;
-      if (nCodepoint >= 0x100)
+      }
+      if (nCodepoint >= 0x100) {
         nCodepoint = '?';
+      }
       *pEncRunner++ = (TForteByte) nCodepoint;
     }
 
@@ -155,59 +162,67 @@ int CIEC_STRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescap
 
     if (pa_bUnescape) {
       nLength = unescapeFromString(getValue(), '\'');
-      if (nLength < 0)
+      if (nLength < 0) {
         return -1;
+      }
     }
   }
   return nSrcLen;
 }
 
-int CIEC_STRING::toUTF8(char* pa_pacBuffer, unsigned int pa_nBufferSize, bool pa_bEscape) const {
+int CIEC_STRING::toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) const {
   // Count the needed space
-  unsigned int nNeededLength = pa_bEscape ? 2 : 0; // Leading and trailing delimiter
+  size_t nNeededLength = paEscape ? 2 : 0; // Leading and trailing delimiter
   int nRes;
 
   const unsigned char *pRunner = (const unsigned char *) getValue();
   while (*pRunner) {
     nRes = CUnicodeUtilities::encodeUTF8Codepoint(0, 0, (TForteUInt32) *pRunner);
-    if (nRes < 0)
+    if (nRes < 0) {
       return -1;
+    }
     nNeededLength += nRes;
-    if (nRes == 1 && pa_bEscape && dollarEscapeChar(0, *pRunner, 0) == 2)
+    if (nRes == 1 && paEscape && dollarEscapeChar(0, *pRunner, 0) == 2) {
       nNeededLength++;
+    }
     ++pRunner;
   }
 
-  if (pa_pacBuffer == 0)
-    return nNeededLength;
+  if(0 == paBuffer) {
+    return static_cast<int>(nNeededLength);
+  }
 
-  if (nNeededLength+1 > pa_nBufferSize)
+  if(nNeededLength + 1 > paBufferSize) {
     return -1;
+  }
 
-  char *pEncRunner = pa_pacBuffer;
-  char *pDataEnd = pa_pacBuffer + nNeededLength;
+  char *pEncRunner = paBuffer;
+  char *pDataEnd = paBuffer + nNeededLength;
 
-  if (pa_bEscape)
+  if(paEscape) {
     *pEncRunner++ = '\'';
+  }
 
   pRunner = (const unsigned char *) getValue();
   while (*pRunner) {
     nRes = CUnicodeUtilities::encodeUTF8Codepoint((TForteByte *) pEncRunner, static_cast<unsigned int>(pDataEnd - pEncRunner), (TForteUInt32) *pRunner);
-    if (nRes == 1 && pa_bEscape)
+    if(nRes == 1 && paEscape) {
       nRes = dollarEscapeChar(pEncRunner, *pRunner, static_cast<unsigned int>(pDataEnd - pEncRunner));
-
-    if (nRes < 0)
+    }
+    if(nRes < 0) {
       return -1;
+    }
 
     pEncRunner += nRes;
     ++pRunner;
   }
 
-  if (pa_bEscape)
+  if(paEscape) {
     *pEncRunner++ = '\'';
+  }
   *pEncRunner = '\0';
 
-  return static_cast<int>(pEncRunner - pa_pacBuffer);
+  return static_cast<int>(pEncRunner - paBuffer);
 }
 
 #endif

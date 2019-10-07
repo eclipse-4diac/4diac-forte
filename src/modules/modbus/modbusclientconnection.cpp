@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012 -2014 AIT
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Filip Andren - initial API and implementation and/or initial documentation
@@ -166,8 +167,9 @@ void CModbusClientConnection::tryPolling(){
     }
   }
 
-  if(dataReturned)
+  if(dataReturned) {
     m_pModbusHandler->executeComCallback(m_nComCallbackId);
+  }
 
   if((nrErrors == m_nNrOfPolls) && (0 != m_nNrOfPolls)){
     modbus_close(m_pModbusConn); // in any case it is worth trying to close the socket
@@ -180,9 +182,9 @@ void CModbusClientConnection::tryPolling(){
 void CModbusClientConnection::tryConnect(){
   if(m_pModbusConnEvent != NULL){
     if(m_pModbusConnEvent->readyToExecute()){
-      if(m_pModbusConnEvent->executeEvent(m_pModbusConn, NULL) < 0)
+      if(m_pModbusConnEvent->executeEvent(m_pModbusConn, NULL) < 0) {
         DEVLOG_ERROR("Connection to Modbus server failed: %s\n", modbus_strerror(errno));
-      else{
+      } else {
         DEVLOG_INFO("Connection to Modbus server succeded\n");
 
         delete m_pModbusConnEvent;

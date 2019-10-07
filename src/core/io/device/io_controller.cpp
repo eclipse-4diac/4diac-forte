@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2017 - 2018 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
@@ -16,57 +17,58 @@
 #include "../configFB/io_configFB_controller.h"
 #include "criticalregion.h"
 
-using namespace forte::core::IO;
+using namespace forte::core::io;
 
-IODeviceController::IODeviceController(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution),
-    notificationType(UnknownNotificationType), notificationAttachment(0), notificationHandled(
-        true), delegate(0), error(0), initDelay(0) {
+IODeviceController::IODeviceController(CDeviceExecution& paDeviceExecution) :
+    CExternalEventHandler(paDeviceExecution), mNotificationType(UnknownNotificationType), mNotificationAttachment(0), mNotificationHandled(true), mError(0),
+        mDelegate(0), mInitDelay(0) {
 }
 
 void IODeviceController::run() {
   // Delay initialization
-  if (initDelay > 0)
-    CThread::sleepThread(initDelay * 1000);
+  if(mInitDelay > 0) {
+    CThread::sleepThread(mInitDelay * 1000);
+  }
 
-  error = init();
+  mError = init();
 
-  if (!hasError()) {
+  if(!hasError()) {
     notifyConfigFB(Success);
 
     runLoop();
 
-    if (hasError())
-      notifyConfigFB(Error, error);
+    if(hasError()) {
+      notifyConfigFB(Error, mError);
+    }
   } else {
-    notifyConfigFB(Error, error);
+    notifyConfigFB(Error, mError);
   }
 
   dropHandles();
   deInit();
 
-  // TODO Remove statement or add arch independent sleep method
-  while (isAlive())
+  while(isAlive()) {
     CThread::sleepThread(10);
+  }
 }
 
-void IODeviceController::addHandle(HandleDescriptor *handleDescriptor) {
-  IOHandle* handle = initHandle(handleDescriptor);
+void IODeviceController::addHandle(HandleDescriptor *paHandleDescriptor) {
+  IOHandle* handle = initHandle(paHandleDescriptor);
 
-  if (handle == 0) {
-    DEVLOG_WARNING(
-        "[IODeviceController] Failed to initialize handle '%s'. Check initHandle method.\n",
-        handleDescriptor->id.getValue());
+  if(0 == handle) {
+    DEVLOG_WARNING("[IODeviceController] Failed to initialize handle '%s'. Check initHandle method.\n", paHandleDescriptor->mId.getValue());
     return;
   }
 
-  if (handle->is(IOMapper::In))
-    addHandle(&inputHandles, handleDescriptor->id, handle);
-  else if (handle->is(IOMapper::Out))
-    addHandle(&outputHandles, handleDescriptor->id, handle);
+  if(handle->is(IOMapper::In)) {
+    addHandle(&mInputHandles, paHandleDescriptor->mId, handle);
+  } else if(handle->is(IOMapper::Out)) {
+    addHandle(&mOutputHandles, paHandleDescriptor->mId, handle);
+  }
 }
 
-void IODeviceController::fireIndicationEvent(IOObserver* observer) {
-  startNewEventChain((CProcessInterface*) observer);
+void IODeviceController::fireIndicationEvent(IOObserver* paObserver) {
+  startNewEventChain((CProcessInterface*) paObserver);
 }
 
 void IODeviceController::handleChangeEvent(IOHandle*) {
@@ -74,63 +76,62 @@ void IODeviceController::handleChangeEvent(IOHandle*) {
 }
 
 bool IODeviceController::hasError() {
-  return error != 0;
+  return mError != 0;
 }
 
-void IODeviceController::notifyConfigFB(NotificationType type, const void* attachment) {
-  if (delegate == 0) {
-    DEVLOG_WARNING(
-        "[IODeviceController] No receiver for notification is available. Notification is dropped.\n");
+void IODeviceController::notifyConfigFB(NotificationType paType, const void* paAttachment) {
+  if(0 == mDelegate) {
+    DEVLOG_WARNING("[IODeviceController] No receiver for notification is available. Notification is dropped.\n");
     return;
   }
 
-  if (!notificationHandled) {
-    DEVLOG_WARNING(
-        "[IODeviceController] Notification has not yet been handled by the configuration fb. Notification is dropped.\n");
+  if(!mNotificationHandled) {
+    DEVLOG_WARNING("[IODeviceController] Notification has not yet been handled by the configuration fb. Notification is dropped.\n");
     return;
   }
 
-  this->notificationType = type;
-  this->notificationAttachment = attachment;
+  this->mNotificationType = paType;
+  this->mNotificationAttachment = paAttachment;
 
-  notificationHandled = false;
-  startNewEventChain(delegate);
+  mNotificationHandled = false;
+  startNewEventChain(mDelegate);
 }
 
 void IODeviceController::checkForInputChanges() {
-  CCriticalRegion criticalRegion(handleMutex);
+  CCriticalRegion criticalRegion(mHandleMutex);
 
   // Iterate over input handles and check for changes
-  THandleList::Iterator itEnd = inputHandles.end();
-  for (THandleList::Iterator it = inputHandles.begin(); it != itEnd; ++it)
-    if ((*it)->hasObserver() && !isHandleValueEqual(*it)) {
+  THandleList::Iterator itEnd = mInputHandles.end();
+  for(THandleList::Iterator it = mInputHandles.begin(); it != itEnd; ++it) {
+    if((*it)->hasObserver() && !isHandleValueEqual(*it)) {
       // Inform Process Interface about change
       (*it)->onChange();
     }
+  }
 }
 
-void IODeviceController::setInitDelay(int delay) {
-  initDelay = delay;
+void IODeviceController::setInitDelay(int paDelay) {
+  mInitDelay = paDelay;
 }
 
 void IODeviceController::dropHandles() {
-  CCriticalRegion criticalRegion(handleMutex);
+  CCriticalRegion criticalRegion(mHandleMutex);
 
   IOMapper& mapper = IOMapper::getInstance();
 
-  THandleList::Iterator itEnd = inputHandles.end();
-  for (THandleList::Iterator it = inputHandles.begin(); it != itEnd; ++it) {
+  THandleList::Iterator itEnd = mInputHandles.end();
+  for(THandleList::Iterator it = mInputHandles.begin(); it != itEnd; ++it) {
     mapper.deregisterHandle(*it);
     delete *it;
   }
-  itEnd = outputHandles.end();
-  for (THandleList::Iterator it = outputHandles.begin(); it != itEnd; ++it) {
+  itEnd = mOutputHandles.end();
+  for(THandleList::Iterator it = mOutputHandles.begin(); it != itEnd; ++it) {
     mapper.deregisterHandle(*it);
     delete *it;
   }
 
-  inputHandles.clearAll();
-  outputHandles.clearAll();
+  mInputHandles.clearAll();
+  mOutputHandles.clearAll();
 
 }
 
@@ -138,13 +139,12 @@ bool IODeviceController::isHandleValueEqual(IOHandle*) {
   return true;
 }
 
-void IODeviceController::addHandle(THandleList* list, CIEC_WSTRING const &id,
-    IOHandle* handle) {
-  if (id != "" && IOMapper::getInstance().registerHandle(id, handle)) {
-    CCriticalRegion criticalRegion(handleMutex);
-    list->pushBack(handle);
+void IODeviceController::addHandle(THandleList* paList, CIEC_WSTRING const &paId, IOHandle* paHandle) {
+  if(paId != "" && IOMapper::getInstance().registerHandle(paId, paHandle)) {
+    CCriticalRegion criticalRegion(mHandleMutex);
+    paList->pushBack(paHandle);
   } else {
-    delete handle;
+    delete paHandle;
   }
 }
 

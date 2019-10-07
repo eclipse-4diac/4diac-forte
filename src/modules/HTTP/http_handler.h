@@ -1,14 +1,14 @@
 /*******************************************************************************
  * Copyright (c) 2018 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
-
 
 #ifndef SRC_MODULES_HTTP_OPCUAHANDLER_H_
 #define SRC_MODULES_HTTP_OPCUAHANDLER_H_
@@ -24,7 +24,7 @@
 #include "forte_date_and_time.h"
 
 // cppcheck-suppress noConstructor
-class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte::com_infra::CComCallback{
+class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte::com_infra::CComCallback {
   DECLARE_HANDLER(CHTTP_Handler)
 
   public:
@@ -41,7 +41,7 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
 
     bool sendClientData(forte::com_infra::CHttpComLayer* paLayer, CIEC_STRING& paToSend);
 
-    void addServerPath(forte::com_infra::CHttpComLayer* paLayer, CIEC_STRING& paPath);
+    bool addServerPath(forte::com_infra::CHttpComLayer* paLayer, CIEC_STRING& paPath);
 
     void removeServerPath(CIEC_STRING& paPath);
 
@@ -53,8 +53,6 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
 
     void forceCloseFromRecv(forte::com_infra::CHttpComLayer* paLayer);
 
-  protected:
-
   private:
 
     /**
@@ -62,7 +60,13 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
      */
     virtual void run();
 
+    void checkClientLayers();
+
+    void checkAcceptedSockets();
+
     void startTimeoutThread();
+
+    void stopTimeoutThread();
 
     void openHTTPServer();
 
@@ -82,20 +86,29 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
 
     bool recvServers(const CIPComSocketHandler::TSocketDescriptor paSocket);
 
+    void removeSocketFromAccepted(const CIPComSocketHandler::TSocketDescriptor paSocket);
 
-    struct HTTPServerWaiting{
+    void handlerReceivedWrongPath(const CIPComSocketHandler::TSocketDescriptor paSocket, CIEC_STRING& paPath);
+
+    void clearServerLayers();
+
+    void clearClientLayers();
+
+    void clearAcceptedSockets();
+
+    struct HTTPServerWaiting {
         forte::com_infra::CHttpComLayer* mLayer;
         CIEC_STRING mPath;
         CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor> mSockets; //to handle many connections to the same path
     };
 
-    struct HTTPClientWaiting{
+    struct HTTPClientWaiting {
         forte::com_infra::CHttpComLayer* mLayer;
         CIPComSocketHandler::TSocketDescriptor mSocket;
         CIEC_DATE_AND_TIME mStartTime;
     };
 
-    struct HTTPAcceptedSockets{
+    struct HTTPAcceptedSockets {
         CIPComSocketHandler::TSocketDescriptor mSocket;
         CIEC_DATE_AND_TIME mStartTime;
     };

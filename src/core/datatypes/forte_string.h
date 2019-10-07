@@ -1,10 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN, nxtControl GmbH
  *   2018 TU Wien/ACIN
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Thomas Strasser, Ingomar Müller, Rene Smodic, Alois Zoitl, Gerhard Ebenhofer
@@ -70,7 +71,7 @@ class CIEC_STRING : public CIEC_ANY_STRING{
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    virtual int toString(char* paValue, unsigned int paBufferSize) const;
+    virtual int toString(char* paValue, size_t paBufferSize) const;
 
     /*! \brief Converts a UTF-8 encoded string to a STRING (ISO 10646 Row 00 internally)
      *
@@ -97,7 +98,7 @@ class CIEC_STRING : public CIEC_ANY_STRING{
      *           -1 on error
      */
 #ifdef FORTE_UNICODE_SUPPORT
-    virtual int toUTF8(char* pa_pacBuffer, unsigned int pa_nBufferSize, bool pa_bEscape) const;
+    virtual int toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) const;
 #endif
 
     /*! \brief Returns the amount of bytes needed to create the IEC 61131 literal string
@@ -109,7 +110,7 @@ class CIEC_STRING : public CIEC_ANY_STRING{
      *
      * \return Needed buffer size for literal string without type delarator e.g., STRING#
      */
-    virtual unsigned int getToStringBufferSize() const;
+    virtual size_t getToStringBufferSize() const;
 
   protected:
 

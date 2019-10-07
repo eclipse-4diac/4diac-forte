@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2014 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Alois Zoitl  - initial API and implementation and/or initial documentation
@@ -47,14 +48,14 @@ class E_DELAY_tester  : public CFBTester{
     }
 
     bool testCase_NormalDelay(){
-      mDT.setFromMiliSeconds(500);
+      mDT.setFromMilliSeconds(500);
       triggerEvent(0);
       usleep(500000);
       return checkForSingleOutputEventOccurence(0);
     }
     bool testCase_AbortedDelay(){
       bool retVal = true;
-      mDT.setFromMiliSeconds(1000);
+      mDT.setFromMilliSeconds(1000);
       triggerEvent(0);
       if(!eventChainEmpty()){
         retVal = false;
@@ -71,7 +72,7 @@ class E_DELAY_tester  : public CFBTester{
     }
     bool testCase_MultipleStarts(){
       bool retVal = true;
-      mDT.setFromMiliSeconds(200);
+      mDT.setFromMilliSeconds(200);
       triggerEvent(0);
       usleep(50000);
       if(!eventChainEmpty()){

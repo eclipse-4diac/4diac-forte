@@ -1,14 +1,16 @@
 /*******************************************************************************
-  * Copyright (c) 2008 - 2015 nxtControl GmbH, ACIN, Profactor GmbH, fortiss GmbH
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Stanislav Meduna, Alois Zoitl, Gerhard Ebenhofer, Martin Melik Merkumians
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2008 - 2015 nxtControl GmbH, ACIN, Profactor GmbH, fortiss GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Stanislav Meduna, Alois Zoitl, Gerhard Ebenhofer, Martin Melik Merkumians
+ *      - initial implementation and rework communication infrastructure
+ *******************************************************************************/
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -63,13 +65,14 @@ int CIEC_TIME_OF_DAY::fromString(const char *paValue){
             ++nNums;
           }
 
-          if(nNums < 3){
-            for (unsigned int i=nNums; i < 3; ++i)
+          if(nNums < 3) {
+            for(unsigned int i = nNums; i < 3; ++i) {
               msec *= 10;
-          }
-          else{
-            for (unsigned int i = 0; i < (nNums - 3); ++i)
+            }
+          } else {
+            for(unsigned int i = 0; i < (nNums - 3); ++i) {
               msec /= 10;
+            }
           }
         }
       }
@@ -89,7 +92,7 @@ int CIEC_TIME_OF_DAY::fromString(const char *paValue){
   return static_cast<int>(acBuffer - paValue);
 }
 
-int CIEC_TIME_OF_DAY::toString(char* paValue, unsigned int paBufferSize) const{
+int CIEC_TIME_OF_DAY::toString(char* paValue, size_t paBufferSize) const {
   TForteUInt64 ntoStingBuffer = getTUINT64();
   time_t t = static_cast<time_t>(ntoStingBuffer / 1000);
 
@@ -98,7 +101,7 @@ int CIEC_TIME_OF_DAY::toString(char* paValue, unsigned int paBufferSize) const{
       (int) ((t % 3600) / 60),
       (int) (t % 60),
       (int) (ntoStingBuffer % 1000));
-  if((nRetVal < -1) || (nRetVal >= (int) paBufferSize)){
+  if((nRetVal < -1) || (nRetVal >= static_cast<int>(paBufferSize))) {
     nRetVal = -1;
   }
   return nRetVal;

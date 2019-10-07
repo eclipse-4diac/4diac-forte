@@ -1,15 +1,17 @@
 /*******************************************************************************
-  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Thomas Strasser, Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny,
-  *    Michael Hofmann
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Thomas Strasser, Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny,
+ *    Michael Hofmann
+ *      - initial implementation and rework communication infrastructure
+ *******************************************************************************/
 #ifndef _CONN_H_
 #define _CONN_H_
 
@@ -17,21 +19,22 @@
 #include "mgmcmd.h"
 #include "stringdict.h"
 
-//forward declaration of a few classes to reduce includefile dependencies
+//forward declaration of a few classes to reduce include file dependencies
 class CFunctionBlock;
 
-struct SConnectionPoint{
+class CConnectionPoint {
+  public:
     CFunctionBlock *mFB;
     TPortId mPortId;
 
-    SConnectionPoint(CFunctionBlock *paFB, TPortId paPortId) :
+    CConnectionPoint(CFunctionBlock *paFB, TPortId paPortId) :
         mFB(paFB), mPortId(paPortId){
     }
 
-    SConnectionPoint():mFB(0), mPortId(0) {
+    CConnectionPoint():mFB(0), mPortId(0) {
     }
 
-    bool operator==(const SConnectionPoint & paRight) const{
+    bool operator==(const CConnectionPoint & paRight) const{
       return ((mFB == paRight.mFB) && (mPortId == paRight.mPortId));
     }
 };
@@ -70,7 +73,6 @@ class CConnection{
     virtual EMGMResponse connectToCFBInterface(CFunctionBlock *paDstFB,
         CStringDictionary::TStringId paDstPortNameId) = 0;
 
-#ifndef FORTE_CLASS_0
     /*! \brief Disconnects the connection.
      *
      * With this command the connection is removed and the FBs are set to appropriate states.
@@ -88,7 +90,6 @@ class CConnection{
      */
     virtual EMGMResponse disconnect(CFunctionBlock *paDstFB,
         CStringDictionary::TStringId paDstPortNameId) = 0;
-    #endif
 
     /*! \brief Check if there are destinations added to this connection
      *
@@ -104,30 +105,28 @@ class CConnection{
 
     /*! \brief Get the source string of the connection
      */
-    const SConnectionPoint& getSourceId(void) const{
+    const CConnectionPoint& getSourceId(void) const{
       return mSourceId;
     }
 
     /*! \brief Get list of destinations of the connection
      */
-    const CSinglyLinkedList<SConnectionPoint>& getDestinationList(void) const {
+    const CSinglyLinkedList<CConnectionPoint>& getDestinationList(void) const {
         return mDestinationIds;
     }
 
   protected:
-    EMGMResponse addDestination(const SConnectionPoint &paDestPoint);
-    #ifndef FORTE_CLASS_0
-    EMGMResponse removeDestination(const SConnectionPoint &paDestPoint);
-    #endif
+    EMGMResponse addDestination(const CConnectionPoint &paDestPoint);
+    EMGMResponse removeDestination(const CConnectionPoint &paDestPoint);
 
     void setSource(CFunctionBlock *paSrcFB, TPortId paSrcPortId);
 
     //!Non const version
-    SConnectionPoint& getSourceId(void){
+    CConnectionPoint& getSourceId(void){
       return mSourceId;
     }
 
-    typedef CSinglyLinkedList<SConnectionPoint> TDestinationIdList;
+    typedef CSinglyLinkedList<CConnectionPoint> TDestinationIdList;
 
     /*!\brief a list of destinations the connection is connected to.
      *
@@ -140,12 +139,12 @@ class CConnection{
      *
      * The source is identified by a FB pointer and the port ID
      */
-    SConnectionPoint mSourceId;
+    CConnectionPoint mSourceId;
 
   private:
 
     //! Check if there is already a connection within this connection with the same dst.
-    bool dstExists(const SConnectionPoint &paDestPoint);
+    bool dstExists(const CConnectionPoint &paDestPoint);
 };
 
 #endif /*_CONN_H_*/

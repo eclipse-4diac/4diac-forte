@@ -1,17 +1,16 @@
 /*******************************************************************************
- * Copyright (c) 2016 -2018 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * Copyright (c) 2016 -2019 fortiss GmbH
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #ifndef _PROCESSINTERFACE_H_
 #define _PROCESSINTERFACE_H_
-
-#define ABSENT 0 //This value is to avoid trigger an event in the subscribe when setting. It's not completed nor well implemented yet.
 
 #include <../stdfblib/io/processinterfacebase.h>
 #include "fmuValueContainer.h"
@@ -28,12 +27,11 @@
 #endif
 
 class CFMUProcessInterface : public CProcessInterfaceBase{
-    DECLARE_FIRMWARE_FB(CFMUProcessInterface) //for parameters this class is instantiated
   public:
     CFMUProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
-    CFMUProcessInterface(const CStringDictionary::TStringId paInstanceNameId, CResource *pa_poSrcRes);
+    CFMUProcessInterface(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
-    void setValueContainer(fmuValueContainer* pa_valueContainer);
+    void setValueContainer(fmuValueContainer* paValueContainer);
 
     virtual ~CFMUProcessInterface();
 
@@ -53,8 +51,6 @@ class CFMUProcessInterface : public CProcessInterfaceBase{
     bool writeDWord() {
       return false; //not implemented
     }
-
-
 
   private:
     static const char * const scmOK;

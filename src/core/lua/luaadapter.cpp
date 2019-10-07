@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2017 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Monika Wenger
@@ -13,9 +14,10 @@
 #include "luaadapter.h"
 #include "resource.h"
 
-CLuaAdapter::CLuaAdapter(CStringDictionary::TStringId instanceNameId, const CLuaAdapterTypeEntry* typeEntry, bool pa_bIsPlug, TForteByte *connData, TForteByte *varsData, CResource *resource)
-    : CAdapter(resource, typeEntry->getSocketInterfaceSpec(), instanceNameId, typeEntry->getPlugInterfaceSpec(), pa_bIsPlug, connData, varsData){
-  this->typeEntry = typeEntry;
+CLuaAdapter::CLuaAdapter(CStringDictionary::TStringId paInstanceNameId, const CLuaAdapterTypeEntry* paTypeEntry, bool paIsPlug, TForteByte *paConnData,
+    TForteByte *paVarsData, CResource *paResource) :
+    CAdapter(paResource, paTypeEntry->getSocketInterfaceSpec(), paInstanceNameId, paTypeEntry->getPlugInterfaceSpec(), paIsPlug, paConnData, paVarsData),
+        mTypeEntry(paTypeEntry) {
 }
 
 CLuaAdapter::~CLuaAdapter() {

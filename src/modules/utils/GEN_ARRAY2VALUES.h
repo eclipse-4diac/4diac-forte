@@ -1,10 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2014 Profactor GmbH, fortiss GbmH
  *                      2018 Johannes Kepler University
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Matthias Plasch, Alois Zoitl
@@ -42,8 +43,8 @@ class GEN_ARRAY2VALUES : public CGenFunctionBlock<CFunctionBlock> {
     static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
     //self-defined members
-    int m_nDOutputs;
-    CStringDictionary::TStringId m_ValueTypeID;
+    size_t mDOutputs;
+    CStringDictionary::TStringId mValueTypeID;
 
     virtual void executeEvent(int paEIID);
     virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);

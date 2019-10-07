@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2013 ACIN, Profactor GmbH, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Alois Zoitl, Thomas Strasser, Rene Smodic, Gerhard Ebenhofer,
@@ -43,16 +44,14 @@ const SFBInterfaceSpec E_RESTART::scm_stFBInterfaceSpec = {
   0
 };
 
-void E_RESTART::executeEvent(int pa_nEIID){
-  if(cg_nExternalEventID == pa_nEIID){
-    if(cg_nInvalidEventID != mEventToSend){
-      sendOutputEvent(mEventToSend);
-      if(csmSTOPID == mEventToSend){
-        //stop event is sent put the FB finally into the stopped state
-        CFunctionBlock::changeFBExecutionState(cg_nMGM_CMD_Stop);
-        // release semaphore to indicate that the stop event was sent now
-        mSuspendSemaphore.inc();
-      }
+void E_RESTART::executeEvent(int pa_nEIID) {
+  if(cg_nExternalEventID == pa_nEIID && cg_nInvalidEventID != mEventToSend) {
+    sendOutputEvent(mEventToSend);
+    if(csmSTOPID == mEventToSend) {
+      //stop event is sent put the FB finally into the stopped state
+      CFunctionBlock::changeFBExecutionState(cg_nMGM_CMD_Stop);
+      // release semaphore to indicate that the stop event was sent now
+      mSuspendSemaphore.inc();
     }
   }
 }

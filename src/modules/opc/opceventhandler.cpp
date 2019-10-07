@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2012 - 2014 AIT, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
@@ -40,8 +41,9 @@ void COpcEventHandler::run(){
   if(result == S_OK){
     while(isAlive()){
       ICmd* nextCommand = getNextCommand();
-      if(nextCommand != NULL)
+      if(nextCommand != NULL) {
         nextCommand->runCommand();
+      }
 
       MSG msg;
       while(PeekMessage(&msg, NULL, NULL, NULL, PM_REMOVE)){
@@ -114,9 +116,9 @@ ICmd* COpcEventHandler::getNextCommand(){
   if(itBegin != m_lCommandQueue.end()){
     command = (*itBegin);
     m_lCommandQueue.popFront();
-  }
-  else
+  } else {
     command = NULL;
+  }
   m_oSync.unlock();
 
   return command;

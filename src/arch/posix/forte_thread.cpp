@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2017 ACIN, fortiss GmbH, Red Hat Inc
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *  Alois Zoitl, Rene Smodic, Martin Melik Merkiumians - initial API and implementation and/or initial documentation
@@ -30,17 +31,17 @@ forte::arch::CThreadBase<pthread_t>::TThreadHandleType CPosixThread::createThrea
       DEVLOG_ERROR("Error could not get the default thread attributes! %s\n", strerror(errno));
       return 0;
     }
-  #ifdef __CYGWIN__
+#ifdef __CYGWIN__
     if (pthread_attr_setstacksize (&stAttr, paStackSize)){
       DEVLOG_ERROR("Error could not set the stacksize for the thread! %s\n", strerror(errno));
       return 0;
     }
-  #else
+#else //__CYGWIN__
     if(pthread_attr_setstack(&stAttr, mStack, paStackSize)){
       DEVLOG_ERROR("Error could not set the stacksize for the thread! %s\n", strerror(errno));
       return 0;
     }
-  #endif
+#endif //__CYGWIN__
     if(pthread_create(&retVal, &stAttr, threadFunction, this)){
       DEVLOG_ERROR("Error could not create the thread! %s\n", strerror(errno));
       return 0;
@@ -84,6 +85,6 @@ void CPosixThread::setDeadline(const CIEC_TIME &paVal){
 }
 
 void CPosixThread::sleepThread(unsigned int paMilliSeconds){
-  struct timespec stReq = {paMilliSeconds / 1000, 1000000 * (paMilliSeconds % 1000)};
+  struct timespec stReq = { static_cast<time_t>(paMilliSeconds / 1000), static_cast<long>(1000000 * (paMilliSeconds % 1000)) };
   nanosleep(&stReq, NULL);
 }

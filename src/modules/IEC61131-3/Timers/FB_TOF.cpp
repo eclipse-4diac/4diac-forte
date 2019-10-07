@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2009 - 2013 ACIN, fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *   Monika Wenger, Alois Zoitl, Ingo Hengy
@@ -60,10 +61,10 @@ void FB_TOF::executeEvent(int pa_nEIID){
       if(true == notFirstRisingEdge){
         if(fallingEdge == false){
           fallingEdge = true;
-          start = TIME();
+          start = NOW_MONOTONIC();
         }
         else{
-          count = TIME() - start;
+          count = NOW_MONOTONIC() - start;
           if(PT() <= count){
             Q() = false;
             ET() = PT();

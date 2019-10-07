@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2014 ACIN
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  * Martin Melik Merkumians - initial API and implementation and/or initial documentation
@@ -52,6 +53,14 @@ MQTTHandler::~MQTTHandler(){
 
 /*
  * START OF CALLBACKS
+ */
+
+/** Callback for handling message reception.
+ *
+ * For convenience and performance it would be great to have the paContext param set subscribing topic.
+ * However Paho only allows one callback per client. Therefore we have to search for the layers attached to this topic.
+ * For details see discussion in Bug 545111.
+ *
  */
 int MQTTHandler::onMqttMessageArrived(void* paContext, char* paTopicName, int, MQTTAsync_message* paMessage){
   //TODO: Check if handler allowed
@@ -122,7 +131,7 @@ void MQTTHandler::onSubscribeSucceed(void* paContext, MQTTAsync_successData* ){
     MQTTHandler& handler = ::getExtEvHandler<MQTTHandler>(*layer->getCommFB());
     DEVLOG_INFO("MQTT: Subscription succeed. Topic: -%s-\n", layer->getTopicName());
 
-    handler.popLayerFromList(layer, &handler.mToResubscribe);
+    handler.mToResubscribe.erase(layer);
     if(handler.mToResubscribe.isEmpty()){
       smMQTTS_STATE = ALL_SUBSCRIBED;
     }
@@ -173,26 +182,6 @@ int MQTTHandler::mqttSubscribe(const MQTTComLayer* paLayer){
   return rc;
 }
 
-void MQTTHandler::popLayerFromList(MQTTComLayer* paLayer, CSinglyLinkedList<MQTTComLayer*> *paList){
-  CSinglyLinkedList<MQTTComLayer*>::Iterator itRunner(paList->begin());
-  CSinglyLinkedList<MQTTComLayer*>::Iterator itRefNode(paList->end());
-  CSinglyLinkedList<MQTTComLayer*>::Iterator itEnd(paList->end());
-
-  while(itRunner != itEnd){
-    if(*itRunner == paLayer){
-      if(itRefNode == itEnd){
-        paList->popFront();
-      }
-      else{
-        paList->eraseAfter(itRefNode);
-      }
-      break;
-    }
-    itRefNode = itRunner;
-    ++itRunner;
-  }
-}
-
 int MQTTHandler::registerLayer(const char* paAddress, const char* paClientId, MQTTComLayer* paLayer){
   if(smClient == 0){
     smClientId = paClientId;
@@ -234,7 +223,7 @@ int MQTTHandler::registerLayer(const char* paAddress, const char* paClientId, MQ
 
 void MQTTHandler::unregisterLayer(MQTTComLayer* paLayer){
   CCriticalRegion section(smMQTTMutex);
-  popLayerFromList(paLayer, &mlayers);
+  mlayers.erase(paLayer);
 }
 
 void MQTTHandler::enableHandler(void){

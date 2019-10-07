@@ -1,15 +1,17 @@
 /*******************************************************************************
-  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Thomas Strasser, Alois Zoitl, Rene Smodic, Gunnar Grabmaier, Ingo Hegny,
-  *    Matthias Plasch
-  *      - initial implementation and rework communication infrastructure
-  *******************************************************************************/
+ * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Thomas Strasser, Alois Zoitl, Rene Smodic, Gunnar Grabmaier, Ingo Hegny,
+ *    Matthias Plasch
+ *      - initial implementation and rework communication infrastructure
+ *******************************************************************************/
 #include "dataconn.h"
 #include "funcbloc.h"
 
@@ -27,7 +29,6 @@ CDataConnection::CDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId,
 CDataConnection::~CDataConnection(){
   if(0 != m_poValue){
     m_poValue->~CIEC_ANY();
-    ;
   }
 }
 
@@ -71,14 +72,13 @@ void CDataConnection::handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint)
   }
 }
 
-#ifndef FORTE_CLASS_0
 EMGMResponse
 CDataConnection::disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId){
   EMGMResponse retval = e_NO_SUCH_OBJECT;
   TPortId dstPortId = paDstFB->getDIID(paDstPortNameId);
 
   if(cg_unInvalidPortId != dstPortId){
-    retval = CConnection::removeDestination(SConnectionPoint(paDstFB, dstPortId));
+    retval = CConnection::removeDestination(CConnectionPoint(paDstFB, dstPortId));
     if(e_RDY == retval){
       // the CConnection class didn't respond an error
       paDstFB->connectDI(dstPortId, 0);
@@ -86,7 +86,6 @@ CDataConnection::disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringI
   }
   return retval;
 }
-#endif
 
 void CDataConnection::readData(CIEC_ANY *pa_poValue) const{
   if(m_poValue){
@@ -141,12 +140,10 @@ EMGMResponse CDataConnection::establishDataConnection(CFunctionBlock *paDstFB, T
   }
 
   if(e_RDY == retVal){
-    retVal = CConnection::addDestination(SConnectionPoint(paDstFB, paDstPortId));
-    if(e_RDY == retVal){
-      if(!paDstFB->connectDI(paDstPortId, this)){
-        retVal = e_INVALID_STATE;
-        mDestinationIds.popFront(); //empty the list so that the have created connection is not here anymore
-      }
+    retVal = CConnection::addDestination(CConnectionPoint(paDstFB, paDstPortId));
+    if(e_RDY == retVal && !paDstFB->connectDI(paDstPortId, this)) {
+      retVal = e_INVALID_STATE;
+      mDestinationIds.popFront(); //empty the list so that the have created connection is not here anymore
     }
   }
   return retVal;

@@ -1,10 +1,11 @@
 /*******************************************************************************
  * Copyright (c) 2006-2014 ACIN, Profactor GmbH, fortiss GmbH
  *                      2018 Johannes Kepler University
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Rene Smodic, Alois Zoitl, Michael Hofmann, Martin Melik Merkumians,
@@ -52,10 +53,10 @@ EMGMResponse CCommFB::changeFBExecutionState(EMGMCommandType pa_unCommand) {
   return retVal;
 }
 
-void CCommFB::executeEvent(int pa_nEIID) {
+void CCommFB::executeEvent(int paEIID) {
   EComResponse resp = e_Nothing;
 
-  switch (pa_nEIID) {
+  switch (paEIID) {
   case scm_nEventINITID:
     if (true == QI()) {
       resp = openConnection();
@@ -75,12 +76,11 @@ void CCommFB::executeEvent(int pa_nEIID) {
     break;
   }
 
-  if (resp & e_Terminated) {
-    if (m_eCommServiceType == e_Server) {
+  if(resp & e_Terminated) {
+    if(m_eCommServiceType == e_Server && scm_nEventINITID != paEIID) { //if e_Terminated happened in INIT event, server shouldn't be silent
       //servers will not send information on client termination and should silently start to listen again
       resp = e_Nothing;
-    }
-    else {
+    } else {
       //subscribers and clients will close the connection and inform the user
       closeConnection();
     }
@@ -139,7 +139,7 @@ bool CCommFB::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &
       break;
     }
   }
-  if (0 != sParamA) // search for 2nd underscore
+  if(0 != sParamA) { // search for 2nd underscore
     for (i = i + 1; i < inlength - 1; i++) {
       if (tempstring[i] == '_') {
         tempstring[i] = '\0';
@@ -147,7 +147,7 @@ bool CCommFB::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &
         break;
       }
     }
-
+  }
   if (0 == sParamB){ // no underscore found
     return false;
   }
@@ -210,11 +210,11 @@ void CCommFB::configureDIs(const char *paDIConfigString, SFBInterfaceSpec &paInt
 
     diDataTypeNames[0] = g_nStringIdBOOL;
     diNames[0] = g_nStringIdQI;
-  #ifdef FORTE_USE_WSTRING_DATATYPE
+#ifdef FORTE_USE_WSTRING_DATATYPE
     diDataTypeNames[1] = g_nStringIdWSTRING;
-  #else
+#else //FORTE_USE_WSTRING_DATATYPE
     diDataTypeNames[1] = g_nStringIdSTRING;
-  #endif
+#endif //FORTE_USE_WSTRING_DATATYPE
     diNames[1] = g_nStringIdID;
 }
 

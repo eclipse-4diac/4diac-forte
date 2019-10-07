@@ -1,16 +1,18 @@
 /*******************************************************************************
-  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN, nxtcontrol GmbH, fortiss GmbH, 2018 TU Vienna/ACIN
-  * All rights reserved. This program and the accompanying materials
-  * are made available under the terms of the Eclipse Public License v1.0
-  * which accompanies this distribution, and is available at
-  * http://www.eclipse.org/legal/epl-v10.html
-  *
-  * Contributors:
-  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
-  *    Ingo Hegny, Martin Melik Merkumians, Stanislav Meduna, Monika Wenger
-  *      - initial implementation and rework communication infrastructure
-  *    Martin Melik Merkumians - templated cast factory function
-  *******************************************************************************/
+ * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN, nxtcontrol GmbH, fortiss GmbH, 2018 TU Vienna/ACIN
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
+ *    Ingo Hegny, Martin Melik Merkumians, Stanislav Meduna, Monika Wenger
+ *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians - templated cast factory function
+ *******************************************************************************/
 #ifndef _ANY_H_
 #define _ANY_H_
 
@@ -174,7 +176,7 @@ class CIEC_ANY{
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    virtual int toString(char* pa_pacValue, unsigned int pa_nBufferSize) const;
+    virtual int toString(char* paValue, size_t paBufferSize) const;
 
     /*! \brief determine whether we can cast the source to the destination and what kind of cast it is
      */
@@ -190,7 +192,7 @@ class CIEC_ANY{
 
     /*! \brief calculates buffer size needed for toString conversion
          */
-    virtual unsigned int getToStringBufferSize() const;
+    virtual size_t getToStringBufferSize() const;
 
 #ifdef FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
     /*! \brief the following methods have to be implemented if a custom datatype is added to the forte which is not supported by the default seralize mechanism. */
@@ -408,7 +410,7 @@ class CIEC_ANY{
 
   private:
     const static int scmMaxTypeNameLength = 14;
-    static const char * const scmAnyToStringResponse;
+    static const char scmAnyToStringResponse[];
 
     //!declared but undefined copy constructor as we don't want ANYs to be directly copied.
     CIEC_ANY(const CIEC_ANY&);

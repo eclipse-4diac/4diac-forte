@@ -1,0 +1,23 @@
+;<Request ID="1" Action="CREATE"><FB Name="Fail_Example" Type="EMB_RES" /></Request>
+Fail_Example;<Request ID="2" Action="CREATE"><FB Name="BOOL2BOOL_1_1_1" Type="BOOL2BOOL" /></Request>
+Fail_Example;<Request ID="3" Action="WRITE"><Connection Source="false" Destination="BOOL2BOOL_1_1_1.IN" /></Request>
+Fail_Example;<Request ID="4" Action="CREATE"><FB Name="BOOL2BOOL_1" Type="BOOL2BOOL" /></Request>
+Fail_Example;<Request ID="5" Action="WRITE"><Connection Source="false" Destination="BOOL2BOOL_1.IN" /></Request>
+Fail_Example;<Request ID="6" Action="CREATE"><FB Name="BOOL2BOOL_1_1" Type="BOOL2BOOL" /></Request>
+Fail_Example;<Request ID="7" Action="WRITE"><Connection Source="true" Destination="BOOL2BOOL_1_1.IN" /></Request>
+Fail_Example;<Request ID="8" Action="CREATE"><FB Name="STEST_END_0" Type="STEST_END" /></Request>
+Fail_Example;<Request ID="9" Action="CREATE"><FB Name="SHOULD_FAIL_1" Type="TEST_CONDITION" /></Request>
+Fail_Example;<Request ID="10" Action="CREATE"><FB Name="SHOULD_FAIL_2" Type="TEST_CONDITION" /></Request>
+Fail_Example;<Request ID="11" Action="CREATE"><FB Name="SHOULD_NOT_FAIL" Type="TEST_CONDITION" /></Request>
+Fail_Example;<Request ID="12" Action="CREATE"><Connection Source="BOOL2BOOL_1.CNF" Destination="SHOULD_FAIL_1.REQ" /></Request>
+Fail_Example;<Request ID="13" Action="CREATE"><Connection Source="SHOULD_FAIL_1.CNF" Destination="BOOL2BOOL_1_1.REQ" /></Request>
+Fail_Example;<Request ID="14" Action="CREATE"><Connection Source="BOOL2BOOL_1_1_1.CNF" Destination="SHOULD_FAIL_2.REQ" /></Request>
+Fail_Example;<Request ID="15" Action="CREATE"><Connection Source="SHOULD_FAIL_2.CNF" Destination="STEST_END_0.REQ" /></Request>
+Fail_Example;<Request ID="16" Action="CREATE"><Connection Source="BOOL2BOOL_1_1.CNF" Destination="SHOULD_NOT_FAIL.REQ" /></Request>
+Fail_Example;<Request ID="17" Action="CREATE"><Connection Source="SHOULD_NOT_FAIL.CNF" Destination="BOOL2BOOL_1_1_1.REQ" /></Request>
+Fail_Example;<Request ID="18" Action="CREATE"><Connection Source="START.COLD" Destination="BOOL2BOOL_1.REQ" /></Request>
+Fail_Example;<Request ID="19" Action="CREATE"><Connection Source="START.WARM" Destination="BOOL2BOOL_1.REQ" /></Request>
+Fail_Example;<Request ID="20" Action="CREATE"><Connection Source="BOOL2BOOL_1.OUT" Destination="SHOULD_FAIL_1.check" /></Request>
+Fail_Example;<Request ID="21" Action="CREATE"><Connection Source="BOOL2BOOL_1_1_1.OUT" Destination="SHOULD_FAIL_2.check" /></Request>
+Fail_Example;<Request ID="22" Action="CREATE"><Connection Source="BOOL2BOOL_1_1.OUT" Destination="SHOULD_NOT_FAIL.check" /></Request>
+Fail_Example;<Request ID="23" Action="START"/>

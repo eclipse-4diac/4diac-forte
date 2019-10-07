@@ -1,9 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2016 - 2017 fortiss GmbH
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
  *    Ben Schneider
@@ -70,16 +71,17 @@ EComResponse CROSLayer::openConnection(char *pa_acLayerParameter){
 
       m_TopicType = layerParams.substr(doublePoint + 1);
 
-      if("std_msgs/Float64" == m_TopicType)
+      if("std_msgs/Float64" == m_TopicType) {
         m_Pub = m_Nh.advertise < std_msgs::Float64 > (m_TopicName, 100);
-      else if("std_msgs/Int32" == m_TopicType)
+      } else if("std_msgs/Int32" == m_TopicType) {
         m_Pub = m_Nh.advertise < std_msgs::Int32 > (m_TopicName, 100);
-      else if("std_msgs/Bool" == m_TopicType)
+      } else if("std_msgs/Bool" == m_TopicType) {
         m_Pub = m_Nh.advertise < std_msgs::Bool > (m_TopicName, 100);
-      else if("std_msgs/String" == m_TopicType)
+      } else if("std_msgs/String" == m_TopicType) {
         m_Pub = m_Nh.advertise < std_msgs::String > (m_TopicName, 100);
-      else
+      } else {
         DEVLOG_ERROR("[ROSLAYER] Publisher could not be initialized: unknown topic type \n");
+      }
      //FIXME successful initialization message also on error..
     }
     else{
