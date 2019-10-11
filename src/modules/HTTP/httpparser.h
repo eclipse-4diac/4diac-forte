@@ -73,6 +73,15 @@ namespace forte {
             char* paData);
 
         /**
+         * Parse a PUT/POST request received as a server
+         * @param paPath place to store the received path
+         * @param paContent place to store the content of the request
+         * @param paData the received PUT/POST  request
+         * @return true if no error happened, false otherwise
+         */
+        static bool parsePutPostRequest(CIEC_STRING& paPath, CIEC_STRING &paContent, char* paData);
+
+        /**
          * Create a HTTP response
          * @param paDest
          * @param paResult the status line of the response
@@ -80,6 +89,13 @@ namespace forte {
          * @param paData the body of the response
          */
         static void createResponse(CIEC_STRING& paDest, const CIEC_STRING& paResult, const CIEC_STRING& paContentType, const CIEC_STRING& paData);
+
+        /**
+         * Look in the request for its type
+         * @param paRequest request to look into
+         * @return Type of request
+         */
+        static CHttpComLayer::ERequestType getTypeOfRequest(const char* paRequest);
 
       private:
         CHttpParser();

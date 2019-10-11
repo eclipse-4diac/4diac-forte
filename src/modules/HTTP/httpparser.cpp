@@ -67,27 +67,72 @@ bool CHttpParser::parseResponse(CIEC_STRING& paBody, CIEC_STRING& paResponseCode
 
 bool forte::com_infra::CHttpParser::parseGetRequest(CIEC_STRING& paPath, CSinglyLinkedList<CIEC_STRING>& paParameterNames,
     CSinglyLinkedList<CIEC_STRING>& paParameterValues, char* paData) {
-  char* helperChar = strstr(paData, "GET ");
-  if(helperChar != 0) {
-    helperChar += 4;
-    char* endOfPath = strstr(helperChar, " ");
+  if(0 == strncmp(paData, "GET ", 4)) {
+    paData = paData + 4;
+
+    char* endOfPath = strstr(paData, " ");
     if(endOfPath != 0) {
       *endOfPath = '\0';
-      char* startOfParameters = strstr(paData, "?");
+      char* startOfParameters = strstr(paData + 1, "?");
       if(startOfParameters != 0) {
         *startOfParameters = '\0';
         startOfParameters++;
         parseGETParameters(startOfParameters, paParameterNames, paParameterValues);
       }
-      paPath = helperChar;
+      paPath = paData;
     } else {
-      DEVLOG_ERROR("[HTTP Parser] Invalid HTTP Get request. No space after path found\n");
+      DEVLOG_ERROR("[HTTP Parser] Invalid HTTP Get request. No GET string found\n");
       return false;
     }
-    return true;
+
   } else {
-    DEVLOG_ERROR("[HTTP Parser] Invalid HTTP Get request. No GET string found\n");
+    DEVLOG_ERROR("[HTTP Parser] Invalid HTTP Get request. No space after path found\n");
     return false;
+  }
+  return true;
+}
+
+bool forte::com_infra::CHttpParser::parsePutPostRequest(CIEC_STRING& paPath, CIEC_STRING &paContent, char* paData) {
+  if(0 == strncmp(paData, "PUT ", 4)) {
+    paData += 4;
+  } else if(0 == strncmp(paData, "POST ", 5)) {
+    paData += 5;
+  } else {
+    DEVLOG_ERROR("[HTTP Parser] Invalid HTTP PUT/POST request. No PUT/POST string found\n");
+    return false;
+  }
+
+  char* endOfPath = strstr(paData, " ");
+  if(endOfPath != 0) {
+    *endOfPath = '\0';
+    paPath = paData;
+    paData = strstr(endOfPath + 1, "\r\n\r\n");
+    if(paData != 0) {
+      *paData += 5;
+      paContent = paData;
+    } else {
+      DEVLOG_ERROR("[HTTP Parser] Invalid HTTP PUT/POST request. No content was found\n");
+      return false;
+    }
+
+  } else {
+    DEVLOG_ERROR("[HTTP Parser] Invalid HTTP PUT/POST request. No space after path found\n");
+    return false;
+  }
+  return true;
+}
+
+
+CHttpComLayer::ERequestType forte::com_infra::CHttpParser::getTypeOfRequest(const char* paRequest) {
+  if(0 == strncmp(paRequest, "GET ", 4)) {
+    return CHttpComLayer::ERequestType::e_GET;
+  } else if(0 == strncmp(paRequest, "PUT ", 4)) {
+    return CHttpComLayer::ERequestType::e_PUT;
+  } else if(0 == strncmp(paRequest, "POST ", 5)) {
+    return CHttpComLayer::ERequestType::e_POST;
+  } else {
+    DEVLOG_ERROR("[HTTP Parser] Invalid HTTP request\n");
+    return CHttpComLayer::ERequestType::e_NOTSET;
   }
 }
 

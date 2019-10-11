@@ -152,7 +152,23 @@ bool CHTTP_Handler::recvServers(const CIPComSocketHandler::TSocketDescriptor paS
     CIEC_STRING path;
     CSinglyLinkedList<CIEC_STRING> parameterNames;
     CSinglyLinkedList<CIEC_STRING> parameterValues;
-    if(CHttpParser::parseGetRequest(path, parameterNames, parameterValues, sRecvBuffer)) {
+    bool noParsingError = false;
+    switch(CHttpParser::getTypeOfRequest(sRecvBuffer)){
+      case CHttpComLayer::ERequestType::e_GET:
+        noParsingError = CHttpParser::parseGetRequest(path, parameterNames, parameterValues, sRecvBuffer);
+        break;
+      case CHttpComLayer::ERequestType::e_POST:
+      case CHttpComLayer::ERequestType::e_PUT: {
+        CIEC_STRING content;
+        noParsingError = CHttpParser::parsePutPostRequest(path, content, sRecvBuffer);
+        parameterValues.pushBack(content);
+        break;
+      }
+      default:
+        break;
+    }
+
+    if(noParsingError) {
       for(CSinglyLinkedList<HTTPServerWaiting *>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter) {
         if((*iter)->mPath == path) {
           (*iter)->mSockets.pushBack(paSocket);
@@ -164,7 +180,7 @@ bool CHTTP_Handler::recvServers(const CIPComSocketHandler::TSocketDescriptor paS
         }
       }
     } else {
-      DEVLOG_ERROR("[HTTP Handler] Wrong HTTP Get request\n");
+      DEVLOG_ERROR("[HTTP Handler] Wrong HTTP request\n");
     }
 
     if(!found) {

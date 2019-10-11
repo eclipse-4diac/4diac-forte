@@ -17,3 +17,7 @@ endif(FORTE_MODULE_UTILS)
 if(FORTE_COM_OPC_UA)
   add_subdirectory(opc_ua)
 endif(FORTE_COM_OPC_UA)
+
+if(FORTE_MODULE_Arrowhead)
+  add_subdirectory(arrowhead)
+endif(FORTE_MODULE_Arrowhead)

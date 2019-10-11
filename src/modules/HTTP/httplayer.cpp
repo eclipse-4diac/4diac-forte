@@ -302,13 +302,14 @@ EComResponse CHttpComLayer::recvData(const void *paData, unsigned int paSize) {
   return mInterruptResp;
 }
 
-EComResponse forte::com_infra::CHttpComLayer::recvServerData(CSinglyLinkedList<CIEC_STRING>& paParameterNames,
-    CSinglyLinkedList<CIEC_STRING>& paParameterValues) {
+EComResponse forte::com_infra::CHttpComLayer::recvServerData(CSinglyLinkedList<CIEC_STRING>&, CSinglyLinkedList<CIEC_STRING>& paParameterValues) {
+  //for now, the parameterNames are not taken in account, and the parameters are put in the same order they arrived
+
   mInterruptResp = e_Nothing;
   bool failed = false;
   if(0 < m_poFb->getNumSD()) {
     unsigned int noOfParameters = 0;
-    for(CSinglyLinkedList<CIEC_STRING>::Iterator iter = paParameterNames.begin(); iter != paParameterNames.end(); ++iter) {
+    for(CSinglyLinkedList<CIEC_STRING>::Iterator iter = paParameterValues.begin(); iter != paParameterValues.end(); ++iter) {
       noOfParameters++;
     }
 
@@ -317,10 +318,9 @@ EComResponse forte::com_infra::CHttpComLayer::recvServerData(CSinglyLinkedList<C
       for(CSinglyLinkedList<CIEC_STRING>::Iterator iter = paParameterValues.begin(); iter != paParameterValues.end(); ++iter) {
         m_poFb->getRDs()[noOfParameters].setValue(*iter);
       }
-      //TODO: How do we handle the names? For now the parameters are put in the same order they arrived
     } else {
       DEVLOG_ERROR("[HTTP Layer] FB with path %s received a number of parameters of %u, while it has %u SDs\n", mPath.getValue(),
-        static_cast<TForteUInt16>(noOfParameters), m_poFb->getNumSD());
+        static_cast<TForteUInt16>(noOfParameters), m_poFb->getNumRD());
       failed = true;
     }
   }
