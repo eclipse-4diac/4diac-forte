@@ -1,0 +1,21 @@
+;<Request ID="1" Action="CREATE"><FB Name="clientAuthFail" Type="EMB_RES" /></Request>
+clientAuthFail;<Request ID="2" Action="CREATE"><FB Name="CLIENT_0_1" Type="CLIENT_0_1" /></Request>
+clientAuthFail;<Request ID="3" Action="WRITE"><Connection Source="1" Destination="CLIENT_0_1.QI" /></Request>
+clientAuthFail;<Request ID="4" Action="WRITE"><Connection Source="opc_ua[READ;opc.tcp://localhost:4840#;/Objects/IsolatedTests/WRITEVariable]" Destination="CLIENT_0_1.ID" /></Request>
+clientAuthFail;<Request ID="5" Action="CREATE"><FB Name="E_DELAY" Type="E_DELAY" /></Request>
+clientAuthFail;<Request ID="6" Action="WRITE"><Connection Source="T#2s" Destination="E_DELAY.DT" /></Request>
+clientAuthFail;<Request ID="7" Action="CREATE"><FB Name="ClientShoulFail" Type="TEST_CONDITION" /></Request>
+clientAuthFail;<Request ID="8" Action="CREATE"><FB Name="STEST_END" Type="STEST_END" /></Request>
+clientAuthFail;<Request ID="9" Action="CREATE"><FB Name="F_NOT" Type="F_NOT" /></Request>
+clientAuthFail;<Request ID="10" Action="CREATE"><FB Name="DINT2DINT_1_1" Type="DINT2DINT" /></Request>
+clientAuthFail;<Request ID="11" Action="CREATE"><Connection Source="CLIENT_0_1.INITO" Destination="E_DELAY.START" /></Request>
+clientAuthFail;<Request ID="12" Action="CREATE"><Connection Source="E_DELAY.EO" Destination="CLIENT_0_1.REQ" /></Request>
+clientAuthFail;<Request ID="13" Action="CREATE"><Connection Source="ClientShoulFail.CNF" Destination="STEST_END.REQ" /></Request>
+clientAuthFail;<Request ID="14" Action="CREATE"><Connection Source="CLIENT_0_1.CNF" Destination="F_NOT.REQ" /></Request>
+clientAuthFail;<Request ID="15" Action="CREATE"><Connection Source="F_NOT.CNF" Destination="ClientShoulFail.REQ" /></Request>
+clientAuthFail;<Request ID="16" Action="CREATE"><Connection Source="START.COLD" Destination="CLIENT_0_1.INIT" /></Request>
+clientAuthFail;<Request ID="17" Action="CREATE"><Connection Source="START.WARM" Destination="CLIENT_0_1.INIT" /></Request>
+clientAuthFail;<Request ID="18" Action="CREATE"><Connection Source="CLIENT_0_1.QO" Destination="F_NOT.IN" /></Request>
+clientAuthFail;<Request ID="19" Action="CREATE"><Connection Source="F_NOT.OUT" Destination="ClientShoulFail.check" /></Request>
+clientAuthFail;<Request ID="20" Action="CREATE"><Connection Source="CLIENT_0_1.RD_1" Destination="DINT2DINT_1_1.IN" /></Request>
+clientAuthFail;<Request ID="21" Action="START"/>
