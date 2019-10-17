@@ -41,7 +41,7 @@ class CUA_ClientConfigFileParser {
     class UA_ConfigFromFile {
       public:
         UA_ConfigFromFile(UA_ClientConfig &paClientConfig, std::string &paUsername, std::string &paPassword) :
-            mClientConfig(paClientConfig), mUsername(paUsername), mPassword(paUsername) {
+            mClientConfig(paClientConfig), mUsername(paUsername), mPassword(paPassword) {
         }
         UA_ClientConfig &mClientConfig;
         std::string &mUsername;

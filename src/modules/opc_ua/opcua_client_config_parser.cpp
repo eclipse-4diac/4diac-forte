@@ -63,6 +63,9 @@ bool CUA_ClientConfigFileParser::loadConfig(std::string &paFileLocation, std::st
 
 # endif // FORTE_COM_OPC_UA_MASTER_BRANCH
 #endif //UA_ENABLE_ENCRYPTION
+            else {
+              DEVLOG_WARNING("[CUA_ClientConfigFileParser]: They %s was not recognized so it will be omitted\n", resultPair.first.c_str());
+            }
             break;
           case CConfigFileParser::eEmptyLine:
             //do nothing, keep reading
