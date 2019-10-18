@@ -126,11 +126,10 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     void generateServerStrings(TForteUInt16 paUAServerPort, UA_ServerStrings &paServerStrings);
     /**
      *  Creates the configuration for the OPC UA Server.
-     * @param paUAServerPort Port where the OPC UA server will listen
      * @param paServerStrings Strings needed to configure the server
      * @param paUaServerConfig Place to store all the configurations
      */
-    void configureUAServer(TForteUInt16 paUAServerPort, UA_ServerStrings &paServerStrings, UA_ServerConfig &paUaServerConfig);
+    void configureUAServer(UA_ServerStrings &paServerStrings, UA_ServerConfig &paUaServerConfig);
 
     /**
      * Handler of the OPC UA stack server

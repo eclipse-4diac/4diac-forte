@@ -15,7 +15,10 @@
 #include "opcua_client_information.h"
 #include <basecommfb.h>
 #include "opcua_handler_abstract.h" //for logger
+#include "opcua_client_config_parser.h"
+#include <stdio.h>
 
+std::string gOpcuaClientConfigFile;
 
 CUA_ClientInformation::CUA_ClientInformation(const CIEC_STRING &paEndpoint) :
     mEndpointUrl(paEndpoint), mClient(0), mSubscriptionInfo(0), mMissingAsyncCalls(0), mNeedsReconnection(false), mWaitToInitializeActions(false),
@@ -27,26 +30,56 @@ CUA_ClientInformation::~CUA_ClientInformation() {
 }
 
 bool CUA_ClientInformation::configureClient() {
+  bool retVal = true;
 #ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
   mClient = UA_Client_new();
   UA_ClientConfig *configPointer = UA_Client_getConfig(mClient);
-  UA_StatusCode retVal = UA_ClientConfig_setDefault(configPointer);
-  if(UA_STATUSCODE_GOOD != retVal) {
-    DEVLOG_ERROR("[OPC UA CLIENT]: Error setting default client config. Error: %s\n", UA_StatusCode_name(retVal));
+
+  if(configureClientFromFile(*configPointer)) {
+    configPointer->stateCallback = CUA_RemoteCallbackFunctions::clientStateChangeCallback;
+    configPointer->logger = COPC_UA_HandlerAbstract::getLogger();
+    configPointer->timeout = scmClientTimeoutInMilli;
+  } else {
     UA_Client_delete(mClient);
-    return false;
+    mClient = 0;
+    retVal = false;
   }
-  configPointer->stateCallback = CUA_RemoteCallbackFunctions::clientStateChangeCallback;
-  configPointer->logger = COPC_UA_HandlerAbstract::getLogger();
-  configPointer->timeout = scmClientTimeoutInMilli;
 #else //FORTE_COM_OPC_UA_MASTER_BRANCH
   UA_ClientConfig config = UA_ClientConfig_default;
-  config.stateCallback = CUA_RemoteCallbackFunctions::clientStateChangeCallback;
-  config.logger = COPC_UA_HandlerAbstract::getLogger();
-  config.timeout = scmClientTimeoutInMilli;
-  mClient = UA_Client_new(config);
+  if(configureClientFromFile(config)) {
+    config.stateCallback = CUA_RemoteCallbackFunctions::clientStateChangeCallback;
+    config.logger = COPC_UA_HandlerAbstract::getLogger();
+    config.timeout = scmClientTimeoutInMilli;
+    mClient = UA_Client_new(config);
+  } else {
+    retVal = false;
+  }
 #endif //FORTE_COM_OPC_UA_MASTER_BRANCH
-  return true;
+  return retVal;
+}
+
+bool CUA_ClientInformation::configureClientFromFile(UA_ClientConfig &paConfig) {
+  bool retVal = true;
+
+  if("" != gOpcuaClientConfigFile){ //file was provided
+
+    std::string endpoint = mEndpointUrl.getValue();
+    CUA_ClientConfigFileParser::UA_ConfigFromFile result = CUA_ClientConfigFileParser::UA_ConfigFromFile(paConfig, mUsername, mPassword);
+
+    retVal = CUA_ClientConfigFileParser::loadConfig(gOpcuaClientConfigFile, endpoint, result);
+  } else {
+#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
+    UA_StatusCode retValOpcUa = UA_ClientConfig_setDefault(&paConfig);
+    if(UA_STATUSCODE_GOOD != retValOpcUa) {
+      DEVLOG_ERROR("[OPC UA CLIENT]: Error setting client configuration. Error: %s\n", UA_StatusCode_name(retValOpcUa));
+      retVal = false;
+    }
+#else // FORTE_COM_OPC_UA_MASTER_BRANCH
+
+#endif // FORTE_COM_OPC_UA_MASTER_BRANCH
+  }
+
+  return retVal;
 }
 
 void CUA_ClientInformation::uninitializeClient() {
@@ -57,9 +90,11 @@ void CUA_ClientInformation::uninitializeClient() {
     uninitializeAction(**itReferencingActions);
     mActionsToBeInitialized.pushBack(*itReferencingActions);
   }
-  UA_Client_disconnect(mClient);
-  UA_Client_delete(mClient);
-  mClient = 0;
+  if(mClient) {
+    UA_Client_disconnect(mClient);
+    UA_Client_delete(mClient);
+    mClient = 0;
+  }
   mWaitToInitializeActions = false;
   mNeedsReconnection = false;
   mSomeActionWasInitialized = false;
@@ -292,7 +327,11 @@ bool CUA_ClientInformation::isActionInitialized(CActionInfo& paActionInfo) {
 }
 
 bool CUA_ClientInformation::connectClient() {
-  return (UA_STATUSCODE_GOOD == UA_Client_connect(mClient, mEndpointUrl.getValue()));
+  if(0 == mUsername.compare("")) {
+    return (UA_STATUSCODE_GOOD == UA_Client_connect(mClient, mEndpointUrl.getValue()));
+  } else {
+    return (UA_STATUSCODE_GOOD == UA_Client_connect_username(mClient, mEndpointUrl.getValue(), mUsername.c_str(), mPassword.c_str()));
+  }
 }
 
 bool CUA_ClientInformation::initializeAllActions() {

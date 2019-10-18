@@ -34,11 +34,12 @@ if (FORTE_COM_OPC_UA)
     SET(FORTE_COM_OPC_UA_PORT "4840" CACHE NUMBER "Port where the OPC_UA server will listen")
     SET(FORTE_COM_OPC_UA_SERVER_PUB_INTERVAL "100.0" CACHE NUMBER "OPC UA Server publishing interval in ms")
     SET(FORTE_COM_OPC_UA_CLIENT_PUB_INTERVAL "100.0" CACHE NUMBER "OPC UA Client requested publishing interval via OPC UA data subscription in ms")
-    SET(FORTE_COM_OPC_UA_MULTICAST OFF CACHE BOOLEAN "Enable multicast support for OPC UA and registering with LDS")
+    SET(FORTE_COM_OPC_UA_MULTICAST OFF CACHE BOOL "Enable multicast support for OPC UA and registering with LDS")
     SET(FORTE_COM_OPC_UA_INCLUDE_DIR "" CACHE PATH "ABSOLUTE path to open62541.h file in the OPC UA project")
     SET(FORTE_COM_OPC_UA_LIB_DIR "" CACHE PATH "ABSOLUTE path to OPC UA folder with object library FORTE_COM_OPC_UA_LIB")
     SET(FORTE_COM_OPC_UA_CUSTOM_HOSTNAME CACHE STRING "Custom hostname which is used for the OPC UA app name and app uri")
-    SET(FORTE_COM_OPC_UA_MASTER_BRANCH OFF CACHE BOOLEAN "Use the master branch")
+    SET(FORTE_COM_OPC_UA_MASTER_BRANCH OFF CACHE BOOL "Use the master branch")
+    SET(FORTE_COM_OPC_UA_ENCRYPTION OFF CACHE BOOL "The open62541 lilbrary was compiled using encryption")
 
     # OPEN62541 library to be linked to forte
     IF ("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
@@ -63,7 +64,8 @@ if (FORTE_COM_OPC_UA)
 
     forte_add_handler(COPC_UA_Local_Handler opcua_local_handler)
     forte_add_handler(COPC_UA_Remote_Handler opcua_remote_handler)
-    forte_add_sourcefile_hcpp(opcua_layer opcua_local_handler opcua_helper opcua_remote_handler opcua_handler_abstract opcua_client_information opcua_action_info)
+    forte_add_sourcefile_hcpp(opcua_layer opcua_local_handler opcua_helper opcua_remote_handler opcua_handler_abstract opcua_client_information opcua_action_info
+        opcua_client_config_parser)
     if (NOT EXISTS ${FORTE_COM_OPC_UA_INCLUDE_DIR})
         message(SEND_ERROR "FORTE_COM_OPC_UA_INCLUDE_DIR not set or does not exist")
     endif (NOT EXISTS ${FORTE_COM_OPC_UA_INCLUDE_DIR})
@@ -75,6 +77,8 @@ if (FORTE_COM_OPC_UA)
     
     forte_add_custom_configuration("#define FORTE_COM_OPC_UA_PORT ${FORTE_COM_OPC_UA_PORT}") 
     forte_add_custom_configuration("extern TForteUInt16 gOpcuaServerPort\;")
+    forte_add_custom_configuration("#include <string>")
+    forte_add_custom_configuration("extern std::string gOpcuaClientConfigFile\;")
     forte_add_custom_configuration("#define FORTE_COM_OPC_UA_SERVER_PUB_INTERVAL ${FORTE_COM_OPC_UA_SERVER_PUB_INTERVAL}")
     forte_add_custom_configuration("#define FORTE_COM_OPC_UA_CLIENT_PUB_INTERVAL ${FORTE_COM_OPC_UA_CLIENT_PUB_INTERVAL}")
     
@@ -87,7 +91,22 @@ if (FORTE_COM_OPC_UA)
 
     add_subdirectory(FBs)    
     add_subdirectory(types)
+    
+    if(FORTE_COM_OPC_UA_ENCRYPTION)
+      if(NOT FORTE_COM_OPC_UA_MASTER_BRANCH)
+        message(SEND_WARNING "You are compiling open62541 with encryption and v0.3.0 which is not fully supported in forte. For encryption, use v1.0")  
+      endif(NOT FORTE_COM_OPC_UA_MASTER_BRANCH)
+      
+      SET(FORTE_COM_OPC_UA_ENCRYPTION_INCLUDE_DIR "" CACHE STRING "ABSOLUTE path to encryption headers")
+      SET(FORTE_COM_OPC_UA_ENCRYPTION_LIB_DIR "" CACHE STRING "ABSOLUTE path to encryption libraries")
+      
+      forte_add_include_system_directories(${FORTE_COM_OPC_UA_ENCRYPTION_INCLUDE_DIR})
+      forte_add_link_directories(${FORTE_COM_OPC_UA_ENCRYPTION_LIB_DIR})
 
+      forte_add_link_library("libmbedcrypto.a")
+      forte_add_link_library("libmbedtls.a")
+      forte_add_link_library("libmbedx509.a")
+    endif()  
 endif (FORTE_COM_OPC_UA)
 
 

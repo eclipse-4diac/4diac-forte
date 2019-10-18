@@ -18,6 +18,7 @@
 #include <fortelist.h>
 #include <forte_sync.h>
 #include <criticalregion.h>
+#include <string>
 
 /**
  * Contains all the information needed for a client to execute remote calls. It's the only class tha access
@@ -263,6 +264,13 @@ class CUA_ClientInformation {
     };
 
     /**
+     * Look for the configuration file and load the configuration from it, otherwise it loads the default configuration
+     * @param paConfigPointer Place to store the configuration
+     * @return True if no error ocurred, false otherwise
+     */
+    bool configureClientFromFile(UA_ClientConfig &paConfigPointer);
+
+    /**
      * Try to connect the client
      * @return True if the connection succeeded, false otherwise
      */
@@ -357,6 +365,16 @@ class CUA_ClientInformation {
      * Endpoint of the remote
      */
     CIEC_STRING mEndpointUrl;
+
+    /**
+     * Username to be used to connect to the server
+     */
+    std::string mUsername;
+
+    /**
+     * * Password to be used to connect to the server
+     */
+    std::string mPassword;
 
     /**
      * Handler of the OPC UA stack client

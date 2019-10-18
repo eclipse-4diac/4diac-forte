@@ -1,0 +1,8 @@
+endpoint=opc.tcp://localhost:4840
+securityMode=3
+securityPolicy=http://opcfoundation.org/UA/SecurityPolicy#Basic256Sha256
+username=john
+password=doe
+unknownKey=value
+
+username=john=

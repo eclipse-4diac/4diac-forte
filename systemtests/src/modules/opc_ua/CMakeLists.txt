@@ -39,3 +39,24 @@ forte_add_2dev_systemtests(FailActions clientFailAction.fboot localFailAction.fb
 
 forte_opcua_add_nodeset_without_generated(fordiacNamespace ${CMAKE_CURRENT_SOURCE_DIR}/nodespaceTest)
 
+#Config files for clients
+
+forte_add_2dev_systemtests(ClientConfigFailNonExistingFile clientAuthFail.fboot serverForAuth.fboot "-oc ${CMAKE_CURRENT_SOURCE_DIR}/clientsConfigFiles/NonExistingFile.forte" "" 10 0)
+
+forte_add_2dev_systemtests(ClientConfigFailNoEqualSignal1 clientAuthFail.fboot serverForAuth.fboot "-oc ${CMAKE_CURRENT_SOURCE_DIR}/clientsConfigFiles/failNoEqualSignal1.forte" "" 10 0)
+
+forte_add_2dev_systemtests(ClientConfigFailNoEqualSignal2 clientAuthFail.fboot serverForAuth.fboot "-oc ${CMAKE_CURRENT_SOURCE_DIR}/clientsConfigFiles/failNoEqualSignal2.forte" "" 10 0)
+
+forte_add_2dev_systemtests(ClientConfigFailTwoEqualSignal1 clientAuthFail.fboot serverForAuth.fboot "-oc ${CMAKE_CURRENT_SOURCE_DIR}/clientsConfigFiles/failTwoEqualSignal1.forte" "" 10 0)
+
+forte_add_2dev_systemtests(ClientConfigFailTwoEqualSignal2 clientAuthFail.fboot serverForAuth.fboot "-oc ${CMAKE_CURRENT_SOURCE_DIR}/clientsConfigFiles/failTwoEqualSignal2.forte" "" 10 0)
+
+forte_add_2dev_systemtests(ClientConfigFailTwoEqualSignal3 clientAuthFail.fboot serverForAuth.fboot "-oc ${CMAKE_CURRENT_SOURCE_DIR}/clientsConfigFiles/failTwoEqualSignal3.forte" "" 10 0)
+
+forte_add_2dev_systemtests(ClientConfigSuccessNoEndpoint clientAuthSuccess.fboot serverForAuth.fboot "-oc ${CMAKE_CURRENT_SOURCE_DIR}/clientsConfigFiles/successNoEndpoint.forte" "" 10 1)
+
+forte_add_2dev_systemtests(ClientConfigSuccessNonMatchEndpointFirst clientAuthSuccess.fboot serverForAuth.fboot "-oc ${CMAKE_CURRENT_SOURCE_DIR}/clientsConfigFiles/successNonMatchEndpointFirst.forte" "" 10 1)
+
+if(FORTE_COM_OPC_UA_ENCRYPTION AND FORTE_COM_OPC_UA_MASTER_BRANCH)
+  forte_add_2dev_systemtests(ClientConfigFailFailNoCertificateFile clientAuthFail.fboot serverForAuth.fboot "-oc ${CMAKE_CURRENT_SOURCE_DIR}/clientsConfigFiles/failNoCertificateFile.forte" "" 10 0)
+endif(FORTE_COM_OPC_UA_ENCRYPTION AND FORTE_COM_OPC_UA_MASTER_BRANCH)

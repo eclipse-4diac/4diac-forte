@@ -28,7 +28,8 @@ void listHelp(void){
   printf("%-20s Set the boot-file where to read from to load the applications\n", "  -f <file>");
 #endif
 #ifdef FORTE_COM_OPC_UA
-  printf("%-20s Set the listening port for the OPC UA connection\n", "  -o <Port>");
+  printf("%-20s Set the listening port for the OPC UA connection\n", "  -op <port>");
+  printf("%-20s Set the configuration file for the OPC UA clients\n", "  -oc <file>");
 #endif //FORTE_COM_OPC_UA
 }
 
@@ -52,8 +53,12 @@ const char *parseCommandLineArguments(int argc, char *arg[]){
             break;
 #endif //FORTE_SUPPORT_BOOT_FILE
 #ifdef FORTE_COM_OPC_UA
-            case 'o': //! Retrieves OPCUA server port number entered from the command line
-            gOpcuaServerPort = static_cast<TForteUInt16>(atoi(arg[i + 1]));
+          case 'o':
+            if('p' == arg[i][2]) { //! Retrieves OPCUA server port number entered from the command line
+              gOpcuaServerPort = static_cast<TForteUInt16>(atoi(arg[i + 1]));
+            } else if('c' == arg[i][2]) { //! Retrieves OPCUA configuration file for clients entered from the command line
+              gOpcuaClientConfigFile = arg[i + 1];
+            }
             break;
 #endif //FORTE_COM_OPC_UA
           default: //! Unknown parameter or -h -> Lists the help for FORTE
