@@ -10,24 +10,24 @@
  *   Jose Cabral - initial implementation
  *******************************************************************************/
 
-#ifndef _SUBSCRIBEEVENTHTTP_H_
-#define _SUBSCRIBEEVENTHTTP_H_
+#ifndef _REGISTERSERVICEOPCUA_H_
+#define _REGISTERSERVICEOPCUA_H_
 
 #include <cfb.h>
 #include <typelib.h>
-#include "SubscribeEventAdp.h"
+#include "RegisterServiceAdp.h"
 
-class FORTE_SubscribeEventHTTP: public CCompositeFB{
-  DECLARE_FIRMWARE_FB(FORTE_SubscribeEventHTTP)
+class FORTE_RegisterServiceOpcUa: public CCompositeFB{
+  DECLARE_FIRMWARE_FB(FORTE_RegisterServiceOpcUa)
 
 private:
   static const TForteInt16 scm_anEOWithIndexes[];
   static const SAdapterInstanceDef scm_astAdapterInstances[];
 
-  FORTE_SubscribeEventAdp& SubscribeEventAdp() {
-    return (*static_cast<FORTE_SubscribeEventAdp*>(m_apoAdapters[0]));
+  FORTE_RegisterServiceAdp& registerService() {
+    return (*static_cast<FORTE_RegisterServiceAdp*>(m_apoAdapters[0]));
   };
-  static const int scm_nSubscribeEventAdpAdpNum = 0;
+  static const int scm_nregisterServiceAdpNum = 0;
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
    FORTE_FB_DATA_ARRAY(0, 0, 0, 1);
@@ -46,10 +46,10 @@ private:
   static const SCFB_FBNData scm_stFBNData;
 
 public:
-  COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_SubscribeEventHTTP){
+  COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_RegisterServiceOpcUa){
   };
 
-  virtual ~FORTE_SubscribeEventHTTP(){};
+  virtual ~FORTE_RegisterServiceOpcUa(){};
 
 };
 

@@ -26,3 +26,6 @@ if(FORTE_COM_HTTP)
   add_subdirectory(HTTP)
 endif(FORTE_COM_HTTP)
 
+if(FORTE_COM_OPC_UA)
+  add_subdirectory(OpcUa)
+endif(FORTE_COM_OPC_UA)

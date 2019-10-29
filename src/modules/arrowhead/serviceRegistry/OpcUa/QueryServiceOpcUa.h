@@ -10,24 +10,24 @@
  *   Jose Cabral - initial implementation
  *******************************************************************************/
 
-#ifndef _SUBSCRIBEEVENTHTTP_H_
-#define _SUBSCRIBEEVENTHTTP_H_
+#ifndef _QUERYSERVICEOPCUA_H_
+#define _QUERYSERVICEOPCUA_H_
 
 #include <cfb.h>
 #include <typelib.h>
-#include "SubscribeEventAdp.h"
+#include "QueryServicesAdp.h"
 
-class FORTE_SubscribeEventHTTP: public CCompositeFB{
-  DECLARE_FIRMWARE_FB(FORTE_SubscribeEventHTTP)
+class FORTE_QueryServiceOpcUa: public CCompositeFB{
+  DECLARE_FIRMWARE_FB(FORTE_QueryServiceOpcUa)
 
 private:
   static const TForteInt16 scm_anEOWithIndexes[];
   static const SAdapterInstanceDef scm_astAdapterInstances[];
 
-  FORTE_SubscribeEventAdp& SubscribeEventAdp() {
-    return (*static_cast<FORTE_SubscribeEventAdp*>(m_apoAdapters[0]));
+  FORTE_QueryServicesAdp& queryServices() {
+    return (*static_cast<FORTE_QueryServicesAdp*>(m_apoAdapters[0]));
   };
-  static const int scm_nSubscribeEventAdpAdpNum = 0;
+  static const int scm_nqueryServicesAdpNum = 0;
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
    FORTE_FB_DATA_ARRAY(0, 0, 0, 1);
@@ -46,10 +46,10 @@ private:
   static const SCFB_FBNData scm_stFBNData;
 
 public:
-  COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_SubscribeEventHTTP){
+  COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_QueryServiceOpcUa){
   };
 
-  virtual ~FORTE_SubscribeEventHTTP(){};
+  virtual ~FORTE_QueryServiceOpcUa(){};
 
 };
 

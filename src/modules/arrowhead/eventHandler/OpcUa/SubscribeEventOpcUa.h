@@ -10,15 +10,15 @@
  *   Jose Cabral - initial implementation
  *******************************************************************************/
 
-#ifndef _SUBSCRIBEEVENTHTTP_H_
-#define _SUBSCRIBEEVENTHTTP_H_
+#ifndef _SUBSCRIBEEVENTOPCUA_H_
+#define _SUBSCRIBEEVENTOPCUA_H_
 
 #include <cfb.h>
 #include <typelib.h>
 #include "SubscribeEventAdp.h"
 
-class FORTE_SubscribeEventHTTP: public CCompositeFB{
-  DECLARE_FIRMWARE_FB(FORTE_SubscribeEventHTTP)
+class FORTE_SubscribeEventOpcUa: public CCompositeFB{
+  DECLARE_FIRMWARE_FB(FORTE_SubscribeEventOpcUa)
 
 private:
   static const TForteInt16 scm_anEOWithIndexes[];
@@ -46,10 +46,10 @@ private:
   static const SCFB_FBNData scm_stFBNData;
 
 public:
-  COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_SubscribeEventHTTP){
+  COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_SubscribeEventOpcUa){
   };
 
-  virtual ~FORTE_SubscribeEventHTTP(){};
+  virtual ~FORTE_SubscribeEventOpcUa(){};
 
 };
 

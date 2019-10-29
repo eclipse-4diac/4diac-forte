@@ -7,25 +7,16 @@
 # SPDX-License-Identifier: EPL-2.0
 # 
 # Contributors:
-#    Jose Cabral - initial implementation
+#   Kirill Dorofeev - initial implementation
 # *******************************************************************************
 
 #############################################################################
-# Arrowhead specific functional blocks for the orchestrator
+# Arrowhead specific functional blocks for OPC UA for service registry
 #############################################################################
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-#datatype
-forte_add_sourcefile_hcpp(forte_orchestrationform forte_preferredprovider forte_servicerequestform)
+forte_add_sourcefile_hcpp(RegisterServiceOpcUa)
+forte_add_sourcefile_hcpp(QueryServiceOpcUa)
 
-#Orchestrator
-forte_add_sourcefile_hcpp(FieldsToPreferredProvider FieldsToServiceRequestForm OrchestratorRequestAdp RequestOrchestrationForm OrchestrationForm2OrchestrationForm)
-
-if(FORTE_COM_HTTP)
-  add_subdirectory(HTTP)
-endif(FORTE_COM_HTTP)
-
-if(FORTE_COM_OPC_UA)
-  add_subdirectory(OpcUa)
-endif(FORTE_COM_OPC_UA)
+  
