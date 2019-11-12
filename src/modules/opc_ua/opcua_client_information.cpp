@@ -22,6 +22,7 @@ std::string gOpcuaClientConfigFile;
 
 CUA_ClientInformation::CUA_ClientInformation(const CIEC_STRING &paEndpoint) :
     mEndpointUrl(paEndpoint), mClient(0), mSubscriptionInfo(0), mMissingAsyncCalls(0), mNeedsReconnection(false), mWaitToInitializeActions(false),
+        mIsClientValid(true),
         mLastReconnectionTry(0), mLastActionInitializationTry(0), mSomeActionWasInitialized(false) {
 }
 
@@ -137,8 +138,9 @@ bool CUA_ClientInformation::handleClientState() {
     } else {
       if(!connectClient()) {
         tryAnotherChangeImmediately = false;
-        DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't connect to endpoint %s. Forte will try to reconnect in %u nanoseconds\n", mEndpointUrl.getValue(),
-          scmConnectionRetryTimeoutNano);
+        DEVLOG_ERROR(("[OPC UA CLIENT]: Couldn't connect to endpoint %s. Forte will try to reconnect in %u milliseconds\n"),
+          mEndpointUrl.getValue(),
+          static_cast<unsigned int>(scmConnectionRetryTimeoutNano / 1E6));
         mNeedsReconnection = true;
         mLastReconnectionTry = getNanoSecondsMonotonic();
       } else { //if connection succeeded, don't break the while and try to handle subscriptions immediately

@@ -101,6 +101,14 @@ class CUA_ClientInformation {
       return mClientMutex;
     }
 
+    void setClientToInvalid() {
+      mIsClientValid = false;
+    }
+
+    bool isClientValid() {
+      return mIsClientValid;
+    }
+
     /**
      * Place the request to the OPC UA API for an asynchronous read of a remote variable
      * @param paActionInfo Action to be performed
@@ -417,6 +425,19 @@ class CUA_ClientInformation {
      * it doesn't fail too often. If an action is added after another fail, this becomes false, so the new action can be initialized and doesn't have to wait
      */
     bool mWaitToInitializeActions;
+
+    /**
+     * Indicate the client is about to be deleted, so it's not added to new lists.
+     * The reason behind this variable, is because the following race condition happened in COPC_UA_Remote_Handler::removeClientFromAllLists
+     *  - The client is removed from the connection list
+     *  - Before removing from the normal handler list, the async call fails and the client is reconfigured and re-added to the connection handler
+     *  - The Client is deleted from allClients lists
+     *  - The Client is deleted (C++ wise)
+     *  - Since the connectionHandler has still the client, it tries to use it and crash
+     *
+     *  So this variable prevents the re-adding to any iteration list if it was set already to invalid, when is about to be deleted
+     */
+    bool mIsClientValid;
 
     /**
      * Store the time when the connection last failed
