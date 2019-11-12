@@ -343,7 +343,7 @@ class CUA_ClientInformation {
      * Uninitialze a subscription action
      * @param paActionInfo Action to be uninitialized
      */
-    void uninitializeSubscription(CActionInfo& paActionInfo);
+    void uninitializeSubscribeAction(CActionInfo& paActionInfo);
 
     /**
      * Reset the subscription information.

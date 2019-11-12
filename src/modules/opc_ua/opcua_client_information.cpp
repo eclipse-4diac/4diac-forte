@@ -26,6 +26,7 @@ CUA_ClientInformation::CUA_ClientInformation(const CIEC_STRING &paEndpoint) :
 }
 
 CUA_ClientInformation::~CUA_ClientInformation() {
+  CCriticalRegion clientRegion(mClientMutex);
   uninitializeClient();
 }
 
@@ -549,11 +550,11 @@ void CUA_ClientInformation::removeAsyncCall() {
 void CUA_ClientInformation::uninitializeAction(CActionInfo& paActionInfo) {
   mActionsToBeInitialized.erase(&paActionInfo); //remove in case it is still not initialized
   if(CActionInfo::eSubscribe == paActionInfo.getAction()) { //only subscription has something to release
-    uninitializeSubscription(paActionInfo);
+    uninitializeSubscribeAction(paActionInfo);
   }
 }
 
-void CUA_ClientInformation::uninitializeSubscription(CActionInfo& paActionInfo) {
+void CUA_ClientInformation::uninitializeSubscribeAction(CActionInfo& paActionInfo) {
   if(mSubscriptionInfo) {
     CSinglyLinkedList<UA_MonitoringItemInfo> toDelete;
     for(CSinglyLinkedList<UA_MonitoringItemInfo>::Iterator itMonitoringItemInfo = mSubscriptionInfo->mMonitoredItems.begin();
@@ -568,6 +569,12 @@ void CUA_ClientInformation::uninitializeSubscription(CActionInfo& paActionInfo) 
       if(UA_STATUSCODE_GOOD != retVal) {
         DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete monitored item %u. No further actions will be taken. Error: %s\n",
           (*itMonitoringItemInfo).mMonitoringItemId, UA_StatusCode_name(retVal));
+
+        // if the remote is unplugged the missing subscription is detected and deleted with the previous call to the stack,
+        // so the callback is called and the subscription is cleaned already by this point
+        if(!mSubscriptionInfo) {
+          return;
+        }
       }
 
       mSubscriptionInfo->mMonitoredItems.erase(*itMonitoringItemInfo);
