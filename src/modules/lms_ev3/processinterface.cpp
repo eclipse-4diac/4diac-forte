@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2016 fortiss GmbH
+ *               2019 Robert Promok
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +10,7 @@
  * Contributors:
  *    Alois Zoitl - initial API and implementation and/or initial documentation
  *    Jose Cabral - expansion of capabilities
+ *    Robert Promok - added functions
  *******************************************************************************/
 
 #include "processinterface.h"
@@ -25,9 +27,15 @@ const std::string CLMSEV3ProcessInterface::scmMotorID("motor");
 const std::string CLMSEV3ProcessInterface::scmModeID("mode");
 
 const std::string CLMSEV3ProcessInterface::scmEnableID("enable");
+const std::string CLMSEV3ProcessInterface::scmEnableSpeedID("enableSpeed");
+const std::string CLMSEV3ProcessInterface::scmRelPositionID("relPos");
+const std::string CLMSEV3ProcessInterface::scmAbsPositionID("absPos");
+
 const std::string CLMSEV3ProcessInterface::scmResetID("reset");
 const std::string CLMSEV3ProcessInterface::scmPWMID("pwm");
 const std::string CLMSEV3ProcessInterface::scmSPEEDID("speed");
+const std::string CLMSEV3ProcessInterface::scmSPEEDSETPOINTID("speedsp");
+const std::string CLMSEV3ProcessInterface::scmPOSITIONSETPOINTID("positionsp");
 const std::string CLMSEV3ProcessInterface::scmStopID("stop");
 const std::string CLMSEV3ProcessInterface::scmPositionID("position");
 const std::string CLMSEV3ProcessInterface::scmRotID("rot");
@@ -160,6 +168,21 @@ bool CLMSEV3ProcessInterface::writePin(){
         mFile << val;
         break;
       }
+      case MOTOR_ENABLE_SPEED:{
+        std::string val = (false != OUT_X()) ? "run-forever" : "stop";
+        mFile << val;
+        break;
+      }
+      case MOTOR_RELATIVE_POSITION:{
+        std::string val = (false != OUT_X()) ? "run-to-rel-pos" : "stop";
+        mFile << val;
+        break;
+      }
+      case MOTOR_ABSOLUTE_POSITION:{
+        std::string val = (false != OUT_X()) ? "run-to-abs-pos" : "stop";
+        mFile << val;
+        break;
+      }
       case MOTOR_RESET:{
         if (true == OUT_X()){
           mFile << "reset";
@@ -190,12 +213,12 @@ bool CLMSEV3ProcessInterface::writePin(){
 bool CLMSEV3ProcessInterface::readWord(){
   bool retVal = false;
 
-  if (SENSORW_VALUE == mnTypeOfIO || MOTOR_PWM == mnTypeOfIO || MOTOR_SPEED == mnTypeOfIO || MOTOR_ROT == mnTypeOfIO) {
+  if (SENSORW_VALUE == mnTypeOfIO || MOTOR_PWM == mnTypeOfIO || MOTOR_SPEED == mnTypeOfIO || MOTOR_ROT == mnTypeOfIO || MOTOR_SPEEDSETPOINT == mnTypeOfIO ) {
     TForteInt32 val;
     int internalChecker;
     internalChecker = readNumberFromFile(&val);
     if (0 == internalChecker){
-      IN_W() = (TForteWord) (val);
+      IN_W() = static_cast<TForteWord>(val);
       STATUS() = scmOK;
       retVal = true;
     }else if (1 == internalChecker){
@@ -211,7 +234,7 @@ bool CLMSEV3ProcessInterface::readWord(){
       mFile.seekg(0, std::ios::beg);
       std::getline(mFile, mode);
       if(mFile.fail()){
-        STATUS() == scmCouldNotRead;
+        STATUS() = scmCouldNotRead;
       }else{
         TForteWord counter = 0;
         std::vector<std::string>::iterator it;
@@ -224,7 +247,7 @@ bool CLMSEV3ProcessInterface::readWord(){
           }
         }
         if (it == mModes.end()){
-          STATUS() == scmCouldNotRead;
+          STATUS() = scmCouldNotRead;
         }
       }
     }else{
@@ -250,8 +273,18 @@ bool CLMSEV3ProcessInterface::writeWord(){
     TForteWord val = OUT_W();
     switch (mnTypeOfIO){
       case MOTOR_PWM:{
-        TForteInt16 finalVal = (TForteInt16) val;
+        TForteInt16 finalVal = static_cast<TForteInt16>(val);
         if (-100 <= finalVal && 100 >= finalVal){
+          mFile << finalVal;
+          writeAttempted = true;
+        }else{
+          STATUS() = scmCouldNotWrite;
+        }
+        break;
+      }
+      case MOTOR_SPEEDSETPOINT:{
+        TForteInt16 finalVal = static_cast<TForteInt16>(val);
+        if (-30000 <= finalVal && 30000 >= finalVal){
           mFile << finalVal;
           writeAttempted = true;
         }else{
@@ -325,18 +358,33 @@ bool CLMSEV3ProcessInterface::readDWord(){
     TForteInt32 val;
     internalChecker = readNumberFromFile(&val);
     if (0 == internalChecker){
-      IN_D() = (TForteDWord) (val);
+      IN_D() = static_cast<TForteDWord>(val);
       STATUS() = scmOK;
       retVal = true;
     }else if (1 == internalChecker){
       STATUS() = scmNotInitialised;
-      DEVLOG_ERROR("Reading double word failed. The FB with PARAMS() = '%s' is not initialized.", PARAMS().getValue());
+      DEVLOG_ERROR("Reading double word failed. The FB with PARAMS() = '%s' is not initialized.\n", PARAMS().getValue());
+    }else{
+      STATUS() = scmCouldNotRead;
+    }
+  }
+  else if (MOTOR_POSITIONSETPOINT == mnTypeOfIO){
+    int internalChecker;
+    TForteInt32 val;
+    internalChecker = readNumberFromFile(&val);
+    if (0 == internalChecker){
+      IN_D() = static_cast<TForteDWord>(val);
+      STATUS() = scmOK;
+      retVal = true;
+    }else if (1 == internalChecker){
+      STATUS() = scmNotInitialised;
+      DEVLOG_ERROR("Reading double word failed. The FB with PARAMS() = '%s' is not initialized.\n", PARAMS().getValue());
     }else{
       STATUS() = scmCouldNotRead;
     }
   }
   if (!retVal){
-    DEVLOG_ERROR("Reading double word failed. The FB with PARAMS() = '%s' couldn't be read.", PARAMS().getValue());
+    DEVLOG_ERROR("Reading double word failed. The FB with PARAMS() = '%s' couldn't be read.\n", PARAMS().getValue());
   }
 
   return retVal;
@@ -352,7 +400,7 @@ bool CLMSEV3ProcessInterface::writeDWord(){
     TForteDWord val = OUT_D();
     switch (mnTypeOfIO){
       case MOTOR_POSITION:{
-        TForteInt32 finalVal = (TForteInt32) val;
+        TForteInt32 finalVal = static_cast<TForteInt32>(val);
         if (CIEC_INT::scm_nMinVal <= finalVal && CIEC_INT::scm_nMaxVal >= finalVal){
           mFile << finalVal;
           writeAttempted = true;
@@ -361,6 +409,17 @@ bool CLMSEV3ProcessInterface::writeDWord(){
         }
         break;
       }
+      case MOTOR_POSITIONSETPOINT:{
+        TForteInt32 finalVal = static_cast<TForteInt32>(val);
+        if (CIEC_INT::scm_nMinVal <= finalVal && CIEC_INT::scm_nMaxVal >= finalVal){
+          mFile << finalVal;
+          writeAttempted = true;
+        }else{
+          STATUS() = scmCouldNotWrite;
+        }
+        break;
+      }
+
       default:{
         STATUS() = scmCouldNotWrite;
         break;
@@ -581,6 +640,12 @@ bool CLMSEV3ProcessInterface::setupMotor(const std::vector<std::string>& paParam
           }else if (scmPositionID == paParamList[2]){
             sysFileName += number.str() + "/position";
             mnTypeOfIO = MOTOR_POSITION;
+          }else if (scmSPEEDSETPOINTID == paParamList[2]){
+            sysFileName += number.str() + "/speed_sp";
+            mnTypeOfIO = MOTOR_SPEEDSETPOINT;
+          }else if (scmPOSITIONSETPOINTID == paParamList[2]){
+            sysFileName += number.str() + "/position_sp";
+            mnTypeOfIO = MOTOR_POSITIONSETPOINT;
           }else{
             defaultType = true;
           }
@@ -588,6 +653,15 @@ bool CLMSEV3ProcessInterface::setupMotor(const std::vector<std::string>& paParam
           if (scmEnableID == paParamList[2]){
             sysFileName += number.str() + "/command";
             mnTypeOfIO = MOTOR_ENABLE;
+          }else if (scmEnableSpeedID == paParamList[2]){
+            sysFileName += number.str() + "/command";
+            mnTypeOfIO = MOTOR_ENABLE_SPEED;
+          }else if (scmRelPositionID == paParamList[2]){
+            sysFileName += number.str() + "/command";
+            mnTypeOfIO = MOTOR_RELATIVE_POSITION;
+          }else if (scmAbsPositionID == paParamList[2]){
+            sysFileName += number.str() + "/command";
+            mnTypeOfIO = MOTOR_ABSOLUTE_POSITION;
           }else if (scmResetID == paParamList[2]){
             sysFileName += number.str() + "/command";
             mnTypeOfIO = MOTOR_RESET;
@@ -595,11 +669,17 @@ bool CLMSEV3ProcessInterface::setupMotor(const std::vector<std::string>& paParam
             sysFileName += number.str() + "/duty_cycle_sp";
             mnTypeOfIO = MOTOR_PWM;
           }else if (scmStopID == paParamList[2]){
-            sysFileName += number.str() + "/stop_command";
+            sysFileName += number.str() + "/stop_action";
             mnTypeOfIO = MOTOR_STOP;
           }else if (scmPositionID == paParamList[2]){
             sysFileName += number.str() + "/position";
             mnTypeOfIO = MOTOR_POSITION;
+          }else if (scmSPEEDSETPOINTID == paParamList[2]){
+            sysFileName += number.str() + "/speed_sp";
+            mnTypeOfIO = MOTOR_SPEEDSETPOINT;
+          }else if (scmPOSITIONSETPOINTID == paParamList[2]){
+            sysFileName += number.str() + "/position_sp";
+            mnTypeOfIO = MOTOR_POSITIONSETPOINT;
           }else{
             defaultType = true;
           }
@@ -632,9 +712,9 @@ int CLMSEV3ProcessInterface::findNumberFromPort(const std::string &paBasePath, c
   int retVal = -1;
   std::fstream mAddressFile;
   std::string fullPath;
-  int portLenght = paEv3Port.length();
+  int portLength = static_cast<int>(paEv3Port.length());
 
-  if (portLenght < 5){ //Only possible values are inX and outX according to input and output ports of the EV3
+  if (portLength < 5){ //Only possible values are inX and outX according to input and output ports of the EV3
     for(int i = 0; i < 255; i++){ //TODO: check maximum value of i
       std::stringstream number;
       number << i;
@@ -642,13 +722,13 @@ int CLMSEV3ProcessInterface::findNumberFromPort(const std::string &paBasePath, c
         fullPath = paBasePath + number.str() + "/address";
         mAddressFile.open(fullPath.c_str(), std::fstream::in); //TODO change this when fully switching to C++11 for LMS EV3ca
         if(mAddressFile.is_open()){
-          char port[5];
+          char port[16];
           mAddressFile.clear();
           mAddressFile.seekg(0, std::ios::beg);
-          mAddressFile.read(port, portLenght);
-          if (!mAddressFile.fail()){
-            port[portLenght] = '\0';
-            if(paEv3Port.compare(port) == 0){
+          mAddressFile.read(port, sizeof(port));
+          auto len = mAddressFile.gcount();
+          if (len > 1) {
+            if (paEv3Port.at(portLength-1) == port[len-2]) {
               retVal = i;
               break;
             }
