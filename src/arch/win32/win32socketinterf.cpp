@@ -39,20 +39,20 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openTCPServerCon
   TSocketDescriptor nSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
   if(INVALID_SOCKET != nSocket){
-    struct sockaddr_in stSockAddr = { 0 };
+    struct sockaddr_in stSockAddr = { };
     stSockAddr.sin_family = AF_INET;
     stSockAddr.sin_port = htons(pa_nPort);
     stSockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
     int nOptVal = 1;
-    if(setsockopt(nSocket, SOL_SOCKET, SO_REUSEADDR, (char *) &nOptVal, sizeof(nOptVal)) == -1){
+    if(SOCKET_ERROR == setsockopt(nSocket, SOL_SOCKET, SO_REUSEADDR, (char*) &nOptVal, sizeof(nOptVal))) {
       LPSTR pacErrorMessage = getErrorMessage(WSAGetLastError());
       DEVLOG_ERROR("CWin32SocketInterface: could not set socket option SO_REUSEADDR:  %s\n", pacErrorMessage);
       LocalFree(pacErrorMessage);
     }
 
     if(0 == bind(nSocket, (struct sockaddr *) &stSockAddr, sizeof(struct sockaddr))){
-      if(-1 == listen(nSocket, 1)){ // for the classic IEC 61499 server only one connection at the same time is accepted TODO mayb make this adjustable for future extensions
+      if(SOCKET_ERROR == listen(nSocket, 1)) { // for the classic IEC 61499 server only one connection at the same time is accepted TODO mayb make this adjustable for future extensions
         int nLastError = WSAGetLastError();
         LPSTR pacErrorMessage = getErrorMessage(nLastError);
         DEVLOG_ERROR("CWin32SocketInterface: listen() failed: %d - %s\n", nLastError, pacErrorMessage);
@@ -84,15 +84,15 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openTCPClientCon
 
   DEVLOG_INFO("CWin32SocketInterface: Opening TCP-Client connection at: %s:%d\n", pa_acIPAddr, pa_nPort);
 
-  if(-1 != nSocket){
-    struct sockaddr_in stSockAddr = { 0 };
+  if(INVALID_SOCKET != nSocket) {
+    struct sockaddr_in stSockAddr = { };
     stSockAddr.sin_family = AF_INET;
     stSockAddr.sin_port = htons(pa_nPort);
     if(1 != InetPton(stSockAddr.sin_family, pa_acIPAddr, &(stSockAddr.sin_addr))) {
       DEVLOG_ERROR("CWin32SocketInterface: InetPton() failed: %d - %s\n", stSockAddr.sin_addr.s_addr, pa_acIPAddr);
     }
 
-    if(-1 == connect(nSocket, (struct sockaddr *) &stSockAddr, sizeof(struct sockaddr))){
+    if(SOCKET_ERROR == connect(nSocket, (struct sockaddr*) &stSockAddr, sizeof(struct sockaddr))) {
       int nLastError = WSAGetLastError();
       LPSTR pacErrorMessage = getErrorMessage(nLastError);
       DEVLOG_ERROR("CWin32SocketInterface: connect() failed: %d - %s\n", nLastError, pacErrorMessage);
@@ -148,9 +148,9 @@ int CWin32SocketInterface::sendDataOnTCP(TSocketDescriptor pa_nSockD, char* pa_p
 int CWin32SocketInterface::receiveDataFromTCP(TSocketDescriptor pa_nSockD, char* pa_pcData, unsigned int pa_unBufSize){
   int nRetVal;
   do{
-    nRetVal = static_cast<int>(recv(pa_nSockD, pa_pcData, pa_unBufSize, 0));
-  } while((-1 == nRetVal) && (WSAEINTR == h_errno)); // recv got interrupt / recieving again
-  if(nRetVal == -1){
+    nRetVal = recv(pa_nSockD, pa_pcData, pa_unBufSize, 0);
+  } while((SOCKET_ERROR == nRetVal) && (WSAEINTR == h_errno)); // recv got interrupt / recieving again
+  if(SOCKET_ERROR == nRetVal) {
     int nLastError = WSAGetLastError();
     LPSTR pacErrorMessage = getErrorMessage(nLastError);
     DEVLOG_ERROR("CWin32SocketInterface: TCP-Socket recv() failed: %d - %s\n", nLastError, pacErrorMessage);
@@ -166,7 +166,7 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPSendPort(
   DEVLOG_INFO("CWin32SocketInterface: Opening UDP sending connection at: %s:%d\n", pa_acIPAddr, pa_nPort);
   TSocketDescriptor nRetVal = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
-  if(-1 != nRetVal){
+  if(INVALID_SOCKET != nRetVal) {
     m_ptDestAddr->sin_family = AF_INET;
     m_ptDestAddr->sin_port = htons(pa_nPort);
     InetPton(m_ptDestAddr->sin_family, pa_acIPAddr, &(m_ptDestAddr->sin_addr));
@@ -186,7 +186,7 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPReceivePo
   TSocketDescriptor nRetVal = INVALID_SOCKET;
   TSocketDescriptor nSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
-  if(-1 != nSocket){
+  if(INVALID_SOCKET != nSocket) {
     int nReuseAddrVal = 1;
     if(0 <= setsockopt(nSocket, SOL_SOCKET, SO_REUSEADDR, (char *) &nReuseAddrVal, sizeof(nReuseAddrVal))){
       struct sockaddr_in stSockAddr;
@@ -251,10 +251,10 @@ int CWin32SocketInterface::sendDataOnUDP(TSocketDescriptor pa_nSockD, TUDPDestAd
 int CWin32SocketInterface::receiveDataFromUDP(TSocketDescriptor pa_nSockD, char* pa_pcData, unsigned int pa_unBufSize){
   int nRetVal;
   do{
-    nRetVal = static_cast<int>(recvfrom(pa_nSockD, pa_pcData, pa_unBufSize, 0, 0, 0));
-  } while((-1 == nRetVal) && (WSAEINTR == h_errno)); // recv got interrupt / recieving again
+    nRetVal = recvfrom(pa_nSockD, pa_pcData, pa_unBufSize, 0, 0, 0);
+  } while((SOCKET_ERROR == nRetVal) && (WSAEINTR == h_errno)); // recv got interrupt / recieving again
 
-  if(nRetVal == -1){ //
+  if(SOCKET_ERROR == nRetVal) {
     int nLastError = WSAGetLastError();
     LPSTR pacErrorMessage = getErrorMessage(nLastError);
     DEVLOG_ERROR("CWin32SocketInterface: UDP-Socket recvfrom() failed: %d - %s\n", nLastError, pacErrorMessage);

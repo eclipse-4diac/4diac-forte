@@ -27,50 +27,6 @@ CPCTimerHandler::~CPCTimerHandler(){
   disableHandler();
 }
 
-/*
- HANDLE gDoneEvent;
-
- VOID CALLBACK TimerRoutine(PVOID lpParam, BOOLEAN TimerOrWaitFired)
- {
- CPCTimerHandler *timerHandler = (CPCTimerHandler*) lpParam;
- if(timerHandler != 0){
- if(timerHandler->isAlive() ){
- timerHandler->nextTick();
- }
- else{
- SetEvent(gDoneEvent);
- }
- }
- }
-
-
- bool CPCTimerHandler::run(){
-
- HANDLE hTimer = NULL;
-
- // Use an event object to track the TimerRoutine execution
- gDoneEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
- if (NULL == gDoneEvent){
- return false;
- }
-
- // Set a timer to call the timer routine in 10 seconds.
- if (!CreateTimerQueueTimer( &hTimer, 0,  (WAITORTIMERCALLBACK)TimerRoutine, this, 0, 1000 / CPCTimerHandler::csm_nTicksPerSecond, 0))
- {
- return false;
- }
-
- if (WaitForSingleObject(gDoneEvent, INFINITE) != WAIT_OBJECT_0)
- return false;
-
- DeleteTimerQueueTimer(0, hTimer,0);
-
- CloseHandle(gDoneEvent);
-
-
- return true;
- }*/
-
 void CPCTimerHandler::run(){
   DWORD stReq = 0; // in us
   LARGE_INTEGER stReqTimeVal = { 0, 0 };
@@ -125,11 +81,11 @@ void CPCTimerHandler::disableHandler(void){
   end();
 }
 
-void CPCTimerHandler::setPriority(int pa_nPriority){
-  //TODO think on hwo to handle this.
+void CPCTimerHandler::setPriority(int) {
+  //TODO think on how to handle this.
 }
 
 int CPCTimerHandler::getPriority(void) const{
-  //TODO think on hwo to handle this.
+  //TODO think on how to handle this.
   return 1;
 }

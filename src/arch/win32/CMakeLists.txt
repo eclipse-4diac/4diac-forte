@@ -48,7 +48,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
 
   forte_add_definition("-DFORTE_LITTLE_ENDIAN")
 
-# TODO this flag was originaly wrongly added to the definitions. May be necessary to be added as link flag. However currently working fine.
+# TODO this flag was originally wrongly added to the definitions. May be necessary to be added as link flag. However currently working fine.
 # forte_add_link_flags("/NODEFAULTLIB:MSVCRT.lib")
 
   forte_add_link_library(comctl32)
