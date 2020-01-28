@@ -21,7 +21,6 @@ forte_test_add_sourcefile_cpp(typelibdatatypetests.cpp)
 forte_test_add_sourcefile_cpp(nameidentifiertest.cpp)
 forte_test_add_sourcefile_cpp(mgmstatemachinetest.cpp)
 forte_test_add_sourcefile_cpp(iec61131_functionstests.cpp)
-
 forte_test_add_sourcefile_cpp(internalvartests.cpp)
 
 forte_test_add_subdirectory(datatypes)

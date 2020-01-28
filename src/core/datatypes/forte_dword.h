@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
+ *               2020 Johannes Kepler University Linz
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,11 +11,15 @@
  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer
  *    Ingo Hegny, Monika Wenger
  *      - initial implementation and rework communication infrastructure
+ *    Ernst Blecha - add multibit partial access
  *******************************************************************************/
 #ifndef _FORTE_DWORD_H_
 #define _FORTE_DWORD_H_
 
 #include "forte_any_bit.h"
+#include "forte_bool.h"
+#include "forte_byte.h"
+#include "forte_word.h"
 #include <limits>
 
 /*!\ingroup COREDTS CIEC_DWORD represents the dword data type according to IEC 61131.
@@ -75,6 +80,27 @@ class CIEC_DWORD : public CIEC_ANY_BIT{
 
     virtual EDataTypeID getDataTypeID() const{
       return CIEC_ANY::e_DWORD;
+    }
+
+    /*! \brief Access a single bit within a CIEC_DWORD (e.g. [DWORD].X<1>())
+     *
+     */
+    template <size_t paIndex> PARTIAL_ACCESS_BIT<CIEC_BOOL, CIEC_DWORD, paIndex> X(){
+      return PARTIAL_ACCESS_BIT<CIEC_BOOL,CIEC_DWORD, paIndex>(*this);
+    }
+
+    /*! \brief Access a single byte within a CIEC_DWORD (e.g. [DWORD].B<1>())
+     *
+     */
+    template <size_t paIndex> PARTIAL_ACCESS<CIEC_BYTE, CIEC_DWORD, paIndex> B(){
+      return PARTIAL_ACCESS<CIEC_BYTE, CIEC_DWORD, paIndex>(*this);
+    }
+
+    /*! \brief Access a single word within a CIEC_DWORD (e.g. [DWORD].W<1>())
+     *
+     */
+    template <size_t paIndex> PARTIAL_ACCESS<CIEC_WORD, CIEC_DWORD, paIndex> W(){
+      return PARTIAL_ACCESS<CIEC_WORD, CIEC_DWORD, paIndex>(*this);
     }
 };
 
