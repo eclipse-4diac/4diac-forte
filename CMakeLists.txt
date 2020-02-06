@@ -1,6 +1,5 @@
  #*******************************************************************************
 # Copyright (c) 2010 - 2015 ACIN, Profactor GmbH, AIT, fortiss GmbH
-#               2020 Johannes Kepler University Linz
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -9,19 +8,13 @@
 # 
 # Contributors:
 #    Michael Hofmann, Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny, Thomas Strasser,
-#    Martin Melik Merkumians
-#      - initial API and implementation and/or initial documentation
-#    Ernst Blecha - add buildtype dropdown menu
+# *   Martin Melik Merkumians
+# *     - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 PROJECT(FORTE)
-
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-set(CMAKE_BUILD_TYPE "Release"  CACHE STRING "Select a build type (Release, Debug, ...)" FORCE)
-endif()
-set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 
 if(NOT (${CMAKE_HOST_SYSTEM_NAME} STREQUAL ${CMAKE_SYSTEM_NAME}))
     MESSAGE("Cross compiling")
