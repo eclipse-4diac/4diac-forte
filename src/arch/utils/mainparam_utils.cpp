@@ -31,6 +31,9 @@ void listHelp(void){
   printf("%-20s Set the listening port for the OPC UA connection\n", "  -op <port>");
   printf("%-20s Set the configuration file for the OPC UA clients\n", "  -oc <file>");
 #endif //FORTE_COM_OPC_UA
+#ifdef FORTE_COM_PAHOMQTT
+  printf("%-20s Set the configuration file for the MQTT clients\n", "  -mc <file>");
+#endif //FORTE_COM_PAHOMQTT
 }
 
 /*!\brief Parses the command line arguments passed to the main function
@@ -61,6 +64,13 @@ const char *parseCommandLineArguments(int argc, char *arg[]){
             }
             break;
 #endif //FORTE_COM_OPC_UA
+#ifdef FORTE_COM_PAHOMQTT
+          case 'm':
+            if('c' == arg[i][2]) { //! Retrieves MQTT configuration file for clients entered from the command line
+              gMqttClientConfigFile = arg[i + 1];
+            }
+            break;
+#endif //FORTE_COM_PAHOMQTT
           default: //! Unknown parameter or -h -> Lists the help for FORTE
             return "";
         }
