@@ -16,10 +16,10 @@
 #define CIEC_ANY_BIT_PARTIAL_TEST
 
 #define test4X(var, offset, b3, b2, b1, b0) \
-  BOOST_CHECK_EQUAL(var.X<0+offset>(),b0);\
-  BOOST_CHECK_EQUAL(var.X<1+offset>(),b1);\
-  BOOST_CHECK_EQUAL(var.X<2+offset>(),b2);\
-  BOOST_CHECK_EQUAL(var.X<3+offset>(),b3);
+  BOOST_CHECK_EQUAL((var.partial<CIEC_BOOL,0+offset>()),b0);\
+  BOOST_CHECK_EQUAL((var.partial<CIEC_BOOL,1+offset>()),b1);\
+  BOOST_CHECK_EQUAL((var.partial<CIEC_BOOL,2+offset>()),b2);\
+  BOOST_CHECK_EQUAL((var.partial<CIEC_BOOL,3+offset>()),b3);
 
 #define test4X_0(var, offset) test4X(var, offset, 0, 0, 0, 0)
 #define test4X_1(var, offset) test4X(var, offset, 0, 0, 0, 1)
@@ -40,10 +40,10 @@
 
 
 #define set4X(var, offset, b3, b2, b1, b0) \
-  var.X<0+offset>()=b0;\
-  var.X<1+offset>()=b1;\
-  var.X<2+offset>()=b2;\
-  var.X<3+offset>()=b3;
+  var.partial<CIEC_BOOL,0+offset>()=b0;\
+  var.partial<CIEC_BOOL,1+offset>()=b1;\
+  var.partial<CIEC_BOOL,2+offset>()=b2;\
+  var.partial<CIEC_BOOL,3+offset>()=b3;
 
 #define set4X_0(var, offset) set4X(var, offset, 0, 0, 0, 0)
 #define set4X_1(var, offset) set4X(var, offset, 0, 0, 0, 1)

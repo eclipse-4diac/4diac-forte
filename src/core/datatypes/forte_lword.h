@@ -84,33 +84,13 @@ class CIEC_LWORD : public CIEC_ANY_BIT{
       return CIEC_ANY::e_LWORD;
     }
 
-    /*! \brief Access a single bit within a CIEC_LWORD (e.g. [LWORD].X<1>())
+    /*! \brief Partial access within a CIEC_LWORD (e.g. [LWORD].partial<CIEC_BOOL,1>())
      *
      */
-    template <size_t paIndex> PARTIAL_ACCESS_BIT<CIEC_BOOL, CIEC_LWORD, paIndex> X(){
-      return PARTIAL_ACCESS_BIT<CIEC_BOOL, CIEC_LWORD, paIndex>(*this);
+    template <class T, size_t paIndex> PARTIAL_ACCESS<T, CIEC_LWORD, paIndex> partial(){
+      return PARTIAL_ACCESS<T,CIEC_LWORD, paIndex>(*this);
     }
 
-    /*! \brief Access a single byte within a CIEC_LWORD (e.g. [LWORD].B<1>())
-     *
-     */
-    template <size_t paIndex> PARTIAL_ACCESS<CIEC_BYTE, CIEC_LWORD, paIndex> B(){
-      return PARTIAL_ACCESS<CIEC_BYTE, CIEC_LWORD, paIndex>(*this);
-    }
-
-    /*! \brief Access a single word within a CIEC_LWORD (e.g. [LWORD].W<1>())
-     *
-     */
-    template <size_t paIndex> PARTIAL_ACCESS<CIEC_WORD, CIEC_LWORD, paIndex> W(){
-      return PARTIAL_ACCESS<CIEC_WORD, CIEC_LWORD, paIndex>(*this);
-    }
-
-    /*! \brief Access a single Dword within a CIEC_LWORD (e.g. [LWORD].D<1>())
-     *
-     */
-    template <size_t paIndex> PARTIAL_ACCESS<CIEC_DWORD, CIEC_LWORD, paIndex> D(){
-      return PARTIAL_ACCESS<CIEC_DWORD, CIEC_LWORD, paIndex>(*this);
-    }
 };
 
 #endif

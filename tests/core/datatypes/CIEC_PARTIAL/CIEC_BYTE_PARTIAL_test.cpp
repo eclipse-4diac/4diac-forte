@@ -29,7 +29,21 @@
 
 using namespace boost::unit_test;
 
+class CIEC_BYTE_PARTIAL_UNCHECKED : public CIEC_BYTE{
+public:
+  CIEC_BYTE_PARTIAL_UNCHECKED() {
+  }
+
+  CIEC_BYTE_PARTIAL_UNCHECKED(const CIEC_BYTE& paValue) : CIEC_BYTE(paValue) {
+  }
+
+  CIEC_ANY_BIT::PARTIAL_ACCESS_TYPE<CIEC_BOOL, CIEC_BYTE> x(size_t paIndex){
+    return CIEC_ANY_BIT::PARTIAL_ACCESS_TYPE<CIEC_BOOL, CIEC_BYTE>(*this, paIndex);
+  }
+};
+
 BOOST_AUTO_TEST_SUITE(CIEC_ANY_BIT_PARTIAL)
+BOOST_AUTO_TEST_SUITE(CIEC_ANY_BIT_PARTIAL_BYTE)
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_INITVALUES)
 {
@@ -38,6 +52,16 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_INITVALUES)
   test4X_0(nTestByte,4);
   test4X_0(nTestByte,0);
 
+}
+
+BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_CONST_INIT)
+{
+  const CIEC_BOOL nTestBool(true);
+  CIEC_BYTE mTestByte;
+
+  mTestByte.partial<CIEC_BOOL,4>() = nTestBool;
+
+  BOOST_CHECK_EQUAL(mTestByte, 16);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE1_CHECK_BYTE)
@@ -169,4 +193,57 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_BIT_CHANGE_BYTE_CHECK_BIT_B)
 
 }
 
+BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_FROM_CONST)
+{
+  const CIEC_BOOL nTestBool(true);
+
+  CIEC_BYTE mTestByte;
+
+  mTestByte.partial<CIEC_BOOL,3>() = nTestBool;
+
+  BOOST_CHECK_EQUAL(mTestByte, 8);
+}
+
+BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_TYPE_WRITE_OUT_OF_BOUNDS)
+{
+  CIEC_BYTE_PARTIAL_UNCHECKED mTestByte;
+
+  auto tmp = mTestByte.x(8);
+
+  tmp = true;
+
+  BOOST_CHECK_EQUAL(mTestByte, 0);
+  BOOST_CHECK_EQUAL(tmp.getAccessedOutOfBounds(), true);
+}
+
+BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_TYPE_WRITE_OUT_OF_BOUNDS_FROM_CONST)
+{
+  const CIEC_BOOL nTestBool (true);
+
+  CIEC_BYTE_PARTIAL_UNCHECKED mTestByte;
+
+  auto tmp = mTestByte.x(8);
+
+  tmp = nTestBool;
+
+  BOOST_CHECK_EQUAL(mTestByte, 0);
+  BOOST_CHECK_EQUAL(tmp.getAccessedOutOfBounds(), true);
+}
+
+BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_TYPE_READ_OUT_OF_BOUNDS)
+{
+  CIEC_BYTE nTestByte;
+  CIEC_BYTE_PARTIAL_UNCHECKED mTestByte;
+
+  nTestByte = 255;
+  mTestByte.setValue(nTestByte);
+
+  auto tmp = mTestByte.x(8);
+
+  BOOST_CHECK_EQUAL(mTestByte, 255);
+  BOOST_CHECK_EQUAL(tmp, 0);
+  BOOST_CHECK_EQUAL(tmp.getAccessedOutOfBounds(), true);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
 BOOST_AUTO_TEST_SUITE_END()

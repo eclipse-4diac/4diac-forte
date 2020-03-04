@@ -31,6 +31,7 @@
 using namespace boost::unit_test;
 
 BOOST_AUTO_TEST_SUITE(CIEC_ANY_BIT_PARTIAL)
+BOOST_AUTO_TEST_SUITE(CIEC_ANY_BIT_PARTIAL_WORD)
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_WORD_INITVALUES_CHECK_BIT)
 {
@@ -47,9 +48,19 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_WORD_INITVALUES_CHECK_BYTE)
 {
   CIEC_WORD nTestWord;
 
-  BOOST_CHECK_EQUAL(nTestWord.B<0>(),0);
-  BOOST_CHECK_EQUAL(nTestWord.B<1>(),0);
+  BOOST_CHECK_EQUAL((nTestWord.partial<CIEC_BYTE,0>()),0);
+  BOOST_CHECK_EQUAL((nTestWord.partial<CIEC_BYTE,1>()),0);
 
+}
+
+BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_WORD_CONST_INIT)
+{
+  const CIEC_BYTE nTestByte(0x42);
+  CIEC_WORD mTestWord;
+
+  mTestWord.partial<CIEC_BYTE,0>() = nTestByte;
+
+  BOOST_CHECK_EQUAL(mTestWord, 0x42);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_WORD_VALUE_CHECK_WORD)
@@ -68,8 +79,8 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_WORD_VALUE_CHECK_BYTE)
 
   nTestWord=0xBABE;
 
-  BOOST_CHECK_EQUAL(nTestWord.B<0>(), 0xBE);
-  BOOST_CHECK_EQUAL(nTestWord.B<1>(), 0xBA);
+  BOOST_CHECK_EQUAL((nTestWord.partial<CIEC_BYTE,0>()), 0xBE);
+  BOOST_CHECK_EQUAL((nTestWord.partial<CIEC_BYTE,1>()), 0xBA);
 
 }
 
@@ -111,8 +122,8 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_WORD_ASSIGN_BIT_CHECK_BYTE)
   set4X_0(nTestWord,4);
   set4X_D(nTestWord,0);
 
-  BOOST_CHECK_EQUAL(nTestWord.B<1>(), 0xF0U);
-  BOOST_CHECK_EQUAL(nTestWord.B<0>(), 0x0DU);
+  BOOST_CHECK_EQUAL((nTestWord.partial<CIEC_BYTE,1>()), 0xF0U);
+  BOOST_CHECK_EQUAL((nTestWord.partial<CIEC_BYTE,0>()), 0x0DU);
 
 }
 
@@ -133,8 +144,8 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_WORD_ASSIGN_BYTE_CHECK_BIT)
 {
   CIEC_WORD nTestWord;
 
-  nTestWord.B<1>() = 0xCA;
-  nTestWord.B<0>() = 0xFE;
+  nTestWord.partial<CIEC_BYTE,1>() = 0xCA;
+  nTestWord.partial<CIEC_BYTE,0>() = 0xFE;
 
   test4X_C(nTestWord,12);
   test4X_A(nTestWord,8);
@@ -147,11 +158,11 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_WORD_ASSIGN_BYTE_CHECK_BYTE)
 {
   CIEC_WORD nTestWord;
 
-  nTestWord.B<1>() = 0xCA;
-  nTestWord.B<0>() = 0xFE;
+  nTestWord.partial<CIEC_BYTE,1>() = 0xCA;
+  nTestWord.partial<CIEC_BYTE,0>() = 0xFE;
 
-  BOOST_CHECK_EQUAL(nTestWord.B<1>(), 0xCAU);
-  BOOST_CHECK_EQUAL(nTestWord.B<0>(), 0xFEU);
+  BOOST_CHECK_EQUAL((nTestWord.partial<CIEC_BYTE,1>()), 0xCAU);
+  BOOST_CHECK_EQUAL((nTestWord.partial<CIEC_BYTE,0>()), 0xFEU);
 
 }
 
@@ -159,8 +170,8 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_WORD_ASSIGN_BYTE_CHECK_WORD)
 {
   CIEC_WORD nTestWord;
 
-  nTestWord.B<1>() = 0xCA;
-  nTestWord.B<0>() = 0xFE;
+  nTestWord.partial<CIEC_BYTE,1>() = 0xCA;
+  nTestWord.partial<CIEC_BYTE,0>() = 0xFE;
 
   BOOST_CHECK_EQUAL(nTestWord, 0xCAFEU);
 
@@ -185,8 +196,8 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_WORD_ASSIGN_WORD_CHECK_BYTE)
 
   nTestWord = 0xFFEE;
 
-  BOOST_CHECK_EQUAL(nTestWord.B<1>(), 0xFFU);
-  BOOST_CHECK_EQUAL(nTestWord.B<0>(), 0xEEU);
+  BOOST_CHECK_EQUAL((nTestWord.partial<CIEC_BYTE,1>()), 0xFFU);
+  BOOST_CHECK_EQUAL((nTestWord.partial<CIEC_BYTE,0>()), 0xEEU);
 
 }
 
@@ -225,8 +236,8 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_WORD_ASSIGN_CHAIN_BYTE_BIT_CHECK_BYTE)
   set4X_F(nTestWord,4);
   set4X_E(nTestWord,0);
 
-  BOOST_CHECK_EQUAL(nTestWord.B<1>(), 0x11U);
-  BOOST_CHECK_EQUAL(nTestWord.B<0>(), 0xFEU);
+  BOOST_CHECK_EQUAL((nTestWord.partial<CIEC_BYTE,1>()), 0x11U);
+  BOOST_CHECK_EQUAL((nTestWord.partial<CIEC_BYTE,0>()), 0xFEU);
 
 }
 
@@ -243,4 +254,5 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_WORD_ASSIGN_CHAIN_BYTE_BIT_CHECK_WORD)
 
 }
 
+BOOST_AUTO_TEST_SUITE_END()
 BOOST_AUTO_TEST_SUITE_END()

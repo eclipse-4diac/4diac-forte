@@ -77,12 +77,13 @@ class CIEC_BYTE : public CIEC_ANY_BIT{
       return CIEC_ANY::e_BYTE;
     }
 
-    /*! \brief Access a single bit within a CIEC_BYTE (e.g. [BYTE].X<1>())
+    /*! \brief Partial access within a CIEC_BYTE (e.g. [BYTE].partial<CIEC_BOOL,1>())
      *
      */
-    template <size_t paIndex> PARTIAL_ACCESS_BIT<CIEC_BOOL, CIEC_BYTE, paIndex> X(){
-      return PARTIAL_ACCESS_BIT<CIEC_BOOL, CIEC_BYTE, paIndex>(*this);
+    template <class T, size_t paIndex> PARTIAL_ACCESS<T, CIEC_BYTE, paIndex> partial(){
+      return PARTIAL_ACCESS<T,CIEC_BYTE, paIndex>(*this);
     }
+
 };
 
 #endif /*_FORTE_BYTE_H_*/

@@ -82,26 +82,13 @@ class CIEC_DWORD : public CIEC_ANY_BIT{
       return CIEC_ANY::e_DWORD;
     }
 
-    /*! \brief Access a single bit within a CIEC_DWORD (e.g. [DWORD].X<1>())
+    /*! \brief Partial access within a CIEC_DWORD (e.g. [DWORD].partial<CIEC_BOOL,1>())
      *
      */
-    template <size_t paIndex> PARTIAL_ACCESS_BIT<CIEC_BOOL, CIEC_DWORD, paIndex> X(){
-      return PARTIAL_ACCESS_BIT<CIEC_BOOL,CIEC_DWORD, paIndex>(*this);
+    template <class T, size_t paIndex> PARTIAL_ACCESS<T, CIEC_DWORD, paIndex> partial(){
+      return PARTIAL_ACCESS<T,CIEC_DWORD, paIndex>(*this);
     }
 
-    /*! \brief Access a single byte within a CIEC_DWORD (e.g. [DWORD].B<1>())
-     *
-     */
-    template <size_t paIndex> PARTIAL_ACCESS<CIEC_BYTE, CIEC_DWORD, paIndex> B(){
-      return PARTIAL_ACCESS<CIEC_BYTE, CIEC_DWORD, paIndex>(*this);
-    }
-
-    /*! \brief Access a single word within a CIEC_DWORD (e.g. [DWORD].W<1>())
-     *
-     */
-    template <size_t paIndex> PARTIAL_ACCESS<CIEC_WORD, CIEC_DWORD, paIndex> W(){
-      return PARTIAL_ACCESS<CIEC_WORD, CIEC_DWORD, paIndex>(*this);
-    }
 };
 
 #endif /*_FORTE_DWORD_H_*/
