@@ -45,7 +45,7 @@ void ArrowheadJSONHelper::transformANYToJSON(const CIEC_ANY& paSource, CIEC_STRI
       break;
     default: {
       bool isDateAndTime = CIEC_ANY::e_DATE_AND_TIME == paSource.getDataTypeID();
-      unsigned int size = paSource.getToStringBufferSize();
+      size_t size = paSource.getToStringBufferSize();
       if(isDateAndTime) {
         size++;
       }
@@ -82,6 +82,8 @@ void ArrowheadJSONHelper::transformANYToJSON(const CIEC_ANY& paSource, CIEC_STRI
 
 void ArrowheadJSONHelper::transformJSONToStruct(char* paToChange) {
   transformServiceMetadata(paToChange);
+  transformNull(paToChange);
+  removeEndOfValidity(paToChange);
   removeIds(paToChange);
   char* runner = paToChange;
   changeKeys(&runner);
@@ -337,9 +339,9 @@ void ArrowheadJSONHelper::transformArrayToJSON(const CIEC_ARRAY& paSource, CIEC_
   paResult.append("[");
 
   bool first = true;
-  for(unsigned int i = 0; i < unSize; ++i) {
+  for(size_t i = 0; i < unSize; ++i) {
     if((CIEC_ANY::e_STRING == paSource.getElementDataTypeID() || CIEC_ANY::e_WSTRING == paSource.getElementDataTypeID())
-      && 0 == strcmp(static_cast<const CIEC_WSTRING*>(paSource[i])->getValue(), "")) {
+      && 0 == strcmp(static_cast<const CIEC_WSTRING*>(paSource[static_cast<TForteUInt16>(i)])->getValue(), "")) {
       break;
     }
 
@@ -348,7 +350,7 @@ void ArrowheadJSONHelper::transformArrayToJSON(const CIEC_ARRAY& paSource, CIEC_
     } else {
       first = false;
     }
-    transformANYToJSON(*paSource[i], paResult);
+    transformANYToJSON(*paSource[static_cast<TForteUInt16>(i)], paResult);
   }
   paResult.append("]");
 }
@@ -410,6 +412,32 @@ void ArrowheadJSONHelper::removeIds(char* paText) {
       }
       *paText = ' '; //for the last comma
       paText++;
+    }
+  } while(0 != paText);
+}
+
+void ArrowheadJSONHelper::removeEndOfValidity(char *paText) {
+  do {
+    paText = strstr(paText, "\"endOfValidity\"");
+    if(0 != paText) {
+      while(',' != *paText) {
+        *paText = ' ';
+        paText++;
+      }
+      *paText = ' '; //for the last comma
+      paText++;
+    }
+  } while(0 != paText);
+}
+
+void ArrowheadJSONHelper::transformNull(char *paText) {
+  do {
+    paText = strstr(paText, "null");
+    if(0 != paText) {
+      *paText++ = ' ';
+      *paText++ = '"';
+      *paText++ = '"';
+      *paText++ = ' ';
     }
   } while(0 != paText);
 }

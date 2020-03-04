@@ -55,9 +55,13 @@ class ArrowheadJSONHelper {
 
     static void removeIds(char* paText);
 
+    static void removeEndOfValidity(char *paText);
+
     static void changeKeys(char** paText);
 
     static void changeKeysArray(char** paText);
+
+    static void transformNull(char *paText);
 
     static void changeToStruct(char* paText);
 };
