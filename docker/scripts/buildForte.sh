@@ -49,7 +49,9 @@ COMMON_FLAGS="-DCMAKE_BUILD_TYPE=Debug \
               -DFORTE_MODULE_IEC61131=ON \
               -DFORTE_MODULE_Arrowhead=ON \
               -DFORTE_COM_HTTP=ON \
-              -DFORTE_COM_HTTP_LISTENING_PORT=8080"
+              -DFORTE_COM_HTTP_LISTENING_PORT=8080 \
+              ${USER_FLAGS} \
+              -DFORTE_EXTERNAL_MODULES_DIRECTORY=${FORTE_EXTERNAL_MODULES}"
 
 ARM_COMPILER="-DCMAKE_C_COMPILER=${ARM_BIN}/arm-linux-gnueabihf-gcc \
               -DCMAKE_CXX_COMPILER=${ARM_BIN}/arm-linux-gnueabihf-g++ \

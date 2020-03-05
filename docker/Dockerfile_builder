@@ -35,8 +35,14 @@ COPY ./docker/scripts/prepareOtherRepos.sh /usr/scripts_temp/
 COPY ./docker/scripts/commonFunctions.sh /usr/scripts_temp/
 RUN /usr/scripts_temp/prepareOtherRepos.sh -A -M && rm -r /usr/scripts_temp/
 
+ARG FORTE_USER_FLAGS=""
+ENV FORTE_USER_FLAGS $FORTE_USER_FLAGS
+
+ARG FORTE_EXTERNAL_MODULES="/usr/forte_modules/"
+ENV FORTE_EXTERNAL_MODULES $FORTE_EXTERNAL_MODULES
+
 COPY . /usr/repos/org.eclipse.4diac.forte
-RUN /usr/repos/org.eclipse.4diac.forte/docker/scripts/buildForte.sh -A -M
+RUN /usr/repos/org.eclipse.4diac.forte/docker/scripts/buildForte.sh -A -M "$FORTE_USER_FLAGS"
 
 CMD /bin/bash
 
