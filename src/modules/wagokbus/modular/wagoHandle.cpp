@@ -90,8 +90,8 @@ void WagoHandle::dropObserver() {
 }
 
 void WagoHandle::getBoolean(CIEC_BOOL &paState) {
-  bool *inDataBool = 0;
-  mAppDevInterface->ReadBool(mKBusDeviceId, mTaskId, mInputOffset, inDataBool);
+  bool inDataBool = false;
+  mAppDevInterface->ReadBool(mKBusDeviceId, mTaskId, mInputOffset, &inDataBool);
   paState = inDataBool;
 }
 
