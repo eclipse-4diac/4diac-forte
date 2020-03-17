@@ -23,6 +23,8 @@
 
 using namespace forte::com_infra;
 
+TForteUInt16 gHTTPServerPort = FORTE_COM_HTTP_LISTENING_PORT;
+
 CIPComSocketHandler::TSocketDescriptor CHTTP_Handler::smServerListeningSocket = CIPComSocketHandler::scmInvalidSocketDescriptor;
 
 char CHTTP_Handler::sRecvBuffer[];
@@ -384,12 +386,12 @@ void CHTTP_Handler::stopTimeoutThread() {
 void CHTTP_Handler::openHTTPServer() {
   if(CIPComSocketHandler::scmInvalidSocketDescriptor == smServerListeningSocket) {
     char address[] = "127.0.0.1";
-    smServerListeningSocket = CIPComSocketHandler::openTCPServerConnection(address, FORTE_COM_HTTP_LISTENING_PORT);
+    smServerListeningSocket = CIPComSocketHandler::openTCPServerConnection(address, gHTTPServerPort);
     if(CIPComSocketHandler::scmInvalidSocketDescriptor != smServerListeningSocket) {
       getExtEvHandler<CIPComSocketHandler>().addComCallback(smServerListeningSocket, this);
-      DEVLOG_INFO("[HTTP Handler] HTTP server listening on port %d\n", FORTE_COM_HTTP_LISTENING_PORT);
+      DEVLOG_INFO("[HTTP Handler] HTTP server listening on port %u\n", gHTTPServerPort);
     } else {
-      DEVLOG_ERROR("[HTTP Handler] Couldn't start HTTP server on port %d\n", FORTE_COM_HTTP_LISTENING_PORT);
+      DEVLOG_ERROR("[HTTP Handler] Couldn't start HTTP server on port %u\n", gHTTPServerPort);
     }
   }
 }

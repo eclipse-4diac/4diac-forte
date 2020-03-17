@@ -21,8 +21,12 @@ if(FORTE_COM_HTTP)
   forte_add_handler(CHTTP_Handler http_handler)
   forte_add_sourcefile_hcpp(http_handler)
   
+      
   SET(FORTE_COM_HTTP_LISTENING_PORT "80" CACHE STRING "HTTP Listening Port")
   
   forte_add_custom_configuration("#define FORTE_COM_HTTP_LISTENING_PORT ${FORTE_COM_HTTP_LISTENING_PORT}")
+  forte_add_custom_configuration("extern TForteUInt16 gHTTPServerPort\;")
+  
+  forte_add_custom_configuration("#cmakedefine FORTE_COM_HTTP")
   
 endif(FORTE_COM_HTTP)

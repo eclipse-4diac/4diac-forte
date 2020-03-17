@@ -34,6 +34,9 @@ void listHelp(void){
 #ifdef FORTE_COM_PAHOMQTT
   printf("%-20s Set the configuration file for the MQTT clients\n", "  -mc <file>");
 #endif //FORTE_COM_PAHOMQTT
+#ifdef FORTE_COM_HTTP
+  printf("%-20s Set the listening port for the HTTP server\n", "  -Hp <port>");
+#endif //FORTE_COM_HTTP
 }
 
 /*!\brief Parses the command line arguments passed to the main function
@@ -71,6 +74,13 @@ const char *parseCommandLineArguments(int argc, char *arg[]){
             }
             break;
 #endif //FORTE_COM_PAHOMQTT
+#ifdef FORTE_COM_HTTP
+          case 'H':
+            if('p' == arg[i][2]) { //! Retrieves HTTP server port number entered from the command line
+              gHTTPServerPort = static_cast<TForteUInt16>(atoi(arg[i + 1]));
+            }
+            break;
+#endif //FORTE_COM_HTTP
           default: //! Unknown parameter or -h -> Lists the help for FORTE
             return "";
         }
