@@ -50,7 +50,7 @@ namespace luatype {
   }
 
   bool getFBParameter(SCFB_FBParameter& paDef, CLuaEngine* paLuaEngine, int paIndex) {
-    paDef.m_acParamValue = paLuaEngine->getField<char *, &CLuaEngine::getString>(paIndex, "paramValue");
+    paDef.m_acParamValue = paLuaEngine->getField<const char *, &CLuaEngine::getString>(paIndex, "paramValue");
     paDef.m_nDINameID = paLuaEngine->getField<CStringDictionary::TStringId, &CLuaEngine::getStringId>(paIndex, "diNameID");
     paDef.m_nFBNum = paLuaEngine->getField<int, &CLuaEngine::getInteger<int> >(paIndex, "fbNum");
     if(paDef.m_nDINameID == CStringDictionary::scm_nInvalidStringId) {
