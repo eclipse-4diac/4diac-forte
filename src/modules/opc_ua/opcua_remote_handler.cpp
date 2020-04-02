@@ -32,7 +32,6 @@ COPC_UA_Client_IterationList::~COPC_UA_Client_IterationList() {
 void COPC_UA_Client_IterationList::startIterationThread() {
   if(!isAlive()) {
     start();
-    mClientsThreadStarted.waitIndefinitely();
   }
 }
 
@@ -59,7 +58,6 @@ void COPC_UA_Client_IterationList::removeClient(CUA_ClientInformation& paClientI
 }
 
 void COPC_UA_Client_IterationList::run() {
-  mClientsThreadStarted.inc();
   while(isAlive()) {
 
     if(mNewClientsPresent) {

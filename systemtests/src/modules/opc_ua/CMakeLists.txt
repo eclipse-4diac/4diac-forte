@@ -60,3 +60,6 @@ forte_add_2dev_systemtests(ClientConfigSuccessNonMatchEndpointFirst clientAuthSu
 if(FORTE_COM_OPC_UA_ENCRYPTION AND FORTE_COM_OPC_UA_MASTER_BRANCH)
   forte_add_2dev_systemtests(ClientConfigFailFailNoCertificateFile clientAuthFail.fboot serverForAuth.fboot "-oc ${CMAKE_CURRENT_SOURCE_DIR}/clientsConfigFiles/failNoCertificateFile.forte" "" 10 0)
 endif(FORTE_COM_OPC_UA_ENCRYPTION AND FORTE_COM_OPC_UA_MASTER_BRANCH)
+
+
+forte_add_2dev_systemtests(DoubleResourceDeadlock doubleResourceDeadlockClient.fboot doubleResourceDeadlockServer.fboot "" "" 10 0) # There's no test in these systems. It only tests that if two resources try to start the local/remote thread at the same time, there won't be a deadlock, thus finishing the test without a timeout

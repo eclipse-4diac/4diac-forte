@@ -125,11 +125,6 @@ class COPC_UA_Client_IterationList : public CThread {
     CSemaphore mNeedsIteration;
 
     /**
-     * Indicates that the thread had started, so other threads waiting for it can continue
-     */
-    CSemaphore mClientsThreadStarted;
-
-    /**
      * Cyclic time to sleep if another iteration is needed. This is the period at which the iteration occurs normally
      */
     static const TForteUInt64 scmNanosecondsToSleep = FORTE_COM_OPC_UA_CLIENT_PUB_INTERVAL * 1000000; //ms to nanoseconds

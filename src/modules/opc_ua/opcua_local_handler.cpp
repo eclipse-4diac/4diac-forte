@@ -133,6 +133,7 @@ void COPC_UA_Local_Handler::startServer() {
   if(!isAlive()) {
     start();
     mServerStarted.waitIndefinitely();
+    mServerStarted.inc(); //in case two threads get into this block at the same time
   }
 }
 
