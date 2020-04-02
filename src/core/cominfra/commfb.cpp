@@ -123,8 +123,8 @@ EComResponse CCommFB::sendData() {
 
 bool CCommFB::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec){
   TIdentifier tempstring;
-  char *sParamA = 0;
-  char *sParamB = 0;
+  const char *sParamA = 0;
+  const char *sParamB = 0;
 
   paInterfaceSpec.m_nNumEIs = 2;
   paInterfaceSpec.m_nNumEOs = 2;
@@ -156,13 +156,13 @@ bool CCommFB::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &
   configureDOs(sParamB, paInterfaceSpec);
 
   if (forte::com_infra::e_Requester == (forte::com_infra::e_Requester & m_eCommServiceType)) {
-    paInterfaceSpec.m_aunEINames = const_cast<CStringDictionary::TStringId*>(scm_aunRequesterEventInputNameIds);
-    paInterfaceSpec.m_aunEONames = const_cast<CStringDictionary::TStringId*>(scm_aunRequesterEventOutputNameIds);
+    paInterfaceSpec.m_aunEINames = scm_aunRequesterEventInputNameIds;
+    paInterfaceSpec.m_aunEONames = scm_aunRequesterEventOutputNameIds;
   }
   else {
     if (forte::com_infra::e_Responder == (forte::com_infra::e_Responder & m_eCommServiceType)) {
-      paInterfaceSpec.m_aunEINames = const_cast<CStringDictionary::TStringId*>(scm_aunResponderEventInputNameIds);
-      paInterfaceSpec.m_aunEONames = const_cast<CStringDictionary::TStringId*>(scm_aunResponderEventOutputNameIds);
+      paInterfaceSpec.m_aunEINames = scm_aunResponderEventInputNameIds;
+      paInterfaceSpec.m_aunEONames = scm_aunResponderEventOutputNameIds;
     }
   }
   paInterfaceSpec.m_anEIWithIndexes = scm_anEIWithIndexes;
