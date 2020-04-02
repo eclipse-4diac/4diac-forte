@@ -71,7 +71,6 @@ class CUA_ClientConfigFileParser {
     static bool lookForEndpointInFile(CConfigFileParser &paFileParse, std::string &paEndpoint, bool &paFound);
 
 #ifdef UA_ENABLE_ENCRYPTION
-# ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
     /**
      * Load a file into a byte string. Used for certifcates and privated key files
      * @param paFileLocation Path to the file to be loaded
@@ -79,9 +78,6 @@ class CUA_ClientConfigFileParser {
      * @return True if no error occurred, false otherwise
      */
     static bool loadFileIntoBytestring(std::string &paFileLocation, UA_ByteString &paResult);
-# else // FORTE_COM_OPC_UA_MASTER_BRANCH
-
-# endif // FORTE_COM_OPC_UA_MASTER_BRANCH
 #endif //UA_ENABLE_ENCRYPTION
 };
 

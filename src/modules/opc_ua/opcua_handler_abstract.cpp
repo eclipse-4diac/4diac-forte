@@ -19,9 +19,7 @@
 const char *LogLevelNames[6] = { "trace", "debug", "info", "warning", "error", "fatal" };
 const char *LogCategoryNames[7] = { "network", "channel", "session", "server", "client", "userland" };
 
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
 const UA_Logger COPC_UA_HandlerAbstract::UA_Forte_logger = {UA_Log_Forte, 0, UA_Log_Forte_clear};
-#endif //FORTE_COM_OPC_UA_MASTER_BRANCH
 
 COPC_UA_HandlerAbstract::COPC_UA_HandlerAbstract(CDeviceExecution& paDeviceExecution) :
     CExternalEventHandler(paDeviceExecution) {
@@ -45,18 +43,10 @@ int COPC_UA_HandlerAbstract::getPriority() const {
 }
 
 UA_Logger COPC_UA_HandlerAbstract::getLogger() {
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
   return UA_Forte_logger;
-#else //FORTE_COM_OPC_UA_MASTER_BRANCH
-  return UA_Log_Forte;
-#endif //FORTE_COM_OPC_UA_MASTER_BRANCH
 }
 
-void COPC_UA_HandlerAbstract::UA_Log_Forte(
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-    void*,
-#endif //FORTE_COM_OPC_UA_MASTER_BRANCH
-    UA_LogLevel paLevel, UA_LogCategory paCategory, const char *paMsg, va_list paArgs) {
+void COPC_UA_HandlerAbstract::UA_Log_Forte(void*, UA_LogLevel paLevel, UA_LogCategory paCategory, const char *paMsg, va_list paArgs) {
 
   char tmpStr[mMaxLogLength];
   forte_snprintf(tmpStr, mMaxLogLength, "[OPC UA LOGGER] %s/%s\t", LogLevelNames[paLevel], LogCategoryNames[paCategory]);
@@ -88,10 +78,6 @@ void COPC_UA_HandlerAbstract::UA_Log_Forte(
   }
 }
 
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
 void COPC_UA_HandlerAbstract::UA_Log_Forte_clear(void *) {
   //do nothing
 }
-#endif //FORTE_COM_OPC_UA_MASTER_BRANCH
-
-

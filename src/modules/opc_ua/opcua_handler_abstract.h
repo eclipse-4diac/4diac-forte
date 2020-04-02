@@ -78,16 +78,10 @@ class COPC_UA_HandlerAbstract : public CExternalEventHandler {
 
   private:
 
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
     static void UA_Log_Forte_clear(void *paLogContext);
     static const UA_Logger UA_Forte_logger;
-#endif //FORTE_COM_OPC_UA_MASTER_BRANCH
 
-    static void UA_Log_Forte(
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-        void*,
-#endif //FORTE_COM_OPC_UA_MASTER_BRANCH
-        UA_LogLevel paLevel, UA_LogCategory paCategory, const char *paMsg, va_list paArgs);
+    static void UA_Log_Forte(void*, UA_LogLevel paLevel, UA_LogCategory paCategory, const char *paMsg, va_list paArgs);
 
     /**
      * Maximum size of the logging buffer

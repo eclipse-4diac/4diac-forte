@@ -155,14 +155,6 @@ class CUA_ClientInformation {
     class CUA_RemoteCallbackFunctions {
       public:
 
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-        //not used
-#else
-        /**
-         * Common async callback in the v0.3.0 of open62541
-         */
-        static void anyAsyncCallback(UA_Client *paClient, void *paUserdata, UA_UInt32 paRequestId, void *paResponse, const UA_DataType *paResponseType);
-#endif
         /**
          * Async callback for read action
          */
@@ -176,12 +168,7 @@ class CUA_ClientInformation {
         /**
          * Async callback for method call action
          */
-        static void callMethodAsyncCallback(UA_Client *paClient, void *paUserdata, UA_UInt32 paRequestId,
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-            void *paResponse);
-#else
-        UA_CallResponse *paResponse);
-#endif
+        static void callMethodAsyncCallback(UA_Client *paClient, void *paUserdata, UA_UInt32 paRequestId, void *paResponse);
 
         /**
          * Async callback for subscription action

@@ -658,15 +658,6 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
 # ifndef UA_ENABLE_DISCOVERY_MULTICAST
 #  error open62541 needs to be built with UA_ENABLE_DISCOVERY_MULTICAST=ON
 # else // UA_ENABLE_DISCOVERY_MULTICAST
-#  ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-    //nothing here
-#   else
-
-    /**
-     * Server configuration
-     */
-    UA_ServerConfig *mServerConfig;
-#   endif
     /**
      * List of LDS servers where this instance is already registered.
      */
