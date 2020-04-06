@@ -14,13 +14,25 @@
 #include "opcua_client_config_parser.h"
 #include "arch/devlog.h"
 
+const char *const CUA_ClientConfigFileParser::mKeyNames[] = {
+  "endpoint",
+  "username",
+  "password",
+#ifdef UA_ENABLE_ENCRYPTION
+  "certificate",
+  "privateKey",
+  "securityMode",
+  "securityPolicy"
+#endif // UA_ENABLE_ENCRYPTION
+  };
+
 bool CUA_ClientConfigFileParser::loadConfig(std::string &paFileLocation, std::string &paEndpoint, UA_ConfigFromFile &paResult) {
   bool retVal = true;
   UA_StatusCode retValOpcUa = UA_STATUSCODE_GOOD;
 
   CConfigFileParser configFileParser(paFileLocation);
   bool endpointFound = false;
-  std::string endpointKey = "endpoint";
+  const std::string endpointKey = CUA_ClientConfigFileParser::mKeyNames[UA_KeyType::eEndpoint];
 
   if(CConfigFileParser::lookForKeyValueInFile(configFileParser, endpointKey, paEndpoint, endpointFound)) {
     if(endpointFound) {
@@ -38,21 +50,21 @@ bool CUA_ClientConfigFileParser::loadConfig(std::string &paFileLocation, std::st
 
         switch(configFileParser.parseNextLine(resultPair)){
           case CConfigFileParser::eOk:
-            if(0 == resultPair.first.compare("endpoint")) {
+            if(0 == resultPair.first.compare(CUA_ClientConfigFileParser::mKeyNames[UA_KeyType::eEndpoint])) {
               moreLinesToRead = false;
-            } else if(0 == resultPair.first.compare("username")) {
+            } else if(0 == resultPair.first.compare(CUA_ClientConfigFileParser::mKeyNames[UA_KeyType::eUsername])) {
               paResult.mUsername = resultPair.second;
-            } else if(0 == resultPair.first.compare("password")) {
+            } else if(0 == resultPair.first.compare(CUA_ClientConfigFileParser::mKeyNames[UA_KeyType::ePassword])) {
               paResult.mPassword = resultPair.second;
             }
 #ifdef UA_ENABLE_ENCRYPTION
-            else if(0 == resultPair.first.compare("certificate")) {
+            else if(0 == resultPair.first.compare(CUA_ClientConfigFileParser::mKeyNames[UA_KeyType::eCertificate])) {
               retVal = loadFileIntoBytestring(resultPair.second, certificateFileContent);
-            } else if(0 == resultPair.first.compare("privateKey")) {
+            } else if(0 == resultPair.first.compare(CUA_ClientConfigFileParser::mKeyNames[UA_KeyType::ePrivateKey])) {
               retVal = loadFileIntoBytestring(resultPair.second, privateKeyFileContent);
-            } else if(0 == resultPair.first.compare("securityMode")) {
+            } else if(0 == resultPair.first.compare(CUA_ClientConfigFileParser::mKeyNames[UA_KeyType::eSecurityMode])) {
               securityMode = static_cast<UA_MessageSecurityMode>(atoi(resultPair.second.c_str()));
-            } else if(0 == resultPair.first.compare("securityPolicy")) {
+            } else if(0 == resultPair.first.compare(CUA_ClientConfigFileParser::mKeyNames[UA_KeyType::eSecurityPolicy])) {
               securityPolicyUri = UA_STRING_ALLOC(resultPair.second.c_str());
             }
 #endif //UA_ENABLE_ENCRYPTION

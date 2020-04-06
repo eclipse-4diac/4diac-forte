@@ -62,7 +62,7 @@ class CConfigFileParser {
      * @param paFound True if the key/value was found, false otherwise
      * @return True if no error occurred, false otherwise. If the key is found but no the value, it's still a valid result and paFound is false
      */
-    static bool lookForKeyValueInFile(CConfigFileParser &paFileParse, std::string &paKey, std::string &paValue, bool &paFound);
+    static bool lookForKeyValueInFile(CConfigFileParser &paFileParse, const std::string &paKey, const std::string &paValue, bool &paFound);
 
   private:
 

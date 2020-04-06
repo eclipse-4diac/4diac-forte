@@ -61,6 +61,27 @@ class CUA_ClientConfigFileParser {
     explicit CUA_ClientConfigFileParser();
     virtual ~CUA_ClientConfigFileParser();
 
+    /**
+     * Allowed keys in the configuration file. If a new key is to be added, it should go before eKeyUnknown
+     */
+    enum UA_KeyType {
+      eEndpoint,
+      eUsername,
+      ePassword,
+#ifdef UA_ENABLE_ENCRYPTION
+      eCertificate,
+      ePrivateKey,
+      eSecurityMode,
+      eSecurityPolicy,
+#endif //UA_ENABLE_ENCRYPTION
+      eKeyUnknown,
+    };
+
+    /**
+     * String representations of the possible keys
+     */
+    static const char *const mKeyNames[eKeyUnknown];
+
 #ifdef UA_ENABLE_ENCRYPTION
     /**
      * Load a file into a byte string. Used for certifcates and privated key files

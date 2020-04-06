@@ -63,7 +63,7 @@ CConfigFileParser::ParseResult CConfigFileParser::parseNextLine(std::pair<std::s
   return retVal;
 }
 
-bool CConfigFileParser::lookForKeyValueInFile(CConfigFileParser &paFileParse, std::string &paKey, std::string &paValue, bool &paFound) {
+bool CConfigFileParser::lookForKeyValueInFile(CConfigFileParser &paFileParse, const std::string &paKey, const std::string &paValue, bool &paFound) {
 
   bool retVal = true;
   bool moreLinesToRead = true;
@@ -85,10 +85,10 @@ bool CConfigFileParser::lookForKeyValueInFile(CConfigFileParser &paFileParse, st
       case CConfigFileParser::eEndOfFile:
         moreLinesToRead = false;
         break;
-      case CConfigFileParser::eWrongLine:
-      case CConfigFileParser::eFileNotOpened:
-      case CConfigFileParser::eInternalError:
       default:
+        // CConfigFileParser::eWrongLine
+        // CConfigFileParser::eFileNotOpened
+        // CConfigFileParser::eInternalError
         retVal = false;
         moreLinesToRead = false;
         break;
