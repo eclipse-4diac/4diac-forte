@@ -129,9 +129,11 @@ bool CCommFB::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &
   paInterfaceSpec.m_nNumEIs = 2;
   paInterfaceSpec.m_nNumEOs = 2;
 
-  memcpy(tempstring, paConfigString, cg_nIdentifierLength);
+  memcpy(tempstring, paConfigString, (strlen(paConfigString) > cg_nIdentifierLength) ? cg_nIdentifierLength : strlen(paConfigString) + 1); //plus 1 for the null character
   tempstring[cg_nIdentifierLength] = '\0';
+
   size_t inlength = strlen(tempstring);
+
   size_t i;
   for (i = 0; i < inlength - 1; i++) { // search first underscore
     if (tempstring[i] == '_') {
