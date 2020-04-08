@@ -142,6 +142,15 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
     bool getDataAlreadyPresentRead();CSyncObject mDataAlreadyPresentMutex;
     bool mDataAlreadyPresent;
 
+    /**
+     * Array of ANY pointers used as buffer to store the received data
+     */
+    CIEC_ANY *mRDBuffer;
+
+    /**
+     * Mutex to access the mRDBuffer
+     */
+    CSyncObject mRDBufferMutex;
 };
 
 #endif /* SRC_MODULES_OPC_UA_OPCUA_LAYER_H_ */
