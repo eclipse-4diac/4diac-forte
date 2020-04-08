@@ -96,13 +96,11 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
   char baseName[cg_nIdentifierLength];
 
   TIdentifier typeIdString;
-  size_t inlength;
 
-  memcpy(typeIdString, paConfigString, cg_nIdentifierLength);
+  memcpy(typeIdString, paConfigString, (strlen(paConfigString) > cg_nIdentifierLength) ? cg_nIdentifierLength : strlen(paConfigString) + 1); //plus 1 for the null character
+  typeIdString[cg_nIdentifierLength] = '\0';
 
-  typeIdString[cg_nIdentifierLength] = '\0'; //make a string
-
-  inlength = strlen(typeIdString);
+  size_t inlength = strlen(typeIdString);
 
   for(index = 0; index < (int) inlength - 1; index++){
 

@@ -143,8 +143,8 @@ public:
     lua_pushstring(luaState, value);
   }
 
-  char* getString(int index) {
-    return strdup(lua_tostring(luaState, index));
+  const char* getString(int index) {
+    return lua_tostring(luaState, index);
   }
 
   void pushStringId(CStringDictionary::TStringId value) {
