@@ -19,9 +19,9 @@
 namespace forte {
   namespace core {
     namespace constants {
-      const CIEC_TIME::TValueType cMillisecondsPerSecond = 1E3;
-      const CIEC_TIME::TValueType cMicrosecondsPerSecond = 1E6;
-      const CIEC_TIME::TValueType cNanosecondsPerSecond = 1E9;
+      const CIEC_TIME::TValueType cMillisecondsPerSecond = 1000 /* 1E3 */;
+      const CIEC_TIME::TValueType cMicrosecondsPerSecond = 1000000 /* 1E6 */;
+      const CIEC_TIME::TValueType cNanosecondsPerSecond = 1000000000 /* 1E9 */;
     } /* namespace constants */
   } /* namespace core */
 } /* namespace forte */

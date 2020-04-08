@@ -316,7 +316,7 @@ EComResponse forte::com_infra::CHttpComLayer::recvServerData(CSinglyLinkedList<C
     if(noOfParameters == m_poFb->getNumRD()) {
       noOfParameters = 0;
       for(CSinglyLinkedList<CIEC_STRING>::Iterator iter = paParameterValues.begin(); iter != paParameterValues.end(); ++iter) {
-        m_poFb->getRDs()[noOfParameters].setValue(*iter);
+        m_poFb->getRDs()[noOfParameters++].setValue(*iter);
       }
     } else {
       DEVLOG_ERROR("[HTTP Layer] FB with path %s received a number of parameters of %u, while it has %u SDs\n", mPath.getValue(),

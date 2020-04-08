@@ -1,0 +1,55 @@
+#*******************************************************************************************
+# Copyright (c) 2020 fortiss GmbH
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0.
+#
+# SPDX-License-Identifier: EPL-2.0
+# 
+# Contributors:
+#     Jose Cabral
+#       -  initial implementation
+# ******************************************************************************************
+
+FROM alpine:edge as forteBuilder
+MAINTAINER Jose Cabral <cabralcochi@gmail.com>
+
+RUN apk add --no-cache bash \
+    ca-certificates \
+    cmake \
+    g++ \
+    git \
+    gcc \
+    make \
+    python \
+    py-pip \ 
+    py-six \
+    openssh-client \
+    subversion 
+
+COPY ./docker/scripts/prepareOtherRepos.sh /usr/scripts_temp/
+COPY ./docker/scripts/commonFunctions.sh /usr/scripts_temp/
+RUN /usr/scripts_temp/prepareOtherRepos.sh -x -M
+
+ARG FORTE_USER_FLAGS=""
+ENV FORTE_USER_FLAGS $FORTE_USER_FLAGS
+
+ARG FORTE_EXTERNAL_MODULES=""
+ENV FORTE_EXTERNAL_MODULES $FORTE_EXTERNAL_MODULES
+
+COPY . /usr/repos/org.eclipse.4diac.forte/
+RUN /usr/repos/org.eclipse.4diac.forte/docker/scripts/buildForte.sh -x -M "$FORTE_USER_FLAGS"
+
+FROM alpine:edge
+WORKDIR /usr/forte_output/linux32/
+COPY --from=forteBuilder /usr/forte_output/linux32/* ./
+RUN apk add --no-cache libstdc++ 
+
+ENV LD_LIBRARY_PATH /usr/forte_output/linux32/
+
+ARG FORTE_BOOT_FILE=/usr/forte_boot/forte.fboot
+ENV FORTE_BOOT_FILE $FORTE_BOOT_FILE
+
+EXPOSE 4840 4841 4842 61499 61500 61501 61502 61503 61504 61505
+
+CMD /usr/forte_output/linux32/forte -f $FORTE_BOOT_FILE

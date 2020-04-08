@@ -20,8 +20,9 @@ bool CUA_ClientConfigFileParser::loadConfig(std::string &paFileLocation, std::st
 
   CConfigFileParser configFileParser(paFileLocation);
   bool endpointFound = false;
+  std::string endpointKey = "endpoint";
 
-  if(lookForEndpointInFile(configFileParser, paEndpoint, endpointFound)) {
+  if(CConfigFileParser::lookForKeyValueInFile(configFileParser, endpointKey, paEndpoint, endpointFound)) {
     if(endpointFound) {
 
 #ifdef UA_ENABLE_ENCRYPTION
@@ -105,46 +106,11 @@ bool CUA_ClientConfigFileParser::loadConfig(std::string &paFileLocation, std::st
     }
 
     if(retVal && UA_STATUSCODE_GOOD != retValOpcUa) {
-      DEVLOG_ERROR("[OPC UA CLIENT]: Error setting client configuration. Error: %s\n", UA_StatusCode_name(retValOpcUa));
+      DEVLOG_ERROR("[CUA_ClientConfigFileParser]: Error setting client configuration. Error: %s\n", UA_StatusCode_name(retValOpcUa));
       retVal = false;
     }
   } else { //if lookForEndpointInFile fails, the errors was already logged
     retVal = false;
-  }
-
-  return retVal;
-}
-
-bool CUA_ClientConfigFileParser::lookForEndpointInFile(CConfigFileParser &paFileParse, std::string &paEndpoint, bool &paFound) {
-
-  bool retVal = true;
-  bool moreLinesToRead = true;
-  paFound = false;
-
-  while(moreLinesToRead) {
-    std::pair<std::string, std::string> resultPair;
-
-    switch(paFileParse.parseNextLine(resultPair)){
-      case CConfigFileParser::eOk:
-        if(0 == resultPair.first.compare("endpoint") && 0 == resultPair.second.compare(paEndpoint)) {
-          paFound = true;
-          moreLinesToRead = false;
-        }
-        break;
-      case CConfigFileParser::eEmptyLine:
-        //do nothing, keep reading
-        break;
-      case CConfigFileParser::eEndOfFile:
-        moreLinesToRead = false;
-        break;
-      case CConfigFileParser::eWrongLine:
-      case CConfigFileParser::eFileNotOpened:
-      case CConfigFileParser::eInternalError:
-      default:
-        retVal = false;
-        moreLinesToRead = false;
-        break;
-    }
   }
 
   return retVal;

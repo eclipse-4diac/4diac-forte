@@ -236,10 +236,10 @@ bool CLuaEngine::luaGetAny(lua_State *paLuaState, CIEC_ANY *paValue, int paIndex
       *static_cast<CIEC_LREAL*>(paValue) = static_cast<TForteDFloat>(lua_tonumber(paLuaState, paIndex));
       break;
     case CIEC_ANY::e_STRING:
-      *static_cast<CIEC_STRING*>(paValue) = strdup(lua_tostring(paLuaState, paIndex));
+      *static_cast<CIEC_STRING*>(paValue) = lua_tostring(paLuaState, paIndex);
       break;
     case CIEC_ANY::e_WSTRING:
-      *static_cast<CIEC_WSTRING*>(paValue) = strdup(lua_tostring(paLuaState, paIndex));
+      *static_cast<CIEC_WSTRING*>(paValue) = lua_tostring(paLuaState, paIndex);
       break;
     case CIEC_ANY::e_ARRAY:
       return luaGetArray(paLuaState, static_cast<CIEC_ARRAY*>(paValue), paIndex);

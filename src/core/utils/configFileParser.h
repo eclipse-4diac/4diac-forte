@@ -54,6 +54,16 @@ class CConfigFileParser {
      */
     ParseResult parseNextLine(std::pair<std::string, std::string> &paResult);
 
+    /**
+     * Looks for a key and value in the file that matches the values passed as parameter
+     * @param paFileParse Parser object used to look for the key/value
+     * @param paKey Key to look for in the file
+     * @param paValue Value to look for
+     * @param paFound True if the key/value was found, false otherwise
+     * @return True if no error occurred, false otherwise. If the key is found but no the value, it's still a valid result and paFound is false
+     */
+    static bool lookForKeyValueInFile(CConfigFileParser &paFileParse, std::string &paKey, std::string &paValue, bool &paFound);
+
   private:
 
     /**
