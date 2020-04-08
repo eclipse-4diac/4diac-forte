@@ -18,6 +18,10 @@
 #include <forte_array.h>
 #include "../forte_arrowheadservice.h"
 #include "../../orchestrator/forte_servicerequestform.h"
+#include <forte_arrowheadevent.h>
+#include <forte_eventfilter.h>
+#include <forte_publishevent.h>
+#include <forte_arrowheadsystem.h>
 
 class ArrowheadJSONHelper {
   public:
@@ -35,17 +39,29 @@ class ArrowheadJSONHelper {
 
     static void transformArrayToJSON(const CIEC_ARRAY &paSource, CIEC_STRING &paResult);
 
+    static void transformSystemToJSON(CIEC_ArrowheadSystem& paSource, CIEC_STRING& paResult);
+
     static void transformServiceToJSON(CIEC_ArrowheadService &paSource, CIEC_STRING &paResult);
 
     static void transformOrchServciceRequestFormToJSON(CIEC_ServiceRequestForm& paSource, CIEC_STRING& paResult);
+
+    static void transformArrowheadEventToJSON(CIEC_ArrowheadEvent& paSource, CIEC_STRING& paResult);
+
+    static void transformEventFilterToJSON(CIEC_EventFilter& paSource, CIEC_STRING& paResult);
+
+    static void transformPublishEventToJSON(CIEC_PublishEvent& paSource, CIEC_STRING& paResult);
 
     static void transformServiceMetadata(char* paText);
 
     static void removeIds(char* paText);
 
+    static void removeEndOfValidity(char *paText);
+
     static void changeKeys(char** paText);
 
     static void changeKeysArray(char** paText);
+
+    static void transformNull(char *paText);
 
     static void changeToStruct(char* paText);
 };

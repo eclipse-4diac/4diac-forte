@@ -23,4 +23,4 @@ CIEC_LocalizedText::CIEC_LocalizedText() :
 }
 
 const CStringDictionary::TStringId CIEC_LocalizedText::scmElementTypes[] = { g_nStringIdSTRING, g_nStringIdSTRING };
-const CStringDictionary::TStringId CIEC_LocalizedText::scmElementNames[] = { g_nStringIdtext, g_nStringIdlocale };
+const CStringDictionary::TStringId CIEC_LocalizedText::scmElementNames[] = { g_nStringIdlocale, g_nStringIdtext };

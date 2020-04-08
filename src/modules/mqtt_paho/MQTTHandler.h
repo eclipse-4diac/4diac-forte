@@ -21,6 +21,7 @@
 #include <forte_string.h>
 #include <forte_thread.h>
 #include <forte_sem.h>
+#include <string>
 
 extern "C" {
 #include <MQTTAsync.h>
@@ -89,6 +90,8 @@ private:
 
     static CIEC_STRING smClientId;
     static CIEC_STRING smAddress;
+    static std::string scmUsername;
+    static std::string scmPassword;
 
     static CSyncObject smMQTTMutex;
 

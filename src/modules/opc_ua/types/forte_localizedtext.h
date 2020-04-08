@@ -26,11 +26,11 @@ class CIEC_LocalizedText : public CIEC_STRUCT {
     virtual ~CIEC_LocalizedText() {
     }
 
-    CIEC_STRING &text() {
+    CIEC_STRING &locale() {
       return *static_cast<CIEC_STRING*>(&getMembers()[0]);
     }
 
-    CIEC_STRING &locale() {
+    CIEC_STRING &text() {
       return *static_cast<CIEC_STRING*>(&getMembers()[1]);
     }
 

@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2016 fortiss GmbH
+ *               2019 Robert Promok
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +10,7 @@
  * Contributors:
  *    Alois Zoitl - initial API and implementation and/or initial documentation
  *    Jose Cabral - expansion of capabilities
+ *    Robert Promok - added functions
  *******************************************************************************/
 
 #ifndef _PROCESSINTERFACE_H_
@@ -32,9 +34,14 @@ enum ETypeOfIO {
   SENSORW_MODE,
   BUTTON,
   MOTOR_ENABLE,
+  MOTOR_ENABLE_SPEED,
+  MOTOR_RELATIVE_POSITION,
+  MOTOR_ABSOLUTE_POSITION,
   MOTOR_RESET,
   MOTOR_PWM,
   MOTOR_SPEED,
+  MOTOR_SPEEDSETPOINT,
+  MOTOR_POSITIONSETPOINT,
   MOTOR_STOP,
   MOTOR_POSITION,
   MOTOR_ROT,
@@ -68,9 +75,15 @@ class CLMSEV3ProcessInterface : public CProcessInterfaceBase{
 
     /* Used together with Motor */
     static const std::string scmEnableID;
+    static const std::string scmEnableSpeedID;
+    static const std::string scmRelPositionID;
+    static const std::string scmAbsPositionID;
+
     static const std::string scmResetID;
     static const std::string scmPWMID;
     static const std::string scmSPEEDID;
+    static const std::string scmSPEEDSETPOINTID;
+    static const std::string scmPOSITIONSETPOINTID;
     static const std::string scmStopID;
     static const std::string scmPositionID;
     static const std::string scmRotID;

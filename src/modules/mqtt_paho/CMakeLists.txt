@@ -19,7 +19,7 @@ forte_add_network_layer(PAHOMQTT OFF "mqtt" MQTTComLayer MQTTComLayer "Enable Pa
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 if(FORTE_COM_PAHOMQTT)
-  forte_add_sourcefile_hcpp( MQTTComLayer MQTTHandler)
+  forte_add_sourcefile_hcpp( MQTTComLayer MQTTHandler MQTTClientConfigParser)
   
   forte_add_handler(MQTTHandler MQTTHandler)
   
@@ -40,6 +40,9 @@ if(FORTE_COM_PAHOMQTT)
     forte_add_include_system_directories(${FORTE_COM_PAHOMQTT_INCLUDE_DIR})
     forte_add_link_directories(${FORTE_COM_PAHOMQTT_LIB_DIR})
     forte_add_link_library_beginning(${FORTE_COM_PAHOMQTT_LIB})
+    forte_add_custom_configuration("#include <string>")
+    forte_add_custom_configuration("extern std::string gMqttClientConfigFile\;")
+    forte_add_custom_configuration("#cmakedefine FORTE_COM_PAHOMQTT")
   
     IF(NOT EXISTS ${FORTE_COM_PAHOMQTT_INCLUDE_DIR})
       MESSAGE(WARNING "WARNING: FORTE_COM_PAHOMQTT_INCLUDE_DIR not set or does not exist. This will probably make the compilation fail.")

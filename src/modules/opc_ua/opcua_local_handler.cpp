@@ -90,10 +90,10 @@ void COPC_UA_Local_Handler::run() {
   if(mUaServer) {
     uaServerConfig = UA_Server_getConfig(mUaServer);
     UA_ServerConfig_setMinimal(uaServerConfig, gOpcuaServerPort, 0);
-    configureUAServer(gOpcuaServerPort, serverStrings, *uaServerConfig);
+    configureUAServer(serverStrings, *uaServerConfig);
 #else
   uaServerConfig = UA_ServerConfig_new_minimal(gOpcuaServerPort, 0);
-  configureUAServer(gOpcuaServerPort, serverStrings, *uaServerConfig);
+  configureUAServer(serverStrings, *uaServerConfig);
   mUaServer = UA_Server_new(uaServerConfig);
   if(mUaServer) {
 #endif
@@ -165,7 +165,7 @@ void COPC_UA_Local_Handler::generateServerStrings(TForteUInt16 paUAServerPort, U
   paServerStrings.mHostname = hostname;
 }
 
-void COPC_UA_Local_Handler::configureUAServer(TForteUInt16 paUAServerPort, UA_ServerStrings &paServerStrings, UA_ServerConfig &paUaServerConfig) {
+void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings, UA_ServerConfig &paUaServerConfig) {
 
   paUaServerConfig.logger = COPC_UA_HandlerAbstract::getLogger();
 

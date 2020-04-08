@@ -58,7 +58,7 @@ void FORTE_GetArrayResponseFromJSON::executeEvent(int paEIID) {
     //clean the output first
     output_Array().setup(output_Array().size(), static_cast<CIEC_STRUCT*>(output_Array()[0])->getStructTypeNameID());
 
-    DEVLOG_DEBUG("[Arrowhead GetResponseFromHTTP]: Response received: %s\n", response().getValue());
+    DEVLOG_DEBUG("[Arrowhead GetArrayResponseFromJSON]: Response received: %s\n", response().getValue());
     char* helper = strrchr(response().getValue(), ']');
     if(0 != helper) {
 
@@ -71,10 +71,10 @@ void FORTE_GetArrayResponseFromJSON::executeEvent(int paEIID) {
           output().fromString(helper);
         } //if response is empty, don't do anything.
       } else {
-        DEVLOG_ERROR("[Arrowhead GetResponseFromHTTP]: Invalid response, ] was found but not [: \n", response().getValue());
+        DEVLOG_ERROR("[Arrowhead GetArrayResponseFromJSON]: Invalid response, ] was found but not [: \n", response().getValue());
       }
     } else {
-      DEVLOG_ERROR("[Arrowhead GetResponseFromHTTP]: Invalid response, no ] was found: %s\n", response().getValue());
+      DEVLOG_ERROR("[Arrowhead GetArrayResponseFromJSON]: Invalid response, no ] was found: %s\n", response().getValue());
     }
     sendOutputEvent(scm_nEventCNFID);
   }

@@ -203,12 +203,12 @@ unsigned long long int forte::core::util::strtoull(const char *nptr, char **endp
 
 #endif
 
-size_t forte::core::util::getExtraSizeForEscapedChars(const char* paString){
+size_t forte::core::util::getExtraSizeForXMLEscapedChars(const char* paString){
   size_t retVal = 0;
   while(0 != *paString){
-    for(size_t i = 0; i < sizeof(forte::core::util::scReplacementForEscapedCharacters) / sizeof(const char* const); i++){
-      if(forte::core::util::scEscapedCharacters[i] == *paString){
-        retVal += strlen(forte::core::util::scReplacementForEscapedCharacters[i]) - 1;
+    for(size_t i = 0; i < sizeof(forte::core::util::scReplacementForXMLEscapedCharacters) / sizeof(const char* const); i++){
+      if(forte::core::util::scXMLEscapedCharacters[i] == *paString){
+        retVal += strlen(forte::core::util::scReplacementForXMLEscapedCharacters[i]) - 1;
         break;
       }
     }
@@ -225,9 +225,9 @@ size_t forte::core::util::transformNonEscapedToEscapedXMLText(char* const paStri
   while(paString <= runner){
     const char* toCopy = 0;
 
-    for(size_t i = 0; i < sizeof(forte::core::util::scReplacementForEscapedCharacters) / sizeof(const char* const ); i++){
-      if(forte::core::util::scEscapedCharacters[i] == *runner){
-        toCopy = forte::core::util::scReplacementForEscapedCharacters[i];
+    for(size_t i = 0; i < sizeof(forte::core::util::scReplacementForXMLEscapedCharacters) / sizeof(const char* const ); i++){
+      if(forte::core::util::scXMLEscapedCharacters[i] == *runner){
+        toCopy = forte::core::util::scReplacementForXMLEscapedCharacters[i];
         break;
       }
     }
@@ -252,10 +252,10 @@ size_t forte::core::util::transformEscapedXMLToNonEscapedText(char* const paStri
       char toCopy = 0;
       size_t toMove = 0;
 
-      for(size_t i = 0; i < sizeof(forte::core::util::scReplacementForEscapedCharacters) / sizeof(const char* const ); i++){
-        if(0 == strncmp(runner, forte::core::util::scReplacementForEscapedCharacters[i], strlen(forte::core::util::scReplacementForEscapedCharacters[i]))){
-          toCopy = forte::core::util::scEscapedCharacters[i];
-          toMove = strlen(forte::core::util::scReplacementForEscapedCharacters[i]);
+      for(size_t i = 0; i < sizeof(forte::core::util::scReplacementForXMLEscapedCharacters) / sizeof(const char* const ); i++){
+        if(0 == strncmp(runner, forte::core::util::scReplacementForXMLEscapedCharacters[i], strlen(forte::core::util::scReplacementForXMLEscapedCharacters[i]))){
+          toCopy = forte::core::util::scXMLEscapedCharacters[i];
+          toMove = strlen(forte::core::util::scReplacementForXMLEscapedCharacters[i]);
           break;
         }
       }
@@ -273,4 +273,58 @@ size_t forte::core::util::transformEscapedXMLToNonEscapedText(char* const paStri
     runner++;
   }
   return retVal;
+}
+
+char * forte::core::util::lookForNonEscapedChar(char **paString, char paChar, char paEscapingChar) {
+  char *foundChar = 0;
+  char* initialPosition = *paString;
+  while(!foundChar && '\0' != **paString) {
+    foundChar = strchr(*paString, paChar);
+    if(0 != foundChar) {
+      *paString = foundChar;
+      if(isEscaped(foundChar, initialPosition, paEscapingChar)) {
+        while('\0' != *foundChar) { //move the rest of the string one char back
+          *(foundChar - 1) = *foundChar;
+          foundChar++;
+        }
+        *(foundChar - 1) = *foundChar; //move also the ending \0
+        foundChar = 0; //reset to keep looking
+      } else {
+        *foundChar = '\0';
+        (*paString)++;
+      }
+    } else { //there's no paChar in the string
+      break;
+    }
+  }
+  return foundChar;
+}
+
+bool forte::core::util::isEscaped(char *paChar, char *paBeginLimit, char paEscapingChar) {
+  size_t noOfScapingSigns = 0;
+  while(paBeginLimit != paChar) { //count the amount of \ signs before paChar to know if the \ signs was also escaped.
+    paChar--;
+    if(paEscapingChar == *paChar) {
+      noOfScapingSigns++;
+    } else {
+      break;
+    }
+  }
+
+  return (noOfScapingSigns % 2); //an even number of \ (or zero) means paChar was not escaped
+}
+
+void forte::core::util::removeEscapedSigns(char **paString, char paEscapingChar) {
+  char *runner = *paString;
+  while('\0' != *runner) {
+    if(paEscapingChar == *runner && paEscapingChar == *(runner + 1)) {
+      char *copier = runner + 1;
+      while('\0' != *copier) {
+        *(copier - 1) = *copier;
+        copier++;
+      }
+      *(copier - 1) = *copier; //move also the ending \0
+    }
+    runner++;
+  }
 }

@@ -262,7 +262,7 @@ EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, CIEC
     switch (var->getDataTypeID()){
       case CIEC_ANY::e_WSTRING:
       case CIEC_ANY::e_STRING:{
-        size_t bufferSize = var->getToStringBufferSize() + forte::core::util::getExtraSizeForEscapedChars(static_cast<CIEC_WSTRING&>(*var).getValue());
+        size_t bufferSize = var->getToStringBufferSize() + forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<CIEC_WSTRING&>(*var).getValue());
         nUsedChars = static_cast<CIEC_WSTRING&>(*var).toUTF8(paValue.getValue(), bufferSize, false);
         if(bufferSize != var->getToStringBufferSize() && 0 < nUsedChars) { //avoid re-running on strings which were already proven not to have any special character
           nUsedChars += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(paValue.getValue()));

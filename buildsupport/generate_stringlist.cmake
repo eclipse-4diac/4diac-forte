@@ -5,7 +5,7 @@
 # http://www.eclipse.org/legal/epl-2.0.
 #
 # SPDX-License-Identifier: EPL-2.0
-# 
+#
 # Contributors:
 #     Michael Hofmann, Alois Zoitl, Ingo Hegny, Gerhard Ebenhofer, Matthias Plasch - initial API and implementation and/or initial documentation
 # *******************************************************************************/
@@ -43,7 +43,7 @@ FOREACH(FBLIB_FILE ${FBLIB_STRUCT})
     FILE(READ ${FBLIB_FILE} FILE_STRING)
     STRING(REGEX MATCHALL  "g_nStringId([A-Za-z0-9_]*)" REGEX_STRINGS ${FILE_STRING})
     STRING(REGEX MATCHALL  "g_nStringId([0-9][A-Za-z0-9_]*)" REGEX_STRINGS_ERROR ${FILE_STRING})
-  
+
     FOREACH(STR ${REGEX_STRINGS})
       string(LENGTH ${STR} len)
     math(EXPR len ${len}-11)
@@ -54,7 +54,7 @@ FOREACH(FBLIB_FILE ${FBLIB_STRUCT})
     FOREACH(STR_ERR ${REGEX_STRINGS_ERROR})
       list(APPEND ErrorStringBuf "#ERROR Invalid Name used! \n//" ${FBLIB_FILE}:${STR_ERR})
     ENDFOREACH(STR_ERR)
-    
+
   ENDIF(NOT REGEX_STRINGS)
 ENDFOREACH(FBLIB_FILE)
 
@@ -65,12 +65,12 @@ list(SORT scm_acConstStringBuf)
 list(REMOVE_DUPLICATES scm_acConstStringBuf)
 SET(STRINGLIST_H "")
 SET(STRINGLIST_CPP "")
-FOREACH(STR ${scm_acConstStringBuf})
+FOREACH(STR IN ITEMS ${scm_acConstStringBuf})
   string(LENGTH ${STR} len)
   math(EXPR len ${len}+1) # \0 is only one character
   list(APPEND scm_aunIdList ${LENGTH_COUNT})
-  SET(STRINGLIST_H "${STRINGLIST_H}const CStringDictionary::TStringId g_nStringId${STR} = ${LENGTH_COUNT};\n")  
-  SET(STRINGLIST_CPP "${STRINGLIST_CPP}extern const CStringDictionary::TStringId g_nStringId${STR} = ${LENGTH_COUNT};\n")  
+  SET(STRINGLIST_H "${STRINGLIST_H}const CStringDictionary::TStringId g_nStringId${STR} = ${LENGTH_COUNT};\n")
+  SET(STRINGLIST_CPP "${STRINGLIST_CPP}extern const CStringDictionary::TStringId g_nStringId${STR} = ${LENGTH_COUNT};\n")
   math(EXPR LENGTH_COUNT ${LENGTH_COUNT}+${len})
 ENDFOREACH(STR)
 list(LENGTH scm_aunIdList NUMOFCONSTSTRINGS)
@@ -92,10 +92,10 @@ SET(scm_aunIdList_Str "")
 SET(FIRST TRUE)
 FOREACH(NUM ${scm_aunIdList})
   if(FIRST)
-    SET(scm_aunIdList_Str "${scm_aunIdList_Str}${NUM}")  
+    SET(scm_aunIdList_Str "${scm_aunIdList_Str}${NUM}")
   SET(FIRST FALSE)
   ELSE(FIRST)
-    SET(scm_aunIdList_Str "${scm_aunIdList_Str}, ${NUM}")  
+    SET(scm_aunIdList_Str "${scm_aunIdList_Str}, ${NUM}")
   ENDIF(FIRST)
 ENDFOREACH(NUM)
 
@@ -104,14 +104,14 @@ IF(WIN32)
   string(LENGTH "1" len)
   math(EXPR cnt ${len})
 ENDIF(WIN32)
-FOREACH(STR ${scm_acConstStringBuf})
-  SET(scm_acConstStringBuf_Str "${scm_acConstStringBuf_Str}${STR}\\0")  
-  IF(WIN32) 
+FOREACH(STR IN ITEMS ${scm_acConstStringBuf})
+  SET(scm_acConstStringBuf_Str "${scm_acConstStringBuf_Str}${STR}\\0")
+  IF(WIN32)
   string(LENGTH ${scm_acConstStringBuf_Str} len)
     math(EXPR lenRest ${len})
   math(EXPR bytes ${cnt}*15000)
   IF(${lenRest} GREATER ${bytes})
-      SET(scm_acConstStringBuf_Str "${scm_acConstStringBuf_Str}\" \"")  
+      SET(scm_acConstStringBuf_Str "${scm_acConstStringBuf_Str}\" \"")
       math(EXPR cnt ${cnt}+1)
     ENDIF(${lenRest} GREATER ${bytes})
   ENDIF(WIN32)

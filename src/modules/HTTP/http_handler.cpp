@@ -23,6 +23,8 @@
 
 using namespace forte::com_infra;
 
+TForteUInt16 gHTTPServerPort = FORTE_COM_HTTP_LISTENING_PORT;
+
 CIPComSocketHandler::TSocketDescriptor CHTTP_Handler::smServerListeningSocket = CIPComSocketHandler::scmInvalidSocketDescriptor;
 
 char CHTTP_Handler::sRecvBuffer[];
@@ -152,7 +154,23 @@ bool CHTTP_Handler::recvServers(const CIPComSocketHandler::TSocketDescriptor paS
     CIEC_STRING path;
     CSinglyLinkedList<CIEC_STRING> parameterNames;
     CSinglyLinkedList<CIEC_STRING> parameterValues;
-    if(CHttpParser::parseGetRequest(path, parameterNames, parameterValues, sRecvBuffer)) {
+    bool noParsingError = false;
+    switch(CHttpParser::getTypeOfRequest(sRecvBuffer)){
+      case CHttpComLayer::ERequestType::e_GET:
+        noParsingError = CHttpParser::parseGetRequest(path, parameterNames, parameterValues, sRecvBuffer);
+        break;
+      case CHttpComLayer::ERequestType::e_POST:
+      case CHttpComLayer::ERequestType::e_PUT: {
+        CIEC_STRING content;
+        noParsingError = CHttpParser::parsePutPostRequest(path, content, sRecvBuffer);
+        parameterValues.pushBack(content);
+        break;
+      }
+      default:
+        break;
+    }
+
+    if(noParsingError) {
       for(CSinglyLinkedList<HTTPServerWaiting *>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter) {
         if((*iter)->mPath == path) {
           (*iter)->mSockets.pushBack(paSocket);
@@ -164,7 +182,7 @@ bool CHTTP_Handler::recvServers(const CIPComSocketHandler::TSocketDescriptor paS
         }
       }
     } else {
-      DEVLOG_ERROR("[HTTP Handler] Wrong HTTP Get request\n");
+      DEVLOG_ERROR("[HTTP Handler] Wrong HTTP request\n");
     }
 
     if(!found) {
@@ -368,12 +386,12 @@ void CHTTP_Handler::stopTimeoutThread() {
 void CHTTP_Handler::openHTTPServer() {
   if(CIPComSocketHandler::scmInvalidSocketDescriptor == smServerListeningSocket) {
     char address[] = "127.0.0.1";
-    smServerListeningSocket = CIPComSocketHandler::openTCPServerConnection(address, FORTE_COM_HTTP_LISTENING_PORT);
+    smServerListeningSocket = CIPComSocketHandler::openTCPServerConnection(address, gHTTPServerPort);
     if(CIPComSocketHandler::scmInvalidSocketDescriptor != smServerListeningSocket) {
       getExtEvHandler<CIPComSocketHandler>().addComCallback(smServerListeningSocket, this);
-      DEVLOG_INFO("[HTTP Handler] HTTP server listening on port %d\n", FORTE_COM_HTTP_LISTENING_PORT);
+      DEVLOG_INFO("[HTTP Handler] HTTP server listening on port %u\n", gHTTPServerPort);
     } else {
-      DEVLOG_ERROR("[HTTP Handler] Couldn't start HTTP server on port %d\n", FORTE_COM_HTTP_LISTENING_PORT);
+      DEVLOG_ERROR("[HTTP Handler] Couldn't start HTTP server on port %u\n", gHTTPServerPort);
     }
   }
 }

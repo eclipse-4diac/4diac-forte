@@ -18,6 +18,7 @@
 #include <fortelist.h>
 #include <forte_sync.h>
 #include <criticalregion.h>
+#include <string>
 
 /**
  * Contains all the information needed for a client to execute remote calls. It's the only class tha access
@@ -98,6 +99,14 @@ class CUA_ClientInformation {
      */
     inline CSyncObject& getMutex() {
       return mClientMutex;
+    }
+
+    void setClientToInvalid() {
+      mIsClientValid = false;
+    }
+
+    bool isClientValid() {
+      return mIsClientValid;
     }
 
     /**
@@ -263,6 +272,13 @@ class CUA_ClientInformation {
     };
 
     /**
+     * Look for the configuration file and load the configuration from it, otherwise it loads the default configuration
+     * @param paConfigPointer Place to store the configuration
+     * @return True if no error ocurred, false otherwise
+     */
+    bool configureClientFromFile(UA_ClientConfig &paConfigPointer);
+
+    /**
      * Try to connect the client
      * @return True if the connection succeeded, false otherwise
      */
@@ -335,7 +351,7 @@ class CUA_ClientInformation {
      * Uninitialze a subscription action
      * @param paActionInfo Action to be uninitialized
      */
-    void uninitializeSubscription(CActionInfo& paActionInfo);
+    void uninitializeSubscribeAction(CActionInfo& paActionInfo);
 
     /**
      * Reset the subscription information.
@@ -357,6 +373,16 @@ class CUA_ClientInformation {
      * Endpoint of the remote
      */
     CIEC_STRING mEndpointUrl;
+
+    /**
+     * Username to be used to connect to the server
+     */
+    std::string mUsername;
+
+    /**
+     * * Password to be used to connect to the server
+     */
+    std::string mPassword;
 
     /**
      * Handler of the OPC UA stack client
@@ -399,6 +425,19 @@ class CUA_ClientInformation {
      * it doesn't fail too often. If an action is added after another fail, this becomes false, so the new action can be initialized and doesn't have to wait
      */
     bool mWaitToInitializeActions;
+
+    /**
+     * Indicate the client is about to be deleted, so it's not added to new lists.
+     * The reason behind this variable, is because the following race condition happened in COPC_UA_Remote_Handler::removeClientFromAllLists
+     *  - The client is removed from the connection list
+     *  - Before removing from the normal handler list, the async call fails and the client is reconfigured and re-added to the connection handler
+     *  - The Client is deleted from allClients lists
+     *  - The Client is deleted (C++ wise)
+     *  - Since the connectionHandler has still the client, it tries to use it and crash
+     *
+     *  So this variable prevents the re-adding to any iteration list if it was set already to invalid, when is about to be deleted
+     */
+    bool mIsClientValid;
 
     /**
      * Store the time when the connection last failed

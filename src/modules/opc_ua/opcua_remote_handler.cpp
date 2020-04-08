@@ -43,10 +43,12 @@ void COPC_UA_Client_IterationList::stopIterationThread() {
 }
 
 void COPC_UA_Client_IterationList::addClient(CUA_ClientInformation& paClientInformation) {
-  CCriticalRegion iterationListRegion(mNewClientsMutex);
-  addClientToList(paClientInformation, mNewClients);
-  mNeedsIteration.inc();
-  mNewClientsPresent = true;
+  if(paClientInformation.isClientValid()) {
+    CCriticalRegion iterationListRegion(mNewClientsMutex);
+    addClientToList(paClientInformation, mNewClients);
+    mNeedsIteration.inc();
+    mNewClientsPresent = true;
+  }
 }
 
 void COPC_UA_Client_IterationList::removeClient(CUA_ClientInformation& paClientInformation) {
@@ -273,6 +275,7 @@ void COPC_UA_Remote_Handler::removeActionFromClient(CActionInfo& paActionInfo) {
 }
 
 void COPC_UA_Remote_Handler::removeClientFromAllLists(CUA_ClientInformation& paClientInformation) {
+  paClientInformation.setClientToInvalid();
   mConnectionHandler.removeClient(paClientInformation);
   removeClient(paClientInformation);
   mAllClients.erase(&paClientInformation);

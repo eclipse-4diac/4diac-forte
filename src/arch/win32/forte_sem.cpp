@@ -40,7 +40,7 @@ namespace forte {
     }
 
     bool CWin32Semaphore::timedWait(TForteUInt64 paRelativeTimeout){
-      return (0 == WaitForSingleObject(mSemaphore, static_cast<DWORD>(paRelativeTimeout / 1E6)));
+      return (0 == WaitForSingleObject(mSemaphore, static_cast<DWORD>(paRelativeTimeout / 1000000 /* 1E6*/)));
     }
 
     bool CWin32Semaphore::tryNoWait(){

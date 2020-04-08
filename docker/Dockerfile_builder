@@ -1,0 +1,48 @@
+#*******************************************************************************************
+# Copyright (c) 2020 fortiss GmbH
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0.
+#
+# SPDX-License-Identifier: EPL-2.0
+# 
+# Contributors:
+#     Jose Cabral
+#       -  initial implementation
+# ******************************************************************************************
+
+FROM 32bit/ubuntu:16.04
+MAINTAINER Jose Cabral <cabralcochi@gmail.com>
+
+RUN apt update && apt install -y --no-install-recommends \
+    ca-certificates \
+    cmake \
+    g++ \
+    git \
+    gcc \
+    libc6-dev \
+    make \
+    python2.7 \
+    python-six \
+    openssh-client \
+    subversion \
+    wget \
+    unzip \ 
+ && apt clean \
+ && rm -rf /var/lib/apt/lists/*
+ 
+COPY ./docker/scripts/prepareOtherRepos.sh /usr/scripts_temp/
+COPY ./docker/scripts/commonFunctions.sh /usr/scripts_temp/
+RUN /usr/scripts_temp/prepareOtherRepos.sh -A -M && rm -r /usr/scripts_temp/
+
+ARG FORTE_USER_FLAGS=""
+ENV FORTE_USER_FLAGS $FORTE_USER_FLAGS
+
+ARG FORTE_EXTERNAL_MODULES="/usr/forte_modules/"
+ENV FORTE_EXTERNAL_MODULES $FORTE_EXTERNAL_MODULES
+
+COPY . /usr/repos/org.eclipse.4diac.forte
+RUN /usr/repos/org.eclipse.4diac.forte/docker/scripts/buildForte.sh -A -M "$FORTE_USER_FLAGS"
+
+CMD /bin/bash
+

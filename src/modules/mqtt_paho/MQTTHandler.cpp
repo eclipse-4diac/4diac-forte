@@ -14,7 +14,11 @@
 #include "MQTTHandler.h"
 #include "../../core/cominfra/commfb.h"
 #include <criticalregion.h>
-#include <string.h>
+#include <string>
+
+#include "MQTTClientConfigParser.h"
+
+std::string gMqttClientConfigFile;
 
 DEFINE_HANDLER(MQTTHandler);
 
@@ -26,6 +30,9 @@ CSyncObject MQTTHandler::smMQTTMutex = CSyncObject();
 MQTTAsync MQTTHandler::smClient = 0;
 CIEC_STRING MQTTHandler::smClientId;
 CIEC_STRING MQTTHandler::smAddress;
+std::string MQTTHandler::scmUsername;
+std::string MQTTHandler::scmPassword;
+
 
 MQTTStates MQTTHandler::smMQTTS_STATE = NOT_CONNECTED;
 forte::arch::CSemaphore MQTTHandler::mStateSemaphore = forte::arch::CSemaphore();
@@ -192,6 +199,20 @@ int MQTTHandler::registerLayer(const char* paAddress, const char* paClientId, MQ
     smClientConnectionOptions.onSuccess = onMqttConnectionSucceed;
     smClientConnectionOptions.onFailure = onMqttConnectionFailed;
     smClientConnectionOptions.context = this;
+
+    if("" != gMqttClientConfigFile) { //file was provided
+
+      CMQTTClientConfigFileParser::MQTTConfigFromFile result = CMQTTClientConfigFileParser::MQTTConfigFromFile(scmUsername, scmPassword);
+      std::string endpoint = smAddress.getValue();
+
+      if(CMQTTClientConfigFileParser::loadConfig(gMqttClientConfigFile, endpoint, result)) {
+        smClientConnectionOptions.username = scmUsername.c_str();
+        smClientConnectionOptions.password = scmPassword.c_str();
+      } else {
+        return eWrongClientID;
+      }
+    }
+
     if(MQTTASYNC_SUCCESS != MQTTAsync_setCallbacks(smClient, this, MQTTHandler::onMqttConnectionLost, onMqttMessageArrived, NULL)){
       return eConnectionFailed;
     }

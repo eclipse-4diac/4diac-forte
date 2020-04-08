@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
+ *               2020 Johannes Kepler University Linz
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,11 +11,13 @@
  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
  *    Ingo Hegny, Martin Melik-Merkumians, Monika Wenger
  *      - initial implementation and rework communication infrastructure
+ *    Ernst Blecha - add multibit partial access
  *******************************************************************************/
 #ifndef _FORTE_BYTE_H_
 #define _FORTE_BYTE_H_
 
 #include "forte_any_bit.h"
+#include "forte_bool.h"
 #include <limits>
 
 /*!\ingroup COREDTS CIEC_BYTE represents the byte data type according to IEC 61131.
@@ -73,6 +76,14 @@ class CIEC_BYTE : public CIEC_ANY_BIT{
     virtual EDataTypeID getDataTypeID() const{
       return CIEC_ANY::e_BYTE;
     }
+
+    /*! \brief Partial access within a CIEC_BYTE (e.g. [BYTE].partial<CIEC_BOOL,1>())
+     *
+     */
+    template <class T, size_t paIndex> PARTIAL_ACCESS<T, CIEC_BYTE, paIndex> partial(){
+      return PARTIAL_ACCESS<T,CIEC_BYTE, paIndex>(*this);
+    }
+
 };
 
 #endif /*_FORTE_BYTE_H_*/

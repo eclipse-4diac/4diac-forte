@@ -16,7 +16,7 @@ forte_add_architecture(Win32)
 
 if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
 
-  add_subdirectory ( serlayer )
+  add_subdirectory(serlayer)
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})  
   
   forte_add_sourcefile_h(fortealloc.h ../forte_architecture_time.h)
@@ -46,20 +46,21 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
    forte_add_sourcefile_h(sockhand.h)
   endif(FORTE_COM_ETH)
 
-  forte_add_definition("-DFORTE_LITTLE_ENDIAN") # -DNONAMESPACE -DWITH_NONAMESPACES)  
+  forte_add_definition("-DFORTE_LITTLE_ENDIAN")
 
-# TODO this flag was originaly wrongly added to the definitions. May be necessary to be added as link flag. However currently working fine.
+# TODO this flag was originally wrongly added to the definitions. May be necessary to be added as link flag. However currently working fine.
 # forte_add_link_flags("/NODEFAULTLIB:MSVCRT.lib")
 
-  forte_add_link_library(comctl32.lib)
-  forte_add_link_library(rpcrt4.lib)
-  forte_add_link_library(winmm.lib)
-  forte_add_link_library(ws2_32.lib)
-  forte_add_link_library(version.lib)
+  forte_add_link_library(comctl32)
+  forte_add_link_library(rpcrt4)
+  forte_add_link_library(winmm)
+  forte_add_link_library(ws2_32)
+  forte_add_link_library(version)
   
   if(MINGW)
     #force MINGW to statically link libc and lib stdc++ so that no mingw dlls are needed for forte.exe
     forte_add_link_flags("-static-libgcc -static-libstdc++")
+    forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -Wshadow")
   elseif(MSVC)
     forte_add_definition("-wd4595")  #warning 4595: 'operator delete/delete[]': non-member operator new or delete functions may not be declared inline
     forte_add_definition("-wd4290")  #warning 4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow). A function is declared using exception specification, which Visual C++ accepts but does not implement. (from new/delete warning)

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2010 - 2013 ACIN
- *
+ *               2020 Johannes Kepler University Linz
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,11 +10,16 @@
  * Contributors:
  *    Martin Melik Merkiumians, Alois Zoitl, Monika Wenger
  *      - initial implementation and rework communication infrastructure
+ *    Ernst Blecha - add multibit partial access
   *******************************************************************************/
 #ifndef _FORTE_LWORD_H_
 #define _FORTE_LWORD_H_
 
 #include "forte_any_bit.h"
+#include "forte_bool.h"
+#include "forte_byte.h"
+#include "forte_word.h"
+#include "forte_dword.h"
 #include <limits>
 
 #ifdef FORTE_USE_64BIT_DATATYPES
@@ -78,6 +83,14 @@ class CIEC_LWORD : public CIEC_ANY_BIT{
     virtual EDataTypeID getDataTypeID() const{
       return CIEC_ANY::e_LWORD;
     }
+
+    /*! \brief Partial access within a CIEC_LWORD (e.g. [LWORD].partial<CIEC_BOOL,1>())
+     *
+     */
+    template <class T, size_t paIndex> PARTIAL_ACCESS<T, CIEC_LWORD, paIndex> partial(){
+      return PARTIAL_ACCESS<T,CIEC_LWORD, paIndex>(*this);
+    }
+
 };
 
 #endif

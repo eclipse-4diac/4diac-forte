@@ -35,7 +35,7 @@ void CHttpParser::createPutPostRequest(CIEC_STRING& paDest, const CIEC_STRING& p
 bool CHttpParser::changePutPostData(CIEC_STRING& paDest, const CIEC_STRING& paData) {
   char* helperChar = strstr(paDest.getValue(), "length: ");
   if(0 != helperChar) {
-    helperChar += 8;
+    helperChar += sizeof("length: ") - 1;
     *helperChar = '\0';
     paDest = paDest.getValue(); //will shrink the length of the string to the new ending
     char contentLength[scmMaxLengthOfContent];
@@ -54,7 +54,7 @@ bool CHttpParser::parseResponse(CIEC_STRING& paBody, CIEC_STRING& paResponseCode
   if(CHttpParser::getHttpResponseCode(paResponseCode, paSrc)) {
     char* helperChar = strstr(paSrc, "\r\n\r\n"); // Extract data from HTTP response char
     if(0 != helperChar) {
-      helperChar += 4;
+      helperChar += sizeof("\r\n\r\n") - 1;
       paBody = helperChar;
     } else { // Empty response received
       DEVLOG_INFO("[HTTP Parser] Empty content response received\n");
@@ -67,27 +67,72 @@ bool CHttpParser::parseResponse(CIEC_STRING& paBody, CIEC_STRING& paResponseCode
 
 bool forte::com_infra::CHttpParser::parseGetRequest(CIEC_STRING& paPath, CSinglyLinkedList<CIEC_STRING>& paParameterNames,
     CSinglyLinkedList<CIEC_STRING>& paParameterValues, char* paData) {
-  char* helperChar = strstr(paData, "GET ");
-  if(helperChar != 0) {
-    helperChar += 4;
-    char* endOfPath = strstr(helperChar, " ");
+  if(0 == strncmp(paData, "GET ", 4)) {
+    paData = paData + 4;
+
+    char* endOfPath = strstr(paData, " ");
     if(endOfPath != 0) {
       *endOfPath = '\0';
-      char* startOfParameters = strstr(paData, "?");
+      char* startOfParameters = strstr(paData + 1, "?");
       if(startOfParameters != 0) {
         *startOfParameters = '\0';
         startOfParameters++;
         parseGETParameters(startOfParameters, paParameterNames, paParameterValues);
       }
-      paPath = helperChar;
+      paPath = paData;
     } else {
-      DEVLOG_ERROR("[HTTP Parser] Invalid HTTP Get request. No space after path found\n");
+      DEVLOG_ERROR("[HTTP Parser] Invalid HTTP Get request. No GET string found\n");
       return false;
     }
-    return true;
+
   } else {
-    DEVLOG_ERROR("[HTTP Parser] Invalid HTTP Get request. No GET string found\n");
+    DEVLOG_ERROR("[HTTP Parser] Invalid HTTP Get request. No space after path found\n");
     return false;
+  }
+  return true;
+}
+
+bool forte::com_infra::CHttpParser::parsePutPostRequest(CIEC_STRING& paPath, CIEC_STRING &paContent, char* paData) {
+  if(0 == strncmp(paData, "PUT ", 4)) {
+    paData += sizeof("PUT ") - 1;
+  } else if(0 == strncmp(paData, "POST ", 5)) {
+    paData += sizeof("POST ") - 1;
+  } else {
+    DEVLOG_ERROR("[HTTP Parser] Invalid HTTP PUT/POST request. No PUT/POST string found\n");
+    return false;
+  }
+
+  char* endOfPath = strstr(paData, " ");
+  if(endOfPath != 0) {
+    *endOfPath = '\0';
+    paPath = paData;
+    paData = strstr(endOfPath + 1, "\r\n\r\n");
+    if(paData != 0) {
+      paData += sizeof("\r\n\r\n") - 1;
+      paContent = paData;
+    } else {
+      DEVLOG_ERROR("[HTTP Parser] Invalid HTTP PUT/POST request. No content was found\n");
+      return false;
+    }
+
+  } else {
+    DEVLOG_ERROR("[HTTP Parser] Invalid HTTP PUT/POST request. No space after path found\n");
+    return false;
+  }
+  return true;
+}
+
+
+CHttpComLayer::ERequestType forte::com_infra::CHttpParser::getTypeOfRequest(const char* paRequest) {
+  if(0 == strncmp(paRequest, "GET ", 4)) {
+    return CHttpComLayer::ERequestType::e_GET;
+  } else if(0 == strncmp(paRequest, "PUT ", 4)) {
+    return CHttpComLayer::ERequestType::e_PUT;
+  } else if(0 == strncmp(paRequest, "POST ", 5)) {
+    return CHttpComLayer::ERequestType::e_POST;
+  } else {
+    DEVLOG_ERROR("[HTTP Parser] Invalid HTTP request\n");
+    return CHttpComLayer::ERequestType::e_NOTSET;
   }
 }
 
