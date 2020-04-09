@@ -350,7 +350,7 @@ class CLocalMethodInfo : public CActionInfo {
      * @param paEndpoint The endpoint of a remote OPC UA in case the action is to be executed remotely. An empty endpoint means that the action is to be executed locally
      * @param paTypes A list of type converters of the connections of the FB of the action (SDs/RDs)
      */
-    explicit CLocalMethodInfo(COPC_UA_Layer& paLayer, CIEC_STRING& paEndpoint);
+    explicit CLocalMethodInfo(COPC_UA_Layer &paLayer, CIEC_STRING &paEndpoint);
 
     /**
      * Destructor of the class
@@ -358,14 +358,8 @@ class CLocalMethodInfo : public CActionInfo {
     ~CLocalMethodInfo();
 
     /**
-     * Getter of the mutex of the action
-     * @return
-     */
-    CSyncObject& getMutex();
-
-    /**
      * Getter for the semaphore of the action
-     * @return
+     * @return the semaphore of the action
      */
     forte::arch::CSemaphore& getResultReady();
 
@@ -380,11 +374,6 @@ class CLocalMethodInfo : public CActionInfo {
      * Assignment operator is private and not defined to avoid its usage
      */
     CLocalMethodInfo& operator=(const CLocalMethodInfo& other);
-
-    /**
-     * Mutex from old code. It's used when a method is called in case other thread may currently create nodes for the same path
-     */
-    CSyncObject mMutex;
 
     /**
      * When a method is called, it waits with this semaphore until the response comes back to the FB, when this semaphore is increased indicating the method has finished

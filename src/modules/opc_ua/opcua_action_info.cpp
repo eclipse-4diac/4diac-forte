@@ -379,10 +379,6 @@ CLocalMethodInfo::CLocalMethodInfo(COPC_UA_Layer &paLayer, CIEC_STRING &paEndpoi
 CLocalMethodInfo::~CLocalMethodInfo() {
 }
 
-CSyncObject& CLocalMethodInfo::getMutex() {
-  return mMutex;
-}
-
 forte::arch::CSemaphore& CLocalMethodInfo::getResultReady() {
   return mResultIsReady;
 }

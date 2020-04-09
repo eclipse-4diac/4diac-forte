@@ -41,14 +41,13 @@ using namespace forte::com_infra;
 DEFINE_HANDLER(COPC_UA_Local_Handler);
 
 COPC_UA_Local_Handler::COPC_UA_Local_Handler(CDeviceExecution &paDeviceExecution) :
-    COPC_UA_HandlerAbstract(paDeviceExecution), mUaServer(0), mUaServerRunningFlag(UA_FALSE)
+    COPC_UA_HandlerAbstract(paDeviceExecution), mUaServer(0)
 {
 }
 
 COPC_UA_Local_Handler::~COPC_UA_Local_Handler() {
   stopServer();
 
-  CCriticalRegion criticalRegion(mNodesReferencesMutex);
   for(CSinglyLinkedList<nodesReferencedByActions *>::Iterator iter = mNodesReferences.begin(); iter != mNodesReferences.end(); ++iter) {
     UA_NodeId_delete(const_cast<UA_NodeId*>((*iter)->mNodeId));
     delete *iter;
@@ -67,8 +66,7 @@ void COPC_UA_Local_Handler::enableHandler(void) {
 }
 
 void COPC_UA_Local_Handler::disableHandler(void) {
-  COPC_UA_Local_Handler::stopServer();
-  end();
+  stopServer();
 }
 
 void COPC_UA_Local_Handler::run() {
@@ -87,13 +85,30 @@ void COPC_UA_Local_Handler::run() {
 #ifdef FORTE_COM_OPC_UA_MULTICAST
       UA_Server_setServerOnNetworkCallback(mUaServer, serverOnNetworkCallback, this);
 #endif //FORTE_COM_OPC_UA_MULTICAST
-      mUaServerRunningFlag = UA_TRUE;
-      mServerStarted.inc();
-      UA_StatusCode retVal = UA_Server_run(mUaServer, &mUaServerRunningFlag); // server keeps iterating as long as running is true
-      if(UA_STATUSCODE_GOOD != retVal) {
-        DEVLOG_ERROR("[OPC UA LOCAL]: Server exited. Error: %s\n", UA_StatusCode_name(retVal));
+
+      UA_StatusCode retVal = UA_Server_run_startup(mUaServer);
+      if(UA_STATUSCODE_GOOD == retVal) {
+        mServerStarted.inc();
+        while(isAlive()) {
+          UA_UInt16 timeToSleepMs;
+          {
+            CCriticalRegion criticalRegion(mServerAccessMutex);
+            timeToSleepMs = UA_Server_run_iterate(mUaServer, false);
+          }
+          if(timeToSleepMs < scmMinimumIterationWaitTime) {
+            timeToSleepMs = scmMinimumIterationWaitTime;
+          }
+
+          mServerNeedsIteration.timedWait(static_cast<unsigned int>(timeToSleepMs));
+        }
+        retVal = UA_Server_run_shutdown(mUaServer);
+        if(UA_STATUSCODE_GOOD == retVal) {
+          DEVLOG_INFO("[OPC UA LOCAL]: Server successfully stopped\n");
+        } else {
+          DEVLOG_ERROR("[OPC UA LOCAL]: Error stopping up the server. Error: %s\n", UA_StatusCode_name(retVal));
+        }
       } else {
-        DEVLOG_INFO("[OPC UA LOCAL]: Server successfully stopped\n");
+        DEVLOG_ERROR("[OPC UA LOCAL]: Error starting up the server. Error: %s\n", UA_StatusCode_name(retVal));
       }
     } else {
       DEVLOG_ERROR("[OPC UA LOCAL]: Couldn't initialize Nodesets\n", gOpcuaServerPort);
@@ -113,7 +128,6 @@ void COPC_UA_Local_Handler::startServer() {
 }
 
 void COPC_UA_Local_Handler::stopServer() {
-  mUaServerRunningFlag = UA_FALSE;
   end();
 }
 
@@ -177,7 +191,6 @@ void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings,
 }
 
 void COPC_UA_Local_Handler::referencedNodesIncrement(const CSinglyLinkedList<UA_NodeId *> &paNodes, CActionInfo &paActionInfo) {
-  CCriticalRegion criticalRegion(mNodesReferencesMutex);
   for(CSinglyLinkedList<UA_NodeId *>::Iterator iterNode = paNodes.begin(); iterNode != paNodes.end(); ++iterNode) {
     bool found = false;
     for(CSinglyLinkedList<nodesReferencedByActions *>::Iterator iterRef = mNodesReferences.begin(); iterRef != mNodesReferences.end(); ++iterRef) {
@@ -200,7 +213,6 @@ void COPC_UA_Local_Handler::referencedNodesIncrement(const CSinglyLinkedList<UA_
 }
 
 void COPC_UA_Local_Handler::referencedNodesDecrement(const CActionInfo &paActionInfo) {
-  CCriticalRegion criticalRegion(mNodesReferencesMutex);
   CSinglyLinkedList<const UA_NodeId *> nodesReferencedByAction;
   getNodesReferencedByAction(paActionInfo, nodesReferencedByAction);
 
@@ -342,7 +354,7 @@ UA_StatusCode COPC_UA_Local_Handler::initializeAction(CActionInfo &paActionInfo)
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
   if(mUaServer) { //if the server failed at starting, nothing will be initialized
     // other thread may currently create nodes, thus mutex
-    CCriticalRegion criticalRegion(mCreateNodesMutex);
+    CCriticalRegion criticalRegion(mServerAccessMutex);
     switch(paActionInfo.getAction()){
       case CActionInfo::eRead:
         retVal = initializeVariable(paActionInfo, false);
@@ -367,6 +379,7 @@ UA_StatusCode COPC_UA_Local_Handler::initializeAction(CActionInfo &paActionInfo)
         DEVLOG_ERROR("[OPC UA LOCAL]: Unknown action %d to be initialized\n", paActionInfo.getAction());
         break;
     }
+    mServerNeedsIteration.inc();
   }
   return retVal;
 }
@@ -374,6 +387,7 @@ UA_StatusCode COPC_UA_Local_Handler::initializeAction(CActionInfo &paActionInfo)
 UA_StatusCode COPC_UA_Local_Handler::executeAction(CActionInfo &paActionInfo) {
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
 
+  CCriticalRegion criticalRegion(mServerAccessMutex);
   switch(paActionInfo.getAction()){
     case CActionInfo::eWrite:
       retVal = executeWrite(paActionInfo);
@@ -392,11 +406,14 @@ UA_StatusCode COPC_UA_Local_Handler::executeAction(CActionInfo &paActionInfo) {
       break;
   }
 
+  mServerNeedsIteration.inc();
+
   return retVal;
 }
 
 UA_StatusCode COPC_UA_Local_Handler::uninitializeAction(CActionInfo &paActionInfo) {
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
+  CCriticalRegion criticalRegion(mServerAccessMutex);
   switch(paActionInfo.getAction()){
     case CActionInfo::eRead:
     case CActionInfo::eWrite:
@@ -410,6 +427,9 @@ UA_StatusCode COPC_UA_Local_Handler::uninitializeAction(CActionInfo &paActionInf
       DEVLOG_ERROR("[OPC UA LOCAL]: Action %d to be uninitialized is unknown or invalid\n", paActionInfo.getAction());
       break;
   }
+
+  mServerNeedsIteration.inc();
+
   return retVal;
 }
 
@@ -719,7 +739,7 @@ UA_StatusCode COPC_UA_Local_Handler::handleExistingMethod(CActionInfo &paActionI
   if(UA_STATUSCODE_GOOD == retVal) {
     retVal = UA_Server_setMethodNode_callback(mUaServer, *(*it)->mNodeId, COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onServerMethodCall);
     if(UA_STATUSCODE_GOOD == retVal) {
-      retVal = UA_Server_setNodeContext(mUaServer, *(*it)->mNodeId, &mMethodsContexts);
+      retVal = UA_Server_setNodeContext(mUaServer, *(*it)->mNodeId, this);
       if(UA_STATUSCODE_GOOD == retVal) {
         UA_ParentNodeHandler parentNodeContext(paParentNode, (*it)->mNodeId, static_cast<CLocalMethodInfo&>(paActionInfo));
         mMethodsContexts.pushBack(parentNodeContext);
@@ -794,8 +814,7 @@ UA_StatusCode COPC_UA_Local_Handler::createMethodNode(CCreateMethodInfo &paCreat
 
   UA_StatusCode retVal = UA_Server_addMethodNode(mUaServer, requestedNodeId, parentNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
     *paCreateMethodInfo.mBrowseName, methodAttributes, COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onServerMethodCall, paCreateMethodInfo.mInputSize,
-    paCreateMethodInfo.mInputArguments, paCreateMethodInfo.mOutputSize, paCreateMethodInfo.mOutputArguments, &mMethodsContexts,
-    paCreateMethodInfo.mReturnedNodeId);
+    paCreateMethodInfo.mInputArguments, paCreateMethodInfo.mOutputSize, paCreateMethodInfo.mOutputArguments, this, paCreateMethodInfo.mReturnedNodeId);
 
   if(UA_STATUSCODE_GOOD == retVal) {
     if(!*paNodeId) {
@@ -1294,8 +1313,8 @@ UA_StatusCode COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onServerMethodC
 
   UA_StatusCode retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
   CLocalMethodInfo *localMethodHandle = 0;
-  CSinglyLinkedList<UA_ParentNodeHandler> *methodsContexts = static_cast<CSinglyLinkedList<UA_ParentNodeHandler>*>(paMethodContext);
-  for(CSinglyLinkedList<UA_ParentNodeHandler>::Iterator iter = methodsContexts->begin(); iter != methodsContexts->end(); ++iter) {
+  COPC_UA_Local_Handler *thisHandler = static_cast<COPC_UA_Local_Handler*>(paMethodContext);
+  for(CSinglyLinkedList<UA_ParentNodeHandler>::Iterator iter = thisHandler->mMethodsContexts.begin(); iter != thisHandler->mMethodsContexts.end(); ++iter) {
     if(UA_NodeId_equal(paParentNodeId, (*iter).mParentNodeId) && UA_NodeId_equal(paMethodNodeId, (*iter).mMethodNodeId)) {
       localMethodHandle = &(*iter).mActionInfo;
       break;
@@ -1309,8 +1328,6 @@ UA_StatusCode COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onServerMethodC
       DEVLOG_ERROR("[OPC UA LOCAL]: method call got invalid number of arguments. In: %d==%d, Out: %d==%d\n", localMethodHandle->getReceiveSize(), paInputSize,
         localMethodHandle->getSendSize(), paOutput);
     } else {
-      // other thread may currently create nodes for the same path, thus mutex
-      CCriticalRegion criticalRegion(localMethodHandle->getMutex()); //TODO: do we need this mutex?
 
       COPC_UA_Helper::UA_SendVariable_handle sendHandle(paOutputSize);
       COPC_UA_Helper::UA_RecvVariable_handle recvHandle(paInputSize);
@@ -1334,6 +1351,10 @@ UA_StatusCode COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onServerMethodC
 
         ::getExtEvHandler<COPC_UA_Local_Handler>(*localMethodHandle->getLayer().getCommFB()).startNewEventChain(localMethodHandle->getLayer().getCommFB());
 
+        //This function is called from the opcua server thread, so we release the lock so the method can be finished by forte in executeAction
+        //there might be a problem here if another resource, which is not executing the method response, uses the server and changes it somehow
+        //that it breaks something, like deleting the method maybe
+        thisHandler->mServerAccessMutex.unlock();
         //wait For semaphore, which will be released by execute Local Method in this handler
         if(!localMethodHandle->getResultReady().timedWait(scmMethodCallTimeoutInNanoSeconds)) {
           DEVLOG_ERROR("[OPC UA LOCAL]: method call did not get result values within timeout of %u nanoseconds.\n", scmMethodCallTimeoutInNanoSeconds);
@@ -1341,6 +1362,7 @@ UA_StatusCode COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onServerMethodC
         } else {
           retVal = sendHandle.mFailed ? UA_STATUSCODE_BADUNEXPECTEDERROR : UA_STATUSCODE_GOOD;
         }
+        thisHandler->mServerAccessMutex.lock();
 
         ::getExtEvHandler<COPC_UA_Local_Handler>(*localMethodHandle->getLayer().getCommFB()).removeMethodCall(localMethodCall);
       }

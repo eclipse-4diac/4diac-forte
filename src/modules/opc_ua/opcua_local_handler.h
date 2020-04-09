@@ -140,11 +140,6 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     UA_Server *mUaServer;
 
     /**
-     * Flag indicating if the server should be running or not
-     */
-    volatile UA_Boolean mUaServerRunningFlag;
-
-    /**
      * Maximal length for the server name
      */
     static const size_t scmMaxServerNameLength = 255;
@@ -169,11 +164,6 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * For each node that is accessed by the action, an entry in this list is added
      */
     CSinglyLinkedList<nodesReferencedByActions*> mNodesReferences;
-
-    /**
-     *  Mutex to access mNodesReferences
-     */
-    CSyncObject mNodesReferencesMutex;
 
     /**
      * For all nodes that an action is referencing, it adds the action as reference
@@ -320,9 +310,19 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     CSinglyLinkedList<UA_VariableContext_Handle> mNodeCallbackHandles;
 
     /**
-     * Mutex used to avoid many threads (Resources) to create the same node at the same time
+     * Mutex used to avoid many threads (Resources) to access the server
      */
-    CSyncObject mCreateNodesMutex;
+    CSyncObject mServerAccessMutex;
+
+    /**
+     * Semaphore to tell the server it needs iteration
+     */
+    CSemaphore mServerNeedsIteration;
+
+    /**
+     * The minimum time the iteration loop must wait when no interrupted
+     */
+    static const UA_UInt16 scmMinimumIterationWaitTime = 1;
 
     /**
      * This class is used to store who is the parent of each method. This need comes from the fact when creating objects that have methods,
