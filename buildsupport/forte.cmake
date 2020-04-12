@@ -290,46 +290,61 @@ FUNCTION(forte_add_systemtest_soft arg1 arg2 arg3)
   SET_TESTS_PROPERTIES(${arg1} PROPERTIES FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED|==ERROR") #==ERROR is the output when memore leak happens
 ENDFUNCTION(forte_add_systemtest_soft)
 
-## forte_add_2dev_systemtests (test_name bootfile_name1 bootfile_name2 extraArgs1 extraArgs2 timeout)
-## Two fortes are executed
-## The bootfiles are added to the args. The first forte is executed in port 61499 and the second in 61500
-## if extraArgs are empty
-
-FUNCTION(forte_add_2dev_systemtests test_name bootfile_name1 bootfile_name2 arg1 arg2 timeout isHard)
-  FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${bootfile_name1}" file_str1)
-  STRING(REPLACE "\\" "\\\\" file_str1 ${file_str1})
-  
-  FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${bootfile_name2}" file_str2)
-  STRING(REPLACE "\\" "\\\\" file_str2 ${file_str2})
-  
-  FILE(TO_NATIVE_PATH "${CMAKE_SOURCE_DIR}/buildsupport/multi_test_2.cmake" scriptFile)
+# forte_add_multi_systemtests (TEST_NAME TIMEOUT IS_HARD FILE_NAME EXTRA_ARGS [FILE_NAME EXTRA_ARGS] ...)
+FUNCTION(forte_add_multi_systemtests)
+   
+  FILE(TO_NATIVE_PATH "${CMAKE_SOURCE_DIR}/buildsupport/multi_test.cmake" scriptFile)
   STRING(REPLACE "\\" "\\\\" scriptFile ${scriptFile})
+
+  LIST(GET ARGV 0 TEST_NAME)
+  LIST(GET ARGV 1 TEST_TIMEOUT)
+  LIST(GET ARGV 2 TEST_ISHARD)
   
-  if (arg1 STREQUAL "")
-    set(arg1 "-c localhost:61499") 
-  endif()
-  
-  if (arg2 STREQUAL "")
-    set(arg2 "-c localhost:61500") 
-  endif()
-  
-  
-  ADD_TEST(NAME ${test_name} COMMAND ${CMAKE_COMMAND}
+  SET(NEXT_IS_FILE 1)
+  SET(NEXT_PORT 61499)
+  SET(COUNTER 0)
+
+  FOREACH(ARG ${ARGV})
+     IF(${COUNTER} GREATER 2)
+
+       IF(${NEXT_IS_FILE})
+         FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${ARG}" file_str1)
+         STRING(REPLACE "\\" "\\\\" file_str1 ${file_str1})
+         LIST(APPEND TEST_SYS_FILES "${file_str1}")
+         SET(NEXT_IS_FILE 0)
+       ELSE(${NEXT_IS_FILE})
+         STRING(FIND "${ARG}" "-c" FLAG_POSITION)
+         IF(${FLAG_POSITION} EQUAL -1)
+           STRING(APPEND ARG " -c localhost:${NEXT_PORT}")
+           MATH(EXPR NEXT_PORT "${NEXT_PORT}+1")
+         ENDIF(${FLAG_POSITION} EQUAL -1)
+         
+         LIST(APPEND TEST_EXTRA_ARGS "${ARG}")
+         MATH(EXPR EXTRA_ARG_COUNTER "${EXTRA_ARG_COUNTER}+1")
+         SET(NEXT_IS_FILE 1)
+       ENDIF(${NEXT_IS_FILE})
+     
+     ENDIF(${COUNTER} GREATER 2) 
+     MATH(EXPR COUNTER "${COUNTER}+1")
+  ENDFOREACH(ARG)
+
+  STRING(REPLACE ";" "<->" TEST_SYS_FILES "${TEST_SYS_FILES}")
+  STRING(REPLACE ";" "<->" TEST_EXTRA_ARGS "${TEST_EXTRA_ARGS}")
+   
+  ADD_TEST(NAME ${TEST_NAME} COMMAND ${CMAKE_COMMAND}
          -DCMD=$<TARGET_FILE:forte>
-         -DBOOT1=${file_str1}
-         -DBOOT2=${file_str2}
-         -DARG1=${arg1}
-         -DARG2=${arg2}
+         -DSYS_FILES=${TEST_SYS_FILES}
+         -DEXTRA_ARGS=${TEST_EXTRA_ARGS}
          -P ${scriptFile})
   
-  set_tests_properties (${test_name} PROPERTIES TIMEOUT ${timeout})
+  SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES TIMEOUT ${TEST_TIMEOUT})
 
-  IF(${isHard})
-    SET_TESTS_PROPERTIES(${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T|==ERROR") #==ERROR is the output when memore leak happens
-  ELSE(${isHard})
-    SET_TESTS_PROPERTIES(${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED|==ERROR") #==ERROR is the output when memore leak happens
-  ENDIF(${isHard}) 
-ENDFUNCTION(forte_add_2dev_systemtests)
+  IF(${TEST_ISHARD})
+    SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T|==ERROR") #==ERROR is the output when memore leak happens
+  ELSE(${TEST_ISHARD})
+    SET_TESTS_PROPERTIES(${TEST_NAME} PROPERTIES FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED|==ERROR") #==ERROR is the output when memore leak happens
+  ENDIF(${TEST_ISHARD}) 
+ENDFUNCTION(forte_add_multi_systemtests)
 
 FUNCTION(forte_add_env_file test file)
   FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${file}" file_str)
