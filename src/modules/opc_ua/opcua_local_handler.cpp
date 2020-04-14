@@ -121,6 +121,10 @@ void COPC_UA_Local_Handler::generateServerStrings(TForteUInt16 paUAServerPort, U
   char helperBuffer[scmMaxServerNameLength + 1];
   forte_snprintf(helperBuffer, scmMaxServerNameLength, "forte_%d", paUAServerPort);
 
+#ifdef FORTE_COM_OPC_UA_MULTICAST
+  paServerStrings.mMdnsServerName = helperBuffer;
+#endif //FORTE_COM_OPC_UA_MULTICAST
+
   char hostname[scmMaxServerNameLength + 1];
 #ifdef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
   forte_snprintf(hostname, scmMaxServerNameLength, "%s-%s", FORTE_COM_OPC_UA_CUSTOM_HOSTNAME, helperBuffer);
@@ -149,7 +153,7 @@ void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings,
   paUaServerConfig.applicationDescription.applicationType = UA_APPLICATIONTYPE_DISCOVERYSERVER;
   // hostname will be added by mdns library
   UA_String_deleteMembers(&paUaServerConfig.discovery.mdns.mdnsServerName);
-  paUaServerConfig.discovery.mdns.mdnsServerName = UA_String_fromChars(helperBuffer);
+  paUaServerConfig.discovery.mdns.mdnsServerName = UA_String_fromChars(paServerStrings.mMdnsServerName.getValue());
 #endif //FORTE_COM_OPC_UA_MULTICAST
 
   UA_String customHost = UA_STRING(paServerStrings.mHostname.getValue());

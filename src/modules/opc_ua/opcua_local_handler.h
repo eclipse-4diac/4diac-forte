@@ -116,6 +116,9 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     struct UA_ServerStrings {
         CIEC_STRING mHostname;
         CIEC_STRING mAppURI;
+#ifdef FORTE_COM_OPC_UA_MULTICAST
+        CIEC_STRING mMdnsServerName;
+#endif //FORTE_COM_OPC_UA_MULTICAST
     };
 
     /**
@@ -663,7 +666,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      */
     CSinglyLinkedList<UA_String*> mRegisteredWithLds;
 
-    const UA_String getDiscoveryUrl() const;
+    const UA_String* getDiscoveryUrl() const;
     void registerWithLds(const UA_String *paDiscoveryUrl);
     void removeLdsRegister(const UA_String *paDiscoveryUrl);
     static void serverOnNetworkCallback(const UA_ServerOnNetwork *paServerOnNetwork, UA_Boolean paIsServerAnnounce, UA_Boolean paIsTxtReceived, void *paData);
