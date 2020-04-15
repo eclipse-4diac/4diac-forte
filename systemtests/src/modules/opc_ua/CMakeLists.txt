@@ -25,15 +25,15 @@ forte_add_systemtest_hard(OPCUA_LocalMethdodsCreate localMethodsCreate.fboot 5)
 
 SET_TESTS_PROPERTIES(OPCUA_LocalFirstRead PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T|==ERROR|OPC UA REMOTE") #remote handler shouldn't start
 
-forte_add_2dev_systemtests(OPCUA_WorkingClientServer clientWorking.fboot serverWorking.fboot "" "" 40 1)
+forte_add_2dev_systemtests(OPCUA_WorkingClientServer clientWorking.fboot serverWorking.fboot "" "" 40 0) #This could be hard, but connections errors sometimes occur which don't affect the TEST_CONDITIONS
 
-forte_add_2dev_systemtests(OPCUA_WorkingClientNoSubsServer clientWorkingNoSubs.fboot serverWorking.fboot "" "" 40 1)
+forte_add_2dev_systemtests(OPCUA_WorkingClientNoSubsServer clientWorkingNoSubs.fboot serverWorking.fboot "" "" 40 0) #This could be hard, but connections errors sometimes occur which don't affect the TEST_CONDITIONS
 
 forte_add_2dev_systemtests(OPCUA_FailingClientServer failingClient.fboot failingServer.fboot "" "" 45 0)
 
 forte_add_2dev_systemtests(OPCUA_DelayedWorking delayedClient.fboot delayedServer.fboot "" "" 85 0)
 
-forte_add_2dev_systemtests(OPCUA_TypesWorking typesClient.fboot typesServer.fboot "" "" 20 1)
+forte_add_2dev_systemtests(OPCUA_TypesWorking typesClient.fboot typesServer.fboot "" "" 20 0) #This could be hard, but connections errors sometimes occur which don't affect the TEST_CONDITIONS
 
 forte_add_2dev_systemtests(OPCUA_FailActions clientFailAction.fboot localFailAction.fboot "" "" 50 0)
 
