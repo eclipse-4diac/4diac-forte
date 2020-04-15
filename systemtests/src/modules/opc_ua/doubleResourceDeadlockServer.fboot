@@ -11,8 +11,8 @@ doubleResourceFirst;<Request ID="10" Action="CREATE"><Connection Source="PUBL_0.
 doubleResourceFirst;<Request ID="11" Action="CREATE"><Connection Source="E_DELAY.EO" Destination="PUBL_0.REQ" /></Request>
 doubleResourceFirst;<Request ID="12" Action="CREATE"><Connection Source="Writable1.IND" Destination="BOOL2BOOL_2_1.REQ" /></Request>
 doubleResourceFirst;<Request ID="13" Action="CREATE"><Connection Source="START.COLD" Destination="Writable1.INIT" /></Request>
-doubleResourceFirst;<Request ID="14" Action="CREATE"><Connection Source="START.WARM" Destination="Writable1.RSP" /></Request>
-doubleResourceFirst;<Request ID="15" Action="CREATE"><Connection Source="Writable1.INITO" Destination="PUBL_0.INIT" /></Request>
+doubleResourceFirst;<Request ID="14" Action="CREATE"><Connection Source="Writable1.INITO" Destination="PUBL_0.INIT" /></Request>
+doubleResourceFirst;<Request ID="15" Action="CREATE"><Connection Source="START.WARM" Destination="Writable1.INIT" /></Request>
 doubleResourceFirst;<Request ID="16" Action="CREATE"><Connection Source="Writable1.RD_1" Destination="BOOL2BOOL_2_1.IN" /></Request>
 doubleResourceFirst;<Request ID="17" Action="START"/>
 ;<Request ID="18" Action="CREATE"><FB Name="doubleResourceSecond" Type="EMB_RES" /></Request>
