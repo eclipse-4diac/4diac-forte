@@ -33,7 +33,6 @@ CUA_ClientInformation::~CUA_ClientInformation() {
 
 bool CUA_ClientInformation::configureClient() {
   bool retVal = true;
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
   mClient = UA_Client_new();
   UA_ClientConfig *configPointer = UA_Client_getConfig(mClient);
 
@@ -46,17 +45,6 @@ bool CUA_ClientInformation::configureClient() {
     mClient = 0;
     retVal = false;
   }
-#else //FORTE_COM_OPC_UA_MASTER_BRANCH
-  UA_ClientConfig config = UA_ClientConfig_default;
-  if(configureClientFromFile(config)) {
-    config.stateCallback = CUA_RemoteCallbackFunctions::clientStateChangeCallback;
-    config.logger = COPC_UA_HandlerAbstract::getLogger();
-    config.timeout = scmClientTimeoutInMilli;
-    mClient = UA_Client_new(config);
-  } else {
-    retVal = false;
-  }
-#endif //FORTE_COM_OPC_UA_MASTER_BRANCH
   return retVal;
 }
 
@@ -70,15 +58,11 @@ bool CUA_ClientInformation::configureClientFromFile(UA_ClientConfig &paConfig) {
 
     retVal = CUA_ClientConfigFileParser::loadConfig(gOpcuaClientConfigFile, endpoint, result);
   } else {
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
     UA_StatusCode retValOpcUa = UA_ClientConfig_setDefault(&paConfig);
     if(UA_STATUSCODE_GOOD != retValOpcUa) {
       DEVLOG_ERROR("[OPC UA CLIENT]: Error setting client configuration. Error: %s\n", UA_StatusCode_name(retValOpcUa));
       retVal = false;
     }
-#else // FORTE_COM_OPC_UA_MASTER_BRANCH
-
-#endif // FORTE_COM_OPC_UA_MASTER_BRANCH
   }
 
   return retVal;
@@ -155,12 +139,7 @@ bool CUA_ClientInformation::handleClientState() {
 
 bool CUA_ClientInformation::executeAsyncCalls() {
   return (UA_STATUSCODE_GOOD ==
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-    UA_Client_run_iterate(
-#else
-      UA_Client_runAsync(
-#endif
-      mClient, 10));
+    UA_Client_run_iterate(mClient, 10));
 }
 
 UA_StatusCode CUA_ClientInformation::executeRead(CActionInfo& paActionInfo) {
@@ -183,20 +162,11 @@ UA_StatusCode CUA_ClientInformation::executeRead(CActionInfo& paActionInfo) {
 
   UA_RemoteCallHandle *remoteCallHandle = new UA_RemoteCallHandle(paActionInfo, *this);
 
-  UA_StatusCode retVal =
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-    UA_Client_sendAsyncReadRequest(mClient, &request, CUA_RemoteCallbackFunctions::readAsyncCallback, remoteCallHandle, 0);
-#else
-  UA_Client_AsyncService_read(mClient, &request, CUA_RemoteCallbackFunctions::anyAsyncCallback, remoteCallHandle, 0);
-#endif
+  UA_StatusCode retVal = UA_Client_sendAsyncReadRequest(mClient, &request, CUA_RemoteCallbackFunctions::readAsyncCallback, remoteCallHandle, 0);
 
   if(UA_STATUSCODE_GOOD != retVal) {
     DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch read action for FB %s. Error: %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
     delete remoteCallHandle;
-#else
-    // v0.3.0 is calling the callback when dispatch fails, where the remoteCallHandle is deleted
-#endif
   } else {
     addAsyncCall();
   }
@@ -231,20 +201,11 @@ UA_StatusCode CUA_ClientInformation::executeWrite(CActionInfo& paActionInfo) {
   }
 
   UA_RemoteCallHandle *remoteCallHandle = new UA_RemoteCallHandle(paActionInfo, *this);
-  retVal =
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-    UA_Client_sendAsyncWriteRequest(mClient, &request, CUA_RemoteCallbackFunctions::writeAsyncCallback, remoteCallHandle, 0);
-#else
-    UA_Client_AsyncService_write(mClient, &request, CUA_RemoteCallbackFunctions::anyAsyncCallback, remoteCallHandle, 0);
-#endif
+  retVal = UA_Client_sendAsyncWriteRequest(mClient, &request, CUA_RemoteCallbackFunctions::writeAsyncCallback, remoteCallHandle, 0);
 
   if(UA_STATUSCODE_GOOD != retVal) {
     DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch write action for FB %s. Error: %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
     delete remoteCallHandle;
-#else
-    // v0.3.0 is calling the callback when dispatch fails, where the remoteCallHandle is deleted
-#endif
   } else {
     addAsyncCall();
   }
@@ -280,22 +241,12 @@ UA_StatusCode CUA_ClientInformation::executeCallMethod(CActionInfo& paActionInfo
   }
 
   UA_RemoteCallHandle *remoteCallHandle = new UA_RemoteCallHandle(paActionInfo, *this);
-  retVal =
-
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-    UA_Client_sendAsyncRequest(mClient, &request, &UA_TYPES[UA_TYPES_CALLREQUEST], CUA_RemoteCallbackFunctions::callMethodAsyncCallback,
+  retVal = UA_Client_sendAsyncRequest(mClient, &request, &UA_TYPES[UA_TYPES_CALLREQUEST], CUA_RemoteCallbackFunctions::callMethodAsyncCallback,
         &UA_TYPES[UA_TYPES_CALLRESPONSE], remoteCallHandle, 0);
-#else
-    UA_Client_AsyncService_call(mClient, &request, CUA_RemoteCallbackFunctions::anyAsyncCallback, remoteCallHandle, 0);
-#endif
 
   if(UA_STATUSCODE_GOOD != retVal) {
     DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch call action for FB %s. Error %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
     delete remoteCallHandle;
-#else
-    // v0.3.0 is calling the callback when dispatch fails, where the remoteCallHandle is deleted
-#endif
   } else {
     addAsyncCall();
   }
@@ -606,23 +557,6 @@ void CUA_ClientInformation::resetSubscription(bool paDeleteSubscription) {
 
 // ******************** CALLBACKS *************************
 
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-//not used
-#else
-void CUA_ClientInformation::CUA_RemoteCallbackFunctions::anyAsyncCallback(UA_Client *paClient, void *paUserdata, UA_UInt32 paRequestId, void *paResponse, //NOSONAR
-    const UA_DataType *paResponseType) {
-  if(&UA_TYPES[UA_TYPES_READRESPONSE] == paResponseType) {
-    readAsyncCallback(paClient, paUserdata, paRequestId, static_cast<UA_ReadResponse*>(paResponse));
-  } else if(&UA_TYPES[UA_TYPES_WRITERESPONSE] == paResponseType) {
-    writeAsyncCallback(paClient, paUserdata, paRequestId, static_cast<UA_WriteResponse*>(paResponse));
-  } else if(&UA_TYPES[UA_TYPES_CALLRESPONSE] == paResponseType) {
-    callMethodAsyncCallback(paClient, paUserdata, paRequestId, static_cast<UA_CallResponse*>(paResponse));
-  } else {
-    DEVLOG_ERROR("[OPC UA CLIENT]: Client has a return call from an unknown type %s\n", paResponseType->typeName);
-  }
-}
-#endif
-
 void CUA_ClientInformation::CUA_RemoteCallbackFunctions::readAsyncCallback(UA_Client *, void *paUserdata, UA_UInt32, UA_ReadResponse *paResponse) { //NOSONAR
   UA_RemoteCallHandle *remoteCallHandle = static_cast<UA_RemoteCallHandle*>(paUserdata);
   remoteCallHandle->mClientInformation.removeAsyncCall();
@@ -703,34 +637,30 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::writeAsyncCallback(UA_C
 }
 
 void CUA_ClientInformation::CUA_RemoteCallbackFunctions::callMethodAsyncCallback(UA_Client *, void *paUserdata, UA_UInt32,
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-    void *paResponse_) {
-      UA_CallResponse *paResponse = static_cast<UA_CallResponse*>(paResponse_);
-#else
-    UA_CallResponse *paResponse) {
-#endif
+    void *paResponse) {
+      UA_CallResponse *response = static_cast<UA_CallResponse*>(paResponse);
 
   bool somethingFailed = false;
 
   UA_RemoteCallHandle *remoteCallHandle = static_cast<UA_RemoteCallHandle*>(paUserdata);
   remoteCallHandle->mClientInformation.removeAsyncCall();
 
-  if(UA_STATUSCODE_GOOD == paResponse->responseHeader.serviceResult) {
-    if(1 == paResponse->resultsSize) {
-      if(UA_STATUSCODE_GOOD == paResponse->results[0].statusCode) {
+  if(UA_STATUSCODE_GOOD == response->responseHeader.serviceResult) {
+    if(1 == response->resultsSize) {
+      if(UA_STATUSCODE_GOOD == response->results[0].statusCode) {
 
-        if(remoteCallHandle->mActionInfo.getLayer().getCommFB()->getNumRD() != paResponse->results[0].outputArgumentsSize) {
+        if(remoteCallHandle->mActionInfo.getLayer().getCommFB()->getNumRD() != response->results[0].outputArgumentsSize) {
           DEVLOG_ERROR(
             "[OPC UA CLIENT]: Calling for FB %s in client %s failed because the number of RD connectors of the client %u does not match the number of returned values %u from the method call\n",
             remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().getValue(),
-            remoteCallHandle->mActionInfo.getLayer().getCommFB()->getNumRD(), paResponse->results->outputArgumentsSize);
+            remoteCallHandle->mActionInfo.getLayer().getCommFB()->getNumRD(), response->results->outputArgumentsSize);
           somethingFailed = true;
         } else {
-          for(size_t i = 0; i < paResponse->results->inputArgumentResultsSize; i++) {
-            if(UA_STATUSCODE_GOOD != paResponse->results->inputArgumentResults[i]) {
+          for(size_t i = 0; i < response->results->inputArgumentResultsSize; i++) {
+            if(UA_STATUSCODE_GOOD != response->results->inputArgumentResults[i]) {
               DEVLOG_ERROR("[OPC UA CLIENT]: Calling for FB %s in client %s failed because the input response for index %u has status %s\n",
                 remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().getValue(), i,
-                UA_StatusCode_name(paResponse->results->inputArgumentResults[i]));
+                UA_StatusCode_name(response->results->inputArgumentResults[i]));
               somethingFailed = true;
               break;
             }
@@ -739,24 +669,24 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::callMethodAsyncCallback
       } else {
         DEVLOG_ERROR("[OPC UA CLIENT]: Calling for FB %s in client %s failed with the specific error: %s\n",
           remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().getValue(),
-          UA_StatusCode_name(paResponse->results->statusCode));
+          UA_StatusCode_name(response->results->statusCode));
         somethingFailed = true;
       }
     } else {
       DEVLOG_ERROR("[OPC UA CLIENT]: Calling for FB %s in client %s failed because the response size is %u, different from 1\n",
         remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().getValue(),
-        paResponse->resultsSize);
+        response->resultsSize);
       somethingFailed = true;
     }
   } else {
     DEVLOG_ERROR("[OPC UA CLIENT]: Calling for FB %s in client %s failed with the main error: %s\n",
       remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().getValue(),
-      UA_StatusCode_name(paResponse->responseHeader.serviceResult));
+      UA_StatusCode_name(response->responseHeader.serviceResult));
     somethingFailed = true;
   }
   size_t outputSize = 0;
   if(!somethingFailed) {
-    outputSize = paResponse->results->outputArgumentsSize;
+    outputSize = response->results->outputArgumentsSize;
   }
   //call layer even when it failed, to let the FB know
   COPC_UA_Helper::UA_SendVariable_handle varHandle(outputSize);
@@ -764,7 +694,7 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::callMethodAsyncCallback
 
   if(!varHandle.mFailed) {
     for(size_t i = 0; i < outputSize; i++) {
-      varHandle.mData[i] = &paResponse->results->outputArguments[i];
+      varHandle.mData[i] = &response->results->outputArguments[i];
     }
   }
 

@@ -14,26 +14,34 @@
 #include "opcua_client_config_parser.h"
 #include "arch/devlog.h"
 
+const char *const CUA_ClientConfigFileParser::mKeyNames[] = {
+  "endpoint",
+  "username",
+  "password",
+#ifdef UA_ENABLE_ENCRYPTION
+  "certificate",
+  "privateKey",
+  "securityMode",
+  "securityPolicy"
+#endif // UA_ENABLE_ENCRYPTION
+  };
+
 bool CUA_ClientConfigFileParser::loadConfig(std::string &paFileLocation, std::string &paEndpoint, UA_ConfigFromFile &paResult) {
   bool retVal = true;
   UA_StatusCode retValOpcUa = UA_STATUSCODE_GOOD;
 
   CConfigFileParser configFileParser(paFileLocation);
   bool endpointFound = false;
-  std::string endpointKey = "endpoint";
+  const std::string endpointKey = CUA_ClientConfigFileParser::mKeyNames[UA_KeyType::eEndpoint];
 
   if(CConfigFileParser::lookForKeyValueInFile(configFileParser, endpointKey, paEndpoint, endpointFound)) {
     if(endpointFound) {
 
 #ifdef UA_ENABLE_ENCRYPTION
-# ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
       UA_ByteString certificateFileContent = UA_STRING_NULL;
       UA_ByteString privateKeyFileContent = UA_STRING_NULL;
       UA_MessageSecurityMode securityMode = UA_MESSAGESECURITYMODE_INVALID;
       UA_String securityPolicyUri = UA_STRING_NULL;
-# else // FORTE_COM_OPC_UA_MASTER_BRANCH
-
-# endif // FORTE_COM_OPC_UA_MASTER_BRANCH
 #endif //UA_ENABLE_ENCRYPTION
 
       bool moreLinesToRead = true;
@@ -42,27 +50,23 @@ bool CUA_ClientConfigFileParser::loadConfig(std::string &paFileLocation, std::st
 
         switch(configFileParser.parseNextLine(resultPair)){
           case CConfigFileParser::eOk:
-            if(0 == resultPair.first.compare("endpoint")) {
+            if(0 == resultPair.first.compare(CUA_ClientConfigFileParser::mKeyNames[UA_KeyType::eEndpoint])) {
               moreLinesToRead = false;
-            } else if(0 == resultPair.first.compare("username")) {
+            } else if(0 == resultPair.first.compare(CUA_ClientConfigFileParser::mKeyNames[UA_KeyType::eUsername])) {
               paResult.mUsername = resultPair.second;
-            } else if(0 == resultPair.first.compare("password")) {
+            } else if(0 == resultPair.first.compare(CUA_ClientConfigFileParser::mKeyNames[UA_KeyType::ePassword])) {
               paResult.mPassword = resultPair.second;
             }
 #ifdef UA_ENABLE_ENCRYPTION
-# ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-            else if(0 == resultPair.first.compare("certificate")) {
+            else if(0 == resultPair.first.compare(CUA_ClientConfigFileParser::mKeyNames[UA_KeyType::eCertificate])) {
               retVal = loadFileIntoBytestring(resultPair.second, certificateFileContent);
-            } else if(0 == resultPair.first.compare("privateKey")) {
+            } else if(0 == resultPair.first.compare(CUA_ClientConfigFileParser::mKeyNames[UA_KeyType::ePrivateKey])) {
               retVal = loadFileIntoBytestring(resultPair.second, privateKeyFileContent);
-            } else if(0 == resultPair.first.compare("securityMode")) {
+            } else if(0 == resultPair.first.compare(CUA_ClientConfigFileParser::mKeyNames[UA_KeyType::eSecurityMode])) {
               securityMode = static_cast<UA_MessageSecurityMode>(atoi(resultPair.second.c_str()));
-            } else if(0 == resultPair.first.compare("securityPolicy")) {
+            } else if(0 == resultPair.first.compare(CUA_ClientConfigFileParser::mKeyNames[UA_KeyType::eSecurityPolicy])) {
               securityPolicyUri = UA_STRING_ALLOC(resultPair.second.c_str());
             }
-# else // FORTE_COM_OPC_UA_MASTER_BRANCH
-
-# endif // FORTE_COM_OPC_UA_MASTER_BRANCH
 #endif //UA_ENABLE_ENCRYPTION
             else {
               DEVLOG_WARNING("[CUA_ClientConfigFileParser]: They %s was not recognized so it will be omitted\n", resultPair.first.c_str());
@@ -86,7 +90,6 @@ bool CUA_ClientConfigFileParser::loadConfig(std::string &paFileLocation, std::st
 
       if(retVal) {
 #ifdef UA_ENABLE_ENCRYPTION
-# ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
         if(0 != certificateFileContent.length) {
           retValOpcUa = UA_ClientConfig_setDefaultEncryption(&paResult.mClientConfig, certificateFileContent, privateKeyFileContent, NULL, 0, NULL, 0);
           if(UA_STATUSCODE_GOOD == retValOpcUa) {
@@ -94,40 +97,24 @@ bool CUA_ClientConfigFileParser::loadConfig(std::string &paFileLocation, std::st
             paResult.mClientConfig.securityPolicyUri = securityPolicyUri;
           }
         } else
-# else // FORTE_COM_OPC_UA_MASTER_BRANCH
-
-# endif // FORTE_COM_OPC_UA_MASTER_BRANCH
 #endif //UA_ENABLE_ENCRYPTION
-
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
         {
           retValOpcUa = UA_ClientConfig_setDefault(&paResult.mClientConfig);
         }
-#else //FORTE_COM_OPC_UA_MASTER_BRANCH
-
-#endif //FORTE_COM_OPC_UA_MASTER_BRANCH
       }
 
 #ifdef UA_ENABLE_ENCRYPTION
-# ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
       else {
         UA_String_clear(&securityPolicyUri);
       }
 
       UA_ByteString_clear(&certificateFileContent);
       UA_ByteString_clear(&privateKeyFileContent);
-# else // FORTE_COM_OPC_UA_MASTER_BRANCH
-
-# endif // FORTE_COM_OPC_UA_MASTER_BRANCH
 #endif
 
     } else { //if the endpoint is not found, configuration is initialize as default
       DEVLOG_INFO("[CUA_ClientConfigFileParser]: No entry for endpoint %s was found in file %s\n", paEndpoint.c_str(), paFileLocation.c_str());
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
       retValOpcUa = UA_ClientConfig_setDefault(&paResult.mClientConfig);
-#else // FORTE_COM_OPC_UA_MASTER_BRANCH
-
-#endif //FORTE_COM_OPC_UA_MASTER_BRANCH
     }
 
     if(retVal && UA_STATUSCODE_GOOD != retValOpcUa) {
@@ -142,7 +129,6 @@ bool CUA_ClientConfigFileParser::loadConfig(std::string &paFileLocation, std::st
 }
 
 #ifdef UA_ENABLE_ENCRYPTION
-# ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
 bool CUA_ClientConfigFileParser::loadFileIntoBytestring(std::string &paFileLocation, UA_ByteString &paResult) {
   bool retVal = false;
 
@@ -167,7 +153,4 @@ bool CUA_ClientConfigFileParser::loadFileIntoBytestring(std::string &paFileLocat
 
   return retVal;
 }
-# else // FORTE_COM_OPC_UA_MASTER_BRANCH
-
-# endif // FORTE_COM_OPC_UA_MASTER_BRANCH
 #endif //UA_ENABLE_ENCRYPTION

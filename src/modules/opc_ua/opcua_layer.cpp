@@ -29,7 +29,7 @@
 using namespace forte::com_infra;
 
 COPC_UA_Layer::COPC_UA_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
-    CComLayer(paUpperLayer, paComFB), mInterruptResp(e_Nothing), mHandler(0), mActionInfo(0), mDataAlreadyPresent(false) {
+    CComLayer(paUpperLayer, paComFB), mInterruptResp(e_Nothing), mHandler(0), mActionInfo(0), mDataAlreadyPresent(false), mRDBuffer(0) {
 }
 
 COPC_UA_Layer::~COPC_UA_Layer() {
@@ -46,7 +46,12 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
             static_cast<COPC_UA_HandlerAbstract*>(&getExtEvHandler<COPC_UA_Local_Handler>());
 
       if(UA_STATUSCODE_GOOD == mHandler->initializeAction(*mActionInfo)) {
+        CCriticalRegion criticalRegion(mRDBufferMutex);
         response = e_InitOk;
+        mRDBuffer = new CIEC_ANY[getCommFB()->getNumRD()];
+        for(size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
+          getCommFB()->getRDs()[i].clone(reinterpret_cast<TForteByte*>(&(mRDBuffer[i])));
+        }
       }
     }
   }
@@ -56,9 +61,11 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
 
 void COPC_UA_Layer::closeConnection() {
   if(mHandler) {
+    CCriticalRegion criticalRegion(mRDBufferMutex);
     mHandler->uninitializeAction(*mActionInfo);
     mHandler = 0;
     delete mActionInfo;
+    delete[] mRDBuffer;
   }
 }
 
@@ -70,11 +77,11 @@ EComResponse COPC_UA_Layer::recvData(const void *paData, unsigned int) {
   if(!handleRecv->mFailed) {
     if(handleRecv->mSize) {
       if(handleRecv->mSize + handleRecv->mOffset <= getCommFB()->getNumRD()) {
-        CIEC_ANY *RDs = getCommFB()->getRDs() + handleRecv->mOffset;
+        CCriticalRegion criticalRegion(mRDBufferMutex);
         for(size_t i = 0; i < handleRecv->mSize; i++) {
           if(UA_Variant_isScalar(handleRecv->mData[i]) && handleRecv->mData[i]->data
-            && handleRecv->mData[i]->type == COPC_UA_Helper::getOPCUATypeFromAny(RDs[i])) {
-            COPC_UA_Helper::convertFromOPCUAType(handleRecv->mData[i]->data, RDs[i]);
+            && handleRecv->mData[i]->type == COPC_UA_Helper::getOPCUATypeFromAny((mRDBuffer + handleRecv->mOffset)[i])) {
+            COPC_UA_Helper::convertFromOPCUAType(handleRecv->mData[i]->data, (mRDBuffer + handleRecv->mOffset)[i]);
           } else {
             DEVLOG_ERROR("[OPC UA LAYER]: RD_%d of FB %s has no data, is not a scalar or there is a type mismatch\n", handleRecv->mOffset + i,
               getCommFB()->getInstanceName());
@@ -112,6 +119,10 @@ EComResponse COPC_UA_Layer::sendData(void *, unsigned int) {
 
 
 EComResponse COPC_UA_Layer::processInterrupt() {
+  CCriticalRegion criticalRegion(mRDBufferMutex);
+  for(size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
+    getCommFB()->getRDs()[i].setValue(mRDBuffer[i]);
+  }
   setDataAlreadyPresentRead(false);
   return mInterruptResp;
 }

@@ -38,7 +38,6 @@ if (FORTE_COM_OPC_UA)
     SET(FORTE_COM_OPC_UA_INCLUDE_DIR "" CACHE PATH "ABSOLUTE path to open62541.h file in the OPC UA project")
     SET(FORTE_COM_OPC_UA_LIB_DIR "" CACHE PATH "ABSOLUTE path to OPC UA folder with object library FORTE_COM_OPC_UA_LIB")
     SET(FORTE_COM_OPC_UA_CUSTOM_HOSTNAME CACHE STRING "Custom hostname which is used for the OPC UA app name and app uri")
-    SET(FORTE_COM_OPC_UA_MASTER_BRANCH OFF CACHE BOOL "Use the master branch")
     SET(FORTE_COM_OPC_UA_ENCRYPTION OFF CACHE BOOL "The open62541 lilbrary was compiled using encryption")
 
     # OPEN62541 library to be linked to forte
@@ -84,7 +83,6 @@ if (FORTE_COM_OPC_UA)
     
     forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA")
     forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA_MULTICAST")
-    forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA_MASTER_BRANCH")
     forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA_CUSTOM_HOSTNAME \"${FORTE_COM_OPC_UA_CUSTOM_HOSTNAME}\"")
     
     forte_opcua_add_type(forte_localizedtext LocalizedText UA_TYPES_LOCALIZEDTEXT)
@@ -93,10 +91,6 @@ if (FORTE_COM_OPC_UA)
     add_subdirectory(types)
     
     if(FORTE_COM_OPC_UA_ENCRYPTION)
-      if(NOT FORTE_COM_OPC_UA_MASTER_BRANCH)
-        message(SEND_WARNING "You are compiling open62541 with encryption and v0.3.0 which is not fully supported in forte. For encryption, use v1.0")  
-      endif(NOT FORTE_COM_OPC_UA_MASTER_BRANCH)
-      
       SET(FORTE_COM_OPC_UA_ENCRYPTION_INCLUDE_DIR "" CACHE STRING "ABSOLUTE path to encryption headers")
       SET(FORTE_COM_OPC_UA_ENCRYPTION_LIB_DIR "" CACHE STRING "ABSOLUTE path to encryption libraries")
       

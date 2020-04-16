@@ -116,6 +116,9 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     struct UA_ServerStrings {
         CIEC_STRING mHostname;
         CIEC_STRING mAppURI;
+#ifdef FORTE_COM_OPC_UA_MULTICAST
+        CIEC_STRING mMdnsServerName;
+#endif //FORTE_COM_OPC_UA_MULTICAST
     };
 
     /**
@@ -658,21 +661,12 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
 # ifndef UA_ENABLE_DISCOVERY_MULTICAST
 #  error open62541 needs to be built with UA_ENABLE_DISCOVERY_MULTICAST=ON
 # else // UA_ENABLE_DISCOVERY_MULTICAST
-#  ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-    //nothing here
-#   else
-
-    /**
-     * Server configuration
-     */
-    UA_ServerConfig *mServerConfig;
-#   endif
     /**
      * List of LDS servers where this instance is already registered.
      */
     CSinglyLinkedList<UA_String*> mRegisteredWithLds;
 
-    const UA_String getDiscoveryUrl() const;
+    const UA_String* getDiscoveryUrl() const;
     void registerWithLds(const UA_String *paDiscoveryUrl);
     void removeLdsRegister(const UA_String *paDiscoveryUrl);
     static void serverOnNetworkCallback(const UA_ServerOnNetwork *paServerOnNetwork, UA_Boolean paIsServerAnnounce, UA_Boolean paIsTxtReceived, void *paData);

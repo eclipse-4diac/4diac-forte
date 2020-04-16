@@ -1,0 +1,35 @@
+;<Request ID="1" Action="CREATE"><FB Name="doubleResourceFirst" Type="EMB_RES" /></Request>
+doubleResourceFirst;<Request ID="2" Action="CREATE"><FB Name="PUBL_0" Type="PUBL_0" /></Request>
+doubleResourceFirst;<Request ID="3" Action="WRITE"><Connection Source="WSTRING#opcuaFirstResourceINIT" Destination="PUBL_0.ID" /></Request>
+doubleResourceFirst;<Request ID="4" Action="CREATE"><FB Name="E_DELAY" Type="E_DELAY" /></Request>
+doubleResourceFirst;<Request ID="5" Action="WRITE"><Connection Source="T#3s" Destination="E_DELAY.DT" /></Request>
+doubleResourceFirst;<Request ID="6" Action="CREATE"><FB Name="Writable1" Type="SUBSCRIBE_1" /></Request>
+doubleResourceFirst;<Request ID="7" Action="WRITE"><Connection Source="1" Destination="Writable1.QI" /></Request>
+doubleResourceFirst;<Request ID="8" Action="WRITE"><Connection Source="opc_ua[READ;/Objects/firstRead/OnlyBrowseName/folderTests/NoId]" Destination="Writable1.ID" /></Request>
+doubleResourceFirst;<Request ID="9" Action="CREATE"><FB Name="BOOL2BOOL_2_1" Type="DINT2DINT" /></Request>
+doubleResourceFirst;<Request ID="10" Action="CREATE"><Connection Source="PUBL_0.INITO" Destination="E_DELAY.START" /></Request>
+doubleResourceFirst;<Request ID="11" Action="CREATE"><Connection Source="E_DELAY.EO" Destination="PUBL_0.REQ" /></Request>
+doubleResourceFirst;<Request ID="12" Action="CREATE"><Connection Source="Writable1.IND" Destination="BOOL2BOOL_2_1.REQ" /></Request>
+doubleResourceFirst;<Request ID="13" Action="CREATE"><Connection Source="START.COLD" Destination="Writable1.INIT" /></Request>
+doubleResourceFirst;<Request ID="14" Action="CREATE"><Connection Source="Writable1.INITO" Destination="PUBL_0.INIT" /></Request>
+doubleResourceFirst;<Request ID="15" Action="CREATE"><Connection Source="START.WARM" Destination="Writable1.INIT" /></Request>
+doubleResourceFirst;<Request ID="16" Action="CREATE"><Connection Source="Writable1.RD_1" Destination="BOOL2BOOL_2_1.IN" /></Request>
+doubleResourceFirst;<Request ID="17" Action="START"/>
+;<Request ID="18" Action="CREATE"><FB Name="doubleResourceSecond" Type="EMB_RES" /></Request>
+doubleResourceSecond;<Request ID="19" Action="CREATE"><FB Name="STEST_END_1" Type="STEST_END" /></Request>
+doubleResourceSecond;<Request ID="20" Action="CREATE"><FB Name="E_REND" Type="E_REND" /></Request>
+doubleResourceSecond;<Request ID="21" Action="CREATE"><FB Name="SUBL_0" Type="SUBL_0" /></Request>
+doubleResourceSecond;<Request ID="22" Action="WRITE"><Connection Source="WSTRING#opcuaFirstResourceINIT" Destination="SUBL_0.ID" /></Request>
+doubleResourceSecond;<Request ID="23" Action="CREATE"><FB Name="BOOL2BOOL_2_2" Type="DINT2DINT" /></Request>
+doubleResourceSecond;<Request ID="24" Action="CREATE"><FB Name="Writable2" Type="SUBSCRIBE_1" /></Request>
+doubleResourceSecond;<Request ID="25" Action="WRITE"><Connection Source="1" Destination="Writable2.QI" /></Request>
+doubleResourceSecond;<Request ID="26" Action="WRITE"><Connection Source="opc_ua[READ;/Objects/firstRead/NumericNodeId/folderTests/WithId,1:i=12345]" Destination="Writable2.ID" /></Request>
+doubleResourceSecond;<Request ID="27" Action="CREATE"><Connection Source="E_REND.EO" Destination="STEST_END_1.REQ" /></Request>
+doubleResourceSecond;<Request ID="28" Action="CREATE"><Connection Source="SUBL_0.IND" Destination="E_REND.EI1" /></Request>
+doubleResourceSecond;<Request ID="29" Action="CREATE"><Connection Source="SUBL_0.INITO" Destination="E_REND.EI2" /></Request>
+doubleResourceSecond;<Request ID="30" Action="CREATE"><Connection Source="Writable2.IND" Destination="BOOL2BOOL_2_2.REQ" /></Request>
+doubleResourceSecond;<Request ID="31" Action="CREATE"><Connection Source="START.COLD" Destination="Writable2.INIT" /></Request>
+doubleResourceSecond;<Request ID="32" Action="CREATE"><Connection Source="START.WARM" Destination="Writable2.INIT" /></Request>
+doubleResourceSecond;<Request ID="33" Action="CREATE"><Connection Source="Writable2.INITO" Destination="SUBL_0.INIT" /></Request>
+doubleResourceSecond;<Request ID="34" Action="CREATE"><Connection Source="Writable2.RD_1" Destination="BOOL2BOOL_2_2.IN" /></Request>
+doubleResourceSecond;<Request ID="35" Action="START"/>

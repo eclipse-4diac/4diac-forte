@@ -42,13 +42,6 @@ DEFINE_HANDLER(COPC_UA_Local_Handler);
 
 COPC_UA_Local_Handler::COPC_UA_Local_Handler(CDeviceExecution &paDeviceExecution) :
     COPC_UA_HandlerAbstract(paDeviceExecution), mUaServer(0), mUaServerRunningFlag(UA_FALSE)
-#ifdef FORTE_COM_OPC_UA_MULTICAST
-# ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-//do nothing
-# else //FORTE_COM_OPC_UA_MASTER_BRANCH
-, mServerConfig(0)
-# endif //FORTE_COM_OPC_UA_MASTER_BRANCH
-#endif //FORTE_COM_OPC_UA_MULTICAST
 {
 }
 
@@ -81,30 +74,17 @@ void COPC_UA_Local_Handler::disableHandler(void) {
 void COPC_UA_Local_Handler::run() {
   DEVLOG_INFO("[OPC UA LOCAL]: Starting OPC UA Server: opc.tcp://localhost:%d\n", gOpcuaServerPort);
 
-  UA_ServerConfig *uaServerConfig = 0;
-
-  UA_ServerStrings serverStrings;
-  generateServerStrings(gOpcuaServerPort, serverStrings);
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
   mUaServer = UA_Server_new();
   if(mUaServer) {
-    uaServerConfig = UA_Server_getConfig(mUaServer);
+    UA_ServerConfig *uaServerConfig = UA_Server_getConfig(mUaServer);
     UA_ServerConfig_setMinimal(uaServerConfig, gOpcuaServerPort, 0);
+
+    UA_ServerStrings serverStrings;
+    generateServerStrings(gOpcuaServerPort, serverStrings);
     configureUAServer(serverStrings, *uaServerConfig);
-#else
-  uaServerConfig = UA_ServerConfig_new_minimal(gOpcuaServerPort, 0);
-  configureUAServer(serverStrings, *uaServerConfig);
-  mUaServer = UA_Server_new(uaServerConfig);
-  if(mUaServer) {
-#endif
 
     if(initializeNodesets(*mUaServer)) {
 #ifdef FORTE_COM_OPC_UA_MULTICAST
-# ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-      //do nothing
-# else
-      mServerConfig = uaServerConfig;
-# endif
       UA_Server_setServerOnNetworkCallback(mUaServer, serverOnNetworkCallback, this);
 #endif //FORTE_COM_OPC_UA_MULTICAST
       mUaServerRunningFlag = UA_TRUE;
@@ -121,11 +101,6 @@ void COPC_UA_Local_Handler::run() {
     UA_Server_delete(mUaServer);
     mUaServer = 0;
   }
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-  //nothing to do in master branch. Config is deleted with the server
-#else
-  UA_ServerConfig_delete(uaServerConfig);
-#endif
   mServerStarted.inc(); //this will avoid locking startServer() for all cases where the starting of server failed
 }
 
@@ -133,6 +108,7 @@ void COPC_UA_Local_Handler::startServer() {
   if(!isAlive()) {
     start();
     mServerStarted.waitIndefinitely();
+    mServerStarted.inc(); //in case two threads get into this block at the same time
   }
 }
 
@@ -144,6 +120,10 @@ void COPC_UA_Local_Handler::stopServer() {
 void COPC_UA_Local_Handler::generateServerStrings(TForteUInt16 paUAServerPort, UA_ServerStrings &paServerStrings) {
   char helperBuffer[scmMaxServerNameLength + 1];
   forte_snprintf(helperBuffer, scmMaxServerNameLength, "forte_%d", paUAServerPort);
+
+#ifdef FORTE_COM_OPC_UA_MULTICAST
+  paServerStrings.mMdnsServerName = helperBuffer;
+#endif //FORTE_COM_OPC_UA_MULTICAST
 
   char hostname[scmMaxServerNameLength + 1];
 #ifdef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
@@ -172,21 +152,12 @@ void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings,
 #ifdef FORTE_COM_OPC_UA_MULTICAST
   paUaServerConfig.applicationDescription.applicationType = UA_APPLICATIONTYPE_DISCOVERYSERVER;
   // hostname will be added by mdns library
-# ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
   UA_String_deleteMembers(&paUaServerConfig.discovery.mdns.mdnsServerName);
-  paUaServerConfig.discovery.mdns.mdnsServerName = UA_String_fromChars(helperBuffer);
-# else //FORTE_COM_OPC_UA_MASTER_BRANCH
-  UA_String_deleteMembers(&paUaServerConfig.mdnsServerName);
-  paUaServerConfig.mdnsServerName = UA_String_fromChars(helperBuffer);
-# endif//FORTE_COM_OPC_UA_MASTER_BRANCH
+  paUaServerConfig.discovery.mdns.mdnsServerName = UA_String_fromChars(paServerStrings.mMdnsServerName.getValue());
 #endif //FORTE_COM_OPC_UA_MULTICAST
 
   UA_String customHost = UA_STRING(paServerStrings.mHostname.getValue());
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
   UA_ServerConfig_setCustomHostname(&paUaServerConfig, customHost);
-#else //FORTE_COM_OPC_UA_MASTER_BRANCH
-  UA_ServerConfig_set_customHostname(&paUaServerConfig, customHost);
-#endif//FORTE_COM_OPC_UA_MASTER_BRANCH
 
   // delete pre-initialized values
   UA_LocalizedText_deleteMembers(&paUaServerConfig.applicationDescription.applicationName);
@@ -198,17 +169,10 @@ void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings,
   paUaServerConfig.publishingIntervalLimits.min = FORTE_COM_OPC_UA_SERVER_PUB_INTERVAL;
 
   for(size_t i = 0; i < paUaServerConfig.endpointsSize; i++) {
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
     UA_String_deleteMembers(&paUaServerConfig.endpoints[i].server.applicationUri);
     UA_LocalizedText_deleteMembers(&paUaServerConfig.endpoints[i].server.applicationName);
     UA_String_copy(&paUaServerConfig.applicationDescription.applicationUri, &paUaServerConfig.endpoints[i].server.applicationUri);
     UA_LocalizedText_copy(&paUaServerConfig.applicationDescription.applicationName, &paUaServerConfig.endpoints[i].server.applicationName);
-#else //FORTE_COM_OPC_UA_MASTER_BRANCH
-    UA_String_deleteMembers(&paUaServerConfig.endpoints[i].endpointDescription.server.applicationUri);
-    UA_LocalizedText_deleteMembers(&paUaServerConfig.endpoints[i].endpointDescription.server.applicationName);
-    UA_String_copy(&paUaServerConfig.applicationDescription.applicationUri, &paUaServerConfig.endpoints[i].endpointDescription.server.applicationUri);
-    UA_LocalizedText_copy(&paUaServerConfig.applicationDescription.applicationName, &paUaServerConfig.endpoints[i].endpointDescription.server.applicationName);
-#endif //FORTE_COM_OPC_UA_MASTER_BRANCH
   }
 }
 
@@ -297,11 +261,7 @@ void COPC_UA_Local_Handler::getNodesReferencedByAction(const CActionInfo &paActi
 
 const UA_String* COPC_UA_Local_Handler::getDiscoveryUrl() const {
 
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
   UA_ServerConfig *mServerConfig = UA_Server_getConfig(mUaServer); //change mServerConfig to serverConfig when only master branch is present
-#else
-  //do nothing
-#endif
   if(0 == mServerConfig->networkLayersSize) {
     return 0;
   }
@@ -355,13 +315,7 @@ void COPC_UA_Local_Handler::registerWithLds(const UA_String *paDiscoveryUrl) {
 
   mRegisteredWithLds.pushFront(discoveryUrlChar);
   DEVLOG_INFO("[OPC UA LOCAL]: Registering with LDS '%.*s'\n", paDiscoveryUrl->length, paDiscoveryUrl->data);
-  UA_StatusCode retVal = UA_Server_addPeriodicServerRegisterCallback(mUaServer,
-#ifdef FORTE_COM_OPC_UA_MASTER_BRANCH
-      0,
-#else //FORTE_COM_OPC_UA_MASTER_BRANCH
-      //nothing here
-#endif //FORTE_COM_OPC_UA_MASTER_BRANCH
-      reinterpret_cast<const char*>(discoveryUrlChar->data), 10 * 60 * 1000, 500, 0);
+  UA_StatusCode retVal = UA_Server_addPeriodicServerRegisterCallback(mUaServer, 0, reinterpret_cast<const char*>(discoveryUrlChar->data), 10 * 60 * 1000, 500, 0);
   if( UA_STATUSCODE_GOOD != retVal) {
     DEVLOG_ERROR("[OPC UA LOCAL]: Could not register with LDS. Error: %s\n", UA_StatusCode_name(retVal));
   }
