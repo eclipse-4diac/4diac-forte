@@ -17,8 +17,6 @@ if(FORTE_COM_XqueryClient)
 
 set(OPENSSL_INCLUDE_DIR "" CACHE PATH "OpenSSL Include Directory")
 set(OPENSSL_LIBRARY_DIR "" CACHE PATH "OpenSSL Library Directory")
-#set(OPENSSL_LIBRARY "" CACHE STRING "OpenSSL Library")
-#set(OPENSSL_ENCRYPTION_LIBRARY "" CACHE STRING "OpenSSL Encryprion Library")
 set(FORTE_BASEX_SRC_DIR "" CACHE PATH "Path to BaseX library directory")
 
 forte_add_include_directories(${OPENSSL_INCLUDE_DIR})
@@ -26,8 +24,6 @@ forte_add_link_directories(${OPENSSL_LIBRARY_DIR})
 #ifdef WIN32
 forte_add_link_library(libssl.a)
 forte_add_link_library(libcrypto.a)
-#forte_add_link_library(${OPENSSL_LIBRARY})
-#forte_add_link_library(${OPENSSL_ENCRYPTION_LIBRARY}) 
 #else
 forte_add_link_library(libssl.a -lpthread -ldl)
 forte_add_link_library(libcrypto.a -lpthread -ldl)
