@@ -1,0 +1,1 @@
+INCLUDE(${CMAKE_BINARY_DIR}/src/external/CMakeLists.txt)
