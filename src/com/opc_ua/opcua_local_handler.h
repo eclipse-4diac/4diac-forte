@@ -170,7 +170,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param paNodes Nodes being referenced by the action
      * @param paActionInfo Action referencing the nodes
      */
-    void referencedNodesIncrement(const CSinglyLinkedList<UA_NodeId *> &paNodes, CActionInfo &paActionInfo);
+    void referencedNodesIncrement(const CSinglyLinkedList<UA_NodeId*> &paNodes, CActionInfo &paActionInfo);
 
     /**
      * Removes the action from the references from all the nodes where it's present
@@ -183,7 +183,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param paActionInfo Action to be look for as a reference
      * @param paNodes Place to store the nodes that are referencing the action
      */
-    void getNodesReferencedByAction(const CActionInfo &paActionInfo, CSinglyLinkedList<const UA_NodeId *> &paNodes);
+    void getNodesReferencedByAction(const CActionInfo &paActionInfo, CSinglyLinkedList<const UA_NodeId*> &paNodes);
 
     /**
      * Parent class that encapsulates the information needed to create something in the OPC UA Stack
@@ -233,7 +233,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     class CCreateVariableInfo : public CCreateInfo {
       public:
         CCreateVariableInfo() :
-            CCreateInfo(), mTypeConvert(0), mInitData(0), mAllowWrite(false) {
+            CCreateInfo(), mTypeConvert(0), mInitData(0), mAllowWrite(false), mVariableTypeNodeId(0) {
 
         }
 
@@ -243,6 +243,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
         const UA_DataType *mTypeConvert;
         const CIEC_ANY *mInitData;
         bool mAllowWrite;
+        UA_NodeId *mVariableTypeNodeId;
       private:
         CCreateVariableInfo(const CCreateVariableInfo &paObj);
         CCreateVariableInfo& operator=(const CCreateVariableInfo &other);
@@ -459,18 +460,18 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     UA_StatusCode createMethodNode(CCreateMethodInfo &paMethodInfo, UA_NodeId **paNodeId);
 
     /**
-     * Perform all the needed initialization of the create object action
+     * Perform all the needed initialization of the create node action
      * @param paActionInfo Action to be initialized
      * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
      */
-    UA_StatusCode initializeCreateObject(CActionInfo &paActionInfo);
+    UA_StatusCode initializeCreateNode(CActionInfo &paActionInfo);
 
     /**
      * Perform all the needed initialization of the delet object action
      * @param paActionInfo Action to be initialized
      * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
      */
-    UA_StatusCode initializeDeleteObject(CActionInfo &paActionInfo);
+    UA_StatusCode initializeDeleteNode(CActionInfo &paActionInfo);
 
     /**
      * Execute the write action to a local variable
@@ -494,6 +495,13 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     UA_StatusCode executeCreateObject(CActionInfo &paActionInfo);
 
     /**
+     * Creates a variable of specified type in the local server
+     * @param paActionInfo Action to be executed
+     * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
+     */
+    UA_StatusCode executeCreateVariable(CActionInfo &paActionInfo);
+
+    /**
      * Creates an object in the OPC UA server using directly the API from the passed information
      * @param paCreateObjectInfo Information needed to create the object
      * @return UA_STATUSCODE_GOOD on success, other value otherwise
@@ -501,11 +509,11 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     UA_StatusCode createObjectNode(CCreateObjectInfo &paCreateObjectInfo);
 
     /**
-     * Checks if the type of an object exist in the local server
+     * Checks if a node, specified in node pair info, exists in the local server
      * @param paNodePairInfo Information about the Node Type
      * @return True if it exists, false otherwise
      */
-    bool isTypeOfObjectPresent(CActionInfo::CNodePairInfo &paNodePairInfo);
+    bool isNodePresent(CActionInfo::CNodePairInfo &paNodePairInfo);
 
     /**
      * Deletes an object from the local server
@@ -544,7 +552,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param paCreatedNodeIds Place to store the existing Node IDs
      * @return UA_STATUSCODE_GOOD on success, other value otherwise
      */
-    UA_StatusCode storeAlreadyExistingNodes(UA_BrowsePathResult *paBrowsePathsResults, size_t paFolderCnt, size_t* paFirstNonExistingNode,
+    UA_StatusCode storeAlreadyExistingNodes(UA_BrowsePathResult *paBrowsePathsResults, size_t paFolderCnt, size_t *paFirstNonExistingNode,
         CSinglyLinkedList<UA_NodeId*> &paCreatedNodeIds);
 
     /**
@@ -650,12 +658,12 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     /**
      * English locale used as default for all nodes
      */
-    static const char * const mEnglishLocaleForNodes;
+    static const char *const mEnglishLocaleForNodes;
 
     /**
      * Default description for variable nodes
      */
-    static const char * const mDefaultDescriptionForVariableNodes;
+    static const char *const mDefaultDescriptionForVariableNodes;
 
 #ifdef FORTE_COM_OPC_UA_MULTICAST
 # ifndef UA_ENABLE_DISCOVERY_MULTICAST

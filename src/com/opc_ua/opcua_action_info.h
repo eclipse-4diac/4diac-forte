@@ -29,13 +29,15 @@ class CActionInfo {
      * Allowed type of actions. If a new action is to be added, it should go before eActionUnknown
      */
     enum UA_ActionType {
-      eRead, //!< eRead Read a variable
-      eWrite, //!< eWrite Write to a variable
+      eRead, //!< eRead Read a data variable
+      eWrite, //!< eWrite Write to a data variable
       eCreateMethod, //!< eCreateMethod Create a method
       eCallMethod, //!< eCallMethod Call a method
       eSubscribe, //!< eSubscribe Subscribe to changes of a variable
       eCreateObject, //!< eCreateObject Create an object
+      eCreateVariable, //!< eCreateObject Create a variable
       eDeleteObject, //!< eDeleteObject Delete an object
+      eDeleteVariable, //!< eDeleteObject Delete a variable
       eActionUnknown, //!< eActionUnknown The provided action is unknown. This is used also to set the length of known actions
     };
 
@@ -125,13 +127,13 @@ class CActionInfo {
      * Retrieves the array of CIEC_ANY to be sent
      * @return the array of CIEC_ANY to be sent
      */
-    const CIEC_ANY *getDataToSend();
+    const CIEC_ANY* getDataToSend();
 
     /**
      * Retrieves the array of CIEC_ANY where to receive the data
      * @return array of CIEC_ANY where to receive the data
      */
-    CIEC_ANY *getDataToReceive();
+    CIEC_ANY* getDataToReceive();
 
     /**
      * Retrieves the size of the array to send
@@ -148,7 +150,7 @@ class CActionInfo {
     /**
      * String representations of the actions and which should be provided as the first part of the ID
      */
-    static const char* const mActionNames[eActionUnknown];
+    static const char *const mActionNames[eActionUnknown];
 
   private:
 
@@ -229,13 +231,22 @@ class CActionInfo {
     bool checkCreateObjectAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs);
 
     /**
-     * Specific check for delete object action
-     * @param paFbType The type of FB that wants to executed the delete object action
+     * Specific check for create variable action
+     * @param paFbType The type of FB that wants to executed the create variable action
      * @param paNoOfRDs Number of RDs present in the FB
      * @param paNoOfSDs Number of SDs present in the FB
-     * @return True if the delete object action is valid, false otherwise
+     * @return True if the create variable action is valid, false otherwise
      */
-    bool checkDeleteObjectAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs);
+    bool checkCreateVariableAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs);
+
+    /**
+     * Specific check for delete node action
+     * @param paFbType The type of FB that wants to executed the delete node action
+     * @param paNoOfRDs Number of RDs present in the FB
+     * @param paNoOfSDs Number of SDs present in the FB
+     * @return True if the delete node action is valid, false otherwise
+     */
+    bool checkDeleteNodeAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs);
 
     /**
      * The type of action to execute
@@ -245,7 +256,7 @@ class CActionInfo {
     /**
      * The layer that created the action
      */
-    COPC_UA_Layer& mLayer;
+    COPC_UA_Layer &mLayer;
 
     /**
      * Empty if the action is executed locally, other value otherwise
@@ -373,7 +384,7 @@ class CLocalMethodInfo : public CActionInfo {
     /**
      * Assignment operator is private and not defined to avoid its usage
      */
-    CLocalMethodInfo& operator=(const CLocalMethodInfo& other);
+    CLocalMethodInfo& operator=(const CLocalMethodInfo &other);
 
     /**
      * When a method is called, it waits with this semaphore until the response comes back to the FB, when this semaphore is increased indicating the method has finished

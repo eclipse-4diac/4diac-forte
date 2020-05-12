@@ -15,7 +15,8 @@
 #include "../../core/utils/parameterParser.h"
 #include "../../core/cominfra/basecommfb.h"
 
-const char * const CActionInfo::mActionNames[] = { "READ", "WRITE", "CREATE_METHOD", "CALL_METHOD", "SUBSCRIBE", "CREATE_OBJECT", "DELETE_OBJECT" };
+const char *const CActionInfo::mActionNames[] = { "READ", "WRITE", "CREATE_METHOD", "CALL_METHOD", "SUBSCRIBE", "CREATE_OBJECT", "CREATE_VARIABLE",
+  "DELETE_OBJECT", "DELETE_VARIABLE" };
 
 CActionInfo::CActionInfo(COPC_UA_Layer &paLayer, UA_ActionType paAction, CIEC_STRING &paEndpoint) :
     mAction(paAction), mLayer(paLayer), mEndpoint(paEndpoint) {
@@ -34,7 +35,7 @@ bool CActionInfo::isRemote() {
   return ("" != mEndpoint);
 }
 
-CActionInfo* CActionInfo::getActionInfoFromParams(const char* paParams, COPC_UA_Layer &paLayer) {
+CActionInfo* CActionInfo::getActionInfoFromParams(const char *paParams, COPC_UA_Layer &paLayer) {
   CActionInfo *retVal = 0;
   CParameterParser mainParser(paParams, ';');
   size_t amountOfParameters = mainParser.parseParameters();
@@ -81,11 +82,11 @@ CActionInfo* CActionInfo::getActionInfoFromParams(const char* paParams, COPC_UA_
   return retVal;
 }
 
-const CIEC_ANY *CActionInfo::getDataToSend() {
+const CIEC_ANY* CActionInfo::getDataToSend() {
   return mLayer.getCommFB()->getSDs();
 }
 
-CIEC_ANY *CActionInfo::getDataToReceive() {
+CIEC_ANY* CActionInfo::getDataToReceive() {
   return mLayer.getCommFB()->getRDs();
 }
 
@@ -124,8 +125,12 @@ bool CActionInfo::checkAction() {
       case eCreateObject:
         retVal = checkCreateObjectAction(fbType, noOfRDs, noOfSDs);
         break;
+      case eCreateVariable:
+        retVal = checkCreateVariableAction(fbType, noOfRDs, noOfSDs);
+        break;
       case eDeleteObject:
-        retVal = checkDeleteObjectAction(fbType, noOfRDs, noOfSDs);
+      case eDeleteVariable:
+        retVal = checkDeleteNodeAction(fbType, noOfRDs, noOfSDs);
         break;
       default:
         DEVLOG_ERROR("[OPC UA ACTION]: Unknown action %d\n", mAction);
@@ -238,7 +243,19 @@ bool CActionInfo::checkCreateObjectAction(forte::com_infra::EComServiceType paFb
   return retVal;
 }
 
-bool CActionInfo::checkDeleteObjectAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int paNoOfSDs) {
+bool CActionInfo::checkCreateVariableAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int paNoOfSDs) {
+  bool retVal = false;
+  if(forte::com_infra::EComServiceType::e_Publisher == paFbType && 3 == getNoOfNodePairs() && 0 == paNoOfSDs) {
+    retVal = true;
+  } else {
+    DEVLOG_ERROR(
+      "[OPC UA ACTION]: In FB %s: %s action is only allowed using a Publish FB, the amount of BrowseName,NodeId pairs should be 3, and no SD must be provided\n",
+      mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCreateVariable]);
+  }
+  return retVal;
+}
+
+bool CActionInfo::checkDeleteNodeAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int paNoOfSDs) {
   bool retVal = false;
   if(forte::com_infra::EComServiceType::e_Publisher == paFbType && 1 == getNoOfNodePairs() && 0 == paNoOfSDs) {
     retVal = true;
@@ -280,7 +297,7 @@ bool CActionInfo::CActionParser::handlePair(const char *paPair, CSinglyLinkedLis
   bool retVal = false;
   CParameterParser pairParser(paPair, ',');
   CIEC_STRING browsePathResult;
-  UA_NodeId* nodeIdResult = 0;
+  UA_NodeId *nodeIdResult = 0;
   size_t noOfParameters = pairParser.parseParameters();
   if(NodePairPositions::eMaxNumberOfPositions == noOfParameters) {
     browsePathResult = pairParser[NodePairPositions::eBrowseName];
