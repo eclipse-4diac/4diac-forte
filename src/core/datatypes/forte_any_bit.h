@@ -120,7 +120,7 @@ class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
        *  On big endian systems the order of bytes has to be flipped.
        *
        */
-      static constexpr size_t endianiseIndex(const size_t paIndex){
+      static size_t endianiseIndex(const size_t paIndex){
 #ifdef FORTE_BIG_ENDIAN
           return (forte::core::mpl::is_same<TBase,CIEC_BOOL>::value) ? paIndex : length-1-paIndex; // Within bool-data endianess is implicitly correct
 #else //#ifdef FORTE_BIG_ENDIAN
