@@ -112,7 +112,7 @@ class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
 
       TObject& dataObject; // The referenced object which data is pulled from
       const size_t index;  // Index value for accessing the split elements
-      bool accessedOutOfBounds = false; // Flag to indicate Out of Bounds access
+      bool accessedOutOfBounds; // Flag to indicate Out of Bounds access
 
       /*! \brief Method for handling endianess conversion
        *
@@ -139,7 +139,8 @@ class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
        *  The index is stored after correction for endianess.
        */
       explicit PARTIAL_ACCESS_TYPE(TObject& paSrc, const size_t paIndex) :
-        TBase(getPartial(paSrc,endianiseIndex(paIndex))), dataObject(paSrc), index(endianiseIndex(paIndex)) {
+          TBase(getPartial(paSrc,endianiseIndex(paIndex))), dataObject(paSrc), index(endianiseIndex(paIndex)),
+          accessedOutOfBounds((paIndex >= length)){
         static_assert(forte::core::mpl::is_same<TObject,CIEC_BYTE>::value ||
                       forte::core::mpl::is_same<TObject,CIEC_WORD>::value ||
                       forte::core::mpl::is_same<TObject,CIEC_DWORD>::value ||
@@ -149,9 +150,6 @@ class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
                       forte::core::mpl::is_same<TBase,CIEC_WORD>::value ||
                       forte::core::mpl::is_same<TBase,CIEC_DWORD>::value, "TBase has to be one of CIEC_BYTE, CIEC_WORD, CIEC_DWORD or CIEC_LWORD");
         static_assert(std::numeric_limits<TObjectType>::digits > std::numeric_limits<TBaseType>::digits, "Partial acces is only possible if accessed element is smaller than the source");
-        if (paIndex >= length) {
-          accessedOutOfBounds = true; // FAIL SILENT
-        }
       };
 
       /*! \brief read the state of the Out of Bounds flag
