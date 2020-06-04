@@ -18,7 +18,7 @@
 const char *const CActionInfo::mActionNames[] = { "READ", "WRITE", "CREATE_METHOD", "CALL_METHOD", "SUBSCRIBE", "CREATE_OBJECT", "CREATE_VARIABLE",
   "DELETE_OBJECT", "DELETE_VARIABLE" };
 
-CActionInfo::CActionInfo(COPC_UA_Layer &paLayer, UA_ActionType paAction, CIEC_STRING &paEndpoint) :
+CActionInfo::CActionInfo(COPC_UA_Layer &paLayer, UA_ActionType paAction, const CIEC_STRING &paEndpoint) :
     mAction(paAction), mLayer(paLayer), mEndpoint(paEndpoint) {
 }
 

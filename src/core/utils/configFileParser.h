@@ -40,7 +40,7 @@ class CConfigFileParser {
      * Constructor
      * @param paFileLocation location of the configuration file to be parsed
      */
-    explicit CConfigFileParser(std::string &paFileLocation);
+    explicit CConfigFileParser(const std::string &paFileLocation);
 
     /**
      * Destructor

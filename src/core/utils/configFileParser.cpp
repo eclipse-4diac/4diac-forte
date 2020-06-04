@@ -14,7 +14,7 @@
 #include "../../arch/devlog.h"
 #include "parameterParser.h"
 
-CConfigFileParser::CConfigFileParser(std::string &paFileLocation) {
+CConfigFileParser::CConfigFileParser(const std::string &paFileLocation) {
   mConfigFile = fopen(paFileLocation.c_str(), "r");
   if(0 != mConfigFile) {
     DEVLOG_INFO("[CConfigFileParser]: Configuration file %s opened\n", paFileLocation.c_str());

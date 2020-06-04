@@ -267,7 +267,7 @@ void CUA_ClientInformation::removeAction(CActionInfo& paActionInfo) {
   mActionsReferencingIt.erase(&paActionInfo);
 }
 
-bool CUA_ClientInformation::isActionInitialized(CActionInfo& paActionInfo) {
+bool CUA_ClientInformation::isActionInitialized(const CActionInfo &paActionInfo) {
   CCriticalRegion clientRegion(mClientMutex);
   bool retVal = true;
   for(CSinglyLinkedList<CActionInfo *>::Iterator itClientInformation = mActionsToBeInitialized.begin(); itClientInformation != mActionsToBeInitialized.end();
@@ -325,26 +325,24 @@ bool CUA_ClientInformation::initializeAction(CActionInfo& paActionInfo) {
         itNodePair != paActionInfo.getNodePairInfo().end();
         ++itNodePair, runnerHelper++) {
 
-      if(!somethingFailed) {
-        if("" != (*itNodePair)->mBrowsePath) { //if browsepath was given, look for NodeId, even if NodeID was also provided
-          UA_NodeId *nodeId;
-          UA_StatusCode retVal = COPC_UA_Helper::getRemoteNodeForPath(*mClient, (*itNodePair)->mBrowsePath.getValue(), 0, &nodeId); //we don't care about the parent
+      if(!somethingFailed && "" != (*itNodePair)->mBrowsePath) { //if browsepath was given, look for NodeId, even if NodeID was also provided
+        UA_NodeId *nodeId;
+        UA_StatusCode retVal = COPC_UA_Helper::getRemoteNodeForPath(*mClient, (*itNodePair)->mBrowsePath.getValue(), 0, &nodeId); //we don't care about the parent
 
-          if(UA_STATUSCODE_GOOD != retVal) {
-            DEVLOG_ERROR("[OPC UA CLIENT]: The index %u of the FB %s could not be initialized because the requested nodeId was not found. Error: %s\n",
-              runnerHelper, paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
-            somethingFailed = true;
-          } else {
-            if((*itNodePair)->mNodeId) {
-              if(!UA_NodeId_equal((*itNodePair)->mNodeId, nodeId)) { //if NodeId was provided, check if found is the same
-                DEVLOG_ERROR("[OPC UA CLIENT]: The call from FB %s failed the found nodeId of the method doesn't match the provided one\n",
-                  paActionInfo.getLayer().getCommFB()->getInstanceName());
-                somethingFailed = true;
-              }
-              UA_NodeId_delete(nodeId);
-            } else {
-              (*itNodePair)->mNodeId = nodeId;
+        if(UA_STATUSCODE_GOOD != retVal) {
+          DEVLOG_ERROR("[OPC UA CLIENT]: The index %u of the FB %s could not be initialized because the requested nodeId was not found. Error: %s\n",
+            runnerHelper, paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
+          somethingFailed = true;
+        } else {
+          if((*itNodePair)->mNodeId) {
+            if(!UA_NodeId_equal((*itNodePair)->mNodeId, nodeId)) { //if NodeId was provided, check if found is the same
+              DEVLOG_ERROR("[OPC UA CLIENT]: The call from FB %s failed the found nodeId of the method doesn't match the provided one\n",
+                paActionInfo.getLayer().getCommFB()->getInstanceName());
+              somethingFailed = true;
             }
+            UA_NodeId_delete(nodeId);
+          } else {
+            (*itNodePair)->mNodeId = nodeId;
           }
         }
       }
@@ -473,9 +471,9 @@ bool CUA_ClientInformation::createSubscription() {
   return false;
 }
 
-bool CUA_ClientInformation::addMonitoringItem(UA_MonitoringItemInfo& paMonitoringInfo, UA_NodeId& paNodeId) {
+bool CUA_ClientInformation::addMonitoringItem(UA_MonitoringItemInfo &paMonitoringInfo, const UA_NodeId &paNodeId) {
 
-  UA_MonitoredItemCreateRequest monRequest = UA_MonitoredItemCreateRequest_default(paNodeId);
+  const UA_MonitoredItemCreateRequest monRequest = UA_MonitoredItemCreateRequest_default(paNodeId);
   UA_MonitoredItemCreateResult monResponse = UA_Client_MonitoredItems_createDataChange(mClient, mSubscriptionInfo->mSubscriptionId, UA_TIMESTAMPSTORETURN_BOTH,
     monRequest, static_cast<void *>(&paMonitoringInfo.mVariableInfo), CUA_RemoteCallbackFunctions::subscriptionValueChangedCallback, 0);
   if(UA_STATUSCODE_GOOD == monResponse.statusCode) {
@@ -507,7 +505,7 @@ void CUA_ClientInformation::uninitializeAction(CActionInfo& paActionInfo) {
   }
 }
 
-void CUA_ClientInformation::uninitializeSubscribeAction(CActionInfo& paActionInfo) {
+void CUA_ClientInformation::uninitializeSubscribeAction(const CActionInfo &paActionInfo) {
   if(mSubscriptionInfo) {
     CSinglyLinkedList<UA_MonitoringItemInfo> toDelete;
     for(CSinglyLinkedList<UA_MonitoringItemInfo>::Iterator itMonitoringItemInfo = mSubscriptionInfo->mMonitoredItems.begin();
@@ -638,7 +636,7 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::writeAsyncCallback(UA_C
 
 void CUA_ClientInformation::CUA_RemoteCallbackFunctions::callMethodAsyncCallback(UA_Client *, void *paUserdata, UA_UInt32,
     void *paResponse) {
-      UA_CallResponse *response = static_cast<UA_CallResponse*>(paResponse);
+  const UA_CallResponse *response = static_cast<UA_CallResponse*>(paResponse);
 
   bool somethingFailed = false;
 

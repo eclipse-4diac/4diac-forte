@@ -26,7 +26,7 @@ const char *const CUA_ClientConfigFileParser::mKeyNames[] = {
 #endif // UA_ENABLE_ENCRYPTION
   };
 
-bool CUA_ClientConfigFileParser::loadConfig(std::string &paFileLocation, std::string &paEndpoint, UA_ConfigFromFile &paResult) {
+bool CUA_ClientConfigFileParser::loadConfig(const std::string &paFileLocation, const std::string &paEndpoint, UA_ConfigFromFile &paResult) {
   bool retVal = true;
   UA_StatusCode retValOpcUa = UA_STATUSCODE_GOOD;
 
@@ -78,10 +78,7 @@ bool CUA_ClientConfigFileParser::loadConfig(std::string &paFileLocation, std::st
           case CConfigFileParser::eEndOfFile:
             moreLinesToRead = false;
             break;
-          case CConfigFileParser::eWrongLine:
-          case CConfigFileParser::eFileNotOpened:
-          case CConfigFileParser::eInternalError:
-          default:
+          default: // eWrongLine, eFileNotOpened, eInternalError
             retVal = false;
             moreLinesToRead = false;
             break;
@@ -129,7 +126,7 @@ bool CUA_ClientConfigFileParser::loadConfig(std::string &paFileLocation, std::st
 }
 
 #ifdef UA_ENABLE_ENCRYPTION
-bool CUA_ClientConfigFileParser::loadFileIntoBytestring(std::string &paFileLocation, UA_ByteString &paResult) {
+bool CUA_ClientConfigFileParser::loadFileIntoBytestring(const std::string &paFileLocation, UA_ByteString &paResult) {
   bool retVal = false;
 
   FILE *file = fopen(paFileLocation.c_str(), "rb"); //read binary

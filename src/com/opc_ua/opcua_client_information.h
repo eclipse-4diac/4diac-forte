@@ -147,7 +147,7 @@ class CUA_ClientInformation {
      * @param paActionInfo Action to be checked
      * @return True if the action was already initialized, false otherwise
      */
-    bool isActionInitialized(CActionInfo& paActionInfo);
+    bool isActionInitialized(const CActionInfo &paActionInfo);
 
     /**
      * Class containing all remote callback functions that are called by the OPC UA stack
@@ -316,7 +316,7 @@ class CUA_ClientInformation {
      * @param paNodeId NodeId of the variable to monitor
      * @return True if no error occurred, false otherwise
      */
-    bool addMonitoringItem(UA_MonitoringItemInfo& paMonitoringInfo, UA_NodeId& paNodeId);
+    bool addMonitoringItem(UA_MonitoringItemInfo &paMonitoringInfo, const UA_NodeId &paNodeId);
 
     /**
      * Increments the amount of missing async calls to be performed. A subscription keeps always the missing calls at least at
@@ -338,7 +338,7 @@ class CUA_ClientInformation {
      * Uninitialze a subscription action
      * @param paActionInfo Action to be uninitialized
      */
-    void uninitializeSubscribeAction(CActionInfo& paActionInfo);
+    void uninitializeSubscribeAction(const CActionInfo &paActionInfo);
 
     /**
      * Reset the subscription information.

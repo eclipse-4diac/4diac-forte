@@ -282,7 +282,8 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param paParentNodeId Information containing the parent node ID
      * @param paResult Place to store the results
      */
-    void initializeCreateInfo(CIEC_STRING &paNodeName, CActionInfo::CNodePairInfo &paNodePairInfo, const UA_NodeId *paParentNodeId, CCreateInfo &paResult);
+    void initializeCreateInfo(CIEC_STRING &paNodeName, const CActionInfo::CNodePairInfo &paNodePairInfo, const UA_NodeId *paParentNodeId,
+        CCreateInfo &paResult);
 
     /**
      * Context passed to a variable node in the OPC UA stack, which is returned when the variable is written from a client.
@@ -335,7 +336,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      */
     class UA_ParentNodeHandler {
       public:
-        UA_ParentNodeHandler(UA_NodeId &paParentNodeId, UA_NodeId *paMethodNodeId, CLocalMethodInfo &paActionInfo) :
+        UA_ParentNodeHandler(const UA_NodeId &paParentNodeId, UA_NodeId *paMethodNodeId, CLocalMethodInfo &paActionInfo) :
             mParentNodeId(UA_NodeId_new()), mMethodNodeId(paMethodNodeId), mActionInfo(paActionInfo) {
           UA_NodeId_copy(&paParentNodeId, mParentNodeId);
         }
@@ -401,7 +402,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param paCreateVariableInfo Information needed to create the variable
      * @return UA_STATUSCODE_GOOD on success, other value otherwise
      */
-    UA_StatusCode createVariableNode(CCreateVariableInfo &paCreateVariableInfo);
+    UA_StatusCode createVariableNode(const CCreateVariableInfo &paCreateVariableInfo);
 
     /**
      * Update a variable node value from a IEC61499 data object.
@@ -506,7 +507,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param paCreateObjectInfo Information needed to create the object
      * @return UA_STATUSCODE_GOOD on success, other value otherwise
      */
-    UA_StatusCode createObjectNode(CCreateObjectInfo &paCreateObjectInfo);
+    UA_StatusCode createObjectNode(const CCreateObjectInfo &paCreateObjectInfo);
 
     /**
      * Checks if a node, specified in node pair info, exists in the local server
@@ -552,7 +553,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param paCreatedNodeIds Place to store the existing Node IDs
      * @return UA_STATUSCODE_GOOD on success, other value otherwise
      */
-    UA_StatusCode storeAlreadyExistingNodes(UA_BrowsePathResult *paBrowsePathsResults, size_t paFolderCnt, size_t *paFirstNonExistingNode,
+    UA_StatusCode storeAlreadyExistingNodes(const UA_BrowsePathResult *paBrowsePathsResults, size_t paFolderCnt, size_t *paFirstNonExistingNode,
         CSinglyLinkedList<UA_NodeId*> &paCreatedNodeIds);
 
     /**
@@ -570,7 +571,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param paRreferencedNodes List of nodes that are used by this browsename. It will include all folders, but not the end node since it was not created yet
      * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
      */
-    UA_StatusCode splitAndCreateFolders(CIEC_STRING &paBrowsePath, CIEC_STRING &paNodeName, CSinglyLinkedList<UA_NodeId*> &paRreferencedNodes);
+    UA_StatusCode splitAndCreateFolders(const CIEC_STRING &paBrowsePath, CIEC_STRING &paNodeName, CSinglyLinkedList<UA_NodeId*> &paRreferencedNodes);
 
     /**
      * Split a string into folders and node name. The provided place for store of the folder and node name are only
@@ -589,7 +590,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param paReferencedNodes Place to store the NodeIds if paFailed is true
      * @param paFailed True if the NodeIds should be deleted, false if they need to be copied into paReferencedNodes
      */
-    void handlePresentNodes(CSinglyLinkedList<UA_NodeId*> &paPresentNodes, CSinglyLinkedList<UA_NodeId*> &paReferencedNodes, bool paFailed);
+    void handlePresentNodes(const CSinglyLinkedList<UA_NodeId*> &paPresentNodes, CSinglyLinkedList<UA_NodeId*> &paReferencedNodes, bool paFailed);
 
     /**
      * Maximum time a local method can take to finish execution without producing an error
@@ -641,14 +642,14 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * Removes a method call from the list when the method is finished
      * @param toDelete Call to remove
      */
-    void removeMethodCall(CLocalMethodCall &toRemove);
+    void removeMethodCall(const CLocalMethodCall &toRemove);
 
     /**
      * Look for the oldest method call of an action
      * @param paActionInfo Action on which the call was triggered
      * @return The method call. 0 if an external call for the action was not triggered
      */
-    CLocalMethodCall* getLocalMethodCall(CLocalMethodInfo &paActionInfo);
+    CLocalMethodCall* getLocalMethodCall(const CLocalMethodInfo &paActionInfo);
 
     /**
      * Default value for the namespace of the browsename for all created nodes

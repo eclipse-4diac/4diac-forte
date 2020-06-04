@@ -451,11 +451,11 @@ UA_StatusCode COPC_UA_Local_Handler::initializeVariable(CActionInfo &paActionInf
       itMain != paActionInfo.getNodePairInfo().end() && UA_STATUSCODE_GOOD == retVal; ++itMain, indexOfNodePair++) {
 
     CSinglyLinkedList<UA_NodeId*> presentNodes;
-    bool isNodePresent = false;
-    retVal = getNode(**itMain, presentNodes, &isNodePresent);
+    bool nodeExists = false;
+    retVal = getNode(**itMain, presentNodes, &nodeExists);
 
     if(UA_STATUSCODE_GOOD == retVal) {
-      if(isNodePresent) {
+      if(nodeExists) {
         retVal = handleExistingVariable(paActionInfo, **itMain, variables[indexOfNodePair], indexOfNodePair, paWrite);
 
         handlePresentNodes(presentNodes, referencedNodes, UA_STATUSCODE_GOOD != retVal);
@@ -546,11 +546,9 @@ UA_StatusCode COPC_UA_Local_Handler::handleNonExistingVariable(CActionInfo &paAc
       if(!paWrite) {
         retVal = registerVariableCallBack(*variableInformation.mReturnedNodeId, paActionInfo, paIndexOfNodePair);
       }
-      if(UA_STATUSCODE_GOOD == retVal) {
-        if(!paNodePairInfo.mNodeId) {
-          paNodePairInfo.mNodeId = UA_NodeId_new();
-          UA_NodeId_copy(variableInformation.mReturnedNodeId, paNodePairInfo.mNodeId);
-        }
+      if(UA_STATUSCODE_GOOD == retVal && !paNodePairInfo.mNodeId) {
+        paNodePairInfo.mNodeId = UA_NodeId_new();
+        UA_NodeId_copy(variableInformation.mReturnedNodeId, paNodePairInfo.mNodeId);
       }
     }
   }
@@ -558,7 +556,7 @@ UA_StatusCode COPC_UA_Local_Handler::handleNonExistingVariable(CActionInfo &paAc
   return retVal;
 }
 
-UA_StatusCode COPC_UA_Local_Handler::createVariableNode(CCreateVariableInfo &paCreateVariableInfo) {
+UA_StatusCode COPC_UA_Local_Handler::createVariableNode(const CCreateVariableInfo &paCreateVariableInfo) {
 
   UA_NodeId requestedNodeId;
   if(paCreateVariableInfo.mRequestedNodeId) {
@@ -670,11 +668,11 @@ UA_StatusCode COPC_UA_Local_Handler::initializeCreateMethod(CActionInfo &paActio
 
   CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itMethodNodePairInfo = paActionInfo.getNodePairInfo().begin();
 
-  bool isNodePresent = false;
-  UA_StatusCode retVal = getNode(**itMethodNodePairInfo, presentNodes, &isNodePresent);
+  bool nodeExists = false;
+  UA_StatusCode retVal = getNode(**itMethodNodePairInfo, presentNodes, &nodeExists);
 
   if(UA_STATUSCODE_GOOD == retVal) {
-    if(isNodePresent) {
+    if(nodeExists) {
 
       UA_NodeId parent = UA_NODEID_NUMERIC(0, UA_NS0ID_ROOTFOLDER);
 
@@ -772,7 +770,7 @@ void COPC_UA_Local_Handler::createMethodArguments(CActionInfo &paActionInfo, CCr
   const SFBInterfaceSpec *interfaceFB = paActionInfo.getLayer().getCommFB()->getFBInterfaceSpec();
 
   const CIEC_ANY *dataToSend = paActionInfo.getDataToSend();
-  CIEC_ANY *dataToReceive = paActionInfo.getDataToReceive();
+  const CIEC_ANY *dataToReceive = paActionInfo.getDataToReceive();
 
   paCreateMethodInfo.mOutputArguments = static_cast<UA_Argument*>(UA_Array_new(paCreateMethodInfo.mOutputSize, &UA_TYPES[UA_TYPES_ARGUMENT]));
   paCreateMethodInfo.mInputArguments = static_cast<UA_Argument*>(UA_Array_new(paCreateMethodInfo.mInputSize, &UA_TYPES[UA_TYPES_ARGUMENT]));
@@ -918,12 +916,12 @@ UA_StatusCode COPC_UA_Local_Handler::executeCreateObject(CActionInfo &paActionIn
     ++itInstance;
 
     CSinglyLinkedList<UA_NodeId*> referencedNodes;
-    bool isNodePresent = false;
+    bool nodeExists = false;
     //check if an instance is already present
-    retVal = getNode(**itInstance, referencedNodes, &isNodePresent);
+    retVal = getNode(**itInstance, referencedNodes, &nodeExists);
 
     if(UA_STATUSCODE_GOOD == retVal) {
-      if(!isNodePresent) {
+      if(!nodeExists) {
 
         CIEC_STRING nodeName;
         retVal = splitAndCreateFolders((*itInstance)->mBrowsePath, nodeName, referencedNodes);
@@ -968,7 +966,7 @@ UA_StatusCode COPC_UA_Local_Handler::executeCreateObject(CActionInfo &paActionIn
   return retVal;
 }
 
-UA_StatusCode COPC_UA_Local_Handler::createObjectNode(CCreateObjectInfo &paCreateObjectInfo) {
+UA_StatusCode COPC_UA_Local_Handler::createObjectNode(const CCreateObjectInfo &paCreateObjectInfo) {
 
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
 
@@ -1024,12 +1022,12 @@ UA_StatusCode COPC_UA_Local_Handler::executeCreateVariable(CActionInfo &paAction
       CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itInstance = paActionInfo.getNodePairInfo().back();
 
       CSinglyLinkedList<UA_NodeId*> referencedNodes;
-      bool isNodePresent = false;
+      bool nodeExists = false;
       //check if an instance is already present
-      retVal = getNode(**itInstance, referencedNodes, &isNodePresent);
+      retVal = getNode(**itInstance, referencedNodes, &nodeExists);
 
       if(UA_STATUSCODE_GOOD == retVal) {
-        if(!isNodePresent) {
+        if(!nodeExists) {
 
           CIEC_STRING nodeName;
           retVal = splitAndCreateFolders((*itInstance)->mBrowsePath, nodeName, referencedNodes);
@@ -1038,7 +1036,7 @@ UA_StatusCode COPC_UA_Local_Handler::executeCreateVariable(CActionInfo &paAction
 
             initializeCreateInfo(nodeName, (**itInstance), referencedNodes.isEmpty() ? 0 : *(referencedNodes.back()), createInformation);
             createInformation.mVariableTypeNodeId = (*itVariableTypeNodePairInfo)->mNodeId;
-            UA_NodeId* dataValueTypeNodeId = (*itDataValueTypeNodePairInfo)->mNodeId;
+            const UA_NodeId *dataValueTypeNodeId = (*itDataValueTypeNodePairInfo)->mNodeId;
 
             createInformation.mTypeConvert = UA_findDataType(dataValueTypeNodeId);
             createInformation.mAllowWrite = true;
@@ -1081,35 +1079,32 @@ UA_StatusCode COPC_UA_Local_Handler::executeCreateVariable(CActionInfo &paAction
 }
 
 bool COPC_UA_Local_Handler::isNodePresent(CActionInfo::CNodePairInfo &paNodePairInfo) {
-  bool isNodePresent = false;
+  bool nodeExists = false;
   CSinglyLinkedList<UA_NodeId*> referencedNodes;
 
-  UA_StatusCode retVal = getNode(paNodePairInfo, referencedNodes, &isNodePresent);
+  UA_StatusCode retVal = getNode(paNodePairInfo, referencedNodes, &nodeExists);
 
   if(UA_STATUSCODE_GOOD == retVal) {
-    if(isNodePresent) {
-      isNodePresent = true;
-    }
     //we don't need the nodes from the type
     for(CSinglyLinkedList<UA_NodeId*>::Iterator itPresentNodes = referencedNodes.begin(); itPresentNodes != referencedNodes.end(); ++itPresentNodes) {
       UA_NodeId_delete(*itPresentNodes);
     }
     referencedNodes.clearAll();
   }
-  return isNodePresent;
+  return nodeExists;
 }
 
 UA_StatusCode COPC_UA_Local_Handler::executeDeleteObject(CActionInfo &paActionInfo) {
 
-  bool isNodePresent = false;
+  bool nodeExists = false;
   CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itInstance = paActionInfo.getNodePairInfo().begin();
   CSinglyLinkedList<UA_NodeId*> referencedNodes;
 
   //look for instance
-  UA_StatusCode retVal = getNode(**itInstance, referencedNodes, &isNodePresent);
+  UA_StatusCode retVal = getNode(**itInstance, referencedNodes, &nodeExists);
 
   if(UA_STATUSCODE_GOOD == retVal) {
-    if(isNodePresent) {
+    if(nodeExists) {
       retVal = UA_Server_deleteNode(mUaServer, *(*itInstance)->mNodeId, true);
     } else {
       DEVLOG_ERROR("[OPC UA LOCAL]: The instance of the object to delete could not be found for FB %s\n",
@@ -1126,7 +1121,7 @@ UA_StatusCode COPC_UA_Local_Handler::executeDeleteObject(CActionInfo &paActionIn
   return retVal;
 }
 
-void COPC_UA_Local_Handler::initializeCreateInfo(CIEC_STRING &paNodeName, CActionInfo::CNodePairInfo &paNodePairInfo, const UA_NodeId *paParentNodeId,
+void COPC_UA_Local_Handler::initializeCreateInfo(CIEC_STRING &paNodeName, const CActionInfo::CNodePairInfo &paNodePairInfo, const UA_NodeId *paParentNodeId,
     CCreateInfo &paResult) {
   COPC_UA_Helper::getBrowsenameFromNodeName(paNodeName.getValue(), scmDefaultBrowsenameNameSpace, *paResult.mBrowseName); //this cannot fail here anymore, since it was checked already with getNode
   paResult.mRequestedNodeId = paNodePairInfo.mNodeId;
@@ -1161,7 +1156,7 @@ UA_StatusCode COPC_UA_Local_Handler::getNode(CActionInfo::CNodePairInfo &paNodeP
         if(!*paIsPresent) {
           UA_NodeId_delete(*it);
         } else {
-          paFoundNodeIds.pushBack((*it));
+          paFoundNodeIds.pushBack(*it);
         }
       }
       COPC_UA_Helper::releaseBrowseArgument(*browsePaths, pathCount);
@@ -1206,7 +1201,8 @@ UA_StatusCode COPC_UA_Local_Handler::translateBrowseNameAndStore(const char *paB
   return retVal;
 }
 
-UA_StatusCode COPC_UA_Local_Handler::storeAlreadyExistingNodes(UA_BrowsePathResult *paBrowsePathsResults, size_t paFolderCnt, size_t *paFirstNonExistingNode,
+UA_StatusCode COPC_UA_Local_Handler::storeAlreadyExistingNodes(const UA_BrowsePathResult *paBrowsePathsResults, size_t paFolderCnt,
+    size_t *paFirstNonExistingNode,
     CSinglyLinkedList<UA_NodeId*> &paCreatedNodeIds) {
   size_t foundFolderOffset = 0;
   int retVal; // no unsigned, because we need to check for -1
@@ -1311,7 +1307,7 @@ UA_StatusCode COPC_UA_Local_Handler::createFolders(const char *paFolders, CSingl
   return retVal;
 }
 
-UA_StatusCode COPC_UA_Local_Handler::splitAndCreateFolders(CIEC_STRING &paBrowsePath, CIEC_STRING &paNodeName,
+UA_StatusCode COPC_UA_Local_Handler::splitAndCreateFolders(const CIEC_STRING &paBrowsePath, CIEC_STRING &paNodeName,
     CSinglyLinkedList<UA_NodeId*> &paRreferencedNodes) {
   CIEC_STRING folders;
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
@@ -1356,7 +1352,8 @@ bool COPC_UA_Local_Handler::splitFoldersFromNode(const CIEC_STRING &paOriginal, 
   return retVal;
 }
 
-void COPC_UA_Local_Handler::handlePresentNodes(CSinglyLinkedList<UA_NodeId*> &paPresentNodes, CSinglyLinkedList<UA_NodeId*> &paReferencedNodes, bool paFailed) {
+void COPC_UA_Local_Handler::handlePresentNodes(const CSinglyLinkedList<UA_NodeId*> &paPresentNodes, CSinglyLinkedList<UA_NodeId*> &paReferencedNodes,
+    bool paFailed) {
   for(CSinglyLinkedList<UA_NodeId*>::Iterator itPresendNodes = paPresentNodes.begin(); itPresendNodes != paPresentNodes.end(); ++itPresendNodes) {
     if(paFailed) {
       UA_NodeId_delete(*itPresendNodes);
@@ -1374,12 +1371,12 @@ COPC_UA_Local_Handler::CLocalMethodCall& COPC_UA_Local_Handler::addMethodCall(CL
   return *justPushed;
 }
 
-void COPC_UA_Local_Handler::removeMethodCall(CLocalMethodCall &toRemove) {
+void COPC_UA_Local_Handler::removeMethodCall(const CLocalMethodCall &toRemove) {
   CCriticalRegion criticalRegion(mMethodCallsMutex);
   mMethodCalls.erase(toRemove);
 }
 
-COPC_UA_Local_Handler::CLocalMethodCall* COPC_UA_Local_Handler::getLocalMethodCall(CLocalMethodInfo &paActionInfo) {
+COPC_UA_Local_Handler::CLocalMethodCall* COPC_UA_Local_Handler::getLocalMethodCall(const CLocalMethodInfo &paActionInfo) {
   CCriticalRegion criticalRegion(mMethodCallsMutex);
   CLocalMethodCall *retVal = 0;
   for(CSinglyLinkedList<CLocalMethodCall>::Iterator it = mMethodCalls.begin(); it != mMethodCalls.end(); ++it) {

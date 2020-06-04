@@ -58,7 +58,7 @@ class CActionInfo {
      * @param paAction The action to be executed
      * @param paEndpoint The endpoint of a remote OPC UA in case the action is to be executed remotely. An empty endpoint means that the action is to be executed locally
      */
-    explicit CActionInfo(COPC_UA_Layer &paLayer, UA_ActionType paAction, CIEC_STRING &paEndpoint);
+    explicit CActionInfo(COPC_UA_Layer &paLayer, UA_ActionType paAction, const CIEC_STRING &paEndpoint);
 
     /**
      * Destructor of the class

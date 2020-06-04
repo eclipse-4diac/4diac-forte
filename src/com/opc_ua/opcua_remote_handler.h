@@ -78,11 +78,45 @@ class COPC_UA_Client_IterationList : public CThread {
      */
     void resumeIterationLoop();
 
+    /**
+     * Access to private member mIterationClients
+     * @return mIterationClients
+     */
+
+    CSinglyLinkedList<CUA_ClientInformation*>& getIterationClients() {
+      return mIterationClients;
+    }
+
+    /**
+     * Access to private member mIterationClientsMutex
+     * @return mIterationClientsMutex
+     */
+    CSyncObject& getIterationClientsMutex() {
+      return mIterationClientsMutex;
+    }
+
+    /**
+     * Access to private member mNewClients
+     * @return mNewClients
+     */
+    CSinglyLinkedList<CUA_ClientInformation*>& getNewClients() {
+      return mNewClients;
+    }
+
+    /**
+     * Access to private member mIterationClients
+     * @return mNewClientsMutex
+     */
+    CSyncObject& getNewClientsMutex() {
+      return mNewClientsMutex;
+    }
+
+  private:
 
     /**
      * List of clients on which the iteration is done
      */
-    CSinglyLinkedList<CUA_ClientInformation *> mIterationClients;
+    CSinglyLinkedList<CUA_ClientInformation*> mIterationClients;
 
     /**
      * Mutex to access the list of clients which is iterated
@@ -92,15 +126,13 @@ class COPC_UA_Client_IterationList : public CThread {
     /**
      * List of new clients. It serves as a buffer that is latter added to the main iteration list
      */
-    CSinglyLinkedList<CUA_ClientInformation *> mNewClients;
+    CSinglyLinkedList<CUA_ClientInformation*> mNewClients;
 
 
-    /**
+        /**
      * Mutex to access the list of new clients
      */
     CSyncObject mNewClientsMutex;
-
-  private:
 
     /**
      * Adds a client to a list. If the client is already present, no client is added

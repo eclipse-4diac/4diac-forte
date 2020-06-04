@@ -47,13 +47,13 @@ size_t convertFromOPCUAToIECSpecific<CIEC_DATE, UA_DateTime>(const void *paSrc, 
 }
 
 template<>
-size_t convertFromIECToOPCUASpecific<CIEC_TIME_OF_DAY, UA_DateTime>(const CIEC_ANY & paSrc, void *paDest) {
+size_t convertFromIECToOPCUASpecific<CIEC_TIME_OF_DAY, UA_DateTime>(const CIEC_ANY&, void*) {
   //TODO how convert TOD to UA_DateTime?
   return 0;
 }
 
 template<>
-size_t convertFromOPCUAToIECSpecific<CIEC_TIME_OF_DAY, UA_DateTime>(const void *paSrc, CIEC_ANY &paDest) {
+size_t convertFromOPCUAToIECSpecific<CIEC_TIME_OF_DAY, UA_DateTime>(const void*, CIEC_ANY&) {
   //TODO how convert UA_DateTime to TOD?
   return 0;
 }
@@ -120,7 +120,6 @@ const UA_DataType *COPC_UA_Helper::getOPCUATypeFromAny(const CIEC_ANY& paAnyType
   } else {
     return getExternalOPCUATypeFromAny(paAnyType);
   }
-  return 0;
 }
 
 size_t COPC_UA_Helper::convertToOPCUAType(const CIEC_ANY& paSrcAny, void *paDest) {
@@ -327,7 +326,7 @@ bool COPC_UA_Helper::getBrowsenameFromNodeName(const char *paNodeName, UA_UInt16
   return retVal;
 }
 
-int COPC_UA_Helper::getFolderOffset(UA_BrowsePathResult *paBrowsePathsResults, size_t paFolderCnt) {
+int COPC_UA_Helper::getFolderOffset(const UA_BrowsePathResult *paBrowsePathsResults, size_t paFolderCnt) {
   int foundFolderOffset = -1;
   if(UA_STATUSCODE_GOOD == paBrowsePathsResults[paFolderCnt - 1].statusCode) {
     foundFolderOffset = 0;
@@ -337,7 +336,7 @@ int COPC_UA_Helper::getFolderOffset(UA_BrowsePathResult *paBrowsePathsResults, s
   return foundFolderOffset;
 }
 
-void COPC_UA_Helper::copyNodeIds(UA_BrowsePathResult *paBrowsePathsResults, size_t paFolderCnt, int paFoundFolderOffset, UA_NodeId **paParentNodeId,
+void COPC_UA_Helper::copyNodeIds(const UA_BrowsePathResult *paBrowsePathsResults, size_t paFolderCnt, int paFoundFolderOffset, UA_NodeId **paParentNodeId,
     UA_NodeId **paFoundNodeId) {
   *paFoundNodeId = UA_NodeId_new();
   UA_NodeId_copy(&paBrowsePathsResults[paFoundFolderOffset + paFolderCnt - 1].targets[0].targetId.nodeId, *paFoundNodeId);

@@ -221,7 +221,7 @@ class COPC_UA_Helper {
      * @param folderCnt Number of folders in the paBrowsePathsResults
      * @return The offset to first existing folder, -1 if no folder exist
      */
-    static int getFolderOffset(UA_BrowsePathResult *paBrowsePathsResults, size_t folderCnt);
+    static int getFolderOffset(const UA_BrowsePathResult *paBrowsePathsResults, size_t folderCnt);
 
     /**
      * Copy the found node id and its parent from a browse result
@@ -231,7 +231,7 @@ class COPC_UA_Helper {
      * @param paParentNodeId Place to store the parent node ID
      * @param paFolderCnt Size of the browse result
      */
-    static void copyNodeIds(UA_BrowsePathResult *paBrowsePathsResults, size_t paFolderCnt, int paFoundFolderOffset, UA_NodeId **paParentNodeId,
+    static void copyNodeIds(const UA_BrowsePathResult *paBrowsePathsResults, size_t paFolderCnt, int paFoundFolderOffset, UA_NodeId **paParentNodeId,
         UA_NodeId **paFoundNodeId);
 };
 

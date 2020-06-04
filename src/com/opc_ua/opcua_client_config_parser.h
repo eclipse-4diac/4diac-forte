@@ -55,7 +55,7 @@ class CUA_ClientConfigFileParser {
      * @param paResult Place to store the results
      * @return True if no error occurred, false otherwise
      */
-    static bool loadConfig(std::string &paFileLocation, std::string &paEndpoint, UA_ConfigFromFile &paResult);
+    static bool loadConfig(const std::string &paFileLocation, const std::string &paEndpoint, UA_ConfigFromFile &paResult);
 
   private:
     explicit CUA_ClientConfigFileParser();
@@ -89,7 +89,7 @@ class CUA_ClientConfigFileParser {
      * @param paResult Place to store the result
      * @return True if no error occurred, false otherwise
      */
-    static bool loadFileIntoBytestring(std::string &paFileLocation, UA_ByteString &paResult);
+    static bool loadFileIntoBytestring(const std::string &paFileLocation, UA_ByteString &paResult);
 #endif //UA_ENABLE_ENCRYPTION
 };
 
