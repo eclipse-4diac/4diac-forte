@@ -32,7 +32,7 @@ private:
                                                     // evaluates to TForteByte, TForteWord, TForteDWord or TForteLWord
   TObject& dataObject; // The referenced object which data is pulled from
   TObject dummy;       // Dummy object for out of bounds data
-  bool accessedOutOfBounds = false; // Flag to indicate Out of Bounds access
+    bool accessedOutOfBounds; // Flag to indicate Out of Bounds access
 
   template <class TO> class ARRAY_AT_ACCESSOR_BASE {
   protected:
@@ -320,7 +320,7 @@ public:
    *  The valid index range is given by startIndex and stopIndex (both included)
    */
   ARRAY_AT(TObject &paSrc) :
-    dataObject(paSrc){
+        dataObject(paSrc), accessedOutOfBounds(false) {
     const size_t length = std::numeric_limits<typename TObject::TValueType>::digits/std::numeric_limits<typename TBase::TValueType>::digits;
       FORTE_STATIC_ASSERT((length > stopIndex), Invalid_index_range);
       FORTE_STATIC_ASSERT((startIndex >= 0), Invalid_index_range);
