@@ -26,7 +26,18 @@ forte_add_network_layer(OPC_UA OFF "opc_ua" COPC_UA_Layer opcua_layer "Enable OP
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 if (FORTE_COM_OPC_UA)
+
+    if(NOT "${FORTE_ARCHITECTURE}" STREQUAL "VxWorks") #the compiler used to test vxworks doesn't support ++11
+      if(CYGWIN)
+        forte_add_definition("-std=gnu++11") 
+      else(CYGWIN)
+        forte_add_definition("-std=c++11")
+      endif(CYGWIN)
+
+    endif(NOT "${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
+
     forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/com/opc_ua/opcua_nodesets.cpp) # created file
+    
     forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/com/opc_ua/opcua_types.cpp) # created file
 
     SET(FORTE_COM_OPC_UA_PORT 4840 CACHE STRING "Port where the OPC_UA server will listen")

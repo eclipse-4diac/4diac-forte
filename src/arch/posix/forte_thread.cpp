@@ -65,11 +65,11 @@ forte::arch::CThreadBase<pthread_t>::TThreadHandleType CPosixThread::createThrea
 
 void * CPosixThread::threadFunction(void *paArguments){
   // Get pointer to CThread object out of void pointer
-  CThreadBase::runThread(static_cast<CPosixThread *>(paArguments));
+  CThreadBase<pthread_t>::runThread(static_cast<CPosixThread *>(paArguments));
   return 0;
 }
 
-CPosixThread::CPosixThread(long paStackSize) : CThreadBase(paStackSize){
+CPosixThread::CPosixThread(long paStackSize) : CThreadBase<pthread_t>(paStackSize){
   if(0 != paStackSize){
     mStack = new char[paStackSize];
   }

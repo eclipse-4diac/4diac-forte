@@ -17,6 +17,7 @@
 #define _ANY_BIT_H_
 
 #include "forte_any_elementary.h"
+#include "../utils/staticassert.h"
 #include <limits>
 
 /*!\ingroup COREDTS IIEC_ANY_BIT represents any bit data types according to IEC 61131.
@@ -112,7 +113,7 @@ class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
 
       TObject& dataObject; // The referenced object which data is pulled from
       const size_t index;  // Index value for accessing the split elements
-      bool accessedOutOfBounds = false; // Flag to indicate Out of Bounds access
+      bool accessedOutOfBounds; // Flag to indicate Out of Bounds access
 
       /*! \brief Method for handling endianess conversion
        *
@@ -120,7 +121,7 @@ class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
        *  On big endian systems the order of bytes has to be flipped.
        *
        */
-      static constexpr size_t endianiseIndex(const size_t paIndex){
+      static size_t endianiseIndex(const size_t paIndex){
 #ifdef FORTE_BIG_ENDIAN
           return (forte::core::mpl::is_same<TBase,CIEC_BOOL>::value) ? paIndex : length-1-paIndex; // Within bool-data endianess is implicitly correct
 #else //#ifdef FORTE_BIG_ENDIAN
@@ -139,19 +140,18 @@ class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
        *  The index is stored after correction for endianess.
        */
       explicit PARTIAL_ACCESS_TYPE(TObject& paSrc, const size_t paIndex) :
-        TBase(getPartial(paSrc,endianiseIndex(paIndex))), dataObject(paSrc), index(endianiseIndex(paIndex)) {
-        static_assert(forte::core::mpl::is_same<TObject,CIEC_BYTE>::value ||
-                      forte::core::mpl::is_same<TObject,CIEC_WORD>::value ||
-                      forte::core::mpl::is_same<TObject,CIEC_DWORD>::value ||
-                      forte::core::mpl::is_same<TObject,CIEC_LWORD>::value, "TObject has to be one of CIEC_BYTE, CIEC_WORD, CIEC_DWORD or CIEC_LWORD");
-        static_assert(forte::core::mpl::is_same<TBase,CIEC_BOOL>::value ||
-                      forte::core::mpl::is_same<TBase,CIEC_BYTE>::value ||
-                      forte::core::mpl::is_same<TBase,CIEC_WORD>::value ||
-                      forte::core::mpl::is_same<TBase,CIEC_DWORD>::value, "TBase has to be one of CIEC_BYTE, CIEC_WORD, CIEC_DWORD or CIEC_LWORD");
-        static_assert(std::numeric_limits<TObjectType>::digits > std::numeric_limits<TBaseType>::digits, "Partial acces is only possible if accessed element is smaller than the source");
-        if (paIndex >= length) {
-          accessedOutOfBounds = true; // FAIL SILENT
-        }
+          TBase(getPartial(paSrc,endianiseIndex(paIndex))), dataObject(paSrc), index(endianiseIndex(paIndex)),
+          accessedOutOfBounds((paIndex >= length)){
+          FORTE_STATIC_ASSERT(
+            (forte::core::mpl::is_same<TObject, CIEC_BYTE>::value || forte::core::mpl::is_same<TObject, CIEC_WORD>::value
+              || forte::core::mpl::is_same<TObject, CIEC_DWORD>::value || forte::core::mpl::is_same<TObject, CIEC_LWORD>::value),
+            TObject_has_to_be_one_of_CIEC_BYTE_CIEC_WORD_CIEC_DWORD_or_CIEC_LWORD);
+          FORTE_STATIC_ASSERT(
+            (forte::core::mpl::is_same<TBase, CIEC_BOOL>::value || forte::core::mpl::is_same<TBase, CIEC_BYTE>::value
+              || forte::core::mpl::is_same<TBase, CIEC_WORD>::value || forte::core::mpl::is_same<TBase, CIEC_DWORD>::value),
+            TBase_has_to_be_one_of_CIEC_BYTE_CIEC_WORD_CIEC_DWORD_or_CIEC_LWORD);
+          FORTE_STATIC_ASSERT((std::numeric_limits<TObjectType>::digits > std::numeric_limits<TBaseType>::digits),
+            Partial_access_is_only_possible_if_accessed_element_is_smaller_than_the_source);
       };
 
       /*! \brief read the state of the Out of Bounds flag
@@ -200,7 +200,7 @@ class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
          */
         explicit PARTIAL_ACCESS(TObject &paSrc) :
           PARTIAL_ACCESS_TYPE<TBase, TObject>(paSrc, TIndex){
-          static_assert(TIndex < CIEC_ANY_BIT::PARTIAL_ACCESS_TYPE<TBase,TObject>::length, "Index for partial access out of bounds.");
+          FORTE_STATIC_ASSERT((TIndex<CIEC_ANY_BIT::PARTIAL_ACCESS_TYPE < TBase, TObject>::length), Index_for_partial_access_out_of_bounds);
         };
 
         /*! \brief Operator: Assignment operator with elementary type as its input
