@@ -361,7 +361,7 @@ class CLocalMethodInfo : public CActionInfo {
      * @param paEndpoint The endpoint of a remote OPC UA in case the action is to be executed remotely. An empty endpoint means that the action is to be executed locally
      * @param paTypes A list of type converters of the connections of the FB of the action (SDs/RDs)
      */
-    explicit CLocalMethodInfo(COPC_UA_Layer &paLayer, CIEC_STRING &paEndpoint);
+    explicit CLocalMethodInfo(COPC_UA_Layer &paLayer, const CIEC_STRING &paEndpoint);
 
     /**
      * Destructor of the class

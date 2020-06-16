@@ -46,7 +46,9 @@ UA_Logger COPC_UA_HandlerAbstract::getLogger() {
   return UA_Forte_logger;
 }
 
-void COPC_UA_HandlerAbstract::UA_Log_Forte(void*, UA_LogLevel paLevel, UA_LogCategory paCategory, const char *paMsg, va_list paArgs) {
+void COPC_UA_HandlerAbstract::UA_Log_Forte( //We omit SONAR only for the parameters
+    void*, UA_LogLevel paLevel, UA_LogCategory paCategory, const char *paMsg, va_list paArgs //NOSONAR
+    ) {
 
   char tmpStr[mMaxLogLength];
   forte_snprintf(tmpStr, mMaxLogLength, "[OPC UA LOGGER] %s/%s\t", LogLevelNames[paLevel], LogCategoryNames[paCategory]);
@@ -78,6 +80,8 @@ void COPC_UA_HandlerAbstract::UA_Log_Forte(void*, UA_LogLevel paLevel, UA_LogCat
   }
 }
 
-void COPC_UA_HandlerAbstract::UA_Log_Forte_clear(void *) {
+void COPC_UA_HandlerAbstract::UA_Log_Forte_clear( //We omit SONAR only for the parameters
+    void* //NOSONAR
+    ) {
   //do nothing
 }

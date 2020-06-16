@@ -634,8 +634,8 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::writeAsyncCallback(UA_C
   delete remoteCallHandle;
 }
 
-void CUA_ClientInformation::CUA_RemoteCallbackFunctions::callMethodAsyncCallback(UA_Client *, void *paUserdata, UA_UInt32,
-    void *paResponse) {
+void CUA_ClientInformation::CUA_RemoteCallbackFunctions::callMethodAsyncCallback( //We omit SONAR only for the parameters
+    UA_Client*, void *paUserdata, UA_UInt32, void *paResponse) { //NOSONAR
   const UA_CallResponse *response = static_cast<UA_CallResponse*>(paResponse);
 
   bool somethingFailed = false;
@@ -730,7 +730,9 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::deleteSubscriptionCallb
   static_cast<CUA_ClientInformation*>(paSubscriptionContext)->resetSubscription(false);
 }
 
-void CUA_ClientInformation::CUA_RemoteCallbackFunctions::clientStateChangeCallback(UA_Client *, UA_ClientState paClientState) {
+void CUA_ClientInformation::CUA_RemoteCallbackFunctions::clientStateChangeCallback( //We omit SONAR only for the parameters
+    UA_Client*, UA_ClientState paClientState //NOSONAR
+    ) {
   //Don't do anything here. If the subscription is deleted, deleteSubscriptionCallback will be called and handled there
   switch(paClientState){
     case UA_CLIENTSTATE_DISCONNECTED:

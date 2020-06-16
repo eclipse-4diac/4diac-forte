@@ -728,7 +728,7 @@ UA_StatusCode COPC_UA_Local_Handler::initializeCreateMethod(CActionInfo &paActio
   return retVal;
 }
 
-UA_StatusCode COPC_UA_Local_Handler::handleExistingMethod(CActionInfo &paActionInfo, UA_NodeId &paParentNode) {
+UA_StatusCode COPC_UA_Local_Handler::handleExistingMethod(CActionInfo &paActionInfo, const UA_NodeId &paParentNode) {
   CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator it = paActionInfo.getNodePairInfo().begin();
   UA_StatusCode retVal = UA_STATUSCODE_GOOD;
 
@@ -1390,10 +1390,10 @@ COPC_UA_Local_Handler::CLocalMethodCall* COPC_UA_Local_Handler::getLocalMethodCa
 
 // ******************** CALLBACKS *************************
 
-UA_StatusCode COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onServerMethodCall(UA_Server*, const UA_NodeId*, void*, const UA_NodeId *paMethodNodeId,
-    void *paMethodContext, //NOSONAR
-    const UA_NodeId *paParentNodeId, void*, //NOSONAR
-    size_t paInputSize, const UA_Variant *paInput, size_t paOutputSize, UA_Variant *paOutput) {
+UA_StatusCode COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onServerMethodCall( //We omit SONAR only for the parameters
+    UA_Server*, const UA_NodeId*, void*, const UA_NodeId *paMethodNodeId, void *paMethodContext, const UA_NodeId *paParentNodeId, void*, //NOSONAR
+    size_t paInputSize, const UA_Variant *paInput, size_t paOutputSize, UA_Variant *paOutput //NOSONAR
+    ) {
 
   UA_StatusCode retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
   CLocalMethodInfo *localMethodHandle = 0;
@@ -1430,7 +1430,7 @@ UA_StatusCode COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onServerMethodC
         localMethodHandle->getLayer().getCommFB()->interruptCommFB(&localMethodHandle->getLayer());
 
         //when the method finishes, and RSP is triggered, sendHandle will be filled with the right information
-        CLocalMethodCall &localMethodCall = ::getExtEvHandler<COPC_UA_Local_Handler>(*localMethodHandle->getLayer().getCommFB()).addMethodCall(
+        const CLocalMethodCall &localMethodCall = ::getExtEvHandler<COPC_UA_Local_Handler>(*localMethodHandle->getLayer().getCommFB()).addMethodCall(
           *localMethodHandle, sendHandle);
 
         ::getExtEvHandler<COPC_UA_Local_Handler>(*localMethodHandle->getLayer().getCommFB()).startNewEventChain(localMethodHandle->getLayer().getCommFB());

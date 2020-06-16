@@ -389,7 +389,7 @@ bool CActionInfo::CActionParser::parseIdentifier(const char *paIdentifier, UA_No
 
 // **** METHOD ACTION *****//
 
-CLocalMethodInfo::CLocalMethodInfo(COPC_UA_Layer &paLayer, CIEC_STRING &paEndpoint) :
+CLocalMethodInfo::CLocalMethodInfo(COPC_UA_Layer &paLayer, const CIEC_STRING &paEndpoint) :
     CActionInfo(paLayer, eCreateMethod, paEndpoint) {
 }
 

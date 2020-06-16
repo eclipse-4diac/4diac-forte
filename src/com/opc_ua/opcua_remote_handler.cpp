@@ -110,7 +110,8 @@ COPC_UA_Remote_Handler::COPC_UA_Remote_Handler(CDeviceExecution& paDeviceExecuti
 }
 
 COPC_UA_Remote_Handler::~COPC_UA_Remote_Handler() {
-  disableHandler();
+  mConnectionHandler.stopIterationThread();
+  stopIterationThread();
   cleanResources();
 }
 

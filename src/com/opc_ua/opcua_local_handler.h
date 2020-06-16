@@ -443,7 +443,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param paParentNode Parent node of the method. For methods instances of an object, the node id of the methods is the same, only the parent is different
      * @return UA_STATUSCODE_GOOD on success, other value otherwise
      */
-    UA_StatusCode handleExistingMethod(CActionInfo &paActionInfo, UA_NodeId &paParentNode);
+    UA_StatusCode handleExistingMethod(CActionInfo &paActionInfo, const UA_NodeId &paParentNode);
 
     /**
      * Create the arguments for a method from the information of the action and store it in the encasulation for creating a method
