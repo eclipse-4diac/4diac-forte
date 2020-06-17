@@ -131,7 +131,7 @@ void COPC_UA_Layer::triggerNewEvent() {
   mHandler->triggerNewEvent(*this->getCommFB());
 }
 
-bool COPC_UA_Layer::checkTypesFromInterface() {
+bool COPC_UA_Layer::checkTypesFromInterface() const {
   bool somethingFailed = false;
   for(unsigned int i = 0; i < getCommFB()->getNumSD(); i++) {
     if(!checkPortConnectionInfo(i + 2, true)) {

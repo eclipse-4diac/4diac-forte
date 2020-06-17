@@ -139,7 +139,7 @@ class COPC_UA_Client_IterationList : public CThread {
      * @param paClientInformation Client to be added
      * @param paList List where the client is added
      */
-    void addClientToList(CUA_ClientInformation &paClientInformation, CSinglyLinkedList<CUA_ClientInformation *> &paList);
+    void addClientToList(CUA_ClientInformation &paClientInformation, CSinglyLinkedList<CUA_ClientInformation*> &paList) const;
 
     /**
      * Add the new clients to the main iteration list and clears the new clients list
@@ -159,7 +159,7 @@ class COPC_UA_Client_IterationList : public CThread {
     /**
      * Cyclic time to sleep if another iteration is needed. This is the period at which the iteration occurs normally
      */
-    static const TForteUInt64 scmNanosecondsToSleep = FORTE_COM_OPC_UA_CLIENT_PUB_INTERVAL * 1000000; //ms to nanoseconds
+    static const TForteUInt64 scmNanosecondsToSleep = static_cast<TForteUInt64>(FORTE_COM_OPC_UA_CLIENT_PUB_INTERVAL * 1000000); //ms to nanoseconds
 };
 
 /**

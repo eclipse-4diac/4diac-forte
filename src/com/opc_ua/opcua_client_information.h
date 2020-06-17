@@ -65,7 +65,7 @@ class CUA_ClientInformation {
      * Check if the client needs another async call. If a subscription action is present, this will stay true
      * @return True if a new async call is needed, false otherwise
      */
-    inline bool isAsyncNeeded() {
+    inline bool isAsyncNeeded() const {
       return (0 != mMissingAsyncCalls);
     }
 
@@ -73,7 +73,7 @@ class CUA_ClientInformation {
      * Check if an action is present in the client
      * @return True if an action is present in the client, false otherwise
      */
-    bool hasActions() {
+    bool hasActions() const {
       return !mActionsReferencingIt.isEmpty();
     }
 
@@ -81,7 +81,7 @@ class CUA_ClientInformation {
      * Check if at least one action was initialized in the last iteration of handleClientState()
      * @return True if at least one action was initialized in the last iteration of handleClientState(), false otherwise
      */
-    bool someActionWasInitialized() {
+    bool someActionWasInitialized() const {
       return mSomeActionWasInitialized;
     }
 
@@ -89,7 +89,7 @@ class CUA_ClientInformation {
      * Getter of the endpoint
      * @return Endpoint of the clinet
      */
-    const CIEC_STRING& getEndpoint() {
+    const CIEC_STRING& getEndpoint() const {
       return mEndpointUrl;
     }
 
@@ -105,7 +105,7 @@ class CUA_ClientInformation {
       mIsClientValid = false;
     }
 
-    bool isClientValid() {
+    bool isClientValid() const {
       return mIsClientValid;
     }
 

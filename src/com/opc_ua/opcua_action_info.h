@@ -69,7 +69,7 @@ class CActionInfo {
      * Getter of the action type
      * @return Action type
      */
-    UA_ActionType getAction() {
+    UA_ActionType getAction() const {
       return mAction;
     }
 
@@ -85,7 +85,7 @@ class CActionInfo {
      * Getter of the enpoint
      * @return A constant reference of the endpoint
      */
-    const CIEC_STRING& getEndpoint() {
+    const CIEC_STRING& getEndpoint() const {
       return mEndpoint;
     }
 
@@ -101,7 +101,7 @@ class CActionInfo {
      * Gets the amount of node pair in the action
      * @return Amount of node pair in the action
      */
-    size_t getNoOfNodePairs() {
+    size_t getNoOfNodePairs() const {
       size_t noOfPairs = 0;
       for(CSinglyLinkedList<CNodePairInfo*>::Iterator it = mNodePair.begin(); it != mNodePair.end(); ++it, noOfPairs++)
         ;
@@ -112,7 +112,7 @@ class CActionInfo {
      * Indicates if the action is to be executed locally or remotely. This function is used by the layer to decide which handler to use (local or remote)
      * @return True if the action is to be executed remotely, false otherwise
      */
-    bool isRemote();
+    bool isRemote() const;
 
     /**
      * Factory to retrieve an action type from the parameters defined in the ID data input of the FB. The ID has the format ACTION;[ENDPOINT#];BROWSENAME,NODEID;[BROSWENAME,NODEID];...
@@ -127,25 +127,25 @@ class CActionInfo {
      * Retrieves the array of CIEC_ANY to be sent
      * @return the array of CIEC_ANY to be sent
      */
-    const CIEC_ANY* getDataToSend();
+    const CIEC_ANY* getDataToSend() const;
 
     /**
      * Retrieves the array of CIEC_ANY where to receive the data
      * @return array of CIEC_ANY where to receive the data
      */
-    CIEC_ANY* getDataToReceive();
+    CIEC_ANY* getDataToReceive() const;
 
     /**
      * Retrieves the size of the array to send
      * @return size of the array to send
      */
-    size_t getSendSize();
+    size_t getSendSize() const;
 
     /**
      * Retrieves the size of the array to receive
      * @return size of the array to receive
      */
-    size_t getReceiveSize();
+    size_t getReceiveSize() const;
 
     /**
      * String representations of the actions and which should be provided as the first part of the ID
@@ -168,13 +168,13 @@ class CActionInfo {
      * Checks if the action is valid regarding requirements for the amount of node pairs, endpoint value and the type of action
      * @return True if the action is valid, false otherwise
      */
-    bool checkAction();
+    bool checkAction() const;
 
     /**
      * Checks if the provided node pair information is valid
      * @return True if the node pair information is valid, false otherwise
      */
-    bool checkNodePairInfo();
+    bool checkNodePairInfo() const;
 
     /**
      * Specific check for read action
@@ -183,7 +183,7 @@ class CActionInfo {
      * @param paNoOfSDs Number of SDs present in the FB
      * @return True if the read action is valid, false otherwise
      */
-    bool checkReadAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs);
+    bool checkReadAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const;
 
     /**
      * Specific check for write action
@@ -192,7 +192,7 @@ class CActionInfo {
      * @param paNoOfSDs Number of SDs present in the FB
      * @return True if the write action is valid, false otherwise
      */
-    bool checkWriteAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs);
+    bool checkWriteAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const;
 
     /**
      * Specific check for create method action
@@ -201,7 +201,7 @@ class CActionInfo {
      * @param paNoOfSDs Number of SDs present in the FB
      * @return True if the create method action is valid, false otherwise
      */
-    bool checkCreateMethodAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs);
+    bool checkCreateMethodAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const;
 
     /**
      * Specific check for call method action
@@ -210,7 +210,7 @@ class CActionInfo {
      * @param paNoOfSDs Number of SDs present in the FB
      * @return True if the call method action is valid, false otherwise
      */
-    bool checkCallMethodAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs);
+    bool checkCallMethodAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const;
 
     /**
      * Specific check for subscribe action
@@ -219,7 +219,7 @@ class CActionInfo {
      * @param paNoOfSDs Number of SDs present in the FB
      * @return True if the subscribe action is valid, false otherwise
      */
-    bool checkSubscribeAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs);
+    bool checkSubscribeAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const;
 
     /**
      * Specific check for create object action
@@ -228,7 +228,7 @@ class CActionInfo {
      * @param paNoOfSDs Number of SDs present in the FB
      * @return True if the create object action is valid, false otherwise
      */
-    bool checkCreateObjectAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs);
+    bool checkCreateObjectAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const;
 
     /**
      * Specific check for create variable action
@@ -237,7 +237,7 @@ class CActionInfo {
      * @param paNoOfSDs Number of SDs present in the FB
      * @return True if the create variable action is valid, false otherwise
      */
-    bool checkCreateVariableAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs);
+    bool checkCreateVariableAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const;
 
     /**
      * Specific check for delete node action
@@ -246,7 +246,7 @@ class CActionInfo {
      * @param paNoOfSDs Number of SDs present in the FB
      * @return True if the delete node action is valid, false otherwise
      */
-    bool checkDeleteNodeAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs);
+    bool checkDeleteNodeAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const;
 
     /**
      * The type of action to execute
