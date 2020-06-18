@@ -105,7 +105,7 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
      * Check that all types of the SDs/RDs of the FBs are correct
      * @return True if no problem occurred, false otherwise
      */
-    bool checkTypesFromInterface();
+    bool checkTypesFromInterface() const;
 
     /**
      * Check the type for a specific data input or output of the FB
@@ -139,7 +139,8 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
      * but the tests lead to an overflow of external events, and this reduces a little.
      */
     void setDataAlreadyPresentRead(bool paDataRead);
-    bool getDataAlreadyPresentRead();CSyncObject mDataAlreadyPresentMutex;
+    bool getDataAlreadyPresentRead();
+    CSyncObject mDataAlreadyPresentMutex;
     bool mDataAlreadyPresent;
 
     /**

@@ -16,8 +16,20 @@
 #include <parameterParser.h>
 
 //we tried to use the logLevelNames and logCategoryNames as extern from open62541 but it failed when using with shared libray
-const char *LogLevelNames[6] = { "trace", "debug", "info", "warning", "error", "fatal" };
-const char *LogCategoryNames[7] = { "network", "channel", "session", "server", "client", "userland" };
+const char *const LogLevelNames[6] = {
+  "trace",
+  "debug",
+  "info",
+  "warning",
+  "error",
+  "fatal" };
+const char *const LogCategoryNames[7] = {
+  "network",
+  "channel",
+  "session",
+  "server",
+  "client",
+  "userland" };
 
 const UA_Logger COPC_UA_HandlerAbstract::UA_Forte_logger = {UA_Log_Forte, 0, UA_Log_Forte_clear};
 

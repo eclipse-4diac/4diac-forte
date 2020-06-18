@@ -130,7 +130,7 @@ void COPC_UA_Local_Handler::stopServer() {
   end();
 }
 
-void COPC_UA_Local_Handler::generateServerStrings(TForteUInt16 paUAServerPort, UA_ServerStrings &paServerStrings) {
+void COPC_UA_Local_Handler::generateServerStrings(TForteUInt16 paUAServerPort, UA_ServerStrings &paServerStrings) const {
   char helperBuffer[scmMaxServerNameLength + 1];
   forte_snprintf(helperBuffer, scmMaxServerNameLength, "forte_%d", paUAServerPort);
 
@@ -158,7 +158,7 @@ void COPC_UA_Local_Handler::generateServerStrings(TForteUInt16 paUAServerPort, U
   paServerStrings.mHostname = hostname;
 }
 
-void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings, UA_ServerConfig &paUaServerConfig) {
+void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings, UA_ServerConfig &paUaServerConfig) const {
 
   paUaServerConfig.logger = COPC_UA_HandlerAbstract::getLogger();
 
@@ -257,7 +257,7 @@ void COPC_UA_Local_Handler::referencedNodesDecrement(const CActionInfo &paAction
   }
 }
 
-void COPC_UA_Local_Handler::getNodesReferencedByAction(const CActionInfo &paActionInfo, CSinglyLinkedList<const UA_NodeId*> &paNodes) {
+void COPC_UA_Local_Handler::getNodesReferencedByAction(const CActionInfo &paActionInfo, CSinglyLinkedList<const UA_NodeId*> &paNodes) const {
   for(CSinglyLinkedList<nodesReferencedByActions*>::Iterator iterRef = mNodesReferences.begin(); iterRef != mNodesReferences.end(); ++iterRef) {
     for(CSinglyLinkedList<CActionInfo*>::Iterator iterAction = (*iterRef)->mActionsReferencingIt.begin(); iterAction != (*iterRef)->mActionsReferencingIt.end();
         ++iterAction) {
@@ -766,7 +766,7 @@ UA_StatusCode COPC_UA_Local_Handler::handleExistingMethod(CActionInfo &paActionI
   return retVal;
 }
 
-void COPC_UA_Local_Handler::createMethodArguments(CActionInfo &paActionInfo, CCreateMethodInfo &paCreateMethodInfo) {
+void COPC_UA_Local_Handler::createMethodArguments(CActionInfo &paActionInfo, CCreateMethodInfo &paCreateMethodInfo) const {
   const SFBInterfaceSpec *interfaceFB = paActionInfo.getLayer().getCommFB()->getFBInterfaceSpec();
 
   const CIEC_ANY *dataToSend = paActionInfo.getDataToSend();
@@ -846,7 +846,7 @@ UA_StatusCode COPC_UA_Local_Handler::createMethodNode(CCreateMethodInfo &paCreat
   return retVal;
 }
 
-UA_StatusCode COPC_UA_Local_Handler::initializeCreateNode(CActionInfo &paActionInfo) {
+UA_StatusCode COPC_UA_Local_Handler::initializeCreateNode(CActionInfo &paActionInfo) const {
   //The main process is done in the execution
   UA_StatusCode retVal = UA_STATUSCODE_GOOD;
 
@@ -860,7 +860,7 @@ UA_StatusCode COPC_UA_Local_Handler::initializeCreateNode(CActionInfo &paActionI
   return retVal;
 }
 
-UA_StatusCode COPC_UA_Local_Handler::initializeDeleteNode(CActionInfo&) {
+UA_StatusCode COPC_UA_Local_Handler::initializeDeleteNode(const CActionInfo&) const {
   //nothing to do here
   return UA_STATUSCODE_GOOD;
 }
@@ -966,7 +966,7 @@ UA_StatusCode COPC_UA_Local_Handler::executeCreateObject(CActionInfo &paActionIn
   return retVal;
 }
 
-UA_StatusCode COPC_UA_Local_Handler::createObjectNode(const CCreateObjectInfo &paCreateObjectInfo) {
+UA_StatusCode COPC_UA_Local_Handler::createObjectNode(const CCreateObjectInfo &paCreateObjectInfo) const {
 
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
 
@@ -1122,7 +1122,7 @@ UA_StatusCode COPC_UA_Local_Handler::executeDeleteObject(CActionInfo &paActionIn
 }
 
 void COPC_UA_Local_Handler::initializeCreateInfo(CIEC_STRING &paNodeName, const CActionInfo::CNodePairInfo &paNodePairInfo, const UA_NodeId *paParentNodeId,
-    CCreateInfo &paResult) {
+    CCreateInfo &paResult) const {
   COPC_UA_Helper::getBrowsenameFromNodeName(paNodeName.getValue(), scmDefaultBrowsenameNameSpace, *paResult.mBrowseName); //this cannot fail here anymore, since it was checked already with getNode
   paResult.mRequestedNodeId = paNodePairInfo.mNodeId;
   paResult.mParentNodeId = paParentNodeId;
@@ -1173,7 +1173,7 @@ UA_StatusCode COPC_UA_Local_Handler::getNode(CActionInfo::CNodePairInfo &paNodeP
 }
 
 UA_StatusCode COPC_UA_Local_Handler::translateBrowseNameAndStore(const char *paBrowsePath, UA_BrowsePath **paBrowsePaths, size_t *paFoldercount,
-    size_t *paFirstNonExistingNode, CSinglyLinkedList<UA_NodeId*> &paFoundNodeIds) {
+    size_t *paFirstNonExistingNode, CSinglyLinkedList<UA_NodeId*> &paFoundNodeIds) const {
 
   UA_StatusCode retVal = COPC_UA_Helper::prepareBrowseArgument(paBrowsePath, paBrowsePaths, paFoldercount);
 
@@ -1203,7 +1203,7 @@ UA_StatusCode COPC_UA_Local_Handler::translateBrowseNameAndStore(const char *paB
 
 UA_StatusCode COPC_UA_Local_Handler::storeAlreadyExistingNodes(const UA_BrowsePathResult *paBrowsePathsResults, size_t paFolderCnt,
     size_t *paFirstNonExistingNode,
-    CSinglyLinkedList<UA_NodeId*> &paCreatedNodeIds) {
+    CSinglyLinkedList<UA_NodeId*> &paCreatedNodeIds) const {
   size_t foundFolderOffset = 0;
   int retVal; // no unsigned, because we need to check for -1
   bool offsetFound = false;
@@ -1243,7 +1243,7 @@ UA_StatusCode COPC_UA_Local_Handler::storeAlreadyExistingNodes(const UA_BrowsePa
   return UA_STATUSCODE_GOOD;
 }
 
-UA_StatusCode COPC_UA_Local_Handler::createFolders(const char *paFolders, CSinglyLinkedList<UA_NodeId*> &paCreatedNodeIds) {
+UA_StatusCode COPC_UA_Local_Handler::createFolders(const char *paFolders, CSinglyLinkedList<UA_NodeId*> &paCreatedNodeIds) const {
 
   UA_BrowsePath *browsePaths = 0;
   size_t folderCnt = 0;
@@ -1308,7 +1308,7 @@ UA_StatusCode COPC_UA_Local_Handler::createFolders(const char *paFolders, CSingl
 }
 
 UA_StatusCode COPC_UA_Local_Handler::splitAndCreateFolders(const CIEC_STRING &paBrowsePath, CIEC_STRING &paNodeName,
-    CSinglyLinkedList<UA_NodeId*> &paRreferencedNodes) {
+    CSinglyLinkedList<UA_NodeId*> &paRreferencedNodes) const {
   CIEC_STRING folders;
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
   if(splitFoldersFromNode(paBrowsePath, folders, paNodeName)) {
@@ -1320,7 +1320,7 @@ UA_StatusCode COPC_UA_Local_Handler::splitAndCreateFolders(const CIEC_STRING &pa
   return retVal;
 }
 
-bool COPC_UA_Local_Handler::splitFoldersFromNode(const CIEC_STRING &paOriginal, CIEC_STRING &paFolder, CIEC_STRING &paNodeName) {
+bool COPC_UA_Local_Handler::splitFoldersFromNode(const CIEC_STRING &paOriginal, CIEC_STRING &paFolder, CIEC_STRING &paNodeName) const {
 
   bool retVal = false;
 
@@ -1353,7 +1353,7 @@ bool COPC_UA_Local_Handler::splitFoldersFromNode(const CIEC_STRING &paOriginal, 
 }
 
 void COPC_UA_Local_Handler::handlePresentNodes(const CSinglyLinkedList<UA_NodeId*> &paPresentNodes, CSinglyLinkedList<UA_NodeId*> &paReferencedNodes,
-    bool paFailed) {
+    bool paFailed) const {
   for(CSinglyLinkedList<UA_NodeId*>::Iterator itPresendNodes = paPresentNodes.begin(); itPresendNodes != paPresentNodes.end(); ++itPresendNodes) {
     if(paFailed) {
       UA_NodeId_delete(*itPresendNodes);

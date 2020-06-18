@@ -78,7 +78,7 @@ void COPC_UA_Client_IterationList::resumeIterationLoop() {
   mNeedsIteration.inc();
 }
 
-void COPC_UA_Client_IterationList::addClientToList(CUA_ClientInformation& paClientInformation, CSinglyLinkedList<CUA_ClientInformation*>& paList) {
+void COPC_UA_Client_IterationList::addClientToList(CUA_ClientInformation &paClientInformation, CSinglyLinkedList<CUA_ClientInformation*> &paList) const {
   bool elementAlreadyPresent = false;
   for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = paList.begin(); itClientInformation != paList.end(); ++itClientInformation) {
     if(&paClientInformation == (*itClientInformation)) {

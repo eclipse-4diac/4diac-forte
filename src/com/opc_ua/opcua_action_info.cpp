@@ -31,7 +31,7 @@ CActionInfo::~CActionInfo() {
   }
 }
 
-bool CActionInfo::isRemote() {
+bool CActionInfo::isRemote() const {
   return ("" != mEndpoint);
 }
 
@@ -82,23 +82,23 @@ CActionInfo* CActionInfo::getActionInfoFromParams(const char *paParams, COPC_UA_
   return retVal;
 }
 
-const CIEC_ANY* CActionInfo::getDataToSend() {
+const CIEC_ANY* CActionInfo::getDataToSend() const {
   return mLayer.getCommFB()->getSDs();
 }
 
-CIEC_ANY* CActionInfo::getDataToReceive() {
+CIEC_ANY* CActionInfo::getDataToReceive() const {
   return mLayer.getCommFB()->getRDs();
 }
 
-size_t CActionInfo::getSendSize() {
+size_t CActionInfo::getSendSize() const {
   return static_cast<size_t>(mLayer.getCommFB()->getNumSD());
 }
 
-size_t CActionInfo::getReceiveSize() {
+size_t CActionInfo::getReceiveSize() const {
   return static_cast<size_t>(mLayer.getCommFB()->getNumRD());
 }
 
-bool CActionInfo::checkAction() {
+bool CActionInfo::checkAction() const {
   bool retVal = false;
   if(checkNodePairInfo()) {
 
@@ -140,7 +140,7 @@ bool CActionInfo::checkAction() {
   return retVal;
 }
 
-bool CActionInfo::checkNodePairInfo() {
+bool CActionInfo::checkNodePairInfo() const {
   bool retVal = true;
   for(CSinglyLinkedList<CNodePairInfo*>::Iterator it = mNodePair.begin(); it != mNodePair.end(); ++it) {
     if("" == (*it)->mBrowsePath && 0 == (*it)->mNodeId) { //browsePath AND/OR NodeId must be given. If both are empty there's a problem
@@ -152,7 +152,7 @@ bool CActionInfo::checkNodePairInfo() {
   return retVal;
 }
 
-bool CActionInfo::checkReadAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) {
+bool CActionInfo::checkReadAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const {
   bool retVal = false;
   if("" == mEndpoint) {
     if(forte::com_infra::EComServiceType::e_Subscriber == paFbType && paNoOfRDs == getNoOfNodePairs()) {
@@ -174,7 +174,7 @@ bool CActionInfo::checkReadAction(forte::com_infra::EComServiceType paFbType, un
   return retVal;
 }
 
-bool CActionInfo::checkWriteAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) {
+bool CActionInfo::checkWriteAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const {
   bool retVal = false;
   if("" == mEndpoint) {
     if(forte::com_infra::EComServiceType::e_Publisher == paFbType && paNoOfSDs == getNoOfNodePairs()) {
@@ -196,7 +196,7 @@ bool CActionInfo::checkWriteAction(forte::com_infra::EComServiceType paFbType, u
   return retVal;
 }
 
-bool CActionInfo::checkCreateMethodAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int) {
+bool CActionInfo::checkCreateMethodAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int) const {
   bool retVal = false;
   if(forte::com_infra::EComServiceType::e_Server == paFbType && 1 == getNoOfNodePairs()) {
     retVal = true;
@@ -207,7 +207,7 @@ bool CActionInfo::checkCreateMethodAction(forte::com_infra::EComServiceType paFb
   return retVal;
 }
 
-bool CActionInfo::checkCallMethodAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int) {
+bool CActionInfo::checkCallMethodAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int) const {
   bool retVal = false;
   if(forte::com_infra::EComServiceType::e_Client == paFbType && 1 == getNoOfNodePairs() && "" != (*(mNodePair.begin()))->mBrowsePath) {
     retVal = true;
@@ -219,7 +219,7 @@ bool CActionInfo::checkCallMethodAction(forte::com_infra::EComServiceType paFbTy
   return retVal;
 }
 
-bool CActionInfo::checkSubscribeAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int) {
+bool CActionInfo::checkSubscribeAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int) const {
   bool retVal = false;
   if(forte::com_infra::EComServiceType::e_Subscriber == paFbType && paNoOfRDs == getNoOfNodePairs()) {
     retVal = true;
@@ -231,7 +231,7 @@ bool CActionInfo::checkSubscribeAction(forte::com_infra::EComServiceType paFbTyp
   return retVal;
 }
 
-bool CActionInfo::checkCreateObjectAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int paNoOfSDs) {
+bool CActionInfo::checkCreateObjectAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int paNoOfSDs) const {
   bool retVal = false;
   if(forte::com_infra::EComServiceType::e_Publisher == paFbType && 2 == getNoOfNodePairs() && 0 == paNoOfSDs) {
     retVal = true;
@@ -243,7 +243,7 @@ bool CActionInfo::checkCreateObjectAction(forte::com_infra::EComServiceType paFb
   return retVal;
 }
 
-bool CActionInfo::checkCreateVariableAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int paNoOfSDs) {
+bool CActionInfo::checkCreateVariableAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int paNoOfSDs) const {
   bool retVal = false;
   if(forte::com_infra::EComServiceType::e_Publisher == paFbType && 3 == getNoOfNodePairs() && 0 == paNoOfSDs) {
     retVal = true;
@@ -255,7 +255,7 @@ bool CActionInfo::checkCreateVariableAction(forte::com_infra::EComServiceType pa
   return retVal;
 }
 
-bool CActionInfo::checkDeleteNodeAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int paNoOfSDs) {
+bool CActionInfo::checkDeleteNodeAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int paNoOfSDs) const {
   bool retVal = false;
   if(forte::com_infra::EComServiceType::e_Publisher == paFbType && 1 == getNoOfNodePairs() && 0 == paNoOfSDs) {
     retVal = true;
