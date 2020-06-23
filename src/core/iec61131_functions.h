@@ -238,6 +238,15 @@ APPLY(const T& pa_roIN1, const U& pa_roIN2){
   return Result;
 }
 
+template<typename T, typename U, template<typename A> class F> typename forte::core::mpl::get_castable_type<T, U>::type
+APPLY_WITH_LITERALS(const T& pa_roIN1, const U& pa_roIN2){
+  typedef typename forte::core::mpl::get_castable_type<T, U>::type tImplicitCastType;
+  FORTE_STATIC_ASSERT(!(forte::core::mpl::is_same<tImplicitCastType, forte::core::mpl::NullType>::value), NoImplicitCastPossible);
+  const tImplicitCastType Result(F<tImplicitCastType>::call(static_cast<tImplicitCastType>(pa_roIN1),
+                                                            static_cast<tImplicitCastType>(pa_roIN2)));
+  return Result;
+}
+
 GENERATE_APPLY_FUNCTION(AND)
 template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type AND(const T& pa_roIN1, const U& pa_roIN2){
   return APPLY<T, U, AND_Function, CIEC_ANY_BIT>(pa_roIN1, pa_roIN2);
@@ -418,7 +427,7 @@ inline double EXPT(double pa_roIN1, double pa_roIN2){
 
 GENERATE_APPLY_FUNCTION(ADD)
 template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type ADD(const T& pa_roIN1, const U& pa_roIN2){
-  return APPLY<T, U, ADD_Function, CIEC_ANY_NUM>(pa_roIN1, pa_roIN2);
+  return APPLY_WITH_LITERALS<T, U, ADD_Function>(pa_roIN1, pa_roIN2);
 }
 
 template<typename T> const T ADD(const T& pa_roIN1, const T& pa_roIN2){
@@ -427,7 +436,7 @@ template<typename T> const T ADD(const T& pa_roIN1, const T& pa_roIN2){
 
 GENERATE_APPLY_FUNCTION(MUL)
 template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type MUL(const T& pa_roIN1, const U& pa_roIN2){
-  return APPLY<T, U, MUL_Function, CIEC_ANY_NUM>(pa_roIN1, pa_roIN2);
+  return APPLY_WITH_LITERALS<T, U, MUL_Function>(pa_roIN1, pa_roIN2);
 }
 
 template<typename T> const T MUL(const T& pa_roIN1, const T& pa_roIN2){
@@ -436,7 +445,7 @@ template<typename T> const T MUL(const T& pa_roIN1, const T& pa_roIN2){
 
 GENERATE_APPLY_FUNCTION(SUB)
 template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type SUB(const T& pa_roIN1, const U& pa_roIN2){
-  return APPLY<T, U, SUB_Function, CIEC_ANY_NUM>(pa_roIN1, pa_roIN2);
+  return APPLY_WITH_LITERALS<T, U, SUB_Function>(pa_roIN1, pa_roIN2);
 }
 
 template<typename T> const T SUB(const T& pa_roIN1, const T& pa_roIN2){
@@ -445,7 +454,7 @@ template<typename T> const T SUB(const T& pa_roIN1, const T& pa_roIN2){
 
 GENERATE_APPLY_FUNCTION(DIV)
 template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type DIV(const T& pa_roIN1, const U& pa_roIN2){
-  return APPLY<T, U, DIV_Function, CIEC_ANY_NUM>(pa_roIN1, pa_roIN2);
+  return APPLY_WITH_LITERALS<T, U, DIV_Function>(pa_roIN1, pa_roIN2);
 }
 
 template<typename T> const T DIV(const T& pa_roIN1, const T& pa_roIN2){
