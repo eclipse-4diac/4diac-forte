@@ -557,7 +557,53 @@ namespace forte {
 #endif
 #endif
 
-      template<typename T, typename U> struct is_same{
+      struct false_ {
+          static const bool value = false;
+      };
+
+      struct true_ {
+          static const bool value = true;
+      };
+
+      template<class c> struct is_integral : false_ {};
+
+      #define IS_INTEGRAL(type) \
+      template<> struct is_integral<type> : true_ {};
+
+      IS_INTEGRAL(TForteInt8)
+      IS_INTEGRAL(TForteInt16)
+      IS_INTEGRAL(TForteInt32)
+      IS_INTEGRAL(TForteInt64)
+      IS_INTEGRAL(TForteUInt8)
+      IS_INTEGRAL(TForteUInt16)
+      IS_INTEGRAL(TForteUInt32)
+      IS_INTEGRAL(TForteUInt64)
+
+      template<class c> struct is_float : false_ {};
+
+      #define IS_FLOAT(type) \
+      template<> struct is_float<type> : true_ {};
+
+      IS_FLOAT(TForteFloat)
+      IS_FLOAT(TForteDFloat)
+
+      template<typename A, typename B> struct or_ {
+          static const bool value = A::value || B::value;
+      };
+
+      template<typename A, typename B> struct and_ {
+          static const bool value = A::value && B::value;
+      };
+
+      template<class c> struct negate {
+          static const bool value = !(c::value);
+      };
+
+      template<class c> struct is_scalar {
+          static const bool value = or_<is_integral<c>, is_float<c>>::value;
+      };
+
+      template<typename T, typename U> struct is_same {
           static const bool value = false;
       };
 
