@@ -134,6 +134,10 @@ class CIEC_ANY{
       return CIEC_ANY::e_ANY;
     }
 
+    virtual CStringDictionary::TStringId getTypeNameID() const {
+      return csmFirmwareDataTypeEntry_CIEC_ANY.getTypeNameId();
+    }
+
     /*! \brief Get the pointer to the union char array
      *
      *  This command returns the pointer to the union char array
