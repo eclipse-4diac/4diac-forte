@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_CASE(AT_VARIABLE_BYTE_READ)
 
   ARRAY_AT<CIEC_BOOL, CIEC_BYTE, 0, 7> testArray(nTestByte);
 
-  for(auto i=0;i<8;i++){
+  for(size_t i=0;i<8;i++) {
     BOOST_CHECK_EQUAL(testArray[i], true);
   }
 

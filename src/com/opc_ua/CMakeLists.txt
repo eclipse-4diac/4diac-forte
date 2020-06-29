@@ -27,15 +27,6 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 if (FORTE_COM_OPC_UA)
 
-    if(NOT "${FORTE_ARCHITECTURE}" STREQUAL "VxWorks") #the compiler used to test vxworks doesn't support ++11
-      if(CYGWIN)
-        forte_add_definition("-std=gnu++11") 
-      else(CYGWIN)
-        forte_add_definition("-std=c++11")
-      endif(CYGWIN)
-
-    endif(NOT "${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
-
     forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/com/opc_ua/opcua_nodesets.cpp) # created file
     
     forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/com/opc_ua/opcua_types.cpp) # created file

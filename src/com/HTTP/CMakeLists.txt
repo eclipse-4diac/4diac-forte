@@ -17,16 +17,6 @@
 forte_add_network_layer(HTTP OFF "http" CHttpComLayer httplayer "Enable an HTTP Com Layer")
 if(FORTE_COM_HTTP)
 
-  if(NOT "${FORTE_ARCHITECTURE}" STREQUAL "VxWorks") #the compiler used to test vxworks doesn't support ++11
-    if(CYGWIN)
-      forte_add_definition("-std=gnu++11") 
-    else(CYGWIN)
-      forte_add_definition("-std=c++11")
-    endif(CYGWIN)
-
-  endif(NOT "${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
-
-
   forte_add_sourcefile_hcpp(httpparser)
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
   forte_add_handler(CHTTP_Handler http_handler)

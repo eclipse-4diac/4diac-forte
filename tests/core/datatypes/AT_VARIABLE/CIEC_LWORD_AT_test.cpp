@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_CASE(AT_VARIABLE_LWORD_READ_BIT)
 
   ARRAY_AT<CIEC_BOOL, CIEC_LWORD, 0, 63> testArray(nTestLWord);
 
-  for(auto i=0;i<64;i++){
+  for(size_t i=0;i<64;i++) {
     BOOST_CHECK_EQUAL(testArray[i], true);
     BOOST_CHECK_EQUAL(testArray.getAccessedOutOfBounds(), false);
   }
@@ -53,10 +53,10 @@ BOOST_AUTO_TEST_CASE(AT_VARIABLE_LWORD_WRITE_BIT)
 
   ARRAY_AT<CIEC_BOOL, CIEC_LWORD, 0, 63> testArray(nTestLWord);
 
-  for(auto i=0;i<64;i++){
+  for(size_t i=0;i<64;i++) {
     nTestLWord = 0xFFFFFFFFFFFFFFFFU;
     testArray[i] = false;
-    for(auto j=0;j<64;j++){
+    for(size_t j=0;j<64;j++) {
       BOOST_CHECK_EQUAL(testArray[j], i!=j);
     }
     BOOST_CHECK_EQUAL(testArray.getAccessedOutOfBounds(), false);
@@ -83,7 +83,7 @@ BOOST_AUTO_TEST_CASE(AT_VARIABLE_LWORD_READ_BYTE)
 
   ARRAY_AT<CIEC_BYTE, CIEC_LWORD, 0, 7> testArray(nTestLWord);
 
-  for(auto i=0;i<8;i++){
+  for(size_t i=0;i<8;i++) {
     BOOST_CHECK_EQUAL((int)testArray[i], 0xFF);
     BOOST_CHECK_EQUAL(testArray.getAccessedOutOfBounds(), false);
   }
@@ -106,10 +106,10 @@ BOOST_AUTO_TEST_CASE(AT_VARIABLE_LWORD_WRITE_BYTE)
 
   ARRAY_AT<CIEC_BYTE, CIEC_LWORD, 0, 7> testArray(nTestLWord);
 
-  for(auto i=0;i<8;i++){
+  for(size_t i=0;i<8;i++) {
     nTestLWord = 0xFFFFFFFFFFFFFFFFU;
     testArray[i] = false;
-    for(auto j=0;j<8;j++){
+    for(size_t j=0;j<8;j++) {
       BOOST_CHECK_EQUAL(testArray[j], i!=j ? 0xFF : false);
     }
     BOOST_CHECK_EQUAL(testArray.getAccessedOutOfBounds(), false);
@@ -136,7 +136,7 @@ BOOST_AUTO_TEST_CASE(AT_VARIABLE_LWORD_READ_WORD)
 
   ARRAY_AT<CIEC_WORD, CIEC_LWORD, 0, 3> testArray(nTestLWord);
 
-  for(auto i=0;i<4;i++){
+  for(size_t i=0;i<4;i++) {
     BOOST_CHECK_EQUAL((int)testArray[i], 0xFFFF);
     BOOST_CHECK_EQUAL(testArray.getAccessedOutOfBounds(), false);
   }
@@ -159,10 +159,10 @@ BOOST_AUTO_TEST_CASE(AT_VARIABLE_LWORD_WRITE_WORD)
 
   ARRAY_AT<CIEC_WORD, CIEC_LWORD, 0, 3> testArray(nTestLWord);
 
-  for(auto i=0;i<4;i++){
+  for(size_t i=0;i<4;i++) {
     nTestLWord = 0xFFFFFFFFFFFFFFFFU;
     testArray[i] = false;
-    for(auto j=0;j<4;j++){
+    for(size_t j=0;j<4;j++) {
       BOOST_CHECK_EQUAL(testArray[j], i!=j ? 0xFFFF : false);
     }
     BOOST_CHECK_EQUAL(testArray.getAccessedOutOfBounds(), false);
@@ -189,7 +189,7 @@ BOOST_AUTO_TEST_CASE(AT_VARIABLE_LWORD_READ_DWORD)
 
   ARRAY_AT<CIEC_DWORD, CIEC_LWORD, 0, 1> testArray(nTestLWord);
 
-  for(auto i=0;i<2;i++){
+  for(size_t i=0;i<2;i++) {
     BOOST_CHECK_EQUAL(testArray[i], 0xFFFFFFFF);
     BOOST_CHECK_EQUAL(testArray.getAccessedOutOfBounds(), false);
   }
@@ -212,10 +212,10 @@ BOOST_AUTO_TEST_CASE(AT_VARIABLE_LWORD_WRITE_DWORD)
 
   ARRAY_AT<CIEC_DWORD, CIEC_LWORD, 0, 1> testArray(nTestLWord);
 
-  for(auto i=0;i<2;i++){
+  for(size_t i=0;i<2;i++) {
     nTestLWord = 0xFFFFFFFFFFFFFFFFU;
     testArray[i] = false;
-    for(auto j=0;j<2;j++){
+    for(size_t j=0;j<2;j++) {
       BOOST_CHECK_EQUAL(testArray[j], i!=j ? 0xFFFFFFFF : false);
     }
     BOOST_CHECK_EQUAL(testArray.getAccessedOutOfBounds(), false);

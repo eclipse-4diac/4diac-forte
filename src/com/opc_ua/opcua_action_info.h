@@ -270,17 +270,18 @@ class CActionInfo {
 
     static const size_t scmMinimumAmounOfParameters = 2; //at least two are needed
 
-    enum IDPositions {
-      eActionType = 0,
-      eEndpoint,
-      eNodePairs
-    };
-
     /**
      * Internal class to parse the parameters that are passed to the factory
      */
     class CActionParser {
       public:
+
+        enum IDPositions {
+          eActionType = 0,
+          eEndpoint,
+          eNodePairs
+        };
+
         /**
          * Retrieves the action type from a string defined in mActionNames
          * @param paParams The string source

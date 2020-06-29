@@ -600,7 +600,7 @@ namespace forte {
       };
 
       template<class c> struct is_scalar {
-          static const bool value = or_<is_integral<c>, is_float<c>>::value;
+          static const bool value = or_<is_integral<c>, is_float<c> >::value;
       };
 
       template<typename T, typename U> struct is_same {

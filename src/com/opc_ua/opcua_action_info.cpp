@@ -41,13 +41,13 @@ CActionInfo* CActionInfo::getActionInfoFromParams(const char *paParams, COPC_UA_
   size_t amountOfParameters = mainParser.parseParameters();
 
   if(scmMinimumAmounOfParameters <= amountOfParameters) {
-    CActionInfo::UA_ActionType action = CActionParser::getActionEnum(mainParser[IDPositions::eActionType]);
+    CActionInfo::UA_ActionType action = CActionParser::getActionEnum(mainParser[CActionParser::eActionType]);
     if(CActionInfo::eActionUnknown != action) {
 
       CIEC_STRING endpoint;
-      size_t startOfNodePairs = IDPositions::eNodePairs;
+      size_t startOfNodePairs = CActionParser::eNodePairs;
 
-      if(!CActionParser::getEndpoint(mainParser[IDPositions::eEndpoint], endpoint)) {
+      if(!CActionParser::getEndpoint(mainParser[CActionParser::eEndpoint], endpoint)) {
         startOfNodePairs--;
       }
 
@@ -155,7 +155,7 @@ bool CActionInfo::checkNodePairInfo() const {
 bool CActionInfo::checkReadAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const {
   bool retVal = false;
   if("" == mEndpoint) {
-    if(forte::com_infra::EComServiceType::e_Subscriber == paFbType && paNoOfRDs == getNoOfNodePairs()) {
+    if(forte::com_infra::e_Subscriber == paFbType && paNoOfRDs == getNoOfNodePairs()) {
       retVal = true;
     } else {
       DEVLOG_ERROR(
@@ -163,7 +163,7 @@ bool CActionInfo::checkReadAction(forte::com_infra::EComServiceType paFbType, un
         mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead]);
     }
   } else {
-    if(forte::com_infra::EComServiceType::e_Client == paFbType && paNoOfRDs == getNoOfNodePairs() && 0 == paNoOfSDs) {
+    if(forte::com_infra::e_Client == paFbType && paNoOfRDs == getNoOfNodePairs() && 0 == paNoOfSDs) {
       retVal = true;
     } else {
       DEVLOG_ERROR(
@@ -177,7 +177,7 @@ bool CActionInfo::checkReadAction(forte::com_infra::EComServiceType paFbType, un
 bool CActionInfo::checkWriteAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const {
   bool retVal = false;
   if("" == mEndpoint) {
-    if(forte::com_infra::EComServiceType::e_Publisher == paFbType && paNoOfSDs == getNoOfNodePairs()) {
+    if(forte::com_infra::e_Publisher == paFbType && paNoOfSDs == getNoOfNodePairs()) {
       retVal = true;
     } else {
       DEVLOG_ERROR(
@@ -185,7 +185,7 @@ bool CActionInfo::checkWriteAction(forte::com_infra::EComServiceType paFbType, u
         mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eWrite]);
     }
   } else {
-    if(forte::com_infra::EComServiceType::e_Client == paFbType && paNoOfSDs == getNoOfNodePairs() && 0 == paNoOfRDs) {
+    if(forte::com_infra::e_Client == paFbType && paNoOfSDs == getNoOfNodePairs() && 0 == paNoOfRDs) {
       retVal = true;
     } else {
       DEVLOG_ERROR(
@@ -198,7 +198,7 @@ bool CActionInfo::checkWriteAction(forte::com_infra::EComServiceType paFbType, u
 
 bool CActionInfo::checkCreateMethodAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int) const {
   bool retVal = false;
-  if(forte::com_infra::EComServiceType::e_Server == paFbType && 1 == getNoOfNodePairs()) {
+  if(forte::com_infra::e_Server == paFbType && 1 == getNoOfNodePairs()) {
     retVal = true;
   } else {
     DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed using a Server FB, the amount of BrowseName,NodeId pairs should be 1\n",
@@ -209,7 +209,7 @@ bool CActionInfo::checkCreateMethodAction(forte::com_infra::EComServiceType paFb
 
 bool CActionInfo::checkCallMethodAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int) const {
   bool retVal = false;
-  if(forte::com_infra::EComServiceType::e_Client == paFbType && 1 == getNoOfNodePairs() && "" != (*(mNodePair.begin()))->mBrowsePath) {
+  if(forte::com_infra::e_Client == paFbType && 1 == getNoOfNodePairs() && "" != (*(mNodePair.begin()))->mBrowsePath) {
     retVal = true;
   } else {
     DEVLOG_ERROR(
@@ -221,7 +221,7 @@ bool CActionInfo::checkCallMethodAction(forte::com_infra::EComServiceType paFbTy
 
 bool CActionInfo::checkSubscribeAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int) const {
   bool retVal = false;
-  if(forte::com_infra::EComServiceType::e_Subscriber == paFbType && paNoOfRDs == getNoOfNodePairs()) {
+  if(forte::com_infra::e_Subscriber == paFbType && paNoOfRDs == getNoOfNodePairs()) {
     retVal = true;
   } else {
     DEVLOG_ERROR(
@@ -233,7 +233,7 @@ bool CActionInfo::checkSubscribeAction(forte::com_infra::EComServiceType paFbTyp
 
 bool CActionInfo::checkCreateObjectAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int paNoOfSDs) const {
   bool retVal = false;
-  if(forte::com_infra::EComServiceType::e_Publisher == paFbType && 2 == getNoOfNodePairs() && 0 == paNoOfSDs) {
+  if(forte::com_infra::e_Publisher == paFbType && 2 == getNoOfNodePairs() && 0 == paNoOfSDs) {
     retVal = true;
   } else {
     DEVLOG_ERROR(
@@ -245,7 +245,7 @@ bool CActionInfo::checkCreateObjectAction(forte::com_infra::EComServiceType paFb
 
 bool CActionInfo::checkCreateVariableAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int paNoOfSDs) const {
   bool retVal = false;
-  if(forte::com_infra::EComServiceType::e_Publisher == paFbType && 3 == getNoOfNodePairs() && 0 == paNoOfSDs) {
+  if(forte::com_infra::e_Publisher == paFbType && 3 == getNoOfNodePairs() && 0 == paNoOfSDs) {
     retVal = true;
   } else {
     DEVLOG_ERROR(
@@ -257,7 +257,7 @@ bool CActionInfo::checkCreateVariableAction(forte::com_infra::EComServiceType pa
 
 bool CActionInfo::checkDeleteNodeAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int paNoOfSDs) const {
   bool retVal = false;
-  if(forte::com_infra::EComServiceType::e_Publisher == paFbType && 1 == getNoOfNodePairs() && 0 == paNoOfSDs) {
+  if(forte::com_infra::e_Publisher == paFbType && 1 == getNoOfNodePairs() && 0 == paNoOfSDs) {
     retVal = true;
   } else {
     DEVLOG_ERROR(
@@ -299,12 +299,12 @@ bool CActionInfo::CActionParser::handlePair(const char *paPair, CSinglyLinkedLis
   CIEC_STRING browsePathResult;
   UA_NodeId *nodeIdResult = 0;
   size_t noOfParameters = pairParser.parseParameters();
-  if(NodePairPositions::eMaxNumberOfPositions == noOfParameters) {
-    browsePathResult = pairParser[NodePairPositions::eBrowseName];
-    nodeIdResult = parseNodeId(pairParser[NodePairPositions::eNodeId]);
+  if(CActionParser::eMaxNumberOfPositions == noOfParameters) {
+    browsePathResult = pairParser[CActionParser::eBrowseName];
+    nodeIdResult = parseNodeId(pairParser[CActionParser::eNodeId]);
     retVal = nodeIdResult;
-  } else if(NodePairPositions::eMaxNumberOfPositions - 1 == noOfParameters) { //no NodeId was provided
-    browsePathResult = pairParser[NodePairPositions::eBrowseName];
+  } else if(CActionParser::eMaxNumberOfPositions - 1 == noOfParameters) { //no NodeId was provided
+    browsePathResult = pairParser[CActionParser::eBrowseName];
     retVal = true;
   } else {
     DEVLOG_ERROR("[OPC UA ACTION]: The pair %s doesn't have the proper format BROWSENAME,NODEID\n", paPair);
@@ -327,14 +327,14 @@ UA_NodeId* CActionInfo::CActionParser::parseNodeId(const char *paNodeIdString) {
   size_t numberOfParameters = mainParser.parseParameters();
 
   switch(numberOfParameters){
-    case NodeIdPositions::eMaxNumberOfNodeIdPositions: //Namespace is present
+    case CActionParser::eMaxNumberOfNodeIdPositions: //Namespace is present
       identifierPosition++;
       if(!parseNamespace(mainParser[0], *resultNodeId)) {
         somethingFailed = true;
         break;
       }
       // fall through
-    case NodeIdPositions::eMaxNumberOfNodeIdPositions - 1: //NOSONAR
+    case CActionParser::eMaxNumberOfNodeIdPositions - 1: //NOSONAR
       if(!parseIdentifier(mainParser[identifierPosition], *resultNodeId)) {
         somethingFailed = true;
       }
@@ -363,19 +363,19 @@ bool CActionInfo::CActionParser::parseNamespace(const char *paNamespace, UA_Node
 
 bool CActionInfo::CActionParser::parseIdentifier(const char *paIdentifier, UA_NodeId &paResult) {
   CParameterParser identifierParser(paIdentifier, '='); //<identifiertype>=<identifier>
-  if(NodeIdItenfierPositions::eMaxNumberOfNodeIdIdenfiertPositions == identifierParser.parseParameters()) {
-    if(0 == strcmp(identifierParser[NodeIdItenfierPositions::eIdenfierType], "i")) { //numeric
+  if(CActionParser::eMaxNumberOfNodeIdIdenfiertPositions == identifierParser.parseParameters()) {
+    if(0 == strcmp(identifierParser[CActionParser::eIdenfierType], "i")) { //numeric
       paResult.identifierType = UA_NODEIDTYPE_NUMERIC;
-      paResult.identifier.numeric = static_cast<UA_UInt32>(forte::core::util::strtoul(identifierParser[NodeIdItenfierPositions::eIdenfierValue], 0, 10)); //TODO: should we check for return value here?
-    } else if(0 == strcmp(identifierParser[NodeIdItenfierPositions::eIdenfierType], "s")) { //string
+      paResult.identifier.numeric = static_cast<UA_UInt32>(forte::core::util::strtoul(identifierParser[CActionParser::eIdenfierValue], 0, 10)); //TODO: should we check for return value here?
+    } else if(0 == strcmp(identifierParser[CActionParser::eIdenfierType], "s")) { //string
       paResult.identifierType = UA_NODEIDTYPE_STRING;
-      paResult.identifier.string = UA_String_fromChars(identifierParser[NodeIdItenfierPositions::eIdenfierValue]);
-    } else if(0 == strcmp(identifierParser[NodeIdItenfierPositions::eIdenfierType], "g")) { //GUID
+      paResult.identifier.string = UA_String_fromChars(identifierParser[CActionParser::eIdenfierValue]);
+    } else if(0 == strcmp(identifierParser[CActionParser::eIdenfierType], "g")) { //GUID
       DEVLOG_ERROR("[OPC UA ACTION]:GUID type is not yet implemented\n");
       return false;
-    } else if(0 == strcmp(identifierParser[NodeIdItenfierPositions::eIdenfierType], "b")) { //byteString
+    } else if(0 == strcmp(identifierParser[CActionParser::eIdenfierType], "b")) { //byteString
       paResult.identifierType = UA_NODEIDTYPE_BYTESTRING;
-      paResult.identifier.byteString = UA_BYTESTRING_ALLOC(identifierParser[NodeIdItenfierPositions::eIdenfierValue]);
+      paResult.identifier.byteString = UA_BYTESTRING_ALLOC(identifierParser[CActionParser::eIdenfierValue]);
     } else {
       DEVLOG_ERROR("[OPC UA ACTION]: The identifier type %s wasn't recognized among the possible values [i, s, b]\n", identifierParser[0]);
       return false;

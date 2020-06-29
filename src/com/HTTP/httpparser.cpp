@@ -125,14 +125,14 @@ bool forte::com_infra::CHttpParser::parsePutPostRequest(CIEC_STRING& paPath, CIE
 
 CHttpComLayer::ERequestType forte::com_infra::CHttpParser::getTypeOfRequest(const char* paRequest) {
   if(0 == strncmp(paRequest, "GET ", 4)) {
-    return CHttpComLayer::ERequestType::e_GET;
+    return CHttpComLayer::e_GET;
   } else if(0 == strncmp(paRequest, "PUT ", 4)) {
-    return CHttpComLayer::ERequestType::e_PUT;
+    return CHttpComLayer::e_PUT;
   } else if(0 == strncmp(paRequest, "POST ", 5)) {
-    return CHttpComLayer::ERequestType::e_POST;
+    return CHttpComLayer::e_POST;
   } else {
     DEVLOG_ERROR("[HTTP Parser] Invalid HTTP request\n");
-    return CHttpComLayer::ERequestType::e_NOTSET;
+    return CHttpComLayer::e_NOTSET;
   }
 }
 

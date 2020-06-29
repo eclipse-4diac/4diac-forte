@@ -633,7 +633,10 @@ UA_StatusCode COPC_UA_Local_Handler::updateNodeValue(const UA_NodeId &paNodeId, 
 
 UA_StatusCode COPC_UA_Local_Handler::registerVariableCallBack(const UA_NodeId &paNodeId, CActionInfo &paActionInfo, size_t paPortIndex) {
 
-  UA_StatusCode retVal = UA_Server_setVariableNode_valueCallback(mUaServer, paNodeId, { 0, COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onWrite });
+  const UA_ValueCallback writeCallback = {
+    0,
+    COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onWrite };
+  UA_StatusCode retVal = UA_Server_setVariableNode_valueCallback(mUaServer, paNodeId, writeCallback);
   if(UA_STATUSCODE_GOOD == retVal) {
 
     UA_VariableContext_Handle variableContext(paActionInfo, paPortIndex);
