@@ -484,7 +484,7 @@ template<typename T> struct DIV_Scalar {
 };
 
 template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type DIV(const T &pa_roIN1, const U &pa_roIN2) {
-  return APPLY_WITH_LITERALS<T, U, DIV_Function>(pa_roIN1, pa_roIN2);
+  return APPLY_WITH_LITERALS<T, U, DIV_Scalar, DIV_Function>(pa_roIN1, pa_roIN2);
 }
 
 template<typename T> const T DIV(const T &pa_roIN1, const T &pa_roIN2) {
