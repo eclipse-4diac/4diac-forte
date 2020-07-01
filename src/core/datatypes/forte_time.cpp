@@ -55,17 +55,16 @@ int CIEC_TIME::fromString(const char *paValue) {
         nRetVal++;
       }
       TValueType nTimeFactor = 1;
+      bool bEnd = false;
       do {
         TValueType nBuf = forte::core::util::strtol(paValue, &pcEnd, 10);
         switch(tolower(*pcEnd)){
           case 'd':
             nTimeFactor = 24 * 60 * 60 * cgForteTimeBaseUnitsPerSecond;
             break;
-
           case 'h':
             nTimeFactor = 60 * 60 * cgForteTimeBaseUnitsPerSecond;
             break;
-
           case 'm':
             if('s' == tolower(*(pcEnd + 1))) {
               nTimeFactor = cgForteTimeBaseUnitsPerSecond / forte::core::constants::cMillisecondsPerSecond;
@@ -97,13 +96,23 @@ int CIEC_TIME::fromString(const char *paValue) {
             //ignore leading underscores
             break;
           default:
-            // we haven't got a unit mark it as error
-            return -1;
+            if((pcEnd != paValue) || (0 == nIntVal)){   //we could not parse anything yet so wrong literal
+              //we have a number without unit or it is the first entry which we could not pars then this is an error
+              return -1;
+            }
+             // we are in an array and at the end of the literal
+            bEnd = true;
+            break;
         }
-        nRetVal += static_cast<int>(pcEnd - paValue) + 1;
-        paValue = pcEnd + 1;
+        nRetVal += static_cast<int>(pcEnd - paValue);
+        paValue = pcEnd;
+        if(!bEnd) {
+          ++nRetVal;
+          ++paValue;
+        }
         nIntVal += (nBuf * nTimeFactor * nTimeSignFactor);
-      } while('\0' != *paValue);
+      } while((!bEnd) && ('\0' != *paValue));
+
     } else {
       return -1;
     }

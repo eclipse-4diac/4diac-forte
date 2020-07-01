@@ -432,4 +432,18 @@ BOOST_AUTO_TEST_CASE(parse_wrong_time_prefix)
   BOOST_CHECK_EQUAL(time.getInNanoSeconds(), 0);
 }
 
+BOOST_AUTO_TEST_CASE(parse_time_in_struct_or_array_literal)
+{
+  CIEC_TIME time;
+
+  BOOST_CHECK_EQUAL(7, time.fromString("T#999ms, "));
+  BOOST_CHECK_EQUAL(time.getInMilliSeconds(), 999);
+
+  BOOST_CHECK_EQUAL(6, time.fromString("T#23ms , "));
+  BOOST_CHECK_EQUAL(time.getInMilliSeconds(), 23);
+
+  BOOST_CHECK_EQUAL(12, time.fromString("T#10325643us,"));
+  BOOST_CHECK_EQUAL(time.getInMicroSeconds(), 10325643);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
