@@ -144,5 +144,15 @@ BOOST_AUTO_TEST_SUITE(STRUCT_MUX_FailedCreationTest)
     BOOST_CHECK(0 == fb);
   }
 
+BOOST_AUTO_TEST_CASE(emptyStruct) {
+CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1Struct_Muxer_Test_Struct_3, 0);
+BOOST_CHECK(0 == fb);
+}
+
+BOOST_AUTO_TEST_CASE(bigStruct) {
+CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1Struct_Muxer_Test_Struct_4, 0);
+BOOST_CHECK(0 == fb);
+}
+
 }
 

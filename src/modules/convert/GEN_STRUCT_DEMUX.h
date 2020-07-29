@@ -38,6 +38,8 @@ class GEN_STRUCT_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
        return *static_cast<CIEC_STRUCT*>(getDI(0));
     }
 
+    //copy constructor, declared but not defined to avoid copying it
+    GEN_STRUCT_DEMUX(const GEN_STRUCT_DEMUX &paOther);
 
   public:
     GEN_STRUCT_DEMUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);

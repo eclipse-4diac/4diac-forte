@@ -71,5 +71,33 @@ class CIEC_Struct_Muxer_Test_Struct_2 : public CIEC_STRUCT {
     static const CStringDictionary::TStringId scm_unElementNames[];
 };
 
+class CIEC_Struct_Muxer_Test_Struct_3 : public CIEC_STRUCT {
+  DECLARE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_3)
+
+  public:
+    CIEC_Struct_Muxer_Test_Struct_3();
+
+    virtual ~CIEC_Struct_Muxer_Test_Struct_3() {
+    }
+
+  private:
+    static const CStringDictionary::TStringId scm_unElementTypes[];
+    static const CStringDictionary::TStringId scm_unElementNames[];
+};
+
+class CIEC_Struct_Muxer_Test_Struct_4 : public CIEC_STRUCT {
+  DECLARE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_4)
+
+  public:
+    CIEC_Struct_Muxer_Test_Struct_4();
+
+    virtual ~CIEC_Struct_Muxer_Test_Struct_4() {
+    }
+
+  private:
+    static const CStringDictionary::TStringId scm_unElementTypes[];
+    static const CStringDictionary::TStringId scm_unElementNames[];
+};
+
 
 #endif /* TESTS_MODULES_CONVERT_STRUCT_MUX_DEMUX_DATA_H_ */

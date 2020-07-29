@@ -38,6 +38,9 @@ class GEN_STRUCT_MUX : public CGenFunctionBlock<CFunctionBlock> {
        return *static_cast<CIEC_STRUCT*>(getDO(0));
      }
 
+    //copy constructor, declared but not defined to avoid copying it
+    GEN_STRUCT_MUX(const GEN_STRUCT_MUX &paOther);
+
 
   public:
     GEN_STRUCT_MUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
