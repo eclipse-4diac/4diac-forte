@@ -36,27 +36,27 @@ class CAnyAdapter : public CAdapter{
     virtual bool disconnect(CAdapterConnection *pa_poAdConn);
 
     //! Helper functions allowing to retrieve interface information from any_adpaters TODO look for Doxygen grouping syntax
-    TForteUInt8 getNumEIs(){
+    TForteUInt8 getNumEIs() const {
       return m_pstInterfaceSpec->m_nNumEIs;
     }
 
-    TForteUInt8 getNumEOs(){
+    TForteUInt8 getNumEOs() const {
       return m_pstInterfaceSpec->m_nNumEOs;
     }
 
-    const TForteInt16* getEIWithIndexes(){
+    const TForteInt16* getEIWithIndexes() const {
       return m_pstInterfaceSpec->m_anEIWithIndexes;
     }
 
-    const TDataIOID* getEIWiths(){
+    const TDataIOID* getEIWiths() const {
       return m_pstInterfaceSpec->m_anEIWith;
     }
 
-    TForteUInt8 getNumDIs(){
+    TForteUInt8 getNumDIs() const {
       return m_pstInterfaceSpec->m_nNumDIs;
     }
 
-    const CStringDictionary::TStringId* getDataInputNames(){
+    const CStringDictionary::TStringId* getDataInputNames() const {
       return m_pstInterfaceSpec->m_aunDINames;
     }
 
@@ -64,11 +64,11 @@ class CAnyAdapter : public CAdapter{
       return getDI(0);
     }
 
-    TForteUInt8 getNumDOs(){
+    TForteUInt8 getNumDOs() const {
       return m_pstInterfaceSpec->m_nNumDOs;
     }
 
-    const CStringDictionary::TStringId* getDataOutputNames(){
+    const CStringDictionary::TStringId* getDataOutputNames() const {
       return m_pstInterfaceSpec->m_aunDONames;
     }
 

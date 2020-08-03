@@ -142,7 +142,7 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
      * \param paCMD the command type
      */
     void generateLongResponse(EMGMResponse paResp, forte::core::SManagementCMD &paCMD);
-    void appedIdentifierName(CIEC_STRING& paDest, forte::core::TNameIdentifier &paIdentifier);
+    static void appendIdentifierName(CIEC_STRING& paDest, forte::core::TNameIdentifier& paIdentifier);
 
     CIEC_BOOL &QI() {
       return *static_cast<CIEC_BOOL*>(getDI(0));

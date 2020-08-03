@@ -65,7 +65,7 @@ public:
       OUT().saveAssign(MAX<T> (oMin, oMax));
   }
 
-  template<typename T> void calculateValueString(){
+  template<typename T> void calculateValueString() const {
     //TODO fill this function
   }
   virtual ~FORTE_F_MAX(){};

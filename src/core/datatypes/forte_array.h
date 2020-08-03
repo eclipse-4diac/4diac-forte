@@ -175,7 +175,7 @@ class CIEC_ARRAY : public CIEC_ANY_DERIVED{
 
     void initializeFromString(TForteUInt16 paArraySize, int* paValueLen, TForteUInt16 paPosition, const char* paSrcString, CIEC_ANY ** paBufVal);
 
-    void findNextNonBlankSpace(const char** paRunner);
+    static void findNextNonBlankSpace(const char** paRunner);
   };
 
 #endif /* FORTE_SUPPORT_ARRAYS */

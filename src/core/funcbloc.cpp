@@ -128,7 +128,7 @@ bool CFunctionBlock::connectDI(TPortId paDIPortId, CDataConnection *pa_poDataCon
   return bRetVal;
 }
 
-void CFunctionBlock::configureGenericDI(TPortId paDIPortId, const CIEC_ANY *paRefValue){
+void CFunctionBlock::configureGenericDI(TPortId paDIPortId, const CIEC_ANY* paRefValue) {
   if(getDI(paDIPortId)->getDataTypeID() == CIEC_ANY::e_ANY && (0 != paRefValue)) {
     paRefValue->clone(reinterpret_cast<TForteByte *>(getDI(paDIPortId)));
   }

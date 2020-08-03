@@ -171,7 +171,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
 
     void clear();
 
-    void findNextNonBlankSpace(const char** paRunner);
+    static void findNextNonBlankSpace(const char** paRunner);
 
     bool initializeFromString(int *paLength, CIEC_ANY *paMember, const char** paRunner, bool* paErrorOcurred);
 

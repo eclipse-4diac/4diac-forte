@@ -121,7 +121,7 @@ bool CHttpComLayer::checkSDInPOSTAndPUT(size_t paNoOfSD) {
   return evetythingOK;
 }
 
-bool CHttpComLayer::checkSDsAndRDsType() {
+bool CHttpComLayer::checkSDsAndRDsType() const {
 
   for(size_t i = 2; i < m_poFb->getNumSD(); i++) {
     CIEC_ANY::EDataTypeID typeToCheck = m_poFb->getDI(static_cast<unsigned int>(i))->getDataTypeID();
@@ -396,7 +396,7 @@ CIEC_STRING& forte::com_infra::CHttpComLayer::getHost() {
   return mHost;
 }
 
-TForteUInt16 forte::com_infra::CHttpComLayer::getPort() {
+TForteUInt16 forte::com_infra::CHttpComLayer::getPort() const {
   return mPort;
 }
 

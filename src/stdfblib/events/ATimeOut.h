@@ -29,7 +29,7 @@ private:
 
  public:
   static const TEventID scm_nEventTimeOutID = 0;
-  int TimeOut() {
+    int TimeOut() const {
     return m_nParentAdapterListEventID + scm_nEventTimeOutID;
   }
  private:
@@ -38,11 +38,11 @@ private:
 
  public:
   static const TEventID scm_nEventSTARTID = 0;
-  int START() {
+    int START() const {
     return m_nParentAdapterListEventID + scm_nEventSTARTID;
   }
   static const TEventID scm_nEventSTOPID = 1;
-  int STOP() {
+    int STOP() const {
     return m_nParentAdapterListEventID + scm_nEventSTOPID;
   }
  private:

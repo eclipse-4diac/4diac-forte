@@ -121,7 +121,7 @@ EComResponse CCommFB::sendData() {
   return resp;
 }
 
-bool CCommFB::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec){
+bool CCommFB::createInterfaceSpec(const char* paConfigString, SFBInterfaceSpec& paInterfaceSpec) {
   TIdentifier tempstring;
   const char *sParamA = 0;
   const char *sParamB = 0;
@@ -173,7 +173,7 @@ bool CCommFB::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &
   return true;
 }
 
-void CCommFB::configureDIs(const char *paDIConfigString, SFBInterfaceSpec &paInterfaceSpec){
+void CCommFB::configureDIs(const char* paDIConfigString, SFBInterfaceSpec& paInterfaceSpec) const {
   CStringDictionary::TStringId* diDataTypeNames;
   CStringDictionary::TStringId* diNames;
   TDataIOID* eiWith;
@@ -220,7 +220,7 @@ void CCommFB::configureDIs(const char *paDIConfigString, SFBInterfaceSpec &paInt
     diNames[1] = g_nStringIdID;
 }
 
-void CCommFB::configureDOs(const char *paDOConfigString, SFBInterfaceSpec &paInterfaceSpec){
+void CCommFB::configureDOs(const char* paDOConfigString, SFBInterfaceSpec& paInterfaceSpec) const {
   CStringDictionary::TStringId* doDataTypeNames;
   CStringDictionary::TStringId* doNames;
   TDataIOID* eoWith;

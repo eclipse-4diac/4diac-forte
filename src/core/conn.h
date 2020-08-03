@@ -144,7 +144,7 @@ class CConnection{
   private:
 
     //! Check if there is already a connection within this connection with the same dst.
-    bool dstExists(const CConnectionPoint &paDestPoint);
+    bool dstExists(const CConnectionPoint& paDestPoint) const;
 };
 
 #endif /*_CONN_H_*/

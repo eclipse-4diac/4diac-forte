@@ -259,7 +259,7 @@ void CCompositeFB::prepareIf2InEventCons(){
 }
 
 void CCompositeFB::establishConnection(CConnection *paCon, CFunctionBlock *paDstFb,
-    CStringDictionary::TStringId paDstNameId){
+    CStringDictionary::TStringId paDstNameId) {
   if(this == paDstFb){
     paCon->connectToCFBInterface(paDstFb, paDstNameId);
   }
@@ -321,7 +321,7 @@ void CCompositeFB::prepareIf2InDataCons(){
   }
 }
 
-void CCompositeFB::setParams(){
+void CCompositeFB::setParams() {
   for(unsigned int i = 0; i < cm_cpoFBNData->m_nNumParams; ++i){
     const SCFB_FBParameter *pstCurrentParam = &(cm_cpoFBNData->m_pstParams[i]);
     CIEC_ANY *poDI =

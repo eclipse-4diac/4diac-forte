@@ -55,7 +55,7 @@ namespace forte {
 
         CIEC_STRING& getHost();
 
-        TForteUInt16 getPort();
+        TForteUInt16 getPort() const;
 
       private:
 
@@ -77,7 +77,7 @@ namespace forte {
 
         bool checkSDInPOSTAndPUT(size_t paNoOfSD);
 
-        bool checkSDsAndRDsType();
+        bool checkSDsAndRDsType() const;
 
         bool handleAddress(const char* paAddress, size_t paNoOfSDs);
 

@@ -494,7 +494,7 @@ void DEV_MGR::generateLongResponse(EMGMResponse paResp, forte::core::SManagement
     RESP().append(">\n  ");
     if(paCMD.mCMD == cg_nMGM_CMD_Read){
       RESP().append("<Connection Source=\"");
-      appedIdentifierName(RESP(), paCMD.mFirstParam);
+      appendIdentifierName(RESP(), paCMD.mFirstParam);
       RESP().append("\" Destination=\"");
       RESP().append(paCMD.mAdditionalParams.getValue());
       RESP().append("\" />");
@@ -519,7 +519,7 @@ void DEV_MGR::generateLongResponse(EMGMResponse paResp, forte::core::SManagement
           RESP().append("\" />");
         } else { //Type == "*"
           RESP().append("<FB Name=\"");
-          appedIdentifierName(RESP(), paCMD.mFirstParam);
+          appendIdentifierName(RESP(), paCMD.mFirstParam);
           RESP().append("\" Type=\"");
           RESP().append(paCMD.mAdditionalParams.getValue());
           RESP().append("\" />");
@@ -556,7 +556,7 @@ void DEV_MGR::generateLongResponse(EMGMResponse paResp, forte::core::SManagement
   RESP().append("\n</Response>");
 }
 
-void DEV_MGR::appedIdentifierName(CIEC_STRING& paDest, forte::core::TNameIdentifier &paIdentifier){
+void DEV_MGR::appendIdentifierName(CIEC_STRING& paDest, forte::core::TNameIdentifier& paIdentifier) {
   if(!paIdentifier.isEmpty()){
     for(forte::core::TNameIdentifier::CIterator runner(paIdentifier.begin());
         runner != paIdentifier.end(); ++runner){

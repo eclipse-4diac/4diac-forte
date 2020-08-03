@@ -28,7 +28,7 @@ namespace forte {
           virtual void set(const CIEC_ANY &);
           void get(CIEC_ANY &);
 
-          bool equal(unsigned char* paOldImage);
+          bool equal(unsigned char* paOldImage) const;
 
         protected:
           virtual void onObserver(IOObserver *paObserver);

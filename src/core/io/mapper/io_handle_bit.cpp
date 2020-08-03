@@ -50,7 +50,7 @@ void IOHandleBit::get(CIEC_ANY &paState) {
   static_cast<CIEC_BOOL&>(paState) = (*(mImage + mOffset) & mMask) != 0;
 }
 
-bool IOHandleBit::equal(uint8_t* paOldImage) {
+bool IOHandleBit::equal(uint8_t* paOldImage) const {
   return (*(mImage + mOffset) & mMask) == (*(paOldImage + mOffset) & mMask);
 }
 

@@ -352,7 +352,7 @@ public:
   /*! \brief read the state of the Out of Bounds flag
    *
    */
-  bool getAccessedOutOfBounds() {
+    bool getAccessedOutOfBounds() const {
     return accessedOutOfBounds;
   }
 

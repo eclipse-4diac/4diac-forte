@@ -80,13 +80,10 @@ namespace forte {
         EMGMResponse resetEventCount(forte::core::TNameIdentifier &paNameList);
 
         SFBMonitoringEntry &findOrCreateFBMonitoringEntry(CFunctionBlock *pa_poFB, forte::core::TNameIdentifier &paNameList);
-        void addDataWatch(SFBMonitoringEntry &pa_roFBMonitoringEntry,
-            CStringDictionary::TStringId pa_unPortId, CIEC_ANY &pa_poDataVal);
-        bool removeDataWatch(SFBMonitoringEntry &pa_roFBMonitoringEntry,
-            CStringDictionary::TStringId pa_unPortId);
-        void addEventWatch(SFBMonitoringEntry &paFBMonitoringEntry, CStringDictionary::TStringId paPortId, TForteUInt32 &paEventData);
-        bool removeEventWatch(SFBMonitoringEntry &pa_roFBMonitoringEntry,
-            CStringDictionary::TStringId pa_unPortId);
+        static void addDataWatch(SFBMonitoringEntry& pa_roFBMonitoringEntry, CStringDictionary::TStringId pa_unPortId, CIEC_ANY& pa_poDataVal);
+        static bool removeDataWatch(SFBMonitoringEntry& pa_roFBMonitoringEntry, CStringDictionary::TStringId pa_unPortId);
+        static void addEventWatch(SFBMonitoringEntry& paFBMonitoringEntry, CStringDictionary::TStringId paPortId, TForteUInt32& paEventData);
+        static bool removeEventWatch(SFBMonitoringEntry& pa_roFBMonitoringEntry, CStringDictionary::TStringId pa_unPortId);
         void readResourceWatches(CIEC_STRING &pa_roResponse);
 
         static void appendDataWatch(CIEC_STRING &pa_roResponse,

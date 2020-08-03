@@ -64,7 +64,7 @@ public:
     OUT().saveAssign(GE(oIn1, oIn2));
   }
 
-  template<typename T> void calculateValueString() {
+  template<typename T> void calculateValueString() const {
      //TODO fill this function
      DEVLOG_WARNING("STRING and WSTRING currently not supported");
    }

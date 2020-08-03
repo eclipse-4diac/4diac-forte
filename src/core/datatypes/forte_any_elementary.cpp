@@ -293,7 +293,7 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *pa_pacValue){
   return nRetVal;
 }
 
-int CIEC_ANY_ELEMENTARY::checkTypeSpec(const char *pa_pacValue, const char *pa_pacHashPos){
+int CIEC_ANY_ELEMENTARY::checkTypeSpec(const char* pa_pacValue, const char* pa_pacHashPos) const {
   int nRetVal = -1;
 
   CStringDictionary::TStringId nTypeNameId = parseTypeName(pa_pacValue, pa_pacHashPos);

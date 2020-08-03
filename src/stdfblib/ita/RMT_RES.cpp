@@ -104,6 +104,6 @@ RMT_RES::RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_
 RMT_RES::~RMT_RES(){
 }
 
-void RMT_RES::joinResourceThread(){
+void RMT_RES::joinResourceThread() const {
   getResourceEventExecution()->joinEventChainExecutionThread();
 }

@@ -50,10 +50,10 @@ class CParameterParser{
     std::vector<const char *> mParameterLocations;
     const char mSeparator;
 
-    void moveToPositionOfFirstNonWhiteSpaceCharacter(char** paParsePosition);
+    void moveToPositionOfFirstNonWhiteSpaceCharacter(char** paParsePosition) const;
     void saveStartPositionForParameterSubstring(char* paParsePosition);
-    void moveToPositionOfNextParameterSeparatorOrEndOfString(char** paParsePosition);
-    void trimTrailingWhiteSpacesOfParameterSubstring(char* paParsePosition, bool isSpace);
+    void moveToPositionOfNextParameterSeparatorOrEndOfString(char** paParsePosition) const;
+    void trimTrailingWhiteSpacesOfParameterSubstring(char* paParsePosition, bool isSpace) const;
 
     //we don't want that parser to be copied or assigned therefore
     //the copy constructor and assignment operator are declared private
