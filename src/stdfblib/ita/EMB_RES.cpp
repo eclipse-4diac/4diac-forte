@@ -16,18 +16,19 @@
 #include "EMB_RES_gen.cpp"
 #endif
 
+#include <ecetFactory.h>
+#include <ecet.h>
 
 DEFINE_FIRMWARE_FB(EMB_RES, g_nStringIdEMB_RES);
 
-const SFBInterfaceSpec EMB_RES::scm_stFBInterfaceSpec = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+const SFBInterfaceSpec EMB_RES::scm_stFBInterfaceSpec = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-EMB_RES::EMB_RES(CStringDictionary::TStringId pa_nInstanceNameId,
-    CResource* pa_poDevice) :
-  CResource(pa_poDevice, 0, pa_nInstanceNameId, 0, 0){
+EMB_RES::EMB_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poDevice) :
+    CResource(pa_poDevice, CEventChainExecutionThreadFactory::createEventChainExecutionThread<CEventChainExecutionThread>(), 0, pa_nInstanceNameId, 0, 0) {
 
   addFB(CTypeLib::createFB(g_nStringIdSTART, g_nStringIdE_RESTART, this));
 }
 
-EMB_RES::~EMB_RES(){
+EMB_RES::~EMB_RES() {
 }
 

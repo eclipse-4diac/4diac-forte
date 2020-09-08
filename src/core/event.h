@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
+ *                      2020 TU Wien ACIN
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,12 +11,13 @@
  * Contributors:
  *    Gunnar Grabmaier, Thomas Strasser, Alois Zoitl
  *      - initial implementation and rework communication infrastructure
+ *    Peter Gsellmann - added constant for receiving data with SUBSCRIBE FBs
+ *                      in IEC 61131-3 PROGRAMs
  *******************************************************************************/
 #ifndef _EVENT_H_
 #define _EVENT_H_
 
 #include "../arch/datatype.h"
-
 
 /*! \ingroup CORE\brief Datatype for holding the IDs of event inputs.
  *
@@ -30,6 +32,8 @@ class CConnectionPoint;
 const TEventID cg_nInvalidEventID = cg_unInvalidPortId;
 //!\ingroup CORE Constant for the invalid event input id
 const TEventID cg_nExternalEventID = 254;
+//!\ingroup CORE Constant for receiving data with SUBSCRIBE FBs, which sets the response to e_ProcessDataOk
+const TEventID cg_nExternal61131EventID = 253;
 
 //!\brief With this marker events are anotated that are from the internals of a CFB to the interface of the CFB
 const TPortId cgInternal2InterfaceMarker = 0x100;
@@ -37,7 +41,7 @@ const TPortId cgInternal2InterfaceMarker = 0x100;
 const TPortId cgInternal2InterfaceRemovalMask = 0xFF;
 
 /*!\ingroup CORE \brief Structure to hold the information needed for delivering input events to FBs.
-*/
+ */
 typedef CConnectionPoint SEventEntry;
 
 typedef SEventEntry *TEventEntryPtr;

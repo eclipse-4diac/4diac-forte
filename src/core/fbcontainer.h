@@ -23,12 +23,12 @@ class CFunctionBlock;
 namespace forte {
   namespace core {
 
-    class CFBContainer{
+    class CFBContainer {
       public:
         CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer *paParent);
         virtual ~CFBContainer();
 
-        CStringDictionary::TStringId getName() const{
+        CStringDictionary::TStringId getName() const {
           return mContainerName;
         }
 
@@ -46,9 +46,9 @@ namespace forte {
          */
         EMGMResponse addFB(CFunctionBlock *pa_poFuncBlock);
 
-        typedef CSinglyLinkedList<CFunctionBlock *> TFunctionBlockList;
+        typedef CSinglyLinkedList<CFunctionBlock*> TFunctionBlockList;
 
-        TFunctionBlockList &getFBList(){
+        TFunctionBlockList& getFBList() {
           return mFunctionBlocks;
         }
 
@@ -61,8 +61,7 @@ namespace forte {
          * @param paRes           the resource this container is contained in and in which the fb should reside
          * @return response of the command execution as defined in IEC 61499
          */
-        EMGMResponse createFB(forte::core::TNameIdentifier::CIterator &paNameListIt,
-            CStringDictionary::TStringId paTypeName, CResource *paRes);
+        EMGMResponse createFB(forte::core::TNameIdentifier::CIterator &paNameListIt, CStringDictionary::TStringId paTypeName, CResource *paRes);
 
         /*!\brief Delete a FB instance with given name
          *
@@ -74,14 +73,15 @@ namespace forte {
         /*! get fb contained in this fbcontainer
          *
          */
-        CFunctionBlock *getFB(CStringDictionary::TStringId paFBName);
-        CFBContainer *getFBContainer(CStringDictionary::TStringId paContainerName);
+        CFunctionBlock* getFB(CStringDictionary::TStringId paFBName);
+        CFBContainer* getFBContainer(CStringDictionary::TStringId paContainerName);
 
         //! Change the execution state of all contained FBs and also recursively in all contained containers
         EMGMResponse changeContainedFBsExecutionState(EMGMCommandType paCommand);
 
+        virtual void postFBcreateAction(CFunctionBlock &paNewFB);
 
-        typedef CSinglyLinkedList<CFBContainer *> TFBContainerList;
+        typedef CSinglyLinkedList<CFBContainer*> TFBContainerList;
 
       private:
         /*!\brief Retrieve a FBContainer with given name. If it does not exist create it.
@@ -89,7 +89,7 @@ namespace forte {
          * @param paContainerName name of the container
          * @return pointer to the container or 0 if an FB with the same name exists in this container
          */
-        CFBContainer *findOrCreateContainer(CStringDictionary::TStringId paContainerName);
+        CFBContainer* findOrCreateContainer(CStringDictionary::TStringId paContainerName);
 
         CStringDictionary::TStringId mContainerName; //!< name of the container
         CFBContainer *mParent; //!< the parent FBContainer this FBContainer is contained in. The parent of a resource is 0

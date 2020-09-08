@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2014 ACIN, Profactor GmbH, fortiss GmbH
+ *                      2020 TU Wien ACIN
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,10 +11,12 @@
  * Contributors:
  *    Alois Zoitl, Gunnar Grabmaier, Thomas Strasser, Rene Smodic, Ingo Hegny
  *      - initial implementation and rework communication infrastructure
+ *    Peter Gsellmann - change superclass
  *******************************************************************************/
 #ifndef _ECET_H_
 #define _ECET_H_
 
+#include "eceta.h"
 #include "event.h"
 #include "datatypes/forte_time.h"
 #include <forte_thread.h>
@@ -23,7 +26,7 @@
 /*! \ingroup CORE\brief Class for executing one event chain.
  *
  */
-class CEventChainExecutionThread : public CThread{
+class CEventChainExecutionThread : public CEventChainExecutionThreadAbstract, public CThread {
   public:
     CEventChainExecutionThread();
     virtual ~CEventChainExecutionThread();
@@ -47,11 +50,11 @@ class CEventChainExecutionThread : public CThread{
      */
     void changeExecutionState(EMGMCommandType paCommand);
 
-    void joinEventChainExecutionThread(){
+    void joinEventChainExecutionThread() {
       CThread::join();
     }
 
-    void setDeadline(const CIEC_TIME &paVal){
+    void setDeadline(const CIEC_TIME &paVal) {
       CThread::setDeadline(paVal);
     }
 
@@ -59,7 +62,7 @@ class CEventChainExecutionThread : public CThread{
       return mProcessingEvents;
     }
 
-    void resumeSelfSuspend(){
+    void resumeSelfSuspend() {
       mSuspendSemaphore.inc();
     }
 
@@ -73,8 +76,8 @@ class CEventChainExecutionThread : public CThread{
      */
 
     TEventEntryPtr mEventList[cg_nEventChainEventListSize];
-    TEventEntryPtr* mEventListStart;
-    TEventEntryPtr* mEventListEnd;
+    TEventEntryPtr *mEventListStart;
+    TEventEntryPtr *mEventListEnd;
     //@}
 
     void mainRun();
@@ -106,7 +109,7 @@ class CEventChainExecutionThread : public CThread{
     //! Transfer elements stored in the external event list to the main event list
     void transferExternalEvents();
 
-    void selfSuspend(){
+    void selfSuspend() {
       mSuspendSemaphore.waitIndefinitely();
     }
 
@@ -118,8 +121,8 @@ class CEventChainExecutionThread : public CThread{
      * list. This is a great performance gain.
      */
     TEventEntryPtr mExternalEventList[cg_nEventChainExternalEventListSize];
-    TEventEntryPtr* mExternalEventListStart;
-    TEventEntryPtr* mExternalEventListEnd;
+    TEventEntryPtr *mExternalEventListStart;
+    TEventEntryPtr *mExternalEventListEnd;
     //@}
 
     //! SyncObject for protecting the list in regard to several accesses

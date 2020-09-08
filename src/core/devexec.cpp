@@ -35,10 +35,10 @@ CDeviceExecution::~CDeviceExecution() {
   }
 }
 
-void CDeviceExecution::startNewEventChain(CEventSourceFB* paECStartFB) const {
+void CDeviceExecution::startNewEventChain(CEventSourceFB *paECStartFB) const {
   // maybe in the future here has to be added something for handling priority adaption and stuff like this.
   if(0 != paECStartFB) {
-    CEventChainExecutionThread *poEventChainExecutor = paECStartFB->getEventChainExecutor();
+    CEventChainExecutionThreadAbstract *poEventChainExecutor = paECStartFB->getEventChainExecutor();
     if(0 != poEventChainExecutor) {
       poEventChainExecutor->startEventChain(paECStartFB->getEventSourceEventEntry());
     } else {

@@ -15,13 +15,14 @@
 #define _EVENCONN_H_
 
 #include "conn.h"
+#include "eceta.h"
 
-class CEventChainExecutionThread;
+class CEventChainExecutionThreadAbstract;
 
 /*!\ingroup CORE \brief Class for handling an event connection.
  *
  */
-class CEventConnection : public CConnection{
+class CEventConnection : public CConnection {
   public:
     CEventConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId);
 
@@ -38,7 +39,7 @@ class CEventConnection : public CConnection{
      *
      *  \param pa_poExecEnv Pointer to the execution environment the event is sent in.
      */
-    void triggerEvent(CEventChainExecutionThread& pa_poExecEnv) const;
+    void triggerEvent(CEventChainExecutionThreadAbstract &pa_poExecEnv);
 
 };
 

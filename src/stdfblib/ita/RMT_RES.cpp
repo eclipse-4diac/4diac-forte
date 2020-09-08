@@ -16,36 +16,19 @@
 #include "RMT_RES_gen.cpp"
 #endif
 
+#include "ecetFactory.h"
 #include "../../core/ecet.h"
 
 DEFINE_FIRMWARE_FB(RMT_RES, g_nStringIdRMT_RES);
 
-const CStringDictionary::TStringId RMT_RES::scm_aunVarInputNameIds[] = {g_nStringIdMGR_ID};
-const CStringDictionary::TStringId RMT_RES::scm_aunDIDataTypeIds[] = {g_nStringIdWSTRING};
+const CStringDictionary::TStringId RMT_RES::scm_aunVarInputNameIds[] = { g_nStringIdMGR_ID };
+const CStringDictionary::TStringId RMT_RES::scm_aunDIDataTypeIds[] = { g_nStringIdWSTRING };
 
+const SFBInterfaceSpec RMT_RES::scm_stFBInterfaceSpec = { 0, 0, 0, 0, 0, 0, 0, 0, 1, scm_aunVarInputNameIds, scm_aunDIDataTypeIds, 0, 0, 0, 0, 0 };
 
-const SFBInterfaceSpec RMT_RES::scm_stFBInterfaceSpec = {
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  1,
-  scm_aunVarInputNameIds,
-  scm_aunDIDataTypeIds,
-  0,
-  0,
-  0,
-  0,
-  0
-  };
-
-
-RMT_RES::RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_poDevice):
-       CResource(pa_poDevice, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData){
+RMT_RES::RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poDevice) :
+        CResource(pa_poDevice, CEventChainExecutionThreadFactory::createEventChainExecutionThread<CEventChainExecutionThread>(), &scm_stFBInterfaceSpec,
+          pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData) {
   addFB(CTypeLib::createFB(g_nStringIdSTART, g_nStringIdE_RESTART, this));
   addFB(CTypeLib::createFB(g_nStringIdMGR_FF, g_nStringIdE_SR, this));
   addFB(CTypeLib::createFB(g_nStringIdMGR, g_nStringIdDEV_MGR, this));
@@ -96,12 +79,12 @@ RMT_RES::RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_
   command.mSecondParam.pushBack(g_nStringIdMGR);
   command.mSecondParam.pushBack(g_nStringIdID);
   createConnection(command);
-  
+
   //Perform reset command normally done by the typelib during the creation process
   changeFBExecutionState(cg_nMGM_CMD_Reset);
 }
 
-RMT_RES::~RMT_RES(){
+RMT_RES::~RMT_RES() {
 }
 
 void RMT_RES::joinResourceThread() const {

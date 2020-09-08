@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2018 ACIN, Profactor GmbH, fortiss GmbH, Johannes Kepler University
+ *                      2020 TU Wien ACIN
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,10 +10,12 @@
  * Contributors:
  *    Alois Zoitl, Rene Smodic, Thomas Strasser, Gerhard Ebenhofer, Ingo Hegny,
  *      - initial implementation and rework communication infrastructure
+ *    Peter Gsellmann - change to CEventChainExecutionThreadAbstract type
  *******************************************************************************/
 #ifndef _RESOURCE_H_
 #define _RESOURCE_H_
 
+#include "eceta.h"
 #include "fbcontainer.h"
 #include "funcbloc.h"
 #include <forte_sync.h>
@@ -27,6 +30,7 @@ class CLuaEngine;
 
 class CDevice;
 class CInterface2InternalDataConnection;
+class CEventChainExecutionThread;
 
 /*! \ingroup CORE\brief Base class for all resources handling the reconfiguration management within this
  * resource and the background execution of event chains.
@@ -35,7 +39,7 @@ class CInterface2InternalDataConnection;
  * also the forwarding of management commands is less effort.
  * TODO think if CFBContainer inheritance should be public or private
  */
-class CResource : public CFunctionBlock, public forte::core::CFBContainer{
+class CResource : public CFunctionBlock, public forte::core::CFBContainer {
 
   public:
     CSyncObject m_oResDataConSync;
@@ -43,14 +47,14 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      *
      * The resource can only be generated with a given device the resource is contained. A resource can not exist outside of an device.
      *  \param pa_poDevice           the device the resource is contained in
+     *  \param paResourceEventExecution the resource's execution thread
      *  \param pa_pstInterfaceSpec   interface-specification of resource
      *  \param pa_nInstanceNameId    StringId of instance-name
      *  \param pa_roObjectHandler    reference to object handler
      *  \param pa_acFBData           Byte-array for resource-specific data
      */
-    CResource(CResource* pa_poDevice, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-        const CStringDictionary::TStringId pa_nInstanceNameId,
-        TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
+    CResource(CResource *pa_poDevice, CEventChainExecutionThreadAbstract *const paResourceEventExecution, const SFBInterfaceSpec *pa_pstInterfaceSpec,
+        const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
 
     virtual ~CResource();
 
@@ -66,14 +70,15 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 
     /*! \brief Get the device the resource is contained in
      */
-    CDevice &getDevice(void){
-      return (CDevice &) getResource();
+    CDevice& getDevice(void) {
+      return (CDevice&) getResource();
     }
     ;
 
-    CEventChainExecutionThread *getResourceEventExecution(void) const{
+    CEventChainExecutionThreadAbstract* getResourceEventExecution(void) const {
       return mResourceEventExecution;
-    };
+    }
+    ;
 
     virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
 
@@ -83,7 +88,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      * @param paValue the value to be writen
      * @return response of the command execution as defined in IEC 61499
      */
-    EMGMResponse writeValue(forte::core::TNameIdentifier &paNameList, const CIEC_STRING & paValue, bool paForce = false);
+    EMGMResponse writeValue(forte::core::TNameIdentifier &paNameList, const CIEC_STRING &paValue, bool paForce = false);
 
 #ifdef FORTE_SUPPORT_MONITORING
     forte::core::CMonitoringHandler &getMonitoringHandler(){
@@ -98,9 +103,8 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 #endif
 
   protected:
-    CResource(const SFBInterfaceSpec *pa_pstInterfaceSpec,
-        const CStringDictionary::TStringId pa_nInstanceNameId,
-        TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
+    CResource(const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData,
+        TForteByte *pa_acFBVarsData);
 
     virtual void executeEvent(int) {
     }
@@ -122,8 +126,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      * @param  padstNameList identifier name list for the destination of the connection
      * @return response of the command execution as defined in IEC 61499
      */
-    EMGMResponse createConnection(forte::core::TNameIdentifier &paSrcNameList,
-        forte::core::TNameIdentifier &paDstNameList);
+    EMGMResponse createConnection(forte::core::TNameIdentifier &paSrcNameList, forte::core::TNameIdentifier &paDstNameList);
 
     /*! Handle and perform the actions required for an execution state change
      * command (i.e., START, STOP, KILL, RESET)
@@ -132,8 +135,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      * @param paTarget identifier which is the target for this request if empty the target is the resource
      * @return response of the command execution as defined in IEC 61499
      */
-    EMGMResponse handleExecutionStateCmd(EMGMCommandType paCMD,
-        forte::core::TNameIdentifier &paTarget);
+    EMGMResponse handleExecutionStateCmd(EMGMCommandType paCMD, forte::core::TNameIdentifier &paTarget);
 
     /*!\brief Create a new connection between source and destination
      *
@@ -141,8 +143,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      * @param  padstNameList identifier name list for the destination of the connection
      * @return response of the command execution as defined in IEC 61499
      */
-    EMGMResponse deleteConnection(forte::core::TNameIdentifier &paSrcNameList,
-        forte::core::TNameIdentifier &paDstNameList);
+    EMGMResponse deleteConnection(forte::core::TNameIdentifier &paSrcNameList, forte::core::TNameIdentifier &paDstNameList);
 
     /*!\brief Read a parameter value from a given FB
      *
@@ -150,7 +151,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      * @param paValue the destination for the value to be read
      * @return response of the command execution as defined in IEC 61499
      */
-    EMGMResponse readValue(forte::core::TNameIdentifier &paNameList, CIEC_STRING & paValue);
+    EMGMResponse readValue(forte::core::TNameIdentifier &paNameList, CIEC_STRING &paValue);
 
 #ifdef FORTE_SUPPORT_QUERY_CMD
     /*!\brief Read the existing fb types.
@@ -210,22 +211,22 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      * @param paNameList the identifier name list of the variable to be retrieved
      * @return the pointer to the variable or 0 if the variable with the given identifier name list does not exist
      */
-    CIEC_ANY *getVariable(forte::core::TNameIdentifier &paNameList);
+    CIEC_ANY* getVariable(forte::core::TNameIdentifier &paNameList);
 
     /*!\brief get the connection object for the given source identifier
      *
      * @param paSrcNameList array of the name hierarchy the requested connection source
      * @return pointer to the requested connection, returns 0 if there is no such source
      */
-    CConnection *getConnection(forte::core::TNameIdentifier &paSrcNameList);
+    CConnection* getConnection(forte::core::TNameIdentifier &paSrcNameList);
 
-    CConnection *getResIf2InConnection(CStringDictionary::TStringId paResInput) const;
+    CConnection* getResIf2InConnection(CStringDictionary::TStringId paResInput) const;
 
     void initializeResIf2InConnections();
 
     /*!\brief The event chain execution of background (low priority) event chains started within this resource
      */
-    CEventChainExecutionThread *mResourceEventExecution;
+    CEventChainExecutionThreadAbstract *mResourceEventExecution;
 
     CInterface2InternalDataConnection *mResIf2InConnections; //!< List of all connections from the res interface to internal FBs
 

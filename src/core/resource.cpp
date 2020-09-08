@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2018 ACIN, Profactor GmbH, fortiss GmbH,
  *                           Johannes Kepler University
+ *                      2020 TU Wien ACIN
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,6 +12,7 @@
  *    Alois Zoitl, Rene Smodic, Gerhard Ebenhofer, Thomas Strasser,
  *    Martin Melik Merkumians,
  *      - initial implementation and rework communication infrastructure
+ *    Peter Gsellmann - updating constructor
  *******************************************************************************/
 #include <fortenew.h>
 #include "resource.h"
@@ -20,7 +22,11 @@
 #include "if2indco.h"
 #include "utils/criticalregion.h"
 #include "utils/fixedcapvector.h"
+#include "ecetFactory.h"
 #include "ecet.h"
+#include "ecetplc.h"
+#include "stringdict.h"
+#include <string.h>
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
 #include "lua/luaengine.h"
@@ -29,9 +35,11 @@
 #include "lua/luaadaptertypeentry.h"
 #endif
 
-CResource::CResource(CResource* pa_poDevice, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-    CFunctionBlock(pa_poDevice, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData), forte::core::CFBContainer(CStringDictionary::scm_nInvalidStringId, 0), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
-    mResourceEventExecution(CEventChainExecutionThread::createEcet()), mResIf2InConnections(0)
+CResource::CResource(CResource *pa_poDevice, CEventChainExecutionThreadAbstract *const paResourceEventExecution, const SFBInterfaceSpec *pa_pstInterfaceSpec,
+    const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
+    CFunctionBlock(pa_poDevice, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData),
+        forte::core::CFBContainer(CStringDictionary::scm_nInvalidStringId, 0), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
+        mResourceEventExecution(paResourceEventExecution), mResIf2InConnections(0)
 #ifdef FORTE_SUPPORT_MONITORING
 , mMonitoringHandler(*this)
 #endif
@@ -42,9 +50,11 @@ CResource::CResource(CResource* pa_poDevice, const SFBInterfaceSpec *pa_pstInter
   initializeResIf2InConnections();
 }
 
-CResource::CResource(const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-    CFunctionBlock(0, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData), forte::core::CFBContainer(CStringDictionary::scm_nInvalidStringId, 0), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
-    mResourceEventExecution(0), mResIf2InConnections(0)
+CResource::CResource(const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData,
+    TForteByte *pa_acFBVarsData) :
+    CFunctionBlock(0, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData),
+        forte::core::CFBContainer(CStringDictionary::scm_nInvalidStringId, 0), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
+        mResourceEventExecution(0), mResIf2InConnections(0)
 #ifdef FORTE_SUPPORT_MONITORING
 , mMonitoringHandler(*this)
 #endif
@@ -55,7 +65,7 @@ CResource::CResource(const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringD
   initializeResIf2InConnections();
 }
 
-CResource::~CResource(){
+CResource::~CResource() {
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
   delete luaEngine;
 #endif
@@ -63,11 +73,11 @@ CResource::~CResource(){
   delete[] mResIf2InConnections;
 }
 
-EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand){
+EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand) {
   EMGMResponse retVal = e_INVALID_DST;
 
-  if(CStringDictionary::scm_nInvalidStringId == paCommand.mDestination){
-    switch (paCommand.mCMD){
+  if(CStringDictionary::scm_nInvalidStringId == paCommand.mDestination) {
+    switch(paCommand.mCMD){
       case cg_nMGM_CMD_Create_FBInstance: {
         forte::core::TNameIdentifier::CIterator itRunner(paCommand.mFirstParam.begin());
         retVal = createFB(itRunner, paCommand.mSecondParam.front(), this);
@@ -142,19 +152,19 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
   return retVal;
 }
 
-EMGMResponse CResource::changeFBExecutionState(EMGMCommandType pa_unCommand){
+EMGMResponse CResource::changeFBExecutionState(EMGMCommandType pa_unCommand) {
   EMGMResponse retVal = CFunctionBlock::changeFBExecutionState(pa_unCommand);
-  if(e_RDY == retVal){
+  if(e_RDY == retVal) {
     retVal = changeContainedFBsExecutionState(pa_unCommand);
-    if(e_RDY == retVal){
-      if(cg_nMGM_CMD_Start == pa_unCommand && 0 != m_pstInterfaceSpec){ //on start, sample inputs
-        for(int i = 0; i < m_pstInterfaceSpec->m_nNumDIs; ++i){
-          if(0 != m_apoDIConns[i]){
+    if(e_RDY == retVal) {
+      if(cg_nMGM_CMD_Start == pa_unCommand && 0 != m_pstInterfaceSpec) { //on start, sample inputs
+        for(int i = 0; i < m_pstInterfaceSpec->m_nNumDIs; ++i) {
+          if(0 != m_apoDIConns[i]) {
             m_apoDIConns[i]->readData(getDI(i));
           }
         }
       }
-      if(0 != mResourceEventExecution){
+      if(0 != mResourceEventExecution) {
         // if we have a m_poResourceEventExecution handle it
         mResourceEventExecution->changeExecutionState(pa_unCommand);
       }
@@ -163,35 +173,35 @@ EMGMResponse CResource::changeFBExecutionState(EMGMCommandType pa_unCommand){
   return retVal;
 }
 
-EMGMResponse CResource::handleExecutionStateCmd(EMGMCommandType paCMD, forte::core::TNameIdentifier &paTarget){
+EMGMResponse CResource::handleExecutionStateCmd(EMGMCommandType paCMD, forte::core::TNameIdentifier &paTarget) {
   EMGMResponse retVal = e_NO_SUCH_OBJECT;
   CFunctionBlock *fb = this;
 
-  if(!paTarget.isEmpty()){
+  if(!paTarget.isEmpty()) {
     forte::core::TNameIdentifier::CIterator itRunner(paTarget.begin());
     fb = getContainedFB(itRunner);
   }
 
-  if(0 != fb){
+  if(0 != fb) {
     retVal = fb->changeFBExecutionState(paCMD);
   }
   return retVal;
 }
 
-EMGMResponse CResource::createConnection(forte::core::SManagementCMD &paCommand){
+EMGMResponse CResource::createConnection(forte::core::SManagementCMD &paCommand) {
   return createConnection(paCommand.mFirstParam, paCommand.mSecondParam);
 }
 
-EMGMResponse CResource::createConnection(forte::core::TNameIdentifier &paSrcNameList, forte::core::TNameIdentifier &paDstNameList){
+EMGMResponse CResource::createConnection(forte::core::TNameIdentifier &paSrcNameList, forte::core::TNameIdentifier &paDstNameList) {
   EMGMResponse retVal = e_NO_SUCH_OBJECT;
 
   CConnection *con = getConnection(paSrcNameList);
-  if(0 != con){
+  if(0 != con) {
     CStringDictionary::TStringId portName = paDstNameList.back();
     paDstNameList.popBack();
     forte::core::TNameIdentifier::CIterator runner(paDstNameList.begin());
     CFunctionBlock *dstFB = getContainedFB(runner);
-    if((0 != dstFB) && (runner.isLastEntry())){
+    if((0 != dstFB) && (runner.isLastEntry())) {
       retVal = con->connect(dstFB, portName);
     }
   }
@@ -199,16 +209,16 @@ EMGMResponse CResource::createConnection(forte::core::TNameIdentifier &paSrcName
   return retVal;
 }
 
-EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcNameList, forte::core::TNameIdentifier &paDstNameList){
+EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcNameList, forte::core::TNameIdentifier &paDstNameList) {
   EMGMResponse retVal = e_NO_SUCH_OBJECT;
 
   CConnection *con = getConnection(paSrcNameList);
-  if(0 != con){
+  if(0 != con) {
     CStringDictionary::TStringId portName = paDstNameList.back();
     paDstNameList.popBack();
     forte::core::TNameIdentifier::CIterator runner(paDstNameList.begin());
     CFunctionBlock *dstFB = getContainedFB(runner);
-    if((0 != dstFB) && (runner.isLastEntry())){
+    if((0 != dstFB) && (runner.isLastEntry())) {
       retVal = con->disconnect(dstFB, portName);
     }
   }
@@ -216,7 +226,7 @@ EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcName
   return retVal;
 }
 
-EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, const CIEC_STRING & paValue, bool paForce){
+EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, const CIEC_STRING &paValue, bool paForce) {
   EMGMResponse retVal = e_NO_SUCH_OBJECT;
 
   CStringDictionary::TStringId portName = paNameList.back();
@@ -224,29 +234,28 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
   forte::core::TNameIdentifier::CIterator runner(paNameList.begin());
 
   CFunctionBlock *fb = this;
-  if(paNameList.size() >= 1){
+  if(paNameList.size() >= 1) {
     //this is not an identifier for the resource interface
     fb = getContainedFB(runner); // the last entry is the input name therefore reduce list here by one
   }
 
-  if((0 != fb) && (runner.isLastEntry())){
+  if((0 != fb) && (runner.isLastEntry())) {
     CIEC_ANY *var = fb->getVar(&portName, 1);
-    if(0 != var){
+    if(0 != var) {
       // 0 is not supported in the fromString method
-      if((paValue.length() > 0) && (paValue.length() == var->fromString(paValue.getValue()))){
+      if((paValue.length() > 0) && (paValue.length() == var->fromString(paValue.getValue()))) {
         //if we cannot parse the full value the value is not valid
-        if(paForce){
+        if(paForce) {
           var->setForced(true);
           CDataConnection *con = fb->getDOConnection(portName);
-          if(0 != con){
+          if(0 != con) {
             //if we have got a connection it was a DO mirror the forced value there
             CCriticalRegion criticalRegion(m_oResDataConSync);
             con->writeData(var);
           }
         }
         retVal = e_RDY;
-      }
-      else{
+      } else {
         retVal = e_BAD_PARAMS;
       }
     }
@@ -254,14 +263,14 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
   return retVal;
 }
 
-EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, CIEC_STRING & paValue){
+EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, CIEC_STRING &paValue) {
   EMGMResponse retVal = e_NO_SUCH_OBJECT;
   CIEC_ANY *var = getVariable(paNameList);
-  if(0 != var){
+  if(0 != var) {
     int nUsedChars = -1;
-    switch (var->getDataTypeID()){
+    switch(var->getDataTypeID()){
       case CIEC_ANY::e_WSTRING:
-      case CIEC_ANY::e_STRING:{
+      case CIEC_ANY::e_STRING: {
         size_t bufferSize = var->getToStringBufferSize() + forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<CIEC_WSTRING&>(*var).getValue());
         nUsedChars = static_cast<CIEC_WSTRING&>(*var).toUTF8(paValue.getValue(), bufferSize, false);
         if(bufferSize != var->getToStringBufferSize() && 0 < nUsedChars) { //avoid re-running on strings which were already proven not to have any special character
@@ -274,11 +283,10 @@ EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, CIEC
         break;
     }
 
-    if(-1 != nUsedChars){
+    if(-1 != nUsedChars) {
       paValue.assign(paValue.getValue(), static_cast<TForteUInt16>(nUsedChars));
       retVal = e_RDY;
-    }
-    else{
+    } else {
       retVal = e_INVALID_OBJECT;
     }
   }
@@ -571,46 +579,45 @@ EMGMResponse CResource::createAdapterTypeFromLua(CStringDictionary::TStringId ty
 
 #endif //FORTE_DYNAMIC_TYPE_LOAD
 
-CIEC_ANY *CResource::getVariable(forte::core::TNameIdentifier &paNameList){
+CIEC_ANY* CResource::getVariable(forte::core::TNameIdentifier &paNameList) {
   CStringDictionary::TStringId portName = paNameList.back();
   paNameList.popBack();
   forte::core::TNameIdentifier::CIterator runner(paNameList.begin());
 
   CFunctionBlock *fb = this;
-  if(paNameList.size() >= 1){
+  if(paNameList.size() >= 1) {
     //this is not an identifier for the resource interface
     fb = getContainedFB(runner); // the last entry is the input name therefore reduce list here by one
   }
 
   CIEC_ANY *var = 0;
-  if((0 != fb) && (runner.isLastEntry())){
+  if((0 != fb) && (runner.isLastEntry())) {
     var = fb->getVar(&portName, 1);
   }
   return var;
 }
 
-CConnection *CResource::getConnection(forte::core::TNameIdentifier &paSrcNameList){
+CConnection* CResource::getConnection(forte::core::TNameIdentifier &paSrcNameList) {
   CConnection *con = 0;
-  if(1 == paSrcNameList.size()){
+  if(1 == paSrcNameList.size()) {
     con = getResIf2InConnection(paSrcNameList[0]);
-  }
-  else if(paSrcNameList.size() > 1){
+  } else if(paSrcNameList.size() > 1) {
     CStringDictionary::TStringId portName = paSrcNameList.back();
     paSrcNameList.popBack();
     forte::core::TNameIdentifier::CIterator runner(paSrcNameList.begin());
 
     CFunctionBlock *srcFB = getContainedFB(runner);
-    if((0 != srcFB) && (runner.isLastEntry())){
+    if((0 != srcFB) && (runner.isLastEntry())) {
       //only use the found result if we have really the last result in the list
       con = srcFB->getEOConnection(portName);
-      if(0 == con){
+      if(0 == con) {
         //it is not an event connection try data connection next
         con = srcFB->getDOConnection(portName);
-        if(0 == con){
+        if(0 == con) {
           //it is not an data connection try data connection next
           //TODO think if it would be better to move this to CFunctionBlock
           CAdapter *adp = srcFB->getAdapter(portName);
-          if((0 != adp) && (adp->isPlug())){
+          if((0 != adp) && (adp->isPlug())) {
             //only plugs hold the connection object
             con = adp->getAdapterConnection();
           }
@@ -621,21 +628,21 @@ CConnection *CResource::getConnection(forte::core::TNameIdentifier &paSrcNameLis
   return con;
 }
 
-CConnection *CResource::getResIf2InConnection(CStringDictionary::TStringId paResInput) const{
+CConnection* CResource::getResIf2InConnection(CStringDictionary::TStringId paResInput) const {
   CConnection *con = 0;
-  if(0 != m_pstInterfaceSpec){
+  if(0 != m_pstInterfaceSpec) {
     TPortId inPortId = getDIID(paResInput);
-    if(cg_unInvalidPortId != inPortId){
+    if(cg_unInvalidPortId != inPortId) {
       con = mResIf2InConnections + inPortId;
     }
   }
   return con;
 }
 
-void CResource::initializeResIf2InConnections(){
-  if(0 != m_pstInterfaceSpec){
+void CResource::initializeResIf2InConnections() {
+  if(0 != m_pstInterfaceSpec) {
     mResIf2InConnections = new CInterface2InternalDataConnection[m_pstInterfaceSpec->m_nNumDIs];
-    for(TPortId i = 0; i < m_pstInterfaceSpec->m_nNumDIs; i++){
+    for(TPortId i = 0; i < m_pstInterfaceSpec->m_nNumDIs; i++) {
       (mResIf2InConnections + i)->setSource(this, i);
     }
   }

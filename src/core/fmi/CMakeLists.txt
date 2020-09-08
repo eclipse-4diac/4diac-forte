@@ -45,6 +45,6 @@ if(FORTE_ENABLE_FMU)
    forte_add_sourcefile_hcpp(../../arch/utils/timespec_utils)
    
 else(FORTE_ENABLE_FMU)
-  forte_add_sourcefile_cpp(../ecetFactory.cpp)
+  forte_add_sourcefile_h(../ecetFactory.h)
 endif(FORTE_ENABLE_FMU)
 
