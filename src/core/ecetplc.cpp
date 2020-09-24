@@ -7,6 +7,7 @@
  *
  * Contributors:
  *    Peter Gsellmann, Martin Melik Merkumians - initial implementation
+ *    Martin Melik Merkumians - move shared methods to abstract base class
  *******************************************************************************/
 #include <forte_config.h>
 #include <fortenew.h>
@@ -19,8 +20,7 @@
 
 bool firstExecDone = false;
 
-CEventChainExecutionThread61131::CEventChainExecutionThread61131() :
-    CThread(), mSuspendSemaphore(0), mProcessingEvents(false) {
+CEventChainExecutionThread61131::CEventChainExecutionThread61131() {
   clear();
 }
 
@@ -34,32 +34,6 @@ bool CEventChainExecutionThread61131::getExeDone() {
 
 void CEventChainExecutionThread61131::setCycleTime(TForteUInt16 time_ms) {
   cycle_time = time_ms;
-}
-
-void CEventChainExecutionThread61131::joinEventChainExecutionThread() {
-  CThread::join();
-}
-
-void CEventChainExecutionThread61131::setDeadline(const CIEC_TIME &paVal) {
-  CThread::setDeadline(paVal);
-}
-
-bool CEventChainExecutionThread61131::isProcessingEvents() const {
-  return mProcessingEvents;
-}
-
-void CEventChainExecutionThread61131::end(void) {
-  setAlive(false);
-  resumeSelfSuspend();
-  CThread::end();
-}
-
-void CEventChainExecutionThread61131::resumeSelfSuspend() {
-  mSuspendSemaphore.inc();
-}
-
-void CEventChainExecutionThread61131::selfSuspend() {
-  mSuspendSemaphore.waitIndefinitely();
 }
 
 void CEventChainExecutionThread61131::run(void) {
@@ -95,33 +69,11 @@ void CEventChainExecutionThread61131::run(void) {
 }
 
 void CEventChainExecutionThread61131::clear(void) {
-  memset(mEventList, 0, cg_nEventChainEventListSize * sizeof(TEventEntryPtr));
-  mEventListEnd = mEventListStart = &mEventList[cg_nEventChainEventListSize - 1];
+  clearEventList();
   mInitEventListEnd = mInitEventListStart = &mInitEventList[cg_nEventChainEventListSize - 1];
 }
-void CEventChainExecutionThread61131::startEventChain(SEventEntry *paEventToAdd) {
+void CEventChainExecutionThread61131::startEventChain(SEventEntry*) {
   mProcessingEvents = true;
-}
-
-void CEventChainExecutionThread61131::addEventEntry(SEventEntry *paEventToAdd) {
-  if(0 == *mEventListEnd) {
-    *mEventListEnd = paEventToAdd;
-    TEventEntryPtr *pstNextEventListElem;
-
-    if(mEventListEnd == &mEventList[0]) {
-      //wrap the ringbuffer
-      pstNextEventListElem = &mEventList[cg_nEventChainEventListSize - 1];
-    } else {
-      pstNextEventListElem = (mEventListEnd - 1);
-    }
-
-    if(mEventListStart != pstNextEventListElem) {
-      //the list is not full
-      mEventListEnd = pstNextEventListElem;
-    }
-  } else {
-    DEVLOG_ERROR("Event queue is full, event dropped!\n");
-  }
 }
 
 void CEventChainExecutionThread61131::addInitEventEntry(SEventEntry *paEventToAdd) {

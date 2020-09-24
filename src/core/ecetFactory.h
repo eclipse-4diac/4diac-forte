@@ -10,11 +10,15 @@
  *******************************************************************************/
 #pragma once
 
+#include "staticassert.h"
+#include "iec61131_cast_helper.h"
+
 class CEventChainExecutionThreadFactory {
   public:
     template<typename T>
     static T* createEventChainExecutionThread() {
-      static_assert(std::is_base_of<CEventChainExecutionThreadAbstract, T>::value, "Is not a type of EventChainExecutionThread");
+      FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CEventChainExecutionThreadAbstract, T>::value),
+        PassedTypeNotASubTypeOfEventChainExeCutionThreadAbstract);
       return new T();
     }
 };

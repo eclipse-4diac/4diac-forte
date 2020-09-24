@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+ *   2020 TU Wien/ACIN
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -11,6 +12,7 @@
  *    Alois Zoitl, Thomas Strasser, Rene Smodic, Gerhard Ebenhofer, Ingo Hegny
  *    Micheal Hofmann
  *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians - move shared methods to abstract base class
  *******************************************************************************/
 #include <forte_config.h>
 #include <fortenew.h>
@@ -19,50 +21,44 @@
 #include "utils/criticalregion.h"
 #include "../arch/devlog.h"
 
-CEventChainExecutionThread::CEventChainExecutionThread() :
-    CThread(), mSuspendSemaphore(0), mProcessingEvents(false)
-{
+CEventChainExecutionThread::CEventChainExecutionThread() {
   clear();
 }
 
-CEventChainExecutionThread::~CEventChainExecutionThread(){
+CEventChainExecutionThread::~CEventChainExecutionThread() {
 }
 
-void CEventChainExecutionThread::run(void){
-  while(isAlive()){ //thread is allowed to execute
+void CEventChainExecutionThread::run(void) {
+  while(isAlive()) { //thread is allowed to execute
     mainRun();
   }
 }
 
-void CEventChainExecutionThread::mainRun(){
-  if(externalEventOccured()){
+void CEventChainExecutionThread::mainRun() {
+  if(externalEventOccured()) {
     transferExternalEvents();
   }
-  if(mEventListEnd == mEventListStart){
+  if(mEventListEnd == mEventListStart) {
     mProcessingEvents = false;
     selfSuspend();
     mProcessingEvents = true; //set this flag here to true as well in case the suspend just went through and processing was not finished
-  }
-  else{
-    if(0 != *mEventListStart){
+  } else {
+    if(0 != *mEventListStart) {
       (*mEventListStart)->mFB->receiveInputEvent((*mEventListStart)->mPortId, *this);
     }
     *mEventListStart = 0;
 
-    if(mEventListStart == &mEventList[0]){
+    if(mEventListStart == &mEventList[0]) {
       //wrap the ringbuffer
       mEventListStart = &mEventList[cg_nEventChainEventListSize - 1];
-    }
-    else{
+    } else {
       mEventListStart--;
     }
   }
 }
 
-void CEventChainExecutionThread::clear(void){
-  memset(mEventList, 0, cg_nEventChainEventListSize * sizeof(TEventEntryPtr));
-  mEventListEnd = mEventListStart = &mEventList[cg_nEventChainEventListSize - 1];
-
+void CEventChainExecutionThread::clear(void) {
+  clearEventList();
   {
     CCriticalRegion criticalRegion(mExternalEventListSync);
     memset(mExternalEventList, 0, cg_nEventChainExternalEventListSize * sizeof(TEventEntryPtr));
@@ -70,82 +66,56 @@ void CEventChainExecutionThread::clear(void){
   }
 }
 
-void CEventChainExecutionThread::transferExternalEvents(){
+void CEventChainExecutionThread::transferExternalEvents() {
   CCriticalRegion criticalRegion(mExternalEventListSync);
   //this while is built in a way that it checks also if we got here by accident
-  while(mExternalEventListStart != mExternalEventListEnd){
-    if(0 != *mExternalEventListStart){
+  while(mExternalEventListStart != mExternalEventListEnd) {
+    if(0 != *mExternalEventListStart) {
       //add only valid entries
       addEventEntry(*mExternalEventListStart);
       *mExternalEventListStart = 0;
 
-      if(mExternalEventListStart == &mExternalEventList[0]){
+      if(mExternalEventListStart == &mExternalEventList[0]) {
         //wrap the ringbuffer
         mExternalEventListStart = &mExternalEventList[cg_nEventChainExternalEventListSize - 1];
-      }
-      else{
+      } else {
         mExternalEventListStart--;
       }
     }
   }
 }
 
-void CEventChainExecutionThread::startEventChain(SEventEntry *paEventToAdd){
+void CEventChainExecutionThread::startEventChain(SEventEntry *paEventToAdd) {
   FORTE_TRACE("CEventChainExecutionThread::startEventChain\n");
   {
     CCriticalRegion criticalRegion(mExternalEventListSync);
-    if(0 == *mExternalEventListEnd){
+    if(0 == *mExternalEventListEnd) {
       *mExternalEventListEnd = paEventToAdd;
-      TEventEntryPtr* pstNextEventListElem;
+      TEventEntryPtr *pstNextEventListElem;
 
-      if(mExternalEventListEnd == &mExternalEventList[0]){
+      if(mExternalEventListEnd == &mExternalEventList[0]) {
         //wrap the ringbuffer
         pstNextEventListElem = &mExternalEventList[cg_nEventChainExternalEventListSize - 1];
-      }
-      else{
+      } else {
         pstNextEventListElem = (mExternalEventListEnd - 1);
       }
 
-      if(mExternalEventListStart != pstNextEventListElem){
+      if(mExternalEventListStart != pstNextEventListElem) {
         //the list is not full
         mExternalEventListEnd = pstNextEventListElem;
       }
       mProcessingEvents = true;
       resumeSelfSuspend();
-    }
-    else{
+    } else {
       DEVLOG_ERROR("External event queue is full, external event dropped!\n");
     }
   } // End critical region
 }
 
-void CEventChainExecutionThread::addEventEntry(SEventEntry *paEventToAdd){
-  if(0 == *mEventListEnd){
-    *mEventListEnd = paEventToAdd;
-    TEventEntryPtr* pstNextEventListElem;
-
-    if(mEventListEnd == &mEventList[0]){
-      //wrap the ringbuffer
-      pstNextEventListElem = &mEventList[cg_nEventChainEventListSize - 1];
-    }
-    else{
-      pstNextEventListElem = (mEventListEnd - 1);
-    }
-
-    if(mEventListStart != pstNextEventListElem){
-      //the list is not full
-      mEventListEnd = pstNextEventListElem;
-    }
-  }
-  else{
-    DEVLOG_ERROR("Event queue is full, event dropped!\n");
-  }
-}
-
-void CEventChainExecutionThread::changeExecutionState(EMGMCommandType paCommand){
-  switch (paCommand){
+void CEventChainExecutionThread::changeExecutionState(EMGMCommandType paCommand) {
+  switch(paCommand){
     case cg_nMGM_CMD_Start:
-      if(!isAlive()){
+      if(!isAlive()) {
         //only start the thread when we are not already running
         start();
       }
@@ -160,5 +130,15 @@ void CEventChainExecutionThread::changeExecutionState(EMGMCommandType paCommand)
     default:
       break;
   }
+}
+
+bool CEventChainExecutionThread::externalEventOccured() const {
+  /* we should not need a protection here as we are just comparing the both
+   * the only value that could change during the compare is m_pstExternalEventListEnd. In the worst case
+   * this results in a to early or to late detection. However as the transfer is protected this should be no
+   * big issue.
+   * TODO perform test to verify this assumption
+   */
+  return (mExternalEventListStart != mExternalEventListEnd);
 }
 
