@@ -1,5 +1,6 @@
- #*******************************************************************************
-# Copyright (c) 2010 - 2015 ACIN, Profactor GmbH, AIT, fortiss GmbH
+#********************************************************************************
+# Copyright (c) 2010 - 2015 Profactor GmbH, AIT, fortiss GmbH
+#               2010-2015, 2020 TU Wien/ACIN
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -8,8 +9,9 @@
 # 
 # Contributors:
 #    Michael Hofmann, Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny, Thomas Strasser,
-# *   Martin Melik Merkumians
-# *     - initial API and implementation and/or initial documentation
+#    Martin Melik Merkumians
+#      - initial API and implementation and/or initial documentation
+#    Martin Melik Merkumians - adds compiler feature check for nullptr
 # *******************************************************************************/
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
@@ -30,6 +32,10 @@ mark_as_advanced(FORTE_BUILDSUPPORT_DIRECTORY)
 
 #include forte cmake-functions
 INCLUDE(${FORTE_BUILDSUPPORT_DIRECTORY}/forte.cmake)
+INCLUDE(${FORTE_BUILDSUPPORT_DIRECTORY}/check_compiler_features.cmake)
+
+TEST_NEEDED_FORTE_COMPILER_FEATURES() #Checl for compiler features and either apply fixes or error messages if not supported
+
 
 forte_add_definition("-DFORTE_COMPILATION") #Allow to tell external modules/middleware that forte is being compiled, so special defines can be added
 
