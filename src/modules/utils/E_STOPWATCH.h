@@ -33,22 +33,21 @@ private:
   static const TEventID scm_nEventSTARTID = 0;
   static const TEventID scm_nEventSTOPID = 1;
   
-  static const TDataIOID scm_anEIWith[];
   static const TForteInt16 scm_anEIWithIndexes[];
   static const CStringDictionary::TStringId scm_anEventInputNames[];
   
   static const TEventID scm_nEventEOID = 0;
   
-  static const TDataIOID scm_anEOWith[];
+   static const TDataIOID scm_anEOWith[]; 
   static const TForteInt16 scm_anEOWithIndexes[];
   static const CStringDictionary::TStringId scm_anEventOutputNames[];
   
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-  
-  static const CStringDictionary::TStringId scm_anInternalsNames[];
-  static const CStringDictionary::TStringId scm_anInternalsTypeIds[];
-  static const SInternalVarsInformation scm_stInternalVars;
+
+static const CStringDictionary::TStringId scm_anInternalsNames[];
+static const CStringDictionary::TStringId scm_anInternalsTypeIds[];
+static const SInternalVarsInformation scm_stInternalVars;
 
   CIEC_TIME &st_TD() {
     return *static_cast<CIEC_TIME*>(getDO(0));
@@ -79,7 +78,7 @@ public:
        CBasicFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, &scm_stInternalVars, m_anFBConnData, m_anFBVarsData) {
   };
 
-  virtual ~FORTE_E_STOPWATCH(){};
+  virtual ~FORTE_E_STOPWATCH() = default;
 };
 
 #endif // _E_STOPWATCH_H_

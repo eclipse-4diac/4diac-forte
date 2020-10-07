@@ -27,7 +27,6 @@ const CStringDictionary::TStringId FORTE_E_STOPWATCH::scm_anDataOutputNames[] = 
 
 const CStringDictionary::TStringId FORTE_E_STOPWATCH::scm_anDataOutputTypeIds[] = {g_nStringIdTIME};
 
-const TDataIOID FORTE_E_STOPWATCH::scm_anEIWith[] = {};
 const TForteInt16 FORTE_E_STOPWATCH::scm_anEIWithIndexes[] = {-1, -1};
 const CStringDictionary::TStringId FORTE_E_STOPWATCH::scm_anEventInputNames[] = {g_nStringIdSTART, g_nStringIdSTOP};
 
@@ -37,26 +36,23 @@ const CStringDictionary::TStringId FORTE_E_STOPWATCH::scm_anEventOutputNames[] =
 
 
 const SFBInterfaceSpec FORTE_E_STOPWATCH::scm_stFBInterfaceSpec = {
-  2, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
+  2, scm_anEventInputNames, nullptr, scm_anEIWithIndexes,
   1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
-  0, 0, 0,
+  0, nullptr, nullptr,
   1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  0, 0
+  0, nullptr
 };
 
 const CStringDictionary::TStringId FORTE_E_STOPWATCH::scm_anInternalsNames[] = {g_nStringIdstartTime};
 const CStringDictionary::TStringId FORTE_E_STOPWATCH::scm_anInternalsTypeIds[] = {g_nStringIdTIME};
-
 const SInternalVarsInformation FORTE_E_STOPWATCH::scm_stInternalVars = {1, scm_anInternalsNames, scm_anInternalsTypeIds};
-
-
 
 void FORTE_E_STOPWATCH::alg_captureStartTime(void) {
   st_startTime() = NOW_MONOTONIC();
 }
 
 void FORTE_E_STOPWATCH::alg_calcDiff(void) {
-  st_TD() = (NOW_MONOTONIC() - st_startTime());
+  st_TD() = SUB(NOW_MONOTONIC(), st_startTime());
 }
 
 
