@@ -14,7 +14,7 @@
 #include "../../arch/devlog.h"
 #include "parameterParser.h"
 
-CConfigFileParser::CConfigFileParser(std::string &paFileLocation) {
+CConfigFileParser::CConfigFileParser(const std::string &paFileLocation) {
   mConfigFile = fopen(paFileLocation.c_str(), "r");
   if(0 != mConfigFile) {
     DEVLOG_INFO("[CConfigFileParser]: Configuration file %s opened\n", paFileLocation.c_str());
@@ -63,7 +63,7 @@ CConfigFileParser::ParseResult CConfigFileParser::parseNextLine(std::pair<std::s
   return retVal;
 }
 
-bool CConfigFileParser::lookForKeyValueInFile(CConfigFileParser &paFileParse, std::string &paKey, std::string &paValue, bool &paFound) {
+bool CConfigFileParser::lookForKeyValueInFile(CConfigFileParser &paFileParse, const std::string &paKey, const std::string &paValue, bool &paFound) {
 
   bool retVal = true;
   bool moreLinesToRead = true;
@@ -85,10 +85,10 @@ bool CConfigFileParser::lookForKeyValueInFile(CConfigFileParser &paFileParse, st
       case CConfigFileParser::eEndOfFile:
         moreLinesToRead = false;
         break;
-      case CConfigFileParser::eWrongLine:
-      case CConfigFileParser::eFileNotOpened:
-      case CConfigFileParser::eInternalError:
       default:
+        // CConfigFileParser::eWrongLine
+        // CConfigFileParser::eFileNotOpened
+        // CConfigFileParser::eInternalError
         retVal = false;
         moreLinesToRead = false;
         break;

@@ -93,8 +93,8 @@ if(FORTE_SYSTEM_TESTS)
   SET_TESTS_PROPERTIES(Test_valid_invalid_parameter PROPERTIES PASS_REGULAR_EXPRESSION "Usage: forte \\[options\\]")
   ##############################################
   
-  # Simple test with 2 devices
-  forte_add_2dev_systemtests(SimpleMultiTest simple_server.fboot simple_client.fboot "" "" 5 1)
+  # Simple test with multi devices
+  forte_add_multi_systemtests(SimpleMultiTest 10 1 multiDevice1.fboot "-c localhost:61500" multiDevice2.fboot " " multiDevice3.fboot "-c localhost:61501")
   
   #after compilation, run "make CTEST_OUTPUT_ON_FAILURE=1 test" on the binary folder
 

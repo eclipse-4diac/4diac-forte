@@ -40,11 +40,11 @@ FUNCTION(forte_opcua_configure_nodesets)
      SET(FORTE_OPCUA_NODESETS_CODE "(void)paUaServer;\n") #to silence warning
   ENDIF()
   
-  set(FORTE_OPCUA_MODULE_DIR "src/modules/opc_ua")
+  set(FORTE_OPCUA_MODULE_DIR "src/com/opc_ua")
   
-  CONFIGURE_FILE(${FORTE_OPCUA_MODULE_DIR}/opcua_nodesets.cpp.in ${CMAKE_BINARY_DIR}/modules/opc_ua/opcua_nodesets_new.cpp)
-  forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/modules/opc_ua/opcua_nodesets_new.cpp ${CMAKE_BINARY_DIR}/modules/opc_ua/opcua_nodesets.cpp)
-  file(REMOVE ${CMAKE_BINARY_DIR}/modules/opc_ua/opcua_nodesets_new.cpp)
+  CONFIGURE_FILE(${FORTE_OPCUA_MODULE_DIR}/opcua_nodesets.cpp.in ${CMAKE_BINARY_DIR}/com/opc_ua/opcua_nodesets_new.cpp)
+  forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/com/opc_ua/opcua_nodesets_new.cpp ${CMAKE_BINARY_DIR}/com/opc_ua/opcua_nodesets.cpp)
+  file(REMOVE ${CMAKE_BINARY_DIR}/com/opc_ua/opcua_nodesets_new.cpp)
 ENDFUNCTION()
 
 FUNCTION(forte_opcua_configure_external_types)
@@ -70,11 +70,11 @@ FUNCTION(forte_opcua_configure_external_types)
      #SET(FORTE_OPCUA_NODESETS_CODE "(void)paUaServer;\n") #to silence warning
   ENDIF()
   
-  set(FORTE_OPCUA_MODULE_DIR "src/modules/opc_ua")
+  set(FORTE_OPCUA_MODULE_DIR "src/com/opc_ua")
   
-  CONFIGURE_FILE(${FORTE_OPCUA_MODULE_DIR}/opcua_types.cpp.in ${CMAKE_BINARY_DIR}/modules/opc_ua/opcua_types_new.cpp)
-  forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/modules/opc_ua/opcua_types_new.cpp ${CMAKE_BINARY_DIR}/modules/opc_ua/opcua_types.cpp)
-  file(REMOVE ${CMAKE_BINARY_DIR}/modules/opc_ua/opcua_types_new.cpp)
+  CONFIGURE_FILE(${FORTE_OPCUA_MODULE_DIR}/opcua_types.cpp.in ${CMAKE_BINARY_DIR}/com/opc_ua/opcua_types_new.cpp)
+  forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/com/opc_ua/opcua_types_new.cpp ${CMAKE_BINARY_DIR}/com/opc_ua/opcua_types.cpp)
+  file(REMOVE ${CMAKE_BINARY_DIR}/com/opc_ua/opcua_types_new.cpp)
 ENDFUNCTION()
 
 FUNCTION(forte_opcua_add_type fileName forteName opcuaType)

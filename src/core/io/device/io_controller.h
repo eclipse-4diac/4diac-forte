@@ -129,7 +129,7 @@ namespace forte {
            */
           virtual void deInit() = 0;
 
-          bool hasError();
+          bool hasError() const;
           const char* mError;
 
           /*! @brief Notifies the corresponding configuration fb about a startup or runtime event.

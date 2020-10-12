@@ -46,8 +46,8 @@ size_t CParameterParser::parseParameters() {
   return mParameterLocations.size();
 }
 
-void CParameterParser::moveToPositionOfFirstNonWhiteSpaceCharacter(char** paParsePosition) {
-  while (0 != isspace(**paParsePosition)) {
+void CParameterParser::moveToPositionOfFirstNonWhiteSpaceCharacter(char** paParsePosition) const {
+  while(0 != isspace(**paParsePosition)) {
     ++(*paParsePosition);
   }
 }
@@ -56,16 +56,16 @@ void CParameterParser::saveStartPositionForParameterSubstring(char* paParsePosit
   mParameterLocations.push_back(paParsePosition);
 }
 
-void CParameterParser::moveToPositionOfNextParameterSeparatorOrEndOfString(char** paParsePosition) {
-  while (mSeparator != **paParsePosition && '\0' != **paParsePosition) {
+void CParameterParser::moveToPositionOfNextParameterSeparatorOrEndOfString(char** paParsePosition) const {
+  while(mSeparator != **paParsePosition && '\0' != **paParsePosition) {
     ++(*paParsePosition);
   }
 }
 
-void CParameterParser::trimTrailingWhiteSpacesOfParameterSubstring(char* paParsePosition, bool isSpace) {
+void CParameterParser::trimTrailingWhiteSpacesOfParameterSubstring(char* paParsePosition, bool isSpace) const {
   char* backTraceCharacter = paParsePosition - 1;
-  if(!isSpace){
-    while(0 != isspace(*backTraceCharacter)){
+  if(!isSpace) {
+    while(0 != isspace(*backTraceCharacter)) {
       --backTraceCharacter;
     }
   }

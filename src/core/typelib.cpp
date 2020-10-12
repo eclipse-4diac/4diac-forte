@@ -139,7 +139,8 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId pa_nInstanceName
         }
         else { // we got a configurable block
           if (!poNewFB->configureFB(acTypeBuf)) {
-            //TODO: Handle an error, if the FB was not configured correctly!!!!
+            deleteFB(poNewFB);
+            poNewFB = 0;
           }
         }
       }

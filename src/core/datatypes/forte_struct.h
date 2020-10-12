@@ -113,7 +113,6 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
     const CIEC_ANY *getMembers() const{
       return (0 != getSpecs()) ? getSpecs()->mMembers : static_cast<CIEC_ANY *>(0);
     }
-
     /*! \brief Get the struct's member var with the given name id
      *
      * \param pa_unMemberNameId the string id of the member name
@@ -124,6 +123,17 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
     virtual size_t getToStringBufferSize() const;
 
   protected:
+    /*! \brief helper method for accessing a member by index
+     *
+     * Mainly used for the generated accessor-functions.
+     * Therefore the index is not range checked!
+     *
+     * \param paMemberIndex index into the member array
+     * \return pointer to the member var
+     */
+    CIEC_ANY* getMember(size_t paMemberIndex){
+      return &getMembers()[paMemberIndex];
+    }
 
     enum EASN1Tags{
       e_UNIVERSAL = 0, e_APPLICATION = 64, e_CONTEXT = 128, e_PRIVATE = 192
@@ -161,7 +171,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
 
     void clear();
 
-    void findNextNonBlankSpace(const char** paRunner);
+    static void findNextNonBlankSpace(const char** paRunner);
 
     bool initializeFromString(int *paLength, CIEC_ANY *paMember, const char** paRunner, bool* paErrorOcurred);
 

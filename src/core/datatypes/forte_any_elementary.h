@@ -48,7 +48,7 @@ class CIEC_ANY_ELEMENTARY : public CIEC_ANY{
 
     private:
 
-    int checkTypeSpec(const char *pa_pacValue, const char *pa_pacHashPos);
+    int checkTypeSpec(const char* pa_pacValue, const char* pa_pacHashPos) const;
 
     const static CStringDictionary::TStringId scm_anTypeNameStringIds[];
     const static int scm_nMaxTypeNameLength = 13;

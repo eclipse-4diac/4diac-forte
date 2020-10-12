@@ -43,7 +43,7 @@ namespace forte {
         EComResponse openConnection(char *paLayerParameter);
         void closeConnection();
         void handledConnectedDataRecv();
-        void handleConnectionAttemptInConnected();
+        void handleConnectionAttemptInConnected() const;
 
         CIPComSocketHandler::TSocketDescriptor mListeningID; //!> to be used by server type connections. there the m_nSocketID will be used for the accepted connection.
         EComResponse mInterruptResp;

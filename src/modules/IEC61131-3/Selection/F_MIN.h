@@ -67,7 +67,7 @@ public:
     OUT().saveAssign(MIN<T> (oMin, oMax));
   }
 
-  template<typename T> void calculateValueString(){
+  template<typename T> void calculateValueString() const {
     //TODO fill this function
   }
 

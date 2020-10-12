@@ -75,7 +75,7 @@ void IODeviceController::handleChangeEvent(IOHandle*) {
   // EMPTY - Override
 }
 
-bool IODeviceController::hasError() {
+bool IODeviceController::hasError() const {
   return mError != 0;
 }
 

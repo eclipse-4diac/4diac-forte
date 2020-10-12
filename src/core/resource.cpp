@@ -401,7 +401,7 @@ void CResource::createAOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRI
 }
 
 void CResource::createConnectionResponseMessage(const CStringDictionary::TStringId srcId, const CStringDictionary::TStringId dstId,
-    const CFunctionBlock& paDstFb, const CFunctionBlock& paSrcFb, CIEC_STRING& paReqResult){
+    const CFunctionBlock& paDstFb, const CFunctionBlock& paSrcFb, CIEC_STRING& paReqResult) const {
   paReqResult.append("<Connection Source=\"");
   paReqResult.append(paSrcFb.getInstanceName());
   paReqResult.append(".");
@@ -510,8 +510,8 @@ void CResource::createInterfaceResponseMessages(CIEC_STRING &paReqResult, const 
   }
 }
 
-void CResource::createInterfaceResponseMessage(CIEC_STRING & paReqResult, const char* pa_pcType,
-    const CIEC_STRING &paName, const CIEC_STRING &paType, const TDataIOID* paEWith, const TForteInt16* paEWithIndexes, const int pa_nIndex, const CStringDictionary::TStringId* paENameList){
+void CResource::createInterfaceResponseMessage(CIEC_STRING& paReqResult, const char* pa_pcType, const CIEC_STRING& paName, const CIEC_STRING& paType,
+    const TDataIOID* paEWith, const TForteInt16* paEWithIndexes, const int pa_nIndex, const CStringDictionary::TStringId* paENameList) const {
   paReqResult.append("<");
   paReqResult.append(pa_pcType);
   paReqResult.append(" Name=\"");

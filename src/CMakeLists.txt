@@ -13,11 +13,19 @@
 # *******************************************************************************/
 
 set(FORTE_EXTERNAL_MODULES_DIRECTORY "" CACHE PATH "Path to a directory with FORTE modules located outside of the FORTE source code")
-
-forte_create_modules_file(${CMAKE_CURRENT_SOURCE_DIR}/modules/ "${FORTE_EXTERNAL_MODULES_DIRECTORY}")
+SET(FORTE_MODULE_LIST modules;com;external)
+forte_create_modules_file("${FORTE_MODULE_LIST}")
 forte_add_subdirectory(arch)
 forte_add_subdirectory(core)
-forte_add_subdirectory(modules)
+foreach(FORTE_MODULE_DIR ${FORTE_MODULE_LIST})
+  string(COMPARE EQUAL "${FORTE_MODULE_DIR}" external _isExternal)
+  if(NOT _isExternal)
+    forte_add_subdirectory("${FORTE_MODULE_DIR}")
+  endif()
+endforeach(FORTE_MODULE_DIR)
+if(EXISTS ${FORTE_EXTERNAL_MODULES_DIRECTORY})
+  INCLUDE(${CMAKE_BINARY_DIR}/src/external/CMakeLists.txt)
+endif()
 forte_add_subdirectory(stdfblib)
 
 SET(SOURCE_GROUP core)  
@@ -288,7 +296,9 @@ ADD_CUSTOM_TARGET(forte_init_generator COMMAND ${CMAKE_COMMAND} -DFORTE_BINARY_D
 ADD_DEPENDENCIES (forte_init_generator forte_generate_modules_cmake_files)
 ADD_DEPENDENCIES (FORTE_LITE forte_init_generator)
 
-ADD_CUSTOM_TARGET(forte_generate_modules_cmake_files COMMAND ${CMAKE_COMMAND} -DFORTE_MODULE_DIR:STRING=${CMAKE_CURRENT_SOURCE_DIR}/modules/ -DFORTE_EXTERNAL_MODULE_DIR:STRING=${FORTE_EXTERNAL_MODULES_DIRECTORY} -P ${FORTE_BUILDSUPPORT_DIRECTORY}/generate_modules_cmake_file.cmake)
+ADD_CUSTOM_TARGET(forte_generate_modules_cmake_files COMMAND ${CMAKE_COMMAND}
+  -DFORTE_MODULE_LIST:LISTS="${FORTE_MODULE_LIST}"
+  -P ${FORTE_BUILDSUPPORT_DIRECTORY}/generate_modules_cmake_file.cmake)
 
 ADD_CUSTOM_TARGET(forte_stringlist_generator COMMAND ${CMAKE_COMMAND} -DFORTE_LINKED_STRINGDICT:STRING="${FORTE_LINKED_STRINGDICT}" -DFORTE_BINARY_DIR:STRING="${CMAKE_BINARY_DIR}" -DFORTE_SOURCE_DIR:STRING="${CMAKE_CURRENT_SOURCE_DIR}" -P ${FORTE_BUILDSUPPORT_DIRECTORY}/generate_stringlist.cmake)
 ADD_DEPENDENCIES (FORTE_LITE forte_stringlist_generator)

@@ -22,7 +22,7 @@ class RMT_RES : public CResource{
     RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_roDevice);
     virtual ~RMT_RES();
 
-    void joinResourceThread();
+    void joinResourceThread() const;
 
   private:
     static const SFBInterfaceSpec scm_stFBInterfaceSpec;

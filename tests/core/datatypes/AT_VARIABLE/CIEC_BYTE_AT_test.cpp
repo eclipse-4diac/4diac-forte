@@ -22,6 +22,31 @@ BOOST_AUTO_TEST_SUITE(AT_VARIABLE)
 
 BOOST_AUTO_TEST_SUITE(AT_VARIABLE_BYTE)
 
+BOOST_AUTO_TEST_CASE(AT_VARIABLE_BYTE_TO_BYTE_FROM_DWORD)
+{
+  CIEC_DWORD nTestDword = 3;
+  CIEC_DWORD nTestDwordB = 3;
+
+  ARRAY_AT<CIEC_BYTE, CIEC_DWORD,0,3> a(nTestDword);
+  ARRAY_AT<CIEC_BYTE, CIEC_DWORD,0,3> b(nTestDwordB);
+
+  b[0] = 0;
+  b[1] = 1;
+  b[2] = 2;
+  b[3] = 3;
+
+  a[0] = b[3];
+  a[1] = b[2];
+  a[2] = b[1];
+  a[3] = b[0];
+
+  BOOST_CHECK_EQUAL((int)a[0],3);
+  BOOST_CHECK_EQUAL((int)a[1],2);
+  BOOST_CHECK_EQUAL((int)a[2],1);
+  BOOST_CHECK_EQUAL((int)a[3],0);
+
+}
+
 BOOST_AUTO_TEST_CASE(AT_VARIABLE_BYTE_READ)
 {
   CIEC_BYTE nTestByte;
@@ -30,7 +55,7 @@ BOOST_AUTO_TEST_CASE(AT_VARIABLE_BYTE_READ)
 
   ARRAY_AT<CIEC_BOOL, CIEC_BYTE, 0, 7> testArray(nTestByte);
 
-  for(auto i=0;i<8;i++){
+  for(size_t i=0;i<8;i++) {
     BOOST_CHECK_EQUAL(testArray[i], true);
   }
 

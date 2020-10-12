@@ -67,7 +67,7 @@ namespace forte {
             return (0 == mNumElements);
           }
 
-          size_t size(){
+          size_t size() const {
             return mNumElements;
           }
 

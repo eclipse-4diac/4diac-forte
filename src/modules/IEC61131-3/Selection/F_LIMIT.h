@@ -74,7 +74,7 @@ class FORTE_F_LIMIT : public CFunctionBlock{
     OUT().saveAssign(LIMIT<T> (oMin, static_cast<T &> (IN()), oMax));
   }
 
-  template<typename T> void calculateValueString(){
+  template<typename T> void calculateValueString() const {
     //TODO fill this function
   }
   virtual ~FORTE_F_LIMIT(){};

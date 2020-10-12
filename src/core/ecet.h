@@ -93,7 +93,7 @@ class CEventChainExecutionThread : public CThread{
      */
     void clear(void);
 
-    bool externalEventOccured(){
+    bool externalEventOccured() const {
       /* we should not need a protection here as we are just comparing the both
        * the only value that could change during the compare is m_pstExternalEventListEnd. In the worst case
        * this results in a to early or to late detection. However as the transfer is protected this should be no

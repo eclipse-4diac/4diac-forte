@@ -104,6 +104,9 @@ class CAdapter;
     virtual CIEC_ANY* clone(TForteByte *pa_acDataBuf) const { \
       FORTE_STATIC_ASSERT((sizeof(CIEC_ANY) == sizeof(CIEC_##datatypename)), DataTypeNotTheSameSizeAsANY); \
       return (0 != pa_acDataBuf)  ? new(pa_acDataBuf)CIEC_##datatypename(*this) : new CIEC_##datatypename(*this); } \
+    virtual CStringDictionary::TStringId getTypeNameID() const { \
+        return CIEC_##datatypename::csm_oFirmwareDataTypeEntry_##datatypename.getTypeNameId(); \
+    }\
   FORTE_DUMMY_INIT_DEC \
   private:
 

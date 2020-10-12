@@ -32,7 +32,7 @@ namespace forte {
           IOHandle(IODeviceController *paController, IOMapper::Direction paDirection, CIEC_ANY::EDataTypeID paType);
           virtual ~IOHandle();
 
-          bool hasObserver() {
+          bool hasObserver() const {
             return !!mObserver;
           }
 
@@ -40,11 +40,11 @@ namespace forte {
             return mObserver;
           }
 
-          bool is(CIEC_ANY::EDataTypeID paType) {
+          bool is(CIEC_ANY::EDataTypeID paType) const {
             return this->mType == paType;
           }
 
-          bool is(IOMapper::Direction paDirection) {
+          bool is(IOMapper::Direction paDirection) const {
             return this->mDirection == paDirection;
           }
 

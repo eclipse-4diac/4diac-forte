@@ -11,7 +11,7 @@
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 
-#include "../../../src/modules/HTTP/httpparser.h"
+#include "../../../src/com/HTTP/httpparser.h"
 
 BOOST_AUTO_TEST_SUITE (HTTPParser_function_test)
 

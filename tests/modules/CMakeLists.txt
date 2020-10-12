@@ -11,14 +11,18 @@
 # *******************************************************************************/
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\fblib)
 
+IF(FORTE_MODULE_CONVERT)
+  add_subdirectory(convert)
+ENDIF()
+
 IF(FORTE_MODULE_IEC61131)
   add_subdirectory(IEC61131-3)
-ENDIF(FORTE_MODULE_IEC61131)
+ENDIF()
 
 IF(FORTE_MODULE_UTILS)
   add_subdirectory(utils)
-ENDIF(FORTE_MODULE_UTILS)
+ENDIF()
 
 IF(FORTE_COM_HTTP)
   add_subdirectory(HTTP)
-ENDIF(FORTE_COM_HTTP)
+ENDIF()

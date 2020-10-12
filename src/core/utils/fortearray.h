@@ -34,7 +34,7 @@ namespace forte {
             return mData[paIndex];
           }
 
-          size_t getSize(){
+          size_t getSize() const {
             return Capacity;
           }
 

@@ -44,7 +44,7 @@ class CDeviceExecution {
      * In this function the CDeviceExecution does all means necessary that the new event chain will be executed correctly.
      * \param paECStartFB The start FB of the event chain
      */
-    void startNewEventChain(CEventSourceFB *paECStartFB);
+    void startNewEventChain(CEventSourceFB* paECStartFB) const;
     /*!\brief Check if an occurrence of the given event handler is currently allowed.
      *
      * With this function the device execution can disable or enable the notification on external events.
@@ -53,7 +53,7 @@ class CDeviceExecution {
      * \param pa_nExtEvHandler ID of the external event handler given by the CDeviceExecution on registerExternalEvnetHandler()
      * \return true if the external event handler is allowed to start new event chains.
      */
-    bool extEvHandlerIsAllowed(size_t) {
+    bool extEvHandlerIsAllowed(size_t) const {
       return true;
     }
 
@@ -64,7 +64,7 @@ class CDeviceExecution {
       return static_cast<T&>(*getExtEvHandler(T::mHandlerIdentifier));
     }
 
-    bool isExtEvHandlerValid(size_t paIdentifier) {
+    bool isExtEvHandlerValid(size_t paIdentifier) const {
       return (0 != getExtEvHandler(paIdentifier));
     }
 

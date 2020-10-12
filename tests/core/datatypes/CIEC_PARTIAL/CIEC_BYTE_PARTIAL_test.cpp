@@ -37,10 +37,24 @@ public:
   CIEC_BYTE_PARTIAL_UNCHECKED(const CIEC_BYTE& paValue) : CIEC_BYTE(paValue) {
   }
 
-  CIEC_ANY_BIT::PARTIAL_ACCESS_TYPE<CIEC_BOOL, CIEC_BYTE> x(size_t paIndex){
-    return CIEC_ANY_BIT::PARTIAL_ACCESS_TYPE<CIEC_BOOL, CIEC_BYTE>(*this, paIndex);
+    class BOOL_ACCESSOR : public CIEC_ANY_BIT::PARTIAL_ACCESS_TYPE<CIEC_BOOL, CIEC_BYTE> {
+      public:
+        explicit BOOL_ACCESSOR(CIEC_BYTE &paSrc, const size_t paIndex) :
+            PARTIAL_ACCESS_TYPE<CIEC_BOOL, CIEC_BYTE>(paSrc, paIndex) {
+        }
+
+        CIEC_BOOL& operator =(const CIEC_BOOL &paValue) {
+          // Simple value assignment - no self assignment check needed
+          setValueSimple(paValue);
+          return *this;
+        }
+    };
+
+    BOOL_ACCESSOR x(size_t paIndex) {
+      return BOOL_ACCESSOR(*this, paIndex);
   }
 };
+
 
 BOOST_AUTO_TEST_SUITE(CIEC_ANY_BIT_PARTIAL)
 BOOST_AUTO_TEST_SUITE(CIEC_ANY_BIT_PARTIAL_BYTE)
@@ -208,7 +222,7 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_TYPE_WRITE_OUT_OF_BOUNDS)
 {
   CIEC_BYTE_PARTIAL_UNCHECKED mTestByte;
 
-  auto tmp = mTestByte.x(8);
+CIEC_BYTE_PARTIAL_UNCHECKED::BOOL_ACCESSOR tmp = mTestByte.x(8);
 
   tmp = true;
 
@@ -222,7 +236,7 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_TYPE_WRITE_OUT_OF_BOUNDS_FROM_CONST)
 
   CIEC_BYTE_PARTIAL_UNCHECKED mTestByte;
 
-  auto tmp = mTestByte.x(8);
+CIEC_BYTE_PARTIAL_UNCHECKED::BOOL_ACCESSOR tmp = mTestByte.x(8);
 
   tmp = nTestBool;
 
@@ -238,7 +252,7 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_TYPE_READ_OUT_OF_BOUNDS)
   nTestByte = 255;
   mTestByte.setValue(nTestByte);
 
-  auto tmp = mTestByte.x(8);
+CIEC_BYTE_PARTIAL_UNCHECKED::BOOL_ACCESSOR tmp = mTestByte.x(8);
 
   BOOST_CHECK_EQUAL(mTestByte, 255);
   BOOST_CHECK_EQUAL(tmp, 0);

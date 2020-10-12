@@ -14,6 +14,8 @@
  *
  *******************************************************************************/
 
+#include "datatype.h"
+
 #ifndef SRC_CORE_IEC61131_CAST_HELPER_CPP_
 #define SRC_CORE_IEC61131_CAST_HELPER_CPP_
 
@@ -71,6 +73,130 @@ namespace forte {
       template<typename T> struct implicit_cast<T, T> {
           typedef T type;
       };
+
+      /* built-in type casts */
+      ALLOW_IMPLICIT_CAST(TForteInt8, double)
+      ALLOW_IMPLICIT_CAST(TForteInt16, double)
+      ALLOW_IMPLICIT_CAST(TForteInt32, double)
+      ALLOW_IMPLICIT_CAST(TForteInt64, double)
+
+      ALLOW_IMPLICIT_CAST(TForteInt8, CIEC_SINT)
+      ALLOW_IMPLICIT_CAST(TForteInt16, CIEC_SINT)
+      ALLOW_IMPLICIT_CAST(TForteInt32, CIEC_SINT)
+      ALLOW_IMPLICIT_CAST(TForteInt64, CIEC_SINT)
+
+      ALLOW_IMPLICIT_CAST(TForteInt8, CIEC_INT)
+      ALLOW_IMPLICIT_CAST(TForteInt16, CIEC_INT)
+      ALLOW_IMPLICIT_CAST(TForteInt32, CIEC_INT)
+      ALLOW_IMPLICIT_CAST(TForteInt64, CIEC_INT)
+
+      ALLOW_IMPLICIT_CAST(TForteInt8, CIEC_DINT)
+      ALLOW_IMPLICIT_CAST(TForteInt16, CIEC_DINT)
+      ALLOW_IMPLICIT_CAST(TForteInt32, CIEC_DINT)
+      ALLOW_IMPLICIT_CAST(TForteInt64, CIEC_DINT)
+
+#ifdef FORTE_USE_64BIT_DATATYPES
+      ALLOW_IMPLICIT_CAST(TForteInt8, CIEC_LINT)
+      ALLOW_IMPLICIT_CAST(TForteInt16, CIEC_LINT)
+      ALLOW_IMPLICIT_CAST(TForteInt32, CIEC_LINT)
+      ALLOW_IMPLICIT_CAST(TForteInt64, CIEC_LINT)
+#endif //FORTE_USE_64BIT_DATATYPES
+
+      ALLOW_IMPLICIT_CAST(TForteUInt8, CIEC_SINT)
+      ALLOW_IMPLICIT_CAST(TForteUInt16, CIEC_SINT)
+      ALLOW_IMPLICIT_CAST(TForteUInt32, CIEC_SINT)
+      ALLOW_IMPLICIT_CAST(TForteUInt64, CIEC_SINT)
+
+      ALLOW_IMPLICIT_CAST(TForteUInt8, CIEC_INT)
+      ALLOW_IMPLICIT_CAST(TForteUInt16, CIEC_INT)
+      ALLOW_IMPLICIT_CAST(TForteUInt32, CIEC_INT)
+      ALLOW_IMPLICIT_CAST(TForteUInt64, CIEC_INT)
+
+      ALLOW_IMPLICIT_CAST(TForteUInt8, CIEC_DINT)
+      ALLOW_IMPLICIT_CAST(TForteUInt16, CIEC_DINT)
+      ALLOW_IMPLICIT_CAST(TForteUInt32, CIEC_DINT)
+      ALLOW_IMPLICIT_CAST(TForteUInt64, CIEC_DINT)
+
+#ifdef FORTE_USE_64BIT_DATATYPES
+      ALLOW_IMPLICIT_CAST(TForteUInt8, CIEC_LINT)
+      ALLOW_IMPLICIT_CAST(TForteUInt16, CIEC_LINT)
+      ALLOW_IMPLICIT_CAST(TForteUInt32, CIEC_LINT)
+      ALLOW_IMPLICIT_CAST(TForteUInt64, CIEC_LINT)
+#endif //FORTE_USE_64BIT_DATATYPES
+
+      ALLOW_IMPLICIT_CAST(TForteInt8, CIEC_USINT)
+      ALLOW_IMPLICIT_CAST(TForteInt16, CIEC_USINT)
+      ALLOW_IMPLICIT_CAST(TForteInt32, CIEC_USINT)
+      ALLOW_IMPLICIT_CAST(TForteInt64, CIEC_USINT)
+
+      ALLOW_IMPLICIT_CAST(TForteInt8, CIEC_UINT)
+      ALLOW_IMPLICIT_CAST(TForteInt16, CIEC_UINT)
+      ALLOW_IMPLICIT_CAST(TForteInt32, CIEC_UINT)
+      ALLOW_IMPLICIT_CAST(TForteInt64, CIEC_UINT)
+
+      ALLOW_IMPLICIT_CAST(TForteInt8, CIEC_UDINT)
+      ALLOW_IMPLICIT_CAST(TForteInt16, CIEC_UDINT)
+      ALLOW_IMPLICIT_CAST(TForteInt32, CIEC_UDINT)
+      ALLOW_IMPLICIT_CAST(TForteInt64, CIEC_UDINT)
+
+#ifdef FORTE_USE_64BIT_DATATYPES
+      ALLOW_IMPLICIT_CAST(TForteInt8, CIEC_ULINT)
+      ALLOW_IMPLICIT_CAST(TForteInt16, CIEC_ULINT)
+      ALLOW_IMPLICIT_CAST(TForteInt32, CIEC_ULINT)
+      ALLOW_IMPLICIT_CAST(TForteInt64, CIEC_ULINT)
+#endif //FORTE_USE_64BIT_DATATYPES
+
+      ALLOW_IMPLICIT_CAST(TForteUInt8, CIEC_USINT)
+      ALLOW_IMPLICIT_CAST(TForteUInt16, CIEC_USINT)
+      ALLOW_IMPLICIT_CAST(TForteUInt32, CIEC_USINT)
+      ALLOW_IMPLICIT_CAST(TForteUInt64, CIEC_USINT)
+
+      ALLOW_IMPLICIT_CAST(TForteUInt8, CIEC_UINT)
+      ALLOW_IMPLICIT_CAST(TForteUInt16, CIEC_UINT)
+      ALLOW_IMPLICIT_CAST(TForteUInt32, CIEC_UINT)
+      ALLOW_IMPLICIT_CAST(TForteUInt64, CIEC_UINT)
+
+      ALLOW_IMPLICIT_CAST(TForteUInt8, CIEC_UDINT)
+      ALLOW_IMPLICIT_CAST(TForteUInt16, CIEC_UDINT)
+      ALLOW_IMPLICIT_CAST(TForteUInt32, CIEC_UDINT)
+      ALLOW_IMPLICIT_CAST(TForteUInt64, CIEC_UDINT)
+
+#ifdef FORTE_USE_64BIT_DATATYPES
+      ALLOW_IMPLICIT_CAST(TForteUInt8, CIEC_ULINT)
+      ALLOW_IMPLICIT_CAST(TForteUInt16, CIEC_ULINT)
+      ALLOW_IMPLICIT_CAST(TForteUInt32, CIEC_ULINT)
+      ALLOW_IMPLICIT_CAST(TForteUInt64, CIEC_ULINT)
+#endif //FORTE_USE_64BIT_DATATYPES
+
+#ifdef FORTE_USE_REAL_DATATYPE
+      ALLOW_IMPLICIT_CAST(TForteInt8, CIEC_REAL)
+      ALLOW_IMPLICIT_CAST(TForteInt16, CIEC_REAL)
+      ALLOW_IMPLICIT_CAST(TForteInt32, CIEC_REAL)
+      ALLOW_IMPLICIT_CAST(TForteInt64, CIEC_REAL)
+
+      ALLOW_IMPLICIT_CAST(TForteUInt8, CIEC_REAL)
+      ALLOW_IMPLICIT_CAST(TForteUInt16, CIEC_REAL)
+      ALLOW_IMPLICIT_CAST(TForteUInt32, CIEC_REAL)
+      ALLOW_IMPLICIT_CAST(TForteUInt64, CIEC_REAL)
+
+      ALLOW_IMPLICIT_CAST(TForteFloat, CIEC_REAL)
+#ifdef FORTE_USE_64BIT_DATATYPES
+      ALLOW_IMPLICIT_CAST(TForteDFloat, CIEC_REAL)
+
+      ALLOW_IMPLICIT_CAST(TForteInt8, CIEC_LREAL)
+      ALLOW_IMPLICIT_CAST(TForteInt16, CIEC_LREAL)
+      ALLOW_IMPLICIT_CAST(TForteInt32, CIEC_LREAL)
+      ALLOW_IMPLICIT_CAST(TForteInt64, CIEC_LREAL)
+
+      ALLOW_IMPLICIT_CAST(TForteUInt8, CIEC_LREAL)
+      ALLOW_IMPLICIT_CAST(TForteUInt16, CIEC_LREAL)
+      ALLOW_IMPLICIT_CAST(TForteUInt32, CIEC_LREAL)
+      ALLOW_IMPLICIT_CAST(TForteUInt64, CIEC_LREAL)
+
+      ALLOW_IMPLICIT_CAST(TForteFloat, CIEC_LREAL)
+      ALLOW_IMPLICIT_CAST(TForteDFloat, CIEC_LREAL)
+#endif //FORTE_USE_64BIT_DATATYPES
+#endif //FORTE_USE_REAL_DATATYPE
 
       /* BOOL casts */
       ALLOW_IMPLICIT_CAST(CIEC_BOOL, CIEC_BYTE)
@@ -431,7 +557,53 @@ namespace forte {
 #endif
 #endif
 
-      template<typename T, typename U> struct is_same{
+      struct false_ {
+          static const bool value = false;
+      };
+
+      struct true_ {
+          static const bool value = true;
+      };
+
+      template<class c> struct is_integral : false_ {};
+
+      #define IS_INTEGRAL(type) \
+      template<> struct is_integral<type> : true_ {};
+
+      IS_INTEGRAL(TForteInt8)
+      IS_INTEGRAL(TForteInt16)
+      IS_INTEGRAL(TForteInt32)
+      IS_INTEGRAL(TForteInt64)
+      IS_INTEGRAL(TForteUInt8)
+      IS_INTEGRAL(TForteUInt16)
+      IS_INTEGRAL(TForteUInt32)
+      IS_INTEGRAL(TForteUInt64)
+
+      template<class c> struct is_float : false_ {};
+
+      #define IS_FLOAT(type) \
+      template<> struct is_float<type> : true_ {};
+
+      IS_FLOAT(TForteFloat)
+      IS_FLOAT(TForteDFloat)
+
+      template<typename A, typename B> struct or_ {
+          static const bool value = A::value || B::value;
+      };
+
+      template<typename A, typename B> struct and_ {
+          static const bool value = A::value && B::value;
+      };
+
+      template<class c> struct negate {
+          static const bool value = !(c::value);
+      };
+
+      template<class c> struct is_scalar {
+          static const bool value = or_<is_integral<c>, is_float<c> >::value;
+      };
+
+      template<typename T, typename U> struct is_same {
           static const bool value = false;
       };
 

@@ -57,7 +57,7 @@ void CConnection::setSource(CFunctionBlock *paSrcFB, TPortId paSrcPortId){
   mSourceId.mPortId = paSrcPortId;
 }
 
-bool CConnection::dstExists(const CConnectionPoint &paDestPoint){
+bool CConnection::dstExists(const CConnectionPoint& paDestPoint) const {
   bool bRetVal = false;
   for(TDestinationIdList::Iterator it = mDestinationIds.begin();
       it != mDestinationIds.end(); ++it){

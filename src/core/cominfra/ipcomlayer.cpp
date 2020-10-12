@@ -226,7 +226,7 @@ void CIPComLayer::handledConnectedDataRecv(){
   }
 }
 
-void CIPComLayer::handleConnectionAttemptInConnected(){
+void CIPComLayer::handleConnectionAttemptInConnected() const {
   //accept and immediately close the connection to tell the client that we are not available
   //so far the best option I've found for handling single connection servers
   CIPComSocketHandler::TSocketDescriptor socketID = CIPComSocketHandler::acceptTCPConnection(mListeningID);
