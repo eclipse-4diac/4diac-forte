@@ -18,6 +18,8 @@
 #include "../core/devexec.h"
 #include "../core/esfb.h"
 #include "../core/utils/criticalregion.h"
+#include <algorithm>
+#include <functional>
 
 DEFINE_HANDLER(CTimerHandler)
 
@@ -38,8 +40,9 @@ void CTimerHandler::registerTimedFB(STimedFBListEntry *paTimerListEntry, const C
   // set the first next activation time right here to reduce jitter, see Bug #568902 for details
   paTimerListEntry->mTimeOut = mForteTime + paTimerListEntry->mInterval;
   {
-    CCriticalRegion criticalRegion(mSync);
-    addTimedFBEntry(paTimerListEntry);
+    CCriticalRegion criticalRegion(mAddListSync);
+    paTimerListEntry->mNext = mAddFBList;
+    mAddFBList = paTimerListEntry;
   }
 }
 
@@ -67,7 +70,11 @@ void CTimerHandler::addTimedFBEntry(STimedFBListEntry *paTimerListEntry) {
 }
 
 void CTimerHandler::unregisterTimedFB(CEventSourceFB *paTimedFB) {
-  CCriticalRegion criticalRegion(mSync);
+  CCriticalRegion criticalRegion(mRemoveListSync);
+  mRemoveFBList.push_back(paTimedFB);
+}
+
+void CTimerHandler::removeTimedFB(CEventSourceFB *paTimedFB) {
   if (0 != mTimedFBList) {
     STimedFBListEntry *buffer = 0;
     if (mTimedFBList->mTimedFB == paTimedFB) {
@@ -94,30 +101,65 @@ void CTimerHandler::unregisterTimedFB(CEventSourceFB *paTimedFB) {
 void CTimerHandler::nextTick(void) {
   ++mForteTime;
   mDeviceExecution.notifyTime(mForteTime); //notify the device execution that one tick passed by.
-  if(0 != mTimedFBList){
-    //only check the list if there are entries in the list
-    CCriticalRegion criticalRegion(mSync);
-    while (0 != mTimedFBList) {
-      if (mTimedFBList->mTimeOut > mForteTime) {
-        break;
-      }
-      mDeviceExecution.startNewEventChain(mTimedFBList->mTimedFB);
-      STimedFBListEntry *buffer = mTimedFBList;
-      mTimedFBList = mTimedFBList->mNext;
 
-      switch (buffer->mType) {
-        case e_Periodic:
-          buffer->mTimeOut = mForteTime + buffer->mInterval;  // the next activation time of this FB
-          addTimedFBEntry(buffer); //re-register the timed FB
-          break;
-        case e_SingleShot:
-          // nothing special is to do up to now
-        default:
-          buffer->mNext = 0;
-          buffer->mTimeOut = 0;
-          break;
-      }
+  if(!mRemoveFBList.empty()){
+    processRemoveList();
+  }
+
+  processTimedFBList();
+
+  if(0 != mAddFBList){
+    processAddList();
+  }
+}
+
+void  CTimerHandler::processTimedFBList(){
+  while (0 != mTimedFBList) {
+    if (mTimedFBList->mTimeOut > mForteTime) {
+      break;
+    }
+    STimedFBListEntry *buffer = mTimedFBList;
+    mTimedFBList = buffer->mNext;  //remove buffer from the list
+    triggerTimedFB(buffer);
+  }
+}
+
+void CTimerHandler::triggerTimedFB(STimedFBListEntry *paTimerListEntry){
+  mDeviceExecution.startNewEventChain(paTimerListEntry->mTimedFB);
+
+  switch (paTimerListEntry->mType) {
+    case e_Periodic:
+      paTimerListEntry->mTimeOut = mForteTime + paTimerListEntry->mInterval;  // the next activation time of this FB
+      addTimedFBEntry(paTimerListEntry); //re-register the timed FB
+      break;
+    case e_SingleShot:
+      // nothing special is to do up to now, therefore go to default
+    default:
+      paTimerListEntry->mNext = 0;
+      paTimerListEntry->mTimeOut = 0;
+      break;
+  }
+}
+
+void CTimerHandler::processAddList(){
+  CCriticalRegion criticalRegion(mAddListSync);
+  while(0 != mAddFBList){
+    STimedFBListEntry *buffer = mAddFBList;
+    mAddFBList = buffer->mNext; //remove buffer from the list
+    if(buffer->mTimeOut < mForteTime){
+      // the time already passed trigger the fb
+      triggerTimedFB(buffer);
+    }
+    else{
+      addTimedFBEntry(buffer);
     }
   }
 }
+
+void CTimerHandler::processRemoveList(){
+  CCriticalRegion criticalRegion(mRemoveListSync);
+  std::for_each(mRemoveFBList.begin(), mRemoveFBList.end(), std::bind1st(std::mem_fun(&CTimerHandler::removeTimedFB), this));
+  mRemoveFBList.clear();
+}
+
 
