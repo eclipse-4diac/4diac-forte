@@ -35,7 +35,7 @@ std::string MQTTHandler::scmPassword;
 
 
 MQTTStates MQTTHandler::smMQTTS_STATE = NOT_CONNECTED;
-forte::arch::CSemaphore MQTTHandler::mStateSemaphore = forte::arch::CSemaphore();
+forte::arch::CSemaphore MQTTHandler::mStateSemaphore;
 bool MQTTHandler::mIsSemaphoreEmpty = true;
 
 MQTTHandler::MQTTHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution)  {
