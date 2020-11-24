@@ -106,8 +106,8 @@ forte::com_infra::EComResponse CPosixSerCommLayer::openSerialConnection(const SS
       default: return forte::com_infra::e_InitInvalidId; break;
     }
 
-    stNewTIO.c_ispeed = mOldTIO.c_ispeed;
-    stNewTIO.c_ospeed = mOldTIO.c_ospeed;
+    cfsetispeed(&stNewTIO, cfgetispeed(&mOldTIO));
+    cfsetospeed(&stNewTIO, cfgetospeed(&mOldTIO));
 
     switch (paSerialParameters.byteSize) {
       case e5: stNewTIO.c_cflag |= CS5;  break;
