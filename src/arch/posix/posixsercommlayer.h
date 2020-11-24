@@ -12,9 +12,9 @@
 #ifndef _SERCOMMLAYER_H_
 #define _SERCOMMLAYER_H_
 
+#include <termios.h>
 #include "../../core/cominfra/serialcomlayerbase.h"
 #include "../gensockhand.h"
-#include <termios.h>
 
 class CPosixSerCommLayer : public CSerialComLayerBase<FORTE_SOCKET_TYPE, FORTE_INVALID_SOCKET>{
   public:
