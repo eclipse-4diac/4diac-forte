@@ -189,9 +189,9 @@ SET(FORTE_CommunicationInterruptQueueSize "10" CACHE STRING "forte Communication
 mark_as_advanced(FORTE_CommunicationInterruptQueueSize)
 
 if(FORTE_DYNAMIC_TYPE_LOAD)
-SET(FORTE_IPLayerRecvBufferSize "20000" CACHE STRING "FORTE ip layer recv buffer size" FORCE)
+SET(FORTE_IPLayerRecvBufferSize "20000" CACHE STRING "FORTE ip layer recv buffer size")
 else()
-SET(FORTE_IPLayerRecvBufferSize "1500" CACHE STRING "FORTE ip layer recv buffer size" FORCE)
+SET(FORTE_IPLayerRecvBufferSize "1500" CACHE STRING "FORTE ip layer recv buffer size")
 endif(FORTE_DYNAMIC_TYPE_LOAD)
 mark_as_advanced(FORTE_IPLayerRecvBufferSize)
 
