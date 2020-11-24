@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2011 ACIN
+ * Copyright (c) 2005, 2020 ACIN, OFFIS e.V.
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +8,7 @@
  *
  * Contributors:
  *  Alois Zoitl - initial API and implementation and/or initial documentation
+ *  Jörg Walter - make objects non-copyable
  *******************************************************************************/
 #ifndef _FORTE_SYNC_H_
 #define _FORTE_SYNC_H_
@@ -56,10 +57,14 @@ class CPThreadSyncObject{
       return &mMutex;
     }
 
+    // prevent copies, since pthread_mutex_t may not be copied
+    CPThreadSyncObject(const CPThreadSyncObject &); /* = delete; */
+    CPThreadSyncObject &operator=(const CPThreadSyncObject &); /* = delete; */
+
     //! The posix thread mutex handle of the operating system.
     pthread_mutex_t mMutex;
 
-   friend class forte::arch::CPThreadSemaphore;
+    friend class forte::arch::CPThreadSemaphore;
 };
 
 typedef CPThreadSyncObject CSyncObject; //allows that doxygen can generate better documenation

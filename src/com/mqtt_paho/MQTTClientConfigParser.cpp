@@ -25,7 +25,7 @@ bool CMQTTClientConfigFileParser::loadConfig(std::string &paFileLocation, std::s
 
   CConfigFileParser configFileParser(paFileLocation);
   bool endpointFound = false;
-  std::string endpointKey = mConfigKeysNames[MQTTConfigKeys::eEndoint];
+  std::string endpointKey = mConfigKeysNames[eEndoint];
 
   if(CConfigFileParser::lookForKeyValueInFile(configFileParser, endpointKey, paEndpoint, endpointFound)) {
     if(endpointFound) {
@@ -36,11 +36,11 @@ bool CMQTTClientConfigFileParser::loadConfig(std::string &paFileLocation, std::s
 
         switch(configFileParser.parseNextLine(resultPair)){
           case CConfigFileParser::eOk:
-            if(0 == resultPair.first.compare(mConfigKeysNames[MQTTConfigKeys::eEndoint])) {
+            if(0 == resultPair.first.compare(mConfigKeysNames[eEndoint])) {
               moreLinesToRead = false;
-            } else if(0 == resultPair.first.compare(mConfigKeysNames[MQTTConfigKeys::eUsername])) {
+            } else if(0 == resultPair.first.compare(mConfigKeysNames[eUsername])) {
               paResult.mUsername = resultPair.second;
-            } else if(0 == resultPair.first.compare(mConfigKeysNames[MQTTConfigKeys::ePassword])) {
+            } else if(0 == resultPair.first.compare(mConfigKeysNames[ePassword])) {
               paResult.mPassword = resultPair.second;
             }
             else {

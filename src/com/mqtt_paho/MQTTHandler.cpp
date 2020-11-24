@@ -25,7 +25,7 @@ DEFINE_HANDLER(MQTTHandler);
 MQTTAsync_connectOptions MQTTHandler::smClientConnectionOptions =
     MQTTAsync_connectOptions_initializer;
 
-CSyncObject MQTTHandler::smMQTTMutex = CSyncObject();
+CSyncObject MQTTHandler::smMQTTMutex;
 
 MQTTAsync MQTTHandler::smClient = 0;
 CIEC_STRING MQTTHandler::smClientId;
