@@ -149,6 +149,12 @@ else()
 endif(NOT ("${FORTE_USE_LUATYPES}" STREQUAL "None"))
 
 #######################################################################################
+# Early definition of option how to generate stringlist for every source file
+#######################################################################################
+SET(FORTE_LINKED_STRINGDICT ON CACHE BOOL "FORTE will resolve references to the stringdict at link-stage and not compile-stage. This will reduce compiletime if the stringdict changes.")
+mark_as_advanced(FORTE_LINKED_STRINGDICT)
+
+#######################################################################################
 # Add subdirectories
 #######################################################################################
 set(FORTE_TESTS OFF CACHE BOOL "Build Tests")
@@ -272,9 +278,6 @@ LIST(REMOVE_DUPLICATES SOURCE_FILES)
 #######################################################################################
 # Generate stringlist for every source file
 #######################################################################################
-SET(FORTE_LINKED_STRINGDICT ON CACHE BOOL "FORTE will resolve references to the stringdict at link-stage and not compile-stage. This will reduce compiletime if the stringdict changes.")
-mark_as_advanced(FORTE_LINKED_STRINGDICT)
-
 SET(FORTE_MODIFY_SOURCES_ON_MISSING_GENERATED_INCLUDES ON CACHE BOOL "FORTE change the source-files if includes for the generated includes are missing.")
 mark_as_advanced(FORTE_MODIFY_SOURCES_ON_MISSING_GENERATED_INCLUDES)
 
