@@ -23,13 +23,12 @@
 #include "forte_sem.h"
 #include "../devlog.h"
 #include "../utils/timespec_utils.h"
+#include <criticalregion.h>
 
 namespace forte {
   namespace arch {
 
-    CPThreadSemaphore::CPThreadSemaphore(bool paInitialValue)
-      : mPosted(paInitialValue)
-    {
+    CPThreadSemaphore::CPThreadSemaphore(bool paInitialValue) : mPosted(paInitialValue){
       pthread_condattr_t condAttr;
 
       if (pthread_condattr_init(&condAttr) != 0) {
@@ -42,43 +41,35 @@ namespace forte {
         DEVLOG_ERROR("Could not initialize condition variable\n");
       }
       pthread_condattr_destroy(&condAttr);
-
-      if (pthread_mutex_init(&mMutex, NULL) != 0) {
-        DEVLOG_ERROR("Could not initialize mutex\n");
-      }
     }
 
     
     CPThreadSemaphore::~CPThreadSemaphore(){
       pthread_cond_destroy(&mCond);
-      pthread_mutex_destroy(&mMutex);
     }
 
 
     void CPThreadSemaphore::inc(){
-      pthread_mutex_lock(&mMutex);
+      CCriticalRegion cr(mMutex);
       mPosted = true;
       pthread_cond_signal(&mCond);
-      pthread_mutex_unlock(&mMutex);
     }
 
 
     void CPThreadSemaphore::waitIndefinitely(){
-      pthread_mutex_lock(&mMutex);
+      CCriticalRegion cr(mMutex);
       while (!mPosted) {
-        pthread_cond_wait(&mCond, &mMutex);
+        pthread_cond_wait(&mCond, mMutex.getPosixMutex());
       }
       mPosted = false;
-      pthread_mutex_unlock(&mMutex);
     }
 
 
     bool CPThreadSemaphore::timedWait(const TForteUInt64 paRelativeTimeout){
-      pthread_mutex_lock(&mMutex);
+      CCriticalRegion cr(mMutex);
 
       if (mPosted) {
         mPosted = false;
-        pthread_mutex_unlock(&mMutex);
         return true;
       }
 
@@ -95,7 +86,7 @@ namespace forte {
 
       int rc = 0;
       while (!mPosted && rc == 0) {
-        rc = pthread_cond_timedwait(&mCond, &mMutex, &expectedAbsoluteTimeoutTime);
+        rc = pthread_cond_timedwait(&mCond, mMutex.getPosixMutex(), &expectedAbsoluteTimeoutTime);
       }
 
       if (rc != 0 && rc != ETIMEDOUT) {
@@ -110,18 +101,14 @@ namespace forte {
         mPosted = false;
       }
 
-      pthread_mutex_unlock(&mMutex);
       return success;
     }
 
 
     bool CPThreadSemaphore::tryNoWait(){
-      pthread_mutex_lock(&mMutex);
-
+      CCriticalRegion cr(mMutex);
       bool success = mPosted;
       mPosted = false;
-
-      pthread_mutex_unlock(&mMutex);
       return success;
     }
   } /* namespace arch */
