@@ -126,6 +126,11 @@ if (WIN32)
     mark_as_advanced(FORTE_ADDITIONAL_CXX_FLAGS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FORTE_ADDITIONAL_CXX_FLAGS}")
   endif(MSVC)
+
+  option(FORTE_WINDOWS_XP_COMPAT OFF "Enable some workarounds for Windows XP compatibility")
+  if (FORTE_WINDOWS_XP_COMPAT)
+    add_definitions(-DWINDOWS_XP_COMPAT=1)
+  endif()
 endif(WIN32)
 
 #######################################################################################
