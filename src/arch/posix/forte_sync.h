@@ -14,6 +14,13 @@
 
 #include <pthread.h>
 
+namespace forte {
+  namespace arch {
+    //forward declaration of CPThreadSemaphore so that we can use it in friend
+    class CPThreadSemaphore;
+  }
+}
+
 
 /*! \ingroup posix_hal
  * \brief The sync object implementation for the posix thread interface.
@@ -22,31 +29,39 @@
  * 
  */
  
-class CPCSyncObject{
+class CPThreadSyncObject{
   public:
-    CPCSyncObject();
-    ~CPCSyncObject();
+    CPThreadSyncObject();
+    ~CPThreadSyncObject();
 
     /*!\brief Lock the resource coming after the lock command
      *
      * This function blocks until it will get the lock for the coming critical section.
      */
     void lock(void){
-      pthread_mutex_lock(&m_oMutexHandle);
+      pthread_mutex_lock(&mMutex);
       //TODO handle return value
     }
 
-    //!Freee the resource coming after the lock command
+    //!Free the resource coming after the lock command
     void unlock(void){
-      pthread_mutex_unlock(&m_oMutexHandle);
+      pthread_mutex_unlock(&mMutex);
       //TODO handle return value
     }
+
 
   private:
+    //! Accessor method to the mutex allowing platform specific code to use this sync object class.
+    pthread_mutex_t *getPosixMutex(){
+      return &mMutex;
+    }
+
     //! The posix thread mutex handle of the operating system.
-    pthread_mutex_t m_oMutexHandle;
+    pthread_mutex_t mMutex;
+
+   friend class forte::arch::CPThreadSemaphore;
 };
 
-typedef CPCSyncObject CSyncObject; //allows that doxygen can generate better documenation
+typedef CPThreadSyncObject CSyncObject; //allows that doxygen can generate better documenation
 
 #endif /*FORTE_SYNC_H_*/
