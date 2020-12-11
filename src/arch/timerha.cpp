@@ -24,7 +24,7 @@
 DEFINE_HANDLER(CTimerHandler)
 
 CTimerHandler::CTimerHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution),
-    mForteTime(0), mTimedFBList(0){
+    mForteTime(0), mTimedFBList(nullptr), mAddFBList(nullptr){
 }
 
 CTimerHandler::~CTimerHandler(){
