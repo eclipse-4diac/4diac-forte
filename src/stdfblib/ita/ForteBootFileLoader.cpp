@@ -21,7 +21,7 @@
 
 char* gCommandLineBootFile = 0;
 
-ForteBootFileLoader::ForteBootFileLoader(IBootFileCallback &paCallback) : mBootfile(0), mCallback(paCallback){
+ForteBootFileLoader::ForteBootFileLoader(IBootFileCallback &paCallback) : mBootfile(0), mCallback(paCallback), mNeedsExit(false){
   openBootFile();
 }
 
@@ -62,7 +62,7 @@ bool ForteBootFileLoader::openBootFile() {
     else{
       if(0 != getenv("FORTE_BOOT_FILE_FAIL_MISSING")){
         DEVLOG_ERROR("Boot file %s could not be opened and FORTE_BOOT_FILE_FAIL_MISSING is set. Failing...\n", bootFileName.getValue());
-        exit(2);
+        mNeedsExit = true;
       }
       else{
         DEVLOG_INFO("Boot file %s could not be opened. Skipping...\n", bootFileName.getValue());
