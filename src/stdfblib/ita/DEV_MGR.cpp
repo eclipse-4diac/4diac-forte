@@ -61,6 +61,10 @@ void DEV_MGR::executeEvent(int paEIID){
     if((true == QI()) && (false == QO())){
       //this is the first time init is called try to load a boot file
       ForteBootFileLoader loader(*this);
+      if(loader.needsExit()){
+        getResource().getDevice().changeFBExecutionState(cg_nMGM_CMD_Kill);
+        return;
+      }
       if(loader.isOpen() && LOAD_RESULT_OK == loader.loadBootFile()){
           DEVLOG_INFO("Bootfile correctly loaded\n");
       }

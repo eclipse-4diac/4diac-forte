@@ -44,9 +44,14 @@ class ForteBootFileLoader {
       return (0 != mBootfile);
     }
 
+    bool needsExit() const {
+      return mNeedsExit;
+    }
+
   private:
     FILE *mBootfile;
     IBootFileCallback &mCallback; //for now with one callback is enough for all cases
+    bool mNeedsExit;
 
     bool openBootFile();
     bool readLine(CIEC_STRING &line);
