@@ -31,7 +31,7 @@ const TForteUInt32 cg_nForteTicksPerSecond = ${FORTE_TicksPerSecond};
  *  For Smaller devices which do not use 64 bit datatypes a time base of 1000 (i.e., 1ms) 
  *  or 1000000 (i.e., 1micro s) may be suitable. 
  */
-const uint_fast32_t cgForteTimeBaseUnitsPerSecond = ${FORTE_TimeBaseUnitsPerSecond};
+const uint_fast64_t cgForteTimeBaseUnitsPerSecond = ${FORTE_TimeBaseUnitsPerSecond};
 
 
 /*! Define the initial size of the event chain list used in the event chain execution thread.
