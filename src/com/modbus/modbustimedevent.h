@@ -42,8 +42,7 @@ class CModbusTimedEvent{
     void restartTimer();
 
   private:
-    SForteTime m_oStartTime;
-    SForteTime m_oUpdateInterval;
+    uint_fast64_t m_nStartTime;
 
     TForteUInt32 m_nUpdateInterval; // Polling interval in milliseconds (0 => single shot event)
 

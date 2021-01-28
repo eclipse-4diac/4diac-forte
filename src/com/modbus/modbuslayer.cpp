@@ -360,7 +360,7 @@ EComResponse CModbusComLayer::openConnection(char *pa_acLayerParameter){
         DEVLOG_ERROR("CModbusComLayer:: Invalid input parameters\n");
       }
       else{
-        m_pModbusConnection = new CModbusClientConnection(getExtEvHandler<CModbusHandler>());
+        m_pModbusConnection = new CModbusClientConnection((CModbusHandler*)&getExtEvHandler<CModbusHandler>());
         if(strlen(tcpParams.m_acIp) > 0){
           m_pModbusConnection->setIPAddress(tcpParams.m_acIp);
           m_pModbusConnection->setPort(tcpParams.m_nPort);
