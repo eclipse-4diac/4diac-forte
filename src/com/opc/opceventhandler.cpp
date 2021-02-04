@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 - 2014 AIT, fortiss GmbH
+ * Copyright (c) 2012 - 2014 AIT, fortiss GmbH, Hit robot group
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +8,7 @@
  *
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
+ *   ys guo - Fix opc module compilation errors and deadlock bug
  *******************************************************************************/
 #include "opceventhandler.h"
 #include "../core/devexec.h"
@@ -22,7 +23,7 @@ COpcEventHandler::TCallbackDescriptor COpcEventHandler::m_nCallbackDescCount = 0
 COpcEventHandler::COpcEventHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution)  {
   this->start();
   // Sleep to allow new thread to start
-  CThread::sleep(100);
+  CThread::sleepThread(100);
 }
 
 COpcEventHandler::~COpcEventHandler(){
