@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 fortiss GmbH
+ * Copyright (c) 2016, 2021 fortiss GmbH, HIT robot group
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +8,7 @@
  *
  * Contributors:
  *   Monika Wenger, Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Tibalt Zhao - adapt to new handler infrastructure
  *******************************************************************************/
 
 #ifndef PROCESSINTERFACE_H_
@@ -25,6 +26,8 @@ class CPiFaceProcessInterface : public CProcessInterfaceBase{
         TForteByte *paFBVarsData);
 
     virtual ~CPiFaceProcessInterface();
+
+  friend class CDeviceExecution;
 
   protected:
     bool initialise(bool paInput);
