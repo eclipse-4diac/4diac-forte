@@ -14,7 +14,7 @@
 # Arrowhead specific functional blocks
 #############################################################################
 
-forte_add_module(Arrowhead "Arrowhead Function Blocks")
+forte_add_module(Arrowhead OFF "Arrowhead Function Blocks")
 
 IF(FORTE_MODULE_Arrowhead)
   add_subdirectory(common)

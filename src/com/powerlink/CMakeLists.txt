@@ -10,7 +10,7 @@
 #    Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
-forte_add_module(POWERLINK "openPOWERLINK Service Interface Function Blocks")
+forte_add_module(POWERLINK OFF "openPOWERLINK Service Interface Function Blocks")
 
 #############################################################################
 # COM Service Interface Function Blocks

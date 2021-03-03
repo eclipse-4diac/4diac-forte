@@ -11,7 +11,7 @@
 # *    Martin Melik-Merkumians - adds IB, QB, IL, QL
 # *******************************************************************************/ 
  
-forte_add_module(ADS "Interacting with ADS servers")
+forte_add_module(ADS OFF "Interacting with ADS servers")
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 SET(FORTE_MODULE_ADS_PI_ADS_ROOT "" CACHE PATH "Path to ADS library source root directory")

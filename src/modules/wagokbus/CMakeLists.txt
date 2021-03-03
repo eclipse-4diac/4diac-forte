@@ -13,7 +13,7 @@
 #############################################################################
 # WAGO KBUS SIFBs
 #############################################################################
-forte_add_module(WagoKbus "Wago Kbus interface")
+forte_add_module(WagoKbus OFF "Wago Kbus interface")
 
 if(FORTE_MODULE_WagoKbus)
   if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")

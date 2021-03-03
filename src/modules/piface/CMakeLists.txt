@@ -13,7 +13,7 @@
 ###############################################################
 # PiFace Raspberry Pi expansion board
 ###############################################################
-forte_add_module(PiFace "PiFace and PiFace like Raspberry PI expansion boards")
+forte_add_module(PiFace OFF "PiFace and PiFace like Raspberry PI expansion boards")
 
 if(FORTE_MODULE_PiFace)
 

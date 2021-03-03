@@ -226,9 +226,9 @@ ENDMACRO(forte_add_handler)
 
 #MACRO(forte_add_module NAME DIRECTORY DESCRIPTION)
 # Additional parameters are interpreted as dependencies
-MACRO(forte_add_module NAME DESCRIPTION)
+MACRO(forte_add_module NAME ONOFF DESCRIPTION)
   # create module with value from cache (does not set the description if the entry exists)
-  SET(FORTE_MODULE_${NAME} OFF CACHE BOOL "${DESCRIPTION}")
+  SET(FORTE_MODULE_${NAME} ${ONOFF} CACHE BOOL "${DESCRIPTION}")
   # update the module description stored in cache
   SET(FORTE_MODULE_${NAME} ${FORTE_MODULE_${NAME}} CACHE BOOL "${DESCRIPTION}" FORCE)
 

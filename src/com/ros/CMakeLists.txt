@@ -14,7 +14,7 @@
 # ROS Example Publish and Subscribe FBs
 #############################################################################
 
-forte_add_module(ROS "Function Blocks to communicate with ROS (publish/subscribe)")
+forte_add_module(ROS OFF "Function Blocks to communicate with ROS (publish/subscribe)")
 
 if (FORTE_MODULE_ROS)
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
