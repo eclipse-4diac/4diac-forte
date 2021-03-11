@@ -43,7 +43,7 @@ private:
         if(m_bInitialized && checkActivation(pa_nEIID)) {
           CEventConnection *eoCon = getEOConUnchecked(1);
           if(eoCon->isConnected()) {
-            eoCon->triggerEvent(m_oECEO);
+            eoCon->triggerEvent(&m_oECEO);
             m_oECEO.resumeSelfSuspend();
           }
         }

@@ -47,12 +47,12 @@ void FORTE_RT_E_SPLIT::executeEvent(int pa_nEIID){
       CEventConnection *eoCon;
       eoCon = getEOConUnchecked(scm_nEventEO1ID);
       if(eoCon->isConnected()){
-        eoCon->triggerEvent(m_oECEO1);
+        eoCon->triggerEvent(&m_oECEO1);
         m_oECEO1.resumeSelfSuspend();
       }
       eoCon = getEOConUnchecked(scm_nEventEO2ID);
       if(eoCon->isConnected()){
-        eoCon->triggerEvent(m_oECEO2);
+        eoCon->triggerEvent(&m_oECEO2);
         m_oECEO2.resumeSelfSuspend();
       }
     }

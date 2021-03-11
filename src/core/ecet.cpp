@@ -45,7 +45,7 @@ void CEventChainExecutionThread::mainRun(){
   }
   else{
     if(0 != *mEventListStart){
-      (*mEventListStart)->mFB->receiveInputEvent((*mEventListStart)->mPortId, *this);
+      (*mEventListStart)->mFB->receiveInputEvent((*mEventListStart)->mPortId, this);
     }
     *mEventListStart = 0;
 
