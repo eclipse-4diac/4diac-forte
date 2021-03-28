@@ -32,7 +32,7 @@ void GEN_OR::executeEvent(int paEIID) {
   switch (paEIID) {
   case scm_nEventREQID:
 
-    anyBitFBHelper<GEN_OR>(OUT().getDataTypeID(), *this);
+    anyBitFBHelper<GEN_OR>(st_OUT().getDataTypeID(), *this);
     sendOutputEvent(scm_nEventCNFID);
 
     break;

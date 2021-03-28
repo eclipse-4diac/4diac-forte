@@ -41,7 +41,7 @@ class GEN_XOR : public CGenBitBase{
        * iff (if and only if) one of the boolean
        * inputs is set to 'true'.
        */
-      if(CIEC_ANY::e_BOOL == OUT().getDataTypeID()){
+      if(CIEC_ANY::e_BOOL == st_OUT().getDataTypeID()){
         unsigned int nInputSet = 0;
         for(unsigned int nInputIndex = 0; nInputIndex < getFBInterfaceSpec()->m_nNumDIs; nInputIndex++){
           oIn.saveAssign(*static_cast<T*>(getDI(nInputIndex)));
@@ -49,7 +49,7 @@ class GEN_XOR : public CGenBitBase{
           nInputSet = oIn ? nInputSet + 1 : nInputSet;
         }
 
-        OUT().saveAssign(static_cast<T>(1 == nInputSet));
+        st_OUT().saveAssign(static_cast<T>(1 == nInputSet));
       }
 
       /*
@@ -66,11 +66,11 @@ class GEN_XOR : public CGenBitBase{
           oIn.saveAssign(*static_cast<T*>(getDI(nInputIndex)));
 
           if(0 == nInputIndex){
-            OUT().saveAssign(oIn);
+            st_OUT().saveAssign(oIn);
           }
           else{
-            oOut.saveAssign(OUT());
-            OUT().saveAssign(XOR(oOut, oIn));
+            oOut.saveAssign(st_OUT());
+            st_OUT().saveAssign(XOR(oOut, oIn));
           }
         }
       }

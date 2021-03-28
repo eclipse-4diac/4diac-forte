@@ -44,7 +44,7 @@ const SFBInterfaceSpec FORTE_F_STRING_TO_BOOL::scm_stFBInterfaceSpec = {
 
 void FORTE_F_STRING_TO_BOOL::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    OUT() = STRING_TO_BOOL(IN());
+    st_OUT() = STRING_TO_BOOL(st_IN());
     sendOutputEvent(scm_nEventCNFID);
   }
 }

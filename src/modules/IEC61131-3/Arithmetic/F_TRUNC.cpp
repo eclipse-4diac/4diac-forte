@@ -44,12 +44,12 @@ const SFBInterfaceSpec FORTE_F_TRUNC::scm_stFBInterfaceSpec = {
 
 void FORTE_F_TRUNC::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    switch(IN().getDataTypeID()){
+    switch(st_IN().getDataTypeID()){
       case CIEC_ANY::e_REAL:
-        OUT().setSignedValue(TRUNC(static_cast<CIEC_REAL &>(IN())));
+        st_OUT().setSignedValue(TRUNC(static_cast<CIEC_REAL &>(st_IN())));
         break;
       default:
-        OUT().setSignedValue(TRUNC(static_cast<CIEC_LREAL &>(IN())));
+        st_OUT().setSignedValue(TRUNC(static_cast<CIEC_LREAL &>(st_IN())));
         break;
     }
     sendOutputEvent(scm_nEventCNFID);

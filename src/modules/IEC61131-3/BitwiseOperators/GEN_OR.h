@@ -39,10 +39,10 @@ public:
       oIn.saveAssign(*static_cast<T*>(getDI(nInputIndex)));
 
       if (0 == nInputIndex) {
-        OUT().saveAssign(oIn);
+        st_OUT().saveAssign(oIn);
       } else {
-        oOut.saveAssign(OUT());
-        OUT().saveAssign(OR(oOut, oIn));
+        oOut.saveAssign(st_OUT());
+        st_OUT().saveAssign(OR(oOut, oIn));
       }
     }
   }

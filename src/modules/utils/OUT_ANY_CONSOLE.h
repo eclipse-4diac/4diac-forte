@@ -31,7 +31,7 @@ private:
   }
   ;
 
-  CIEC_ANY &IN() {
+  CIEC_ANY &st_IN() {
     return *static_cast<CIEC_ANY*>(getDI(2));
   }
   ;

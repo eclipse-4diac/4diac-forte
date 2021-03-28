@@ -22,13 +22,13 @@ class FORTE_F_TIME_TO_WSTRING: public CFunctionBlock{
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_TIME &IN() {
+  CIEC_TIME &st_IN() {
     return *static_cast<CIEC_TIME*>(getDI(0));
   };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_WSTRING &OUT() {
+  CIEC_WSTRING &st_OUT() {
     return *static_cast<CIEC_WSTRING*>(getDO(0));
   };
 

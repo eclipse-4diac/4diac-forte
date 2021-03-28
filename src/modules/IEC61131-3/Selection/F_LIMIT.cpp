@@ -49,7 +49,7 @@ const SFBInterfaceSpec FORTE_F_LIMIT::scm_stFBInterfaceSpec = { 1,
 
 void FORTE_F_LIMIT::executeEvent(int pa_nEIID) {
   if (scm_nEventREQID == pa_nEIID) {
-      anyElementaryFBHelper<FORTE_F_LIMIT>(IN().getDataTypeID(), *this);
+      anyElementaryFBHelper<FORTE_F_LIMIT>(st_IN().getDataTypeID(), *this);
       sendOutputEvent(scm_nEventCNFID);
   }
 }

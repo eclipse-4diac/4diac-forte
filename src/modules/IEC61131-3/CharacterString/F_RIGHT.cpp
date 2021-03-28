@@ -45,7 +45,7 @@ const SFBInterfaceSpec FORTE_F_RIGHT::scm_stFBInterfaceSpec = {
 
 void FORTE_F_RIGHT::executeEvent(int pa_nEIID){
   if (scm_nEventREQID == pa_nEIID) {
-    anyStringFBHelper<FORTE_F_RIGHT>(IN().getDataTypeID(), *this);
+    anyStringFBHelper<FORTE_F_RIGHT>(st_IN().getDataTypeID(), *this);
     sendOutputEvent(scm_nEventCNFID);
   }
 }

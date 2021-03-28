@@ -44,7 +44,7 @@ const SFBInterfaceSpec FORTE_F_WSTRING_TO_USINT::scm_stFBInterfaceSpec = {
 
 void FORTE_F_WSTRING_TO_USINT::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    OUT() = WSTRING_TO_USINT(IN());
+    st_OUT() = WSTRING_TO_USINT(st_IN());
     sendOutputEvent(scm_nEventCNFID);
   }
 }

@@ -26,7 +26,7 @@ class FORTE_F_LIMIT : public CFunctionBlock{
     }
     ;
 
-    CIEC_ANY_ELEMENTARY &IN(){
+    CIEC_ANY_ELEMENTARY &st_IN(){
       return *static_cast<CIEC_ANY_ELEMENTARY*>(getDI(1));
     }
     ;
@@ -38,7 +38,7 @@ class FORTE_F_LIMIT : public CFunctionBlock{
 
     static const CStringDictionary::TStringId scm_anDataOutputNames[];
     static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-    CIEC_ANY_ELEMENTARY &OUT(){
+    CIEC_ANY_ELEMENTARY &st_OUT(){
       return *static_cast<CIEC_ANY_ELEMENTARY*>(getDO(0));
     }
     ;
@@ -71,7 +71,7 @@ class FORTE_F_LIMIT : public CFunctionBlock{
     oMin.saveAssign(MN());
     oMax.saveAssign(MX());
 
-    OUT().saveAssign(LIMIT<T> (oMin, static_cast<T &> (IN()), oMax));
+    st_OUT().saveAssign(LIMIT<T> (oMin, static_cast<T &> (st_IN()), oMax));
   }
 
   template<typename T> void calculateValueString() const {

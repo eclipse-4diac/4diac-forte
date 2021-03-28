@@ -30,8 +30,8 @@ const TDataIOID GEN_STRUCT_MUX::scm_anEOWith[] = {0, 255};
 
 void GEN_STRUCT_MUX::executeEvent(int paEIID) {
   if(scm_nEventREQID == paEIID) {
-    CIEC_ANY *members = OUT().getMembers();
-    for (size_t i = 0; i < OUT().getStructSize(); i++){
+    CIEC_ANY *members = st_OUT().getMembers();
+    for (size_t i = 0; i < st_OUT().getStructSize(); i++){
       members[i].setValue(*getDI(static_cast<unsigned int>(i)));
     }
     sendOutputEvent(scm_nEventCNFID);

@@ -44,7 +44,7 @@ const SFBInterfaceSpec FORTE_F_SUB_TOD_TOD::scm_stFBInterfaceSpec = {
 
 void FORTE_F_SUB_TOD_TOD::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    OUT() = SUB_TOD_TOD(IN1(), IN2());
+    st_OUT() = SUB_TOD_TOD(IN1(), IN2());
     sendOutputEvent(scm_nEventCNFID);
   }
 }

@@ -61,14 +61,14 @@ void FB_TP::executeEvent(int pa_nEIID){
         }
       }
       else {
-        if(IN() == true && ET() == 0){
+        if(st_IN() == true && ET() == 0){
           Q() = true;
           edgeFlag = true;
           start = NOW_MONOTONIC();
           DEVLOG_DEBUG("start\n");
         }
         else
-          if((false == IN()) && (ET()>0)) {
+          if((false == st_IN()) && (ET()>0)) {
             ET() = 0;
             DEVLOG_DEBUG("reset\n");
           }

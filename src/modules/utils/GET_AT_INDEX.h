@@ -35,7 +35,7 @@ private:
     return *static_cast<CIEC_BOOL*>(getDO(0));
   };
 
-  CIEC_ANY &OUT() {
+  CIEC_ANY &st_OUT() {
     return *static_cast<CIEC_ANY*>(getDO(1));
   };
 

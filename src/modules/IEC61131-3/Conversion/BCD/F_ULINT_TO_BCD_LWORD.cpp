@@ -44,7 +44,7 @@ const SFBInterfaceSpec FORTE_F_ULINT_TO_BCD_LWORD::scm_stFBInterfaceSpec = {
 
 void FORTE_F_ULINT_TO_BCD_LWORD::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    OUT() = ULINT_TO_BCD_LWORD(IN());
+    st_OUT() = ULINT_TO_BCD_LWORD(st_IN());
     sendOutputEvent(scm_nEventCNFID);
   }
 }

@@ -50,7 +50,7 @@ const SFBInterfaceSpec DINT2DINT::scm_stFBInterfaceSpec = {
 
 void DINT2DINT::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    OUT() = IN();
+    st_OUT() = st_IN();
     sendOutputEvent(scm_nEventCNFID);
   }
 }

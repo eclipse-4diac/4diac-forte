@@ -44,7 +44,7 @@ const SFBInterfaceSpec FORTE_F_REAL_TO_ULINT::scm_stFBInterfaceSpec = {
 
 void FORTE_F_REAL_TO_ULINT::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    OUT() = REAL_TO_ULINT(IN());
+    st_OUT() = REAL_TO_ULINT(st_IN());
     sendOutputEvent(scm_nEventCNFID);
   }
 }

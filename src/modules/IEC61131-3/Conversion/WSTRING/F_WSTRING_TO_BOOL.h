@@ -22,13 +22,13 @@ class FORTE_F_WSTRING_TO_BOOL: public CFunctionBlock{
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_WSTRING &IN() {
+  CIEC_WSTRING &st_IN() {
     return *static_cast<CIEC_WSTRING*>(getDI(0));
   };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_BOOL &OUT() {
+  CIEC_BOOL &st_OUT() {
     return *static_cast<CIEC_BOOL*>(getDO(0));
   };
 

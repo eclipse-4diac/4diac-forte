@@ -21,13 +21,13 @@ class FORTE_F_NOT: public CFunctionBlock{
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_ANY_BIT &IN() {
+  CIEC_ANY_BIT &st_IN() {
     return *static_cast<CIEC_ANY_BIT*>(getDI(0));
   };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_ANY_BIT &OUT() {
+  CIEC_ANY_BIT &st_OUT() {
     return *static_cast<CIEC_ANY_BIT*>(getDO(0));
   };
 
@@ -53,8 +53,8 @@ public:
 
   template<typename T> void calculateValue(){
     T oIn;
-    oIn.saveAssign(IN());
-    OUT().saveAssign(NOT(oIn));
+    oIn.saveAssign(st_IN());
+    st_OUT().saveAssign(NOT(oIn));
   }
 
   virtual ~FORTE_F_NOT(){};

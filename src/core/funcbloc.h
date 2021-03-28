@@ -520,14 +520,6 @@ typedef CFunctionBlock *TFunctionBlockPtr;
  fbBaseClass( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData)
 
 
-#ifdef IN
-#undef IN
-#endif
-
-#ifdef OUT
-#undef OUT
-#endif
-
 #ifdef OPTIONAL
 #undef OPTIONAL
 #endif

@@ -44,7 +44,7 @@ const SFBInterfaceSpec FORTE_F_CONCAT_DATE_TOD::scm_stFBInterfaceSpec = {
 
 void FORTE_F_CONCAT_DATE_TOD::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    OUT() = CONCAT_DATE_TOD(IN1(), IN2());
+    st_OUT() = CONCAT_DATE_TOD(IN1(), IN2());
     sendOutputEvent(scm_nEventCNFID);
   }
 }

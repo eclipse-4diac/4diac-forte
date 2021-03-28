@@ -48,11 +48,11 @@ void FORTE_GET_AT_INDEX::executeEvent(int pa_nEIID){
     if(CIEC_ANY::e_ARRAY == IN_ARRAY().getDataTypeID()){
       CIEC_ARRAY &rInArray = static_cast<CIEC_ARRAY&>(IN_ARRAY());
       //check if data types match
-      if(rInArray.getElementDataTypeID() == OUT().getDataTypeID()){
+      if(rInArray.getElementDataTypeID() == st_OUT().getDataTypeID()){
         //now check array length of input array
         if(INDEX() < rInArray.size()){
           //update the output value
-          OUT().setValue(*rInArray[INDEX()]);
+          st_OUT().setValue(*rInArray[INDEX()]);
           QO() = true;
         }
         else{

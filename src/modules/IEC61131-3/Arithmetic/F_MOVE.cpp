@@ -45,7 +45,7 @@ const SFBInterfaceSpec FORTE_F_MOVE::scm_stFBInterfaceSpec = {
 
 void FORTE_F_MOVE::executeEvent(int pa_nEIID){
   if (scm_nEventREQID == pa_nEIID) {
-  anyMagnitudeFBHelper<FORTE_F_MOVE>(IN().getDataTypeID(), *this);
+  anyMagnitudeFBHelper<FORTE_F_MOVE>(st_IN().getDataTypeID(), *this);
   sendOutputEvent(scm_nEventCNFID);
   }
 }

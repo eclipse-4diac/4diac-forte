@@ -50,7 +50,7 @@ const SFBInterfaceSpec BOOL2BOOL::scm_stFBInterfaceSpec = {
 
 void BOOL2BOOL::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    OUT() = IN();
+    st_OUT() = st_IN();
     sendOutputEvent(scm_nEventCNFID);
   }
 }

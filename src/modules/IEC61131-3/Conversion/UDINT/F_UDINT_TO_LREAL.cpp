@@ -44,7 +44,7 @@ const SFBInterfaceSpec FORTE_F_UDINT_TO_LREAL::scm_stFBInterfaceSpec = {
 
 void FORTE_F_UDINT_TO_LREAL::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    OUT() = UDINT_TO_LREAL(IN());
+    st_OUT() = UDINT_TO_LREAL(st_IN());
     sendOutputEvent(scm_nEventCNFID);
   }
 }

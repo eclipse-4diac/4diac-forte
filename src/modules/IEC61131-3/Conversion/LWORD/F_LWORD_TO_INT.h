@@ -22,13 +22,13 @@ class FORTE_F_LWORD_TO_INT: public CFunctionBlock{
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_LWORD &IN() {
+  CIEC_LWORD &st_IN() {
     return *static_cast<CIEC_LWORD*>(getDI(0));
   };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_INT &OUT() {
+  CIEC_INT &st_OUT() {
     return *static_cast<CIEC_INT*>(getDO(0));
   };
 

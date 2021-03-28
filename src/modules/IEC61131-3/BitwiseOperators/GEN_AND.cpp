@@ -33,7 +33,7 @@ void GEN_AND::executeEvent(int paEIID) {
   switch (paEIID) {
   case scm_nEventREQID:
 
-    anyBitFBHelper<GEN_AND>(OUT().getDataTypeID(), *this);
+    anyBitFBHelper<GEN_AND>(st_OUT().getDataTypeID(), *this);
     sendOutputEvent(scm_nEventCNFID);
 
     break;

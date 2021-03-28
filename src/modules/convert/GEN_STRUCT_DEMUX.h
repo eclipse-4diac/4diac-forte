@@ -34,7 +34,7 @@ class GEN_STRUCT_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
     void executeEvent(int paEIID);
     virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);
 
-    CIEC_STRUCT& IN() {
+    CIEC_STRUCT& st_IN() {
        return *static_cast<CIEC_STRUCT*>(getDI(0));
     }
 

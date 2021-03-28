@@ -42,7 +42,7 @@ const SFBInterfaceSpec FORTE_F_TIME_IN_S_TO_LINT::scm_stFBInterfaceSpec = {
 };
 
 void FORTE_F_TIME_IN_S_TO_LINT::alg_REQ(void){
-OUT() = TIME_IN_S_TO_LINT((IN()));
+  st_OUT() = TIME_IN_S_TO_LINT((st_IN()));
 }
 
 

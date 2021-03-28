@@ -18,14 +18,6 @@
 #include <string>
 #include <fstream>
 
-#ifdef OUT
-#undef OUT
-#endif
-
-#ifdef IN
-#undef IN
-#endif
-
 class CFMUProcessInterface : public CProcessInterfaceBase{
   public:
     CFMUProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
