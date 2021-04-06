@@ -250,7 +250,7 @@ MACRO(forte_add_directory_module)
   forte_directory_listing(DESCRIPTION "*.cpp" "*.c" "*.h")
 
   # add the module (stops execution if module is disabled!)
-  forte_add_module(${MODULENAME} ${DESCRIPTION})
+  forte_add_module(${MODULENAME} OFF ${DESCRIPTION})
 ENDMACRO(forte_add_directory_module)
 
 #MACRO(forte_add_io NAME DIRECTORY DESCRIPTION)
