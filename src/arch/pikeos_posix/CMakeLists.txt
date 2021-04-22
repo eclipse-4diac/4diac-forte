@@ -1,14 +1,14 @@
 #*******************************************************************************
-# Copyright (c) 2018 SYSGO AG
+# Copyright (c) 2018, 2021 SYSGO GmbH
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
 #
 # SPDX-License-Identifier: EPL-2.0
-#
+# 
 # Contributors:
-#   Agostino Mascitti - adaption to PikeOS 4.2
-#   Christoph Binder - add possibility to configure simulated time
+#   Agostino Mascitti - adaption to PikeOS 4.2 arm v7hf
+#   Thomas Wagner -     adaption to PikeOS >=5.0 architecture independent
 # *******************************************************************************/
 
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\pikeos)
@@ -17,93 +17,88 @@ forte_add_architecture(PikeOS_Posix)
 
 if("${FORTE_ARCHITECTURE}" STREQUAL "PikeOS_Posix")
 
-  forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+   execute_process(COMMAND $ENV{CC} -dumpversion OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE CCVERSION)
+   execute_process(COMMAND $ENV{CC} -dumpmachine OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE CCTARGET)
+   string(TOUPPER $ENV{PIKEOS_ARCHITECTURE} ARCH_UPPERC)
+   string(TOUPPER $ENV{PIKEOS_TARGET_ENDIAN} ENDIAN_UPPERC)
+   set(PIKEOS_LWIP_LIB_PATH $ENV{PIKEOS_PROJECT})
+   if("$ENV{POSIX_SMP}" STREQUAL "true")
+      set(PROCCORE smp)
+   else()
+      set(PROCCORE up)
+   endif()
+   if("$ENV{POSIX_DEBUG}$ENV{POSIX_TRACE}" STREQUAL "truetrue")
+      set(DEBUG "/debug-trace")
+   elseif("$ENV{POSIX_DEBUG}" STREQUAL "true")
+      set(DEBUG_VARIANT "/debug")
+   elseif("$ENV{POSIX_TRACE}" STREQUAL "true")
+      set(DEBUG_VARIANT "/trace")
+   else()
+      set(DEBUG_VARIANT "")
+   endif()
+  
+  
+   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+   forte_add_sourcefile_hcpp(../posix/forte_sync ../utils/timespec_utils)
+   forte_add_sourcefile_cpp(main.cpp forte_thread.cpp pctimeha.cpp forte_sem.cpp forte_architecture_time.cpp
+                            ../genforte_printer.cpp ../genforte_realFunctions.cpp)
+   forte_add_sourcefile_h(../forte_architecture_time.h forte_thread.h pctimeha.h)
+  
 
-  forte_add_sourcefile_hcpp(../posix/forte_sync ../posix/forte_sem)
-  forte_add_sourcefile_cpp(main.cpp ../genforte_printer.cpp ../posix/forte_thread.cpp)
-  forte_add_sourcefile_cpp(../genforte_fileio.cpp)
-  if(FORTE_FAKE_TIME)
-    forte_set_timer(../fake_time/faketimerha)
-  else(FORTE_FAKE_TIME)
-    forte_add_sourcefile_cpp(pctimeha.cpp)
-    forte_add_sourcefile_cpp(pctimeha.h)
-  endif(FORTE_FAKE_TIME)
-  forte_add_sourcefile_cpp(../posix/forte_architecture_time.cpp)
-  forte_add_sourcefile_h(../forte_architecture_time.h forte_thread.h)
+   if(FORTE_COM_ETH)
+      forte_add_handler(CFDSelectHandler sockhand)
+      forte_add_sourcefile_hcpp( ../fdselecthand ../bsdsocketinterf)
+      forte_add_sourcefile_h(../gensockhand.h sockhand.h)
+   endif(FORTE_COM_ETH)
 
-  forte_add_sourcefile_hcpp(../utils/timespec_utils)
-  forte_add_sourcefile_cpp(../genforte_realFunctions.cpp)
-
-  if(FORTE_COM_ETH)
-   forte_add_handler(CFDSelectHandler sockhand)
-   forte_add_sourcefile_hcpp( ../fdselecthand ../bsdsocketinterf)
-   forte_add_sourcefile_h(../gensockhand.h)
-   forte_add_sourcefile_h(sockhand.h)
-  endif(FORTE_COM_ETH)
-
-set(PIKEOS_LWIP_LIB_PATH "" CACHE PATH "Path to LWIP build that supports SO_REUSEADDR")
-
-  if(PIKEOS_LWIP_LIB_PATH STREQUAL "")
-    message(WARNING "PIKEOS_LWIP_LIB_PATH is unset. The lwIP library is required by the PikeOS_Posix architecture.")
-  endif(PIKEOS_LWIP_LIB_PATH STREQUAL "")
-
-    forte_add_include_directories(
-        "${CMAKE_FIND_ROOT_PATH}/target/arm/v7hf/posix/include"
-        "${CMAKE_FIND_ROOT_PATH}/target/arm/v7hf/include"
-        "${CMAKE_FIND_ROOT_PATH}/target/arm/v7hf/include/kernel"
-        "${CMAKE_FIND_ROOT_PATH}/cdk/arm/v7hf/lib/gcc/arm-unknown-eabihf/5.4.0/include"
-        "${CMAKE_FIND_ROOT_PATH}/target/arm/v7hf/posix/include/c++98"
-
-        #LwIP includes
-        "${PIKEOS_LWIP_LIB_PATH}"   #lwipopts.h is here
-
-        "${CMAKE_FIND_ROOT_PATH}/target/arm/v7hf/posix/lwip/include"
-    )
-
-    forte_add_link_directories(
-        "${CMAKE_FIND_ROOT_PATH}/target/arm/v7hf/posix/lib"
-        "${CMAKE_FIND_ROOT_PATH}/target/arm/v7hf/posix/os/smp/debug"
-        "${CMAKE_FIND_ROOT_PATH}/target/arm/v7hf/lib"
-        "${CMAKE_FIND_ROOT_PATH}/cdk/arm/v7hf/lib/gcc/arm-unknown-eabihf/5.4.0"
+   forte_add_include_directories(
+        "$ENV{PIKEOS_POOL_DIR}/posix/include"
+        "$ENV{PIKEOS_POOL_DIR}/posix/include/c++"
+        "$ENV{PIKEOS_POOL_DIR}/include"
+        "$ENV{PIKEOS_POOL_DIR}/include/kernel"
+        "$ENV{PIKEOS_PREFIX}/cdk/$ENV{PIKEOS_ARCH}/$ENV{PIKEOS_PROC}/lib/gcc/${CCTARGET}/${CCVERSION}/include"
+        "$ENV{PIKEOS_POOL_DIR}/posix/include/c++98"
         "${PIKEOS_LWIP_LIB_PATH}"
+        "$ENV{PIKEOS_POOL_DIR}/posix/lwip/include"
+   )
 
-        #LwIP lib
+   forte_add_link_directories(
+        "$ENV{PIKEOS_POOL_DIR}/posix/os/${PROCCORE}${DEBUG_VARIANT}"
+        "$ENV{PIKEOS_POOL_DIR}/posix/lib"
+        "$ENV{PIKEOS_POOL_DIR}/lib"
+        "$ENV{PIKEOS_PREFIX}/cdk/$ENV{PIKEOS_ARCH}/$ENV{PIKEOS_PROC}/lib/gcc/${CCTARGET}/${CCVERSION}"
         "${PIKEOS_LWIP_LIB_PATH}"
-    )
+   )
 
-    # PikeOS POSIX libs and statically linked objects
-      forte_add_link_library("${CMAKE_FIND_ROOT_PATH}/target/arm/v7hf/posix/lib/cxx_init-c++98.o")
-      forte_add_link_library("${CMAKE_FIND_ROOT_PATH}/target/arm/v7hf/posix/os/smp/crt0.o")
+   # PikeOS POSIX libs and statically linked objects ("-lc" and "-lpse51" have to be included twice)
+   forte_add_link_library (
+        -lp4start -lstdcxx -lm -lc -lstand -lpse51
+        -llwip -lsbuf -lgdbstubsig -lc -lpse51 -lvm -lp4
+        -T$ENV{PIKEOS_POOL_DIR}/ldscript/app.ld
+   )
 
-      forte_add_link_library ("-lstdcxx-c++98" "-llwip" "-lsbuf" "-lm" "-lc" "-lgdbstubsig" "-lpse51" "-lm" "-lc" "-lpse51" "-lvm" "-lstand" "-lp4" "-lgcc")
-
-      # PikeOS linker script and custom link flags
-      forte_add_link_flags( "-T${CMAKE_FIND_ROOT_PATH}/target/arm/v7hf/ldscript/app.ld")
-
-  forte_add_definition("-nostdinc -W -Wall -Wextra -Woverloaded-virtual -Wconversion -ggdb -fno-builtin -DFORTE_LITTLE_ENDIAN -DARM_V7HF -DARM_CPU_V7 -DPOSIX_CXX -DPOSIX_LWIP -DPOSIX_SMP -DSMP -DPIKEOS_POSIX")
-
-  set(FORTE_POSIX_GENERATE_MAP_FILE FALSE CACHE BOOL "Enable the generation of map files")
-  mark_as_advanced(FORTE_POSIX_GENERATE_MAP_FILE)
-  IF(FORTE_POSIX_GENERATE_MAP_FILE)
-    forte_add_link_flags("-Wl,-M -Wl,-Map -Wl,forte.map -Wl,-cref")
-  ENDIF(FORTE_POSIX_GENERATE_MAP_FILE)  
-
-  forte_add_network_layer(SER OFF "ser" CPosixSerCommLayer ../posix/posixsercommlayer "Enable Forte serial line communication")
-
-  set(FORTE_RTTI_AND_EXCEPTIONS FALSE CACHE BOOL "Enable RTTI and Exceptions")
-  mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)
-
-  if(FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)
-    forte_add_definition("-DBOOST_TEST_DYN_LINK -g -O0 --coverage -fno-inline -fno-elide-constructors -fexceptions -fsanitize=address")
-    forte_add_link_library("-fsanitize=address")
-    forte_add_link_library("--coverage")
-  else()
-    IF(NOT FORTE_RTTI_AND_EXCEPTIONS)
-      forte_add_definition("-fno-rtti -fno-exceptions")
-    ENDIF(NOT FORTE_RTTI_AND_EXCEPTIONS)
-  endif(FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)
-
-
-
-
+   forte_add_definition("-nostdinc -W -Wall -Wextra -Woverloaded-virtual -Wconversion -ggdb -fno-builtin -DFORTE_${ENDIAN_UPPERC}_ENDIAN -D${ARCH_UPPERC} -DPOSIX_CXX -DPOSIX_LWIP -DPOSIX_${PROCCORE} -D${PROCCORE} -DPIKEOS_POSIX")
+    
+   set(FORTE_POSIX_GENERATE_MAP_FILE FALSE CACHE BOOL "Enable the generation of map files")
+   mark_as_advanced(FORTE_POSIX_GENERATE_MAP_FILE)
+   
+   IF(FORTE_POSIX_GENERATE_MAP_FILE)
+      forte_add_link_flags("-Wl,-M -Wl,-Map -Wl,forte.map -Wl,-cref")
+   ENDIF(FORTE_POSIX_GENERATE_MAP_FILE)  
+ 
+   forte_add_network_layer(SER OFF "ser" CPosixSerCommLayer ../posix/posixsercommlayer "Enable Forte serial line communication")
+  
+   set(FORTE_RTTI_AND_EXCEPTIONS FALSE CACHE BOOL "Enable RTTI and Exceptions")
+   mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)
+  
+   if("$ENV{POSIX_DEBUG}" STREQUAL "true")
+      forte_add_definition("-DBOOST_TEST_DYN_LINK -g -O0 --coverage -fno-inline -fno-elide-constructors -fexceptions -fsanitize=address")
+      forte_add_link_library("-fsanitize=address")
+      forte_add_link_library("--coverage")
+   else()
+      IF(NOT FORTE_RTTI_AND_EXCEPTIONS)
+        forte_add_definition("-fno-rtti -fno-exceptions")
+      ENDIF(NOT FORTE_RTTI_AND_EXCEPTIONS)
+   endif()
+  
 endif()
