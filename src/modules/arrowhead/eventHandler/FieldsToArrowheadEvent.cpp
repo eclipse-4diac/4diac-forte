@@ -47,7 +47,7 @@ CIEC_INT i;
 i = 0;
 arrowheadEvent().type() = type();
 arrowheadEvent().payload() = payload();
-arrowheadEvent().timestamp() == timestamp();
+arrowheadEvent().timestamp() = timestamp();
 
 while((i < 10)){
 // looks like while is faster than FOR when exporting to cpp

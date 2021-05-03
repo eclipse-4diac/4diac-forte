@@ -45,7 +45,7 @@ const SFBInterfaceSpec FORTE_F_ASIN::scm_stFBInterfaceSpec = {
 
 void FORTE_F_ASIN::executeEvent(int pa_nEIID){
   if (scm_nEventREQID == pa_nEIID) {
-    anyRealFBHelper<FORTE_F_ASIN>(IN().getDataTypeID(), *this);
+    anyRealFBHelper<FORTE_F_ASIN>(st_IN().getDataTypeID(), *this);
     sendOutputEvent(scm_nEventCNFID);
   }
 }

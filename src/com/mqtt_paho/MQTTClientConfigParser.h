@@ -68,7 +68,7 @@ class CMQTTClientConfigFileParser {
     /**
      * Strings for the allowed keys in the configuration file for the mqtt clients
      */
-    static const char *const mConfigKeysNames[MQTTConfigKeys::eUnknown];
+    static const char *const mConfigKeysNames[eUnknown];
 
 };
 

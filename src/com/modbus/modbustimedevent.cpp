@@ -10,11 +10,11 @@
  *   Filip Andren - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "modbustimedevent.h"
+#include "../../core/iec61131_functions.h"
 
 CModbusTimedEvent::CModbusTimedEvent(TForteUInt32 pa_nUpdateInterval) 
   : m_bIsStarted(false){
   m_nUpdateInterval = pa_nUpdateInterval;
-  m_oUpdateInterval += (m_nUpdateInterval * cg_nForteTicksPerSecond) / 1000;
 
   if(pa_nUpdateInterval == 0){
     m_bSingleShotEvent = true;
@@ -27,13 +27,10 @@ CModbusTimedEvent::CModbusTimedEvent(TForteUInt32 pa_nUpdateInterval)
 
 void CModbusTimedEvent::setUpdateInterval(TForteUInt32 pa_nUpdateInterval){
   m_nUpdateInterval = pa_nUpdateInterval;
-  SForteTime newTime;
-  newTime += (m_nUpdateInterval * cg_nForteTicksPerSecond) / 1000;
-  m_oUpdateInterval = newTime;
 }
 
 void CModbusTimedEvent::activate(){
-  m_oStartTime = CTimerHandler::sm_poFORTETimer->getForteTime();
+  m_nStartTime = NOW_MONOTONIC().getInMilliSeconds();
   m_bIsStarted = true;
 }
 
@@ -42,13 +39,13 @@ void CModbusTimedEvent::deactivate(){
 }
 
 bool CModbusTimedEvent::readyToExecute() const{
-  SForteTime currentTime = CTimerHandler::sm_poFORTETimer->getForteTime();
-  if (m_oUpdateInterval > currentTime) {
+  uint_fast64_t currentTime = NOW_MONOTONIC().getInMilliSeconds();
+  if (m_nUpdateInterval > currentTime) {
     return false;
   }
-  currentTime -= m_oUpdateInterval;
+  currentTime -= m_nUpdateInterval;
 
-  if(isStarted() && (currentTime > m_oStartTime || currentTime == m_oStartTime)){
+  if(isStarted() && (currentTime > m_nStartTime || currentTime == m_nStartTime)){
     return true;
   }
 

@@ -15,16 +15,6 @@
 
 #include <processinterface.h>
 
-#ifdef IN
-// cppcheck-suppress ConfigurationNotChecked
-#undef IN
-#endif
-
-#ifdef OUT
-// cppcheck-suppress ConfigurationNotChecked
-#undef OUT
-#endif
-
 class FORTE_IB: public CProcessInterface{
   DECLARE_FIRMWARE_FB(FORTE_IB)
 
@@ -49,7 +39,7 @@ private:
     return *static_cast<CIEC_STRING*>(getDO(1));
   };
 
-  CIEC_BYTE &IN() {
+  CIEC_BYTE &st_IN() {
     return *static_cast<CIEC_BYTE*>(getDO(2));
   };
 

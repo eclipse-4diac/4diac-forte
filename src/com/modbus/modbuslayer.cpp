@@ -312,25 +312,18 @@ T CModbusComLayer::convertFBOutput(TForteByte *pa_acDataArray, unsigned int pa_n
       // we need to swap order of each 16 bit data package
 
       unsigned int nrUint16s = currentDataSize / 2;
-      TForteUInt16 *destAr = new TForteUInt16[nrUint16s];
+      TForteUInt16 *destAr = (TForteUInt16*)(&retVal);
       TForteUInt16 *sourceAr = (TForteUInt16*) pa_acDataArray;
 
       for(unsigned int i = 0; i < nrUint16s; i++) {
         destAr[i] = sourceAr[nrUint16s - 1 - i];
       }
-
-      retVal = *((T*) destAr);
-
-      delete[] destAr;
     }
     else{
-      TForteByte *tempAr = new TForteByte[currentDataSize];
+      TForteByte *tempAr = (TForteByte*)(&retVal);
       for(unsigned int j = 0; j < currentDataSize; j++) {
         tempAr[j] = pa_acDataArray[j];
       }
-
-      retVal = *((T*) tempAr);
-      delete[] tempAr;
     }
   }
   else {
@@ -360,7 +353,7 @@ EComResponse CModbusComLayer::openConnection(char *pa_acLayerParameter){
         DEVLOG_ERROR("CModbusComLayer:: Invalid input parameters\n");
       }
       else{
-        m_pModbusConnection = new CModbusClientConnection(getExtEvHandler<CModbusHandler>());
+        m_pModbusConnection = new CModbusClientConnection((CModbusHandler*)&getExtEvHandler<CModbusHandler>());
         if(strlen(tcpParams.m_acIp) > 0){
           m_pModbusConnection->setIPAddress(tcpParams.m_acIp);
           m_pModbusConnection->setPort(tcpParams.m_nPort);

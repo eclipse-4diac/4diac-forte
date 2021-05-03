@@ -21,13 +21,13 @@ class FORTE_F_ULINT_TO_DWORD: public CFunctionBlock{
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_ULINT &IN() {
+  CIEC_ULINT &st_IN() {
     return *static_cast<CIEC_ULINT*>(getDI(0));
   };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_DWORD &OUT() {
+  CIEC_DWORD &st_OUT() {
     return *static_cast<CIEC_DWORD*>(getDO(0));
   };
 

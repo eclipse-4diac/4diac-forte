@@ -44,7 +44,7 @@ const SFBInterfaceSpec FORTE_F_LREAL_TO_WSTRING::scm_stFBInterfaceSpec = {
 
 void FORTE_F_LREAL_TO_WSTRING::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    OUT() = LREAL_TO_WSTRING(IN());
+    st_OUT() = LREAL_TO_WSTRING(st_IN());
     sendOutputEvent(scm_nEventCNFID);
   }
 }

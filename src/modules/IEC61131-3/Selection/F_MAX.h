@@ -31,7 +31,7 @@ private:
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_ANY_ELEMENTARY &OUT() {
+  CIEC_ANY_ELEMENTARY &st_OUT() {
     return *static_cast<CIEC_ANY_ELEMENTARY*>(getDO(0));
   };
 
@@ -62,7 +62,7 @@ public:
       oMin.saveAssign(IN1());
       oMax.saveAssign(IN2());
 
-      OUT().saveAssign(MAX<T> (oMin, oMax));
+      st_OUT().saveAssign(MAX<T> (oMin, oMax));
   }
 
   template<typename T> void calculateValueString() const {

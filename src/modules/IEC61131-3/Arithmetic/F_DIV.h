@@ -31,7 +31,7 @@ private:
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_ANY_NUM &OUT() {
+  CIEC_ANY_NUM &st_OUT() {
     return *static_cast<CIEC_ANY_NUM*>(getDO(0));
   };
 
@@ -61,7 +61,7 @@ public:
     oIn1.saveAssign(IN1());
     oIn2.saveAssign(IN2());
 
-    OUT().saveAssign(DIV(oIn1,oIn2));
+    st_OUT().saveAssign(DIV(oIn1,oIn2));
   }
 
   virtual ~FORTE_F_DIV(){};

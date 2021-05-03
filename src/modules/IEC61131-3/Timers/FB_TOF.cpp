@@ -50,7 +50,7 @@ const SFBInterfaceSpec FB_TOF::scm_stFBInterfaceSpec = {
 
 void FB_TOF::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    if(IN() == true){
+    if(st_IN() == true){
       Q() = true;
       ET() = 0;
       fallingEdge = false;

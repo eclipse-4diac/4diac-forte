@@ -32,8 +32,8 @@ const TForteInt16 GEN_STRUCT_DEMUX::scm_anEOWithIndexes[] = {0};
 
 void GEN_STRUCT_DEMUX::executeEvent(int paEIID) {
   if(scm_nEventREQID == paEIID) {
-    CIEC_ANY *members = IN().getMembers();
-    for (size_t i = 0; i < IN().getStructSize(); i++){
+    CIEC_ANY *members = st_IN().getMembers();
+    for (size_t i = 0; i < st_IN().getStructSize(); i++){
       getDO(static_cast<unsigned int>(i))->setValue(members[i]);
     }
     sendOutputEvent(scm_nEventCNFID);

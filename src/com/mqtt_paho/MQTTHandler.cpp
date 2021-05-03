@@ -25,7 +25,7 @@ DEFINE_HANDLER(MQTTHandler);
 MQTTAsync_connectOptions MQTTHandler::smClientConnectionOptions =
     MQTTAsync_connectOptions_initializer;
 
-CSyncObject MQTTHandler::smMQTTMutex = CSyncObject();
+CSyncObject MQTTHandler::smMQTTMutex;
 
 MQTTAsync MQTTHandler::smClient = 0;
 CIEC_STRING MQTTHandler::smClientId;
@@ -35,7 +35,7 @@ std::string MQTTHandler::scmPassword;
 
 
 MQTTStates MQTTHandler::smMQTTS_STATE = NOT_CONNECTED;
-forte::arch::CSemaphore MQTTHandler::mStateSemaphore = forte::arch::CSemaphore();
+forte::arch::CSemaphore MQTTHandler::mStateSemaphore;
 bool MQTTHandler::mIsSemaphoreEmpty = true;
 
 MQTTHandler::MQTTHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHandler(paDeviceExecution)  {

@@ -1,5 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+ *               2020 Johannes Kepler University Linz
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +11,8 @@
  * Contributors:
  *   Alois Zoitl, Thomas Strasser, Rene Smodic, Monika Wenger, Ingo Hegny
  *    - initial API and implementation and/or initial documentation
+ *   Alois Zoitl - worked on reducing the jitter and overhead of timer handler
+ *                 Bug #568902
  *******************************************************************************/
 #ifndef _TIMERHA_H_
 #define _TIMERHA_H_
@@ -16,6 +20,7 @@
 #include <forte_config.h>
 #include "../core/extevhan.h"
 #include <forte_sync.h>
+#include <vector>
 
 class CEventSourceFB;
 class CIEC_TIME;
@@ -37,7 +42,8 @@ struct STimedFBListEntry{
  *  \ingroup EXTEVHAND
  */
 class CTimerHandler : public CExternalEventHandler{
-  DECLARE_HANDLER(CTimerHandler);
+  DECLARE_HANDLER(CTimerHandler)
+    ;
   public:
 
     /*!\brief create the timer handler and set the parameter pointer with the the new timer handler.
@@ -45,7 +51,7 @@ class CTimerHandler : public CExternalEventHandler{
      * This function is not implemented in the standardtimerhandler and has to be implemented in the specific implementation.
      * implementations should check that not two timerhanlders can be created.
      */
-    static CTimerHandler* createTimerHandler(CDeviceExecution& paDeviceExecution);
+    static CTimerHandler* createTimerHandler(CDeviceExecution &paDeviceExecution);
 
     /*!\brief Sets the priority of the event source
      *
@@ -87,18 +93,34 @@ class CTimerHandler : public CExternalEventHandler{
       return mForteTime;
     }
 
-  protected:
-    CSyncObject mSync;
-
   private:
     //!Add an entry to the timed list.
     void addTimedFBEntry(STimedFBListEntry *paTimerListEntry);
+
+    void processTimedFBList();
+    void processAddList();
+    void processRemoveList();
+
+    //!Remove an entry from the timed list.
+    void removeTimedFB(CEventSourceFB *paTimedFB);
+
+    //! process one timed FB entry, trigger the external event and if needed readd into the list.
+    void triggerTimedFB(STimedFBListEntry *paTimerListEntry);
 
     //!The runtime time in ticks till the start of FORTE.
     uint_fast64_t mForteTime;
 
     //! List of function blocks currently registered to the timer handler
     STimedFBListEntry *mTimedFBList;
+
+    //! List of function blocks to be added to the timer handler
+    STimedFBListEntry *mAddFBList;
+    CSyncObject mAddListSync;
+
+    //! List of function blocks to be removed from the timer handler
+    std::vector<CEventSourceFB *> mRemoveFBList;
+    CSyncObject mRemoveListSync;
+
 };
 
 #endif /*TIMERHA_H_*/

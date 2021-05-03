@@ -44,7 +44,7 @@ const SFBInterfaceSpec FORTE_F_REAL_TO_LINT::scm_stFBInterfaceSpec = {
 
 void FORTE_F_REAL_TO_LINT::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    OUT() = REAL_TO_LINT(IN());
+    st_OUT() = REAL_TO_LINT(st_IN());
     sendOutputEvent(scm_nEventCNFID);
   }
 }

@@ -1,13 +1,15 @@
 #*******************************************************************************
 # Copyright (c) 2010 -2014 Profactor GmbH, ACIN, fortiss GmbH
+#               2020 Johannes Kepler University Linz
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
 #
 # SPDX-License-Identifier: EPL-2.0
-# 
+#
 # Contributors:
 #     Michael Hofmann, Alois Zoitl, Gerhard Ebenhofer, Matthias Plash, Patrick Smejkal - initial API and implementation and/or initial documentation
+#     Ernst Blecha - add directory-based module creation
 # *******************************************************************************/
 
 MACRO(forte_add_subdirectory DIRECTORY)
@@ -205,9 +207,9 @@ FUNCTION(forte_add_architecture)
   ENDFOREACH(ARG)
 ENDFUNCTION(forte_add_architecture)
 
-MACRO(forte_add_network_layer NAME ONOFF CONFIGNAME CLASSNAME FILENAME DISCRIPTION)
+MACRO(forte_add_network_layer NAME ONOFF CONFIGNAME CLASSNAME FILENAME DESCRIPTION)
 # TODO: parse filename from filename
-  set(FORTE_COM_${NAME} ${ONOFF} CACHE BOOL "${DISCRIPTION}")
+  set(FORTE_COM_${NAME} ${ONOFF} CACHE BOOL "${DESCRIPTION}")
   IF(FORTE_COM_${NAME})
     FORTE_ADD_SOURCEFILE_HCPP(${FILENAME})
     set_property(GLOBAL APPEND PROPERTY FORTE_LAYER_CLASS ${CLASSNAME})
@@ -222,19 +224,34 @@ MACRO(forte_add_handler CLASSNAME FILENAME)
     set_property(GLOBAL APPEND PROPERTY FORTE_HANDLER_FILENAME "${FILENAME}.h")
 ENDMACRO(forte_add_handler)
 
-#MACRO(forte_add_module NAME DIRECTORY DISCRIPTION)
+#MACRO(forte_add_module NAME DIRECTORY DESCRIPTION)
 # Additional parameters are interpreted as dependencies
-MACRO(forte_add_module NAME DISCRIPTION)
-  set(FORTE_MODULE_${NAME} OFF CACHE BOOL "${DISCRIPTION}")
+MACRO(forte_add_module NAME DESCRIPTION)
+  # create module with value from cache (does not set the description if the entry exists)
+  SET(FORTE_MODULE_${NAME} OFF CACHE BOOL "${DESCRIPTION}")
+  # update the module description stored in cache
+  SET(FORTE_MODULE_${NAME} ${FORTE_MODULE_${NAME}} CACHE BOOL "${DESCRIPTION}" FORCE)
+
   FOREACH(dependencies ${ARGN})
-  if(NOT ${dependencies})
-  return()
-  endif(NOT ${dependencies})
+    IF(NOT ${dependencies})
+      RETURN()
+    ENDIF(NOT ${dependencies})
   ENDFOREACH(dependencies)
-  if(NOT FORTE_MODULE_${NAME})
-    return()
-  endif(NOT FORTE_MODULE_${NAME})
+  IF(NOT FORTE_MODULE_${NAME})
+    RETURN()
+  ENDIF(NOT FORTE_MODULE_${NAME})
 ENDMACRO(forte_add_module)
+
+MACRO(forte_add_directory_module)
+  # use the current directory name as basis for naming the module
+  GET_FILENAME_COMPONENT(MODULENAME ${CMAKE_CURRENT_LIST_DIR} NAME)
+  SET(MODULENAME "EXTERNAL_${MODULENAME}")
+
+  forte_directory_listing(DESCRIPTION "*.cpp" "*.c" "*.h")
+
+  # add the module (stops execution if module is disabled!)
+  forte_add_module(${MODULENAME} ${DESCRIPTION})
+ENDMACRO(forte_add_directory_module)
 
 #MACRO(forte_add_io NAME DIRECTORY DESCRIPTION)
 MACRO(forte_add_io NAME DESCRIPTION)
@@ -268,6 +285,40 @@ FUNCTION(forte_add_post_build_command)
     set_property(GLOBAL APPEND PROPERTY FORTE_POST_BUILD_COMMAND ${ARG})
   ENDFOREACH(ARG)
 ENDFUNCTION(forte_add_post_build_command)
+
+FUNCTION(forte_directory_listing VARIABLE EXTENSION)
+  # retrieve all files matching the given extension(s)
+  file(GLOB FILES LIST_DIRECTORIES false CONFIGURE_DEPENDS ${EXTENSION} ${ARGN})
+  # loop over the files, extract the name
+  FOREACH(FILE ${FILES})
+    get_filename_component(FILENAME ${FILE} NAME)
+    list(APPEND FILENAMES ${FILENAME})
+  ENDFOREACH()
+  # create a newline-seperated list of files
+  list(JOIN FILENAMES "\n" FILENAMESTRING)
+  set(${VARIABLE} "${CMAKE_CURRENT_LIST_DIR}\n${FILENAMESTRING}" PARENT_SCOPE)
+ENDFUNCTION(forte_directory_listing)
+
+FUNCTION(forte_add_all_sourcefiles)
+  forte_add_all_sourcefiles_h()
+  forte_add_all_sourcefiles_c()
+  forte_add_all_sourcefiles_cpp()
+ENDFUNCTION(forte_add_all_sourcefiles)
+
+FUNCTION(forte_add_all_sourcefiles_h)
+  file(GLOB FILES LIST_DIRECTORIES false CONFIGURE_DEPENDS "*.h")
+  forte_add_sourcefile_with_path_h(${FILES})
+ENDFUNCTION(forte_add_all_sourcefiles_h)
+
+FUNCTION(forte_add_all_sourcefiles_c)
+  file(GLOB FILES LIST_DIRECTORIES false CONFIGURE_DEPENDS "*.c")
+  forte_add_sourcefile_with_path_c(${FILES})
+ENDFUNCTION(forte_add_all_sourcefiles_c)
+
+FUNCTION(forte_add_all_sourcefiles_cpp)
+  file(GLOB FILES LIST_DIRECTORIES false CONFIGURE_DEPENDS "*.cpp")
+  forte_add_sourcefile_with_path_cpp(${FILES})
+ENDFUNCTION(forte_add_all_sourcefiles_cpp)
 
 ## forte_add_systemtest_hard (test_name bootfile_name timeout)
 ## Fails if any error has been logged

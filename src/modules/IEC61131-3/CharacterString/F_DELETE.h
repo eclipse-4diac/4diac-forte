@@ -22,7 +22,7 @@ class FORTE_F_DELETE: public CFunctionBlock{
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_ANY_STRING &IN() {
+  CIEC_ANY_STRING &st_IN() {
     return *static_cast<CIEC_ANY_STRING*>(getDI(0));
   };
 
@@ -36,7 +36,7 @@ private:
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_ANY_STRING &OUT() {
+  CIEC_ANY_STRING &st_OUT() {
     return *static_cast<CIEC_ANY_STRING*>(getDO(0));
   };
 
@@ -62,8 +62,8 @@ public:
 
   template<typename T> void calculateValueString(){
      T oIn1;
-     oIn1.saveAssign(IN());
-     OUT().saveAssign(DELETE(oIn1,L(),P()));
+     oIn1.saveAssign(st_IN());
+     st_OUT().saveAssign(DELETE(oIn1,L(),P()));
    }
 
   virtual ~FORTE_F_DELETE(){};

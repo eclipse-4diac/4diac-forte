@@ -44,7 +44,7 @@ const SFBInterfaceSpec FORTE_F_DWORD_BCD_TO_UDINT::scm_stFBInterfaceSpec = {
 
 void FORTE_F_DWORD_BCD_TO_UDINT::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    OUT() = DWORD_BCD_TO_UDINT(IN());
+    st_OUT() = DWORD_BCD_TO_UDINT(st_IN());
     sendOutputEvent(scm_nEventCNFID);
   }
 }

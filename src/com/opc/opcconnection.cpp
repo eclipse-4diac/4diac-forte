@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 -2014 AIT, fortiss GmbH
+ * Copyright (c) 2012 -2014 AIT, fortiss GmbH, Hit robot group
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +8,7 @@
  *
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
+ *   ys guo - Fix opc module compilation errors and deadlock bug
  *******************************************************************************/
 #include "opcconnection.h"
 #include "opcconnectionimpl.h"
@@ -156,20 +157,17 @@ void COpcConnection::response_connect(bool pa_bConnectionState){
     //m_eConnectionEvent = e_Disconnected;
 
   if(!m_bBlockingConnect){
-    m_oSync.lock();
 
     TOpcGroupMapList::Iterator itEnd = m_lOpcGroupMapList.end();
     for(TOpcGroupMapList::Iterator it = m_lOpcGroupMapList.begin(); it != itEnd; ++it){
       m_eventHandler->executeComCallback((*it)->m_nCallbackDesc);
     }
 
-    m_oSync.unlock();
   }
 }
 
 void COpcConnection::response_dataReceived(const char *pa_acGroupName, TItemDataList & pa_lItemDataList){
   // Loop through OpcGroups
-  m_oSync.lock();
   TOpcGroupMapList::Iterator itEnd_group = m_lOpcGroupMapList.end();
   for(TOpcGroupMapList::Iterator it_group = m_lOpcGroupMapList.begin(); it_group != itEnd_group; ++it_group){
 
@@ -213,7 +211,6 @@ void COpcConnection::response_dataReceived(const char *pa_acGroupName, TItemData
       break;
     }
   }
-  m_oSync.unlock();
 }
 
 void COpcConnection::response_itemAdded(COpcProcessVar* pa_pOpcItem){

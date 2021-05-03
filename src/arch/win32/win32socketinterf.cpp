@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 - 2015 ACIN, Profactor GmbH, AIT, fortiss GmbH
+ * Copyright (c) 2010, 2020 ACIN, Profactor GmbH, AIT, fortiss GmbH, OFFIS e.V.
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,18 +9,8 @@
  * Contributors:
  *   Alois Zoitl, Ingo Hegny, Gerhard Ebenhofer, Thomas Strasser
  *     - initial API and implementation and/or initial documentation
+ *  Jörg Walter - Windows XP compatibility
  *******************************************************************************/
-
-#ifdef __GNUC__
-#ifdef __MINGW32__
-
-#ifdef _WIN32_WINNT
-#undef _WIN32_WINNT
-#endif
-#define _WIN32_WINNT 0x0600 //windows vista version, which included InepPton
-
-#endif //__MINGW32__
-#endif //__GNUC__
 
 #include <sockhand.h>      //needs to be first pulls in the platform specific includes
 #include "win32socketinterf.h"
@@ -85,12 +75,13 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openTCPClientCon
   DEVLOG_INFO("CWin32SocketInterface: Opening TCP-Client connection at: %s:%d\n", pa_acIPAddr, pa_nPort);
 
   if(INVALID_SOCKET != nSocket) {
-    struct sockaddr_in stSockAddr = { };
+    sockaddr_in stSockAddr = {};
+    int stSockAddrSz = sizeof(stSockAddr);
+    if(WSAStringToAddressA(pa_acIPAddr, AF_INET, NULL, (LPSOCKADDR)&stSockAddr, &stSockAddrSz)) {
+      DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressA() failed: %d - %s\n", stSockAddr.sin_addr.s_addr, pa_acIPAddr);
+    }
     stSockAddr.sin_family = AF_INET;
     stSockAddr.sin_port = htons(pa_nPort);
-    if(1 != InetPton(stSockAddr.sin_family, pa_acIPAddr, &(stSockAddr.sin_addr))) {
-      DEVLOG_ERROR("CWin32SocketInterface: InetPton() failed: %d - %s\n", stSockAddr.sin_addr.s_addr, pa_acIPAddr);
-    }
 
     if(SOCKET_ERROR == connect(nSocket, (struct sockaddr*) &stSockAddr, sizeof(struct sockaddr))) {
       int nLastError = WSAGetLastError();
@@ -167,11 +158,14 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPSendPort(
   TSocketDescriptor nRetVal = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
   if(INVALID_SOCKET != nRetVal) {
+    *m_ptDestAddr = TUDPDestAddr();
+    int m_ptDestAddrSz = sizeof(*m_ptDestAddr);
+    if(WSAStringToAddressA(pa_acIPAddr, AF_INET, NULL, (LPSOCKADDR)m_ptDestAddr, &m_ptDestAddrSz)) {
+      DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressA() failed: %d - %s\n", m_ptDestAddr->sin_addr.s_addr, pa_acIPAddr);
+    }
     m_ptDestAddr->sin_family = AF_INET;
     m_ptDestAddr->sin_port = htons(pa_nPort);
-    InetPton(m_ptDestAddr->sin_family, pa_acIPAddr, &(m_ptDestAddr->sin_addr));
-    memset(&(m_ptDestAddr->sin_zero), '\0', sizeof(m_ptDestAddr->sin_zero));
-  }
+ }
   else{
     int nLastError = WSAGetLastError();
     LPSTR pacErrorMessage = getErrorMessage(nLastError);
@@ -189,15 +183,20 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPReceivePo
   if(INVALID_SOCKET != nSocket) {
     int nReuseAddrVal = 1;
     if(0 <= setsockopt(nSocket, SOL_SOCKET, SO_REUSEADDR, (char *) &nReuseAddrVal, sizeof(nReuseAddrVal))){
-      struct sockaddr_in stSockAddr;
+      struct sockaddr_in stSockAddr = {};
       stSockAddr.sin_family = AF_INET;
       stSockAddr.sin_port = htons(pa_nPort);
       stSockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-      memset(&(stSockAddr.sin_zero), '\0', sizeof(stSockAddr.sin_zero));
       if(0 == bind(nSocket, (struct sockaddr *) &stSockAddr, sizeof(struct sockaddr))){
         // setting up multicast group
-        struct ip_mreq stMReq;
-        InetPton(stSockAddr.sin_family, pa_acIPAddr, &(stMReq.imr_multiaddr));
+        sockaddr_in stMCastAddr = {};
+        int stMCastAddrSz = sizeof(stMCastAddr);
+        if(WSAStringToAddressA(pa_acIPAddr, AF_INET, NULL, (LPSOCKADDR)&stMCastAddr, &stMCastAddrSz)) {
+          DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressA() failed: %d - %s\n", stMCastAddr.sin_addr.s_addr, pa_acIPAddr);
+        }
+
+        struct ip_mreq stMReq = {};
+        stMReq.imr_multiaddr = stMCastAddr.sin_addr;
         stMReq.imr_interface.s_addr = htonl(INADDR_ANY);
         setsockopt(nSocket, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char*) &stMReq, sizeof(stMReq));
         //if this fails we may have given a non multicasting addr. For now we accept this. May need to be changed in the future.

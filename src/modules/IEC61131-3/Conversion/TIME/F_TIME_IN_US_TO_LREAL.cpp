@@ -42,7 +42,7 @@ const SFBInterfaceSpec FORTE_F_TIME_IN_US_TO_LREAL::scm_stFBInterfaceSpec = {
 };
 
 void FORTE_F_TIME_IN_US_TO_LREAL::alg_REQ(void){
-OUT() = TIME_IN_US_TO_LREAL((IN()));
+  st_OUT() = TIME_IN_US_TO_LREAL((st_IN()));
 }
 
 

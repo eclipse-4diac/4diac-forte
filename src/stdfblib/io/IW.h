@@ -15,13 +15,6 @@
 
 #include <processinterface.h>
 
-#ifdef IN
-#undef IN
-#endif
-
-#ifdef OUT
-#undef OUT
-#endif
 
 /*! /brief generic class for IW function blocks providing access to one word physical input
  *
@@ -68,7 +61,7 @@ private:
     return *static_cast<CIEC_STRING*>(getDO(1));
   };
 
-  CIEC_WORD &IN() {
+  CIEC_WORD &st_IN() {
     return *static_cast<CIEC_WORD*>(getDO(2));
   };
 

@@ -14,13 +14,6 @@
 
 #include <processinterface.h>
 
-#ifdef IN
-#undef IN
-#endif
-
-#ifdef OUT
-#undef OUT
-#endif
 
 /*! /brief generic class for IX function blocks providing access to one boolean physical input
  *
@@ -67,7 +60,7 @@ private:
     return *static_cast<CIEC_STRING*>(getDO(1));
   };
 
-  CIEC_BOOL &IN() {
+  CIEC_BOOL &st_IN() {
     return *static_cast<CIEC_BOOL*>(getDO(2));
   };
 

@@ -50,7 +50,7 @@ const SFBInterfaceSpec UINT2UINT::scm_stFBInterfaceSpec = {
 
 void UINT2UINT::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    OUT() = IN();
+    st_OUT() = st_IN();
     sendOutputEvent(scm_nEventCNFID);
   }
 }

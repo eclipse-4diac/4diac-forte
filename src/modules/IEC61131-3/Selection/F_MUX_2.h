@@ -36,7 +36,7 @@ private:
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_ANY &OUT() {
+  CIEC_ANY &st_OUT() {
     return *static_cast<CIEC_ANY*>(getDO(0));
   };
 

@@ -22,13 +22,13 @@ class FORTE_F_WSTRING_TO_UDINT: public CFunctionBlock{
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_WSTRING &IN() {
+  CIEC_WSTRING &st_IN() {
     return *static_cast<CIEC_WSTRING*>(getDI(0));
   };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_UDINT &OUT() {
+  CIEC_UDINT &st_OUT() {
     return *static_cast<CIEC_UDINT*>(getDO(0));
   };
 

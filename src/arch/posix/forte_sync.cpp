@@ -11,11 +11,11 @@
  *******************************************************************************/
 #include "forte_sync.h"
 
-CPCSyncObject::CPCSyncObject(){
-  pthread_mutex_init(&m_oMutexHandle, 0);
+CPThreadSyncObject::CPThreadSyncObject(){
+  pthread_mutex_init(&mMutex, 0);
 }
 
-CPCSyncObject::~CPCSyncObject(){
-  pthread_mutex_destroy(&m_oMutexHandle);
+CPThreadSyncObject::~CPThreadSyncObject(){
+  pthread_mutex_destroy(&mMutex);
   //TODO handle return value
 }

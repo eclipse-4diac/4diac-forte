@@ -24,13 +24,13 @@ class FORTE_F_TIME_IN_US_TO_LREAL: public CSimpleFB{
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_TIME &IN() {
+  CIEC_TIME &st_IN() {
     return *static_cast<CIEC_TIME*>(getDI(0));
   };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_LREAL &OUT() {
+  CIEC_LREAL &st_OUT() {
     return *static_cast<CIEC_LREAL*>(getDO(0));
   };
 

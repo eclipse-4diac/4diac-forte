@@ -45,7 +45,7 @@ const SFBInterfaceSpec FORTE_F_ATAN::scm_stFBInterfaceSpec = {
 
 void FORTE_F_ATAN::executeEvent(int pa_nEIID){
   if (scm_nEventREQID == pa_nEIID) {
-    anyRealFBHelper<FORTE_F_ATAN>(IN().getDataTypeID(), *this);
+    anyRealFBHelper<FORTE_F_ATAN>(st_IN().getDataTypeID(), *this);
     sendOutputEvent(scm_nEventCNFID);
   }
 }

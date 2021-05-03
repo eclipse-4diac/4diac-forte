@@ -22,13 +22,13 @@ class FORTE_F_MOVE: public CFunctionBlock{
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_ANY &IN() {
+  CIEC_ANY &st_IN() {
     return *static_cast<CIEC_ANY*>(getDI(0));
   };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_ANY &OUT() {
+  CIEC_ANY &st_OUT() {
     return *static_cast<CIEC_ANY*>(getDO(0));
   };
 
@@ -53,8 +53,8 @@ public:
   };
 
   template<typename T> void calculateValue(){
-    T &roIn(static_cast<T&>(IN()));
-    OUT().saveAssign(MOVE(roIn));
+    T &roIn(static_cast<T&>(st_IN()));
+    st_OUT().saveAssign(MOVE(roIn));
   }
 
   virtual ~FORTE_F_MOVE(){};

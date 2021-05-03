@@ -44,7 +44,7 @@ const SFBInterfaceSpec FORTE_F_UINT_TO_STRING::scm_stFBInterfaceSpec = {
 
 void FORTE_F_UINT_TO_STRING::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    OUT() = UINT_TO_STRING(IN());
+    st_OUT() = UINT_TO_STRING(st_IN());
     sendOutputEvent(scm_nEventCNFID);
   }
 }

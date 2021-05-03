@@ -22,13 +22,13 @@ class FORTE_F_BOOL_TO_BYTE: public CFunctionBlock{
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_BOOL &IN() {
+  CIEC_BOOL &st_IN() {
     return *static_cast<CIEC_BOOL*>(getDI(0));
   };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_BYTE &OUT() {
+  CIEC_BYTE &st_OUT() {
     return *static_cast<CIEC_BYTE*>(getDO(0));
   };
 

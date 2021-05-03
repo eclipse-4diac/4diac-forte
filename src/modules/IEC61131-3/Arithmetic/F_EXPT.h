@@ -32,7 +32,7 @@ private:
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_ANY_REAL &OUT() {
+  CIEC_ANY_REAL &st_OUT() {
     return *static_cast<CIEC_ANY_REAL*>(getDO(0));
   };
 
@@ -60,7 +60,7 @@ public:
     T &roIn1(static_cast<T&>(IN1()));
     T oIn2;
     oIn2.saveAssign(IN2());
-    OUT().saveAssign(EXPT(roIn1,oIn2));
+    st_OUT().saveAssign(EXPT(roIn1,oIn2));
   }
 
   virtual ~FORTE_F_EXPT(){};

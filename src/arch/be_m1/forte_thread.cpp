@@ -31,7 +31,7 @@ void CBEThread::setDeadline(TForteUInt32 paVal){
   //TODO implement priority assignment similar to threadx and ecos
 }
 
-forte::arch::CThreadBase<int>::TThreadHandleType CTXThread::CBEThread(long ){
+forte::arch::CThreadBase<int>::TThreadHandleType CBEThread::createThread(long ){
   int retVal = 1;
   if(Spawn(0, 0, 130, VX_FP_TASK, APP_TSK_STACK) == ERROR){
     retVal = 0;

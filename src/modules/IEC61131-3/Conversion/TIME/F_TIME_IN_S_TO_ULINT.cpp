@@ -42,7 +42,7 @@ const SFBInterfaceSpec FORTE_F_TIME_IN_S_TO_ULINT::scm_stFBInterfaceSpec = {
 };
 
 void FORTE_F_TIME_IN_S_TO_ULINT::alg_REQ(void){
-OUT() = TIME_IN_S_TO_ULINT((IN()));
+  st_OUT() = TIME_IN_S_TO_ULINT((st_IN()));
 }
 
 

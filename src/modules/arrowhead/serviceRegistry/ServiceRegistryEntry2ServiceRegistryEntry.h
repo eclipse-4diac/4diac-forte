@@ -22,13 +22,13 @@ class FORTE_ServiceRegistryEntry2ServiceRegistryEntry: public CFunctionBlock{
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_ServiceRegistryEntry &IN() {
+  CIEC_ServiceRegistryEntry &st_IN() {
     return *static_cast<CIEC_ServiceRegistryEntry*>(getDI(0));
   };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_ServiceRegistryEntry &OUT() {
+  CIEC_ServiceRegistryEntry &st_OUT() {
     return *static_cast<CIEC_ServiceRegistryEntry*>(getDO(0));
   };
 

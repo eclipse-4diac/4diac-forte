@@ -33,7 +33,7 @@ private:
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_BOOL &OUT() {
+  CIEC_BOOL &st_OUT() {
     return *static_cast<CIEC_BOOL*>(getDO(0));
   };
 
@@ -62,7 +62,7 @@ public:
     T oIn2;
     oIn1.saveAssign(IN1());
     oIn2.saveAssign(IN2());
-    OUT().saveAssign(NE(oIn1, oIn2));
+    st_OUT().saveAssign(NE(oIn1, oIn2));
   }
 
   template<typename T> void calculateValueString() {

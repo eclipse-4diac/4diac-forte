@@ -15,13 +15,6 @@
 
 #include <processinterface.h>
 
-#ifdef IN
-#undef IN
-#endif
-
-#ifdef OUT
-#undef OUT
-#endif
 
 /*! /brief generic class for QW function blocks providing access to one word physical output
  *
@@ -58,7 +51,7 @@ private:
     return *static_cast<CIEC_STRING*>(getDI(1));
   };
 
-  CIEC_WORD &OUT() {
+  CIEC_WORD &st_OUT() {
     return *static_cast<CIEC_WORD*>(getDI(2));
   };
 

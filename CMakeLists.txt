@@ -126,6 +126,11 @@ if (WIN32)
     mark_as_advanced(FORTE_ADDITIONAL_CXX_FLAGS)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FORTE_ADDITIONAL_CXX_FLAGS}")
   endif(MSVC)
+
+  option(FORTE_WINDOWS_XP_COMPAT OFF "Enable some workarounds for Windows XP compatibility")
+  if (FORTE_WINDOWS_XP_COMPAT)
+    add_definitions(-DWINDOWS_XP_COMPAT=1)
+  endif()
 endif(WIN32)
 
 #######################################################################################
@@ -147,6 +152,12 @@ else()
   unset(LUAJIT_INCLUDE_DIR CACHE)
   unset(LUAJIT_MATH_LIBRARY CACHE)
 endif(NOT ("${FORTE_USE_LUATYPES}" STREQUAL "None"))
+
+#######################################################################################
+# Early definition of option how to generate stringlist for every source file
+#######################################################################################
+SET(FORTE_LINKED_STRINGDICT ON CACHE BOOL "FORTE will resolve references to the stringdict at link-stage and not compile-stage. This will reduce compiletime if the stringdict changes.")
+mark_as_advanced(FORTE_LINKED_STRINGDICT)
 
 #######################################################################################
 # Add subdirectories
@@ -189,9 +200,9 @@ SET(FORTE_CommunicationInterruptQueueSize "10" CACHE STRING "forte Communication
 mark_as_advanced(FORTE_CommunicationInterruptQueueSize)
 
 if(FORTE_DYNAMIC_TYPE_LOAD)
-SET(FORTE_IPLayerRecvBufferSize "20000" CACHE STRING "FORTE ip layer recv buffer size" FORCE)
+SET(FORTE_IPLayerRecvBufferSize "20000" CACHE STRING "FORTE ip layer recv buffer size")
 else()
-SET(FORTE_IPLayerRecvBufferSize "1500" CACHE STRING "FORTE ip layer recv buffer size" FORCE)
+SET(FORTE_IPLayerRecvBufferSize "1500" CACHE STRING "FORTE ip layer recv buffer size")
 endif(FORTE_DYNAMIC_TYPE_LOAD)
 mark_as_advanced(FORTE_IPLayerRecvBufferSize)
 
@@ -272,9 +283,6 @@ LIST(REMOVE_DUPLICATES SOURCE_FILES)
 #######################################################################################
 # Generate stringlist for every source file
 #######################################################################################
-SET(FORTE_LINKED_STRINGDICT ON CACHE BOOL "FORTE will resolve references to the stringdict at link-stage and not compile-stage. This will reduce compiletime if the stringdict changes.")
-mark_as_advanced(FORTE_LINKED_STRINGDICT)
-
 SET(FORTE_MODIFY_SOURCES_ON_MISSING_GENERATED_INCLUDES ON CACHE BOOL "FORTE change the source-files if includes for the generated includes are missing.")
 mark_as_advanced(FORTE_MODIFY_SOURCES_ON_MISSING_GENERATED_INCLUDES)
 

@@ -45,7 +45,7 @@ const SFBInterfaceSpec FORTE_F_FIND::scm_stFBInterfaceSpec = {
 
 void FORTE_F_FIND::executeEvent(int pa_nEIID){
   if (scm_nEventREQID == pa_nEIID) {
-    OUT().setSignedValue(FIND(IN1(),IN2()).getSignedValue());
+    st_OUT().setSignedValue(FIND(IN1(),IN2()).getSignedValue());
     sendOutputEvent(scm_nEventCNFID);
   }
 }

@@ -34,7 +34,7 @@ class GEN_STRUCT_MUX : public CGenFunctionBlock<CFunctionBlock> {
     void executeEvent(int paEIID);
     virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);
 
-    CIEC_STRUCT& OUT() {
+    CIEC_STRUCT& st_OUT() {
        return *static_cast<CIEC_STRUCT*>(getDO(0));
      }
 

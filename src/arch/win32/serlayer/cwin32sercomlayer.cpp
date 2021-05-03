@@ -41,7 +41,7 @@ forte::com_infra::EComResponse CWin32SerComLayer::recvData(const void *, unsigne
 
 forte::com_infra::EComResponse CWin32SerComLayer::sendData(void *paData, unsigned int paSize)
 {
-  DWORD dwBytesWritten= 0, dwWaitResult = 0;
+  DWORD dwBytesWritten= 0;
   char *pcData = static_cast<char*> (paData);
   unsigned int nToBeSent = paSize;
   //Send payload
@@ -82,7 +82,7 @@ forte::com_infra::EComResponse CWin32SerComLayer::openSerialConnection(const SSe
     return forte::com_infra::e_ProcessDataInvalidObject;
   }
 
-  DCB dcbSerialParams = { 0 };
+  DCB dcbSerialParams = DCB();
 
   dcbSerialParams.DCBlength = sizeof(dcbSerialParams);
 
@@ -111,7 +111,7 @@ forte::com_infra::EComResponse CWin32SerComLayer::openSerialConnection(const SSe
       default: return forte::com_infra::e_InitInvalidId; break;
     }
 
-  dcbSerialParams.ByteSize = static_cast<DWORD>(paSerialParameters.byteSize);
+  dcbSerialParams.ByteSize = paSerialParameters.byteSize;
 
   switch (paSerialParameters.stopBits){
     case EForteSerialStopBits::eOneBit:
@@ -148,7 +148,7 @@ forte::com_infra::EComResponse CWin32SerComLayer::openSerialConnection(const SSe
   }
 
   //Timeouts for non-blocking behaviour
-  COMMTIMEOUTS timeouts = { 0 };
+  COMMTIMEOUTS timeouts = COMMTIMEOUTS();
   //Read timeouts
   timeouts.ReadIntervalTimeout = 50;
   timeouts.ReadTotalTimeoutConstant = 50;

@@ -44,7 +44,7 @@ const SFBInterfaceSpec FORTE_F_SUB_DT_DT::scm_stFBInterfaceSpec = {
 
 void FORTE_F_SUB_DT_DT::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    OUT() = SUB_DT_DT(IN1(), IN2());
+    st_OUT() = SUB_DT_DT(IN1(), IN2());
     sendOutputEvent(scm_nEventCNFID);
   }
 }

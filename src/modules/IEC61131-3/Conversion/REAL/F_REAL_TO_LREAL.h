@@ -22,13 +22,13 @@ class FORTE_F_REAL_TO_LREAL: public CFunctionBlock{
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_REAL &IN() {
+  CIEC_REAL &st_IN() {
     return *static_cast<CIEC_REAL*>(getDI(0));
   };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_LREAL &OUT() {
+  CIEC_LREAL &st_OUT() {
     return *static_cast<CIEC_LREAL*>(getDO(0));
   };
 
