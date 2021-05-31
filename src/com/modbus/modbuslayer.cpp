@@ -31,7 +31,7 @@ EComResponse CModbusComLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
         // todo
         break;
       case e_Client: {
-        TForteUInt16 *convertedData = new TForteUInt16[pa_unSize * 4];
+        TForteUInt8 *convertedData = new TForteUInt8[pa_unSize * 8];
         unsigned int sendLength = convertDataInput(pa_pvData, pa_unSize, convertedData);
         if(sendLength > 0){
           m_pModbusConnection->writeData(convertedData, sendLength);
@@ -50,7 +50,8 @@ EComResponse CModbusComLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
   return eRetVal;
 }
 
-unsigned int CModbusComLayer::convertDataInput(void *pa_poInData, unsigned int pa_nDataSize, TForteUInt16 *pa_poConvertedData){
+unsigned int CModbusComLayer::convertDataInput(void *pa_poInData, unsigned int pa_nDataSize, void *pa_poConvertedData){
+  TForteUInt8 *convertedData = (TForteUInt8*)pa_poConvertedData;
   unsigned int outLength = 0;
 
   CIEC_ANY *apoSDs = static_cast<CIEC_ANY*>(pa_poInData);
@@ -59,98 +60,99 @@ unsigned int CModbusComLayer::convertDataInput(void *pa_poInData, unsigned int p
   for(unsigned int i = 0; i < nrSDs; i++){
     CIEC_ANY *anyVal = &apoSDs[i];
     switch (apoSDs[i].getDataTypeID()){
-      case CIEC_ANY::e_BOOL: // 8bit data types
+      case CIEC_ANY::e_BOOL: // 1bit data type
       {
-        TForteUInt16 out = (bool) *(CIEC_BOOL*) anyVal;
-        *(TForteUInt16*) (&pa_poConvertedData[outLength]) = out;
-        outLength += sizeof(TForteUInt16) / 2;
+        TForteUInt8 out = (bool) *(CIEC_BOOL*) anyVal;
+        *(TForteUInt8*) (&convertedData[outLength]) = out;
+        outLength += sizeof(TForteUInt8);
         break;
       }
-      case CIEC_ANY::e_SINT: {
+      case CIEC_ANY::e_SINT: // 8bit data types
+      {
         TForteInt16 out = (TForteInt8) *(CIEC_SINT*) anyVal;
-        *(TForteInt16*) (&pa_poConvertedData[outLength]) = out;
-        outLength += sizeof(TForteInt16) / 2;
+        *(TForteInt16*) (&convertedData[outLength]) = out;
+        outLength += sizeof(TForteInt16);
         break;
       }
       case CIEC_ANY::e_USINT: {
         TForteUInt16 out = (TForteUInt8) *(CIEC_USINT*) anyVal;
-        *(TForteUInt16*) (&pa_poConvertedData[outLength]) = out;
-        outLength += sizeof(TForteUInt16) / 2;
+        *(TForteUInt16*) (&convertedData[outLength]) = out;
+        outLength += sizeof(TForteUInt16);
         break;
       }
       case CIEC_ANY::e_BYTE: {
         TForteUInt16 out = (TForteByte) *(CIEC_BYTE*) anyVal;
-        *(TForteUInt16*) (&pa_poConvertedData[outLength]) = out;
-        outLength += sizeof(TForteUInt16) / 2;
+        *(TForteUInt16*) (&convertedData[outLength]) = out;
+        outLength += sizeof(TForteUInt16);
         break;
       }
       case CIEC_ANY::e_INT: // 16bit data types
       {
         TForteInt16 out = (TForteInt16) *(CIEC_INT*) anyVal;
-        *(TForteInt16*) (&pa_poConvertedData[outLength]) = out;
-        outLength += sizeof(TForteInt16) / 2;
+        *(TForteInt16*) (&convertedData[outLength]) = out;
+        outLength += sizeof(TForteInt16);
         break;
       }
       case CIEC_ANY::e_UINT: {
         TForteUInt16 out = (TForteUInt16) *(CIEC_UINT*) anyVal;
-        *(TForteUInt16*) (&pa_poConvertedData[outLength]) = out;
-        outLength += sizeof(TForteUInt16) / 2;
+        *(TForteUInt16*) (&convertedData[outLength]) = out;
+        outLength += sizeof(TForteUInt16);
         break;
       }
       case CIEC_ANY::e_WORD: {
         TForteWord out = (TForteWord) *(CIEC_WORD*) anyVal;
-        *(TForteWord*) (&pa_poConvertedData[outLength]) = out;
-        outLength += sizeof(TForteWord) / 2;
+        *(TForteWord*) (&convertedData[outLength]) = out;
+        outLength += sizeof(TForteWord);
         break;
       }
       case CIEC_ANY::e_DINT: // 32bit data types
       {
         TForteInt32 out = (TForteInt32) *static_cast<CIEC_DINT*>(anyVal);
-        *(TForteInt32*) (&pa_poConvertedData[outLength]) = convertFBOutput<TForteInt32>((TForteByte*) &out, sizeof(TForteInt32));
-        outLength += sizeof(TForteInt32) / 2;
+        *(TForteInt32*) (&convertedData[outLength]) = convertFBOutput<TForteInt32>((TForteByte*) &out, sizeof(TForteInt32));
+        outLength += sizeof(TForteInt32);
         break;
       }
       case CIEC_ANY::e_UDINT: {
         TForteUInt32 out = (TForteUInt32) *(CIEC_UDINT*) anyVal;
-        *(TForteUInt32*) (&pa_poConvertedData[outLength]) = convertFBOutput<TForteUInt32>((TForteByte*) &out, sizeof(TForteUInt32));
-        outLength += sizeof(TForteUInt32) / 2;
+        *(TForteUInt32*) (&convertedData[outLength]) = convertFBOutput<TForteUInt32>((TForteByte*) &out, sizeof(TForteUInt32));
+        outLength += sizeof(TForteUInt32);
         break;
       }
       case CIEC_ANY::e_DWORD: {
         TForteDWord out = (TForteDWord) *(CIEC_DWORD*) anyVal;
-        *(TForteDWord*) (&pa_poConvertedData[outLength]) = convertFBOutput<TForteDWord>((TForteByte*) &out, sizeof(TForteDWord));
-        outLength += sizeof(TForteDWord) / 2;
+        *(TForteDWord*) (&convertedData[outLength]) = convertFBOutput<TForteDWord>((TForteByte*) &out, sizeof(TForteDWord));
+        outLength += sizeof(TForteDWord);
         break;
       }
       case CIEC_ANY::e_REAL: {
         TForteFloat out = (TForteFloat) *(CIEC_REAL*) anyVal;
-        *(TForteFloat*) (&pa_poConvertedData[outLength]) = convertFBOutput<TForteFloat>((TForteByte*) &out, sizeof(TForteFloat));
-        outLength += sizeof(TForteFloat) / 2;
+        *(TForteFloat*) (&convertedData[outLength]) = convertFBOutput<TForteFloat>((TForteByte*) &out, sizeof(TForteFloat));
+        outLength += sizeof(TForteFloat);
         break;
       }
       case CIEC_ANY::e_LINT: // 64bit data types
       {
         TForteInt64 out = (TForteInt64) *(CIEC_LINT*) anyVal;
-        *(TForteInt64*) (&pa_poConvertedData[outLength]) = convertFBOutput<TForteInt64>((TForteByte*) &out, sizeof(TForteInt64));
-        outLength += sizeof(TForteInt64) / 2;
+        *(TForteInt64*) (&convertedData[outLength]) = convertFBOutput<TForteInt64>((TForteByte*) &out, sizeof(TForteInt64));
+        outLength += sizeof(TForteInt64);
         break;
       }
       case CIEC_ANY::e_ULINT: {
         TForteUInt64 out = (TForteUInt64) *(CIEC_ULINT*) anyVal;
-        *(TForteUInt64*) (&pa_poConvertedData[outLength]) = convertFBOutput<TForteUInt64>((TForteByte*) &out, sizeof(TForteUInt64));
-        outLength += sizeof(TForteUInt64) / 2;
+        *(TForteUInt64*) (&convertedData[outLength]) = convertFBOutput<TForteUInt64>((TForteByte*) &out, sizeof(TForteUInt64));
+        outLength += sizeof(TForteUInt64);
         break;
       }
       case CIEC_ANY::e_LWORD: {
         TForteLWord out = (TForteLWord) *(CIEC_LWORD*) anyVal;
-        *(TForteLWord*) (&pa_poConvertedData[outLength]) = convertFBOutput<TForteLWord>((TForteByte*) &out, sizeof(TForteLWord));
-        outLength += sizeof(TForteLWord) / 2;
+        *(TForteLWord*) (&convertedData[outLength]) = convertFBOutput<TForteLWord>((TForteByte*) &out, sizeof(TForteLWord));
+        outLength += sizeof(TForteLWord);
         break;
       }
       case CIEC_ANY::e_LREAL: {
         TForteDFloat out = (TForteDFloat) *(CIEC_LREAL*) anyVal;
-        *(TForteDFloat*) (&pa_poConvertedData[outLength]) = convertFBOutput<TForteDFloat>((TForteByte*) &out, sizeof(TForteDFloat));
-        outLength += sizeof(TForteDFloat) / 2;
+        *(TForteDFloat*) (&convertedData[outLength]) = convertFBOutput<TForteDFloat>((TForteByte*) &out, sizeof(TForteDFloat));
+        outLength += sizeof(TForteDFloat);
         break;
       }
       default:
@@ -371,10 +373,10 @@ EComResponse CModbusComLayer::openConnection(char *pa_acLayerParameter){
         static_cast<CModbusClientConnection*>(m_pModbusConnection)->setSlaveId(commonParams.m_nSlaveId);
 
         for(unsigned int i = 0; i < commonParams.m_nNrPolls; i++){
-          static_cast<CModbusClientConnection*>(m_pModbusConnection)->addNewPoll(commonParams.m_nPollFrequency, commonParams.m_nFuncCode, commonParams.m_nReadStartAddress[i], commonParams.m_nReadNrAddresses[i]);
+          static_cast<CModbusClientConnection*>(m_pModbusConnection)->addNewPoll(commonParams.m_nPollFrequency, commonParams.m_nReadFuncCode, commonParams.m_nReadStartAddress[i], commonParams.m_nReadNrAddresses[i]);
         }
         for(unsigned int i = 0; i < commonParams.m_nNrSends; i++){
-          static_cast<CModbusClientConnection*>(m_pModbusConnection)->addNewSend(commonParams.m_nSendStartAddress[i], commonParams.m_nSendNrAddresses[i]);
+          static_cast<CModbusClientConnection*>(m_pModbusConnection)->addNewSend(commonParams.m_nSendFuncCode, commonParams.m_nSendStartAddress[i], commonParams.m_nSendNrAddresses[i]);
         }
 
         if(m_pModbusConnection->connect() < 0){

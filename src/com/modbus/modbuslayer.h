@@ -49,7 +49,8 @@ namespace forte {
           unsigned int m_nNrPolls;
           unsigned int m_nNrSends;
           long m_nPollFrequency;
-          unsigned int m_nFuncCode;
+          unsigned int m_nReadFuncCode;
+          unsigned int m_nSendFuncCode;
           unsigned int m_nSlaveId;
           unsigned int m_nReadStartAddress[100];
           unsigned int m_nReadNrAddresses[100];
@@ -62,7 +63,7 @@ namespace forte {
         template<typename T>
         T convertFBOutput(TForteByte *pa_acDataArray, unsigned int pa_nDataSize);
 
-        unsigned int convertDataInput(void *pa_poInData, unsigned int pa_nDataSize, TForteUInt16 *pa_poConvertedData);
+        unsigned int convertDataInput(void *pa_poInData, unsigned int pa_nDataSize, void *pa_poConvertedData);
 
         EComResponse openConnection(char *pa_acLayerParameter) override;
         void closeConnection() override;

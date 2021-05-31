@@ -39,7 +39,7 @@ class CModbusClientConnection : public CModbusConnection{
     void disconnect() override;
 
     void addNewPoll(TForteUInt32 pa_nPollInterval, unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses);
-    void addNewSend(unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses);
+    void addNewSend(unsigned int pa_nSendFuncCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses);
 
     void setSlaveId(unsigned int pa_nSlaveId);
 
@@ -51,6 +51,7 @@ class CModbusClientConnection : public CModbusConnection{
     void tryPolling();
 
     struct SSendInformation {
+      unsigned int m_nSendFuncCode;
       unsigned int m_nStartAddress;
       unsigned int m_nNrAddresses;
     };
