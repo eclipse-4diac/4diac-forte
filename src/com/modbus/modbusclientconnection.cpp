@@ -39,15 +39,12 @@ CModbusClientConnection::~CModbusClientConnection(){
   }
 }
 
-int CModbusClientConnection::readData(uint8_t *pa_pData){
-  for(unsigned int i = 0; i < m_unBufFillSize; i++){
-    pa_pData[i] = m_acRecvBuffer[i];
-  }
-
+int CModbusClientConnection::readData(void *pa_pData){
+  memcpy(pa_pData, m_acRecvBuffer, m_unBufFillSize);
   return (int) m_unBufFillSize;
 }
 
-int CModbusClientConnection::writeData(uint16_t *pa_pData, unsigned int pa_nDataSize){
+int CModbusClientConnection::writeData(const void *pa_pData, unsigned int pa_nDataSize){
   unsigned int dataIndex = 0;
 
   TModbusSendList::Iterator itEnd = m_lstSendList.end();
@@ -55,7 +52,7 @@ int CModbusClientConnection::writeData(uint16_t *pa_pData, unsigned int pa_nData
     if (dataIndex + it->m_nNrAddresses > pa_nDataSize) {
       break;
     }
-    modbus_write_registers(m_pModbusConn, it->m_nStartAddress, it->m_nNrAddresses, &pa_pData[dataIndex]);
+    modbus_write_registers(m_pModbusConn, it->m_nStartAddress, it->m_nNrAddresses, &((const uint16_t*)pa_pData)[dataIndex]);
     dataIndex += it->m_nNrAddresses;
   }
 

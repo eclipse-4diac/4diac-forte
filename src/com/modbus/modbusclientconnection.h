@@ -33,8 +33,8 @@ class CModbusClientConnection : public CModbusConnection{
     explicit CModbusClientConnection(CModbusHandler* pa_modbusHandler);
     ~CModbusClientConnection() override;
 
-    int readData(uint8_t *pa_pData) override;
-    int writeData(uint16_t *pa_pData, unsigned int pa_nDataSize) override;
+    int readData(void *pa_pData) override;
+    int writeData(const void *pa_pData, unsigned int pa_nDataSize);
     int connect() override;
     void disconnect() override;
 

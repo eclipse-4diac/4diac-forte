@@ -28,8 +28,8 @@ class CModbusConnection : public CThread{
     explicit CModbusConnection(CModbusHandler* pa_modbusHandler);
     ~CModbusConnection() override;
 
-    virtual int readData(uint8_t *pa_pData) = 0;
-    virtual int writeData(uint16_t *pa_pData, unsigned int pa_nDataSize) = 0;
+    virtual int readData(void *pa_pData) = 0;
+    virtual int writeData(const void *pa_pData, unsigned int pa_nDataSize) = 0;
     void run() override = 0;
 
     /*! \brief Initializes Modbus connection
