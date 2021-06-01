@@ -32,18 +32,20 @@ int CModbusConnection::connect(){
     return -1;
   }
 
+#if 0
   if(m_nResponseTimeout > 0){
     timeval responseTimeout;
     responseTimeout.tv_sec = m_nResponseTimeout / 1000;
     responseTimeout.tv_usec = (m_nResponseTimeout % 1000)*1000;
-    //modbus_set_response_timeout(m_pModbusConn, &responseTimeout);
+    modbus_set_response_timeout(m_pModbusConn, &responseTimeout);
   }
   if(m_nByteTimeout > 0){
     timeval byteTimeout;
     byteTimeout.tv_sec = m_nByteTimeout / 1000;
     byteTimeout.tv_usec = (m_nByteTimeout % 1000)*1000;
-    //modbus_set_byte_timeout(m_pModbusConn, &byteTimeout);
+    modbus_set_byte_timeout(m_pModbusConn, &byteTimeout);
   }
+#endif
 
   return 0;
 }

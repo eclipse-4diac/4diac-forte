@@ -15,8 +15,8 @@
 
 #include <modbus.h>
 
-CModbusPoll::CModbusPoll(TForteUInt32 pa_nPollInterval, unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses) :
-    CModbusTimedEvent(pa_nPollInterval){
+CModbusPoll::CModbusPoll(long pa_nPollInterval, unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses) :
+    CModbusTimedEvent((TForteUInt32)pa_nPollInterval){
   setFunctionCode(pa_nFunctionCode);
   addPollAddresses(pa_nStartAddress, pa_nNrAddresses);
 }

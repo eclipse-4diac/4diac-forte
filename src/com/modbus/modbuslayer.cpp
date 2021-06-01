@@ -557,7 +557,7 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
   ++chrStorage;
 
   // Find read addresses
-  int paramLen = strlen(readAddresses);
+  int paramLen = (int)strlen(readAddresses);
   int nrPolls = 0;
   int strIndex = -1;
   while(strIndex < paramLen - 1){
@@ -580,7 +580,7 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
   }
 
   // Find send addresses
-  paramLen = strlen(writeAddresses);
+  paramLen = (int)strlen(writeAddresses);
   int nrSends = 0;
   strIndex = -1;
   while(strIndex < paramLen - 1){
@@ -638,12 +638,12 @@ int CModbusComLayer::findNextStartAddress(const char* pa_acParam, int pa_nStartI
     }
   }
 
-  int strLength = strlen(&pa_acParam[pa_nStartIndex]);
+  size_t strLength = strlen(&pa_acParam[pa_nStartIndex]);
   const char *pch = strchr(&pa_acParam[pa_nStartIndex], ',');
 
   if(pch != nullptr){
-    if(pch - &pa_acParam[pa_nStartIndex] < strLength - 1) {
-      return pch - &pa_acParam[0] + 1;
+    if((size_t)(pch - &pa_acParam[pa_nStartIndex]) < strLength - 1) {
+      return (int)(pch - &pa_acParam[0]) + 1;
     }
 
   }
@@ -652,17 +652,17 @@ int CModbusComLayer::findNextStartAddress(const char* pa_acParam, int pa_nStartI
 }
 
 int CModbusComLayer::findNextStopAddress(const char* pa_acParam, int pa_nStartIndex){
-  int strLength = strlen(&pa_acParam[pa_nStartIndex]);
+  size_t strLength = strlen(&pa_acParam[pa_nStartIndex]);
   const char *pchComma = strchr(&pa_acParam[pa_nStartIndex], ',');
   const char *pchDot = strchr(&pa_acParam[pa_nStartIndex], '.');
 
   if(pchComma != nullptr && pchDot != nullptr) {
-    if(pchDot < pchComma && (pchDot - &pa_acParam[pa_nStartIndex] < strLength - 2)) {
-      return pchDot - &pa_acParam[0] + 2;
+    if(pchDot < pchComma && ((size_t)(pchDot - &pa_acParam[pa_nStartIndex]) < strLength - 2)) {
+      return (int)(pchDot - &pa_acParam[0]) + 2;
     }
   } else if(pchDot != nullptr) {
-    if(pchDot - &pa_acParam[pa_nStartIndex] < strLength - 2) {
-      return pchDot - &pa_acParam[0] + 2;
+    if((size_t)(pchDot - &pa_acParam[pa_nStartIndex]) < strLength - 2) {
+      return (int)(pchDot - &pa_acParam[0]) + 2;
     }
   }
 
