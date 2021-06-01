@@ -45,7 +45,7 @@ class CModbusPoll : public CModbusTimedEvent{
 
     unsigned int m_nFunctionCode;
 
-    std::vector<SModbusPollData*> m_lPolls;
+    std::vector<SModbusPollData> m_lPolls;
 };
 
 #endif /* MODBUSPOLL_H_ */
