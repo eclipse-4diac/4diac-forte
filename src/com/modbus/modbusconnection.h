@@ -15,6 +15,7 @@
 #include <modbus.h>
 #include <forte_thread.h>
 #include "modbushandler.h"
+#include "modbusioblock.h"
 #include <errno.h>
 
 namespace forte{
@@ -28,8 +29,9 @@ class CModbusConnection : public CThread{
     explicit CModbusConnection(CModbusHandler* pa_modbusHandler);
     ~CModbusConnection() override;
 
-    virtual int readData(void *pa_pData) = 0;
-    virtual int writeData(const void *pa_pData, unsigned int pa_nDataSize) = 0;
+    virtual int readData(CModbusIOBlock* pa_pIOBlock, void* pa_pData, unsigned int pa_nMaxDataSize) = 0;
+    int writeData(CModbusIOBlock* pa_pIOBlock, const void* pa_pData, unsigned int pa_nDataSize);
+    virtual void writeDataRange(unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses, const void *pa_pData) = 0;
     void run() override = 0;
 
     /*! \brief Initializes Modbus connection

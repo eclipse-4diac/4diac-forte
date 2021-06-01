@@ -93,3 +93,17 @@ void CModbusConnection::setByteTimeout(unsigned int pa_nByteTimeout){
 void CModbusConnection::setComCallback(forte::com_infra::CModbusComLayer* pa_poModbusLayer){
   m_nComCallbackId = m_pModbusHandler->addComCallback(pa_poModbusLayer);
 }
+
+int CModbusConnection::writeData(CModbusIOBlock* pa_pIOBlock, const void* pa_pData, unsigned int pa_nDataSize){
+  unsigned int dataIndex = 0;
+  const CModbusIOBlock::TModbusRangeList &lSends = pa_pIOBlock->getSends();
+  for (auto &it : lSends) {
+    const unsigned int nextDataIndex = dataIndex + it.m_nNrAddresses * CModbusIOBlock::getRegisterSize(it.m_nFunctionCode);
+    if (nextDataIndex > pa_nDataSize) {
+      break;
+    }
+    writeDataRange(it.m_nFunctionCode, it.m_nStartAddress, it.m_nNrAddresses, (const uint8_t*)pa_pData + dataIndex);
+    dataIndex = nextDataIndex;
+  }
+  return (int)dataIndex;
+}

@@ -34,7 +34,7 @@ EComResponse CModbusComLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
         TForteUInt8 *convertedData = new TForteUInt8[pa_unSize * 8];
         unsigned int sendLength = convertDataInput(pa_pvData, pa_unSize, convertedData);
         if(sendLength > 0){
-          m_pModbusConnection->writeData(convertedData, sendLength);
+          m_pModbusConnection->writeData(&m_IOBlock, convertedData, sendLength);
         }
         delete[] convertedData;
         break;
@@ -272,7 +272,7 @@ EComResponse CModbusComLayer::recvData(const void *, unsigned int){
           break;
         case e_Client:
           //TODO check if errors occured during polling in ModbusConnection
-          nRetVal = m_pModbusConnection->readData(&m_acRecvBuffer[0]);
+          nRetVal = m_pModbusConnection->readData(&m_IOBlock, &m_acRecvBuffer[0], sizeof(m_acRecvBuffer));
           break;
         case e_Publisher:
           //do nothing as publisher cannot receive data
@@ -373,11 +373,12 @@ EComResponse CModbusComLayer::openConnection(char *pa_acLayerParameter){
         static_cast<CModbusClientConnection*>(m_pModbusConnection)->setSlaveId(commonParams.m_nSlaveId);
 
         for(unsigned int i = 0; i < commonParams.m_nNrPolls; i++){
-          static_cast<CModbusClientConnection*>(m_pModbusConnection)->addNewPoll(commonParams.m_nPollFrequency, commonParams.m_nReadFuncCode, commonParams.m_nReadStartAddress[i], commonParams.m_nReadNrAddresses[i]);
+          m_IOBlock.addNewRead(commonParams.m_nReadFuncCode, commonParams.m_nReadStartAddress[i], commonParams.m_nReadNrAddresses[i]);
         }
         for(unsigned int i = 0; i < commonParams.m_nNrSends; i++){
-          static_cast<CModbusClientConnection*>(m_pModbusConnection)->addNewSend(commonParams.m_nSendFuncCode, commonParams.m_nSendStartAddress[i], commonParams.m_nSendNrAddresses[i]);
+          m_IOBlock.addNewSend(commonParams.m_nSendFuncCode, commonParams.m_nSendStartAddress[i], commonParams.m_nSendNrAddresses[i]);
         }
+        static_cast<CModbusClientConnection*>(m_pModbusConnection)->addNewPoll(commonParams.m_nPollFrequency, &m_IOBlock);
 
         if(m_pModbusConnection->connect() < 0){
           return eRetVal;

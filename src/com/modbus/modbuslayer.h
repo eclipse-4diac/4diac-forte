@@ -13,6 +13,7 @@
 #define MODBUSCOMLAYER_H_
 
 #include <forte_config.h>
+#include "modbusioblock.h"
 #include "comlayer.h"
 #include <stdint.h>
 
@@ -80,6 +81,8 @@ namespace forte {
 
         TForteByte m_acRecvBuffer[cg_unIPLayerRecvBufferSize];
         unsigned int m_unBufFillSize;
+
+        CModbusIOBlock m_IOBlock;
     };
 
   }

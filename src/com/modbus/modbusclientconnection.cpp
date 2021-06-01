@@ -20,7 +20,8 @@ using namespace modbus_connection_event;
  * CModbusClientConnection class
  *************************************/
 
-CModbusClientConnection::CModbusClientConnection(CModbusHandler *pa_modbusHandler) : CModbusConnection(pa_modbusHandler), m_pModbusConnEvent(nullptr), m_nNrOfPolls(0), m_nSlaveId(0xFF), m_unBufFillSize(0), m_anRecvBuffPosition{0}, m_acRecvBuffer{0} {
+CModbusClientConnection::CModbusClientConnection(CModbusHandler* pa_modbusHandler) :
+    CModbusConnection(pa_modbusHandler), m_pModbusConnEvent(nullptr), m_nSlaveId(0xFF){
 }
 
 CModbusClientConnection::~CModbusClientConnection() {
@@ -35,37 +36,27 @@ CModbusClientConnection::~CModbusClientConnection() {
   }
 }
 
-int CModbusClientConnection::readData(void *pa_pData) {
-  memcpy(pa_pData, m_acRecvBuffer, m_unBufFillSize);
-  return (int) m_unBufFillSize;
+int CModbusClientConnection::readData(CModbusIOBlock* pa_pIOBlock, void* pa_pData, unsigned int pa_nMaxDataSize){
+  const unsigned int size = std::min(pa_nMaxDataSize, pa_pIOBlock->getReadSize());
+  memcpy(pa_pData, pa_pIOBlock->getCache(), size);
+  return (int)size;
 }
 
-int CModbusClientConnection::writeData(const void *pa_pData, unsigned int pa_nDataSize) {
-  unsigned int dataIndex = 0;
-
-  for (auto &it : m_lstSendList) {
-    if (dataIndex + it.m_nNrAddresses > pa_nDataSize) {
+void CModbusClientConnection::writeDataRange(unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses, const void *pa_pData){
+  CCriticalRegion criticalRegion(m_oModbusLock);
+  switch (pa_nFunctionCode) {
+    case 5:
+    case 15:
+      modbus_write_bits(m_pModbusConn, pa_nStartAddress, pa_nNrAddresses, (const uint8_t*)pa_pData);
       break;
-    }
-
-    CCriticalRegion criticalRegion(m_oModbusLock);
-    switch (it.m_nSendFuncCode) {
-      case 5:
-      case 15:
-        modbus_write_bits(m_pModbusConn, it.m_nStartAddress, it.m_nNrAddresses, &((uint8_t*)pa_pData)[dataIndex]);
-        break;
-      case 6:
-      case 16:
-        modbus_write_registers(m_pModbusConn, it.m_nStartAddress, it.m_nNrAddresses, &((uint16_t*)pa_pData)[dataIndex]);
-        break;
-      default:
-        // TODO: error
-        break;
-    }
-    dataIndex += it.m_nNrAddresses;
+    case 6:
+    case 16:
+      modbus_write_registers(m_pModbusConn, pa_nStartAddress, pa_nNrAddresses, (const uint16_t*)pa_pData);
+      break;
+    default:
+      // TODO: error
+      break;
   }
-
-  return (int)dataIndex;
 }
 
 int CModbusClientConnection::connect(){
@@ -92,44 +83,21 @@ void CModbusClientConnection::disconnect(){
   CModbusConnection::disconnect();
 }
 
-void CModbusClientConnection::addNewPoll(long pa_nPollInterval, unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses){
+void CModbusClientConnection::addNewPoll(long pa_nPollInterval, CModbusIOBlock* pa_pIOBlock){
   CModbusPoll *newPoll = nullptr;
 
   for (auto it : m_lstPollList) {
-    if(it->getUpdateInterval() == pa_nPollInterval && it->getFunctionCode() == pa_nFunctionCode){
-      it->addPollAddresses(pa_nStartAddress, pa_nNrAddresses);
+    if(it->getUpdateInterval() == pa_nPollInterval){
       newPoll = it;
       break;
     }
   }
   if(newPoll == nullptr){
-    m_lstPollList.push_back(new CModbusPoll(pa_nPollInterval, pa_nFunctionCode, pa_nStartAddress, pa_nNrAddresses));
-    m_nNrOfPolls++;
-    m_anRecvBuffPosition[m_nNrOfPolls - 1] = m_unBufFillSize;
+    newPoll = new CModbusPoll(pa_nPollInterval);
+    m_lstPollList.push_back(newPoll);
   }
 
-  // Count bytes
-  unsigned int nrBytes = 0;
-  switch (pa_nFunctionCode){
-    case 1:
-    case 2:
-      nrBytes = pa_nNrAddresses;
-      break;
-    case 3:
-    case 4:
-      nrBytes = pa_nNrAddresses * 2;
-      break;
-  }
-  for(unsigned int i = m_unBufFillSize; i < m_unBufFillSize + nrBytes; i++){
-    m_acRecvBuffer[i] = 0;
-  }
-  m_unBufFillSize += nrBytes;
-}
-
-void CModbusClientConnection::addNewSend(unsigned int pa_nSendFuncCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses) {
-  SSendInformation sendInfo = {pa_nSendFuncCode, pa_nStartAddress, pa_nNrAddresses};
-
-  m_lstSendList.push_back(sendInfo);
+  newPoll->addPollBlock(pa_pIOBlock);
 }
 
 void CModbusClientConnection::setSlaveId(unsigned int pa_nSlaveId){
@@ -160,7 +128,7 @@ void CModbusClientConnection::tryPolling(){
     if(itPoll->readyToExecute()){
       CCriticalRegion criticalRegion(m_oModbusLock);
 
-      int nrVals = itPoll->executeEvent(m_pModbusConn, (void*) &m_acRecvBuffer[m_anRecvBuffPosition[index]]); // retVal);
+      int nrVals = itPoll->executeEvent(m_pModbusConn, 0);
 
       if(nrVals < 0){
         DEVLOG_ERROR("Error reading input status :: %s\n", modbus_strerror(errno));
@@ -178,7 +146,7 @@ void CModbusClientConnection::tryPolling(){
     m_pModbusHandler->executeComCallback(m_nComCallbackId);
   }
 
-  if((nrErrors == m_nNrOfPolls) && (0 != m_nNrOfPolls)){
+  if((nrErrors == m_lstPollList.size()) && !m_lstPollList.empty()){
     modbus_close(m_pModbusConn); // in any case it is worth trying to close the socket
     m_bConnected = false;
     m_pModbusConnEvent = new CModbusConnectionEvent(1000);

@@ -15,37 +15,21 @@
 #include "modbustimedevent.h"
 #include <vector>
 
+class CModbusIOBlock;
+
 class CModbusPoll : public CModbusTimedEvent{
   public:
-    CModbusPoll(long pa_nPollInterval, unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses);
+    CModbusPoll(long pa_nPollInterval);
     ~CModbusPoll() override;
 
     int executeEvent(modbus_t *pa_pModbusConn, void *pa_pRetVal) override;
 
-    void setFunctionCode(unsigned int pa_nFunctionCode){
-      m_nFunctionCode = pa_nFunctionCode;
-    }
-    unsigned int getFunctionCode(){
-      return m_nFunctionCode;
-    }
-
-    void addPollAddresses(unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses);
+    void addPollBlock(CModbusIOBlock *pa_pIOBlock);
 
   private:
+    std::vector<CModbusIOBlock*> m_lPolls;
 
-    struct SModbusPollData{
-        unsigned int m_nStartAddress;
-        unsigned int m_nNrAddresses;
-
-        SModbusPollData(unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses) :
-            m_nStartAddress(pa_nStartAddress), m_nNrAddresses(pa_nNrAddresses){
-        }
-        ;
-    };
-
-    unsigned int m_nFunctionCode;
-
-    std::vector<SModbusPollData> m_lPolls;
+    int readOneBlock(modbus_t *pa_pModbusConn, CModbusIOBlock *pa_pIOBlock);
 };
 
 #endif /* MODBUSPOLL_H_ */

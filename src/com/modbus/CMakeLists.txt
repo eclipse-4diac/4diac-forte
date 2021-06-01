@@ -22,6 +22,7 @@ if(FORTE_COM_MODBUS)
                  modbusconnection 
                  modbusclientconnection
                  modbuspoll
+                 modbusioblock
                  modbustimedevent )
                  
   forte_add_handler(CModbusHandler modbushandler)
