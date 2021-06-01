@@ -52,6 +52,8 @@ int CModbusClientConnection::writeData(const void *pa_pData, unsigned int pa_nDa
     if (dataIndex + it->m_nNrAddresses > pa_nDataSize) {
       break;
     }
+
+    CCriticalRegion criticalRegion(m_oModbusLock);
     switch (it->m_nSendFuncCode) {
       case 5:
       case 15:
@@ -162,6 +164,8 @@ void CModbusClientConnection::tryPolling(){
   TModbusPollList::Iterator itEnd(m_lstPollList.end());
   for(TModbusPollList::Iterator itPoll = m_lstPollList.begin(); itPoll != itEnd; ++itPoll, ++index){
     if(itPoll->readyToExecute()){
+      CCriticalRegion criticalRegion(m_oModbusLock);
+
       int nrVals = itPoll->executeEvent(m_pModbusConn, (void*) &m_acRecvBuffer[m_anRecvBuffPosition[index]]); // retVal);
 
       if(nrVals < 0){
