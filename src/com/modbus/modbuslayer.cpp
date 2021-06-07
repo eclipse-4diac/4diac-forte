@@ -650,11 +650,11 @@ int CModbusComLayer::findNextStartAddress(const char* pa_acParam, int pa_nStartI
     }
   }
 
-  size_t strLength = strlen(&pa_acParam[pa_nStartIndex]);
+  int strLength = (int)strlen(&pa_acParam[pa_nStartIndex]);
   const char *pch = strchr(&pa_acParam[pa_nStartIndex], ',');
 
   if(pch != nullptr){
-    if((size_t)(pch - &pa_acParam[pa_nStartIndex]) < strLength - 1) {
+    if(pch - &pa_acParam[pa_nStartIndex] < strLength - 1) {
       return (int)(pch - &pa_acParam[0]) + 1;
     }
 
@@ -664,16 +664,16 @@ int CModbusComLayer::findNextStartAddress(const char* pa_acParam, int pa_nStartI
 }
 
 int CModbusComLayer::findNextStopAddress(const char* pa_acParam, int pa_nStartIndex){
-  size_t strLength = strlen(&pa_acParam[pa_nStartIndex]);
+  int strLength = (int)strlen(&pa_acParam[pa_nStartIndex]);
   const char *pchComma = strchr(&pa_acParam[pa_nStartIndex], ',');
   const char *pchDot = strchr(&pa_acParam[pa_nStartIndex], '.');
 
   if(pchComma != nullptr && pchDot != nullptr) {
-    if(pchDot < pchComma && ((size_t)(pchDot - &pa_acParam[pa_nStartIndex]) < strLength - 2)) {
+    if(pchDot < pchComma && (pchDot - &pa_acParam[pa_nStartIndex] < strLength - 2)) {
       return (int)(pchDot - &pa_acParam[0]) + 2;
     }
   } else if(pchDot != nullptr) {
-    if((size_t)(pchDot - &pa_acParam[pa_nStartIndex]) < strLength - 2) {
+    if(pchDot - &pa_acParam[pa_nStartIndex] < strLength - 2) {
       return (int)(pchDot - &pa_acParam[0]) + 2;
     }
   }
