@@ -47,17 +47,18 @@ namespace forte {
           int m_nDataBit;
           int m_nStopBit;
         };
+        struct SAddrRange {
+          EModbusFunction m_eFunction;
+          unsigned int m_nStartAddress;
+          unsigned int m_nNrAddresses;
+        };
         struct SCommonParams {
           unsigned int m_nNrPolls;
           unsigned int m_nNrSends;
           long m_nPollFrequency;
           unsigned int m_nSlaveId;
-          EModbusFunction m_eReadFunction[100];
-          unsigned int m_nReadStartAddress[100];
-          unsigned int m_nReadNrAddresses[100];
-          EModbusFunction m_eSendFunction[100];
-          unsigned int m_nSendStartAddress[100];
-          unsigned int m_nSendNrAddresses[100];
+          SAddrRange m_stRead[100];
+          SAddrRange m_stSend[100];
           unsigned int m_nResponseTimeout;
           unsigned int m_nByteTimeout;
         };
