@@ -42,15 +42,13 @@ int CModbusClientConnection::readData(CModbusIOBlock* pa_pIOBlock, void* pa_pDat
   return (int)size;
 }
 
-void CModbusClientConnection::writeDataRange(unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses, const void *pa_pData){
+void CModbusClientConnection::writeDataRange(EModbusFunction pa_eFunction, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses, const void *pa_pData){
   CCriticalRegion criticalRegion(m_oModbusLock);
-  switch (pa_nFunctionCode) {
-    case 5:
-    case 15:
+  switch (pa_eFunction) {
+    case eCoil:
       modbus_write_bits(m_pModbusConn, pa_nStartAddress, pa_nNrAddresses, (const uint8_t*)pa_pData);
       break;
-    case 6:
-    case 16:
+    case eHoldingRegister:
       modbus_write_registers(m_pModbusConn, pa_nStartAddress, pa_nNrAddresses, (const uint16_t*)pa_pData);
       break;
     default:

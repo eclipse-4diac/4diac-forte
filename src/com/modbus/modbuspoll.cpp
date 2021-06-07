@@ -45,21 +45,21 @@ int CModbusPoll::readOneBlock(modbus_t *pa_pModbusConn, CModbusIOBlock *pa_pIOBl
   const CModbusIOBlock::TModbusRangeList &lReads = pa_pIOBlock->getReads();
   void *pData = pa_pIOBlock->getCache();
   for (auto &it : lReads) {
-    const unsigned int nextDataIndex = dataIndex + it.m_nNrAddresses * CModbusIOBlock::getRegisterSize(it.m_nFunctionCode);
+    const unsigned int nextDataIndex = dataIndex + it.m_nNrAddresses * CModbusIOBlock::getRegisterSize(it.m_eFunction);
     if (nextDataIndex > pa_pIOBlock->getReadSize()) {
       break;
     }
-    switch (it.m_nFunctionCode){
-      case 1:
+    switch (it.m_eFunction){
+      case eCoil:
         nrVals += modbus_read_bits(pa_pModbusConn, it.m_nStartAddress, it.m_nNrAddresses, &((uint8_t*)pData)[dataIndex]);
         break;
-      case 2:
+      case eDiscreteInput:
         nrVals += modbus_read_input_bits(pa_pModbusConn, it.m_nStartAddress, it.m_nNrAddresses, &((uint8_t*)pData)[dataIndex]);
         break;
-      case 3:
+      case eHoldingRegister:
         nrVals += modbus_read_registers(pa_pModbusConn, it.m_nStartAddress, it.m_nNrAddresses, &((uint16_t*)pData)[dataIndex]);
         break;
-      case 4:
+      case eInputRegister:
         nrVals += modbus_read_input_registers(pa_pModbusConn, it.m_nStartAddress, it.m_nNrAddresses, &((uint16_t*)pData)[dataIndex]);
         break;
       default:

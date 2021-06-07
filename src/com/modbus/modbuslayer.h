@@ -14,6 +14,7 @@
 
 #include <forte_config.h>
 #include "modbusioblock.h"
+#include "modbusfunction.h"
 #include "comlayer.h"
 #include <stdint.h>
 
@@ -50,11 +51,11 @@ namespace forte {
           unsigned int m_nNrPolls;
           unsigned int m_nNrSends;
           long m_nPollFrequency;
-          unsigned int m_nReadFuncCode;
-          unsigned int m_nSendFuncCode;
           unsigned int m_nSlaveId;
+          EModbusFunction m_eReadFunction[100];
           unsigned int m_nReadStartAddress[100];
           unsigned int m_nReadNrAddresses[100];
+          EModbusFunction m_eSendFunction[100];
           unsigned int m_nSendStartAddress[100];
           unsigned int m_nSendNrAddresses[100];
           unsigned int m_nResponseTimeout;
@@ -69,7 +70,7 @@ namespace forte {
         EComResponse openConnection(char *pa_acLayerParameter) override;
         void closeConnection() override;
 
-        //int processClientParams(char* pa_acLayerParams, char* pa_acIp, unsigned int &pa_nPort, long &pa_nPollFrequency, unsigned int &pa_nFuncCode, unsigned int &pa_nSlaveId, unsigned int *pa_nStartAddress, unsigned int *pa_nNrAddresses);
+        EModbusFunction decodeFunction(const char* pa_acParam, int *strIndex, EModbusFunction pa_eDefaultFunction=eHoldingRegister);
         int processClientParams(char* pa_acLayerParams, STcpParams* pa_pTcpParams, SRtuParams* pa_pRtuParams, SCommonParams* pa_pCommonParams);
         int findNextStartAddress(const char* pa_acString, int pa_nStartIndex);
         int findNextStopAddress(const char* pa_acString, int pa_nStartIndex);

@@ -13,11 +13,12 @@
 #define _MODBUSIOBLOCK_H_
 
 #include <vector>
+#include "modbusfunction.h"
 
 class CModbusIOBlock {
   public:
     struct SModbusRange {
-      unsigned int m_nFunctionCode;
+      EModbusFunction m_eFunction;
       unsigned int m_nStartAddress;
       unsigned int m_nNrAddresses;
     };
@@ -26,8 +27,8 @@ class CModbusIOBlock {
     CModbusIOBlock();
     ~CModbusIOBlock();
 
-    void addNewRead(unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses);
-    void addNewSend(unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses);
+    void addNewRead(EModbusFunction pa_eFunction, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses);
+    void addNewSend(EModbusFunction pa_eFunction, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses);
 
     void allocCache();
     void* getCache() { return m_pCache; }
@@ -37,7 +38,7 @@ class CModbusIOBlock {
 
     unsigned int getReadSize() const { return m_nReadSize; }
     unsigned int getSendSize() const { return m_nSendSize; }
-    static unsigned int getRegisterSize(unsigned int pa_nFunctionCode);
+    static unsigned int getRegisterSize(EModbusFunction pa_eFunction);
 
   private:
     TModbusRangeList m_lReads;

@@ -373,10 +373,10 @@ EComResponse CModbusComLayer::openConnection(char *pa_acLayerParameter){
         static_cast<CModbusClientConnection*>(m_pModbusConnection)->setSlaveId(commonParams.m_nSlaveId);
 
         for(unsigned int i = 0; i < commonParams.m_nNrPolls; i++){
-          m_IOBlock.addNewRead(commonParams.m_nReadFuncCode, commonParams.m_nReadStartAddress[i], commonParams.m_nReadNrAddresses[i]);
+          m_IOBlock.addNewRead(commonParams.m_eReadFunction[i], commonParams.m_nReadStartAddress[i], commonParams.m_nReadNrAddresses[i]);
         }
         for(unsigned int i = 0; i < commonParams.m_nNrSends; i++){
-          m_IOBlock.addNewSend(commonParams.m_nSendFuncCode, commonParams.m_nSendStartAddress[i], commonParams.m_nSendNrAddresses[i]);
+          m_IOBlock.addNewSend(commonParams.m_eSendFunction[i], commonParams.m_nSendStartAddress[i], commonParams.m_nSendNrAddresses[i]);
         }
         static_cast<CModbusClientConnection*>(m_pModbusConnection)->addNewPoll(commonParams.m_nPollFrequency, &m_IOBlock);
 
@@ -407,6 +407,30 @@ void CModbusComLayer::closeConnection(){
     m_pModbusConnection->disconnect();
     delete m_pModbusConnection;
   }
+}
+
+EModbusFunction CModbusComLayer::decodeFunction(const char* pa_acParam, int *strIndex, EModbusFunction pa_eDefaultFunction){
+  switch(pa_acParam[*strIndex]){
+    case 'd':
+    case 'D':
+      ++*strIndex;
+      return eDiscreteInput;
+    case 'c':
+    case 'C':
+      ++*strIndex;
+      return eCoil;
+    case 'i':
+    case 'I':
+      ++*strIndex;
+      return eInputRegister;
+    case 'h':
+    case 'H':
+      ++*strIndex;
+      return eHoldingRegister;
+    default:
+      break;
+  }
+  return pa_eDefaultFunction;
 }
 
 int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_pTcpParams, SRtuParams* pa_pRtuParams, SCommonParams* pa_pCommonParams){
@@ -520,27 +544,6 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
   *chrStorage = '\0';
   ++chrStorage;
 
-  pa_pCommonParams->m_nReadFuncCode = (unsigned int) forte::core::util::strtoul(chrStorage, nullptr, 10);
-
-  chrStorage = strchr(chrStorage, ':');
-  if(chrStorage == nullptr){
-    delete[] paramsAddress;
-    return -1;
-  }
-  *chrStorage = '\0';
-  ++chrStorage;
-
-  pa_pCommonParams->m_nSendFuncCode = (unsigned int) forte::core::util::strtoul(chrStorage, nullptr, 10);
-
-  chrStorage = strchr(chrStorage, ':');
-  if(chrStorage == nullptr){
-    delete[] paramsAddress;
-    return -1;
-  }
-  *chrStorage = '\0';
-  ++chrStorage;
-
-
   // Search for optional parameter slave id
   char *chrSlave = strchr(chrStorage, ':');
   if(chrSlave != nullptr){
@@ -577,6 +580,7 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
     if(strIndex < 0){
       break;
     }
+    pa_pCommonParams->m_eReadFunction[nrPolls] = decodeFunction(readAddresses, &strIndex);
     pa_pCommonParams->m_nReadStartAddress[nrPolls] = (unsigned int) forte::core::util::strtoul(const_cast<char*>(&readAddresses[strIndex]), nullptr, 10);
     strIndex = findNextStopAddress(readAddresses, strIndex);
     pa_pCommonParams->m_nReadNrAddresses[nrPolls] = (unsigned int) forte::core::util::strtoul(const_cast<char*>(&readAddresses[strIndex]), nullptr, 10) - pa_pCommonParams->m_nReadStartAddress[nrPolls] + 1;
@@ -600,6 +604,7 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
     if(strIndex < 0){
       break;
     }
+    pa_pCommonParams->m_eSendFunction[nrSends] = decodeFunction(writeAddresses, &strIndex);
     pa_pCommonParams->m_nSendStartAddress[nrSends] = (unsigned int) forte::core::util::strtoul(const_cast<char*>(&writeAddresses[strIndex]), nullptr, 10);
     strIndex = findNextStopAddress(writeAddresses, strIndex);
     pa_pCommonParams->m_nSendNrAddresses[nrSends] = (unsigned int) forte::core::util::strtoul(const_cast<char*>(&writeAddresses[strIndex]), nullptr, 10) - pa_pCommonParams->m_nSendStartAddress[nrSends] + 1;
@@ -646,6 +651,14 @@ int CModbusComLayer::findNextStartAddress(const char* pa_acParam, int pa_nStartI
       case '7':
       case '8':
       case '9':
+      case 'c': // coil
+      case 'C':
+      case 'd': // discrete
+      case 'D':
+      case 'h': // holding
+      case 'H':
+      case 'i': // input
+      case 'I':
         return pa_nStartIndex;
     }
   }

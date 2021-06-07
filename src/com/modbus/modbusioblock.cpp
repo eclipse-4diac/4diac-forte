@@ -25,31 +25,27 @@ void CModbusIOBlock::allocCache() {
   m_pCache = new uint8_t[m_nReadSize]();
 }
 
-void CModbusIOBlock::addNewRead(unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses) {
-  m_lReads.push_back((SModbusRange){pa_nFunctionCode, pa_nStartAddress, pa_nNrAddresses});
-  m_nReadSize += getRegisterSize(pa_nFunctionCode) * pa_nNrAddresses;
+void CModbusIOBlock::addNewRead(EModbusFunction pa_eFunction, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses) {
+  m_lReads.push_back((SModbusRange){pa_eFunction, pa_nStartAddress, pa_nNrAddresses});
+  m_nReadSize += getRegisterSize(pa_eFunction) * pa_nNrAddresses;
   if (m_pCache) {
     delete [] (uint8_t*)m_pCache;
     allocCache();
   }
 }
 
-void CModbusIOBlock::addNewSend(unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses) {
-  m_lSends.push_back((SModbusRange){pa_nFunctionCode, pa_nStartAddress, pa_nNrAddresses});
-  m_nSendSize += getRegisterSize(pa_nFunctionCode) * pa_nNrAddresses;
+void CModbusIOBlock::addNewSend(EModbusFunction pa_eFunction, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses) {
+  m_lSends.push_back((SModbusRange){pa_eFunction, pa_nStartAddress, pa_nNrAddresses});
+  m_nSendSize += getRegisterSize(pa_eFunction) * pa_nNrAddresses;
 }
 
-unsigned int CModbusIOBlock::getRegisterSize(unsigned int pa_nFunctionCode) {
-  switch (pa_nFunctionCode) {
-    case 2:     // discrete inputs
-    case 1:     // coils
-    case 5:
-    case 15:
+unsigned int CModbusIOBlock::getRegisterSize(EModbusFunction pa_eFunction) {
+  switch (pa_eFunction) {
+    case eDiscreteInput:
+    case eCoil:
         return sizeof(uint8_t);
-    case 4:     // input regs
-    case 3:     // holding regs
-    case 6:
-    case 16:
+    case eInputRegister:
+    case eHoldingRegister:
         return sizeof(uint16_t);
     default:
         return 0;

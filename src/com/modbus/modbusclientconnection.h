@@ -34,7 +34,7 @@ class CModbusClientConnection : public CModbusConnection{
     ~CModbusClientConnection() override;
 
     int readData(CModbusIOBlock* pa_pIOBlock, void* pa_pData, unsigned int pa_nMaxDataSize) override;
-    void writeDataRange(unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses, const void *pa_pData);
+    void writeDataRange(EModbusFunction pa_eFunction, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses, const void *pa_pData);
     int connect() override;
     void disconnect() override;
 

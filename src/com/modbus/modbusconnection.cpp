@@ -98,11 +98,11 @@ int CModbusConnection::writeData(CModbusIOBlock* pa_pIOBlock, const void* pa_pDa
   unsigned int dataIndex = 0;
   const CModbusIOBlock::TModbusRangeList &lSends = pa_pIOBlock->getSends();
   for (auto &it : lSends) {
-    const unsigned int nextDataIndex = dataIndex + it.m_nNrAddresses * CModbusIOBlock::getRegisterSize(it.m_nFunctionCode);
+    const unsigned int nextDataIndex = dataIndex + it.m_nNrAddresses * CModbusIOBlock::getRegisterSize(it.m_eFunction);
     if (nextDataIndex > pa_nDataSize) {
       break;
     }
-    writeDataRange(it.m_nFunctionCode, it.m_nStartAddress, it.m_nNrAddresses, (const uint8_t*)pa_pData + dataIndex);
+    writeDataRange(it.m_eFunction, it.m_nStartAddress, it.m_nNrAddresses, (const uint8_t*)pa_pData + dataIndex);
     dataIndex = nextDataIndex;
   }
   return (int)dataIndex;
