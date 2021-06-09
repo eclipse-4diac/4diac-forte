@@ -440,6 +440,7 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
   char *paramsAddress =  params;
   strcpy(params, pa_acLayerParams);
   char *chrStorage;
+  unsigned int defaultSlaveId;
 
   pa_pTcpParams->m_acIp[0] = '\0';
   pa_pRtuParams->m_acDevice[0] = '\0';
@@ -453,6 +454,8 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
   ++chrStorage;
 
   if(strcmp(params, "rtu") == 0 || strcmp(params, "RTU") == 0){
+    defaultSlaveId = 1;
+
     // get rtu params
     params = chrStorage;
     chrStorage = strchr(chrStorage, ':');
@@ -506,6 +509,8 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
   }
   else{
     if(strcmp(params, "tcp") == 0 || strcmp(params, "TCP") == 0){
+      defaultSlaveId = 0xFF;
+
       params = chrStorage;
 
       chrStorage = strchr(chrStorage, ':');
@@ -562,7 +567,7 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
     pa_pCommonParams->m_nSlaveId = (unsigned int) forte::core::util::strtoul(chrSlave, nullptr, 10);
   }
   else{
-    pa_pCommonParams->m_nSlaveId = 0xFF;
+    pa_pCommonParams->m_nSlaveId = defaultSlaveId;
   }
 
   char *readAddresses = chrStorage;
