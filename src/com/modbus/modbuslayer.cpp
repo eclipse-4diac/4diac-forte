@@ -536,8 +536,19 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
   }
   // Get common parameters
 
-  pa_pCommonParams->m_nPollFrequency = atol(chrStorage);
+  char *pollFrequency = chrStorage;
+  chrStorage = strchr(chrStorage, ':');
+  if(chrStorage == 0){
+    delete[] paramsAddress;
+    return -1;
+  }
+  *chrStorage = '\0';
+  ++chrStorage;
 
+  // Find poll frequency
+  pa_pCommonParams->m_nPollFrequency = atol(pollFrequency);
+
+  char *chrSlave = chrStorage;
   chrStorage = strchr(chrStorage, ':');
   if(chrStorage == nullptr){
     delete[] paramsAddress;
@@ -547,21 +558,11 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
   ++chrStorage;
 
   // Search for optional parameter slave id
-  char *chrSlave = strchr(chrStorage, ':');
-  if(chrSlave != nullptr){
-    chrSlave++;
-    if(strchr(chrSlave, ':') != nullptr){
-      pa_pCommonParams->m_nSlaveId = (unsigned int) forte::core::util::strtoul(chrStorage, nullptr, 10);
-
-      chrStorage = chrSlave;
-    }
-    else{
-      pa_pCommonParams->m_nSlaveId = 0xFF;
-    }
+  if(*chrSlave){
+    pa_pCommonParams->m_nSlaveId = (unsigned int) forte::core::util::strtoul(chrSlave, nullptr, 10);
   }
   else{
-    delete[] paramsAddress;
-    return -1;
+    pa_pCommonParams->m_nSlaveId = 0xFF;
   }
 
   char *readAddresses = chrStorage;
