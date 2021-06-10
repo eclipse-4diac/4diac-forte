@@ -44,6 +44,10 @@ int CModbusClientConnection::readData(CModbusIOBlock* pa_pIOBlock, void* pa_pDat
 
 void CModbusClientConnection::writeDataRange(EModbusFunction pa_eFunction, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses, const void *pa_pData){
   CCriticalRegion criticalRegion(m_oModbusLock);
+  if (!m_bConnected) {
+    // TODO: error
+    return;
+  }
   switch (pa_eFunction) {
     case eCoil:
       modbus_write_bits(m_pModbusConn, pa_nStartAddress, pa_nNrAddresses, (const uint8_t*)pa_pData);
@@ -145,6 +149,7 @@ void CModbusClientConnection::tryPolling(){
   }
 
   if((nrErrors == m_lstPollList.size()) && !m_lstPollList.empty()){
+    CCriticalRegion criticalRegion(m_oModbusLock);
     modbus_close(m_pModbusConn); // in any case it is worth trying to close the socket
     m_bConnected = false;
     m_pModbusConnEvent = new CModbusConnectionEvent(1000);
@@ -155,6 +160,7 @@ void CModbusClientConnection::tryPolling(){
 void CModbusClientConnection::tryConnect(){
   if(m_pModbusConnEvent != nullptr){
     if(m_pModbusConnEvent->readyToExecute()){
+      CCriticalRegion criticalRegion(m_oModbusLock);
       if(m_pModbusConnEvent->executeEvent(m_pModbusConn, nullptr) < 0) {
         DEVLOG_ERROR("Connection to Modbus server failed: %s\n", modbus_strerror(errno));
       } else {
