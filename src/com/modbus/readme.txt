@@ -12,12 +12,12 @@ Follow the steps below to set up your environment before compiling forte
 Parameter Documentation
 Modbus Client (TCP)
 At the moment the Modbus client can only be used for reading values from a Modbus server.
-modbus[(protocol:)ip:port:pollFreqency:(slaveId):readAddresses:sendAddresses(:responseTimeout:byteTimeout)]
+modbus[(protocol:)ip:port:(slaveId):pollFreqency:readAddresses:sendAddresses(:responseTimeout:byteTimeout)]
   - protocol: tcp (tcp is default)
   - ip: 127.0.0.1 etc
   - port: default is 502
-  - pollFrequency: polling frequency in milliseconds
   - slaveId (optional): the slave id used by the modbus server (0xFF is standard)
+  - pollFrequency: polling frequency in milliseconds
   - readAddresses: addresses can be specified between 0-65535
            more than one address (max 100) can be specified using
             + comma for separate addresses 0,2,65500

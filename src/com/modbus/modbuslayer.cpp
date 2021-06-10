@@ -541,18 +541,6 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
   }
   // Get common parameters
 
-  char *pollFrequency = chrStorage;
-  chrStorage = strchr(chrStorage, ':');
-  if(chrStorage == 0){
-    delete[] paramsAddress;
-    return -1;
-  }
-  *chrStorage = '\0';
-  ++chrStorage;
-
-  // Find poll frequency
-  pa_pCommonParams->m_nPollFrequency = atol(pollFrequency);
-
   char *chrSlave = chrStorage;
   chrStorage = strchr(chrStorage, ':');
   if(chrStorage == nullptr){
@@ -569,6 +557,18 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
   else{
     pa_pCommonParams->m_nSlaveId = defaultSlaveId;
   }
+
+  char *pollFrequency = chrStorage;
+  chrStorage = strchr(chrStorage, ':');
+  if(chrStorage == 0){
+    delete[] paramsAddress;
+    return -1;
+  }
+  *chrStorage = '\0';
+  ++chrStorage;
+
+  // Find poll frequency
+  pa_pCommonParams->m_nPollFrequency = atol(pollFrequency);
 
   char *readAddresses = chrStorage;
   chrStorage = strchr(chrStorage, ':');
