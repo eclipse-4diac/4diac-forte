@@ -15,6 +15,12 @@
 #include <vector>
 #include "modbusfunction.h"
 
+namespace forte {
+  namespace com_infra {
+    class CModbusComLayer;
+  }
+}
+
 class CModbusIOBlock {
   public:
     struct SModbusRange {
@@ -24,8 +30,10 @@ class CModbusIOBlock {
     };
     typedef std::vector<SModbusRange> TModbusRangeList;
 
-    CModbusIOBlock();
+    CModbusIOBlock(forte::com_infra::CModbusComLayer* pa_pParent);
     ~CModbusIOBlock();
+
+    forte::com_infra::CModbusComLayer* getParent() const { return m_pParent; }
 
     void addNewRead(EModbusFunction pa_eFunction, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses);
     void addNewSend(EModbusFunction pa_eFunction, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses);
@@ -41,6 +49,7 @@ class CModbusIOBlock {
     static unsigned int getRegisterSize(EModbusFunction pa_eFunction);
 
   private:
+    forte::com_infra::CModbusComLayer *const m_pParent;
     TModbusRangeList m_lReads;
     TModbusRangeList m_lSends;
 

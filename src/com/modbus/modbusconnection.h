@@ -59,13 +59,9 @@ class CModbusConnection : public CThread{
     void setResponseTimeout(unsigned int pa_nResponseTimeout);
     void setByteTimeout(unsigned int pa_nByteTimeout);
 
-    void setComCallback(forte::com_infra::CModbusComLayer* pa_poModbusLayer);
-
   protected:
     modbus_t* m_pModbusConn;
     CModbusHandler* m_pModbusHandler;
-
-    CModbusHandler::TCallbackDescriptor m_nComCallbackId;
 
     bool m_bConnected;
 

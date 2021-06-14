@@ -13,7 +13,7 @@
 #include "modbuslayer.h"
 #include "../../core/cominfra/basecommfb.h"
 
-CModbusConnection::CModbusConnection(CModbusHandler* pa_modbusHandler) : m_pModbusConn(nullptr), m_pModbusHandler(pa_modbusHandler), m_nComCallbackId(0),
+CModbusConnection::CModbusConnection(CModbusHandler* pa_modbusHandler) : m_pModbusConn(nullptr), m_pModbusHandler(pa_modbusHandler),
   m_bConnected(false), m_paIPAddress(nullptr), m_nPort(0),
   m_chDevice(nullptr), m_nBaud(0), m_cParity(0), m_nDataBit(0),
    m_nStopBit(0), m_nResponseTimeout(0), m_nByteTimeout(0){
@@ -88,10 +88,6 @@ void CModbusConnection::setResponseTimeout(unsigned int pa_nResponseTimeout){
 
 void CModbusConnection::setByteTimeout(unsigned int pa_nByteTimeout){
   m_nByteTimeout = pa_nByteTimeout;
-}
-
-void CModbusConnection::setComCallback(forte::com_infra::CModbusComLayer* pa_poModbusLayer){
-  m_nComCallbackId = m_pModbusHandler->addComCallback(pa_poModbusLayer);
 }
 
 int CModbusConnection::writeData(CModbusIOBlock* pa_pIOBlock, const void* pa_pData, unsigned int pa_nDataSize){

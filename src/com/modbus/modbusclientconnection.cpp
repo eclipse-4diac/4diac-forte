@@ -95,7 +95,7 @@ void CModbusClientConnection::addNewPoll(long pa_nPollInterval, CModbusIOBlock* 
     }
   }
   if(newPoll == nullptr){
-    newPoll = new CModbusPoll(pa_nPollInterval);
+    newPoll = new CModbusPoll(m_pModbusHandler, pa_nPollInterval);
     m_lstPollList.push_back(newPoll);
   }
 
@@ -122,7 +122,6 @@ void CModbusClientConnection::run(){
 
 void CModbusClientConnection::tryPolling(){
   unsigned int nrErrors = 0;
-  bool dataReturned = false;
 
   for (size_t index = 0; index < m_lstPollList.size(); ++index) {
     auto itPoll = m_lstPollList[index];
@@ -138,14 +137,7 @@ void CModbusClientConnection::tryPolling(){
 
         nrErrors++;
       }
-      else if(nrVals > 0){
-        dataReturned = true;
-      }
     }
-  }
-
-  if(dataReturned) {
-    m_pModbusHandler->executeComCallback(m_nComCallbackId);
   }
 
   if((nrErrors == m_lstPollList.size()) && !m_lstPollList.empty()){

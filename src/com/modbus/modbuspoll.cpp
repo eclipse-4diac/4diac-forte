@@ -10,14 +10,15 @@
  *   Filip Andren - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "modbuspoll.h"
+#include "modbushandler.h"
 #include "modbusioblock.h"
 
 #include <devlog.h>
 
 #include <modbus.h>
 
-CModbusPoll::CModbusPoll(long pa_nPollInterval) :
-    CModbusTimedEvent((TForteUInt32)pa_nPollInterval){
+CModbusPoll::CModbusPoll(CModbusHandler* pa_pModbusHandler, long pa_nPollInterval) :
+  CModbusTimedEvent((TForteUInt32)pa_nPollInterval),m_pModbusHandler(pa_pModbusHandler){
 }
 
 CModbusPoll::~CModbusPoll(){
@@ -68,5 +69,10 @@ int CModbusPoll::readOneBlock(modbus_t *pa_pModbusConn, CModbusIOBlock *pa_pIOBl
     }
     dataIndex = nextDataIndex;
   }
+
+  if (nrVals > 0) {
+    m_pModbusHandler->executeComCallback(pa_pIOBlock->getParent());
+  }
+
   return nrVals;
 }

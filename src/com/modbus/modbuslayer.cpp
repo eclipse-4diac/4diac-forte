@@ -9,14 +9,17 @@
  * Contributors:
  *   Filip Andren, Patrick Smejkal, Alois Zoitl, Martin Melik-Merkumians - initial API and implementation and/or initial documentation
  *******************************************************************************/
+#include <algorithm>
 #include "modbuslayer.h"
 #include "commfb.h"
 #include "modbusclientconnection.h"
 
 using namespace forte::com_infra;
 
+std::vector<CModbusComLayer::SConnection> CModbusComLayer::sm_lstConnections;
+
 CModbusComLayer::CModbusComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB) :
-    CComLayer(pa_poUpperLayer, pa_poComFB), m_pModbusConnection(nullptr), m_unBufFillSize(0){
+    CComLayer(pa_poUpperLayer, pa_poComFB), m_pModbusConnection(nullptr), m_unBufFillSize(0),m_IOBlock(this){
   m_eConnectionState = e_Disconnected;
 }
 
@@ -345,16 +348,18 @@ EComResponse CModbusComLayer::openConnection(char *pa_acLayerParameter){
       STcpParams tcpParams;
       SRtuParams rtuParams;
       SCommonParams commonParams;
+      char idString[256] = {0};
       memset(&tcpParams, 0, sizeof(tcpParams));
       memset(&rtuParams, 0, sizeof(rtuParams));
       memset(&commonParams, 0, sizeof(commonParams));
 
-      int errCode = processClientParams(pa_acLayerParameter, &tcpParams, &rtuParams, &commonParams);
+      int errCode = processClientParams(pa_acLayerParameter, &tcpParams, &rtuParams, &commonParams, idString);
       if(errCode != 0){
         DEVLOG_ERROR("CModbusComLayer:: Invalid input parameters\n");
       }
       else{
-        m_pModbusConnection = new CModbusClientConnection((CModbusHandler*)&getExtEvHandler<CModbusHandler>());
+        bool reuseConnection = false;
+        m_pModbusConnection = getClientConnection(idString);
         if(strlen(tcpParams.m_acIp) > 0){
           m_pModbusConnection->setIPAddress(tcpParams.m_acIp);
           m_pModbusConnection->setPort(tcpParams.m_nPort);
@@ -366,7 +371,9 @@ EComResponse CModbusComLayer::openConnection(char *pa_acLayerParameter){
           m_pModbusConnection->setDataBit(rtuParams.m_nDataBit);
           m_pModbusConnection->setStopBit(rtuParams.m_nStopBit);
         }
-        m_pModbusConnection->setComCallback(this);
+        else{
+          reuseConnection = true;
+        }
         m_pModbusConnection->setResponseTimeout(commonParams.m_nResponseTimeout);
         m_pModbusConnection->setByteTimeout(commonParams.m_nByteTimeout);
 
@@ -382,7 +389,7 @@ EComResponse CModbusComLayer::openConnection(char *pa_acLayerParameter){
         }
         static_cast<CModbusClientConnection*>(m_pModbusConnection)->addNewPoll(commonParams.m_nPollFrequency, &m_IOBlock);
 
-        if(m_pModbusConnection->connect() < 0){
+        if(!reuseConnection && m_pModbusConnection->connect() < 0){
           return eRetVal;
         }
         m_eConnectionState = e_Connected;
@@ -405,10 +412,7 @@ void CModbusComLayer::closeConnection(){
   //TODO
   DEVLOG_INFO("CModbusLayer::closeConnection()\n");
 
-  if(m_pModbusConnection != nullptr){
-    m_pModbusConnection->disconnect();
-    delete m_pModbusConnection;
-  }
+  putConnection(m_pModbusConnection);
 }
 
 EModbusFunction CModbusComLayer::decodeFunction(const char* pa_acParam, int *strIndex, EModbusFunction pa_eDefaultFunction){
@@ -435,12 +439,13 @@ EModbusFunction CModbusComLayer::decodeFunction(const char* pa_acParam, int *str
   return pa_eDefaultFunction;
 }
 
-int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_pTcpParams, SRtuParams* pa_pRtuParams, SCommonParams* pa_pCommonParams){
+int CModbusComLayer::processClientParams(const char* pa_acLayerParams, STcpParams* pa_pTcpParams, SRtuParams* pa_pRtuParams, SCommonParams* pa_pCommonParams, char* pa_acIdString){
   char *params = new char[strlen(pa_acLayerParams) + 1];
   char *paramsAddress =  params;
   strcpy(params, pa_acLayerParams);
   char *chrStorage;
   unsigned int defaultSlaveId;
+  bool reuseConnection = false;
 
   pa_pTcpParams->m_acIp[0] = '\0';
   pa_pRtuParams->m_acDevice[0] = '\0';
@@ -466,6 +471,8 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
     *chrStorage = '\0';
     ++chrStorage;
 
+    strcpy(pa_acIdString, "rtu:");
+    strcat(pa_acIdString, params);
     strcpy(pa_pRtuParams->m_acDevice, params);
     pa_pRtuParams->m_nBaud = (int) forte::core::util::strtol(chrStorage, nullptr, 10);
 
@@ -478,6 +485,7 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
     ++chrStorage;
 
     pa_pRtuParams->m_cParity = chrStorage[0];
+    reuseConnection |= chrStorage[0] == ':';
 
     chrStorage = strchr(chrStorage, ':');
     if(chrStorage == nullptr){
@@ -488,6 +496,7 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
     ++chrStorage;
 
     pa_pRtuParams->m_nDataBit = (int) forte::core::util::strtol(chrStorage, nullptr, 10);
+    reuseConnection |= !chrStorage[0];
 
     chrStorage = strchr(chrStorage, ':');
     if(chrStorage == nullptr){
@@ -498,6 +507,7 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
     ++chrStorage;
 
     pa_pRtuParams->m_nStopBit = (int) forte::core::util::strtol(chrStorage, nullptr, 10);
+    reuseConnection |= !chrStorage[0];
 
     chrStorage = strchr(chrStorage, ':');
     if(chrStorage == nullptr){
@@ -506,6 +516,10 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
     }
     *chrStorage = '\0';
     ++chrStorage;
+
+    if (reuseConnection) {
+      pa_pRtuParams->m_acDevice[0] = '\0';
+    }
   }
   else{
     if(strcmp(params, "tcp") == 0 || strcmp(params, "TCP") == 0){
@@ -523,9 +537,14 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
     }
     if(isIp(params)){
       // TCP connection
+      strcpy(pa_acIdString, "tcp:");
+      strcat(pa_acIdString, params);
+      strcat(pa_acIdString, ":");
       strcpy(pa_pTcpParams->m_acIp, params);
       pa_pTcpParams->m_nPort = (unsigned int) forte::core::util::strtoul(chrStorage, nullptr, 10);
+      reuseConnection |= !chrStorage[0];
 
+      params = chrStorage;
       chrStorage = strchr(chrStorage, ':');
       if(chrStorage == nullptr){
         delete[] paramsAddress;
@@ -533,10 +552,15 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
       }
       *chrStorage = '\0';
       ++chrStorage;
+      strcat(pa_acIdString, params);
     }
     else{
       delete[] paramsAddress;
       return -1;
+    }
+
+    if (reuseConnection) {
+      pa_pTcpParams->m_acIp[0] = '\0';
     }
   }
   // Get common parameters
@@ -733,4 +757,39 @@ bool CModbusComLayer::isIp(const char* pa_acIp){
 
   delete[] str;
   return true;
+}
+
+CModbusConnection* CModbusComLayer::getClientConnection(const char* pa_acIdString) {
+  auto itConn = std::find_if(
+          sm_lstConnections.begin(),
+          sm_lstConnections.end(),
+          [pa_acIdString](const SConnection &sc) {
+            return !strcmp(sc.m_acIdString, pa_acIdString);
+          });
+  if (itConn != sm_lstConnections.end()) {
+    ++itConn->m_nUseCount;
+    return itConn->m_pConnection;
+  }
+
+  CModbusConnection *modbusConnection = new CModbusClientConnection((CModbusHandler*)&getExtEvHandler<CModbusHandler>());
+  SConnection connInfo = {{0}, 1, modbusConnection};
+  strcpy(connInfo.m_acIdString, pa_acIdString);
+  sm_lstConnections.push_back(connInfo);
+  return modbusConnection;
+}
+
+void CModbusComLayer::putConnection(CModbusConnection *pa_pModbusConn) {
+  auto itConn = std::find_if(
+          sm_lstConnections.begin(),
+          sm_lstConnections.end(),
+          [pa_pModbusConn](const SConnection &sc) {
+            return sc.m_pConnection == pa_pModbusConn;
+          });
+  if (itConn != sm_lstConnections.end()) {
+    if (!--itConn->m_nUseCount) {
+      itConn->m_pConnection->disconnect();
+      delete itConn->m_pConnection;
+      sm_lstConnections.erase(itConn);
+    }
+  }
 }

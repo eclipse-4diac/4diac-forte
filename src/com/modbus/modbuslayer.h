@@ -12,6 +12,7 @@
 #ifndef MODBUSCOMLAYER_H_
 #define MODBUSCOMLAYER_H_
 
+#include <vector>
 #include <forte_config.h>
 #include "modbusioblock.h"
 #include "modbusfunction.h"
@@ -62,6 +63,11 @@ namespace forte {
           unsigned int m_nResponseTimeout;
           unsigned int m_nByteTimeout;
         };
+        struct SConnection {
+          char m_acIdString[256];
+          unsigned int m_nUseCount;
+          CModbusConnection *m_pConnection;
+        };
 
         template<typename T>
         T convertFBOutput(TForteByte *pa_acDataArray, unsigned int pa_nDataSize);
@@ -72,10 +78,13 @@ namespace forte {
         void closeConnection() override;
 
         EModbusFunction decodeFunction(const char* pa_acParam, int *strIndex, EModbusFunction pa_eDefaultFunction=eHoldingRegister);
-        int processClientParams(char* pa_acLayerParams, STcpParams* pa_pTcpParams, SRtuParams* pa_pRtuParams, SCommonParams* pa_pCommonParams);
+        int processClientParams(const char* pa_acLayerParams, STcpParams* pa_pTcpParams, SRtuParams* pa_pRtuParams, SCommonParams* pa_pCommonParams, char* pa_acIdString);
         int findNextStartAddress(const char* pa_acString, int pa_nStartIndex);
         int findNextStopAddress(const char* pa_acString, int pa_nStartIndex);
         bool isIp(const char* pa_acIp);
+
+        CModbusConnection* getClientConnection(const char* pa_acIdString);
+        void putConnection(CModbusConnection *pa_pModbusConn);
 
         EComResponse m_eInterruptResp;
 
@@ -85,6 +94,8 @@ namespace forte {
         unsigned int m_unBufFillSize;
 
         CModbusIOBlock m_IOBlock;
+
+        static std::vector<SConnection> sm_lstConnections;
     };
 
   }

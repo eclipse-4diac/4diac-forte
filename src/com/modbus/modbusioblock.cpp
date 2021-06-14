@@ -13,8 +13,8 @@
 #include "modbusconnection.h"
 
 
-CModbusIOBlock::CModbusIOBlock()
-  : m_pCache(0),m_nReadSize(0),m_nSendSize(0){
+CModbusIOBlock::CModbusIOBlock(forte::com_infra::CModbusComLayer* pa_pParent)
+  : m_pParent(pa_pParent),m_pCache(0),m_nReadSize(0),m_nSendSize(0){
 }
 
 CModbusIOBlock::~CModbusIOBlock(){
