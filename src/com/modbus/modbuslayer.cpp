@@ -370,6 +370,7 @@ EComResponse CModbusComLayer::openConnection(char *pa_acLayerParameter){
           m_pModbusConnection->setParity(rtuParams.m_cParity);
           m_pModbusConnection->setDataBit(rtuParams.m_nDataBit);
           m_pModbusConnection->setStopBit(rtuParams.m_nStopBit);
+          m_pModbusConnection->setFlowControl(rtuParams.m_enFlowControl);
         }
         else{
           reuseConnection = true;
@@ -516,6 +517,23 @@ int CModbusComLayer::processClientParams(const char* pa_acLayerParams, STcpParam
     }
     *chrStorage = '\0';
     ++chrStorage;
+
+    const char* flow = chrStorage;
+    chrStorage = strchr(chrStorage, ':');
+    if(chrStorage == 0){
+      delete[] paramsAddress;
+      return -1;
+    }
+    *chrStorage = '\0';
+    ++chrStorage;
+
+    if (!strcmp(flow, "arduino")) {
+      pa_pRtuParams->m_enFlowControl = eFlowArduino;
+    } else if (!strcmp(flow, "delay")) {
+      pa_pRtuParams->m_enFlowControl = eFlowDelay;
+    } else {
+      pa_pRtuParams->m_enFlowControl = eFlowNone;
+    }
 
     if (reuseConnection) {
       pa_pRtuParams->m_acDevice[0] = '\0';

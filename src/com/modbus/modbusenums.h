@@ -9,14 +9,21 @@
  * Contributors:
  *   Davor Cihlar - multiple FBs sharing a single Modbus connection
  *******************************************************************************/
-#ifndef _MODBUSFUNCTION_H_
-#define _MODBUSFUNCTION_H_
+#ifndef _MODBUSENUMS_H_
+#define _MODBUSENUMS_H_
 
 enum EModbusFunction {
   eDiscreteInput = 0,
   eCoil,
   eInputRegister,
   eHoldingRegister
+};
+
+enum EModbusFlowControl {
+  eFlowNone = 0,
+  eFlow485,
+  eFlowArduino,
+  eFlowDelay,
 };
 
 #endif

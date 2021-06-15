@@ -16,7 +16,7 @@
 #include <forte_thread.h>
 #include "modbushandler.h"
 #include "modbusioblock.h"
-#include "modbusfunction.h"
+#include "modbusenums.h"
 #include <errno.h>
 
 namespace forte{
@@ -56,6 +56,7 @@ class CModbusConnection : public CThread{
     void setParity(char pa_cParity);
     void setDataBit(int pa_nDataBit);
     void setStopBit(int pa_nStopBit);
+    void setFlowControl(EModbusFlowControl pa_enFlowControl);
     void setResponseTimeout(unsigned int pa_nResponseTimeout);
     void setByteTimeout(unsigned int pa_nByteTimeout);
 
@@ -64,6 +65,8 @@ class CModbusConnection : public CThread{
     CModbusHandler* m_pModbusHandler;
 
     bool m_bConnected;
+
+    EModbusFlowControl getFlowControl() const { return m_enFlowControl; }
 
   private:
     const char* m_paIPAddress;
@@ -74,6 +77,7 @@ class CModbusConnection : public CThread{
     char m_cParity;
     int m_nDataBit;
     int m_nStopBit;
+    EModbusFlowControl m_enFlowControl;
 
     unsigned int m_nResponseTimeout;
     unsigned int m_nByteTimeout;

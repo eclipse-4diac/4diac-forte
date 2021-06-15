@@ -13,7 +13,7 @@
 #define _MODBUSIOBLOCK_H_
 
 #include <vector>
-#include "modbusfunction.h"
+#include "modbusenums.h"
 
 namespace forte {
   namespace com_infra {

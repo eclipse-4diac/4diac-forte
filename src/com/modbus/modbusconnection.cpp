@@ -16,7 +16,7 @@
 CModbusConnection::CModbusConnection(CModbusHandler* pa_modbusHandler) : m_pModbusConn(nullptr), m_pModbusHandler(pa_modbusHandler),
   m_bConnected(false), m_paIPAddress(nullptr), m_nPort(0),
   m_chDevice(nullptr), m_nBaud(0), m_cParity(0), m_nDataBit(0),
-   m_nStopBit(0), m_nResponseTimeout(0), m_nByteTimeout(0){
+  m_nStopBit(0), m_enFlowControl(eFlowNone), m_nResponseTimeout(0), m_nByteTimeout(0){
 }
     
 CModbusConnection::~CModbusConnection(){
@@ -80,6 +80,10 @@ void CModbusConnection::setDataBit(int pa_nDataBit) {
 
 void CModbusConnection::setStopBit(int pa_nStopBit) {
   m_nStopBit = pa_nStopBit;
+}
+
+void CModbusConnection::setFlowControl(EModbusFlowControl pa_enFlowControl){
+  m_enFlowControl = pa_enFlowControl;
 }
 
 void CModbusConnection::setResponseTimeout(unsigned int pa_nResponseTimeout){

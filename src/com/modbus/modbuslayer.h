@@ -15,7 +15,7 @@
 #include <vector>
 #include <forte_config.h>
 #include "modbusioblock.h"
-#include "modbusfunction.h"
+#include "modbusenums.h"
 #include "comlayer.h"
 #include <stdint.h>
 
@@ -47,6 +47,7 @@ namespace forte {
           char m_cParity;
           int m_nDataBit;
           int m_nStopBit;
+          EModbusFlowControl m_enFlowControl;
         };
         struct SAddrRange {
           EModbusFunction m_eFunction;

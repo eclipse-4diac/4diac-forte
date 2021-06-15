@@ -13,6 +13,7 @@
 #include "devlog.h"
 #include "modbuspoll.h"
 #include <forte_thread.h>
+#include <unistd.h>
 
 using namespace modbus_connection_event;
 
@@ -68,7 +69,7 @@ int CModbusClientConnection::connect(){
     modbus_set_slave(m_pModbusConn, m_nSlaveId);
   }
 
-  m_pModbusConnEvent = new CModbusConnectionEvent(1000);
+  m_pModbusConnEvent = new CModbusConnectionEvent(1000, getFlowControl());
   m_pModbusConnEvent->activate();
 
   this->start();
@@ -144,7 +145,7 @@ void CModbusClientConnection::tryPolling(){
     CCriticalRegion criticalRegion(m_oModbusLock);
     modbus_close(m_pModbusConn); // in any case it is worth trying to close the socket
     m_bConnected = false;
-    m_pModbusConnEvent = new CModbusConnectionEvent(1000);
+    m_pModbusConnEvent = new CModbusConnectionEvent(1000, getFlowControl());
     m_pModbusConnEvent->activate();
   }
 }
@@ -175,8 +176,8 @@ void CModbusClientConnection::tryConnect(){
 /*************************************
  * CModbusConnectionEvent class
  *************************************/
-CModbusConnectionEvent::CModbusConnectionEvent(long pa_nReconnectInterval) :
-    CModbusTimedEvent((TForteUInt32)pa_nReconnectInterval){
+CModbusConnectionEvent::CModbusConnectionEvent(long pa_nReconnectInterval, EModbusFlowControl pa_enFlowControl) :
+    CModbusTimedEvent((TForteUInt32)pa_nReconnectInterval), m_enFlowControl(pa_enFlowControl){
 }
 
 int CModbusConnectionEvent::executeEvent(modbus_t *pa_pModbusConn, void *pa_pRetVal){
@@ -184,6 +185,28 @@ int CModbusConnectionEvent::executeEvent(modbus_t *pa_pModbusConn, void *pa_pRet
 
   restartTimer();
 
-  return modbus_connect(pa_pModbusConn);
+  switch (m_enFlowControl) {
+    case eFlowArduino:
+        //TODO
+      break;
+    default:
+      // ignore
+      break;
+  };
+
+  int retVal = modbus_connect(pa_pModbusConn);
+
+  if (retVal >= 0) {
+    switch (m_enFlowControl) {
+      case eFlowDelay:
+        sleep(2);
+        break;
+      default:
+        // ignore
+        break;
+    }
+  }
+
+  return retVal;
 }
 
