@@ -21,13 +21,14 @@ class CModbusPoll;
 namespace modbus_connection_event {
   class CModbusConnectionEvent : public CModbusTimedEvent{
     public:
-      explicit CModbusConnectionEvent(long pa_nReconnectInterval, EModbusFlowControl pa_enFlowControl); //ReconnectInterval = 0 => only one connection try
+      explicit CModbusConnectionEvent(long pa_nReconnectInterval, EModbusFlowControl pa_enFlowControl, const char *pa_acDevice); //ReconnectInterval = 0 => only one connection try
       ~CModbusConnectionEvent() override = default;
 
       int executeEvent(modbus_t *pa_pModbusConn, void *pa_pRetVal) override;
 
     private:
       EModbusFlowControl m_enFlowControl;
+      char m_acDevice[256];
   };
 }
 

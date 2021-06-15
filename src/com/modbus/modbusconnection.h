@@ -66,13 +66,14 @@ class CModbusConnection : public CThread{
 
     bool m_bConnected;
 
+    const char* getDevice() const { return m_chDevice; }
     EModbusFlowControl getFlowControl() const { return m_enFlowControl; }
 
   private:
     const char* m_paIPAddress;
     unsigned int m_nPort;
 
-    const char* m_chDevice;
+    char m_chDevice[256];
     int m_nBaud;
     char m_cParity;
     int m_nDataBit;

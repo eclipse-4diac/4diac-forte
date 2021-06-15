@@ -15,7 +15,7 @@
 
 CModbusConnection::CModbusConnection(CModbusHandler* pa_modbusHandler) : m_pModbusConn(nullptr), m_pModbusHandler(pa_modbusHandler),
   m_bConnected(false), m_paIPAddress(nullptr), m_nPort(0),
-  m_chDevice(nullptr), m_nBaud(0), m_cParity(0), m_nDataBit(0),
+  m_chDevice{0}, m_nBaud(0), m_cParity(0), m_nDataBit(0),
   m_nStopBit(0), m_enFlowControl(eFlowNone), m_nResponseTimeout(0), m_nByteTimeout(0){
 }
     
@@ -26,10 +26,8 @@ CModbusConnection::~CModbusConnection(){
 int CModbusConnection::connect(){
   if (m_paIPAddress != nullptr) {
     m_pModbusConn = modbus_new_tcp(m_paIPAddress, m_nPort);
-  } else if (m_chDevice != nullptr) {
-    m_pModbusConn = modbus_new_rtu(m_chDevice, m_nBaud, m_cParity, m_nDataBit, m_nStopBit);
   } else {
-    return -1;
+    m_pModbusConn = modbus_new_rtu(m_chDevice, m_nBaud, m_cParity, m_nDataBit, m_nStopBit);
   }
 
 #if 0
@@ -63,7 +61,7 @@ void CModbusConnection::setPort(unsigned int pa_nPort){
 }
 
 void CModbusConnection::setDevice(const char* pa_chDevice) {
-  m_chDevice = pa_chDevice;
+  strcpy(m_chDevice, pa_chDevice);
 }
 
 void CModbusConnection::setBaud(int pa_nBaud) {

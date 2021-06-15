@@ -176,8 +176,9 @@ void CModbusClientConnection::tryConnect(){
 /*************************************
  * CModbusConnectionEvent class
  *************************************/
-CModbusConnectionEvent::CModbusConnectionEvent(long pa_nReconnectInterval, EModbusFlowControl pa_enFlowControl) :
+CModbusConnectionEvent::CModbusConnectionEvent(long pa_nReconnectInterval, EModbusFlowControl pa_enFlowControl, const char *pa_acDevice) :
     CModbusTimedEvent((TForteUInt32)pa_nReconnectInterval), m_enFlowControl(pa_enFlowControl){
+  strcpy(m_acDevice, pa_acDevice);
 }
 
 int CModbusConnectionEvent::executeEvent(modbus_t *pa_pModbusConn, void *pa_pRetVal){
@@ -186,9 +187,13 @@ int CModbusConnectionEvent::executeEvent(modbus_t *pa_pModbusConn, void *pa_pRet
   restartTimer();
 
   switch (m_enFlowControl) {
-    case eFlowArduino:
-        //TODO
+    case eFlowArduino: {
+      int fd = open(m_acDevice, O_RDWR);
+      if (fd >= 0) {
+        close(fd);
+      }
       break;
+    }
     default:
       // ignore
       break;
