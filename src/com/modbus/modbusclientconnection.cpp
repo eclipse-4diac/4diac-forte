@@ -122,7 +122,7 @@ void CModbusClientConnection::run(){
 }
 
 void CModbusClientConnection::tryPolling(){
-  unsigned int nrErrors = 0;
+  unsigned int nrErrors = 0, nrPolls = 0;
 
   for (size_t index = 0; index < m_lstPollList.size(); ++index) {
     auto itPoll = m_lstPollList[index];
@@ -138,10 +138,12 @@ void CModbusClientConnection::tryPolling(){
 
         nrErrors++;
       }
+      ++nrPolls;
     }
   }
 
-  if((nrErrors == m_lstPollList.size()) && !m_lstPollList.empty()){
+  if((nrErrors == nrPolls) && nrPolls && !m_lstPollList.empty()){
+    DEVLOG_WARNING("Too many errors on Modbus, reconnecting\n");
     CCriticalRegion criticalRegion(m_oModbusLock);
     modbus_close(m_pModbusConn); // in any case it is worth trying to close the socket
     m_bConnected = false;
