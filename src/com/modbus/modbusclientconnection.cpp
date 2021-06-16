@@ -13,7 +13,12 @@
 #include "devlog.h"
 #include "modbuspoll.h"
 #include <forte_thread.h>
-#include <unistd.h>
+#include <unistd.h> // for sleep
+// for open and disabling DTR
+#include <termios.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 using namespace modbus_connection_event;
 
@@ -69,7 +74,7 @@ int CModbusClientConnection::connect(){
     modbus_set_slave(m_pModbusConn, m_nSlaveId);
   }
 
-  m_pModbusConnEvent = new CModbusConnectionEvent(1000, getFlowControl());
+  m_pModbusConnEvent = new CModbusConnectionEvent(1000, getFlowControl(), getDevice());
   m_pModbusConnEvent->activate();
 
   this->start();
@@ -147,7 +152,7 @@ void CModbusClientConnection::tryPolling(){
     CCriticalRegion criticalRegion(m_oModbusLock);
     modbus_close(m_pModbusConn); // in any case it is worth trying to close the socket
     m_bConnected = false;
-    m_pModbusConnEvent = new CModbusConnectionEvent(1000, getFlowControl());
+    m_pModbusConnEvent = new CModbusConnectionEvent(1000, getFlowControl(), getDevice());
     m_pModbusConnEvent->activate();
   }
 }
@@ -192,6 +197,22 @@ int CModbusConnectionEvent::executeEvent(modbus_t *pa_pModbusConn, void *pa_pRet
     case eFlowArduino: {
       int fd = open(m_acDevice, O_RDWR);
       if (fd >= 0) {
+        termios tty;
+        tcgetattr(fd, &tty);
+        if (tty.c_cflag & (HUPCL | CRTSCTS)) {
+          tty.c_cflag &= ~(HUPCL | CRTSCTS);
+          if (!tcsetattr(fd, TCSANOW, &tty)) {
+            DEVLOG_INFO("Hardware flow control for Modbus RTU disabled\n");
+            // Disabling DTR is not perfect and it will be toggled by this open for disabling it.
+            // Therefore, wait for Arduino to boot only if flags weren't previously set.
+            sleep(2);
+          } else {
+            DEVLOG_ERROR("Failed disabling flow control for Modbus RTU\n");
+            return -1;
+          }
+        } else {
+          DEVLOG_INFO("Hardware flow control for Modbus RTU was already disabled\n");
+        }
         close(fd);
       }
       break;
