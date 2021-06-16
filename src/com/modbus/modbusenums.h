@@ -24,6 +24,7 @@ enum EModbusFlowControl {
   eFlow485,
   eFlowArduino,
   eFlowDelay,
+  eFlowLongDelay,
 };
 
 #endif

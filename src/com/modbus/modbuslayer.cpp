@@ -531,6 +531,8 @@ int CModbusComLayer::processClientParams(const char* pa_acLayerParams, STcpParam
       pa_pRtuParams->m_enFlowControl = eFlowArduino;
     } else if (!strcmp(flow, "delay")) {
       pa_pRtuParams->m_enFlowControl = eFlowDelay;
+    } else if (!strcmp(flow, "longdelay") || !strcmp(flow, "delay5")) {
+      pa_pRtuParams->m_enFlowControl = eFlowLongDelay;
     } else {
       pa_pRtuParams->m_enFlowControl = eFlowNone;
     }

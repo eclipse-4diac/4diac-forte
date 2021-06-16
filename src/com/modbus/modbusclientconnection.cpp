@@ -226,6 +226,9 @@ int CModbusConnectionEvent::executeEvent(modbus_t *pa_pModbusConn, void *pa_pRet
 
   if (retVal >= 0) {
     switch (m_enFlowControl) {
+      case eFlowLongDelay:
+        sleep(3);
+        // fall through
       case eFlowDelay:
         sleep(2);
         break;
