@@ -98,6 +98,9 @@ int CModbusConnection::writeData(CModbusIOBlock* pa_pIOBlock, const void* pa_pDa
   for (auto &it : lSends) {
     const unsigned int nextDataIndex = dataIndex + it.m_nNrAddresses * CModbusIOBlock::getRegisterSize(it.m_eFunction);
     if (nextDataIndex > pa_nDataSize) {
+      const unsigned int maxNrAddresses = (pa_nDataSize - dataIndex) / CModbusIOBlock::getRegisterSize(it.m_eFunction);
+      DEVLOG_WARNING("Modbus writing %u instead of %u registers from address %u\n", maxNrAddresses, it.m_nNrAddresses, it.m_nStartAddress);
+      writeDataRange(it.m_eFunction, it.m_nStartAddress, maxNrAddresses, (const uint8_t*)pa_pData + dataIndex);
       break;
     }
     writeDataRange(it.m_eFunction, it.m_nStartAddress, it.m_nNrAddresses, (const uint8_t*)pa_pData + dataIndex);
