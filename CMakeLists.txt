@@ -18,6 +18,15 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 PROJECT(FORTE)
 
+set(FORTE_USE_STD_11 OFF CACHE BOOL "Enable c++11 for the project")
+mark_as_advanced(FORTE_USE_STD_11)
+
+if (FORTE_USE_STD_11)
+  set(CMAKE_CXX_STANDARD 11)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif()
+
+
 if(NOT (${CMAKE_HOST_SYSTEM_NAME} STREQUAL ${CMAKE_SYSTEM_NAME}))
     MESSAGE("Cross compiling")
     SET(CMAKE_CXX_USE_RESPONSE_FILE_FOR_OBJECTS 1)
@@ -34,7 +43,12 @@ mark_as_advanced(FORTE_BUILDSUPPORT_DIRECTORY)
 INCLUDE(${FORTE_BUILDSUPPORT_DIRECTORY}/forte.cmake)
 INCLUDE(${FORTE_BUILDSUPPORT_DIRECTORY}/check_compiler_features.cmake)
 
-TEST_NEEDED_FORTE_COMPILER_FEATURES() #Checl for compiler features and either apply fixes or error messages if not supported
+set(FORTE_TEST_NEEDED_COMPILER_FEATURES ON CACHE BOOL "Check for compiler features and either apply fixes or error messages if not supported")
+mark_as_advanced(FORTE_BUILD_EXECUTABLE)
+
+if (FORTE_TEST_NEEDED_COMPILER_FEATURES)
+  TEST_NEEDED_FORTE_COMPILER_FEATURES()
+endif()
 
 
 forte_add_definition("-DFORTE_COMPILATION") #Allow to tell external modules/middleware that forte is being compiled, so special defines can be added
