@@ -269,7 +269,7 @@ delayedWorkingServer;<Request ID="268" Action="WRITE"><Connection Source="opc_ua
 delayedWorkingServer;<Request ID="269" Action="CREATE"><FB Name="CreateObjects.createServer" Type="TEST_CONDITION" /></Request>
 delayedWorkingServer;<Request ID="270" Action="CREATE"><FB Name="CreateObjects.E_SWITCH" Type="E_SWITCH" /></Request>
 delayedWorkingServer;<Request ID="271" Action="CREATE"><FB Name="CreateObjects.testObject" Type="PUBLISH_0" /></Request>
-delayedWorkingServer;<Request ID="272" Action="WRITE"><Connection Source="opc_ua[CREATE_OBJECT;,2:i=15001;/Objects/testObject1]" Destination="CreateObjects.testObject.ID" /></Request>
+delayedWorkingServer;<Request ID="272" Action="WRITE"><Connection Source="opc_ua[CREATE_OBJECT;,2:i=1;/Objects/testObject1]" Destination="CreateObjects.testObject.ID" /></Request>
 delayedWorkingServer;<Request ID="273" Action="CREATE"><FB Name="CreateObjects.testObject1Test" Type="TEST_CONDITION" /></Request>
 delayedWorkingServer;<Request ID="274" Action="CREATE"><FB Name="CreateObjects.testObject2Test" Type="TEST_CONDITION" /></Request>
 delayedWorkingServer;<Request ID="275" Action="CREATE"><FB Name="CreateObjects.testObject2" Type="PUBLISH_0" /></Request>

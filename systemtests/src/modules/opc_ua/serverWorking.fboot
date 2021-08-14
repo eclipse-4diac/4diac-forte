@@ -384,7 +384,7 @@ WorkingServer;<Request ID="383" Action="WRITE"><Connection Source="opc_ua[CREATE
 WorkingServer;<Request ID="384" Action="CREATE"><FB Name="CreateObjects.createServer" Type="TEST_CONDITION" /></Request>
 WorkingServer;<Request ID="385" Action="CREATE"><FB Name="CreateObjects.E_SWITCH" Type="E_SWITCH" /></Request>
 WorkingServer;<Request ID="386" Action="CREATE"><FB Name="CreateObjects.testObject" Type="PUBLISH_0" /></Request>
-WorkingServer;<Request ID="387" Action="WRITE"><Connection Source="opc_ua[CREATE_OBJECT;,2:i=15001;/Objects/testObject1]" Destination="CreateObjects.testObject.ID" /></Request>
+WorkingServer;<Request ID="387" Action="WRITE"><Connection Source="opc_ua[CREATE_OBJECT;,2:i=1;/Objects/testObject1]" Destination="CreateObjects.testObject.ID" /></Request>
 WorkingServer;<Request ID="388" Action="CREATE"><FB Name="CreateObjects.testObject1Test" Type="TEST_CONDITION" /></Request>
 WorkingServer;<Request ID="389" Action="CREATE"><FB Name="CreateObjects.testObject2Test" Type="TEST_CONDITION" /></Request>
 WorkingServer;<Request ID="390" Action="CREATE"><FB Name="CreateObjects.testObject2" Type="PUBLISH_0" /></Request>

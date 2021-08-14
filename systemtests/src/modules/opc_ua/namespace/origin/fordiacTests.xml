@@ -54,4 +54,14 @@ xmlns:uax="http://opcfoundation.org/UA/2008/02/Types.xsd"
 		</OutputArguments>
 
 	</Method>
+	
+	<DataType SymbolicName="fordiacTest:DatatypeTest" BaseType="OpcUa:Structure">
+    	<Fields>
+    		<Field Name="Name" DataType="OpcUa:String" />
+			<Field Name="Age" DataType="OpcUa:SByte" />
+			<Field Name="IsRegistered" DataType="OpcUa:Boolean" />
+		</Fields>
+    </DataType>
+  
+  
 </ModelDesign>

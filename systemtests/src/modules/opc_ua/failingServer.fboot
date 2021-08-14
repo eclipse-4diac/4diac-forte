@@ -226,7 +226,7 @@ FailingServer;<Request ID="225" Action="WRITE"><Connection Source="opc_ua[CREATE
 FailingServer;<Request ID="226" Action="CREATE"><FB Name="DINT2DINT_3" Type="DINT2DINT" /></Request>
 FailingServer;<Request ID="227" Action="CREATE"><FB Name="testObject" Type="PUBLISH_0" /></Request>
 FailingServer;<Request ID="228" Action="WRITE"><Connection Source="1" Destination="testObject.QI" /></Request>
-FailingServer;<Request ID="229" Action="WRITE"><Connection Source="opc_ua[CREATE_OBJECT;,2:i=15001;/Objects/testObject1]" Destination="testObject.ID" /></Request>
+FailingServer;<Request ID="229" Action="WRITE"><Connection Source="opc_ua[CREATE_OBJECT;,2:i=1;/Objects/testObject1]" Destination="testObject.ID" /></Request>
 FailingServer;<Request ID="230" Action="CREATE"><FB Name="objectMethod1" Type="TEST_CONDITION" /></Request>
 FailingServer;<Request ID="231" Action="CREATE"><FB Name="testMethod2" Type="SERVER_1" /></Request>
 FailingServer;<Request ID="232" Action="WRITE"><Connection Source="1" Destination="testMethod2.QI" /></Request>

@@ -85,7 +85,7 @@ if (FORTE_COM_OPC_UA)
     forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA_MULTICAST")
     forte_add_custom_configuration("#cmakedefine FORTE_COM_OPC_UA_CUSTOM_HOSTNAME \"${FORTE_COM_OPC_UA_CUSTOM_HOSTNAME}\"")
     
-    forte_opcua_add_type(forte_localizedtext LocalizedText UA_TYPES_LOCALIZEDTEXT)
+    forte_opcua_add_type(forte_localizedtext LocalizedText "UA")
 
     add_subdirectory(FBs)    
     add_subdirectory(types)
