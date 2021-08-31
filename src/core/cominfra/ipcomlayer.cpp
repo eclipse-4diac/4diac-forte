@@ -72,6 +72,7 @@ EComResponse CIPComLayer::processInterrupt(){
     switch (mConnectionState){
       case e_Connected:
         if((0 < mBufFillSize) && (nullptr != mTopLayer)){
+          CCriticalRegion criticalRegion(mFb->getFBLock());
           mInterruptResp = mTopLayer->recvData(mRecvBuffer, mBufFillSize);
           mBufFillSize = 0;
         }
@@ -192,7 +193,7 @@ void CIPComLayer::handledConnectedDataRecv(){
     CThread::sleepThread(0);
   }
   if(CIPComSocketHandler::scmInvalidSocketDescriptor != mSocketID){
-    // TODO: sync buffer and bufFillSize
+    CCriticalRegion criticalRegion(mFb->getFBLock());
     int nRetVal = 0;
     switch (mFb->getComServiceType()){
       case e_Server:
