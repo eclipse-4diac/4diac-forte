@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2010 - 2015 TU Vienna/ACIN, Profactor GmbH, fortiss GmbH,
  *    2018-2019 TU Vienna/ACIN
+ *   2021 HIT robot group
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -14,6 +15,7 @@
  *    Martin Melik-Merkumians - fixes DT_TO_TOD
  *    Martin Melik-Merkumians - removes invalid casts, update implementation
  *     to use new cast function
+ *    Zhao Xin -fixes string conversion 
  *******************************************************************************/
 #ifndef SRC_CORE_DATATYPES_CONVERT_CONVERT_FUNCTIONS_H_
 #define SRC_CORE_DATATYPES_CONVERT_CONVERT_FUNCTIONS_H_
@@ -56,12 +58,13 @@
  */
 
 inline void stringConverter(CIEC_ANY_STRING &paString, const CIEC_ANY &paVal) {
-  TForteUInt16 bufferSize = CIEC_ANY::csmStringBufferSize[paVal.getDataTypeID()];
-  paString.reserve(static_cast<TForteUInt16>(bufferSize));
-  char *pacBuffer = paString.getValue();
-  int nWrittenBytes = paVal.toString(pacBuffer, bufferSize);
-  nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
-  paString.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+    size_t bufferSize = paVal.getToStringBufferSize();
+
+    paString.reserve(static_cast<TForteUInt16>(bufferSize));
+    char *pacBuffer = paString.getValue();
+    int nWrittenBytes = paVal.toString(pacBuffer, bufferSize);
+    nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
+    paString.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
 }
 
 #include "DateAndTimeToConvertFunctions.h"
