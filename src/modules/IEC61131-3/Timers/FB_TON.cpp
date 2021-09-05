@@ -50,7 +50,7 @@ const SFBInterfaceSpec FB_TON::scm_stFBInterfaceSpec = {
 
 void FB_TON::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    if(IN() == false){
+    if(st_IN() == false){
       Q() = false;
       ET() = 0;
       risingEdge = false;

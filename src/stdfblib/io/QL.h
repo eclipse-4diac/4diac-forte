@@ -15,13 +15,6 @@
 
 #include <processinterface.h>
 
-#ifdef IN
-#undef IN
-#endif
-
-#ifdef OUT
-#undef OUT
-#endif
 
 class FORTE_QL: public CProcessInterface{
   DECLARE_FIRMWARE_FB(FORTE_QL)
@@ -37,7 +30,7 @@ private:
     return *static_cast<CIEC_STRING*>(getDI(1));
   };
 
-  CIEC_LWORD &OUT() {
+  CIEC_LWORD &st_OUT() {
     return *static_cast<CIEC_LWORD*>(getDI(2));
   };
 

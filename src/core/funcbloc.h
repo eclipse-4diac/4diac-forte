@@ -520,13 +520,6 @@ struct CFunctionBlock::genFBVarsDataSizeTemplate<0, 0, 0> {
  fbclass(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : \
  fbBaseClass( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData)
 
-#ifdef IN
-#undef IN
-#endif
-
-#ifdef OUT
-#undef OUT
-#endif
 
 #ifdef OPTIONAL
 #undef OPTIONAL

@@ -43,7 +43,7 @@ const SFBInterfaceSpec FORTE_F_UINT_TO_LWORD::scm_stFBInterfaceSpec = {
 
 void FORTE_F_UINT_TO_LWORD::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    OUT() = UINT_TO_LWORD(IN());
+    st_OUT() = UINT_TO_LWORD(st_IN());
     sendOutputEvent(scm_nEventCNFID);
   }
 }

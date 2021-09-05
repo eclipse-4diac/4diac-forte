@@ -33,7 +33,7 @@ void GEN_XOR::executeEvent(int paEIID) {
   switch (paEIID) {
   case scm_nEventREQID:
 
-    anyBitFBHelper<GEN_XOR>(OUT().getDataTypeID(), *this);
+    anyBitFBHelper<GEN_XOR>(st_OUT().getDataTypeID(), *this);
     sendOutputEvent(scm_nEventCNFID);
 
     break;

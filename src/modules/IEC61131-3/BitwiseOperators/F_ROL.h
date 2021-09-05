@@ -22,7 +22,7 @@ class FORTE_F_ROL: public CFunctionBlock{
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_ANY_BIT &IN() {
+  CIEC_ANY_BIT &st_IN() {
     return *static_cast<CIEC_ANY_BIT*>(getDI(0));
   };
 
@@ -32,7 +32,7 @@ private:
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_ANY_BIT &OUT() {
+  CIEC_ANY_BIT &st_OUT() {
     return *static_cast<CIEC_ANY_BIT*>(getDO(0));
   };
 
@@ -64,9 +64,9 @@ public:
     CIEC_UDINT oN;
 #endif //FORTE_USE_64BIT_DATATYPES
 
-    oIn.saveAssign(IN());
+    oIn.saveAssign(st_IN());
     oN.saveAssign(N());
-    OUT().saveAssign(ROL(oIn, oN));
+    st_OUT().saveAssign(ROL(oIn, oN));
   }
 
   virtual ~FORTE_F_ROL(){};

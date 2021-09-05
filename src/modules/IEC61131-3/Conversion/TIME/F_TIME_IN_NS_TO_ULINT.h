@@ -24,13 +24,13 @@ class FORTE_F_TIME_IN_NS_TO_ULINT: public CSimpleFB{
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_TIME &IN() {
+  CIEC_TIME &st_IN() {
     return *static_cast<CIEC_TIME*>(getDI(0));
   };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_ULINT &OUT() {
+  CIEC_ULINT &st_OUT() {
     return *static_cast<CIEC_ULINT*>(getDO(0));
   };
 

@@ -32,7 +32,7 @@ private:
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_TIME &OUT() {
+  CIEC_TIME &st_OUT() {
     return *static_cast<CIEC_TIME*>(getDO(0));
   };
 
@@ -58,7 +58,7 @@ public:
 
   template<typename T> void calculateValue(){
     T &roIn2(static_cast<T&>(IN2()));
-    OUT().saveAssign(DIVTIME(IN1(), roIn2));
+    st_OUT().saveAssign(DIVTIME(IN1(), roIn2));
   }
 
   virtual ~FORTE_F_DIVTIME(){};

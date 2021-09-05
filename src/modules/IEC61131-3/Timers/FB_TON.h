@@ -42,7 +42,7 @@ private:
 
   void executeEvent(int pa_nEIID);
 
-  CIEC_BOOL& IN() {
+  CIEC_BOOL& st_IN() {
      return *static_cast<CIEC_BOOL*>(getDI(0));
   }  
 

@@ -31,7 +31,7 @@ private:
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_ANY_BIT &OUT() {
+  CIEC_ANY_BIT &st_OUT() {
     return *static_cast<CIEC_ANY_BIT*>(getDO(0));
   };
 
@@ -60,7 +60,7 @@ public:
     T oIn2;
     oIn1.saveAssign(IN1());
     oIn2.saveAssign(IN2());
-    OUT().saveAssign(AND(oIn1, oIn2));
+    st_OUT().saveAssign(AND(oIn1, oIn2));
   }
 
   virtual ~FORTE_F_AND(){};

@@ -22,13 +22,13 @@ class FORTE_F_LEN: public CFunctionBlock{
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_ANY_STRING &IN() {
+  CIEC_ANY_STRING &st_IN() {
     return *static_cast<CIEC_ANY_STRING*>(getDI(0));
   };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_ANY_INT &OUT() {
+  CIEC_ANY_INT &st_OUT() {
     return *static_cast<CIEC_ANY_INT*>(getDO(0));
   };
 
@@ -53,12 +53,12 @@ public:
   };
 
   template<typename T> void calculateValue(){
-    OUT().saveAssign(CIEC_UDINT(0));
+    st_OUT().saveAssign(CIEC_UDINT(0));
   }
 
   template<typename T> void calculateValueString(){
-    T &roIn(static_cast<T&>(IN()));
-    OUT().saveAssign(LEN(roIn));
+    T &roIn(static_cast<T&>(st_IN()));
+    st_OUT().saveAssign(LEN(roIn));
   }
 
   virtual ~FORTE_F_LEN(){};

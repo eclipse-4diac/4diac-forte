@@ -50,7 +50,7 @@ void GEN_ADD::executeEvent(int paEIID){
   switch (paEIID){
     case scm_nEventREQID:
 
-      anyMagnitudeFBHelper<GEN_ADD>(OUT().getDataTypeID(), *this);
+      anyMagnitudeFBHelper<GEN_ADD>(st_OUT().getDataTypeID(), *this);
       sendOutputEvent(scm_nEventCNFID);
 
       break;

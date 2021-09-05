@@ -44,7 +44,7 @@ const SFBInterfaceSpec FORTE_F_ADD_DT_TIME::scm_stFBInterfaceSpec = {
 
 void FORTE_F_ADD_DT_TIME::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    OUT() = ADD_DT_TIME(IN1(), IN2());
+    st_OUT() = ADD_DT_TIME(IN1(), IN2());
     sendOutputEvent(scm_nEventCNFID);
   }
 }

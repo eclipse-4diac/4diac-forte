@@ -44,7 +44,7 @@ const SFBInterfaceSpec FORTE_F_INT_TO_DWORD::scm_stFBInterfaceSpec = {
 
 void FORTE_F_INT_TO_DWORD::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    OUT() = INT_TO_DWORD(IN());
+    st_OUT() = INT_TO_DWORD(st_IN());
     sendOutputEvent(scm_nEventCNFID);
   }
 }

@@ -16,14 +16,6 @@
 
 #include <processinterface.h>
 
-#ifdef IN
-#undef IN
-#endif
-
-#ifdef OUT
-#undef OUT
-#endif
-
 /*! /brief generic class for IW function blocks providing access to one word physical input
  *
  * In order that this FB can be used implementations need to provide a class CProcessInterface
@@ -69,7 +61,7 @@ private:
     return *static_cast<CIEC_STRING*>(getDO(1));
   };
 
-  CIEC_DWORD &IN() {
+  CIEC_DWORD &st_IN() {
     return *static_cast<CIEC_DWORD*>(getDO(2));
   };
 

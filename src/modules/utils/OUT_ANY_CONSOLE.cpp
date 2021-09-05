@@ -60,18 +60,18 @@ void FORTE_OUT_ANY_CONSOLE::executeEvent(int pa_nEIID) {
       char strbuf1[scm_maxStringBufSize];
       LABEL().toString(strbuf1, sizeof(strbuf1));
 
-      if(IN().getDataTypeID() == CIEC_ANY::e_STRING || IN().getDataTypeID() == CIEC_ANY::e_WSTRING){
+      if(st_IN().getDataTypeID() == CIEC_ANY::e_STRING || st_IN().getDataTypeID() == CIEC_ANY::e_WSTRING){
         //obtain length of string value
-        nStringLength = (static_cast<CIEC_ANY_STRING*>(&IN()))->length();
+        nStringLength = (static_cast<CIEC_ANY_STRING*>(&st_IN()))->length();
         //assign value
-        sOutput.assign((static_cast<CIEC_ANY_STRING*>(&IN()))->getValue(), nStringLength);
+        sOutput.assign((static_cast<CIEC_ANY_STRING*>(&st_IN()))->getValue(), nStringLength);
       }
       else{
         //values other than strings
         //for arrays
-        if(IN().getDataTypeID() == CIEC_ANY::e_ARRAY){
+        if(st_IN().getDataTypeID() == CIEC_ANY::e_ARRAY){
           //get number of array elements
-          TForteUInt16 nArrayElements = (static_cast<CIEC_ARRAY*>(&IN()))->size();
+          TForteUInt16 nArrayElements = (static_cast<CIEC_ARRAY*>(&st_IN()))->size();
           //number of required bytes (including brackets '[' ']' and ',' separators
           nRequiredBytes = static_cast<TForteUInt16>(nArrayElements * scm_maxStringBufSize +  nArrayElements + 1);
         }
@@ -82,7 +82,7 @@ void FORTE_OUT_ANY_CONSOLE::executeEvent(int pa_nEIID) {
 
         sOutput.reserve(nRequiredBytes);
         //write StringValue
-        nUsedBytes = static_cast<TForteUInt16>(IN().toString(sOutput.getValue(), nRequiredBytes));
+        nUsedBytes = static_cast<TForteUInt16>(st_IN().toString(sOutput.getValue(), nRequiredBytes));
         //maintain the state of the output data value string
         sOutput.assign(sOutput.getValue(), nUsedBytes);
       }

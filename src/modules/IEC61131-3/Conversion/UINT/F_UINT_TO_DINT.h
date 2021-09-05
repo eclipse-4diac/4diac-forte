@@ -21,13 +21,13 @@ class FORTE_F_UINT_TO_DINT: public CFunctionBlock{
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_UINT &IN() {
+  CIEC_UINT &st_IN() {
     return *static_cast<CIEC_UINT*>(getDI(0));
   };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_DINT &OUT() {
+  CIEC_DINT &st_OUT() {
     return *static_cast<CIEC_DINT*>(getDO(0));
   };
 

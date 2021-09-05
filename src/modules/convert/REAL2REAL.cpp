@@ -50,7 +50,7 @@ const SFBInterfaceSpec REAL2REAL::scm_stFBInterfaceSpec = {
 
 void REAL2REAL::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    OUT() = IN();
+    st_OUT() = st_IN();
     sendOutputEvent(scm_nEventCNFID);
   }
 }

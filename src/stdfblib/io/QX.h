@@ -14,13 +14,6 @@
 
 #include <processinterface.h>
 
-#ifdef IN
-#undef IN
-#endif
-
-#ifdef OUT
-#undef OUT
-#endif
 
 /*! /brief generic class for QX function blocks providing access to one boolean physical output
  *
@@ -57,7 +50,7 @@ private:
     return *static_cast<CIEC_STRING*>(getDI(1));
   };
 
-  CIEC_BOOL &OUT() {
+  CIEC_BOOL &st_OUT() {
     return *static_cast<CIEC_BOOL*>(getDI(2));
   };
 

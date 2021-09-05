@@ -15,13 +15,6 @@
 
 #include <processinterface.h>
 
-#ifdef IN
-#undef IN
-#endif
-
-#ifdef OUT
-#undef OUT
-#endif
 
 class FORTE_QB: public CProcessInterface{
   DECLARE_FIRMWARE_FB(FORTE_QB)
@@ -37,7 +30,7 @@ private:
     return *static_cast<CIEC_STRING*>(getDI(1));
   };
 
-  CIEC_BYTE &OUT() {
+  CIEC_BYTE &st_OUT() {
     return *static_cast<CIEC_BYTE*>(getDI(2));
   };
 

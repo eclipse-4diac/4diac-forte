@@ -13,9 +13,6 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
-#undef IN
-#undef OUT
-
 
 #include <datatype.h>
 

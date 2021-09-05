@@ -17,7 +17,6 @@
 forte_add_network_layer(OPC OFF "opc" COpcComLayer opccomlayer "Enable OPC communication")
 SET(FORTE_COM_OPC_LIB_ROOT "" CACHE PATH "Path to OPC library root directory")
 SET(FORTE_COM_OPC_BOOST_ROOT "" CACHE PATH "Path to Boost library root directory")
-SET(FORTE_COM_OPC_ATL_ROOT "" CACHE PATH "Path to ATL headers directory")
 
 if(FORTE_COM_OPC)  
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -32,17 +31,9 @@ if(FORTE_COM_OPC)
     forte_add_include_directories( ${FORTE_COM_OPC_BOOST_ROOT} )
     
     forte_add_include_directories( ${FORTE_COM_OPC_LIB_ROOT}/include )
-    forte_add_include_directories( ${FORTE_COM_OPC_ATL_ROOT}/inc/atl71)
     forte_add_link_directories( ${FORTE_COM_OPC_LIB_ROOT}/lib )
-    forte_add_link_directories( ${FORTE_COM_OPC_ATL_ROOT}/lib/ATL/i386 )
 
     forte_add_link_library( OPCClientToolKit.lib )
-
-    #change atlsd.lib to atls.lib if you want to compile in release mode
-    forte_add_link_library( atlsd.lib )
-
-    #open below if visual studio 2019(msbuild tool 2019) is used
-    #forte_add_link_library( legacy_stdio_definitions.lib )
     
   else()
     # Generate error since OPC only works with Windows

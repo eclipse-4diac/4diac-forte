@@ -22,13 +22,13 @@ class FORTE_F_DT_TO_TOD: public CFunctionBlock{
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_DATE_AND_TIME &IN() {
+  CIEC_DATE_AND_TIME &st_IN() {
     return *static_cast<CIEC_DATE_AND_TIME*>(getDI(0));
   };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_TIME_OF_DAY &OUT() {
+  CIEC_TIME_OF_DAY &st_OUT() {
     return *static_cast<CIEC_TIME_OF_DAY*>(getDO(0));
   };
 

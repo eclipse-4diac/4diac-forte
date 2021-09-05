@@ -36,7 +36,7 @@ private:
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_ANY_STRING &OUT() {
+  CIEC_ANY_STRING &st_OUT() {
     return *static_cast<CIEC_ANY_STRING*>(getDO(0));
   };
 
@@ -65,7 +65,7 @@ public:
      T oIn2;
      oIn1.saveAssign(IN1());
      oIn2.saveAssign(IN2());
-     OUT().saveAssign(INSERT(oIn1,oIn2,P()));
+     st_OUT().saveAssign(INSERT(oIn1,oIn2,P()));
    }
 
   virtual ~FORTE_F_INSERT(){};

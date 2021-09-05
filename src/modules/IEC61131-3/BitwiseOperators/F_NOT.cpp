@@ -44,7 +44,7 @@ const SFBInterfaceSpec FORTE_F_NOT::scm_stFBInterfaceSpec = {
 
 void FORTE_F_NOT::executeEvent(int pa_nEIID){
   if (scm_nEventREQID == pa_nEIID) {
-    anyBitFBHelper<FORTE_F_NOT>(IN().getDataTypeID(), *this);
+    anyBitFBHelper<FORTE_F_NOT>(st_IN().getDataTypeID(), *this);
     sendOutputEvent(scm_nEventCNFID);
   }
 }

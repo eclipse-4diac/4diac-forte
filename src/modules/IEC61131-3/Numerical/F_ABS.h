@@ -22,13 +22,13 @@ class FORTE_F_ABS: public CFunctionBlock{
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_ANY_NUM &IN() {
+  CIEC_ANY_NUM &st_IN() {
     return *static_cast<CIEC_ANY_NUM*>(getDI(0));
   };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_ANY_NUM &OUT() {
+  CIEC_ANY_NUM &st_OUT() {
     return *static_cast<CIEC_ANY_NUM*>(getDO(0));
   };
 
@@ -54,8 +54,8 @@ public:
 
   template<typename T> void calculateValue(){
     T oIn;
-    oIn.saveAssign(IN());
-    OUT().saveAssign(ABS(oIn));
+    oIn.saveAssign(st_IN());
+    st_OUT().saveAssign(ABS(oIn));
   }
 
   virtual ~FORTE_F_ABS(){};

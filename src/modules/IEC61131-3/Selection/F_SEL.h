@@ -37,7 +37,7 @@ private:
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_ANY &OUT() {
+  CIEC_ANY &st_OUT() {
     return *static_cast<CIEC_ANY*>(getDO(0));
   };
 
@@ -69,7 +69,7 @@ public:
     oIn0.saveAssign(IN0());
     oIn1.saveAssign(IN1());
 
-    OUT().saveAssign(SEL<T> (G(), oIn0, oIn1));
+    st_OUT().saveAssign(SEL<T> (G(), oIn0, oIn1));
   }
 
   template<typename T> void calculateValueString(){

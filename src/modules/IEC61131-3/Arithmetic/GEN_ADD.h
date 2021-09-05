@@ -27,7 +27,7 @@ private:
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_ANY_MAGNITUDE &OUT() {
+  CIEC_ANY_MAGNITUDE &st_OUT() {
     return *static_cast<CIEC_ANY_MAGNITUDE*>(getDO(0));
   }
 
@@ -62,10 +62,10 @@ public:
       oIn.saveAssign(*static_cast<T*>(getDI(nInputIndex)));
 
       if (0 == nInputIndex) {
-        OUT().saveAssign(oIn);
+        st_OUT().saveAssign(oIn);
       } else {
-        oOut.saveAssign(OUT());
-        OUT().saveAssign(ADD(oOut, oIn));
+        oOut.saveAssign(st_OUT());
+        st_OUT().saveAssign(ADD(oOut, oIn));
       }
     }
   }

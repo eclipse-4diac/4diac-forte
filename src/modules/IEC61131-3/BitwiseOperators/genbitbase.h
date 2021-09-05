@@ -21,7 +21,7 @@ class CGenBitBase : public CGenFunctionBlock<CFunctionBlock> {
     CGenBitBase(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
     virtual ~CGenBitBase();
 
-    CIEC_ANY_BIT &OUT(){
+    CIEC_ANY_BIT &st_OUT(){
       return *static_cast<CIEC_ANY_BIT*>(getDO(0));
     }
 

@@ -47,7 +47,7 @@ const SFBInterfaceSpec TIME2TIME::scm_stFBInterfaceSpec = {
 
 void TIME2TIME::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    OUT() = IN();
+    st_OUT() = st_IN();
     sendOutputEvent(scm_nEventCNFID);
   }
 }

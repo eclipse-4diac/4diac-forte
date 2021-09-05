@@ -44,7 +44,7 @@ const SFBInterfaceSpec FORTE_F_DT_TO_DATE::scm_stFBInterfaceSpec = {
 
 void FORTE_F_DT_TO_DATE::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    OUT() = DT_TO_DATE(IN());
+    st_OUT() = DT_TO_DATE(st_IN());
     sendOutputEvent(scm_nEventCNFID);
   }
 }

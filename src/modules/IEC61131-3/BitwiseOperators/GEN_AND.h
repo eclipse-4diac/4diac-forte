@@ -36,10 +36,10 @@ public:
     for (unsigned int nInputIndex = 0; nInputIndex < getFBInterfaceSpec()->m_nNumDIs; nInputIndex++) {
       oIn.saveAssign(*static_cast<T*>(getDI(nInputIndex)));
       if (0 == nInputIndex) {
-        OUT().saveAssign(oIn);
+        st_OUT().saveAssign(oIn);
       } else {
-        oOut.saveAssign(OUT());
-        OUT().saveAssign(AND(oOut, oIn));
+        oOut.saveAssign(st_OUT());
+        st_OUT().saveAssign(AND(oOut, oIn));
       }
     }
   }

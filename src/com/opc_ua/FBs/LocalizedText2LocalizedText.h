@@ -22,13 +22,13 @@ class FORTE_LocalizedText2LocalizedText: public CFunctionBlock{
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_LocalizedText &IN() {
+  CIEC_LocalizedText &st_IN() {
     return *static_cast<CIEC_LocalizedText*>(getDI(0));
   };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_LocalizedText &OUT() {
+  CIEC_LocalizedText &st_OUT() {
     return *static_cast<CIEC_LocalizedText*>(getDO(0));
   };
 
