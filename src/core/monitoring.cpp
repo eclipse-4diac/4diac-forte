@@ -326,59 +326,71 @@ void CMonitoringHandler::readResourceWatches(CIEC_STRING &paResponse){
     paResponse.append(mResource.getInstanceName());
     paResponse.append("\">");
 
-    { //begin critical region
-      CCriticalRegion criticalRegion(mResource.m_oResDataConSync);
+    updateMonitringData();
 
-      for(TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin();
-          itRunner != mFBMonitoringList.end(); ++itRunner){
-        paResponse.append("<FB name=\"");
-        paResponse.append(itRunner->mFullFBName.getValue());
-        paResponse.append("\">");
+    for(TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin(); itRunner != mFBMonitoringList.end(); ++itRunner){
+      paResponse.append("<FB name=\"");
+      paResponse.append(itRunner->mFullFBName.getValue());
+      paResponse.append("\">");
 
-        //add the data watches
-        for(TDataWatchList::Iterator itDataRunner = itRunner->m_lstWatchedDataPoints.begin();
-            itDataRunner != itRunner->m_lstWatchedDataPoints.end(); ++itDataRunner){
-          appendDataWatch(paResponse, *itDataRunner);
-        }
-
-        //add the event watches
-        for(TEventWatchList::Iterator itEventRunner = itRunner->m_lstWatchedEventPoints.begin();
-            itEventRunner != itRunner->m_lstWatchedEventPoints.end();
-            ++itEventRunner){
-          appendEventWatch(paResponse, *itEventRunner);
-        }
-
-        paResponse.append("</FB>");
+      //add the data watches
+      for(TDataWatchList::Iterator itDataRunner = itRunner->m_lstWatchedDataPoints.begin(); itDataRunner != itRunner->m_lstWatchedDataPoints.end(); ++itDataRunner){
+        appendDataWatch(paResponse, *itDataRunner);
       }
-    } //end critical region
+
+      //add the event watches
+      for(TEventWatchList::Iterator itEventRunner = itRunner->m_lstWatchedEventPoints.begin(); itEventRunner != itRunner->m_lstWatchedEventPoints.end(); ++itEventRunner){
+        appendEventWatch(paResponse, *itEventRunner);
+      }
+
+      paResponse.append("</FB>");
+    }
     paResponse.append("</Resource>");
   }
 }
 
+
+void CMonitoringHandler::updateMonitringData(){
+  //update the monitoring data buffer to keep the critical region as short as possible
+  CCriticalRegion criticalRegion(mResource.m_oResDataConSync);
+  for(TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin(); itRunner != mFBMonitoringList.end(); ++itRunner){
+
+    for(TDataWatchList::Iterator itDataRunner = itRunner->m_lstWatchedDataPoints.begin(); itDataRunner != itRunner->m_lstWatchedDataPoints.end(); ++itDataRunner){
+      itDataRunner->mDataBuffer->setValue(itDataRunner->mDataValueRef);
+      itDataRunner->mDataBuffer->setForced(itDataRunner->mDataValueRef.isForced());
+    }
+
+    for(TEventWatchList::Iterator itEventRunner = itRunner->m_lstWatchedEventPoints.begin(); itEventRunner != itRunner->m_lstWatchedEventPoints.end(); ++itEventRunner){
+      itEventRunner->mEventDataBuf = itEventRunner->mEventDataRef;
+    }
+  }
+}
+
+
 void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
     SDataWatchEntry &paDataWatchEntry){
-  size_t bufferSize = paDataWatchEntry.mDataValue.getToStringBufferSize() + getExtraSizeForEscapedChars(paDataWatchEntry.mDataValue);
+  size_t bufferSize = paDataWatchEntry.mDataBuffer->getToStringBufferSize() + getExtraSizeForEscapedChars(*paDataWatchEntry.mDataBuffer);
   appendPortTag(paResponse, paDataWatchEntry.mPortId);
   paResponse.append("<Data value=\"");
   char* acDataValue = new char [bufferSize]; //TODO try to directly use the response string instead
   int consumedBytes = -1;
-  switch (paDataWatchEntry.mDataValue.getDataTypeID()){
+  switch (paDataWatchEntry.mDataBuffer->getDataTypeID()){
     case CIEC_ANY::e_WSTRING:
     case CIEC_ANY::e_STRING:
-      consumedBytes = static_cast<CIEC_WSTRING&>(paDataWatchEntry.mDataValue).toUTF8(acDataValue, bufferSize, false);
-      if(bufferSize != paDataWatchEntry.mDataValue.getToStringBufferSize() && 0 < consumedBytes) { //avoid re-running on strings which were already proven not to have any special character
+      consumedBytes = static_cast<CIEC_WSTRING*>(paDataWatchEntry.mDataBuffer)->toUTF8(acDataValue, bufferSize, false);
+      if(bufferSize != paDataWatchEntry.mDataBuffer->getToStringBufferSize() && 0 < consumedBytes) { //avoid re-running on strings which were already proven not to have any special character
         consumedBytes += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(acDataValue));
       }
       break;
     case CIEC_ANY::e_ARRAY:
     case CIEC_ANY::e_STRUCT:
-      consumedBytes = paDataWatchEntry.mDataValue.toString(acDataValue, bufferSize);
-      if(bufferSize != paDataWatchEntry.mDataValue.getToStringBufferSize() && 0 < consumedBytes) { //avoid re-running on elements which were already proven not to have any special character
+      consumedBytes = paDataWatchEntry.mDataBuffer->toString(acDataValue, bufferSize);
+      if(bufferSize != paDataWatchEntry.mDataBuffer->getToStringBufferSize() && 0 < consumedBytes) { //avoid re-running on elements which were already proven not to have any special character
         consumedBytes += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(acDataValue));
       }
       break;
     default:
-      consumedBytes = paDataWatchEntry.mDataValue.toString(acDataValue, bufferSize);
+      consumedBytes = paDataWatchEntry.mDataBuffer->toString(acDataValue, bufferSize);
       break;
   }
   if(-1 != consumedBytes){
@@ -386,7 +398,7 @@ void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
   }
   paResponse.append(acDataValue);
   paResponse.append("\" forced=\"");
-  paResponse.append((paDataWatchEntry.mDataValue.isForced()) ? "true" : "false");
+  paResponse.append((paDataWatchEntry.mDataBuffer->isForced()) ? "true" : "false");
   paResponse.append("\"/></Port>");
   delete [] acDataValue;
 }
@@ -468,7 +480,7 @@ void CMonitoringHandler::appendPortTag(CIEC_STRING &paResponse,
 void CMonitoringHandler::appendEventWatch(CIEC_STRING &paResponse, SEventWatchEntry &paEventWatchEntry){
   appendPortTag(paResponse, paEventWatchEntry.mPortId);
 
-  CIEC_UDINT udint(paEventWatchEntry.mEventData);
+  CIEC_UDINT udint(paEventWatchEntry.mEventDataBuf);
   CIEC_ULINT ulint(mResource.getDevice().getTimer().getForteTime());
 
   paResponse.append("<Data value=\"");
