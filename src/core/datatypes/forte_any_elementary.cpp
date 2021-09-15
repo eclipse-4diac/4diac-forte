@@ -298,9 +298,25 @@ int CIEC_ANY_ELEMENTARY::checkTypeSpec(const char* pa_pacValue, const char* pa_p
 
   CStringDictionary::TStringId nTypeNameId = parseTypeName(pa_pacValue, pa_pacHashPos);
 
-  if((CStringDictionary::scm_nInvalidStringId != nTypeNameId) && (scm_anTypeNameStringIds[getDataTypeID()] == nTypeNameId)){
+  if((CStringDictionary::scm_nInvalidStringId != nTypeNameId) && ((scm_anTypeNameStringIds[getDataTypeID()] == nTypeNameId) || (isCastable(nTypeNameId)) )){
     nRetVal = static_cast<int>(pa_pacHashPos - pa_pacValue);
   }
   return nRetVal;
 }
 
+bool CIEC_ANY_ELEMENTARY::isCastable(CStringDictionary::TStringId paTypeNameId) const {
+  EDataTypeID literalID = getElementaryDataTypeId(paTypeNameId);
+  bool upCast;
+  bool downCast;
+  return CIEC_ANY::isCastable(literalID, getDataTypeID(), upCast, downCast) && upCast;
+}
+
+
+CIEC_ANY::EDataTypeID CIEC_ANY_ELEMENTARY::getElementaryDataTypeId(CStringDictionary::TStringId paTypeNameId){
+  for(size_t i = 0; i <= CIEC_ANY::e_LWORD; i++){
+    if(scm_anTypeNameStringIds[i] == paTypeNameId){
+      return static_cast<EDataTypeID>(i);
+    }
+  }
+  return CIEC_ANY::e_ANY;
+}

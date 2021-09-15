@@ -46,9 +46,12 @@ class CIEC_ANY_ELEMENTARY : public CIEC_ANY{
     CIEC_ANY_ELEMENTARY() {
     }
 
-    private:
+  private:
 
     int checkTypeSpec(const char* pa_pacValue, const char* pa_pacHashPos) const;
+    bool isCastable(CStringDictionary::TStringId paTypeNameId) const;
+
+    static EDataTypeID getElementaryDataTypeId(CStringDictionary::TStringId paTypeNameId);
 
     const static CStringDictionary::TStringId scm_anTypeNameStringIds[];
     const static int scm_nMaxTypeNameLength = 13;
