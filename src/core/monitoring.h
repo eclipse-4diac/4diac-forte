@@ -39,23 +39,37 @@ namespace forte {
         EMGMResponse executeMonitoringCommand(SManagementCMD &paCommand);
 
       private:
-        struct SDataWatchEntry{
+        class  SDataWatchEntry{
+          public:
             SDataWatchEntry(CStringDictionary::TStringId paPortId, CIEC_ANY &paDataValue) :
-                mPortId(paPortId), mDataValue(paDataValue){
+                mPortId(paPortId), mDataValueRef(paDataValue), mDataBuffer(paDataValue.clone(0)){
+            }
+
+            SDataWatchEntry(const SDataWatchEntry& paSrc):
+              mPortId(paSrc.mPortId), mDataValueRef(paSrc.mDataValueRef), mDataBuffer(paSrc.mDataBuffer->clone(0)){
+            }
+
+            ~SDataWatchEntry(){
+              delete mDataBuffer;
             }
 
             CStringDictionary::TStringId mPortId;
-            CIEC_ANY &mDataValue;
+            CIEC_ANY &mDataValueRef;  //!< reference to the data point to watch
+            CIEC_ANY *mDataBuffer;    //!< buffer for copying the data from the data point reference
+
+          private:
+            SDataWatchEntry &operator=(const SDataWatchEntry&);  // only declaration no implementation to forbid assignment
         };
 
         struct SEventWatchEntry{
             SEventWatchEntry(CStringDictionary::TStringId paPortId,
                 TForteUInt32 &paEventData) :
-                mPortId(paPortId), mEventData(paEventData){
+                mPortId(paPortId), mEventDataRef(paEventData){
             }
 
             CStringDictionary::TStringId mPortId;
-            TForteUInt32 &mEventData;
+            TForteUInt32 &mEventDataRef;    //!< reference to the event counter of the watched event pin
+            TForteUInt32 mEventDataBuf;  //!< buffer for the event count
         };
 
         typedef CSinglyLinkedList<SDataWatchEntry> TDataWatchList;
@@ -85,6 +99,8 @@ namespace forte {
         static void addEventWatch(SFBMonitoringEntry& paFBMonitoringEntry, CStringDictionary::TStringId paPortId, TForteUInt32& paEventData);
         static bool removeEventWatch(SFBMonitoringEntry& pa_roFBMonitoringEntry, CStringDictionary::TStringId pa_unPortId);
         void readResourceWatches(CIEC_STRING &pa_roResponse);
+
+        void updateMonitringData();
 
         static void appendDataWatch(CIEC_STRING &pa_roResponse,
             SDataWatchEntry &pa_roDataWatchEntry);

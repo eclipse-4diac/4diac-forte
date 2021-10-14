@@ -48,10 +48,7 @@ namespace forte {
     }
 
     bool CPThreadSemaphore::timedWait(const TForteUInt64 paRelativeTimeout){
-      struct timespec now = { 0, 0 };
-      clock_gettime(CLOCK_MONOTONIC, &now);
-      dispatch_time_t timeout = dispatch_walltime(&now, paRelativeTimeout)
-      return (0 == dispatch_semaphore_wait(mSemaphore, timeout));
+      return (0 == dispatch_semaphore_wait(mSemaphore, dispatch_time(DISPATCH_TIME_NOW, static_cast<int64_t>(paRelativeTimeout))));
     }
 
     bool CPThreadSemaphore::tryNoWait(){

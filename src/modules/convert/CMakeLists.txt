@@ -10,7 +10,7 @@
 #    Micheal Hofmann, Alois Zoitl  
 # *   - initial API and implementation and/or initial documentation
 # *******************************************************************************/
-forte_add_module(CONVERT "Convert Function Blocks")
+forte_add_module(CONVERT OFF "Convert Function Blocks")
 
 #############################################################################
 # Convert FB

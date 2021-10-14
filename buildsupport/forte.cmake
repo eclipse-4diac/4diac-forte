@@ -226,9 +226,9 @@ ENDMACRO(forte_add_handler)
 
 #MACRO(forte_add_module NAME DIRECTORY DESCRIPTION)
 # Additional parameters are interpreted as dependencies
-MACRO(forte_add_module NAME DESCRIPTION)
+MACRO(forte_add_module NAME ONOFF DESCRIPTION)
   # create module with value from cache (does not set the description if the entry exists)
-  SET(FORTE_MODULE_${NAME} OFF CACHE BOOL "${DESCRIPTION}")
+  SET(FORTE_MODULE_${NAME} ${ONOFF} CACHE BOOL "${DESCRIPTION}")
   # update the module description stored in cache
   SET(FORTE_MODULE_${NAME} ${FORTE_MODULE_${NAME}} CACHE BOOL "${DESCRIPTION}" FORCE)
 
@@ -250,7 +250,7 @@ MACRO(forte_add_directory_module)
   forte_directory_listing(DESCRIPTION "*.cpp" "*.c" "*.h")
 
   # add the module (stops execution if module is disabled!)
-  forte_add_module(${MODULENAME} ${DESCRIPTION})
+  forte_add_module(${MODULENAME} OFF ${DESCRIPTION})
 ENDMACRO(forte_add_directory_module)
 
 #MACRO(forte_add_io NAME DIRECTORY DESCRIPTION)

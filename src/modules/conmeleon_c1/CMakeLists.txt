@@ -10,7 +10,7 @@
 #     Alois Zoitl and Herwig Eichler
 # *******************************************************************************/ 
  
-forte_add_module(CONMELEON_C1 "Interacting with the CONMELEON C1 IO board")
+forte_add_module(CONMELEON_C1 OFF "Interacting with the CONMELEON C1 IO board")
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 

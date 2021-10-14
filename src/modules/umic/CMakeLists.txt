@@ -10,7 +10,7 @@
 #     Jose Cabral - initial API and implementation and/or initial documentation
 # *******************************************************************************/ 
  
-forte_add_module(uMIC "Interacting with GPIOs using the umic library for MicroControl")
+forte_add_module(uMIC OFF "Interacting with GPIOs using the umic library for MicroControl")
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 

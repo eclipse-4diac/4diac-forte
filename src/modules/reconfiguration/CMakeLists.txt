@@ -11,7 +11,7 @@
 # *******************************************************************************/
 
 
-forte_add_module(RECONFIGURATION "FORTE Online Reconfiguration")
+forte_add_module(RECONFIGURATION OFF "FORTE Online Reconfiguration")
 
 #############################################################################
 # FORTE Reconfiguration FBs

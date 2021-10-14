@@ -31,6 +31,8 @@ class CEventChainExecutionThread;
 class CAdapter;
 class CTimerHandler;
 
+typedef CFunctionBlock *TFunctionBlockPtr;
+
 #ifdef FORTE_SUPPORT_MONITORING
 #include "mgmcmdstruct.h"
 namespace forte {
@@ -61,45 +63,55 @@ typedef TForteUInt8 TDataIOID; //!< \ingroup CORE Type for holding an data In- o
 
 /*!\ingroup CORE\brief Structure to hold all data of adapters instantiated in the function block.
  */
-struct SAdapterInstanceDef{
+struct SAdapterInstanceDef {
     CStringDictionary::TStringId m_nAdapterTypeNameID; //!< Adapter type name
     CStringDictionary::TStringId m_nAdapterNameID; //!< Adapter instance name
     bool m_bIsPlug; //!< Flag for distinction of adapter nature (plug/socket)
 };
 
+/*!
+ * \brief Instance and type name of to be created FBs. Used in CFBs FBNs and BFB/SFBs internal FBs
+ */
+struct SCFB_FBInstanceData {
+    CStringDictionary::TStringId m_nFBInstanceNameId;
+    CStringDictionary::TStringId m_nFBTypeNameId;
+};
+
 /*!\ingroup CORE\brief Structure to hold all the data for specifying a function block interface.
  */
-struct SFBInterfaceSpec{
+struct SFBInterfaceSpec {
     TForteUInt8 m_nNumEIs; //!< Number of event inputs (max 254)
-    const CStringDictionary::TStringId* m_aunEINames; //!< List of the event input names
-    const TDataIOID* m_anEIWith; //!< Input WITH reference list. This list contains an array of input data ids. For each input event the associated data inputs are listed. The start for each input event is specified in the m_anEIWithIndexes field. The end is defined trough the value 255.
-    const TForteInt16* m_anEIWithIndexes; //!< Index list for each input event. This list gives for each input event an entry in the m_anEIWith. Input events are numbered starting from 0. if the input event has no assciated data inputs -1 is the entry at this event inputs postion.
+    const CStringDictionary::TStringId *m_aunEINames; //!< List of the event input names
+    const TDataIOID *m_anEIWith; //!< Input WITH reference list. This list contains an array of input data ids. For each input event the associated data inputs are listed. The start for each input event is specified in the m_anEIWithIndexes field. The end is defined trough the value 255.
+    const TForteInt16 *m_anEIWithIndexes; //!< Index list for each input event. This list gives for each input event an entry in the m_anEIWith. Input events are numbered starting from 0. if the input event has no assciated data inputs -1 is the entry at this event inputs postion.
     TForteUInt8 m_nNumEOs; //!< Number of event outputs (max 254)
-    const CStringDictionary::TStringId* m_aunEONames; //!< List of the event output names
-    const TDataIOID* m_anEOWith; //!< Output WITH reference list. This list contains an array of output data ids. For each output event the associated data outputs are listed. The start for each output event is specified in the m_anEOWithIndexes field. The end is defined trough the value 255.
-    const TForteInt16* m_anEOWithIndexes; //!< Index list for each output event. This list gives for each output event an entry in the m_anEOWith. Output events are numbered starting from 0. if the output event has no assciated data outputs -1 is the entry at this event outputs postion. Additionally at the postion m_nNumEOs in this list an index to an own list in the m_anEOWith list is stored specifying all output data port that are not associated with any output event. That values will be updated on every FB invocation.
+    const CStringDictionary::TStringId *m_aunEONames; //!< List of the event output names
+    const TDataIOID *m_anEOWith; //!< Output WITH reference list. This list contains an array of output data ids. For each output event the associated data outputs are listed. The start for each output event is specified in the m_anEOWithIndexes field. The end is defined trough the value 255.
+    const TForteInt16 *m_anEOWithIndexes; //!< Index list for each output event. This list gives for each output event an entry in the m_anEOWith. Output events are numbered starting from 0. if the output event has no assciated data outputs -1 is the entry at this event outputs postion. Additionally at the postion m_nNumEOs in this list an index to an own list in the m_anEOWith list is stored specifying all output data port that are not associated with any output event. That values will be updated on every FB invocation.
     TForteUInt8 m_nNumDIs; //!< Number of data inputs (max 254)
-    const CStringDictionary::TStringId* m_aunDINames; //!< List of the data input names
-    const CStringDictionary::TStringId* m_aunDIDataTypeNames; //!< List of the data type names for the data inputs
+    const CStringDictionary::TStringId *m_aunDINames; //!< List of the data input names
+    const CStringDictionary::TStringId *m_aunDIDataTypeNames; //!< List of the data type names for the data inputs
     TForteUInt8 m_nNumDOs; //!< Number of data outputs (max 254)
-    const CStringDictionary::TStringId* m_aunDONames; //!< List of the data output names
-    const CStringDictionary::TStringId* m_aunDODataTypeNames; //!< List of the data type names for the data outputs
+    const CStringDictionary::TStringId *m_aunDONames; //!< List of the data output names
+    const CStringDictionary::TStringId *m_aunDODataTypeNames; //!< List of the data type names for the data outputs
     TForteUInt8 m_nNumAdapters; //!< Number of Adapters
-    const SAdapterInstanceDef* m_pstAdapterInstanceDefinition; //!< List of adapter instances
+    const SAdapterInstanceDef *m_pstAdapterInstanceDefinition; //!< List of adapter instances
 };
 
 /*!\ingroup CORE\brief Base class for all function blocks.
  */
-class CFunctionBlock{
+class CFunctionBlock {
   public:
-    const static TDataIOID scmWithListDelimiter = cg_unInvalidPortId;  //!< value identifying the end of a with list
+    const static TDataIOID scmWithListDelimiter = cg_unInvalidPortId; //!< value identifying the end of a with list
 
     /*!\brief Possible states of a runable object.
      *
      */
-    enum E_FBStates{
-      e_RUNNING = 0,  // in the most critical execution path of FORTE we are checking for this enum value it is faster if this is the zero entry
-      e_IDLE, e_STOPPED, e_KILLED
+    enum E_FBStates {
+      e_RUNNING = 0, // in the most critical execution path of FORTE we are checking for this enum value it is faster if this is the zero entry
+      e_IDLE,
+      e_STOPPED,
+      e_KILLED
     };
 
     /*! \brief Indicator that the given EventID is an included adapter's eventID.
@@ -114,16 +126,16 @@ class CFunctionBlock{
 
     /*!\brief Get the resource the function block is contained in.
      */
-    CResource &getResource(void){
+    CResource& getResource(void) {
       return *m_poResource;
     }
 
-    CResource *getResourcePtr(void){
+    CResource* getResourcePtr(void) {
       return m_poResource;
     }
 
     /*!\brief Get the timer of the device wher the FB is contained.
-         */
+     */
     CTimerHandler& getTimer(void);
 
     /*!\brief Returns the type of this FB instance
@@ -134,7 +146,7 @@ class CFunctionBlock{
      * \param pa_unEINameId   StringId to the event input name.
      * \return The ID of the event input or cg_nInvalidEventID.
      */
-    TEventID getEIID(CStringDictionary::TStringId pa_unEINameId) const{
+    TEventID getEIID(CStringDictionary::TStringId pa_unEINameId) const {
       return static_cast<TEventID>(getPortId(pa_unEINameId, m_pstInterfaceSpec->m_nNumEIs, m_pstInterfaceSpec->m_aunEINames));
     }
 
@@ -143,11 +155,11 @@ class CFunctionBlock{
      * \param pa_unEONameId string id to the event output name.
      * \return The ID of the event output or cg_nInvalidEventID.
      */
-    TEventID getEOID(CStringDictionary::TStringId pa_unEONameId) const{
+    TEventID getEOID(CStringDictionary::TStringId pa_unEONameId) const {
       return static_cast<TEventID>(getPortId(pa_unEONameId, m_pstInterfaceSpec->m_nNumEOs, m_pstInterfaceSpec->m_aunEONames));
     }
 
-    CEventConnection *getEOConnection(CStringDictionary::TStringId paEONameId) const;
+    CEventConnection* getEOConnection(CStringDictionary::TStringId paEONameId) const;
 
     /*!\brief Connects specific data input of a FB with a specific data connection.
      *
@@ -167,7 +179,7 @@ class CFunctionBlock{
      * \param pa_unDINameId  StringId of the data input name.
      * \return Returns index of the Data Input Array of a FB
      */
-    TPortId getDIID(CStringDictionary::TStringId pa_unDINameId) const{
+    TPortId getDIID(CStringDictionary::TStringId pa_unDINameId) const {
       return getPortId(pa_unDINameId, m_pstInterfaceSpec->m_nNumDIs, m_pstInterfaceSpec->m_aunDINames);
     }
 
@@ -186,7 +198,7 @@ class CFunctionBlock{
      * \param pa_unDONameId  StringId of the data input name.
      * \return Returns index of the Data Output Array of a FB
      */
-    TPortId getDOID(CStringDictionary::TStringId pa_unDONameId) const{
+    TPortId getDOID(CStringDictionary::TStringId pa_unDONameId) const {
       return getPortId(pa_unDONameId, m_pstInterfaceSpec->m_nNumDOs, m_pstInterfaceSpec->m_aunDONames);
     }
 
@@ -194,9 +206,9 @@ class CFunctionBlock{
      */
     CIEC_ANY* getDOFromPortId(TPortId paDOPortId) const;
 
-    CDataConnection *getDOConnection(CStringDictionary::TStringId paDONameId) const;
+    CDataConnection* getDOConnection(CStringDictionary::TStringId paDONameId) const;
 
-    CDataConnection *getDIConnection(CStringDictionary::TStringId paDINameId) const;
+    CDataConnection* getDIConnection(CStringDictionary::TStringId paDINameId) const;
 
     /*!\brief if the data output is of generic type (i.e, ANY) this function allows an data connection to configure
      * the DO with the specific type coming from the other end of the connection
@@ -217,8 +229,7 @@ class CFunctionBlock{
      * \return Pointer to the variable or 0.
      *  The variable may be input, output or in the case of a BFB an internal var.
      */
-    virtual CIEC_ANY* getVar(CStringDictionary::TStringId *paNameList,
-        unsigned int paNameListSize);
+    virtual CIEC_ANY* getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize);
 
     /*!\brief Get the pointer to the adapter instance of the FB.
      *
@@ -234,7 +245,7 @@ class CFunctionBlock{
      * \param paEIID ID of the input event that has occurred.
      * \param paExecEnv Event chain execution environment the FB will be executed in (used for adding output events).
      */
-    void receiveInputEvent(size_t paEIID, CEventChainExecutionThread &paExecEnv);
+    void receiveInputEvent(size_t paEIID, CEventChainExecutionThread *paExecEnv);
 
     /*!\brief Configuration interface used by the typelib to parameterize generic function blocks.
      *
@@ -246,39 +257,38 @@ class CFunctionBlock{
 
     void setupFBInterface(const SFBInterfaceSpec *pa_pstInterfaceSpec, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
 
-    const SFBInterfaceSpec* getFBInterfaceSpec() const{
+    const SFBInterfaceSpec* getFBInterfaceSpec() const {
       return m_pstInterfaceSpec;
     }
-
 
     virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
 
     /*!\brief Get/set the instance name
      */
-    CStringDictionary::TStringId getInstanceNameId(void) const{
+    CStringDictionary::TStringId getInstanceNameId(void) const {
       return m_nFBInstanceName;
     }
     ;
 
-    const char *getInstanceName(void) const{
+    const char* getInstanceName(void) const {
       return CStringDictionary::getInstance().get(m_nFBInstanceName);
     }
 
-    void setInstanceNameId(const CStringDictionary::TStringId pa_nInstanceNameId){
+    void setInstanceNameId(const CStringDictionary::TStringId pa_nInstanceNameId) {
       m_nFBInstanceName = pa_nInstanceNameId;
     }
 
     /*!\brief Get information if the runable object is deletable by a management command.
      *
      */
-    bool getDeletable(void) const{
+    bool getDeletable(void) const {
       return m_bDeletable;
     }
     ;
     /*!\brief Set attribute to enable/disable the runable object deletion by a management command.
      *
      */
-    void setDeletable(const bool &pa_bDelAble){
+    void setDeletable(const bool &pa_bDelAble) {
       m_bDeletable = pa_bDelAble;
     }
     ;
@@ -288,39 +298,35 @@ class CFunctionBlock{
      * According to IEC 61499-1 Figure 24 an FB is deleteable if it is not in the Running state
      * \return true if currently all conditions are met to be deleteable
      */
-    bool isCurrentlyDeleteable(void) const{
+    bool isCurrentlyDeleteable(void) const {
       return ((m_bDeletable) && (m_enFBState != e_RUNNING));
     }
 
     /*!\brief return the current execution state of the managed object
      */
-    E_FBStates getState(void) const{
+    E_FBStates getState(void) const {
       return m_enFBState;
     }
 
     template<unsigned int ta_nNumEOs, unsigned int ta_nNumDIs, unsigned int ta_nNumDOs>
-    struct genFBConnDataSizeTemplate{
+    struct genFBConnDataSizeTemplate {
         enum {
-          value = (sizeof(CEventConnection) * ta_nNumEOs + sizeof(TDataConnectionPtr) * ta_nNumDIs +
-                   sizeof(CDataConnection) * ta_nNumDOs)
+          value = (sizeof(CEventConnection) * ta_nNumEOs + sizeof(TDataConnectionPtr) * ta_nNumDIs + sizeof(CDataConnection) * ta_nNumDOs)
         };
     };
 
-    static size_t genFBConnDataSize(unsigned int pa_nNumEOs, unsigned int pa_nNumDIs,
-        unsigned int pa_nNumDOs){
-      return (sizeof(CEventConnection) * pa_nNumEOs + sizeof(TDataConnectionPtr) * pa_nNumDIs +
-              sizeof(CDataConnection) * pa_nNumDOs);
+    static size_t genFBConnDataSize(unsigned int pa_nNumEOs, unsigned int pa_nNumDIs, unsigned int pa_nNumDOs) {
+      return (sizeof(CEventConnection) * pa_nNumEOs + sizeof(TDataConnectionPtr) * pa_nNumDIs + sizeof(CDataConnection) * pa_nNumDOs);
     }
 
     template<unsigned int ta_nNumDIs, unsigned int ta_nNumDOs, unsigned int ta_nNumAdapters = 0>
-    struct genFBVarsDataSizeTemplate{
+    struct genFBVarsDataSizeTemplate {
         enum {
           value = (sizeof(CIEC_ANY) * ta_nNumDIs + sizeof(CIEC_ANY) * ta_nNumDOs + sizeof(TAdapterPtr) * ta_nNumAdapters)
         };
     };
 
-    static size_t genFBVarsDataSize(unsigned int pa_nNumDIs, unsigned int pa_nNumDOs,
-        unsigned int pa_nNumAdapters = 0){
+    static size_t genFBVarsDataSize(unsigned int pa_nNumDIs, unsigned int pa_nNumDOs, unsigned int pa_nNumAdapters = 0) {
       return (sizeof(CIEC_ANY) * pa_nNumDIs + sizeof(CIEC_ANY) * pa_nNumDOs + sizeof(TAdapterPtr) * pa_nNumAdapters);
 
     }
@@ -341,7 +347,7 @@ class CFunctionBlock{
      * @param pa_nDONum number of the data output starting with 0
      * @return pointer to the data output
      */
-    CIEC_ANY *getDO(unsigned int pa_nDONum) const{
+    CIEC_ANY* getDO(unsigned int pa_nDONum) const {
       return m_aoDOs + pa_nDONum;
     }
 
@@ -375,12 +381,10 @@ class CFunctionBlock{
      *                               sizeof(CIEC_ANY)) * Number of Data outputs +
      *                               sizeof(TAdapterPtr) * ta_nNumAdapters
      */
-    CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-        const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData,
-        TForteByte *pa_acFBVarsData);
+    CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId,
+        TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
 
-    static TPortId getPortId(CStringDictionary::TStringId pa_unPortNameId,
-        TPortId pa_unMaxPortNames, const CStringDictionary::TStringId* pa_aunPortNames);
+    static TPortId getPortId(CStringDictionary::TStringId pa_unPortNameId, TPortId pa_unMaxPortNames, const CStringDictionary::TStringId *pa_aunPortNames);
 
     /*!\brief Function to send an output event of the FB.
      *
@@ -397,8 +401,7 @@ class CFunctionBlock{
 
     void setupAdapters(const SFBInterfaceSpec *pa_pstInterfaceSpec, TForteByte *pa_acFBData);
 
-
-    CEventConnection *getEOConUnchecked(TPortId paEONum) const {
+    CEventConnection* getEOConUnchecked(TPortId paEONum) const {
       return (mEOConns + paEONum);
     }
 
@@ -408,7 +411,7 @@ class CFunctionBlock{
      * @param pa_nDONum number of the data output starting with 0
      * @return pointer to the data output connection
      */
-    CDataConnection *getDOConUnchecked(TPortId paDONum){
+    CDataConnection* getDOConUnchecked(TPortId paDONum) {
       return mDOConns + paDONum;
     }
 
@@ -422,17 +425,17 @@ class CFunctionBlock{
      * @return on success... pointer to the datatype instance
      *         on error... 0
      */
-    static CIEC_ANY *createDataPoint(const CStringDictionary::TStringId **pa_panDataTypeIds,
-        TForteByte *pa_acDataBuf);
+    static CIEC_ANY* createDataPoint(const CStringDictionary::TStringId **pa_panDataTypeIds, TForteByte *pa_acDataBuf);
 
     void freeAllData();
 
-    const SFBInterfaceSpec* m_pstInterfaceSpec; //!< Pointer to the interface specification
+    const SFBInterfaceSpec *m_pstInterfaceSpec; //!< Pointer to the interface specification
     CEventConnection *mEOConns; //!< A list of event connections pointers storing for each event output the event connection. If the output event is not connected the pointer is 0.
     TDataConnectionPtr *m_apoDIConns; //!< A list of data connections pointers storing for each data input the data connection. If the data input is not connected the pointer is 0.
     CDataConnection *mDOConns; //!< A list of data connections pointers storing for each data output the data connection. If the data output is not connected the pointer is 0.
     CEventChainExecutionThread *m_poInvokingExecEnv; //!< A pointer to the execution thread that invoked the FB. This value is stored here to reduce function parameters and reduce therefore stack usage.
     CAdapter **m_apoAdapters; //!< A list of pointers to the adapters. This allows to implement a general getAdapter().
+    TFunctionBlockPtr *mInternalFBs;
 
   private:
     /*!\brief Function providing the functionality of the FB (e.g. execute ECC for basic FBs).
@@ -448,7 +451,7 @@ class CFunctionBlock{
      * function. The function will be invoked on entering the IDLE state (i.e.,
      * on creation and on RESET).
      */
-    virtual void setInitialValues(){
+    virtual void setInitialValues() {
     }
 
     //!declared but undefined copy constructor as we don't want FBs to be directly copied.
@@ -496,20 +499,18 @@ class CFunctionBlock{
 };
 
 template<>
-struct CFunctionBlock::genFBConnDataSizeTemplate<0, 0, 0>{
+struct CFunctionBlock::genFBConnDataSizeTemplate<0, 0, 0> {
     enum {
       value = 1
     };
 };
 
 template<>
-struct CFunctionBlock::genFBVarsDataSizeTemplate<0, 0, 0>{
+struct CFunctionBlock::genFBVarsDataSizeTemplate<0, 0, 0> {
     enum {
       value = 1
     };
 };
-
-typedef CFunctionBlock *TFunctionBlockPtr;
 
 #define FUNCTION_BLOCK_CTOR(fbclass) \
  fbclass(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : \

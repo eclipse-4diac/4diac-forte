@@ -19,11 +19,6 @@
 
 class CInterface2InternalDataConnection;
 
-struct SCFB_FBInstanceData {
-    CStringDictionary::TStringId m_nFBInstanceNameId;
-    CStringDictionary::TStringId m_nFBTypeNameId;
-};
-
 struct SCFB_FBConnectionData {
     CStringDictionary::TStringId m_nSrcId;
     int m_nSrcFBNum;
@@ -147,7 +142,6 @@ class CCompositeFB: public CFunctionBlock {
     CDataConnection **m_apoIn2IfDConns;
 
     const SCFB_FBNData * const cm_cpoFBNData;
-    TFunctionBlockPtr *m_apoInternalFBs;
 
     CEventConnection **m_apoEventConnections;
     CDataConnection **m_apoDataConnections;

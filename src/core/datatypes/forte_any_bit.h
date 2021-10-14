@@ -29,21 +29,6 @@ class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
     virtual ~CIEC_ANY_BIT(){
     }
 
-  protected:
-    CIEC_ANY_BIT() :
-        CIEC_ANY_ELEMENTARY(){
-    }
-
-    /*! \brief Set method for data type member value
-     *
-     *  The data type value is set using th setLargestUInt method;
-     *  This method needs to be derived in case of chaining multiple access elements after one another (e.g. [LWORD].D<1>().W<1>().B<1>().X<1>()).
-     *
-     */
-    virtual void setValuePartial(TLargestUIntValueType paValue) {
-      this->setLargestUInt(paValue);
-    }
-
     template <class TBase, class TObject>
     class PARTIAL_ACCESS_TYPE : public TBase {
     protected:
@@ -195,6 +180,21 @@ class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
       }
 
     };
+
+  protected:
+    CIEC_ANY_BIT() :
+        CIEC_ANY_ELEMENTARY(){
+    }
+
+    /*! \brief Set method for data type member value
+     *
+     *  The data type value is set using th setLargestUInt method;
+     *  This method needs to be derived in case of chaining multiple access elements after one another (e.g. [LWORD].D<1>().W<1>().B<1>().X<1>()).
+     *
+     */
+    virtual void setValuePartial(TLargestUIntValueType paValue) {
+      this->setLargestUInt(paValue);
+    }
 
     template <class TBase, class TObject, size_t TIndex>
     class PARTIAL_ACCESS : public CIEC_ANY_BIT::PARTIAL_ACCESS_TYPE<TBase, TObject>{

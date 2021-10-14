@@ -10,7 +10,7 @@
 #     Waldemar Eisenmenger - initial API and implementation and/or initial documentation
 # *******************************************************************************/ 
  
-forte_add_module(SysFs "Interacting with GPIOs of linuxbased devices via the filesystem using sysfs")
+forte_add_module(SysFs OFF "Interacting with GPIOs of linuxbased devices via the filesystem using sysfs")
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 

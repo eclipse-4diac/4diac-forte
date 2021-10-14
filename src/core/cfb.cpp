@@ -48,9 +48,9 @@ CCompositeFB::CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_ps
 CCompositeFB::~CCompositeFB(){
   if(cm_cpoFBNData->m_nNumFBs){
     for(unsigned int i = 0; i < cm_cpoFBNData->m_nNumFBs; ++i){
-      delete m_apoInternalFBs[i];
+      delete mInternalFBs[i];
     }
-    delete[] m_apoInternalFBs;
+    delete[] mInternalFBs;
   }
 
   //only delete the interface to internal event connections all other connections are managed by their source's FBs
@@ -112,8 +112,8 @@ bool CCompositeFB::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefV
 EMGMResponse CCompositeFB::changeFBExecutionState(EMGMCommandType pa_unCommand){
   EMGMResponse nRetVal = CFunctionBlock::changeFBExecutionState(pa_unCommand);
   for(unsigned int i = 0; ((i < cm_cpoFBNData->m_nNumFBs) && (e_RDY == nRetVal)); ++i){
-    if(m_apoInternalFBs[i]){
-      nRetVal = m_apoInternalFBs[i]->changeFBExecutionState(pa_unCommand);
+    if(mInternalFBs[i]){
+      nRetVal = mInternalFBs[i]->changeFBExecutionState(pa_unCommand);
     }
   }
   //Update FB parameters that maybe got overwritten by default values of the FB
@@ -128,13 +128,13 @@ EMGMResponse CCompositeFB::changeFBExecutionState(EMGMCommandType pa_unCommand){
 CFunctionBlock *CCompositeFB::getFB(forte::core::TNameIdentifier::CIterator &paNameListIt){
   CFunctionBlock *retVal = 0;
   for(unsigned int i = 0; i < cm_cpoFBNData->m_nNumFBs; ++i){
-    if(m_apoInternalFBs[i]->getInstanceNameId() == *paNameListIt){
+    if(mInternalFBs[i]->getInstanceNameId() == *paNameListIt){
       if(paNameListIt.isLastEntry()){
-        retVal = m_apoInternalFBs[i];
+        retVal = mInternalFBs[i];
       } else {
          //we are looking for a child of this fB
         ++paNameListIt;
-        retVal = m_apoInternalFBs[i]->getFB(paNameListIt);
+        retVal = mInternalFBs[i]->getFB(paNameListIt);
       }
     }
   }
@@ -153,10 +153,10 @@ CIEC_ANY *CCompositeFB::getVar(CStringDictionary::TStringId *paNameList,
 
   if(1 > paNameListSize){
     for(unsigned int i = 0; i < cm_cpoFBNData->m_nNumFBs; ++i){
-      if(*paNameList == m_apoInternalFBs[i]->getInstanceNameId()){
+      if(*paNameList == mInternalFBs[i]->getInstanceNameId()){
         paNameList++;
         paNameListSize--;
-        retVal = m_apoInternalFBs[i]->getVar(paNameList, paNameListSize);
+        retVal = mInternalFBs[i]->getVar(paNameList, paNameListSize);
         break;
       }
     }
@@ -175,7 +175,7 @@ void CCompositeFB::executeEvent(int pa_nEIID){
   }
   else{
     if(pa_nEIID < m_pstInterfaceSpec->m_nNumEIs && 0 != mInterface2InternalEventCons[pa_nEIID]){
-      mInterface2InternalEventCons[pa_nEIID]->triggerEvent(*m_poInvokingExecEnv);
+      mInterface2InternalEventCons[pa_nEIID]->triggerEvent(m_poInvokingExecEnv);
     }
   }
 }
@@ -203,9 +203,9 @@ void CCompositeFB::sendInternal2InterfaceOutputEvent(int pa_nEOID){
 
 void CCompositeFB::createInternalFBs(){
   if(cm_cpoFBNData->m_nNumFBs){
-    m_apoInternalFBs = new TFunctionBlockPtr[cm_cpoFBNData->m_nNumFBs];
+    mInternalFBs = new TFunctionBlockPtr[cm_cpoFBNData->m_nNumFBs];
     for(unsigned int i = 0; i < cm_cpoFBNData->m_nNumFBs; ++i){
-      m_apoInternalFBs[i] =
+      mInternalFBs[i] =
           CTypeLib::createFB(cm_cpoFBNData->m_pstFBInstances[i].m_nFBInstanceNameId, cm_cpoFBNData->m_pstFBInstances[i].m_nFBTypeNameId, getResourcePtr());
     }
   }
@@ -325,7 +325,7 @@ void CCompositeFB::setParams() {
   for(unsigned int i = 0; i < cm_cpoFBNData->m_nNumParams; ++i){
     const SCFB_FBParameter *pstCurrentParam = &(cm_cpoFBNData->m_pstParams[i]);
     CIEC_ANY *poDI =
-        m_apoInternalFBs[pstCurrentParam->m_nFBNum]->getDataInput(pstCurrentParam->m_nDINameID);
+        mInternalFBs[pstCurrentParam->m_nFBNum]->getDataInput(pstCurrentParam->m_nDINameID);
     if(0 != poDI){
       poDI->fromString(pstCurrentParam->m_acParamValue);
     }
@@ -349,7 +349,7 @@ CFunctionBlock *CCompositeFB::getFunctionBlock(int pa_nFBNum){
     }
     else{
       if(static_cast<unsigned int>(pa_nFBNum) < cm_cpoFBNData->m_nNumFBs){
-        poRetVal = m_apoInternalFBs[pa_nFBNum];
+        poRetVal = mInternalFBs[pa_nFBNum];
       }
     }
   }

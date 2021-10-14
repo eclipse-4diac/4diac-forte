@@ -201,6 +201,14 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPReceivePort(c
     int nReuseAddrVal = 1;
     if(0
         <= setsockopt(nSocket, SOL_SOCKET, SO_REUSEADDR, (char *) &nReuseAddrVal, sizeof(nReuseAddrVal))){
+
+#ifdef __APPLE__
+        if(0 > setsockopt(nSocket, SOL_SOCKET, SO_REUSEPORT, (char *) &nReuseAddrVal, sizeof(nReuseAddrVal))){
+            DEVLOG_ERROR("CBSDSocketInterface: setsockopt(SO_REUSEPORT) failed: %s\n", strerror(errno));
+            return nRetVal;
+        }
+#endif
+
       struct sockaddr_in stSockAddr;
       stSockAddr.sin_family = AF_INET;
 #if VXWORKS

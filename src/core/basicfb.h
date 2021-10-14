@@ -35,45 +35,43 @@
  * \brief structure to hold the data needed for creating the internal vars
  *
  */
-struct SInternalVarsInformation{
+struct SInternalVarsInformation {
     TPortId m_nNumIntVars; //!< Number of internal vars
-    const CStringDictionary::TStringId * m_aunIntVarsNames; //!< List of the internalvarsnames
-    const CStringDictionary::TStringId * m_aunIntVarsDataTypeNames; //!< List of the data type names for the internal vars
+    const CStringDictionary::TStringId *m_aunIntVarsNames; //!< List of the internalvarsnames
+    const CStringDictionary::TStringId *m_aunIntVarsDataTypeNames; //!< List of the data type names for the internal vars
 };
 
 /*!\ingroup CORE
  *
  * \brief Class for handling firmware basic function blocks.
  */
-class CBasicFB : public CFunctionBlock{
+class CBasicFB : public CFunctionBlock {
   public:
     /*!\brief The main constructur for a basic function block.
      */
-    CBasicFB(CResource *pa_poSrcRes,
-        const SFBInterfaceSpec *pa_pstInterfaceSpec,
-        const CStringDictionary::TStringId pa_nInstanceNameId,
-        const SInternalVarsInformation *pa_pstVarInternals,
-        TForteByte *pa_acFBConnData, TForteByte *pa_acBasicFBVarsData);
+
+    CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId,
+        const SInternalVarsInformation *pa_pstVarInternals, TForteByte *pa_acFBConnData, TForteByte *pa_acBasicFBVarsData);
+
+    CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId,
+        const SInternalVarsInformation *pa_pstVarInternals, TForteByte *pa_acFBConnData, TForteByte *pa_acBasicFBVarsData,
+        const SCFB_FBInstanceData *const pa_astInternalFBs, const size_t pa_numberOfInternalFbs);
+
     virtual ~CBasicFB();
 
-    virtual CIEC_ANY* getVar(CStringDictionary::TStringId *paNameList,
-        unsigned int paNameListSize);
+    virtual CIEC_ANY* getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize);
 
     virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
 
-    template<unsigned int ta_nNumDIs, unsigned int ta_nNumDOs, unsigned int ta_nNumIntVars,
-        unsigned int ta_nNumAdapters = 0>
-    struct genBasicFBVarsDataSizeTemplate{
+    template<unsigned int ta_nNumDIs, unsigned int ta_nNumDOs, unsigned int ta_nNumIntVars, unsigned int ta_nNumAdapters = 0>
+    struct genBasicFBVarsDataSizeTemplate {
         enum {
-          value = ((sizeof(TDataConnectionPtr) + sizeof(CIEC_ANY)) * ta_nNumIntVars +
-              genFBVarsDataSizeTemplate<ta_nNumDIs, ta_nNumDOs, ta_nNumAdapters>::value)
+          value = ((sizeof(TDataConnectionPtr) + sizeof(CIEC_ANY)) * ta_nNumIntVars + genFBVarsDataSizeTemplate<ta_nNumDIs, ta_nNumDOs, ta_nNumAdapters>::value)
         };
     };
 
-    static size_t genBasicFBVarsDataSize(unsigned int pa_nNumDIs, unsigned int pa_nNumDOs,
-        unsigned int pa_nNumIntVars, unsigned int pa_nNumAdapters = 0){
-      return ((sizeof(TDataConnectionPtr) + sizeof(CIEC_ANY)) * pa_nNumIntVars +
-          genFBVarsDataSize(pa_nNumDIs, pa_nNumDOs, pa_nNumAdapters));
+    static size_t genBasicFBVarsDataSize(unsigned int pa_nNumDIs, unsigned int pa_nNumDOs, unsigned int pa_nNumIntVars, unsigned int pa_nNumAdapters = 0) {
+      return ((sizeof(TDataConnectionPtr) + sizeof(CIEC_ANY)) * pa_nNumIntVars + genFBVarsDataSize(pa_nNumDIs, pa_nNumDOs, pa_nNumAdapters));
     }
     ;
 
@@ -84,21 +82,25 @@ class CBasicFB : public CFunctionBlock{
      * @param pa_nVarIntNum number of the internal variable starting with 0
      * @return pointer to the internal variable
      */
-    CIEC_ANY *getVarInternal(unsigned int pa_nVarIntNum){
+    CIEC_ANY* getVarInternal(unsigned int pa_nVarIntNum) {
       return m_aoInternals + pa_nVarIntNum;
     }
 
     CIEC_UINT m_nECCState; //! the current state of the ecc. start value is 0 = initial state id
-    const SInternalVarsInformation * const cm_pstVarInternals; //!< struct holding the information on the internal vars.
+    const SInternalVarsInformation *const cm_pstVarInternals; //!< struct holding the information on the internal vars.
+    size_t cm_amountOfInternalFBs;
+
   private:
     /*!\brief Get the pointer to a internal variable of the basic FB.
      *
      * \param pa_nInternalName StringId of the internal variable name.
      * \return Pointer to the internal variable or 0.
      */
-    CIEC_ANY *getInternalVar(CStringDictionary::TStringId pa_nInternalName);
+    CIEC_ANY* getInternalVar(CStringDictionary::TStringId pa_nInternalName);
 
     CIEC_ANY *m_aoInternals; //!< A list of pointers to the internal variables.
+
+    void createInternalFBs(const SCFB_FBInstanceData *const pa_InternalFBData);
 
 #ifdef FORTE_FMU
     friend class fmuInstance;

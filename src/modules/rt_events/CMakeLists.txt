@@ -10,7 +10,7 @@
 #    Alois Zoitl
 # *    - initial API and implementation and/or initial documentation
 # *******************************************************************************/
-forte_add_module(RT_Events "Real-Time Event Funktion blocks")
+forte_add_module(RT_Events OFF "Real-Time Event Funktion blocks")
 
 #############################################################################
 # RT_Events FB

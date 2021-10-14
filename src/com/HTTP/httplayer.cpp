@@ -372,23 +372,22 @@ void CHttpComLayer::closeConnection() {
 
 bool CHttpComLayer::serializeData(const CIEC_ANY& paCIECData) {
   size_t bufferSize = paCIECData.getToStringBufferSize();
-  char acDataValue[bufferSize];
-  int nConsumedBytes;
+  mReqData.reserve(static_cast<TForteUInt16>(bufferSize));
+  char *buffer = mReqData.getValue();
+  int nWrittenBytes;
   switch(paCIECData.getDataTypeID()){
     case CIEC_ANY::e_WSTRING:
-      nConsumedBytes = static_cast<const CIEC_WSTRING&>(paCIECData).toUTF8(acDataValue, bufferSize, false);
+      nWrittenBytes = static_cast<const CIEC_WSTRING&>(paCIECData).toUTF8(buffer, bufferSize, false);
       break;
     case CIEC_ANY::e_STRING:
-      nConsumedBytes = static_cast<const CIEC_STRING&>(paCIECData).toUTF8(acDataValue, bufferSize, false);
+      nWrittenBytes = static_cast<const CIEC_STRING&>(paCIECData).toUTF8(buffer, bufferSize, false);
       break;
     default:
-      nConsumedBytes = paCIECData.toString(acDataValue, bufferSize);
-      break;
+      nWrittenBytes = paCIECData.toString(buffer, bufferSize);
   }
-  if(-1 != nConsumedBytes) {
-    acDataValue[nConsumedBytes] = '\0';
-  }
-  mReqData = acDataValue;
+
+  nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
+  mReqData.assign(buffer, static_cast<TForteUInt16>(nWrittenBytes));
   return true;
 }
 

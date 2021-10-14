@@ -13,7 +13,7 @@
 ###############################################################
 # PiFace Raspberry Pi expansion board
 ###############################################################
-forte_add_module(MLPI "Process interface using the MLPI functions for Bosch Rexroth PLCs")
+forte_add_module(MLPI OFF "Process interface using the MLPI functions for Bosch Rexroth PLCs")
 
 SET(FORTE_COM_MLPI_DIR "" CACHE PATH "Path to MLPI src directory")
 

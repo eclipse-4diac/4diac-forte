@@ -263,7 +263,7 @@ void CFunctionBlock::sendOutputEvent(size_t paEO){
       }
     }
 
-    getEOConUnchecked(static_cast<TPortId>(paEO))->triggerEvent(*m_poInvokingExecEnv);
+    getEOConUnchecked(static_cast<TPortId>(paEO))->triggerEvent(m_poInvokingExecEnv);
 
 #ifdef FORTE_SUPPORT_MONITORING
     // Count Event for monitoring
@@ -274,7 +274,7 @@ void CFunctionBlock::sendOutputEvent(size_t paEO){
 
 void CFunctionBlock::sendAdapterEvent(size_t paAdapterID, size_t paEID) const{
   if((paAdapterID < m_pstInterfaceSpec->m_nNumAdapters) && (0 != m_apoAdapters[paAdapterID])){
-    m_apoAdapters[paAdapterID]->receiveInputEvent(paEID, *m_poInvokingExecEnv);
+    m_apoAdapters[paAdapterID]->receiveInputEvent(paEID, m_poInvokingExecEnv);
   }
 }
 
@@ -282,7 +282,7 @@ bool CFunctionBlock::configureFB(const char *){
   return true;
 }
 
-void CFunctionBlock::receiveInputEvent(size_t paEIID, CEventChainExecutionThread &paExecEnv){
+void CFunctionBlock::receiveInputEvent(size_t paEIID, CEventChainExecutionThread *paExecEnv){
   FORTE_TRACE("InputEvent: Function Block (%s) got event: %d (maxid: %d)\n", CStringDictionary::getInstance().get(getInstanceNameId()), paEIID, m_pstInterfaceSpec->m_nNumEIs - 1);
 
   if(e_RUNNING == getState()){
@@ -310,7 +310,7 @@ void CFunctionBlock::receiveInputEvent(size_t paEIID, CEventChainExecutionThread
       mEIMonitorCount[paEIID]++;
 #endif //FORTE_SUPPORT_MONITORING
     }
-    m_poInvokingExecEnv = &paExecEnv;
+    m_poInvokingExecEnv = paExecEnv;
     executeEvent(paEIID);
   }
 }

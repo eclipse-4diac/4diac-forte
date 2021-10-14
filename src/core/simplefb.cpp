@@ -14,22 +14,26 @@
 
 #include "simplefb.h"
 
-CSimpleFB::CSimpleFB(CResource *paSrcRes,
-    const SFBInterfaceSpec *paInterfaceSpec,
-    const CStringDictionary::TStringId paInstanceNameId,
-    const SInternalVarsInformation *paVarInternals,
-    TForteByte *paFBConnData,
-    TForteByte *paBasicFBVarsData) :
-    CBasicFB(paSrcRes, paInterfaceSpec, paInstanceNameId, paVarInternals, paFBConnData, paBasicFBVarsData){
-      
+CSimpleFB::CSimpleFB(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
+    const SInternalVarsInformation *paVarInternals, TForteByte *paFBConnData, TForteByte *paBasicFBVarsData) :
+    CBasicFB(paSrcRes, paInterfaceSpec, paInstanceNameId, paVarInternals, paFBConnData, paBasicFBVarsData) {
+
+}
+
+CSimpleFB::CSimpleFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId,
+    const SInternalVarsInformation *pa_pstVarInternals, TForteByte *pa_acFBConnData, TForteByte *pa_acBasicFBVarsData,
+    const SCFB_FBInstanceData *const pa_astInternalFBs, const size_t pa_numberOfInternalFbs) :
+        CBasicFB(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_pstVarInternals, pa_acFBConnData, pa_acBasicFBVarsData, pa_astInternalFBs,
+          pa_numberOfInternalFbs) {
+
 }
 
 CSimpleFB::~CSimpleFB() {
 
 }
 
-void CSimpleFB::executeEvent(int paEIID){
-  if (0 == paEIID) {
+void CSimpleFB::executeEvent(int paEIID) {
+  if(0 == paEIID) {
     alg_REQ();
     sendOutputEvent(0);
   }

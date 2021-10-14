@@ -53,10 +53,12 @@ EMGMResponse CEventConnection::disconnect(CFunctionBlock *paDstFB, CStringDictio
   return retval;
 }
 
-void CEventConnection::triggerEvent(CEventChainExecutionThread& pa_poExecEnv) const {
-  for(TDestinationIdList::Iterator it = mDestinationIds.begin();
-      0 != it.getPosition(); ++it){
-    pa_poExecEnv.addEventEntry(&(*it));
+void CEventConnection::triggerEvent(CEventChainExecutionThread *pa_poExecEnv) const {
+  if(nullptr != pa_poExecEnv) {
+    for(TDestinationIdList::Iterator it = mDestinationIds.begin();
+        0 != it.getPosition(); ++it){
+      pa_poExecEnv->addEventEntry(&(*it));
+    }
   }
 }
 

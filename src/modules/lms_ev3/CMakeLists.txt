@@ -11,7 +11,7 @@
 # *    Jose Cabral - added fileWriter
 # *******************************************************************************/ 
  
-forte_add_module(LMS_EV3 "I/O support for Lego Mindstorms EV3 using the ev3_dev operating system")
+forte_add_module(LMS_EV3 OFF "I/O support for Lego Mindstorms EV3 using the ev3_dev operating system")
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 

@@ -12,8 +12,8 @@
  *    and documentation
  *******************************************************************************/
 
-#ifndef SRC_ARCH_POSIX_SEMAPHORE_H_
-#define SRC_ARCH_POSIX_SEMAPHORE_H_
+#ifndef SRC_ARCH_MACOS_SEMAPHORE_H_
+#define SRC_ARCH_MACOS_SEMAPHORE_H_
 
 #include <dispatch/dispatch.h>
 #include "datatype.h"
@@ -63,4 +63,4 @@ namespace forte {
   } /* namespace arch */
 } /* namespace forte */
 
-#endif /* SRC_ARCH_POSIX_SEMAPHORE_H_ */
+#endif /* SRC_ARCH_MACOS_SEMAPHORE_H_ */

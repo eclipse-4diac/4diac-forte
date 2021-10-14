@@ -56,28 +56,28 @@ void FORTE_RT_E_DEMUX::executeEvent(int pa_nEIID){
         case 0:
           eoCon = getEOConUnchecked(scm_nEventEO0ID);
           if(eoCon->isConnected()){
-            eoCon->triggerEvent(m_oECEO0);
+            eoCon->triggerEvent(&m_oECEO0);
             m_oECEO0.resumeSelfSuspend();
           }
           break;
         case 1:
           eoCon = getEOConUnchecked(scm_nEventEO1ID);
           if(eoCon->isConnected()){
-            eoCon->triggerEvent(m_oECEO1);
+            eoCon->triggerEvent(&m_oECEO1);
             m_oECEO1.resumeSelfSuspend();
           }
           break;
         case 2:
           eoCon = getEOConUnchecked(scm_nEventEO2ID);
           if(eoCon->isConnected()){
-            eoCon->triggerEvent(m_oECEO2);
+            eoCon->triggerEvent(&m_oECEO2);
             m_oECEO2.resumeSelfSuspend();
           }
           break;
         case 3:
           eoCon = getEOConUnchecked(scm_nEventEO3ID);
           if(eoCon->isConnected()){
-            eoCon->triggerEvent(m_oECEO3);
+            eoCon->triggerEvent(&m_oECEO3);
             m_oECEO3.resumeSelfSuspend();
           }
           break;
