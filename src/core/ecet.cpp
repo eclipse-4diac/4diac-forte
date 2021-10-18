@@ -39,7 +39,7 @@ void CEventChainExecutionThread::mainRun(){
   if(externalEventOccured()){
     transferExternalEvents();
   }
-  if(mEventListEnd == mEventListStart){
+  if(mEventListEnd == mEventListStart && *mEventListEnd == 0){
     mProcessingEvents = false;
     selfSuspend();
     mProcessingEvents = true; //set this flag here to true as well in case the suspend just went through and processing was not finished
@@ -49,6 +49,9 @@ void CEventChainExecutionThread::mainRun(){
       (*mEventListStart)->mFB->receiveInputEvent((*mEventListStart)->mPortId, this);
     }
     *mEventListStart = 0;
+    if(mEventListEnd == mEventListStart){ 
+      return;//let's suspend next time call mainrun to reduce duplicate code
+    }
 
     if(mEventListStart == &mEventList[0]){
       //wrap the ringbuffer
