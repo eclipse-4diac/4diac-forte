@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2020 ACIN, Profactor GmbH, AIT, fortiss GmbH, OFFIS e.V.
+ * Copyright (c) 2010, 2021 ACIN, Profactor GmbH, AIT, fortiss GmbH, OFFIS e.V., HIT robot group
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,6 +10,7 @@
  *   Alois Zoitl, Ingo Hegny, Gerhard Ebenhofer, Thomas Strasser
  *     - initial API and implementation and/or initial documentation
  *  Jörg Walter - Windows XP compatibility
+ *  Zhao Xin - fix socket resource leakage
  *******************************************************************************/
 
 #include <sockhand.h>      //needs to be first pulls in the platform specific includes
@@ -88,6 +89,7 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openTCPClientCon
       LPSTR pacErrorMessage = getErrorMessage(nLastError);
       DEVLOG_ERROR("CWin32SocketInterface: connect() failed: %d - %s\n", nLastError, pacErrorMessage);
       LocalFree(pacErrorMessage);
+      closeSocket(nSocket);
     }
     else{
       nRetVal = nSocket;
