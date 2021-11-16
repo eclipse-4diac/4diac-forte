@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2018 fortiss GmbH
+ *               2021 HIT robot group
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +9,7 @@
  *
  * Contributors:
  *    Jose Cabral - initial API and implementation and/or initial documentation
+ *    Tibalt Zhao - remove the client http layer when socket error in recv
  *******************************************************************************/
 
 #ifndef SRC_MODULES_HTTP_OPCUAHANDLER_H_
@@ -73,6 +75,8 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
     void closeHTTPServer();
 
     void removeAndCloseSocket(const CIPComSocketHandler::TSocketDescriptor paSocket);
+
+    bool removeHTTPLayerFromClientList(const CIPComSocketHandler::TSocketDescriptor paSocket);
 
     void resumeSelfsuspend();
 

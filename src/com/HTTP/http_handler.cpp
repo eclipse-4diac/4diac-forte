@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2018 fortiss GmbH
+ *               2021 HIT robot group
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +9,7 @@
  *
  * Contributors:
  *    Jose Cabral - initial API and implementation and/or initial documentation
+ *    Tibalt Zhao - remove the client http layer when socket error in recv
  *******************************************************************************/
 
 #include "http_handler.h"
@@ -114,8 +116,10 @@ forte::com_infra::EComResponse CHTTP_Handler::recvData(const void* paData, unsig
     int recvLen = CIPComSocketHandler::receiveDataFromTCP(socket, &sRecvBuffer[sBufFillSize], cg_unIPLayerRecvBufferSize - sBufFillSize);
     if(0 == recvLen) {
       removeAndCloseSocket(socket);
+      removeHTTPLayerFromClientList(socket);
     } else if(-1 == recvLen) {
       removeAndCloseSocket(socket);
+      removeHTTPLayerFromClientList(socket);
       DEVLOG_ERROR("[HTTP handler] Error receiving packet\n");
     } else {
       if(!recvClients(socket, recvLen) && !recvServers(socket)) {
@@ -144,6 +148,23 @@ bool CHTTP_Handler::recvClients(const CIPComSocketHandler::TSocketDescriptor paS
 
   return false;
 }
+
+bool CHTTP_Handler::removeHTTPLayerFromClientList(const CIPComSocketHandler::TSocketDescriptor paSocket)
+{
+  CCriticalRegion criticalRegion(mClientMutex);
+  for(CSinglyLinkedList<HTTPClientWaiting *>::Iterator iter = mClientLayers.begin(); iter != mClientLayers.end(); ++iter) {
+    if((*iter)->mSocket == paSocket) {
+      //removeAndCloseSocket(paSocket);
+      HTTPClientWaiting * toDelete = *iter;
+      mClientLayers.erase(toDelete);
+      delete toDelete;
+      return true;
+    }
+  }
+  DEVLOG_ERROR("[HTTP Handler] Couldn't find layer to remove\n");
+  return false;
+}
+
 
 bool CHTTP_Handler::recvServers(const CIPComSocketHandler::TSocketDescriptor paSocket) {
   CCriticalRegion criticalRegion(mServerMutex);
