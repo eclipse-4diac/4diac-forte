@@ -98,7 +98,7 @@ void COPC_UA_Local_Handler::run() {
             timeToSleepMs = scmMinimumIterationWaitTime;
           }
 
-          mServerNeedsIteration.timedWait(static_cast<unsigned int>(timeToSleepMs));
+          mServerNeedsIteration.timedWait(static_cast<TForteUInt64>(timeToSleepMs) * 1E6);
         }
         retVal = UA_Server_run_shutdown(mUaServer);
         if(UA_STATUSCODE_GOOD == retVal) {
