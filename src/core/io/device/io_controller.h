@@ -39,7 +39,7 @@ namespace forte {
        * - base structure for safe startups and resets (see #init, #runLoop, and #deInit)
        * - automatic error handling and restart (see #IOConfigFBController)
        */
-      class IODeviceController : protected CExternalEventHandler, protected CThread {
+      class IODeviceController : public CExternalEventHandler, protected CThread {
           friend class IOConfigFBController;
 
         public:
