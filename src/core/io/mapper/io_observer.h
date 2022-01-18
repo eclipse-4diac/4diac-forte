@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ * Copyright (c) 2016 - 2022 Johannes Messmer (admin@jomess.com), fortiss GmbH, 
+ *                           Jonathan Lainer
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +10,7 @@
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
+ *   Jonathan Lainer - Adding getter for mDirection.
  *******************************************************************************/
 
 #ifndef SRC_CORE_IO_MAPPER_OBSERVER_H_
@@ -29,6 +31,8 @@ namespace forte {
           virtual ~IOObserver();
 
           virtual bool onChange() = 0;
+
+          IOMapper::Direction getDirection();
 
         protected:
           IOHandle* mHandle;
