@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ * Copyright (c) 2016, 2022 Johannes Messmer (admin@jomess.com), fortiss GmbH,
+ *                          Jonathan Lainer
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +10,7 @@
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
+ *   Jonathan Lainer - Add method for deregistering Handles by ID.
  *******************************************************************************/
 
 #include "io_mapper.h"
@@ -64,6 +66,26 @@ void IOMapper::deregisterHandle(IOHandle* paHandle) {
         paHandle->dropObserver();
         mObservers[it->first]->dropHandle();
         DEVLOG_INFO("[IOMapper]  Disconnected %s (lost handle)\n", it->first.data());
+      }
+
+      DEVLOG_DEBUG("[IOMapper] Deregister handle %s\n", it->first.data());
+
+      mHandles.erase(it);
+      break;
+    }
+  }
+}
+
+void IOMapper::deregisterHandle(CIEC_WSTRING const &paId) {
+  CCriticalRegion criticalRegion(mSyncMutex);
+
+  for (THandleMap::iterator it = mHandles.begin(); it != mHandles.end(); ++it) {
+    if (it->first == paId.getValue()) {
+      if (mObservers.find(it->first) != mObservers.end()) {
+        it->second->dropObserver();
+        mObservers[it->first]->dropHandle();
+        DEVLOG_INFO("[IOMapper] Disconnected %s (lost handle)\n",
+                    it->first.data());
       }
 
       DEVLOG_DEBUG("[IOMapper] Deregister handle %s\n", it->first.data());
