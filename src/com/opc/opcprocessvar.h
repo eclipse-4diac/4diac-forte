@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 AIT, ACIN
+ * Copyright (c) 2012, 2022 AIT, ACIN, HIT robot group
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,16 +8,15 @@
  *
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Tibalt Zhao - use stl deque and polish the logs
  *******************************************************************************/
 #ifndef OPCPROCESSVAR_H_
 #define OPCPROCESSVAR_H_
 
 #include "windows.h"
 #include "Variant.h"
-#include "fortelist.h"
-#include <forte_sync.h>
-
-class COPCItem;
+#include <deque>
+#include "forte_sync.h"
 
 class COpcProcessVar{
   public:
@@ -39,35 +38,18 @@ class COpcProcessVar{
       return mFunction;
     }
 
-    void setOpcItem(COPCItem* paOpcItem){
-      mOpcItem = paOpcItem;
-    }
-
-    void sendItemData();
-
     void setNewValue(Variant paNewValue);
     Variant peekNewValue();
-
     Variant updateValue();
 
-    bool getIsActive() const {
-      return mActive;
-    }
-
-    void setIsActive(bool paActive){
-      mActive = paActive;
-    }
-
   private:
-    COPCItem* mOpcItem;
-
     const char* mItemGroupName;
     const char* mItemName;
     bool mActive;
 
     Variant mCurrentValue;
 
-    typedef CSinglyLinkedList<Variant> TVariantList;
+    typedef std::deque<Variant> TVariantList;
     TVariantList mNewValueQueue;
 
     Variant mNewValue;
@@ -75,7 +57,6 @@ class COpcProcessVar{
     CSyncObject mSync;
 
     EOpcProcessVarFunctions mFunction;
-
 };
 
 #endif // OPCPROCESSVAR_H_

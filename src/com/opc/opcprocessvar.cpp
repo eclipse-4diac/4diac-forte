@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 AIT
+ * Copyright (c) 2012, 2022 AIT, HIT robot group
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,62 +8,50 @@
  *
  * Contributors:
  *   Filip Andren - initial API and implementation and/or initial documentation
+ *   Tibalt Zhao - use stl deque and polish the logs
  *******************************************************************************/
 #include "opcprocessvar.h"
 #include "OPCGroup.h"
 #include "OPCItem.h"
+#include "../../arch/devlog.h"
+#include <criticalregion.h>
 
 COpcProcessVar::COpcProcessVar(const char* paItemGroupName, const char* paItemName, EOpcProcessVarFunctions paFunction) :
-  mOpcItem(0), mItemGroupName(paItemGroupName), mItemName(paItemName), mActive(false), mFunction(paFunction){
+  mItemGroupName(paItemGroupName), mItemName(paItemName), mActive(false), mFunction(paFunction){
   mCurrentValue.set<SHORT>(0);
 }
 
-void COpcProcessVar::sendItemData(){
-  try{
-    if(getIsActive()) {
-      mOpcItem->writeSync(updateValue());
-    }
-  } catch (OPCException &e){
-    setIsActive(false);
-  }
-}
-
 void COpcProcessVar::setNewValue(Variant paNewValue){
-  mSync.lock();
-  mNewValueQueue.pushBack(paNewValue);
-  mSync.unlock();
+  CCriticalRegion criticalRegion(mSync);  
+  try{
+    paNewValue.get<bool>();
+  }catch(...){
+    return;
+  }
+  mNewValueQueue.push_back(paNewValue);
 }
 
 Variant COpcProcessVar::peekNewValue(){
   Variant retVal;
-
-  mSync.lock();
-  TVariantList::Iterator itBegin = mNewValueQueue.begin();
+  CCriticalRegion criticalRegion(mSync);  
+  TVariantList::iterator itBegin = mNewValueQueue.begin();
   if(itBegin != mNewValueQueue.end()){
     retVal = (*itBegin);
   } else {
     retVal = mCurrentValue;
   }
-
-  mSync.unlock();
-
   return retVal;
 }
 
 Variant COpcProcessVar::updateValue(){
   Variant retVal;
-
-  mSync.lock();
-  TVariantList::Iterator itBegin = mNewValueQueue.begin();
-  TVariantList::Iterator itEnd = mNewValueQueue.end();
+  CCriticalRegion criticalRegion(mSync);  
+  TVariantList::iterator itBegin = mNewValueQueue.begin();
   if(itBegin != mNewValueQueue.end()){
     mCurrentValue = retVal = (*itBegin);
-    mNewValueQueue.popFront();
+    mNewValueQueue.pop_front();
   } else {
     retVal = mCurrentValue;
   }
-
-  mSync.unlock();
-
   return retVal;
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 - 2014 AIT, fortiss GmbH, Hit robot group
+ * Copyright (c) 2012, 2022 AIT, fortiss GmbH, Hit robot group
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +9,7 @@
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
  *   ys guo - Fix opc module compilation errors and deadlock bug
+ *   Tibalt Zhao - use stl vector
  *******************************************************************************/
 #include "opceventhandler.h"
 #include "../core/devexec.h"
@@ -31,9 +32,8 @@ COpcEventHandler::~COpcEventHandler(){
 }
 
 void COpcEventHandler::sendCommand(ICmd *paCmd){
-  mSync.lock();
+  CCriticalRegion critcalRegion(mSync);
   mCommandQueue.pushBack(paCmd);
-  mSync.unlock();
 }
 
 void COpcEventHandler::run(){
@@ -44,6 +44,7 @@ void COpcEventHandler::run(){
       ICmd* nextCommand = getNextCommand();
       if(nextCommand != nullptr) {
         nextCommand->runCommand();
+        delete nextCommand;
       }
 
       MSG msg;
@@ -51,6 +52,7 @@ void COpcEventHandler::run(){
         TranslateMessage(&msg);
         DispatchMessage(&msg);
       }
+      CThread::sleepThread(100);
     }
   }
 
@@ -58,43 +60,31 @@ void COpcEventHandler::run(){
 }
 
 COpcEventHandler::TCallbackDescriptor COpcEventHandler::addComCallback(forte::com_infra::CComLayer* paComCallback){
-  mSync.lock();
+  CCriticalRegion critcalRegion(mSync);
   mCallbackDescCount++;
+  DEVLOG_INFO("COpcEventHandler::addComCallback[%d]\n",mCallbackDescCount);
   TComContainer stNewNode = { mCallbackDescCount, paComCallback };
-  mComCallbacks.pushBack(stNewNode);
-  mSync.unlock();
+  mComCallbacks.push_back(stNewNode);
 
   return mCallbackDescCount;
 }
 
 void COpcEventHandler::removeComCallback(COpcEventHandler::TCallbackDescriptor paCallbackDesc){
-  mSync.lock();
-
-  TCallbackList::Iterator itRunner(mComCallbacks.begin());
-
-  if(itRunner->mCallbackDesc == paCallbackDesc){
-    mComCallbacks.popFront();
-  }
-  else{
-    TCallbackList::Iterator itLastPos(itRunner);
-    TCallbackList::Iterator itEnd(mComCallbacks.end());
-    ++itRunner;
-    while(itRunner != itEnd){
-      if(itRunner->mCallbackDesc == paCallbackDesc){
-        mComCallbacks.eraseAfter(itLastPos);
-        break;
-      }
-      itLastPos = itRunner;
-      ++itRunner;
+  CCriticalRegion critcalRegion(mSync);
+  for(TCallbackList::iterator itRunner = mComCallbacks.begin(); itRunner != mComCallbacks.end(); ++itRunner){
+    if(itRunner->mCallbackDesc == paCallbackDesc){
+      mComCallbacks.erase(itRunner);
+      break; 
     }
   }
-  mSync.unlock();
 }
 
 void COpcEventHandler::executeComCallback(COpcEventHandler::TCallbackDescriptor paCallbackDesc){
-  mSync.lock();
-  TCallbackList::Iterator itEnd(mComCallbacks.end());
-  for(TCallbackList::Iterator itCallback = mComCallbacks.begin(); itCallback != itEnd; ++itCallback){
+  CCriticalRegion critcalRegion(mSync);
+  if(mComCallbacks.empty()){
+    return;
+  }
+  for(TCallbackList::iterator itCallback = mComCallbacks.begin(); itCallback != mComCallbacks.end(); ++itCallback){
     if(itCallback->mCallbackDesc == paCallbackDesc){
       //FIX
       TComContainer comCon = (*itCallback);
@@ -106,21 +96,16 @@ void COpcEventHandler::executeComCallback(COpcEventHandler::TCallbackDescriptor 
       break;
     }
   }
-  mSync.unlock();
 }
 
 ICmd* COpcEventHandler::getNextCommand(){
-  ICmd* command;
+  ICmd* command = nullptr;
 
-  mSync.lock();
+  CCriticalRegion critcalRegion(mSync);
   TCommandQueue::Iterator itBegin = mCommandQueue.begin();
   if(itBegin != mCommandQueue.end()){
     command = (*itBegin);
     mCommandQueue.popFront();
-  } else {
-    command = nullptr;
   }
-  mSync.unlock();
-
   return command;
 }
