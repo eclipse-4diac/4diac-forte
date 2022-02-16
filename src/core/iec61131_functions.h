@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2010 - 2013 ACIN, Profactor GmbH, fortiss GmbH, 2018 TU Vienna/ACIN
+ *               2022 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -12,6 +13,8 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians - adds different type templates for IEC 61131-3 functions
  *      and adds several type guards
+ *    Martin Melik Merkumians - Reworks binary operator templates to create correctly
+ *      calculated and typed results
  *******************************************************************************/
 #ifndef IEC61131_FUNCTIONS_H_
 #define IEC61131_FUNCTIONS_H_
@@ -236,31 +239,166 @@ template<typename T, typename U, template<typename A> class F, typename C> typen
   return Result;
 }
 
-GENERATE_APPLY_FUNCTION(AND)
+template<class T, class U>
+class AndOperation {
+    typedef typename forte::core::mpl::get_castable_type<T, U>::type resultType;
+  public:
+    static resultType call(const T &pa_roIN1, const U &pa_roIN2) {
+      return resultType(static_cast<resultType>(pa_roIN1) & static_cast<resultType>(pa_roIN2));
+    }
+  private:
+    AndOperation() {
+    }
+};
+
+template<class T>
+class AndOperation<T, CIEC_BOOL> {
+    typedef typename forte::core::mpl::get_castable_type<T, CIEC_BOOL>::type resultType;
+  public:
+    static resultType call(const T &pa_roIN1, const CIEC_BOOL &pa_roIN2) {
+      return resultType(pa_roIN1 & (pa_roIN2 ? 1 : 0));
+    }
+  private:
+    AndOperation() {
+    }
+};
+
+template<class T>
+class AndOperation<CIEC_BOOL, T> {
+    typedef typename forte::core::mpl::get_castable_type<T, CIEC_BOOL>::type resultType;
+  public:
+    static resultType call(const CIEC_BOOL &pa_roIN1, const T &pa_roIN2) {
+      return resultType((pa_roIN1 ? 1 : 0) & pa_roIN2);
+    }
+  private:
+    AndOperation() {
+    }
+};
+
+template<>
+class AndOperation<CIEC_BOOL, CIEC_BOOL> {
+  public:
+    static CIEC_BOOL call(const CIEC_BOOL &pa_roIN1, const CIEC_BOOL &pa_roIN2) {
+      return CIEC_BOOL(pa_roIN1 && pa_roIN2);
+    }
+  private:
+    AndOperation() {
+    }
+};
+
 template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type AND(const T &pa_roIN1, const U &pa_roIN2) {
-  return APPLY<T, U, AND_Function, CIEC_ANY_BIT>(pa_roIN1, pa_roIN2);
+  FORTE_STATIC_ASSERT((forte::core::mpl::are_of_subtype<CIEC_ANY_BIT, T, U>::value), TemplateInstantiationWithIncompatibleTypes);
+  typedef typename forte::core::mpl::get_castable_type<T, U>::type tImplicitCastType;
+  FORTE_STATIC_ASSERT(!(forte::core::mpl::is_same<tImplicitCastType, forte::core::mpl::NullType>::value), NoImplicitCastPossible);
+  return AndOperation<T, U>::call(pa_roIN1, pa_roIN2);
 }
 
-template<typename T> const T AND(const T &pa_roIN1, const T &pa_roIN2) {
-  return T((typename T::TValueType) (pa_roIN1 & pa_roIN2));
-}
+template<class T, class U>
+class OrOperation {
+    typedef typename forte::core::mpl::get_castable_type<T, U>::type resultType;
+  public:
+    static resultType call(const T &pa_roIN1, const U &pa_roIN2) {
+      return resultType(static_cast<resultType>(pa_roIN1) | static_cast<resultType>(pa_roIN2));
+    }
+  private:
+    OrOperation() {
+    }
+};
 
-GENERATE_APPLY_FUNCTION(OR)
+template<class T>
+class OrOperation<T, CIEC_BOOL> {
+    typedef typename forte::core::mpl::get_castable_type<T, CIEC_BOOL>::type resultType;
+  public:
+    static resultType call(const T &pa_roIN1, const CIEC_BOOL &pa_roIN2) {
+      return resultType(pa_roIN1 | (pa_roIN2 ? 1 : 0));
+    }
+  private:
+    OrOperation() {
+    }
+};
+
+template<class T>
+class OrOperation<CIEC_BOOL, T> {
+    typedef typename forte::core::mpl::get_castable_type<T, CIEC_BOOL>::type resultType;
+  public:
+    static resultType call(const CIEC_BOOL &pa_roIN1, const T &pa_roIN2) {
+      return resultType((pa_roIN1 ? 1 : 0) | pa_roIN2);
+    }
+  private:
+    OrOperation() {
+    }
+};
+
+template<>
+class OrOperation<CIEC_BOOL, CIEC_BOOL> {
+  public:
+    static CIEC_BOOL call(const CIEC_BOOL &pa_roIN1, const CIEC_BOOL &pa_roIN2) {
+      return CIEC_BOOL(pa_roIN1 || pa_roIN2);
+    }
+  private:
+    OrOperation() {
+    }
+};
+
 template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type OR(const T &pa_roIN1, const U &pa_roIN2) {
-  return APPLY<T, U, OR_Function, CIEC_ANY_BIT>(pa_roIN1, pa_roIN2);
+  FORTE_STATIC_ASSERT((forte::core::mpl::are_of_subtype<CIEC_ANY_BIT, T, U>::value), TemplateInstantiationWithIncompatibleTypes);
+  typedef typename forte::core::mpl::get_castable_type<T, U>::type tImplicitCastType;
+  FORTE_STATIC_ASSERT(!(forte::core::mpl::is_same<tImplicitCastType, forte::core::mpl::NullType>::value), NoImplicitCastPossible);
+  return OrOperation<T, U>::call(pa_roIN1, pa_roIN2);
 }
 
-template<typename T> const T OR(const T &pa_roIN1, const T &pa_roIN2) {
-  return T((typename T::TValueType) (pa_roIN1 | pa_roIN2));
-}
+template<class T, class U>
+class XorOperation {
+    typedef typename forte::core::mpl::get_castable_type<T, U>::type resultType;
+  public:
+    static resultType call(const T &pa_roIN1, const U &pa_roIN2) {
+      return resultType(static_cast<resultType>(pa_roIN1) ^ static_cast<resultType>(pa_roIN2));
+    }
+  private:
+    XorOperation() {
+    }
+};
 
-GENERATE_APPLY_FUNCTION(XOR)
+template<class T>
+class XorOperation<T, CIEC_BOOL> {
+    typedef typename forte::core::mpl::get_castable_type<T, CIEC_BOOL>::type resultType;
+  public:
+    static resultType call(const T &pa_roIN1, const CIEC_BOOL &pa_roIN2) {
+      return resultType(pa_roIN1 ^ (pa_roIN2 ? 1 : 0));
+    }
+  private:
+    XorOperation() {
+    }
+};
+
+template<class T>
+class XorOperation<CIEC_BOOL, T> {
+    typedef typename forte::core::mpl::get_castable_type<T, CIEC_BOOL>::type resultType;
+  public:
+    static resultType call(const CIEC_BOOL &pa_roIN1, const T &pa_roIN2) {
+      return resultType((pa_roIN1 ? 1 : 0) ^ pa_roIN2);
+    }
+  private:
+    XorOperation() {
+    }
+};
+
+template<>
+class XorOperation<CIEC_BOOL, CIEC_BOOL> {
+  public:
+    static CIEC_BOOL call(const CIEC_BOOL &pa_roIN1, const CIEC_BOOL &pa_roIN2) {
+      return CIEC_BOOL(pa_roIN1 != pa_roIN2);
+    }
+  private:
+    XorOperation() {
+    }
+};
+
 template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type XOR(const T &pa_roIN1, const U &pa_roIN2) {
-  return APPLY<T, U, XOR_Function, CIEC_ANY_BIT>(pa_roIN1, pa_roIN2);
-}
-
-template<typename T> const T XOR(const T &pa_roIN1, const T &pa_roIN2) {
-  return T((typename T::TValueType) (pa_roIN1 ^ pa_roIN2));
+  FORTE_STATIC_ASSERT((forte::core::mpl::are_of_subtype<CIEC_ANY_BIT, T, U>::value), TemplateInstantiationWithIncompatibleTypes);
+  typedef typename forte::core::mpl::get_castable_type<T, U>::type tImplicitCastType;
+  FORTE_STATIC_ASSERT(!(forte::core::mpl::is_same<tImplicitCastType, forte::core::mpl::NullType>::value), NoImplicitCastPossible);
+  return XorOperation<T, U>::call(pa_roIN1, pa_roIN2);
 }
 
 template<typename T> const T NOT(const T &pa_roIN) {
@@ -418,8 +556,8 @@ template<typename T, typename U, template<typename A> class F, template<typename
   FORTE_STATIC_ASSERT(!(forte::core::mpl::is_same<tImplicitCastType, forte::core::mpl::NullType>::value), NoImplicitCastPossible);
   const tImplicitCastType Result(
     forte::core::mpl::conditional<forte::core::mpl::and_<forte::core::mpl::is_scalar<T>, forte::core::mpl::is_scalar<T> >::value,
-        F<typename forte::core::mpl::get_castable_type<T, U>::type>,
-        G<typename forte::core::mpl::get_castable_type<T, U>::type> >::type::call(static_cast<tImplicitCastType>(pa_roIN1),static_cast<tImplicitCastType>(pa_roIN2)));
+        F<typename forte::core::mpl::get_castable_type<T, U>::type>, G<typename forte::core::mpl::get_castable_type<T, U>::type> >::type::call(
+      static_cast<tImplicitCastType>(pa_roIN1), static_cast<tImplicitCastType>(pa_roIN2)));
   return Result;
 }
 
