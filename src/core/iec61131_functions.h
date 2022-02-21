@@ -286,11 +286,14 @@ class AndOperation<CIEC_BOOL, CIEC_BOOL> {
     }
 };
 
-template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type AND(const T &pa_roIN1, const U &pa_roIN2) {
-  FORTE_STATIC_ASSERT((forte::core::mpl::are_of_subtype<CIEC_ANY_BIT, T, U>::value), TemplateInstantiationWithIncompatibleTypes);
-  typedef typename forte::core::mpl::get_castable_type<T, U>::type tImplicitCastType;
+template<typename T, typename U>
+typename forte::core::mpl::get_castable_type<typename forte::core::mpl::get_equivalent_CIEC_class<T>::type, typename forte::core::mpl::get_equivalent_CIEC_class<U>::type>::type AND(const T &pa_roIN1, const U &pa_roIN2) {
+  typedef typename forte::core::mpl::get_equivalent_CIEC_class<T>::type tTClass;
+  typedef typename forte::core::mpl::get_equivalent_CIEC_class<U>::type tUClass;
+  FORTE_STATIC_ASSERT((forte::core::mpl::are_of_subtype<CIEC_ANY_BIT, tTClass, tUClass>::value), TemplateInstantiationWithIncompatibleTypes);
+  typedef typename forte::core::mpl::get_castable_type<tTClass, tUClass>::type tImplicitCastType;
   FORTE_STATIC_ASSERT(!(forte::core::mpl::is_same<tImplicitCastType, forte::core::mpl::NullType>::value), NoImplicitCastPossible);
-  return AndOperation<T, U>::call(pa_roIN1, pa_roIN2);
+  return AndOperation<tTClass, tUClass>::call(pa_roIN1, pa_roIN2);
 }
 
 template<class T, class U>
@@ -340,13 +343,15 @@ class OrOperation<CIEC_BOOL, CIEC_BOOL> {
     }
 };
 
-template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type OR(const T &pa_roIN1, const U &pa_roIN2) {
-  FORTE_STATIC_ASSERT((forte::core::mpl::are_of_subtype<CIEC_ANY_BIT, T, U>::value), TemplateInstantiationWithIncompatibleTypes);
-  typedef typename forte::core::mpl::get_castable_type<T, U>::type tImplicitCastType;
+template<typename T, typename U>
+typename forte::core::mpl::get_castable_type<typename forte::core::mpl::get_equivalent_CIEC_class<T>::type, typename forte::core::mpl::get_equivalent_CIEC_class<U>::type>::type OR(const T &pa_roIN1, const U &pa_roIN2) {
+  typedef typename forte::core::mpl::get_equivalent_CIEC_class<T>::type tTClass;
+  typedef typename forte::core::mpl::get_equivalent_CIEC_class<U>::type tUClass;
+  FORTE_STATIC_ASSERT((forte::core::mpl::are_of_subtype<CIEC_ANY_BIT, tTClass, tUClass>::value), TemplateInstantiationWithIncompatibleTypes);
+  typedef typename forte::core::mpl::get_castable_type<tTClass, tUClass>::type tImplicitCastType;
   FORTE_STATIC_ASSERT(!(forte::core::mpl::is_same<tImplicitCastType, forte::core::mpl::NullType>::value), NoImplicitCastPossible);
-  return OrOperation<T, U>::call(pa_roIN1, pa_roIN2);
+  return OrOperation<tTClass, tUClass>::call(pa_roIN1, pa_roIN2);
 }
-
 template<class T, class U>
 class XorOperation {
     typedef typename forte::core::mpl::get_castable_type<T, U>::type resultType;
@@ -394,11 +399,14 @@ class XorOperation<CIEC_BOOL, CIEC_BOOL> {
     }
 };
 
-template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type XOR(const T &pa_roIN1, const U &pa_roIN2) {
-  FORTE_STATIC_ASSERT((forte::core::mpl::are_of_subtype<CIEC_ANY_BIT, T, U>::value), TemplateInstantiationWithIncompatibleTypes);
-  typedef typename forte::core::mpl::get_castable_type<T, U>::type tImplicitCastType;
+template<typename T, typename U>
+typename forte::core::mpl::get_castable_type<typename forte::core::mpl::get_equivalent_CIEC_class<T>::type, typename forte::core::mpl::get_equivalent_CIEC_class<U>::type>::type XOR(const T &pa_roIN1, const U &pa_roIN2) {
+  typedef typename forte::core::mpl::get_equivalent_CIEC_class<T>::type tTClass;
+  typedef typename forte::core::mpl::get_equivalent_CIEC_class<U>::type tUClass;
+  FORTE_STATIC_ASSERT((forte::core::mpl::are_of_subtype<CIEC_ANY_BIT, tTClass, tUClass>::value), TemplateInstantiationWithIncompatibleTypes);
+  typedef typename forte::core::mpl::get_castable_type<tTClass, tUClass>::type tImplicitCastType;
   FORTE_STATIC_ASSERT(!(forte::core::mpl::is_same<tImplicitCastType, forte::core::mpl::NullType>::value), NoImplicitCastPossible);
-  return XorOperation<T, U>::call(pa_roIN1, pa_roIN2);
+  return XorOperation<tTClass, tUClass>::call(pa_roIN1, pa_roIN2);
 }
 
 template<typename T> const T NOT(const T &pa_roIN) {

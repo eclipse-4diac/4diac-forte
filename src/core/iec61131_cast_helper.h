@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2018 TU Vienna/ACIN
+ *               2022 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,7 +12,7 @@
  *      - initial implementation of template metaprograms
  *      - adds macro functions for easier defintion of allowed casts, metaprograms
  *      for is_base_of including is_base_helper, conditional, and is_same
- *
+ *      - adds get_equivalent_CIEC_class template
  *******************************************************************************/
 
 #include "datatype.h"
@@ -64,9 +65,101 @@ namespace forte {
           NullType();
       };
 
+      struct false_ {
+          static const bool value = false;
+      };
+
+      struct true_ {
+          static const bool value = true;
+      };
+
+      template<class c> struct is_integral : false_ {};
+
+      #define IS_INTEGRAL(type) \
+      template<> struct is_integral<type> : true_ {};
+
+      template<class c> struct is_float : false_ {};
+
+      #define IS_FLOAT(type) \
+      template<> struct is_float<type> : true_ {};
+
+      IS_FLOAT(TForteFloat)
+      IS_FLOAT(TForteDFloat)
+
+      template<typename A, typename B> struct or_ {
+          static const bool value = A::value || B::value;
+      };
+
+      template<typename A, typename B> struct and_ {
+          static const bool value = A::value && B::value;
+      };
+
+      template<class c> struct negate {
+          static const bool value = !(c::value);
+      };
+
+      template<class c> struct is_scalar {
+          static const bool value = or_<is_integral<c>, is_float<c> >::value;
+      };
+
+      template<typename T, typename U> struct is_same {
+          static const bool value = false;
+      };
+
+      template<typename T> struct is_same<T, T> {
+          static const bool value = true;
+      };
+
+      template<bool Condition, typename TrueResult, typename FalseResult> struct conditional;
+
+      template<typename TrueResult, typename FalseResult> struct conditional<true, TrueResult, FalseResult> {
+          typedef TrueResult type;
+      };
+
+      template<typename TrueResult, typename FalseResult> struct conditional<false, TrueResult, FalseResult> {
+          typedef FalseResult type;
+      };
+
+      template<typename Base, typename Derived> struct is_base_of_helper{
+          operator Base*() const;
+          operator Derived*();
+      };
+
+      struct no_type{
+          char dummy[1];
+      };
+
+      struct yes_type{
+          char dummy[2];
+      };
+
+      template<typename Base, typename Derived> struct is_base_of{
+          template<typename T>
+          static yes_type check(Derived*, T);
+          static no_type check(Base*, int);
+
+          static const bool value = (sizeof(check(is_base_of_helper<Base, Derived>(), int())) == sizeof(yes_type));
+      };
+
+      template<typename Base> struct is_base_of<Base, Base>{
+          static const bool value = true;
+      };
+
+      template<typename CommonSubtype, typename T, typename U> struct are_of_subtype{
+          enum {
+            value = (is_base_of<CommonSubtype, T>::value && is_base_of<CommonSubtype, U>::value)
+          };
+      };
+
+      /* For PARTIAL classes, which derive from their base CIEC class, which can be used to identify the CIEC class*/
+      template<typename T> struct get_equivalent_CIEC_class {
+        typedef typename conditional<is_base_of<CIEC_BOOL, T>::value, CIEC_BOOL, typename conditional<is_base_of<CIEC_BYTE, T>::value, CIEC_BYTE, typename conditional<is_base_of<CIEC_WORD, T>::value, CIEC_WORD, typename conditional<is_base_of<CIEC_DWORD, T>::value, CIEC_DWORD, typename conditional<is_base_of<CIEC_LWORD, T>::value, CIEC_LWORD, NullType>::type>::type>::type>::type>::type type;
+      };
+
       /* invalid implicit casts */
       template<typename T, typename U> struct implicit_cast{
           typedef NullType type;
+
       };
 
       /* Self-casts */
@@ -557,19 +650,6 @@ namespace forte {
 #endif
 #endif
 
-      struct false_ {
-          static const bool value = false;
-      };
-
-      struct true_ {
-          static const bool value = true;
-      };
-
-      template<class c> struct is_integral : false_ {};
-
-      #define IS_INTEGRAL(type) \
-      template<> struct is_integral<type> : true_ {};
-
       IS_INTEGRAL(TForteInt8)
       IS_INTEGRAL(TForteInt16)
       IS_INTEGRAL(TForteInt32)
@@ -579,78 +659,6 @@ namespace forte {
       IS_INTEGRAL(TForteUInt32)
       IS_INTEGRAL(TForteUInt64)
 
-      template<class c> struct is_float : false_ {};
-
-      #define IS_FLOAT(type) \
-      template<> struct is_float<type> : true_ {};
-
-      IS_FLOAT(TForteFloat)
-      IS_FLOAT(TForteDFloat)
-
-      template<typename A, typename B> struct or_ {
-          static const bool value = A::value || B::value;
-      };
-
-      template<typename A, typename B> struct and_ {
-          static const bool value = A::value && B::value;
-      };
-
-      template<class c> struct negate {
-          static const bool value = !(c::value);
-      };
-
-      template<class c> struct is_scalar {
-          static const bool value = or_<is_integral<c>, is_float<c> >::value;
-      };
-
-      template<typename T, typename U> struct is_same {
-          static const bool value = false;
-      };
-
-      template<typename T> struct is_same<T, T> {
-          static const bool value = true;
-      };
-
-      template<bool Condition, typename TrueResult, typename FalseResult> struct conditional;
-
-      template<typename TrueResult, typename FalseResult> struct conditional<true, TrueResult, FalseResult> {
-          typedef TrueResult type;
-      };
-
-      template<typename TrueResult, typename FalseResult> struct conditional<false, TrueResult, FalseResult> {
-          typedef FalseResult type;
-      };
-
-      template<typename Base, typename Derived> struct is_base_of_helper{
-          operator Base*() const;
-          operator Derived*();
-      };
-
-      struct no_type{
-          char dummy[1];
-      };
-
-      struct yes_type{
-          char dummy[2];
-      };
-
-      template<typename Base, typename Derived> struct is_base_of{
-          template<typename T>
-          static yes_type check(Derived*, T);
-          static no_type check(Base*, int);
-
-          static const bool value = (sizeof(check(is_base_of_helper<Base, Derived>(), int())) == sizeof(yes_type));
-      };
-
-      template<typename Base> struct is_base_of<Base, Base>{
-          static const bool value = true;
-      };
-
-      template<typename CommonSubtype, typename T, typename U> struct are_of_subtype{
-          enum {
-            value = (is_base_of<CommonSubtype, T>::value && is_base_of<CommonSubtype, U>::value)
-          };
-      };
 
       template<typename T, typename U> struct get_castable_type{
           typedef typename conditional<is_same<NullType, typename implicit_cast<T, U>::type>::value, typename implicit_cast<U, T>::type, typename implicit_cast<T, U>::type>::type type;
