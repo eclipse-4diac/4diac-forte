@@ -47,7 +47,9 @@ private:
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
    FORTE_FB_DATA_ARRAY(1, 1, 1, 0);
-  void alg_REQ(void);
+
+    virtual void executeEvent(int paEIID);
+    void alg_REQ(void);
 
 public:
   FORTE_F_TIME_IN_S_TO_LREAL(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : 

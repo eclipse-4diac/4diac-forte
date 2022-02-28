@@ -45,5 +45,12 @@ void FORTE_F_TIME_IN_NS_TO_LINT::alg_REQ(void){
   st_OUT() = TIME_IN_NS_TO_LINT((st_IN()));
 }
 
+void FORTE_F_TIME_IN_NS_TO_LINT::executeEvent(int paEIID) {
+    if(scm_nEventREQID == paEIID) {
+        alg_REQ();
+        sendOutputEvent(scm_nEventCNFID);
+    }
+}
+
 
 

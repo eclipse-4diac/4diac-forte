@@ -45,5 +45,12 @@ void FORTE_F_TIME_IN_MS_TO_ULINT::alg_REQ(void){
   st_OUT() = TIME_IN_MS_TO_ULINT((st_IN()));
 }
 
+void FORTE_F_TIME_IN_MS_TO_ULINT::executeEvent(int paEIID) {
+    if(scm_nEventREQID == paEIID) {
+        alg_REQ();
+        sendOutputEvent(scm_nEventCNFID);
+    }
+}
+
 
 

@@ -45,5 +45,12 @@ void FORTE_F_TIME_IN_US_TO_LREAL::alg_REQ(void){
   st_OUT() = TIME_IN_US_TO_LREAL((st_IN()));
 }
 
+void FORTE_F_TIME_IN_US_TO_LREAL::executeEvent(int paEIID) {
+    if(scm_nEventREQID == paEIID) {
+        alg_REQ();
+        sendOutputEvent(scm_nEventCNFID);
+    }
+}
+
 
 

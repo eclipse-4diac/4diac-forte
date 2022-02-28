@@ -31,10 +31,3 @@ CSimpleFB::CSimpleFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInter
 CSimpleFB::~CSimpleFB() {
 
 }
-
-void CSimpleFB::executeEvent(int paEIID) {
-  if(0 == paEIID) {
-    alg_REQ();
-    sendOutputEvent(0);
-  }
-}

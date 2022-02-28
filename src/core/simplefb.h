@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2018 TU Wien/ACIN
+ *               2022 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,6 +11,8 @@
  * Contributors:
  *    Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
+ *    Martin Jobst
+ *      - multi algorithm support
  *******************************************************************************/
 
 #ifndef SRC_CORE_SIMPLEFB_H_
@@ -27,9 +30,6 @@ class CSimpleFB : public CBasicFB {
         const SCFB_FBInstanceData *const pa_astInternalFBs, const size_t pa_numberOfInternalFbs);
 
     virtual ~CSimpleFB();
-
-    virtual void executeEvent(int paEIID);
-    virtual void alg_REQ(void) = 0;
 };
 
 #endif /* SRC_CORE_SIMPLEFB_H_ */
