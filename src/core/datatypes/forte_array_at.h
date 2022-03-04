@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2020 Johannes Kepler University Linz
+ *               2022 Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,6 +10,8 @@
  *
  * Contributors:
  *    Ernst Blecha - initial implementation
+ *    Martin Melik Merkumians - changes multibit access index from template
+ *      parameter to call argument
  *******************************************************************************/
 #ifndef _FORTE_ARRAY_AT_H_
 #define _FORTE_ARRAY_AT_H_
@@ -75,17 +78,10 @@ private:
             TO_has_to_be_one_of_CIEC_BYTE_CIEC_WORD_CIEC_DWORD_or_CIEC_LWORD)
 
           FORTE_STATIC_ASSERT((forte::core::mpl::is_same<TB, CIEC_BOOL>::value), TB_has_to_be_CIEC_BOOL);
-      switch(index) {
-        case  0: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,0>();
-        case  1: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,1>();
-        case  2: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,2>();
-        case  3: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,3>();
-        case  4: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,4>();
-        case  5: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,5>();
-        case  6: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,6>();
-        case  7: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,7>();
-        default: return ARRAY_AT_ACCESSOR_BASE<TO>::dummy.template partial<CIEC_BOOL,0>();
+      if(index < 8) {
+        return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL>(index);
       }
+      return ARRAY_AT_ACCESSOR_BASE<TO>::dummy.template partial<CIEC_BOOL>(0);
     }
   };
 
@@ -100,19 +96,11 @@ private:
             (forte::core::mpl::is_same<TO, CIEC_WORD>::value || forte::core::mpl::is_same<TO, CIEC_DWORD>::value
               || forte::core::mpl::is_same<TO, CIEC_LWORD>::value), TO_has_to_be_one_of_CIEC_WORD_CIEC_DWORD_or_CIEC_LWORD);
           FORTE_STATIC_ASSERT((forte::core::mpl::is_same<TB, CIEC_BOOL>::value), TB_has_to_be_CIEC_BOOL);
-      switch(index) {
-        case  8: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,8>();
-        case  9: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,9>();
-        case 10: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,10>();
-        case 11: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,11>();
-        case 12: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,12>();
-        case 13: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,13>();
-        case 14: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,14>();
-        case 15: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,15>();
-        default:
-          ARRAY_AT_ACCESSOR<TB, TO, CIEC_BOOL, CIEC_BYTE> accessor(ARRAY_AT_ACCESSOR_BASE<TO>::dataObject, ARRAY_AT_ACCESSOR_BASE<TO>::dummy);
-          return accessor.getAccessor(index);
+      if(index < 16) {
+        return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL>(index);
       }
+      ARRAY_AT_ACCESSOR<TB, TO, CIEC_BOOL, CIEC_BYTE> accessor(ARRAY_AT_ACCESSOR_BASE<TO>::dataObject, ARRAY_AT_ACCESSOR_BASE<TO>::dummy);
+      return accessor.getAccessor(index);
     }
   };
 
@@ -126,27 +114,11 @@ private:
           FORTE_STATIC_ASSERT((forte::core::mpl::is_same<TO, CIEC_DWORD>::value || forte::core::mpl::is_same<TO, CIEC_LWORD>::value),
             TO_has_to_be_one_of_CIEC_DWORD_or_CIEC_LWORD);
           FORTE_STATIC_ASSERT((forte::core::mpl::is_same<TB, CIEC_BOOL>::value), TB_has_to_be_CIEC_BOOL);
-      switch(index) {
-        case 16: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,16>();
-        case 17: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,17>();
-        case 18: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,18>();
-        case 19: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,19>();
-        case 20: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,20>();
-        case 21: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,21>();
-        case 22: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,22>();
-        case 23: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,23>();
-        case 24: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,24>();
-        case 25: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,25>();
-        case 26: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,26>();
-        case 27: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,27>();
-        case 28: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,28>();
-        case 29: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,29>();
-        case 30: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,30>();
-        case 31: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,31>();
-        default:
-          ARRAY_AT_ACCESSOR<TB, TO, CIEC_BOOL, CIEC_WORD> accessor(ARRAY_AT_ACCESSOR_BASE<TO>::dataObject, ARRAY_AT_ACCESSOR_BASE<TO>::dummy);
-          return accessor.getAccessor(index);
+      if(index < 32) {
+        return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL>(index);
       }
+      ARRAY_AT_ACCESSOR<TB, TO, CIEC_BOOL, CIEC_WORD> accessor(ARRAY_AT_ACCESSOR_BASE<TO>::dataObject, ARRAY_AT_ACCESSOR_BASE<TO>::dummy);
+      return accessor.getAccessor(index);
     }
   };
 
@@ -159,43 +131,11 @@ private:
     inline CIEC_ANY_BIT::PARTIAL_ACCESS_TYPE<TB, TO> getAccessor(size_t index) {
           FORTE_STATIC_ASSERT((forte::core::mpl::is_same<TO, CIEC_LWORD>::value), TO_has_to_be_CIEC_LWORD);
           FORTE_STATIC_ASSERT((forte::core::mpl::is_same<TB, CIEC_BOOL>::value), TB_has_to_be_CIEC_BOOL);
-      switch(index) {
-        case 32: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,32>();
-        case 33: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,33>();
-        case 34: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,34>();
-        case 35: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,35>();
-        case 36: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,36>();
-        case 37: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,37>();
-        case 38: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,38>();
-        case 39: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,39>();
-        case 40: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,40>();
-        case 41: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,41>();
-        case 42: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,42>();
-        case 43: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,43>();
-        case 44: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,44>();
-        case 45: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,45>();
-        case 46: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,46>();
-        case 47: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,47>();
-        case 48: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,48>();
-        case 49: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,49>();
-        case 50: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,50>();
-        case 51: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,51>();
-        case 52: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,52>();
-        case 53: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,53>();
-        case 54: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,54>();
-        case 55: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,55>();
-        case 56: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,56>();
-        case 57: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,57>();
-        case 58: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,58>();
-        case 59: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,59>();
-        case 60: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,60>();
-        case 61: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,61>();
-        case 62: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,62>();
-        case 63: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL,63>();
-        default:
-          ARRAY_AT_ACCESSOR<TB, TO, CIEC_BOOL, CIEC_DWORD> accessor(ARRAY_AT_ACCESSOR_BASE<TO>::dataObject, ARRAY_AT_ACCESSOR_BASE<TO>::dummy);
-          return accessor.getAccessor(index);
+      if(index < 64) {
+        return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BOOL>(index);
       }
+      ARRAY_AT_ACCESSOR<TB, TO, CIEC_BOOL, CIEC_DWORD> accessor(ARRAY_AT_ACCESSOR_BASE<TO>::dataObject, ARRAY_AT_ACCESSOR_BASE<TO>::dummy);
+      return accessor.getAccessor(index);
     }
   };
 
@@ -210,11 +150,10 @@ private:
             (forte::core::mpl::is_same<TO, CIEC_WORD>::value || forte::core::mpl::is_same<TO, CIEC_DWORD>::value
               || forte::core::mpl::is_same<TO, CIEC_LWORD>::value), TO_has_to_be_one_of_CIEC_BYTE_CIEC_WORD_CIEC_DWORD_or_CIEC_LWORD);
           FORTE_STATIC_ASSERT((forte::core::mpl::is_same<TB, CIEC_BYTE>::value), TB_has_to_be_CIEC_BYTE);
-          switch(index){
-        case  0: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BYTE,0>();
-        case  1: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BYTE,1>();
-        default: return ARRAY_AT_ACCESSOR_BASE<TO>::dummy.template partial<CIEC_BYTE, 0>();
+      if(index < 2){
+        return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BYTE>(index);
       }
+      return ARRAY_AT_ACCESSOR_BASE<TO>::dummy.template partial<CIEC_BYTE>(0);
     }
   };
 
@@ -228,13 +167,11 @@ private:
           FORTE_STATIC_ASSERT((forte::core::mpl::is_same<TO, CIEC_DWORD>::value || forte::core::mpl::is_same<TO, CIEC_LWORD>::value),
             TO_has_to_be_one_of_CIEC_DWORD_or_CIEC_LWORD);
           FORTE_STATIC_ASSERT((forte::core::mpl::is_same<TB, CIEC_BYTE>::value), TB_has_to_be_CIEC_BYTE);
-      switch(index) {
-        case  2: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BYTE,2>();
-        case  3: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BYTE,3>();
-        default:
-          ARRAY_AT_ACCESSOR<TB, TO, CIEC_BYTE, CIEC_WORD> accessor(ARRAY_AT_ACCESSOR_BASE<TO>::dataObject, ARRAY_AT_ACCESSOR_BASE<TO>::dummy);
-          return accessor.getAccessor(index);
+      if(index < 4) {
+        return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BYTE>(index);
       }
+      ARRAY_AT_ACCESSOR<TB, TO, CIEC_BYTE, CIEC_WORD> accessor(ARRAY_AT_ACCESSOR_BASE<TO>::dataObject, ARRAY_AT_ACCESSOR_BASE<TO>::dummy);
+      return accessor.getAccessor(index);
     }
   };
 
@@ -247,15 +184,11 @@ private:
     inline CIEC_ANY_BIT::PARTIAL_ACCESS_TYPE<TB, TO> getAccessor(size_t index) {
           FORTE_STATIC_ASSERT((forte::core::mpl::is_same<TO, CIEC_LWORD>::value), TO_has_to_be_CIEC_LWORD);
           FORTE_STATIC_ASSERT((forte::core::mpl::is_same<TB, CIEC_BYTE>::value), TB_has_to_be_CIEC_BYTE);
-      switch(index) {
-        case  4: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BYTE,4>();
-        case  5: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BYTE,5>();
-        case  6: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BYTE,6>();
-        case  7: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BYTE,7>();
-        default:
-          ARRAY_AT_ACCESSOR<TB, TO, CIEC_BYTE, CIEC_DWORD> accessor(ARRAY_AT_ACCESSOR_BASE<TO>::dataObject, ARRAY_AT_ACCESSOR_BASE<TO>::dummy);
-          return accessor.getAccessor(index);
+      if(index < 8) {
+        return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_BYTE>(index);
       }
+      ARRAY_AT_ACCESSOR<TB, TO, CIEC_BYTE, CIEC_DWORD> accessor(ARRAY_AT_ACCESSOR_BASE<TO>::dataObject, ARRAY_AT_ACCESSOR_BASE<TO>::dummy);
+      return accessor.getAccessor(index);
     }
   };
 
@@ -269,11 +202,10 @@ private:
           FORTE_STATIC_ASSERT((forte::core::mpl::is_same<TO, CIEC_DWORD>::value || forte::core::mpl::is_same<TO, CIEC_LWORD>::value),
             TO_has_to_be_one_of_CIEC_DWORD_or_CIEC_LWORD);
           FORTE_STATIC_ASSERT((forte::core::mpl::is_same<TB, CIEC_WORD>::value), TB_has_to_be_CIEC_WORD);
-      switch(index) {
-        case  0: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_WORD,0>();
-        case  1: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_WORD,1>();
-        default: return ARRAY_AT_ACCESSOR_BASE<TO>::dummy.template partial<CIEC_WORD,0>();
+      if(index < 2) {
+        return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_WORD>(index);
       }
+      return ARRAY_AT_ACCESSOR_BASE<TO>::dummy.template partial<CIEC_WORD>(0);
     }
   };
 
@@ -286,13 +218,11 @@ private:
     inline CIEC_ANY_BIT::PARTIAL_ACCESS_TYPE<TB, TO> getAccessor(size_t index) {
           FORTE_STATIC_ASSERT((forte::core::mpl::is_same<TO, CIEC_LWORD>::value), TO_has_to_be_CIEC_LWORD);
           FORTE_STATIC_ASSERT((forte::core::mpl::is_same<TB, CIEC_WORD>::value), TB_has_to_be_CIEC_WORD);
-      switch(index) {
-        case  2: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_WORD,2>();
-        case  3: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_WORD,3>();
-        default:
-          ARRAY_AT_ACCESSOR<TB, TO, CIEC_WORD, CIEC_DWORD> accessor(ARRAY_AT_ACCESSOR_BASE<TO>::dataObject, ARRAY_AT_ACCESSOR_BASE<TO>::dummy);
-          return accessor.getAccessor(index);
+      if(index < 4) {
+        return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_WORD>(index);
       }
+      ARRAY_AT_ACCESSOR<TB, TO, CIEC_WORD, CIEC_DWORD> accessor(ARRAY_AT_ACCESSOR_BASE<TO>::dataObject, ARRAY_AT_ACCESSOR_BASE<TO>::dummy);
+      return accessor.getAccessor(index);
     }
   };
 
@@ -305,11 +235,10 @@ private:
     inline CIEC_ANY_BIT::PARTIAL_ACCESS_TYPE<TB, TO> getAccessor(size_t index) {
           FORTE_STATIC_ASSERT((forte::core::mpl::is_same<TO, CIEC_LWORD>::value), TO_has_to_be_CIEC_LWORD);
           FORTE_STATIC_ASSERT((forte::core::mpl::is_same<TB, CIEC_DWORD>::value), TB_has_to_be_CIEC_DWORD);
-      switch(index) {
-        case  0: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_DWORD,0>();
-        case  1: return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_DWORD,1>();
-        default: return ARRAY_AT_ACCESSOR_BASE<TO>::dummy.template partial<CIEC_DWORD,0>();
+      if(index < 2) {
+        return ARRAY_AT_ACCESSOR_BASE<TO>::dataObject.template partial<CIEC_DWORD>(index);
       }
+      return ARRAY_AT_ACCESSOR_BASE<TO>::dummy.template partial<CIEC_DWORD>(0);
     }
   };
 

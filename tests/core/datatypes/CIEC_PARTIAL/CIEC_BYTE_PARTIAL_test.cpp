@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2011 - 2012 ACIN, nxtControl, 2018 TU Vienna/ACIN
  *               2020 Johannes Kepler University Linz
+ *               2022 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,6 +11,7 @@
  * Contributors:
  *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
  *   Ernst Blecha - Adds partial access tests
+ *   Martin Melik Merkumians - Updates test for changes in partial
  *******************************************************************************/
 
 #include <boost/test/unit_test.hpp>
@@ -73,7 +75,7 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_CONST_INIT)
   const CIEC_BOOL nTestBool(true);
   CIEC_BYTE mTestByte;
 
-  mTestByte.partial<CIEC_BOOL,4>() = nTestBool;
+  mTestByte.partial<CIEC_BOOL>(4) = nTestBool;
 
   BOOST_CHECK_EQUAL(mTestByte, 16);
 }
@@ -213,7 +215,7 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_FROM_CONST)
 
   CIEC_BYTE mTestByte;
 
-  mTestByte.partial<CIEC_BOOL,3>() = nTestBool;
+  mTestByte.partial<CIEC_BOOL>(3) = nTestBool;
 
   BOOST_CHECK_EQUAL(mTestByte, 8);
 }

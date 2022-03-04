@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
  *               2020 Johannes Kepler University Linz
+ *               2022 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -12,6 +13,8 @@
  *    Ingo Hegny, Monika Wenger
  *      - initial implementation and rework communication infrastructure
  *    Ernst Blecha - add multibit partial access
+ *    Martin Melik Merkumians - changes multibit access index from template
+ *      parameter to call argument
  *******************************************************************************/
 #ifndef _FORTE_DWORD_H_
 #define _FORTE_DWORD_H_
@@ -85,8 +88,8 @@ class CIEC_DWORD : public CIEC_ANY_BIT{
     /*! \brief Partial access within a CIEC_DWORD (e.g. [DWORD].partial<CIEC_BOOL,1>())
      *
      */
-    template <class T, size_t paIndex> PARTIAL_ACCESS<T, CIEC_DWORD, paIndex> partial(){
-      return PARTIAL_ACCESS<T,CIEC_DWORD, paIndex>(*this);
+    template <class T> PARTIAL_ACCESS<T, CIEC_DWORD> partial(size_t paIndex){
+      return PARTIAL_ACCESS<T,CIEC_DWORD>(*this, paIndex);
     }
 
 };

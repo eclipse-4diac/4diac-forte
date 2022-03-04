@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
  *               2020 Johannes Kepler University Linz
+ *               2022 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -12,6 +13,8 @@
  *    Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
  *    Ernst Blecha - add multibit partial access
+ *    Martin Melik Merkumians - changes multibit access index from template
+ *      parameter to call argument
   *******************************************************************************/
 #ifndef _ANY_BIT_H_
 #define _ANY_BIT_H_
@@ -196,7 +199,7 @@ class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
       this->setLargestUInt(paValue);
     }
 
-    template <class TBase, class TObject, size_t TIndex>
+    template <class TBase, class TObject>
     class PARTIAL_ACCESS : public CIEC_ANY_BIT::PARTIAL_ACCESS_TYPE<TBase, TObject>{
     public:
         /*! \brief Constructor: Setup of byte/word/dword-access-object
@@ -205,15 +208,14 @@ class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
          *  Out of Bounds checking is implemented on the index value as a static check; The index therefore has to be known at compile time.
          *  The index is stored after correction for endianess.
          */
-        explicit PARTIAL_ACCESS(TObject &paSrc) :
-          PARTIAL_ACCESS_TYPE<TBase, TObject>(paSrc, TIndex){
-          FORTE_STATIC_ASSERT((TIndex<CIEC_ANY_BIT::PARTIAL_ACCESS_TYPE < TBase, TObject>::length), Index_for_partial_access_out_of_bounds);
+        explicit PARTIAL_ACCESS(TObject &paSrc, size_t paIndex) :
+          PARTIAL_ACCESS_TYPE<TBase, TObject>(paSrc, paIndex) {
         };
 
         /*! \brief Operator: Assignment operator with elementary type as its input
          *
          */
-        PARTIAL_ACCESS<TBase, TObject, TIndex>& operator=(typename CIEC_ANY_BIT::PARTIAL_ACCESS_TYPE<TBase,TObject>::TBaseType paValue){
+        PARTIAL_ACCESS<TBase, TObject>& operator=(typename CIEC_ANY_BIT::PARTIAL_ACCESS_TYPE<TBase,TObject>::TBaseType paValue){
           this->setPartial(paValue); // No need for conversion, TBaseType can be directly assigned
           return *this;
         }
@@ -221,7 +223,7 @@ class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
         /*! \brief Operator: Assignment operator with CIEC_XXXX as its input
          *
          */
-        PARTIAL_ACCESS<TBase, TObject, TIndex>& operator =(const TBase &paValue){
+        PARTIAL_ACCESS<TBase, TObject>& operator =(const TBase &paValue){
           this->setPartial(paValue); // This does conversion from TBase to TBaseType implicitly
           return *this;
         }
