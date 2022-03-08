@@ -417,7 +417,7 @@ template<typename T> const T NOT(const T &pa_roIN) {
 template<> const CIEC_BOOL NOT<CIEC_BOOL>(const CIEC_BOOL &pa_roIN);
 
 GENERATE_APPLY_FUNCTION(GT)
-template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type GT(const T &pa_roIN1, const U &pa_roIN2) {
+template<typename T, typename U> const CIEC_BOOL GT(const T &pa_roIN1, const U &pa_roIN2) {
   return APPLY<T, U, GT_Function, CIEC_ANY_ELEMENTARY>(pa_roIN1, pa_roIN2);
 }
 
@@ -430,7 +430,7 @@ template<typename T> const CIEC_BOOL GT(const T &pa_roIN1, const T &pa_roIN2) {
 }
 
 GENERATE_APPLY_FUNCTION(EQ)
-template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type EQ(const T &pa_roIN1, const U &pa_roIN2) {
+template<typename T, typename U> const CIEC_BOOL EQ(const T &pa_roIN1, const U &pa_roIN2) {
   return APPLY<T, U, EQ_Function, CIEC_ANY_ELEMENTARY>(pa_roIN1, pa_roIN2);
 }
 
@@ -443,7 +443,7 @@ template<typename T> const CIEC_BOOL EQ(const T &pa_roIN1, const T &pa_roIN2) {
 }
 
 GENERATE_APPLY_FUNCTION(GE)
-template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type GE(const T &pa_roIN1, const U &pa_roIN2) {
+template<typename T, typename U> const CIEC_BOOL GE(const T &pa_roIN1, const U &pa_roIN2) {
   return APPLY<T, U, GE_Function, CIEC_ANY_ELEMENTARY>(pa_roIN1, pa_roIN2);
 }
 
@@ -456,7 +456,7 @@ template<typename T> const CIEC_BOOL GE(const T &pa_roIN1, const T &pa_roIN2) {
 }
 
 GENERATE_APPLY_FUNCTION(LE)
-template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type LE(const T &pa_roIN1, const U &pa_roIN2) {
+template<typename T, typename U> const CIEC_BOOL LE(const T &pa_roIN1, const U &pa_roIN2) {
   return APPLY<T, U, LE_Function, CIEC_ANY_ELEMENTARY>(pa_roIN1, pa_roIN2);
 }
 
@@ -469,7 +469,7 @@ template<typename T> const CIEC_BOOL LE(const T &pa_roIN1, const T &pa_roIN2) {
 }
 
 GENERATE_APPLY_FUNCTION(LT)
-template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type LT(const T &pa_roIN1, const U &pa_roIN2) {
+template<typename T, typename U> const CIEC_BOOL LT(const T &pa_roIN1, const U &pa_roIN2) {
   return APPLY<T, U, LT_Function, CIEC_ANY_ELEMENTARY>(pa_roIN1, pa_roIN2);
 }
 
@@ -482,7 +482,7 @@ template<typename T> const CIEC_BOOL LT(const T &pa_roIN1, const T &pa_roIN2) {
 }
 
 GENERATE_APPLY_FUNCTION(NE)
-template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type NE(const T &pa_roIN1, const U &pa_roIN2) {
+template<typename T, typename U> const CIEC_BOOL NE(const T &pa_roIN1, const U &pa_roIN2) {
   return APPLY<T, U, NE_Function, CIEC_ANY_ELEMENTARY>(pa_roIN1, pa_roIN2);
 }
 
