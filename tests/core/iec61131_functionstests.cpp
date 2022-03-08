@@ -208,6 +208,34 @@ BOOST_AUTO_TEST_CASE(ne_false)
   BOOST_TEST(NE(nInt1, nInt2) == true);
 }
 
+BOOST_AUTO_TEST_CASE(eq_true_mixed_types)
+{
+  CIEC_LINT nLint1(10);
+  CIEC_INT nInt2(10);
+  BOOST_TEST(EQ(nLint1, nInt2) == true);
+}
+
+BOOST_AUTO_TEST_CASE(eq_false_mixed_types)
+{
+  CIEC_LINT nLint1(10);
+  CIEC_INT nInt2(-10);
+  BOOST_TEST(EQ(nLint1, nInt2) == false);
+}
+
+BOOST_AUTO_TEST_CASE(ne_true_mixed_types)
+{
+  CIEC_LINT nLint1(10);
+  CIEC_INT nInt2(10);
+  BOOST_TEST(NE(nLint1, nInt2) == false);
+}
+
+BOOST_AUTO_TEST_CASE(ne_false_mixed_types)
+{
+  CIEC_LINT nLint1(10);
+  CIEC_INT nInt2(-10);
+  BOOST_TEST(NE(nLint1, nInt2) == true);
+}
+
 BOOST_AUTO_TEST_CASE(implicit_bool_casts)
 {
   bool bSame = forte::core::mpl::is_same<CIEC_BOOL, forte::core::mpl::implicit_cast<CIEC_BOOL, CIEC_BOOL>::type>::value;
