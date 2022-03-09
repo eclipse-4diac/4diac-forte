@@ -104,12 +104,12 @@ bool CHttpComLayer::checkSDInPOSTAndPUT(size_t paNoOfSD) {
   bool evetythingOK = true;
 
   if(0 == paNoOfSD) {
-    if("" == mReqData) {
+    if(CIEC_STRING("") == mReqData) {
       DEVLOG_ERROR("[HTTP Layer] You are using a POST/PUT FB but no data is defined as SD nor as parameters in PARAMS\n");
       evetythingOK = false;
     }
   } else if(1 == paNoOfSD) {
-    if("" != mReqData) {
+    if(CIEC_STRING("") != mReqData) {
       DEVLOG_WARNING("[HTTP Layer] Parameters in PARAMS are ignored for PUT/POST request data and SDs are sent instead\n");
     }
     mHasParameterInSD = true;
@@ -177,7 +177,7 @@ bool CHttpComLayer::handleAddress(const char* paAddress, size_t paNoOfSDs) {
 
   //look for parameters
   CParameterParser parser(paAddress, '?', 2); //IP:PORT/PATH?PARAMETERS
-  CIEC_STRING addressToParse = paAddress;
+  CIEC_STRING addressToParse(paAddress);
   if(2 == parser.parseParameters() && (e_PUT == mRequestType || e_POST == mRequestType)) {
     if(0 == paNoOfSDs) { //if SDs are present, the parameters in PARAMS are ignored
       mReqData = parser[1];
@@ -233,7 +233,7 @@ void CHttpComLayer::sendDataAsServer(const void *paData) {
   if(!serializeData(apoSDs[0])) {
     error = true;
   } else {
-    CHttpParser::createResponse(mRequest, "HTTP/1.1 200 OK", mContentType, mReqData);
+    CHttpParser::createResponse(mRequest, CIEC_STRING("HTTP/1.1 200 OK"), mContentType, mReqData);
   }
   if(error) {
     getExtEvHandler<CHTTP_Handler>().forceClose(this);
@@ -327,8 +327,8 @@ EComResponse forte::com_infra::CHttpComLayer::recvServerData(CSinglyLinkedList<C
 
   if(failed) {
     CIEC_STRING toSend;
-    CIEC_STRING result = "HTTP/1.1 400 Bad Request";
-    mReqData = "";
+    CIEC_STRING result("HTTP/1.1 400 Bad Request");
+    mReqData = CIEC_STRING("");
     CHttpParser::createResponse(toSend, result, mContentType, mReqData);
     getExtEvHandler<CHTTP_Handler>().sendServerAnswerFromRecv(this, toSend);
     mInterruptResp = e_ProcessDataDataTypeError;

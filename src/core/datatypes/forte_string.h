@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN, nxtControl GmbH
- *   2018 TU Wien/ACIN
+ *               2018 TU Wien/ACIN
+ *               2022 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -14,6 +15,8 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians
  *      - fixes behavior for getToStringBufferSize
+ *    Martin Melik Merkumians - make const char* constructor explicit, adds copy
+ *      constructor
  *******************************************************************************/
 #ifndef _FORTE_STRING_H_
 #define _FORTE_STRING_H_
@@ -31,10 +34,10 @@ class CIEC_STRING : public CIEC_ANY_STRING{
     CIEC_STRING(){
     }
 
-    // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
-    // Maybe when we have better code generators we want to make this constructur explicit again and generate it
-    // cppcheck-suppress noExplicitConstructor
-    CIEC_STRING(const char* pa_pacValue){
+    CIEC_STRING(const CIEC_STRING& paValue) : CIEC_ANY_STRING(paValue) {
+    }
+
+    explicit CIEC_STRING(const char* pa_pacValue){
       (*this) = pa_pacValue;
     }
 

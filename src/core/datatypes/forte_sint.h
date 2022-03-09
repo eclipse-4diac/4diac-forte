@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN
+ *               2022 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,6 +11,7 @@
  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
  *    Ingo Hegny, Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians - make TForteInt8 constructor explicit
  *******************************************************************************/
 #ifndef _FORTE_SINT_H_
 #define _FORTE_SINT_H_
@@ -36,10 +38,7 @@ class CIEC_SINT : public CIEC_ANY_INT{
       setValueSimple(paValue);
     }
 
-    // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
-    // Maybe when we have better code generators we want to make this constructor explicit again and generate it
-    // cppcheck-suppress noExplicitConstructor
-    CIEC_SINT(TForteInt8 paValue){
+    explicit CIEC_SINT(TForteInt8 paValue){
       setTINT8(paValue);
     }
 

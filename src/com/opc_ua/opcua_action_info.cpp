@@ -32,7 +32,7 @@ CActionInfo::~CActionInfo() {
 }
 
 bool CActionInfo::isRemote() const {
-  return ("" != mEndpoint);
+  return (CIEC_STRING("") != mEndpoint);
 }
 
 CActionInfo* CActionInfo::getActionInfoFromParams(const char *paParams, COPC_UA_Layer &paLayer) {
@@ -143,7 +143,7 @@ bool CActionInfo::checkAction() const {
 bool CActionInfo::checkNodePairInfo() const {
   bool retVal = true;
   for(CSinglyLinkedList<CNodePairInfo*>::Iterator it = mNodePair.begin(); it != mNodePair.end(); ++it) {
-    if("" == (*it)->mBrowsePath && 0 == (*it)->mNodeId) { //browsePath AND/OR NodeId must be given. If both are empty there's a problem
+    if(CIEC_STRING("") == (*it)->mBrowsePath && 0 == (*it)->mNodeId) { //browsePath AND/OR NodeId must be given. If both are empty there's a problem
       DEVLOG_ERROR("[OPC UA ACTION]: BrowsePath and NodeId are empty in FB %s\n", mLayer.getCommFB()->getInstanceName());
       retVal = false;
       break;
@@ -154,7 +154,7 @@ bool CActionInfo::checkNodePairInfo() const {
 
 bool CActionInfo::checkReadAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const {
   bool retVal = false;
-  if("" == mEndpoint) {
+  if(CIEC_STRING("") == mEndpoint) {
     if(forte::com_infra::e_Subscriber == paFbType && paNoOfRDs == getNoOfNodePairs()) {
       retVal = true;
     } else {
@@ -176,7 +176,7 @@ bool CActionInfo::checkReadAction(forte::com_infra::EComServiceType paFbType, un
 
 bool CActionInfo::checkWriteAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const {
   bool retVal = false;
-  if("" == mEndpoint) {
+  if(CIEC_STRING("") == mEndpoint) {
     if(forte::com_infra::e_Publisher == paFbType && paNoOfSDs == getNoOfNodePairs()) {
       retVal = true;
     } else {
@@ -209,7 +209,7 @@ bool CActionInfo::checkCreateMethodAction(forte::com_infra::EComServiceType paFb
 
 bool CActionInfo::checkCallMethodAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int) const {
   bool retVal = false;
-  if(forte::com_infra::e_Client == paFbType && 1 == getNoOfNodePairs() && "" != (*(mNodePair.begin()))->mBrowsePath) {
+  if(forte::com_infra::e_Client == paFbType && 1 == getNoOfNodePairs() && CIEC_STRING("") != (*(mNodePair.begin()))->mBrowsePath) {
     retVal = true;
   } else {
     DEVLOG_ERROR(

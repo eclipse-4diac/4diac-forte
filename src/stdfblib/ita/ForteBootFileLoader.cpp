@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2017 fortiss GmbH
+ *               2022 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +10,8 @@
  * Contributors:
  *   Monika Wenger
  *    - initial API and implementation and/or initial documentation
+ *    Martin Melik Merkumians - changes for removed implicit constructor for
+ *      primitve types
  *******************************************************************************/
 
 #include "ForteBootFileLoader.h"
@@ -51,7 +54,7 @@ bool ForteBootFileLoader::openBootFile() {
   }
 
   // check if we finally have a boot file name
-  if("" == bootFileName){
+  if(CIEC_STRING("") == bootFileName){
     DEVLOG_INFO("No bootfile specified and no default bootfile configured during build\n");
   }else{
     mBootfile = fopen(bootFileName.getValue(), "r");

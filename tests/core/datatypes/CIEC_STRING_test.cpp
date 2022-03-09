@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2011 - 2013 ACIN, nxtControl, Profactor GmbH, fortiss GmbH
- *   2018 TU Wien/ACIN
+ *              2018 TU Wien/ACIN
+ *               2022 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,6 +12,8 @@
  *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna,
  *     Matthias Plasch - initial API and implementation and/or initial documentation
  *   Martin Melik Merkumians - adds getToStringBufferSize tests
+ *    Martin Melik Merkumians - changes for removed implicit constructor for
+ *      primitve types
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 
@@ -32,16 +35,16 @@ BOOST_AUTO_TEST_CASE(String_length)
   CIEC_STRING test1;
   BOOST_CHECK_EQUAL(test1.length(), 0);
 
-  CIEC_STRING test2 = "\0";
+  CIEC_STRING test2("\0");
   BOOST_CHECK_EQUAL(test2.length(), 0);
 
-  CIEC_STRING test3 = "";
+  CIEC_STRING test3("");
   BOOST_CHECK_EQUAL(test3.length(), 0);
 
-  CIEC_STRING test4 = "1\03"; // {'1', '3', '\0'}
+  CIEC_STRING test4("1\03"); // {'1', '3', '\0'}
   BOOST_CHECK_EQUAL(test4.length(), 2);
 
-  CIEC_STRING test5 = "123456789";
+  CIEC_STRING test5("123456789");
   BOOST_CHECK_EQUAL(test5.length(), 9);
 
 }
@@ -51,16 +54,16 @@ BOOST_AUTO_TEST_CASE(String_empty)
   CIEC_STRING test1;
   BOOST_CHECK(test1.empty());
 
-  CIEC_STRING test2 = "\0";
+  CIEC_STRING test2("\0");
   BOOST_CHECK(test2.empty());
 
-  CIEC_STRING test3 = "";
+  CIEC_STRING test3("");
   BOOST_CHECK(test3.empty());
 
-  CIEC_STRING test4 = "1\03";  //{'1', '3', '\0'}
+  CIEC_STRING test4("1\03");  //{'1', '3', '\0'}
   BOOST_CHECK(!test4.empty());
 
-  CIEC_STRING test5 = "12345789";
+  CIEC_STRING test5("12345789");
   BOOST_CHECK(!test5.empty());
 
 }
@@ -72,7 +75,7 @@ BOOST_AUTO_TEST_CASE(String_manipulation_interface)
   BOOST_CHECK_EQUAL(sTest.length(), 0);
   BOOST_CHECK(sTest.empty());
 
-  sTest = cTest;
+  sTest = CIEC_STRING(cTest);
   BOOST_CHECK(! sTest.empty());
   BOOST_CHECK_EQUAL(sTest.length(), 22);
   BOOST_CHECK_EQUAL(strcmp(sTest.getValue(), cTest), 0);
@@ -91,7 +94,7 @@ BOOST_AUTO_TEST_CASE(String_assignment)
   char cTest1[] = "This is another test string!";
   char cTest2[] = "Check string!";
 
-  sTest1 = cTest1;
+  sTest1 = CIEC_STRING(cTest1);
   BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), cTest1), 0);
 
   sTest2 = sTest1;
@@ -100,7 +103,7 @@ BOOST_AUTO_TEST_CASE(String_assignment)
   BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), sTest2.getValue()), 0);
   BOOST_CHECK_EQUAL(sTest1.length(), 28);
   BOOST_CHECK_EQUAL(sTest2.length(), 28);
-  sTest2 = cTest2;
+  sTest2 = CIEC_STRING(cTest2);
   BOOST_CHECK((0 != strcmp(sTest1.getValue(), sTest2.getValue())));
 }
 
@@ -110,19 +113,19 @@ BOOST_AUTO_TEST_CASE(String_clear)
   test1.clear();
   BOOST_CHECK_EQUAL(test1.length(), 0);
 
-  CIEC_STRING test2 = "";
+  CIEC_STRING test2("");
   test2.clear();
   BOOST_CHECK_EQUAL(test2.length(), 0);
 
-  CIEC_STRING test3 = "\0";
+  CIEC_STRING test3("\0");
   test3.clear();
   BOOST_CHECK_EQUAL(test3.length(), 0);
 
-  CIEC_STRING test4 = "1\03";  //{'1', '3', '\0'}
+  CIEC_STRING test4("1\03");  //{'1', '3', '\0'}
   test4.clear();
   BOOST_CHECK_EQUAL(test4.length(), 0);
 
-  CIEC_STRING test5 = "123456789";
+  CIEC_STRING test5("123456789");
   test5.clear();
   BOOST_CHECK_EQUAL(test5.length(), 0);
 
@@ -130,7 +133,7 @@ BOOST_AUTO_TEST_CASE(String_clear)
 
 BOOST_AUTO_TEST_CASE(String_re_assignment)
 {
-  CIEC_STRING test1 = "123456789";
+  CIEC_STRING test1("123456789");
   BOOST_CHECK_EQUAL(test1.length(), 9);
 
   test1.clear();
@@ -166,7 +169,7 @@ BOOST_AUTO_TEST_CASE(String_re_assignment)
 
 BOOST_AUTO_TEST_CASE(String_append)
 {
-  CIEC_STRING test1 = "123456789";
+  CIEC_STRING test1("123456789");
   BOOST_CHECK_EQUAL(test1.length(), 9);
 
   test1.append("");
@@ -240,34 +243,35 @@ BOOST_AUTO_TEST_CASE(String_compare)
   BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), cTest1), 0);
   
 
-  BOOST_CHECK(sTest1 == cTest2);
+  BOOST_CHECK(sTest1 == CIEC_STRING(cTest2));
   BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), cTest1), 0);
 
-  BOOST_CHECK(cTest2 == sTest1);
+  BOOST_CHECK(CIEC_STRING(cTest2) == sTest1);
   BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), cTest1), 0);
 
-  BOOST_CHECK(!(sTest1 == cTest3));
+  BOOST_CHECK(!(sTest1 == CIEC_STRING(cTest3)));
   BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), cTest1), 0);
 
-  BOOST_CHECK(!(cTest3 == sTest1));
+  BOOST_CHECK(!(CIEC_STRING(cTest3) == sTest1));
   BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), cTest1), 0);
 
-  BOOST_CHECK(sTest2 != cTest3);
+  BOOST_CHECK(sTest2 != CIEC_STRING(cTest3));
   BOOST_CHECK_EQUAL(strcmp(sTest2.getValue(), cTest2), 0);
 
-  BOOST_CHECK(cTest3 != sTest2);
+  BOOST_CHECK(CIEC_STRING(cTest3) != sTest2);
   BOOST_CHECK_EQUAL(strcmp(sTest2.getValue(), cTest2), 0);
 
-  BOOST_CHECK(!(sTest2 != cTest1));
+  BOOST_CHECK(!(sTest2 != CIEC_STRING(cTest1)));
   BOOST_CHECK_EQUAL(strcmp(sTest2.getValue(), cTest2), 0);
 
-  BOOST_CHECK(!(cTest1 != sTest2));
+  BOOST_CHECK(!(CIEC_STRING(cTest1) != sTest2));
   BOOST_CHECK_EQUAL(strcmp(sTest2.getValue(), cTest2), 0);
 }
 
 BOOST_AUTO_TEST_CASE(String_binary_interface)
 {
-  CIEC_STRING sTest1, sTest2;
+  CIEC_STRING sTest1;
+  CIEC_STRING sTest2;
   char cTest[] = "This is a test\0string!"; //embedded \0, length 22 without trailing \0
   BOOST_CHECK_EQUAL(sTest1.length(), 0);
   sTest1.assign(cTest, static_cast<TForteUInt16>(sizeof(cTest)-1));
@@ -295,15 +299,15 @@ BOOST_AUTO_TEST_CASE(Memory_Allocation)
   BOOST_CHECK_EQUAL(sTest.length(), 0);
   BOOST_CHECK_EQUAL(strlen(sTest.getValue()),0);
   BOOST_CHECK_EQUAL(sTest.getValue()[0],'\0');
-  sTest = "Test";
+  sTest = CIEC_STRING("Test");
   BOOST_CHECK_EQUAL(sTest.length(), 4);
-  sTest = "Test with more than ten characters";
+  sTest = CIEC_STRING("Test with more than ten characters");
   BOOST_CHECK_EQUAL(sTest.length(), 34);
 
-  sTest = "Test Test";
+  sTest = CIEC_STRING("Test Test");
   BOOST_CHECK_EQUAL(sTest.length(), 9);
 
-  sTest = "";
+  sTest = CIEC_STRING("");
   BOOST_CHECK_EQUAL(sTest.length(), 0);
 }
 
@@ -550,7 +554,7 @@ BOOST_AUTO_TEST_CASE(String_toString)
 
 BOOST_AUTO_TEST_CASE(String_toString_faultcase_buffer_size_zero)
 {
-  CIEC_STRING testString = "4diac 4 ever!";
+  CIEC_STRING testString("4diac 4 ever!");
   const size_t bufferSize = 50;
   char cStringBuffer[bufferSize];
 

@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2018 ACIN, Profactor GmbH, fortiss GmbH,
  *                           Johannes Kepler University
+ *               2022 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,6 +12,8 @@
  *    Alois Zoitl, Rene Smodic, Gerhard Ebenhofer, Thomas Strasser,
  *    Martin Melik Merkumians,
  *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians - modify for removed implicit constructors
+ *         for primitive types
  *******************************************************************************/
 #include <fortenew.h>
 #include "resource.h"
@@ -474,22 +477,22 @@ void CResource::createDataInterfaceResponseMessage(const SFBInterfaceSpec* paInt
 
 void CResource::createAdapterInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, CIEC_STRING& paReqResult){
   if(paInterfaceSpec->m_nNumAdapters > 0){
-    CIEC_STRING sockets = "";
-    CIEC_STRING plugs = "";
+    CIEC_STRING sockets("");
+    CIEC_STRING plugs("");
     for(int i = 0; i < paInterfaceSpec->m_nNumAdapters; i++){
       if(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_bIsPlug){
-        createInterfaceResponseMessage(plugs, "AdapterDeclaration", CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID), CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterTypeNameID));
+        createInterfaceResponseMessage(plugs, "AdapterDeclaration", CIEC_STRING(CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID)), CIEC_STRING(CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterTypeNameID)));
       }
       else{
-        createInterfaceResponseMessage(sockets, "AdapterDeclaration", CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID), CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterTypeNameID));
+        createInterfaceResponseMessage(sockets, "AdapterDeclaration", CIEC_STRING(CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID)), CIEC_STRING(CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterTypeNameID)));
       }
     }
-    if(plugs != ""){
+    if(plugs != CIEC_STRING("")){
       paReqResult.append("<Plugs>\n         ");
       paReqResult.append(plugs.getValue());
       paReqResult.append("</Plugs>\n   ");
     }
-    if(sockets != ""){
+    if(sockets != CIEC_STRING("")){
       paReqResult.append("<Sockets>\n         ");
       paReqResult.append(sockets.getValue());
       paReqResult.append("</Sockets>\n   ");
@@ -502,10 +505,10 @@ void CResource::createInterfaceResponseMessages(CIEC_STRING &paReqResult, const 
     const int pa_nNumberOfElements, const TDataIOID* paEWith, const TForteInt16* paEWithIndexes, const CStringDictionary::TStringId* paDNameList){
   for(int nIndex = 0; nIndex < pa_nNumberOfElements; nIndex++){
     if(NULL != paTypeList){
-      createInterfaceResponseMessage(paReqResult, pa_pcType, CStringDictionary::getInstance().get(paNameList[nIndex]), CStringDictionary::getInstance().get(paTypeList[nIndex]));
+      createInterfaceResponseMessage(paReqResult, pa_pcType, CIEC_STRING(CStringDictionary::getInstance().get(paNameList[nIndex])), CIEC_STRING(CStringDictionary::getInstance().get(paTypeList[nIndex])));
     }
     else{
-      createInterfaceResponseMessage(paReqResult, pa_pcType, CStringDictionary::getInstance().get(paNameList[nIndex]), "Event", paEWith, paEWithIndexes, nIndex, paDNameList);
+      createInterfaceResponseMessage(paReqResult, pa_pcType, CIEC_STRING(CStringDictionary::getInstance().get(paNameList[nIndex])), CIEC_STRING("Event"), paEWith, paEWithIndexes, nIndex, paDNameList);
     }
   }
 }

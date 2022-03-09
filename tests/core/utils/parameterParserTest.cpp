@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2013 fortiss GmbH
+ *               2022 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +9,8 @@
  *
  * Contributors:
  *   Alois Zoitl  - initial API and implementation and/or initial documentation
+ *    Martin Melik Merkumians - changes for removed implicit constructor for
+ *      primitve types
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "../../../src/core/utils/parameterParser.h"
@@ -36,7 +39,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_SourceStringRemainsUntouched) {
-    CIEC_STRING stringTest = "123,456";
+    CIEC_STRING stringTest("123,456");
     CParameterParser test1(stringTest.getValue(), ',');
     CParameterParser test2(stringTest.getValue(), ',', 2);
     CParameterParser test3(stringTest.getValue(), ',', 1);
@@ -63,7 +66,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_InitializedToZero) {
-    CIEC_STRING stringTest = "123,456";
+    CIEC_STRING stringTest("123,456");
     CParameterParser test1(stringTest.getValue(), ',');
     CParameterParser test2(stringTest.getValue(), ',', 2);
     CParameterParser test3(stringTest.getValue(), ',', 1);
@@ -85,7 +88,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_RegularParams) {
-    CIEC_STRING stringTest = "123,456";
+    CIEC_STRING stringTest("123,456");
     CParameterParser test1(stringTest.getValue(), ',');
     CParameterParser test2(stringTest.getValue(), ',', 2);
     CParameterParser test3(stringTest.getValue(), ',', 1);
@@ -106,7 +109,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_EmptyString) {
-    CIEC_STRING stringTest = "";
+    CIEC_STRING stringTest = CIEC_STRING("");
     CParameterParser test1(stringTest.getValue(), ',');
     CParameterParser test2(stringTest.getValue(), ',', 2);
     CParameterParser test3(stringTest.getValue(), ',', 1);
@@ -128,7 +131,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_BlankSpaces) {
-    CIEC_STRING stringTest = "  1  2 3 ,             4 56     ,       789              ";
+    CIEC_STRING stringTest("  1  2 3 ,             4 56     ,       789              ");
     CParameterParser test1(stringTest.getValue(), ',');
     CParameterParser test2(stringTest.getValue(), ',', 2);
     CParameterParser test3(stringTest.getValue(), ',', 1);
@@ -154,7 +157,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_EmptyParameters) {
-    CIEC_STRING stringTest = ",123,456,,789,";
+    CIEC_STRING stringTest(",123,456,,789,");
     CParameterParser test1(stringTest.getValue(), ',');
     CParameterParser test2(stringTest.getValue(), ',', 2);
     CParameterParser test3(stringTest.getValue(), ',', 1);
@@ -175,7 +178,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_OtherSeparatorPresentInString) {
-    CIEC_STRING stringTest = " 123, 456, 789   ";
+    CIEC_STRING stringTest(" 123, 456, 789   ");
     CParameterParser test1(stringTest.getValue(), '5');
     CParameterParser test2(stringTest.getValue(), '5', 2);
     CParameterParser test3(stringTest.getValue(), '5', 1);
@@ -195,7 +198,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_OtherSeparatorNonPresentInString) {
-    CIEC_STRING stringTest = " 123, 456, 789   ";
+    CIEC_STRING stringTest(" 123, 456, 789   ");
     CParameterParser test1(stringTest.getValue(), ';');
     CParameterParser test2(stringTest.getValue(), ';', 2);
     CParameterParser test3(stringTest.getValue(), ';', 1);
@@ -221,7 +224,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_BlankSpaceSeparator) {
-    CIEC_STRING stringTest = " 123, 456, 789   ";
+    CIEC_STRING stringTest(" 123, 456, 789   ");
     CParameterParser test1(stringTest.getValue(), ' ');
     CParameterParser test2(stringTest.getValue(), ' ', 2);
     CParameterParser test3(stringTest.getValue(), ' ', 1);
@@ -241,7 +244,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_OnlyBlankSpace) {
-    CIEC_STRING stringTest = "   "; //3 Blank Spaces
+    CIEC_STRING stringTest("   "); //3 Blank Spaces
     CParameterParser test1(stringTest.getValue(), ',');
     CParameterParser test2(stringTest.getValue(), ',', 2);
     CParameterParser test3(stringTest.getValue(), ',', 1);
@@ -262,7 +265,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_EmptyParametersWithBlankSpace) {
-    CIEC_STRING stringTest = " , ";
+    CIEC_STRING stringTest(" , ");
     CParameterParser test1(stringTest.getValue(), ',');
     CParameterParser test2(stringTest.getValue(), ',', 2);
     CParameterParser test3(stringTest.getValue(), ',', 1);
@@ -284,7 +287,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_EmptyParametersWithBlankSpaceAndEndingInParameter) {
-    CIEC_STRING stringTest = " , ,";
+    CIEC_STRING stringTest(" , ,");
     CParameterParser test1(stringTest.getValue(), ',');
     CParameterParser test2(stringTest.getValue(), ',', 2);
     CParameterParser test3(stringTest.getValue(), ',', 1);
@@ -308,7 +311,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_OnlySeparator) {
-    CIEC_STRING stringTest = ",,,";
+    CIEC_STRING stringTest(",,,");
     CParameterParser test1(stringTest.getValue(), ',');
     CParameterParser test2(stringTest.getValue(), ',', 2);
     CParameterParser test3(stringTest.getValue(), ',', 1);
@@ -332,7 +335,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_OnlyBlankSpaceSeparator) {
-    CIEC_STRING stringTest = "   "; //3 Blank Spaces
+    CIEC_STRING stringTest("   "); //3 Blank Spaces
     CParameterParser test1(stringTest.getValue(), ' ');
     CParameterParser test2(stringTest.getValue(), ' ', 2);
     CParameterParser test3(stringTest.getValue(), ' ', 1);
@@ -357,7 +360,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_SerialCase1) {
-    CIEC_STRING stringTest = "COM1, 19200, 8, 1, NONE, $n";
+    CIEC_STRING stringTest("COM1, 19200, 8, 1, NONE, $n");
     CParameterParser test1(stringTest.getValue(), ',');
     CParameterParser test2(stringTest.getValue(), ',', 2);
     CParameterParser test3(stringTest.getValue(), ',', 1);
@@ -382,7 +385,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_SerialCase2) {
-    CIEC_STRING stringTest = "COM1, 19200, 8, 1, NONE, $r$n";
+    CIEC_STRING stringTest("COM1, 19200, 8, 1, NONE, $r$n");
     CParameterParser test1(stringTest.getValue(), ',');
     CParameterParser test2(stringTest.getValue(), ',', 2);
     CParameterParser test3(stringTest.getValue(), ',', 1);

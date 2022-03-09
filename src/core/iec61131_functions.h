@@ -552,9 +552,9 @@ template<typename T, typename U> typename forte::core::mpl::get_castable_type<T,
 
 template<typename T> const T MOD(const T &pa_roIN1, const T &pa_roIN2) {
   if(0 == pa_roIN2) {
-    return static_cast<typename T::TValueType>(0);
+    return T(0);
   }
-  return static_cast<typename T::TValueType>(pa_roIN1.getSignedValue() % pa_roIN2.getSignedValue());
+  return T(pa_roIN1.getSignedValue() % pa_roIN2.getSignedValue());
 }
 template<typename T> const T MOVE(const T &pa_roIN) {
   return static_cast<typename T::TValueType>(pa_roIN);
@@ -724,10 +724,12 @@ template<typename T> const T LEFT(const T &pa_rsIn, const CIEC_ANY_INT &pa_roL) 
       temp.reserve(static_cast<TForteUInt16>(pa_roL.getUnsignedValue()));
       memcpy(temp.getValue(), pa_rsIn.getValue(), static_cast<TForteUInt16>(pa_roL.getUnsignedValue()));
       temp.getValue()[pa_roL.getUnsignedValue()] = '\0';
-      return temp.getValue();
+      temp.assign(temp.getValue(), pa_roL.getUnsignedValue());
+      return temp;
     }
   }
 }
+
 template<typename T> const T RIGHT(const T &pa_rsIn, const CIEC_ANY_INT &pa_roL) {
   if(true == pa_roL.isSigned() && 0 > pa_roL.getSignedValue()) {
     DEVLOG_ERROR("value of input L is less than zero");
@@ -742,7 +744,8 @@ template<typename T> const T RIGHT(const T &pa_rsIn, const CIEC_ANY_INT &pa_roL)
       memcpy(temp.getValue(), pa_rsIn.getValue() + (pa_rsIn.length() - static_cast<TForteUInt16>(pa_roL.getUnsignedValue())),
         static_cast<TForteUInt16>(pa_roL.getUnsignedValue()));
       temp.getValue()[pa_roL.getUnsignedValue()] = '\0';
-      return temp.getValue();
+      temp.assign(temp.getValue(), pa_roL.getUnsignedValue());
+      return temp;
     }
   }
 }

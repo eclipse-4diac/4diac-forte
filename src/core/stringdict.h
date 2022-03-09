@@ -34,7 +34,7 @@ public:
   /*!\brief Get a string from the dictionary
    *
    * \param pa_nId String id
-   * \return true the found string or 0 if not found
+   * \return the found string or 0 if not found
    */
   const char *get(TStringId pa_nId);
 
