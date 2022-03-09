@@ -140,7 +140,7 @@ bool IODeviceController::isHandleValueEqual(IOHandle*) {
 }
 
 void IODeviceController::addHandle(THandleList* paList, CIEC_WSTRING const &paId, IOHandle* paHandle) {
-  if(paId != "" && IOMapper::getInstance().registerHandle(paId, paHandle)) {
+  if(paId != CIEC_WSTRING("") && IOMapper::getInstance().registerHandle(paId, paHandle)) {
     CCriticalRegion criticalRegion(mHandleMutex);
     paList->pushBack(paHandle);
   } else {

@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN, nxtControl GmbH
  *   2018 TU Wien/ACIN
+ *               2022 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -12,12 +13,14 @@
  *    Martin Melik Merkumians, Matthias Plasch, Monika Wenger
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians
- *      - fixes behavior for getToStringBufferSize
+ *      - fixes behavior for getToStringBufferSize, make const char*
+ *        constructor explicit
  *******************************************************************************/
 #ifndef _FORTE_WSTRING_H_
 #define _FORTE_WSTRING_H_
 
 #include "forte_any_string.h"
+#include "forte_string.h"
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
 
@@ -26,25 +29,24 @@
  *  "wstring" is implemented like the "string" - the following first implementation
  *  "typedef std::basic_string<wchar_t> TWSTRING; didn't work well"
  */
-class CIEC_WSTRING : public CIEC_ANY_STRING{
+class CIEC_WSTRING : public CIEC_ANY_STRING {
   DECLARE_FIRMWARE_DATATYPE(WSTRING)
   public:
-    CIEC_WSTRING(){
+    CIEC_WSTRING() {
     }
 
     CIEC_WSTRING(const CIEC_WSTRING& pa_roValue) :
-        CIEC_ANY_STRING(){
-      (*this) = pa_roValue.getValue();
+        CIEC_ANY_STRING(pa_roValue) {
     }
 
-    CIEC_WSTRING(const char* pa_pacValue){
+    explicit CIEC_WSTRING(const char* pa_pacValue) {
       (*this) = pa_pacValue;
     }
 
-    virtual ~CIEC_WSTRING(){
+    virtual ~CIEC_WSTRING() {
     }
 
-    CIEC_WSTRING &operator =(const char* const pa_pacValue){
+    CIEC_WSTRING &operator =(const char* const pa_pacValue) {
       CIEC_ANY_STRING::operator =(pa_pacValue);
       return *this;
     }
@@ -98,11 +100,11 @@ class CIEC_WSTRING : public CIEC_ANY_STRING{
      */
     int toUTF16(TForteByte* pa_pacBuffer, unsigned int pa_nBufferSize) const;
 
-    virtual EDataTypeID getDataTypeID() const{
+    virtual EDataTypeID getDataTypeID() const {
       return CIEC_ANY::e_WSTRING;
     }
 
-    virtual void setValue(const CIEC_ANY& pa_roValue){
+    virtual void setValue(const CIEC_ANY& pa_roValue) {
       if(pa_roValue.getDataTypeID() == CIEC_ANY::e_WSTRING){
         const CIEC_WSTRING &roSrc(static_cast<const CIEC_WSTRING &>(pa_roValue));
         this->assign(roSrc.getValue(), roSrc.length());
@@ -151,12 +153,12 @@ class CIEC_WSTRING : public CIEC_ANY_STRING{
 };
 
 inline
-bool operator ==(const CIEC_WSTRING &pa_roLeft, const CIEC_WSTRING &pa_roRight){
+bool operator ==(const CIEC_WSTRING &pa_roLeft, const CIEC_WSTRING &pa_roRight) {
   return (0 == strcmp(pa_roLeft.getValue(), pa_roRight.getValue()));
 }
 
 inline
-bool operator !=(const CIEC_WSTRING &pa_roLeft, const CIEC_WSTRING &pa_roRight){
+bool operator !=(const CIEC_WSTRING &pa_roLeft, const CIEC_WSTRING &pa_roRight) {
   return !(pa_roLeft == pa_roRight);
 }
 
