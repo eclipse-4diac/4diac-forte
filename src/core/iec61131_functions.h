@@ -587,7 +587,7 @@ GENERATE_APPLY_FUNCTION(ADD)
 
 template<typename T> struct ADD_Scalar {
     static T call(const T pa_roIN1, const T pa_roIN2) {
-      return pa_roIN1 + pa_roIN2;
+      return T(pa_roIN1 + pa_roIN2);
     }
 };
 
@@ -596,14 +596,14 @@ template<typename T, typename U> typename forte::core::mpl::get_castable_type<T,
 }
 
 template<typename T> const T ADD(const T &pa_roIN1, const T &pa_roIN2) {
-  return pa_roIN1 + pa_roIN2;
+  return T(pa_roIN1 + pa_roIN2);
 }
 
 GENERATE_APPLY_FUNCTION(MUL)
 
 template<typename T> struct MUL_Scalar {
     static T call(const T pa_roIN1, const T pa_roIN2) {
-      return pa_roIN1 * pa_roIN2;
+      return T(pa_roIN1 * pa_roIN2);
     }
 };
 
@@ -612,14 +612,14 @@ template<typename T, typename U> typename forte::core::mpl::get_castable_type<T,
 }
 
 template<typename T> const T MUL(const T &pa_roIN1, const T &pa_roIN2) {
-  return pa_roIN1 * pa_roIN2;
+  return T(pa_roIN1 * pa_roIN2);
 }
 
 GENERATE_APPLY_FUNCTION(SUB)
 
 template<typename T> struct SUB_Scalar {
     static T call(const T pa_roIN1, const T pa_roIN2) {
-      return pa_roIN1 - pa_roIN2;
+      return T(pa_roIN1 - pa_roIN2);
     }
 };
 
@@ -628,7 +628,7 @@ template<typename T, typename U> typename forte::core::mpl::get_castable_type<T,
 }
 
 template<typename T> const T SUB(const T &pa_roIN1, const T &pa_roIN2) {
-  return pa_roIN1 - pa_roIN2;
+  return T(pa_roIN1 - pa_roIN2);
 }
 
 GENERATE_APPLY_FUNCTION(DIV)
@@ -675,18 +675,18 @@ const CIEC_DATE_AND_TIME CONCAT_DATE_TOD(const CIEC_DATE& pa_roIN1, const CIEC_T
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 template<typename T> const CIEC_TIME MULTIME(const CIEC_TIME& pa_roIN1, const T& pa_roIN2){
-  return static_cast<TForteInt64>(pa_roIN1 * pa_roIN2);
+  return CIEC_TIME(pa_roIN1 * pa_roIN2);
 }
 #else
 template<typename T> const CIEC_TIME MULTIME(const CIEC_TIME &pa_roIN1, const T &pa_roIN2) {
-  return static_cast<TForteInt32>(pa_roIN1 * pa_roIN2);
+  return CIEC_TIME(pa_roIN1 * pa_roIN2);
 }
 #endif
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 template<typename T> const CIEC_TIME DIVTIME(const CIEC_TIME& pa_roIN1, const T& pa_roIN2){
   if(0 != pa_roIN2){
-    return static_cast<TForteInt64>(pa_roIN1 / pa_roIN2);
+    return CIEC_TIME(pa_roIN1 / pa_roIN2);
   }else{
     return pa_roIN1;
   }
@@ -694,7 +694,7 @@ template<typename T> const CIEC_TIME DIVTIME(const CIEC_TIME& pa_roIN1, const T&
 #else
 template<typename T> const CIEC_TIME DIVTIME(const CIEC_TIME &pa_roIN1, const T &pa_roIN2) {
   if(0 != pa_roIN2) {
-    return static_cast<TForteInt32>(pa_roIN1 / pa_roIN2);
+    return CIEC_TIME(pa_roIN1 / pa_roIN2);
   } else {
     return pa_roIN1;
   }

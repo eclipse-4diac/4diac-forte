@@ -68,7 +68,7 @@ void FORTE_RT_E_DELAY::executeEvent(int paEIID){
       break;
     case scm_nEventSTARTID:
       if((!mActive)&&(mInitialized)){
-        getTimer().registerTimedFB( &mTimeListEntry, DT());
+        getTimer().registerTimedFB(&mTimeListEntry, DT());
         mActive = true;
       }
       break;
@@ -83,7 +83,7 @@ void FORTE_RT_E_DELAY::executeEvent(int paEIID){
       else{
        // m_oECEO.end();
         mInitialized = false;
-        mECEO.setDeadline(static_cast<CIEC_TIME::TValueType>(0));
+        mECEO.setDeadline(CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0)));
       }
       QO() = QI();
       sendOutputEvent(scm_nEventINITOID);

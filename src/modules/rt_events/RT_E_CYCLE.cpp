@@ -60,7 +60,7 @@ void FORTE_RT_E_CYCLE::executeEvent(int paEIID){
       break;
     case scm_nEventSTOPID:
       if(mActive){
-        mECEO.setDeadline(static_cast<CIEC_TIME::TValueType>(0));
+        mECEO.setDeadline(CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0)));
         getTimer().unregisterTimedFB(this);
         mActive = false;
       }
