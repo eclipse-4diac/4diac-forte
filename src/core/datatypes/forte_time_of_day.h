@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2008 - 2013 nxtControl GmbH, ACIN, Profactor GmbH, fortiss GmbH
+ *               2022 Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -11,6 +12,7 @@
  *    Stanislav Meduna, Alois Zoitl, Gerhard Ebenhofer, Martin Melik Merkumians,
  *    Monika Wenger
  *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians - make TForteUInt64 constructor explicit
  *******************************************************************************/
 #ifndef _FORTE_TOD_H_
 #define _FORTE_TOD_H_
@@ -37,10 +39,7 @@ class CIEC_TIME_OF_DAY : public CIEC_ANY_DATE{
       setValueSimple(paValue);
     }
 
-    // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
-    // Maybe when we have better code generators we want to make this constructor explicit again and generate it
-    // cppcheck-suppress noExplicitConstructor
-    CIEC_TIME_OF_DAY(TForteUInt64 paValue){
+    explicit CIEC_TIME_OF_DAY(TForteUInt64 paValue){
       setTUINT64(paValue);
     }
 

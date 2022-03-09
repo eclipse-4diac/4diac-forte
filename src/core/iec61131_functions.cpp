@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2011 - 2013, 2018 ACIN, fortiss GmbH, 2019 TU Wien/ACIN
+ *               2022 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,7 +10,8 @@
  * Contributors:
  *    Alois Zoitl, Monika Wenger
  *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - adds NOW and NOW_MONOTONIC functions
+ *    Martin Melik Merkumians - adds NOW and NOW_MONOTONIC functions, 
+ *        changes for removed implicit constructor for primitive types
  *******************************************************************************/
 #include "iec61131_functions.h"
 
@@ -33,7 +35,7 @@ TForteInt64 TRUNC(const CIEC_LREAL& pa_roIN){
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 const CIEC_TIME_OF_DAY ADD_TOD_TIME(const CIEC_TIME_OF_DAY& pa_roIN1, const CIEC_TIME& pa_roIN2){
-  return static_cast<TForteUInt64>(pa_roIN1 + pa_roIN2.getInMilliSeconds());
+  return CIEC_TIME_OF_DAY(static_cast<TForteUInt64>(pa_roIN1 + pa_roIN2.getInMilliSeconds()));
 }
 
 const CIEC_DATE_AND_TIME ADD_DT_TIME(const CIEC_DATE_AND_TIME& pa_roIN1, const CIEC_TIME& pa_roIN2){
@@ -41,7 +43,7 @@ const CIEC_DATE_AND_TIME ADD_DT_TIME(const CIEC_DATE_AND_TIME& pa_roIN1, const C
 }
 
 const CIEC_TIME_OF_DAY SUB_TOD_TIME(const CIEC_TIME_OF_DAY& pa_roIN1, const CIEC_TIME& pa_roIN2){
-  return static_cast<TForteUInt64>(pa_roIN1 - pa_roIN2.getInMilliSeconds());
+  return CIEC_TIME_OF_DAY(static_cast<TForteUInt64>(pa_roIN1 - pa_roIN2.getInMilliSeconds()));
 }
 
 const CIEC_DATE_AND_TIME SUB_DT_TIME(const CIEC_DATE_AND_TIME& pa_roIN1, const CIEC_TIME& pa_roIN2){
