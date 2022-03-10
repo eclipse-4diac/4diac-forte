@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2008 - 2013 nxtControl GmbH, ACIN, fortiss GmbH
+ *               2022 Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,6 +11,7 @@
  * Contributors:
  *    Stanislav Meduna, Alois Zoitl, Martin Melik Merkumians, Monika Wenger
  *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians - make TForteUInt64 constructor explicit
  *******************************************************************************/
 #ifndef _FORTE_DATE_H_
 #define _FORTE_DATE_H_
@@ -21,7 +23,7 @@
 /*!\ingroup COREDTS CIEC_DATE represents the time data types according to IEC 61131.
  */
 
-class CIEC_DATE : public CIEC_ANY_DATE{
+class CIEC_DATE : public CIEC_ANY_DATE {
   DECLARE_FIRMWARE_DATATYPE(DATE)
   public:
     typedef TForteUInt64 TValueType;
@@ -30,14 +32,11 @@ class CIEC_DATE : public CIEC_ANY_DATE{
     }
 
     CIEC_DATE(const CIEC_DATE& paValue) :
-        CIEC_ANY_DATE(){
+        CIEC_ANY_DATE() {
       setValueSimple(paValue);
     }
 
-    // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
-    // Maybe when we have better code generators we want to make this constructor explicit again and generate it
-    // cppcheck-suppress noExplicitConstructor
-    CIEC_DATE(TForteUInt64 paValue){
+    explicit CIEC_DATE(TForteUInt64 paValue) {
       setTUINT64(paValue);
     }
 
@@ -52,12 +51,12 @@ class CIEC_DATE : public CIEC_ANY_DATE{
      *   \return Can be the following response:
      *     - Pointer to given object.
      */
-    CIEC_DATE& operator =(TForteUInt64 paValue){
+    CIEC_DATE& operator =(TForteUInt64 paValue) {
       setTUINT64(paValue);
       return *this;
     }
 
-    CIEC_DATE& operator =(const CIEC_DATE &paValue){
+    CIEC_DATE& operator =(const CIEC_DATE &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
@@ -70,7 +69,7 @@ class CIEC_DATE : public CIEC_ANY_DATE{
      *   \return Can be the following response:
      *     - Pointer to given object.
      */
-    CIEC_DATE& operator ++(void){
+    CIEC_DATE& operator ++(void) {
       setTUINT64(getTUINT64() + 1);
       return *this;
     }
@@ -78,11 +77,11 @@ class CIEC_DATE : public CIEC_ANY_DATE{
      *
      *   Conversion operator for converting CIEC_SINT to elementary 32 bit integer
      */
-    operator TForteUInt64() const{
+    operator TForteUInt64() const {
       return getTUINT64();
     }
 
-    virtual EDataTypeID getDataTypeID() const{
+    virtual EDataTypeID getDataTypeID() const {
       return CIEC_ANY::e_DATE;
     }
 
