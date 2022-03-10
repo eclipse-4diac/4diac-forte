@@ -557,7 +557,7 @@ template<typename T> const T MOD(const T &pa_roIN1, const T &pa_roIN2) {
   return T(pa_roIN1.getSignedValue() % pa_roIN2.getSignedValue());
 }
 template<typename T> const T MOVE(const T &pa_roIN) {
-  return static_cast<typename T::TValueType>(pa_roIN);
+  return T(pa_roIN);
 }
 
 template<typename T, typename U> const T EXPT(const T &pa_roIN1, const U &pa_roIN2) {

@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2009 - 2013 ACIN
+ *               2022 Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,11 +11,19 @@
  * Contributors:
  *    Monika Wenger, Alois Zoitl,
  *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians - make TForteInt64 constructor explicit,
+ *      adds casts constructors
   *******************************************************************************/
 #ifndef _FORTE_LINT_H_
 #define _FORTE_LINT_H_
 
 #include "forte_any_int.h"
+#include "forte_dint.h"
+#include "forte_int.h"
+#include "forte_sint.h"
+#include "forte_udint.h"
+#include "forte_uint.h"
+#include "forte_usint.h"
 #include <limits>
 
 #ifdef FORTE_USE_64BIT_DATATYPES
@@ -38,10 +47,37 @@ class CIEC_LINT : public CIEC_ANY_INT{
       setValueSimple(paValue);
     }
 
-    // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
-    // Maybe when we have better code generators we want to make this constructor explicit again and generate it
-    // cppcheck-suppress noExplicitConstructor
-    CIEC_LINT(TForteInt64 paValue){
+    CIEC_LINT(const CIEC_DINT& paValue) :
+        CIEC_ANY_INT(){
+      setValueSimple(paValue);
+    }
+
+    CIEC_LINT(const CIEC_UDINT& paValue) :
+        CIEC_ANY_INT(){
+      setValueSimple(paValue);
+    }
+
+    CIEC_LINT(const CIEC_INT& paValue) :
+        CIEC_ANY_INT(){
+      setValueSimple(paValue);
+    }
+
+    CIEC_LINT(const CIEC_UINT& paValue) :
+        CIEC_ANY_INT(){
+      setValueSimple(paValue);
+    }
+
+    CIEC_LINT(const CIEC_SINT& paValue) :
+        CIEC_ANY_INT(){
+      setValueSimple(paValue);
+    }
+
+    CIEC_LINT(const CIEC_USINT& paValue) :
+        CIEC_ANY_INT(){
+      setValueSimple(paValue);
+    }
+
+    explicit CIEC_LINT(TForteInt64 paValue){
       setTINT64(paValue);
     }
 
