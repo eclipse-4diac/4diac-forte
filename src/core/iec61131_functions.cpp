@@ -39,7 +39,7 @@ const CIEC_TIME_OF_DAY ADD_TOD_TIME(const CIEC_TIME_OF_DAY& pa_roIN1, const CIEC
 }
 
 const CIEC_DATE_AND_TIME ADD_DT_TIME(const CIEC_DATE_AND_TIME& pa_roIN1, const CIEC_TIME& pa_roIN2){
-  return static_cast<TForteUInt64>(pa_roIN1 + pa_roIN2.getInMilliSeconds());
+  return CIEC_DATE_AND_TIME(static_cast<TForteUInt64>(pa_roIN1 + pa_roIN2.getInMilliSeconds()));
 }
 
 const CIEC_TIME_OF_DAY SUB_TOD_TIME(const CIEC_TIME_OF_DAY& pa_roIN1, const CIEC_TIME& pa_roIN2){
@@ -47,7 +47,7 @@ const CIEC_TIME_OF_DAY SUB_TOD_TIME(const CIEC_TIME_OF_DAY& pa_roIN1, const CIEC
 }
 
 const CIEC_DATE_AND_TIME SUB_DT_TIME(const CIEC_DATE_AND_TIME& pa_roIN1, const CIEC_TIME& pa_roIN2){
-  return static_cast<TForteUInt64>(pa_roIN1 - pa_roIN2.getInMilliSeconds());
+  return CIEC_DATE_AND_TIME(static_cast<TForteUInt64>(pa_roIN1 - pa_roIN2.getInMilliSeconds()));
 }
 
 const CIEC_TIME SUB_DT_DT(const CIEC_DATE_AND_TIME& pa_roIN1, const CIEC_DATE_AND_TIME& pa_roIN2){

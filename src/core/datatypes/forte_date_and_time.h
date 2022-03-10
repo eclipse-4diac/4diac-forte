@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2008 - 2013 nxtControl GmbH, ACIN, fortiss GmbH
+ *               2022 Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,6 +11,7 @@
  * Contributors:
  *    Stanislav Meduna, Alois Zoitl, Martin Melik Merkumians, Monika Wenger
  *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians - make TForteUInt64 constructor explicit
   *******************************************************************************/
 #ifndef _FORTE_DATE_AND_TIME_H_
 #define _FORTE_DATE_AND_TIME_H_
@@ -33,10 +35,7 @@ class CIEC_DATE_AND_TIME : public CIEC_ANY_DATE {
       setValueSimple(paValue);
     }
 
-    // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
-    // Maybe when we have better code generators we want to make this constructur explicit again and generate it
-    // cppcheck-suppress noExplicitConstructor
-    CIEC_DATE_AND_TIME(TForteUInt64 paValue) {
+    explicit CIEC_DATE_AND_TIME(TForteUInt64 paValue) {
       setTUINT64(paValue);
     }
 
@@ -61,7 +60,7 @@ class CIEC_DATE_AND_TIME : public CIEC_ANY_DATE {
       return *this;
     }
 
-  /*! \brief Operator: CIEC_TIME data type operator++
+  /*! \brief Operator: CIEC_DATE_AND_TIME data type operator++
    *
    *   This command implements the increment operator for the IEC61131 data type TIME.
    *   The parameter value is represented by a C++ variable (call by value).

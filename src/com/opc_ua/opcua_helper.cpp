@@ -42,7 +42,7 @@ size_t convertFromIECToOPCUASpecific<CIEC_DATE, UA_DateTime>(const CIEC_ANY & pa
 
 template<>
 size_t convertFromOPCUAToIECSpecific<CIEC_DATE, UA_DateTime>(const void *paSrc, CIEC_ANY &paDest) {
-  static_cast<CIEC_DATE &>(paDest) = DT_TO_DATE(*reinterpret_cast<const TForteUInt64*>(static_cast<const UA_DateTime*>(paSrc)));
+  static_cast<CIEC_DATE &>(paDest) = DT_TO_DATE(CIEC_DATE_AND_TIME(*reinterpret_cast<const TForteUInt64*>(static_cast<const UA_DateTime*>(paSrc))));
   return sizeof(UA_DateTime);
 }
 
