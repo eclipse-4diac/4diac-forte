@@ -755,8 +755,8 @@ template<typename T> const T MID(const T &pa_rsIn, const CIEC_ANY_INT &pa_roL, c
     DEVLOG_ERROR("value of input P is less than zero\n");
     return pa_rsIn;
   } else {
-    CIEC_INT len_right = static_cast<TForteInt16>(pa_rsIn.length() - pa_roP.getUnsignedValue() + 1);
-    CIEC_INT len_left = static_cast<TForteInt16>(pa_roL.getUnsignedValue());
+    CIEC_INT len_right = CIEC_INT(pa_rsIn.length() - pa_roP.getUnsignedValue() + 1);
+    CIEC_INT len_left = CIEC_INT(pa_roL.getUnsignedValue());
     return LEFT(RIGHT(pa_rsIn, len_right), len_left);
   }
 }
@@ -789,7 +789,7 @@ template<typename T> const T INSERT(const T &paIn1, const T &paIn2, const CIEC_A
     DEVLOG_ERROR("P exceeds input string length!\n");
     return paIn1;
   }
-  CIEC_INT positionRight = static_cast<TForteInt16>(paIn1.length() - paP.getSignedValue());
+  CIEC_INT positionRight = CIEC_INT(paIn1.length() - paP.getSignedValue());
   return CONCAT(CONCAT(LEFT(paIn1, paP), paIn2), RIGHT(paIn1, positionRight));
 }
 
@@ -844,8 +844,8 @@ template<typename T> const T REPLACE(const T &paIn1, const T &paIn2, const CIEC_
     DEVLOG_ERROR("REPLACE exceeds length of string!\n");
   }
 
-  CIEC_INT positionRight = static_cast<CIEC_INT::TValueType>(paIn1.length() - (L + P - 1));
-  CIEC_INT positionLeft = static_cast<CIEC_INT::TValueType>(P - 1);
+  CIEC_INT positionRight = CIEC_INT(paIn1.length() - (L + P - 1));
+  CIEC_INT positionLeft = CIEC_INT(P - 1);
   return CONCAT(CONCAT(LEFT(paIn1, positionLeft), paIn2), RIGHT(paIn1, positionRight));
 }
 

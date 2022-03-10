@@ -241,7 +241,7 @@ BOOST_AUTO_TEST_CASE(Array_copy_test){
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(*nTest1[3]), 4);
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(*nTest1[4]), 5);
 
-  CIEC_INT intTest = 5;
+  CIEC_INT intTest(5);
   nTest1.setValue(intTest); //try to assign non-array. Shouldn't change or break anything
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(*nTest1[0]), 1);
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(*nTest1[1]), 2);
