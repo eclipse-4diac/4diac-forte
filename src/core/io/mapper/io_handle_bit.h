@@ -36,8 +36,7 @@ namespace forte {
           virtual void dropObserver();
 
           virtual void reset() {
-            CIEC_BOOL s = false;
-            set(s);
+            set(CIEC_BOOL(false));
           }
 
           const uint8_t mOffset;

@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
+ *               2022 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,6 +11,7 @@
  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
  *    Ingo Hegny, Martin Melik-Merkiumians, Monika Wenger
  *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians - make bool constructor explicit
  *******************************************************************************/
 #ifndef _FORTE_BOOL_H_
 #define _FORTE_BOOL_H_
@@ -24,19 +26,16 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
   public:
     typedef bool TValueType;
 
-    CIEC_BOOL(){
+    CIEC_BOOL() {
       setTBOOL8(false);
     }
 
     CIEC_BOOL(const CIEC_BOOL& paValue) :
-        CIEC_ANY_BIT(){
+        CIEC_ANY_BIT() {
       *this = paValue;
     }
 
-    // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
-    // Maybe when we have better code generators we want to make this constructur explicit again and generate it
-    // cppcheck-suppress noExplicitConstructor
-    CIEC_BOOL(bool paValue){
+    explicit CIEC_BOOL(bool paValue) {
       *this = paValue;
     }
 
@@ -51,12 +50,12 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
      *   \return Can be the following response:
      *     - Pointer to given object.
      */
-    CIEC_BOOL& operator =(bool paValue){
+    CIEC_BOOL& operator =(bool paValue) {
       setTBOOL8(paValue);
       return *this;
     }
 
-    CIEC_BOOL& operator =(const CIEC_BOOL &paValue){
+    CIEC_BOOL& operator =(const CIEC_BOOL &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
@@ -66,11 +65,11 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
      *
      *   Conversion operator for converting CIEC_BOOL to elementary bool
      */
-    operator bool() const{
+    operator bool() const {
       return (0 != getLargestUInt());
     }
 
-    virtual EDataTypeID getDataTypeID() const{
+    virtual EDataTypeID getDataTypeID() const {
       return CIEC_ANY::e_BOOL;
     }
 
