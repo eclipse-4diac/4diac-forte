@@ -60,8 +60,8 @@ inline const CIEC_WORD UINT_TO_BCD_WORD(const CIEC_UINT &paVal) {
 
 inline const CIEC_DWORD UDINT_TO_BCD_DWORD(const CIEC_UDINT &paVal) {
   return CIEC_DWORD(
-    static_cast<TForteDWord>((static_cast<TForteDWord>(UINT_TO_BCD_WORD(static_cast<TForteUInt16>(paVal / 10000))) << 16)
-      + static_cast<TForteDWord>(UINT_TO_BCD_WORD(static_cast<TForteUInt16>(paVal % 10000)))));
+    static_cast<TForteDWord>((static_cast<TForteDWord>(UINT_TO_BCD_WORD(CIEC_UINT(static_cast<TForteUInt16>(paVal / 10000)))) << 16)
+      + static_cast<TForteDWord>(UINT_TO_BCD_WORD(CIEC_UINT(static_cast<TForteUInt16>(paVal % 10000))))));
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES

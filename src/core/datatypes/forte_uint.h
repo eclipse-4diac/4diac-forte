@@ -15,6 +15,7 @@
 #define _FORTE_UINT_H_
 
 #include "forte_any_int.h"
+#include "forte_usint.h"
 #include <limits>
 
 /*!\ingroup COREDTS CIEC_UINT represents the uint data type according to IEC 61131.
@@ -36,10 +37,12 @@ class CIEC_UINT : public CIEC_ANY_INT{
       setValueSimple(paValue);
     }
 
-    // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
-    // Maybe when we have better code generators we want to make this constructor explicit again and generate it
-    // cppcheck-suppress noExplicitConstructor
-    CIEC_UINT(TForteUInt16 paValue){
+    CIEC_UINT(const CIEC_USINT& paValue) :
+        CIEC_ANY_INT(){
+      setValueSimple(paValue);
+    }
+
+    explicit CIEC_UINT(TForteUInt16 paValue){
       setTUINT16(paValue);
     }
 

@@ -816,8 +816,8 @@ template<typename T> const T DELETE(const T &paIn, const CIEC_ANY_INT &paL, cons
     return paIn;
   }
 
-  CIEC_UINT positionRight = static_cast<CIEC_UINT::TValueType>(paIn.length() - (L + P - 1));
-  CIEC_UINT positionLeft = static_cast<CIEC_UINT::TValueType>(P - 1);
+  CIEC_UINT positionRight = CIEC_UINT(paIn.length() - (L + P - 1));
+  CIEC_UINT positionLeft = CIEC_UINT(P - 1);
   return CONCAT(LEFT(paIn, positionLeft), RIGHT(paIn, positionRight));
 }
 
