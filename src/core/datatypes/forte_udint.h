@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
+ *               2022 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,11 +11,14 @@
  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
  *    Ingo Hegny, Monika Wenger
  *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians - make TForteUInt32 constructor explicit
  *******************************************************************************/
 #ifndef _FORTE_UDINT_H_
 #define _FORTE_UDINT_H_
 
 #include "forte_any_int.h"
+#include "forte_uint.h"
+#include "forte_usint.h"
 #include <limits>
 
 /*!\ingroup COREDTS CIEC_UDINT represents the udint data type according to IEC 61131.
@@ -32,18 +36,25 @@ class CIEC_UDINT : public CIEC_ANY_INT{
     }
 
     CIEC_UDINT(const CIEC_UDINT& paValue) :
-        CIEC_ANY_INT(){
+        CIEC_ANY_INT() {
       setValueSimple(paValue);
     }
 
-    // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
-    // Maybe when we have better code generators we want to make this constructor explicit again and generate it
-    // cppcheck-suppress noExplicitConstructor
-    CIEC_UDINT(TForteUInt32 paValue){
+    CIEC_UDINT(const CIEC_UINT& paValue) :
+        CIEC_ANY_INT() {
+      setValueSimple(paValue);
+    }
+
+    CIEC_UDINT(const CIEC_USINT& paValue) :
+        CIEC_ANY_INT() {
+      setValueSimple(paValue);
+    }
+
+    explicit CIEC_UDINT(TForteUInt32 paValue){
       setTUINT32(paValue);
     }
 
-    virtual ~CIEC_UDINT(){
+    virtual ~CIEC_UDINT() {
     }
 
     /*! \brief Operator: CIEC_UDINT data type = unsigned long data type

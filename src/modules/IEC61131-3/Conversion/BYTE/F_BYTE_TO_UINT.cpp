@@ -23,7 +23,7 @@ const CStringDictionary::TStringId FORTE_F_BYTE_TO_UINT::scm_anDataInputTypeIds[
 
 const CStringDictionary::TStringId FORTE_F_BYTE_TO_UINT::scm_anDataOutputNames[] = {g_nStringIdOUT};
 
-const CStringDictionary::TStringId FORTE_F_BYTE_TO_UINT::scm_anDataOutputTypeIds[] = {g_nStringIdUDINT};
+const CStringDictionary::TStringId FORTE_F_BYTE_TO_UINT::scm_anDataOutputTypeIds[] = {g_nStringIdUINT};
 
 const TForteInt16 FORTE_F_BYTE_TO_UINT::scm_anEIWithIndexes[] = {0};
 const TDataIOID FORTE_F_BYTE_TO_UINT::scm_anEIWith[] = {0, 255};
@@ -47,6 +47,3 @@ void FORTE_F_BYTE_TO_UINT::executeEvent(int pa_nEIID){
     sendOutputEvent(scm_nEventCNFID);
   }
 }
-
-
-

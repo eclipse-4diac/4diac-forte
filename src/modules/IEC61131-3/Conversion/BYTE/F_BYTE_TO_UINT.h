@@ -15,7 +15,7 @@
 
 #include <funcbloc.h>
 
-class FORTE_F_BYTE_TO_UINT: public CFunctionBlock{
+class FORTE_F_BYTE_TO_UINT : public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_BYTE_TO_UINT)
 
 private:
@@ -27,8 +27,8 @@ private:
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_UDINT &st_OUT() {
-    return *static_cast<CIEC_UDINT*>(getDO(0));
+  CIEC_UINT &st_OUT() {
+    return *static_cast<CIEC_UINT*>(getDO(0));
   };
 
   static const TEventID scm_nEventREQID = 0;
@@ -56,4 +56,3 @@ public:
 };
 
 #endif //close the ifdef sequence from the beginning of the file
-

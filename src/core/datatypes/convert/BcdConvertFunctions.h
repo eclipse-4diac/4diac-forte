@@ -66,7 +66,8 @@ inline const CIEC_DWORD UDINT_TO_BCD_DWORD(const CIEC_UDINT &paVal) {
 
 #ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LWORD ULINT_TO_BCD_LWORD(const CIEC_ULINT &paVal){
-  return CIEC_LWORD(static_cast<TForteLWord>((static_cast<TForteLWord>(UDINT_TO_BCD_DWORD(static_cast<TForteUInt32>(paVal / 100000000))) << 32) + static_cast<TForteLWord>(UDINT_TO_BCD_DWORD(static_cast<TForteUInt32>(paVal % 100000000)))));
+  return CIEC_LWORD(static_cast<TForteLWord>((static_cast<TForteLWord>(UDINT_TO_BCD_DWORD(CIEC_UDINT(static_cast<TForteUInt32>(paVal / 100000000)))) << 32)
+   + static_cast<TForteLWord>(UDINT_TO_BCD_DWORD(CIEC_UDINT(static_cast<TForteUInt32>(paVal % 100000000))))));
 }
 #endif
 
