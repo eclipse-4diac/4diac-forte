@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 Pr3factor GmbH, ACIN, fortiss GmbH
+ *               2022 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,6 +11,7 @@
  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
  *    Ingo Hegny, Martin Melik Merkumians, Monika Wenger
  *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians - make TForteFloat constructor explicit
  *******************************************************************************/
 #ifndef _FORTE_REAL_H_
 #define _FORTE_REAL_H_
@@ -27,18 +29,15 @@ class CIEC_REAL : public CIEC_ANY_REAL{
   public:
     typedef TForteFloat TValueType;
 
-    CIEC_REAL(){
+    CIEC_REAL() {
     }
 
     CIEC_REAL(const CIEC_REAL& paValue) :
-        CIEC_ANY_REAL(){
+        CIEC_ANY_REAL() {
       setValueSimple(paValue);
     }
 
-    // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
-    // Maybe when we have better code generators we want to make this constructor explicit again and generate it
-    // cppcheck-suppress noExplicitConstructor
-    CIEC_REAL(TForteFloat paValue){
+    explicit CIEC_REAL(TForteFloat paValue) {
       setTFLOAT(paValue);
     }
 

@@ -563,7 +563,7 @@ template<typename T> const T MOVE(const T &pa_roIN) {
 template<typename T, typename U> const T EXPT(const T &pa_roIN1, const U &pa_roIN2) {
   FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_REAL, T>::value), In1NotOfTypeAnyReal);
   FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_NUM, T>::value), In1NotOfTypeAnyNum);
-  return static_cast<typename T::TValueType>(pow(pa_roIN1, pa_roIN2));
+  return T(pow(pa_roIN1, pa_roIN2));
 }
 
 //specialisation of function for base type double.
