@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2010 - 2015 TU Vienna/ACIN, Profactor GmbH, fortiss GmbH,
- *    2018-2019 TU Vienna/ACIN
+ *                      2018-2019 TU Vienna/ACIN
+ *               2022 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,9 +12,9 @@
  *    Alois Zoitl, Ingo Hegny, Monika Wenger, Carolyn Oates, Patrick Smejkal,
  *    Matthias Plasch,
  *      - initial implementation and rework communication infrastructure
- *    Martin Melik-Merkumians - fixes DT_TO_TOD
- *    Martin Melik-Merkumians - removes invalid casts, update implementation
- *     to use new cast function
+ *    Martin Melik-Merkumians - fixes DT_TO_TOD, removes invalid casts,
+ *        update implementation to use new cast function, changes for removed 
+ *        implicit constructor for primitve types
  *******************************************************************************/
 
 #ifndef SRC_CORE_DATATYPES_CONVERT_BCDCONVERTFUNCTIONS_H_
@@ -53,8 +54,8 @@ inline const CIEC_BYTE USINT_TO_BCD_BYTE(const CIEC_USINT &paVal) {
 
 inline const CIEC_WORD UINT_TO_BCD_WORD(const CIEC_UINT &paVal) {
   return CIEC_WORD(
-    static_cast<TForteWord>((static_cast<TForteWord>(USINT_TO_BCD_BYTE(static_cast<TForteUInt8>(paVal / 100))) << 8)
-      + static_cast<TForteWord>(USINT_TO_BCD_BYTE(static_cast<TForteUInt8>(paVal % 100)))));
+    static_cast<TForteWord>((static_cast<TForteWord>(USINT_TO_BCD_BYTE(CIEC_USINT(static_cast<TForteUInt8>(paVal / 100))) << 8))
+      + static_cast<TForteWord>(USINT_TO_BCD_BYTE(CIEC_USINT(static_cast<TForteUInt8>(paVal % 100))))));
 }
 
 inline const CIEC_DWORD UDINT_TO_BCD_DWORD(const CIEC_UDINT &paVal) {
