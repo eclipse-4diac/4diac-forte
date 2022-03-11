@@ -407,7 +407,6 @@ BOOST_AUTO_TEST_CASE(LREAL_Castable_test)
 
 BOOST_AUTO_TEST_CASE(Explict_cast_operator_to_LREAL)
 {
-
   CIEC_USINT nUsint(2);
   CIEC_UINT nUint(3);
   CIEC_UDINT nUdint(4);
@@ -444,6 +443,14 @@ BOOST_AUTO_TEST_CASE(Explict_cast_operator_to_LREAL)
   BOOST_TEST(nResult == 11);
   nResult = CIEC_ANY::cast<CIEC_LREAL>(nLword);
   BOOST_TEST(nResult == 11);
+}
+
+BOOST_AUTO_TEST_CASE(REAL_TO_LREAL_cast_constructor)
+{
+  CIEC_REAL realValue(36.0f);
+  CIEC_LREAL lrealValue(realValue);
+
+  BOOST_CHECK_EQUAL(36.0, lrealValue);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

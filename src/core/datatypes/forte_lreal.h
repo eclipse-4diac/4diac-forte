@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
+ *               2022 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,11 +11,14 @@
  *    Thomas Strasser, Ingomar Müller, Alois Zoitl,
  *    Ingo Hegny, Monika Wenger, Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
+ *    Martin Melik Merkumians - make TForteDFloat constructor explicit, 
+ *      adds implicit cast constructor and operator=
  *******************************************************************************/
 #ifndef _FORTE_LREAL_H_
 #define _FORTE_LREAL_H_
 
 #include "forte_any_real.h"
+#include "forte_real.h"
 
 /*!\ingroup COREDTS CIEC_LREAL represents the lreal data type according to IEC 61131.
  */
@@ -32,10 +36,12 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
       setValueSimple(paValue);
     }
 
-    // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
-    // Maybe when we have better code generators we want to make this constructor explicit again and generate it
-    // cppcheck-suppress noExplicitConstructor
-    CIEC_LREAL(TForteDFloat paValue){
+    CIEC_LREAL(const CIEC_REAL& paValue) :
+        CIEC_ANY_REAL(){
+      setValue(paValue);
+    }
+
+    explicit CIEC_LREAL(TForteDFloat paValue){
       setTDFLOAT(paValue);
     }
 
@@ -58,6 +64,11 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
     CIEC_LREAL& operator =(const CIEC_LREAL &paValue){
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
+      return *this;
+    }
+
+    CIEC_LREAL& operator =(const CIEC_REAL &paValue){
+      setValue(paValue);
       return *this;
     }
 
