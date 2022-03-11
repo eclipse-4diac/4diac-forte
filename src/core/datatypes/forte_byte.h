@@ -14,7 +14,7 @@
  *      - initial implementation and rework communication infrastructure
  *    Ernst Blecha - add multibit partial access
  *    Martin Melik Merkumians - changes multibit access index from template
- *      parameter to call argument
+ *      parameter to call argument, make TForteByte constructor explicit
  *******************************************************************************/
 #ifndef _FORTE_BYTE_H_
 #define _FORTE_BYTE_H_
@@ -34,7 +34,7 @@ class CIEC_BYTE : public CIEC_ANY_BIT{
     static const TValueType scm_nMinVal = 0;
     static const TValueType scm_nMaxVal;
 
-    CIEC_BYTE(){
+    CIEC_BYTE() {
     }
 
     CIEC_BYTE(const CIEC_BYTE& paValue) :
@@ -42,7 +42,7 @@ class CIEC_BYTE : public CIEC_ANY_BIT{
       setValueSimple(paValue);
     }
 
-    explicit CIEC_BYTE(TForteByte paValue){
+    explicit CIEC_BYTE(TForteByte paValue) {
       setTUINT8(paValue);
     }
 
@@ -72,11 +72,11 @@ class CIEC_BYTE : public CIEC_ANY_BIT{
      *
      *   Conversion operator for converting CIEC_BYTE to elementary byte
      */
-    operator TForteByte() const{
+    operator TForteByte() const {
       return getTUINT8();
     }
 
-    virtual EDataTypeID getDataTypeID() const{
+    virtual EDataTypeID getDataTypeID() const {
       return CIEC_ANY::e_BYTE;
     }
 
