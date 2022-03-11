@@ -13,7 +13,8 @@
  *      - initial implementation and rework communication infrastructure
  *    Ernst Blecha - add multibit partial access
  *    Martin Melik Merkumians - changes multibit access index from template
- *      parameter to call argument
+ *      parameter to call argument, make TForteLWord constructor explicit, adds
+ *      implicit cast constructor
   *******************************************************************************/
 #ifndef _FORTE_LWORD_H_
 #define _FORTE_LWORD_H_
@@ -47,10 +48,22 @@ class CIEC_LWORD : public CIEC_ANY_BIT{
       setValueSimple(paValue);
     }
 
-    // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
-    // Maybe when we have better code generators we want to make this constructor explicit again and generate it
-    // cppcheck-suppress noExplicitConstructor
-    CIEC_LWORD(TForteLWord paValue){
+    CIEC_LWORD(const CIEC_DWORD& paValue) :
+        CIEC_ANY_BIT(){
+      setValueSimple(paValue);
+    }
+
+    CIEC_LWORD(const CIEC_WORD& paValue) :
+        CIEC_ANY_BIT(){
+      setValueSimple(paValue);
+    }
+
+    CIEC_LWORD(const CIEC_BYTE& paValue) :
+        CIEC_ANY_BIT(){
+      setValueSimple(paValue);
+    }
+
+    explicit CIEC_LWORD(TForteLWord paValue){
       setTUINT64(paValue);
     }
     virtual ~CIEC_LWORD(){
@@ -87,7 +100,7 @@ class CIEC_LWORD : public CIEC_ANY_BIT{
       return CIEC_ANY::e_LWORD;
     }
 
-    /*! \brief Partial access within a CIEC_LWORD (e.g. [LWORD].partial<CIEC_BOOL,1>())
+    /*! \brief Partial access within a CIEC_LWORD (e.g. [LWORD].partial<CIEC_BOOL>(1))
      *
      */
     template <class T> PARTIAL_ACCESS<T, CIEC_LWORD> partial(size_t paIndex){
