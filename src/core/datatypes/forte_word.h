@@ -14,7 +14,8 @@
  *      - initial implementation and rework communication infrastructure
  *    Ernst Blecha - add multibit partial access
  *    Martin Melik Merkumians - changes multibit access index from template
- *      parameter to call argument
+ *      parameter to call argument, make TForteWord constructor explicit, adds
+ *      implicit cast constructor
  *******************************************************************************/
 #ifndef _FORTE_WORD_H_
 #define _FORTE_WORD_H_
@@ -43,10 +44,12 @@ class CIEC_WORD : public CIEC_ANY_BIT{
       setValueSimple(paValue);
     }
 
-    // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
-    // Maybe when we have better code generators we want to make this constructor explicit again and generate it
-    // cppcheck-suppress noExplicitConstructor
-    CIEC_WORD(TForteWord pa_cValue){
+    CIEC_WORD(const CIEC_BYTE& paValue) :
+        CIEC_ANY_BIT(){
+      setValueSimple(paValue);
+    }
+
+    explicit CIEC_WORD(TForteWord pa_cValue) {
       setTUINT16(pa_cValue);
     }
 
@@ -61,12 +64,12 @@ class CIEC_WORD : public CIEC_ANY_BIT{
      *   \return Can be the following response:
      *     - Pointer to given object.
      */
-    CIEC_WORD& operator =(TForteWord paValue){
+    CIEC_WORD& operator =(TForteWord paValue) {
       setTUINT16(paValue);
       return *this;
     }
 
-    CIEC_WORD& operator =(const CIEC_WORD &paValue){
+    CIEC_WORD& operator =(const CIEC_WORD &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
@@ -76,18 +79,18 @@ class CIEC_WORD : public CIEC_ANY_BIT{
      *
      *   Conversion operator for converting CIEC_WORD to elementary word
      */
-    operator TForteWord() const{
+    operator TForteWord() const {
       return getTUINT16();
     }
 
-    virtual EDataTypeID getDataTypeID() const{
+    virtual EDataTypeID getDataTypeID() const {
       return CIEC_ANY::e_WORD;
     }
 
-    /*! \brief Partial access within a CIEC_WORD (e.g. [WORD].partial<CIEC_BOOL,1>())
+    /*! \brief Partial access within a CIEC_WORD (e.g. [WORD].partial<CIEC_BOOL>(1))
      *
      */
-    template <class T> PARTIAL_ACCESS<T, CIEC_WORD> partial(size_t paIndex){
+    template <class T> PARTIAL_ACCESS<T, CIEC_WORD> partial(size_t paIndex) {
       return PARTIAL_ACCESS<T,CIEC_WORD>(*this, paIndex);
     }
 
