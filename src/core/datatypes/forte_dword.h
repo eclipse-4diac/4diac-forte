@@ -14,7 +14,8 @@
  *      - initial implementation and rework communication infrastructure
  *    Ernst Blecha - add multibit partial access
  *    Martin Melik Merkumians - changes multibit access index from template
- *      parameter to call argument
+ *      parameter to call argument, make TForteDWord constructor explicit, adds
+ *      implicit cast constructor
  *******************************************************************************/
 #ifndef _FORTE_DWORD_H_
 #define _FORTE_DWORD_H_
@@ -27,7 +28,7 @@
 
 /*!\ingroup COREDTS CIEC_DWORD represents the dword data type according to IEC 61131.
  */
-class CIEC_DWORD : public CIEC_ANY_BIT{
+class CIEC_DWORD : public CIEC_ANY_BIT {
   DECLARE_FIRMWARE_DATATYPE(DWORD)
 
   public:
@@ -40,18 +41,25 @@ class CIEC_DWORD : public CIEC_ANY_BIT{
     }
 
     CIEC_DWORD(const CIEC_DWORD& paValue) :
-        CIEC_ANY_BIT(){
+        CIEC_ANY_BIT() {
       setValueSimple(paValue);
     }
 
-    // We don't want this constructor to be explicit as it simplifies code generation for ST algorithms
-    // Maybe when we have better code generators we want to make this constructor explicit again and generate it
-    // cppcheck-suppress noExplicitConstructor
-    CIEC_DWORD(TForteDWord paValue){
+    CIEC_DWORD(const CIEC_WORD& paValue) :
+        CIEC_ANY_BIT() {
+      setValueSimple(paValue);
+    }
+
+    CIEC_DWORD(const CIEC_BYTE& paValue) :
+        CIEC_ANY_BIT() {
+      setValueSimple(paValue);
+    }
+
+    explicit CIEC_DWORD(TForteDWord paValue) {
       setTUINT32(paValue);
     }
 
-    virtual ~CIEC_DWORD(){
+    virtual ~CIEC_DWORD() {
     }
 
     /*! \brief Operator: CIEC_DWORD data type = long data type
@@ -62,12 +70,12 @@ class CIEC_DWORD : public CIEC_ANY_BIT{
      *   \return Can be the following response:
      *     - Pointer to given object.
      */
-    CIEC_DWORD& operator =(TForteDWord paValue){
+    CIEC_DWORD& operator =(TForteDWord paValue) {
       setTUINT32(paValue);
       return *this;
     }
 
-    CIEC_DWORD& operator =(const CIEC_DWORD &paValue){
+    CIEC_DWORD& operator =(const CIEC_DWORD &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
@@ -77,18 +85,18 @@ class CIEC_DWORD : public CIEC_ANY_BIT{
      *
      *   Conversion operator for converting CIEC_DWORD to elementary word
      */
-    operator TForteDWord() const{
+    operator TForteDWord() const {
       return getTUINT32();
     }
 
-    virtual EDataTypeID getDataTypeID() const{
+    virtual EDataTypeID getDataTypeID() const {
       return CIEC_ANY::e_DWORD;
     }
 
-    /*! \brief Partial access within a CIEC_DWORD (e.g. [DWORD].partial<CIEC_BOOL,1>())
+    /*! \brief Partial access within a CIEC_DWORD (e.g. [DWORD].partial<CIEC_BOOL>(1))
      *
      */
-    template <class T> PARTIAL_ACCESS<T, CIEC_DWORD> partial(size_t paIndex){
+    template <class T> PARTIAL_ACCESS<T, CIEC_DWORD> partial(size_t paIndex) {
       return PARTIAL_ACCESS<T,CIEC_DWORD>(*this, paIndex);
     }
 
