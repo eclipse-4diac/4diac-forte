@@ -425,11 +425,7 @@ template<typename T, typename U> const CIEC_BOOL GT(const T &pa_roIN1, const U &
 }
 
 template<typename T> const CIEC_BOOL GT(const T &pa_roIN1, const T &pa_roIN2) {
-  CIEC_BOOL temp(false);
-  if(pa_roIN1 > pa_roIN2) {
-    temp = true;
-  }
-  return temp;
+  return CIEC_BOOL(pa_roIN1 > pa_roIN2);
 }
 
 template<typename T, typename U> const CIEC_BOOL EQ(const T &pa_roIN1, const U &pa_roIN2) {
@@ -439,11 +435,7 @@ template<typename T, typename U> const CIEC_BOOL EQ(const T &pa_roIN1, const U &
 }
 
 template<typename T> const CIEC_BOOL EQ(const T &pa_roIN1, const T &pa_roIN2) {
-  CIEC_BOOL temp(false);
-  if(pa_roIN1 == pa_roIN2) {
-    temp = true;
-  }
-  return temp;
+  return CIEC_BOOL(pa_roIN1 == pa_roIN2);
 }
 
 template<typename T, typename U> const CIEC_BOOL GE(const T &pa_roIN1, const U &pa_roIN2) {
@@ -455,11 +447,7 @@ template<typename T, typename U> const CIEC_BOOL GE(const T &pa_roIN1, const U &
 }
 
 template<typename T> const CIEC_BOOL GE(const T &pa_roIN1, const T &pa_roIN2) {
-  CIEC_BOOL temp(false);
-  if(pa_roIN1 >= pa_roIN2) {
-    temp = true;
-  }
-  return temp;
+  return CIEC_BOOL(pa_roIN1 >= pa_roIN2);
 }
 
 template<typename T, typename U> const CIEC_BOOL LE(const T &pa_roIN1, const U &pa_roIN2) {
@@ -471,11 +459,7 @@ template<typename T, typename U> const CIEC_BOOL LE(const T &pa_roIN1, const U &
 }
 
 template<typename T> const CIEC_BOOL LE(const T &pa_roIN1, const T &pa_roIN2) {
-  CIEC_BOOL temp(false);
-  if(pa_roIN1 <= pa_roIN2) {
-    temp = true;
-  }
-  return temp;
+  return CIEC_BOOL(pa_roIN1 <= pa_roIN2);
 }
 
 template<typename T, typename U> const CIEC_BOOL LT(const T &pa_roIN1, const U &pa_roIN2) {
@@ -487,11 +471,7 @@ template<typename T, typename U> const CIEC_BOOL LT(const T &pa_roIN1, const U &
 }
 
 template<typename T> const CIEC_BOOL LT(const T &pa_roIN1, const T &pa_roIN2) {
-  CIEC_BOOL temp(false);
-  if(pa_roIN1 < pa_roIN2) {
-    temp = true;
-  }
-  return temp;
+  return CIEC_BOOL(pa_roIN1 < pa_roIN2);
 }
 
 template<typename T, typename U> const CIEC_BOOL NE(const T &pa_roIN1, const U &pa_roIN2) {
@@ -501,11 +481,7 @@ template<typename T, typename U> const CIEC_BOOL NE(const T &pa_roIN1, const U &
 }
 
 template<typename T> const CIEC_BOOL NE(const T &pa_roIN1, const T &pa_roIN2) {
-  CIEC_BOOL temp(false);
-  if(pa_roIN1 != pa_roIN2) {
-    temp = true;
-  }
-  return temp;
+  return CIEC_BOOL(pa_roIN1 != pa_roIN2);
 }
 
 template<typename T, typename U> const typename forte::core::mpl::get_castable_type<T, U>::type SEL(const CIEC_BOOL &G, const T &IN0, const U &IN1) {
