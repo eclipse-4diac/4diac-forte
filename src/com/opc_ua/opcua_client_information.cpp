@@ -325,7 +325,7 @@ bool CUA_ClientInformation::initializeAction(CActionInfo& paActionInfo) {
         itNodePair != paActionInfo.getNodePairInfo().end();
         ++itNodePair, runnerHelper++) {
 
-      if(!somethingFailed && CIEC_STRING("") != (*itNodePair)->mBrowsePath) { //if browsepath was given, look for NodeId, even if NodeID was also provided
+      if(!somethingFailed && !(*itNodePair)->mBrowsePath.empty()) { //if browsepath was given, look for NodeId, even if NodeID was also provided
         UA_NodeId *nodeId;
         UA_StatusCode retVal = COPC_UA_Helper::getRemoteNodeForPath(*mClient, (*itNodePair)->mBrowsePath.getValue(), 0, &nodeId); //we don't care about the parent
 

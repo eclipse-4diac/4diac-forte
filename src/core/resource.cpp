@@ -477,8 +477,8 @@ void CResource::createDataInterfaceResponseMessage(const SFBInterfaceSpec* paInt
 
 void CResource::createAdapterInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, CIEC_STRING& paReqResult){
   if(paInterfaceSpec->m_nNumAdapters > 0){
-    CIEC_STRING sockets("");
-    CIEC_STRING plugs("");
+    CIEC_STRING sockets;
+    CIEC_STRING plugs;
     for(int i = 0; i < paInterfaceSpec->m_nNumAdapters; i++){
       if(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_bIsPlug){
         createInterfaceResponseMessage(plugs, "AdapterDeclaration", CIEC_STRING(CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID)), CIEC_STRING(CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterTypeNameID)));
@@ -487,12 +487,12 @@ void CResource::createAdapterInterfaceResponseMessage(const SFBInterfaceSpec* pa
         createInterfaceResponseMessage(sockets, "AdapterDeclaration", CIEC_STRING(CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID)), CIEC_STRING(CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterTypeNameID)));
       }
     }
-    if(plugs != CIEC_STRING("")){
+    if(!plugs.empty()){
       paReqResult.append("<Plugs>\n         ");
       paReqResult.append(plugs.getValue());
       paReqResult.append("</Plugs>\n   ");
     }
-    if(sockets != CIEC_STRING("")){
+    if(!sockets.empty()){
       paReqResult.append("<Sockets>\n         ");
       paReqResult.append(sockets.getValue());
       paReqResult.append("</Sockets>\n   ");

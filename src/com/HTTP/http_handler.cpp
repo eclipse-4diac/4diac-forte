@@ -232,7 +232,7 @@ void CHTTP_Handler::handlerReceivedWrongPath(const CIPComSocketHandler::TSocketD
   CIEC_STRING toSend;
   CIEC_STRING result("HTTP/1.1 404 Not Found");
   CIEC_STRING mContentType("text/html");
-  CIEC_STRING mReqData("");
+  CIEC_STRING mReqData;
   CHttpParser::createResponse(toSend, result, mContentType, mReqData);
   if(toSend.length() != CIPComSocketHandler::sendDataOnTCP(paSocket, toSend.getValue(), toSend.length())) {
     DEVLOG_ERROR("[HTTP Handler]: Error sending back the answer %s \n", toSend.getValue());

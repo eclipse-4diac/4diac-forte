@@ -104,12 +104,12 @@ bool CHttpComLayer::checkSDInPOSTAndPUT(size_t paNoOfSD) {
   bool evetythingOK = true;
 
   if(0 == paNoOfSD) {
-    if(CIEC_STRING("") == mReqData) {
+    if(mReqData.empty()) {
       DEVLOG_ERROR("[HTTP Layer] You are using a POST/PUT FB but no data is defined as SD nor as parameters in PARAMS\n");
       evetythingOK = false;
     }
   } else if(1 == paNoOfSD) {
-    if(CIEC_STRING("") != mReqData) {
+    if(!mReqData.empty()) {
       DEVLOG_WARNING("[HTTP Layer] Parameters in PARAMS are ignored for PUT/POST request data and SDs are sent instead\n");
     }
     mHasParameterInSD = true;
@@ -328,7 +328,7 @@ EComResponse forte::com_infra::CHttpComLayer::recvServerData(CSinglyLinkedList<C
   if(failed) {
     CIEC_STRING toSend;
     CIEC_STRING result("HTTP/1.1 400 Bad Request");
-    mReqData = CIEC_STRING("");
+    mReqData.clear();
     CHttpParser::createResponse(toSend, result, mContentType, mReqData);
     getExtEvHandler<CHTTP_Handler>().sendServerAnswerFromRecv(this, toSend);
     mInterruptResp = e_ProcessDataDataTypeError;

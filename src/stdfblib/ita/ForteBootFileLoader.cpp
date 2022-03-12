@@ -54,7 +54,7 @@ bool ForteBootFileLoader::openBootFile() {
   }
 
   // check if we finally have a boot file name
-  if(CIEC_STRING("") == bootFileName){
+  if(bootFileName.empty()){
     DEVLOG_INFO("No bootfile specified and no default bootfile configured during build\n");
   }else{
     mBootfile = fopen(bootFileName.getValue(), "r");

@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_SUITE (HTTPParser_function_test)
 
 
     CIEC_STRING dest("random text");
-    CIEC_STRING destEmpty("");
+    CIEC_STRING destEmpty;
     CIEC_STRING host("0.0.0.0");
     CIEC_STRING path("/");
     CIEC_STRING data("key1=val1;key2=val2");
@@ -94,7 +94,7 @@ BOOST_AUTO_TEST_SUITE (HTTPParser_function_test)
     BOOST_CHECK_EQUAL(0, strcmp(dest.getValue(), postResultValid1));
 
     BOOST_CHECK_EQUAL(false, forte::com_infra::CHttpParser::changePutPostData(destEmpty, data));
-    dataChanged = CIEC_STRING("");
+    dataChanged.clear();
     BOOST_CHECK_EQUAL(false, forte::com_infra::CHttpParser::changePutPostData(destEmpty, dataChanged));
 
     host = CIEC_STRING("192.168.0.1");
@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_SUITE (HTTPParser_function_test)
     forte::com_infra::CHttpParser::createPutPostRequest(dest, host, path, data, contentType, forte::com_infra::CHttpComLayer::e_POST);
     BOOST_CHECK_EQUAL(0, strcmp(dest.getValue(), postResultValid4));
 
-    data = CIEC_STRING("");
+    data.clear();
     forte::com_infra::CHttpParser::createPutPostRequest(dest, host, path, data, contentType, forte::com_infra::CHttpComLayer::e_PUT);
     BOOST_CHECK_EQUAL(0, strcmp(dest.getValue(), putEmptyData));
     forte::com_infra::CHttpParser::createPutPostRequest(dest, host, path, data, contentType, forte::com_infra::CHttpComLayer::e_POST);
@@ -143,7 +143,7 @@ BOOST_AUTO_TEST_SUITE (HTTPParser_function_test)
     BOOST_CHECK_EQUAL(0, strcmp(body.getValue(), "key1=val1;key2=val2"));
     BOOST_CHECK_EQUAL(0, strcmp(responseCode.getValue(), "200"));
 
-    responseCode = CIEC_STRING("");
+    responseCode.clear();
     BOOST_CHECK_EQUAL(true, forte::com_infra::CHttpParser::parseResponse(body, responseCode, validReponseNoBody.getValue()));
     BOOST_CHECK_EQUAL(0, strcmp(body.getValue(), ""));
     BOOST_CHECK_EQUAL(0, strcmp(responseCode.getValue(), "200"));
@@ -166,7 +166,7 @@ BOOST_AUTO_TEST_SUITE (HTTPParser_function_test)
     forte::com_infra::CHttpParser::createResponse(dest, result, contentType, data);
     BOOST_CHECK_EQUAL(0, strcmp(dest.getValue(), validResult));
 
-    data = CIEC_STRING("");
+    data.clear();
     forte::com_infra::CHttpParser::createResponse(dest, result, contentType, data);
     BOOST_CHECK_EQUAL(0, strcmp(dest.getValue(), validResultNoBody));
 

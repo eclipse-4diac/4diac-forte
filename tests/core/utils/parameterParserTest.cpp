@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_EmptyString) {
-    CIEC_STRING stringTest = CIEC_STRING("");
+    CIEC_STRING stringTest;
     CParameterParser test1(stringTest.getValue(), ',');
     CParameterParser test2(stringTest.getValue(), ',', 2);
     CParameterParser test3(stringTest.getValue(), ',', 1);

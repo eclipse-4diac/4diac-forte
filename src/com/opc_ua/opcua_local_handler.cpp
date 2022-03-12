@@ -855,7 +855,7 @@ UA_StatusCode COPC_UA_Local_Handler::initializeCreateNode(CActionInfo &paActionI
 
   CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator it = paActionInfo.getNodePairInfo().back();
 
-  if(CIEC_STRING("") == (*it)->mBrowsePath) { //the browsename of the instance is mandatory
+  if((*it)->mBrowsePath.empty()) { //the browsename of the instance is mandatory
     retVal = UA_STATUSCODE_BADINTERNALERROR;
     DEVLOG_ERROR("[OPC UA LOCAL]: The BrowsePath of the instance is mandatory for creating a node at FB %s. Error: %s\n",
       paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
@@ -1135,7 +1135,7 @@ UA_StatusCode COPC_UA_Local_Handler::getNode(CActionInfo::CNodePairInfo &paNodeP
   UA_StatusCode retVal = UA_STATUSCODE_GOOD;
   *paIsPresent = false;
 
-  if(CIEC_STRING("") != paNodePairInfo.mBrowsePath) {
+  if(!paNodePairInfo.mBrowsePath.empty()) {
     UA_BrowsePath *browsePaths = 0;
     size_t pathCount = 0;
     size_t firstNonExistingNode = 0;
@@ -1316,7 +1316,7 @@ UA_StatusCode COPC_UA_Local_Handler::splitAndCreateFolders(const CIEC_STRING &pa
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
   if(splitFoldersFromNode(paBrowsePath, folders, paNodeName)) {
     retVal = UA_STATUSCODE_GOOD;
-    if(CIEC_STRING("") != folders) {
+    if(!folders.empty()) {
       retVal = createFolders(folders.getValue(), paRreferencedNodes);
     }
   }

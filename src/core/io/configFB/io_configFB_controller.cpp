@@ -129,7 +129,7 @@ bool IOConfigFBController::init(int paDelay) {
 
 void IOConfigFBController::initHandle(IODeviceController::HandleDescriptor *paHandleDescriptor) {
 
-  if(paHandleDescriptor->mId == CIEC_WSTRING("")) {
+  if(paHandleDescriptor->mId.empty()) {
     return;
   }
 
