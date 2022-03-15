@@ -135,7 +135,7 @@ void COPC_UA_Local_Handler::generateServerStrings(TForteUInt16 paUAServerPort, U
   forte_snprintf(helperBuffer, scmMaxServerNameLength, "forte_%d", paUAServerPort);
 
 #ifdef FORTE_COM_OPC_UA_MULTICAST
-  paServerStrings.mMdnsServerName = helperBuffer;
+  paServerStrings.mMdnsServerName = CIEC_STRING(helperBuffer);
 #endif //FORTE_COM_OPC_UA_MULTICAST
 
   char hostname[scmMaxServerNameLength + 1];
@@ -154,8 +154,8 @@ void COPC_UA_Local_Handler::generateServerStrings(TForteUInt16 paUAServerPort, U
 
   forte_snprintf(helperBuffer, scmMaxServerNameLength, "org.eclipse.4diac.%s", hostname);
 
-  paServerStrings.mAppURI = helperBuffer;
-  paServerStrings.mHostname = hostname;
+  paServerStrings.mAppURI = CIEC_STRING(helperBuffer);
+  paServerStrings.mHostname = CIEC_STRING(hostname);
 }
 
 void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings, UA_ServerConfig &paUaServerConfig) const {
@@ -1345,10 +1345,10 @@ bool COPC_UA_Local_Handler::splitFoldersFromNode(const CIEC_STRING &paOriginal, 
     }
 
     *runner = '\0';
-    paNodeName = runner + 1;
+    paNodeName = CIEC_STRING(runner + 1);
 
     if(begin != runner) {
-      paFolder = begin;
+      paFolder = CIEC_STRING(begin);
     }
   }
 

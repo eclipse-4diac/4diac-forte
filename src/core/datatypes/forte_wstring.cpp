@@ -203,7 +203,7 @@ int CIEC_WSTRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnesca
     // problems when serializing
     if(nLength < 0){
       DEVLOG_WARNING("Invalid UTF-8 string given to fromString!\n");
-      *this = "***INVALID UTF-8***";
+      fromCharString("***INVALID UTF-8***");
       return -1;
     }
     else if(nMaxWidth > 16){

@@ -51,12 +51,12 @@ const SFBInterfaceSpec FB_CTU::scm_stFBInterfaceSpec = {
 void FB_CTU::executeEvent(int pa_nEIID){
   if(pa_nEIID == scm_nEventREQID){
       if(true == R()){
-        CV() = 0;
+        CV() = CIEC_INT(0);
       }
-      else if( (true == CU()) && (CV() < CIEC_INT::scm_nMaxVal)){
-        CV() = static_cast<TForteInt16>(CV() + 1);
+      else if(AND(CU(), LT(CV(), CIEC_INT(CIEC_INT::scm_nMaxVal)))) {
+        CV() = ADD(CV(), CIEC_INT(1));
       }
-      Q() = (CV() >= PV());
+      Q() = GE(CV(), PV());
       sendOutputEvent(scm_nEventCNFID);
   }
 }

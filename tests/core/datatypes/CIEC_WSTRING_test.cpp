@@ -121,9 +121,9 @@ BOOST_AUTO_TEST_CASE(Memory_Allocation)
   CIEC_WSTRING sTest;
   sTest.reserve(10);
   BOOST_CHECK_EQUAL(sTest.length(), 0);
-  sTest = "Test";
+  sTest = CIEC_WSTRING("Test");
   BOOST_CHECK_EQUAL(sTest.length(), 4);
-  sTest = "Test with more than ten characters";
+  sTest = CIEC_WSTRING("Test with more than ten characters");
   BOOST_CHECK_EQUAL(sTest.length(), 34);
 }
 

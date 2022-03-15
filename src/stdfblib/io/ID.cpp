@@ -50,16 +50,16 @@ void FORTE_ID::executeEvent(int pa_nEIID){
       break;
     case scm_nEventINITID:
       if(true == QI()){
-        QO() = CProcessInterface::initialise(true);  //initialise as input
+        QO() = CIEC_BOOL(CProcessInterface::initialise(true));  //initialise as input
       }
       else{
-        QO() = CProcessInterface::deinitialise();
+        QO() = CIEC_BOOL(CProcessInterface::deinitialise());
       }
       sendOutputEvent(scm_nEventINITOID);
       break;
     case scm_nEventREQID:
       if(true == QI()){
-        QO() = CProcessInterface::readDWord();
+        QO() = CIEC_BOOL(CProcessInterface::readDWord());
       }
       sendOutputEvent(scm_nEventCNFID);
       break;

@@ -262,7 +262,7 @@ bool DEV_MGR::parseWriteConnectionData(char *paRequestPartLeft, forte::core::SMa
     }
     *endOfSource = '\0';
     forte::core::util::transformEscapedXMLToNonEscapedText(paRequestPartLeft);
-    paCommand.mAdditionalParams = paRequestPartLeft;
+    paCommand.mAdditionalParams = CIEC_STRING(paRequestPartLeft);
     *endOfSource = '"'; // restore the string
     paRequestPartLeft = strchr(endOfSource + 1, '\"');
     if(0 != paRequestPartLeft){

@@ -22,6 +22,8 @@
 #include "forte_real.h"
 #include "forte_string.h"
 #include "forte_wstring.h"
+#include "forte_lint.h"
+#include "forte_ulint.h"
 
 #include <forte_printer.h>
 
@@ -62,7 +64,7 @@ void CIEC_LREAL::setValue(const CIEC_ANY& paValue){
       setValueSimple(paValue);
       break;
     case e_REAL:
-      (*this) = static_cast<const CIEC_REAL &>(paValue).operator TForteFloat();
+      setTDFLOAT(static_cast<TForteFloat>(static_cast<const CIEC_REAL &>(paValue)));
       break;
     case e_STRING:
       (*this).fromString(reinterpret_cast<const CIEC_STRING&>(paValue).getValue());
@@ -74,10 +76,10 @@ void CIEC_LREAL::setValue(const CIEC_ANY& paValue){
     case e_INT:
     case e_DINT:
     case e_LINT:
-      (*this) = static_cast<TForteDFloat>(*((CIEC_ANY::TLargestIntValueType *) paValue.getConstDataPtr()));
+      setTDFLOAT(static_cast<TForteInt64>(static_cast<const CIEC_LINT&>(paValue)));
       break;
-    default:
-      (*this) =  static_cast<TForteDFloat>(*((CIEC_ANY::TLargestUIntValueType *) paValue.getConstDataPtr()));
+    default: //UINT types
+      setTDFLOAT(static_cast<TForteUInt64>(static_cast<const CIEC_ULINT&>(paValue)));
       break;
   }
 }
@@ -85,7 +87,7 @@ void CIEC_LREAL::setValue(const CIEC_ANY& paValue){
 void CIEC_LREAL::castLRealData(const CIEC_LREAL &paSrcValue, CIEC_ANY &paDestValue){
   switch (paDestValue.getDataTypeID()){
     case CIEC_ANY::e_REAL:
-      static_cast<CIEC_REAL &>(paDestValue) = static_cast<TForteFloat>(paSrcValue);
+      static_cast<CIEC_REAL &>(paDestValue) = CIEC_REAL(static_cast<TForteFloat>(paSrcValue));
       break;
     case CIEC_ANY::e_LREAL:
       static_cast<CIEC_LREAL &>(paDestValue) = paSrcValue;

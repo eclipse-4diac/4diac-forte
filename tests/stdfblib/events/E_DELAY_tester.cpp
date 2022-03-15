@@ -58,15 +58,15 @@ class E_DELAY_tester  : public CFBTester{
       mDT.setFromMilliSeconds(1000);
       triggerEvent(0);
       if(!eventChainEmpty()){
-        retVal = false;
+        retVal = CIEC_BOOL(false);
       }
       triggerEvent(1);
       if(!eventChainEmpty()){
-        retVal = false;
+        retVal = CIEC_BOOL(false);
       }
       usleep(1000000);
       if(!eventChainEmpty()){
-        retVal = false;
+        retVal = CIEC_BOOL(false);
       }
       return retVal;
     }
@@ -76,16 +76,16 @@ class E_DELAY_tester  : public CFBTester{
       triggerEvent(0);
       usleep(50000);
       if(!eventChainEmpty()){
-        retVal = false;
+        retVal = CIEC_BOOL(false);
       }
       triggerEvent(0);
       usleep(150000);
       if(!checkForSingleOutputEventOccurence(0)){
-        retVal = false;
+        retVal = CIEC_BOOL(false);
       }
       usleep(50000);
       if(!eventChainEmpty()){
-        retVal = false;
+        retVal = CIEC_BOOL(false);
       }
       return retVal;
     }

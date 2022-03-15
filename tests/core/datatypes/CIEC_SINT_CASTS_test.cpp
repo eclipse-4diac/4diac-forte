@@ -64,10 +64,10 @@ BOOST_AUTO_TEST_CASE(CASTS_SINT_to_BOOL)
   BOOST_CHECK_EQUAL(nTestSInt45, 0);
   BOOST_CHECK_EQUAL(nTestSInt127, 0);
 
-  nTestSInt0=0;
-  nTestSInt1=1;
-  nTestSInt45=45;
-  nTestSInt127=127;
+  nTestSInt0 = CIEC_SINT(0);
+  nTestSInt1 = CIEC_SINT(1);
+  nTestSInt45 = CIEC_SINT(45);
+  nTestSInt127 = CIEC_SINT(127);
 
   BOOST_CHECK_EQUAL(nTestSInt0, 0);
   BOOST_CHECK_EQUAL(nTestSInt1, 1);
@@ -105,10 +105,10 @@ BOOST_AUTO_TEST_CASE(CASTS_SINT_to_BITDTs)
   BOOST_CHECK_EQUAL(nTestSInt45, 0);
   BOOST_CHECK_EQUAL(nTestSInt127, 0);
 
-  nTestSInt0=0;
-  nTestSInt1=1;
-  nTestSInt45=45;
-  nTestSInt127=127;
+  nTestSInt0 = CIEC_SINT(0);
+  nTestSInt1 = CIEC_SINT(1);
+  nTestSInt45 = CIEC_SINT(45);
+  nTestSInt127 = CIEC_SINT(127);
 
   BOOST_CHECK_EQUAL(nTestSInt0, 0);
   BOOST_CHECK_EQUAL(nTestSInt1, 1);
@@ -183,11 +183,11 @@ BOOST_AUTO_TEST_CASE(CASTS_SINT_to_INTS)
   BOOST_CHECK_EQUAL(nTestSInt127, 0);
   BOOST_CHECK_EQUAL(nTestSInt_1, 0);
 
-  nTestSInt0=0;
-  nTestSInt1=1;
-  nTestSInt45=45;
-  nTestSInt127=127;
-  nTestSInt_1=-1;
+  nTestSInt0 = CIEC_SINT(0);
+  nTestSInt1 = CIEC_SINT(1);
+  nTestSInt45 = CIEC_SINT(45);
+  nTestSInt127 = CIEC_SINT(127);
+  nTestSInt_1 = CIEC_SINT(-1);
 
   BOOST_CHECK_EQUAL(nTestSInt0, 0);
   BOOST_CHECK_EQUAL(nTestSInt1, 1);
@@ -292,10 +292,10 @@ BOOST_AUTO_TEST_CASE(CASTS_SINT_to_REAL)
   BOOST_CHECK_EQUAL(nTestSInt45, 0);
   BOOST_CHECK_EQUAL(nTestSInt127, 0);
 
-  nTestSInt0=0;
-  nTestSInt1=1;
-  nTestSInt45=45;
-  nTestSInt127=127;
+  nTestSInt0 = CIEC_SINT(0);
+  nTestSInt1 = CIEC_SINT(1);
+  nTestSInt45 = CIEC_SINT(45);
+  nTestSInt127 = CIEC_SINT(127);
 
   BOOST_CHECK_EQUAL(nTestSInt0, 0);
   BOOST_CHECK_EQUAL(nTestSInt1, 1);
@@ -344,10 +344,10 @@ BOOST_AUTO_TEST_CASE(CASTS_SINT_to_TIME)
   BOOST_CHECK_EQUAL(nTestSInt45, 0);
   BOOST_CHECK_EQUAL(nTestSInt127, 0);
 
-  nTestSInt0=0;
-  nTestSInt1=1;
-  nTestSInt45=45;
-  nTestSInt127=127;
+  nTestSInt0 = CIEC_SINT(0);
+  nTestSInt1 = CIEC_SINT(1);
+  nTestSInt45 = CIEC_SINT(45);
+  nTestSInt127 = CIEC_SINT(127);
 
   BOOST_CHECK_EQUAL(nTestSInt0, 0);
   BOOST_CHECK_EQUAL(nTestSInt1, 1);

@@ -12,7 +12,8 @@
  *    Ingo Hegny, Monika Wenger
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians - make TForteInt16 constructor explicit,
- *        added valid cast constructors
+ *        added valid cast constructors, removed built-in type operator=, added
+ *        castable CIEC types operator=
  *******************************************************************************/
 #ifndef _FORTE_INT_H_
 #define _FORTE_INT_H_
@@ -58,20 +59,19 @@ class CIEC_INT : public CIEC_ANY_INT{
     virtual ~CIEC_INT(){
     }
 
-    /*! \brief Operator: CIEC_INT data type = short data type
-     *
-     *   This command implements the assignment operator for the C++ data type SHORT
-     *   The parameter value is represented by a C++ variable (call by value).
-     *   \param paValue  Value for assignment.
-     *   \return Can be the following response:
-     *     - Pointer to given object.
-     */
-    CIEC_INT& operator =(TForteInt16 paValue){
-      setTINT16(paValue);
+    CIEC_INT& operator =(const CIEC_INT &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
       return *this;
     }
 
-    CIEC_INT& operator =(const CIEC_INT &paValue){
+    CIEC_INT& operator =(const CIEC_SINT &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
+      return *this;
+    }
+
+    CIEC_INT& operator =(const CIEC_USINT &paValue){
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;

@@ -20,6 +20,8 @@
 #include <stdio.h>
 #include "forte_real.h"
 #include "forte_lreal.h"
+#include "forte_lint.h"
+#include "forte_ulint.h"
 
 #include <forte_printer.h>
 #include "../../arch/forte_realFunctions.h"
@@ -57,7 +59,7 @@ int CIEC_REAL::toString(char* paValue, size_t paBufferSize) const {
   return nRetVal;
 }
 
-void  CIEC_REAL::setValue(const CIEC_ANY& paValue){
+void CIEC_REAL::setValue(const CIEC_ANY& paValue){
   EDataTypeID eID = paValue.getDataTypeID();
   switch (eID) {
   case e_REAL:
@@ -65,7 +67,7 @@ void  CIEC_REAL::setValue(const CIEC_ANY& paValue){
     break;
 #ifdef FORTE_USE_LREAL_DATATYPE
   case e_LREAL:
-    (*this)=static_cast<TForteFloat>((CIEC_LREAL&)(paValue));
+    setTFLOAT(static_cast<TForteDFloat>(static_cast<const CIEC_LREAL&>(paValue)));
     break;
 #endif
   case e_STRING:
@@ -78,10 +80,10 @@ void  CIEC_REAL::setValue(const CIEC_ANY& paValue){
   case e_INT:
   case e_DINT:
   case e_LINT:
-    (*this) = static_cast<TForteFloat>(*((CIEC_ANY::TLargestIntValueType *) paValue.getConstDataPtr()));
+    setTFLOAT(static_cast<TForteInt64>(static_cast<const CIEC_LINT&>(paValue)));
     break;
-  default:
-    (*this) =  static_cast<TForteFloat>(*((CIEC_ANY::TLargestUIntValueType *) paValue.getConstDataPtr()));
+  default: //UINT types
+    setTFLOAT(static_cast<TForteUInt64>(static_cast<const CIEC_ULINT&>(paValue)));
     break;
   }
 }

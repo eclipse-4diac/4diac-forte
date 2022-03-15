@@ -42,13 +42,13 @@ const SFBInterfaceSpec FORTE_E_CTD::scm_stFBInterfaceSpec = {
 };
 
 void FORTE_E_CTD::alg_CD(void){
-CV() = static_cast<TForteUInt16>(CV()-1);
-Q() = ((CV() == 0));
+CV() = SUB(CV(), CIEC_UINT(1));
+Q() = EQ(CV(), CIEC_UINT(0));
 }
 
 void FORTE_E_CTD::alg_LD(void){
 CV() = PV();
-Q() = ((CV() == 0));
+Q() = EQ(CV(), CIEC_UINT(0));
 }
 
 
@@ -74,7 +74,7 @@ void FORTE_E_CTD::executeEvent(int pa_nEIID){
     bTransitionCleared = true;
     switch(m_nECCState){
       case scm_nStateSTART:
-        if((scm_nEventCDID == pa_nEIID) && (((CV() > 0))))
+        if((scm_nEventCDID == pa_nEIID) && GT(CV(),CIEC_UINT(0)))
           enterStateCU();
         else
         if(scm_nEventLDID == pa_nEIID)
@@ -95,7 +95,7 @@ void FORTE_E_CTD::executeEvent(int pa_nEIID){
           bTransitionCleared  = false; //no transition cleared
         break;
       default:
-      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 2.", m_nECCState.operator TForteUInt16 ());
+      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 2.", static_cast<TForteUInt16>(m_nECCState));
         m_nECCState = 0; //0 is always the initial state
         break;
     }

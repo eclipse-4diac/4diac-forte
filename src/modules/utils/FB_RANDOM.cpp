@@ -58,7 +58,7 @@ void FORTE_FB_RANDOM::alg_INIT(void){
 }
 
 void FORTE_FB_RANDOM::alg_REQ(void){
-  VAL() = static_cast<TForteFloat>(rand())/static_cast<TForteFloat>(RAND_MAX);
+  VAL() = CIEC_REAL(static_cast<TForteFloat>(rand())/static_cast<TForteFloat>(RAND_MAX));
 }
 
 
@@ -105,7 +105,7 @@ void FORTE_FB_RANDOM::executeEvent(int pa_nEIID){
           bTransitionCleared  = false; //no transition cleared
         break;
       default:
-      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 2.", m_nECCState.operator TForteUInt16 ());
+      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 2.", static_cast<TForteUInt16>(m_nECCState));
         m_nECCState = 0; //0 is always the initial state
         break;
     }

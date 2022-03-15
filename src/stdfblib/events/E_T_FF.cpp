@@ -34,22 +34,22 @@ const SFBInterfaceSpec FORTE_E_T_FF::scm_stFBInterfaceSpec = {
   0, 0
 };
 
-void FORTE_E_T_FF::alg_TOGGLE(void){
-Q() = !Q();
+void FORTE_E_T_FF::alg_TOGGLE(void) {
+  Q() = NOT(Q());
 }
 
 
-void FORTE_E_T_FF::enterStateSTART(void){
+void FORTE_E_T_FF::enterStateSTART(void) {
   m_nECCState = scm_nStateSTART;
 }
 
-void FORTE_E_T_FF::enterStateSET(void){
+void FORTE_E_T_FF::enterStateSET(void) {
   m_nECCState = scm_nStateSET;
   alg_TOGGLE();
   sendOutputEvent( scm_nEventEOID);
 }
 
-void FORTE_E_T_FF::executeEvent(int pa_nEIID){
+void FORTE_E_T_FF::executeEvent(int pa_nEIID) {
   bool bTransitionCleared;
   do{
     bTransitionCleared = true;
@@ -67,7 +67,7 @@ void FORTE_E_T_FF::executeEvent(int pa_nEIID){
           bTransitionCleared  = false; //no transition cleared
         break;
       default:
-      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 1.", m_nECCState.operator TForteUInt16 ());
+      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 1.", static_cast<TForteUInt16>(m_nECCState));
         m_nECCState = 0; //0 is always the initial state
         break;
     }

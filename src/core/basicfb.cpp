@@ -67,7 +67,7 @@ CIEC_ANY* CBasicFB::getVar(CStringDictionary::TStringId *paNameList, unsigned in
   CIEC_ANY *poRetVal = CFunctionBlock::getVar(paNameList, paNameListSize);
   if((0 == poRetVal) && (1 == paNameListSize)) {
     poRetVal = getInternalVar(*paNameList);
-    if(0 == poRetVal && !strcmp("$ECC", CStringDictionary::getInstance().get(*paNameList))) { //TODO consider if this can also be an string ID in a different way
+    if(0 == poRetVal && !strcmp("!ECC", CStringDictionary::getInstance().get(*paNameList))) { //TODO consider if this can also be an string ID in a different way
       poRetVal = &m_nECCState;
     }
   }

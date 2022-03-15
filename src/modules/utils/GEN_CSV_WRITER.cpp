@@ -34,9 +34,9 @@ const TForteInt16 GEN_CSV_WRITER::scm_anEOWithIndexes[] = { 0, 3, -1 };
 const CStringDictionary::TStringId GEN_CSV_WRITER::scm_anEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF };
 
 
-const char * const GEN_CSV_WRITER::scmOK = "OK";
-const char * const GEN_CSV_WRITER::scmFileAlreadyOpened = "File already opened";
-const char * const GEN_CSV_WRITER::scmFileNotOpened = "File not opened";
+const CIEC_STRING GEN_CSV_WRITER::scmOK("OK");
+const CIEC_STRING GEN_CSV_WRITER::scmFileAlreadyOpened("File already opened");
+const CIEC_STRING GEN_CSV_WRITER::scmFileNotOpened("File not opened");
 
 void GEN_CSV_WRITER::executeEvent(int paEIID) {
   if(scm_nEventINITID == paEIID) {
@@ -115,15 +115,15 @@ bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfac
 }
 
 void GEN_CSV_WRITER::openCSVFile() {
-  QO() = false;
+  QO() = CIEC_BOOL(false);
   if(0 == mCSVFile) {
     mCSVFile = fopen(FILE_NAME().getValue(), "w+");
     if(0 != mCSVFile) {
-      QO() = true;
+      QO() = CIEC_BOOL(true);
       STATUS() = scmOK;
       DEVLOG_INFO("[GEN_CSV_WRITER]: File %s successfully opened\n", FILE_NAME().getValue());
     } else {
-      STATUS() = strerror(errno);
+      STATUS() = CIEC_STRING(strerror(errno));
       DEVLOG_ERROR("[GEN_CSV_WRITER]: Couldn't open file %s. Error: %s\n", FILE_NAME().getValue(), STATUS().getValue());
     }
   } else {
@@ -133,13 +133,13 @@ void GEN_CSV_WRITER::openCSVFile() {
 }
 
 void GEN_CSV_WRITER::closeCSVFile() {
-  QO() = false;
+  QO() = CIEC_BOOL(false);
   if(0 != mCSVFile) {
     if(0 == fclose(mCSVFile)) {
       STATUS() = scmOK;
       DEVLOG_INFO("[GEN_CSV_WRITER]: File %s successfully closed\n", FILE_NAME().getValue());
     } else {
-      STATUS() = strerror(errno);
+      STATUS() = CIEC_STRING(strerror(errno));
       DEVLOG_ERROR("[GEN_CSV_WRITER]: Couldn't close file %s. Error: %s\n", FILE_NAME().getValue(), STATUS().getValue());
     }
     mCSVFile = 0;
@@ -156,7 +156,7 @@ void GEN_CSV_WRITER::writeCSVFileLine() {
     }
     fwrite("\n", 1, 1, mCSVFile);
   } else {
-    QO() = false;
+    QO() = CIEC_BOOL(false);
     STATUS() = scmFileNotOpened;
     DEVLOG_ERROR("[GEN_CSV_WRITER]: Can't write to file %s since it is not opened\n", FILE_NAME().getValue());
   }

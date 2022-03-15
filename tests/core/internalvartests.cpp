@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(checkNullInternalVarsAreAllowed){
   CInternalVarTestFB testFB(0, varsDataBuffer);
   BOOST_CHECK(0 == testFB.getVar(namelist, 1));
   //check that we should at least get the ECC variable
-  namelist[0] = CStringDictionary::getInstance().insert("$ECC");
+  namelist[0] = CStringDictionary::getInstance().insert("!ECC");
   BOOST_CHECK(0 != testFB.getVar(namelist, 1));
 }
 
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE(checkEmptyInternalVarsAreAllowed){
   CInternalVarTestFB testFB(&varData, varsDataBuffer);
   BOOST_CHECK(0 == testFB.getVar(namelist, 1));
   //check that we should at least get the ECC variable
-  namelist[0] = CStringDictionary::getInstance().insert("$ECC");
+  namelist[0] = CStringDictionary::getInstance().insert("!ECC");
   BOOST_CHECK(0 != testFB.getVar(namelist, 1));
 }
 

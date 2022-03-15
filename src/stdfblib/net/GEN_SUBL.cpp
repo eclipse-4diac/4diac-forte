@@ -27,7 +27,7 @@ GEN_SUBL::GEN_SUBL(const CStringDictionary::TStringId pa_nInstanceNameId, CResou
 bool GEN_SUBL::configureFB(const char *pa_acConfigString){
   bool bRetVal = GEN_SUBSCRIBE::configureFB(pa_acConfigString);
   //subls normally don't show the QI in the tool
-  QI() = true;
+  QI() = CIEC_BOOL(true);
   return bRetVal;
 }
 

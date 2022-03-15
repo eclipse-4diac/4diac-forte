@@ -42,27 +42,24 @@ const SFBInterfaceSpec FORTE_E_CTUD::scm_stFBInterfaceSpec = {
 };
 
 void FORTE_E_CTUD::alg_CountUp(void){
-CV() = static_cast<TForteUInt16>(CV() + 1);
-
-
+  CV() = ADD(CV(), CIEC_UINT(1));
 }
 
-void FORTE_E_CTUD::alg_Reset(void){
-CV() = 0;
-
+void FORTE_E_CTUD::alg_Reset(void) {
+  CV() = CIEC_UINT(0);
 }
 
-void FORTE_E_CTUD::alg_Load(void){
-CV() = PV();
+void FORTE_E_CTUD::alg_Load(void) {
+  CV() = PV();
 }
 
-void FORTE_E_CTUD::alg_UpdateQUQD(void){
-QU() = ((CV() >= PV()));
-QD() = ((CV() == 0));
+void FORTE_E_CTUD::alg_UpdateQUQD(void) {
+  QU() = GE(CV(), PV());
+  QD() = EQ(CV(), CIEC_UINT(0));
 }
 
 void FORTE_E_CTUD::alg_CountDown(void){
-CV() = static_cast<TForteUInt16>(CV() - 1);
+  CV() = SUB(CV(), CIEC_UINT(1));
 }
 
 
@@ -104,13 +101,13 @@ void FORTE_E_CTUD::executeEvent(int pa_nEIID){
     bTransitionCleared = true;
     switch(m_nECCState){
       case scm_nStateSTART:
-        if((scm_nEventCUID == pa_nEIID) && (((CV() < 65535))))
+        if((scm_nEventCUID == pa_nEIID) && LT(CV(), CIEC_UINT(65535)))
           enterStateCU();
         else
         if(scm_nEventRID == pa_nEIID)
           enterStateR();
         else
-        if((scm_nEventCDID == pa_nEIID) && (((((CV() > 0))))))
+        if((scm_nEventCDID == pa_nEIID) && GT(CV(), CIEC_UINT(0)))
           enterStateCD();
         else
         if(scm_nEventLDID == pa_nEIID)
@@ -143,7 +140,7 @@ void FORTE_E_CTUD::executeEvent(int pa_nEIID){
           bTransitionCleared  = false; //no transition cleared
         break;
       default:
-      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 4.", m_nECCState.operator TForteUInt16 ());
+      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 4.", static_cast<TForteUInt16>(m_nECCState));
         m_nECCState = 0; //0 is always the initial state
         break;
     }

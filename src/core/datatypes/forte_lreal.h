@@ -12,13 +12,20 @@
  *    Ingo Hegny, Monika Wenger, Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians - make TForteDFloat constructor explicit, 
- *      adds implicit cast constructor and operator=
+ *      adds implicit cast constructor and operator=, removed built-in type operator=,
+ *      added castable CIEC types operator=
  *******************************************************************************/
 #ifndef _FORTE_LREAL_H_
 #define _FORTE_LREAL_H_
 
 #include "forte_any_real.h"
 #include "forte_real.h"
+#include "forte_dint.h"
+#include "forte_int.h"
+#include "forte_sint.h"
+#include "forte_udint.h"
+#include "forte_uint.h"
+#include "forte_usint.h"
 
 /*!\ingroup COREDTS CIEC_LREAL represents the lreal data type according to IEC 61131.
  */
@@ -38,6 +45,36 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
 
     CIEC_LREAL(const CIEC_REAL& paValue) :
         CIEC_ANY_REAL(){
+      setTDFLOAT(static_cast<TForteFloat>(static_cast<const CIEC_REAL &>(paValue)));
+    }
+
+    CIEC_LREAL(const CIEC_DINT& paValue) :
+        CIEC_ANY_REAL(){
+      setValue(paValue);
+    }
+
+    CIEC_LREAL(const CIEC_INT& paValue) :
+        CIEC_ANY_REAL(){
+      setValue(paValue);
+    }
+
+    CIEC_LREAL(const CIEC_SINT& paValue) :
+        CIEC_ANY_REAL(){
+      setValue(paValue);
+    }
+
+    CIEC_LREAL(const CIEC_UDINT& paValue) :
+        CIEC_ANY_REAL(){
+      setValue(paValue);
+    }
+
+    CIEC_LREAL(const CIEC_UINT& paValue) :
+        CIEC_ANY_REAL(){
+      setValue(paValue);
+    }
+
+    CIEC_LREAL(const CIEC_USINT& paValue) :
+        CIEC_ANY_REAL(){
       setValue(paValue);
     }
 
@@ -48,19 +85,6 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
     virtual ~CIEC_LREAL(){
     }
 
-    /*! \brief Operator: CIEC_LREAL data type = CIEC_LREAL data type
-     *
-     *   This command implements the assignment operator for the C++ data type DFLOAT.
-     *   The parameter value is represented by a C++ variable (call by value).
-     *   \param paValue  Value for assignment.
-     *   \return Can be the following response:
-     *     - Pointer to given object.
-     */
-    CIEC_LREAL& operator =(TForteDFloat pa_fValue){
-      setTDFLOAT(pa_fValue);
-      return *this;
-    }
-
     CIEC_LREAL& operator =(const CIEC_LREAL &paValue){
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
@@ -68,6 +92,36 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
     }
 
     CIEC_LREAL& operator =(const CIEC_REAL &paValue){
+      setValue(paValue);
+      return *this;
+    }
+
+    CIEC_LREAL& operator =(const CIEC_DINT &paValue){
+      setValue(paValue);
+      return *this;
+    }
+
+    CIEC_LREAL& operator =(const CIEC_INT &paValue){
+      setValue(paValue);
+      return *this;
+    }
+
+    CIEC_LREAL& operator =(const CIEC_SINT &paValue){
+      setValue(paValue);
+      return *this;
+    }
+
+    CIEC_LREAL& operator =(const CIEC_UDINT &paValue){
+      setValue(paValue);
+      return *this;
+    }
+
+    CIEC_LREAL& operator =(const CIEC_UINT &paValue){
+      setValue(paValue);
+      return *this;
+    }
+
+    CIEC_LREAL& operator =(const CIEC_USINT &paValue){
       setValue(paValue);
       return *this;
     }

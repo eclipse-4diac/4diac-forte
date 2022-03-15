@@ -68,10 +68,10 @@ BOOST_AUTO_TEST_CASE(CASTS_WORD_to_BOOL)
   BOOST_CHECK_EQUAL(nTestWord256, 0U);
   BOOST_CHECK_EQUAL(nTestWord65535, 0U);
 
-  nTestWord0=0x00;
-  nTestWord1=0x01;
-  nTestWord256=0x0100;
-  nTestWord65535=0xffff;
+  nTestWord0 = CIEC_WORD(0x00);
+  nTestWord1 = CIEC_WORD(0x01);
+  nTestWord256 = CIEC_WORD(0x0100);
+  nTestWord65535 = CIEC_WORD(0xffff);
 
   BOOST_CHECK_EQUAL(nTestWord0, 0U);
   BOOST_CHECK_EQUAL(nTestWord1, 1U);
@@ -109,10 +109,10 @@ BOOST_AUTO_TEST_CASE(CASTS_WORD_to_BITDTs)
   BOOST_CHECK_EQUAL(nTestWord256, 0U);
   BOOST_CHECK_EQUAL(nTestWord65535, 0U);
 
-  nTestWord0=0U;
-  nTestWord1=1U;
-  nTestWord256=256U;
-  nTestWord65535=65535U;
+  nTestWord0 = CIEC_WORD(0U);
+  nTestWord1 = CIEC_WORD(1U);
+  nTestWord256 = CIEC_WORD(256U);
+  nTestWord65535 = CIEC_WORD(65535U);
 
   BOOST_CHECK_EQUAL(nTestWord0, 0U);
   BOOST_CHECK_EQUAL(nTestWord1, 1U);
@@ -178,10 +178,10 @@ BOOST_AUTO_TEST_CASE(CASTS_WORD_to_INTS)
     BOOST_CHECK_EQUAL(nTestWord256, 0U);
     BOOST_CHECK_EQUAL(nTestWord65535, 0U);
 
-    nTestWord0=0U;
-    nTestWord1=1U;
-    nTestWord256=256U;
-    nTestWord65535=65535U;
+    nTestWord0 = CIEC_WORD(0U);
+    nTestWord1 = CIEC_WORD(1U);
+    nTestWord256 = CIEC_WORD(256U);
+    nTestWord65535 = CIEC_WORD(65535U);
 
     BOOST_CHECK_EQUAL(nTestWord0, 0U);
     BOOST_CHECK_EQUAL(nTestWord1, 1U);
@@ -288,10 +288,10 @@ BOOST_AUTO_TEST_CASE(CASTS_WORD_to_REAL)
   BOOST_CHECK_EQUAL(nTestWord256, 0U);
   BOOST_CHECK_EQUAL(nTestWord65535, 0U);
 
-  nTestWord0=0U;
-  nTestWord1=1U;
-  nTestWord256=256U;
-  nTestWord65535=65535U;
+  nTestWord0 = CIEC_WORD(0U);
+  nTestWord1 = CIEC_WORD(1U);
+  nTestWord256 = CIEC_WORD(256U);
+  nTestWord65535 = CIEC_WORD(65535U);
 
   BOOST_CHECK_EQUAL(nTestWord0, 0U);
   BOOST_CHECK_EQUAL(nTestWord1, 1U);
@@ -342,10 +342,10 @@ BOOST_AUTO_TEST_CASE(CASTS_WORD_to_TIME)
   BOOST_CHECK_EQUAL(nTestWord256, 0U);
   BOOST_CHECK_EQUAL(nTestWord65535, 0U);
 
-  nTestWord0=0U;
-  nTestWord1=1U;
-  nTestWord256=256U;
-  nTestWord65535=65535U;
+  nTestWord0 = CIEC_WORD(0U);
+  nTestWord1 = CIEC_WORD(1U);
+  nTestWord256 = CIEC_WORD(256U);
+  nTestWord65535 = CIEC_WORD(65535U);
 
   BOOST_CHECK_EQUAL(nTestWord0, 0U);
   BOOST_CHECK_EQUAL(nTestWord1, 1U);

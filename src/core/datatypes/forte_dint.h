@@ -12,7 +12,8 @@
  *    Ingo Hegny, Monika Wenger
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians - make TForteInt8 constructor explicit, add
- *      implicit cast constructors
+ *      implicit cast constructors, removed built-in type operator=, added
+ *        castable CIEC types operator=
  *******************************************************************************/
 #ifndef _FORTE_DINT_H_
 #define _FORTE_DINT_H_
@@ -70,24 +71,38 @@ class CIEC_DINT : public CIEC_ANY_INT{
     virtual ~CIEC_DINT(){
     }
 
-    /*! \brief Operator: CIEC_DINT data type = long data type
-     *
-     *   This command implements the assignment operator for the C++ data type LONG.
-     *   The parameter value is represented by a C++ variable (call by value).
-     *   \param paValue  Value for assignment.
-     *   \return Can be the following response:
-     *     - Pointer to given object.
-     */
-    CIEC_DINT& operator =(TForteInt32 paValue){
-      setTINT32(paValue);
-      return *this;
-    }
-
     CIEC_DINT& operator =(const CIEC_DINT &paValue){
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
     }
+
+    CIEC_DINT& operator =(const CIEC_INT &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
+      return *this;
+    }
+    
+
+    CIEC_DINT& operator =(const CIEC_UINT &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
+      return *this;
+    }
+    
+    CIEC_DINT& operator =(const CIEC_SINT &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
+      return *this;
+    }
+    
+
+    CIEC_DINT& operator =(const CIEC_USINT &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
+      return *this;
+    }
+    
 
     /*! \brief Converts CIEC_DINT to elementary byte
      *

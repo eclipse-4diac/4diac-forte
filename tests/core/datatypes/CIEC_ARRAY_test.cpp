@@ -29,7 +29,7 @@ class CIEC_ArrayOfStructTest : public CIEC_STRUCT {
 
     /* Struct:
      *   val1 : String[2]
-     *   val3 : BOOL
+     *   val2 : BOOL
      *   val3 : INT[1]
      */
 
@@ -81,25 +81,25 @@ BOOST_AUTO_TEST_CASE(Array_assignment_test_BOOL)
   BOOST_CHECK_EQUAL(nTest[1]->getDataTypeID(), CIEC_ANY::e_BOOL);
   BOOST_CHECK_EQUAL(nTest[2]->getDataTypeID(), CIEC_ANY::e_BOOL);
 
-  static_cast<CIEC_BOOL &>(*nTest[0]) = true;
-  static_cast<CIEC_BOOL &>(*nTest[1]) = false;
-  static_cast<CIEC_BOOL &>(*nTest[2]) = true;
+  static_cast<CIEC_BOOL &>(*nTest[0]) = CIEC_BOOL(true);
+  static_cast<CIEC_BOOL &>(*nTest[1]) = CIEC_BOOL(false);
+  static_cast<CIEC_BOOL &>(*nTest[2]) = CIEC_BOOL(true);
 
   BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nTest[0]), true);
   BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nTest[1]), false);
   BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nTest[2]), true);
 
-  static_cast<CIEC_BOOL &>(*nTest[0]) = false;
-  static_cast<CIEC_BOOL &>(*nTest[1]) = false;
-  static_cast<CIEC_BOOL &>(*nTest[2]) = true;
+  static_cast<CIEC_BOOL &>(*nTest[0]) = CIEC_BOOL(false);
+  static_cast<CIEC_BOOL &>(*nTest[1]) = CIEC_BOOL(false);
+  static_cast<CIEC_BOOL &>(*nTest[2]) = CIEC_BOOL(true);
 
   BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nTest[0]), false);
   BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nTest[1]), false);
   BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nTest[2]), true);
 
-  static_cast<CIEC_BOOL &>(*nTest[0]) = true;
-  static_cast<CIEC_BOOL &>(*nTest[1]) = false;
-  static_cast<CIEC_BOOL &>(*nTest[2]) = false;
+  static_cast<CIEC_BOOL &>(*nTest[0]) = CIEC_BOOL(true);
+  static_cast<CIEC_BOOL &>(*nTest[1]) = CIEC_BOOL(false);
+  static_cast<CIEC_BOOL &>(*nTest[2]) = CIEC_BOOL(false);
 
   BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nTest[0]), true);
   BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nTest[1]), false);
@@ -119,11 +119,11 @@ BOOST_AUTO_TEST_CASE(Array_assignment_test_INT)
   BOOST_CHECK_EQUAL(nTest[3]->getDataTypeID(), CIEC_ANY::e_INT);
   BOOST_CHECK_EQUAL(nTest[4]->getDataTypeID(), CIEC_ANY::e_INT);
 
-  static_cast<CIEC_INT &>(*nTest[0]) = 1;
-  static_cast<CIEC_INT &>(*nTest[1]) = -32259;
-  static_cast<CIEC_INT &>(*nTest[2]) = 256;
-  static_cast<CIEC_INT &>(*nTest[3]) = -32259;
-  static_cast<CIEC_INT &>(*nTest[4]) = 256;
+  static_cast<CIEC_INT &>(*nTest[0]) = CIEC_INT(1);
+  static_cast<CIEC_INT &>(*nTest[1]) = CIEC_INT(-32259);
+  static_cast<CIEC_INT &>(*nTest[2]) = CIEC_INT(256);
+  static_cast<CIEC_INT &>(*nTest[3]) = CIEC_INT(-32259);
+  static_cast<CIEC_INT &>(*nTest[4]) = CIEC_INT(256);
 
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(*nTest[0]), 1);
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(*nTest[1]), -32259);
@@ -267,11 +267,11 @@ BOOST_AUTO_TEST_CASE(Configure_test){
   BOOST_CHECK_EQUAL((*pTest)[6]->getDataTypeID(), CIEC_ANY::e_INT);
   BOOST_CHECK_EQUAL((*pTest)[7]->getDataTypeID(), CIEC_ANY::e_INT);
 
-  static_cast<CIEC_INT &>(*(*pTest)[0]) = 1;
-  static_cast<CIEC_INT &>(*(*pTest)[1]) = -32259;
-  static_cast<CIEC_INT &>(*(*pTest)[2]) = 256;
-  static_cast<CIEC_INT &>(*(*pTest)[4]) = -32259;
-  static_cast<CIEC_INT &>(*(*pTest)[7]) = 256;
+  static_cast<CIEC_INT &>(*(*pTest)[0]) = CIEC_INT(1);
+  static_cast<CIEC_INT &>(*(*pTest)[1]) = CIEC_INT(-32259);
+  static_cast<CIEC_INT &>(*(*pTest)[2]) = CIEC_INT(256);
+  static_cast<CIEC_INT &>(*(*pTest)[4]) = CIEC_INT(-32259);
+  static_cast<CIEC_INT &>(*(*pTest)[7]) = CIEC_INT(256);
 
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(*(*pTest)[0]), 1);
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(*(*pTest)[1]), -32259);
@@ -298,7 +298,7 @@ BOOST_AUTO_TEST_CASE(Configure_test){
   BOOST_CHECK_EQUAL((*pTest)[13]->getDataTypeID(), CIEC_ANY::e_STRING);
   BOOST_CHECK_EQUAL((*pTest)[14]->getDataTypeID(), CIEC_ANY::e_STRING);
 
-  static_cast<CIEC_STRING &>(*(*pTest)[0]) = "Hansi";
+  static_cast<CIEC_STRING &>(*(*pTest)[0]) = CIEC_STRING("Hansi");
   BOOST_CHECK_EQUAL(static_cast<CIEC_STRING &>(*(*pTest)[0]).length(), 5);
   BOOST_CHECK_EQUAL(strcmp("Hansi", static_cast<CIEC_STRING &>(*(*pTest)[0]).getValue()), 0);
 
@@ -604,10 +604,10 @@ void checkArrayOfStructTest_InitialValues(CIEC_ArrayOfStructTest &paStruct) {
 }
 
 void setDataArrayOfStructTest(CIEC_ArrayOfStructTest &paStruct, const char* paVal11, const char* paVal12, bool paVal2, int paVal31) {
-  paStruct.val11() = paVal11;
-  paStruct.val12() = paVal12;
-  paStruct.val2() = paVal2;
-  paStruct.val31() = static_cast<TForteInt16>(paVal31);
+  paStruct.val11() = CIEC_STRING(paVal11);
+  paStruct.val12() = CIEC_STRING(paVal12);
+  paStruct.val2() = CIEC_BOOL(paVal2);
+  paStruct.val31() = CIEC_INT(paVal31);
 }
 
 void setupArrayOfStructTest_TestDataSet1(CIEC_ArrayOfStructTest &paStruct) {

@@ -1,6 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN, fortiss GmbH
- *               2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2022 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,23 +7,19 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
- *    Ingo Hegny, Monika Wenger
+ *    Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure,
- *    Martin Melik Merkumains - make TForteUInt16 constructor explicit,
- *        removed built-in type operator=, added castable CIEC types operator=
  *******************************************************************************/
-#ifndef _FORTE_UINT_H_
-#define _FORTE_UINT_H_
+#ifndef _FORTE_STATE_H_
+#define _FORTE_STATE_H_
 
 #include "forte_any_int.h"
-#include "forte_usint.h"
 #include <limits>
 
-/*!\ingroup COREDTS CIEC_UINT represents the uint data type according to IEC 61131.
+/*!\ingroup COREDTS CIEC_EVENT represents the STATE data type according to IEC 61131.
  */
-class CIEC_UINT : public CIEC_ANY_INT{
-  DECLARE_FIRMWARE_DATATYPE(UINT)
+class CIEC_STATE : public CIEC_ANY_INT {
+  DECLARE_FIRMWARE_DATATYPE(STATE)
 
   public:
     typedef TForteUInt16 TValueType;
@@ -32,35 +27,30 @@ class CIEC_UINT : public CIEC_ANY_INT{
     static const TValueType scm_nMinVal = 0;
     static const TValueType scm_nMaxVal;
 
-    CIEC_UINT(){
+    CIEC_STATE(){
     }
 
-    CIEC_UINT(const CIEC_UINT& paValue) :
+    CIEC_STATE(const CIEC_STATE& paValue) :
         CIEC_ANY_INT(){
       setValueSimple(paValue);
     }
 
-    CIEC_UINT(const CIEC_USINT& paValue) :
-        CIEC_ANY_INT(){
-      setValueSimple(paValue);
-    }
-
-    explicit CIEC_UINT(TForteUInt16 paValue){
+    explicit CIEC_STATE(const TForteUInt16 paValue){
       setTUINT16(paValue);
     }
 
-    virtual ~CIEC_UINT(){
+    virtual ~CIEC_STATE(){
     }
 
-    CIEC_UINT& operator =(const CIEC_UINT &paValue){
+    CIEC_STATE& operator =(const CIEC_STATE &paValue){
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
     }
 
-    CIEC_UINT& operator =(const CIEC_USINT &paValue){
+    CIEC_STATE& operator =(const TForteUInt16 paValue){
       // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
+      setTUINT16(paValue);
       return *this;
     }
 
@@ -77,4 +67,4 @@ class CIEC_UINT : public CIEC_ANY_INT{
     }
 };
 
-#endif /*_FORTE_UINT_H_*/
+#endif /*_FORTE_STATE_H_*/

@@ -12,7 +12,7 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik-Merkumians - added getInNanoSeconds, setFromNanoSeconds,
  *      changed defines to constants, added literal parsing for micro and
- *      nanoseconds
+ *      nanoseconds, removed built-in type operator=, removed operator++
  *******************************************************************************/
 #ifndef _FORTE_TIME_H_
 #define _FORTE_TIME_H_
@@ -36,32 +36,22 @@ class CIEC_TIME : public CIEC_ANY_MAGNITUDE{
     }
 
     explicit CIEC_TIME(TValueType paValue){
-      *this = paValue;
+      setLargestInt(paValue);
     }
 
     explicit CIEC_TIME(const char *paValue){
       if(-1 == CIEC_TIME::fromString(paValue)){ //explicitly state that you like to have the fromString of this class to avoid potential virtual function clashes in the constructor
       //we had an error in string parsing set a default value
-        *this = 0;
+        setLargestInt(0);
       }
     }
 
     virtual ~CIEC_TIME(){
     }
 
-    CIEC_TIME& operator =(TValueType paValue){
-      setLargestInt(paValue);
-      return *this;
-    }
-
     CIEC_TIME& operator =(const CIEC_TIME &paValue){
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
-      return *this;
-    }
-
-    CIEC_TIME& operator ++(void){
-      *this = 1 + (*this);
       return *this;
     }
 

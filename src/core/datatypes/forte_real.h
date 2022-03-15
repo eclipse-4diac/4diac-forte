@@ -11,7 +11,8 @@
  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
  *    Ingo Hegny, Martin Melik Merkumians, Monika Wenger
  *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - make TForteFloat constructor explicit
+ *    Martin Melik Merkumians - make TForteFloat constructor explicit,
+ *        removed built-in type operator=, added castable CIEC types operator=
  *******************************************************************************/
 #ifndef _FORTE_REAL_H_
 #define _FORTE_REAL_H_
@@ -20,6 +21,10 @@
 
 #include "forte_string.h"
 #include "forte_wstring.h"
+#include "forte_int.h"
+#include "forte_sint.h"
+#include "forte_uint.h"
+#include "forte_usint.h"
 
 /*!\ingroup COREDTS CIEC_REAL represents the real data type according to IEC 61131.
  */
@@ -44,23 +49,29 @@ class CIEC_REAL : public CIEC_ANY_REAL{
     virtual ~CIEC_REAL(){
     }
 
-    /*! \brief Operator: CIEC_REAL data type = float data type
-     *
-     *   This command implements the assignment operator for the C++ data type FLOAT.
-     *   The parameter value is represented by a C++ variable (call by value).
-     *   \param paValue  Value for assignment.
-     *   \return Can be the following response:
-     *     - Pointer to given object.
-     */
-    CIEC_REAL& operator =(TForteFloat paValue){
-      setTFLOAT(paValue);
-      return *this;
-    }
-    ;
-
     CIEC_REAL& operator =(const CIEC_REAL &paValue){
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
+      return *this;
+    }
+
+    CIEC_REAL& operator =(const CIEC_INT &paValue){
+      setValue(paValue);
+      return *this;
+    }
+
+    CIEC_REAL& operator =(const CIEC_UINT &paValue){
+      setValue(paValue);
+      return *this;
+    }
+
+    CIEC_REAL& operator =(const CIEC_SINT &paValue){
+      setValue(paValue);
+      return *this;
+    }
+
+    CIEC_REAL& operator =(const CIEC_USINT &paValue){
+      setValue(paValue);
       return *this;
     }
 

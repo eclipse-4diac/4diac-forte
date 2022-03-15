@@ -573,7 +573,7 @@ bool CFBDKASN1ComLayer::deserializeTag(const TForteByte pa_cByte, CIEC_ANY &pa_r
     case CIEC_ANY::e_BOOL:
       bRetVal = (((e_APPLICATION + e_PRIMITIVE) == pa_cByte) || ((e_APPLICATION + e_PRIMITIVE + CIEC_ANY::e_BOOL) == pa_cByte));
       if(bRetVal){
-        static_cast<CIEC_BOOL &>(pa_roCIECData) = (csm_aDataTags[CIEC_ANY::e_BOOL][0] == pa_cByte);
+        static_cast<CIEC_BOOL &>(pa_roCIECData) = CIEC_BOOL((csm_aDataTags[CIEC_ANY::e_BOOL][0] == pa_cByte));
       }
       break;
     case CIEC_ANY::e_STRUCT:

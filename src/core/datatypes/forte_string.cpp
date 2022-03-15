@@ -128,7 +128,7 @@ int CIEC_STRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescap
     int nLength = CUnicodeUtilities::checkUTF8(pa_pacValue, nSrcCappedLength, nMaxWidth);
     if (nLength < 0) {
       DEVLOG_WARNING("Invalid UTF-8 string given to fromString!\n");
-      *this = "***INVALID UTF-8***";
+      fromCharString("***INVALID UTF-8***");
       return -1;
     } else if (nMaxWidth > 8) {
       DEVLOG_WARNING("UTF-8 string with non-representable characters given to fromString!\n");

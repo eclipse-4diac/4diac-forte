@@ -41,18 +41,18 @@ void IOConfigFBMultiSlave::executeEvent(int paEIID) {
     if(BusAdapterIn().QI() == true) {
       // Handle initialization event
       const char* const error = handleInitEvent();
-      QO() = mInitialized = error == 0;
+      QO() = CIEC_BOOL(mInitialized = error == 0);
 
       if(mInitialized) {
-        STATUS() = scmOK;
+        STATUS() = CIEC_WSTRING(scmOK);
       } else {
-        STATUS() = error;
+        STATUS() = CIEC_WSTRING(error);
       }
 
       if(BusAdapterOut().getPeer() != 0) {
         // Initialize next slave
         BusAdapterOut().QI() = BusAdapterIn().QI();
-        BusAdapterOut().Index() = (TForteUInt16) (BusAdapterIn().Index() + 1);
+        BusAdapterOut().Index() = ADD(BusAdapterIn().Index(), CIEC_UINT(1));
         BusAdapterOut().MasterId() = BusAdapterIn().MasterId();
 
         for(int i = 0; i < BusAdapterIn().mSlaveConfigurationIONum; i++) {
@@ -74,8 +74,8 @@ void IOConfigFBMultiSlave::executeEvent(int paEIID) {
     } else {
       deInit();
 
-      QO() = false;
-      STATUS() = scmStopped;
+      QO() = CIEC_BOOL(false);
+      STATUS() = CIEC_WSTRING(scmStopped);
 
       if(BusAdapterOut().getPeer() != 0) {
         // DeInit next slave
@@ -91,7 +91,7 @@ void IOConfigFBMultiSlave::executeEvent(int paEIID) {
     }
   } else if(BusAdapterOut().INITO() == paEIID) {
     // Forward confirmation of initialization
-    BusAdapterIn().QO() = BusAdapterOut().QO() && QO();
+    BusAdapterIn().QO() = AND(BusAdapterOut().QO(), QO());
     sendAdapterEvent(scm_nBusAdapterInAdpNum, IOConfigFBMultiAdapter::scmEventINITOID);
   }
 
@@ -104,9 +104,9 @@ void IOConfigFBMultiSlave::executeEvent(int paEIID) {
         initHandles();
       }
 
-      QO() = true;
+      QO() = CIEC_BOOL(true);
     } else {
-      QO() = false;
+      QO() = CIEC_BOOL(false);
     }
 
     sendOutputEvent(scm_nEventMAPOID);

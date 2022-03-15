@@ -34,33 +34,33 @@ BOOST_AUTO_TEST_CASE(Assignment_test)
   //initial value must be 0
   BOOST_CHECK_EQUAL(nTest1, 0.0f);
 
-  nTest1 = std::numeric_limits<TForteDFloat>::min();
+  nTest1 = CIEC_LREAL(std::numeric_limits<TForteDFloat>::min());
   nTest2 = nTest1;
   BOOST_CHECK_EQUAL(nTest1, std::numeric_limits<TForteDFloat>::min());
   BOOST_CHECK_EQUAL(nTest2, std::numeric_limits<TForteDFloat>::min());
 
-  nTest1 = 2.28743e6;
+  nTest1 = CIEC_LREAL(2.28743e6);
   nTest2 = nTest1;
   BOOST_CHECK_EQUAL(nTest1, 2.28743e6);
   BOOST_CHECK_EQUAL(nTest2, 2.28743e6);
 
-  nTest1 = -6.2587e-4f;
+  nTest1 = CIEC_LREAL(-6.2587e-4f);
   nTest2 = nTest1;
   BOOST_CHECK_EQUAL(nTest1, -6.2587e-4f);
   BOOST_CHECK_EQUAL(nTest2, -6.2587e-4f);
 
-  nTest1 = 1.0E-37f;
+  nTest1 = CIEC_LREAL(1.0E-37f);
   nTest2 = nTest1;
   BOOST_CHECK_EQUAL(nTest1, 1.0E-37f);
   BOOST_CHECK_EQUAL(nTest2, 1.0E-37f);
 
-  nTest1 = std::numeric_limits<TForteDFloat>::max();
+  nTest1 = CIEC_LREAL(std::numeric_limits<TForteDFloat>::max());
   nTest2 = nTest1;
   BOOST_CHECK_EQUAL(nTest1, std::numeric_limits<TForteDFloat>::max());
   BOOST_CHECK_EQUAL(nTest2, std::numeric_limits<TForteDFloat>::max());
 
   //check that assignment operator does not intertwine objects
-  nTest2 = -36.0;
+  nTest2 = CIEC_LREAL(-36.0);
   BOOST_CHECK_EQUAL(nTest1, std::numeric_limits<TForteDFloat>::max());
   BOOST_CHECK_EQUAL(nTest2, -36.0);
 
@@ -74,19 +74,19 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   char cBufferFail[2];
 
   //check cast operator
-  nTest = 0.0;
+  nTest = CIEC_LREAL(0.0);
   BOOST_CHECK_EQUAL(nTest.operator TForteDFloat(), 0.0);
 
-  nTest = std::numeric_limits<TForteDFloat>::min();
+  nTest = CIEC_LREAL(std::numeric_limits<TForteDFloat>::min());
   BOOST_CHECK_EQUAL(nTest.operator TForteDFloat(), std::numeric_limits<TForteDFloat>::min());
 
-  nTest = -4.2345e4;
+  nTest = CIEC_LREAL(-4.2345e4);
   BOOST_CHECK_EQUAL(nTest.operator TForteDFloat(), -4.2345e4);
 
-  nTest = 23.7813e2;
+  nTest = CIEC_LREAL(23.7813e2);
   BOOST_CHECK_EQUAL(nTest.operator TForteDFloat(), 23.7813e2);
 
-  nTest = std::numeric_limits<TForteDFloat>::max();
+  nTest = CIEC_LREAL(std::numeric_limits<TForteDFloat>::max());
   BOOST_CHECK_EQUAL(nTest.operator TForteDFloat(), std::numeric_limits<TForteDFloat>::max());
 
   //check toString and fromString
@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   strcpy(cBuffer, "");
-  nTest = 0;
+  nTest = CIEC_LREAL(0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("0"), 1);
   BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(nTest), 0.0);
@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
     BOOST_CHECK_EQUAL(strcmp(cBuffer, "0"), 0);
     BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 0), -1);
     strcpy(cBuffer, "");
-    nTest = 0;
+    nTest = CIEC_LREAL(0);
 
 
     BOOST_CHECK_EQUAL(nTest.fromString("3.2523E15"), 9);
@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 
     BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
     strcpy(cBuffer, "");
-    nTest = 0;
+    nTest = CIEC_LREAL(0);
 
     BOOST_CHECK_EQUAL(nTest.fromString("1E37"), 4);
     BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(nTest), 1e37);
@@ -129,7 +129,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 
     BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
     strcpy(cBuffer, "");
-    nTest = 0;
+    nTest = CIEC_LREAL(0);
 
     //testing values outside of allowed range
     BOOST_CHECK_EQUAL(nTest.fromString("4e401"), -1);

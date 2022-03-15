@@ -91,14 +91,14 @@ CIEC_ANY* FORTE_GET_STRUCT_VALUE::lookForMember(CIEC_STRUCT* paWhereToLook, char
 
 void FORTE_GET_STRUCT_VALUE::executeEvent(int paEIID) {
   if(scm_nEventREQID == paEIID) {
-    QO() = 0;
+    QO() = CIEC_BOOL(false);
     if(CIEC_ANY::e_STRUCT == in_struct().getDataTypeID()) {
       CIEC_STRING copyOfMember = member();
       CIEC_ANY *foundMember = lookForMember(static_cast<CIEC_STRUCT*>(&in_struct()), copyOfMember.getValue());
       if(0 != foundMember) {
         if(foundMember->getDataTypeID() == output().getDataTypeID()) {
           output().setValue(*foundMember);
-          QO() = 1;
+          QO() = CIEC_BOOL(true);
         } else {
           DEVLOG_ERROR("[GET_STRUCT_VALUE]: In instance %s, the member %s was found but it doesn't match the output type %d\n",
             getInstanceName(), member().getValue(), output().getDataTypeID());

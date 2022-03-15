@@ -48,28 +48,28 @@ const SFBInterfaceSpec FB_TP::scm_stFBInterfaceSpec = {
     0
 };
 
-void FB_TP::executeEvent(int pa_nEIID){
-  if(pa_nEIID == scm_nEventREQID){
-      if (edgeFlag) {
-        if(ET() >= PT()){
-          Q() = false;
+void FB_TP::executeEvent(int pa_nEIID) {
+  if(pa_nEIID == scm_nEventREQID) {
+      if(edgeFlag) {
+        if(GE(ET(), PT())) {
+          Q() = CIEC_BOOL(false);
           edgeFlag = false;
           DEVLOG_DEBUG("top\n");
-        }else{
-          ET() = NOW_MONOTONIC() - start;
+        } else {
+          ET() = SUB(NOW_MONOTONIC(), start);
           DEVLOG_DEBUG("rising\n");
         }
       }
       else {
-        if(st_IN() == true && ET() == 0){
-          Q() = true;
+        if(AND(st_IN(), EQ(ET(), CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0))))) {
+          Q() = CIEC_BOOL(true);
           edgeFlag = true;
           start = NOW_MONOTONIC();
           DEVLOG_DEBUG("start\n");
         }
         else
-          if((false == st_IN()) && (ET()>0)) {
-            ET() = 0;
+          if(AND(st_IN(), GT(ET(), CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0))))) {
+            ET() = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
             DEVLOG_DEBUG("reset\n");
           }
       }

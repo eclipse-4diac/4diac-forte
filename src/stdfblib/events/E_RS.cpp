@@ -48,13 +48,13 @@ void E_RS::executeEvent(int pa_nEIID){
   switch(pa_nEIID){
     case scm_nEventRID:
       if(true == Q()){
-        Q() = false;
+        Q() = CIEC_BOOL(false);
         sendOutputEvent( scm_nEventEOID);
       }
       break;
     case scm_nEventSID:
       if(false == Q()){
-        Q() = true;
+        Q() = CIEC_BOOL(true);
         sendOutputEvent( scm_nEventEOID);
       }
       break;

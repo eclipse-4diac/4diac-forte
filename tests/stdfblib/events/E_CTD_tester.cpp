@@ -34,14 +34,14 @@ struct E_CTD_TestFixture : public CFBTestFixtureBase{
     bool checkCD(TForteUInt16 pa_prevCV){
       if(pa_prevCV < 1){
         //no algorithm should have been executed
-        if(mOutCV != pa_prevCV || !mOutQ || !eventChainEmpty()){
+        if(OR(NE(mOutCV, CIEC_UINT(pa_prevCV)), OR(NOT(mOutQ), NOT(CIEC_BOOL(eventChainEmpty()))))){
           return false;
         }
       }
       else{
-        if(((pa_prevCV - 1) != mOutCV)){
+        if(NE(CIEC_UINT(pa_prevCV - 1), mOutCV)){
           return false;
-        } else if(mOutQ != (mOutCV < 1)){
+        } else if(NE(mOutQ, LT(mOutCV, CIEC_UINT(1)))){
           return false;
         } else if(!checkForSingleOutputEventOccurence(0)){
           return false;
@@ -51,7 +51,7 @@ struct E_CTD_TestFixture : public CFBTestFixtureBase{
     }
 
     bool checkLD(TForteUInt16 pa_usedPV){
-      if(pa_usedPV != mInPV || mInPV != mOutCV || ((pa_usedPV < 1) != (true == mOutQ))){
+      if(OR(NE(CIEC_UINT(pa_usedPV),  mInPV), OR(NE(mInPV, mOutCV), NE(CIEC_BOOL(pa_usedPV < 1), mOutQ)))) {
         return false;
       }
       if(!checkForSingleOutputEventOccurence(1)){
@@ -69,7 +69,7 @@ BOOST_FIXTURE_TEST_SUITE( CTDTests, E_CTD_TestFixture)
     unsigned int numberOfValues = static_cast<unsigned int>(sizeof(valuesToTest) / sizeof(TForteUInt16));
     for(unsigned int i = 0; i < numberOfValues; i++){
       for(unsigned int j = 0; j < numberOfTries; j++){
-        mInPV = valuesToTest[i];
+        mInPV = CIEC_UINT(valuesToTest[i]);
         triggerEvent(1);
         checkForSingleOutputEventOccurence(1);
         //Send event
@@ -85,7 +85,7 @@ BOOST_FIXTURE_TEST_SUITE( CTDTests, E_CTD_TestFixture)
     unsigned int numberOftest = static_cast<unsigned int>(sizeof(PVToTest) / sizeof(TForteUInt16));
     for(unsigned int i = 0; i < numberOftest; ++i){
       for(unsigned int j = 0; j < numberOfTries; j++){
-        mInPV = PVToTest[i];
+        mInPV = CIEC_UINT(PVToTest[i]);
         triggerEvent(1);
         BOOST_CHECK(checkLD(PVToTest[i]));
       }
@@ -95,13 +95,13 @@ BOOST_FIXTURE_TEST_SUITE( CTDTests, E_CTD_TestFixture)
   BOOST_AUTO_TEST_CASE(Mix){
     unsigned int numberOfTries = 100;
     for(unsigned int i = 0; i < numberOfTries; i++){
-      mInPV = 0;
+      mInPV = CIEC_UINT(0);
       triggerEvent(1);
       BOOST_CHECK(checkLD(0));
       triggerEvent(0);
       BOOST_CHECK(checkCD(0));
 
-      mInPV = 1;
+      mInPV = CIEC_UINT(1);
       triggerEvent(0);
       BOOST_CHECK(checkCD(0));
       triggerEvent(1);
@@ -121,7 +121,7 @@ BOOST_FIXTURE_TEST_SUITE( CTDTests, E_CTD_TestFixture)
       triggerEvent(0);
       BOOST_CHECK(checkCD(0));
 
-      mInPV = 65535;
+      mInPV = CIEC_UINT(65535);
       triggerEvent(1);
       BOOST_CHECK(checkLD(65535));
       triggerEvent(0);

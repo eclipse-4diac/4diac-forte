@@ -39,14 +39,14 @@ bool ProcessInterface::initialise(bool paIsInput) {
   mType = (paIsInput ? getDO(2) : getDI(2))->getDataTypeID();
 
   mIsReady = false;
-  STATUS() = scmWaitingForHandle;
+  STATUS() = CIEC_STRING(scmWaitingForHandle);
 
   // Reset before initialization
   deinitialise();
 
   // Register interface
   if(!(mIsListening = IOMapper::getInstance().registerObserver(CIEC_WSTRING(getInstanceName()), this))) {
-    STATUS() = scmFailedToRegister;
+    STATUS() = CIEC_STRING(scmFailedToRegister);
     return false;
   }
 
@@ -133,12 +133,12 @@ void ProcessInterface::onHandle(IOHandle* paHandle) {
     IOObserver::onHandle(paHandle);
 
     if(!paHandle->is(mType)) {
-      STATUS() = scmMappedWrongDataType;
+      STATUS() = CIEC_STRING(scmMappedWrongDataType);
       return;
     }
 
     if(!paHandle->is(mDirection)) {
-      STATUS() = mDirection == IOMapper::In ? scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput;
+      STATUS() = CIEC_STRING(mDirection == IOMapper::In ? scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput);
       return;
     }
 
@@ -146,15 +146,15 @@ void ProcessInterface::onHandle(IOHandle* paHandle) {
       setEventChainExecutor(m_poInvokingExecEnv);
     }
 
-    STATUS() = scmOK;
+    STATUS() = CIEC_STRING(scmOK);
     mIsReady = true;
   }
 
   // Read & write current state
   if(mDirection == IOMapper::In) {
-    QO() = read();
+    QO() = CIEC_BOOL(read());
   } else {
-    QO() = write();
+    QO() = CIEC_BOOL(write());
   }
 }
 
@@ -163,8 +163,8 @@ void ProcessInterface::dropHandle() {
 
   IOObserver::dropHandle();
 
-  QO() = false;
-  STATUS() = scmWaitingForHandle;
-  mIsReady = false;
+  QO() = CIEC_BOOL(false);
+  STATUS() = CIEC_STRING(scmWaitingForHandle);
+  mIsReady = CIEC_BOOL(false);
 }
 

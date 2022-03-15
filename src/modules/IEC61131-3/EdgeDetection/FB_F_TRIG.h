@@ -49,7 +49,7 @@ private:
 
 public:
   FUNCTION_BLOCK_CTOR(FB_F_TRIG){
-   M = true;
+   M = CIEC_BOOL(true);
   };
   virtual ~FB_F_TRIG(){};
 

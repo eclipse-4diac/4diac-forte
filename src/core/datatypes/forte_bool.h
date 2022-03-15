@@ -11,7 +11,8 @@
  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
  *    Ingo Hegny, Martin Melik-Merkiumians, Monika Wenger
  *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - make bool constructor explicit
+ *    Martin Melik Merkumians - make bool constructor explicit,
+ *        removed built-in type operator=
  *******************************************************************************/
 #ifndef _FORTE_BOOL_H_
 #define _FORTE_BOOL_H_
@@ -24,6 +25,7 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
   DECLARE_FIRMWARE_DATATYPE(BOOL)
 
   public:
+
     typedef bool TValueType;
 
     CIEC_BOOL() {
@@ -36,23 +38,10 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
     }
 
     explicit CIEC_BOOL(bool paValue) {
-      *this = paValue;
+      setTBOOL8(paValue);
     }
 
     virtual ~CIEC_BOOL(){
-    }
-
-    /*! \brief Operator: CIEC_BOOL data type = bool data type
-     *
-     *   This command implements the assignment operator for the IEC 61131 datatype BOOL.
-     *   The parameter value is a reference onto a given C++ variable (call by reference).
-     *   \param paValue  Value for assignment.
-     *   \return Can be the following response:
-     *     - Pointer to given object.
-     */
-    CIEC_BOOL& operator =(bool paValue) {
-      setTBOOL8(paValue);
-      return *this;
     }
 
     CIEC_BOOL& operator =(const CIEC_BOOL &paValue) {

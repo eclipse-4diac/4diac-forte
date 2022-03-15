@@ -73,9 +73,9 @@ class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
 
     TDataIOID *m_anEIWith;
 
-    static const char * const scmOK;
-    static const char * const scmFileAlreadyOpened;
-    static const char * const scmFileNotOpened;
+    static const CIEC_STRING scmOK;
+    static const CIEC_STRING scmFileAlreadyOpened;
+    static const CIEC_STRING scmFileNotOpened;
 
     static const size_t scmWriteBufferSize = 100;
 

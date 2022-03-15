@@ -30,7 +30,7 @@ size_t convertFromIECToOPCUASpecific(const CIEC_ANY &paSrc, void *paDest) {
 
 template<typename T_FORTE_TYPE, typename T_OPCUA_TYPE>
 size_t convertFromOPCUAToIECSpecific(const void *paSrc, CIEC_ANY &paDest) {
-  static_cast<T_FORTE_TYPE &>(paDest) = *static_cast<const T_OPCUA_TYPE *>(paSrc);
+  static_cast<T_FORTE_TYPE &>(paDest) = T_FORTE_TYPE(*static_cast<const T_OPCUA_TYPE *>(paSrc));
   return sizeof(T_OPCUA_TYPE);
 }
 
@@ -312,9 +312,9 @@ bool COPC_UA_Helper::getBrowsenameFromNodeName(const char *paNodeName, UA_UInt16
   size_t parsingResult = browseNameParser.parseParameters();
   if(scmMaxNoOfParametersInBrowseName == parsingResult) {
     browsenameNamespace = static_cast<UA_UInt16>(forte::core::util::strtol(browseNameParser[0], 0, 10));
-    targetName = browseNameParser[1];
+    targetName = CIEC_STRING(browseNameParser[1]);
   } else if(1 == parsingResult) {
-    targetName = browseNameParser[0];
+    targetName = CIEC_STRING(browseNameParser[0]);
   } else {
     DEVLOG_ERROR("[OPC UA HELPER]: Error by parsing FB browse path %s\n", paNodeName);
     retVal = false;

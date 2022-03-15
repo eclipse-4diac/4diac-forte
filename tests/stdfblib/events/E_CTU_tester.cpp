@@ -34,25 +34,25 @@ struct E_CTU_TestFixture : public CFBTestFixtureBase{
 
     bool checkCU(TForteUInt16 paPrevCV){
        if(paPrevCV < CIEC_UINT::scm_nMaxVal){
-         if(((paPrevCV + 1) != mOutCV)){
+         if(NE(CIEC_UINT(paPrevCV + 1), mOutCV)){
            return false;
          }
          else if(!checkForSingleOutputEventOccurence(0)){
            return false;
          }
        }else{
-         if(CIEC_UINT::scm_nMaxVal != mOutCV && !eventChainEmpty()){
+         if(AND(NE(CIEC_UINT(CIEC_UINT::scm_nMaxVal), mOutCV), NOT(CIEC_BOOL(eventChainEmpty())))){
            return false;
          }
        }
-       if(mOutQ != (mOutCV >= mInPV)){
+       if(NE(mOutQ, GE(mOutCV, mInPV))){
          return false;
        }
        return true;
      }
 
      bool checkR(){
-       if(0 != mOutCV || mOutQ){
+       if(OR(NE(CIEC_UINT(0), mOutCV), mOutQ)){
          return false;
        }
        if(!checkForSingleOutputEventOccurence(1)){
@@ -71,7 +71,7 @@ BOOST_FIXTURE_TEST_SUITE( CTUTests, E_CTU_TestFixture)
     for(size_t j = 0; j < numberOfValues; j++){
       triggerEvent(1);
       BOOST_CHECK(checkR());
-      mInPV = valuesToTest[j];
+      mInPV = CIEC_UINT(valuesToTest[j]);
       for(unsigned int k = 0; k < static_cast<unsigned int>(mInPV + 3); k++){
         prevCV = mOutCV;
         //Send event
@@ -87,7 +87,7 @@ BOOST_FIXTURE_TEST_SUITE( CTUTests, E_CTU_TestFixture)
     size_t numberOfValues = static_cast<size_t>(sizeof(valuesToTest) / sizeof(TForteUInt16));
     for(size_t i = 0; i < numberOfTries; i++){
       for(size_t j = 0; j < numberOfValues; j++){
-        mInPV = valuesToTest[j];
+        mInPV = CIEC_UINT(valuesToTest[j]);
         triggerEvent(1);
         BOOST_CHECK(checkR());
       }
@@ -95,14 +95,14 @@ BOOST_FIXTURE_TEST_SUITE( CTUTests, E_CTU_TestFixture)
   }
 
   BOOST_AUTO_TEST_CASE(Mix){
-    mInPV = 0;
+    mInPV = CIEC_UINT(0);
     triggerEvent(1);
     BOOST_CHECK(checkR());
 
     triggerEvent(0);
     BOOST_CHECK(checkCU(0));
 
-    mInPV = 1;
+    mInPV = CIEC_UINT(1);
     triggerEvent(0);
     BOOST_CHECK(checkCU(1));
 
@@ -120,7 +120,7 @@ BOOST_FIXTURE_TEST_SUITE( CTUTests, E_CTU_TestFixture)
     triggerEvent(1);
     BOOST_CHECK(checkR());
 
-    mInPV = 65533;
+    mInPV = CIEC_UINT(65533);
     for(TForteUInt16 i = 0; i < CIEC_UINT::scm_nMaxVal; i++){
       //Send event
       triggerEvent(0);

@@ -67,10 +67,10 @@ BOOST_AUTO_TEST_CASE(CASTS_INT_to_BOOL)
   BOOST_CHECK_EQUAL(nTestInt256, 0);
   BOOST_CHECK_EQUAL(nTestInt32767, 0);
 
-  nTestInt0=0;
-  nTestInt1=1;
-  nTestInt256=256;
-  nTestInt32767=32767;
+  nTestInt0 = CIEC_INT(0);
+  nTestInt1 = CIEC_INT(1);
+  nTestInt256 = CIEC_INT(256);
+  nTestInt32767 = CIEC_INT(32767);
 
   BOOST_CHECK_EQUAL(nTestInt0, 0);
   BOOST_CHECK_EQUAL(nTestInt1, 1);
@@ -109,10 +109,10 @@ BOOST_AUTO_TEST_CASE(CASTS_INT_to_BITDTs)
   BOOST_CHECK_EQUAL(nTestInt256, 0);
   BOOST_CHECK_EQUAL(nTestInt32767, 0);
 
-  nTestInt0=0;
-  nTestInt1=1;
-  nTestInt256=256;
-  nTestInt32767=32767;
+  nTestInt0 = CIEC_INT(0);
+  nTestInt1 = CIEC_INT(1);
+  nTestInt256 = CIEC_INT(256);
+  nTestInt32767 = CIEC_INT(32767);
 
   BOOST_CHECK_EQUAL(nTestInt0, 0);
   BOOST_CHECK_EQUAL(nTestInt1, 1);
@@ -189,11 +189,11 @@ BOOST_AUTO_TEST_CASE(CASTS_INT_to_INTS)
     BOOST_CHECK_EQUAL(nTestInt32767, 0);
     BOOST_CHECK_EQUAL(nTestInt_1, 0);
 
-    nTestInt0=0;
-    nTestInt1=1;
-    nTestInt256=256;
-    nTestInt32767=32767;
-    nTestInt_1=-1;
+    nTestInt0 = CIEC_INT(0);
+    nTestInt1 = CIEC_INT(1);
+    nTestInt256 = CIEC_INT(256);
+    nTestInt32767 = CIEC_INT(32767);
+    nTestInt_1 = CIEC_INT(-1);
 
     BOOST_CHECK_EQUAL(nTestInt0, 0);
     BOOST_CHECK_EQUAL(nTestInt1, 1);
@@ -299,10 +299,10 @@ BOOST_AUTO_TEST_CASE(CASTS_INT_to_REAL)
   BOOST_CHECK_EQUAL(nTestInt256, 0);
   BOOST_CHECK_EQUAL(nTestInt32767, 0);
 
-  nTestInt0=0;
-  nTestInt1=1;
-  nTestInt256=256;
-  nTestInt32767=32767;
+  nTestInt0 = CIEC_INT(0);
+  nTestInt1 = CIEC_INT(1);
+  nTestInt256 = CIEC_INT(256);
+  nTestInt32767 = CIEC_INT(32767);
 
   BOOST_CHECK_EQUAL(nTestInt0, 0);
   BOOST_CHECK_EQUAL(nTestInt1, 1);
@@ -354,11 +354,11 @@ BOOST_AUTO_TEST_CASE(CASTS_INT_to_TIME)
     BOOST_CHECK_EQUAL(nTestInt32767, 0);
     BOOST_CHECK_EQUAL(nTestInt_1, 0);
 
-    nTestInt0=0;
-    nTestInt1=1;
-    nTestInt256=256;
-    nTestInt32767=32767;
-    nTestInt_1=-1;
+    nTestInt0 = CIEC_INT(0);
+    nTestInt1 = CIEC_INT(1);
+    nTestInt256 = CIEC_INT(256);
+    nTestInt32767 = CIEC_INT(32767);
+    nTestInt_1 = CIEC_INT(-1);
 
     BOOST_CHECK_EQUAL(nTestInt0, 0);
     BOOST_CHECK_EQUAL(nTestInt1, 1);

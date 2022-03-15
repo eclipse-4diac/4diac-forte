@@ -31,13 +31,13 @@ struct E_PERMIT_TestFixture : public CFBTestFixtureBase{
 BOOST_FIXTURE_TEST_SUITE( PermitTests, E_PERMIT_TestFixture)
 
   BOOST_AUTO_TEST_CASE(permit){
-    mInPERMIT = true;
+    mInPERMIT = CIEC_BOOL(true);
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
   }
 
   BOOST_AUTO_TEST_CASE(dontPermit){
-    mInPERMIT = false;
+    mInPERMIT = CIEC_BOOL(false);
     triggerEvent(0);
     BOOST_CHECK(eventChainEmpty());
   }

@@ -15,7 +15,8 @@
  *    Ernst Blecha - add multibit partial access
  *    Martin Melik Merkumians - changes multibit access index from template
  *      parameter to call argument, make TForteDWord constructor explicit, adds
- *      implicit cast constructor
+ *      implicit cast constructor, removed built-in type operator=, added
+ *      castable CIEC types operator=
  *******************************************************************************/
 #ifndef _FORTE_DWORD_H_
 #define _FORTE_DWORD_H_
@@ -62,20 +63,19 @@ class CIEC_DWORD : public CIEC_ANY_BIT {
     virtual ~CIEC_DWORD() {
     }
 
-    /*! \brief Operator: CIEC_DWORD data type = long data type
-     *
-     *   This command implements the assignment operator for the C++ data type UNSIGNED LONG
-     *   The parameter value is represented by a C++ variable (call by value).
-     *   \param paValue  Value for assignment.
-     *   \return Can be the following response:
-     *     - Pointer to given object.
-     */
-    CIEC_DWORD& operator =(TForteDWord paValue) {
-      setTUINT32(paValue);
+    CIEC_DWORD& operator =(const CIEC_DWORD &paValue) {
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
       return *this;
     }
 
-    CIEC_DWORD& operator =(const CIEC_DWORD &paValue) {
+    CIEC_DWORD& operator =(const CIEC_WORD &paValue) {
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
+      return *this;
+    }
+
+    CIEC_DWORD& operator =(const CIEC_BYTE &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;

@@ -69,10 +69,10 @@ BOOST_AUTO_TEST_CASE(CASTS_BYTE_to_BOOL)
   BOOST_CHECK_EQUAL(nTestByte45, 0U);
   BOOST_CHECK_EQUAL(nTestByte255, 0U);
 
-  nTestByte0=0U;
-  nTestByte1=1U;
-  nTestByte45=45U;
-  nTestByte255=255U;
+  nTestByte0 = CIEC_BYTE(0U);
+  nTestByte1 = CIEC_BYTE(1U);
+  nTestByte45 = CIEC_BYTE(45U);
+  nTestByte255 = CIEC_BYTE(255U);
 
   BOOST_CHECK_EQUAL(nTestByte0, 0U);
   BOOST_CHECK_EQUAL(nTestByte1, 1U);
@@ -110,10 +110,10 @@ BOOST_AUTO_TEST_CASE(CASTS_BYTE_to_BITDTs)
   BOOST_CHECK_EQUAL(nTestByte45, 0U);
   BOOST_CHECK_EQUAL(nTestByte255, 0U);
 
-  nTestByte0=0U;
-  nTestByte1=1U;
-  nTestByte45=45U;
-  nTestByte255=255U;
+  nTestByte0 = CIEC_BYTE(0U);
+  nTestByte1 = CIEC_BYTE(1U);
+  nTestByte45 = CIEC_BYTE(45U);
+  nTestByte255 = CIEC_BYTE(255U);
 
   BOOST_CHECK_EQUAL(nTestByte0, 0U);
   BOOST_CHECK_EQUAL(nTestByte1, 1U);
@@ -179,10 +179,10 @@ BOOST_AUTO_TEST_CASE(CASTS_BYTE_to_INTS)
     BOOST_CHECK_EQUAL(nTestByte45, 0U);
     BOOST_CHECK_EQUAL(nTestByte255, 0U);
 
-    nTestByte0=0U;
-    nTestByte1=1U;
-    nTestByte45=45U;
-    nTestByte255=255U;
+    nTestByte0 = CIEC_BYTE(0U);
+    nTestByte1 = CIEC_BYTE(1U);
+    nTestByte45 = CIEC_BYTE(45U);
+    nTestByte255 = CIEC_BYTE(255U);
 
     BOOST_CHECK_EQUAL(nTestByte0, 0U);
     BOOST_CHECK_EQUAL(nTestByte1, 1U);
@@ -289,10 +289,10 @@ BOOST_AUTO_TEST_CASE(CASTS_BYTE_to_REAL)
   BOOST_CHECK_EQUAL(nTestByte45, 0U);
   BOOST_CHECK_EQUAL(nTestByte255, 0U);
 
-  nTestByte0=0U;
-  nTestByte1=1U;
-  nTestByte45=45U;
-  nTestByte255=255U;
+  nTestByte0 = CIEC_BYTE(0U);
+  nTestByte1 = CIEC_BYTE(1U);
+  nTestByte45 = CIEC_BYTE(45U);
+  nTestByte255 = CIEC_BYTE(255U);
 
   BOOST_CHECK_EQUAL(nTestByte0, 0U);
   BOOST_CHECK_EQUAL(nTestByte1, 1U);
@@ -343,10 +343,10 @@ BOOST_AUTO_TEST_CASE(CASTS_BYTE_to_TIME)
   BOOST_CHECK_EQUAL(nTestByte45, 0U);
   BOOST_CHECK_EQUAL(nTestByte255, 0U);
 
-  nTestByte0=0U;
-  nTestByte1=1U;
-  nTestByte45=45U;
-  nTestByte255=255U;
+  nTestByte0 = CIEC_BYTE(0U);
+  nTestByte1 = CIEC_BYTE(1U);
+  nTestByte45 = CIEC_BYTE(45U);
+  nTestByte255 = CIEC_BYTE(255U);
 
   BOOST_CHECK_EQUAL(nTestByte0, 0U);
   BOOST_CHECK_EQUAL(nTestByte1, 1U);

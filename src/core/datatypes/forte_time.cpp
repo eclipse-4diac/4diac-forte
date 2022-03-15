@@ -121,7 +121,7 @@ int CIEC_TIME::fromString(const char *paValue) {
     nRetVal = static_cast<int>(pcEnd - paValue);
   }
 
-  *this = nIntVal;
+  setLargestInt(nIntVal);
   return nRetVal;
 
 }
@@ -130,29 +130,31 @@ int CIEC_TIME::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal = -1;
   if(paBufferSize > 4) {
 #ifdef FORTE_USE_64BIT_DATATYPES
-    CIEC_LINT timeVal(getInMilliSeconds());
+    #define INTERAL_CIEC_TIME_TYPE CIEC_LINT
 #else //FORTE_USE_64BIT_DATATYPES
-    CIEC_DINT timeVal(getInMilliSeconds());
+    #define INTERAL_CIEC_TIME_TYPE CIEC_DINT
 #endif //FORTE_USE_64BIT_DATATYPES
+    INTERAL_CIEC_TIME_TYPE timeVal(getInMilliSeconds());
     nRetVal = timeVal.toString(paValue + 2, paBufferSize - 4);
     if(-1 != nRetVal) {
       paValue[0] = 'T';
       paValue[1] = '#';
       nRetVal += 2;
-      timeVal = getInMicroSeconds();
-      timeVal = timeVal % 1000; //we only want the microseconds
-      if(0 != timeVal) {
+      TValueType timeValSimple = getInMicroSeconds();
+      timeValSimple = timeValSimple % 1000; //we only want the microseconds
+      if(0 != timeValSimple) {
         //If we have a microsecond value add it to the literal
         paValue[nRetVal] = '.';
         ++nRetVal;
-        if(timeVal < 100) {
+        if(timeValSimple < 100) {
           paValue[nRetVal] = '0';
           ++nRetVal;
-          if(timeVal < 10) {
+          if(timeValSimple < 10) {
             paValue[nRetVal] = '0';
             ++nRetVal;
           }
         }
+        timeVal = INTERAL_CIEC_TIME_TYPE(timeValSimple);
         int size = timeVal.toString(paValue + nRetVal, paBufferSize - nRetVal);
         if(-1 == size) {
           return size;
@@ -167,6 +169,7 @@ int CIEC_TIME::toString(char* paValue, size_t paBufferSize) const {
   }
   return nRetVal;
 }
+#undef INTERAL_CIEC_TIME_TYPE
 
 CIEC_TIME::TValueType CIEC_TIME::getInSeconds() const {
   return static_cast<TValueType>(*this) / static_cast<TValueType>(cgForteTimeBaseUnitsPerSecond);
@@ -194,26 +197,26 @@ CIEC_TIME::TValueType CIEC_TIME::getInNanoSeconds() const {
 }
 
 void CIEC_TIME::setFromSeconds(TValueType paValue) {
-  *this = paValue * cgForteTimeBaseUnitsPerSecond;
+  setLargestInt(paValue * cgForteTimeBaseUnitsPerSecond);
 }
 
 void CIEC_TIME::setFromMilliSeconds(TValueType paValue) {
-  *this =
-      (forte::core::constants::cMillisecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ?
-        paValue * (cgForteTimeBaseUnitsPerSecond / forte::core::constants::cMillisecondsPerSecond) :
-        paValue / (forte::core::constants::cMillisecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
+  setLargestInt
+      ((forte::core::constants::cMillisecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ?
+              paValue * (cgForteTimeBaseUnitsPerSecond / forte::core::constants::cMillisecondsPerSecond) :
+              paValue / (forte::core::constants::cMillisecondsPerSecond / cgForteTimeBaseUnitsPerSecond));
 }
 
 void CIEC_TIME::setFromMicroSeconds(TValueType paValue) {
-  *this =
-      (forte::core::constants::cMicrosecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ?
-        paValue * (cgForteTimeBaseUnitsPerSecond / forte::core::constants::cMicrosecondsPerSecond) :
-        paValue / (forte::core::constants::cMicrosecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
+  setLargestInt(
+        (forte::core::constants::cMicrosecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ?
+          paValue * (cgForteTimeBaseUnitsPerSecond / forte::core::constants::cMicrosecondsPerSecond) :
+          paValue / (forte::core::constants::cMicrosecondsPerSecond / cgForteTimeBaseUnitsPerSecond));
 }
 
 void CIEC_TIME::setFromNanoSeconds(TValueType paValue) {
-  *this =
-      (forte::core::constants::cNanosecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ?
-        paValue * (cgForteTimeBaseUnitsPerSecond / forte::core::constants::cNanosecondsPerSecond) :
-        paValue / (forte::core::constants::cNanosecondsPerSecond / cgForteTimeBaseUnitsPerSecond);
+  setLargestInt(
+        (forte::core::constants::cNanosecondsPerSecond < cgForteTimeBaseUnitsPerSecond) ?
+          paValue * (cgForteTimeBaseUnitsPerSecond / forte::core::constants::cNanosecondsPerSecond) :
+          paValue / (forte::core::constants::cNanosecondsPerSecond / cgForteTimeBaseUnitsPerSecond));
 }

@@ -68,12 +68,12 @@ BOOST_AUTO_TEST_CASE(CASTS_REAL_to_BOOL)
   BOOST_CHECK_EQUAL(nTestReal1_0em37, 0.0f);
   BOOST_CHECK_EQUAL(nTestReal36, 0.0f);
 
-  nTestReal0=0.0f;
-  nTestReal1=1.0f;
-  nTestReal2_2874e6=2.2874e6f;
-  nTestRealm6_2587em4=-6.2587e-4f;
-  nTestReal1_0em37=1.0e-37f;
-  nTestReal36=36.0f;
+  nTestReal0 = CIEC_REAL(0.0f);
+  nTestReal1 = CIEC_REAL(1.0f);
+  nTestReal2_2874e6 = CIEC_REAL(2.2874e6f);
+  nTestRealm6_2587em4 = CIEC_REAL(-6.2587e-4f);
+  nTestReal1_0em37 = CIEC_REAL(1.0e-37f);
+  nTestReal36 = CIEC_REAL(36.0f);
 
 
   BOOST_CHECK_EQUAL(0.0f, nTestReal0);
@@ -120,12 +120,12 @@ BOOST_AUTO_TEST_CASE(CASTS_REAL_to_BITDTs)
   BOOST_CHECK_EQUAL(nTestReal1_0em37, 0.0f);
   BOOST_CHECK_EQUAL(nTestReal36, 0.0f);
 
-  nTestReal0=0.0f;
-  nTestReal1=1.0f;
-  nTestReal2_2874e6=2.2874e6f;
-  nTestRealm6_2587em4=-6.2587e-4f;
-  nTestReal1_0em37=1.0e-37f;
-  nTestReal36=36.0f;
+  nTestReal0 = CIEC_REAL(0.0f);
+  nTestReal1 = CIEC_REAL(1.0f);
+  nTestReal2_2874e6 = CIEC_REAL(2.2874e6f);
+  nTestRealm6_2587em4 = CIEC_REAL(-6.2587e-4f);
+  nTestReal1_0em37 = CIEC_REAL(1.0e-37f);
+  nTestReal36 = CIEC_REAL(36.0f);
 
   BOOST_CHECK_EQUAL(0.0f, nTestReal0);
   BOOST_CHECK_EQUAL(1.0f, nTestReal1);
@@ -208,12 +208,12 @@ BOOST_AUTO_TEST_CASE(CASTS_REAL_to_INTS)
   BOOST_CHECK_EQUAL(nTestReal1_0em37, 0.0f);
   BOOST_CHECK_EQUAL(nTestReal36, 0.0f);
 
-  nTestReal0=0.0f;
-  nTestReal1=1.0f;
-  nTestReal2_2874e6=2.2874e6f;
-  nTestRealm6_2587em4=-6.2587e-4f;
-  nTestReal1_0em37=1.0e-37f;
-  nTestReal36=36.0f;
+  nTestReal0 = CIEC_REAL(0.0f);
+  nTestReal1 = CIEC_REAL(1.0f);
+  nTestReal2_2874e6 = CIEC_REAL(2.2874e6f);
+  nTestRealm6_2587em4 = CIEC_REAL(-6.2587e-4f);
+  nTestReal1_0em37 = CIEC_REAL(1.0e-37f);
+  nTestReal36 = CIEC_REAL(36.0f);
 
   BOOST_CHECK_EQUAL(0.0f, nTestReal0);
   BOOST_CHECK_EQUAL(1.0f, nTestReal1);
@@ -298,12 +298,12 @@ BOOST_AUTO_TEST_CASE(CASTS_REAL_to_LREAL)
   BOOST_CHECK_EQUAL(nTestReal1_0em37, 0.0f);
   BOOST_CHECK_EQUAL(nTestReal36, 0.0f);
 
-  nTestReal0=0.0f;
-  nTestReal1=1.0f;
-  nTestReal2_2874e6=2.2874e6f;
-  nTestRealm6_2587em4=-6.2587e-4f;
-  nTestReal1_0em37=1.0e-37f;
-  nTestReal36=36.0f;
+  nTestReal0 = CIEC_REAL(0.0f);
+  nTestReal1 = CIEC_REAL(1.0f);
+  nTestReal2_2874e6 = CIEC_REAL(2.2874e6f);
+  nTestRealm6_2587em4 = CIEC_REAL(-6.2587e-4f);
+  nTestReal1_0em37 = CIEC_REAL(1.0e-37f);
+  nTestReal36 = CIEC_REAL(36.0f);
 
   BOOST_CHECK_EQUAL(0.0f, nTestReal0);
   BOOST_CHECK_EQUAL(1.0f, nTestReal1);
@@ -362,12 +362,12 @@ BOOST_AUTO_TEST_CASE(CASTS_REAL_to_TIME)
   BOOST_CHECK_EQUAL(nTestReal1_0em37, 0.0f);
   BOOST_CHECK_EQUAL(nTestReal36, 0.0f);
 
-  nTestReal0=0.0f;
-  nTestReal1=1.0f;
-  nTestReal2_2874e6=2.2874e6f;
-  nTestRealm6_2587em4=-6.2587e-4f;
-  nTestReal1_0em37=1.0e-37f;
-  nTestReal36=36.0f;
+  nTestReal0 = CIEC_REAL(0.0f);
+  nTestReal1 = CIEC_REAL(1.0f);
+  nTestReal2_2874e6 = CIEC_REAL(2.2874e6f);
+  nTestRealm6_2587em4 = CIEC_REAL(-6.2587e-4f);
+  nTestReal1_0em37 = CIEC_REAL(1.0e-37f);
+  nTestReal36 = CIEC_REAL(36.0f);
 
   BOOST_CHECK_EQUAL(0.0f, nTestReal0);
   BOOST_CHECK_EQUAL(1.0f, nTestReal1);

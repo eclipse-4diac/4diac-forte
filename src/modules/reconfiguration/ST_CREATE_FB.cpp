@@ -50,7 +50,7 @@ void FORTE_ST_CREATE_FB::executeEvent(int pa_nEIID){
       if(true == QI()) {
         executeRQST();
       } else {
-      STATUS() = "Not Ready";
+      STATUS() = CIEC_WSTRING("Not Ready");
       }
       sendOutputEvent(scm_nEventCNFID);
       break;
@@ -70,10 +70,10 @@ void FORTE_ST_CREATE_FB::executeRQST(void){
   //calculate return value
   CIEC_STRING retVal(DEV_MGR::scm_sMGMResponseTexts[resp]);
   CIEC_STRING compareVal(DEV_MGR::scm_sMGMResponseTexts[e_RDY]);
-  QO() = retVal == compareVal;
+  QO() = CIEC_BOOL(retVal == compareVal);
 
   DEVLOG_DEBUG("%s\n", DEV_MGR::scm_sMGMResponseTexts[resp]); 
-  STATUS() = (DEV_MGR::scm_sMGMResponseTexts[resp]);
+  STATUS() = CIEC_WSTRING(DEV_MGR::scm_sMGMResponseTexts[resp]);
 }
 
 

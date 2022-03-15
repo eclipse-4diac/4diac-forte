@@ -66,8 +66,8 @@ inline const CIEC_UDINT INT_TO_UDINT(const CIEC_INT &paVal) {
   return CIEC_ANY::cast<CIEC_UDINT>(paVal);
 }
 
-inline const CIEC_INT INT_TO_UINT(const CIEC_INT &paVal) {
-  return CIEC_ANY::cast<CIEC_INT>(paVal);
+inline const CIEC_UINT INT_TO_UINT(const CIEC_INT &paVal) {
+  return CIEC_ANY::cast<CIEC_UINT>(paVal);
 }
 
 #ifdef FORTE_USE_64BIT_DATATYPES

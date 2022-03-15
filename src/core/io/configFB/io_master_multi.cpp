@@ -43,9 +43,9 @@ void IOConfigFBMultiMaster::onStartup() {
     return IOConfigFBController::onStartup();
   }
 
-  BusAdapterOut().MasterId() = mId;
-  BusAdapterOut().Index() = 0;
-  BusAdapterOut().QI() = true;
+  BusAdapterOut().MasterId() = CIEC_UINT(mId);
+  BusAdapterOut().Index() = CIEC_UINT(0);
+  BusAdapterOut().QI() = CIEC_BOOL(true);
   sendAdapterEvent(scmBusAdapterAdpNum, IOConfigFBMultiAdapter::scmEventINITID);
 }
 
@@ -54,7 +54,7 @@ void IOConfigFBMultiMaster::onStop() {
     return IOConfigFBController::onStop();
   }
 
-  BusAdapterOut().QI() = false;
+  BusAdapterOut().QI() = CIEC_BOOL(false);
   sendAdapterEvent(scmBusAdapterAdpNum, IOConfigFBMultiAdapter::scmEventINITID);
 }
 

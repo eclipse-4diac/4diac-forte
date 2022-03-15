@@ -14,7 +14,8 @@
  *    Ernst Blecha - add multibit partial access
  *    Martin Melik Merkumians - changes multibit access index from template
  *      parameter to call argument, make TForteLWord constructor explicit, adds
- *      implicit cast constructor
+ *      implicit cast constructor, removed built-in type operator=, added
+ *        castable CIEC types operator=
   *******************************************************************************/
 #ifndef _FORTE_LWORD_H_
 #define _FORTE_LWORD_H_
@@ -69,20 +70,25 @@ class CIEC_LWORD : public CIEC_ANY_BIT{
     virtual ~CIEC_LWORD(){
     }
 
-    /*! \brief Operator: CIEC_LWORD data type = long data type
-     *
-     *   This command implements the assignment operator for the C++ data type UNSIGNED LONG LONG
-     *   The parameter value is represented by a C++ variable (call by value).
-     *   \param paValue  Value for assignment.
-     *   \return Can be the following response:
-     *     - Pointer to given object.
-     */
-    CIEC_LWORD& operator =(TForteLWord paValue){
-      setTUINT64(paValue);
+    CIEC_LWORD& operator =(const CIEC_LWORD &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
       return *this;
     }
 
-    CIEC_LWORD& operator =(const CIEC_LWORD &paValue){
+    CIEC_LWORD& operator =(const CIEC_DWORD &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
+      return *this;
+    }
+
+    CIEC_LWORD& operator =(const CIEC_WORD &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
+      return *this;
+    }
+
+    CIEC_LWORD& operator =(const CIEC_BYTE &paValue){
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;

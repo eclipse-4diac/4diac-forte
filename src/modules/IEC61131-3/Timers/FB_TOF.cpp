@@ -51,11 +51,11 @@ const SFBInterfaceSpec FB_TOF::scm_stFBInterfaceSpec = {
 void FB_TOF::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
     if(st_IN() == true){
-      Q() = true;
-      ET() = 0;
+      Q() = CIEC_BOOL(true);
+      ET() = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
       fallingEdge = false;
       notFirstRisingEdge = true;
-      start = 0;
+      start = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
     }
     else{
       if(true == notFirstRisingEdge){
@@ -63,12 +63,12 @@ void FB_TOF::executeEvent(int pa_nEIID){
           fallingEdge = true;
           start = NOW_MONOTONIC();
         }
-        else{
-          count = NOW_MONOTONIC() - start;
-          if(PT() <= count){
-            Q() = false;
+        else {
+          count = SUB(NOW_MONOTONIC(), start);
+          if(LE(PT(), count)) {
+            Q() = CIEC_BOOL(false);
             ET() = PT();
-          }else{
+          } else{
             ET() = count;
           }
         }

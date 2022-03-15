@@ -12,7 +12,8 @@
  *    Monika Wenger, Alois Zoitl,
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians - make TForteInt64 constructor explicit,
- *      adds casts constructors
+ *      adds casts constructors, removed built-in type operator=, added
+ *      castable CIEC types operator=
   *******************************************************************************/
 #ifndef _FORTE_LINT_H_
 #define _FORTE_LINT_H_
@@ -84,20 +85,43 @@ class CIEC_LINT : public CIEC_ANY_INT{
     virtual ~CIEC_LINT(){
     }
 
-    /*! \brief Operator: CIEC_LINT data type = long data type
-     *
-     *   This command implements the assignment operator for the C++ data type LONG.
-     *   The parameter value is represented by a C++ variable (call by value).
-     *   \param paValue  Value for assignment.
-     *   \return Can be the following response:
-     *     - Pointer to given object.
-     */
-    CIEC_LINT& operator =(TForteInt64 paValue){
-      setTINT64(paValue);
+    CIEC_LINT& operator =(const CIEC_LINT &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
       return *this;
     }
 
-    CIEC_LINT& operator =(const CIEC_LINT &paValue){
+    CIEC_LINT& operator =(const CIEC_DINT &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
+      return *this;
+    }
+
+    CIEC_LINT& operator =(const CIEC_UDINT &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
+      return *this;
+    }
+
+    CIEC_LINT& operator =(const CIEC_INT &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
+      return *this;
+    }
+
+    CIEC_LINT& operator =(const CIEC_UINT &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
+      return *this;
+    }
+
+    CIEC_LINT& operator =(const CIEC_SINT &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
+      return *this;
+    }
+
+    CIEC_LINT& operator =(const CIEC_USINT &paValue){
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;

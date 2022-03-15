@@ -35,8 +35,8 @@ struct F_DEV_TestFixture : public CFBTestFixtureBase{
 BOOST_FIXTURE_TEST_SUITE( F_DIV_Tests, F_DEV_TestFixture)
 
   BOOST_AUTO_TEST_CASE(validDivision){
-    mIn1_DIV = 30;
-    mIn2_DIV = 5;
+    mIn1_DIV = CIEC_INT(30);
+    mIn2_DIV = CIEC_INT(5);
     /* trigger the inputevent */
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
@@ -44,8 +44,8 @@ BOOST_FIXTURE_TEST_SUITE( F_DIV_Tests, F_DEV_TestFixture)
   }
 
   BOOST_AUTO_TEST_CASE(divisionByZero){
-    mIn1_DIV = 30;
-    mIn2_DIV = 0;
+    mIn1_DIV = CIEC_INT(30);
+    mIn2_DIV = CIEC_INT(0);
     /* trigger the inputevent */
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));

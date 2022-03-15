@@ -26,8 +26,8 @@ struct STRUCT_MUX_TestFixture_1 : public CFBTestFixtureBase{
       CFBTestFixtureBase::setup();
     }
 
-    CIEC_INT    mVar1;
-    CIEC_INT    mVar2;
+    CIEC_INT mVar1;
+    CIEC_INT mVar2;
     CIEC_STRING mVar3;
 
     CIEC_Struct_Muxer_Test_Struct_1 mOut;
@@ -48,36 +48,36 @@ BOOST_FIXTURE_TEST_SUITE( STRUCT_MUX_MainTests, STRUCT_MUX_TestFixture_1)
   }
 
   BOOST_AUTO_TEST_CASE(changeValueCheck) {
-    mVar1 = -256;
-    mVar2 = 23145;
-    mVar3 = "My Test String!";
+    mVar1 = CIEC_INT(-256);
+    mVar2 = CIEC_INT(23145);
+    mVar3 = CIEC_STRING("My Test String!");
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     checkStructValues();
   }
 
   BOOST_AUTO_TEST_CASE(updateValueCheck) {
-    mVar1 = 12;
-    mVar2 = -11111;
-    mVar3 = "string!";
+    mVar1 = CIEC_INT(12);
+    mVar2 = CIEC_INT(-11111);
+    mVar3 = CIEC_STRING("string!");
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     checkStructValues();
 
     //change values to check consecutive updates
 
-    mVar1 = 32255;
-    mVar2 = 12345;
-    mVar3 = "new string!";
+    mVar1 = CIEC_INT(32255);
+    mVar2 = CIEC_INT(12345);
+    mVar3 = CIEC_STRING("new string!");
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     checkStructValues();
   }
 
   BOOST_AUTO_TEST_CASE(steadyStateValueCheck) {
-    mVar1 = 13;
-    mVar2 = 234;
-    mVar3 = "stable value";
+    mVar1 = CIEC_INT(13);
+    mVar2 = CIEC_INT(234);
+    mVar3 = CIEC_STRING("stable value");
 
     for(size_t i = 0; i < 45; i++){
       triggerEvent(0);
@@ -119,9 +119,9 @@ BOOST_FIXTURE_TEST_SUITE( STRUCT_MUX_SecondStructTest, STRUCT_MUX_TestFixture_2)
   }
 
   BOOST_AUTO_TEST_CASE(changeValueCheck) {
-    mVar1 = 1234;
-    mVar2 = "this is the second struct!";
-    mVar3 = -2345;
+    mVar1 = CIEC_INT(1234);
+    mVar2 = CIEC_STRING("this is the second struct!");
+    mVar3 = CIEC_INT(-2345);
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     checkStructValues();

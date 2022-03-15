@@ -87,8 +87,8 @@ void CCommFB::executeEvent(int paEIID) {
   }
 
   if (e_Nothing != resp) {
-    STATUS() = scm_sResponseTexts[resp & 0xF];
-    QO() = !(resp & scg_unComNegative);
+    STATUS() = CIEC_WSTRING(scm_sResponseTexts[resp & 0xF]);
+    QO() = CIEC_BOOL(!(resp & scg_unComNegative));
 
     if (scg_unINIT & resp) {
       sendOutputEvent(scm_nEventINITOID);

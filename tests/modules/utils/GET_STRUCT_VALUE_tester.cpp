@@ -101,7 +101,7 @@ struct GET_STRUCT_VALUE_Main_TestFixture : public GET_STRUCT_VALUE_GenericTestFi
 BOOST_FIXTURE_TEST_SUITE( GET_STRUCT_VALUE_MainTests, GET_STRUCT_VALUE_Main_TestFixture)
 
   BOOST_AUTO_TEST_CASE(firstLevel) {
-    mMember = "Val1";
+    mMember = CIEC_STRING("Val1");
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     BOOST_CHECK_EQUAL(true, mQO);
@@ -109,7 +109,7 @@ BOOST_FIXTURE_TEST_SUITE( GET_STRUCT_VALUE_MainTests, GET_STRUCT_VALUE_Main_Test
   }
 
   BOOST_AUTO_TEST_CASE(secondLevel) {
-    mMember = "Val2.Val2";
+    mMember = CIEC_STRING("Val2.Val2");
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     BOOST_CHECK_EQUAL(true, mQO);
@@ -118,42 +118,42 @@ BOOST_FIXTURE_TEST_SUITE( GET_STRUCT_VALUE_MainTests, GET_STRUCT_VALUE_Main_Test
 
 
   BOOST_AUTO_TEST_CASE(firstLevelWrongName) {
-    mMember = "xVal1";
+    mMember = CIEC_STRING("xVal1");
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     BOOST_CHECK_EQUAL(false, mQO);
   }
 
   BOOST_AUTO_TEST_CASE(firstLevelWrongNameWithSecondLevel) {
-    mMember = "xVal1.Val2";
+    mMember = CIEC_STRING("xVal1.Val2");
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     BOOST_CHECK_EQUAL(false, mQO);
   }
 
   BOOST_AUTO_TEST_CASE(secondLevelWrongName) {
-    mMember = "Val2.xVal2";
+    mMember = CIEC_STRING("Val2.xVal2");
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     BOOST_CHECK_EQUAL(false, mQO);
   }
 
   BOOST_AUTO_TEST_CASE(accessNonStruct) {
-    mMember = "Val1.Val1";
+    mMember = CIEC_STRING("Val1.Val1");
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     BOOST_CHECK_EQUAL(false, mQO);
   }
 
   BOOST_AUTO_TEST_CASE(wrongOutputType) {
-    mMember = "Val2.Val1";
+    mMember = CIEC_STRING("Val2.Val1");
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     BOOST_CHECK_EQUAL(false, mQO);
   }
 
   BOOST_AUTO_TEST_CASE(WrongEventInput) {
-    mMember = "Val2.Val1";
+    mMember = CIEC_STRING("Val2.Val1");
     triggerEvent(1);
     BOOST_CHECK(eventChainEmpty());
   }
@@ -165,7 +165,7 @@ struct GET_STRUCT_VALUE_WRONG_OUTPUT_TYPE_TestFixture : public GET_STRUCT_VALUE_
 
     GET_STRUCT_VALUE_WRONG_OUTPUT_TYPE_TestFixture() :
         GET_STRUCT_VALUE_GenericTestFixture(&mIn_struct, &mOut){
-      mIn_struct = 1;
+      mIn_struct = CIEC_INT(1);
       CFBTestFixtureBase::setup();
     }
 
@@ -176,7 +176,7 @@ struct GET_STRUCT_VALUE_WRONG_OUTPUT_TYPE_TestFixture : public GET_STRUCT_VALUE_
 BOOST_FIXTURE_TEST_SUITE( GET_STRUCT_VALUE_WRONG_OUTPUT_TYPETests, GET_STRUCT_VALUE_WRONG_OUTPUT_TYPE_TestFixture)
 
   BOOST_AUTO_TEST_CASE(wrongInputType) {
-    mMember = "Val1";
+    mMember = CIEC_STRING("Val1");
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     BOOST_CHECK_EQUAL(false, mQO);

@@ -52,14 +52,14 @@ void E_CTU::executeEvent(int pa_nEIID){
   switch(pa_nEIID){
     case scm_nEventCUID:
       if(CV() < 65535){
-        CV() = static_cast<TForteUInt16>(CV() + 1);
-        Q() = (CV() >= PV());
+        CV() = CIEC_UINT(CV() + 1);
+        Q() = GE(CV(), PV());
         sendOutputEvent( scm_nEventCUOID);
       }
       break;
     case scm_nEventRID:
-      CV() = 0;
-      Q() = false;
+      CV() = CIEC_UINT(0);
+      Q() = CIEC_BOOL(false);
       sendOutputEvent( scm_nEventROID);
       break;
     default:

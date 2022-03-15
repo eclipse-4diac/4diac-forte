@@ -11,7 +11,8 @@
  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
  *    Ingo Hegny, Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - make TForteInt8 constructor explicit
+ *    Martin Melik Merkumians - make TForteInt8 constructor explicit,
+ *      removed built-in type operator=
  *******************************************************************************/
 #ifndef _FORTE_SINT_H_
 #define _FORTE_SINT_H_
@@ -43,19 +44,6 @@ class CIEC_SINT : public CIEC_ANY_INT{
     }
 
     virtual ~CIEC_SINT(){
-    }
-
-    /*! \brief Operator: CIEC_SINT data type = char data type
-     *
-     *   This command implements the assignment operator for the C++ data type CHAR
-     *   The parameter value is represented by a C++ variable (call by value).
-     *   \param paValue  Value for assignment.
-     *   \return Can be the following response:
-     *     - Pointer to given object.
-     */
-    CIEC_SINT& operator =(TForteInt8 paValue){
-      setTINT8(paValue);
-      return *this;
     }
 
     CIEC_SINT& operator =(const CIEC_SINT &paValue){

@@ -223,9 +223,9 @@ BOOST_AUTO_TEST_CASE(String_compare)
   char cTest2[] = "Check string!";
   char cTest3[] = "checkstring!";
 
-  sTest1 = cTest1;
-  sTest2 = cTest2;
-  sTest3 = cTest3;
+  sTest1 = CIEC_STRING(cTest1);
+  sTest2 = CIEC_STRING(cTest2);
+  sTest3 = CIEC_STRING(cTest3);
   BOOST_CHECK(sTest1 == sTest2);
   BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), cTest1), 0);
   BOOST_CHECK_EQUAL(strcmp(sTest2.getValue(), cTest2), 0);
@@ -371,13 +371,13 @@ BOOST_AUTO_TEST_CASE(String_toUTF8)
   CIEC_STRING sTest;
   char sResult[32];
 
-  sTest = "";
+  sTest = CIEC_STRING("");
   sResult[0] = '\0';
   nRes = sTest.toUTF8(sResult, sizeof(sResult), false);
   BOOST_CHECK_EQUAL(nRes, 0);
   BOOST_CHECK(! memcmp(sResult, cASCII1, sizeof(cASCII1)));
 
-  sTest = "A";
+  sTest = CIEC_STRING("A");
   sResult[0] = '\0';
   nRes = sTest.toUTF8(sResult, sizeof(sResult), false);
   BOOST_CHECK_EQUAL(nRes, 1);
@@ -385,7 +385,7 @@ BOOST_AUTO_TEST_CASE(String_toUTF8)
   nRes = sTest.toUTF8(sResult, 1, false);
   BOOST_CHECK_EQUAL(nRes, -1);
 
-  sTest = "\x7f";
+  sTest = CIEC_STRING("\x7f");
   sResult[0] = '\0';
   nRes = sTest.toUTF8(sResult, sizeof(sResult), false);
   BOOST_CHECK_EQUAL(nRes, 1);
@@ -395,7 +395,7 @@ BOOST_AUTO_TEST_CASE(String_toUTF8)
   nRes = sTest.toUTF8(sResult, 2, false);
   BOOST_CHECK_EQUAL(nRes, 1);
 
-  sTest = "A\xa2""A";
+  sTest = CIEC_STRING("A\xa2""A");
   sResult[0] = '\0';
   nRes = sTest.toUTF8(sResult, sizeof(sResult), false);
   BOOST_CHECK_EQUAL(nRes, 4);
@@ -507,47 +507,47 @@ BOOST_AUTO_TEST_CASE(String_toString)
   CIEC_STRING sTestee;
   char acBuffer[200];
 
-  sTestee = cTestResult1;
+  sTestee = CIEC_STRING(cTestResult1);
   BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cTestToStringResult1));
   BOOST_CHECK_EQUAL(0, strncmp(cTestToStringResult1, acBuffer, strlen(cTestToStringResult1)));
 
-  sTestee = cTestResult2;
+  sTestee = CIEC_STRING(cTestResult2);
   BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cTestLiteral2));
   BOOST_CHECK_EQUAL(0, strncmp(cTestLiteral2, acBuffer, strlen(cTestLiteral2)));
 
-  sTestee = cTestDollarResult;
+  sTestee = CIEC_STRING(cTestDollarResult);
   BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cTestDollarToStringResult));
   BOOST_CHECK_EQUAL(0, strncmp(cTestDollarToStringResult, acBuffer, strlen(cTestDollarToStringResult)));
 
-  sTestee = cTestLineFeedResult;
+  sTestee = CIEC_STRING(cTestLineFeedResult);
   BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cTestLineFeedToStringResult));
   BOOST_CHECK_EQUAL(0, strncmp(cTestLineFeedToStringResult, acBuffer, strlen(cTestLineFeedToStringResult)));
 
-  sTestee = cTestNewLineResult;
+  sTestee = CIEC_STRING(cTestNewLineResult);
   BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cTestNewLineToStringResult));
   BOOST_CHECK_EQUAL(0, strncmp(cTestNewLineToStringResult, acBuffer, strlen(cTestNewLineToStringResult)));
 
-  sTestee = cTestFormFeedResult;
+  sTestee = CIEC_STRING(cTestFormFeedResult);
   BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cTestFormFeedToStringResult));
   BOOST_CHECK_EQUAL(0, strncmp(cTestFormFeedToStringResult, acBuffer, strlen(cTestFormFeedToStringResult)));
 
-  sTestee = cTestCarriageReturnResult;
+  sTestee = CIEC_STRING(cTestCarriageReturnResult);
   BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cTestCarriageReturnToStringResult));
   BOOST_CHECK_EQUAL(0, strncmp(cTestCarriageReturnToStringResult, acBuffer, strlen(cTestCarriageReturnToStringResult)));
 
-  sTestee = cTestTabResult;
+  sTestee = CIEC_STRING(cTestTabResult);
   BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cTestTabToStringResult));
   BOOST_CHECK_EQUAL(0, strncmp(cTestTabToStringResult, acBuffer, strlen(cTestTabToStringResult)));
 
-  sTestee = cTestSingleQuoteResult;
+  sTestee = CIEC_STRING(cTestSingleQuoteResult);
   BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cTestSingleQuoteToStringResult));
   BOOST_CHECK_EQUAL(0, strncmp(cTestSingleQuoteToStringResult, acBuffer, strlen(cTestSingleQuoteToStringResult)));
 
-  sTestee = cTestDoubleQuoteResult;
+  sTestee = CIEC_STRING(cTestDoubleQuoteResult);
   BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cTestDoubleQuoteToStringResult));
   BOOST_CHECK_EQUAL(0, strncmp(cTestDoubleQuoteToStringResult, acBuffer, strlen(cTestDoubleQuoteToStringResult)));
 
-  sTestee = cTestEscapedCharacterResult;
+  sTestee = CIEC_STRING(cTestEscapedCharacterResult);
   BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cTestEscapedCharacterToStringResult));
   BOOST_CHECK_EQUAL(0, strncmp(cTestEscapedCharacterToStringResult, acBuffer, strlen(cTestEscapedCharacterToStringResult)));
 }

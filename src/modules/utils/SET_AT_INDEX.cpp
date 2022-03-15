@@ -17,7 +17,7 @@
 
 DEFINE_FIRMWARE_FB(FORTE_SET_AT_INDEX, g_nStringIdSET_AT_INDEX)
 
-  const CStringDictionary::TStringId FORTE_SET_AT_INDEX::scm_anDataInputNames[] = {g_nStringIdIN_ARRAY, g_nStringIdINDEX, g_nStringIdVALUE};
+const CStringDictionary::TStringId FORTE_SET_AT_INDEX::scm_anDataInputNames[] = {g_nStringIdIN_ARRAY, g_nStringIdINDEX, g_nStringIdVALUE};
 
 const CStringDictionary::TStringId FORTE_SET_AT_INDEX::scm_anDataInputTypeIds[] = {g_nStringIdANY, g_nStringIdUINT, g_nStringIdANY};
 
@@ -56,21 +56,21 @@ void FORTE_SET_AT_INDEX::executeEvent(int pa_nEIID){
             //update the value
             rOutArray.setValue(rInArray);
             rOutArray[INDEX()]->saveAssign(VALUE());
-            QO() = true;
+            QO() = CIEC_BOOL(true);
           }
           else{
             DEVLOG_DEBUG("Access index out of range, or mismatching array lengths.\n");
-            QO() = false;
+            QO() = CIEC_BOOL(false);
           }
       }
       else{
-        DEVLOG_DEBUG("Inequal element data types.\n");
-        QO() = false;
+        DEVLOG_DEBUG("Unequal element data types.\n");
+        QO() = CIEC_BOOL(false);
       }
     }
     else{
       DEVLOG_DEBUG("No 'Array' typed input and output data.\n");
-      QO() = false;
+      QO() = CIEC_BOOL(false);
     }
     sendOutputEvent(scm_nEventCNFID);
     break;

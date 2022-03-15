@@ -286,7 +286,7 @@ CActionInfo::UA_ActionType CActionInfo::CActionParser::getActionEnum(const char 
 
 bool CActionInfo::CActionParser::getEndpoint(const char *paEndpoint, CIEC_STRING &paResult) {
   if(0 != strchr(paEndpoint, '#')) {
-    paResult = paEndpoint;
+    paResult = CIEC_STRING(paEndpoint);
     paResult.assign(paResult.getValue(), static_cast<TForteUInt16>(paResult.length() - 1)); //remove #
     return true;
   }
@@ -300,11 +300,11 @@ bool CActionInfo::CActionParser::handlePair(const char *paPair, CSinglyLinkedLis
   UA_NodeId *nodeIdResult = 0;
   size_t noOfParameters = pairParser.parseParameters();
   if(CActionParser::eMaxNumberOfPositions == noOfParameters) {
-    browsePathResult = pairParser[CActionParser::eBrowseName];
+    browsePathResult = CIEC_STRING(pairParser[CActionParser::eBrowseName]);
     nodeIdResult = parseNodeId(pairParser[CActionParser::eNodeId]);
     retVal = nodeIdResult;
   } else if(CActionParser::eMaxNumberOfPositions - 1 == noOfParameters) { //no NodeId was provided
-    browsePathResult = pairParser[CActionParser::eBrowseName];
+    browsePathResult = CIEC_STRING(pairParser[CActionParser::eBrowseName]);
     retVal = true;
   } else {
     DEVLOG_ERROR("[OPC UA ACTION]: The pair %s doesn't have the proper format BROWSENAME,NODEID\n", paPair);

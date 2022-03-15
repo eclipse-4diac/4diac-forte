@@ -31,17 +31,18 @@ CIEC_ANY_STRING::~CIEC_ANY_STRING(){
   }
 }
 
-CIEC_ANY_STRING& CIEC_ANY_STRING::operator =(const char* const pa_pacValue){
-  if(0 != pa_pacValue){
-    size_t nLen = strlen(pa_pacValue);
+void CIEC_ANY_STRING::fromCharString(const char* const paValue){
+  if(0 != paValue){
+    size_t nLen = strlen(paValue);
     if (nLen > scm_unMaxStringLen) {
       //If we get a to large string we will truncate it
       nLen = scm_unMaxStringLen;
       DEVLOG_WARNING("Too large string given in assignment, destination will be truncated!\n");
     }
-    assign(pa_pacValue, static_cast<TForteUInt16>(nLen));
+    assign(paValue, static_cast<TForteUInt16>(nLen));
+  } else {
+    DEVLOG_WARNING("CIEC_ANY_STRING::fromCharString - Attempt to assign null, no action performed!\n");
   }
-  return *this;
 }
 
 void CIEC_ANY_STRING::assign(const char *pa_poData, TForteUInt16 pa_nLen) {

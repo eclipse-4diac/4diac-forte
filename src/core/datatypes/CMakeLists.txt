@@ -31,6 +31,7 @@ forte_add_sourcefile_hcpp(forte_any_magnitude)
 forte_add_sourcefile_hcpp(forte_any_bit)
 forte_add_sourcefile_hcpp(forte_any_int)
 forte_add_sourcefile_hcpp(forte_any_real)
+forte_add_sourcefile_hcpp(forte_state)
 
 # include STRUCT Datatype-Support
 forte_add_sourcefile_hcpp(forte_struct)

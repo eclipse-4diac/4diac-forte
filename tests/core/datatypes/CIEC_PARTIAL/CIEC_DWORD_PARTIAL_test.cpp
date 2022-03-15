@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_VALUE_CHECK_BIT)
 {
   CIEC_DWORD nTestDWord;
 
-  nTestDWord=0xCAFEBABE;
+  nTestDWord = CIEC_DWORD(0xCAFEBABE);
 
   test4X_C(nTestDWord,28)
   test4X_A(nTestDWord,24)
@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_VALUE_CHECK_BYTE)
 {
   CIEC_DWORD nTestDWord;
 
-  nTestDWord=0xCAFEBABE;
+  nTestDWord = CIEC_DWORD(0xCAFEBABE);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_BYTE>(0)), 0xBE);
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_BYTE>(1)), 0xBA);
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_VALUE_CHECK_WORD)
 {
   CIEC_DWORD nTestDWord;
 
-  nTestDWord=0xCAFEBABE;
+  nTestDWord = CIEC_DWORD(0xCAFEBABE);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_WORD>(0)), 0xBABE);
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_WORD>(1)), 0xCAFE);
@@ -135,7 +135,7 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_VALUE_CHECK_DWORD)
 {
   CIEC_DWORD nTestDWord;
 
-  nTestDWord=0xCAFEBABE;
+  nTestDWord = CIEC_DWORD(0xCAFEBABE);
 
   BOOST_CHECK_EQUAL(nTestDWord, 0xCAFEBABE);
 
@@ -171,10 +171,10 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_ASSIGN)
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_WORD>(0)), 0xF00DU);
   BOOST_CHECK_EQUAL(nTestDWord, 0xBAADF00DU);
 
-  nTestDWord.partial<CIEC_BYTE>(3) = 0xBA;
-  nTestDWord.partial<CIEC_BYTE>(2) = 0xD0;
-  nTestDWord.partial<CIEC_BYTE>(1) = 0xCA;
-  nTestDWord.partial<CIEC_BYTE>(0) = 0xFE;
+  nTestDWord.partial<CIEC_BYTE>(3) = CIEC_BYTE(0xBA);
+  nTestDWord.partial<CIEC_BYTE>(2) = CIEC_BYTE(0xD0);
+  nTestDWord.partial<CIEC_BYTE>(1) = CIEC_BYTE(0xCA);
+  nTestDWord.partial<CIEC_BYTE>(0) = CIEC_BYTE(0xFE);
 
   test4X_B(nTestDWord,28);
   test4X_A(nTestDWord,24);
@@ -193,8 +193,8 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_ASSIGN)
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_WORD>(0)), 0xCAFEU);
   BOOST_CHECK_EQUAL(nTestDWord, 0xBAD0CAFEU);
 
-  nTestDWord.partial<CIEC_WORD>(1) = 0xCEC0;
-  nTestDWord.partial<CIEC_WORD>(0) = 0xFFEE;
+  nTestDWord.partial<CIEC_WORD>(1) = CIEC_WORD(0xCEC0);
+  nTestDWord.partial<CIEC_WORD>(0) = CIEC_WORD(0xFFEE);
 
   test4X_C(nTestDWord,28);
   test4X_E(nTestDWord,24);
@@ -213,7 +213,7 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_ASSIGN)
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_WORD>(0)), 0xFFEEU);
   BOOST_CHECK_EQUAL(nTestDWord, 0xCEC0FFEEU);
 
-  nTestDWord = 0xADD511FE;
+  nTestDWord = CIEC_DWORD(0xADD511FE);
 
   test4X_A(nTestDWord,28);
   test4X_D(nTestDWord,24);
@@ -322,10 +322,10 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_CHANGE_CHAIN_SET_BYTE_CHECK_BIT)
   set4X_0(nTestDWord,4);
   set4X_D(nTestDWord,0);
 
-  nTestDWord.partial<CIEC_BYTE>(3) = 0xBA;
-  nTestDWord.partial<CIEC_BYTE>(2) = 0xD0;
-  nTestDWord.partial<CIEC_BYTE>(1) = 0xCA;
-  nTestDWord.partial<CIEC_BYTE>(0) = 0xFE;
+  nTestDWord.partial<CIEC_BYTE>(3) = CIEC_BYTE(0xBA);
+  nTestDWord.partial<CIEC_BYTE>(2) = CIEC_BYTE(0xD0);
+  nTestDWord.partial<CIEC_BYTE>(1) = CIEC_BYTE(0xCA);
+  nTestDWord.partial<CIEC_BYTE>(0) = CIEC_BYTE(0xFE);
 
   test4X_B(nTestDWord,28);
   test4X_A(nTestDWord,24);
@@ -350,10 +350,10 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_CHANGE_CHAIN_SET_BYTE_CHECK_BYTE)
   set4X_0(nTestDWord,4);
   set4X_D(nTestDWord,0);
 
-  nTestDWord.partial<CIEC_BYTE>(3) = 0xBA;
-  nTestDWord.partial<CIEC_BYTE>(2) = 0xD0;
-  nTestDWord.partial<CIEC_BYTE>(1) = 0xCA;
-  nTestDWord.partial<CIEC_BYTE>(0) = 0xFE;
+  nTestDWord.partial<CIEC_BYTE>(3) = CIEC_BYTE(0xBA);
+  nTestDWord.partial<CIEC_BYTE>(2) = CIEC_BYTE(0xD0);
+  nTestDWord.partial<CIEC_BYTE>(1) = CIEC_BYTE(0xCA);
+  nTestDWord.partial<CIEC_BYTE>(0) = CIEC_BYTE(0xFE);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_BYTE>(3)), 0xBAU);
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_BYTE>(2)), 0xD0U);
@@ -374,10 +374,10 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_CHANGE_CHAIN_SET_BYTE_CHECK_WORD)
   set4X_0(nTestDWord,4);
   set4X_D(nTestDWord,0);
 
-  nTestDWord.partial<CIEC_BYTE>(3) = 0xBA;
-  nTestDWord.partial<CIEC_BYTE>(2) = 0xD0;
-  nTestDWord.partial<CIEC_BYTE>(1) = 0xCA;
-  nTestDWord.partial<CIEC_BYTE>(0) = 0xFE;
+  nTestDWord.partial<CIEC_BYTE>(3) = CIEC_BYTE(0xBA);
+  nTestDWord.partial<CIEC_BYTE>(2) = CIEC_BYTE(0xD0);
+  nTestDWord.partial<CIEC_BYTE>(1) = CIEC_BYTE(0xCA);
+  nTestDWord.partial<CIEC_BYTE>(0) = CIEC_BYTE(0xFE);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_WORD>(1)), 0xBAD0U);
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_WORD>(0)), 0xCAFEU);
@@ -396,10 +396,10 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_CHANGE_CHAIN_SET_BYTE_CHECK_DWORD)
   set4X_0(nTestDWord,4);
   set4X_D(nTestDWord,0);
 
-  nTestDWord.partial<CIEC_BYTE>(3) = 0xBA;
-  nTestDWord.partial<CIEC_BYTE>(2) = 0xD0;
-  nTestDWord.partial<CIEC_BYTE>(1) = 0xCA;
-  nTestDWord.partial<CIEC_BYTE>(0) = 0xFE;
+  nTestDWord.partial<CIEC_BYTE>(3) = CIEC_BYTE(0xBA);
+  nTestDWord.partial<CIEC_BYTE>(2) = CIEC_BYTE(0xD0);
+  nTestDWord.partial<CIEC_BYTE>(1) = CIEC_BYTE(0xCA);
+  nTestDWord.partial<CIEC_BYTE>(0) = CIEC_BYTE(0xFE);
 
   BOOST_CHECK_EQUAL(nTestDWord, 0xBAD0CAFEU);
 }
@@ -417,13 +417,13 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_CHANGE_CHAIN_SET_WORD_CHECK_BIT)
   set4X_0(nTestDWord,4);
   set4X_D(nTestDWord,0);
 
-  nTestDWord.partial<CIEC_BYTE>(3) = 0xBA;
-  nTestDWord.partial<CIEC_BYTE>(2) = 0xD0;
-  nTestDWord.partial<CIEC_BYTE>(1) = 0xCA;
-  nTestDWord.partial<CIEC_BYTE>(0) = 0xFE;
+  nTestDWord.partial<CIEC_BYTE>(3) = CIEC_BYTE(0xBA);
+  nTestDWord.partial<CIEC_BYTE>(2) = CIEC_BYTE(0xD0);
+  nTestDWord.partial<CIEC_BYTE>(1) = CIEC_BYTE(0xCA);
+  nTestDWord.partial<CIEC_BYTE>(0) = CIEC_BYTE(0xFE);
 
-  nTestDWord.partial<CIEC_WORD>(1) = 0xCEC0;
-  nTestDWord.partial<CIEC_WORD>(0) = 0xFFEE;
+  nTestDWord.partial<CIEC_WORD>(1) = CIEC_WORD(0xCEC0);
+  nTestDWord.partial<CIEC_WORD>(0) = CIEC_WORD(0xFFEE);
 
   test4X_C(nTestDWord,28);
   test4X_E(nTestDWord,24);
@@ -448,13 +448,13 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_CHANGE_CHAIN_SET_WORD_CHECK_BYTE)
   set4X_0(nTestDWord,4);
   set4X_D(nTestDWord,0);
 
-  nTestDWord.partial<CIEC_BYTE>(3) = 0xBA;
-  nTestDWord.partial<CIEC_BYTE>(2) = 0xD0;
-  nTestDWord.partial<CIEC_BYTE>(1) = 0xCA;
-  nTestDWord.partial<CIEC_BYTE>(0) = 0xFE;
+  nTestDWord.partial<CIEC_BYTE>(3) = CIEC_BYTE(0xBA);
+  nTestDWord.partial<CIEC_BYTE>(2) = CIEC_BYTE(0xD0);
+  nTestDWord.partial<CIEC_BYTE>(1) = CIEC_BYTE(0xCA);
+  nTestDWord.partial<CIEC_BYTE>(0) = CIEC_BYTE(0xFE);
 
-  nTestDWord.partial<CIEC_WORD>(1) = 0xCEC0;
-  nTestDWord.partial<CIEC_WORD>(0) = 0xFFEE;
+  nTestDWord.partial<CIEC_WORD>(1) = CIEC_WORD(0xCEC0);
+  nTestDWord.partial<CIEC_WORD>(0) = CIEC_WORD(0xFFEE);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_BYTE>(3)), 0xCEU);
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_BYTE>(2)), 0xC0U);
@@ -475,13 +475,13 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_CHANGE_CHAIN_SET_WORD_CHECK_WORD)
   set4X_0(nTestDWord,4);
   set4X_D(nTestDWord,0);
 
-  nTestDWord.partial<CIEC_BYTE>(3) = 0xBA;
-  nTestDWord.partial<CIEC_BYTE>(2) = 0xD0;
-  nTestDWord.partial<CIEC_BYTE>(1) = 0xCA;
-  nTestDWord.partial<CIEC_BYTE>(0) = 0xFE;
+  nTestDWord.partial<CIEC_BYTE>(3) = CIEC_BYTE(0xBA);
+  nTestDWord.partial<CIEC_BYTE>(2) = CIEC_BYTE(0xD0);
+  nTestDWord.partial<CIEC_BYTE>(1) = CIEC_BYTE(0xCA);
+  nTestDWord.partial<CIEC_BYTE>(0) = CIEC_BYTE(0xFE);
 
-  nTestDWord.partial<CIEC_WORD>(1) = 0xCEC0;
-  nTestDWord.partial<CIEC_WORD>(0) = 0xFFEE;
+  nTestDWord.partial<CIEC_WORD>(1) = CIEC_WORD(0xCEC0);
+  nTestDWord.partial<CIEC_WORD>(0) = CIEC_WORD(0xFFEE);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_WORD>(1)), 0xCEC0U);
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_WORD>(0)), 0xFFEEU);
@@ -500,13 +500,13 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_CHANGE_CHAIN_SET_WORD_CHECK_DWORD)
   set4X_0(nTestDWord,4);
   set4X_D(nTestDWord,0);
 
-  nTestDWord.partial<CIEC_BYTE>(3) = 0xBA;
-  nTestDWord.partial<CIEC_BYTE>(2) = 0xD0;
-  nTestDWord.partial<CIEC_BYTE>(1) = 0xCA;
-  nTestDWord.partial<CIEC_BYTE>(0) = 0xFE;
+  nTestDWord.partial<CIEC_BYTE>(3) = CIEC_BYTE(0xBA);
+  nTestDWord.partial<CIEC_BYTE>(2) = CIEC_BYTE(0xD0);
+  nTestDWord.partial<CIEC_BYTE>(1) = CIEC_BYTE(0xCA);
+  nTestDWord.partial<CIEC_BYTE>(0) = CIEC_BYTE(0xFE);
 
-  nTestDWord.partial<CIEC_WORD>(1) = 0xCEC0;
-  nTestDWord.partial<CIEC_WORD>(0) = 0xFFEE;
+  nTestDWord.partial<CIEC_WORD>(1) = CIEC_WORD(0xCEC0);
+  nTestDWord.partial<CIEC_WORD>(0) = CIEC_WORD(0xFFEE);
 
   BOOST_CHECK_EQUAL(nTestDWord, 0xCEC0FFEEU);
 }
@@ -524,13 +524,13 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_CHANGE_CHAIN_WORD_SET_BIT_CHECK_BIT)
   set4X_0(nTestDWord,4);
   set4X_D(nTestDWord,0);
 
-  nTestDWord.partial<CIEC_BYTE>(3) = 0xBA;
-  nTestDWord.partial<CIEC_BYTE>(2) = 0xD0;
-  nTestDWord.partial<CIEC_BYTE>(1) = 0xCA;
-  nTestDWord.partial<CIEC_BYTE>(0) = 0xFE;
+  nTestDWord.partial<CIEC_BYTE>(3) = CIEC_BYTE(0xBA);
+  nTestDWord.partial<CIEC_BYTE>(2) = CIEC_BYTE(0xD0);
+  nTestDWord.partial<CIEC_BYTE>(1) = CIEC_BYTE(0xCA);
+  nTestDWord.partial<CIEC_BYTE>(0) = CIEC_BYTE(0xFE);
 
-  nTestDWord.partial<CIEC_WORD>(1) = 0xCEC0;
-  nTestDWord.partial<CIEC_WORD>(0) = 0xFFEE;
+  nTestDWord.partial<CIEC_WORD>(1) = CIEC_WORD(0xCEC0);
+  nTestDWord.partial<CIEC_WORD>(0) = CIEC_WORD(0xFFEE);
 
   set4X_A((nTestDWord.partial<CIEC_WORD>(1)),12);
   set4X_D((nTestDWord.partial<CIEC_WORD>(1)),8);
@@ -564,13 +564,13 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_CHANGE_CHAIN_WORD_SET_BIT_CHECK_BYTE)
   set4X_0(nTestDWord,4);
   set4X_D(nTestDWord,0);
 
-  nTestDWord.partial<CIEC_BYTE>(3) = 0xBA;
-  nTestDWord.partial<CIEC_BYTE>(2) = 0xD0;
-  nTestDWord.partial<CIEC_BYTE>(1) = 0xCA;
-  nTestDWord.partial<CIEC_BYTE>(0) = 0xFE;
+  nTestDWord.partial<CIEC_BYTE>(3) = CIEC_BYTE(0xBA);
+  nTestDWord.partial<CIEC_BYTE>(2) = CIEC_BYTE(0xD0);
+  nTestDWord.partial<CIEC_BYTE>(1) = CIEC_BYTE(0xCA);
+  nTestDWord.partial<CIEC_BYTE>(0) = CIEC_BYTE(0xFE);
 
-  nTestDWord.partial<CIEC_WORD>(1) = 0xCEC0;
-  nTestDWord.partial<CIEC_WORD>(0) = 0xFFEE;
+  nTestDWord.partial<CIEC_WORD>(1) = CIEC_WORD(0xCEC0);
+  nTestDWord.partial<CIEC_WORD>(0) = CIEC_WORD(0xFFEE);
 
   set4X_A((nTestDWord.partial<CIEC_WORD>(1)),12);
   set4X_D((nTestDWord.partial<CIEC_WORD>(1)),8);
@@ -600,13 +600,13 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_CHANGE_CHAIN_WORD_SET_BIT_CHECK_WORD)
   set4X_0(nTestDWord,4);
   set4X_D(nTestDWord,0);
 
-  nTestDWord.partial<CIEC_BYTE>(3) = 0xBA;
-  nTestDWord.partial<CIEC_BYTE>(2) = 0xD0;
-  nTestDWord.partial<CIEC_BYTE>(1) = 0xCA;
-  nTestDWord.partial<CIEC_BYTE>(0) = 0xFE;
+  nTestDWord.partial<CIEC_BYTE>(3) = CIEC_BYTE(0xBA);
+  nTestDWord.partial<CIEC_BYTE>(2) = CIEC_BYTE(0xD0);
+  nTestDWord.partial<CIEC_BYTE>(1) = CIEC_BYTE(0xCA);
+  nTestDWord.partial<CIEC_BYTE>(0) = CIEC_BYTE(0xFE);
 
-  nTestDWord.partial<CIEC_WORD>(1) = 0xCEC0;
-  nTestDWord.partial<CIEC_WORD>(0) = 0xFFEE;
+  nTestDWord.partial<CIEC_WORD>(1) = CIEC_WORD(0xCEC0);
+  nTestDWord.partial<CIEC_WORD>(0) = CIEC_WORD(0xFFEE);
 
   set4X_A((nTestDWord.partial<CIEC_WORD>(1)),12);
   set4X_D((nTestDWord.partial<CIEC_WORD>(1)),8);
@@ -625,13 +625,13 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_CHANGE_CHAIN_WORD_SET_BIT_CHECK_DWORD)
 {
   CIEC_DWORD nTestDWord;
 
-  nTestDWord.partial<CIEC_BYTE>(3) = 0xBA;
-  nTestDWord.partial<CIEC_BYTE>(2) = 0xD0;
-  nTestDWord.partial<CIEC_BYTE>(1) = 0xCA;
-  nTestDWord.partial<CIEC_BYTE>(0) = 0xFE;
+  nTestDWord.partial<CIEC_BYTE>(3) = CIEC_BYTE(0xBA);
+  nTestDWord.partial<CIEC_BYTE>(2) = CIEC_BYTE(0xD0);
+  nTestDWord.partial<CIEC_BYTE>(1) = CIEC_BYTE(0xCA);
+  nTestDWord.partial<CIEC_BYTE>(0) = CIEC_BYTE(0xFE);
 
-  nTestDWord.partial<CIEC_WORD>(1) = 0xCEC0;
-  nTestDWord.partial<CIEC_WORD>(0) = 0xFFEE;
+  nTestDWord.partial<CIEC_WORD>(1) = CIEC_WORD(0xCEC0);
+  nTestDWord.partial<CIEC_WORD>(0) = CIEC_WORD(0xFFEE);
 
   set4X_A((nTestDWord.partial<CIEC_WORD>(1)),12);
   set4X_D((nTestDWord.partial<CIEC_WORD>(1)),8);
@@ -808,7 +808,7 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_A_CHECK_WORD)
   CIEC_DWORD nTestDWord;
   CIEC_WORD nTestWord;
 
-  nTestWord = 0xCAFE;
+  nTestWord = CIEC_WORD(0xCAFE);
 
   nTestDWord.partial<CIEC_WORD>(0).setValue(nTestWord);
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_WORD>(1)), 0x0000);
@@ -821,7 +821,7 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_A_CHECK_DWORD)
   CIEC_DWORD nTestDWord;
   CIEC_WORD nTestWord;
 
-  nTestWord = 0xCAFE;
+  nTestWord = CIEC_WORD(0xCAFE);
   nTestDWord.partial<CIEC_WORD>(0).setValue(nTestWord);
 
   BOOST_CHECK_EQUAL(nTestDWord, 0x0000CAFE);
@@ -833,10 +833,10 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_B_CHECK_WORD)
   CIEC_DWORD nTestDWord;
   CIEC_WORD nTestWord;
 
-  nTestWord = 0xCAFE;
+  nTestWord = CIEC_WORD(0xCAFE);
   nTestDWord.partial<CIEC_WORD>(0).setValue(nTestWord);
 
-  nTestWord = 0xBAD0;
+  nTestWord = CIEC_WORD(0xBAD0);
   nTestDWord.partial<CIEC_WORD>(1).setValue(nTestWord);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_WORD>(1)), 0xBAD0);
@@ -849,10 +849,10 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_B_CHECK_DWORD)
   CIEC_DWORD nTestDWord;
   CIEC_WORD nTestWord;
 
-  nTestWord = 0xCAFE;
+  nTestWord = CIEC_WORD(0xCAFE);
   nTestDWord.partial<CIEC_WORD>(0).setValue(nTestWord);
 
-  nTestWord = 0xBAD0;
+  nTestWord = CIEC_WORD(0xBAD0);
   nTestDWord.partial<CIEC_WORD>(1).setValue(nTestWord);
 
   BOOST_CHECK_EQUAL(nTestDWord, 0xBAD0CAFE);
@@ -865,13 +865,13 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_BYTE_CHECK_BYTE)
   CIEC_WORD nTestWord;
   CIEC_BYTE nTestByte;
 
-  nTestWord = 0xCAFE;
+  nTestWord = CIEC_WORD(0xCAFE);
   nTestDWord.partial<CIEC_WORD>(0).setValue(nTestWord);
 
-  nTestWord = 0xBAD0;
+  nTestWord = CIEC_WORD(0xBAD0);
   nTestDWord.partial<CIEC_WORD>(1).setValue(nTestWord);
 
-  nTestByte = 0x0B;
+  nTestByte = CIEC_BYTE(0x0B);
   nTestDWord.partial<CIEC_BYTE>(1).setValue(nTestByte);
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_BYTE>(3)), 0xBA);
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_BYTE>(2)), 0xD0);
@@ -886,13 +886,13 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_BYTE_CHECK_WORD)
   CIEC_WORD nTestWord;
   CIEC_BYTE nTestByte;
 
-  nTestWord = 0xCAFE;
+  nTestWord = CIEC_WORD(0xCAFE);
   nTestDWord.partial<CIEC_WORD>(0).setValue(nTestWord);
 
-  nTestWord = 0xBAD0;
+  nTestWord = CIEC_WORD(0xBAD0);
   nTestDWord.partial<CIEC_WORD>(1).setValue(nTestWord);
 
-  nTestByte = 0x0B;
+  nTestByte = CIEC_BYTE(0x0B);
   nTestDWord.partial<CIEC_BYTE>(1).setValue(nTestByte);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_WORD>(1)), 0xBAD0);
@@ -906,13 +906,13 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_BYTE_CHECK_DWORD)
   CIEC_WORD nTestWord;
   CIEC_BYTE nTestByte;
 
-  nTestWord = 0xCAFE;
+  nTestWord = CIEC_WORD(0xCAFE);
   nTestDWord.partial<CIEC_WORD>(0).setValue(nTestWord);
 
-  nTestWord = 0xBAD0;
+  nTestWord = CIEC_WORD(0xBAD0);
   nTestDWord.partial<CIEC_WORD>(1).setValue(nTestWord);
 
-  nTestByte = 0x0B;
+  nTestByte = CIEC_BYTE(0x0B);
   nTestDWord.partial<CIEC_BYTE>(1).setValue(nTestByte);
 
   BOOST_CHECK_EQUAL(nTestDWord, 0xBAD00BFE);
@@ -925,16 +925,16 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_BYTE_CHECK_BYTE)
   CIEC_WORD nTestWord;
   CIEC_BYTE nTestByte;
 
-  nTestWord = 0xCAFE;
+  nTestWord = CIEC_WORD(0xCAFE);
   nTestDWord.partial<CIEC_WORD>(0).setValue(nTestWord);
 
-  nTestWord = 0xBAD0;
+  nTestWord = CIEC_WORD(0xBAD0);
   nTestDWord.partial<CIEC_WORD>(1).setValue(nTestWord);
 
-  nTestByte = 0x0B;
+  nTestByte = CIEC_BYTE(0x0B);
   nTestDWord.partial<CIEC_BYTE>(1).setValue(nTestByte);
 
-  nTestByte = 0xAD;
+  nTestByte = CIEC_BYTE(0xAD);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).setValue(nTestByte);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_BYTE>(0)), 0xAD);
@@ -947,16 +947,16 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_BYTE_CHECK_WORD)
   CIEC_WORD nTestWord;
   CIEC_BYTE nTestByte;
 
-  nTestWord = 0xCAFE;
+  nTestWord = CIEC_WORD(0xCAFE);
   nTestDWord.partial<CIEC_WORD>(0).setValue(nTestWord);
 
-  nTestWord = 0xBAD0;
+  nTestWord = CIEC_WORD(0xBAD0);
   nTestDWord.partial<CIEC_WORD>(1).setValue(nTestWord);
 
-  nTestByte = 0x0B;
+  nTestByte = CIEC_BYTE(0x0B);
   nTestDWord.partial<CIEC_BYTE>(1).setValue(nTestByte);
 
-  nTestByte = 0xAD;
+  nTestByte = CIEC_BYTE(0xAD);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).setValue(nTestByte);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_WORD>(0)), 0x0BAD);
@@ -969,16 +969,16 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_BYTE_CHECK_DWORD)
   CIEC_WORD nTestWord;
   CIEC_BYTE nTestByte;
 
-  nTestWord = 0xCAFE;
+  nTestWord = CIEC_WORD(0xCAFE);
   nTestDWord.partial<CIEC_WORD>(0).setValue(nTestWord);
 
-  nTestWord = 0xBAD0;
+  nTestWord = CIEC_WORD(0xBAD0);
   nTestDWord.partial<CIEC_WORD>(1).setValue(nTestWord);
 
-  nTestByte = 0x0B;
+  nTestByte = CIEC_BYTE(0x0B);
   nTestDWord.partial<CIEC_BYTE>(1).setValue(nTestByte);
 
-  nTestByte = 0xAD;
+  nTestByte = CIEC_BYTE(0xAD);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).setValue(nTestByte);
 
   BOOST_CHECK_EQUAL(nTestDWord, 0xBAD00BAD);
@@ -992,19 +992,19 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_BYTE_BIT_CHECK_BIT_A)
   CIEC_BYTE nTestByte;
   CIEC_BOOL nTestBool;
 
-  nTestWord = 0xCAFE;
+  nTestWord = CIEC_WORD(0xCAFE);
   nTestDWord.partial<CIEC_WORD>(0).setValue(nTestWord);
 
-  nTestWord = 0xBAD0;
+  nTestWord = CIEC_WORD(0xBAD0);
   nTestDWord.partial<CIEC_WORD>(1).setValue(nTestWord);
 
-  nTestByte = 0x0B;
+  nTestByte = CIEC_BYTE(0x0B);
   nTestDWord.partial<CIEC_BYTE>(1).setValue(nTestByte);
 
-  nTestByte = 0xAD;
+  nTestByte = CIEC_BYTE(0xAD);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).setValue(nTestByte);
 
-  nTestBool = false;
+  nTestBool = CIEC_BOOL(false);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(0).setValue(nTestBool);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_BOOL>(0)), false);
@@ -1018,19 +1018,19 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_BYTE_BIT_CHECK_BYTE_A)
   CIEC_BYTE nTestByte;
   CIEC_BOOL nTestBool;
 
-  nTestWord = 0xCAFE;
+  nTestWord = CIEC_WORD(0xCAFE);
   nTestDWord.partial<CIEC_WORD>(0).setValue(nTestWord);
 
-  nTestWord = 0xBAD0;
+  nTestWord = CIEC_WORD(0xBAD0);
   nTestDWord.partial<CIEC_WORD>(1).setValue(nTestWord);
 
-  nTestByte = 0x0B;
+  nTestByte = CIEC_BYTE(0x0B);
   nTestDWord.partial<CIEC_BYTE>(1).setValue(nTestByte);
 
-  nTestByte = 0xAD;
+  nTestByte = CIEC_BYTE(0xAD);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).setValue(nTestByte);
 
-  nTestBool = false;
+  nTestBool = CIEC_BOOL(false);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(0).setValue(nTestBool);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_BYTE>(0)), 0xAC);
@@ -1044,19 +1044,19 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_BYTE_BIT_CHECK_WORD_A)
   CIEC_BYTE nTestByte;
   CIEC_BOOL nTestBool;
 
-  nTestWord = 0xCAFE;
+  nTestWord = CIEC_WORD(0xCAFE);
   nTestDWord.partial<CIEC_WORD>(0).setValue(nTestWord);
 
-  nTestWord = 0xBAD0;
+  nTestWord = CIEC_WORD(0xBAD0);
   nTestDWord.partial<CIEC_WORD>(1).setValue(nTestWord);
 
-  nTestByte = 0x0B;
+  nTestByte = CIEC_BYTE(0x0B);
   nTestDWord.partial<CIEC_BYTE>(1).setValue(nTestByte);
 
-  nTestByte = 0xAD;
+  nTestByte = CIEC_BYTE(0xAD);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).setValue(nTestByte);
 
-  nTestBool = false;
+  nTestBool = CIEC_BOOL(false);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(0).setValue(nTestBool);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_WORD>(0)), 0x0BAC);
@@ -1070,19 +1070,19 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_BYTE_BIT_CHECK_DWORD_A)
   CIEC_BYTE nTestByte;
   CIEC_BOOL nTestBool;
 
-  nTestWord = 0xCAFE;
+  nTestWord = CIEC_WORD(0xCAFE);
   nTestDWord.partial<CIEC_WORD>(0).setValue(nTestWord);
 
-  nTestWord = 0xBAD0;
+  nTestWord = CIEC_WORD(0xBAD0);
   nTestDWord.partial<CIEC_WORD>(1).setValue(nTestWord);
 
-  nTestByte = 0x0B;
+  nTestByte = CIEC_BYTE(0x0B);
   nTestDWord.partial<CIEC_BYTE>(1).setValue(nTestByte);
 
-  nTestByte = 0xAD;
+  nTestByte = CIEC_BYTE(0xAD);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).setValue(nTestByte);
 
-  nTestBool = false;
+  nTestBool = CIEC_BOOL(false);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(0).setValue(nTestBool);
 
   BOOST_CHECK_EQUAL(nTestDWord, 0xBAD00BAC);
@@ -1096,19 +1096,19 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_BYTE_BIT_CHECK_BIT_B)
   CIEC_BYTE nTestByte;
   CIEC_BOOL nTestBool;
 
-  nTestWord = 0xCAFE;
+  nTestWord = CIEC_WORD(0xCAFE);
   nTestDWord.partial<CIEC_WORD>(0).setValue(nTestWord);
 
-  nTestWord = 0xBAD0;
+  nTestWord = CIEC_WORD(0xBAD0);
   nTestDWord.partial<CIEC_WORD>(1).setValue(nTestWord);
 
-  nTestByte = 0x0B;
+  nTestByte = CIEC_BYTE(0x0B);
   nTestDWord.partial<CIEC_BYTE>(1).setValue(nTestByte);
 
-  nTestByte = 0xAD;
+  nTestByte = CIEC_BYTE(0xAD);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).setValue(nTestByte);
 
-  nTestBool = false;
+  nTestBool = CIEC_BOOL(false);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(0).setValue(nTestBool);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_BOOL>(0)), false);
@@ -1122,22 +1122,22 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_BYTE_BIT_CHECK_BYTE_B)
   CIEC_BYTE nTestByte;
   CIEC_BOOL nTestBool;
 
-  nTestWord = 0xCAFE;
+  nTestWord = CIEC_WORD(0xCAFE);
   nTestDWord.partial<CIEC_WORD>(0).setValue(nTestWord);
 
-  nTestWord = 0xBAD0;
+  nTestWord = CIEC_WORD(0xBAD0);
   nTestDWord.partial<CIEC_WORD>(1).setValue(nTestWord);
 
-  nTestByte = 0x0B;
+  nTestByte = CIEC_BYTE(0x0B);
   nTestDWord.partial<CIEC_BYTE>(1).setValue(nTestByte);
 
-  nTestByte = 0xAD;
+  nTestByte = CIEC_BYTE(0xAD);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).setValue(nTestByte);
 
-  nTestBool = false;
+  nTestBool = CIEC_BOOL(false);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(0).setValue(nTestBool);
 
-  nTestBool = true;
+  nTestBool = CIEC_BOOL(true);
   nTestDWord.partial<CIEC_WORD>(1).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(5).setValue(nTestBool);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_BYTE>(2)), 0xF0);
@@ -1151,22 +1151,22 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_BYTE_BIT_CHECK_WORD_B)
   CIEC_BYTE nTestByte;
   CIEC_BOOL nTestBool;
 
-  nTestWord = 0xCAFE;
+  nTestWord = CIEC_WORD(0xCAFE);
   nTestDWord.partial<CIEC_WORD>(0).setValue(nTestWord);
 
-  nTestWord = 0xBAD0;
+  nTestWord = CIEC_WORD(0xBAD0);
   nTestDWord.partial<CIEC_WORD>(1).setValue(nTestWord);
 
-  nTestByte = 0x0B;
+  nTestByte = CIEC_BYTE(0x0B);
   nTestDWord.partial<CIEC_BYTE>(1).setValue(nTestByte);
 
-  nTestByte = 0xAD;
+  nTestByte = CIEC_BYTE(0xAD);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).setValue(nTestByte);
 
-  nTestBool = false;
+  nTestBool = CIEC_BOOL(false);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(0).setValue(nTestBool);
 
-  nTestBool = true;
+  nTestBool = CIEC_BOOL(true);
   nTestDWord.partial<CIEC_WORD>(1).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(5).setValue(nTestBool);
 
   BOOST_CHECK_EQUAL((nTestDWord.partial<CIEC_WORD>(1)), 0xBAF0);
@@ -1180,22 +1180,22 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_BYTE_BIT_CHECK_DWORD_B)
   CIEC_BYTE nTestByte;
   CIEC_BOOL nTestBool;
 
-  nTestWord = 0xCAFE;
+  nTestWord = CIEC_WORD(0xCAFE);
   nTestDWord.partial<CIEC_WORD>(0).setValue(nTestWord);
 
-  nTestWord = 0xBAD0;
+  nTestWord = CIEC_WORD(0xBAD0);
   nTestDWord.partial<CIEC_WORD>(1).setValue(nTestWord);
 
-  nTestByte = 0x0B;
+  nTestByte = CIEC_BYTE(0x0B);
   nTestDWord.partial<CIEC_BYTE>(1).setValue(nTestByte);
 
-  nTestByte = 0xAD;
+  nTestByte = CIEC_BYTE(0xAD);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).setValue(nTestByte);
 
-  nTestBool = false;
+  nTestBool = CIEC_BOOL(false);
   nTestDWord.partial<CIEC_WORD>(0).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(0).setValue(nTestBool);
 
-  nTestBool = true;
+  nTestBool = CIEC_BOOL(true);
   nTestDWord.partial<CIEC_WORD>(1).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(5).setValue(nTestBool);
 
   BOOST_CHECK_EQUAL(nTestDWord, 0xBAF00BAC);

@@ -12,7 +12,8 @@
  *    Stanislav Meduna, Alois Zoitl, Gerhard Ebenhofer, Martin Melik Merkumians,
  *    Monika Wenger
  *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - make TForteUInt64 constructor explicit
+ *    Martin Melik Merkumians - make TForteUInt64 constructor explicit,
+ *      removed built-in type operator=, removed operator++
  *******************************************************************************/
 #ifndef _FORTE_TOD_H_
 #define _FORTE_TOD_H_
@@ -46,36 +47,12 @@ class CIEC_TIME_OF_DAY : public CIEC_ANY_DATE{
     virtual ~CIEC_TIME_OF_DAY(){
     }
 
-    /*! \brief Operator: CIEC_TIME_OF_DAY data type = long data type
-     *
-     *   This command implements the assignment operator for the C++ data type long long.
-     *   The parameter value is represented by a C++ variable (call by value).
-     *   \param paValue  Value for assignment.
-     *   \return Can be the following response:
-     *     - Pointer to given object.
-     */
-    CIEC_TIME_OF_DAY& operator =(TForteInt64 paValue){
-      setTUINT64(paValue);
-      return *this;
-    }
-
     CIEC_TIME_OF_DAY& operator =(const CIEC_TIME_OF_DAY &paValue){
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
     }
 
-    /*! \brief Operator: CIEC_TIME data type operator++
-     *
-     *   This command implements the increment operator for the IEC61131 datatype TIME.
-     *   The parameter value is represented by a C++ variable (call by value).
-     *   \return Can be the following response:
-     *     - Pointer to given object.
-     */
-    CIEC_TIME_OF_DAY& operator ++(void){
-      setTUINT64(getTUINT64() + 1);
-      return *this;
-    }
     /*! \brief Converts CIEC_SINT to elementary 32 bit integer
      *
      *   Conversion operator for converting CIEC_SINT to elementary 32 bit integer

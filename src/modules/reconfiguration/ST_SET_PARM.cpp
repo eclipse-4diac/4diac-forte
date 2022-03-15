@@ -49,7 +49,7 @@ void FORTE_ST_SET_PARM::executeEvent(int pa_nEIID){
       if(true == QI()) {
         executeRQST();
       } else {
-      STATUS() = "Not Ready";
+      STATUS() = CIEC_WSTRING("Not Ready");
       }
       sendOutputEvent(scm_nEventCNFID);
       break;
@@ -62,7 +62,7 @@ void FORTE_ST_SET_PARM::executeRQST(void){
   theCommand.mDestination = CStringDictionary::getInstance().getId(DST().getValue());
   theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(ELEM_NAME().getValue()));
   theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(ELEM_DATA_IN().getValue()));
-  theCommand.mAdditionalParams = PARM_VAL().getValue();
+  theCommand.mAdditionalParams = WSTRING_TO_STRING(PARM_VAL());
   theCommand.mCMD = cg_nMGM_CMD_Write;
   
   EMGMResponse resp = m_poDevice.executeMGMCommand(theCommand);
@@ -70,9 +70,9 @@ void FORTE_ST_SET_PARM::executeRQST(void){
   //calculate return value
   CIEC_STRING retVal(DEV_MGR::scm_sMGMResponseTexts[resp]);
   CIEC_STRING compareVal(DEV_MGR::scm_sMGMResponseTexts[e_RDY]);
-  QO() = retVal == compareVal;
+  QO() = CIEC_BOOL(retVal == compareVal);
 
   DEVLOG_DEBUG("%s\n", DEV_MGR::scm_sMGMResponseTexts[resp]); 
-  STATUS() = (DEV_MGR::scm_sMGMResponseTexts[resp]);
+  STATUS() = CIEC_WSTRING(DEV_MGR::scm_sMGMResponseTexts[resp]);
   
 }

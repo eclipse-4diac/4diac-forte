@@ -14,7 +14,8 @@
  *      - initial implementation and rework communication infrastructure
  *    Ernst Blecha - add multibit partial access
  *    Martin Melik Merkumians - changes multibit access index from template
- *      parameter to call argument, make TForteByte constructor explicit
+ *      parameter to call argument, make TForteByte constructor explicit,
+ *      removed built-in type operator=
  *******************************************************************************/
 #ifndef _FORTE_BYTE_H_
 #define _FORTE_BYTE_H_
@@ -47,19 +48,6 @@ class CIEC_BYTE : public CIEC_ANY_BIT{
     }
 
     virtual ~CIEC_BYTE(){
-    }
-
-    /*! \brief Operator: CIEC_BYTE data type = CIEC_BYTE data type
-     *
-     *   This command implements the assignment operator for the IEC 61131 data type BYTE.
-     *   The parameter value is a reference onto a given C++ variable (call by reference).
-     *   \param paValue  Reference for assignment.
-     *   \return Can be the following response:
-     *     - Pointer to given object.
-     */
-    CIEC_BYTE& operator =(TForteByte paValue){
-      setTUINT8(paValue);
-      return *this;
     }
 
     CIEC_BYTE& operator =(const CIEC_BYTE &paValue){

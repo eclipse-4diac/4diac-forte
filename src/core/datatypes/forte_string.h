@@ -16,7 +16,7 @@
  *    Martin Melik Merkumians
  *      - fixes behavior for getToStringBufferSize
  *    Martin Melik Merkumians - make const char* constructor explicit, adds copy
- *      constructor
+ *      constructor, removed built-in type operator=
  *******************************************************************************/
 #ifndef _FORTE_STRING_H_
 #define _FORTE_STRING_H_
@@ -37,15 +37,15 @@ class CIEC_STRING : public CIEC_ANY_STRING{
     CIEC_STRING(const CIEC_STRING& paValue) : CIEC_ANY_STRING(paValue) {
     }
 
-    explicit CIEC_STRING(const char* pa_pacValue){
-      (*this) = pa_pacValue;
+    explicit CIEC_STRING(const char* paValue){
+      fromCharString(paValue);
     }
 
     virtual ~CIEC_STRING(){
     }
 
-    CIEC_STRING &operator =(const char* const pa_pacValue){
-      CIEC_ANY_STRING::operator =(pa_pacValue);
+    CIEC_STRING &operator =(const CIEC_STRING& paValue){
+      CIEC_ANY_STRING::operator =(paValue);
       return *this;
     }
 

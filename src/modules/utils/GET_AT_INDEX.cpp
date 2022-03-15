@@ -53,21 +53,21 @@ void FORTE_GET_AT_INDEX::executeEvent(int pa_nEIID){
         if(INDEX() < rInArray.size()){
           //update the output value
           st_OUT().setValue(*rInArray[INDEX()]);
-          QO() = true;
+          QO() = CIEC_BOOL(true);
         }
         else{
           DEVLOG_DEBUG("Access index out of range.\n");
-          QO() = false;
+          QO() = CIEC_BOOL(false);
         }
       }
       else{
         DEVLOG_DEBUG("Inequal element data types.\n");
-        QO() = false;
+        QO() = CIEC_BOOL(false);
       }
     }
     else{
       DEVLOG_DEBUG("No 'Array' typed input and output data.\n");
-      QO() = false;
+      QO() = CIEC_BOOL(false);
     }
     sendOutputEvent(scm_nEventCNFID);
 

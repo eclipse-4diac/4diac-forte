@@ -48,24 +48,24 @@ const SFBInterfaceSpec FB_TON::scm_stFBInterfaceSpec = {
   0
 };
 
-void FB_TON::executeEvent(int pa_nEIID){
-  if(scm_nEventREQID == pa_nEIID){
+void FB_TON::executeEvent(int pa_nEIID) {
+  if(scm_nEventREQID == pa_nEIID) {
     if(st_IN() == false){
-      Q() = false;
-      ET() = 0;
+      Q() = CIEC_BOOL(false);
+      ET() = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
       risingEdge = false;
-      start = 0;
+      start = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
     }
-    else{
-      if(risingEdge == false){
+    else {
+      if(risingEdge == false) {
         risingEdge = true;
         start = NOW_MONOTONIC();
-      }else{
-        count = NOW_MONOTONIC() - start;
-        if(PT() <= count){
-          Q() = true;
+      } else {
+        count = SUB(NOW_MONOTONIC(), start);
+        if(LE(PT(), count)) {
+          Q() = CIEC_BOOL(true);
           ET() = PT();
-        }else{
+        } else {
           ET() = count;
         }
       }

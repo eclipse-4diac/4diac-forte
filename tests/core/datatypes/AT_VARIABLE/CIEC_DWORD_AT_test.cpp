@@ -24,9 +24,7 @@ BOOST_AUTO_TEST_SUITE(AT_VARIABLE_DWORD)
 
 BOOST_AUTO_TEST_CASE(AT_VARIABLE_DWORD_READ_BIT)
 {
-  CIEC_DWORD nTestDWord;
-
-  nTestDWord = 0xFFFFFFFF;
+  CIEC_DWORD nTestDWord(0xFFFFFFFF);
 
   ARRAY_AT<CIEC_BOOL, CIEC_DWORD, 0, 31> testArray(nTestDWord);
 
@@ -54,7 +52,7 @@ BOOST_AUTO_TEST_CASE(AT_VARIABLE_DWORD_WRITE_BIT)
   ARRAY_AT<CIEC_BOOL, CIEC_DWORD, 0, 31> testArray(nTestDWord);
 
   for(size_t i=0;i<32;i++) {
-    nTestDWord = 0xFFFFFFFF;
+    nTestDWord = CIEC_DWORD(0xFFFFFFFF);
     testArray[i] = false;
     for(size_t j=0;j<32;j++) {
       BOOST_CHECK_EQUAL(testArray[j], i!=j);
@@ -77,9 +75,7 @@ BOOST_AUTO_TEST_CASE(AT_VARIABLE_DWORD_WRITE_BIT_OUTOFBOUNDS)
 
 BOOST_AUTO_TEST_CASE(AT_VARIABLE_DWORD_READ_BYTE)
 {
-  CIEC_DWORD nTestDWord;
-
-  nTestDWord = 0xFFFFFFFF;
+  CIEC_DWORD nTestDWord(0xFFFFFFFF);
 
   ARRAY_AT<CIEC_BYTE, CIEC_DWORD, 0, 3> testArray(nTestDWord);
 
@@ -107,7 +103,7 @@ BOOST_AUTO_TEST_CASE(AT_VARIABLE_DWORD_WRITE_BYTE)
   ARRAY_AT<CIEC_BYTE, CIEC_DWORD, 0, 3> testArray(nTestDWord);
 
   for(size_t i=0;i<4;i++) {
-    nTestDWord = 0xFFFFFFFF;
+    nTestDWord = CIEC_DWORD(0xFFFFFFFF);
     testArray[i] = false;
     for(size_t j=0;j<4;j++) {
       BOOST_CHECK_EQUAL(testArray[j], i!=j ? 0xFF : false);
@@ -130,9 +126,7 @@ BOOST_AUTO_TEST_CASE(AT_VARIABLE_DWORD_WRITE_BYTE_OUTOFBOUNDS)
 
 BOOST_AUTO_TEST_CASE(AT_VARIABLE_DWORD_READ_WORD)
 {
-  CIEC_DWORD nTestDWord;
-
-  nTestDWord = 0xFFFFFFFF;
+  CIEC_DWORD nTestDWord(0xFFFFFFFF);
 
   ARRAY_AT<CIEC_WORD, CIEC_DWORD, 0, 1> testArray(nTestDWord);
 
@@ -160,7 +154,7 @@ BOOST_AUTO_TEST_CASE(AT_VARIABLE_DWORD_WRITE_WORD)
   ARRAY_AT<CIEC_WORD, CIEC_DWORD, 0, 1> testArray(nTestDWord);
 
   for(size_t i=0;i<2;i++) {
-    nTestDWord = 0xFFFFFFFF;
+    nTestDWord = CIEC_DWORD(0xFFFFFFFF);
     testArray[i] = false;
     for(size_t j=0;j<2;j++) {
       BOOST_CHECK_EQUAL(testArray[j], i!=j ? 0xFFFF : false);
@@ -183,9 +177,7 @@ BOOST_AUTO_TEST_CASE(AT_VARIABLE_DWORD_WRITE_WORD_OUTOFBOUNDS)
 
 BOOST_AUTO_TEST_CASE(AT_VARIABLE_DWORD_MOVING_BIT)
 {
-  CIEC_DWORD nTestDWord;
-
-  nTestDWord = 0x0;
+  CIEC_DWORD nTestDWord(0x0);
 
   ARRAY_AT<CIEC_BOOL, CIEC_DWORD, 0, 31> testArray(nTestDWord);
 
@@ -199,9 +191,7 @@ BOOST_AUTO_TEST_CASE(AT_VARIABLE_DWORD_MOVING_BIT)
 
 BOOST_AUTO_TEST_CASE(AT_VARIABLE_DWORD_MOVING_BYTE)
 {
-  CIEC_DWORD nTestDWord;
-
-  nTestDWord = 0x0;
+  CIEC_DWORD nTestDWord(0x0);
 
   ARRAY_AT<CIEC_BYTE, CIEC_DWORD, 0, 3> testArray(nTestDWord);
 
@@ -215,9 +205,7 @@ BOOST_AUTO_TEST_CASE(AT_VARIABLE_DWORD_MOVING_BYTE)
 
 BOOST_AUTO_TEST_CASE(AT_VARIABLE_DWORD_MOVING_WORD)
 {
-  CIEC_DWORD nTestDWord;
-
-  nTestDWord = 0x0;
+  CIEC_DWORD nTestDWord(0x0);
 
   ARRAY_AT<CIEC_WORD, CIEC_DWORD, 0, 1> testArray(nTestDWord);
 

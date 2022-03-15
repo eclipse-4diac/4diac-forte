@@ -11,7 +11,8 @@
  * Contributors:
  *    Monika Wenger, Alois Zoitl
  *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - make TForteUInt64 constructor explicit
+ *    Martin Melik Merkumians - make TForteUInt64 constructor explicit,
+ *        removed built-in type operator=, added castable CIEC types operator=
  *******************************************************************************/
 #ifndef _FORTE_ULINT_H_
 #define _FORTE_ULINT_H_
@@ -62,20 +63,25 @@ class CIEC_ULINT : public CIEC_ANY_INT{
     virtual ~CIEC_ULINT(){
     }
 
-    /*! \brief Operator: CIEC_ULINT data type = unsigned long data type
-     *
-     *   This command implements the assignment operator for the C++ data type UNSIGNED LONG
-     *   The parameter value is represented by a C++ variable (call by value).
-     *   \param paValue  Value for assignment.
-     *   \return Can be the following response:
-     *     - Pointer to given object.
-     */
-    CIEC_ULINT& operator =(TForteUInt64 paValue) {
-      setTUINT64(paValue);
+    CIEC_ULINT& operator =(const CIEC_ULINT &paValue) {
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
       return *this;
     }
 
-    CIEC_ULINT& operator =(const CIEC_ULINT &paValue) {
+    CIEC_ULINT& operator =(const CIEC_UDINT &paValue) {
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
+      return *this;
+    }
+
+    CIEC_ULINT& operator =(const CIEC_UINT &paValue) {
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
+      return *this;
+    }
+
+    CIEC_ULINT& operator =(const CIEC_USINT &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;

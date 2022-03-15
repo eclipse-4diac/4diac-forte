@@ -38,7 +38,7 @@ EComResponse CHttpComLayer::openConnection(char *paLayerParameter) {
     switch(m_poFb->getComServiceType()){
       case e_Server:
         if(1 == m_poFb->getNumSD()) {
-          mPath = paLayerParameter;
+          mPath = CIEC_STRING(paLayerParameter);
           if(getExtEvHandler<CHTTP_Handler>().addServerPath(this, mPath)) {
             eRetVal = e_InitOk;
           }
@@ -160,9 +160,9 @@ bool CHttpComLayer::handleContentAndRequestType(CParameterParser &paParser, size
   bool everythingOK = true;
   if(1 < paNoOfParameters) {
     if(3 == paNoOfParameters) {
-      mContentType = paParser[2];
+      mContentType = CIEC_STRING(paParser[2]);
     } else {
-      mContentType = "text/html";
+      mContentType = CIEC_STRING("text/html");
     }
     everythingOK = storeRequestType(paParser[1]);
   } else {
@@ -180,23 +180,23 @@ bool CHttpComLayer::handleAddress(const char* paAddress, size_t paNoOfSDs) {
   CIEC_STRING addressToParse(paAddress);
   if(2 == parser.parseParameters() && (e_PUT == mRequestType || e_POST == mRequestType)) {
     if(0 == paNoOfSDs) { //if SDs are present, the parameters in PARAMS are ignored
-      mReqData = parser[1];
-      mContentType = "application/x-www-form-urlencoded";
+      mReqData = CIEC_STRING(parser[1]);
+      mContentType = CIEC_STRING("application/x-www-form-urlencoded");
     }
-    addressToParse = parser[0];
+    addressToParse = CIEC_STRING(parser[0]);
   }
 
   char* firstSlash = strchr(addressToParse.getValue(), '/');
 
   if(firstSlash) {
-    mPath = firstSlash;
+    mPath = CIEC_STRING(firstSlash);
     *firstSlash = '\0';
     CParameterParser portParser(addressToParse.getValue(), ':', 2);
     if(2 == portParser.parseParameters()) {
-      mHost = portParser[0];
+      mHost = CIEC_STRING(portParser[0]);
       mPort = static_cast<TForteUInt16>(forte::core::util::strtoul(portParser[1], 0, 10));
     } else {
-      mHost = addressToParse.getValue();
+      mHost = addressToParse;
       DEVLOG_INFO("[HTTP Layer] No port was found on the parameter, using default 80\n");
     }
   } else {

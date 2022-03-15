@@ -11,7 +11,8 @@
  *    Thomas Strasser, Alois Zoitl, Stanislav Meduna, Monika Wenger, Ingo Hegny
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians
- *      - fixes behavior for getToStringBufferSize
+ *      - fixes behavior for getToStringBufferSize, removed built-in type operator=,
+ *      added fromCharString protected function
  *******************************************************************************/
 #ifndef _ANY_STR_H_
 #define _ANY_STR_H_
@@ -39,16 +40,6 @@ class CIEC_ANY_STRING : public CIEC_ANY_ELEMENTARY{
       }
       return *this;
     }
-
-    /*! \brief Operator: CIEC_STRING data type = string data type
-     *
-     *   This command implements the assignment operator for the C++ datatype STRING
-     *   The parameter value is represented by a C++ variable (call by value).
-     *   \param pa_pacValue  Value for assignment.
-     *   \return Can be the following response:
-     *     - Pointer to given object.
-     */
-    CIEC_ANY_STRING& operator =(const char* const pa_pacValue);
 
     /*! \brief Get-Method for CIEC_ANY_STRING
      *
@@ -179,6 +170,8 @@ class CIEC_ANY_STRING : public CIEC_ANY_ELEMENTARY{
         *((TForteUInt16 *) (pBuf + 2)) = pa_unVal;
       }
     }
+
+    void fromCharString(const char* const paValue);
 
     CIEC_ANY_STRING(){
     }

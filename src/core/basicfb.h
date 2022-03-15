@@ -86,7 +86,7 @@ class CBasicFB : public CFunctionBlock {
       return m_aoInternals + pa_nVarIntNum;
     }
 
-    CIEC_UINT m_nECCState; //! the current state of the ecc. start value is 0 = initial state id
+    CIEC_STATE m_nECCState; //! the current state of the ecc. start value is 0 = initial state id
     const SInternalVarsInformation *const cm_pstVarInternals; //!< struct holding the information on the internal vars.
     size_t cm_amountOfInternalFBs;
 

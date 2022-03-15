@@ -26,8 +26,8 @@ struct STRUCT_DEMUX_TestFixture_1 : public CFBTestFixtureBase{
       CFBTestFixtureBase::setup();
     }
 
-    CIEC_INT    mVar1;
-    CIEC_INT   mVar2;
+    CIEC_INT mVar1;
+    CIEC_INT mVar2;
     CIEC_STRING mVar3;
 
     CIEC_Struct_Muxer_Test_Struct_1 mIn;
@@ -48,36 +48,36 @@ BOOST_FIXTURE_TEST_SUITE( STRUCT_DEMUX_MainTests, STRUCT_DEMUX_TestFixture_1)
   }
 
   BOOST_AUTO_TEST_CASE(changeValueCheck) {
-    mIn.Var1() = -256;
-    mIn.Var2() = 23145;
-    mIn.Var3() = "My Test String!";
+    mIn.Var1() = CIEC_INT(-256);
+    mIn.Var2() = CIEC_INT(23145);
+    mIn.Var3() = CIEC_STRING("My Test String!");
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     checkStructValues();
   }
 
   BOOST_AUTO_TEST_CASE(updateValueCheck) {
-    mIn.Var1() = 12;
-    mIn.Var2() = 11111;
-    mIn.Var3() = "string!";
+    mIn.Var1() = CIEC_INT(12);
+    mIn.Var2() = CIEC_INT(11111);
+    mIn.Var3() = CIEC_STRING("string!");
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     checkStructValues();
 
     //change values to check consecutive updates
 
-    mIn.Var1() = 32255;
-    mIn.Var2() = 12345;
-    mIn.Var3() = "new string!";
+    mIn.Var1() = CIEC_INT(32255);
+    mIn.Var2() = CIEC_INT(12345);
+    mIn.Var3() = CIEC_STRING("new string!");
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     checkStructValues();
   }
 
   BOOST_AUTO_TEST_CASE(steadyStateValueCheck) {
-    mIn.Var1() = 13;
-    mIn.Var2() = 234;
-    mIn.Var3() = "stable value";
+    mIn.Var1() = CIEC_INT(13);
+    mIn.Var2() = CIEC_INT(234);
+    mIn.Var3() = CIEC_STRING("stable value");
 
     for(size_t i = 0; i < 45; i++){
       triggerEvent(0);
@@ -119,9 +119,9 @@ BOOST_FIXTURE_TEST_SUITE( STRUCT_DEMUX_SecondStructTest, STRUCT_DEMUX_TestFixtur
   }
 
   BOOST_AUTO_TEST_CASE(changeValueCheck) {
-    mIn.Var1() = 1234;
-    mIn.Var2() = "this is the second struct!";
-    mIn.Var3() = -2345;
+    mIn.Var1() = CIEC_INT(1234);
+    mIn.Var2() = CIEC_STRING("this is the second struct!");
+    mIn.Var3() = CIEC_INT(-2345);
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     checkStructValues();

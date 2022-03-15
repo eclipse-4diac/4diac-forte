@@ -55,10 +55,10 @@ void FB_CTD_LINT::executeEvent(int pa_nEIID){
       if(true == LD()){
         CV() = PV();
       }
-      else if( (true == CD()) && (CV() > CIEC_LINT::scm_nMinVal)){
-        CV() = CV() - 1;
+      else if(AND(CD(), GT(CV(), CIEC_LINT(CIEC_LINT::scm_nMinVal)))) {
+        CV() = SUB(CV(), CIEC_LINT(1));
       }
-      Q() = (CV() <= 0);
+      Q() = LE(CV(), CIEC_LINT(0));
       sendOutputEvent(scm_nEventCNFID);
   }
 }

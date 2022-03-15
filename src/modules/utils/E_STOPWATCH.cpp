@@ -96,7 +96,7 @@ void FORTE_E_STOPWATCH::executeEvent(int pa_nEIID){
           bTransitionCleared  = false; //no transition cleared
         break;
       default:
-        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 3.", m_nECCState.operator TForteUInt16 ());
+        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 3.", static_cast<TForteUInt16>(m_nECCState));
         m_nECCState = 0; // 0 is always the initial state
         break;
     }

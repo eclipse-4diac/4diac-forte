@@ -115,7 +115,7 @@ BOOST_FIXTURE_TEST_SUITE( CTUDTests, E_CTUD_TestFixture)
     for(unsigned int j = 0; j < numberOfValues; j++){
       triggerEvent(2);
       BOOST_CHECK(checkR());
-      mInPV = valuesToTest[j];
+      mInPV = CIEC_UINT(valuesToTest[j]);
       for(unsigned int k = 0; k < static_cast<unsigned int>(mInPV + 3); k++){
         prevCV = mOutCV;
         //Send event
@@ -131,7 +131,7 @@ BOOST_FIXTURE_TEST_SUITE( CTUDTests, E_CTUD_TestFixture)
     unsigned int numberOfValues = static_cast<unsigned int>(sizeof(valuesToTest) / sizeof(TForteUInt16));
     for(unsigned int i = 0; i < numberOfTries; i++){
       for(unsigned int j = 0; j < numberOfValues; j++){
-        mInPV = valuesToTest[j];
+        mInPV = CIEC_UINT(valuesToTest[j]);
         triggerEvent(3);
         checkForSingleOutputEventOccurence(1);
         //Send event
@@ -147,7 +147,7 @@ BOOST_FIXTURE_TEST_SUITE( CTUDTests, E_CTUD_TestFixture)
     unsigned int numberOfValues = static_cast<unsigned int>(sizeof(valuesToTest) / sizeof(TForteUInt16));
     for(unsigned int i = 0; i < numberOfTries; i++){
       for(unsigned int j = 0; j < numberOfValues; j++){
-        mInPV = valuesToTest[j];
+        mInPV = CIEC_UINT(valuesToTest[j]);
         triggerEvent(3); //loads the value to input of the FB, because the Rese event doesn't scan the PV input.
         checkForSingleOutputEventOccurence(1);
         triggerEvent(2);
@@ -162,7 +162,7 @@ BOOST_FIXTURE_TEST_SUITE( CTUDTests, E_CTUD_TestFixture)
     unsigned int numberOftest = static_cast<unsigned int>(sizeof(PVToTest) / sizeof(TForteUInt16));
     for(unsigned int i = 0; i < numberOfTries; i++){
       for(unsigned int j = 0; j < numberOftest; j++){
-        mInPV = PVToTest[j];
+        mInPV = CIEC_UINT(PVToTest[j]);
         triggerEvent(3);
         BOOST_CHECK(checkLD(PVToTest[j]));
       }
@@ -172,7 +172,7 @@ BOOST_FIXTURE_TEST_SUITE( CTUDTests, E_CTUD_TestFixture)
   BOOST_AUTO_TEST_CASE(Mix){
       unsigned int numberOfTries = 10;
       for(unsigned int i = 0; i < numberOfTries; i++){
-        mInPV = 0;
+        mInPV = CIEC_UINT(0);
         triggerEvent(3);
         BOOST_CHECK(checkLD(0));
         triggerEvent(0);
@@ -186,7 +186,7 @@ BOOST_FIXTURE_TEST_SUITE( CTUDTests, E_CTUD_TestFixture)
         triggerEvent(2);
         BOOST_CHECK(checkR());
 
-        mInPV = 1;
+        mInPV = CIEC_UINT(1);
         triggerEvent(0);
         BOOST_CHECK(checkCU(0));
         triggerEvent(3);
@@ -194,7 +194,7 @@ BOOST_FIXTURE_TEST_SUITE( CTUDTests, E_CTUD_TestFixture)
         triggerEvent(3);
         BOOST_CHECK(checkLD(1));
 
-        mInPV = 65533;
+        mInPV = CIEC_UINT(65533);
         triggerEvent(3);
         BOOST_CHECK(checkLD(65533));
         triggerEvent(0);
@@ -212,7 +212,7 @@ BOOST_FIXTURE_TEST_SUITE( CTUDTests, E_CTUD_TestFixture)
         triggerEvent(2);
         BOOST_CHECK(checkR());
 
-        mInPV = 65533;
+        mInPV = CIEC_UINT(65533);
         for(unsigned int j = 0; j < 65533; j++){
           //Send event
           triggerEvent(0);

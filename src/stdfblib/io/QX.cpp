@@ -44,16 +44,16 @@ void FORTE_QX::executeEvent(int pa_nEIID){
   switch(pa_nEIID){
     case scm_nEventINITID:
       if(true == QI()){
-        QO() = CProcessInterface::initialise(false); //initialise as output
+        QO() = CIEC_BOOL(CProcessInterface::initialise(false)); //initialise as output
       }
       else{
-        QO() = CProcessInterface::deinitialise();
+        QO() = CIEC_BOOL(CProcessInterface::deinitialise());
       }
       sendOutputEvent(scm_nEventINITOID);
       break;
     case scm_nEventREQID:
       if(true == QI()){
-        QO() = CProcessInterface::writePin();
+        QO() = CIEC_BOOL(CProcessInterface::writePin());
       }
       sendOutputEvent(scm_nEventCNFID);
       break;

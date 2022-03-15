@@ -47,7 +47,7 @@ void IOHandleBit::set(const CIEC_ANY &paState) {
 }
 
 void IOHandleBit::get(CIEC_ANY &paState) {
-  static_cast<CIEC_BOOL&>(paState) = (*(mImage + mOffset) & mMask) != 0;
+  static_cast<CIEC_BOOL&>(paState) = CIEC_BOOL((*(mImage + mOffset) & mMask) != 0);
 }
 
 bool IOHandleBit::equal(uint8_t* paOldImage) const {

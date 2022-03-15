@@ -12,7 +12,8 @@
  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
  *    Ingo Hegny, Monika Wenger,
  *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - make TForteUInt8 constructor explicit
+ *    Martin Melik Merkumians - make TForteUInt8 constructor explicit,
+ *        removed built-in type operator=
  *******************************************************************************/
 #ifndef _FORTE_USINT_H_
 #define _FORTE_USINT_H_
@@ -44,19 +45,6 @@ class CIEC_USINT : public CIEC_ANY_INT{
     }
 
     virtual ~CIEC_USINT(){
-    }
-
-    /*! \brief Operator: CIEC_USINT data type = unsigned char data type
-     *
-     *   This command implements the assignment operator for the C++ datatype UNSIGNED CHAR
-     *   The parameter value is represented by a C++ variable (call by value).
-     *   \param pa_nValue  Value for assignment.
-     *   \return Can be the following response:
-     *     - Pointer to given object.
-     */
-    CIEC_USINT& operator =(TForteUInt8 pa_nValue){
-      setTUINT8(pa_nValue);
-      return *this;
     }
 
     CIEC_USINT& operator =(const CIEC_USINT &pa_roValue){

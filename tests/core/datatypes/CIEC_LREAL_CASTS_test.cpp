@@ -67,12 +67,12 @@ BOOST_AUTO_TEST_CASE(CASTS_LREAL_to_BOOL)
   BOOST_CHECK_EQUAL(nTestLReal1_0em37, 0);
   BOOST_CHECK_EQUAL(nTestLReal36, 0);
 
-  nTestLReal0=0.0;
-  nTestLReal1=1.0;
-  nTestLReal2_2874e6=2.2874e6;
-  nTestLRealm6_2587em4=-6.2587e-4;
-  nTestLReal1_0em37=1.0e-37;
-  nTestLReal36=36.0;
+  nTestLReal0 = CIEC_LREAL(0.0);
+  nTestLReal1 = CIEC_LREAL(1.0);
+  nTestLReal2_2874e6 = CIEC_LREAL(2.2874e6);
+  nTestLRealm6_2587em4 = CIEC_LREAL(-6.2587e-4);
+  nTestLReal1_0em37 = CIEC_LREAL(1.0e-37);
+  nTestLReal36 = CIEC_LREAL(36.0);
 
 
   BOOST_CHECK_EQUAL(0.0, nTestLReal0);
@@ -117,12 +117,12 @@ BOOST_AUTO_TEST_CASE(CASTS_LREAL_to_BITDTs)
   BOOST_CHECK_EQUAL(nTestLReal1_0em37, 0.0);
   BOOST_CHECK_EQUAL(nTestLReal36, 0);
 
-  nTestLReal0=0.0;
-  nTestLReal1=1.0;
-  nTestLReal2_2874e6=2.2874e6;
-  nTestLRealm6_2587em4=-6.2587e-4;
-  nTestLReal1_0em37=1.0e-37;
-  nTestLReal36=36.0;
+  nTestLReal0 = CIEC_LREAL(0.0);
+  nTestLReal1 = CIEC_LREAL(1.0);
+  nTestLReal2_2874e6 = CIEC_LREAL(2.2874e6);
+  nTestLRealm6_2587em4 = CIEC_LREAL(-6.2587e-4);
+  nTestLReal1_0em37 = CIEC_LREAL(1.0e-37);
+  nTestLReal36 = CIEC_LREAL(36.0);
 
   //the 4byte hex value for 36.0:        0x4042000000000000
   //the 4byte hex value for -6.2587e-4f: 0xbf44822d973cf2fb
@@ -202,12 +202,12 @@ BOOST_AUTO_TEST_CASE(CASTS_LREAL_to_INTS)
   BOOST_CHECK_EQUAL(nTestLReal1_0em37, 0);
   BOOST_CHECK_EQUAL(nTestLReal36, 0);
 
-  nTestLReal0=0.0;
-  nTestLReal1=1.0;
-  nTestLReal2_2874e6=2.2874e6;
-  nTestLRealm6_2587em4=-6.2587e-4;
-  nTestLReal1_0em37=1.0e-37;
-  nTestLReal36=36.0;
+  nTestLReal0 = CIEC_LREAL(0.0);
+  nTestLReal1 = CIEC_LREAL(1.0);
+  nTestLReal2_2874e6 = CIEC_LREAL(2.2874e6);
+  nTestLRealm6_2587em4 = CIEC_LREAL(-6.2587e-4);
+  nTestLReal1_0em37 = CIEC_LREAL(1.0e-37);
+  nTestLReal36 = CIEC_LREAL(36.0);
 
   BOOST_CHECK_EQUAL(0.0, nTestLReal0);
   BOOST_CHECK_EQUAL(1.0, nTestLReal1);
@@ -290,12 +290,12 @@ BOOST_AUTO_TEST_CASE(CASTS_LREAL_to_REAL)
   BOOST_CHECK_EQUAL(nTestLReal1_0em37, 0);
   BOOST_CHECK_EQUAL(nTestLReal36, 0);
 
-  nTestLReal0=0.0;
-  nTestLReal1=1.0;
-  nTestLReal2_2874e6=2.2874e6;
-  nTestLRealm6_2587em4=-6.2587e-4;
-  nTestLReal1_0em37=1.0e-37;
-  nTestLReal36=36.0;
+  nTestLReal0 = CIEC_LREAL(0.0);
+  nTestLReal1 = CIEC_LREAL(1.0);
+  nTestLReal2_2874e6 = CIEC_LREAL(2.2874e6);
+  nTestLRealm6_2587em4 = CIEC_LREAL(-6.2587e-4);
+  nTestLReal1_0em37 = CIEC_LREAL(1.0e-37);
+  nTestLReal36 = CIEC_LREAL(36.0);
 
   BOOST_CHECK_EQUAL(0.0, nTestLReal0);
   BOOST_CHECK_EQUAL(1.0, nTestLReal1);
@@ -348,12 +348,12 @@ BOOST_AUTO_TEST_CASE(CASTS_LREAL_to_TIME)
   BOOST_CHECK_EQUAL(nTestLReal1_0em37, 0);
   BOOST_CHECK_EQUAL(nTestLReal36, 0);
 
-  nTestLReal0=0.0;
-  nTestLReal1=1.0;
-  nTestLReal2_2874e6=2.2874e6;
-  nTestLRealm6_2587em4=-6.2587e-4;
-  nTestLReal1_0em37=1.0e-37;
-  nTestLReal36=36.0;
+  nTestLReal0 = CIEC_LREAL(0.0);
+  nTestLReal1 = CIEC_LREAL(1.0);
+  nTestLReal2_2874e6 = CIEC_LREAL(2.2874e6);
+  nTestLRealm6_2587em4 = CIEC_LREAL(-6.2587e-4);
+  nTestLReal1_0em37 = CIEC_LREAL(1.0e-37);
+  nTestLReal36 = CIEC_LREAL(36.0);
 
   BOOST_CHECK_EQUAL(0.0, nTestLReal0);
   BOOST_CHECK_EQUAL(1.0, nTestLReal1);

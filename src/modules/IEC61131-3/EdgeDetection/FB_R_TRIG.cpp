@@ -51,7 +51,7 @@ const SFBInterfaceSpec FB_R_TRIG::scm_stFBInterfaceSpec = {
 void FB_R_TRIG::executeEvent(int pa_nEIID){
   switch(pa_nEIID){
     case scm_nEventREQID:
-        Q() = CLK() && !M;
+        Q() = AND(CLK(), NOT(M));
         M = CLK();
         sendOutputEvent(scm_nEventCNFID);
       break;

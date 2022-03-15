@@ -11,7 +11,8 @@
  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Gerhard Ebenhofer,
  *    Ingo Hegny, Monika Wenger
  *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - make TForteUInt32 constructor explicit
+ *    Martin Melik Merkumians - make TForteUInt32 constructor explicit,
+ *      removed built-in type operator=, added castable CIEC types operator=
  *******************************************************************************/
 #ifndef _FORTE_UDINT_H_
 #define _FORTE_UDINT_H_
@@ -57,20 +58,19 @@ class CIEC_UDINT : public CIEC_ANY_INT{
     virtual ~CIEC_UDINT() {
     }
 
-    /*! \brief Operator: CIEC_UDINT data type = unsigned long data type
-     *
-     *   This command implements the assignment operator for the C++ data type UNSIGNED LONG
-     *   The parameter value is represented by a C++ variable (call by value).
-     *   \param paValue  Value for assignment.
-     *   \return Can be the following response:
-     *     - Pointer to given object.
-     */
-    CIEC_UDINT& operator =(TForteUInt32 paValue){
-      setTUINT32(paValue);
+    CIEC_UDINT& operator =(const CIEC_UDINT &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
       return *this;
     }
 
-    CIEC_UDINT& operator =(const CIEC_UDINT &paValue){
+    CIEC_UDINT& operator =(const CIEC_UINT &paValue){
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
+      return *this;
+    }
+
+    CIEC_UDINT& operator =(const CIEC_USINT &paValue){
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;

@@ -13,8 +13,9 @@
  *    Martin Melik Merkumians, Matthias Plasch, Monika Wenger
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians
- *      - fixes behavior for getToStringBufferSize, make const char*
- *        constructor explicit
+ *      - fixed behavior for getToStringBufferSize, make const char*
+ *        constructor explicit, removed built-in type operator=, added
+ *        castable CIEC types operator=
  *******************************************************************************/
 #ifndef _FORTE_WSTRING_H_
 #define _FORTE_WSTRING_H_
@@ -35,19 +36,19 @@ class CIEC_WSTRING : public CIEC_ANY_STRING {
     CIEC_WSTRING() {
     }
 
-    CIEC_WSTRING(const CIEC_WSTRING& pa_roValue) :
-        CIEC_ANY_STRING(pa_roValue) {
+    CIEC_WSTRING(const CIEC_WSTRING& paValue) :
+        CIEC_ANY_STRING(paValue) {
     }
 
-    explicit CIEC_WSTRING(const char* pa_pacValue) {
-      (*this) = pa_pacValue;
+    explicit CIEC_WSTRING(const char* paValue) {
+      fromCharString(paValue);
     }
 
     virtual ~CIEC_WSTRING() {
     }
 
-    CIEC_WSTRING &operator =(const char* const pa_pacValue) {
-      CIEC_ANY_STRING::operator =(pa_pacValue);
+    CIEC_WSTRING &operator =(const CIEC_WSTRING &paValue) {
+      CIEC_ANY_STRING::operator =(paValue);
       return *this;
     }
 

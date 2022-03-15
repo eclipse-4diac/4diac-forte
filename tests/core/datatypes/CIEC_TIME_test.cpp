@@ -37,39 +37,35 @@ BOOST_AUTO_TEST_CASE(Operator_test)
   BOOST_CHECK_EQUAL(nTest1,0);
 
 #ifdef FORTE_USE_64BIT_DATATYPES
-  nTest1 = std::numeric_limits<TForteInt64>::min();
+  nTest1 = CIEC_TIME(std::numeric_limits<TForteInt64>::min());
   nTest2 = nTest1;
   BOOST_CHECK_EQUAL(nTest1, std::numeric_limits<TForteInt64>::min());
   BOOST_CHECK_EQUAL(nTest2, std::numeric_limits<TForteInt64>::min());
 
-  nTest1 = std::numeric_limits<TForteInt64>::max();
+  nTest1 = CIEC_TIME(std::numeric_limits<TForteInt64>::max());
   nTest2 = nTest1;
   BOOST_CHECK_EQUAL(nTest1, std::numeric_limits<TForteInt64>::max());
   BOOST_CHECK_EQUAL(nTest2, std::numeric_limits<TForteInt64>::max());
 #endif
 
-  nTest1 = std::numeric_limits<TForteInt32>::min();
+  nTest1 = CIEC_TIME(std::numeric_limits<TForteInt32>::min());
   nTest2 = nTest1;
   BOOST_CHECK_EQUAL(nTest1, std::numeric_limits<TForteInt32>::min());
   BOOST_CHECK_EQUAL(nTest2, std::numeric_limits<TForteInt32>::min());
 
-  nTest1 = 9657545ULL;
+  nTest1 = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(9657545ULL));
   nTest2 = nTest1;
   BOOST_CHECK_EQUAL(nTest1, 9657545LL);
   BOOST_CHECK_EQUAL(nTest2, 9657545LL);
 
-  nTest1 = std::numeric_limits<TForteInt32>::max();
+  nTest1 = CIEC_TIME(std::numeric_limits<TForteInt32>::max());
   nTest2 = nTest1;
   BOOST_CHECK_EQUAL(nTest1, std::numeric_limits<TForteInt32>::max());
   BOOST_CHECK_EQUAL(nTest2, std::numeric_limits<TForteInt32>::max());
 
-  nTest2 = 564874642ULL;
+  nTest2 = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(564874642ULL));
   BOOST_CHECK_EQUAL(nTest1, std::numeric_limits<TForteInt32>::max());
   BOOST_CHECK_EQUAL(nTest2, 564874642LL);
-
-  ++nTest2;
-  BOOST_CHECK_EQUAL(nTest2, 564874643LL);
-
 }
 
 BOOST_AUTO_TEST_CASE(Conversion_test)
@@ -80,7 +76,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   char cBufferFail[2];
 
   //check cast operator
-  nTest = 0;
+  nTest = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
 
 #ifdef FORTE_USE_64BIT_DATATYPES
   BOOST_CHECK_EQUAL(nTest.operator TForteInt64(), 0);
@@ -88,19 +84,19 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.operator TForteInt32(), 0);
 #endif
 
-  nTest = std::numeric_limits<TForteInt32>::min();
+  nTest = CIEC_TIME(std::numeric_limits<TForteInt32>::min());
 #ifdef FORTE_USE_64BIT_DATATYPES
   BOOST_CHECK_EQUAL(nTest.operator TForteInt64(), std::numeric_limits<TForteInt32>::min());
 #else
   BOOST_CHECK_EQUAL(nTest.operator TForteInt32(), std::numeric_limits<TForteInt32>::min());
 #endif
-  nTest = -21654147L;
+  nTest = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(-21654147L));
 #ifdef FORTE_USE_64BIT_DATATYPES
   BOOST_CHECK_EQUAL(nTest.operator TForteInt64(), -21654147L);
 #else
   BOOST_CHECK_EQUAL(nTest.operator TForteInt32(), -21654147L);
 #endif
-  nTest = std::numeric_limits<TForteInt32>::max();
+  nTest = CIEC_TIME(std::numeric_limits<TForteInt32>::max());
 #ifdef FORTE_USE_64BIT_DATATYPES
   BOOST_CHECK_EQUAL(nTest.operator TForteInt64(), std::numeric_limits<TForteInt32>::max());
 #else
@@ -121,7 +117,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#16560000ms");
   strcpy(cBuffer, "");
-  nTest = 0;
+  nTest = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
 
   BOOST_CHECK_EQUAL(nTest.fromString("time#4h36m"), 10);
   BOOST_CHECK_EQUAL(nTest, 16560000LL * (cgForteTimeBaseUnitsPerSecond / 1000));
@@ -129,7 +125,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#16560000ms");
   strcpy(cBuffer, "");
-  nTest = 0;
+  nTest = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
 
   BOOST_CHECK_EQUAL(nTest.fromString("T#4h36m"), 7);
   BOOST_CHECK_EQUAL(nTest, 16560000LL * (cgForteTimeBaseUnitsPerSecond / 1000));
@@ -137,7 +133,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#16560000ms");
   strcpy(cBuffer, "");
-  nTest = 0;
+  nTest = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
 
   BOOST_CHECK_EQUAL(nTest.fromString("t#4h36m"), 7);
   BOOST_CHECK_EQUAL(nTest, 16560000LL * (cgForteTimeBaseUnitsPerSecond / 1000));
@@ -145,7 +141,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#16560000ms");
   strcpy(cBuffer, "");
-  nTest = 0;
+  nTest = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
 
   BOOST_CHECK_EQUAL(nTest.fromString("3s_22ms"), 1);
   /*BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 17);
@@ -159,7 +155,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#3022ms");
   strcpy(cBuffer, "");
-  nTest = 0;
+  nTest = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
 
   BOOST_CHECK_EQUAL(nTest.fromString("time#3s_22ms"), 12);
   BOOST_CHECK_EQUAL(nTest, 3022LL * (cgForteTimeBaseUnitsPerSecond / 1000LL));
@@ -167,7 +163,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#3022ms");
   strcpy(cBuffer, "");
-  nTest = 0;
+  nTest = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
 
   BOOST_CHECK_EQUAL(nTest.fromString("T#3s_22ms"), 9);
   BOOST_CHECK_EQUAL(nTest, 3022LL * (cgForteTimeBaseUnitsPerSecond / 1000LL));
@@ -175,7 +171,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#3022ms");
   strcpy(cBuffer, "");
-  nTest = 0;
+  nTest = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
 
   BOOST_CHECK_EQUAL(nTest.fromString("t#3s_22ms"), 9);
   BOOST_CHECK_EQUAL(nTest, 3022LL * (cgForteTimeBaseUnitsPerSecond / 1000LL));
@@ -183,7 +179,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#3022ms");
   strcpy(cBuffer, "");
-  nTest = 0;
+  nTest = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
 }
 
 BOOST_AUTO_TEST_CASE(toString_with_microseconds_test){
@@ -244,16 +240,16 @@ BOOST_AUTO_TEST_CASE(get_time_in_nanoseconds)
   CIEC_TIME time;
 
   time.setFromNanoSeconds(1);
-  BOOST_CHECK(time.getInNanoSeconds() == 1);
+  BOOST_CHECK(time.getInNanoSeconds() == CIEC_TIME(static_cast<CIEC_TIME::TValueType>(1)));
 
   time.setFromNanoSeconds(10);
-  BOOST_CHECK(time.getInNanoSeconds() == 10);
+  BOOST_CHECK(time.getInNanoSeconds() == CIEC_TIME(static_cast<CIEC_TIME::TValueType>(10)));
 
   time.setFromNanoSeconds(999);
-  BOOST_CHECK(time.getInNanoSeconds() == 999);
+  BOOST_CHECK(time.getInNanoSeconds() == CIEC_TIME(static_cast<CIEC_TIME::TValueType>(999)));
 
   time.setFromNanoSeconds(10325643);
-  BOOST_CHECK(time.getInNanoSeconds() == 10325643);
+  BOOST_CHECK(time.getInNanoSeconds() == CIEC_TIME(static_cast<CIEC_TIME::TValueType>(10325643)));
 }
 
 BOOST_AUTO_TEST_CASE(parse_time_literal_in_milliseconds)

@@ -27,7 +27,7 @@ GEN_PUBL::GEN_PUBL(const CStringDictionary::TStringId pa_nInstanceNameId, CResou
 bool GEN_PUBL::configureFB(const char *pa_acConfigString){
   bool bRetVal = GEN_PUBLISH::configureFB(pa_acConfigString);
   //publs normally don't show the QI in the tool
-  QI() = true;
+  QI() = CIEC_BOOL(true);
   return bRetVal;
 }
 

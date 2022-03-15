@@ -40,16 +40,16 @@ bool ForteBootFileLoader::openBootFile() {
   CIEC_STRING bootFileName;
   if(gCommandLineBootFile) {
     DEVLOG_INFO("Using provided bootfile location set in the command line: %s\n", gCommandLineBootFile);
-    bootFileName = gCommandLineBootFile;
+    bootFileName = CIEC_STRING(gCommandLineBootFile);
   } else {
     // select provided or default boot file name
     char * envBootFileName = getenv("FORTE_BOOT_FILE");
     if(0 != envBootFileName) {
       DEVLOG_INFO("Using provided bootfile location from environment variable: %s\n", envBootFileName);
-      bootFileName = envBootFileName;
+      bootFileName = CIEC_STRING(envBootFileName);
     } else {
       DEVLOG_INFO("Using provided bootfile location set in CMake: %s\n", FORTE_BOOT_FILE_LOCATION);
-      bootFileName = FORTE_BOOT_FILE_LOCATION;
+      bootFileName = CIEC_STRING(FORTE_BOOT_FILE_LOCATION);
     }
   }
 
@@ -109,10 +109,10 @@ bool ForteBootFileLoader::readLine(CIEC_STRING &line){
   const unsigned int size = 100;
   line.clear();
   char acLineBuf[size];
-  do{
-    if(0 != fgets(acLineBuf, size, mBootfile)){
+  do {
+    if(0 != fgets(acLineBuf, size, mBootfile)) {
       line.append(acLineBuf);
-    }else{
+    } else {
       return 0 != line.length();
     }
   }while(!hasCommandEnded(line));

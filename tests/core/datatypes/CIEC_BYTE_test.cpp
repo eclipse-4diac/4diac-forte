@@ -33,23 +33,23 @@ BOOST_AUTO_TEST_CASE(Assignment_test)
   //initial value must be 0
   BOOST_CHECK_EQUAL(nTest1, 0);
 
-  nTest1 = 0;
+  nTest1 = CIEC_BYTE(0);
   nTest2 = nTest1;
   BOOST_CHECK_EQUAL(nTest1, 0);
   BOOST_CHECK_EQUAL(nTest2, 0);
 
-  nTest1 = 12;
+  nTest1 = CIEC_BYTE(12);
   nTest2 = nTest1;
   BOOST_CHECK_EQUAL(nTest1, 12);
   BOOST_CHECK_EQUAL(nTest2, 12);
 
-  nTest1 = 255;
+  nTest1 = CIEC_BYTE(255);
   nTest2 = nTest1;
   BOOST_CHECK_EQUAL(nTest1, 255);
   BOOST_CHECK_EQUAL(nTest2, 255);
 
   //check that assignment operator does not intertwine objects
-  nTest2 = 128;
+  nTest2 = CIEC_BYTE(128);
   BOOST_CHECK_EQUAL(nTest1, 255);
   BOOST_CHECK_EQUAL(nTest2, 128);
 
@@ -63,15 +63,15 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   char cBufferFail[2];
 
   //check cast operator
-  nTest = 0;
+  nTest = CIEC_BYTE(0);
   strcpy(cBuffer, "");
 
   BOOST_CHECK_EQUAL(nTest.operator TForteByte(), 0);
 
-  nTest = 64;
+  nTest = CIEC_BYTE(64);
   BOOST_CHECK_EQUAL(nTest.operator TForteByte(), 64);
 
-  nTest = 255;
+  nTest = CIEC_BYTE(255);
   BOOST_CHECK_EQUAL(nTest.operator TForteByte(), 255);
 
   //check toString and fromString
@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
     BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
 
     strcpy(cBuffer, "");
-    nTest = 0;
+    nTest = CIEC_BYTE(0);
 
     BOOST_CHECK_EQUAL(nTest.fromString("2#1001111"), 9);
     BOOST_CHECK_EQUAL(nTest, 79);
@@ -129,7 +129,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
     BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
 
     strcpy(cBuffer, "");
-    nTest = 0;
+    nTest = CIEC_BYTE(0);
 
     BOOST_CHECK_EQUAL(nTest.fromString("8#117"), 5);
     BOOST_CHECK_EQUAL(nTest, 79);
@@ -139,7 +139,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
     BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
 
     strcpy(cBuffer, "");
-    nTest = 0;
+    nTest = CIEC_BYTE(0);
 
     BOOST_CHECK_EQUAL(nTest.fromString("16#4F"), 5);
     BOOST_CHECK_EQUAL(nTest, 79);
@@ -149,7 +149,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
     BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
 
     strcpy(cBuffer, "");
-    nTest = 0;
+    nTest = CIEC_BYTE(0);
 
     BOOST_CHECK_EQUAL(nTest.fromString("255"), 3);
     BOOST_CHECK_EQUAL(nTest, 255);
@@ -159,7 +159,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
     BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
 
     strcpy(cBuffer, "");
-    nTest = 0;
+    nTest = CIEC_BYTE(0);
 
     BOOST_CHECK_EQUAL(nTest.fromString("2#11111111"), 10);
     BOOST_CHECK_EQUAL(nTest, 255);
@@ -169,7 +169,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
     BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
 
     strcpy(cBuffer, "");
-    nTest = 0;
+    nTest = CIEC_BYTE(0);
 
     BOOST_CHECK_EQUAL(nTest.fromString("8#377"), 5);
     BOOST_CHECK_EQUAL(nTest, 255);
@@ -179,7 +179,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
     BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
 
     strcpy(cBuffer, "");
-    nTest = 0;
+    nTest = CIEC_BYTE(0);
 
     BOOST_CHECK_EQUAL(nTest.fromString("16#FF"), 5);
     BOOST_CHECK_EQUAL(nTest, 255);
@@ -189,7 +189,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
     BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
 
     strcpy(cBuffer, "");
-    nTest = 0;
+    nTest = CIEC_BYTE(0);
 
     //testing values outside of allowed range
     BOOST_CHECK_EQUAL(nTest.fromString("300"), -1);

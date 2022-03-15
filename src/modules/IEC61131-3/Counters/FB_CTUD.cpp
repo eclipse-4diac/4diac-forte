@@ -37,27 +37,27 @@ const SFBInterfaceSpec FB_CTUD::scm_stFBInterfaceSpec = { 1, scm_anEventInputNam
 void FB_CTUD::executeEvent(int pa_nEIID) {
   if (pa_nEIID == scm_nEventREQID) {
     if (true == R()) {
-      CV() = 0;
+      CV() = CIEC_INT(0);
     }
     else {
       if (true == LD()) {
         CV() = PV();
       }
       else {
-        if (!(CU() && CD())) {
-          if ((CU() && (CV() < CIEC_INT::scm_nMaxVal))) {
-            CV() = static_cast<TForteInt16>(CV() + 1);
+        if (NOT(AND(CU(), CD()))) {
+          if (AND(CU(), LT(CV(), CIEC_INT(CIEC_INT::scm_nMaxVal)))) {
+            CV() = ADD(CV(), CIEC_INT(1));
           }
           else {
-            if ((CD() && (CV() > CIEC_INT::scm_nMinVal))) {
-              CV() = static_cast<TForteInt16>(CV() - 1);
+            if (AND(CD(), GT(CV(), CIEC_INT(CIEC_INT::scm_nMinVal)))) {
+              CV() = SUB(CV(), CIEC_INT(1));
             }
           }
         }
       }
     }
-    QU() = (CV() >= PV());
-    QD() = (CV() <= 0);
+    QU() = GE(CV(), PV());
+    QD() = LE(CV(), CIEC_INT(0));
     sendOutputEvent(scm_nEventCNFID);
   }
 }

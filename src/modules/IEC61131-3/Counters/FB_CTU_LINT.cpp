@@ -53,12 +53,12 @@ const SFBInterfaceSpec FB_CTU_LINT::scm_stFBInterfaceSpec = {
 void FB_CTU_LINT::executeEvent(int pa_nEIID){
   if(pa_nEIID == scm_nEventREQID){
       if(true == R()){
-        CV() = 0;
+        CV() = CIEC_LINT(0);
       }
-      else if( (true == CU()) && (CV() < CIEC_LINT::scm_nMaxVal)){
-        CV() = CV() + 1;
+      else if(AND(CU(), LT(CV(), CIEC_LINT(CIEC_LINT::scm_nMaxVal)))) {
+        CV() = ADD(CV(), CIEC_LINT(1));
       }
-      Q() = (CV() >= PV());
+      Q() = GE(CV(), PV());
       sendOutputEvent(scm_nEventCNFID);
   }
 }

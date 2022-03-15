@@ -77,12 +77,12 @@ void GEN_F_MUX::executeEvent(int paEIID){
     }
 
     if(status == true){
-      *static_cast<CIEC_BOOL*>(getDO(0)) = true;
-      *static_cast<CIEC_WSTRING *>(getDO(1)) = "OK";
+      *static_cast<CIEC_BOOL*>(getDO(0)) = CIEC_BOOL(true);
+      *static_cast<CIEC_WSTRING *>(getDO(1)) = CIEC_WSTRING("OK");
     }
     else{
-      *static_cast<CIEC_BOOL*>(getDO(0)) = false;
-      *static_cast<CIEC_WSTRING *>(getDO(1)) = "Datatype ERROR";
+      *static_cast<CIEC_BOOL*>(getDO(0)) = CIEC_BOOL(false);
+      *static_cast<CIEC_WSTRING *>(getDO(1)) = CIEC_WSTRING("Datatype ERROR");
     }
 
     sendOutputEvent(0);

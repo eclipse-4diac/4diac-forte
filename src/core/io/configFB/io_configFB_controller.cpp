@@ -42,11 +42,11 @@ void IOConfigFBController::executeEvent(int paEIID) {
   } else if(scmEventINITID == paEIID) {
     if(true == QI()) {
       if(!init()) {
-        QO() = false;
+        QO() = CIEC_BOOL(false);
         sendOutputEvent(scmEventINITOID);
       }
     } else {
-      QO() = deInit();
+      QO() = CIEC_BOOL(deInit());
       sendOutputEvent(scmEventINITOID);
     }
   }
@@ -61,10 +61,10 @@ bool IOConfigFBController::handleNotification(IODeviceController::NotificationTy
           paAttachment = scmFailedToInit;
         }
 
-        STATUS() = (const char*) paAttachment;
+        STATUS() = CIEC_WSTRING((const char*) paAttachment);
         DEVLOG_ERROR("[IOConfigFBController] Failed to initialize controller. Reason: %s\n", STATUS().getValue());
       } else {
-        STATUS() = (const char*) paAttachment;
+        STATUS() = CIEC_WSTRING((const char*) paAttachment);
 
         DEVLOG_ERROR("[IOConfigFBController] Runtime error. Reason: %s\n", STATUS().getValue());
       }
@@ -89,7 +89,7 @@ void IOConfigFBController::onError(bool paIsFatal) {
     deInit();
   } else {
     mStarting = false;
-    QO() = false;
+    QO() = CIEC_BOOL(false);
     sendOutputEvent(scmEventINITOID);
 
     if(paIsFatal) {
@@ -117,7 +117,7 @@ bool IOConfigFBController::init(int paDelay) {
   mController->setInitDelay(paDelay);
 
   mStarting = true;
-  STATUS() = scmInitializing;
+  STATUS() = CIEC_WSTRING(scmInitializing);
 
   setConfig();
 
@@ -142,7 +142,7 @@ void IOConfigFBController::onStartup() {
 
 void IOConfigFBController::started(const char* paError) {
   if(paError != 0) {
-    STATUS() = paError;
+    STATUS() = CIEC_WSTRING(paError);
     DEVLOG_ERROR("[IOConfigFBController] Failed to start. Reason: %s\n", STATUS().getValue());
     return onError(false);
   }
@@ -150,8 +150,8 @@ void IOConfigFBController::started(const char* paError) {
   mErrorCounter = 0;
   mStarting = false;
 
-  QO() = true;
-  STATUS() = scmOK;
+  QO() = CIEC_BOOL(true);
+  STATUS() = CIEC_WSTRING(scmOK);
   sendOutputEvent(scmEventINITOID);
 }
 
@@ -185,7 +185,7 @@ void IOConfigFBController::stopped() {
   mController = 0;
   mStarting = false;
 
-  STATUS() = scmStopped;
+  STATUS() = CIEC_WSTRING(scmStopped);
 
   if(mPerformRestart) {
     mPerformRestart = false;

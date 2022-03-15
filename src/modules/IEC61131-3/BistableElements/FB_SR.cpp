@@ -51,7 +51,7 @@ const SFBInterfaceSpec FB_SR::scm_stFBInterfaceSpec = {
 void FB_SR::executeEvent(int pa_nEIID){
   switch(pa_nEIID){
     case scm_nEventREQID:
-      Q1() = S1() || (!R() && Q1());
+      Q1() = OR(S1(), AND(NOT(R()), Q1()));
       sendOutputEvent(scm_nEventCNFID);
       break;
   }

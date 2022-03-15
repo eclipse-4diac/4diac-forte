@@ -11,7 +11,8 @@
  * Contributors:
  *    Stanislav Meduna, Alois Zoitl, Martin Melik Merkumians, Monika Wenger
  *      - initial implementation and rework communication infrastructure
- *    Martin Melik Merkumians - make TForteUInt64 constructor explicit
+ *    Martin Melik Merkumians - make TForteUInt64 constructor explicit,
+ *        removed built-in type operator=, removed operator++
  *******************************************************************************/
 #ifndef _FORTE_DATE_H_
 #define _FORTE_DATE_H_
@@ -43,39 +44,15 @@ class CIEC_DATE : public CIEC_ANY_DATE {
     virtual ~CIEC_DATE(){
     }
 
-    /*! \brief Operator: CIEC_DATE data type = long data type
-     *
-     *   This command implements the assignment operator for the C++ data type long long.
-     *   The parameter value is represented by a C++ variable (call by value).
-     *   \param paValue  Value for assignment.
-     *   \return Can be the following response:
-     *     - Pointer to given object.
-     */
-    CIEC_DATE& operator =(TForteUInt64 paValue) {
-      setTUINT64(paValue);
-      return *this;
-    }
-
     CIEC_DATE& operator =(const CIEC_DATE &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
     }
 
-    /*! \brief Operator: CIEC_TIME data type operator++
+    /*! \brief Converts CIEC_TIME to unsigned 64 bit integer
      *
-     *   This command implements the increment operator for the IEC 61131 data type TIME.
-     *   The parameter value is represented by a C++ variable (call by value).
-     *   \return Can be the following response:
-     *     - Pointer to given object.
-     */
-    CIEC_DATE& operator ++(void) {
-      setTUINT64(getTUINT64() + 1);
-      return *this;
-    }
-    /*! \brief Converts CIEC_SINT to elementary 32 bit integer
-     *
-     *   Conversion operator for converting CIEC_SINT to elementary 32 bit integer
+     *   Conversion operator for converting CIEC_TIME to unsigned 64 bit integer
      */
     operator TForteUInt64() const {
       return getTUINT64();

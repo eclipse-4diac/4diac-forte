@@ -37,7 +37,7 @@ bool CHttpParser::changePutPostData(CIEC_STRING& paDest, const CIEC_STRING& paDa
   if(0 != helperChar) {
     helperChar += sizeof("length: ") - 1;
     *helperChar = '\0';
-    paDest = paDest.getValue(); //will shrink the length of the string to the new ending
+    paDest = CIEC_STRING(paDest.getValue()); //will shrink the length of the string to the new ending
     char contentLength[scmMaxLengthOfContent];
     snprintf(contentLength, sizeof(contentLength), "%zu", strlen(paData.getValue()));
     paDest.append(contentLength);
@@ -55,10 +55,10 @@ bool CHttpParser::parseResponse(CIEC_STRING& paBody, CIEC_STRING& paResponseCode
     char* helperChar = strstr(paSrc, "\r\n\r\n"); // Extract data from HTTP response char
     if(0 != helperChar) {
       helperChar += sizeof("\r\n\r\n") - 1;
-      paBody = helperChar;
+      paBody = CIEC_STRING(helperChar);
     } else { // Empty response received
       DEVLOG_INFO("[HTTP Parser] Empty content response received\n");
-      paBody = "";
+      paBody = CIEC_STRING("");
     }
     return true;
   }
@@ -79,7 +79,7 @@ bool forte::com_infra::CHttpParser::parseGetRequest(CIEC_STRING& paPath, CSingly
         startOfParameters++;
         parseGETParameters(startOfParameters, paParameterNames, paParameterValues);
       }
-      paPath = paData;
+      paPath = CIEC_STRING(paData);
     } else {
       DEVLOG_ERROR("[HTTP Parser] Invalid HTTP Get request. No GET string found\n");
       return false;
@@ -105,11 +105,11 @@ bool forte::com_infra::CHttpParser::parsePutPostRequest(CIEC_STRING& paPath, CIE
   char* endOfPath = strstr(paData, " ");
   if(endOfPath != 0) {
     *endOfPath = '\0';
-    paPath = paData;
+    paPath = CIEC_STRING(paData);
     paData = strstr(endOfPath + 1, "\r\n\r\n");
     if(paData != 0) {
       paData += sizeof("\r\n\r\n") - 1;
-      paContent = paData;
+      paContent = CIEC_STRING(paData);
     } else {
       DEVLOG_ERROR("[HTTP Parser] Invalid HTTP PUT/POST request. No content was found\n");
       return false;
@@ -152,13 +152,13 @@ void forte::com_infra::CHttpParser::createResponse(CIEC_STRING& paDest, const CI
 void CHttpParser::addCommonHeader(CIEC_STRING& paDest, const CIEC_STRING& paHost, const CIEC_STRING& paPath, CHttpComLayer::ERequestType paType) {
   switch(paType){
     case CHttpComLayer::e_GET:
-      paDest = "GET ";
+      paDest = CIEC_STRING("GET ");
       break;
     case CHttpComLayer::e_PUT:
-      paDest = "PUT ";
+      paDest = CIEC_STRING("PUT ");
       break;
     case CHttpComLayer::e_POST:
-      paDest = "POST ";
+      paDest = CIEC_STRING("POST ");
       break;
     default:
       DEVLOG_ERROR("[HTTP Parser] Unexpected HTTP Type when adding header\n");
@@ -182,7 +182,7 @@ bool CHttpParser::getHttpResponseCode(CIEC_STRING& paDest, char* paSrc) {
     *helperChar = '\0';
     CParameterParser parser(paSrc, ' ');
     if(3 <= parser.parseParameters()) { //Reason-Phrase can contain spaces in it
-      paDest = parser[1];
+      paDest = CIEC_STRING(parser[1]);
     } else {
       DEVLOG_ERROR("[HTTP Parser] Invalid HTTP response. The status line is not well defined\n");
       return false;
