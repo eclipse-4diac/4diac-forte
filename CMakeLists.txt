@@ -14,7 +14,7 @@
 #    Martin Melik Merkumians - adds compiler feature check for nullptr
 # *******************************************************************************/
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.8)
 
 PROJECT(FORTE)
 
@@ -25,7 +25,6 @@ if (FORTE_USE_STD_11)
   set(CMAKE_CXX_STANDARD 11)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
 endif()
-
 
 if(NOT (${CMAKE_HOST_SYSTEM_NAME} STREQUAL ${CMAKE_SYSTEM_NAME}))
     MESSAGE("Cross compiling")
