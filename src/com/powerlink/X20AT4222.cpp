@@ -90,7 +90,7 @@ void FORTE_X20AT4222::cnSynchCallback(){
 
   SEplMapping::TEplMappingList::Iterator itEnd = mEplMapping.mCurrentValues.end();
   SEplMapping::TEplMappingList::Iterator it = mEplMapping.mCurrentValues.begin();
-  for(it; it != itEnd; ++it){
+  for(; it != itEnd; ++it){
     short ioVal = 0x0000;
     char lowByte;
     char highByte;

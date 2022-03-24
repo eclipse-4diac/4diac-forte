@@ -218,7 +218,7 @@ int CEplStackWrapper::eplStackInit(char* paXmlFile, char* paCdcFile, char* paEth
 #endif
   
   }
-  schedParam.__sched_priority = MAIN_THREAD_PRIORITY;
+  schedParam.sched_priority = MAIN_THREAD_PRIORITY;
   if(pthread_setschedparam(pthread_self(), SCHED_RR, &schedParam) != 0){
 #if EPL_DEFINED_STACK_VERSION >= EPL_STACK_VERSION(1, 8, 2)  
   EPL_DBGLVL_ERROR_TRACE("%s() couldn't set thread scheduling parameters! %d\n", __func__, schedParam.__sched_priority);
@@ -523,7 +523,7 @@ bool CEplStackWrapper::findMAC(const char* paUserMAC, char* paDeviceName){
   // Walk thru the array returned and query for each interface's
   // address
   //
-  for(pIfList; *(char *) pIfList != 0; pIfList++){
+  for(; *(char *) pIfList != 0; pIfList++){
 
     strncpy(sIfReq.ifr_name, pIfList->if_name, IF_NAMESIZE);
 
@@ -616,7 +616,7 @@ bool CEplStackWrapper::compareMACs(const char* paMACa, const char* paMACb){
   strcpy(macCopyB, paMACb);
 
   // Change to upper case
-  for(int i = 0; i < strlen(paMACa); i++){
+  for(unsigned i = 0; i < strlen(paMACa); i++){
     switch (macCopyA[i]){
       case 'a':
         macCopyA[i] = 'A';
@@ -638,7 +638,7 @@ bool CEplStackWrapper::compareMACs(const char* paMACa, const char* paMACb){
         break;
     }
   }
-  for(int i = 0; i < strlen(paMACb); i++){
+  for(unsigned i = 0; i < strlen(paMACb); i++){
     switch (macCopyB[i]){
       case 'a':
         macCopyB[i] = 'A';

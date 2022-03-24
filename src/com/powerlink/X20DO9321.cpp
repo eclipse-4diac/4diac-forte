@@ -90,7 +90,7 @@ void FORTE_X20DO9321::cnSynchCallback(){
 
   SEplMapping::TEplMappingList::Iterator itEnd = mEplMapping.mCurrentValues.end();
   SEplMapping::TEplMappingList::Iterator it = mEplMapping.mCurrentValues.begin();
-  for(it; it != itEnd; ++it){
+  for(; it != itEnd; ++it){
     bool ioVal = *(it->mCurrentValue) != 0x00;
     (eplStack.getProcImageIn())[it->mPiOffset] &= (char) (~(0x01 << it->mBitOffset));
     (eplStack.getProcImageIn())[it->mPiOffset] |= (char) (ioVal << it->mBitOffset);
