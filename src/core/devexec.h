@@ -16,7 +16,6 @@
 class CFunctionBlock;
 class CEventSourceFB;
 class CExternalEventHandler;
-struct SForteTime;
 class CTimerHandler;
 class CDevice;
 
