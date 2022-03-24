@@ -11,7 +11,7 @@
 # *******************************************************************************/ 
  
 if ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-forte_add_module(Raspberry-SPS OFF "Interacting with GPIOs Raspberry SPS")
+forte_add_module(Raspberry_SPS OFF "Interacting with GPIOs Raspberry SPS")
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
