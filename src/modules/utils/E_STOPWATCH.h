@@ -19,7 +19,6 @@
 
 #include "basicfb.h"
 #include "forte_time.h"
-#include "forte_array_at.h"
 
 
 class FORTE_E_STOPWATCH: public CBasicFB {

@@ -38,8 +38,7 @@ IF (FORTE_USE_64BIT_DATATYPES)
   forte_test_add_sourcefile_cpp(CIEC_LWORD_CASTS_test.cpp)
 ENDIF (FORTE_USE_64BIT_DATATYPES) 
   forte_test_add_subdirectory(CIEC_PARTIAL)
-  forte_test_add_subdirectory(AT_VARIABLE)
-  
+
 #INT-Datatypes
   forte_test_add_sourcefile_cpp(CIEC_SINT_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_SINT_CASTS_test.cpp)
