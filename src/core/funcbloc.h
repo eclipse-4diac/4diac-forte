@@ -28,6 +28,7 @@
 #include <stringlist.h>
 #include "forte_state.h"
 #include "forte_st_iterator.h"
+#include "forte_st_util.h"
 
 class CEventChainExecutionThread;
 class CAdapter;
