@@ -55,10 +55,10 @@ void FB_CTU_ULINT::executeEvent(int pa_nEIID){
       if(true == R()){
         CV() = CIEC_ULINT(0);
       }
-      else if(AND(CU(), LT(CV(), CIEC_ULINT(CIEC_ULINT::scm_nMaxVal)))) {
-        CV() = ADD(CV(), CIEC_ULINT(1));
+      else if(func_AND(CU(), func_LT(CV(), CIEC_ULINT(CIEC_ULINT::scm_nMaxVal)))) {
+        CV() = func_ADD(CV(), CIEC_ULINT(1));
       }
-      Q() = GE(CV(), PV());
+      Q() = func_GE(CV(), PV());
       sendOutputEvent(scm_nEventCNFID);
   }
 }

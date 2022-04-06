@@ -18,7 +18,7 @@
 
 #include "genbitbase.h"
 
-class GEN_XOR : public CGenBitBase{
+class GEN_XOR : public CGenBitBase {
   DECLARE_GENERIC_FIRMWARE_FB(GEN_XOR)
 
   private:
@@ -30,7 +30,7 @@ class GEN_XOR : public CGenBitBase{
 
   public:
     template<typename T>
-    void calculateValue(){
+    void calculateValue() {
       T oIn;
 
       /*
@@ -41,9 +41,9 @@ class GEN_XOR : public CGenBitBase{
        * iff (if and only if) one of the boolean
        * inputs is set to 'true'.
        */
-      if(CIEC_ANY::e_BOOL == st_OUT().getDataTypeID()){
+      if(CIEC_ANY::e_BOOL == st_OUT().getDataTypeID()) {
         unsigned int nInputSet = 0;
-        for(unsigned int nInputIndex = 0; nInputIndex < getFBInterfaceSpec()->m_nNumDIs; nInputIndex++){
+        for(unsigned int nInputIndex = 0; nInputIndex < getFBInterfaceSpec()->m_nNumDIs; nInputIndex++) {
           oIn.saveAssign(*static_cast<T*>(getDI(nInputIndex)));
 
           nInputSet = oIn ? nInputSet + 1 : nInputSet;
@@ -59,18 +59,17 @@ class GEN_XOR : public CGenBitBase{
        * 2-Input XOR gates. This leads to a behaviour of an
        * odd-parity checker.
        */
-      else{
+      else {
         T oOut;
 
-        for(unsigned int nInputIndex = 0; nInputIndex < getFBInterfaceSpec()->m_nNumDIs; nInputIndex++){
+        for(unsigned int nInputIndex = 0; nInputIndex < getFBInterfaceSpec()->m_nNumDIs; nInputIndex++) {
           oIn.saveAssign(*static_cast<T*>(getDI(nInputIndex)));
 
-          if(0 == nInputIndex){
+          if(0 == nInputIndex) {
             st_OUT().saveAssign(oIn);
-          }
-          else{
+          } else {
             oOut.saveAssign(st_OUT());
-            st_OUT().saveAssign(XOR(oOut, oIn));
+            st_OUT().saveAssign(func_XOR(oOut, oIn));
           }
         }
       }

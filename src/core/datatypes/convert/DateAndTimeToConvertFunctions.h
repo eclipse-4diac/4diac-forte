@@ -23,7 +23,7 @@
 //   DT_TO_**  functions
 //********************************************************************************************
 #ifdef FORTE_USE_64BIT_DATATYPES
-inline const CIEC_DATE DT_TO_DATE(const CIEC_DATE_AND_TIME &paVal){
+inline const CIEC_DATE func_DT_TO_DATE(const CIEC_DATE_AND_TIME &paVal){
   TForteUInt64 nBuffer = paVal;
   time_t t = static_cast<time_t>(nBuffer / 1000);
   struct tm *ptm = forte_localtime(&t);
@@ -44,11 +44,11 @@ inline const CIEC_DATE DT_TO_DATE(const CIEC_DATE_AND_TIME &paVal){
   return CIEC_DATE(t * 1000ULL);
 }
 
-inline const CIEC_DATE_AND_TIME DATE_TO_DT(const CIEC_DATE &paVal){
+inline const CIEC_DATE_AND_TIME func_DATE_TO_DT(const CIEC_DATE &paVal){
   return CIEC_DATE_AND_TIME((TForteUInt64) paVal);
 }
 
-inline const CIEC_TIME_OF_DAY DT_TO_TOD(const CIEC_DATE_AND_TIME &paVal){
+inline const CIEC_TIME_OF_DAY func_DT_TO_TOD(const CIEC_DATE_AND_TIME &paVal){
   TForteUInt64 nBuffer = paVal;
   time_t t = static_cast<time_t>(nBuffer / 1000);
   struct tm *ptm = forte_localtime(&t);

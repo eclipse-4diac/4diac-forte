@@ -17,41 +17,27 @@
 
 DEFINE_FIRMWARE_FB(FB_RS, g_nStringIdFB_RS)
 
-const CStringDictionary::TStringId FB_RS::scm_anDataInputNames[] = {g_nStringIdS, g_nStringIdR1};
+const CStringDictionary::TStringId FB_RS::scm_anDataInputNames[] = { g_nStringIdS, g_nStringIdR1 };
 
-const CStringDictionary::TStringId FB_RS::scm_anDataOutputNames[] = {g_nStringIdQ1};
-const CStringDictionary::TStringId FB_RS::scm_aunDIDataTypeIds[] = {g_nStringIdBOOL, g_nStringIdBOOL};
-const CStringDictionary::TStringId FB_RS::scm_aunDODataTypeIds[] = {g_nStringIdBOOL};
+const CStringDictionary::TStringId FB_RS::scm_anDataOutputNames[] = { g_nStringIdQ1 };
+const CStringDictionary::TStringId FB_RS::scm_aunDIDataTypeIds[] = { g_nStringIdBOOL, g_nStringIdBOOL };
+const CStringDictionary::TStringId FB_RS::scm_aunDODataTypeIds[] = { g_nStringIdBOOL };
 
-const TForteInt16 FB_RS::scm_anEIWithIndexes[] = {0};
-const TDataIOID FB_RS::scm_anEIWith[] = {0, 1, 255};
-const CStringDictionary::TStringId FB_RS::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TForteInt16 FB_RS::scm_anEIWithIndexes[] = { 0 };
+const TDataIOID FB_RS::scm_anEIWith[] = { 0, 1, 255 };
+const CStringDictionary::TStringId FB_RS::scm_anEventInputNames[] = { g_nStringIdREQ };
 
-const TDataIOID FB_RS::scm_anEOWith[] = {0, 255};
-const TForteInt16 FB_RS::scm_anEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FB_RS::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FB_RS::scm_anEOWith[] = { 0, 255 };
+const TForteInt16 FB_RS::scm_anEOWithIndexes[] = { 0 };
+const CStringDictionary::TStringId FB_RS::scm_anEventOutputNames[] = { g_nStringIdCNF };
 
-const SFBInterfaceSpec FB_RS::scm_stFBInterfaceSpec = {
-    1,
-    scm_anEventInputNames,
-    scm_anEIWith,
-    scm_anEIWithIndexes,
-    1,
-    scm_anEventOutputNames,
-    scm_anEOWith,
-    scm_anEOWithIndexes,
-    2,
-    scm_anDataInputNames, scm_aunDIDataTypeIds,
-    1,
-    scm_anDataOutputNames, scm_aunDODataTypeIds,
-    0,
-    0
-};
+const SFBInterfaceSpec FB_RS::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith,
+  scm_anEOWithIndexes, 2, scm_anDataInputNames, scm_aunDIDataTypeIds, 1, scm_anDataOutputNames, scm_aunDODataTypeIds, 0, 0 };
 
-void FB_RS::executeEvent(int pa_nEIID){
+void FB_RS::executeEvent(int pa_nEIID) {
   switch(pa_nEIID){
     case scm_nEventREQID:
-      Q1() = AND(NOT(R1()), OR(S(), Q1()));
+      Q1() = func_AND(func_NOT(R1()), func_OR(S(), Q1()));
       sendOutputEvent(scm_nEventCNFID);
       break;
   }

@@ -47,20 +47,20 @@ void FB_CTUD_ULINT::executeEvent(int pa_nEIID) {
         CV() = PV();
       }
       else {
-        if (NOT(AND(CU(), CD()))) {
-          if (AND(CU(), LT(CV(), CIEC_ULINT(CIEC_ULINT::scm_nMaxVal)))) {
-            CV() = ADD(CV(),CIEC_ULINT(1));
+        if (func_NOT(func_AND(CU(), CD()))) {
+          if (func_AND(CU(), func_LT(CV(), CIEC_ULINT(CIEC_ULINT::scm_nMaxVal)))) {
+            CV() = func_ADD(CV(),CIEC_ULINT(1));
           }
           else {
-            if (AND(CD(), GT(CV(), CIEC_ULINT(CIEC_ULINT::scm_nMinVal)))) {
-              CV() = SUB(CV(), CIEC_ULINT(1));
+            if (func_AND(CD(), func_GT(CV(), CIEC_ULINT(CIEC_ULINT::scm_nMinVal)))) {
+              CV() = func_SUB(CV(), CIEC_ULINT(1));
             }
           }
         }
       }
     }
-    QU() = GE(CV(), PV());
-    QD() = LE(CV(), CIEC_ULINT(0));
+    QU() = func_GE(CV(), PV());
+    QD() = func_LE(CV(), CIEC_ULINT(0));
     sendOutputEvent(scm_nEventCNFID);
   }
 }

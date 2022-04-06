@@ -17,52 +17,37 @@
 
 DEFINE_FIRMWARE_FB(FB_TON, g_nStringIdFB_TON)
 
-const CStringDictionary::TStringId FB_TON::scm_anDataInputNames[] = {g_nStringIdIN, g_nStringIdPT};
+const CStringDictionary::TStringId FB_TON::scm_anDataInputNames[] = { g_nStringIdIN, g_nStringIdPT };
 
-const CStringDictionary::TStringId FB_TON::scm_anDataOutputNames[] = {g_nStringIdQ, g_nStringIdET};
-const CStringDictionary::TStringId FB_TON::scm_aunDIDataTypeIds[] = {g_nStringIdBOOL, g_nStringIdTIME};
-const CStringDictionary::TStringId FB_TON::scm_aunDODataTypeIds[] = {g_nStringIdBOOL, g_nStringIdTIME};
+const CStringDictionary::TStringId FB_TON::scm_anDataOutputNames[] = { g_nStringIdQ, g_nStringIdET };
+const CStringDictionary::TStringId FB_TON::scm_aunDIDataTypeIds[] = { g_nStringIdBOOL, g_nStringIdTIME };
+const CStringDictionary::TStringId FB_TON::scm_aunDODataTypeIds[] = { g_nStringIdBOOL, g_nStringIdTIME };
 
-const TForteInt16 FB_TON::scm_anEIWithIndexes[] = {0};
-const TDataIOID FB_TON::scm_anEIWith[] = {0, 1, 255};
-const CStringDictionary::TStringId FB_TON::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TForteInt16 FB_TON::scm_anEIWithIndexes[] = { 0 };
+const TDataIOID FB_TON::scm_anEIWith[] = { 0, 1, 255 };
+const CStringDictionary::TStringId FB_TON::scm_anEventInputNames[] = { g_nStringIdREQ };
 
-const TDataIOID FB_TON::scm_anEOWith[] = {0, 1, 255};
-const TForteInt16 FB_TON::scm_anEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FB_TON::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FB_TON::scm_anEOWith[] = { 0, 1, 255 };
+const TForteInt16 FB_TON::scm_anEOWithIndexes[] = { 0 };
+const CStringDictionary::TStringId FB_TON::scm_anEventOutputNames[] = { g_nStringIdCNF };
 
-const SFBInterfaceSpec FB_TON::scm_stFBInterfaceSpec = {
-  1,
-  scm_anEventInputNames,
-  scm_anEIWith,
-  scm_anEIWithIndexes,
-  1,
-  scm_anEventOutputNames,
-  scm_anEOWith,
-  scm_anEOWithIndexes,
-  2,
-  scm_anDataInputNames, scm_aunDIDataTypeIds,
-  2,
-  scm_anDataOutputNames, scm_aunDODataTypeIds,
-  0,
-  0
-};
+const SFBInterfaceSpec FB_TON::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith,
+  scm_anEOWithIndexes, 2, scm_anDataInputNames, scm_aunDIDataTypeIds, 2, scm_anDataOutputNames, scm_aunDODataTypeIds, 0, 0 };
 
 void FB_TON::executeEvent(int pa_nEIID) {
   if(scm_nEventREQID == pa_nEIID) {
-    if(st_IN() == false){
+    if(st_IN() == false) {
       Q() = CIEC_BOOL(false);
       ET() = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
       risingEdge = false;
       start = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
-    }
-    else {
+    } else {
       if(risingEdge == false) {
         risingEdge = true;
-        start = NOW_MONOTONIC();
+        start = func_NOW_MONOTONIC();
       } else {
-        count = SUB(NOW_MONOTONIC(), start);
-        if(LE(PT(), count)) {
+        count = func_SUB(func_NOW_MONOTONIC(), start);
+        if(func_LE(PT(), count)) {
           Q() = CIEC_BOOL(true);
           ET() = PT();
         } else {

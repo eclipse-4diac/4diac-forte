@@ -22,14 +22,14 @@
 //********************************************************************************************
 //   TIME_TO_*  functions
 //********************************************************************************************
-inline const CIEC_STRING TIME_TO_STRING(const CIEC_TIME &paVal) {
+inline const CIEC_STRING func_TIME_TO_STRING(const CIEC_TIME &paVal) {
   CIEC_STRING string;
   stringConverter(string, paVal);
   return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
-inline const CIEC_WSTRING TIME_TO_WSTRING(const CIEC_TIME &paVal){
+inline const CIEC_WSTRING func_TIME_TO_WSTRING(const CIEC_TIME &paVal){
   CIEC_WSTRING string;
   stringConverter(string, paVal);
   return string;

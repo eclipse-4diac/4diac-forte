@@ -15,30 +15,30 @@
 
 #include <funcbloc.h>
 
-class FORTE_F_LIMIT : public CFunctionBlock{
+class FORTE_F_LIMIT : public CFunctionBlock {
   DECLARE_FIRMWARE_FB(FORTE_F_LIMIT)
 
   private:
     static const CStringDictionary::TStringId scm_anDataInputNames[];
     static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-    CIEC_ANY_ELEMENTARY &MN(){
+    CIEC_ANY_ELEMENTARY& MN() {
       return *static_cast<CIEC_ANY_ELEMENTARY*>(getDI(0));
     }
     ;
 
-    CIEC_ANY_ELEMENTARY &st_IN(){
+    CIEC_ANY_ELEMENTARY& st_IN() {
       return *static_cast<CIEC_ANY_ELEMENTARY*>(getDI(1));
     }
     ;
 
-    CIEC_ANY_ELEMENTARY &MX(){
+    CIEC_ANY_ELEMENTARY& MX() {
       return *static_cast<CIEC_ANY_ELEMENTARY*>(getDI(2));
     }
     ;
 
     static const CStringDictionary::TStringId scm_anDataOutputNames[];
     static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-    CIEC_ANY_ELEMENTARY &st_OUT(){
+    CIEC_ANY_ELEMENTARY& st_OUT() {
       return *static_cast<CIEC_ANY_ELEMENTARY*>(getDO(0));
     }
     ;
@@ -64,20 +64,20 @@ class FORTE_F_LIMIT : public CFunctionBlock{
     FUNCTION_BLOCK_CTOR(FORTE_F_LIMIT){
   };
 
-  template<typename T> void calculateValue(){
+  template<typename T> void calculateValue() {
     T oMin;
     T oMax;
 
     oMin.saveAssign(MN());
     oMax.saveAssign(MX());
 
-    st_OUT().saveAssign(LIMIT<T> (oMin, static_cast<T &> (st_IN()), oMax));
+    st_OUT().saveAssign(func_LIMIT<T> (oMin, static_cast<T &> (st_IN()), oMax));
   }
 
   template<typename T> void calculateValueString() const {
     //TODO fill this function
   }
-  virtual ~FORTE_F_LIMIT(){};
+  virtual ~FORTE_F_LIMIT() {};
 };
 
 #endif //close the ifdef sequence from the beginning of the file

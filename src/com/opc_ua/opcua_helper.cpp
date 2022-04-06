@@ -24,25 +24,25 @@
 
 template<typename T_FORTE_TYPE, typename T_OPCUA_TYPE>
 size_t convertFromIECToOPCUASpecific(const CIEC_ANY &paSrc, void *paDest) {
-  *static_cast<T_OPCUA_TYPE *>(paDest) = static_cast<const T_FORTE_TYPE &>(paSrc);
+  *static_cast<T_OPCUA_TYPE*>(paDest) = static_cast<const T_FORTE_TYPE&>(paSrc);
   return sizeof(T_OPCUA_TYPE);
 }
 
 template<typename T_FORTE_TYPE, typename T_OPCUA_TYPE>
 size_t convertFromOPCUAToIECSpecific(const void *paSrc, CIEC_ANY &paDest) {
-  static_cast<T_FORTE_TYPE &>(paDest) = T_FORTE_TYPE(*static_cast<const T_OPCUA_TYPE *>(paSrc));
+  static_cast<T_FORTE_TYPE&>(paDest) = T_FORTE_TYPE(*static_cast<const T_OPCUA_TYPE*>(paSrc));
   return sizeof(T_OPCUA_TYPE);
 }
 
 template<>
-size_t convertFromIECToOPCUASpecific<CIEC_DATE, UA_DateTime>(const CIEC_ANY & paSrc, void *paDest) {
-  *static_cast<UA_DateTime *>(paDest) = DATE_TO_DT(static_cast<const CIEC_DATE&>(paSrc));
+size_t convertFromIECToOPCUASpecific<CIEC_DATE, UA_DateTime>(const CIEC_ANY &paSrc, void *paDest) {
+  *static_cast<UA_DateTime*>(paDest) = func_DATE_TO_DT(static_cast<const CIEC_DATE&>(paSrc));
   return sizeof(UA_DateTime);
 }
 
 template<>
 size_t convertFromOPCUAToIECSpecific<CIEC_DATE, UA_DateTime>(const void *paSrc, CIEC_ANY &paDest) {
-  static_cast<CIEC_DATE &>(paDest) = DT_TO_DATE(CIEC_DATE_AND_TIME(*reinterpret_cast<const TForteUInt64*>(static_cast<const UA_DateTime*>(paSrc))));
+  static_cast<CIEC_DATE&>(paDest) = func_DT_TO_DATE(CIEC_DATE_AND_TIME(*reinterpret_cast<const TForteUInt64*>(static_cast<const UA_DateTime*>(paSrc))));
   return sizeof(UA_DateTime);
 }
 
@@ -60,33 +60,32 @@ size_t convertFromOPCUAToIECSpecific<CIEC_TIME_OF_DAY, UA_DateTime>(const void*,
 
 template<>
 size_t convertFromIECToOPCUASpecific<CIEC_STRING, UA_String>(const CIEC_ANY &paSrc, void *paDest) {
-  *static_cast<UA_String *>(paDest) = UA_String_fromChars(static_cast<const CIEC_STRING &>(paSrc).getValue());
+  *static_cast<UA_String*>(paDest) = UA_String_fromChars(static_cast<const CIEC_STRING&>(paSrc).getValue());
   return sizeof(UA_String);
 }
 
 template<>
 size_t convertFromOPCUAToIECSpecific<CIEC_STRING, UA_String>(const void *paSrc, CIEC_ANY &paDest) {
-  const UA_String *str = static_cast<const UA_String *>(paSrc);
-  static_cast<CIEC_STRING &>(paDest).assign(reinterpret_cast<const char*>(str->data), static_cast<TForteUInt16>(str->length));
+  const UA_String *str = static_cast<const UA_String*>(paSrc);
+  static_cast<CIEC_STRING&>(paDest).assign(reinterpret_cast<const char*>(str->data), static_cast<TForteUInt16>(str->length));
   return sizeof(UA_String);
 }
 
 template<>
 size_t convertFromIECToOPCUASpecific<CIEC_WSTRING, UA_String>(const CIEC_ANY &paSrc, void *paDest) {
-  CIEC_STRING str = WSTRING_TO_STRING(static_cast<const CIEC_WSTRING &>(paSrc));
+  CIEC_STRING str = func_WSTRING_TO_STRING(static_cast<const CIEC_WSTRING&>(paSrc));
   return convertFromIECToOPCUASpecific<CIEC_STRING, UA_String>(str, paDest);
 }
 
 template<>
 size_t convertFromOPCUAToIECSpecific<CIEC_WSTRING, UA_String>(const void *paSrc, CIEC_ANY &paDest) {
-  const UA_String *str = static_cast<const UA_String *>(paSrc);
-  static_cast<CIEC_WSTRING &>(paDest).assign(reinterpret_cast<const char*>(str->data), static_cast<TForteUInt16>(str->length));
+  const UA_String *str = static_cast<const UA_String*>(paSrc);
+  static_cast<CIEC_WSTRING&>(paDest).assign(reinterpret_cast<const char*>(str->data), static_cast<TForteUInt16>(str->length));
   return sizeof(UA_String);
 }
 
-const COPC_UA_Helper::UA_TypeConvert COPC_UA_Helper::scmMapForteTypeIdToOpcUa[] = {
-  UA_TypeConvert(0, 0, 0), // dummy for e_ANY
-  UA_TypeConvert(&UA_TYPES[UA_TYPES_BOOLEAN], &convertFromIECToOPCUASpecific<CIEC_BOOL, UA_Boolean>, &convertFromOPCUAToIECSpecific<CIEC_BOOL, UA_Boolean>),
+const COPC_UA_Helper::UA_TypeConvert COPC_UA_Helper::scmMapForteTypeIdToOpcUa[] = { UA_TypeConvert(0, 0, 0), // dummy for e_ANY
+UA_TypeConvert(&UA_TYPES[UA_TYPES_BOOLEAN], &convertFromIECToOPCUASpecific<CIEC_BOOL, UA_Boolean>, &convertFromOPCUAToIECSpecific<CIEC_BOOL, UA_Boolean>),
   UA_TypeConvert(&UA_TYPES[UA_TYPES_SBYTE], &convertFromIECToOPCUASpecific<CIEC_SINT, UA_SByte>, &convertFromOPCUAToIECSpecific<CIEC_SINT, UA_SByte>),
   UA_TypeConvert(&UA_TYPES[UA_TYPES_INT16], &convertFromIECToOPCUASpecific<CIEC_INT, UA_Int16>, &convertFromOPCUAToIECSpecific<CIEC_INT, UA_Int16>),
   UA_TypeConvert(&UA_TYPES[UA_TYPES_INT32], &convertFromIECToOPCUASpecific<CIEC_DINT, UA_Int32>, &convertFromOPCUAToIECSpecific<CIEC_DINT, UA_Int32>),
@@ -101,17 +100,15 @@ const COPC_UA_Helper::UA_TypeConvert COPC_UA_Helper::scmMapForteTypeIdToOpcUa[] 
   UA_TypeConvert(&UA_TYPES[UA_TYPES_UINT64], &convertFromIECToOPCUASpecific<CIEC_LWORD, UA_UInt64>, &convertFromOPCUAToIECSpecific<CIEC_LWORD, UA_UInt64>),
   UA_TypeConvert(&UA_TYPES[UA_TYPES_DATETIME], &convertFromIECToOPCUASpecific<CIEC_DATE, UA_DateTime>, &convertFromOPCUAToIECSpecific<CIEC_DATE, UA_DateTime>),
   UA_TypeConvert(&UA_TYPES[UA_TYPES_DATETIME], &convertFromIECToOPCUASpecific<CIEC_TIME_OF_DAY, UA_DateTime>,
-    &convertFromOPCUAToIECSpecific<CIEC_TIME_OF_DAY, UA_DateTime>),
-  UA_TypeConvert(&UA_TYPES[UA_TYPES_UINT64], &convertFromIECToOPCUASpecific<CIEC_LWORD, UA_UInt64>, &convertFromOPCUAToIECSpecific<CIEC_LWORD, UA_UInt64>),
-  UA_TypeConvert(&UA_TYPES[UA_TYPES_DATETIME], &convertFromIECToOPCUASpecific<CIEC_DATE_AND_TIME, UA_DateTime>,
-    &convertFromOPCUAToIECSpecific<CIEC_DATE_AND_TIME, UA_DateTime>),
-  UA_TypeConvert(&UA_TYPES[UA_TYPES_FLOAT], &convertFromIECToOPCUASpecific<CIEC_REAL, UA_Float>, &convertFromOPCUAToIECSpecific<CIEC_REAL, UA_Float>),
-  UA_TypeConvert(&UA_TYPES[UA_TYPES_DOUBLE], &convertFromIECToOPCUASpecific<CIEC_LREAL, UA_Double>, &convertFromOPCUAToIECSpecific<CIEC_LREAL, UA_Double>),
-    UA_TypeConvert(&UA_TYPES[UA_TYPES_STRING], &convertFromIECToOPCUASpecific<CIEC_STRING, UA_String>, &convertFromOPCUAToIECSpecific<CIEC_STRING, UA_String>),
-    UA_TypeConvert(&UA_TYPES[UA_TYPES_STRING], &convertFromIECToOPCUASpecific<CIEC_WSTRING, UA_String>, &convertFromOPCUAToIECSpecific<CIEC_WSTRING, UA_String>), };
+    &convertFromOPCUAToIECSpecific<CIEC_TIME_OF_DAY, UA_DateTime>), UA_TypeConvert(&UA_TYPES[UA_TYPES_UINT64],
+    &convertFromIECToOPCUASpecific<CIEC_LWORD, UA_UInt64>, &convertFromOPCUAToIECSpecific<CIEC_LWORD, UA_UInt64>), UA_TypeConvert(&UA_TYPES[UA_TYPES_DATETIME],
+    &convertFromIECToOPCUASpecific<CIEC_DATE_AND_TIME, UA_DateTime>, &convertFromOPCUAToIECSpecific<CIEC_DATE_AND_TIME, UA_DateTime>), UA_TypeConvert(
+    &UA_TYPES[UA_TYPES_FLOAT], &convertFromIECToOPCUASpecific<CIEC_REAL, UA_Float>, &convertFromOPCUAToIECSpecific<CIEC_REAL, UA_Float>), UA_TypeConvert(
+    &UA_TYPES[UA_TYPES_DOUBLE], &convertFromIECToOPCUASpecific<CIEC_LREAL, UA_Double>, &convertFromOPCUAToIECSpecific<CIEC_LREAL, UA_Double>), UA_TypeConvert(
+    &UA_TYPES[UA_TYPES_STRING], &convertFromIECToOPCUASpecific<CIEC_STRING, UA_String>, &convertFromOPCUAToIECSpecific<CIEC_STRING, UA_String>), UA_TypeConvert(
+    &UA_TYPES[UA_TYPES_STRING], &convertFromIECToOPCUASpecific<CIEC_WSTRING, UA_String>, &convertFromOPCUAToIECSpecific<CIEC_WSTRING, UA_String>), };
 
-
-const UA_DataType *COPC_UA_Helper::getOPCUATypeFromAny(const CIEC_ANY& paAnyType) {
+const UA_DataType* COPC_UA_Helper::getOPCUATypeFromAny(const CIEC_ANY &paAnyType) {
   CIEC_ANY::EDataTypeID typeId = paAnyType.getDataTypeID();
   if(typeId >= CIEC_ANY::e_BOOL && typeId <= CIEC_ANY::e_WSTRING) { //basic type
     return scmMapForteTypeIdToOpcUa[typeId].mType;
@@ -122,7 +119,7 @@ const UA_DataType *COPC_UA_Helper::getOPCUATypeFromAny(const CIEC_ANY& paAnyType
   }
 }
 
-size_t COPC_UA_Helper::convertToOPCUAType(const CIEC_ANY& paSrcAny, void *paDest) {
+size_t COPC_UA_Helper::convertToOPCUAType(const CIEC_ANY &paSrcAny, void *paDest) {
   size_t retVal = 0;
 
   CIEC_ANY::EDataTypeID typeId = paSrcAny.getDataTypeID();
@@ -259,7 +256,7 @@ UA_StatusCode COPC_UA_Helper::prepareBrowseArgument(const char *paNodePathConst,
   UA_NodeId startingNode = UA_NODEID_NUMERIC(0, UA_NS0ID_ROOTFOLDER);
 
   // for every folder (which is a BrowsePath) we want to get the node id
-  *paBrowsePaths = static_cast<UA_BrowsePath *>(UA_Array_new((*paFolderCount) * 2, &UA_TYPES[UA_TYPES_BROWSEPATH]));
+  *paBrowsePaths = static_cast<UA_BrowsePath*>(UA_Array_new((*paFolderCount) * 2, &UA_TYPES[UA_TYPES_BROWSEPATH]));
   UA_BrowsePath *browsePaths = *paBrowsePaths;
 
   for(size_t i = 0; i < (*paFolderCount); i++) {
@@ -268,7 +265,7 @@ UA_StatusCode COPC_UA_Helper::prepareBrowseArgument(const char *paNodePathConst,
     browsePaths[i].startingNode = startingNode;
     browsePaths[i].relativePath.elementsSize = i + 1;
 
-    browsePaths[i].relativePath.elements = static_cast<UA_RelativePathElement *>(UA_Array_new(browsePaths[i].relativePath.elementsSize,
+    browsePaths[i].relativePath.elements = static_cast<UA_RelativePathElement*>(UA_Array_new(browsePaths[i].relativePath.elementsSize,
       &UA_TYPES[UA_TYPES_RELATIVEPATHELEMENT]));
 
     for(size_t j = 0; j <= i; j++) {

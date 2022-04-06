@@ -15,13 +15,13 @@
 
 using namespace forte::core::io;
 
-const char * const IOConfigFBMultiSlave::scmOK = "OK";
-const char * const IOConfigFBMultiSlave::scmStopped = "Stopped";
-const char * const IOConfigFBMultiSlave::scmMasterNotFound = "Master not found";
-const char * const IOConfigFBMultiSlave::scmNotFound = "Module not found";
-const char * const IOConfigFBMultiSlave::scmIncorrectType = "Module type is incorrect";
+const char *const IOConfigFBMultiSlave::scmOK = "OK";
+const char *const IOConfigFBMultiSlave::scmStopped = "Stopped";
+const char *const IOConfigFBMultiSlave::scmMasterNotFound = "Master not found";
+const char *const IOConfigFBMultiSlave::scmNotFound = "Module not found";
+const char *const IOConfigFBMultiSlave::scmIncorrectType = "Module type is incorrect";
 
-IOConfigFBMultiSlave::IOConfigFBMultiSlave(const TForteUInt8* const paSlaveConfigurationIO, const TForteUInt8 paSlaveConfigurationIONum, int paType,
+IOConfigFBMultiSlave::IOConfigFBMultiSlave(const TForteUInt8 *const paSlaveConfigurationIO, const TForteUInt8 paSlaveConfigurationIONum, int paType,
     CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData,
     TForteByte *paFBVarsData) :
     IOConfigFBBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mIndex(-1), mSlaveConfigurationIO(paSlaveConfigurationIO),
@@ -40,7 +40,7 @@ void IOConfigFBMultiSlave::executeEvent(int paEIID) {
   if(BusAdapterIn().INIT() == paEIID) {
     if(BusAdapterIn().QI() == true) {
       // Handle initialization event
-      const char* const error = handleInitEvent();
+      const char *const error = handleInitEvent();
       QO() = CIEC_BOOL(mInitialized = error == 0);
 
       if(mInitialized) {
@@ -52,7 +52,7 @@ void IOConfigFBMultiSlave::executeEvent(int paEIID) {
       if(BusAdapterOut().getPeer() != 0) {
         // Initialize next slave
         BusAdapterOut().QI() = BusAdapterIn().QI();
-        BusAdapterOut().Index() = ADD(BusAdapterIn().Index(), CIEC_UINT(1));
+        BusAdapterOut().Index() = func_ADD(BusAdapterIn().Index(), CIEC_UINT(1));
         BusAdapterOut().MasterId() = BusAdapterIn().MasterId();
 
         for(int i = 0; i < BusAdapterIn().mSlaveConfigurationIONum; i++) {
@@ -91,7 +91,7 @@ void IOConfigFBMultiSlave::executeEvent(int paEIID) {
     }
   } else if(BusAdapterOut().INITO() == paEIID) {
     // Forward confirmation of initialization
-    BusAdapterIn().QO() = AND(BusAdapterOut().QO(), QO());
+    BusAdapterIn().QO() = func_AND(BusAdapterOut().QO(), QO());
     sendAdapterEvent(scm_nBusAdapterInAdpNum, IOConfigFBMultiAdapter::scmEventINITOID);
   }
 
@@ -146,7 +146,7 @@ const char* IOConfigFBMultiSlave::handleInitEvent() {
     }
   }
 
-  IODeviceMultiController& controller = getController();
+  IODeviceMultiController &controller = getController();
 
   // Check if slave exists
   if(!controller.isSlaveAvailable(mIndex)) {
@@ -161,7 +161,7 @@ const char* IOConfigFBMultiSlave::handleInitEvent() {
   }
 
   // Perform slave initialization
-  const char* const error = init();
+  const char *const error = init();
   if(error != 0) {
     return error;
   }

@@ -24,70 +24,70 @@
 //********************************************************************************************
 #ifdef FORTE_USE_64BIT_DATATYPES
 
-inline const CIEC_BYTE LINT_TO_BYTE(const CIEC_LINT &paVal){
+inline const CIEC_BYTE func_LINT_TO_BYTE(const CIEC_LINT &paVal){
   return CIEC_ANY::cast<CIEC_BYTE>(paVal);
 }
 
-inline const CIEC_DWORD LINT_TO_DWORD(const CIEC_LINT &paVal){
+inline const CIEC_DWORD func_LINT_TO_DWORD(const CIEC_LINT &paVal){
   return CIEC_ANY::cast<CIEC_DWORD>(paVal);
 }
 
-inline const CIEC_DINT LINT_TO_DINT(const CIEC_LINT &paVal){
+inline const CIEC_DINT func_LINT_TO_DINT(const CIEC_LINT &paVal){
   return CIEC_ANY::cast<CIEC_DINT>(paVal);
 }
 
-inline const CIEC_INT LINT_TO_INT(const CIEC_LINT &paVal){
+inline const CIEC_INT func_LINT_TO_INT(const CIEC_LINT &paVal){
   return CIEC_ANY::cast<CIEC_INT>(paVal);
 }
 
 #ifdef FORTE_USE_LREAL_DATATYPE
-inline const CIEC_LREAL LINT_TO_LREAL(const CIEC_LINT &paVal){
+inline const CIEC_LREAL func_LINT_TO_LREAL(const CIEC_LINT &paVal){
   return CIEC_ANY::cast<CIEC_LREAL>(paVal);
 }
 #endif
 
-inline const CIEC_LWORD LINT_TO_LWORD(const CIEC_LINT &paVal){
+inline const CIEC_LWORD func_LINT_TO_LWORD(const CIEC_LINT &paVal){
   return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 
 #ifdef FORTE_USE_REAL_DATATYPE
-inline const CIEC_REAL LINT_TO_REAL(const CIEC_LINT &paVal){
+inline const CIEC_REAL func_LINT_TO_REAL(const CIEC_LINT &paVal){
   return CIEC_ANY::cast<CIEC_REAL>(paVal);
 }
 #endif
 
-inline const CIEC_SINT LINT_TO_SINT(const CIEC_LINT &paVal){
+inline const CIEC_SINT func_LINT_TO_SINT(const CIEC_LINT &paVal){
   return CIEC_ANY::cast<CIEC_SINT>(paVal);
 }
 
-inline const CIEC_UDINT LINT_TO_UDINT(const CIEC_LINT &paVal){
+inline const CIEC_UDINT func_LINT_TO_UDINT(const CIEC_LINT &paVal){
   return CIEC_ANY::cast<CIEC_UDINT>(paVal);
 }
 
-inline const CIEC_UINT LINT_TO_UINT(const CIEC_LINT &paVal){
+inline const CIEC_UINT func_LINT_TO_UINT(const CIEC_LINT &paVal){
   return CIEC_ANY::cast<CIEC_UINT>(paVal);
 }
 
-inline const CIEC_ULINT LINT_TO_ULINT(const CIEC_LINT &paVal){
+inline const CIEC_ULINT func_LINT_TO_ULINT(const CIEC_LINT &paVal){
   return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 
-inline const CIEC_USINT LINT_TO_USINT(const CIEC_LINT &paVal){
+inline const CIEC_USINT func_LINT_TO_USINT(const CIEC_LINT &paVal){
   return CIEC_ANY::cast<CIEC_USINT>(paVal);
 }
 
-inline const CIEC_WORD LINT_TO_WORD(const CIEC_LINT &paVal){
+inline const CIEC_WORD func_LINT_TO_WORD(const CIEC_LINT &paVal){
   return CIEC_ANY::cast<CIEC_WORD>(paVal);
 }
 
-inline const CIEC_STRING LINT_TO_STRING(const CIEC_LINT &paVal){
+inline const CIEC_STRING func_LINT_TO_STRING(const CIEC_LINT &paVal){
   CIEC_STRING string;
   stringConverter(string, paVal);
   return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
-inline const CIEC_WSTRING LINT_TO_WSTRING(const CIEC_LINT &paVal){
+inline const CIEC_WSTRING func_LINT_TO_WSTRING(const CIEC_LINT &paVal){
   CIEC_WSTRING string;
   stringConverter(string, paVal);
   return string;

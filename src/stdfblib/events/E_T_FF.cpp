@@ -16,28 +16,23 @@
 
 DEFINE_FIRMWARE_FB(FORTE_E_T_FF, g_nStringIdE_T_FF)
 
-const CStringDictionary::TStringId FORTE_E_T_FF::scm_anDataOutputNames[] = {g_nStringIdQ};
+const CStringDictionary::TStringId FORTE_E_T_FF::scm_anDataOutputNames[] = { g_nStringIdQ };
 
-const CStringDictionary::TStringId FORTE_E_T_FF::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL};
+const CStringDictionary::TStringId FORTE_E_T_FF::scm_anDataOutputTypeIds[] = { g_nStringIdBOOL };
 
-const TForteInt16 FORTE_E_T_FF::scm_anEIWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_E_T_FF::scm_anEventInputNames[] = {g_nStringIdCLK};
+const TForteInt16 FORTE_E_T_FF::scm_anEIWithIndexes[] = { -1 };
+const CStringDictionary::TStringId FORTE_E_T_FF::scm_anEventInputNames[] = { g_nStringIdCLK };
 
-const TDataIOID FORTE_E_T_FF::scm_anEOWith[] = {0, 255};
-const TForteInt16 FORTE_E_T_FF::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_E_T_FF::scm_anEventOutputNames[] = {g_nStringIdEO};
+const TDataIOID FORTE_E_T_FF::scm_anEOWith[] = { 0, 255 };
+const TForteInt16 FORTE_E_T_FF::scm_anEOWithIndexes[] = { 0, -1 };
+const CStringDictionary::TStringId FORTE_E_T_FF::scm_anEventOutputNames[] = { g_nStringIdEO };
 
-const SFBInterfaceSpec FORTE_E_T_FF::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  0,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  0,  0, 0, 
-  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  0, 0
-};
+const SFBInterfaceSpec FORTE_E_T_FF::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, 0, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith,
+  scm_anEOWithIndexes, 0, 0, 0, 1, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
 
 void FORTE_E_T_FF::alg_TOGGLE(void) {
-  Q() = NOT(Q());
+  Q() = func_NOT(Q());
 }
-
 
 void FORTE_E_T_FF::enterStateSTART(void) {
   m_nECCState = scm_nStateSTART;
@@ -46,33 +41,32 @@ void FORTE_E_T_FF::enterStateSTART(void) {
 void FORTE_E_T_FF::enterStateSET(void) {
   m_nECCState = scm_nStateSET;
   alg_TOGGLE();
-  sendOutputEvent( scm_nEventEOID);
+  sendOutputEvent(scm_nEventEOID);
 }
 
 void FORTE_E_T_FF::executeEvent(int pa_nEIID) {
   bool bTransitionCleared;
-  do{
+  do {
     bTransitionCleared = true;
     switch(m_nECCState){
       case scm_nStateSTART:
         if(scm_nEventCLKID == pa_nEIID)
           enterStateSET();
         else
-          bTransitionCleared  = false; //no transition cleared
+          bTransitionCleared = false; //no transition cleared
         break;
       case scm_nStateSET:
         if((1))
           enterStateSTART();
         else
-          bTransitionCleared  = false; //no transition cleared
+          bTransitionCleared = false; //no transition cleared
         break;
       default:
-      DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 1.", static_cast<TForteUInt16>(m_nECCState));
+        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 1.", static_cast<TForteUInt16>(m_nECCState));
         m_nECCState = 0; //0 is always the initial state
         break;
     }
-    pa_nEIID = cg_nInvalidEventID;  // we have to clear the event after the first check in order to ensure correct behavior
-  }while(bTransitionCleared);
+    pa_nEIID = cg_nInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
+  } while(bTransitionCleared);
 }
-
 

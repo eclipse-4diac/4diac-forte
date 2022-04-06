@@ -17,33 +17,28 @@
 
 DEFINE_FIRMWARE_FB(FORTE_F_DINT_TO_REAL, g_nStringIdF_DINT_TO_REAL)
 
-const CStringDictionary::TStringId FORTE_F_DINT_TO_REAL::scm_anDataInputNames[] = {g_nStringIdIN};
+const CStringDictionary::TStringId FORTE_F_DINT_TO_REAL::scm_anDataInputNames[] = { g_nStringIdIN };
 
-const CStringDictionary::TStringId FORTE_F_DINT_TO_REAL::scm_anDataInputTypeIds[] = {g_nStringIdDINT};
+const CStringDictionary::TStringId FORTE_F_DINT_TO_REAL::scm_anDataInputTypeIds[] = { g_nStringIdDINT };
 
-const CStringDictionary::TStringId FORTE_F_DINT_TO_REAL::scm_anDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_F_DINT_TO_REAL::scm_anDataOutputNames[] = { g_nStringIdOUT };
 
-const CStringDictionary::TStringId FORTE_F_DINT_TO_REAL::scm_anDataOutputTypeIds[] = {g_nStringIdREAL};
+const CStringDictionary::TStringId FORTE_F_DINT_TO_REAL::scm_anDataOutputTypeIds[] = { g_nStringIdREAL };
 
-const TForteInt16 FORTE_F_DINT_TO_REAL::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_F_DINT_TO_REAL::scm_anEIWith[] = {0, 255};
-const CStringDictionary::TStringId FORTE_F_DINT_TO_REAL::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TForteInt16 FORTE_F_DINT_TO_REAL::scm_anEIWithIndexes[] = { 0 };
+const TDataIOID FORTE_F_DINT_TO_REAL::scm_anEIWith[] = { 0, 255 };
+const CStringDictionary::TStringId FORTE_F_DINT_TO_REAL::scm_anEventInputNames[] = { g_nStringIdREQ };
 
-const TDataIOID FORTE_F_DINT_TO_REAL::scm_anEOWith[] = {0, 255};
-const TForteInt16 FORTE_F_DINT_TO_REAL::scm_anEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_DINT_TO_REAL::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_F_DINT_TO_REAL::scm_anEOWith[] = { 0, 255 };
+const TForteInt16 FORTE_F_DINT_TO_REAL::scm_anEOWithIndexes[] = { 0 };
+const CStringDictionary::TStringId FORTE_F_DINT_TO_REAL::scm_anEventOutputNames[] = { g_nStringIdCNF };
 
-const SFBInterfaceSpec FORTE_F_DINT_TO_REAL::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  0, 0
-};
+const SFBInterfaceSpec FORTE_F_DINT_TO_REAL::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames,
+  scm_anEOWith, scm_anEOWithIndexes, 1, scm_anDataInputNames, scm_anDataInputTypeIds, 1, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
 
-
-void FORTE_F_DINT_TO_REAL::executeEvent(int pa_nEIID){
-  if(scm_nEventREQID == pa_nEIID){
-    st_OUT() = DINT_TO_REAL(st_IN());
+void FORTE_F_DINT_TO_REAL::executeEvent(int pa_nEIID) {
+  if(scm_nEventREQID == pa_nEIID) {
+    st_OUT() = func_DINT_TO_REAL(st_IN());
     sendOutputEvent(scm_nEventCNFID);
   }
 }

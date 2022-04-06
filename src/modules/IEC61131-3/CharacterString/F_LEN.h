@@ -16,52 +16,55 @@
 
 #include <funcbloc.h>
 
-class FORTE_F_LEN: public CFunctionBlock{
+class FORTE_F_LEN : public CFunctionBlock {
   DECLARE_FIRMWARE_FB(FORTE_F_LEN)
 
-private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[];
-  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_ANY_STRING &st_IN() {
-    return *static_cast<CIEC_ANY_STRING*>(getDI(0));
+  private:
+    static const CStringDictionary::TStringId scm_anDataInputNames[];
+    static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+    CIEC_ANY_STRING& st_IN() {
+      return *static_cast<CIEC_ANY_STRING*>(getDI(0));
+    }
+    ;
+
+    static const CStringDictionary::TStringId scm_anDataOutputNames[];
+    static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+    CIEC_ANY_INT& st_OUT() {
+      return *static_cast<CIEC_ANY_INT*>(getDO(0));
+    }
+    ;
+
+    static const TEventID scm_nEventREQID = 0;
+    static const TForteInt16 scm_anEIWithIndexes[];
+    static const TDataIOID scm_anEIWith[];
+    static const CStringDictionary::TStringId scm_anEventInputNames[];
+
+    static const TEventID scm_nEventCNFID = 0;
+    static const TForteInt16 scm_anEOWithIndexes[];
+    static const TDataIOID scm_anEOWith[];
+    static const CStringDictionary::TStringId scm_anEventOutputNames[];
+
+    static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+
+    FORTE_FB_DATA_ARRAY(1, 1, 1, 0)
+    ;
+
+    void executeEvent(int pa_nEIID);
+
+  public:
+    FUNCTION_BLOCK_CTOR(FORTE_F_LEN){
   };
 
-  static const CStringDictionary::TStringId scm_anDataOutputNames[];
-  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_ANY_INT &st_OUT() {
-    return *static_cast<CIEC_ANY_INT*>(getDO(0));
-  };
-
-  static const TEventID scm_nEventREQID = 0;
-  static const TForteInt16 scm_anEIWithIndexes[];
-  static const TDataIOID scm_anEIWith[];
-  static const CStringDictionary::TStringId scm_anEventInputNames[];
-
-  static const TEventID scm_nEventCNFID = 0;
-  static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
-  static const CStringDictionary::TStringId scm_anEventOutputNames[];
-
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-
-   FORTE_FB_DATA_ARRAY(1, 1, 1, 0);
-
-  void executeEvent(int pa_nEIID);
-
-public:
-  FUNCTION_BLOCK_CTOR(FORTE_F_LEN){
-  };
-
-  template<typename T> void calculateValue(){
+  template<typename T> void calculateValue() {
     st_OUT().saveAssign(CIEC_UDINT(0));
   }
 
-  template<typename T> void calculateValueString(){
+  template<typename T> void calculateValueString() {
     T &roIn(static_cast<T&>(st_IN()));
-    st_OUT().saveAssign(LEN(roIn));
+    st_OUT().saveAssign(func_LEN(roIn));
   }
 
-  virtual ~FORTE_F_LEN(){};
+  virtual ~FORTE_F_LEN() {};
 
 };
 

@@ -18,36 +18,29 @@
 
 DEFINE_FIRMWARE_FB(FORTE_F_LWORD_TO_LREAL, g_nStringIdF_LWORD_TO_LREAL)
 
-const CStringDictionary::TStringId FORTE_F_LWORD_TO_LREAL::scm_anDataInputNames[] = {g_nStringIdIN};
+const CStringDictionary::TStringId FORTE_F_LWORD_TO_LREAL::scm_anDataInputNames[] = { g_nStringIdIN };
 
-const CStringDictionary::TStringId FORTE_F_LWORD_TO_LREAL::scm_anDataInputTypeIds[] = {g_nStringIdLWORD};
+const CStringDictionary::TStringId FORTE_F_LWORD_TO_LREAL::scm_anDataInputTypeIds[] = { g_nStringIdLWORD };
 
-const CStringDictionary::TStringId FORTE_F_LWORD_TO_LREAL::scm_anDataOutputNames[] = {g_nStringIdOUT};
+const CStringDictionary::TStringId FORTE_F_LWORD_TO_LREAL::scm_anDataOutputNames[] = { g_nStringIdOUT };
 
-const CStringDictionary::TStringId FORTE_F_LWORD_TO_LREAL::scm_anDataOutputTypeIds[] = {g_nStringIdLREAL};
+const CStringDictionary::TStringId FORTE_F_LWORD_TO_LREAL::scm_anDataOutputTypeIds[] = { g_nStringIdLREAL };
 
-const TForteInt16 FORTE_F_LWORD_TO_LREAL::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_F_LWORD_TO_LREAL::scm_anEIWith[] = {0, 255};
-const CStringDictionary::TStringId FORTE_F_LWORD_TO_LREAL::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TForteInt16 FORTE_F_LWORD_TO_LREAL::scm_anEIWithIndexes[] = { 0 };
+const TDataIOID FORTE_F_LWORD_TO_LREAL::scm_anEIWith[] = { 0, 255 };
+const CStringDictionary::TStringId FORTE_F_LWORD_TO_LREAL::scm_anEventInputNames[] = { g_nStringIdREQ };
 
-const TDataIOID FORTE_F_LWORD_TO_LREAL::scm_anEOWith[] = {0, 255};
-const TForteInt16 FORTE_F_LWORD_TO_LREAL::scm_anEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_F_LWORD_TO_LREAL::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FORTE_F_LWORD_TO_LREAL::scm_anEOWith[] = { 0, 255 };
+const TForteInt16 FORTE_F_LWORD_TO_LREAL::scm_anEOWithIndexes[] = { 0, -1 };
+const CStringDictionary::TStringId FORTE_F_LWORD_TO_LREAL::scm_anEventOutputNames[] = { g_nStringIdCNF };
 
-const SFBInterfaceSpec FORTE_F_LWORD_TO_LREAL::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  0, 0
-};
+const SFBInterfaceSpec FORTE_F_LWORD_TO_LREAL::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames,
+  scm_anEOWith, scm_anEOWithIndexes, 1, scm_anDataInputNames, scm_anDataInputTypeIds, 1, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
 
-
-void FORTE_F_LWORD_TO_LREAL::executeEvent(int pa_nEIID){
-  if(scm_nEventREQID == pa_nEIID){
-    st_OUT() = LWORD_TO_LREAL(st_IN());
+void FORTE_F_LWORD_TO_LREAL::executeEvent(int pa_nEIID) {
+  if(scm_nEventREQID == pa_nEIID) {
+    st_OUT() = func_LWORD_TO_LREAL(st_IN());
     sendOutputEvent(scm_nEventCNFID);
   }
 }
-
-
 

@@ -19,7 +19,8 @@ DEFINE_FIRMWARE_FB(FB_CTUD_DINT, g_nStringIdFB_CTUD_DINT)
 const CStringDictionary::TStringId FB_CTUD_DINT::scm_anDataInputNames[] = { g_nStringIdCU, g_nStringIdCD, g_nStringIdR, g_nStringIdLD, g_nStringIdPV };
 
 const CStringDictionary::TStringId FB_CTUD_DINT::scm_anDataOutputNames[] = { g_nStringIdQU, g_nStringIdQD, g_nStringIdCV };
-const CStringDictionary::TStringId FB_CTUD_DINT::scm_aunDIDataTypeIds[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdDINT };
+const CStringDictionary::TStringId FB_CTUD_DINT::scm_aunDIDataTypeIds[] =
+  { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdDINT };
 const CStringDictionary::TStringId FB_CTUD_DINT::scm_aunDODataTypeIds[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdDINT };
 
 const TForteInt16 FB_CTUD_DINT::scm_anEIWithIndexes[] = { 0 };
@@ -30,34 +31,30 @@ const TDataIOID FB_CTUD_DINT::scm_anEOWith[] = { 0, 2, 1, 255 };
 const TForteInt16 FB_CTUD_DINT::scm_anEOWithIndexes[] = { 0, -1 };
 const CStringDictionary::TStringId FB_CTUD_DINT::scm_anEventOutputNames[] = { g_nStringIdCNF };
 
-const SFBInterfaceSpec FB_CTUD_DINT::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 5, scm_anDataInputNames, scm_aunDIDataTypeIds, 3, scm_anDataOutputNames, scm_aunDODataTypeIds,
-    0,
-    0 };
+const SFBInterfaceSpec FB_CTUD_DINT::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames,
+  scm_anEOWith, scm_anEOWithIndexes, 5, scm_anDataInputNames, scm_aunDIDataTypeIds, 3, scm_anDataOutputNames, scm_aunDODataTypeIds, 0, 0 };
 
 void FB_CTUD_DINT::executeEvent(int pa_nEIID) {
-  if (pa_nEIID == scm_nEventREQID) {
-    if (true == R()) {
+  if(pa_nEIID == scm_nEventREQID) {
+    if(true == R()) {
       CV() = CIEC_DINT(0);
-    }
-    else {
-      if (true == LD()) {
+    } else {
+      if(true == LD()) {
         CV() = PV();
-      }
-      else {
-        if (NOT(AND(CU(), CD()))) {
-          if (AND(CU(), LT(CV(), CIEC_DINT(CIEC_DINT::scm_nMaxVal)))) {
-            CV() = ADD(CV(), CIEC_DINT(1));
-          }
-          else {
-            if (AND(CD(), GE(CV(), CIEC_DINT(CIEC_DINT::scm_nMinVal)))) {
-              CV() = SUB(CV(), CIEC_DINT(1));
+      } else {
+        if(func_NOT(func_AND(CU(), CD()))) {
+          if(func_AND(CU(), func_LT(CV(), CIEC_DINT(CIEC_DINT::scm_nMaxVal)))) {
+            CV() = func_ADD(CV(), CIEC_DINT(1));
+          } else {
+            if(func_AND(CD(), func_GE(CV(), CIEC_DINT(CIEC_DINT::scm_nMinVal)))) {
+              CV() = func_SUB(CV(), CIEC_DINT(1));
             }
           }
         }
       }
     }
-    QU() = GE(CV(), PV());
-    QD() = LE(CV(), CIEC_DINT(0));
+    QU() = func_GE(CV(), PV());
+    QD() = func_LE(CV(), CIEC_DINT(0));
     sendOutputEvent(scm_nEventCNFID);
   }
 }

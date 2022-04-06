@@ -17,58 +17,42 @@
 
 DEFINE_FIRMWARE_FB(FB_TOF, g_nStringIdFB_TOF)
 
-const CStringDictionary::TStringId FB_TOF::scm_anDataInputNames[] = {g_nStringIdIN, g_nStringIdPT};
+const CStringDictionary::TStringId FB_TOF::scm_anDataInputNames[] = { g_nStringIdIN, g_nStringIdPT };
 
-const CStringDictionary::TStringId FB_TOF::scm_anDataOutputNames[] = {g_nStringIdQ, g_nStringIdET};
-const CStringDictionary::TStringId FB_TOF::scm_aunDIDataTypeIds[] = {g_nStringIdBOOL, g_nStringIdTIME};
-const CStringDictionary::TStringId FB_TOF::scm_aunDODataTypeIds[] = {g_nStringIdBOOL, g_nStringIdTIME};
+const CStringDictionary::TStringId FB_TOF::scm_anDataOutputNames[] = { g_nStringIdQ, g_nStringIdET };
+const CStringDictionary::TStringId FB_TOF::scm_aunDIDataTypeIds[] = { g_nStringIdBOOL, g_nStringIdTIME };
+const CStringDictionary::TStringId FB_TOF::scm_aunDODataTypeIds[] = { g_nStringIdBOOL, g_nStringIdTIME };
 
-const TForteInt16 FB_TOF::scm_anEIWithIndexes[] = {0};
-const TDataIOID FB_TOF::scm_anEIWith[] = {0, 1, 255};
-const CStringDictionary::TStringId FB_TOF::scm_anEventInputNames[] = {g_nStringIdREQ};
+const TForteInt16 FB_TOF::scm_anEIWithIndexes[] = { 0 };
+const TDataIOID FB_TOF::scm_anEIWith[] = { 0, 1, 255 };
+const CStringDictionary::TStringId FB_TOF::scm_anEventInputNames[] = { g_nStringIdREQ };
 
-const TDataIOID FB_TOF::scm_anEOWith[] = {0, 1, 255};
-const TForteInt16 FB_TOF::scm_anEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FB_TOF::scm_anEventOutputNames[] = {g_nStringIdCNF};
+const TDataIOID FB_TOF::scm_anEOWith[] = { 0, 1, 255 };
+const TForteInt16 FB_TOF::scm_anEOWithIndexes[] = { 0 };
+const CStringDictionary::TStringId FB_TOF::scm_anEventOutputNames[] = { g_nStringIdCNF };
 
-const SFBInterfaceSpec FB_TOF::scm_stFBInterfaceSpec = {
-  1,
-  scm_anEventInputNames,
-  scm_anEIWith,
-  scm_anEIWithIndexes,
-  1,
-  scm_anEventOutputNames,
-  scm_anEOWith,
-  scm_anEOWithIndexes,
-  2,
-  scm_anDataInputNames, scm_aunDIDataTypeIds,
-  2,
-  scm_anDataOutputNames, scm_aunDODataTypeIds,
-  0,
-  0
-};
+const SFBInterfaceSpec FB_TOF::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith,
+  scm_anEOWithIndexes, 2, scm_anDataInputNames, scm_aunDIDataTypeIds, 2, scm_anDataOutputNames, scm_aunDODataTypeIds, 0, 0 };
 
-void FB_TOF::executeEvent(int pa_nEIID){
-  if(scm_nEventREQID == pa_nEIID){
-    if(st_IN() == true){
+void FB_TOF::executeEvent(int pa_nEIID) {
+  if(scm_nEventREQID == pa_nEIID) {
+    if(st_IN() == true) {
       Q() = CIEC_BOOL(true);
       ET() = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
       fallingEdge = false;
       notFirstRisingEdge = true;
       start = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
-    }
-    else{
-      if(true == notFirstRisingEdge){
-        if(fallingEdge == false){
+    } else {
+      if(true == notFirstRisingEdge) {
+        if(fallingEdge == false) {
           fallingEdge = true;
-          start = NOW_MONOTONIC();
-        }
-        else {
-          count = SUB(NOW_MONOTONIC(), start);
-          if(LE(PT(), count)) {
+          start = func_NOW_MONOTONIC();
+        } else {
+          count = func_SUB(func_NOW_MONOTONIC(), start);
+          if(func_LE(PT(), count)) {
             Q() = CIEC_BOOL(false);
             ET() = PT();
-          } else{
+          } else {
             ET() = count;
           }
         }

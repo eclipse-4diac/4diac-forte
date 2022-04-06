@@ -18,10 +18,10 @@
 #include "E_SWITCH_tester_gen.cpp"
 #endif
 
+struct E_SWITCH_TestFixture : public CFBTestFixtureBase {
 
-struct E_SWITCH_TestFixture : public CFBTestFixtureBase{
-
-    E_SWITCH_TestFixture() : CFBTestFixtureBase(g_nStringIdE_SWITCH){
+    E_SWITCH_TestFixture() :
+        CFBTestFixtureBase(g_nStringIdE_SWITCH) {
       SETUP_INPUTDATA(&mInG);
       CFBTestFixtureBase::setup();
     }
@@ -31,40 +31,40 @@ struct E_SWITCH_TestFixture : public CFBTestFixtureBase{
 
 BOOST_FIXTURE_TEST_SUITE( SwitchTests, E_SWITCH_TestFixture)
 
-  BOOST_AUTO_TEST_CASE(singleE0){
-    mInG = CIEC_BOOL(false);
+BOOST_AUTO_TEST_CASE(singleE0) {
+  mInG = CIEC_BOOL(false);
+  triggerEvent(0);
+  BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+}
+
+BOOST_AUTO_TEST_CASE(SingleE1) {
+  mInG = CIEC_BOOL(true);
+  triggerEvent(0);
+  BOOST_CHECK(checkForSingleOutputEventOccurence(1));
+}
+
+BOOST_AUTO_TEST_CASE(MultipleE0) {
+  mInG = CIEC_BOOL(false);
+  for(unsigned int i = 0; i < 1000; ++i) {
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
   }
+}
 
-  BOOST_AUTO_TEST_CASE(SingleE1){
-    mInG = CIEC_BOOL(true);
+BOOST_AUTO_TEST_CASE(MultipleE1) {
+  mInG = CIEC_BOOL(true);
+  for(unsigned int i = 0; i < 1000; ++i) {
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(1));
   }
+}
 
-  BOOST_AUTO_TEST_CASE(MultipleE0){
-    mInG = CIEC_BOOL(false);
-    for(unsigned int i = 0; i < 1000; ++i){
-      triggerEvent(0);
-      BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-    }
+BOOST_AUTO_TEST_CASE(Alternate) {
+  for(unsigned int i = 0; i < 1000; ++i) {
+    mInG = func_NOT(mInG);
+    triggerEvent(0);
+    BOOST_CHECK(checkForSingleOutputEventOccurence((mInG) ? 1 : 0));
   }
-
-  BOOST_AUTO_TEST_CASE(MultipleE1){
-    mInG = CIEC_BOOL(true);
-    for(unsigned int i = 0; i < 1000; ++i){
-      triggerEvent(0);
-      BOOST_CHECK(checkForSingleOutputEventOccurence(1));
-    }
-  }
-
-  BOOST_AUTO_TEST_CASE(Alternate){
-    for(unsigned int i = 0; i < 1000; ++i){
-      mInG = NOT(mInG);
-      triggerEvent(0);
-      BOOST_CHECK(checkForSingleOutputEventOccurence((mInG) ? 1 : 0));
-    }
-  }
+}
 
 BOOST_AUTO_TEST_SUITE_END()

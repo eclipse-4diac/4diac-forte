@@ -18,31 +18,31 @@
 
 #include "genbitbase.h"
 
-class GEN_AND: public CGenBitBase {
-DECLARE_GENERIC_FIRMWARE_FB(GEN_AND)
+class GEN_AND : public CGenBitBase {
+  DECLARE_GENERIC_FIRMWARE_FB(GEN_AND)
 
-private:
-  virtual void executeEvent(int paEIID);
+  private:
+    virtual void executeEvent(int paEIID);
 
-  GEN_AND(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
-  virtual ~GEN_AND();
+    GEN_AND(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
+    virtual ~GEN_AND();
 
-public:
+  public:
 
-  template<typename T> void calculateValue() {
-    T oIn;
-    T oOut;
+    template<typename T> void calculateValue() {
+      T oIn;
+      T oOut;
 
-    for (unsigned int nInputIndex = 0; nInputIndex < getFBInterfaceSpec()->m_nNumDIs; nInputIndex++) {
-      oIn.saveAssign(*static_cast<T*>(getDI(nInputIndex)));
-      if (0 == nInputIndex) {
-        st_OUT().saveAssign(oIn);
-      } else {
-        oOut.saveAssign(st_OUT());
-        st_OUT().saveAssign(AND(oOut, oIn));
+      for(unsigned int nInputIndex = 0; nInputIndex < getFBInterfaceSpec()->m_nNumDIs; nInputIndex++) {
+        oIn.saveAssign(*static_cast<T*>(getDI(nInputIndex)));
+        if(0 == nInputIndex) {
+          st_OUT().saveAssign(oIn);
+        } else {
+          oOut.saveAssign(st_OUT());
+          st_OUT().saveAssign(func_AND(oOut, oIn));
+        }
       }
     }
-  }
 };
 
 #endif //_GEN_AND_H_

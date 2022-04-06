@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE(BOOLS_AND_BITS_to_STRING_test)
   //check BOOL
   CIEC_BOOL bTest(true);
   sResult = CIEC_STRING("TRUE");
-  sTest = BOOL_TO_STRING(bTest);
+  sTest = func_BOOL_TO_STRING(bTest);
   //check result value
   BOOST_CHECK(sTest == sResult);
   //check length value
@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(BOOLS_AND_BITS_to_STRING_test)
   //check WORD
   CIEC_WORD nWTest(0xffff);
   sResult = CIEC_STRING("65535");
-  sTest = WORD_TO_STRING(nWTest);
+  sTest = func_WORD_TO_STRING(nWTest);
   //check result value
   BOOST_CHECK(sTest == sResult);
   //check length value
@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_CASE(BOOLS_AND_BITS_to_STRING_test)
   //check DWORD 4294967295
   CIEC_DWORD nDWTest(0xffffffff);
   sResult = CIEC_STRING("4294967295");
-  sTest = DWORD_TO_STRING(nDWTest);
+  sTest = func_DWORD_TO_STRING(nDWTest);
   //check result value
   BOOST_CHECK(sTest == sResult);
   //check length value
@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE(BOOLS_AND_BITS_to_STRING_test)
   //check BYTE 255U
   CIEC_BYTE nBTest(255U);
   sResult = CIEC_STRING("255");
-  sTest = BYTE_TO_STRING(nBTest);
+  sTest = func_BYTE_TO_STRING(nBTest);
   //check result value
   BOOST_CHECK(sTest == sResult);
   //check length value
@@ -92,7 +92,7 @@ BOOST_AUTO_TEST_CASE(BOOLS_AND_BITS_to_STRING_test)
   //check LWORD 255U
   CIEC_LWORD nLWTest(18446744073709551615ULL);
   sResult = CIEC_STRING("18446744073709551615");
-  sTest = LWORD_TO_STRING(nLWTest);
+  sTest = func_LWORD_TO_STRING(nLWTest);
   //check result value
   BOOST_CHECK(sTest == sResult);
   //check length value
@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_CASE(INTEGERS_to_STRING_test)
   //check SINT
   CIEC_SINT nSTest(127);
   sResult = CIEC_STRING("127");
-  sTest = SINT_TO_STRING(nSTest);
+  sTest = func_SINT_TO_STRING(nSTest);
   //check result value
   BOOST_CHECK(sTest == sResult);
   //check length value
@@ -117,7 +117,7 @@ BOOST_AUTO_TEST_CASE(INTEGERS_to_STRING_test)
   //check USINT
   CIEC_USINT nUSTest(255);
   sResult = CIEC_STRING("255");
-  sTest = USINT_TO_STRING(nUSTest);
+  sTest = func_USINT_TO_STRING(nUSTest);
   //check result value
   BOOST_CHECK(sTest == sResult);
   //check length value
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(INTEGERS_to_STRING_test)
   //check INT
   CIEC_INT nITest(32767);
   sResult = CIEC_STRING("32767");
-  sTest = INT_TO_STRING(nITest);
+  sTest = func_INT_TO_STRING(nITest);
   //check result value
   BOOST_CHECK(sTest == sResult);
   //check length value
@@ -135,7 +135,7 @@ BOOST_AUTO_TEST_CASE(INTEGERS_to_STRING_test)
   //check UINT
   CIEC_UINT nUITest(65535);
   sResult = CIEC_STRING("65535");
-  sTest = UINT_TO_STRING(nUITest);
+  sTest = func_UINT_TO_STRING(nUITest);
   //check result value
   BOOST_CHECK(sTest == sResult);
   //check length value
@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE(INTEGERS_to_STRING_test)
   //check DINT
   CIEC_DINT nDITest(2147483647);
   sResult = CIEC_STRING("2147483647");
-  sTest = DINT_TO_STRING(nDITest);
+  sTest = func_DINT_TO_STRING(nDITest);
   //check result value
   BOOST_CHECK(sTest == sResult);
   //check length value
@@ -153,7 +153,7 @@ BOOST_AUTO_TEST_CASE(INTEGERS_to_STRING_test)
   //check UDINT
   CIEC_UDINT nUDITest(4294967295ULL);
   sResult = CIEC_STRING("4294967295");
-  sTest = UDINT_TO_STRING(nUDITest);
+  sTest = func_UDINT_TO_STRING(nUDITest);
   //check result value
   BOOST_CHECK(sTest == sResult);
   //check length value
@@ -163,7 +163,7 @@ BOOST_AUTO_TEST_CASE(INTEGERS_to_STRING_test)
   //check LINT
   CIEC_LINT nLITest(9223372036854775807LL);
   sResult = CIEC_STRING("9223372036854775807");
-  sTest = LINT_TO_STRING(nLITest);
+  sTest = func_LINT_TO_STRING(nLITest);
   //check result value
   BOOST_CHECK(sTest == sResult);
   //check length value
@@ -172,7 +172,7 @@ BOOST_AUTO_TEST_CASE(INTEGERS_to_STRING_test)
   //check ULINT
   CIEC_ULINT nULITest(18446744073709551615ULL);
   sResult = CIEC_STRING("18446744073709551615");
-  sTest = ULINT_TO_STRING(nULITest);
+  sTest = func_ULINT_TO_STRING(nULITest);
   //check result value
   BOOST_CHECK(sTest == sResult);
   //check length value
@@ -188,7 +188,7 @@ BOOST_AUTO_TEST_CASE(TIME_to_STRING_test)
   //check TIME
   CIEC_TIME tTest("T#3000ms");
   sResult = CIEC_STRING("T#3000ms");
-  sTest = TIME_TO_STRING(tTest);
+  sTest = func_TIME_TO_STRING(tTest);
   //check result value
   BOOST_CHECK(sTest == sResult);
   //check length value
@@ -204,7 +204,7 @@ BOOST_AUTO_TEST_CASE(REAL_to_STRING_test)
   //check REAL
   CIEC_REAL nRTest(1.46e-3f);
   sResult = CIEC_STRING("0.00146");
-  sTest = REAL_TO_STRING(nRTest);
+  sTest = func_REAL_TO_STRING(nRTest);
   //check result value
   BOOST_CHECK(sTest == sResult);
   //check length value
@@ -214,7 +214,7 @@ BOOST_AUTO_TEST_CASE(REAL_to_STRING_test)
   //check LREAL
   CIEC_LREAL nLRTest(-2.2874e6);
   sResult = CIEC_STRING("-2287400");
-  sTest = LREAL_TO_STRING(nLRTest);
+  sTest = func_LREAL_TO_STRING(nLRTest);
   //check result value
   BOOST_CHECK(sTest == sResult);
   //check length value

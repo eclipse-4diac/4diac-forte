@@ -17,50 +17,36 @@
 
 DEFINE_FIRMWARE_FB(E_CTU, g_nStringIdE_CTU)
 
-const CStringDictionary::TStringId E_CTU::scm_anDataInputNames[] = {g_nStringIdPV};
+const CStringDictionary::TStringId E_CTU::scm_anDataInputNames[] = { g_nStringIdPV };
 
-const CStringDictionary::TStringId E_CTU::scm_anDataOutputNames[] = {g_nStringIdQ, g_nStringIdCV};
-const CStringDictionary::TStringId E_CTU::scm_aunDODataTypeIds[] = {g_nStringIdBOOL, g_nStringIdUINT};
-const CStringDictionary::TStringId E_CTU::scm_aunDIDataTypeIds[] = {g_nStringIdUINT};
+const CStringDictionary::TStringId E_CTU::scm_anDataOutputNames[] = { g_nStringIdQ, g_nStringIdCV };
+const CStringDictionary::TStringId E_CTU::scm_aunDODataTypeIds[] = { g_nStringIdBOOL, g_nStringIdUINT };
+const CStringDictionary::TStringId E_CTU::scm_aunDIDataTypeIds[] = { g_nStringIdUINT };
 
-const TForteInt16 E_CTU::scm_anEIWithIndexes[] = {0, -1};
-const TDataIOID E_CTU::scm_anEIWith[] = {0, 255};
-const CStringDictionary::TStringId E_CTU::scm_anEventInputNames[] = {g_nStringIdCU, g_nStringIdR};
+const TForteInt16 E_CTU::scm_anEIWithIndexes[] = { 0, -1 };
+const TDataIOID E_CTU::scm_anEIWith[] = { 0, 255 };
+const CStringDictionary::TStringId E_CTU::scm_anEventInputNames[] = { g_nStringIdCU, g_nStringIdR };
 
-const TDataIOID E_CTU::scm_anEOWith[] = {0, 1, 255, 0, 1, 255};
-const TForteInt16 E_CTU::scm_anEOWithIndexes[] = {0, 3};
-const CStringDictionary::TStringId E_CTU::scm_anEventOutputNames[] = {g_nStringIdCUO, g_nStringIdRO};
+const TDataIOID E_CTU::scm_anEOWith[] = { 0, 1, 255, 0, 1, 255 };
+const TForteInt16 E_CTU::scm_anEOWithIndexes[] = { 0, 3 };
+const CStringDictionary::TStringId E_CTU::scm_anEventOutputNames[] = { g_nStringIdCUO, g_nStringIdRO };
 
-const SFBInterfaceSpec E_CTU::scm_stFBInterfaceSpec = {
-  2,
-  scm_anEventInputNames,
-  scm_anEIWith,
-  scm_anEIWithIndexes,
-  2,
-  scm_anEventOutputNames,
-  scm_anEOWith,
-  scm_anEOWithIndexes,
-  1,
-  scm_anDataInputNames, scm_aunDIDataTypeIds,
-  2,
-  scm_anDataOutputNames, scm_aunDODataTypeIds,
-  0,
-  0
-};
+const SFBInterfaceSpec E_CTU::scm_stFBInterfaceSpec = { 2, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 2, scm_anEventOutputNames, scm_anEOWith,
+  scm_anEOWithIndexes, 1, scm_anDataInputNames, scm_aunDIDataTypeIds, 2, scm_anDataOutputNames, scm_aunDODataTypeIds, 0, 0 };
 
-void E_CTU::executeEvent(int pa_nEIID){
+void E_CTU::executeEvent(int pa_nEIID) {
   switch(pa_nEIID){
     case scm_nEventCUID:
-      if(CV() < 65535){
+      if(CV() < 65535) {
         CV() = CIEC_UINT(CV() + 1);
-        Q() = GE(CV(), PV());
-        sendOutputEvent( scm_nEventCUOID);
+        Q() = func_GE(CV(), PV());
+        sendOutputEvent(scm_nEventCUOID);
       }
       break;
     case scm_nEventRID:
       CV() = CIEC_UINT(0);
       Q() = CIEC_BOOL(false);
-      sendOutputEvent( scm_nEventROID);
+      sendOutputEvent(scm_nEventROID);
       break;
     default:
       break;

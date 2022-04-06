@@ -30,34 +30,30 @@ const TDataIOID FB_CTUD::scm_anEOWith[] = { 0, 2, 1, 255 };
 const TForteInt16 FB_CTUD::scm_anEOWithIndexes[] = { 0, -1 };
 const CStringDictionary::TStringId FB_CTUD::scm_anEventOutputNames[] = { g_nStringIdCNF };
 
-const SFBInterfaceSpec FB_CTUD::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 5, scm_anDataInputNames, scm_aunDIDataTypeIds, 3, scm_anDataOutputNames, scm_aunDODataTypeIds,
-    0,
-    0 };
+const SFBInterfaceSpec FB_CTUD::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith,
+  scm_anEOWithIndexes, 5, scm_anDataInputNames, scm_aunDIDataTypeIds, 3, scm_anDataOutputNames, scm_aunDODataTypeIds, 0, 0 };
 
 void FB_CTUD::executeEvent(int pa_nEIID) {
-  if (pa_nEIID == scm_nEventREQID) {
-    if (true == R()) {
+  if(pa_nEIID == scm_nEventREQID) {
+    if(true == R()) {
       CV() = CIEC_INT(0);
-    }
-    else {
-      if (true == LD()) {
+    } else {
+      if(true == LD()) {
         CV() = PV();
-      }
-      else {
-        if (NOT(AND(CU(), CD()))) {
-          if (AND(CU(), LT(CV(), CIEC_INT(CIEC_INT::scm_nMaxVal)))) {
-            CV() = ADD(CV(), CIEC_INT(1));
-          }
-          else {
-            if (AND(CD(), GT(CV(), CIEC_INT(CIEC_INT::scm_nMinVal)))) {
-              CV() = SUB(CV(), CIEC_INT(1));
+      } else {
+        if(func_NOT(func_AND(CU(), CD()))) {
+          if(func_AND(CU(), func_LT(CV(), CIEC_INT(CIEC_INT::scm_nMaxVal)))) {
+            CV() = func_ADD(CV(), CIEC_INT(1));
+          } else {
+            if(func_AND(CD(), func_GT(CV(), CIEC_INT(CIEC_INT::scm_nMinVal)))) {
+              CV() = func_SUB(CV(), CIEC_INT(1));
             }
           }
         }
       }
     }
-    QU() = GE(CV(), PV());
-    QD() = LE(CV(), CIEC_INT(0));
+    QU() = func_GE(CV(), PV());
+    QD() = func_LE(CV(), CIEC_INT(0));
     sendOutputEvent(scm_nEventCNFID);
   }
 }

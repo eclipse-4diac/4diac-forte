@@ -15,14 +15,14 @@
 #include <forte_uint.h>
 #include <forte_bool.h>
 
-
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "E_CTU_tester_gen.cpp"
 #endif
 
-struct E_CTU_TestFixture : public CFBTestFixtureBase{
+struct E_CTU_TestFixture : public CFBTestFixtureBase {
 
-    E_CTU_TestFixture() : CFBTestFixtureBase(g_nStringIdE_CTU){
+    E_CTU_TestFixture() :
+        CFBTestFixtureBase(g_nStringIdE_CTU) {
       SETUP_INPUTDATA(&mInPV);
       SETUP_OUTPUTDATA(&mOutQ, &mOutCV);
       CFBTestFixtureBase::setup();
@@ -32,112 +32,110 @@ struct E_CTU_TestFixture : public CFBTestFixtureBase{
     CIEC_BOOL mOutQ; //CV >= PV
     CIEC_UINT mOutCV; //count value
 
-    bool checkCU(TForteUInt16 paPrevCV){
-       if(paPrevCV < CIEC_UINT::scm_nMaxVal){
-         if(NE(CIEC_UINT(paPrevCV + 1), mOutCV)){
-           return false;
-         }
-         else if(!checkForSingleOutputEventOccurence(0)){
-           return false;
-         }
-       }else{
-         if(AND(NE(CIEC_UINT(CIEC_UINT::scm_nMaxVal), mOutCV), NOT(CIEC_BOOL(eventChainEmpty())))){
-           return false;
-         }
-       }
-       if(NE(mOutQ, GE(mOutCV, mInPV))){
-         return false;
-       }
-       return true;
-     }
+    bool checkCU(TForteUInt16 paPrevCV) {
+      if(paPrevCV < CIEC_UINT::scm_nMaxVal) {
+        if(func_NE(CIEC_UINT(paPrevCV + 1), mOutCV)) {
+          return false;
+        } else if(!checkForSingleOutputEventOccurence(0)) {
+          return false;
+        }
+      } else {
+        if(func_AND(func_NE(CIEC_UINT(CIEC_UINT::scm_nMaxVal), mOutCV), func_NOT(CIEC_BOOL(eventChainEmpty())))) {
+          return false;
+        }
+      }
+      if(func_NE(mOutQ, func_GE(mOutCV, mInPV))) {
+        return false;
+      }
+      return true;
+    }
 
-     bool checkR(){
-       if(OR(NE(CIEC_UINT(0), mOutCV), mOutQ)){
-         return false;
-       }
-       if(!checkForSingleOutputEventOccurence(1)){
-         return false;
-       }
-       return true;
-     }
+    bool checkR() {
+      if(func_OR(func_NE(CIEC_UINT(0), mOutCV), mOutQ)) {
+        return false;
+      }
+      if(!checkForSingleOutputEventOccurence(1)) {
+        return false;
+      }
+      return true;
+    }
 };
 
 BOOST_FIXTURE_TEST_SUITE( CTUTests, E_CTU_TestFixture)
 
-  BOOST_AUTO_TEST_CASE(EventCU){
-    TForteUInt16 prevCV = 0;
-    TForteUInt16 valuesToTest[] = { 10, 1, 0, 65534, 65535 };
-    size_t numberOfValues = static_cast<size_t>(sizeof(valuesToTest) / sizeof(TForteUInt16));
-    for(size_t j = 0; j < numberOfValues; j++){
-      triggerEvent(1);
-      BOOST_CHECK(checkR());
-      mInPV = CIEC_UINT(valuesToTest[j]);
-      for(unsigned int k = 0; k < static_cast<unsigned int>(mInPV + 3); k++){
-        prevCV = mOutCV;
-        //Send event
-        triggerEvent(0);
-        BOOST_CHECK(checkCU(prevCV));
-      }
-    }
-  }
-
-  BOOST_AUTO_TEST_CASE(EventR){
-    size_t numberOfTries = 100;
-    TForteUInt16 valuesToTest[] = { 10, 1, 0, 65534, 65535 };
-    size_t numberOfValues = static_cast<size_t>(sizeof(valuesToTest) / sizeof(TForteUInt16));
-    for(size_t i = 0; i < numberOfTries; i++){
-      for(size_t j = 0; j < numberOfValues; j++){
-        mInPV = CIEC_UINT(valuesToTest[j]);
-        triggerEvent(1);
-        BOOST_CHECK(checkR());
-      }
-    }
-  }
-
-  BOOST_AUTO_TEST_CASE(Mix){
-    mInPV = CIEC_UINT(0);
+BOOST_AUTO_TEST_CASE(EventCU) {
+  TForteUInt16 prevCV = 0;
+  TForteUInt16 valuesToTest[] = {10, 1, 0, 65534, 65535};
+  size_t numberOfValues = static_cast<size_t>(sizeof(valuesToTest) / sizeof(TForteUInt16));
+  for(size_t j = 0; j < numberOfValues; j++) {
     triggerEvent(1);
     BOOST_CHECK(checkR());
-
-    triggerEvent(0);
-    BOOST_CHECK(checkCU(0));
-
-    mInPV = CIEC_UINT(1);
-    triggerEvent(0);
-    BOOST_CHECK(checkCU(1));
-
-    triggerEvent(1);
-    BOOST_CHECK(checkR());
-
-    triggerEvent(0);
-    BOOST_CHECK(checkCU(0));
-    triggerEvent(0);
-    BOOST_CHECK(checkCU(1));
-
-    triggerEvent(0);
-    BOOST_CHECK(checkCU(2));
-
-    triggerEvent(1);
-    BOOST_CHECK(checkR());
-
-    mInPV = CIEC_UINT(65533);
-    for(TForteUInt16 i = 0; i < CIEC_UINT::scm_nMaxVal; i++){
+    mInPV = CIEC_UINT(valuesToTest[j]);
+    for(unsigned int k = 0; k < static_cast<unsigned int>(mInPV + 3); k++) {
+      prevCV = mOutCV;
       //Send event
       triggerEvent(0);
-      BOOST_CHECK(checkCU(i));
+      BOOST_CHECK(checkCU(prevCV));
     }
-
-    triggerEvent(0);
-    BOOST_CHECK(checkCU(CIEC_UINT::scm_nMaxVal));
-
-    triggerEvent(0);
-    BOOST_CHECK(checkCU(CIEC_UINT::scm_nMaxVal));
-
-    triggerEvent(0);
-    BOOST_CHECK(checkCU(CIEC_UINT::scm_nMaxVal));
-
-    triggerEvent(1);
-    BOOST_CHECK(checkR());
   }
+}
+
+BOOST_AUTO_TEST_CASE(EventR) {
+  size_t numberOfTries = 100;
+  TForteUInt16 valuesToTest[] = { 10, 1, 0, 65534, 65535 };
+  size_t numberOfValues = static_cast<size_t>(sizeof(valuesToTest) / sizeof(TForteUInt16));
+  for(size_t i = 0; i < numberOfTries; i++) {
+    for(size_t j = 0; j < numberOfValues; j++) {
+      mInPV = CIEC_UINT(valuesToTest[j]);
+      triggerEvent(1);
+      BOOST_CHECK(checkR());
+    }
+  }
+}
+
+BOOST_AUTO_TEST_CASE(Mix) {
+  mInPV = CIEC_UINT(0);
+  triggerEvent(1);
+  BOOST_CHECK (checkR());
+
+triggerEvent(0);
+BOOST_CHECK(checkCU(0));
+
+mInPV = CIEC_UINT(1);
+triggerEvent(0);
+BOOST_CHECK(checkCU(1));
+
+triggerEvent(1);
+BOOST_CHECK (checkR());
+
+triggerEvent(0);
+BOOST_CHECK(checkCU(0));
+triggerEvent(0);
+BOOST_CHECK(checkCU(1));
+
+triggerEvent(0);
+BOOST_CHECK(checkCU(2));
+
+triggerEvent(1);
+BOOST_CHECK (checkR());
+
+mInPV = CIEC_UINT(65533);
+for(TForteUInt16 i = 0; i < CIEC_UINT::scm_nMaxVal; i++) {
+  //Send event
+  triggerEvent(0);
+  BOOST_CHECK(checkCU(i));
+}
+
+triggerEvent(0);
+BOOST_CHECK (checkCU(CIEC_UINT::scm_nMaxVal));
+
+triggerEvent(0);
+BOOST_CHECK (checkCU(CIEC_UINT::scm_nMaxVal));
+
+triggerEvent(0);
+BOOST_CHECK (checkCU(CIEC_UINT::scm_nMaxVal));
+
+triggerEvent(1);
+BOOST_CHECK (checkR());}
 
 BOOST_AUTO_TEST_SUITE_END()
