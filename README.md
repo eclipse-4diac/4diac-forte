@@ -30,7 +30,7 @@ files:
 
 ### Building a local RPM
 
-For building local RPMs you can use (tito)[https://github.com/dgoodwin/tito]
+For building local RPMs you can use [tito](https://github.com/dgoodwin/tito):
 
     tito build --test --rpm
     
