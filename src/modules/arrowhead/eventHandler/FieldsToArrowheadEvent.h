@@ -38,11 +38,11 @@ private:
   };
 
   CIEC_WSTRING *eventMetadata() {
-    return (CIEC_WSTRING*)(*static_cast<CIEC_ARRAY *>(getDI(3)))[0]; //the first element marks the start of the array
+    return (CIEC_WSTRING*)(*static_cast<CIEC_ARRAY<> *>(getDI(3)))[0]; //the first element marks the start of the array
   };
 
-  CIEC_ARRAY &eventMetadata_Array() {
-    return *static_cast<CIEC_ARRAY*>(getDI(3));
+  CIEC_ARRAY<> &eventMetadata_Array() {
+    return *static_cast<CIEC_ARRAY<>*>(getDI(3));
   };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];

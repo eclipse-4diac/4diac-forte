@@ -36,11 +36,11 @@ private:
   };
 
   CIEC_ArrowheadSystem *sources() {
-    return (CIEC_ArrowheadSystem*)(*static_cast<CIEC_ARRAY *>(getDI(2)))[0]; //the first element marks the start of the array
+    return (CIEC_ArrowheadSystem*)(*static_cast<CIEC_ARRAY<> *>(getDI(2)))[0]; //the first element marks the start of the array
   };
 
-  CIEC_ARRAY &sources_Array() {
-    return *static_cast<CIEC_ARRAY*>(getDI(2));
+  CIEC_ARRAY<> &sources_Array() {
+    return *static_cast<CIEC_ARRAY<>*>(getDI(2));
   };
 
   CIEC_DATE_AND_TIME &startDate() {
@@ -52,11 +52,11 @@ private:
   };
 
   CIEC_WSTRING *filterMetadata() {
-    return (CIEC_WSTRING*)(*static_cast<CIEC_ARRAY *>(getDI(5)))[0]; //the first element marks the start of the array
+    return (CIEC_WSTRING*)(*static_cast<CIEC_ARRAY<> *>(getDI(5)))[0]; //the first element marks the start of the array
   };
 
-  CIEC_ARRAY &filterMetadata_Array() {
-    return *static_cast<CIEC_ARRAY*>(getDI(5));
+  CIEC_ARRAY<> &filterMetadata_Array() {
+    return *static_cast<CIEC_ARRAY<>*>(getDI(5));
   };
 
   CIEC_WSTRING &notifyUri() {

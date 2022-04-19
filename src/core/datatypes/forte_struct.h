@@ -135,11 +135,11 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
       return &getMembers()[paMemberIndex];
     }
 
-    enum EASN1Tags{
+    enum EASN1Tags {
       e_UNIVERSAL = 0, e_APPLICATION = 64, e_CONTEXT = 128, e_PRIVATE = 192
     };
-    enum EASN1Encoding{
-    e_PRIMITIVE = 0, e_CONSTRUCTED = 32
+    enum EASN1Encoding {
+      e_PRIMITIVE = 0, e_CONSTRUCTED = 32
     };
 
     //!Function to configure the array if it is created via the typelib

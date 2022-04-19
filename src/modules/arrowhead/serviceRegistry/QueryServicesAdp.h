@@ -29,11 +29,11 @@ private:
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
  public:
   CIEC_ServiceRegistryEntry *serviceEntries() {
-    return (CIEC_ServiceRegistryEntry*)(*static_cast<CIEC_ARRAY *>((isSocket()) ? getDI(0) : getDO(0)))[0]; //the first element marks the start of the array
+    return (CIEC_ServiceRegistryEntry*)(*static_cast<CIEC_ARRAY<> *>((isSocket()) ? getDI(0) : getDO(0)))[0]; //the first element marks the start of the array
   };
 
-  CIEC_ARRAY &serviceEntries_Array() {
-    return *static_cast<CIEC_ARRAY*>((isSocket()) ? getDI(0) : getDO(0));
+  CIEC_ARRAY<> &serviceEntries_Array() {
+    return *static_cast<CIEC_ARRAY<>*>((isSocket()) ? getDI(0) : getDO(0));
   };
 
  private:

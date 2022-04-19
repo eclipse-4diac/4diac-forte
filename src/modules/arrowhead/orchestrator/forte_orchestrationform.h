@@ -53,7 +53,7 @@ class CIEC_OrchestrationForm : public CIEC_STRUCT {
     }
 
     CIEC_WSTRING *warnings() {
-      return static_cast<CIEC_WSTRING*>((*static_cast<CIEC_ARRAY *>(&getMembers()[6]))[0]); //the first element marks the start of the array
+      return static_cast<CIEC_WSTRING*>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[6]))[0]); //the first element marks the start of the array
     }
 
   private:

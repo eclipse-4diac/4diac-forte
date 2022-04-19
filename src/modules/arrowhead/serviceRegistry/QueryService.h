@@ -38,11 +38,11 @@ private:
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
   CIEC_ServiceRegistryEntry *serviceEntries() {
-    return (CIEC_ServiceRegistryEntry*)(*static_cast<CIEC_ARRAY *>(getDO(0)))[0]; //the first element marks the start of the array
+    return (CIEC_ServiceRegistryEntry*)(*static_cast<CIEC_ARRAY<> *>(getDO(0)))[0]; //the first element marks the start of the array
   };
 
-  CIEC_ARRAY &serviceEntries_Array() {
-    return *static_cast<CIEC_ARRAY*>(getDO(0));
+  CIEC_ARRAY<> &serviceEntries_Array() {
+    return *static_cast<CIEC_ARRAY<>*>(getDO(0));
   };
 
   static const TEventID scm_nEventqueryID = 0;

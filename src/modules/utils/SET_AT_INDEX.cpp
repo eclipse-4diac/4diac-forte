@@ -46,8 +46,8 @@ void FORTE_SET_AT_INDEX::executeEvent(int pa_nEIID){
   case scm_nEventREQID:
 
     if(CIEC_ANY::e_ARRAY == IN_ARRAY().getDataTypeID() && CIEC_ANY::e_ARRAY == OUT_ARRAY().getDataTypeID()){
-      CIEC_ARRAY &rInArray = static_cast<CIEC_ARRAY&>(IN_ARRAY());
-      CIEC_ARRAY &rOutArray = static_cast<CIEC_ARRAY&>(OUT_ARRAY());
+      CIEC_ARRAY<> &rInArray = static_cast<CIEC_ARRAY<>&>(IN_ARRAY());
+      CIEC_ARRAY<> &rOutArray = static_cast<CIEC_ARRAY<>&>(OUT_ARRAY());
       //check if data types match
       if(rInArray.getElementDataTypeID() == rOutArray.getElementDataTypeID() &&
         rInArray.getElementDataTypeID() == VALUE().getDataTypeID()){
@@ -55,7 +55,7 @@ void FORTE_SET_AT_INDEX::executeEvent(int pa_nEIID){
           if(INDEX() < rInArray.size() && rOutArray.size() >= rInArray.size()){
             //update the value
             rOutArray.setValue(rInArray);
-            rOutArray[INDEX()]->saveAssign(VALUE());
+            rOutArray[INDEX()].saveAssign(VALUE());
             QO() = CIEC_BOOL(true);
           }
           else{

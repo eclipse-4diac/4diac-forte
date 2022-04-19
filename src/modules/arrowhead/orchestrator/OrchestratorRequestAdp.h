@@ -29,11 +29,11 @@ private:
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
  public:
   CIEC_OrchestrationForm *orchestrationResponse() {
-    return (CIEC_OrchestrationForm*)(*static_cast<CIEC_ARRAY *>((isSocket()) ? getDI(0) : getDO(0)))[0]; //the first element marks the start of the array
+    return (CIEC_OrchestrationForm*)(*static_cast<CIEC_ARRAY<> *>((isSocket()) ? getDI(0) : getDO(0)))[0]; //the first element marks the start of the array
   };
 
-  CIEC_ARRAY &orchestrationResponse_Array() {
-    return *static_cast<CIEC_ARRAY*>((isSocket()) ? getDI(0) : getDO(0));
+  CIEC_ARRAY<> &orchestrationResponse_Array() {
+    return *static_cast<CIEC_ARRAY<>*>((isSocket()) ? getDI(0) : getDO(0));
   };
 
  private:

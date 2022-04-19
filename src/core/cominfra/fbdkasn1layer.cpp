@@ -334,7 +334,7 @@ int CFBDKASN1ComLayer::serializeValue(TForteByte* pa_pcBytes, int pa_nStreamSize
         break;
 #ifdef FORTE_SUPPORT_ARRAYS
       case CIEC_ANY::e_ARRAY:
-        nRetVal = serializeArray(pa_pcBytes, pa_nStreamSize, static_cast<const CIEC_ARRAY &>(pa_roCIECData));
+        nRetVal = serializeArray(pa_pcBytes, pa_nStreamSize, static_cast<const CIEC_ARRAY_TYPELIB &>(pa_roCIECData));
         break;
 #endif /* FORTE_SUPPORT_ARRAYS */
       case CIEC_ANY::e_STRUCT:
@@ -446,9 +446,9 @@ int CFBDKASN1ComLayer::serializeValueWString(TForteByte* pa_pcBytes, int pa_nStr
 
 #ifdef FORTE_SUPPORT_ARRAYS
 
-int CFBDKASN1ComLayer::serializeArray(TForteByte* pa_pcBytes, int pa_nStreamSize, const CIEC_ARRAY &pa_roArray){
+int CFBDKASN1ComLayer::serializeArray(TForteByte *pa_pcBytes, int pa_nStreamSize, const CIEC_ARRAY_TYPELIB &pa_roArray) {
   int nRetVal = -1;
-  TForteUInt16 nArraySize = pa_roArray.size();
+  size_t nArraySize = pa_roArray.size();
 
   //Number of array elements
   pa_pcBytes[0] = (TForteByte) ((nArraySize >> 8) & 0x00FF);
@@ -458,12 +458,12 @@ int CFBDKASN1ComLayer::serializeArray(TForteByte* pa_pcBytes, int pa_nStreamSize
   //TODO should we check if the array has size zero?
 
 
-  if( CIEC_ANY::e_BOOL == pa_roArray[0]->getDataTypeID()){
+  if( CIEC_ANY::e_BOOL == pa_roArray[0].getDataTypeID()){
     //bool arrays are special
     nRetVal = 2; // array len
     pa_nStreamSize -= nRetVal;
     for(TForteUInt16 i = 0; i < nArraySize; i++){ //serialize elements
-      int nSerSize = serializeDataPoint(pa_pcBytes, pa_nStreamSize, *pa_roArray[i]);
+      int nSerSize = serializeDataPoint(pa_pcBytes, pa_nStreamSize, pa_roArray[i]);
       if(0 < nSerSize){
         nRetVal += nSerSize;
         pa_pcBytes += nSerSize;
@@ -476,14 +476,14 @@ int CFBDKASN1ComLayer::serializeArray(TForteByte* pa_pcBytes, int pa_nStreamSize
     }
   }
   else{
-    serializeTag(pa_pcBytes, *pa_roArray[0]);
+    serializeTag(pa_pcBytes, pa_roArray[0]);
 
     nRetVal = 2 + 1; // array len + contained data tag
     pa_nStreamSize -= nRetVal;
 
     ++pa_pcBytes;
     for(TForteUInt16 i = 0; i < nArraySize; i++){ //serialize elements
-      int nSerSize = serializeValue(pa_pcBytes, pa_nStreamSize, *pa_roArray[i]);
+      int nSerSize = serializeValue(pa_pcBytes, pa_nStreamSize, pa_roArray[i]);
       if(-1 == nSerSize){
         nRetVal = -1;
         break;
@@ -618,7 +618,7 @@ int CFBDKASN1ComLayer::deserializeValue(const TForteByte* pa_pcBytes, int pa_nSt
         break;
 #ifdef FORTE_SUPPORT_ARRAYS
       case CIEC_ANY::e_ARRAY:
-        nRetVal = deserializeArray(pa_pcBytes, pa_nStreamSize, static_cast<CIEC_ARRAY &>(pa_roCIECData));
+        nRetVal = deserializeArray(pa_pcBytes, pa_nStreamSize, static_cast<CIEC_ARRAY_TYPELIB &>(pa_roCIECData));
         break;
 #endif /* FORTE_SUPPORT_ARRAYS*/
       case CIEC_ANY::e_STRUCT:
@@ -719,7 +719,7 @@ int CFBDKASN1ComLayer::deserializeValueString(const TForteByte* pa_pcBytes, int 
 
 #ifdef FORTE_SUPPORT_ARRAYS
 
-int CFBDKASN1ComLayer::deserializeArray(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_ARRAY &pa_roArray){
+int CFBDKASN1ComLayer::deserializeArray(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_ARRAY_TYPELIB &pa_roArray) {
   int nRetVal = -1;
 
   if(pa_nStreamSize >= 2){
@@ -733,7 +733,7 @@ int CFBDKASN1ComLayer::deserializeArray(const TForteByte* pa_pcBytes, int pa_nSt
       pa_nStreamSize -= 2;
 
       //TODO do we need to check if the array's size is bigger than 0
-      if(CIEC_ANY::e_BOOL == pa_roArray[0]->getDataTypeID()){
+      if(CIEC_ANY::e_BOOL == pa_roArray[0].getDataTypeID()){
         //bool arrays are special
         nValueLen = deserializeValueBoolArray(pa_pcBytes, pa_nStreamSize, pa_roArray, nSize);
         if(0 <= nValueLen){
@@ -744,22 +744,22 @@ int CFBDKASN1ComLayer::deserializeArray(const TForteByte* pa_pcBytes, int pa_nSt
         }
       }
       else{
-        if(!deserializeTag(*pa_pcBytes, *pa_roArray[0])){
+        if(!deserializeTag(*pa_pcBytes, pa_roArray[0])){
           return -1;
         }
         pa_pcBytes += 1;
         pa_nStreamSize -= 1;
         ++nRetVal;
         CIEC_ANY *poBufVal = 0;
-        TForteUInt16 unArraySize = pa_roArray.size();
+        size_t unArraySize = pa_roArray.size();
 
         for(TForteUInt16 i = 0; i < nSize; ++i){
           if(i < unArraySize){
-            nValueLen = deserializeValue(pa_pcBytes, pa_nStreamSize, *pa_roArray[i]);
+            nValueLen = deserializeValue(pa_pcBytes, pa_nStreamSize, pa_roArray[i]);
           }
           else{
             if(poBufVal == 0) {
-              poBufVal = pa_roArray[0]->clone(0);
+              poBufVal = pa_roArray[0].clone(0);
             }
             nValueLen = deserializeValue(pa_pcBytes, pa_nStreamSize, *poBufVal);
           }
@@ -783,16 +783,16 @@ int CFBDKASN1ComLayer::deserializeArray(const TForteByte* pa_pcBytes, int pa_nSt
   return nRetVal;
 }
 
-int CFBDKASN1ComLayer::deserializeValueBoolArray(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_ARRAY &pa_roArray, TForteUInt16 pa_unDecodedArraySize){
+int CFBDKASN1ComLayer::deserializeValueBoolArray(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_ARRAY_TYPELIB &pa_roArray, TForteUInt16 pa_unDecodedArraySize) {
   int nRetVal = 0;
   CIEC_BOOL oBoolVal;  //buffer value for handling to large input data
 
-  TForteUInt16 unArraySize = pa_roArray.size();
+  size_t unArraySize = pa_roArray.size();
   int nValueLen;
 
   for(TForteUInt16 i = 0; i < pa_unDecodedArraySize; ++i){
     if(i < unArraySize){
-      nValueLen = deserializeDataPoint(pa_pcBytes, pa_nStreamSize, *pa_roArray[i]);
+      nValueLen = deserializeDataPoint(pa_pcBytes, pa_nStreamSize, pa_roArray[i]);
     }
     else{
       nValueLen = deserializeDataPoint(pa_pcBytes, pa_nStreamSize, oBoolVal);
@@ -850,14 +850,14 @@ unsigned int CFBDKASN1ComLayer::getRequiredSerializationSize(const CIEC_ANY &pa_
 #ifdef FORTE_SUPPORT_ARRAYS
     case CIEC_ANY::e_ARRAY:
       unRetVal += 3;
-      if(((CIEC_ARRAY&) pa_roCIECData).getElementDataTypeID() == CIEC_ANY::e_BOOL) {
-        unRetVal += ((CIEC_ARRAY&)pa_roCIECData).size();
+      if (((CIEC_ARRAY_TYPELIB &)pa_roCIECData).getElementDataTypeID() == CIEC_ANY::e_BOOL) {
+        unRetVal += ((CIEC_ARRAY_TYPELIB &)pa_roCIECData).size();
       } else {
-        for(TForteUInt16 j = 0; j < ((CIEC_ARRAY&)pa_roCIECData).size(); ++j){
-          unRetVal += getRequiredSerializationSize(*(((CIEC_ARRAY&)pa_roCIECData)[j]));
+        for (TForteUInt16 j = 0; j < ((CIEC_ARRAY_TYPELIB &)pa_roCIECData).size(); ++j) {
+          unRetVal += getRequiredSerializationSize((((CIEC_ARRAY_TYPELIB &)pa_roCIECData)[j]));
         }
         // First element with tag, subsequent ones without - adjust
-        unRetVal -= ((CIEC_ARRAY&)pa_roCIECData).size() - 1;
+        unRetVal -= ((CIEC_ARRAY_TYPELIB &)pa_roCIECData).size() - 1;
       }
       break;
 #endif

@@ -365,7 +365,7 @@ CIEC_ANY *CFunctionBlock::createDataPoint(const CStringDictionary::TStringId **p
   if(g_nStringIdARRAY == (*pa_panDataTypeIds)[-1]){
     if(0 != poRetVal){
       //For an array we have to do more
-      (static_cast<CIEC_ARRAY *>(poRetVal))->setup(static_cast<TForteUInt16>(**pa_panDataTypeIds), (*pa_panDataTypeIds)[1]);
+      (static_cast<CIEC_ARRAY_TYPELIB *>(poRetVal))->setup(static_cast<TForteUInt16>(**pa_panDataTypeIds), (*pa_panDataTypeIds)[1]);
     }
     (*pa_panDataTypeIds) += 2;
   }

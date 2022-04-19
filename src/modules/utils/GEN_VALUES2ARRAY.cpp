@@ -48,7 +48,7 @@ void GEN_VALUES2ARRAY::executeEvent(int paEIID){
 
       for(unsigned int input_index = 0; input_index < m_nDInputs; input_index++){
         //copy input values to array
-        OUT_Array()[static_cast<TForteUInt16>(input_index)]->saveAssign(*getDI(input_index));
+        OUT_Array()[input_index].saveAssign(*getDI(input_index));
       }
 
       sendOutputEvent(scm_nEventCNFID);

@@ -76,6 +76,7 @@ ENDIF (FORTE_USE_LREAL_DATATYPE)
 
 IF (FORTE_SUPPORT_ARRAYS)
   forte_test_add_sourcefile_cpp(CIEC_ARRAY_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ARRAY_TEMPLATE_test.cpp)
 ENDIF(FORTE_SUPPORT_ARRAYS)
 
 forte_test_add_sourcefile_cpp(CIEC_TIME_test.cpp)

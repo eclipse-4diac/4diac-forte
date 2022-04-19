@@ -33,8 +33,8 @@ private:
     return *static_cast<CIEC_ANY*>(getDO(0));
   };
 
-  CIEC_ARRAY &output_Array() {
-    return *static_cast<CIEC_ARRAY*>(getDO(0));
+  CIEC_ARRAY<> &output_Array() {
+    return *static_cast<CIEC_ARRAY<>*>(getDO(0));
   }
 
   static const TEventID scm_nEventREQID = 0;

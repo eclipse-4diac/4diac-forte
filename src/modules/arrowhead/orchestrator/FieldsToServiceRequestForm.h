@@ -41,27 +41,27 @@ private:
   };
 
   CIEC_WSTRING *orchestrationFlags() {
-    return (CIEC_WSTRING*)(*static_cast<CIEC_ARRAY *>(getDI(3)))[0]; //the first element marks the start of the array
+    return (CIEC_WSTRING*)(*static_cast<CIEC_ARRAY<> *>(getDI(3)))[0]; //the first element marks the start of the array
   };
 
-  CIEC_ARRAY &orchestrationFlags_Array() {
-    return *static_cast<CIEC_ARRAY*>(getDI(3));
+  CIEC_ARRAY<> &orchestrationFlags_Array() {
+    return *static_cast<CIEC_ARRAY<>*>(getDI(3));
   };
 
   CIEC_PreferredProvider *preferredProviders() {
-    return (CIEC_PreferredProvider*)(*static_cast<CIEC_ARRAY *>(getDI(4)))[0]; //the first element marks the start of the array
+    return (CIEC_PreferredProvider*)(*static_cast<CIEC_ARRAY<> *>(getDI(4)))[0]; //the first element marks the start of the array
   };
 
-  CIEC_ARRAY &preferredProviders_Array() {
-    return *static_cast<CIEC_ARRAY*>(getDI(4));
+  CIEC_ARRAY<> &preferredProviders_Array() {
+    return *static_cast<CIEC_ARRAY<>*>(getDI(4));
   };
 
   CIEC_WSTRING *requestedQoS() {
-    return (CIEC_WSTRING*)(*static_cast<CIEC_ARRAY *>(getDI(5)))[0]; //the first element marks the start of the array
+    return (CIEC_WSTRING*)(*static_cast<CIEC_ARRAY<> *>(getDI(5)))[0]; //the first element marks the start of the array
   };
 
-  CIEC_ARRAY &requestedQoS_Array() {
-    return *static_cast<CIEC_ARRAY*>(getDI(5));
+  CIEC_ARRAY<> &requestedQoS_Array() {
+    return *static_cast<CIEC_ARRAY<>*>(getDI(5));
   };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];

@@ -24,7 +24,7 @@
 
 class CIEC_TIME;
 class CIEC_STRUCT;
-class CIEC_ARRAY;
+class CIEC_ARRAY_TYPELIB;
 class CIEC_STRING;
 class CIEC_WSTRING;
 
@@ -171,7 +171,7 @@ namespace forte {
 #endif //FORTE_USE_WSTRING_DATATYPE
         static int serializeValueStruct(TForteByte* pa_pcBytes, int pa_nStreamSize, const CIEC_STRUCT & pa_roWString);
 #ifdef FORTE_SUPPORT_ARRAYS
-        static int serializeArray(TForteByte* pa_pcBytes, int pa_nStreamSize, const CIEC_ARRAY &pa_roArray);
+        static int serializeArray(TForteByte *pa_pcBytes, int pa_nStreamSize, const CIEC_ARRAY_TYPELIB &pa_roArray);
 #endif //FORTE_SUPPORT_ARRAYS
         /**@}*/
 
@@ -196,8 +196,8 @@ namespace forte {
 #endif //FORTE_USE_WSTRING_DATATYPE
         static int deserializeValueString(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_STRING &pa_roIECData);
 #ifdef FORTE_SUPPORT_ARRAYS
-        static int deserializeArray(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_ARRAY &pa_roArray);
-        static int deserializeValueBoolArray(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_ARRAY &pa_roArray, TForteUInt16 pa_unDecodedArraySize);
+        static int deserializeArray(const TForteByte *pa_pcBytes, int pa_nStreamSize, CIEC_ARRAY_TYPELIB &pa_roArray);
+        static int deserializeValueBoolArray(const TForteByte *pa_pcBytes, int pa_nStreamSize, CIEC_ARRAY_TYPELIB &pa_roArray, TForteUInt16 pa_unDecodedArraySize);
 #endif //FORTE_SUPPORT_ARRAYS
         static int deserializeValueStruct(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_STRUCT &pa_roIECData);
         /**@}*/

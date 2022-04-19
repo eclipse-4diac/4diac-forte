@@ -17,7 +17,7 @@
 
 DEFINE_FIRMWARE_FB(FORTE_GET_AT_INDEX, g_nStringIdGET_AT_INDEX)
 
-  const CStringDictionary::TStringId FORTE_GET_AT_INDEX::scm_anDataInputNames[] = {g_nStringIdIN_ARRAY, g_nStringIdINDEX};
+const CStringDictionary::TStringId FORTE_GET_AT_INDEX::scm_anDataInputNames[] = {g_nStringIdIN_ARRAY, g_nStringIdINDEX};
 
 const CStringDictionary::TStringId FORTE_GET_AT_INDEX::scm_anDataInputTypeIds[] = {g_nStringIdANY, g_nStringIdUINT};
 
@@ -46,13 +46,13 @@ void FORTE_GET_AT_INDEX::executeEvent(int pa_nEIID){
   case scm_nEventREQID:
 
     if(CIEC_ANY::e_ARRAY == IN_ARRAY().getDataTypeID()){
-      CIEC_ARRAY &rInArray = static_cast<CIEC_ARRAY&>(IN_ARRAY());
+      CIEC_ARRAY<> &rInArray = static_cast<CIEC_ARRAY<>&>(IN_ARRAY());
       //check if data types match
       if(rInArray.getElementDataTypeID() == st_OUT().getDataTypeID()){
         //now check array length of input array
         if(INDEX() < rInArray.size()){
           //update the output value
-          st_OUT().setValue(*rInArray[INDEX()]);
+          st_OUT().setValue(rInArray[INDEX()]);
           QO() = CIEC_BOOL(true);
         }
         else{

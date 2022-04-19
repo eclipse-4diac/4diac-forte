@@ -1352,95 +1352,95 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdARRAY, 5, g_nStringIdBOOL };
     CDeserTestMockCommFB nTestFB(1, anType);
     forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
-    CIEC_ARRAY &nVal(*static_cast<CIEC_ARRAY *>(nTestFB.getRDs()));
+    CIEC_ARRAY<> &nVal(*static_cast<CIEC_ARRAY<> *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abArrayBool10011, cg_unBOOL5SerSize));
-    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nVal[0]), true);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nVal[1]), false);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nVal[2]), false);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nVal[3]), true);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nVal[4]), true);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nVal[0]), true);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nVal[1]), false);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nVal[2]), false);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nVal[3]), true);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nVal[4]), true);
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abArrayBool01010, cg_unBOOL5SerSize));
-    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nVal[0]), false);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nVal[1]), true);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nVal[2]), false);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nVal[3]), true);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nVal[4]), false);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nVal[0]), false);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nVal[1]), true);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nVal[2]), false);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nVal[3]), true);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nVal[4]), false);
 
     CStringDictionary::TStringId anType7[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdARRAY, 7, g_nStringIdBOOL };
     CDeserTestMockCommFB nTestFB7(1, anType7);
     forte::com_infra::CFBDKASN1ComLayer nTestee7(0, &nTestFB7);
-    CIEC_ARRAY &nBoolArray7(*static_cast<CIEC_ARRAY *>(nTestFB7.getRDs()));
+    CIEC_ARRAY<> &nBoolArray7(*static_cast<CIEC_ARRAY<> *>(nTestFB7.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee7.recvData(cg_abArrayBool10011, cg_unBOOL5SerSize));
-    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nBoolArray7[0]), true);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nBoolArray7[1]), false);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nBoolArray7[2]), false);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nBoolArray7[3]), true);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nBoolArray7[4]), true);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nBoolArray7[5]), false);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nBoolArray7[6]), false);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nBoolArray7[0]), true);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nBoolArray7[1]), false);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nBoolArray7[2]), false);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nBoolArray7[3]), true);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nBoolArray7[4]), true);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nBoolArray7[5]), false);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nBoolArray7[6]), false);
 
     CStringDictionary::TStringId anType3[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdARRAY, 3, g_nStringIdBOOL };
     CDeserTestMockCommFB nTestFB3(1, anType3);
     forte::com_infra::CFBDKASN1ComLayer nTestee3(0, &nTestFB3);
-    CIEC_ARRAY &nBoolArray3(*static_cast<CIEC_ARRAY *>(nTestFB3.getRDs()));
+    CIEC_ARRAY<> &nBoolArray3(*static_cast<CIEC_ARRAY<> *>(nTestFB3.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee3.recvData(cg_abArrayBool10011, cg_unBOOL5SerSize));
-    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nBoolArray3[0]), true);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nBoolArray3[1]), false);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(*nBoolArray3[2]), false);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nBoolArray3[0]), true);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nBoolArray3[1]), false);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BOOL &>(nBoolArray3[2]), false);
 
     CStringDictionary::TStringId anType4[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdARRAY, 4, g_nStringIdSINT };
     CDeserTestMockCommFB nTestFB4(1, anType4);
     forte::com_infra::CFBDKASN1ComLayer nTesteeSInt(0, &nTestFB4);
-    CIEC_ARRAY &nSIntArray(*static_cast<CIEC_ARRAY *>(nTestFB4.getRDs()));
+    CIEC_ARRAY<> &nSIntArray(*static_cast<CIEC_ARRAY<> *>(nTestFB4.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTesteeSInt.recvData(cg_abArraySINTm128_127_0_m90, cg_unSINT4SerSize));
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(*nSIntArray[0]), -128);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(*nSIntArray[1]), 127);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(*nSIntArray[2]), 0);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(*nSIntArray[3]), -90);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray[0]), -128);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray[1]), 127);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray[2]), 0);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray[3]), -90);
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTesteeSInt.recvData(cg_abArraySINTm90_90_127_0, cg_unSINT4SerSize));
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(*nSIntArray[0]), -90);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(*nSIntArray[1]), 90);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(*nSIntArray[2]), 127);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(*nSIntArray[3]), 0);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray[0]), -90);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray[1]), 90);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray[2]), 127);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray[3]), 0);
 
     CStringDictionary::TStringId anTypeSIntArray7[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdARRAY, 7, g_nStringIdSINT };
     CDeserTestMockCommFB nTestFBSIntArray7(1, anTypeSIntArray7);
     forte::com_infra::CFBDKASN1ComLayer nTesteeSInt7(0, &nTestFBSIntArray7);
-    CIEC_ARRAY &nSIntArray7(*static_cast<CIEC_ARRAY *>(nTestFBSIntArray7.getRDs()));
+    CIEC_ARRAY<> &nSIntArray7(*static_cast<CIEC_ARRAY<> *>(nTestFBSIntArray7.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTesteeSInt7.recvData(cg_abArraySINTm128_127_0_m90, cg_unSINT4SerSize));
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(*nSIntArray7[0]), -128);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(*nSIntArray7[1]), 127);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(*nSIntArray7[2]), 0);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(*nSIntArray7[3]), -90);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(*nSIntArray7[4]), 0);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(*nSIntArray7[5]), 0);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(*nSIntArray7[6]), 0);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray7[0]), -128);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray7[1]), 127);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray7[2]), 0);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray7[3]), -90);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray7[4]), 0);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray7[5]), 0);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray7[6]), 0);
 
     CStringDictionary::TStringId anTypeSInt2[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdARRAY, 2, g_nStringIdSINT };
     CDeserTestMockCommFB nTestFBSInt2(1, anTypeSInt2);
     forte::com_infra::CFBDKASN1ComLayer nTesteeSInt2(0, &nTestFBSInt2);
-    CIEC_ARRAY &nSIntArray2(*static_cast<CIEC_ARRAY *>(nTestFBSInt2.getRDs()));
+    CIEC_ARRAY<> &nSIntArray2(*static_cast<CIEC_ARRAY<> *>(nTestFBSInt2.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTesteeSInt2.recvData(cg_abArraySINTm128_127_0_m90, cg_unSINT4SerSize));
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(*nSIntArray2[0]), -128);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(*nSIntArray2[1]), 127);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray2[0]), -128);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray2[1]), 127);
 
     CStringDictionary::TStringId anTypeString[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdARRAY, 2, g_nStringIdSTRING };
     CDeserTestMockCommFB nTestFBString(1, anTypeString);
     forte::com_infra::CFBDKASN1ComLayer nTesteeString(0, &nTestFBString);
-    CIEC_ARRAY &nStringArray(*static_cast<CIEC_ARRAY *>(nTestFBString.getRDs()));
+    CIEC_ARRAY<> &nStringArray(*static_cast<CIEC_ARRAY<> *>(nTestFBString.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTesteeString.recvData(cg_abArrayStringEmptyHalloWorld, cg_unString2SerSize));
-    BOOST_CHECK_EQUAL(static_cast<CIEC_STRING &>(*nStringArray[0]).length(), 0);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_STRING &>(*nStringArray[1]).length(), 10);
-    BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(*nStringArray[1]).getValue(), "HalloWorld"), 0);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_STRING &>(nStringArray[0]).length(), 0);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_STRING &>(nStringArray[1]).length(), 10);
+    BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nStringArray[1]).getValue(), "HalloWorld"), 0);
   }
 
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_BOOLARRAY){

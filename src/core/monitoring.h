@@ -112,7 +112,7 @@ namespace forte {
 
         static size_t getExtraSizeForEscapedChars(const CIEC_ANY& paDataValue);
 
-        static size_t getExtraSizeForEscapedCharsArray(const CIEC_ARRAY& paDataValue);
+        static size_t getExtraSizeForEscapedCharsArray(const CIEC_ARRAY_TYPELIB &paDataValue);
 
         static size_t getExtraSizeForEscapedCharsStruct(const CIEC_STRUCT& paDataValue);
 

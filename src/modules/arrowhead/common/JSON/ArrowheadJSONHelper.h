@@ -37,7 +37,7 @@ class ArrowheadJSONHelper {
 
     static void transformStructToJSON(const CIEC_STRUCT &paSource, CIEC_STRING &paResult);
 
-    static void transformArrayToJSON(const CIEC_ARRAY &paSource, CIEC_STRING &paResult);
+    static void transformArrayToJSON(const CIEC_ARRAY<> &paSource, CIEC_STRING &paResult);
 
     static void transformSystemToJSON(CIEC_ArrowheadSystem& paSource, CIEC_STRING& paResult);
 

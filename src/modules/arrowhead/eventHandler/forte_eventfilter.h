@@ -37,12 +37,12 @@ class CIEC_EventFilter : public CIEC_STRUCT {
       return *static_cast<CIEC_ArrowheadSystem*>(&getMembers()[1]);
     }
 
-    CIEC_ARRAY *sources_array() {
-      return static_cast<CIEC_ARRAY *>(&getMembers()[2]); //the first element marks the start of the array
+    CIEC_ARRAY<> *sources_array() {
+      return static_cast<CIEC_ARRAY<> *>(&getMembers()[2]); //the first element marks the start of the array
     }
 
     CIEC_ArrowheadSystem *sources() {
-      return static_cast<CIEC_ArrowheadSystem*>((*static_cast<CIEC_ARRAY *>(&getMembers()[2]))[0]); //the first element marks the start of the array
+      return static_cast<CIEC_ArrowheadSystem*>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[2]))[0]); //the first element marks the start of the array
     }
 
     CIEC_DATE_AND_TIME &startDate() {
@@ -52,12 +52,12 @@ class CIEC_EventFilter : public CIEC_STRUCT {
       return *static_cast<CIEC_DATE_AND_TIME*>(&getMembers()[4]);
     }
 
-    CIEC_ARRAY *filterMetadata_array() {
-      return static_cast<CIEC_ARRAY *>(&getMembers()[5]); //the first element marks the start of the array
+    CIEC_ARRAY<> *filterMetadata_array() {
+      return static_cast<CIEC_ARRAY<> *>(&getMembers()[5]); //the first element marks the start of the array
     }
 
     CIEC_WSTRING *filterMetadata() {
-      return static_cast<CIEC_WSTRING*>((*static_cast<CIEC_ARRAY *>(&getMembers()[5]))[0]); //the first element marks the start of the array
+      return static_cast<CIEC_WSTRING*>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[5]))[0]); //the first element marks the start of the array
     }
 
     CIEC_WSTRING &notifyUri() {

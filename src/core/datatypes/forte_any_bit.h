@@ -166,7 +166,7 @@ class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
       /*! \brief Operator: Assignment operator with elementary type as its input
        *
        */
-      PARTIAL_ACCESS_TYPE<TBase, TObject>& operator=(PARTIAL_ACCESS_TYPE<TBase, TObject> paValue){
+      PARTIAL_ACCESS_TYPE<TBase, TObject>& operator=(PARTIAL_ACCESS_TYPE<TBase, TObject> &paValue){
         return setPartial((TBase)paValue); // No need for conversion, TBaseType can be directly assigned
       }
 

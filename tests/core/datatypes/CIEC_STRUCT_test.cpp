@@ -84,11 +84,11 @@ CIEC_TestStruct2::CIEC_TestStruct2() :
       }
 
       CIEC_STRING& val11(){
-        return *static_cast<CIEC_STRING*>((*static_cast<CIEC_ARRAY *>(&getMembers()[0]))[0]);
+        return static_cast<CIEC_STRING &>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[0]))[0]);
       }
 
       CIEC_STRING& val12(){
-        return *static_cast<CIEC_STRING*>((*static_cast<CIEC_ARRAY *>(&getMembers()[0]))[1]);
+        return static_cast<CIEC_STRING &>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[0]))[1]);
       }
 
       CIEC_BOOL& val2(){
@@ -96,7 +96,7 @@ CIEC_TestStruct2::CIEC_TestStruct2() :
       }
 
       CIEC_INT& val31(){
-        return *static_cast<CIEC_INT*>((*static_cast<CIEC_ARRAY *>(&getMembers()[2]))[0]);
+        return static_cast<CIEC_INT &>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[2]))[0]);
       }
 
 
@@ -133,11 +133,11 @@ class CIEC_TestStruct4 : public CIEC_STRUCT { //undefined data types
     }
 
     CIEC_STRING& val11() {
-      return *static_cast<CIEC_STRING*>((*static_cast<CIEC_ARRAY *>(&getMembers()[0]))[0]);
+      return static_cast<CIEC_STRING &>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[0]))[0]);
     }
 
     CIEC_STRING& val12() {
-      return *static_cast<CIEC_STRING*>((*static_cast<CIEC_ARRAY *>(&getMembers()[0]))[1]);
+      return static_cast<CIEC_STRING &>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[0]))[1]);
     }
 
     CIEC_BOOL& val2() {
@@ -322,16 +322,16 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
     BOOST_CHECK_EQUAL(stStruct3.getMemberNamed(g_nStringIdVal1)->getDataTypeID(), CIEC_ANY::e_ARRAY);
     BOOST_CHECK_EQUAL(stStruct3.getMembers()[0].getDataTypeID(), CIEC_ANY::e_ARRAY);
     for(size_t i = 0; i < CIEC_TestStruct3::sizeOfFirstArray; i++){
-      BOOST_CHECK_EQUAL((*static_cast<CIEC_ARRAY *>(stStruct3.getMemberNamed(g_nStringIdVal1)))[i]->getDataTypeID(), CIEC_ANY::e_STRING);
-    BOOST_CHECK_EQUAL((*static_cast<CIEC_ARRAY *>(&stStruct3.getMembers()[0]))[i]->getDataTypeID(), CIEC_ANY::e_STRING);
+      BOOST_CHECK_EQUAL((*static_cast<CIEC_ARRAY<> *>(stStruct3.getMemberNamed(g_nStringIdVal1)))[i].getDataTypeID(), CIEC_ANY::e_STRING);
+    BOOST_CHECK_EQUAL((*static_cast<CIEC_ARRAY<> *>(&stStruct3.getMembers()[0]))[i].getDataTypeID(), CIEC_ANY::e_STRING);
     }
     BOOST_CHECK_EQUAL(stStruct3.getMemberNamed(g_nStringIdVal2)->getDataTypeID(), CIEC_ANY::e_BOOL);
     BOOST_CHECK_EQUAL(stStruct3.getMembers()[1].getDataTypeID(), CIEC_ANY::e_BOOL);
 
     BOOST_CHECK_EQUAL(stStruct3.getMemberNamed(g_nStringIdVal3)->getDataTypeID(), CIEC_ANY::e_ARRAY);
     for(size_t i = 0; i < CIEC_TestStruct3::sizeOfSecondArray; i++){
-      BOOST_CHECK_EQUAL((*static_cast<CIEC_ARRAY *>(stStruct3.getMemberNamed(g_nStringIdVal3)))[i]->getDataTypeID(), CIEC_ANY::e_INT);
-    BOOST_CHECK_EQUAL((*static_cast<CIEC_ARRAY *>(&stStruct3.getMembers()[2]))[i]->getDataTypeID(), CIEC_ANY::e_INT);
+      BOOST_CHECK_EQUAL((*static_cast<CIEC_ARRAY<> *>(stStruct3.getMemberNamed(g_nStringIdVal3)))[i].getDataTypeID(), CIEC_ANY::e_INT);
+      BOOST_CHECK_EQUAL((*static_cast<CIEC_ARRAY<> *>(&stStruct3.getMembers()[2]))[i].getDataTypeID(), CIEC_ANY::e_INT);
     }
 
     checkTestStruct3_InitialValues(stStruct3);

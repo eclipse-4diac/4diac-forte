@@ -31,16 +31,16 @@ class CIEC_ArrowheadService : public CIEC_STRUCT {
       return *static_cast<CIEC_WSTRING*>(&getMembers()[0]);
     }
 
-    CIEC_ARRAY *interfaces_array() {
-      return static_cast<CIEC_ARRAY *>(&getMembers()[1]); //the first element marks the start of the array
+    CIEC_ARRAY<> *interfaces_array() {
+      return static_cast<CIEC_ARRAY<> *>(&getMembers()[1]); //the first element marks the start of the array
     }
 
     CIEC_WSTRING *interfaces() {
-      return static_cast<CIEC_WSTRING*>((*static_cast<CIEC_ARRAY *>(&getMembers()[1]))[0]); //the first element marks the start of the array
+      return static_cast<CIEC_WSTRING*>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[1]))[0]); //the first element marks the start of the array
     }
 
     CIEC_WSTRING *serviceMetadata() {
-      return static_cast<CIEC_WSTRING*>((*static_cast<CIEC_ARRAY *>(&getMembers()[2]))[0]); //the first element marks the start of the array
+      return static_cast<CIEC_WSTRING*>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[2]))[0]); //the first element marks the start of the array
     }
 
   private:

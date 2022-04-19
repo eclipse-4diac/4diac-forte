@@ -44,15 +44,15 @@ class CIEC_ServiceRequestForm : public CIEC_STRUCT {
     }
 
     CIEC_WSTRING *orchestrationFlags() {
-      return static_cast<CIEC_WSTRING*>((*static_cast<CIEC_ARRAY *>(&getMembers()[3]))[0]); //the first element marks the start of the array
+      return static_cast<CIEC_WSTRING*>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[3]))[0]); //the first element marks the start of the array
     }
 
     CIEC_PreferredProvider *preferredProviders() {
-      return static_cast<CIEC_PreferredProvider*>((*static_cast<CIEC_ARRAY *>(&getMembers()[4]))[0]); //the first element marks the start of the array
+      return static_cast<CIEC_PreferredProvider*>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[4]))[0]); //the first element marks the start of the array
     }
 
     CIEC_WSTRING *requestedQoS() {
-      return static_cast<CIEC_WSTRING*>((*static_cast<CIEC_ARRAY *>(&getMembers()[5]))[0]); //the first element marks the start of the array
+      return static_cast<CIEC_WSTRING*>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[5]))[0]); //the first element marks the start of the array
     }
 
   private:

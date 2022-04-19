@@ -38,11 +38,11 @@ private:
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
   CIEC_OrchestrationForm *orchestrationResponse() {
-    return (CIEC_OrchestrationForm*)(*static_cast<CIEC_ARRAY *>(getDO(0)))[0]; //the first element marks the start of the array
+    return (CIEC_OrchestrationForm*)(*static_cast<CIEC_ARRAY<> *>(getDO(0)))[0]; //the first element marks the start of the array
   };
 
-  CIEC_ARRAY &orchestrationResponse_Array() {
-    return *static_cast<CIEC_ARRAY*>(getDO(0));
+  CIEC_ARRAY<> &orchestrationResponse_Array() {
+    return *static_cast<CIEC_ARRAY<>*>(getDO(0));
   };
 
   static const TEventID scm_nEventrequestOrchestatorID = 0;

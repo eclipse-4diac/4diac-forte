@@ -39,12 +39,12 @@ class CIEC_ArrowheadEvent : public CIEC_STRUCT {
       return *static_cast<CIEC_DATE_AND_TIME*>(&getMembers()[2]);
     }
 
-    CIEC_ARRAY *eventMetadata_array() {
-      return static_cast<CIEC_ARRAY *>(&getMembers()[3]); //the first element marks the start of the array
+    CIEC_ARRAY<> *eventMetadata_array() {
+      return static_cast<CIEC_ARRAY<> *>(&getMembers()[3]); //the first element marks the start of the array
     }
 
     CIEC_WSTRING *eventMetadata() {
-      return static_cast<CIEC_WSTRING*>((*static_cast<CIEC_ARRAY *>(&getMembers()[3]))[0]); //the first element marks the start of the array
+      return static_cast<CIEC_WSTRING*>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[3]))[0]); //the first element marks the start of the array
     }
 
   private:

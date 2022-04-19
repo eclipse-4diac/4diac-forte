@@ -71,7 +71,7 @@ void FORTE_OUT_ANY_CONSOLE::executeEvent(int pa_nEIID) {
         //for arrays
         if(st_IN().getDataTypeID() == CIEC_ANY::e_ARRAY){
           //get number of array elements
-          TForteUInt16 nArrayElements = (static_cast<CIEC_ARRAY*>(&st_IN()))->size();
+          TForteUInt16 nArrayElements = (static_cast<CIEC_ARRAY<>*>(&st_IN()))->size();
           //number of required bytes (including brackets '[' ']' and ',' separators
           nRequiredBytes = static_cast<TForteUInt16>(nArrayElements * scm_maxStringBufSize +  nArrayElements + 1);
         }

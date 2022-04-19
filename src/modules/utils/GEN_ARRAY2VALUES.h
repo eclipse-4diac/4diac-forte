@@ -27,8 +27,8 @@ class GEN_ARRAY2VALUES : public CGenFunctionBlock<CFunctionBlock> {
     static const CStringDictionary::TStringId scm_anDataInputNames[];
     CStringDictionary::TStringId *m_anDataInputTypeIds;
 
-    CIEC_ARRAY &IN_Array(){
-      return *static_cast<CIEC_ARRAY *>(getDI(0));
+    CIEC_ARRAY<> &IN_Array(){
+      return *static_cast<CIEC_ARRAY<> *>(getDI(0));
     }
     ;
 

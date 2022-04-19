@@ -58,7 +58,7 @@ void CIEC_STRUCT::setup(CStringDictionary::TStringId paTypeName, TForteUInt16 pa
 #ifdef FORTE_SUPPORT_ARRAYS
         if(g_nStringIdARRAY == paElementTypes[-1]) {
           //For an array we have to do more
-          (static_cast<CIEC_ARRAY *>(retVal))->setup(static_cast<TForteUInt16>(*paElementTypes), paElementTypes[1]);
+          (static_cast<CIEC_ARRAY_TYPELIB *>(retVal))->setup(static_cast<TForteUInt16>(*paElementTypes), paElementTypes[1]);
           paElementTypes += 2;
         }
 #endif

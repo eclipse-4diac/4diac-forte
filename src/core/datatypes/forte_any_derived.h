@@ -20,14 +20,12 @@
 /*!\ingroup COREDTS CIEC_ANY_DERIVED represents the user defined data types according to
  *  IEC 61131.
  */
-class CIEC_ANY_DERIVED : public CIEC_ANY{
+class CIEC_ANY_DERIVED : public CIEC_ANY {
   public:
-    virtual ~CIEC_ANY_DERIVED(){
-    }
+    virtual ~CIEC_ANY_DERIVED() = default;
 
   protected:
-    CIEC_ANY_DERIVED() {
-    }
+    CIEC_ANY_DERIVED() = default;
 };
 
 #endif /*_MANY_DER_H_*/

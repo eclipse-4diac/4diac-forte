@@ -960,23 +960,23 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_MultiDatas){
   BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, nSerSize - 2, const_cast<TConstIEC_ANYPtr *>(poArray), 6), -1);
 
   //free memory
-  for(int i = 0; i < 6; ++i){
+  for(size_t i = 0; i < 6; ++i){
     poArray[i]->~CIEC_ANY();
   }
 }
 
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_ARRAY){
   CFBDKASN1ComLayerTestMock nTestee;
-  CIEC_ARRAY nVal(5, g_nStringIdBOOL);
+  CIEC_ARRAY<> nVal(5, g_nStringIdBOOL);
   TIEC_ANYPtr poArray[1];
   poArray[0] = &nVal;
 
 
-  static_cast<CIEC_BOOL &>(*nVal[0]) = CIEC_BOOL(true);
-  static_cast<CIEC_BOOL &>(*nVal[1]) = CIEC_BOOL(false);
-  static_cast<CIEC_BOOL &>(*nVal[2]) = CIEC_BOOL(false);
-  static_cast<CIEC_BOOL &>(*nVal[3]) = CIEC_BOOL(true);
-  static_cast<CIEC_BOOL &>(*nVal[4]) = CIEC_BOOL(true);
+  static_cast<CIEC_BOOL &>(nVal[0]) = CIEC_BOOL(true);
+  static_cast<CIEC_BOOL &>(nVal[1]) = CIEC_BOOL(false);
+  static_cast<CIEC_BOOL &>(nVal[2]) = CIEC_BOOL(false);
+  static_cast<CIEC_BOOL &>(nVal[3]) = CIEC_BOOL(true);
+  static_cast<CIEC_BOOL &>(nVal[4]) = CIEC_BOOL(true);
 
   TForteByte acSmallBuf[7];
   BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, 1, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
@@ -990,40 +990,40 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_ARRAY){
   BOOST_CHECK_EQUAL(nTestee.getSendDataSize(), cg_unBOOL5SerSize);
   BOOST_CHECK(std::equal(cg_abArrayBool10011, cg_abArrayBool10011 + cg_unBOOL5SerSize, ((TForteByte *)nTestee.getSendDataPtr())));
 
-  static_cast<CIEC_BOOL &>(*nVal[0]) = CIEC_BOOL(false);
-  static_cast<CIEC_BOOL &>(*nVal[1]) = CIEC_BOOL(true);
-  static_cast<CIEC_BOOL &>(*nVal[2]) = CIEC_BOOL(false);
-  static_cast<CIEC_BOOL &>(*nVal[3]) = CIEC_BOOL(true);
-  static_cast<CIEC_BOOL &>(*nVal[4]) = CIEC_BOOL(false);
+  static_cast<CIEC_BOOL &>(nVal[0]) = CIEC_BOOL(false);
+  static_cast<CIEC_BOOL &>(nVal[1]) = CIEC_BOOL(true);
+  static_cast<CIEC_BOOL &>(nVal[2]) = CIEC_BOOL(false);
+  static_cast<CIEC_BOOL &>(nVal[3]) = CIEC_BOOL(true);
+  static_cast<CIEC_BOOL &>(nVal[4]) = CIEC_BOOL(false);
 
   BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.sendData(&nVal, 1));
   BOOST_CHECK_EQUAL(nTestee.getSendDataSize(), cg_unBOOL5SerSize);
   BOOST_CHECK(std::equal(cg_abArrayBool01010, cg_abArrayBool01010 + cg_unBOOL5SerSize, ((TForteByte *)nTestee.getSendDataPtr())));
 
 
-  CIEC_ARRAY nSIntArray(4, g_nStringIdSINT);
+  CIEC_ARRAY<> nSIntArray(4, g_nStringIdSINT);
 
-  static_cast<CIEC_SINT &>(*nSIntArray[0]) = CIEC_SINT(-128);
-  static_cast<CIEC_SINT &>(*nSIntArray[1]) = CIEC_SINT(127);
-  static_cast<CIEC_SINT &>(*nSIntArray[2]) = CIEC_SINT(0);
-  static_cast<CIEC_SINT &>(*nSIntArray[3]) = CIEC_SINT(-90);
+  static_cast<CIEC_SINT &>(nSIntArray[0]) = CIEC_SINT(-128);
+  static_cast<CIEC_SINT &>(nSIntArray[1]) = CIEC_SINT(127);
+  static_cast<CIEC_SINT &>(nSIntArray[2]) = CIEC_SINT(0);
+  static_cast<CIEC_SINT &>(nSIntArray[3]) = CIEC_SINT(-90);
 
   BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.sendData(&nSIntArray, 1));
   BOOST_CHECK_EQUAL(nTestee.getSendDataSize(), cg_unSINT4SerSize);
   BOOST_CHECK(std::equal(cg_abArraySINTm128_127_0_m90, cg_abArraySINTm128_127_0_m90 + cg_unSINT4SerSize, ((TForteByte *)nTestee.getSendDataPtr())));
 
-  static_cast<CIEC_SINT &>(*nSIntArray[0]) = CIEC_SINT(-90);
-  static_cast<CIEC_SINT &>(*nSIntArray[1]) = CIEC_SINT(90);
-  static_cast<CIEC_SINT &>(*nSIntArray[2]) = CIEC_SINT(127);
-  static_cast<CIEC_SINT &>(*nSIntArray[3]) = CIEC_SINT(0);
+  static_cast<CIEC_SINT &>(nSIntArray[0]) = CIEC_SINT(-90);
+  static_cast<CIEC_SINT &>(nSIntArray[1]) = CIEC_SINT(90);
+  static_cast<CIEC_SINT &>(nSIntArray[2]) = CIEC_SINT(127);
+  static_cast<CIEC_SINT &>(nSIntArray[3]) = CIEC_SINT(0);
 
   BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.sendData(&nSIntArray, 1));
   BOOST_CHECK_EQUAL(nTestee.getSendDataSize(), cg_unSINT4SerSize);
   BOOST_CHECK(std::equal(cg_abArraySINTm90_90_127_0, cg_abArraySINTm90_90_127_0 + cg_unSINT4SerSize, ((TForteByte *)nTestee.getSendDataPtr())));
 
-  CIEC_ARRAY nStringArray(2, g_nStringIdSTRING);
+  CIEC_ARRAY<> nStringArray(2, g_nStringIdSTRING);
 
-  static_cast<CIEC_STRING &>(*nStringArray[1]) = CIEC_STRING("HalloWorld");
+  static_cast<CIEC_STRING &>(nStringArray[1]) = CIEC_STRING("HalloWorld");
   BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.sendData(&nStringArray, 1));
   BOOST_CHECK_EQUAL(nTestee.getSendDataSize(), cg_unString2SerSize);
   BOOST_CHECK(std::equal(cg_abArrayStringEmptyHalloWorld, cg_abArrayStringEmptyHalloWorld + cg_unString2SerSize, ((TForteByte *)nTestee.getSendDataPtr())));

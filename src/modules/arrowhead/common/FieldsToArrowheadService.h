@@ -29,19 +29,19 @@ private:
   };
 
   CIEC_WSTRING *interfaces() {
-    return (CIEC_WSTRING*)(*static_cast<CIEC_ARRAY *>(getDI(1)))[0]; //the first element marks the start of the array
+    return (CIEC_WSTRING*)(*static_cast<CIEC_ARRAY<> *>(getDI(1)))[0]; //the first element marks the start of the array
   };
 
-  CIEC_ARRAY &interfaces_Array() {
-    return *static_cast<CIEC_ARRAY*>(getDI(1));
+  CIEC_ARRAY<> &interfaces_Array() {
+    return *static_cast<CIEC_ARRAY<>*>(getDI(1));
   };
 
   CIEC_WSTRING *serviceMetadata() {
-    return (CIEC_WSTRING*)(*static_cast<CIEC_ARRAY *>(getDI(2)))[0]; //the first element marks the start of the array
+    return (CIEC_WSTRING*)(*static_cast<CIEC_ARRAY<> *>(getDI(2)))[0]; //the first element marks the start of the array
   };
 
-  CIEC_ARRAY &serviceMetadata_Array() {
-    return *static_cast<CIEC_ARRAY*>(getDI(2));
+  CIEC_ARRAY<> &serviceMetadata_Array() {
+    return *static_cast<CIEC_ARRAY<>*>(getDI(2));
   };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
