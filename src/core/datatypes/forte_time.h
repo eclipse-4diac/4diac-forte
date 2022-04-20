@@ -39,13 +39,6 @@ class CIEC_TIME : public CIEC_ANY_MAGNITUDE{
       setLargestInt(paValue);
     }
 
-    explicit CIEC_TIME(const char *paValue){
-      if(-1 == CIEC_TIME::fromString(paValue)){ //explicitly state that you like to have the fromString of this class to avoid potential virtual function clashes in the constructor
-      //we had an error in string parsing set a default value
-        setLargestInt(0);
-      }
-    }
-
     virtual ~CIEC_TIME(){
     }
 

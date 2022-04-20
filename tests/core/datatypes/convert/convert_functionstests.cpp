@@ -78,70 +78,80 @@ BOOST_AUTO_TEST_SUITE(convert_functions)
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_S_LINT) {
-    CIEC_TIME time("T#2d5h43m12s");
+    CIEC_TIME time;
+    time.fromString("T#2d5h43m12s");
     CIEC_LINT timeInS;
     timeInS = func_TIME_IN_S_TO_LINT(time);
     BOOST_TEST(timeInS == (INT64_C(172800) + INT64_C(18000) + INT64_C(2580) + INT64_C(12)));
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_MS_LINT) {
-    CIEC_TIME time("T#2d5h43m12s44ms");
+    CIEC_TIME time;
+    time.fromString("T#2d5h43m12s44ms");
     CIEC_LINT timeInMs;
     timeInMs = func_TIME_IN_MS_TO_LINT(time);
     BOOST_TEST(timeInMs == (INT64_C(172800000) + INT64_C(18000000) + INT64_C(2580000) + INT64_C(12000) + INT64_C(44)));
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_US_LINT) {
-    CIEC_TIME time("T#2d5h43m12s44ms27us");
+    CIEC_TIME time;
+    time.fromString("T#2d5h43m12s44ms27us");
     CIEC_LINT timeInUs;
     timeInUs = func_TIME_IN_US_TO_LINT(time);
     BOOST_TEST(timeInUs == (INT64_C(172800000000) + INT64_C(18000000000) + INT64_C(2580000000) + INT64_C(12000000) + INT64_C(44000) + INT64_C(27)));
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_NS_LINT) {
-    CIEC_TIME time("T#2d5h43m12s44ms27us31ns");
+    CIEC_TIME time;
+    time.fromString("T#2d5h43m12s44ms27us31ns");
     CIEC_LINT timeInNs;
     timeInNs = func_TIME_IN_NS_TO_LINT(time);
     BOOST_TEST(timeInNs == (INT64_C(172800000000000) + INT64_C(18000000000000) + INT64_C(2580000000000) + INT64_C(12000000000) + INT64_C(44000000) + INT64_C(27000) + INT64_C(31)));
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_S_ULINT) {
-    CIEC_TIME time("T#2d5h43m12s");
+    CIEC_TIME time;
+    time.fromString("T#2d5h43m12s");
     CIEC_ULINT timeInS;
     timeInS = func_TIME_IN_S_TO_ULINT(time);
     BOOST_TEST(timeInS == (UINT64_C(172800) + UINT64_C(18000) + UINT64_C(2580) + UINT64_C(12)));
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_MS_ULINT) {
-    CIEC_TIME time("T#2d5h43m12s44ms");
+    CIEC_TIME time;
+    time.fromString("T#2d5h43m12s44ms");
     CIEC_ULINT timeInMs;
     timeInMs = func_TIME_IN_MS_TO_ULINT(time);
     BOOST_TEST(timeInMs == (UINT64_C(172800000) + UINT64_C(18000000) + UINT64_C(2580000) + UINT64_C(12000) + UINT64_C(44)));
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_US_ULINT) {
-    CIEC_TIME time("T#2d5h43m12s44ms27us");
+    CIEC_TIME time;
+    time.fromString("T#2d5h43m12s44ms27us");
     CIEC_ULINT timeInUs;
     timeInUs = func_TIME_IN_US_TO_ULINT(time);
     BOOST_TEST(timeInUs == (UINT64_C(172800000000) + UINT64_C(18000000000) + UINT64_C(2580000000) + UINT64_C(12000000) + UINT64_C(44000) + UINT64_C(27)));
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_NS_ULINT) {
-    CIEC_TIME time("T#2d5h43m12s44ms27us31ns");
+    CIEC_TIME time;
+    time.fromString("T#2d5h43m12s44ms27us31ns");
     CIEC_ULINT timeInNs;
     timeInNs = func_TIME_IN_NS_TO_ULINT(time);
     BOOST_TEST(timeInNs == (UINT64_C(172800000000000) + UINT64_C(18000000000000) + UINT64_C(2580000000000) + UINT64_C(12000000000) + UINT64_C(44000000) + UINT64_C(27000) + UINT64_C(31)));
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_S_LREAL) {
-    CIEC_TIME time("T#2d5h43m12s44ms27us31ns");
+    CIEC_TIME time;
+    time.fromString("T#2d5h43m12s44ms27us31ns");
     CIEC_LREAL timeInS;
     timeInS = func_TIME_IN_S_TO_LREAL(time);
     BOOST_TEST(timeInS == static_cast<CIEC_LREAL>(INT64_C(172800000000000) + INT64_C(18000000000000) + INT64_C(2580000000000) + INT64_C(12000000000) + INT64_C(44000000) + INT64_C(27000) + INT64_C(31)) / static_cast<CIEC_LREAL>(1E9));
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_MS_LREAL) {
-    CIEC_TIME time("T#2d5h43m12s44ms27us31ns");
+    CIEC_TIME time;
+    time.fromString("T#2d5h43m12s44ms27us31ns");
     CIEC_LREAL timeInMs;
     timeInMs = func_TIME_IN_MS_TO_LREAL(time);
     BOOST_TEST(
@@ -149,7 +159,8 @@ BOOST_AUTO_TEST_SUITE(convert_functions)
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_US_LREAL) {
-    CIEC_TIME time("T#2d5h43m12s44ms27us31ns");
+    CIEC_TIME time;
+    time.fromString("T#2d5h43m12s44ms27us31ns");
     CIEC_LREAL timeInUs;
     timeInUs = func_TIME_IN_US_TO_LREAL(time);
     BOOST_TEST(
@@ -157,7 +168,8 @@ BOOST_AUTO_TEST_SUITE(convert_functions)
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_NS_LREAL) {
-    CIEC_TIME time("T#2d5h43m12s44ms27us31ns");
+    CIEC_TIME time;
+    time.fromString("T#2d5h43m12s44ms27us31ns");
     CIEC_LREAL timeInNs;
     timeInNs = func_TIME_IN_NS_TO_LREAL(time);
     BOOST_TEST(
