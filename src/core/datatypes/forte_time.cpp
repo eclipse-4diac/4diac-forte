@@ -130,46 +130,52 @@ int CIEC_TIME::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal = -1;
   if(paBufferSize > 4) {
 #ifdef FORTE_USE_64BIT_DATATYPES
-    #define INTERAL_CIEC_TIME_TYPE CIEC_LINT
+    typedef CIEC_LINT INTERAL_CIEC_TIME_TYPE;
 #else //FORTE_USE_64BIT_DATATYPES
-    #define INTERAL_CIEC_TIME_TYPE CIEC_DINT
+    typedef CIEC_DINT INTERAL_CIEC_TIME_TYPE;
 #endif //FORTE_USE_64BIT_DATATYPES
-    INTERAL_CIEC_TIME_TYPE timeVal(getInMilliSeconds());
-    nRetVal = timeVal.toString(paValue + 2, paBufferSize - 4);
-    if(-1 != nRetVal) {
-      paValue[0] = 'T';
-      paValue[1] = '#';
-      nRetVal += 2;
-      TValueType timeValSimple = getInMicroSeconds();
-      timeValSimple = timeValSimple % 1000; //we only want the microseconds
-      if(0 != timeValSimple) {
-        //If we have a microsecond value add it to the literal
-        paValue[nRetVal] = '.';
+    INTERAL_CIEC_TIME_TYPE timeVal(static_cast<TValueType>(llabs(getInMilliSeconds())));
+    paValue[0] = 'T';
+    paValue[1] = '#';
+    nRetVal += 3; // Compensate for -1 start value
+    if (static_cast<TValueType>(*this) < 0) {
+      paValue[2] = '-';
+      nRetVal++;
+    }
+    int msPartRetVal = timeVal.toString(paValue + nRetVal, paBufferSize - nRetVal);
+    if (-1 == msPartRetVal) { // Conversion failed, 0 string and return -1
+      memset(paValue, 0, paBufferSize);
+      return msPartRetVal;
+    }
+    nRetVal += msPartRetVal;
+    TValueType timeValSimple = getInMicroSeconds();
+    timeValSimple = static_cast<TValueType>(llabs(timeValSimple) % 1000LL); // we only want the microseconds
+    if(0 != timeValSimple) {
+      //If we have a microsecond value add it to the literal
+      paValue[nRetVal] = '.';
+      ++nRetVal;
+      if(timeValSimple < 100) {
+        paValue[nRetVal] = '0';
         ++nRetVal;
-        if(timeValSimple < 100) {
+        if(timeValSimple < 10) {
           paValue[nRetVal] = '0';
           ++nRetVal;
-          if(timeValSimple < 10) {
-            paValue[nRetVal] = '0';
-            ++nRetVal;
-          }
         }
-        timeVal = INTERAL_CIEC_TIME_TYPE(timeValSimple);
-        int size = timeVal.toString(paValue + nRetVal, paBufferSize - nRetVal);
-        if(-1 == size) {
-          return size;
-        }
-        nRetVal += size;
       }
-      paValue[nRetVal] = 'm';
-      paValue[nRetVal + 1] = 's';
-      paValue[nRetVal + 2] = '\0';
-      nRetVal += 2;
+      timeVal = INTERAL_CIEC_TIME_TYPE(timeValSimple);
+      int size = timeVal.toString(paValue + nRetVal, paBufferSize - nRetVal);
+      if(-1 == size) {
+        return size;
+      }
+      nRetVal += size;
     }
+    paValue[nRetVal] = 'm';
+    paValue[nRetVal + 1] = 's';
+    paValue[nRetVal + 2] = '\0';
+    nRetVal += 2;
   }
   return nRetVal;
 }
-#undef INTERAL_CIEC_TIME_TYPE
 
 CIEC_TIME::TValueType CIEC_TIME::getInSeconds() const {
   return static_cast<TValueType>(*this) / static_cast<TValueType>(cgForteTimeBaseUnitsPerSecond);

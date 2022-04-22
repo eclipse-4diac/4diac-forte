@@ -207,6 +207,27 @@ BOOST_AUTO_TEST_CASE(toString_with_microseconds_test){
   BOOST_CHECK_EQUAL(std::string(cBuffer), "T#3450.001ms");
 }
 
+BOOST_AUTO_TEST_CASE(toString_with_negative_times_test)
+{
+  CIEC_TIME time;
+  char cBuffer[17];
+
+  time.setFromMicroSeconds(-1);
+  BOOST_CHECK_EQUAL(time.toString(cBuffer, 17), 10);
+  BOOST_CHECK_EQUAL(std::string(cBuffer), "T#-0.001ms");
+
+  time.setFromMicroSeconds(-10);
+  BOOST_CHECK_EQUAL(time.toString(cBuffer, 17), 10);
+  BOOST_CHECK_EQUAL(std::string(cBuffer), "T#-0.010ms");
+
+  time.setFromMicroSeconds(-100);
+  BOOST_CHECK_EQUAL(time.toString(cBuffer, 17), 10);
+  BOOST_CHECK_EQUAL(std::string(cBuffer), "T#-0.100ms");
+
+  time.setFromMicroSeconds(-3450001);
+  BOOST_CHECK_EQUAL(time.toString(cBuffer, 17), 13);
+  BOOST_CHECK_EQUAL(std::string(cBuffer), "T#-3450.001ms");
+}
 
 BOOST_AUTO_TEST_CASE(time_comparision_tests){
   CIEC_TIME time1, time2;

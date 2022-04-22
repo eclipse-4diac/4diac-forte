@@ -36,17 +36,17 @@ class ST_FOR_ITER {
       if (byValue > 0) {
         const typename E::TValueType limit = E::scm_nMaxVal - static_cast<typename E::TValueType>(byValue);
         if (toValue > limit) {
-          DEVLOG_ERROR("The given TO value would produce an overflow - TO changed to the highest achievable value");
+          DEVLOG_ERROR("The given TO value would produce an overflow - TO changed to the highest achievable value\n");
           to = E(limit);
         }
       } else if (byValue < 0) {
         const typename E::TValueType limit = E::scm_nMinVal - static_cast<typename E::TValueType>(byValue); // byValue is negative, so its in fact an addition
         if (toValue < limit) {
-          DEVLOG_ERROR("The given TO value would produce an underflow - TO changed to the lowest achievable value");
+          DEVLOG_ERROR("The given TO value would produce an underflow - TO changed to the lowest achievable value\n");
           to = E(limit);
         }
       } else {
-        DEVLOG_ERROR("Potential infinite loop - BY value is 0");
+        DEVLOG_ERROR("Potential infinite loop - BY value is 0\n");
       }
     }
 
