@@ -18,7 +18,8 @@
 uint_fast64_t getNanoSecondsMonotonic() {
   struct timespec now;
   clock_gettime(CLOCK_MONOTONIC, &now);
-  return now.tv_nsec + now.tv_sec * forte::core::constants::cNanosecondsPerSecond;
+  return static_cast<uint_fast64_t>(now.tv_nsec) + static_cast<uint_fast64_t>(now.tv_sec) *
+   static_cast<uint_fast64_t>(forte::core::constants::cNanosecondsPerSecond);
 }
 
 
