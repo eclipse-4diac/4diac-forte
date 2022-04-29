@@ -13,12 +13,15 @@
  *      - adds macro functions for easier defintion of allowed casts, metaprograms
  *      for is_base_of including is_base_helper, conditional, and is_same
  *      - adds get_equivalent_CIEC_class template
+ *      - added cast helper for MUL and DIV which can be mixed with ANY_DURATION
  *******************************************************************************/
 
 #include "datatype.h"
 
 #ifndef SRC_CORE_IEC61131_CAST_HELPER_CPP_
 #define SRC_CORE_IEC61131_CAST_HELPER_CPP_
+
+class CIEC_ANY_DURATION;
 
 class CIEC_BOOL;
 class CIEC_BYTE;
@@ -535,7 +538,6 @@ namespace forte {
       IS_INTEGRAL(TForteUInt32)
       IS_INTEGRAL(TForteUInt64)
 
-
       template<typename T, typename U> struct get_castable_type{
           typedef typename conditional<is_same<NullType, typename implicit_cast<T, U>::type>::value, typename implicit_cast<U, T>::type, typename implicit_cast<T, U>::type>::type type;
       };
@@ -544,6 +546,18 @@ namespace forte {
           typedef typename conditional<is_same<NullType, typename explicit_cast<T, U>::type>::value, typename implicit_cast<T, U>::type, typename explicit_cast<T, U>::type>::type type;
       };
 
+      template <typename T, typename U>
+      struct get_castable_type_duration_mixed_operations {
+      private:
+        typedef typename get_castable_type<T, U>::type castableType;
+        constexpr static const bool isTAndUcastable = !is_same<NullType, castableType>::value;
+        constexpr static const bool isTAnyDuration = is_base_of<CIEC_ANY_DURATION, T>::value;
+        constexpr static const bool isUAnyDuration = is_base_of<CIEC_ANY_DURATION, U>::value;
+        constexpr static const bool isTAndUAnyDuration = isTAnyDuration && isUAnyDuration;
+
+      public:
+        typedef typename conditional<isTAndUAnyDuration, NullType, typename conditional<isTAndUcastable, castableType, typename conditional<isTAnyDuration, T, typename conditional<isUAnyDuration, U, NullType>::type>::type>::type>::type type;
+      };
     }
   }
 }

@@ -17,12 +17,12 @@
 #ifndef _FORTE_TIME_H_
 #define _FORTE_TIME_H_
 
-#include "forte_any_magnitude.h"
+#include "forte_any_duration.h"
 
 /*!\ingroup COREDTS CIEC_TIME represents the time data types according to IEC 61131.
  */
 
-class CIEC_TIME : public CIEC_ANY_MAGNITUDE{
+class CIEC_TIME : public CIEC_ANY_DURATION {
   DECLARE_FIRMWARE_DATATYPE(TIME)
   public:
     typedef TLargestIntValueType TValueType;
@@ -30,8 +30,7 @@ class CIEC_TIME : public CIEC_ANY_MAGNITUDE{
     CIEC_TIME(){
     }
 
-    CIEC_TIME(const CIEC_TIME& paValue) :
-        CIEC_ANY_MAGNITUDE(){
+    CIEC_TIME(const CIEC_TIME &paValue) : CIEC_ANY_DURATION() {
       setValueSimple(paValue);
     }
 

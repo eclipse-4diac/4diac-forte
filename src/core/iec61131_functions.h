@@ -576,28 +576,55 @@ template<typename T> const T func_ADD(const T &pa_roIN1, const T &pa_roIN2) {
   return T(pa_roIN1 + pa_roIN2);
 }
 
-GENERATE_APPLY_FUNCTION(func_MUL)
+template <class T, class U>
+class MulOperation {
+  typedef typename forte::core::mpl::get_castable_type_duration_mixed_operations<T, U>::type resultType;
 
-template<typename T> struct func_MUL_Scalar {
-    static T call(const T pa_roIN1, const T pa_roIN2) {
-      return T(pa_roIN1 * pa_roIN2);
-    }
+public:
+  static resultType call(const T &pa_roIN1, const U &pa_roIN2) {
+    return resultType(static_cast<resultType>(pa_roIN1) * static_cast<resultType>(pa_roIN2));
+  }
+  MulOperation() = delete;
 };
 
-template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type func_MUL(const T &pa_roIN1, const U &pa_roIN2) {
-  return APPLY_WITH_LITERALS<T, U, func_MUL_Scalar, func_MUL_Function>(pa_roIN1, pa_roIN2);
-}
+template <class T>
+class MulOperation<T, CIEC_TIME> {
+  typedef typename forte::core::mpl::get_castable_type_duration_mixed_operations<T, CIEC_TIME>::type resultType;
 
-template<typename T> const T func_MUL(const T &pa_roIN1, const T &pa_roIN2) {
-  return T(pa_roIN1 * pa_roIN2);
+public:
+  static resultType call(const T &pa_roIN1, const CIEC_TIME &pa_roIN2) {
+    return func_MULTIME(pa_roIN2, pa_roIN1);
+  }
+  MulOperation() = delete;
+};
+
+template <class T>
+class MulOperation<CIEC_TIME, T>
+{
+  typedef typename forte::core::mpl::get_castable_type_duration_mixed_operations<T, CIEC_TIME>::type resultType;
+
+public:
+  static resultType call(const CIEC_TIME &pa_roIN1, const T &pa_roIN2) {
+    return func_MULTIME(pa_roIN1, pa_roIN2);
+  }
+
+  MulOperation() = delete;
+};
+
+template <typename T, typename U>
+typename forte::core::mpl::get_castable_type_duration_mixed_operations<T, U>::type func_MUL(const T &pa_roIN1, const U &pa_roIN2){
+  return MulOperation<T, U>::call(pa_roIN1, pa_roIN2);
 }
 
 GENERATE_APPLY_FUNCTION(func_SUB)
 
-template<typename T> struct func_SUB_Scalar {
-    static T call(const T pa_roIN1, const T pa_roIN2) {
-      return T(pa_roIN1 - pa_roIN2);
-    }
+    template <typename T>
+    struct func_SUB_Scalar
+{
+  static T call(const T pa_roIN1, const T pa_roIN2)
+  {
+    return T(pa_roIN1 - pa_roIN2);
+  }
 };
 
 template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type func_SUB(const T &pa_roIN1, const U &pa_roIN2) {
@@ -608,27 +635,37 @@ template<typename T> const T func_SUB(const T &pa_roIN1, const T &pa_roIN2) {
   return T(pa_roIN1 - pa_roIN2);
 }
 
-GENERATE_APPLY_FUNCTION(func_DIV)
+template <class T, class U>
+class DivOperation {
+  typedef typename forte::core::mpl::get_castable_type<T, U>::type resultType;
 
-template<typename T> struct func_DIV_Scalar {
-    static T call(const T pa_roIN1, const T pa_roIN2) {
-      T temp(0);
-      if(0 != static_cast<typename T::TValueType>(pa_roIN2)) {
-        temp = static_cast<typename T::TValueType>(pa_roIN1) / static_cast<typename T::TValueType>(pa_roIN2);
-      }
-      return temp;
+public:
+  static resultType call(const T &pa_roIN1, const U &pa_roIN2) {
+    if(0 != pa_roIN2) {
+      return resultType(static_cast<resultType>(pa_roIN1) / static_cast<resultType>(pa_roIN2));
     }
+    return resultType(0); // Divisor is 0
+  }
+
+  DivOperation() = delete;
 };
 
-template<typename T, typename U> typename forte::core::mpl::get_castable_type<T, U>::type func_DIV(const T &pa_roIN1, const U &pa_roIN2) {
-  return APPLY_WITH_LITERALS<T, U, func_DIV_Scalar, func_DIV_Function>(pa_roIN1, pa_roIN2);
-}
+// Time division only works with TIME as dividend
+template <class T>
+class DivOperation<CIEC_TIME, T> {
+  typedef typename forte::core::mpl::get_castable_type_duration_mixed_operations<T, CIEC_TIME>::type resultType;
 
-template<typename T> const T func_DIV(const T &pa_roIN1, const T &pa_roIN2) {
-  if(0 != static_cast<typename T::TValueType>(pa_roIN2)) {
-    return T(static_cast<typename T::TValueType>(pa_roIN1) / static_cast<typename T::TValueType>(pa_roIN2));
+public:
+  static resultType call(const CIEC_TIME &pa_roIN1, const T &pa_roIN2) {
+    return func_DIVTIME(pa_roIN1, pa_roIN2);
   }
-  return T(0);
+
+  DivOperation() = delete;
+};
+
+template <typename T, typename U>
+typename forte::core::mpl::get_castable_type_duration_mixed_operations<T, U>::type func_DIV(const T &pa_roIN1, const U &pa_roIN2) {
+  return DivOperation<T, U>::call(pa_roIN1, pa_roIN2);
 }
 
 #ifdef FORTE_USE_REAL_DATATYPE

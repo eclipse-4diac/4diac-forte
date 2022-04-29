@@ -64,8 +64,4 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
       forte_add_definition("-fno-rtti -fno-exceptions")
     ENDIF(NOT FORTE_RTTI_AND_EXCEPTIONS)
   endif(FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)
-  
-
-
-    
 endif()

@@ -459,5 +459,46 @@ BOOST_AUTO_TEST_CASE(shl_signed)
   BOOST_REQUIRE_EQUAL(0x0, result);
 }
 
+BOOST_AUTO_TEST_CASE(mul_numbers)
+{
+  
+  CIEC_USINT sint(5);
+  CIEC_UINT inte(6);
+  CIEC_UINT result;
+
+  result = func_MUL(sint, inte);
+  BOOST_REQUIRE_EQUAL(CIEC_UINT(30), result);
+}
+
+BOOST_AUTO_TEST_CASE(mul_number_and_time)
+{
+  CIEC_USINT sint(5);
+  CIEC_TIME time(6);
+  CIEC_TIME result;
+
+  result = func_MUL(sint, time);
+  BOOST_REQUIRE_EQUAL(CIEC_TIME(30), result);
+}
+
+BOOST_AUTO_TEST_CASE(div_numbers)
+{
+
+  CIEC_USINT sint(30);
+  CIEC_UINT inte(6);
+  CIEC_UINT result;
+
+  result = func_DIV(sint, inte);
+  BOOST_REQUIRE_EQUAL(CIEC_UINT(5), result);
+}
+
+BOOST_AUTO_TEST_CASE(div_number_and_time)
+{
+  CIEC_USINT sint(5);
+  CIEC_TIME time(30);
+  CIEC_TIME result;
+
+  result = func_DIV(time, sint);
+  BOOST_REQUIRE_EQUAL(CIEC_TIME(6), result);
+}
 
 BOOST_AUTO_TEST_SUITE_END()
