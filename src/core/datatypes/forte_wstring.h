@@ -2,6 +2,7 @@
  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN, nxtControl GmbH
  *   2018 TU Wien/ACIN
  *               2022 Primetals Technologies Austria GmbH
+ *               2022 Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -16,6 +17,8 @@
  *      - fixed behavior for getToStringBufferSize, make const char*
  *        constructor explicit, removed built-in type operator=, added
  *        castable CIEC types operator=
+ *    Martin Jobst
+ *      - add compare operators
  *******************************************************************************/
 #ifndef _FORTE_WSTRING_H_
 #define _FORTE_WSTRING_H_
@@ -161,6 +164,26 @@ bool operator ==(const CIEC_WSTRING &pa_roLeft, const CIEC_WSTRING &pa_roRight) 
 inline
 bool operator !=(const CIEC_WSTRING &pa_roLeft, const CIEC_WSTRING &pa_roRight) {
   return !(pa_roLeft == pa_roRight);
+}
+
+inline
+bool operator >(const CIEC_WSTRING &pa_roLeft, const CIEC_WSTRING &pa_roRight){
+  return (0 < strcmp(pa_roLeft.getValue(), pa_roRight.getValue()));
+}
+
+inline
+bool operator <(const CIEC_WSTRING &pa_roLeft, const CIEC_WSTRING &pa_roRight){
+  return (0 > strcmp(pa_roLeft.getValue(), pa_roRight.getValue()));
+}
+
+inline
+bool operator >=(const CIEC_WSTRING &pa_roLeft, const CIEC_WSTRING &pa_roRight){
+  return (0 <= strcmp(pa_roLeft.getValue(), pa_roRight.getValue()));
+}
+
+inline
+bool operator <=(const CIEC_WSTRING &pa_roLeft, const CIEC_WSTRING &pa_roRight){
+  return (0 >= strcmp(pa_roLeft.getValue(), pa_roRight.getValue()));
 }
 
 #endif
