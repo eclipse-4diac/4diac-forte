@@ -410,12 +410,16 @@ typename forte::core::mpl::get_castable_type<typename forte::core::mpl::get_equi
   return XorOperation<tTClass, tUClass>::call(pa_roIN1, pa_roIN2);
 }
 
-template<typename T> const T func_NOT(const T &pa_roIN) {
-  FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), NotOnlyForCiecAnyBit);
-  return T((typename T::TValueType) (~pa_roIN));
+template <typename T>
+const typename forte::core::mpl::get_equivalent_CIEC_class<T>::type func_NOT(const T& paIN) {
+  FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value), NotFunctionOnlyForCiecAnyBit);
+  typedef typename forte::core::mpl::get_equivalent_CIEC_class<T>::type tResultType;
+  if constexpr (std::is_same<tResultType, CIEC_BOOL>::value) {
+    return tResultType(!paIN);
+  } else {
+    return tResultType(~paIN);
+  }
 }
-
-template<> const CIEC_BOOL func_NOT<CIEC_BOOL>(const CIEC_BOOL &pa_roIN);
 
 template<typename T, typename U> const CIEC_BOOL func_GT(const T &pa_roIN1, const U &pa_roIN2) {
   FORTE_STATIC_ASSERT((forte::core::mpl::are_of_subtype<CIEC_ANY_ELEMENTARY, T, U>::value), TemplateInstantiationWithIncompatibleTypes);

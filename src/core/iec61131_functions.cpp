@@ -17,10 +17,6 @@
 
 #include "forte_architecture_time.h"
 
-template<> const CIEC_BOOL func_NOT<CIEC_BOOL>(const CIEC_BOOL& pa_roIN){
-  return CIEC_BOOL(!pa_roIN);
-}
-
 #ifdef FORTE_USE_REAL_DATATYPE
 TForteInt32 func_TRUNC(const CIEC_REAL& pa_roIN){
   return static_cast<TForteInt32>(pa_roIN);
