@@ -136,4 +136,16 @@ BOOST_AUTO_TEST_CASE(ST_ITER_CIEC_UINT_EXPLICIT_BY_UNDERFLOW)
     BOOST_TEST(static_cast<CIEC_UINT::TValueType>(runner) == 0);
 }
 
+BOOST_AUTO_TEST_CASE(ST_ITER_CIEC_INT_ABORT_BEFORE_FIRST_LOOP)
+{
+    CIEC_INT runner;
+    CIEC_INT start(0);
+    CIEC_INT to(-1);
+    CIEC_INT by(1);
+    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_INT>(runner, start, to, by))
+    {
+    }
+    BOOST_TEST(static_cast<CIEC_INT::TValueType>(runner) == 0);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
