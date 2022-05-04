@@ -20,20 +20,18 @@
 /*!\ingroup COREDTS CIEC_ANY_NUM represents any number data types according to IEC 61131.
 
  */
-class CIEC_ANY_NUM : public CIEC_ANY_MAGNITUDE{
+class CIEC_ANY_NUM : public CIEC_ANY_MAGNITUDE {
   DECLARE_FIRMWARE_DATATYPE(ANY_NUM)
 
   public:
-    virtual ~CIEC_ANY_NUM(){
-    }
+    virtual ~CIEC_ANY_NUM() = default;
 
-    virtual EDataTypeID getDataTypeID() const{
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_ANY;
     }
+    
   protected:
-    CIEC_ANY_NUM() {
-
-    }
+    CIEC_ANY_NUM() = default;
 
 };
 

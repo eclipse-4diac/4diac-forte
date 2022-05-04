@@ -27,8 +27,7 @@ class CIEC_TIME : public CIEC_ANY_DURATION {
   public:
     typedef TLargestIntValueType TValueType;
 
-    CIEC_TIME(){
-    }
+    CIEC_TIME() = default;
 
     CIEC_TIME(const CIEC_TIME &paValue) : CIEC_ANY_DURATION() {
       setValueSimple(paValue);
@@ -38,8 +37,7 @@ class CIEC_TIME : public CIEC_ANY_DURATION {
       setLargestInt(paValue);
     }
 
-    virtual ~CIEC_TIME(){
-    }
+    virtual ~CIEC_TIME() = default;
 
     CIEC_TIME& operator =(const CIEC_TIME &paValue){
       // Simple value assignment - no self assignment check needed
@@ -47,11 +45,15 @@ class CIEC_TIME : public CIEC_ANY_DURATION {
       return *this;
     }
 
-    operator TValueType() const{
+    CIEC_TIME operator-() const {
+      return CIEC_TIME(-1 * *this);
+    }
+
+    operator TValueType() const {
       return getLargestInt();
     }
 
-    virtual EDataTypeID getDataTypeID() const{
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_TIME;
     }
 

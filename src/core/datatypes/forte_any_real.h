@@ -24,12 +24,10 @@ class CIEC_ANY_REAL : public CIEC_ANY_NUM{
   DECLARE_FIRMWARE_DATATYPE(ANY_REAL)
 
   public:
-    virtual ~CIEC_ANY_REAL(){
-    }
+    virtual ~CIEC_ANY_REAL() = default;
 
   protected:
-    CIEC_ANY_REAL() {
-    }
+    CIEC_ANY_REAL() = default;
 };
 
 #endif /*_MANY_REA_H_*/

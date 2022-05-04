@@ -34,8 +34,7 @@ class CIEC_REAL : public CIEC_ANY_REAL{
   public:
     typedef TForteFloat TValueType;
 
-    CIEC_REAL() {
-    }
+    CIEC_REAL() = default;
 
     CIEC_REAL(const CIEC_REAL& paValue) :
         CIEC_ANY_REAL() {
@@ -46,8 +45,7 @@ class CIEC_REAL : public CIEC_ANY_REAL{
       setTFLOAT(paValue);
     }
 
-    virtual ~CIEC_REAL(){
-    }
+    virtual ~CIEC_REAL() = default;
 
     CIEC_REAL& operator =(const CIEC_REAL &paValue){
       // Simple value assignment - no self assignment check needed
@@ -75,6 +73,10 @@ class CIEC_REAL : public CIEC_ANY_REAL{
       return *this;
     }
 
+    CIEC_REAL operator-() const {
+      return CIEC_REAL(-1.0f * *this);
+    }
+
     /*! \brief Converts CIEC_REAL to elementary 32 bit float
      *
      *   Conversion operator for converting CIEC_REAL to elementary 32 bit float
@@ -85,7 +87,7 @@ class CIEC_REAL : public CIEC_ANY_REAL{
 
     virtual void setValue(const CIEC_ANY& paValue);
 
-    virtual EDataTypeID getDataTypeID() const{
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_REAL;
     }
 

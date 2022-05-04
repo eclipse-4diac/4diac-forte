@@ -34,21 +34,20 @@ class CIEC_INT : public CIEC_ANY_INT{
     static const TValueType scm_nMinVal;
     static const TValueType scm_nMaxVal;
 
-    CIEC_INT(){
-    }
+    CIEC_INT() = default;
 
     CIEC_INT(const CIEC_INT& paValue) :
-        CIEC_ANY_INT(){
+        CIEC_ANY_INT() {
       setValueSimple(paValue);
     }
 
     CIEC_INT(const CIEC_SINT& paValue) :
-        CIEC_ANY_INT(){
+        CIEC_ANY_INT() {
       setValueSimple(paValue);
     }
 
     CIEC_INT(const CIEC_USINT& paValue) :
-        CIEC_ANY_INT(){
+        CIEC_ANY_INT() {
       setValueSimple(paValue);
     }
 
@@ -56,8 +55,7 @@ class CIEC_INT : public CIEC_ANY_INT{
       setTINT16(paValue);
     }
 
-    virtual ~CIEC_INT(){
-    }
+    virtual ~CIEC_INT() = default;
 
     CIEC_INT& operator =(const CIEC_INT &paValue){
       // Simple value assignment - no self assignment check needed
@@ -77,15 +75,19 @@ class CIEC_INT : public CIEC_ANY_INT{
       return *this;
     }
 
+    CIEC_INT operator-() const {
+      return CIEC_INT(-1 * *this);
+    }
+
     /*! \brief Converts CIEC_INT to elementary 16 bit integer
      *
      *   Conversion operator for converting CIEC_INT to elementary 16 bit integer
      */
-    operator TForteInt16() const{
+    operator TForteInt16() const {
       return getTINT16();
     }
 
-    virtual EDataTypeID getDataTypeID() const{
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_INT;
     }
 };

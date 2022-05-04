@@ -672,6 +672,11 @@ typename forte::core::mpl::get_castable_type_duration_mixed_operations<T, U>::ty
   return DivOperation<T, U>::call(pa_roIN1, pa_roIN2);
 }
 
+template <typename T>
+T func_MINUS(const T& paIN) {
+  return paIN.operator-();
+}
+
 #ifdef FORTE_USE_REAL_DATATYPE
 TForteInt32 func_TRUNC(const CIEC_REAL &pa_roIN);
 #endif

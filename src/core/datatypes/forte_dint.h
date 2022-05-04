@@ -36,40 +36,38 @@ class CIEC_DINT : public CIEC_ANY_INT{
     static const TValueType scm_nMinVal;
     static const TValueType scm_nMaxVal;
 
-    CIEC_DINT(){
-    }
+    CIEC_DINT() = default;
 
     CIEC_DINT(const CIEC_DINT& paValue) :
-        CIEC_ANY_INT(){
+        CIEC_ANY_INT() {
       setValueSimple(paValue);
     }
 
     CIEC_DINT(const CIEC_INT& paValue) :
-        CIEC_ANY_INT(){
+        CIEC_ANY_INT() {
       setValueSimple(paValue);
     }
 
     CIEC_DINT(const CIEC_UINT& paValue) :
-        CIEC_ANY_INT(){
+        CIEC_ANY_INT() {
       setValueSimple(paValue);
     }
 
     CIEC_DINT(const CIEC_SINT& paValue) :
-        CIEC_ANY_INT(){
+        CIEC_ANY_INT() {
       setValueSimple(paValue);
     }
 
     CIEC_DINT(const CIEC_USINT& paValue) :
-        CIEC_ANY_INT(){
+        CIEC_ANY_INT() {
       setValueSimple(paValue);
     }
 
-    explicit CIEC_DINT(TForteInt32 paValue){
+    explicit CIEC_DINT(TForteInt32 paValue) {
       setTINT32(paValue);
     }
 
-    virtual ~CIEC_DINT(){
-    }
+    virtual ~CIEC_DINT() = default;
 
     CIEC_DINT& operator =(const CIEC_DINT &paValue){
       // Simple value assignment - no self assignment check needed
@@ -102,6 +100,10 @@ class CIEC_DINT : public CIEC_ANY_INT{
       setValueSimple(paValue);
       return *this;
     }
+
+    CIEC_DINT operator-() const {
+      return CIEC_DINT(-1 * *this);
+    }
     
 
     /*! \brief Converts CIEC_DINT to elementary byte
@@ -112,7 +114,7 @@ class CIEC_DINT : public CIEC_ANY_INT{
       return getTINT32();
     }
 
-    virtual EDataTypeID getDataTypeID() const{
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_DINT;
     }
 };

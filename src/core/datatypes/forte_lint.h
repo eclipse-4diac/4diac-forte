@@ -40,41 +40,40 @@ class CIEC_LINT : public CIEC_ANY_INT{
     static const TValueType scm_nMinVal;
     static const TValueType scm_nMaxVal;
 
-    CIEC_LINT(){
-    }
+    CIEC_LINT() = default;
 
     CIEC_LINT(const CIEC_LINT& paValue) :
-        CIEC_ANY_INT(){
+        CIEC_ANY_INT() {
       setValueSimple(paValue);
     }
 
     CIEC_LINT(const CIEC_DINT& paValue) :
-        CIEC_ANY_INT(){
+        CIEC_ANY_INT() {
       setValueSimple(paValue);
     }
 
     CIEC_LINT(const CIEC_UDINT& paValue) :
-        CIEC_ANY_INT(){
+        CIEC_ANY_INT() {
       setValueSimple(paValue);
     }
 
     CIEC_LINT(const CIEC_INT& paValue) :
-        CIEC_ANY_INT(){
+        CIEC_ANY_INT() {
       setValueSimple(paValue);
     }
 
     CIEC_LINT(const CIEC_UINT& paValue) :
-        CIEC_ANY_INT(){
+        CIEC_ANY_INT() {
       setValueSimple(paValue);
     }
 
     CIEC_LINT(const CIEC_SINT& paValue) :
-        CIEC_ANY_INT(){
+        CIEC_ANY_INT() {
       setValueSimple(paValue);
     }
 
     CIEC_LINT(const CIEC_USINT& paValue) :
-        CIEC_ANY_INT(){
+        CIEC_ANY_INT() {
       setValueSimple(paValue);
     }
 
@@ -82,8 +81,7 @@ class CIEC_LINT : public CIEC_ANY_INT{
       setTINT64(paValue);
     }
 
-    virtual ~CIEC_LINT(){
-    }
+    virtual ~CIEC_LINT() = default;
 
     CIEC_LINT& operator =(const CIEC_LINT &paValue){
       // Simple value assignment - no self assignment check needed
@@ -127,6 +125,10 @@ class CIEC_LINT : public CIEC_ANY_INT{
       return *this;
     }
 
+    CIEC_LINT operator-() const {
+      return CIEC_LINT(-1 * *this);
+    }
+
     /*! \brief Converts CIEC_LINT to elementary byte
      *
      *   Conversion operator for converting CIEC_LINT to elementary 64 bit integer
@@ -135,7 +137,7 @@ class CIEC_LINT : public CIEC_ANY_INT{
       return getTINT64();
     }
 
-    virtual EDataTypeID getDataTypeID() const{
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_LINT;
     }
 };

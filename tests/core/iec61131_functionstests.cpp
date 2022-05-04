@@ -547,4 +547,27 @@ BOOST_AUTO_TEST_CASE(Partial_DWord_Operations)
   BOOST_REQUIRE_EQUAL(result, CIEC_DWORD(~0xA5A5A5A5));
 }
 
+BOOST_AUTO_TEST_CASE(func_minus)
+{
+  CIEC_SINT sint(5);
+  CIEC_INT integer(5);
+  CIEC_DINT dint(5);
+  CIEC_LINT lint(5);
+
+  CIEC_REAL real(5.0f);
+  CIEC_LREAL lreal(5.0);
+
+  CIEC_TIME time(5);
+
+  BOOST_REQUIRE_EQUAL(CIEC_SINT(-5), func_MINUS(sint));
+  BOOST_REQUIRE_EQUAL(CIEC_INT(-5), func_MINUS(integer));
+  BOOST_REQUIRE_EQUAL(CIEC_DINT(-5), func_MINUS(dint));
+  BOOST_REQUIRE_EQUAL(CIEC_LINT(-5), func_MINUS(lint));
+
+  BOOST_REQUIRE_EQUAL(CIEC_REAL(-5.0f), func_MINUS(real));
+  BOOST_REQUIRE_EQUAL(CIEC_LREAL(-5.0), func_MINUS(lreal));
+
+  BOOST_REQUIRE_EQUAL(CIEC_TIME(-5), func_MINUS(time));
+}
+
 BOOST_AUTO_TEST_SUITE_END()

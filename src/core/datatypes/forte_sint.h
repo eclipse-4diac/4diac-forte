@@ -43,13 +43,16 @@ class CIEC_SINT : public CIEC_ANY_INT{
       setTINT8(paValue);
     }
 
-    virtual ~CIEC_SINT(){
-    }
+    virtual ~CIEC_SINT() = default;
 
     CIEC_SINT& operator =(const CIEC_SINT &paValue){
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
+    }
+
+    CIEC_SINT operator-() const {
+      return CIEC_SINT(-1 * *this);
     }
 
     /*! \brief Converts CIEC_SINT to elementary 8 bit integer
@@ -60,7 +63,7 @@ class CIEC_SINT : public CIEC_ANY_INT{
       return getTINT8();
     }
 
-    virtual EDataTypeID getDataTypeID() const{
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_SINT;
     }
 };

@@ -35,46 +35,45 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
   public:
     typedef TForteDFloat TValueType;
 
-    CIEC_LREAL(){
-    }
+    CIEC_LREAL() = default;
 
     CIEC_LREAL(const CIEC_LREAL& paValue) :
-        CIEC_ANY_REAL(){
+        CIEC_ANY_REAL() {
       setValueSimple(paValue);
     }
 
     CIEC_LREAL(const CIEC_REAL& paValue) :
-        CIEC_ANY_REAL(){
+        CIEC_ANY_REAL() {
       setTDFLOAT(static_cast<TForteFloat>(static_cast<const CIEC_REAL &>(paValue)));
     }
 
     CIEC_LREAL(const CIEC_DINT& paValue) :
-        CIEC_ANY_REAL(){
+        CIEC_ANY_REAL() {
       setValue(paValue);
     }
 
     CIEC_LREAL(const CIEC_INT& paValue) :
-        CIEC_ANY_REAL(){
+        CIEC_ANY_REAL() {
       setValue(paValue);
     }
 
     CIEC_LREAL(const CIEC_SINT& paValue) :
-        CIEC_ANY_REAL(){
+        CIEC_ANY_REAL() {
       setValue(paValue);
     }
 
     CIEC_LREAL(const CIEC_UDINT& paValue) :
-        CIEC_ANY_REAL(){
+        CIEC_ANY_REAL() {
       setValue(paValue);
     }
 
     CIEC_LREAL(const CIEC_UINT& paValue) :
-        CIEC_ANY_REAL(){
+        CIEC_ANY_REAL() {
       setValue(paValue);
     }
 
     CIEC_LREAL(const CIEC_USINT& paValue) :
-        CIEC_ANY_REAL(){
+        CIEC_ANY_REAL() {
       setValue(paValue);
     }
 
@@ -82,8 +81,7 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
       setTDFLOAT(paValue);
     }
 
-    virtual ~CIEC_LREAL(){
-    }
+    virtual ~CIEC_LREAL() = default;
 
     CIEC_LREAL& operator =(const CIEC_LREAL &paValue){
       // Simple value assignment - no self assignment check needed
@@ -126,6 +124,10 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
       return *this;
     }
 
+    CIEC_LREAL operator-() const {
+      return CIEC_LREAL(-1.0 * *this);
+    }
+
     /*! \brief Converts CIEC_LREAL to elementary 64 bit float
      *
      *   Conversion operator for converting CIEC_LREAL to elementary 64 bit float
@@ -135,7 +137,7 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
       return getTDFLOAT();
     }
 
-    virtual EDataTypeID getDataTypeID() const{
+     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_LREAL;
     }
 
