@@ -14,41 +14,31 @@
 #include "../../core/fbtests/fbtestfixture.h"
 
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
-#include "F_DIV_tester_gen.cpp"
+#include "F_TRUNC_tester_gen.cpp"
 #endif
 
-struct F_DIV_TestFixture : public CFBTestFixtureBase{
+struct F_TRUNC_TestFixture : public CFBTestFixtureBase{
 
-  F_DIV_TestFixture() : CFBTestFixtureBase(g_nStringIdF_DIV)
+  F_TRUNC_TestFixture() : CFBTestFixtureBase(g_nStringIdF_TRUNC)
   {
-    SETUP_INPUTDATA(&mIn1_DIV, &mIn2_DIV);
-    SETUP_OUTPUTDATA(&mOut_DIV);
+    SETUP_INPUTDATA(&mIn_TRUNC);
+    SETUP_OUTPUTDATA(&mOut_TRUNC);
     CFBTestFixtureBase::setup();
   }
 
-    CIEC_INT mIn1_DIV; //DATA INPUT
-    CIEC_INT mIn2_DIV; //DATA INPUT
+  CIEC_REAL mIn_TRUNC; // DATA INPUT
 
-    CIEC_INT mOut_DIV;
+  CIEC_INT mOut_TRUNC;
 };
 
-BOOST_FIXTURE_TEST_SUITE( F_DIV_Tests, F_DIV_TestFixture)
+BOOST_FIXTURE_TEST_SUITE( F_TRUNC_Tests, F_TRUNC_TestFixture)
 
-  BOOST_AUTO_TEST_CASE(validDivision){
-    mIn1_DIV = CIEC_INT(30);
-    mIn2_DIV = CIEC_INT(5);
+  BOOST_AUTO_TEST_CASE(validTruncationFromRealToInt){
+    mIn_TRUNC = CIEC_REAL(30.45343);
     /* trigger the inputevent */
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-    BOOST_CHECK_EQUAL(6, mOut_DIV);
-  }
-
-  BOOST_AUTO_TEST_CASE(divisionByZero){
-    mIn1_DIV = CIEC_INT(30);
-    mIn2_DIV = CIEC_INT(0);
-    /* trigger the inputevent */
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    BOOST_CHECK_EQUAL(30, mOut_TRUNC);
   }
 
 BOOST_AUTO_TEST_SUITE_END()

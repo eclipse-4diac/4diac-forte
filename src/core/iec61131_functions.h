@@ -722,10 +722,54 @@ T func_MINUS(const T& paIN) {
 }
 
 #ifdef FORTE_USE_REAL_DATATYPE
-TForteInt32 func_TRUNC(const CIEC_REAL &pa_roIN);
+template <typename T>
+const T func_TRUNC(const CIEC_REAL &paIN) {
+  return T(static_cast<typename T::TValueType>(static_cast<TForteInt32>(paIN)));
+}
+
+const CIEC_SINT func_TRUNC_SINT(const CIEC_REAL &paIN);
+const CIEC_INT func_TRUNC_INT(const CIEC_REAL &paIN);
+const CIEC_DINT func_TRUNC_DINT(const CIEC_REAL &paIN);
+const CIEC_LINT func_TRUNC_LINT(const CIEC_REAL &paIN);
+const CIEC_USINT func_TRUNC_USINT(const CIEC_REAL &paIN);
+const CIEC_UINT func_TRUNC_UINT(const CIEC_REAL &paIN);
+const CIEC_UDINT func_TRUNC_UDINT(const CIEC_REAL &paIN);
+const CIEC_ULINT func_TRUNC_ULINT(const CIEC_REAL &paIN);
+
+const CIEC_SINT func_REAL_TRUNC_SINT(const CIEC_REAL &paIN);
+const CIEC_INT func_REAL_TRUNC_INT(const CIEC_REAL &paIN);
+const CIEC_DINT func_REAL_TRUNC_DINT(const CIEC_REAL &paIN);
+const CIEC_LINT func_REAL_TRUNC_LINT(const CIEC_REAL &paIN);
+const CIEC_USINT func_REAL_TRUNC_USINT(const CIEC_REAL &paIN);
+const CIEC_UINT func_REAL_TRUNC_UINT(const CIEC_REAL &paIN);
+const CIEC_UDINT func_REAL_TRUNC_UDINT(const CIEC_REAL &paIN);
+const CIEC_ULINT func_REAL_TRUNC_ULINT(const CIEC_REAL &paIN);
+
 #endif
+
 #ifdef FORTE_USE_LREAL_DATATYPE
-TForteInt64 func_TRUNC(const CIEC_LREAL &pa_roIN);
+template <typename T>
+const T func_TRUNC(const CIEC_LREAL &paIN) {
+  return T(static_cast<typename T::TValueType>(static_cast<TForteInt64>(paIN)));
+}
+
+const CIEC_SINT func_TRUNC_SINT(const CIEC_LREAL &paIN);
+const CIEC_INT func_TRUNC_INT(const CIEC_LREAL &paIN);
+const CIEC_DINT func_TRUNC_DINT(const CIEC_LREAL &paIN);
+const CIEC_LINT func_TRUNC_LINT(const CIEC_LREAL &paIN);
+const CIEC_USINT func_TRUNC_USINT(const CIEC_LREAL &paIN);
+const CIEC_UINT func_TRUNC_UINT(const CIEC_LREAL &paIN);
+const CIEC_UDINT func_TRUNC_UDINT(const CIEC_LREAL &paIN);
+const CIEC_ULINT func_TRUNC_ULINT(const CIEC_LREAL &paIN);
+
+const CIEC_SINT func_LREAL_TRUNC_SINT(const CIEC_LREAL &paIN);
+const CIEC_INT func_LREAL_TRUNC_INT(const CIEC_LREAL &paIN);
+const CIEC_DINT func_LREAL_TRUNC_DINT(const CIEC_LREAL &paIN);
+const CIEC_LINT func_LREAL_TRUNC_LINT(const CIEC_LREAL &paIN);
+const CIEC_USINT func_LREAL_TRUNC_USINT(const CIEC_LREAL &paIN);
+const CIEC_UINT func_LREAL_TRUNC_UINT(const CIEC_LREAL &paIN);
+const CIEC_UDINT func_LREAL_TRUNC_UDINT(const CIEC_LREAL &paIN);
+const CIEC_ULINT func_LREAL_TRUNC_ULINT(const CIEC_LREAL &paIN);
 #endif
 
 #ifdef FORTE_USE_64BIT_DATATYPES

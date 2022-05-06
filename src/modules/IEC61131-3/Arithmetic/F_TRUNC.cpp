@@ -15,6 +15,7 @@
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "F_TRUNC_gen.cpp"
 #endif
+#include <anyhelper.h>
 
 DEFINE_FIRMWARE_FB(FORTE_F_TRUNC, g_nStringIdF_TRUNC)
 
@@ -39,14 +40,7 @@ const SFBInterfaceSpec FORTE_F_TRUNC::scm_stFBInterfaceSpec = { 1, scm_anEventIn
 
 void FORTE_F_TRUNC::executeEvent(int pa_nEIID) {
   if(scm_nEventREQID == pa_nEIID) {
-    switch(st_IN().getDataTypeID()){
-      case CIEC_ANY::e_REAL:
-        st_OUT().setSignedValue(func_TRUNC(static_cast<CIEC_REAL&>(st_IN())));
-        break;
-      default:
-        st_OUT().setSignedValue(func_TRUNC(static_cast<CIEC_LREAL&>(st_IN())));
-        break;
-    }
+    anyRealToAnyIntInOutHelper<FORTE_F_TRUNC>(st_IN().getDataTypeID(), st_OUT().getDataTypeID(), *this);
     sendOutputEvent(scm_nEventCNFID);
   }
 }

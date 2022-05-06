@@ -195,4 +195,69 @@ void anyStringFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
 #endif
 }
 
+template <typename T>
+void anyRealToAnyIntInOutHelper(CIEC_ANY::EDataTypeID paDataTypeIdIn, CIEC_ANY::EDataTypeID paDataTypeIdOut, T &paFB) {
+  switch (paDataTypeIdIn) {
+  case CIEC_ANY::e_REAL:
+    switch (paDataTypeIdOut) {
+      case CIEC_ANY::e_SINT:
+        paFB.template calculateValue<CIEC_REAL, CIEC_SINT>();
+        break;
+      case CIEC_ANY::e_INT:
+        paFB.template calculateValue<CIEC_REAL, CIEC_INT>();
+        break;
+      case CIEC_ANY::e_DINT:
+        paFB.template calculateValue<CIEC_REAL, CIEC_DINT>();
+        break;
+      case CIEC_ANY::e_LINT:
+        paFB.template calculateValue<CIEC_REAL, CIEC_LINT>();
+        break;
+      case CIEC_ANY::e_USINT:
+        paFB.template calculateValue<CIEC_REAL, CIEC_USINT>();
+        break;
+      case CIEC_ANY::e_UINT:
+        paFB.template calculateValue<CIEC_REAL, CIEC_UINT>();
+        break;
+      case CIEC_ANY::e_UDINT:
+        paFB.template calculateValue<CIEC_REAL, CIEC_UDINT>();
+        break;
+      case CIEC_ANY::e_ULINT:
+        paFB.template calculateValue<CIEC_REAL, CIEC_ULINT>();
+        break;
+      default:
+        DEVLOG_ERROR("Invalid type used in anyTruncInOutHelper! No calculation performed!");
+    }
+    break;
+  case CIEC_ANY::e_LREAL:
+    switch (paDataTypeIdOut) {
+      case CIEC_ANY::e_SINT:
+        paFB.template calculateValue<CIEC_LREAL, CIEC_SINT>();
+        break;
+      case CIEC_ANY::e_INT:
+        paFB.template calculateValue<CIEC_LREAL, CIEC_INT>();
+        break;
+      case CIEC_ANY::e_DINT:
+        paFB.template calculateValue<CIEC_LREAL, CIEC_DINT>();
+        break;
+      case CIEC_ANY::e_LINT:
+        paFB.template calculateValue<CIEC_LREAL, CIEC_LINT>();
+        break;
+      case CIEC_ANY::e_USINT:
+        paFB.template calculateValue<CIEC_LREAL, CIEC_USINT>();
+        break;
+      case CIEC_ANY::e_UINT:
+        paFB.template calculateValue<CIEC_LREAL, CIEC_UINT>();
+        break;
+      case CIEC_ANY::e_UDINT:
+        paFB.template calculateValue<CIEC_LREAL, CIEC_UDINT>();
+        break;
+      case CIEC_ANY::e_ULINT:
+        paFB.template calculateValue<CIEC_LREAL, CIEC_ULINT>();
+        break;
+      default:
+        DEVLOG_ERROR("Invalid type used in anyTruncInOutHelper! No calculation performed!");
+    }
+  }
+}
+
 #endif /* ANYELEMHELPER_H_ */

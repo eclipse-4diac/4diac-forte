@@ -15,6 +15,7 @@
 #define _F_TRUNC_H_
 
 #include <funcbloc.h>
+#include <iec61131_functions.h>
 
 class FORTE_F_TRUNC: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FORTE_F_TRUNC)
@@ -52,7 +53,13 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_F_TRUNC){
   };
 
-  virtual ~FORTE_F_TRUNC(){};
+  template <typename T, typename U>
+  void calculateValue() {
+    const T& input = static_cast<T&>(st_IN());
+    st_OUT().saveAssign(func_TRUNC<U>(input));
+  }
+
+  virtual ~FORTE_F_TRUNC() = default;
 
 };
 
