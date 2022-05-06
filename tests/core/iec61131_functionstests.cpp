@@ -583,6 +583,38 @@ BOOST_AUTO_TEST_CASE(Both_Partial_NE_Operation)
   BOOST_REQUIRE_EQUAL(CIEC_BOOL(true), result);
 }
 
+BOOST_AUTO_TEST_CASE(Both_Partial_GT_Operation)
+{
+  CIEC_LWORD lword(0xA5A5A5A5A5A5A5A5);
+  CIEC_DWORD dword(0xFEFEFEFE);
+
+  BOOST_REQUIRE_EQUAL(CIEC_BOOL(false), func_GT(lword.partial<CIEC_BYTE>(0), dword.partial<CIEC_BYTE>(0)));
+}
+
+BOOST_AUTO_TEST_CASE(Both_Partial_GE_Operations)
+{
+  CIEC_LWORD lword(0xA5A5A5A5A5A5A5A5);
+  CIEC_DWORD dword(0xFEFEFEFE);
+
+  BOOST_REQUIRE_EQUAL(CIEC_BOOL(false), func_GE(lword.partial<CIEC_BYTE>(0), dword.partial<CIEC_BYTE>(0)));
+}
+
+BOOST_AUTO_TEST_CASE(Both_Partial_LT_Operations)
+{
+  CIEC_LWORD lword(0xA5A5A5A5A5A5A5A5);
+  CIEC_DWORD dword(0xFEFEFEFE);
+
+  BOOST_REQUIRE_EQUAL(CIEC_BOOL(true), func_LT(lword.partial<CIEC_BYTE>(0), dword.partial<CIEC_BYTE>(0)));
+}
+
+BOOST_AUTO_TEST_CASE(Both_Partial_LE_Operations)
+{
+  CIEC_LWORD lword(0xA5A5A5A5A5A5A5A5);
+  CIEC_DWORD dword(0xFEFEFEFE);
+
+  BOOST_REQUIRE_EQUAL(CIEC_BOOL(true), func_LE(lword.partial<CIEC_BYTE>(0), dword.partial<CIEC_BYTE>(0)));
+}
+
 BOOST_AUTO_TEST_CASE(func_minus)
 {
   CIEC_SINT sint(5);
