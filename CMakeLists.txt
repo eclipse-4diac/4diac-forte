@@ -172,6 +172,35 @@ SET(FORTE_LINKED_STRINGDICT ON CACHE BOOL "FORTE will resolve references to the 
 mark_as_advanced(FORTE_LINKED_STRINGDICT)
 
 #######################################################################################
+# clang-tidy
+#######################################################################################
+set(FORTE_CLANG_TIDY_MODE "OFF" CACHE STRING "Run clang-tidy with the compiler.")
+set_property(CACHE FORTE_CLANG_TIDY_MODE PROPERTY STRINGS "OFF" "WARNING" "FIX")
+
+if(NOT ("${FORTE_CLANG_TIDY_MODE}" STREQUAL "OFF"))
+    find_program(CLANG_TIDY_COMMAND NAMES clang-tidy)
+
+    if(CLANG_TIDY_COMMAND)
+        if("${FORTE_CLANG_TIDY_MODE}" STREQUAL "FIX")
+            set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND};-fix-errors")
+            message("Applying clang-tidy fixes via ${CLANG_TIDY_COMMAND}.")
+        elseif("${FORTE_CLANG_TIDY_MODE}" STREQUAL "WARNING")
+            set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND}")
+        endif()
+
+    else(CLANG_TIDY_COMMAND)
+        message(FATAL_ERROR "clang-tidy is configured but not found!")
+    endif(CLANG_TIDY_COMMAND)
+
+    if(NOT CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
+        configure_file(.clang-tidy .clang-tidy COPYONLY)
+    endif()
+else()
+    unset(CMAKE_CXX_CLANG_TIDY CACHE)
+endif(NOT ("${FORTE_CLANG_TIDY_MODE}" STREQUAL "OFF"))
+
+
+#######################################################################################
 # Add subdirectories
 #######################################################################################
 set(FORTE_TESTS OFF CACHE BOOL "Build Tests")
