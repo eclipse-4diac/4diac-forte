@@ -108,7 +108,7 @@ bool CSysFsProcessInterface::initialise(bool paIsInput) {
           }
         }
         DEVLOG_DEBUG("[CSysFsProcessInterface::initialise] Pin with PARAM() %s was properly initialized.\n", PARAMS().getValue());
-        STATUS() = scmOK;
+        STATUS().fromString(scmOK);
         retVal = true;
       }
     }
@@ -128,13 +128,13 @@ bool CSysFsProcessInterface::unexportIO() {
     mUnExport << PARAMS().getValue();
     if(!mUnExport.fail()) {
       retVal = true;
-      STATUS() = scmOK;
+      STATUS().fromString(scmOK);
     } else {
-      STATUS() = scmError;
+      STATUS().fromString(scmError);
       DEVLOG_ERROR("[CSysFsProcessInterface::deinitialise] Error writing PARAMS() to file %s.\n", fileName.c_str());
     }
   } else {
-    STATUS() = scmError;
+    STATUS().fromString(scmError);
     DEVLOG_ERROR("[CSysFsProcessInterface::deinitialise] Opening file %s failed.\n", fileName.c_str());
   }
   return retVal;
@@ -157,16 +157,16 @@ bool CSysFsProcessInterface::checkInputData() {
     mFile.seekg(0, std::ios::beg);
     mFile.read(&binData, 1);
     if(mFile.fail()) {
-      STATUS() = scmCouldNotRead;
+      STATUS().fromString(scmCouldNotRead);
     } else {
-      bool newData = ('0' != binData) ? true : false;
+      bool newData = '0' != binData;
       if(newData != IN_X()) {
-        IN_X() = newData;
+        IN_X() = CIEC_BOOL(newData);
         retVal = true;
       }
     }
   } else {
-    STATUS() = scmNotInitialised;
+    STATUS().fromString(scmNotInitialised);
   }
 
   return retVal;
@@ -180,15 +180,15 @@ bool CSysFsProcessInterface::writePin() {
     unsigned int val = (false != OUT_X()) ? 1 : 0; //if true set the led to full glowing
     mFile << val;
     if(!mFile.fail()) {
-      STATUS() = scmOK;
+      STATUS().fromString(scmOK);
       retVal = true;
     } else {
       DEVLOG_ERROR("[CSysFsProcessInterface::writePin] Could not write %u to output file\n", val);
-      STATUS() = scmCouldNotWrite;
+      STATUS().fromString(scmCouldNotWrite);
     }
   } else {
     DEVLOG_ERROR("[CSysFsProcessInterface::writePin] Cannot write to output since the FB was not properly initialized\n");
-    STATUS() = scmNotInitialised;
+    STATUS().fromString(scmNotInitialised);
   }
 
   return retVal;
