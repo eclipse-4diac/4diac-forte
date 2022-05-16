@@ -116,35 +116,35 @@ const CIEC_ULINT func_TRUNC_ULINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_ULINT>(paIN);
 }
 
-const CIEC_SINT func_REAL_TRUNC_SINT(const CIEC_LREAL &paIN) {
+const CIEC_SINT func_LREAL_TRUNC_SINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_SINT>(paIN);
 }
 
-const CIEC_INT func_REAL_TRUNC_INT(const CIEC_LREAL &paIN) {
+const CIEC_INT func_LREAL_TRUNC_INT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_INT>(paIN);
 }
 
-const CIEC_DINT func_REAL_TRUNC_DINT(const CIEC_LREAL &paIN) {
+const CIEC_DINT func_LREAL_TRUNC_DINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_DINT>(paIN);
 }
 
-const CIEC_LINT func_REAL_TRUNC_LINT(const CIEC_LREAL &paIN) {
+const CIEC_LINT func_LREAL_TRUNC_LINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_LINT>(paIN);
 }
 
-const CIEC_USINT func_REAL_TRUNC_USINT(const CIEC_LREAL &paIN) {
+const CIEC_USINT func_LREAL_TRUNC_USINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_USINT>(paIN);
 }
 
-const CIEC_UINT func_REAL_TRUNC_UINT(const CIEC_LREAL &paIN) {
+const CIEC_UINT func_LREAL_TRUNC_UINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_UINT>(paIN);
 }
 
-const CIEC_UDINT func_REAL_TRUNC_UDINT(const CIEC_LREAL &paIN) {
+const CIEC_UDINT func_LREAL_TRUNC_UDINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_UDINT>(paIN);
 }
 
-const CIEC_ULINT func_REAL_TRUNC_ULINT(const CIEC_LREAL &paIN) {
+const CIEC_ULINT func_LREAL_TRUNC_ULINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_ULINT>(paIN);
 }
 #endif
