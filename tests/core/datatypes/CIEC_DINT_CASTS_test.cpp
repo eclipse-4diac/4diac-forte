@@ -13,7 +13,7 @@
 #include <boost/test/unit_test.hpp>
 
 #ifdef FORTE_USE_REAL_DATATYPE
-  #include <boost/test/floating_point_comparison.hpp>
+  #include <boost/test/tools/floating_point_comparison.hpp>
 
   #include "../../../src/core/datatypes/forte_real.h"
 #endif //FORTE_USE_REAL_DATATYPE
