@@ -24,29 +24,26 @@
 using namespace forte::core::util;
 
 
-bool CStringIdListSpecBuilder::setStaticList(const CStringDictionary::TStringId *pa_aunStaticList, std::size_t pa_nItemsCount) {
-  if (pa_nItemsCount > m_unMaxItems)
-    return false;
+void CStringIdListSpecBuilder::setStaticList(const CStringDictionary::TStringId *pa_aunStaticList, std::size_t pa_nItemsCount) {
   m_vDynamicList.clear();
   m_aunStaticList = pa_aunStaticList;
   m_unStaticListSize = (TForteUInt8)pa_nItemsCount;
-  return true;
 }
 
-bool CStringIdListSpecBuilder::addString(CStringDictionary::TStringId pa_unString) {
+void CStringIdListSpecBuilder::addString(CStringDictionary::TStringId pa_unString) {
+  if (!isGood()) {
+    return;
+  }
   if (m_aunStaticList) {
     m_vDynamicList.insert(m_vDynamicList.end(), m_aunStaticList, m_aunStaticList + m_unStaticListSize);
-    m_aunStaticList = nullptr;
   }
+  m_aunStaticList = nullptr;
   m_unStaticListSize = 0;
-  if (m_vDynamicList.size() >= m_unMaxItems)
-    return false;
   m_vDynamicList.push_back(pa_unString);
-  return true;
 }
 
-bool CStringIdListSpecBuilder::addString(const char *pa_sString) {
-  return addString(CStringDictionary::getInstance().insert(pa_sString));
+void CStringIdListSpecBuilder::addString(const char *pa_sString) {
+  addString(CStringDictionary::getInstance().insert(pa_sString));
 }
 
 int CStringIdListSpecBuilder::findString(const char *pa_sString) const {
@@ -90,26 +87,26 @@ static bool makeName(char *pa_sName, const char *pa_sPrefix, int pa_nNumber) {
   return forte_snprintf(pa_sName, sizeof(TIdentifier), "%s%d", pa_sPrefix, pa_nNumber) < (int)sizeof(TIdentifier);
 }
 
-bool CEventSpecBuilderBase::addEventRange(const char *pa_sPrefix, int pa_nRangeSize) {
+void CEventSpecBuilderBase::addEventRange(const char *pa_sPrefix, int pa_nRangeSize) {
   TIdentifier name;
-  bool retVal = true;
   for (int i = 0; i < pa_nRangeSize; ++i) {
-    if (!makeName(name, pa_sPrefix, i + 1))
-      return false;
-    retVal = retVal && addEvent(name);
+    if (!makeName(name, pa_sPrefix, i + 1)) {
+      m_bIsGood = false;
+      break;
+    }
+    addEvent(name);
   }
-  return retVal;
 }
 
-bool CDataSpecBuilderBase::addDataRange(const char *pa_sPrefix, int pa_nRangeSize) {
+void CDataSpecBuilderBase::addDataRange(const char *pa_sPrefix, int pa_nRangeSize) {
   TIdentifier name;
-  bool retVal = true;
   for (int i = 0; i < pa_nRangeSize; ++i) {
-    if (!makeName(name, pa_sPrefix, i + 1))
-      return false;
-    retVal = retVal && addData(name, g_nStringIdANY);
+    if (!makeName(name, pa_sPrefix, i + 1)) {
+      m_bIsGood = false;
+      break;
+    }
+    addData(name, g_nStringIdANY);
   }
-  return retVal;
 }
 
 std::tuple<const CStringDictionary::TStringId*, const CStringDictionary::TStringId*, TForteUInt8>
@@ -126,29 +123,26 @@ void CWithSpecBuilderBase::grow(std::size_t pa_unNumEvents) {
   }
 }
 
-bool CWithSpecBuilderBase::setStaticBindings(const TDataIOID *pa_aunStaticBindings, const TForteInt16 *pa_anStaticIndexes, std::size_t pa_unNumEvents) {
-  if (!m_vvDynamicList.empty())
-    return false;
+void CWithSpecBuilderBase::setStaticBindings(const TDataIOID *pa_aunStaticBindings, const TForteInt16 *pa_anStaticIndexes, std::size_t pa_unNumEvents) {
+  m_vvDynamicList.clear();
   m_aunStaticBindings = pa_aunStaticBindings;
   m_anStaticIndexes = pa_anStaticIndexes;
   m_unNumStaticEvents = pa_unNumEvents;
-  return true;
 }
 
-bool CWithSpecBuilderBase::bind(TDataIOID pa_unEventId, TDataIOID pa_unDataId) {
-  if (m_aunStaticBindings)
-    return false;
+void CWithSpecBuilderBase::bind(TDataIOID pa_unEventId, TDataIOID pa_unDataId) {
+  if (m_aunStaticBindings) {
+    m_bIsGood = false;
+    return;
+  }
   grow(pa_unEventId + 1);
   m_vvDynamicList[pa_unEventId].push_back(pa_unDataId);
-  return true;
 }
 
-bool CWithSpecBuilderBase::bindRange(TDataIOID pa_unEventId, TDataIOID pa_unFirstDataId, TDataIOID pa_unLastDataId) {
-  bool retVal = true;
+void CWithSpecBuilderBase::bindRange(TDataIOID pa_unEventId, TDataIOID pa_unFirstDataId, TDataIOID pa_unLastDataId) {
   for (TDataIOID runnerPort = pa_unFirstDataId; runnerPort <= pa_unLastDataId; ++runnerPort) {
-    retVal = retVal && bind(pa_unEventId, runnerPort);
+    bind(pa_unEventId, runnerPort);
   }
-  return retVal;
 }
 
 std::size_t CWithSpecBuilderBase::calcStorageSize(std::size_t pa_unNumEvents) const {
@@ -166,9 +160,10 @@ std::size_t CWithSpecBuilderBase::calcStorageSize(std::size_t pa_unNumEvents) co
   return sumSize;
 }
 
-std::tuple<const TDataIOID*, const TForteInt16*> CWithSpecBuilderBase::build(CMixedStorage &pa_oStorage, std::size_t pa_unNumEvents) const {
+std::tuple<const TDataIOID*, const TForteInt16*> CWithSpecBuilderBase::build(CMixedStorage &pa_oStorage, std::size_t pa_unNumEvents) {
+  // special case for building with static data
   if (m_aunStaticBindings) {
-    //TODO error when number of events differ
+    check(m_unNumStaticEvents == pa_unNumEvents);
     return {m_aunStaticBindings, m_anStaticIndexes};
   }
 
@@ -193,16 +188,20 @@ std::tuple<const TDataIOID*, const TForteInt16*> CWithSpecBuilderBase::build(CMi
     }
   }
   // handle unspecified events
+  check(m_vvDynamicList.size() <= pa_unNumEvents);
   for (std::size_t ei = m_vvDynamicList.size(); ei < pa_unNumEvents; ++ei) {
     pa_oStorage.write<TForteInt16>(-1);
   }
-  //TODO error when internal event count is greater than pa_unNumEvents
 
   return {pWiths, pIndexes};
 }
 
 
-bool CIfSpecBuilder::build(CMixedStorage &pa_oStorage, SFBInterfaceSpec &pa_oInterfaceSpec) const {
+bool CIfSpecBuilder::build(CMixedStorage &pa_oStorage, SFBInterfaceSpec &pa_oInterfaceSpec) {
+  if (!isGood()) {
+    return false;
+  }
+
   std::size_t storageSize =
     m_oEI.calcStorageSize() + m_oEO.calcStorageSize() +
     m_oDI.calcStorageSize() + m_oDO.calcStorageSize() +
@@ -225,5 +224,10 @@ bool CIfSpecBuilder::build(CMixedStorage &pa_oStorage, SFBInterfaceSpec &pa_oInt
   pa_oInterfaceSpec.m_nNumAdapters = 0;
   pa_oInterfaceSpec.m_pstAdapterInstanceDefinition = nullptr;
 
-  return pa_oStorage.size() <= storageSize;
+  m_bIsGood = pa_oStorage.size() <= storageSize;
+  return isGood();
+}
+
+bool CIfSpecBuilder::isGood() const {
+  return m_oEI.isGood() && m_oEO.isGood() && m_oDI.isGood() && m_oDO.isGood() && m_oIWith.isGood() && m_oOWith.isGood() && m_bIsGood;
 }

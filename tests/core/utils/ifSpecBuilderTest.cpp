@@ -57,8 +57,9 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
     for (int i = 0; i < n; ++i) {
       char name[16];
       snprintf(name, sizeof(name), "E%d", i + 1);
-      BOOST_REQUIRE(e.addEvent(name));
+      e.addEvent(name);
     }
+    BOOST_REQUIRE(e.isGood());
   }
 
   template<class DirTag>
@@ -67,8 +68,9 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
       char name[16], typeName[16];
       snprintf(name, sizeof(name), "D%d", i + 1);
       snprintf(typeName, sizeof(typeName), "T%d", i);
-      BOOST_REQUIRE(e.addData(name, typeName));
+      e.addData(name, typeName);
     }
+    BOOST_REQUIRE(e.isGood());
   }
 
   void test_events(CIfSpecBuilder &uut, TForteUInt8 &n, const CStringDictionary::TStringId *&f) {
@@ -254,6 +256,7 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_StaticWith) {
     CIfSpecBuilder uut;
+    uut.m_oEO.addEvent("E");
     uut.m_oOWith.setStaticBindings(staticBindings, staticIndexes);
     build(uut);
     BOOST_CHECK_EQUAL(ifspec.m_anEOWith, staticBindings.data());
@@ -262,14 +265,35 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_CombinedStaticAndDynamicWith) {
     CWithSpecBuilderBase uut;
-    BOOST_CHECK(uut.setStaticBindings(staticBindings, staticIndexes));
-    BOOST_CHECK(!uut.bind(0, 0));
+    uut.setStaticBindings(staticBindings, staticIndexes);
+    BOOST_CHECK(uut.isGood());
+    uut.bind(0, 0);
+    BOOST_CHECK(!uut.isGood());
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_CombinedDynamicAndStaticWith) {
     CWithSpecBuilderBase uut;
-    BOOST_CHECK(uut.bind(0, 0));
-    BOOST_CHECK(!uut.setStaticBindings(staticBindings, staticIndexes));
+    uut.bind(0, 0);
+    BOOST_CHECK(uut.isGood());
+    uut.setStaticBindings(staticBindings, staticIndexes);
+    BOOST_CHECK(uut.isGood());
+    auto out = uut.build(storage, staticIndexes.size());
+    BOOST_CHECK_EQUAL(std::get<0>(out), staticBindings.data());
+  }
+
+  BOOST_AUTO_TEST_CASE(IfSpecBuilder_StaticWithsAndEventsCountDifferenceHandling) {
+    CWithSpecBuilderBase uut;
+    uut.setStaticBindings(staticBindings, staticIndexes);
+    BOOST_CHECK(uut.isGood());
+    uut.build(storage, 0);
+    BOOST_CHECK(!uut.isGood());
+  }
+
+  BOOST_AUTO_TEST_CASE(IfSpecBuilder_DynamicWithsAndEventsCountDifferenceHandling) {
+    CIfSpecBuilder uut;
+    uut.m_oOWith.setStaticBindings(staticBindings, staticIndexes);
+    storage.clear();
+    BOOST_CHECK(!uut.build(storage, ifspec));
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_CombinedStaticAndDynamicString) {
@@ -285,9 +309,11 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_StringListOverflow) {
     CStringIdListSpecBuilder uut{2};
-    BOOST_CHECK(uut.addString(1));
-    BOOST_CHECK(uut.addString(1));
-    BOOST_CHECK(!uut.addString(1));
+    uut.addString(1);
+    uut.addString(1);
+    BOOST_CHECK(uut.isGood());
+    uut.addString(1);
+    BOOST_CHECK(!uut.isGood());
   }
 
   BOOST_AUTO_TEST_SUITE_END()

@@ -61,11 +61,13 @@ class CStringIdListSpecBuilder {
     CStringIdListSpecBuilder(std::size_t pa_unMaxItems) : m_unMaxItems(pa_unMaxItems)
     {}
 
-    bool setStaticList(const CStringDictionary::TStringId *pa_aunStaticList, std::size_t pa_nItemsCount);
-    bool addString(const CStringDictionary::TStringId pa_unString);
-    bool addString(const char *pa_sString);
+    void setStaticList(const CStringDictionary::TStringId *pa_aunStaticList, std::size_t pa_nItemsCount);
+    void addString(const CStringDictionary::TStringId pa_unString);
+    void addString(const char *pa_sString);
 
-    auto getNumStrings() const { return m_vDynamicList.size(); }
+    std::size_t getNumStrings() const {
+      return m_aunStaticList ? m_unStaticListSize : m_vDynamicList.size();
+    }
 
     int findString(const char *pa_sString) const;
     int findString(CStringDictionary::TStringId pa_unString) const;
@@ -73,29 +75,31 @@ class CStringIdListSpecBuilder {
     std::size_t calcStorageSize() const;
     std::tuple<const CStringDictionary::TStringId*, TForteUInt8> build(CMixedStorage &pa_oStorage) const;
 
+    bool isGood() const { return getNumStrings() <= m_unMaxItems; }
+
   private:
     const std::size_t m_unMaxItems;
     std::vector<CStringDictionary::TStringId> m_vDynamicList;
-    TForteUInt8 m_unStaticListSize = 0;
+    std::size_t m_unStaticListSize = 0;
     const CStringDictionary::TStringId *m_aunStaticList = nullptr;
 };
 
 class CEventSpecBuilderBase {
   public:
-    bool setStaticEvents(const CStringDictionary::TStringId *pa_aunStaticNames, std::size_t pa_nEventsCount) {
-      return m_oNamesListBuilder.setStaticList(pa_aunStaticNames, pa_nEventsCount);
+    void setStaticEvents(const CStringDictionary::TStringId *pa_aunStaticNames, std::size_t pa_nEventsCount) {
+      m_oNamesListBuilder.setStaticList(pa_aunStaticNames, pa_nEventsCount);
     }
     template<std::size_t N>
-    bool setStaticEvents(const std::array<CStringDictionary::TStringId, N> &pa_aStaticNames) {
-      return setStaticEvents(pa_aStaticNames.data(), pa_aStaticNames.size());
+    void setStaticEvents(const std::array<CStringDictionary::TStringId, N> &pa_aStaticNames) {
+      setStaticEvents(pa_aStaticNames.data(), pa_aStaticNames.size());
     }
-    bool addEvent(CStringDictionary::TStringId pa_unName) {
-      return m_oNamesListBuilder.addString(pa_unName);
+    void addEvent(CStringDictionary::TStringId pa_unName) {
+      m_oNamesListBuilder.addString(pa_unName);
     }
-    bool addEvent(const char *pa_sName) {
-      return m_oNamesListBuilder.addString(pa_sName);
+    void addEvent(const char *pa_sName) {
+      m_oNamesListBuilder.addString(pa_sName);
     }
-    bool addEventRange(const char *pa_sPrefix, int pa_nRangeSize);
+    void addEventRange(const char *pa_sPrefix, int pa_nRangeSize);
 
     auto getNumEvents() const {
       return m_oNamesListBuilder.getNumStrings();
@@ -113,8 +117,13 @@ class CEventSpecBuilderBase {
       return m_oNamesListBuilder.build(pa_oStorage);
     }
 
+    bool isGood() const {
+      return m_oNamesListBuilder.isGood() && m_bIsGood;
+    }
+
   private:
     static constexpr auto scm_unMaxEvents = CFunctionBlock::scm_nMaxInterfaceEvents;
+    bool m_bIsGood = true;
     CStringIdListSpecBuilder m_oNamesListBuilder{scm_unMaxEvents};
 };
 
@@ -129,24 +138,27 @@ class CEventSpecBuilder : public CEventSpecBuilderBase {
 
 class CDataSpecBuilderBase {
   public:
-    bool setStaticData(const CStringDictionary::TStringId *pa_aunStaticDataNames, const CStringDictionary::TStringId *pa_aunStaticTypeNames, std::size_t pa_nDataCount) {
-      return
-        m_oNamesListBuilder.setStaticList(pa_aunStaticDataNames, pa_nDataCount) &&
+    void setStaticData(const CStringDictionary::TStringId *pa_aunStaticDataNames, const CStringDictionary::TStringId *pa_aunStaticTypeNames, std::size_t pa_nDataCount) {
+        m_oNamesListBuilder.setStaticList(pa_aunStaticDataNames, pa_nDataCount);
         m_oTypesListBuilder.setStaticList(pa_aunStaticTypeNames, pa_nDataCount);
     }
-    bool addData(CStringDictionary::TStringId pa_unName, CStringDictionary::TStringId pa_unTypeName) {
-      return m_oNamesListBuilder.addString(pa_unName) && m_oTypesListBuilder.addString(pa_unTypeName);
+    void addData(CStringDictionary::TStringId pa_unName, CStringDictionary::TStringId pa_unTypeName) {
+      m_oNamesListBuilder.addString(pa_unName);
+      m_oTypesListBuilder.addString(pa_unTypeName);
     }
-    bool addData(const char *pa_sName, CStringDictionary::TStringId pa_unTypeName) {
-      return m_oNamesListBuilder.addString(pa_sName) && m_oTypesListBuilder.addString(pa_unTypeName);
+    void addData(const char *pa_sName, CStringDictionary::TStringId pa_unTypeName) {
+      m_oNamesListBuilder.addString(pa_sName);
+      m_oTypesListBuilder.addString(pa_unTypeName);
     }
-    bool addData(CStringDictionary::TStringId pa_unName, const char * pa_sTypeName) {
-      return m_oNamesListBuilder.addString(pa_unName) && m_oTypesListBuilder.addString(pa_sTypeName);
+    void addData(CStringDictionary::TStringId pa_unName, const char * pa_sTypeName) {
+      m_oNamesListBuilder.addString(pa_unName);
+      m_oTypesListBuilder.addString(pa_sTypeName);
     }
-    bool addData(const char *pa_sName, const char *pa_sTypeName) {
-      return m_oNamesListBuilder.addString(pa_sName) && m_oTypesListBuilder.addString(pa_sTypeName);
+    void addData(const char *pa_sName, const char *pa_sTypeName) {
+      m_oNamesListBuilder.addString(pa_sName);
+      m_oTypesListBuilder.addString(pa_sTypeName);
     }
-    bool addDataRange(const char *pa_sPrefix, int pa_nRangeSize);
+    void addDataRange(const char *pa_sPrefix, int pa_nRangeSize);
 
     template<typename T>
     int findData(T pa_tName) const {
@@ -158,8 +170,13 @@ class CDataSpecBuilderBase {
     }
     std::tuple<const CStringDictionary::TStringId*, const CStringDictionary::TStringId*, TForteUInt8> build(CMixedStorage &pa_oStorage) const;
 
+    bool isGood() const {
+      return m_oNamesListBuilder.isGood() && m_oTypesListBuilder.isGood() && m_bIsGood;
+    }
+
   private:
     static constexpr auto scm_unMaxData = CFunctionBlock::scm_nMaxInterfaceEvents;
+    bool m_bIsGood = true;
     CStringIdListSpecBuilder m_oNamesListBuilder{scm_unMaxData};
     CStringIdListSpecBuilder m_oTypesListBuilder{scm_unMaxData};
 };
@@ -175,48 +192,60 @@ class CDataSpecBuilder : public CDataSpecBuilderBase {
 
 class CWithSpecBuilderBase {
   public:
-    bool setStaticBindings(const TDataIOID *pa_aunStaticBindings, const TForteInt16 *pa_anStaticIndexes, std::size_t pa_unNumEvents);
+    void setStaticBindings(const TDataIOID *pa_aunStaticBindings, const TForteInt16 *pa_anStaticIndexes, std::size_t pa_unNumEvents);
     template<std::size_t NBindings, std::size_t NEvents>
-    bool setStaticBindings(const std::array<TDataIOID, NBindings> &pa_aunStaticBindings, const std::array<TForteInt16, NEvents> &pa_anStaticIndexes) {
-      return setStaticBindings(pa_aunStaticBindings.data(), pa_anStaticIndexes.data(), NEvents);
+    void setStaticBindings(const std::array<TDataIOID, NBindings> &pa_aunStaticBindings, const std::array<TForteInt16, NEvents> &pa_anStaticIndexes) {
+      setStaticBindings(pa_aunStaticBindings.data(), pa_anStaticIndexes.data(), NEvents);
     }
-    bool bind(TDataIOID pa_unEventId, TDataIOID pa_unDataId);
-    bool bind(TDataIOID pa_unEventId, std::initializer_list<TDataIOID> pa_aunDataIds) {
-      bool retVal = true;
+    void bind(TDataIOID pa_unEventId, TDataIOID pa_unDataId);
+    void bind(TDataIOID pa_unEventId, std::initializer_list<TDataIOID> pa_aunDataIds) {
       for (auto dataId : pa_aunDataIds) {
-        retVal = retVal && bind(pa_unEventId, dataId);
+        bind(pa_unEventId, dataId);
       }
-      return retVal;
     }
-    bool bindRange(TDataIOID pa_unEventId, TDataIOID pa_unFirstDataId, TDataIOID pa_unLastDataId);
+    void bindRange(TDataIOID pa_unEventId, TDataIOID pa_unFirstDataId, TDataIOID pa_unLastDataId);
     
     std::size_t calcStorageSize(std::size_t pa_unNumEvents) const;
-    std::tuple<const TDataIOID*, const TForteInt16*> build(CMixedStorage &pa_oStorage, std::size_t pa_unNumEvents) const;
+    std::tuple<const TDataIOID*, const TForteInt16*> build(CMixedStorage &pa_oStorage, std::size_t pa_unNumEvents);
+
+    bool isGood() const { return m_bIsGood; }
 
   private:
+    bool m_bIsGood = true;
     const TDataIOID *m_aunStaticBindings = nullptr;
     const TForteInt16 *m_anStaticIndexes = nullptr;
     std::size_t m_unNumStaticEvents = 0;
     std::vector<std::vector<TDataIOID>> m_vvDynamicList;
 
     void grow(std::size_t pa_unNumEvents);
+
+  protected:
+    bool check(bool pa_bState) {
+      m_bIsGood = m_bIsGood && pa_bState;
+      return isGood();
+    }
 };
 
 template<class DirTag>
 class CWithSpecBuilder : public CWithSpecBuilderBase {
   public:
-    bool bind(CSpecReference<CEventSpecTag, DirTag> pa_oEventRef, CSpecReference<CDataSpecTag, DirTag> pa_oDataRef) {
-      return pa_oEventRef.isValid() && pa_oDataRef.isValid() && CWithSpecBuilderBase::bind(*pa_oEventRef, *pa_oDataRef);
-    }
-    bool bind(CSpecReference<CEventSpecTag, DirTag> pa_oEventRef, std::initializer_list<CSpecReference<CDataSpecTag, DirTag>> pa_aoDataRefs) {
-      bool retVal = pa_oEventRef.isValid();
-      for (auto ref : pa_aoDataRefs) {
-        retVal = retVal && ref.isValid() && bind(pa_oEventRef, *ref);
+    void bind(CSpecReference<CEventSpecTag, DirTag> pa_oEventRef, CSpecReference<CDataSpecTag, DirTag> pa_oDataRef) {
+      if (check(pa_oEventRef.isValid() && pa_oDataRef.isValid())) {
+        CWithSpecBuilderBase::bind(*pa_oEventRef, *pa_oDataRef);
       }
-      return retVal;
     }
-    bool bindRange(CSpecReference<CEventSpecTag, DirTag> pa_oEventRef, CSpecReference<CDataSpecTag, DirTag> pa_oFirstDataRef, CSpecReference<CDataSpecTag, DirTag> pa_oLastDataRef) {
-      return pa_oEventRef.isValid() && pa_oFirstDataRef.isValid() && pa_oLastDataRef.isValid() && CWithSpecBuilderBase::bindRange(*pa_oEventRef, *pa_oFirstDataRef, *pa_oLastDataRef);
+    void bind(CSpecReference<CEventSpecTag, DirTag> pa_oEventRef, std::initializer_list<CSpecReference<CDataSpecTag, DirTag>> pa_aoDataRefs) {
+      check(pa_oEventRef.isValid());
+      for (auto ref : pa_aoDataRefs) {
+        if (!check(ref.isValid()))
+            break;
+        bind(pa_oEventRef, *ref);
+      }
+    }
+    void bindRange(CSpecReference<CEventSpecTag, DirTag> pa_oEventRef, CSpecReference<CDataSpecTag, DirTag> pa_oFirstDataRef, CSpecReference<CDataSpecTag, DirTag> pa_oLastDataRef) {
+      if (check(pa_oEventRef.isValid() && pa_oFirstDataRef.isValid() && pa_oLastDataRef.isValid())) {
+        CWithSpecBuilderBase::bindRange(*pa_oEventRef, *pa_oFirstDataRef, *pa_oLastDataRef);
+      }
     }
 };
 
@@ -230,21 +259,25 @@ class CIfSpecBuilder {
     CWithSpecBuilder<COutputSpecTag>  m_oOWith;
 
     template<class DirTag>
-    bool bind(CSpecReference<CEventSpecTag, DirTag> pa_oEventRef, CSpecReference<CDataSpecTag, DirTag> pa_oDataRef) {
-      return getWithFromDir(pa_oEventRef).bind(pa_oEventRef, pa_oDataRef);
+    void bind(CSpecReference<CEventSpecTag, DirTag> pa_oEventRef, CSpecReference<CDataSpecTag, DirTag> pa_oDataRef) {
+      getWithFromDir(pa_oEventRef).bind(pa_oEventRef, pa_oDataRef);
     }
     template<class DirTag>
-    bool bind(CSpecReference<CEventSpecTag, DirTag> pa_oEventRef, std::initializer_list<CSpecReference<CDataSpecTag, DirTag>> &&pa_loDataRef) {
-      return getWithFromDir(pa_oEventRef).bind(pa_oEventRef, std::move(pa_loDataRef));
+    void bind(CSpecReference<CEventSpecTag, DirTag> pa_oEventRef, std::initializer_list<CSpecReference<CDataSpecTag, DirTag>> &&pa_loDataRef) {
+      getWithFromDir(pa_oEventRef).bind(pa_oEventRef, std::move(pa_loDataRef));
     }
     template<class DirTag>
-    bool bindRange(CSpecReference<CEventSpecTag, DirTag> pa_oEventRef, CSpecReference<CDataSpecTag, DirTag> pa_oFirstDataRef, CSpecReference<CDataSpecTag, DirTag> pa_oLastDataRef) {
-      return getWithFromDir(pa_oEventRef).bindRange(pa_oEventRef, pa_oFirstDataRef, pa_oLastDataRef);
+    void bindRange(CSpecReference<CEventSpecTag, DirTag> pa_oEventRef, CSpecReference<CDataSpecTag, DirTag> pa_oFirstDataRef, CSpecReference<CDataSpecTag, DirTag> pa_oLastDataRef) {
+      getWithFromDir(pa_oEventRef).bindRange(pa_oEventRef, pa_oFirstDataRef, pa_oLastDataRef);
     }
 
-    bool build(CMixedStorage &pa_oStorage, SFBInterfaceSpec &pa_oInterfaceSpec) const;
+    bool build(CMixedStorage &pa_oStorage, SFBInterfaceSpec &pa_oInterfaceSpec);
+
+    bool isGood() const;
 
   private:
+    bool m_bIsGood = true;
+
     constexpr CWithSpecBuilder<CInputSpecTag>& getWithFromDir(CSpecReference<CEventSpecTag, CInputSpecTag>) {
       return m_oIWith;
     }
