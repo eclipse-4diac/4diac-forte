@@ -18,4 +18,5 @@ forte_test_add_sourcefile_cpp(
   parameterParserTest.cpp
   string_utils_test.cpp
   mixedStorageTest.cpp
+  ifSpecBuilderTest.cpp
 )
