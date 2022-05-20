@@ -99,13 +99,21 @@ void CEventSpecBuilderBase::addEventRange(const char *pa_sPrefix, int pa_nRangeS
 }
 
 void CDataSpecBuilderBase::addDataRange(const char *pa_sPrefix, int pa_nRangeSize) {
+  addDataRange(pa_sPrefix, pa_nRangeSize, g_nStringIdANY);
+}
+
+void CDataSpecBuilderBase::addDataRange(const char *pa_sPrefix, int pa_nRangeSize, const char *pa_sTypeName) {
+  addDataRange(pa_sPrefix, pa_nRangeSize, CStringDictionary::getInstance().insert(pa_sTypeName));
+}
+
+void CDataSpecBuilderBase::addDataRange(const char *pa_sPrefix, int pa_nRangeSize, CStringDictionary::TStringId pa_unTypeName) {
   TIdentifier name;
   for (int i = 0; i < pa_nRangeSize; ++i) {
     if (!makeName(name, pa_sPrefix, i + 1)) {
       m_bIsGood = false;
       break;
     }
-    addData(name, g_nStringIdANY);
+    addData(name, pa_unTypeName);
   }
 }
 

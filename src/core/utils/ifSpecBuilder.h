@@ -142,6 +142,10 @@ class CDataSpecBuilderBase {
         m_oNamesListBuilder.setStaticList(pa_aunStaticDataNames, pa_nDataCount);
         m_oTypesListBuilder.setStaticList(pa_aunStaticTypeNames, pa_nDataCount);
     }
+    template<std::size_t N>
+    void setStaticData(const std::array<CStringDictionary::TStringId, N> &pa_aunStaticDataNames, const std::array<CStringDictionary::TStringId, N> &pa_aunStaticTypeNames) {
+      setStaticData(pa_aunStaticDataNames.data(), pa_aunStaticTypeNames.data(), N);
+    }
     void addData(CStringDictionary::TStringId pa_unName, CStringDictionary::TStringId pa_unTypeName) {
       m_oNamesListBuilder.addString(pa_unName);
       m_oTypesListBuilder.addString(pa_unTypeName);
@@ -159,6 +163,8 @@ class CDataSpecBuilderBase {
       m_oTypesListBuilder.addString(pa_sTypeName);
     }
     void addDataRange(const char *pa_sPrefix, int pa_nRangeSize);
+    void addDataRange(const char *pa_sPrefix, int pa_nRangeSize, CStringDictionary::TStringId pa_unTypeName);
+    void addDataRange(const char *pa_sPrefix, int pa_nRangeSize, const char *pa_sTypeName);
 
     template<typename T>
     int findData(T pa_tName) const {
