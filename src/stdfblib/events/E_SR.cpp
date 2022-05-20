@@ -30,20 +30,20 @@ const CStringDictionary::TStringId E_SR::scm_aunDataOutputDataTypeIds[] = {g_nSt
 const SFBInterfaceSpec E_SR::scm_stFBInterfaceSpec = {
   2,
   scm_aunEventInputNameIds,
-  0,
-  0,
+  nullptr,
+  nullptr,
   1,
   scm_aunEventOutputNameIds,
   scm_anEOWith,
   scm_anEOWithIndexes,
   0,
-  0,
-  0,
+  nullptr,
+  nullptr,
   1,
   scm_aunDataOutputNameIds,
   scm_aunDataOutputDataTypeIds,
   0,
-  0
+  nullptr
 };
 
 void E_SR::executeEvent(int pa_nEIID){

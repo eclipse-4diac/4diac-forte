@@ -31,10 +31,10 @@ const TDataIOID FORTE_GET_STRUCT_VALUE::scm_anEOWith[] = { 0, 1, 255 };
 const TForteInt16 FORTE_GET_STRUCT_VALUE::scm_anEOWithIndexes[] = { 0, -1 };
 const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scm_anEventOutputNames[] = { g_nStringIdCNF };
 const SFBInterfaceSpec FORTE_GET_STRUCT_VALUE::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames,
-  scm_anEOWith, scm_anEOWithIndexes, 2, scm_anDataInputNames, scm_anDataInputTypeIds, 2, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
+  scm_anEOWith, scm_anEOWithIndexes, 2, scm_anDataInputNames, scm_anDataInputTypeIds, 2, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, nullptr };
 
 CIEC_ANY* FORTE_GET_STRUCT_VALUE::getMemberFromName(CIEC_STRUCT* paWhereToLook, char* paMemberName) {
-  CIEC_ANY* retVal = 0;
+  CIEC_ANY* retVal = nullptr;
 
   CStringDictionary::TStringId elementNameId = CStringDictionary::getInstance().getId(paMemberName);
   if(CStringDictionary::scm_nInvalidStringId != elementNameId) {
@@ -47,7 +47,7 @@ CIEC_ANY* FORTE_GET_STRUCT_VALUE::getMemberFromName(CIEC_STRUCT* paWhereToLook, 
 }
 
 CIEC_ANY* FORTE_GET_STRUCT_VALUE::lookForMember(CIEC_STRUCT* paWhereToLook, char* paMemberName) {
-  CIEC_ANY* retVal = 0;
+  CIEC_ANY* retVal = nullptr;
 
   char* startOfName = paMemberName;
   bool errorOcurred = false;
@@ -58,10 +58,10 @@ CIEC_ANY* FORTE_GET_STRUCT_VALUE::lookForMember(CIEC_STRUCT* paWhereToLook, char
 
       CIEC_ANY *resultMember = getMemberFromName(paWhereToLook, startOfName);
 
-      if(0 != resultMember) {
+      if(nullptr != resultMember) {
         if(CIEC_ANY::e_STRUCT == resultMember->getDataTypeID()) {
           retVal = lookForMember(static_cast<CIEC_STRUCT*>(resultMember), paMemberName + 1);
-          if(0 == retVal) {
+          if(nullptr == retVal) {
             errorOcurred = true;
           }
         } else {
@@ -76,13 +76,13 @@ CIEC_ANY* FORTE_GET_STRUCT_VALUE::lookForMember(CIEC_STRUCT* paWhereToLook, char
       }
     }
 
-    if(errorOcurred || 0 != retVal) {
+    if(errorOcurred || nullptr != retVal) {
       break;
     }
     paMemberName++;
   }
 
-  if(!errorOcurred && 0 == retVal) {
+  if(!errorOcurred && nullptr == retVal) {
     retVal = getMemberFromName(paWhereToLook, startOfName);
   }
 
@@ -95,7 +95,7 @@ void FORTE_GET_STRUCT_VALUE::executeEvent(int paEIID) {
     if(CIEC_ANY::e_STRUCT == in_struct().getDataTypeID()) {
       CIEC_STRING copyOfMember = member();
       CIEC_ANY *foundMember = lookForMember(static_cast<CIEC_STRUCT*>(&in_struct()), copyOfMember.getValue());
-      if(0 != foundMember) {
+      if(nullptr != foundMember) {
         if(foundMember->getDataTypeID() == output().getDataTypeID()) {
           output().setValue(*foundMember);
           QO() = CIEC_BOOL(true);

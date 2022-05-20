@@ -40,11 +40,11 @@ extern "C" void __cxa_pure_virtual(void){
 
 }
 
-RMT_DEV *poDev = 0;
+RMT_DEV *poDev = nullptr;
 
 void endForte(int pa_nSig){
   (void) pa_nSig;
-  if(0 != poDev){
+  if(nullptr != poDev){
     poDev->changeFBExecutionState(cg_nMGM_CMD_Kill);
   }
 }
@@ -87,7 +87,7 @@ int main(int argc, char *arg[]){
 #endif //FORTE_ROS
 
   const char *pIpPort = parseCommandLineArguments(argc, arg);
-  if((0 != strlen(pIpPort)) && (NULL != strchr(pIpPort, ':'))){
+  if((0 != strlen(pIpPort)) && (nullptr != strchr(pIpPort, ':'))){
     createDev(pIpPort);
   }
   else{ //! Lists the help for FORTE

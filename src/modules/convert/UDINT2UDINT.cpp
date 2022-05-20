@@ -45,7 +45,7 @@ const SFBInterfaceSpec UDINT2UDINT::scm_stFBInterfaceSpec = {
   1,
   scm_anDataOutputNames, scm_aunDODataTypeIds,
   0,
-  0
+  nullptr
 };
 
 void UDINT2UDINT::executeEvent(int pa_nEIID){

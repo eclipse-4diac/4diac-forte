@@ -32,7 +32,7 @@ CIEC_ANY_STRING::~CIEC_ANY_STRING(){
 }
 
 void CIEC_ANY_STRING::fromCharString(const char* const paValue){
-  if(0 != paValue){
+  if(nullptr != paValue){
     size_t nLen = strlen(paValue);
     if (nLen > scm_unMaxStringLen) {
       //If we get a to large string we will truncate it
@@ -46,12 +46,12 @@ void CIEC_ANY_STRING::fromCharString(const char* const paValue){
 }
 
 void CIEC_ANY_STRING::assign(const char *pa_poData, TForteUInt16 pa_nLen) {
-  if (0 != pa_poData){
+  if (nullptr != pa_poData){
     if(0 != pa_nLen && pa_poData != getValue()) {
       reserve(pa_nLen);
       memcpy(getValue(), pa_poData, pa_nLen);
     }
-    if(0 != getValue()){
+    if(nullptr != getValue()){
       setLength(pa_nLen);
       getValue()[pa_nLen] = '\0'; //not really necessary, but is a stop if someone forgets that this is not a textual string
     }
@@ -59,19 +59,19 @@ void CIEC_ANY_STRING::assign(const char *pa_poData, TForteUInt16 pa_nLen) {
 }
 
 void CIEC_ANY_STRING::append(const char *pa_poData) {
-  if (0 != pa_poData){
+  if (nullptr != pa_poData){
     append(pa_poData, static_cast<TForteUInt16>(strlen(pa_poData)));
   }
 }
 
 void CIEC_ANY_STRING::append(const char *pa_poData, TForteUInt16 pa_nLen) {
-  if (0 != pa_poData){
+  if (nullptr != pa_poData){
     TForteUInt16 nLen = length();
     if(0 != pa_nLen){
       if((getCapacity() - nLen) < pa_nLen){
         reserve(static_cast<TForteUInt16>(nLen + pa_nLen));
       }
-      if(0 != getValue()){
+      if(nullptr != getValue()){
         memcpy(getValue() + nLen, pa_poData, pa_nLen);
         setLength(static_cast<TForteUInt16>(nLen + pa_nLen));
         getValue()[nLen + pa_nLen] = '\0'; //not really necessary, but is a stop if someone forgets that this is not a textual string
@@ -82,7 +82,7 @@ void CIEC_ANY_STRING::append(const char *pa_poData, TForteUInt16 pa_nLen) {
 
 void CIEC_ANY_STRING::reserve(TForteUInt16 pa_nRequestedSize){
   if(getCapacity() < pa_nRequestedSize + 1){
-    bool firstAlloc = (getGenData() == 0);
+    bool firstAlloc = (getGenData() == nullptr);
     TForteUInt16 nLength = length();
     TForteUInt16 nNewLength = static_cast<TForteUInt16>((getCapacity() * 3) >> 1);
     if(nNewLength < pa_nRequestedSize){
@@ -91,7 +91,7 @@ void CIEC_ANY_STRING::reserve(TForteUInt16 pa_nRequestedSize){
 
     TForteByte *newMemory = (TForteByte *) forte_malloc(nNewLength + 5);  // the plus five are 2 bytes for length, 2 bytes for capacity and one for a backup \0
     TForteByte *oldMemory = getGenData();
-    if(0 != oldMemory){
+    if(nullptr != oldMemory){
       memcpy(newMemory, oldMemory, getCapacity() + 5);
       forte_free(oldMemory);
     }
@@ -203,7 +203,7 @@ int CIEC_ANY_STRING::dollarEscapeChar(char *pa_pacValue, char pa_cValue, unsigne
       break;
   }
 
-  if (pa_pacValue == 0)
+  if (pa_pacValue == nullptr)
     return nUsedBytes;
 
   if (nUsedBytes > pa_nBufferSize)

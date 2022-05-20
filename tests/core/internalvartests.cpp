@@ -21,13 +21,13 @@
 # include "stringlist.h"
 #endif
 
-const SFBInterfaceSpec gcEmptyInterface = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+const SFBInterfaceSpec gcEmptyInterface = { 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr };
 
 class CInternalVarTestFB : public CBasicFB{
   public:
     CInternalVarTestFB(const SInternalVarsInformation *paVarInternals, TForteByte *paBasicFBVarsData) :
-      CBasicFB(0, &gcEmptyInterface, CStringDictionary::scm_nInvalidStringId,
-            paVarInternals, 0, paBasicFBVarsData) {
+      CBasicFB(nullptr, &gcEmptyInterface, CStringDictionary::scm_nInvalidStringId,
+            paVarInternals, nullptr, paBasicFBVarsData) {
     }
 
     CIEC_ANY *getVarInternal(unsigned int paVarIntNum){
@@ -51,25 +51,25 @@ BOOST_AUTO_TEST_CASE(checkNullInternalVarsAreAllowed){
   TForteByte varsDataBuffer[10];
   CStringDictionary::TStringId namelist[1] = {g_nStringIdDT};
 
-  CInternalVarTestFB testFB(0, varsDataBuffer);
-  BOOST_CHECK(0 == testFB.getVar(namelist, 1));
+  CInternalVarTestFB testFB(nullptr, varsDataBuffer);
+  BOOST_CHECK(nullptr == testFB.getVar(namelist, 1));
   //check that we should at least get the ECC variable
   namelist[0] = CStringDictionary::getInstance().insert("!ECC");
-  BOOST_CHECK(0 != testFB.getVar(namelist, 1));
+  BOOST_CHECK(nullptr != testFB.getVar(namelist, 1));
 }
 
 
 BOOST_AUTO_TEST_CASE(checkEmptyInternalVarsAreAllowed){
   //check that we can create an FB where we have a var internal struct which has all parts set to zero
-  SInternalVarsInformation varData = {0,0,0};
+  SInternalVarsInformation varData = {0,nullptr,nullptr};
   TForteByte varsDataBuffer[10];
   CStringDictionary::TStringId namelist[1] = {g_nStringIdDT};
 
   CInternalVarTestFB testFB(&varData, varsDataBuffer);
-  BOOST_CHECK(0 == testFB.getVar(namelist, 1));
+  BOOST_CHECK(nullptr == testFB.getVar(namelist, 1));
   //check that we should at least get the ECC variable
   namelist[0] = CStringDictionary::getInstance().insert("!ECC");
-  BOOST_CHECK(0 != testFB.getVar(namelist, 1));
+  BOOST_CHECK(nullptr != testFB.getVar(namelist, 1));
 }
 
 BOOST_AUTO_TEST_CASE(sampleInteralVarList){
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE(sampleInteralVarList){
 
   for(size_t i = 0; i < varData.m_nNumIntVars; i++){
     CIEC_ANY *var = testFB.getVar(&(varInternalNames[i]), 1);
-    BOOST_CHECK(0 != var);
+    BOOST_CHECK(nullptr != var);
     BOOST_CHECK_EQUAL(var, testFB.getVarInternal(static_cast<unsigned int>(i)));
   }
 

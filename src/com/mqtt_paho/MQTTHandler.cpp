@@ -27,7 +27,7 @@ MQTTAsync_connectOptions MQTTHandler::smClientConnectionOptions =
 
 CSyncObject MQTTHandler::smMQTTMutex;
 
-MQTTAsync MQTTHandler::smClient = 0;
+MQTTAsync MQTTHandler::smClient = nullptr;
 CIEC_STRING MQTTHandler::smClientId;
 CIEC_STRING MQTTHandler::smAddress;
 std::string MQTTHandler::scmUsername;
@@ -50,7 +50,7 @@ MQTTHandler::~MQTTHandler(){
     setAlive(false);
     resumeSelfSuspend();
   }
-  if(0 != smClient){
+  if(nullptr != smClient){
     MQTTAsync_disconnectOptions disconnectOptions = MQTTAsync_disconnectOptions_initializer;
     disconnectOptions.timeout = 10000;
     MQTTAsync_disconnect(smClient, &disconnectOptions);
@@ -71,7 +71,7 @@ MQTTHandler::~MQTTHandler(){
  */
 int MQTTHandler::onMqttMessageArrived(void* paContext, char* paTopicName, int, MQTTAsync_message* paMessage){
   //TODO: Check if handler allowed
-  if(0 != paContext){
+  if(nullptr != paContext){
     CCriticalRegion section(smMQTTMutex);
 
     MQTTHandler *handler = static_cast<MQTTHandler *>(paContext);
@@ -95,7 +95,7 @@ int MQTTHandler::onMqttMessageArrived(void* paContext, char* paTopicName, int, M
 
 void MQTTHandler::onMqttConnectionLost(void* paContext, char* paCause){
   DEVLOG_ERROR("MQTT: Disconnected from broker. Cause: %s\n", paCause);
-  if(0 != paContext){
+  if(nullptr != paContext){
     CCriticalRegion section(smMQTTMutex);
 
     MQTTHandler *handler = static_cast<MQTTHandler *>(paContext);
@@ -132,7 +132,7 @@ void MQTTHandler::onMqttConnectionFailed(void *paContext, MQTTAsync_failureData 
 }
 
 void MQTTHandler::onSubscribeSucceed(void* paContext, MQTTAsync_successData* ){
-  if(0 != paContext){
+  if(nullptr != paContext){
     CCriticalRegion sectionState(smMQTTMutex);
     MQTTComLayer* layer = static_cast<MQTTComLayer*>(paContext);
     MQTTHandler& handler = ::getExtEvHandler<MQTTHandler>(*layer->getCommFB());
@@ -149,7 +149,7 @@ void MQTTHandler::onSubscribeSucceed(void* paContext, MQTTAsync_successData* ){
 }
 
 void MQTTHandler::onSubscribeFailed(void* paContext, MQTTAsync_failureData*){
-  if(0 != paContext){
+  if(nullptr != paContext){
     CCriticalRegion sectionState(smMQTTMutex);
     MQTTComLayer* layer = static_cast<MQTTComLayer*>(paContext);
     DEVLOG_ERROR("MQTT: Subscription failed. Topic: -%s-\n", layer->getTopicName());
@@ -190,10 +190,10 @@ int MQTTHandler::mqttSubscribe(const MQTTComLayer* paLayer){
 }
 
 int MQTTHandler::registerLayer(const char* paAddress, const char* paClientId, MQTTComLayer* paLayer){
-  if(smClient == 0){
+  if(smClient == nullptr){
     smClientId = paClientId;
     smAddress = paAddress;
-    MQTTAsync_create(&smClient, smAddress.getValue(), smClientId.getValue(), MQTTCLIENT_PERSISTENCE_NONE, NULL);
+    MQTTAsync_create(&smClient, smAddress.getValue(), smClientId.getValue(), MQTTCLIENT_PERSISTENCE_NONE, nullptr);
     smClientConnectionOptions.keepAliveInterval = 20;
     smClientConnectionOptions.cleansession = 1;
     smClientConnectionOptions.onSuccess = onMqttConnectionSucceed;
@@ -213,7 +213,7 @@ int MQTTHandler::registerLayer(const char* paAddress, const char* paClientId, MQ
       }
     }
 
-    if(MQTTASYNC_SUCCESS != MQTTAsync_setCallbacks(smClient, this, MQTTHandler::onMqttConnectionLost, onMqttMessageArrived, NULL)){
+    if(MQTTASYNC_SUCCESS != MQTTAsync_setCallbacks(smClient, this, MQTTHandler::onMqttConnectionLost, onMqttMessageArrived, nullptr)){
       return eConnectionFailed;
     }
     {

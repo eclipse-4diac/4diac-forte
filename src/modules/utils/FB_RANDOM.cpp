@@ -40,7 +40,7 @@ const SFBInterfaceSpec FORTE_FB_RANDOM::scm_stFBInterfaceSpec = {
   2,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
   2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
   1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  0, 0
+  0, nullptr
 };
 
 
@@ -51,7 +51,7 @@ void FORTE_FB_RANDOM::setInitialValues(){
 void FORTE_FB_RANDOM::alg_INIT(void){
 // WARNING - Don't forget to add #include <time.h>
   if (SEED() == 0) {
-    srand((unsigned int) time(NULL) );
+    srand((unsigned int) time(nullptr) );
   } else {
     srand( SEED() );
   }

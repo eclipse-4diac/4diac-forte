@@ -20,10 +20,10 @@
 
 DEFINE_GENERIC_ADAPTER_TYPE(CAnyAdapter, g_nStringIdANY_ADAPTER)
 
-const SFBInterfaceSpec CAnyAdapter::scm_stFBInterfaceSpec = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+const SFBInterfaceSpec CAnyAdapter::scm_stFBInterfaceSpec = { 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr };
 
 CAnyAdapter::CAnyAdapter(CStringDictionary::TStringId pa_anAdapterInstanceName, CResource *pa_poSrcRes, bool pa_bIsPlug) :
-    CAdapter(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_anAdapterInstanceName, &scm_stFBInterfaceSpec, pa_bIsPlug, 0, 0), m_ParentFB(0),
+    CAdapter(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_anAdapterInstanceName, &scm_stFBInterfaceSpec, pa_bIsPlug, nullptr, nullptr), m_ParentFB(nullptr),
     m_nParentAdapterlistID(0){
   memset(&m_stCurrentFBInterfaceSpec, 0, sizeof(SFBInterfaceSpec));
 }
@@ -59,14 +59,14 @@ bool CAnyAdapter::disconnect(CAdapterConnection *pa_poAdConn){
 
   //clean interface data and reset to empty interface
   freeAllData();
-  setupFBInterface(&scm_stFBInterfaceSpec, 0, 0);
+  setupFBInterface(&scm_stFBInterfaceSpec, nullptr, nullptr);
 
   return bRetVal;
 }
 
 // Saves parentFB for later use
 void CAnyAdapter::setParentFB(CFunctionBlock *pa_poParentFB, TForteUInt8 pa_nParentAdapterlistID){
-  if(0 == m_ParentFB){
+  if(nullptr == m_ParentFB){
     m_ParentFB = pa_poParentFB;
   }
   if(0 == m_nParentAdapterlistID){

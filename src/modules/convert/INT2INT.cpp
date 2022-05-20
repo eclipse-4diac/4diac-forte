@@ -45,7 +45,7 @@ const SFBInterfaceSpec INT2INT::scm_stFBInterfaceSpec = {
   1,
   scm_anDataOutputNames, scm_aunDODataTypeIds,
   0,
-  0
+  nullptr
 };
 
 void INT2INT::executeEvent(int pa_nEIID){

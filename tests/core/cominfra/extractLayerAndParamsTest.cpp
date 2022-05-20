@@ -32,8 +32,8 @@ BOOST_AUTO_TEST_CASE(noExtraSquareBrackets_test) {
   char *remainingIdToDelete = remainingId;
 
   memcpy(remainingId, stringToTest, strlen(stringToTest) + 1);
-  char* layerParams = 0;
-  char* layerId = 0;
+  char* layerParams = nullptr;
+  char* layerId = nullptr;
 
   layerId = CExtractLayerAndParamsCommFB::extractLayerIdAndParams(&remainingId, &layerParams);
 
@@ -88,8 +88,8 @@ BOOST_AUTO_TEST_CASE(escapedSign_test) {
   char *remainingIdToDelete = remainingId;
 
   memcpy(remainingId, stringToTest, strlen(stringToTest) + 1);
-  char* layerParams = 0;
-  char* layerId = 0;
+  char* layerParams = nullptr;
+  char* layerId = nullptr;
 
   layerId = CExtractLayerAndParamsCommFB::extractLayerIdAndParams(&remainingId, &layerParams);
 
@@ -114,12 +114,12 @@ BOOST_AUTO_TEST_CASE(emptyId_test) {
   char *remainingIdToDelete = remainingId;
 
   memcpy(remainingId, stringToTest, strlen(stringToTest) + 1);
-  char* layerParams = 0;
-  char* layerId = 0;
+  char* layerParams = nullptr;
+  char* layerId = nullptr;
 
   layerId = CExtractLayerAndParamsCommFB::extractLayerIdAndParams(&remainingId, &layerParams);
 
-  BOOST_CHECK(layerId == 0);
+  BOOST_CHECK(layerId == nullptr);
 
   delete[] remainingIdToDelete;
 
@@ -134,12 +134,12 @@ BOOST_AUTO_TEST_CASE(noOpeningBracket_test) {
   char *remainingIdToDelete = remainingId;
 
   memcpy(remainingId, stringToTest, strlen(stringToTest) + 1);
-  char* layerParams = 0;
-  char* layerId = 0;
+  char* layerParams = nullptr;
+  char* layerId = nullptr;
 
   layerId = CExtractLayerAndParamsCommFB::extractLayerIdAndParams(&remainingId, &layerParams);
 
-  BOOST_CHECK(layerId == 0);
+  BOOST_CHECK(layerId == nullptr);
 
   delete[] remainingIdToDelete;
 }
@@ -152,12 +152,12 @@ BOOST_AUTO_TEST_CASE(noOpeningBracketWithScaped_test) {
   char *remainingIdToDelete = remainingId;
 
   memcpy(remainingId, stringToTest, strlen(stringToTest) + 1);
-  char* layerParams = 0;
-  char* layerId = 0;
+  char* layerParams = nullptr;
+  char* layerId = nullptr;
 
   layerId = CExtractLayerAndParamsCommFB::extractLayerIdAndParams(&remainingId, &layerParams);
 
-  BOOST_CHECK(layerId == 0);
+  BOOST_CHECK(layerId == nullptr);
 
   delete[] remainingIdToDelete;
 
@@ -171,12 +171,12 @@ BOOST_AUTO_TEST_CASE(noClosingBracket_test) {
   char *remainingIdToDelete = remainingId;
 
   memcpy(remainingId, stringToTest, strlen(stringToTest) + 1);
-  char* layerParams = 0;
-  char* layerId = 0;
+  char* layerParams = nullptr;
+  char* layerId = nullptr;
 
   layerId = CExtractLayerAndParamsCommFB::extractLayerIdAndParams(&remainingId, &layerParams);
 
-  BOOST_CHECK(layerId == 0);
+  BOOST_CHECK(layerId == nullptr);
 
   delete[] remainingIdToDelete;
 
@@ -190,12 +190,12 @@ BOOST_AUTO_TEST_CASE(noClosingBracketWithScaped_test) {
   char *remainingIdToDelete = remainingId;
 
   memcpy(remainingId, stringToTest, strlen(stringToTest) + 1);
-  char* layerParams = 0;
-  char* layerId = 0;
+  char* layerParams = nullptr;
+  char* layerId = nullptr;
 
   layerId = CExtractLayerAndParamsCommFB::extractLayerIdAndParams(&remainingId, &layerParams);
 
-  BOOST_CHECK(layerId == 0);
+  BOOST_CHECK(layerId == nullptr);
 
   delete[] remainingIdToDelete;
 
@@ -209,8 +209,8 @@ BOOST_AUTO_TEST_CASE(noId_test) {
   char *remainingIdToDelete = remainingId;
 
   memcpy(remainingId, stringToTest, strlen(stringToTest) + 1);
-  char* layerParams = 0;
-  char* layerId = 0;
+  char* layerParams = nullptr;
+  char* layerId = nullptr;
 
   layerId = CExtractLayerAndParamsCommFB::extractLayerIdAndParams(&remainingId, &layerParams);
 

@@ -63,7 +63,7 @@ bool CIEC_WSTRING::fromUTF16(const TForteByte *pa_pacBuffer, unsigned int pa_nBu
     }
     i += nRes;
     pRunner += nRes;
-    nRes = CUnicodeUtilities::encodeUTF8Codepoint(0, 0, nCodepoint);
+    nRes = CUnicodeUtilities::encodeUTF8Codepoint(nullptr, 0, nCodepoint);
     if(nRes < 0) {
       return false;
     }
@@ -76,7 +76,7 @@ bool CIEC_WSTRING::fromUTF16(const TForteByte *pa_pacBuffer, unsigned int pa_nBu
 
   // Reserve and encode
   reserve(static_cast<TForteUInt16>(nNeededLength));
-  if(getGenData() == 0) {
+  if(getGenData() == nullptr) {
     return false;
   }
 
@@ -115,7 +115,7 @@ int CIEC_WSTRING::toUTF16(TForteByte* pa_pacBuffer, unsigned int pa_nBufferSize)
     pRunner += nRes;
     // Skip the BOM if present
     if(nCodepoint != CUnicodeUtilities::scm_unBOMMarker){
-      nRes = CUnicodeUtilities::encodeUTF16Codepoint(0, 0, nCodepoint, false);
+      nRes = CUnicodeUtilities::encodeUTF16Codepoint(nullptr, 0, nCodepoint, false);
       if(nRes < 0) {
         return -1;
       }
@@ -123,7 +123,7 @@ int CIEC_WSTRING::toUTF16(TForteByte* pa_pacBuffer, unsigned int pa_nBufferSize)
     }
   }
 
-  if(pa_pacBuffer == 0) {
+  if(pa_pacBuffer == nullptr) {
     return nNeededLength;
   }
 
@@ -177,7 +177,7 @@ int CIEC_WSTRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnesca
   int nSrcCappedLength = nSrcLen;
 
   if(0 <= nSrcLen){
-    if((0 == pa_pacValue) || (pa_pacValue[0] == '\0') || (nSrcLen == 0)){
+    if((nullptr == pa_pacValue) || (pa_pacValue[0] == '\0') || (nSrcLen == 0)){
       assign("", 0);
       return 0;
     }
@@ -192,7 +192,7 @@ int CIEC_WSTRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnesca
     // The needed space is surely not larger than original length - it can
     // only be smaller if there are chars outside the BMP
     reserve(static_cast<TForteUInt16>(nSrcCappedLength));
-    if(0 == getGenData()){
+    if(nullptr == getGenData()){
       return -1;
     }
 

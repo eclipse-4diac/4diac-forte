@@ -23,12 +23,12 @@ CCompositeFB::CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_ps
     const CStringDictionary::TStringId pa_nInstanceNameId, const SCFB_FBNData * const pa_cpoFBNData,
     TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
         CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData),
-        mIf2InDConns(0),
-        m_apoIn2IfDConns(0),
+        mIf2InDConns(nullptr),
+        m_apoIn2IfDConns(nullptr),
         cm_cpoFBNData(pa_cpoFBNData),
-        m_apoEventConnections(0),
-        m_apoDataConnections(0),
-        mInterface2InternalEventCons(0){
+        m_apoEventConnections(nullptr),
+        m_apoDataConnections(nullptr),
+        mInterface2InternalEventCons(nullptr){
 
   createInternalFBs();
 
@@ -38,8 +38,8 @@ CCompositeFB::CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_ps
 
   //remove adapter-references for CFB
   for(TForteUInt8 i = 0; i < pa_pstInterfaceSpec->m_nNumAdapters; i++){
-    if(0 != m_apoAdapters){
-      static_cast<CAdapter*>(m_apoAdapters[i])->setParentFB(0, 0);
+    if(nullptr != m_apoAdapters){
+      static_cast<CAdapter*>(m_apoAdapters[i])->setParentFB(nullptr, 0);
     }
   }
 
@@ -65,13 +65,13 @@ CCompositeFB::~CCompositeFB(){
   }
 
   if(cm_cpoFBNData->m_nNumDataConnections){
-    if(0 != m_apoDataConnections){
+    if(nullptr != m_apoDataConnections){
       delete[] m_apoDataConnections;
     }
-    if(0 != mIf2InDConns){
+    if(nullptr != mIf2InDConns){
       delete[] mIf2InDConns;
     }
-    if(0 != m_apoIn2IfDConns){
+    if(nullptr != m_apoIn2IfDConns){
       delete[] m_apoIn2IfDConns;
     }
   }
@@ -90,8 +90,8 @@ bool CCompositeFB::connectDI(TPortId paDIPortId, CDataConnection *paDataCon){
   else if(paDIPortId < m_pstInterfaceSpec->m_nNumDIs){
     bool needsCloning = (getDI(paDIPortId)->getDataTypeID() == CIEC_ANY::e_ANY);
     retVal = CFunctionBlock::connectDI(paDIPortId, paDataCon);
-    if((true == retVal) && (true == needsCloning) && (0 != paDataCon)
-        && (0 != paDataCon->getValue())){
+    if((true == retVal) && (true == needsCloning) && (nullptr != paDataCon)
+        && (nullptr != paDataCon->getValue())){
       //if internal connected update the connections data type and maybe internal further connection points
       (mIf2InDConns + paDIPortId)->setValue(getDI(paDIPortId));
       (mIf2InDConns + paDIPortId)->cloneInputInterfaceValue();
@@ -102,7 +102,7 @@ bool CCompositeFB::connectDI(TPortId paDIPortId, CDataConnection *paDataCon){
 
 bool CCompositeFB::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefValue){
   bool bRetVal = CFunctionBlock::configureGenericDO(paDOPortId, paRefValue);
-  if(true == bRetVal && 0 != m_apoIn2IfDConns[paDOPortId]){
+  if(bRetVal && nullptr != m_apoIn2IfDConns[paDOPortId]){
     //issue a reconfiguration attempt so that all connection end points in this connection are also correctly configured
     m_apoIn2IfDConns[paDOPortId]->connectToCFBInterface(this, paDOPortId);
   }
@@ -126,7 +126,7 @@ EMGMResponse CCompositeFB::changeFBExecutionState(EMGMCommandType pa_unCommand){
 #ifdef FORTE_SUPPORT_MONITORING
 
 CFunctionBlock *CCompositeFB::getFB(forte::core::TNameIdentifier::CIterator &paNameListIt){
-  CFunctionBlock *retVal = 0;
+  CFunctionBlock *retVal = nullptr;
   for(unsigned int i = 0; i < cm_cpoFBNData->m_nNumFBs; ++i){
     if(mInternalFBs[i]->getInstanceNameId() == *paNameListIt){
       if(paNameListIt.isLastEntry()){
@@ -138,7 +138,7 @@ CFunctionBlock *CCompositeFB::getFB(forte::core::TNameIdentifier::CIterator &paN
       }
     }
   }
-  if(0 == retVal){
+  if(nullptr == retVal){
     //check if it is an adapter of the function block
     retVal = CFunctionBlock::getFB(paNameListIt);
   }
@@ -149,7 +149,7 @@ CFunctionBlock *CCompositeFB::getFB(forte::core::TNameIdentifier::CIterator &paN
 
 CIEC_ANY *CCompositeFB::getVar(CStringDictionary::TStringId *paNameList,
     unsigned int paNameListSize){
-  CIEC_ANY *retVal = 0;
+  CIEC_ANY *retVal = nullptr;
 
   if(1 > paNameListSize){
     for(unsigned int i = 0; i < cm_cpoFBNData->m_nNumFBs; ++i){
@@ -174,7 +174,7 @@ void CCompositeFB::executeEvent(int pa_nEIID){
         & cgInternal2InterfaceRemovalMask));
   }
   else{
-    if(pa_nEIID < m_pstInterfaceSpec->m_nNumEIs && 0 != mInterface2InternalEventCons[pa_nEIID]){
+    if(pa_nEIID < m_pstInterfaceSpec->m_nNumEIs && nullptr != mInterface2InternalEventCons[pa_nEIID]){
       mInterface2InternalEventCons[pa_nEIID]->triggerEvent(m_poInvokingExecEnv);
     }
   }
@@ -182,7 +182,7 @@ void CCompositeFB::executeEvent(int pa_nEIID){
 
 void CCompositeFB::sendInternal2InterfaceOutputEvent(int pa_nEOID){
   //handle sampling of internal 2 interface data connections
-  if((pa_nEOID < m_pstInterfaceSpec->m_nNumEOs) && (0 != m_pstInterfaceSpec->m_anEOWithIndexes) &&
+  if((pa_nEOID < m_pstInterfaceSpec->m_nNumEOs) && (nullptr != m_pstInterfaceSpec->m_anEOWithIndexes) &&
     (-1 != m_pstInterfaceSpec->m_anEOWithIndexes[pa_nEOID])){
       const TDataIOID *poEOWithStart =
           &(m_pstInterfaceSpec->m_anEOWith[m_pstInterfaceSpec->m_anEOWithIndexes[pa_nEOID]]);
@@ -191,7 +191,7 @@ void CCompositeFB::sendInternal2InterfaceOutputEvent(int pa_nEOID){
       {
         CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
         for(int i = 0; poEOWithStart[i] != 255; ++i){
-          if(0 != m_apoIn2IfDConns[poEOWithStart[i]]){
+          if(nullptr != m_apoIn2IfDConns[poEOWithStart[i]]){
             m_apoIn2IfDConns[poEOWithStart[i]]->readData(getDO(poEOWithStart[i]));
           }
         }
@@ -224,7 +224,7 @@ void CCompositeFB::createEventConnections(){
       poSrcFB = getFunctionBlock(cpstCurrentConn->m_nSrcFBNum);
       poDstFB = getFunctionBlock(cpstCurrentConn->m_nDstFBNum);
 
-      if((0 != poSrcFB) && (0 != poDstFB)){
+      if((nullptr != poSrcFB) && (nullptr != poDstFB)){
         if(this == poSrcFB){
           m_apoEventConnections[i] =
               mInterface2InternalEventCons[getEIID(cpstCurrentConn->m_nSrcId)];
@@ -276,7 +276,7 @@ void CCompositeFB::createDataConnections(){
     if(m_pstInterfaceSpec->m_nNumDOs){
       m_apoIn2IfDConns = new CDataConnection *[m_pstInterfaceSpec->m_nNumDOs];
       for(TPortId i = 0; i < m_pstInterfaceSpec->m_nNumDOs; i++){
-        m_apoIn2IfDConns[i] = 0;
+        m_apoIn2IfDConns[i] = nullptr;
       }
     }
 
@@ -290,7 +290,7 @@ void CCompositeFB::createDataConnections(){
       poSrcFB = getFunctionBlock(cpstCurrentConn->m_nSrcFBNum);
       poDstFB = getFunctionBlock(cpstCurrentConn->m_nDstFBNum);
 
-      if((0 != poSrcFB) && (0 != poDstFB)){
+      if((nullptr != poSrcFB) && (nullptr != poDstFB)){
         if(this == poSrcFB){
           m_apoDataConnections[i] = &(mIf2InDConns[getDIID(cpstCurrentConn->m_nSrcId)]);
         }
@@ -326,7 +326,7 @@ void CCompositeFB::setParams() {
     const SCFB_FBParameter *pstCurrentParam = &(cm_cpoFBNData->m_pstParams[i]);
     CIEC_ANY *poDI =
         mInternalFBs[pstCurrentParam->m_nFBNum]->getDataInput(pstCurrentParam->m_nDINameID);
-    if(0 != poDI){
+    if(nullptr != poDI){
       poDI->fromString(pstCurrentParam->m_acParamValue);
     }
     else{
@@ -336,7 +336,7 @@ void CCompositeFB::setParams() {
 }
 
 CFunctionBlock *CCompositeFB::getFunctionBlock(int pa_nFBNum){
-  CFunctionBlock *poRetVal = 0;
+  CFunctionBlock *poRetVal = nullptr;
   if(-1 == pa_nFBNum){
     poRetVal = this;
   }

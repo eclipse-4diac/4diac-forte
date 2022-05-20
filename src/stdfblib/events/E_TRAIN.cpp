@@ -39,7 +39,7 @@ const SFBInterfaceSpec FORTE_E_TRAIN::scm_stFBInterfaceSpec = {
   2,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
   1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  2,  scm_anDataInputNames, scm_anDataInputTypeIds,
   1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  0, 0
+  0, nullptr
 };
 
 
@@ -74,8 +74,8 @@ const SCFB_FBNData FORTE_E_TRAIN::scm_stFBNData = {
   6, scm_astEventConnections,
   1, scm_astFannedOutEventConnections,
   4, scm_astDataConnections,
-  0, 0,
-  0, 0
+  0, nullptr,
+  0, nullptr
 };
 
 

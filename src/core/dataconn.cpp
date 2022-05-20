@@ -18,16 +18,16 @@
 CDataConnection::CDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId,
     const CIEC_ANY *paSrcDO) :
     CConnection(paSrcFB, paSrcPortId),
-        m_poValue(0),
+        m_poValue(nullptr),
         mSpecialCastConnection(false){
 
-  if((0 != paSrcDO) && (CIEC_ANY::e_ANY != paSrcDO->getDataTypeID())){
+  if((nullptr != paSrcDO) && (CIEC_ANY::e_ANY != paSrcDO->getDataTypeID())){
     m_poValue = paSrcDO->clone(m_acDataBuf);
   }
 }
 
 CDataConnection::~CDataConnection(){
-  if(0 != m_poValue){
+  if(nullptr != m_poValue){
     m_poValue->~CIEC_ANY();
   }
 }
@@ -81,7 +81,7 @@ CDataConnection::disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringI
     retval = CConnection::removeDestination(CConnectionPoint(paDstFB, dstPortId));
     if(e_RDY == retval){
       // the CConnection class didn't respond an error
-      paDstFB->connectDI(dstPortId, 0);
+      paDstFB->connectDI(dstPortId, nullptr);
     }
   }
   return retval;
@@ -129,7 +129,7 @@ EMGMResponse CDataConnection::establishDataConnection(CFunctionBlock *paDstFB, T
     CIEC_ANY *paDstDataPoint){
   EMGMResponse retVal = e_INVALID_OPERATION;
 
-  if(0 == m_poValue){
+  if(nullptr == m_poValue){
     handleAnySrcPortConnection(*paDstDataPoint);
     retVal = e_RDY;
   }

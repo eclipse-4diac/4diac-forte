@@ -24,19 +24,19 @@ const CStringDictionary::TStringId E_MERGE::scm_anEventOutputNames[] = {g_nStrin
 const SFBInterfaceSpec E_MERGE::scm_stFBInterfaceSpec = {
   2,
   scm_anEventInputNames,
-  0,
-  0,
+  nullptr,
+  nullptr,
   1,
   scm_anEventOutputNames,
+  nullptr,
+  nullptr,
   0,
+  nullptr,
+  nullptr,
   0,
+  nullptr,
+  nullptr,
   0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0
+  nullptr
 };
 

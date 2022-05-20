@@ -50,7 +50,7 @@ const SFBInterfaceSpec DEV_MGR::scm_stFBInterfaceSpec = {
   2,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
   2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  3,  scm_anDataInputNames, scm_anDataInputTypeIds,
   4,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  0, 0
+  0, nullptr
 };
 
 const char * const DEV_MGR::scm_sMGMResponseTexts[13] = { "RDY", "BAD_PARAMS", "LOCAL_TERMINATION", "SYSTEM_TERMINATION", "NOT_READY", "UNSUPPORTED_CMD", "UNSUPPORTED_TYPE", "NO_SUCH_OBJECT", "INVALID_OBJECT", "INVALID_OPERATION", "INVALID_STATE", "OVERFLOW", "INVALID_DST" };
@@ -100,7 +100,7 @@ void DEV_MGR::executeRQST(void){
 
 char *DEV_MGR::parseRequest(char *paRequestString, forte::core::SManagementCMD &paCommand){
 //first check if it is an management request
-  char *acCommandStart = 0;
+  char *acCommandStart = nullptr;
   static const int scnCommandLength[] = {7, 7, 6, 5, 5, 6, 5, 6, 6};
 
   if(!strncmp("<Request ID=\"", paRequestString, 13)){
@@ -109,13 +109,13 @@ char *DEV_MGR::parseRequest(char *paRequestString, forte::core::SManagementCMD &
     paCommand.mID = &(paRequestString[i]);
     for(j = 0; paRequestString[i] != '\"'; ++i, ++j){
       if(j >= 7){
-        return 0;
+        return nullptr;
       }
     }
     paRequestString[i] = '\0'; //close ID
     ++i;
     acCommandStart = strchr((&paRequestString[i]), '\"');
-    if(acCommandStart != 0){
+    if(acCommandStart != nullptr){
       acCommandStart++; //this is the real start of the command
       if(!strncmp("CREATE", acCommandStart, 6)){
         paCommand.mCMD = cg_nMGM_CMD_Create_Group;
@@ -147,7 +147,7 @@ char *DEV_MGR::parseRequest(char *paRequestString, forte::core::SManagementCMD &
       }
 #endif
       else{
-        return 0;
+        return nullptr;
       }
       acCommandStart += scnCommandLength[paCommand.mCMD];
     }
@@ -186,19 +186,19 @@ bool DEV_MGR::parseFBData(char *paRequestPartLeft, forte::core::SManagementCMD &
     int i = 0;
     if(acBuf[0] != '*'){
       i = parseIdentifier(acBuf, paCommand.mFirstParam);
-      acBuf = (-1 == i) ? 0 : strchr(&(acBuf[i + 1]), '\"');
+      acBuf = (-1 == i) ? nullptr : strchr(&(acBuf[i + 1]), '\"');
     }
     else{
       acBuf = strchr(&(acBuf[i + 2]), '\"');
     }
 
-    if(acBuf != 0){
+    if(acBuf != nullptr){
       if(acBuf[1] != '*'){
         ++acBuf;
         i = parseIdentifier(acBuf, paCommand.mSecondParam);
         if(-1 != i){
           acBuf = strchr(&(acBuf[i + 1]), '\"');
-          if(acBuf != 0){
+          if(acBuf != nullptr){
             // We have an application name given
             ++acBuf;
             TForteUInt16 nBufLength = static_cast<TForteUInt16>(strcspn(acBuf, "\"") + 1);
@@ -242,7 +242,7 @@ bool DEV_MGR::parseConnectionData(char *paRequestPartLeft, forte::core::SManagem
     int i = parseIdentifier(&(paRequestPartLeft[19]), paCommand.mFirstParam);
     if(-1 != i){
       char *acBuf = strchr(&(paRequestPartLeft[i + 21]), '\"');
-      if(acBuf != 0){
+      if(acBuf != nullptr){
         parseIdentifier(&(acBuf[1]), paCommand.mSecondParam);
         bRetVal = (-1 != i);
       }
@@ -257,7 +257,7 @@ bool DEV_MGR::parseWriteConnectionData(char *paRequestPartLeft, forte::core::SMa
     paRequestPartLeft = &(paRequestPartLeft[19]);
 
     char* endOfSource = strchr(paRequestPartLeft, '\"');
-    if(0 == endOfSource){
+    if(nullptr == endOfSource){
       return false;
     }
     *endOfSource = '\0';
@@ -265,7 +265,7 @@ bool DEV_MGR::parseWriteConnectionData(char *paRequestPartLeft, forte::core::SMa
     paCommand.mAdditionalParams = CIEC_STRING(paRequestPartLeft);
     *endOfSource = '"'; // restore the string
     paRequestPartLeft = strchr(endOfSource + 1, '\"');
-    if(0 != paRequestPartLeft){
+    if(nullptr != paRequestPartLeft){
       retVal = (-1 != parseIdentifier(&paRequestPartLeft[1], paCommand.mFirstParam));
     }
   }
@@ -274,7 +274,7 @@ bool DEV_MGR::parseWriteConnectionData(char *paRequestPartLeft, forte::core::SMa
 
 void DEV_MGR::parseCreateData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand){
   paCommand.mCMD = cg_nMGM_CMD_INVALID;
-  if(0 != paRequestPartLeft){
+  if(nullptr != paRequestPartLeft){
       switch (paRequestPartLeft[0]){
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
         case 'A': // we have an Adapter to Create
@@ -313,7 +313,7 @@ void DEV_MGR::parseCreateData(char *paRequestPartLeft, forte::core::SManagementC
 
 void DEV_MGR::parseDeleteData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand){
   paCommand.mCMD = cg_nMGM_CMD_INVALID;
-  if(0 != paRequestPartLeft){
+  if(nullptr != paRequestPartLeft){
     switch (paRequestPartLeft[0]){
       case 'F': // we have an FB to delete
         if(parseFBData(paRequestPartLeft, paCommand)){
@@ -339,7 +339,7 @@ void DEV_MGR::parseDeleteData(char *paRequestPartLeft, forte::core::SManagementC
 }
 
 void DEV_MGR::parseAdditionalStateCommandData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand){
-  if(0 != paRequestPartLeft && '/' != paRequestPartLeft[0] && //if we have an additional xml token parse if it is an FB definition
+  if(nullptr != paRequestPartLeft && '/' != paRequestPartLeft[0] && //if we have an additional xml token parse if it is an FB definition
     !parseFBData(paRequestPartLeft, paCommand)) {
     paCommand.mCMD = cg_nMGM_CMD_INVALID;
   }
@@ -347,7 +347,7 @@ void DEV_MGR::parseAdditionalStateCommandData(char *paRequestPartLeft, forte::co
 
 void DEV_MGR::parseReadData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand){
   paCommand.mCMD = cg_nMGM_CMD_INVALID;
-  if(0 != paRequestPartLeft){
+  if(nullptr != paRequestPartLeft){
 #ifdef FORTE_SUPPORT_MONITORING
     if('W' == paRequestPartLeft[0]){
           paCommand.mCMD = cg_nMGM_CMD_Monitoring_Read_Watches;
@@ -362,10 +362,10 @@ void DEV_MGR::parseReadData(char *paRequestPartLeft, forte::core::SManagementCMD
 void DEV_MGR::parseWriteData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand){
   //We need an additional xml connection token parse if it is an connection definition
   paCommand.mCMD = cg_nMGM_CMD_INVALID;
-  if(0 != paRequestPartLeft && parseWriteConnectionData(paRequestPartLeft, paCommand)){
+  if(nullptr != paRequestPartLeft && parseWriteConnectionData(paRequestPartLeft, paCommand)){
 #ifdef FORTE_SUPPORT_MONITORING
     char *pch = strstr(paRequestPartLeft, "force=\"");
-    if (0 != pch) {
+    if (nullptr != pch) {
       if (!strncmp(&pch[7], "true", sizeof("true") - 1)) {
         paCommand.mCMD = cg_nMGM_CMD_Monitoring_Force;
       } else if (!strncmp(&pch[7], "false", sizeof("false") - 1)) {
@@ -389,7 +389,7 @@ void DEV_MGR::parseWriteData(char *paRequestPartLeft, forte::core::SManagementCM
 #ifdef FORTE_SUPPORT_QUERY_CMD
 void DEV_MGR::parseQueryData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand){
   paCommand.mCMD = cg_nMGM_CMD_INVALID;
-  if(0 != paRequestPartLeft){
+  if(nullptr != paRequestPartLeft){
     switch (paRequestPartLeft[0]){
       case 'F': // query fb or fb type list
         if(!strncmp(paRequestPartLeft, "FBT", sizeof("FBT") - 1)){
@@ -469,7 +469,7 @@ bool DEV_MGR::parseTypeListData(char *paRequestPartLeft, forte::core::SManagemen
 void DEV_MGR::generateResponse(const char *paID, EMGMResponse paResp){
   RESP().clear();
   RESP().append("<Response ID=\"");
-  if (0 != paID) {
+  if (nullptr != paID) {
     RESP().append(paID);
   }
   RESP().append("\"");
@@ -485,7 +485,7 @@ void DEV_MGR::generateLongResponse(EMGMResponse paResp, forte::core::SManagement
   RESP().clear();
   RESP().reserve(static_cast<TForteUInt16>(255 + (paCMD.mAdditionalParams.length())));
   RESP().append("<Response ID=\"");
-  if (0 != paCMD.mID) {
+  if (nullptr != paCMD.mID) {
     RESP().append(paCMD.mID);
   }
   RESP().append("\"");
@@ -581,26 +581,26 @@ DEV_MGR::DEV_MGR(CStringDictionary::TStringId paInstanceNameId, CResource *paSrc
 
 DEV_MGR::~DEV_MGR(){
   freeAllData();
-  m_pstInterfaceSpec = 0;  //block any wrong cleanup in the generic fb base class of CBaseCommFB
+  m_pstInterfaceSpec = nullptr;  //block any wrong cleanup in the generic fb base class of CBaseCommFB
 }
 
 EMGMResponse DEV_MGR::parseAndExecuteMGMCommand(char *paDest, char *paCommand){
   EMGMResponse eResp = e_INVALID_OBJECT;
-  if(0 != strchr(paCommand, '>')){
+  if(nullptr != strchr(paCommand, '>')){
     mCommand.mDestination = (strlen(paDest) != 0) ? CStringDictionary::getInstance().insert(paDest) : CStringDictionary::scm_nInvalidStringId;
     mCommand.mFirstParam.clear();
     mCommand.mSecondParam.clear();
     if ( 255 <= mCommand.mAdditionalParams.getCapacity()) {
       mCommand.mAdditionalParams.reserve(255);
     }
-    mCommand.mID=0;
+    mCommand.mID=nullptr;
 #ifdef FORTE_SUPPORT_MONITORING
   mCommand.mMonitorResponse.clear();
 #endif // FORTE_SUPPORT_MONITORING
     char *acRequestPartLeft = parseRequest(paCommand, mCommand);
-    if(0 != acRequestPartLeft){
+    if(nullptr != acRequestPartLeft){
       acRequestPartLeft = strchr(acRequestPartLeft, '<');
-      if(0 != acRequestPartLeft){
+      if(nullptr != acRequestPartLeft){
         acRequestPartLeft++; //point to the next character after the <
       }
       // we got the command for execution
@@ -652,7 +652,7 @@ bool DEV_MGR::parseMonitoringData(char *paRequestPartLeft, forte::core::SManagem
     int i = parseIdentifier(&(paRequestPartLeft[14]), paCommand.mFirstParam);
     if(-1 != i){
       char *acBuf = strchr(&(paRequestPartLeft[i + 16]), '\"');
-      if(acBuf != 0){
+      if(acBuf != nullptr){
         parseIdentifier(&(acBuf[1]), paCommand.mSecondParam);
         bRetVal = (-1 != i);
       }

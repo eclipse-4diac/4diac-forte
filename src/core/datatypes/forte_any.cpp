@@ -73,9 +73,9 @@ int CIEC_ANY::fromString(const char *pa_pacValue){
   if(e_ANY == getDataTypeID()){
     //we should only be here if it is really an unparameterized generic data type
     const char *acHashPos = strchr(pa_pacValue, '#');
-    if(0 != acHashPos){
+    if(nullptr != acHashPos){
       CStringDictionary::TStringId nTypeNameId = parseTypeName(pa_pacValue, acHashPos);
-      if(CStringDictionary::scm_nInvalidStringId != nTypeNameId && 0 != CTypeLib::createDataTypeInstance(nTypeNameId, (TForteByte *) this)) {
+      if(CStringDictionary::scm_nInvalidStringId != nTypeNameId && nullptr != CTypeLib::createDataTypeInstance(nTypeNameId, (TForteByte *) this)) {
         nRetVal = fromString(pa_pacValue); //some of the datatypes require the type upfront for correct parsing e.g., time
         if(0 > nRetVal) {
           //if it didn't work change us back to an any

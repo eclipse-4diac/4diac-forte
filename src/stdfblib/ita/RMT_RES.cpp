@@ -26,21 +26,21 @@ const CStringDictionary::TStringId RMT_RES::scm_aunDIDataTypeIds[] = {g_nStringI
 
 const SFBInterfaceSpec RMT_RES::scm_stFBInterfaceSpec = {
   0,
+  nullptr,
+  nullptr,
+  nullptr,
   0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
+  nullptr,
+  nullptr,
+  nullptr,
   1,
   scm_aunVarInputNameIds,
   scm_aunDIDataTypeIds,
   0,
+  nullptr,
+  nullptr,
   0,
-  0,
-  0,
-  0
+  nullptr
   };
 
 

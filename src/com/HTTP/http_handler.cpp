@@ -347,7 +347,7 @@ void CHTTP_Handler::checkClientLayers() {
         DEVLOG_ERROR("[HTTP Handler]: Timeout at client %s:%u \n", (*iter)->mLayer->getHost().getValue(), (*iter)->mLayer->getPort());
         removeAndCloseSocket((*iter)->mSocket);
         clientsToDelete.pushBack(*iter);
-        (*iter)->mLayer->recvData(0, 0); //indicates timeout
+        (*iter)->mLayer->recvData(nullptr, 0); //indicates timeout
       }
     }
     for(CSinglyLinkedList<HTTPClientWaiting*>::Iterator iter = clientsToDelete.begin(); iter != clientsToDelete.end(); ++iter) {

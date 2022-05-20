@@ -39,9 +39,9 @@ const CStringDictionary::TStringId FORTE_TEST_CONDITION::scm_anEventOutputNames[
 
 const SFBInterfaceSpec FORTE_TEST_CONDITION::scm_stFBInterfaceSpec = {
   1,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  0, 0,  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  0,  0, 0,
-  0, 0
+  1,  scm_anEventOutputNames,  nullptr, nullptr,  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
+  0,  nullptr, nullptr,
+  0, nullptr
 };
 
 FORTE_TEST_CONDITION::~FORTE_TEST_CONDITION() {

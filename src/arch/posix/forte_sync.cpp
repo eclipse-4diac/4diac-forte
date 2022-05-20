@@ -12,7 +12,7 @@
 #include "forte_sync.h"
 
 CPThreadSyncObject::CPThreadSyncObject(){
-  pthread_mutex_init(&mMutex, 0);
+  pthread_mutex_init(&mMutex, nullptr);
 }
 
 CPThreadSyncObject::~CPThreadSyncObject(){

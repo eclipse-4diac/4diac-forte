@@ -111,7 +111,7 @@ CIEC_TestStruct2::CIEC_TestStruct2() :
 
   const CStringDictionary::TStringId CIEC_TestStruct3::scm_unElementTypes[] = { g_nStringIdARRAY, sizeOfFirstArray, g_nStringIdSTRING, g_nStringIdBOOL, g_nStringIdARRAY, sizeOfSecondArray, g_nStringIdINT };
   const CStringDictionary::TStringId CIEC_TestStruct3::scm_unElementNames[] = { g_nStringIdVal1, g_nStringIdVal2, g_nStringIdVal3 };
-CIEC_STRUCT::TStructInitialValues CIEC_TestStruct3::scmInitialValues[] = { 0, "true", "[9]" };
+CIEC_STRUCT::TStructInitialValues CIEC_TestStruct3::scmInitialValues[] = { nullptr, "true", "[9]" };
 DEFINE_FIRMWARE_DATATYPE(TestStruct3, g_nStringIdTestStruct3)
 CIEC_TestStruct3::CIEC_TestStruct3() :
     CIEC_STRUCT(g_nStringIdTestStruct3, 3, scm_unElementTypes, scm_unElementNames, e_APPLICATION + e_CONSTRUCTED + 1, scmInitialValues) {
@@ -159,7 +159,7 @@ class CIEC_TestStruct4 : public CIEC_STRUCT { //undefined data types
 const CStringDictionary::TStringId CIEC_TestStruct4::scm_unElementTypes[] = { g_nStringIdARRAY, sizeOfFirstArray, g_nStringIdSTRING, g_nStringIdBOOL,
   g_nStringIdUNDEFINEDDATATYPE };
 const CStringDictionary::TStringId CIEC_TestStruct4::scm_unElementNames[] = { g_nStringIdVal1, g_nStringIdVal2, g_nStringIdVal3 };
-CIEC_STRUCT::TStructInitialValues CIEC_TestStruct4::scmInitialValues[] = { "['a', 'b', '']", 0, "9" };
+CIEC_STRUCT::TStructInitialValues CIEC_TestStruct4::scmInitialValues[] = { "['a', 'b', '']", nullptr, "9" };
 DEFINE_FIRMWARE_DATATYPE(TestStruct4, g_nStringIdTestStruct4)
 CIEC_TestStruct4::CIEC_TestStruct4() :
     CIEC_STRUCT(g_nStringIdTestStruct4, 3, scm_unElementTypes, scm_unElementNames, e_APPLICATION + e_CONSTRUCTED + 1, scmInitialValues) {
@@ -925,11 +925,11 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
     BOOST_CHECK_EQUAL(paStruct.getASN1StructType(), 0);
     BOOST_CHECK_EQUAL(paStruct.getStructSize(), 0);
     const CStringDictionary::TStringId* names = paStruct.elementNames();
-    BOOST_CHECK(0 == paStruct.elementNames());
+    BOOST_CHECK(nullptr == paStruct.elementNames());
     BOOST_CHECK_EQUAL(paStruct.getStructTypeNameID(), 0);
     BOOST_CHECK_EQUAL(paStruct.getDataTypeID(), CIEC_ANY::e_STRUCT);
-    BOOST_CHECK(0 == paStruct.getMembers());
-    BOOST_CHECK(0 == paStruct.getMemberNamed(0));
+    BOOST_CHECK(nullptr == paStruct.getMembers());
+    BOOST_CHECK(nullptr == paStruct.getMemberNamed(0));
 
     char acBuffer[3];
     BOOST_CHECK_EQUAL(paStruct.getToStringBufferSize(), sizeof("()"));
@@ -938,7 +938,7 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
   }
 
   BOOST_AUTO_TEST_CASE(Struct_EmptyStruct) {
-    CIEC_STRUCT nTest(0, 0, 0, 0, 64 + 32 + 1); //CIEC_STRUCT::e_APPLICATION + CIEC_STRUCT::e_CONSTRUCTED + 1
+    CIEC_STRUCT nTest(0, 0, nullptr, nullptr, 64 + 32 + 1); //CIEC_STRUCT::e_APPLICATION + CIEC_STRUCT::e_CONSTRUCTED + 1
     checkEmptyStruct(nTest);
 
     CIEC_STRUCT nTest1(nTest);

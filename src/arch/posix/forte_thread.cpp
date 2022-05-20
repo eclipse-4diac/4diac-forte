@@ -52,7 +52,7 @@ forte::arch::CThreadBase<pthread_t>::TThreadHandleType CPosixThread::createThrea
     }
   }
   else{
-    if(pthread_create(&retVal, NULL, threadFunction, this)){
+    if(pthread_create(&retVal, nullptr, threadFunction, this)){
       DEVLOG_ERROR("Error could not create the thread! %s\n", strerror(errno));
       return 0;
     }
@@ -66,7 +66,7 @@ forte::arch::CThreadBase<pthread_t>::TThreadHandleType CPosixThread::createThrea
 void * CPosixThread::threadFunction(void *paArguments){
   // Get pointer to CThread object out of void pointer
   CThreadBase<pthread_t>::runThread(static_cast<CPosixThread *>(paArguments));
-  return 0;
+  return nullptr;
 }
 
 CPosixThread::CPosixThread(long paStackSize) : CThreadBase<pthread_t>(paStackSize){
@@ -86,5 +86,5 @@ void CPosixThread::setDeadline(const CIEC_TIME &paVal){
 
 void CPosixThread::sleepThread(unsigned int paMilliSeconds){
   struct timespec stReq = { static_cast<time_t>(paMilliSeconds / 1000), static_cast<long>(1000000 * (paMilliSeconds % 1000)) };
-  nanosleep(&stReq, NULL);
+  nanosleep(&stReq, nullptr);
 }

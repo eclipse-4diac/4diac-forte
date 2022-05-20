@@ -21,7 +21,7 @@
 using namespace forte::core;
 
 CMonitoringHandler::CMonitoringHandler(CResource &paResource) :
-    mTriggerEvent(0, 0),
+    mTriggerEvent(nullptr, 0),
         mResource(paResource){
 }
 
@@ -60,7 +60,7 @@ CFunctionBlock* CMonitoringHandler::getFB(forte::core::TNameIdentifier &paNameLi
   forte::core::TNameIdentifier::CIterator runner(paNameList.begin());
 
   CFunctionBlock *fb = mResource.getContainedFB(runner);
-  if((0 != fb) && (!runner.isLastEntry())){
+  if((nullptr != fb) && (!runner.isLastEntry())){
     ++runner;
     fb = fb->getFB(runner);
   }
@@ -74,11 +74,11 @@ EMGMResponse CMonitoringHandler::addWatch(forte::core::TNameIdentifier &paNameLi
   paNameList.popBack();
   CFunctionBlock *fB = getFB(paNameList);
 
-  if(0 != fB){
+  if(nullptr != fB){
     SFBMonitoringEntry &fbMonitoringEntry(findOrCreateFBMonitoringEntry(fB, paNameList));
 
     CIEC_ANY *dataVal = fB->getVar(&portName, 1);
-    if(0 != dataVal){
+    if(nullptr != dataVal){
       addDataWatch(fbMonitoringEntry, portName, *dataVal);
       eRetVal = e_RDY;
     }
@@ -107,7 +107,7 @@ EMGMResponse CMonitoringHandler::removeWatch(forte::core::TNameIdentifier &paNam
   CStringDictionary::TStringId portName = paNameList.back();
   paNameList.popBack();
   CFunctionBlock *fB = getFB(paNameList);
-  if(0 != fB){
+  if(nullptr != fB){
     TFBMonitoringList::Iterator itRefNode = mFBMonitoringList.end(); //needed for deleting the entry from the list
     TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin();
 
@@ -140,7 +140,7 @@ EMGMResponse CMonitoringHandler::removeWatch(forte::core::TNameIdentifier &paNam
 
 EMGMResponse CMonitoringHandler::readWatches(CIEC_STRING &paResponse){
   paResponse.clear();
-  if(0 == mResource.getResourcePtr()){
+  if(nullptr == mResource.getResourcePtr()){
     //we are in the device
     for(CFBContainer::TFunctionBlockList::Iterator itRunner = mResource.getFBList().begin();
         itRunner != mResource.getFBList().end();
@@ -162,9 +162,9 @@ EMGMResponse CMonitoringHandler::clearForce(forte::core::TNameIdentifier &paName
   paNameList.popBack();
   CFunctionBlock *fB = getFB(paNameList);
 
-  if(0 != fB){
+  if(nullptr != fB){
     CIEC_ANY *poDataVal = fB->getVar(&portName, 1);
-    if(0 != poDataVal){
+    if(nullptr != poDataVal){
       poDataVal->setForced(false);
       eRetVal = e_RDY;
     }
@@ -177,7 +177,7 @@ EMGMResponse CMonitoringHandler::triggerEvent(forte::core::TNameIdentifier &paNa
   CStringDictionary::TStringId portName = paNameList.back();
   paNameList.popBack();
   CFunctionBlock *fB = getFB(paNameList);
-  if(0 != fB){
+  if(nullptr != fB){
     TEventID eventId = fB->getEIID(portName);
     if(cg_nInvalidEventID != eventId){
       //only a single event can be triggered simultaneously (until it is executed by ecet!)
@@ -206,9 +206,9 @@ EMGMResponse CMonitoringHandler::resetEventCount(forte::core::TNameIdentifier &p
   CStringDictionary::TStringId portName = paNameList.back();
   paNameList.popBack();
   CFunctionBlock *fB = getFB(paNameList);
-  if(0 != fB){
+  if(nullptr != fB){
     TEventID eventId = fB->getEIID(portName);
-    TForteUInt32 *eventMonitorData = 0;
+    TForteUInt32 *eventMonitorData = nullptr;
 
     if(cg_nInvalidEventID != eventId){
       eventMonitorData = &fB->getEIMonitorData(eventId);
@@ -219,7 +219,7 @@ EMGMResponse CMonitoringHandler::resetEventCount(forte::core::TNameIdentifier &p
         eventMonitorData = &fB->getEOMonitorData(eventId);
       }
     }
-    if(0 != eventMonitorData){
+    if(nullptr != eventMonitorData){
       CCriticalRegion criticalRegion(fB->getResource().m_oResDataConSync);
       *eventMonitorData = 0;
       eRetVal = e_RDY;

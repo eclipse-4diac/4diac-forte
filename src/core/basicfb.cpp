@@ -19,8 +19,8 @@ CBasicFB::CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfa
     CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acBasicFBVarsData), m_nECCState(0),
         cm_pstVarInternals(pa_pstVarInternals), cm_amountOfInternalFBs(0) {
 
-  m_aoInternals = 0;
-  if((0 != cm_pstVarInternals) && (cm_pstVarInternals->m_nNumIntVars) && (0 != pa_acBasicFBVarsData)) {
+  m_aoInternals = nullptr;
+  if((nullptr != cm_pstVarInternals) && (cm_pstVarInternals->m_nNumIntVars) && (nullptr != pa_acBasicFBVarsData)) {
     pa_acBasicFBVarsData += genFBVarsDataSize(m_pstInterfaceSpec->m_nNumDIs, m_pstInterfaceSpec->m_nNumDOs, m_pstInterfaceSpec->m_nNumAdapters);
 
     m_aoInternals = reinterpret_cast<CIEC_ANY*>(pa_acBasicFBVarsData);
@@ -41,8 +41,8 @@ CBasicFB::CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfa
 
   createInternalFBs(pa_internalFBs);
 
-  m_aoInternals = 0;
-  if((0 != cm_pstVarInternals) && (cm_pstVarInternals->m_nNumIntVars) && (0 != pa_acBasicFBVarsData)) {
+  m_aoInternals = nullptr;
+  if((nullptr != cm_pstVarInternals) && (cm_pstVarInternals->m_nNumIntVars) && (nullptr != pa_acBasicFBVarsData)) {
     pa_acBasicFBVarsData += genFBVarsDataSize(m_pstInterfaceSpec->m_nNumDIs, m_pstInterfaceSpec->m_nNumDOs, m_pstInterfaceSpec->m_nNumAdapters);
 
     m_aoInternals = reinterpret_cast<CIEC_ANY*>(pa_acBasicFBVarsData);
@@ -56,7 +56,7 @@ CBasicFB::CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfa
 }
 
 CBasicFB::~CBasicFB() {
-  if(0 != m_aoInternals) {
+  if(nullptr != m_aoInternals) {
     for(int i = 0; i < cm_pstVarInternals->m_nNumIntVars; ++i) {
       getVarInternal(i)->~CIEC_ANY();
     }
@@ -65,9 +65,9 @@ CBasicFB::~CBasicFB() {
 
 CIEC_ANY* CBasicFB::getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) {
   CIEC_ANY *poRetVal = CFunctionBlock::getVar(paNameList, paNameListSize);
-  if((0 == poRetVal) && (1 == paNameListSize)) {
+  if((nullptr == poRetVal) && (1 == paNameListSize)) {
     poRetVal = getInternalVar(*paNameList);
-    if(0 == poRetVal && !strcmp("!ECC", CStringDictionary::getInstance().get(*paNameList))) { //TODO consider if this can also be an string ID in a different way
+    if(nullptr == poRetVal && !strcmp("!ECC", CStringDictionary::getInstance().get(*paNameList))) { //TODO consider if this can also be an string ID in a different way
       poRetVal = &m_nECCState;
     }
   }
@@ -85,8 +85,8 @@ EMGMResponse CBasicFB::changeFBExecutionState(EMGMCommandType pa_unCommand) {
 }
 
 CIEC_ANY* CBasicFB::getInternalVar(CStringDictionary::TStringId pa_nInternalName) {
-  CIEC_ANY *retVal = 0;
-  if(0 != cm_pstVarInternals) {
+  CIEC_ANY *retVal = nullptr;
+  if(nullptr != cm_pstVarInternals) {
     TPortId unVarId = getPortId(pa_nInternalName, cm_pstVarInternals->m_nNumIntVars, cm_pstVarInternals->m_aunIntVarsNames);
     if(cg_unInvalidPortId != unVarId) {
       retVal = getVarInternal(unVarId);

@@ -251,7 +251,7 @@ BOOST_AUTO_TEST_CASE(Array_copy_test){
 
 
 BOOST_AUTO_TEST_CASE(Configure_test){
-  CIEC_ARRAY_TYPELIB *pTest = static_cast<CIEC_ARRAY_TYPELIB *>(CTypeLib::createDataTypeInstance(g_nStringIdARRAY, 0));
+  CIEC_ARRAY_TYPELIB *pTest = static_cast<CIEC_ARRAY_TYPELIB *>(CTypeLib::createDataTypeInstance(g_nStringIdARRAY, nullptr));
 
   pTest->setup(8, g_nStringIdINT);
 

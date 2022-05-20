@@ -32,7 +32,7 @@ const TForteInt16 FB_SR::scm_anEOWithIndexes[] = { 0 };
 const CStringDictionary::TStringId FB_SR::scm_anEventOutputNames[] = { g_nStringIdCNF };
 
 const SFBInterfaceSpec FB_SR::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith,
-  scm_anEOWithIndexes, 2, scm_anDataInputNames, scm_aunDIDataTypeIds, 1, scm_anDataOutputNames, scm_aunDODataTypeIds, 0, 0 };
+  scm_anEOWithIndexes, 2, scm_anDataInputNames, scm_aunDIDataTypeIds, 1, scm_anDataOutputNames, scm_aunDODataTypeIds, 0, nullptr };
 
 void FB_SR::executeEvent(int pa_nEIID) {
   switch(pa_nEIID){

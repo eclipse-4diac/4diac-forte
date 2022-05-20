@@ -154,7 +154,7 @@ BOOST_AUTO_TEST_CASE(String_re_assignment)
   test1.assign("1234", 3);//length to assign smaller than actual string coming from a bigger string
   BOOST_CHECK_EQUAL(test1.length(), 3);
 
-  test1.assign(0, 0);//shouldn't do anything
+  test1.assign(nullptr, 0);//shouldn't do anything
   BOOST_CHECK_EQUAL(test1.length(), 3);
 
   test1.assign("\0", 0);
@@ -192,7 +192,7 @@ BOOST_AUTO_TEST_CASE(String_append)
   BOOST_CHECK_EQUAL(test1.length(), 11);
   BOOST_CHECK_EQUAL(strcmp(test1.getValue(), "12345678901"), 0);
 
-  test1.append(0, 0); //shouldn't do anything
+  test1.append(nullptr, 0); //shouldn't do anything
   BOOST_CHECK_EQUAL(test1.length(), 11);
   BOOST_CHECK_EQUAL(strcmp(test1.getValue(), "12345678901"), 0);
 
@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE(String_append)
   BOOST_CHECK_EQUAL(test1.length(), 13);
   BOOST_CHECK_EQUAL(strcmp(test1.getValue(), "123456789011\3"), 0);
 
-  test1.append(0, 0);//shouldn't do anything
+  test1.append(nullptr, 0);//shouldn't do anything
   BOOST_CHECK_EQUAL(test1.length(), 13);
   BOOST_CHECK_EQUAL(strcmp(test1.getValue(), "123456789011\3"), 0);
 
@@ -566,7 +566,7 @@ BOOST_AUTO_TEST_CASE(String_toString_faultcase_buffer_pointer_nullptr)
   CIEC_STRING testString;
   const size_t bufferSize = 50;
 
-  BOOST_CHECK_EQUAL(-1, testString.toString(0, bufferSize));
+  BOOST_CHECK_EQUAL(-1, testString.toString(nullptr, bufferSize));
 }
 
 BOOST_AUTO_TEST_CASE(String_toString_faultcase_buffer_not_enough_buffer_size)

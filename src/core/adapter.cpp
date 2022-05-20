@@ -24,20 +24,20 @@ CAdapter::CAdapter(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfa
   CFunctionBlock(pa_poSrcRes, (pa_bIsPlug) ? pa_pstInterfaceSpecPlug : pa_pstInterfaceSpecSocket, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData),
   m_nParentAdapterListEventID(0),
   m_bIsPlug(pa_bIsPlug),
-  m_poPeer(0),
+  m_poPeer(nullptr),
   m_aoLocalDIs(m_aoDIs),
-  m_poAdapterConn(0){
+  m_poAdapterConn(nullptr){
   setupEventEntryList();
 }
 
 CAdapter::~CAdapter(){
   if (m_bIsPlug) {
-    if (m_poAdapterConn != 0) {
+    if (m_poAdapterConn != nullptr) {
       delete m_poAdapterConn;
     }
   } else {
-    if (m_poAdapterConn != 0) {
-      m_poAdapterConn->setSocket(0);
+    if (m_poAdapterConn != nullptr) {
+      m_poAdapterConn->setSocket(nullptr);
     }
   }
   delete[] m_astEventEntry;
@@ -63,7 +63,7 @@ void CAdapter::setParentFB(CFunctionBlock *pa_poParentFB, TForteUInt8 pa_nParent
 
 bool CAdapter::connect(CAdapter *pa_poPeer, CAdapterConnection *pa_poAdConn){
   bool bRetVal = false;
-  if (m_poPeer == 0) {
+  if (m_poPeer == nullptr) {
     m_poPeer = pa_poPeer;
     m_aoDIs = pa_poPeer->m_aoDOs; //TODO: change is adapters of subtypes may be connected
     if (isSocket()) {
@@ -76,13 +76,13 @@ bool CAdapter::connect(CAdapter *pa_poPeer, CAdapterConnection *pa_poAdConn){
 }
 
 bool CAdapter::disconnect(CAdapterConnection *pa_poAdConn){
-  if ((pa_poAdConn != 0) && (pa_poAdConn != m_poAdapterConn)) {
+  if ((pa_poAdConn != nullptr) && (pa_poAdConn != m_poAdapterConn)) {
     return false; //connection requesting disconnect is not equal to established connection
   }
-  m_poPeer = 0;
+  m_poPeer = nullptr;
   m_aoDIs = m_aoLocalDIs;
   if (isSocket()) {
-    m_poAdapterConn = 0;
+    m_poAdapterConn = nullptr;
   }
   return true;
 }
@@ -93,8 +93,8 @@ bool CAdapter::isCompatible(CAdapter *pa_poPeer) const {
 }
 
 void CAdapter::executeEvent(int pa_nEIID){
-  if (0 != m_poPeer) {
-    if (0 != m_poPeer->m_astEventEntry[pa_nEIID].mFB) {
+  if (nullptr != m_poPeer) {
+    if (nullptr != m_poPeer->m_astEventEntry[pa_nEIID].mFB) {
       m_poInvokingExecEnv->addEventEntry(&(m_poPeer->m_astEventEntry[pa_nEIID]));
     } else {
       m_poPeer->m_poInvokingExecEnv = m_poInvokingExecEnv;

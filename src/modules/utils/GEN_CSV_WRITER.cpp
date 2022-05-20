@@ -56,7 +56,7 @@ void GEN_CSV_WRITER::executeEvent(int paEIID) {
 }
 
 GEN_CSV_WRITER::GEN_CSV_WRITER(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), mCSVFile(0), m_anDataInputNames(0), m_anDataInputTypeIds(0), m_anEIWith(0){
+    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), mCSVFile(nullptr), m_anDataInputNames(nullptr), m_anDataInputTypeIds(nullptr), m_anEIWith(nullptr){
 }
 
 GEN_CSV_WRITER::~GEN_CSV_WRITER(){
@@ -68,9 +68,9 @@ GEN_CSV_WRITER::~GEN_CSV_WRITER(){
 
 bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
   const char *acPos = strrchr(paConfigString, '_');
-  if(0 != acPos){
+  if(nullptr != acPos){
     acPos++;
-    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(forte::core::util::strtoul(acPos, 0, 10) + 2); // we have in addition to the SDs a QI and FILE_NAME data inputs
+    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(forte::core::util::strtoul(acPos, nullptr, 10) + 2); // we have in addition to the SDs a QI and FILE_NAME data inputs
 
     m_anDataInputNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
     m_anDataInputTypeIds = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
@@ -116,9 +116,9 @@ bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfac
 
 void GEN_CSV_WRITER::openCSVFile() {
   QO() = CIEC_BOOL(false);
-  if(0 == mCSVFile) {
+  if(nullptr == mCSVFile) {
     mCSVFile = fopen(FILE_NAME().getValue(), "w+");
-    if(0 != mCSVFile) {
+    if(nullptr != mCSVFile) {
       QO() = CIEC_BOOL(true);
       STATUS() = scmOK;
       DEVLOG_INFO("[GEN_CSV_WRITER]: File %s successfully opened\n", FILE_NAME().getValue());
@@ -134,7 +134,7 @@ void GEN_CSV_WRITER::openCSVFile() {
 
 void GEN_CSV_WRITER::closeCSVFile() {
   QO() = CIEC_BOOL(false);
-  if(0 != mCSVFile) {
+  if(nullptr != mCSVFile) {
     if(0 == fclose(mCSVFile)) {
       STATUS() = scmOK;
       DEVLOG_INFO("[GEN_CSV_WRITER]: File %s successfully closed\n", FILE_NAME().getValue());
@@ -142,12 +142,12 @@ void GEN_CSV_WRITER::closeCSVFile() {
       STATUS() = CIEC_STRING(strerror(errno));
       DEVLOG_ERROR("[GEN_CSV_WRITER]: Couldn't close file %s. Error: %s\n", FILE_NAME().getValue(), STATUS().getValue());
     }
-    mCSVFile = 0;
+    mCSVFile = nullptr;
   }
 }
 
 void GEN_CSV_WRITER::writeCSVFileLine() {
-  if(0 != mCSVFile) {
+  if(nullptr != mCSVFile) {
     char acBuffer[scmWriteBufferSize];
     for(int i = 2; i < m_pstInterfaceSpec->m_nNumDIs; i++) {
       int nLen = getDI(i)->toString(acBuffer, scmWriteBufferSize);

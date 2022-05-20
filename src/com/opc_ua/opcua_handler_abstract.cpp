@@ -31,7 +31,7 @@ const char *const LogCategoryNames[7] = {
   "client",
   "userland" };
 
-const UA_Logger COPC_UA_HandlerAbstract::UA_Forte_logger = {UA_Log_Forte, 0, UA_Log_Forte_clear};
+const UA_Logger COPC_UA_HandlerAbstract::UA_Forte_logger = {UA_Log_Forte, nullptr, UA_Log_Forte_clear};
 
 COPC_UA_HandlerAbstract::COPC_UA_HandlerAbstract(CDeviceExecution& paDeviceExecution) :
     CExternalEventHandler(paDeviceExecution) {

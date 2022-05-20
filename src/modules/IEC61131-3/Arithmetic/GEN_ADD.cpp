@@ -37,7 +37,7 @@ const TForteInt16 GEN_ADD::scm_anEOWithIndexes[] = { 0, -1 };
 const CStringDictionary::TStringId GEN_ADD::scm_anEventOutputNames[] = { g_nStringIdCNF };
 
 GEN_ADD::GEN_ADD(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(pa_poSrcRes, pa_nInstanceNameId), m_anDataInputNames(0), m_anDataInputTypeIds(0), m_anEIWith(0), m_nDInputs(0){
+    CGenFunctionBlock<CFunctionBlock>(pa_poSrcRes, pa_nInstanceNameId), m_anDataInputNames(nullptr), m_anDataInputTypeIds(nullptr), m_anEIWith(nullptr), m_nDInputs(0){
 }
 
 GEN_ADD::~GEN_ADD(){
@@ -60,10 +60,10 @@ void GEN_ADD::executeEvent(int paEIID){
 bool GEN_ADD::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec){
   const char *pcPos = strrchr(paConfigString, '_');
 
-  if(0 != pcPos){
+  if(nullptr != pcPos){
     pcPos++;
     //we have an underscore and it is the first underscore after AND
-    m_nDInputs = static_cast<unsigned int>(forte::core::util::strtoul(pcPos, 0, 10));
+    m_nDInputs = static_cast<unsigned int>(forte::core::util::strtoul(pcPos, nullptr, 10));
     DEVLOG_DEBUG("DIs: %d;\n", m_nDInputs);
   }
   else{

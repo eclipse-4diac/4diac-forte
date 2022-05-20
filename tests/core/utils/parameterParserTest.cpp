@@ -23,14 +23,14 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
     BOOST_CHECK(1 == paParser.parseParameters());
 
     BOOST_CHECK(0 == strcmp(paParser[0], ""));
-    BOOST_CHECK(0 == paParser[1]);
+    BOOST_CHECK(nullptr == paParser[1]);
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_NullString) {
-    CParameterParser test1(0, ',');
-    CParameterParser test2(0, ',', 0);
-    CParameterParser test3(0, ',', 1);
-    CParameterParser test4(0, ',', 20);
+    CParameterParser test1(nullptr, ',');
+    CParameterParser test2(nullptr, ',', 0);
+    CParameterParser test3(nullptr, ',', 1);
+    CParameterParser test4(nullptr, ',', 20);
 
     testParameterParameterParser_NullString(test1);
     testParameterParameterParser_NullString(test2);
@@ -59,10 +59,10 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
   }
 
   void testParameterParser_InitializedToZero(CParameterParser& paParser) {
-    BOOST_CHECK(0 == paParser[0]);
-    BOOST_CHECK(0 == paParser[1]);
-    BOOST_CHECK(0 == paParser[2]);
-    BOOST_CHECK(0 == paParser[3]);
+    BOOST_CHECK(nullptr == paParser[0]);
+    BOOST_CHECK(nullptr == paParser[1]);
+    BOOST_CHECK(nullptr == paParser[2]);
+    BOOST_CHECK(nullptr == paParser[3]);
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_InitializedToZero) {
@@ -83,8 +83,8 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
 
     BOOST_CHECK(0 == strcmp(paParser[0], "123"));
     BOOST_CHECK(0 == strcmp(paParser[1], "456"));
-    BOOST_CHECK(0 == paParser[2]);
-    BOOST_CHECK(0 == paParser[3]);
+    BOOST_CHECK(nullptr == paParser[2]);
+    BOOST_CHECK(nullptr == paParser[3]);
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_RegularParams) {
@@ -104,8 +104,8 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
     BOOST_CHECK(1 == paParser.parseParameters());
 
     BOOST_CHECK(0 == strcmp(paParser[0], ""));
-    BOOST_CHECK(0 == paParser[1]);
-    BOOST_CHECK(0 == paParser[2]);
+    BOOST_CHECK(nullptr == paParser[1]);
+    BOOST_CHECK(nullptr == paParser[2]);
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_EmptyString) {
@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
     BOOST_CHECK(0 == strcmp(paParser[0], "1  2 3"));
     BOOST_CHECK(0 == strcmp(paParser[1], "4 56"));
     BOOST_CHECK(0 == strcmp(paParser[2], "789"));
-    BOOST_CHECK(0 == paParser[3]);
+    BOOST_CHECK(nullptr == paParser[3]);
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_BlankSpaces) {
@@ -152,8 +152,8 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
     BOOST_CHECK(0 == strcmp(paParser[3], ""));
     BOOST_CHECK(0 == strcmp(paParser[4], "789"));
     BOOST_CHECK(0 == strcmp(paParser[5], ""));
-    BOOST_CHECK(0 == paParser[6]);
-    BOOST_CHECK(0 == paParser[7]);
+    BOOST_CHECK(nullptr == paParser[6]);
+    BOOST_CHECK(nullptr == paParser[7]);
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_EmptyParameters) {
@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
 
     BOOST_CHECK(0 == strcmp(paParser[0], "123, 4"));
     BOOST_CHECK(0 == strcmp(paParser[1], "6, 789"));
-    BOOST_CHECK(0 == paParser[2]);
+    BOOST_CHECK(nullptr == paParser[2]);
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_OtherSeparatorPresentInString) {
@@ -194,7 +194,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
     BOOST_CHECK(1 == paParser.parseParameters());
 
     BOOST_CHECK(0 == strcmp(paParser[0], "123, 456, 789"));
-    BOOST_CHECK(0 == paParser[1]);;
+    BOOST_CHECK(nullptr == paParser[1]);;
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_OtherSeparatorNonPresentInString) {
@@ -220,7 +220,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
     BOOST_CHECK(0 == strcmp(paParser[4], ""));
     BOOST_CHECK(0 == strcmp(paParser[5], ""));
     BOOST_CHECK(0 == strcmp(paParser[6], ""));
-    BOOST_CHECK(0 == paParser[7]);
+    BOOST_CHECK(nullptr == paParser[7]);
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_BlankSpaceSeparator) {
@@ -240,7 +240,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
     BOOST_CHECK(1 == paParser.parseParameters());
 
     BOOST_CHECK(0 == strcmp(paParser[0], ""));
-    BOOST_CHECK(0 == paParser[1]);
+    BOOST_CHECK(nullptr == paParser[1]);
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_OnlyBlankSpace) {
@@ -261,7 +261,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
 
     BOOST_CHECK(0 == strcmp(paParser[0], ""));
     BOOST_CHECK(0 == strcmp(paParser[1], ""));
-    BOOST_CHECK(0 == paParser[2]);
+    BOOST_CHECK(nullptr == paParser[2]);
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_EmptyParametersWithBlankSpace) {
@@ -283,7 +283,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
     BOOST_CHECK(0 == strcmp(paParser[0], ""));
     BOOST_CHECK(0 == strcmp(paParser[1], ""));
     BOOST_CHECK(0 == strcmp(paParser[2], ""));
-    BOOST_CHECK(0 == paParser[3]);
+    BOOST_CHECK(nullptr == paParser[3]);
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_EmptyParametersWithBlankSpaceAndEndingInParameter) {
@@ -306,8 +306,8 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
     BOOST_CHECK(0 == strcmp(paParser[1], ""));
     BOOST_CHECK(0 == strcmp(paParser[2], ""));
     BOOST_CHECK(0 == strcmp(paParser[3], ""));
-    BOOST_CHECK(0 == paParser[4]);
-    BOOST_CHECK(0 == paParser[5]);
+    BOOST_CHECK(nullptr == paParser[4]);
+    BOOST_CHECK(nullptr == paParser[5]);
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_OnlySeparator) {
@@ -330,8 +330,8 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
     BOOST_CHECK(0 == strcmp(paParser[1], ""));
     BOOST_CHECK(0 == strcmp(paParser[2], ""));
     BOOST_CHECK(0 == strcmp(paParser[3], ""));
-    BOOST_CHECK(0 == paParser[4]);
-    BOOST_CHECK(0 == paParser[5]);
+    BOOST_CHECK(nullptr == paParser[4]);
+    BOOST_CHECK(nullptr == paParser[5]);
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_OnlyBlankSpaceSeparator) {
@@ -356,7 +356,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
     BOOST_CHECK(0 == strcmp(paParser[3], "1"));
     BOOST_CHECK(0 == strcmp(paParser[4], "NONE"));
     BOOST_CHECK(0 == strcmp(paParser[5], "$n"));
-    BOOST_CHECK(0 == paParser[6]);
+    BOOST_CHECK(nullptr == paParser[6]);
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_SerialCase1) {
@@ -381,7 +381,7 @@ BOOST_AUTO_TEST_SUITE(ParameterParser_Test)
     BOOST_CHECK(0 == strcmp(paParser[3], "1"));
     BOOST_CHECK(0 == strcmp(paParser[4], "NONE"));
     BOOST_CHECK(0 == strcmp(paParser[5], "$r$n"));
-    BOOST_CHECK(0 == paParser[6]);
+    BOOST_CHECK(nullptr == paParser[6]);
   }
 
   BOOST_AUTO_TEST_CASE(ParameterParser_SerialCase2) {

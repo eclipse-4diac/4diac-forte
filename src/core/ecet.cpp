@@ -39,16 +39,16 @@ void CEventChainExecutionThread::mainRun(){
   if(externalEventOccured()){
     transferExternalEvents();
   }
-  if(mEventListEnd == mEventListStart && *mEventListEnd == 0){
+  if(mEventListEnd == mEventListStart && *mEventListEnd == nullptr){
     mProcessingEvents = false;
     selfSuspend();
     mProcessingEvents = true; //set this flag here to true as well in case the suspend just went through and processing was not finished
   }
   else{
-    if(0 != *mEventListStart){
+    if(nullptr != *mEventListStart){
       (*mEventListStart)->mFB->receiveInputEvent((*mEventListStart)->mPortId, this);
     }
-    *mEventListStart = 0;
+    *mEventListStart = nullptr;
     if(mEventListEnd == mEventListStart){ 
       return;//let's suspend next time call mainrun to reduce duplicate code
     }
@@ -78,10 +78,10 @@ void CEventChainExecutionThread::transferExternalEvents(){
   CCriticalRegion criticalRegion(mExternalEventListSync);
   //this while is built in a way that it checks also if we got here by accident
   while(mExternalEventListStart != mExternalEventListEnd){
-    if(0 != *mExternalEventListStart){
+    if(nullptr != *mExternalEventListStart){
       //add only valid entries
       addEventEntry(*mExternalEventListStart);
-      *mExternalEventListStart = 0;
+      *mExternalEventListStart = nullptr;
 
       if(mExternalEventListStart == &mExternalEventList[0]){
         //wrap the ringbuffer
@@ -93,9 +93,9 @@ void CEventChainExecutionThread::transferExternalEvents(){
     }
   }
   //the queue is full and pop out last one
-  if(0 != *mExternalEventListStart){
+  if(nullptr != *mExternalEventListStart){
       addEventEntry(*mExternalEventListStart);
-      *mExternalEventListStart = 0;
+      *mExternalEventListStart = nullptr;
   }
 }
 
@@ -103,7 +103,7 @@ void CEventChainExecutionThread::startEventChain(SEventEntry *paEventToAdd){
   FORTE_TRACE("CEventChainExecutionThread::startEventChain\n");
   {
     CCriticalRegion criticalRegion(mExternalEventListSync);
-    if(0 == *mExternalEventListEnd){
+    if(nullptr == *mExternalEventListEnd){
       *mExternalEventListEnd = paEventToAdd;
       TEventEntryPtr* pstNextEventListElem;
 
@@ -129,7 +129,7 @@ void CEventChainExecutionThread::startEventChain(SEventEntry *paEventToAdd){
 }
 
 void CEventChainExecutionThread::addEventEntry(SEventEntry *paEventToAdd){
-  if(0 == *mEventListEnd){
+  if(nullptr == *mEventListEnd){
     *mEventListEnd = paEventToAdd;
     TEventEntryPtr* pstNextEventListElem;
 

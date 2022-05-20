@@ -31,7 +31,7 @@ const TForteInt16 GEN_ARRAY2ARRAY::scm_anEOWithIndexes[] = { 0, -1 };
 const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scm_anEventOutputNames[] = { g_nStringIdCNF };
 
 GEN_ARRAY2ARRAY::GEN_ARRAY2ARRAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), m_anDataInputTypeIds(0), m_anDataOutputTypeIds(0), m_ValueTypeID(CStringDictionary::scm_nInvalidStringId), m_nArrayLength(0){
+    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), m_anDataInputTypeIds(nullptr), m_anDataOutputTypeIds(nullptr), m_ValueTypeID(CStringDictionary::scm_nInvalidStringId), m_nArrayLength(0){
 }
 
 GEN_ARRAY2ARRAY::~GEN_ARRAY2ARRAY(){
@@ -54,14 +54,14 @@ void GEN_ARRAY2ARRAY::executeEvent(int paEIID){
 bool GEN_ARRAY2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec){
   const char *dNumberPos = strchr(paConfigString, '_');
 
-  if(0 != dNumberPos){
+  if(nullptr != dNumberPos){
     ++dNumberPos;
     //get position of a second underscore
     const char *dTypePos = strchr(dNumberPos, '_');
 
-    if(0 != dTypePos){
+    if(nullptr != dTypePos){
       //there is a number and a data type of inputs within the typename
-      m_nArrayLength = static_cast<unsigned int>(forte::core::util::strtoul(dNumberPos, 0, 10));
+      m_nArrayLength = static_cast<unsigned int>(forte::core::util::strtoul(dNumberPos, nullptr, 10));
       m_ValueTypeID = CStringDictionary::getInstance().getId(++dTypePos);
     }
     else{

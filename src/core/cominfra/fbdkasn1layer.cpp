@@ -21,13 +21,13 @@
 using namespace forte::com_infra;
 
 CFBDKASN1ComLayer::CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poComFB) :
-  CComLayer(pa_poUpperLayer, pa_poComFB), mStatSerBuf(0), mStatSerBufSize(0), mDeserBuf(0), mDeserBufSize(0), mDeserBufPos(0), mDIPos(0), mDOPos(0){
+  CComLayer(pa_poUpperLayer, pa_poComFB), mStatSerBuf(nullptr), mStatSerBufSize(0), mDeserBuf(nullptr), mDeserBufSize(0), mDeserBufPos(0), mDIPos(0), mDOPos(0){
 
-  if(0 != pa_poComFB){
+  if(nullptr != pa_poComFB){
     unsigned int sdNum = pa_poComFB->getNumSD();
     CIEC_ANY *apoSDs = pa_poComFB->getSDs();
     for(unsigned int i = 0; i < sdNum; ++i){
-      if(apoSDs != 0){
+      if(apoSDs != nullptr){
         TForteByte typeSize = csm_aDataTags[apoSDs->getDataTypeID()][1];
         if(typeSize != 255){
           mStatSerBufSize += typeSize + 1;
@@ -39,7 +39,7 @@ CFBDKASN1ComLayer::CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * p
     unsigned int rdNum = pa_poComFB->getNumRD();
     CIEC_ANY *apoRDs = pa_poComFB->getRDs();
     for(unsigned int i = 0; i < rdNum; ++i){
-      if(0 != apoRDs){
+      if(nullptr != apoRDs){
         TForteByte typeSize = csm_aDataTags[apoRDs->getDataTypeID()][1];
         if(typeSize != 255){
           mDeserBufSize += typeSize + 1;
@@ -81,19 +81,19 @@ void CFBDKASN1ComLayer::resizeDeserBuffer(unsigned int pa_size){
 EComResponse CFBDKASN1ComLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
   EComResponse eRetVal = e_ProcessDataNoSocket;
 
-  if(m_poBottomLayer != 0){
+  if(m_poBottomLayer != nullptr){
     TConstIEC_ANYPtr apoSDs = static_cast<TConstIEC_ANYPtr > (pa_pvData);
     unsigned int unNeededBufferSize = 0;
 
-    if(0 == apoSDs){
+    if(nullptr == apoSDs){
        return e_ProcessDataDataTypeError;
      }
 
     for(size_t i = 0; i < pa_unSize; ++i){
       unNeededBufferSize += getRequiredSerializationSize(apoSDs[i]);
     }
-    TForteByte *paUsedBuffer = 0;
-    TForteByte *paDynSerBuffer = 0;
+    TForteByte *paUsedBuffer = nullptr;
+    TForteByte *paDynSerBuffer = nullptr;
     //FIXME grow buffer instead of allocating every time a new one
     if(unNeededBufferSize <= mStatSerBufSize){
       paUsedBuffer = mStatSerBuf;
@@ -105,7 +105,7 @@ EComResponse CFBDKASN1ComLayer::sendData(void *pa_pvData, unsigned int pa_unSize
 
     int ser_size = -1; //stays negative if no Buffer for serialization is provided or error occurs while serialization
 
-    if (0 != paUsedBuffer) {
+    if (nullptr != paUsedBuffer) {
       ser_size = serializeFBDataPointArray(paUsedBuffer, unNeededBufferSize, apoSDs, pa_unSize);
     }
 
@@ -117,7 +117,7 @@ EComResponse CFBDKASN1ComLayer::sendData(void *pa_pvData, unsigned int pa_unSize
       DEVLOG_ERROR("CAsn1Layer:: serializeData failed\n");
     }
 
-    if(0 != paDynSerBuffer){
+    if(nullptr != paDynSerBuffer){
       delete[] paDynSerBuffer;
     }
   }
@@ -129,11 +129,11 @@ EComResponse CFBDKASN1ComLayer::recvData(const void *paData, unsigned int paSize
   TForteByte *receivedData = const_cast<TForteByte*>(static_cast<const TForteByte *>(paData));
   EComResponse eRetVal = e_Nothing;
 
-  if(m_poFb != 0){
+  if(m_poFb != nullptr){
     CIEC_ANY *apoRDs = m_poFb->getRDs();
     unsigned int unNumRD = m_poFb->getNumRD();
     unsigned int usedBufferSize = 0;
-    TForteByte *usedBuffer = 0;
+    TForteByte *usedBuffer = nullptr;
 
     // TODO: only copy if necessary
     if(0 == mDeserBufPos){
@@ -155,7 +155,7 @@ EComResponse CFBDKASN1ComLayer::recvData(const void *paData, unsigned int paSize
         nBuf = 1;
       }
       else{
-        if(0 == apoRDs){
+        if(nullptr == apoRDs){
           DEVLOG_ERROR("Data type error\n");
           eRetVal = e_ProcessDataDataTypeError;
           break;
@@ -222,7 +222,7 @@ int CFBDKASN1ComLayer::serializeDataPointArray(TForteByte *pa_pcBytes, unsigned 
     int nBuf;
     nRetVal = 0;
     for(unsigned int i = 0; i < pa_nDataNum; i++){
-      if(0 != (pa_apoData[i])){
+      if(nullptr != (pa_apoData[i])){
         nBuf = serializeDataPoint(pa_pcBytes, nRemainingBytes, *pa_apoData[i]);
         if(0 < nBuf){
           nRetVal += nBuf;
@@ -262,7 +262,7 @@ int CFBDKASN1ComLayer::serializeFBDataPointArray(TForteByte* pa_pcBytes, unsigne
       nRetVal = 1;
     }
     else{
-      if(0 == pa_aoData){
+      if(nullptr == pa_aoData){
         return -1;
       }
       int nRemainingBytes = pa_nStreamSize;
@@ -533,7 +533,7 @@ bool CFBDKASN1ComLayer::deserializeDataPointArray(const TForteByte* pa_pcBytes, 
   }
   else{
     for(unsigned int i = 0; i < pa_nDataNum; ++i){
-      if(0 == pa_apoData[i]){
+      if(nullptr == pa_apoData[i]){
         bRetval = false;
         break;
       }
@@ -750,7 +750,7 @@ int CFBDKASN1ComLayer::deserializeArray(const TForteByte* pa_pcBytes, int pa_nSt
         pa_pcBytes += 1;
         pa_nStreamSize -= 1;
         ++nRetVal;
-        CIEC_ANY *poBufVal = 0;
+        CIEC_ANY *poBufVal = nullptr;
         size_t unArraySize = pa_roArray.size();
 
         for(TForteUInt16 i = 0; i < nSize; ++i){
@@ -758,14 +758,14 @@ int CFBDKASN1ComLayer::deserializeArray(const TForteByte* pa_pcBytes, int pa_nSt
             nValueLen = deserializeValue(pa_pcBytes, pa_nStreamSize, pa_roArray[i]);
           }
           else{
-            if(poBufVal == 0) {
-              poBufVal = pa_roArray[0].clone(0);
+            if(poBufVal == nullptr) {
+              poBufVal = pa_roArray[0].clone(nullptr);
             }
             nValueLen = deserializeValue(pa_pcBytes, pa_nStreamSize, *poBufVal);
           }
           //size of the elements is given by the array datatype
           if(nValueLen <= 0) {
-            if(poBufVal != 0) {
+            if(poBufVal != nullptr) {
               delete poBufVal;
             }
             return nValueLen;
@@ -775,7 +775,7 @@ int CFBDKASN1ComLayer::deserializeArray(const TForteByte* pa_pcBytes, int pa_nSt
           nRetVal += nValueLen;
         }
 
-        if (poBufVal != 0)
+        if (poBufVal != nullptr)
           delete poBufVal;
       }
     }
@@ -844,7 +844,7 @@ unsigned int CFBDKASN1ComLayer::getRequiredSerializationSize(const CIEC_ANY &pa_
       break;
 #ifdef FORTE_USE_WSTRING_DATATYPE
     case CIEC_ANY::e_WSTRING:
-      unRetVal += ((CIEC_WSTRING&)pa_roCIECData).toUTF16(0, 0) + 3;
+      unRetVal += ((CIEC_WSTRING&)pa_roCIECData).toUTF16(nullptr, 0) + 3;
       break;
 #endif
 #ifdef FORTE_SUPPORT_ARRAYS

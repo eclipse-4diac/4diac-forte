@@ -65,7 +65,7 @@ void CFDSelectHandler::run(void){
     tv.tv_usec = 0;
 
     if(scmInvalidFileDescriptor != nHighestFDID){
-      retval = select(static_cast<int>(nHighestFDID + 1), &anFDSet, NULL, NULL, &tv);
+      retval = select(static_cast<int>(nHighestFDID + 1), &anFDSet, nullptr, nullptr, &tv);
       if(!isAlive()){
         //the thread has been closed in the meantime do not process any messages anymore
         return;
@@ -84,7 +84,7 @@ void CFDSelectHandler::run(void){
         TFileDescriptor sockDes = itRunner->mSockDes;
         ++itRunner;
 
-        if((0 != FD_ISSET(sockDes, &anFDSet)) && (0 != callee)){
+        if((0 != FD_ISSET(sockDes, &anFDSet)) && (nullptr != callee)){
           mSync.unlock();
           if(forte::com_infra::e_Nothing != callee->recvData(&sockDes,0)){
             startNewEventChain(callee->getCommFB());

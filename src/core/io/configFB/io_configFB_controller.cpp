@@ -26,7 +26,7 @@ const char * const IOConfigFBController::scmStopped = "Stopped";
 
 IOConfigFBController::IOConfigFBController(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
     TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-    IOConfigFBBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mStarting(false), mErrorCounter(0), mController(0),
+    IOConfigFBBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mStarting(false), mErrorCounter(0), mController(nullptr),
         mPerformRestart(false) {
 }
 
@@ -57,7 +57,7 @@ bool IOConfigFBController::handleNotification(IODeviceController::NotificationTy
     case IODeviceController::Error:
       onError();
       if(mStarting) {
-        if(0 == paAttachment) {
+        if(nullptr == paAttachment) {
           paAttachment = scmFailedToInit;
         }
 
@@ -102,13 +102,13 @@ void IOConfigFBController::onError(bool paIsFatal) {
 }
 
 bool IOConfigFBController::init(int paDelay) {
-  if(mController != 0) {
+  if(mController != nullptr) {
     DEVLOG_ERROR("[IOConfigFBController] IOConfigFBController has already been initialized.\n");
     return false;
   }
 
   mController = createDeviceController(getResource().getDevice().getDeviceExecution());
-  if(mController == 0) {
+  if(mController == nullptr) {
     DEVLOG_ERROR("[IOConfigFBController] Failed to create controller.\n");
     return false;
   }
@@ -141,7 +141,7 @@ void IOConfigFBController::onStartup() {
 }
 
 void IOConfigFBController::started(const char* paError) {
-  if(paError != 0) {
+  if(paError != nullptr) {
     STATUS() = CIEC_WSTRING(paError);
     DEVLOG_ERROR("[IOConfigFBController] Failed to start. Reason: %s\n", STATUS().getValue());
     return onError(false);
@@ -160,7 +160,7 @@ void IOConfigFBController::onStop() {
 }
 
 bool IOConfigFBController::deInit(bool paIsDestructing) {
-  if(0 == mController) {
+  if(nullptr == mController) {
     DEVLOG_ERROR("[IOConfigFBController] IOConfigFBController has already been stopped.\n");
     return false;
   }
@@ -176,13 +176,13 @@ bool IOConfigFBController::deInit(bool paIsDestructing) {
 }
 
 void IOConfigFBController::stopped() {
-  mController->mDelegate = 0;
+  mController->mDelegate = nullptr;
   if(mController->isAlive()) {
     mController->end();
   }
 
   delete mController;
-  mController = 0;
+  mController = nullptr;
   mStarting = false;
 
   STATUS() = CIEC_WSTRING(scmStopped);

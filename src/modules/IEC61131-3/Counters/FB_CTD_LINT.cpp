@@ -47,7 +47,7 @@ const SFBInterfaceSpec FB_CTD_LINT::scm_stFBInterfaceSpec = {
   2,
   scm_anDataOutputNames, scm_aunDODataTypeIds,
   0,
-  0
+  nullptr
 };
 
 void FB_CTD_LINT::executeEvent(int pa_nEIID){

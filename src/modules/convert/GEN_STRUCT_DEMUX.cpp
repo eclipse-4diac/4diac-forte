@@ -45,7 +45,7 @@ GEN_STRUCT_DEMUX::GEN_STRUCT_DEMUX(const CStringDictionary::TStringId paInstance
 }
 
 GEN_STRUCT_DEMUX::~GEN_STRUCT_DEMUX(){
-  if(0 != m_pstInterfaceSpec){
+  if(nullptr != m_pstInterfaceSpec){
     delete[](m_pstInterfaceSpec->m_anEOWith);
     delete[](m_pstInterfaceSpec->m_aunDIDataTypeNames);
     delete[](m_pstInterfaceSpec->m_aunDONames);
@@ -57,9 +57,9 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
   bool retval = false;
   CStringDictionary::TStringId structTypeNameId = GEN_STRUCT_MUX::getStructNameId(paConfigString);
 
-  CIEC_ANY *data = CTypeLib::createDataTypeInstance(structTypeNameId, 0);
+  CIEC_ANY *data = CTypeLib::createDataTypeInstance(structTypeNameId, nullptr);
 
-  if(0 != data) {
+  if(nullptr != data) {
     if(data->getDataTypeID() == CIEC_ANY::e_STRUCT) {
       // we could find the struct
       CIEC_STRUCT *structInstance = static_cast<CIEC_STRUCT*>(data);

@@ -19,7 +19,7 @@
 using namespace forte::core::io;
 
 IOObserver::IOObserver() :
-    mHandle(NULL), mType(CIEC_ANY::e_ANY), mDirection(IOMapper::UnknownDirection) {
+    mHandle(nullptr), mType(CIEC_ANY::e_ANY), mDirection(IOMapper::UnknownDirection) {
 
 }
 
@@ -32,7 +32,7 @@ void IOObserver::onHandle(IOHandle *paHandle) {
 }
 
 void IOObserver::dropHandle() {
-  this->mHandle = NULL;
+  this->mHandle = nullptr;
 }
 
 IOMapper::Direction IOObserver::getDirection() {

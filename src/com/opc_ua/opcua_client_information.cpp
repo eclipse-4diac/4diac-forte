@@ -21,7 +21,7 @@
 std::string gOpcuaClientConfigFile;
 
 CUA_ClientInformation::CUA_ClientInformation(const CIEC_STRING &paEndpoint) :
-    mEndpointUrl(paEndpoint), mClient(0), mSubscriptionInfo(0), mMissingAsyncCalls(0), mNeedsReconnection(false), mWaitToInitializeActions(false),
+    mEndpointUrl(paEndpoint), mClient(nullptr), mSubscriptionInfo(nullptr), mMissingAsyncCalls(0), mNeedsReconnection(false), mWaitToInitializeActions(false),
         mIsClientValid(true),
         mLastReconnectionTry(0), mLastActionInitializationTry(0), mSomeActionWasInitialized(false) {
 }
@@ -42,7 +42,7 @@ bool CUA_ClientInformation::configureClient() {
     configPointer->timeout = scmClientTimeoutInMilli;
   } else {
     UA_Client_delete(mClient);
-    mClient = 0;
+    mClient = nullptr;
     retVal = false;
   }
   return retVal;
@@ -79,7 +79,7 @@ void CUA_ClientInformation::uninitializeClient() {
   if(mClient) {
     UA_Client_disconnect(mClient);
     UA_Client_delete(mClient);
-    mClient = 0;
+    mClient = nullptr;
   }
   mWaitToInitializeActions = false;
   mNeedsReconnection = false;
@@ -162,7 +162,7 @@ UA_StatusCode CUA_ClientInformation::executeRead(CActionInfo& paActionInfo) {
 
   UA_RemoteCallHandle *remoteCallHandle = new UA_RemoteCallHandle(paActionInfo, *this);
 
-  UA_StatusCode retVal = UA_Client_sendAsyncReadRequest(mClient, &request, CUA_RemoteCallbackFunctions::readAsyncCallback, remoteCallHandle, 0);
+  UA_StatusCode retVal = UA_Client_sendAsyncReadRequest(mClient, &request, CUA_RemoteCallbackFunctions::readAsyncCallback, remoteCallHandle, nullptr);
 
   if(UA_STATUSCODE_GOOD != retVal) {
     DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch read action for FB %s. Error: %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
@@ -201,7 +201,7 @@ UA_StatusCode CUA_ClientInformation::executeWrite(CActionInfo& paActionInfo) {
   }
 
   UA_RemoteCallHandle *remoteCallHandle = new UA_RemoteCallHandle(paActionInfo, *this);
-  retVal = UA_Client_sendAsyncWriteRequest(mClient, &request, CUA_RemoteCallbackFunctions::writeAsyncCallback, remoteCallHandle, 0);
+  retVal = UA_Client_sendAsyncWriteRequest(mClient, &request, CUA_RemoteCallbackFunctions::writeAsyncCallback, remoteCallHandle, nullptr);
 
   if(UA_STATUSCODE_GOOD != retVal) {
     DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch write action for FB %s. Error: %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
@@ -242,7 +242,7 @@ UA_StatusCode CUA_ClientInformation::executeCallMethod(CActionInfo& paActionInfo
 
   UA_RemoteCallHandle *remoteCallHandle = new UA_RemoteCallHandle(paActionInfo, *this);
   retVal = UA_Client_sendAsyncRequest(mClient, &request, &UA_TYPES[UA_TYPES_CALLREQUEST], CUA_RemoteCallbackFunctions::callMethodAsyncCallback,
-        &UA_TYPES[UA_TYPES_CALLRESPONSE], remoteCallHandle, 0);
+        &UA_TYPES[UA_TYPES_CALLRESPONSE], remoteCallHandle, nullptr);
 
   if(UA_STATUSCODE_GOOD != retVal) {
     DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch call action for FB %s. Error %s\n", paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
@@ -449,7 +449,7 @@ bool CUA_ClientInformation::allocAndCreateSubscription() {
     mSubscriptionInfo = new UA_subscriptionInfo();
     if(!createSubscription()) {
       delete mSubscriptionInfo;
-      mSubscriptionInfo = 0;
+      mSubscriptionInfo = nullptr;
       somethingFailed = true;
     }
   }
@@ -459,7 +459,7 @@ bool CUA_ClientInformation::allocAndCreateSubscription() {
 bool CUA_ClientInformation::createSubscription() {
   UA_CreateSubscriptionRequest request = UA_CreateSubscriptionRequest_default();
   request.requestedPublishingInterval = FORTE_COM_OPC_UA_CLIENT_PUB_INTERVAL;
-  UA_CreateSubscriptionResponse response = UA_Client_Subscriptions_create(mClient, request, this, 0, CUA_RemoteCallbackFunctions::deleteSubscriptionCallback);
+  UA_CreateSubscriptionResponse response = UA_Client_Subscriptions_create(mClient, request, this, nullptr, CUA_RemoteCallbackFunctions::deleteSubscriptionCallback);
   if(UA_STATUSCODE_GOOD == response.responseHeader.serviceResult) {
     DEVLOG_INFO("[OPC UA CLIENT]: Create subscription to %s succeeded, id %u\n", mEndpointUrl.getValue(), response.subscriptionId);
     mSubscriptionInfo->mSubscriptionId = response.subscriptionId;
@@ -475,7 +475,7 @@ bool CUA_ClientInformation::addMonitoringItem(UA_MonitoringItemInfo &paMonitorin
 
   const UA_MonitoredItemCreateRequest monRequest = UA_MonitoredItemCreateRequest_default(paNodeId);
   UA_MonitoredItemCreateResult monResponse = UA_Client_MonitoredItems_createDataChange(mClient, mSubscriptionInfo->mSubscriptionId, UA_TIMESTAMPSTORETURN_BOTH,
-    monRequest, static_cast<void *>(&paMonitoringInfo.mVariableInfo), CUA_RemoteCallbackFunctions::subscriptionValueChangedCallback, 0);
+    monRequest, static_cast<void *>(&paMonitoringInfo.mVariableInfo), CUA_RemoteCallbackFunctions::subscriptionValueChangedCallback, nullptr);
   if(UA_STATUSCODE_GOOD == monResponse.statusCode) {
     DEVLOG_INFO("[OPC UA CLIENT]: Monitoring of FB %s at index %u succeeded. The monitoring item id is %u\n",
       paMonitoringInfo.mVariableInfo.mActionInfo.getLayer().getCommFB()->getInstanceName(), paMonitoringInfo.mVariableInfo.mPortIndex,
@@ -549,7 +549,7 @@ void CUA_ClientInformation::resetSubscription(bool paDeleteSubscription) {
     }
 
     delete mSubscriptionInfo;
-    mSubscriptionInfo = 0;
+    mSubscriptionInfo = nullptr;
   }
 }
 

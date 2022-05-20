@@ -51,7 +51,7 @@ CFBContainer::~CFBContainer() {
 
 EMGMResponse CFBContainer::addFB(CFunctionBlock* pa_poFuncBlock){
   EMGMResponse eRetVal = e_INVALID_OBJECT;
-  if(0 != pa_poFuncBlock){
+  if(nullptr != pa_poFuncBlock){
     mFunctionBlocks.pushBack(pa_poFuncBlock);
     eRetVal = e_RDY;
   }
@@ -64,9 +64,9 @@ EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::CIterator &paN
 
   if(paNameListIt.isLastEntry()){
     // test if the container does not contain any FB or a container with the same name
-    if((0 == getFB(*paNameListIt)) && (0 == getFBContainer(*paNameListIt))){
+    if((nullptr == getFB(*paNameListIt)) && (nullptr == getFBContainer(*paNameListIt))){
       CFunctionBlock *newFB = CTypeLib::createFB(*paNameListIt, paTypeName, paRes);
-      if(0 != newFB){
+      if(nullptr != newFB){
         //we could create a FB now add it to the list of contained FBs
         mFunctionBlocks.pushBack(newFB);
         retval = e_RDY;
@@ -79,7 +79,7 @@ EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::CIterator &paN
   else{
     //we have more than one name in the fb name list. Find or create the container and hand the create command to this container.
     CFBContainer *childCont = findOrCreateContainer(*paNameListIt);
-    if(0 != childCont){
+    if(nullptr != childCont){
       //remove the container from the name list
       ++paNameListIt;
       retval = childCont->createFB(paNameListIt, paTypeName, paRes);
@@ -94,7 +94,7 @@ EMGMResponse CFBContainer::deleteFB(forte::core::TNameIdentifier::CIterator &paN
   if(!paNameListIt.isLastEntry()){
     //we have more than one name in the fb name list. Find or create the container and hand the create command to this container.
     CFBContainer *childCont = findOrCreateContainer(*paNameListIt);
-    if(0 != childCont){
+    if(nullptr != childCont){
       //remove the container from the name list
       ++paNameListIt;
       retval = childCont->deleteFB(paNameListIt);
@@ -136,7 +136,7 @@ EMGMResponse CFBContainer::deleteFB(forte::core::TNameIdentifier::CIterator &paN
 }
 
 CFunctionBlock *CFBContainer::getFB(CStringDictionary::TStringId paFBName) {
-  CFunctionBlock *retVal = 0;
+  CFunctionBlock *retVal = nullptr;
 
   if(CStringDictionary::scm_nInvalidStringId != paFBName){
     for(TFunctionBlockList::Iterator it = mFunctionBlocks.begin(); it != mFunctionBlocks.end();
@@ -154,7 +154,7 @@ CFunctionBlock* CFBContainer::getContainedFB(forte::core::TNameIdentifier::CIter
   if(!paNameListIt.isLastEntry()){
     //we have more than one name in the fb name list. Find or create the container and hand the create command to this container.
     CFBContainer *childCont = getFBContainer(*paNameListIt);
-    if(0 != childCont){
+    if(nullptr != childCont){
       //remove the container from the name list
       ++paNameListIt;
       return childCont->getContainedFB(paNameListIt);
@@ -165,7 +165,7 @@ CFunctionBlock* CFBContainer::getContainedFB(forte::core::TNameIdentifier::CIter
 }
 
 CFBContainer *CFBContainer::getFBContainer(CStringDictionary::TStringId paContainerName)  {
-  CFBContainer *retVal = 0;
+  CFBContainer *retVal = nullptr;
 
   if(CStringDictionary::scm_nInvalidStringId != paContainerName){
     for(TFBContainerList::Iterator it = mSubContainers.begin(); it != mSubContainers.end();
@@ -181,7 +181,7 @@ CFBContainer *CFBContainer::getFBContainer(CStringDictionary::TStringId paContai
 
 CFBContainer *CFBContainer::findOrCreateContainer(CStringDictionary::TStringId paContainerName){
   CFBContainer *retVal = getFBContainer(paContainerName);
-  if(0 == retVal && 0 == getFB(paContainerName)) {
+  if(nullptr == retVal && nullptr == getFB(paContainerName)) {
     //the container with the given name does not exist but only create it if there is no FB with the same name.
     retVal = new CFBContainer(paContainerName, this);
     mSubContainers.pushBack(retVal);

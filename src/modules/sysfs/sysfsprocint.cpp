@@ -25,7 +25,7 @@ const char * const CSysFsProcessInterface::scmCouldNotWrite = "Could not write";
 CSysFsProcessInterface::CSysFsProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
     const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
     CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData) {
-  mFile.rdbuf()->pubsetbuf(0, 0); //disable buffer to avoid latency
+  mFile.rdbuf()->pubsetbuf(nullptr, 0); //disable buffer to avoid latency
   STATUS() = scmNotInitialised;
 }
 

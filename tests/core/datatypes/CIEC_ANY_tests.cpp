@@ -14,13 +14,13 @@
 
 BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
   BOOST_AUTO_TEST_CASE(Type_test){
-    CIEC_ANY *poTest = CIEC_ANY::createDataType(0);
+    CIEC_ANY *poTest = CIEC_ANY::createDataType(nullptr);
     BOOST_CHECK_EQUAL(poTest->getDataTypeID(), CIEC_ANY::e_ANY);
     delete poTest;
   }
 
   BOOST_AUTO_TEST_CASE(Conversion_test){
-    CIEC_ANY *poTest = CIEC_ANY::createDataType(0);
+    CIEC_ANY *poTest = CIEC_ANY::createDataType(nullptr);
     char cBuffer[20];
     BOOST_CHECK_EQUAL(poTest->fromString("Any string is invalid in this case"), -1);
     BOOST_CHECK_EQUAL(poTest->toString(cBuffer, 20), strlen("ND (ANY)"));
@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
   }
 
   BOOST_AUTO_TEST_CASE(Any_Typisation_negativtest){
-    CIEC_ANY *poTest = CIEC_ANY::createDataType(0);
+    CIEC_ANY *poTest = CIEC_ANY::createDataType(nullptr);
 
     BOOST_CHECK_EQUAL(poTest->fromString("Hansi#Any string is invalid in this case"), -1);
     BOOST_CHECK_EQUAL(poTest->getDataTypeID(), CIEC_ANY::e_ANY);
@@ -47,87 +47,87 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
   BOOST_AUTO_TEST_CASE(Any_Typisation_test){
     CIEC_ANY *poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkTypisation(poTestee, "BOOL#TRUE", CIEC_ANY::e_BOOL);
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkTypisation(poTestee, "SINT#123", CIEC_ANY::e_SINT);
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkTypisation(poTestee, "INT#5754", CIEC_ANY::e_INT);
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkTypisation(poTestee, "DINT#112323", CIEC_ANY::e_DINT);
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkTypisation(poTestee, "USINT#255", CIEC_ANY::e_USINT);
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkTypisation(poTestee, "UINT#25754", CIEC_ANY::e_UINT);
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkTypisation(poTestee, "UDINT#3112323", CIEC_ANY::e_UDINT);
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkTypisation(poTestee, "BYTE#253", CIEC_ANY::e_BYTE);
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkTypisation(poTestee, "WORD#25754", CIEC_ANY::e_WORD);
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkTypisation(poTestee, "DWORD#3112323", CIEC_ANY::e_DWORD);
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkTypisation(poTestee, "DATE#2008-04-03", CIEC_ANY::e_DATE);
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkTypisation(poTestee, "TIME_OF_DAY#15:36:55.36", CIEC_ANY::e_TIME_OF_DAY);
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkTypisation(poTestee, "DATE_AND_TIME#1994-06-22-14:23:54.8", CIEC_ANY::e_DATE_AND_TIME);
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkTypisation(poTestee, "TIME#311ms", CIEC_ANY::e_TIME);
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkTypisation(poTestee, "REAL#3.125", CIEC_ANY::e_REAL);
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkTypisation(poTestee, "LREAL#3.1251234", CIEC_ANY::e_LREAL);
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkTypisation(poTestee, "STRING#Hallo FORTE user!", CIEC_ANY::e_STRING);
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkTypisation(poTestee, "WSTRING#Hallo FORTE user!", CIEC_ANY::e_WSTRING);
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkTypisation(poTestee, "LINT#123123123123", CIEC_ANY::e_LINT);
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkTypisation(poTestee, "ULINT#123123123123123", CIEC_ANY::e_ULINT);
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkTypisation(poTestee, "LWORD#123123123123123", CIEC_ANY::e_LWORD);
     delete poTestee;
 
@@ -141,79 +141,79 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
   BOOST_AUTO_TEST_CASE(Any_SaveWrongTypisation_test){
     CIEC_ANY *poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkSaveWrongTypisation(*poTestee, "BOOL#231");
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkSaveWrongTypisation(*poTestee, "SINT#-130");
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkSaveWrongTypisation(*poTestee, "INT#40000");
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkSaveWrongTypisation(*poTestee, "DINT#411232312345");
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkSaveWrongTypisation(*poTestee, "USINT#257");
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkSaveWrongTypisation(*poTestee, "UINT#6257541235");
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkSaveWrongTypisation(*poTestee, "UDINT#7311232312325346");
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkSaveWrongTypisation(*poTestee, "BYTE#256");
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkSaveWrongTypisation(*poTestee, "WORD#62575412345");
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkSaveWrongTypisation(*poTestee, "DWORD#831123235938695");
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkSaveWrongTypisation(*poTestee, "DATE#tes2008-04");
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkSaveWrongTypisation(*poTestee, "TIME_OF_DAY#test15:36.36");
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkSaveWrongTypisation(*poTestee, "DATE_AND_TIME#Test-06-22-54.8");
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkSaveWrongTypisation(*poTestee, "TIME#Test");
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkSaveWrongTypisation(*poTestee, "REAL#test");
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkSaveWrongTypisation(*poTestee, "LREAL#hansi");
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkSaveWrongTypisation(*poTestee, "LINT#1231231231239485692939293");
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkSaveWrongTypisation(*poTestee, "ULINT#1231231231927598267926798546723123");
     delete poTestee;
 
-    poTestee = CIEC_ANY::createDataType(0);
+    poTestee = CIEC_ANY::createDataType(nullptr);
     checkSaveWrongTypisation(*poTestee, "LWORD#823123123123123123468");
     delete poTestee;
   }

@@ -45,7 +45,7 @@ const SFBInterfaceSpec BOOL2BOOL::scm_stFBInterfaceSpec = {
   1,
   scm_anDataOutputNames, scm_aunDODataTypeIds,
   0,
-  0
+  nullptr
 };
 
 void BOOL2BOOL::executeEvent(int pa_nEIID){

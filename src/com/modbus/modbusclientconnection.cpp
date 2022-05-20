@@ -21,7 +21,7 @@ using namespace modbus_connection_event;
  *************************************/
 
 CModbusClientConnection::CModbusClientConnection(CModbusHandler* pa_modbusHandler) :
-    CModbusConnection(pa_modbusHandler), m_pModbusConnEvent(NULL), m_nNrOfPolls(0), m_nSlaveId(0xFF), m_unBufFillSize(0){
+    CModbusConnection(pa_modbusHandler), m_pModbusConnEvent(nullptr), m_nNrOfPolls(0), m_nSlaveId(0xFF), m_unBufFillSize(0){
   memset(m_anRecvBuffPosition, 0, sizeof(m_anRecvBuffPosition)); //TODO change this to  m_anRecvBuffPosition{0} in the extended list when fully switching to C++11
   memset(m_acRecvBuffer, 0, sizeof(m_acRecvBuffer)); //TODO change this to  m_acRecvBuffer{0} in the extended list when fully switching to C++11
 }
@@ -34,7 +34,7 @@ CModbusClientConnection::~CModbusClientConnection(){
   for(TModbusPollList::Iterator itRunner = m_lstPollList.begin(); itRunner != itEnd; ++itRunner){
     delete *itRunner;
   }
-  if (m_pModbusConnEvent != NULL){
+  if (m_pModbusConnEvent != nullptr){
     delete m_pModbusConnEvent;
   }
 }
@@ -87,7 +87,7 @@ void CModbusClientConnection::disconnect(){
 }
 
 void CModbusClientConnection::addNewPoll(TForteUInt32 pa_nPollInterval, unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses){
-  CModbusPoll *newPoll = NULL;
+  CModbusPoll *newPoll = nullptr;
 
   TModbusPollList::Iterator itEnd = m_lstPollList.end();
   for(TModbusPollList::Iterator it = m_lstPollList.begin(); it != itEnd; ++it){
@@ -97,7 +97,7 @@ void CModbusClientConnection::addNewPoll(TForteUInt32 pa_nPollInterval, unsigned
       break;
     }
   }
-  if(newPoll == NULL){
+  if(newPoll == nullptr){
     m_lstPollList.pushBack(new CModbusPoll(pa_nPollInterval, pa_nFunctionCode, pa_nStartAddress, pa_nNrAddresses));
     m_nNrOfPolls++;
     m_anRecvBuffPosition[m_nNrOfPolls - 1] = m_unBufFillSize;
@@ -180,15 +180,15 @@ void CModbusClientConnection::tryPolling(){
 }
 
 void CModbusClientConnection::tryConnect(){
-  if(m_pModbusConnEvent != NULL){
+  if(m_pModbusConnEvent != nullptr){
     if(m_pModbusConnEvent->readyToExecute()){
-      if(m_pModbusConnEvent->executeEvent(m_pModbusConn, NULL) < 0) {
+      if(m_pModbusConnEvent->executeEvent(m_pModbusConn, nullptr) < 0) {
         DEVLOG_ERROR("Connection to Modbus server failed: %s\n", modbus_strerror(errno));
       } else {
         DEVLOG_INFO("Connection to Modbus server succeded\n");
 
         delete m_pModbusConnEvent;
-        m_pModbusConnEvent = NULL;
+        m_pModbusConnEvent = nullptr;
 
         m_bConnected = true;
 

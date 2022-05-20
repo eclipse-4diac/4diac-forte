@@ -27,21 +27,21 @@ const TEventID E_RESTART::csmSTOPID;
 
 const SFBInterfaceSpec E_RESTART::scm_stFBInterfaceSpec = {
   0,
-  0,
-  0,
-  0,
+  nullptr,
+  nullptr,
+  nullptr,
   3,
   scm_aunEONameIds,
+  nullptr,
+  nullptr,
   0,
+  nullptr,
+  nullptr,
   0,
+  nullptr,
+  nullptr,
   0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0
+  nullptr
 };
 
 void E_RESTART::executeEvent(int pa_nEIID) {

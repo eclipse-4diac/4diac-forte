@@ -46,7 +46,7 @@ const SFBInterfaceSpec DWORD2DWORD::scm_stFBInterfaceSpec = {
   1,
   scm_anDataOutputNames, scm_aunDODataTypeIds,
   0,
-  0
+  nullptr
 };
 
 void DWORD2DWORD::executeEvent(int pa_nEIID){

@@ -29,7 +29,7 @@
 using namespace forte::com_infra;
 
 COPC_UA_Layer::COPC_UA_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
-    CComLayer(paUpperLayer, paComFB), mInterruptResp(e_Nothing), mHandler(0), mActionInfo(0), mDataAlreadyPresent(false), mRDBuffer(0) {
+    CComLayer(paUpperLayer, paComFB), mInterruptResp(e_Nothing), mHandler(nullptr), mActionInfo(nullptr), mDataAlreadyPresent(false), mRDBuffer(nullptr) {
 }
 
 COPC_UA_Layer::~COPC_UA_Layer() {
@@ -63,7 +63,7 @@ void COPC_UA_Layer::closeConnection() {
   if(mHandler) {
     CCriticalRegion criticalRegion(mRDBufferMutex);
     mHandler->uninitializeAction(*mActionInfo);
-    mHandler = 0;
+    mHandler = nullptr;
     delete mActionInfo;
     delete[] mRDBuffer;
   }
@@ -168,7 +168,7 @@ bool COPC_UA_Layer::checkPortConnectionInfo(unsigned int paPortIndex, bool paIsS
     return false;
   }
 
-  CIEC_ANY *remoteType = 0;
+  CIEC_ANY *remoteType = nullptr;
   if(paIsSD) {
     const CConnectionPoint &remoteConnectionPoint = localPortConnection->getSourceId();
     if(!getRemoteAny(&remoteType, remoteConnectionPoint, paIsSD)) {

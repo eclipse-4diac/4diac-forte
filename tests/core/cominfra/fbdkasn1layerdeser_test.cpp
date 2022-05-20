@@ -67,18 +67,18 @@ class CDeserTestMockCommFB : public forte::com_infra::CCommFB{
         forte::com_infra::CCommFB(CStringDictionary::scm_nInvalidStringId, &m_oResource, forte::com_infra::e_Publisher),
         m_oMockFBInterface(){
 
-      m_oMockFBInterface.m_aunEINames = 0;
-      m_oMockFBInterface.m_anEIWith = 0;
-      m_oMockFBInterface.m_anEIWithIndexes = 0;
+      m_oMockFBInterface.m_aunEINames = nullptr;
+      m_oMockFBInterface.m_anEIWith = nullptr;
+      m_oMockFBInterface.m_anEIWithIndexes = nullptr;
       m_oMockFBInterface.m_nNumEOs = 0;
-      m_oMockFBInterface.m_aunEONames = 0;
-      m_oMockFBInterface.m_anEOWith = 0;
-      m_oMockFBInterface.m_anEOWithIndexes = 0;
+      m_oMockFBInterface.m_aunEONames = nullptr;
+      m_oMockFBInterface.m_anEOWith = nullptr;
+      m_oMockFBInterface.m_anEOWithIndexes = nullptr;
       m_oMockFBInterface.m_nNumDIs = 2;
-      m_oMockFBInterface.m_aunDINames = 0;
+      m_oMockFBInterface.m_aunDINames = nullptr;
       m_oMockFBInterface.m_aunDIDataTypeNames = scm_anInputTypes;
       m_oMockFBInterface.m_nNumDOs = static_cast<TForteUInt8>(pa_nNumRD + 2U);
-      m_oMockFBInterface.m_aunDONames = 0;
+      m_oMockFBInterface.m_aunDONames = nullptr;
       m_oMockFBInterface.m_aunDODataTypeNames = pa_aunDODataTypeNames;
 
       m_acFBConnData = new TForteByte[genFBConnDataSize(0, 2, pa_nNumRD + 2)];
@@ -91,7 +91,7 @@ class CDeserTestMockCommFB : public forte::com_infra::CCommFB{
       freeAllData();
       delete[] m_acFBConnData;
       delete[] m_acFBVarsData;
-      m_pstInterfaceSpec = 0;
+      m_pstInterfaceSpec = nullptr;
     }
 
   private:
@@ -105,7 +105,7 @@ class CDeserTestMockCommFB : public forte::com_infra::CCommFB{
 };
 
 const CStringDictionary::TStringId CDeserTestMockCommFB::scm_anInputTypes[] = { g_nStringIdBOOL, g_nStringIdBOOL };
-EMB_RES CDeserTestMockCommFB::m_oResource(CStringDictionary::scm_nInvalidStringId, 0);
+EMB_RES CDeserTestMockCommFB::m_oResource(CStringDictionary::scm_nInvalidStringId, nullptr);
 
 BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
 
@@ -113,7 +113,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
 
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
     CIEC_BOOL &nVal(*static_cast<CIEC_BOOL *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize));
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_BOOL){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBOOL };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWord40396, cg_unWordSerSize)));
@@ -163,7 +163,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_BYTE){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBYTE };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
     CIEC_BYTE &nVal(*static_cast<CIEC_BYTE *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abByte0, cg_unByteSerSize));
@@ -186,7 +186,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_BYTE){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdBYTE };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWord40396, cg_unWordSerSize)));
@@ -223,7 +223,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_WORD){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdWORD };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
     CIEC_WORD &nVal(*static_cast<CIEC_WORD *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abWord0, cg_unWordSerSize));
@@ -250,7 +250,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_WORD){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdWORD };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
@@ -287,7 +287,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_DWORD){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdDWORD };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
     CIEC_DWORD &nVal(*static_cast<CIEC_DWORD *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abDWord0, cg_unDWordSerSize));
@@ -322,7 +322,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_DWORD){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdDWORD };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
@@ -360,7 +360,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_LWORD){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdLWORD };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
     CIEC_LWORD &nVal(*static_cast<CIEC_LWORD *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLWord0, cg_unLWordSerSize));
@@ -394,7 +394,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_LWORD){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdLWORD };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
@@ -430,7 +430,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_USINT){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdUSINT };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
     CIEC_USINT &nVal(*static_cast<CIEC_USINT *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abUSInt0, cg_unUSIntSerSize));
@@ -453,7 +453,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_USINT){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdUSINT };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
@@ -490,7 +490,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_UINT){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdUINT };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
     CIEC_UINT &nVal(*static_cast<CIEC_UINT *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abUInt0, cg_unUIntSerSize));
@@ -517,7 +517,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_UINT){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdUINT };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
@@ -554,7 +554,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_UDINT){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdUDINT };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
     CIEC_UDINT &nVal(*static_cast<CIEC_UDINT *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abUDInt0, cg_unUDIntSerSize));
@@ -589,7 +589,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_UDINT){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdUDINT };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
@@ -627,7 +627,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_ULINT){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdULINT };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
     CIEC_ULINT &nVal(*static_cast<CIEC_ULINT *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abULInt0, cg_unULIntSerSize));
@@ -661,7 +661,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_ULINT){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdULINT };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
@@ -697,7 +697,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_SINT){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdSINT };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
     CIEC_SINT &nVal(*static_cast<CIEC_SINT *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abSInt0, cg_unSIntSerSize));
@@ -724,7 +724,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_SINT){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdSINT };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
@@ -761,7 +761,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_INT){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdINT };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
     CIEC_INT &nVal(*static_cast<CIEC_INT *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abInt0, cg_unIntSerSize));
@@ -804,7 +804,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_INT){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdINT };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
@@ -841,7 +841,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_DINT){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdDINT };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
     CIEC_DINT &nVal(*static_cast<CIEC_DINT *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abDInt0, cg_unDIntSerSize));
@@ -902,7 +902,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_DINT){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdDINT };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
@@ -940,7 +940,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_LINT){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdLINT };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
     CIEC_LINT &nVal(*static_cast<CIEC_LINT *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLInt0, cg_unLIntSerSize));
@@ -1002,7 +1002,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_LINT){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdLINT };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
@@ -1040,7 +1040,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_REAL){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdREAL };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
     CIEC_REAL &nVal(*static_cast<CIEC_REAL *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abReal0, cg_unRealSerSize));
@@ -1062,7 +1062,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_REAL){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdREAL };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
@@ -1101,7 +1101,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_LREAL){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdLREAL };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
     CIEC_LREAL &nVal(*static_cast<CIEC_LREAL *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLReal0, cg_unLRealSerSize));
@@ -1123,7 +1123,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_LREAL){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdLREAL };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
@@ -1160,7 +1160,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_STRING){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdSTRING };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
     CIEC_STRING &nVal(*static_cast<CIEC_STRING *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abStringEmpty, cg_unStringEmptySerSize));
@@ -1174,7 +1174,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_STRING){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdSTRING };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
@@ -1211,7 +1211,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_WSTRING){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdWSTRING };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
     CIEC_WSTRING &nVal(*static_cast<CIEC_WSTRING *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abWStringEmpty, cg_unWStringEmptySerSize));
@@ -1229,7 +1229,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_WSTRING){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdWSTRING };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
@@ -1266,7 +1266,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_TIME){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdTIME };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
     CIEC_TIME &nVal(*static_cast<CIEC_TIME *>(nTestFB.getRDs()));
     char acStrBuf[20];
 
@@ -1285,7 +1285,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_TIME){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdTIME };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
@@ -1323,7 +1323,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
 
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdTIME, g_nStringIdWORD, g_nStringIdSTRING, g_nStringIdINT, g_nStringIdBOOL, g_nStringIdTIME };
     CDeserTestMockCommFB nTestFB(6, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     CIEC_TIME &oTimeVal1(*static_cast<CIEC_TIME *>(nTestFB.getRDs()));
     CIEC_WORD &oWordVal(*static_cast<CIEC_WORD *>(nTestFB.getRDs() + 1));
@@ -1351,7 +1351,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_ARRAY){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdARRAY, 5, g_nStringIdBOOL };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
     CIEC_ARRAY<> &nVal(*static_cast<CIEC_ARRAY<> *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abArrayBool10011, cg_unBOOL5SerSize));
@@ -1370,7 +1370,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
 
     CStringDictionary::TStringId anType7[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdARRAY, 7, g_nStringIdBOOL };
     CDeserTestMockCommFB nTestFB7(1, anType7);
-    forte::com_infra::CFBDKASN1ComLayer nTestee7(0, &nTestFB7);
+    forte::com_infra::CFBDKASN1ComLayer nTestee7(nullptr, &nTestFB7);
     CIEC_ARRAY<> &nBoolArray7(*static_cast<CIEC_ARRAY<> *>(nTestFB7.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee7.recvData(cg_abArrayBool10011, cg_unBOOL5SerSize));
@@ -1384,7 +1384,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
 
     CStringDictionary::TStringId anType3[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdARRAY, 3, g_nStringIdBOOL };
     CDeserTestMockCommFB nTestFB3(1, anType3);
-    forte::com_infra::CFBDKASN1ComLayer nTestee3(0, &nTestFB3);
+    forte::com_infra::CFBDKASN1ComLayer nTestee3(nullptr, &nTestFB3);
     CIEC_ARRAY<> &nBoolArray3(*static_cast<CIEC_ARRAY<> *>(nTestFB3.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee3.recvData(cg_abArrayBool10011, cg_unBOOL5SerSize));
@@ -1394,7 +1394,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
 
     CStringDictionary::TStringId anType4[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdARRAY, 4, g_nStringIdSINT };
     CDeserTestMockCommFB nTestFB4(1, anType4);
-    forte::com_infra::CFBDKASN1ComLayer nTesteeSInt(0, &nTestFB4);
+    forte::com_infra::CFBDKASN1ComLayer nTesteeSInt(nullptr, &nTestFB4);
     CIEC_ARRAY<> &nSIntArray(*static_cast<CIEC_ARRAY<> *>(nTestFB4.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTesteeSInt.recvData(cg_abArraySINTm128_127_0_m90, cg_unSINT4SerSize));
@@ -1411,7 +1411,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
 
     CStringDictionary::TStringId anTypeSIntArray7[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdARRAY, 7, g_nStringIdSINT };
     CDeserTestMockCommFB nTestFBSIntArray7(1, anTypeSIntArray7);
-    forte::com_infra::CFBDKASN1ComLayer nTesteeSInt7(0, &nTestFBSIntArray7);
+    forte::com_infra::CFBDKASN1ComLayer nTesteeSInt7(nullptr, &nTestFBSIntArray7);
     CIEC_ARRAY<> &nSIntArray7(*static_cast<CIEC_ARRAY<> *>(nTestFBSIntArray7.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTesteeSInt7.recvData(cg_abArraySINTm128_127_0_m90, cg_unSINT4SerSize));
@@ -1425,7 +1425,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
 
     CStringDictionary::TStringId anTypeSInt2[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdARRAY, 2, g_nStringIdSINT };
     CDeserTestMockCommFB nTestFBSInt2(1, anTypeSInt2);
-    forte::com_infra::CFBDKASN1ComLayer nTesteeSInt2(0, &nTestFBSInt2);
+    forte::com_infra::CFBDKASN1ComLayer nTesteeSInt2(nullptr, &nTestFBSInt2);
     CIEC_ARRAY<> &nSIntArray2(*static_cast<CIEC_ARRAY<> *>(nTestFBSInt2.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTesteeSInt2.recvData(cg_abArraySINTm128_127_0_m90, cg_unSINT4SerSize));
@@ -1434,7 +1434,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
 
     CStringDictionary::TStringId anTypeString[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdARRAY, 2, g_nStringIdSTRING };
     CDeserTestMockCommFB nTestFBString(1, anTypeString);
-    forte::com_infra::CFBDKASN1ComLayer nTesteeString(0, &nTestFBString);
+    forte::com_infra::CFBDKASN1ComLayer nTesteeString(nullptr, &nTestFBString);
     CIEC_ARRAY<> &nStringArray(*static_cast<CIEC_ARRAY<> *>(nTestFBString.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTesteeString.recvData(cg_abArrayStringEmptyHalloWorld, cg_unString2SerSize));
@@ -1446,7 +1446,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_BOOLARRAY){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdARRAY, 5, g_nStringIdBOOL };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
@@ -1483,7 +1483,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_SINTARRAY){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdARRAY, 4, g_nStringIdSINT };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
@@ -1520,7 +1520,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_STRINGARRAY){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdARRAY, 2, g_nStringIdSTRING };
     CDeserTestMockCommFB nTestFB(1, anType);
-    forte::com_infra::CFBDKASN1ComLayer nTestee(0, &nTestFB);
+    forte::com_infra::CFBDKASN1ComLayer nTestee(nullptr, &nTestFB);
 
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));

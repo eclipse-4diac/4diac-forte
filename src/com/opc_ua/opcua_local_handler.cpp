@@ -41,7 +41,7 @@ using namespace forte::com_infra;
 DEFINE_HANDLER(COPC_UA_Local_Handler);
 
 COPC_UA_Local_Handler::COPC_UA_Local_Handler(CDeviceExecution &paDeviceExecution) :
-    COPC_UA_HandlerAbstract(paDeviceExecution), mUaServer(0) {
+    COPC_UA_HandlerAbstract(paDeviceExecution), mUaServer(nullptr) {
 }
 
 COPC_UA_Local_Handler::~COPC_UA_Local_Handler() {
@@ -113,7 +113,7 @@ void COPC_UA_Local_Handler::run() {
       DEVLOG_ERROR("[OPC UA LOCAL]: Couldn't initialize Nodesets\n", gOpcuaServerPort);
     }
     UA_Server_delete(mUaServer);
-    mUaServer = 0;
+    mUaServer = nullptr;
   }
   mServerStarted.inc(); //this will avoid locking startServer() for all cases where the starting of server failed
 }
@@ -492,7 +492,7 @@ UA_StatusCode COPC_UA_Local_Handler::handleExistingVariable(CActionInfo &paActio
       if(!paWrite) { //If we are reading a variable, it should be writable from the outside
         retVal = addWritePermission(*paNodePairInfo.mNodeId);
         if(UA_STATUSCODE_GOOD == retVal) {
-          void *handle = 0;
+          void *handle = nullptr;
           retVal = UA_Server_getNodeContext(mUaServer, *paNodePairInfo.mNodeId, &handle);
           if(UA_STATUSCODE_GOOD == retVal) {
             if(!handle) {
@@ -581,7 +581,7 @@ UA_StatusCode COPC_UA_Local_Handler::createVariableNode(const CCreateVariableInf
   void *paVarValue = UA_new(paCreateVariableInfo.mTypeConvert);
 
   UA_init(paVarValue, paCreateVariableInfo.mTypeConvert);
-  if(0 != paCreateVariableInfo.mInitData) {
+  if(nullptr != paCreateVariableInfo.mInitData) {
     COPC_UA_Helper::convertToOPCUAType(*paCreateVariableInfo.mInitData, paVarValue);
   }
 
@@ -793,7 +793,7 @@ void COPC_UA_Local_Handler::createMethodArguments(CActionInfo &paActionInfo, CCr
     }
 
     arg->arrayDimensionsSize = 0;
-    arg->arrayDimensions = 0;
+    arg->arrayDimensions = nullptr;
     arg->description = UA_LOCALIZEDTEXT_ALLOC(mEnglishLocaleForNodes, "Method parameter");
     arg->valueRank = -1;
   }
@@ -1136,7 +1136,7 @@ UA_StatusCode COPC_UA_Local_Handler::getNode(CActionInfo::CNodePairInfo &paNodeP
   *paIsPresent = false;
 
   if(!paNodePairInfo.mBrowsePath.empty()) {
-    UA_BrowsePath *browsePaths = 0;
+    UA_BrowsePath *browsePaths = nullptr;
     size_t pathCount = 0;
     size_t firstNonExistingNode = 0;
 
@@ -1165,7 +1165,7 @@ UA_StatusCode COPC_UA_Local_Handler::getNode(CActionInfo::CNodePairInfo &paNodeP
       COPC_UA_Helper::releaseBrowseArgument(*browsePaths, pathCount);
     }
   } else {
-    void *handle = 0;
+    void *handle = nullptr;
     //we use UA_Server_getNodeContext just to check if the node exist in the addressspace
     if(UA_STATUSCODE_BADNODEIDUNKNOWN != UA_Server_getNodeContext(mUaServer, *paNodePairInfo.mNodeId, &handle)) {
       *paIsPresent = true;
@@ -1181,7 +1181,7 @@ UA_StatusCode COPC_UA_Local_Handler::translateBrowseNameAndStore(const char *paB
   UA_StatusCode retVal = COPC_UA_Helper::prepareBrowseArgument(paBrowsePath, paBrowsePaths, paFoldercount);
 
   if(UA_STATUSCODE_GOOD == retVal) {
-    UA_BrowsePathResult *browsePathsResults = 0;
+    UA_BrowsePathResult *browsePathsResults = nullptr;
     CSinglyLinkedList<UA_NodeId*> storedNodeIds;
 
     browsePathsResults = static_cast<UA_BrowsePathResult*>(UA_Array_new(*paFoldercount * 2, &UA_TYPES[UA_TYPES_BROWSEPATHRESULT]));
@@ -1248,7 +1248,7 @@ UA_StatusCode COPC_UA_Local_Handler::storeAlreadyExistingNodes(const UA_BrowsePa
 
 UA_StatusCode COPC_UA_Local_Handler::createFolders(const char *paFolders, CSinglyLinkedList<UA_NodeId*> &paCreatedNodeIds) const {
 
-  UA_BrowsePath *browsePaths = 0;
+  UA_BrowsePath *browsePaths = nullptr;
   size_t folderCnt = 0;
   size_t firstNonExistingNode;
   CSinglyLinkedList<UA_NodeId*> existingNodeIds;
@@ -1271,7 +1271,7 @@ UA_StatusCode COPC_UA_Local_Handler::createFolders(const char *paFolders, CSingl
       UA_NodeId type = UA_NODEID_NUMERIC(0, UA_NS0ID_FOLDERTYPE);
       CCreateObjectInfo createInformation;
 
-      createInformation.mRequestedNodeId = 0;
+      createInformation.mRequestedNodeId = nullptr;
       createInformation.mParentNodeId = &parentNodeId;
       UA_QualifiedName_copy(&browsePaths[folderCnt - 1].relativePath.elements[j].targetName, createInformation.mBrowseName);
       createInformation.mTypeNodeId = &type;
@@ -1381,7 +1381,7 @@ void COPC_UA_Local_Handler::removeMethodCall(const CLocalMethodCall &toRemove) {
 
 COPC_UA_Local_Handler::CLocalMethodCall* COPC_UA_Local_Handler::getLocalMethodCall(const CLocalMethodInfo &paActionInfo) {
   CCriticalRegion criticalRegion(mMethodCallsMutex);
-  CLocalMethodCall *retVal = 0;
+  CLocalMethodCall *retVal = nullptr;
   for(CSinglyLinkedList<CLocalMethodCall>::Iterator it = mMethodCalls.begin(); it != mMethodCalls.end(); ++it) {
     if(&(*it).mActionInfo == &paActionInfo) {
       retVal = &(*it);
@@ -1399,7 +1399,7 @@ UA_StatusCode COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onServerMethodC
     ) {
 
   UA_StatusCode retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
-  CLocalMethodInfo *localMethodHandle = 0;
+  CLocalMethodInfo *localMethodHandle = nullptr;
   COPC_UA_Local_Handler *thisHandler = static_cast<COPC_UA_Local_Handler*>(paMethodContext);
   for(CSinglyLinkedList<UA_ParentNodeHandler>::Iterator iter = thisHandler->mMethodsContexts.begin(); iter != thisHandler->mMethodsContexts.end(); ++iter) {
     if(UA_NodeId_equal(paParentNodeId, (*iter).mParentNodeId) && UA_NodeId_equal(paMethodNodeId, (*iter).mMethodNodeId)) {
@@ -1465,7 +1465,7 @@ void COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onWrite(UA_Server*, cons
 
   COPC_UA_Helper::UA_RecvVariable_handle handleRecv(1);
 
-  handleRecv.mData[0] = data->hasValue ? &data->value : 0; //TODO: check this empty data
+  handleRecv.mData[0] = data->hasValue ? &data->value : nullptr; //TODO: check this empty data
   handleRecv.mOffset = variableCallbackHandle->mPortIndex;
 
   EComResponse retVal = variableCallbackHandle->mActionInfo.getLayer().recvData(static_cast<const void*>(&handleRecv), 0); //TODO: add multidimensional mData handling with 'range'.

@@ -39,55 +39,55 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
 
 
   BOOST_AUTO_TEST_CASE(ANY_toString_Test){
-    CIEC_ANY *poTest = CIEC_ANY::createDataType(0);
+    CIEC_ANY *poTest = CIEC_ANY::createDataType(nullptr);
     performToStringTests(*poTest);
     delete poTest;
   }
 
   BOOST_AUTO_TEST_CASE(ANY_BIT_toString_Test){
-    CIEC_ANY *poTest = CIEC_ANY_BIT::createDataType(0);
+    CIEC_ANY *poTest = CIEC_ANY_BIT::createDataType(nullptr);
     performToStringTests(*poTest);
     delete poTest;
   }
 
   BOOST_AUTO_TEST_CASE(ANY_DERIVED_toString_Test){
-    CIEC_ANY *poTest = CIEC_ANY_DERIVED::createDataType(0);
+    CIEC_ANY *poTest = CIEC_ANY_DERIVED::createDataType(nullptr);
     performToStringTests(*poTest);
     delete poTest;
   }
 
   BOOST_AUTO_TEST_CASE(ANY_ELEMENTARY_toString_Test){
-    CIEC_ANY *poTest = CIEC_ANY_ELEMENTARY::createDataType(0);
+    CIEC_ANY *poTest = CIEC_ANY_ELEMENTARY::createDataType(nullptr);
     performToStringTests(*poTest);
     delete poTest;
   }
 
   BOOST_AUTO_TEST_CASE(ANY_INT_toString_Test){
-    CIEC_ANY *poTest = CIEC_ANY_INT::createDataType(0);
+    CIEC_ANY *poTest = CIEC_ANY_INT::createDataType(nullptr);
     performToStringTests(*poTest);
     delete poTest;
   }
 
   BOOST_AUTO_TEST_CASE(ANY_MAGNITUDE_toString_Test){
-    CIEC_ANY *poTest = CIEC_ANY_MAGNITUDE::createDataType(0);
+    CIEC_ANY *poTest = CIEC_ANY_MAGNITUDE::createDataType(nullptr);
     performToStringTests(*poTest);
     delete poTest;
   }
 
   BOOST_AUTO_TEST_CASE(ANY_NUM_toString_Test){
-    CIEC_ANY *poTest = CIEC_ANY_NUM::createDataType(0);
+    CIEC_ANY *poTest = CIEC_ANY_NUM::createDataType(nullptr);
     performToStringTests(*poTest);
     delete poTest;
   }
 
   BOOST_AUTO_TEST_CASE(ANY_REAL_toString_Test){
-    CIEC_ANY *poTest = CIEC_ANY_REAL::createDataType(0);
+    CIEC_ANY *poTest = CIEC_ANY_REAL::createDataType(nullptr);
     performToStringTests(*poTest);
     delete poTest;
   }
 
   BOOST_AUTO_TEST_CASE(ANY_STRING_toString_Test){
-    CIEC_ANY *poTest = CIEC_ANY_STRING::createDataType(0);
+    CIEC_ANY *poTest = CIEC_ANY_STRING::createDataType(nullptr);
     performToStringTests(*poTest);
     delete poTest;
   }

@@ -16,23 +16,23 @@
 #endif
 #include <boost/test/unit_test.hpp>
 
-const static SFBInterfaceSpec gscTestDevSpec = { 0, 0, 0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0, 0, 0,
+const static SFBInterfaceSpec gscTestDevSpec = { 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr,
+          nullptr, 0, nullptr, nullptr, 0, nullptr, nullptr,
           0,
-          0 };
+          nullptr };
 
 CDevice *CFBTestDataGlobalFixture::smTestDev;
 CResource *CFBTestDataGlobalFixture::smTestRes;
 
 CFBTestDataGlobalFixture::CFBTestDataGlobalFixture(){
   //setup is done in the setup so that boost_test can throw exceptions
-  smTestDev = new CDevice(&gscTestDevSpec, CStringDictionary::scm_nInvalidStringId, 0, 0);
+  smTestDev = new CDevice(&gscTestDevSpec, CStringDictionary::scm_nInvalidStringId, nullptr, nullptr);
   //mimick the behavior provided by typelib
   smTestDev->changeFBExecutionState(cg_nMGM_CMD_Reset);
 
   smTestRes = (CResource *)CTypeLib::createFB(g_nStringIdEMB_RES, g_nStringIdEMB_RES, smTestDev);
 
-  if(smTestRes != 0){
+  if(smTestRes != nullptr){
     smTestDev->addFB(smTestRes);
     smTestDev->startDevice();
   }

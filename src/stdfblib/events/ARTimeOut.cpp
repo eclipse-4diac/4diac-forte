@@ -28,17 +28,17 @@ const TForteInt16 FORTE_ARTimeOut::scm_anEOWithIndexes[] = {0, -1, -1};
 const CStringDictionary::TStringId FORTE_ARTimeOut::scm_anEventOutputNames[] = {g_nStringIdSTART, g_nStringIdSTOP};
 
 const SFBInterfaceSpec FORTE_ARTimeOut::scm_stFBInterfaceSpecSocket = {
-  1,  scm_anEventInputNames,  0,  scm_anEIWithIndexes,
-  2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  0,  0, 0, 
+  1,  scm_anEventInputNames,  nullptr,  scm_anEIWithIndexes,
+  2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  0,  nullptr, nullptr, 
   1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  0, 0
+  0, nullptr
 };
 
 const SFBInterfaceSpec FORTE_ARTimeOut::scm_stFBInterfaceSpecPlug = {
   2,  scm_anEventOutputNames,  scm_anEOWith,  scm_anEOWithIndexes,
-  1,  scm_anEventInputNames,  0, 0,  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  0,  0, 0,
-  0, 0
+  1,  scm_anEventInputNames,  nullptr, nullptr,  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+  0,  nullptr, nullptr,
+  0, nullptr
 };
 
 

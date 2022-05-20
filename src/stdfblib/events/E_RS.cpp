@@ -29,19 +29,19 @@ const CStringDictionary::TStringId E_RS::scm_anEventOutputNames[] = {g_nStringId
 const SFBInterfaceSpec E_RS::scm_stFBInterfaceSpec = {
   2,
   scm_anEventInputNames,
-  0,
-  0,
+  nullptr,
+  nullptr,
   1,
   scm_anEventOutputNames,
   scm_anEOWith,
   scm_anEOWithIndexes,
   0,
-  0,
-  0,
+  nullptr,
+  nullptr,
   1,
   scm_anDataOutputNames, scm_aunDODataTypeIds,
   0,
-  0
+  nullptr
 };
 
 void E_RS::executeEvent(int pa_nEIID){

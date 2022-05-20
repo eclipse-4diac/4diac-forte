@@ -35,7 +35,7 @@ const TForteInt16 FORTE_E_CTD::scm_anEOWithIndexes[] = { 0, 3, -1 };
 const CStringDictionary::TStringId FORTE_E_CTD::scm_anEventOutputNames[] = { g_nStringIdCDO, g_nStringIdLDO };
 
 const SFBInterfaceSpec FORTE_E_CTD::scm_stFBInterfaceSpec = { 2, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 2, scm_anEventOutputNames,
-  scm_anEOWith, scm_anEOWithIndexes, 1, scm_anDataInputNames, scm_anDataInputTypeIds, 2, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
+  scm_anEOWith, scm_anEOWithIndexes, 1, scm_anDataInputNames, scm_anDataInputTypeIds, 2, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, nullptr };
 
 void FORTE_E_CTD::alg_CD(void) {
   CV() = func_SUB(CV(), CIEC_UINT(1));

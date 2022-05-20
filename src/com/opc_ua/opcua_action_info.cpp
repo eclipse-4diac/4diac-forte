@@ -36,7 +36,7 @@ bool CActionInfo::isRemote() const {
 }
 
 CActionInfo* CActionInfo::getActionInfoFromParams(const char *paParams, COPC_UA_Layer &paLayer) {
-  CActionInfo *retVal = 0;
+  CActionInfo *retVal = nullptr;
   CParameterParser mainParser(paParams, ';');
   size_t amountOfParameters = mainParser.parseParameters();
 
@@ -71,7 +71,7 @@ CActionInfo* CActionInfo::getActionInfoFromParams(const char *paParams, COPC_UA_
 
       if(somethingFailed) {
         delete retVal;
-        retVal = 0;
+        retVal = nullptr;
       }
     }
 
@@ -143,7 +143,7 @@ bool CActionInfo::checkAction() const {
 bool CActionInfo::checkNodePairInfo() const {
   bool retVal = true;
   for(CSinglyLinkedList<CNodePairInfo*>::Iterator it = mNodePair.begin(); it != mNodePair.end(); ++it) {
-    if((*it)->mBrowsePath.empty() && 0 == (*it)->mNodeId) { //browsePath AND/OR NodeId must be given. If both are empty there's a problem
+    if((*it)->mBrowsePath.empty() && nullptr == (*it)->mNodeId) { //browsePath AND/OR NodeId must be given. If both are empty there's a problem
       DEVLOG_ERROR("[OPC UA ACTION]: BrowsePath and NodeId are empty in FB %s\n", mLayer.getCommFB()->getInstanceName());
       retVal = false;
       break;
@@ -285,7 +285,7 @@ CActionInfo::UA_ActionType CActionInfo::CActionParser::getActionEnum(const char 
 }
 
 bool CActionInfo::CActionParser::getEndpoint(const char *paEndpoint, CIEC_STRING &paResult) {
-  if(0 != strchr(paEndpoint, '#')) {
+  if(nullptr != strchr(paEndpoint, '#')) {
     paResult = CIEC_STRING(paEndpoint);
     paResult.assign(paResult.getValue(), static_cast<TForteUInt16>(paResult.length() - 1)); //remove #
     return true;
@@ -297,7 +297,7 @@ bool CActionInfo::CActionParser::handlePair(const char *paPair, CSinglyLinkedLis
   bool retVal = false;
   CParameterParser pairParser(paPair, ',');
   CIEC_STRING browsePathResult;
-  UA_NodeId *nodeIdResult = 0;
+  UA_NodeId *nodeIdResult = nullptr;
   size_t noOfParameters = pairParser.parseParameters();
   if(CActionParser::eMaxNumberOfPositions == noOfParameters) {
     browsePathResult = CIEC_STRING(pairParser[CActionParser::eBrowseName]);
@@ -350,14 +350,14 @@ UA_NodeId* CActionInfo::CActionParser::parseNodeId(const char *paNodeIdString) {
       "[OPC UA ACTION]: Parsing the NodeId %s failed. The format should follow the notation '<namespaceIndex>:<identifiertype>=<identifier>'. if the part before the : is omitted, namespace 0 is assumed\n",
       paNodeIdString);
     UA_NodeId_delete(resultNodeId);
-    resultNodeId = 0;
+    resultNodeId = nullptr;
   }
 
   return resultNodeId;
 }
 
 bool CActionInfo::CActionParser::parseNamespace(const char *paNamespace, UA_NodeId &paResult) {
-  paResult.namespaceIndex = static_cast<UA_UInt16>(forte::core::util::strtoul(paNamespace, 0, 10)); //TODO: should we check for return value here?
+  paResult.namespaceIndex = static_cast<UA_UInt16>(forte::core::util::strtoul(paNamespace, nullptr, 10)); //TODO: should we check for return value here?
   return true;
 }
 
@@ -366,7 +366,7 @@ bool CActionInfo::CActionParser::parseIdentifier(const char *paIdentifier, UA_No
   if(CActionParser::eMaxNumberOfNodeIdIdenfiertPositions == identifierParser.parseParameters()) {
     if(0 == strcmp(identifierParser[CActionParser::eIdenfierType], "i")) { //numeric
       paResult.identifierType = UA_NODEIDTYPE_NUMERIC;
-      paResult.identifier.numeric = static_cast<UA_UInt32>(forte::core::util::strtoul(identifierParser[CActionParser::eIdenfierValue], 0, 10)); //TODO: should we check for return value here?
+      paResult.identifier.numeric = static_cast<UA_UInt32>(forte::core::util::strtoul(identifierParser[CActionParser::eIdenfierValue], nullptr, 10)); //TODO: should we check for return value here?
     } else if(0 == strcmp(identifierParser[CActionParser::eIdenfierType], "s")) { //string
       paResult.identifierType = UA_NODEIDTYPE_STRING;
       paResult.identifier.string = UA_String_fromChars(identifierParser[CActionParser::eIdenfierValue]);

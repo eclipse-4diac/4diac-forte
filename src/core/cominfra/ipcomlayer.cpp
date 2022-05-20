@@ -37,7 +37,7 @@ CIPComLayer::~CIPComLayer(){
 EComResponse CIPComLayer::sendData(void *paData, unsigned int paSize){
   EComResponse eRetVal = e_ProcessDataOk;
 
-  if((0 != m_poFb) && (CIPComSocketHandler::scmInvalidSocketDescriptor != mSocketID)){
+  if((nullptr != m_poFb) && (CIPComSocketHandler::scmInvalidSocketDescriptor != mSocketID)){
     switch (m_poFb->getComServiceType()){
       case e_Server:
         if(0
@@ -71,7 +71,7 @@ EComResponse CIPComLayer::processInterrupt(){
   if(e_ProcessDataOk == mInterruptResp){
     switch (m_eConnectionState){
       case e_Connected:
-        if((0 < mBufFillSize) && (0 != m_poTopLayer)){
+        if((0 < mBufFillSize) && (nullptr != m_poTopLayer)){
           mInterruptResp = m_poTopLayer->recvData(mRecvBuffer, mBufFillSize);
           mBufFillSize = 0;
         }
@@ -118,11 +118,11 @@ EComResponse CIPComLayer::recvData(const void *paData, unsigned int){
 EComResponse CIPComLayer::openConnection(char *paLayerParameter){
   EComResponse eRetVal = e_InitInvalidId;
   char *acPort = strchr(paLayerParameter, ':');
-  if(0 != acPort){
+  if(nullptr != acPort){
     *acPort = '\0';
     ++acPort;
 
-    TForteUInt16 nPort = static_cast<TForteUInt16>(forte::core::util::strtoul(acPort, 0, 10));
+    TForteUInt16 nPort = static_cast<TForteUInt16>(forte::core::util::strtoul(acPort, nullptr, 10));
 
     CIPComSocketHandler::TSocketDescriptor nSockDes =
         CIPComSocketHandler::scmInvalidSocketDescriptor;

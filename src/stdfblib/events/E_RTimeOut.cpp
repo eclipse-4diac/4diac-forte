@@ -21,9 +21,9 @@ const SAdapterInstanceDef FORTE_E_RTimeOut::scm_astAdapterInstances[] = {
 {g_nStringIdARTimeOut, g_nStringIdTimeOutSocket, false }};
 
 const SFBInterfaceSpec FORTE_E_RTimeOut::scm_stFBInterfaceSpec = {
-  0,  0,  0,  0,
-  0,  0,   0, 0,  0,  0, 0, 
-  0,  0, 0,
+  0,  nullptr,  nullptr,  nullptr,
+  0,  nullptr,   nullptr, nullptr,  0,  nullptr, nullptr, 
+  0,  nullptr, nullptr,
   1,scm_astAdapterInstances};
 
 
@@ -44,10 +44,10 @@ const SCFB_FBConnectionData FORTE_E_RTimeOut::scm_astDataConnections[] = {
 const SCFB_FBNData FORTE_E_RTimeOut::scm_stFBNData = {
   1, scm_astInternalFBs,
   3, scm_astEventConnections,
-  0, 0,
+  0, nullptr,
   1, scm_astDataConnections,
-  0, 0,
-  0, 0
+  0, nullptr,
+  0, nullptr
 };
 
 

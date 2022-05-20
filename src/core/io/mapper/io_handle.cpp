@@ -19,7 +19,7 @@
 using namespace forte::core::io;
 
 IOHandle::IOHandle(IODeviceController *paController, IOMapper::Direction paDirection, CIEC_ANY::EDataTypeID paType) :
-    mController(paController), mType(paType), mDirection(paDirection), mObserver(0) {
+    mController(paController), mType(paType), mDirection(paDirection), mObserver(nullptr) {
 }
 
 IOHandle::~IOHandle() {
@@ -31,11 +31,11 @@ void IOHandle::onObserver(IOObserver *paObserver) {
 }
 
 void IOHandle::dropObserver() {
-  this->mObserver = 0;
+  this->mObserver = nullptr;
 }
 
 void IOHandle::onChange() {
-  if(mObserver != 0 && mObserver->onChange()) {
+  if(mObserver != nullptr && mObserver->onChange()) {
     mController->fireIndicationEvent(mObserver);
   }
 }

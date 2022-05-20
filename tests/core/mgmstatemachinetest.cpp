@@ -15,7 +15,7 @@
 class CFunctionBlockMock : public CFunctionBlock{
   public:
     CFunctionBlockMock() :
-        CFunctionBlock(0, 0, 0, 0, 0){
+        CFunctionBlock(nullptr, nullptr, 0, nullptr, nullptr){
       //mimick the behavior provided by typelib
       changeFBExecutionState(cg_nMGM_CMD_Reset);
     }

@@ -24,18 +24,18 @@ const CStringDictionary::TStringId E_SPLIT::scm_anEventOutputNames[] = {g_nStrin
 const SFBInterfaceSpec E_SPLIT::scm_stFBInterfaceSpec = {
   1,
   scm_anEventInputNames,
-  0,
-  0,
+  nullptr,
+  nullptr,
   2,
   scm_anEventOutputNames,
+  nullptr,
+  nullptr,
   0,
+  nullptr,
+  nullptr,
   0,
+  nullptr,
+  nullptr,
   0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0
+  nullptr
 };

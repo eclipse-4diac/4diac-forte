@@ -17,7 +17,7 @@ using namespace forte::core::io;
 
 IOConfigFBPartController::IOConfigFBPartController(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
     const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-    IOConfigFBBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mMaster(0) {
+    IOConfigFBBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mMaster(nullptr) {
 }
 
 void IOConfigFBPartController::executeEvent(int paEIID) {
@@ -26,7 +26,7 @@ void IOConfigFBPartController::executeEvent(int paEIID) {
       // Get master by id
       mMaster = IOConfigFBSplitController::getControllerById(IOConfigFBMultiAdapter().MasterId());
 
-      if(0 == mMaster) {
+      if(nullptr == mMaster) {
         QO() = CIEC_BOOL(false);
       } else {
         // Initialize handles

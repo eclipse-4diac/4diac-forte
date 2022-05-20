@@ -16,7 +16,7 @@
 
 CConfigFileParser::CConfigFileParser(const std::string &paFileLocation) {
   mConfigFile = fopen(paFileLocation.c_str(), "r");
-  if(0 != mConfigFile) {
+  if(nullptr != mConfigFile) {
     DEVLOG_INFO("[CConfigFileParser]: Configuration file %s opened\n", paFileLocation.c_str());
   } else {
     DEVLOG_ERROR("[CConfigFileParser]: Could not open configuration file %s\n", paFileLocation.c_str());
@@ -24,7 +24,7 @@ CConfigFileParser::CConfigFileParser(const std::string &paFileLocation) {
 }
 
 CConfigFileParser::~CConfigFileParser() {
-  if(0 != mConfigFile) {
+  if(nullptr != mConfigFile) {
     DEVLOG_INFO("[CConfigFileParser]: Closing configuration file\n");
     fclose(mConfigFile);
   }
@@ -34,7 +34,7 @@ CConfigFileParser::ParseResult CConfigFileParser::parseNextLine(std::pair<std::s
   ParseResult retVal = eFileNotOpened;
   if(mConfigFile) {
     char lineBuf[scmLineBuffer];
-    if(0 != fgets(lineBuf, scmLineBuffer, mConfigFile)) {
+    if(nullptr != fgets(lineBuf, scmLineBuffer, mConfigFile)) {
       if(0 == strcmp(lineBuf, "\n")) {
         retVal = eEmptyLine;
       } else {

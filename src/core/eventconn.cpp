@@ -56,7 +56,7 @@ EMGMResponse CEventConnection::disconnect(CFunctionBlock *paDstFB, CStringDictio
 void CEventConnection::triggerEvent(CEventChainExecutionThread *pa_poExecEnv) const {
   if(nullptr != pa_poExecEnv) {
     for(TDestinationIdList::Iterator it = mDestinationIds.begin();
-        0 != it.getPosition(); ++it){
+        nullptr != it.getPosition(); ++it){
       pa_poExecEnv->addEventEntry(&(*it));
     }
   }

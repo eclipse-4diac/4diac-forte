@@ -52,7 +52,7 @@ int CIEC_STRING::fromString(const char *pa_pacValue){
 
 int CIEC_STRING::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal = -1;
-  if(0 != paValue && getToStringBufferSize() <= paBufferSize){
+  if(nullptr != paValue && getToStringBufferSize() <= paBufferSize){
     *paValue = '\'';
     paValue++;
     TForteUInt16 nLen = length();
@@ -135,7 +135,7 @@ int CIEC_STRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescap
     }
 
     reserve(static_cast<TForteUInt16>(nLength));
-    if (0 == getGenData()) {
+    if (nullptr == getGenData()) {
       return -1;
     }
 
@@ -177,18 +177,18 @@ int CIEC_STRING::toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) cons
 
   const unsigned char *pRunner = (const unsigned char *) getValue();
   while (*pRunner) {
-    nRes = CUnicodeUtilities::encodeUTF8Codepoint(0, 0, (TForteUInt32) *pRunner);
+    nRes = CUnicodeUtilities::encodeUTF8Codepoint(nullptr, 0, (TForteUInt32) *pRunner);
     if (nRes < 0) {
       return -1;
     }
     nNeededLength += nRes;
-    if (nRes == 1 && paEscape && dollarEscapeChar(0, *pRunner, 0) == 2) {
+    if (nRes == 1 && paEscape && dollarEscapeChar(nullptr, *pRunner, 0) == 2) {
       nNeededLength++;
     }
     ++pRunner;
   }
 
-  if(0 == paBuffer) {
+  if(nullptr == paBuffer) {
     return static_cast<int>(nNeededLength);
   }
 

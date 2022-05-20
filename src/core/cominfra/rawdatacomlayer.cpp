@@ -37,7 +37,7 @@ namespace forte {
     }
 
     EComResponse CRawDataComLayer::recvData( const void *paData, unsigned int paSize){
-      if (0 == m_poTopLayer && m_poFb->getNumRD() == 1){
+      if (nullptr == m_poTopLayer && m_poFb->getNumRD() == 1){
         TIEC_ANYPtr apoRDs = static_cast<TIEC_ANYPtr>(m_poFb->getRDs());
         CIEC_STRING &val(static_cast<CIEC_STRING&>(apoRDs[0]));
         val.assign(static_cast<const char *>(paData), static_cast<TForteUInt16>(paSize));

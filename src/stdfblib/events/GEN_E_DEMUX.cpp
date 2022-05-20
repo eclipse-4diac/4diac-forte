@@ -28,7 +28,7 @@ const TDataIOID GEN_E_DEMUX::scm_anEIWith[] = { 0, 255 };
 const CStringDictionary::TStringId GEN_E_DEMUX::scm_anEventInputNames[] = { g_nStringIdEI };
 
 GEN_E_DEMUX::GEN_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), m_anEventOutputNames(0){
+    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), m_anEventOutputNames(nullptr){
 }
 
 GEN_E_DEMUX::~GEN_E_DEMUX(){
@@ -44,11 +44,11 @@ void GEN_E_DEMUX::executeEvent(int paEIID){
 bool GEN_E_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec){
   const char *acPos = strrchr(paConfigString, '_');
 
-  if(0 != acPos){
+  if(nullptr != acPos){
     ++acPos;
     if('D' != *acPos){
       //we have an underscore and it is not the first underscore after E
-      paInterfaceSpec.m_nNumEOs = static_cast<TForteUInt8>(forte::core::util::strtoul(acPos, 0, 10));
+      paInterfaceSpec.m_nNumEOs = static_cast<TForteUInt8>(forte::core::util::strtoul(acPos, nullptr, 10));
 
       if(paInterfaceSpec.m_nNumEOs < CFunctionBlock::scm_nMaxInterfaceEvents){
         m_anEventOutputNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumEOs];
@@ -60,14 +60,14 @@ bool GEN_E_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
         paInterfaceSpec.m_anEIWith = scm_anEIWith;
         paInterfaceSpec.m_anEIWithIndexes = scm_anEIWithIndexes;
         paInterfaceSpec.m_aunEONames = m_anEventOutputNames;
-        paInterfaceSpec.m_anEOWith = 0;
-        paInterfaceSpec.m_anEOWithIndexes = 0;
+        paInterfaceSpec.m_anEOWith = nullptr;
+        paInterfaceSpec.m_anEOWithIndexes = nullptr;
         paInterfaceSpec.m_nNumDIs = 1;
         paInterfaceSpec.m_aunDINames = scm_anDataInputNames;
         paInterfaceSpec.m_aunDIDataTypeNames = scm_aunDIDataTypeIds;
         paInterfaceSpec.m_nNumDOs = 0;
-        paInterfaceSpec.m_aunDONames = 0;
-        paInterfaceSpec.m_aunDODataTypeNames = 0;
+        paInterfaceSpec.m_aunDONames = nullptr;
+        paInterfaceSpec.m_aunDODataTypeNames = nullptr;
         return true;
       }
     }

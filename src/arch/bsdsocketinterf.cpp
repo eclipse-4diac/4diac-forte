@@ -268,7 +268,7 @@ int CBSDSocketInterface::receiveDataFromUDP(TSocketDescriptor pa_nSockD, char* p
     unsigned int pa_unBufSize){
   int nRetVal;
   do{
-    nRetVal = static_cast<int>(recvfrom(pa_nSockD, pa_pcData, pa_unBufSize, 0, 0, 0));
+    nRetVal = static_cast<int>(recvfrom(pa_nSockD, pa_pcData, pa_unBufSize, 0, nullptr, nullptr));
   } while((-1 == nRetVal) && (EINTR == errno)); // recv got interrupt / recieving again
 
   if(nRetVal == -1){ //

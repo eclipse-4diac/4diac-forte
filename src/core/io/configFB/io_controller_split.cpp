@@ -32,11 +32,11 @@ IOConfigFBSplitController* IOConfigFBSplitController::getControllerById(TForteUI
   TControllerList::Iterator itEnd = mInstances.end();
   int i = 0;
   for(TControllerList::Iterator it = mInstances.begin(); it != itEnd; ++it, i++) {
-    if(paId == i && *it != 0) {
+    if(paId == i && *it != nullptr) {
       return *it;
     }
   }
-  return 0;
+  return nullptr;
 }
 
 void IOConfigFBSplitController::onStartup() {
@@ -48,7 +48,7 @@ void IOConfigFBSplitController::onStartup() {
 
   IOConfigFBSplitAdapter *cur = static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[scmSplitAdapter[mSplitIterator]]);
 
-  while(!cur || 0 == cur->getPeer()) {
+  while(!cur || nullptr == cur->getPeer()) {
     mSplitIterator++;
 
     if(mSplitIterator == scmSplitAdapterNum) {
@@ -72,7 +72,7 @@ void IOConfigFBSplitController::onStop() {
 
   IOConfigFBSplitAdapter *cur = static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[scmSplitAdapter[mSplitIterator]]);
 
-  while(cur->getPeer() == 0) {
+  while(cur->getPeer() == nullptr) {
     mSplitIterator++;
 
     if(mSplitIterator == scmSplitAdapterNum) {
@@ -110,7 +110,7 @@ void IOConfigFBSplitController::executeEvent(int paEIID) {
       } else {
         IOConfigFBSplitAdapter *next = static_cast<IOConfigFBSplitAdapter*>(m_apoAdapters[scmSplitAdapter[mSplitIterator]]);
 
-        while(!next || 0 == next->getPeer()) {
+        while(!next || nullptr == next->getPeer()) {
           mSplitIterator++;
 
           if(mSplitIterator == scmSplitAdapterNum) {

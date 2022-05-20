@@ -31,7 +31,7 @@ const TForteInt16 CGenBitBase::scmEOWithIndexes[] = { 0, -1 };
 const CStringDictionary::TStringId CGenBitBase::scmEventOutputNames[] = { g_nStringIdCNF };
 
 CGenBitBase::CGenBitBase(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), mDataInputNames(0), mDataInputTypeIds(0), mEIWith(0){
+    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), mDataInputNames(nullptr), mDataInputTypeIds(nullptr), mEIWith(nullptr){
 }
 
 CGenBitBase::~CGenBitBase(){
@@ -43,10 +43,10 @@ CGenBitBase::~CGenBitBase(){
 bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
   const char *pcPos = strrchr(paConfigString, '_');
 
-  if (0 != pcPos) {
+  if (nullptr != pcPos) {
     pcPos++;
     //we have an underscore and it is the first underscore after AND
-    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(forte::core::util::strtoul(pcPos, 0, 10));
+    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(forte::core::util::strtoul(pcPos, nullptr, 10));
     DEVLOG_DEBUG("DIs: %d;\n", paInterfaceSpec.m_nNumDIs);
   } else {
     return false;

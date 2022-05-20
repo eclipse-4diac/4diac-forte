@@ -25,7 +25,7 @@ IOConfigFBMultiSlave::IOConfigFBMultiSlave(const TForteUInt8 *const paSlaveConfi
     CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData,
     TForteByte *paFBVarsData) :
     IOConfigFBBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mIndex(-1), mSlaveConfigurationIO(paSlaveConfigurationIO),
-        mMaster(0), mType(paType), mInitialized(false), mSlaveConfigurationIONum(paSlaveConfigurationIONum),
+        mMaster(nullptr), mType(paType), mInitialized(false), mSlaveConfigurationIONum(paSlaveConfigurationIONum),
         mSlaveConfigurationIOIsDefault(new bool[paSlaveConfigurationIONum]()) {
   for(int i = 0; i < mSlaveConfigurationIONum; i++) {
     mSlaveConfigurationIOIsDefault[i] = false;
@@ -41,7 +41,7 @@ void IOConfigFBMultiSlave::executeEvent(int paEIID) {
     if(BusAdapterIn().QI() == true) {
       // Handle initialization event
       const char *const error = handleInitEvent();
-      QO() = CIEC_BOOL(mInitialized = error == 0);
+      QO() = CIEC_BOOL(mInitialized = error == nullptr);
 
       if(mInitialized) {
         STATUS() = CIEC_WSTRING(scmOK);
@@ -49,7 +49,7 @@ void IOConfigFBMultiSlave::executeEvent(int paEIID) {
         STATUS() = CIEC_WSTRING(error);
       }
 
-      if(BusAdapterOut().getPeer() != 0) {
+      if(BusAdapterOut().getPeer() != nullptr) {
         // Initialize next slave
         BusAdapterOut().QI() = BusAdapterIn().QI();
         BusAdapterOut().Index() = func_ADD(BusAdapterIn().Index(), CIEC_UINT(1));
@@ -77,7 +77,7 @@ void IOConfigFBMultiSlave::executeEvent(int paEIID) {
       QO() = CIEC_BOOL(false);
       STATUS() = CIEC_WSTRING(scmStopped);
 
-      if(BusAdapterOut().getPeer() != 0) {
+      if(BusAdapterOut().getPeer() != nullptr) {
         // DeInit next slave
         BusAdapterOut().QI() = BusAdapterIn().QI();
 
@@ -120,7 +120,7 @@ void IOConfigFBMultiSlave::initHandle(IODeviceController::HandleDescriptor *paHa
 const char* IOConfigFBMultiSlave::handleInitEvent() {
   // Get master by id
   mMaster = IOConfigFBMultiMaster::getMasterById(BusAdapterIn().MasterId());
-  if(0 == mMaster) {
+  if(nullptr == mMaster) {
     return scmMasterNotFound;
   }
   mIndex = BusAdapterIn().Index();
@@ -162,7 +162,7 @@ const char* IOConfigFBMultiSlave::handleInitEvent() {
 
   // Perform slave initialization
   const char *const error = init();
-  if(error != 0) {
+  if(error != nullptr) {
     return error;
   }
   controller.dropSlaveHandles(mIndex);
@@ -172,6 +172,6 @@ const char* IOConfigFBMultiSlave::handleInitEvent() {
 
   DEVLOG_DEBUG("[IOConfigFBMultiSlave] Initialized slave at position %d\n", mIndex);
 
-  return 0;
+  return nullptr;
 }
 

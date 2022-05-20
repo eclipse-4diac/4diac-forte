@@ -74,6 +74,6 @@ void CParameterParser::trimTrailingWhiteSpacesOfParameterSubstring(char* paParse
 }
 
 const char* CParameterParser::operator [](const size_t paIndex) {
-  const char* result = (paIndex < mParameterLocations.size()) ? mParameterLocations[paIndex] : 0;
+  const char* result = (paIndex < mParameterLocations.size()) ? mParameterLocations[paIndex] : nullptr;
   return result;
 }

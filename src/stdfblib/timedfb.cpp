@@ -30,16 +30,16 @@ const SFBInterfaceSpec CTimedFB::scm_stFBInterfaceSpec = {
   scm_anEIWithIndexes,
   1,
   scm_aunEONameIds,
-  0,
-  0,
+  nullptr,
+  nullptr,
   1,
   scm_aunDINameIds,
   scm_aunDIDataTypeNameIds,
   0,
+  nullptr,
+  nullptr,
   0,
-  0,
-  0,
-  0
+  nullptr
 };
 
 CTimedFB::CTimedFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, ETimerActivationType paType) :
@@ -48,7 +48,7 @@ CTimedFB::CTimedFB(const CStringDictionary::TStringId paInstanceNameId, CResourc
   mActive = false;
   mTimeListEntry.mTimeOut = 0;
   mTimeListEntry.mInterval = 0;
-  mTimeListEntry.mNext = 0;
+  mTimeListEntry.mNext = nullptr;
   mTimeListEntry.mType = paType;
   mTimeListEntry.mTimedFB = this;
 }

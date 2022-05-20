@@ -33,7 +33,7 @@ CStringDictionary::CStringDictionary(){
   m_nNrOfStrings = cg_nNumOfConstStrings;
   m_nNextString = g_nStringIdNextFreeId;
 #else
-  m_pnStringIdBufAddr = 0;
+  m_pnStringIdBufAddr = nullptr;
   m_nStringBufSize = 0;
   m_nMaxNrOfStrings = 0;
   m_nNrOfStrings = 0;
@@ -49,9 +49,9 @@ CStringDictionary::CStringDictionary(){
   }
 
   m_paStringBufAddr = (char *) forte_malloc(nStringBufSize * sizeof(char));
-  if(0 != m_paStringBufAddr){
+  if(nullptr != m_paStringBufAddr){
     m_pnStringIdBufAddr = (TStringId *) forte_malloc(nMaxNrOfStrings * sizeof(TStringId));
-    if(0 != m_pnStringIdBufAddr){
+    if(nullptr != m_pnStringIdBufAddr){
       memcpy(m_paStringBufAddr, scm_acConstStringBuf, g_nStringIdNextFreeId);
       memcpy(m_pnStringIdBufAddr, scm_aunIdList, (cg_nNumOfConstStrings * sizeof(TStringId)));
 
@@ -63,7 +63,7 @@ CStringDictionary::CStringDictionary(){
     }
     else{
       forte_free(m_paStringBufAddr);
-      m_paStringBufAddr = 0;
+      m_paStringBufAddr = nullptr;
     }
   }
 #endif
@@ -79,8 +79,8 @@ void CStringDictionary::clear(){
   forte_free(m_paStringBufAddr);
   forte_free(m_pnStringIdBufAddr);
 #endif
-  m_pnStringIdBufAddr = 0;
-  m_paStringBufAddr = 0;
+  m_pnStringIdBufAddr = nullptr;
+  m_paStringBufAddr = nullptr;
   m_nStringBufSize = 0;
   m_nMaxNrOfStrings = 0;
   m_nNrOfStrings = 0;
@@ -90,12 +90,12 @@ void CStringDictionary::clear(){
 // get a string (0 if not found)
 const char *CStringDictionary::get(TStringId pa_nId){
   if(pa_nId >= m_nNextString) {
-    return 0;
+    return nullptr;
   }
 
   const char *adr = getStringAddress(pa_nId);
   if(pa_nId > 0 && adr[-1] != '\0') {
-    return 0;
+    return nullptr;
   }
 
   return adr;
@@ -105,7 +105,7 @@ const char *CStringDictionary::get(TStringId pa_nId){
 CStringDictionary::TStringId CStringDictionary::insert(const char *pa_sStr){
   TStringId nRetVal = scm_nInvalidStringId;
 
-  if(0 != pa_sStr){
+  if(nullptr != pa_sStr){
     if('\0' != *pa_sStr){
       unsigned int idx;
       nRetVal = findEntry(pa_sStr, idx);
@@ -183,7 +183,7 @@ bool CStringDictionary::reallocateStringIdBuf(unsigned int pa_nNewMaxNrOfStrings
   bool bRetval = true;
   if(pa_nNewMaxNrOfStrings > m_nMaxNrOfStrings){
     TStringId *adr = (TStringId *) forte_malloc(pa_nNewMaxNrOfStrings * sizeof(TStringId));
-    if(0 != adr){
+    if(nullptr != adr){
       memcpy(adr, m_pnStringIdBufAddr, m_nMaxNrOfStrings * sizeof(TStringId));
       TStringId *oldData = m_pnStringIdBufAddr;
       m_pnStringIdBufAddr = adr;
@@ -202,7 +202,7 @@ bool CStringDictionary::reallocateStringBuf(TForteUInt32 pa_nNewBufSize){
   bool bRetval = true;
   if(pa_nNewBufSize > m_nStringBufSize){
     char *adr = (char *) forte_malloc(pa_nNewBufSize * sizeof(char));
-    if(0 != adr){
+    if(nullptr != adr){
       memcpy(adr, m_paStringBufAddr, m_nStringBufSize * sizeof(char));
       char *oldData = m_paStringBufAddr;
       m_paStringBufAddr = adr;

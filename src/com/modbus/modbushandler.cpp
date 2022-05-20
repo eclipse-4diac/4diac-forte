@@ -68,7 +68,7 @@ void CModbusHandler::executeComCallback(CModbusHandler::TCallbackDescriptor pa_n
     if(itCurrent->m_nCallbackDesc == pa_nCallbackDesc){
       forte::com_infra::CComLayer *comLayer = itCurrent->m_pCallback;
       m_oSync.unlock();
-      if(forte::com_infra::e_Nothing != comLayer->recvData(0,0)){
+      if(forte::com_infra::e_Nothing != comLayer->recvData(nullptr,0)){
         startNewEventChain(comLayer->getCommFB());
       }
       m_oSync.lock();

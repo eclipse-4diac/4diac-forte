@@ -33,15 +33,15 @@ const SFBInterfaceSpec E_DEMUX::scm_stFBInterfaceSpec = {
   scm_anEIWithIndexes,
   4,
   scm_anEventOutputNames,
-  0,
-  0,
+  nullptr,
+  nullptr,
   1,
   scm_anDataInputNames, scm_aunDIDataTypeIds,
   0,
+  nullptr,
+  nullptr,
   0,
-  0,
-  0,
-  0
+  nullptr
 };
 
 void E_DEMUX::executeEvent(int pa_nEIID){

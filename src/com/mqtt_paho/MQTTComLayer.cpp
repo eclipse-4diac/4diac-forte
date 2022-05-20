@@ -32,7 +32,7 @@ EComResponse MQTTComLayer::sendData(void* paData, unsigned int paSize) {
   message.payloadlen = paSize;
   message.qos = QOS;
   message.retained = 0;
-  int errorCode = MQTTAsync_sendMessage(getExtEvHandler<MQTTHandler>().getClient(), mTopicName.getValue(), &message, NULL);
+  int errorCode = MQTTAsync_sendMessage(getExtEvHandler<MQTTHandler>().getClient(), mTopicName.getValue(), &message, nullptr);
   if (0 != errorCode) {
     return e_ProcessDataSendFailed;
   }
@@ -53,7 +53,7 @@ EComResponse MQTTComLayer::recvData(const void* paData,  unsigned int paSize) {
 
 EComResponse MQTTComLayer::processInterrupt() {
   if(e_ProcessDataOk == mInterruptResp) {
-    if((0 < mUsedBuffer) && (0 != m_poTopLayer)) {
+    if((0 < mUsedBuffer) && (nullptr != m_poTopLayer)) {
       mInterruptResp = m_poTopLayer->recvData(mDataBuffer, mUsedBuffer);
       mUsedBuffer = 0;
     }

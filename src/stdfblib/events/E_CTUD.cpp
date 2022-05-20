@@ -35,7 +35,7 @@ const TForteInt16 FORTE_E_CTUD::scm_anEOWithIndexes[] = { 0, 4, 8, -1 };
 const CStringDictionary::TStringId FORTE_E_CTUD::scm_anEventOutputNames[] = { g_nStringIdCO, g_nStringIdRO, g_nStringIdLDO };
 
 const SFBInterfaceSpec FORTE_E_CTUD::scm_stFBInterfaceSpec = { 4, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 3, scm_anEventOutputNames,
-  scm_anEOWith, scm_anEOWithIndexes, 1, scm_anDataInputNames, scm_anDataInputTypeIds, 3, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
+  scm_anEOWith, scm_anEOWithIndexes, 1, scm_anDataInputNames, scm_anDataInputTypeIds, 3, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, nullptr };
 
 void FORTE_E_CTUD::alg_CountUp(void) {
   CV() = func_ADD(CV(), CIEC_UINT(1));

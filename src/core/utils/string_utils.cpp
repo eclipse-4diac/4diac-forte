@@ -71,7 +71,7 @@ long int forte::core::util::strtol(const char *nptr, char **endptr, int base) {
     nRetVal = -nRetVal;
   }
 
-  if(0 != endptr){
+  if(nullptr != endptr){
     *endptr = const_cast<char*>(nptr);
   }
   return nRetVal;
@@ -103,7 +103,7 @@ unsigned long int forte::core::util::strtoul(const char *nptr, char **endptr, in
     }
     unRetVal = base * unRetVal + nCharVal;
   }
-  if(0 != endptr){
+  if(nullptr != endptr){
     *endptr = const_cast<char*>(nptr);
   }
   return unRetVal;
@@ -164,7 +164,7 @@ long long int forte::core::util::strtoll(const char *nptr, char **endptr, int ba
   if((bNegativeNumber) && (ERANGE != errno)){
     nRetVal = -nRetVal;
   }
-  if(0 != endptr){
+  if(nullptr != endptr){
     *endptr = const_cast<char*>(nptr);
   }
   return nRetVal;
@@ -195,7 +195,7 @@ unsigned long long int forte::core::util::strtoull(const char *nptr, char **endp
     }
     unRetVal = base * unRetVal + nCharVal;
   }
-  if(0 != endptr){
+  if(nullptr != endptr){
     *endptr = const_cast<char*>(nptr);
   }
   return unRetVal;
@@ -223,7 +223,7 @@ size_t forte::core::util::transformNonEscapedToEscapedXMLText(char* const paStri
   char* originalEnd = runner;
   runner--;
   while(paString <= runner){
-    const char* toCopy = 0;
+    const char* toCopy = nullptr;
 
     for(size_t i = 0; i < sizeof(forte::core::util::scReplacementForXMLEscapedCharacters) / sizeof(const char* const ); i++){
       if(forte::core::util::scXMLEscapedCharacters[i] == *runner){
@@ -232,7 +232,7 @@ size_t forte::core::util::transformNonEscapedToEscapedXMLText(char* const paStri
       }
     }
 
-    if(0 != toCopy){
+    if(nullptr != toCopy){
       size_t toMove = strlen(toCopy);
       memmove(&runner[toMove], runner + 1, originalEnd - runner + retVal);
       memcpy(runner, toCopy, toMove);
@@ -276,11 +276,11 @@ size_t forte::core::util::transformEscapedXMLToNonEscapedText(char* const paStri
 }
 
 char * forte::core::util::lookForNonEscapedChar(char **paString, char paChar, char paEscapingChar) {
-  char *foundChar = 0;
+  char *foundChar = nullptr;
   char* initialPosition = *paString;
   while(!foundChar && '\0' != **paString) {
     foundChar = strchr(*paString, paChar);
-    if(0 != foundChar) {
+    if(nullptr != foundChar) {
       *paString = foundChar;
       if(isEscaped(foundChar, initialPosition, paEscapingChar)) {
         while('\0' != *foundChar) { //move the rest of the string one char back
@@ -288,7 +288,7 @@ char * forte::core::util::lookForNonEscapedChar(char **paString, char paChar, ch
           foundChar++;
         }
         *(foundChar - 1) = *foundChar; //move also the ending \0
-        foundChar = 0; //reset to keep looking
+        foundChar = nullptr; //reset to keep looking
       } else {
         *foundChar = '\0';
         (*paString)++;

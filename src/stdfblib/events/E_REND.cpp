@@ -24,20 +24,20 @@ const CStringDictionary::TStringId E_REND::scm_anEventOutputNames[] = {g_nString
 const SFBInterfaceSpec E_REND::scm_stFBInterfaceSpec = {
   3,
   scm_anEventInputNames,
-  0,
-  0,
+  nullptr,
+  nullptr,
   1,
   scm_anEventOutputNames,
+  nullptr,
+  nullptr,
   0,
+  nullptr,
+  nullptr,
   0,
+  nullptr,
+  nullptr,
   0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0
+  nullptr
 };
 
 void E_REND::executeEvent(int pa_nEIID){

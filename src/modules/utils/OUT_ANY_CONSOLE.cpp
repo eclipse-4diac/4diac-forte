@@ -43,7 +43,7 @@ const SFBInterfaceSpec FORTE_OUT_ANY_CONSOLE::scm_stFBInterfaceSpec = { 1,
   scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1,
   scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 3,
   scm_anDataInputNames, scm_anDataInputTypeIds, 1, scm_anDataOutputNames,
-  scm_anDataOutputTypeIds, 0, 0 };
+  scm_anDataOutputTypeIds, 0, nullptr };
 
 //default value is set to 100 (sufficient for several data types)
 const TForteInt16 FORTE_OUT_ANY_CONSOLE::scm_maxStringBufSize = 100;

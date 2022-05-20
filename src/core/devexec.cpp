@@ -27,19 +27,19 @@ CDeviceExecution::CDeviceExecution() {
 
 CDeviceExecution::~CDeviceExecution() {
   for(size_t i = 0; i < cg_unNumberOfHandlers; i++) {
-    if(0 != mRegisteredEventHandlers[i].mHandler) { //for the test cases, only the timer handler is created
+    if(nullptr != mRegisteredEventHandlers[i].mHandler) { //for the test cases, only the timer handler is created
       mRegisteredEventHandlers[i].mHandler->disableHandler();
       delete mRegisteredEventHandlers[i].mHandler;
-      mRegisteredEventHandlers[i].mHandler = 0;
+      mRegisteredEventHandlers[i].mHandler = nullptr;
     }
   }
 }
 
 void CDeviceExecution::startNewEventChain(CEventSourceFB* paECStartFB) const {
   // maybe in the future here has to be added something for handling priority adaption and stuff like this.
-  if(0 != paECStartFB) {
+  if(nullptr != paECStartFB) {
     CEventChainExecutionThread *poEventChainExecutor = paECStartFB->getEventChainExecutor();
-    if(0 != poEventChainExecutor) {
+    if(nullptr != poEventChainExecutor) {
       poEventChainExecutor->startEventChain(paECStartFB->getEventSourceEventEntry());
     } else {
       DEVLOG_ERROR("[CDeviceExecution] Couldn't start new event chain because the event has no CEventChainExecutionThread");
@@ -59,7 +59,7 @@ CTimerHandler& CDeviceExecution::getTimer() const {
 
 void CDeviceExecution::disableHandlers() {
   for(size_t i = 0; i < cg_unNumberOfHandlers; i++) {
-    if(0 != mRegisteredEventHandlers[i].mHandler) {
+    if(nullptr != mRegisteredEventHandlers[i].mHandler) {
       mRegisteredEventHandlers[i].mHandler->disableHandler();
     }
   }

@@ -23,10 +23,10 @@ const TForteInt16 FORTE_STEST_END::scm_anEIWithIndexes[] = {-1};
 const CStringDictionary::TStringId FORTE_STEST_END::scm_anEventInputNames[] = {g_nStringIdREQ};
 
 const SFBInterfaceSpec FORTE_STEST_END::scm_stFBInterfaceSpec = {
-  1,  scm_anEventInputNames,  0,  scm_anEIWithIndexes,
-  0,  0,  0, 0,  0,  0, 0,
-  0,  0, 0,
-  0, 0
+  1,  scm_anEventInputNames,  nullptr,  scm_anEIWithIndexes,
+  0,  nullptr,  nullptr, nullptr,  0,  nullptr, nullptr,
+  0,  nullptr, nullptr,
+  0, nullptr
 };
 
 void FORTE_STEST_END::executeEvent(int pa_nEIID){

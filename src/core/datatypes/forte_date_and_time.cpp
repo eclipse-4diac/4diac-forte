@@ -111,7 +111,7 @@ int CIEC_DATE_AND_TIME::toString(char* paValue, size_t paBufferSize) const {
 
   struct tm *ptm = getTimeStruct();
 
-  if(0 != ptm){
+  if(nullptr != ptm){
     nRetVal = forte_snprintf(paValue, paBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03u", 1900 + ptm->tm_year, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, getMilliSeconds());
     if((nRetVal < -1) || (nRetVal >= static_cast<int>(paBufferSize))) {
       nRetVal = -1;
@@ -125,7 +125,7 @@ int CIEC_DATE_AND_TIME::toGMTString(char* paValue, unsigned int paBufferSize) co
   time_t t = static_cast<time_t>(nToStringBuffer / 1000);
 
   struct tm *ptm = forte_gmtime(&t);
-  if(ptm == 0) {
+  if(ptm == nullptr) {
     return -1;
   }
   int nRetVal = forte_snprintf(paValue, paBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03d", 1900 + ptm->tm_year, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, (int) (nToStringBuffer % 1000));

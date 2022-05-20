@@ -43,7 +43,7 @@ GEN_STRUCT_MUX::GEN_STRUCT_MUX(const CStringDictionary::TStringId paInstanceName
 }
 
 GEN_STRUCT_MUX::~GEN_STRUCT_MUX(){
-  if(0!= m_pstInterfaceSpec){
+  if(nullptr!= m_pstInterfaceSpec){
     delete[](m_pstInterfaceSpec->m_anEIWith);
     delete[](m_pstInterfaceSpec->m_aunDINames);
     delete[](m_pstInterfaceSpec->m_aunDIDataTypeNames);
@@ -55,9 +55,9 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
   bool retval = false;
   CStringDictionary::TStringId structTypeNameId = getStructNameId(paConfigString);
 
-  CIEC_ANY *data = CTypeLib::createDataTypeInstance(structTypeNameId, 0);
+  CIEC_ANY *data = CTypeLib::createDataTypeInstance(structTypeNameId, nullptr);
 
-  if(0 != data) {
+  if(nullptr != data) {
     if(data->getDataTypeID() == CIEC_ANY::e_STRUCT) {
       // we could find the struct
       CIEC_STRUCT *structInstance = static_cast<CIEC_STRUCT*>(data);
@@ -109,10 +109,10 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
 
 CStringDictionary::TStringId GEN_STRUCT_MUX::getStructNameId(const char *paConfigString) {
   const char *acPos = strchr(paConfigString, '_');
-  if(0 != acPos){
+  if(nullptr != acPos){
     acPos++;
     acPos = strchr(acPos, '_');
-    if(0 != acPos){
+    if(nullptr != acPos){
       acPos += 2;  //put the postion one after the seperating number
       return CStringDictionary::getInstance().getId(acPos);
     }

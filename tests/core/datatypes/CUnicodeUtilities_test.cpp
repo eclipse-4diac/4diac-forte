@@ -85,16 +85,16 @@ BOOST_AUTO_TEST_CASE(CUnicodeUtilities_parseEncode8)
   BOOST_CHECK(! memcmp(cUpper3, cBuffer, 1));
 
   cBuffer[0] = '\0';
-  nRet = CUnicodeUtilities::encodeUTF8Codepoint(0, 0, 0x7f);
+  nRet = CUnicodeUtilities::encodeUTF8Codepoint(nullptr, 0, 0x7f);
   BOOST_CHECK_EQUAL(nRet, 1);
   BOOST_CHECK_EQUAL(cBuffer[0], 0);
-  nRet = CUnicodeUtilities::encodeUTF8Codepoint(0, 0, 0xa2);
+  nRet = CUnicodeUtilities::encodeUTF8Codepoint(nullptr, 0, 0xa2);
   BOOST_CHECK_EQUAL(nRet, 2);
   BOOST_CHECK_EQUAL(cBuffer[0], 0);
-  nRet = CUnicodeUtilities::encodeUTF8Codepoint(0, 0, 0x20ac);
+  nRet = CUnicodeUtilities::encodeUTF8Codepoint(nullptr, 0, 0x20ac);
   BOOST_CHECK_EQUAL(nRet, 3);
   BOOST_CHECK_EQUAL(cBuffer[0], 0);
-  nRet = CUnicodeUtilities::encodeUTF8Codepoint(0, 0, 0x24b62);
+  nRet = CUnicodeUtilities::encodeUTF8Codepoint(nullptr, 0, 0x24b62);
   BOOST_CHECK_EQUAL(nRet, 4);
   BOOST_CHECK_EQUAL(cBuffer[0], 0);
 
@@ -211,9 +211,9 @@ BOOST_AUTO_TEST_CASE(CUnicodeUtilities_parseEncode16)
   BOOST_CHECK_EQUAL(nRet, 4);
   BOOST_CHECK(! memcmp(cTest5LE, cBuffer, 1));
 
-  nRet = CUnicodeUtilities::encodeUTF16Codepoint(0, 0, 0x6c34, false);
+  nRet = CUnicodeUtilities::encodeUTF16Codepoint(nullptr, 0, 0x6c34, false);
   BOOST_CHECK_EQUAL(nRet, 2);
-  nRet = CUnicodeUtilities::encodeUTF16Codepoint(0, 0, 0x10fffd, false);
+  nRet = CUnicodeUtilities::encodeUTF16Codepoint(nullptr, 0, 0x10fffd, false);
   BOOST_CHECK_EQUAL(nRet, 4);
 
   cBuffer[0] = '\0';

@@ -20,7 +20,7 @@
 #include "anyadapter.h"
 
 CAdapterConnection::CAdapterConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CAdapter *paPlug) :
-    CConnection(paSrcFB, paSrcPortId), mPlug(paPlug), mSocket(0){
+    CConnection(paSrcFB, paSrcPortId), mPlug(paPlug), mSocket(nullptr){
 }
 
 CAdapterConnection::~CAdapterConnection(){
@@ -87,12 +87,12 @@ EMGMResponse CAdapterConnection::disconnect(CFunctionBlock *paDstFB, CStringDict
 }
 
 void CAdapterConnection::performDisconnect(){
-  if(mPlug != 0){
+  if(mPlug != nullptr){
     mPlug->disconnect(this);
   }
 
-  if(mSocket != 0){
+  if(mSocket != nullptr){
     mSocket->disconnect(this);
-    mSocket = 0;
+    mSocket = nullptr;
   }
 }

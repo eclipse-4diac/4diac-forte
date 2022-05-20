@@ -36,7 +36,7 @@ const SFBInterfaceSpec FORTE_CFB_TEST::scm_stFBInterfaceSpec = {
   2,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
   2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
   1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  0, 0
+  0, nullptr
 };
 
 
@@ -84,7 +84,7 @@ const SCFB_FBNData FORTE_CFB_TEST::scm_stFBNData = {
   1, scm_astFannedOutEventConnections,
   3, scm_astDataConnections,
   2, scm_astFannedOutDataConnections,
-  0, 0
+  0, nullptr
 };
 
 

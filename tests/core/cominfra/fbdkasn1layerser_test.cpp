@@ -60,12 +60,12 @@
 
 class CFBDKASN1ComLayerTestMock: public forte::com_infra::CFBDKASN1ComLayer{
   public:
-    CFBDKASN1ComLayerTestMock() : forte::com_infra::CFBDKASN1ComLayer(0, 0){
+    CFBDKASN1ComLayerTestMock() : forte::com_infra::CFBDKASN1ComLayer(nullptr, nullptr){
       m_poBottomLayer = &m_oTestLayer;
     }
 
     ~CFBDKASN1ComLayerTestMock(){
-      m_poBottomLayer = 0;
+      m_poBottomLayer = nullptr;
     }
 
     void *getSendDataPtr() {
@@ -78,24 +78,24 @@ class CFBDKASN1ComLayerTestMock: public forte::com_infra::CFBDKASN1ComLayer{
   private:
    class TestMockBottomLayer : public forte::com_infra::CComLayer{
      public:
-     TestMockBottomLayer() : forte::com_infra::CComLayer(0,0){
-       m_poData = 0;
-       m_poAllocData = 0;
+     TestMockBottomLayer() : forte::com_infra::CComLayer(nullptr,nullptr){
+       m_poData = nullptr;
+       m_poAllocData = nullptr;
        m_unSize = 0;
      }
 
      ~TestMockBottomLayer(){
-       if (0 != m_poAllocData) {
+       if (nullptr != m_poAllocData) {
          delete[] m_poAllocData;
        }
      }
 
       forte::com_infra::EComResponse sendData(void *pa_pvData, unsigned int pa_unSize){
-        if (0 != m_poAllocData) {
+        if (nullptr != m_poAllocData) {
           delete[] m_poAllocData;
         }
         m_poAllocData = new TForteByte[pa_unSize];
-        if (0 != m_poAllocData) {
+        if (nullptr != m_poAllocData) {
           m_poData = m_poAllocData;
           memcpy(m_poData,pa_pvData,pa_unSize);
           //m_poData = pa_pvData;
@@ -142,8 +142,8 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_BOOL){
   BOOST_CHECK_EQUAL(nTestee.getSendDataSize(), cg_unBoolSerSize);
   BOOST_CHECK_EQUAL(cg_abBoolTrue, *((TForteByte *)nTestee.getSendDataPtr()));
 
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(static_cast<TForteByte *>(0), 0, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
-  BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(static_cast<TForteByte *>(0), 0, nBool), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(static_cast<TForteByte *>(nullptr), 0, const_cast<TConstIEC_ANYPtr *>(poArray), 1), -1);
+  BOOST_CHECK_EQUAL(nTestee.serializeDataPoint(static_cast<TForteByte *>(nullptr), 0, nBool), -1);
 }
 
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_BYTE){

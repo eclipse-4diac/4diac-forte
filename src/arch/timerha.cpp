@@ -47,8 +47,8 @@ void CTimerHandler::registerTimedFB(STimedFBListEntry *paTimerListEntry, const C
 }
 
 void CTimerHandler::addTimedFBEntry(STimedFBListEntry *paTimerListEntry) {
-  paTimerListEntry->mNext = 0;
-  if (0 == mTimedFBList) {
+  paTimerListEntry->mNext = nullptr;
+  if (nullptr == mTimedFBList) {
     mTimedFBList = paTimerListEntry;
   } else {
     if (mTimedFBList->mTimeOut > paTimerListEntry->mTimeOut) {
@@ -56,7 +56,7 @@ void CTimerHandler::addTimedFBEntry(STimedFBListEntry *paTimerListEntry) {
       mTimedFBList = paTimerListEntry;
     } else {
       STimedFBListEntry *runner = mTimedFBList;
-      while (0 != runner->mNext) {
+      while (nullptr != runner->mNext) {
         if (runner->mNext->mTimeOut > paTimerListEntry->mTimeOut) {
           paTimerListEntry->mNext = runner->mNext;
           runner->mNext = paTimerListEntry;
@@ -75,20 +75,20 @@ void CTimerHandler::unregisterTimedFB(CEventSourceFB *paTimedFB) {
 }
 
 void CTimerHandler::removeTimedFB(CEventSourceFB *paTimedFB) {
-  if (0 != mTimedFBList) {
-    STimedFBListEntry *buffer = 0;
+  if (nullptr != mTimedFBList) {
+    STimedFBListEntry *buffer = nullptr;
     if (mTimedFBList->mTimedFB == paTimedFB) {
       buffer = mTimedFBList;
       mTimedFBList = mTimedFBList->mNext;
-      buffer->mNext = 0;
+      buffer->mNext = nullptr;
       buffer->mTimeOut = 0;
     } else {
       STimedFBListEntry *runner = mTimedFBList;
-      while (0 != runner->mNext) {
+      while (nullptr != runner->mNext) {
         if (runner->mNext->mTimedFB == paTimedFB) {
           buffer = runner->mNext;
           runner->mNext = runner->mNext->mNext;
-          buffer->mNext = 0;
+          buffer->mNext = nullptr;
           buffer->mTimeOut = 0;
           break;
         }
@@ -108,13 +108,13 @@ void CTimerHandler::nextTick(void) {
 
   processTimedFBList();
 
-  if(0 != mAddFBList){
+  if(nullptr != mAddFBList){
     processAddList();
   }
 }
 
 void  CTimerHandler::processTimedFBList(){
-  while (0 != mTimedFBList) {
+  while (nullptr != mTimedFBList) {
     if (mTimedFBList->mTimeOut > mForteTime) {
       break;
     }
@@ -135,7 +135,7 @@ void CTimerHandler::triggerTimedFB(STimedFBListEntry *paTimerListEntry){
     case e_SingleShot:
       // nothing special is to do up to now, therefore go to default
     default:
-      paTimerListEntry->mNext = 0;
+      paTimerListEntry->mNext = nullptr;
       paTimerListEntry->mTimeOut = 0;
       break;
   }
@@ -143,7 +143,7 @@ void CTimerHandler::triggerTimedFB(STimedFBListEntry *paTimerListEntry){
 
 void CTimerHandler::processAddList(){
   CCriticalRegion criticalRegion(mAddListSync);
-  while(0 != mAddFBList){
+  while(nullptr != mAddFBList){
     STimedFBListEntry *buffer = mAddFBList;
     mAddFBList = buffer->mNext; //remove buffer from the list
     if(buffer->mTimeOut < mForteTime){

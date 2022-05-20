@@ -22,7 +22,7 @@
 
 CTypeLib::CTypeEntry::CTypeEntry(CStringDictionary::TStringId pa_nTypeNameId) :
   m_nTypeNameId(pa_nTypeNameId),
-  m_poNext(0){
+  m_poNext(nullptr){
 }
 
 CTypeLib::CTypeEntry::~CTypeEntry(void){
@@ -73,18 +73,18 @@ CTypeLib::CDataTypeEntry::~CDataTypeEntry(void){
 
 EMGMResponse CTypeLib::m_eLastErrorMSG = e_RDY;
 
-CTypeLib::CFBTypeEntry *CTypeLib::m_poFBLibStart = 0;
-CTypeLib::CFBTypeEntry *CTypeLib::m_poFBLibEnd = 0;
+CTypeLib::CFBTypeEntry *CTypeLib::m_poFBLibStart = nullptr;
+CTypeLib::CFBTypeEntry *CTypeLib::m_poFBLibEnd = nullptr;
 
-CTypeLib::CAdapterTypeEntry *CTypeLib::m_poAdapterLibStart = 0;
-CTypeLib::CAdapterTypeEntry *CTypeLib::m_poAdapterLibEnd = 0;
+CTypeLib::CAdapterTypeEntry *CTypeLib::m_poAdapterLibStart = nullptr;
+CTypeLib::CAdapterTypeEntry *CTypeLib::m_poAdapterLibEnd = nullptr;
 
-CTypeLib::CDataTypeEntry *CTypeLib::m_poDTLibStart = 0;
-CTypeLib::CDataTypeEntry *CTypeLib::m_poDTLibEnd = 0;
+CTypeLib::CDataTypeEntry *CTypeLib::m_poDTLibStart = nullptr;
+CTypeLib::CDataTypeEntry *CTypeLib::m_poDTLibEnd = nullptr;
 
 CTypeLib::CTypeEntry *CTypeLib::findType(CStringDictionary::TStringId pa_nTypeId, CTypeLib::CTypeEntry *pa_poListStart) {
-  CTypeEntry *retval = 0;
-  for (CTypeEntry *poRunner = pa_poListStart; poRunner != 0; poRunner
+  CTypeEntry *retval = nullptr;
+  for (CTypeEntry *poRunner = pa_poListStart; poRunner != nullptr; poRunner
       = poRunner->m_poNext){
     if (pa_nTypeId == poRunner->getTypeNameId()) {
       retval = poRunner;
@@ -95,12 +95,12 @@ CTypeLib::CTypeEntry *CTypeLib::findType(CStringDictionary::TStringId pa_nTypeId
 }
 
 CAdapter *CTypeLib::createAdapter(CStringDictionary::TStringId pa_nInstanceNameId, CStringDictionary::TStringId pa_nAdapterTypeId, CResource *pa_poRes, bool pa_bIsPlug) {
-  CAdapter *poNewAdapter = 0;
+  CAdapter *poNewAdapter = nullptr;
   CTypeEntry *poToCreate = findType(pa_nAdapterTypeId, m_poAdapterLibStart);
-  if (0 != poToCreate) {
+  if (nullptr != poToCreate) {
     poNewAdapter =
       (static_cast<CAdapterTypeEntry *>(poToCreate))->createAdapterInstance(pa_nInstanceNameId,pa_poRes, pa_bIsPlug);
-    if(0 == poNewAdapter) {
+    if(nullptr == poNewAdapter) {
       m_eLastErrorMSG = e_OVERFLOW;
     }
   } //no generic adapters supported
@@ -110,13 +110,13 @@ CAdapter *CTypeLib::createAdapter(CStringDictionary::TStringId pa_nInstanceNameI
 }
 
 CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId pa_nInstanceNameId, CStringDictionary::TStringId pa_nFBTypeId, CResource *pa_poRes) {
-  CFunctionBlock *poNewFB = 0;
+  CFunctionBlock *poNewFB = nullptr;
   CTypeEntry *poToCreate = findType(pa_nFBTypeId, m_poFBLibStart);
   //TODO: Avoid that the user can create generic blocks.
-  if (0 != poToCreate) {
+  if (nullptr != poToCreate) {
     poNewFB
         = (static_cast<CFBTypeEntry *>(poToCreate))->createFBInstance(pa_nInstanceNameId, pa_poRes);
-    if(0 == poNewFB) { // we could not create the requested object
+    if(nullptr == poNewFB) { // we could not create the requested object
       m_eLastErrorMSG = e_OVERFLOW;
     }
   } else { //check for parameterizable FBs (e.g. SERVER)
@@ -124,7 +124,7 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId pa_nInstanceName
     const char *acTypeBuf = CStringDictionary::getInstance().get(pa_nFBTypeId);
     const char *pcUnderScore = getFirstNonTypeNameUnderscorePos(acTypeBuf);
 
-    if (0 != pcUnderScore) { // We found no underscore in the type name therefore it can not be a generic type
+    if (nullptr != pcUnderScore) { // We found no underscore in the type name therefore it can not be a generic type
       ptrdiff_t nCopyLen = pcUnderScore - acTypeBuf;
       if(nCopyLen > static_cast<ptrdiff_t>(cg_nIdentifierLength - 4)) {
         nCopyLen = cg_nIdentifierLength - 4;
@@ -132,15 +132,15 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId pa_nInstanceName
       memcpy(&(acGenFBName[4]), acTypeBuf, nCopyLen);
       acGenFBName[cg_nIdentifierLength] = '\0';
       poToCreate = findType(CStringDictionary::getInstance().getId(acGenFBName), m_poFBLibStart);
-      if (0 != poToCreate) {
+      if (nullptr != poToCreate) {
         poNewFB = (static_cast<CFBTypeEntry *>(poToCreate))->createFBInstance(pa_nInstanceNameId, pa_poRes);
-        if (0 == poNewFB){ // we could not create the requested object
+        if (nullptr == poNewFB){ // we could not create the requested object
           m_eLastErrorMSG = e_OVERFLOW;
         }
         else { // we got a configurable block
           if (!poNewFB->configureFB(acTypeBuf)) {
             deleteFB(poNewFB);
-            poNewFB = 0;
+            poNewFB = nullptr;
           }
         }
       }
@@ -153,7 +153,7 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId pa_nInstanceName
     }
   }
 
-  if(0 != poNewFB){
+  if(nullptr != poNewFB){
     // perform reset to move it into idle state and set the initial values
     poNewFB->changeFBExecutionState(cg_nMGM_CMD_Reset);
   }
@@ -167,11 +167,11 @@ bool CTypeLib::deleteFB(CFunctionBlock *pa_poFBToDelete) {
 }
 
 CIEC_ANY *CTypeLib::createDataTypeInstance(CStringDictionary::TStringId pa_nDTNameId, TForteByte *pa_acDataBuf) {
-  CIEC_ANY *poNewDT = 0;
+  CIEC_ANY *poNewDT = nullptr;
   CTypeEntry *poToCreate = findType(pa_nDTNameId, m_poDTLibStart);
-  if (0 != poToCreate) {
+  if (nullptr != poToCreate) {
     poNewDT = (static_cast<CDataTypeEntry *>(poToCreate))->createDataTypeInstance(pa_acDataBuf);
-    if(0 == poNewDT) { // we could not create the requested object
+    if(nullptr == poNewDT) { // we could not create the requested object
       m_eLastErrorMSG = e_OVERFLOW;
     }
   } else {
@@ -182,8 +182,8 @@ CIEC_ANY *CTypeLib::createDataTypeInstance(CStringDictionary::TStringId pa_nDTNa
 }
 
 void CTypeLib::addFBType(CFBTypeEntry *pa_poFBTypeEntry) {
-  if (0 == findType(pa_poFBTypeEntry->getTypeNameId(), m_poFBLibStart)) {
-    if(m_poFBLibStart == 0) {
+  if (nullptr == findType(pa_poFBTypeEntry->getTypeNameId(), m_poFBLibStart)) {
+    if(m_poFBLibStart == nullptr) {
       m_poFBLibStart = pa_poFBTypeEntry;
     } else {
       m_poFBLibEnd->m_poNext = pa_poFBTypeEntry;
@@ -193,8 +193,8 @@ void CTypeLib::addFBType(CFBTypeEntry *pa_poFBTypeEntry) {
 }
 
 void CTypeLib::addAdapterType(CAdapterTypeEntry *pa_poAdapterTypeEntry) {
-  if (0 == findType(pa_poAdapterTypeEntry->getTypeNameId(), m_poAdapterLibStart)) {
-    if(m_poAdapterLibStart == 0) {
+  if (nullptr == findType(pa_poAdapterTypeEntry->getTypeNameId(), m_poAdapterLibStart)) {
+    if(m_poAdapterLibStart == nullptr) {
       m_poAdapterLibStart = pa_poAdapterTypeEntry;
     } else {
       m_poAdapterLibEnd->m_poNext = pa_poAdapterTypeEntry;
@@ -205,8 +205,8 @@ void CTypeLib::addAdapterType(CAdapterTypeEntry *pa_poAdapterTypeEntry) {
 
 
 void CTypeLib::addDataType(CDataTypeEntry *pa_poDTEntry) {
-  if (0 == findType(pa_poDTEntry->getTypeNameId(), m_poDTLibStart)) {
-    if(m_poDTLibStart == 0) {
+  if (nullptr == findType(pa_poDTEntry->getTypeNameId(), m_poDTLibStart)) {
+    if(m_poDTLibStart == nullptr) {
       m_poDTLibStart = pa_poDTEntry;
     } else {
       m_poDTLibEnd->m_poNext = pa_poDTEntry;
@@ -221,14 +221,14 @@ const char *CTypeLib::getFirstNonTypeNameUnderscorePos(const char *pa_acTypeName
 
   do{
     acRetVal = strchr(acRetVal, '_');
-    if(0 != acRetVal){
+    if(nullptr != acRetVal){
       if(forte::core::util::isDigit(*(acRetVal + 1))){
         //only when the element after the underscore is a digit it is a correct type name
         break;
       }
       acRetVal++;
     }
-  } while(0 != acRetVal);
+  } while(nullptr != acRetVal);
 
   return acRetVal;
 }

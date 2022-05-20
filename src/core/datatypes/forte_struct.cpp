@@ -54,7 +54,7 @@ void CIEC_STRUCT::setup(CStringDictionary::TStringId paTypeName, TForteUInt16 pa
     for(size_t i = 0; i < paLength; ++i) {
       CIEC_ANY *retVal = CTypeLib::createDataTypeInstance(*paElementTypes, reinterpret_cast<TForteByte *>(&(localMembers[i])));
       ++paElementTypes;
-      if(0 != retVal) {
+      if(nullptr != retVal) {
 #ifdef FORTE_SUPPORT_ARRAYS
         if(g_nStringIdARRAY == paElementTypes[-1]) {
           //For an array we have to do more
@@ -84,9 +84,9 @@ void CIEC_STRUCT::setValue(const CIEC_ANY& paValue){
 }
 
 void CIEC_STRUCT::clear() {
-  if(0 != getGenData()) {
+  if(nullptr != getGenData()) {
     delete getSpecs();
-    setGenData(0);
+    setGenData(nullptr);
   }
 }
 
@@ -108,7 +108,7 @@ int CIEC_STRUCT::fromString(const char *paValue){
         pcRunner += nLength;
 
         CIEC_ANY *poMember = getMemberNamed(unElementNameId);
-        if(0 != poMember) {
+        if(nullptr != poMember) {
           if(!initializeFromString(&nLength, poMember, &pcRunner, &errorOcurred)) {
             break;
           }
@@ -258,7 +258,7 @@ int CIEC_STRUCT::toString(char* paValue, size_t paBufferSize) const {
 }
 
 CIEC_ANY *CIEC_STRUCT::getMemberNamed(CStringDictionary::TStringId paMemberNameId){
-  CIEC_ANY *poRetVal = 0;
+  CIEC_ANY *poRetVal = nullptr;
 
   CIEC_ANY *poMembers = getMembers();
   const CStringDictionary::TStringId *punMemberNameIds = elementNames();
@@ -278,7 +278,7 @@ size_t CIEC_STRUCT::getToStringBufferSize() const {
   retVal += (nSize > 1) ? (nSize - 1) : 0; //for the commas between the elements
   retVal += (nSize * 2); //for the := of each element
   const CIEC_ANY *poMembers = getMembers();
-  if(0 != poMembers) {
+  if(nullptr != poMembers) {
     for(size_t i = 0; i < nSize; i++) {
       retVal += strlen(CStringDictionary::getInstance().get(elementNames()[i])); //element name
       retVal += (poMembers[i].getToStringBufferSize() - 1); //length of the element itself. -1 for the included \0 in each element

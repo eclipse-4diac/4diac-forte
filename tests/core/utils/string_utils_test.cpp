@@ -214,16 +214,16 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
 
     for(unsigned int i = 0; i < unTestData; i++){
       BOOST_CHECK_EQUAL(sTestDataResult[i], forte::core::util::strtol(sTestData10[i].c_str(), &pacEndptr, 10));
-      BOOST_CHECK(0 != pacEndptr);
-      if(0 != pacEndptr){
+      BOOST_CHECK(nullptr != pacEndptr);
+      if(nullptr != pacEndptr){
         BOOST_CHECK_EQUAL('\0', *pacEndptr);
       }
     }
 
     for(unsigned int i = 0; i < unTestData; i++){
       BOOST_CHECK_EQUAL(sTestDataResult[i], forte::core::util::strtol(sTestData16[i].c_str(), &pacEndptr, 16));
-      BOOST_CHECK(0 != pacEndptr);
-      if(0 != pacEndptr){
+      BOOST_CHECK(nullptr != pacEndptr);
+      if(nullptr != pacEndptr){
         BOOST_CHECK_EQUAL('\0', *pacEndptr);
       }
     }
@@ -277,16 +277,16 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
 
     for(unsigned int i = 0; i < unTestData; i++){
       BOOST_CHECK_EQUAL(sTestDataResult[i], forte::core::util::strtoul(sTestData10[i].c_str(), &pacEndptr, 10));
-      BOOST_CHECK(0 != pacEndptr);
-      if(0 != pacEndptr){
+      BOOST_CHECK(nullptr != pacEndptr);
+      if(nullptr != pacEndptr){
         BOOST_CHECK_EQUAL('\0', *pacEndptr);
       }
     }
 
     for(unsigned int i = 0; i < unTestData; i++){
       BOOST_CHECK_EQUAL(sTestDataResult[i], forte::core::util::strtoul(sTestData16[i].c_str(), &pacEndptr, 16));
-      BOOST_CHECK(0 != pacEndptr);
-      if(0 != pacEndptr){
+      BOOST_CHECK(nullptr != pacEndptr);
+      if(nullptr != pacEndptr){
         BOOST_CHECK_EQUAL('\0', *pacEndptr);
       }
     }
@@ -333,16 +333,16 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
 
     for(unsigned int i = 0; i < unTestData; i++){
       BOOST_CHECK_EQUAL(sTestDataResult[i], forte::core::util::strtoll(sTestData10[i].c_str(), &pacEndptr, 10));
-      BOOST_CHECK(0 != pacEndptr);
-      if(0 != pacEndptr){
+      BOOST_CHECK(nullptr != pacEndptr);
+      if(nullptr != pacEndptr){
         BOOST_CHECK_EQUAL('\0', *pacEndptr);
       }
     }
 
     for(unsigned int i = 0; i < unTestData; i++){
       BOOST_CHECK_EQUAL(sTestDataResult[i], forte::core::util::strtoll(sTestData16[i].c_str(), &pacEndptr, 16));
-      BOOST_CHECK(0 != pacEndptr);
-      if(0 != pacEndptr){
+      BOOST_CHECK(nullptr != pacEndptr);
+      if(nullptr != pacEndptr){
         BOOST_CHECK_EQUAL('\0', *pacEndptr);
       }
     }
@@ -387,16 +387,16 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
 
     for(unsigned int i = 0; i < unTestData; i++){
       BOOST_CHECK_EQUAL(sTestDataResult[i], forte::core::util::strtoull(sTestData10[i].c_str(), &pacEndptr, 10));
-      BOOST_CHECK(0 != pacEndptr);
-      if(0 != pacEndptr){
+      BOOST_CHECK(nullptr != pacEndptr);
+      if(nullptr != pacEndptr){
         BOOST_CHECK_EQUAL('\0', *pacEndptr);
       }
     }
 
     for(unsigned int i = 0; i < unTestData; i++){
       BOOST_CHECK_EQUAL(sTestDataResult[i], forte::core::util::strtoull(sTestData16[i].c_str(), &pacEndptr, 16));
-      BOOST_CHECK(0 != pacEndptr);
-      if(0 != pacEndptr){
+      BOOST_CHECK(nullptr != pacEndptr);
+      if(nullptr != pacEndptr){
         BOOST_CHECK_EQUAL('\0', *pacEndptr);
       }
     }

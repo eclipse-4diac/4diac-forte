@@ -45,7 +45,7 @@ const SFBInterfaceSpec DINT2DINT::scm_stFBInterfaceSpec = {
   1,
   scm_anDataOutputNames, scm_aunDODataTypeIds,
   0,
-  0
+  nullptr
 };
 
 void DINT2DINT::executeEvent(int pa_nEIID){

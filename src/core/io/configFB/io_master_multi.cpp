@@ -31,15 +31,15 @@ IOConfigFBMultiMaster* IOConfigFBMultiMaster::getMasterById(TForteUInt16 paId) {
   TMasterList::Iterator itEnd = mInstances.end();
   int i = 0;
   for(TMasterList::Iterator it = mInstances.begin(); it != itEnd; ++it, i++) {
-    if(paId == i && *it != 0) {
+    if(paId == i && *it != nullptr) {
       return *it;
     }
   }
-  return 0;
+  return nullptr;
 }
 
 void IOConfigFBMultiMaster::onStartup() {
-  if(0 == BusAdapterOut().getPeer()) {
+  if(nullptr == BusAdapterOut().getPeer()) {
     return IOConfigFBController::onStartup();
   }
 
@@ -50,7 +50,7 @@ void IOConfigFBMultiMaster::onStartup() {
 }
 
 void IOConfigFBMultiMaster::onStop() {
-  if(0 == BusAdapterOut().getPeer()) {
+  if(nullptr == BusAdapterOut().getPeer()) {
     return IOConfigFBController::onStop();
   }
 

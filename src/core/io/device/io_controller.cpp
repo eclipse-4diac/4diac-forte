@@ -20,8 +20,8 @@
 using namespace forte::core::io;
 
 IODeviceController::IODeviceController(CDeviceExecution& paDeviceExecution) :
-    CExternalEventHandler(paDeviceExecution), mNotificationType(UnknownNotificationType), mNotificationAttachment(0), mNotificationHandled(true), mError(0),
-        mDelegate(0), mInitDelay(0) {
+    CExternalEventHandler(paDeviceExecution), mNotificationType(UnknownNotificationType), mNotificationAttachment(nullptr), mNotificationHandled(true), mError(nullptr),
+        mDelegate(nullptr), mInitDelay(0) {
 }
 
 void IODeviceController::run() {
@@ -55,7 +55,7 @@ void IODeviceController::run() {
 void IODeviceController::addHandle(HandleDescriptor *paHandleDescriptor) {
   IOHandle* handle = initHandle(paHandleDescriptor);
 
-  if(0 == handle) {
+  if(nullptr == handle) {
     DEVLOG_WARNING("[IODeviceController] Failed to initialize handle '%s'. Check initHandle method.\n", paHandleDescriptor->mId.getValue());
     return;
   }
@@ -76,11 +76,11 @@ void IODeviceController::handleChangeEvent(IOHandle*) {
 }
 
 bool IODeviceController::hasError() const {
-  return mError != 0;
+  return mError != nullptr;
 }
 
 void IODeviceController::notifyConfigFB(NotificationType paType, const void* paAttachment) {
-  if(0 == mDelegate) {
+  if(nullptr == mDelegate) {
     DEVLOG_WARNING("[IODeviceController] No receiver for notification is available. Notification is dropped.\n");
     return;
   }

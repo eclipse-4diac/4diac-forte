@@ -45,7 +45,7 @@ void CPCTimerHandler::run(){
   clock_gettime(CLOCK_MONOTONIC, &stOldTime);
   while(isAlive()){
 
-    nanosleep(&stReq, NULL);
+    nanosleep(&stReq, nullptr);
 
     clock_gettime(CLOCK_MONOTONIC, &stNewTime);
 

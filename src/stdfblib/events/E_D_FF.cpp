@@ -45,7 +45,7 @@ const SFBInterfaceSpec E_D_FF::scm_stFBInterfaceSpec = {
   1,
   scm_anDataOutputNames, scm_aunDODataTypeIds,
   0,
-  0
+  nullptr
 };
 
 void E_D_FF::executeEvent(int pa_nEIID){

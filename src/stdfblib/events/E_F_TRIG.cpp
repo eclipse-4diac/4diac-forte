@@ -34,15 +34,15 @@ const SFBInterfaceSpec E_F_TRIG::scm_stFBInterfaceSpec = {
   scm_anEIWithIndexes,
   1,
   scm_anEventOutputNames,
-  0,
-  0,
+  nullptr,
+  nullptr,
   1,
   scm_anDataInputNames, scm_aunDIDataTypeIds,
   0,
+  nullptr,
+  nullptr,
   0,
-  0,
-  0,
-  0
+  nullptr
 };
 
 void E_F_TRIG::executeEvent(int pa_nEIID){

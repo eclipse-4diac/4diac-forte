@@ -103,7 +103,7 @@ EComResponse CCommFB::sendData() {
   EComResponse resp = e_Nothing;
   if (true == QI()) {
     if (m_eCommServiceType != e_Subscriber) {
-      if (0 != m_poTopOfComStack) {
+      if (nullptr != m_poTopOfComStack) {
         resp = m_poTopOfComStack->sendData(static_cast<void*>(getSDs()), m_pstInterfaceSpec->m_nNumDIs - 2);
         if ((resp == e_ProcessDataOk) && (m_eCommServiceType != e_Publisher)) {
           // client and server will not directly send a cnf/ind event
@@ -123,8 +123,8 @@ EComResponse CCommFB::sendData() {
 
 bool CCommFB::createInterfaceSpec(const char* paConfigString, SFBInterfaceSpec& paInterfaceSpec) {
   TIdentifier tempstring;
-  const char *sParamA = 0;
-  const char *sParamB = 0;
+  const char *sParamA = nullptr;
+  const char *sParamB = nullptr;
 
   paInterfaceSpec.m_nNumEIs = 2;
   paInterfaceSpec.m_nNumEOs = 2;
@@ -141,7 +141,7 @@ bool CCommFB::createInterfaceSpec(const char* paConfigString, SFBInterfaceSpec& 
       break;
     }
   }
-  if(0 != sParamA) { // search for 2nd underscore
+  if(nullptr != sParamA) { // search for 2nd underscore
     for (i = i + 1; i < inlength - 1; i++) {
       if (tempstring[i] == '_') {
         tempstring[i] = '\0';
@@ -150,7 +150,7 @@ bool CCommFB::createInterfaceSpec(const char* paConfigString, SFBInterfaceSpec& 
       }
     }
   }
-  if (0 == sParamB){ // no underscore found
+  if (nullptr == sParamB){ // no underscore found
     return false;
   }
 
@@ -182,7 +182,7 @@ void CCommFB::configureDIs(const char* paDIConfigString, SFBInterfaceSpec& paInt
 
   if (forte::com_infra::e_DataInputs == (forte::com_infra::e_DataInputs & m_eCommServiceType)) {
       //TODO: Check range of sParamA
-      paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(paInterfaceSpec.m_nNumDIs + forte::core::util::strtol(paDIConfigString, 0, 10));
+      paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(paInterfaceSpec.m_nNumDIs + forte::core::util::strtol(paDIConfigString, nullptr, 10));
       diDataTypeNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
       diNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
       eiWith = new TDataIOID[paInterfaceSpec.m_nNumDIs - 2 + scmMinWithLength];
@@ -229,7 +229,7 @@ void CCommFB::configureDOs(const char* paDOConfigString, SFBInterfaceSpec& paInt
 
   if(forte::com_infra::e_DataOutputs == (forte::com_infra::e_DataOutputs & m_eCommServiceType)){
     //TODO: Check range of sParamA
-    paInterfaceSpec.m_nNumDOs = static_cast<TForteUInt8>(paInterfaceSpec.m_nNumDOs + forte::core::util::strtol(paDOConfigString, 0, 10));
+    paInterfaceSpec.m_nNumDOs = static_cast<TForteUInt8>(paInterfaceSpec.m_nNumDOs + forte::core::util::strtol(paDOConfigString, nullptr, 10));
     doDataTypeNames  = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDOs];
     doNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDOs];
     eoWith = new TDataIOID[paInterfaceSpec.m_nNumDOs - 2 + scmMinWithLength];

@@ -37,7 +37,7 @@ const SFBInterfaceSpec FORTE_RT_E_CYCLE::scm_stFBInterfaceSpec = {
   2,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
   1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  3,  scm_anDataInputNames, scm_anDataInputTypeIds,
   1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  0, 0
+  0, nullptr
 };
 
 FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
@@ -46,7 +46,7 @@ FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstance
   mActive = false;
   mTimeListEntry.mTimeOut = 0;
   mTimeListEntry.mInterval = 0;
-  mTimeListEntry.mNext = 0;
+  mTimeListEntry.mNext = nullptr;
   mTimeListEntry.mTimedFB = this;
   mTimeListEntry.mType = e_Periodic;
   mECEO.changeExecutionState(cg_nMGM_CMD_Start);

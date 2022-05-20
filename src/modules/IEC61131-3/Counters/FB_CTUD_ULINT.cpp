@@ -35,7 +35,7 @@ const CStringDictionary::TStringId FB_CTUD_ULINT::scm_anEventOutputNames[] = { g
 
 const SFBInterfaceSpec FB_CTUD_ULINT::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 5, scm_anDataInputNames, scm_aunDIDataTypeIds, 3, scm_anDataOutputNames, scm_aunDODataTypeIds,
     0,
-    0 };
+    nullptr };
 
 void FB_CTUD_ULINT::executeEvent(int pa_nEIID) {
   if (pa_nEIID == scm_nEventREQID) {

@@ -36,7 +36,7 @@ const TForteInt16 GEN_APPEND_STRING::scm_anEOWithIndexes[] = { 0, -1 };
 const TForteInt16 GEN_APPEND_STRING::scm_maxStringBufSize = 100;
 
 GEN_APPEND_STRING::GEN_APPEND_STRING(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), m_anDataInputNames(0), m_anDataInputTypeIds(0), m_anEIWith(0), mDInputs(0){
+    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), m_anDataInputNames(nullptr), m_anDataInputTypeIds(nullptr), m_anEIWith(nullptr), mDInputs(0){
 }
 
 GEN_APPEND_STRING::~GEN_APPEND_STRING(){
@@ -126,11 +126,11 @@ void GEN_APPEND_STRING::executeEvent(int paEIID){
 bool GEN_APPEND_STRING::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec){
   const char *pcPos = strrchr(paConfigString, '_');
 
-  if(0 != pcPos){
+  if(nullptr != pcPos){
     ++pcPos;
     if('S' != *pcPos){
       //we have an underscore and it is not the first underscore after E
-      mDInputs = static_cast<size_t>(forte::core::util::strtoul(pcPos, 0, 10));
+      mDInputs = static_cast<size_t>(forte::core::util::strtoul(pcPos, nullptr, 10));
     }
     else{
       mDInputs = 0;

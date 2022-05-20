@@ -27,14 +27,14 @@
 #include <stdlib.h>
 
 CFunctionBlock::CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-   mEOConns(0), m_apoDIConns(0), mDOConns(0),
-   m_poInvokingExecEnv(0), m_apoAdapters(0), m_poResource(pa_poSrcRes), m_aoDIs(0), m_aoDOs(0), m_nFBInstanceName(pa_nInstanceNameId),
+   mEOConns(nullptr), m_apoDIConns(nullptr), mDOConns(nullptr),
+   m_poInvokingExecEnv(nullptr), m_apoAdapters(nullptr), m_poResource(pa_poSrcRes), m_aoDIs(nullptr), m_aoDOs(nullptr), m_nFBInstanceName(pa_nInstanceNameId),
     m_enFBState(e_KILLED),   //put the FB in the killed state so that reseting it after creation will correctly initialize it
     m_bDeletable(true){
 
 #ifdef FORTE_SUPPORT_MONITORING
-  mEIMonitorCount = 0;
-  mEOMonitorCount = 0;
+  mEIMonitorCount = nullptr;
+  mEOMonitorCount = nullptr;
 #endif
 
   setupFBInterface(pa_pstInterfaceSpec, pa_acFBConnData, pa_acFBVarsData);
@@ -45,7 +45,7 @@ CFunctionBlock::~CFunctionBlock(){
 }
 
 void CFunctionBlock::freeAllData(){
-  if(0 != m_pstInterfaceSpec){
+  if(nullptr != m_pstInterfaceSpec){
     for(int i = 0; i < m_pstInterfaceSpec->m_nNumEOs; ++i){
       (mEOConns + i)->~CEventConnection();
     }
@@ -66,21 +66,21 @@ void CFunctionBlock::freeAllData(){
 
 #ifdef  FORTE_SUPPORT_MONITORING
   delete[] mEOMonitorCount;
-  mEOMonitorCount = 0;
+  mEOMonitorCount = nullptr;
   delete[] mEIMonitorCount;
-  mEIMonitorCount = 0;
+  mEIMonitorCount = nullptr;
 #endif //FORTE_SUPPORT_MONITORING
 }
 
 void CFunctionBlock::setupAdapters(const SFBInterfaceSpec *pa_pstInterfaceSpec, TForteByte *pa_acFBData){
-  if((0 != pa_pstInterfaceSpec) && (0 != pa_acFBData) && (pa_pstInterfaceSpec->m_nNumAdapters)) {
+  if((nullptr != pa_pstInterfaceSpec) && (nullptr != pa_acFBData) && (pa_pstInterfaceSpec->m_nNumAdapters)) {
     m_apoAdapters = reinterpret_cast<TAdapterPtr *>(pa_acFBData);
     for(unsigned int i = 0; i < pa_pstInterfaceSpec->m_nNumAdapters; ++i) {
       //set pointer to right place in pa_acFBData
       m_apoAdapters[i] = CTypeLib::createAdapter(pa_pstInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID,
         pa_pstInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterTypeNameID, getResourcePtr(),
         pa_pstInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_bIsPlug);
-      if(0 != m_apoAdapters[i]) {
+      if(nullptr != m_apoAdapters[i]) {
         m_apoAdapters[i]->setParentFB(this, static_cast<TForteUInt8>(i));
       }
     }
@@ -92,7 +92,7 @@ CTimerHandler& CFunctionBlock::getTimer(void){
 }
 
 CEventConnection *CFunctionBlock::getEOConnection(CStringDictionary::TStringId paEONameId) const{
-  CEventConnection *retVal = 0;
+  CEventConnection *retVal = nullptr;
   TPortId portId = getPortId(paEONameId, m_pstInterfaceSpec->m_nNumEOs, m_pstInterfaceSpec->m_aunEONames);
   if(cg_unInvalidPortId != portId){
     retVal = getEOConUnchecked(portId);
@@ -104,13 +104,13 @@ bool CFunctionBlock::connectDI(TPortId paDIPortId, CDataConnection *pa_poDataCon
   bool bRetVal = false;
 
   if(m_pstInterfaceSpec->m_nNumDIs > paDIPortId){ //catch invalid ID
-    if(0 == pa_poDataCon){
-      m_apoDIConns[paDIPortId] = 0;
+    if(nullptr == pa_poDataCon){
+      m_apoDIConns[paDIPortId] = nullptr;
       bRetVal = true;
     }
     else{
       //only perform connection checks if it is not a disconnection request.
-      if(0 != m_apoDIConns[paDIPortId]){
+      if(nullptr != m_apoDIConns[paDIPortId]){
         if(m_apoDIConns[paDIPortId] == pa_poDataCon){
           //we have a reconfiguration attempt
           configureGenericDI(paDIPortId, pa_poDataCon->getValue());
@@ -129,13 +129,13 @@ bool CFunctionBlock::connectDI(TPortId paDIPortId, CDataConnection *pa_poDataCon
 }
 
 void CFunctionBlock::configureGenericDI(TPortId paDIPortId, const CIEC_ANY* paRefValue) {
-  if(getDI(paDIPortId)->getDataTypeID() == CIEC_ANY::e_ANY && (0 != paRefValue)) {
+  if(getDI(paDIPortId)->getDataTypeID() == CIEC_ANY::e_ANY && (nullptr != paRefValue)) {
     paRefValue->clone(reinterpret_cast<TForteByte *>(getDI(paDIPortId)));
   }
 }
 
 CDataConnection *CFunctionBlock::getDOConnection(CStringDictionary::TStringId paDONameId) const{
-  CDataConnection *retVal = 0;
+  CDataConnection *retVal = nullptr;
   TPortId doPortID = getDOID(paDONameId);
   if(cg_unInvalidPortId != doPortID){
     retVal = mDOConns + doPortID;
@@ -144,7 +144,7 @@ CDataConnection *CFunctionBlock::getDOConnection(CStringDictionary::TStringId pa
 }
 
 CDataConnection *CFunctionBlock::getDIConnection(CStringDictionary::TStringId paDINameId) const{
-  CDataConnection *retVal = 0;
+  CDataConnection *retVal = nullptr;
   TPortId diPortID = getDIID(paDINameId);
   if(cg_unInvalidPortId != diPortID){
     retVal = m_apoDIConns[diPortID];
@@ -166,7 +166,7 @@ bool CFunctionBlock::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRe
 }
 
 CIEC_ANY *CFunctionBlock::getDataOutput(CStringDictionary::TStringId pa_unDONameId) const {
-  CIEC_ANY *poRetVal = 0;
+  CIEC_ANY *poRetVal = nullptr;
   unsigned int unDID = getDOID(pa_unDONameId);
 
   if(cg_unInvalidPortId != unDID){
@@ -176,7 +176,7 @@ CIEC_ANY *CFunctionBlock::getDataOutput(CStringDictionary::TStringId pa_unDOName
 }
 
 CIEC_ANY *CFunctionBlock::getDataInput(CStringDictionary::TStringId pa_unDINameId) const {
-  CIEC_ANY *poRetVal = 0;
+  CIEC_ANY *poRetVal = nullptr;
   unsigned int unDID = getDIID(pa_unDINameId);
 
   if(cg_unInvalidPortId != unDID){
@@ -186,7 +186,7 @@ CIEC_ANY *CFunctionBlock::getDataInput(CStringDictionary::TStringId pa_unDINameI
 }
 
 CIEC_ANY* CFunctionBlock::getDIFromPortId(TPortId paDIPortId) const{
-  CIEC_ANY *retVal = 0;
+  CIEC_ANY *retVal = nullptr;
   if(paDIPortId < m_pstInterfaceSpec->m_nNumDIs){
     retVal = getDI(paDIPortId);
   }
@@ -194,7 +194,7 @@ CIEC_ANY* CFunctionBlock::getDIFromPortId(TPortId paDIPortId) const{
 }
 
 CIEC_ANY* CFunctionBlock::getDOFromPortId(TPortId paDOPortId) const{
-  CIEC_ANY *retVal = 0;
+  CIEC_ANY *retVal = nullptr;
   if(paDOPortId < m_pstInterfaceSpec->m_nNumDOs){
     retVal = getDO(paDOPortId);
   }
@@ -204,7 +204,7 @@ CIEC_ANY* CFunctionBlock::getDOFromPortId(TPortId paDOPortId) const{
 CIEC_ANY *CFunctionBlock::getVar(CStringDictionary::TStringId *paNameList,
     unsigned int paNameListSize){
 
-  CIEC_ANY *poRetVal = 0;
+  CIEC_ANY *poRetVal = nullptr;
   if(1 == paNameListSize){
     unsigned int portId = getDIID(*paNameList);
     if(cg_unInvalidPortId != portId){
@@ -226,7 +226,7 @@ CAdapter *CFunctionBlock::getAdapter(CStringDictionary::TStringId paAdapterNameI
   if(cg_unInvalidPortId != adpPortId){
     return m_apoAdapters[adpPortId];
   }
-  return 0;
+  return nullptr;
 }
 
 TPortId CFunctionBlock::getAdapterPortId(CStringDictionary::TStringId paAdapterNameId) const{
@@ -241,7 +241,7 @@ TPortId CFunctionBlock::getAdapterPortId(CStringDictionary::TStringId paAdapterN
 void CFunctionBlock::sendOutputEvent(size_t paEO){
   FORTE_TRACE("OutputEvent: Function Block sending event: %d (maxid: %d)\n", paEO, m_pstInterfaceSpec->m_nNumEOs - 1);
   if(paEO < m_pstInterfaceSpec->m_nNumEOs) {
-    if(0 != m_pstInterfaceSpec->m_anEOWithIndexes && -1 != m_pstInterfaceSpec->m_anEOWithIndexes[paEO]) {
+    if(nullptr != m_pstInterfaceSpec->m_anEOWithIndexes && -1 != m_pstInterfaceSpec->m_anEOWithIndexes[paEO]) {
       const TDataIOID *eiWithStart = &(m_pstInterfaceSpec->m_anEOWith[m_pstInterfaceSpec->m_anEOWithIndexes[paEO]]);
       //TODO think on this lock
       CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
@@ -273,7 +273,7 @@ void CFunctionBlock::sendOutputEvent(size_t paEO){
 }
 
 void CFunctionBlock::sendAdapterEvent(size_t paAdapterID, size_t paEID) const{
-  if((paAdapterID < m_pstInterfaceSpec->m_nNumAdapters) && (0 != m_apoAdapters[paAdapterID])){
+  if((paAdapterID < m_pstInterfaceSpec->m_nNumAdapters) && (nullptr != m_apoAdapters[paAdapterID])){
     m_apoAdapters[paAdapterID]->receiveInputEvent(paEID, m_poInvokingExecEnv);
   }
 }
@@ -287,13 +287,13 @@ void CFunctionBlock::receiveInputEvent(size_t paEIID, CEventChainExecutionThread
 
   if(e_RUNNING == getState()){
     if(paEIID < m_pstInterfaceSpec->m_nNumEIs) {
-      if(0 != m_pstInterfaceSpec->m_anEIWithIndexes && -1 != m_pstInterfaceSpec->m_anEIWithIndexes[paEIID]) {
+      if(nullptr != m_pstInterfaceSpec->m_anEIWithIndexes && -1 != m_pstInterfaceSpec->m_anEIWithIndexes[paEIID]) {
         const TDataIOID *eiWithStart = &(m_pstInterfaceSpec->m_anEIWith[m_pstInterfaceSpec->m_anEIWithIndexes[paEIID]]);
 
         // TODO think on this lock
         CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
         for(size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
-          if(0 != m_apoDIConns[eiWithStart[i]]) {
+          if(nullptr != m_apoDIConns[eiWithStart[i]]) {
             CIEC_ANY *di = getDI(eiWithStart[i]);
 #ifdef FORTE_SUPPORT_MONITORING
             if(true != di->isForced()) {
@@ -348,9 +348,9 @@ EMGMResponse CFunctionBlock::changeFBExecutionState(EMGMCommandType pa_unCommand
       break;
   }
 
-  if(e_RDY == nRetVal && 0 != m_pstInterfaceSpec) {
+  if(e_RDY == nRetVal && nullptr != m_pstInterfaceSpec) {
     for(int i = 0; i < m_pstInterfaceSpec->m_nNumAdapters; ++i) {
-      if(0 != m_apoAdapters[i]) {
+      if(nullptr != m_apoAdapters[i]) {
         m_apoAdapters[i]->changeFBExecutionState(pa_unCommand);
       }
     }
@@ -363,7 +363,7 @@ CIEC_ANY *CFunctionBlock::createDataPoint(const CStringDictionary::TStringId **p
   ++(*pa_panDataTypeIds);
 #ifdef FORTE_SUPPORT_ARRAYS
   if(g_nStringIdARRAY == (*pa_panDataTypeIds)[-1]){
-    if(0 != poRetVal){
+    if(nullptr != poRetVal){
       //For an array we have to do more
       (static_cast<CIEC_ARRAY_TYPELIB *>(poRetVal))->setup(static_cast<TForteUInt16>(**pa_panDataTypeIds), (*pa_panDataTypeIds)[1]);
     }
@@ -376,8 +376,8 @@ CIEC_ANY *CFunctionBlock::createDataPoint(const CStringDictionary::TStringId **p
 void CFunctionBlock::setupFBInterface(const SFBInterfaceSpec *pa_pstInterfaceSpec, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData){
   m_pstInterfaceSpec = const_cast<SFBInterfaceSpec *>(pa_pstInterfaceSpec);
 
-  if(0 != pa_pstInterfaceSpec){
-    if((0 != pa_acFBConnData) && (0 != pa_acFBVarsData)){
+  if(nullptr != pa_pstInterfaceSpec){
+    if((nullptr != pa_acFBConnData) && (nullptr != pa_acFBVarsData)){
       TPortId i;
       if(m_pstInterfaceSpec->m_nNumEOs){
         mEOConns = reinterpret_cast<CEventConnection *>(pa_acFBConnData);
@@ -389,7 +389,7 @@ void CFunctionBlock::setupFBInterface(const SFBInterfaceSpec *pa_pstInterfaceSpe
         }
       }
       else{
-        mEOConns = 0;
+        mEOConns = nullptr;
       }
 
       const CStringDictionary::TStringId *pnDataIds;
@@ -402,14 +402,14 @@ void CFunctionBlock::setupFBInterface(const SFBInterfaceSpec *pa_pstInterfaceSpe
 
         pnDataIds = pa_pstInterfaceSpec->m_aunDIDataTypeNames;
         for(i = 0; i < m_pstInterfaceSpec->m_nNumDIs; ++i){
-          m_apoDIConns[i] = 0;
+          m_apoDIConns[i] = nullptr;
           createDataPoint(&pnDataIds, pa_acFBVarsData);
           pa_acFBVarsData += sizeof(CIEC_ANY);
         }
       }
       else{
-        m_apoDIConns = 0;
-        m_aoDIs = 0;
+        m_apoDIConns = nullptr;
+        m_aoDIs = nullptr;
       }
 
       if(m_pstInterfaceSpec->m_nNumDOs){
@@ -429,8 +429,8 @@ void CFunctionBlock::setupFBInterface(const SFBInterfaceSpec *pa_pstInterfaceSpe
         }
       }
       else{
-        mDOConns = 0;
-        m_aoDOs = 0;
+        mDOConns = nullptr;
+        m_aoDOs = nullptr;
       }
       if(m_pstInterfaceSpec->m_nNumAdapters){
         setupAdapters(pa_pstInterfaceSpec, pa_acFBVarsData);
@@ -468,7 +468,7 @@ void CFunctionBlock::setupEventMonitoringData(){
 
 
 CFunctionBlock *CFunctionBlock::getFB(forte::core::TNameIdentifier::CIterator &paNameListIt){
-  CFunctionBlock *retVal = 0;
+  CFunctionBlock *retVal = nullptr;
 
   if(paNameListIt.isLastEntry()){
     //only check for adpaters if it we have the last entry in the line

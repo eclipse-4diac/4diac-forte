@@ -194,7 +194,7 @@ bool CHttpComLayer::handleAddress(const char* paAddress, size_t paNoOfSDs) {
     CParameterParser portParser(addressToParse.getValue(), ':', 2);
     if(2 == portParser.parseParameters()) {
       mHost = CIEC_STRING(portParser[0]);
-      mPort = static_cast<TForteUInt16>(forte::core::util::strtoul(portParser[1], 0, 10));
+      mPort = static_cast<TForteUInt16>(forte::core::util::strtoul(portParser[1], nullptr, 10));
     } else {
       mHost = addressToParse;
       DEVLOG_INFO("[HTTP Layer] No port was found on the parameter, using default 80\n");
@@ -280,7 +280,7 @@ EComResponse CHttpComLayer::recvData(const void *paData, unsigned int paSize) {
         DEVLOG_ERROR("[HTTP Layer] Receiving raw data as a Server? That's wrong, use the recvServerData function\n");
         break;
       case e_Client:
-        if(0 == paData) { //timeout occurred
+        if(nullptr == paData) { //timeout occurred
           mInterruptResp = e_ProcessDataRecvFaild;
         } else {
           if(e_ProcessDataOk != (mInterruptResp = handleHTTPResponse(mRecvBuffer))) {
@@ -344,7 +344,7 @@ EComResponse forte::com_infra::CHttpComLayer::recvServerData(CSinglyLinkedList<C
 EComResponse CHttpComLayer::handleHTTPResponse(char *paData) {
   DEVLOG_DEBUG("[HTTP Layer] Handling received HTTP response\n");
   EComResponse eRetVal = e_ProcessDataRecvFaild;
-  if(m_poFb != 0) {
+  if(m_poFb != nullptr) {
     CIEC_ANY* apoRDs = m_poFb->getRDs();
     // Interpret HTTP response and set output status according to success/failure.
     CIEC_STRING responseCode;

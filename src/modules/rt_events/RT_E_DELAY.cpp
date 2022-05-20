@@ -37,7 +37,7 @@ const SFBInterfaceSpec FORTE_RT_E_DELAY::scm_stFBInterfaceSpec = {
   3,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
   2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  5,  scm_anDataInputNames, scm_anDataInputTypeIds,
   1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
-  0, 0
+  0, nullptr
 };
 
 
@@ -48,7 +48,7 @@ FORTE_RT_E_DELAY::FORTE_RT_E_DELAY(const CStringDictionary::TStringId paInstance
   mInitialized = false;
   mTimeListEntry.mTimeOut = 0;
   mTimeListEntry.mInterval = 0;
-  mTimeListEntry.mNext = 0;
+  mTimeListEntry.mNext = nullptr;
   mTimeListEntry.mTimedFB = this;
   mTimeListEntry.mType = e_SingleShot;
   mECEO.changeExecutionState(cg_nMGM_CMD_Start);

@@ -32,7 +32,7 @@ using namespace forte::com_infra;
 const char * const CBaseCommFB::scm_sResponseTexts[] = { "OK", "INVALID_ID", "TERMINATED", "INVALID_OBJECT", "DATA_TYPE_ERROR", "INHIBITED", "NO_SOCKET", "SEND_FAILED", "RECV_FAILED" };
 
 CBaseCommFB::CBaseCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, forte::com_infra::EComServiceType pa_eCommServiceType) :
-    CGenFunctionBlock<CEventSourceFB>(pa_poSrcRes, pa_nInstanceNameId), m_eCommServiceType(pa_eCommServiceType), m_poTopOfComStack(0) {
+    CGenFunctionBlock<CEventSourceFB>(pa_poSrcRes, pa_nInstanceNameId), m_eCommServiceType(pa_eCommServiceType), m_poTopOfComStack(nullptr) {
   memset(m_apoInterruptQueue, 0, sizeof(m_apoInterruptQueue)); //TODO change this to  m_apoInterruptQueue{0} in the extended list when fully switching to C++11
   setEventChainExecutor(getResource().getResourceEventExecution());
   m_unComInterruptQueueCount = 0;
@@ -41,7 +41,7 @@ CBaseCommFB::CBaseCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, 
 CBaseCommFB::~CBaseCommFB() {
   closeConnection();
 
-  if(0 != m_pstInterfaceSpec) {
+  if(nullptr != m_pstInterfaceSpec) {
     //Free the memory allocated for the interface, only do this if we dynamically created it (i.e., getManagesFBData is true)
     delete[](m_pstInterfaceSpec->m_anEIWith);
     delete[](m_pstInterfaceSpec->m_anEOWith);
@@ -63,10 +63,10 @@ EMGMResponse CBaseCommFB::changeFBExecutionState(EMGMCommandType pa_unCommand) {
 
 EComResponse CBaseCommFB::openConnection() {
   EComResponse retVal;
-  if (0 == m_poTopOfComStack) {
+  if (nullptr == m_poTopOfComStack) {
     // Get the ID
     char *commID;
-    if (0 == strchr(ID().getValue(), ']')) {
+    if (nullptr == strchr(ID().getValue(), ']')) {
       commID = getDefaultIDString(ID().getValue());
     }
     else {
@@ -98,18 +98,18 @@ EComResponse CBaseCommFB::openConnection() {
 
 EComResponse CBaseCommFB::createComstack(char *commID) {
   EComResponse retVal = e_InitInvalidId;
-  CComLayer *newLayer = 0;
-  CComLayer *previousLayer = 0; // Reference to the previous layer as it needs to set the bottom layer
-  char *layerParams = 0;
+  CComLayer *newLayer = nullptr;
+  CComLayer *previousLayer = nullptr; // Reference to the previous layer as it needs to set the bottom layer
+  char *layerParams = nullptr;
   while('\0' != *commID) { // Loop until reaching the end of the ID
     retVal = e_InitInvalidId;
     char * layerID = extractLayerIdAndParams(&commID, &layerParams); // Get the next layer's ID and parameters
 
-    if(0 != layerID && '\0' != *layerID) { // If well formated ID, keep going
+    if(nullptr != layerID && '\0' != *layerID) { // If well formated ID, keep going
     // Create the new layer
       newLayer = CComLayersManager::createCommunicationLayer(layerID, previousLayer, this);
-      if(0 != newLayer) { // If the layer could be created, keep going
-        if(0 == m_poTopOfComStack) {
+      if(nullptr != newLayer) { // If the layer could be created, keep going
+        if(nullptr == m_poTopOfComStack) {
           m_poTopOfComStack = newLayer; // Assign the newly created layer to the FB
         }
 
@@ -127,10 +127,10 @@ EComResponse CBaseCommFB::createComstack(char *commID) {
 
 
 void CBaseCommFB::closeConnection() {
-  if (m_poTopOfComStack != 0) {
+  if (m_poTopOfComStack != nullptr) {
     m_poTopOfComStack->closeConnection();
     delete m_poTopOfComStack; // this will close the whole communication stack
-    m_poTopOfComStack = 0;
+    m_poTopOfComStack = nullptr;
   }
 }
 
@@ -145,15 +145,15 @@ void CBaseCommFB::interruptCommFB(CComLayer *pa_poComLayer) {
 }
 
 char *CBaseCommFB::extractLayerIdAndParams(char **paRemainingID, char **paLayerParams) {
-  char *layerID = 0;
+  char *layerID = nullptr;
   if('\0' != **paRemainingID) {
     char *possibleLayerId = *paRemainingID;
     *paRemainingID = forte::core::util::lookForNonEscapedChar(paRemainingID, '[', '\\');
-    if(0 != *paRemainingID) {
+    if(nullptr != *paRemainingID) {
       ++*paRemainingID;
       char *possibleLayerParams = *paRemainingID;
       *paRemainingID = forte::core::util::lookForNonEscapedChar(paRemainingID, ']', '\\');
-      if(0 != *paRemainingID) { //both [ and ] were found so the ID is correct
+      if(nullptr != *paRemainingID) { //both [ and ] were found so the ID is correct
         ++*paRemainingID;
         if('\0' != **paRemainingID) {
           ++*paRemainingID;

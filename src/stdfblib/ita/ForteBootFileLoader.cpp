@@ -22,14 +22,14 @@
 #include <mgmcmdstruct.h>
 #include "../../core/device.h"
 
-char* gCommandLineBootFile = 0;
+char* gCommandLineBootFile = nullptr;
 
-ForteBootFileLoader::ForteBootFileLoader(IBootFileCallback &paCallback) : mBootfile(0), mCallback(paCallback), mNeedsExit(false){
+ForteBootFileLoader::ForteBootFileLoader(IBootFileCallback &paCallback) : mBootfile(nullptr), mCallback(paCallback), mNeedsExit(false){
   openBootFile();
 }
 
 ForteBootFileLoader::~ForteBootFileLoader() {
-  if(0 != mBootfile){
+  if(nullptr != mBootfile){
     DEVLOG_INFO("Closing bootfile\n");
     fclose(mBootfile);
   }
@@ -44,7 +44,7 @@ bool ForteBootFileLoader::openBootFile() {
   } else {
     // select provided or default boot file name
     char * envBootFileName = getenv("FORTE_BOOT_FILE");
-    if(0 != envBootFileName) {
+    if(nullptr != envBootFileName) {
       DEVLOG_INFO("Using provided bootfile location from environment variable: %s\n", envBootFileName);
       bootFileName = CIEC_STRING(envBootFileName);
     } else {
@@ -58,12 +58,12 @@ bool ForteBootFileLoader::openBootFile() {
     DEVLOG_INFO("No bootfile specified and no default bootfile configured during build\n");
   }else{
     mBootfile = fopen(bootFileName.getValue(), "r");
-    if(0 != mBootfile){
+    if(nullptr != mBootfile){
       DEVLOG_INFO("Boot file %s opened\n", bootFileName.getValue());
       retVal = true;
     }
     else{
-      if(0 != getenv("FORTE_BOOT_FILE_FAIL_MISSING")){
+      if(nullptr != getenv("FORTE_BOOT_FILE_FAIL_MISSING")){
         DEVLOG_ERROR("Boot file %s could not be opened and FORTE_BOOT_FILE_FAIL_MISSING is set. Failing...\n", bootFileName.getValue());
         mNeedsExit = true;
       }
@@ -77,14 +77,14 @@ bool ForteBootFileLoader::openBootFile() {
 
 LoadBootResult ForteBootFileLoader::loadBootFile(){
   LoadBootResult eResp = FILE_NOT_OPENED;
-  if(0 != mBootfile){
+  if(nullptr != mBootfile){
     //we could open the file try to load it
     int nLineCount = 1;
     eResp = LOAD_RESULT_OK;
     CIEC_STRING line;
     while(readLine(line) && LOAD_RESULT_OK == eResp) {
       char *cmdStart = strchr(line.getValue(), ';');
-      if(0 == cmdStart){
+      if(nullptr == cmdStart){
         eResp = MISSING_COLON;
         DEVLOG_ERROR("Boot file line does not contain separating ';'. Line: %d\n", nLineCount);
       } else {
@@ -110,7 +110,7 @@ bool ForteBootFileLoader::readLine(CIEC_STRING &line){
   line.clear();
   char acLineBuf[size];
   do {
-    if(0 != fgets(acLineBuf, size, mBootfile)) {
+    if(nullptr != fgets(acLineBuf, size, mBootfile)) {
       line.append(acLineBuf);
     } else {
       return 0 != line.length();

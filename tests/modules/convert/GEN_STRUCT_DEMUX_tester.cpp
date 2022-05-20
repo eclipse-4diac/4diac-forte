@@ -132,26 +132,26 @@ BOOST_FIXTURE_TEST_SUITE( STRUCT_DEMUX_SecondStructTest, STRUCT_DEMUX_TestFixtur
 BOOST_AUTO_TEST_SUITE(STRUCT_DEMUX_FailedCreationTest)
 
   BOOST_AUTO_TEST_CASE(missingDataType){
-    CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_DEMUX_1UnknownType, 0);
-    BOOST_CHECK(0 == fb);
+    CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_DEMUX_1UnknownType, nullptr);
+    BOOST_CHECK(nullptr == fb);
   }
 
   BOOST_AUTO_TEST_CASE(wrongDataType){
-    CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_DEMUX_1STRING, 0);
-    BOOST_CHECK(0 == fb);
+    CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_DEMUX_1STRING, nullptr);
+    BOOST_CHECK(nullptr == fb);
 
-    fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_DEMUX_1REAL, 0);
-    BOOST_CHECK(0 == fb);
+    fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_DEMUX_1REAL, nullptr);
+    BOOST_CHECK(nullptr == fb);
   }
 
 BOOST_AUTO_TEST_CASE(emptyStruct) {
-CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_DEMUX_1Struct_Muxer_Test_Struct_3, 0);
-BOOST_CHECK(0 == fb);
+CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_DEMUX_1Struct_Muxer_Test_Struct_3, nullptr);
+BOOST_CHECK(nullptr == fb);
 }
 
 BOOST_AUTO_TEST_CASE(bigStruct) {
-CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_DEMUX_1Struct_Muxer_Test_Struct_4, 0);
-BOOST_CHECK(0 == fb);
+CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_DEMUX_1Struct_Muxer_Test_Struct_4, nullptr);
+BOOST_CHECK(nullptr == fb);
 }
 
 }

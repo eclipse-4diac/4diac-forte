@@ -45,7 +45,7 @@ const SFBInterfaceSpec WSTRING2WSTRING::scm_stFBInterfaceSpec = {
   1,
   scm_anDataOutputNames, scm_aunDODataTypeIds,
   0,
-  0
+  nullptr
 };
 
 void WSTRING2WSTRING::executeEvent(int pa_nEIID){

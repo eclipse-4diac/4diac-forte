@@ -34,7 +34,7 @@ void CHttpParser::createPutPostRequest(CIEC_STRING& paDest, const CIEC_STRING& p
 
 bool CHttpParser::changePutPostData(CIEC_STRING& paDest, const CIEC_STRING& paData) {
   char* helperChar = strstr(paDest.getValue(), "length: ");
-  if(0 != helperChar) {
+  if(nullptr != helperChar) {
     helperChar += sizeof("length: ") - 1;
     *helperChar = '\0';
     paDest = CIEC_STRING(paDest.getValue()); //will shrink the length of the string to the new ending
@@ -53,7 +53,7 @@ bool CHttpParser::changePutPostData(CIEC_STRING& paDest, const CIEC_STRING& paDa
 bool CHttpParser::parseResponse(CIEC_STRING& paBody, CIEC_STRING& paResponseCode, char* paSrc) {
   if(CHttpParser::getHttpResponseCode(paResponseCode, paSrc)) {
     char* helperChar = strstr(paSrc, "\r\n\r\n"); // Extract data from HTTP response char
-    if(0 != helperChar) {
+    if(nullptr != helperChar) {
       helperChar += sizeof("\r\n\r\n") - 1;
       paBody = CIEC_STRING(helperChar);
     } else { // Empty response received
@@ -71,10 +71,10 @@ bool forte::com_infra::CHttpParser::parseGetRequest(CIEC_STRING& paPath, CSingly
     paData = paData + 4;
 
     char* endOfPath = strstr(paData, " ");
-    if(endOfPath != 0) {
+    if(endOfPath != nullptr) {
       *endOfPath = '\0';
       char* startOfParameters = strstr(paData + 1, "?");
-      if(startOfParameters != 0) {
+      if(startOfParameters != nullptr) {
         *startOfParameters = '\0';
         startOfParameters++;
         parseGETParameters(startOfParameters, paParameterNames, paParameterValues);
@@ -103,11 +103,11 @@ bool forte::com_infra::CHttpParser::parsePutPostRequest(CIEC_STRING& paPath, CIE
   }
 
   char* endOfPath = strstr(paData, " ");
-  if(endOfPath != 0) {
+  if(endOfPath != nullptr) {
     *endOfPath = '\0';
     paPath = CIEC_STRING(paData);
     paData = strstr(endOfPath + 1, "\r\n\r\n");
-    if(paData != 0) {
+    if(paData != nullptr) {
       paData += sizeof("\r\n\r\n") - 1;
       paContent = CIEC_STRING(paData);
     } else {
@@ -178,7 +178,7 @@ void CHttpParser::addHeaderEnding(CIEC_STRING& paDest) {
 bool CHttpParser::getHttpResponseCode(CIEC_STRING& paDest, char* paSrc) {
   //HTTP-Version SP Status-Code SP Reason-Phrase CRLF (SP = space)
   char* helperChar = strstr(paSrc, "\r\n");
-  if(helperChar != 0) {
+  if(helperChar != nullptr) {
     *helperChar = '\0';
     CParameterParser parser(paSrc, ' ');
     if(3 <= parser.parseParameters()) { //Reason-Phrase can contain spaces in it
@@ -206,7 +206,7 @@ unsigned int forte::com_infra::CHttpParser::parseGETParameters(char* paParameter
   bool endOfParameters = false;
   while('\0' != *startOfName && !endOfParameters) {
     char* startOfValue = strstr(startOfName, "=");
-    if(0 != startOfValue) {
+    if(nullptr != startOfValue) {
       *startOfValue = '\0';
       startOfValue++;
     } else {
@@ -217,7 +217,7 @@ unsigned int forte::com_infra::CHttpParser::parseGETParameters(char* paParameter
     }
     char* nextName = strstr(startOfValue, "&");
     endOfParameters = false;
-    if(0 != nextName) {
+    if(nullptr != nextName) {
       *nextName = '\0';
     } else {
       endOfParameters = true;

@@ -220,7 +220,7 @@ UA_StatusCode COPC_UA_Remote_Handler::getClientAndAddAction(CActionInfo& paActio
 CUA_ClientInformation* COPC_UA_Remote_Handler::getClient(const CIEC_STRING &paEndpoint) {
   CCriticalRegion allClientsRegion(mAllClientListMutex);
 
-  CUA_ClientInformation *client = 0;
+  CUA_ClientInformation *client = nullptr;
   for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = mAllClients.begin(); itClientInformation != mAllClients.end();
       ++itClientInformation) {
     if((*itClientInformation)->getEndpoint() == paEndpoint) {
@@ -234,7 +234,7 @@ CUA_ClientInformation* COPC_UA_Remote_Handler::getClient(const CIEC_STRING &paEn
       mAllClients.pushBack(client);
     } else {
       delete client;
-      client = 0;
+      client = nullptr;
     }
   }
 
@@ -257,7 +257,7 @@ void COPC_UA_Remote_Handler::addActionToClient(CActionInfo& paActionInfo) {
 void COPC_UA_Remote_Handler::removeActionFromClient(CActionInfo& paActionInfo) {
   CCriticalRegion allClientsRegion(mAllClientListMutex);
 
-  CUA_ClientInformation *clientToDelete = 0;
+  CUA_ClientInformation *clientToDelete = nullptr;
   for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = mAllClients.begin(); itClientInformation != mAllClients.end();
       ++itClientInformation) {
     CCriticalRegion clientRegion((*itClientInformation)->getMutex());

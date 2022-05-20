@@ -14,11 +14,11 @@
 #include "funcbloc.h"
 
 CInterface2InternalDataConnection::CInterface2InternalDataConnection() :
-    CDataConnection(0, cg_unInvalidPortId, 0){
+    CDataConnection(nullptr, cg_unInvalidPortId, nullptr){
 }
 
 CInterface2InternalDataConnection::~CInterface2InternalDataConnection(){
-  m_poValue = 0; // in interface data connections we are not allowed to delete the m_poValue
+  m_poValue = nullptr; // in interface data connections we are not allowed to delete the m_poValue
 }
 
 void CInterface2InternalDataConnection::cloneInputInterfaceValue(void){

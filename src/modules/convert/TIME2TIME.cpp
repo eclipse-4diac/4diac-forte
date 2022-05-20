@@ -42,7 +42,7 @@ const SFBInterfaceSpec TIME2TIME::scm_stFBInterfaceSpec = {
   1,
   scm_anDataOutputNames, scm_aunDODataTypeIds,
   0,
-  0
+  nullptr
 };
 
 void TIME2TIME::executeEvent(int pa_nEIID){

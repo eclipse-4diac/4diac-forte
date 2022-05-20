@@ -45,7 +45,7 @@ const SFBInterfaceSpec REAL2REAL::scm_stFBInterfaceSpec = {
   1,
   scm_anDataOutputNames, scm_aunDODataTypeIds,
   0,
-  0
+  nullptr
 };
 
 void REAL2REAL::executeEvent(int pa_nEIID){

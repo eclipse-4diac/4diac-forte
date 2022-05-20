@@ -28,9 +28,9 @@ const CStringDictionary::TStringId E_PERMIT::scm_anEventOutputNames[] = { g_nStr
 
 const SFBInterfaceSpec
     E_PERMIT::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1,
-      scm_anEventOutputNames, 0, 0, 1, scm_anDataInputNames, scm_aunDIDataTypeIds, 0, 0, 0,
+      scm_anEventOutputNames, nullptr, nullptr, 1, scm_anDataInputNames, scm_aunDIDataTypeIds, 0, nullptr, nullptr,
       0,
-      0
+      nullptr
 };
 
 void E_PERMIT::executeEvent(int pa_nEIID){

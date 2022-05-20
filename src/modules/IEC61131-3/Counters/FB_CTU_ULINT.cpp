@@ -47,7 +47,7 @@ const SFBInterfaceSpec FB_CTU_ULINT::scm_stFBInterfaceSpec = {
   2,
   scm_anDataOutputNames, scm_aunDODataTypeIds,
   0,
-  0
+  nullptr
 };
 
 void FB_CTU_ULINT::executeEvent(int pa_nEIID){

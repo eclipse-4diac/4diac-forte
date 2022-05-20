@@ -26,15 +26,15 @@ const CStringDictionary::TStringId GEN_F_MUX::scm_anEventOutputNames[] = { g_nSt
 
 GEN_F_MUX::GEN_F_MUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
     CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId),
-  m_anEventInputNames(0),
-  m_anDataOutputNames(0),
-  m_anDataInputNames(0),
-  m_anDataOutputTypeIds(0),
-  m_anDataInputTypeIds(0),
-  m_anEIWithIndexes(0),
-  m_anEIWith(0),
-  m_anEOWithIndexes(0),
-  m_anEOWith(0),
+  m_anEventInputNames(nullptr),
+  m_anDataOutputNames(nullptr),
+  m_anDataInputNames(nullptr),
+  m_anDataOutputTypeIds(nullptr),
+  m_anDataInputTypeIds(nullptr),
+  m_anEIWithIndexes(nullptr),
+  m_anEIWith(nullptr),
+  m_anEOWithIndexes(nullptr),
+  m_anEOWith(nullptr),
   mEInputs(0),
   mEOutputs(0),
   mDInputs(0),
@@ -66,7 +66,7 @@ void GEN_F_MUX::executeEvent(int paEIID){
       CIEC_ANY *p_dataOutput = getDO(static_cast<unsigned int>(output_index));
 
       // check whether datatypes match
-      if(p_dataInput != 0 && p_dataOutput != 0 && p_dataInput->getDataTypeID() == p_dataOutput->getDataTypeID()){
+      if(p_dataInput != nullptr && p_dataOutput != nullptr && p_dataInput->getDataTypeID() == p_dataOutput->getDataTypeID()){
 
         p_dataOutput->setValue(*p_dataInput);
         status = true && status;
@@ -91,8 +91,8 @@ void GEN_F_MUX::executeEvent(int paEIID){
 
 bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
   int index = 0;
-  char *paramEI = 0;
-  char *paramDO = 0;
+  char *paramEI = nullptr;
+  char *paramDO = nullptr;
   char baseName[cg_nIdentifierLength];
 
   TIdentifier typeIdString;
@@ -125,7 +125,7 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
       break;
     }
   }
-  if(paramDO != 0){
+  if(paramDO != nullptr){
 
     for(index = index + 1; index < (int) inlength - 1; index++){
 
@@ -138,13 +138,13 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
     }
   }
 
-  if(paramDO == 0){
+  if(paramDO == nullptr){
     return false;
   }
   else{
     //set the data and event port numbers
-    mEInputs = static_cast<size_t>(forte::core::util::strtoul(paramEI, 0, 10));
-    mDOutputs = static_cast<size_t>(forte::core::util::strtoul(paramDO, 0, 10));
+    mEInputs = static_cast<size_t>(forte::core::util::strtoul(paramEI, nullptr, 10));
+    mDOutputs = static_cast<size_t>(forte::core::util::strtoul(paramDO, nullptr, 10));
     mEOutputs = 1;
     mDInputs = mEInputs * mDOutputs;
 

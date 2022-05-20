@@ -19,10 +19,10 @@
 const CStringDictionary::TStringId RMT_DEV::scm_aunDINameIds[] = { g_nStringIdMGR_ID };
 const CStringDictionary::TStringId RMT_DEV::scm_aunDIDataTypeIds[] = {g_nStringIdWSTRING};
 
-const SFBInterfaceSpec RMT_DEV::scm_stFBInterfaceSpec = { 0, 0, 0, 0, 0, 0, 0,
-    0, 1, scm_aunDINameIds, scm_aunDIDataTypeIds, 0, 0, 0,
+const SFBInterfaceSpec RMT_DEV::scm_stFBInterfaceSpec = { 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr,
+    nullptr, 1, scm_aunDINameIds, scm_aunDIDataTypeIds, 0, nullptr, nullptr,
     0,
-    0};
+    nullptr};
 
 RMT_DEV::RMT_DEV() :
   CDevice(&scm_stFBInterfaceSpec, CStringDictionary::scm_nInvalidStringId, m_anFBConnData, m_anFBVarsData),

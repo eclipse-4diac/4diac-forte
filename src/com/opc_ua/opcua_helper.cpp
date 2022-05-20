@@ -84,7 +84,7 @@ size_t convertFromOPCUAToIECSpecific<CIEC_WSTRING, UA_String>(const void *paSrc,
   return sizeof(UA_String);
 }
 
-const COPC_UA_Helper::UA_TypeConvert COPC_UA_Helper::scmMapForteTypeIdToOpcUa[] = { UA_TypeConvert(0, 0, 0), // dummy for e_ANY
+const COPC_UA_Helper::UA_TypeConvert COPC_UA_Helper::scmMapForteTypeIdToOpcUa[] = { UA_TypeConvert(nullptr, nullptr, nullptr), // dummy for e_ANY
 UA_TypeConvert(&UA_TYPES[UA_TYPES_BOOLEAN], &convertFromIECToOPCUASpecific<CIEC_BOOL, UA_Boolean>, &convertFromOPCUAToIECSpecific<CIEC_BOOL, UA_Boolean>),
   UA_TypeConvert(&UA_TYPES[UA_TYPES_SBYTE], &convertFromIECToOPCUASpecific<CIEC_SINT, UA_SByte>, &convertFromOPCUAToIECSpecific<CIEC_SINT, UA_SByte>),
   UA_TypeConvert(&UA_TYPES[UA_TYPES_INT16], &convertFromIECToOPCUASpecific<CIEC_INT, UA_Int16>, &convertFromOPCUAToIECSpecific<CIEC_INT, UA_Int16>),
@@ -190,8 +190,8 @@ bool COPC_UA_Helper::isBrowsePathValid(const char *paBrowsepath) {
 }
 
 UA_StatusCode COPC_UA_Helper::getRemoteNodeForPath(UA_Client &paClient, const char *paNodePathConst, UA_NodeId **paParentNodeId, UA_NodeId **paFoundNodeId) {
-  *paFoundNodeId = NULL;
-  UA_BrowsePath *browsePaths = 0;
+  *paFoundNodeId = nullptr;
+  UA_BrowsePath *browsePaths = nullptr;
   size_t folderCnt = 0;
   UA_StatusCode retVal = prepareBrowseArgument(paNodePathConst, &browsePaths, &folderCnt);
   if(UA_STATUSCODE_GOOD == retVal) {
@@ -308,7 +308,7 @@ bool COPC_UA_Helper::getBrowsenameFromNodeName(const char *paNodeName, UA_UInt16
   CParameterParser browseNameParser(paNodeName, ':');
   size_t parsingResult = browseNameParser.parseParameters();
   if(scmMaxNoOfParametersInBrowseName == parsingResult) {
-    browsenameNamespace = static_cast<UA_UInt16>(forte::core::util::strtol(browseNameParser[0], 0, 10));
+    browsenameNamespace = static_cast<UA_UInt16>(forte::core::util::strtol(browseNameParser[0], nullptr, 10));
     targetName = CIEC_STRING(browseNameParser[1]);
   } else if(1 == parsingResult) {
     targetName = CIEC_STRING(browseNameParser[0]);
