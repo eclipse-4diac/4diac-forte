@@ -56,14 +56,40 @@ class CSpecReference {
     TDataIOID ref = maxVal;
 };
 
+template<class TypeTag, class DirTag>
+class CSpecReferenceRange {
+  public:
+    using TCSpecReference = CSpecReference<TypeTag, DirTag>;
+
+    TCSpecReference m_oFirst;
+    TCSpecReference m_oLast;
+
+    constexpr CSpecReferenceRange() = default;
+    constexpr CSpecReferenceRange(TCSpecReference pa_oFirst, TCSpecReference pa_oLast)
+      : m_oFirst(pa_oFirst), m_oLast(pa_oLast)
+    {}
+    constexpr CSpecReferenceRange(std::pair<int, int> pa_oRangePair)
+      : CSpecReferenceRange(std::get<0>(pa_oRangePair), std::get<1>(pa_oRangePair))
+    {}
+
+    constexpr TCSpecReference operator[](int offset) const {
+      int id = *m_oFirst + offset;
+      return { isValid() && id >= *m_oFirst && id <= *m_oLast ? id : -1 };
+    }
+
+    constexpr bool isValid() const {
+      return m_oFirst.isValid() && m_oLast.isValid();
+    }
+};
+
 class CStringIdListSpecBuilder {
   public:
     CStringIdListSpecBuilder(std::size_t pa_unMaxItems) : m_unMaxItems(pa_unMaxItems)
     {}
 
     void setStaticList(const CStringDictionary::TStringId *pa_aunStaticList, std::size_t pa_nItemsCount);
-    void addString(const CStringDictionary::TStringId pa_unString);
-    void addString(const char *pa_sString);
+    int addString(const CStringDictionary::TStringId pa_unString);
+    int addString(const char *pa_sString);
 
     std::size_t getNumStrings() const {
       return m_aunStaticList ? m_unStaticListSize : m_vDynamicList.size();
@@ -93,13 +119,6 @@ class CEventSpecBuilderBase {
     void setStaticEvents(const std::array<CStringDictionary::TStringId, N> &pa_aStaticNames) {
       setStaticEvents(pa_aStaticNames.data(), pa_aStaticNames.size());
     }
-    void addEvent(CStringDictionary::TStringId pa_unName) {
-      m_oNamesListBuilder.addString(pa_unName);
-    }
-    void addEvent(const char *pa_sName) {
-      m_oNamesListBuilder.addString(pa_sName);
-    }
-    void addEventRange(const char *pa_sPrefix, int pa_nRangeSize);
 
     auto getNumEvents() const {
       return m_oNamesListBuilder.getNumStrings();
@@ -125,13 +144,33 @@ class CEventSpecBuilderBase {
     static constexpr auto scm_unMaxEvents = CFunctionBlock::scm_nMaxInterfaceEvents;
     bool m_bIsGood = true;
     CStringIdListSpecBuilder m_oNamesListBuilder{scm_unMaxEvents};
+
+  protected:
+    template<typename NameType>
+    int addEvent(NameType pa_xName) {
+      return m_oNamesListBuilder.addString(pa_xName);
+    }
+
+    std::pair<int, int> addEventRange(const char *pa_sPrefix, int pa_nRangeSize);
 };
 
 template<class DirTag>
 class CEventSpecBuilder : public CEventSpecBuilderBase {
   public:
+    using TCSpecReference = CSpecReference<CEventSpecTag, DirTag>;
+    using TCSpecReferenceRange = CSpecReferenceRange<CEventSpecTag, DirTag>;
+
     template<typename TNameType>
-    CSpecReference<CEventSpecTag, DirTag> operator[] (TNameType pa_tName) const {
+    TCSpecReference addEvent(TNameType pa_xName) {
+      return CEventSpecBuilderBase::addEvent(pa_xName);
+    }
+
+    TCSpecReferenceRange addEventRange(const char *pa_sPrefix, int pa_nRangeSize) {
+      return CEventSpecBuilderBase::addEventRange(pa_sPrefix, pa_nRangeSize);
+    }
+
+    template<typename TNameType>
+    TCSpecReference operator[] (TNameType pa_tName) const {
       return { findEvent(pa_tName) };
     }
 };
@@ -139,32 +178,13 @@ class CEventSpecBuilder : public CEventSpecBuilderBase {
 class CDataSpecBuilderBase {
   public:
     void setStaticData(const CStringDictionary::TStringId *pa_aunStaticDataNames, const CStringDictionary::TStringId *pa_aunStaticTypeNames, std::size_t pa_nDataCount) {
-        m_oNamesListBuilder.setStaticList(pa_aunStaticDataNames, pa_nDataCount);
-        m_oTypesListBuilder.setStaticList(pa_aunStaticTypeNames, pa_nDataCount);
+      m_oNamesListBuilder.setStaticList(pa_aunStaticDataNames, pa_nDataCount);
+      m_oTypesListBuilder.setStaticList(pa_aunStaticTypeNames, pa_nDataCount);
     }
     template<std::size_t N>
     void setStaticData(const std::array<CStringDictionary::TStringId, N> &pa_aunStaticDataNames, const std::array<CStringDictionary::TStringId, N> &pa_aunStaticTypeNames) {
       setStaticData(pa_aunStaticDataNames.data(), pa_aunStaticTypeNames.data(), N);
     }
-    void addData(CStringDictionary::TStringId pa_unName, CStringDictionary::TStringId pa_unTypeName) {
-      m_oNamesListBuilder.addString(pa_unName);
-      m_oTypesListBuilder.addString(pa_unTypeName);
-    }
-    void addData(const char *pa_sName, CStringDictionary::TStringId pa_unTypeName) {
-      m_oNamesListBuilder.addString(pa_sName);
-      m_oTypesListBuilder.addString(pa_unTypeName);
-    }
-    void addData(CStringDictionary::TStringId pa_unName, const char * pa_sTypeName) {
-      m_oNamesListBuilder.addString(pa_unName);
-      m_oTypesListBuilder.addString(pa_sTypeName);
-    }
-    void addData(const char *pa_sName, const char *pa_sTypeName) {
-      m_oNamesListBuilder.addString(pa_sName);
-      m_oTypesListBuilder.addString(pa_sTypeName);
-    }
-    void addDataRange(const char *pa_sPrefix, int pa_nRangeSize);
-    void addDataRange(const char *pa_sPrefix, int pa_nRangeSize, CStringDictionary::TStringId pa_unTypeName);
-    void addDataRange(const char *pa_sPrefix, int pa_nRangeSize, const char *pa_sTypeName);
 
     template<typename T>
     int findData(T pa_tName) const {
@@ -185,13 +205,38 @@ class CDataSpecBuilderBase {
     bool m_bIsGood = true;
     CStringIdListSpecBuilder m_oNamesListBuilder{scm_unMaxData};
     CStringIdListSpecBuilder m_oTypesListBuilder{scm_unMaxData};
+
+  protected:
+    template<typename TNameType1, typename TNameType2>
+    int addData(TNameType1 pa_xName, TNameType2 pa_xTypeName) {
+      m_oNamesListBuilder.addString(pa_xName);
+      return m_oTypesListBuilder.addString(pa_xTypeName);
+    }
+    std::pair<int, int> addDataRange(const char *pa_sPrefix, int pa_nRangeSize);
+    std::pair<int, int> addDataRange(const char *pa_sPrefix, int pa_nRangeSize, CStringDictionary::TStringId pa_unTypeName);
+    std::pair<int, int> addDataRange(const char *pa_sPrefix, int pa_nRangeSize, const char *pa_sTypeName);
 };
 
 template<class DirTag>
 class CDataSpecBuilder : public CDataSpecBuilderBase {
   public:
+    using TCSpecReference = CSpecReference<CDataSpecTag, DirTag>;
+    using TCSpecReferenceRange = CSpecReferenceRange<CDataSpecTag, DirTag>;
+
+    template<typename TNameType1, typename TNameType2>
+    TCSpecReference addData(TNameType1 pa_xName, TNameType2 pa_xTypeName) {
+      return CDataSpecBuilderBase::addData(pa_xName, pa_xTypeName);
+    }
+    TCSpecReferenceRange addDataRange(const char *pa_sPrefix, int pa_nRangeSize) {
+      return CDataSpecBuilderBase::addDataRange(pa_sPrefix, pa_nRangeSize);
+    }
     template<typename TNameType>
-    CSpecReference<CDataSpecTag, DirTag> operator[] (TNameType pa_tName) const {
+    TCSpecReferenceRange addDataRange(const char *pa_sPrefix, int pa_nRangeSize, TNameType pa_xTypeName) {
+      return CDataSpecBuilderBase::addDataRange(pa_sPrefix, pa_nRangeSize, pa_xTypeName);
+    }
+
+    template<typename TNameType>
+    TCSpecReference operator[] (TNameType pa_tName) const {
       return { findData(pa_tName) };
     }
 };
@@ -235,12 +280,16 @@ class CWithSpecBuilderBase {
 template<class DirTag>
 class CWithSpecBuilder : public CWithSpecBuilderBase {
   public:
-    void bind(CSpecReference<CEventSpecTag, DirTag> pa_oEventRef, CSpecReference<CDataSpecTag, DirTag> pa_oDataRef) {
+    using TCSpecEventReference = CSpecReference<CEventSpecTag, DirTag>;
+    using TCSpecDataReference = CSpecReference<CDataSpecTag, DirTag>;
+    using TCSpecDataReferenceRange = CSpecReferenceRange<CDataSpecTag, DirTag>;
+
+    void bind(TCSpecEventReference pa_oEventRef, TCSpecDataReference pa_oDataRef) {
       if (check(pa_oEventRef.isValid() && pa_oDataRef.isValid())) {
         CWithSpecBuilderBase::bind(*pa_oEventRef, *pa_oDataRef);
       }
     }
-    void bind(CSpecReference<CEventSpecTag, DirTag> pa_oEventRef, std::initializer_list<CSpecReference<CDataSpecTag, DirTag>> pa_aoDataRefs) {
+    void bind(TCSpecEventReference pa_oEventRef, std::initializer_list<TCSpecDataReference> pa_aoDataRefs) {
       check(pa_oEventRef.isValid());
       for (auto ref : pa_aoDataRefs) {
         if (!check(ref.isValid()))
@@ -248,9 +297,15 @@ class CWithSpecBuilder : public CWithSpecBuilderBase {
         bind(pa_oEventRef, *ref);
       }
     }
-    void bindRange(CSpecReference<CEventSpecTag, DirTag> pa_oEventRef, CSpecReference<CDataSpecTag, DirTag> pa_oFirstDataRef, CSpecReference<CDataSpecTag, DirTag> pa_oLastDataRef) {
+
+    void bindRange(TCSpecEventReference pa_oEventRef, TCSpecDataReference pa_oFirstDataRef, TCSpecDataReference pa_oLastDataRef) {
       if (check(pa_oEventRef.isValid() && pa_oFirstDataRef.isValid() && pa_oLastDataRef.isValid())) {
         CWithSpecBuilderBase::bindRange(*pa_oEventRef, *pa_oFirstDataRef, *pa_oLastDataRef);
+      }
+    }
+    void bindRange(TCSpecEventReference pa_oEventRef, TCSpecDataReferenceRange pa_oDataRefRange) {
+      if (check(pa_oEventRef.isValid() && pa_oDataRefRange.isValid())) {
+        CWithSpecBuilderBase::bindRange(*pa_oEventRef, *pa_oDataRefRange.m_oFirst, *pa_oDataRefRange.m_oLast);
       }
     }
 };
@@ -275,6 +330,10 @@ class CIfSpecBuilder {
     template<class DirTag>
     void bindRange(CSpecReference<CEventSpecTag, DirTag> pa_oEventRef, CSpecReference<CDataSpecTag, DirTag> pa_oFirstDataRef, CSpecReference<CDataSpecTag, DirTag> pa_oLastDataRef) {
       getWithFromDir(pa_oEventRef).bindRange(pa_oEventRef, pa_oFirstDataRef, pa_oLastDataRef);
+    }
+    template<class DirTag>
+    void bindRange(CSpecReference<CEventSpecTag, DirTag> pa_oEventRef, CSpecReferenceRange<CDataSpecTag, DirTag> pa_oDataRefRange) {
+      getWithFromDir(pa_oEventRef).bindRange(pa_oEventRef, pa_oDataRefRange);
     }
 
     bool build(CMixedStorage &pa_oStorage, SFBInterfaceSpec &pa_oInterfaceSpec);

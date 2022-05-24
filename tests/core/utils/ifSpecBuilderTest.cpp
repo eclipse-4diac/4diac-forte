@@ -23,12 +23,53 @@ using namespace forte::core::util;
 
 
 BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
+  using CSpecEIReference = CSpecReference<CEventSpecTag, CInputSpecTag>;
+  using CSpecEIRefRange = CSpecReferenceRange<CEventSpecTag, CInputSpecTag>;
+
   static constexpr const CStringDictionary::TStringId constStringIdList1[] = {1, 2, 3};
   static constexpr const CStringDictionary::TStringId constStringIdList2[] = {4, 5, 6};
   static constexpr std::array<TDataIOID, 3> staticBindings = {0, 1, 255};
   static constexpr std::array<TForteInt16, 1> staticIndexes = {0};
+
   SFBInterfaceSpec ifspec;
   CMixedStorage storage;
+
+
+  BOOST_AUTO_TEST_CASE(IfSpecBuilder_UninitializedReferenceIsInvalid) {
+    CSpecEIReference uut;
+    BOOST_CHECK(!uut.isValid());
+  }
+
+  BOOST_AUTO_TEST_CASE(IfSpecBuilder_NegativeReferenceIsInvalid) {
+    CSpecEIReference uut{-1};
+    BOOST_CHECK(!uut.isValid());
+  }
+
+  BOOST_AUTO_TEST_CASE(IfSpecBuilder_ReferenceHoldsValue) {
+    CSpecEIReference uut{42};
+    BOOST_CHECK(uut.isValid());
+    BOOST_CHECK_EQUAL(*uut, 42);
+  }
+
+  BOOST_AUTO_TEST_CASE(IfSpecBuilder_RangeReferenceNoHalfValid) {
+    CSpecEIRefRange uut;
+    uut = CSpecEIRefRange{-1, 0};
+    BOOST_CHECK(!uut.isValid());
+    uut = CSpecEIRefRange{0, -1};
+    BOOST_CHECK(!uut.isValid());
+    uut = CSpecEIRefRange{0, 0};
+    BOOST_CHECK(uut.isValid());
+  }
+
+  BOOST_AUTO_TEST_CASE(IfSpecBuilder_PickFromRange) {
+    CSpecEIRefRange uut{1, 3};
+    BOOST_CHECK_EQUAL(*uut[0], 1);
+    BOOST_CHECK_EQUAL(*uut[2], 3);
+    BOOST_CHECK(!uut[-1].isValid());
+    BOOST_CHECK(uut[0].isValid());
+    BOOST_CHECK(uut[2].isValid());
+    BOOST_CHECK(!uut[3].isValid());
+  }
 
   void build(CIfSpecBuilder &uut) {
     memset(&ifspec, 0xCC, sizeof(ifspec));
@@ -111,8 +152,18 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_AddEventsRange) {
     CIfSpecBuilder uut;
-    uut.m_oEI.addEventRange("E", 2);
+    auto range = uut.m_oEI.addEventRange("E", 2);
     test_events(uut, ifspec.m_nNumEIs, ifspec.m_aunEINames);
+    BOOST_CHECK(range.isValid());
+    BOOST_CHECK_EQUAL(*range.m_oFirst, 0);
+    BOOST_CHECK_EQUAL(*range.m_oLast, 1);
+  }
+
+  BOOST_AUTO_TEST_CASE(IfSpecBuilder_AddEventReturningReference) {
+    CIfSpecBuilder uut;
+    BOOST_CHECK_EQUAL(*uut.m_oEI.addEvent("IE0"), 0);
+    BOOST_CHECK_EQUAL(*uut.m_oEI.addEvent("IE1"), 1);
+    BOOST_CHECK_EQUAL(*uut.m_oEO.addEvent("OE0"), 0);
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_DefaultWith) {
@@ -155,8 +206,18 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_AddDataRange) {
     CIfSpecBuilder uut;
-    uut.m_oDI.addDataRange("D", 2);
+    auto range = uut.m_oDI.addDataRange("D", 2);
     test_data(uut, ifspec.m_nNumDIs, ifspec.m_aunDINames, ifspec.m_aunDIDataTypeNames, strid("ANY"));
+    BOOST_CHECK(range.isValid());
+    BOOST_CHECK_EQUAL(*range.m_oFirst, 0);
+    BOOST_CHECK_EQUAL(*range.m_oLast, 1);
+  }
+
+  BOOST_AUTO_TEST_CASE(IfSpecBuilder_AddDataReturningReference) {
+    CIfSpecBuilder uut;
+    BOOST_CHECK_EQUAL(*uut.m_oDI.addData("ID0", 0), 0);
+    BOOST_CHECK_EQUAL(*uut.m_oDI.addData("ID1", 0), 1);
+    BOOST_CHECK_EQUAL(*uut.m_oDO.addData("OD0", 0), 0);
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_SetStaticInputData) {
@@ -244,7 +305,7 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
     test_bind(ifspec.m_anEOWith, ifspec.m_anEOWithIndexes);
   }
 
-  BOOST_AUTO_TEST_CASE(IfSpecBuilder_RangeWith) {
+  BOOST_AUTO_TEST_CASE(IfSpecBuilder_RangeWithExplicit) {
     CIfSpecBuilder uut;
     uut.m_oEO.addEvent("E");
     uut.m_oDO.addDataRange("D", 3);
@@ -252,6 +313,17 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
     build(uut);
     static constexpr std::array<TDataIOID, 4> tw = {0, 1, 2, 255};
     BOOST_CHECK_EQUAL_COLLECTIONS(ifspec.m_anEOWith, ifspec.m_anEOWith + tw.size(), tw.begin(), tw.end());
+  }
+
+  BOOST_AUTO_TEST_CASE(IfSpecBuilder_RangeWithDirect) {
+    CIfSpecBuilder uut;
+    auto eRef = uut.m_oEO.addEvent("E");
+    auto dRange = uut.m_oDO.addDataRange("D", 3);
+    uut.bindRange(eRef, dRange);
+    build(uut);
+    BOOST_CHECK_EQUAL(ifspec.m_anEOWith[0], 0);
+    BOOST_CHECK_EQUAL(ifspec.m_anEOWith[2], 2);
+    BOOST_CHECK_EQUAL(ifspec.m_anEOWith[3], 255);
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_StaticWith) {

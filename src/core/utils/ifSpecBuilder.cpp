@@ -30,9 +30,9 @@ void CStringIdListSpecBuilder::setStaticList(const CStringDictionary::TStringId 
   m_unStaticListSize = (TForteUInt8)pa_nItemsCount;
 }
 
-void CStringIdListSpecBuilder::addString(CStringDictionary::TStringId pa_unString) {
+int CStringIdListSpecBuilder::addString(CStringDictionary::TStringId pa_unString) {
   if (!isGood()) {
-    return;
+    return -1;
   }
   if (m_aunStaticList) {
     m_vDynamicList.insert(m_vDynamicList.end(), m_aunStaticList, m_aunStaticList + m_unStaticListSize);
@@ -40,10 +40,11 @@ void CStringIdListSpecBuilder::addString(CStringDictionary::TStringId pa_unStrin
   m_aunStaticList = nullptr;
   m_unStaticListSize = 0;
   m_vDynamicList.push_back(pa_unString);
+  return (int)m_vDynamicList.size() - 1;
 }
 
-void CStringIdListSpecBuilder::addString(const char *pa_sString) {
-  addString(CStringDictionary::getInstance().insert(pa_sString));
+int CStringIdListSpecBuilder::addString(const char *pa_sString) {
+  return addString(CStringDictionary::getInstance().insert(pa_sString));
 }
 
 int CStringIdListSpecBuilder::findString(const char *pa_sString) const {
@@ -87,34 +88,40 @@ static bool makeName(char *pa_sName, const char *pa_sPrefix, int pa_nNumber) {
   return forte_snprintf(pa_sName, sizeof(TIdentifier), "%s%d", pa_sPrefix, pa_nNumber) < (int)sizeof(TIdentifier);
 }
 
-void CEventSpecBuilderBase::addEventRange(const char *pa_sPrefix, int pa_nRangeSize) {
+std::pair<int, int> CEventSpecBuilderBase::addEventRange(const char *pa_sPrefix, int pa_nRangeSize) {
   TIdentifier name;
+  int firstId = (int)m_oNamesListBuilder.getNumStrings();
+  int lastId = firstId;
   for (int i = 0; i < pa_nRangeSize; ++i) {
     if (!makeName(name, pa_sPrefix, i + 1)) {
       m_bIsGood = false;
       break;
     }
-    addEvent(name);
+    lastId = addEvent(name);
   }
+  return {firstId, lastId};
 }
 
-void CDataSpecBuilderBase::addDataRange(const char *pa_sPrefix, int pa_nRangeSize) {
-  addDataRange(pa_sPrefix, pa_nRangeSize, g_nStringIdANY);
+std::pair<int, int> CDataSpecBuilderBase::addDataRange(const char *pa_sPrefix, int pa_nRangeSize) {
+  return addDataRange(pa_sPrefix, pa_nRangeSize, g_nStringIdANY);
 }
 
-void CDataSpecBuilderBase::addDataRange(const char *pa_sPrefix, int pa_nRangeSize, const char *pa_sTypeName) {
-  addDataRange(pa_sPrefix, pa_nRangeSize, CStringDictionary::getInstance().insert(pa_sTypeName));
+std::pair<int, int> CDataSpecBuilderBase::addDataRange(const char *pa_sPrefix, int pa_nRangeSize, const char *pa_sTypeName) {
+  return addDataRange(pa_sPrefix, pa_nRangeSize, CStringDictionary::getInstance().insert(pa_sTypeName));
 }
 
-void CDataSpecBuilderBase::addDataRange(const char *pa_sPrefix, int pa_nRangeSize, CStringDictionary::TStringId pa_unTypeName) {
+std::pair<int, int> CDataSpecBuilderBase::addDataRange(const char *pa_sPrefix, int pa_nRangeSize, CStringDictionary::TStringId pa_unTypeName) {
   TIdentifier name;
+  int firstId = (int)m_oNamesListBuilder.getNumStrings();
+  int lastId = firstId;
   for (int i = 0; i < pa_nRangeSize; ++i) {
     if (!makeName(name, pa_sPrefix, i + 1)) {
       m_bIsGood = false;
       break;
     }
-    addData(name, pa_unTypeName);
+    lastId = addData(name, pa_unTypeName);
   }
+  return {firstId, lastId};
 }
 
 std::tuple<const CStringDictionary::TStringId*, const CStringDictionary::TStringId*, TForteUInt8>
