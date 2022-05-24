@@ -18,6 +18,7 @@
 #include "GEN_ADD_gen.cpp"
 #endif
 
+#include <ifSpecBuilder.h>
 #include <anyhelper.h>
 #include <ctype.h>
 #include <stdio.h>
@@ -25,25 +26,11 @@
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_ADD, g_nStringIdGEN_ADD)
 
-const CStringDictionary::TStringId GEN_ADD::scm_anDataOutputNames[] = { g_nStringIdOUT };
-
-const CStringDictionary::TStringId GEN_ADD::scm_anDataOutputTypeIds[] = { g_nStringIdANY_MAGNITUDE };
-
-const TForteInt16 GEN_ADD::scm_anEIWithIndexes[] = { 0 };
-const CStringDictionary::TStringId GEN_ADD::scm_anEventInputNames[] = { g_nStringIdREQ };
-
-const TDataIOID GEN_ADD::scm_anEOWith[] = { 0, 255 };
-const TForteInt16 GEN_ADD::scm_anEOWithIndexes[] = { 0, -1 };
-const CStringDictionary::TStringId GEN_ADD::scm_anEventOutputNames[] = { g_nStringIdCNF };
-
 GEN_ADD::GEN_ADD(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(pa_poSrcRes, pa_nInstanceNameId), m_anDataInputNames(nullptr), m_anDataInputTypeIds(nullptr), m_anEIWith(nullptr), m_nDInputs(0){
+    CGenFunctionBlock<CFunctionBlock>(pa_poSrcRes, pa_nInstanceNameId), m_nDInputs(0){
 }
 
 GEN_ADD::~GEN_ADD(){
-  delete[] m_anDataInputNames;
-  delete[] m_anDataInputTypeIds;
-  delete[] m_anEIWith;
 }
 
 void GEN_ADD::executeEvent(int paEIID){
@@ -76,51 +63,21 @@ bool GEN_ADD::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &
 
   //now the number of needed eventInputs and dataOutputs are available in the integer array
   //create the eventInputs
-  if(m_nDInputs < CFunctionBlock::scm_nMaxInterfaceEvents){
 
-    //create the data inputs
-    m_anDataInputNames = new CStringDictionary::TStringId[m_nDInputs];
-    m_anDataInputTypeIds = new CStringDictionary::TStringId[m_nDInputs];
+  static const std::array<CStringDictionary::TStringId, 1>anEventInputNames = { g_nStringIdREQ };
+  static const std::array<CStringDictionary::TStringId, 1>anEventOutputNames = { g_nStringIdCNF };
+  static const std::array<CStringDictionary::TStringId, 1>anDataOutputNames = { g_nStringIdOUT };
+  static const std::array<CStringDictionary::TStringId, 1>anDataOutputTypeIds = { g_nStringIdANY_MAGNITUDE };
+  static constexpr std::array<TDataIOID, 2> anEOWith = { 0, 255 };
+  static constexpr std::array<TForteInt16, 1> anEOWithIndexes = { 0 };
 
-    char diNames[cg_nIdentifierLength] = { "IN" };
+  forte::core::util::CIfSpecBuilder isb;
+  isb.m_oEI.setStaticEvents(anEventInputNames);
+  isb.m_oEO.setStaticEvents(anEventOutputNames);
+  auto DIRange = isb.m_oDI.addDataRange("IN", m_nDInputs, g_nStringIdANY_MAGNITUDE);
+  isb.m_oDO.setStaticData(anDataOutputNames, anDataOutputTypeIds);
+  isb.m_oIWith.bindRange(isb.m_oEI[g_nStringIdREQ], DIRange);
+  isb.m_oOWith.setStaticBindings(anEOWith, anEOWithIndexes);
 
-    for(size_t di = 0; di < m_nDInputs; ++di){
-      forte_snprintf(&(diNames[2]), 5 - 2, "%i", di + 1);
-      m_anDataInputNames[di] = CStringDictionary::getInstance().insert(diNames);
-      m_anDataInputTypeIds[di] = g_nStringIdANY_MAGNITUDE;
-    }
-
-    //now create the WITH constructs...
-    //the With-Indexes for the data variables
-    m_anEIWith = new TDataIOID[m_nDInputs + 1]; //for inputs + '255' separators at the list end
-
-    //in-withs
-    for(size_t in_with = 0; in_with < m_nDInputs + 1; ++in_with){
-      if(in_with == m_nDInputs){
-        //set end separator of with
-        m_anEIWith[in_with] = scmWithListDelimiter;
-      }
-      else{
-        m_anEIWith[in_with] = static_cast<TDataIOID>(in_with);
-      }
-    }
-
-    //set the resulting the interface Specification
-    paInterfaceSpec.m_nNumEIs = 1;
-    paInterfaceSpec.m_aunEINames = scm_anEventInputNames;
-    paInterfaceSpec.m_anEIWith = m_anEIWith;
-    paInterfaceSpec.m_anEIWithIndexes = scm_anEIWithIndexes;
-    paInterfaceSpec.m_nNumEOs = 1;
-    paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
-    paInterfaceSpec.m_anEOWith = scm_anEOWith;
-    paInterfaceSpec.m_anEOWithIndexes = scm_anEOWithIndexes;
-    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(m_nDInputs);
-    paInterfaceSpec.m_aunDINames = m_anDataInputNames;
-    paInterfaceSpec.m_aunDIDataTypeNames = m_anDataInputTypeIds;
-    paInterfaceSpec.m_nNumDOs = 1;
-    paInterfaceSpec.m_aunDONames = scm_anDataOutputNames;
-    paInterfaceSpec.m_aunDODataTypeNames = scm_anDataOutputTypeIds;
-    return true;
-  }
-  return false;
+  return isb.build(m_oIfSpecStorage, paInterfaceSpec);
 }

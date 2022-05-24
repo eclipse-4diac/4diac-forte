@@ -17,23 +17,20 @@
 #define _GEN_ADD_H_
 
 #include <genfb.h>
+#include <mixedStorage.h>
 
 class GEN_ADD : public CGenFunctionBlock<CFunctionBlock> {
   DECLARE_GENERIC_FIRMWARE_FB(GEN_ADD)
 
   private:
-    CStringDictionary::TStringId *m_anDataInputNames;
-    CStringDictionary::TStringId *m_anDataInputTypeIds;
+    forte::core::util::CMixedStorage m_oIfSpecStorage;
 
-    static const CStringDictionary::TStringId scm_anDataOutputNames[];
-    static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
     CIEC_ANY_MAGNITUDE& st_OUT() {
       return *static_cast<CIEC_ANY_MAGNITUDE*>(getDO(0));
     }
 
     static const TEventID scm_nEventREQID = 0;
     static const TForteInt16 scm_anEIWithIndexes[];
-    TDataIOID *m_anEIWith;
     static const CStringDictionary::TStringId scm_anEventInputNames[];
 
     static const TEventID scm_nEventCNFID = 0;
