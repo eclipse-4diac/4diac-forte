@@ -80,7 +80,7 @@ void FORTE_E_STOPWATCH::executeEvent(int pa_nEIID) {
           bTransitionCleared = false; //no transition cleared
         break;
       case scm_nStateSTOP:
-        if(1)
+        if(true)
           enterStateSTART();
         else
           bTransitionCleared = false; //no transition cleared

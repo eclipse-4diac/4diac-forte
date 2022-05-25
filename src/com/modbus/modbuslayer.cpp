@@ -609,7 +609,7 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
     ++chrStorage;
 
     pa_pCommonParams->m_nByteTimeout = (unsigned int) forte::core::util::strtoul(chrStorage, nullptr, 10);
-  } while(0);
+  } while(false);
 
   if(nrPolls == 0 && nrSends == 0){
     delete[] paramsAddress;

@@ -153,7 +153,7 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
     //return with error if there are not enough event inputs (use common merge FB instead!!)
     if(mEInputs < 2){
       DEVLOG_ERROR("At least 2 Event Inputs need to be set\n");
-      return 0;
+      return false;
     }
   }
 

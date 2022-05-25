@@ -22,7 +22,7 @@
 #include "../arch/devlog.h"
 
 CEventChainExecutionThread::CEventChainExecutionThread() :
-    CThread(), mSuspendSemaphore(0), mProcessingEvents(false){
+    CThread(), mSuspendSemaphore(false), mProcessingEvents(false){
   clear();
 }
 

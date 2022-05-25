@@ -108,25 +108,25 @@ void FORTE_E_CTUD::executeEvent(int pa_nEIID) {
           bTransitionCleared = false; //no transition cleared
         break;
       case scm_nStateCU:
-        if(1)
+        if(true)
           enterStateSTART();
         else
           bTransitionCleared = false; //no transition cleared
         break;
       case scm_nStateR:
-        if(1)
+        if(true)
           enterStateSTART();
         else
           bTransitionCleared = false; //no transition cleared
         break;
       case scm_nStateCD:
-        if(1)
+        if(true)
           enterStateSTART();
         else
           bTransitionCleared = false; //no transition cleared
         break;
       case scm_nStateLD:
-        if(1)
+        if(true)
           enterStateSTART();
         else
           bTransitionCleared = false; //no transition cleared

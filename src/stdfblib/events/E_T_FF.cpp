@@ -56,7 +56,7 @@ void FORTE_E_T_FF::executeEvent(int pa_nEIID) {
           bTransitionCleared = false; //no transition cleared
         break;
       case scm_nStateSET:
-        if((1))
+        if((true))
           enterStateSTART();
         else
           bTransitionCleared = false; //no transition cleared

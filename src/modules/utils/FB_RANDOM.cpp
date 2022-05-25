@@ -93,13 +93,13 @@ void FORTE_FB_RANDOM::executeEvent(int pa_nEIID){
           bTransitionCleared  = false; //no transition cleared
         break;
       case scm_nStateREQ:
-        if(1)
+        if(true)
           enterStateSTART();
         else
           bTransitionCleared  = false; //no transition cleared
         break;
       case scm_nStateState:
-        if(1)
+        if(true)
           enterStateSTART();
         else
           bTransitionCleared  = false; //no transition cleared
