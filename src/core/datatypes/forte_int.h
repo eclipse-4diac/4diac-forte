@@ -76,7 +76,7 @@ class CIEC_INT : public CIEC_ANY_INT{
     }
 
     CIEC_INT operator-() const {
-      return CIEC_INT(-1 * *this);
+      return CIEC_INT(static_cast<TForteInt16>(-1 * *this));
     }
 
     /*! \brief Converts CIEC_INT to elementary 16 bit integer

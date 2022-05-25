@@ -52,7 +52,7 @@ class CIEC_SINT : public CIEC_ANY_INT{
     }
 
     CIEC_SINT operator-() const {
-      return CIEC_SINT(-1 * *this);
+      return CIEC_SINT(static_cast<TForteInt8>(-1 * *this));
     }
 
     /*! \brief Converts CIEC_SINT to elementary 8 bit integer
