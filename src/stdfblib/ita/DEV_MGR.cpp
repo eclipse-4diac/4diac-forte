@@ -81,7 +81,7 @@ void DEV_MGR::executeEvent(int paEIID){
   }
 }
 
-void DEV_MGR::executeRQST(void){
+void DEV_MGR::executeRQST(){
   mCommand.mAdditionalParams.clear();
   EMGMResponse resp = parseAndExecuteMGMCommand(DST().getValue(), RQST().getValue());
 

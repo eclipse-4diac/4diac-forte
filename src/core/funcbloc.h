@@ -129,21 +129,21 @@ class CFunctionBlock {
 
     /*!\brief Get the resource the function block is contained in.
      */
-    CResource& getResource(void) {
+    CResource& getResource() {
       return *m_poResource;
     }
 
-    CResource* getResourcePtr(void) {
+    CResource* getResourcePtr() {
       return m_poResource;
     }
 
     /*!\brief Get the timer of the device wher the FB is contained.
      */
-    CTimerHandler& getTimer(void);
+    CTimerHandler& getTimer();
 
     /*!\brief Returns the type of this FB instance
      */
-    virtual CStringDictionary::TStringId getFBTypeId(void) const = 0;
+    virtual CStringDictionary::TStringId getFBTypeId() const = 0;
     /*!\brief Get the ID of a specific event input of the FB.
      *
      * \param pa_unEINameId   StringId to the event input name.
@@ -268,12 +268,12 @@ class CFunctionBlock {
 
     /*!\brief Get/set the instance name
      */
-    CStringDictionary::TStringId getInstanceNameId(void) const {
+    CStringDictionary::TStringId getInstanceNameId() const {
       return m_nFBInstanceName;
     }
     ;
 
-    const char* getInstanceName(void) const {
+    const char* getInstanceName() const {
       return CStringDictionary::getInstance().get(m_nFBInstanceName);
     }
 
@@ -284,7 +284,7 @@ class CFunctionBlock {
     /*!\brief Get information if the runable object is deletable by a management command.
      *
      */
-    bool getDeletable(void) const {
+    bool getDeletable() const {
       return m_bDeletable;
     }
     ;
@@ -301,13 +301,13 @@ class CFunctionBlock {
      * According to IEC 61499-1 Figure 24 an FB is deleteable if it is not in the Running state
      * \return true if currently all conditions are met to be deleteable
      */
-    bool isCurrentlyDeleteable(void) const {
+    bool isCurrentlyDeleteable() const {
       return ((m_bDeletable) && (m_enFBState != e_RUNNING));
     }
 
     /*!\brief return the current execution state of the managed object
      */
-    E_FBStates getState(void) const {
+    E_FBStates getState() const {
       return m_enFBState;
     }
 

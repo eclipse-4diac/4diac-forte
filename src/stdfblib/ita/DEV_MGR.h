@@ -66,7 +66,7 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
     //! The device the block is contained in
     CDevice &m_poDevice;
 
-    void executeRQST(void);
+    void executeRQST();
     /*! \brief Parse the given request header to determine the ID and the requested command
      *
      * \param paRequestString data of the request

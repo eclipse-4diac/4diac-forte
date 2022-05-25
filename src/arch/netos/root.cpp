@@ -53,7 +53,7 @@ int APP_BURN_IN_TEST = 0;
  *      none
  */
 extern "C"
-void applicationTcpDown(void) {
+void applicationTcpDown() {
   static int ticksPassed = 0;
   ticksPassed++;
 }

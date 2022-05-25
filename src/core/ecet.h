@@ -87,11 +87,11 @@ class CEventChainExecutionThread : public CThread{
      * active EventChainExecutionlist in CFBNExecution.
      * \return true if thread execution ended successfully
      */
-    virtual void run(void);
+    virtual void run();
 
     /*! \brief Clear the event chain.
      */
-    void clear(void);
+    void clear();
 
     bool externalEventOccured() const {
       /* we should not need a protection here as we are just comparing the both

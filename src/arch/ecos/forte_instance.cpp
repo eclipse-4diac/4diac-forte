@@ -32,11 +32,11 @@ bool checkEndianess();
 
 void createDev(const char *paMGRID, TForteInstance* paResultDevice);
 
-void forteGlobalInitialize(void){
+void forteGlobalInitialize(){
   CForteArchitecture::initialize();
 }
 
-void forteGlobalDeinitialize(void){
+void forteGlobalDeinitialize(){
   CForteArchitecture::deinitialize();
 }
 

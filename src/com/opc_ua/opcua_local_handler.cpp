@@ -60,11 +60,11 @@ COPC_UA_Local_Handler::~COPC_UA_Local_Handler() {
 #endif //FORTE_COM_OPC_UA_MULTICAST
 }
 
-void COPC_UA_Local_Handler::enableHandler(void) {
+void COPC_UA_Local_Handler::enableHandler() {
   startServer();
 }
 
-void COPC_UA_Local_Handler::disableHandler(void) {
+void COPC_UA_Local_Handler::disableHandler() {
   stopServer();
 }
 

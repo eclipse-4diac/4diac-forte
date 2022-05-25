@@ -48,11 +48,11 @@ void CExternTimerHandler::externNextTick(){
   }
 }
 
-void CExternTimerHandler::enableHandler(void){
+void CExternTimerHandler::enableHandler(){
   //TODO think on hwo to handle this.
 }
 
-void CExternTimerHandler::disableHandler(void){
+void CExternTimerHandler::disableHandler(){
   //TODO think on hwo to handle this.
 }
 
@@ -60,7 +60,7 @@ void CExternTimerHandler::setPriority(int pa_nPriority){
   //TODO think on hwo to handle this.
 }
 
-int CExternTimerHandler::getPriority(void) const{
+int CExternTimerHandler::getPriority() const{
   //TODO think on hwo to handle this.
   return 1;
 }

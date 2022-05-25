@@ -41,11 +41,11 @@ class CFDSelectHandler : public CExternalEventHandler, private CThread {
     void removeComCallback(TFileDescriptor paFD);
 
     /* functions needed for the external event handler interface */
-    void enableHandler(void){
+    void enableHandler(){
       start();
     }
 
-    void disableHandler(void){
+    void disableHandler(){
       end();
     }
 
@@ -54,13 +54,13 @@ class CFDSelectHandler : public CExternalEventHandler, private CThread {
       //TODO We should adjust the thread priority.
     }
 
-    int getPriority(void) const {
+    int getPriority() const {
       //the same as for setPriority
       return 0;
     }
 
   protected:
-    virtual void run(void);
+    virtual void run();
 
   private:
     struct TConnContType{

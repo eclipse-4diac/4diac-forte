@@ -67,7 +67,7 @@ class CEplStackWrapper{
 
     int eplStackInit(char* pa_chXmlFile, char* pa_chCdcFile, char* pa_chEthDeviceName);
 
-    int eplStackShutdown(void);
+    int eplStackShutdown();
 
     CProcessImageMatrix* getProcessImageMatrixIn();
     CProcessImageMatrix* getProcessImageMatrixOut();

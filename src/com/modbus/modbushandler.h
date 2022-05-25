@@ -23,10 +23,10 @@ class CModbusHandler : public CExternalEventHandler{
   public:
     typedef int TCallbackDescriptor;
 
-    void enableHandler(void){
+    void enableHandler(){
     }
     ;
-    void disableHandler(void){
+    void disableHandler(){
     }
     ;
 
@@ -35,7 +35,7 @@ class CModbusHandler : public CExternalEventHandler{
       //TODO We should adjust the thread priority.
     }
 
-    int getPriority(void) const{
+    int getPriority() const{
       //the same as for setPriority
       return 0;
     }

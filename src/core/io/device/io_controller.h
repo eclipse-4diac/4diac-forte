@@ -215,16 +215,16 @@ namespace forte {
           void addHandle(THandleList* paList, CIEC_WSTRING const &paId, IOHandle* paHandle);
 
           // Functions needed for the external event handler interface
-          void enableHandler(void) {
+          void enableHandler() {
             //do nothing
           }
-          void disableHandler(void) {
+          void disableHandler() {
             //do nothing
           }
           void setPriority(int) {
             //do nothing
           }
-          int getPriority(void) const {
+          int getPriority() const {
             return 0;
           }
       };

@@ -35,7 +35,7 @@ CTXTimerHandler::~CTXTimerHandler(){
   tx_timer_delete(&m_stTimer);
 }
 
-void CTXTimerHandler::enableHandler(void){
+void CTXTimerHandler::enableHandler(){
   UINT status = tx_timer_activate(&m_stTimer);
   if (status == TX_SUCCESS)
     DEVLOG_DEBUG("Timer activated\n");
@@ -45,7 +45,7 @@ void CTXTimerHandler::enableHandler(void){
   //TODO handle retval
 }
 
-void CTXTimerHandler::disableHandler(void){
+void CTXTimerHandler::disableHandler(){
   tx_timer_deactivate(&m_stTimer);
   //TODO handle retval
 }
@@ -53,6 +53,6 @@ void CTXTimerHandler::disableHandler(void){
 void CTXTimerHandler::setPriority(int pa_nPriority){
 }
 
-int CTXTimerHandler::getPriority(void) const {
+int CTXTimerHandler::getPriority() const {
   return 0;
 }

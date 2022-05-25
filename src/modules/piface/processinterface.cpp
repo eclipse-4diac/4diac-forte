@@ -151,16 +151,16 @@ void CPiFaceProcessInterface::CPiFaceIOHandler::updateWriteData(bool paValue, in
   }
 }
 
-void CPiFaceProcessInterface::CPiFaceIOHandler::enableHandler(void){
+void CPiFaceProcessInterface::CPiFaceIOHandler::enableHandler(){
 }
 
-void CPiFaceProcessInterface::CPiFaceIOHandler::disableHandler(void){
+void CPiFaceProcessInterface::CPiFaceIOHandler::disableHandler(){
 }
 
 void CPiFaceProcessInterface::CPiFaceIOHandler::setPriority(int){
 }
 
-int CPiFaceProcessInterface::CPiFaceIOHandler::getPriority(void) const{
+int CPiFaceProcessInterface::CPiFaceIOHandler::getPriority() const{
   return 0;
 }
 

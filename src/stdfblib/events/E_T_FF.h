@@ -37,12 +37,12 @@ private:
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
    FORTE_BASIC_FB_DATA_ARRAY(1, 0, 1, 0, 0);
-  void alg_TOGGLE(void);
+  void alg_TOGGLE();
   static const TForteInt16 scm_nStateSTART = 0;
   static const TForteInt16 scm_nStateSET = 1;
 
-  void enterStateSTART(void);
-  void enterStateSET(void);
+  void enterStateSTART();
+  void enterStateSET();
 
   virtual void executeEvent(int pa_nEIID);
 

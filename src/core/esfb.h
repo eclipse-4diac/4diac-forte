@@ -36,9 +36,9 @@ public:
   }
   virtual ~CEventSourceFB() {};
   void setEventChainExecutor(CEventChainExecutionThread *pa_poEventChainExecutor) { m_poEventChainExecutor = pa_poEventChainExecutor; };
-  CEventChainExecutionThread * getEventChainExecutor(void) { return m_poEventChainExecutor; };
+  CEventChainExecutionThread * getEventChainExecutor() { return m_poEventChainExecutor; };
 
-  SEventEntry *getEventSourceEventEntry(void) { return &mEventSourceEventEntry; };
+  SEventEntry *getEventSourceEventEntry() { return &mEventSourceEventEntry; };
 };
 
 #define EVENT_SOURCE_FUNCTION_BLOCK_CTOR(fbclass) \

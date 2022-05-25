@@ -17,7 +17,7 @@
 /*!\brief Lists the help for FORTE
  *
  */
-void listHelp(void);
+void listHelp();
 
 /*!\brief Parses the command line arguments passed to the main function
  *

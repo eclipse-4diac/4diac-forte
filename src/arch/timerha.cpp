@@ -98,7 +98,7 @@ void CTimerHandler::removeTimedFB(CEventSourceFB *paTimedFB) {
   }
 }
 
-void CTimerHandler::nextTick(void) {
+void CTimerHandler::nextTick() {
   ++mForteTime;
   mDeviceExecution.notifyTime(mForteTime); //notify the device execution that one tick passed by.
 

@@ -32,11 +32,11 @@ CPCSyncObject::~CPCSyncObject(){
   //we don't need to do anything here
 }
 
-void CPCSyncObject::lock(void){
+void CPCSyncObject::lock(){
   AcquireSRWLockExclusive(&mLock);
 }
 
 //!Free the resource coming after the lock command
-void CPCSyncObject::unlock(void){
+void CPCSyncObject::unlock(){
   ReleaseSRWLockExclusive(&mLock);
 }

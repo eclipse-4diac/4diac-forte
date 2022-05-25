@@ -20,7 +20,7 @@ class CFunctionBlockMock : public CFunctionBlock{
       changeFBExecutionState(cg_nMGM_CMD_Reset);
     }
 
-    virtual CStringDictionary::TStringId getFBTypeId(void) const{
+    virtual CStringDictionary::TStringId getFBTypeId() const{
       return CStringDictionary::scm_nInvalidStringId;
     }
 

@@ -53,7 +53,7 @@ void FORTE_ST_SET_PARM::executeEvent(int pa_nEIID) {
   }
 }
 
-void FORTE_ST_SET_PARM::executeRQST(void) {
+void FORTE_ST_SET_PARM::executeRQST() {
   forte::core::SManagementCMD theCommand;
   theCommand.mDestination = CStringDictionary::getInstance().getId(DST().getValue());
   theCommand.mFirstParam.pushBack(CStringDictionary::getInstance().getId(ELEM_NAME().getValue()));

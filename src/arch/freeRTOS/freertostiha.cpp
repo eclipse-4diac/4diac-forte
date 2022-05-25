@@ -27,11 +27,11 @@ CFreeRTOSTimerHandler::~CFreeRTOSTimerHandler() {
   xTimerDelete(mTimer, 0);
 }
 
-void CFreeRTOSTimerHandler::enableHandler(void) {
+void CFreeRTOSTimerHandler::enableHandler() {
   xTimerStart(mTimer, 0);
 }
 
-void CFreeRTOSTimerHandler::disableHandler(void) {
+void CFreeRTOSTimerHandler::disableHandler() {
   xTimerStop(mTimer, 0);
 }
 
@@ -39,7 +39,7 @@ void CFreeRTOSTimerHandler::setPriority(int paPriority) {
 
 }
 
-int CFreeRTOSTimerHandler::getPriority(void) const {
+int CFreeRTOSTimerHandler::getPriority() const {
   return 1;
 }
 

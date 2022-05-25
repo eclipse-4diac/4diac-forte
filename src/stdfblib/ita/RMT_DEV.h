@@ -34,7 +34,7 @@ public:
  *
  * This is that it waits till the thread of the MGR resource has anded
  */
-  virtual int startDevice(void);
+  virtual int startDevice();
 
   virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
 

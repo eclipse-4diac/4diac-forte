@@ -297,15 +297,15 @@ void WagoPFCProcessInterface::CKBusHandler::closeKBusInterface() {
   }
 }
 
-void WagoPFCProcessInterface::CKBusHandler::enableHandler(void) {
+void WagoPFCProcessInterface::CKBusHandler::enableHandler() {
 }
 
-void WagoPFCProcessInterface::CKBusHandler::disableHandler(void) {
+void WagoPFCProcessInterface::CKBusHandler::disableHandler() {
 }
 
 void WagoPFCProcessInterface::CKBusHandler::setPriority(int) {
 }
 
-int WagoPFCProcessInterface::CKBusHandler::getPriority(void) const {
+int WagoPFCProcessInterface::CKBusHandler::getPriority() const {
   return 0;
 }

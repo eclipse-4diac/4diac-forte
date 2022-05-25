@@ -16,7 +16,7 @@ CCmd_AddOPCProcessVar::CCmd_AddOPCProcessVar(COpcConnectionImpl *pa_pConnection,
     m_pOpcConn(pa_pConnection), m_pNewProcessVar(pa_pNewItem){
 }
 
-CCmd_AddOPCProcessVar::~CCmd_AddOPCProcessVar(void){
+CCmd_AddOPCProcessVar::~CCmd_AddOPCProcessVar(){
 }
 
 void CCmd_AddOPCProcessVar::runCommand(){

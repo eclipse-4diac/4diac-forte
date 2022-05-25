@@ -40,7 +40,7 @@ const SFBInterfaceSpec FORTE_FieldsToServiceRequestForm::scm_stFBInterfaceSpec =
   0, 0
 };
 
-void FORTE_FieldsToServiceRequestForm::alg_REQ(void){
+void FORTE_FieldsToServiceRequestForm::alg_REQ(){
 CIEC_INT i;
 ;
 
@@ -67,11 +67,11 @@ i = i+1;
 }
 
 
-void FORTE_FieldsToServiceRequestForm::enterStateSTART(void){
+void FORTE_FieldsToServiceRequestForm::enterStateSTART(){
   m_nECCState = scm_nStateSTART;
 }
 
-void FORTE_FieldsToServiceRequestForm::enterStateREQ(void){
+void FORTE_FieldsToServiceRequestForm::enterStateREQ(){
   m_nECCState = scm_nStateREQ;
   alg_REQ();
   sendOutputEvent( scm_nEventCNFID);

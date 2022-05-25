@@ -27,10 +27,10 @@ class CECOSTimerHandler : public CTimerHandler, private CThread{
     /*!\brief Enables this event source
      *
      */
-    virtual void enableHandler(void);
+    virtual void enableHandler();
     /*!\brief Disable this event source
      */
-    virtual void disableHandler(void);
+    virtual void disableHandler();
     /*!\brief Sets the priority of the event source
      *
      * \param pa_nPriority new priority of the event source
@@ -40,7 +40,7 @@ class CECOSTimerHandler : public CTimerHandler, private CThread{
      *
      * \return current priority
      */
-    virtual int getPriority(void) const;
+    virtual int getPriority() const;
 
   private:
 
@@ -53,7 +53,7 @@ class CECOSTimerHandler : public CTimerHandler, private CThread{
     }
 
     explicit CECOSTimerHandler(CDeviceExecution& pa_poDeviceExecution);
-    virtual void run(void);
+    virtual void run();
 
     cyg_handle_t m_stAlarmHandle;
     cyg_handle_t m_stCounterHandle, m_stSystemclockHandle;

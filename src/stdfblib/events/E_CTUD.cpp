@@ -37,53 +37,53 @@ const CStringDictionary::TStringId FORTE_E_CTUD::scm_anEventOutputNames[] = { g_
 const SFBInterfaceSpec FORTE_E_CTUD::scm_stFBInterfaceSpec = { 4, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 3, scm_anEventOutputNames,
   scm_anEOWith, scm_anEOWithIndexes, 1, scm_anDataInputNames, scm_anDataInputTypeIds, 3, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, nullptr };
 
-void FORTE_E_CTUD::alg_CountUp(void) {
+void FORTE_E_CTUD::alg_CountUp() {
   CV() = func_ADD(CV(), CIEC_UINT(1));
 }
 
-void FORTE_E_CTUD::alg_Reset(void) {
+void FORTE_E_CTUD::alg_Reset() {
   CV() = CIEC_UINT(0);
 }
 
-void FORTE_E_CTUD::alg_Load(void) {
+void FORTE_E_CTUD::alg_Load() {
   CV() = PV();
 }
 
-void FORTE_E_CTUD::alg_UpdateQUQD(void) {
+void FORTE_E_CTUD::alg_UpdateQUQD() {
   QU() = func_GE(CV(), PV());
   QD() = func_EQ(CV(), CIEC_UINT(0));
 }
 
-void FORTE_E_CTUD::alg_CountDown(void) {
+void FORTE_E_CTUD::alg_CountDown() {
   CV() = func_SUB(CV(), CIEC_UINT(1));
 }
 
-void FORTE_E_CTUD::enterStateSTART(void) {
+void FORTE_E_CTUD::enterStateSTART() {
   m_nECCState = scm_nStateSTART;
 }
 
-void FORTE_E_CTUD::enterStateCU(void) {
+void FORTE_E_CTUD::enterStateCU() {
   m_nECCState = scm_nStateCU;
   alg_CountUp();
   alg_UpdateQUQD();
   sendOutputEvent(scm_nEventCOID);
 }
 
-void FORTE_E_CTUD::enterStateR(void) {
+void FORTE_E_CTUD::enterStateR() {
   m_nECCState = scm_nStateR;
   alg_Reset();
   alg_UpdateQUQD();
   sendOutputEvent(scm_nEventROID);
 }
 
-void FORTE_E_CTUD::enterStateCD(void) {
+void FORTE_E_CTUD::enterStateCD() {
   m_nECCState = scm_nStateCD;
   alg_CountDown();
   alg_UpdateQUQD();
   sendOutputEvent(scm_nEventCOID);
 }
 
-void FORTE_E_CTUD::enterStateLD(void) {
+void FORTE_E_CTUD::enterStateLD() {
   m_nECCState = scm_nStateLD;
   alg_Load();
   alg_UpdateQUQD();

@@ -50,15 +50,15 @@ private:
    FORTE_BASIC_FB_DATA_ARRAY(2, 1, 1, 0, 0);
 
 virtual void setInitialValues();
-  void alg_INIT(void);
-  void alg_REQ(void);
+  void alg_INIT();
+  void alg_REQ();
   static const TForteInt16 scm_nStateSTART = 0;
   static const TForteInt16 scm_nStateREQ = 1;
   static const TForteInt16 scm_nStateState = 2;
 
-  void enterStateSTART(void);
-  void enterStateREQ(void);
-  void enterStateState(void);
+  void enterStateSTART();
+  void enterStateREQ();
+  void enterStateState();
 
   virtual void executeEvent(int pa_nEIID);
 

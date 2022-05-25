@@ -57,16 +57,16 @@ static const SInternalVarsInformation scm_stInternalVars;
   }
   
 
-  void alg_captureStartTime(void);
-  void alg_calcDiff(void);
+  void alg_captureStartTime();
+  void alg_calcDiff();
 
   static const TForteInt16 scm_nStateSTART = 0;
   static const TForteInt16 scm_nStateMeasure = 1;
   static const TForteInt16 scm_nStateSTOP = 2;
   
-  void enterStateSTART(void);
-  void enterStateMeasure(void);
-  void enterStateSTOP(void);
+  void enterStateSTART();
+  void enterStateMeasure();
+  void enterStateSTOP();
 
   virtual void executeEvent(int pa_nEIID);
 

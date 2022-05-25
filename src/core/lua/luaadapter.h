@@ -23,7 +23,7 @@ class CLuaAdapter : public CAdapter {
         TForteByte *paVarsData, CResource *paResource);
     virtual ~CLuaAdapter();
 
-    virtual CStringDictionary::TStringId getFBTypeId(void) const {
+    virtual CStringDictionary::TStringId getFBTypeId() const {
       return mTypeEntry->getTypeNameId();
     }
 

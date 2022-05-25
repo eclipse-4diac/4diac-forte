@@ -53,7 +53,7 @@ class CDevice : public CResource {
     }
 
 
-    virtual CStringDictionary::TStringId getFBTypeId(void) const {
+    virtual CStringDictionary::TStringId getFBTypeId() const {
       return CStringDictionary::scm_nInvalidStringId;
     }
 
@@ -65,7 +65,7 @@ class CDevice : public CResource {
      *  finishes its execution.
      *  \return 0 on success -1 on error
      */
-    virtual int startDevice(void) {
+    virtual int startDevice() {
       changeFBExecutionState(cg_nMGM_CMD_Start);
       return 1;
     }
@@ -82,7 +82,7 @@ class CDevice : public CResource {
     virtual EMGMResponse changeFBExecutionState(EMGMCommandType paCommand);
 
     //! Retrieve the device execution of this device
-    CDeviceExecution &getDeviceExecution(void) {
+    CDeviceExecution &getDeviceExecution() {
       return mDeviceExecution;
     }
 

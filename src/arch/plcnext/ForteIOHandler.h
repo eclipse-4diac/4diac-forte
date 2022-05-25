@@ -25,11 +25,11 @@ namespace ForteLibrary {
       public:
         explicit ForteIOHandler(const String& paName);
         ForteIOHandler(const ForteIOHandler& paArg) = delete;
-        virtual ~ForteIOHandler(void) = default;
+        virtual ~ForteIOHandler() = default;
 
         ForteIOHandler& operator=(const ForteIOHandler& paArg) = delete;
 
-        void Execute(void)override;
+        void Execute() override;
 
     };
   } // end of namespace ForteComponent

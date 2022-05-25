@@ -66,12 +66,12 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 
     /*! \brief Get the device the resource is contained in
      */
-    CDevice &getDevice(void){
+    CDevice &getDevice(){
       return (CDevice &) getResource();
     }
     ;
 
-    CEventChainExecutionThread *getResourceEventExecution(void) const{
+    CEventChainExecutionThread *getResourceEventExecution() const{
       return mResourceEventExecution;
     };
 

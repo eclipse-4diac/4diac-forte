@@ -40,7 +40,7 @@ void CrcXTimerHandler::timerCallback(void* arguments){
   }
 }
 
-void CrcXTimerHandler::enableHandler(void){
+void CrcXTimerHandler::enableHandler(){
   if (mFirstTime){
     rX_TimCreateTimer(mTimer, timerCallback, (void*) this, RX_TIM_AUTO_RELOAD, (1000000 / rX_SysGetSystemCycletime()) / getTicksPerSecond(),
             (1000000 / rX_SysGetSystemCycletime()) / getTicksPerSecond());
@@ -50,7 +50,7 @@ void CrcXTimerHandler::enableHandler(void){
   }
 }
 
-void CrcXTimerHandler::disableHandler(void){
+void CrcXTimerHandler::disableHandler(){
   rX_TimStopTimer(mTimer);
 }
 
@@ -58,7 +58,7 @@ void CrcXTimerHandler::setPriority(int ){
   //TODO think on how to handle this.
 }
 
-int CrcXTimerHandler::getPriority(void) const {
+int CrcXTimerHandler::getPriority() const {
   //TODO think on how to handle this.
   return 1;
 }

@@ -57,7 +57,7 @@ void FORTE_ST_CREATE_CONN::executeEvent(int pa_nEIID){
 }
 
 
-void FORTE_ST_CREATE_CONN::executeRQST(void){
+void FORTE_ST_CREATE_CONN::executeRQST(){
   forte::core::SManagementCMD theCommand;
   
   theCommand.mDestination = CStringDictionary::getInstance().getId(DST().getValue());

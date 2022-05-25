@@ -33,9 +33,9 @@ class fmuInstance : public CDevice{
     void printToFile(const char* message);
 #endif
 
-    void startInstance(void);
-    void resetInstance(void);
-    void stopInstance(void);
+    void startInstance();
+    void resetInstance();
+    void stopInstance();
     bool loadFBs();
 
     static fmuInstance* sFmuInstance;

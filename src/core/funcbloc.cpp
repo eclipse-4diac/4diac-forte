@@ -87,7 +87,7 @@ void CFunctionBlock::setupAdapters(const SFBInterfaceSpec *pa_pstInterfaceSpec, 
   }
 }
 
-CTimerHandler& CFunctionBlock::getTimer(void){
+CTimerHandler& CFunctionBlock::getTimer(){
   return m_poResource->getDevice().getTimer();
 }
 

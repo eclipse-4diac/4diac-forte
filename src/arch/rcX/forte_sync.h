@@ -30,13 +30,13 @@ class CrcXSyncObject{
      *
      * This function blocks until it will get the lock for the coming critical section.
      */
-    void lock(void){
+    void lock(){
       rX_MtxLockMutex(mMutexHandle, RX_INFINITE);
       //TODO handle return value
     }
 
     //!Free the resource coming after the lock command
-    void unlock(void){
+    void unlock(){
       rX_MtxUnlockMutex(mMutexHandle);
       //TODO handle return value
     }

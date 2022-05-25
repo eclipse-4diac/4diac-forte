@@ -62,11 +62,11 @@ void CPCTimerHandler::run(){
   } 
 }
 
-void CPCTimerHandler::enableHandler(void){
+void CPCTimerHandler::enableHandler(){
   start();
 }
 
-void CPCTimerHandler::disableHandler(void){
+void CPCTimerHandler::disableHandler(){
   end(); 
 }
 
@@ -74,7 +74,7 @@ void CPCTimerHandler::setPriority(int ){
   //TODO think on hwo to handle this.
 }
 
-int CPCTimerHandler::getPriority(void) const {
+int CPCTimerHandler::getPriority() const {
   //TODO think on hwo to handle this.
   return 1;
 }

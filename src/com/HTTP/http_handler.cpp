@@ -49,11 +49,11 @@ CHTTP_Handler::~CHTTP_Handler() {
   clearAcceptedSockets();
 }
 
-void CHTTP_Handler::enableHandler(void) {
+void CHTTP_Handler::enableHandler() {
   startTimeoutThread();
 }
 
-void CHTTP_Handler::disableHandler(void) {
+void CHTTP_Handler::disableHandler() {
   stopTimeoutThread();
 }
 
@@ -91,7 +91,7 @@ void CHTTP_Handler::setPriority(int) {
   //currently we are doing nothing here.
 }
 
-int CHTTP_Handler::getPriority(void) const {
+int CHTTP_Handler::getPriority() const {
   //the same as for setPriority
   return 0;
 }

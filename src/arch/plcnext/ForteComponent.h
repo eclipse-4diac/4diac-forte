@@ -31,20 +31,20 @@ namespace ForteLibrary{
       static IComponent::Ptr Create(IApplication& paApplication, const String& paComponentName);
 
       ForteComponent(IApplication& paApplication, const String& paName);
-      virtual ~ForteComponent(void) = default;
+      virtual ~ForteComponent() = default;
 
-      void Initialize(void)override;
-      void LoadSettings(const String& paSettingsPath)override;
-      void SetupSettings(void)override;
-      void SubscribeServices(void)override;
-      void LoadConfig(void)override;
-      void SetupConfig(void)override;
-      void ResetConfig(void)override;
-      void PublishServices(void)override;
-      void Dispose(void)override;
-      void PowerDown(void)override;
+      void Initialize() override;
+      void LoadSettings(const String& paSettingsPath) override;
+      void SetupSettings() override;
+      void SubscribeServices() override;
+      void LoadConfig() override;
+      void SetupConfig() override;
+      void ResetConfig() override;
+      void PublishServices() override;
+      void Dispose() override;
+      void PowerDown() override;
 
-      IProgramProvider* GetProgramProvider(void)override;
+      IProgramProvider* GetProgramProvider() override;
 
     private:
         ForteComponent(const ForteComponent& paArg) = delete;

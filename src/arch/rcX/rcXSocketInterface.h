@@ -107,11 +107,11 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
     void removeComCallback(TSocketDescriptor pa_nFD);
 
     /* functions needed for the external event handler interface */
-    void enableHandler(void){
+    void enableHandler(){
       start();
     }
 
-    void disableHandler(void){
+    void disableHandler(){
       end();
     }
 
@@ -120,13 +120,13 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
       //TODO We should adjust the thread priority.
     }
 
-    int getPriority(void) const{
+    int getPriority() const{
       //the same as for setPriority
       return 0;
     }
 
   protected:
-     virtual void run(void);
+     virtual void run();
 
   private:
 
@@ -173,9 +173,9 @@ class CrcXSocketInterface : public CExternalEventHandler, private CThread{
     RX_RESULT waitPacket(UINT32 pa_command, FORTE_TCP_PACKET_T** pa_packetResult, UINT pa_timeout);
     void managePacketsDefault(FORTE_TCP_PACKET_T* pa_packetResult);
     UINT32 getSocketIDFromPacket(FORTE_TCP_PACKET_T* pa_packet);
-    bool isInitialized(void);
+    bool isInitialized();
 
-    TSocketDescriptor socketDescriptorAlloc(void);
+    TSocketDescriptor socketDescriptorAlloc();
     void socketDescriptorDeAlloc(TSocketDescriptor pa_Socket);
 
     CSinglyLinkedList<FORTE_TCP_PACKET_T*> mWaitingList;

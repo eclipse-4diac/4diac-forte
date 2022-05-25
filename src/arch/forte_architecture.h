@@ -18,11 +18,11 @@
 class CForteArchitecture{
 
   public:
-    static bool initialize(void);
+    static bool initialize();
 
-    static void deinitialize(void);
+    static void deinitialize();
 
-    static bool isInitialized(void){
+    static bool isInitialized(){
       return mInitialized;
     }
   private:

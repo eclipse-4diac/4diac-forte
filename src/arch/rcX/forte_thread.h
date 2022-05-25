@@ -31,7 +31,7 @@ class CrcXThread : public forte::arch::CThreadBase<RX_HANDLE, 0, CrcXThread> {
      */
     virtual ~CrcXThread();
 
-    virtual void join(void);
+    virtual void join();
 
     //!Set the deadline of the thread.
     void setDeadline(const CIEC_TIME &paVal);

@@ -49,7 +49,7 @@ private:
    FORTE_FB_DATA_ARRAY(1, 1, 1, 0);
 
     virtual void executeEvent(int paEIID);
-    void alg_REQ(void);
+    void alg_REQ();
 
 public:
   FORTE_F_TIME_IN_S_TO_LREAL(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : 

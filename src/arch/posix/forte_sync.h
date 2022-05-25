@@ -39,13 +39,13 @@ class CPThreadSyncObject{
      *
      * This function blocks until it will get the lock for the coming critical section.
      */
-    void lock(void){
+    void lock(){
       pthread_mutex_lock(&mMutex);
       //TODO handle return value
     }
 
     //!Free the resource coming after the lock command
-    void unlock(void){
+    void unlock(){
       pthread_mutex_unlock(&mMutex);
       //TODO handle return value
     }

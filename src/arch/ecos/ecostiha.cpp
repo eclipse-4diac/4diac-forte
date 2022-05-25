@@ -33,11 +33,11 @@ CECOSTimerHandler::~CECOSTimerHandler(){
   cyg_semaphore_destroy(&m_stSemaphore);
 }
 
-void CECOSTimerHandler::enableHandler(void){
+void CECOSTimerHandler::enableHandler(){
   cyg_alarm_initialize(m_stAlarmHandle, cyg_current_time() + 1, 1);
 }
 
-void CECOSTimerHandler::disableHandler(void){
+void CECOSTimerHandler::disableHandler(){
   cyg_alarm_disable(m_stAlarmHandle);
 }
 
@@ -45,11 +45,11 @@ void CECOSTimerHandler::setPriority(int ){
 
 }
 
-int CECOSTimerHandler::getPriority(void) const{
+int CECOSTimerHandler::getPriority() const{
   return 0;
 }
 
-void CECOSTimerHandler::run(void){
+void CECOSTimerHandler::run(){
   CECOSThread::setPriority(0); //we want to be a very important thread
   while(isAlive()){
     cyg_semaphore_wait(&m_stSemaphore);

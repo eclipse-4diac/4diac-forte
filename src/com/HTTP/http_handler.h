@@ -31,13 +31,13 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
 
   public:
     /* functions needed for the external event handler interface */
-    void enableHandler(void);
+    void enableHandler();
 
-    void disableHandler(void);
+    void disableHandler();
 
     void setPriority(int pa_nPriority);
 
-    int getPriority(void) const;
+    int getPriority() const;
 
     virtual forte::com_infra::EComResponse recvData(const void *paData, unsigned int paSize);
 

@@ -27,10 +27,10 @@ class ForteLibrary : public LibraryBase, public Singleton<ForteLibrary> {
     typedef Singleton<ForteLibrary> TSingletonBase;
 
     explicit ForteLibrary(AppDomain& appDomain);
-    virtual ~ForteLibrary(void) = default;
+    virtual ~ForteLibrary() = default;
 
     static void Main(AppDomain& appDomain);
-    static ILibrary* GetInstance(void);
+    static ILibrary* GetInstance();
 
   private:
     ForteLibrary(const ForteLibrary& arg) = delete;

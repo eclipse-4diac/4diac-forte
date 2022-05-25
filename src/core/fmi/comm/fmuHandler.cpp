@@ -79,11 +79,11 @@ void fmuHandler::unregisterLayer(fmuComLayer* paLayer){
   }
 }
 
-void fmuHandler::enableHandler(void){
+void fmuHandler::enableHandler(){
   //TODO: Should also work empty
 }
 
-void fmuHandler::disableHandler(void){
+void fmuHandler::disableHandler(){
   //TODO: Should also work empty
 }
 
@@ -91,6 +91,6 @@ void fmuHandler::setPriority(int ){
   //TODO: Should also work empty
 }
 
-int fmuHandler::getPriority(void) const{
+int fmuHandler::getPriority() const{
   return 0;
 }

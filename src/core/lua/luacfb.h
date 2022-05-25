@@ -26,7 +26,7 @@ class CLuaCFB : public CCompositeFB {
         TForteByte *paVarsData, CResource *paResource);
     virtual ~CLuaCFB();
 
-    virtual CStringDictionary::TStringId getFBTypeId(void) const {
+    virtual CStringDictionary::TStringId getFBTypeId() const {
       return mTypeEntry->getTypeNameId();
     }
 };

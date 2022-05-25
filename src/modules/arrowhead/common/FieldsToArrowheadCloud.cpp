@@ -40,7 +40,7 @@ const SFBInterfaceSpec FORTE_FieldsToArrowheadCloud::scm_stFBInterfaceSpec = {
   0, 0
 };
 
-void FORTE_FieldsToArrowheadCloud::alg_REQ(void){
+void FORTE_FieldsToArrowheadCloud::alg_REQ(){
 arrowheadCloud().Operator() = Operator();
 arrowheadCloud().cloudName() = cloudName();
 arrowheadCloud().address() = address();
@@ -56,11 +56,11 @@ arrowheadCloud().secure() = secure();
 }
 
 
-void FORTE_FieldsToArrowheadCloud::enterStateSTART(void){
+void FORTE_FieldsToArrowheadCloud::enterStateSTART(){
   m_nECCState = scm_nStateSTART;
 }
 
-void FORTE_FieldsToArrowheadCloud::enterStateREQ(void){
+void FORTE_FieldsToArrowheadCloud::enterStateREQ(){
   m_nECCState = scm_nStateREQ;
   alg_REQ();
   sendOutputEvent( scm_nEventCNFID);

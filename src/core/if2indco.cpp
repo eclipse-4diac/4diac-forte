@@ -21,7 +21,7 @@ CInterface2InternalDataConnection::~CInterface2InternalDataConnection(){
   m_poValue = nullptr; // in interface data connections we are not allowed to delete the m_poValue
 }
 
-void CInterface2InternalDataConnection::cloneInputInterfaceValue(void){
+void CInterface2InternalDataConnection::cloneInputInterfaceValue(){
   for(TDestinationIdList::Iterator it = mDestinationIds.begin();
       it != mDestinationIds.end(); ++it){
     it->mFB->connectDI(it->mPortId, this);

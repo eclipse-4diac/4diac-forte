@@ -30,15 +30,15 @@ const CStringDictionary::TStringId FORTE_E_T_FF::scm_anEventOutputNames[] = { g_
 const SFBInterfaceSpec FORTE_E_T_FF::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, nullptr, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith,
   scm_anEOWithIndexes, 0, nullptr, nullptr, 1, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, nullptr };
 
-void FORTE_E_T_FF::alg_TOGGLE(void) {
+void FORTE_E_T_FF::alg_TOGGLE() {
   Q() = func_NOT(Q());
 }
 
-void FORTE_E_T_FF::enterStateSTART(void) {
+void FORTE_E_T_FF::enterStateSTART() {
   m_nECCState = scm_nStateSTART;
 }
 
-void FORTE_E_T_FF::enterStateSET(void) {
+void FORTE_E_T_FF::enterStateSET() {
   m_nECCState = scm_nStateSET;
   alg_TOGGLE();
   sendOutputEvent(scm_nEventEOID);

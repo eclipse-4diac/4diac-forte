@@ -29,7 +29,7 @@ CEventChainExecutionThread::CEventChainExecutionThread() :
 CEventChainExecutionThread::~CEventChainExecutionThread(){
 }
 
-void CEventChainExecutionThread::run(void){
+void CEventChainExecutionThread::run(){
   while(isAlive()){ //thread is allowed to execute
     mainRun();
   }
@@ -63,7 +63,7 @@ void CEventChainExecutionThread::mainRun(){
   }
 }
 
-void CEventChainExecutionThread::clear(void){
+void CEventChainExecutionThread::clear(){
   memset(mEventList, 0, cg_nEventChainEventListSize * sizeof(TEventEntryPtr));
   mEventListEnd = mEventListStart = &mEventList[cg_nEventChainEventListSize - 1];
 

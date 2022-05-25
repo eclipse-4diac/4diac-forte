@@ -39,12 +39,12 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     /**
      * Starts OPC UA Server
      */
-    void enableHandler(void);
+    void enableHandler();
 
     /**
      * Stops the OPC UA server
      */
-    void disableHandler(void);
+    void disableHandler();
 
     /**
      * Class containing all local callback functions that are called by the OPC UA stack

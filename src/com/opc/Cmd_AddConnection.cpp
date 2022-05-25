@@ -16,7 +16,7 @@ CCmd_AddConnection::CCmd_AddConnection(COpcConnectionImpl *pa_pConnection) :
     m_pConnection(pa_pConnection){
 }
 
-CCmd_AddConnection::~CCmd_AddConnection(void){
+CCmd_AddConnection::~CCmd_AddConnection(){
 }
 
 void CCmd_AddConnection::runCommand(){

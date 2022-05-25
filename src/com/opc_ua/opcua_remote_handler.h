@@ -173,12 +173,12 @@ class COPC_UA_Remote_Handler : public COPC_UA_HandlerAbstract, public COPC_UA_Cl
     /**
      * Starts the threads
      */
-    void enableHandler(void);
+    void enableHandler();
 
     /**
      * Stops the threads
      */
-    void disableHandler(void);
+    void disableHandler();
 
   protected:
 

@@ -25,7 +25,7 @@
  */
 #define DECLARE_SINGLETON(TypeName)                                   \
   public:                                                             \
-    static TypeName &getInstance(void);                               \
+    static TypeName &getInstance();                                   \
   private:                                                            \
     TypeName();                                                       \
     TypeName(const TypeName&);                                         \
@@ -33,8 +33,8 @@
     ~TypeName();
 
 #define DEFINE_SINGLETON(TypeName)                                    \
- TypeName& TypeName::getInstance(void){                               \
-   static TypeName oInstance;                                                \
+ TypeName& TypeName::getInstance(){                                   \
+   static TypeName oInstance;                                         \
    return oInstance;                                                  \
  };
 

@@ -27,11 +27,11 @@ class CWin32SerComHandler : public CExternalEventHandler, public CThread{
     void unregisterSerComLayer(CWin32SerComLayer *pa_poComLayer);
 
     /* functions needed for the external event handler interface */
-    void enableHandler(void){
+    void enableHandler(){
       start();
     }
 
-    void disableHandler(void){
+    void disableHandler(){
       setAlive(false);
       mSem.inc();
       end();
@@ -42,7 +42,7 @@ class CWin32SerComHandler : public CExternalEventHandler, public CThread{
       //TODO We should adjust the thread priority.
     }
 
-    int getPriority(void) const{
+    int getPriority() const{
       //the same as for setPriority
       return 0;
     }

@@ -49,15 +49,15 @@ private:
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
    FORTE_BASIC_FB_DATA_ARRAY(2, 1, 2, 0, 0);
-  void alg_CD(void);
-  void alg_LD(void);
+  void alg_CD();
+  void alg_LD();
   static const TForteInt16 scm_nStateSTART = 0;
   static const TForteInt16 scm_nStateCU = 1;
   static const TForteInt16 scm_nStateLD = 2;
 
-  void enterStateSTART(void);
-  void enterStateCU(void);
-  void enterStateLD(void);
+  void enterStateSTART();
+  void enterStateCU();
+  void enterStateLD();
 
   virtual void executeEvent(int pa_nEIID);
 

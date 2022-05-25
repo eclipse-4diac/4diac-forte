@@ -33,12 +33,12 @@ public:
 
     void unregisterLayer(fmuComLayer* paLayer);
 
-    void fmuMessageProcessed(void);
+    void fmuMessageProcessed();
 
-    virtual void enableHandler(void);
+    virtual void enableHandler();
     /*!\brief Disable this event source
      */
-    virtual void disableHandler(void);
+    virtual void disableHandler();
     /*!\brief Sets the priority of the event source
      *
      * \param pa_nPriority new priority of the event source
@@ -48,7 +48,7 @@ public:
      *
      * \return current priority
      */
-    virtual int getPriority(void) const;
+    virtual int getPriority() const;
     static void fmuMessageArrived(void *pa_value);
 
     std::map<CFunctionBlock*, std::vector<fmuValueContainer*>*>* getOutputMap(){

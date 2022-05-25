@@ -21,7 +21,7 @@
 class CExternTimerHandler : public CTimerHandler{
   public:
     static void externNextTick();
-    static TForteUInt32 getExternTicksPerSecond(void){ return csm_nTicksPerSecond; };
+    static TForteUInt32 getExternTicksPerSecond(){ return csm_nTicksPerSecond; };
     explicit CExternTimerHandler(CDeviceExecution& pa_poDeviceExecution);
       
     virtual ~CExternTimerHandler();
@@ -34,10 +34,10 @@ class CExternTimerHandler : public CTimerHandler{
   /*!\brief Enables this event source
    * 
    */
-    virtual void enableHandler(void);  
+    virtual void enableHandler();
   /*!\brief Disable this event source
    */  
-    virtual void disableHandler(void); 
+    virtual void disableHandler();
   /*!\brief Sets the priority of the event source  
    * 
    * \param pa_nPriority new priority of the event source
@@ -47,13 +47,13 @@ class CExternTimerHandler : public CTimerHandler{
    * 
    * \return current priority
    */  
-    virtual int getPriority(void) const;  
+    virtual int getPriority() const;
     
   /*! \brief Get the time base of the runtime
    * 
    * \return internal runtime ticks per millisecond
    */ 
-    virtual TForteUInt32 getTicksPerSecond(void){ return csm_nTicksPerSecond; };
+    virtual TForteUInt32 getTicksPerSecond(){ return csm_nTicksPerSecond; };
 
   private:
   /*!\brief default time base of the used timer. in useconds.

@@ -284,12 +284,12 @@ void fmuInstance::fillInterfaceElementsArray(CFunctionBlock* pa_poFB, bool isInp
   }
 }
 
-void fmuInstance::startInstance(void){
+void fmuInstance::startInstance(){
   resetInstance();
   (static_cast<CDevice*>(mResource->getResourcePtr()))->changeFBExecutionState(cg_nMGM_CMD_Start);
 }
 
-void fmuInstance::resetInstance(void){
+void fmuInstance::resetInstance(){
   (static_cast<CDevice*>(mResource->getResourcePtr()))->changeFBExecutionState(cg_nMGM_CMD_Reset);
 }
 

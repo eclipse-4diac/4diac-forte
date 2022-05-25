@@ -39,7 +39,7 @@ namespace forte {
          *  This functions checks if the Thread is still executing user code in its run()-method.
          *  \return true if there the run method is active.
          */
-        bool isAlive(void) const{
+        bool isAlive() const{
           return mAlive;
         }
 
@@ -65,7 +65,7 @@ namespace forte {
         void join();
 
         //!Get the current deadline of the thread.
-        const CIEC_TIME &getDeadline(void) const {
+        const CIEC_TIME &getDeadline() const {
           return mDeadline;
         }
 

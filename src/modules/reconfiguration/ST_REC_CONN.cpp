@@ -56,7 +56,7 @@ void FORTE_ST_REC_CONN::executeEvent(int pa_nEIID){
   }
 }
 
-void FORTE_ST_REC_CONN::executeRQST(void){
+void FORTE_ST_REC_CONN::executeRQST(){
   forte::core::SManagementCMD theCommand;
   // delete old connection
   theCommand.mDestination = CStringDictionary::getInstance().getId(DST().getValue());

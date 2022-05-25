@@ -257,8 +257,8 @@ public:
    */
   int readTemperature();
 
-  unsigned char* getConfigRegister(void) { return &m_ConfigRegister[0]; }
-  unsigned char* getDataRegister(void) { return &m_DataRegister[0]; }
+  unsigned char* getConfigRegister() { return &m_ConfigRegister[0]; }
+  unsigned char* getDataRegister() { return &m_DataRegister[0]; }
 
 private:
   //   Factor used to calculate temperature readout value, see datasheet of ADS1018

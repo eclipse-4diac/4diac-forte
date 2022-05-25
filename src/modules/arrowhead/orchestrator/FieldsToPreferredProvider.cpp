@@ -40,7 +40,7 @@ const SFBInterfaceSpec FORTE_FieldsToPreferredProvider::scm_stFBInterfaceSpec = 
   0, 0
 };
 
-void FORTE_FieldsToPreferredProvider::alg_REQ(void){
+void FORTE_FieldsToPreferredProvider::alg_REQ(){
 preferredProvider().providerSystem() = providerSystem();
 preferredProvider().providerCloud() = providerCloud();
 
@@ -51,11 +51,11 @@ preferredProvider().providerCloud() = providerCloud();
 }
 
 
-void FORTE_FieldsToPreferredProvider::enterStateSTART(void){
+void FORTE_FieldsToPreferredProvider::enterStateSTART(){
   m_nECCState = scm_nStateSTART;
 }
 
-void FORTE_FieldsToPreferredProvider::enterStateREQ(void){
+void FORTE_FieldsToPreferredProvider::enterStateREQ(){
   m_nECCState = scm_nStateREQ;
   alg_REQ();
   sendOutputEvent( scm_nEventCNFID);

@@ -48,7 +48,7 @@ void FORTE_FB_RANDOM::setInitialValues(){
   SEED().fromString("0");
 }
 
-void FORTE_FB_RANDOM::alg_INIT(void){
+void FORTE_FB_RANDOM::alg_INIT(){
 // WARNING - Don't forget to add #include <time.h>
   if (SEED() == 0) {
     srand((unsigned int) time(nullptr) );
@@ -57,22 +57,22 @@ void FORTE_FB_RANDOM::alg_INIT(void){
   }
 }
 
-void FORTE_FB_RANDOM::alg_REQ(void){
+void FORTE_FB_RANDOM::alg_REQ(){
   VAL() = CIEC_REAL(static_cast<TForteFloat>(rand())/static_cast<TForteFloat>(RAND_MAX));
 }
 
 
-void FORTE_FB_RANDOM::enterStateSTART(void){
+void FORTE_FB_RANDOM::enterStateSTART(){
   m_nECCState = scm_nStateSTART;
 }
 
-void FORTE_FB_RANDOM::enterStateREQ(void){
+void FORTE_FB_RANDOM::enterStateREQ(){
   m_nECCState = scm_nStateREQ;
   alg_REQ();
   sendOutputEvent( scm_nEventCNFID);
 }
 
-void FORTE_FB_RANDOM::enterStateState(void){
+void FORTE_FB_RANDOM::enterStateState(){
   m_nECCState = scm_nStateState;
   alg_INIT();
   sendOutputEvent( scm_nEventINITOID);

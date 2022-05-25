@@ -95,7 +95,7 @@ class CConnection{
      *
      * \return TRUE if there is no destination in the connection.
      */
-    bool isEmpty(void) const{
+    bool isEmpty() const{
       return mDestinationIds.isEmpty();
     }
 
@@ -105,13 +105,13 @@ class CConnection{
 
     /*! \brief Get the source string of the connection
      */
-    const CConnectionPoint& getSourceId(void) const{
+    const CConnectionPoint& getSourceId() const{
       return mSourceId;
     }
 
     /*! \brief Get list of destinations of the connection
      */
-    const CSinglyLinkedList<CConnectionPoint>& getDestinationList(void) const {
+    const CSinglyLinkedList<CConnectionPoint>& getDestinationList() const {
         return mDestinationIds;
     }
 
@@ -122,7 +122,7 @@ class CConnection{
     void setSource(CFunctionBlock *paSrcFB, TPortId paSrcPortId);
 
     //!Non const version
-    CConnectionPoint& getSourceId(void){
+    CConnectionPoint& getSourceId(){
       return mSourceId;
     }
 

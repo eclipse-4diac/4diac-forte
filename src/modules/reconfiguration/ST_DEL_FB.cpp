@@ -56,7 +56,7 @@ void FORTE_ST_DEL_FB::executeEvent(int pa_nEIID){
   }
 }
 
-void FORTE_ST_DEL_FB::executeRQST(void){
+void FORTE_ST_DEL_FB::executeRQST(){
   forte::core::SManagementCMD theCommand;
   
   theCommand.mDestination = CStringDictionary::getInstance().getId(DST().getValue());

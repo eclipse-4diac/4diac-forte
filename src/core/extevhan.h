@@ -56,10 +56,10 @@ class CExternalEventHandler{
     /*!\brief Enables this event source
      *
      */
-    virtual void enableHandler(void) = 0;
+    virtual void enableHandler() = 0;
     /*!\brief Disable this event source
      */
-    virtual void disableHandler(void) = 0;
+    virtual void disableHandler() = 0;
     /*!\brief Sets the priority of the event source
      *
      * \param paPriority new priority of the event source
@@ -69,7 +69,7 @@ class CExternalEventHandler{
      *
      * \return current priority
      */
-    virtual int getPriority(void) const = 0;
+    virtual int getPriority() const = 0;
 
     virtual size_t getIdentifier() const = 0;
 

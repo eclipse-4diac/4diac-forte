@@ -38,7 +38,7 @@ const SFBInterfaceSpec FORTE_F_TIME_IN_NS_TO_LINT::scm_stFBInterfaceSpec = { 1, 
   scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 1, scm_anDataInputNames, scm_anDataInputTypeIds, 1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
   0, nullptr };
 
-void FORTE_F_TIME_IN_NS_TO_LINT::alg_REQ(void) {
+void FORTE_F_TIME_IN_NS_TO_LINT::alg_REQ() {
   st_OUT() = func_TIME_IN_NS_TO_LINT((st_IN()));
 }
 

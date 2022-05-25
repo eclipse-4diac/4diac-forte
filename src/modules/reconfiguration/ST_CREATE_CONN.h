@@ -74,7 +74,7 @@ private:
   FORTE_FB_DATA_ARRAY(1, 6, 2, 0);
 
   void executeEvent(int pa_nEIID);
-  void executeRQST(void);
+  void executeRQST();
 public:
   FUNCTION_BLOCK_CTOR(FORTE_ST_CREATE_CONN), m_poDevice(pa_poSrcRes->getDevice()){
   };

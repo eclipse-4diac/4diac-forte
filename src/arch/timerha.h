@@ -62,13 +62,13 @@ class CTimerHandler : public CExternalEventHandler{
      *
      * \return current priority
      */
-    virtual int getPriority(void) const = 0;
+    virtual int getPriority() const = 0;
 
     /*! \brief Get the time base of the runtime
      *
      * \return internal runtime ticks per second
      */
-    static TForteUInt32 getTicksPerSecond(void){
+    static TForteUInt32 getTicksPerSecond(){
       return cg_nForteTicksPerSecond;
     }
 
@@ -86,7 +86,7 @@ class CTimerHandler : public CExternalEventHandler{
     void unregisterTimedFB(CEventSourceFB *paTimedFB);
 
     //! one tick of time elapsed. Implementations should call this function on each tick.
-    void nextTick(void);
+    void nextTick();
 
     //! returns the time since startup of FORTE
     uint_fast64_t getForteTime() const{

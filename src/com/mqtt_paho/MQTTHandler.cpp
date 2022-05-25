@@ -247,13 +247,13 @@ void MQTTHandler::unregisterLayer(MQTTComLayer* paLayer){
   mlayers.erase(paLayer);
 }
 
-void MQTTHandler::enableHandler(void){
+void MQTTHandler::enableHandler(){
   if (!isAlive()){
     start();
   }
 }
 
-void MQTTHandler::disableHandler(void){
+void MQTTHandler::disableHandler(){
   if (isAlive()){
     setAlive(false);
     resumeSelfSuspend();
@@ -265,7 +265,7 @@ void MQTTHandler::setPriority(int ){
   //TODO: Should also work empty
 }
 
-int MQTTHandler::getPriority(void) const{
+int MQTTHandler::getPriority() const{
   return 0;
 }
 

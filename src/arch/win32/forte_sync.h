@@ -36,10 +36,10 @@ class CPCSyncObject{
      *
      * This function blocks until it will get the lock for the coming critical section.
      */
-    void lock(void);
+    void lock();
 
     //!Free the resource coming after the lock command
-    void unlock(void);
+    void unlock();
 
   private:
     CPCSyncObject(const CPCSyncObject &); /* = delete; */

@@ -20,11 +20,11 @@ class CVXWorksSyncObject{
     CVXWorksSyncObject();
     virtual ~CVXWorksSyncObject();
 
-    void lock(void){
+    void lock(){
       semTake(m_oSemBinary, WAIT_FOREVER);
     }
 
-    void unlock(void){
+    void unlock(){
       semGive(m_oSemBinary);
     }
 

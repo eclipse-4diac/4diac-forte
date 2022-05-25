@@ -211,15 +211,15 @@ void CMLPIFaceProcessInterface::CIOHandler::updateReadData(){
   }
 }
 
-void CMLPIFaceProcessInterface::CIOHandler::enableHandler(void){
+void CMLPIFaceProcessInterface::CIOHandler::enableHandler(){
 }
 
-void CMLPIFaceProcessInterface::CIOHandler::disableHandler(void){
+void CMLPIFaceProcessInterface::CIOHandler::disableHandler(){
 }
 
 void CMLPIFaceProcessInterface::CIOHandler::setPriority(int){
 }
 
-int CMLPIFaceProcessInterface::CIOHandler::getPriority(void) const{
+int CMLPIFaceProcessInterface::CIOHandler::getPriority() const{
  return 0;
 }

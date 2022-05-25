@@ -40,7 +40,7 @@ class CFBTestFixtureBase : public CFunctionBlock{
   public:
     ~CFBTestFixtureBase();
 
-    CStringDictionary::TStringId getFBTypeId(void) const {
+    CStringDictionary::TStringId getFBTypeId() const {
       return mTypeId;
     }
 

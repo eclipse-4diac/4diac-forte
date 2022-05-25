@@ -34,12 +34,12 @@ class CFreeRTOSSyncObject {
      *
      * This function blocks until it will get the lock for the coming critical section.
      */
-    void lock(void) {
+    void lock() {
       xSemaphoreTake(mMutexHandle, portMAX_DELAY);
     }
 
     //!Free the resource coming after the lock command
-    void unlock(void) {
+    void unlock() {
       xSemaphoreGive(mMutexHandle);
     }
 

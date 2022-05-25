@@ -40,7 +40,7 @@ const SFBInterfaceSpec FORTE_FieldsToArrowheadSystem::scm_stFBInterfaceSpec = {
   0, 0
 };
 
-void FORTE_FieldsToArrowheadSystem::alg_REQ(void){
+void FORTE_FieldsToArrowheadSystem::alg_REQ(){
 arrowheadSystem().systemName() = systemName();
 arrowheadSystem().address() = address();
 arrowheadSystem().port() = port();
@@ -49,11 +49,11 @@ arrowheadSystem().authenticationInfo() = authenticationInfo();
 }
 
 
-void FORTE_FieldsToArrowheadSystem::enterStateSTART(void){
+void FORTE_FieldsToArrowheadSystem::enterStateSTART(){
   m_nECCState = scm_nStateSTART;
 }
 
-void FORTE_FieldsToArrowheadSystem::enterStateREQ(void){
+void FORTE_FieldsToArrowheadSystem::enterStateREQ(){
   m_nECCState = scm_nStateREQ;
   alg_REQ();
   sendOutputEvent( scm_nEventCNFID);

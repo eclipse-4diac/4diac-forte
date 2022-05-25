@@ -40,7 +40,7 @@ const SFBInterfaceSpec FORTE_FieldsToPublishEvent::scm_stFBInterfaceSpec = {
   0, 0
 };
 
-void FORTE_FieldsToPublishEvent::alg_REQ(void){
+void FORTE_FieldsToPublishEvent::alg_REQ(){
 publishEvent().source() = source();
 publishEvent().event() = event();
 publishEvent().deliveryCompleteUri() = deliveryCompleteUri();
@@ -49,11 +49,11 @@ publishEvent().deliveryCompleteUri() = deliveryCompleteUri();
 }
 
 
-void FORTE_FieldsToPublishEvent::enterStateSTART(void){
+void FORTE_FieldsToPublishEvent::enterStateSTART(){
   m_nECCState = scm_nStateSTART;
 }
 
-void FORTE_FieldsToPublishEvent::enterStateREQ(void){
+void FORTE_FieldsToPublishEvent::enterStateREQ(){
   m_nECCState = scm_nStateREQ;
   alg_REQ();
   sendOutputEvent( scm_nEventCNFID);

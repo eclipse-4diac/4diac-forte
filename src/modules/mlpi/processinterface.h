@@ -45,10 +45,10 @@ class CMLPIFaceProcessInterface : public CProcessInterfaceBase{
         void registerIXFB(CMLPIFaceProcessInterface *paFB);
         void unregisterIXFB(CMLPIFaceProcessInterface *paFB);
         /* functions needed for the external event handler interface */
-        void enableHandler(void);
-        void disableHandler(void);
+        void enableHandler();
+        void disableHandler();
         void setPriority(int paPriority);
-        int getPriority(void) const;
+        int getPriority() const;
     };
 
   protected:

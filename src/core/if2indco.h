@@ -27,7 +27,7 @@ class CInterface2InternalDataConnection : public CDataConnection{
 
     /*! \brief Clones interface data value (CFB data input) to internal FB data input.
      */
-    void cloneInputInterfaceValue(void);
+    void cloneInputInterfaceValue();
 
     void setSource(CFunctionBlock *paSrcFB, TPortId paSrcPortId);
 

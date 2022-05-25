@@ -247,11 +247,11 @@ void CSysFsProcessInterface::CIOHandler::updateReadData() {
   }
 }
 
-void CSysFsProcessInterface::CIOHandler::enableHandler(void) {
+void CSysFsProcessInterface::CIOHandler::enableHandler() {
   //do nothing
 }
 
-void CSysFsProcessInterface::CIOHandler::disableHandler(void) {
+void CSysFsProcessInterface::CIOHandler::disableHandler() {
   end();
 }
 
@@ -259,7 +259,7 @@ void CSysFsProcessInterface::CIOHandler::setPriority(int) {
   //do nothing
 }
 
-int CSysFsProcessInterface::CIOHandler::getPriority(void) const {
+int CSysFsProcessInterface::CIOHandler::getPriority() const {
   return 0;
 }
 

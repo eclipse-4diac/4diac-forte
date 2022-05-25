@@ -435,7 +435,7 @@ int CEplStackWrapper::eplStackInit(char* pa_chXmlFile, char* pa_chCdcFile, char*
 ////////////////////////////////////////////////////////////////////////////////
 // Stop the stack //
 ////////////////////////////////////////////////////////////////////////////////
-int CEplStackWrapper::eplStackShutdown(void){
+int CEplStackWrapper::eplStackShutdown(){
   tEplKernel EplRet;
 
   // halt the NMT state machine
@@ -1041,7 +1041,7 @@ tEplKernel PUBLIC AppCbEvent(
 //
 //---------------------------------------------------------------------------
 
-tEplKernel PUBLIC AppCbSync(void){
+tEplKernel PUBLIC AppCbSync(){
   tEplKernel EplRet = kEplSuccessful;
 
   EplRet = EplApiProcessImageExchange(&AppProcessImageCopyJob_g);

@@ -38,7 +38,7 @@ void vStartForteServerTask(UBaseType_t uxPriority) {
   xTaskCreate(vForteTask, "forte", 2000, nullptr, uxPriority, nullptr);
 }
 
-int main(void) {
+int main() {
 
   vStartForteServerTask(mainFORTE_TASK_PRIORITY);
 

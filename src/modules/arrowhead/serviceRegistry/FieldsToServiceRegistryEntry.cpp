@@ -40,7 +40,7 @@ const SFBInterfaceSpec FORTE_FieldsToServiceRegistryEntry::scm_stFBInterfaceSpec
   0, 0
 };
 
-void FORTE_FieldsToServiceRegistryEntry::alg_REQ(void){
+void FORTE_FieldsToServiceRegistryEntry::alg_REQ(){
 serviceRegistryEntry().providedService() = providedService();
 serviceRegistryEntry().provider() = provider();
 serviceRegistryEntry().serviceURI() = serviceURI();
@@ -52,11 +52,11 @@ serviceRegistryEntry().metadata() = metadata();
 }
 
 
-void FORTE_FieldsToServiceRegistryEntry::enterStateSTART(void){
+void FORTE_FieldsToServiceRegistryEntry::enterStateSTART(){
   m_nECCState = scm_nStateSTART;
 }
 
-void FORTE_FieldsToServiceRegistryEntry::enterStateREQ(void){
+void FORTE_FieldsToServiceRegistryEntry::enterStateREQ(){
   m_nECCState = scm_nStateREQ;
   alg_REQ();
   sendOutputEvent( scm_nEventCNFID);

@@ -49,11 +49,11 @@ class CIEC_ANY_STRING : public CIEC_ANY_ELEMENTARY{
      *     - Actual value of the object.
      */
 
-    char* getValue(void){
+    char* getValue(){
       return ((char *) ((nullptr != getGenData()) ? reinterpret_cast<char*>(getGenData() + 4) : sm_acNullString));
     }
 
-    const char *getValue(void) const{
+    const char *getValue() const{
       return (const char *) ((nullptr != getGenData()) ? reinterpret_cast<const char*>(getGenData() + 4) : sm_acNullString);
     }
 

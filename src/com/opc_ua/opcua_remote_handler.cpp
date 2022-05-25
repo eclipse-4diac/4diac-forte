@@ -115,12 +115,12 @@ COPC_UA_Remote_Handler::~COPC_UA_Remote_Handler() {
   cleanResources();
 }
 
-void COPC_UA_Remote_Handler::enableHandler(void) {
+void COPC_UA_Remote_Handler::enableHandler() {
   startIterationThread();
   mConnectionHandler.startIterationThread();
 }
 
-void COPC_UA_Remote_Handler::disableHandler(void) {
+void COPC_UA_Remote_Handler::disableHandler() {
   mConnectionHandler.stopIterationThread();
   stopIterationThread();
 }

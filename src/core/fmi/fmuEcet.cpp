@@ -26,7 +26,7 @@ CFMUEventChainExecutionThread::CFMUEventChainExecutionThread() :
 CFMUEventChainExecutionThread::~CFMUEventChainExecutionThread(){
 }
 
-void CFMUEventChainExecutionThread::run(void){
+void CFMUEventChainExecutionThread::run(){
   assert(mAllowedToRun);
   assert(mStepSemaphore);
   bool runOnce = true; //don't allow the first time to run

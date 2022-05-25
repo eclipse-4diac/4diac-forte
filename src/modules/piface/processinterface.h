@@ -52,10 +52,10 @@ class CPiFaceProcessInterface : public CProcessInterfaceBase{
         void updateWriteData(bool paValue, int paPin);
 
         /* functions needed for the external event handler interface */
-        void enableHandler(void);
-        void disableHandler(void);
+        void enableHandler();
+        void disableHandler();
         void setPriority(int paPriority);
-        int getPriority(void) const;
+        int getPriority() const;
 
       private:
         typedef CSinglyLinkedList<CPiFaceProcessInterface *> TReadFBContainer;

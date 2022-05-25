@@ -18,7 +18,7 @@
 externC void
 cyg_user_start( void );
 
-void cyg_user_start(void){
+void cyg_user_start(){
   RMT_DEV *dev = new RMT_DEV;  //otherwise we would loose the var if it is only on the stack
   dev->startDevice();
 }

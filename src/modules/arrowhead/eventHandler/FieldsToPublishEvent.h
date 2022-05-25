@@ -56,12 +56,12 @@ private:
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
    FORTE_BASIC_FB_DATA_ARRAY(1, 3, 1, 0, 0);
-  void alg_REQ(void);
+  void alg_REQ();
   static const TForteInt16 scm_nStateSTART = 0;
   static const TForteInt16 scm_nStateREQ = 1;
 
-  void enterStateSTART(void);
-  void enterStateREQ(void);
+  void enterStateSTART();
+  void enterStateREQ();
 
   virtual void executeEvent(int pa_nEIID);
 

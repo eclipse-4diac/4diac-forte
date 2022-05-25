@@ -41,7 +41,7 @@ RMT_DEV::RMT_DEV() :
 RMT_DEV::~RMT_DEV(){
 }
 
-int RMT_DEV::startDevice(void){
+int RMT_DEV::startDevice(){
   CDevice::startDevice();
   MGR.changeFBExecutionState(cg_nMGM_CMD_Start);
   return 0;

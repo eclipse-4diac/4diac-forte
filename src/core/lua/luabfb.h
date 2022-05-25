@@ -57,7 +57,7 @@ class CLuaBFB : public CBasicFB {
 
     virtual void executeEvent(int paEIID);
 
-    virtual CStringDictionary::TStringId getFBTypeId(void) const {
+    virtual CStringDictionary::TStringId getFBTypeId() const {
       return mTypeEntry->getTypeNameId();
     }
 

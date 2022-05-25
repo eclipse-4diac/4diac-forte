@@ -61,7 +61,7 @@ private:
   FORTE_FB_DATA_ARRAY(1, 3, 2, 0);
 
   void executeEvent(int pa_nEIID);
-  void executeRQST(void);
+  void executeRQST();
 
 public:
   FUNCTION_BLOCK_CTOR(FORTE_EC_KILL_ELEM), m_poDevice(pa_poSrcRes->getDevice()){

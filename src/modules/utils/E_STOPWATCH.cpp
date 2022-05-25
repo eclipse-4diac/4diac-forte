@@ -39,24 +39,24 @@ const CStringDictionary::TStringId FORTE_E_STOPWATCH::scm_anInternalsNames[] = {
 const CStringDictionary::TStringId FORTE_E_STOPWATCH::scm_anInternalsTypeIds[] = { g_nStringIdTIME };
 const SInternalVarsInformation FORTE_E_STOPWATCH::scm_stInternalVars = { 1, scm_anInternalsNames, scm_anInternalsTypeIds };
 
-void FORTE_E_STOPWATCH::alg_captureStartTime(void) {
+void FORTE_E_STOPWATCH::alg_captureStartTime() {
   st_startTime() = func_NOW_MONOTONIC();
 }
 
-void FORTE_E_STOPWATCH::alg_calcDiff(void) {
+void FORTE_E_STOPWATCH::alg_calcDiff() {
   st_TD() = func_SUB(func_NOW_MONOTONIC(), st_startTime());
 }
 
-void FORTE_E_STOPWATCH::enterStateSTART(void) {
+void FORTE_E_STOPWATCH::enterStateSTART() {
   m_nECCState = scm_nStateSTART;
 }
 
-void FORTE_E_STOPWATCH::enterStateMeasure(void) {
+void FORTE_E_STOPWATCH::enterStateMeasure() {
   m_nECCState = scm_nStateMeasure;
   alg_captureStartTime();
 }
 
-void FORTE_E_STOPWATCH::enterStateSTOP(void) {
+void FORTE_E_STOPWATCH::enterStateSTOP() {
   m_nECCState = scm_nStateSTOP;
   alg_calcDiff();
   sendOutputEvent(scm_nEventEOID);

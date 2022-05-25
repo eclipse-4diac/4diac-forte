@@ -79,7 +79,7 @@ CrcXSocketInterface::~CrcXSocketInterface(){
   TLR_POOL_DELETE_CHECK(mForteResources.fortePoolHandle);
 }
 
-void CrcXSocketInterface::run(void){
+void CrcXSocketInterface::run(){
 
   UINT32 ticks = 1000000 * 1 / rX_SysGetSystemCycletime(); //1 second
   while(isAlive()){
@@ -668,7 +668,7 @@ CrcXSocketInterface::TSocketDescriptor CrcXSocketInterface::acceptTCPConnection(
   return 0;
 }
 
-CrcXSocketInterface::TSocketDescriptor CrcXSocketInterface::socketDescriptorAlloc(void){
+CrcXSocketInterface::TSocketDescriptor CrcXSocketInterface::socketDescriptorAlloc(){
   SSocketDescriptor* returnSocket = new SSocketDescriptor;
   if (0 != returnSocket){
     returnSocket->socketNumber = 0;

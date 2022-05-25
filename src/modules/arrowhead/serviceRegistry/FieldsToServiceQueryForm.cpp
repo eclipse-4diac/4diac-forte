@@ -40,7 +40,7 @@ const SFBInterfaceSpec FORTE_FieldsToServiceQueryForm::scm_stFBInterfaceSpec = {
   0, 0
 };
 
-void FORTE_FieldsToServiceQueryForm::alg_REQ(void){
+void FORTE_FieldsToServiceQueryForm::alg_REQ(){
 serviceQueryForm().service() = service();
 serviceQueryForm().metadataSearch() = metadataSearch();
 serviceQueryForm().pingProviders() = pingProviders();
@@ -49,11 +49,11 @@ serviceQueryForm().version() = version();
 }
 
 
-void FORTE_FieldsToServiceQueryForm::enterStateSTART(void){
+void FORTE_FieldsToServiceQueryForm::enterStateSTART(){
   m_nECCState = scm_nStateSTART;
 }
 
-void FORTE_FieldsToServiceQueryForm::enterStateREQ(void){
+void FORTE_FieldsToServiceQueryForm::enterStateREQ(){
   m_nECCState = scm_nStateREQ;
   alg_REQ();
   sendOutputEvent( scm_nEventCNFID);

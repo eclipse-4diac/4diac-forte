@@ -19,7 +19,7 @@
 /*!\brief Lists the help for FORTE
  *
  */
-void listHelp(void){
+void listHelp(){
   printf("Usage: forte [options]\n");
   printf("Options:\n");
   printf("%-20s Display this information\n", "  -h");

@@ -55,7 +55,7 @@ class CAdapter;
 #define DECLARE_FIRMWARE_FB(fbclass) \
     DECLARE_GENERIC_FIRMWARE_FB(fbclass) \
   public: \
-    virtual CStringDictionary::TStringId getFBTypeId(void) const;\
+    virtual CStringDictionary::TStringId getFBTypeId() const;\
   private:
 
 
@@ -71,7 +71,7 @@ class CAdapter;
     extern const CStringDictionary::TStringId g_nStringId##fbclass; \
     const CTypeLib::CFBTypeEntry fbclass::csm_oFirmwareFBEntry_##fbclass((fbTypeNameId), fbclass::createFB, &(fbclass::scm_stFBInterfaceSpec)); \
     FORTE_DUMMY_INIT_DEF(fbclass) \
-    CStringDictionary::TStringId fbclass::getFBTypeId(void) const {return (fbTypeNameId); }
+    CStringDictionary::TStringId fbclass::getFBTypeId() const {return (fbTypeNameId); }
 
 //!\ingroup CORE This define is used to create the definition necessary for Adapter types.
 #define DECLARE_ADAPTER_TYPE(adapterclass) \
@@ -81,7 +81,7 @@ class CAdapter;
     static CAdapter *createAdapter(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, bool pa_bIsPlug){\
       return new adapterclass(pa_nInstanceNameId, pa_poSrcRes, pa_bIsPlug);\
     }; \
-    virtual CStringDictionary::TStringId getFBTypeId(void) const {return (csm_oAdapterTypeEntry_##adapterclass.getTypeNameId()); };\
+    virtual CStringDictionary::TStringId getFBTypeId() const {return (csm_oAdapterTypeEntry_##adapterclass.getTypeNameId()); };\
     FORTE_DUMMY_INIT_DEC \
   private:
 
@@ -132,9 +132,9 @@ class CTypeLib{
       CTypeEntry *m_poNext; //!< a pointer to the next element in the list. Will be used to build single linked list of type entries.
 
       explicit CTypeEntry(CStringDictionary::TStringId pa_nTypeNameId);
-      virtual ~CTypeEntry(void);
+      virtual ~CTypeEntry();
 
-      CStringDictionary::TStringId getTypeNameId(void) const { return m_nTypeNameId; };
+      CStringDictionary::TStringId getTypeNameId() const { return m_nTypeNameId; };
   };
 
   class CSpecTypeEntry : public CTypeEntry {
@@ -142,7 +142,7 @@ class CTypeLib{
       const SFBInterfaceSpec* mSocketInterfaceSpec;
     public:
       CSpecTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, const SFBInterfaceSpec* paSocketInterfaceSpec);
-      virtual ~CSpecTypeEntry(void);
+      virtual ~CSpecTypeEntry();
       const SFBInterfaceSpec* getInterfaceSpec() const{ return mSocketInterfaceSpec; }
   };
 
@@ -150,7 +150,7 @@ class CTypeLib{
   class CFBTypeEntry : public CSpecTypeEntry{
     public:
       CFBTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TFunctionBlockCreateFunc pa_pfuncCreateFB, const SFBInterfaceSpec* paSocketInterfaceSpec);
-      virtual ~CFBTypeEntry(void);
+      virtual ~CFBTypeEntry();
       virtual CFunctionBlock *createFBInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes){
               return m_pfuncFBCreationFunc( pa_nInstanceNameId, pa_poSrcRes);
             }
@@ -163,7 +163,7 @@ class CTypeLib{
       class CAdapterTypeEntry : public CSpecTypeEntry{
         public:
           CAdapterTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TAdapterCreateFunc pa_pfuncCreateAdapter, const SFBInterfaceSpec* paSocketInterfaceSpec);
-          virtual ~CAdapterTypeEntry(void);
+          virtual ~CAdapterTypeEntry();
           virtual CAdapter *createAdapterInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, bool pa_bIsPlug){
             return m_pfuncAdapterCreationFunc( pa_nInstanceNameId, pa_poSrcRes, pa_bIsPlug);
           }
@@ -175,7 +175,7 @@ class CTypeLib{
   class CDataTypeEntry : public CTypeEntry{
     public:
       CDataTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TDataTypeCreateFunc pa_pfuncDTCreateFunc);
-      virtual ~CDataTypeEntry(void);
+      virtual ~CDataTypeEntry();
       virtual CIEC_ANY *createDataTypeInstance(TForteByte *pa_acDataBuf){
         return m_pfuncDTCreateFunc(pa_acDataBuf);
       };
@@ -217,7 +217,7 @@ public:
  * e.g. Out of memory
  * \return Reference to the error string.
  */
-  static EMGMResponse getLastError(void) { return m_eLastErrorMSG; };
+  static EMGMResponse getLastError() { return m_eLastErrorMSG; };
 
 /*!\brief add a Firmware FB type to the type lib (is mainly used by the corresponding entry class).
  */

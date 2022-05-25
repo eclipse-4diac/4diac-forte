@@ -40,7 +40,7 @@ const SFBInterfaceSpec FORTE_FieldsToEventFilter::scm_stFBInterfaceSpec = {
   0, 0
 };
 
-void FORTE_FieldsToEventFilter::alg_REQ(void){
+void FORTE_FieldsToEventFilter::alg_REQ(){
 CIEC_INT i;
 ;
 
@@ -62,11 +62,11 @@ i = i+1;
 }
 
 
-void FORTE_FieldsToEventFilter::enterStateSTART(void){
+void FORTE_FieldsToEventFilter::enterStateSTART(){
   m_nECCState = scm_nStateSTART;
 }
 
-void FORTE_FieldsToEventFilter::enterStateREQ(void){
+void FORTE_FieldsToEventFilter::enterStateREQ(){
   m_nECCState = scm_nStateREQ;
   alg_REQ();
   sendOutputEvent( scm_nEventCNFID);

@@ -20,7 +20,7 @@ UA_DatatypeTest_init(UA_DatatypeTest *p) {
 }
 
 static UA_INLINE UA_DatatypeTest *
-UA_DatatypeTest_new(void) {
+UA_DatatypeTest_new() {
     return (UA_DatatypeTest*)UA_new(&UA_UA_TYPES_FORDIACNAMESPACE[UA_UA_TYPES_FORDIACNAMESPACE_DATATYPETEST]);
 }
 

@@ -33,11 +33,11 @@ class CECOSSyncObject{
    * 
    * This function blocks until it will get the lock for the coming critical section.
    */  
-    void lock(void){
+    void lock(){
       cyg_mutex_lock(&m_oMutexHandle);
     };
   //!Freee the resource coming after the lock command  
-    void unlock(void){
+    void unlock(){
       cyg_mutex_unlock(&m_oMutexHandle);
     };
 };

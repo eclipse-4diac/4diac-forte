@@ -68,12 +68,12 @@ extern "C" {
   /**
    * \brief Initializes the architecture. Prepare all resources needed by the Forte's instances. Must be called once before the first Forte instance is started
    */
-  FORTE_SHARED_PREFIX void FORTE_SHARED_CALL forteGlobalInitialize(void);
+  FORTE_SHARED_PREFIX void FORTE_SHARED_CALL forteGlobalInitialize();
 
   /**
    * \brief Deinitializes the architecture. Frees all resources used by Forte's instances. Must be called after the last instance is ended
    */
-  FORTE_SHARED_PREFIX void FORTE_SHARED_CALL forteGlobalDeinitialize(void);
+  FORTE_SHARED_PREFIX void FORTE_SHARED_CALL forteGlobalDeinitialize();
 
 
 #ifdef __cplusplus

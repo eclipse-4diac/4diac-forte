@@ -22,11 +22,11 @@ CPCSyncObject::~CPCSyncObject(){
   DeleteCriticalSection(&mLock);
 }
 
-void CPCSyncObject::lock(void){
+void CPCSyncObject::lock(){
   EnterCriticalSection(&mLock);
 }
 
 //!Free the resource coming after the lock command
-void CPCSyncObject::unlock(void){
+void CPCSyncObject::unlock(){
   LeaveCriticalSection(&mLock);
 }

@@ -37,7 +37,7 @@ class CFMUEventChainExecutionThread : public CEventChainExecutionThread{
     }
 
 private:
-    virtual void run(void);
+    virtual void run();
     bool* mAllowedToRun;
     forte::arch::CSemaphore* mStepSemaphore;
     bool mWaitingStep;

@@ -37,10 +37,10 @@ class CPCTimerHandler : public CTimerHandler, public CThread{
   /*!\brief Enables this event source
    * 
    */
-    virtual void enableHandler(void);  
+    virtual void enableHandler();
   /*!\brief Disable this event source
    */  
-    virtual void disableHandler(void); 
+    virtual void disableHandler();
   /*!\brief Sets the priority of the event source  
    * 
    * \param pa_nPriority new priority of the event source
@@ -50,13 +50,13 @@ class CPCTimerHandler : public CTimerHandler, public CThread{
    * 
    * \return current priority
    */  
-    virtual int getPriority(void) const;  
+    virtual int getPriority() const;
     
   /*! \brief Get the time base of the runtime
    * 
    * \return internal runtime ticks per millisecond
    */ 
-    virtual TForteUInt32 getTicksPerSecond(void){ return csm_nTicksPerSecond; };
+    virtual TForteUInt32 getTicksPerSecond(){ return csm_nTicksPerSecond; };
     
     
 };

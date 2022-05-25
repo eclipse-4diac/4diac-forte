@@ -40,7 +40,7 @@ const SFBInterfaceSpec FORTE_FieldsToArrowheadService::scm_stFBInterfaceSpec = {
   0, 0
 };
 
-void FORTE_FieldsToArrowheadService::alg_REQ(void){
+void FORTE_FieldsToArrowheadService::alg_REQ(){
 CIEC_INT i;
 ;
 
@@ -58,11 +58,11 @@ i = i+1;
 }
 
 
-void FORTE_FieldsToArrowheadService::enterStateSTART(void){
+void FORTE_FieldsToArrowheadService::enterStateSTART(){
   m_nECCState = scm_nStateSTART;
 }
 
-void FORTE_FieldsToArrowheadService::enterStateREQ(void){
+void FORTE_FieldsToArrowheadService::enterStateREQ(){
   m_nECCState = scm_nStateREQ;
   alg_REQ();
   sendOutputEvent( scm_nEventCNFID);

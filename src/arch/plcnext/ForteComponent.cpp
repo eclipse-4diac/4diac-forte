@@ -14,39 +14,39 @@
 
 namespace ForteLibrary {
 
-  void ForteComponent::Initialize(void){
+  void ForteComponent::Initialize(){
     mDev = new RMT_DEV;
   }
 
   void ForteComponent::LoadSettings(const String& /*paSettingsPath*/){
   }
 
-  void ForteComponent::SetupSettings(void){
+  void ForteComponent::SetupSettings(){
   }
 
-  void ForteComponent::SubscribeServices(void){
+  void ForteComponent::SubscribeServices(){
   }
 
-  void ForteComponent::LoadConfig(void){
+  void ForteComponent::LoadConfig(){
   }
 
-  void ForteComponent::SetupConfig(void){
+  void ForteComponent::SetupConfig(){
     mDev->setMGR_ID("localhost:61499");
     mDev->startDevice();
   }
 
-  void ForteComponent::ResetConfig(void){
+  void ForteComponent::ResetConfig(){
   }
 
-  void ForteComponent::PublishServices(void){
+  void ForteComponent::PublishServices(){
   }
 
-  void ForteComponent::Dispose(void){
+  void ForteComponent::Dispose(){
     delete mDev;
     mDev = 0;
   }
 
-  void ForteComponent::PowerDown(void){
+  void ForteComponent::PowerDown(){
     if(0 != mDev){
       mDev->changeFBExecutionState(cg_nMGM_CMD_Kill);
     }

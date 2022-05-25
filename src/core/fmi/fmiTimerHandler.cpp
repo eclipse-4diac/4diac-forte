@@ -25,17 +25,17 @@ fmiTimerHandler::fmiTimerHandler(CDeviceExecution& pa_poDeviceExecution) : CTime
 fmiTimerHandler::~fmiTimerHandler(){
 }
 
-void fmiTimerHandler::enableHandler(void){
+void fmiTimerHandler::enableHandler(){
 }
 
-void fmiTimerHandler::disableHandler(void){
+void fmiTimerHandler::disableHandler(){
 }
 
 void fmiTimerHandler::setPriority(int pa_nPriority){
   NOT_USED(pa_nPriority)
 }
 
-int fmiTimerHandler::getPriority(void) const {
+int fmiTimerHandler::getPriority() const {
   return 0;
 }
 

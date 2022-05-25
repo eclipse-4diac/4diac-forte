@@ -41,7 +41,7 @@ CFDSelectHandler::~CFDSelectHandler(){
 }
 
 // single-threaded-network-code
-void CFDSelectHandler::run(void){
+void CFDSelectHandler::run(){
 
   struct timeval tv;
   fd_set anFDSet;

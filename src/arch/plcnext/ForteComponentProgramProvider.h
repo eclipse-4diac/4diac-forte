@@ -21,9 +21,9 @@ namespace ForteLibrary{
 
   class ForteComponentProgramProvider : public IProgramProvider {
     public:
-      ForteComponentProgramProvider(void) = default;
+      ForteComponentProgramProvider() = default;
       ForteComponentProgramProvider(const ForteComponentProgramProvider& paArg) = delete;
-      ~ForteComponentProgramProvider(void) = default;
+      ~ForteComponentProgramProvider() = default;
 
       ForteComponentProgramProvider& operator= (const ForteComponentProgramProvider& paArg) = delete;
 

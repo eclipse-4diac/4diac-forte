@@ -25,7 +25,7 @@ CTypeLib::CTypeEntry::CTypeEntry(CStringDictionary::TStringId pa_nTypeNameId) :
   m_poNext(nullptr){
 }
 
-CTypeLib::CTypeEntry::~CTypeEntry(void){
+CTypeLib::CTypeEntry::~CTypeEntry(){
 
 }
 
@@ -34,7 +34,7 @@ CTypeLib::CSpecTypeEntry::CSpecTypeEntry(CStringDictionary::TStringId pa_nTypeNa
   mSocketInterfaceSpec(paSocketInterfaceSpec){
 }
 
-CTypeLib::CSpecTypeEntry::~CSpecTypeEntry(void){
+CTypeLib::CSpecTypeEntry::~CSpecTypeEntry(){
 
 }
 
@@ -46,7 +46,7 @@ CTypeLib::addFBType(this);
 }
 
 
-CTypeLib::CFBTypeEntry::~CFBTypeEntry(void){
+CTypeLib::CFBTypeEntry::~CFBTypeEntry(){
 
 }
 
@@ -57,7 +57,7 @@ CTypeLib::addAdapterType(this);
 
 }
 
-CTypeLib::CAdapterTypeEntry::~CAdapterTypeEntry(void){
+CTypeLib::CAdapterTypeEntry::~CAdapterTypeEntry(){
 
 }
 
@@ -66,7 +66,7 @@ CTypeLib::CDataTypeEntry::CDataTypeEntry(CStringDictionary::TStringId paTypeName
   CTypeLib::addDataType(this);
 }
 
-CTypeLib::CDataTypeEntry::~CDataTypeEntry(void){
+CTypeLib::CDataTypeEntry::~CDataTypeEntry(){
 
 }
 
