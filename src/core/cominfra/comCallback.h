@@ -43,7 +43,7 @@ class CComCallback {
     virtual EComResponse recvData(const void *paData, unsigned int paSize) = 0;
 
     virtual CBaseCommFB *getCommFB() const{
-      return 0;
+      return nullptr;
     }
 };
 

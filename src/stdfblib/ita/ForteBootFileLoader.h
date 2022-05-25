@@ -41,7 +41,7 @@ class ForteBootFileLoader {
     LoadBootResult loadBootFile();
 
     bool isOpen() const {
-      return (0 != mBootfile);
+      return (nullptr != mBootfile);
     }
 
     bool needsExit() const {

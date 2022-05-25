@@ -36,7 +36,7 @@ private:
   CSinglyLinkedListNode* mNextNode;
   CSinglyLinkedListNode();
 public:
-  CSinglyLinkedListNode(T paNodeElement, CSinglyLinkedListNode* paNextNode = 0) : mNodeElement(paNodeElement), mNextNode(paNextNode) {
+  CSinglyLinkedListNode(T paNodeElement, CSinglyLinkedListNode* paNextNode = nullptr) : mNodeElement(paNodeElement), mNextNode(paNextNode) {
 
   }
 

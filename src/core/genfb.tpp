@@ -16,19 +16,19 @@
 
 template<class T>
 CGenFunctionBlock<T>::CGenFunctionBlock(CResource *paSrcRes, const CStringDictionary::TStringId paInstanceNameId) :
-    T(paSrcRes, 0, paInstanceNameId, 0, 0),
-    mConfiguredFBTypeNameId(CStringDictionary::scm_nInvalidStringId), mGenInterfaceSpec(), mFBConnData(0), mFBVarsData(0) {
+    T(paSrcRes, nullptr, paInstanceNameId, nullptr, nullptr),
+    mConfiguredFBTypeNameId(CStringDictionary::scm_nInvalidStringId), mGenInterfaceSpec(), mFBConnData(nullptr), mFBVarsData(nullptr) {
 
     FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CFunctionBlock, T>::value), TFunctionBlock);
 }
 
 template<class T>
 CGenFunctionBlock<T>::~CGenFunctionBlock(){
-  if(0 != T::m_pstInterfaceSpec){
+  if(nullptr != T::m_pstInterfaceSpec){
     T::freeAllData();  //clean the interface and connections first.
     delete[] mFBConnData;
     delete[] mFBVarsData;
-    T::m_pstInterfaceSpec = 0; //this stops the base classes from any wrong clean-up
+    T::m_pstInterfaceSpec = nullptr; //this stops the base classes from any wrong clean-up
   }
 }
 

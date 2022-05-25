@@ -28,7 +28,7 @@ inline const CIEC_DATE func_DT_TO_DATE(const CIEC_DATE_AND_TIME &paVal){
   time_t t = static_cast<time_t>(nBuffer / 1000);
   struct tm *ptm = forte_localtime(&t);
 
-  if(0 == ptm){
+  if(nullptr == ptm){
     return CIEC_DATE(0);
   }
 
@@ -53,7 +53,7 @@ inline const CIEC_TIME_OF_DAY func_DT_TO_TOD(const CIEC_DATE_AND_TIME &paVal){
   time_t t = static_cast<time_t>(nBuffer / 1000);
   struct tm *ptm = forte_localtime(&t);
 
-  if(0 == ptm){
+  if(nullptr == ptm){
     return CIEC_TIME_OF_DAY(0);
   }
 

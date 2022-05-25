@@ -42,11 +42,11 @@ namespace forte {
         class  SDataWatchEntry{
           public:
             SDataWatchEntry(CStringDictionary::TStringId paPortId, CIEC_ANY &paDataValue) :
-                mPortId(paPortId), mDataValueRef(paDataValue), mDataBuffer(paDataValue.clone(0)){
+                mPortId(paPortId), mDataValueRef(paDataValue), mDataBuffer(paDataValue.clone(nullptr)){
             }
 
             SDataWatchEntry(const SDataWatchEntry& paSrc):
-              mPortId(paSrc.mPortId), mDataValueRef(paSrc.mDataValueRef), mDataBuffer(paSrc.mDataBuffer->clone(0)){
+              mPortId(paSrc.mPortId), mDataValueRef(paSrc.mDataValueRef), mDataBuffer(paSrc.mDataBuffer->clone(nullptr)){
             }
 
             ~SDataWatchEntry(){

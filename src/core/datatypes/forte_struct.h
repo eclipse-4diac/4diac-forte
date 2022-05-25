@@ -22,7 +22,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
     typedef const char* TStructInitialValues;
 
     CIEC_STRUCT(CStringDictionary::TStringId paTypeName, TForteUInt16 paLength, const CStringDictionary::TStringId paElementTypes[],
-        const CStringDictionary::TStringId paElementNames[], TForteUInt8 paTypeID, TStructInitialValues *paInitialValues = 0);
+        const CStringDictionary::TStringId paElementNames[], TForteUInt8 paTypeID, TStructInitialValues *paInitialValues = nullptr);
 
     CIEC_STRUCT(const CIEC_STRUCT& paValue);
 
@@ -44,7 +44,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      */
 
     TForteUInt8 getASN1StructType() const{
-      return (0 != getSpecs()) ? getSpecs()->mASN1Type : static_cast<TForteUInt8>(0);
+      return (nullptr != getSpecs()) ? getSpecs()->mASN1Type : static_cast<TForteUInt8>(0);
     }
 
     /*! \brief Get the Struct's size
@@ -55,7 +55,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      *   \return - the size of the struct.
      */
     TForteUInt16 getStructSize() const{
-      return (0 != getSpecs()) ? getSpecs()->mNumberOfElements : static_cast<TForteUInt16>(0);
+      return (nullptr != getSpecs()) ? getSpecs()->mNumberOfElements : static_cast<TForteUInt16>(0);
     }
 
     /*! \brief Get the Struct's elementNames
@@ -66,7 +66,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      *   \return - pointer to array of StringIds.
      */
     const CStringDictionary::TStringId* elementNames() const{
-      return (0 != getSpecs()) ? getSpecs()->mElementNames : 0;
+      return (nullptr != getSpecs()) ? getSpecs()->mElementNames : nullptr;
     }
 
     /*! \brief Get the Struct's type name
@@ -77,7 +77,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      *   \return - StringId of Struct's type name.
      */
     CStringDictionary::TStringId getStructTypeNameID() const{
-      return (0 != getSpecs()) ? getSpecs()->mStructureTypeID : 0;
+      return (nullptr != getSpecs()) ? getSpecs()->mStructureTypeID : 0;
     }
 
     void setValue(const CIEC_ANY& paValue);
@@ -107,11 +107,11 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
     virtual int toString(char* paValue, size_t paBufferSize) const;
 
     CIEC_ANY *getMembers(){
-      return (0 != getSpecs()) ? getSpecs()->mMembers : static_cast<CIEC_ANY *>(0);
+      return (nullptr != getSpecs()) ? getSpecs()->mMembers : static_cast<CIEC_ANY *>(nullptr);
     }
 
     const CIEC_ANY *getMembers() const{
-      return (0 != getSpecs()) ? getSpecs()->mMembers : static_cast<CIEC_ANY *>(0);
+      return (nullptr != getSpecs()) ? getSpecs()->mMembers : static_cast<CIEC_ANY *>(nullptr);
     }
     /*! \brief Get the struct's member var with the given name id
      *
@@ -144,7 +144,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
 
     //!Function to configure the array if it is created via the typelib
     void setup(CStringDictionary::TStringId paTypeName, TForteUInt16 paLength, const CStringDictionary::TStringId paElementTypes[],
-        const CStringDictionary::TStringId paElementNames[], TForteUInt8 paTypeID, TStructInitialValues *paInitialValues = 0);
+        const CStringDictionary::TStringId paElementNames[], TForteUInt8 paTypeID, TStructInitialValues *paInitialValues = nullptr);
 
   private:
 

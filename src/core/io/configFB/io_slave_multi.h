@@ -70,7 +70,7 @@ namespace forte {
           }
 
           virtual const char* init() {
-            return 0;
+            return nullptr;
           }
 
           virtual void deInit() {

@@ -235,7 +235,7 @@ class CIEC_ARRAY : public CIEC_ARRAY_COMMON<T> {
      *
      */
     [[nodiscard]] CIEC_ANY::EDataTypeID getElementDataTypeID() const override {
-      return getReferenceElement() != 0 ? getReferenceElement()->getDataTypeID() : CIEC_ANY::e_ANY;
+      return getReferenceElement() != nullptr ? getReferenceElement()->getDataTypeID() : CIEC_ANY::e_ANY;
     }
 
     void setValue(const CIEC_ANY &paValue) override {
@@ -358,7 +358,7 @@ class CIEC_ARRAY : public CIEC_ARRAY_COMMON<T> {
       retVal += (nSize > 1) ? (nSize - 1) : 0; // for the commas between the elements
 
       const CIEC_ANY *members = getArray();
-      if (0 != members) {
+      if (nullptr != members) {
         switch (getElementDataTypeID()) { // in these cases, the length of the elements are not always the same
         case CIEC_ANY::e_WSTRING:
         case CIEC_ANY::e_STRING: // quotes or double quotes are already counted in ANY_STRING

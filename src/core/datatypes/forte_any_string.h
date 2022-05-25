@@ -50,15 +50,15 @@ class CIEC_ANY_STRING : public CIEC_ANY_ELEMENTARY{
      */
 
     char* getValue(void){
-      return ((char *) ((0 != getGenData()) ? reinterpret_cast<char*>(getGenData() + 4) : sm_acNullString));
+      return ((char *) ((nullptr != getGenData()) ? reinterpret_cast<char*>(getGenData() + 4) : sm_acNullString));
     }
 
     const char *getValue(void) const{
-      return (const char *) ((0 != getGenData()) ? reinterpret_cast<const char*>(getGenData() + 4) : sm_acNullString);
+      return (const char *) ((nullptr != getGenData()) ? reinterpret_cast<const char*>(getGenData() + 4) : sm_acNullString);
     }
 
     TForteUInt16 length() const{
-      return (0 != getGenData()) ? (*((TForteUInt16 *) (getGenData()))) : static_cast<TForteUInt16>(0);
+      return (nullptr != getGenData()) ? (*((TForteUInt16 *) (getGenData()))) : static_cast<TForteUInt16>(0);
     }
 
     void clear(){
@@ -91,7 +91,7 @@ class CIEC_ANY_STRING : public CIEC_ANY_ELEMENTARY{
      * @return number of bytes that this string has allocated for use
      */
     TForteUInt16 getCapacity() const{
-      return (0 != getGenData()) ? (*((TForteUInt16 *) (getGenData() + 2))) : static_cast<TForteUInt16>(0);
+      return (nullptr != getGenData()) ? (*((TForteUInt16 *) (getGenData() + 2))) : static_cast<TForteUInt16>(0);
     }
 
 #ifdef FORTE_UNICODE_SUPPORT
@@ -159,14 +159,14 @@ class CIEC_ANY_STRING : public CIEC_ANY_ELEMENTARY{
 
     void setLength(TForteUInt16 pa_unVal){
       TForteByte *pBuf = getGenData();
-      if(0 != pBuf){
+      if(nullptr != pBuf){
         *((TForteUInt16 *) (pBuf)) = pa_unVal;
       }
     }
 
     void setAllocatedLength(TForteUInt16 pa_unVal){
       TForteByte *pBuf = getGenData();
-      if(0 != pBuf){
+      if(nullptr != pBuf){
         *((TForteUInt16 *) (pBuf + 2)) = pa_unVal;
       }
     }

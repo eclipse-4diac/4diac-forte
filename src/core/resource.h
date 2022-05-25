@@ -186,11 +186,11 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
     void createDataInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, CIEC_STRING& paReqResult);
     void createAdapterInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, CIEC_STRING& paReqResult);
     void createInterfaceResponseMessages(CIEC_STRING& paReqResult, const char *paType, const CStringDictionary::TStringId* paNameList,
-        const CStringDictionary::TStringId* paTypeList, const int pa_nNumberOfElements = 0, const TDataIOID* paEWith = 0, const TForteInt16* paEWithIndexes = 0,
-        const CStringDictionary::TStringId* paDNameList = 0);
+        const CStringDictionary::TStringId* paTypeList, const int pa_nNumberOfElements = 0, const TDataIOID* paEWith = nullptr, const TForteInt16* paEWithIndexes = nullptr,
+        const CStringDictionary::TStringId* paDNameList = nullptr);
     void createInterfaceResponseMessage(CIEC_STRING& paReqResult, const char* pa_pcType, const CIEC_STRING& paName, const CIEC_STRING& paType,
-        const TDataIOID* paEWith = 0, const TForteInt16* paEWithIndexes = 0, const int pa_nIndex = 0,
-        const CStringDictionary::TStringId* paENameList = 0) const;
+        const TDataIOID* paEWith = nullptr, const TForteInt16* paEWithIndexes = nullptr, const int pa_nIndex = 0,
+        const CStringDictionary::TStringId* paENameList = nullptr) const;
 
 #endif //FORTE_SUPPORT_QUERY_CMD
 

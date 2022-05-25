@@ -31,7 +31,7 @@ class CConnectionPoint {
         mFB(paFB), mPortId(paPortId){
     }
 
-    CConnectionPoint():mFB(0), mPortId(0) {
+    CConnectionPoint():mFB(nullptr), mPortId(0) {
     }
 
     bool operator==(const CConnectionPoint & paRight) const{

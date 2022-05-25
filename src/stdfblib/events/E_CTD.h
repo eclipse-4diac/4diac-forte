@@ -64,7 +64,7 @@ private:
 public:
   FORTE_E_CTD(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : 
        CBasicFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId,
-              0, m_anFBConnData, m_anFBVarsData){
+              nullptr, m_anFBConnData, m_anFBVarsData){
   };
 
   virtual ~FORTE_E_CTD(){};

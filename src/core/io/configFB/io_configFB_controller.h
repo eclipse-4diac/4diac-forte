@@ -132,7 +132,7 @@ namespace forte {
            *
            * @param paError Forward error message in case the startup was not successful. Leads to a re-initialization.
            */
-          void started(const char* paError = 0);
+          void started(const char* paError = nullptr);
 
           /*! @brief Used for asynchronous deinitialization operations
            *

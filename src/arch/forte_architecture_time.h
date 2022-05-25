@@ -60,7 +60,7 @@ struct tm* forte_gmtime(const time_t* pa_time){
 
 inline
 time_t forte_time(){
-  return time(0);
+  return time(nullptr);
 }
 
 #endif

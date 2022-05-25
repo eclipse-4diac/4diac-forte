@@ -18,14 +18,14 @@ using namespace forte::arch;
 
 template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
 CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::CThreadBase(long paStackSize) :
-    mStack(0), mThreadHandle(nullHandle), mStackSize(paStackSize), mAlive(false) {
+    mStack(nullptr), mThreadHandle(nullHandle), mStackSize(paStackSize), mAlive(false) {
 
 }
 
 template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
 CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::~CThreadBase() {
   end();
-  if(0 != mStack ){
+  if(nullptr != mStack ){
     delete[] mStack;
   }
 }
@@ -64,7 +64,7 @@ void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::join(){
 template <typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
 void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::runThread(CThreadBase *paThread) {
   // if pointer is ok
-  if (0 != paThread) {
+  if (nullptr != paThread) {
     paThread->setAlive(true);
     paThread->run();
     paThread->setAlive(false);

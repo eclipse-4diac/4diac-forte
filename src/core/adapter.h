@@ -76,7 +76,7 @@ class CAdapter : public CFunctionBlock{
      *   \param pa_poAdConn Pointer to the connecting adapter connection.
      *   \return success of disconnection
      */
-    virtual bool disconnect(CAdapterConnection *pa_poAdConn = 0);
+    virtual bool disconnect(CAdapterConnection *pa_poAdConn = nullptr);
 
     /*! \brief Returns the compatibility of the adapter to another adapter
      *

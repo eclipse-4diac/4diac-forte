@@ -32,7 +32,7 @@ forte::com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::p
     CCriticalRegion lock(mRecvLock);
     switch (m_eConnectionState){
       case forte::com_infra::e_Connected:
-        if(0 != m_poTopLayer){
+        if(nullptr != m_poTopLayer){
           mInterruptResp = m_poTopLayer->recvData(mRecvBuffer, mBufFillSize);
           mBufFillSize = 0;
         }

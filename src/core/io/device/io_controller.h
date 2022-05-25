@@ -140,7 +140,7 @@ namespace forte {
            * @param paType Type of notification
            * @param paAttachment Attachment of notification. E.g. a const* char pointer should be attached to an Error notification.
            */
-          void notifyConfigFB(NotificationType paType, const void* paAttachment = 0);
+          void notifyConfigFB(NotificationType paType, const void* paAttachment = nullptr);
 
           typedef CSinglyLinkedList<IOHandle *> THandleList;
 

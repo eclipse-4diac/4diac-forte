@@ -65,7 +65,7 @@ class CDeviceExecution {
     }
 
     bool isExtEvHandlerValid(size_t paIdentifier) const {
-      return (0 != getExtEvHandler(paIdentifier));
+      return (nullptr != getExtEvHandler(paIdentifier));
     }
 
     void disableHandlers();

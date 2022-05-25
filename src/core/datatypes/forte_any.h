@@ -72,7 +72,7 @@ class CIEC_ANY{
      * does not work here.
      */
     static CIEC_ANY *createDataType(TForteByte *pa_acDataBuf){
-      return (0 != pa_acDataBuf) ? new (pa_acDataBuf) CIEC_ANY : new CIEC_ANY;
+      return (nullptr != pa_acDataBuf) ? new (pa_acDataBuf) CIEC_ANY : new CIEC_ANY;
     }
     const static CTypeLib::CDataTypeEntry csmFirmwareDataTypeEntry_CIEC_ANY;
 
