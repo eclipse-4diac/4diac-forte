@@ -251,9 +251,9 @@ class CUA_ClientInformation {
 
         CActionInfo& mActionInfo;
         CUA_ClientInformation& mClientInformation;
-      private:
-        UA_RemoteCallHandle(const UA_RemoteCallHandle &paObj);
-        UA_RemoteCallHandle& operator=(const UA_RemoteCallHandle& other);
+
+        UA_RemoteCallHandle(const UA_RemoteCallHandle &paObj) = delete;
+        UA_RemoteCallHandle& operator=(const UA_RemoteCallHandle& other) = delete;
     };
 
     /**
@@ -344,15 +344,11 @@ class CUA_ClientInformation {
      */
     void resetSubscription(bool paDeleteSubscription);
 
-    /**
-     * Copy constructor is private and not defined to avoid its usage
-     */
-    CUA_ClientInformation(const CUA_ClientInformation &paObj);
+  public:
+    CUA_ClientInformation(const CUA_ClientInformation &paObj) = delete;
+    CUA_ClientInformation& operator=(const CUA_ClientInformation& other) = delete;
 
-    /**
-     * Assignment operator is private and not defined to avoid its usage
-     */
-    CUA_ClientInformation& operator=(const CUA_ClientInformation& other);
+  private:
 
     /**
      * Endpoint of the remote

@@ -164,9 +164,8 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
         CStringDictionary::TStringId mStructureTypeID;
         const CStringDictionary::TStringId *mElementNames;
         CIEC_ANY *mMembers;
-      private:
-        //!declared but undefined copy constructor as we don't want these specs to be directly copied.
-        CStructSpecs(const CStructSpecs&);
+
+        CStructSpecs(const CStructSpecs&) = delete;
     };
 
     void clear();

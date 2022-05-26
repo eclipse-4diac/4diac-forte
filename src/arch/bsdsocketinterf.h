@@ -31,8 +31,7 @@ class CBSDSocketInterface{
     static int sendDataOnUDP(TSocketDescriptor pa_nSockD, TUDPDestAddr *pa_ptDestAddr, char* pa_pcData, unsigned int pa_unSize);
     static int receiveDataFromUDP(TSocketDescriptor pa_nSockD, char* pa_pcData, unsigned int pa_unBufSize);
 
-  private:
-    CBSDSocketInterface(); //this function is not implemented as we don't want instances of this class
+    CBSDSocketInterface() = delete;
 };
 
 #endif /* BSDSOCKETINTERF_H_ */

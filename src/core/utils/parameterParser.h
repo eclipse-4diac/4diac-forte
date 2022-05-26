@@ -55,11 +55,9 @@ class CParameterParser{
     void moveToPositionOfNextParameterSeparatorOrEndOfString(char** paParsePosition) const;
     void trimTrailingWhiteSpacesOfParameterSubstring(char* paParsePosition, bool isSpace) const;
 
-    //we don't want that parser to be copied or assigned therefore
-    //the copy constructor and assignment operator are declared private
-    //but not implemented avoiding cppchecks warnings too
-    CParameterParser(const CParameterParser&);
-    CParameterParser& operator =(const CParameterParser &);
+  public:
+    CParameterParser(const CParameterParser&) = delete;
+    CParameterParser& operator =(const CParameterParser &) = delete;
 };
 
 #endif /* SRC_CORE_UTILS_PARAMETERPARSER_H_ */

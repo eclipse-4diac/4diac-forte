@@ -63,10 +63,9 @@ class CPosixThread : public forte::arch::CThreadBase<pthread_t> {
      */
     static void * threadFunction(void *paArguments);
 
-    //we don't want that threads can be copied or assigned therefore the copy constructor and assignment operator are declared private
-    //but not implemented
-    CPosixThread(const CPosixThread&);
-    CPosixThread& operator = (const CPosixThread &);
+  public:
+    CPosixThread(const CPosixThread&) = delete;
+    CPosixThread& operator = (const CPosixThread &) = delete;
 };
 
 

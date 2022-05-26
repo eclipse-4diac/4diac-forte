@@ -46,10 +46,10 @@ namespace ForteLibrary{
 
       IProgramProvider* GetProgramProvider() override;
 
-    private:
-        ForteComponent(const ForteComponent& paArg) = delete;
-        ForteComponent& operator= (const ForteComponent& paArg) = delete;
+      ForteComponent(const ForteComponent& paArg) = delete;
+      ForteComponent& operator= (const ForteComponent& paArg) = delete;
 
+    private:
         ForteComponentProgramProvider mProgramProvider;
         RMT_DEV *mDev;
   };

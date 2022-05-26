@@ -457,9 +457,10 @@ class CFunctionBlock {
     virtual void setInitialValues() {
     }
 
-    //!declared but undefined copy constructor as we don't want FBs to be directly copied.
-    CFunctionBlock(const CFunctionBlock&);
+  public:
+    CFunctionBlock(const CFunctionBlock&) = delete;
 
+  private:
     void configureGenericDI(TPortId paDIPortId, const CIEC_ANY *paRefValue);
 
     CResource *m_poResource; //!< A pointer to the resource containing the function block.

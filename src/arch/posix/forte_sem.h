@@ -59,16 +59,10 @@ namespace forte {
          */
         bool tryNoWait();
 
-      private:
-        /* TODO: in C++11, this class should be properly made non-copyable since
-         * mutexes cannot be copied after initialisation
-
         CPThreadSemaphore(const CPThreadSemaphore &) = delete;
         CPThreadSemaphore &operator=(const CPThreadSemaphore &) = delete;
-        */
-        CPThreadSemaphore(const CPThreadSemaphore &);
-        CPThreadSemaphore &operator=(const CPThreadSemaphore &);
 
+      private:
         /* Implementation is based on POSIX condition variables instead of POSIX
          * semaphores, because POSIX semaphores cannot safely wait without busy
          * looping. Derived from https://stackoverflow.com/a/57496953 */

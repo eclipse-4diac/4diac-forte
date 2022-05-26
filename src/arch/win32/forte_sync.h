@@ -41,10 +41,10 @@ class CPCSyncObject{
     //!Free the resource coming after the lock command
     void unlock();
 
-  private:
-    CPCSyncObject(const CPCSyncObject &); /* = delete; */
-    CPCSyncObject &operator=(const CPCSyncObject &); /* = delete; */
+    CPCSyncObject(const CPCSyncObject &) = delete;
+    CPCSyncObject &operator=(const CPCSyncObject &) = delete;
 
+  private:
 #ifdef WINDOWS_XP_COMPAT
     CRITICAL_SECTION mLock;
 #else

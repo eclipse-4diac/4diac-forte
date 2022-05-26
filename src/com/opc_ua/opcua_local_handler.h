@@ -204,9 +204,8 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
         UA_QualifiedName *mBrowseName;
         UA_NodeId *mReturnedNodeId;
 
-      private:
-        CCreateInfo(const CCreateInfo &other);
-        CCreateInfo& operator=(const CCreateInfo &other);
+        CCreateInfo(const CCreateInfo &other) = delete;
+        CCreateInfo& operator=(const CCreateInfo &other) = delete;
     };
 
     /**
@@ -221,9 +220,9 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
         ~CCreateObjectInfo() = default;
 
         UA_NodeId *mTypeNodeId;
-      private:
-        CCreateObjectInfo(const CCreateObjectInfo &paObj);
-        CCreateObjectInfo& operator=(const CCreateObjectInfo &other);
+
+        CCreateObjectInfo(const CCreateObjectInfo &paObj) = delete;
+        CCreateObjectInfo& operator=(const CCreateObjectInfo &other) = delete;
     };
 
     /**
@@ -242,9 +241,9 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
         const CIEC_ANY *mInitData;
         bool mAllowWrite;
         UA_NodeId *mVariableTypeNodeId;
-      private:
-        CCreateVariableInfo(const CCreateVariableInfo &paObj);
-        CCreateVariableInfo& operator=(const CCreateVariableInfo &other);
+
+        CCreateVariableInfo(const CCreateVariableInfo &paObj) = delete;
+        CCreateVariableInfo& operator=(const CCreateVariableInfo &other) = delete;
     };
 
     /**
@@ -266,9 +265,9 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
         CLocalMethodInfo &mLocalMethodInfo;
         size_t mInputSize;
         size_t mOutputSize;
-      private:
-        CCreateMethodInfo(CCreateMethodInfo &other);
-        CCreateMethodInfo& operator=(const CCreateMethodInfo &other);
+
+        CCreateMethodInfo(CCreateMethodInfo &other) = delete;
+        CCreateMethodInfo& operator=(const CCreateMethodInfo &other) = delete;
     };
 
     /**
@@ -351,8 +350,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
         UA_NodeId *mMethodNodeId;
         CLocalMethodInfo &mActionInfo;
 
-      private:
-        UA_ParentNodeHandler& operator=(const UA_ParentNodeHandler &other);
+        UA_ParentNodeHandler& operator=(const UA_ParentNodeHandler &other) = delete;
     };
 
     /**

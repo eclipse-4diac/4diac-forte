@@ -97,10 +97,10 @@ namespace forte {
          */
         static CHttpComLayer::ERequestType getTypeOfRequest(const char* paRequest);
 
-      private:
-        CHttpParser();
-        virtual ~CHttpParser();
+        CHttpParser() = delete;
+        virtual ~CHttpParser() = delete;
 
+      private:
         /**
          *  Creates the common parts of the headers of the supported types
          * @param paDest place to store the header

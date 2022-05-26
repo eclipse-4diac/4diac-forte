@@ -415,12 +415,11 @@ class CIEC_ANY{
     const static int scmMaxTypeNameLength = 14;
     static const char scmAnyToStringResponse[];
 
-    //!declared but undefined copy constructor as we don't want ANYs to be directly copied.
-    CIEC_ANY(const CIEC_ANY&);
+  public:
+    CIEC_ANY(const CIEC_ANY&) = delete;
+    CIEC_ANY& operator =(const CIEC_ANY& pa_roValue) = delete;
 
-    //!declared but undefined copy constructor as we don't want ANYs to be directly assigned. Can result in problems for more complicated data types (e.g., string)
-    CIEC_ANY& operator =(const CIEC_ANY& pa_roValue);
-
+  private:
     bool mForced;
 
     //Anonymous union holding the data value of our IEC data type

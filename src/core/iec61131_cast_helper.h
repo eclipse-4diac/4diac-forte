@@ -64,8 +64,7 @@ namespace forte {
     namespace mpl {
 
       struct NullType{
-        private:
-          NullType();
+          NullType() = delete;
       };
 
       struct false_ {

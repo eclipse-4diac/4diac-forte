@@ -32,7 +32,6 @@ class ForteLibrary : public LibraryBase, public Singleton<ForteLibrary> {
     static void Main(AppDomain& appDomain);
     static ILibrary* GetInstance();
 
-  private:
     ForteLibrary(const ForteLibrary& arg) = delete;
     ForteLibrary& operator= (const ForteLibrary& arg) = delete;
 };

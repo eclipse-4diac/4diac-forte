@@ -33,12 +33,12 @@ class CGenericIPComSocketHandler : public THandler, public TSocketCreator{
     typedef FORTE_SOCKET_TYPE TSocketDescriptor;
 
     static const TSocketDescriptor scmInvalidSocketDescriptor = FORTE_INVALID_SOCKET;
-  private:
+
     //as this class is just a place holder for the others we don't want to have an instance of it
-    CGenericIPComSocketHandler();
-    CGenericIPComSocketHandler(const CGenericIPComSocketHandler&);
-    CGenericIPComSocketHandler& operator =(const CGenericIPComSocketHandler &);
-    ~CGenericIPComSocketHandler();
+    CGenericIPComSocketHandler() = delete;
+    CGenericIPComSocketHandler(const CGenericIPComSocketHandler&) = delete;
+    CGenericIPComSocketHandler& operator =(const CGenericIPComSocketHandler &) = delete;
+    ~CGenericIPComSocketHandler() = default;
 };
 
 

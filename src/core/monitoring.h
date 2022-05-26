@@ -57,8 +57,8 @@ namespace forte {
             CIEC_ANY &mDataValueRef;  //!< reference to the data point to watch
             CIEC_ANY *mDataBuffer;    //!< buffer for copying the data from the data point reference
 
-          private:
-            SDataWatchEntry &operator=(const SDataWatchEntry&);  // only declaration no implementation to forbid assignment
+          public:
+            SDataWatchEntry &operator=(const SDataWatchEntry&) = delete;
         };
 
         struct SEventWatchEntry{
@@ -124,9 +124,9 @@ namespace forte {
 
         CResource &mResource; //!< The resource this monitoring handler manages
 
-        //don't allow that CMonitoringHandler can be copy therefore making the copy constructor private and not implemented
-        CMonitoringHandler(const CMonitoringHandler&);
-        CMonitoringHandler& operator =(const CMonitoringHandler &);
+      public:
+        CMonitoringHandler(const CMonitoringHandler&) = delete;
+        CMonitoringHandler& operator =(const CMonitoringHandler &) = delete;
     };
 
   }

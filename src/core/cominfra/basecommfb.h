@@ -145,11 +145,9 @@ namespace forte {
       unsigned int m_unComInterruptQueueCount; //!< number of triggers pending from the network
       CComLayer *m_apoInterruptQueue[cg_unCommunicationInterruptQueueSize];
 
-      private:
-        //we don't want that CBaseCommFB can be copied or assigned therefore the copy constructor and assignment operator are declared private
-        //but not implemented
-        CBaseCommFB(const CBaseCommFB&);
-        CBaseCommFB& operator=(const CBaseCommFB& paOther);
+    public:
+      CBaseCommFB(const CBaseCommFB&) = delete;
+      CBaseCommFB& operator=(const CBaseCommFB& paOther) = delete;
     };
 
   }

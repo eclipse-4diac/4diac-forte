@@ -68,9 +68,9 @@ class COPC_UA_Helper {
         bool mFailed;
         size_t mOffset;
         size_t mSize;
-      private:
-        UA_Variables_handle(const UA_Variables_handle &paObj);
-        UA_Variables_handle& operator=(const UA_Variables_handle& other);
+
+        UA_Variables_handle(const UA_Variables_handle &paObj) = delete;
+        UA_Variables_handle& operator=(const UA_Variables_handle& other) = delete;
 
     };
 
@@ -89,9 +89,9 @@ class COPC_UA_Helper {
         }
 
         const UA_Variant **mData;
-      private:
-        UA_RecvVariable_handle(const UA_RecvVariable_handle &paObj);
-        UA_RecvVariable_handle& operator=(const UA_RecvVariable_handle& other);
+
+        UA_RecvVariable_handle(const UA_RecvVariable_handle &paObj) = delete;
+        UA_RecvVariable_handle& operator=(const UA_RecvVariable_handle& other) = delete;
     };
 
     /**
@@ -109,9 +109,9 @@ class COPC_UA_Helper {
         }
 
         UA_Variant **mData;
-      private:
-        UA_SendVariable_handle(const UA_SendVariable_handle &paObj);
-        UA_SendVariable_handle& operator=(const UA_SendVariable_handle& other);
+
+        UA_SendVariable_handle(const UA_SendVariable_handle &paObj) = delete;
+        UA_SendVariable_handle& operator=(const UA_SendVariable_handle& other) = delete;
     };
 
 

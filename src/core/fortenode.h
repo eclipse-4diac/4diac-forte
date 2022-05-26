@@ -34,8 +34,8 @@ private:
   /*!\brief pointer to the next node element
    */
   CSinglyLinkedListNode* mNextNode;
-  CSinglyLinkedListNode();
 public:
+  CSinglyLinkedListNode() = delete;
   CSinglyLinkedListNode(T paNodeElement, CSinglyLinkedListNode* paNextNode = nullptr) : mNodeElement(paNodeElement), mNextNode(paNextNode) {
 
   }

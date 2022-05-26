@@ -88,8 +88,9 @@ public:
     return !(*this == rhs);
   }
 
+  CIterator() = delete;
+
 private:
-  CIterator();
   Container* mCurrentPosition;
 };
 
@@ -156,8 +157,8 @@ public:
     return !(*this == rhs);
   }
 
+  CIterator() = delete;
 private:
-  CIterator();
   Container* mCurrentPosition;
 };
 

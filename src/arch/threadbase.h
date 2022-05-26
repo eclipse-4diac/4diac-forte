@@ -147,10 +147,9 @@ namespace forte {
          */
         CSyncObject mThreadMutex;
 
-        //we don't want that threads can be copied or assigned therefore the copy constructor and assignment operator are declared private
-        //but not implemented
-        CThreadBase(const CThreadBase&);
-        CThreadBase& operator = (const CThreadBase &);
+  public:
+        CThreadBase(const CThreadBase&) = delete;
+        CThreadBase& operator = (const CThreadBase &) = delete;
     };
 
   } /* namespace arch */

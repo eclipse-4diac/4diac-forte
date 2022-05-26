@@ -88,9 +88,9 @@ namespace forte {
 
             friend class CLocalComLayer;
 
-            //not to be implemented
-            CLocalCommGroupsManager(const CLocalCommGroupsManager &);
-            CLocalCommGroupsManager &operator =(const CLocalCommGroupsManager&);
+          public:
+            CLocalCommGroupsManager(const CLocalCommGroupsManager &) = delete;
+            CLocalCommGroupsManager &operator =(const CLocalCommGroupsManager&) = delete;
         };
 
         static CLocalCommGroupsManager sm_oLocalCommGroupsManager;

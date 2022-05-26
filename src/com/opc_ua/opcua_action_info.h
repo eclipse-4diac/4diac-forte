@@ -152,17 +152,10 @@ class CActionInfo {
      */
     static const char *const mActionNames[eActionUnknown];
 
+    CActionInfo(const CActionInfo &paObj) = delete;
+    CActionInfo& operator=(const CActionInfo &paOther) = delete;
+
   private:
-
-    /**
-     * Copy constructor is private and not defined to avoid its usage
-     */
-    CActionInfo(const CActionInfo &paObj);
-
-    /**
-     * Assignment operator is private and not defined to avoid its usage
-     */
-    CActionInfo& operator=(const CActionInfo &paOther);
 
     /**
      * Checks if the action is valid regarding requirements for the amount of node pairs, endpoint value and the type of action
@@ -375,17 +368,10 @@ class CLocalMethodInfo : public CActionInfo {
      */
     forte::arch::CSemaphore& getResultReady();
 
+    CLocalMethodInfo(const CLocalMethodInfo &paObj) = delete;
+    CLocalMethodInfo& operator=(const CLocalMethodInfo &other) = delete;
+
   private:
-
-    /**
-     * Copy constructor is private and not defined to avoid its usage
-     */
-    CLocalMethodInfo(const CLocalMethodInfo &paObj);
-
-    /**
-     * Assignment operator is private and not defined to avoid its usage
-     */
-    CLocalMethodInfo& operator=(const CLocalMethodInfo &other);
 
     /**
      * When a method is called, it waits with this semaphore until the response comes back to the FB, when this semaphore is increased indicating the method has finished

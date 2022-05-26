@@ -51,10 +51,10 @@ class CMQTTClientConfigFileParser {
      */
     static bool loadConfig(std::string &paFileLocation, std::string &paEndpoint, MQTTConfigFromFile &paResult);
 
-  private:
-    explicit CMQTTClientConfigFileParser();
-    virtual ~CMQTTClientConfigFileParser();
+    explicit CMQTTClientConfigFileParser() = delete;
+    virtual ~CMQTTClientConfigFileParser() = delete;
 
+  private:
     /**
      * Allowed key in the configuration file for the mqtt clients
      */

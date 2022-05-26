@@ -57,10 +57,12 @@ class CPThreadSyncObject{
       return &mMutex;
     }
 
+  public:
     // prevent copies, since pthread_mutex_t may not be copied
-    CPThreadSyncObject(const CPThreadSyncObject &); /* = delete; */
-    CPThreadSyncObject &operator=(const CPThreadSyncObject &); /* = delete; */
+    CPThreadSyncObject(const CPThreadSyncObject &) = delete;
+    CPThreadSyncObject &operator=(const CPThreadSyncObject &) = delete;
 
+  private:
     //! The posix thread mutex handle of the operating system.
     pthread_mutex_t mMutex;
 

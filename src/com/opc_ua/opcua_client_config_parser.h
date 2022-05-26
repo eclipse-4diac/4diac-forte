@@ -57,10 +57,10 @@ class CUA_ClientConfigFileParser {
      */
     static bool loadConfig(const std::string &paFileLocation, const std::string &paEndpoint, UA_ConfigFromFile &paResult);
 
-  private:
-    explicit CUA_ClientConfigFileParser();
-    virtual ~CUA_ClientConfigFileParser();
+    explicit CUA_ClientConfigFileParser() = delete;
+    virtual ~CUA_ClientConfigFileParser() = delete;
 
+  private:
     /**
      * Allowed keys in the configuration file. If a new key is to be added, it should go before eKeyUnknown
      */
