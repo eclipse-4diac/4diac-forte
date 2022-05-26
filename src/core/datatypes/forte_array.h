@@ -225,8 +225,10 @@ class CIEC_ARRAY : public CIEC_ARRAY_COMMON<T> {
         copyEnd -= init.size() - size();
         DEVLOG_WARNING("Initializer list longer than array\n");
       }
-      for (auto iterSource = init.begin(), iterDest = begin(); iterSource != copyEnd; ++iterSource, ++iterDest ) {
+      auto iterDest = begin();
+      for (auto iterSource = init.begin(); iterSource != copyEnd; ++iterSource) {
         iterDest->setValue(*iterSource);
+        ++iterDest;
       }
       return *this;
     }
