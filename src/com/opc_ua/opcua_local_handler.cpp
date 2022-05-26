@@ -74,7 +74,7 @@ void COPC_UA_Local_Handler::run() {
   mUaServer = UA_Server_new();
   if(mUaServer) {
     UA_ServerConfig *uaServerConfig = UA_Server_getConfig(mUaServer);
-    UA_ServerConfig_setMinimal(uaServerConfig, gOpcuaServerPort, 0);
+    UA_ServerConfig_setMinimal(uaServerConfig, gOpcuaServerPort, nullptr);
 
     UA_ServerStrings serverStrings;
     generateServerStrings(gOpcuaServerPort, serverStrings);
@@ -530,7 +530,7 @@ UA_StatusCode COPC_UA_Local_Handler::handleNonExistingVariable(CActionInfo &paAc
   UA_StatusCode retVal = splitAndCreateFolders(paNodePairInfo.mBrowsePath, nodeName, paReferencedNodes);
   if(UA_STATUSCODE_GOOD == retVal) {
     CCreateVariableInfo variableInformation;
-    initializeCreateInfo(nodeName, paNodePairInfo, paReferencedNodes.isEmpty() ? 0 : *(paReferencedNodes.back()), variableInformation);
+    initializeCreateInfo(nodeName, paNodePairInfo, paReferencedNodes.isEmpty() ? nullptr : *(paReferencedNodes.back()), variableInformation);
 
     variableInformation.mTypeConvert = COPC_UA_Helper::getOPCUATypeFromAny(paVariable);
     variableInformation.mInitData = &paVariable;
@@ -604,7 +604,7 @@ UA_StatusCode COPC_UA_Local_Handler::createVariableNode(const CCreateVariableInf
     *paCreateVariableInfo.mBrowseName, // browseName
     *paCreateVariableInfo.mVariableTypeNodeId, // typeDefinition Reference to the type definition for the variable node
     variableAttributes, // Variable attributes
-    0, // instantiation callback
+    nullptr, // instantiation callback
     paCreateVariableInfo.mReturnedNodeId); // return Node Id
 
   if(UA_STATUSCODE_GOOD != retVal) {
@@ -634,7 +634,7 @@ UA_StatusCode COPC_UA_Local_Handler::updateNodeValue(const UA_NodeId &paNodeId, 
 UA_StatusCode COPC_UA_Local_Handler::registerVariableCallBack(const UA_NodeId &paNodeId, CActionInfo &paActionInfo, size_t paPortIndex) {
 
   const UA_ValueCallback writeCallback = {
-    0,
+    nullptr,
     COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onWrite };
   UA_StatusCode retVal = UA_Server_setVariableNode_valueCallback(mUaServer, paNodeId, writeCallback);
   if(UA_STATUSCODE_GOOD == retVal) {
@@ -699,7 +699,7 @@ UA_StatusCode COPC_UA_Local_Handler::initializeCreateMethod(CActionInfo &paActio
       retVal = splitAndCreateFolders((*itMethodNodePairInfo)->mBrowsePath, nodeName, referencedNodes);
       if(UA_STATUSCODE_GOOD == retVal) {
         CCreateMethodInfo methodInformation(static_cast<CLocalMethodInfo&>(paActionInfo));
-        initializeCreateInfo(nodeName, (**itMethodNodePairInfo), referencedNodes.isEmpty() ? 0 : *(referencedNodes.back()), methodInformation);
+        initializeCreateInfo(nodeName, (**itMethodNodePairInfo), referencedNodes.isEmpty() ? nullptr : *(referencedNodes.back()), methodInformation);
 
         methodInformation.mOutputSize = paActionInfo.getSendSize();
         methodInformation.mInputSize = paActionInfo.getReceiveSize();
@@ -931,7 +931,7 @@ UA_StatusCode COPC_UA_Local_Handler::executeCreateObject(CActionInfo &paActionIn
         if(UA_STATUSCODE_GOOD == retVal) {
           CCreateObjectInfo createInformation;
 
-          initializeCreateInfo(nodeName, (**itInstance), referencedNodes.isEmpty() ? 0 : *(referencedNodes.back()), createInformation);
+          initializeCreateInfo(nodeName, (**itInstance), referencedNodes.isEmpty() ? nullptr : *(referencedNodes.back()), createInformation);
           createInformation.mTypeNodeId = (*itTypeNodePairInfo)->mNodeId;
 
           retVal = createObjectNode(createInformation);
@@ -999,7 +999,7 @@ UA_StatusCode COPC_UA_Local_Handler::createObjectNode(const CCreateObjectInfo &p
   oAttr.description = UA_LOCALIZEDTEXT_ALLOC("", nodeName.getValue());
   oAttr.displayName = UA_LOCALIZEDTEXT_ALLOC("", nodeName.getValue());
   retVal = UA_Server_addObjectNode(mUaServer, requestedNodeId, parentNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT), *paCreateObjectInfo.mBrowseName,
-    *paCreateObjectInfo.mTypeNodeId, oAttr, 0, paCreateObjectInfo.mReturnedNodeId);
+    *paCreateObjectInfo.mTypeNodeId, oAttr, nullptr, paCreateObjectInfo.mReturnedNodeId);
   if(UA_STATUSCODE_GOOD != retVal) {
     DEVLOG_ERROR("[OPC UA LOCAL]: Could not addObjectNode. Error: %s\n", UA_StatusCode_name(retVal));
   }
@@ -1037,7 +1037,7 @@ UA_StatusCode COPC_UA_Local_Handler::executeCreateVariable(CActionInfo &paAction
           if(UA_STATUSCODE_GOOD == retVal) {
             CCreateVariableInfo createInformation;
 
-            initializeCreateInfo(nodeName, (**itInstance), referencedNodes.isEmpty() ? 0 : *(referencedNodes.back()), createInformation);
+            initializeCreateInfo(nodeName, (**itInstance), referencedNodes.isEmpty() ? nullptr : *(referencedNodes.back()), createInformation);
             createInformation.mVariableTypeNodeId = (*itVariableTypeNodePairInfo)->mNodeId;
             const UA_NodeId *dataValueTypeNodeId = (*itDataValueTypeNodePairInfo)->mNodeId;
 

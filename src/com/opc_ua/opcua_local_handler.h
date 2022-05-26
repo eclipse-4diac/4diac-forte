@@ -191,7 +191,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     class CCreateInfo {
       public:
         CCreateInfo() :
-            mRequestedNodeId(0), mParentNodeId(0), mBrowseName(UA_QualifiedName_new()), mReturnedNodeId(UA_NodeId_new()) {
+            mRequestedNodeId(nullptr), mParentNodeId(nullptr), mBrowseName(UA_QualifiedName_new()), mReturnedNodeId(UA_NodeId_new()) {
         }
 
         virtual ~CCreateInfo() {
@@ -215,7 +215,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     class CCreateObjectInfo : public CCreateInfo {
       public:
         CCreateObjectInfo() :
-            CCreateInfo(), mTypeNodeId(0) {
+            CCreateInfo(), mTypeNodeId(nullptr) {
         }
 
         ~CCreateObjectInfo() {
@@ -233,7 +233,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     class CCreateVariableInfo : public CCreateInfo {
       public:
         CCreateVariableInfo() :
-            CCreateInfo(), mTypeConvert(0), mInitData(0), mAllowWrite(false), mVariableTypeNodeId(0) {
+            CCreateInfo(), mTypeConvert(nullptr), mInitData(nullptr), mAllowWrite(false), mVariableTypeNodeId(nullptr) {
 
         }
 
@@ -255,7 +255,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     class CCreateMethodInfo : public CCreateInfo {
       public:
         explicit CCreateMethodInfo(CLocalMethodInfo &paCallack) :
-            CCreateInfo(), mInputArguments(0), mOutputArguments(0), mLocalMethodInfo(paCallack), mInputSize(0), mOutputSize(0) {
+            CCreateInfo(), mInputArguments(nullptr), mOutputArguments(nullptr), mLocalMethodInfo(paCallack), mInputSize(0), mOutputSize(0) {
 
         }
         ~CCreateMethodInfo() {

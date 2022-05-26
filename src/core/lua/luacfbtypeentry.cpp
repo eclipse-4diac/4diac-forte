@@ -62,7 +62,7 @@ namespace luatype {
 
 CLuaCFBTypeEntry::CLuaCFBTypeEntry(CStringDictionary::TStringId paTypeNameId, CIEC_STRING paLuaScriptAsString, SFBInterfaceSpec& paInterfaceSpec,
     SCFB_FBNData& paFbnSpec) :
-    CTypeLib::CFBTypeEntry(paTypeNameId, 0, &m_interfaceSpec), cm_sLuaScriptAsString(paLuaScriptAsString), m_interfaceSpec(paInterfaceSpec), m_fbnSpec(paFbnSpec) {
+    CTypeLib::CFBTypeEntry(paTypeNameId, nullptr, &m_interfaceSpec), cm_sLuaScriptAsString(paLuaScriptAsString), m_interfaceSpec(paInterfaceSpec), m_fbnSpec(paFbnSpec) {
 }
 
 CLuaCFBTypeEntry::~CLuaCFBTypeEntry() {
@@ -76,7 +76,7 @@ CLuaCFBTypeEntry* CLuaCFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStr
     return nullptr;
   }
   //interfaceSpec
-  SFBInterfaceSpec interfaceSpec = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+  SFBInterfaceSpec interfaceSpec = { 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr };
   if(!luaEngine.pushField(-1, "interfaceSpec", LUA_TTABLE)) {
     return nullptr;
   }
@@ -86,7 +86,7 @@ CLuaCFBTypeEntry* CLuaCFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStr
   }
   luaEngine.pop(); //pop interfaceSpec
   //fbnSpec
-  SCFB_FBNData fbnSpec = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+  SCFB_FBNData fbnSpec = { 0, nullptr, 0, nullptr, 0, nullptr, 0, nullptr, 0, nullptr, 0, nullptr };
   if(!luaEngine.pushField(-1, "fbnSpec", LUA_TTABLE)) {
     deleteInterfaceSpec(interfaceSpec);
     return nullptr;

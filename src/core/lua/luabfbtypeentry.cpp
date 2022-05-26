@@ -20,7 +20,7 @@
 
 CLuaBFBTypeEntry::CLuaBFBTypeEntry(CStringDictionary::TStringId paTypeNameId, CIEC_STRING paLuaScriptAsString, SFBInterfaceSpec& paInterfaceSpec,
     SInternalVarsInformation& paInternalVarsInformation) :
-    CFBTypeEntry(paTypeNameId, 0, &m_interfaceSpec), cm_sLuaScriptAsString(paLuaScriptAsString), m_interfaceSpec(paInterfaceSpec),
+    CFBTypeEntry(paTypeNameId, nullptr, &m_interfaceSpec), cm_sLuaScriptAsString(paLuaScriptAsString), m_interfaceSpec(paInterfaceSpec),
         m_internalVarsInformation(paInternalVarsInformation) {
 }
 
@@ -35,7 +35,7 @@ CLuaBFBTypeEntry* CLuaBFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStr
     return nullptr;
   }
   //interfaceSpec
-  SFBInterfaceSpec interfaceSpec = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+  SFBInterfaceSpec interfaceSpec = { 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr };
   if(!luaEngine.pushField(-1, "interfaceSpec", LUA_TTABLE)) {
     return nullptr;
   }
@@ -45,7 +45,7 @@ CLuaBFBTypeEntry* CLuaBFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStr
   }
   luaEngine.pop(); //pop interfaceSpec
   //internalVarsInformation
-  SInternalVarsInformation internalVarsInformation = { 0, 0, 0 };
+  SInternalVarsInformation internalVarsInformation = { 0, nullptr, nullptr };
   if(!luaEngine.pushField(-1, "internalVarsInformation", LUA_TTABLE)) {
     deleteInterfaceSpec(interfaceSpec);
     return nullptr;

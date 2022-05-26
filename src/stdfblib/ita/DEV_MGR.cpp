@@ -163,9 +163,9 @@ bool DEV_MGR::parseXType(char *paRequestPartLeft, forte::core::SManagementCMD &p
     paRequestPartLeft = &(paRequestPartLeft[nReqLength]);
     if('*' != paRequestPartLeft[0]){
       int i = parseIdentifier(paRequestPartLeft, paCommand.mFirstParam);
-      paRequestPartLeft = (-1 == i) ? 0 : strchr(&(paRequestPartLeft[i + 1]), '>');
+      paRequestPartLeft = (-1 == i) ? nullptr : strchr(&(paRequestPartLeft[i + 1]), '>');
     }
-    if(0 != paRequestPartLeft){
+    if(nullptr != paRequestPartLeft){
       paRequestPartLeft++;
       char* endOfRequest = strchr(paRequestPartLeft, '<');
       *endOfRequest = '\0';

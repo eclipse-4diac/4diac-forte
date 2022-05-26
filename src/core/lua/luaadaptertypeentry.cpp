@@ -19,7 +19,7 @@
 #include "adapter.h"
 
 CLuaAdapterTypeEntry::CLuaAdapterTypeEntry(CStringDictionary::TStringId paTypeNameId, CIEC_STRING paLuaScriptAsString, SFBInterfaceSpec& paInterfaceSpec) :
-    CTypeLib::CAdapterTypeEntry(paTypeNameId, 0, &mSocketInterfaceSpec), cm_sLuaScriptAsString(paLuaScriptAsString), mSocketInterfaceSpec(paInterfaceSpec) {
+    CTypeLib::CAdapterTypeEntry(paTypeNameId, nullptr, &mSocketInterfaceSpec), cm_sLuaScriptAsString(paLuaScriptAsString), mSocketInterfaceSpec(paInterfaceSpec) {
   initPlugInterfaceSpec(mSocketInterfaceSpec);
 }
 
@@ -33,7 +33,7 @@ CLuaAdapterTypeEntry* CLuaAdapterTypeEntry::createLuaAdapterTypeEntry(CStringDic
     return nullptr;
   }
   //interfaceSpec
-  SFBInterfaceSpec interfaceSpec = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+  SFBInterfaceSpec interfaceSpec = { 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr };
   if(!luaEngine.pushField(-1, "interfaceSpec", LUA_TTABLE)) {
     return nullptr;
   }
@@ -51,8 +51,8 @@ CAdapter* CLuaAdapterTypeEntry::createAdapterInstance(CStringDictionary::TString
   if(!luaEngine->load(this) && (!luaEngine->loadString(std::string(cm_sLuaScriptAsString.getValue())))) {
     return nullptr;
   }
-  TForteByte* connData = 0;
-  TForteByte* varsData = 0;
+  TForteByte* connData = nullptr;
+  TForteByte* varsData = nullptr;
   if(pa_bIsPlug) {
     connData = new TForteByte[CAdapter::genAdapterFBConnDataSize(mPlugInterfaceSpec.m_nNumEIs, mPlugInterfaceSpec.m_nNumEOs, mPlugInterfaceSpec.m_nNumDIs,
       mPlugInterfaceSpec.m_nNumDOs)];
@@ -95,7 +95,7 @@ bool CLuaAdapterTypeEntry::initInterfaceSpec(SFBInterfaceSpec& paInterfaceSpec, 
   paInterfaceSpec.m_aunDODataTypeNames = paLuaEngine->getCustomArrayField<CStringDictionary::TStringId, luatype::getTypeNameId>(paIndex, "DODataTypeNames",
     numDODataTypeNames);
   paInterfaceSpec.m_nNumAdapters = 0;
-  paInterfaceSpec.m_pstAdapterInstanceDefinition = 0;
+  paInterfaceSpec.m_pstAdapterInstanceDefinition = nullptr;
   //checks
   if(paInterfaceSpec.m_aunEINames == nullptr || paInterfaceSpec.m_anEIWith == nullptr || paInterfaceSpec.m_anEIWithIndexes == nullptr
     || paInterfaceSpec.m_aunEONames == nullptr || paInterfaceSpec.m_anEOWith == nullptr || paInterfaceSpec.m_anEOWithIndexes == nullptr
@@ -136,7 +136,7 @@ bool CLuaAdapterTypeEntry::initPlugInterfaceSpec(SFBInterfaceSpec& paInterfaceSp
   mPlugInterfaceSpec.m_aunDONames = paInterfaceSpec.m_aunDINames;
   mPlugInterfaceSpec.m_aunDODataTypeNames = paInterfaceSpec.m_aunDIDataTypeNames;
   mPlugInterfaceSpec.m_nNumAdapters = 0;
-  mPlugInterfaceSpec.m_pstAdapterInstanceDefinition = 0;
+  mPlugInterfaceSpec.m_pstAdapterInstanceDefinition = nullptr;
   return true;
 }
 

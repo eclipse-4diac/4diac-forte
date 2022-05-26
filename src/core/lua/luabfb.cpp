@@ -89,7 +89,7 @@ CIEC_ANY* CLuaBFB::getVariable(TForteUInt32 paId) {
     if((paId & CLuaBFB::LUA_FB_DI_FLAG) != 0) {
       return m_apoAdapters[(paId >> 16) & CLuaBFB::LUA_AD_VAR_MAX]->getDI(paId & CLuaBFB::LUA_FB_VAR_MAX);
     }
-    return 0;
+    return nullptr;
   }
   if((paId & CLuaBFB::LUA_FB_DI_FLAG) != 0) {
     return getDI(paId & CLuaBFB::LUA_FB_VAR_MAX);
@@ -97,6 +97,6 @@ CIEC_ANY* CLuaBFB::getVariable(TForteUInt32 paId) {
   if((paId & CLuaBFB::LUA_FB_DO_FLAG) != 0) {
     return getDO(paId & CLuaBFB::LUA_FB_VAR_MAX);
   }
-  return 0;
+  return nullptr;
 }
 

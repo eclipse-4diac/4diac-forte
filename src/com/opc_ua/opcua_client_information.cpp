@@ -327,7 +327,7 @@ bool CUA_ClientInformation::initializeAction(CActionInfo& paActionInfo) {
 
       if(!somethingFailed && !(*itNodePair)->mBrowsePath.empty()) { //if browsepath was given, look for NodeId, even if NodeID was also provided
         UA_NodeId *nodeId;
-        UA_StatusCode retVal = COPC_UA_Helper::getRemoteNodeForPath(*mClient, (*itNodePair)->mBrowsePath.getValue(), 0, &nodeId); //we don't care about the parent
+        UA_StatusCode retVal = COPC_UA_Helper::getRemoteNodeForPath(*mClient, (*itNodePair)->mBrowsePath.getValue(), nullptr, &nodeId); //we don't care about the parent
 
         if(UA_STATUSCODE_GOOD != retVal) {
           DEVLOG_ERROR("[OPC UA CLIENT]: The index %u of the FB %s could not be initialized because the requested nodeId was not found. Error: %s\n",
