@@ -26,8 +26,8 @@ forte::arch::CSemaphore CXqueryHandler::mStateSemaphore = forte::arch::CSemaphor
 bool CXqueryHandler::mIsSemaphoreEmpty = true;
 
 CXqueryHandler::CXqueryHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution){
-  result = NULL;
-  info = NULL;
+  result = nullptr;
+  info = nullptr;
 }
 
 CXqueryHandler::~CXqueryHandler(){

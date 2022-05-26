@@ -46,7 +46,7 @@ void CPCTimerHandler::run(){
   clock_gettime(CLOCK_REALTIME, &stOldTime); // in PikeOS time cannot be changed at run-time. So it's equivalent to CLOCK_MONOTONIC
   while(isAlive()){
 
-    nanosleep(&stReq, NULL);
+    nanosleep(&stReq, nullptr);
 
     clock_gettime(CLOCK_REALTIME, &stNewTime);
 

@@ -162,7 +162,7 @@ void CEplStackWrapper::eplMainInit(){
   sigemptyset(&mask);
   sigaddset(&mask, SIGRTMIN);
   sigaddset(&mask, SIGRTMIN + 1);
-  pthread_sigmask(SIG_BLOCK, &mask, NULL);
+  pthread_sigmask(SIG_BLOCK, &mask, nullptr);
 #endif
 }
 
@@ -265,7 +265,7 @@ int CEplStackWrapper::eplStackInit(char* pa_chXmlFile, char* pa_chCdcFile, char*
   }
 
   printf("\n");
-  for(seldev = alldevs, i = 0; seldev != NULL; seldev = seldev->next, i++){
+  for(seldev = alldevs, i = 0; seldev != nullptr; seldev = seldev->next, i++){
     if(seldev->description){
       printf("%d: %s\n      %s\n", i, seldev->description, seldev->name);
     }
@@ -275,7 +275,7 @@ int CEplStackWrapper::eplStackInit(char* pa_chXmlFile, char* pa_chCdcFile, char*
 
     if(macFound){
       const char* userDescLoc = strstr(seldev->name, correctDevName);
-      if(userDescLoc != NULL){
+      if(userDescLoc != nullptr){
         if(seldev->description){
           printf("\nChosen Ethernet Card: %s\n      %s\n", seldev->description, seldev->name);
         }
@@ -288,14 +288,14 @@ int CEplStackWrapper::eplStackInit(char* pa_chXmlFile, char* pa_chCdcFile, char*
 
     if(seldev->description){
       const char* userDescLoc = strstr(seldev->description, pa_chEthDeviceName);
-      if(userDescLoc != NULL){
+      if(userDescLoc != nullptr){
         printf("\nChosen Ethernet Card: %s\n", seldev->description);
         break;
       }
     }
     else{
       const char* userDescLoc = strstr(seldev->name, pa_chEthDeviceName);
-      if(userDescLoc != NULL){
+      if(userDescLoc != nullptr){
         printf("Chosen Ethernet Card: %s\n", seldev->name);
         break;
       }
@@ -361,7 +361,7 @@ int CEplStackWrapper::eplStackInit(char* pa_chXmlFile, char* pa_chCdcFile, char*
   EplApiInitParam.m_pfnObdInitRam = EplObdInitRam;
   EplApiInitParam.m_pfnCbSync = AppCbSync;
 #else
-  EplApiInitParam.m_pfnCbSync = NULL;
+  EplApiInitParam.m_pfnCbSync = nullptr;
 #endif
   ////////////////////////////////////////////////////////////////////////////////
 
@@ -386,12 +386,12 @@ int CEplStackWrapper::eplStackInit(char* pa_chXmlFile, char* pa_chCdcFile, char*
   }
 #else
   // create event thread
-  if(pthread_create(&eventThreadId, NULL, &powerlinkEventThread, NULL) != 0){
+  if(pthread_create(&eventThreadId, nullptr, &powerlinkEventThread, nullptr) != 0){
     return EplRet;
   }
 
   // create sync thread
-  if(pthread_create(&syncThreadId, NULL, &powerlinkSyncThread, NULL) != 0){
+  if(pthread_create(&syncThreadId, nullptr, &powerlinkSyncThread, nullptr) != 0){
     return EplRet;
   }
 #endif
@@ -497,8 +497,8 @@ bool CEplStackWrapper::findMAC(const char* pa_pchUserMAC, char* pa_pchDeviceName
   //
   // Initialize this function
   //
-  pIfList = (struct if_nameindex *) NULL;
-  pListSave = (struct if_nameindex *) NULL;
+  pIfList = nullptr;
+  pListSave = nullptr;
 #ifndef SIOCGIFADDR
   // The kernel does not support the required ioctls
   return (false);
@@ -601,7 +601,7 @@ bool CEplStackWrapper::findMAC(const char* pa_pchUserMAC, char* pa_pchDeviceName
 
 #endif
 
-  //pa_pchDeviceName = NULL; //No effect
+  //pa_pchDeviceName = nullptr; //No effect
   return false;
 }
 
@@ -1066,14 +1066,14 @@ void CEplStackWrapper::executeAllCallbacks(){
 void *powerlinkEventThread(void * arg __attribute__((unused))){
   EplApiProcess();
 
-  return NULL;
+  return nullptr;
 }
 
 void *powerlinkSyncThread(void * arg __attribute__((unused))){
   while(1){
     AppCbSync();
   }
-  return NULL;
+  return nullptr;
 }
 
 #endif

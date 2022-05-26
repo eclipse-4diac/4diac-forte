@@ -32,28 +32,28 @@ CLuaBFBTypeEntry::~CLuaBFBTypeEntry() {
 CLuaBFBTypeEntry* CLuaBFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStringId paTypeNameId, CIEC_STRING& paLuaScriptAsString) {
   CLuaEngine luaEngine;
   if(!luaEngine.loadString(std::string(paLuaScriptAsString.getValue()))) {
-    return NULL;
+    return nullptr;
   }
   //interfaceSpec
   SFBInterfaceSpec interfaceSpec = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
   if(!luaEngine.pushField(-1, "interfaceSpec", LUA_TTABLE)) {
-    return NULL;
+    return nullptr;
   }
   if(!initInterfaceSpec(interfaceSpec, &luaEngine, -1)) {
     deleteInterfaceSpec(interfaceSpec);
-    return NULL;
+    return nullptr;
   }
   luaEngine.pop(); //pop interfaceSpec
   //internalVarsInformation
   SInternalVarsInformation internalVarsInformation = { 0, 0, 0 };
   if(!luaEngine.pushField(-1, "internalVarsInformation", LUA_TTABLE)) {
     deleteInterfaceSpec(interfaceSpec);
-    return NULL;
+    return nullptr;
   }
   if(!initInternalVarsInformation(internalVarsInformation, &luaEngine, -1)) {
     deleteInterfaceSpec(interfaceSpec);
     deleteInternalVarsInformation(internalVarsInformation);
-    return NULL;
+    return nullptr;
   }
   luaEngine.pop(); //pop internalVarsInformation
   luaEngine.pop(); //pop loaded defs
@@ -64,7 +64,7 @@ CFunctionBlock* CLuaBFBTypeEntry::createFBInstance(CStringDictionary::TStringId 
   CLuaEngine* luaEngine = paSrcRes->getLuaEngine();
   if(!luaEngine->load(this)) {
     if(!luaEngine->loadString(std::string(cm_sLuaScriptAsString.getValue()))) {
-      return NULL;
+      return nullptr;
     }
     luaEngine->pushField(-1, "ECC", LUA_TFUNCTION);
     luaEngine->store(this); //store ECC
@@ -111,10 +111,10 @@ bool CLuaBFBTypeEntry::initInterfaceSpec(SFBInterfaceSpec& paInterfaceSpec, CLua
   paInterfaceSpec.m_pstAdapterInstanceDefinition = paLuaEngine->getCustomArrayField<SAdapterInstanceDef, luatype::getAdapterInstanceDefinition>(paIndex,
     "adapterInstanceDefinition", numAdapters);
   //checks
-  if(paInterfaceSpec.m_aunEINames == NULL || paInterfaceSpec.m_anEIWith == NULL || paInterfaceSpec.m_anEIWithIndexes == NULL
-    || paInterfaceSpec.m_aunEONames == NULL || paInterfaceSpec.m_anEOWith == NULL || paInterfaceSpec.m_anEOWithIndexes == NULL
-    || paInterfaceSpec.m_aunDINames == NULL || paInterfaceSpec.m_aunDIDataTypeNames == NULL || paInterfaceSpec.m_aunDONames == NULL
-    || paInterfaceSpec.m_aunDODataTypeNames == NULL || paInterfaceSpec.m_pstAdapterInstanceDefinition == NULL) {
+  if(paInterfaceSpec.m_aunEINames == nullptr || paInterfaceSpec.m_anEIWith == nullptr || paInterfaceSpec.m_anEIWithIndexes == nullptr
+    || paInterfaceSpec.m_aunEONames == nullptr || paInterfaceSpec.m_anEOWith == nullptr || paInterfaceSpec.m_anEOWithIndexes == nullptr
+    || paInterfaceSpec.m_aunDINames == nullptr || paInterfaceSpec.m_aunDIDataTypeNames == nullptr || paInterfaceSpec.m_aunDONames == nullptr
+    || paInterfaceSpec.m_aunDODataTypeNames == nullptr || paInterfaceSpec.m_pstAdapterInstanceDefinition == nullptr) {
     return false;
   }
   return true;
@@ -142,7 +142,7 @@ bool CLuaBFBTypeEntry::initInternalVarsInformation(SInternalVarsInformation& paI
   size_t numIntVarTypes = SIZE_MAX;
   paInternalVarsInformation.m_aunIntVarsDataTypeNames = paLuaEngine->getCustomArrayField<CStringDictionary::TStringId, luatype::getTypeNameId>(paIndex,
     "intVarsDataTypeNames", numIntVarTypes);
-  if(paInternalVarsInformation.m_aunIntVarsNames == NULL || paInternalVarsInformation.m_aunIntVarsDataTypeNames == NULL) {
+  if(paInternalVarsInformation.m_aunIntVarsNames == nullptr || paInternalVarsInformation.m_aunIntVarsDataTypeNames == nullptr) {
     return false;
   }
   return true;

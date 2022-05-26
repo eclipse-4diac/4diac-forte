@@ -69,7 +69,7 @@ int COpcConnectionImpl::sendItemData(COpcProcessVar* pa_pNewItem){
 void COpcConnectionImpl::OnDataChange(COPCGroup & group, CAtlMap<COPCItem *, OPCItemData *> & changes){
 
   TItemDataList itemList;
-  for(POSITION pos = changes.GetStartPosition(); pos != NULL;){
+  for(POSITION pos = changes.GetStartPosition(); pos != nullptr;){
     OPCItemData *itemData = changes.GetValueAt(pos);
     COPCItem *item = changes.GetNextKey(pos);
 
@@ -80,7 +80,7 @@ void COpcConnectionImpl::OnDataChange(COPCGroup & group, CAtlMap<COPCItem *, OPC
 
   int position = 0;
   const char * subStrRead = strstr(c_groupName, "_read");
-  if(subStrRead != NULL) {
+  if(subStrRead != nullptr) {
     position = subStrRead - c_groupName;
   }
   else{
@@ -97,7 +97,7 @@ void COpcConnectionImpl::OnDataChange(COPCGroup & group, CAtlMap<COPCItem *, OPC
 }
 
 COPCGroup* COpcConnectionImpl::getOpcGroup(const char* pa_acGroupName, COpcProcessVar::EOpcProcessVarFunctions pa_eFunction){
-  COPCGroup *retGroup = NULL;
+  COPCGroup *retGroup = nullptr;
 
   TOpcGroupSettingsList::Iterator itEnd = m_lOpcGroupSettingsList.end();
   for(TOpcGroupSettingsList::Iterator it = m_lOpcGroupSettingsList.begin(); it != itEnd; ++it){

@@ -30,16 +30,16 @@ CLuaAdapterTypeEntry::~CLuaAdapterTypeEntry() {
 CLuaAdapterTypeEntry* CLuaAdapterTypeEntry::createLuaAdapterTypeEntry(CStringDictionary::TStringId paTypeNameId, CIEC_STRING& paLuaScriptAsString) {
   CLuaEngine luaEngine;
   if(!luaEngine.loadString(std::string(paLuaScriptAsString.getValue()))) {
-    return NULL;
+    return nullptr;
   }
   //interfaceSpec
   SFBInterfaceSpec interfaceSpec = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
   if(!luaEngine.pushField(-1, "interfaceSpec", LUA_TTABLE)) {
-    return NULL;
+    return nullptr;
   }
   if(!initInterfaceSpec(interfaceSpec, &luaEngine, -1)) {
     deleteInterfaceSpec(interfaceSpec);
-    return NULL;
+    return nullptr;
   }
   luaEngine.pop(); //pop interfaceSpec
   luaEngine.pop(); //pop loaded defs
@@ -49,7 +49,7 @@ CLuaAdapterTypeEntry* CLuaAdapterTypeEntry::createLuaAdapterTypeEntry(CStringDic
 CAdapter* CLuaAdapterTypeEntry::createAdapterInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, bool pa_bIsPlug) {
   CLuaEngine* luaEngine = pa_poSrcRes->getLuaEngine();
   if(!luaEngine->load(this) && (!luaEngine->loadString(std::string(cm_sLuaScriptAsString.getValue())))) {
-    return NULL;
+    return nullptr;
   }
   TForteByte* connData = 0;
   TForteByte* varsData = 0;
@@ -97,10 +97,10 @@ bool CLuaAdapterTypeEntry::initInterfaceSpec(SFBInterfaceSpec& paInterfaceSpec, 
   paInterfaceSpec.m_nNumAdapters = 0;
   paInterfaceSpec.m_pstAdapterInstanceDefinition = 0;
   //checks
-  if(paInterfaceSpec.m_aunEINames == NULL || paInterfaceSpec.m_anEIWith == NULL || paInterfaceSpec.m_anEIWithIndexes == NULL
-    || paInterfaceSpec.m_aunEONames == NULL || paInterfaceSpec.m_anEOWith == NULL || paInterfaceSpec.m_anEOWithIndexes == NULL
-    || paInterfaceSpec.m_aunDINames == NULL || paInterfaceSpec.m_aunDIDataTypeNames == NULL || paInterfaceSpec.m_aunDONames == NULL
-    || paInterfaceSpec.m_aunDODataTypeNames == NULL) {
+  if(paInterfaceSpec.m_aunEINames == nullptr || paInterfaceSpec.m_anEIWith == nullptr || paInterfaceSpec.m_anEIWithIndexes == nullptr
+    || paInterfaceSpec.m_aunEONames == nullptr || paInterfaceSpec.m_anEOWith == nullptr || paInterfaceSpec.m_anEOWithIndexes == nullptr
+    || paInterfaceSpec.m_aunDINames == nullptr || paInterfaceSpec.m_aunDIDataTypeNames == nullptr || paInterfaceSpec.m_aunDONames == nullptr
+    || paInterfaceSpec.m_aunDODataTypeNames == nullptr) {
     return false;
   }
   for(size_t i = 0; i < numEIs; i++) {

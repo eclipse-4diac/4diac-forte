@@ -32,9 +32,9 @@ void *forte_malloc(size_t pa_nSize){
 
     pTemp = sys_MemXPAlloc(FORTE_MemPart, pa_nSize);
 
-    if (pTemp == NULL)
+    if (pTemp == nullptr)
     {
-      /* no memory, suspend task to avoid a NULL exception*/
+      /* no memory, suspend task to avoid a nullptr exception*/
       log_Err(
           "forte_malloc: unable to allocate 0x%x bytes in partition %d, Suspend task!",
           pa_nSize, FORTE_MemPart);

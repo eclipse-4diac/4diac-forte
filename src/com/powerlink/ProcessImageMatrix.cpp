@@ -52,7 +52,7 @@ unsigned int* CProcessImageMatrix::getEntry(unsigned int pa_nCN, unsigned int pa
     }
   }
 
-  return NULL;
+  return nullptr;
 }
 
 // getEntry: same as above but returns the values on row "index"
@@ -69,7 +69,7 @@ unsigned int* CProcessImageMatrix::getEntry(unsigned int pa_nIndex){
     return data;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 unsigned int CProcessImageMatrix::getNrOfEntries() const {
@@ -77,12 +77,12 @@ unsigned int CProcessImageMatrix::getNrOfEntries() const {
 }
 
 CProcessImageMatrix* CProcessImageMatrix::getModuleEntries(unsigned int pa_nCN, unsigned int pa_nModule){
-  CProcessImageMatrix* newMatrix = NULL;
+  CProcessImageMatrix* newMatrix = nullptr;
 
   TChannelList::Iterator itEnd = m_lMatrix.end();
   for(TChannelList::Iterator it(m_lMatrix.begin()); it != itEnd; ++it){
     if(it->m_nCN == pa_nCN && it->m_nModuleId == pa_nModule){
-      if(newMatrix == NULL) {
+      if(newMatrix == nullptr) {
         newMatrix = new CProcessImageMatrix();
       }
 

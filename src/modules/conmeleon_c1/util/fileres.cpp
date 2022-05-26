@@ -79,7 +79,7 @@ void CFileResource::readLine(char* pszData, std::size_t nLength) const {
   }
 
   if (m_pFileHandle != nullptr) {
-    char *pszLine = NULL;
+    char *pszLine = nullptr;
     std::size_t nLen = 0;
     ssize_t nNrCharsRead;
 

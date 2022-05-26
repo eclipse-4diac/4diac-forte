@@ -37,17 +37,17 @@ void COpcEventHandler::sendCommand(ICmd *pa_pCmd){
 }
 
 void COpcEventHandler::run(){
-  HRESULT result = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+  HRESULT result = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
   if(result == S_OK){
     while(isAlive()){
       ICmd* nextCommand = getNextCommand();
-      if(nextCommand != NULL) {
+      if(nextCommand != nullptr) {
         nextCommand->runCommand();
       }
 
       MSG msg;
-      while(PeekMessage(&msg, NULL, NULL, NULL, PM_REMOVE)){
+      while(PeekMessage(&msg, nullptr, nullptr, nullptr, PM_REMOVE)){
         TranslateMessage(&msg);
         DispatchMessage(&msg);
       }
@@ -118,7 +118,7 @@ ICmd* COpcEventHandler::getNextCommand(){
     command = (*itBegin);
     m_lCommandQueue.popFront();
   } else {
-    command = NULL;
+    command = nullptr;
   }
   m_oSync.unlock();
 

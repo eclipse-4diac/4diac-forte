@@ -58,7 +58,7 @@ void FORTE_GET_VALUE::executeEvent(int pa_nEIID){
 
 bool FORTE_GET_VALUE::init() {
   driverId = mio_GetDrv(static_cast<unsigned int>(MOD_NB()));
-  return driverId != NULL;
+  return driverId != nullptr;
 }
 
 SINT32 FORTE_GET_VALUE::read() {

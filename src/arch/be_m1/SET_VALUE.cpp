@@ -51,7 +51,7 @@ void FORTE_SET_VALUE::executeEvent(int pa_nEIID){
 
 bool FORTE_SET_VALUE::init(){
   driverId = mio_GetDrv((short) MOD_NB());
-  return driverId != NULL;
+  return driverId != nullptr;
 }
 
 SINT32 FORTE_SET_VALUE::write(){

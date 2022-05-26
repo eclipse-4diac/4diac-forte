@@ -31,20 +31,20 @@ namespace forte {
     }
 
     void CFreeRTOSSemaphore::waitIndefinitely() {
-      if(mSemaphore != NULL) {
+      if(mSemaphore != nullptr) {
         xSemaphoreTake(mSemaphore, portMAX_DELAY);
       }
     }
 
     bool CFreeRTOSSemaphore::timedWait(const TForteUInt64 paRelativeTimeout) {
-      if(mSemaphore != NULL) {
+      if(mSemaphore != nullptr) {
         return xSemaphoreTake(mSemaphore, pdMS_TO_TICKS(paRelativeTimeout / 1000000));
       }
       return false;
     }
 
     bool CFreeRTOSSemaphore::tryNoWait() {
-      if(mSemaphore != NULL) {
+      if(mSemaphore != nullptr) {
         return xSemaphoreTake(mSemaphore, 0);
       }
       return false;

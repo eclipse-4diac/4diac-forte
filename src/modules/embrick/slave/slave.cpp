@@ -164,6 +164,6 @@ EmbrickSlaveHandle* EmbrickSlaveHandler::getHandle(TSlaveHandleList* paList, int
       return *it;
     }
   }
-  return NULL;
+  return nullptr;
 }
 

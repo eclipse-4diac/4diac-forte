@@ -73,28 +73,28 @@ CLuaCFBTypeEntry::~CLuaCFBTypeEntry() {
 CLuaCFBTypeEntry* CLuaCFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStringId paTypeNameId, CIEC_STRING& paLuaScriptAsString) {
   CLuaEngine luaEngine;
   if(!luaEngine.loadString(std::string(paLuaScriptAsString.getValue()))) {
-    return NULL;
+    return nullptr;
   }
   //interfaceSpec
   SFBInterfaceSpec interfaceSpec = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
   if(!luaEngine.pushField(-1, "interfaceSpec", LUA_TTABLE)) {
-    return NULL;
+    return nullptr;
   }
   if(!initInterfaceSpec(interfaceSpec, &luaEngine, -1)) {
     deleteInterfaceSpec(interfaceSpec);
-    return NULL;
+    return nullptr;
   }
   luaEngine.pop(); //pop interfaceSpec
   //fbnSpec
   SCFB_FBNData fbnSpec = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
   if(!luaEngine.pushField(-1, "fbnSpec", LUA_TTABLE)) {
     deleteInterfaceSpec(interfaceSpec);
-    return NULL;
+    return nullptr;
   }
   if(!initFbnSpec(fbnSpec, &luaEngine, -1)) {
     deleteInterfaceSpec(interfaceSpec);
     deleteFbnSpec(fbnSpec);
-    return NULL;
+    return nullptr;
   }
   luaEngine.pop(); //pop fbnSpec
   luaEngine.pop(); //pop loaded defs
@@ -104,7 +104,7 @@ CLuaCFBTypeEntry* CLuaCFBTypeEntry::createLuaFBTypeEntry(CStringDictionary::TStr
 CFunctionBlock* CLuaCFBTypeEntry::createFBInstance(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) {
   CLuaEngine* luaEngine = paSrcRes->getLuaEngine();
   if(!luaEngine->load(this) && (!luaEngine->loadString(std::string(cm_sLuaScriptAsString.getValue())))) {
-    return NULL;
+    return nullptr;
   }
   TForteByte* connData = new TForteByte[CFunctionBlock::genFBConnDataSize(m_interfaceSpec.m_nNumEOs, m_interfaceSpec.m_nNumDIs, m_interfaceSpec.m_nNumDOs)];
   TForteByte* varsData = new TForteByte[CCompositeFB::genFBVarsDataSize(m_interfaceSpec.m_nNumDIs, m_interfaceSpec.m_nNumDOs, m_interfaceSpec.m_nNumAdapters)];
@@ -146,10 +146,10 @@ bool CLuaCFBTypeEntry::initInterfaceSpec(SFBInterfaceSpec& paInterfaceSpec, CLua
   paInterfaceSpec.m_pstAdapterInstanceDefinition = paLuaEngine->getCustomArrayField<SAdapterInstanceDef, luatype::getAdapterInstanceDefinition>(paIndex,
     "adapterInstanceDefinition", numAdapters);
   //checks
-  if(paInterfaceSpec.m_aunEINames == NULL || paInterfaceSpec.m_anEIWith == NULL || paInterfaceSpec.m_anEIWithIndexes == NULL
-    || paInterfaceSpec.m_aunEONames == NULL || paInterfaceSpec.m_anEOWith == NULL || paInterfaceSpec.m_anEOWithIndexes == NULL
-    || paInterfaceSpec.m_aunDINames == NULL || paInterfaceSpec.m_aunDIDataTypeNames == NULL || paInterfaceSpec.m_aunDONames == NULL
-    || paInterfaceSpec.m_aunDODataTypeNames == NULL || paInterfaceSpec.m_pstAdapterInstanceDefinition == NULL) {
+  if(paInterfaceSpec.m_aunEINames == nullptr || paInterfaceSpec.m_anEIWith == nullptr || paInterfaceSpec.m_anEIWithIndexes == nullptr
+    || paInterfaceSpec.m_aunEONames == nullptr || paInterfaceSpec.m_anEOWith == nullptr || paInterfaceSpec.m_anEOWithIndexes == nullptr
+    || paInterfaceSpec.m_aunDINames == nullptr || paInterfaceSpec.m_aunDIDataTypeNames == nullptr || paInterfaceSpec.m_aunDONames == nullptr
+    || paInterfaceSpec.m_aunDODataTypeNames == nullptr || paInterfaceSpec.m_pstAdapterInstanceDefinition == nullptr) {
     return false;
   }
   for(size_t i = 0; i < numEIs; i++) {
@@ -208,7 +208,7 @@ bool CLuaCFBTypeEntry::initFbnSpec(SCFB_FBNData& paFbnSpec, CLuaEngine* paLuaEng
   size_t numParams = paFbnSpec.m_nNumParams;
   paFbnSpec.m_pstParams = paLuaEngine->getCustomArrayField<SCFB_FBParameter, luatype::getFBParameter>(paIndex, "parameters", numParams);
   //checks
-  if(paFbnSpec.m_pstFBInstances == NULL) {
+  if(paFbnSpec.m_pstFBInstances == nullptr) {
     return false;
   }
   return true;

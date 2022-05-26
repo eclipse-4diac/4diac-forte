@@ -23,12 +23,12 @@ const char *CXqueryClientLayer::scmParameterSeperator = " ;:";
 
 CXqueryClientLayer::CXqueryClientLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB) : CComLayer(pa_poUpperLayer, pa_poComFB){
   sfd = -1;
-  command = NULL;
-  host = NULL;
-  port = NULL;
-  usr = NULL;
-  psw = NULL;
-  dbName = NULL;
+  command = nullptr;
+  host = nullptr;
+  port = nullptr;
+  usr = nullptr;
+  psw = nullptr;
+  dbName = nullptr;
 }
 
 CXqueryClientLayer::~CXqueryClientLayer() {
@@ -37,11 +37,11 @@ CXqueryClientLayer::~CXqueryClientLayer() {
 bool CXqueryClientLayer::parseParameters(char *pa_acLayerParameter){
   bool retVal = true;
   host = strtok(pa_acLayerParameter, scmParameterSeperator);
-  port = strtok(NULL, scmParameterSeperator);
-  dbName = strtok(NULL, scmParameterSeperator);
-  usr = strtok(NULL, scmParameterSeperator);
-  psw = strtok(NULL, scmParameterSeperator);
-  if(NULL == host || NULL == port || NULL == usr || NULL == psw || NULL == dbName){
+  port = strtok(nullptr, scmParameterSeperator);
+  dbName = strtok(nullptr, scmParameterSeperator);
+  usr = strtok(nullptr, scmParameterSeperator);
+  psw = strtok(nullptr, scmParameterSeperator);
+  if(nullptr == host || nullptr == port || nullptr == usr || nullptr == psw || nullptr == dbName){
     retVal = false;
   }
   return retVal;
@@ -71,8 +71,8 @@ forte::com_infra::EComResponse CXqueryClientLayer::openConnection(char *pa_acLay
 }
 
 void CXqueryClientLayer::openDB(){
-  char *r = NULL;
-  char *i = NULL;
+  char *r = nullptr;
+  char *i = nullptr;
   command = new char[strlen(dbName) + 6];
   strcpy(command, "open ");
   strcat(command, dbName);

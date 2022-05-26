@@ -111,10 +111,10 @@ class EmbrickBusHandler : public forte::core::io::IODeviceMultiController {
     void cleanLoop();
 
     bool transfer(unsigned int paTarget, Command paCmd, unsigned char* paDataSend =
-    NULL, int paDataSendLength = 0, unsigned char* paDataReceive = NULL, int paDataReceiveLength = 0, EmbrickSlaveHandler::SlaveStatus* paStatus = NULL,
-        CSyncObject *paSyncMutex = NULL);
+    nullptr, int paDataSendLength = 0, unsigned char* paDataReceive = nullptr, int paDataReceiveLength = 0, EmbrickSlaveHandler::SlaveStatus* paStatus = nullptr,
+        CSyncObject *paSyncMutex = nullptr);
     bool broadcast(Command paCmd, unsigned char* paDataSend =
-    NULL, int paDataSendLength = 0, unsigned char* paDataReceive = NULL, int paDataReceiveLength = 0) {
+    nullptr, int paDataSendLength = 0, unsigned char* paDataReceive = nullptr, int paDataReceiveLength = 0) {
       return transfer(0, paCmd, paDataSend, paDataSendLength, paDataReceive, paDataReceiveLength);
     }
 

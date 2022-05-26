@@ -107,7 +107,7 @@ namespace forte {
            * If the system requires an initialization sequence which is executed once at startup, place it here.
            * In case of an error, return an error description.
            *
-           * @return 0/NULL if the initialization was successful. Otherwise return an error description.
+           * @return nullptr if the initialization was successful. Otherwise return an error description.
            */
           virtual const char* init() = 0;
 

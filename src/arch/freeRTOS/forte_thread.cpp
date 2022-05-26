@@ -33,7 +33,7 @@ void CFreeRTOSThread::threadFunction(void *paData) {
   /* Tasks must not attempt to return from their implementing
    function or otherwise exit.
    https://www.freertos.org/implementing-a-FreeRTOS-task.html */
-  vTaskDelete(NULL);
+  vTaskDelete(nullptr);
 }
 
 forte::arch::CThreadBase<TaskHandle_t, TaskHandle_t(0), CFreeRTOSThread>::TThreadHandleType CFreeRTOSThread::createThread(long paStackSize) {

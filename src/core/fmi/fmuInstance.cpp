@@ -230,7 +230,7 @@ CIEC_ANY::EDataTypeID fmuInstance::getConnectedDataType(unsigned int portIndex, 
   /* Retrieve Publisher, Connection and Signals Source Function Block Information */
   const CStringDictionary::TStringId portNameId = pa_isInput ? pa_poFB->getFBInterfaceSpec()->m_aunDINames[portIndex] : pa_poFB->getFBInterfaceSpec()->m_aunDONames[portIndex];
   const CDataConnection *portConnection = pa_isInput ? pa_poFB->getDIConnection(portNameId) : pa_poFB->getDOConnection(portNameId);
-  if(portConnection != NULL){
+  if(portConnection != nullptr){
     //TODO for now we assume that the subscriber connection only has one destination. Needs fix!
     if(!pa_isInput && portConnection->getDestinationList().isEmpty()){
       FMU_DEBUG_LOG(this, "--------ERROR: Subscriber does not have any connection.\n");

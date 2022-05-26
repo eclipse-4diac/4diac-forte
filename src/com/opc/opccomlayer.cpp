@@ -362,23 +362,23 @@ EComResponse COpcComLayer::recvData(const void *, unsigned int){
     int nrItems = 0;
     char *pch;
     pch = strtok(inputItems, ",");
-    while(pch != NULL){
+    while(pch != nullptr){
       char *itemName = (char*) malloc(strlen(pch) + 1);
       strcpy(itemName, pch);
       m_lFBInputVars.pushBack(new COpcProcessVar(m_acOpcGroupName, itemName, COpcProcessVar::e_FBInput));
       nrItems++;
-      pch = strtok(NULL, ",");
+      pch = strtok(nullptr, ",");
     }
 
     // Get FB output items
     pch = strtok(chrStorage, ",");
-    while(pch != NULL){
+    while(pch != nullptr){
       char *itemName = (char*) malloc(strlen(pch) + 1);
       strcpy(itemName, pch);
       m_lFBOutputVars.pushBack(new COpcProcessVar(m_acOpcGroupName, itemName, COpcProcessVar::e_FBOutput));
       nrItems++;
 
-      pch = strtok(NULL, ",");
+      pch = strtok(nullptr, ",");
     }
 
   if(nrItems > 0) {

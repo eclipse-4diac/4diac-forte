@@ -44,7 +44,7 @@ void CEplXmlReader::readXmlFile(const char* pa_pchFileName){
   if(xmlDoc.LoadFile()){
     TiXmlNode *appProcess = xmlDoc.FirstChild("ApplicationProcess");
     TiXmlNode *processImageIn;
-    for(TiXmlNode *processImage = appProcess->ToElement()->FirstChild("ProcessImage"); processImage != NULL; processImage = processImage->NextSibling("ProcessImage")){
+    for(TiXmlNode *processImage = appProcess->ToElement()->FirstChild("ProcessImage"); processImage != nullptr; processImage = processImage->NextSibling("ProcessImage")){
       if(strcmp(processImage->ToElement()->Attribute("type"), "output") == 0){
         createProcImageOut(processImage);
       }
@@ -66,7 +66,7 @@ void CEplXmlReader::createProcImageOut(TiXmlNode* pa_pProcessImage){
   int currentIoNr = -1;
 
   TiXmlNode *channel;
-  for(channel = pa_pProcessImage->FirstChild("Channel"); channel != NULL; channel = channel->NextSibling("Channel")){
+  for(channel = pa_pProcessImage->FirstChild("Channel"); channel != nullptr; channel = channel->NextSibling("Channel")){
     // New IO
     currentIoNr++;
 
@@ -80,7 +80,7 @@ void CEplXmlReader::createProcImageOut(TiXmlNode* pa_pProcessImage){
     int cnId = forte::core::util::strtol(pch,0,10);
 
     // Get module ID
-    char* modId = strtok(NULL, ".");
+    char* modId = strtok(nullptr, ".");
 
     // Get dataSize
     const char *temp = channel->ToElement()->Attribute("dataSize");
@@ -88,13 +88,13 @@ void CEplXmlReader::createProcImageOut(TiXmlNode* pa_pProcessImage){
 
     // Get PIOffset
     temp = channel->ToElement()->Attribute("PIOffset");
-    long piOffset = forte::core::util::strtol(temp, NULL, 16);
+    long piOffset = forte::core::util::strtol(temp, nullptr, 16);
 
     // Get BitOffset
     long bitOffset = 0;
     temp = channel->ToElement()->Attribute("BitOffset");
-    if(temp != NULL){
-      bitOffset = forte::core::util::strtol(temp, NULL, 16);
+    if(temp != nullptr){
+      bitOffset = forte::core::util::strtol(temp, nullptr, 16);
     }
 
     // Check CN id, module number and add new IO
@@ -145,7 +145,7 @@ void CEplXmlReader::createProcImageIn(TiXmlNode *pa_pProcessImage){
   int currentIoNr = -1;
 
   TiXmlNode *channel;
-  for(channel = pa_pProcessImage->FirstChild("Channel"); channel != NULL; channel = channel->NextSibling("Channel")){
+  for(channel = pa_pProcessImage->FirstChild("Channel"); channel != nullptr; channel = channel->NextSibling("Channel")){
     // New IO
     currentIoNr++;
 
@@ -159,7 +159,7 @@ void CEplXmlReader::createProcImageIn(TiXmlNode *pa_pProcessImage){
     int cnId = forte::core::util::strtoul(pch,0,10);
 
     // Get module ID
-    char* modId = strtok(NULL, ".");
+    char* modId = strtok(nullptr, ".");
 
     // Get dataSize
     const char *temp = channel->ToElement()->Attribute("dataSize");
@@ -167,13 +167,13 @@ void CEplXmlReader::createProcImageIn(TiXmlNode *pa_pProcessImage){
 
     // Get PIOffset
     temp = channel->ToElement()->Attribute("PIOffset");
-    long piOffset = forte::core::util::strtol(temp, NULL, 16);
+    long piOffset = forte::core::util::strtol(temp, nullptr, 16);
 
     // Get BitOffset
     long bitOffset = 0;
     temp = channel->ToElement()->Attribute("BitOffset");
-    if(temp != NULL){
-      bitOffset = forte::core::util::strtol(temp, NULL, 16);
+    if(temp != nullptr){
+      bitOffset = forte::core::util::strtol(temp, nullptr, 16);
     }
 
     // Check CN id, module number and add new IO
@@ -231,7 +231,7 @@ int CEplXmlReader::getModuleNr(const char* pa_pchIoId){
   char* pch = strtok(localCopy, ".");
   strcpy(dest, pch);
   strcat(dest, ".");
-  pch = strtok(NULL, ".");
+  pch = strtok(nullptr, ".");
   strcat(dest, pch);
 
   int occurences = m_oModuleListIn.getNrOfModules(dest);

@@ -30,12 +30,12 @@ void vForteTask(void* pvParameters) {
   poDev->MGR.joinResourceThread();
   DEVLOG_INFO("FORTE finished\n");
   delete poDev;
-  vTaskDelete(NULL);
+  vTaskDelete(nullptr);
 }
 
 void vStartForteServerTask(UBaseType_t uxPriority) {
   /* Spawn the task. */
-  xTaskCreate(vForteTask, "forte", 2000, NULL, uxPriority, (TaskHandle_t *) NULL);
+  xTaskCreate(vForteTask, "forte", 2000, nullptr, uxPriority, nullptr);
 }
 
 int main(void) {

@@ -230,7 +230,7 @@ index 0989286..9899051 100644
 @@ -216,7 +251,7 @@ long MQTTAsync_elapsed(struct timeval start)
    struct timeval now, res;
  
-   gettimeofday(&now, NULL);
+   gettimeofday(&now, nullptr);
 -  timersub(&now, &start, &res);
 +  timersub(&now,  &start, &res);
    return (res.tv_sec)*1000 + (res.tv_usec)/1000;
@@ -242,7 +242,7 @@ index 0989286..9899051 100644
  #else
 -  usleep(milliseconds*1000);
 +  struct timespec rqtp = {0,milliseconds*1000};
-+        nanosleep(&rqtp, NULL);
++        nanosleep(&rqtp, nullptr);
  #endif
    FUNC_EXIT;
  }
@@ -274,7 +274,7 @@ index bc467be..33c6583 100644
      #else
 -      usleep(10000L);
 +      struct timespec rqtp = {0,10000000L};
-+        nanosleep(&rqtp, NULL);
++        nanosleep(&rqtp, nullptr);
      #endif
  
  exit:
@@ -340,7 +340,7 @@ index 1362470..698f769 100644
  #else
 -  usleep(milliseconds*1000);
 +  struct timespec rqtp = {0,milliseconds*1000000};
-+          nanosleep(&rqtp, NULL);
++          nanosleep(&rqtp, nullptr);
  #endif
    FUNC_EXIT;
  }

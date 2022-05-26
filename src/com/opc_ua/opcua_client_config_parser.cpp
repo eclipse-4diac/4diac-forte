@@ -88,7 +88,7 @@ bool CUA_ClientConfigFileParser::loadConfig(const std::string &paFileLocation, c
       if(retVal) {
 #ifdef UA_ENABLE_ENCRYPTION
         if(0 != certificateFileContent.length) {
-          retValOpcUa = UA_ClientConfig_setDefaultEncryption(&paResult.mClientConfig, certificateFileContent, privateKeyFileContent, NULL, 0, NULL, 0);
+          retValOpcUa = UA_ClientConfig_setDefaultEncryption(&paResult.mClientConfig, certificateFileContent, privateKeyFileContent, nullptr, 0, nullptr, 0);
           if(UA_STATUSCODE_GOOD == retValOpcUa) {
             paResult.mClientConfig.securityMode = securityMode;
             paResult.mClientConfig.securityPolicyUri = securityPolicyUri;

@@ -68,8 +68,7 @@ extern "C" SINT32 forte_Init(MOD_CONF *pConf, MOD_LOAD *pLoad){
   g_poMainModule = new CFORTEModule();
 
   //--- Close application if an error is occurred.
-  if(g_poMainModule == NULL
-    )
+  if(g_poMainModule == nullptr)
     return ERROR;
 
   //--- Initialize software module.
@@ -125,7 +124,7 @@ MLOCAL VOID PanicHandler(UINT32 PanicMode){
  * Ret:
  *-------------------------------------------------------------------------*/
 CFORTEModule::CFORTEModule() :
-    m_poDev(NULL){
+    m_poDev(nullptr){
   forteInit::initForte();
 }
 

@@ -27,7 +27,7 @@ forte::arch::CThreadBase<RX_HANDLE>::TThreadHandleType CrcXThread::createThread(
   if (0 != mStack){
     RX_RESULT retVal;
     retVal = rX_SysCreateTask(FORTE_TASK_NAME, threadFunction, (void*)this, mStack, paStackSize / 4, RX_TASK_AUTO_START,
-        0, FORTE_TASK_PRIORITY, CrcXThread::smTaskToken, CrcXThread::smTaskInstance, (void (*) (void*))NULL);
+        0, FORTE_TASK_PRIORITY, CrcXThread::smTaskToken, CrcXThread::smTaskInstance, nullptr);
     if (RX_OK == retVal){
       CrcXThread::smTaskInstance++;
       CrcXThread::smTaskToken++;

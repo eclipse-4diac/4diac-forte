@@ -131,7 +131,7 @@ bool WagoPFCProcessInterface::CKBusHandler::loadTerminalInformation() {
 
   if(KbusInfo_Failed != ldkc_KbusInfo_Create()) {
     if(KbusInfo_Failed != ldkc_KbusInfo_GetTerminalInfo(OS_ARRAY_SIZE(mTerminalDescription), mTerminalDescription, &mTerminalCount)) {
-      if(KbusInfo_Failed != ldkc_KbusInfo_GetTerminalList(OS_ARRAY_SIZE(mTerminalIds), mTerminalIds, NULL)) {
+      if(KbusInfo_Failed != ldkc_KbusInfo_GetTerminalList(OS_ARRAY_SIZE(mTerminalIds), mTerminalIds, nullptr)) {
         bRetVal = true;
       } else {
         DEVLOG_ERROR("CKBusHandler: ldkc_KbusInfo_GetTerminalList() failed\n");
@@ -215,7 +215,7 @@ std::vector<std::string> WagoPFCProcessInterface::generateParameterList() {
 }
 
 void WagoPFCProcessInterface::CKBusHandler::updateReadData() {
-  //long pa_Value = strtol(m_acIndata, NULL, 16);
+  //long pa_Value = strtol(m_acIndata, nullptr, 16);
   mReadFBListSync.lock();
   mAppDevInterface->ReadStart(mKBusDeviceId, mTaskId); /* lock PD-In data */
   TReadFBContainer::Iterator itEnd(mReadFBList.end());

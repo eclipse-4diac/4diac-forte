@@ -75,7 +75,7 @@ void fileReader::executeEvent(int pa_nEIID){ //TODO: manage output and status
 
 fileReader::fileReader(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
     CFunctionBlock(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData){
-  mFile.rdbuf()->pubsetbuf(NULL, 0); //disable buffer to avoid latency
+  mFile.rdbuf()->pubsetbuf(nullptr, 0); //disable buffer to avoid latency
 }
 
 bool fileReader::openFile(){

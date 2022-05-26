@@ -78,7 +78,7 @@ int forteStartInstanceGeneric(int paArgc, char *paArgv[], TForteInstance* paResu
   }
 
   const char *pIpPort = parseCommandLineArguments(paArgc, paArgv);
-  if((0 != strlen(pIpPort)) && (NULL != strchr(pIpPort, ':'))) {
+  if((0 != strlen(pIpPort)) && (nullptr != strchr(pIpPort, ':'))) {
     createDev(pIpPort, paResultInstance);
   } else { //! If needed call listHelp() to list the help for FORTE
     return FORTE_WRONG_PARAMETERS;

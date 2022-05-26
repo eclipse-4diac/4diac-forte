@@ -26,7 +26,7 @@ forte::com_infra::EComResponse CWin32SerComLayer::recvData(const void *, unsigne
   mInterruptResp = forte::com_infra::e_Nothing;
 
   DWORD dwBytesRead = 0;
-  if(ReadFile(static_cast<HANDLE>(mSerialHandle), mRecvBuffer, mMaxRecvBuffer - 1, &dwBytesRead, NULL)){ //TODO: Failure handling and send INITO-
+  if(ReadFile(static_cast<HANDLE>(mSerialHandle), mRecvBuffer, mMaxRecvBuffer - 1, &dwBytesRead, nullptr)){ //TODO: Failure handling and send INITO-
     if(0 < dwBytesRead){
       mBufFillSize = dwBytesRead;
       mInterruptResp = forte::com_infra::e_ProcessDataOk;
@@ -45,7 +45,7 @@ forte::com_infra::EComResponse CWin32SerComLayer::sendData(void *paData, unsigne
   char *pcData = static_cast<char*> (paData);
   unsigned int nToBeSent = paSize;
   //Send payload
-  if(!WriteFile(static_cast<HANDLE>(mSerialHandle), pcData, nToBeSent, &dwBytesWritten, NULL))
+  if(!WriteFile(static_cast<HANDLE>(mSerialHandle), pcData, nToBeSent, &dwBytesWritten, nullptr))
   {
    return forte::com_infra::e_ProcessDataSendFailed;
   }
@@ -55,7 +55,7 @@ forte::com_infra::EComResponse CWin32SerComLayer::sendData(void *paData, unsigne
   }
 
   //Send termination symbol(s)
-  if (!WriteFile(static_cast<HANDLE>(mSerialHandle), mTerminationSymbol, strlen(mTerminationSymbol), &dwBytesWritten, NULL))
+  if (!WriteFile(static_cast<HANDLE>(mSerialHandle), mTerminationSymbol, strlen(mTerminationSymbol), &dwBytesWritten, nullptr))
   {
     return forte::com_infra::e_ProcessDataSendFailed;
   }

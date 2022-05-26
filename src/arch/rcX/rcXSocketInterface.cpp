@@ -36,7 +36,7 @@ CrcXSocketInterface::CrcXSocketInterface(){
   m_unPacketsWaiting = 0;
   /* forte Task identification */
   //TODO: Check if it is really necessary
-  eRslt = TLR_TSK_IDENTIFY(NULL, 0, &mForteResources.forteTask, 0, 0);
+  eRslt = TLR_TSK_IDENTIFY(nullptr, 0, &mForteResources.forteTask, 0, 0);
   if(eRslt != RX_OK){
     DEVLOG_ERROR("Couldn't identify own task\n");
     m_bInitialized = false;

@@ -50,7 +50,7 @@ int CLuaFB_call(lua_State *paLuaState) {
 }
 
 const char CLuaBFB::LUA_NAME[] = "FORTE_CLuaFB";
-const luaL_Reg CLuaBFB::LUA_FUNCS[] = { { "__index", CLuaFB_index }, { "__newindex", CLuaFB_newindex }, { "__call", CLuaFB_call }, { NULL, NULL } };
+const luaL_Reg CLuaBFB::LUA_FUNCS[] = { { "__index", CLuaFB_index }, { "__newindex", CLuaFB_newindex }, { "__call", CLuaFB_call }, { nullptr, nullptr } };
 
 CLuaBFB::CLuaBFB(CStringDictionary::TStringId paInstanceNameId, const CLuaBFBTypeEntry* paTypeEntry, TForteByte *paConnData, TForteByte *paVarsData,
     CResource *paResource) :

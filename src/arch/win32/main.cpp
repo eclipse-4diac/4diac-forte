@@ -62,7 +62,7 @@ int main(int argc, char *arg[]){
   if(CForteArchitecture::initialize()){
 
     const char *pIpPort = parseCommandLineArguments(argc, arg);
-    if((0 != strlen(pIpPort)) && (NULL != strchr(pIpPort, ':'))){
+    if((0 != strlen(pIpPort)) && (nullptr != strchr(pIpPort, ':'))){
       createDev(pIpPort);
     }
     else{ //! Lists the help for FORTE

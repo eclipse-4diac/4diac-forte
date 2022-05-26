@@ -57,7 +57,7 @@ SINT32 FORTE_GET_CHAN_INFO::getChannelInfo(){
   UINT32 ChanNb;
 
   CHAR* symbolicName = (CHAR*) (const char*) SYMB_NAME().getValue();
-  SINT32 retCode = mio_GetDrvByName(symbolicName, &DrvId, &Type, &CardNb, &ChanNb, NULL);
+  SINT32 retCode = mio_GetDrvByName(symbolicName, &DrvId, &Type, &CardNb, &ChanNb, nullptr);
 
   CHAN_NB() = ChanNb;
   MOD_NB() = CardNb;

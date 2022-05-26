@@ -156,12 +156,12 @@ const unsigned int allowedStatesInFunction[] = {
 
 #define ENTRY_FUNCTION(function)                                                                                \
     fmuInstance* componentInstance = static_cast<fmuInstance*>(c);                                              \
-    if(NULL == c) {return fmi2Error;}                                                                           \
+    if(nullptr == c) {return fmi2Error;}                                                                           \
     ASSERT_STATE(componentInstance, function)                                                                   \
 
 #define ENTRY_FUNCTION_NO_RETURN(function)                                                                      \
     fmuInstance* componentInstance = static_cast<fmuInstance*>(c);                                              \
-    if(NULL == c) {return;}                                                                                     \
+    if(nullptr == c) {return;}                                                                                     \
     ASSERT_STATE_NO_RETURN(componentInstance, function)                                                         \
 
 #define NOT_USED(var)                                                                                           \

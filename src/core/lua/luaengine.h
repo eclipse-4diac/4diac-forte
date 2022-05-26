@@ -74,7 +74,7 @@ public:
 #if LUA_VERSION_NUM > 501
       luaL_setfuncs(luaState, T::LUA_FUNCS, 0);
 #else
-      luaL_register(luaState, NULL, T::LUA_FUNCS);
+      luaL_register(luaState, nullptr, T::LUA_FUNCS);
 #endif
       lua_pop(luaState, 1);
     }
@@ -100,7 +100,7 @@ public:
   template<class T>
   static T* luaGetObject(lua_State* luaState, int index) {
     T** userdata = static_cast<T**>(luaL_checkudata(luaState, index, T::LUA_NAME));
-    if (userdata == NULL) {
+    if (userdata == nullptr) {
       luaL_argerror(luaState, index, T::LUA_NAME);
     }
     return *userdata;
@@ -158,7 +158,7 @@ public:
   template<class T, T (CLuaEngine::*F)(int)>
   T* getArray(int index, size_t& length) {
     if (!lua_istable(luaState, index)) {
-      return NULL;
+      return nullptr;
     }
 #if LUA_VERSION_NUM > 501
     size_t len = lua_rawlen(luaState, index);
@@ -168,7 +168,7 @@ public:
     if (length == SIZE_MAX) {
       length = len;
     } else if (len != length) {
-      return NULL;
+      return nullptr;
     }
     T* array = new T[len];
     for (size_t i = len; i > 0; i--) {
@@ -183,7 +183,7 @@ public:
   template<class T, bool (*F)(T&, CLuaEngine*, int)>
   T* getCustomArray(int index, size_t& length) {
     if (!lua_istable(luaState, index)) {
-      return NULL;
+      return nullptr;
     }
 #if LUA_VERSION_NUM > 501
     size_t len = lua_rawlen(luaState, index);
@@ -193,14 +193,14 @@ public:
     if (length == SIZE_MAX) {
       length = len;
     } else if (len != length) {
-      return NULL;
+      return nullptr;
     }
     T* array = new T[len];
     for (size_t i = len; i > 0; i--) {
       lua_rawgeti(luaState, index, (int) i);
       if (!F(array[i - 1], this, -1)) {
         delete[] array;
-        return NULL;
+        return nullptr;
       }
       lua_pop(luaState, 1);
     }

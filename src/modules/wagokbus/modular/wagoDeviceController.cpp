@@ -167,7 +167,7 @@ const char* WagoDeviceController::loadTerminalInformation() {
     return scmFailedGetTerminalInfo;
   }
 
-  if(KbusInfo_Failed == ldkc_KbusInfo_GetTerminalList(OS_ARRAY_SIZE(mTerminalIds), mTerminalIds, NULL)) {
+  if(KbusInfo_Failed == ldkc_KbusInfo_GetTerminalList(OS_ARRAY_SIZE(mTerminalIds), mTerminalIds, nullptr)) {
     DEVLOG_ERROR("[WagoDeviceController] %s\n", scmFailedGetTerminalList);
     ldkc_KbusInfo_Destroy();
     return scmFailedGetTerminalList;

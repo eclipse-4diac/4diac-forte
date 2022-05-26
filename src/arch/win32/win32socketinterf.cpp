@@ -78,7 +78,7 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openTCPClientCon
   if(INVALID_SOCKET != nSocket) {
     sockaddr_in stSockAddr = {};
     int stSockAddrSz = sizeof(stSockAddr);
-    if(WSAStringToAddressA(pa_acIPAddr, AF_INET, NULL, (LPSOCKADDR)&stSockAddr, &stSockAddrSz)) {
+    if(WSAStringToAddressA(pa_acIPAddr, AF_INET, nullptr, (LPSOCKADDR)&stSockAddr, &stSockAddrSz)) {
       DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressA() failed: %d - %s\n", stSockAddr.sin_addr.s_addr, pa_acIPAddr);
     }
     stSockAddr.sin_family = AF_INET;
@@ -162,7 +162,7 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPSendPort(
   if(INVALID_SOCKET != nRetVal) {
     *m_ptDestAddr = TUDPDestAddr();
     int m_ptDestAddrSz = sizeof(*m_ptDestAddr);
-    if(WSAStringToAddressA(pa_acIPAddr, AF_INET, NULL, (LPSOCKADDR)m_ptDestAddr, &m_ptDestAddrSz)) {
+    if(WSAStringToAddressA(pa_acIPAddr, AF_INET, nullptr, (LPSOCKADDR)m_ptDestAddr, &m_ptDestAddrSz)) {
       DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressA() failed: %d - %s\n", m_ptDestAddr->sin_addr.s_addr, pa_acIPAddr);
     }
     m_ptDestAddr->sin_family = AF_INET;
@@ -193,7 +193,7 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::openUDPReceivePo
         // setting up multicast group
         sockaddr_in stMCastAddr = {};
         int stMCastAddrSz = sizeof(stMCastAddr);
-        if(WSAStringToAddressA(pa_acIPAddr, AF_INET, NULL, (LPSOCKADDR)&stMCastAddr, &stMCastAddrSz)) {
+        if(WSAStringToAddressA(pa_acIPAddr, AF_INET, nullptr, (LPSOCKADDR)&stMCastAddr, &stMCastAddrSz)) {
           DEVLOG_ERROR("CWin32SocketInterface: WSAStringToAddressA() failed: %d - %s\n", stMCastAddr.sin_addr.s_addr, pa_acIPAddr);
         }
 
@@ -265,10 +265,10 @@ int CWin32SocketInterface::receiveDataFromUDP(TSocketDescriptor pa_nSockD, char*
 }
 
 LPSTR CWin32SocketInterface::getErrorMessage(int pa_nErrorNumber){
-  LPSTR pacErrorMessage = NULL;
+  LPSTR pacErrorMessage = nullptr;
   FormatMessage(
   FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-  NULL, pa_nErrorNumber, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), pacErrorMessage, 0,
-  NULL);
+  nullptr, pa_nErrorNumber, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), pacErrorMessage, 0,
+  nullptr);
   return pacErrorMessage;
 }

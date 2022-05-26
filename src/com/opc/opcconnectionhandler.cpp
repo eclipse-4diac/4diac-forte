@@ -34,7 +34,7 @@ COpcConnectionHandler::~COpcConnectionHandler(){
 COpcConnection* COpcConnectionHandler::getOpcConnection(const char *pa_acHost, const char *pa_acServerName, const char* pa_acGroupName, unsigned long pa_nReqUpdateRate, float pa_nDeadBand, CComLayer* pa_pComCallback){
 
   COpcConnection *newConnection = findOpcConnection(pa_acHost, pa_acServerName);
-  if(newConnection == NULL){
+  if(newConnection == nullptr){
     newConnection = new COpcConnection(pa_acHost, pa_acServerName, &(getExtEvHandler<COpcEventHandler>(*pa_pComCallback->getCommFB())));
 
     m_lOpcConnectionList.pushBack(newConnection);
@@ -47,7 +47,7 @@ COpcConnection* COpcConnectionHandler::getOpcConnection(const char *pa_acHost, c
 
 void COpcConnectionHandler::removeOpcConnection(const char *pa_acHost, const char *pa_acServerName, const char* pa_acGroupName){
   COpcConnection *existingCon = findOpcConnection(pa_acHost, pa_acServerName);
-  if(existingCon != NULL){
+  if(existingCon != nullptr){
     existingCon->removeGroup(pa_acGroupName);
 
     if(existingCon->getGroupCount() == 0) {
@@ -64,7 +64,7 @@ COpcConnection* COpcConnectionHandler::findOpcConnection(const char* pa_acHost, 
     }
   }
 
-  return NULL;
+  return nullptr;
 }
 
 void COpcConnectionHandler::deleteOpcConnection(const char* pa_acHost, const char* pa_acServerName){

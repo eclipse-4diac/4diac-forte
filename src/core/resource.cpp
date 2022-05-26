@@ -540,8 +540,8 @@ void CResource::createInterfaceResponseMessage(CIEC_STRING& paReqResult, const c
 EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNameId,
     CIEC_STRING& paLuaScriptAsString){
   EMGMResponse retVal = e_UNSUPPORTED_TYPE;
-  if(NULL != strstr(paLuaScriptAsString.getValue(), "internalFBs")){ // CFBType
-    if(CLuaCFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != NULL){
+  if(nullptr != strstr(paLuaScriptAsString.getValue(), "internalFBs")){ // CFBType
+    if(CLuaCFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != nullptr){
       retVal = e_RDY;
     }
     else{
@@ -549,7 +549,7 @@ EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNam
     }
   }
   else{ // BFBType
-    if(CLuaBFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != NULL){
+    if(CLuaBFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != nullptr){
       retVal = e_RDY;
     }
     else{
@@ -563,7 +563,7 @@ EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNam
 EMGMResponse CResource::createAdapterTypeFromLua(CStringDictionary::TStringId typeNameId,
     CIEC_STRING& paLuaScriptAsString){
   EMGMResponse retVal = e_UNSUPPORTED_TYPE;
-  if(CLuaAdapterTypeEntry::createLuaAdapterTypeEntry(typeNameId, paLuaScriptAsString) != NULL){
+  if(CLuaAdapterTypeEntry::createLuaAdapterTypeEntry(typeNameId, paLuaScriptAsString) != nullptr){
      retVal = e_RDY;
    }else{
      retVal = e_INVALID_OPERATION;

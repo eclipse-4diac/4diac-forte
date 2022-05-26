@@ -58,7 +58,7 @@ int CModuleList::getModuleNr(const char* pa_pchName, unsigned int pa_nOccurence)
   TModuleList::Iterator itEnd(m_lModules.end());
   for(TModuleList::Iterator it(m_lModules.begin()); it != itEnd; ++it){
     char* pch = strstr(it->m_pchName, pa_pchName);
-    if(pch != NULL){
+    if(pch != nullptr){
       nrOcc++;
       if(nrOcc == pa_nOccurence){
         return it->m_nModuleNr;
@@ -75,7 +75,7 @@ int CModuleList::getNrOfModules(const char* pa_pchName){
   TModuleList::Iterator itEnd(m_lModules.end());
   for(TModuleList::Iterator it(m_lModules.begin()); it != itEnd; ++it){
     char* pch = strstr(it->m_pchName, pa_pchName);
-    if(pch != NULL){
+    if(pch != nullptr){
       nrMods++;
     }
   }
