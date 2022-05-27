@@ -60,7 +60,7 @@ public:
   ADAPTER_CTOR(FORTE_ATimeOut){
   };
 
-  virtual ~FORTE_ATimeOut(){};
+  virtual ~FORTE_ATimeOut() = default;
 
 };
 

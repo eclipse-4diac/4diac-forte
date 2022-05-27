@@ -61,7 +61,7 @@ class FORTE_F_ASIN : public CFunctionBlock {
     st_OUT().saveAssign(func_ASIN(oIn));
   }
 
-  virtual ~FORTE_F_ASIN() {};
+  virtual ~FORTE_F_ASIN() = default;
 
 };
 

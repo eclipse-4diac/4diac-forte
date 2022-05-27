@@ -24,7 +24,7 @@ class FORTE_GET_STRUCT_VALUE : public CFunctionBlock {
   public:
     FUNCTION_BLOCK_CTOR(FORTE_GET_STRUCT_VALUE){};
 
-    virtual ~FORTE_GET_STRUCT_VALUE() {};
+    virtual ~FORTE_GET_STRUCT_VALUE() = default;
 
   private:
 

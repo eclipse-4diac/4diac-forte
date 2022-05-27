@@ -25,8 +25,7 @@ COpcConnectionImpl::COpcConnectionImpl(const char *pa_acHost, const char *pa_acS
   m_pOpcConn(pa_pOpcConn), m_pOpcHost(0), m_pOpcServer(0), m_acHost(pa_acHost), m_acServerName(pa_acServerName), m_acGroupName(0), m_nReqUpdateRate(0), m_nRealUpdateRate(0), m_nDeadBand(0) {
 }
 
-COpcConnectionImpl::~COpcConnectionImpl(){
-}
+COpcConnectionImpl::~COpcConnectionImpl() = default;
 
 void COpcConnectionImpl::connect(){
   try{

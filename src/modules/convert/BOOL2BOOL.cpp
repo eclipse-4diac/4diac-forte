@@ -55,6 +55,5 @@ void BOOL2BOOL::executeEvent(int pa_nEIID){
   }
 }
 
-BOOL2BOOL::~BOOL2BOOL(){
-}
+BOOL2BOOL::~BOOL2BOOL() = default;
 

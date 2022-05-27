@@ -66,7 +66,7 @@ private:
 
 public:
   FUNCTION_BLOCK_CTOR(FB_CTUD_DINT){};
-  virtual ~FB_CTUD_DINT(){};
+  virtual ~FB_CTUD_DINT() = default;
 
 };
 

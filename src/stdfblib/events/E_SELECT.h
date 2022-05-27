@@ -44,7 +44,7 @@ private:
 public:
   FUNCTION_BLOCK_CTOR(E_SELECT){
   };
-  virtual ~E_SELECT(){};
+  virtual ~E_SELECT() = default;
 
 };
 

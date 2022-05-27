@@ -57,7 +57,7 @@ public:
               nullptr, m_anFBConnData, m_anFBVarsData){
   };
 
-  virtual ~FORTE_F_TIME_IN_US_TO_ULINT(){};
+  virtual ~FORTE_F_TIME_IN_US_TO_ULINT() = default;
 
 };
 

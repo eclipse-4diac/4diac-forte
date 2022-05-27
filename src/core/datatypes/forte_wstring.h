@@ -36,24 +36,17 @@
 class CIEC_WSTRING : public CIEC_ANY_STRING {
   DECLARE_FIRMWARE_DATATYPE(WSTRING)
   public:
-    CIEC_WSTRING() {
-    }
+    CIEC_WSTRING() = default;
 
-    CIEC_WSTRING(const CIEC_WSTRING& paValue) :
-        CIEC_ANY_STRING(paValue) {
-    }
+    CIEC_WSTRING(const CIEC_WSTRING& paValue) = default;
 
     explicit CIEC_WSTRING(const char* paValue) {
       fromCharString(paValue);
     }
 
-    virtual ~CIEC_WSTRING() {
-    }
+    virtual ~CIEC_WSTRING() = default;
 
-    CIEC_WSTRING &operator =(const CIEC_WSTRING &paValue) {
-      CIEC_ANY_STRING::operator =(paValue);
-      return *this;
-    }
+    CIEC_WSTRING &operator =(const CIEC_WSTRING &paValue) = default;
 
     /*! \brief Converts a UTF-8 encoded string to a WSTRING (ISO 10646 Row 00 internally)
      *

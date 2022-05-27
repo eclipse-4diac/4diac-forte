@@ -65,7 +65,7 @@ class FORTE_F_DIVTIME : public CFunctionBlock {
     st_OUT().saveAssign(func_DIVTIME(IN1(), roIn2));
   }
 
-  virtual ~FORTE_F_DIVTIME() {};
+  virtual ~FORTE_F_DIVTIME() = default;
 
 };
 

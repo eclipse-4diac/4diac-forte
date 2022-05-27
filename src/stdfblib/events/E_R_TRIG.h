@@ -44,7 +44,7 @@ private:
 public:
   FUNCTION_BLOCK_CTOR(E_R_TRIG), m_bOldVal(false){
   };
-  virtual ~E_R_TRIG(){};
+  virtual ~E_R_TRIG() = default;
 
 };
 

@@ -73,7 +73,7 @@ class FORTE_F_NE : public CFunctionBlock {
     calculateValue<T>();
   }
 
-  virtual ~FORTE_F_NE() {};
+  virtual ~FORTE_F_NE() = default;
 
 };
 

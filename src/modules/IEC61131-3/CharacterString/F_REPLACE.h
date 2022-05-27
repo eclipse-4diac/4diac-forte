@@ -78,7 +78,7 @@ class FORTE_F_REPLACE : public CFunctionBlock {
     st_OUT().saveAssign(func_REPLACE(oIn1,oIn2,L(),P()));
   }
 
-  virtual ~FORTE_F_REPLACE() {};
+  virtual ~FORTE_F_REPLACE() = default;
 
 };
 

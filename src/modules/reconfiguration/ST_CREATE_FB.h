@@ -71,7 +71,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_ST_CREATE_FB), m_poDevice(pa_poSrcRes->getDevice()){
   };
 
-  virtual ~FORTE_ST_CREATE_FB(){};
+  virtual ~FORTE_ST_CREATE_FB() = default;
 
 };
 

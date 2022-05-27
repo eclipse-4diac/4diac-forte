@@ -23,13 +23,9 @@ using namespace forte::core::io;
 
 DEFINE_SINGLETON(IOMapper)
 
-IOMapper::IOMapper() {
+IOMapper::IOMapper() = default;
 
-}
-
-IOMapper::~IOMapper() {
-
-}
+IOMapper::~IOMapper() = default;
 
 bool IOMapper::registerHandle(CIEC_WSTRING const &paId, IOHandle* paHandle) {
   CCriticalRegion criticalRegion(mSyncMutex);

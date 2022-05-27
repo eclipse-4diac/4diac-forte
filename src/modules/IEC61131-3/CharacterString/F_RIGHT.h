@@ -65,7 +65,7 @@ class FORTE_F_RIGHT : public CFunctionBlock {
     st_OUT().saveAssign(func_RIGHT(roIn,L()));
   }
 
-  virtual ~FORTE_F_RIGHT() {};
+  virtual ~FORTE_F_RIGHT() = default;
 
 };
 

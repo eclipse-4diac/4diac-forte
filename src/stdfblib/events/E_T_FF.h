@@ -52,7 +52,7 @@ public:
               nullptr, m_anFBConnData, m_anFBVarsData){
   };
 
-  virtual ~FORTE_E_T_FF(){};
+  virtual ~FORTE_E_T_FF() = default;
 
 };
 

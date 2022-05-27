@@ -64,7 +64,7 @@ class FORTE_F_LEN : public CFunctionBlock {
     st_OUT().saveAssign(func_LEN(roIn));
   }
 
-  virtual ~FORTE_F_LEN() {};
+  virtual ~FORTE_F_LEN() = default;
 
 };
 

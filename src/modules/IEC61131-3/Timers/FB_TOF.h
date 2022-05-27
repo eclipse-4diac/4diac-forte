@@ -61,7 +61,7 @@ private:
 
 public:
   FUNCTION_BLOCK_CTOR(FB_TOF), fallingEdge(false), notFirstRisingEdge(false){};
-  virtual ~FB_TOF(){};
+  virtual ~FB_TOF() = default;
 
 };
 

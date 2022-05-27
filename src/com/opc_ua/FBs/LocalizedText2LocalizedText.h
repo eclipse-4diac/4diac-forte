@@ -52,7 +52,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_LocalizedText2LocalizedText){
   };
 
-  virtual ~FORTE_LocalizedText2LocalizedText(){};
+  virtual ~FORTE_LocalizedText2LocalizedText() = default;
 
 };
 

@@ -32,8 +32,7 @@ class CIEC_UINT : public CIEC_ANY_INT{
     static const TValueType scm_nMinVal = 0;
     static const TValueType scm_nMaxVal;
 
-    CIEC_UINT(){
-    }
+    CIEC_UINT() = default;
 
     CIEC_UINT(const CIEC_UINT& paValue) :
         CIEC_ANY_INT(){
@@ -49,8 +48,7 @@ class CIEC_UINT : public CIEC_ANY_INT{
       setTUINT16(paValue);
     }
 
-    virtual ~CIEC_UINT(){
-    }
+    virtual ~CIEC_UINT() = default;
 
     CIEC_UINT& operator =(const CIEC_UINT &paValue){
       // Simple value assignment - no self assignment check needed

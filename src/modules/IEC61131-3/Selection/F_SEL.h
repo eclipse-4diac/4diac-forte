@@ -66,7 +66,7 @@ class FORTE_F_SEL : public CFunctionBlock {
     FUNCTION_BLOCK_CTOR(FORTE_F_SEL){
   };
 
-  virtual ~FORTE_F_SEL() {};
+  virtual ~FORTE_F_SEL() = default;
 
   template<typename T> void calculateValue() {
     T oIn0;

@@ -55,7 +55,7 @@ private:
 public:
   FUNCTION_BLOCK_CTOR(FORTE_F_FIND){
   };
-  virtual ~FORTE_F_FIND(){};
+  virtual ~FORTE_F_FIND() = default;
 };
 
 #endif //close the ifdef sequence from the beginning of the file

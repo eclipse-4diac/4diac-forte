@@ -360,9 +360,7 @@ private:
   CSinglyLinkedList<void*> mList;
 
 public:
-  CSinglyLinkedList() {
-
-  }
+  CSinglyLinkedList() = default;
 
   ~CSinglyLinkedList()  {
     clearAll();

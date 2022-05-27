@@ -18,8 +18,7 @@
 class CModbusTimedEvent{
   public:
     explicit CModbusTimedEvent(TForteUInt32 pa_nUpdateInterval); // UpdateInterval = 0 => single shot event
-    virtual ~CModbusTimedEvent(){
-    }
+    virtual ~CModbusTimedEvent() = default;
 
     void setUpdateInterval(TForteUInt32 pa_nUpdateInterval);
     TForteUInt32 getUpdateInterval() const{

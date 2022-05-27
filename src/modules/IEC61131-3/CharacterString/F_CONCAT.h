@@ -68,7 +68,7 @@ class FORTE_F_CONCAT : public CFunctionBlock {
     st_OUT().saveAssign(func_CONCAT(oIn1,oIn2));
   }
 
-  virtual ~FORTE_F_CONCAT() {};
+  virtual ~FORTE_F_CONCAT() = default;
 
 };
 

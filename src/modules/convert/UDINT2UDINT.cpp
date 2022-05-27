@@ -55,5 +55,4 @@ void UDINT2UDINT::executeEvent(int pa_nEIID){
   }
 }
 
-UDINT2UDINT::~UDINT2UDINT(){
-}
+UDINT2UDINT::~UDINT2UDINT() = default;

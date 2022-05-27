@@ -56,5 +56,4 @@ void DWORD2DWORD::executeEvent(int pa_nEIID){
   }
 }
 
-DWORD2DWORD::~DWORD2DWORD(){
-}
+DWORD2DWORD::~DWORD2DWORD() = default;

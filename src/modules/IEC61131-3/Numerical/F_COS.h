@@ -61,7 +61,7 @@ class FORTE_F_COS : public CFunctionBlock {
     st_OUT().saveAssign(func_COS(oIn));
   }
 
-  virtual ~FORTE_F_COS() {};
+  virtual ~FORTE_F_COS() = default;
 
 };
 

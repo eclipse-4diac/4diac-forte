@@ -75,7 +75,7 @@ private:
 
 public:
   FORTE_RT_E_DELAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
-  virtual ~FORTE_RT_E_DELAY(){};
+  virtual ~FORTE_RT_E_DELAY() = default;
 
 };
 

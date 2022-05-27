@@ -41,8 +41,7 @@ class CIEC_LWORD : public CIEC_ANY_BIT{
     static const TValueType scm_nMinVal = 0;
     static const TValueType scm_nMaxVal;
 
-    CIEC_LWORD(){
-    }
+    CIEC_LWORD() = default;
 
     CIEC_LWORD(const CIEC_LWORD& paValue) :
         CIEC_ANY_BIT(){
@@ -67,8 +66,7 @@ class CIEC_LWORD : public CIEC_ANY_BIT{
     explicit CIEC_LWORD(TForteLWord paValue){
       setTUINT64(paValue);
     }
-    virtual ~CIEC_LWORD(){
-    }
+    virtual ~CIEC_LWORD() = default;
 
     CIEC_LWORD& operator =(const CIEC_LWORD &paValue){
       // Simple value assignment - no self assignment check needed

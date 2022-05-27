@@ -46,9 +46,8 @@ class CConnection{
   public:
     CConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId);
 
-    virtual ~CConnection(){
-    }
-    ;
+    virtual ~CConnection() = default;
+
     /*! \brief Establishes a connection.
      *
      * With this command the connection is created and the FBs are set to appropriate states.

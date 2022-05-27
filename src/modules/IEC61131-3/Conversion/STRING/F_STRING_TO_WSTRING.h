@@ -52,7 +52,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_F_STRING_TO_WSTRING){
   };
 
-  virtual ~FORTE_F_STRING_TO_WSTRING(){};
+  virtual ~FORTE_F_STRING_TO_WSTRING() = default;
 
 };
 

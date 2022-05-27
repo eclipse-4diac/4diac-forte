@@ -52,7 +52,7 @@ public:
   FUNCTION_BLOCK_CTOR(E_D_FF){
   };
 
-  virtual ~E_D_FF(){ };
+  virtual ~E_D_FF() = default;
 
 };
 

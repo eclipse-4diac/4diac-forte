@@ -25,18 +25,14 @@ CTypeLib::CTypeEntry::CTypeEntry(CStringDictionary::TStringId pa_nTypeNameId) :
   m_poNext(nullptr){
 }
 
-CTypeLib::CTypeEntry::~CTypeEntry(){
-
-}
+CTypeLib::CTypeEntry::~CTypeEntry() = default;
 
 CTypeLib::CSpecTypeEntry::CSpecTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, const SFBInterfaceSpec* paSocketInterfaceSpec) :
   CTypeEntry(pa_nTypeNameId),
   mSocketInterfaceSpec(paSocketInterfaceSpec){
 }
 
-CTypeLib::CSpecTypeEntry::~CSpecTypeEntry(){
-
-}
+CTypeLib::CSpecTypeEntry::~CSpecTypeEntry() = default;
 
 CTypeLib::CFBTypeEntry::CFBTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TFunctionBlockCreateFunc pa_pfuncCreateFB, const SFBInterfaceSpec* paSocketInterfaceSpec):
   CSpecTypeEntry(pa_nTypeNameId, paSocketInterfaceSpec),
@@ -46,9 +42,7 @@ CTypeLib::addFBType(this);
 }
 
 
-CTypeLib::CFBTypeEntry::~CFBTypeEntry(){
-
-}
+CTypeLib::CFBTypeEntry::~CFBTypeEntry() = default;
 
 CTypeLib::CAdapterTypeEntry::CAdapterTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TAdapterCreateFunc pa_pfuncCreateAdapter, const SFBInterfaceSpec* paSocketInterfaceSpec):
   CSpecTypeEntry(pa_nTypeNameId, paSocketInterfaceSpec),
@@ -57,18 +51,14 @@ CTypeLib::addAdapterType(this);
 
 }
 
-CTypeLib::CAdapterTypeEntry::~CAdapterTypeEntry(){
-
-}
+CTypeLib::CAdapterTypeEntry::~CAdapterTypeEntry() = default;
 
 CTypeLib::CDataTypeEntry::CDataTypeEntry(CStringDictionary::TStringId paTypeNameId, TDataTypeCreateFunc pafuncDTCreateFunc) :
     CTypeEntry(paTypeNameId), m_pfuncDTCreateFunc(pafuncDTCreateFunc) {
   CTypeLib::addDataType(this);
 }
 
-CTypeLib::CDataTypeEntry::~CDataTypeEntry(){
-
-}
+CTypeLib::CDataTypeEntry::~CDataTypeEntry() = default;
 
 
 EMGMResponse CTypeLib::m_eLastErrorMSG = e_RDY;

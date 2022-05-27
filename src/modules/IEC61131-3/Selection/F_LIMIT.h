@@ -77,7 +77,7 @@ class FORTE_F_LIMIT : public CFunctionBlock {
   template<typename T> void calculateValueString() const {
     //TODO fill this function
   }
-  virtual ~FORTE_F_LIMIT() {};
+  virtual ~FORTE_F_LIMIT() = default;
 };
 
 #endif //close the ifdef sequence from the beginning of the file

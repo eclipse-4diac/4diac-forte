@@ -144,7 +144,7 @@ class FORTE_X20DO9321 : public CFunctionBlock, public IEplCNCallback{
     FUNCTION_BLOCK_CTOR(FORTE_X20DO9321){
   };
 
-  virtual ~FORTE_X20DO9321(){};
+  virtual ~FORTE_X20DO9321() = default;
 
   void cnSynchCallback();
 

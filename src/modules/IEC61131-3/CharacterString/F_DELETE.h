@@ -71,7 +71,7 @@ class FORTE_F_DELETE : public CFunctionBlock {
     st_OUT().saveAssign(func_DELETE(oIn1,L(),P()));
   }
 
-  virtual ~FORTE_F_DELETE() {};
+  virtual ~FORTE_F_DELETE() = default;
 
 };
 

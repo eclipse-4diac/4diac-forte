@@ -247,8 +247,7 @@ class AndOperation {
       return resultType(static_cast<resultType>(pa_roIN1) & static_cast<resultType>(pa_roIN2));
     }
   private:
-    AndOperation() {
-    }
+    AndOperation() = default;
 };
 
 template<class T>
@@ -259,8 +258,7 @@ class AndOperation<T, CIEC_BOOL> {
       return resultType(pa_roIN1 & (pa_roIN2 ? 1 : 0));
     }
   private:
-    AndOperation() {
-    }
+    AndOperation() = default;
 };
 
 template<class T>
@@ -271,8 +269,7 @@ class AndOperation<CIEC_BOOL, T> {
       return resultType((pa_roIN1 ? 1 : 0) & pa_roIN2);
     }
   private:
-    AndOperation() {
-    }
+    AndOperation() = default;
 };
 
 template<>
@@ -282,8 +279,7 @@ class AndOperation<CIEC_BOOL, CIEC_BOOL> {
       return CIEC_BOOL(pa_roIN1 && pa_roIN2);
     }
   private:
-    AndOperation() {
-    }
+    AndOperation() = default;
 };
 
 template<typename T, typename U>
@@ -304,8 +300,7 @@ class OrOperation {
       return resultType(static_cast<resultType>(pa_roIN1) | static_cast<resultType>(pa_roIN2));
     }
   private:
-    OrOperation() {
-    }
+    OrOperation() = default;
 };
 
 template<class T>
@@ -316,8 +311,7 @@ class OrOperation<T, CIEC_BOOL> {
       return resultType(pa_roIN1 | (pa_roIN2 ? 1 : 0));
     }
   private:
-    OrOperation() {
-    }
+    OrOperation() = default;
 };
 
 template<class T>
@@ -328,8 +322,7 @@ class OrOperation<CIEC_BOOL, T> {
       return resultType((pa_roIN1 ? 1 : 0) | pa_roIN2);
     }
   private:
-    OrOperation() {
-    }
+    OrOperation() = default;
 };
 
 template<>
@@ -339,8 +332,7 @@ class OrOperation<CIEC_BOOL, CIEC_BOOL> {
       return CIEC_BOOL(pa_roIN1 || pa_roIN2);
     }
   private:
-    OrOperation() {
-    }
+    OrOperation() = default;
 };
 
 
@@ -361,8 +353,7 @@ class XorOperation {
       return resultType(static_cast<resultType>(pa_roIN1) ^ static_cast<resultType>(pa_roIN2));
     }
   private:
-    XorOperation() {
-    }
+    XorOperation() = default;
 };
 
 template<class T>
@@ -373,8 +364,7 @@ class XorOperation<T, CIEC_BOOL> {
       return resultType(pa_roIN1 ^ (pa_roIN2 ? 1 : 0));
     }
   private:
-    XorOperation() {
-    }
+    XorOperation() = default;
 };
 
 template<class T>
@@ -385,8 +375,7 @@ class XorOperation<CIEC_BOOL, T> {
       return resultType((pa_roIN1 ? 1 : 0) ^ pa_roIN2);
     }
   private:
-    XorOperation() {
-    }
+    XorOperation() = default;
 };
 
 template<>
@@ -396,8 +385,7 @@ class XorOperation<CIEC_BOOL, CIEC_BOOL> {
       return CIEC_BOOL(pa_roIN1 != pa_roIN2);
     }
   private:
-    XorOperation() {
-    }
+    XorOperation() = default;
 };
 
 template<typename T, typename U>

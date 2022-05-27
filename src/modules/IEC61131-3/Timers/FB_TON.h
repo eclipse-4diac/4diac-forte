@@ -60,7 +60,7 @@ private:
 
 public:
   FUNCTION_BLOCK_CTOR(FB_TON), risingEdge(false){};
-  virtual ~FB_TON(){};
+  virtual ~FB_TON() = default;
 
 };
 

@@ -35,8 +35,7 @@ public:
 
   }
 
-  ~CIterator() {
-  }
+  ~CIterator() = default;
 
   /*!\brief returns the pointer of the current node element
    */
@@ -102,9 +101,7 @@ public:
 
   }
 
-  ~CIterator() {
-
-  }
+  ~CIterator() = default;
 
   /*!\brief returns the pointer of the current node element
    */

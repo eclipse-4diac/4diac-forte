@@ -44,7 +44,7 @@ private:
 public:
   FUNCTION_BLOCK_CTOR(E_RS){
   };
-  virtual ~E_RS() {};
+  virtual ~E_RS() = default;
 
 };
 

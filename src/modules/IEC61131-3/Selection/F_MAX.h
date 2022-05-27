@@ -72,7 +72,7 @@ class FORTE_F_MAX : public CFunctionBlock {
   template<typename T> void calculateValueString() const {
     //TODO fill this function
   }
-  virtual ~FORTE_F_MAX() {};
+  virtual ~FORTE_F_MAX() = default;
 
 };
 

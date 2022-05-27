@@ -28,6 +28,5 @@ EMB_RES::EMB_RES(CStringDictionary::TStringId pa_nInstanceNameId,
   addFB(CTypeLib::createFB(g_nStringIdSTART, g_nStringIdE_RESTART, this));
 }
 
-EMB_RES::~EMB_RES(){
-}
+EMB_RES::~EMB_RES() = default;
 

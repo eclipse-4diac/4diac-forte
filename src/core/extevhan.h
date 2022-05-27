@@ -50,9 +50,7 @@ class CExternalEventHandler{
   public:
     explicit CExternalEventHandler(CDeviceExecution& paDeviceExecution);
 
-    virtual ~CExternalEventHandler(){
-    }
-    ;
+    virtual ~CExternalEventHandler() = default;
     /*!\brief Enables this event source
      *
      */

@@ -20,6 +20,5 @@ TestSingleton::TestSingleton(){
   m_unSingletonID = sm_unInstanceCount;
 }
 
-TestSingleton::~TestSingleton(){
-}
+TestSingleton::~TestSingleton() = default;
 

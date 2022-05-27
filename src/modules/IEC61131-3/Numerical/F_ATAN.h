@@ -61,7 +61,7 @@ class FORTE_F_ATAN : public CFunctionBlock {
     st_OUT().saveAssign(func_ATAN(oIn));
   }
 
-  virtual ~FORTE_F_ATAN() {};
+  virtual ~FORTE_F_ATAN() = default;
 
 };
 

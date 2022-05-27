@@ -52,7 +52,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_F_LWORD_TO_UDINT){
   };
 
-  virtual ~FORTE_F_LWORD_TO_UDINT(){};
+  virtual ~FORTE_F_LWORD_TO_UDINT() = default;
 
 };
 

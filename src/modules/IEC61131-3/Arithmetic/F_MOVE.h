@@ -60,7 +60,7 @@ class FORTE_F_MOVE : public CFunctionBlock {
     st_OUT().saveAssign(func_MOVE(roIn));
   }
 
-  virtual ~FORTE_F_MOVE() {};
+  virtual ~FORTE_F_MOVE() = default;
 
 };
 

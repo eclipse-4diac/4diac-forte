@@ -25,8 +25,7 @@ GEN_OR::GEN_OR(const CStringDictionary::TStringId paInstanceNameId, CResource *p
     CGenBitBase(paInstanceNameId, paSrcRes){
 }
 
-GEN_OR::~GEN_OR() {
-}
+GEN_OR::~GEN_OR() = default;
 
 void GEN_OR::executeEvent(int paEIID) {
   switch (paEIID) {

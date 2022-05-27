@@ -67,7 +67,7 @@ class FORTE_F_EXPT : public CFunctionBlock {
     st_OUT().saveAssign(func_EXPT(roIn1,oIn2));
   }
 
-  virtual ~FORTE_F_EXPT() {};
+  virtual ~FORTE_F_EXPT() = default;
 
 };
 

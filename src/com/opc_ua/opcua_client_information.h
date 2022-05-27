@@ -247,9 +247,7 @@ class CUA_ClientInformation {
         UA_RemoteCallHandle(CActionInfo& paActionInfo, CUA_ClientInformation& paClientInformation) :
             mActionInfo(paActionInfo), mClientInformation(paClientInformation) {
         }
-        ~UA_RemoteCallHandle() {
-
-        }
+        ~UA_RemoteCallHandle() = default;
 
         CActionInfo& mActionInfo;
         CUA_ClientInformation& mClientInformation;

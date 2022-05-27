@@ -218,8 +218,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
             CCreateInfo(), mTypeNodeId(nullptr) {
         }
 
-        ~CCreateObjectInfo() {
-        }
+        ~CCreateObjectInfo() = default;
 
         UA_NodeId *mTypeNodeId;
       private:
@@ -237,8 +236,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
 
         }
 
-        ~CCreateVariableInfo() {
-        }
+        ~CCreateVariableInfo() = default;
 
         const UA_DataType *mTypeConvert;
         const CIEC_ANY *mInitData;

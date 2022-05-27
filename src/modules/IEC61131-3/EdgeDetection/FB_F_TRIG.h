@@ -51,7 +51,7 @@ public:
   FUNCTION_BLOCK_CTOR(FB_F_TRIG){
    M = CIEC_BOOL(true);
   };
-  virtual ~FB_F_TRIG(){};
+  virtual ~FB_F_TRIG() = default;
 
 };
 

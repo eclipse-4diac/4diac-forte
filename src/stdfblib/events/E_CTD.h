@@ -67,7 +67,7 @@ public:
               nullptr, m_anFBConnData, m_anFBVarsData){
   };
 
-  virtual ~FORTE_E_CTD(){};
+  virtual ~FORTE_E_CTD() = default;
 
 };
 

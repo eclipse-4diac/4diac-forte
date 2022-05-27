@@ -63,7 +63,7 @@ public:
   COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_CFB_TEST){
   };
 
-  virtual ~FORTE_CFB_TEST(){};
+  virtual ~FORTE_CFB_TEST() = default;
 
 };
 

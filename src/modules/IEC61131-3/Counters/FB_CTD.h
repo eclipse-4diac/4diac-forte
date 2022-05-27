@@ -57,7 +57,7 @@ private:
 
 public:
   FUNCTION_BLOCK_CTOR(FB_CTD){};
-  virtual ~FB_CTD(){};
+  virtual ~FB_CTD() = default;
 
 };
 

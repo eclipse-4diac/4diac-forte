@@ -20,8 +20,7 @@ CModbusComLayer::CModbusComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poC
   m_eConnectionState = e_Disconnected;
 }
 
-CModbusComLayer::~CModbusComLayer(){
-}
+CModbusComLayer::~CModbusComLayer() = default;
 
 EComResponse CModbusComLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
   EComResponse eRetVal = e_ProcessDataOk;

@@ -23,8 +23,7 @@ MQTTComLayer::MQTTComLayer(CComLayer* paUpperLayer, CBaseCommFB * pFB) : CComLay
   memset(mDataBuffer, 0, mBufferSize); //TODO change this to  dataBuffer{0} in the extended list when fully switching to C++11
 }
 
-MQTTComLayer::~MQTTComLayer() {
-}
+MQTTComLayer::~MQTTComLayer() = default;
 
 EComResponse MQTTComLayer::sendData(void* paData, unsigned int paSize) {
   MQTTAsync_message message = MQTTAsync_message_initializer;

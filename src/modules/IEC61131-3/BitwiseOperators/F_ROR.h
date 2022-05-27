@@ -72,7 +72,7 @@ class FORTE_F_ROR : public CFunctionBlock {
     st_OUT().saveAssign(func_ROR(oIn, oN));
   }
 
-  virtual ~FORTE_F_ROR() {};
+  virtual ~FORTE_F_ROR() = default;
 
 };
 

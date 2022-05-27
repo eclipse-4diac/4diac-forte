@@ -60,7 +60,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_F_MUX_2){
   };
 
-  virtual ~FORTE_F_MUX_2(){};
+  virtual ~FORTE_F_MUX_2() = default;
 
 };
 

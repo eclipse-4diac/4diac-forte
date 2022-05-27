@@ -75,8 +75,7 @@ CPosixThread::CPosixThread(long paStackSize) : CThreadBase<pthread_t>(paStackSiz
   }
 }
 
-CPosixThread::~CPosixThread(){
-}
+CPosixThread::~CPosixThread() = default;
 
 void CPosixThread::setDeadline(const CIEC_TIME &paVal){
   mDeadline = paVal;

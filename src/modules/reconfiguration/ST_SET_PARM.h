@@ -75,7 +75,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_ST_SET_PARM), m_poDevice(pa_poSrcRes->getDevice()){
   };
 
-  virtual ~FORTE_ST_SET_PARM(){};
+  virtual ~FORTE_ST_SET_PARM() = default;
 
 };
 

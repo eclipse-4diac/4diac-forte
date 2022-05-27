@@ -66,7 +66,7 @@ class FORTE_F_SUB : public CFunctionBlock {
     st_OUT().saveAssign(func_SUB(roIn1,oIn2));
   }
 
-  virtual ~FORTE_F_SUB() {};
+  virtual ~FORTE_F_SUB() = default;
 };
 
 #endif //close the ifdef sequence from the beginning of the file

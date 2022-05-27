@@ -133,7 +133,7 @@ class FORTE_EXECUTE_ACTION_SERVER : public CEventSourceFB{
     EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_EXECUTE_ACTION_SERVER), m_nh(0) ,m_RosNamespace(""), m_RosMsgName(""), m_Initiated(false), m_ResultAvailable(false), m_ActionServer(0) {
     };
 
-    virtual ~FORTE_EXECUTE_ACTION_SERVER(){};
+    virtual ~FORTE_EXECUTE_ACTION_SERVER() = default;
 
   };
 

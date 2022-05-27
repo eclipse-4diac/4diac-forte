@@ -28,8 +28,7 @@ CAnyAdapter::CAnyAdapter(CStringDictionary::TStringId pa_anAdapterInstanceName, 
   memset(&m_stCurrentFBInterfaceSpec, 0, sizeof(SFBInterfaceSpec));
 }
 
-CAnyAdapter::~CAnyAdapter(){
-}
+CAnyAdapter::~CAnyAdapter() = default;
 
 void CAnyAdapter::typifyAnyAdapter(CAdapter *pa_poPeer){
   m_stCurrentFBInterfaceSpec.m_nNumEIs = pa_poPeer->getAdapterInterfaceSpec()->m_nNumEOs;

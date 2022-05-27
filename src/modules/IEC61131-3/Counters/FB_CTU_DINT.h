@@ -57,7 +57,7 @@ private:
 
 public:
   FUNCTION_BLOCK_CTOR(FB_CTU_DINT){};
-  virtual ~FB_CTU_DINT(){};
+  virtual ~FB_CTU_DINT() = default;
 
 };
 

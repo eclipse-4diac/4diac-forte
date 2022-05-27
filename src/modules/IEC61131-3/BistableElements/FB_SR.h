@@ -50,7 +50,7 @@ private:
 
 public:
   FUNCTION_BLOCK_CTOR(FB_SR){};
-  virtual ~FB_SR(){};
+  virtual ~FB_SR() = default;
 
 };
 

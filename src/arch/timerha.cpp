@@ -27,8 +27,7 @@ CTimerHandler::CTimerHandler(CDeviceExecution& paDeviceExecution) : CExternalEve
     mForteTime(0), mTimedFBList(nullptr), mAddFBList(nullptr){
 }
 
-CTimerHandler::~CTimerHandler(){
-}
+CTimerHandler::~CTimerHandler() = default;
 
 void CTimerHandler::registerTimedFB(STimedFBListEntry *paTimerListEntry, const CIEC_TIME &paTimeInterval) {
   //calculate the correct interval based on time-base and timer ticks per seconds

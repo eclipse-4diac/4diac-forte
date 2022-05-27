@@ -94,7 +94,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_X20DO4623){
   };
 
-  virtual ~FORTE_X20DO4623(){};
+  virtual ~FORTE_X20DO4623() = default;
 
   void cnSynchCallback();
 

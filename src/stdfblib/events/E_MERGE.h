@@ -40,7 +40,7 @@ private:
 public:
   FUNCTION_BLOCK_CTOR(E_MERGE){
   };
-  virtual ~E_MERGE() {};
+  virtual ~E_MERGE() = default;
 
 };
 

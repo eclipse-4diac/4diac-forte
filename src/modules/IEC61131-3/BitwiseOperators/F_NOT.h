@@ -60,7 +60,7 @@ class FORTE_F_NOT : public CFunctionBlock {
     st_OUT().saveAssign(func_NOT(oIn));
   }
 
-  virtual ~FORTE_F_NOT() {};
+  virtual ~FORTE_F_NOT() = default;
 
 };
 

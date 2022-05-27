@@ -33,8 +33,7 @@ using namespace boost::unit_test;
 
 class CIEC_BYTE_PARTIAL_UNCHECKED : public CIEC_BYTE{
 public:
-  CIEC_BYTE_PARTIAL_UNCHECKED() {
-  }
+  CIEC_BYTE_PARTIAL_UNCHECKED() = default;
 
   CIEC_BYTE_PARTIAL_UNCHECKED(const CIEC_BYTE& paValue) : CIEC_BYTE(paValue) {
   }

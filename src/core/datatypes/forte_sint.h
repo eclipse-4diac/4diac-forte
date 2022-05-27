@@ -31,8 +31,7 @@ class CIEC_SINT : public CIEC_ANY_INT{
     static const TValueType scm_nMinVal;
     static const TValueType scm_nMaxVal;
 
-    CIEC_SINT(){
-    }
+    CIEC_SINT() = default;
 
     CIEC_SINT(const CIEC_SINT& paValue) :
         CIEC_ANY_INT(){

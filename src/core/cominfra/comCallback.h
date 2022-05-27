@@ -24,7 +24,7 @@ class CComCallback {
 
   public:
 
-    virtual ~CComCallback() {};
+    virtual ~CComCallback() = default;
 
     /*!\brief Take the given data and perform the necessary process for receiving data
      *

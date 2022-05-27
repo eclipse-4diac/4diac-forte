@@ -30,7 +30,7 @@ class CIEC_DATE_AND_TIME : public CIEC_ANY_DATE {
   public:
     typedef TForteUInt64 TValueType;
 
-    CIEC_DATE_AND_TIME()  { }
+    CIEC_DATE_AND_TIME() = default;
 
     CIEC_DATE_AND_TIME(const CIEC_DATE_AND_TIME& paValue) : CIEC_ANY_DATE() {
       setValueSimple(paValue);
@@ -40,7 +40,7 @@ class CIEC_DATE_AND_TIME : public CIEC_ANY_DATE {
       setTUINT64(paValue);
     }
 
-    virtual ~CIEC_DATE_AND_TIME() {}
+    virtual ~CIEC_DATE_AND_TIME() = default;
 
     CIEC_DATE_AND_TIME& operator = (const CIEC_DATE_AND_TIME &paValue){
       // Simple value assignment - no self assignment check needed

@@ -63,7 +63,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_SET_AT_INDEX){
   };
 
-  virtual ~FORTE_SET_AT_INDEX(){};
+  virtual ~FORTE_SET_AT_INDEX() = default;
 
 };
 

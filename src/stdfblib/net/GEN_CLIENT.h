@@ -24,7 +24,7 @@ class GEN_CLIENT : public forte::com_infra::CCommFB {
 
 public:
   GEN_CLIENT(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
-  virtual ~GEN_CLIENT(){};
+  virtual ~GEN_CLIENT() = default;
 
 };
 

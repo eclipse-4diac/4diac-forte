@@ -65,7 +65,7 @@ class FORTE_F_MULTIME : public CFunctionBlock {
     st_OUT().saveAssign(func_MULTIME(IN1(), roIn2));
   }
 
-  virtual ~FORTE_F_MULTIME() {};
+  virtual ~FORTE_F_MULTIME() = default;
 
 };
 

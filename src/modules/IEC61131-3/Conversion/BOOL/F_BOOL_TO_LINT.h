@@ -52,7 +52,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_F_BOOL_TO_LINT){
   };
 
-  virtual ~FORTE_F_BOOL_TO_LINT(){};
+  virtual ~FORTE_F_BOOL_TO_LINT() = default;
 
 };
 

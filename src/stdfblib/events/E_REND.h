@@ -52,7 +52,7 @@ public:
     m_bE1Occ(false),
     m_bE2Occ(false){
   };
-  virtual ~E_REND() {};
+  virtual ~E_REND() = default;
 
 };
 

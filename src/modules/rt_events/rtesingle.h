@@ -72,7 +72,7 @@ public:
   {
       m_bInitialized = false;
   };
-  virtual ~CRTEventSingle(){};
+  virtual ~CRTEventSingle() = default;
 };
 
 #endif /*RTESINGLE_H_*/

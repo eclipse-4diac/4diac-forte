@@ -61,7 +61,7 @@ class FORTE_F_LOG : public CFunctionBlock {
     st_OUT().saveAssign(func_LOG(oIn));
   }
 
-  virtual ~FORTE_F_LOG() {};
+  virtual ~FORTE_F_LOG() = default;
 
 };
 

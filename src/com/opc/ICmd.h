@@ -14,12 +14,8 @@
 
 class ICmd{
   public:
-    ICmd(){
-    }
-    ;
-    virtual ~ICmd(){
-    }
-    ;
+    ICmd() = default;
+    virtual ~ICmd() = default;
 
     virtual void runCommand() = 0;
     virtual const char* getCommandName() const = 0;

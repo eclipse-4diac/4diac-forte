@@ -52,7 +52,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_F_LWORD_TO_DWORD){
   };
 
-  virtual ~FORTE_F_LWORD_TO_DWORD(){};
+  virtual ~FORTE_F_LWORD_TO_DWORD() = default;
 
 };
 

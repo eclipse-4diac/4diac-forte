@@ -37,9 +37,7 @@ COPC_UA_HandlerAbstract::COPC_UA_HandlerAbstract(CDeviceExecution& paDeviceExecu
     CExternalEventHandler(paDeviceExecution) {
 }
 
-COPC_UA_HandlerAbstract::~COPC_UA_HandlerAbstract() {
-  //do nothing
-}
+COPC_UA_HandlerAbstract::~COPC_UA_HandlerAbstract() = default;
 
 void COPC_UA_HandlerAbstract::triggerNewEvent(CEventSourceFB &paLayer) {
   startNewEventChain(&paLayer);

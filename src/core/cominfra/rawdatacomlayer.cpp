@@ -22,8 +22,7 @@ namespace forte {
             CComLayer(pa_poUpperLayer, pa_poFB){
     }
 
-    CRawDataComLayer::~CRawDataComLayer(){
-    }
+    CRawDataComLayer::~CRawDataComLayer() = default;
 
     void CRawDataComLayer::closeConnection(){
       //We don't need to do anything specific on closing

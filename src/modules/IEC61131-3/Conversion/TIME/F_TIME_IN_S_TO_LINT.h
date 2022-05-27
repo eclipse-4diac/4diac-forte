@@ -57,7 +57,7 @@ public:
               nullptr, m_anFBConnData, m_anFBVarsData){
   };
 
-  virtual ~FORTE_F_TIME_IN_S_TO_LINT(){};
+  virtual ~FORTE_F_TIME_IN_S_TO_LINT() = default;
 
 };
 

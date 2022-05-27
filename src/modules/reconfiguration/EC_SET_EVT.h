@@ -72,7 +72,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_EC_SET_EVT), m_poDevice(pa_poSrcRes->getDevice()){
   };
 
-  virtual ~FORTE_EC_SET_EVT(){};
+  virtual ~FORTE_EC_SET_EVT() = default;
 
 };
 

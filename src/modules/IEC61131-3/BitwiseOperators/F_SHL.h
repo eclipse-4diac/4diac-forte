@@ -71,7 +71,7 @@ class FORTE_F_SHL : public CFunctionBlock {
     st_OUT().saveAssign(func_SHL(oIn, oN));
   }
 
-  virtual ~FORTE_F_SHL() {};
+  virtual ~FORTE_F_SHL() = default;
 
 };
 

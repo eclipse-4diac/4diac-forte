@@ -173,8 +173,7 @@ class CIEC_ANY_STRING : public CIEC_ANY_ELEMENTARY{
 
     void fromCharString(const char* const paValue);
 
-    CIEC_ANY_STRING(){
-    }
+    CIEC_ANY_STRING() = default;
 };
 
 #endif /*_MANY_STR_H_*/

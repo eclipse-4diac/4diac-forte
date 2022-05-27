@@ -52,7 +52,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_F_STRING_TO_UINT){
   };
 
-  virtual ~FORTE_F_STRING_TO_UINT(){};
+  virtual ~FORTE_F_STRING_TO_UINT() = default;
 
 };
 

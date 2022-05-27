@@ -26,8 +26,7 @@ CEventChainExecutionThread::CEventChainExecutionThread() :
   clear();
 }
 
-CEventChainExecutionThread::~CEventChainExecutionThread(){
-}
+CEventChainExecutionThread::~CEventChainExecutionThread() = default;
 
 void CEventChainExecutionThread::run(){
   while(isAlive()){ //thread is allowed to execute

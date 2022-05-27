@@ -45,7 +45,7 @@ private:
 public:
   FUNCTION_BLOCK_CTOR(E_DEMUX){
   };
-  virtual ~E_DEMUX(){};
+  virtual ~E_DEMUX() = default;
 
 };
 

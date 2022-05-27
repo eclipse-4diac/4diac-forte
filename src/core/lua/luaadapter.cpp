@@ -20,5 +20,4 @@ CLuaAdapter::CLuaAdapter(CStringDictionary::TStringId paInstanceNameId, const CL
         mTypeEntry(paTypeEntry) {
 }
 
-CLuaAdapter::~CLuaAdapter() {
-}
+CLuaAdapter::~CLuaAdapter() = default;

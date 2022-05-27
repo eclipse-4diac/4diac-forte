@@ -25,8 +25,7 @@ CTSNLayer::CTSNLayer(CComLayer* paUpperLayer, CBaseCommFB* paBaseCommFB) :
     CIPComLayer(paUpperLayer, paBaseCommFB){
 }
 
-CTSNLayer::~CTSNLayer(){
-}
+CTSNLayer::~CTSNLayer() = default;
 
 EComResponse CTSNLayer::openConnection(char *paLayerParameter){
   EComResponse eRetVal = e_InitInvalidId;

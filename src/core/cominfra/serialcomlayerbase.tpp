@@ -23,8 +23,7 @@ CSerialComLayerBase<TThreadHandle, nullHandle>::CSerialComLayerBase(forte::com_i
 }
 
 template <typename TThreadHandle, TThreadHandle nullHandle>
-CSerialComLayerBase<TThreadHandle, nullHandle>::~CSerialComLayerBase() {
-}
+CSerialComLayerBase<TThreadHandle, nullHandle>::~CSerialComLayerBase() = default;
 
 template <typename TThreadHandle, TThreadHandle nullHandle>
 forte::com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::processInterrupt(){

@@ -24,7 +24,7 @@ class GEN_SUBSCRIBE : public forte::com_infra::CCommFB {
 
   public:
     GEN_SUBSCRIBE(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
-    virtual ~GEN_SUBSCRIBE(){};
+    virtual ~GEN_SUBSCRIBE() = default;
 
 };
 

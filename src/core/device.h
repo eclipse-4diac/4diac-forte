@@ -49,8 +49,7 @@ class CDevice : public CResource {
         CResource(pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData), mDeviceExecution() {
     }
 
-    virtual ~CDevice() {
-    }
+    virtual ~CDevice() = default;
 
 
     virtual CStringDictionary::TStringId getFBTypeId() const {

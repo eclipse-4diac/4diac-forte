@@ -19,8 +19,7 @@ CEventConnection::CEventConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId)
     CConnection(paSrcFB, paSrcPortId){
 }
 
-CEventConnection::~CEventConnection(){
-}
+CEventConnection::~CEventConnection() = default;
 
 EMGMResponse CEventConnection::connect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId){
   EMGMResponse retval = e_NO_SUCH_OBJECT;

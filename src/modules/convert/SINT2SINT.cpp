@@ -55,5 +55,4 @@ void SINT2SINT::executeEvent(int pa_nEIID){
   }
 }
 
-SINT2SINT::~SINT2SINT(){
-}
+SINT2SINT::~SINT2SINT() = default;

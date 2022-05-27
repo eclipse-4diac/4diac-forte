@@ -72,7 +72,7 @@ class FORTE_F_SHR : public CFunctionBlock {
     st_OUT().saveAssign(func_SHR(oIn, oN));
   }
 
-  virtual ~FORTE_F_SHR() {};
+  virtual ~FORTE_F_SHR() = default;
 
 };
 

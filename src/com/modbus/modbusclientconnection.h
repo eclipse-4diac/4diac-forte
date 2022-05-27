@@ -22,9 +22,7 @@ namespace modbus_connection_event {
   class CModbusConnectionEvent : public CModbusTimedEvent{
     public:
       explicit CModbusConnectionEvent(long pa_nReconnectInterval); //ReconnectInterval = 0 => only one connection try
-      ~CModbusConnectionEvent(){
-      }
-      ;
+      ~CModbusConnectionEvent() = default;
 
       int executeEvent(modbus_t *pa_pModbusConn, void *pa_pRetVal);
   };

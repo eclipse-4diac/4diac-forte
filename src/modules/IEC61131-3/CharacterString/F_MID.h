@@ -70,7 +70,7 @@ class FORTE_F_MID : public CFunctionBlock {
     st_OUT().saveAssign(func_MID(roIn,L(),P()));
   }
 
-  virtual ~FORTE_F_MID() {};
+  virtual ~FORTE_F_MID() = default;
 
 };
 

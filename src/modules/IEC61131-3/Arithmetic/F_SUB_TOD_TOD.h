@@ -56,7 +56,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_F_SUB_TOD_TOD){
   };
 
-  virtual ~FORTE_F_SUB_TOD_TOD(){};
+  virtual ~FORTE_F_SUB_TOD_TOD() = default;
 
 };
 

@@ -1,2 +1,2 @@
-Checks: modernize-use-nullptr,modernize-use-bool-literals,modernize-redundant-void-arg,-clang-diagnostic-*,-clang-analyzer-*
+Checks: modernize-use-nullptr,modernize-use-bool-literals,modernize-redundant-void-arg,modernize-use-equals-default,-clang-diagnostic-*,-clang-analyzer-*
 HeaderFilterRegex: .*

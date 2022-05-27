@@ -31,8 +31,7 @@ class CIEC_TestStruct1 : public CIEC_STRUCT {
   public:
     CIEC_TestStruct1();
 
-    virtual ~CIEC_TestStruct1() {
-    }
+    virtual ~CIEC_TestStruct1() = default;
 
   private:
     static const CStringDictionary::TStringId scm_unElementTypes[];
@@ -53,8 +52,7 @@ CIEC_TestStruct1::CIEC_TestStruct1() :
     public:
     CIEC_TestStruct2();
 
-      virtual ~CIEC_TestStruct2(){
-      }
+      virtual ~CIEC_TestStruct2() = default;
 
     private:
       static const CStringDictionary::TStringId scm_unElementTypes[];
@@ -80,8 +78,7 @@ CIEC_TestStruct2::CIEC_TestStruct2() :
     public:
     CIEC_TestStruct3();
 
-      virtual ~CIEC_TestStruct3(){
-      }
+      virtual ~CIEC_TestStruct3() = default;
 
       CIEC_STRING& val11(){
         return static_cast<CIEC_STRING &>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[0]))[0]);
@@ -129,8 +126,7 @@ class CIEC_TestStruct4 : public CIEC_STRUCT { //undefined data types
   public:
     CIEC_TestStruct4();
 
-    virtual ~CIEC_TestStruct4() {
-    }
+    virtual ~CIEC_TestStruct4() = default;
 
     CIEC_STRING& val11() {
       return static_cast<CIEC_STRING &>((*static_cast<CIEC_ARRAY<> *>(&getMembers()[0]))[0]);

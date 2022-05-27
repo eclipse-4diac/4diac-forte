@@ -68,7 +68,7 @@ public:
   FORTE_RT_E_MERGE(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
 
-  virtual ~FORTE_RT_E_MERGE(){};
+  virtual ~FORTE_RT_E_MERGE() = default;
 
 };
 

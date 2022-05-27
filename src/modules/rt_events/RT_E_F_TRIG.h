@@ -66,7 +66,7 @@ private:
 public:
   FORTE_RT_E_F_TRIG(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
-  virtual ~FORTE_RT_E_F_TRIG(){};
+  virtual ~FORTE_RT_E_F_TRIG() = default;
 
 };
 

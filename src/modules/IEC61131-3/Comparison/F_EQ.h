@@ -75,7 +75,7 @@ class FORTE_F_EQ : public CFunctionBlock {
     calculateValue<T>();
   }
 
-  virtual ~FORTE_F_EQ() {};
+  virtual ~FORTE_F_EQ() = default;
 
 };
 

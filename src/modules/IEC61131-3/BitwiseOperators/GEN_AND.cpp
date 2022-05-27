@@ -26,8 +26,7 @@ GEN_AND::GEN_AND(const CStringDictionary::TStringId paInstanceNameId, CResource 
     CGenBitBase(paInstanceNameId, paSrcRes){
 }
 
-GEN_AND::~GEN_AND() {
-}
+GEN_AND::~GEN_AND() = default;
 
 void GEN_AND::executeEvent(int paEIID) {
   switch (paEIID) {

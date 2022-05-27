@@ -51,7 +51,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_F_INT_TO_LREAL){
   };
 
-  virtual ~FORTE_F_INT_TO_LREAL(){};
+  virtual ~FORTE_F_INT_TO_LREAL() = default;
 
 };
 

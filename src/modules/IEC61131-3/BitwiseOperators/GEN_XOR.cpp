@@ -26,8 +26,7 @@ GEN_XOR::GEN_XOR(const CStringDictionary::TStringId paInstanceNameId, CResource 
     CGenBitBase(paInstanceNameId, paSrcRes){
 }
 
-GEN_XOR::~GEN_XOR() {
-}
+GEN_XOR::~GEN_XOR() = default;
 
 void GEN_XOR::executeEvent(int paEIID) {
   switch (paEIID) {

@@ -68,7 +68,7 @@ private:
 
 public:
   FORTE_RT_E_SELECT(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
-  virtual ~FORTE_RT_E_SELECT(){};
+  virtual ~FORTE_RT_E_SELECT() = default;
 
 };
 

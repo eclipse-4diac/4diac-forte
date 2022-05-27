@@ -58,7 +58,7 @@ private:
   }  
 public:
   FUNCTION_BLOCK_CTOR(FB_TP), edgeFlag(false){};
-  virtual ~FB_TP(){};
+  virtual ~FB_TP() = default;
 
 };
 

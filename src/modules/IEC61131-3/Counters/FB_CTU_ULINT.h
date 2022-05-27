@@ -58,7 +58,7 @@ private:
 
 public:
   FUNCTION_BLOCK_CTOR(FB_CTU_ULINT){};
-  virtual ~FB_CTU_ULINT(){};
+  virtual ~FB_CTU_ULINT() = default;
 
 };
 

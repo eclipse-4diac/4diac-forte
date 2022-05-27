@@ -52,7 +52,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_F_INT_TO_DINT){
   };
 
-  virtual ~FORTE_F_INT_TO_DINT(){};
+  virtual ~FORTE_F_INT_TO_DINT() = default;
 
 };
 

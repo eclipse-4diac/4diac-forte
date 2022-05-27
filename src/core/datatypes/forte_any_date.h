@@ -21,8 +21,7 @@
  */
 class CIEC_ANY_DATE : public CIEC_ANY_ELEMENTARY{
   public:
-    virtual ~CIEC_ANY_DATE(){
-    }
+    virtual ~CIEC_ANY_DATE() = default;
 
     /*! Retrieve the current timezone
      *
@@ -46,8 +45,7 @@ class CIEC_ANY_DATE : public CIEC_ANY_ELEMENTARY{
     unsigned int getMilliSeconds() const;
 
   protected:
-    CIEC_ANY_DATE() {
-    }
+    CIEC_ANY_DATE() = default;
 
   private:
     static TForteInt32 sm_nTimeZoneOffset;

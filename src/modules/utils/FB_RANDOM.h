@@ -68,7 +68,7 @@ public:
               nullptr, m_anFBConnData, m_anFBVarsData){
   };
 
-  virtual ~FORTE_FB_RANDOM(){};
+  virtual ~FORTE_FB_RANDOM() = default;
 
 };
 

@@ -102,7 +102,7 @@ class FORTE_TRIGGER_SERVICE_CLIENT : public CEventSourceFB{
     EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_TRIGGER_SERVICE_CLIENT), m_Initiated(false) , m_RosNamespace(""), m_RosMsgName(""){
     };
 
-    virtual ~FORTE_TRIGGER_SERVICE_CLIENT(){};
+    virtual ~FORTE_TRIGGER_SERVICE_CLIENT() = default;
 
   };
 

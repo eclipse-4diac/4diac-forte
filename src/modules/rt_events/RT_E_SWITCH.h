@@ -84,7 +84,7 @@ public:
   m_bInitialized = false;
   };
 
-  virtual ~FORTE_RT_E_SWITCH(){};
+  virtual ~FORTE_RT_E_SWITCH() = default;
 
 };
 

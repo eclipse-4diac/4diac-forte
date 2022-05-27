@@ -28,6 +28,4 @@ CSimpleFB::CSimpleFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInter
 
 }
 
-CSimpleFB::~CSimpleFB() {
-
-}
+CSimpleFB::~CSimpleFB() = default;

@@ -41,7 +41,7 @@ private:
 public:
   FUNCTION_BLOCK_CTOR(E_SPLIT){
   };
-  virtual ~E_SPLIT(){};
+  virtual ~E_SPLIT() = default;
 
 };
 

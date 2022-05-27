@@ -20,6 +20,5 @@ IOConfigFBBase::IOConfigFBBase(CResource *paSrcRes, const SFBInterfaceSpec *paIn
     CEventSourceFB(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData) {
 }
 
-IOConfigFBBase::~IOConfigFBBase() {
-}
+IOConfigFBBase::~IOConfigFBBase() = default;
 

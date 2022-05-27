@@ -65,7 +65,7 @@ private:
 
 public:
   FUNCTION_BLOCK_CTOR(FB_CTUD){};
-  virtual ~FB_CTUD(){};
+  virtual ~FB_CTUD() = default;
 
 };
 

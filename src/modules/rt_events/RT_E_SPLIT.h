@@ -81,7 +81,7 @@ public:
     m_bInitialized = false;
   };
 
-  virtual ~FORTE_RT_E_SPLIT(){};
+  virtual ~FORTE_RT_E_SPLIT() = default;
 
 };
 

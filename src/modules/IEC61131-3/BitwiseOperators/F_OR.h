@@ -67,7 +67,7 @@ class FORTE_F_OR : public CFunctionBlock {
     st_OUT().saveAssign(func_OR(oIn1, oIn2));
   }
 
-  virtual ~FORTE_F_OR() {};
+  virtual ~FORTE_F_OR() = default;
 
 };
 

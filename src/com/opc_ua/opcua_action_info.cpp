@@ -393,8 +393,7 @@ CLocalMethodInfo::CLocalMethodInfo(COPC_UA_Layer &paLayer, const CIEC_STRING &pa
     CActionInfo(paLayer, eCreateMethod, paEndpoint) {
 }
 
-CLocalMethodInfo::~CLocalMethodInfo() {
-}
+CLocalMethodInfo::~CLocalMethodInfo() = default;
 
 forte::arch::CSemaphore& CLocalMethodInfo::getResultReady() {
   return mResultIsReady;

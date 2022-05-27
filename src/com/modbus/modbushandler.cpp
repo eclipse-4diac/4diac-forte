@@ -22,9 +22,7 @@ CModbusHandler::TCallbackDescriptor CModbusHandler::m_nCallbackDescCount = 0;
 CModbusHandler::CModbusHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution)  {
 }
 
-CModbusHandler::~CModbusHandler(){
-
-}
+CModbusHandler::~CModbusHandler() = default;
 
 CModbusHandler::TCallbackDescriptor CModbusHandler::addComCallback(forte::com_infra::CComLayer* pa_pComCallback){
   CCriticalRegion criticalRegion(m_oSync);

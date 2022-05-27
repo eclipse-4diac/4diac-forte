@@ -35,7 +35,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_STEST_END){
   };
 
-  virtual ~FORTE_STEST_END(){};
+  virtual ~FORTE_STEST_END() = default;
 
 };
 

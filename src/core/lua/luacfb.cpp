@@ -19,5 +19,4 @@ CLuaCFB::CLuaCFB(CStringDictionary::TStringId paInstanceNameId, const CLuaCFBTyp
     CCompositeFB(paResource, paTypeEntry->getInterfaceSpec(), paInstanceNameId, paFbnData, paConnData, paVarsData), mTypeEntry(paTypeEntry) {
 }
 
-CLuaCFB::~CLuaCFB() {
-}
+CLuaCFB::~CLuaCFB() = default;

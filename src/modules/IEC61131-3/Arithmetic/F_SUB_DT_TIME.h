@@ -56,7 +56,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_F_SUB_DT_TIME){
   };
 
-  virtual ~FORTE_F_SUB_DT_TIME(){};
+  virtual ~FORTE_F_SUB_DT_TIME() = default;
 
 };
 

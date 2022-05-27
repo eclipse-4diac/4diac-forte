@@ -103,7 +103,7 @@ private:
 public:
   FORTE_RT_E_DEMUX(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
-  virtual ~FORTE_RT_E_DEMUX(){};
+  virtual ~FORTE_RT_E_DEMUX() = default;
 
 };
 

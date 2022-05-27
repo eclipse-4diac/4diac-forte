@@ -38,8 +38,7 @@ RMT_DEV::RMT_DEV() :
   changeFBExecutionState(cg_nMGM_CMD_Reset);
 }
 
-RMT_DEV::~RMT_DEV(){
-}
+RMT_DEV::~RMT_DEV() = default;
 
 int RMT_DEV::startDevice(){
   CDevice::startDevice();

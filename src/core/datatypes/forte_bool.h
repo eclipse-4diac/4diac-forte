@@ -41,8 +41,7 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
       setTBOOL8(paValue);
     }
 
-    virtual ~CIEC_BOOL(){
-    }
+    virtual ~CIEC_BOOL() = default;
 
     CIEC_BOOL& operator =(const CIEC_BOOL &paValue) {
       // Simple value assignment - no self assignment check needed

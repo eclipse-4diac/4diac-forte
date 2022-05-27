@@ -61,7 +61,7 @@ class FORTE_F_SQRT : public CFunctionBlock {
     st_OUT().saveAssign(func_SQRT(oIn));
   }
 
-  virtual ~FORTE_F_SQRT() {};
+  virtual ~FORTE_F_SQRT() = default;
 
 };
 

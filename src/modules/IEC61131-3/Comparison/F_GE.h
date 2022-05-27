@@ -73,7 +73,7 @@ class FORTE_F_GE : public CFunctionBlock {
     DEVLOG_WARNING("STRING and WSTRING currently not supported");
   }
 
-  virtual ~FORTE_F_GE() {};
+  virtual ~FORTE_F_GE() = default;
 
 };
 

@@ -70,7 +70,7 @@ public:
 
   FORTE_RT_E_PERMIT(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
-  virtual ~FORTE_RT_E_PERMIT(){};
+  virtual ~FORTE_RT_E_PERMIT() = default;
 
 };
 

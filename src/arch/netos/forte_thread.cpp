@@ -40,8 +40,7 @@ CTXThread::CTXThread(long paStackSize, char *paThreadName) : CThreadBase(paStack
   memset((void *) &mThreadData, 0, sizeof(mThreadData));
 }
 
-CTXThread::~CTXThread() {
-}
+CTXThread::~CTXThread() = default;
 
 void CTXThread::setDeadline(const CIEC_TIME &paVal) {
   int i;

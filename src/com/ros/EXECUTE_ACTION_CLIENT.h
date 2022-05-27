@@ -140,7 +140,7 @@ class FORTE_EXECUTE_ACTION_CLIENT : public CEventSourceFB{
     EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_EXECUTE_ACTION_CLIENT), m_Initiated(false), m_GoalActive(false), m_ActionClient(0), mResultReady(false), nh(0), m_RosNamespace(""), m_RosMsgName(""){
     };
 
-    virtual ~FORTE_EXECUTE_ACTION_CLIENT(){};
+    virtual ~FORTE_EXECUTE_ACTION_CLIENT() = default;
 
   };
 

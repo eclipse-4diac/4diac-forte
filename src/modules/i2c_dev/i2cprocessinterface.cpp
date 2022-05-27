@@ -27,8 +27,7 @@ CI2CProcessInterface::CI2CProcessInterface(CResource *paSrcRes, const SFBInterfa
     CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mFd(-1), mValueAddress(-1){
 }
 
-CI2CProcessInterface::~CI2CProcessInterface(){
-}
+CI2CProcessInterface::~CI2CProcessInterface() = default;
 
 bool CI2CProcessInterface::initialise(bool ){
   bool retVal = false;

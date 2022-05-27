@@ -65,7 +65,7 @@ private:
 public:
   FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
-  virtual ~FORTE_RT_E_CYCLE(){};
+  virtual ~FORTE_RT_E_CYCLE() = default;
 
 };
 

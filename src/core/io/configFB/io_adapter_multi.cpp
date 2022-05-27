@@ -22,6 +22,5 @@ IOConfigFBMultiAdapter::IOConfigFBMultiAdapter(const TForteUInt8* const paSlaveC
         cmSlaveConfigurationIO(paSlaveConfigurationIO), mSlaveConfigurationIONum(paSlaveConfigurationIONum) {
 }
 
-IOConfigFBMultiAdapter::~IOConfigFBMultiAdapter() {
-}
+IOConfigFBMultiAdapter::~IOConfigFBMultiAdapter() = default;
 

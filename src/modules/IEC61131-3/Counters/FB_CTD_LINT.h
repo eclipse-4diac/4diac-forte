@@ -60,7 +60,7 @@ private:
 
 public:
   FUNCTION_BLOCK_CTOR(FB_CTD_LINT){};
-  virtual ~FB_CTD_LINT(){};
+  virtual ~FB_CTD_LINT() = default;
 
 };
 

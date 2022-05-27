@@ -52,7 +52,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_F_LWORD_BCD_TO_ULINT){
   };
 
-  virtual ~FORTE_F_LWORD_BCD_TO_ULINT(){};
+  virtual ~FORTE_F_LWORD_BCD_TO_ULINT() = default;
 
 };
 

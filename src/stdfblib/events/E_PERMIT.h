@@ -43,7 +43,7 @@ private:
 public:
   FUNCTION_BLOCK_CTOR(E_PERMIT) {
   };
-  virtual ~E_PERMIT(){};
+  virtual ~E_PERMIT() = default;
 
 };
 

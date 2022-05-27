@@ -31,8 +31,7 @@ CIPComLayer::CIPComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB) :
   memset(&mDestAddr, 0, sizeof(mDestAddr));
 }
 
-CIPComLayer::~CIPComLayer(){
-}
+CIPComLayer::~CIPComLayer() = default;
 
 EComResponse CIPComLayer::sendData(void *paData, unsigned int paSize){
   EComResponse eRetVal = e_ProcessDataOk;

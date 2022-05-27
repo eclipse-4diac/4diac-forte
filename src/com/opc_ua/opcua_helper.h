@@ -63,8 +63,7 @@ class COPC_UA_Helper {
             mFailed(false), mOffset(0), mSize(paSize) {
         }
 
-        virtual ~UA_Variables_handle() {
-        }
+        virtual ~UA_Variables_handle() = default;
 
         bool mFailed;
         size_t mOffset;

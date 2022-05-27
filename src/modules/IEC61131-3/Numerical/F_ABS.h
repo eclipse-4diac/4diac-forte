@@ -61,7 +61,7 @@ class FORTE_F_ABS : public CFunctionBlock {
     st_OUT().saveAssign(func_ABS(oIn));
   }
 
-  virtual ~FORTE_F_ABS() {};
+  virtual ~FORTE_F_ABS() = default;
 
 };
 

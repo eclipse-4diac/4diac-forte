@@ -73,7 +73,7 @@ class FORTE_F_MIN : public CFunctionBlock {
     //TODO fill this function
   }
 
-  virtual ~FORTE_F_MIN() {};
+  virtual ~FORTE_F_MIN() = default;
 
 };
 

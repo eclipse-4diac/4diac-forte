@@ -35,8 +35,7 @@ class CIEC_BYTE : public CIEC_ANY_BIT{
     static const TValueType scm_nMinVal = 0;
     static const TValueType scm_nMaxVal;
 
-    CIEC_BYTE() {
-    }
+    CIEC_BYTE() = default;
 
     CIEC_BYTE(const CIEC_BYTE& paValue) :
         CIEC_ANY_BIT(){
@@ -47,8 +46,7 @@ class CIEC_BYTE : public CIEC_ANY_BIT{
       setTUINT8(paValue);
     }
 
-    virtual ~CIEC_BYTE(){
-    }
+    virtual ~CIEC_BYTE() = default;
 
     CIEC_BYTE& operator =(const CIEC_BYTE &paValue){
       // Simple value assignment - no self assignment check needed

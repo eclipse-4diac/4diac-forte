@@ -54,8 +54,7 @@ namespace forte {
                 m_nGroupName(pa_roLocalCommGroup.m_nGroupName), m_lPublList(), m_lSublList(){
             }
 
-            ~CLocalCommGroup(){
-            }
+            ~CLocalCommGroup() = default;
 
             CStringDictionary::TStringId m_nGroupName;
             CSinglyLinkedList<CLocalComLayer*> m_lPublList;
@@ -73,7 +72,7 @@ namespace forte {
             void unregisterSubl(CLocalCommGroup *pa_poGroup, CLocalComLayer *pa_poLayer);
 
           private:
-            CLocalCommGroupsManager(){};
+            CLocalCommGroupsManager() = default;
 
             CLocalCommGroup* findLocalCommGroup(CStringDictionary::TStringId pa_nID);
             CLocalCommGroup* createLocalCommGroup(CStringDictionary::TStringId pa_nID);

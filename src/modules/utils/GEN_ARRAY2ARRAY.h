@@ -55,7 +55,7 @@ private:
   virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);
 
   GEN_ARRAY2ARRAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
-  virtual ~GEN_ARRAY2ARRAY();;
+  virtual ~GEN_ARRAY2ARRAY();
 
 public:
 

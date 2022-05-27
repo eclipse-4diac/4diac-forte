@@ -66,7 +66,7 @@ class FORTE_F_ADD : public CFunctionBlock {
     st_OUT().saveAssign(func_ADD(roIn1,oIn2));
   }
 
-  virtual ~FORTE_F_ADD() {};
+  virtual ~FORTE_F_ADD() = default;
 };
 
 #endif //close the ifdef sequence from the beginning of the file

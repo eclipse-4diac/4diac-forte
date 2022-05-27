@@ -45,7 +45,7 @@ private:
 public:
   FUNCTION_BLOCK_CTOR(E_SR){
   };
-  virtual ~E_SR(){ };
+  virtual ~E_SR() = default;
 
 };
 

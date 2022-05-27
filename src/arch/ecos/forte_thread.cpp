@@ -38,8 +38,7 @@ CECOSThread::CECOSThread(long paStackSize) : CThreadBase(paStackSize){
   mStack = new char[paStackSize];
 }
 
-CECOSThread::~CECOSThread(){
-}
+CECOSThread::~CECOSThread() = default;
 
 void CECOSThread::setDeadline(const CIEC_TIME &paVal){
   CCriticalRegion criticalRegion(smThreadListLock);

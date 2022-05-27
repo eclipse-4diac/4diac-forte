@@ -29,8 +29,7 @@ class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
   DECLARE_FIRMWARE_DATATYPE(ANY_BIT)
 
   public:
-    virtual ~CIEC_ANY_BIT(){
-    }
+    virtual ~CIEC_ANY_BIT() = default;
 
     template <class TBase, class TObject>
     class PARTIAL_ACCESS_TYPE : public TBase {

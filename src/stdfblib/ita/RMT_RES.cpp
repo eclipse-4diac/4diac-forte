@@ -101,8 +101,7 @@ RMT_RES::RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_
   changeFBExecutionState(cg_nMGM_CMD_Reset);
 }
 
-RMT_RES::~RMT_RES(){
-}
+RMT_RES::~RMT_RES() = default;
 
 void RMT_RES::joinResourceThread() const {
   getResourceEventExecution()->joinEventChainExecutionThread();

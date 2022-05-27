@@ -40,9 +40,7 @@ CCommFB::CCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResourc
   CBaseCommFB(pa_nInstanceNameId, pa_poSrcRes, pa_eCommServiceType) {
 }
 
-CCommFB::~CCommFB() {
-
-}
+CCommFB::~CCommFB() = default;
 
 EMGMResponse CCommFB::changeFBExecutionState(EMGMCommandType pa_unCommand) {
   EMGMResponse retVal = CEventSourceFB::changeFBExecutionState(pa_unCommand);

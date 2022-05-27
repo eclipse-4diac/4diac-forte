@@ -50,7 +50,7 @@ class FORTE_E_TimeOut : public CEventSourceFB{
       mTimeListEntry.mTimedFB = this;
     };
 
-  virtual ~FORTE_E_TimeOut(){};
+  virtual ~FORTE_E_TimeOut() = default;
 
   virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
 

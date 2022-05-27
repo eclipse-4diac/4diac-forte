@@ -40,9 +40,7 @@ public:
 
   }
 
-  ~CSinglyLinkedListNode()  {
-
-  }
+  ~CSinglyLinkedListNode() = default;
 
   T& getData() {
     return mNodeElement;

@@ -62,7 +62,7 @@ private:
 public:
   FORTE_RT_E_EC_COUPLER(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
-  virtual ~FORTE_RT_E_EC_COUPLER(){};
+  virtual ~FORTE_RT_E_EC_COUPLER() = default;
 
 };
 

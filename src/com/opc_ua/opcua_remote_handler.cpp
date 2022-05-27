@@ -26,8 +26,7 @@ COPC_UA_Client_IterationList::COPC_UA_Client_IterationList() :
     mNewClientsPresent(false) {
 }
 
-COPC_UA_Client_IterationList::~COPC_UA_Client_IterationList() {
-}
+COPC_UA_Client_IterationList::~COPC_UA_Client_IterationList() = default;
 
 void COPC_UA_Client_IterationList::startIterationThread() {
   if(!isAlive()) {
@@ -329,8 +328,7 @@ COPC_UA_Remote_Handler::UA_ConnectionHandler::UA_ConnectionHandler(COPC_UA_Remot
     mClientHandler(paClientHandler) {
 }
 
-COPC_UA_Remote_Handler::UA_ConnectionHandler::~UA_ConnectionHandler() {
-}
+COPC_UA_Remote_Handler::UA_ConnectionHandler::~UA_ConnectionHandler() = default;
 
 bool COPC_UA_Remote_Handler::UA_ConnectionHandler::handleClients() {
   CCriticalRegion clientsClientsRegion(getIterationClientsMutex());

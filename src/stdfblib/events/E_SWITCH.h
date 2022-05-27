@@ -43,7 +43,7 @@ private:
 public:
   FUNCTION_BLOCK_CTOR(E_SWITCH){
   };
-  virtual ~E_SWITCH(){};
+  virtual ~E_SWITCH() = default;
 
 };
 

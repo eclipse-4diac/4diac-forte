@@ -34,23 +34,17 @@ class CIEC_STRING : public CIEC_ANY_STRING{
   DECLARE_FIRMWARE_DATATYPE(STRING)
     ;
   public:
-    CIEC_STRING(){
-    }
+    CIEC_STRING() = default;
 
-    CIEC_STRING(const CIEC_STRING& paValue) : CIEC_ANY_STRING(paValue) {
-    }
+    CIEC_STRING(const CIEC_STRING& paValue) = default;
 
     explicit CIEC_STRING(const char* paValue){
       fromCharString(paValue);
     }
 
-    virtual ~CIEC_STRING(){
-    }
+    virtual ~CIEC_STRING() = default;
 
-    CIEC_STRING &operator =(const CIEC_STRING& paValue){
-      CIEC_ANY_STRING::operator =(paValue);
-      return *this;
-    }
+    CIEC_STRING &operator =(const CIEC_STRING& paValue) = default;
 
     virtual EDataTypeID getDataTypeID() const{
       return CIEC_ANY::e_STRING;

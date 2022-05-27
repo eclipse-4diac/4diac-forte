@@ -67,7 +67,7 @@ class FORTE_F_MOD : public CFunctionBlock {
     st_OUT().saveAssign(func_MOD(roIn1,oIn2));
   }
 
-  virtual ~FORTE_F_MOD() {};
+  virtual ~FORTE_F_MOD() = default;
 
 };
 

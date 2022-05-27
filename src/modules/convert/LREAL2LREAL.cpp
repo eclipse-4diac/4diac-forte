@@ -55,5 +55,4 @@ void LREAL2LREAL::executeEvent(int pa_nEIID){
   }
 }
 
-LREAL2LREAL::~LREAL2LREAL(){
-}
+LREAL2LREAL::~LREAL2LREAL() = default;

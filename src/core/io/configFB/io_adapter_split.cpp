@@ -21,6 +21,5 @@ IOConfigFBSplitAdapter::IOConfigFBSplitAdapter(CResource *paSrcRes, const SFBInt
     CAdapter(paSrcRes, paInterfaceSpecSocket, paInstanceNameId, paInterfaceSpecPlug, paIsPlug, paFBConnData, paFBVarsData) {
 }
 
-IOConfigFBSplitAdapter::~IOConfigFBSplitAdapter() {
-}
+IOConfigFBSplitAdapter::~IOConfigFBSplitAdapter() = default;
 

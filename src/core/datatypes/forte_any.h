@@ -101,8 +101,7 @@ class CIEC_ANY{
       setLargestUInt(0);
     }
 
-    virtual ~CIEC_ANY(){
-    }
+    virtual ~CIEC_ANY() = default;
 
     void saveAssign(const CIEC_ANY &pa_roValue);
 

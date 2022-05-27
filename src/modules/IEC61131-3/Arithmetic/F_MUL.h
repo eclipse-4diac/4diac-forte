@@ -66,7 +66,7 @@ class FORTE_F_MUL : public CFunctionBlock {
     st_OUT().saveAssign(func_MUL(roIn1,oIn2));
   }
 
-  virtual ~FORTE_F_MUL() {};
+  virtual ~FORTE_F_MUL() = default;
 };
 
 #endif //close the ifdef sequence from the beginning of the file

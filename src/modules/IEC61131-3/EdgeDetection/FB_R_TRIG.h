@@ -49,7 +49,7 @@ private:
 
 public:
   FUNCTION_BLOCK_CTOR(FB_R_TRIG){};
-  virtual ~FB_R_TRIG(){};
+  virtual ~FB_R_TRIG() = default;
 
 };
 

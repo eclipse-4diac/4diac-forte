@@ -33,9 +33,7 @@ CROSLayer::CROSLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB) :
   m_NumRDs = -1;
 }
 
-CROSLayer::~CROSLayer(){
-
-}
+CROSLayer::~CROSLayer() = default;
 
 // initializes current layer
 EComResponse CROSLayer::openConnection(char *pa_acLayerParameter){

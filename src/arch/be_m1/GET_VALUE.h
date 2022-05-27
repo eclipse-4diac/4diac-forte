@@ -75,7 +75,7 @@ class FORTE_GET_VALUE : public CFunctionBlock{
     FUNCTION_BLOCK_CTOR(FORTE_GET_VALUE){
   };
 
-  virtual ~FORTE_GET_VALUE(){};
+  virtual ~FORTE_GET_VALUE() = default;
 
 };
 

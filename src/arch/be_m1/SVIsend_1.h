@@ -64,7 +64,7 @@ public:
        BE_SVIFB( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData){
   };
 
-  virtual ~FORTE_SVIsend_1(){};
+  virtual ~FORTE_SVIsend_1() = default;
 
 };
 

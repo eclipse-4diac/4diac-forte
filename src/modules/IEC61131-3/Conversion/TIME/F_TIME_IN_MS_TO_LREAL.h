@@ -57,7 +57,7 @@ public:
               nullptr, m_anFBConnData, m_anFBVarsData){
   };
 
-  virtual ~FORTE_F_TIME_IN_MS_TO_LREAL(){};
+  virtual ~FORTE_F_TIME_IN_MS_TO_LREAL() = default;
 
 };
 

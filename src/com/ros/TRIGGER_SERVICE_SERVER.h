@@ -100,7 +100,7 @@ class FORTE_TRIGGER_SERVICE_SERVER : public CEventSourceFB{
     EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_TRIGGER_SERVICE_SERVER), m_Initiated(false), m_RosNamespace(""), m_RosMsgName(""), m_ResponseAvailable(false){
     };
 
-    virtual ~FORTE_TRIGGER_SERVICE_SERVER(){};
+    virtual ~FORTE_TRIGGER_SERVICE_SERVER() = default;
   };
 
 #endif //close the ifdef sequence from the beginning of the file

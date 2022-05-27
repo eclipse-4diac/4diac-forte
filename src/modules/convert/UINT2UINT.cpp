@@ -55,5 +55,4 @@ void UINT2UINT::executeEvent(int pa_nEIID){
   }
 }
 
-UINT2UINT::~UINT2UINT(){
-}
+UINT2UINT::~UINT2UINT() = default;

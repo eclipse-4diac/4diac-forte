@@ -54,7 +54,7 @@ private:
 
 public:
   FUNCTION_BLOCK_CTOR(E_CTU){};
-  virtual ~E_CTU(){};
+  virtual ~E_CTU() = default;
 
 };
 

@@ -31,8 +31,7 @@ CXqueryClientLayer::CXqueryClientLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* 
   dbName = nullptr;
 }
 
-CXqueryClientLayer::~CXqueryClientLayer() {
-}
+CXqueryClientLayer::~CXqueryClientLayer() = default;
 
 bool CXqueryClientLayer::parseParameters(char *pa_acLayerParameter){
   bool retVal = true;

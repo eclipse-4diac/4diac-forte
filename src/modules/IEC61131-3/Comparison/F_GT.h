@@ -74,7 +74,7 @@ class FORTE_F_GT : public CFunctionBlock {
     DEVLOG_WARNING("STRING and WSTRING currently not supported");
   }
 
-  virtual ~FORTE_F_GT() {};
+  virtual ~FORTE_F_GT() = default;
 
 };
 #endif //close the ifdef sequence from the beginning of the file

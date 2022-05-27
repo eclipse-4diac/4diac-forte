@@ -23,7 +23,7 @@ DECLARE_GENERIC_FIRMWARE_FB(GEN_PUBLISH)
 
 public:
   GEN_PUBLISH(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
-  virtual ~GEN_PUBLISH(){};
+  virtual ~GEN_PUBLISH() = default;
 };
 
 #endif //_GEN_PUBLISH_H_

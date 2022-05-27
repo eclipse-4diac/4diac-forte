@@ -68,7 +68,7 @@ class FORTE_F_DIV : public CFunctionBlock {
     st_OUT().saveAssign(func_DIV(oIn1,oIn2));
   }
 
-  virtual ~FORTE_F_DIV() {};
+  virtual ~FORTE_F_DIV() = default;
 };
 
 #endif //close the ifdef sequence from the beginning of the file

@@ -73,7 +73,7 @@ class FORTE_F_INSERT : public CFunctionBlock {
     st_OUT().saveAssign(func_INSERT(oIn1,oIn2,P()));
   }
 
-  virtual ~FORTE_F_INSERT() {};
+  virtual ~FORTE_F_INSERT() = default;
 
 };
 

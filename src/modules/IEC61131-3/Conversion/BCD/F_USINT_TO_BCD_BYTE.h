@@ -52,7 +52,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_F_USINT_TO_BCD_BYTE){
   };
 
-  virtual ~FORTE_F_USINT_TO_BCD_BYTE(){};
+  virtual ~FORTE_F_USINT_TO_BCD_BYTE() = default;
 
 };
 

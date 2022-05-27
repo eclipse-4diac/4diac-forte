@@ -72,7 +72,7 @@ class FORTE_F_LE : public CFunctionBlock {
     //TODO fill this function
     DEVLOG_WARNING("STRING and WSTRING currently not supported");
   }
-  virtual ~FORTE_F_LE() {};
+  virtual ~FORTE_F_LE() = default;
 
 };
 

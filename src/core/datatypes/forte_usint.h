@@ -32,8 +32,7 @@ class CIEC_USINT : public CIEC_ANY_INT{
     static const TValueType scm_nMinVal = 0;
     static const TValueType scm_nMaxVal;
 
-    CIEC_USINT(){
-    }
+    CIEC_USINT() = default;
 
     CIEC_USINT(const CIEC_USINT& pa_roValue) :
         CIEC_ANY_INT() {
@@ -44,8 +43,7 @@ class CIEC_USINT : public CIEC_ANY_INT{
       setTUINT8(pa_nValue);
     }
 
-    virtual ~CIEC_USINT(){
-    }
+    virtual ~CIEC_USINT() = default;
 
     CIEC_USINT& operator =(const CIEC_USINT &pa_roValue){
       setValueSimple(pa_roValue);

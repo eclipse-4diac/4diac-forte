@@ -52,7 +52,7 @@ protected:
   }
 public:
   CTimedFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, ETimerActivationType paType);
-  virtual ~CTimedFB() {};
+  virtual ~CTimedFB() = default;
 
   virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
 

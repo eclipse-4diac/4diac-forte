@@ -32,8 +32,7 @@ class CIEC_TIME_OF_DAY : public CIEC_ANY_DATE{
   public:
     typedef TForteUInt64 TValueType;
 
-    CIEC_TIME_OF_DAY(){
-    }
+    CIEC_TIME_OF_DAY() = default;
 
     CIEC_TIME_OF_DAY(const CIEC_TIME_OF_DAY& paValue) :
         CIEC_ANY_DATE(){
@@ -44,8 +43,7 @@ class CIEC_TIME_OF_DAY : public CIEC_ANY_DATE{
       setTUINT64(paValue);
     }
 
-    virtual ~CIEC_TIME_OF_DAY(){
-    }
+    virtual ~CIEC_TIME_OF_DAY() = default;
 
     CIEC_TIME_OF_DAY& operator =(const CIEC_TIME_OF_DAY &paValue){
       // Simple value assignment - no self assignment check needed

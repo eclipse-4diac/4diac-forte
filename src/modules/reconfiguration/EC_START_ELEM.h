@@ -67,7 +67,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_EC_START_ELEM), m_poDevice(pa_poSrcRes->getDevice()){
   };
 
-  virtual ~FORTE_EC_START_ELEM(){};
+  virtual ~FORTE_EC_START_ELEM() = default;
 
 };
 

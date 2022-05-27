@@ -26,8 +26,7 @@ class CIEC_ANY_INT : public CIEC_ANY_NUM{
   public:
     explicit CIEC_ANY_INT(TLargestIntValueType paVal);
 
-    virtual ~CIEC_ANY_INT(){
-    }
+    virtual ~CIEC_ANY_INT() = default;
 
     bool isSigned() const{
       bool bRetVal = false;
@@ -53,8 +52,7 @@ class CIEC_ANY_INT : public CIEC_ANY_NUM{
        setLargestInt(m_nVal);
      }
 
-    CIEC_ANY_INT() {
-    }
+    CIEC_ANY_INT() = default;
 };
 
 #endif /*_MANY_INT_H_*/

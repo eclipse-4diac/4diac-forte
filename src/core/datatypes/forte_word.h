@@ -37,8 +37,7 @@ class CIEC_WORD : public CIEC_ANY_BIT{
     static const TValueType scm_nMinVal = 0;
     static const TValueType scm_nMaxVal;
 
-    CIEC_WORD(){
-    }
+    CIEC_WORD() = default;
 
     CIEC_WORD(const CIEC_WORD& paValue) :
         CIEC_ANY_BIT(){
@@ -54,8 +53,7 @@ class CIEC_WORD : public CIEC_ANY_BIT{
       setTUINT16(pa_cValue);
     }
 
-    virtual ~CIEC_WORD(){
-    }
+    virtual ~CIEC_WORD() = default;
 
     CIEC_WORD& operator =(const CIEC_WORD &paValue) {
       // Simple value assignment - no self assignment check needed

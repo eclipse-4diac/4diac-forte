@@ -68,7 +68,7 @@ class FORTE_F_XOR : public CFunctionBlock {
     st_OUT().saveAssign(func_XOR(oIn1, oIn2));
   }
 
-  virtual ~FORTE_F_XOR() {};
+  virtual ~FORTE_F_XOR() = default;
 
 };
 

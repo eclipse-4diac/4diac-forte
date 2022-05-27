@@ -64,7 +64,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_GET_CHAN_INFO){
   };
 
-  virtual ~FORTE_GET_CHAN_INFO(){};
+  virtual ~FORTE_GET_CHAN_INFO() = default;
 };
 
 #endif //close the ifdef sequence from the beginning of the file

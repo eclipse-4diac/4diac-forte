@@ -52,7 +52,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_F_UDINT_TO_SINT){
   };
 
-  virtual ~FORTE_F_UDINT_TO_SINT(){};
+  virtual ~FORTE_F_UDINT_TO_SINT() = default;
 
 };
 

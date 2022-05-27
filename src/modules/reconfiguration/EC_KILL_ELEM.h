@@ -67,7 +67,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_EC_KILL_ELEM), m_poDevice(pa_poSrcRes->getDevice()){
   };
 
-  virtual ~FORTE_EC_KILL_ELEM(){};
+  virtual ~FORTE_EC_KILL_ELEM() = default;
 
 };
 

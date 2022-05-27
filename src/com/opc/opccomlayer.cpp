@@ -26,8 +26,7 @@ CComLayer(pa_poUpperLayer, pa_poComFB), m_acHost(0), m_acServerName(0), m_nUpdat
   m_acOpcGroupName = m_poFb->getInstanceName();
 }
 
-COpcComLayer::~COpcComLayer(){
-}
+COpcComLayer::~COpcComLayer() = default;
 
 EComResponse COpcComLayer::sendData(void *pa_pvData, unsigned int pa_unSize){
   EComResponse eRetVal = e_ProcessDataOk;

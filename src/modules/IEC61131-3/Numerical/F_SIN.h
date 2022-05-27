@@ -61,7 +61,7 @@ class FORTE_F_SIN : public CFunctionBlock {
     st_OUT().saveAssign(func_SIN(oIn));
   }
 
-  virtual ~FORTE_F_SIN() {};
+  virtual ~FORTE_F_SIN() = default;
 
 };
 

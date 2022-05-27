@@ -68,7 +68,7 @@ public:
   COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_E_TRAIN){
   };
 
-  virtual ~FORTE_E_TRAIN(){};
+  virtual ~FORTE_E_TRAIN() = default;
 
 };
 

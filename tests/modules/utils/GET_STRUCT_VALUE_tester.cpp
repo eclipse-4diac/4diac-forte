@@ -30,8 +30,7 @@ class CIEC_GET_STRUCT_VALUE_Struct_test1 : public CIEC_STRUCT {
         CIEC_STRUCT(g_nStringIdGET_STRUCT_VALUE_Struct_test1, 2, scm_unElementTypes, scm_unElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
     }
 
-    virtual ~CIEC_GET_STRUCT_VALUE_Struct_test1() {
-    }
+    virtual ~CIEC_GET_STRUCT_VALUE_Struct_test1() = default;
 
     static const unsigned int sizeOfFirstArray = 2;
 
@@ -59,8 +58,7 @@ class CIEC_GET_STRUCT_VALUE_Struct_test2 : public CIEC_STRUCT {
         CIEC_STRUCT(g_nStringIdGET_STRUCT_VALUE_Struct_test2, 2, scm_unElementTypes, scm_unElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
     }
 
-    virtual ~CIEC_GET_STRUCT_VALUE_Struct_test2() {
-    }
+    virtual ~CIEC_GET_STRUCT_VALUE_Struct_test2() = default;
 
   private:
     static const CStringDictionary::TStringId scm_unElementTypes[];

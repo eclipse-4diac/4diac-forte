@@ -73,7 +73,7 @@ class FORTE_F_ROL : public CFunctionBlock {
     st_OUT().saveAssign(func_ROL(oIn, oN));
   }
 
-  virtual ~FORTE_F_ROL() {};
+  virtual ~FORTE_F_ROL() = default;
 
 };
 

@@ -67,7 +67,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_OUT_ANY_CONSOLE){
   };
 
-  virtual ~FORTE_OUT_ANY_CONSOLE() {};
+  virtual ~FORTE_OUT_ANY_CONSOLE() = default;
 
 };
 
