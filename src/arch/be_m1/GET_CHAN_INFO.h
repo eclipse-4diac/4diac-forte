@@ -55,7 +55,7 @@ private:
 
    FORTE_FB_DATA_ARRAY(1, 1, 3, 0);
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
   bool init();
   SINT32 getChannelInfo();
@@ -64,7 +64,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_GET_CHAN_INFO){
   };
 
-  virtual ~FORTE_GET_CHAN_INFO() = default;
+  ~FORTE_GET_CHAN_INFO() override = default;
 };
 
 #endif //close the ifdef sequence from the beginning of the file

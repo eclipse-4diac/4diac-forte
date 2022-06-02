@@ -18,10 +18,10 @@ class COpcConnectionImpl;
 class CCmd_AddConnection : public ICmd{
   public:
     explicit CCmd_AddConnection(COpcConnectionImpl *pa_pConnection);
-    virtual ~CCmd_AddConnection();
+    ~CCmd_AddConnection() override;
 
-    virtual void runCommand();
-    virtual const char* getCommandName() const;
+    void runCommand() override;
+    const char* getCommandName() const override;
   private:
     COpcConnectionImpl* m_pConnection;
 };

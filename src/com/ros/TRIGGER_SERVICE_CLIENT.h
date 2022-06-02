@@ -89,7 +89,7 @@ class FORTE_TRIGGER_SERVICE_CLIENT : public CEventSourceFB{
     FORTE_FB_DATA_ARRAY(2, 3, 4, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
   public:
     ros::ServiceClient m_triggerClient;
@@ -102,7 +102,7 @@ class FORTE_TRIGGER_SERVICE_CLIENT : public CEventSourceFB{
     EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_TRIGGER_SERVICE_CLIENT), m_Initiated(false) , m_RosNamespace(""), m_RosMsgName(""){
     };
 
-    virtual ~FORTE_TRIGGER_SERVICE_CLIENT() = default;
+    ~FORTE_TRIGGER_SERVICE_CLIENT() override = default;
 
   };
 

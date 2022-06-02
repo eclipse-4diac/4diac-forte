@@ -52,7 +52,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
         const CStringDictionary::TStringId pa_nInstanceNameId,
         TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
 
-    virtual ~CResource();
+    ~CResource() override;
 
     /*!\brief Execute the given management command
      *
@@ -75,7 +75,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
       return mResourceEventExecution;
     };
 
-    virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
+    EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand) override;
 
     /*!\brief Write a parameter value to a given FB-input
      *
@@ -102,7 +102,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
         const CStringDictionary::TStringId pa_nInstanceNameId,
         TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
 
-    virtual void executeEvent(int) {
+    void executeEvent(int) override {
     }
 
     /*!Wrapper for simplifying connection creation in resources

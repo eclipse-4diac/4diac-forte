@@ -26,8 +26,7 @@ class CIEC_ServiceRegistryEntry : public CIEC_STRUCT {
   public:
     CIEC_ServiceRegistryEntry();
 
-    virtual ~CIEC_ServiceRegistryEntry() {
-    }
+    ~CIEC_ServiceRegistryEntry() override = default;
 
     CIEC_ArrowheadService &providedService() {
       return *static_cast<CIEC_ArrowheadService*>(&getMembers()[0]);

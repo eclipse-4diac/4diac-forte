@@ -29,13 +29,13 @@ using namespace forte::com_infra;
 class MQTTComLayer: public forte::com_infra::CComLayer{
 public:
   MQTTComLayer(CComLayer* paUpperLayer, CBaseCommFB * paFB);
-  virtual ~MQTTComLayer();
+  ~MQTTComLayer() override;
 
-  EComResponse sendData(void* paData, unsigned int paSize);
+  EComResponse sendData(void* paData, unsigned int paSize) override;
 
-  EComResponse recvData(const void *paData, unsigned int paSize);
+  EComResponse recvData(const void *paData, unsigned int paSize) override;
 
-  EComResponse processInterrupt();
+  EComResponse processInterrupt() override;
 
   char const* getTopicName() const {
     return mTopicName.getValue();
@@ -51,8 +51,8 @@ private:
   unsigned int mUsedBuffer;
   EComResponse mInterruptResp;
 
-  EComResponse openConnection(char* paLayerParameter);
-  void closeConnection();
+  EComResponse openConnection(char* paLayerParameter) override;
+  void closeConnection() override;
 
   enum Parameters {
     Address,

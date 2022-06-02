@@ -30,7 +30,7 @@ private:
 
   CLuaAdapterTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING paLuaScriptAsString,  SFBInterfaceSpec& interfaceSpec);
 
-  virtual ~CLuaAdapterTypeEntry();
+  ~CLuaAdapterTypeEntry() override;
 
   static bool initInterfaceSpec(SFBInterfaceSpec& interfaceSpec, CLuaEngine* luaEngine, int index);
   bool initPlugInterfaceSpec(SFBInterfaceSpec& interfaceSpec);
@@ -39,7 +39,7 @@ private:
 public:
   static CLuaAdapterTypeEntry* createLuaAdapterTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING& paLuaScriptAsString);
 
-  virtual CAdapter* createAdapterInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, bool pa_bIsPlug);
+  CAdapter* createAdapterInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, bool pa_bIsPlug) override;
 
   const SFBInterfaceSpec* getSocketInterfaceSpec() const {
     return &mSocketInterfaceSpec;

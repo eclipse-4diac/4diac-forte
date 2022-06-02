@@ -51,7 +51,7 @@ private:
 
    FORTE_FB_DATA_ARRAY(1, 1, 1, 0);
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
   bool isResponseEmpty(char* paText);
 
@@ -60,7 +60,7 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_GetArrayResponseFromJSON){
   };
 
-  virtual ~FORTE_GetArrayResponseFromJSON(){};
+  ~FORTE_GetArrayResponseFromJSON() override = default;
 
 };
 

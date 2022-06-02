@@ -24,7 +24,7 @@ class CIEC_ANY_REAL : public CIEC_ANY_NUM{
   DECLARE_FIRMWARE_DATATYPE(ANY_REAL)
 
   public:
-    virtual ~CIEC_ANY_REAL() = default;
+    ~CIEC_ANY_REAL() override = default;
 
   protected:
     CIEC_ANY_REAL() = default;

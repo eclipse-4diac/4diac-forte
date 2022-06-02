@@ -41,7 +41,7 @@ private:
   CIEC_TIME start;
   CIEC_TIME count;
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
   CIEC_BOOL& st_IN() {
      return *static_cast<CIEC_BOOL*>(getDI(0));
@@ -61,7 +61,7 @@ private:
 
 public:
   FUNCTION_BLOCK_CTOR(FB_TOF), fallingEdge(false), notFirstRisingEdge(false){};
-  virtual ~FB_TOF() = default;
+  ~FB_TOF() override = default;
 
 };
 

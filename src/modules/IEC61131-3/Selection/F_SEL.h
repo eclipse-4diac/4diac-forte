@@ -60,13 +60,13 @@ class FORTE_F_SEL : public CFunctionBlock {
     FORTE_FB_DATA_ARRAY(1, 3, 1, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
   public:
     FUNCTION_BLOCK_CTOR(FORTE_F_SEL){
   };
 
-  virtual ~FORTE_F_SEL() = default;
+  ~FORTE_F_SEL() override = default;
 
   template<typename T> void calculateValue() {
     T oIn0;

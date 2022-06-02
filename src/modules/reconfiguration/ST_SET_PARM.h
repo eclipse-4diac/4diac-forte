@@ -68,14 +68,14 @@ private:
   
   FORTE_FB_DATA_ARRAY(1, 5, 2, 0);
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
   void executeRQST();
 
 public:
   FUNCTION_BLOCK_CTOR(FORTE_ST_SET_PARM), m_poDevice(pa_poSrcRes->getDevice()){
   };
 
-  virtual ~FORTE_ST_SET_PARM() = default;
+  ~FORTE_ST_SET_PARM() override = default;
 
 };
 

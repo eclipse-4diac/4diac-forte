@@ -28,7 +28,7 @@ class EmbrickSlaveHandle : public forte::core::io::IOHandle {
   public:
     EmbrickSlaveHandle(forte::core::io::IODeviceController *paController, forte::core::io::IOMapper::Direction paDirection, CIEC_ANY::EDataTypeID type,
         uint8_t paOffset, EmbrickSlaveHandler *paSlave);
-    virtual ~EmbrickSlaveHandle();
+    ~EmbrickSlaveHandle() override;
 
     virtual void set(const CIEC_ANY &);
     virtual bool equal(unsigned char*) = 0;

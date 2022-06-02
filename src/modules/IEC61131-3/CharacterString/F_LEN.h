@@ -49,7 +49,7 @@ class FORTE_F_LEN : public CFunctionBlock {
     FORTE_FB_DATA_ARRAY(1, 1, 1, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
   public:
     FUNCTION_BLOCK_CTOR(FORTE_F_LEN){
@@ -64,7 +64,7 @@ class FORTE_F_LEN : public CFunctionBlock {
     st_OUT().saveAssign(func_LEN(roIn));
   }
 
-  virtual ~FORTE_F_LEN() = default;
+  ~FORTE_F_LEN() override = default;
 
 };
 

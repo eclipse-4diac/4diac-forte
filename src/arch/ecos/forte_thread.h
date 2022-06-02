@@ -45,7 +45,7 @@ class CECOSThread : public forte::arch::CThreadBase<cyg_handle_t, 0, CECOSThread
      *
      *  Will stop the execution if running and destroy the thread including all system specific data.
      */
-    virtual ~CECOSThread();
+    ~CECOSThread() override;
 
     //!Set the deadline of the thread.
     void setDeadline(const CIEC_TIME &paVal);
@@ -71,7 +71,7 @@ class CECOSThread : public forte::arch::CThreadBase<cyg_handle_t, 0, CECOSThread
      */
     static void threadFunction(cyg_addrword_t paData);
 
-    virtual TThreadHandleType createThread(long paStackSize);
+    TThreadHandleType createThread(long paStackSize) override;
 
     static const int scmThreadListSize = 27;
     static TCECOSThreadPtr smThreadList[scmThreadListSize];

@@ -63,7 +63,7 @@ public:
                  pa_anAdapterInstanceName, &scm_stFBInterfaceSpecPlug,
                  pa_bIsPlug, m_anFBConnData, m_anFBVarsData){};
 
-  virtual ~FORTE_PortAdapter() = default;
+  ~FORTE_PortAdapter() override = default;
 };
 
 #endif // _PORTADAPTER_H_

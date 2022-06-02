@@ -25,7 +25,7 @@ class FORTE_Wago1506: public WagoSlaveBase {
     FUNCTION_BLOCK_CTOR_FOR_WAGO_SLAVES(FORTE_Wago1506, 34831){
     };
 
-    virtual ~FORTE_Wago1506(){};
+    ~FORTE_Wago1506() override = default;
 
   protected:
 

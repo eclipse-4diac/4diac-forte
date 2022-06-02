@@ -25,25 +25,25 @@ class fmiTimerHandler : public CTimerHandler{
 
     explicit fmiTimerHandler(CDeviceExecution& pa_poDeviceExecution);
 
-    virtual ~fmiTimerHandler();
+    ~fmiTimerHandler() override;
 
     /*!\brief Enables this event source
      *
      */
-    virtual void enableHandler();
+    void enableHandler() override;
     /*!\brief Disable this event source
      */
-    virtual void disableHandler();
+    void disableHandler() override;
     /*!\brief Sets the priority of the event source
      *
      * \param pa_nPriority new priority of the event source
      */
-    virtual void setPriority(int pa_nPriority);
+    void setPriority(int pa_nPriority) override;
     /*!\brief Get the current priority of the event source
      *
      * \return current priority
      */
-    virtual int getPriority() const;
+    int getPriority() const override;
 
     /*!\brief Advance the ticks according of the time
      */

@@ -24,9 +24,9 @@ class CLuaCFB : public CCompositeFB {
   public:
     CLuaCFB(CStringDictionary::TStringId paInstanceNameId, const CLuaCFBTypeEntry* paTypeEntry, SCFB_FBNData *paFbnData, TForteByte *paConnData,
         TForteByte *paVarsData, CResource *paResource);
-    virtual ~CLuaCFB();
+    ~CLuaCFB() override;
 
-    virtual CStringDictionary::TStringId getFBTypeId() const {
+    CStringDictionary::TStringId getFBTypeId() const override {
       return mTypeEntry->getTypeNameId();
     }
 };

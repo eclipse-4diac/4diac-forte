@@ -53,13 +53,13 @@ private:
 
   FORTE_FB_DATA_ARRAY(1, 2, 2, 0);
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
 public:
   FUNCTION_BLOCK_CTOR(FORTE_GET_AT_INDEX){
   };
 
-  virtual ~FORTE_GET_AT_INDEX() = default;
+  ~FORTE_GET_AT_INDEX() override = default;
 
 };
 

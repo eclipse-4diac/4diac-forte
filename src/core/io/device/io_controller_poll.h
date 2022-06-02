@@ -30,7 +30,7 @@ namespace forte {
       class IODevicePollController : public IODeviceController {
         public:
 
-          virtual void handleChangeEvent(IOHandle *paHandle);
+          void handleChangeEvent(IOHandle *paHandle) override;
 
         protected:
           /*! @brief Constructor
@@ -64,7 +64,7 @@ namespace forte {
           void setPollInterval(float paPollInterval);
 
         private:
-          virtual void runLoop();
+          void runLoop() override;
 
           float mPollInterval;
 

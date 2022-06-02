@@ -59,7 +59,7 @@ class CIEC_ULINT : public CIEC_ANY_INT{
       setTUINT64(paValue);
     }
 
-    virtual ~CIEC_ULINT() = default;
+    ~CIEC_ULINT() override = default;
 
     CIEC_ULINT& operator =(const CIEC_ULINT &paValue) {
       // Simple value assignment - no self assignment check needed
@@ -93,7 +93,7 @@ class CIEC_ULINT : public CIEC_ANY_INT{
       return getTUINT64();
     }
 
-    virtual EDataTypeID getDataTypeID() const {
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_ULINT;
     }
 };

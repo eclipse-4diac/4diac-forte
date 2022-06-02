@@ -23,21 +23,21 @@ class CSysFsProcessInterface : public CProcessInterfaceBase {
   public:
     CSysFsProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
         TForteByte *paFBConnData, TForteByte *paFBVarsData);
-    virtual ~CSysFsProcessInterface();
+    ~CSysFsProcessInterface() override;
 
     class CIOHandler : public CExternalEventHandler, public CThread {
       DECLARE_HANDLER(CIOHandler)
         ;
       public:
-        virtual void run();
+        void run() override;
         void updateReadData();
         void registerIXFB(CSysFsProcessInterface *paFB);
         void unregisterIXFB(CSysFsProcessInterface *paFB);
         /* functions needed for the external event handler interface */
-        void enableHandler();
-        void disableHandler();
-        void setPriority(int paPriority);
-        int getPriority() const;
+        void enableHandler() override;
+        void disableHandler() override;
+        void setPriority(int paPriority) override;
+        int getPriority() const override;
 
       private:
         typedef CSinglyLinkedList<CSysFsProcessInterface *> TReadFBContainer;

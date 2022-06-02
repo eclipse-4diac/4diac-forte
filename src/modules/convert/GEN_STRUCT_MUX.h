@@ -31,8 +31,8 @@ class GEN_STRUCT_MUX : public CGenFunctionBlock<CFunctionBlock> {
     static const TDataIOID scm_anEOWith[];
     static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
-    void executeEvent(int paEIID);
-    virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);
+    void executeEvent(int paEIID) override;
+    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
     CIEC_STRUCT& st_OUT() {
        return *static_cast<CIEC_STRUCT*>(getDO(0));
@@ -42,7 +42,7 @@ class GEN_STRUCT_MUX : public CGenFunctionBlock<CFunctionBlock> {
 
     GEN_STRUCT_MUX(const GEN_STRUCT_MUX &paOther) = delete;
     GEN_STRUCT_MUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
-    virtual ~GEN_STRUCT_MUX();
+    ~GEN_STRUCT_MUX() override;
 
     static CStringDictionary::TStringId getStructNameId(const char *paConfigString);
 

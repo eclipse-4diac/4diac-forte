@@ -27,7 +27,7 @@ private:
   static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
 
-  virtual void executeEvent(int pa_nEIID){
+  void executeEvent(int pa_nEIID) override {
     if(scm_nEventEIID == pa_nEIID){
       sendOutputEvent( scm_nEventEO1ID);
       sendOutputEvent( scm_nEventEO2ID);
@@ -41,7 +41,7 @@ private:
 public:
   FUNCTION_BLOCK_CTOR(E_SPLIT){
   };
-  virtual ~E_SPLIT() = default;
+  ~E_SPLIT() override = default;
 
 };
 

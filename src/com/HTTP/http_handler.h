@@ -31,15 +31,15 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
 
   public:
     /* functions needed for the external event handler interface */
-    void enableHandler();
+    void enableHandler() override;
 
-    void disableHandler();
+    void disableHandler() override;
 
-    void setPriority(int pa_nPriority);
+    void setPriority(int pa_nPriority) override;
 
-    int getPriority() const;
+    int getPriority() const override;
 
-    virtual forte::com_infra::EComResponse recvData(const void *paData, unsigned int paSize);
+    forte::com_infra::EComResponse recvData(const void *paData, unsigned int paSize) override;
 
     bool sendClientData(forte::com_infra::CHttpComLayer* paLayer, CIEC_STRING& paToSend);
 
@@ -60,7 +60,7 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
     /**
      * Overridden run() from CThread which loops the UA Server.
      */
-    virtual void run();
+    void run() override;
 
     void checkClientLayers();
 

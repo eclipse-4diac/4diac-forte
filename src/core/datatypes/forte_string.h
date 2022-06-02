@@ -42,11 +42,11 @@ class CIEC_STRING : public CIEC_ANY_STRING{
       fromCharString(paValue);
     }
 
-    virtual ~CIEC_STRING() = default;
+    ~CIEC_STRING() override = default;
 
     CIEC_STRING &operator =(const CIEC_STRING& paValue) = default;
 
-    virtual EDataTypeID getDataTypeID() const{
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_STRING;
     }
 
@@ -59,7 +59,7 @@ class CIEC_STRING : public CIEC_ANY_STRING{
      *   \return number of bytes taken used from the buffer
      *        -1 on on error
      */
-    virtual int fromString(const char *pa_pacValue);
+    int fromString(const char *pa_pacValue) override;
 
     /*! \brief Converts data type value to string
      *
@@ -71,7 +71,7 @@ class CIEC_STRING : public CIEC_ANY_STRING{
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    virtual int toString(char* paValue, size_t paBufferSize) const;
+    int toString(char* paValue, size_t paBufferSize) const override;
 
     /*! \brief Converts a UTF-8 encoded string to a STRING (ISO 10646 Row 00 internally)
      *
@@ -85,7 +85,7 @@ class CIEC_STRING : public CIEC_ANY_STRING{
      *       -1 on error
      */
 #ifdef FORTE_UNICODE_SUPPORT
-    virtual int fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescape);
+    int fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescape) override;
 #endif
     /*! \brief Converts the STRING to a UTF-8 representation
      *
@@ -98,7 +98,7 @@ class CIEC_STRING : public CIEC_ANY_STRING{
      *           -1 on error
      */
 #ifdef FORTE_UNICODE_SUPPORT
-    virtual int toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) const;
+    int toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) const override;
 #endif
 
     /*! \brief Returns the amount of bytes needed to create the IEC 61131 literal string
@@ -110,11 +110,11 @@ class CIEC_STRING : public CIEC_ANY_STRING{
      *
      * \return Needed buffer size for literal string without type delarator e.g., STRING#
      */
-    virtual size_t getToStringBufferSize() const;
+    size_t getToStringBufferSize() const override;
 
   protected:
 
-    virtual void setValue(const CIEC_ANY &pa_roValue){
+    void setValue(const CIEC_ANY &pa_roValue) override {
       if(pa_roValue.getDataTypeID() == CIEC_ANY::e_STRING){
         const CIEC_STRING &roSrc(static_cast<const CIEC_STRING &>(pa_roValue));
         this->assign(roSrc.getValue(), roSrc.length());

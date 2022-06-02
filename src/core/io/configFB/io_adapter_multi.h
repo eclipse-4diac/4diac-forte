@@ -29,7 +29,7 @@ namespace forte {
           IOConfigFBMultiAdapter(const TForteUInt8* const paSlaveConfigurationIO, const TForteUInt8 paSlaveConfigurationIONum, CResource *paSrcRes,
               const SFBInterfaceSpec *patInterfaceSpecSocket, const CStringDictionary::TStringId paInstanceNameId, const SFBInterfaceSpec *paInterfaceSpecPlug,
               bool paIsPlug, TForteByte *paFBConnData, TForteByte *paFBVarsData);
-          virtual ~IOConfigFBMultiAdapter();
+          ~IOConfigFBMultiAdapter() override;
 
           CIEC_BOOL &QO() {
             return *static_cast<CIEC_BOOL*>((isSocket()) ? getDI(0) : getDO(0));

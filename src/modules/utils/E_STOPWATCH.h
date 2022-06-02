@@ -68,7 +68,7 @@ static const SInternalVarsInformation scm_stInternalVars;
   void enterStateMeasure();
   void enterStateSTOP();
 
-  virtual void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
   FORTE_BASIC_FB_DATA_ARRAY(1, 0, 1, 1, 0);
 
@@ -77,7 +77,7 @@ public:
        CBasicFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, &scm_stInternalVars, m_anFBConnData, m_anFBVarsData) {
   };
 
-  virtual ~FORTE_E_STOPWATCH() = default;
+  ~FORTE_E_STOPWATCH() override = default;
 };
 
 #endif // _E_STOPWATCH_H_

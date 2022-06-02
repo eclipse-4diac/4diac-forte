@@ -26,10 +26,10 @@ class E_DELAY : public CTimedFB{
   DECLARE_FIRMWARE_FB(E_DELAY)
 private:
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 public:
   E_DELAY(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
-  virtual ~E_DELAY() = default;
+  ~E_DELAY() override = default;
 
 };
 

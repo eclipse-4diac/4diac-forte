@@ -60,7 +60,7 @@ public:
   ADAPTER_CTOR(FORTE_ARTimeOut){
   };
 
-  virtual ~FORTE_ARTimeOut() = default;
+  ~FORTE_ARTimeOut() override = default;
 
 };
 

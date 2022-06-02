@@ -23,7 +23,7 @@ class CFunctionBlock;
 class CInterface2InternalDataConnection : public CDataConnection{
   public:
     CInterface2InternalDataConnection();
-    virtual ~CInterface2InternalDataConnection();
+    ~CInterface2InternalDataConnection() override;
 
     /*! \brief Clones interface data value (CFB data input) to internal FB data input.
      */

@@ -18,7 +18,7 @@
 class CFMUEventChainExecutionThread : public CEventChainExecutionThread{
   public:
     CFMUEventChainExecutionThread();
-    virtual ~CFMUEventChainExecutionThread();
+    ~CFMUEventChainExecutionThread() override;
 
     void setAllowedToRun(bool* paAllowedToRun){
       mAllowedToRun = paAllowedToRun;

@@ -24,8 +24,7 @@ class CIEC_ArrowheadService : public CIEC_STRUCT {
   public:
     CIEC_ArrowheadService();
 
-    virtual ~CIEC_ArrowheadService() {
-    }
+    ~CIEC_ArrowheadService() override = default;
 
     CIEC_WSTRING &serviceDefinition() {
       return *static_cast<CIEC_WSTRING*>(&getMembers()[0]);

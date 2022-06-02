@@ -71,11 +71,11 @@ private:
   STimedFBListEntry mTimeListEntry;
   CEventChainExecutionThread mECEO;
 
-  virtual void executeEvent(int paEIID);
+  void executeEvent(int paEIID) override;
 
 public:
   FORTE_RT_E_DELAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
-  virtual ~FORTE_RT_E_DELAY() = default;
+  ~FORTE_RT_E_DELAY() override = default;
 
 };
 

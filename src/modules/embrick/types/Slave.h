@@ -26,7 +26,7 @@ class EmbrickSlave : public forte::core::io::IOConfigFBMultiSlave, public Embric
   public:
     EmbrickSlave(const TForteUInt8* const paSlaveConfigurationIO, const TForteUInt8 paSlaveConfigurationIO_num, int paType, CResource *paSrcRes,
         const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
-    virtual ~EmbrickSlave();
+    ~EmbrickSlave() override;
 
   protected:
     virtual CIEC_UINT &UpdateInterval() {

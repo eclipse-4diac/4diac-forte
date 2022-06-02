@@ -24,7 +24,7 @@ class FORTE_GET_STRUCT_VALUE : public CFunctionBlock {
   public:
     FUNCTION_BLOCK_CTOR(FORTE_GET_STRUCT_VALUE){};
 
-    virtual ~FORTE_GET_STRUCT_VALUE() = default;
+    ~FORTE_GET_STRUCT_VALUE() override = default;
 
   private:
 
@@ -44,7 +44,7 @@ class FORTE_GET_STRUCT_VALUE : public CFunctionBlock {
       return *static_cast<CIEC_ANY*>(getDO(1));
     };
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
     CIEC_ANY* getMemberFromName(CIEC_STRUCT* paWhereToLook, char* paMemberName);
 

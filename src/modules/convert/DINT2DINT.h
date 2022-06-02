@@ -36,7 +36,7 @@ private:
   FORTE_FB_DATA_ARRAY(1,1,1, 0);
 
 
-  virtual void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
   CIEC_DINT& st_IN() {
     return *static_cast<CIEC_DINT*>(getDI(0));
@@ -48,7 +48,7 @@ private:
 
 public:
   FUNCTION_BLOCK_CTOR(DINT2DINT){};
-  virtual ~DINT2DINT();
+  ~DINT2DINT() override;
 
 };
 

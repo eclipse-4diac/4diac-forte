@@ -126,7 +126,7 @@ class FORTE_EXECUTE_ACTION_CLIENT : public CEventSourceFB{
     FORTE_FB_DATA_ARRAY(2, 6, 6, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
     void doneCallback(const actionlib::SimpleClientGoalState& state, const ExecuteResultConstPtr& result);
     void activeCallback();
@@ -140,7 +140,7 @@ class FORTE_EXECUTE_ACTION_CLIENT : public CEventSourceFB{
     EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_EXECUTE_ACTION_CLIENT), m_Initiated(false), m_GoalActive(false), m_ActionClient(0), mResultReady(false), nh(0), m_RosNamespace(""), m_RosMsgName(""){
     };
 
-    virtual ~FORTE_EXECUTE_ACTION_CLIENT() = default;
+    ~FORTE_EXECUTE_ACTION_CLIENT() override = default;
 
   };
 

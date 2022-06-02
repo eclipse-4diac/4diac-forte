@@ -49,7 +49,7 @@ public:
   COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_RegisterServiceHTTP){
   };
 
-  virtual ~FORTE_RegisterServiceHTTP(){};
+  ~FORTE_RegisterServiceHTTP() override = default;
 
 };
 

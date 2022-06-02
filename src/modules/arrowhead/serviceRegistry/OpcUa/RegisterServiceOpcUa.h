@@ -49,7 +49,7 @@ public:
   COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_RegisterServiceOpcUa){
   };
 
-  virtual ~FORTE_RegisterServiceOpcUa(){};
+  ~FORTE_RegisterServiceOpcUa() override = default;
 
 };
 

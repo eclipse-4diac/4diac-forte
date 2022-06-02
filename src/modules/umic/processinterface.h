@@ -36,7 +36,7 @@ class CUMICProcessInterface : public CProcessInterfaceBase{
 
   public:
     CUMICProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
-    virtual ~CUMICProcessInterface();
+    ~CUMICProcessInterface() override;
 
   protected:
     bool initialise(bool paIsInput);

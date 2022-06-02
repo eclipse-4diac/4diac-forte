@@ -37,7 +37,7 @@ private:
 
   CIEC_BOOL M;
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
   CIEC_BOOL& CLK() {
     return *static_cast<CIEC_BOOL*>(getDI(0));
@@ -49,7 +49,7 @@ private:
 
 public:
   FUNCTION_BLOCK_CTOR(FB_R_TRIG){};
-  virtual ~FB_R_TRIG() = default;
+  ~FB_R_TRIG() override = default;
 
 };
 

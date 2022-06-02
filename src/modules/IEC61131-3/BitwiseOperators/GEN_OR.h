@@ -23,10 +23,10 @@ class GEN_OR : public CGenBitBase {
 
   private:
 
-    virtual void executeEvent(int paEIID);
+    void executeEvent(int paEIID) override;
 
     GEN_OR(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
-    virtual ~GEN_OR();
+    ~GEN_OR() override;
 
   public:
 

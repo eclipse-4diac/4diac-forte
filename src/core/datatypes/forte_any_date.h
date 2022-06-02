@@ -21,7 +21,7 @@
  */
 class CIEC_ANY_DATE : public CIEC_ANY_ELEMENTARY{
   public:
-    virtual ~CIEC_ANY_DATE() = default;
+    ~CIEC_ANY_DATE() override = default;
 
     /*! Retrieve the current timezone
      *

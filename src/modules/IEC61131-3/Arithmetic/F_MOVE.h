@@ -49,7 +49,7 @@ class FORTE_F_MOVE : public CFunctionBlock {
     FORTE_FB_DATA_ARRAY(1, 1, 1, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
   public:
     FUNCTION_BLOCK_CTOR(FORTE_F_MOVE){
@@ -60,7 +60,7 @@ class FORTE_F_MOVE : public CFunctionBlock {
     st_OUT().saveAssign(func_MOVE(roIn));
   }
 
-  virtual ~FORTE_F_MOVE() = default;
+  ~FORTE_F_MOVE() override = default;
 
 };
 

@@ -37,7 +37,7 @@ class CIEC_TIME : public CIEC_ANY_DURATION {
       setLargestInt(paValue);
     }
 
-    virtual ~CIEC_TIME() = default;
+    ~CIEC_TIME() override = default;
 
     CIEC_TIME& operator =(const CIEC_TIME &paValue){
       // Simple value assignment - no self assignment check needed
@@ -66,7 +66,7 @@ class CIEC_TIME : public CIEC_ANY_DURATION {
      *   \return number of bytes taken used from the buffer
      *        -1 on on error
      */
-    virtual int fromString(const char *paValue);
+    int fromString(const char *paValue) override;
     /*! \brief Converts data type value to string
      *
      *   This command implements a conversion function from C++ data type
@@ -77,7 +77,7 @@ class CIEC_TIME : public CIEC_ANY_DURATION {
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    virtual int toString(char* paValue, size_t paBufferSize) const;
+    int toString(char* paValue, size_t paBufferSize) const override;
 
     TValueType getInSeconds() const;
     TValueType getInMilliSeconds() const;

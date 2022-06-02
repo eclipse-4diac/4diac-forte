@@ -61,7 +61,7 @@ public:
   COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_ArrowheadPublish){
   };
 
-  virtual ~FORTE_ArrowheadPublish(){};
+  ~FORTE_ArrowheadPublish() override = default;
 
 };
 

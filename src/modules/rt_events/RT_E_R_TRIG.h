@@ -21,7 +21,7 @@ class FORTE_RT_E_R_TRIG: public CRTEventSingle {
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_BOOL &QI() {
+  CIEC_BOOL &QI() override {
     return *static_cast<CIEC_BOOL*>(getDI(0));
   };
 
@@ -29,7 +29,7 @@ private:
     return *static_cast<CIEC_TIME*>(getDI(1));
   };
 
-  CIEC_TIME &Deadline() {
+  CIEC_TIME &Deadline() override {
     return *static_cast<CIEC_TIME*>(getDI(2));
   };
 
@@ -39,7 +39,7 @@ private:
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_BOOL &QO() {
+  CIEC_BOOL &QO() override {
     return *static_cast<CIEC_BOOL*>(getDO(0));
   };
 
@@ -62,11 +62,11 @@ private:
    bool m_bWasHigh;
 
 
-   virtual bool checkActivation(int pa_nEIID);
+   bool checkActivation(int pa_nEIID) override;
 
 public:
   FORTE_RT_E_R_TRIG(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
-  virtual ~FORTE_RT_E_R_TRIG() = default;
+  ~FORTE_RT_E_R_TRIG() override = default;
 
 };
 

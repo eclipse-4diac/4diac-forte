@@ -44,7 +44,7 @@ class CIEC_WSTRING : public CIEC_ANY_STRING {
       fromCharString(paValue);
     }
 
-    virtual ~CIEC_WSTRING() = default;
+    ~CIEC_WSTRING() override = default;
 
     CIEC_WSTRING &operator =(const CIEC_WSTRING &paValue) = default;
 
@@ -59,7 +59,7 @@ class CIEC_WSTRING : public CIEC_ANY_STRING {
      *   \return number of bytes used from srcString
      *       -1 on error
      */
-    virtual int fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescape);
+    int fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescape) override;
 
     /*! \brief Converts the WSTRING to a UTF-8 representation
      *
@@ -71,7 +71,7 @@ class CIEC_WSTRING : public CIEC_ANY_STRING {
      *   \return number of bytes used in the buffer
      *           -1 on error
      */
-    virtual int toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) const;
+    int toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) const override;
 
     /*! \brief Converts a UTF-16 encoded string to a WSTRING (UTF-8 internally)
      *
@@ -97,11 +97,11 @@ class CIEC_WSTRING : public CIEC_ANY_STRING {
      */
     int toUTF16(TForteByte* pa_pacBuffer, unsigned int pa_nBufferSize) const;
 
-    virtual EDataTypeID getDataTypeID() const {
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_WSTRING;
     }
 
-    virtual void setValue(const CIEC_ANY& pa_roValue) {
+    void setValue(const CIEC_ANY& pa_roValue) override {
       if(pa_roValue.getDataTypeID() == CIEC_ANY::e_WSTRING){
         const CIEC_WSTRING &roSrc(static_cast<const CIEC_WSTRING &>(pa_roValue));
         this->assign(roSrc.getValue(), roSrc.length());
@@ -119,7 +119,7 @@ class CIEC_WSTRING : public CIEC_ANY_STRING {
      *   \return number of bytes taken used from the buffer
      *        -1 on on error
      */
-    virtual int fromString(const char *pa_pacValue);
+    int fromString(const char *pa_pacValue) override;
 
     /*! \brief Converts data type value to string
      *
@@ -131,7 +131,7 @@ class CIEC_WSTRING : public CIEC_ANY_STRING {
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    virtual int toString(char* paValue, size_t paBufferSize) const;
+    int toString(char* paValue, size_t paBufferSize) const override;
 
     /*! \brief Returns the amount of bytes needed to create the IEC 61131 literal string
      *
@@ -142,7 +142,7 @@ class CIEC_WSTRING : public CIEC_ANY_STRING {
      *
      * \return Needed buffer size for literal string without type delarator e.g., WSTRING#
      */
-    virtual size_t getToStringBufferSize() const;
+    size_t getToStringBufferSize() const override;
 
   protected:
 

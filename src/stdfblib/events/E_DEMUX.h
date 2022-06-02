@@ -36,7 +36,7 @@ private:
 
   FORTE_FB_DATA_ARRAY(4,1,0,0);
 
-  virtual void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
   
   CIEC_UINT& K() {
      return *static_cast<CIEC_UINT*>(getDI(0));
@@ -45,7 +45,7 @@ private:
 public:
   FUNCTION_BLOCK_CTOR(E_DEMUX){
   };
-  virtual ~E_DEMUX() = default;
+  ~E_DEMUX() override = default;
 
 };
 

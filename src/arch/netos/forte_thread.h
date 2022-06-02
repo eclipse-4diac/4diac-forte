@@ -47,7 +47,7 @@ class CTXThread : public forte::arch::CThreadBase<ULONG> {
      *
      *  Will stop the execution if running and destroy the thread including all system specific data.
      */
-    virtual ~CTXThread();
+    ~CTXThread() override;
 
     //!Set the deadline of the thread.
     void setDeadline(const CIEC_TIME &paVal);

@@ -22,7 +22,7 @@ class FORTE_WagoMaster : public forte::core::io::IOConfigFBMultiMaster {
     FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(FORTE_WagoMaster, forte::core::io::IOConfigFBMultiMaster){
     };
 
-    virtual ~FORTE_WagoMaster(){};
+    ~FORTE_WagoMaster() override = default;
 
     CIEC_BOOL &QO(){
       return *static_cast<CIEC_BOOL*>(getDO(0));

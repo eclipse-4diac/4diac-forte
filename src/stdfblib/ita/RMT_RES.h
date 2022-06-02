@@ -20,7 +20,7 @@ class RMT_RES : public CResource{
 
   public:
     RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_roDevice);
-    virtual ~RMT_RES();
+    ~RMT_RES() override;
 
     void joinResourceThread() const;
 

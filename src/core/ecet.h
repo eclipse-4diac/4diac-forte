@@ -26,7 +26,7 @@
 class CEventChainExecutionThread : public CThread{
   public:
     CEventChainExecutionThread();
-    virtual ~CEventChainExecutionThread();
+    ~CEventChainExecutionThread() override;
 
     /*!\brief Start the a new event chain with the given event.
      *
@@ -87,7 +87,7 @@ class CEventChainExecutionThread : public CThread{
      * active EventChainExecutionlist in CFBNExecution.
      * \return true if thread execution ended successfully
      */
-    virtual void run();
+    void run() override;
 
     /*! \brief Clear the event chain.
      */

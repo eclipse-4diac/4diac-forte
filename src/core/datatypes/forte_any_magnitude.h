@@ -26,7 +26,7 @@ class CIEC_ANY_MAGNITUDE : public CIEC_ANY_ELEMENTARY {
   DECLARE_FIRMWARE_DATATYPE(ANY_MAGNITUDE)
 
   public:
-    virtual ~CIEC_ANY_MAGNITUDE() = default;
+    ~CIEC_ANY_MAGNITUDE() override = default;
 
     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_ANY;

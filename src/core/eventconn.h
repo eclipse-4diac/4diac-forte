@@ -25,13 +25,13 @@ class CEventConnection : public CConnection{
   public:
     CEventConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId);
 
-    virtual ~CEventConnection();
+    ~CEventConnection() override;
 
-    virtual EMGMResponse connect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId);
+    EMGMResponse connect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
-    virtual EMGMResponse connectToCFBInterface(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId);
+    EMGMResponse connectToCFBInterface(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
-    virtual EMGMResponse disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId);
+    EMGMResponse disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
     /*! \brief Triggers the event connection and all destinations are notified.
      *

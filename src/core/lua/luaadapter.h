@@ -21,9 +21,9 @@ class CLuaAdapter : public CAdapter {
   public:
     CLuaAdapter(CStringDictionary::TStringId paInstanceNameId, const CLuaAdapterTypeEntry* paTypeEntry, bool paIsPlug, TForteByte *paConnData,
         TForteByte *paVarsData, CResource *paResource);
-    virtual ~CLuaAdapter();
+    ~CLuaAdapter() override;
 
-    virtual CStringDictionary::TStringId getFBTypeId() const {
+    CStringDictionary::TStringId getFBTypeId() const override {
       return mTypeEntry->getTypeNameId();
     }
 

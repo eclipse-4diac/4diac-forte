@@ -72,14 +72,14 @@ private:
   
   FORTE_FB_DATA_ARRAY(1, 6, 2, 0);
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
   void executeRQST();
 
 public:
   FUNCTION_BLOCK_CTOR(FORTE_ST_DEL_CONN), m_poDevice(pa_poSrcRes->getDevice()){
   };
 
-  virtual ~FORTE_ST_DEL_CONN() = default;
+  ~FORTE_ST_DEL_CONN() override = default;
 
 };
 

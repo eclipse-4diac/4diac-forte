@@ -53,7 +53,7 @@ class FORTE_F_SUB : public CFunctionBlock {
     FORTE_FB_DATA_ARRAY(1, 2, 1, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
   public:
     FUNCTION_BLOCK_CTOR(FORTE_F_SUB){
@@ -66,7 +66,7 @@ class FORTE_F_SUB : public CFunctionBlock {
     st_OUT().saveAssign(func_SUB(roIn1,oIn2));
   }
 
-  virtual ~FORTE_F_SUB() = default;
+  ~FORTE_F_SUB() override = default;
 };
 
 #endif //close the ifdef sequence from the beginning of the file

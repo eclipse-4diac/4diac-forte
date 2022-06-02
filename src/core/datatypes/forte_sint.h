@@ -42,7 +42,7 @@ class CIEC_SINT : public CIEC_ANY_INT{
       setTINT8(paValue);
     }
 
-    virtual ~CIEC_SINT() = default;
+    ~CIEC_SINT() override = default;
 
     CIEC_SINT& operator =(const CIEC_SINT &paValue){
       // Simple value assignment - no self assignment check needed

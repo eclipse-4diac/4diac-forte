@@ -27,7 +27,7 @@ class WagoDeviceController : public forte::core::io::IODeviceMultiController {
   public:
     explicit WagoDeviceController(CDeviceExecution& paDeviceExecution);
 
-    virtual ~WagoDeviceController();
+    ~WagoDeviceController() override;
 
     struct WagoConfig : forte::core::io::IODeviceController::Config {
         unsigned int updateInterval; //!< Sets the frequency for the data update cycle. The default value is 25 Hz.

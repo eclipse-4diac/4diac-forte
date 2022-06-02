@@ -30,10 +30,8 @@ class ArrowheadJSONHelper {
     static void transformJSONToStruct(char* paToChange);
 
   private:
-    ArrowheadJSONHelper() {
-    }
-    virtual ~ArrowheadJSONHelper() {
-    }
+    ArrowheadJSONHelper() = default;
+    virtual ~ArrowheadJSONHelper() = default;
 
     static void transformStructToJSON(const CIEC_STRUCT &paSource, CIEC_STRING &paResult);
 

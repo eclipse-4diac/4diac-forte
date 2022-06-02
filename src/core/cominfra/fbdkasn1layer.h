@@ -34,10 +34,10 @@ namespace forte {
     class CFBDKASN1ComLayer : public CComLayer{
       public:
         CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB);
-        virtual ~CFBDKASN1ComLayer();
+        ~CFBDKASN1ComLayer() override;
 
-        EComResponse sendData(void *pa_pvData, unsigned int pa_unSize); // top interface, called from top
-        EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize); // bottom interface, called from bottom
+        EComResponse sendData(void *pa_pvData, unsigned int pa_unSize) override; // top interface, called from top
+        EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize) override; // bottom interface, called from bottom
 
         /*!\brief Serialize an array of IEC data points into a byte array
          *
@@ -204,8 +204,8 @@ namespace forte {
 
         static unsigned int getRequiredSerializationSize(const CIEC_ANY &pa_roCIECData);
 
-        EComResponse openConnection(char *pa_acLayerParameter);
-        void closeConnection();
+        EComResponse openConnection(char *pa_acLayerParameter) override;
+        void closeConnection() override;
         void resizeDeserBuffer(unsigned int pa_size);
 
 

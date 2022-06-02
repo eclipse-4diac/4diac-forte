@@ -32,14 +32,14 @@ class CIEC_ANY_ELEMENTARY : public CIEC_ANY{
       setLargestUInt(pa_roVal.getLargestUInt());
     }
 
-    virtual ~CIEC_ANY_ELEMENTARY() = default;
+    ~CIEC_ANY_ELEMENTARY() override = default;
 
     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_ANY;
     }
 
-    virtual int toString(char* paValue, size_t paBufferSize) const;
-    virtual int fromString(const char *pa_rsValue);
+    int toString(char* paValue, size_t paBufferSize) const override;
+    int fromString(const char *pa_rsValue) override;
 
   protected:
     CIEC_ANY_ELEMENTARY() = default;

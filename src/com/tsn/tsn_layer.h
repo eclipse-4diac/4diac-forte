@@ -22,7 +22,7 @@ namespace forte {
     class CTSNLayer : public CIPComLayer{
       public:
         CTSNLayer(CComLayer* paUpperLayer, CBaseCommFB* paBaseCommFB);
-        virtual ~CTSNLayer();
+        ~CTSNLayer() override;
 
       protected:
 
@@ -36,7 +36,7 @@ namespace forte {
          *      - e_InitOk if the opening process was successful
          *      - e_InitInvalidId if the opening process was not successful
          */
-        EComResponse openConnection(char *paLayerParameter);
+        EComResponse openConnection(char *paLayerParameter) override;
 
 
         /*!\brief Set the VLAN priority (VLAN PCP) for the socket

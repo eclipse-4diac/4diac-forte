@@ -360,7 +360,7 @@ class CLocalMethodInfo : public CActionInfo {
     /**
      * Destructor of the class
      */
-    ~CLocalMethodInfo();
+    ~CLocalMethodInfo() override;
 
     /**
      * Getter for the semaphore of the action

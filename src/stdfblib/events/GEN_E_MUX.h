@@ -30,15 +30,15 @@ class GEN_E_MUX : public CGenFunctionBlock<CFunctionBlock>{
 
     CStringDictionary::TStringId *m_anEventInputNames;
 
-    virtual void executeEvent(int paEIID);
-    virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);
+    void executeEvent(int paEIID) override;
+    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
     CIEC_UINT& K(){
       return *static_cast<CIEC_UINT*>(getDO(0));
     }
 
     GEN_E_MUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
-    virtual ~GEN_E_MUX();
+    ~GEN_E_MUX() override;
 
 };
 #endif //_GEN_E_MUX_H_

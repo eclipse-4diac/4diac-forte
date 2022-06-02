@@ -19,7 +19,7 @@ class BE_RMT_DEV : public RMT_DEV{
   public:
     explicit BE_RMT_DEV(CFORTEModule &pa_roModule);
 
-    virtual ~BE_RMT_DEV();
+    ~BE_RMT_DEV() override;
 
     CFORTEModule & getModule() const{
       return m_roModule;

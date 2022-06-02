@@ -24,17 +24,17 @@ class CROSManager : public CExternalEventHandler, private CThread{
   DECLARE_HANDLER(CROSManager)
 
   public:
-    virtual void enableHandler();
-    virtual void disableHandler();
-    virtual void setPriority(int pa_prio);
-    virtual int getPriority() const;
+    void enableHandler() override;
+    void disableHandler() override;
+    void setPriority(int pa_prio) override;
+    int getPriority() const override;
 
     void startChain(CEventSourceFB *pa_poECStartF);
     std::string ciecStringToStdString(const CIEC_STRING &pa_DataInput);
     CIEC_STRING stdStringToCiecString(const std::string &pa_inputString);
 
   protected:
-    virtual void run();
+    void run() override;
 
 };
 

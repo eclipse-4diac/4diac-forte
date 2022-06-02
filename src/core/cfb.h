@@ -102,7 +102,7 @@ class CCompositeFB: public CFunctionBlock {
     CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
         const CStringDictionary::TStringId pa_nInstanceNameId,
         const SCFB_FBNData * const pa_cpoFBNData, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
-    virtual ~CCompositeFB();
+    ~CCompositeFB() override;
 
     /*!\brief Connects specific data input of a CFB with a specific data connection.
      *
@@ -110,21 +110,21 @@ class CCompositeFB: public CFunctionBlock {
      * \param pa_poDataCon     Pointer to the data connection the CFB should be connected to.
      * \return TRUE on success, FALSE if data output not exists or output is already connected.
      */
-    virtual bool connectDI(TPortId paDIPortId, CDataConnection *paDataCon);
+    bool connectDI(TPortId paDIPortId, CDataConnection *paDataCon) override;
 
-    virtual bool configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefValue);
+    bool configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefValue) override;
     //! implement improved version of get Var for CFBs, allowing to read and write to internal elements
-    virtual CIEC_ANY* getVar(CStringDictionary::TStringId *paNameList,
-        unsigned int paNameListSize);
+    CIEC_ANY* getVar(CStringDictionary::TStringId *paNameList,
+        unsigned int paNameListSize) override;
 
-    virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
+    EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand) override;
 
 #ifdef FORTE_SUPPORT_MONITORING
-    virtual CFunctionBlock *getFB(forte::core::TNameIdentifier::CIterator &paNameListIt);
+    CFunctionBlock *getFB(forte::core::TNameIdentifier::CIterator &paNameListIt) override;
 #endif
 
   private:
-    virtual void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
     void createInternalFBs();
     void createEventConnections();

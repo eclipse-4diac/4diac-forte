@@ -49,7 +49,7 @@ class FORTE_F_SQRT : public CFunctionBlock {
     FORTE_FB_DATA_ARRAY(1, 1, 1, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
   public:
     FUNCTION_BLOCK_CTOR(FORTE_F_SQRT){
@@ -61,7 +61,7 @@ class FORTE_F_SQRT : public CFunctionBlock {
     st_OUT().saveAssign(func_SQRT(oIn));
   }
 
-  virtual ~FORTE_F_SQRT() = default;
+  ~FORTE_F_SQRT() override = default;
 
 };
 

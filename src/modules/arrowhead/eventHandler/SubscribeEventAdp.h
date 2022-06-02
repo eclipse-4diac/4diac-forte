@@ -71,7 +71,7 @@ public:
   ADAPTER_CTOR(FORTE_SubscribeEventAdp){
   };
 
-  virtual ~FORTE_SubscribeEventAdp(){};
+  ~FORTE_SubscribeEventAdp() override = default;
 
 };
 

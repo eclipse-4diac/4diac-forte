@@ -96,7 +96,7 @@ private:
 
   FORTE_FB_DATA_ARRAY(1, 0, 0, 11);
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
  
   void setConfig() {}
   
@@ -114,7 +114,7 @@ public:
   FORTE_EliteBoard(const CStringDictionary::TStringId pa_nInstanceNameId, 
       CResource *pa_poSrcRes);
 
-  virtual ~FORTE_EliteBoard() = default;
+  ~FORTE_EliteBoard() override = default;
 };
 
 #endif // _ELITEBOARD_H_

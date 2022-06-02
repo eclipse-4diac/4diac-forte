@@ -58,7 +58,7 @@ private:
   static const TForteUInt8 scmSlaveConfigurationIO[];
   static const TForteUInt8 scmSlaveConfigurationIONum;
 
-  virtual ~EmbrickBusAdapter() {};
+  ~EmbrickBusAdapter() override = default;
 
 };
 

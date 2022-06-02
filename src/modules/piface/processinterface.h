@@ -25,7 +25,7 @@ class CPiFaceProcessInterface : public CProcessInterfaceBase{
         const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData,
         TForteByte *paFBVarsData);
 
-    virtual ~CPiFaceProcessInterface();
+    ~CPiFaceProcessInterface() override;
 
   friend class CDeviceExecution;
 
@@ -52,10 +52,10 @@ class CPiFaceProcessInterface : public CProcessInterfaceBase{
         void updateWriteData(bool paValue, int paPin);
 
         /* functions needed for the external event handler interface */
-        void enableHandler();
-        void disableHandler();
-        void setPriority(int paPriority);
-        int getPriority() const;
+        void enableHandler() override;
+        void disableHandler() override;
+        void setPriority(int paPriority) override;
+        int getPriority() const override;
 
       private:
         typedef CSinglyLinkedList<CPiFaceProcessInterface *> TReadFBContainer;
@@ -77,7 +77,7 @@ class CPiFaceProcessInterface : public CProcessInterfaceBase{
         CSyncObject mReadFBListSync;
         TForteUInt8 mOutBuffer;
 
-        virtual void run();
+        void run() override;
 
         static void setupPiFaceIOChip(CONMELEON::CSpiDevice &paDev);
         static TForteByte readInputs(CONMELEON::CSpiDevice &paDev);

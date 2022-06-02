@@ -63,7 +63,7 @@ public:
   ADAPTER_CTOR(FORTE_ArrowheadPublishAdp){
   };
 
-  virtual ~FORTE_ArrowheadPublishAdp(){};
+  ~FORTE_ArrowheadPublishAdp() override = default;
 
 };
 

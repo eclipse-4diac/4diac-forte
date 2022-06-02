@@ -84,7 +84,7 @@ class COPC_UA_Helper {
           mData = new const UA_Variant*[mSize];
         }
 
-        virtual ~UA_RecvVariable_handle() {
+        ~UA_RecvVariable_handle() override {
           delete[] mData;
         }
 
@@ -104,7 +104,7 @@ class COPC_UA_Helper {
           mData = new UA_Variant*[mSize];
         }
 
-        ~UA_SendVariable_handle() {
+        ~UA_SendVariable_handle() override {
           delete[] mData;
         }
 

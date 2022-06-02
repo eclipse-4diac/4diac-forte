@@ -31,7 +31,7 @@ class CMLPIFaceProcessInterface : public CProcessInterfaceBase{
         const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData,
         TForteByte *paFBVarsData);
 
-    virtual ~CMLPIFaceProcessInterface();
+    ~CMLPIFaceProcessInterface() override;
 
     class CIOHandler : public CExternalEventHandler, public CThread{
       DECLARE_HANDLER(CIOHandler)
@@ -40,15 +40,15 @@ class CMLPIFaceProcessInterface : public CProcessInterfaceBase{
         TReadFBContainer mReadFBList;
         CSyncObject mReadFBListSync;
       public:
-        virtual void run();
+        void run() override;
         void updateReadData();
         void registerIXFB(CMLPIFaceProcessInterface *paFB);
         void unregisterIXFB(CMLPIFaceProcessInterface *paFB);
         /* functions needed for the external event handler interface */
-        void enableHandler();
-        void disableHandler();
-        void setPriority(int paPriority);
-        int getPriority() const;
+        void enableHandler() override;
+        void disableHandler() override;
+        void setPriority(int paPriority) override;
+        int getPriority() const override;
     };
 
   protected:

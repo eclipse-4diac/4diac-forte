@@ -34,9 +34,9 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
     static const char * const scm_sMGMResponseTexts[13];
 
     DEV_MGR(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
-    virtual ~DEV_MGR();
+    ~DEV_MGR() override;
 
-    bool executeCommand(char *paDest, char *paCommand);
+    bool executeCommand(char *paDest, char *paCommand) override;
 
   private:
 
@@ -122,7 +122,7 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
      */
     static int parseIdentifier(char *paIdentifierStart, forte::core::TNameIdentifier &paIdentifier);
 
-    virtual void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
 #ifdef FORTE_SUPPORT_MONITORING
     static bool parseMonitoringData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand);

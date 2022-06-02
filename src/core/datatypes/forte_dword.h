@@ -59,7 +59,7 @@ class CIEC_DWORD : public CIEC_ANY_BIT {
       setTUINT32(paValue);
     }
 
-    virtual ~CIEC_DWORD() = default;
+    ~CIEC_DWORD() override = default;
 
     CIEC_DWORD& operator =(const CIEC_DWORD &paValue) {
       // Simple value assignment - no self assignment check needed
@@ -87,7 +87,7 @@ class CIEC_DWORD : public CIEC_ANY_BIT {
       return getTUINT32();
     }
 
-    virtual EDataTypeID getDataTypeID() const {
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_DWORD;
     }
 

@@ -27,13 +27,13 @@ class CAnyAdapter : public CAdapter{
 
   public:
     CAnyAdapter(CStringDictionary::TStringId pa_anAdapterInstanceName, CResource *pa_poSrcRes, bool pa_bIsPlug);
-    virtual ~CAnyAdapter();
+    ~CAnyAdapter() override;
 
     void typifyAnyAdapter(CAdapter *pa_poPeer);
 
-    virtual void setParentFB(CFunctionBlock *pa_poParentFB, TForteUInt8 pa_nParentAdapterlistID);
+    void setParentFB(CFunctionBlock *pa_poParentFB, TForteUInt8 pa_nParentAdapterlistID) override;
 
-    virtual bool disconnect(CAdapterConnection *pa_poAdConn);
+    bool disconnect(CAdapterConnection *pa_poAdConn) override;
 
     //! Helper functions allowing to retrieve interface information from any_adpaters TODO look for Doxygen grouping syntax
     TForteUInt8 getNumEIs() const {

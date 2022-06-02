@@ -22,8 +22,8 @@
  */
 class CUncopyable {
 protected:
-  CUncopyable() {}
-  ~CUncopyable() {}
+  CUncopyable() = default;
+  ~CUncopyable() = default;
 private:
   CUncopyable (const CUncopyable&);
   CUncopyable& operator = (const CUncopyable&);

@@ -64,7 +64,7 @@ class FORTE_F_REPLACE : public CFunctionBlock {
     FORTE_FB_DATA_ARRAY(1, 4, 1, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
   public:
     FUNCTION_BLOCK_CTOR(FORTE_F_REPLACE){
@@ -78,7 +78,7 @@ class FORTE_F_REPLACE : public CFunctionBlock {
     st_OUT().saveAssign(func_REPLACE(oIn1,oIn2,L(),P()));
   }
 
-  virtual ~FORTE_F_REPLACE() = default;
+  ~FORTE_F_REPLACE() override = default;
 
 };
 

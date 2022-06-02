@@ -57,7 +57,7 @@ class CFreeRTOSThread : public forte::arch::CThreadBase<TaskHandle_t> {
      *
      *  Will stop the execution if running and destroy the thread including all system specific data.
      */
-    virtual ~CFreeRTOSThread();
+    ~CFreeRTOSThread() override;
 
     //!Set the deadline of the thread.
     void setDeadline(const CIEC_TIME &paVal);

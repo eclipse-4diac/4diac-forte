@@ -53,7 +53,7 @@ class FORTE_F_GT : public CFunctionBlock {
     FORTE_FB_DATA_ARRAY(1, 2, 1, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
   public:
     FUNCTION_BLOCK_CTOR(FORTE_F_GT){
@@ -74,7 +74,7 @@ class FORTE_F_GT : public CFunctionBlock {
     DEVLOG_WARNING("STRING and WSTRING currently not supported");
   }
 
-  virtual ~FORTE_F_GT() = default;
+  ~FORTE_F_GT() override = default;
 
 };
 #endif //close the ifdef sequence from the beginning of the file

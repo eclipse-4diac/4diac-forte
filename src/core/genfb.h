@@ -22,15 +22,15 @@ class CGenFunctionBlock : public T {
     /*!\brief The getFBType method is used by the Query command to get the instances correct type name (eg. "CLIENT_3_2")
     * \return pointer to typename string
     */
-    CStringDictionary::TStringId getFBTypeId() const {
+    CStringDictionary::TStringId getFBTypeId() const override {
       return mConfiguredFBTypeNameId;
     }
 
-    bool configureFB(const char *paConfigString);
+    bool configureFB(const char *paConfigString) override;
 
   protected:
     CGenFunctionBlock(CResource *paSrcRes, const CStringDictionary::TStringId paInstanceNameId);
-    virtual ~CGenFunctionBlock();
+    ~CGenFunctionBlock() override;
 
 
     static void generateGenericInterfacePointNameArray(const char * const paPrefix,

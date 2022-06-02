@@ -98,12 +98,12 @@ private:
   CEventChainExecutionThread m_oECEO3;
   bool m_bInitialized;
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
 public:
   FORTE_RT_E_DEMUX(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
-  virtual ~FORTE_RT_E_DEMUX() = default;
+  ~FORTE_RT_E_DEMUX() override = default;
 
 };
 

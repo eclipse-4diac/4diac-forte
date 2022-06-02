@@ -66,7 +66,7 @@ class CIEC_LWORD : public CIEC_ANY_BIT{
     explicit CIEC_LWORD(TForteLWord paValue){
       setTUINT64(paValue);
     }
-    virtual ~CIEC_LWORD() = default;
+    ~CIEC_LWORD() override = default;
 
     CIEC_LWORD& operator =(const CIEC_LWORD &paValue){
       // Simple value assignment - no self assignment check needed
@@ -100,7 +100,7 @@ class CIEC_LWORD : public CIEC_ANY_BIT{
       return getTUINT64();
     }
 
-    virtual EDataTypeID getDataTypeID() const{
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_LWORD;
     }
 

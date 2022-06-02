@@ -41,7 +41,7 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
       setTBOOL8(paValue);
     }
 
-    virtual ~CIEC_BOOL() = default;
+    ~CIEC_BOOL() override = default;
 
     CIEC_BOOL& operator =(const CIEC_BOOL &paValue) {
       // Simple value assignment - no self assignment check needed
@@ -57,7 +57,7 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
       return (0 != getLargestUInt());
     }
 
-    virtual EDataTypeID getDataTypeID() const {
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_BOOL;
     }
 
@@ -70,7 +70,7 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
      *   \return number of bytes taken used from the buffer
      *        -1 on on error
      */
-    virtual int fromString(const char *paValue);
+    int fromString(const char *paValue) override;
     /*! \brief Converts data type value to string
      *
      *   This command implements a conversion function from C++ data type
@@ -81,7 +81,7 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    virtual int toString(char* paValue, size_t paBufferSize) const;
+    int toString(char* paValue, size_t paBufferSize) const override;
 
   private:
 };

@@ -78,7 +78,7 @@ public:
   ADAPTER_CTOR(FORTE_QueryServicesAdp){
   };
 
-  virtual ~FORTE_QueryServicesAdp(){};
+  ~FORTE_QueryServicesAdp() override = default;
 
 };
 

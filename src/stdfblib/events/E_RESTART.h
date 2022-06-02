@@ -39,16 +39,16 @@ private:
 
   TEventID mEventToSend;
 
-  virtual void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
 public:
   EVENT_SOURCE_FUNCTION_BLOCK_CTOR(E_RESTART),
         mEventToSend(cg_nInvalidEventID) {
     setEventChainExecutor(pa_poSrcRes->getResourceEventExecution());
   }
-  virtual ~E_RESTART() = default;
+  ~E_RESTART() override = default;
 
-  virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
+  EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand) override;
 };
 
 #endif /*E_RESTART_H_*/

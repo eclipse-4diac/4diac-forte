@@ -63,7 +63,7 @@ private:
   void enterStateSTART();
   void enterStateREQ();
 
-  virtual void executeEvent(int pa_nEIID);
+  virtual void executeEvent(int pa_nEIID) override;
 
 public:
   FORTE_FieldsToPublishEvent(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : 
@@ -71,7 +71,7 @@ public:
               0, m_anFBConnData, m_anFBVarsData){
   };
 
-  virtual ~FORTE_FieldsToPublishEvent(){};
+  ~FORTE_FieldsToPublishEvent() override = default;
 
 };
 

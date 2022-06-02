@@ -71,7 +71,7 @@ public:
   ADAPTER_CTOR(FORTE_RegisterServiceAdp){
   };
 
-  virtual ~FORTE_RegisterServiceAdp(){};
+  ~FORTE_RegisterServiceAdp() override = default;
 
 };
 

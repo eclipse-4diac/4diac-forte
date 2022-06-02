@@ -46,7 +46,7 @@ class CIEC_BYTE : public CIEC_ANY_BIT{
       setTUINT8(paValue);
     }
 
-    virtual ~CIEC_BYTE() = default;
+    ~CIEC_BYTE() override = default;
 
     CIEC_BYTE& operator =(const CIEC_BYTE &paValue){
       // Simple value assignment - no self assignment check needed
@@ -62,7 +62,7 @@ class CIEC_BYTE : public CIEC_ANY_BIT{
       return getTUINT8();
     }
 
-    virtual EDataTypeID getDataTypeID() const {
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_BYTE;
     }
 

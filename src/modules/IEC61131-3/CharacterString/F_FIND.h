@@ -50,12 +50,12 @@ private:
 
    FORTE_FB_DATA_ARRAY(1, 2, 1, 0);
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
 public:
   FUNCTION_BLOCK_CTOR(FORTE_F_FIND){
   };
-  virtual ~FORTE_F_FIND() = default;
+  ~FORTE_F_FIND() override = default;
 };
 
 #endif //close the ifdef sequence from the beginning of the file

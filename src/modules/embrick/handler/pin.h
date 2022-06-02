@@ -24,7 +24,7 @@ class EmbrickPinHandler {
 
   protected:
     explicit EmbrickPinHandler(unsigned int paPin);
-    virtual ~EmbrickPinHandler();
+    ~EmbrickPinHandler() override;
 
     bool set(bool paState);
     bool enable() {

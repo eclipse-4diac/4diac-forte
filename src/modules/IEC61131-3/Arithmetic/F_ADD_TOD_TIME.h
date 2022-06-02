@@ -50,13 +50,13 @@ private:
 
    FORTE_FB_DATA_ARRAY(1, 2, 1, 0);
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
 public:
   FUNCTION_BLOCK_CTOR(FORTE_F_ADD_TOD_TIME){
   };
 
-  virtual ~FORTE_F_ADD_TOD_TIME() = default;
+  ~FORTE_F_ADD_TOD_TIME() override = default;
 
 };
 

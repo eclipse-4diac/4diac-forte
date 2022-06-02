@@ -82,7 +82,7 @@ private:
 
   FORTE_FB_DATA_ARRAY(2, 7, 3, 0);
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
   // Variables for mapping between inputs and POWERLINK stack
   SEplMapping m_oEplMapping;
@@ -94,9 +94,9 @@ public:
   FUNCTION_BLOCK_CTOR(FORTE_X20DO4623){
   };
 
-  virtual ~FORTE_X20DO4623() = default;
+  ~FORTE_X20DO4623() override = default;
 
-  void cnSynchCallback();
+  void cnSynchCallback() override;
 
 };
 

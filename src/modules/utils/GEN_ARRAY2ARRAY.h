@@ -51,11 +51,11 @@ private:
   CStringDictionary::TStringId m_ValueTypeID;
   unsigned int m_nArrayLength;
 
-  virtual void executeEvent(int paEIID);
-  virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);
+  void executeEvent(int paEIID) override;
+  bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
   GEN_ARRAY2ARRAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
-  virtual ~GEN_ARRAY2ARRAY();
+  ~GEN_ARRAY2ARRAY() override;
 
 public:
 

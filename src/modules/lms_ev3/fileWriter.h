@@ -70,11 +70,11 @@ class fileWriter: public CFunctionBlock{
     static const char * const scmNotInitialised;
     static const char * const scmCouldNotWrite;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
   public:
     fileWriter(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
-    virtual ~fileWriter(){};
+    ~fileWriter() override = default;
 
   private:
     bool openFile();

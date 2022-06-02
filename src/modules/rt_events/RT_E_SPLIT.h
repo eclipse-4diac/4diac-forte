@@ -74,14 +74,14 @@ private:
    bool m_bInitialized;
 
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
 public:
   FUNCTION_BLOCK_CTOR(FORTE_RT_E_SPLIT){
     m_bInitialized = false;
   };
 
-  virtual ~FORTE_RT_E_SPLIT() = default;
+  ~FORTE_RT_E_SPLIT() override = default;
 
 };
 

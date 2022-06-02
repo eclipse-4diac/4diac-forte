@@ -26,11 +26,11 @@ namespace forte{
 class CModbusConnection : public CThread{
   public:
     explicit CModbusConnection(CModbusHandler* pa_modbusHandler);
-    ~CModbusConnection();
+    ~CModbusConnection() override;
 
     virtual int readData(uint8_t *pa_pData) = 0;
     virtual int writeData(uint16_t *pa_pData, unsigned int pa_nDataSize) = 0;
-    virtual void run() = 0;
+    void run() override = 0;
 
     /*! \brief Initializes Modbus connection
      *

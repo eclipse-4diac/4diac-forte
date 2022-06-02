@@ -48,7 +48,7 @@ private:
 
    FORTE_FB_DATA_ARRAY(1, 1, 1, 0);
 
-    virtual void executeEvent(int paEIID);
+    void executeEvent(int paEIID) override;
     void alg_REQ();
 
 public:
@@ -57,7 +57,7 @@ public:
               nullptr, m_anFBConnData, m_anFBVarsData){
   };
 
-  virtual ~FORTE_F_TIME_IN_S_TO_LREAL() = default;
+  ~FORTE_F_TIME_IN_S_TO_LREAL() override = default;
 
 };
 

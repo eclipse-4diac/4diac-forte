@@ -29,7 +29,7 @@ private:
   CLuaBFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING paLuaScriptAsString, SFBInterfaceSpec& interfaceSpec,
       SInternalVarsInformation& internalVarsInformation);
 
-  virtual ~CLuaBFBTypeEntry();
+  ~CLuaBFBTypeEntry() override;
 
   static bool initInterfaceSpec(SFBInterfaceSpec& interfaceSpec, CLuaEngine* luaEngine, int index);
   static void deleteInterfaceSpec(SFBInterfaceSpec& interfaceSpec);
@@ -38,7 +38,7 @@ private:
 public:
   static CLuaBFBTypeEntry* createLuaFBTypeEntry(CStringDictionary::TStringId typeNameId, CIEC_STRING& paLuaScriptAsString);
 
-  virtual CFunctionBlock* createFBInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+  CFunctionBlock* createFBInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) override;
 
   const SFBInterfaceSpec* getInterfaceSpec() const {
     return &m_interfaceSpec;

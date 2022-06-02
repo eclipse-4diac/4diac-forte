@@ -81,13 +81,13 @@ private:
 
    FORTE_FB_DATA_ARRAY(3, 2, 3, 0);
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
 public:
   FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(FORTE_IX, CProcessInterface){
   };
 
-  virtual ~FORTE_IX(){};
+  ~FORTE_IX() override = default;
 
 };
 

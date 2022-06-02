@@ -53,7 +53,7 @@ class FORTE_F_MAX : public CFunctionBlock {
     FORTE_FB_DATA_ARRAY(1, 2, 1, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
   public:
     FUNCTION_BLOCK_CTOR(FORTE_F_MAX){
@@ -72,7 +72,7 @@ class FORTE_F_MAX : public CFunctionBlock {
   template<typename T> void calculateValueString() const {
     //TODO fill this function
   }
-  virtual ~FORTE_F_MAX() = default;
+  ~FORTE_F_MAX() override = default;
 
 };
 

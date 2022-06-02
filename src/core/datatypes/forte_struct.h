@@ -26,7 +26,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
 
     CIEC_STRUCT(const CIEC_STRUCT& paValue);
 
-    virtual ~CIEC_STRUCT();
+    ~CIEC_STRUCT() override;
 
     CIEC_STRUCT& operator =(const CIEC_STRUCT &paValue){
       if(this != &paValue) {
@@ -80,9 +80,9 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
       return (nullptr != getSpecs()) ? getSpecs()->mStructureTypeID : 0;
     }
 
-    void setValue(const CIEC_ANY& paValue);
+    void setValue(const CIEC_ANY& paValue) override;
 
-    virtual EDataTypeID getDataTypeID() const{
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_STRUCT;
     }
 
@@ -95,7 +95,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      *   \return number of bytes taken used from the buffer
      *        -1 on on error
      */
-    virtual int fromString(const char *paValue);
+    int fromString(const char *paValue) override;
     /*! \brief Converts data type value to string
      *
      *   This command implements a conversion function to C++ data type.
@@ -104,7 +104,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      *   \return number of bytes used in the buffer
      *           -1 on error
      */
-    virtual int toString(char* paValue, size_t paBufferSize) const;
+    int toString(char* paValue, size_t paBufferSize) const override;
 
     CIEC_ANY *getMembers(){
       return (nullptr != getSpecs()) ? getSpecs()->mMembers : static_cast<CIEC_ANY *>(nullptr);
@@ -120,7 +120,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      */
     CIEC_ANY *getMemberNamed(CStringDictionary::TStringId paMemberNameId);
 
-    virtual size_t getToStringBufferSize() const;
+    size_t getToStringBufferSize() const override;
 
   protected:
     /*! \brief helper method for accessing a member by index

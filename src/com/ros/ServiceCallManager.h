@@ -30,17 +30,17 @@ class CServiceCallManager : public CExternalEventHandler, private CThread{
     std::vector<FORTE_TRIGGER_SERVICE_CLIENT*> m_connectVector;
 
   public:
-    virtual void enableHandler();
-    virtual void disableHandler();
-    virtual void setPriority(int pa_prio);
-    virtual int getPriority() const;
+    void enableHandler() override;
+    void disableHandler() override;
+    void setPriority(int pa_prio) override;
+    int getPriority() const override;
 
     void startChain(CEventSourceFB* pa_poECStartF);
     void queueServiceCall(FORTE_TRIGGER_SERVICE_CLIENT* pa_serviceClientPtr);
     void queueConnectWait(FORTE_TRIGGER_SERVICE_CLIENT* pa_serviceClientPtr);
 
   protected:
-    virtual void run();
+    void run() override;
 
 };
 

@@ -49,7 +49,7 @@ public:
   COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_RequestOrchestrationHTTP){
   };
 
-  virtual ~FORTE_RequestOrchestrationHTTP(){};
+  ~FORTE_RequestOrchestrationHTTP() override = default;
 
 };
 

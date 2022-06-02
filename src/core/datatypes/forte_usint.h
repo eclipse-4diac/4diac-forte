@@ -43,7 +43,7 @@ class CIEC_USINT : public CIEC_ANY_INT{
       setTUINT8(pa_nValue);
     }
 
-    virtual ~CIEC_USINT() = default;
+    ~CIEC_USINT() override = default;
 
     CIEC_USINT& operator =(const CIEC_USINT &pa_roValue){
       setValueSimple(pa_roValue);
@@ -58,7 +58,7 @@ class CIEC_USINT : public CIEC_ANY_INT{
       return getTUINT8();
     }
 
-    virtual EDataTypeID getDataTypeID() const{
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_USINT;
     }
 };

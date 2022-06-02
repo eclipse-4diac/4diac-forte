@@ -57,14 +57,14 @@ private:
 
    FORTE_FB_DATA_ARRAY(2, 3, 1, 0);
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
 public:
   FORTE_SVIsend_1(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
        BE_SVIFB( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData){
   };
 
-  virtual ~FORTE_SVIsend_1() = default;
+  ~FORTE_SVIsend_1() override = default;
 
 };
 

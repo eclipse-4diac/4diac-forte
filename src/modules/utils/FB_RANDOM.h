@@ -49,7 +49,7 @@ private:
 
    FORTE_BASIC_FB_DATA_ARRAY(2, 1, 1, 0, 0);
 
-virtual void setInitialValues();
+void setInitialValues() override;
   void alg_INIT();
   void alg_REQ();
   static const TForteInt16 scm_nStateSTART = 0;
@@ -60,7 +60,7 @@ virtual void setInitialValues();
   void enterStateREQ();
   void enterStateState();
 
-  virtual void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
 public:
   FORTE_FB_RANDOM(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : 
@@ -68,7 +68,7 @@ public:
               nullptr, m_anFBConnData, m_anFBVarsData){
   };
 
-  virtual ~FORTE_FB_RANDOM() = default;
+  ~FORTE_FB_RANDOM() override = default;
 
 };
 

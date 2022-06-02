@@ -49,7 +49,7 @@ class FORTE_F_ASIN : public CFunctionBlock {
     FORTE_FB_DATA_ARRAY(1, 1, 1, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
   public:
     FUNCTION_BLOCK_CTOR(FORTE_F_ASIN){
@@ -61,7 +61,7 @@ class FORTE_F_ASIN : public CFunctionBlock {
     st_OUT().saveAssign(func_ASIN(oIn));
   }
 
-  virtual ~FORTE_F_ASIN() = default;
+  ~FORTE_F_ASIN() override = default;
 
 };
 

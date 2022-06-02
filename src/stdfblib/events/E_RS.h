@@ -31,7 +31,7 @@ private:
   static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
  
-  virtual void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
@@ -44,7 +44,7 @@ private:
 public:
   FUNCTION_BLOCK_CTOR(E_RS){
   };
-  virtual ~E_RS() = default;
+  ~E_RS() override = default;
 
 };
 

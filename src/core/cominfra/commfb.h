@@ -25,14 +25,14 @@ namespace forte {
 
     class CCommFB : public CBaseCommFB {
     public:
-      virtual ~CCommFB();
+      ~CCommFB() override;
 
-      virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
+      EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand) override;
 
     protected:
       CCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, forte::com_infra::EComServiceType pa_eCommServiceType);
 
-      void executeEvent(int pa_nEIID);
+      void executeEvent(int pa_nEIID) override;
 
       static const TEventID scm_nEventINITID = 0;
       static const TEventID scm_nEventINITOID = 0;
@@ -44,10 +44,10 @@ namespace forte {
 
       static char *extractLayerIdAndParams(char **paRemainingID, char **paLayerParams);
 
-      char *getDefaultIDString(const char *paID);
+      char *getDefaultIDString(const char *paID) override;
 
-      virtual EComResponse receiveData();
-      virtual EComResponse sendData();
+      EComResponse receiveData() override;
+      EComResponse sendData() override;
 
     private:
       static const CStringDictionary::TStringId scm_aunRequesterEventInputNameIds[];
@@ -60,7 +60,7 @@ namespace forte {
       static const TForteInt16 scm_anEOWithIndexes[];
       static const size_t scmMinWithLength = 6;
 
-        virtual bool createInterfaceSpec(const char* paConfigString, SFBInterfaceSpec& paInterfaceSpec);
+        bool createInterfaceSpec(const char* paConfigString, SFBInterfaceSpec& paInterfaceSpec) override;
 
         void configureDIs(const char* paDIConfigString, SFBInterfaceSpec& paInterfaceSpec) const;
         void configureDOs(const char* paDOConfigString, SFBInterfaceSpec& paInterfaceSpec) const;

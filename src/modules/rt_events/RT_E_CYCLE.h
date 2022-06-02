@@ -60,12 +60,12 @@ private:
   STimedFBListEntry mTimeListEntry;
   CEventChainExecutionThread mECEO;
 
-  void executeEvent(int paEIID);
+  void executeEvent(int paEIID) override;
 
 public:
   FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
 
-  virtual ~FORTE_RT_E_CYCLE() = default;
+  ~FORTE_RT_E_CYCLE() override = default;
 
 };
 

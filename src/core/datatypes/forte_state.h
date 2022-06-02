@@ -38,7 +38,7 @@ class CIEC_STATE : public CIEC_ANY_INT {
       setTUINT16(paValue);
     }
 
-    virtual ~CIEC_STATE() = default;
+    ~CIEC_STATE() override = default;
 
     CIEC_STATE& operator =(const CIEC_STATE &paValue){
       // Simple value assignment - no self assignment check needed
@@ -60,7 +60,7 @@ class CIEC_STATE : public CIEC_ANY_INT {
       return getTUINT16();
     }
 
-    virtual EDataTypeID getDataTypeID() const{
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_UINT;
     }
 };

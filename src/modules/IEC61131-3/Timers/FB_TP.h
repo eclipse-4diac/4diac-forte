@@ -39,7 +39,7 @@ private:
   bool edgeFlag;
   CIEC_TIME start;
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
   CIEC_BOOL& st_IN() {
      return *static_cast<CIEC_BOOL*>(getDI(0));
@@ -58,7 +58,7 @@ private:
   }  
 public:
   FUNCTION_BLOCK_CTOR(FB_TP), edgeFlag(false){};
-  virtual ~FB_TP() = default;
+  ~FB_TP() override = default;
 
 };
 

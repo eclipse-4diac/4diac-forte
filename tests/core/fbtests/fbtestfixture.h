@@ -75,7 +75,7 @@ class CFBTestFixtureBase : public CFunctionBlock{
     void setOutputData(TIEC_ANYPtr paInputData[], size_t paLenght);
 
   private:
-    virtual void executeEvent(int paEIID);
+    void executeEvent(int paEIID) override;
 
     void setupTestInterface();
     void performFBDeleteTests();

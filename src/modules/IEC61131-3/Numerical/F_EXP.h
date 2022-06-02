@@ -48,7 +48,7 @@ class FORTE_F_EXP : public CFunctionBlock {
     FORTE_FB_DATA_ARRAY(1, 1, 1, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
   public:
     FUNCTION_BLOCK_CTOR(FORTE_F_EXP){
@@ -60,7 +60,7 @@ class FORTE_F_EXP : public CFunctionBlock {
     st_OUT().saveAssign(func_EXP(oIn));
   }
 
-  virtual ~FORTE_F_EXP() = default;
+  ~FORTE_F_EXP() override = default;
 
 };
 

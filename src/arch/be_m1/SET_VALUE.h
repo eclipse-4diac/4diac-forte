@@ -64,7 +64,7 @@ class FORTE_SET_VALUE : public CFunctionBlock{
     FORTE_FB_DATA_ARRAY(2, 3, 1, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
     void *driverId;
 
@@ -75,7 +75,7 @@ class FORTE_SET_VALUE : public CFunctionBlock{
     FUNCTION_BLOCK_CTOR(FORTE_SET_VALUE){
   };
 
-  virtual ~FORTE_SET_VALUE() = default;
+  ~FORTE_SET_VALUE() override = default;
 
 };
 

@@ -124,7 +124,7 @@ class FORTE_EXECUTE_ACTION_SERVER : public CEventSourceFB{
     FORTE_FB_DATA_ARRAY(2, 6, 6, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
     void ActionExecuteCB(const ExecuteGoalConstPtr &pa_goal);
 
@@ -133,7 +133,7 @@ class FORTE_EXECUTE_ACTION_SERVER : public CEventSourceFB{
     EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_EXECUTE_ACTION_SERVER), m_nh(0) ,m_RosNamespace(""), m_RosMsgName(""), m_Initiated(false), m_ResultAvailable(false), m_ActionServer(0) {
     };
 
-    virtual ~FORTE_EXECUTE_ACTION_SERVER() = default;
+    ~FORTE_EXECUTE_ACTION_SERVER() override = default;
 
   };
 

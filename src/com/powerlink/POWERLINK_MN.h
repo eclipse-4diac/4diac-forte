@@ -67,7 +67,7 @@ class FORTE_POWERLINK_MN : public CFunctionBlock{
     FORTE_FB_DATA_ARRAY(1, 4, 2, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
     void shutdownStack();
 
@@ -75,7 +75,7 @@ class FORTE_POWERLINK_MN : public CFunctionBlock{
     FUNCTION_BLOCK_CTOR(FORTE_POWERLINK_MN){
   };
 
-  virtual ~FORTE_POWERLINK_MN();
+  ~FORTE_POWERLINK_MN() override;
 
 };
 

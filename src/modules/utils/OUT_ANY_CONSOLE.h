@@ -61,13 +61,13 @@ private:
   FORTE_FB_DATA_ARRAY(1, 3, 1, 0)
     ;
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
 public:
   FUNCTION_BLOCK_CTOR(FORTE_OUT_ANY_CONSOLE){
   };
 
-  virtual ~FORTE_OUT_ANY_CONSOLE() = default;
+  ~FORTE_OUT_ANY_CONSOLE() override = default;
 
 };
 

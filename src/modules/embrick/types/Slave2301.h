@@ -81,7 +81,7 @@ public:
   FUNCTION_BLOCK_CTOR_FOR_IO_MULTI_SLAVE(EmbrickSlave2301, EmbrickSlave, EmbrickSlaveHandler::G_2RelNo4RelCo){
 };
 
-virtual ~EmbrickSlave2301() {};
+~EmbrickSlave2301() override = default;
 
 };
 

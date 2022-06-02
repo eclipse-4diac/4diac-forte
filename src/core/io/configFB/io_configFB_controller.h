@@ -35,7 +35,7 @@ namespace forte {
         public:
           IOConfigFBController(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
               TForteByte *paFBConnData, TForteByte *paFBVarsData);
-          virtual ~IOConfigFBController();
+          ~IOConfigFBController() override;
 
           IODeviceController* getDeviceController() {
             return mController;
@@ -60,7 +60,7 @@ namespace forte {
             return *static_cast<CIEC_WSTRING*>(getDO(1));
           }
 
-          virtual void executeEvent(int paEIID);
+          void executeEvent(int paEIID) override;
 
           /*! @brief Creates an instance of the corresponding Device Controller
            *

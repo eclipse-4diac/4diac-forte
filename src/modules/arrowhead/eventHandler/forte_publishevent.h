@@ -24,8 +24,7 @@ class CIEC_PublishEvent : public CIEC_STRUCT {
   public:
     CIEC_PublishEvent();
 
-    virtual ~CIEC_PublishEvent() {
-    }
+    ~CIEC_PublishEvent() override = default;
 
     CIEC_ArrowheadSystem &source() {
       return *static_cast<CIEC_ArrowheadSystem*>(&getMembers()[0]);

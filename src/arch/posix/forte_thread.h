@@ -42,7 +42,7 @@ class CPosixThread : public forte::arch::CThreadBase<pthread_t> {
      *
      *  Will stop the execution if running and destroy the thread including all system specific data.
      */
-    virtual ~CPosixThread();
+    ~CPosixThread() override;
 
     //!Set the deadline of the thread.
     void setDeadline(const CIEC_TIME &paVal);
@@ -55,7 +55,7 @@ class CPosixThread : public forte::arch::CThreadBase<pthread_t> {
     static void sleepThread(unsigned int paMilliSeconds);
 
   private:
-    virtual TThreadHandleType createThread(long paStackSize);
+    TThreadHandleType createThread(long paStackSize) override;
 
     /*!\brief Function that is given to the system thread support that should be called for the thread.
      *

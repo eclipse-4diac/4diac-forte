@@ -74,7 +74,7 @@ public:
   COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_RequestOrchestrationForm){
   };
 
-  virtual ~FORTE_RequestOrchestrationForm(){};
+  ~FORTE_RequestOrchestrationForm() override = default;
 
 };
 

@@ -38,7 +38,7 @@ class FORTE_E_TimeOut : public CEventSourceFB{
     bool mActive; //!> flag to indicate that the timed fb is currently active
     STimedFBListEntry mTimeListEntry; //!> The Timer list entry of this timed FB
 
-    virtual void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
   public:
     EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_E_TimeOut){
@@ -50,9 +50,9 @@ class FORTE_E_TimeOut : public CEventSourceFB{
       mTimeListEntry.mTimedFB = this;
     };
 
-  virtual ~FORTE_E_TimeOut() = default;
+  ~FORTE_E_TimeOut() override = default;
 
-  virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
+  EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand) override;
 
 };
 

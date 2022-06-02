@@ -23,7 +23,7 @@ class GEN_SERVER: public forte::com_infra::CCommFB {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_SERVER)
   public:
     GEN_SERVER(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
-    virtual ~GEN_SERVER() = default;
+    ~GEN_SERVER() override = default;
 
 };
 

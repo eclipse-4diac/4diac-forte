@@ -19,7 +19,7 @@ class CGenBitBase : public CGenFunctionBlock<CFunctionBlock> {
 
   protected:
     CGenBitBase(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
-    virtual ~CGenBitBase();
+    ~CGenBitBase() override;
 
     CIEC_ANY_BIT &st_OUT(){
       return *static_cast<CIEC_ANY_BIT*>(getDO(0));
@@ -43,7 +43,7 @@ class CGenBitBase : public CGenFunctionBlock<CFunctionBlock> {
     static const TDataIOID scmEOWith[];
     static const CStringDictionary::TStringId scmEventOutputNames[];
 
-    virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);
+    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 };
 
 #endif /* _GENBITBASE_H_ */

@@ -44,11 +44,11 @@ class GEN_ADD : public CGenFunctionBlock<CFunctionBlock> {
     //self-defined members
     unsigned int m_nDInputs;
 
-    virtual void executeEvent(int paEIID);
-    virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);
+    void executeEvent(int paEIID) override;
+    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
     GEN_ADD(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
-    virtual ~GEN_ADD();
+    ~GEN_ADD() override;
 
   public:
 

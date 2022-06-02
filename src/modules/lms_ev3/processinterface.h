@@ -51,7 +51,7 @@ class CLMSEV3ProcessInterface : public CProcessInterfaceBase{
 
   public:
     CLMSEV3ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
-    virtual ~CLMSEV3ProcessInterface();
+    ~CLMSEV3ProcessInterface() override;
 
   protected:
     bool initialise(bool paIsInput);

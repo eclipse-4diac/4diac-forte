@@ -24,8 +24,7 @@ class CIEC_ServiceQueryForm : public CIEC_STRUCT {
   public:
     CIEC_ServiceQueryForm();
 
-    virtual ~CIEC_ServiceQueryForm() {
-    }
+    ~CIEC_ServiceQueryForm() override = default;
 
     CIEC_ArrowheadService &service() {
       return *static_cast<CIEC_ArrowheadService*>(&getMembers()[0]);

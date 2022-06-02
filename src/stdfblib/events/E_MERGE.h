@@ -28,7 +28,7 @@ private:
   static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
 
-  virtual void executeEvent(int pa_nEIID){
+  void executeEvent(int pa_nEIID) override {
     if((scm_nEventEI1ID == pa_nEIID)||(scm_nEventEI2ID == pa_nEIID)){
       sendOutputEvent(scm_nEventEOID);
     }
@@ -40,7 +40,7 @@ private:
 public:
   FUNCTION_BLOCK_CTOR(E_MERGE){
   };
-  virtual ~E_MERGE() = default;
+  ~E_MERGE() override = default;
 
 };
 

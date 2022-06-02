@@ -28,8 +28,7 @@ class CIEC_ServiceRequestForm : public CIEC_STRUCT {
   public:
     CIEC_ServiceRequestForm();
 
-    virtual ~CIEC_ServiceRequestForm() {
-    }
+    ~CIEC_ServiceRequestForm() override = default;
 
     CIEC_ArrowheadSystem &requesterSystem() {
       return *static_cast<CIEC_ArrowheadSystem*>(&getMembers()[0]);

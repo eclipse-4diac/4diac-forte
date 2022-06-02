@@ -25,7 +25,7 @@ public:
       CTimedFB( paInstanceNameId, paSrcRes, e_Periodic){
   }
 
-  virtual ~E_CYCLE() = default;
+  ~E_CYCLE() override = default;
 
 };
 

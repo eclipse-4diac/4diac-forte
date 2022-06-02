@@ -22,7 +22,7 @@
  */
 class CIEC_ANY_DERIVED : public CIEC_ANY {
   public:
-    virtual ~CIEC_ANY_DERIVED() = default;
+    ~CIEC_ANY_DERIVED() override = default;
 
   protected:
     CIEC_ANY_DERIVED() = default;

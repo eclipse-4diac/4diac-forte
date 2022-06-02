@@ -29,7 +29,7 @@ class CrcXThread : public forte::arch::CThreadBase<RX_HANDLE, 0, CrcXThread> {
      *
      *  Will stop the execution if running and destroy the thread including all system specific data.
      */
-    virtual ~CrcXThread();
+    ~CrcXThread() override;
 
     virtual void join();
 

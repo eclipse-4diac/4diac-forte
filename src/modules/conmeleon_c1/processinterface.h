@@ -23,7 +23,7 @@ class CConmeleonC1ProcessInterface : public CProcessInterfaceBase{
 public:
  CConmeleonC1ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
         const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
-    virtual ~CConmeleonC1ProcessInterface();
+    ~CConmeleonC1ProcessInterface() override;
 
 protected:
   bool initialise(bool m_bInputOrOutput);

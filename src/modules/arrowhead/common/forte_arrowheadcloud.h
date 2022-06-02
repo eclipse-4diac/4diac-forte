@@ -24,8 +24,7 @@ class CIEC_ArrowheadCloud : public CIEC_STRUCT {
   public:
     CIEC_ArrowheadCloud();
 
-    virtual ~CIEC_ArrowheadCloud() {
-    }
+    ~CIEC_ArrowheadCloud() override = default;
 
     CIEC_WSTRING &Operator() {
       return *static_cast<CIEC_WSTRING*>(&getMembers()[0]);

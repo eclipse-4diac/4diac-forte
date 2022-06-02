@@ -21,7 +21,7 @@ class FORTE_RT_E_MERGE: public CRTEventSingle{
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_BOOL &QI() {
+  CIEC_BOOL &QI() override {
     return *static_cast<CIEC_BOOL*>(getDI(0));
   };
 
@@ -29,7 +29,7 @@ private:
     return *static_cast<CIEC_TIME*>(getDI(1));
   };
 
-  CIEC_TIME &Deadline() {
+  CIEC_TIME &Deadline() override {
     return *static_cast<CIEC_TIME*>(getDI(2));
   };
 
@@ -39,7 +39,7 @@ private:
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_BOOL &QO() {
+  CIEC_BOOL &QO() override {
     return *static_cast<CIEC_BOOL*>(getDO(0));
   };
 
@@ -61,14 +61,14 @@ private:
    FORTE_FB_DATA_ARRAY(2, 4, 1, 0);
 
 
-   virtual bool checkActivation(int ) {return true;}; //we activate on every input event
+   bool checkActivation(int) override { return true; } //we activate on every input event
 
 
 public:
   FORTE_RT_E_MERGE(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
 
-  virtual ~FORTE_RT_E_MERGE() = default;
+  ~FORTE_RT_E_MERGE() override = default;
 
 };
 

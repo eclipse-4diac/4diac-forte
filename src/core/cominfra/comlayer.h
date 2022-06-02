@@ -27,7 +27,7 @@ namespace forte {
 
     class CComLayer : public CComCallback{
       public:
-        virtual ~CComLayer();
+        ~CComLayer() override;
 
         /*!\brief Configure the current layer and perform necessary means to setup the connection
          *
@@ -84,7 +84,7 @@ namespace forte {
 
         /*!\brief get the FB of this layer
          */
-        CBaseCommFB *getCommFB() const {
+        CBaseCommFB *getCommFB() const override {
           return m_poFb;
         }
 

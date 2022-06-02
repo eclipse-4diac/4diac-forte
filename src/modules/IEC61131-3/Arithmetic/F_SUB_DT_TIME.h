@@ -50,13 +50,13 @@ private:
 
    FORTE_FB_DATA_ARRAY(1, 2, 1, 0);
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
 public:
   FUNCTION_BLOCK_CTOR(FORTE_F_SUB_DT_TIME){
   };
 
-  virtual ~FORTE_F_SUB_DT_TIME() = default;
+  ~FORTE_F_SUB_DT_TIME() override = default;
 
 };
 

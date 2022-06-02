@@ -22,10 +22,10 @@ class GEN_AND : public CGenBitBase {
   DECLARE_GENERIC_FIRMWARE_FB(GEN_AND)
 
   private:
-    virtual void executeEvent(int paEIID);
+    void executeEvent(int paEIID) override;
 
     GEN_AND(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
-    virtual ~GEN_AND();
+    ~GEN_AND() override;
 
   public:
 

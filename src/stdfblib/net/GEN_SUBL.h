@@ -25,14 +25,14 @@ class GEN_SUBL : public GEN_SUBSCRIBE{
   public:
     GEN_SUBL(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
-    virtual bool configureFB(const char *pa_acConfigString);
+    bool configureFB(const char *pa_acConfigString) override;
 
   protected:
     static const char * const scmLocalIDPrefix;
     static const char * const scmLocalIDSuffix;
 
   private:
-    virtual char * getDefaultIDString(const char *paID);
+    char * getDefaultIDString(const char *paID) override;
 };
 
 #endif /*GEN_SUBL_H_*/

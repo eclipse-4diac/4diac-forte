@@ -38,7 +38,7 @@ class WagoPFCProcessInterface : public CProcessInterfaceBase {
     // wago PFC process interface declaration
     WagoPFCProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
         TForteByte *paFBConnData, TForteByte *paFBVarsData);
-    virtual ~WagoPFCProcessInterface();
+    ~WagoPFCProcessInterface() override;
 
     // cppcheck-suppress noConstructor
     class CKBusHandler : public CExternalEventHandler, public CThread {
@@ -56,15 +56,15 @@ class WagoPFCProcessInterface : public CProcessInterfaceBase {
         void writeOutputDataWordToKBus(tldkc_KbusInfo_TerminalInfo *paTerminal, TForteUInt32 paChannel, TForteWord paOutDataWord);
         void readInputDataBitfromKBus(tldkc_KbusInfo_TerminalInfo *paTerminal, TForteUInt32 paChannel, bool *paInDataBool);
         void readInputDataWordfromKBus(tldkc_KbusInfo_TerminalInfo *paTerminal, TForteUInt32 paChannel, TForteWord *paInDataWord);
-        virtual void run();
+        void run() override;
         /*!Go through the read list notifying the registered FBs on the new cycle allowing
          * them to update their data and if necessary activate an event chain*/
 
         /* functions needed for the external event handler interface */
-        void enableHandler();
-        void disableHandler();
-        void setPriority(int paPriority);
-        int getPriority() const;
+        void enableHandler() override;
+        void disableHandler() override;
+        void setPriority(int paPriority) override;
+        int getPriority() const override;
 
       private:
         // Private methods

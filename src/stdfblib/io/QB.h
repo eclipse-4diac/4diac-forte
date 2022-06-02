@@ -60,13 +60,13 @@ private:
 
    FORTE_FB_DATA_ARRAY(2, 3, 2, 0);
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
 public:
   FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(FORTE_QB, CProcessInterface){
   };
 
-  virtual ~FORTE_QB(){};
+  ~FORTE_QB() override = default;
 
 };
 

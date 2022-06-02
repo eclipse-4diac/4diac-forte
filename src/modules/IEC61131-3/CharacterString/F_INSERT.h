@@ -59,7 +59,7 @@ class FORTE_F_INSERT : public CFunctionBlock {
     FORTE_FB_DATA_ARRAY(1, 3, 1, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
   public:
     FUNCTION_BLOCK_CTOR(FORTE_F_INSERT){
@@ -73,7 +73,7 @@ class FORTE_F_INSERT : public CFunctionBlock {
     st_OUT().saveAssign(func_INSERT(oIn1,oIn2,P()));
   }
 
-  virtual ~FORTE_F_INSERT() = default;
+  ~FORTE_F_INSERT() override = default;
 
 };
 

@@ -24,8 +24,7 @@ class CIEC_ArrowheadEvent : public CIEC_STRUCT {
   public:
     CIEC_ArrowheadEvent();
 
-    virtual ~CIEC_ArrowheadEvent() {
-    }
+    ~CIEC_ArrowheadEvent() override = default;
 
     CIEC_WSTRING &type() {
       return *static_cast<CIEC_WSTRING*>(&getMembers()[0]);

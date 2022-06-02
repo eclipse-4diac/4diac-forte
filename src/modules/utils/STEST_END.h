@@ -29,13 +29,13 @@ private:
 
   FORTE_FB_DATA_ARRAY(0, 0, 0, 0);
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
 public:
   FUNCTION_BLOCK_CTOR(FORTE_STEST_END){
   };
 
-  virtual ~FORTE_STEST_END() = default;
+  ~FORTE_STEST_END() override = default;
 
 };
 

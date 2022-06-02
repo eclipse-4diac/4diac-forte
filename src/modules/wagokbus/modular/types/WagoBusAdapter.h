@@ -27,7 +27,7 @@ class FORTE_WagoBusAdapter : public forte::core::io::IOConfigFBMultiAdapter {
     static const TForteUInt8 scmSlaveConfigurationIO[];
     static const TForteUInt8 scmSlaveConfigurationIONum;
 
-    virtual ~FORTE_WagoBusAdapter(){};
+    ~FORTE_WagoBusAdapter() override = default;
 
     CIEC_BOOL &QO(){
       return *static_cast<CIEC_BOOL*>((isSocket()) ? getDI(0) : getDO(0));

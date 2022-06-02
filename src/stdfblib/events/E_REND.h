@@ -41,7 +41,7 @@ private:
   bool m_bE2Occ;
 
 
-  virtual void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
@@ -52,7 +52,7 @@ public:
     m_bE1Occ(false),
     m_bE2Occ(false){
   };
-  virtual ~E_REND() = default;
+  ~E_REND() override = default;
 
 };
 

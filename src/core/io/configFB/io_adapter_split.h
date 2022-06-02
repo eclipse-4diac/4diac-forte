@@ -24,7 +24,7 @@ namespace forte {
         public:
           IOConfigFBSplitAdapter(CResource *paSrcRes, const SFBInterfaceSpec *patInterfaceSpecSocket, const CStringDictionary::TStringId paInstanceNameId,
               const SFBInterfaceSpec *paInterfaceSpecPlug, bool paIsPlug, TForteByte *paFBConnData, TForteByte *paFBVarsData);
-          virtual ~IOConfigFBSplitAdapter();
+          ~IOConfigFBSplitAdapter() override;
 
           CIEC_BOOL &QO() {
             return *static_cast<CIEC_BOOL*>((isSocket()) ? getDI(0) : getDO(0));

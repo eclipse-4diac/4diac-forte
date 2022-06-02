@@ -42,7 +42,7 @@ class CWin32Thread : public forte::arch::CThreadBase <HANDLE>{
      *
      *  Will stop the execution if running and destroy the thread including all system specific data.
      */
-    virtual ~CWin32Thread();
+    ~CWin32Thread() override;
 
     //!Set the deadline of the thread.
     void setDeadline(const CIEC_TIME &mVal);

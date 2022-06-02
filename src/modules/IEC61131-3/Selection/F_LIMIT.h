@@ -58,7 +58,7 @@ class FORTE_F_LIMIT : public CFunctionBlock {
     FORTE_FB_DATA_ARRAY(1, 3, 1, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
   public:
     FUNCTION_BLOCK_CTOR(FORTE_F_LIMIT){
@@ -77,7 +77,7 @@ class FORTE_F_LIMIT : public CFunctionBlock {
   template<typename T> void calculateValueString() const {
     //TODO fill this function
   }
-  virtual ~FORTE_F_LIMIT() = default;
+  ~FORTE_F_LIMIT() override = default;
 };
 
 #endif //close the ifdef sequence from the beginning of the file

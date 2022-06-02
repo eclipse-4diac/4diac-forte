@@ -77,14 +77,14 @@ private:
   CEventChainExecutionThread m_oECEO1, m_oECEO2;
   bool m_bInitialized;
 
-  virtual void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
 public:
   FUNCTION_BLOCK_CTOR(FORTE_RT_E_SWITCH){
   m_bInitialized = false;
   };
 
-  virtual ~FORTE_RT_E_SWITCH() = default;
+  ~FORTE_RT_E_SWITCH() override = default;
 
 };
 

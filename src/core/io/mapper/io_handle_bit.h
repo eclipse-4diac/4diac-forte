@@ -25,15 +25,15 @@ namespace forte {
         public:
           IOHandleBit(IODeviceController *paController, IOMapper::Direction paDirection, uint8_t paOffset, uint8_t paPosition, uint8_t* paImage);
 
-          virtual void set(const CIEC_ANY &);
-          void get(CIEC_ANY &);
+          void set(const CIEC_ANY &) override;
+          void get(CIEC_ANY &) override;
 
           bool equal(unsigned char* paOldImage) const;
 
         protected:
-          virtual void onObserver(IOObserver *paObserver);
+          void onObserver(IOObserver *paObserver) override;
 
-          virtual void dropObserver();
+          void dropObserver() override;
 
           virtual void reset() {
             set(CIEC_BOOL());

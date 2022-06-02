@@ -23,9 +23,9 @@ class CSerialComLayerBase : public forte::com_infra::CComLayer{
     typedef TSerialHandle TSerialHandleType;
 
     CSerialComLayerBase(forte::com_infra::CComLayer* paUpperLayer, forte::com_infra::CBaseCommFB * paFB);
-    virtual ~CSerialComLayerBase();
+    ~CSerialComLayerBase() override;
 
-    virtual forte::com_infra::EComResponse processInterrupt();
+    forte::com_infra::EComResponse processInterrupt() override;
 
     /*! \brief Perform send to serial interface
     *   \param paData Sendable payload
@@ -33,15 +33,15 @@ class CSerialComLayerBase : public forte::com_infra::CComLayer{
     *
     *   \return ComLayer response
     */
-    virtual forte::com_infra::EComResponse sendData(void *paData, unsigned int paSize) = 0;
+    forte::com_infra::EComResponse sendData(void *paData, unsigned int paSize) override = 0;
 
     /*! \brief Perform reading from serial interface
      *
      * @return if not e_Nothing something was read and the FB should get an external event
      */
-    virtual forte::com_infra::EComResponse recvData(const void *paData, unsigned int paSize) = 0;
+    forte::com_infra::EComResponse recvData(const void *paData, unsigned int paSize) override = 0;
 
-    virtual void closeConnection() = 0;
+    void closeConnection() override = 0;
 
   protected:
 
@@ -100,7 +100,7 @@ class CSerialComLayerBase : public forte::com_infra::CComLayer{
     } ;
 
     char mTerminationSymbol[3]; //**< Space for CR, LF, or CR/LF + Terminating \0
-    forte::com_infra::EComResponse openConnection(char *paLayerParameter);
+    forte::com_infra::EComResponse openConnection(char *paLayerParameter) override;
     virtual forte::com_infra::EComResponse openSerialConnection(const SSerialParameters& paSerialParameters, TSerialHandle* paHandleResult) = 0;
     static const unsigned int mMaxRecvBuffer = 1000;
 

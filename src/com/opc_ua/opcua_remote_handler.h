@@ -36,7 +36,7 @@ class COPC_UA_Client_IterationList : public CThread {
     /**
      * Destructor of the class
      */
-    virtual ~COPC_UA_Client_IterationList();
+    ~COPC_UA_Client_IterationList() override;
 
     /**
      * Start the iteration thread that will execute periodically handleClients()
@@ -63,7 +63,7 @@ class COPC_UA_Client_IterationList : public CThread {
     /**
      * Get the added clients to the iteration list, and execute handleClients(). Depending on the result, it will wait forever or just for some time (the cyclic period)
      */
-    void run();
+    void run() override;
 
   protected:
 
@@ -173,12 +173,12 @@ class COPC_UA_Remote_Handler : public COPC_UA_HandlerAbstract, public COPC_UA_Cl
     /**
      * Starts the threads
      */
-    void enableHandler();
+    void enableHandler() override;
 
     /**
      * Stops the threads
      */
-    void disableHandler();
+    void disableHandler() override;
 
   protected:
 
@@ -187,21 +187,21 @@ class COPC_UA_Remote_Handler : public COPC_UA_HandlerAbstract, public COPC_UA_Cl
      * @param paActionInfo Action to be initialized
      * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
      */
-    virtual UA_StatusCode initializeAction(CActionInfo &paActionInfo);
+    UA_StatusCode initializeAction(CActionInfo &paActionInfo) override;
 
     /**
      * Execute the action
      * @param paActionInfo Action to be executed
      * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
      */
-    virtual UA_StatusCode executeAction(CActionInfo &paActionInfo);
+    UA_StatusCode executeAction(CActionInfo &paActionInfo) override;
 
     /**
      * Uninitialize the action
      * @param paActionInfo Action to be Uninitialized
      * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
      */
-    virtual UA_StatusCode uninitializeAction(CActionInfo &paActionInfo);
+    UA_StatusCode uninitializeAction(CActionInfo &paActionInfo) override;
 
   private:
 
@@ -223,7 +223,7 @@ class COPC_UA_Remote_Handler : public COPC_UA_HandlerAbstract, public COPC_UA_Cl
         /**
          * Destructor of the class
          */
-        ~UA_ConnectionHandler();
+        ~UA_ConnectionHandler() override;
 
       private:
 
@@ -231,7 +231,7 @@ class COPC_UA_Remote_Handler : public COPC_UA_HandlerAbstract, public COPC_UA_Cl
          * Calls the handleClientState() function in the clients.
          * @return True if a new iteration is needed, false otherwise
          */
-        bool handleClients();
+        bool handleClients() override;
 
         /**
          * Remote handler to pass the clients who have at least one action initialized
@@ -287,7 +287,7 @@ class COPC_UA_Remote_Handler : public COPC_UA_HandlerAbstract, public COPC_UA_Cl
      * to the connection handler
      * @return True if a new iteration is needed, false otherwise
      */
-    bool handleClients();
+    bool handleClients() override;
 
     /**
      * Connection handler to pass the clients that aren't fully initialized yet

@@ -17,7 +17,7 @@
 class COdroidProcessInterface : public CSysFsProcessInterface{
   public:
     COdroidProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
-    virtual ~COdroidProcessInterface();
+    ~COdroidProcessInterface() override;
 
   protected:
     bool initialise(bool paIsInput);

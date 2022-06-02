@@ -22,7 +22,7 @@ class EMB_RES : public CResource{
   public:
     EMB_RES(CStringDictionary::TStringId pa_nInstanceNameId,
         CResource* pa_poDevice);
-    virtual ~EMB_RES();
+    ~EMB_RES() override;
 
   private:
     static const SFBInterfaceSpec scm_stFBInterfaceSpec;

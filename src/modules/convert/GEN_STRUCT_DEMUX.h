@@ -31,8 +31,8 @@ class GEN_STRUCT_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
     static const TForteInt16 scm_anEOWithIndexes[];
     static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
-    void executeEvent(int paEIID);
-    virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);
+    void executeEvent(int paEIID) override;
+    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
     CIEC_STRUCT& st_IN() {
        return *static_cast<CIEC_STRUCT*>(getDI(0));
@@ -42,7 +42,7 @@ class GEN_STRUCT_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
 
     GEN_STRUCT_DEMUX(const GEN_STRUCT_DEMUX &paOther) = delete;
     GEN_STRUCT_DEMUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
-    virtual ~GEN_STRUCT_DEMUX();
+    ~GEN_STRUCT_DEMUX() override;
 
 };
 

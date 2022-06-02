@@ -53,7 +53,7 @@ class FORTE_F_DIV : public CFunctionBlock {
     FORTE_FB_DATA_ARRAY(1, 2, 1, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
   public:
     FUNCTION_BLOCK_CTOR(FORTE_F_DIV){
@@ -68,7 +68,7 @@ class FORTE_F_DIV : public CFunctionBlock {
     st_OUT().saveAssign(func_DIV(oIn1,oIn2));
   }
 
-  virtual ~FORTE_F_DIV() = default;
+  ~FORTE_F_DIV() override = default;
 };
 
 #endif //close the ifdef sequence from the beginning of the file

@@ -59,7 +59,7 @@ class FORTE_F_MID : public CFunctionBlock {
     FORTE_FB_DATA_ARRAY(1, 3, 1, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
   public:
     FUNCTION_BLOCK_CTOR(FORTE_F_MID){
@@ -70,7 +70,7 @@ class FORTE_F_MID : public CFunctionBlock {
     st_OUT().saveAssign(func_MID(roIn,L(),P()));
   }
 
-  virtual ~FORTE_F_MID() = default;
+  ~FORTE_F_MID() override = default;
 
 };
 

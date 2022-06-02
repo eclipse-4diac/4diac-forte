@@ -26,8 +26,7 @@ class CIEC_EventFilter : public CIEC_STRUCT {
   public:
     CIEC_EventFilter();
 
-    virtual ~CIEC_EventFilter() {
-    }
+    ~CIEC_EventFilter() override = default;
 
     CIEC_WSTRING &eventType() {
       return *static_cast<CIEC_WSTRING*>(&getMembers()[0]);

@@ -39,12 +39,12 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
     /**
      * Starts OPC UA Server
      */
-    void enableHandler();
+    void enableHandler() override;
 
     /**
      * Stops the OPC UA server
      */
-    void disableHandler();
+    void disableHandler() override;
 
     /**
      * Class containing all local callback functions that are called by the OPC UA stack
@@ -72,28 +72,28 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param paActionInfo Action to be initialized
      * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
      */
-    virtual UA_StatusCode initializeAction(CActionInfo &paActionInfo);
+    UA_StatusCode initializeAction(CActionInfo &paActionInfo) override;
 
     /**
      * Execute the action
      * @param paActionInfo Action to be executed
      * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
      */
-    virtual UA_StatusCode executeAction(CActionInfo &paActionInfo);
+    UA_StatusCode executeAction(CActionInfo &paActionInfo) override;
 
     /**
      * Uninitialize the action
      * @param paActionInfo Action to be Uninitialized
      * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
      */
-    virtual UA_StatusCode uninitializeAction(CActionInfo &paActionInfo);
+    UA_StatusCode uninitializeAction(CActionInfo &paActionInfo) override;
 
   private:
 
     /**
      * Overridden run() from CThread which loops the UA Server.
      */
-    virtual void run();
+    void run() override;
 
     /**
      * Starts the OPC UA server, if it is not already running
@@ -217,7 +217,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
             CCreateInfo(), mTypeNodeId(nullptr) {
         }
 
-        ~CCreateObjectInfo() = default;
+        ~CCreateObjectInfo() override = default;
 
         UA_NodeId *mTypeNodeId;
 
@@ -235,7 +235,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
 
         }
 
-        ~CCreateVariableInfo() = default;
+        ~CCreateVariableInfo() override = default;
 
         const UA_DataType *mTypeConvert;
         const CIEC_ANY *mInitData;
@@ -255,7 +255,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
             CCreateInfo(), mInputArguments(nullptr), mOutputArguments(nullptr), mLocalMethodInfo(paCallack), mInputSize(0), mOutputSize(0) {
 
         }
-        ~CCreateMethodInfo() {
+        ~CCreateMethodInfo() override {
           UA_Array_delete(mInputArguments, mInputSize, &UA_TYPES[UA_TYPES_ARGUMENT]);
           UA_Array_delete(mOutputArguments, mOutputSize, &UA_TYPES[UA_TYPES_ARGUMENT]);
         }

@@ -63,7 +63,7 @@ public:
   COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_RegisterService){
   };
 
-  virtual ~FORTE_RegisterService(){};
+  ~FORTE_RegisterService() override = default;
 
 };
 

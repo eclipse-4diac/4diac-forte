@@ -57,11 +57,11 @@ class CBasicFB : public CFunctionBlock {
         const SInternalVarsInformation *pa_pstVarInternals, TForteByte *pa_acFBConnData, TForteByte *pa_acBasicFBVarsData,
         const SCFB_FBInstanceData *const pa_astInternalFBs, const size_t pa_numberOfInternalFbs);
 
-    virtual ~CBasicFB();
+    ~CBasicFB() override;
 
-    virtual CIEC_ANY* getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize);
+    CIEC_ANY* getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) override;
 
-    virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
+    EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand) override;
 
     template<unsigned int ta_nNumDIs, unsigned int ta_nNumDOs, unsigned int ta_nNumIntVars, unsigned int ta_nNumAdapters = 0>
     struct genBasicFBVarsDataSizeTemplate {

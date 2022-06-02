@@ -25,7 +25,7 @@ class CIEC_Struct_Muxer_Test_Struct_1 : public CIEC_STRUCT {
   public:
     CIEC_Struct_Muxer_Test_Struct_1();
 
-    virtual ~CIEC_Struct_Muxer_Test_Struct_1() = default;
+    ~CIEC_Struct_Muxer_Test_Struct_1() override = default;
 
     CIEC_INT &Var1() {
       return *static_cast<CIEC_INT*>(getMember(0));
@@ -50,7 +50,7 @@ class CIEC_Struct_Muxer_Test_Struct_2 : public CIEC_STRUCT {
   public:
     CIEC_Struct_Muxer_Test_Struct_2();
 
-    virtual ~CIEC_Struct_Muxer_Test_Struct_2() = default;
+    ~CIEC_Struct_Muxer_Test_Struct_2() override = default;
 
     CIEC_INT &Var1() {
       return *static_cast<CIEC_INT*>(getMember(0));
@@ -75,7 +75,7 @@ class CIEC_Struct_Muxer_Test_Struct_3 : public CIEC_STRUCT {
   public:
     CIEC_Struct_Muxer_Test_Struct_3();
 
-    virtual ~CIEC_Struct_Muxer_Test_Struct_3() = default;
+    ~CIEC_Struct_Muxer_Test_Struct_3() override = default;
 
   private:
     static const CStringDictionary::TStringId scm_unElementTypes[];
@@ -88,7 +88,7 @@ class CIEC_Struct_Muxer_Test_Struct_4 : public CIEC_STRUCT {
   public:
     CIEC_Struct_Muxer_Test_Struct_4();
 
-    virtual ~CIEC_Struct_Muxer_Test_Struct_4() = default;
+    ~CIEC_Struct_Muxer_Test_Struct_4() override = default;
 
   private:
     static const CStringDictionary::TStringId scm_unElementTypes[];

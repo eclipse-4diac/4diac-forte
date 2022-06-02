@@ -45,7 +45,7 @@ class CBEThread : public forte::arch::CThreadBase<int, 0, CBEThread>, private BE
      *
      *  Will stop the execution if running and destroy the thread including all system specific data.
      */
-    virtual ~CBEThread();
+    ~CBEThread() override;
 
     void setDeadline(TForteUInt32 paVal); //!Set the deadline of the thread.
 

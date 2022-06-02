@@ -24,7 +24,7 @@ class CProcessInterface : public CI2CProcessInterface{
     CProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
         const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData,
         TForteByte *paFBVarsData);
-    virtual ~CProcessInterface();
+    ~CProcessInterface() override;
 
   protected:
     bool writePin();

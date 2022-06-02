@@ -18,9 +18,7 @@ class IEplCNCallback{
     virtual void cnSynchCallback() = 0;
 
   protected:
-    virtual ~IEplCNCallback(){
-    }
-    ;
+    virtual ~IEplCNCallback() = default;
 
 };
 

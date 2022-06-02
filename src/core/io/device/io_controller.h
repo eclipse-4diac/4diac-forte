@@ -93,7 +93,7 @@ namespace forte {
           virtual void handleChangeEvent(IOHandle *paHandle);
 
           //TODO: adapt this properly to the new handler model. This mockup is just to avoid the classes below to be abstract
-          virtual size_t getIdentifier() const {
+          size_t getIdentifier() const override {
             return 0;
           }
 
@@ -206,7 +206,7 @@ namespace forte {
            */
           void dropHandles();
 
-          void run();
+          void run() override;
 
           void setInitDelay(int paDelay);
 
@@ -215,16 +215,16 @@ namespace forte {
           void addHandle(THandleList* paList, CIEC_WSTRING const &paId, IOHandle* paHandle);
 
           // Functions needed for the external event handler interface
-          void enableHandler() {
+          void enableHandler() override {
             //do nothing
           }
-          void disableHandler() {
+          void disableHandler() override {
             //do nothing
           }
-          void setPriority(int) {
+          void setPriority(int) override {
             //do nothing
           }
-          int getPriority() const {
+          int getPriority() const override {
             return 0;
           }
       };

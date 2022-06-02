@@ -26,12 +26,12 @@ namespace forte {
     class CIPComLayer : public CComLayer{
       public:
         CIPComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB);
-        virtual ~CIPComLayer();
+        ~CIPComLayer() override;
 
-        EComResponse sendData(void *paData, unsigned int paSize); // top interface, called from top
-        EComResponse recvData(const void *paData, unsigned int paSize);
+        EComResponse sendData(void *paData, unsigned int paSize) override; // top interface, called from top
+        EComResponse recvData(const void *paData, unsigned int paSize) override;
 
-        EComResponse processInterrupt();
+        EComResponse processInterrupt() override;
 
       protected:
         CIPComSocketHandler::TSocketDescriptor mSocketID;
@@ -40,8 +40,8 @@ namespace forte {
       private:
         void closeSocket(CIPComSocketHandler::TSocketDescriptor *paSocketID);
 
-        EComResponse openConnection(char *paLayerParameter);
-        void closeConnection();
+        EComResponse openConnection(char *paLayerParameter) override;
+        void closeConnection() override;
         void handledConnectedDataRecv();
         void handleConnectionAttemptInConnected() const;
 

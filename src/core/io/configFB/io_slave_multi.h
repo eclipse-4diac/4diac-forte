@@ -32,7 +32,7 @@ namespace forte {
           IOConfigFBMultiSlave(const TForteUInt8* const paSlaveConfigurationIO, const TForteUInt8 paSlaveConfigurationIONum, int paType, CResource *paSrcRes,
               const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData,
               TForteByte *paFBVarsData);
-          virtual ~IOConfigFBMultiSlave();
+          ~IOConfigFBMultiSlave() override;
 
         protected:
           CIEC_BOOL &QI() {
@@ -63,7 +63,7 @@ namespace forte {
 
           static const int scm_nBusAdapterInAdpNum = 1;
 
-          virtual void executeEvent(int paEIID);
+          void executeEvent(int paEIID) override;
 
           IODeviceMultiController& getController() {
             return (*static_cast<IODeviceMultiController*>(mMaster->getDeviceController()));

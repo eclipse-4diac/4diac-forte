@@ -73,7 +73,7 @@ private:
   void enterStateCD();
   void enterStateLD();
 
-  virtual void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
 public:
   FORTE_E_CTUD(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : 
@@ -81,7 +81,7 @@ public:
               nullptr, m_anFBConnData, m_anFBVarsData){
   };
 
-  virtual ~FORTE_E_CTUD() = default;
+  ~FORTE_E_CTUD() override = default;
 
 };
 

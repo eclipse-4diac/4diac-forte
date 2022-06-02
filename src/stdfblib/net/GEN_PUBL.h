@@ -25,14 +25,14 @@ class GEN_PUBL : public GEN_PUBLISH{
   public:
     GEN_PUBL(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
-    virtual bool configureFB(const char *pa_acConfigString);
+    bool configureFB(const char *pa_acConfigString) override;
 
   protected:
     static const char * const scmLocalIDPrefix;
     static const char * const scmLocalIDSuffix;
 
   private:
-    virtual char * getDefaultIDString(const char *paID);
+    char * getDefaultIDString(const char *paID) override;
 };
 
 #endif /*GEN_PUBL_H_*/

@@ -54,7 +54,7 @@ class FORTE_F_MULTIME : public CFunctionBlock {
     FORTE_FB_DATA_ARRAY(1, 2, 1, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
   public:
     FUNCTION_BLOCK_CTOR(FORTE_F_MULTIME){
@@ -65,7 +65,7 @@ class FORTE_F_MULTIME : public CFunctionBlock {
     st_OUT().saveAssign(func_MULTIME(IN1(), roIn2));
   }
 
-  virtual ~FORTE_F_MULTIME() = default;
+  ~FORTE_F_MULTIME() override = default;
 
 };
 

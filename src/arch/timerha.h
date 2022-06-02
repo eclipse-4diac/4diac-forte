@@ -57,12 +57,12 @@ class CTimerHandler : public CExternalEventHandler{
      *
      * \param pa_nPriority new priority of the event source
      */
-    virtual void setPriority(int paPriority) = 0;
+    void setPriority(int paPriority) override = 0;
     /*!\brief Get the current priority of the event source
      *
      * \return current priority
      */
-    virtual int getPriority() const = 0;
+    int getPriority() const override = 0;
 
     /*! \brief Get the time base of the runtime
      *

@@ -49,7 +49,7 @@ public:
   COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_PublishEventHTTP){
   };
 
-  virtual ~FORTE_PublishEventHTTP(){};
+  ~FORTE_PublishEventHTTP() override = default;
 
 };
 

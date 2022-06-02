@@ -23,10 +23,10 @@ class GEN_XOR : public CGenBitBase {
 
   private:
 
-    virtual void executeEvent(int paEIID);
+    void executeEvent(int paEIID) override;
 
     GEN_XOR(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
-    virtual ~GEN_XOR();
+    ~GEN_XOR() override;
 
   public:
     template<typename T>

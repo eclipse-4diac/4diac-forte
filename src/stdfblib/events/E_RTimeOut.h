@@ -42,7 +42,7 @@ public:
   COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_E_RTimeOut){
   };
 
-  virtual ~FORTE_E_RTimeOut() = default;
+  ~FORTE_E_RTimeOut() override = default;
 
 };
 

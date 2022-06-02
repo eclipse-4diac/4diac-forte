@@ -25,7 +25,7 @@ class CProcessInterfaceBase : public CEventSourceFB{
   setEventChainExecutor(paSrcRes->getResourceEventExecution());
     }
 
-    virtual ~CProcessInterfaceBase() = default;
+    ~CProcessInterfaceBase() override = default;
 
   protected:
     CIEC_BOOL &QI(){

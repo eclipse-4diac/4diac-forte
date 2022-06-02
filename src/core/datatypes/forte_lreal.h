@@ -81,7 +81,7 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
       setTDFLOAT(paValue);
     }
 
-    virtual ~CIEC_LREAL() = default;
+    ~CIEC_LREAL() override = default;
 
     CIEC_LREAL& operator =(const CIEC_LREAL &paValue){
       // Simple value assignment - no self assignment check needed
@@ -141,7 +141,7 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
       return CIEC_ANY::e_LREAL;
     }
 
-    virtual void setValue(const CIEC_ANY& paValue);
+    void setValue(const CIEC_ANY& paValue) override;
 
     /*! \brief Converts string value to data type value
      *
@@ -152,7 +152,7 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
      *   \return number of bytes taken used from the buffer
      *        -1 on on error
      */
-    virtual int fromString(const char *paValue);
+    int fromString(const char *paValue) override;
 
     /*! \brief Converts data type value to string
      *
@@ -164,7 +164,7 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    virtual int toString(char* paValue, size_t paBufferSize) const;
+    int toString(char* paValue, size_t paBufferSize) const override;
 
     /*! \brief Casts TForteDFloat values to CIEC data types
      *  \param paSrcValue Source value for the cast

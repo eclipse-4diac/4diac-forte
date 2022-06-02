@@ -23,7 +23,7 @@ class CIEC_LocalizedText : public CIEC_STRUCT {
   public:
     CIEC_LocalizedText();
 
-    virtual ~CIEC_LocalizedText() = default;
+    ~CIEC_LocalizedText() override = default;
 
     CIEC_STRING &locale() {
       return *static_cast<CIEC_STRING*>(&getMembers()[0]);

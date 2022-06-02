@@ -78,7 +78,7 @@ public:
   ADAPTER_CTOR(FORTE_OrchestratorRequestAdp){
   };
 
-  virtual ~FORTE_OrchestratorRequestAdp(){};
+  ~FORTE_OrchestratorRequestAdp() override = default;
 
 };
 

@@ -49,7 +49,7 @@ public:
   COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_QueryServiceHTTP){
   };
 
-  virtual ~FORTE_QueryServiceHTTP(){};
+  ~FORTE_QueryServiceHTTP() override = default;
 
 };
 

@@ -23,10 +23,10 @@ class COpcConnectionImpl;
 class CCmd_SetProcessVarValue : public ICmd{
   public:
     explicit CCmd_SetProcessVarValue(COpcProcessVar * pa_pOpcVar);
-    virtual ~CCmd_SetProcessVarValue();
+    ~CCmd_SetProcessVarValue() override;
 
-    virtual void runCommand();
-    virtual const char* getCommandName() const;
+    void runCommand() override;
+    const char* getCommandName() const override;
 
   private:
     COpcProcessVar* m_pOpcVar;

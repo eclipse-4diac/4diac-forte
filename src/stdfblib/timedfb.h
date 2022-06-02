@@ -45,16 +45,16 @@ protected:
  *
  * Derived Timed FBs only normaly need only the start event es this is different for each timed FB type (e.g. periodic vs. onetimeshot)
  */
-  virtual void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
   CIEC_TIME& DT() {
      return *static_cast<CIEC_TIME*>(getDI(0));
   }
 public:
   CTimedFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, ETimerActivationType paType);
-  virtual ~CTimedFB() = default;
+  ~CTimedFB() override = default;
 
-  virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
+  EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand) override;
 
 };
 

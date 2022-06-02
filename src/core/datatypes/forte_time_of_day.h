@@ -43,7 +43,7 @@ class CIEC_TIME_OF_DAY : public CIEC_ANY_DATE{
       setTUINT64(paValue);
     }
 
-    virtual ~CIEC_TIME_OF_DAY() = default;
+    ~CIEC_TIME_OF_DAY() override = default;
 
     CIEC_TIME_OF_DAY& operator =(const CIEC_TIME_OF_DAY &paValue){
       // Simple value assignment - no self assignment check needed
@@ -59,7 +59,7 @@ class CIEC_TIME_OF_DAY : public CIEC_ANY_DATE{
       return getTUINT64();
     }
 
-    virtual EDataTypeID getDataTypeID() const{
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_TIME_OF_DAY;
     }
 
@@ -73,7 +73,7 @@ class CIEC_TIME_OF_DAY : public CIEC_ANY_DATE{
      *   \return number of bytes taken used from the buffer
      *        -1 on on error
      */
-    virtual int fromString(const char *paValue);
+    int fromString(const char *paValue) override;
     /*! \brief Converts data type value to string
      *
      *   This command implements a conversion function from C++ data type
@@ -84,7 +84,7 @@ class CIEC_TIME_OF_DAY : public CIEC_ANY_DATE{
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    virtual int toString(char* paValue, size_t paBufferSize) const;
+    int toString(char* paValue, size_t paBufferSize) const override;
 };
 
 #endif /* #ifdef FORTE_USE_64BIT_DATATYPES */

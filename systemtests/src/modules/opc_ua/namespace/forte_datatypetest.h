@@ -25,8 +25,7 @@ class CIEC_DataTypeTest : public CIEC_STRUCT {
   public:
     CIEC_DataTypeTest();
 
-    virtual ~CIEC_DataTypeTest() {
-    }
+    ~CIEC_DataTypeTest() override = default;
 
     CIEC_STRING &Name() {
       return *static_cast<CIEC_STRING*>(&getMembers()[0]);

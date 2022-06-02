@@ -44,10 +44,10 @@ class GEN_F_MUX : public CGenFunctionBlock<CFunctionBlock> {
     size_t mDInputs;
     size_t mDOutputs;
 
-    virtual void executeEvent(int paEIID);
-    virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec);
+    void executeEvent(int paEIID) override;
+    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
     GEN_F_MUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
-    virtual ~GEN_F_MUX();
+    ~GEN_F_MUX() override;
 };
 #endif //_GEN_F_MUX_H_

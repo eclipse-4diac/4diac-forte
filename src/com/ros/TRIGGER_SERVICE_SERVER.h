@@ -91,7 +91,7 @@ class FORTE_TRIGGER_SERVICE_SERVER : public CEventSourceFB{
     FORTE_FB_DATA_ARRAY(2, 5, 2, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
     bool triggerCallback(std_srvs::Trigger::Request &pa_req, std_srvs::Trigger::Response &pa_resp);
 
@@ -100,7 +100,7 @@ class FORTE_TRIGGER_SERVICE_SERVER : public CEventSourceFB{
     EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_TRIGGER_SERVICE_SERVER), m_Initiated(false), m_RosNamespace(""), m_RosMsgName(""), m_ResponseAvailable(false){
     };
 
-    virtual ~FORTE_TRIGGER_SERVICE_SERVER() = default;
+    ~FORTE_TRIGGER_SERVICE_SERVER() override = default;
   };
 
 #endif //close the ifdef sequence from the beginning of the file

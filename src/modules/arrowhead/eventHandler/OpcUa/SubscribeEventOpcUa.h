@@ -49,7 +49,7 @@ public:
   COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_SubscribeEventOpcUa){
   };
 
-  virtual ~FORTE_SubscribeEventOpcUa(){};
+  ~FORTE_SubscribeEventOpcUa() override = default;
 
 };
 

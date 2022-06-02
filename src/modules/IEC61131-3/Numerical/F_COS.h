@@ -49,7 +49,7 @@ class FORTE_F_COS : public CFunctionBlock {
     FORTE_FB_DATA_ARRAY(1, 1, 1, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
   public:
     FUNCTION_BLOCK_CTOR(FORTE_F_COS){
@@ -61,7 +61,7 @@ class FORTE_F_COS : public CFunctionBlock {
     st_OUT().saveAssign(func_COS(oIn));
   }
 
-  virtual ~FORTE_F_COS() = default;
+  ~FORTE_F_COS() override = default;
 
 };
 

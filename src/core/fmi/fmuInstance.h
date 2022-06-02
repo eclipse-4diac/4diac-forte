@@ -26,7 +26,7 @@ class fmuInstance : public CDevice{
 
   public:
     fmuInstance(fmi2String instanceName, fmi2String GUID, fmi2String bootFileLocation, const fmi2CallbackFunctions *callbackFunctions);
-    virtual ~fmuInstance();
+    ~fmuInstance() override;
 
 #ifdef FMU_DEBUG
     std::fstream debugFile;

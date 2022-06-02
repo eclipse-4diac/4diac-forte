@@ -22,7 +22,7 @@
 class CIEC_ANY_DURATION : public CIEC_ANY_MAGNITUDE {
   DECLARE_FIRMWARE_DATATYPE(ANY_DURATION)
 public:
-  virtual ~CIEC_ANY_DURATION() = default;
+  ~CIEC_ANY_DURATION() override = default;
 
   EDataTypeID getDataTypeID() const override {
     return CIEC_ANY::e_ANY;

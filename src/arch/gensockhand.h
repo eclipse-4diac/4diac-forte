@@ -38,7 +38,7 @@ class CGenericIPComSocketHandler : public THandler, public TSocketCreator{
     CGenericIPComSocketHandler() = delete;
     CGenericIPComSocketHandler(const CGenericIPComSocketHandler&) = delete;
     CGenericIPComSocketHandler& operator =(const CGenericIPComSocketHandler &) = delete;
-    ~CGenericIPComSocketHandler() = default;
+    ~CGenericIPComSocketHandler() override = default;
 };
 
 

@@ -43,7 +43,7 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
     /**
      * Class destructor
      */
-    virtual ~COPC_UA_Layer();
+    ~COPC_UA_Layer() override;
 
     /**
      * The handler uses this functions to let the layer know that some data has arrived
@@ -51,7 +51,7 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
      * @param paSize not used
      * @return
      */
-    forte::com_infra::EComResponse recvData(const void *paData, unsigned int paSize);
+    forte::com_infra::EComResponse recvData(const void *paData, unsigned int paSize) override;
 
     /**
      * Executes the action in the handler
@@ -59,13 +59,13 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
      * @param paSize not used
      * @return
      */
-    forte::com_infra::EComResponse sendData(void *paData, unsigned int paSize);
+    forte::com_infra::EComResponse sendData(void *paData, unsigned int paSize) override;
 
     /**
      * Function called when the external event (triggered when data is received) is executed in the FB
      * @return
      */
-    virtual forte::com_infra::EComResponse processInterrupt();
+    forte::com_infra::EComResponse processInterrupt() override;
 
     /**
      * Trigger a new incoming event. This is needed here because the CUA_ClientInformation needs to trigger, but it doesn't know the handler
@@ -94,12 +94,12 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
      * @param paLayerParameter String conatained between the square brackets in the ID data input (opc_ua[...])
      * @return e_InitOk is initialization was ok, e_InitTerminated otherwise
      */
-    forte::com_infra::EComResponse openConnection(char *paLayerParameter);
+    forte::com_infra::EComResponse openConnection(char *paLayerParameter) override;
 
     /**
      * Called when INIT is triggered in the FB and QI is set to false
      */
-    void closeConnection();
+    void closeConnection() override;
 
     /**
      * Check that all types of the SDs/RDs of the FBs are correct

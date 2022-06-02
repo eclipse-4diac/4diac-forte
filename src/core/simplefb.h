@@ -29,7 +29,7 @@ class CSimpleFB : public CBasicFB {
         const SInternalVarsInformation *pa_pstVarInternals, TForteByte *pa_acFBConnData, TForteByte *pa_acBasicFBVarsData,
         const SCFB_FBInstanceData *const pa_astInternalFBs, const size_t pa_numberOfInternalFbs);
 
-    virtual ~CSimpleFB();
+    ~CSimpleFB() override;
 };
 
 #endif /* SRC_CORE_SIMPLEFB_H_ */

@@ -28,9 +28,9 @@ namespace forte {
 
     class CBaseCommFB : public CGenFunctionBlock<CEventSourceFB> {
     public:
-      virtual ~CBaseCommFB();
+      ~CBaseCommFB() override;
 
-      virtual EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand);
+      EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand) override;
 
       forte::com_infra::EComServiceType getComServiceType() const {
         return m_eCommServiceType;

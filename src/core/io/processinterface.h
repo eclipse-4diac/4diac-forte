@@ -29,9 +29,9 @@ namespace forte {
         public:
           ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
               TForteByte *paFBConnData, TForteByte *paFBVarsData);
-          virtual ~ProcessInterface();
+          ~ProcessInterface() override;
 
-          bool onChange();
+          bool onChange() override;
 
         protected:
           bool initialise(bool paIsInput);
@@ -61,8 +61,8 @@ namespace forte {
           bool read(CIEC_ANY &);
           bool write(CIEC_ANY &);
 
-          virtual void onHandle(IOHandle *paHandle);
-          virtual void dropHandle();
+          void onHandle(IOHandle *paHandle) override;
+          void dropHandle() override;
 
         private:
           bool mIsListening;

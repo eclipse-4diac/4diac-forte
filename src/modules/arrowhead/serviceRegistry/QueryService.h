@@ -74,7 +74,7 @@ public:
   COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_QueryService){
   };
 
-  virtual ~FORTE_QueryService(){};
+  ~FORTE_QueryService() override = default;
 
 };
 

@@ -37,7 +37,7 @@ class CDevice : public CResource {
     CDeviceExecution mDeviceExecution;
 
   protected:
-    virtual void executeEvent(int) {
+    void executeEvent(int) override {
     }
 
   public:
@@ -49,10 +49,10 @@ class CDevice : public CResource {
         CResource(pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData), mDeviceExecution() {
     }
 
-    virtual ~CDevice() = default;
+    ~CDevice() override = default;
 
 
-    virtual CStringDictionary::TStringId getFBTypeId() const {
+    CStringDictionary::TStringId getFBTypeId() const override {
       return CStringDictionary::scm_nInvalidStringId;
     }
 
@@ -76,9 +76,9 @@ class CDevice : public CResource {
      * \param pa_oCommand FORTE internal representation of the management command
      * \return response of the MGMCommand execution as defined in IEC 61499
      */
-    virtual EMGMResponse executeMGMCommand(forte::core::SManagementCMD &paCommand);
+    EMGMResponse executeMGMCommand(forte::core::SManagementCMD &paCommand) override;
 
-    virtual EMGMResponse changeFBExecutionState(EMGMCommandType paCommand);
+    EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
 
     //! Retrieve the device execution of this device
     CDeviceExecution &getDeviceExecution() {

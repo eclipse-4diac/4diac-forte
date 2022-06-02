@@ -18,9 +18,9 @@
 class CModbusPoll : public CModbusTimedEvent{
   public:
     CModbusPoll(TForteUInt32 pa_nPollInterval, unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses);
-    ~CModbusPoll();
+    ~CModbusPoll() override;
 
-    int executeEvent(modbus_t *pa_pModbusConn, void *pa_pRetVal);
+    int executeEvent(modbus_t *pa_pModbusConn, void *pa_pRetVal) override;
 
     void setFunctionCode(unsigned int pa_nFunctionCode){
       m_nFunctionCode = pa_nFunctionCode;

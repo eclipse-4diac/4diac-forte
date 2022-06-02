@@ -36,7 +36,7 @@ private:
   FORTE_FB_DATA_ARRAY(1,1,1, 0);
 
 
-  virtual void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
   
@@ -52,7 +52,7 @@ public:
   FUNCTION_BLOCK_CTOR(E_D_FF){
   };
 
-  virtual ~E_D_FF() = default;
+  ~E_D_FF() override = default;
 
 };
 

@@ -67,7 +67,7 @@ class CIEC_DINT : public CIEC_ANY_INT{
       setTINT32(paValue);
     }
 
-    virtual ~CIEC_DINT() = default;
+    ~CIEC_DINT() override = default;
 
     CIEC_DINT& operator =(const CIEC_DINT &paValue){
       // Simple value assignment - no self assignment check needed

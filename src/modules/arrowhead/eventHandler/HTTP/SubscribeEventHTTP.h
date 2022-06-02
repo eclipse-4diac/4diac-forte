@@ -49,7 +49,7 @@ public:
   COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_SubscribeEventHTTP){
   };
 
-  virtual ~FORTE_SubscribeEventHTTP(){};
+  ~FORTE_SubscribeEventHTTP() override = default;
 
 };
 

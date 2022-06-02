@@ -23,8 +23,7 @@ class CIEC_ArrowheadSystem : public CIEC_STRUCT {
   public:
     CIEC_ArrowheadSystem();
 
-    virtual ~CIEC_ArrowheadSystem() {
-    }
+    ~CIEC_ArrowheadSystem() override = default;
 
     CIEC_WSTRING &systemName() {
       return *static_cast<CIEC_WSTRING*>(&getMembers()[0]);

@@ -40,11 +40,11 @@ namespace forte {
 
         protected:
 
-          virtual void onStartup();
+          void onStartup() override;
 
-          virtual void onStop();
+          void onStop() override;
 
-          virtual void executeEvent(int paEIID);
+          void executeEvent(int paEIID) override;
 
         private:
           const TForteUInt8* scmSplitAdapter;

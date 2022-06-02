@@ -29,17 +29,17 @@ class CROSLayer : public forte::com_infra::CComLayer{
 
   public:
     CROSLayer(forte::com_infra::CComLayer* pa_poUpperLayer, forte::com_infra::CBaseCommFB* pa_poComFB);
-    virtual ~CROSLayer();
+    ~CROSLayer() override;
 
-    virtual void closeConnection();
+    void closeConnection() override;
 
-    virtual forte::com_infra::EComResponse sendData(void *pa_pvData, unsigned int pa_unSize);
-    virtual forte::com_infra::EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize);
+    forte::com_infra::EComResponse sendData(void *pa_pvData, unsigned int pa_unSize) override;
+    forte::com_infra::EComResponse recvData(const void *pa_pvData, unsigned int pa_unSize) override;
 
-    virtual forte::com_infra::EComResponse processInterrupt();
+    forte::com_infra::EComResponse processInterrupt() override;
 
   private:
-    virtual forte::com_infra::EComResponse openConnection(char *pa_acLayerParameter);
+    forte::com_infra::EComResponse openConnection(char *pa_acLayerParameter) override;
 
     forte::com_infra::EComServiceType m_eCommServiceType;
     forte::com_infra::EComResponse m_eInterruptResp;

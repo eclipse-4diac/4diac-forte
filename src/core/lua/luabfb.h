@@ -53,11 +53,11 @@ class CLuaBFB : public CBasicFB {
 
     CLuaBFB(CStringDictionary::TStringId paInstanceNameId, const CLuaBFBTypeEntry* paTypeEntry, TForteByte *paConnData, TForteByte *paVarsData,
         CResource *paResource);
-    virtual ~CLuaBFB();
+    ~CLuaBFB() override;
 
-    virtual void executeEvent(int paEIID);
+    void executeEvent(int paEIID) override;
 
-    virtual CStringDictionary::TStringId getFBTypeId() const {
+    CStringDictionary::TStringId getFBTypeId() const override {
       return mTypeEntry->getTypeNameId();
     }
 

@@ -135,7 +135,7 @@ class FORTE_X20DI937X : public CFunctionBlock, public IEplCNCallback{
     FORTE_FB_DATA_ARRAY(3, 3, 15, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
     // Variables for mapping between inputs and POWERLINK stack
 
@@ -147,9 +147,9 @@ class FORTE_X20DI937X : public CFunctionBlock, public IEplCNCallback{
     FUNCTION_BLOCK_CTOR(FORTE_X20DI937X){
   };
 
-  virtual ~FORTE_X20DI937X() = default;
+  ~FORTE_X20DI937X() override = default;
 
-  void cnSynchCallback();
+  void cnSynchCallback() override;
 
 };
 

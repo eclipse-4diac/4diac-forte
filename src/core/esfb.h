@@ -34,7 +34,7 @@ public:
     m_poEventChainExecutor(nullptr),
     mEventSourceEventEntry(this, cg_nExternalEventID){
   }
-  virtual ~CEventSourceFB() = default;
+  ~CEventSourceFB() override = default;
   void setEventChainExecutor(CEventChainExecutionThread *pa_poEventChainExecutor) { m_poEventChainExecutor = pa_poEventChainExecutor; };
   CEventChainExecutionThread * getEventChainExecutor() { return m_poEventChainExecutor; };
 

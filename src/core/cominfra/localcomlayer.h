@@ -28,20 +28,20 @@ namespace forte {
 
       public:
         CLocalComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poFB);
-        virtual ~CLocalComLayer();
+        ~CLocalComLayer() override;
 
-        virtual EComResponse sendData(void *pa_pvData, unsigned int pa_unSize);
-        virtual EComResponse recvData(const void *, unsigned int ){
+        EComResponse sendData(void *pa_pvData, unsigned int pa_unSize) override;
+        EComResponse recvData(const void *, unsigned int ) override {
           return e_ProcessDataOk;
         }
 
-        virtual EComResponse processInterrupt(){
+        EComResponse processInterrupt() override {
           return e_ProcessDataOk;
         }
 
       private:
-        virtual EComResponse openConnection(char *pa_acLayerParameter);
-        virtual void closeConnection();
+        EComResponse openConnection(char *pa_acLayerParameter) override;
+        void closeConnection() override;
         void setRDs(CLocalComLayer *pa_poSublLayer, CIEC_ANY *pa_aSDs, unsigned int pa_unNumSDs);
 
         class CLocalCommGroup {

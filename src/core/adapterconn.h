@@ -23,12 +23,12 @@ class CAdapter;
 class CAdapterConnection : public CConnection{
   public:
     CAdapterConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CAdapter *paPlug);
-    virtual ~CAdapterConnection();
+    ~CAdapterConnection() override;
 
-    virtual EMGMResponse connect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId);
-    virtual EMGMResponse connectToCFBInterface(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId);
+    EMGMResponse connect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
+    EMGMResponse connectToCFBInterface(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
-    virtual EMGMResponse disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId);
+    EMGMResponse disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
     CAdapter *getPlug(){
       return mPlug;

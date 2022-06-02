@@ -46,13 +46,13 @@ private:
 
    FORTE_FB_DATA_ARRAY(1, 1, 1, 0);
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
 public:
   FUNCTION_BLOCK_CTOR(FORTE_LocalizedText2LocalizedText){
   };
 
-  virtual ~FORTE_LocalizedText2LocalizedText() = default;
+  ~FORTE_LocalizedText2LocalizedText() override = default;
 
 };
 

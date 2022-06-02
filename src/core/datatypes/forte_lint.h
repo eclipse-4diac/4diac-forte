@@ -81,7 +81,7 @@ class CIEC_LINT : public CIEC_ANY_INT{
       setTINT64(paValue);
     }
 
-    virtual ~CIEC_LINT() = default;
+    ~CIEC_LINT() override = default;
 
     CIEC_LINT& operator =(const CIEC_LINT &paValue){
       // Simple value assignment - no self assignment check needed

@@ -22,21 +22,21 @@ namespace modbus_connection_event {
   class CModbusConnectionEvent : public CModbusTimedEvent{
     public:
       explicit CModbusConnectionEvent(long pa_nReconnectInterval); //ReconnectInterval = 0 => only one connection try
-      ~CModbusConnectionEvent() = default;
+      ~CModbusConnectionEvent() override = default;
 
-      int executeEvent(modbus_t *pa_pModbusConn, void *pa_pRetVal);
+      int executeEvent(modbus_t *pa_pModbusConn, void *pa_pRetVal) override;
   };
 }
 
 class CModbusClientConnection : public CModbusConnection{
   public:
     explicit CModbusClientConnection(CModbusHandler* pa_modbusHandler);
-    ~CModbusClientConnection();
+    ~CModbusClientConnection() override;
 
-    int readData(uint8_t *pa_pData);
-    int writeData(uint16_t *pa_pData, unsigned int pa_nDataSize);
-    int connect();
-    void disconnect();
+    int readData(uint8_t *pa_pData) override;
+    int writeData(uint16_t *pa_pData, unsigned int pa_nDataSize) override;
+    int connect() override;
+    void disconnect() override;
 
     void addNewPoll(TForteUInt32 pa_nPollInterval, unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses);
     void addNewSend(unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses);
@@ -44,7 +44,7 @@ class CModbusClientConnection : public CModbusConnection{
     void setSlaveId(unsigned int pa_nSlaveId);
 
   protected:
-    virtual void run();
+    void run() override;
 
   private:
     void tryConnect();

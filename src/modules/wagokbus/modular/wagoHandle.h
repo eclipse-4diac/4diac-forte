@@ -22,7 +22,7 @@ class WagoHandle : public forte::core::io::IOHandle {
     WagoHandle(WagoDeviceController *paController, CIEC_ANY::EDataTypeID paType, forte::core::io::IOMapper::Direction paDirection,
         tApplicationDeviceInterface * paAppDevInterface, uint32_t paTaskId, tDeviceId paKBusDeviceId, TForteUInt32 paOutputOffset, TForteUInt32 paInputOffset);
 
-    virtual ~WagoHandle();
+    ~WagoHandle() override;
 
     virtual void set(const CIEC_ANY &) override;
 

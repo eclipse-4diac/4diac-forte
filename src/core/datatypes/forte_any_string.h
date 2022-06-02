@@ -27,7 +27,7 @@ class CIEC_ANY_STRING : public CIEC_ANY_ELEMENTARY{
   public:
     static const unsigned int scm_unMaxStringLen = 65534; //save one for the \0 needed for allocated length
 
-    virtual ~CIEC_ANY_STRING();
+    ~CIEC_ANY_STRING() override;
 
     CIEC_ANY_STRING(const CIEC_ANY_STRING& paValue) :
         CIEC_ANY_ELEMENTARY(){

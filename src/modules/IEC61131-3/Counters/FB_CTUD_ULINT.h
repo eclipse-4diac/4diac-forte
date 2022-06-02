@@ -37,7 +37,7 @@ private:
 
   FORTE_FB_DATA_ARRAY(1,5,3, 0);
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
   CIEC_BOOL& CU() {
      return *static_cast<CIEC_BOOL*>(getDI(0));
@@ -67,7 +67,7 @@ private:
 
 public:
   FUNCTION_BLOCK_CTOR(FB_CTUD_ULINT){};
-  virtual ~FB_CTUD_ULINT() = default;
+  ~FB_CTUD_ULINT() override = default;
 
 };
 

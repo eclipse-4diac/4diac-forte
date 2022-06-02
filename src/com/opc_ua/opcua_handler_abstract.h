@@ -31,7 +31,7 @@ class COPC_UA_HandlerAbstract : public CExternalEventHandler {
     /**
      * Destructor of the class
      */
-    virtual ~COPC_UA_HandlerAbstract();
+    ~COPC_UA_HandlerAbstract() override;
 
     /**
      * Trigger a new incoming event in the FB
@@ -63,12 +63,12 @@ class COPC_UA_HandlerAbstract : public CExternalEventHandler {
     /**
      * Not used
      */
-    void setPriority(int paPriority);
+    void setPriority(int paPriority) override;
 
     /**
      * Not used
      */
-    int getPriority() const;
+    int getPriority() const override;
 
     /**
      * Get the logger used by the the OPC UA stack

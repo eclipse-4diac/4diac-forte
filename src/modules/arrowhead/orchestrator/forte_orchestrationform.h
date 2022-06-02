@@ -25,8 +25,7 @@ class CIEC_OrchestrationForm : public CIEC_STRUCT {
   public:
     CIEC_OrchestrationForm();
 
-    virtual ~CIEC_OrchestrationForm() {
-    }
+    ~CIEC_OrchestrationForm() override = default;
 
     CIEC_ArrowheadService &service() {
       return *static_cast<CIEC_ArrowheadService*>(&getMembers()[0]);

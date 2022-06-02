@@ -24,7 +24,7 @@ namespace forte {
       public:
         CAdsConnection(const std::string& paAddr, const std::string& paRemoteIpOrHostName);
         CAdsConnection(const std::string& paAddr, uint16_t paPort, const std::string& paRemoteIpOrHostName);
-        virtual ~CAdsConnection();
+        ~CAdsConnection() override;
         bool connect();
 
         uint16_t getPort() const;

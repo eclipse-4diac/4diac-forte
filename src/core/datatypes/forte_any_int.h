@@ -26,7 +26,7 @@ class CIEC_ANY_INT : public CIEC_ANY_NUM{
   public:
     explicit CIEC_ANY_INT(TLargestIntValueType paVal);
 
-    virtual ~CIEC_ANY_INT() = default;
+    ~CIEC_ANY_INT() override = default;
 
     bool isSigned() const{
       bool bRetVal = false;

@@ -37,7 +37,7 @@ private:
   bool m_bOldVal;
 
 
-  virtual void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
   
   CIEC_BOOL& QI() {
      return *static_cast<CIEC_BOOL*>(getDI(0));
@@ -47,7 +47,7 @@ public:
   FUNCTION_BLOCK_CTOR(E_F_TRIG), m_bOldVal(false) {
   };
 
-  virtual ~E_F_TRIG() = default;
+  ~E_F_TRIG() override = default;
 
 };
 

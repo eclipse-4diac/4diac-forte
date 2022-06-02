@@ -33,7 +33,7 @@ private:
   static const CStringDictionary::TStringId scm_aunEventOutputNameIds[];
 
 
-  virtual void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
   FORTE_FB_DATA_ARRAY(1,0,1, 0);
@@ -45,7 +45,7 @@ private:
 public:
   FUNCTION_BLOCK_CTOR(E_SR){
   };
-  virtual ~E_SR() = default;
+  ~E_SR() override = default;
 
 };
 

@@ -45,13 +45,13 @@ private:
 
    FORTE_FB_DATA_ARRAY(1, 1, 1, 0);
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
 public:
   FUNCTION_BLOCK_CTOR(FORTE_F_USINT_TO_INT){
   };
 
-  virtual ~FORTE_F_USINT_TO_INT() = default;
+  ~FORTE_F_USINT_TO_INT() override = default;
 
 };
 

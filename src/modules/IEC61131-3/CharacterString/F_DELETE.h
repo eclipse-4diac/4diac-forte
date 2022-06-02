@@ -59,7 +59,7 @@ class FORTE_F_DELETE : public CFunctionBlock {
     FORTE_FB_DATA_ARRAY(1, 3, 1, 0)
     ;
 
-    void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
 
   public:
     FUNCTION_BLOCK_CTOR(FORTE_F_DELETE){
@@ -71,7 +71,7 @@ class FORTE_F_DELETE : public CFunctionBlock {
     st_OUT().saveAssign(func_DELETE(oIn1,L(),P()));
   }
 
-  virtual ~FORTE_F_DELETE() = default;
+  ~FORTE_F_DELETE() override = default;
 
 };
 

@@ -142,7 +142,7 @@ class CTypeLib{
       const SFBInterfaceSpec* mSocketInterfaceSpec;
     public:
       CSpecTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, const SFBInterfaceSpec* paSocketInterfaceSpec);
-      virtual ~CSpecTypeEntry();
+      ~CSpecTypeEntry() override;
       const SFBInterfaceSpec* getInterfaceSpec() const{ return mSocketInterfaceSpec; }
   };
 
@@ -150,7 +150,7 @@ class CTypeLib{
   class CFBTypeEntry : public CSpecTypeEntry{
     public:
       CFBTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TFunctionBlockCreateFunc pa_pfuncCreateFB, const SFBInterfaceSpec* paSocketInterfaceSpec);
-      virtual ~CFBTypeEntry();
+      ~CFBTypeEntry() override;
       virtual CFunctionBlock *createFBInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes){
               return m_pfuncFBCreationFunc( pa_nInstanceNameId, pa_poSrcRes);
             }
@@ -163,7 +163,7 @@ class CTypeLib{
       class CAdapterTypeEntry : public CSpecTypeEntry{
         public:
           CAdapterTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TAdapterCreateFunc pa_pfuncCreateAdapter, const SFBInterfaceSpec* paSocketInterfaceSpec);
-          virtual ~CAdapterTypeEntry();
+          ~CAdapterTypeEntry() override;
           virtual CAdapter *createAdapterInstance(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, bool pa_bIsPlug){
             return m_pfuncAdapterCreationFunc( pa_nInstanceNameId, pa_poSrcRes, pa_bIsPlug);
           }
@@ -175,7 +175,7 @@ class CTypeLib{
   class CDataTypeEntry : public CTypeEntry{
     public:
       CDataTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TDataTypeCreateFunc pa_pfuncDTCreateFunc);
-      virtual ~CDataTypeEntry();
+      ~CDataTypeEntry() override;
       virtual CIEC_ANY *createDataTypeInstance(TForteByte *pa_acDataBuf){
         return m_pfuncDTCreateFunc(pa_acDataBuf);
       };

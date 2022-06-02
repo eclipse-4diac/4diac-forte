@@ -24,7 +24,7 @@ namespace forte {
         public:
           IOConfigFBBase(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
               TForteByte *paFBConnData, TForteByte *paFBVarsData);
-          virtual ~IOConfigFBBase();
+          ~IOConfigFBBase() override;
       };
 
     } //namespace IO

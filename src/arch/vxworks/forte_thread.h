@@ -30,7 +30,7 @@ class CVxWorksThread : public forte::arch::CThreadBase<TASK_ID, TASK_ID_ERROR> {
      *
      *  Will stop the execution if running and destroy the thread including all system specific data.
      */
-    virtual ~CVxWorksThread();
+    ~CVxWorksThread() override;
 
     //!Set the deadline of the thread.
     void setDeadline(const CIEC_TIME &paVal);

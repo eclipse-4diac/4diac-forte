@@ -25,7 +25,7 @@ class CFMUProcessInterface : public CProcessInterfaceBase{
 
     void setValueContainer(fmuValueContainer* paValueContainer);
 
-    virtual ~CFMUProcessInterface();
+    ~CFMUProcessInterface() override;
 
     virtual void executeEvent(int ){};
 

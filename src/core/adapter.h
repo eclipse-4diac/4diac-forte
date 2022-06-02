@@ -43,7 +43,7 @@ class CAdapter : public CFunctionBlock{
      */
     //TODO: think on interface
     CAdapter(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpecSocket, const CStringDictionary::TStringId pa_nInstanceNameId, const SFBInterfaceSpec *pa_pstInterfaceSpecPlug, bool pa_bIsPlug, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
-    virtual ~CAdapter();
+    ~CAdapter() override;
 
     /*!\brief Returns if Adapter instance is a Plug
      */
@@ -140,7 +140,7 @@ class CAdapter : public CFunctionBlock{
     TForteUInt16 m_nParentAdapterListEventID;
 
   private:
-    virtual void executeEvent(int pa_nEIID);
+    void executeEvent(int pa_nEIID) override;
     void setupEventEntryList();
 
     const bool m_bIsPlug;

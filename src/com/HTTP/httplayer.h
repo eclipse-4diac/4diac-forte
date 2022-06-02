@@ -28,18 +28,18 @@ namespace forte {
     class CHttpComLayer : public CComLayer {
       public:
         CHttpComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB);
-        virtual ~CHttpComLayer();
+        ~CHttpComLayer() override;
 
-        EComResponse sendData(void *paData, unsigned int paSize); // top interface, called from top
-        EComResponse recvData(const void *paData, unsigned int paSize);
+        EComResponse sendData(void *paData, unsigned int paSize) override; // top interface, called from top
+        EComResponse recvData(const void *paData, unsigned int paSize) override;
 
         EComResponse recvServerData(CSinglyLinkedList<CIEC_STRING>& paParameterNames, CSinglyLinkedList<CIEC_STRING>& paParameterValues);
 
-        EComResponse openConnection(char* paLayerParameter);
+        EComResponse openConnection(char* paLayerParameter) override;
 
-        void closeConnection();
+        void closeConnection() override;
 
-        EComResponse processInterrupt();
+        EComResponse processInterrupt() override;
 
         /** enum representing the HTTP request type */
         enum ERequestType {

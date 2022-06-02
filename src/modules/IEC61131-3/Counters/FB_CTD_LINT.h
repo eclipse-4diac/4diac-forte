@@ -37,7 +37,7 @@ private:
 
   FORTE_FB_DATA_ARRAY(1,3,2, 0);
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(int pa_nEIID) override;
 
 
   CIEC_BOOL& CD() {
@@ -60,7 +60,7 @@ private:
 
 public:
   FUNCTION_BLOCK_CTOR(FB_CTD_LINT){};
-  virtual ~FB_CTD_LINT() = default;
+  ~FB_CTD_LINT() override = default;
 
 };
 

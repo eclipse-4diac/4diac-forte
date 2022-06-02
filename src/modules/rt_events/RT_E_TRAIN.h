@@ -70,7 +70,7 @@ public:
   COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_RT_E_TRAIN){
   };
 
-  virtual ~FORTE_RT_E_TRAIN() = default;
+  ~FORTE_RT_E_TRAIN() override = default;
 
 };
 

@@ -25,13 +25,13 @@ class CDataConnection : public CConnection {
   public:
     CDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, const CIEC_ANY *paSrcDO);
 
-    virtual ~CDataConnection();
+    ~CDataConnection() override;
 
-    virtual EMGMResponse connect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId);
+    EMGMResponse connect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
-    virtual EMGMResponse connectToCFBInterface(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId);
+    EMGMResponse connectToCFBInterface(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
-    virtual EMGMResponse disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId);
+    EMGMResponse disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
 /*! \brief Write connection data value.
  *

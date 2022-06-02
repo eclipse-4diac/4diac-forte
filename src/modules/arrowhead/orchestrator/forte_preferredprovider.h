@@ -23,8 +23,7 @@ class CIEC_PreferredProvider : public CIEC_STRUCT {
   public:
     CIEC_PreferredProvider();
 
-    virtual ~CIEC_PreferredProvider() {
-    }
+    ~CIEC_PreferredProvider() override = default;
 
     CIEC_ArrowheadSystem &providerSystem() {
       return *static_cast<CIEC_ArrowheadSystem*>(&getMembers()[0]);

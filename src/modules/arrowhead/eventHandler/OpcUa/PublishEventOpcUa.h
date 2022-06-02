@@ -49,7 +49,7 @@ public:
   COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_PublishEventOpcUa){
   };
 
-  virtual ~FORTE_PublishEventOpcUa(){};
+  ~FORTE_PublishEventOpcUa() override = default;
 
 };
 

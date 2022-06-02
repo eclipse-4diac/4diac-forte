@@ -24,7 +24,7 @@ class CI2CProcessInterface : public CProcessInterfaceBase{
     CI2CProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
         const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData,
         TForteByte *paFBVarsData);
-    virtual ~CI2CProcessInterface();
+    ~CI2CProcessInterface() override;
 
   protected:
     bool initialise(bool paInput);
