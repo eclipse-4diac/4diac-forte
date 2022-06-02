@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2018 ACIN, Profactor GmbH, fortiss GmbH, Johannes Kepler University
+ *               2022 Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +10,7 @@
  * Contributors:
  *    Alois Zoitl, Rene Smodic, Thomas Strasser, Gerhard Ebenhofer, Ingo Hegny,
  *      - initial implementation and rework communication infrastructure
+ *    Martin Jobst - add CTF tracing integration
  *******************************************************************************/
 #ifndef _RESOURCE_H_
 #define _RESOURCE_H_
@@ -23,6 +25,10 @@
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
 class CLuaEngine;
+#endif
+
+#ifdef FORTE_TRACE_CTF
+#include "trace/barectf_platform_forte.h"
 #endif
 
 class CDevice;
@@ -94,6 +100,12 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
     CLuaEngine *getLuaEngine(){
       return luaEngine;
+    }
+#endif
+
+#ifdef FORTE_TRACE_CTF
+    BarectfPlatformFORTE &getTracePlatformContext() {
+      return tracePlatformContext;
     }
 #endif
 
@@ -232,6 +244,10 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 #ifdef FORTE_SUPPORT_MONITORING
     forte::core::CMonitoringHandler mMonitoringHandler;
 #endif //#ifdef FORTE_SUPPORT_MONITORING
+
+#ifdef FORTE_TRACE_CTF
+    BarectfPlatformFORTE tracePlatformContext;
+#endif // FORTE_TRACE_CTF
 
 };
 

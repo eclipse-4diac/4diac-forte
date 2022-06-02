@@ -1,6 +1,8 @@
 #********************************************************************************
 # Copyright (c) 2010 - 2015 Profactor GmbH, AIT, fortiss GmbH
 #               2010-2015, 2020 TU Wien/ACIN
+#               2022 Martin Erich Jobst
+#
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -12,6 +14,8 @@
 #    Martin Melik Merkumians
 #      - initial API and implementation and/or initial documentation
 #    Martin Melik Merkumians - adds compiler feature check for nullptr
+#    Martin Jobst
+#      - add CTF tracing support
 # *******************************************************************************/
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
@@ -40,6 +44,8 @@ mark_as_advanced(FORTE_BUILDSUPPORT_DIRECTORY)
 #include forte cmake-functions
 INCLUDE(${FORTE_BUILDSUPPORT_DIRECTORY}/forte.cmake)
 INCLUDE(${FORTE_BUILDSUPPORT_DIRECTORY}/check_compiler_features.cmake)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${FORTE_BUILDSUPPORT_DIRECTORY})
 
 set(FORTE_TEST_NEEDED_COMPILER_FEATURES ON CACHE BOOL "Check for compiler features and either apply fixes or error messages if not supported")
 mark_as_advanced(FORTE_BUILD_EXECUTABLE)
@@ -164,6 +170,16 @@ else()
   unset(LUAJIT_INCLUDE_DIR CACHE)
   unset(LUAJIT_MATH_LIBRARY CACHE)
 endif(NOT ("${FORTE_USE_LUATYPES}" STREQUAL "None"))
+
+#######################################################################################
+# CTF tracing
+#######################################################################################
+SET(FORTE_TRACE_CTF OFF CACHE BOOL "FORTE Common Trace Format (CTF) tracing")
+SET(FORTE_TRACE_CTF_BUFFER_SIZE 4096 CACHE STRING "FORTE Common Trace Format (CTF) trace buffer size")
+if(FORTE_TRACE_CTF)
+    forte_add_definition("-DFORTE_TRACE_CTF")
+    forte_add_definition("-DFORTE_TRACE_CTF_BUFFER_SIZE=${FORTE_TRACE_CTF_BUFFER_SIZE}")
+endif(FORTE_TRACE_CTF)
 
 #######################################################################################
 # Early definition of option how to generate stringlist for every source file

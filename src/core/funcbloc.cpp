@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2018 Profactor GmbH, ACIN, fortiss GmbH,
  *                           Johannes Kepler University
+ *               2022 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -14,6 +15,7 @@
  *    Matthias Plasch
  *      - initial implementation and rework communication infrastructure
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *    Martin Jobst - add CTF tracing integration
  *******************************************************************************/
 #include "funcbloc.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -25,6 +27,10 @@
 #include "../arch/timerha.h"
 #include <string.h>
 #include <stdlib.h>
+
+#ifdef FORTE_TRACE_CTF
+#include "trace/barectf_platform_forte.h"
+#endif
 
 CFunctionBlock::CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
    mEOConns(nullptr), m_apoDIConns(nullptr), mDOConns(nullptr),
@@ -240,6 +246,13 @@ TPortId CFunctionBlock::getAdapterPortId(CStringDictionary::TStringId paAdapterN
 
 void CFunctionBlock::sendOutputEvent(size_t paEO){
   FORTE_TRACE("OutputEvent: Function Block sending event: %d (maxid: %d)\n", paEO, m_pstInterfaceSpec->m_nNumEOs - 1);
+
+#ifdef FORTE_TRACE_CTF
+  barectf_default_trace_sendOutputEvent(m_poResource->getTracePlatformContext().getContext(),
+                                        CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
+                                        static_cast<uint64_t>(paEO));
+#endif
+
   if(paEO < m_pstInterfaceSpec->m_nNumEOs) {
     if(nullptr != m_pstInterfaceSpec->m_anEOWithIndexes && -1 != m_pstInterfaceSpec->m_anEOWithIndexes[paEO]) {
       const TDataIOID *eiWithStart = &(m_pstInterfaceSpec->m_anEOWith[m_pstInterfaceSpec->m_anEOWithIndexes[paEO]]);
@@ -247,8 +260,8 @@ void CFunctionBlock::sendOutputEvent(size_t paEO){
       CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
       for(size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
         CDataConnection *con = getDOConUnchecked(eiWithStart[i]);
+        CIEC_ANY *dataOutput = getDO(eiWithStart[i]);
         if(con->isConnected()) {
-          CIEC_ANY *dataOutput = getDO(eiWithStart[i]);
 #ifdef FORTE_SUPPORT_MONITORING
           if(dataOutput->isForced() != true) {
 #endif //FORTE_SUPPORT_MONITORING
@@ -260,6 +273,14 @@ void CFunctionBlock::sendOutputEvent(size_t paEO){
           }
 #endif //FORTE_SUPPORT_MONITORING
         }
+#ifdef FORTE_TRACE_CTF
+        std::string valueString;
+        valueString.reserve(dataOutput->getToStringBufferSize());
+        dataOutput->toString(valueString.data(), valueString.capacity());
+        barectf_default_trace_outputData(m_poResource->getTracePlatformContext().getContext(),
+                                         CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
+                                         static_cast<uint64_t>(eiWithStart[i]), valueString.c_str());
+#endif //FORTE_TRACE_CTF
       }
     }
 
@@ -285,6 +306,12 @@ bool CFunctionBlock::configureFB(const char *){
 void CFunctionBlock::receiveInputEvent(size_t paEIID, CEventChainExecutionThread *paExecEnv){
   FORTE_TRACE("InputEvent: Function Block (%s) got event: %d (maxid: %d)\n", CStringDictionary::getInstance().get(getInstanceNameId()), paEIID, m_pstInterfaceSpec->m_nNumEIs - 1);
 
+#ifdef FORTE_TRACE_CTF
+  barectf_default_trace_receiveInputEvent(m_poResource->getTracePlatformContext().getContext(),
+                                          CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
+                                          static_cast<uint64_t>(paEIID));
+#endif
+
   if(e_RUNNING == getState()){
     if(paEIID < m_pstInterfaceSpec->m_nNumEIs) {
       if(nullptr != m_pstInterfaceSpec->m_anEIWithIndexes && -1 != m_pstInterfaceSpec->m_anEIWithIndexes[paEIID]) {
@@ -302,6 +329,14 @@ void CFunctionBlock::receiveInputEvent(size_t paEIID, CEventChainExecutionThread
 #ifdef FORTE_SUPPORT_MONITORING
             }
 #endif //FORTE_SUPPORT_MONITORING
+#ifdef FORTE_TRACE_CTF
+            std::string valueString;
+            valueString.reserve(di->getToStringBufferSize());
+            di->toString(valueString.data(), valueString.capacity());
+            barectf_default_trace_inputData(m_poResource->getTracePlatformContext().getContext(),
+                                            CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
+                                            static_cast<uint64_t>(eiWithStart[i]), valueString.c_str());
+#endif //FORTE_TRACE_CTF
           }
         }
       }

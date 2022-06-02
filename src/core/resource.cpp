@@ -2,6 +2,7 @@
  * Copyright (c) 2005 - 2018 ACIN, Profactor GmbH, fortiss GmbH,
  *                           Johannes Kepler University
  *               2022 Primetals Technologies Austria GmbH
+ *               2022 Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -14,6 +15,7 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians - modify for removed implicit constructors
  *         for primitive types
+ *    Martin Jobst - add CTF tracing integration
  *******************************************************************************/
 #include <fortenew.h>
 #include "resource.h"
@@ -38,6 +40,9 @@ CResource::CResource(CResource* pa_poDevice, const SFBInterfaceSpec *pa_pstInter
 #ifdef FORTE_SUPPORT_MONITORING
 , mMonitoringHandler(*this)
 #endif
+#ifdef FORTE_TRACE_CTF
+, tracePlatformContext(pa_nInstanceNameId, FORTE_TRACE_CTF_BUFFER_SIZE)
+#endif
 {
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
   luaEngine = new CLuaEngine();
@@ -50,6 +55,9 @@ CResource::CResource(const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringD
     mResourceEventExecution(nullptr), mResIf2InConnections(nullptr)
 #ifdef FORTE_SUPPORT_MONITORING
 , mMonitoringHandler(*this)
+#endif
+#ifdef FORTE_TRACE_CTF
+, tracePlatformContext(pa_nInstanceNameId, FORTE_TRACE_CTF_BUFFER_SIZE)
 #endif
 {
 #ifdef FORTE_DYNAMIC_TYPE_LOAD

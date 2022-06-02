@@ -1,6 +1,7 @@
 #*******************************************************************************
 # Copyright (c) 2010 - 2016 Profactor GmbH, ACIN, fortiss GmbH
 # *                      2018 Johannes Kepler University
+#               2022 Martin Erich Jobst
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -12,6 +13,7 @@
 # *      - initial implementation and rework communication infrastructure
 # *    Martin Jobst - adapt for LUA integration
 # *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+#      Martin Jobst - add CTF tracing support
 # *******************************************************************************/
 #############################################################################
 # Core
@@ -43,5 +45,9 @@ endif(FORTE_DYNAMIC_TYPE_LOAD)
 if(FORTE_SUPPORT_MONITORING)
   forte_add_sourcefile_hcpp(monitoring)
 endif(FORTE_SUPPORT_MONITORING)
+
+if(FORTE_TRACE_CTF)
+  forte_add_subdirectory(trace)
+endif(FORTE_TRACE_CTF)
 
 
