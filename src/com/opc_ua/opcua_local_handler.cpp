@@ -146,7 +146,7 @@ void COPC_UA_Local_Handler::generateServerStrings(TForteUInt16 paUAServerPort, U
     size_t offset = strlen(hostname);
     size_t nameLen = strlen(helperBuffer);
     if(offset + nameLen + 1 > scmMaxServerNameLength) {
-      offset = MAX(scmMaxServerNameLength - nameLen - 1, (size_t) 0);
+      offset = std::max<size_t>(scmMaxServerNameLength - nameLen - 1, (size_t) 0);
     }
     forte_snprintf(hostname + offset, scmMaxServerNameLength - offset, "-%s", helperBuffer);
   }
