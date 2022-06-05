@@ -65,6 +65,10 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
             const UA_NumericRange *paRange, const UA_DataValue *paData);
     };
 
+    UA_Server* getUAServer() {
+      return mUaServer;
+    }
+
   protected:
 
     /**
