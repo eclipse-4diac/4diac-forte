@@ -76,3 +76,24 @@ trace:
                 - instanceName: string # FB instance name
                 - dataId: uint64 # Data id
                 - value: string # Data value
+          # instanceData
+          instanceData:
+            payload-field-type:
+              class: structure
+              members:
+                - instanceName: string # FB instance name
+                - inputs: # Data values
+                    field-type:
+                      class: dynamic-array
+                      element-field-type:
+                        class: string
+                - outputs: # Data values
+                    field-type:
+                      class: dynamic-array
+                      element-field-type:
+                        class: string
+                - internal: # Data values
+                    field-type:
+                      class: dynamic-array
+                      element-field-type:
+                        class: string

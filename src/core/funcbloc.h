@@ -366,6 +366,9 @@ class CFunctionBlock {
     virtual CFunctionBlock *getFB(forte::core::TNameIdentifier::CIterator &paNameListIt);
 
 #endif //FORTE_SUPPORT_MONITORING
+#ifdef FORTE_TRACE_CTF
+    virtual void traceInstanceData() {}
+#endif //FORTE_TRACE_CTF
   protected:
 
     /*!\brief The main constructor for a function block.

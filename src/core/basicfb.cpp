@@ -13,6 +13,7 @@
  *******************************************************************************/
 #include <string.h>
 #include "basicfb.h"
+#include "resource.h"
 
 CBasicFB::CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId,
     const SInternalVarsInformation *pa_pstVarInternals, TForteByte *pa_acFBConnData, TForteByte *pa_acBasicFBVarsData) :
@@ -103,4 +104,45 @@ void CBasicFB::createInternalFBs(const SCFB_FBInstanceData *const pa_InternalFBD
     }
   }
 }
+
+#ifdef FORTE_TRACE_CTF
+void CBasicFB::traceInstanceData() {
+  std::vector<std::string> inputs(m_pstInterfaceSpec->m_nNumDIs);
+  std::vector<std::string> outputs(m_pstInterfaceSpec->m_nNumDOs);
+  std::vector<std::string> internals(cm_pstVarInternals ? cm_pstVarInternals->m_nNumIntVars : 0);
+  std::vector<const char *> inputs_c_str(inputs.size());
+  std::vector<const char *> outputs_c_str(outputs.size());
+  std::vector<const char *> internals_c_str(internals.size());
+
+  for(TForteUInt8 i = 0; i < inputs.size(); ++i) {
+    CIEC_ANY *value = getDI(i);
+    std::string &valueString = inputs[i];
+    valueString.reserve(value->getToStringBufferSize());
+    value->toString(valueString.data(), valueString.capacity());
+    inputs_c_str[i] = valueString.c_str();
+  }
+
+  for(TForteUInt8 i = 0; i < outputs.size(); ++i) {
+    CIEC_ANY *value = getDO(i);
+    std::string &valueString = outputs[i];
+    valueString.reserve(value->getToStringBufferSize());
+    value->toString(valueString.data(), valueString.capacity());
+    outputs_c_str[i] = valueString.c_str();
+  }
+
+  for(TForteUInt8 i = 0; i < internals.size(); ++i) {
+    CIEC_ANY *value = getVarInternal(i);
+    std::string &valueString = internals[i];
+    valueString.reserve(value->getToStringBufferSize());
+    value->toString(valueString.data(), valueString.capacity());
+    internals_c_str[i] = valueString.c_str();
+  }
+
+  barectf_default_trace_instanceData(getResource().getTracePlatformContext().getContext(),
+                                     getInstanceName() ?: "null",
+                                     static_cast<uint32_t >(inputs.size()), inputs_c_str.data(),
+                                     static_cast<uint32_t >(outputs.size()), outputs_c_str.data(),
+                                     static_cast<uint32_t >(internals.size()), internals_c_str.data());
+}
+#endif
 

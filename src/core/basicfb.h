@@ -75,6 +75,10 @@ class CBasicFB : public CFunctionBlock {
     }
     ;
 
+#ifdef FORTE_TRACE_CTF
+    void traceInstanceData() override;
+#endif
+
   protected:
     /*! \brief Get the internal variable with given number
      *

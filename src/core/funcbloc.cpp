@@ -310,6 +310,8 @@ void CFunctionBlock::receiveInputEvent(size_t paEIID, CEventChainExecutionThread
   barectf_default_trace_receiveInputEvent(m_poResource->getTracePlatformContext().getContext(),
                                           CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
                                           static_cast<uint64_t>(paEIID));
+
+  traceInstanceData();
 #endif
 
   if(e_RUNNING == getState()){
