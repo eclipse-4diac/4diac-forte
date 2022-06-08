@@ -662,4 +662,26 @@ BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_NonCommonSymbol)
   BOOST_CHECK_EQUAL(3 + 2 + 1, bufferSize); // '$8A'\0
 }
 
+BOOST_AUTO_TEST_CASE(Implicit_cast_from_CHAR)
+{
+  CIEC_CHAR testChar('4');
+  CIEC_STRING resultString(testChar);
+
+  unsigned int bufferSize = resultString.getToStringBufferSize();
+
+  BOOST_CHECK_EQUAL(3, bufferSize); //'<symbol>' = 3
+}
+
+BOOST_AUTO_TEST_CASE(Assignment_from_CHAR)
+{
+  CIEC_CHAR testChar('4');
+  CIEC_STRING resultString;
+
+  resultString = testChar;
+
+  unsigned int bufferSize = resultString.getToStringBufferSize();
+
+  BOOST_CHECK_EQUAL(3, bufferSize); //'<symbol>' = 3
+}
+
 BOOST_AUTO_TEST_SUITE_END()

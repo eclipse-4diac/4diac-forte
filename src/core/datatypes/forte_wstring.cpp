@@ -20,7 +20,11 @@
 
 DEFINE_FIRMWARE_DATATYPE(WSTRING, g_nStringIdWSTRING)
 
-bool CIEC_WSTRING::fromUTF16(const TForteByte *pa_pacBuffer, unsigned int pa_nBufferLen){
+bool CIEC_WSTRING::fromUTF16(const TForteWChar *paBuffer, unsigned int paBufferLen) {
+  return fromUTF16(reinterpret_cast<const TForteByte*>(paBuffer), 2 * paBufferLen);
+}
+
+bool CIEC_WSTRING::fromUTF16(const TForteByte *pa_pacBuffer, unsigned int pa_nBufferLen) {
   bool bLittleEndian = false;
   TForteUInt32 nCodepoint;
   int nRes;

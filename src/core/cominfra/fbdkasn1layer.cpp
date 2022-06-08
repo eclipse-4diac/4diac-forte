@@ -20,6 +20,28 @@
 
 using namespace forte::com_infra;
 
+const std::set<CIEC_ANY::EDataTypeID> CFBDKASN1ComLayer::scmSimpleEncodableDataTypes{
+    CIEC_ANY::e_SINT,
+    CIEC_ANY::e_INT,
+    CIEC_ANY::e_DINT,
+    CIEC_ANY::e_LINT,
+    CIEC_ANY::e_USINT,
+    CIEC_ANY::e_UINT,
+    CIEC_ANY::e_UDINT,
+    CIEC_ANY::e_ULINT,
+    CIEC_ANY::e_BYTE,
+    CIEC_ANY::e_WORD,
+    CIEC_ANY::e_DWORD,
+    CIEC_ANY::e_LWORD,
+    CIEC_ANY::e_DATE,
+    CIEC_ANY::e_TIME_OF_DAY,
+    CIEC_ANY::e_DATE_AND_TIME,
+    CIEC_ANY::e_CHAR,
+    CIEC_ANY::e_WCHAR,
+    CIEC_ANY::e_REAL,
+    CIEC_ANY::e_LREAL
+};
+
 CFBDKASN1ComLayer::CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poComFB) :
   CComLayer(pa_poUpperLayer, pa_poComFB), mStatSerBuf(nullptr), mStatSerBufSize(0), mDeserBuf(nullptr), mDeserBufSize(0), mDeserBufPos(0), mDIPos(0), mDOPos(0){
 
@@ -206,10 +228,38 @@ EComResponse CFBDKASN1ComLayer::recvData(const void *paData, unsigned int paSize
  *
  */
 const TForteByte CFBDKASN1ComLayer::csm_aDataTags[][2] = {
-//!< {Tag, Size of data + tag size}; Size == 255 means unknown
-//TODO: consider size=0 for unknown
-    { e_APPLICATION + e_PRIMITIVE + e_ANY_TAG, 255 }, { e_APPLICATION + e_PRIMITIVE + e_BOOL_TAG, 1 }, { e_APPLICATION + e_PRIMITIVE + e_SINT_TAG, 2 }, { e_APPLICATION + e_PRIMITIVE + e_INT_TAG, 3 }, { e_APPLICATION + e_PRIMITIVE + e_DINT_TAG, 5 }, { e_APPLICATION + e_PRIMITIVE + e_LINT_TAG, 9 }, { e_APPLICATION + e_PRIMITIVE + e_USINT_TAG, 2 }, { e_APPLICATION + e_PRIMITIVE + e_UINT_TAG, 3 }, { e_APPLICATION + e_PRIMITIVE + e_UDINT_TAG, 5 }, { e_APPLICATION + e_PRIMITIVE + e_ULINT_TAG, 9 }, { e_APPLICATION + e_PRIMITIVE + e_BYTE_TAG, 2 }, { e_APPLICATION + e_PRIMITIVE + e_WORD_TAG, 3 }, { e_APPLICATION + e_PRIMITIVE + e_DWORD_TAG, 5 }, { e_APPLICATION + e_PRIMITIVE + e_LWORD_TAG, 9 },  {
-        e_APPLICATION + e_PRIMITIVE + e_DATE_TAG, 9 }, { e_APPLICATION + e_PRIMITIVE + e_TIME_OF_DAY_TAG, 9 }, { e_APPLICATION + e_PRIMITIVE + e_DATE_AND_TIME_TAG, 9 }, { e_APPLICATION + e_PRIMITIVE + e_TIME_TAG, 9 }, { e_APPLICATION + e_PRIMITIVE + e_REAL_TAG, 5 }, { e_APPLICATION + e_PRIMITIVE + e_LREAL_TAG, 9 }, { e_APPLICATION + e_PRIMITIVE + e_STRING_TAG, 255 }, { e_APPLICATION + e_PRIMITIVE + e_WSTRING_TAG, 255 }, { e_APPLICATION + e_CONSTRUCTED + e_DerivedData_TAG, 255 }, { e_APPLICATION + e_CONSTRUCTED + e_DirectlyDerivedData_TAG, 255 }, { e_APPLICATION + e_CONSTRUCTED + e_EnumeratedData_TAG, 255 }, { e_APPLICATION + e_CONSTRUCTED + e_SubrangeData_TAG, 255 }, { e_APPLICATION + e_CONSTRUCTED + e_ARRAY_TAG, 255 }, { e_APPLICATION + e_CONSTRUCTED + e_STRUCT_TAG, 255 } };
+    //!< {Tag, Size of data + tag size}; Size == 255 means unknown
+    // TODO: consider size=0 for unknown
+    {e_APPLICATION + e_PRIMITIVE + e_ANY_TAG, 255},
+    {e_APPLICATION + e_PRIMITIVE + e_BOOL_TAG, 1},
+    {e_APPLICATION + e_PRIMITIVE + e_SINT_TAG, 2},
+    {e_APPLICATION + e_PRIMITIVE + e_INT_TAG, 3},
+    {e_APPLICATION + e_PRIMITIVE + e_DINT_TAG, 5},
+    {e_APPLICATION + e_PRIMITIVE + e_LINT_TAG, 9},
+    {e_APPLICATION + e_PRIMITIVE + e_USINT_TAG, 2},
+    {e_APPLICATION + e_PRIMITIVE + e_UINT_TAG, 3},
+    {e_APPLICATION + e_PRIMITIVE + e_UDINT_TAG, 5},
+    {e_APPLICATION + e_PRIMITIVE + e_ULINT_TAG, 9},
+    {e_APPLICATION + e_PRIMITIVE + e_BYTE_TAG, 2},
+    {e_APPLICATION + e_PRIMITIVE + e_WORD_TAG, 3},
+    {e_APPLICATION + e_PRIMITIVE + e_DWORD_TAG, 5},
+    {e_APPLICATION + e_PRIMITIVE + e_LWORD_TAG, 9},
+    {e_APPLICATION + e_PRIMITIVE + e_DATE_TAG, 9},
+    {e_APPLICATION + e_PRIMITIVE + e_TIME_OF_DAY_TAG, 9},
+    {e_APPLICATION + e_PRIMITIVE + e_DATE_AND_TIME_TAG, 9},
+    {e_APPLICATION + e_PRIMITIVE + e_TIME_TAG, 9},
+    {e_APPLICATION + e_PRIMITIVE + e_CHAR_TAG, 2},
+    {e_APPLICATION + e_PRIMITIVE + e_WCHAR_TAG, 3},
+    {e_APPLICATION + e_PRIMITIVE + e_REAL_TAG, 5},
+    {e_APPLICATION + e_PRIMITIVE + e_LREAL_TAG, 9},
+    {e_APPLICATION + e_PRIMITIVE + e_STRING_TAG, 255},
+    {e_APPLICATION + e_PRIMITIVE + e_WSTRING_TAG, 255},
+    {e_APPLICATION + e_CONSTRUCTED + e_DerivedData_TAG, 255},
+    {e_APPLICATION + e_CONSTRUCTED + e_DirectlyDerivedData_TAG, 255},
+    {e_APPLICATION + e_CONSTRUCTED + e_EnumeratedData_TAG, 255},
+    {e_APPLICATION + e_CONSTRUCTED + e_SubrangeData_TAG, 255},
+    {e_APPLICATION + e_CONSTRUCTED + e_ARRAY_TAG, 255},
+    {e_APPLICATION + e_CONSTRUCTED + e_STRUCT_TAG, 255}};
 
 int CFBDKASN1ComLayer::serializeDataPointArray(TForteByte *pa_pcBytes, unsigned int pa_nStreamSize, TConstIEC_ANYPtr *pa_apoData, unsigned int pa_nDataNum){
   int nRetVal = -1;
@@ -596,7 +646,8 @@ int CFBDKASN1ComLayer::deserializeValue(const TForteByte* pa_pcBytes, int pa_nSt
   int nRetVal = -1;
   CIEC_ANY::EDataTypeID eDataType = pa_roCIECData.getDataTypeID();
 
-  if((CIEC_ANY::e_BOOL < eDataType && eDataType <= CIEC_ANY::e_DATE_AND_TIME)||(CIEC_ANY::e_REAL == eDataType)||(CIEC_ANY::e_LREAL == eDataType)){//e_ANY to e_DATE_AND_TIME can be handled the same way
+  if (scmSimpleEncodableDataTypes.find(eDataType) != scmSimpleEncodableDataTypes.end())
+  { // e_ANY to e_DATE_AND_TIME can be handled the same way
     nRetVal = deserializeValueSimpleDataType(pa_pcBytes, pa_nStreamSize, pa_roCIECData);
   }
   else{

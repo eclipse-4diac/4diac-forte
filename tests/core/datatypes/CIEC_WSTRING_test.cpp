@@ -16,6 +16,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "../../../src/core/datatypes/forte_wstring.h"
+#include "../../../src/core/datatypes/forte_wchar.h"
 
 BOOST_AUTO_TEST_SUITE(CIEC_WSTRING_function_test)
 BOOST_AUTO_TEST_CASE(Type_test)
@@ -582,6 +583,27 @@ BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_NonCommonSymbol_Two_OneBytesU
 
   unsigned int bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(5 + 5 + 2 + 1, bufferSize); // "$008A"\0
+}
+
+BOOST_AUTO_TEST_CASE(Implicit_cast_from_WCHAR){
+  CIEC_WCHAR testChar(u'\u00df');
+  CIEC_WSTRING resultString(testChar);
+
+  unsigned int bufferSize = resultString.getToStringBufferSize();
+
+  BOOST_CHECK_EQUAL(3, bufferSize); // "<symbol>" = 3
+}
+
+BOOST_AUTO_TEST_CASE(Assignment_from_WCHAR)
+{
+  CIEC_WCHAR testChar(u'\u00df');
+  CIEC_WSTRING resultString;
+
+  resultString = testChar;
+
+  unsigned int bufferSize = resultString.getToStringBufferSize();
+
+  BOOST_CHECK_EQUAL(3, bufferSize); // "<symbol>" = 3
 }
 
 BOOST_AUTO_TEST_SUITE_END()

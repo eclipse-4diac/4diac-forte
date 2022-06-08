@@ -22,7 +22,6 @@
 
 #include "forte_any_bit.h"
 #include "forte_bool.h"
-#include <limits>
 
 /*!\ingroup COREDTS CIEC_BYTE represents the byte data type according to IEC 61131.
  */

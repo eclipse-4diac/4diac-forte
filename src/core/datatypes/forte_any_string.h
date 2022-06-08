@@ -17,11 +17,11 @@
 #ifndef _ANY_STR_H_
 #define _ANY_STR_H_
 
-#include "forte_any_elementary.h"
+#include "forte_any_chars.h"
 
 /*!\ingroup COREDTS IIEC_ANY_STRING represents any bit data types according to IEC 61131.
  */
-class CIEC_ANY_STRING : public CIEC_ANY_ELEMENTARY{
+class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
   DECLARE_FIRMWARE_DATATYPE(ANY_STRING)
 
   public:
@@ -30,7 +30,7 @@ class CIEC_ANY_STRING : public CIEC_ANY_ELEMENTARY{
     ~CIEC_ANY_STRING() override;
 
     CIEC_ANY_STRING(const CIEC_ANY_STRING& paValue) :
-        CIEC_ANY_ELEMENTARY(){
+        CIEC_ANY_CHARS(){
       this->assign(paValue.getValue(), paValue.length());
     }
 

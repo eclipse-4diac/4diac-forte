@@ -25,6 +25,7 @@
 #define _FORTE_STRING_H_
 
 #include "forte_any_string.h"
+#include "forte_char.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -37,6 +38,11 @@ class CIEC_STRING : public CIEC_ANY_STRING{
     CIEC_STRING() = default;
 
     CIEC_STRING(const CIEC_STRING& paValue) = default;
+
+    CIEC_STRING(const CIEC_CHAR &paValue) {
+      reserve(1);
+      getValue()[0] = static_cast<TForteChar>(paValue);
+    }
 
     explicit CIEC_STRING(const char* paValue){
       fromCharString(paValue);

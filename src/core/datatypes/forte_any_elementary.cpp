@@ -29,18 +29,30 @@
 
 DEFINE_FIRMWARE_DATATYPE(ANY_ELEMENTARY, g_nStringIdANY_ELEMENTARY)
 
-const CStringDictionary::TStringId CIEC_ANY_ELEMENTARY::scm_anTypeNameStringIds[] = { g_nStringIdANY, g_nStringIdBOOL, g_nStringIdSINT, g_nStringIdINT, g_nStringIdDINT, g_nStringIdLINT, g_nStringIdUSINT, g_nStringIdUINT, g_nStringIdUDINT, g_nStringIdULINT, g_nStringIdBYTE, g_nStringIdWORD, g_nStringIdDWORD, g_nStringIdLWORD, g_nStringIdDATE, g_nStringIdTIME_OF_DAY, g_nStringIdDATE_AND_TIME, g_nStringIdTIME, //until here simple Datatypes
-    g_nStringIdREAL, g_nStringIdLREAL, g_nStringIdSTRING, //e_STRING,
-    g_nStringIdWSTRING, //e_WSTRING,
-    CStringDictionary::scm_nInvalidStringId, //e_DerivedData,
-    CStringDictionary::scm_nInvalidStringId, //e_DirectlyDerivedData,
-    CStringDictionary::scm_nInvalidStringId, //e_EnumeratedData,
-    CStringDictionary::scm_nInvalidStringId, //e_SubrangeData,
-    CStringDictionary::scm_nInvalidStringId, //e_ARRAY,
-    CStringDictionary::scm_nInvalidStringId, //e_STRUCT,
-    CStringDictionary::scm_nInvalidStringId, //e_External,
-    CStringDictionary::scm_nInvalidStringId, //e_Max
-    };
+const std::map<CStringDictionary::TStringId, CIEC_ANY::EDataTypeID> CIEC_ANY_ELEMENTARY::scm_StringToTypeId = {
+    {g_nStringIdANY, CIEC_ANY::e_ANY},
+    {g_nStringIdBOOL, CIEC_ANY::e_BOOL},
+    {g_nStringIdSINT, CIEC_ANY::e_SINT},
+    {g_nStringIdINT, CIEC_ANY::e_INT},
+    {g_nStringIdDINT, CIEC_ANY::e_DINT},
+    {g_nStringIdLINT, CIEC_ANY::e_LINT},
+    {g_nStringIdUSINT, CIEC_ANY::e_USINT},
+    {g_nStringIdUINT, CIEC_ANY::e_UINT},
+    {g_nStringIdUDINT, CIEC_ANY::e_UDINT},
+    {g_nStringIdULINT, CIEC_ANY::e_ULINT},
+    {g_nStringIdBYTE, CIEC_ANY::e_BYTE},
+    {g_nStringIdWORD, CIEC_ANY::e_WORD},
+    {g_nStringIdDWORD, CIEC_ANY::e_DWORD},
+    {g_nStringIdLWORD, CIEC_ANY::e_LWORD},
+    {g_nStringIdDATE, CIEC_ANY::e_DATE},
+    {g_nStringIdTIME_OF_DAY, CIEC_ANY::e_TIME_OF_DAY},
+    {g_nStringIdDATE_AND_TIME, CIEC_ANY::e_DATE_AND_TIME},
+    {g_nStringIdCHAR, CIEC_ANY::e_CHAR},
+    {g_nStringIdWCHAR, CIEC_ANY::e_WCHAR},
+    {g_nStringIdREAL, CIEC_ANY::e_REAL},
+    {g_nStringIdLREAL, CIEC_ANY::e_LREAL},
+    {g_nStringIdSTRING, CIEC_ANY::e_STRING},
+    {g_nStringIdWSTRING, CIEC_ANY::e_WSTRING}};
 
 int CIEC_ANY_ELEMENTARY::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal = 0;
@@ -143,29 +155,28 @@ int CIEC_ANY_ELEMENTARY::toString(char* paValue, size_t paBufferSize) const {
   return nRetVal;
 }
 
-int CIEC_ANY_ELEMENTARY::fromString(const char *pa_pacValue){
+int CIEC_ANY_ELEMENTARY::fromString(const char *paValue){
   int nRetVal = -1;
-  const char *pacRunner = pa_pacValue;
+  const char *pacRunner = paValue;
 
-  if((nullptr == pa_pacValue) || ('\0' == *pa_pacValue)){
+  if((nullptr == paValue) || ('\0' == *paValue)){
     return -1;
   }
 
   if(e_ANY == getDataTypeID()){
-    nRetVal = CIEC_ANY::fromString(pa_pacValue);
+    nRetVal = CIEC_ANY::fromString(paValue);
     //TODO think of a check if it is really an any elementary that has been created
   }
   else{
-    const char *acHashPos = strchr(pa_pacValue, '#');
+    const char *acHashPos = strchr(paValue, '#');
     int nMultiplier = 10;
     bool bSigned = true;
-    if((nullptr != acHashPos) && (!forte::core::util::isDigit(*pa_pacValue))){
+    if((nullptr != acHashPos) && (!forte::core::util::isDigit(*paValue))){
       //if we have a hash and the first character is not a digit it has to be a type identifier
-      nRetVal = checkTypeSpec(pa_pacValue, acHashPos);
-      if(nRetVal < 0){
+      if(!isTypeSpecifier(paValue, acHashPos)){
         return -1;
       }
-      pacRunner += (nRetVal + 1); //put the runner one after the hash
+      pacRunner = acHashPos + 1; //put the runner one after the hash
       nRetVal = -1;
     }
 
@@ -268,7 +279,7 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *pa_pacValue){
       if((ERANGE != errno)&& (nValue <= nSUpperBound) && (nValue
           >= nSLowerBound)){
       setLargestInt(nValue);
-      nRetVal = static_cast<int>(pacEndPtr - pa_pacValue);
+      nRetVal = static_cast<int>(pacEndPtr - paValue);
     }
   }
   else{
@@ -281,7 +292,7 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *pa_pacValue){
 #endif //FORTE_USE_64BIT_DATATYPES
           if ((ERANGE != errno) && (nValue <= nUUpperBound)){
             setLargestUInt(nValue);
-            nRetVal = static_cast<int>(pacEndPtr - pa_pacValue);
+            nRetVal = static_cast<int>(pacEndPtr - paValue);
           }
         }
       }
@@ -293,15 +304,14 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *pa_pacValue){
   return nRetVal;
 }
 
-int CIEC_ANY_ELEMENTARY::checkTypeSpec(const char* pa_pacValue, const char* pa_pacHashPos) const {
-  int nRetVal = -1;
+bool CIEC_ANY_ELEMENTARY::isTypeSpecifier(const char* paValue, const char* paHashPosition) const {
+  CStringDictionary::TStringId nTypeNameId = parseTypeName(paValue, paHashPosition);
 
-  CStringDictionary::TStringId nTypeNameId = parseTypeName(pa_pacValue, pa_pacHashPos);
-
-  if((CStringDictionary::scm_nInvalidStringId != nTypeNameId) && ((scm_anTypeNameStringIds[getDataTypeID()] == nTypeNameId) || (isCastable(nTypeNameId)) )){
-    nRetVal = static_cast<int>(pa_pacHashPos - pa_pacValue);
+  if ((CStringDictionary::scm_nInvalidStringId != nTypeNameId) && ((scm_StringToTypeId.find(nTypeNameId) != scm_StringToTypeId.end()) || (isCastable(nTypeNameId))))
+  {
+    return true;
   }
-  return nRetVal;
+  return false;
 }
 
 bool CIEC_ANY_ELEMENTARY::isCastable(CStringDictionary::TStringId paTypeNameId) const {
@@ -312,11 +322,9 @@ bool CIEC_ANY_ELEMENTARY::isCastable(CStringDictionary::TStringId paTypeNameId) 
 }
 
 
-CIEC_ANY::EDataTypeID CIEC_ANY_ELEMENTARY::getElementaryDataTypeId(CStringDictionary::TStringId paTypeNameId){
-  for(size_t i = 0; i <= CIEC_ANY::e_LWORD; i++){
-    if(scm_anTypeNameStringIds[i] == paTypeNameId){
-      return static_cast<EDataTypeID>(i);
+CIEC_ANY::EDataTypeID CIEC_ANY_ELEMENTARY::getElementaryDataTypeId(const CStringDictionary::TStringId paTypeNameId){
+    if(scm_StringToTypeId.find(paTypeNameId) != scm_StringToTypeId.end()){
+      return scm_StringToTypeId.at(paTypeNameId);
     }
-  }
   return CIEC_ANY::e_ANY;
 }

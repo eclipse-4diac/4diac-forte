@@ -98,7 +98,7 @@ void anyMagnitudeFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
 #endif //FORTE_USE_LREAL_DATATYPE
       break;
     default:
-      if(pa_eDataTypeId <= CIEC_ANY::e_TIME){
+      if(pa_eDataTypeId <= CIEC_ANY::e_WCHAR){
 #ifdef FORTE_USE_64BIT_DATATYPES
           pa_roFB.template calculateValue<CIEC_LINT>();
 #else //FORTE_USE_64BIT_DATATYPES
@@ -257,6 +257,8 @@ void anyRealToAnyIntInOutHelper(CIEC_ANY::EDataTypeID paDataTypeIdIn, CIEC_ANY::
       default:
         DEVLOG_ERROR("Invalid type used in anyTruncInOutHelper! No calculation performed!");
     }
+  default:
+    DEVLOG_ERROR("Invalid type used in anyTruncInOutHelper! No calculation performed!");
   }
 }
 

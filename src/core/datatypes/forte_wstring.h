@@ -25,6 +25,9 @@
 
 #include "forte_any_string.h"
 #include "forte_string.h"
+#include "forte_wchar.h"
+
+#include <codecvt>
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
 
@@ -40,6 +43,20 @@ class CIEC_WSTRING : public CIEC_ANY_STRING {
 
     CIEC_WSTRING(const CIEC_WSTRING& paValue) = default;
 
+    CIEC_WSTRING(const CIEC_WCHAR &paValue) {
+      TForteWChar value = static_cast<TForteWChar>(paValue);
+      auto &converter = std::use_facet<std::codecvt<char16_t, char, std::mbstate_t>>(std::locale());
+      std::mbstate_t mb{};
+      char buf[converter.max_length()];
+      const char16_t *from_next;
+      char *to_next;
+      converter.out(mb, &value, &value + 1, from_next, buf, buf + converter.max_length(), to_next);
+      // error checking skipped for brevity
+      std::size_t size = to_next - buf;
+      reserve(static_cast<TForteUInt16>(size));
+      memcpy(getValue(), buf, size);
+    }
+
     explicit CIEC_WSTRING(const char* paValue) {
       fromCharString(paValue);
     }
@@ -47,6 +64,11 @@ class CIEC_WSTRING : public CIEC_ANY_STRING {
     ~CIEC_WSTRING() override = default;
 
     CIEC_WSTRING &operator =(const CIEC_WSTRING &paValue) = default;
+    
+    CIEC_WSTRING &operator=(const CIEC_WCHAR &paValue) {
+      *this = CIEC_WSTRING(paValue);
+      return *this;
+    }
 
     /*! \brief Converts a UTF-8 encoded string to a WSTRING (ISO 10646 Row 00 internally)
      *
@@ -86,16 +108,29 @@ class CIEC_WSTRING : public CIEC_ANY_STRING {
      */
     bool fromUTF16(const TForteByte *pa_pacBuffer, unsigned int pa_nBufferLen);
 
-    /*! \brief Converts the WSTRING to a UTF-16 representation
+    /*! \brief Converts a UTF-16 encoded string to a WSTRING (UTF-8 internally)
      *
-     *   This command implements a conversion function from a WSTRING
-     *   to a big-endian UTF-16 encoding, usable e.g. for the serialization.
-     *   \param pa_pacBuffer  Reference to the output buffer. If 0, only the needed size will be computed.
-     *   \param pa_nBufferSize  Size of the provided buffer.
-     *   \return number of bytes used in the buffer
-     *           -1 on error
+     *   This command implements a conversion function from a UTF-16
+     *   encoded string (found e.g. in serialized WSTRING type) to the internal
+     *   UTF-8 encoding.
+     *   \param paBuffer  Reference to the given UTF-16 encoded byte array
+     *   \param paBufferLen  Length of the provided WChar array/data
+     *   \return Can be the following response:
+     *     - false....conversion was not successful - something went wrong!
+     *     -  true....conversion was successful.
      */
-    int toUTF16(TForteByte* pa_pacBuffer, unsigned int pa_nBufferSize) const;
+    bool fromUTF16(const TForteWChar *paBuffer, unsigned int paBufferLen);
+
+        /*! \brief Converts the WSTRING to a UTF-16 representation
+         *
+         *   This command implements a conversion function from a WSTRING
+         *   to a big-endian UTF-16 encoding, usable e.g. for the serialization.
+         *   \param pa_pacBuffer  Reference to the output buffer. If 0, only the needed size will be computed.
+         *   \param pa_nBufferSize  Size of the provided buffer.
+         *   \return number of bytes used in the buffer
+         *           -1 on error
+         */
+        int toUTF16(TForteByte *pa_pacBuffer, unsigned int pa_nBufferSize) const;
 
     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_WSTRING;

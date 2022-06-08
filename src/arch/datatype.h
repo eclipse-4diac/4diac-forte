@@ -43,6 +43,9 @@ typedef uint16_t TForteUInt16; /**< 16 bit unsigned */
 typedef uint32_t TForteUInt32; /**< 32 bit unsigned */
 typedef uint64_t TForteUInt64; /**< 64 bit unsigned */
 
+typedef unsigned char TForteChar; /**< 8 bit character */
+typedef char16_t TForteWChar; /**< 16 bit character */
+
 typedef float TForteFloat; /**< single precision IEEE float (32 Bit) */
 typedef double TForteDFloat; /**< double precision IEEE float (64 bit) */
 

@@ -35,14 +35,15 @@
 class CIEC_ANY_REAL;
 class CIEC_ANY_BIT;
 
-class CIEC_ANY{
+class CIEC_ANY {
   public:
     /*! \ingroup COREDTS\brief Data type ID's are chosen according to IEC 61499-1 : Function Block
      *  -- Part 1 Architecture - Annex F (informative) Information exchange/F.3
      *  Transfer syntaxes (page 89).
      */
-    enum EDataTypeID{
-      e_ANY, e_BOOL, e_SINT, e_INT, e_DINT, e_LINT, e_USINT, e_UINT, e_UDINT, e_ULINT, e_BYTE, e_WORD, e_DWORD, e_LWORD, e_DATE, e_TIME_OF_DAY, e_DATE_AND_TIME, e_TIME, //until here simple Datatypes
+    enum EDataTypeID {
+      e_ANY, e_BOOL, e_SINT, e_INT, e_DINT, e_LINT, e_USINT, e_UINT, e_UDINT, e_ULINT, e_BYTE, e_WORD, e_DWORD, e_LWORD, e_DATE, e_TIME_OF_DAY, e_DATE_AND_TIME, e_TIME, 
+      e_CHAR, e_WCHAR, //until here mem-copiable data types
       e_REAL,
       e_LREAL,
       e_STRING,
@@ -277,6 +278,14 @@ class CIEC_ANY{
       mAnyData.mLargestInt = TLargestIntValueType(src);
     }
 
+    void setChar(TForteChar src) { 
+      mAnyData.mLargestUInt = TLargestUIntValueType(src);
+    }
+
+    void setChar16(TForteWChar src) { 
+      mAnyData.mLargestUInt = TLargestUIntValueType(src);
+    }
+
 #ifdef FORTE_USE_REAL_DATATYPE
     void setTFLOAT(TForteFloat src){
       mAnyData.mFloat = TForteFloat(src);
@@ -326,6 +335,14 @@ class CIEC_ANY{
       return (TForteInt8)mAnyData.mLargestInt;
     }
 
+    TForteChar getChar8() const {
+      return static_cast<TForteChar>(mAnyData.mLargestInt);
+    }
+
+    TForteWChar getChar16() const {
+      return static_cast<TForteWChar>(mAnyData.mLargestInt);
+    }
+
 #ifdef FORTE_USE_64BIT_DATATYPES
     TForteUInt64 getTUINT64() const{ //also used for LWORD
       return (TForteUInt64)mAnyData.mLargestUInt;
@@ -339,23 +356,37 @@ class CIEC_ANY{
     bool getTBOOL8() const{
       return mAnyData.mBool;
     }
+
     TForteUInt32 getTUINT32() const{ //also used for TForteDWord
       return mAnyData.mUInt32;
     }
+
     TForteUInt16 getTUINT16() const{ //also used for TForteWord
       return mAnyData.mUInt16;
     }
+
     TForteUInt8 getTUINT8() const{ //also used for TForteByte
       return mAnyData.mUInt8;
     }
+
     TForteInt32 getTINT32() const{
       return mAnyData.mInt32;
     }
+
     TForteInt16 getTINT16() const{
       return mAnyData.mInt16;
     }
+
     TForteInt8 getTINT8() const{
       return mAnyData.mInt8;
+    }
+
+    TForteChar getChar8() const {
+      return mAnyData.mChar8;
+    }
+
+    TForteWChar getChar16() const {
+      return mAnyData.mWChar16;
     }
 
 #ifdef FORTE_USE_64BIT_DATATYPES
@@ -365,6 +396,7 @@ class CIEC_ANY{
     TForteInt64 getTINT64() const{
       return mAnyData.mInt64;
     }
+
 #endif //#ifdef FORTE_USE_64BIT_DATATYPES
 #else
 #error Endianess not defined!
@@ -437,6 +469,9 @@ class CIEC_ANY{
         TForteUInt8 mUInt8;
         TForteUInt16 mUInt16;
         TForteUInt32 mUInt32;
+
+        TForteChar mChar8;
+        TForteWChar mWChar16;
 
 #ifdef FORTE_USE_REAL_DATATYPE
         TForteFloat mFloat;

@@ -18,17 +18,18 @@
 #include "forte_any.h"
 #include <ctype.h>
 #include <string_utils.h>
+#include <map>
 
 /*!\ingroup COREDTS IIEC_ANY_ELEMENTARY represents the elementary data types according to
  *  IEC 61131.
  */
-class CIEC_ANY_ELEMENTARY : public CIEC_ANY{
+class CIEC_ANY_ELEMENTARY : public CIEC_ANY {
   DECLARE_FIRMWARE_DATATYPE(ANY_ELEMENTARY)
 
   public:
 
     CIEC_ANY_ELEMENTARY(const CIEC_ANY_ELEMENTARY &pa_roVal) :
-        CIEC_ANY(){
+        CIEC_ANY() {
       setLargestUInt(pa_roVal.getLargestUInt());
     }
 
@@ -46,12 +47,13 @@ class CIEC_ANY_ELEMENTARY : public CIEC_ANY{
 
   private:
 
-    int checkTypeSpec(const char* pa_pacValue, const char* pa_pacHashPos) const;
+    bool isTypeSpecifier(const char* paValue, const char* paHashPosition) const;
     bool isCastable(CStringDictionary::TStringId paTypeNameId) const;
 
     static EDataTypeID getElementaryDataTypeId(CStringDictionary::TStringId paTypeNameId);
 
-    const static CStringDictionary::TStringId scm_anTypeNameStringIds[];
+    const static std::map<CStringDictionary::TStringId, CIEC_ANY::EDataTypeID> scm_StringToTypeId;
+
     const static int scm_nMaxTypeNameLength = 13;
 
 };
