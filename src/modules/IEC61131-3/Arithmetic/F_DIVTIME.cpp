@@ -42,10 +42,9 @@ const SFBInterfaceSpec FORTE_F_DIVTIME::scm_stFBInterfaceSpec = {
   0, nullptr
 };
 
-
 void FORTE_F_DIVTIME::executeEvent(int pa_nEIID){
   if(scm_nEventREQID == pa_nEIID){
-    anyIntFBHelper<FORTE_F_DIVTIME>(IN2().getDataTypeID(), *this);
+    anyNumFBHelper<FORTE_F_DIVTIME>(IN2().getDataTypeID(), *this);
     sendOutputEvent(scm_nEventCNFID);
   }
 }
