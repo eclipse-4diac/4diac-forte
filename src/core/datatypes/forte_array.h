@@ -240,6 +240,12 @@ class CIEC_ARRAY : public CIEC_ARRAY_COMMON<T> {
       return getReferenceElement() != nullptr ? getReferenceElement()->getDataTypeID() : CIEC_ANY::e_ANY;
     }
 
+    /*! \brief Get the data type name id of elements inside the array
+     */
+    [[nodiscard]] CStringDictionary::TStringId getElementTypeNameID() const {
+      return getReferenceElement() != nullptr ? getReferenceElement()->getTypeNameID() : CStringDictionary::scm_nInvalidStringId;
+    }
+
     void setValue(const CIEC_ANY &paValue) override {
       if (paValue.getDataTypeID() == CIEC_ANY::e_ARRAY)
       {
@@ -498,6 +504,7 @@ class CIEC_ARRAY_TYPELIB : public CIEC_ARRAY<CIEC_ANY> {
     [[nodiscard]] CStringDictionary::TStringId getTypeNameID() const override {
       return CIEC_ARRAY_TYPELIB::csm_oFirmwareDataTypeEntry_ARRAY_TYPELIB.getTypeNameId();
     }
+
     static int dummyInit();
 };
 

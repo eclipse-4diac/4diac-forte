@@ -46,6 +46,8 @@ class GEN_STRUCT_MUX : public CGenFunctionBlock<CFunctionBlock> {
 
     static CStringDictionary::TStringId getStructNameId(const char *paConfigString);
 
+    static size_t calcStructTypeNameSize(CIEC_STRUCT &paStruct);
+
 };
 
 #endif //_GEN_STRUCT_MUX_H_

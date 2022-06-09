@@ -16,6 +16,7 @@
 #endif
 #include "GEN_STRUCT_MUX.h"
 #include <stdio.h>
+#include "GEN_STRUCT_DEMUX.h"
 
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_STRUCT_DEMUX, g_nStringIdGEN_STRUCT_DEMUX);
@@ -70,7 +71,7 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
           CStringDictionary::getInstance().get(structTypeNameId));
       } else {
         TDataIOID *eoWith = new TDataIOID[structSize + 1];
-        CStringDictionary::TStringId *doDataTypeNames = new CStringDictionary::TStringId[structSize];
+        CStringDictionary::TStringId *doDataTypeNames = new CStringDictionary::TStringId[GEN_STRUCT_MUX::calcStructTypeNameSize(*structInstance)];
         CStringDictionary::TStringId *doNames = new CStringDictionary::TStringId[structSize];
         CStringDictionary::TStringId *diDataTypeNames = new CStringDictionary::TStringId[1];
 
@@ -90,10 +91,16 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
         paInterfaceSpec.m_aunDODataTypeNames = doDataTypeNames;
         diDataTypeNames[0] = structTypeNameId;
 
-        for(size_t i = 0; i < paInterfaceSpec.m_nNumDOs; i++) {
+        for(size_t i = 0, typeNameIndex = 0; i < paInterfaceSpec.m_nNumDOs; i++, typeNameIndex++) {
           eoWith[i] = static_cast<TForteUInt8>(i);
           doNames[i] = structInstance->elementNames()[i];
-          doDataTypeNames[i] = (&(structInstance->getMembers()[i]))->getTypeNameID();
+          doDataTypeNames[typeNameIndex] = (&(structInstance->getMembers()[i]))->getTypeNameID();
+          if((&(structInstance->getMembers()[i]))->getTypeNameID() == CIEC_ANY::e_ARRAY){
+            CIEC_ARRAY_TYPELIB *array = static_cast<CIEC_ARRAY_TYPELIB*>(&(structInstance->getMembers()[i]));
+            doDataTypeNames[typeNameIndex + 1] = static_cast<CStringDictionary::TStringId>(array->size());
+            doDataTypeNames[typeNameIndex + 2] = array->getElementTypeNameID();
+            typeNameIndex += 2;
+          }
         }
         eoWith[paInterfaceSpec.m_nNumDOs] = scmWithListDelimiter;
         retval = true;

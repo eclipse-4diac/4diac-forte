@@ -68,7 +68,7 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
           CStringDictionary::getInstance().get(structTypeNameId));
       } else {
         TDataIOID *eiWith = new TDataIOID[structSize + 1];
-        CStringDictionary::TStringId *diDataTypeNames = new CStringDictionary::TStringId[structSize];
+        CStringDictionary::TStringId *diDataTypeNames = new CStringDictionary::TStringId[calcStructTypeNameSize(*structInstance)];
         CStringDictionary::TStringId *diNames = new CStringDictionary::TStringId[structSize];
         CStringDictionary::TStringId *doDataTypeNames = new CStringDictionary::TStringId[1];
 
@@ -88,10 +88,16 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
         paInterfaceSpec.m_aunDODataTypeNames = doDataTypeNames;
         doDataTypeNames[0] = structTypeNameId;
 
-        for(size_t i = 0; i < paInterfaceSpec.m_nNumDIs; i++) {
+        for(size_t i = 0, typeNameIndex = 0; i < paInterfaceSpec.m_nNumDIs; i++, typeNameIndex++) {
           eiWith[i] = static_cast<TForteUInt8>(i);
           diNames[i] = structInstance->elementNames()[i];
-          diDataTypeNames[i] = (&(structInstance->getMembers()[i]))->getTypeNameID();
+          diDataTypeNames[typeNameIndex] = (&(structInstance->getMembers()[i]))->getTypeNameID();
+          if((&(structInstance->getMembers()[i]))->getDataTypeID() == CIEC_ANY::e_ARRAY){
+            CIEC_ARRAY_TYPELIB *array = static_cast<CIEC_ARRAY_TYPELIB*>(&(structInstance->getMembers()[i]));
+            diDataTypeNames[typeNameIndex + 1] = static_cast<CStringDictionary::TStringId>(array->size());
+            diDataTypeNames[typeNameIndex + 2] = array->getElementTypeNameID();
+            typeNameIndex += 2;
+          }
         }
         eiWith[paInterfaceSpec.m_nNumDIs] = scmWithListDelimiter;
         retval = true;
@@ -113,12 +119,22 @@ CStringDictionary::TStringId GEN_STRUCT_MUX::getStructNameId(const char *paConfi
     acPos++;
     acPos = strchr(acPos, '_');
     if(nullptr != acPos){
-      acPos += 2;  //put the postion one after the seperating number
+      acPos += 2;  //put the position one after the separating number
       return CStringDictionary::getInstance().getId(acPos);
     }
   }
   return CStringDictionary::scm_nInvalidStringId;
 }
 
+size_t GEN_STRUCT_MUX::calcStructTypeNameSize(CIEC_STRUCT &paStruct){
+  size_t structSize = paStruct.getStructSize();
+  size_t numArrayMembers = 0;
+  for(size_t i = 0; i < structSize; i++) {
+    if((&(paStruct.getMembers()[i]))->getDataTypeID() == CIEC_ANY::e_ARRAY){
+      numArrayMembers++;
+    }
+  }
 
+  return structSize + numArrayMembers * 2; //arrays need to additional entries
+}
 
