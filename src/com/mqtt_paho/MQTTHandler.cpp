@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2023 ACIN
- *                          Primetals Austria GmbH
+ * Copyright (c) 2013, 2023 ACIN, Primetals Technologies Austria GmbH,
+ *                          Johannes Kepler University Linz
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,32 +10,20 @@
  *
  * Contributors:
  * Martin Melik Merkumians - initial API and implementation and/or initial documentation
- *                         - Change CIEC_STRING to std::string
+ *                         - change CIEC_STRING to std::string
+ * Markus Meingast         - refactoring and adaption to new Client class,
+ *                           enabling connection to multiple servers
  *******************************************************************************/
 
 #include "MQTTHandler.h"
 #include "../../core/cominfra/commfb.h"
 #include <criticalregion.h>
 
-#include "MQTTClientConfigParser.h"
-
-std::string gMqttClientConfigFile;
+#include "MQTTClient.h"
 
 DEFINE_HANDLER(MQTTHandler);
 
-MQTTAsync_connectOptions MQTTHandler::smClientConnectionOptions =
-    MQTTAsync_connectOptions_initializer;
-
 CSyncObject MQTTHandler::smMQTTMutex;
-
-MQTTAsync MQTTHandler::smClient = nullptr;
-std::string MQTTHandler::smClientId;
-std::string MQTTHandler::smAddress;
-std::string MQTTHandler::scmUsername;
-std::string MQTTHandler::scmPassword;
-
-
-MQTTStates MQTTHandler::smMQTTS_STATE = NOT_CONNECTED;
 forte::arch::CSemaphore MQTTHandler::mStateSemaphore;
 bool MQTTHandler::mIsSemaphoreEmpty = true;
 
@@ -45,16 +34,19 @@ MQTTHandler::MQTTHandler(CDeviceExecution& paDeviceExecution) : CExternalEventHa
 }
 
 MQTTHandler::~MQTTHandler(){
-  CCriticalRegion sectionState(smMQTTMutex);
-  if(isAlive()){
+  if (isAlive()) {
     setAlive(false);
     resumeSelfSuspend();
   }
-  if(nullptr != smClient){
-    MQTTAsync_disconnectOptions disconnectOptions = MQTTAsync_disconnectOptions_initializer;
-    disconnectOptions.timeout = 10000;
-    MQTTAsync_disconnect(smClient, &disconnectOptions);
-    MQTTAsync_destroy(&smClient);
+  for (std::shared_ptr<CMQTTClient> client : mClients) {
+    CCriticalRegion sectionState(smMQTTMutex);
+    MQTTAsync asClient = client->getAsClient();
+    if (asClient != nullptr) {
+      MQTTAsync_disconnectOptions disconnectOptions = MQTTAsync_disconnectOptions_initializer;
+      disconnectOptions.timeout = smTimeout;
+      MQTTAsync_disconnect(asClient, &disconnectOptions);
+      MQTTAsync_destroy(&asClient);
+    }
   }
 }
 
@@ -72,16 +64,15 @@ MQTTHandler::~MQTTHandler(){
 int MQTTHandler::onMqttMessageArrived(void* paContext, char* paTopicName, int, MQTTAsync_message* paMessage){
   //TODO: Check if handler allowed
   if(nullptr != paContext){
+    CMQTTClient* client = static_cast<CMQTTClient*>(paContext);
     CCriticalRegion section(smMQTTMutex);
-
-    MQTTHandler *handler = static_cast<MQTTHandler *>(paContext);
     void* pPayLoad = paMessage->payload;
     unsigned int payLoadSize = static_cast<unsigned int>(paMessage->payloadlen);
 
-    for(CSinglyLinkedList<MQTTComLayer*>::Iterator it = handler->mlayers.begin(); it != handler->mlayers.end(); ++it){
-      if(0 == strcmp((*it)->getTopicName(), paTopicName)){
-        if(forte::com_infra::e_Nothing != (*it)->recvData(pPayLoad, payLoadSize)){
-          handler->startNewEventChain((*it)->getCommFB());
+    for (MQTTComLayer* layer : client->getLayers()) {
+      if (0 == strcmp(layer->getTopicName(), paTopicName)) {
+        if (forte::com_infra::e_Nothing != layer->recvData(pPayLoad, payLoadSize)) {
+          client->getHandler().startNewEventChain(layer->getCommFB());
         }
       }
     }
@@ -94,66 +85,55 @@ int MQTTHandler::onMqttMessageArrived(void* paContext, char* paTopicName, int, M
 }
 
 void MQTTHandler::onMqttConnectionLost(void* paContext, char* paCause){
-  DEVLOG_ERROR("MQTT: Disconnected from broker. Cause: %s\n", paCause);
   if(nullptr != paContext){
+    CMQTTClient* client = static_cast<CMQTTClient*>(paContext);
+    DEVLOG_ERROR("MQTT: Disconnected from broker at -%s. Cause: %s\n", client->getAddress().c_str(), paCause);
     CCriticalRegion section(smMQTTMutex);
-
-    MQTTHandler *handler = static_cast<MQTTHandler *>(paContext);
-    smMQTTS_STATE = NOT_CONNECTED;
-
-    handler->mToResubscribe.clearAll();
-    for(CSinglyLinkedList<MQTTComLayer*>::Iterator it = handler->mlayers.begin(); it != handler->mlayers.end(); ++it){
-      if(e_Subscriber == (*it)->getCommFB()->getComServiceType()){
-        handler->mToResubscribe.pushBack((*it));
-      }
-    }
-    handler->resumeSelfSuspend();
+    client->reconnect();
+    client->getHandler().resumeSelfSuspend();
   }
 }
 
 void MQTTHandler::onMqttConnectionSucceed(void *paContext, MQTTAsync_successData *){
-  DEVLOG_INFO("MQTT: successfully connected\n");
-  {
-    MQTTHandler *handler = static_cast<MQTTHandler *>(paContext);
+  if (paContext != nullptr) {
+    CMQTTClient* client = static_cast<CMQTTClient*>(paContext);
+    DEVLOG_INFO("MQTT: @%s: Successfully connected\n", client->getAddress().c_str());
     CCriticalRegion sectionState(smMQTTMutex);
-    smMQTTS_STATE = SUBSCRIBING;
-    handler->resumeSelfSuspend();
+    client->setMQTTState(SUBSCRIBING);
+    client->getHandler().resumeSelfSuspend();
   }
 }
 
 void MQTTHandler::onMqttConnectionFailed(void *paContext, MQTTAsync_failureData *){
-  DEVLOG_ERROR("MQTT connection failed.\n");
-  {
-    MQTTHandler *handler = static_cast<MQTTHandler *>(paContext);
+  if(paContext != nullptr){
+    CMQTTClient* client = static_cast<CMQTTClient*>(paContext);
+    DEVLOG_ERROR("MQTT: Connection failed to -%s-\n", client->getAddress().c_str());
     CCriticalRegion sectionState(smMQTTMutex);
-    smMQTTS_STATE = NOT_CONNECTED;
-    handler->resumeSelfSuspend();
+    client->setMQTTState(NOT_CONNECTED);
+    client->getHandler().resumeSelfSuspend();
   }
 }
 
 void MQTTHandler::onSubscribeSucceed(void* paContext, MQTTAsync_successData* ){
   if(nullptr != paContext){
-    CCriticalRegion sectionState(smMQTTMutex);
     MQTTComLayer* layer = static_cast<MQTTComLayer*>(paContext);
-    MQTTHandler& handler = ::getExtEvHandler<MQTTHandler>(*layer->getCommFB());
-    DEVLOG_INFO("MQTT: Subscription succeed. Topic: -%s-\n", layer->getTopicName());
-
-    handler.mToResubscribe.erase(layer);
-    if(handler.mToResubscribe.isEmpty()){
-      smMQTTS_STATE = ALL_SUBSCRIBED;
-    }
-    else{
-      handler.resumeSelfSuspend();
+    std::shared_ptr<CMQTTClient> client = layer->getClient();
+    DEVLOG_INFO("MQTT: @%s: Subscription succeed.\n Topic: -%s-\n", client->getAddress().c_str(), layer->getTopicName());
+    CCriticalRegion sectionState(smMQTTMutex);
+    client->removeToResubscribe(layer);
+    if (client->getMQTTState() != ALL_SUBSCRIBED) {
+      client->getHandler().resumeSelfSuspend();
     }
   }
 }
 
 void MQTTHandler::onSubscribeFailed(void* paContext, MQTTAsync_failureData*){
   if(nullptr != paContext){
-    CCriticalRegion sectionState(smMQTTMutex);
     MQTTComLayer* layer = static_cast<MQTTComLayer*>(paContext);
-    DEVLOG_ERROR("MQTT: Subscription failed. Topic: -%s-\n", layer->getTopicName());
-    ::getExtEvHandler<MQTTHandler>(*layer->getCommFB()).resumeSelfSuspend();
+    std::shared_ptr<CMQTTClient> client = layer->getClient();
+    CCriticalRegion sectionState(smMQTTMutex);
+    DEVLOG_ERROR("MQTT: @%s: Subscription failed.\n Topic: -%s-\n", client->getAddress().c_str(), layer->getTopicName());
+    client->getHandler().resumeSelfSuspend();
   }
 }
 
@@ -161,89 +141,85 @@ void MQTTHandler::onSubscribeFailed(void* paContext, MQTTAsync_failureData*){
  * END OF CALLBACKS AND START OF HELPER FUNCTIONS
  */
 
-int MQTTHandler::mqttConnect(){
-  DEVLOG_INFO("MQTT: Requesting connection to broker\n");
-  int rc = MQTTAsync_connect(smClient, &smClientConnectionOptions);
+int MQTTHandler::mqttConnect(CMQTTClient* paClient){
+  DEVLOG_INFO("MQTT: Requesting connection to broker @%s\n", paClient->getAddress().c_str());
+  int rc = MQTTAsync_connect(paClient->getAsClient(), &paClient->getClientConnectionOptions());
   if(MQTTASYNC_SUCCESS != rc){
     DEVLOG_ERROR("MQTT: Request to mqtt library failed\n");
   }else{
-    DEVLOG_INFO("MQTT: Connection to broker requested\n");
+    DEVLOG_INFO("MQTT: Request successful - Connecting...\n");
   }
   return rc;
 }
 
-int MQTTHandler::mqttSubscribe(const MQTTComLayer* paLayer){
-  DEVLOG_INFO("MQTT: subscribing to topic -%s-\n", paLayer->getTopicName());
+int MQTTHandler::mqttSubscribe(const MQTTComLayer* paLayer, CMQTTClient* paClient){
+  DEVLOG_INFO("MQTT: Subscribing to topic -%s-\n", paLayer->getTopicName());
   MQTTAsync_responseOptions opts = MQTTAsync_responseOptions_initializer;
   opts.onSuccess = onSubscribeSucceed;
   opts.onFailure = onSubscribeFailed;
   opts.context = (void*)paLayer;
-  int rc = MQTTAsync_subscribe(smClient, paLayer->getTopicName(), QOS, &opts);
+  int rc = MQTTAsync_subscribe(paClient->getAsClient(), paLayer->getTopicName(), QOS, &opts);
   if(MQTTASYNC_SUCCESS != rc){ //call failed
     CCriticalRegion sectionState(smMQTTMutex);
-    DEVLOG_INFO("MQTT: subscribe request failed with val = %d\n", rc);
+    DEVLOG_INFO("MQTT: Subscribe Request failed with val = %d\n", rc);
     resumeSelfSuspend();
   }else{
-    DEVLOG_INFO("MQTT: subscribe Requested\n");
+    DEVLOG_INFO("MQTT: Subscribe Request successful - Subscribing...\n");
   }
   return rc;
 }
 
-int MQTTHandler::registerLayer(const char* paAddress, const char* paClientId, MQTTComLayer* paLayer){
-  if(smClient == nullptr){
-    smClientId = std::string(paClientId);
-    smAddress = std::string(paAddress);
-    MQTTAsync_create(&smClient, smAddress.c_str(), smClientId.c_str(), MQTTCLIENT_PERSISTENCE_NONE, nullptr);
-    smClientConnectionOptions.keepAliveInterval = 20;
-    smClientConnectionOptions.cleansession = 1;
-    smClientConnectionOptions.onSuccess = onMqttConnectionSucceed;
-    smClientConnectionOptions.onFailure = onMqttConnectionFailed;
-    smClientConnectionOptions.context = this;
-
-    if("" != gMqttClientConfigFile) { //file was provided
-
-      CMQTTClientConfigFileParser::MQTTConfigFromFile result = CMQTTClientConfigFileParser::MQTTConfigFromFile(scmUsername, scmPassword);
-      std::string endpoint = smAddress;
-
-      if(CMQTTClientConfigFileParser::loadConfig(gMqttClientConfigFile, endpoint, result)) {
-        smClientConnectionOptions.username = scmUsername.c_str();
-        smClientConnectionOptions.password = scmPassword.c_str();
-      } else {
-        return eWrongClientID;
+std::shared_ptr<CMQTTClient> MQTTHandler::getClient(std::string& paAddress, std::string& paClientId) {
+  for (std::shared_ptr<CMQTTClient> client : mClients) {
+    if (paAddress == client->getAddress()) {
+      if (paClientId.compare(client->getClientId()) == 0) {
+        return client;
+      }
+      else {
+        // Wrong ClientId
+        DEVLOG_ERROR("Wrong ClientID for Address %s, ClientID: %s\n", paAddress, paClientId);
+        return nullptr;
       }
     }
+  }
+  std::shared_ptr<CMQTTClient> newClient = std::make_shared<CMQTTClient>(paAddress, paClientId, *this);
+  {
+    CCriticalRegion sectionState(smMQTTMutex);
+    newClient->initClient();
+    mClients.push_back(std::move(newClient));
+    return mClients.back();
+  }
+}
 
-    if(MQTTASYNC_SUCCESS != MQTTAsync_setCallbacks(smClient, this, MQTTHandler::onMqttConnectionLost, onMqttMessageArrived, nullptr)){
+
+int MQTTHandler::registerLayer(std::string& paAddress, std::string& paClientId, MQTTComLayer* paLayer) {
+  std::shared_ptr<CMQTTClient> client = getClient(paAddress, paClientId);
+  if (client != nullptr) {
+    if (client->getState() == CMQTTClient::eUninitialized) {
       return eConnectionFailed;
     }
-    {
-      CCriticalRegion sectionState(smMQTTMutex);
-      if(MQTTASYNC_SUCCESS != mqttConnect()){
-        return eConnectionFailed;
-      }
-      smMQTTS_STATE = CONNECTION_ASKED;
-    }
-  } else if((smClientId != std::string(paClientId)) || (smAddress != std::string(paAddress))){
-    return eWrongClientID;
-  }
-  {
     CCriticalRegion section(smMQTTMutex);
-    mlayers.pushBack(paLayer);
-    if (e_Subscriber == paLayer->getCommFB()->getComServiceType()){
-      mToResubscribe.pushBack(paLayer);
-      if(ALL_SUBSCRIBED == smMQTTS_STATE){
-        smMQTTS_STATE = SUBSCRIBING;
-        this->resumeSelfSuspend();
+    client->addLayer(paLayer);
+    if (e_Subscriber == paLayer->getCommFB()->getComServiceType()) {
+      client->addToResubscribe(paLayer);
+      if (ALL_SUBSCRIBED == client->getMQTTState()) {
+        client->setMQTTState(SUBSCRIBING);
+        resumeSelfSuspend();
       }
     }
-
+    paLayer->setClient(client);
+    return eRegisterLayerSucceeded;
   }
-  return eRegisterLayerSucceeded;
+  return eConnectionFailed;
 }
 
 void MQTTHandler::unregisterLayer(MQTTComLayer* paLayer){
+  std::shared_ptr<CMQTTClient> client = paLayer->getClient();
   CCriticalRegion section(smMQTTMutex);
-  mlayers.erase(paLayer);
+  if (client != nullptr) {
+    client->removeLayer(paLayer);
+    paLayer->setClient(nullptr);
+  }
 }
 
 void MQTTHandler::enableHandler(){
@@ -261,7 +237,7 @@ void MQTTHandler::disableHandler(){
 }
 
 void MQTTHandler::setPriority(int ){
-  //TODO: Should also work empty
+  //NOTE: Priorities are currently not supported by MQTTHandler, therefore this function remains empty
 }
 
 int MQTTHandler::getPriority() const{
@@ -275,37 +251,15 @@ void MQTTHandler::run(){
     if(!isAlive()){
       break;
     }
-    {
-      CCriticalRegion sectionState(smMQTTMutex);
-      switch(smMQTTS_STATE){
-        case NOT_CONNECTED:
-          if (MQTTASYNC_SUCCESS == mqttConnect()){
-             smMQTTS_STATE = CONNECTION_ASKED;
-          }
-          break;
-        case SUBSCRIBING:{
-          if(!mToResubscribe.isEmpty()){
-            //only try subscribe one at a time. There were some problems in some cases when subscribing one after the other, because the MQTTAsync_subscribe hangs.
-            const MQTTComLayer *layer = *mToResubscribe.begin();
-            smMQTTMutex.unlock();
-            if(MQTTASYNC_SUCCESS != mqttSubscribe(layer)){
-              needSleep = true;
-            }
-            smMQTTMutex.lock();
-          }
-          else{
-            smMQTTS_STATE = ALL_SUBSCRIBED;
-          }
-          break;
-        }
-        default:
-          break;
+    for (std::shared_ptr<CMQTTClient> client : mClients) {        
+      if (client->getMQTTState() != ALL_SUBSCRIBED) {
+        needSleep = needSleep || client->runClient();
       }
     }
     if(needSleep){
       //sleep in case a subscribe fails while connected
       needSleep = false;
-      CThread::sleepThread(5000);
+      CThread::sleepThread(smSleepTime);
     }
   }
 }

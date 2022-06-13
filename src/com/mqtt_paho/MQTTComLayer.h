@@ -1,6 +1,5 @@
 /*******************************************************************************
  * Copyright (c) 2013, 2023 ACIN
- *                          Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -16,17 +15,20 @@
 #define MQTTCOMLAYER_H_
 
 #include "comlayer.h"
+#include "../../core/datatypes/forte_string.h"
 extern "C" {
 #include <MQTTAsync.h>
 }
-
-#include <string>
+#include <memory>
 
 #define QOS 0
 
 //raw[].mqtt[tcp://localhost:1883, ClientID, Topic]
 
+class CMQTTClient;
+
 using namespace forte::com_infra;
+
 
 class MQTTComLayer: public forte::com_infra::CComLayer{
 public:
@@ -40,11 +42,21 @@ public:
   EComResponse processInterrupt() override;
 
   char const* getTopicName() const {
-    return mTopicName.c_str();
+    return mTopicName.getValue();
+  }
+
+  std::shared_ptr<CMQTTClient> getClient() {
+    return mClient;
+  }
+
+  void setClient(std::shared_ptr<CMQTTClient> paClient) {
+    mClient = paClient;
   }
 
 private:
   std::string mTopicName;
+
+  std::shared_ptr<CMQTTClient> mClient;
 
   static const unsigned int mNoOfParameters = 3;
   static const unsigned int mBufferSize = 255;

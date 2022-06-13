@@ -15,7 +15,9 @@
 #include "MQTTComLayer.h"
 #include "../../core/utils/parameterParser.h"
 #include "MQTTHandler.h"
+#include "MQTTClient.h"
 #include "commfb.h"
+#include <string>
 
 using namespace forte::com_infra;
 
@@ -32,7 +34,7 @@ EComResponse MQTTComLayer::sendData(void* paData, unsigned int paSize) {
   message.payloadlen = paSize;
   message.qos = QOS;
   message.retained = 0;
-  int errorCode = MQTTAsync_sendMessage(getExtEvHandler<MQTTHandler>().getClient(), mTopicName.c_str(), &message, nullptr);
+  int errorCode = MQTTAsync_sendMessage(mClient->getAsClient(), mTopicName.getValue(), &message, NULL);
   if (0 != errorCode) {
     return e_ProcessDataSendFailed;
   }
@@ -58,7 +60,6 @@ EComResponse MQTTComLayer::processInterrupt() {
       mUsedBuffer = 0;
     }
   }
-
   return mInterruptResp;
 }
 
@@ -68,10 +69,10 @@ EComResponse MQTTComLayer::openConnection(char* paLayerParameter) {
   if(mNoOfParameters == parser.parseParameters()){
     mTopicName = std::string(parser[Topic]);
     if( MQTTHandler::eRegisterLayerSucceeded ==
-        getExtEvHandler<MQTTHandler>().registerLayer(parser[Address], parser[ClientID], this)) {
-      eRetVal = e_InitOk;
-    } else {
-      eRetVal = e_InitInvalidId;
+        getExtEvHandler<MQTTHandler>().registerLayer(std::string(parser[Address]), std::string(parser[ClientID]), this)) {
+      if (mClient != nullptr) {
+        eRetVal = e_InitOk;
+      }
     }
 
     switch (m_poFb->getComServiceType()){
@@ -91,7 +92,6 @@ EComResponse MQTTComLayer::openConnection(char* paLayerParameter) {
       break;
     }
   }
-
   return eRetVal;
 }
 
