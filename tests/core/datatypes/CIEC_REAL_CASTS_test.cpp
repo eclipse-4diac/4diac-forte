@@ -460,5 +460,18 @@ BOOST_AUTO_TEST_CASE(Explict_cast_operator_to_REAL)
   BOOST_TEST(nResult == 10);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+BOOST_AUTO_TEST_CASE(Ctor_cast_to_REAL)
+{
+  CIEC_REAL realfromSint(CIEC_SINT(-1));
+  CIEC_REAL realfromInt(CIEC_INT(-2));
+  CIEC_REAL realfromUsint(CIEC_USINT(1));
+  CIEC_REAL realfromUint(CIEC_UINT(2));
+
+  BOOST_TEST(realfromSint == CIEC_SINT(-1));
+  BOOST_TEST(realfromInt == CIEC_INT(-2));
+  BOOST_TEST(realfromUsint == CIEC_USINT(1));
+  BOOST_TEST(realfromUint == CIEC_UINT(2));
+}
+
+  BOOST_AUTO_TEST_SUITE_END()
 #endif //FORTE_USE_REAL_DATATYPE

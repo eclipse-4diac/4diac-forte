@@ -41,6 +41,26 @@ class CIEC_REAL : public CIEC_ANY_REAL{
       setValueSimple(paValue);
     }
 
+    CIEC_REAL(const CIEC_SINT& paValue) :
+        CIEC_ANY_REAL() {
+      setValue(paValue);
+    }
+
+    CIEC_REAL(const CIEC_INT& paValue) :
+        CIEC_ANY_REAL() {
+      setValue(paValue);
+    }
+
+    CIEC_REAL(const CIEC_USINT& paValue) :
+        CIEC_ANY_REAL() {
+      setValue(paValue);
+    }
+
+    CIEC_REAL(const CIEC_UINT& paValue) :
+        CIEC_ANY_REAL() {
+      setValue(paValue);
+    }
+
     explicit CIEC_REAL(TForteFloat paValue) {
       setTFLOAT(paValue);
     }
