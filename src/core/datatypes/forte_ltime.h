@@ -14,38 +14,50 @@
  *      changed defines to constants, added literal parsing for micro and
  *      nanoseconds, removed built-in type operator=, removed operator++
  *******************************************************************************/
-#ifndef _FORTE_TIME_H_
-#define _FORTE_TIME_H_
+#ifndef _FORTE_LTIME_H_
+#define _FORTE_LTIME_H_
 
 #include "forte_any_duration.h"
+
+#include "forte_time.h"
 
 /*!\ingroup COREDTS CIEC_TIME represents the time data types according to IEC 61131.
  */
 
-class CIEC_TIME : public CIEC_ANY_DURATION {
-  DECLARE_FIRMWARE_DATATYPE(TIME)
+class CIEC_LTIME : public CIEC_ANY_DURATION {
+  DECLARE_FIRMWARE_DATATYPE(LTIME)
   public:
     typedef TLargestIntValueType TValueType;
 
-    CIEC_TIME() = default;
+    CIEC_LTIME() = default;
 
-    CIEC_TIME(const CIEC_TIME &paValue) : CIEC_ANY_DURATION() {
+    CIEC_LTIME(const CIEC_LTIME &paValue) : CIEC_ANY_DURATION() {
       setValueSimple(paValue);
     }
 
-    explicit CIEC_TIME(TValueType paValue){
+    CIEC_LTIME(const CIEC_TIME &paValue) : CIEC_ANY_DURATION() {
+      setValue(paValue);
+    }
+
+    explicit CIEC_LTIME(TValueType paValue){
       setLargestInt(paValue);
     }
 
-    ~CIEC_TIME() override = default;
+    ~CIEC_LTIME() override = default;
 
-    CIEC_TIME& operator =(const CIEC_TIME &paValue){
+    CIEC_LTIME& operator =(const CIEC_LTIME &paValue){
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;
     }
 
-    CIEC_TIME operator-() const {
+    CIEC_LTIME &operator=(const CIEC_TIME &paValue) {
+      // Simple value assignment - no self assignment check needed
+      setValue(paValue);
+      return *this;
+    }
+
+    CIEC_LTIME operator-() const {
       return CIEC_TIME(-1 * *this);
     }
 
@@ -54,7 +66,7 @@ class CIEC_TIME : public CIEC_ANY_DURATION {
     }
 
     EDataTypeID getDataTypeID() const override {
-      return CIEC_ANY::e_TIME;
+      return CIEC_ANY::e_LTIME;
     }
 
     /*! \brief Converts string value to data type value
@@ -90,4 +102,4 @@ class CIEC_TIME : public CIEC_ANY_DURATION {
     void setFromNanoSeconds(TValueType paValue);
 };
 
-#endif /*_FORTE_TIME_H_*/
+#endif /*_FORTE_LTIME_H_*/

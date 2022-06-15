@@ -38,9 +38,11 @@ const std::set<CIEC_ANY::EDataTypeID> CFBDKASN1ComLayer::scmSimpleEncodableDataT
     CIEC_ANY::e_DATE_AND_TIME,
     CIEC_ANY::e_CHAR,
     CIEC_ANY::e_WCHAR,
+    CIEC_ANY::e_LDATE,
+    CIEC_ANY::e_LTIME_OF_DAY,
+    CIEC_ANY::e_LDATE_AND_TIME,
     CIEC_ANY::e_REAL,
-    CIEC_ANY::e_LREAL
-};
+    CIEC_ANY::e_LREAL};
 
 CFBDKASN1ComLayer::CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * pa_poComFB) :
   CComLayer(pa_poUpperLayer, pa_poComFB), mStatSerBuf(nullptr), mStatSerBufSize(0), mDeserBuf(nullptr), mDeserBufSize(0), mDeserBufPos(0), mDIPos(0), mDOPos(0){
@@ -250,6 +252,10 @@ const TForteByte CFBDKASN1ComLayer::csm_aDataTags[][2] = {
     {e_APPLICATION + e_PRIMITIVE + e_TIME_TAG, 9},
     {e_APPLICATION + e_PRIMITIVE + e_CHAR_TAG, 2},
     {e_APPLICATION + e_PRIMITIVE + e_WCHAR_TAG, 3},
+    {e_APPLICATION + e_PRIMITIVE + e_LDATE_TAG, 9},
+    {e_APPLICATION + e_PRIMITIVE + e_LTIME_OF_DAY_TAG, 9},
+    {e_APPLICATION + e_PRIMITIVE + e_LDATE_AND_TIME_TAG, 9},
+    {e_APPLICATION + e_PRIMITIVE + e_LTIME_TAG, 9},
     {e_APPLICATION + e_PRIMITIVE + e_REAL_TAG, 5},
     {e_APPLICATION + e_PRIMITIVE + e_LREAL_TAG, 9},
     {e_APPLICATION + e_PRIMITIVE + e_STRING_TAG, 255},
@@ -657,6 +663,7 @@ int CFBDKASN1ComLayer::deserializeValue(const TForteByte* pa_pcBytes, int pa_nSt
         nRetVal = 0;
         break;
       case CIEC_ANY::e_TIME:
+      case CIEC_ANY::e_LTIME:
         nRetVal = deserializeValueTime(pa_pcBytes, pa_nStreamSize, static_cast<CIEC_TIME &>(pa_roCIECData));
         break;
 #ifdef FORTE_USE_WSTRING_DATATYPE

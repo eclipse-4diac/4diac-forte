@@ -42,8 +42,9 @@ class CIEC_ANY {
      *  Transfer syntaxes (page 89).
      */
     enum EDataTypeID {
-      e_ANY, e_BOOL, e_SINT, e_INT, e_DINT, e_LINT, e_USINT, e_UINT, e_UDINT, e_ULINT, e_BYTE, e_WORD, e_DWORD, e_LWORD, e_DATE, e_TIME_OF_DAY, e_DATE_AND_TIME, e_TIME, 
-      e_CHAR, e_WCHAR, //until here mem-copiable data types
+      e_ANY, e_BOOL, e_SINT, e_INT, e_DINT, e_LINT, e_USINT, e_UINT, e_UDINT, e_ULINT, e_BYTE, e_WORD, e_DWORD, e_LWORD, e_DATE, e_TIME_OF_DAY, e_DATE_AND_TIME, e_TIME,
+      e_CHAR, e_WCHAR,
+      e_LDATE, e_LTIME_OF_DAY, e_LDATE_AND_TIME, e_LTIME, //until here mem-copiable data types
       e_REAL,
       e_LREAL,
       e_STRING,

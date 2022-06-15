@@ -42,6 +42,10 @@
 #include "forte_time_of_day.h"
 #include "forte_date_and_time.h"
 #include "forte_date.h"
+#include "forte_ltime.h"
+#include "forte_ltime_of_day.h"
+#include "forte_ldate_and_time.h"
+#include "forte_ldate.h"
 #include "forte_struct.h"
 #include "forte_array.h"
 #include <math.h>
