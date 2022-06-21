@@ -95,7 +95,7 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
           eoWith[i] = static_cast<TForteUInt8>(i);
           doNames[i] = structInstance->elementNames()[i];
           doDataTypeNames[typeNameIndex] = (&(structInstance->getMembers()[i]))->getTypeNameID();
-          if((&(structInstance->getMembers()[i]))->getTypeNameID() == CIEC_ANY::e_ARRAY){
+          if((&(structInstance->getMembers()[i]))->getDataTypeID() == CIEC_ANY::e_ARRAY){
             CIEC_ARRAY_TYPELIB *array = static_cast<CIEC_ARRAY_TYPELIB*>(&(structInstance->getMembers()[i]));
             doDataTypeNames[typeNameIndex + 1] = static_cast<CStringDictionary::TStringId>(array->size());
             doDataTypeNames[typeNameIndex + 2] = array->getElementTypeNameID();
