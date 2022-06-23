@@ -198,11 +198,11 @@ const CIEC_DATE_AND_TIME func_CONCAT_DATE_TOD(const CIEC_DATE& pa_roIN1, const C
   return retVal;
 }
 
-CIEC_ANY_INT func_FIND(const CIEC_ANY_STRING& pa_rsIn1, const CIEC_ANY_STRING& pa_rsIn2){
+CIEC_ULINT func_FIND(const CIEC_ANY_STRING& pa_rsIn1, const CIEC_ANY_STRING& pa_rsIn2){
   const char* pc_Find = strstr(pa_rsIn1.getValue(), pa_rsIn2.getValue());
-  CIEC_ANY_INT temp;
+  CIEC_ULINT temp;
   if (nullptr != pc_Find){
-    temp.setSignedValue(pc_Find - pa_rsIn1.getValue() + 1);
+    temp.setUnsignedValue(pc_Find - pa_rsIn1.getValue() + 1);
   }
   return temp;
 }
