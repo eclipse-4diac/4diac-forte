@@ -14,7 +14,7 @@
 #    Martin Melik Merkumians - adds compiler feature check for nullptr
 # *******************************************************************************/
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
 
 PROJECT(FORTE)
 
