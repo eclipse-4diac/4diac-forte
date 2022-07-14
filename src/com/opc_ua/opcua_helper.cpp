@@ -103,7 +103,7 @@ UA_TypeConvert(&UA_TYPES[UA_TYPES_BOOLEAN], &convertFromIECToOPCUASpecific<CIEC_
   UA_TypeConvert(&UA_TYPES[UA_TYPES_DATETIME], &convertFromIECToOPCUASpecific<CIEC_DATE_AND_TIME, UA_DateTime>, &convertFromOPCUAToIECSpecific<CIEC_DATE_AND_TIME, UA_DateTime>),
   UA_TypeConvert(&UA_TYPES[UA_TYPES_INT64], &convertFromIECToOPCUASpecific<CIEC_TIME, UA_Int64>, &convertFromOPCUAToIECSpecific<CIEC_TIME, UA_Int64>),
   UA_TypeConvert(&UA_TYPES[UA_TYPES_BYTE], &convertFromIECToOPCUASpecific<CIEC_CHAR, UA_Byte>, &convertFromOPCUAToIECSpecific<CIEC_CHAR, UA_Byte>),
-  UA_TypeConvert(&UA_TYPES[UA_TYPES_BYTE], &convertFromIECToOPCUASpecific<CIEC_WCHAR, UA_Byte>, &convertFromOPCUAToIECSpecific<CIEC_WCHAR, UA_Byte>),
+  UA_TypeConvert(&UA_TYPES[UA_TYPES_UINT16], &convertFromIECToOPCUASpecific<CIEC_WCHAR, UA_UInt16>, &convertFromOPCUAToIECSpecific<CIEC_WCHAR, UA_UInt16>),
   UA_TypeConvert(&UA_TYPES[UA_TYPES_FLOAT], &convertFromIECToOPCUASpecific<CIEC_REAL, UA_Float>, &convertFromOPCUAToIECSpecific<CIEC_REAL, UA_Float>),
   UA_TypeConvert(&UA_TYPES[UA_TYPES_DOUBLE], &convertFromIECToOPCUASpecific<CIEC_LREAL, UA_Double>, &convertFromOPCUAToIECSpecific<CIEC_LREAL, UA_Double>),
   UA_TypeConvert(&UA_TYPES[UA_TYPES_STRING], &convertFromIECToOPCUASpecific<CIEC_STRING, UA_String>, &convertFromOPCUAToIECSpecific<CIEC_STRING, UA_String>),
