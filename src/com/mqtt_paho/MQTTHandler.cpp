@@ -191,8 +191,8 @@ int MQTTHandler::mqttSubscribe(const MQTTComLayer* paLayer){
 
 int MQTTHandler::registerLayer(const char* paAddress, const char* paClientId, MQTTComLayer* paLayer){
   if(smClient == nullptr){
-    smClientId = paClientId;
-    smAddress = paAddress;
+    smClientId = CIEC_STRING(paClientId);
+    smAddress = CIEC_STRING(paAddress);
     MQTTAsync_create(&smClient, smAddress.getValue(), smClientId.getValue(), MQTTCLIENT_PERSISTENCE_NONE, nullptr);
     smClientConnectionOptions.keepAliveInterval = 20;
     smClientConnectionOptions.cleansession = 1;
@@ -223,8 +223,7 @@ int MQTTHandler::registerLayer(const char* paAddress, const char* paClientId, MQ
       }
       smMQTTS_STATE = CONNECTION_ASKED;
     }
-  }
-  else if((smClientId != paClientId) || (smAddress != paAddress)){
+  } else if((smClientId != CIEC_STRING(paClientId)) || (smAddress != CIEC_STRING(paAddress))){
     return eWrongClientID;
   }
   {

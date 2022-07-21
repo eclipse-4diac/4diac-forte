@@ -65,7 +65,7 @@ EComResponse MQTTComLayer::openConnection(char* paLayerParameter) {
   EComResponse eRetVal = e_InitInvalidId;
   CParameterParser parser(paLayerParameter, ',', mNoOfParameters);
   if(mNoOfParameters == parser.parseParameters()){
-    mTopicName = parser[Topic];
+    mTopicName = CIEC_STRING(parser[Topic]);
     if( MQTTHandler::eRegisterLayerSucceeded ==
         getExtEvHandler<MQTTHandler>().registerLayer(parser[Address], parser[ClientID], this)) {
       eRetVal = e_InitOk;
