@@ -49,9 +49,7 @@ FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstance
   mTimeListEntry.mNext = nullptr;
   mTimeListEntry.mTimedFB = this;
   mTimeListEntry.mType = e_Periodic;
-  mECEO.changeExecutionState(cg_nMGM_CMD_Start);
 }
-
 
 void FORTE_RT_E_CYCLE::executeEvent(int paEIID){
   switch(paEIID){
@@ -77,3 +75,12 @@ void FORTE_RT_E_CYCLE::executeEvent(int paEIID){
   }
 }
 
+EMGMResponse FORTE_RT_E_CYCLE::changeFBExecutionState(EMGMCommandType paCommand){
+  mECEO.changeExecutionState(paCommand);
+  EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(paCommand);
+  if((e_RDY == eRetVal) && ((cg_nMGM_CMD_Stop == paCommand) || (cg_nMGM_CMD_Kill == paCommand)) && mActive) {
+    getTimer().unregisterTimedFB(this);
+    mActive = false;
+  }
+  return eRetVal;
+}

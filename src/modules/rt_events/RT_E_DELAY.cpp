@@ -51,7 +51,6 @@ FORTE_RT_E_DELAY::FORTE_RT_E_DELAY(const CStringDictionary::TStringId paInstance
   mTimeListEntry.mNext = nullptr;
   mTimeListEntry.mTimedFB = this;
   mTimeListEntry.mType = e_SingleShot;
-  mECEO.changeExecutionState(cg_nMGM_CMD_Start);
 }
 
 void FORTE_RT_E_DELAY::executeEvent(int paEIID){
@@ -93,3 +92,12 @@ void FORTE_RT_E_DELAY::executeEvent(int paEIID){
 }
 
 
+EMGMResponse FORTE_RT_E_DELAY::changeFBExecutionState(EMGMCommandType paCommand){
+  mECEO.changeExecutionState(paCommand);
+  EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(paCommand);
+  if((e_RDY == eRetVal) && ((cg_nMGM_CMD_Stop == paCommand) || (cg_nMGM_CMD_Kill == paCommand)) && mActive) {
+    getTimer().unregisterTimedFB(this);
+    mActive = false;
+  }
+  return eRetVal;
+}

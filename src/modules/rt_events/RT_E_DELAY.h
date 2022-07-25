@@ -77,6 +77,8 @@ public:
   FORTE_RT_E_DELAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
   ~FORTE_RT_E_DELAY() override = default;
 
+  EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
+
 };
 
 #endif //close the ifdef sequence from the beginning of the file

@@ -67,6 +67,8 @@ public:
 
   ~FORTE_RT_E_CYCLE() override = default;
 
+  EMGMResponse changeFBExecutionState(EMGMCommandType paCommand) override;
+
 };
 
 #endif //close the ifdef sequence from the beginning of the file
