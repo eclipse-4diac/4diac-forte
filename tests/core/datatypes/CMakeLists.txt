@@ -69,10 +69,11 @@ ENDIF (FORTE_USE_REAL_DATATYPE)
 IF (FORTE_USE_LREAL_DATATYPE) 
   forte_test_add_sourcefile_cpp(CIEC_LREAL_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_LREAL_CASTS_test.cpp)
-ENDIF (FORTE_USE_LREAL_DATATYPE)  
-  
-  forte_test_add_sourcefile_cpp(CIEC_STRING_test.cpp)
-  forte_test_add_sourcefile_cpp(CIEC_WSTRING_test.cpp)
+ENDIF (FORTE_USE_LREAL_DATATYPE)
+
+forte_test_add_sourcefile_cpp(CIEC_CHAR_test.cpp)
+forte_test_add_sourcefile_cpp(CIEC_STRING_test.cpp)
+forte_test_add_sourcefile_cpp(CIEC_WSTRING_test.cpp)
 
 IF (FORTE_SUPPORT_ARRAYS)
   forte_test_add_sourcefile_cpp(CIEC_ARRAY_test.cpp)

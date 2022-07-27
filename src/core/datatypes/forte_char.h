@@ -55,6 +55,10 @@ class CIEC_CHAR : public CIEC_ANY_CHAR{
       return getChar8();
     }
 
+    int toString(char* paValue, size_t paBufferSize) const override;
+
+    int fromString(const char *paValue) override;
+
     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_CHAR;
     }
