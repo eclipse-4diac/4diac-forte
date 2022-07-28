@@ -42,7 +42,7 @@ int CIEC_WCHAR::toString(char *paValue, size_t paBufferSize) const {
         if(symbol < 256) {
             return snprintf(paValue, longestStringSize, "WCHAR#\"%c\"", symbol);
         }
-        return snprintf(paValue, longestStringSize, "WCHAR#\"$%x\"", symbol);
+        return snprintf(paValue, longestStringSize, "WCHAR#\"$%X\"", symbol);
       } break;
     }
   }
@@ -54,7 +54,9 @@ int CIEC_WCHAR::fromString(const char *paValue) {
   int bufferCount;    
   if ('"' != paValue[0] && 'W' != paValue[0]) { // Not a valid literal start
     return -1;
-  } else if('W' == paValue[0] && 'C' == paValue[1] && 'H' == paValue[2] && 'A' == paValue[3]
+  }
+
+  if('W' == paValue[0] && 'C' == paValue[1] && 'H' == paValue[2] && 'A' == paValue[3]
        && 'R' == paValue[4] && '#' == paValue[5] && '"' == paValue[6]) { // qualifier start
     bufferCount = 7; // Start of char with paValue
   } else if ('"' == paValue[0]) {
@@ -63,7 +65,7 @@ int CIEC_WCHAR::fromString(const char *paValue) {
     return -1; // Type qualifier was wrong
   }
 
-  if('\'' == paValue[bufferCount]) { // Char is immediatly closed
+  if('"' == paValue[bufferCount]) { // Char is immediatly closed
     *this = CIEC_WCHAR('\0');
     return bufferCount + 1; // closing '
   }
@@ -74,11 +76,11 @@ int CIEC_WCHAR::fromString(const char *paValue) {
   }
 
   if('$' == paValue[bufferCount]) { // Escape sequence, so the next symbol must either be a hex number or a special symbol
-    if('\'' == paValue[bufferCount + 2]) { // if there is only one symbol it will get considered as special symbol
+    if('"' == paValue[bufferCount + 2]) { // if there is only one symbol it will get considered as special symbol
       const char controlSymbol = toupper(paValue[bufferCount + 1]);
       switch(controlSymbol) {
         case '$': *this = CIEC_WCHAR('$'); break;
-        case '\'': *this = CIEC_WCHAR('\''); break;
+        case '"': *this = CIEC_WCHAR('"'); break;
         case 'L': *this = CIEC_WCHAR('\n'); break;
         case 'N': *this = CIEC_WCHAR('\n'); break;
         case 'P': *this = CIEC_WCHAR('\f'); break;
@@ -91,7 +93,7 @@ int CIEC_WCHAR::fromString(const char *paValue) {
 
     if(forte::core::util::isHexDigit(paValue[bufferCount + 1]) && forte::core::util::isHexDigit(paValue[bufferCount + 2]) 
       && forte::core::util::isHexDigit(paValue[bufferCount + 3]) && forte::core::util::isHexDigit(paValue[bufferCount + 4])
-      && '\'' == paValue[bufferCount + 5]) { // if there are two symbols it is a hex code
+      && '"' == paValue[bufferCount + 5]) { // if there are two symbols it is a hex code
       const TForteWChar codePoint = (forte::core::util::charHexDigitToInt(paValue[bufferCount + 1]) << 12) +
        (forte::core::util::charHexDigitToInt(paValue[bufferCount + 2]) << 8) +
        (forte::core::util::charHexDigitToInt(paValue[bufferCount + 3]) << 4) +

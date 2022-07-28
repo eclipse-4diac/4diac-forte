@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(Assignment_test)
 
 BOOST_AUTO_TEST_CASE(ToString_test){
   CIEC_WCHAR test('a');
-  char toStringBuffer[11];
+  char toStringBuffer[14];
   const char expected[] = "WCHAR#\"a\"";
   BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), sizeof(expected) -1);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(ToString_test){
 
 BOOST_AUTO_TEST_CASE(ToStringEmpty_test){
   CIEC_WCHAR test;
-  char toStringBuffer[11];
+  char toStringBuffer[14];
   const char expected[] = "WCHAR#\"\"";
   BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), sizeof(expected) -1);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE(ToStringEmpty_test){
 
 BOOST_AUTO_TEST_CASE(ToStringDollar_test){
   CIEC_WCHAR test('$');
-  char toStringBuffer[11];
+  char toStringBuffer[14];
   const char expected[] = "WCHAR#\"$$\"";
   BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), sizeof(expected) -1);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE(ToStringDollar_test){
 
 BOOST_AUTO_TEST_CASE(ToStringSingleQuote_test){
   CIEC_WCHAR test('"');
-  char toStringBuffer[11];
+  char toStringBuffer[14];
   const char expected[] = "WCHAR#\"$\"\"";
   BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), sizeof(expected) -1);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_CASE(ToStringSingleQuote_test){
 
 BOOST_AUTO_TEST_CASE(ToStringLineFeed_NewLine_test){
   CIEC_WCHAR test('\n');
-  char toStringBuffer[11];
+  char toStringBuffer[14];
   const char expected[] = "WCHAR#\"$N\"";
   BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), sizeof(expected) -1);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE(ToStringLineFeed_NewLine_test){
 
 BOOST_AUTO_TEST_CASE(ToStringPageFeed_test){
   CIEC_WCHAR test('\f');
-  char toStringBuffer[11];
+  char toStringBuffer[14];
   const char expected[] = "WCHAR#\"$P\"";
   BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), sizeof(expected) -1);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_CASE(ToStringPageFeed_test){
 
 BOOST_AUTO_TEST_CASE(ToStringCarriageReturn_test){
   CIEC_WCHAR test('\r');
-  char toStringBuffer[11];
+  char toStringBuffer[14];
   const char expected[] = "WCHAR#\"$R\"";
   BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), sizeof(expected) -1);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_CASE(ToStringCarriageReturn_test){
 
 BOOST_AUTO_TEST_CASE(ToStringTab_test){
   CIEC_WCHAR test('\t');
-  char toStringBuffer[11];
+  char toStringBuffer[14];
   const char expected[] = "WCHAR#\"$T\"";
   BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), sizeof(expected) -1);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
@@ -121,8 +121,8 @@ BOOST_AUTO_TEST_CASE(ToStringTab_test){
 
 BOOST_AUTO_TEST_CASE(FromString_test){
   CIEC_WCHAR test;
-  char toStringBuffer[11];
-  const char expected[] = "WCHAR#'A'";
+  char toStringBuffer[14];
+  const char expected[] = "WCHAR#\"A\"";
   BOOST_CHECK_EQUAL(test.fromString(expected), sizeof(expected) - 1);
   BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), sizeof(expected) -1);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
@@ -130,8 +130,8 @@ BOOST_AUTO_TEST_CASE(FromString_test){
 
 BOOST_AUTO_TEST_CASE(FromStringEmpty_test){
   CIEC_WCHAR test;
-  char toStringBuffer[11];
-  const char expected[] = "WCHAR#''";
+  char toStringBuffer[14];
+  const char expected[] = "WCHAR#\"\"";
   BOOST_CHECK_EQUAL(test.fromString(expected), sizeof(expected) - 1);
   BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)),sizeof(expected) - 1);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
@@ -139,85 +139,85 @@ BOOST_AUTO_TEST_CASE(FromStringEmpty_test){
 
 BOOST_AUTO_TEST_CASE(FromStringDollar_test){
   CIEC_WCHAR test;
-  char toStringBuffer[11];
-  const char expected[] = "WCHAR#'$$'";
+  char toStringBuffer[14];
+  const char expected[] = "WCHAR#\"$$\"";
   BOOST_CHECK_EQUAL(test.fromString(expected), sizeof(expected) - 1);
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)),9);
+  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)),10);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(FromStringQuote_test){
   CIEC_WCHAR test;
-  char toStringBuffer[11];
-  const char expected[] = "WCHAR#'$''";
+  char toStringBuffer[14];
+  const char expected[] = "WCHAR#\"$\"\"";
   BOOST_CHECK_EQUAL(test.fromString(expected), sizeof(expected) - 1);
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)),9);
+  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)),10);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(FromStringLineFeed_test){
   CIEC_WCHAR test;
-  char toStringBuffer[11];
-  const char source[] = "WCHAR#'$L'";
-  const char expected[] = "WCHAR#'$N'";
+  char toStringBuffer[14];
+  const char source[] = "WCHAR#\"$L\"";
+  const char expected[] = "WCHAR#\"$N\"";
   BOOST_CHECK_EQUAL(test.fromString(source), sizeof(source) - 1);
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)),9);
+  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)),10);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(FromStringNewLine_test){
   CIEC_WCHAR test;
-  char toStringBuffer[11];
-  const char expected[] = "WCHAR#'$N'";
+  char toStringBuffer[14];
+  const char expected[] = "WCHAR#\"$N\"";
   BOOST_CHECK_EQUAL(test.fromString(expected), sizeof(expected) - 1);
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)),9);
+  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)),10);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(FromStringPageFeed_test){
   CIEC_WCHAR test;
-  char toStringBuffer[11];
-  const char expected[] = "WCHAR#'$P'";
+  char toStringBuffer[14];
+  const char expected[] = "WCHAR#\"$P\"";
   BOOST_CHECK_EQUAL(test.fromString(expected), sizeof(expected) - 1);
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)),9);
+  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)),10);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(FromStringCarriageReturn_test){
   CIEC_WCHAR test;
-  char toStringBuffer[11];
-  const char expected[] = "WCHAR#'$R'";
+  char toStringBuffer[14];
+  const char expected[] = "WCHAR#\"$R\"";
   BOOST_CHECK_EQUAL(test.fromString(expected), sizeof(expected) - 1);
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)),9);
+  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)),10);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(FromStringTab_test){
   CIEC_WCHAR test;
-  char toStringBuffer[11];
-  const char expected[] = "WCHAR#'$T'";
+  char toStringBuffer[14];
+  const char expected[] = "WCHAR#\"$T\"";
   BOOST_CHECK_EQUAL(test.fromString(expected), sizeof(expected) - 1);
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)),9);
+  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)),10);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(FromStringCodePoint_test){
   CIEC_WCHAR test;
-  char toStringBuffer[11];
-  const char source[] = "WCHAR#'$000A'";
-  const char expected[] = "WCHAR#'$N'";
+  char toStringBuffer[14];
+  const char source[] = "WCHAR#\"$000A\"";
+  const char expected[] = "WCHAR#\"$N\"";
   BOOST_CHECK_EQUAL(test.fromString(source), sizeof(source) - 1);
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)),9);
+  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)),10);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
 BOOST_AUTO_TEST_CASE(FromStringHighCodePoint_test){
   CIEC_WCHAR test;
-  char toStringBuffer[11];
-  const char source[] = "WCHAR#'$A00A'";
-  const char expected[] = "WCHAR#'$A00A'";
+  char toStringBuffer[14];
+  const char source[] = "WCHAR#\"$A00A\"";
+  const char expected[] = "WCHAR#\"$A00A\"";
   BOOST_CHECK_EQUAL(test.fromString(source), sizeof(source) - 1);
-  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)),9);
+  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)),sizeof(source) - 1);
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
