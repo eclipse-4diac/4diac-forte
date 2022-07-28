@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2018 fortiss GmbH, Johannes Kepler University
+ * Copyright (c) 2015, 2018, 2022 fortiss GmbH, Johannes Kepler University
+ *  Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +10,8 @@
  * Contributors:
  *    Alois Zoitl
  *      - initial implementation and rework communication infrastructure
+ *  Martin Melik Merkumians
+ *    - adds functionality for W/CHAR
  *******************************************************************************/
 #include "monitoring.h"
 #include "resource.h"
@@ -382,6 +385,11 @@ void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
         consumedBytes += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(acDataValue));
       }
       break;
+    case CIEC_ANY::e_CHAR:
+    case CIEC_ANY::e_WCHAR:
+      consumedBytes = paDataWatchEntry.mDataBuffer->toString(acDataValue, bufferSize);
+      consumedBytes += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(acDataValue));
+      break;
     case CIEC_ANY::e_ARRAY:
     case CIEC_ANY::e_STRUCT:
       consumedBytes = paDataWatchEntry.mDataBuffer->toString(acDataValue, bufferSize);
@@ -411,6 +419,12 @@ size_t CMonitoringHandler::getExtraSizeForEscapedChars(const CIEC_ANY& paDataVal
     case CIEC_ANY::e_STRING:
       retVal = forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<const CIEC_WSTRING&>(paDataValue).getValue());
      break;
+    case CIEC_ANY::e_CHAR:
+      retVal = 5 + 5 + 5; // Both outer quotes and symbol gets evetually replaced
+      break;
+    case CIEC_ANY::e_WCHAR:
+      retVal = 5 + 5 + 5; //Both outer quotes and symbol gets evetually replaced
+    break;
     case CIEC_ANY::e_ARRAY:
       retVal = getExtraSizeForEscapedCharsArray(static_cast<const CIEC_ARRAY_TYPELIB &>(paDataValue));
       break;
