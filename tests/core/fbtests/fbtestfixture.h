@@ -33,7 +33,7 @@ class CFBTestFixtureBase : public CFunctionBlock{
   protected:
     explicit CFBTestFixtureBase(CStringDictionary::TStringId paTypeId);
 
-    void setup();
+    void setup(const char* pa_acConfigString = nullptr);
 
     /*!\brief invoke the FB under Test with the given event id
      *

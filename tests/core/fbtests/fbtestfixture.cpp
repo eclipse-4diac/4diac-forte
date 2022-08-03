@@ -12,6 +12,9 @@
  *   Alois Zoitl - migrated fb tests to boost test infrastructure
  *******************************************************************************/
 #include "fbtestfixture.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "fbtestfixture_gen.cpp"
+#endif
 #include "fbtesterglobalfixture.h"
 #include <device.h>
 #include <criticalregion.h>
@@ -100,7 +103,11 @@ void CFBTestFixtureBase::performFBDeleteTests() {
   mFBUnderTest = nullptr;
 }
 
-void CFBTestFixtureBase::setup(){
+void CFBTestFixtureBase::setup(const char* pa_acConfigString){
+  if(pa_acConfigString != nullptr) {
+    mFBUnderTest->configureFB(pa_acConfigString);
+  }
+
   setupTestInterface();
   performDataInterfaceTests();
 
@@ -159,9 +166,11 @@ void CFBTestFixtureBase::setOutputData(std::initializer_list<TIEC_ANYPtr> paOutp
 }
 
 void CFBTestFixtureBase::setupTestInterface(){
-  BOOST_CHECK(CFunctionBlock::e_IDLE == mFBUnderTest->getState());
-  BOOST_CHECK(getFBTypeId() == mFBUnderTest->getFBTypeId());
-  BOOST_CHECK(getFBTypeId() == mFBUnderTest->getInstanceNameId());
+  BOOST_CHECK_EQUAL(CFunctionBlock::e_IDLE, mFBUnderTest->getState());
+  if (mFBUnderTest->getFBTypeId() < g_nStringIdNextFreeId) { // not a generic block
+    BOOST_CHECK_EQUAL(getFBTypeId(), mFBUnderTest->getFBTypeId());
+  }
+  BOOST_CHECK_EQUAL(getFBTypeId(), mFBUnderTest->getInstanceNameId());
 
   const SFBInterfaceSpec* interfaceSpec = mFBUnderTest->getFBInterfaceSpec();
 
