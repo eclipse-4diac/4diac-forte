@@ -20,8 +20,8 @@ struct F_MULTIME_TestFixture : public CFBTestFixtureBase{
 
   F_MULTIME_TestFixture() : CFBTestFixtureBase(g_nStringIdF_MULTIME)
   {
-    SETUP_INPUTDATA(&mIn_TIME_MULTIME, &mIn_REAL_MULTIME);
-    SETUP_OUTPUTDATA(&mOut_TIME_MULTIME);
+    setInputData({&mIn_TIME_MULTIME, &mIn_REAL_MULTIME});
+    setOutputData({&mOut_TIME_MULTIME});
     CFBTestFixtureBase::setup();
   }
 

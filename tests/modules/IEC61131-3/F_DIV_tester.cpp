@@ -21,8 +21,8 @@ struct F_DIV_TestFixture : public CFBTestFixtureBase{
 
   F_DIV_TestFixture() : CFBTestFixtureBase(g_nStringIdF_DIV)
   {
-    SETUP_INPUTDATA(&mIn1_DIV, &mIn2_DIV);
-    SETUP_OUTPUTDATA(&mOut_DIV);
+    setInputData({&mIn1_DIV, &mIn2_DIV});
+    setOutputData({&mOut_DIV});
     CFBTestFixtureBase::setup();
   }
 

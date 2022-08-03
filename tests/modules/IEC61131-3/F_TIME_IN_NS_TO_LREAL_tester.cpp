@@ -19,8 +19,8 @@ struct F_TIME_IN_NS_TO_LREAL_TestFixture : public CFBTestFixtureBase {
 
     F_TIME_IN_NS_TO_LREAL_TestFixture() :
         CFBTestFixtureBase(g_nStringIdF_TIME_IN_NS_TO_LREAL) {
-      SETUP_INPUTDATA(&mIn_F_TIME_IN_NS_TO_LREAL);
-      SETUP_OUTPUTDATA(&mOut_F_TIME_IN_NS_TO_LREAL);
+      setInputData({&mIn_F_TIME_IN_NS_TO_LREAL});
+      setOutputData({&mOut_F_TIME_IN_NS_TO_LREAL});
       CFBTestFixtureBase::setup();
     }
 

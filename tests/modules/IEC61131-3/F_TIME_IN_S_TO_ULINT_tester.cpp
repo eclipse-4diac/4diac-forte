@@ -19,8 +19,8 @@ struct F_TIME_IN_S_TO_ULINT_TestFixture : public CFBTestFixtureBase {
 
     F_TIME_IN_S_TO_ULINT_TestFixture() :
         CFBTestFixtureBase(g_nStringIdF_TIME_IN_S_TO_ULINT) {
-      SETUP_INPUTDATA(&mIn_F_TIME_IN_S_TO_ULINT);
-      SETUP_OUTPUTDATA(&mOut_F_TIME_IN_S_TO_ULINT);
+      setInputData({&mIn_F_TIME_IN_S_TO_ULINT});
+      setOutputData({&mOut_F_TIME_IN_S_TO_ULINT});
       CFBTestFixtureBase::setup();
     }
 

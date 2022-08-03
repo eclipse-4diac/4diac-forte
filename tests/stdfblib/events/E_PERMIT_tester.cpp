@@ -20,7 +20,7 @@
 struct E_PERMIT_TestFixture : public CFBTestFixtureBase{
 
     E_PERMIT_TestFixture() : CFBTestFixtureBase(g_nStringIdE_PERMIT){
-      SETUP_INPUTDATA(&mInPERMIT);
+      setInputData({&mInPERMIT});
       CFBTestFixtureBase::setup();
     }
  

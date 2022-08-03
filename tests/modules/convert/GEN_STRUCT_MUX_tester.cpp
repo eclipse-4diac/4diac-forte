@@ -21,8 +21,8 @@
 struct STRUCT_MUX_TestFixture_1 : public CFBTestFixtureBase{
 
     STRUCT_MUX_TestFixture_1() : CFBTestFixtureBase(g_nStringIdSTRUCT_MUX_1Struct_Muxer_Test_Struct_1){
-      SETUP_INPUTDATA(&mVar1, &mVar2, &mVar3);
-      SETUP_OUTPUTDATA(&mOut);
+      setInputData({&mVar1, &mVar2, &mVar3});
+      setOutputData({&mOut});
       CFBTestFixtureBase::setup();
     }
 
@@ -91,8 +91,8 @@ BOOST_FIXTURE_TEST_SUITE( STRUCT_MUX_MainTests, STRUCT_MUX_TestFixture_1)
 struct STRUCT_MUX_TestFixture_2 : public CFBTestFixtureBase{
 
     STRUCT_MUX_TestFixture_2() : CFBTestFixtureBase(g_nStringIdSTRUCT_MUX_1Struct_Muxer_Test_Struct_2){
-      SETUP_INPUTDATA(&mVar1, &mVar2, &mVar3);
-      SETUP_OUTPUTDATA(&mOut);
+      setInputData({&mVar1, &mVar2, &mVar3});
+      setOutputData({&mOut});
       CFBTestFixtureBase::setup();
     }
 

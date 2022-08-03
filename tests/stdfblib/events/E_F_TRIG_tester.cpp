@@ -21,7 +21,7 @@
 struct E_F_TRIG_TestFixture : public CFBTestFixtureBase{
 
     E_F_TRIG_TestFixture() : CFBTestFixtureBase(g_nStringIdE_F_TRIG){
-      SETUP_INPUTDATA(&mInQI);
+      setInputData({&mInQI});
       CFBTestFixtureBase::setup();
     }
 

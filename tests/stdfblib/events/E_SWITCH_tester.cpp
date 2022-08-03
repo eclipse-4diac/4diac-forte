@@ -22,7 +22,7 @@ struct E_SWITCH_TestFixture : public CFBTestFixtureBase {
 
     E_SWITCH_TestFixture() :
         CFBTestFixtureBase(g_nStringIdE_SWITCH) {
-      SETUP_INPUTDATA(&mInG);
+      setInputData({&mInG});
       CFBTestFixtureBase::setup();
     }
 

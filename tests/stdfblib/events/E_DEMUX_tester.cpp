@@ -26,7 +26,7 @@ class E_DEMUX_tester : public CFBTester{
   private:
     E_DEMUX_tester(CResource* m_poTestResource) :
         CFBTester(m_poTestResource){
-      SETUP_INPUTDATA(&m_oIn_K);
+      setInputData({&m_oIn_K});
     }
     virtual ~E_DEMUX_tester() {
 

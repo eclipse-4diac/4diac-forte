@@ -21,8 +21,8 @@
 struct STRUCT_DEMUX_TestFixture_1 : public CFBTestFixtureBase{
 
     STRUCT_DEMUX_TestFixture_1() : CFBTestFixtureBase(g_nStringIdSTRUCT_DEMUX_1Struct_Muxer_Test_Struct_1){
-      SETUP_INPUTDATA(&mIn);
-      SETUP_OUTPUTDATA(&mVar1, &mVar2, &mVar3);
+      setInputData({&mIn});
+      setOutputData({&mVar1, &mVar2, &mVar3});
       CFBTestFixtureBase::setup();
     }
 
@@ -91,8 +91,8 @@ BOOST_FIXTURE_TEST_SUITE( STRUCT_DEMUX_MainTests, STRUCT_DEMUX_TestFixture_1)
 struct STRUCT_DEMUX_TestFixture_2 : public CFBTestFixtureBase{
 
     STRUCT_DEMUX_TestFixture_2() : CFBTestFixtureBase(g_nStringIdSTRUCT_DEMUX_1Struct_Muxer_Test_Struct_2){
-      SETUP_INPUTDATA(&mIn);
-      SETUP_OUTPUTDATA(&mVar1, &mVar2, &mVar3);
+      setInputData({&mIn});
+      setOutputData({&mVar1, &mVar2, &mVar3});
       CFBTestFixtureBase::setup();
     }
 

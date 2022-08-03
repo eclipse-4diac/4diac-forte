@@ -150,14 +150,12 @@ bool CFBTestFixtureBase::checkForSingleOutputEventOccurence(int paExpectedEOId) 
   return (!eventChainEmpty() && (pullFirstChainEventID() == paExpectedEOId) && eventChainEmpty());
 }
 
-void CFBTestFixtureBase::setInputData(TIEC_ANYPtr paInputData[], size_t paLenght){
-  mInputDataBuffers.reserve(paLenght);
-  mInputDataBuffers.assign(paInputData, paInputData + paLenght);
+void CFBTestFixtureBase::setInputData(std::initializer_list<TIEC_ANYPtr> paInputData){
+  mInputDataBuffers.assign(paInputData);
 }
 
-void CFBTestFixtureBase::setOutputData(TIEC_ANYPtr paOutputData[], size_t paLenght){
-  mOutputDataBuffers.reserve(paLenght);
-  mOutputDataBuffers.assign(paOutputData, paOutputData + paLenght);
+void CFBTestFixtureBase::setOutputData(std::initializer_list<TIEC_ANYPtr> paOutputData){
+  mOutputDataBuffers.assign(paOutputData);
 }
 
 void CFBTestFixtureBase::setupTestInterface(){

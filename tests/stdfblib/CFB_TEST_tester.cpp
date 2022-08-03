@@ -20,8 +20,8 @@
 struct CFB_TEST_TestFixture : public CFBTestFixtureBase{
 
     CFB_TEST_TestFixture() : CFBTestFixtureBase(g_nStringIdCFB_TEST){
-      SETUP_INPUTDATA(&mInQI);
-      SETUP_OUTPUTDATA(&mOutSR);
+      setInputData({&mInQI});
+      setOutputData({&mOutSR});
       CFBTestFixtureBase::setup();
     }
 

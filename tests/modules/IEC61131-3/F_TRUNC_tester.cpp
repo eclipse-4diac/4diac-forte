@@ -21,8 +21,8 @@ struct F_TRUNC_TestFixture : public CFBTestFixtureBase{
 
   F_TRUNC_TestFixture() : CFBTestFixtureBase(g_nStringIdF_TRUNC)
   {
-    SETUP_INPUTDATA(&mIn_TRUNC);
-    SETUP_OUTPUTDATA(&mOut_TRUNC);
+    setInputData({&mIn_TRUNC});
+    setOutputData({&mOut_TRUNC});
     CFBTestFixtureBase::setup();
   }
 

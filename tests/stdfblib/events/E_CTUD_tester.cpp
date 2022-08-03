@@ -21,8 +21,8 @@
 struct E_CTUD_TestFixture : public CFBTestFixtureBase{
 
     E_CTUD_TestFixture() : CFBTestFixtureBase(g_nStringIdE_CTUD){
-      SETUP_INPUTDATA(&mInPV);
-      SETUP_OUTPUTDATA(&mOutQU, &mOutQD, &mOutCV);
+      setInputData({&mInPV});
+      setOutputData({&mOutQU, &mOutQD, &mOutCV});
       CFBTestFixtureBase::setup();
     }
 

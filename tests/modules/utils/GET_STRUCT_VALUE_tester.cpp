@@ -76,8 +76,8 @@ struct GET_STRUCT_VALUE_GenericTestFixture : public CFBTestFixtureBase{
 
     GET_STRUCT_VALUE_GenericTestFixture(CIEC_ANY *paIN_STRUCT, CIEC_ANY *paOUT) :
         CFBTestFixtureBase(g_nStringIdGET_STRUCT_VALUE){
-      SETUP_INPUTDATA(paIN_STRUCT, &mMember);
-      SETUP_OUTPUTDATA(&mQO, paOUT);
+      setInputData({paIN_STRUCT, &mMember});
+      setOutputData({&mQO, paOUT});
     }
 
     CIEC_STRING mMember;

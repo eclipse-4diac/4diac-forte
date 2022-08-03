@@ -19,8 +19,8 @@ struct F_TIME_IN_US_TO_LINT_TestFixture : public CFBTestFixtureBase {
 
     F_TIME_IN_US_TO_LINT_TestFixture() :
         CFBTestFixtureBase(g_nStringIdF_TIME_IN_US_TO_LINT) {
-      SETUP_INPUTDATA(&mIn_F_TIME_IN_US_TO_LINT);
-      SETUP_OUTPUTDATA(&mOut_F_TIME_IN_US_TO_LINT);
+      setInputData({&mIn_F_TIME_IN_US_TO_LINT});
+      setOutputData({&mOut_F_TIME_IN_US_TO_LINT});
       CFBTestFixtureBase::setup();
     }
 

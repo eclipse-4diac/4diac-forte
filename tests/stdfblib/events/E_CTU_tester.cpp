@@ -23,8 +23,8 @@ struct E_CTU_TestFixture : public CFBTestFixtureBase {
 
     E_CTU_TestFixture() :
         CFBTestFixtureBase(g_nStringIdE_CTU) {
-      SETUP_INPUTDATA(&mInPV);
-      SETUP_OUTPUTDATA(&mOutQ, &mOutCV);
+      setInputData({&mInPV});
+      setOutputData({&mOutQ, &mOutCV});
       CFBTestFixtureBase::setup();
     }
 

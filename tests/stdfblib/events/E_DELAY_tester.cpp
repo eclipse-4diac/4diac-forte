@@ -33,7 +33,7 @@ class E_DELAY_tester  : public CFBTester{
   public:
     E_DELAY_tester(CResource* m_poTestResource) :
         CFBTester(m_poTestResource){
-      SETUP_INPUTDATA(&mDT);
+      setInputData({&mDT});
     }
 
     virtual ~E_DELAY_tester() {

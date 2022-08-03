@@ -22,20 +22,6 @@
 #include <vector>
 #include <deque>
 
-#define SETUP_INPUTDATA(...)                                                \
-  {                                                                         \
-    TIEC_ANYPtr inputData[] = {__VA_ARGS__};                                \
-    setInputData(inputData, (sizeof(inputData) / sizeof(inputData[0])) );   \
-  }                                                                         \
-
-
-#define SETUP_OUTPUTDATA(...)                                                \
-  {                                                                          \
-    TIEC_ANYPtr outputData[] = {__VA_ARGS__};                                \
-    setOutputData(outputData, (sizeof(outputData) / sizeof(outputData[0])) ); \
-  }                                                                          \
-
-
 class CFBTestFixtureBase : public CFunctionBlock{
   public:
     ~CFBTestFixtureBase();
@@ -71,8 +57,8 @@ class CFBTestFixtureBase : public CFunctionBlock{
      */
     bool checkForSingleOutputEventOccurence(int paExpectedEOId);
 
-    void setInputData(TIEC_ANYPtr paInputData[], size_t paLenght);
-    void setOutputData(TIEC_ANYPtr paInputData[], size_t paLenght);
+    void setInputData(std::initializer_list<TIEC_ANYPtr> paInputData);
+    void setOutputData(std::initializer_list<TIEC_ANYPtr> paOutputData);
 
   private:
     void executeEvent(int paEIID) override;

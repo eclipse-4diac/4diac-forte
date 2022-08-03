@@ -21,7 +21,7 @@
 struct E_SR_TestFixture : public CFBTestFixtureBase{
 
     E_SR_TestFixture() : CFBTestFixtureBase(g_nStringIdE_SR){
-      SETUP_OUTPUTDATA(&mOutQ);
+      setOutputData({&mOutQ});
       CFBTestFixtureBase::setup();
     }
 

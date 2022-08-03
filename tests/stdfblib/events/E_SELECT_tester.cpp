@@ -22,7 +22,7 @@ struct E_SELECT_TestFixture : public CFBTestFixtureBase {
 
     E_SELECT_TestFixture() :
         CFBTestFixtureBase(g_nStringIdE_SELECT) {
-      SETUP_INPUTDATA(&mInG);
+      setInputData({&mInG});
       CFBTestFixtureBase::setup();
     }
 

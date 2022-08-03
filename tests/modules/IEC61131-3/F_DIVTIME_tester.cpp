@@ -20,8 +20,8 @@ struct F_DIVTIME_TestFixture : public CFBTestFixtureBase{
 
   F_DIVTIME_TestFixture() : CFBTestFixtureBase(g_nStringIdF_DIVTIME)
   {
-    SETUP_INPUTDATA(&mIn_TIME_DIVTIME, &mIn_REAL_DIVTIME);
-    SETUP_OUTPUTDATA(&mOut_TIME_DIVTIME);
+    setInputData({&mIn_TIME_DIVTIME, &mIn_REAL_DIVTIME});
+    setOutputData({&mOut_TIME_DIVTIME});
     CFBTestFixtureBase::setup();
   }
 
