@@ -15,3 +15,4 @@
 #############################################################################
 
 forte_test_add_sourcefile_cpp(GET_STRUCT_VALUE_tester.cpp)
+forte_test_add_sourcefile_cpp(GEN_CSV_WRITER_tester.cpp)
