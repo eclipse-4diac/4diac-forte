@@ -15,6 +15,8 @@
  *   Martin Jobst
  *     - refactor for ANY variant
  *     - add generic readInputData and writeOutputData
+ *   Michael Hansal
+ *   - add support for array parameters
  *******************************************************************************/
 #include "GEN_CSV_WRITER.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -155,19 +157,57 @@ void GEN_CSV_WRITER::closeCSVFile() {
   }
 }
 
+bool GEN_CSV_WRITER::areDIsSameArrayLength(size_t& commonArraySize) {
+  constexpr TPortId firstDataDI = 2;
+  if(mInterfaceSpec->mNumDIs <= firstDataDI) {
+    return false;
+  }
+
+  for(TPortId i = firstDataDI; i < mInterfaceSpec->mNumDIs; i++) {
+    auto& value = getDI(i)->unwrap();
+    if(value.getDataTypeID() != CIEC_ANY::e_ARRAY) {
+      return false;
+    }
+
+    const size_t size = static_cast<const CIEC_ARRAY &>(value).size();
+    if (i == firstDataDI) {
+      commonArraySize = size;
+    } else if (size != commonArraySize) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 void GEN_CSV_WRITER::writeCSVFileLine() {
   if(nullptr != mCSVFile) {
-    char acBuffer[scmWriteBufferSize];
-    for(TPortId i = 2; i < mInterfaceSpec->mNumDIs; i++) {
-      int nLen = getDI(i)->unwrap().toString(acBuffer, scmWriteBufferSize);
-      if(nLen >= 0) {
-        forte_fwrite(acBuffer, 1, static_cast<size_t>(nLen), mCSVFile);
-      } else {
-        DEVLOG_ERROR("[GEN_CSV_WRITER]: Can't get string value for input %d\n", i);
-      }
-      forte_fwrite("; ", 1, 2, mCSVFile);
+    size_t numLines;
+    bool multiline = areDIsSameArrayLength(numLines);
+    if(!multiline) {
+      numLines = 1;
     }
-    forte_fwrite("\n", 1, 1, mCSVFile);
+
+    char acBuffer[scmWriteBufferSize];
+    for(size_t line = 0; line < numLines; line++) {
+      for(TPortId i = 2; i < mInterfaceSpec->mNumDIs; i++) {
+        auto& value = getDI(i)->unwrap();
+        int nLen;
+        if(multiline) {
+          auto& array = static_cast<const CIEC_ARRAY &>(value);
+          nLen = array.at(line).unwrap().toString(acBuffer, scmWriteBufferSize);
+        } else {
+          nLen = value.toString(acBuffer, scmWriteBufferSize);
+        }
+        if(nLen >= 0) {
+          forte_fwrite(acBuffer, 1, static_cast<size_t>(nLen), mCSVFile);
+        } else {
+          DEVLOG_ERROR("[GEN_CSV_WRITER]: Can't get string value for input %d\n", i);
+        }
+        forte_fwrite("; ", 1, 2, mCSVFile);
+      }
+      forte_fwrite("\n", 1, 1, mCSVFile);
+    }
   } else {
     QO() = CIEC_BOOL(false);
     STATUS() = scmFileNotOpened;
