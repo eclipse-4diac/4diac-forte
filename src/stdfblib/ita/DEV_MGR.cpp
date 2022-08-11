@@ -261,8 +261,10 @@ bool DEV_MGR::parseWriteConnectionData(char *paRequestPartLeft, forte::core::SMa
       return false;
     }
     *endOfSource = '\0';
-    forte::core::util::transformEscapedXMLToNonEscapedText(paRequestPartLeft);
     paCommand.mAdditionalParams = CIEC_STRING(paRequestPartLeft);
+    char *addParams = paCommand.mAdditionalParams.getValue();
+    forte::core::util::transformEscapedXMLToNonEscapedText(addParams);
+    paCommand.mAdditionalParams.assign(addParams, static_cast<TForteUInt16>(strlen(addParams)));
     *endOfSource = '"'; // restore the string
     paRequestPartLeft = strchr(endOfSource + 1, '\"');
     if(nullptr != paRequestPartLeft){
