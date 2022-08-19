@@ -215,7 +215,7 @@ class CIEC_ARRAY : public CIEC_ARRAY_COMMON<T> {
     }
 
     CIEC_ARRAY<T> &operator=(const CIEC_ARRAY<T> &paValue) {
-      this->operator=(static_cast<CIEC_ARRAY_COMMON<T> &>(paValue));
+      this->operator=(static_cast<const CIEC_ARRAY_COMMON<T> &>(paValue));
       return *this;
     }
 
