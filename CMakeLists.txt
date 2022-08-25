@@ -214,6 +214,15 @@ mark_as_advanced(FORTE_USE_TEST_CONFIG_IN_FORTE)
 ADD_SUBDIRECTORY(src)
 
 #######################################################################################
+# process interface
+#######################################################################################
+if(NOT DEFINED CACHE{FORTE_PROCESS_INTERFACE})
+    message("Building forte without a process interface.")
+else()
+    message("Using process interface: " $CACHE{FORTE_PROCESS_INTERFACE})
+endif()
+
+#######################################################################################
 # FORTE Tests
 #######################################################################################
 IF(FORTE_TESTS)

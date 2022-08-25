@@ -23,6 +23,7 @@ if(FORTE_MODULE_MLPI)
   forte_add_sourcefile_hcpp(../../stdfblib/io/IX)
   forte_add_sourcefile_hcpp(../../stdfblib/io/QX)
   forte_add_sourcefile_hcpp(processinterface)
+  forte_set_process_interface("MLPI")
   
   forte_add_handler(CMLPIFaceProcessInterface::CIOHandler processinterface)
   

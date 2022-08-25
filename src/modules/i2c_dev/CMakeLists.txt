@@ -25,5 +25,6 @@ forte_add_sourcefile_hcpp(../../stdfblib/io/IW)
 forte_add_sourcefile_hcpp( ../../stdfblib/io/QW)
 
 forte_add_sourcefile_h(processinterface.h)
+forte_set_process_interface("I2C-Dev")
 forte_add_sourcefile_hcpp(i2cprocessinterface)
 

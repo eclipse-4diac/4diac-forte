@@ -24,4 +24,5 @@ forte_add_sourcefile_hcpp( ../../stdfblib/io/QX)
 forte_add_sourcefile_hcpp(../../stdfblib/io/IW)
 forte_add_sourcefile_hcpp(../sysfs/sysfsprocint)
 forte_add_sourcefile_hcpp(processinterface)
+forte_set_process_interface("Odroid")
 

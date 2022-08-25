@@ -23,5 +23,6 @@ forte_add_sourcefile_hcpp(../../stdfblib/io/IX)
 forte_add_sourcefile_hcpp( ../../stdfblib/io/QX)
 forte_add_handler(CSysFsProcessInterface::CIOHandler sysfsprocint)
 forte_add_sourcefile_hcpp(sysfsprocint)
+forte_set_process_interface("SysFs")
 forte_add_sourcefile_h(processinterface.h)
 

@@ -41,6 +41,7 @@ if(FORTE_ENABLE_FMU)
     ../../stdfblib/io/IX ../../stdfblib/io/QX
     ../../stdfblib/io/IW ../../stdfblib/io/QW
    )
+  forte_set_process_interface("FORTE FMU")
    forte_add_sourcefile_cpp(fmuEcetFactory.cpp)
    forte_add_sourcefile_hcpp(../../arch/utils/timespec_utils)
    

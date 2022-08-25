@@ -30,6 +30,7 @@ if(FORTE_MODULE_WagoKbus)
       forte_add_sourcefile_hcpp( ../../stdfblib/io/QW) 
       forte_add_sourcefile_hcpp( ../../stdfblib/io/IW) 
       forte_add_sourcefile_hcpp(processinterface)
+      forte_set_process_interface("Wago Kbus")
       forte_add_handler(WagoPFCProcessInterface::CKBusHandler processinterface) 
     endif(FORTE_IO)
   

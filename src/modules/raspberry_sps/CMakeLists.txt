@@ -27,4 +27,5 @@ forte_add_sourcefile_hcpp( ../../stdfblib/io/QW)
 forte_add_sourcefile_hcpp(../i2c_dev/i2cprocessinterface)
 
 forte_add_sourcefile_hcpp(processinterface)
+forte_set_process_interface("Raspberry-SPS")
 

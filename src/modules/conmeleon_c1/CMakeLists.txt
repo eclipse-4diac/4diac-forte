@@ -29,5 +29,6 @@ forte_add_sourcefile_hcpp(spi/ads1018)
 forte_add_sourcefile_hcpp(util/fileres)
 forte_add_sourcefile_h(util/uncopyable.h)
 forte_add_sourcefile_hcpp(processinterface)
+forte_set_process_interface("Conmeleon C1")
 
 

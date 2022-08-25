@@ -29,6 +29,8 @@ forte_add_definition(-std=c++11)
 
 forte_add_sourcefile_hcpp(CAdsProcessInterface CAdsConnection CAdsConnectionManager)
 forte_add_sourcefile_hcpp(ADS_SERVER_CONFIG SET_LOCAL_ADS_ADDRESS)
+forte_add_sourcefile_h(processinterface.h)
+forte_set_process_interface("ADS")
 
 forte_add_sourcefile_hcpp(../../stdfblib/io/IX)
 forte_add_sourcefile_hcpp( ../../stdfblib/io/QX)
