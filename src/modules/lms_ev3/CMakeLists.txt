@@ -20,14 +20,8 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 #######################################################
 
 
-forte_add_sourcefile_hcpp(../../stdfblib/io/IX)
-forte_add_sourcefile_hcpp( ../../stdfblib/io/QX)
-forte_add_sourcefile_hcpp(../../stdfblib/io/IW)
-forte_add_sourcefile_hcpp( ../../stdfblib/io/QW)
-forte_add_sourcefile_hcpp( ../../stdfblib/io/ID)
-forte_add_sourcefile_hcpp( ../../stdfblib/io/QD)
 forte_add_sourcefile_hcpp(processinterface)
-forte_set_process_interface("Lego Mindstorms EV3")
+forte_set_process_interface("Lego Mindstorms EV3" IX QX IW QW ID QD)
 
 forte_add_sourcefile_hcpp(fileWriter)
 forte_add_sourcefile_hcpp(fileReader)

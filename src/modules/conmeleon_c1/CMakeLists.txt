@@ -20,15 +20,12 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 forte_add_definition(-std=c++11)
 
-forte_add_sourcefile_hcpp(../../stdfblib/io/IX)
-forte_add_sourcefile_hcpp( ../../stdfblib/io/QX)
-forte_add_sourcefile_hcpp( ../../stdfblib/io/IW)
 forte_add_sourcefile_hcpp(gpio/gpiopin)
 forte_add_sourcefile_hcpp(spi/spidevice)
 forte_add_sourcefile_hcpp(spi/ads1018)
 forte_add_sourcefile_hcpp(util/fileres)
 forte_add_sourcefile_h(util/uncopyable.h)
 forte_add_sourcefile_hcpp(processinterface)
-forte_set_process_interface("Conmeleon C1")
+forte_set_process_interface("Conmeleon C1" IX QX IW)
 
 

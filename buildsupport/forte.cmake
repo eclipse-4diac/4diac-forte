@@ -261,6 +261,9 @@ MACRO(forte_add_io NAME DESCRIPTION)
   endif(NOT FORTE_IO_${NAME})
 ENDMACRO(forte_add_io)
 
+set(FORTE_SRC_DIR ${CMAKE_CURRENT_LIST_DIR}/../src CACHE INTERNAL "")
+
+# Additional parameters are interpreted as I/O standard function blocks
 MACRO(forte_set_process_interface NAME)
   if(DEFINED CACHE{FORTE_PROCESS_INTERFACE})
     if(NOT "${NAME}" STREQUAL "$CACHE{FORTE_PROCESS_INTERFACE}")
@@ -268,6 +271,10 @@ MACRO(forte_set_process_interface NAME)
     endif()
   else()
     set(FORTE_PROCESS_INTERFACE ${NAME} CACHE INTERNAL "The used process interface.")
+    FOREACH(fb ${ARGN})
+      message(DEBUG "Add I/O FB " ${fb})
+      forte_add_sourcefile_with_path_hcpp(${FORTE_SRC_DIR}/stdfblib/io/${fb})
+    ENDFOREACH()
   endif()
 ENDMACRO(forte_set_process_interface)
 
