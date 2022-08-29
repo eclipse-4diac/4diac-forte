@@ -28,8 +28,144 @@ CMQTTClient::CMQTTClient(std::string& paAddress, std::string& paClientId, MQTTHa
 }
 
 CMQTTClient::~CMQTTClient() {
+  CCriticalRegion sectionState(mMQTTMutex);
+  if (mAsClient != nullptr) {
+    MQTTAsync_disconnectOptions disconnectOptions = MQTTAsync_disconnectOptions_initializer;
+    disconnectOptions.timeout = smTimeout;
+    MQTTAsync_disconnect(mAsClient, &disconnectOptions);
+    MQTTAsync_destroy(&mAsClient);
+  }
 }
 
+int CMQTTClient::sendData(void* paData, unsigned int paSize, char* paTopicName) {
+  MQTTAsync_message message = MQTTAsync_message_initializer;
+  message.payload = paData;
+  message.payloadlen = paSize;
+  message.qos = QOS;
+  message.retained = 0;
+  return MQTTAsync_sendMessage(mAsClient, paTopicName, &message, NULL);
+}
+
+/*
+ * START OF CALLBACKS
+ */
+
+ /** Callback for handling message reception.
+  *
+  * For convenience and performance it would be great to have the paContext param set subscribing topic.
+  * However Paho only allows one callback per client. Therefore we have to search for the layers attached to this topic.
+  * For details see discussion in Bug 545111.
+  *
+  */
+int CMQTTClient::onMqttMessageArrived(void* paContext, char* paTopicName, int, MQTTAsync_message* paMessage) {
+  //TODO: Check if handler allowed
+  if (nullptr != paContext) {
+    CMQTTClient* client = static_cast<CMQTTClient*>(paContext);
+    CCriticalRegion section(client->mMQTTMutex);
+    void* pPayLoad = paMessage->payload;
+    unsigned int payLoadSize = static_cast<unsigned int>(paMessage->payloadlen);
+
+    for (MQTTComLayer* layer : client->mLayers) {
+      if (0 == strcmp(layer->getTopicName(), paTopicName)) {
+        if (forte::com_infra::e_Nothing != layer->recvData(pPayLoad, payLoadSize)) {
+          client->mHandler.startNewEventChain(layer);
+        }
+      }
+    }
+    //End critical section
+  }
+  MQTTAsync_freeMessage(&paMessage);
+  MQTTAsync_free(paTopicName);
+
+  return 1;
+}
+
+void CMQTTClient::onMqttConnectionLost(void* paContext, char* paCause) {
+  if (nullptr != paContext) {
+    CMQTTClient* client = static_cast<CMQTTClient*>(paContext);
+    DEVLOG_ERROR("MQTT: Disconnected from broker at -%s. Cause: %s\n", client->mAddress.c_str(), paCause);
+    CCriticalRegion section(client->mMQTTMutex);
+    client->reconnect();
+    client->mHandler.resumeSelfSuspend();
+  }
+}
+
+void CMQTTClient::onMqttConnectionSucceed(void* paContext, MQTTAsync_successData*) {
+  if (paContext != nullptr) {
+    CMQTTClient* client = static_cast<CMQTTClient*>(paContext);
+    DEVLOG_INFO("MQTT: @%s: Successfully connected\n", client->mAddress.c_str());
+    CCriticalRegion sectionState(client->mMQTTMutex);
+    client->mMQTT_STATE = SUBSCRIBING;
+    client->mHandler.resumeSelfSuspend();
+  }
+}
+
+void CMQTTClient::onMqttConnectionFailed(void* paContext, MQTTAsync_failureData*) {
+  if (paContext != nullptr) {
+    CMQTTClient* client = static_cast<CMQTTClient*>(paContext);
+    DEVLOG_ERROR("MQTT: Connection failed to -%s-\n", client->mAddress.c_str());
+    CCriticalRegion sectionState(client->mMQTTMutex);
+    client->mMQTT_STATE = NOT_CONNECTED;
+    client->mHandler.resumeSelfSuspend();
+  }
+}
+
+void CMQTTClient::onSubscribeSucceed(void* paContext, MQTTAsync_successData*) {
+  if (nullptr != paContext) {
+    MQTTComLayer* layer = static_cast<MQTTComLayer*>(paContext);
+    std::shared_ptr<CMQTTClient> client = layer->getClient();
+    DEVLOG_INFO("MQTT: @%s: Subscription succeed.\n Topic: -%s-\n", client->mAddress.c_str(), layer->getTopicName());
+    CCriticalRegion sectionState(client->mMQTTMutex);
+    client->removeToResubscribe(layer);
+    if (client->mMQTT_STATE != ALL_SUBSCRIBED) {
+      client->mHandler.resumeSelfSuspend();
+    }
+  }
+}
+
+void CMQTTClient::onSubscribeFailed(void* paContext, MQTTAsync_failureData*) {
+  if (nullptr != paContext) {
+    MQTTComLayer* layer = static_cast<MQTTComLayer*>(paContext);
+    std::shared_ptr<CMQTTClient> client = layer->getClient();
+    CCriticalRegion sectionState(client->mMQTTMutex);
+    DEVLOG_ERROR("MQTT: @%s: Subscription failed.\n Topic: -%s-\n", client->mAddress.c_str(), layer->getTopicName());
+    client->mHandler.resumeSelfSuspend();
+  }
+}
+
+/*
+ * END OF CALLBACKS AND START OF HELPER FUNCTIONS
+ */
+
+int CMQTTClient::mqttConnect() {
+  DEVLOG_INFO("MQTT: Requesting connection to broker @%s\n", mAddress.c_str());
+  int rc = MQTTAsync_connect(mAsClient, &mClientConnectionOptions);
+  if (MQTTASYNC_SUCCESS != rc) {
+    DEVLOG_ERROR("MQTT: Request to mqtt library failed\n");
+  }
+  else {
+    DEVLOG_INFO("MQTT: Request successful - Connecting...\n");
+  }
+  return rc;
+}
+
+int CMQTTClient::mqttSubscribe(const MQTTComLayer* paLayer) {
+  DEVLOG_INFO("MQTT: Subscribing to topic -%s-\n", paLayer->getTopicName());
+  MQTTAsync_responseOptions opts = MQTTAsync_responseOptions_initializer;
+  opts.onSuccess = onSubscribeSucceed;
+  opts.onFailure = onSubscribeFailed;
+  opts.context = (void*)paLayer;
+  int rc = MQTTAsync_subscribe(mAsClient, paLayer->getTopicName(), QOS, &opts);
+  if (MQTTASYNC_SUCCESS != rc) { //call failed
+    CCriticalRegion sectionState(mMQTTMutex);
+    DEVLOG_INFO("MQTT: Subscribe Request failed with val = %d\n", rc);
+    mHandler.resumeSelfSuspend();
+  }
+  else {
+    DEVLOG_INFO("MQTT: Subscribe Request successful - Subscribing...\n");
+  }
+  return rc;
+}
 
 int CMQTTClient::initClient() {
   if (MQTTASYNC_SUCCESS != MQTTAsync_create(&mAsClient, mAddress.c_str(), mClientId.c_str(), MQTTCLIENT_PERSISTENCE_NONE, NULL)) {
@@ -37,13 +173,13 @@ int CMQTTClient::initClient() {
   }
   mClientConnectionOptions.keepAliveInterval = smKeepAliveInterval;
   mClientConnectionOptions.cleansession = smCleanSession;
-  mClientConnectionOptions.onSuccess = MQTTHandler::onMqttConnectionSucceed;
-  mClientConnectionOptions.onFailure = MQTTHandler::onMqttConnectionFailed;
+  mClientConnectionOptions.onSuccess = onMqttConnectionSucceed;
+  mClientConnectionOptions.onFailure = onMqttConnectionFailed;
   mClientConnectionOptions.context = this;
-  if (MQTTASYNC_SUCCESS != MQTTAsync_setCallbacks(mAsClient, this, MQTTHandler::onMqttConnectionLost, MQTTHandler::onMqttMessageArrived, NULL)) {
+  if (MQTTASYNC_SUCCESS != MQTTAsync_setCallbacks(mAsClient, this, onMqttConnectionLost, onMqttMessageArrived, NULL)) {
     return MQTTHandler::eConnectionFailed;
   }
-  if (MQTTASYNC_SUCCESS != mHandler.mqttConnect(this)) {
+  if (MQTTASYNC_SUCCESS != mqttConnect()) {
     return MQTTHandler::eConnectionFailed;
   }
   mMQTT_STATE = CONNECTION_ASKED;
@@ -57,7 +193,7 @@ bool CMQTTClient::runClient() {
   CCriticalRegion sectionState(mMQTTMutex);
   switch (mMQTT_STATE) {
   case NOT_CONNECTED:
-    if (MQTTASYNC_SUCCESS == mHandler.mqttConnect(this)) {
+    if (MQTTASYNC_SUCCESS == mqttConnect()) {
       mMQTT_STATE = CONNECTION_ASKED;
     }
     break;
@@ -66,7 +202,7 @@ bool CMQTTClient::runClient() {
       //only try subscribe one at a time. There were some problems in some cases when subscribing one after the other, because the MQTTAsync_subscribe hangs.
       const MQTTComLayer* layer = *mToResubscribe.begin();
       mMQTTMutex.unlock();
-      if (MQTTASYNC_SUCCESS != mHandler.mqttSubscribe(layer, this)) {
+      if (MQTTASYNC_SUCCESS != mqttSubscribe(layer)) {
         needSleep = true;
       }
       mMQTTMutex.lock();

@@ -21,20 +21,18 @@
 
 using namespace forte::com_infra;
 
-MQTTComLayer::MQTTComLayer(CComLayer* paUpperLayer, CBaseCommFB * pFB) : CComLayer(paUpperLayer, pFB),
-    mUsedBuffer(0), mInterruptResp(e_Nothing){
+MQTTComLayer::MQTTComLayer(CComLayer* paUpperLayer, CBaseCommFB* pFB) : CComLayer(paUpperLayer, pFB),
+mUsedBuffer(0), mInterruptResp(e_Nothing) {
   memset(mDataBuffer, 0, mBufferSize); //TODO change this to  dataBuffer{0} in the extended list when fully switching to C++11
 }
 
 MQTTComLayer::~MQTTComLayer() = default;
 
 EComResponse MQTTComLayer::sendData(void* paData, unsigned int paSize) {
-  MQTTAsync_message message = MQTTAsync_message_initializer;
-  message.payload = paData;
-  message.payloadlen = paSize;
-  message.qos = QOS;
-  message.retained = 0;
-  int errorCode = MQTTAsync_sendMessage(mClient->getAsClient(), mTopicName.getValue(), &message, NULL);
+  if (mClient == nullptr) {
+    return e_ProcessDataSendFailed;
+  }
+  int errorCode = mClient->sendData(paData, paSize, mTopicName.getValue());
   if (0 != errorCode) {
     return e_ProcessDataSendFailed;
   }
@@ -42,8 +40,8 @@ EComResponse MQTTComLayer::sendData(void* paData, unsigned int paSize) {
   return e_ProcessDataOk;
 }
 
-EComResponse MQTTComLayer::recvData(const void* paData,  unsigned int paSize) {
-  if(paSize > mBufferSize){
+EComResponse MQTTComLayer::recvData(const void* paData, unsigned int paSize) {
+  if (paSize > mBufferSize) {
     paSize = mBufferSize; //Rest of the message is discarded
   }
   memcpy(mDataBuffer, paData, paSize);
@@ -54,8 +52,8 @@ EComResponse MQTTComLayer::recvData(const void* paData,  unsigned int paSize) {
 }
 
 EComResponse MQTTComLayer::processInterrupt() {
-  if(e_ProcessDataOk == mInterruptResp) {
-    if((0 < mUsedBuffer) && (nullptr != m_poTopLayer)) {
+  if (e_ProcessDataOk == mInterruptResp) {
+    if ((0 < mUsedBuffer) && (nullptr != m_poTopLayer)) {
       mInterruptResp = m_poTopLayer->recvData(mDataBuffer, mUsedBuffer);
       mUsedBuffer = 0;
     }
@@ -66,16 +64,18 @@ EComResponse MQTTComLayer::processInterrupt() {
 EComResponse MQTTComLayer::openConnection(char* paLayerParameter) {
   EComResponse eRetVal = e_InitInvalidId;
   CParameterParser parser(paLayerParameter, ',', mNoOfParameters);
-  if(mNoOfParameters == parser.parseParameters()){
-    mTopicName = std::string(parser[Topic]);
-    if( MQTTHandler::eRegisterLayerSucceeded ==
-        getExtEvHandler<MQTTHandler>().registerLayer(std::string(parser[Address]), std::string(parser[ClientID]), this)) {
+  if (mNoOfParameters == parser.parseParameters()) {
+    mTopicName.fromString(parser[Topic]);
+    std::string address = parser[Address];
+    std::string clientId = parser[ClientID];
+    if (MQTTHandler::eRegisterLayerSucceeded ==
+      getExtEvHandler<MQTTHandler>().registerLayer(address, clientId, this)) {
       if (mClient != nullptr) {
         eRetVal = e_InitOk;
       }
     }
 
-    switch (m_poFb->getComServiceType()){
+    switch (m_poFb->getComServiceType()) {
     case e_Server:
       // TODO: Not implemented yet
       eRetVal = e_InitTerminated;

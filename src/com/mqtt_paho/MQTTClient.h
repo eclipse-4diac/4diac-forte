@@ -18,6 +18,11 @@
 #include <string>
 #include <vector>
 
+extern "C" {
+#include <MQTTAsync.h>
+}
+
+
 class CMQTTClient {
 public:
   enum ClientState {
@@ -25,98 +30,106 @@ public:
     eUninitialized
   };
 
-    CMQTTClient(std::string& paAddress, std::string& paClientId, MQTTHandler& paHandler);
+  CMQTTClient(std::string& paAddress, std::string& paClientId, MQTTHandler& paHandler);
 
-    ~CMQTTClient();
+  ~CMQTTClient();
 
-    int initClient();
+  int initClient();
 
-    bool runClient();
+  bool runClient();
 
-    void reconnect();
+  void reconnect();
 
-    const std::string& getClientId() const {
-      return mClientId;
+  const std::string& getClientId() const {
+    return mClientId;
+  }
+
+  const std::string& getAddress() const {
+    return mAddress;
+  }
+
+  const ClientState getState() const {
+    return mState;
+  }
+
+  void addLayer(MQTTComLayer* paLayer) {
+    mLayers.push_back(paLayer);
+  }
+
+  //const std::vector<MQTTComLayer*>& getLayers() const {
+  //  return mLayers;
+  //}
+
+  void removeLayer(MQTTComLayer* paLayer) {
+    removeLayerHelper(paLayer, mLayers);
+  }
+
+  void addToResubscribe(MQTTComLayer* paToResubscribe) {
+    mToResubscribe.push_back(paToResubscribe);
+  }
+
+  //const std::vector<MQTTComLayer*>& getToResubscribe() const {
+  //  return mToResubscribe;
+  //}
+
+  void removeToResubscribe(MQTTComLayer* paLayer) {
+    removeLayerHelper(paLayer, mToResubscribe);
+    if (mToResubscribe.empty()) {
+      mMQTT_STATE = ALL_SUBSCRIBED;
     }
+  }
 
-    const std::string& getAddress() const {
-      return mAddress;
-    }
+  //MQTTHandler& getHandler() const {
+  //  return mHandler;
+  //}
 
-    const ClientState getState() const {
-      return mState;
-    }
+  void setMQTTState(MQTTStates paState) {
+    mMQTT_STATE = paState;
+  }
 
-    MQTTAsync& getAsClient() {
-      return mAsClient;
-    }
+  const MQTTStates getMQTTState() const {
+    return mMQTT_STATE;
+  }
 
-    MQTTAsync_connectOptions& getClientConnectionOptions() {
-      return mClientConnectionOptions;
-    }
+  int sendData(void* paData, unsigned int paSize, char* paTopicName);
 
-    void addLayer(MQTTComLayer* paLayer) {
-      mLayers.push_back(paLayer);
-    }
+  int mqttSubscribe(const MQTTComLayer* paLayer);
+  int mqttConnect();
 
-    const std::vector<MQTTComLayer*>& getLayers() const {
-      return mLayers;
-    }
+  static void onMqttConnectionLost(void* paContext, char* paCause);
+  static int onMqttMessageArrived(void* paContext, char* paTopicName, int paTopicLen, MQTTAsync_message* paMessage);
 
-    void removeLayer(MQTTComLayer* paLayer) {
-      removeLayerHelper(paLayer, mLayers);
-    }
-
-    void addToResubscribe(MQTTComLayer* paToResubscribe) {
-      mToResubscribe.push_back(paToResubscribe);
-    }
-
-    const std::vector<MQTTComLayer*>& getToResubscribe() const {
-      return mToResubscribe;
-    }
-
-    void removeToResubscribe(MQTTComLayer* paLayer) {
-      removeLayerHelper(paLayer, mToResubscribe);
-      if (mToResubscribe.empty()) {
-        mMQTT_STATE = ALL_SUBSCRIBED;
-      }
-    }
-
-    MQTTHandler& getHandler() const {
-      return mHandler;
-    }
-
-    void setMQTTState(MQTTStates paState) {
-      mMQTT_STATE = paState;
-    }
-
-    const MQTTStates getMQTTState() const {
-      return mMQTT_STATE;
-    }
+  static void onMqttConnectionSucceed(void* paContext, MQTTAsync_successData* paResponse);
+  static void onMqttConnectionFailed(void* paContext, MQTTAsync_failureData* paResponse);
 
 private:
 
-    void removeLayerHelper(MQTTComLayer* paLayer, std::vector<MQTTComLayer*>& paLayerList);
+  static void onSubscribeSucceed(void* paContext, MQTTAsync_successData* paResponse);
+  static void onSubscribeFailed(void* paContext, MQTTAsync_failureData* paResponse);
 
-    void clearToResubscribe() {
-      mToResubscribe.clear();
-    }
+  void removeLayerHelper(MQTTComLayer* paLayer, std::vector<MQTTComLayer*>& paLayerList);
 
-    static const int smKeepAliveInterval = 20;
-    static const int smCleanSession = 1;
+  void clearToResubscribe() {
+    mToResubscribe.clear();
+  }
 
-    std::string mAddress;
-    std::string mClientId;
+  static const int smKeepAliveInterval = 20;
+  static const int smCleanSession = 1;
 
-    MQTTAsync mAsClient;
-    MQTTAsync_connectOptions mClientConnectionOptions;
-    MQTTStates mMQTT_STATE;
-    ClientState mState;
-    CSyncObject mMQTTMutex;
+  static const int smTimeout = 10000;
 
-    MQTTHandler& mHandler;
-    std::vector<MQTTComLayer*> mLayers;
-    std::vector<MQTTComLayer*> mToResubscribe;
+  std::string mAddress;
+  std::string mClientId;
+
+  MQTTAsync mAsClient;
+  MQTTAsync_connectOptions mClientConnectionOptions;
+  MQTTStates mMQTT_STATE;
+  ClientState mState;
+  CSyncObject mMQTTMutex;
+
+  MQTTHandler& mHandler;
+  std::vector<MQTTComLayer*> mLayers;
+  std::vector<MQTTComLayer*> mToResubscribe;
 };
 
 #endif /*CMQTTCLIENT_H*/
