@@ -23,7 +23,6 @@ CMQTTClient::CMQTTClient(std::string& paAddress, std::string& paClientId, MQTTHa
   mAsClient(nullptr),
   mClientConnectionOptions(MQTTAsync_connectOptions_initializer),
   mMQTT_STATE(NOT_CONNECTED),
-  mState(eUninitialized),
   mHandler(paHandler) {
 }
 
@@ -34,6 +33,17 @@ CMQTTClient::~CMQTTClient() {
     disconnectOptions.timeout = smTimeout;
     MQTTAsync_disconnect(mAsClient, &disconnectOptions);
     MQTTAsync_destroy(&mAsClient);
+  }
+}
+
+std::shared_ptr<CMQTTClient> CMQTTClient::getNewClient(std::string& paAddress, std::string& paClientId, MQTTHandler& paHandler) {
+  std::shared_ptr<CMQTTClient> newClient = std::make_shared<CMQTTClient>(paAddress, paClientId, paHandler);
+  {
+    CCriticalRegion sectionState(newClient->mMQTTMutex);
+    if (MQTTHandler::eRegisterLayerSucceeded != newClient->initClient()) {
+      return nullptr;
+    }
+    return newClient;
   }
 }
 
@@ -183,7 +193,6 @@ int CMQTTClient::initClient() {
     return MQTTHandler::eConnectionFailed;
   }
   mMQTT_STATE = CONNECTION_ASKED;
-  mState = eInitialized;
   return MQTTHandler::eRegisterLayerSucceeded;
 }
 
@@ -223,8 +232,32 @@ void CMQTTClient::reconnect() {
   clearToResubscribe();
   for (MQTTComLayer* layer : mLayers) {
     if (layer->getCommFB()->getComServiceType() == e_Subscriber) {
-      addToResubscribe(layer);
+      mToResubscribe.push_back(layer);
     }
+  }
+}
+
+void CMQTTClient::addLayer(MQTTComLayer* paLayer) {
+  CCriticalRegion section(mMQTTMutex);
+  mLayers.push_back(paLayer);
+  if (e_Subscriber == paLayer->getCommFB()->getComServiceType()) {
+    mToResubscribe.push_back(paLayer);
+    if (ALL_SUBSCRIBED == mMQTT_STATE) {
+      mMQTT_STATE = SUBSCRIBING;
+      mHandler.resumeSelfSuspend();
+    }
+  }
+}
+
+void CMQTTClient::removeLayer(MQTTComLayer* paLayer) {
+  CCriticalRegion section(mMQTTMutex);
+  removeLayerHelper(paLayer, mLayers);
+}
+
+void CMQTTClient::removeToResubscribe(MQTTComLayer* paLayer) {
+  removeLayerHelper(paLayer, mToResubscribe);
+  if (mToResubscribe.empty()) {
+    mMQTT_STATE = ALL_SUBSCRIBED;
   }
 }
 

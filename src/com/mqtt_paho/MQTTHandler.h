@@ -30,13 +30,6 @@
 
 class CMQTTClient;
 
-enum MQTTStates {
-  NOT_CONNECTED,
-  CONNECTION_ASKED,
-  SUBSCRIBING,
-  ALL_SUBSCRIBED,
-};
-
 class MQTTHandler : public CExternalEventHandler, public CThread {
   DECLARE_HANDLER(MQTTHandler)
 public:
@@ -64,16 +57,18 @@ public:
    * \return current priority
    */
   int getPriority() const override;
+
   void resumeSelfSuspend();
+
   void selfSuspend();
+
   void startNewEventChain(MQTTComLayer* layer);
+
 protected:
   void run() override;
 
 private:
   std::shared_ptr<CMQTTClient> getClient(std::string& paAddress, std::string& paClientId);
-  //void resumeSelfSuspend();
-  //void selfSuspend();
 
   static CSyncObject smMQTTMutex;
   static const int smSleepTime = 5000;

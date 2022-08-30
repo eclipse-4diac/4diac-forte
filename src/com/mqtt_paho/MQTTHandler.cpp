@@ -58,40 +58,27 @@ std::shared_ptr<CMQTTClient> MQTTHandler::getClient(std::string& paAddress, std:
       }
     }
   }
-  std::shared_ptr<CMQTTClient> newClient = std::make_shared<CMQTTClient>(paAddress, paClientId, *this);
-  {
-    CCriticalRegion sectionState(smMQTTMutex);
-    newClient->initClient();
+  std::shared_ptr<CMQTTClient> newClient = CMQTTClient::getNewClient(paAddress, paClientId, *this);
+  if (newClient != nullptr) {
     mClients.push_back(std::move(newClient));
     return mClients.back();
   }
+  return nullptr;
 }
 
 
 int MQTTHandler::registerLayer(std::string& paAddress, std::string& paClientId, MQTTComLayer* paLayer) {
   std::shared_ptr<CMQTTClient> client = getClient(paAddress, paClientId);
-  if (client != nullptr) {
-    if (client->getState() == CMQTTClient::eUninitialized) {
-      return eConnectionFailed;
-    }
-    CCriticalRegion section(smMQTTMutex);
-    client->addLayer(paLayer);
-    if (e_Subscriber == paLayer->getCommFB()->getComServiceType()) {
-      client->addToResubscribe(paLayer);
-      if (ALL_SUBSCRIBED == client->getMQTTState()) {
-        client->setMQTTState(SUBSCRIBING);
-        resumeSelfSuspend();
-      }
-    }
-    paLayer->setClient(client);
-    return eRegisterLayerSucceeded;
+  if (client == nullptr) {
+    return eConnectionFailed;
   }
-  return eConnectionFailed;
+  client->addLayer(paLayer);
+  paLayer->setClient(client);
+  return eRegisterLayerSucceeded;
 }
 
 void MQTTHandler::unregisterLayer(MQTTComLayer* paLayer) {
   std::shared_ptr<CMQTTClient> client = paLayer->getClient();
-  CCriticalRegion section(smMQTTMutex);
   if (client != nullptr) {
     client->removeLayer(paLayer);
     paLayer->setClient(nullptr);
@@ -128,7 +115,7 @@ void MQTTHandler::run() {
       break;
     }
     for (std::shared_ptr<CMQTTClient> client : mClients) {
-      if (client->getMQTTState() != ALL_SUBSCRIBED) {
+      if (client->getMQTTState() != CMQTTClient::ALL_SUBSCRIBED) {
         needSleep = needSleep || client->runClient();
       }
     }
