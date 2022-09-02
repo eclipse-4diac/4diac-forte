@@ -64,6 +64,15 @@ namespace forte {
          */
         void join();
 
+        /*! \brief Set the deadline of the thread.
+         *
+         *  The default behaviour is to ignore the deadline.
+         *  Architecture specific thread implementations may override this behaviour.
+         */
+        virtual void setDeadline(const CIEC_TIME &paVal) {
+          mDeadline = paVal;
+        }
+
         //!Get the current deadline of the thread.
         const CIEC_TIME &getDeadline() const {
           return mDeadline;
@@ -92,9 +101,6 @@ namespace forte {
          * This method is to be called by the system specific thread function.
          */
         static void runThread(CThreadBase *paThread);
-
-        //!deadline the thread needs to be finish its execution. 0 means unconstrained.
-        CIEC_TIME mDeadline;
 
         /*! \brief Pointer to the memory to be used for this thread'm_stSuspendSemaphore stack
          *
@@ -146,6 +152,9 @@ namespace forte {
          *  See https://bugs.eclipse.org/bugs/show_bug.cgi?id=547620
          */
         CSyncObject mThreadMutex;
+
+        //!deadline the thread needs to be finish its execution. 0 means unconstrained.
+        CIEC_TIME mDeadline;
 
   public:
         CThreadBase(const CThreadBase&) = delete;

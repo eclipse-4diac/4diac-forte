@@ -47,8 +47,6 @@ class CBEThread : public forte::arch::CThreadBase<int, 0, CBEThread>, private BE
      */
     ~CBEThread() override;
 
-    void setDeadline(TForteUInt32 paVal); //!Set the deadline of the thread.
-
     virtual void Main(VOID);
 
     /*! \brief Sleep the calling thread

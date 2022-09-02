@@ -49,5 +49,3 @@ forte::arch::CThreadBase<TaskHandle_t, TaskHandle_t(0), CFreeRTOSThread>::TThrea
 void CFreeRTOSThread::sleepThread(unsigned int paMilliSeconds) {
   vTaskDelay(pdMS_TO_TICKS(paMilliSeconds));
 }
-void CFreeRTOSThread::setDeadline(const CIEC_TIME &paVal) {
-}

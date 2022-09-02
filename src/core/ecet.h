@@ -51,10 +51,6 @@ class CEventChainExecutionThread : public CThread{
       CThread::join();
     }
 
-    void setDeadline(const CIEC_TIME &paVal){
-      CThread::setDeadline(paVal);
-    }
-
     bool isProcessingEvents() const {
       return mProcessingEvents;
     }

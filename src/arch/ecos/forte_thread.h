@@ -48,7 +48,7 @@ class CECOSThread : public forte::arch::CThreadBase<cyg_handle_t, 0, CECOSThread
     ~CECOSThread() override;
 
     //!Set the deadline of the thread.
-    void setDeadline(const CIEC_TIME &paVal);
+    void setDeadline(const CIEC_TIME &paVal) override final;
 
     /*! \brief Sleep the calling thread
      *

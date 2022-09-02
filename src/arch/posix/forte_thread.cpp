@@ -77,12 +77,6 @@ CPosixThread::CPosixThread(long paStackSize) : CThreadBase<pthread_t>(paStackSiz
 
 CPosixThread::~CPosixThread() = default;
 
-void CPosixThread::setDeadline(const CIEC_TIME &paVal){
-  mDeadline = paVal;
-  //under the posix pthread implemention currently it makes no sense to set any priority.
-  //It will not be considered.
-}
-
 void CPosixThread::sleepThread(unsigned int paMilliSeconds){
   struct timespec stReq = { static_cast<time_t>(paMilliSeconds / 1000), static_cast<long>(1000000 * (paMilliSeconds % 1000)) };
   nanosleep(&stReq, nullptr);

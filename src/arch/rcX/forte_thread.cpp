@@ -59,10 +59,6 @@ CrcXThread::CrcXThread(long paStackSize) : CThreadBase(paStackSize),  mStack(0){
 CrcXThread::~CrcXThread(){
 }
 
-void CrcXThread::setDeadline(const CIEC_TIME &){
-  //mDeadline = paVal;
-}
-
 void CrcXThread::sleepThread(unsigned int paMilliSeconds){
   rX_SysSleepTask(paMilliSeconds * 1000 / rX_SysGetSystemCycletime());
 }

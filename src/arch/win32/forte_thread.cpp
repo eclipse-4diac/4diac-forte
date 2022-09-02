@@ -24,12 +24,6 @@ CWin32Thread::CWin32Thread(long paStackSize) : CThreadBase(paStackSize){
 CWin32Thread::~CWin32Thread(){
 }
 
-void CWin32Thread::setDeadline(const CIEC_TIME &paVal){
-  mDeadline = paVal;
-  //under the win32 currently it makes no sense to set any priority.
-  //It will not be considered.
-}
-
 forte::arch::CThreadBase<HANDLE>::TThreadHandleType CWin32Thread::createThread(long paStackSize){
     DWORD threadID;
     return CreateThread(0, // default security attributes

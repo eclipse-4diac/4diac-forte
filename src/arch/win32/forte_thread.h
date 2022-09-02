@@ -44,9 +44,6 @@ class CWin32Thread : public forte::arch::CThreadBase <HANDLE>{
      */
     ~CWin32Thread() override;
 
-    //!Set the deadline of the thread.
-    void setDeadline(const CIEC_TIME &mVal);
-
     /*! \brief Sleep the calling thread
      *
      * @param paMilliSeconds The milliseconds for the thread to sleep

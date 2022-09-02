@@ -44,9 +44,6 @@ class CPosixThread : public forte::arch::CThreadBase<pthread_t> {
      */
     ~CPosixThread() override;
 
-    //!Set the deadline of the thread.
-    void setDeadline(const CIEC_TIME &paVal);
-
     /*! \brief Sleep the calling thread
      *
      * @param paMilliSeconds The milliseconds for the thread to sleep

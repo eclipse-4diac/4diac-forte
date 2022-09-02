@@ -59,9 +59,6 @@ class CFreeRTOSThread : public forte::arch::CThreadBase<TaskHandle_t> {
      */
     ~CFreeRTOSThread() override;
 
-    //!Set the deadline of the thread.
-    void setDeadline(const CIEC_TIME &paVal);
-
     /*! \brief Sleep the calling thread
      *
      * @param pa_miliSeconds The miliseconds for the thread to sleep

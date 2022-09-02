@@ -29,10 +29,6 @@ CVxWorksThread::CVxWorksThread(long paStackSize) : forte::arch::CThreadBase<TASK
 CVxWorksThread::~CVxWorksThread(){
 }
 
-void CVxWorksThread::setDeadline(const CIEC_TIME &paVal){
-  mDeadline = paVal;
-}
-
 void CVxWorksThread::sleepThread(unsigned int paMilliSeconds){
   struct timespec stReq = {paMilliSeconds / 1000, 1000000 * (paMilliSeconds % 1000)};
   nanosleep(&stReq, nullptr);

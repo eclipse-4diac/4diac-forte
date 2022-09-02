@@ -32,9 +32,6 @@ class CVxWorksThread : public forte::arch::CThreadBase<TASK_ID, TASK_ID_ERROR> {
      */
     ~CVxWorksThread() override;
 
-    //!Set the deadline of the thread.
-    void setDeadline(const CIEC_TIME &paVal);
-
     /*! \brief Sleep the calling thread
      *
      * @param paMilliSeconds The milliseconds for the thread to sleep

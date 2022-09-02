@@ -33,9 +33,6 @@ class CrcXThread : public forte::arch::CThreadBase<RX_HANDLE, 0, CrcXThread> {
 
     virtual void join();
 
-    //!Set the deadline of the thread.
-    void setDeadline(const CIEC_TIME &paVal);
-
     /*! \brief Sleep the calling thread
      *
      * @param paMilliSeconds The milliseconds for the thread to sleep
