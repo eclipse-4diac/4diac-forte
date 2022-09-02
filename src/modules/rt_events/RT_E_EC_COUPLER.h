@@ -35,6 +35,10 @@ private:
     return *static_cast<CIEC_TIME*>(getDI(2));
   };
 
+  CIEC_TIME &WCET() {
+    return *static_cast<CIEC_TIME*>(getDI(3));
+  };
+
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
   CIEC_BOOL &QO() override {
