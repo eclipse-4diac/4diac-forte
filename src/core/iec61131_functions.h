@@ -26,6 +26,8 @@
 #include "iec61131_cast_helper.h"
 #include "./utils/staticassert.h"
 
+#include <algorithm>
+
 #ifdef CONCAT
 # undef CONCAT
 #endif
@@ -920,18 +922,18 @@ template<typename T> const T func_DELETE(const T &paIn, const CIEC_ANY_INT &paL,
 }
 
 template<typename T> const T func_REPLACE(const T &paIn1, const T &paIn2, const CIEC_ANY_INT &paL, const CIEC_ANY_INT &paP) {
-  if(paL.isSigned() && paL.getSignedValue() < 0) {
-    DEVLOG_ERROR("L has to be larger than 0!\n");
+  const CIEC_ANY::TLargestUIntValueType L = paL.isSigned() ? static_cast<CIEC_ANY::TLargestUIntValueType>(std::max(CIEC_ANY::TLargestIntValueType(0), paL.getSignedValue())) : paL.getUnsignedValue();
+  const CIEC_ANY::TLargestUIntValueType P = paP.isSigned() ? static_cast<CIEC_ANY::TLargestUIntValueType>(std::max(CIEC_ANY::TLargestIntValueType(0), paP.getSignedValue())) : paP.getUnsignedValue();
+
+  if(L == 0) {
+    DEVLOG_ERROR("REPLACE called with L equal or less to 0!\n");
     return paIn1;
   }
 
-  if(paP.isSigned() && paP.getSignedValue() < 0) {
-    DEVLOG_ERROR("P has to be larger than 0!\n");
+  if(P == 0) {
+    DEVLOG_ERROR("REPLACE called with P equal or less to 0!\n");
     return paIn1;
   }
-
-  const CIEC_ANY::TLargestUIntValueType L = paL.isSigned() ? static_cast<CIEC_ANY::TLargestUIntValueType>(paL.getSignedValue()) : paL.getUnsignedValue();
-  const CIEC_ANY::TLargestUIntValueType P = paP.isSigned() ? static_cast<CIEC_ANY::TLargestUIntValueType>(paP.getSignedValue()) : paP.getUnsignedValue();
 
   if((P + L) > paIn1.length()) {
     DEVLOG_ERROR("REPLACE outside string boundaries!\n");

@@ -166,6 +166,30 @@ BOOST_AUTO_TEST_CASE(replace)
   BOOST_TEST(sResult.getValue() == "Lorem muspi dolor sit");
 }
 
+BOOST_AUTO_TEST_CASE(replace_P_signed_0)
+{
+  CIEC_STRING sIn1("Lorem ipsum dolor sit");
+  CIEC_STRING sIn2("muspi");
+  CIEC_STRING sResult(func_REPLACE(sIn1, sIn2, CIEC_INT(5), CIEC_INT(0)));
+  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+}
+
+BOOST_AUTO_TEST_CASE(replace_P_signed_negative_number)
+{
+  CIEC_STRING sIn1("Lorem ipsum dolor sit");
+  CIEC_STRING sIn2("muspi");
+  CIEC_STRING sResult(func_REPLACE(sIn1, sIn2, CIEC_INT(5), CIEC_INT(-200)));
+  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+}
+
+BOOST_AUTO_TEST_CASE(replace_P_unsigned_0)
+{
+  CIEC_STRING sIn1("Lorem ipsum dolor sit");
+  CIEC_STRING sIn2("muspi");
+  CIEC_STRING sResult(func_REPLACE(sIn1, sIn2, CIEC_UINT(5), CIEC_UINT(0)));
+  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+}
+
 BOOST_AUTO_TEST_CASE(standard_example_delete)
 {
   CIEC_STRING sIn1("ABXYC");
