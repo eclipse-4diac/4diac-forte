@@ -29,11 +29,7 @@ class CIEC_ANY_INT : public CIEC_ANY_NUM{
     ~CIEC_ANY_INT() override = default;
 
     bool isSigned() const{
-      bool bRetVal = false;
-      if(e_LINT <= getDataTypeID()){
-        bRetVal = true;
-      }
-      return bRetVal;
+      return e_LINT >= getDataTypeID();
     }
 
     TLargestUIntValueType getUnsignedValue() const{

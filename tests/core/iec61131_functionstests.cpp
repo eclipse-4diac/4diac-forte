@@ -204,6 +204,55 @@ BOOST_AUTO_TEST_CASE(delete_function)
   BOOST_TEST(sResult.getValue() == "Lorem ipsum sit");
 }
 
+BOOST_AUTO_TEST_CASE(delete_function_L_unsigned_0)
+{
+  CIEC_STRING sIn1("Lorem ipsum dolor sit");
+  CIEC_STRING sResult(func_DELETE(sIn1, CIEC_UINT(0), CIEC_INT(12)));
+  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+}
+
+BOOST_AUTO_TEST_CASE(delete_function_L_signed_0)
+{
+  CIEC_STRING sIn1("Lorem ipsum dolor sit");
+  CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(0), CIEC_INT(12)));
+  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+}
+
+BOOST_AUTO_TEST_CASE(delete_function_L_signed_negative_number)
+{
+  CIEC_STRING sIn1("Lorem ipsum dolor sit");
+  CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(-4), CIEC_INT(12)));
+  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+}
+
+BOOST_AUTO_TEST_CASE(delete_function_P_unsigned_0)
+{
+  CIEC_STRING sIn1("Lorem ipsum dolor sit");
+  CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(6), CIEC_UINT(0)));
+  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+}
+
+BOOST_AUTO_TEST_CASE(delete_function_P_signed_0)
+{
+  CIEC_STRING sIn1("Lorem ipsum dolor sit");
+  CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(6), CIEC_INT(0)));
+  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+}
+
+BOOST_AUTO_TEST_CASE(delete_function_P_signed_negative_number)
+{
+  CIEC_STRING sIn1("Lorem ipsum dolor sit");
+  CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(6), CIEC_INT(-32370)));
+  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+}
+
+BOOST_AUTO_TEST_CASE(delete_function_length_exceeding_string)
+{
+  CIEC_STRING sIn1("Lorem ipsum dolor sit");
+  CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(6), CIEC_INT(30)));
+  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+}
+
 BOOST_AUTO_TEST_CASE(eq_true)
 {
   CIEC_INT nInt1(10);
