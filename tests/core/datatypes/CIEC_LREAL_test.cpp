@@ -104,43 +104,54 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 
   BOOST_CHECK_EQUAL(nTest.fromString("0"), 1);
   BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(nTest), 0.0);
-    BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 1);
-    BOOST_CHECK_EQUAL(strcmp(cBuffer, "0"), 0);
-    BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 0), -1);
-    strcpy(cBuffer, "");
-    nTest = CIEC_LREAL(0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 3);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "0.0"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 0), -1);
+  strcpy(cBuffer, "");
+  nTest = CIEC_LREAL(0);
 
+  BOOST_CHECK_EQUAL(nTest.fromString("3.2523E15"), 9);
+  BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(nTest), 3.2523e15);
 
-    BOOST_CHECK_EQUAL(nTest.fromString("3.2523E15"), 9);
-    BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(nTest), 3.2523e15);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "3.2523e+15"), 0);
 
-    BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
-    BOOST_CHECK_EQUAL(strcmp(cBuffer, "3.2523e+15"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
+  strcpy(cBuffer, "");
+  nTest = CIEC_LREAL(0);
 
-    BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-    strcpy(cBuffer, "");
-    nTest = CIEC_LREAL(0);
+  BOOST_CHECK_EQUAL(nTest.fromString("1E37"), 4);
+  BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(nTest), 1e37);
 
-    BOOST_CHECK_EQUAL(nTest.fromString("1E37"), 4);
-    BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(nTest), 1e37);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 5);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "1e+37"), 0);
 
-    BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 5);
-    BOOST_CHECK_EQUAL(strcmp(cBuffer, "1e+37"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
+  strcpy(cBuffer, "");
+  nTest = CIEC_LREAL(0);
 
-    BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-    strcpy(cBuffer, "");
-    nTest = CIEC_LREAL(0);
-
-    //testing values outside of allowed range
-    BOOST_CHECK_EQUAL(nTest.fromString("4e401"), -1);
-    BOOST_CHECK_EQUAL(nTest.fromString("2#100101100"), 1);
-    BOOST_CHECK_EQUAL(nTest.fromString("8#116100"), 1);
-    BOOST_CHECK_EQUAL(nTest.fromString("10#300"), 2);
-    BOOST_CHECK_EQUAL(nTest.fromString("16#FFFF0"), 2);
-    BOOST_CHECK_EQUAL(nTest.fromString("-4e-401"), -1);
+  //testing values outside of allowed range
+  BOOST_CHECK_EQUAL(nTest.fromString("4e401"), -1);
+  BOOST_CHECK_EQUAL(nTest.fromString("2#100101100"), 1);
+  BOOST_CHECK_EQUAL(nTest.fromString("8#116100"), 1);
+  BOOST_CHECK_EQUAL(nTest.fromString("10#300"), 2);
+  BOOST_CHECK_EQUAL(nTest.fromString("16#FFFF0"), 2);
+  BOOST_CHECK_EQUAL(nTest.fromString("-4e-401"), -1);
 
   //check invalid fromString string
   BOOST_CHECK_EQUAL(nTest.fromString("NOT A VALID STRING"), -1);
+}
+
+BOOST_AUTO_TEST_CASE(ToString_Tests)
+{
+  CIEC_LREAL nTest(3.0);
+  char cBuffer[10];
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 3);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "3.0"), 0);
+
+  nTest = CIEC_REAL(10.0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 7), 4);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "10.0"), 0);
 }
 
 void lRealTypedFromString(const char *pa_acTestString, double pa_fResult){

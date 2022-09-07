@@ -28,6 +28,8 @@ class CIEC_ANY_REAL : public CIEC_ANY_NUM{
 
   protected:
     CIEC_ANY_REAL() = default;
+
+    int normalizeToStringRepresentation(char *paValue, size_t paBufferSize, int usedBytes) const;
 };
 
 #endif /*_MANY_REA_H_*/

@@ -214,12 +214,12 @@ BOOST_AUTO_TEST_CASE(REAL_to_WSTRING_test)
 #ifdef FORTE_USE_64BIT_DATATYPES
   //check LREAL
   CIEC_LREAL nLRTest(-2.2874e6);
-  sResult = CIEC_WSTRING("-2287400");
+  sResult = CIEC_WSTRING("-2287400.0");
   sTest = func_LREAL_TO_WSTRING(nLRTest);
   //check result value
   BOOST_CHECK(sTest == sResult);
   //check length value
-  BOOST_CHECK_EQUAL(sTest.length(), 8);
+  BOOST_CHECK_EQUAL(sTest.length(), 10);
 #endif //FORTE_USE_64BIT_DATATYPES
 }
 #endif //FORTE_USE_REAL_DATATYPE

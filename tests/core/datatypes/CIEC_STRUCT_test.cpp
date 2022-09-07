@@ -877,9 +877,9 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
     }
 
   BOOST_AUTO_TEST_CASE(Struct_toString_TestStruct2){
-    toStringTest_testStruct2(0.0f, 0, false, 0, "(Val1:=0,Val2:=0,Val3:=FALSE,Val4:=0)");
-    toStringTest_testStruct2(0.0f, 0, true, 0, "(Val1:=0,Val2:=0,Val3:=TRUE,Val4:=0)");
-    toStringTest_testStruct2(0.0f, 32767, false, -32768, "(Val1:=0,Val2:=32767,Val3:=FALSE,Val4:=-32768)");
+    toStringTest_testStruct2(0.0f, 0, false, 0, "(Val1:=0.0,Val2:=0,Val3:=FALSE,Val4:=0)");
+    toStringTest_testStruct2(0.0f, 0, true, 0, "(Val1:=0.0,Val2:=0,Val3:=TRUE,Val4:=0)");
+    toStringTest_testStruct2(0.0f, 32767, false, -32768, "(Val1:=0.0,Val2:=32767,Val3:=FALSE,Val4:=-32768)");
     toStringTest_testStruct2(1345.13f, 32767, false, -32768, "(Val1:=1345.13,Val2:=32767,Val3:=FALSE,Val4:=-32768)");
     toStringTest_testStruct2(1345.13f, -32767, false, -32768, "(Val1:=1345.13,Val2:=-32767,Val3:=FALSE,Val4:=-32768)");
 

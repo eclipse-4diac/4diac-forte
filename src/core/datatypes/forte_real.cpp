@@ -54,9 +54,10 @@ int CIEC_REAL::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal;
   nRetVal = forte_snprintf(paValue, paBufferSize, "%g", getTFLOAT());
   if((nRetVal < -1) || (nRetVal >= static_cast<int>(paBufferSize))) {
-    nRetVal = -1;
+    return -1;
   }
-  return nRetVal;
+  // Check if there is a trailing decimal fraction or exponent
+  return normalizeToStringRepresentation(paValue, paBufferSize, nRetVal);
 }
 
 void CIEC_REAL::setValue(const CIEC_ANY& paValue){

@@ -52,9 +52,9 @@ int CIEC_LREAL::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal;
   nRetVal = forte_snprintf(paValue, paBufferSize, "%.*g", 15, getTDFLOAT());
   if((nRetVal < -1) || (nRetVal >= static_cast<int>(paBufferSize))) {
-    nRetVal = -1;
+    return -1;
   }
-  return nRetVal;
+  return normalizeToStringRepresentation(paValue, paBufferSize, nRetVal);
 }
 
 void CIEC_LREAL::setValue(const CIEC_ANY& paValue){

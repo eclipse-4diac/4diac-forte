@@ -15,6 +15,27 @@
 
 DEFINE_FIRMWARE_DATATYPE(ANY_REAL, g_nStringIdANY_REAL)
 
-
-
-
+int CIEC_ANY_REAL::normalizeToStringRepresentation(char *paValue, size_t paBufferSize, int paUsedBytes) const {
+  size_t i = 0;
+  for (; i < paBufferSize; ++i) {
+    if (paValue[i] != '\0') {
+      // Found one
+      if (paValue[i] == '.' || tolower(paValue[i]) == 'e') {
+        return paUsedBytes;
+      }
+    } else {
+      break;
+    }
+  }
+    // Found none, check if it can be added
+  if (paUsedBytes + 2 >= static_cast<int>(paBufferSize)) {
+    return -1;
+  } else {
+    // Add it
+    paValue[i] = '.';
+    paValue[i + 1] = '0';
+    paValue[i + 2] = '\0';
+    paUsedBytes += 2;
+  }
+  return paUsedBytes;
+}
