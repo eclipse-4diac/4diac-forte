@@ -880,13 +880,15 @@ template<typename T> const T func_INSERT(const T &paIn1, const T &paIn2, const C
     DEVLOG_ERROR("result would be longer than maximum allowed length");
     return paIn1;
   }
-  if(paP.isSigned() && paP.getSignedValue() < 0) {
-    DEVLOG_ERROR("P has to be larger than 0!\n");
+  const CIEC_ANY::TLargestUIntValueType P = paP.isSigned() ? static_cast<CIEC_ANY::TLargestUIntValueType>(std::max(CIEC_ANY::TLargestIntValueType(0),paP.getSignedValue())) : paP.getUnsignedValue();
+
+  if(P == 0) {
+    DEVLOG_ERROR("INSERT called with P equal or lower than 0!\n");
     return paIn1;
   }
-  const CIEC_ANY::TLargestUIntValueType P = paP.isSigned() ? static_cast<CIEC_ANY::TLargestUIntValueType>(paP.getSignedValue()) : paP.getUnsignedValue();
+  
   if(P > paIn1.length()) {
-    DEVLOG_ERROR("P exceeds input string length!\n");
+    DEVLOG_ERROR("INSERT called with P exceeding input string length!\n");
     return paIn1;
   }
   CIEC_INT positionRight = CIEC_INT(paIn1.length() - paP.getSignedValue());

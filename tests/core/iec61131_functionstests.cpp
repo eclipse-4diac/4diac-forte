@@ -386,6 +386,38 @@ BOOST_AUTO_TEST_CASE(insert)
   BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
 }
 
+BOOST_AUTO_TEST_CASE(insert_P_larger_than_input_string)
+{
+  CIEC_STRING sIn1("Lorem  sit");
+  CIEC_STRING sIn2("ipsum dolor");
+  CIEC_STRING sResult = func_INSERT(sIn1, sIn2, CIEC_UINT(11));
+  BOOST_TEST(sResult.getValue() == "Lorem  sit");
+}
+
+BOOST_AUTO_TEST_CASE(insert_P_unsigned_0)
+{
+  CIEC_STRING sIn1("Lorem  sit");
+  CIEC_STRING sIn2("ipsum dolor");
+  CIEC_STRING sResult = func_INSERT(sIn1, sIn2, CIEC_UINT(0));
+  BOOST_TEST(sResult.getValue() == "Lorem  sit");
+}
+
+BOOST_AUTO_TEST_CASE(insert_P_signed_0)
+{
+  CIEC_STRING sIn1("Lorem  sit");
+  CIEC_STRING sIn2("ipsum dolor");
+  CIEC_STRING sResult = func_INSERT(sIn1, sIn2, CIEC_INT(0));
+  BOOST_TEST(sResult.getValue() == "Lorem  sit");
+}
+
+BOOST_AUTO_TEST_CASE(insert_P_signed_negative_number)
+{
+  CIEC_STRING sIn1("Lorem  sit");
+  CIEC_STRING sIn2("ipsum dolor");
+  CIEC_STRING sResult = func_INSERT(sIn1, sIn2, CIEC_INT(-20));
+  BOOST_TEST(sResult.getValue() == "Lorem  sit");
+}
+
 BOOST_AUTO_TEST_CASE(trunc)
 {
   CIEC_REAL real(50.6f);
