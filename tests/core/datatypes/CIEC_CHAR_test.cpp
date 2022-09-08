@@ -118,6 +118,15 @@ BOOST_AUTO_TEST_CASE(ToStringTab_test){
   BOOST_CHECK_EQUAL(toStringBuffer, expected);
 }
 
+BOOST_AUTO_TEST_CASE(ToStringFormFeed_test)
+{
+  CIEC_CHAR test('\f');
+  char toStringBuffer[11];
+  const char expected[] = "CHAR#'$P'";
+  BOOST_CHECK_EQUAL(test.toString(toStringBuffer, sizeof(toStringBuffer)), sizeof(expected) - 1);
+  BOOST_CHECK_EQUAL(toStringBuffer, expected);
+}
+
 BOOST_AUTO_TEST_CASE(FromString_test){
   CIEC_CHAR test;
   char toStringBuffer[11];
