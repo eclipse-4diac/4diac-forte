@@ -218,7 +218,7 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock* paFB){
     else if(0 != testComposite){
       //populateInputsOutputs for internal FBs
       for(unsigned int i = 0; i < testComposite->cm_cpoFBNData->m_nNumFBs; i++){
-        populateInputsAndOutputsCore(testComposite->m_apoInternalFBs[i]);
+        populateInputsAndOutputsCore(testComposite->mInternalFBs[i]);
       }
     }
   }
