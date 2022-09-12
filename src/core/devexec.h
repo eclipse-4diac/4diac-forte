@@ -18,6 +18,7 @@ class CEventSourceFB;
 class CExternalEventHandler;
 struct SForteTime;
 class CTimerHandler;
+class CDevice;
 
 #include <forte_config.h>
 
@@ -28,7 +29,7 @@ class CTimerHandler;
  */
 class CDeviceExecution {
   public:
-    CDeviceExecution();
+    CDeviceExecution(CDevice& paDevice);
 
     ~CDeviceExecution();
 
@@ -70,6 +71,8 @@ class CDeviceExecution {
 
     void disableHandlers();
 
+    CDevice& getDevice();
+
   private:
     /*!\brief Structure for holding the information belonging to one external event.
      */
@@ -88,6 +91,7 @@ class CDeviceExecution {
      */
     SEventHandlerElement mRegisteredEventHandlers[cg_unNumberOfHandlers];
 
+    CDevice& mDevice;
 };
 
 #endif

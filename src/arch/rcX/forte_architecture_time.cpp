@@ -15,8 +15,9 @@
 
 #include "forte_architecture_time.h"
 
+#ifndef FORTE_FAKE_TIME
 uint_fast64_t getNanoSecondsMonotonic() {
   return rX_SysGetSystemTicks() * rX_SysGetSystemCycletime() *
       (forte::core::constants::cNanosecondsPerSecond / forte::core::constants::cMicrosecondsPerSecond);
 }
-
+#endif

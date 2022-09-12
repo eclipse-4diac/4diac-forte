@@ -5,9 +5,10 @@
 # http://www.eclipse.org/legal/epl-2.0.
 #
 # SPDX-License-Identifier: EPL-2.0
-# 
+#
 # Contributors:
 #    Alois Zoitl - initial API and implementation and/or initial documentation
+#    Christoph Binder - add possibility to configure simulated time
 # *******************************************************************************/
 
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\be_m1)
@@ -18,22 +19,25 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Bachmann M1")
 
 
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-  
-  forte_set_timer(../posix/pctimeha)
-  
+  if(FORTE_FAKE_TIME)
+    forte_set_timer(../fake_time/faketimerha)
+  else(FORTE_FAKE_TIME)
+    forte_set_timer(../posix/pctimeha)
+    forte_add_sourcefile_cpp(../vxworks/forte_architecture_time.cpp)
+  endif(FORTE_FAKE_TIME)
+
   forte_add_sourcefile_hcpp(forte_thread ../vxworks/forte_sync ../vxworks/forte_sem)
   forte_add_sourcefile_hcpp(fortemodule)
   forte_add_sourcefile_cpp(../genforte_printer.cpp)
   forte_add_sourcefile_hcpp(../utils/timespec_utils)
-  
+
   forte_add_sourcefile_h(stdint.h ../forte_architecture_time.h)
-  
+
   forte_add_sourcefile_hcpp(GET_CHAN_INFO)
   forte_add_sourcefile_hcpp(GET_VALUE)
   forte_add_sourcefile_hcpp(SET_VALUE)
   forte_add_sourcefile_hcpp(BE_SVIFB SVIsend_1 SVIreceive_1 BE_RMT_DEV)
-  forte_add_sourcefile_cpp(../genforte_realFunctions.cpp ../vxworks/forte_architecture_time.cpp)
-  
+  forte_add_sourcefile_cpp(../genforte_realFunctions.cpp )
 
   if(FORTE_COM_ETH)
    forte_add_handler(CFDSelectHandler sockhand)
@@ -44,15 +48,15 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Bachmann M1")
 
   forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -DFORTE_LITTLE_ENDIAN  -DVXWORKS")
   forte_add_definition("-fno-rtti")
-  
+
   forte_add_link_flags("-Wl,-M -Wl,-Map -Wl,forte.map -Wl,-cref")
-  
+
   CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/forte.ver.in ${CMAKE_BINARY_DIR}/forte.new.ver)
   forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/forte.new.ver ${CMAKE_BINARY_DIR}/forte.ver)
   CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/CPPLIB.ver.in ${CMAKE_BINARY_DIR}/CPPLIB.new.ver)
   forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/CPPLIB.new.ver ${CMAKE_BINARY_DIR}/CPPLIB.ver)
-  
-  
+
+
   set(GNU_TOOLS C:/bachmann/SolutionCenter/V1.70Release/cutils/GnuTools)
   set(MSYS_PATH C:/bachmann/SolutionCenter/V1.70Release/cutils/mcsdk/msys)
   set(GNU_TOOLS_PATH ${GNU_TOOLS}/../GnuTools-4.1.2)
@@ -80,7 +84,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Bachmann M1")
   set(M1_MBIND "${MSYS_UTILS_PATH}/mbind")
   set(M1_CONFC "${MSYS_UTILS_PATH}/confc")
   set(M1_SYMCONV "${MSYS_UTILS_PATH}/symconv")
-  
+
   forte_add_post_build_command(COMMAND ${M1_CONFC}  ${CMAKE_CURRENT_SOURCE_DIR}/forte.cru forte.bcr  
                                COMMAND ${M1_LD} ${M1_LD_PATH} -r -d -o forte_all.o --whole-archive libforte.a ${CMAKE_CURRENT_SOURCE_DIR}/forte.lk
                                COMMAND ${M1_SYMCONV} forte_all.o -i

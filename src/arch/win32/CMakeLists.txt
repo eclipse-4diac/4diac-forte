@@ -5,9 +5,10 @@
 # http://www.eclipse.org/legal/epl-2.0.
 #
 # SPDX-License-Identifier: EPL-2.0
-# 
+#
 # Contributors:
 #   Alois Zoitl, Gerhard Ebenhofer, Martin Melik-Merkumians - initial API and implementation and/or initial documentation
+#   Christoph Binder - add possibility to configure simulated time
 # *******************************************************************************/
 
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\win32)
@@ -27,7 +28,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   else()
     forte_add_sourcefile_cpp(forte_sync.cpp)
   endif()
-  forte_add_sourcefile_cpp(forte_architecture.cpp forte_architecture_time.cpp winforte_printer.cpp)
+  forte_add_sourcefile_cpp(forte_architecture.cpp winforte_printer.cpp forte_architecture_time.cpp)
   forte_add_sourcefile_cpp(../genforte_realFunctions.cpp)
   
   forte_add_sourcefile_hcpp(forte_instance)
@@ -44,6 +45,10 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
     unset(FORTE_EXTERNAL_TIMEHA CACHE)
       forte_set_timer(pctimeha)
   endif(FORTE_BUILD_SHARED_LIBRARY)
+
+  if(FORTE_FAKE_TIME)
+    forte_set_timer(../fake_time/faketimerha)
+  endif(FORTE_FAKE_TIME)
 
   if(FORTE_COM_ETH)
    forte_add_handler(CFDSelectHandler sockhand)

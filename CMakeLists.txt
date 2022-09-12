@@ -371,3 +371,8 @@ endif(FORTE_LINKED_STRINGDICT)
 if(FORTE_COM_OPC_UA)
   forte_opcua_configure()
 endif()
+
+#######################################################################################
+# Forte Simulated Time
+#######################################################################################
+set(FORTE_FAKE_TIME OFF CACHE BOOL "Forte configuration for using simulated progression of time")

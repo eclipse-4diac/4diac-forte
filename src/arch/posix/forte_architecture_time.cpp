@@ -15,11 +15,11 @@
 #include "forte_architecture_time.h"
 #include "forte_constants.h"
 
+#ifndef FORTE_FAKE_TIME
 uint_fast64_t getNanoSecondsMonotonic() {
   struct timespec now;
   clock_gettime(CLOCK_MONOTONIC, &now);
   return static_cast<uint_fast64_t>(now.tv_nsec) + static_cast<uint_fast64_t>(now.tv_sec) *
    static_cast<uint_fast64_t>(forte::core::constants::cNanosecondsPerSecond);
 }
-
-
+#endif

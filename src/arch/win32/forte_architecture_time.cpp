@@ -17,6 +17,7 @@
 #include "forte_architecture_time.h"
 #include "forte_constants.h"
 
+#ifndef FORTE_FAKE_TIME
 uint_fast64_t getNanoSecondsMonotonic() {
   LARGE_INTEGER performance_counter;
   LARGE_INTEGER performance_frequency;
@@ -31,5 +32,4 @@ uint_fast64_t getNanoSecondsMonotonic() {
   const uint_fast64_t timeFactor = static_cast<uint_fast64_t>(forte::core::constants::cNanosecondsPerSecond) / static_cast<uint_fast64_t>(performance_frequency.QuadPart);
   return static_cast<uint_fast64_t>(performance_counter.QuadPart) * timeFactor;
 }
-
-
+#endif

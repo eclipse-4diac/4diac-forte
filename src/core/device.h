@@ -46,7 +46,7 @@ class CDevice : public CResource {
      */
     CDevice(const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData,
         TForteByte *pa_acFBVarsData) :
-        CResource(pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData), mDeviceExecution() {
+        CResource(pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData), mDeviceExecution(*this) {
     }
 
     ~CDevice() override = default;

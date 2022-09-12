@@ -16,8 +16,10 @@
 #include "extevhan.h"
 #include "../arch/timerha.h"
 #include "../arch/devlog.h"
+#include "device.h"
 
-CDeviceExecution::CDeviceExecution() {
+CDeviceExecution::CDeviceExecution(CDevice& paDevice) :
+  mDevice(paDevice) {
   memset(mRegisteredEventHandlers, 0, sizeof(SEventHandlerElement) * cg_unNumberOfHandlers);
 
   CDeviceExecution::createHandlers(*this);
@@ -63,4 +65,8 @@ void CDeviceExecution::disableHandlers() {
       mRegisteredEventHandlers[i].mHandler->disableHandler();
     }
   }
+}
+
+CDevice& CDeviceExecution::getDevice(){
+  return mDevice;
 }

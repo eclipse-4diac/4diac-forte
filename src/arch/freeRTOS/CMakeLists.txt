@@ -5,10 +5,11 @@
 # http://www.eclipse.org/legal/epl-2.0.
 #
 # SPDX-License-Identifier: EPL-2.0
-# 
+#
 # Contributors:
 #  Guru Chandrasekhara - initial API and implementation and/or initial documentation
 # * Jose Cabral - Cleaning
+#   Christoph Binder - add possibility to configure simulated time
 # ************************************************************************************/
 
 
@@ -22,21 +23,28 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "FreeRTOSLwIP")
 
   set(FORTE_LOGLEVEL "NOLOG" CACHE STRING "Loglevel to use" FORCE)
   SET(FORTE_FreeRTOSLwIP_INCLUDES "" CACHE STRING "Folders to include from the FreeRTOS OS and the LwIP stack")
-  
+
   SET(FORTE_FreeRTOSLwIP_LIB_DIR "" CACHE PATH "Only for executable: ABSOLUTE path to FreeRTOSLwIP folder with object library FORTE_FreeRTOSLwIP_LIB")
   SET(FORTE_FreeRTOSLwIP_LIB "" CACHE STRING "Only for executable: FreeRTOSLwIP Library file in FORTE_FreeRTOSLwIP_DIR to be linked to forte")
-  
+
   forte_add_sourcefile_h(fortealloc.h)
-  forte_add_sourcefile_hcpp(forte_thread forte_sync freertostiha forte_sem forte_Init)
+  forte_add_sourcefile_hcpp(forte_thread forte_sync forte_sem forte_Init)
+
+  if(FORTE_FAKE_TIME)
+    forte_set_timer(../fake_time/faketimerha)
+  else(FORTE_FAKE_TIME)
+    forte_set_timer(freertostiha)
+    forte_add_sourcefile_cpp(./forte_architecture_time.cpp)
+  endif(FORTE_FAKE_TIME)
   forte_add_sourcefile_cpp(forte_architecture.cpp ../genforte_printer.cpp)
-  forte_add_sourcefile_cpp(../genforte_realFunctions.cpp ./forte_architecture_time.cpp)
-  
+  forte_add_sourcefile_cpp(../genforte_realFunctions.cpp)
+
   forte_add_to_executable_cpp(main)
-  
+
   forte_add_definition("-DFORTE_LITTLE_ENDIAN")
-  
+
   forte_add_include_system_directories(${FORTE_FreeRTOSLwIP_INCLUDES})
-  
+
   if(FORTE_COM_ETH)
     forte_add_handler(CFDSelectHandler sockhand)
     forte_add_sourcefile_hcpp( ../fdselecthand ../bsdsocketinterf)
@@ -48,5 +56,5 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "FreeRTOSLwIP")
     message("#define LWIP_IGMP 1 //to use IP_ADD_MEMBERSHIP")
     message("#define LWIP_TIMEVAL_PRIVATE 0 //This is optional. Set this flag if you get a compilation error about redefinition of struct timeval")
   endif(FORTE_COM_ETH)
-  
+
 endif()

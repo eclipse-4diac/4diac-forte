@@ -8,6 +8,7 @@
 # 
 # Contributors:
 #    Alois Zoitl, Patrick Smejkal - initial API and implementation and/or initial documentation
+#   Christoph Binder - add possibility to configure simulated time
 # *******************************************************************************/
 
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\netos74)
@@ -23,8 +24,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "NetOs 7.4")
   set(NETOS_ROOT_PATH_WIN ${CMAKE_FIND_ROOT_PATH})
   execute_process(COMMAND cygpath ${CMAKE_FIND_ROOT_PATH} OUTPUT_VARIABLE NETOS_ROOT_PATH_CYG)
   string(REPLACE "\n" "" NETOS_ROOT_PATH_CYG ${NETOS_ROOT_PATH_CYG})
-  
-  
+
 #######################################################################################
 # Look for available Board support packages
 #######################################################################################
@@ -38,7 +38,6 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "NetOs 7.4")
   string(REPLACE " " ";" AVAILABLE_BSP ${ECHO_BSP})
   set_property(CACHE FORTE_NETOS74_BSP PROPERTY STRINGS ${AVAILABLE_BSP})
 
-
 #######################################################################################
 # Add commands for creating target image
 #######################################################################################
@@ -49,14 +48,17 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "NetOs 7.4")
                                WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
                                COMMENT "Create target image (image.bin)...")
 
-
 #######################################################################################
 # COMPILER FLAGS - INCLUDE DIRS
 #######################################################################################
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/..)
-  
-  forte_set_timer(../txtimeha)
-  
+  if(FORTE_FAKE_TIME)
+    forte_set_timer(../../fake_time/faketimerha)
+  else(FORTE_FAKE_TIME)
+    forte_set_timer(../txtimeha)
+    forte_add_sourcefile_cpp(../forte_architecture_time.cpp)
+  endif(FORTE_FAKE_TIME)
+
   forte_add_sourcefile_hcpp(../forte_thread ../forte_sync ../forte_sem)
   forte_add_sourcefile_cpp(appconf_api.c ../root.cpp ../../genforte_printer.cpp)
   forte_add_sourcefile_h(../../forte_architecture_time.h)
@@ -70,7 +72,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "NetOs 7.4")
   endif(FORTE_COM_ETH)
 
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-  
+
   # Include-Dirs for NetOS
   forte_add_include_directories(${NETOS_ROOT_PATH_CYG}/h)
   forte_add_include_directories(${NETOS_ROOT_PATH_CYG}/h/shared)
@@ -101,16 +103,16 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "NetOs 7.4")
   forte_add_link_directories(${NETOS_ROOT_PATH_CYG}/lib/arm7/32b/gnu)
   forte_add_link_directories(${NETOS_ROOT_PATH_CYG}/lib/32b/gnu)
   forte_add_link_directories(${NETOS_ROOT_PATH_CYG}/lib/arm7/32b/gnu/bsp/${FORTE_NETOS74_BSP})
-  
+
   forte_add_link_library(-Wl,--start-group)
-  
+
   # Look for reset.o
   if(EXISTS ${NETOS_ROOT_PATH_WIN}/lib/arm7/32b/gnu/bsp/${FORTE_NETOS74_BSP}/reset.o)
     forte_add_link_library(${NETOS_ROOT_PATH_CYG}/lib/arm7/32b/gnu/bsp/${FORTE_NETOS74_BSP}/reset.o)
   else(EXISTS ${NETOS_ROOT_PATH_WIN}/lib/arm7/32b/gnu/bsp/${FORTE_NETOS74_BSP}/reset.o)
     message(WARNING "reset.o wasn't found where it is expected (${NETOS_ROOT_PATH_WIN}/lib/arm7/32b/gnu/bsp/${FORTE_NETOS74_BSP}/reset.o). Your program maybe won't work without this object. Build BSP first! For further information please refer to the Digi support.")
   endif(EXISTS ${NETOS_ROOT_PATH_WIN}/lib/arm7/32b/gnu/bsp/${FORTE_NETOS74_BSP}/reset.o)
-  
+
   forte_add_link_library(${NETOS_ROOT_PATH_CYG}/lib/32b/gnu/crt0.o)
   forte_add_link_library(${NETOS_ROOT_PATH_CYG}/lib/32b/gnu/crti.o)
   forte_add_link_library(${NETOS_ROOT_PATH_CYG}/lib/32b/gnu/crtbegin.o)
@@ -119,7 +121,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "NetOs 7.4")
   forte_add_link_library(-lbsp -lftpsvr -lflash -lfilesys -lposix -ltx -ldnsclnt -laddp -ltcpip -ltelnsvr)
   forte_add_link_library(-lc -lgcc -lm -lstdc++)
   forte_add_link_library(-Wl,--end-group)
-  
+
   # Look for image.ld
   if(EXISTS ${NETOS_ROOT_PATH_WIN}/src/bsp/platforms/${FORTE_NETOS74_BSP}/image.ld)
     forte_add_link_flags("-mbig-endian -nostartfiles -nostdlib -mcpu=arm7tdmi -T ${NETOS_ROOT_PATH_CYG}/src/bsp/platforms/${FORTE_NETOS74_BSP}/image.ld")
@@ -127,5 +129,5 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "NetOs 7.4")
     message(WARNING "image.ld wasn't found where it is expected (${NETOS_ROOT_PATH_WIN}/src/bsp/platforms/${FORTE_NETOS74_BSP}/image.ld). Your program maybe won't work without this object. Build BSP first! For further information please refer to the Digi support.")
     forte_add_link_flags("-mbig-endian -nostartfiles -nostdlib -mcpu=arm7tdmi -T")
   endif(EXISTS ${NETOS_ROOT_PATH_WIN}/src/bsp/platforms/${FORTE_NETOS74_BSP}/image.ld)
-    
+
 endif()

@@ -9,6 +9,7 @@
  * Contributors:
  *  Jose Cabral - initial API and implementation and/or initial documentation
  *  Martin Melik-Merkumians - adds function for getting monotonic time in nanoseconds
+ *  Christoph Binder - add possibility to configure simulated time
  *******************************************************************************/
 
 #ifndef SRC_ARCH_FORTE_ARCHITECTURE_TIME_H_
@@ -17,6 +18,8 @@
 #include <time.h>
 
 #include "forte_constants.h"
+
+time_t forte_time();
 
 #if defined(WINCE)
 #include <wce_time.h>
@@ -36,10 +39,12 @@ struct tm* forte_gmtime(const time_t* pa_time){
   return wceex_gmtime(pa_time);
 }
 
+#ifndef FORTE_FAKE_TIME
 inline
 time_t forte_time(){
   return wceex_time(0);
 }
+#endif
 
 #else
 
@@ -58,13 +63,17 @@ struct tm* forte_gmtime(const time_t* pa_time){
   return gmtime(pa_time);
 }
 
+#ifndef FORTE_FAKE_TIME
 inline
 time_t forte_time(){
   return time(nullptr);
 }
+#endif
 
 #endif
 
 uint_fast64_t getNanoSecondsMonotonic();
+
+uint_fast64_t trackFakeForteTime();
 
 #endif /* SRC_ARCH_FORTE_ARCHITECTURE_TIME_H_ */

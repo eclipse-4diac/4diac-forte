@@ -15,8 +15,10 @@
 #include "forte_architecture_time.h"
 #include "forte_constants.h"
 
+#ifndef FORTE_FAKE_TIME
 uint_fast64_t getNanoSecondsMonotonic() {
   return (forte::core::constants::cNanosecondsPerSecond > timerFreq()) ?
       sysTimestamp() / (timerFreq() / forte::core::constants::cNanosecondsPerSecond) :
       (sysTimestamp() / timerFreq()) * forte::core::constants::cNanosecondsPerSecond; /// forte::core::constants::cNanosecondsPerSecond) * sysClkRateGet();
 }
+#endif
