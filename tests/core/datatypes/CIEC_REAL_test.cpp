@@ -138,7 +138,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.fromString("8#116100"), 1);
   BOOST_CHECK_EQUAL(nTest.fromString("10#300"), 2);
   BOOST_CHECK_EQUAL(nTest.fromString("16#FFFF0"), 2);
-  BOOST_CHECK_EQUAL(nTest.fromString("-4e-40"), -1);
+  BOOST_CHECK_EQUAL(nTest.fromString("-4e40"), -1);
 
   //check invalid fromString string
   BOOST_CHECK_EQUAL(nTest.fromString("NOT A VALID STRING"), -1);

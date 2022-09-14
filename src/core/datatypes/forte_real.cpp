@@ -32,17 +32,15 @@ int CIEC_REAL::fromString(const char *paValue){
   char *pcEnd;
   const char *pacRunner = paValue;
   TForteFloat realval = 0.0;
-  const TForteFloat TFLOAT_min = 3.4e-38F; // lower precision boundary
-  const TForteFloat TFLOAT_max = 3.4e38F; // upper precision boundary
 
   if(0 == strncmp(pacRunner, "REAL#", 5)){
     pacRunner += 5;
   }
 
+  errno = 0;
   realval = forte_stringToFloat(pacRunner, &pcEnd);
 
-  if(((fabs(realval) < TFLOAT_min) && (realval != 0)) || ((fabs(realval) > TFLOAT_max) && (realval != 0)) ||
-      (pacRunner == pcEnd)) {
+  if(pacRunner == pcEnd || !isfinite(realval) || errno != 0) {
     return -1;
   }
 

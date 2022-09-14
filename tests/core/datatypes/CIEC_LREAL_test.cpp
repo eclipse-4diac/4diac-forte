@@ -136,7 +136,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.fromString("8#116100"), 1);
   BOOST_CHECK_EQUAL(nTest.fromString("10#300"), 2);
   BOOST_CHECK_EQUAL(nTest.fromString("16#FFFF0"), 2);
-  BOOST_CHECK_EQUAL(nTest.fromString("-4e-401"), -1);
+  BOOST_CHECK_EQUAL(nTest.fromString("-4e401"), -1);
 
   //check invalid fromString string
   BOOST_CHECK_EQUAL(nTest.fromString("NOT A VALID STRING"), -1);
@@ -173,7 +173,7 @@ BOOST_AUTO_TEST_CASE(REAL_typed_fromString_tests){
   lRealTypedFromString("LREAL#3.2523E15",3.2523E15);
 
   faultingLRealTypedFromString("LREAL#4e401");
-  faultingLRealTypedFromString("LREAL#-4e-401");
+  faultingLRealTypedFromString("LREAL#-4e401");
   faultingLRealTypedFromString("LREAL#NOT A VALID STRING");
 }
 
