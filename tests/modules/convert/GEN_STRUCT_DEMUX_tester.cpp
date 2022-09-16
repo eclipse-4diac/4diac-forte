@@ -86,7 +86,7 @@ BOOST_FIXTURE_TEST_SUITE( STRUCT_DEMUX_MainTests, STRUCT_DEMUX_TestFixture_1)
     }
   }
 
-}
+BOOST_AUTO_TEST_SUITE_END()
 
 struct STRUCT_DEMUX_TestFixture_2 : public CFBTestFixtureBase{
 
@@ -127,7 +127,7 @@ BOOST_FIXTURE_TEST_SUITE( STRUCT_DEMUX_SecondStructTest, STRUCT_DEMUX_TestFixtur
     checkStructValues();
   }
 
-}
+BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(STRUCT_DEMUX_FailedCreationTest)
 
@@ -154,5 +154,5 @@ CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRU
 BOOST_CHECK(nullptr == fb);
 }
 
-}
+BOOST_AUTO_TEST_SUITE_END()
 
