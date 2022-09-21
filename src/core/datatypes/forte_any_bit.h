@@ -48,7 +48,7 @@ class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
       static TBaseType getPartial(TObject &src, const size_t paIndex){
         if(paIndex >= length) {
           return 0; // FAIL SILENT
-        } else if (forte::core::mpl::is_same<TBase,CIEC_BOOL>::value){
+        } else if (std::is_same<TBase,CIEC_BOOL>::value){
           return ( 0 != (src.getLargestUInt() & ((TLargestUIntValueType)1 << paIndex)));
         } else {
           TFortePartial temp;
@@ -67,7 +67,7 @@ class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
         if(index < length) {
           TFortePartial temp;
           temp.mLargestUInt = dataObject.getLargestUInt();
-          if (forte::core::mpl::is_same<TBase,CIEC_BOOL>::value){
+          if (std::is_same<TBase,CIEC_BOOL>::value){
             if(paValue) {
               temp.mLargestUInt |=  ((TLargestUIntValueType)1 << index);
             } else {
@@ -110,7 +110,7 @@ class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
        */
       static size_t endianiseIndex(const size_t paIndex){
 #ifdef FORTE_BIG_ENDIAN
-          return (forte::core::mpl::is_same<TBase,CIEC_BOOL>::value) ? paIndex : length-1-paIndex; // Within bool-data endianess is implicitly correct
+          return (std::is_same<TBase,CIEC_BOOL>::value) ? paIndex : length-1-paIndex; // Within bool-data endianess is implicitly correct
 #else //#ifdef FORTE_BIG_ENDIAN
           return paIndex;
 #ifndef FORTE_LITTLE_ENDIAN
@@ -129,16 +129,16 @@ class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
       explicit PARTIAL_ACCESS_TYPE(TObject& paSrc, const size_t paIndex) :
           TBase(getPartial(paSrc,endianiseIndex(paIndex))), dataObject(paSrc), index(endianiseIndex(paIndex)),
           accessedOutOfBounds((paIndex >= length)){
-          FORTE_STATIC_ASSERT(
-            (forte::core::mpl::is_same<TObject, CIEC_BYTE>::value || forte::core::mpl::is_same<TObject, CIEC_WORD>::value
-              || forte::core::mpl::is_same<TObject, CIEC_DWORD>::value || forte::core::mpl::is_same<TObject, CIEC_LWORD>::value),
-            TObject_has_to_be_one_of_CIEC_BYTE_CIEC_WORD_CIEC_DWORD_or_CIEC_LWORD);
-          FORTE_STATIC_ASSERT(
-            (forte::core::mpl::is_same<TBase, CIEC_BOOL>::value || forte::core::mpl::is_same<TBase, CIEC_BYTE>::value
-              || forte::core::mpl::is_same<TBase, CIEC_WORD>::value || forte::core::mpl::is_same<TBase, CIEC_DWORD>::value),
-            TBase_has_to_be_one_of_CIEC_BYTE_CIEC_WORD_CIEC_DWORD_or_CIEC_LWORD);
-          FORTE_STATIC_ASSERT((std::numeric_limits<TObjectType>::digits > std::numeric_limits<TBaseType>::digits),
-            Partial_access_is_only_possible_if_accessed_element_is_smaller_than_the_source);
+          static_assert(
+            (std::is_same<TObject, CIEC_BYTE>::value || std::is_same<TObject, CIEC_WORD>::value
+              || std::is_same<TObject, CIEC_DWORD>::value || std::is_same<TObject, CIEC_LWORD>::value),
+            "TObject has to be one of CIEC_BYTE, CIEC_WORD, CIEC_DWORD, or CIEC_LWORD");
+          static_assert(
+            (std::is_same<TBase, CIEC_BOOL>::value || std::is_same<TBase, CIEC_BYTE>::value
+              || std::is_same<TBase, CIEC_WORD>::value || std::is_same<TBase, CIEC_DWORD>::value),
+            "Base has to be one of CIEC_BYTE, CIEC_WORD, CIEC_DWORD, or CIEC_LWORD");
+          static_assert((std::numeric_limits<TObjectType>::digits > std::numeric_limits<TBaseType>::digits),
+            "Partial access is only possible if accessed element is smaller than the source");
       };
 
       /*! \brief read the state of the Out of Bounds flag
@@ -174,7 +174,7 @@ class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
        */
       virtual void setValue(const CIEC_ANY &pa_roValue){
         TBase::setValue(pa_roValue); //Extract the value using the base class' setValue method
-        if (forte::core::mpl::is_same<TBase,CIEC_BOOL>::value){
+        if (std::is_same<TBase,CIEC_BOOL>::value){
           setPartial(static_cast<TBaseType>(false != this->getLargestUInt()));
         } else {
           setPartial(static_cast<TBaseType>(this->getLargestUInt()));

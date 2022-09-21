@@ -62,7 +62,7 @@ class FORTE_F_MULTIME : public CFunctionBlock {
 
   template<typename T> void calculateValue() {
     T &roIn2(static_cast<T&>(IN2()));
-    st_OUT().saveAssign(func_MULTIME(IN1(), roIn2));
+    st_OUT().saveAssign(func_MUL_TIME(IN1(), roIn2));
   }
 
   ~FORTE_F_MULTIME() override = default;

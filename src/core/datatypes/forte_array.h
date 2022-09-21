@@ -497,7 +497,7 @@ class CIEC_ARRAY_TYPELIB : public CIEC_ARRAY<CIEC_ANY> {
     
     const static CTypeLib::CDataTypeEntry csm_oFirmwareDataTypeEntry_ARRAY_TYPELIB;
     [[nodiscard]] CIEC_ANY* clone(TForteByte *pa_acDataBuf) const override {
-      FORTE_STATIC_ASSERT((sizeof(CIEC_ANY) == sizeof(CIEC_ARRAY_TYPELIB)), DataTypeNotTheSameSizeAsANY);
+      static_assert((sizeof(CIEC_ANY) == sizeof(CIEC_ARRAY_TYPELIB)), "Data type not the same size as CIEC_ANY");
       return (nullptr != pa_acDataBuf) ? new (pa_acDataBuf) CIEC_ARRAY_TYPELIB(*this) : new CIEC_ARRAY_TYPELIB(*this);
     }
 

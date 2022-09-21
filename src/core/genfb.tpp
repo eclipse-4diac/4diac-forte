@@ -19,7 +19,7 @@ CGenFunctionBlock<T>::CGenFunctionBlock(CResource *paSrcRes, const CStringDictio
     T(paSrcRes, nullptr, paInstanceNameId, nullptr, nullptr),
     mConfiguredFBTypeNameId(CStringDictionary::scm_nInvalidStringId), mGenInterfaceSpec(), mFBConnData(nullptr), mFBVarsData(nullptr) {
 
-    FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CFunctionBlock, T>::value), TFunctionBlock);
+  static_assert((std::is_base_of<CFunctionBlock, T>::value), "TFunctionBlock");
 }
 
 template<class T>

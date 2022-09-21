@@ -33,8 +33,8 @@
  */
 template<typename T>
 inline const T func_TIME_IN_S_TO(const CIEC_TIME &paValue) {
-  FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_NUM, T>::value), TNotOfAnyNum);
-  if(forte::core::mpl::is_base_of<CIEC_ANY_REAL, T>::value) {
+  static_assert((std::is_base_of<CIEC_ANY_NUM, T>::value), "T not of ANY_NUM");
+  if(std::is_base_of<CIEC_ANY_REAL, T>::value) {
     return T(
       static_cast<typename T::TValueType>(paValue.getInNanoSeconds()) / static_cast<typename T::TValueType>(forte::core::constants::cNanosecondsPerSecond));
   } else {
@@ -54,8 +54,8 @@ inline const T func_TIME_IN_S_TO(const CIEC_TIME &paValue) {
  */
 template<typename T>
 inline const T func_TIME_IN_MS_TO(const CIEC_TIME &paValue) {
-  FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_NUM, T>::value), TNotOfAnyNum);
-  if(forte::core::mpl::is_base_of<CIEC_ANY_REAL, T>::value) {
+  static_assert((std::is_base_of<CIEC_ANY_NUM, T>::value), "T not of ANY_NUM");
+  if(std::is_base_of<CIEC_ANY_REAL, T>::value) {
     return T(
       static_cast<typename T::TValueType>(paValue.getInNanoSeconds())
         * (static_cast<typename T::TValueType>(forte::core::constants::cMillisecondsPerSecond)
@@ -77,8 +77,8 @@ inline const T func_TIME_IN_MS_TO(const CIEC_TIME &paValue) {
  */
 template<typename T>
 inline const T func_TIME_IN_US_TO(const CIEC_TIME &paValue) {
-  FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_NUM, T>::value), TNotOfAnyNum);
-  if(forte::core::mpl::is_base_of<CIEC_ANY_REAL, T>::value) {
+  static_assert((std::is_base_of<CIEC_ANY_NUM, T>::value), "T not of ANY_NUM");
+  if(std::is_base_of<CIEC_ANY_REAL, T>::value) {
     return T(
       static_cast<typename T::TValueType>(paValue.getInNanoSeconds())
         * (static_cast<typename T::TValueType>(forte::core::constants::cMicrosecondsPerSecond)
@@ -100,7 +100,7 @@ inline const T func_TIME_IN_US_TO(const CIEC_TIME &paValue) {
  */
 template<typename T>
 inline const T func_TIME_IN_NS_TO(const CIEC_TIME &paValue) {
-  FORTE_STATIC_ASSERT((forte::core::mpl::is_base_of<CIEC_ANY_NUM, T>::value), TNotOfAnyNum);
+  static_assert((std::is_base_of<CIEC_ANY_NUM, T>::value), "T not of ANY_NUM");
   return T(static_cast<typename T::TValueType>(paValue.getInNanoSeconds()));
 }
 

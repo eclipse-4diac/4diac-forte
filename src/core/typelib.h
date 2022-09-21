@@ -102,7 +102,7 @@ class CAdapter;
     }; \
     const static CTypeLib::CDataTypeEntry csm_oFirmwareDataTypeEntry_##datatypename; \
     virtual CIEC_ANY* clone(TForteByte *pa_acDataBuf) const { \
-      FORTE_STATIC_ASSERT((sizeof(CIEC_ANY) == sizeof(CIEC_##datatypename)), DataTypeNotTheSameSizeAsANY); \
+      static_assert((sizeof(CIEC_ANY) == sizeof(CIEC_##datatypename)), "Data type not the same size as CIEC_ANY"); \
       return (0 != pa_acDataBuf)  ? new(pa_acDataBuf)CIEC_##datatypename(*this) : new CIEC_##datatypename(*this); } \
     virtual CStringDictionary::TStringId getTypeNameID() const { \
         return CIEC_##datatypename::csm_oFirmwareDataTypeEntry_##datatypename.getTypeNameId(); \

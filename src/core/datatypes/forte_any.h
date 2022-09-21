@@ -83,13 +83,13 @@ class CIEC_ANY {
     template<typename U, typename T>
     static typename forte::core::mpl::implicit_or_explicit_cast<T, U>::type cast(const T paFromCast){
       U oToCast;
-      if (forte::core::mpl::is_base_of<CIEC_ANY_BIT, T>::value ||
-          forte::core::mpl::is_base_of<CIEC_ANY_BIT, U>::value) {
+      if (std::is_base_of<CIEC_ANY_BIT, T>::value ||
+          std::is_base_of<CIEC_ANY_BIT, U>::value) {
         oToCast.setValueSimple(paFromCast);
       } else
-      if(forte::core::mpl::is_base_of<CIEC_ANY_REAL, T>::value){
+      if(std::is_base_of<CIEC_ANY_REAL, T>::value){
         specialCast(paFromCast, oToCast);
-      } else if(forte::core::mpl::is_base_of<CIEC_ANY_REAL, U>::value){
+      } else if(std::is_base_of<CIEC_ANY_REAL, U>::value){
         oToCast.setValue(paFromCast);
       }
       else{

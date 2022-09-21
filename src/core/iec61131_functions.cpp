@@ -17,6 +17,7 @@
 
 #include "forte_architecture_time.h"
 
+/*** TRUNC ***/
 #ifdef FORTE_USE_REAL_DATATYPE
 const CIEC_SINT func_TRUNC_SINT(const CIEC_REAL &paIN) {
   return func_TRUNC<CIEC_SINT>(paIN);
@@ -150,51 +151,116 @@ const CIEC_ULINT func_LREAL_TRUNC_ULINT(const CIEC_LREAL &paIN) {
 #endif
 
 #ifdef FORTE_USE_64BIT_DATATYPES
-const CIEC_TIME_OF_DAY func_ADD_TOD_TIME(const CIEC_TIME_OF_DAY& pa_roIN1, const CIEC_TIME& pa_roIN2){
-  return CIEC_TIME_OF_DAY(static_cast<TForteUInt64>(pa_roIN1 + pa_roIN2.getInMilliSeconds()));
+
+const CIEC_TIME func_ADD_TIME(const CIEC_TIME &paIN1, const CIEC_TIME &paIN2) {
+  return func_ADD(paIN1, paIN2);
 }
 
-const CIEC_DATE_AND_TIME func_ADD_DT_TIME(const CIEC_DATE_AND_TIME& pa_roIN1, const CIEC_TIME& pa_roIN2){
-  return CIEC_DATE_AND_TIME(static_cast<TForteUInt64>(pa_roIN1 + pa_roIN2.getInMilliSeconds()));
+const CIEC_TIME_OF_DAY func_ADD_TOD_TIME(const CIEC_TIME_OF_DAY& paIN1, const CIEC_TIME& paIN2){
+  return CIEC_TIME_OF_DAY(static_cast<TForteUInt64>(paIN1 + paIN2.getInMilliSeconds()));
 }
 
-const CIEC_TIME_OF_DAY func_SUB_TOD_TIME(const CIEC_TIME_OF_DAY& pa_roIN1, const CIEC_TIME& pa_roIN2){
-  return CIEC_TIME_OF_DAY(static_cast<TForteUInt64>(pa_roIN1 - pa_roIN2.getInMilliSeconds()));
+const CIEC_DATE_AND_TIME func_ADD_DT_TIME(const CIEC_DATE_AND_TIME& paIN1, const CIEC_TIME& pa_IN2){
+  return CIEC_DATE_AND_TIME(static_cast<TForteUInt64>(paIN1 + pa_IN2.getInMilliSeconds()));
 }
 
-const CIEC_DATE_AND_TIME func_SUB_DT_TIME(const CIEC_DATE_AND_TIME& pa_roIN1, const CIEC_TIME& pa_roIN2){
-  return CIEC_DATE_AND_TIME(static_cast<TForteUInt64>(pa_roIN1 - pa_roIN2.getInMilliSeconds()));
+const CIEC_TIME func_SUB_TIME(const CIEC_TIME &paIN1, const CIEC_TIME &paIN2) {
+  return func_SUB(paIN1, paIN2);
 }
 
-const CIEC_TIME func_SUB_DT_DT(const CIEC_DATE_AND_TIME& pa_roIN1, const CIEC_DATE_AND_TIME& pa_roIN2){
+const CIEC_TIME_OF_DAY func_SUB_TOD_TIME(const CIEC_TIME_OF_DAY& paIN1, const CIEC_TIME& paIN2){
+  return CIEC_TIME_OF_DAY(static_cast<TForteUInt64>(paIN1 - paIN2.getInMilliSeconds()));
+}
+
+const CIEC_DATE_AND_TIME func_SUB_DT_TIME(const CIEC_DATE_AND_TIME& paIN1, const CIEC_TIME& paIN2){
+  return CIEC_DATE_AND_TIME(static_cast<TForteUInt64>(paIN1 - paIN2.getInMilliSeconds()));
+}
+
+const CIEC_TIME func_SUB_DT_DT(const CIEC_DATE_AND_TIME& paIN1, const CIEC_DATE_AND_TIME& paIN2){
   CIEC_TIME temp;
-  temp.setFromMilliSeconds(pa_roIN1 - pa_roIN2);
+  temp.setFromMilliSeconds(paIN1 - paIN2);
   return temp;
 }
 
-const CIEC_TIME func_SUB_TOD_TOD(const CIEC_TIME_OF_DAY &pa_roIN1, const CIEC_TIME_OF_DAY &pa_roIN2){
+const CIEC_TIME func_SUB_TOD_TOD(const CIEC_TIME_OF_DAY &paIN1, const CIEC_TIME_OF_DAY &paIN2){
   CIEC_TIME temp;
-  temp.setFromMilliSeconds(pa_roIN1 - pa_roIN2);
+  temp.setFromMilliSeconds(paIN1 - paIN2);
   return temp;
 }
 
-const CIEC_TIME func_SUB_DATE_DATE(const CIEC_DATE &pa_roIN1, const CIEC_DATE &pa_roIN2){
+const CIEC_TIME func_SUB_DATE_DATE(const CIEC_DATE &paIN1, const CIEC_DATE &paIN2){
   CIEC_TIME temp;
-  temp.setFromMilliSeconds(pa_roIN1 - pa_roIN2);
+  temp.setFromMilliSeconds(paIN1 - paIN2);
   return temp;
 }
 
-const CIEC_DATE_AND_TIME func_CONCAT_DATE_TOD(const CIEC_DATE& pa_roIN1, const CIEC_TIME_OF_DAY& pa_roIN2){
+const CIEC_DATE_AND_TIME func_CONCAT_DATE_TOD(const CIEC_DATE& paIN1, const CIEC_TIME_OF_DAY& paIN2){
   CIEC_DATE_AND_TIME retVal;
 
-  struct tm *pstTime = pa_roIN1.getTimeStruct();
+  struct tm *pstTime = paIN1.getTimeStruct();
 
-  time_t t = static_cast<time_t>( pa_roIN2 / 1000ULL);
+  time_t t = static_cast<time_t>( paIN2 / 1000ULL);
   pstTime->tm_hour = (int) (t / 3600);
   pstTime->tm_min = (int) ((t % 3600) / 60);
   pstTime->tm_sec = (int) (t % 60);
 
-  retVal.setDateAndTime(*pstTime, pa_roIN2.getMilliSeconds());
+  retVal.setDateAndTime(*pstTime, paIN2.getMilliSeconds());
+  return retVal;
+}
+
+const CIEC_LTIME func_ADD_LTIME(const CIEC_LTIME &paIN1, const CIEC_LTIME &paIN2) {
+  return func_ADD(paIN1, paIN2);
+}
+
+const CIEC_LTIME_OF_DAY func_ADD_LTOD_LTIME(const CIEC_LTIME_OF_DAY& paIN1, const CIEC_LTIME& paIN2){
+  return CIEC_LTIME_OF_DAY(static_cast<TForteUInt64>(paIN1 + paIN2.getInMilliSeconds()));
+}
+
+const CIEC_LDATE_AND_TIME func_ADD_LDT_LTIME(const CIEC_LDATE_AND_TIME& paIN1, const CIEC_LTIME& paIN2){
+  return CIEC_LDATE_AND_TIME(static_cast<TForteUInt64>(paIN1 + paIN2.getInMilliSeconds()));
+}
+
+const CIEC_LTIME func_SUB_LTIME(const CIEC_LTIME &paIN1, const CIEC_LTIME &paIN2) {
+  return func_SUB(paIN1, paIN2);
+}
+
+const CIEC_LTIME_OF_DAY func_SUB_LTOD_LTIME(const CIEC_LTIME_OF_DAY& paIN1, const CIEC_LTIME& paIN2){
+  return CIEC_LTIME_OF_DAY(static_cast<TForteUInt64>(paIN1 - paIN2.getInMilliSeconds()));
+}
+
+const CIEC_LDATE_AND_TIME func_SUB_LDT_LTIME(const CIEC_LDATE_AND_TIME& paIN1, const CIEC_LTIME& paIN2){
+  return CIEC_LDATE_AND_TIME(static_cast<TForteUInt64>(paIN1 - paIN2.getInMilliSeconds()));
+}
+
+const CIEC_LTIME func_SUB_LDT_LDT(const CIEC_LDATE_AND_TIME& paIN1, const CIEC_LDATE_AND_TIME& paIN2){
+  CIEC_LTIME temp;
+  temp.setFromMilliSeconds(paIN1 - paIN2);
+  return temp;
+}
+
+const CIEC_LTIME func_SUB_LTOD_LTOD(const CIEC_LTIME_OF_DAY &paIN1, const CIEC_LTIME_OF_DAY &paIN2){
+  CIEC_LTIME temp;
+  temp.setFromMilliSeconds(paIN1 - paIN2);
+  return temp;
+}
+
+const CIEC_LTIME func_SUB_LDATE_LDATE(const CIEC_LDATE &paIN1, const CIEC_LDATE &paIN2){
+  CIEC_LTIME temp;
+  temp.setFromMilliSeconds(paIN1 - paIN2);
+  return temp;
+}
+
+const CIEC_LDATE_AND_TIME func_CONCAT_LDATE_LTOD(const CIEC_LDATE& paIN1, const CIEC_LTIME_OF_DAY& paIN2){
+  CIEC_LDATE_AND_TIME retVal;
+
+  struct tm *pstTime = paIN1.getTimeStruct();
+
+  time_t t = static_cast<time_t>( paIN2 / 1000ULL);
+  pstTime->tm_hour = (int) (t / 3600);
+  pstTime->tm_min = (int) ((t % 3600) / 60);
+  pstTime->tm_sec = (int) (t % 60);
+
+  retVal.setDateAndTime(*pstTime, paIN2.getMilliSeconds());
   return retVal;
 }
 

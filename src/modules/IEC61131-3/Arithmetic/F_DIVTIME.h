@@ -62,7 +62,7 @@ class FORTE_F_DIVTIME : public CFunctionBlock {
 
   template<typename T> void calculateValue() {
     T &roIn2(static_cast<T&>(IN2()));
-    st_OUT().saveAssign(func_DIVTIME(IN1(), roIn2));
+    st_OUT().saveAssign(func_DIV_TIME(IN1(), roIn2));
   }
 
   ~FORTE_F_DIVTIME() override = default;
