@@ -851,6 +851,7 @@ public:
     if(0 != paIN2) {
       return resultType(static_cast<resultType>(paIN1) / static_cast<resultType>(paIN2));
     }
+    DEVLOG_ERROR("Division by zero!");
     return resultType(0); // Divisor is 0
   }
   DivOperation() = delete;
@@ -953,11 +954,12 @@ template<typename T> const CIEC_LTIME func_MUL_LTIME(const CIEC_LTIME &paIN1, co
   return CIEC_LTIME(paIN1 * paIN2);
 }
 
-template<typename T> const CIEC_TIME func_DIV_TIME(const CIEC_TIME& paIN1, const T& paIN2){
-  if(0 != paIN2){
+template<typename T> const CIEC_TIME func_DIV_TIME(const CIEC_TIME& paIN1, const T& paIN2) {
+  if(0 != paIN2) {
     return CIEC_TIME(paIN1 / paIN2);
-  }else{
-    return paIN1;
+  } else {
+    DEVLOG_ERROR("Division by zero!");
+    return CIEC_TIME(0);
   }
 }
 
@@ -965,7 +967,8 @@ template<typename T> const CIEC_LTIME func_DIV_LTIME(const CIEC_LTIME &paIN1, co
   if(0 != paIN2) {
     return CIEC_LTIME(paIN1 / paIN2);
   } else {
-    return paIN1;
+    DEVLOG_ERROR("Division by zero!");
+    return CIEC_LTIME(0);
   }
 }
 
