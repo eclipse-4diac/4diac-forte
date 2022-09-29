@@ -251,6 +251,17 @@ get_property(LINK_LIBRARY GLOBAL PROPERTY FORTE_LINK_LIBRARY)
 # Create Files
 #######################################################################################
 
+
+# setting the C++ version has to be done directyl before defining the targets only then modules can override this setting 
+if(NOT DEFINED CMAKE_CXX_STANDARD)
+    set(CMAKE_CXX_STANDARD 17)
+elseif(CMAKE_CXX_STANDARD LESS 17)
+  set(CMAKE_CXX_STANDARD 17)
+endif()
+if(NOT DEFINED CMAKE_CXX_STANDARD_REQUIRED)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif()
+
 get_property(existing_link_flags GLOBAL PROPERTY LINK_FLAGS)
 if(existing_link_flags)
   set_property(GLOBAL APPEND PROPERTY FORTE_LINK_FLAGS ${existing_link_flags})
