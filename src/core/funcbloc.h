@@ -129,11 +129,11 @@ class CFunctionBlock {
 
     /*!\brief Get the resource the function block is contained in.
      */
-    CResource& getResource() {
+    CResource& getResource() const {
       return *m_poResource;
     }
 
-    CResource* getResourcePtr() {
+    CResource* getResourcePtr() const {
       return m_poResource;
     }
 
