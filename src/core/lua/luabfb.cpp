@@ -25,7 +25,7 @@ int CLuaFB_index(lua_State *paLuaState) {
   CLuaBFB* luaFB = CLuaEngine::luaGetObject<CLuaBFB>(paLuaState, 1);
   TForteUInt32 id = static_cast<TForteUInt32>(luaL_checkinteger(paLuaState, 2));
   CIEC_ANY* var = luaFB->getVariable(id);
-  CLuaEngine::luaPushAny(paLuaState, var);
+  CLuaEngine::luaPushAny(paLuaState, *var);
   return 1;
 }
 
@@ -34,7 +34,7 @@ int CLuaFB_newindex(lua_State *paLuaState) {
   CLuaBFB* luaFB = CLuaEngine::luaGetObject<CLuaBFB>(paLuaState, 1);
   TForteUInt32 id = static_cast<TForteUInt32>(luaL_checkinteger(paLuaState, 2));
   CIEC_ANY* var = luaFB->getVariable(id);
-  CLuaEngine::luaGetAny(paLuaState, var, 3);
+  CLuaEngine::luaGetAny(paLuaState, *var, 3);
   return 0;
 }
 

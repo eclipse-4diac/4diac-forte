@@ -31,7 +31,9 @@ extern "C" {
 
 #include "../datatypes/forte_any.h"
 
-class CIEC_ARRAY;
+#include <forte_array.h>
+
+//class CIEC_ARRAY;
 
 
 class CLuaEngine {
@@ -50,10 +52,10 @@ public:
   bool loadFile(const std::string& path);
   bool call(int args, int results);
 
-  static bool luaPushAny(lua_State* luaState, CIEC_ANY* value);
-  static bool luaGetAny(lua_State* luaState, CIEC_ANY* value, int index);
-  static bool luaPushArray(lua_State *luaState, CIEC_ARRAY* array);
-  static bool luaGetArray(lua_State *luaState, CIEC_ARRAY* array, int index);
+  static bool luaPushAny(lua_State* luaState, CIEC_ANY& value);
+  static bool luaGetAny(lua_State* luaState, CIEC_ANY& value, int index);
+  static bool luaPushArray(lua_State *luaState, CIEC_ARRAY<>& array);
+  static bool luaGetArray(lua_State *luaState, CIEC_ARRAY<>& array, int index);
 
   void store(const void* ref) {
     lua_rawsetp(luaState, LUA_REGISTRYINDEX, ref);
@@ -240,11 +242,11 @@ public:
     return value;
   }
 
-  bool pushAny(CIEC_ANY* value) {
+  bool pushAny(CIEC_ANY& value) {
     return luaPushAny(luaState, value);
   }
 
-  bool getAny(CIEC_ANY *value, int index) {
+  bool getAny(CIEC_ANY &value, int index) {
     return luaGetAny(luaState, value, index);
   }
 
