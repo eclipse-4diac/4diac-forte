@@ -27,10 +27,9 @@ CFakeTimerHandler::~CFakeTimerHandler() {
 }
 
 void CFakeTimerHandler::run() {
-  CEventChainExecutionThread *execThread = 0;
   while(isAlive()) {
     if(sleepTime > 0) {
-      execThread = getExecThread(); //get execThread for every sleep fake, since resource potentially changed
+      CEventChainExecutionThread *execThread = getExecThread(); //get execThread for every sleep fake, since resource potentially changed
       while(sleepTime > 0) {
         nextTick();
         trackFakeForteTime();
@@ -39,25 +38,15 @@ void CFakeTimerHandler::run() {
           sleepThread(0);
         }
       }
-      if(fakeSleepFb) {
-        fakeSleepFb->receiveInputEvent(-1, nullptr);
-      }
+      startOutputEvent();
     } else {
-      sleepThread(1000);
+      sleepThread(1);
     }
   }
 }
 
 CEventChainExecutionThread* CFakeTimerHandler::getExecThread() {
-  const char *resNname = 0;
-  for(forte::core::CFBContainer::TFunctionBlockList::Iterator itRunner = mDeviceExecution.getDevice().getFBList().begin();
-      itRunner != mDeviceExecution.getDevice().getFBList().end(); ++itRunner) {
-    resNname = static_cast<CResource*>(*itRunner)->getInstanceName();
-    if(strcmp(resNname, "ROBOT_TEST_RES") == 0) {
-      return static_cast<CResource*>(*itRunner)->getResourceEventExecution();
-    }
-  }
-  return 0;
+    return fakeSleepFb ? fakeSleepFb->getResourcePtr()->getResourceEventExecution() : nullptr;
 }
 
 void CFakeTimerHandler::setSleepTime(CIEC_TIME &t, CFunctionBlock *fb) {
@@ -65,9 +54,17 @@ void CFakeTimerHandler::setSleepTime(CIEC_TIME &t, CFunctionBlock *fb) {
   if(sleepTime == 0) {
     sleepTime = t.getInMilliSeconds();
     if(sleepTime == 0) {
-      if(fakeSleepFb) {
-        fakeSleepFb->receiveInputEvent(-1, nullptr); // no computation time necessary in case of zero sleeptime
-      }
+      startOutputEvent();
+    }
+  }
+}
+
+void CFakeTimerHandler::startOutputEvent() {
+  if(fakeSleepFb) {
+    CEventChainExecutionThread *execThread = getExecThread();
+    if(execThread) {
+        fakeSleepFb->receiveInputEvent(-1, execThread);
+        execThread->resumeSelfSuspend();
     }
   }
 }

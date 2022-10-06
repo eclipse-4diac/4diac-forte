@@ -48,6 +48,7 @@ class CFakeTimerHandler : public CTimerHandler, public CThread {
 
   private:
     CEventChainExecutionThread* getExecThread();
+    void startOutputEvent();
     uint_fast64_t sleepTime;
     CFunctionBlock *fakeSleepFb;
 };
