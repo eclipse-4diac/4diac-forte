@@ -29,6 +29,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
   forte_add_sourcefile_hcpp(forte_thread forte_sync forte_sem)
   forte_add_sourcefile_cpp(../genforte_printer.cpp)
   forte_add_sourcefile_h(../forte_architecture_time.h)
+  forte_add_sourcefile_cpp(forte_architecture.cpp)
   forte_add_sourcefile_hcpp(../utils/timespec_utils)
   forte_add_sourcefile_cpp(../genforte_realFunctions.cpp)
 
