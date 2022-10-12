@@ -246,9 +246,6 @@ ENDIF(FORTE_TESTS)
 SET(FORTE_TicksPerSecond "1000" CACHE STRING "forte sticks per second")
 mark_as_advanced(FORTE_TicksPerSecond)
 
-SET(FORTE_TimeBaseUnitsPerSecond "1000000000" CACHE STRING "Defines the time base in units per second that will be used in the TIME data type, The default value 1000000000 means 1ns")
-mark_as_advanced(FORTE_TimeBaseUnitsPerSecond)
-
 SET(FORTE_EventChainEventListSize "256" CACHE STRING "forte eventchain event list size")
 mark_as_advanced(FORTE_EventChainEventListSize)
 
@@ -277,17 +274,6 @@ mark_as_advanced(FORTE_STRINGDICTINITIALSTRINGBUFSIZE)
 
 SET(FORTE_STRINGDICTINITIALMAXNROFSTRINGS "300" CACHE STRING "FORTE string dict's initial max nr of strings")
 mark_as_advanced(FORTE_STRINGDICTINITIALMAXNROFSTRINGS)
-
-if(FORTE_USE_64BIT_DATATYPES)
- SET(MAX_TimeBaseUnitsPerSecond 1000000000)
-else(FORTE_USE_64BIT_DATATYPES)
-    SET(MAX_TimeBaseUnitsPerSecond 1000000)
-endif(FORTE_USE_64BIT_DATATYPES)
-
-if(${FORTE_TimeBaseUnitsPerSecond} GREATER ${MAX_TimeBaseUnitsPerSecond})  
- MESSAGE("Forced FORTE_TimeBaseUnitsPerSecond to ${MAX_TimeBaseUnitsPerSecond}")
- SET(FORTE_TimeBaseUnitsPerSecond ${MAX_TimeBaseUnitsPerSecond})
-endif(${FORTE_TimeBaseUnitsPerSecond} GREATER ${MAX_TimeBaseUnitsPerSecond})
 
 GET_PROPERTY(FORTE_CUSTOM_CONFIGURATIONS_LOCAL GLOBAL PROPERTY FORTE_CUSTOM_CONFIGURATIONS_GLOBAL)
 

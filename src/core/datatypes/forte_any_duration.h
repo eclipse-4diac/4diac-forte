@@ -22,6 +22,15 @@
 class CIEC_ANY_DURATION : public CIEC_ANY_MAGNITUDE {
   DECLARE_FIRMWARE_DATATYPE(ANY_DURATION)
 public:
+
+  /*! \brief Defines the time base in units per second that will be used in the TIME data type
+   *
+   *  The default value will be 1 000 000 000, which means that the time bas is 1 ns.
+   *  For Smaller devices which do not use 64 bit datatypes a time base of 1000 (i.e., 1ms)
+   *  or 1000000 (i.e., 1micro s) may be suitable.
+   */
+  static const uint_fast64_t csmForteTimeBaseUnitsPerSecond = 1000000000; /* 1E9 */
+
   ~CIEC_ANY_DURATION() override = default;
 
   EDataTypeID getDataTypeID() const override {

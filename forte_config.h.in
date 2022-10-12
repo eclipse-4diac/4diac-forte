@@ -22,15 +22,6 @@
  */
 const TForteUInt32 cg_nForteTicksPerSecond = ${FORTE_TicksPerSecond};
 
-/*! \brief Defines the time base in units per second that will be used in the TIME data type
- *
- *  The default value will be 1 000 000 000, which means that the time bas is 1 ns.
- *  For Smaller devices which do not use 64 bit datatypes a time base of 1000 (i.e., 1ms) 
- *  or 1000000 (i.e., 1micro s) may be suitable. 
- */
-const uint_fast64_t cgForteTimeBaseUnitsPerSecond = ${FORTE_TimeBaseUnitsPerSecond};
-
-
 /*! Define the initial size of the event chain list used in the event chain execution thread.
  *
  */
