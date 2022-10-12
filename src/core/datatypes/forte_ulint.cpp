@@ -13,10 +13,6 @@
  *******************************************************************************/
 #include "forte_ulint.h"
 
-#ifdef FORTE_USE_64BIT_DATATYPES
-
 DEFINE_FIRMWARE_DATATYPE(ULINT, g_nStringIdULINT)
 
 const CIEC_ULINT::TValueType CIEC_ULINT::scm_nMaxVal = std::numeric_limits<CIEC_ULINT::TValueType>::max();
-
-#endif

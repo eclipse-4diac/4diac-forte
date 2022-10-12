@@ -94,7 +94,6 @@ int CIEC_ANY_ELEMENTARY::toString(char* paValue, size_t paBufferSize) const {
       nDivisor = 1000000000L;
       bSigned = false;
       break;
-#ifdef FORTE_USE_64BIT_DATATYPES
       case e_LINT:
       nSBuffer = getTINT64();
       nDivisor = 1000000000000000000LL;
@@ -105,7 +104,6 @@ int CIEC_ANY_ELEMENTARY::toString(char* paValue, size_t paBufferSize) const {
       nDivisor = 10000000000000000000ULL;
       bSigned = false;
       break;
-#endif
     default:
       return CIEC_ANY::toString(paValue, paBufferSize);
   }
@@ -228,12 +226,10 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *paValue){
         nSUpperBound = CIEC_DINT::scm_nMaxVal;
         nSLowerBound = CIEC_DINT::scm_nMinVal;
         break;
-#ifdef FORTE_USE_64BIT_DATATYPES
         case e_LINT:
         nSUpperBound = CIEC_LINT::scm_nMaxVal;
         nSLowerBound = CIEC_LINT::scm_nMinVal;
         break;
-#endif
       case e_USINT:
       case e_BYTE:
         nUUpperBound = CIEC_USINT::scm_nMaxVal;
@@ -249,13 +245,11 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *paValue){
         nUUpperBound = CIEC_UDINT::scm_nMaxVal;
         bSigned = false;
         break;
-#ifdef FORTE_USE_64BIT_DATATYPES
       case e_ULINT:
       case e_LWORD:
         nUUpperBound = CIEC_ULINT::scm_nMaxVal;
         bSigned = false;
         break;
-#endif
       default:
         return false;
     }
@@ -270,12 +264,7 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *paValue){
     errno = 0; //erno is not cleared by the strto* functions
 
     if(true == bSigned){
-#ifdef FORTE_USE_64BIT_DATATYPES
       TForteInt64 nValue = forte::core::util::strtoll(pacRunner, &pacEndPtr, nMultiplier);
-#else
-      TForteInt32 nValue = forte::core::util::strtol(pacRunner, &pacEndPtr, nMultiplier);
-#endif
-
       if((ERANGE != errno)&& (nValue <= nSUpperBound) && (nValue
           >= nSLowerBound)){
       setLargestInt(nValue);
@@ -285,11 +274,7 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *paValue){
   else{
     if ('-' != *pacRunner){
       //The strtou* functions will correctly parse also negative numbers and provide their two complement as value
-#ifdef FORTE_USE_64BIT_DATATYPES
           TForteUInt64 nValue = forte::core::util::strtoull(pacRunner, &pacEndPtr, nMultiplier);
-#else
-          TForteUInt32 nValue = forte::core::util::strtoul(pacRunner, &pacEndPtr, nMultiplier);
-#endif //FORTE_USE_64BIT_DATATYPES
           if ((ERANGE != errno) && (nValue <= nUUpperBound)){
             setLargestUInt(nValue);
             nRetVal = static_cast<int>(pacEndPtr - paValue);

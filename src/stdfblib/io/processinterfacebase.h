@@ -76,7 +76,6 @@ class CProcessInterfaceBase : public CEventSourceFB{
       return *static_cast<CIEC_DWORD*>(getDI(2));
     };
 
-#ifdef FORTE_USE_64BIT_DATATYPES
     CIEC_LWORD &IN_L(){
       return *static_cast<CIEC_LWORD*>(getDO(2));
     }
@@ -84,7 +83,6 @@ class CProcessInterfaceBase : public CEventSourceFB{
     CIEC_LWORD &OUT_L() {
       return *static_cast<CIEC_LWORD*>(getDI(2));
     };
-#endif /* FORTE_USE_64BIT_DATATYPES */
 
     //TODO move pin checking and managing code into this class. Can be solved with recurring template pattern
 };

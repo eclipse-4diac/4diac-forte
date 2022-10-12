@@ -23,7 +23,6 @@
 //   REAL_TO_*  functions
 //********************************************************************************************
 #ifdef FORTE_USE_REAL_DATATYPE
-#ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LINT func_REAL_TO_LINT(const CIEC_REAL &paVal){
   return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
@@ -35,7 +34,6 @@ inline const CIEC_ULINT func_REAL_TO_ULINT(const CIEC_REAL &paVal){
 inline const CIEC_LREAL func_REAL_TO_LREAL(const CIEC_REAL &paVal){
   return CIEC_ANY::cast<CIEC_LREAL>(paVal);
 }
-#endif
 
 inline const CIEC_DINT func_REAL_TO_DINT(const CIEC_REAL &paVal){
   return CIEC_ANY::cast<CIEC_DINT>(paVal);

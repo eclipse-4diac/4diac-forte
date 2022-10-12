@@ -176,7 +176,6 @@ namespace forte {
       return true;
     }
 
-#ifdef FORTE_USE_64BIT_DATATYPES
     bool CAdsProcessInterface::writeLWord(){
       CAdsConnection *connection = CAdsConnectionManager::getInstance().getConnection(mFriendlyAdsServerName);
       const long status = AdsSyncWriteReqEx(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND, mAdsHandle, sizeof(TForteDWord), OUT_L().getDataPtr());
@@ -204,7 +203,6 @@ namespace forte {
       STATUS() = "OK";
       return true;
     }
-#endif /* FORTE_USE_64BIT_DATATYPES */
 
     CAdsProcessInterface::~CAdsProcessInterface(){
       if(0 != mAdsHandle){

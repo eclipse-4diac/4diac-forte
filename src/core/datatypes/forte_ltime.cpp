@@ -20,12 +20,8 @@
 #include <ctype.h>
 
 #include "forte_constants.h"
+#include "forte_lint.h"
 
-#ifdef FORTE_USE_64BIT_DATATYPES
-# include "forte_lint.h"
-#else
-# include "forte_dint.h"
-#endif
 
 DEFINE_FIRMWARE_DATATYPE(LTIME, g_nStringIdLTIME)
 

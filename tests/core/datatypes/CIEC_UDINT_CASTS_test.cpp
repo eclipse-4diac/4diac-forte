@@ -37,16 +37,14 @@
 //Time
 #include "../../../src/core/datatypes/forte_time.h"
 
-
-#ifdef FORTE_USE_64BIT_DATATYPES
-  #include "../../../src/core/datatypes/forte_lword.h"
-  #include "../../../src/core/datatypes/forte_lint.h"
-  #include "../../../src/core/datatypes/forte_ulint.h"
+#include "../../../src/core/datatypes/forte_lword.h"
+#include "../../../src/core/datatypes/forte_lint.h"
+#include "../../../src/core/datatypes/forte_ulint.h"
 
 #ifdef FORTE_USE_REAL_DATATYPE
   #include "../../../src/core/datatypes/forte_lreal.h"
 #endif //FORTE_USE_REAL_DATATYPE
-#endif //FORTE_USE_64BIT_DATATYPES
+
 
 using namespace boost::unit_test;
 
@@ -100,9 +98,7 @@ BOOST_AUTO_TEST_CASE(CASTS_UDINT_to_BITDTs)
   CIEC_BYTE nTestByte;
   CIEC_WORD nTestWord;
   CIEC_DWORD nTestDWord;
-#ifdef FORTE_USE_64BIT_DATATYPES
-  CIEC_DWORD nTestLWord;
-#endif //FORTE_USE_64BIT_DATATYPES
+  CIEC_LWORD nTestLWord;
 
 //check initial values
   BOOST_CHECK_EQUAL(nTestUDInt0, 0UL);
@@ -150,8 +146,6 @@ BOOST_AUTO_TEST_CASE(CASTS_UDINT_to_BITDTs)
   nTestDWord.setValue(nTestUDInt4294967295);
   BOOST_CHECK_EQUAL(nTestDWord, 4294967295UL);
 
-
-#ifdef FORTE_USE_64BIT_DATATYPES
 //toLWord
   nTestLWord.setValue(nTestUDInt0);
   BOOST_CHECK_EQUAL(nTestLWord, 0ULL);
@@ -161,8 +155,6 @@ BOOST_AUTO_TEST_CASE(CASTS_UDINT_to_BITDTs)
   BOOST_CHECK_EQUAL(nTestLWord, 65536ULL);
   nTestLWord.setValue(nTestUDInt4294967295);
   BOOST_CHECK_EQUAL(nTestLWord, 4294967295ULL);
-
-#endif
 }
 
 BOOST_AUTO_TEST_CASE(CASTS_UDINT_to_INTS)
@@ -177,10 +169,8 @@ BOOST_AUTO_TEST_CASE(CASTS_UDINT_to_INTS)
   CIEC_INT nTestInt;
   CIEC_UINT nTestUInt;
   CIEC_DINT nTestDInt;
-#ifdef FORTE_USE_64BIT_DATATYPES
   CIEC_LINT nTestLInt;
   CIEC_ULINT nTestULInt;
-#endif //FORTE_USE_64BIT_DATATYPES
 
   //check initial values
     BOOST_CHECK_EQUAL(nTestUDInt0, 0UL);
@@ -248,8 +238,6 @@ BOOST_AUTO_TEST_CASE(CASTS_UDINT_to_INTS)
   nTestDInt.setValue(nTestUDInt4294967295);
   BOOST_CHECK_EQUAL(nTestDInt, -1L);
 
-
-#ifdef FORTE_USE_64BIT_DATATYPES
 //toLINT
   nTestLInt.setValue(nTestUDInt0);
   BOOST_CHECK_EQUAL(nTestLInt, 0LL);
@@ -269,7 +257,6 @@ BOOST_AUTO_TEST_CASE(CASTS_UDINT_to_INTS)
   BOOST_CHECK_EQUAL(nTestULInt, 65536ULL);
   nTestULInt.setValue(nTestUDInt4294967295);
   BOOST_CHECK_EQUAL(nTestULInt, 4294967295ULL);
-#endif
 }
 
 #ifdef FORTE_USE_REAL_DATATYPE
@@ -308,8 +295,6 @@ BOOST_AUTO_TEST_CASE(CASTS_UDINT_to_REAL)
   nTestReal.setValue(nTestUDInt4294967295);
   BOOST_CHECK_EQUAL(4294967295.0f, nTestReal); 
 
-
-#ifdef FORTE_USE_64BIT_DATATYPES
   CIEC_LREAL nTestLReal;
 
 //toLREAL
@@ -321,8 +306,6 @@ BOOST_AUTO_TEST_CASE(CASTS_UDINT_to_REAL)
   BOOST_CHECK_EQUAL(65536.0, nTestLReal); 
   nTestLReal.setValue(nTestUDInt4294967295);
   BOOST_CHECK_EQUAL(4294967295.0,nTestLReal); 
-#endif //FORTE_USE_64BIT_DATATYPES
-
 }
 #endif //FORTE_USE_REAL_DATATYPE
 
@@ -353,7 +336,6 @@ BOOST_AUTO_TEST_CASE(CASTS_UDINT_to_TIME)
   BOOST_CHECK_EQUAL(nTestUDInt4294967295, 4294967295UL);
 
 //toTime
-#ifdef FORTE_USE_64BIT_DATATYPES
   nTestTime.setValue(nTestUDInt0);
   BOOST_CHECK_EQUAL(0LL, nTestTime);
   nTestTime.setValue(nTestUDInt1);
@@ -362,16 +344,6 @@ BOOST_AUTO_TEST_CASE(CASTS_UDINT_to_TIME)
   BOOST_CHECK_EQUAL(65536LL, nTestTime);
   nTestTime.setValue(nTestUDInt4294967295);
   BOOST_CHECK_EQUAL(4294967295LL, nTestTime);
-#else
-  nTestTime.setValue(nTestUDInt0);
-  BOOST_CHECK_EQUAL(0L, nTestTime);
-  nTestTime.setValue(nTestUDInt1);
-  BOOST_CHECK_EQUAL(1L, nTestTime);
-  nTestTime.setValue(nTestUDInt65536);
-  BOOST_CHECK_EQUAL(65536L, nTestTime);
-  nTestTime.setValue(nTestUDInt4294967295);
-  BOOST_CHECK_EQUAL(-1L, nTestTime);
-#endif
 }
 
 BOOST_AUTO_TEST_CASE(UDINT_Castable_test)

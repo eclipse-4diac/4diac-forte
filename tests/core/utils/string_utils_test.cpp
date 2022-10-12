@@ -307,7 +307,6 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
     strtoulWrongInputCheck("0x0x74x219x52", 0, 3, 16);
   }
 
-#ifdef FORTE_USE_64BIT_DATATYPES
   void strtollWrongInputCheck(const char* pa_acString, long long int pa_nResult, unsigned int pa_unErrorPos){
     char *pacEndptr;
     BOOST_CHECK_EQUAL(pa_nResult, forte::core::util::strtoll(pa_acString, &pacEndptr, 10));
@@ -412,7 +411,6 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
     strtoullWrongInputCheck("-74219x52", 0, 0);
 
   }
-#endif
 
   const char* sNonEscapedData[] = {
       "", "A", "AB", //no escaped chars

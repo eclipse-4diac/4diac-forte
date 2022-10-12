@@ -101,7 +101,6 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
     delete poVal;
   }
 
-#ifdef FORTE_USE_64BIT_DATATYPES
   BOOST_AUTO_TEST_CASE(createLINT){
     TForteByte acDataBuf[sizeof(CIEC_LINT)];
     CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdLINT, acDataBuf);
@@ -113,7 +112,6 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
     BOOST_CHECK_EQUAL(0, *static_cast<CIEC_LINT *>(poVal));
     delete poVal;
   }
-#endif
 
   BOOST_AUTO_TEST_CASE(createUSINT){
     TForteByte acDataBuf[sizeof(CIEC_USINT)];
@@ -151,7 +149,6 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
     delete poVal;
   }
 
-#ifdef FORTE_USE_64BIT_DATATYPES
   BOOST_AUTO_TEST_CASE(createULINT){
     TForteByte acDataBuf[sizeof(CIEC_ULINT)];
     CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdULINT, acDataBuf);
@@ -163,7 +160,6 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
     BOOST_CHECK_EQUAL(0, *static_cast<CIEC_ULINT *>(poVal));
     delete poVal;
   }
-#endif
 
   BOOST_AUTO_TEST_CASE(createBYTE){
     TForteByte acDataBuf[sizeof(CIEC_BYTE)];
@@ -201,7 +197,6 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
     delete poVal;
   }
 
-#ifdef FORTE_USE_64BIT_DATATYPES
   BOOST_AUTO_TEST_CASE(createLWORD){
     TForteByte acDataBuf[sizeof(CIEC_LWORD)];
     CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdLWORD, acDataBuf);
@@ -213,7 +208,6 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
     BOOST_CHECK_EQUAL(0, *static_cast<CIEC_LWORD *>(poVal));
     delete poVal;
   }
-#endif
 
   BOOST_AUTO_TEST_CASE(createDATE){
     TForteByte acDataBuf[sizeof(CIEC_DATE)];

@@ -47,7 +47,6 @@
 
 #include "../../../src/core/datatypes/forte_array.h"
 
-#ifdef FORTE_USE_64BIT_DATATYPES
 #include "../../../src/core/datatypes/forte_lword.h"
 #include "../../../src/core/datatypes/forte_lint.h"
 #include "../../../src/core/datatypes/forte_ulint.h"
@@ -55,7 +54,6 @@
 #ifdef FORTE_USE_REAL_DATATYPE
 #include "../../../src/core/datatypes/forte_lreal.h"
 #endif //FORTE_USE_LREAL_DATATYPE
-#endif //FORTE_USE_64BIT_DATATYPES
 
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "fbdkasn1layerdeser_test_gen.cpp"
@@ -131,26 +129,18 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWord40396, cg_unWordSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDWord690586453, cg_unDWordSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLWord4294967296, cg_unLWordSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUSInt128, cg_unUSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUInt40396, cg_unUIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUDInt690586453, cg_unUDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abULInt3544923647067170873, cg_unULIntSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#endif
 #ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
 #endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
@@ -191,26 +181,18 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWord40396, cg_unWordSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDWord690586453, cg_unDWordSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLWord4294967296, cg_unLWordSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUSInt128, cg_unUSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUInt40396, cg_unUIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUDInt690586453, cg_unUDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abULInt3544923647067170873, cg_unULIntSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#endif
 #ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
 #endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
@@ -255,26 +237,18 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDWord690586453, cg_unDWordSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLWord4294967296, cg_unLWordSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUSInt128, cg_unUSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUInt40396, cg_unUIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUDInt690586453, cg_unUDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abULInt3544923647067170873, cg_unULIntSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#endif
 #ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
 #endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
@@ -327,26 +301,18 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(&cg_abBoolFalse, cg_unBoolSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWord40396, cg_unWordSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLWord4294967296, cg_unLWordSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUSInt128, cg_unUSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUInt40396, cg_unUIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUDInt690586453, cg_unUDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abULInt3544923647067170873, cg_unULIntSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#endif
 #ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
 #endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
@@ -356,7 +322,6 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abArrayStringEmptyHalloWorld, cg_unString2SerSize)));
   }
 
-#ifdef FORTE_USE_64BIT_DATATYPES
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_LWORD){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdLWORD };
     CDeserTestMockCommFB nTestFB(1, anType);
@@ -403,20 +368,14 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUSInt128, cg_unUSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUInt40396, cg_unUIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUDInt690586453, cg_unUDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abULInt3544923647067170873, cg_unULIntSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#endif
 #ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
 #endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
@@ -425,7 +384,6 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abArraySINTm90_90_127_0, cg_unSINT4SerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abArrayStringEmptyHalloWorld, cg_unString2SerSize)));
   }
-#endif
 
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_USINT){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdUSINT };
@@ -459,25 +417,17 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWord40396, cg_unWordSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDWord690586453, cg_unDWordSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLWord4294967296, cg_unLWordSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUInt40396, cg_unUIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUDInt690586453, cg_unUDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abULInt3544923647067170873, cg_unULIntSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#endif
 #ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
 #endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
@@ -523,25 +473,17 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWord40396, cg_unWordSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDWord690586453, cg_unDWordSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLWord4294967296, cg_unLWordSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUSInt128, cg_unUSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUDInt690586453, cg_unUDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abULInt3544923647067170873, cg_unULIntSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#endif
 #ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
 #endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
@@ -595,25 +537,17 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWord40396, cg_unWordSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDWord690586453, cg_unDWordSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLWord4294967296, cg_unLWordSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUSInt128, cg_unUSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUInt40396, cg_unUIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abULInt3544923647067170873, cg_unULIntSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#endif
 #ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
 #endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
@@ -623,7 +557,6 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abArrayStringEmptyHalloWorld, cg_unString2SerSize)));
   }
 
-#ifdef FORTE_USE_64BIT_DATATYPES
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_ULINT){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdULINT };
     CDeserTestMockCommFB nTestFB(1, anType);
@@ -667,23 +600,17 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWord40396, cg_unWordSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDWord690586453, cg_unDWordSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLWord4294967296, cg_unLWordSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUSInt128, cg_unUSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUInt40396, cg_unUIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUDInt690586453, cg_unUDIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#endif
 #ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
 #endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
@@ -692,7 +619,6 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abArraySINTm90_90_127_0, cg_unSINT4SerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abArrayStringEmptyHalloWorld, cg_unString2SerSize)));
   }
-#endif
 
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_SINT){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdSINT };
@@ -730,25 +656,17 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWord40396, cg_unWordSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDWord690586453, cg_unDWordSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLWord4294967296, cg_unLWordSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUSInt128, cg_unUSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUInt40396, cg_unUIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUDInt690586453, cg_unUDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abULInt3544923647067170873, cg_unULIntSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#endif
 #ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
 #endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
@@ -810,25 +728,17 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWord40396, cg_unWordSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDWord690586453, cg_unDWordSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLWord4294967296, cg_unLWordSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUSInt128, cg_unUSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUInt40396, cg_unUIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUDInt690586453, cg_unUDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abULInt3544923647067170873, cg_unULIntSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#endif
 #ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
 #endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
@@ -908,25 +818,17 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWord40396, cg_unWordSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDWord690586453, cg_unDWordSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLWord4294967296, cg_unLWordSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUSInt128, cg_unUSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUInt40396, cg_unUIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUDInt690586453, cg_unUDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abULInt3544923647067170873, cg_unULIntSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#endif
 #ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
 #endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
@@ -936,7 +838,6 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abArrayStringEmptyHalloWorld, cg_unString2SerSize)));
   }
 
-#ifdef FORTE_USE_64BIT_DATATYPES
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_LINT){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdLINT };
     CDeserTestMockCommFB nTestFB(1, anType);
@@ -1008,23 +909,17 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWord40396, cg_unWordSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDWord690586453, cg_unDWordSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLWord4294967296, cg_unLWordSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUSInt128, cg_unUSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUInt40396, cg_unUIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUDInt690586453, cg_unUDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abULInt3544923647067170873, cg_unULIntSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
 #ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
 #endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
@@ -1033,8 +928,6 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abArraySINTm90_90_127_0, cg_unSINT4SerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abArrayStringEmptyHalloWorld, cg_unString2SerSize)));
   }
-
-#endif
 
 #ifdef FORTE_USE_REAL_DATATYPE
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_REAL){
@@ -1058,6 +951,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abReal36_0, cg_unRealSerSize));
     BOOST_CHECK_EQUAL(36.0f, nVal);
   }
+#endif
 
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_REAL){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdREAL };
@@ -1068,25 +962,17 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWord40396, cg_unWordSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDWord690586453, cg_unDWordSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLWord4294967296, cg_unLWordSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUSInt128, cg_unUSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUInt40396, cg_unUIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUDInt690586453, cg_unUDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abULInt3544923647067170873, cg_unULIntSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#endif
 #ifdef FORTE_USE_REAL_DATATYPE
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
 #endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
@@ -1095,8 +981,6 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abArraySINTm90_90_127_0, cg_unSINT4SerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abArrayStringEmptyHalloWorld, cg_unString2SerSize)));
   }
-
-#ifdef FORTE_USE_64BIT_DATATYPES
 
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_LREAL){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdLREAL };
@@ -1129,21 +1013,15 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWord40396, cg_unWordSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDWord690586453, cg_unDWordSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLWord4294967296, cg_unLWordSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUSInt128, cg_unUSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUInt40396, cg_unUIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUDInt690586453, cg_unUDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abULInt3544923647067170873, cg_unULIntSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#endif
 #ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
 #endif
@@ -1154,8 +1032,6 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abArraySINTm90_90_127_0, cg_unSINT4SerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abArrayStringEmptyHalloWorld, cg_unString2SerSize)));
   }
-#endif
-#endif
 
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_STRING){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdSTRING };
@@ -1180,26 +1056,18 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWord40396, cg_unWordSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDWord690586453, cg_unDWordSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLWord4294967296, cg_unLWordSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUSInt128, cg_unUSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUInt40396, cg_unUIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUDInt690586453, cg_unUDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abULInt3544923647067170873, cg_unULIntSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#endif
 #ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
 #endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));
@@ -1235,26 +1103,18 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWord40396, cg_unWordSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDWord690586453, cg_unDWordSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLWord4294967296, cg_unLWordSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUSInt128, cg_unUSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUInt40396, cg_unUIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUDInt690586453, cg_unUDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abULInt3544923647067170873, cg_unULIntSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#endif
 #ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
 #endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));
@@ -1291,26 +1151,18 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWord40396, cg_unWordSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDWord690586453, cg_unDWordSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLWord4294967296, cg_unLWordSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUSInt128, cg_unUSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUInt40396, cg_unUIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUDInt690586453, cg_unUDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abULInt3544923647067170873, cg_unULIntSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#endif
 #ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
 #endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
@@ -1452,26 +1304,18 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWord40396, cg_unWordSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDWord690586453, cg_unDWordSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLWord4294967296, cg_unLWordSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUSInt128, cg_unUSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUInt40396, cg_unUIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUDInt690586453, cg_unUDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abULInt3544923647067170873, cg_unULIntSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#endif
 #ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
 #endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
@@ -1489,26 +1333,18 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWord40396, cg_unWordSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDWord690586453, cg_unDWordSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLWord4294967296, cg_unLWordSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUSInt128, cg_unUSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUInt40396, cg_unUIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUDInt690586453, cg_unUDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abULInt3544923647067170873, cg_unULIntSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#endif
 #ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
 #endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
@@ -1526,26 +1362,18 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abByte128, cg_unByteSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWord40396, cg_unWordSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDWord690586453, cg_unDWordSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLWord4294967296, cg_unLWordSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUSInt128, cg_unUSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUInt40396, cg_unUIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abUDInt690586453, cg_unUDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abULInt3544923647067170873, cg_unULIntSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#endif
 #ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
-#ifdef FORTE_USE_64BIT_DATATYPES
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
 #endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));

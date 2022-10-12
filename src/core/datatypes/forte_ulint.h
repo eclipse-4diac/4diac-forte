@@ -23,7 +23,6 @@
 #include "forte_usint.h"
 #include <limits>
 
-#ifdef FORTE_USE_64BIT_DATATYPES
 
 /*!\ingroup COREDTS CIEC_ULINT represents the ulint data type according to IEC 61131.
  *  @author mw & az
@@ -98,5 +97,4 @@ class CIEC_ULINT : public CIEC_ANY_INT{
     }
 };
 
-#endif
 #endif /*_FORTE_ULINT_H_*/

@@ -43,12 +43,9 @@ namespace forte {
 
       unsigned long int strtoul(const char *nptr, char **endptr, int base);
 
-#ifdef FORTE_USE_64BIT_DATATYPES
       long long int strtoll(const char *nptr, char **endptr, int base);
 
       unsigned long long int strtoull(const char *nptr, char **endptr, int base);
-#endif
-
 
       const char scXMLEscapedCharacters[] = { '"', '\'', '&', '<', '>'};
 

@@ -27,8 +27,6 @@
 #include "forte_usint.h"
 #include <limits>
 
-#ifdef FORTE_USE_64BIT_DATATYPES
-
 /*!\ingroup COREDTS CIEC_LINT represents the dint data type according to IEC 61131.
  */
 class CIEC_LINT : public CIEC_ANY_INT{
@@ -142,5 +140,4 @@ class CIEC_LINT : public CIEC_ANY_INT{
     }
 };
 
-#endif
 #endif /*_FORTE_LINT_H_*/

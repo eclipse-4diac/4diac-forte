@@ -39,11 +39,9 @@ inline const CIEC_UDINT func_DWORD_BCD_TO_UDINT(const CIEC_DWORD &paVal) {
       + func_WORD_BCD_TO_UINT(CIEC_WORD(static_cast<TForteWord>(paVal & 0xffff)))));
 }
 
-#ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_ULINT func_LWORD_BCD_TO_ULINT(const CIEC_LWORD &paVal){
   return CIEC_ULINT(static_cast<TForteUInt64>(func_DWORD_BCD_TO_UDINT(CIEC_DWORD(static_cast<TForteDWord>(paVal >> 32))) * 100000000 + func_DWORD_BCD_TO_UDINT(CIEC_DWORD(static_cast<TForteDWord>(paVal & 0xffffffff)))));
 }
-#endif
 
 //********************************************************************************************
 //   **_TO_BCD_*  functions
@@ -64,11 +62,9 @@ inline const CIEC_DWORD func_UDINT_TO_BCD_DWORD(const CIEC_UDINT &paVal) {
       + static_cast<TForteDWord>(func_UINT_TO_BCD_WORD(CIEC_UINT(static_cast<TForteUInt16>(paVal % 10000))))));
 }
 
-#ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LWORD func_ULINT_TO_BCD_LWORD(const CIEC_ULINT &paVal){
   return CIEC_LWORD(static_cast<TForteLWord>((static_cast<TForteLWord>(func_UDINT_TO_BCD_DWORD(CIEC_UDINT(static_cast<TForteUInt32>(paVal / 100000000)))) << 32)
    + static_cast<TForteLWord>(func_UDINT_TO_BCD_DWORD(CIEC_UDINT(static_cast<TForteUInt32>(paVal % 100000000))))));
 }
-#endif
 
 #endif /* SRC_CORE_DATATYPES_CONVERT_BCDCONVERTFUNCTIONS_H_ */

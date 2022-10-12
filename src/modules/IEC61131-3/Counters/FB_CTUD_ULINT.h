@@ -15,8 +15,6 @@
 
 #include <funcbloc.h>
 
-#ifdef FORTE_USE_64BIT_DATATYPES
-
 class FB_CTUD_ULINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FB_CTUD_ULINT)
 
@@ -71,6 +69,4 @@ public:
 
 };
 
-#endif
-
-#endif //close the ifdef sequence from the beginning of the file
+#endif /*_FB_CTUD_ULINT_H_*/

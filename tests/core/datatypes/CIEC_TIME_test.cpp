@@ -21,11 +21,7 @@ BOOST_AUTO_TEST_CASE(Type_test)
   //check type information
   BOOST_CHECK_EQUAL(nTest.getDataTypeID(), CIEC_ANY::e_TIME);
   //check operator bool data type size
-#ifdef FORTE_USE_64BIT_DATATYPES
   BOOST_CHECK_EQUAL(sizeof(nTest.operator TForteInt64()), sizeof(TForteInt64));
-#else
-  BOOST_CHECK_EQUAL(sizeof(nTest.operator TForteInt32()), sizeof(TForteInt32));
-#endif
 }
 
 BOOST_AUTO_TEST_CASE(Operator_test)
@@ -36,7 +32,6 @@ BOOST_AUTO_TEST_CASE(Operator_test)
   //check if data type is initialized with value of zero
   BOOST_CHECK_EQUAL(nTest1,0);
 
-#ifdef FORTE_USE_64BIT_DATATYPES
   nTest1 = CIEC_TIME(std::numeric_limits<TForteInt64>::min());
   nTest2 = nTest1;
   BOOST_CHECK_EQUAL(nTest1, std::numeric_limits<TForteInt64>::min());
@@ -46,7 +41,6 @@ BOOST_AUTO_TEST_CASE(Operator_test)
   nTest2 = nTest1;
   BOOST_CHECK_EQUAL(nTest1, std::numeric_limits<TForteInt64>::max());
   BOOST_CHECK_EQUAL(nTest2, std::numeric_limits<TForteInt64>::max());
-#endif
 
   nTest1 = CIEC_TIME(std::numeric_limits<TForteInt32>::min());
   nTest2 = nTest1;
@@ -78,30 +72,17 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   //check cast operator
   nTest = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
 
-#ifdef FORTE_USE_64BIT_DATATYPES
   BOOST_CHECK_EQUAL(nTest.operator TForteInt64(), 0);
-#else
-  BOOST_CHECK_EQUAL(nTest.operator TForteInt32(), 0);
-#endif
 
   nTest = CIEC_TIME(std::numeric_limits<TForteInt32>::min());
-#ifdef FORTE_USE_64BIT_DATATYPES
   BOOST_CHECK_EQUAL(nTest.operator TForteInt64(), std::numeric_limits<TForteInt32>::min());
-#else
-  BOOST_CHECK_EQUAL(nTest.operator TForteInt32(), std::numeric_limits<TForteInt32>::min());
-#endif
+
   nTest = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(-21654147L));
-#ifdef FORTE_USE_64BIT_DATATYPES
   BOOST_CHECK_EQUAL(nTest.operator TForteInt64(), -21654147L);
-#else
-  BOOST_CHECK_EQUAL(nTest.operator TForteInt32(), -21654147L);
-#endif
+
   nTest = CIEC_TIME(std::numeric_limits<TForteInt32>::max());
-#ifdef FORTE_USE_64BIT_DATATYPES
   BOOST_CHECK_EQUAL(nTest.operator TForteInt64(), std::numeric_limits<TForteInt32>::max());
-#else
-  BOOST_CHECK_EQUAL(nTest.operator TForteInt32(), std::numeric_limits<TForteInt32>::max());
-#endif
+
   //check toString and fromString
   strcpy(cBuffer, "");
 

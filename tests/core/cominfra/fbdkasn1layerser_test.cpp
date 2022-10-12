@@ -43,15 +43,13 @@
 
 #include "../../../src/core/datatypes/forte_array.h"
 
-#ifdef FORTE_USE_64BIT_DATATYPES
-  #include "../../../src/core/datatypes/forte_lword.h"
-  #include "../../../src/core/datatypes/forte_lint.h"
-  #include "../../../src/core/datatypes/forte_ulint.h"
+#include "../../../src/core/datatypes/forte_lword.h"
+#include "../../../src/core/datatypes/forte_lint.h"
+#include "../../../src/core/datatypes/forte_ulint.h"
 
 #ifdef FORTE_USE_REAL_DATATYPE
   #include "../../../src/core/datatypes/forte_lreal.h"
 #endif //FORTE_USE_LREAL_DATATYPE
-#endif //FORTE_USE_64BIT_DATATYPES
 
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "fbdkasn1layerser_test_gen.cpp"
@@ -260,8 +258,6 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_DWORD){
   BOOST_CHECK(std::equal(cg_abDWord690586453, cg_abDWord690586453 + cg_unDWordSerSize, ((TForteByte *)nTestee.getSendDataPtr())));
 }
 
-
-#ifdef FORTE_USE_64BIT_DATATYPES
 //LWORD
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_LWORD){
   CFBDKASN1ComLayerTestMock nTestee;
@@ -318,7 +314,6 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_LWORD){
   BOOST_CHECK_EQUAL(nTestee.getSendDataSize(), cg_unLWordSerSize);
   BOOST_CHECK(std::equal(cg_abLWord18446744073709551615, cg_abLWord18446744073709551615 + cg_unLWordSerSize, ((TForteByte *)nTestee.getSendDataPtr())));
 }
-#endif
 
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_USINT){
   CFBDKASN1ComLayerTestMock nTestee;
@@ -435,8 +430,6 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_UDINT){
   BOOST_CHECK(std::equal(cg_abUDInt690586453, cg_abUDInt690586453 + cg_unUDIntSerSize, ((TForteByte *)nTestee.getSendDataPtr())));
 }
 
-
-#ifdef FORTE_USE_64BIT_DATATYPES
 //LWORD
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_ULINT){
   CFBDKASN1ComLayerTestMock nTestee;
@@ -495,7 +488,6 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_ULINT){
   BOOST_CHECK_EQUAL(nTestee.getSendDataSize(), cg_unULIntSerSize);
   BOOST_CHECK(std::equal(cg_abULInt18446744073709551615, cg_abULInt18446744073709551615 + cg_unULIntSerSize, ((TForteByte *)nTestee.getSendDataPtr())));
 }
-#endif
 
 
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_SINT){
@@ -666,7 +658,6 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_DINT){
   BOOST_CHECK(std::equal(cg_abDInt800058586, cg_abDInt800058586 + cg_unDIntSerSize, ((TForteByte *)nTestee.getSendDataPtr())));
 }
 
-#ifdef FORTE_USE_64BIT_DATATYPES
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_LINT){
   CFBDKASN1ComLayerTestMock nTestee;
   CIEC_LINT nVal;
@@ -762,11 +753,7 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_LINT){
    BOOST_CHECK_EQUAL(nTestee.getSendDataSize(), cg_unLIntSerSize);
    BOOST_CHECK(std::equal(cg_abLInt800058586, cg_abLInt800058586 + cg_unLIntSerSize, ((TForteByte *)nTestee.getSendDataPtr())));
 }
-
-#endif
-
 #ifdef FORTE_USE_REAL_DATATYPE
-
 
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_REAL){
   CFBDKASN1ComLayerTestMock nTestee;
@@ -803,7 +790,6 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_REAL){
   BOOST_CHECK(std::equal(cg_abReal36_0, cg_abReal36_0 + cg_unRealSerSize, ((TForteByte *)nTestee.getSendDataPtr())));
 }
 
-#ifdef FORTE_USE_64BIT_DATATYPES
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_LREAL){
   CFBDKASN1ComLayerTestMock nTestee;
   CIEC_LREAL nVal;
@@ -838,8 +824,6 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_LREAL){
   BOOST_CHECK_EQUAL(nTestee.getSendDataSize(), cg_unLRealSerSize);
   BOOST_CHECK(std::equal(cg_abLReal36_0, cg_abLReal36_0 + cg_unLRealSerSize, ((TForteByte *)nTestee.getSendDataPtr())));
 }
-
-#endif
 #endif
 
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_STRING){

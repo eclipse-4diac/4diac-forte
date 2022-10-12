@@ -63,62 +63,52 @@ const T func_ABS(const T &pa_roIN) {
     return CIEC_REAL(sqrtf(pa_roIN));
   }
 
-# ifdef FORTE_USE_64BIT_DATATYPES
   inline const CIEC_LREAL func_SQRT(const CIEC_LREAL &pa_roIN){
     return CIEC_LREAL(sqrt(pa_roIN));
   }
-# endif //FORTE_USE_64BIT_DATATYPES
 
 #endif //#ifdef FORTE_USE_REAL_DATATYPE
 
 #ifdef FORTE_USE_REAL_DATATYPE
   inline const CIEC_REAL func_LN(const CIEC_REAL &pa_roIN){
-      return CIEC_REAL(logf(pa_roIN));
-    }
+    return CIEC_REAL(logf(pa_roIN));
+  }
 
-# ifdef FORTE_USE_64BIT_DATATYPES
-    inline const CIEC_LREAL func_LN(const CIEC_LREAL &pa_roIN){
-      return CIEC_LREAL(log(pa_roIN));
-    }
-# endif //FORTE_USE_64BIT_DATATYPES
+  inline const CIEC_LREAL func_LN(const CIEC_LREAL &pa_roIN){
+    return CIEC_LREAL(log(pa_roIN));
+  }
 
 #endif //#ifdef FORTE_USE_REAL_DATATYPE
 
 #ifdef FORTE_USE_REAL_DATATYPE
   inline const CIEC_REAL func_LOG(const CIEC_REAL &pa_roIN){
-      return CIEC_REAL(log10f(pa_roIN));
-    }
+    return CIEC_REAL(log10f(pa_roIN));
+  }
 
-# ifdef FORTE_USE_64BIT_DATATYPES
-    inline const CIEC_LREAL func_LOG(const CIEC_LREAL &pa_roIN){
-      return CIEC_LREAL(log10(pa_roIN));
-    }
-# endif //FORTE_USE_64BIT_DATATYPES
+  inline const CIEC_LREAL func_LOG(const CIEC_LREAL &pa_roIN){
+    return CIEC_LREAL(log10(pa_roIN));
+  }
 #endif //#ifdef FORTE_USE_REAL_DATATYPE
 
 #ifdef FORTE_USE_REAL_DATATYPE
   inline const CIEC_REAL func_SIN(const CIEC_REAL &pa_roIN){
-      return CIEC_REAL(sinf(pa_roIN));
-    }
+    return CIEC_REAL(sinf(pa_roIN));
+  }
 
-# ifdef FORTE_USE_64BIT_DATATYPES
-    inline const CIEC_LREAL func_SIN(const CIEC_LREAL &pa_roIN){
-      return CIEC_LREAL(sin(pa_roIN));
-    }
-# endif //FORTE_USE_64BIT_DATATYPES
+  inline const CIEC_LREAL func_SIN(const CIEC_LREAL &pa_roIN){
+    return CIEC_LREAL(sin(pa_roIN));
+  }
 
 #endif //#ifdef FORTE_USE_REAL_DATATYPE
 
 #ifdef FORTE_USE_REAL_DATATYPE
   inline const CIEC_REAL func_COS(const CIEC_REAL &pa_roIN){
-      return CIEC_REAL(cosf(pa_roIN));
-    }
+    return CIEC_REAL(cosf(pa_roIN));
+  }
 
-# ifdef FORTE_USE_64BIT_DATATYPES
-    inline const CIEC_LREAL func_COS(const CIEC_LREAL &pa_roIN){
-      return CIEC_LREAL(cos(pa_roIN));
-    }
-# endif //FORTE_USE_64BIT_DATATYPES
+  inline const CIEC_LREAL func_COS(const CIEC_LREAL &pa_roIN){
+    return CIEC_LREAL(cos(pa_roIN));
+  }
 #endif //#ifdef FORTE_USE_REAL_DATATYPE
 
 #ifdef FORTE_USE_REAL_DATATYPE
@@ -126,11 +116,11 @@ const T func_ABS(const T &pa_roIN) {
       return CIEC_REAL(tanf(pa_roIN));
     }
 
-# ifdef FORTE_USE_64BIT_DATATYPES
-    inline const CIEC_LREAL func_TAN(const CIEC_LREAL &pa_roIN){
-      return CIEC_LREAL(tan(pa_roIN));
-    }
-# endif //FORTE_USE_64BIT_DATATYPES
+
+  inline const CIEC_LREAL func_TAN(const CIEC_LREAL &pa_roIN){
+    return CIEC_LREAL(tan(pa_roIN));
+  }
+
 #endif //#ifdef FORTE_USE_REAL_DATATYPE
 
 #ifdef FORTE_USE_REAL_DATATYPE
@@ -138,24 +128,23 @@ const T func_ABS(const T &pa_roIN) {
       return CIEC_REAL(asinf(pa_roIN));
     }
 
-# ifdef FORTE_USE_64BIT_DATATYPES
-    inline const CIEC_LREAL func_ASIN(const CIEC_LREAL &pa_roIN){
-      return CIEC_LREAL(asin(pa_roIN));
-    }
-# endif //FORTE_USE_64BIT_DATATYPES
+
+  inline const CIEC_LREAL func_ASIN(const CIEC_LREAL &pa_roIN){
+    return CIEC_LREAL(asin(pa_roIN));
+  }
+
 
 #endif //#ifdef FORTE_USE_REAL_DATATYPE
 
 #ifdef FORTE_USE_REAL_DATATYPE
   inline const CIEC_REAL func_ACOS(const CIEC_REAL &pa_roIN){
-      return CIEC_REAL(acosf(pa_roIN));
-    }
+    return CIEC_REAL(acosf(pa_roIN));
+  }
 
-# ifdef FORTE_USE_64BIT_DATATYPES
-    inline const CIEC_LREAL func_ACOS(const CIEC_LREAL &pa_roIN){
-      return CIEC_LREAL(acos(pa_roIN));
-    }
-# endif //FORTE_USE_64BIT_DATATYPES
+  inline const CIEC_LREAL func_ACOS(const CIEC_LREAL &pa_roIN){
+    return CIEC_LREAL(acos(pa_roIN));
+  }
+
 #endif //#ifdef FORTE_USE_REAL_DATATYPE
 
 #ifdef FORTE_USE_REAL_DATATYPE
@@ -163,11 +152,9 @@ const T func_ABS(const T &pa_roIN) {
       return CIEC_REAL(atanf(pa_roIN));
     }
 
-# ifdef FORTE_USE_64BIT_DATATYPES
-    inline const CIEC_LREAL func_ATAN(const CIEC_LREAL &pa_roIN){
-      return CIEC_LREAL(atan(pa_roIN));
-    }
-# endif //FORTE_USE_64BIT_DATATYPES
+  inline const CIEC_LREAL func_ATAN(const CIEC_LREAL &pa_roIN){
+    return CIEC_LREAL(atan(pa_roIN));
+  }
 #endif //#ifdef FORTE_USE_REAL_DATATYPE
 
 #ifdef FORTE_USE_REAL_DATATYPE
@@ -175,11 +162,9 @@ const T func_ABS(const T &pa_roIN) {
       return CIEC_REAL(expf(pa_roIN));
     }
 
-# ifdef FORTE_USE_64BIT_DATATYPES
-    inline const CIEC_LREAL func_EXP(const CIEC_LREAL &pa_roIN){
-      return CIEC_LREAL(exp(pa_roIN));
-    }
-# endif //FORTE_USE_64BIT_DATATYPES
+  inline const CIEC_LREAL func_EXP(const CIEC_LREAL &pa_roIN){
+    return CIEC_LREAL(exp(pa_roIN));
+  }
 #endif //#ifdef FORTE_USE_REAL_DATATYPE
 
 template<typename T> const T func_ROL(const T &paIn, const CIEC_ANY_INT &paN) {
@@ -972,16 +957,9 @@ template<typename T> const CIEC_LTIME func_DIV_LTIME(const CIEC_LTIME &paIN1, co
   }
 }
 
-
-#ifdef FORTE_USE_64BIT_DATATYPES
 template<typename T> CIEC_ULINT func_LEN(const T& paVal){
   return CIEC_ULINT(paVal.length());
 }
-#else
-template<typename T> CIEC_UDINT func_LEN(const T &paVal) {
-  return CIEC_UDINT(paVal.length());
-}
-#endif
 
 template<typename T> const T func_LEFT(const T &paIn, const CIEC_ANY_INT &paL) {
   if(true == paL.isSigned() && 0 > paL.getSignedValue()) {

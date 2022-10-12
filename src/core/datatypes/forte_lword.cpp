@@ -13,10 +13,6 @@
  *******************************************************************************/
 #include "forte_lword.h"
 
-#ifdef FORTE_USE_64BIT_DATATYPES
-
 DEFINE_FIRMWARE_DATATYPE(LWORD, g_nStringIdLWORD)
 
 const CIEC_LWORD::TValueType CIEC_LWORD::scm_nMaxVal = std::numeric_limits<CIEC_LWORD::TValueType>::max();
-
-#endif

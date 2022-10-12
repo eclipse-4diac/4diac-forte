@@ -10,7 +10,6 @@
  *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
  *   Martin Melik Merkumians - Adds cast template tests
  *******************************************************************************/
-#ifdef FORTE_USE_64BIT_DATATYPES
 #include <boost/test/unit_test.hpp>
 
 #ifdef FORTE_USE_REAL_DATATYPE
@@ -38,11 +37,9 @@
 //time
 #include "../../../src/core/datatypes/forte_time.h"
 
-
-
-  #include "../../../src/core/datatypes/forte_lword.h"
-  #include "../../../src/core/datatypes/forte_lint.h"
-  #include "../../../src/core/datatypes/forte_ulint.h"
+#include "../../../src/core/datatypes/forte_lword.h"
+#include "../../../src/core/datatypes/forte_lint.h"
+#include "../../../src/core/datatypes/forte_ulint.h"
 
 #ifdef FORTE_USE_REAL_DATATYPE
   #include "../../../src/core/datatypes/forte_lreal.h"
@@ -444,4 +441,3 @@ BOOST_AUTO_TEST_CASE(Explict_cast_operator_to_ULINT)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-#endif //FORTE_USE_64BIT_DATATYPES

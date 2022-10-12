@@ -150,8 +150,6 @@ const CIEC_ULINT func_LREAL_TRUNC_ULINT(const CIEC_LREAL &paIN) {
 }
 #endif
 
-#ifdef FORTE_USE_64BIT_DATATYPES
-
 const CIEC_TIME func_ADD_TIME(const CIEC_TIME &paIN1, const CIEC_TIME &paIN2) {
   return func_ADD(paIN1, paIN2);
 }
@@ -282,5 +280,3 @@ const CIEC_TIME func_NOW_MONOTONIC() {
 const CIEC_DATE_AND_TIME func_NOW() {
   return CIEC_DATE_AND_TIME(forte_time() * 1000ULL);
 }
-
-#endif

@@ -10,7 +10,6 @@
  *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
  *   Martin Melik Merkumians - Adds cast template tests
  *******************************************************************************/
-#ifdef FORTE_USE_64BIT_DATATYPES
 #include <boost/test/unit_test.hpp>
 
 #ifdef FORTE_USE_REAL_DATATYPE
@@ -342,7 +341,6 @@ BOOST_AUTO_TEST_CASE(CASTS_LWORD_to_Time)
   BOOST_CHECK_EQUAL(nTestLWord18446744073709551615, 18446744073709551615ULL);
 
 //toTime
-#ifdef FORTE_USE_64BIT_DATATYPES
   nTestTime.setValue(nTestLWord0);
   BOOST_CHECK_EQUAL(0, nTestTime);
   nTestTime.setValue(nTestLWord1);
@@ -351,16 +349,6 @@ BOOST_AUTO_TEST_CASE(CASTS_LWORD_to_Time)
   BOOST_CHECK_EQUAL(4294967296LL, nTestTime);
   nTestTime.setValue(nTestLWord18446744073709551615);
   BOOST_CHECK_EQUAL(-1LL, nTestTime);
-#else
-  nTestTime.setValue(nTestLWord0);
-  BOOST_CHECK_EQUAL(0, nTestTime);
-  nTestTime.setValue(nTestLWord1);
-  BOOST_CHECK_EQUAL(1, nTestTime);
-  nTestTime.setValue(nTestLWord4294967296);
-  BOOST_CHECK_EQUAL(0, nTestTime);
-  nTestTime.setValue(nTestLWord18446744073709551615);
-  BOOST_CHECK_EQUAL(-1, nTestTime);
-#endif
 }
 
 
@@ -449,5 +437,3 @@ BOOST_AUTO_TEST_CASE(Explict_cast_operator_to_USINT)
   nResult = CIEC_ANY::cast<CIEC_LWORD>(bBool);
   BOOST_TEST(nResult == true);
 }
-
-#endif //FORTE_USE_64BIT_DATATYPES

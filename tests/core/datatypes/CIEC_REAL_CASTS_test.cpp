@@ -37,12 +37,12 @@
 #include "../../../src/core/datatypes/forte_time.h"
 
 
-#ifdef FORTE_USE_64BIT_DATATYPES
-  #include "../../../src/core/datatypes/forte_lword.h"
-  #include "../../../src/core/datatypes/forte_lint.h"
-  #include "../../../src/core/datatypes/forte_ulint.h"
-  #include "../../../src/core/datatypes/forte_lreal.h"
-#endif //FORTE_USE_64BIT_DATATYPES
+#include "../../../src/core/datatypes/forte_lword.h"
+#include "../../../src/core/datatypes/forte_lint.h"
+#include "../../../src/core/datatypes/forte_ulint.h"
+#ifdef FORTE_USE_REAL_DATATYPE
+#include "../../../src/core/datatypes/forte_lreal.h"
+#endif // FORTE_USE_REAL_DATATYPE
 
 using namespace boost::unit_test;
 
@@ -101,9 +101,7 @@ BOOST_AUTO_TEST_CASE(CASTS_REAL_to_BITDTs)
   CIEC_BYTE nTestByte;
   CIEC_WORD nTestWord;
   CIEC_DWORD nTestDWord;
-#ifdef FORTE_USE_64BIT_DATATYPES
   CIEC_LWORD nTestLWord;
-#endif //FORTE_USE_64BIT_DATATYPES
 
   CIEC_REAL nTestReal0;
   CIEC_REAL nTestReal1;
@@ -168,7 +166,6 @@ BOOST_AUTO_TEST_CASE(CASTS_REAL_to_BITDTs)
   CIEC_ANY::specialCast(nTestRealm6_2587em4, nTestDWord);
   BOOST_CHECK_EQUAL(nTestDWord, 0xba24116d);
 
-#ifdef FORTE_USE_64BIT_DATATYPES
 //toLWord
   CIEC_ANY::specialCast(nTestReal0, nTestLWord);
   BOOST_CHECK_EQUAL(nTestLWord, 0ULL);
@@ -178,7 +175,6 @@ BOOST_AUTO_TEST_CASE(CASTS_REAL_to_BITDTs)
   BOOST_CHECK_EQUAL(nTestLWord, 0x42100000);
   CIEC_ANY::specialCast(nTestRealm6_2587em4, nTestLWord);
   BOOST_CHECK_EQUAL(nTestLWord, 0xba24116d);
-#endif
 }
 
 BOOST_AUTO_TEST_CASE(CASTS_REAL_to_INTS)
@@ -188,10 +184,8 @@ BOOST_AUTO_TEST_CASE(CASTS_REAL_to_INTS)
   CIEC_UINT nTestUInt;
   CIEC_DINT nTestDInt;
   CIEC_UDINT nTestUDInt;
-#ifdef FORTE_USE_64BIT_DATATYPES
   CIEC_LINT nTestLInt;
   CIEC_ULINT nTestULInt;
-#endif //FORTE_USE_64BIT_DATATYPES
 
   CIEC_REAL nTestReal0;
   CIEC_REAL nTestReal1;
@@ -262,7 +256,6 @@ BOOST_AUTO_TEST_CASE(CASTS_REAL_to_INTS)
   CIEC_ANY::specialCast(nTestReal36, nTestUDInt);
   BOOST_CHECK_EQUAL(nTestUDInt, 36UL);
 
-#ifdef FORTE_USE_64BIT_DATATYPES
 //toLINT
   CIEC_ANY::specialCast(nTestReal0, nTestLInt);
   BOOST_CHECK_EQUAL(nTestLInt, 0LL);
@@ -278,7 +271,6 @@ BOOST_AUTO_TEST_CASE(CASTS_REAL_to_INTS)
   BOOST_CHECK_EQUAL(nTestULInt, 1ULL);
   CIEC_ANY::specialCast(nTestReal36, nTestULInt);
   BOOST_CHECK_EQUAL(nTestULInt, 36ULL);
-#endif
 }
 
 BOOST_AUTO_TEST_CASE(CASTS_REAL_to_LREAL)
@@ -312,9 +304,6 @@ BOOST_AUTO_TEST_CASE(CASTS_REAL_to_LREAL)
   BOOST_CHECK_EQUAL(1.0e-37f, nTestReal1_0em37);
   BOOST_CHECK_EQUAL(36.0f, nTestReal36);
 
-
-
-#ifdef FORTE_USE_64BIT_DATATYPES
   CIEC_LREAL nTestLReal;
 
 //toLREAL
@@ -338,9 +327,6 @@ BOOST_AUTO_TEST_CASE(CASTS_REAL_to_LREAL)
   BOOST_CHECK_EQUAL(((double)1.0e-37f), nTestLReal);
   CIEC_ANY::specialCast(nTestReal36, nTestLReal);
   BOOST_CHECK_EQUAL(((double)36.0f), nTestLReal);
-
-#endif //FORTE_USE_64BIT_DATATYPES
-
 }
 
 BOOST_AUTO_TEST_CASE(CASTS_REAL_to_TIME)

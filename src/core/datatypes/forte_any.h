@@ -62,13 +62,8 @@ class CIEC_ANY {
     // ordering of sizes is according to EDataTypeID, that the ID can be used to get the proper value, +1 for \0
     const static TForteByte csmStringBufferSize[];
 
-#ifdef FORTE_USE_64BIT_DATATYPES
     typedef TForteUInt64 TLargestUIntValueType;
     typedef TForteInt64 TLargestIntValueType;
-#else
-    typedef TForteUInt32 TLargestUIntValueType;
-    typedef TForteInt32 TLargestIntValueType;
-#endif
 
     /* the following functions have to be added by hand as they the default DECLARE_FIRMWARE_DATATYPE and DEFINE_FIRMWARE_DATATYPE
      * does not work here.
@@ -297,17 +292,13 @@ class CIEC_ANY {
       mAnyData.mDFloat = TForteDFloat(src);
     }
 #endif //#ifdef FORTE_USE_LREAL_DATATYPE
+  void setTUINT64(TForteUInt64 src){ //also used for LWORD
+    mAnyData.mLargestUInt = TLargestUIntValueType(src);
+  }
 
-#ifdef FORTE_USE_64BIT_DATATYPES
-
-    void setTUINT64(TForteUInt64 src){ //also used for LWORD
-      mAnyData.mLargestUInt = TLargestUIntValueType(src);
-    }
-
-    void setTINT64(TForteInt64 src){
-      mAnyData.mLargestInt = TLargestIntValueType(src);
-    }
-#endif //#ifdef FORTE_USE_64BIT_DATATYPES
+  void setTINT64(TForteInt64 src){
+    mAnyData.mLargestInt = TLargestIntValueType(src);
+  }
 #ifdef FORTE_BIG_ENDIAN
     bool getTBOOL8() const{
       return (mAnyData.mLargestUInt != 0);
@@ -344,14 +335,13 @@ class CIEC_ANY {
       return static_cast<TForteWChar>(mAnyData.mLargestInt);
     }
 
-#ifdef FORTE_USE_64BIT_DATATYPES
     TForteUInt64 getTUINT64() const{ //also used for LWORD
       return (TForteUInt64)mAnyData.mLargestUInt;
     }
+
     TForteInt64 getTINT64() const{
       return (TForteInt64)mAnyData.mLargestInt;
     }
-#endif //#ifdef FORTE_USE_64BIT_DATATYPES
 #else
 #ifdef FORTE_LITTLE_ENDIAN
     bool getTBOOL8() const{
@@ -390,15 +380,12 @@ class CIEC_ANY {
       return mAnyData.mWChar16;
     }
 
-#ifdef FORTE_USE_64BIT_DATATYPES
     TForteUInt64 getTUINT64() const{ //also used for LWORD
       return mAnyData.mUInt64;
     }
     TForteInt64 getTINT64() const{
       return mAnyData.mInt64;
     }
-
-#endif //#ifdef FORTE_USE_64BIT_DATATYPES
 #else
 #error Endianess not defined!
 #endif //#ifdef FORTE_BIG_ENDIAN
@@ -480,13 +467,9 @@ class CIEC_ANY {
 #ifdef FORTE_USE_LREAL_DATATYPE
         TForteDFloat mDFloat;
 #endif //#ifdef FORTE_USE_LREAL_DATATYPE
-#ifdef FORTE_USE_64BIT_DATATYPES
         TForteInt64 mInt64;
         TForteUInt64 mUInt64;
         TForteByte mData[sizeof(TForteUInt64)]; //!< For data extraction in big endian machines
-#else
-        TForteByte mData[sizeof(TForteUInt32)]; //!< For data extraction in big endian machines
-#endif //#ifdef FORTE_USE_64BIT_DATATYPES
         TLargestUIntValueType mLargestUInt;
         TLargestIntValueType mLargestInt;
         /*! \brief A pointer to general data that can be used for data types needing other data than that contained in the union

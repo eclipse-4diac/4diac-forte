@@ -22,7 +22,6 @@
 //********************************************************************************************
 //   LWORD_TO_*  functions
 //********************************************************************************************
-#ifdef FORTE_USE_64BIT_DATATYPES
 
 inline const CIEC_DINT func_LWORD_TO_DINT(const CIEC_LWORD &paVal){
   return CIEC_ANY::cast<CIEC_DINT>(paVal);
@@ -87,9 +86,5 @@ inline const CIEC_WSTRING func_LWORD_TO_WSTRING(const CIEC_LWORD &paVal){
   return string;
 }
 #endif
-
-#endif
-
-
 
 #endif /* SRC_CORE_DATATYPES_CONVERT_LWORDTOCONVERTFUNCTIONS_H_ */

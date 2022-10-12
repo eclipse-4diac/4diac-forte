@@ -19,8 +19,6 @@
 
 #include "forte_any_date.h"
 
-#ifdef FORTE_USE_64BIT_DATATYPES
-
 /*!\ingroup COREDTS CIEC_DATE represents the time data types according to IEC 61131.
  */
 
@@ -83,7 +81,5 @@ class CIEC_DATE : public CIEC_ANY_DATE {
      */
     int toString(char* paValue, size_t paBufferSize) const override;
 };
-
-#endif /* #ifdef FORTE_USE_64BIT_DATATYPES */
 
 #endif /*_FORTE_DATE_H_*/

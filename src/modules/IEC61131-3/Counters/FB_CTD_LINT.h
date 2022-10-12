@@ -15,8 +15,6 @@
 
 #include <funcbloc.h>
 
-#ifdef FORTE_USE_64BIT_DATATYPES
-
 class FB_CTD_LINT: public CFunctionBlock{
   DECLARE_FIRMWARE_FB(FB_CTD_LINT)
 
@@ -64,7 +62,5 @@ public:
 
 };
 
-#endif
-
-#endif //close the ifdef sequence from the beginning of the file
+#endif /*_FB_CTD_LINT_H_*/
 

@@ -62,11 +62,7 @@ class FORTE_F_ROL : public CFunctionBlock {
 
   template<typename T> void calculateValue() {
     T oIn;
-#ifdef FORTE_USE_64BIT_DATATYPES
     CIEC_ULINT oN;
-#else //FORTE_USE_64BIT_DATATYPES
-    CIEC_UDINT oN;
-#endif //FORTE_USE_64BIT_DATATYPES
 
     oIn.saveAssign(st_IN());
     oN.saveAssign(N());

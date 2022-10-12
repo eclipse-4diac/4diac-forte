@@ -34,17 +34,13 @@ inline const CIEC_INT func_DWORD_TO_INT(const CIEC_DWORD &paVal) {
   return CIEC_ANY::cast<CIEC_INT>(paVal);
 }
 
-#ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LINT func_DWORD_TO_LINT(const CIEC_DWORD &paVal){
   return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
-#endif
 
-#ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LWORD func_DWORD_TO_LWORD(const CIEC_DWORD &paVal){
   return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
-#endif
 
 #ifdef FORTE_USE_REAL_DATATYPE
 inline const CIEC_REAL func_DWORD_TO_REAL(const CIEC_DWORD &paVal){
@@ -64,11 +60,9 @@ inline const CIEC_UINT func_DWORD_TO_UINT(const CIEC_DWORD &paVal) {
   return CIEC_ANY::cast<CIEC_UINT>(paVal);
 }
 
-#ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_ULINT func_DWORD_TO_ULINT(const CIEC_DWORD &paVal){
   return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
-#endif
 
 inline const CIEC_USINT func_DWORD_TO_USINT(const CIEC_DWORD &paVal) {
   return CIEC_ANY::cast<CIEC_USINT>(paVal);

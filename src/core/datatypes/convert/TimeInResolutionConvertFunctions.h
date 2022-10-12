@@ -19,8 +19,6 @@
 /*********************************************************************************************
  *   TIME_IN_<RESOLUTION>_TO_* functions - custom non-standard functions
  *********************************************************************************************/
-#ifdef FORTE_USE_64BIT_DATATYPES
-
 /**
  * @brief template function for converting TIME in seconds to ANY_NUM type
  *
@@ -235,7 +233,5 @@ inline const CIEC_LREAL func_TIME_IN_US_TO_LREAL(const CIEC_TIME &paValue) {
 inline const CIEC_LREAL func_TIME_IN_NS_TO_LREAL(const CIEC_TIME &paValue) {
   return func_TIME_IN_NS_TO<CIEC_LREAL>(paValue);
 }
-
-#endif /* FORTE_USE_64BIT_DATATYPES */
 
 #endif /* SRC_CORE_DATATYPES_CONVERT_TIMEINRESOLUTIONCONVERTFUNCTIONS_H_ */

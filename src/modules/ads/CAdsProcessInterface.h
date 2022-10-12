@@ -36,10 +36,8 @@ namespace forte {
         bool readWord();
         bool writeDWord();
         bool readDWord();
-#ifdef FORTE_USE_64BIT_DATATYPES
         bool writeLWord();
         bool readLWord();
-#endif /* FORTE_USE_64BIT_DATATYPES */
 
       private:
         std::string mFriendlyAdsServerName;

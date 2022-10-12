@@ -43,7 +43,6 @@ const TForteByte cg_abDWord65536[5] = {0x53, 0, 1, 0, 0};
 const TForteByte cg_abDWord4294967295[5] = {0x53, 0xFF, 0xFF, 0xFF, 0xFF};
 const TForteByte cg_abDWord690586453[5] = {0x53, 0x29, 0x29, 0x83, 0x55};
 
-#ifdef FORTE_USE_64BIT_DATATYPES
 //LWORD
 const unsigned int cg_unLWordSerSize = 9;
 const TForteByte cg_abLWord0[9] = {0x54, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -55,7 +54,6 @@ const TForteByte cg_abLWord4294967295[9] = {0x54, 0, 0, 0, 0, 0xFF, 0xFF, 0xFF, 
 const TForteByte cg_abLWord4294967296[9] = {0x54, 0, 0, 0, 1, 0, 0, 0, 0};
 const TForteByte cg_abLWord18446744073709551615[9] = {0x54, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 const TForteByte cg_abLWord3544923647067170873[9] =  {0x54, 0x31, 0x32, 0x19, 0x46, 0x73, 0x52, 0x28, 0x39};
-#endif
 
 //USINT
 const unsigned int cg_unUSIntSerSize = 2;
@@ -82,7 +80,6 @@ const TForteByte cg_abUDInt65536[5] = {0x48, 0, 1, 0, 0};
 const TForteByte cg_abUDInt4294967295[5] = {0x48, 0xFF, 0xFF, 0xFF, 0xFF};
 const TForteByte cg_abUDInt690586453[5] = {0x48, 0x29, 0x29, 0x83, 0x55};
 
-#ifdef FORTE_USE_64BIT_DATATYPES
 //ULINT
 const unsigned int cg_unULIntSerSize = 9;
 const TForteByte cg_abULInt0[9] = {0x49, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -94,8 +91,6 @@ const TForteByte cg_abULInt4294967295[9] = {0x49, 0, 0, 0, 0, 0xFF, 0xFF, 0xFF, 
 const TForteByte cg_abULInt4294967296[9] = {0x49, 0, 0, 0, 1, 0, 0, 0, 0};
 const TForteByte cg_abULInt18446744073709551615[9] = {0x49, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 const TForteByte cg_abULInt3544923647067170873[9] =  {0x49, 0x31, 0x32, 0x19, 0x46, 0x73, 0x52, 0x28, 0x39};
-#endif
-
 
 //SINT
 const unsigned int cg_unSIntSerSize = 2;
@@ -133,7 +128,6 @@ const TForteByte cg_abDInt2147483647[5] = {0x44, 0x7F, 0xFF, 0xFF, 0xFF};
 const TForteByte cg_abDInt800058586[5] = {0x44, 0x2F, 0xAF, 0xEC, 0xDA};
 const TForteByte cg_abDIntm800058586[5] = {0x44, 0xD0, 0x50, 0x13, 0x26};
 
-#ifdef FORTE_USE_64BIT_DATATYPES
 //LINT
 const unsigned int cg_unLIntSerSize = 9;
 const TForteByte cg_abLInt0[9] = {0x45, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -153,7 +147,6 @@ const TForteByte cg_abLIntm9223372036854775808[9] = {0x45, 0x80, 0, 0x0, 0x0, 0,
 const TForteByte cg_abLInt9223372036854775807[9] = {0x45, 0x7F, 0xFF, 0xFF, 0xFF, 0xff, 0xff, 0xff, 0xff};
 const TForteByte cg_abLInt800058586[9] = {0x45, 0, 0, 0, 0, 0x2F, 0xAF, 0xEC, 0xDA};
 const TForteByte cg_abLIntm800058586[9] = {0x45, 0xff, 0xff, 0xff, 0xff, 0xD0, 0x50, 0x13, 0x26};
-#endif
 
 #ifdef FORTE_USE_REAL_DATATYPE
 //REAL
@@ -164,7 +157,6 @@ const TForteByte cg_abRealm6_2587em4[5] = {0x4A, 0xba, 0x24, 0x11, 0x6d};
 const TForteByte cg_abReal1_0Em37[5] = {0x4A, 0x02, 0x08, 0x1c, 0xea};
 const TForteByte cg_abReal36_0[5] = {0x4A, 0x42, 0x10, 0x00, 0x00};
 
-#ifdef FORTE_USE_64BIT_DATATYPES
 //LREAL
 const unsigned int cg_unLRealSerSize = 9;
 const TForteByte cg_abLReal0[9] = {0x4B, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -172,7 +164,6 @@ const TForteByte cg_abLReal2_28743e6[9] = {0x4B, 0x41, 0x41, 0x73, 0xa3, 0x00, 0
 const TForteByte cg_abLRealm6_2587em4[9] = {0x4B, 0xbf, 0x44, 0x82, 0x2d, 0x97, 0x3c, 0xf2, 0xfb};
 const TForteByte cg_abLReal1_0Em37[9] = {0x4B, 0x38, 0x41, 0x03, 0x9d, 0x42, 0x8a, 0x8b, 0x8f};
 const TForteByte cg_abLReal36_0[9] = {0x4B, 0x40, 0x42, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-#endif
 #endif
 
 //STRING

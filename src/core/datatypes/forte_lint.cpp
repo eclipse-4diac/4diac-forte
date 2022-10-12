@@ -13,11 +13,7 @@
  *******************************************************************************/
 #include "forte_lint.h"
 
-#ifdef FORTE_USE_64BIT_DATATYPES
-
 DEFINE_FIRMWARE_DATATYPE(LINT, g_nStringIdLINT);
 
 const CIEC_LINT::TValueType CIEC_LINT::scm_nMinVal = std::numeric_limits<CIEC_LINT::TValueType>::min();
 const CIEC_LINT::TValueType CIEC_LINT::scm_nMaxVal = std::numeric_limits<CIEC_LINT::TValueType>::max();
-
-#endif

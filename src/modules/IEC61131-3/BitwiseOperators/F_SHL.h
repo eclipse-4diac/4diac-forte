@@ -61,11 +61,8 @@ class FORTE_F_SHL : public CFunctionBlock {
 
   template<typename T> void calculateValue() {
     T oIn;
-#ifdef FORTE_USE_64BIT_DATATYPES
-      CIEC_ULINT oN;
-#else //FORTE_USE_64BIT_DATATYPES
-    CIEC_UDINT oN;
-#endif //FORTE_USE_64BIT_DATATYPES
+    CIEC_ULINT oN;
+
     oIn.saveAssign(st_IN());
     oN.saveAssign(N());
     st_OUT().saveAssign(func_SHL(oIn, oN));

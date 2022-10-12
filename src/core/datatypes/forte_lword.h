@@ -27,8 +27,6 @@
 #include "forte_dword.h"
 #include <limits>
 
-#ifdef FORTE_USE_64BIT_DATATYPES
-
 /*!\ingroup COREDTS CIEC_DWORD represents the dword data type according to IEC 61131.
  */
 
@@ -112,7 +110,5 @@ class CIEC_LWORD : public CIEC_ANY_BIT{
     }
 
 };
-
-#endif
 
 #endif /*_FORTE_LWORD_H_*/

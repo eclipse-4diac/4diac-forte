@@ -15,8 +15,6 @@
 #include "FB_CTUD_LINT_gen.cpp"
 #endif
 
-#ifdef FORTE_USE_64BIT_DATATYPES
-
 DEFINE_FIRMWARE_FB(FB_CTUD_LINT, g_nStringIdFB_CTUD_LINT)
 
 const CStringDictionary::TStringId FB_CTUD_LINT::scm_anDataInputNames[] = { g_nStringIdCU, g_nStringIdCD, g_nStringIdR, g_nStringIdLD, g_nStringIdPV };
@@ -64,5 +62,3 @@ void FB_CTUD_LINT::executeEvent(int pa_nEIID) {
     sendOutputEvent(scm_nEventCNFID);
   }
 }
-
-#endif

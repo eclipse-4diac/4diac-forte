@@ -10,7 +10,6 @@
  *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
  *   Martin Melik Merkumians - Adds cast template tests
  *******************************************************************************/
-#ifdef FORTE_USE_64BIT_DATATYPES
 #include <boost/test/unit_test.hpp>
 
 #ifdef FORTE_USE_REAL_DATATYPE
@@ -363,7 +362,6 @@ BOOST_AUTO_TEST_CASE(CASTS_LINT_to_TIME)
   BOOST_CHECK_EQUAL(nTestLInt9223372036854775807, 9223372036854775807LL);
 
 //toTIME
-#ifdef FORTE_USE_64BIT_DATATYPES
   nTestTime.setValue(nTestLInt0);
   BOOST_CHECK_EQUAL(0L, nTestTime);
   nTestTime.setValue(nTestLInt1);
@@ -372,16 +370,6 @@ BOOST_AUTO_TEST_CASE(CASTS_LINT_to_TIME)
   BOOST_CHECK_EQUAL(2147483648LL, nTestTime);
   nTestTime.setValue(nTestLInt9223372036854775807);
   BOOST_CHECK_EQUAL(9223372036854775807LL, nTestTime);
-#else
-  nTestTime.setValue(nTestLInt0);
-  BOOST_CHECK_EQUAL(0L, nTestTime);
-  nTestTime.setValue(nTestLInt1);
-  BOOST_CHECK_EQUAL(1L, nTestTime);
-  nTestTime.setValue(nTestLInt2147483648);
-  BOOST_CHECK_EQUAL(-2147483648L, nTestTime);
-  nTestTime.setValue(nTestLInt9223372036854775807);
-  BOOST_CHECK_EQUAL(-1L, nTestTime);
-#endif
 }
 
 BOOST_AUTO_TEST_CASE(LINT_Castable_test)
@@ -469,6 +457,4 @@ BOOST_AUTO_TEST_CASE(Explict_cast_operator_to_LINT)
   nResult = CIEC_ANY::cast<CIEC_LINT>(bBool);
   BOOST_TEST(nResult == true);
 }
-
 BOOST_AUTO_TEST_SUITE_END()
-#endif //FORTE_USE_64BIT_DATATYPES

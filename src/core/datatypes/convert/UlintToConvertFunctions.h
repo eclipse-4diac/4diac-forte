@@ -21,8 +21,6 @@
 //********************************************************************************************
 //   ULINT_TO_*  functions
 //********************************************************************************************
-#ifdef FORTE_USE_64BIT_DATATYPES
-
 inline const CIEC_DINT func_ULINT_TO_DINT(const CIEC_ULINT &paVal){
   return CIEC_ANY::cast<CIEC_DINT>(paVal);
 }
@@ -91,8 +89,6 @@ inline const CIEC_WSTRING func_ULINT_TO_WSTRING(const CIEC_ULINT &paVal){
   stringConverter(string, paVal);
   return string;
 }
-#endif
-
 #endif
 
 #endif /* SRC_CORE_DATATYPES_CONVERT_ULINTTOCONVERTFUNCTIONS_H_ */

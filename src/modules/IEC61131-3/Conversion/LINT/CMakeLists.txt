@@ -24,11 +24,8 @@ forte_add_sourcefile_hcpp(F_LINT_TO_UINT)
 forte_add_sourcefile_hcpp(F_LINT_TO_USINT)
 forte_add_sourcefile_hcpp(F_LINT_TO_WORD)
 forte_add_sourcefile_hcpp(F_LINT_TO_STRING)
- 
-if(FORTE_USE_64BIT_DATATYPES)
-  forte_add_sourcefile_hcpp(F_LINT_TO_LWORD)
-  forte_add_sourcefile_hcpp(F_LINT_TO_ULINT)
-endif(FORTE_USE_64BIT_DATATYPES)  
+forte_add_sourcefile_hcpp(F_LINT_TO_LWORD)
+forte_add_sourcefile_hcpp(F_LINT_TO_ULINT)
   
 if(FORTE_USE_REAL_DATATYPE)
   forte_add_sourcefile_hcpp(F_LINT_TO_REAL)

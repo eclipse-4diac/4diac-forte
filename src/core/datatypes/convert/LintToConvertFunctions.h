@@ -22,7 +22,6 @@
 //********************************************************************************************
 //   LINT_TO_*  functions
 //********************************************************************************************
-#ifdef FORTE_USE_64BIT_DATATYPES
 
 inline const CIEC_BYTE func_LINT_TO_BYTE(const CIEC_LINT &paVal){
   return CIEC_ANY::cast<CIEC_BYTE>(paVal);
@@ -93,9 +92,5 @@ inline const CIEC_WSTRING func_LINT_TO_WSTRING(const CIEC_LINT &paVal){
   return string;
 }
 #endif
-
-#endif
-
-
 
 #endif /* SRC_CORE_DATATYPES_CONVERT_LINTTOCONVERTFUNCTIONS_H_ */

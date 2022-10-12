@@ -118,7 +118,6 @@ inline const CIEC_LREAL func_STRING_TO_LREAL(const CIEC_STRING &paVal){
 }
 #endif
 
-#ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_ULINT func_STRING_TO_ULINT(const CIEC_STRING &paVal){
   CIEC_ULINT tempVal;
   const char *pacBuffer = paVal.getValue();
@@ -139,7 +138,6 @@ inline const CIEC_LWORD func_STRING_TO_LWORD(const CIEC_STRING &paVal){
   tempVal.fromString(pacBuffer);
   return tempVal;
 }
-#endif
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
 inline const CIEC_WSTRING func_STRING_TO_WSTRING(const CIEC_STRING &paVal){

@@ -36,15 +36,13 @@
   #include "../../../src/core/datatypes/forte_real.h"
 #endif //FORTE_USE_REAL_DATATYPE
 
-#ifdef FORTE_USE_64BIT_DATATYPES
-  #include "../../../src/core/datatypes/forte_lword.h"
-  #include "../../../src/core/datatypes/forte_lint.h"
-  #include "../../../src/core/datatypes/forte_ulint.h"
+#include "../../../src/core/datatypes/forte_lword.h"
+#include "../../../src/core/datatypes/forte_lint.h"
+#include "../../../src/core/datatypes/forte_ulint.h"
 
 #ifdef FORTE_USE_REAL_DATATYPE
   #include "../../../src/core/datatypes/forte_lreal.h"
 #endif //FORTE_USE_REAL_DATATYPE
-#endif //FORTE_USE_64BIT_DATATYPES
 
 BOOST_AUTO_TEST_SUITE(Datatypes_to_STRING_conversion_test)
 
@@ -88,7 +86,6 @@ BOOST_AUTO_TEST_CASE(BOOLS_AND_BITS_to_STRING_test)
   //check length value
   BOOST_CHECK_EQUAL(sTest.length(), 3);
 
-#ifdef FORTE_USE_64BIT_DATATYPES
   //check LWORD 255U
   CIEC_LWORD nLWTest(18446744073709551615ULL);
   sResult = CIEC_STRING("18446744073709551615");
@@ -97,7 +94,6 @@ BOOST_AUTO_TEST_CASE(BOOLS_AND_BITS_to_STRING_test)
   BOOST_CHECK(sTest == sResult);
   //check length value
   BOOST_CHECK_EQUAL(sTest.length(), 20);
-#endif //FORTE_USE_64BIT_DATATYPES
 }
 
 BOOST_AUTO_TEST_CASE(INTEGERS_to_STRING_test)
@@ -159,7 +155,6 @@ BOOST_AUTO_TEST_CASE(INTEGERS_to_STRING_test)
   //check length value
   BOOST_CHECK_EQUAL(sTest.length(), 10);
 
-#ifdef FORTE_USE_64BIT_DATATYPES
   //check LINT
   CIEC_LINT nLITest(9223372036854775807LL);
   sResult = CIEC_STRING("9223372036854775807");
@@ -177,7 +172,6 @@ BOOST_AUTO_TEST_CASE(INTEGERS_to_STRING_test)
   BOOST_CHECK(sTest == sResult);
   //check length value
   BOOST_CHECK_EQUAL(sTest.length(), 20);
-#endif //FORTE_USE_64BIT_DATATYPES
 }
 
 BOOST_AUTO_TEST_CASE(TIME_to_STRING_test)
@@ -211,7 +205,6 @@ BOOST_AUTO_TEST_CASE(REAL_to_STRING_test)
   //check length value
   BOOST_CHECK_EQUAL(sTest.length(), 7);
 
-#ifdef FORTE_USE_64BIT_DATATYPES
   //check LREAL
   CIEC_LREAL nLRTest(-2.2874e6);
   sResult = CIEC_STRING("-2287400.0");
@@ -220,7 +213,6 @@ BOOST_AUTO_TEST_CASE(REAL_to_STRING_test)
   BOOST_CHECK(sTest == sResult);
   //check length value
   BOOST_CHECK_EQUAL(sTest.length(), 10);
-#endif //FORTE_USE_64BIT_DATATYPES
 }
 #endif //FORTE_USE_REAL_DATATYPE
 

@@ -33,10 +33,8 @@
   forte_test_add_sourcefile_cpp(CIEC_WORD_CASTS_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_DWORD_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_DWORD_CASTS_test.cpp)
-IF (FORTE_USE_64BIT_DATATYPES)
   forte_test_add_sourcefile_cpp(CIEC_LWORD_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_LWORD_CASTS_test.cpp)
-ENDIF (FORTE_USE_64BIT_DATATYPES) 
   forte_test_add_subdirectory(CIEC_PARTIAL)
 
 #INT-Datatypes
@@ -52,14 +50,10 @@ ENDIF (FORTE_USE_64BIT_DATATYPES)
   forte_test_add_sourcefile_cpp(CIEC_DINT_CASTS_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_UDINT_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_UDINT_CASTS_test.cpp)
-IF (FORTE_USE_64BIT_DATATYPES)
   forte_test_add_sourcefile_cpp(CIEC_LINT_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_LINT_CASTS_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_ULINT_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_ULINT_CASTS_test.cpp)
-ENDIF (FORTE_USE_64BIT_DATATYPES) 
-
-
  
 IF (FORTE_USE_REAL_DATATYPE)
   forte_test_add_sourcefile_cpp(CIEC_REAL_test.cpp)

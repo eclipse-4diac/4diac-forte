@@ -109,7 +109,6 @@ unsigned long int forte::core::util::strtoul(const char *nptr, char **endptr, in
   return unRetVal;
 }
 
-#ifdef FORTE_USE_64BIT_DATATYPES
 long long int forte::core::util::strtoll(const char *nptr, char **endptr, int base) {
   long long int nRetVal = 0;
   bool bNegativeNumber = false;
@@ -200,8 +199,6 @@ unsigned long long int forte::core::util::strtoull(const char *nptr, char **endp
   }
   return unRetVal;
 }
-
-#endif
 
 size_t forte::core::util::getExtraSizeForXMLEscapedChars(const char* paString){
   size_t retVal = 0;

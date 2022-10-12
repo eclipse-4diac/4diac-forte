@@ -43,11 +43,9 @@ void anyBitFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
     case CIEC_ANY::e_WORD:
       pa_roFB.template calculateValue<CIEC_WORD>();
       break;
-#ifdef FORTE_USE_64BIT_DATATYPES
-      case  CIEC_ANY::e_LWORD:
-        pa_roFB.template calculateValue<CIEC_LWORD>();
-        break;
-#endif //FORTE_USE_64BIT_DATATYPES
+    case  CIEC_ANY::e_LWORD:
+      pa_roFB.template calculateValue<CIEC_LWORD>();
+      break;
     default:
       pa_roFB.template calculateValue<CIEC_DWORD>();
       break;
@@ -63,11 +61,10 @@ void anyBitFBHelperWithoutBool(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB)
     case CIEC_ANY::e_WORD:
       pa_roFB.template calculateValue<CIEC_WORD>();
       break;
-#ifdef FORTE_USE_64BIT_DATATYPES
-      case  CIEC_ANY::e_LWORD:
-        pa_roFB.template calculateValue<CIEC_LWORD>();
-        break;
-#endif //FORTE_USE_64BIT_DATATYPES
+
+    case  CIEC_ANY::e_LWORD:
+      pa_roFB.template calculateValue<CIEC_LWORD>();
+      break;
     case CIEC_ANY::e_DWORD:
       pa_roFB.template calculateValue<CIEC_DWORD>();
       break;
@@ -99,11 +96,7 @@ void anyMagnitudeFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
       break;
     default:
       if(pa_eDataTypeId <= CIEC_ANY::e_WCHAR){
-#ifdef FORTE_USE_64BIT_DATATYPES
           pa_roFB.template calculateValue<CIEC_LINT>();
-#else //FORTE_USE_64BIT_DATATYPES
-          pa_roFB.template calculateValue<CIEC_DINT>();
-#endif //FORTE_USE_64BIT_DATATYPES
       }
       break;
   }
@@ -118,20 +111,18 @@ void anyIntFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
     case CIEC_ANY::e_DINT:
       pa_roFB.template calculateValue<CIEC_DINT>();
       break;
-#ifdef FORTE_USE_64BIT_DATATYPES
     case CIEC_ANY::e_LINT:
       pa_roFB.template calculateValue<CIEC_LINT>();
       break;
     case CIEC_ANY::e_ULINT:
-    pa_roFB.template calculateValue<CIEC_ULINT>();
-    break;
-#endif //FORTE_USE_64BIT_DATATYPES
+      pa_roFB.template calculateValue<CIEC_ULINT>();
+      break;
     case CIEC_ANY::e_UINT:
       pa_roFB.template calculateValue<CIEC_UINT>();
       break;
     case CIEC_ANY::e_USINT:
-        pa_roFB.template calculateValue<CIEC_USINT>();
-        break;
+      pa_roFB.template calculateValue<CIEC_USINT>();
+      break;
     case CIEC_ANY::e_UDINT:
       pa_roFB.template calculateValue<CIEC_UDINT>();
       break;

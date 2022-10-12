@@ -125,7 +125,6 @@ inline const CIEC_LREAL func_WSTRING_TO_LREAL(const CIEC_WSTRING &paVal){
 }
 #endif
 
-#ifdef FORTE_USE_64BIT_DATATYPES
 inline const CIEC_LINT func_WSTRING_TO_LINT(const CIEC_WSTRING &paVal){
   CIEC_LINT tempVal;
   const char *pacBuffer = paVal.getValue();
@@ -147,8 +146,5 @@ inline const CIEC_ULINT func_WSTRING_TO_ULINT(const CIEC_WSTRING &paVal){
   return tempVal;
 }
 #endif
-#endif
-
-
 
 #endif /* SRC_CORE_DATATYPES_CONVERT_WSTRINGTOCONVERTFUNCTIONS_H_ */

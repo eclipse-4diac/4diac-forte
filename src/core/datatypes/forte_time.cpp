@@ -20,12 +20,7 @@
 #include <ctype.h>
 
 #include "forte_constants.h"
-
-#ifdef FORTE_USE_64BIT_DATATYPES
 # include "forte_lint.h"
-#else
-# include "forte_dint.h"
-#endif
 
 DEFINE_FIRMWARE_DATATYPE(TIME, g_nStringIdTIME)
 
@@ -129,12 +124,7 @@ int CIEC_TIME::fromString(const char *paValue) {
 int CIEC_TIME::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal = -1;
   if(paBufferSize > 4) {
-#ifdef FORTE_USE_64BIT_DATATYPES
-    typedef CIEC_LINT INTERAL_CIEC_TIME_TYPE;
-#else //FORTE_USE_64BIT_DATATYPES
-    typedef CIEC_DINT INTERAL_CIEC_TIME_TYPE;
-#endif //FORTE_USE_64BIT_DATATYPES
-    INTERAL_CIEC_TIME_TYPE timeVal(static_cast<TValueType>(llabs(getInMilliSeconds())));
+    CIEC_LINT timeVal(static_cast<TValueType>(llabs(getInMilliSeconds())));
     paValue[0] = 'T';
     paValue[1] = '#';
     nRetVal += 3; // Compensate for -1 start value
@@ -162,7 +152,7 @@ int CIEC_TIME::toString(char* paValue, size_t paBufferSize) const {
           ++nRetVal;
         }
       }
-      timeVal = INTERAL_CIEC_TIME_TYPE(timeValSimple);
+      timeVal = CIEC_LINT(timeValSimple);
       int size = timeVal.toString(paValue + nRetVal, paBufferSize - nRetVal);
       if(-1 == size) {
         return size;

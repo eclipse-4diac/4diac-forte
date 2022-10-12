@@ -20,8 +20,6 @@
 #include "forte_any_date.h"
 #include <forte_architecture_time.h>
 
-#ifdef FORTE_USE_64BIT_DATATYPES
-
 /*!\ingroup COREDTS CIEC_DATE_AND_TIME represents the time data types according to IEC 61131.
  */
 
@@ -92,6 +90,4 @@ class CIEC_DATE_AND_TIME : public CIEC_ANY_DATE {
     virtual int toGMTString(char* paValue, unsigned int paBufferSize) const ;
 };
 
-#endif /* #ifdef FORTE_USE_64BIT_DATATYPES */
-
-#endif /*_MTIME_H_*/
+#endif /*_FORTE_DATE_AND_TIME_H_*/

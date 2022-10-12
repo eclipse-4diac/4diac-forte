@@ -21,8 +21,6 @@
 #include "forte_any_date.h"
 #include <forte_architecture_time.h>
 
-#ifdef FORTE_USE_64BIT_DATATYPES
-
 /*!\ingroup COREDTS CIEC_TIME_OF_DAY represents the time data types according to IEC 61131.
  */
 
@@ -86,7 +84,5 @@ class CIEC_TIME_OF_DAY : public CIEC_ANY_DATE{
      */
     int toString(char* paValue, size_t paBufferSize) const override;
 };
-
-#endif /* #ifdef FORTE_USE_64BIT_DATATYPES */
 
 #endif /*_FORTE_TOD_H_*/
