@@ -53,89 +53,89 @@
 };
 
 template<typename T>
-const T func_ABS(const T &pa_roIN) {
+const T func_ABS(const T &paIN) {
   static_assert((std::is_base_of<CIEC_ANY_NUM, T>::value), "T not of ANY_NUM");
-  return (0 > pa_roIN) ? T(static_cast<typename T::TValueType>(pa_roIN * static_cast<typename T::TValueType>(-1))) : pa_roIN;
+  return (0 > paIN) ? T(static_cast<typename T::TValueType>(paIN * static_cast<typename T::TValueType>(-1))) : paIN;
 }
 
-inline const CIEC_REAL func_SQRT(const CIEC_REAL &pa_roIN){
-  return CIEC_REAL(sqrtf(pa_roIN));
+inline const CIEC_REAL func_SQRT(const CIEC_REAL &paIN){
+  return CIEC_REAL(sqrtf(paIN));
 }
 
-inline const CIEC_LREAL func_SQRT(const CIEC_LREAL &pa_roIN){
-  return CIEC_LREAL(sqrt(pa_roIN));
+inline const CIEC_LREAL func_SQRT(const CIEC_LREAL &paIN){
+  return CIEC_LREAL(sqrt(paIN));
 }
 
-inline const CIEC_REAL func_LN(const CIEC_REAL &pa_roIN){
-  return CIEC_REAL(logf(pa_roIN));
+inline const CIEC_REAL func_LN(const CIEC_REAL &paIN){
+  return CIEC_REAL(logf(paIN));
 }
 
-inline const CIEC_LREAL func_LN(const CIEC_LREAL &pa_roIN){
-  return CIEC_LREAL(log(pa_roIN));
+inline const CIEC_LREAL func_LN(const CIEC_LREAL &paIN){
+  return CIEC_LREAL(log(paIN));
 }
 
-inline const CIEC_REAL func_LOG(const CIEC_REAL &pa_roIN){
-  return CIEC_REAL(log10f(pa_roIN));
+inline const CIEC_REAL func_LOG(const CIEC_REAL &paIN){
+  return CIEC_REAL(log10f(paIN));
 }
 
-inline const CIEC_LREAL func_LOG(const CIEC_LREAL &pa_roIN){
-  return CIEC_LREAL(log10(pa_roIN));
+inline const CIEC_LREAL func_LOG(const CIEC_LREAL &paIN){
+  return CIEC_LREAL(log10(paIN));
 }
 
-inline const CIEC_REAL func_SIN(const CIEC_REAL &pa_roIN){
-  return CIEC_REAL(sinf(pa_roIN));
+inline const CIEC_REAL func_SIN(const CIEC_REAL &paIN){
+  return CIEC_REAL(sinf(paIN));
 }
 
-inline const CIEC_LREAL func_SIN(const CIEC_LREAL &pa_roIN){
-  return CIEC_LREAL(sin(pa_roIN));
+inline const CIEC_LREAL func_SIN(const CIEC_LREAL &paIN){
+  return CIEC_LREAL(sin(paIN));
 }
 
-inline const CIEC_REAL func_COS(const CIEC_REAL &pa_roIN){
-  return CIEC_REAL(cosf(pa_roIN));
+inline const CIEC_REAL func_COS(const CIEC_REAL &paIN){
+  return CIEC_REAL(cosf(paIN));
 }
 
-inline const CIEC_LREAL func_COS(const CIEC_LREAL &pa_roIN){
-  return CIEC_LREAL(cos(pa_roIN));
+inline const CIEC_LREAL func_COS(const CIEC_LREAL &paIN){
+  return CIEC_LREAL(cos(paIN));
 }
 
-inline const CIEC_REAL func_TAN(const CIEC_REAL &pa_roIN){
-    return CIEC_REAL(tanf(pa_roIN));
+inline const CIEC_REAL func_TAN(const CIEC_REAL &paIN){
+    return CIEC_REAL(tanf(paIN));
 }
 
-inline const CIEC_LREAL func_TAN(const CIEC_LREAL &pa_roIN){
-  return CIEC_LREAL(tan(pa_roIN));
+inline const CIEC_LREAL func_TAN(const CIEC_LREAL &paIN){
+  return CIEC_LREAL(tan(paIN));
 }
 
-inline const CIEC_REAL func_ASIN(const CIEC_REAL &pa_roIN){
-    return CIEC_REAL(asinf(pa_roIN));
+inline const CIEC_REAL func_ASIN(const CIEC_REAL &paIN){
+    return CIEC_REAL(asinf(paIN));
 }
 
-inline const CIEC_LREAL func_ASIN(const CIEC_LREAL &pa_roIN){
-  return CIEC_LREAL(asin(pa_roIN));
+inline const CIEC_LREAL func_ASIN(const CIEC_LREAL &paIN){
+  return CIEC_LREAL(asin(paIN));
 }
 
-inline const CIEC_REAL func_ACOS(const CIEC_REAL &pa_roIN){
-  return CIEC_REAL(acosf(pa_roIN));
+inline const CIEC_REAL func_ACOS(const CIEC_REAL &paIN){
+  return CIEC_REAL(acosf(paIN));
 }
 
-inline const CIEC_LREAL func_ACOS(const CIEC_LREAL &pa_roIN){
-  return CIEC_LREAL(acos(pa_roIN));
+inline const CIEC_LREAL func_ACOS(const CIEC_LREAL &paIN){
+  return CIEC_LREAL(acos(paIN));
 }
 
-inline const CIEC_REAL func_ATAN(const CIEC_REAL &pa_roIN){
-    return CIEC_REAL(atanf(pa_roIN));
+inline const CIEC_REAL func_ATAN(const CIEC_REAL &paIN){
+    return CIEC_REAL(atanf(paIN));
 }
 
-inline const CIEC_LREAL func_ATAN(const CIEC_LREAL &pa_roIN){
-  return CIEC_LREAL(atan(pa_roIN));
+inline const CIEC_LREAL func_ATAN(const CIEC_LREAL &paIN){
+  return CIEC_LREAL(atan(paIN));
 }
 
-inline const CIEC_REAL func_EXP(const CIEC_REAL &pa_roIN){
-    return CIEC_REAL(expf(pa_roIN));
+inline const CIEC_REAL func_EXP(const CIEC_REAL &paIN){
+    return CIEC_REAL(expf(paIN));
 }
 
-inline const CIEC_LREAL func_EXP(const CIEC_LREAL &pa_roIN){
-  return CIEC_LREAL(exp(pa_roIN));
+inline const CIEC_LREAL func_EXP(const CIEC_LREAL &paIN){
+  return CIEC_LREAL(exp(paIN));
 }
 
 template<typename T> const T func_ROL(const T &paIn, const CIEC_ANY_INT &paN) {
@@ -503,10 +503,10 @@ template<typename T> const T func_MIN(const T &paIN1, const T &paIN2) {
 }
 
 template<typename T, typename U, typename V>
-const typename forte::core::mpl::get_castable_type<typename forte::core::mpl::get_castable_type<T, U>::type, V>::type func_LIMIT(const T &pa_roMN, const U &pa_roIN,
+const typename forte::core::mpl::get_castable_type<typename forte::core::mpl::get_castable_type<T, U>::type, V>::type func_LIMIT(const T &pa_roMN, const U &paIN,
     const V &pa_roMX) {
   typedef typename forte::core::mpl::get_castable_type<typename forte::core::mpl::get_castable_type<T, U>::type, V>::type tImplicitType;
-  return func_MIN(func_MAX(static_cast<tImplicitType>(pa_roIN), static_cast<tImplicitType>(pa_roMN)), static_cast<tImplicitType>(pa_roMX));
+  return func_MIN(func_MAX(static_cast<tImplicitType>(paIN), static_cast<tImplicitType>(pa_roMN)), static_cast<tImplicitType>(pa_roMX));
 }
 
 GENERATE_APPLY_FUNCTION(func_MOD)
@@ -520,8 +520,8 @@ template<typename T> const T func_MOD(const T &paIN1, const T &paIN2) {
   }
   return T(paIN1.getSignedValue() % paIN2.getSignedValue());
 }
-template<typename T> const T func_MOVE(const T &pa_roIN) {
-  return T(pa_roIN);
+template<typename T> const T func_MOVE(const T &paIN) {
+  return T(paIN);
 }
 
 template<typename T, typename U> const T func_EXPT(const T &paIN1, const U &paIN2) {
@@ -1067,8 +1067,7 @@ template<typename T> const T func_REPLACE(const T &paIn1, const T &paIn2, const 
 CIEC_ULINT func_FIND(const CIEC_ANY_STRING &paIn1, const CIEC_ANY_STRING &paIn2);
 
 template <typename T>
-const T func_TOUPPER(const T &paIn)
-{
+const T func_TOUPPER(const T &paIn) {
   T temp(paIn);
   char *current = temp.getValue();
   for(size_t i = 0; i <= paIn.length(); ++i) {
@@ -1078,8 +1077,7 @@ const T func_TOUPPER(const T &paIn)
 }
 
 template <typename T>
-const T func_TOLOWER(const T &paIn)
-{
+const T func_TOLOWER(const T &paIn) {
   T temp(paIn);
   char *current = temp.getValue();
   for(size_t i = 0; i <= paIn.length(); ++i) {
