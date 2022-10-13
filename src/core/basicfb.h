@@ -53,15 +53,9 @@ class CBasicFB : public CFunctionBlock {
     CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId,
         const SInternalVarsInformation *pa_pstVarInternals, TForteByte *pa_acFBConnData, TForteByte *pa_acBasicFBVarsData);
 
-    CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId,
-        const SInternalVarsInformation *pa_pstVarInternals, TForteByte *pa_acFBConnData, TForteByte *pa_acBasicFBVarsData,
-        const SCFB_FBInstanceData *const pa_astInternalFBs, const size_t pa_numberOfInternalFbs);
-
     ~CBasicFB() override;
 
     CIEC_ANY* getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) override;
-
-    EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand) override;
 
     template<unsigned int ta_nNumDIs, unsigned int ta_nNumDOs, unsigned int ta_nNumIntVars, unsigned int ta_nNumAdapters = 0>
     struct genBasicFBVarsDataSizeTemplate {
@@ -92,7 +86,10 @@ class CBasicFB : public CFunctionBlock {
 
     CIEC_STATE m_nECCState; //! the current state of the ecc. start value is 0 = initial state id
     const SInternalVarsInformation *const cm_pstVarInternals; //!< struct holding the information on the internal vars.
-    size_t cm_amountOfInternalFBs;
+
+    static TFunctionBlockPtr *createInternalFBs(const size_t paAmountOfInternalFBs, const SCFB_FBInstanceData *const pa_InternalFBData, CResource *const paResource);
+
+    static void deleteInternalFBs(const size_t paAmountOfInternalFBs, TFunctionBlockPtr *paInternalFBs);
 
   private:
     /*!\brief Get the pointer to a internal variable of the basic FB.
@@ -104,10 +101,8 @@ class CBasicFB : public CFunctionBlock {
 
     CIEC_ANY *m_aoInternals; //!< A list of pointers to the internal variables.
 
-    void createInternalFBs(const SCFB_FBInstanceData *const pa_InternalFBData);
-
 #ifdef FORTE_FMU
-    friend class fmuInstance;
+        friend class fmuInstance;
 #endif //FORTE_FMU
 };
 

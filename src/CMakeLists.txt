@@ -252,7 +252,7 @@ get_property(LINK_LIBRARY GLOBAL PROPERTY FORTE_LINK_LIBRARY)
 #######################################################################################
 
 
-# setting the C++ version has to be done directyl before defining the targets only then modules can override this setting 
+# setting the C++ version has to be done directly before defining the targets only then modules can override this setting 
 if(NOT DEFINED CMAKE_CXX_STANDARD)
     set(CMAKE_CXX_STANDARD 17)
 elseif(CMAKE_CXX_STANDARD LESS 17)

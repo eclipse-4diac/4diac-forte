@@ -149,6 +149,8 @@ class CCompositeFB: public CFunctionBlock {
     //!Array storing the holding the connections to be used in the execute event for triggering the internal FBs
     CEventConnection **mInterface2InternalEventCons;
 
+    TFunctionBlockPtr *mInternalFBs;
+
 #ifdef FORTE_FMU
     friend class fmuInstance;
 #endif //FORTE_FMU

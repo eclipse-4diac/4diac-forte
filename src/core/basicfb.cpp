@@ -18,29 +18,7 @@
 CBasicFB::CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId,
     const SInternalVarsInformation *pa_pstVarInternals, TForteByte *pa_acFBConnData, TForteByte *pa_acBasicFBVarsData) :
     CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acBasicFBVarsData), m_nECCState(0),
-        cm_pstVarInternals(pa_pstVarInternals), cm_amountOfInternalFBs(0) {
-
-  m_aoInternals = nullptr;
-  if((nullptr != cm_pstVarInternals) && (cm_pstVarInternals->m_nNumIntVars) && (nullptr != pa_acBasicFBVarsData)) {
-    pa_acBasicFBVarsData += genFBVarsDataSize(m_pstInterfaceSpec->m_nNumDIs, m_pstInterfaceSpec->m_nNumDOs, m_pstInterfaceSpec->m_nNumAdapters);
-
-    m_aoInternals = reinterpret_cast<CIEC_ANY*>(pa_acBasicFBVarsData);
-
-    const CStringDictionary::TStringId *pnDataIds = cm_pstVarInternals->m_aunIntVarsDataTypeNames;
-    for(int i = 0; i < cm_pstVarInternals->m_nNumIntVars; ++i) {
-      createDataPoint(&pnDataIds, pa_acBasicFBVarsData);
-      pa_acBasicFBVarsData += sizeof(CIEC_ANY);
-    }
-  }
-}
-
-CBasicFB::CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId,
-    const SInternalVarsInformation *pa_pstVarInternals, TForteByte *pa_acFBConnData, TForteByte *pa_acBasicFBVarsData,
-    const SCFB_FBInstanceData *const pa_internalFBs, const size_t pa_numberOfInternalFbs) :
-    CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acBasicFBVarsData), m_nECCState(0),
-        cm_pstVarInternals(pa_pstVarInternals), cm_amountOfInternalFBs(pa_numberOfInternalFbs) {
-
-  createInternalFBs(pa_internalFBs);
+        cm_pstVarInternals(pa_pstVarInternals) {
 
   m_aoInternals = nullptr;
   if((nullptr != cm_pstVarInternals) && (cm_pstVarInternals->m_nNumIntVars) && (nullptr != pa_acBasicFBVarsData)) {
@@ -75,16 +53,6 @@ CIEC_ANY* CBasicFB::getVar(CStringDictionary::TStringId *paNameList, unsigned in
   return poRetVal;
 }
 
-EMGMResponse CBasicFB::changeFBExecutionState(EMGMCommandType pa_unCommand) {
-  EMGMResponse nRetVal = CFunctionBlock::changeFBExecutionState(pa_unCommand);
-  for(size_t i = 0; ((i < cm_amountOfInternalFBs) && (e_RDY == nRetVal)); ++i) {
-    if(mInternalFBs[i]) {
-      nRetVal = mInternalFBs[i]->changeFBExecutionState(pa_unCommand);
-    }
-  }
-  return nRetVal;
-}
-
 CIEC_ANY* CBasicFB::getInternalVar(CStringDictionary::TStringId pa_nInternalName) {
   CIEC_ANY *retVal = nullptr;
   if(nullptr != cm_pstVarInternals) {
@@ -96,14 +64,23 @@ CIEC_ANY* CBasicFB::getInternalVar(CStringDictionary::TStringId pa_nInternalName
   return retVal;
 }
 
-void CBasicFB::createInternalFBs(const SCFB_FBInstanceData *const pa_InternalFBData) {
-  if(cm_amountOfInternalFBs) {
-    mInternalFBs = new TFunctionBlockPtr[cm_amountOfInternalFBs];
-    for(size_t i = 0; i < cm_amountOfInternalFBs; ++i) {
-      mInternalFBs[i] = CTypeLib::createFB(pa_InternalFBData[i].m_nFBInstanceNameId, pa_InternalFBData[i].m_nFBTypeNameId, getResourcePtr());
+TFunctionBlockPtr *CBasicFB::createInternalFBs(const size_t paAmountOfInternalFBs, const SCFB_FBInstanceData *const paInternalFBData, CResource* const paResource)
+{
+  TFunctionBlockPtr *internalFBs = nullptr;
+  if (paAmountOfInternalFBs) {
+    internalFBs = new TFunctionBlockPtr[paAmountOfInternalFBs];
+    for(size_t i = 0; i < paAmountOfInternalFBs; ++i) {
+      internalFBs[i] = CTypeLib::createFB(paInternalFBData[i].m_nFBInstanceNameId, paInternalFBData[i].m_nFBTypeNameId, paResource);
     }
   }
 }
+
+void CBasicFB::deleteInternalFBs(const size_t paAmountOfInternalFBs, TFunctionBlockPtr *paInternalFBs) {
+  for (size_t i = 0; i < paAmountOfInternalFBs; ++i) {
+    delete paInternalFBs[i];
+  }
+  delete[] paInternalFBs;
+};
 
 #ifdef FORTE_TRACE_CTF
 void CBasicFB::traceInstanceData() {
