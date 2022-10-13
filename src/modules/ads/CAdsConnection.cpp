@@ -55,8 +55,8 @@ namespace forte {
       return mPort;
     }
 
-    const AmsAddr* const CAdsConnection::getRemoteDevice() const{
-      return &mRemoteDevice;
+    AmsAddr* CAdsConnection::getRemoteDevice() const{
+      return const_cast<AmsAddr*>(&mRemoteDevice);
     }
 
   } /* namespace ads */

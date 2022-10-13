@@ -49,19 +49,19 @@ void FORTE_SET_LOCAL_ADS_ADDRESS::executeEvent(int pa_nEIID){
         long port = AdsPortOpenEx();
         AdsGetLocalAddressEx(port, &actualAddress);
         if(actualAddress.netId == desiredAddress){
-          STATUS() = "OK";
-          QO() = true;
+          STATUS() = CIEC_WSTRING("OK");
+          QO() = CIEC_BOOL(true);
           std::stringstream amsNetId;
           amsNetId << std::to_string(actualAddress.netId.b[0]) << "." + std::to_string(actualAddress.netId.b[1]) << "." << std::to_string(actualAddress.netId.b[2]) << "." << std::to_string(actualAddress.netId.b[3]) << "." << std::to_string(actualAddress.netId.b[4]) << "." << std::to_string(actualAddress.netId.b[5]);
-          LOCAL_ADS_ADDRESS() = amsNetId.str().c_str();
+          LOCAL_ADS_ADDRESS() = CIEC_STRING(amsNetId.str().c_str());
         }
         else{
-          STATUS() = "NOT OK";
-          QO() = false;
+          STATUS() = CIEC_WSTRING("NOT OK");
+          QO() = CIEC_BOOL(false);
         }
       }
       else{
-        QO() = false;
+        QO() = CIEC_BOOL(false);
       }
 
       sendOutputEvent(scm_nEventINITOID);

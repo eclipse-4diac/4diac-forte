@@ -28,7 +28,7 @@ namespace forte {
     bool CAdsProcessInterface::initialise(bool){
       CParameterParser adsParameters(PARAMS().getValue(), ':', 2);
       if(2 != adsParameters.parseParameters()) {
-        STATUS() = "PARAMS could not be parsed";
+        STATUS() = CIEC_STRING("PARAMS could not be parsed");
         return false;
       }
       mFriendlyAdsServerName = adsParameters[0];
@@ -37,10 +37,10 @@ namespace forte {
       CAdsConnection *connection = CAdsConnectionManager::getInstance().getConnection(mFriendlyAdsServerName);
       if(0 != connection){
         uint32_t handle = 0;
-        const long handleStatus = AdsSyncReadWriteReqEx2(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_HNDBYNAME, 0, sizeof(handle), &handle, mAdsVariableName.size(), mAdsVariableName.c_str(), 0);
+        const long handleStatus = AdsSyncReadWriteReqEx2(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_HNDBYNAME, 0, sizeof(handle), &handle, static_cast<uint32_t>(mAdsVariableName.size()), mAdsVariableName.c_str(), 0);
         if(handleStatus){
           DEVLOG_ERROR("Create handle for %s failed with code 0x%x\n", mAdsVariableName, handleStatus);
-          STATUS() = "Handle could not be created!";
+          STATUS() = CIEC_STRING("Handle could not be created!");
           return false;
         }
         mAdsHandle = handle;
@@ -48,7 +48,7 @@ namespace forte {
       }
       else{
         DEVLOG_ERROR("Connection could not be found!\n");
-        STATUS() = "Connection could not be found!";
+        STATUS() = CIEC_STRING("Connection could not be found!");
         return false;
       }
     }
@@ -68,11 +68,11 @@ namespace forte {
       CAdsConnection *connection = CAdsConnectionManager::getInstance().getConnection(mFriendlyAdsServerName);
       const long status = AdsSyncWriteReqEx(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND, mAdsHandle, sizeof(TForteByte), OUT_X().getDataPtr());
       if(status){
-        STATUS() = "Write Pin malfunction\n";
+        STATUS() = CIEC_STRING("Write Pin malfunction\n");
         DEVLOG_ERROR("Write Pin malfunction\n");
         return false;
       }
-      STATUS() = "OK";
+      STATUS() = CIEC_STRING("OK");
       return true;
     }
 
@@ -82,13 +82,13 @@ namespace forte {
       uint_fast8_t buffer;
       const long status = AdsSyncReadReqEx2(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND, mAdsHandle, sizeof(buffer), &buffer, &bytesRead);
       if(status){
-        IN_X() = false;
-        STATUS() = "Read Pin malfunction";
+        IN_X() = CIEC_BOOL(false);
+        STATUS() = CIEC_STRING("Read Pin malfunction");
         DEVLOG_ERROR("Read Pin malfunction\n");
         return false;
       }
-      STATUS() = "OK";
-      IN_X() = buffer;
+      STATUS() = CIEC_STRING("OK");
+      IN_X() = CIEC_BOOL(buffer);
       return true;
     }
 
@@ -96,11 +96,11 @@ namespace forte {
       CAdsConnection *connection = CAdsConnectionManager::getInstance().getConnection(mFriendlyAdsServerName);
       const long status = AdsSyncWriteReqEx(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND, mAdsHandle, sizeof(TForteWord), OUT_B().getDataPtr());
       if(status){
-        STATUS() = "Write Byte malfunction\n";
+        STATUS() = CIEC_STRING("Write Byte malfunction\n");
         DEVLOG_ERROR("Write Byte malfunction\n");
         return false;
       }
-      STATUS() = "OK";
+      STATUS() = CIEC_STRING("OK");
       return true;
     }
 
@@ -110,13 +110,13 @@ namespace forte {
       uint_fast8_t buffer;
       const long status = AdsSyncReadReqEx2(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND, mAdsHandle, sizeof(buffer), &buffer, &bytesRead);
       if(status){
-        IN_B() = 0;
-        STATUS() = "Read Byte malfunction";
+        IN_B() = CIEC_BYTE(0);
+        STATUS() = CIEC_STRING("Read Byte malfunction");
         DEVLOG_ERROR("Read Byte malfunction\n");
         return false;
       }
-      IN_B() = buffer;
-      STATUS() = "OK";
+      IN_B() = CIEC_BYTE(buffer);
+      STATUS() = CIEC_STRING("OK");
       return true;
     }
 
@@ -124,11 +124,11 @@ namespace forte {
       CAdsConnection *connection = CAdsConnectionManager::getInstance().getConnection(mFriendlyAdsServerName);
       const long status = AdsSyncWriteReqEx(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND, mAdsHandle, sizeof(TForteWord), OUT_W().getDataPtr());
       if(status){
-        STATUS() = "Write Word malfunction\n";
+        STATUS() = CIEC_STRING("Write Word malfunction\n");
         DEVLOG_ERROR("Write Word malfunction\n");
         return false;
       }
-      STATUS() = "OK";
+      STATUS() = CIEC_STRING("OK");
       return true;
     }
 
@@ -138,13 +138,13 @@ namespace forte {
       uint_fast16_t buffer;
       const long status = AdsSyncReadReqEx2(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND, mAdsHandle, sizeof(buffer), &buffer, &bytesRead);
       if(status){
-        IN_W() = 0;
-        STATUS() = "Read Word malfunction";
+        IN_W() = CIEC_WORD(0);
+        STATUS() = CIEC_STRING("Read Word malfunction");
         DEVLOG_ERROR("Read Word malfunction\n");
         return false;
       }
-      IN_W() = buffer;
-      STATUS() = "OK";
+      IN_W() = CIEC_WORD(static_cast<TForteWord>(buffer));
+      STATUS() = CIEC_STRING("OK");
       return true;
     }
 
@@ -152,11 +152,11 @@ namespace forte {
       CAdsConnection *connection = CAdsConnectionManager::getInstance().getConnection(mFriendlyAdsServerName);
       const long status = AdsSyncWriteReqEx(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND, mAdsHandle, sizeof(TForteDWord), OUT_D().getDataPtr());
       if(status){
-        STATUS() = "Write DWord malfunction\n";
+        STATUS() = CIEC_STRING("Write DWord malfunction\n");
         DEVLOG_ERROR("Write DWord malfunction\n");
         return false;
       }
-      STATUS() = "OK";
+      STATUS() = CIEC_STRING("OK");
       return true;
     }
 
@@ -166,13 +166,13 @@ namespace forte {
       uint_fast32_t buffer;
       const long status = AdsSyncReadReqEx2(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND, mAdsHandle, sizeof(buffer), &buffer, &bytesRead);
       if(status){
-        IN_D() = 0;
-        STATUS() = "Read DWORD malfunction";
+        IN_D() = CIEC_DWORD(0);
+        STATUS() = CIEC_STRING("Read DWORD malfunction");
         DEVLOG_ERROR("Read DWORD malfunction\n");
         return false;
       }
-      IN_D() = buffer;
-      STATUS() = "OK";
+      IN_D() = CIEC_DWORD(static_cast<TForteDWord>(buffer));
+      STATUS() = CIEC_STRING("OK");
       return true;
     }
 
@@ -180,11 +180,11 @@ namespace forte {
       CAdsConnection *connection = CAdsConnectionManager::getInstance().getConnection(mFriendlyAdsServerName);
       const long status = AdsSyncWriteReqEx(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND, mAdsHandle, sizeof(TForteDWord), OUT_L().getDataPtr());
       if(status){
-        STATUS() = "Write DWord malfunction\n";
+        STATUS() = CIEC_STRING("Write DWord malfunction\n");
         DEVLOG_ERROR("Write DWord malfunction\n");
         return false;
       }
-      STATUS() = "OK";
+      STATUS() = CIEC_STRING("OK");
       return true;
     }
 
@@ -194,13 +194,13 @@ namespace forte {
       uint_fast64_t buffer;
       const long status = AdsSyncReadReqEx2(connection->getPort(), connection->getRemoteDevice(), ADSIGRP_SYM_VALBYHND, mAdsHandle, sizeof(buffer), &buffer, &bytesRead);
       if(status){
-        IN_L() = 0;
-        STATUS() = "Read DWORD malfunction";
-        DEVLOG_ERROR("Read DWORD malfunction\n");
+        IN_L() = CIEC_LWORD(0);
+        STATUS() = CIEC_STRING("Read LWORD malfunction");
+        DEVLOG_ERROR("Read LWORD malfunction\n");
         return false;
       }
-      IN_L() = buffer;
-      STATUS() = "OK";
+      IN_L() = CIEC_LWORD(buffer);
+      STATUS() = CIEC_STRING("OK");
       return true;
     }
 

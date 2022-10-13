@@ -18,14 +18,12 @@ SET(FORTE_MODULE_ADS_PI_ADS_ROOT "" CACHE PATH "Path to ADS library source root 
 
 forte_add_include_directories( ${FORTE_MODULE_ADS_PI_ADS_ROOT}/AdsLib )
 
-find_library( ADS_LIBRARY AdsLib-Linux.a )
+find_library( ADS_LIBRARY libads.a )
 forte_add_link_library( ${ADS_LIBRARY} )
 
 #######################################################
 # ADS interface
 #######################################################
-
-forte_add_definition(-std=c++11)
 
 forte_add_sourcefile_hcpp(CAdsProcessInterface CAdsConnection CAdsConnectionManager)
 forte_add_sourcefile_hcpp(ADS_SERVER_CONFIG SET_LOCAL_ADS_ADDRESS)
