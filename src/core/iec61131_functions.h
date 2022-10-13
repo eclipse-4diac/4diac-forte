@@ -58,114 +58,85 @@ const T func_ABS(const T &pa_roIN) {
   return (0 > pa_roIN) ? T(static_cast<typename T::TValueType>(pa_roIN * static_cast<typename T::TValueType>(-1))) : pa_roIN;
 }
 
-#ifdef FORTE_USE_REAL_DATATYPE
-  inline const CIEC_REAL func_SQRT(const CIEC_REAL &pa_roIN){
-    return CIEC_REAL(sqrtf(pa_roIN));
-  }
+inline const CIEC_REAL func_SQRT(const CIEC_REAL &pa_roIN){
+  return CIEC_REAL(sqrtf(pa_roIN));
+}
 
-  inline const CIEC_LREAL func_SQRT(const CIEC_LREAL &pa_roIN){
-    return CIEC_LREAL(sqrt(pa_roIN));
-  }
+inline const CIEC_LREAL func_SQRT(const CIEC_LREAL &pa_roIN){
+  return CIEC_LREAL(sqrt(pa_roIN));
+}
 
-#endif //#ifdef FORTE_USE_REAL_DATATYPE
+inline const CIEC_REAL func_LN(const CIEC_REAL &pa_roIN){
+  return CIEC_REAL(logf(pa_roIN));
+}
 
-#ifdef FORTE_USE_REAL_DATATYPE
-  inline const CIEC_REAL func_LN(const CIEC_REAL &pa_roIN){
-    return CIEC_REAL(logf(pa_roIN));
-  }
+inline const CIEC_LREAL func_LN(const CIEC_LREAL &pa_roIN){
+  return CIEC_LREAL(log(pa_roIN));
+}
 
-  inline const CIEC_LREAL func_LN(const CIEC_LREAL &pa_roIN){
-    return CIEC_LREAL(log(pa_roIN));
-  }
+inline const CIEC_REAL func_LOG(const CIEC_REAL &pa_roIN){
+  return CIEC_REAL(log10f(pa_roIN));
+}
 
-#endif //#ifdef FORTE_USE_REAL_DATATYPE
+inline const CIEC_LREAL func_LOG(const CIEC_LREAL &pa_roIN){
+  return CIEC_LREAL(log10(pa_roIN));
+}
 
-#ifdef FORTE_USE_REAL_DATATYPE
-  inline const CIEC_REAL func_LOG(const CIEC_REAL &pa_roIN){
-    return CIEC_REAL(log10f(pa_roIN));
-  }
+inline const CIEC_REAL func_SIN(const CIEC_REAL &pa_roIN){
+  return CIEC_REAL(sinf(pa_roIN));
+}
 
-  inline const CIEC_LREAL func_LOG(const CIEC_LREAL &pa_roIN){
-    return CIEC_LREAL(log10(pa_roIN));
-  }
-#endif //#ifdef FORTE_USE_REAL_DATATYPE
+inline const CIEC_LREAL func_SIN(const CIEC_LREAL &pa_roIN){
+  return CIEC_LREAL(sin(pa_roIN));
+}
 
-#ifdef FORTE_USE_REAL_DATATYPE
-  inline const CIEC_REAL func_SIN(const CIEC_REAL &pa_roIN){
-    return CIEC_REAL(sinf(pa_roIN));
-  }
+inline const CIEC_REAL func_COS(const CIEC_REAL &pa_roIN){
+  return CIEC_REAL(cosf(pa_roIN));
+}
 
-  inline const CIEC_LREAL func_SIN(const CIEC_LREAL &pa_roIN){
-    return CIEC_LREAL(sin(pa_roIN));
-  }
+inline const CIEC_LREAL func_COS(const CIEC_LREAL &pa_roIN){
+  return CIEC_LREAL(cos(pa_roIN));
+}
 
-#endif //#ifdef FORTE_USE_REAL_DATATYPE
+inline const CIEC_REAL func_TAN(const CIEC_REAL &pa_roIN){
+    return CIEC_REAL(tanf(pa_roIN));
+}
 
-#ifdef FORTE_USE_REAL_DATATYPE
-  inline const CIEC_REAL func_COS(const CIEC_REAL &pa_roIN){
-    return CIEC_REAL(cosf(pa_roIN));
-  }
+inline const CIEC_LREAL func_TAN(const CIEC_LREAL &pa_roIN){
+  return CIEC_LREAL(tan(pa_roIN));
+}
 
-  inline const CIEC_LREAL func_COS(const CIEC_LREAL &pa_roIN){
-    return CIEC_LREAL(cos(pa_roIN));
-  }
-#endif //#ifdef FORTE_USE_REAL_DATATYPE
+inline const CIEC_REAL func_ASIN(const CIEC_REAL &pa_roIN){
+    return CIEC_REAL(asinf(pa_roIN));
+}
 
-#ifdef FORTE_USE_REAL_DATATYPE
-  inline const CIEC_REAL func_TAN(const CIEC_REAL &pa_roIN){
-      return CIEC_REAL(tanf(pa_roIN));
-    }
+inline const CIEC_LREAL func_ASIN(const CIEC_LREAL &pa_roIN){
+  return CIEC_LREAL(asin(pa_roIN));
+}
 
+inline const CIEC_REAL func_ACOS(const CIEC_REAL &pa_roIN){
+  return CIEC_REAL(acosf(pa_roIN));
+}
 
-  inline const CIEC_LREAL func_TAN(const CIEC_LREAL &pa_roIN){
-    return CIEC_LREAL(tan(pa_roIN));
-  }
+inline const CIEC_LREAL func_ACOS(const CIEC_LREAL &pa_roIN){
+  return CIEC_LREAL(acos(pa_roIN));
+}
 
-#endif //#ifdef FORTE_USE_REAL_DATATYPE
+inline const CIEC_REAL func_ATAN(const CIEC_REAL &pa_roIN){
+    return CIEC_REAL(atanf(pa_roIN));
+}
 
-#ifdef FORTE_USE_REAL_DATATYPE
-  inline const CIEC_REAL func_ASIN(const CIEC_REAL &pa_roIN){
-      return CIEC_REAL(asinf(pa_roIN));
-    }
+inline const CIEC_LREAL func_ATAN(const CIEC_LREAL &pa_roIN){
+  return CIEC_LREAL(atan(pa_roIN));
+}
 
+inline const CIEC_REAL func_EXP(const CIEC_REAL &pa_roIN){
+    return CIEC_REAL(expf(pa_roIN));
+}
 
-  inline const CIEC_LREAL func_ASIN(const CIEC_LREAL &pa_roIN){
-    return CIEC_LREAL(asin(pa_roIN));
-  }
-
-
-#endif //#ifdef FORTE_USE_REAL_DATATYPE
-
-#ifdef FORTE_USE_REAL_DATATYPE
-  inline const CIEC_REAL func_ACOS(const CIEC_REAL &pa_roIN){
-    return CIEC_REAL(acosf(pa_roIN));
-  }
-
-  inline const CIEC_LREAL func_ACOS(const CIEC_LREAL &pa_roIN){
-    return CIEC_LREAL(acos(pa_roIN));
-  }
-
-#endif //#ifdef FORTE_USE_REAL_DATATYPE
-
-#ifdef FORTE_USE_REAL_DATATYPE
-  inline const CIEC_REAL func_ATAN(const CIEC_REAL &pa_roIN){
-      return CIEC_REAL(atanf(pa_roIN));
-    }
-
-  inline const CIEC_LREAL func_ATAN(const CIEC_LREAL &pa_roIN){
-    return CIEC_LREAL(atan(pa_roIN));
-  }
-#endif //#ifdef FORTE_USE_REAL_DATATYPE
-
-#ifdef FORTE_USE_REAL_DATATYPE
-  inline const CIEC_REAL func_EXP(const CIEC_REAL &pa_roIN){
-      return CIEC_REAL(expf(pa_roIN));
-    }
-
-  inline const CIEC_LREAL func_EXP(const CIEC_LREAL &pa_roIN){
-    return CIEC_LREAL(exp(pa_roIN));
-  }
-#endif //#ifdef FORTE_USE_REAL_DATATYPE
+inline const CIEC_LREAL func_EXP(const CIEC_LREAL &pa_roIN){
+  return CIEC_LREAL(exp(pa_roIN));
+}
 
 template<typename T> const T func_ROL(const T &paIn, const CIEC_ANY_INT &paN) {
   static_assert((std::is_base_of<CIEC_ANY_BIT, T>::value), "T not of ANY_BIT");
@@ -880,7 +851,6 @@ T func_MINUS(const T& paIN) {
   return paIN.operator-();
 }
 
-#ifdef FORTE_USE_REAL_DATATYPE
 template <typename T>
 const T func_TRUNC(const CIEC_REAL &paIN) {
   return T(static_cast<typename T::TValueType>(static_cast<TForteInt32>(paIN)));
@@ -904,9 +874,6 @@ const CIEC_UINT func_REAL_TRUNC_UINT(const CIEC_REAL &paIN);
 const CIEC_UDINT func_REAL_TRUNC_UDINT(const CIEC_REAL &paIN);
 const CIEC_ULINT func_REAL_TRUNC_ULINT(const CIEC_REAL &paIN);
 
-#endif
-
-#ifdef FORTE_USE_LREAL_DATATYPE
 template <typename T>
 const T func_TRUNC(const CIEC_LREAL &paIN) {
   return T(static_cast<typename T::TValueType>(static_cast<TForteInt64>(paIN)));
@@ -929,7 +896,6 @@ const CIEC_USINT func_LREAL_TRUNC_USINT(const CIEC_LREAL &paIN);
 const CIEC_UINT func_LREAL_TRUNC_UINT(const CIEC_LREAL &paIN);
 const CIEC_UDINT func_LREAL_TRUNC_UDINT(const CIEC_LREAL &paIN);
 const CIEC_ULINT func_LREAL_TRUNC_ULINT(const CIEC_LREAL &paIN);
-#endif /* FORTE_USE_LREAL_DATATYPE */
 
 template<typename T> const CIEC_TIME func_MUL_TIME(const CIEC_TIME& paIN1, const T& paIN2){
   return CIEC_TIME(paIN1 * paIN2);

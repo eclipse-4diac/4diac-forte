@@ -39,11 +39,9 @@ inline const CIEC_LINT func_LWORD_TO_LINT(const CIEC_LWORD &paVal){
   return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
 
-#ifdef FORTE_USE_LREAL_DATATYPE
 inline const CIEC_LREAL func_LWORD_TO_LREAL(const CIEC_LWORD &paVal){
   return CIEC_ANY::cast<CIEC_LREAL>(paVal);
 }
-#endif
 
 inline const CIEC_DWORD func_LWORD_TO_DWORD(const CIEC_LWORD &paVal){
   return CIEC_ANY::cast<CIEC_DWORD>(paVal);

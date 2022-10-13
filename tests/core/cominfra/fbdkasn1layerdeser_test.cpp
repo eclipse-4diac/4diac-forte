@@ -20,11 +20,9 @@
 #include "../../../src/core/cominfra/commfb.h"
 #include "../../../src/stdfblib/ita/EMB_RES.h"
 
-#ifdef FORTE_USE_REAL_DATATYPE
 #include <boost/test/tools/floating_point_comparison.hpp>
 
 #include "../../../src/core/datatypes/forte_real.h"
-#endif
 
 //BOOLEAN
 #include "../../../src/core/datatypes/forte_bool.h"
@@ -51,9 +49,7 @@
 #include "../../../src/core/datatypes/forte_lint.h"
 #include "../../../src/core/datatypes/forte_ulint.h"
 
-#ifdef FORTE_USE_REAL_DATATYPE
 #include "../../../src/core/datatypes/forte_lreal.h"
-#endif //FORTE_USE_LREAL_DATATYPE
 
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "fbdkasn1layerdeser_test_gen.cpp"
@@ -138,10 +134,8 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));
@@ -190,10 +184,8 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));
@@ -246,10 +238,8 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));
@@ -310,10 +300,8 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));
@@ -373,10 +361,8 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));
@@ -425,10 +411,8 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));
@@ -481,10 +465,8 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));
@@ -545,10 +527,8 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));
@@ -608,10 +588,8 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));
@@ -664,10 +642,8 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));
@@ -736,10 +712,8 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));
@@ -826,10 +800,8 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));
@@ -917,10 +889,8 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
-#ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));
@@ -929,7 +899,6 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abArrayStringEmptyHalloWorld, cg_unString2SerSize)));
   }
 
-#ifdef FORTE_USE_REAL_DATATYPE
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Test_REAL){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdREAL };
     CDeserTestMockCommFB nTestFB(1, anType);
@@ -951,7 +920,6 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abReal36_0, cg_unRealSerSize));
     BOOST_CHECK_EQUAL(36.0f, nVal);
   }
-#endif
 
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_REAL){
     CStringDictionary::TStringId anType[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdREAL };
@@ -971,9 +939,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));
@@ -1022,9 +988,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));
@@ -1065,10 +1029,8 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abArrayBool01010, cg_unBOOL5SerSize)));
@@ -1112,10 +1074,8 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abArrayBool01010, cg_unBOOL5SerSize)));
@@ -1160,10 +1120,8 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abArrayBool01010, cg_unBOOL5SerSize)));
@@ -1313,10 +1271,8 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));
@@ -1342,10 +1298,8 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));
@@ -1371,10 +1325,8 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abIntm10934, cg_unIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize)));
-#ifdef FORTE_USE_REAL_DATATYPE
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abReal1_0Em37, cg_unRealSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abLRealm6_2587em4, cg_unLRealSerSize)));
-#endif
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize)));
     BOOST_CHECK((forte::com_infra::e_ProcessDataOk != nTestee.recvData(cg_abTime3s22ms, cg_unTimeSerSize)));

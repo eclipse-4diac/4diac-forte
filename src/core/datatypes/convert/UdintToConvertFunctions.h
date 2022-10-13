@@ -38,21 +38,17 @@ inline const CIEC_LINT func_UDINT_TO_LINT(const CIEC_UDINT &paVal){
   return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
 
-#ifdef FORTE_USE_LREAL_DATATYPE
 inline const CIEC_LREAL func_UDINT_TO_LREAL(const CIEC_UDINT &paVal){
   return CIEC_ANY::cast<CIEC_LREAL>(paVal);
 }
-#endif
 
 inline const CIEC_LWORD func_UDINT_TO_LWORD(const CIEC_UDINT &paVal){
   return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 
-#ifdef FORTE_USE_REAL_DATATYPE
 inline const CIEC_REAL func_UDINT_TO_REAL(const CIEC_UDINT &paVal){
   return CIEC_ANY::cast<CIEC_REAL>(paVal);
 }
-#endif
 
 inline const CIEC_SINT func_UDINT_TO_SINT(const CIEC_UDINT &paVal) {
   return CIEC_ANY::cast<CIEC_SINT>(paVal);

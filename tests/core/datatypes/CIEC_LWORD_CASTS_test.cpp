@@ -12,11 +12,9 @@
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 
-#ifdef FORTE_USE_REAL_DATATYPE
-  #include <boost/test/tools/floating_point_comparison.hpp>
+#include <boost/test/tools/floating_point_comparison.hpp>
+#include "../../../src/core/datatypes/forte_real.h"
 
-  #include "../../../src/core/datatypes/forte_real.h"
-#endif //FORTE_USE_REAL_DATATYPE
 
 //BOOLEAN
 #include "../../../src/core/datatypes/forte_bool.h"
@@ -36,20 +34,14 @@
 #include "../../../src/core/datatypes/forte_wstring.h"
 //Time
 #include "../../../src/core/datatypes/forte_time.h"
-
-
-  #include "../../../src/core/datatypes/forte_lword.h"
-  #include "../../../src/core/datatypes/forte_lint.h"
-  #include "../../../src/core/datatypes/forte_ulint.h"
-
-#ifdef FORTE_USE_REAL_DATATYPE
-  #include "../../../src/core/datatypes/forte_lreal.h"
-#endif //FORTE_USE_REAL_DATATYPE
+#include "../../../src/core/datatypes/forte_lword.h"
+#include "../../../src/core/datatypes/forte_lint.h"
+#include "../../../src/core/datatypes/forte_ulint.h"
+#include "../../../src/core/datatypes/forte_lreal.h"
 
 using namespace boost::unit_test;
 
 BOOST_AUTO_TEST_SUITE(CIEC_LWORD_casts_function_test)
-
 
 BOOST_AUTO_TEST_CASE(CASTS_LWORD_to_BOOL)
 {
@@ -262,7 +254,6 @@ BOOST_AUTO_TEST_CASE(CASTS_LWORD_to_INTS)
   BOOST_CHECK_EQUAL(nTestULInt, 18446744073709551615ULL);
 }
 
-#ifdef FORTE_USE_REAL_DATATYPE
 BOOST_AUTO_TEST_CASE(CASTS_LWORD_to_REAL)
 {
   CIEC_LWORD nTestLWord0;
@@ -312,8 +303,6 @@ BOOST_AUTO_TEST_CASE(CASTS_LWORD_to_REAL)
   BOOST_CHECK_EQUAL(nTestLReal, 18446744073709551615.0); 
 
 }
-#endif //FORTE_USE_REAL_DATATYPE
-
 
 BOOST_AUTO_TEST_CASE(CASTS_LWORD_to_Time)
 {

@@ -79,20 +79,10 @@ template<class T>
 void anyMagnitudeFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
   switch (pa_eDataTypeId){
     case CIEC_ANY::e_REAL:
-#ifdef FORTE_USE_REAL_DATATYPE
-        pa_roFB.template calculateValue<CIEC_REAL>();
-#else //FORTE_USE_REAL_DATATYPE
-        DEVLOG_ERROR("REAL is not compiled in this version of forte and you are still trying to use it. Exiting");
-        assert(0);
-#endif //FORTE_USE_REAL_DATATYPE
+      pa_roFB.template calculateValue<CIEC_REAL>();
       break;
     case CIEC_ANY::e_LREAL:
-#ifdef FORTE_USE_LREAL_DATATYPE
-          pa_roFB.template calculateValue<CIEC_LREAL>();
-#else //FORTE_USE_LREAL_DATATYPE
-          DEVLOG_ERROR("LREAL is not compiled in this version of forte and you are still trying to use it. Exiting");
-          assert(0);
-#endif //FORTE_USE_LREAL_DATATYPE
+      pa_roFB.template calculateValue<CIEC_LREAL>();
       break;
     default:
       if(pa_eDataTypeId <= CIEC_ANY::e_WCHAR){
@@ -136,14 +126,10 @@ template<class T>
 void anyRealFBHelper(CIEC_ANY::EDataTypeID pa_eDataTypeId, T &pa_roFB){
   switch (pa_eDataTypeId){
     case CIEC_ANY::e_REAL:
-#ifdef FORTE_USE_REAL_DATATYPE
-        pa_roFB.template calculateValue<CIEC_REAL>();
-#endif //FORTE_USE_REAL_DATATYPE
+      pa_roFB.template calculateValue<CIEC_REAL>();
       break;
     case CIEC_ANY::e_LREAL:
-#ifdef FORTE_USE_LREAL_DATATYPE
-        pa_roFB.template calculateValue<CIEC_LREAL>();
-#endif //FORTE_USE_LREAL_DATATYPE
+      pa_roFB.template calculateValue<CIEC_LREAL>();
       break;
     default:
       break;

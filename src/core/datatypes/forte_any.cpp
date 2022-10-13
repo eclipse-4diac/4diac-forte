@@ -190,16 +190,12 @@ bool CIEC_ANY::isCastable(EDataTypeID pa_eSource, EDataTypeID pa_eDestination, b
 
 void CIEC_ANY::specialCast(const CIEC_ANY &pa_roSrcValue, CIEC_ANY &pa_roDstValue){
   switch (pa_roSrcValue.getDataTypeID()){
-#ifdef FORTE_USE_REAL_DATATYPE
     case CIEC_ANY::e_REAL:
       CIEC_REAL::castRealData(static_cast<const CIEC_REAL &>(pa_roSrcValue), pa_roDstValue);
       break;
-#endif
-#ifdef FORTE_USE_LREAL_DATATYPE
     case CIEC_ANY::e_LREAL:
       CIEC_LREAL::castLRealData(static_cast<const CIEC_LREAL &>(pa_roSrcValue), pa_roDstValue);
       break;
-#endif
     default:
       (void)pa_roDstValue; //to avoid warnings of unused parameter when real types aren't used
       //we should not be here log error

@@ -18,7 +18,6 @@
 #include "forte_architecture_time.h"
 
 /*** TRUNC ***/
-#ifdef FORTE_USE_REAL_DATATYPE
 const CIEC_SINT func_TRUNC_SINT(const CIEC_REAL &paIN) {
   return func_TRUNC<CIEC_SINT>(paIN);
 }
@@ -82,9 +81,7 @@ const CIEC_UDINT func_REAL_TRUNC_UDINT(const CIEC_REAL &paIN) {
 const CIEC_ULINT func_REAL_TRUNC_ULINT(const CIEC_REAL &paIN) {
   return func_TRUNC<CIEC_ULINT>(paIN);
 }
-#endif
 
-#ifdef FORTE_USE_LREAL_DATATYPE
 const CIEC_SINT func_TRUNC_SINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_SINT>(paIN);
 }
@@ -148,7 +145,6 @@ const CIEC_UDINT func_LREAL_TRUNC_UDINT(const CIEC_LREAL &paIN) {
 const CIEC_ULINT func_LREAL_TRUNC_ULINT(const CIEC_LREAL &paIN) {
   return func_TRUNC<CIEC_ULINT>(paIN);
 }
-#endif
 
 const CIEC_TIME func_ADD_TIME(const CIEC_TIME &paIN1, const CIEC_TIME &paIN2) {
   return func_ADD(paIN1, paIN2);

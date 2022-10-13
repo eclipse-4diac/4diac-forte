@@ -22,7 +22,6 @@
 //********************************************************************************************
 //   REAL_TO_*  functions
 //********************************************************************************************
-#ifdef FORTE_USE_REAL_DATATYPE
 inline const CIEC_LINT func_REAL_TO_LINT(const CIEC_REAL &paVal){
   return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
@@ -76,6 +75,5 @@ inline const CIEC_WSTRING func_REAL_TO_WSTRING(const CIEC_REAL &paVal){
 inline const CIEC_DWORD func_REAL_TO_DWORD(const CIEC_REAL &paVal){
   return CIEC_ANY::cast<CIEC_DWORD>(paVal);
 }
-#endif
 
 #endif /* SRC_CORE_DATATYPES_CONVERT_REALTOCONVERTFUNCTIONS_H_ */

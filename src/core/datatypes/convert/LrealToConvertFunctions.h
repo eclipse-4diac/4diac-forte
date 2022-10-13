@@ -22,17 +22,13 @@
 //********************************************************************************************
 //   LREAL_TO_*  functions
 //********************************************************************************************
-#ifdef FORTE_USE_LREAL_DATATYPE
-
 inline const CIEC_LWORD func_LREAL_TO_LWORD(const CIEC_LREAL &paVal){
   return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 
-#ifdef FORTE_USE_REAL_DATATYPE
 inline const CIEC_REAL func_LREAL_TO_REAL(const CIEC_LREAL &paVal){
   return CIEC_ANY::cast<CIEC_REAL>(paVal);
 }
-#endif
 
 inline const CIEC_USINT func_LREAL_TO_USINT(const CIEC_LREAL &paVal){
   return CIEC_ANY::cast<CIEC_USINT>(paVal);
@@ -79,7 +75,5 @@ inline const CIEC_WSTRING func_LREAL_TO_WSTRING(const CIEC_LREAL &paVal){
   return string;
 }
 #endif
-#endif
-
 
 #endif /* SRC_CORE_DATATYPES_CONVERT_LREALTOCONVERTFUNCTIONS_H_ */

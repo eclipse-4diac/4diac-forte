@@ -11,13 +11,6 @@
  *   Martin Melik Merkumians - Adds cast template tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
-
-#ifdef FORTE_USE_REAL_DATATYPE
-  #include <boost/test/tools/floating_point_comparison.hpp>
-
-  #include "../../../src/core/datatypes/forte_real.h"
-#endif //FORTE_USE_REAL_DATATYPE
-
 //BOOLEAN
 #include "../../../src/core/datatypes/forte_bool.h"
 //BIT-Datatypes
@@ -40,14 +33,14 @@
 #include "../../../src/core/datatypes/forte_lword.h"
 #include "../../../src/core/datatypes/forte_lint.h"
 #include "../../../src/core/datatypes/forte_ulint.h"
-#ifdef FORTE_USE_REAL_DATATYPE
-  #include "../../../src/core/datatypes/forte_lreal.h"
-#endif //FORTE_USE_REAL_DATATYPE
+
+#include <boost/test/tools/floating_point_comparison.hpp>
+#include "../../../src/core/datatypes/forte_real.h"
+#include "../../../src/core/datatypes/forte_lreal.h"
 
 using namespace boost::unit_test;
 
 BOOST_AUTO_TEST_SUITE(CIEC_WORD_casts_function_test)
-
 
 BOOST_AUTO_TEST_CASE(CASTS_WORD_to_BOOL)
 {
@@ -258,7 +251,6 @@ BOOST_AUTO_TEST_CASE(CASTS_WORD_to_INTS)
   BOOST_CHECK_EQUAL(nTestULInt, 65535ULL);
 }
 
-#ifdef FORTE_USE_REAL_DATATYPE
 BOOST_AUTO_TEST_CASE(CASTS_WORD_to_REAL)
 {
   CIEC_WORD nTestWord0;
@@ -306,8 +298,6 @@ BOOST_AUTO_TEST_CASE(CASTS_WORD_to_REAL)
   nTestLReal.setValue(nTestWord65535);
   BOOST_CHECK_EQUAL(65535.0, nTestLReal); 
 }
-#endif //FORTE_USE_REAL_DATATYPE
-
 
 BOOST_AUTO_TEST_CASE(CASTS_WORD_to_TIME)
 {

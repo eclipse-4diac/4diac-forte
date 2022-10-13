@@ -10,8 +10,6 @@
  *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
  *   Martin Melik Merkumians - Adds cast template tests
  *******************************************************************************/
-#ifdef FORTE_USE_REAL_DATATYPE
-
 #include <boost/test/unit_test.hpp>
 #include <boost/test/tools/floating_point_comparison.hpp>
 
@@ -453,4 +451,3 @@ BOOST_AUTO_TEST_CASE(REAL_TO_LREAL_cast_constructor)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-#endif //FORTE_USE_REAL_DATATYPE

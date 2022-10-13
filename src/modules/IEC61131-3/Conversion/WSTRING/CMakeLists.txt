@@ -28,11 +28,5 @@ forte_add_sourcefile_hcpp(F_WSTRING_TO_TIME)
 forte_add_sourcefile_hcpp(F_WSTRING_TO_LINT)
 forte_add_sourcefile_hcpp(F_WSTRING_TO_LWORD)
 forte_add_sourcefile_hcpp(F_WSTRING_TO_ULINT)
-
-if(FORTE_USE_REAL_DATATYPE)
-  forte_add_sourcefile_hcpp(F_WSTRING_TO_REAL)
-endif(FORTE_USE_REAL_DATATYPE)
-
-if(FORTE_USE_LREAL_DATATYPE)
-  forte_add_sourcefile_hcpp(F_WSTRING_TO_LREAL)
-endif(FORTE_USE_LREAL_DATATYPE)
+forte_add_sourcefile_hcpp(F_WSTRING_TO_REAL)
+forte_add_sourcefile_hcpp(F_WSTRING_TO_LREAL)

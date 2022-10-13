@@ -100,23 +100,19 @@ inline const CIEC_TIME func_STRING_TO_TIME(const CIEC_STRING &paVal) {
   return tempVal;
 }
 
-#ifdef FORTE_USE_REAL_DATATYPE
 inline const CIEC_REAL func_STRING_TO_REAL(const CIEC_STRING &paVal){
   CIEC_REAL tempVal;
   const char *pacBuffer = paVal.getValue();
   tempVal.fromString(pacBuffer);
   return tempVal;
 }
-#endif
 
-#ifdef FORTE_USE_LREAL_DATATYPE
 inline const CIEC_LREAL func_STRING_TO_LREAL(const CIEC_STRING &paVal){
   CIEC_LREAL tempVal;
   const char *pacBuffer = paVal.getValue();
   tempVal.fromString(pacBuffer);
   return tempVal;
 }
-#endif
 
 inline const CIEC_ULINT func_STRING_TO_ULINT(const CIEC_STRING &paVal){
   CIEC_ULINT tempVal;

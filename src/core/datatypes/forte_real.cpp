@@ -64,11 +64,9 @@ void CIEC_REAL::setValue(const CIEC_ANY& paValue){
   case e_REAL:
     setValueSimple(paValue);
     break;
-#ifdef FORTE_USE_LREAL_DATATYPE
   case e_LREAL:
     setTFLOAT(static_cast<TForteDFloat>(static_cast<const CIEC_LREAL&>(paValue)));
     break;
-#endif
   case e_STRING:
     (*this).fromString(((CIEC_STRING&)paValue).getValue());
     break;
@@ -93,9 +91,7 @@ void CIEC_REAL::castRealData(const CIEC_REAL &paSrcValue, CIEC_ANY &paDestValue)
       static_cast<CIEC_REAL &>(paDestValue) = paSrcValue;
       break;
     case CIEC_ANY::e_LREAL:
-#ifdef FORTE_USE_LREAL_DATATYPE
       static_cast<CIEC_LREAL &>(paDestValue) = paSrcValue;
-#endif
       break;
     case CIEC_ANY::e_BYTE:
     case CIEC_ANY::e_WORD:

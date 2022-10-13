@@ -26,10 +26,7 @@ forte_add_sourcefile_hcpp(F_LWORD_TO_ULINT)
 forte_add_sourcefile_hcpp(F_LWORD_TO_USINT)
 forte_add_sourcefile_hcpp(F_LWORD_TO_WORD)
 forte_add_sourcefile_hcpp(F_LWORD_TO_STRING)
-  
-if(FORTE_USE_LREAL_DATATYPE)
-  forte_add_sourcefile_hcpp(F_LWORD_TO_LREAL)
-endif(FORTE_USE_LREAL_DATATYPE)
+forte_add_sourcefile_hcpp(F_LWORD_TO_LREAL)
 
 if(FORTE_USE_WSTRING_DATATYPE)
   forte_add_sourcefile_hcpp(F_LWORD_TO_WSTRING)

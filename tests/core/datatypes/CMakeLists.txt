@@ -54,31 +54,27 @@
   forte_test_add_sourcefile_cpp(CIEC_LINT_CASTS_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_ULINT_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_ULINT_CASTS_test.cpp)
- 
-IF (FORTE_USE_REAL_DATATYPE)
   forte_test_add_sourcefile_cpp(CIEC_REAL_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_REAL_CASTS_test.cpp)
-ENDIF (FORTE_USE_REAL_DATATYPE) 
-
-IF (FORTE_USE_LREAL_DATATYPE) 
   forte_test_add_sourcefile_cpp(CIEC_LREAL_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_LREAL_CASTS_test.cpp)
-ENDIF (FORTE_USE_LREAL_DATATYPE)
 
-forte_test_add_sourcefile_cpp(CIEC_CHAR_test.cpp)
-forte_test_add_sourcefile_cpp(CIEC_WCHAR_test.cpp)
-forte_test_add_sourcefile_cpp(CIEC_STRING_test.cpp)
-forte_test_add_sourcefile_cpp(CIEC_WSTRING_test.cpp)
+#ANY_CHARS-Datatypes
+  forte_test_add_sourcefile_cpp(CIEC_CHAR_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_WCHAR_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_STRING_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_WSTRING_test.cpp)
 
 IF (FORTE_SUPPORT_ARRAYS)
   forte_test_add_sourcefile_cpp(CIEC_ARRAY_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_ARRAY_TEMPLATE_test.cpp)
 ENDIF(FORTE_SUPPORT_ARRAYS)
 
-forte_test_add_sourcefile_cpp(CIEC_TIME_test.cpp)
-forte_test_add_sourcefile_cpp(CIEC_DATE_AND_TIME_test.cpp)
-forte_test_add_sourcefile_cpp(CIEC_DATE_test.cpp)
-forte_test_add_sourcefile_cpp(CIEC_TIME_OF_DAY_test.cpp)
+#ANY_DURATION and ANY_DATE-Datatypes
+  forte_test_add_sourcefile_cpp(CIEC_TIME_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_DATE_AND_TIME_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_DATE_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_TIME_OF_DAY_test.cpp)
   
 forte_test_add_sourcefile_cpp(CIEC_STRUCT_test.cpp)
  

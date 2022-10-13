@@ -30,19 +30,14 @@
 //Time
 #include "../../../src/core/datatypes/forte_time.h"
 
-#ifdef FORTE_USE_REAL_DATATYPE
-  #include <boost/test/tools/floating_point_comparison.hpp>
-
-  #include "../../../src/core/datatypes/forte_real.h"
-#endif //FORTE_USE_REAL_DATATYPE
-
 #include "../../../src/core/datatypes/forte_lword.h"
 #include "../../../src/core/datatypes/forte_lint.h"
 #include "../../../src/core/datatypes/forte_ulint.h"
 
-#ifdef FORTE_USE_REAL_DATATYPE
-  #include "../../../src/core/datatypes/forte_lreal.h"
-#endif //FORTE_USE_REAL_DATATYPE
+#include <boost/test/tools/floating_point_comparison.hpp>
+#include "../../../src/core/datatypes/forte_real.h"
+#include "../../../src/core/datatypes/forte_lreal.h"
+
 
 BOOST_AUTO_TEST_SUITE(Datatypes_to_STRING_conversion_test)
 
@@ -190,7 +185,6 @@ BOOST_AUTO_TEST_CASE(TIME_to_STRING_test)
   BOOST_CHECK_EQUAL(sTest.length(), 8);
 }
 
-#ifdef FORTE_USE_REAL_DATATYPE
 BOOST_AUTO_TEST_CASE(REAL_to_STRING_test)
 {
   CIEC_STRING sTest;
@@ -214,6 +208,5 @@ BOOST_AUTO_TEST_CASE(REAL_to_STRING_test)
   //check length value
   BOOST_CHECK_EQUAL(sTest.length(), 10);
 }
-#endif //FORTE_USE_REAL_DATATYPE
 
 BOOST_AUTO_TEST_SUITE_END()

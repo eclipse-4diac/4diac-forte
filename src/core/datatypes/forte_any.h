@@ -282,16 +282,14 @@ class CIEC_ANY {
       mAnyData.mLargestUInt = TLargestUIntValueType(src);
     }
 
-#ifdef FORTE_USE_REAL_DATATYPE
     void setTFLOAT(TForteFloat src){
       mAnyData.mFloat = TForteFloat(src);
     }
-#endif //#ifdef FORTE_USE_REAL_DATATYPE
-#ifdef FORTE_USE_LREAL_DATATYPE
+
     void setTDFLOAT(TForteDFloat src){
       mAnyData.mDFloat = TForteDFloat(src);
     }
-#endif //#ifdef FORTE_USE_LREAL_DATATYPE
+
   void setTUINT64(TForteUInt64 src){ //also used for LWORD
     mAnyData.mLargestUInt = TLargestUIntValueType(src);
   }
@@ -390,16 +388,14 @@ class CIEC_ANY {
 #error Endianess not defined!
 #endif //#ifdef FORTE_BIG_ENDIAN
 #endif //#ifdef FORTE_LITTLE_ENDIAN
-#ifdef FORTE_USE_REAL_DATATYPE //!< get-Methods are Big/Little Endian independent
+//!< get-Methods are Big/Little Endian independent
     TForteFloat getTFLOAT() const{
       return (TForteFloat) mAnyData.mFloat;
     }
-#endif //#ifdef FORTE_USE_REAL_DATATYPE
-#ifdef FORTE_USE_LREAL_DATATYPE
+
     TForteDFloat getTDFLOAT() const{
       return TForteDFloat(mAnyData.mDFloat);
     }
-#endif //#ifdef FORTE_USE_LREAL_DATATYPE
 
     TLargestUIntValueType getLargestUInt() const{
       return mAnyData.mLargestUInt;
@@ -461,12 +457,9 @@ class CIEC_ANY {
         TForteChar mChar8;
         TForteWChar mWChar16;
 
-#ifdef FORTE_USE_REAL_DATATYPE
         TForteFloat mFloat;
-#endif //#ifdef FORTE_USE_REAL_DATATYPE
-#ifdef FORTE_USE_LREAL_DATATYPE
         TForteDFloat mDFloat;
-#endif //#ifdef FORTE_USE_LREAL_DATATYPE
+
         TForteInt64 mInt64;
         TForteUInt64 mUInt64;
         TForteByte mData[sizeof(TForteUInt64)]; //!< For data extraction in big endian machines

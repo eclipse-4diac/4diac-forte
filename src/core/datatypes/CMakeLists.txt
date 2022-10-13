@@ -25,6 +25,8 @@ forte_add_sourcefile_hcpp(forte_any)
   forte_add_sourcefile_hcpp(forte_any_magnitude)
   forte_add_sourcefile_hcpp(forte_any_num)
     forte_add_sourcefile_hcpp(forte_any_real)
+      forte_add_sourcefile_hcpp(forte_real)
+      forte_add_sourcefile_hcpp(forte_lreal)
     forte_add_sourcefile_hcpp(forte_any_int)
       forte_add_sourcefile_hcpp(forte_usint)
       forte_add_sourcefile_hcpp(forte_uint)
@@ -62,19 +64,6 @@ forte_add_sourcefile_hcpp(forte_state)
 
 # include STRUCT Datatype-Support
 forte_add_sourcefile_hcpp(forte_struct)
-
-set(FORTE_USE_REAL_DATATYPE ON CACHE BOOL "Enable Forte Real Datatypes")
-mark_as_advanced(FORTE_USE_REAL_DATATYPE)
-if(FORTE_USE_REAL_DATATYPE)
-  forte_add_sourcefile_hcpp(forte_real)
-  forte_add_definition("-DFORTE_USE_REAL_DATATYPE")
-endif(FORTE_USE_REAL_DATATYPE)
-
-if(FORTE_USE_REAL_DATATYPE)
-  forte_add_sourcefile_hcpp(forte_lreal)
-  forte_add_definition("-DFORTE_USE_LREAL_DATATYPE")
-  set(FORTE_USE_LREAL_DATATYPE ON CACHE INTERNAL "Enable Forte Real Datatypes")
-endif(FORTE_USE_REAL_DATATYPE)
 
 set(FORTE_SUPPORT_ARRAYS ON CACHE BOOL "Enable Forte Array Datatypes")
 mark_as_advanced(FORTE_SUPPORT_ARRAYS)

@@ -107,23 +107,19 @@ inline const CIEC_SINT func_WSTRING_TO_SINT(const CIEC_WSTRING &paVal){
   return tempVal;
 }
 
-#ifdef FORTE_USE_REAL_DATATYPE
 inline const CIEC_REAL func_WSTRING_TO_REAL(const CIEC_WSTRING &paVal){
   CIEC_REAL tempVal;
   const char *pacBuffer = paVal.getValue();
   tempVal.fromString(pacBuffer);
   return tempVal;
 }
-#endif
 
-#ifdef FORTE_USE_LREAL_DATATYPE
 inline const CIEC_LREAL func_WSTRING_TO_LREAL(const CIEC_WSTRING &paVal){
   CIEC_LREAL tempVal;
   const char *pacBuffer = paVal.getValue();
   tempVal.fromString(pacBuffer);
   return tempVal;
 }
-#endif
 
 inline const CIEC_LINT func_WSTRING_TO_LINT(const CIEC_WSTRING &paVal){
   CIEC_LINT tempVal;

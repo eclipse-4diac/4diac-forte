@@ -42,11 +42,9 @@ inline const CIEC_LWORD func_DWORD_TO_LWORD(const CIEC_DWORD &paVal){
   return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 
-#ifdef FORTE_USE_REAL_DATATYPE
 inline const CIEC_REAL func_DWORD_TO_REAL(const CIEC_DWORD &paVal){
   return CIEC_ANY::cast<CIEC_REAL>(paVal);
 }
-#endif
 
 inline const CIEC_SINT func_DWORD_TO_SINT(const CIEC_DWORD &paVal) {
   return CIEC_ANY::cast<CIEC_SINT>(paVal);

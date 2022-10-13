@@ -12,12 +12,6 @@
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 
-#ifdef FORTE_USE_REAL_DATATYPE
-  #include <boost/test/tools/floating_point_comparison.hpp>
-
-  #include "../../../src/core/datatypes/forte_real.h"
-#endif //FORTE_USE_REAL_DATATYPE
-
 //BOOLEAN
 #include "../../../src/core/datatypes/forte_bool.h"
 //BIT-Datatypes
@@ -41,9 +35,9 @@
 #include "../../../src/core/datatypes/forte_lint.h"
 #include "../../../src/core/datatypes/forte_ulint.h"
 
-#ifdef FORTE_USE_REAL_DATATYPE
-  #include "../../../src/core/datatypes/forte_lreal.h"
-#endif //FORTE_USE_REAL_DATATYPE
+#include <boost/test/tools/floating_point_comparison.hpp>
+#include "../../../src/core/datatypes/forte_real.h"
+#include "../../../src/core/datatypes/forte_lreal.h"
 
 using namespace boost::unit_test;
 
@@ -260,7 +254,6 @@ BOOST_AUTO_TEST_CASE(CASTS_USINT_to_INTS)
   BOOST_CHECK_EQUAL(nTestULInt, 255ULL);
 }
 
-#ifdef FORTE_USE_REAL_DATATYPE
 BOOST_AUTO_TEST_CASE(CASTS_USINT_to_REAL)
 {
   CIEC_USINT nTestUSInt0;
@@ -308,7 +301,6 @@ BOOST_AUTO_TEST_CASE(CASTS_USINT_to_REAL)
   nTestLReal.setValue(nTestUSInt255);
   BOOST_CHECK_EQUAL(255.0, nTestLReal); 
 }
-#endif //FORTE_USE_REAL_DATATYPE
 
 BOOST_AUTO_TEST_CASE(CASTS_USINT_to_TIME)
 {

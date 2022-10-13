@@ -23,11 +23,7 @@ forte_add_sourcefile_hcpp(F_MOVE)
 forte_add_sourcefile_hcpp(F_MULTIME)
 forte_add_sourcefile_hcpp(F_DIVTIME)
 forte_add_sourcefile_hcpp(GEN_ADD)
-  
-if(FORTE_USE_REAL_DATATYPE)
-  forte_add_sourcefile_hcpp(F_TRUNC)
-endif(FORTE_USE_REAL_DATATYPE)
-
+forte_add_sourcefile_hcpp(F_TRUNC)
 forte_add_sourcefile_hcpp(F_ADD_DT_TIME)
 forte_add_sourcefile_hcpp(F_ADD_TOD_TIME)
 forte_add_sourcefile_hcpp(F_SUB_DT_TIME)

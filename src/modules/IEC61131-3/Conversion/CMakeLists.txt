@@ -31,14 +31,8 @@ if(FORTE_USE_WSTRING_DATATYPE)
   forte_add_subdirectory(WSTRING)
 endif(FORTE_USE_WSTRING_DATATYPE)
 
-if(FORTE_USE_REAL_DATATYPE)
-  forte_add_subdirectory(REAL)
-endif(FORTE_USE_REAL_DATATYPE)
-
-if(FORTE_USE_LREAL_DATATYPE)
-  forte_add_subdirectory(LREAL)
-endif(FORTE_USE_LREAL_DATATYPE)
-
+forte_add_subdirectory(REAL)
+forte_add_subdirectory(LREAL)
 forte_add_subdirectory(ULINT)
 forte_add_subdirectory(LWORD)
 forte_add_subdirectory(LINT)
