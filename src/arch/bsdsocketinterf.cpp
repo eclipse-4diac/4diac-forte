@@ -15,40 +15,36 @@
 #include "devlog.h"
 #include <string.h>
 
-void CBSDSocketInterface::closeSocket(TSocketDescriptor pa_nSockD){
+void CBSDSocketInterface::closeSocket(TSocketDescriptor paSockD){
 #if defined(NET_OS)
   closesocket(pa_nSockD);
 #else
-  close(pa_nSockD);
+  close(paSockD);
 #endif
 }
 
 CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openTCPServerConnection(
-    char *pa_acIPAddr, unsigned short pa_nPort){
+    const char *const paIPAddr, unsigned short paPort){
   TSocketDescriptor nRetVal = -1;
 
 #ifndef LOGINFO
-  (void)pa_acIPAddr;
+  (void)paIPAddr;
 #else
   DEVLOG_INFO("CBSDSocketInterface: Opening TCP-Server connection at: %s:%d\n", pa_acIPAddr, pa_nPort);
 #endif
 
-
-  TSocketDescriptor nSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
-
-  if(-1 != nSocket){
+  if(TSocketDescriptor nSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);-1 != nSocket) {
     struct sockaddr_in stSockAddr;
     memset(&(stSockAddr), '\0', sizeof(sockaddr_in));
     stSockAddr.sin_family = AF_INET;
 #if VXWORKS
     stSockAddr.sin_port = static_cast<unsigned short>(htons(pa_nPort));
 #else
-    stSockAddr.sin_port = htons(pa_nPort);
+    stSockAddr.sin_port = htons(paPort);
 #endif
     stSockAddr.sin_addr.s_addr = htonl(INADDR_ANY );
 
-    int nOptVal = 1;
-    if (setsockopt(nSocket, SOL_SOCKET, SO_REUSEADDR, (char *)&nOptVal, sizeof(nOptVal)) == -1){
+    if (int nOptVal = 1;setsockopt(nSocket, SOL_SOCKET, SO_REUSEADDR, (char *)&nOptVal, sizeof(nOptVal)) == -1) {
       DEVLOG_ERROR("CBSDSocketInterface: could not set socket option SO_REUSEADDR:  %s\n", strerror(errno));
     }
 
@@ -74,21 +70,20 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openTCPServerConnect
 }
 
 CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openTCPClientConnection(
-    char *pa_acIPAddr, unsigned short pa_nPort){
+    char *paIPAddr, unsigned short paPort){
   TSocketDescriptor nRetVal = -1;
-  TSocketDescriptor nSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-  DEVLOG_INFO("CBSDSocketInterface: Opening TCP-Client connection at: %s:%d\n", pa_acIPAddr, pa_nPort);
+  DEVLOG_INFO("CBSDSocketInterface: Opening TCP-Client connection at: %s:%d\n", paIPAddr, paPort);
 
-  if(-1 != nSocket){
+  if(TSocketDescriptor nSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);-1 != nSocket) {
     struct sockaddr_in stSockAddr;
     stSockAddr.sin_family = AF_INET;
 #if VXWORKS
     stSockAddr.sin_port = static_cast<unsigned short>(htons(pa_nPort));
 #else
-    stSockAddr.sin_port = htons(pa_nPort);
+    stSockAddr.sin_port = htons(paPort);
 #endif
-    stSockAddr.sin_addr.s_addr = inet_addr(pa_acIPAddr);
+    stSockAddr.sin_addr.s_addr = inet_addr(paIPAddr);
     memset(&(stSockAddr.sin_zero), '\0', sizeof(stSockAddr.sin_zero));
 
     if(-1 == connect(nSocket, (struct sockaddr *) &stSockAddr, sizeof(struct sockaddr))){
@@ -106,7 +101,7 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openTCPClientConnect
 }
 
 CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::acceptTCPConnection(
-    TSocketDescriptor pa_nListeningSockD){
+    TSocketDescriptor paListeningSockD){
   struct sockaddr client_addr;
   int sin_size = sizeof(struct sockaddr);
   TSocketDescriptor nRetVal;
@@ -114,35 +109,35 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::acceptTCPConnection(
 #if defined(NET_OS) || defined (VXWORKS)
   nRetVal = accept(pa_nListeningSockD, &client_addr, &sin_size);
 #else
-  nRetVal = accept(pa_nListeningSockD, &client_addr, (socklen_t*) &sin_size);
+  nRetVal = accept(paListeningSockD, &client_addr, (socklen_t*) &sin_size);
 #endif
   return nRetVal;
 }
 
-int CBSDSocketInterface::sendDataOnTCP(TSocketDescriptor pa_nSockD, char* pa_pcData,
-    unsigned int pa_unSize){
+int CBSDSocketInterface::sendDataOnTCP(TSocketDescriptor paSockD, const char* paData,
+    unsigned int paSize) {
   // This function sends all data in the buffer before it returns!
-  int nToSend = pa_unSize;
+  int nToSend = paSize;
   int nRetVal = 0;
 
   while(0 < nToSend){
     //TODO: check if open connection (socket might be closed by peer)
-    nRetVal = static_cast<int>(send(pa_nSockD, pa_pcData, nToSend, 0));
+    nRetVal = static_cast<int>(send(paSockD, paData, nToSend, 0));
     if(nRetVal <= 0){
       DEVLOG_ERROR("TCP-Socket Send failed: %s\n", strerror(errno));
       break;
     }
     nToSend -= nRetVal;
-    pa_pcData += nRetVal;
+    paData += nRetVal;
   }
   return nRetVal;
 }
 
-int CBSDSocketInterface::receiveDataFromTCP(TSocketDescriptor pa_nSockD, char* pa_pcData,
-    unsigned int pa_unBufSize){
+int CBSDSocketInterface::receiveDataFromTCP(TSocketDescriptor paSockD, char* paData,
+    unsigned int paBufSize){
   int nRetVal;
   do{
-    nRetVal = static_cast<int>(recv(pa_nSockD, pa_pcData, pa_unBufSize, 0));
+    nRetVal = static_cast<int>(recv(paSockD, paData, paBufSize, 0));
   } while((-1 == nRetVal) && (EINTR == errno)); // recv got interrupt / recieving again
 
   if(nRetVal == -1){

@@ -16,20 +16,20 @@
 
 class CBSDSocketInterface{
   public:
-    typedef FORTE_SOCKET_TYPE TSocketDescriptor;
-    typedef struct sockaddr_in TUDPDestAddr;
+    using TSocketDescriptor = FORTE_SOCKET_TYPE;
+    using TUDPDestAddr = struct sockaddr_in;
 
-    static void closeSocket(TSocketDescriptor pa_nSockD);
-    static TSocketDescriptor openTCPServerConnection(char *pa_acIPAddr, unsigned short pa_nPort);
-    static TSocketDescriptor openTCPClientConnection(char *pa_acIPAddr, unsigned short pa_nPort);
-    static TSocketDescriptor acceptTCPConnection(TSocketDescriptor pa_nListeningSockD);
-    static int sendDataOnTCP(TSocketDescriptor pa_nSockD, char* pa_pcData, unsigned int pa_unSize);
-    static int receiveDataFromTCP(TSocketDescriptor pa_nSockD, char* pa_pcData, unsigned int pa_unBufSize);
+    static void closeSocket(TSocketDescriptor paSockD);
+    static TSocketDescriptor openTCPServerConnection(const char *const paIPAddr, unsigned short paPort);
+    static TSocketDescriptor openTCPClientConnection(char *paIPAddr, unsigned short paPort);
+    static TSocketDescriptor acceptTCPConnection(TSocketDescriptor paListeningSockD);
+    static int sendDataOnTCP(TSocketDescriptor paSockD, const char *paData, unsigned int paSize);
+    static int receiveDataFromTCP(TSocketDescriptor paSockD, char* paData, unsigned int paBufSize);
 
-    static TSocketDescriptor openUDPSendPort(char *pa_acIPAddr, unsigned short pa_nPort, TUDPDestAddr *m_ptDestAddr);
-    static TSocketDescriptor openUDPReceivePort(char *pa_acIPAddr, unsigned short pa_nPort);
-    static int sendDataOnUDP(TSocketDescriptor pa_nSockD, TUDPDestAddr *pa_ptDestAddr, char* pa_pcData, unsigned int pa_unSize);
-    static int receiveDataFromUDP(TSocketDescriptor pa_nSockD, char* pa_pcData, unsigned int pa_unBufSize);
+    static TSocketDescriptor openUDPSendPort(char *paIPAddr, unsigned short paPort, TUDPDestAddr *mtDestAddr);
+    static TSocketDescriptor openUDPReceivePort(char *paIPAddr, unsigned short paPort);
+    static int sendDataOnUDP(TSocketDescriptor paSockD, TUDPDestAddr *paDestAddr, char* paData, unsigned int paSize);
+    static int receiveDataFromUDP(TSocketDescriptor paSockD, char* paData, unsigned int paBufSize);
 
     CBSDSocketInterface() = delete;
 };
