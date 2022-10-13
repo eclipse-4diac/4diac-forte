@@ -31,22 +31,21 @@ int CIEC_WCHAR::toString(char *paValue, size_t paBufferSize) const {
   if(paBufferSize >= longestStringSize) { //sizeof is char string + \0
   const TForteWChar symbol = this->operator TForteWChar();
     switch(symbol) {
-      case '\0': return snprintf(paValue, longestStringSize, "WCHAR#\"\""); break; 
-      case '$': return snprintf(paValue, longestStringSize, "WCHAR#\"$$\""); break; 
-      case '"': return snprintf(paValue, longestStringSize, "WCHAR#\"$\"\""); break; 
-      case '\n': return snprintf(paValue, longestStringSize, "WCHAR#\"$N\""); break; 
-      case '\f': return snprintf(paValue, longestStringSize, "WCHAR#\"$P\""); break;  // page aka form feed
-      case '\r': return snprintf(paValue, longestStringSize, "WCHAR#\"$R\""); break; 
-      case '\t': return snprintf(paValue, longestStringSize, "WCHAR#\"$T\""); break; 
+      case '\0': return snprintf(paValue, longestStringSize, "WCHAR#\"\"");
+      case '$': return snprintf(paValue, longestStringSize, "WCHAR#\"$$\"");
+      case '"': return snprintf(paValue, longestStringSize, "WCHAR#\"$\"\"");
+      case '\n': return snprintf(paValue, longestStringSize, "WCHAR#\"$N\"");
+      case '\f': return snprintf(paValue, longestStringSize, "WCHAR#\"$P\""); // page aka form feed
+      case '\r': return snprintf(paValue, longestStringSize, "WCHAR#\"$R\"");
+      case '\t': return snprintf(paValue, longestStringSize, "WCHAR#\"$T\"");
       default: {
         if(symbol < 256) {
             return snprintf(paValue, longestStringSize, "WCHAR#\"%c\"", symbol);
         }
         return snprintf(paValue, longestStringSize, "WCHAR#\"$%X\"", symbol);
-      } break;
+      }
     }
   }
-  
   return -1;
 }
 

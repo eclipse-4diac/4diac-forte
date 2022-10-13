@@ -31,17 +31,16 @@ int CIEC_CHAR::toString(char *paValue, size_t paBufferSize) const {
   if(paBufferSize >= longestStringSize) { //sizeof is char string + \0
   const unsigned char symbol = this->operator TForteChar();
     switch(symbol) {
-      case '\0': return snprintf(paValue, longestStringSize, "CHAR#''"); break; 
-      case '$': return snprintf(paValue, longestStringSize, "CHAR#'$$'"); break; 
-      case '\'': return snprintf(paValue, longestStringSize, "CHAR#'$''"); break; 
-      case '\n': return snprintf(paValue, longestStringSize, "CHAR#'$N'"); break; 
-      case '\f': return snprintf(paValue, longestStringSize, "CHAR#'$P'"); break;  // page aka form feed
-      case '\r': return snprintf(paValue, longestStringSize, "CHAR#'$R'"); break; 
-      case '\t': return snprintf(paValue, longestStringSize, "CHAR#'$T'"); break; 
-      default: return snprintf(paValue, longestStringSize, "CHAR#'%c'", symbol); break; 
+      case '\0': return snprintf(paValue, longestStringSize, "CHAR#''");
+      case '$': return snprintf(paValue, longestStringSize, "CHAR#'$$'");
+      case '\'': return snprintf(paValue, longestStringSize, "CHAR#'$''");
+      case '\n': return snprintf(paValue, longestStringSize, "CHAR#'$N'");
+      case '\f': return snprintf(paValue, longestStringSize, "CHAR#'$P'"); // page aka form feed
+      case '\r': return snprintf(paValue, longestStringSize, "CHAR#'$R'");
+      case '\t': return snprintf(paValue, longestStringSize, "CHAR#'$T'");
+      default: return snprintf(paValue, longestStringSize, "CHAR#'%c'", symbol);
     }
   }
-  
   return -1;
 }
 
