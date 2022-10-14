@@ -234,6 +234,7 @@ void anyRealToAnyIntInOutHelper(CIEC_ANY::EDataTypeID paDataTypeIdIn, CIEC_ANY::
       default:
         DEVLOG_ERROR("Invalid type used in anyTruncInOutHelper! No calculation performed!");
     }
+    break;
   default:
     DEVLOG_ERROR("Invalid type used in anyTruncInOutHelper! No calculation performed!");
   }
