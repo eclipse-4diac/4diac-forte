@@ -239,30 +239,29 @@ IF(FORTE_TESTS)
     ADD_SUBDIRECTORY(tests)
 ENDIF(FORTE_TESTS)
 
-#######################################################################################
-# FORTE forte_config.h 
-#######################################################################################
-
-SET(FORTE_TicksPerSecond "1000" CACHE STRING "forte sticks per second")
+# ######################################################################################
+# FORTE forte_config.h
+# ######################################################################################
+SET(FORTE_TicksPerSecond "1000" CACHE STRING "FORTE ticks per second")
 mark_as_advanced(FORTE_TicksPerSecond)
 
-SET(FORTE_EventChainEventListSize "256" CACHE STRING "forte eventchain event list size")
+SET(FORTE_EventChainEventListSize "256" CACHE STRING "FORTE eventchain event list size")
 mark_as_advanced(FORTE_EventChainEventListSize)
 
-SET(FORTE_EventChainExternalEventListSize "10"  CACHE STRING "forte eventchain external event list size")
+SET(FORTE_EventChainExternalEventListSize "10" CACHE STRING "FORTE eventchain external event list size")
 mark_as_advanced(FORTE_EventChainExternalEventListSize)
 
-SET(FORTE_CommunicationInterruptQueueSize "10" CACHE STRING "forte Communication interrupt queue size")
+SET(FORTE_CommunicationInterruptQueueSize "10" CACHE STRING "FORTE Communication interrupt queue size")
 mark_as_advanced(FORTE_CommunicationInterruptQueueSize)
 
 if(FORTE_DYNAMIC_TYPE_LOAD)
-SET(FORTE_IPLayerRecvBufferSize "20000" CACHE STRING "FORTE ip layer recv buffer size")
+SET(FORTE_IPLayerRecvBufferSize "20000" CACHE STRING "FORTE IP layer recv buffer size")
 else()
-SET(FORTE_IPLayerRecvBufferSize "1500" CACHE STRING "FORTE ip layer recv buffer size")
+SET(FORTE_IPLayerRecvBufferSize "1500" CACHE STRING "FORTE IP layer recv buffer size")
 endif(FORTE_DYNAMIC_TYPE_LOAD)
 mark_as_advanced(FORTE_IPLayerRecvBufferSize)
 
-SET(FORTE_MGMCOMMANDPROTOCOL "DEV_MGR" CACHE STRING "forte management command protocol")
+SET(FORTE_MGMCOMMANDPROTOCOL "DEV_MGR" CACHE STRING "FORTE management command protocol")
 set_property(CACHE FORTE_MGMCOMMANDPROTOCOL PROPERTY STRINGS DEV_MGR)
 mark_as_advanced(FORTE_MGMCOMMANDPROTOCOL)
 
@@ -367,7 +366,7 @@ if(FORTE_COM_OPC_UA)
   forte_opcua_configure()
 endif()
 
-#######################################################################################
+# ######################################################################################
 # Forte Simulated Time
-#######################################################################################
+# ######################################################################################
 set(FORTE_FAKE_TIME OFF CACHE BOOL "Forte configuration for using simulated progression of time")

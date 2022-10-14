@@ -106,6 +106,7 @@ FILE(WRITE ${CMAKE_BINARY_DIR}/file_test_list.txt "${WRITE_FILE}")
 #######################################################################################
 
 ADD_EXECUTABLE(forte_test $<TARGET_OBJECTS:FORTE_LITE> ${SOURCE_H} ${SOURCE_CPP})
+target_compile_features(forte_test PRIVATE cxx_std_17)
 
 #######################################################################################
 # Add definitions
