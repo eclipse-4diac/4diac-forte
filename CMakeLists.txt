@@ -41,7 +41,7 @@ INCLUDE(${FORTE_BUILDSUPPORT_DIRECTORY}/check_compiler_features.cmake)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${FORTE_BUILDSUPPORT_DIRECTORY})
 
 set(FORTE_TEST_NEEDED_COMPILER_FEATURES ON CACHE BOOL "Check for compiler features and either apply fixes or error messages if not supported")
-mark_as_advanced(FORTE_BUILD_EXECUTABLE)
+mark_as_advanced(FORTE_TEST_NEEDED_COMPILER_FEATURES)
 
 if (FORTE_TEST_NEEDED_COMPILER_FEATURES)
   TEST_NEEDED_FORTE_COMPILER_FEATURES()
@@ -57,10 +57,10 @@ set(FORTE_BUILD_EXECUTABLE ON CACHE BOOL "Build FORTE as an executable")
 mark_as_advanced(FORTE_BUILD_EXECUTABLE)
 
 set(FORTE_BUILD_STATIC_LIBRARY OFF CACHE BOOL "Build FORTE as static library")
-mark_as_advanced(FORTE_BUILD_EXECUTABLE)
+mark_as_advanced(FORTE_BUILD_STATIC_LIBRARY)
 
 set(FORTE_BUILD_SHARED_LIBRARY OFF CACHE BOOL "Build FORTE as shared library")
-mark_as_advanced(FORTE_BUILD_EXECUTABLE)
+mark_as_advanced(FORTE_BUILD_SHARED_LIBRARY)
 
 #######################################################################################
 # Determine the loglevel
@@ -185,6 +185,7 @@ mark_as_advanced(FORTE_LINKED_STRINGDICT)
 #######################################################################################
 set(FORTE_CLANG_TIDY_MODE "OFF" CACHE STRING "Run clang-tidy with the compiler.")
 set_property(CACHE FORTE_CLANG_TIDY_MODE PROPERTY STRINGS "OFF" "WARNING" "FIX")
+mark_as_advanced(FORTE_CLANG_TIDY_MODE)
 
 if(NOT ("${FORTE_CLANG_TIDY_MODE}" STREQUAL "OFF"))
     find_program(CLANG_TIDY_COMMAND NAMES clang-tidy)
