@@ -11,9 +11,11 @@
 #    - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
+if ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 forte_add_io(PLC01A1 "Support for X-NUCLEO-PLC01A")
 
 if(FORTE_IO_PLC01A1)
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
   forte_add_sourcefile_hcpp(plc01a1_controller plc01a1_config_fb)
 endif(FORTE_IO_PLC01A1)
+endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")

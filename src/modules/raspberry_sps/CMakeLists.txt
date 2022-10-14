@@ -10,6 +10,7 @@
 #     Gerd Kainz, Alois Zoitl - initial API and implementation and/or initial documentation
 # *******************************************************************************/ 
  
+if ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 forte_add_module(Raspberry-SPS OFF "Interacting with GPIOs Raspberry SPS")
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -24,3 +25,4 @@ forte_add_sourcefile_hcpp(../i2c_dev/i2cprocessinterface)
 forte_add_sourcefile_hcpp(processinterface)
 forte_set_process_interface("Raspberry-SPS" IX QX IW QW)
 
+endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")

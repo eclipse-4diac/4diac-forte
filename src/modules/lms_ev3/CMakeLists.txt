@@ -11,6 +11,7 @@
 # *    Jose Cabral - added fileWriter
 # *******************************************************************************/ 
  
+if ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 forte_add_module(LMS_EV3 OFF "I/O support for Lego Mindstorms EV3 using the ev3_dev operating system")
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -25,3 +26,5 @@ forte_set_process_interface("Lego Mindstorms EV3" IX QX IW QW ID QD)
 
 forte_add_sourcefile_hcpp(fileWriter)
 forte_add_sourcefile_hcpp(fileReader)
+
+endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")

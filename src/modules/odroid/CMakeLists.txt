@@ -10,6 +10,7 @@
 #     Alois Zoitl - initial API and implementation and/or initial documentation
 # *******************************************************************************/ 
  
+if ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 forte_add_module(Odroid OFF "Interacting with GPIOs and analogue inputs of the Odroid device")
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -23,3 +24,4 @@ forte_add_sourcefile_hcpp(../sysfs/sysfsprocint)
 forte_add_sourcefile_hcpp(processinterface)
 forte_set_process_interface("Odroid" IX QX IW)
 
+endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")

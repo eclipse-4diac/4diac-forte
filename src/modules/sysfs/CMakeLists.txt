@@ -10,6 +10,7 @@
 #     Waldemar Eisenmenger - initial API and implementation and/or initial documentation
 # *******************************************************************************/ 
  
+if ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 forte_add_module(SysFs OFF "Interacting with GPIOs of linuxbased devices via the filesystem using sysfs")
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -24,3 +25,4 @@ forte_add_sourcefile_hcpp(sysfsprocint)
 forte_set_process_interface("SysFs" IX QX)
 forte_add_sourcefile_h(processinterface.h)
 
+endif ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")

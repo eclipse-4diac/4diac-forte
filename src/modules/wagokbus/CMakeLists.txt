@@ -13,11 +13,10 @@
 #############################################################################
 # WAGO KBUS SIFBs
 #############################################################################
+if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 forte_add_module(WagoKbus OFF "Wago Kbus interface")
 
 if(FORTE_MODULE_WagoKbus)
-  if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-
     # All Wago depedencies are added here
     if(FORTE_IO)
       add_subdirectory(modular)
@@ -44,8 +43,5 @@ if(FORTE_MODULE_WagoKbus)
   
     #TODO: Further dependencies are to be checked and added later
 
-  else("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-    MESSAGE(FATAL_ERROR "The WAGO_KBUS IO system is only supported for FORTE on Linux platforms!")
-  endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-
 endif(FORTE_MODULE_WagoKbus)
+endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")

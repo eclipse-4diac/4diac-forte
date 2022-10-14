@@ -13,6 +13,7 @@
 ###############################################################
 # PiFace Raspberry Pi expansion board
 ###############################################################
+if ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 forte_add_module(MLPI OFF "Process interface using the MLPI functions for Bosch Rexroth PLCs")
 
 if(FORTE_MODULE_MLPI)
@@ -27,3 +28,4 @@ if(FORTE_MODULE_MLPI)
   forte_add_include_system_directories( ${FORTE_COM_MLPI_DIR}/mlpiCore/include )
           
 endif()
+endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")

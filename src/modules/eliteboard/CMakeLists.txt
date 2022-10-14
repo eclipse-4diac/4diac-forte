@@ -10,12 +10,10 @@
 #   Jonathan Lainer - Initial implementation.
 # *******************************************************************************/
 
+if("${FORTE_ARCHITECTURE}" STREQUAL "FreeRTOSLwIP")
 forte_add_io(ELITEBOARD "Support for the eLITe-Board development board")
 
 if(FORTE_IO_ELITEBOARD)
-
-if("${FORTE_ARCHITECTURE}" STREQUAL "FreeRTOSLwIP")
-
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 #############################################################################
@@ -35,8 +33,5 @@ forte_add_sourcefile_hcpp(handle/PinHandle)
 forte_add_sourcefile_hcpp(types/EliteBoard)
 forte_add_sourcefile_hcpp(types/Port types/PortAdapter)
 
-else("${FORTE_ARCHITECTURE}" STREQUAL "FreeRTOSLwIP")
-  MESSAGE(FATAL_ERROR "Architecture not supported for the eLITe-Board. Please choose FreeRTOSLwIP!")
-endif("${FORTE_ARCHITECTURE}" STREQUAL "FreeRTOSLwIP")
-
 endif(FORTE_IO_ELITEBOARD)
+endif("${FORTE_ARCHITECTURE}" STREQUAL "FreeRTOSLwIP")

@@ -13,6 +13,7 @@
 ###############################################################
 # PiFace Raspberry Pi expansion board
 ###############################################################
+if ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 forte_add_module(PiFace OFF "PiFace and PiFace like Raspberry PI expansion boards")
 
 if(FORTE_MODULE_PiFace)
@@ -24,3 +25,4 @@ if(FORTE_MODULE_PiFace)
   forte_set_process_interface("PiFace" IX QX)
   forte_add_sourcefile_hcpp(../conmeleon_c1/spi/spidevice)
 endif()
+endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")

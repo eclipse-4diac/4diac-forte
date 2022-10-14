@@ -14,6 +14,7 @@
 # ROS Example Publish and Subscribe FBs
 #############################################################################
 
+if ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 forte_add_module(ROS OFF "Function Blocks to communicate with ROS (publish/subscribe)")
 
 if (FORTE_MODULE_ROS)
@@ -62,3 +63,4 @@ if (FORTE_MODULE_ROS)
   forte_add_link_library(${catkin_LIBRARIES})
 
 endif(FORTE_MODULE_ROS)
+endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")

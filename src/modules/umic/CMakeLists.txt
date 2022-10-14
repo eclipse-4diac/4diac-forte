@@ -10,6 +10,7 @@
 #     Jose Cabral - initial API and implementation and/or initial documentation
 # *******************************************************************************/ 
  
+if ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 forte_add_module(uMIC OFF "Interacting with GPIOs using the umic library for MicroControl")
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -22,3 +23,4 @@ forte_add_sourcefile_hcpp(processinterface)
 forte_set_process_interface("uMIC" IX QX)
 forte_add_link_library(umic.so)
 
+endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")

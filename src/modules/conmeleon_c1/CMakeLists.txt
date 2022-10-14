@@ -10,6 +10,7 @@
 #     Alois Zoitl and Herwig Eichler
 # *******************************************************************************/ 
  
+if ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 forte_add_module(CONMELEON_C1 OFF "Interacting with the CONMELEON C1 IO board")
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -28,4 +29,5 @@ forte_add_sourcefile_h(util/uncopyable.h)
 forte_add_sourcefile_hcpp(processinterface)
 forte_set_process_interface("Conmeleon C1" IX QX IW)
 
+endif ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 
