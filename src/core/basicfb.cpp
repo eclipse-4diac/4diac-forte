@@ -64,8 +64,7 @@ CIEC_ANY* CBasicFB::getInternalVar(CStringDictionary::TStringId pa_nInternalName
   return retVal;
 }
 
-TFunctionBlockPtr *CBasicFB::createInternalFBs(const size_t paAmountOfInternalFBs, const SCFB_FBInstanceData *const paInternalFBData, CResource* const paResource)
-{
+TFunctionBlockPtr *CBasicFB::createInternalFBs(const size_t paAmountOfInternalFBs, const SCFB_FBInstanceData *const paInternalFBData, CResource* const paResource) {
   TFunctionBlockPtr *internalFBs = nullptr;
   if (paAmountOfInternalFBs) {
     internalFBs = new TFunctionBlockPtr[paAmountOfInternalFBs];
@@ -75,7 +74,7 @@ TFunctionBlockPtr *CBasicFB::createInternalFBs(const size_t paAmountOfInternalFB
   }
 }
 
-void CBasicFB::deleteInternalFBs(const size_t paAmountOfInternalFBs, TFunctionBlockPtr *paInternalFBs) {
+void CBasicFB::deleteInternalFBs(const size_t paAmountOfInternalFBs, TFunctionBlockPtr *const paInternalFBs) {
   for (size_t i = 0; i < paAmountOfInternalFBs; ++i) {
     delete paInternalFBs[i];
   }

@@ -410,6 +410,16 @@ CIEC_ANY *CFunctionBlock::createDataPoint(const CStringDictionary::TStringId **p
   return poRetVal;
 }
 
+EMGMResponse CFunctionBlock::changeInternalFBExecutionState(const EMGMCommandType paCommand, const size_t paAmountOfInternalFBs, TFunctionBlockPtr *const paInternalFBs) {
+  EMGMResponse nRetVal = e_RDY;
+  for (size_t i = 0; ((i < paAmountOfInternalFBs) && (e_RDY == nRetVal)); ++i) {
+    if(paInternalFBs[i]) {
+      nRetVal = paInternalFBs[i]->changeFBExecutionState(paCommand);
+    }
+  }
+  return nRetVal;
+}
+
 void CFunctionBlock::setupFBInterface(const SFBInterfaceSpec *pa_pstInterfaceSpec, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData){
   m_pstInterfaceSpec = const_cast<SFBInterfaceSpec *>(pa_pstInterfaceSpec);
 

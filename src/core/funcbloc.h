@@ -433,6 +433,8 @@ class CFunctionBlock {
      */
     static CIEC_ANY* createDataPoint(const CStringDictionary::TStringId **pa_panDataTypeIds, TForteByte *pa_acDataBuf);
 
+    static EMGMResponse changeInternalFBExecutionState(const EMGMCommandType paCommand, const size_t paAmountOfInternalFBs, TFunctionBlockPtr *const paInternalFBs);
+
     void freeAllData();
 
     const SFBInterfaceSpec *m_pstInterfaceSpec; //!< Pointer to the interface specification
