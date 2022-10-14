@@ -15,10 +15,11 @@
 #############################################################################
 
 forte_add_network_layer(OPC OFF "opc" COpcComLayer opccomlayer "Enable OPC communication")
-SET(FORTE_COM_OPC_LIB_ROOT "" CACHE PATH "Path to OPC library root directory")
-SET(FORTE_COM_OPC_BOOST_ROOT "" CACHE PATH "Path to Boost library root directory")
 
 if(FORTE_COM_OPC)  
+  SET(FORTE_COM_OPC_LIB_ROOT "" CACHE PATH "Path to OPC library root directory")
+  SET(FORTE_COM_OPC_BOOST_ROOT "" CACHE PATH "Path to Boost library root directory")
+
   forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
   
   forte_add_handler(COpcEventHandler opceventhandler)

@@ -214,8 +214,10 @@ endif(NOT ("${FORTE_CLANG_TIDY_MODE}" STREQUAL "OFF"))
 # Add subdirectories
 #######################################################################################
 set(FORTE_TESTS OFF CACHE BOOL "Build Tests")
-set(FORTE_TESTS_LINK_DIRS "" CACHE PATH "Test specific library directories")
-set(FORTE_TESTS_INC_DIRS "" CACHE PATH "Test specific include directories")
+IF(FORTE_TESTS)
+    set(FORTE_TESTS_LINK_DIRS "" CACHE PATH "Test specific library directories")
+    set(FORTE_TESTS_INC_DIRS "" CACHE PATH "Test specific include directories")
+ENDIF(FORTE_TESTS)
 
 set(FORTE_USE_TEST_CONFIG_IN_FORTE ON CACHE BOOL "Add the test definitions and compiler options to the base forte") #this is needed for posix and win32 options
 mark_as_advanced(FORTE_USE_TEST_CONFIG_IN_FORTE)
