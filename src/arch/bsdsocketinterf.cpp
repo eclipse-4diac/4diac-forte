@@ -30,7 +30,7 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openTCPServerConnect
 #ifndef LOGINFO
   (void)paIPAddr;
 #else
-  DEVLOG_INFO("CBSDSocketInterface: Opening TCP-Server connection at: %s:%d\n", pa_acIPAddr, pa_nPort);
+  DEVLOG_INFO("CBSDSocketInterface: Opening TCP-Server connection at: %s:%d\n", paIPAddr, paPort);
 #endif
 
   if(TSocketDescriptor nSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);-1 != nSocket) {
