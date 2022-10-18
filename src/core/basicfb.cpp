@@ -72,6 +72,7 @@ TFunctionBlockPtr *CBasicFB::createInternalFBs(const size_t paAmountOfInternalFB
       internalFBs[i] = CTypeLib::createFB(paInternalFBData[i].m_nFBInstanceNameId, paInternalFBData[i].m_nFBTypeNameId, paResource);
     }
   }
+  return internalFBs;
 }
 
 void CBasicFB::deleteInternalFBs(const size_t paAmountOfInternalFBs, TFunctionBlockPtr *const paInternalFBs) {
