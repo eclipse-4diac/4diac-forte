@@ -35,6 +35,7 @@
 #include "../datatypes/forte_time.h"
 #include "../datatypes/forte_array.h"
 #include "../../arch/devlog.h"
+#include "luamodule.h"
 
 extern "C" {
 #include <lua.h>
@@ -45,6 +46,17 @@ extern "C" {
 CLuaEngine::CLuaEngine() {
   luaState = luaL_newstate();
   luaL_openlibs(luaState);
+
+  //load lua module STfunc
+  lua_getglobal(luaState, "package");
+  lua_getfield(luaState, -1, "preload");
+
+  // package, preload, luaJIT_BC_STfunc
+  luaL_loadbuffer(luaState, (char *)luaJIT_BC_STfunc, luaJIT_BC_STfunc_SIZE, NULL);
+
+  // package.preload.STfunc = luaJIT_BC_STfunc
+  lua_setfield(luaState, -2, "STfunc");
+
 }
 
 CLuaEngine::~CLuaEngine() {
