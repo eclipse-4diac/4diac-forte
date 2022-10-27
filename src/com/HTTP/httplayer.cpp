@@ -233,7 +233,7 @@ void CHttpComLayer::sendDataAsServer(const void *paData) {
   if(!serializeData(apoSDs[0])) {
     error = true;
   } else {
-    CHttpParser::createResponse(mRequest, CIEC_STRING("HTTP/1.1 200 OK"), mContentType, mReqData);
+    CHttpParser::createResponse(mRequest, CIEC_STRING("HTTP/1.1 200 OK"), CIEC_STRING("text/plain"), mReqData);
   }
   if(error) {
     getExtEvHandler<CHTTP_Handler>().forceClose(this);
