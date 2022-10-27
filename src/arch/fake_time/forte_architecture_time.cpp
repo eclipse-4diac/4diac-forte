@@ -10,8 +10,6 @@
  *    Christoph Binder - initial implementation
  *******************************************************************************/
 
-#include <windows.h>
-
 #include "forte_architecture_time.h"
 #include "forte_constants.h"
 
