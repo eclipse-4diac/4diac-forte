@@ -477,7 +477,7 @@ void DEV_MGR::generateResponse(const char *paID, EMGMResponse paResp){
   RESP().append("\"");
   if(e_RDY != paResp){
     RESP().append(" Reason=\"");
-    RESP().append(scm_sMGMResponseTexts[paResp]);
+    RESP().append(getResponseText(paResp));
     RESP().append("\"");
   }
   RESP().append(" />");
@@ -493,7 +493,7 @@ void DEV_MGR::generateLongResponse(EMGMResponse paResp, forte::core::SManagement
   RESP().append("\"");
   if(e_RDY != paResp){
     RESP().append(" Reason=\"");
-    RESP().append(scm_sMGMResponseTexts[paResp]);
+    RESP().append(getResponseText(paResp));
     RESP().append("\">\n  ");
   }
   else{
@@ -670,7 +670,7 @@ void DEV_MGR::generateMonitorResponse(EMGMResponse paResp, forte::core::SManagem
     RESP().append(paCMD.mID);
     RESP().append("\"");
     RESP().append(" Reason=\"");
-    RESP().append(scm_sMGMResponseTexts[paResp]);
+    RESP().append(getResponseText(paResp));
     RESP().append("\">\n  ");
     RESP().append("\n</Response>");
   }else{
@@ -697,7 +697,7 @@ void DEV_MGR::generateMonitorResponse(EMGMResponse paResp, forte::core::SManagem
 bool DEV_MGR::executeCommand(char *paDest, char *paCommand){
   EMGMResponse eResp = parseAndExecuteMGMCommand(paDest, paCommand);
   if(eResp != e_RDY){
-    DEVLOG_ERROR("Boot file error. DEV_MGR says error is %s\n", DEV_MGR::scm_sMGMResponseTexts[eResp]);
+    DEVLOG_ERROR("Boot file error. DEV_MGR says error is %s\n", DEV_MGR::getResponseText(eResp));
   }
   return (eResp == e_RDY);
 }

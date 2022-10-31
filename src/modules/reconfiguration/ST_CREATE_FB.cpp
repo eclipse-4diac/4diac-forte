@@ -68,12 +68,12 @@ void FORTE_ST_CREATE_FB::executeRQST(){
   EMGMResponse resp =  m_poDevice.executeMGMCommand(theCommand);
 
   //calculate return value
-  CIEC_STRING retVal(DEV_MGR::scm_sMGMResponseTexts[resp]);
-  CIEC_STRING compareVal(DEV_MGR::scm_sMGMResponseTexts[e_RDY]);
+  CIEC_STRING retVal(DEV_MGR::getResponseText(resp));
+  CIEC_STRING compareVal(DEV_MGR::getResponseText(e_RDY));
   QO() = CIEC_BOOL(retVal == compareVal);
 
-  DEVLOG_DEBUG("%s\n", DEV_MGR::scm_sMGMResponseTexts[resp]); 
-  STATUS() = CIEC_WSTRING(DEV_MGR::scm_sMGMResponseTexts[resp]);
+  DEVLOG_DEBUG("%s\n", DEV_MGR::getResponseText(resp));
+  STATUS() = CIEC_WSTRING(DEV_MGR::getResponseText(resp));
 }
 
 

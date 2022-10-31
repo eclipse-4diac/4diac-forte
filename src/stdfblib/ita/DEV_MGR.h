@@ -27,18 +27,21 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
   DECLARE_FIRMWARE_FB(DEV_MGR)
 
   public:
-    /*!\brief Type for the response of MGM command messages
-     *
-     * TODO fully define all responses as defined in IEC 61499 inc. numbers.
-     */
-    static const char * const scm_sMGMResponseTexts[13];
-
     DEV_MGR(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
     ~DEV_MGR() override;
 
     bool executeCommand(char *paDest, char *paCommand) override;
 
+    static const char *getResponseText(EMGMResponse paResp) {
+      return scm_sMGMResponseTexts[static_cast<std::underlying_type_t<EMGMResponse>>(paResp)];
+    }
+
   private:
+    /*!\brief Type for the response of MGM command messages
+     *
+     * TODO fully define all responses as defined in IEC 61499 inc. numbers.
+     */
+    static const char * const scm_sMGMResponseTexts[13];
 
     EMGMResponse parseAndExecuteMGMCommand(char *paDest, char *paCommand);
 
