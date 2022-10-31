@@ -61,7 +61,7 @@ CTypeLib::CDataTypeEntry::CDataTypeEntry(CStringDictionary::TStringId paTypeName
 CTypeLib::CDataTypeEntry::~CDataTypeEntry() = default;
 
 
-EMGMResponse CTypeLib::m_eLastErrorMSG = e_RDY;
+EMGMResponse CTypeLib::m_eLastErrorMSG = EMGMResponse::Ready;
 
 CTypeLib::CFBTypeEntry *CTypeLib::m_poFBLibStart = nullptr;
 CTypeLib::CFBTypeEntry *CTypeLib::m_poFBLibEnd = nullptr;
@@ -91,7 +91,7 @@ CAdapter *CTypeLib::createAdapter(CStringDictionary::TStringId pa_nInstanceNameI
     poNewAdapter =
       (static_cast<CAdapterTypeEntry *>(poToCreate))->createAdapterInstance(pa_nInstanceNameId,pa_poRes, pa_bIsPlug);
     if(nullptr == poNewAdapter) {
-      m_eLastErrorMSG = e_OVERFLOW;
+      m_eLastErrorMSG = EMGMResponse::Overflow;
     }
   } //no generic adapters supported
 
@@ -107,7 +107,7 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId pa_nInstanceName
     poNewFB
         = (static_cast<CFBTypeEntry *>(poToCreate))->createFBInstance(pa_nInstanceNameId, pa_poRes);
     if(nullptr == poNewFB) { // we could not create the requested object
-      m_eLastErrorMSG = e_OVERFLOW;
+      m_eLastErrorMSG = EMGMResponse::Overflow;
     }
   } else { //check for parameterizable FBs (e.g. SERVER)
     TIdentifier acGenFBName = { "GEN_" };
@@ -125,7 +125,7 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId pa_nInstanceName
       if (nullptr != poToCreate) {
         poNewFB = (static_cast<CFBTypeEntry *>(poToCreate))->createFBInstance(pa_nInstanceNameId, pa_poRes);
         if (nullptr == poNewFB){ // we could not create the requested object
-          m_eLastErrorMSG = e_OVERFLOW;
+          m_eLastErrorMSG = EMGMResponse::Overflow;
         }
         else { // we got a configurable block
           if (!poNewFB->configureFB(acTypeBuf)) {
@@ -135,11 +135,11 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId pa_nInstanceName
         }
       }
       else{
-        m_eLastErrorMSG = e_UNSUPPORTED_TYPE;
+        m_eLastErrorMSG = EMGMResponse::UnsupportedType;
       }
     }
     else{
-      m_eLastErrorMSG = e_UNSUPPORTED_TYPE;
+      m_eLastErrorMSG = EMGMResponse::UnsupportedType;
     }
   }
 
@@ -162,10 +162,10 @@ CIEC_ANY *CTypeLib::createDataTypeInstance(CStringDictionary::TStringId pa_nDTNa
   if (nullptr != poToCreate) {
     poNewDT = (static_cast<CDataTypeEntry *>(poToCreate))->createDataTypeInstance(pa_acDataBuf);
     if(nullptr == poNewDT) { // we could not create the requested object
-      m_eLastErrorMSG = e_OVERFLOW;
+      m_eLastErrorMSG = EMGMResponse::Overflow;
     }
   } else {
-    m_eLastErrorMSG = e_UNSUPPORTED_TYPE;
+    m_eLastErrorMSG = EMGMResponse::UnsupportedType;
   }
 
   return poNewDT;

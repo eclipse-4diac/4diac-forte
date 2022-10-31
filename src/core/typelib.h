@@ -192,8 +192,8 @@ public:
  * \param pa_poRes   Resource the FB is contained in.
  * \return On success a pointer to the new FB is returned, else the return value is 0 use getLastError for getting more information on the problem.
  *   possible error codes are:
- *    - e_UNSUPPORTED_TYPE   The requested FB type is not known to the typelib
- *    - e_INVALID_OPERATION The requested FB can not be created (e.g. out of memory)
+ *    - UnsupportedType   The requested FB type is not known to the typelib
+ *    - InvalidOperation The requested FB can not be created (e.g. out of memory)
  */
   static CFunctionBlock *createFB(CStringDictionary::TStringId pa_nInstanceNameId, CStringDictionary::TStringId pa_nFBTypeId, CResource *pa_poRes);
 

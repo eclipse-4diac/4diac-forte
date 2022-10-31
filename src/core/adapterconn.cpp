@@ -38,7 +38,7 @@ void CAdapterConnection::typifyAnyAdapter(CAdapter *paSocket, CAdapter *paPlug){
 }
 
 EMGMResponse CAdapterConnection::connect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId){
-  EMGMResponse retVal = e_NO_SUCH_OBJECT;
+  EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
   TPortId portId = paDstFB->getAdapterPortId(paDstPortNameId);
   if(cg_unInvalidPortId != portId){
@@ -50,36 +50,36 @@ EMGMResponse CAdapterConnection::connect(CFunctionBlock *paDstFB, CStringDiction
         if(mPlug->connect(socket, this) && socket->connect(mPlug, this)) {
           mSocket = socket;
           addDestination(CConnectionPoint(paDstFB, portId));
-          retVal = e_RDY;
+          retVal = EMGMResponse::Ready;
         }
         else{
           mPlug->disconnect();
           socket->disconnect();
-          retVal = e_INVALID_OBJECT;
+          retVal = EMGMResponse::InvalidObject;
         }
       }
       else{
-        retVal = e_INVALID_OBJECT;
+        retVal = EMGMResponse::InvalidObject;
       }
     }
     else{
-      retVal = e_INVALID_STATE;
+      retVal = EMGMResponse::InvalidState;
     }
   }
   return retVal;
 }
 
 EMGMResponse CAdapterConnection::connectToCFBInterface(CFunctionBlock *, CStringDictionary::TStringId){
-  return e_INVALID_OPERATION; //currently we are not supporting adapter connections accross interface boundaries
+  return EMGMResponse::InvalidOperation; //currently we are not supporting adapter connections accross interface boundaries
 }
 
 EMGMResponse CAdapterConnection::disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId){
-  EMGMResponse retVal = e_NO_SUCH_OBJECT;
+  EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
   TPortId portId = paDstFB->getAdapterPortId(paDstPortNameId);
   if(cg_unInvalidPortId != portId){
     retVal = CConnection::removeDestination(CConnectionPoint(paDstFB, portId));
-    if(e_RDY == retVal){
+    if(EMGMResponse::Ready == retVal){
       performDisconnect();
     }
   }

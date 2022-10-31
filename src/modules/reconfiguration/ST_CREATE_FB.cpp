@@ -69,7 +69,7 @@ void FORTE_ST_CREATE_FB::executeRQST(){
 
   //calculate return value
   CIEC_STRING retVal(DEV_MGR::getResponseText(resp));
-  CIEC_STRING compareVal(DEV_MGR::getResponseText(e_RDY));
+  CIEC_STRING compareVal(DEV_MGR::getResponseText(EMGMResponse::Ready));
   QO() = CIEC_BOOL(retVal == compareVal);
 
   DEVLOG_DEBUG("%s\n", DEV_MGR::getResponseText(resp));

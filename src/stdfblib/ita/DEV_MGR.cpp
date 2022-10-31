@@ -475,7 +475,7 @@ void DEV_MGR::generateResponse(const char *paID, EMGMResponse paResp){
     RESP().append(paID);
   }
   RESP().append("\"");
-  if(e_RDY != paResp){
+  if(EMGMResponse::Ready != paResp){
     RESP().append(" Reason=\"");
     RESP().append(getResponseText(paResp));
     RESP().append("\"");
@@ -491,7 +491,7 @@ void DEV_MGR::generateLongResponse(EMGMResponse paResp, forte::core::SManagement
     RESP().append(paCMD.mID);
   }
   RESP().append("\"");
-  if(e_RDY != paResp){
+  if(EMGMResponse::Ready != paResp){
     RESP().append(" Reason=\"");
     RESP().append(getResponseText(paResp));
     RESP().append("\">\n  ");
@@ -587,7 +587,7 @@ DEV_MGR::~DEV_MGR(){
 }
 
 EMGMResponse DEV_MGR::parseAndExecuteMGMCommand(char *paDest, char *paCommand){
-  EMGMResponse eResp = e_INVALID_OBJECT;
+  EMGMResponse eResp = EMGMResponse::InvalidObject;
   if(nullptr != strchr(paCommand, '>')){
     mCommand.mDestination = (strlen(paDest) != 0) ? CStringDictionary::getInstance().insert(paDest) : CStringDictionary::scm_nInvalidStringId;
     mCommand.mFirstParam.clear();
@@ -640,7 +640,7 @@ EMGMResponse DEV_MGR::parseAndExecuteMGMCommand(char *paDest, char *paCommand){
       }
     }
     else {
-      eResp = e_UNSUPPORTED_CMD;
+      eResp = EMGMResponse::UnsupportedCmd;
     }
   }
   return eResp;
@@ -665,7 +665,7 @@ bool DEV_MGR::parseMonitoringData(char *paRequestPartLeft, forte::core::SManagem
 
 void DEV_MGR::generateMonitorResponse(EMGMResponse paResp, forte::core::SManagementCMD &paCMD){
   RESP().clear();
-  if(e_RDY != paResp){
+  if(EMGMResponse::Ready != paResp){
     RESP().append("<Response ID=\"");
     RESP().append(paCMD.mID);
     RESP().append("\"");
@@ -696,8 +696,8 @@ void DEV_MGR::generateMonitorResponse(EMGMResponse paResp, forte::core::SManagem
 
 bool DEV_MGR::executeCommand(char *paDest, char *paCommand){
   EMGMResponse eResp = parseAndExecuteMGMCommand(paDest, paCommand);
-  if(eResp != e_RDY){
+  if(eResp != EMGMResponse::Ready){
     DEVLOG_ERROR("Boot file error. DEV_MGR says error is %s\n", DEV_MGR::getResponseText(eResp));
   }
-  return (eResp == e_RDY);
+  return (eResp == EMGMResponse::Ready);
 }

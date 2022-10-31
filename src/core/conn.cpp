@@ -19,24 +19,24 @@ CConnection::CConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId) :
 }
 
 EMGMResponse CConnection::addDestination(const CConnectionPoint &paDestPoint){
-  EMGMResponse retval = e_INVALID_STATE;
+  EMGMResponse retval = EMGMResponse::InvalidState;
 
   if(!dstExists(paDestPoint)){ // check if there is up to now no such fan out with this destination
     mDestinationIds.pushBack(paDestPoint);
-    retval = e_RDY;
+    retval = EMGMResponse::Ready;
   }
   return retval;
 }
 
 EMGMResponse CConnection::removeDestination(const CConnectionPoint &paDestPoint){
-  EMGMResponse retval = e_INVALID_STATE;
+  EMGMResponse retval = EMGMResponse::InvalidState;
 
   TDestinationIdList::Iterator itRunner = mDestinationIds.begin();
   TDestinationIdList::Iterator itRefNode = mDestinationIds.end();
 
   while(itRunner != mDestinationIds.end()){
     if(paDestPoint == (*itRunner)){
-      retval = e_RDY;
+      retval = EMGMResponse::Ready;
       if(itRefNode == mDestinationIds.end()){
         mDestinationIds.popFront();
       }

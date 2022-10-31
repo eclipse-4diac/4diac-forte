@@ -111,7 +111,7 @@ bool CCompositeFB::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefV
 
 EMGMResponse CCompositeFB::changeFBExecutionState(EMGMCommandType pa_unCommand){
   EMGMResponse nRetVal = CFunctionBlock::changeFBExecutionState(pa_unCommand);
-  if (e_RDY == nRetVal) {
+  if (EMGMResponse::Ready == nRetVal) {
     nRetVal = changeInternalFBExecutionState(pa_unCommand, cm_cpoFBNData->m_nNumFBs, mInternalFBs);
   }
   //Update FB parameters that maybe got overwritten by default values of the FB

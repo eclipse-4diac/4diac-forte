@@ -34,7 +34,7 @@ CDataConnection::~CDataConnection(){
 
 EMGMResponse CDataConnection::connect(CFunctionBlock *paDstFB,
     CStringDictionary::TStringId paDstPortNameId){
-  EMGMResponse retVal = e_NO_SUCH_OBJECT;
+  EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
   TPortId dstPortId = paDstFB->getDIID(paDstPortNameId);
   if(cg_unInvalidPortId != dstPortId){
@@ -46,7 +46,7 @@ EMGMResponse CDataConnection::connect(CFunctionBlock *paDstFB,
 
 EMGMResponse CDataConnection::connectToCFBInterface(CFunctionBlock *paDstFB,
     CStringDictionary::TStringId paDstPortNameId){
-  EMGMResponse retVal = e_NO_SUCH_OBJECT;
+  EMGMResponse retVal = EMGMResponse::NoSuchObject;
   TPortId nDOID = paDstFB->getDOID(paDstPortNameId);
 
   if(cg_nInvalidEventID != nDOID){
@@ -74,12 +74,12 @@ void CDataConnection::handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint)
 
 EMGMResponse
 CDataConnection::disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId){
-  EMGMResponse retval = e_NO_SUCH_OBJECT;
+  EMGMResponse retval = EMGMResponse::NoSuchObject;
   TPortId dstPortId = paDstFB->getDIID(paDstPortNameId);
 
   if(cg_unInvalidPortId != dstPortId){
     retval = CConnection::removeDestination(CConnectionPoint(paDstFB, dstPortId));
-    if(e_RDY == retval){
+    if(EMGMResponse::Ready == retval){
       // the CConnection class didn't respond an error
       paDstFB->connectDI(dstPortId, nullptr);
     }
@@ -127,22 +127,22 @@ bool CDataConnection::needsSpecialCast(CIEC_ANY::EDataTypeID pa_eSrcDTId){
 
 EMGMResponse CDataConnection::establishDataConnection(CFunctionBlock *paDstFB, TPortId paDstPortId,
     CIEC_ANY *paDstDataPoint){
-  EMGMResponse retVal = e_INVALID_OPERATION;
+  EMGMResponse retVal = EMGMResponse::InvalidOperation;
 
   if(nullptr == m_poValue){
     handleAnySrcPortConnection(*paDstDataPoint);
-    retVal = e_RDY;
+    retVal = EMGMResponse::Ready;
   }
   else{
     if(canBeConnected(m_poValue, paDstDataPoint, mSpecialCastConnection)){
-      retVal = e_RDY;
+      retVal = EMGMResponse::Ready;
     }
   }
 
-  if(e_RDY == retVal){
+  if(EMGMResponse::Ready == retVal){
     retVal = CConnection::addDestination(CConnectionPoint(paDstFB, paDstPortId));
-    if(e_RDY == retVal && !paDstFB->connectDI(paDstPortId, this)) {
-      retVal = e_INVALID_STATE;
+    if(EMGMResponse::Ready == retVal && !paDstFB->connectDI(paDstPortId, this)) {
+      retVal = EMGMResponse::InvalidState;
       mDestinationIds.popFront(); //empty the list so that the have created connection is not here anymore
     }
   }

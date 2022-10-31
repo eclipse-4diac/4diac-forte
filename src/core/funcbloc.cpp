@@ -353,39 +353,39 @@ void CFunctionBlock::receiveInputEvent(size_t paEIID, CEventChainExecutionThread
 }
 
 EMGMResponse CFunctionBlock::changeFBExecutionState(EMGMCommandType pa_unCommand){
-  EMGMResponse nRetVal = e_INVALID_STATE;
+  EMGMResponse nRetVal = EMGMResponse::InvalidState;
   switch (pa_unCommand){
     case EMGMCommandType::Start:
       if((e_IDLE == m_enFBState) || (e_STOPPED == m_enFBState)){
         m_enFBState = e_RUNNING;
-        nRetVal = e_RDY;
+        nRetVal = EMGMResponse::Ready;
       }
       break;
     case EMGMCommandType::Stop:
       if(e_RUNNING == m_enFBState){
         m_enFBState = e_STOPPED;
-        nRetVal = e_RDY;
+        nRetVal = EMGMResponse::Ready;
       }
       break;
     case EMGMCommandType::Kill:
       if(e_RUNNING == m_enFBState){
         m_enFBState = e_KILLED;
-        nRetVal = e_RDY;
+        nRetVal = EMGMResponse::Ready;
       }
       break;
     case EMGMCommandType::Reset:
       if((e_STOPPED == m_enFBState) || (e_KILLED == m_enFBState)){
         m_enFBState = e_IDLE;
-        nRetVal = e_RDY;
+        nRetVal = EMGMResponse::Ready;
         setInitialValues();
       }
       break;
     default:
-      nRetVal = e_INVALID_OPERATION;
+      nRetVal = EMGMResponse::InvalidOperation;
       break;
   }
 
-  if(e_RDY == nRetVal && nullptr != m_pstInterfaceSpec) {
+  if(EMGMResponse::Ready == nRetVal && nullptr != m_pstInterfaceSpec) {
     for(int i = 0; i < m_pstInterfaceSpec->m_nNumAdapters; ++i) {
       if(nullptr != m_apoAdapters[i]) {
         m_apoAdapters[i]->changeFBExecutionState(pa_unCommand);
@@ -411,8 +411,8 @@ CIEC_ANY *CFunctionBlock::createDataPoint(const CStringDictionary::TStringId **p
 }
 
 EMGMResponse CFunctionBlock::changeInternalFBExecutionState(const EMGMCommandType paCommand, const size_t paAmountOfInternalFBs, TFunctionBlockPtr *const paInternalFBs) {
-  EMGMResponse nRetVal = e_RDY;
-  for (size_t i = 0; ((i < paAmountOfInternalFBs) && (e_RDY == nRetVal)); ++i) {
+  EMGMResponse nRetVal = EMGMResponse::Ready;
+  for (size_t i = 0; ((i < paAmountOfInternalFBs) && (EMGMResponse::Ready == nRetVal)); ++i) {
     if(paInternalFBs[i]) {
       nRetVal = paInternalFBs[i]->changeFBExecutionState(paCommand);
     }

@@ -59,9 +59,9 @@ class CConnection{
      * \param paDstFB     the destination FB of this connection
      * \param paDestPortNameId the input port name to which this connection should be connected to
      * \return can be the following response:
-     *     - e_RDY... creation went well.
-     *     - e_NO_SUCH_OBJECT... The destination is not a valid input.
-     *     - e_INVALID_STATE... The specified connection already exists.
+     *     - Ready... creation went well.
+     *     - NoSuchObject... The destination is not a valid input.
+     *     - InvalidState... The specified connection already exists.
      */
     virtual EMGMResponse connect(CFunctionBlock *paDstFB,
         CStringDictionary::TStringId paDstPortNameId) = 0;
@@ -83,9 +83,9 @@ class CConnection{
      * \param paDstFB     the destination FB of this connection
      * \param paDestPortNameId the input port name to from which this connection should be removed
      * \return can be the following response:
-     *     - e_RDY... creation went well.
-     *     - e_NO_SUCH_OBJECT... The destination is not a valid input.
-     *     - e_INVALID_STATE... this connection is not connected to the destination
+     *     - Ready... creation went well.
+     *     - NoSuchObject... The destination is not a valid input.
+     *     - InvalidState... this connection is not connected to the destination
      */
     virtual EMGMResponse disconnect(CFunctionBlock *paDstFB,
         CStringDictionary::TStringId paDstPortNameId) = 0;

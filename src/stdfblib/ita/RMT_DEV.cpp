@@ -48,7 +48,7 @@ int RMT_DEV::startDevice(){
 
 EMGMResponse RMT_DEV::changeFBExecutionState(EMGMCommandType pa_unCommand){
   EMGMResponse eRetVal = CDevice::changeFBExecutionState(pa_unCommand);
-  if((e_RDY == eRetVal) && (EMGMCommandType::Kill == pa_unCommand)){
+  if((EMGMResponse::Ready == eRetVal) && (EMGMCommandType::Kill == pa_unCommand)){
     MGR.changeFBExecutionState(EMGMCommandType::Kill);
   }
   return eRetVal;

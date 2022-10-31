@@ -43,7 +43,7 @@ void FORTE_E_TimeOut::executeEvent(int pa_nEIID){
 
 EMGMResponse FORTE_E_TimeOut::changeFBExecutionState(EMGMCommandType pa_unCommand){
   EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(pa_unCommand);
-  if((e_RDY == eRetVal) && ((EMGMCommandType::Stop == pa_unCommand) || (EMGMCommandType::Kill == pa_unCommand))){
+  if((EMGMResponse::Ready == eRetVal) && ((EMGMCommandType::Stop == pa_unCommand) || (EMGMCommandType::Kill == pa_unCommand))){
     if(mActive){
       getTimer().unregisterTimedFB(this);
       mActive = false;

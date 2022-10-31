@@ -22,7 +22,7 @@ CEventConnection::CEventConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId)
 CEventConnection::~CEventConnection() = default;
 
 EMGMResponse CEventConnection::connect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId){
-  EMGMResponse retval = e_NO_SUCH_OBJECT;
+  EMGMResponse retval = EMGMResponse::NoSuchObject;
   TPortId nEIID = paDstFB->getEIID(paDstPortNameId);
 
   if(cg_nInvalidEventID != nEIID){
@@ -32,7 +32,7 @@ EMGMResponse CEventConnection::connect(CFunctionBlock *paDstFB, CStringDictionar
 }
 
 EMGMResponse CEventConnection::connectToCFBInterface(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId){
-  EMGMResponse retval = e_NO_SUCH_OBJECT;
+  EMGMResponse retval = EMGMResponse::NoSuchObject;
   TPortId nEOID = paDstFB->getEOID(paDstPortNameId);
 
   if(cg_nInvalidEventID != nEOID){
@@ -43,7 +43,7 @@ EMGMResponse CEventConnection::connectToCFBInterface(CFunctionBlock *paDstFB, CS
 }
 
 EMGMResponse CEventConnection::disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId){
-  EMGMResponse retval = e_NO_SUCH_OBJECT;
+  EMGMResponse retval = EMGMResponse::NoSuchObject;
   TEventID nEIID = paDstFB->getEIID(paDstPortNameId);
 
   if(cg_nInvalidEventID != nEIID){

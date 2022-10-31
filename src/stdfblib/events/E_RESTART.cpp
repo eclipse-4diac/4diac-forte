@@ -58,7 +58,7 @@ void E_RESTART::executeEvent(int pa_nEIID) {
 
 EMGMResponse E_RESTART::changeFBExecutionState(EMGMCommandType pa_unCommand){
   EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(pa_unCommand);
-  if(e_RDY == eRetVal){
+  if(EMGMResponse::Ready == eRetVal){
     switch(pa_unCommand){
       case EMGMCommandType::Start:
         mEventToSend = (csmSTOPID == mEventToSend) ? csmWARMID : csmCOLDID;

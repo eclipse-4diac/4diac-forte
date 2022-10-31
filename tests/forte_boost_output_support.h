@@ -30,6 +30,7 @@
 #include "forte_ltime_of_day.h"
 #include "forte_ldate.h"
 #include "forte_ldate_and_time.h"
+#include "mgmcmd.h"
 
 inline
 std::ostream& boost_test_print_type(std::ostream &out, const CIEC_TIME &variable) {
@@ -124,6 +125,12 @@ std::ostream& boost_test_print_type(std::ostream &out, const CIEC_WSTRING &varia
   char outputString[variable.getToStringBufferSize()];
   variable.toString(outputString, sizeof(outputString));
   out << outputString;
+  return out;
+}
+
+inline
+std::ostream& boost_test_print_type(std::ostream &out, const EMGMResponse &variable) {
+  out << static_cast<std::underlying_type_t<EMGMResponse>>(variable);
   return out;
 }
 

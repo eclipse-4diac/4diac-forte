@@ -75,7 +75,7 @@ CResource::~CResource(){
 }
 
 EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand){
-  EMGMResponse retVal = e_INVALID_DST;
+  EMGMResponse retVal = EMGMResponse::InvalidDst;
 
   if(CStringDictionary::scm_nInvalidStringId == paCommand.mDestination){
     switch (paCommand.mCMD){
@@ -88,14 +88,14 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
         retVal = createFBTypeFromLua(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
 #else
-        retVal = e_UNSUPPORTED_CMD;
+        retVal = EMGMResponse::UnsupportedCmd;
 #endif
         break;
       case EMGMCommandType::CreateAdapterType:
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
         retVal = createAdapterTypeFromLua(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
 #else
-        retVal = e_UNSUPPORTED_CMD;
+        retVal = EMGMResponse::UnsupportedCmd;
 #endif
         break;
       case EMGMCommandType::DeleteFBInstance: {
@@ -145,7 +145,7 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
 #ifdef FORTE_SUPPORT_MONITORING
         retVal = mMonitoringHandler.executeMonitoringCommand(paCommand);
 #else
-        retVal = e_UNSUPPORTED_CMD;
+        retVal = EMGMResponse::UnsupportedCmd;
 #endif
         break;
     }
@@ -155,9 +155,9 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
 
 EMGMResponse CResource::changeFBExecutionState(EMGMCommandType pa_unCommand){
   EMGMResponse retVal = CFunctionBlock::changeFBExecutionState(pa_unCommand);
-  if(e_RDY == retVal){
+  if(EMGMResponse::Ready == retVal){
     retVal = changeContainedFBsExecutionState(pa_unCommand);
-    if(e_RDY == retVal){
+    if(EMGMResponse::Ready == retVal){
       if(EMGMCommandType::Start == pa_unCommand && nullptr != m_pstInterfaceSpec) { //on start, sample inputs
         for(int i = 0; i < m_pstInterfaceSpec->m_nNumDIs; ++i) {
           if(nullptr != m_apoDIConns[i]) {
@@ -175,7 +175,7 @@ EMGMResponse CResource::changeFBExecutionState(EMGMCommandType pa_unCommand){
 }
 
 EMGMResponse CResource::handleExecutionStateCmd(EMGMCommandType paCMD, forte::core::TNameIdentifier &paTarget){
-  EMGMResponse retVal = e_NO_SUCH_OBJECT;
+  EMGMResponse retVal = EMGMResponse::NoSuchObject;
   CFunctionBlock *fb = this;
 
   if(!paTarget.isEmpty()){
@@ -194,7 +194,7 @@ EMGMResponse CResource::createConnection(forte::core::SManagementCMD &paCommand)
 }
 
 EMGMResponse CResource::createConnection(forte::core::TNameIdentifier &paSrcNameList, forte::core::TNameIdentifier &paDstNameList){
-  EMGMResponse retVal = e_NO_SUCH_OBJECT;
+  EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
   CConnection *con = getConnection(paSrcNameList);
   if(nullptr != con){
@@ -211,7 +211,7 @@ EMGMResponse CResource::createConnection(forte::core::TNameIdentifier &paSrcName
 }
 
 EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcNameList, forte::core::TNameIdentifier &paDstNameList){
-  EMGMResponse retVal = e_NO_SUCH_OBJECT;
+  EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
   CConnection *con = getConnection(paSrcNameList);
   if(nullptr != con){
@@ -228,7 +228,7 @@ EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcName
 }
 
 EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, const CIEC_STRING & paValue, bool paForce){
-  EMGMResponse retVal = e_NO_SUCH_OBJECT;
+  EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
   CStringDictionary::TStringId portName = paNameList.back();
   paNameList.popBack();
@@ -255,10 +255,10 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
             con->writeData(var);
           }
         }
-        retVal = e_RDY;
+        retVal = EMGMResponse::Ready;
       }
       else{
-        retVal = e_BAD_PARAMS;
+        retVal = EMGMResponse::BadParams;
       }
     }
   }
@@ -266,7 +266,7 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
 }
 
 EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, CIEC_STRING & paValue){
-  EMGMResponse retVal = e_NO_SUCH_OBJECT;
+  EMGMResponse retVal = EMGMResponse::NoSuchObject;
   CIEC_ANY *var = getVariable(paNameList);
   if(nullptr != var){
     int nUsedChars = -1;
@@ -287,10 +287,10 @@ EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, CIEC
 
     if(-1 != nUsedChars){
       paValue.assign(paValue.getValue(), static_cast<TForteUInt16>(nUsedChars));
-      retVal = e_RDY;
+      retVal = EMGMResponse::Ready;
     }
     else{
-      retVal = e_INVALID_OBJECT;
+      retVal = EMGMResponse::InvalidObject;
     }
   }
   return retVal;
@@ -299,11 +299,11 @@ EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, CIEC
 #ifdef FORTE_SUPPORT_QUERY_CMD
 
 EMGMResponse CResource::queryAllFBTypes(CIEC_STRING & paValue){
-  EMGMResponse retVal = e_UNSUPPORTED_TYPE;
+  EMGMResponse retVal = EMGMResponse::UnsupportedType;
 
   CTypeLib::CTypeEntry *fbTypeRunner = CTypeLib::getFBLibStart();
   if(fbTypeRunner != nullptr){
-    retVal = e_RDY;
+    retVal = EMGMResponse::Ready;
     for(; fbTypeRunner != nullptr; fbTypeRunner = fbTypeRunner->m_poNext){
       paValue.append(CStringDictionary::getInstance().get(fbTypeRunner->getTypeNameId()));
       if(fbTypeRunner->m_poNext != nullptr){
@@ -315,11 +315,11 @@ EMGMResponse CResource::queryAllFBTypes(CIEC_STRING & paValue){
 }
 
 EMGMResponse CResource::queryAllAdapterTypes(CIEC_STRING & paValue){
-  EMGMResponse retVal = e_UNSUPPORTED_TYPE;
+  EMGMResponse retVal = EMGMResponse::UnsupportedType;
 
   CTypeLib::CTypeEntry *adapterTypeRunner = CTypeLib::getAdapterLibStart();
   if(adapterTypeRunner != nullptr){
-    retVal = e_RDY;
+    retVal = EMGMResponse::Ready;
     for(; adapterTypeRunner != nullptr; adapterTypeRunner = adapterTypeRunner->m_poNext){
       paValue.append(CStringDictionary::getInstance().get(adapterTypeRunner->getTypeNameId()));
       if(adapterTypeRunner->m_poNext != nullptr){
@@ -341,18 +341,18 @@ EMGMResponse CResource::queryFBs(CIEC_STRING & paValue){
     paValue.append(CStringDictionary::getInstance().get((static_cast<CFunctionBlock *>(*itRunner))->getFBTypeId()));
     paValue.append("\"/>");
   }
-  return e_RDY;
+  return EMGMResponse::Ready;
 }
 
 EMGMResponse CResource::queryConnections(CIEC_STRING & paReqResult){
-  EMGMResponse retVal = e_UNSUPPORTED_TYPE;
+  EMGMResponse retVal = EMGMResponse::UnsupportedType;
   //TODO check container list to support subapps issue[538333]
   for(TFunctionBlockList::Iterator itRunner(getFBList().begin()); itRunner != getFBList().end(); ++itRunner){
     createEOConnectionResponse(**itRunner, paReqResult);
     createDOConnectionResponse(**itRunner, paReqResult);
     createAOConnectionResponse(**itRunner, paReqResult);
   }
-  retVal = e_RDY;
+  retVal = EMGMResponse::Ready;
   return retVal;
 }
 
@@ -425,7 +425,7 @@ void CResource::createConnectionResponseMessage(const CStringDictionary::TString
 }
 
 EMGMResponse CResource::createFBTypeResponseMessage(const CStringDictionary::TStringId paValue, CIEC_STRING & paReqResult){
-  EMGMResponse retVal = e_UNSUPPORTED_TYPE;
+  EMGMResponse retVal = EMGMResponse::UnsupportedType;
   CTypeLib::CFBTypeEntry* fbType = static_cast<CTypeLib::CFBTypeEntry *>(CTypeLib::findType(paValue, CTypeLib::getFBLibStart()));
   if(nullptr != fbType){
     retVal = createXTypeResponseMessage(fbType, paValue, retVal, paReqResult);
@@ -434,7 +434,7 @@ EMGMResponse CResource::createFBTypeResponseMessage(const CStringDictionary::TSt
 }
 
 EMGMResponse CResource::createAdapterTypeResponseMessage(const CStringDictionary::TStringId paValue, CIEC_STRING & paReqResult){
-  EMGMResponse retVal = e_UNSUPPORTED_TYPE;
+  EMGMResponse retVal = EMGMResponse::UnsupportedType;
   CTypeLib::CAdapterTypeEntry* adapterType = static_cast<CTypeLib::CAdapterTypeEntry *>(CTypeLib::findType(paValue, CTypeLib::getAdapterLibStart()));
   if(nullptr != adapterType){
     retVal = createXTypeResponseMessage(adapterType, paValue, retVal, paReqResult);
@@ -452,7 +452,7 @@ EMGMResponse  CResource::createXTypeResponseMessage(const CTypeLib::CSpecTypeEnt
     createDataInterfaceResponseMessage(paInterfaceSpec, paReqResult);
     createAdapterInterfaceResponseMessage(paInterfaceSpec, paReqResult);
     paReqResult.append("</InterfaceList>\n");
-    retVal = e_RDY;
+    retVal = EMGMResponse::Ready;
   }
   return retVal;
 }
@@ -547,21 +547,21 @@ void CResource::createInterfaceResponseMessage(CIEC_STRING& paReqResult, const c
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
 EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNameId,
     CIEC_STRING& paLuaScriptAsString){
-  EMGMResponse retVal = e_UNSUPPORTED_TYPE;
+  EMGMResponse retVal = EMGMResponse::UnsupportedType;
   if(nullptr != strstr(paLuaScriptAsString.getValue(), "internalFBs")){ // CFBType
     if(CLuaCFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != nullptr){
-      retVal = e_RDY;
+      retVal = EMGMResponse::Ready;
     }
     else{
-      retVal = e_INVALID_OPERATION;
+      retVal = EMGMResponse::InvalidOperation;
     }
   }
   else{ // BFBType
     if(CLuaBFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != nullptr){
-      retVal = e_RDY;
+      retVal = EMGMResponse::Ready;
     }
     else{
-      retVal = e_INVALID_OPERATION;
+      retVal = EMGMResponse::InvalidOperation;
     }
   }
   paLuaScriptAsString.clear();
@@ -570,11 +570,11 @@ EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNam
 
 EMGMResponse CResource::createAdapterTypeFromLua(CStringDictionary::TStringId typeNameId,
     CIEC_STRING& paLuaScriptAsString){
-  EMGMResponse retVal = e_UNSUPPORTED_TYPE;
+  EMGMResponse retVal = EMGMResponse::UnsupportedType;
   if(CLuaAdapterTypeEntry::createLuaAdapterTypeEntry(typeNameId, paLuaScriptAsString) != nullptr){
-     retVal = e_RDY;
+     retVal = EMGMResponse::Ready;
    }else{
-     retVal = e_INVALID_OPERATION;
+     retVal = EMGMResponse::InvalidOperation;
    }
    paLuaScriptAsString.clear();
   return retVal;

@@ -78,7 +78,7 @@ void FORTE_RT_E_CYCLE::executeEvent(int paEIID){
 EMGMResponse FORTE_RT_E_CYCLE::changeFBExecutionState(EMGMCommandType paCommand){
   mECEO.changeExecutionState(paCommand);
   EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(paCommand);
-  if((e_RDY == eRetVal) && ((EMGMCommandType::Stop == paCommand) || (EMGMCommandType::Kill == paCommand)) && mActive) {
+  if((EMGMResponse::Ready == eRetVal) && ((EMGMCommandType::Stop == paCommand) || (EMGMCommandType::Kill == paCommand)) && mActive) {
     getTimer().unregisterTimedFB(this);
     mActive = false;
   }

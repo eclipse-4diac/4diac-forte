@@ -18,7 +18,7 @@
 #include <string.h>
 
 EMGMResponse CDevice::executeMGMCommand(forte::core::SManagementCMD &paCommand){
-  EMGMResponse retval = e_INVALID_DST;
+  EMGMResponse retval = EMGMResponse::InvalidDst;
 
   if(CStringDictionary::scm_nInvalidStringId == paCommand.mDestination){
     retval = CResource::executeMGMCommand(paCommand);

@@ -29,7 +29,7 @@ CMonitoringHandler::CMonitoringHandler(CResource &paResource) :
 }
 
 EMGMResponse CMonitoringHandler::executeMonitoringCommand(SManagementCMD &paCommand){
-  EMGMResponse retVal = e_UNSUPPORTED_CMD;
+  EMGMResponse retVal = EMGMResponse::UnsupportedCmd;
 
   switch (paCommand.mCMD){
     case EMGMCommandType::MonitoringAddWatch:
@@ -71,7 +71,7 @@ CFunctionBlock* CMonitoringHandler::getFB(forte::core::TNameIdentifier &paNameLi
 }
 
 EMGMResponse CMonitoringHandler::addWatch(forte::core::TNameIdentifier &paNameList){
-  EMGMResponse eRetVal = e_NO_SUCH_OBJECT;
+  EMGMResponse eRetVal = EMGMResponse::NoSuchObject;
 
   CStringDictionary::TStringId portName = paNameList.back();
   paNameList.popBack();
@@ -83,19 +83,19 @@ EMGMResponse CMonitoringHandler::addWatch(forte::core::TNameIdentifier &paNameLi
     CIEC_ANY *dataVal = fB->getVar(&portName, 1);
     if(nullptr != dataVal){
       addDataWatch(fbMonitoringEntry, portName, *dataVal);
-      eRetVal = e_RDY;
+      eRetVal = EMGMResponse::Ready;
     }
     else{
       TEventID eventId = fB->getEIID(portName);
       if(cg_nInvalidEventID != eventId){
         addEventWatch(fbMonitoringEntry, portName, fB->getEIMonitorData(eventId));
-        eRetVal = e_RDY;
+        eRetVal = EMGMResponse::Ready;
       }
       else{
         eventId = fB->getEOID(portName);
         if(cg_nInvalidEventID != eventId){
           addEventWatch(fbMonitoringEntry, portName, fB->getEOMonitorData(eventId));
-          eRetVal = e_RDY;
+          eRetVal = EMGMResponse::Ready;
         }
       }
     }
@@ -105,7 +105,7 @@ EMGMResponse CMonitoringHandler::addWatch(forte::core::TNameIdentifier &paNameLi
 }
 
 EMGMResponse CMonitoringHandler::removeWatch(forte::core::TNameIdentifier &paNameList){
-  EMGMResponse eRetVal = e_NO_SUCH_OBJECT;
+  EMGMResponse eRetVal = EMGMResponse::NoSuchObject;
 
   CStringDictionary::TStringId portName = paNameList.back();
   paNameList.popBack();
@@ -129,7 +129,7 @@ EMGMResponse CMonitoringHandler::removeWatch(forte::core::TNameIdentifier &paNam
               mFBMonitoringList.eraseAfter(itRefNode);
             }
           }
-          eRetVal = e_RDY;
+          eRetVal = EMGMResponse::Ready;
         }
         break;
       }
@@ -156,11 +156,11 @@ EMGMResponse CMonitoringHandler::readWatches(CIEC_STRING &paResponse){
     readResourceWatches(paResponse);
   }
 
-  return e_RDY;
+  return EMGMResponse::Ready;
 }
 
 EMGMResponse CMonitoringHandler::clearForce(forte::core::TNameIdentifier &paNameList){
-  EMGMResponse eRetVal = e_NO_SUCH_OBJECT;
+  EMGMResponse eRetVal = EMGMResponse::NoSuchObject;
   CStringDictionary::TStringId portName = paNameList.back();
   paNameList.popBack();
   CFunctionBlock *fB = getFB(paNameList);
@@ -169,14 +169,14 @@ EMGMResponse CMonitoringHandler::clearForce(forte::core::TNameIdentifier &paName
     CIEC_ANY *poDataVal = fB->getVar(&portName, 1);
     if(nullptr != poDataVal){
       poDataVal->setForced(false);
-      eRetVal = e_RDY;
+      eRetVal = EMGMResponse::Ready;
     }
   }
   return eRetVal;
 }
 
 EMGMResponse CMonitoringHandler::triggerEvent(forte::core::TNameIdentifier &paNameList){
-  EMGMResponse eRetVal = e_NO_SUCH_OBJECT;
+  EMGMResponse eRetVal = EMGMResponse::NoSuchObject;
   CStringDictionary::TStringId portName = paNameList.back();
   paNameList.popBack();
   CFunctionBlock *fB = getFB(paNameList);
@@ -188,7 +188,7 @@ EMGMResponse CMonitoringHandler::triggerEvent(forte::core::TNameIdentifier &paNa
       mTriggerEvent.mFB = fB;
       mTriggerEvent.mPortId = eventId;
       mResource.getResourceEventExecution()->startEventChain(&mTriggerEvent);
-      eRetVal = e_RDY;
+      eRetVal = EMGMResponse::Ready;
     }
     else{
       eventId = fB->getEOID(portName);
@@ -196,7 +196,7 @@ EMGMResponse CMonitoringHandler::triggerEvent(forte::core::TNameIdentifier &paNa
         fB->m_poInvokingExecEnv = mResource.getResourceEventExecution();
         fB->sendOutputEvent(eventId);
         mResource.getResourceEventExecution()->resumeSelfSuspend();
-        eRetVal = e_RDY;
+        eRetVal = EMGMResponse::Ready;
       }
     }
 
@@ -205,7 +205,7 @@ EMGMResponse CMonitoringHandler::triggerEvent(forte::core::TNameIdentifier &paNa
 }
 
 EMGMResponse CMonitoringHandler::resetEventCount(forte::core::TNameIdentifier &paNameList){
-  EMGMResponse eRetVal = e_NO_SUCH_OBJECT;
+  EMGMResponse eRetVal = EMGMResponse::NoSuchObject;
   CStringDictionary::TStringId portName = paNameList.back();
   paNameList.popBack();
   CFunctionBlock *fB = getFB(paNameList);
@@ -225,7 +225,7 @@ EMGMResponse CMonitoringHandler::resetEventCount(forte::core::TNameIdentifier &p
     if(nullptr != eventMonitorData){
       CCriticalRegion criticalRegion(fB->getResource().m_oResDataConSync);
       *eventMonitorData = 0;
-      eRetVal = e_RDY;
+      eRetVal = EMGMResponse::Ready;
     }
   }
   return eRetVal;

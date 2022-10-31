@@ -64,7 +64,7 @@ CFBTestFixtureBase::~CFBTestFixtureBase(){
 
   for(size_t i = 0; i < interfaceSpec->m_nNumEOs; i++) {
    CEventConnection *eventCon = mFBUnderTest->getEOConnection(interfaceSpec->m_aunEONames[i]);
-   BOOST_CHECK_EQUAL(e_RDY, eventCon->disconnect(this, interfaceSpec->m_aunEONames[i]));
+   BOOST_CHECK_EQUAL(EMGMResponse::Ready, eventCon->disconnect(this, interfaceSpec->m_aunEONames[i]));
   }
 
   for(size_t i = 0; i < interfaceSpec->m_nNumDOs; ++i) {
@@ -72,11 +72,11 @@ CFBTestFixtureBase::~CFBTestFixtureBase(){
    //set it to zero so that when the FB under test is deleted it will not delete our test output data
    dataCon->setValue(nullptr);
 
-   BOOST_CHECK_EQUAL(e_RDY, dataCon->disconnect(this, interfaceSpec->m_aunDONames[i]));
+   BOOST_CHECK_EQUAL(EMGMResponse::Ready, dataCon->disconnect(this, interfaceSpec->m_aunDONames[i]));
   }
 
   for(size_t i = 0; i < interfaceSpec->m_nNumDIs; ++i) {
-   BOOST_CHECK_EQUAL(e_RDY, mDIConnections[i]->disconnect(mFBUnderTest, interfaceSpec->m_aunDINames[i]));
+   BOOST_CHECK_EQUAL(EMGMResponse::Ready, mDIConnections[i]->disconnect(mFBUnderTest, interfaceSpec->m_aunDINames[i]));
   }
 
   for_each(mDIConnections.begin(), mDIConnections.end(), SDeleteFunctor());
@@ -95,7 +95,7 @@ CFBTestFixtureBase::~CFBTestFixtureBase(){
 void CFBTestFixtureBase::performFBDeleteTests() {
   BOOST_CHECK(!mFBUnderTest->isCurrentlyDeleteable());
 
-  BOOST_CHECK_EQUAL(e_RDY, mFBUnderTest->changeFBExecutionState(EMGMCommandType::Stop));
+  BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeFBExecutionState(EMGMCommandType::Stop));
 
   BOOST_CHECK(mFBUnderTest->isCurrentlyDeleteable());
 
@@ -265,7 +265,7 @@ void CFBTestFixtureBase::createEventOutputConnections() {
 
   for(TPortId i = 0; i < interfaceSpec->m_nNumEOs; i++) {
     CEventConnection *eventCon = mFBUnderTest->getEOConnection(interfaceSpec->m_aunEONames[i]);
-    BOOST_REQUIRE_EQUAL(e_RDY, eventCon->connect(this, interfaceSpec->m_aunEONames[i]));
+    BOOST_REQUIRE_EQUAL(EMGMResponse::Ready, eventCon->connect(this, interfaceSpec->m_aunEONames[i]));
   }
 }
 
@@ -276,7 +276,7 @@ void CFBTestFixtureBase::createDataInputConnections() {
     CInterface2InternalDataConnection *con = new CInterface2InternalDataConnection();
     mDIConnections.push_back(con);
     con->setValue(mInputDataBuffers[i]);
-    BOOST_REQUIRE_EQUAL(e_RDY, con->connect(mFBUnderTest, interfaceSpec->m_aunDINames[i]));
+    BOOST_REQUIRE_EQUAL(EMGMResponse::Ready, con->connect(mFBUnderTest, interfaceSpec->m_aunDINames[i]));
   }
 }
 
@@ -286,7 +286,7 @@ void CFBTestFixtureBase::createDataOutputConnections() {
   for(size_t i = 0; i < interfaceSpec->m_nNumDOs; ++i) {
     if(CFBTestConn::canBeConnected(mOutputDataBuffers[i], mFBUnderTest->getDataOutput(interfaceSpec->m_aunDONames[i]))) {
       CDataConnection *dataCon = mFBUnderTest->getDOConnection(interfaceSpec->m_aunDONames[i]);
-      BOOST_REQUIRE_EQUAL(e_RDY, dataCon->connect(this, interfaceSpec->m_aunDONames[i]));
+      BOOST_REQUIRE_EQUAL(EMGMResponse::Ready, dataCon->connect(this, interfaceSpec->m_aunDONames[i]));
       dataCon->getValue()->~CIEC_ANY();
       dataCon->setValue(mOutputDataBuffers[i]);
     }

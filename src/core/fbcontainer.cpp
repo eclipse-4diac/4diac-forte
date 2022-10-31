@@ -22,15 +22,15 @@ EMGMResponse checkForActionEquivalentState(const CFunctionBlock &paFB, const EMG
   CFunctionBlock::E_FBStates currentState = paFB.getState();
   switch (paCommand){
     case EMGMCommandType::Stop:
-      return (CFunctionBlock::e_KILLED == currentState) ? e_RDY : e_INVALID_STATE;
+      return (CFunctionBlock::e_KILLED == currentState) ? EMGMResponse::Ready : EMGMResponse::InvalidState;
       break;
     case EMGMCommandType::Kill:
-      return (CFunctionBlock::e_STOPPED == currentState || CFunctionBlock::e_IDLE == currentState) ? e_RDY : e_INVALID_STATE;
+      return (CFunctionBlock::e_STOPPED == currentState || CFunctionBlock::e_IDLE == currentState) ? EMGMResponse::Ready : EMGMResponse::InvalidState;
       break;
     default:
       break;
   }
-  return e_INVALID_STATE;
+  return EMGMResponse::InvalidState;
 }
 
 CFBContainer::CFBContainer(CStringDictionary::TStringId paContainerName, CFBContainer *paParent) :
@@ -50,17 +50,17 @@ CFBContainer::~CFBContainer() {
 }
 
 EMGMResponse CFBContainer::addFB(CFunctionBlock* pa_poFuncBlock){
-  EMGMResponse eRetVal = e_INVALID_OBJECT;
+  EMGMResponse eRetVal = EMGMResponse::InvalidObject;
   if(nullptr != pa_poFuncBlock){
     mFunctionBlocks.pushBack(pa_poFuncBlock);
-    eRetVal = e_RDY;
+    eRetVal = EMGMResponse::Ready;
   }
   return eRetVal;
 }
 
 
 EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::CIterator &paNameListIt, CStringDictionary::TStringId paTypeName, CResource *paRes){
-  EMGMResponse retval = e_INVALID_STATE;
+  EMGMResponse retval = EMGMResponse::InvalidState;
 
   if(paNameListIt.isLastEntry()){
     // test if the container does not contain any FB or a container with the same name
@@ -69,7 +69,7 @@ EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::CIterator &paN
       if(nullptr != newFB){
         //we could create a FB now add it to the list of contained FBs
         mFunctionBlocks.pushBack(newFB);
-        retval = e_RDY;
+        retval = EMGMResponse::Ready;
       }
       else{
         retval = CTypeLib::getLastError();
@@ -89,7 +89,7 @@ EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::CIterator &paN
 }
 
 EMGMResponse CFBContainer::deleteFB(forte::core::TNameIdentifier::CIterator &paNameListIt){
-  EMGMResponse retval = e_NO_SUCH_OBJECT;
+  EMGMResponse retval = EMGMResponse::NoSuchObject;
 
   if(!paNameListIt.isLastEntry()){
     //we have more than one name in the fb name list. Find or create the container and hand the create command to this container.
@@ -119,10 +119,10 @@ EMGMResponse CFBContainer::deleteFB(forte::core::TNameIdentifier::CIterator &paN
             else{
               mFunctionBlocks.eraseAfter(itRefNode);
             }
-            retval = e_RDY;
+            retval = EMGMResponse::Ready;
           }
           else{
-            retval = e_INVALID_STATE;
+            retval = EMGMResponse::InvalidState;
           }
           break;
         }
@@ -190,20 +190,20 @@ CFBContainer *CFBContainer::findOrCreateContainer(CStringDictionary::TStringId p
 }
 
 EMGMResponse CFBContainer::changeContainedFBsExecutionState(EMGMCommandType paCommand){
-  EMGMResponse retVal = e_RDY;
+  EMGMResponse retVal = EMGMResponse::Ready;
 
   for(TFBContainerList::Iterator it(mSubContainers.begin());
-      ((it != mSubContainers.end()) && (e_RDY == retVal));
+      ((it != mSubContainers.end()) && (EMGMResponse::Ready == retVal));
       ++it){
     retVal = (*it)->changeContainedFBsExecutionState(paCommand);
   }
 
-  if(e_RDY == retVal){
+  if(EMGMResponse::Ready == retVal){
     for(TFunctionBlockList::Iterator itRunner(mFunctionBlocks.begin());
-        ((itRunner != mFunctionBlocks.end()) && (e_RDY == retVal));
+        ((itRunner != mFunctionBlocks.end()) && (EMGMResponse::Ready == retVal));
         ++itRunner){
       retVal = (*itRunner)->changeFBExecutionState(paCommand);
-      if(e_RDY != retVal) {
+      if(EMGMResponse::Ready != retVal) {
         retVal = checkForActionEquivalentState(*(*itRunner), paCommand);
       }
     }

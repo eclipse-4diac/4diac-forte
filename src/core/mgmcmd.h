@@ -250,9 +250,21 @@ enum class EMGMCommandType : uint8_t {
  *
  * TODO fully define all responses as defined in IEC 61499 inc. numbers.
  */
-enum EMGMResponse {e_RDY, e_BAD_PARAMS, e_LOCAL_TERMINATION, e_SYSTEM_TERMINATION, e_NOT_READY, e_UNSUPPORTED_CMD,
-  e_UNSUPPORTED_TYPE, e_NO_SUCH_OBJECT, e_INVALID_OBJECT, e_INVALID_OPERATION, e_INVALID_STATE,
-  e_OVERFLOW, e_INVALID_DST};
+enum class EMGMResponse {
+    Ready,
+    BadParams,
+    LocalTermination,
+    SystemTermination,
+    NotReady,
+    UnsupportedCmd,
+    UnsupportedType,
+    NoSuchObject,
+    InvalidObject,
+    InvalidOperation,
+    InvalidState,
+    Overflow,
+    InvalidDst
+};
 
 /*@}*/
 #endif /*MGMCMD_H_*/
