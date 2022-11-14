@@ -71,7 +71,7 @@ CIEC_TestStruct2::CIEC_TestStruct2() :
 
     /* Struct:
      *   val1 : String[3]
-     *   val3 : BOOL
+     *   val2 : BOOL
      *   val3 : INT[1]
      */
 
@@ -114,6 +114,7 @@ CIEC_TestStruct3::CIEC_TestStruct3() :
     CIEC_STRUCT(g_nStringIdTestStruct3, 3, scm_unElementTypes, scm_unElementNames, e_APPLICATION + e_CONSTRUCTED + 1, scmInitialValues) {
 }
 
+/***********************************************************/
 class CIEC_TestStruct4 : public CIEC_STRUCT { //undefined data types
   DECLARE_FIRMWARE_DATATYPE(TestStruct4)
 
@@ -887,7 +888,7 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
 
   void toStringTest_testStruct3(const char* pa_acVal11, const char* pa_acVal12, bool pa_nVal2, int pa_nVal3, const char* pa_acResult){
       CIEC_TestStruct3 stStruct;
-  BOOST_CHECK_EQUAL(stStruct.getToStringBufferSize(), sizeof("(Val1:=['',''],Val2:=FALSE,Val3:=[+32767])"));
+    BOOST_CHECK_EQUAL(stStruct.getToStringBufferSize(), sizeof("(Val1:=['',''],Val2:=FALSE,Val3:=[+32767])"));
       int nResultLenght = static_cast<int>(strlen(pa_acResult));
       char acBuffer[70];
 
@@ -900,22 +901,22 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
       for(int i = 0; i <= nResultLenght; i++){
         BOOST_CHECK_EQUAL(stStruct.toString(acBuffer, i), -1);
       }
-    }
+  }
 
-    BOOST_AUTO_TEST_CASE(Struct_toString_TestStruct3){
-  CIEC_TestStruct3 stStruct;
-  const char* initialString = "(Val1:=['',''],Val2:=TRUE,Val3:=[9])";
-  char acBuffer[70];
-  BOOST_CHECK_EQUAL(stStruct.toString(acBuffer, 70), strlen(initialString));
-  BOOST_CHECK_EQUAL(strcmp(acBuffer, initialString), 0);
-  BOOST_CHECK_EQUAL(stStruct.getToStringBufferSize(), sizeof("(Val1:=['',''],Val2:=FALSE,Val3:=[+32767])"));
+  BOOST_AUTO_TEST_CASE(Struct_toString_TestStruct3){
+    CIEC_TestStruct3 stStruct;
+    const char* initialString = "(Val1:=['',''],Val2:=TRUE,Val3:=[9])";
+    char acBuffer[70];
+    BOOST_CHECK_EQUAL(stStruct.toString(acBuffer, 70), strlen(initialString));
+    BOOST_CHECK_EQUAL(strcmp(acBuffer, initialString), 0);
+    BOOST_CHECK_EQUAL(stStruct.getToStringBufferSize(), sizeof("(Val1:=['',''],Val2:=FALSE,Val3:=[+32767])"));
 
-      toStringTest_testStruct3("", "", false, 0, "(Val1:=['',''],Val2:=FALSE,Val3:=[0])");
-      toStringTest_testStruct3("", "", true, 0, "(Val1:=['',''],Val2:=TRUE,Val3:=[0])");
-      toStringTest_testStruct3("Hansi Test", "", true, 0, "(Val1:=['Hansi Test',''],Val2:=TRUE,Val3:=[0])");
-      toStringTest_testStruct3("Hansi Test", "Hansi Test 2", true, 0, "(Val1:=['Hansi Test','Hansi Test 2'],Val2:=TRUE,Val3:=[0])");
-      toStringTest_testStruct3("", "", true, 2345, "(Val1:=['',''],Val2:=TRUE,Val3:=[2345])");
-    }
+    toStringTest_testStruct3("", "", false, 0, "(Val1:=['',''],Val2:=FALSE,Val3:=[0])");
+    toStringTest_testStruct3("", "", true, 0, "(Val1:=['',''],Val2:=TRUE,Val3:=[0])");
+    toStringTest_testStruct3("Hansi Test", "", true, 0, "(Val1:=['Hansi Test',''],Val2:=TRUE,Val3:=[0])");
+    toStringTest_testStruct3("Hansi Test", "Hansi Test 2", true, 0, "(Val1:=['Hansi Test','Hansi Test 2'],Val2:=TRUE,Val3:=[0])");
+    toStringTest_testStruct3("", "", true, 2345, "(Val1:=['',''],Val2:=TRUE,Val3:=[2345])");
+  }
 
   void checkEmptyStruct(CIEC_STRUCT& paStruct) {
     BOOST_CHECK_EQUAL(paStruct.getASN1StructType(), 0);

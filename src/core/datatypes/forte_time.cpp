@@ -95,7 +95,7 @@ int CIEC_TIME::fromString(const char *paValue) {
               //we have a number without unit or it is the first entry which we could not pars then this is an error
               return -1;
             }
-             // we are in an array and at the end of the literal
+            // we are in an array and at the end of the literal
             bEnd = true;
             break;
         }
@@ -106,7 +106,7 @@ int CIEC_TIME::fromString(const char *paValue) {
           ++paValue;
         }
         nIntVal += (nBuf * nTimeFactor * nTimeSignFactor);
-      } while((!bEnd) && ('\0' != *paValue));
+      } while((!bEnd) && ('\0' != *paValue && ',' != *paValue && ')' != *paValue));
 
     } else {
       return -1;

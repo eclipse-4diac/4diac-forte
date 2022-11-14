@@ -68,6 +68,7 @@
 IF (FORTE_SUPPORT_ARRAYS)
   forte_test_add_sourcefile_cpp(CIEC_ARRAY_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_ARRAY_TEMPLATE_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_TIME_STRUCT_AND_ARRAY_test.cpp)
 ENDIF(FORTE_SUPPORT_ARRAYS)
 
 #ANY_DURATION and ANY_DATE-Datatypes
