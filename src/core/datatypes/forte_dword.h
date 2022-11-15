@@ -55,6 +55,10 @@ class CIEC_DWORD : public CIEC_ANY_BIT {
       setValueSimple(paValue);
     }
 
+    CIEC_DWORD(const CIEC_BOOL &paValue) : CIEC_ANY_BIT() {
+      setValueSimple(paValue);
+    }
+
     explicit CIEC_DWORD(TForteDWord paValue) {
       setTUINT32(paValue);
     }
@@ -74,6 +78,12 @@ class CIEC_DWORD : public CIEC_ANY_BIT {
     }
 
     CIEC_DWORD& operator =(const CIEC_BYTE &paValue) {
+      // Simple value assignment - no self assignment check needed
+      setValueSimple(paValue);
+      return *this;
+    }
+
+    CIEC_DWORD &operator=(const CIEC_BOOL &paValue) {
       // Simple value assignment - no self assignment check needed
       setValueSimple(paValue);
       return *this;

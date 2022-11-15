@@ -44,6 +44,23 @@ using namespace boost::unit_test;
 
 BOOST_AUTO_TEST_SUITE(CIEC_DWORD_casts_function_test)
 
+BOOST_AUTO_TEST_CASE(Implicit_bool_cast_assignment)
+{
+  CIEC_DWORD testee;
+  BOOST_CHECK_EQUAL(testee, 0);
+
+  testee = CIEC_BOOL(true);
+  BOOST_CHECK_EQUAL(testee, 1);
+
+  testee = CIEC_BOOL(false);
+  BOOST_CHECK_EQUAL(testee, 0);
+}
+
+BOOST_AUTO_TEST_CASE(Implicit_bool_cast_ctor)
+{
+  CIEC_DWORD testee(CIEC_BOOL(true));
+  BOOST_CHECK_EQUAL(testee, 1);
+}
 
 BOOST_AUTO_TEST_CASE(CASTS_DWORD_to_BOOL)
 {
