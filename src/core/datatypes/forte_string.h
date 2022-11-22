@@ -33,15 +33,15 @@
  */
 class CIEC_STRING : public CIEC_ANY_STRING{
   DECLARE_FIRMWARE_DATATYPE(STRING)
-    ;
+
   public:
     CIEC_STRING() = default;
 
     CIEC_STRING(const CIEC_STRING& paValue) = default;
 
     CIEC_STRING(const CIEC_CHAR &paValue) {
-      reserve(1);
-      getValue()[0] = static_cast<TForteChar>(paValue);
+      const TForteChar symbol = static_cast<TForteChar>(paValue);
+      assign(reinterpret_cast<const char*>(&symbol), 1);
     }
 
     explicit CIEC_STRING(const char* paValue){
@@ -119,7 +119,6 @@ class CIEC_STRING : public CIEC_ANY_STRING{
     size_t getToStringBufferSize() const override;
 
   protected:
-
     void setValue(const CIEC_ANY &pa_roValue) override {
       if(pa_roValue.getDataTypeID() == CIEC_ANY::e_STRING){
         const CIEC_STRING &roSrc(static_cast<const CIEC_STRING &>(pa_roValue));
@@ -131,33 +130,33 @@ class CIEC_STRING : public CIEC_ANY_STRING{
 };
 
 inline
-bool operator ==(const CIEC_STRING &pa_roLeft, const CIEC_STRING &pa_roRight){
-  return (0 == strcmp(pa_roLeft.getValue(), pa_roRight.getValue()));
+bool operator ==(const CIEC_STRING &paLeft, const CIEC_STRING &paRight){
+  return (0 == strcmp(paLeft.getValue(), paRight.getValue()));
 }
 
 inline
-bool operator !=(const CIEC_STRING &pa_roLeft, const CIEC_STRING &pa_roRight){
-  return !(pa_roLeft == pa_roRight);
+bool operator !=(const CIEC_STRING &paLeft, const CIEC_STRING &paRight){
+  return !(paLeft == paRight);
 }
 
 inline
-bool operator >(const CIEC_STRING &pa_roLeft, const CIEC_STRING &pa_roRight){
-  return (0 < strcmp(pa_roLeft.getValue(), pa_roRight.getValue()));
+bool operator >(const CIEC_STRING &paLeft, const CIEC_STRING &paRight){
+  return (0 < strcmp(paLeft.getValue(), paRight.getValue()));
 }
 
 inline
-bool operator <(const CIEC_STRING &pa_roLeft, const CIEC_STRING &pa_roRight){
-  return (0 > strcmp(pa_roLeft.getValue(), pa_roRight.getValue()));
+bool operator <(const CIEC_STRING &paLeft, const CIEC_STRING &paRight){
+  return (0 > strcmp(paLeft.getValue(), paRight.getValue()));
 }
 
 inline
-bool operator >=(const CIEC_STRING &pa_roLeft, const CIEC_STRING &pa_roRight){
-  return (0 <= strcmp(pa_roLeft.getValue(), pa_roRight.getValue()));
+bool operator >=(const CIEC_STRING &paLeft, const CIEC_STRING &paRight){
+  return (0 <= strcmp(paLeft.getValue(), paRight.getValue()));
 }
 
 inline
-bool operator <=(const CIEC_STRING &pa_roLeft, const CIEC_STRING &pa_roRight){
-  return (0 >= strcmp(pa_roLeft.getValue(), pa_roRight.getValue()));
+bool operator <=(const CIEC_STRING &paLeft, const CIEC_STRING &paRight){
+  return (0 >= strcmp(paLeft.getValue(), paRight.getValue()));
 }
 
 #endif /*_FORTE_STRING_H_*/

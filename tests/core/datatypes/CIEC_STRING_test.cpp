@@ -16,6 +16,7 @@
  *      primitve types
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
+#include "forte_boost_output_support.h"
 
 #include "../../../src/core/datatypes/forte_string.h"
 
@@ -669,7 +670,8 @@ BOOST_AUTO_TEST_CASE(Implicit_cast_from_CHAR)
 
   unsigned int bufferSize = resultString.getToStringBufferSize();
 
-  BOOST_CHECK_EQUAL(3, bufferSize); //'<symbol>' = 3
+  BOOST_TEST(4 == bufferSize); //'<symbol>'\0 = 4
+  BOOST_TEST(CIEC_STRING("4") == resultString);
 }
 
 BOOST_AUTO_TEST_CASE(Assignment_from_CHAR)
@@ -681,7 +683,8 @@ BOOST_AUTO_TEST_CASE(Assignment_from_CHAR)
 
   unsigned int bufferSize = resultString.getToStringBufferSize();
 
-  BOOST_CHECK_EQUAL(3, bufferSize); //'<symbol>' = 3
+  BOOST_CHECK_EQUAL(4, bufferSize); //'<symbol>'\0 = 4
+  BOOST_CHECK_EQUAL(CIEC_STRING("4"), resultString);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

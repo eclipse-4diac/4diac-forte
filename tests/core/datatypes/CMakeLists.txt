@@ -61,6 +61,7 @@
 
 #ANY_CHARS-Datatypes
   forte_test_add_sourcefile_cpp(CIEC_CHAR_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_CHAR_CASTS_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_WCHAR_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_STRING_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_WSTRING_test.cpp)

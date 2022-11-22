@@ -72,6 +72,7 @@ inline void stringConverter(CIEC_ANY_STRING &paString, const CIEC_ANY &paVal) {
 }
 
 #include "DateAndTimeToConvertFunctions.h"
+#include "CharToConvertFunctions.h"
 #include "WstringToConvertFunctions.h"
 #include "StringToConvertFunctions.h"
 #include "LrealToConvertFunctions.h"
