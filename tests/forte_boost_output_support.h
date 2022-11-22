@@ -18,11 +18,39 @@
 #define _FORTE_BOOST_OUTPUT_SUPPORT_H_
 
 #include <iostream>
+#include "forte_char.h"
+#include "forte_wchar.h"
 #include "forte_string.h"
+#include "forte_wstring.h"
 
-inline std::ostream& boost_test_print_type(std::ostream &out, const CIEC_STRING &string) {
-  char outputString[string.getToStringBufferSize()];
-  string.toString(outputString, sizeof(outputString));
+inline
+std::ostream& boost_test_print_type(std::ostream &out, const CIEC_CHAR &variable) {
+  char outputString[variable.getToStringBufferSize()];
+  variable.toString(outputString, sizeof(outputString));
+  out << outputString;
+  return out;
+}
+
+inline
+std::ostream& boost_test_print_type(std::ostream &out, const CIEC_WCHAR &variable) {
+  char outputString[variable.getToStringBufferSize()];
+  variable.toString(outputString, sizeof(outputString));
+  out << outputString;
+  return out;
+}
+
+inline
+std::ostream& boost_test_print_type(std::ostream &out, const CIEC_STRING &variable) {
+  char outputString[variable.getToStringBufferSize()];
+  variable.toString(outputString, sizeof(outputString));
+  out << outputString;
+  return out;
+}
+
+inline
+std::ostream& boost_test_print_type(std::ostream &out, const CIEC_WSTRING &variable) {
+  char outputString[variable.getToStringBufferSize()];
+  variable.toString(outputString, sizeof(outputString));
   out << outputString;
   return out;
 }

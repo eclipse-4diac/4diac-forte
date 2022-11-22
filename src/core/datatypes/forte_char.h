@@ -16,7 +16,6 @@
 
 #include "forte_any_char.h"
 
-
 /*!\ingroup COREDTS CIEC_BYTE represents the byte data type according to IEC 61131.
  */
 class CIEC_CHAR : public CIEC_ANY_CHAR{

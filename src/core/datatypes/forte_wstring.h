@@ -53,8 +53,7 @@ class CIEC_WSTRING : public CIEC_ANY_STRING {
       converter.out(mb, &value, &value + 1, from_next, buf, buf + converter.max_length(), to_next);
       // error checking skipped for brevity
       std::size_t size = to_next - buf;
-      reserve(static_cast<TForteUInt16>(size));
-      memcpy(getValue(), buf, size);
+      assign(buf, size);
     }
 
     explicit CIEC_WSTRING(const char* paValue) {
@@ -185,33 +184,33 @@ class CIEC_WSTRING : public CIEC_ANY_STRING {
 };
 
 inline
-bool operator ==(const CIEC_WSTRING &pa_roLeft, const CIEC_WSTRING &pa_roRight) {
-  return (0 == strcmp(pa_roLeft.getValue(), pa_roRight.getValue()));
+bool operator ==(const CIEC_WSTRING &paLeft, const CIEC_WSTRING &paRight) {
+  return (0 == strcmp(paLeft.getValue(), paRight.getValue()));
 }
 
 inline
-bool operator !=(const CIEC_WSTRING &pa_roLeft, const CIEC_WSTRING &pa_roRight) {
-  return !(pa_roLeft == pa_roRight);
+bool operator !=(const CIEC_WSTRING &paLeft, const CIEC_WSTRING &paRight) {
+  return !(paLeft == paRight);
 }
 
 inline
-bool operator >(const CIEC_WSTRING &pa_roLeft, const CIEC_WSTRING &pa_roRight){
-  return (0 < strcmp(pa_roLeft.getValue(), pa_roRight.getValue()));
+bool operator >(const CIEC_WSTRING &paLeft, const CIEC_WSTRING &paRight){
+  return (0 < strcmp(paLeft.getValue(), paRight.getValue()));
 }
 
 inline
-bool operator <(const CIEC_WSTRING &pa_roLeft, const CIEC_WSTRING &pa_roRight){
-  return (0 > strcmp(pa_roLeft.getValue(), pa_roRight.getValue()));
+bool operator <(const CIEC_WSTRING &paLeft, const CIEC_WSTRING &paRight){
+  return (0 > strcmp(paLeft.getValue(), paRight.getValue()));
 }
 
 inline
-bool operator >=(const CIEC_WSTRING &pa_roLeft, const CIEC_WSTRING &pa_roRight){
-  return (0 <= strcmp(pa_roLeft.getValue(), pa_roRight.getValue()));
+bool operator >=(const CIEC_WSTRING &paLeft, const CIEC_WSTRING &paRight){
+  return (0 <= strcmp(paLeft.getValue(), paRight.getValue()));
 }
 
 inline
-bool operator <=(const CIEC_WSTRING &pa_roLeft, const CIEC_WSTRING &pa_roRight){
-  return (0 >= strcmp(pa_roLeft.getValue(), pa_roRight.getValue()));
+bool operator <=(const CIEC_WSTRING &paLeft, const CIEC_WSTRING &paRight){
+  return (0 >= strcmp(paLeft.getValue(), paRight.getValue()));
 }
 
 #endif

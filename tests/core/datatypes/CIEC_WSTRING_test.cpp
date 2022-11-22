@@ -14,6 +14,7 @@
  *   Martin Melik Merkumians - adds getToStringBufferSize tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
+#include "forte_boost_output_support.h"
 
 #include "../../../src/core/datatypes/forte_wstring.h"
 #include "../../../src/core/datatypes/forte_wchar.h"
@@ -591,7 +592,8 @@ BOOST_AUTO_TEST_CASE(Implicit_cast_from_WCHAR){
 
   unsigned int bufferSize = resultString.getToStringBufferSize();
 
-  BOOST_CHECK_EQUAL(3, bufferSize); // "<symbol>" = 3
+  BOOST_CHECK_EQUAL(8, bufferSize); // "<symbol>" = 3
+  BOOST_TEST(CIEC_WSTRING("ß") == resultString);
 }
 
 BOOST_AUTO_TEST_CASE(Assignment_from_WCHAR)
@@ -603,7 +605,8 @@ BOOST_AUTO_TEST_CASE(Assignment_from_WCHAR)
 
   unsigned int bufferSize = resultString.getToStringBufferSize();
 
-  BOOST_CHECK_EQUAL(3, bufferSize); // "<symbol>" = 3
+  BOOST_CHECK_EQUAL(8, bufferSize); // "<symbol>" = 3
+  BOOST_TEST(CIEC_WSTRING("ß") == resultString);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
