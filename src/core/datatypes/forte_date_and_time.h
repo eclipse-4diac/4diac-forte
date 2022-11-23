@@ -88,4 +88,12 @@ class CIEC_DATE_AND_TIME : public CIEC_ANY_DATE {
     virtual int toGMTString(char* paValue, unsigned int paBufferSize) const ;
 };
 
+inline bool operator==(const CIEC_DATE_AND_TIME left, const CIEC_DATE_AND_TIME &right) {
+  return static_cast<TForteUInt64>(left) == static_cast<TForteUInt64>(right);
+}
+
+inline bool operator!=(const CIEC_DATE_AND_TIME left, const CIEC_DATE_AND_TIME &right) {
+  return !(left == right);
+}
+
 #endif /*_FORTE_DATE_AND_TIME_H_*/

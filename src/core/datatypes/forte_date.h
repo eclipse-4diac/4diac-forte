@@ -80,4 +80,12 @@ class CIEC_DATE : public CIEC_ANY_DATE {
     int toString(char* paValue, size_t paBufferSize) const override;
 };
 
+inline bool operator==(const CIEC_DATE left, const CIEC_DATE &right) {
+  return static_cast<TForteUInt64>(left) == static_cast<TForteUInt64>(right);
+}
+
+inline bool operator!=(const CIEC_DATE left, const CIEC_DATE &right) {
+  return !(left == right);
+}
+
 #endif /*_FORTE_DATE_H_*/

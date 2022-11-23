@@ -32,7 +32,6 @@ BOOST_AUTO_TEST_CASE(Representation_test) {
   BOOST_TEST(stringSet == interalRepSet);
 }
 
-
 BOOST_AUTO_TEST_CASE(Operator_test)
 {
   CIEC_TIME_OF_DAY nTest1;
