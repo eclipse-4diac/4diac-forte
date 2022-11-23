@@ -26,8 +26,6 @@
 class CIEC_DATE_AND_TIME : public CIEC_ANY_DATE {
     DECLARE_FIRMWARE_DATATYPE(DATE_AND_TIME)
   public:
-    typedef TForteUInt64 TValueType;
-
     CIEC_DATE_AND_TIME() = default;
 
     CIEC_DATE_AND_TIME(const CIEC_DATE_AND_TIME& paValue) : CIEC_ANY_DATE() {

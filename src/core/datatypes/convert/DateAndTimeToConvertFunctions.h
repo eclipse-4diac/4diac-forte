@@ -24,7 +24,7 @@
 //********************************************************************************************
 inline const CIEC_DATE func_DT_TO_DATE(const CIEC_DATE_AND_TIME &paVal){
   TForteUInt64 nBuffer = paVal;
-  time_t t = static_cast<time_t>(nBuffer / 1000);
+  time_t t = static_cast<time_t>(nBuffer / 1000000000ULL);
   struct tm *ptm = forte_localtime(&t);
 
   if(nullptr == ptm){
@@ -40,7 +40,7 @@ inline const CIEC_DATE func_DT_TO_DATE(const CIEC_DATE_AND_TIME &paVal){
     return CIEC_DATE(0);
   }
 
-  return CIEC_DATE(t * 1000ULL);
+  return CIEC_DATE(t * 1000000000ULL);
 }
 
 inline const CIEC_DATE_AND_TIME func_DATE_TO_DT(const CIEC_DATE &paVal){
@@ -49,14 +49,14 @@ inline const CIEC_DATE_AND_TIME func_DATE_TO_DT(const CIEC_DATE &paVal){
 
 inline const CIEC_TIME_OF_DAY func_DT_TO_TOD(const CIEC_DATE_AND_TIME &paVal){
   TForteUInt64 nBuffer = paVal;
-  time_t t = static_cast<time_t>(nBuffer / 1000);
+  time_t t = static_cast<time_t>(nBuffer/1000000000ULL);
   struct tm *ptm = forte_localtime(&t);
 
-  if(nullptr == ptm){
+  if(nullptr == ptm) {
     return CIEC_TIME_OF_DAY(0);
   }
 
-  return CIEC_TIME_OF_DAY(static_cast<TForteUInt64>((ptm->tm_hour * UINT64_C(3600) + ptm->tm_min * UINT64_C(60) + ptm->tm_sec) * UINT64_C(1000) + (nBuffer % UINT64_C(1000))));
+  return CIEC_TIME_OF_DAY(static_cast<TForteUInt64>((ptm->tm_hour * UINT64_C(3600) + ptm->tm_min * UINT64_C(60) + ptm->tm_sec) * UINT64_C(1000000000) + (nBuffer % UINT64_C(1000000000))));
 }
 
 #endif /* SRC_CORE_DATATYPES_CONVERT_DATEANDTIMETOCONVERTFUNCTIONS_H_ */

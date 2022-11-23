@@ -10,6 +10,7 @@
  *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
+#include "forte_boost_output_support.h"
 #include <boost/test/tools/floating_point_comparison.hpp>
 
 #include "../../../src/core/datatypes/forte_lreal.h"

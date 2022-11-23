@@ -14,6 +14,8 @@
 #include <boost/test/unit_test.hpp>
 #include <algorithm>
 
+#include "forte_boost_output_support.h"
+
 #include "fbdkasn1layer_serdeserdata.h"
 
 #include "../../../src/core/cominfra/fbdkasn1layer.h"
@@ -1091,7 +1093,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     char acStrBuf[20];
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abTime0, cg_unTimeSerSize));
-    BOOST_CHECK_EQUAL(0, nVal);
+    BOOST_CHECK_EQUAL(0, static_cast<CIEC_TIME::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abTime3000ms, cg_unTimeSerSize));
     nVal.toString(acStrBuf, 20);

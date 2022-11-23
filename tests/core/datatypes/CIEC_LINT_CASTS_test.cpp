@@ -11,6 +11,7 @@
  *   Martin Melik Merkumians - Adds cast template tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
+#include "forte_boost_output_support.h"
 
 #include <boost/test/tools/floating_point_comparison.hpp>
 #include "../../../src/core/datatypes/forte_real.h"
@@ -317,43 +318,6 @@ BOOST_AUTO_TEST_CASE(CASTS_LINT_to_REAL)
   BOOST_CHECK_EQUAL(2147483648.0, nTestLReal); 
   nTestLReal.setValue(nTestLInt9223372036854775807);
   BOOST_CHECK_EQUAL(9223372036854775807.0, nTestLReal); 
-}
-
-
-BOOST_AUTO_TEST_CASE(CASTS_LINT_to_TIME)
-{
-  CIEC_LINT nTestLInt0;
-  CIEC_LINT nTestLInt1;
-  CIEC_LINT nTestLInt2147483648;
-  CIEC_LINT nTestLInt9223372036854775807;
-
-  CIEC_TIME nTestTime;
-
-//check initial values
-  BOOST_CHECK_EQUAL(nTestLInt0, 0);
-  BOOST_CHECK_EQUAL(nTestLInt1, 0);
-  BOOST_CHECK_EQUAL(nTestLInt2147483648, 0);
-  BOOST_CHECK_EQUAL(nTestLInt9223372036854775807, 0);
-
-  nTestLInt0 = CIEC_LINT(0LL);
-  nTestLInt1 = CIEC_LINT(1LL);
-  nTestLInt2147483648 = CIEC_LINT(2147483648LL);
-  nTestLInt9223372036854775807 = CIEC_LINT(9223372036854775807LL);
-
-  BOOST_CHECK_EQUAL(nTestLInt0, 0LL);
-  BOOST_CHECK_EQUAL(nTestLInt1, 1LL);
-  BOOST_CHECK_EQUAL(nTestLInt2147483648, 2147483648LL);
-  BOOST_CHECK_EQUAL(nTestLInt9223372036854775807, 9223372036854775807LL);
-
-//toTIME
-  nTestTime.setValue(nTestLInt0);
-  BOOST_CHECK_EQUAL(0L, nTestTime);
-  nTestTime.setValue(nTestLInt1);
-  BOOST_CHECK_EQUAL(1L, nTestTime);
-  nTestTime.setValue(nTestLInt2147483648);
-  BOOST_CHECK_EQUAL(2147483648LL, nTestTime);
-  nTestTime.setValue(nTestLInt9223372036854775807);
-  BOOST_CHECK_EQUAL(9223372036854775807LL, nTestTime);
 }
 
 BOOST_AUTO_TEST_CASE(LINT_Castable_test)

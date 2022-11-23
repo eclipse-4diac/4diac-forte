@@ -30,8 +30,8 @@ int CIEC_LDATE::fromString(const char *paValue){
 
   memset(&tm, 0, sizeof(tm));
 
-  if('d' == tolower(*acBuffer)){
-    acBuffer++;
+  if('l' == tolower(acBuffer[0]) && 'd' == tolower(acBuffer[1]) ){
+    acBuffer += 2;
     if(('a' == tolower(acBuffer[0])) && ('t' == tolower(acBuffer[1])) && ('e' == tolower(acBuffer[2]))){
       acBuffer += 3;
     }

@@ -33,32 +33,31 @@ struct F_MULTIME_TestFixture : public CFBTestFixtureBase{
 
 BOOST_FIXTURE_TEST_SUITE(F_MULTIME_Tests, F_MULTIME_TestFixture)
 
-BOOST_AUTO_TEST_CASE(mulWithRealWithOne)
-{
+BOOST_AUTO_TEST_CASE(mulWithRealWithOne) {
   mIn_TIME_MULTIME = CIEC_TIME(30000000);
   mIn_REAL_MULTIME = CIEC_REAL(1.0);
   /* trigger the inputevent */
   triggerEvent(0);
   BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-  BOOST_CHECK_EQUAL(30000000, mOut_TIME_MULTIME);
-  }
+  BOOST_CHECK_EQUAL(CIEC_TIME(30000000), mOut_TIME_MULTIME);
+}
 
-  BOOST_AUTO_TEST_CASE(mulWithRealWithDecimal){
+  BOOST_AUTO_TEST_CASE(mulWithRealWithDecimal) {
     mIn_TIME_MULTIME = CIEC_TIME(30000000);
     mIn_REAL_MULTIME = CIEC_REAL(0.5);
     /* trigger the inputevent */
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-    BOOST_CHECK_EQUAL(15000000, mOut_TIME_MULTIME);
+    BOOST_CHECK_EQUAL(CIEC_TIME(15000000), mOut_TIME_MULTIME);
   }
 
-  BOOST_AUTO_TEST_CASE(mulWithRealWitGreaterThanOne){
+  BOOST_AUTO_TEST_CASE(mulWithRealWitGreaterThanOne) {
     mIn_TIME_MULTIME = CIEC_TIME(30000000);
     mIn_REAL_MULTIME = CIEC_REAL(2.0);
     /* trigger the inputevent */
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-    BOOST_CHECK_EQUAL(60000000, mOut_TIME_MULTIME);
+    BOOST_CHECK_EQUAL(CIEC_TIME(60000000), mOut_TIME_MULTIME);
   }
 
 BOOST_AUTO_TEST_SUITE_END()

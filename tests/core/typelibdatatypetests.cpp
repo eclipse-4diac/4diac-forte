@@ -10,6 +10,7 @@
  *   Alois Zoitl  - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
+#include "forte_boost_output_support.h"
 #include "../../src/core/typelib.h"
 #include "../../src/core/datatypes/forte_any.h"
 #include "../../src/core/datatypes/forte_bool.h"
@@ -225,11 +226,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
     TForteByte acDataBuf[sizeof(CIEC_TIME_OF_DAY)];
     CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdTIME_OF_DAY, acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_TIME_OF_DAY, poVal->getDataTypeID());
-    BOOST_CHECK_EQUAL(0, *static_cast<CIEC_TIME_OF_DAY *>(poVal));
+    BOOST_CHECK_EQUAL(0, static_cast<CIEC_TIME_OF_DAY::TValueType>(*static_cast<CIEC_TIME_OF_DAY *>(poVal)));
 
     poVal = CTypeLib::createDataTypeInstance(g_nStringIdTIME_OF_DAY, nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_TIME_OF_DAY, poVal->getDataTypeID());
-    BOOST_CHECK_EQUAL(0, *static_cast<CIEC_TIME_OF_DAY *>(poVal));
+    BOOST_CHECK_EQUAL(0, static_cast<CIEC_TIME_OF_DAY::TValueType>(*static_cast<CIEC_TIME_OF_DAY *>(poVal)));
     delete poVal;
   }
 
@@ -249,11 +250,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
     TForteByte acDataBuf[sizeof(CIEC_TIME)];
     CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdTIME, acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_TIME, poVal->getDataTypeID());
-    BOOST_CHECK_EQUAL(0, *static_cast<CIEC_TIME *>(poVal));
+    BOOST_CHECK_EQUAL(0, static_cast<CIEC_TIME::TValueType>(* static_cast<CIEC_TIME *>(poVal)));
 
     poVal = CTypeLib::createDataTypeInstance(g_nStringIdTIME, nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_TIME, poVal->getDataTypeID());
-    BOOST_CHECK_EQUAL(0, *static_cast<CIEC_TIME *>(poVal));
+    BOOST_CHECK_EQUAL(0, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(poVal)));
     delete poVal;
   }
 

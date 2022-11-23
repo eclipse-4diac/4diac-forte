@@ -53,7 +53,7 @@ class CIEC_WSTRING : public CIEC_ANY_STRING {
       converter.out(mb, &value, &value + 1, from_next, buf, buf + converter.max_length(), to_next);
       // error checking skipped for brevity
       std::size_t size = to_next - buf;
-      assign(buf, size);
+      assign(buf, static_cast<TForteUInt16>(size));
     }
 
     explicit CIEC_WSTRING(const char* paValue) {

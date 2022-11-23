@@ -11,6 +11,7 @@
  *   Martin Melik Merkumians - Adds cast template tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
+#include "forte_boost_output_support.h"
 #include <boost/test/tools/floating_point_comparison.hpp>
 
 #include "../../../src/core/datatypes/forte_real.h"
@@ -324,49 +325,6 @@ BOOST_AUTO_TEST_CASE(CASTS_LREAL_to_REAL)
   BOOST_CHECK_EQUAL(1.0e-37f, nTestReal);
   CIEC_ANY::specialCast(nTestLReal36, nTestReal);
   BOOST_CHECK_EQUAL(36.0f, nTestReal);
-}
-
-BOOST_AUTO_TEST_CASE(CASTS_LREAL_to_TIME)
-{
-  CIEC_TIME nTestTime;
-
-  CIEC_LREAL nTestLReal0;
-  CIEC_LREAL nTestLReal1;
-  CIEC_LREAL nTestLReal2_2874e6;
-  CIEC_LREAL nTestLRealm6_2587em4;
-  CIEC_LREAL nTestLReal1_0em37;
-  CIEC_LREAL nTestLReal36;
-
-//check initial values
-  BOOST_CHECK_EQUAL(nTestLReal0, 0);
-  BOOST_CHECK_EQUAL(nTestLReal1, 0);
-  BOOST_CHECK_EQUAL(nTestLReal2_2874e6, 0);
-  BOOST_CHECK_EQUAL(nTestLRealm6_2587em4, 0);
-  BOOST_CHECK_EQUAL(nTestLReal1_0em37, 0);
-  BOOST_CHECK_EQUAL(nTestLReal36, 0);
-
-  nTestLReal0 = CIEC_LREAL(0.0);
-  nTestLReal1 = CIEC_LREAL(1.0);
-  nTestLReal2_2874e6 = CIEC_LREAL(2.2874e6);
-  nTestLRealm6_2587em4 = CIEC_LREAL(-6.2587e-4);
-  nTestLReal1_0em37 = CIEC_LREAL(1.0e-37);
-  nTestLReal36 = CIEC_LREAL(36.0);
-
-  BOOST_CHECK_EQUAL(0.0, nTestLReal0);
-  BOOST_CHECK_EQUAL(1.0, nTestLReal1);
-  BOOST_CHECK_EQUAL(2.2874e6, nTestLReal2_2874e6);
-  BOOST_CHECK_EQUAL(-6.2587e-4, nTestLRealm6_2587em4);
-  BOOST_CHECK_EQUAL(1.0e-37, nTestLReal1_0em37);
-  BOOST_CHECK_EQUAL(36.0, nTestLReal36);
-
-//toTime
-  CIEC_ANY::specialCast(nTestLReal0, nTestTime);
-  BOOST_CHECK_EQUAL(nTestTime, 0);
-  CIEC_ANY::specialCast(nTestLReal1, nTestTime);
-  BOOST_CHECK_EQUAL(nTestTime, 1);
-  CIEC_ANY::specialCast(nTestLReal36, nTestTime);
-  BOOST_CHECK_EQUAL(nTestTime, 36);
-
 }
 
 BOOST_AUTO_TEST_CASE(LREAL_Castable_test)

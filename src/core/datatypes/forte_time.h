@@ -25,8 +25,6 @@
 class CIEC_TIME : public CIEC_ANY_DURATION {
   DECLARE_FIRMWARE_DATATYPE(TIME)
   public:
-    typedef TLargestIntValueType TValueType;
-
     CIEC_TIME() = default;
 
     CIEC_TIME(const CIEC_TIME &paValue) : CIEC_ANY_DURATION() {
@@ -46,10 +44,10 @@ class CIEC_TIME : public CIEC_ANY_DURATION {
     }
 
     CIEC_TIME operator-() const {
-      return CIEC_TIME(-1 * *this);
+      return CIEC_TIME(-1 * static_cast<TValueType>(*this));
     }
 
-    operator TValueType() const {
+    explicit operator TValueType() const {
       return getLargestInt();
     }
 

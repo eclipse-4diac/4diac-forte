@@ -10,6 +10,7 @@
  *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
+#include "forte_boost_output_support.h"
 
 #include "../../../src/core/datatypes/forte_time_of_day.h"
 
@@ -24,32 +25,40 @@ BOOST_AUTO_TEST_CASE(Type_test)
 
 }
 
+BOOST_AUTO_TEST_CASE(Representation_test) {
+  CIEC_TIME_OF_DAY interalRepSet(56215360000000ULL); // "15:36:55.36"
+  CIEC_TIME_OF_DAY stringSet; // "15:36:55.36"
+  stringSet.fromString("15:36:55.360");
+  BOOST_TEST(stringSet == interalRepSet);
+}
+
+
 BOOST_AUTO_TEST_CASE(Operator_test)
 {
   CIEC_TIME_OF_DAY nTest1;
   CIEC_TIME_OF_DAY nTest2;
 
   //check if data type is initialized with value of zero
-  BOOST_CHECK_EQUAL(nTest1,0ULL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest1),0ULL);
 
   nTest1 = CIEC_TIME_OF_DAY(std::numeric_limits<TForteUInt64>::min());
   nTest2 = nTest1;
-  BOOST_CHECK_EQUAL(nTest1, std::numeric_limits<TForteUInt64>::min());
-  BOOST_CHECK_EQUAL(nTest2, std::numeric_limits<TForteUInt64>::min());
+  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest1), std::numeric_limits<TForteUInt64>::min());
+  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest2), std::numeric_limits<TForteUInt64>::min());
 
   nTest1 = CIEC_TIME_OF_DAY(123894391ULL);
   nTest2 = nTest1;
-  BOOST_CHECK_EQUAL(nTest1, 123894391ULL);
-  BOOST_CHECK_EQUAL(nTest2, 123894391ULL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest1), 123894391ULL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest2), 123894391ULL);
 
   nTest1 = CIEC_TIME_OF_DAY(std::numeric_limits<TForteUInt64>::max());
   nTest2 = nTest1;
-  BOOST_CHECK_EQUAL(nTest1, std::numeric_limits<TForteUInt64>::max());
-  BOOST_CHECK_EQUAL(nTest2, std::numeric_limits<TForteUInt64>::max());
+  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest1), std::numeric_limits<TForteUInt64>::max());
+  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest2), std::numeric_limits<TForteUInt64>::max());
 
   nTest2 = CIEC_TIME_OF_DAY(2145729524ULL);
-  BOOST_CHECK_EQUAL(nTest1, std::numeric_limits<TForteUInt64>::max());
-  BOOST_CHECK_EQUAL(nTest2, 2145729524ULL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest1), std::numeric_limits<TForteUInt64>::max());
+  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest2), 2145729524ULL);
 }
 
 BOOST_AUTO_TEST_CASE(Conversion_test)
@@ -80,13 +89,13 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.36"), 11);
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "15:36:55.360"), 0);
+  BOOST_TEST(cBuffer == "15:36:55.360");
   strcpy(cBuffer, "");
 
   nTest = CIEC_TIME_OF_DAY(0);
   BOOST_CHECK_EQUAL(nTest.fromString("15:36:55"), 8);
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "15:36:55.000"), 0);
+  BOOST_TEST(cBuffer == "15:36:55.000");
   strcpy(cBuffer, "");
 
   nTest = CIEC_TIME_OF_DAY(0);

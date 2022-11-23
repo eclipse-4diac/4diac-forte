@@ -10,6 +10,7 @@
  *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
+#include "forte_boost_output_support.h"
 
 //BOOLEAN
 #include "../../../src/core/datatypes/forte_bool.h"
@@ -306,42 +307,6 @@ BOOST_AUTO_TEST_CASE(CASTS_SINT_to_REAL)
   BOOST_CHECK_EQUAL(nTestLReal, 45.0f);
   nTestLReal.setValue(nTestSInt127);
   BOOST_CHECK_EQUAL(nTestLReal, 127.0f);
-}
-
-BOOST_AUTO_TEST_CASE(CASTS_SINT_to_TIME)
-{
-  CIEC_SINT nTestSInt0;
-  CIEC_SINT nTestSInt1;
-  CIEC_SINT nTestSInt45;
-  CIEC_SINT nTestSInt127;
-
-  CIEC_TIME nTestTime;
-
-//check initial values
-  BOOST_CHECK_EQUAL(nTestSInt0, 0);
-  BOOST_CHECK_EQUAL(nTestSInt1, 0);
-  BOOST_CHECK_EQUAL(nTestSInt45, 0);
-  BOOST_CHECK_EQUAL(nTestSInt127, 0);
-
-  nTestSInt0 = CIEC_SINT(0);
-  nTestSInt1 = CIEC_SINT(1);
-  nTestSInt45 = CIEC_SINT(45);
-  nTestSInt127 = CIEC_SINT(127);
-
-  BOOST_CHECK_EQUAL(nTestSInt0, 0);
-  BOOST_CHECK_EQUAL(nTestSInt1, 1);
-  BOOST_CHECK_EQUAL(nTestSInt45, 45);
-  BOOST_CHECK_EQUAL(nTestSInt127, 127);
-
-//toTime
-  nTestTime.setValue(nTestSInt0);
-  BOOST_CHECK_EQUAL(0, nTestTime);
-  nTestTime.setValue(nTestSInt1);
-  BOOST_CHECK_EQUAL(1, nTestTime);
-  nTestTime.setValue(nTestSInt45);
-  BOOST_CHECK_EQUAL(45, nTestTime);
-  nTestTime.setValue(nTestSInt127);
-  BOOST_CHECK_EQUAL(127, nTestTime);
 }
 
 BOOST_AUTO_TEST_CASE(SINT_Castable_test)

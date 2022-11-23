@@ -12,6 +12,7 @@
  *******************************************************************************/
 
 #include <boost/test/unit_test.hpp>
+#include "forte_boost_output_support.h"
 
 #include <boost/test/tools/floating_point_comparison.hpp>
 #include "../../../src/core/datatypes/forte_real.h"
@@ -301,42 +302,6 @@ BOOST_AUTO_TEST_CASE(CASTS_BYTE_to_REAL)
   BOOST_CHECK_EQUAL(45.0, nTestLReal); 
   nTestLReal.setValue(nTestByte255);
   BOOST_CHECK_EQUAL(255.0, nTestLReal); 
-}
-
-BOOST_AUTO_TEST_CASE(CASTS_BYTE_to_TIME)
-{
-  CIEC_BYTE nTestByte0;
-  CIEC_BYTE nTestByte1;
-  CIEC_BYTE nTestByte45;
-  CIEC_BYTE nTestByte255;
-
-  CIEC_TIME nTestTime;
-
-//check initial values
-  BOOST_CHECK_EQUAL(nTestByte0, 0U);
-  BOOST_CHECK_EQUAL(nTestByte1, 0U);
-  BOOST_CHECK_EQUAL(nTestByte45, 0U);
-  BOOST_CHECK_EQUAL(nTestByte255, 0U);
-
-  nTestByte0 = CIEC_BYTE(0U);
-  nTestByte1 = CIEC_BYTE(1U);
-  nTestByte45 = CIEC_BYTE(45U);
-  nTestByte255 = CIEC_BYTE(255U);
-
-  BOOST_CHECK_EQUAL(nTestByte0, 0U);
-  BOOST_CHECK_EQUAL(nTestByte1, 1U);
-  BOOST_CHECK_EQUAL(nTestByte45, 45U);
-  BOOST_CHECK_EQUAL(nTestByte255, 255U);
-
-//toTime
-  nTestTime.setValue(nTestByte0);
-  BOOST_CHECK_EQUAL(0, nTestTime);
-  nTestTime.setValue(nTestByte1);
-  BOOST_CHECK_EQUAL(1, nTestTime);
-  nTestTime.setValue(nTestByte45);
-  BOOST_CHECK_EQUAL(45, nTestTime);
-  nTestTime.setValue(nTestByte255);
-  BOOST_CHECK_EQUAL(255, nTestTime);
 }
 
 BOOST_AUTO_TEST_CASE(BYTE_Castable_test)

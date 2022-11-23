@@ -12,6 +12,7 @@
  *******************************************************************************/
 
 #include <boost/test/unit_test.hpp>
+#include "forte_boost_output_support.h"
 
 #include "convert_functions.h"
 
@@ -28,7 +29,7 @@ BOOST_AUTO_TEST_SUITE(convert_functions)
     date.fromString("DT#2018-07-10-12:38:50.123");
 
     CIEC_TIME_OF_DAY tod(func_DT_TO_TOD(date));
-    BOOST_TEST((TForteUInt64)tod == (12*3600 + 38*60 + 50)*1000ULL + 123);
+    BOOST_TEST(tod == CIEC_TIME_OF_DAY(((12 * 3600 + 38 * 60 + 50) * 1000ULL + 123) * 1000000ULL));
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_REAL_TO_XINT) {

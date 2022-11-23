@@ -18,8 +18,7 @@
 
 struct F_DIVTIME_TestFixture : public CFBTestFixtureBase{
 
-  F_DIVTIME_TestFixture() : CFBTestFixtureBase(g_nStringIdF_DIVTIME)
-  {
+  F_DIVTIME_TestFixture() : CFBTestFixtureBase(g_nStringIdF_DIVTIME) {
     setInputData({&mIn_TIME_DIVTIME, &mIn_REAL_DIVTIME});
     setOutputData({&mOut_TIME_DIVTIME});
     CFBTestFixtureBase::setup();
@@ -33,32 +32,31 @@ struct F_DIVTIME_TestFixture : public CFBTestFixtureBase{
 
 BOOST_FIXTURE_TEST_SUITE(F_DIVTIME_Tests, F_DIVTIME_TestFixture)
 
-BOOST_AUTO_TEST_CASE(divWithRealWithOne)
-{
+BOOST_AUTO_TEST_CASE(divWithRealWithOne) {
   mIn_TIME_DIVTIME = CIEC_TIME(30000000);
   mIn_REAL_DIVTIME = CIEC_REAL(1.0);
   /* trigger the inputevent */
   triggerEvent(0);
   BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-  BOOST_CHECK_EQUAL(30000000, mOut_TIME_DIVTIME);
-  }
+  BOOST_CHECK_EQUAL(CIEC_TIME(30000000), mOut_TIME_DIVTIME);
+}
 
-  BOOST_AUTO_TEST_CASE(divWithRealWithDecimal){
-    mIn_TIME_DIVTIME = CIEC_TIME(30000000);
-    mIn_REAL_DIVTIME = CIEC_REAL(0.5);
-    /* trigger the inputevent */
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-    BOOST_CHECK_EQUAL(60000000, mOut_TIME_DIVTIME);
-  }
+BOOST_AUTO_TEST_CASE(divWithRealWithDecimal) {
+  mIn_TIME_DIVTIME = CIEC_TIME(30000000);
+  mIn_REAL_DIVTIME = CIEC_REAL(0.5);
+  /* trigger the inputevent */
+  triggerEvent(0);
+  BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+  BOOST_CHECK_EQUAL(CIEC_TIME(60000000), mOut_TIME_DIVTIME);
+}
 
-  BOOST_AUTO_TEST_CASE(divWithRealWitGreaterThanOne){
-    mIn_TIME_DIVTIME = CIEC_TIME(30000000);
-    mIn_REAL_DIVTIME = CIEC_REAL(2.0);
-    /* trigger the inputevent */
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-    BOOST_CHECK_EQUAL(15000000, mOut_TIME_DIVTIME);
-  }
+BOOST_AUTO_TEST_CASE(divWithRealWitGreaterThanOne) {
+  mIn_TIME_DIVTIME = CIEC_TIME(30000000);
+  mIn_REAL_DIVTIME = CIEC_REAL(2.0);
+  /* trigger the inputevent */
+  triggerEvent(0);
+  BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+  BOOST_CHECK_EQUAL(CIEC_TIME(15000000), mOut_TIME_DIVTIME);
+}
 
 BOOST_AUTO_TEST_SUITE_END()

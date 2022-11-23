@@ -31,7 +31,7 @@ CTimerHandler::~CTimerHandler() = default;
 
 void CTimerHandler::registerTimedFB(STimedFBListEntry *paTimerListEntry, const CIEC_TIME &paTimeInterval) {
   //calculate the correct interval based on time-base and timer ticks per seconds
-  paTimerListEntry->mInterval = static_cast<TForteUInt32>((paTimeInterval * getTicksPerSecond()) / CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond);
+  paTimerListEntry->mInterval = static_cast<TForteUInt32>((static_cast<CIEC_TIME::TValueType>(paTimeInterval) * getTicksPerSecond()) / CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond);
   // Correct null intervals that can lead to event queue overflow to at least 1 timer tick
   if(0 == paTimerListEntry->mInterval) {
     paTimerListEntry->mInterval = 1;

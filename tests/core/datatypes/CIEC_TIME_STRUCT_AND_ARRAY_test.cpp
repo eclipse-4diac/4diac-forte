@@ -12,6 +12,7 @@
 
 #include <boost/test/unit_test.hpp>
 #include <string>
+#include "forte_boost_output_support.h"
 
 #include "../../../src/core/datatypes/forte_time.h"
 #include "../../../src/core/datatypes/forte_bool.h"
@@ -67,13 +68,13 @@ void setupTestStruct_TestDataSet1(CIEC_TestStruct &paStruct){
 void checkTestStruct_InitialValues(CIEC_TestStruct &pa_stStruct){
   BOOST_CHECK_EQUAL(false, (*static_cast<CIEC_BOOL *>(pa_stStruct.getMemberNamed(g_nStringIdVal1))));
   BOOST_CHECK_EQUAL(0, (*static_cast<CIEC_INT *>(pa_stStruct.getMemberNamed(g_nStringIdVal2))));
-  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME::TValueType>(0), (*static_cast<CIEC_TIME *>(pa_stStruct.getMemberNamed(g_nStringIdVal3))));
+  BOOST_CHECK_EQUAL(0, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(pa_stStruct.getMemberNamed(g_nStringIdVal3))));
 }
 
 void checkTestStruct_TestDataSet1(CIEC_TestStruct &pa_stStruct){
   BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(pa_stStruct.getMemberNamed(g_nStringIdVal1))));
   BOOST_CHECK_EQUAL(44, (*static_cast<CIEC_INT *>(pa_stStruct.getMemberNamed(g_nStringIdVal2))));
-  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME::TValueType>(10), (*static_cast<CIEC_TIME *>(pa_stStruct.getMemberNamed(g_nStringIdVal3))));
+  BOOST_CHECK_EQUAL(10, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(pa_stStruct.getMemberNamed(g_nStringIdVal3))));
 }
 
 BOOST_AUTO_TEST_CASE(TimeStruct_element_access_test){ 
@@ -93,7 +94,7 @@ BOOST_AUTO_TEST_CASE(TimeStruct_element_access_test){
   (*static_cast<CIEC_TIME *>(stStruct.getMemberNamed(g_nStringIdVal3))) = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(12));
   BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(stStruct.getMemberNamed(g_nStringIdVal1))));
   BOOST_CHECK_EQUAL(55, (*static_cast<CIEC_INT *>(stStruct.getMemberNamed(g_nStringIdVal2))));
-  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME::TValueType>(12), (*static_cast<CIEC_TIME *>(stStruct.getMemberNamed(g_nStringIdVal3))));
+  BOOST_CHECK_EQUAL(12, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(stStruct.getMemberNamed(g_nStringIdVal3))));
 }
 
 BOOST_AUTO_TEST_CASE(TimeStruct_TIME_parser_test) {
@@ -105,13 +106,13 @@ BOOST_AUTO_TEST_CASE(TimeStruct_TIME_parser_test) {
   (*static_cast<CIEC_TIME *>(stStruct.getMemberNamed(g_nStringIdVal3))) = timeVar;
   BOOST_CHECK_EQUAL(false, (*static_cast<CIEC_BOOL *>(stStruct.getMemberNamed(g_nStringIdVal1))));
   BOOST_CHECK_EQUAL(0, (*static_cast<CIEC_INT *>(stStruct.getMemberNamed(g_nStringIdVal2))));
-  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME::TValueType>(33000000), (*static_cast<CIEC_TIME *>(stStruct.getMemberNamed(g_nStringIdVal3))));
+  BOOST_CHECK_EQUAL(33000000, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(stStruct.getMemberNamed(g_nStringIdVal3))));
 
   timeVar.fromString("TIME#44h36m");
   (*static_cast<CIEC_TIME *>(stStruct.getMemberNamed(g_nStringIdVal3))) = timeVar;
   BOOST_CHECK_EQUAL(false, (*static_cast<CIEC_BOOL *>(stStruct.getMemberNamed(g_nStringIdVal1))));
   BOOST_CHECK_EQUAL(0, (*static_cast<CIEC_INT *>(stStruct.getMemberNamed(g_nStringIdVal2))));
-  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME::TValueType>(160560000000000), (*static_cast<CIEC_TIME *>(stStruct.getMemberNamed(g_nStringIdVal3))));
+  BOOST_CHECK_EQUAL(160560000000000, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(stStruct.getMemberNamed(g_nStringIdVal3))));
 
   const char cTestString_1[] = { "(Val1:=TRUE,Val2:=11,Val3:=T#33ms)" };
   const char cTestString_2[] = { "(Val1:=TRUE,Val2:=11,Val3:=TIME#44h36m)" };
@@ -134,7 +135,7 @@ void setupArrayOfStructTest_TestDataSet1(CIEC_TestStruct &paStruct) {
 void checkArrayOfStructTest_TestDataSet1(CIEC_TestStruct &paStruct) {
   BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(paStruct.getMemberNamed(g_nStringIdVal1))));
   BOOST_CHECK_EQUAL(33, (*static_cast<CIEC_INT *>(paStruct.getMemberNamed(g_nStringIdVal2))));
-  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME::TValueType>(22), (*static_cast<CIEC_TIME *>(paStruct.getMemberNamed(g_nStringIdVal3))));
+  BOOST_CHECK_EQUAL(22, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(paStruct.getMemberNamed(g_nStringIdVal3))));
 }
 
 BOOST_AUTO_TEST_CASE(arrayOfStructs_access_test) {
@@ -171,13 +172,13 @@ BOOST_AUTO_TEST_CASE(arrayOfStructs_TIME_parser_test) {
   timeVar.fromString("T#33ms");
   for(size_t i = 0; i < 3; i++) { 
     (*static_cast<CIEC_TIME *>(static_cast<CIEC_STRUCT &>(nTest[0]).getMemberNamed(g_nStringIdVal3))) = timeVar;
-    BOOST_CHECK_EQUAL(static_cast<CIEC_TIME::TValueType>(33000000), (*static_cast<CIEC_TIME *>(static_cast<CIEC_STRUCT &>(nTest[0]).getMemberNamed(g_nStringIdVal3))));
+    BOOST_CHECK_EQUAL(33000000, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(static_cast<CIEC_STRUCT &>(nTest[0]).getMemberNamed(g_nStringIdVal3))));
   }
 
   timeVar.fromString("TIME#44h36m");
   for(size_t i = 0; i < 3; i++) { 
     (*static_cast<CIEC_TIME *>(static_cast<CIEC_STRUCT &>(nTest[0]).getMemberNamed(g_nStringIdVal3))) = timeVar;
-    BOOST_CHECK_EQUAL(static_cast<CIEC_TIME::TValueType>(160560000000000), (*static_cast<CIEC_TIME *>(static_cast<CIEC_STRUCT &>(nTest[0]).getMemberNamed(g_nStringIdVal3))));
+    BOOST_CHECK_EQUAL(160560000000000, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(static_cast<CIEC_STRUCT &>(nTest[0]).getMemberNamed(g_nStringIdVal3))));
   }
 
   const char cTestString_1[] = { "[(Val1:=TRUE,Val2:=33,Val3:=T#44ms),(Val1:=TRUE,Val2:=33,Val3:=T#44ms),(Val1:=TRUE,Val2:=33,Val3:=T#44ms)]" };

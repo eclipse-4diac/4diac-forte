@@ -898,7 +898,7 @@ const CIEC_UDINT func_LREAL_TRUNC_UDINT(const CIEC_LREAL &paIN);
 const CIEC_ULINT func_LREAL_TRUNC_ULINT(const CIEC_LREAL &paIN);
 
 template<typename T> const CIEC_TIME func_MUL_TIME(const CIEC_TIME& paIN1, const T& paIN2){
-  return CIEC_TIME(paIN1 * paIN2);
+  return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paIN1) * static_cast<typename T::TValueType>(paIN2));
 }
 
 template<typename T> const CIEC_LTIME func_MUL_LTIME(const CIEC_LTIME &paIN1, const T &paIN2) {
@@ -907,7 +907,7 @@ template<typename T> const CIEC_LTIME func_MUL_LTIME(const CIEC_LTIME &paIN1, co
 
 template<typename T> const CIEC_TIME func_DIV_TIME(const CIEC_TIME& paIN1, const T& paIN2) {
   if(0 != paIN2) {
-    return CIEC_TIME(paIN1 / paIN2);
+    return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paIN1) / static_cast<typename T::TValueType>(paIN2));
   } else {
     DEVLOG_ERROR("Division by zero!");
     return CIEC_TIME(0);

@@ -22,6 +22,23 @@
 #include "forte_wchar.h"
 #include "forte_string.h"
 #include "forte_wstring.h"
+#include "forte_time_of_day.h"
+
+inline
+std::ostream& boost_test_print_type(std::ostream &out, const CIEC_TIME &variable) {
+  char outputString[variable.getToStringBufferSize()];
+  variable.toString(outputString, sizeof(outputString));
+  out << outputString;
+  return out;
+}
+
+inline
+std::ostream& boost_test_print_type(std::ostream &out, const CIEC_TIME_OF_DAY &variable) {
+  char outputString[variable.getToStringBufferSize()];
+  variable.toString(outputString, sizeof(outputString));
+  out << outputString;
+  return out;
+}
 
 inline
 std::ostream& boost_test_print_type(std::ostream &out, const CIEC_CHAR &variable) {

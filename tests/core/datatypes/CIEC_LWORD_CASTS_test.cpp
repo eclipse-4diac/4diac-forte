@@ -11,6 +11,7 @@
  *   Martin Melik Merkumians - Adds cast template tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
+#include "forte_boost_output_support.h"
 
 #include <boost/test/tools/floating_point_comparison.hpp>
 #include "../../../src/core/datatypes/forte_real.h"
@@ -322,45 +323,6 @@ BOOST_AUTO_TEST_CASE(CASTS_LWORD_to_REAL)
 
 }
 
-BOOST_AUTO_TEST_CASE(CASTS_LWORD_to_Time)
-{
-  CIEC_LWORD nTestLWord0;
-  CIEC_LWORD nTestLWord1;
-  CIEC_LWORD nTestLWord4294967296;
-  CIEC_LWORD nTestLWord18446744073709551615;
-
-  CIEC_TIME nTestTime;
-
-//check initial values
-  BOOST_CHECK_EQUAL(nTestLWord0, 0ULL);
-  BOOST_CHECK_EQUAL(nTestLWord1, 0ULL);
-  BOOST_CHECK_EQUAL(nTestLWord4294967296, 0ULL);
-  BOOST_CHECK_EQUAL(nTestLWord18446744073709551615, 0ULL);
-
-  nTestLWord0 = CIEC_LWORD(0ULL);
-  nTestLWord1 = CIEC_LWORD(1ULL);
-  nTestLWord4294967296 = CIEC_LWORD(4294967296ULL);
-  nTestLWord18446744073709551615 = CIEC_LWORD(18446744073709551615ULL);
-
-  BOOST_CHECK_EQUAL(nTestLWord0, 0ULL);
-  BOOST_CHECK_EQUAL(nTestLWord1, 1ULL);
-  BOOST_CHECK_EQUAL(nTestLWord4294967296, 4294967296ULL);
-  BOOST_CHECK_EQUAL(nTestLWord18446744073709551615, 18446744073709551615ULL);
-
-//toTime
-  nTestTime.setValue(nTestLWord0);
-  BOOST_CHECK_EQUAL(0, nTestTime);
-  nTestTime.setValue(nTestLWord1);
-  BOOST_CHECK_EQUAL(1, nTestTime);
-  nTestTime.setValue(nTestLWord4294967296);
-  BOOST_CHECK_EQUAL(4294967296LL, nTestTime);
-  nTestTime.setValue(nTestLWord18446744073709551615);
-  BOOST_CHECK_EQUAL(-1LL, nTestTime);
-}
-
-
-BOOST_AUTO_TEST_SUITE_END()
-
 BOOST_AUTO_TEST_CASE(LWORD_Castable_test)
 {
   bool bUp, bDown;
@@ -444,3 +406,5 @@ BOOST_AUTO_TEST_CASE(Explict_cast_operator_to_USINT)
   nResult = CIEC_ANY::cast<CIEC_LWORD>(bBool);
   BOOST_TEST(nResult == true);
 }
+
+BOOST_AUTO_TEST_SUITE_END()

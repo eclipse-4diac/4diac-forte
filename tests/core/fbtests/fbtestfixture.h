@@ -22,6 +22,8 @@
 #include <vector>
 #include <deque>
 
+#include "forte_boost_output_support.h"
+
 class CFBTestFixtureBase : public CFunctionBlock{
   public:
     ~CFBTestFixtureBase();

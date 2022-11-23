@@ -13,6 +13,8 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/tools/floating_point_comparison.hpp>
 
+#include "forte_boost_output_support.h"
+
 #include "../../../src/core/datatypes/forte_real.h"
 
 //BOOLEAN
@@ -323,49 +325,6 @@ BOOST_AUTO_TEST_CASE(CASTS_REAL_to_LREAL)
   BOOST_CHECK_EQUAL(((double)1.0e-37f), nTestLReal);
   CIEC_ANY::specialCast(nTestReal36, nTestLReal);
   BOOST_CHECK_EQUAL(((double)36.0f), nTestLReal);
-}
-
-BOOST_AUTO_TEST_CASE(CASTS_REAL_to_TIME)
-{
-  CIEC_TIME nTestTime;
-
-  CIEC_REAL nTestReal0;
-  CIEC_REAL nTestReal1;
-  CIEC_REAL nTestReal2_2874e6;
-  CIEC_REAL nTestRealm6_2587em4;
-  CIEC_REAL nTestReal1_0em37;
-  CIEC_REAL nTestReal36;
-
-//check initial values
-  BOOST_CHECK_EQUAL(nTestReal0, 0.0f);
-  BOOST_CHECK_EQUAL(nTestReal1, 0.0f);
-  BOOST_CHECK_EQUAL(nTestReal2_2874e6, 0.0f);
-  BOOST_CHECK_EQUAL(nTestRealm6_2587em4, 0.0f);
-  BOOST_CHECK_EQUAL(nTestReal1_0em37, 0.0f);
-  BOOST_CHECK_EQUAL(nTestReal36, 0.0f);
-
-  nTestReal0 = CIEC_REAL(0.0f);
-  nTestReal1 = CIEC_REAL(1.0f);
-  nTestReal2_2874e6 = CIEC_REAL(2.2874e6f);
-  nTestRealm6_2587em4 = CIEC_REAL(-6.2587e-4f);
-  nTestReal1_0em37 = CIEC_REAL(1.0e-37f);
-  nTestReal36 = CIEC_REAL(36.0f);
-
-  BOOST_CHECK_EQUAL(0.0f, nTestReal0);
-  BOOST_CHECK_EQUAL(1.0f, nTestReal1);
-  BOOST_CHECK_EQUAL(2.2874e6f, nTestReal2_2874e6);
-  BOOST_CHECK_EQUAL(-6.2587e-4f, nTestRealm6_2587em4);
-  BOOST_CHECK_EQUAL(1.0e-37f, nTestReal1_0em37);
-  BOOST_CHECK_EQUAL(36.0f, nTestReal36);
-
-//toTime
-  CIEC_ANY::specialCast(nTestReal0, nTestTime);
-  BOOST_CHECK_EQUAL(nTestTime, 0);
-  CIEC_ANY::specialCast(nTestReal1, nTestTime);
-  BOOST_CHECK_EQUAL(nTestTime, 1);
-  CIEC_ANY::specialCast(nTestReal36, nTestTime);
-  BOOST_CHECK_EQUAL(nTestTime, 36);
-
 }
 
 BOOST_AUTO_TEST_CASE(REAL_Castable_test)

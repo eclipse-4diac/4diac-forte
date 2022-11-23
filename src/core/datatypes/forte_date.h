@@ -25,8 +25,6 @@
 class CIEC_DATE : public CIEC_ANY_DATE {
   DECLARE_FIRMWARE_DATATYPE(DATE)
   public:
-    typedef TForteUInt64 TValueType;
-
     CIEC_DATE() = default;
 
     CIEC_DATE(const CIEC_DATE& paValue) :

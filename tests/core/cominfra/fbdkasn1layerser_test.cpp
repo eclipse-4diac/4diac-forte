@@ -12,6 +12,8 @@
 #include <boost/test/unit_test.hpp>
 #include <algorithm>
 
+#include "forte_boost_output_support.h"
+
 #include "fbdkasn1layer_serdeserdata.h"
 
 #include "../../../src/core/cominfra/fbdkasn1layer.h"

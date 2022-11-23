@@ -22,6 +22,8 @@
 class CIEC_ANY_DURATION : public CIEC_ANY_MAGNITUDE {
   DECLARE_FIRMWARE_DATATYPE(ANY_DURATION)
 public:
+  /*! \brief The common C/C++ internal representation type for ANY_DURATION */
+  typedef TLargestIntValueType TValueType;
 
   /*! \brief Defines the time base in units per second that will be used in the TIME data type
    *
@@ -30,6 +32,47 @@ public:
    *  or 1000000 (i.e., 1micro s) may be suitable.
    */
   static const uint_fast64_t csmForteTimeBaseUnitsPerSecond = 1000000000; /* 1E9 */
+
+  template <typename T, typename U, std::enable_if_t<std::conjunction_v<std::is_base_of<CIEC_ANY_DURATION, T>, std::is_base_of<CIEC_ANY_DURATION, U> >, int> = 0>
+  friend bool operator==(const T &paLeft, const U &paRight) {
+    return static_cast<typename T::TValueType>(paLeft) == static_cast<typename T::TValueType>(paRight);
+  }
+
+  template <typename T, typename U, std::enable_if_t<std::conjunction_v<std::is_base_of<CIEC_ANY_DURATION, T>, std::is_base_of<CIEC_ANY_DURATION, U> >, int> = 0>
+  friend bool operator!=(const T &paLeft, const U &paRight) {
+    return !(paLeft == paRight);
+  }
+
+  template <typename T, typename U, std::enable_if_t<std::conjunction_v<std::is_base_of<CIEC_ANY_DURATION, T>, std::is_base_of<CIEC_ANY_DURATION, U> >, int> = 0>
+  friend bool operator<(const T &paLeft, const U &paRight) {
+    return static_cast<typename T::TValueType>(paLeft) < static_cast<typename T::TValueType>(paRight);
+  }
+
+  template <typename T, typename U, std::enable_if_t<std::conjunction_v<std::is_base_of<CIEC_ANY_DURATION, T>, std::is_base_of<CIEC_ANY_DURATION, U> >, int> = 0>
+  friend bool operator>(const T &paLeft, const U &paRight) {
+    return static_cast<typename T::TValueType>(paLeft) > static_cast<typename T::TValueType>(paRight);
+  }
+
+  template <typename T, typename U, std::enable_if_t<std::conjunction_v<std::is_base_of<CIEC_ANY_DURATION, T>, std::is_base_of<CIEC_ANY_DURATION, U> >, int> = 0>
+  friend bool operator<=(const T &paLeft, const U &paRight) {
+    return paLeft == paRight || paLeft < paRight;
+  }
+
+  template <typename T, typename U, std::enable_if_t<std::conjunction_v<std::is_base_of<CIEC_ANY_DURATION, T>, std::is_base_of<CIEC_ANY_DURATION, U> >, int> = 0>
+  friend bool operator>=(const T &paLeft, const U &paRight) {
+    return paLeft == paRight || paLeft > paRight;
+  }
+
+  template <typename T, std::enable_if_t<std::is_base_of_v<CIEC_ANY_DURATION, T>, int> = 0>
+  friend T operator+(const T& paLeft, const T& paRight) {
+    return T(static_cast<typename T::TValueType>(paLeft) + static_cast<typename T::TValueType>(paRight));
+  }
+
+  template <typename T, std::enable_if_t<std::is_base_of_v<CIEC_ANY_DURATION, T>, int> = 0>
+  friend T operator-(const T& paLeft, const T& paRight) {
+    return T(static_cast<typename T::TValueType>(paLeft) - static_cast<typename T::TValueType>(paRight));
+  }
+
 
   ~CIEC_ANY_DURATION() override = default;
 

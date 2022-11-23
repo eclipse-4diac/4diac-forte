@@ -11,6 +11,7 @@
  *   Martin Melik Merkumians - Adds cast template tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
+#include "forte_boost_output_support.h"
 
 //BOOLEAN
 #include "../../../src/core/datatypes/forte_bool.h"
@@ -298,42 +299,6 @@ BOOST_AUTO_TEST_CASE(CASTS_UDINT_to_REAL)
   BOOST_CHECK_EQUAL(65536.0, nTestLReal); 
   nTestLReal.setValue(nTestUDInt4294967295);
   BOOST_CHECK_EQUAL(4294967295.0,nTestLReal); 
-}
-
-BOOST_AUTO_TEST_CASE(CASTS_UDINT_to_TIME)
-{
-  CIEC_UDINT nTestUDInt0;
-  CIEC_UDINT nTestUDInt1;
-  CIEC_UDINT nTestUDInt65536;
-  CIEC_UDINT nTestUDInt4294967295;
-
-  CIEC_TIME nTestTime;
-
-//check initial values
-  BOOST_CHECK_EQUAL(nTestUDInt0, 0UL);
-  BOOST_CHECK_EQUAL(nTestUDInt1, 0UL);
-  BOOST_CHECK_EQUAL(nTestUDInt65536, 0UL);
-  BOOST_CHECK_EQUAL(nTestUDInt4294967295, 0UL);
-
-  nTestUDInt0 = CIEC_UDINT(0UL);
-  nTestUDInt1 = CIEC_UDINT(1UL);
-  nTestUDInt65536 = CIEC_UDINT(65536UL);
-  nTestUDInt4294967295 = CIEC_UDINT(4294967295UL);
-
-  BOOST_CHECK_EQUAL(nTestUDInt0, 0UL);
-  BOOST_CHECK_EQUAL(nTestUDInt1, 1UL);
-  BOOST_CHECK_EQUAL(nTestUDInt65536, 65536UL);
-  BOOST_CHECK_EQUAL(nTestUDInt4294967295, 4294967295UL);
-
-//toTime
-  nTestTime.setValue(nTestUDInt0);
-  BOOST_CHECK_EQUAL(0LL, nTestTime);
-  nTestTime.setValue(nTestUDInt1);
-  BOOST_CHECK_EQUAL(1LL, nTestTime);
-  nTestTime.setValue(nTestUDInt65536);
-  BOOST_CHECK_EQUAL(65536LL, nTestTime);
-  nTestTime.setValue(nTestUDInt4294967295);
-  BOOST_CHECK_EQUAL(4294967295LL, nTestTime);
 }
 
 BOOST_AUTO_TEST_CASE(UDINT_Castable_test)

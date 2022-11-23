@@ -12,6 +12,8 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/test/tools/floating_point_comparison.hpp>
 
+#include "forte_boost_output_support.h"
+
 #include "../../../src/core/datatypes/forte_real.h"
 #include <limits>
 

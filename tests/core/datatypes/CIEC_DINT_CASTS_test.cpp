@@ -11,6 +11,7 @@
  *   Martin Melik Merkumians - Adds cast template tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
+#include "forte_boost_output_support.h"
 
 #include <boost/test/tools/floating_point_comparison.hpp>
 #include "../../../src/core/datatypes/forte_real.h"
@@ -169,23 +170,23 @@ BOOST_AUTO_TEST_CASE(CASTS_DINT_to_INTS)
   CIEC_ULINT nTestULInt;
 
   //check initial values
-    BOOST_CHECK_EQUAL(nTestDInt0, 0);
-    BOOST_CHECK_EQUAL(nTestDInt1, 0);
-    BOOST_CHECK_EQUAL(nTestDInt32768, 0);
-    BOOST_CHECK_EQUAL(nTestDInt2147483647, 0);
-    BOOST_CHECK_EQUAL(nTestDInt_1, 0);
+  BOOST_CHECK_EQUAL(nTestDInt0, 0);
+  BOOST_CHECK_EQUAL(nTestDInt1, 0);
+  BOOST_CHECK_EQUAL(nTestDInt32768, 0);
+  BOOST_CHECK_EQUAL(nTestDInt2147483647, 0);
+  BOOST_CHECK_EQUAL(nTestDInt_1, 0);
 
-    nTestDInt0 = CIEC_DINT(0);
-    nTestDInt1 = CIEC_DINT(1);
-    nTestDInt32768 = CIEC_DINT(32768);
-    nTestDInt2147483647 = CIEC_DINT(2147483647);
-    nTestDInt_1 = CIEC_DINT(-1);
+  nTestDInt0 = CIEC_DINT(0);
+  nTestDInt1 = CIEC_DINT(1);
+  nTestDInt32768 = CIEC_DINT(32768);
+  nTestDInt2147483647 = CIEC_DINT(2147483647);
+  nTestDInt_1 = CIEC_DINT(-1);
 
-    BOOST_CHECK_EQUAL(nTestDInt0, 0);
-    BOOST_CHECK_EQUAL(nTestDInt1, 1);
-    BOOST_CHECK_EQUAL(nTestDInt32768, 32768);
-    BOOST_CHECK_EQUAL(nTestDInt2147483647, 2147483647);
-    BOOST_CHECK_EQUAL(nTestDInt_1, -1);
+  BOOST_CHECK_EQUAL(nTestDInt0, 0);
+  BOOST_CHECK_EQUAL(nTestDInt1, 1);
+  BOOST_CHECK_EQUAL(nTestDInt32768, 32768);
+  BOOST_CHECK_EQUAL(nTestDInt2147483647, 2147483647);
+  BOOST_CHECK_EQUAL(nTestDInt_1, -1);
 
 //toUSINT
   nTestUSInt.setValue(nTestDInt0);
@@ -317,43 +318,6 @@ BOOST_AUTO_TEST_CASE(CASTS_DINT_to_REAL)
   BOOST_CHECK_EQUAL(2147483647.0, nTestLReal); 
 }
 
-BOOST_AUTO_TEST_CASE(CASTS_DINT_to_TIME)
-{
-  CIEC_DINT nTestDInt0;
-  CIEC_DINT nTestDInt1;
-  CIEC_DINT nTestDInt32768;
-  CIEC_DINT nTestDInt2147483647;
-
-  CIEC_TIME nTestTime;
-
-//check initial values
-  BOOST_CHECK_EQUAL(nTestDInt0, 0);
-  BOOST_CHECK_EQUAL(nTestDInt1, 0);
-  BOOST_CHECK_EQUAL(nTestDInt32768, 0);
-  BOOST_CHECK_EQUAL(nTestDInt2147483647, 0);
-
-  nTestDInt0 = CIEC_DINT(0);
-  nTestDInt1 = CIEC_DINT(1);
-  nTestDInt32768 = CIEC_DINT(32768);
-  nTestDInt2147483647 = CIEC_DINT(2147483647);
-
-  BOOST_CHECK_EQUAL(nTestDInt0, 0);
-  BOOST_CHECK_EQUAL(nTestDInt1, 1);
-  BOOST_CHECK_EQUAL(nTestDInt32768, 32768);
-  BOOST_CHECK_EQUAL(nTestDInt2147483647, 2147483647);
-
-//toTIME
-  nTestTime.setValue(nTestDInt0);
-  BOOST_CHECK_EQUAL(0, nTestTime);
-  nTestTime.setValue(nTestDInt1);
-  BOOST_CHECK_EQUAL(1, nTestTime);
-  nTestTime.setValue(nTestDInt32768);
-  BOOST_CHECK_EQUAL(32768, nTestTime);
-  nTestTime.setValue(nTestDInt2147483647);
-  BOOST_CHECK_EQUAL(2147483647, nTestTime);
-
-}
-
 BOOST_AUTO_TEST_CASE(DINT_Castable_test)
 {
   bool bUp, bDown;
@@ -387,9 +351,7 @@ BOOST_AUTO_TEST_CASE(DINT_Castable_test)
   BOOST_CHECK(!CIEC_ANY::isCastable(CIEC_ANY::e_DINT, CIEC_ANY::e_WSTRING, bUp, bDown)); BOOST_CHECK(! bUp); BOOST_CHECK(! bDown);
 }
 
-BOOST_AUTO_TEST_CASE(Explict_cast_operator_to_DINT)
-{
-
+BOOST_AUTO_TEST_CASE(Explict_cast_operator_to_DINT) {
   CIEC_USINT nUsint(2);
   CIEC_UINT nUint(3);
   CIEC_UDINT nUdint(4);

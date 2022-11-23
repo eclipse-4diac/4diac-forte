@@ -27,8 +27,6 @@
 class CIEC_LTIME : public CIEC_ANY_DURATION {
   DECLARE_FIRMWARE_DATATYPE(LTIME)
   public:
-    typedef TLargestIntValueType TValueType;
-
     CIEC_LTIME() = default;
 
     CIEC_LTIME(const CIEC_LTIME &paValue) : CIEC_ANY_DURATION() {

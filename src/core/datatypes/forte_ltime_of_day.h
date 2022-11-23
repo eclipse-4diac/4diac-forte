@@ -28,10 +28,7 @@
 
 class CIEC_LTIME_OF_DAY : public CIEC_ANY_DATE {
   DECLARE_FIRMWARE_DATATYPE(LTIME_OF_DAY)
-
   public:
-    typedef TForteUInt64 TValueType;
-
     CIEC_LTIME_OF_DAY() = default;
 
     CIEC_LTIME_OF_DAY(const CIEC_LTIME_OF_DAY& paValue) :

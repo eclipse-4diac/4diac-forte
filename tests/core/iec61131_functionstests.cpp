@@ -16,6 +16,7 @@
  *******************************************************************************/
 
 #include <boost/test/unit_test.hpp>
+#include "forte_boost_output_support.h"
 
 #include "iec61131_functions.h"
 
@@ -395,9 +396,6 @@ BOOST_AUTO_TEST_CASE(add_function_LREAL_USINT)
 //  BOOST_TEST(static_cast<TForteDWord>(nResult) == 30020);
 //}
 
-//The following tests only work if we have C++ 11 or higher
-#if __cplusplus > 201103L
-
 BOOST_AUTO_TEST_CASE(concat3)
 {
   CIEC_STRING sFristString("THIS_IS_THE_FIRST_STRING");
@@ -416,8 +414,6 @@ BOOST_AUTO_TEST_CASE(concat4)
   CIEC_STRING sConcatString(func_CONCAT(sFristString, sSecondString, sThirdString, sForthString));
   BOOST_TEST(sConcatString.getValue() == "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING_THIS_IS_THE_THIRD_STRING_THIS_IS_THE_FORTH_STRING");
 }
-
-#endif
 
 BOOST_AUTO_TEST_CASE(standard_example_insert)
 {
@@ -564,9 +560,7 @@ BOOST_AUTO_TEST_CASE(shl_signed)
   BOOST_REQUIRE_EQUAL(0x0, result);
 }
 
-BOOST_AUTO_TEST_CASE(mul_numbers)
-{
-  
+BOOST_AUTO_TEST_CASE(mul_numbers) {
   CIEC_USINT sint(5);
   CIEC_UINT inte(6);
   CIEC_UINT result;
@@ -718,7 +712,7 @@ BOOST_AUTO_TEST_CASE(add_time_and_tod_with_add) {
   CIEC_TIME_OF_DAY result;
 
   result = func_ADD(tod1, time1);
-  BOOST_REQUIRE_EQUAL(CIEC_TIME_OF_DAY(2000001), result);
+  BOOST_REQUIRE_EQUAL(CIEC_TIME_OF_DAY(1000000 + 2000000), result);
 }
 
 BOOST_AUTO_TEST_CASE(add_time_and_tod_with_add_tod_time) {
@@ -727,7 +721,7 @@ BOOST_AUTO_TEST_CASE(add_time_and_tod_with_add_tod_time) {
   CIEC_TIME_OF_DAY result;
 
   result = func_ADD_TOD_TIME(tod1, time1);
-  BOOST_REQUIRE_EQUAL(CIEC_TIME_OF_DAY(2000001), result);
+  BOOST_REQUIRE_EQUAL(CIEC_TIME_OF_DAY(1000000 + 2000000), result);
 }
 
 BOOST_AUTO_TEST_CASE(add_date_and_time_and_time_with_add) {
@@ -736,7 +730,7 @@ BOOST_AUTO_TEST_CASE(add_date_and_time_and_time_with_add) {
   CIEC_DATE_AND_TIME result;
 
   result = func_ADD(date_and_time1, time1);
-  BOOST_REQUIRE_EQUAL(CIEC_DATE_AND_TIME(2000001), result);
+  BOOST_REQUIRE_EQUAL(CIEC_DATE_AND_TIME(1000000 + 2000000), result);
 }
 
 BOOST_AUTO_TEST_CASE(add_date_and_time_and_time_with_add_dt_time) {
@@ -745,7 +739,7 @@ BOOST_AUTO_TEST_CASE(add_date_and_time_and_time_with_add_dt_time) {
   CIEC_DATE_AND_TIME result;
 
   result = func_ADD_DT_TIME(date_and_time1, time1);
-  BOOST_REQUIRE_EQUAL(CIEC_DATE_AND_TIME(2000001), result);
+  BOOST_REQUIRE_EQUAL(CIEC_DATE_AND_TIME(1000000 + 2000000), result);
 }
 
 BOOST_AUTO_TEST_CASE(add_two_ltimes_with_add) {
@@ -772,7 +766,7 @@ BOOST_AUTO_TEST_CASE(add_ltime_and_ltod_with_add) {
   CIEC_LTIME_OF_DAY result;
 
   result = func_ADD(tod1, time1);
-  BOOST_REQUIRE_EQUAL(CIEC_LTIME_OF_DAY(2000001), result);
+  BOOST_REQUIRE_EQUAL(CIEC_LTIME_OF_DAY(1000000 + 2000000), result);
 }
 
 BOOST_AUTO_TEST_CASE(add_ltime_and_ltod_with_add_ltod_ltime) {
@@ -781,7 +775,7 @@ BOOST_AUTO_TEST_CASE(add_ltime_and_ltod_with_add_ltod_ltime) {
   CIEC_LTIME_OF_DAY result;
 
   result = func_ADD_LTOD_LTIME(tod1, time1);
-  BOOST_REQUIRE_EQUAL(CIEC_LTIME_OF_DAY(2000001), result);
+  BOOST_REQUIRE_EQUAL(CIEC_LTIME_OF_DAY(1000000 + 2000000), result);
 }
 
 BOOST_AUTO_TEST_CASE(add_ldate_and_time_and_ltime_with_add)
@@ -791,7 +785,7 @@ BOOST_AUTO_TEST_CASE(add_ldate_and_time_and_ltime_with_add)
   CIEC_LDATE_AND_TIME result;
 
   result = func_ADD(date_and_time1, time1);
-  BOOST_REQUIRE_EQUAL(CIEC_LDATE_AND_TIME(2000001), result);
+  BOOST_REQUIRE_EQUAL(CIEC_LDATE_AND_TIME(1000000 + 2000000), result);
 }
 
 BOOST_AUTO_TEST_CASE(add_ldate_and_time_and_ltime_with_add_ldt_ltime)
@@ -801,7 +795,7 @@ BOOST_AUTO_TEST_CASE(add_ldate_and_time_and_ltime_with_add_ldt_ltime)
   CIEC_LDATE_AND_TIME result;
 
   result = func_ADD_LDT_LTIME(date_and_time1, time1);
-  BOOST_REQUIRE_EQUAL(CIEC_LDATE_AND_TIME(2000001), result);
+  BOOST_REQUIRE_EQUAL(CIEC_LDATE_AND_TIME(1000000 + 2000000), result);
 }
 
 BOOST_AUTO_TEST_CASE(sub_two_times_with_sub) {
@@ -823,21 +817,21 @@ BOOST_AUTO_TEST_CASE(sub_two_times_with_sub_time) {
 }
 
 BOOST_AUTO_TEST_CASE(sub_two_dates_with_sub) {
-  CIEC_DATE date1 = CIEC_DATE(1000000);
-  CIEC_DATE date2 = CIEC_DATE(2000000);
+  CIEC_DATE date1 = CIEC_DATE(1000000000000);
+  CIEC_DATE date2 = CIEC_DATE(2000000000000);
   CIEC_TIME result;
 
   result = func_SUB(date1, date2);
-  BOOST_REQUIRE_EQUAL(CIEC_TIME(-1000000000000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_TIME(1000000000000 - 2000000000000), result);
 }
 
 BOOST_AUTO_TEST_CASE(sub_two_dates_with_sub_DATE_DATE) {
-  CIEC_DATE date1 = CIEC_DATE(1000000);
-  CIEC_DATE date2 = CIEC_DATE(2000000);
+  CIEC_DATE date1 = CIEC_DATE(1000000000000);
+  CIEC_DATE date2 = CIEC_DATE(2000000000000);
   CIEC_TIME result;
 
   result = func_SUB_DATE_DATE(date1, date2);
-  BOOST_REQUIRE_EQUAL(CIEC_TIME(-1000000000000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_TIME(1000000000000 - 2000000000000), result);
 }
 
 BOOST_AUTO_TEST_CASE(sub_tod_time_with_sub) {
@@ -846,7 +840,7 @@ BOOST_AUTO_TEST_CASE(sub_tod_time_with_sub) {
   CIEC_TIME_OF_DAY result;
 
   result = func_SUB(tod1, time1);
-  BOOST_REQUIRE_EQUAL(CIEC_TIME_OF_DAY(1000000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_TIME_OF_DAY(1000000 - 500000), result);
 }
 
 BOOST_AUTO_TEST_CASE(sub_tod_time_with_sub_TOD_TIME) {
@@ -855,25 +849,25 @@ BOOST_AUTO_TEST_CASE(sub_tod_time_with_sub_TOD_TIME) {
   CIEC_TIME_OF_DAY result;
 
   result = func_SUB_TOD_TIME(tod1, time1);
-  BOOST_REQUIRE_EQUAL(CIEC_TIME_OF_DAY(1000000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_TIME_OF_DAY(1000000 - 500000), result);
 }
 
 BOOST_AUTO_TEST_CASE(sub_tod_tod_with_sub) {
-  CIEC_TIME_OF_DAY tod1 = CIEC_TIME_OF_DAY(1000000);
-  CIEC_TIME_OF_DAY tod2 = CIEC_TIME_OF_DAY(500000);
+  CIEC_TIME_OF_DAY tod1 = CIEC_TIME_OF_DAY(1000000000000);
+  CIEC_TIME_OF_DAY tod2 = CIEC_TIME_OF_DAY(500000000000);
   CIEC_TIME result;
 
   result = func_SUB(tod1, tod2);
-  BOOST_REQUIRE_EQUAL(CIEC_TIME(500000000000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_TIME(1000000000000 - 500000000000), result);
 }
 
 BOOST_AUTO_TEST_CASE(sub_tod_tod_with_sub_tod_tod) {
-  CIEC_TIME_OF_DAY tod1 = CIEC_TIME_OF_DAY(1000000);
-  CIEC_TIME_OF_DAY tod2 = CIEC_TIME_OF_DAY(500000);
+  CIEC_TIME_OF_DAY tod1 = CIEC_TIME_OF_DAY(1000000000000);
+  CIEC_TIME_OF_DAY tod2 = CIEC_TIME_OF_DAY(500000000000);
   CIEC_TIME result;
 
   result = func_SUB_TOD_TOD(tod1, tod2);
-  BOOST_REQUIRE_EQUAL(CIEC_TIME(500000000000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_TIME(1000000000000 - 500000000000), result);
 }
 
 BOOST_AUTO_TEST_CASE(sub_dt_time_with_sub) {
@@ -882,7 +876,7 @@ BOOST_AUTO_TEST_CASE(sub_dt_time_with_sub) {
   CIEC_DATE_AND_TIME result;
 
   result = func_SUB(dt1, time1);
-  BOOST_REQUIRE_EQUAL(CIEC_DATE_AND_TIME(1000000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_DATE_AND_TIME(1000000 - 500000), result);
 }
 
 BOOST_AUTO_TEST_CASE(sub_dt_time_with_sub_dt_time) {
@@ -891,145 +885,133 @@ BOOST_AUTO_TEST_CASE(sub_dt_time_with_sub_dt_time) {
   CIEC_DATE_AND_TIME result;
 
   result = func_SUB_DT_TIME(dt1, time1);
-  BOOST_REQUIRE_EQUAL(CIEC_DATE_AND_TIME(1000000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_DATE_AND_TIME(1000000 - 500000), result);
 }
 
 BOOST_AUTO_TEST_CASE(sub_dt_dt_with_sub) {
-  CIEC_DATE_AND_TIME dt1 = CIEC_DATE_AND_TIME(1000000);
-  CIEC_DATE_AND_TIME dt2 = CIEC_DATE_AND_TIME(500000);
+  CIEC_DATE_AND_TIME dt1 = CIEC_DATE_AND_TIME(1000000000000);
+  CIEC_DATE_AND_TIME dt2 = CIEC_DATE_AND_TIME(500000000000);
   CIEC_TIME result;
 
   result = func_SUB(dt1, dt2);
-  BOOST_REQUIRE_EQUAL(CIEC_TIME(500000000000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_TIME(1000000000000 - 500000000000), result);
 }
 
 BOOST_AUTO_TEST_CASE(sub_dt_dt_with_sub_dt_dt) {
-  CIEC_DATE_AND_TIME dt1 = CIEC_DATE_AND_TIME(1000000);
-  CIEC_DATE_AND_TIME dt2 = CIEC_DATE_AND_TIME(500000);
+  CIEC_DATE_AND_TIME dt1 = CIEC_DATE_AND_TIME(1000000000000);
+  CIEC_DATE_AND_TIME dt2 = CIEC_DATE_AND_TIME(500000000000);
   CIEC_TIME result;
 
   result = func_SUB_DT_DT(dt1, dt2);
-  BOOST_REQUIRE_EQUAL(CIEC_TIME(500000000000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_TIME(1000000000000 - 500000000000), result);
 }
 
-BOOST_AUTO_TEST_CASE(sub_two_ltimes_with_sub)
-{
+BOOST_AUTO_TEST_CASE(sub_two_ltimes_with_sub) {
   CIEC_LTIME time1 = CIEC_LTIME(1000);
   CIEC_LTIME time2 = CIEC_LTIME(2000);
   CIEC_LTIME result;
 
   result = func_SUB(time1, time2);
-  BOOST_REQUIRE_EQUAL(CIEC_LTIME(-1000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_LTIME(1000 - 2000), result);
 }
 
-BOOST_AUTO_TEST_CASE(sub_two_ltimes_with_sub_ltime)
-{
+BOOST_AUTO_TEST_CASE(sub_two_ltimes_with_sub_ltime) {
   CIEC_LTIME time1 = CIEC_LTIME(1000);
   CIEC_LTIME time2 = CIEC_LTIME(2000);
   CIEC_LTIME result;
 
   result = func_SUB_LTIME(time1, time2);
-  BOOST_REQUIRE_EQUAL(CIEC_LTIME(-1000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_LTIME(1000 - 2000), result);
 }
 
-BOOST_AUTO_TEST_CASE(sub_two_ldates_with_sub)
-{
-  CIEC_LDATE date1 = CIEC_LDATE(1000000);
-  CIEC_LDATE date2 = CIEC_LDATE(2000000);
+BOOST_AUTO_TEST_CASE(sub_two_ldates_with_sub) {
+  CIEC_LDATE date1 = CIEC_LDATE(1000000000000);
+  CIEC_LDATE date2 = CIEC_LDATE(2000000000000);
   CIEC_LTIME result;
 
   result = func_SUB(date1, date2);
-  BOOST_REQUIRE_EQUAL(CIEC_LTIME(-1000000000000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_LTIME(1000000000000 - 2000000000000), result);
 }
 
-BOOST_AUTO_TEST_CASE(sub_two_ldates_with_SUB_LDATE_LDATE)
-{
-  CIEC_LDATE date1 = CIEC_LDATE(1000000);
-  CIEC_LDATE date2 = CIEC_LDATE(2000000);
+BOOST_AUTO_TEST_CASE(sub_two_ldates_with_SUB_LDATE_LDATE) {
+  CIEC_LDATE date1 = CIEC_LDATE(1000000000000);
+  CIEC_LDATE date2 = CIEC_LDATE(2000000000000);
   CIEC_LTIME result;
 
   result = func_SUB_LDATE_LDATE(date1, date2);
-  BOOST_REQUIRE_EQUAL(CIEC_LTIME(-1000000000000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_LTIME(1000000000000 - 2000000000000), result);
 }
 
-BOOST_AUTO_TEST_CASE(sub_tod_ltime_with_sub)
-{
+BOOST_AUTO_TEST_CASE(sub_tod_ltime_with_sub) {
   CIEC_LTIME_OF_DAY tod1 = CIEC_LTIME_OF_DAY(1000000);
   CIEC_LTIME time1 = CIEC_LTIME(500000);
   CIEC_LTIME_OF_DAY result;
 
   result = func_SUB(tod1, time1);
-  BOOST_REQUIRE_EQUAL(CIEC_LTIME_OF_DAY(1000000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_LTIME_OF_DAY(1000000 - 500000), result);
 }
 
-BOOST_AUTO_TEST_CASE(sub_tod_ltime_with_sub_LTOD_LTIME)
-{
+BOOST_AUTO_TEST_CASE(sub_tod_ltime_with_sub_LTOD_LTIME) {
   CIEC_LTIME_OF_DAY tod1 = CIEC_LTIME_OF_DAY(1000000);
   CIEC_LTIME time1 = CIEC_LTIME(500000);
   CIEC_LTIME_OF_DAY result;
 
   result = func_SUB_LTOD_LTIME(tod1, time1);
-  BOOST_REQUIRE_EQUAL(CIEC_LTIME_OF_DAY(1000000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_LTIME_OF_DAY(1000000 - 500000), result);
 }
 
-BOOST_AUTO_TEST_CASE(sub_ltod_ltod_with_sub)
-{
-  CIEC_LTIME_OF_DAY tod1 = CIEC_LTIME_OF_DAY(1000000);
-  CIEC_LTIME_OF_DAY tod2 = CIEC_LTIME_OF_DAY(500000);
+BOOST_AUTO_TEST_CASE(sub_ltod_ltod_with_sub) {
+  CIEC_LTIME_OF_DAY tod1 = CIEC_LTIME_OF_DAY(1000000000000);
+  CIEC_LTIME_OF_DAY tod2 = CIEC_LTIME_OF_DAY(500000000000);
   CIEC_LTIME result;
 
   result = func_SUB(tod1, tod2);
-  BOOST_REQUIRE_EQUAL(CIEC_LTIME(500000000000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_LTIME(1000000000000 - 500000000000), result);
 }
 
-BOOST_AUTO_TEST_CASE(sub_ltod_ltod_with_sub_ltod_ltod)
-{
-  CIEC_LTIME_OF_DAY tod1 = CIEC_LTIME_OF_DAY(1000000);
-  CIEC_LTIME_OF_DAY tod2 = CIEC_LTIME_OF_DAY(500000);
+BOOST_AUTO_TEST_CASE(sub_ltod_ltod_with_sub_ltod_ltod) {
+  CIEC_LTIME_OF_DAY tod1 = CIEC_LTIME_OF_DAY(1000000000000);
+  CIEC_LTIME_OF_DAY tod2 = CIEC_LTIME_OF_DAY(500000000000);
   CIEC_LTIME result;
 
   result = func_SUB_LTOD_LTOD(tod1, tod2);
-  BOOST_REQUIRE_EQUAL(CIEC_LTIME(500000000000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_LTIME(1000000000000 - 500000000000), result);
 }
 
-BOOST_AUTO_TEST_CASE(sub_ldt_ltime_with_sub)
-{
-  CIEC_LDATE_AND_TIME dt1 = CIEC_LDATE_AND_TIME(1000000);
-  CIEC_LTIME time1 = CIEC_LTIME(500000);
+BOOST_AUTO_TEST_CASE(sub_ldt_ltime_with_sub) {
+  CIEC_LDATE_AND_TIME dt1 = CIEC_LDATE_AND_TIME(1000000000000);
+  CIEC_LTIME time1 = CIEC_LTIME(500000000000);
   CIEC_LDATE_AND_TIME result;
 
   result = func_SUB(dt1, time1);
-  BOOST_REQUIRE_EQUAL(CIEC_LDATE_AND_TIME(1000000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_LDATE_AND_TIME(1000000000000 - 500000000000), result);
 }
 
-BOOST_AUTO_TEST_CASE(sub_ldt_ltime_with_sub_ldt_ltime)
-{
-  CIEC_LDATE_AND_TIME dt1 = CIEC_LDATE_AND_TIME(1000000);
-  CIEC_LTIME time1 = CIEC_LTIME(500000);
+BOOST_AUTO_TEST_CASE(sub_ldt_ltime_with_sub_ldt_ltime) {
+  CIEC_LDATE_AND_TIME dt1 = CIEC_LDATE_AND_TIME(1000000000000);
+  CIEC_LTIME time1 = CIEC_LTIME(500000000000);
   CIEC_LDATE_AND_TIME result;
 
   result = func_SUB_LDT_LTIME(dt1, time1);
-  BOOST_REQUIRE_EQUAL(CIEC_LDATE_AND_TIME(1000000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_LDATE_AND_TIME(1000000000000 - 500000000000), result);
 }
 
-BOOST_AUTO_TEST_CASE(sub_ldt_ldt_with_sub)
-{
-  CIEC_LDATE_AND_TIME dt1 = CIEC_LDATE_AND_TIME(1000000);
-  CIEC_LDATE_AND_TIME dt2 = CIEC_LDATE_AND_TIME(500000);
+BOOST_AUTO_TEST_CASE(sub_ldt_ldt_with_sub) {
+  CIEC_LDATE_AND_TIME dt1 = CIEC_LDATE_AND_TIME(1000000000000);
+  CIEC_LDATE_AND_TIME dt2 = CIEC_LDATE_AND_TIME(500000000000);
   CIEC_LTIME result;
 
   result = func_SUB(dt1, dt2);
-  BOOST_REQUIRE_EQUAL(CIEC_LTIME(500000000000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_LTIME(1000000000000 - 500000000000), result);
 }
 
-BOOST_AUTO_TEST_CASE(sub_ldt_ldt_with_sub_ldt_ldt)
-{
-  CIEC_LDATE_AND_TIME dt1 = CIEC_LDATE_AND_TIME(1000000);
-  CIEC_LDATE_AND_TIME dt2 = CIEC_LDATE_AND_TIME(500000);
+BOOST_AUTO_TEST_CASE(sub_ldt_ldt_with_sub_ldt_ldt) {
+  CIEC_LDATE_AND_TIME dt1 = CIEC_LDATE_AND_TIME(1000000000000);
+  CIEC_LDATE_AND_TIME dt2 = CIEC_LDATE_AND_TIME(500000000000);
   CIEC_LTIME result;
 
   result = func_SUB_LDT_LDT(dt1, dt2);
-  BOOST_REQUIRE_EQUAL(CIEC_LTIME(500000000000), result);
+  BOOST_REQUIRE_EQUAL(CIEC_LTIME(1000000000000 - 500000000000), result);
 }
 
 BOOST_AUTO_TEST_CASE(Partial_Bool_NOT_Operation) {

@@ -10,6 +10,7 @@
  *   Alois Zoitl, Micheal Hofmann, Stanislav Meduna, Ingo Hegny - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
+#include "forte_boost_output_support.h"
 
 #include "../../../src/core/datatypes/forte_array.h"
 #include "../../../src/core/datatypes/forte_bool.h"

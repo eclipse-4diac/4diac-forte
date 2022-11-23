@@ -13,7 +13,8 @@
  *    Monika Wenger
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians - make TForteUInt64 constructor explicit,
- *      removed built-in type operator=, removed operator++
+ *      removed built-in type operator=, removed operator++, update timebase to 
+ *      nanoseconds
  *******************************************************************************/
 #ifndef _FORTE_TOD_H_
 #define _FORTE_TOD_H_
@@ -26,10 +27,7 @@
 
 class CIEC_TIME_OF_DAY : public CIEC_ANY_DATE{
   DECLARE_FIRMWARE_DATATYPE(TIME_OF_DAY)
-
   public:
-    typedef TForteUInt64 TValueType;
-
     CIEC_TIME_OF_DAY() = default;
 
     CIEC_TIME_OF_DAY(const CIEC_TIME_OF_DAY& paValue) :
@@ -49,11 +47,11 @@ class CIEC_TIME_OF_DAY : public CIEC_ANY_DATE{
       return *this;
     }
 
-    /*! \brief Converts CIEC_SINT to elementary 32 bit integer
+    /*! \brief Converts CIEC_TIME_OF_DAY to elementary 64 bit unsigned integer
      *
-     *   Conversion operator for converting CIEC_SINT to elementary 32 bit integer
+     *   Conversion operator for converting CIEC_TIME_OF_DAY to elementary 64 bit unsigned integer
      */
-    operator TForteUInt64() const{
+    explicit operator TForteUInt64() const{
       return getTUINT64();
     }
 

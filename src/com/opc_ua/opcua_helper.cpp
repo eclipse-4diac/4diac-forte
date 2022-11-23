@@ -24,7 +24,7 @@
 
 template<typename T_FORTE_TYPE, typename T_OPCUA_TYPE>
 size_t convertFromIECToOPCUASpecific(const CIEC_ANY &paSrc, void *paDest) {
-  *static_cast<T_OPCUA_TYPE*>(paDest) = static_cast<const T_FORTE_TYPE&>(paSrc);
+  *static_cast<T_OPCUA_TYPE *>(paDest) = static_cast<typename T_FORTE_TYPE::TValueType>(static_cast<const T_FORTE_TYPE &>(paSrc));
   return sizeof(T_OPCUA_TYPE);
 }
 
