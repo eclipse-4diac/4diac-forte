@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010 - 2015 TU Vienna/ACIN, Profactor GmbH, fortiss GmbH,
- *    2018-2019 TU Vienna/ACIN
+ * Copyright (c) 2010-2019 TU Vienna/ACIN, Profactor GmbH, fortiss GmbH,
+ *               2022 Primetals Technologies Austria GmbH
+ *              
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -26,7 +27,7 @@ inline const CIEC_LDATE_AND_TIME func_DT_TO_LDT(const CIEC_DATE_AND_TIME &paValu
   return CIEC_LDATE_AND_TIME(paValue);
 }
 
-inline const CIEC_DATE func_DT_TO_DATE(const CIEC_DATE_AND_TIME &paVal){
+inline const CIEC_DATE func_DT_TO_DATE(const CIEC_DATE_AND_TIME &paVal) {
   TForteUInt64 nBuffer = paVal;
   time_t t = static_cast<time_t>(nBuffer / 1000000000ULL);
   struct tm *ptm = forte_localtime(&t);
@@ -40,15 +41,11 @@ inline const CIEC_DATE func_DT_TO_DATE(const CIEC_DATE_AND_TIME &paVal){
   ptm->tm_sec = 0;
 
   t = forte_mktime(ptm);
-  if((time_t) -1 == t){
+  if(static_cast<time_t>(-1) == t){
     return CIEC_DATE(0);
   }
 
   return CIEC_DATE(t * 1000000000ULL);
-}
-
-inline const CIEC_DATE_AND_TIME func_DATE_TO_DT(const CIEC_DATE &paVal){
-  return CIEC_DATE_AND_TIME((TForteUInt64) paVal);
 }
 
 inline const CIEC_TIME_OF_DAY func_DT_TO_TOD(const CIEC_DATE_AND_TIME &paVal){

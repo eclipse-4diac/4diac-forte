@@ -445,4 +445,12 @@ BOOST_AUTO_TEST_CASE(parse_time_in_struct_or_array_literal)
   BOOST_CHECK_EQUAL(time.getInMicroSeconds(), 10325643);
 }
 
+BOOST_AUTO_TEST_CASE(InternalRepresentationTest) {
+  CIEC_TIME directRep(3600000000000);
+  CIEC_TIME fromStringRep;
+  fromStringRep.fromString("T#1h");
+
+  BOOST_TEST(directRep == fromStringRep);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

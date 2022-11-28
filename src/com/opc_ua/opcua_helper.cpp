@@ -19,8 +19,11 @@
 #include "../../core/utils/parameterParser.h"
 #include "../../arch/devlog.h"
 #include "convert_functions.h"
-#include <forte_struct.h>
-#include <forte_array.h>
+#include "forte_date.h"
+#include "forte_struct.h"
+#include "forte_array.h"
+
+static const CIEC_DATE::TValueType internalToOPCUAEpochDifferenceInNanoseconds = 11644473600000000LL;
 
 template<typename T_FORTE_TYPE, typename T_OPCUA_TYPE>
 size_t convertFromIECToOPCUASpecific(const CIEC_ANY &paSrc, void *paDest) {
@@ -36,13 +39,20 @@ size_t convertFromOPCUAToIECSpecific(const void *paSrc, CIEC_ANY &paDest) {
 
 template<>
 size_t convertFromIECToOPCUASpecific<CIEC_DATE, UA_DateTime>(const CIEC_ANY &paSrc, void *paDest) {
-  *static_cast<UA_DateTime*>(paDest) = func_DATE_TO_DT(static_cast<const CIEC_DATE&>(paSrc));
+  const CIEC_DATE::TValueType timeInNsFromInternalEpoch = static_cast<CIEC_DATE::TValueType>(static_cast<const CIEC_DATE &>(paSrc));
+
+  *static_cast<UA_DateTime *>(paDest) = (timeInNsFromInternalEpoch + internalToOPCUAEpochDifferenceInNanoseconds) / 100LL;
   return sizeof(UA_DateTime);
 }
 
 template<>
 size_t convertFromOPCUAToIECSpecific<CIEC_DATE, UA_DateTime>(const void *paSrc, CIEC_ANY &paDest) {
-  static_cast<CIEC_DATE&>(paDest) = func_DT_TO_DATE(CIEC_DATE_AND_TIME(*reinterpret_cast<const TForteUInt64*>(static_cast<const UA_DateTime*>(paSrc))));
+  const TForteInt64 cNanosecondsPerDay = 24LL * 60LL * 60LL * 1000000000LL;
+  TForteInt64 opcUaTime = *reinterpret_cast<const TForteInt64 *>(static_cast<const UA_DateTime *>(paSrc)) - (internalToOPCUAEpochDifferenceInNanoseconds / 100LL);
+  opcUaTime = opcUaTime >= 0 ? opcUaTime : 0; // Workaround: CIEC_DATE internal representation is unsigned from Epoch, so dates before Epoch are not representable
+  opcUaTime /= cNanosecondsPerDay; // Timestap divided by nanoseconds per day -> floored result will give date only
+  opcUaTime *= cNanosecondsPerDay; // Multiply again to get correct timestamp value
+  static_cast<CIEC_DATE &>(paDest) = CIEC_DATE(opcUaTime);
   return sizeof(UA_DateTime);
 }
 

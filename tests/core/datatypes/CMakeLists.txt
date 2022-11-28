@@ -79,6 +79,8 @@ ENDIF(FORTE_SUPPORT_ARRAYS)
   forte_test_add_sourcefile_cpp(CIEC_DATE_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_TIME_OF_DAY_test.cpp)
   
+  forte_test_add_sourcefile_cpp(CIEC_LTIME_test.cpp)
+  
 forte_test_add_sourcefile_cpp(CIEC_STRUCT_test.cpp)
  
 forte_test_add_subdirectory(convert)

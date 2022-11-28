@@ -31,10 +31,10 @@ int CIEC_LTIME::fromString(const char *paValue) {
 
   TValueType nIntVal = 0;
 
-  if(('l' == tolower(paValue[0])) && ('t' == tolower(paValue[0]))) {
+  if(('l' == tolower(paValue[0])) && ('t' == tolower(paValue[1]))) {
     nRetVal = 2;
     paValue += 2;
-    if (('i' == tolower(paValue[1])) && ('m' == tolower(paValue[2])) && ('e' == tolower(paValue[3]))) {
+    if (('i' == tolower(paValue[0])) && ('m' == tolower(paValue[1])) && ('e' == tolower(paValue[2]))) {
       paValue += 3;
       nRetVal += 3;
     }

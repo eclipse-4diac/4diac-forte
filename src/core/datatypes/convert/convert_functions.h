@@ -71,6 +71,7 @@ inline void stringConverter(CIEC_ANY_STRING &paString, const CIEC_ANY &paVal) {
     paString.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
 }
 
+#include "TimeOfDayToConvertFunctions.h"
 #include "DateAndTimeToConvertFunctions.h"
 #include "LDateAndTimeToConvertFunctions.h"
 #include "CharToConvertFunctions.h"

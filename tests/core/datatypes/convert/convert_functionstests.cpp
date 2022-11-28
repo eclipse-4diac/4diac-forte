@@ -32,6 +32,106 @@ BOOST_AUTO_TEST_SUITE(convert_functions)
     BOOST_TEST(tod == CIEC_TIME_OF_DAY(((12 * 3600 + 38 * 60 + 50) * 1000ULL + 123) * 1000000ULL));
   }
 
+  BOOST_AUTO_TEST_CASE(CONVERT_DT_TO_LDT) {
+    CIEC_DATE_AND_TIME date;
+    date.fromString("DT#2018-07-10-12:38:50.123");
+
+    CIEC_LDATE_AND_TIME ldt(func_DT_TO_LDT(date));
+    CIEC_LDATE_AND_TIME expected;
+    expected.fromString("LDT#2018-07-10-12:38:50.123");
+    BOOST_TEST(ldt == expected);
+  }
+
+  BOOST_AUTO_TEST_CASE(CONVERT_DT_TO_DATE) {
+    CIEC_DATE_AND_TIME date;
+    date.fromString("DT#2018-07-10-12:38:50.123");
+
+    CIEC_DATE converted(func_DT_TO_DATE(date));
+    CIEC_DATE expected;
+    expected.fromString("D#2018-07-10");
+    BOOST_TEST(converted == expected);
+  }
+
+  BOOST_AUTO_TEST_CASE(CONVERT_DT_TO_LTOD) {
+    CIEC_DATE_AND_TIME date;
+    date.fromString("DT#2018-07-10-12:38:50.123");
+
+    CIEC_LTIME_OF_DAY converted(func_DT_TO_LTOD(date));
+    CIEC_LTIME_OF_DAY expected;
+    expected.fromString("LTOD#12:38:50.123");
+    BOOST_TEST(converted == expected);
+  }
+
+  BOOST_AUTO_TEST_CASE(CONVERT_LDT_TO_DT) {
+    CIEC_LDATE_AND_TIME ldt;
+    ldt.fromString("LDT#2018-07-10-12:38:50.123");
+
+    CIEC_DATE_AND_TIME dt(func_LDT_TO_DT(ldt));
+    CIEC_DATE_AND_TIME expected;
+    expected.fromString("DT#2018-07-10-12:38:50.123");
+    BOOST_TEST(ldt == expected);
+  }
+
+  BOOST_AUTO_TEST_CASE(CONVERT_LDT_TO_LDATE) {
+    CIEC_LDATE_AND_TIME date;
+    date.fromString("LDT#2018-07-10-12:38:50.123");
+
+    CIEC_LDATE converted(func_LDT_TO_LDATE(date));
+    CIEC_LDATE expected;
+    expected.fromString("LD#2018-07-10");
+    BOOST_TEST(converted == expected);
+  }
+
+  BOOST_AUTO_TEST_CASE(CONVERT_LDT_TO_DATE) {
+    CIEC_LDATE_AND_TIME date;
+    date.fromString("LDT#2018-07-10-12:38:50.123");
+
+    CIEC_DATE converted(func_LDT_TO_DATE(date));
+    CIEC_DATE expected;
+    expected.fromString("D#2018-07-10");
+    BOOST_TEST(converted == expected);
+  }
+
+  BOOST_AUTO_TEST_CASE(CONVERT_LDT_TO_LTOD) {
+    CIEC_LDATE_AND_TIME date;
+    date.fromString("LDT#2018-07-10-12:38:50.123");
+
+    CIEC_LTIME_OF_DAY converted(func_LDT_TO_LTOD(date));
+    CIEC_LTIME_OF_DAY expected;
+    expected.fromString("LTOD#12:38:50.123");
+    BOOST_TEST(converted == expected);
+  }
+
+  BOOST_AUTO_TEST_CASE(CONVERT_LDT_TO_TOD) {
+    CIEC_LDATE_AND_TIME date;
+    date.fromString("LDT#2018-07-10-12:38:50.123");
+
+    CIEC_TIME_OF_DAY converted(func_LDT_TO_TOD(date));
+    CIEC_TIME_OF_DAY expected;
+    expected.fromString("TOD#12:38:50.123");
+    BOOST_TEST(converted == expected);
+  }
+
+  BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_LTIME) {
+    CIEC_TIME value;
+    value.fromString("TIME#12h34m56s789ms");
+
+    CIEC_LTIME converted(func_TIME_TO_LTIME(value));
+    CIEC_LTIME expected;
+    expected.fromString("LTIME#12h34m56s789ms");
+    BOOST_TEST(converted == expected);
+  }
+
+  BOOST_AUTO_TEST_CASE(CONVERT_LTIME_TO_TIME) {
+    CIEC_LTIME value;
+    value.fromString("LTIME#12h34m56s789ms");
+
+    CIEC_TIME converted(func_LTIME_TO_TIME(value));
+    CIEC_TIME expected;
+    expected.fromString("TIME#12h34m56s789ms");
+    BOOST_TEST(converted == expected);
+  }
+
   BOOST_AUTO_TEST_CASE(CONVERT_REAL_TO_XINT) {
     CIEC_REAL roundUpReal(50.5f);
     CIEC_REAL roundDownReal(50.4f);
