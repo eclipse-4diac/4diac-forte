@@ -19,3 +19,6 @@
   forte_test_add_sourcefile_cpp(CIEC_WORD_PARTIAL_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_DWORD_PARTIAL_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_LWORD_PARTIAL_test.cpp)
+
+#STRING-Types
+  forte_test_add_sourcefile_cpp(CIEC_STRING_PARTIAL_test.cpp)

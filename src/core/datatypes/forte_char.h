@@ -63,4 +63,8 @@ class CIEC_CHAR : public CIEC_ANY_CHAR{
     }
 };
 
+inline bool operator==(const CIEC_CHAR &lhs, const CIEC_CHAR &rhs) {
+  return static_cast<CIEC_CHAR::TValueType>(lhs) == static_cast<CIEC_CHAR::TValueType>(rhs);
+}
+
 #endif /*_FORTE_CHAR_H_*/

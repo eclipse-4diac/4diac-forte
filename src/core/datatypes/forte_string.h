@@ -26,6 +26,9 @@
 
 #include "forte_any_string.h"
 #include "forte_char.h"
+
+#include "devlog.h"
+
 #include <string.h>
 #include <stdlib.h>
 
@@ -35,6 +38,10 @@ class CIEC_STRING : public CIEC_ANY_STRING{
   DECLARE_FIRMWARE_DATATYPE(STRING)
 
   public:
+    using value_type = CIEC_CHAR;
+    using reference = value_type &;
+    using const_reference = const value_type &;
+
     CIEC_STRING() = default;
 
     CIEC_STRING(const CIEC_STRING& paValue) = default;
@@ -54,6 +61,61 @@ class CIEC_STRING : public CIEC_ANY_STRING{
 
     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_STRING;
+    }
+
+    class PARTIAL_ACCESS_TYPE : public CIEC_CHAR {
+      using value_type = CIEC_CHAR::TValueType;
+      using pointer_type = CIEC_CHAR::TValueType*;
+
+      public:
+        PARTIAL_ACCESS_TYPE(char *paValue) {
+          value = paValue;
+          setChar(*paValue);
+        }
+
+        operator value_type() const {
+          return getChar8();
+        }
+
+        PARTIAL_ACCESS_TYPE& operator=(const CIEC_CHAR& paValue) {
+          *value = static_cast<value_type>(paValue);
+          return *this;
+        }
+
+      private:
+        char *value;
+    };
+
+    [[nodiscard]] PARTIAL_ACCESS_TYPE at(const intmax_t paIndex) {
+      if(paIndex < 1) {
+        DEVLOG_ERROR("String index start at 1!\n");
+        return PARTIAL_ACCESS_TYPE(getValue());
+      }
+      if(paIndex > length()) {
+        DEVLOG_ERROR("String index %d outside of length!\n", paIndex);
+        return PARTIAL_ACCESS_TYPE(getValue() + length() - 1);
+      }
+      return PARTIAL_ACCESS_TYPE(getValue() + paIndex - 1);
+    }
+
+    [[nodiscard]] value_type at(intmax_t paIndex) const {
+      if(paIndex < 1) {
+        DEVLOG_ERROR("String index start at 1!\n");
+        return CIEC_CHAR(*getValue());
+      }
+      if(paIndex > length()) {
+        DEVLOG_ERROR("String index %d outside of length!\n", paIndex);
+        return CIEC_CHAR(*(getValue() + length() - 1));
+      }
+      return CIEC_CHAR(*(getValue() + paIndex - 1));
+    }
+
+    [[nodiscard]] PARTIAL_ACCESS_TYPE operator[](intmax_t paIndex) {
+      return at(paIndex);
+    }
+
+    [[nodiscard]] value_type operator[](intmax_t paIndex) const {
+      return at(paIndex);
     }
 
     /*! \brief Converts string value to data type value
