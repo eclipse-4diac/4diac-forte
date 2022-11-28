@@ -1222,4 +1222,86 @@ BOOST_AUTO_TEST_CASE(func_concat_tod_lints) {
   BOOST_TEST(expected == testTod);
 }
 
+BOOST_AUTO_TEST_CASE(func_concat_ldate_ulints) {
+  CIEC_ULINT year(2017);
+  CIEC_ULINT month(3);
+  CIEC_ULINT day(20);
+  CIEC_STRING dateString;
+  CIEC_LDATE expected;
+  expected.fromString("LDATE#2017-03-20");
+
+  CIEC_LDATE testDate = func_CONCAT_LDATE(year, month, day);
+  BOOST_TEST(expected == testDate);
+}
+
+BOOST_AUTO_TEST_CASE(func_concat_ldate_lints) {
+  CIEC_LINT year(2017);
+  CIEC_LINT month(3);
+  CIEC_LINT day(20);
+  CIEC_STRING dateString;
+  CIEC_LDATE expected;
+  expected.fromString("LDATE#2017-03-20");
+
+  CIEC_LDATE testDate = func_CONCAT_LDATE(year, month, day);
+  BOOST_TEST(expected == testDate);
+}
+
+BOOST_AUTO_TEST_CASE(func_concat_ldt_ulints) {
+  CIEC_ULINT year(2017);
+  CIEC_ULINT month(3);
+  CIEC_ULINT day(20);
+  CIEC_ULINT hour(15);
+  CIEC_ULINT minute(43);
+  CIEC_ULINT second(13);
+  CIEC_ULINT millisecond(574);
+  CIEC_STRING dateString;
+  CIEC_LDATE_AND_TIME expected;
+  expected.fromString("LDT#2017-03-20-15:43:13.574");
+
+  CIEC_LDATE_AND_TIME testDate = func_CONCAT_LDT(year, month, day, hour, minute, second, millisecond);
+  BOOST_TEST(expected == testDate);
+}
+
+BOOST_AUTO_TEST_CASE(func_concat_ldt_lints) {
+  CIEC_LINT year(2017);
+  CIEC_LINT month(3);
+  CIEC_LINT day(20);
+  CIEC_LINT hour(15);
+  CIEC_LINT minute(43);
+  CIEC_LINT second(13);
+  CIEC_LINT millisecond(574);
+  CIEC_STRING dateString;
+  CIEC_LDATE_AND_TIME expected;
+  expected.fromString("LDT#2017-03-20-15:43:13.574");
+
+  CIEC_LDATE_AND_TIME testDate = func_CONCAT_LDT(year, month, day, hour, minute, second, millisecond);
+  BOOST_TEST(expected == testDate);
+}
+
+BOOST_AUTO_TEST_CASE(func_concat_ltod_ulints) {
+  CIEC_ULINT hour(15);
+  CIEC_ULINT minute(43);
+  CIEC_ULINT second(13);
+  CIEC_ULINT millisecond(574);
+  CIEC_STRING dateString;
+  CIEC_LTIME_OF_DAY expected;
+  expected.fromString("LTOD#15:43:13.574");
+
+  CIEC_LTIME_OF_DAY testTod = func_CONCAT_LTOD(hour, minute, second, millisecond);
+  BOOST_TEST(expected == testTod);
+}
+
+BOOST_AUTO_TEST_CASE(func_concat_ltod_lints) {
+  CIEC_LINT hour(15);
+  CIEC_LINT minute(43);
+  CIEC_LINT second(13);
+  CIEC_LINT millisecond(574);
+  CIEC_STRING dateString;
+  CIEC_LTIME_OF_DAY expected;
+  expected.fromString("15:43:13.574");
+
+  CIEC_LTIME_OF_DAY testTod = func_CONCAT_LTOD(hour, minute, second, millisecond);
+  BOOST_TEST(expected == testTod);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

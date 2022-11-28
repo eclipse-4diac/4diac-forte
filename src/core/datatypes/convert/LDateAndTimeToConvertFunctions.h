@@ -16,17 +16,13 @@
  *     to use new cast function
  *******************************************************************************/
 
-#ifndef SRC_CORE_DATATYPES_CONVERT_DATEANDTIMETOCONVERTFUNCTIONS_H_
-#define SRC_CORE_DATATYPES_CONVERT_DATEANDTIMETOCONVERTFUNCTIONS_H_
+#ifndef SRC_CORE_DATATYPES_CONVERT_LDATEANDTIMETOCONVERTFUNCTIONS_H_
+#define SRC_CORE_DATATYPES_CONVERT_LDATEANDTIMETOCONVERTFUNCTIONS_H_
 
 //********************************************************************************************
-//   DT_TO_**  functions
+//   LDT_TO_**  functions
 //********************************************************************************************
-inline const CIEC_LDATE_AND_TIME func_DT_TO_LDT(const CIEC_DATE_AND_TIME &paValue) {
-  return CIEC_LDATE_AND_TIME(paValue);
-}
-
-inline const CIEC_DATE func_DT_TO_DATE(const CIEC_DATE_AND_TIME &paVal){
+inline const CIEC_LDATE func_LDT_TO_LDATE(const CIEC_LDATE_AND_TIME &paVal){
   TForteUInt64 nBuffer = paVal;
   time_t t = static_cast<time_t>(nBuffer / 1000000000ULL);
   struct tm *ptm = forte_localtime(&t);
@@ -41,30 +37,10 @@ inline const CIEC_DATE func_DT_TO_DATE(const CIEC_DATE_AND_TIME &paVal){
 
   t = forte_mktime(ptm);
   if((time_t) -1 == t){
-    return CIEC_DATE(0);
+    return CIEC_LDATE(0);
   }
 
-  return CIEC_DATE(t * 1000000000ULL);
+  return CIEC_LDATE(t * 1000000000ULL);
 }
 
-inline const CIEC_DATE_AND_TIME func_DATE_TO_DT(const CIEC_DATE &paVal){
-  return CIEC_DATE_AND_TIME((TForteUInt64) paVal);
-}
-
-inline const CIEC_TIME_OF_DAY func_DT_TO_TOD(const CIEC_DATE_AND_TIME &paVal){
-  TForteUInt64 nBuffer = paVal;
-  time_t t = static_cast<time_t>(nBuffer/1000000000ULL);
-  struct tm *ptm = forte_localtime(&t);
-
-  if(nullptr == ptm) {
-    return CIEC_TIME_OF_DAY(0);
-  }
-
-  return CIEC_TIME_OF_DAY(static_cast<TForteUInt64>((ptm->tm_hour * UINT64_C(3600) + ptm->tm_min * UINT64_C(60) + ptm->tm_sec) * UINT64_C(1000000000) + (nBuffer % UINT64_C(1000000000))));
-}
-
-inline const CIEC_LTIME_OF_DAY func_DT_TO_LTOD(const CIEC_DATE_AND_TIME &paValue) {
-  return CIEC_LTIME_OF_DAY(func_DT_TO_TOD(paValue));
-}
-
-#endif /* SRC_CORE_DATATYPES_CONVERT_DATEANDTIMETOCONVERTFUNCTIONS_H_ */
+#endif /* SRC_CORE_DATATYPES_CONVERT_LDATEANDTIMETOCONVERTFUNCTIONS_H_ */

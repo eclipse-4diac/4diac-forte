@@ -22,7 +22,14 @@
 #include "forte_wchar.h"
 #include "forte_string.h"
 #include "forte_wstring.h"
+#include "forte_time.h"
 #include "forte_time_of_day.h"
+#include "forte_date.h"
+#include "forte_date_and_time.h"
+#include "forte_ltime.h"
+#include "forte_ltime_of_day.h"
+#include "forte_ldate.h"
+#include "forte_ldate_and_time.h"
 
 inline
 std::ostream& boost_test_print_type(std::ostream &out, const CIEC_TIME &variable) {
@@ -34,6 +41,54 @@ std::ostream& boost_test_print_type(std::ostream &out, const CIEC_TIME &variable
 
 inline
 std::ostream& boost_test_print_type(std::ostream &out, const CIEC_TIME_OF_DAY &variable) {
+  char outputString[variable.getToStringBufferSize()];
+  variable.toString(outputString, sizeof(outputString));
+  out << outputString;
+  return out;
+}
+
+inline
+std::ostream& boost_test_print_type(std::ostream &out, const CIEC_DATE &variable) {
+  char outputString[variable.getToStringBufferSize()];
+  variable.toString(outputString, sizeof(outputString));
+  out << outputString;
+  return out;
+}
+
+inline
+std::ostream& boost_test_print_type(std::ostream &out, const CIEC_DATE_AND_TIME &variable) {
+  char outputString[variable.getToStringBufferSize()];
+  variable.toString(outputString, sizeof(outputString));
+  out << outputString;
+  return out;
+}
+
+inline
+std::ostream& boost_test_print_type(std::ostream &out, const CIEC_LTIME &variable) {
+  char outputString[variable.getToStringBufferSize()];
+  variable.toString(outputString, sizeof(outputString));
+  out << outputString;
+  return out;
+}
+
+inline
+std::ostream& boost_test_print_type(std::ostream &out, const CIEC_LTIME_OF_DAY &variable) {
+  char outputString[variable.getToStringBufferSize()];
+  variable.toString(outputString, sizeof(outputString));
+  out << outputString;
+  return out;
+}
+
+inline
+std::ostream& boost_test_print_type(std::ostream &out, const CIEC_LDATE &variable) {
+  char outputString[variable.getToStringBufferSize()];
+  variable.toString(outputString, sizeof(outputString));
+  out << outputString;
+  return out;
+}
+
+inline
+std::ostream& boost_test_print_type(std::ostream &out, const CIEC_LDATE_AND_TIME &variable) {
   char outputString[variable.getToStringBufferSize()];
   variable.toString(outputString, sizeof(outputString));
   out << outputString;

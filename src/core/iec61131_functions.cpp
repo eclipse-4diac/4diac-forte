@@ -325,6 +325,85 @@ const CIEC_LDATE_AND_TIME func_CONCAT_LDATE_LTOD(const CIEC_LDATE& paIN1, const 
   return retVal;
 }
 
+const CIEC_LDATE_AND_TIME func_CONCAT_LDT(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &MONTH, const CIEC_ANY_INT &DAY, const CIEC_ANY_INT &HOUR, const CIEC_ANY_INT &MINUTE, const CIEC_ANY_INT &SECOND, const CIEC_ANY_INT &MILLISECOND) {
+  struct tm concatTime = {0};
+  memset(&concatTime, 0, sizeof(concatTime));
+  if(YEAR.isSigned()) {
+    concatTime.tm_year = YEAR.getSignedValue() - 1900;
+  } else {
+    concatTime.tm_year = YEAR.getUnsignedValue() - 1900;
+  }
+
+  if (MONTH.isSigned()) {
+    concatTime.tm_mon = MONTH.getSignedValue() - 1;
+  } else {
+    concatTime.tm_mon = MONTH.getUnsignedValue() - 1;
+  }
+
+  if (DAY.isSigned()) {
+    concatTime.tm_mday = DAY.getSignedValue();
+  } else {
+    concatTime.tm_mday = DAY.getUnsignedValue();
+  }
+
+  if (HOUR.isSigned()) {
+    concatTime.tm_hour = HOUR.getSignedValue();
+  } else {
+    concatTime.tm_hour = HOUR.getUnsignedValue();
+  }
+
+  if (MINUTE.isSigned()) {
+    concatTime.tm_min = MINUTE.getSignedValue();
+  } else {
+    concatTime.tm_min = MINUTE.getUnsignedValue();
+  }
+
+  if (SECOND.isSigned()) {
+    concatTime.tm_sec = SECOND.getSignedValue();
+  } else {
+    concatTime.tm_sec = SECOND.getUnsignedValue();
+  }
+
+  unsigned int millisecond = 0;
+  if (MILLISECOND.isSigned()) {
+    millisecond = MILLISECOND.getSignedValue();
+  } else {
+    millisecond = MILLISECOND.getUnsignedValue();
+  }
+  CIEC_LDATE_AND_TIME retVal;
+  retVal.setDateAndTime(concatTime, millisecond);
+  return retVal;
+}
+
+const CIEC_LDATE func_CONCAT_LDATE(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &MONTH, const CIEC_ANY_INT &DAY) {
+  return func_LDT_TO_LDATE(func_CONCAT_DT(YEAR, MONTH, DAY, CIEC_LINT(0), CIEC_LINT(0), CIEC_LINT(0), CIEC_LINT(0)));
+}
+
+const CIEC_LTIME_OF_DAY func_CONCAT_LTOD(const CIEC_ANY_INT &HOUR, const CIEC_ANY_INT &MINUTE, const CIEC_ANY_INT &SECOND, const CIEC_ANY_INT &MILLISECOND) {
+  // Only unsigned representations need to be checked, as negative signed number will be large positive unsigned numbers, outside the allowed range
+  if (HOUR.getUnsignedValue() > 23) {
+    DEVLOG_ERROR("CONCAT_TOD HOUR outside of valid range");
+    return CIEC_TIME_OF_DAY(0);
+  }
+  if (MINUTE.getUnsignedValue() > 59) {
+    DEVLOG_ERROR("CONCAT_TOD MINUTE outside of valid range");
+    return CIEC_TIME_OF_DAY(0);
+  }
+  if (SECOND.getUnsignedValue() > 59) {
+    DEVLOG_ERROR("CONCAT_TOD SECOND outside of valid range");
+    return CIEC_TIME_OF_DAY(0);
+  }
+  if (MILLISECOND.getUnsignedValue() > 999) {
+    DEVLOG_ERROR("CONCAT_TOD MILLISECOND outside of valid range");
+    return CIEC_TIME_OF_DAY(0);
+  }
+  uint_fast64_t hour = HOUR.getSignedValue() * 60ULL * 60ULL * 1000ULL * 1000000ULL;
+  uint_fast64_t minute = MINUTE.getSignedValue() * 60ULL * 1000ULL * 1000000ULL;
+  uint_fast64_t second = SECOND.getSignedValue() * 1000ULL * 1000000ULL;
+  uint_fast64_t millisecond = MILLISECOND.getSignedValue() * 1000000ULL;
+  return CIEC_LTIME_OF_DAY(hour + minute + second + millisecond);
+}
+
 CIEC_ULINT func_FIND(const CIEC_ANY_STRING& pa_rsIn1, const CIEC_ANY_STRING& pa_rsIn2){
   const char* pc_Find = strstr(pa_rsIn1.getValue(), pa_rsIn2.getValue());
   CIEC_ULINT temp;
