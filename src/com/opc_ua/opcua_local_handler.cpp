@@ -157,8 +157,8 @@ void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings,
 #ifdef FORTE_COM_OPC_UA_MULTICAST
   paUaServerConfig.applicationDescription.applicationType = UA_APPLICATIONTYPE_DISCOVERYSERVER;
   // hostname will be added by mdns library
-  UA_String_deleteMembers(&paUaServerConfig.discovery.mdns.mdnsServerName);
-  paUaServerConfig.discovery.mdns.mdnsServerName = UA_String_fromChars(paServerStrings.mMdnsServerName.getValue());
+  UA_String_deleteMembers(&paUaServerConfig.mdnsConfig.mdnsServerName);
+  paUaServerConfig.mdnsConfig.mdnsServerName = UA_String_fromChars(paServerStrings.mMdnsServerName.getValue());
 #endif //FORTE_COM_OPC_UA_MULTICAST
 
   UA_String_clear(&paUaServerConfig.customHostname);
