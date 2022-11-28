@@ -161,19 +161,22 @@ class CIEC_ARRAY : public CIEC_ARRAY_COMMON<T> {
      */
     [[nodiscard]] reference at(intmax_t paIndex) override {
       if (!(paIndex >= 0 && static_cast<size_t>(paIndex) < size())) {
-        std::__throw_out_of_range_fmt(__N("array::at: __n (which is %zu) "
-                                          ">= _Nm (which is %zu)"),
-                                      paIndex, size());
-      } 
+#ifdef FORTE_RTTI_AND_EXCEPTIONS
+        throw std::out_of_range("array::at: Index: " + std::to_string(paIndex) + " >=  size: " + std::to_string(size()));
+#else // FORTE_RTTI_AND_EXCEPTIONS
+        std::abort();
+#endif // FORTE_RTTI_AND_EXCEPTIONS
+      }
       return begin()[paIndex];
     }
 
     [[nodiscard]] const_reference at(intmax_t paIndex) const override {
-      if (!(paIndex >= 0 && static_cast<size_t>(paIndex) < size()))
-      {
-        std::__throw_out_of_range_fmt(__N("array::at: __n (which is %zu) "
-                                          ">= _Nm (which is %zu)"),
-                                      paIndex, size());
+      if (!(paIndex >= 0 && static_cast<size_t>(paIndex) < size())) {
+#ifdef FORTE_RTTI_AND_EXCEPTIONS
+        throw std::out_of_range("array::at: Index: " + std::to_string(paIndex) + " >=  size: " + std::to_string(size()));
+#else // FORTE_RTTI_AND_EXCEPTIONS
+        std::abort();
+#endif // FORTE_RTTI_AND_EXCEPTIONS
       }
       return begin()[paIndex];
     }

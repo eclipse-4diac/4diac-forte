@@ -157,7 +157,7 @@ void CTimerHandler::processAddList(){
 
 void CTimerHandler::processRemoveList(){
   CCriticalRegion criticalRegion(mRemoveListSync);
-  std::for_each(mRemoveFBList.begin(), mRemoveFBList.end(), std::bind1st(std::mem_fun(&CTimerHandler::removeTimedFB), this));
+  std::for_each(mRemoveFBList.begin(), mRemoveFBList.end(), [this](CEventSourceFB* event) { removeTimedFB(event);} );
   mRemoveFBList.clear();
 }
 
