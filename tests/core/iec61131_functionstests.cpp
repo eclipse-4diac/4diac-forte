@@ -1304,4 +1304,221 @@ BOOST_AUTO_TEST_CASE(func_concat_ltod_lints) {
   BOOST_TEST(expected == testTod);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+BOOST_AUTO_TEST_CASE(func_split_date_ulints) {
+  CIEC_DATE date;
+  date.fromString("DATE#2017-03-20");
+
+  CIEC_ULINT year;
+  CIEC_ULINT month;
+  CIEC_ULINT day;
+
+  func_SPLIT_DATE(date, year, month, day);
+  BOOST_TEST(year == CIEC_ULINT(2017));
+  BOOST_TEST(month == CIEC_ULINT(3));
+  BOOST_TEST(day == CIEC_ULINT(20));
+}
+
+BOOST_AUTO_TEST_CASE(func_split_date_lints) {
+  CIEC_DATE date;
+  date.fromString("DATE#2017-03-20");
+
+  CIEC_LINT year;
+  CIEC_LINT month;
+  CIEC_LINT day;
+
+  func_SPLIT_DATE(date, year, month, day);
+  BOOST_TEST(year == CIEC_LINT(2017));
+  BOOST_TEST(month == CIEC_LINT(3));
+  BOOST_TEST(day == CIEC_LINT(20));
+}
+
+BOOST_AUTO_TEST_CASE(func_split_ldate_ulints) {
+  CIEC_LDATE date;
+  date.fromString("LDATE#2017-03-20");
+
+  CIEC_ULINT year;
+  CIEC_ULINT month;
+  CIEC_ULINT day;
+
+  func_SPLIT_LDATE(date, year, month, day);
+  BOOST_TEST(year == CIEC_ULINT(2017));
+  BOOST_TEST(month == CIEC_ULINT(3));
+  BOOST_TEST(day == CIEC_ULINT(20));
+}
+
+BOOST_AUTO_TEST_CASE(func_split_ldate_lints) {
+  CIEC_LDATE date;
+  date.fromString("LDATE#2017-03-20");
+
+  CIEC_LINT year;
+  CIEC_LINT month;
+  CIEC_LINT day;
+
+  func_SPLIT_LDATE(date, year, month, day);
+  BOOST_TEST(year == CIEC_LINT(2017));
+  BOOST_TEST(month == CIEC_LINT(3));
+  BOOST_TEST(day == CIEC_LINT(20));
+}
+
+BOOST_AUTO_TEST_CASE(func_split_tod_ulints) {
+  CIEC_TIME_OF_DAY given;
+  given.fromString("TOD#15:43:13.574");
+
+  CIEC_ULINT hour;
+  CIEC_ULINT minute;
+  CIEC_ULINT second;
+  CIEC_ULINT millisecond;
+
+  func_SPLIT_TOD(given, hour, minute, second, millisecond);
+  BOOST_TEST(hour == CIEC_ULINT(15));
+  BOOST_TEST(minute == CIEC_ULINT(43));
+  BOOST_TEST(second == CIEC_ULINT(13));
+  BOOST_TEST(millisecond == CIEC_ULINT(574));
+}
+
+BOOST_AUTO_TEST_CASE(func_split_tod_lints) {
+  CIEC_TIME_OF_DAY given;
+  given.fromString("TOD#15:43:13.574");
+
+  CIEC_LINT hour;
+  CIEC_LINT minute;
+  CIEC_LINT second;
+  CIEC_LINT millisecond;
+
+  func_SPLIT_TOD(given, hour, minute, second, millisecond);
+  BOOST_TEST(hour == CIEC_LINT(15));
+  BOOST_TEST(minute == CIEC_LINT(43));
+  BOOST_TEST(second == CIEC_LINT(13));
+  BOOST_TEST(millisecond == CIEC_LINT(574));
+}
+
+BOOST_AUTO_TEST_CASE(func_split_ltod_ulints) {
+  CIEC_LTIME_OF_DAY given;
+  given.fromString("LTOD#15:43:13.574");
+
+  CIEC_ULINT hour;
+  CIEC_ULINT minute;
+  CIEC_ULINT second;
+  CIEC_ULINT millisecond;
+
+  func_SPLIT_LTOD(given, hour, minute, second, millisecond);
+  BOOST_TEST(hour == CIEC_ULINT(15));
+  BOOST_TEST(minute == CIEC_ULINT(43));
+  BOOST_TEST(second == CIEC_ULINT(13));
+  BOOST_TEST(millisecond == CIEC_ULINT(574));
+}
+
+BOOST_AUTO_TEST_CASE(func_split_ltod_lints) {
+  CIEC_LTIME_OF_DAY given;
+  given.fromString("LTOD#15:43:13.574");
+
+  CIEC_LINT hour;
+  CIEC_LINT minute;
+  CIEC_LINT second;
+  CIEC_LINT millisecond;
+
+  func_SPLIT_LTOD(given, hour, minute, second, millisecond);
+  BOOST_TEST(hour == CIEC_LINT(15));
+  BOOST_TEST(minute == CIEC_LINT(43));
+  BOOST_TEST(second == CIEC_LINT(13));
+  BOOST_TEST(millisecond == CIEC_LINT(574));
+}
+
+BOOST_AUTO_TEST_CASE(func_split_dt_ulints) {
+  CIEC_DATE_AND_TIME given;
+  given.fromString("DT#2017-03-20-15:43:13.574");
+
+  CIEC_ULINT year;
+  CIEC_ULINT month;
+  CIEC_ULINT day;
+  CIEC_ULINT hour;
+  CIEC_ULINT minute;
+  CIEC_ULINT second;
+  CIEC_ULINT millisecond;
+
+  func_SPLIT_DT(given, year, month, day, hour, minute, second, millisecond);
+  BOOST_TEST(year == CIEC_ULINT(2017));
+  BOOST_TEST(month == CIEC_ULINT(3));
+  BOOST_TEST(day == CIEC_ULINT(20));
+  BOOST_TEST(hour == CIEC_ULINT(15));
+  BOOST_TEST(minute == CIEC_ULINT(43));
+  BOOST_TEST(second == CIEC_ULINT(13));
+  BOOST_TEST(millisecond == CIEC_ULINT(574));
+}
+
+BOOST_AUTO_TEST_CASE(func_split_dt_lints) {
+  CIEC_DATE_AND_TIME given;
+  given.fromString("DT#2017-03-20-15:43:13.574");
+
+  CIEC_LINT year;
+  CIEC_LINT month;
+  CIEC_LINT day;
+  CIEC_LINT hour;
+  CIEC_LINT minute;
+  CIEC_LINT second;
+  CIEC_LINT millisecond;
+
+  func_SPLIT_DT(given, year, month, day, hour, minute, second, millisecond);
+  BOOST_TEST(year == CIEC_LINT(2017));
+  BOOST_TEST(month == CIEC_LINT(3));
+  BOOST_TEST(day == CIEC_LINT(20));
+  BOOST_TEST(hour == CIEC_LINT(15));
+  BOOST_TEST(minute == CIEC_LINT(43));
+  BOOST_TEST(second == CIEC_LINT(13));
+  BOOST_TEST(millisecond == CIEC_LINT(574));
+}
+
+BOOST_AUTO_TEST_CASE(func_split_ldt_ulints) {
+  CIEC_LDATE_AND_TIME given;
+  given.fromString("LDT#2017-03-20-15:43:13.574");
+
+  CIEC_ULINT year;
+  CIEC_ULINT month;
+  CIEC_ULINT day;
+  CIEC_ULINT hour;
+  CIEC_ULINT minute;
+  CIEC_ULINT second;
+  CIEC_ULINT millisecond;
+
+  func_SPLIT_LDT(given, year, month, day, hour, minute, second, millisecond);
+  BOOST_TEST(year == CIEC_ULINT(2017));
+  BOOST_TEST(month == CIEC_ULINT(3));
+  BOOST_TEST(day == CIEC_ULINT(20));
+  BOOST_TEST(hour == CIEC_ULINT(15));
+  BOOST_TEST(minute == CIEC_ULINT(43));
+  BOOST_TEST(second == CIEC_ULINT(13));
+  BOOST_TEST(millisecond == CIEC_ULINT(574));
+}
+
+BOOST_AUTO_TEST_CASE(func_split_ldt_lints) {
+  CIEC_LDATE_AND_TIME given;
+  given.fromString("LDT#2017-03-20-15:43:13.574");
+
+  CIEC_LINT year;
+  CIEC_LINT month;
+  CIEC_LINT day;
+  CIEC_LINT hour;
+  CIEC_LINT minute;
+  CIEC_LINT second;
+  CIEC_LINT millisecond;
+
+  func_SPLIT_LDT(given, year, month, day, hour, minute, second, millisecond);
+  BOOST_TEST(year == CIEC_LINT(2017));
+  BOOST_TEST(month == CIEC_LINT(3));
+  BOOST_TEST(day == CIEC_LINT(20));
+  BOOST_TEST(hour == CIEC_LINT(15));
+  BOOST_TEST(minute == CIEC_LINT(43));
+  BOOST_TEST(second == CIEC_LINT(13));
+  BOOST_TEST(millisecond == CIEC_LINT(574));
+}
+
+BOOST_AUTO_TEST_CASE(func_day_of_week) {
+  CIEC_DATE date;
+  date.fromString("DATE#2017-03-20");
+
+  CIEC_ULINT weekday;
+  func_DAY_OF_WEEK(date, weekday);
+  BOOST_TEST(weekday == CIEC_ULINT(1));
+}
+
+  BOOST_AUTO_TEST_SUITE_END()

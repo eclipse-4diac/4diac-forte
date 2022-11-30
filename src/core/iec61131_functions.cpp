@@ -420,3 +420,56 @@ const CIEC_TIME func_NOW_MONOTONIC() {
 const CIEC_DATE_AND_TIME func_NOW() {
   return CIEC_DATE_AND_TIME(forte_time() * 1000ULL);
 }
+
+void func_SPLIT_DATE(const CIEC_DATE &paValue, CIEC_ANY_INT &YEAR, CIEC_ANY_INT &MONTH, CIEC_ANY_INT &DAY) {
+  func_SPLIT_LDATE(paValue, YEAR, MONTH, DAY);
+}
+
+void func_SPLIT_LDATE(const CIEC_LDATE &paValue, CIEC_ANY_INT &YEAR, CIEC_ANY_INT &MONTH, CIEC_ANY_INT &DAY) {
+  struct tm *timeStruct = paValue.getTimeStruct();
+  YEAR.setUnsignedValue(timeStruct->tm_year + 1900);
+  MONTH.setUnsignedValue(timeStruct->tm_mon + 1);
+  DAY.setUnsignedValue(timeStruct->tm_mday);
+}
+
+void func_SPLIT_TOD(const CIEC_TIME_OF_DAY &paValue, CIEC_ANY_INT &HOUR, CIEC_ANY_INT &MINUTE, CIEC_ANY_INT &SECOND, CIEC_ANY_INT &MILLISECOND) {
+  func_SPLIT_LTOD(paValue, HOUR, MINUTE, SECOND, MILLISECOND);
+}
+
+void func_SPLIT_LTOD(const CIEC_LTIME_OF_DAY &paValue, CIEC_ANY_INT &HOUR, CIEC_ANY_INT &MINUTE, CIEC_ANY_INT &SECOND, CIEC_ANY_INT &MILLISECOND) {
+  CIEC_LTIME_OF_DAY::TValueType nanoSeconds = static_cast<CIEC_LTIME_OF_DAY::TValueType>(paValue);
+  CIEC_LTIME_OF_DAY::TValueType hours = nanoSeconds / (3600ULL * CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond);
+  HOUR.setUnsignedValue(hours);
+
+  nanoSeconds = nanoSeconds - hours * (3600ULL * CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond);
+  CIEC_LTIME_OF_DAY::TValueType minutes = nanoSeconds / (60ULL * CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond);
+  MINUTE.setUnsignedValue(minutes);
+
+  nanoSeconds = nanoSeconds - minutes * (60ULL * CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond);
+  CIEC_LTIME_OF_DAY::TValueType seconds = nanoSeconds / CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond;
+  SECOND.setUnsignedValue(seconds);
+
+  nanoSeconds = nanoSeconds - seconds * CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond;
+  CIEC_LTIME_OF_DAY::TValueType milliSeconds = nanoSeconds / (CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond / 1000ULL);
+  MILLISECOND.setUnsignedValue(milliSeconds);
+}
+
+void func_SPLIT_DT(const CIEC_DATE_AND_TIME &paValue, CIEC_ANY_INT &YEAR, CIEC_ANY_INT &MONTH, CIEC_ANY_INT &DAY, CIEC_ANY_INT &HOUR, CIEC_ANY_INT &MINUTE, CIEC_ANY_INT &SECOND, CIEC_ANY_INT &MILLISECOND) {
+  func_SPLIT_LDT(paValue, YEAR, MONTH, DAY, HOUR, MINUTE, SECOND, MILLISECOND);
+}
+
+void func_SPLIT_LDT(const CIEC_LDATE_AND_TIME &paValue, CIEC_ANY_INT &YEAR, CIEC_ANY_INT &MONTH, CIEC_ANY_INT &DAY, CIEC_ANY_INT &HOUR, CIEC_ANY_INT &MINUTE, CIEC_ANY_INT &SECOND, CIEC_ANY_INT &MILLISECOND) {
+  struct tm *timeStruct = paValue.getTimeStruct();
+  YEAR.setUnsignedValue(timeStruct->tm_year + 1900);
+  MONTH.setUnsignedValue(timeStruct->tm_mon + 1);
+  DAY.setUnsignedValue(timeStruct->tm_mday);
+  HOUR.setUnsignedValue(timeStruct->tm_hour);
+  MINUTE.setUnsignedValue(timeStruct->tm_min);
+  SECOND.setUnsignedValue(timeStruct->tm_sec);
+  MILLISECOND.setUnsignedValue(paValue.getMilliSeconds());
+}
+
+void func_DAY_OF_WEEK(const CIEC_LDATE &paValue, CIEC_ANY_INT &WEEKDAY) {
+  struct tm *timeStruct = paValue.getTimeStruct();
+  WEEKDAY.setUnsignedValue(timeStruct->tm_wday);
+}
