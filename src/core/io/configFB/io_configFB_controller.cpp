@@ -37,7 +37,7 @@ IOConfigFBController::~IOConfigFBController() {
 void IOConfigFBController::executeEvent(int paEIID) {
   if(cg_nExternalEventID == paEIID) {
     if(!(mController->mNotificationHandled = handleNotification(mController->mNotificationType, mController->mNotificationAttachment))) {
-      DEVLOG_ERROR("[IOConfigFBController] Notification of type %d has not been handled.\n", mController->mNotificationType);
+      DEVLOG_ERROR("[IOConfigFBController] Notification of type %d has not been handled.\n", static_cast<int>(mController->mNotificationType));
     }
   } else if(scmEventINITID == paEIID) {
     if(true == QI()) {
@@ -54,7 +54,7 @@ void IOConfigFBController::executeEvent(int paEIID) {
 
 bool IOConfigFBController::handleNotification(IODeviceController::NotificationType paType, const void* paAttachment) {
   switch(paType){
-    case IODeviceController::Error:
+    case IODeviceController::NotificationType::Error:
       onError();
       if(mStarting) {
         if(nullptr == paAttachment) {
@@ -69,7 +69,7 @@ bool IOConfigFBController::handleNotification(IODeviceController::NotificationTy
         DEVLOG_ERROR("[IOConfigFBController] Runtime error. Reason: %s\n", STATUS().getValue());
       }
       return true;
-    case IODeviceController::Success:
+    case IODeviceController::NotificationType::Success:
       if(mStarting) {
         onStartup();
         return true;

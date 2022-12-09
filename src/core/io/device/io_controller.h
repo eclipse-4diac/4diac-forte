@@ -69,7 +69,7 @@ namespace forte {
               }
           };
 
-          enum NotificationType {
+          enum class NotificationType {
             UnknownNotificationType,
             //! Notifies the configuration fb about a successful operation e.g. a successful startup.
             Success,

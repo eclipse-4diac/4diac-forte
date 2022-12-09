@@ -20,7 +20,7 @@
 using namespace forte::core::io;
 
 IODeviceController::IODeviceController(CDeviceExecution& paDeviceExecution) :
-    CExternalEventHandler(paDeviceExecution), mNotificationType(UnknownNotificationType), mNotificationAttachment(nullptr), mNotificationHandled(true), mError(nullptr),
+    CExternalEventHandler(paDeviceExecution), mNotificationType(NotificationType::UnknownNotificationType), mNotificationAttachment(nullptr), mNotificationHandled(true), mError(nullptr),
         mDelegate(nullptr), mInitDelay(0) {
 }
 
@@ -33,15 +33,15 @@ void IODeviceController::run() {
   mError = init();
 
   if(!hasError()) {
-    notifyConfigFB(Success);
+    notifyConfigFB(NotificationType::Success);
 
     runLoop();
 
     if(hasError()) {
-      notifyConfigFB(Error, mError);
+      notifyConfigFB(NotificationType::Error, mError);
     }
   } else {
-    notifyConfigFB(Error, mError);
+    notifyConfigFB(NotificationType::Error, mError);
   }
 
   dropHandles();
