@@ -63,7 +63,7 @@ void logMessage(E_MsgLevel paLevel, const char *paMessage, ...) {
 }
 
 void printLogMessage(E_MsgLevel paLevel, const char *paMessage) {
-  fprintf(stderr, "%s: T#%" PRIuFAST64 ": %s", scLogLevel[paLevel], getNanoSecondsMonotonic(), paMessage);
+  fprintf(stderr, "%s: T#%" PRIuFAST64 ": %s", scLogLevel[static_cast<int>(paLevel)], getNanoSecondsMonotonic(), paMessage);
 }
 
 # endif  /* FORTE_EXTERNAL_LOG_HANDLER */

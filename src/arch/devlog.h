@@ -18,12 +18,12 @@
  * They can be printed to a console or archived somewhere (This is implementation dependent).
  */
 
-enum E_MsgLevel {
-  E_INFO,
-  E_WARNING,
-  E_ERROR,
-  E_DEBUG,
-  E_TRACE
+enum class E_MsgLevel {
+  Info,
+  Warning,
+  Error,
+  Debug,
+  Trace
 };
 
 // possible loglevels: NOLOG, LOGERROR, LOGWARNING, LOGINFO, LOGDEBUG
@@ -40,10 +40,10 @@ enum E_MsgLevel {
 #endif
 
 #ifdef LOGDEBUG
-# define DEVLOG_ERROR(...) logMessage(E_ERROR, __VA_ARGS__)
-# define DEVLOG_WARNING(...) logMessage(E_WARNING, __VA_ARGS__)
-# define DEVLOG_INFO(...) logMessage(E_INFO, __VA_ARGS__)
-# define DEVLOG_DEBUG(...) logMessage(E_DEBUG, __VA_ARGS__)
+# define DEVLOG_ERROR(...) logMessage(E_MsgLevel::Error, __VA_ARGS__)
+# define DEVLOG_WARNING(...) logMessage(E_MsgLevel::Warning, __VA_ARGS__)
+# define DEVLOG_INFO(...) logMessage(E_MsgLevel::Info, __VA_ARGS__)
+# define DEVLOG_DEBUG(...) logMessage(E_MsgLevel::Debug, __VA_ARGS__)
 # define DEVLOG_ERROR_VAR(X) X
 # define DEVLOG_WARNING_VAR(X) X
 # define DEVLOG_INFO_VAR(X) X
@@ -51,7 +51,7 @@ enum E_MsgLevel {
 #endif
 
 #ifdef LOGERROR
-# define DEVLOG_ERROR(...) logMessage(E_ERROR, __VA_ARGS__)
+# define DEVLOG_ERROR(...) logMessage(E_MsgLevel::Error, __VA_ARGS__)
 # define DEVLOG_WARNING(...)
 # define DEVLOG_INFO(...)
 # define DEVLOG_DEBUG(...)
@@ -62,8 +62,8 @@ enum E_MsgLevel {
 #endif
 
 #ifdef LOGWARNING
-# define DEVLOG_ERROR(...) logMessage(E_ERROR, __VA_ARGS__)
-# define DEVLOG_WARNING(...) logMessage(E_WARNING, __VA_ARGS__)
+# define DEVLOG_ERROR(...) logMessage(E_MsgLevel::Error, __VA_ARGS__)
+# define DEVLOG_WARNING(...) logMessage(E_MsgLevel::Warning, __VA_ARGS__)
 # define DEVLOG_INFO(...)
 # define DEVLOG_DEBUG(...)
 # define DEVLOG_ERROR_VAR(X) X
@@ -73,9 +73,9 @@ enum E_MsgLevel {
 #endif
 
 #ifdef LOGINFO
-# define DEVLOG_ERROR(...) logMessage(E_ERROR, __VA_ARGS__)
-# define DEVLOG_WARNING(...) logMessage(E_WARNING, __VA_ARGS__)
-# define DEVLOG_INFO(...) logMessage(E_INFO, __VA_ARGS__)
+# define DEVLOG_ERROR(...) logMessage(E_MsgLevel::Error, __VA_ARGS__)
+# define DEVLOG_WARNING(...) logMessage(E_MsgLevel::Warning, __VA_ARGS__)
+# define DEVLOG_INFO(...) logMessage(E_MsgLevel::Info, __VA_ARGS__)
 # define DEVLOG_DEBUG(...)
 # define DEVLOG_ERROR_VAR(X) X
 # define DEVLOG_WARNING_VAR(X) X
@@ -95,7 +95,7 @@ enum E_MsgLevel {
 #endif
 
 #if (defined(FORTE_TRACE_EVENTS) && !defined(NOLOG))
-# define FORTE_TRACE(...) logMessage(E_TRACE,  __VA_ARGS__)
+# define FORTE_TRACE(...) logMessage(E_MsgLevel::Trace,  __VA_ARGS__)
 #else
 # define FORTE_TRACE(...)
 #endif
