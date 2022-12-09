@@ -35,21 +35,21 @@ BOOST_AUTO_TEST_SUITE(ManagedObjectStateMachine)
   BOOST_AUTO_TEST_CASE(idleTest){
     CFunctionBlockMock testee;
 
-    BOOST_CHECK_EQUAL(CFunctionBlock::e_IDLE, testee.getState());
+    BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Idle, testee.getState());
 
     BOOST_CHECK(testee.isCurrentlyDeleteable());
 
     BOOST_CHECK_EQUAL(EMGMResponse::InvalidState, testee.changeFBExecutionState(EMGMCommandType::Stop));
-    BOOST_CHECK_EQUAL(CFunctionBlock::e_IDLE, testee.getState());
+    BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Idle, testee.getState());
 
     BOOST_CHECK_EQUAL(EMGMResponse::InvalidState, testee.changeFBExecutionState(EMGMCommandType::Kill));
-    BOOST_CHECK_EQUAL(CFunctionBlock::e_IDLE, testee.getState());
+    BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Idle, testee.getState());
 
     BOOST_CHECK_EQUAL(EMGMResponse::InvalidState, testee.changeFBExecutionState(EMGMCommandType::Reset));
-    BOOST_CHECK_EQUAL(CFunctionBlock::e_IDLE, testee.getState());
+    BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Idle, testee.getState());
 
     BOOST_CHECK_EQUAL(EMGMResponse::Ready, testee.changeFBExecutionState(EMGMCommandType::Start));
-    BOOST_CHECK_EQUAL(CFunctionBlock::e_RUNNING, testee.getState());
+    BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Running, testee.getState());
   }
 
   void putTesteeIntoRun(CFunctionBlock &paTestee){
@@ -62,26 +62,26 @@ BOOST_AUTO_TEST_SUITE(ManagedObjectStateMachine)
 
     BOOST_CHECK_EQUAL(false, testee.isCurrentlyDeleteable());
 
-    BOOST_CHECK_EQUAL(CFunctionBlock::e_RUNNING, testee.getState());
+    BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Running, testee.getState());
 
     //we should not be able to reset it
     BOOST_CHECK_EQUAL(EMGMResponse::InvalidState, testee.changeFBExecutionState(EMGMCommandType::Reset));
-    BOOST_CHECK_EQUAL(CFunctionBlock::e_RUNNING, testee.getState());
+    BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Running, testee.getState());
 
     //we should not be able to start it
     BOOST_CHECK_EQUAL(EMGMResponse::InvalidState, testee.changeFBExecutionState(EMGMCommandType::Start));
-    BOOST_CHECK_EQUAL(CFunctionBlock::e_RUNNING, testee.getState());
+    BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Running, testee.getState());
 
     //we should be able to stop it
     BOOST_CHECK_EQUAL(EMGMResponse::Ready, testee.changeFBExecutionState(EMGMCommandType::Stop));
-    BOOST_CHECK_EQUAL(CFunctionBlock::e_STOPPED, testee.getState());
+    BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Stopped, testee.getState());
 
     //we shold be able to kill it, use a new testee to have a clean running state
     CFunctionBlockMock killTestee;
     putTesteeIntoRun(killTestee);
 
     BOOST_CHECK_EQUAL(EMGMResponse::Ready, killTestee.changeFBExecutionState(EMGMCommandType::Kill));
-    BOOST_CHECK_EQUAL(CFunctionBlock::e_KILLED, killTestee.getState());
+    BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Killed, killTestee.getState());
   }
 
   void putTesteeIntoStopped(CFunctionBlock &paTestee){
@@ -97,22 +97,22 @@ BOOST_AUTO_TEST_SUITE(ManagedObjectStateMachine)
 
     //we should not be able to kill it
     BOOST_CHECK_EQUAL(EMGMResponse::InvalidState, testee.changeFBExecutionState(EMGMCommandType::Kill));
-    BOOST_CHECK_EQUAL(CFunctionBlock::e_STOPPED, testee.getState());
+    BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Stopped, testee.getState());
 
     //we should not be able to stop it
     BOOST_CHECK_EQUAL(EMGMResponse::InvalidState, testee.changeFBExecutionState(EMGMCommandType::Stop));
-    BOOST_CHECK_EQUAL(CFunctionBlock::e_STOPPED, testee.getState());
+    BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Stopped, testee.getState());
 
     //we should be able to start it
     BOOST_CHECK_EQUAL(EMGMResponse::Ready, testee.changeFBExecutionState(EMGMCommandType::Start));
-    BOOST_CHECK_EQUAL(CFunctionBlock::e_RUNNING, testee.getState());
+    BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Running, testee.getState());
 
     //we should be able to reset it, use new testeee for a clean stopped state
     CFunctionBlockMock resetTestee;
     putTesteeIntoStopped(resetTestee);
 
     BOOST_CHECK_EQUAL(EMGMResponse::Ready, resetTestee.changeFBExecutionState(EMGMCommandType::Reset));
-    BOOST_CHECK_EQUAL(CFunctionBlock::e_IDLE, resetTestee.getState());
+    BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Idle, resetTestee.getState());
 
   }
 
@@ -129,19 +129,19 @@ BOOST_AUTO_TEST_SUITE(ManagedObjectStateMachine)
 
     //we should not be able to kill it
     BOOST_CHECK_EQUAL(EMGMResponse::InvalidState, testee.changeFBExecutionState(EMGMCommandType::Kill));
-    BOOST_CHECK_EQUAL(CFunctionBlock::e_KILLED, testee.getState());
+    BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Killed, testee.getState());
 
     //we should not be able to stop it
     BOOST_CHECK_EQUAL(EMGMResponse::InvalidState, testee.changeFBExecutionState(EMGMCommandType::Stop));
-    BOOST_CHECK_EQUAL(CFunctionBlock::e_KILLED, testee.getState());
+    BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Killed, testee.getState());
 
     //we should not be able to start it
     BOOST_CHECK_EQUAL(EMGMResponse::InvalidState, testee.changeFBExecutionState(EMGMCommandType::Start));
-    BOOST_CHECK_EQUAL(CFunctionBlock::e_KILLED, testee.getState());
+    BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Killed, testee.getState());
 
     //we should be able to reset it
     BOOST_CHECK_EQUAL(EMGMResponse::Ready, testee.changeFBExecutionState(EMGMCommandType::Reset));
-    BOOST_CHECK_EQUAL(CFunctionBlock::e_IDLE, testee.getState());
+    BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Idle, testee.getState());
   }
 
   void testAllOtherCommands(CFunctionBlock &paTestee, CFunctionBlock::E_FBStates paState){
@@ -159,20 +159,20 @@ BOOST_AUTO_TEST_SUITE(ManagedObjectStateMachine)
     CFunctionBlockMock testee;
 
     //test for idle
-    testAllOtherCommands(testee, CFunctionBlock::e_IDLE);
+    testAllOtherCommands(testee, CFunctionBlock::E_FBStates::Idle);
 
     //test for running
     testee.changeFBExecutionState(EMGMCommandType::Start);
-    testAllOtherCommands(testee, CFunctionBlock::e_RUNNING);
+    testAllOtherCommands(testee, CFunctionBlock::E_FBStates::Running);
 
     //test for stopped
     testee.changeFBExecutionState(EMGMCommandType::Stop);
-    testAllOtherCommands(testee, CFunctionBlock::e_STOPPED);
+    testAllOtherCommands(testee, CFunctionBlock::E_FBStates::Stopped);
 
     //test for killed
     testee.changeFBExecutionState(EMGMCommandType::Start);
     testee.changeFBExecutionState(EMGMCommandType::Kill);
-    testAllOtherCommands(testee, CFunctionBlock::e_KILLED);
+    testAllOtherCommands(testee, CFunctionBlock::E_FBStates::Killed);
   }
 
   BOOST_AUTO_TEST_SUITE_END()

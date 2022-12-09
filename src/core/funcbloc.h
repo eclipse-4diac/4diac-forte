@@ -110,11 +110,11 @@ class CFunctionBlock {
     /*!\brief Possible states of a runable object.
      *
      */
-    enum E_FBStates {
-      e_RUNNING = 0, // in the most critical execution path of FORTE we are checking for this enum value it is faster if this is the zero entry
-      e_IDLE,
-      e_STOPPED,
-      e_KILLED
+    enum class E_FBStates {
+      Running = 0, // in the most critical execution path of FORTE we are checking for this enum value it is faster if this is the zero entry
+      Idle,
+      Stopped,
+      Killed
     };
 
     /*! \brief Indicator that the given EventID is an included adapter's eventID.
@@ -302,7 +302,7 @@ class CFunctionBlock {
      * \return true if currently all conditions are met to be deleteable
      */
     bool isCurrentlyDeleteable() const {
-      return ((m_bDeletable) && (m_enFBState != e_RUNNING));
+      return ((m_bDeletable) && (m_enFBState != E_FBStates::Running));
     }
 
     /*!\brief return the current execution state of the managed object

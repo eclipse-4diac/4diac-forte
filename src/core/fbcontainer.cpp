@@ -22,10 +22,10 @@ EMGMResponse checkForActionEquivalentState(const CFunctionBlock &paFB, const EMG
   CFunctionBlock::E_FBStates currentState = paFB.getState();
   switch (paCommand){
     case EMGMCommandType::Stop:
-      return (CFunctionBlock::e_KILLED == currentState) ? EMGMResponse::Ready : EMGMResponse::InvalidState;
+      return (CFunctionBlock::E_FBStates::Killed == currentState) ? EMGMResponse::Ready : EMGMResponse::InvalidState;
       break;
     case EMGMCommandType::Kill:
-      return (CFunctionBlock::e_STOPPED == currentState || CFunctionBlock::e_IDLE == currentState) ? EMGMResponse::Ready : EMGMResponse::InvalidState;
+      return (CFunctionBlock::E_FBStates::Stopped == currentState || CFunctionBlock::E_FBStates::Idle == currentState) ? EMGMResponse::Ready : EMGMResponse::InvalidState;
       break;
     default:
       break;

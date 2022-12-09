@@ -35,7 +35,7 @@
 CFunctionBlock::CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
    mEOConns(nullptr), m_apoDIConns(nullptr), mDOConns(nullptr),
    m_poInvokingExecEnv(nullptr), m_apoAdapters(nullptr), m_poResource(pa_poSrcRes), m_aoDIs(nullptr), m_aoDOs(nullptr), m_nFBInstanceName(pa_nInstanceNameId),
-    m_enFBState(e_KILLED),   //put the FB in the killed state so that reseting it after creation will correctly initialize it
+    m_enFBState(E_FBStates::Killed),   //put the FB in the killed state so that reseting it after creation will correctly initialize it
     m_bDeletable(true){
 
 #ifdef FORTE_SUPPORT_MONITORING
@@ -314,7 +314,7 @@ void CFunctionBlock::receiveInputEvent(size_t paEIID, CEventChainExecutionThread
   traceInstanceData();
 #endif
 
-  if(e_RUNNING == getState()){
+  if(E_FBStates::Running == getState()){
     if(paEIID < m_pstInterfaceSpec->m_nNumEIs) {
       if(nullptr != m_pstInterfaceSpec->m_anEIWithIndexes && -1 != m_pstInterfaceSpec->m_anEIWithIndexes[paEIID]) {
         const TDataIOID *eiWithStart = &(m_pstInterfaceSpec->m_anEIWith[m_pstInterfaceSpec->m_anEIWithIndexes[paEIID]]);
@@ -356,26 +356,26 @@ EMGMResponse CFunctionBlock::changeFBExecutionState(EMGMCommandType pa_unCommand
   EMGMResponse nRetVal = EMGMResponse::InvalidState;
   switch (pa_unCommand){
     case EMGMCommandType::Start:
-      if((e_IDLE == m_enFBState) || (e_STOPPED == m_enFBState)){
-        m_enFBState = e_RUNNING;
+      if((E_FBStates::Idle == m_enFBState) || (E_FBStates::Stopped == m_enFBState)){
+        m_enFBState = E_FBStates::Running;
         nRetVal = EMGMResponse::Ready;
       }
       break;
     case EMGMCommandType::Stop:
-      if(e_RUNNING == m_enFBState){
-        m_enFBState = e_STOPPED;
+      if(E_FBStates::Running == m_enFBState){
+        m_enFBState = E_FBStates::Stopped;
         nRetVal = EMGMResponse::Ready;
       }
       break;
     case EMGMCommandType::Kill:
-      if(e_RUNNING == m_enFBState){
-        m_enFBState = e_KILLED;
+      if(E_FBStates::Running == m_enFBState){
+        m_enFBState = E_FBStates::Killed;
         nRetVal = EMGMResponse::Ready;
       }
       break;
     case EMGMCommandType::Reset:
-      if((e_STOPPED == m_enFBState) || (e_KILLED == m_enFBState)){
-        m_enFBState = e_IDLE;
+      if((E_FBStates::Stopped == m_enFBState) || (E_FBStates::Killed == m_enFBState)){
+        m_enFBState = E_FBStates::Idle;
         nRetVal = EMGMResponse::Ready;
         setInitialValues();
       }

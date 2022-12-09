@@ -115,7 +115,7 @@ EMGMResponse CCompositeFB::changeFBExecutionState(EMGMCommandType pa_unCommand){
     nRetVal = changeInternalFBExecutionState(pa_unCommand, cm_cpoFBNData->m_nNumFBs, mInternalFBs);
   }
   //Update FB parameters that maybe got overwritten by default values of the FB
-  if((EMGMCommandType::Reset == pa_unCommand) && (e_IDLE == getState())){
+  if((EMGMCommandType::Reset == pa_unCommand) && (E_FBStates::Idle == getState())){
     setParams();
   }
   return nRetVal;

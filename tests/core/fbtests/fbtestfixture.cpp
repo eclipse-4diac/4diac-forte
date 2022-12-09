@@ -55,7 +55,7 @@ CFBTestFixtureBase::CFBTestFixtureBase(CStringDictionary::TStringId paTypeId) :
   changeFBExecutionState(EMGMCommandType::Reset);
   changeFBExecutionState(EMGMCommandType::Start);
   //assure that we are in running state
-  BOOST_REQUIRE_EQUAL(CFunctionBlock::e_RUNNING, getState());
+  BOOST_REQUIRE_EQUAL(CFunctionBlock::E_FBStates::Running, getState());
   BOOST_REQUIRE(nullptr != mFBUnderTest);
 }
 
@@ -166,7 +166,7 @@ void CFBTestFixtureBase::setOutputData(std::initializer_list<TIEC_ANYPtr> paOutp
 }
 
 void CFBTestFixtureBase::setupTestInterface(){
-  BOOST_CHECK_EQUAL(CFunctionBlock::e_IDLE, mFBUnderTest->getState());
+  BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Idle, mFBUnderTest->getState());
   if (mFBUnderTest->getFBTypeId() < g_nStringIdNextFreeId) { // not a generic block
     BOOST_CHECK_EQUAL(getFBTypeId(), mFBUnderTest->getFBTypeId());
   }
