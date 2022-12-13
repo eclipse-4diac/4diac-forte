@@ -222,7 +222,7 @@ end
 
 function STfunc.AND64(a, ...)
   local ol = a % 0x0000000100000000
-  local oh = (a - al) / 0x0000000100000000
+  local oh = (a - ol) / 0x0000000100000000
   local args = {...}
   for i, val in ipairs(args) do
     local vl = val % 0x0000000100000000
@@ -236,7 +236,7 @@ end
 
 function STfunc.OR64(a, ...)
   local ol = a % 0x0000000100000000
-  local oh = (a - al) / 0x0000000100000000
+  local oh = (a - ol) / 0x0000000100000000
   local args = {...}
   for i, val in ipairs(args) do
     local vl = val % 0x0000000100000000
@@ -250,7 +250,7 @@ end
 
 function STfunc.XOR64(a, ...)
   local ol = a % 0x0000000100000000
-  local oh = (a - al) / 0x0000000100000000
+  local oh = (a - ol) / 0x0000000100000000
   local args = {...}
   for i, val in ipairs(args) do
     local vl = val % 0x0000000100000000
@@ -278,13 +278,146 @@ function STfunc.NOT32(a)
   return bit.bnot(a)
 end
 
-function STfunc.NOT32(a)
+function STfunc.NOT64(a)
   local al = a % 0x0000000100000000
   local ah = (a - al) / 0x0000000100000000
   al = bit.bnot(al)
   ah = bit.bnot(ah)
   al = al % 0x0000000100000000
   return ah * 0x0000000100000000 + al
+end
+
+--Selection functions
+function STfunc.LIMIT(mn, input, mx)
+  return math.min(math.max(input, mn), mx)
+end
+
+function STfunc.SEL(g, in0, in1)
+  if g then
+    return in1
+  else
+    return in0
+  end
+end
+
+function STfunc.MUX(k, ...)
+  arr = {...}
+  n = #(arr)
+  if k < 0 or k > n-1 then
+    return nil
+  end
+  return arr[k+1]
+end
+
+--Comparison functions
+function STfunc.GT(...)
+  arr = {...}
+  n = #(arr)
+  last = arr[1]
+  for i = 2, n do
+    if last <= arr[i] then -- not last > arr[i]
+      return false
+    end
+    last = arr[i]
+  end
+  return true
+end
+
+function STfunc.GE(...)
+  arr = {...}
+  n = #(arr)
+  last = arr[1]
+  for i = 2, n do
+    if last < arr[i] then -- not last >= arr[i]
+      return false
+    end
+    last = arr[i]
+  end
+  return true
+end
+
+function STfunc.LT(...)
+  arr = {...}
+  n = #(arr)
+  last = arr[1]
+  for i = 2, n do
+    if last >= arr[i] then -- not last < arr[i]
+      return false
+    end
+    last = arr[i]
+  end
+  return true
+end
+
+function STfunc.LE(...)
+  arr = {...}
+  n = #(arr)
+  last = arr[1]
+  for i = 2, n do
+    if last > arr[i] then -- not last <= arr[i]
+      return false
+    end
+    last = arr[i]
+  end
+  return true
+end
+
+function STfunc.EQ(...)
+  arr = {...}
+  n = #(arr)
+  last = arr[1]
+  for i = 2, n do
+    if last ~= arr[i] then -- not last == arr[i]
+      return false
+    end
+    last = arr[i]
+  end
+  return true
+end
+
+function STfunc.NE(a, b)
+  return a ~= b
+end
+
+--String functions
+function STfunc.LEN(s)
+  return #(s)
+end
+
+function STfunc.LEFT(s, p)
+  return string.sub(s, 1, p)
+end
+
+function STfunc.RIGHT(s, p)
+  return string.sub(s, -p)
+end
+
+function STfunc.MID(s, p, n)
+  return string.sub(s, p, p + n - 1)
+end
+
+function STfunc.CONCAT(...)
+  return table.concat({...})
+end
+
+function STfunc.INSERT(s1, s2, p)
+  return string.sub(s1, 1, p-1) .. s2 .. string.sub(s1, p)
+end
+
+function STfunc.DELETE(s1, p, n)
+  return string.sub(s1, 1, p-1) .. string.sub(s1, p + n)
+end
+
+function STfunc.REPLACE(s1, s2, p, n)
+  return string.sub(s1, 1, p-1) .. s2 .. string.sub(s1, p + n)
+end
+
+function STfunc.FIND(s1, s2)
+  ind, _ = string.find(s1, s2, 1, true)
+  if ind == nil then
+    return 0
+  end
+  return ind
 end
 
 return STfunc
