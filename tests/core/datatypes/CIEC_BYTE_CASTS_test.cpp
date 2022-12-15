@@ -333,6 +333,7 @@ BOOST_AUTO_TEST_CASE(BYTE_Castable_test)
   BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_BYTE, CIEC_ANY::e_REAL, bUp, bDown)); BOOST_CHECK(! bUp); BOOST_CHECK(bDown);
   BOOST_CHECK(CIEC_ANY::isCastable(CIEC_ANY::e_BYTE, CIEC_ANY::e_LREAL, bUp, bDown)); BOOST_CHECK(! bUp); BOOST_CHECK(bDown);
 
+  BOOST_CHECK(!CIEC_ANY::isCastable(CIEC_ANY::e_BYTE, CIEC_ANY::e_CHAR, bUp, bDown)); BOOST_CHECK(!bUp); BOOST_CHECK(!bDown);
   BOOST_CHECK(!CIEC_ANY::isCastable(CIEC_ANY::e_BYTE, CIEC_ANY::e_STRING, bUp, bDown)); BOOST_CHECK(! bUp); BOOST_CHECK(! bDown);
   BOOST_CHECK(!CIEC_ANY::isCastable(CIEC_ANY::e_BYTE, CIEC_ANY::e_WSTRING, bUp, bDown)); BOOST_CHECK(! bUp); BOOST_CHECK(! bDown);
 }
@@ -369,6 +370,7 @@ BOOST_AUTO_TEST_CASE(Explict_cast_operator_to_BYTE)
   CIEC_WORD nWord(13);
   CIEC_DWORD nDword(14);
   CIEC_LWORD nLword(15);
+  CIEC_CHAR cChar(16);
   CIEC_BOOL bBool(true);
 
   CIEC_BYTE nResult(0);
@@ -397,6 +399,8 @@ BOOST_AUTO_TEST_CASE(Explict_cast_operator_to_BYTE)
   BOOST_TEST(nResult == 14);
   nResult = CIEC_ANY::cast<CIEC_BYTE>(nLword);
   BOOST_TEST(nResult == 15);
+  nResult = CIEC_ANY::cast<CIEC_BYTE>(cChar);
+  BOOST_TEST(nResult == 16);
   nResult = CIEC_ANY::cast<CIEC_BYTE>(bBool);
   BOOST_TEST(nResult == true);
 }

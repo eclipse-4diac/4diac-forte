@@ -67,6 +67,10 @@ inline const CIEC_WORD func_BYTE_TO_WORD(const CIEC_BYTE &paVal) {
   return CIEC_ANY::cast<CIEC_WORD>(paVal);
 }
 
+inline const CIEC_CHAR func_BYTE_TO_CHAR(const CIEC_BYTE &paVal) {
+  return CIEC_ANY::cast<CIEC_CHAR>(paVal);
+}
+
 inline const CIEC_STRING func_BYTE_TO_STRING(const CIEC_BYTE &paVal) {
   CIEC_STRING string;
   stringConverter(string, paVal);
