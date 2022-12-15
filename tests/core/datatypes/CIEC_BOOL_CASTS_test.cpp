@@ -112,51 +112,51 @@ BOOST_AUTO_TEST_CASE(CASTS_BOOL_to_INTS)
 
 //toSINT
   nTestSInt.setValue(bTestBool_false);
-  BOOST_CHECK_EQUAL(nTestSInt, 0);
+  BOOST_TEST(0 == static_cast<CIEC_SINT::TValueType>(nTestSInt));
   nTestSInt.setValue(bTestBool_true);
-  BOOST_CHECK_EQUAL(nTestSInt, 1);
+  BOOST_TEST(1 == static_cast<CIEC_SINT::TValueType>(nTestSInt));
 
 //toUSINT
   nTestUSInt.setValue(bTestBool_false);
-  BOOST_CHECK_EQUAL(nTestUSInt, 0U);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_USINT::TValueType>(nTestUSInt), 0U);
   nTestUSInt.setValue(bTestBool_true);
-  BOOST_CHECK_EQUAL(nTestUSInt, 1U);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_USINT::TValueType>(nTestUSInt), 1U);
 
 //toINT
   nTestInt.setValue(bTestBool_false);
-  BOOST_CHECK_EQUAL(nTestInt, 0);
+  BOOST_TEST(0 == static_cast<CIEC_INT::TValueType>(nTestInt));
   nTestInt.setValue(bTestBool_true);
-  BOOST_CHECK_EQUAL(nTestInt, 1);
+  BOOST_TEST(1 == static_cast<CIEC_INT::TValueType>(nTestInt));
 
 //toUINT
   nTestUInt.setValue(bTestBool_false);
-  BOOST_CHECK_EQUAL(nTestUInt, 0U);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_UINT::TValueType>(nTestUInt), 0U);
   nTestUInt.setValue(bTestBool_true);
-  BOOST_CHECK_EQUAL(nTestUInt, 1U);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_UINT::TValueType>(nTestUInt), 1U);
 
-//toDINT
+// toDINT
   nTestDInt.setValue(bTestBool_false);
-  BOOST_CHECK_EQUAL(nTestDInt, 0);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(nTestDInt), 0);
   nTestDInt.setValue(bTestBool_true);
-  BOOST_CHECK_EQUAL(nTestDInt, 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(nTestDInt), 1);
 
-//toUINT
+//toUDINT
   nTestUDInt.setValue(bTestBool_false);
-  BOOST_CHECK_EQUAL(nTestUDInt, 0UL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_UDINT::TValueType>(nTestUDInt), 0UL);
   nTestUDInt.setValue(bTestBool_true);
-  BOOST_CHECK_EQUAL(nTestUDInt, 1UL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_UDINT::TValueType>(nTestUDInt), 1UL);
 
 //toLINT
   nTestLInt.setValue(bTestBool_false);
-  BOOST_CHECK_EQUAL(nTestLInt, 0LL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTestLInt), 0LL);
   nTestLInt.setValue(bTestBool_true);
-  BOOST_CHECK_EQUAL(nTestLInt, 1LL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTestLInt), 1LL);
 
-//toULINT
+// toULINT
   nTestULInt.setValue(bTestBool_false);
-  BOOST_CHECK_EQUAL(nTestULInt, 0ULL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_ULINT::TValueType>(nTestULInt), 0ULL);
   nTestULInt.setValue(bTestBool_true);
-  BOOST_CHECK_EQUAL(nTestULInt, 1ULL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_ULINT::TValueType>(nTestULInt), 1ULL);
 }
 
 BOOST_AUTO_TEST_CASE(CASTS_BOOL_to_REAL)

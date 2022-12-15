@@ -39,17 +39,17 @@ BOOST_AUTO_TEST_CASE(InstantiateTemplateWithLimitsArray) {
   BOOST_CHECK_EQUAL(intArray.getDataTypeID(), CIEC_ANY::e_ARRAY);
   BOOST_CHECK_EQUAL(intArray.getElementDataTypeID(), CIEC_ANY::e_INT);
 
-  BOOST_CHECK_EQUAL(intArray[0], CIEC_INT(0));
-  BOOST_CHECK_EQUAL(intArray[1], CIEC_INT(0));
-  BOOST_CHECK_EQUAL(intArray[2], CIEC_INT(0));
-  BOOST_CHECK_EQUAL(intArray[3], CIEC_INT(0));
-  BOOST_CHECK_EQUAL(intArray[4], CIEC_INT(0));
-  BOOST_CHECK_EQUAL(intArray[5], CIEC_INT(0));
-  BOOST_CHECK_EQUAL(intArray[6], CIEC_INT(0));
-  BOOST_CHECK_EQUAL(intArray[7], CIEC_INT(0));
-  BOOST_CHECK_EQUAL(intArray[8], CIEC_INT(0));
-  BOOST_CHECK_EQUAL(intArray[9], CIEC_INT(0));
-  BOOST_CHECK_EQUAL(intArray[10], CIEC_INT(0));
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[0]), 0);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[1]), 0);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[2]), 0);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[3]), 0);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[4]), 0);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[5]), 0);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[6]), 0);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[7]), 0);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[8]), 0);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[9]), 0);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[10]), 0);
 }
 
 BOOST_AUTO_TEST_CASE(InitializerListStaticArray) {
@@ -57,17 +57,17 @@ BOOST_AUTO_TEST_CASE(InitializerListStaticArray) {
                                                       CIEC_INT(5), CIEC_INT(6), CIEC_INT(7), CIEC_INT(8),
                                                       CIEC_INT(9), CIEC_INT(10), CIEC_INT(11)};
 
-    BOOST_CHECK_EQUAL(intArray[0], CIEC_INT(1));
-    BOOST_CHECK_EQUAL(intArray[1], CIEC_INT(2));
-    BOOST_CHECK_EQUAL(intArray[2], CIEC_INT(3));
-    BOOST_CHECK_EQUAL(intArray[3], CIEC_INT(4));
-    BOOST_CHECK_EQUAL(intArray[4], CIEC_INT(5));
-    BOOST_CHECK_EQUAL(intArray[5], CIEC_INT(6));
-    BOOST_CHECK_EQUAL(intArray[6], CIEC_INT(7));
-    BOOST_CHECK_EQUAL(intArray[7], CIEC_INT(8));
-    BOOST_CHECK_EQUAL(intArray[8], CIEC_INT(9));
-    BOOST_CHECK_EQUAL(intArray[9], CIEC_INT(10));
-    BOOST_CHECK_EQUAL(intArray[10], CIEC_INT(11));
+    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[0]), 1);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[1]), 2);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[2]), 3);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[3]), 4);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[4]), 5);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[5]), 6);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[6]), 7);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[7]), 8);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[8]), 9);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[9]), 10);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[10]), 11);
   }
 
 BOOST_AUTO_TEST_CASE(InitializeNegativeRangesStaticArray) {
@@ -75,17 +75,17 @@ BOOST_AUTO_TEST_CASE(InitializeNegativeRangesStaticArray) {
                                                     CIEC_INT(5), CIEC_INT(6), CIEC_INT(7), CIEC_INT(8),
                                                     CIEC_INT(9), CIEC_INT(10), CIEC_INT(11)};
 
-  BOOST_CHECK_EQUAL(intArray[-10], CIEC_INT(1));
-  BOOST_CHECK_EQUAL(intArray[-9], CIEC_INT(2));
-  BOOST_CHECK_EQUAL(intArray[-8], CIEC_INT(3));
-  BOOST_CHECK_EQUAL(intArray[-7], CIEC_INT(4));
-  BOOST_CHECK_EQUAL(intArray[-6], CIEC_INT(5));
-  BOOST_CHECK_EQUAL(intArray[-5], CIEC_INT(6));
-  BOOST_CHECK_EQUAL(intArray[-4], CIEC_INT(7));
-  BOOST_CHECK_EQUAL(intArray[-3], CIEC_INT(8));
-  BOOST_CHECK_EQUAL(intArray[-2], CIEC_INT(9));
-  BOOST_CHECK_EQUAL(intArray[-1], CIEC_INT(10));
-  BOOST_CHECK_EQUAL(intArray[0], CIEC_INT(11));
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[-10]), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[-9]), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[-8]), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[-7]), 4);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[-6]), 5);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[-5]), 6);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[-4]), 7);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[-3]), 8);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[-2]), 9);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[-1]), 10);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[0]), 11);
 }
 
 BOOST_AUTO_TEST_CASE(WriteElementsStaticArray) {
@@ -103,17 +103,17 @@ BOOST_AUTO_TEST_CASE(WriteElementsStaticArray) {
   intArray[9] = CIEC_INT(10);
   intArray[10] = CIEC_INT(11);
 
-  BOOST_CHECK_EQUAL(intArray[0], CIEC_INT(1));
-  BOOST_CHECK_EQUAL(intArray[1], CIEC_INT(2));
-  BOOST_CHECK_EQUAL(intArray[2], CIEC_INT(3));
-  BOOST_CHECK_EQUAL(intArray[3], CIEC_INT(4));
-  BOOST_CHECK_EQUAL(intArray[4], CIEC_INT(5));
-  BOOST_CHECK_EQUAL(intArray[5], CIEC_INT(6));
-  BOOST_CHECK_EQUAL(intArray[6], CIEC_INT(7));
-  BOOST_CHECK_EQUAL(intArray[7], CIEC_INT(8));
-  BOOST_CHECK_EQUAL(intArray[8], CIEC_INT(9));
-  BOOST_CHECK_EQUAL(intArray[9], CIEC_INT(10));
-  BOOST_CHECK_EQUAL(intArray[10], CIEC_INT(11));
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[0]), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[1]), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[2]), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[3]), 4);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[4]), 5);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[5]), 6);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[6]), 7);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[7]), 8);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[8]), 9);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[9]), 10);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[10]), 11);
 }
 
 BOOST_AUTO_TEST_CASE(StaticToStaticCopyConstructor)
@@ -124,17 +124,17 @@ BOOST_AUTO_TEST_CASE(StaticToStaticCopyConstructor)
 
   CIEC_ARRAY_FIXED<CIEC_INT, 0, 10> intArray(intArraySource);
 
-  BOOST_CHECK_EQUAL(intArray[0], CIEC_INT(1));
-  BOOST_CHECK_EQUAL(intArray[1], CIEC_INT(2));
-  BOOST_CHECK_EQUAL(intArray[2], CIEC_INT(3));
-  BOOST_CHECK_EQUAL(intArray[3], CIEC_INT(4));
-  BOOST_CHECK_EQUAL(intArray[4], CIEC_INT(5));
-  BOOST_CHECK_EQUAL(intArray[5], CIEC_INT(6));
-  BOOST_CHECK_EQUAL(intArray[6], CIEC_INT(7));
-  BOOST_CHECK_EQUAL(intArray[7], CIEC_INT(8));
-  BOOST_CHECK_EQUAL(intArray[8], CIEC_INT(9));
-  BOOST_CHECK_EQUAL(intArray[9], CIEC_INT(10));
-  BOOST_CHECK_EQUAL(intArray[10], CIEC_INT(11));
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[0]), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[1]), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[2]), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[3]), 4);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[4]), 5);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[5]), 6);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[6]), 7);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[7]), 8);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[8]), 9);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[9]), 10);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[10]), 11);
 }
 
 BOOST_AUTO_TEST_CASE(StaticToStaticDifferentTypeSameSizeCopyConstructor)
@@ -145,17 +145,17 @@ BOOST_AUTO_TEST_CASE(StaticToStaticDifferentTypeSameSizeCopyConstructor)
 
   CIEC_ARRAY_FIXED<CIEC_DINT, 0, 10> intArray(intArraySource);
 
-  BOOST_CHECK_EQUAL(intArray[0], CIEC_INT(1));
-  BOOST_CHECK_EQUAL(intArray[1], CIEC_INT(2));
-  BOOST_CHECK_EQUAL(intArray[2], CIEC_INT(3));
-  BOOST_CHECK_EQUAL(intArray[3], CIEC_INT(4));
-  BOOST_CHECK_EQUAL(intArray[4], CIEC_INT(5));
-  BOOST_CHECK_EQUAL(intArray[5], CIEC_INT(6));
-  BOOST_CHECK_EQUAL(intArray[6], CIEC_INT(7));
-  BOOST_CHECK_EQUAL(intArray[7], CIEC_INT(8));
-  BOOST_CHECK_EQUAL(intArray[8], CIEC_INT(9));
-  BOOST_CHECK_EQUAL(intArray[9], CIEC_INT(10));
-  BOOST_CHECK_EQUAL(intArray[10], CIEC_INT(11));
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(intArray[0]), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(intArray[1]), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(intArray[2]), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(intArray[3]), 4);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(intArray[4]), 5);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(intArray[5]), 6);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(intArray[6]), 7);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(intArray[7]), 8);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(intArray[8]), 9);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(intArray[9]), 10);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(intArray[10]), 11);
 }
 
 BOOST_AUTO_TEST_CASE(StaticToStaticDifferentTypeDifferentSizeWindowCopyConstructor)
@@ -166,9 +166,9 @@ BOOST_AUTO_TEST_CASE(StaticToStaticDifferentTypeDifferentSizeWindowCopyConstruct
 
   CIEC_ARRAY_FIXED<CIEC_DINT, 3, 5> intArray(intArraySource);
 
-  BOOST_CHECK_EQUAL(intArray[3], CIEC_INT(4));
-  BOOST_CHECK_EQUAL(intArray[4], CIEC_INT(5));
-  BOOST_CHECK_EQUAL(intArray[5], CIEC_INT(6));
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(intArray[3]), 4);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(intArray[4]), 5);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(intArray[5]), 6);
 }
 
 BOOST_AUTO_TEST_CASE(StaticToStaticDifferentTypeMovedSizeWindowCopyConstructor)
@@ -179,16 +179,16 @@ BOOST_AUTO_TEST_CASE(StaticToStaticDifferentTypeMovedSizeWindowCopyConstructor)
 
   CIEC_ARRAY_FIXED<CIEC_DINT, 3, 12> dintArray(intArraySource);
 
-  BOOST_CHECK_EQUAL(dintArray[3], CIEC_INT(4));
-  BOOST_CHECK_EQUAL(dintArray[4], CIEC_INT(5));
-  BOOST_CHECK_EQUAL(dintArray[5], CIEC_INT(6));
-  BOOST_CHECK_EQUAL(dintArray[6], CIEC_INT(7));
-  BOOST_CHECK_EQUAL(dintArray[7], CIEC_INT(8));
-  BOOST_CHECK_EQUAL(dintArray[8], CIEC_INT(9));
-  BOOST_CHECK_EQUAL(dintArray[9], CIEC_INT(10));
-  BOOST_CHECK_EQUAL(dintArray[10], CIEC_INT(11));
-  BOOST_CHECK_EQUAL(dintArray[11], CIEC_DINT(0));
-  BOOST_CHECK_EQUAL(dintArray[12], CIEC_DINT(0));
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(dintArray[3]), 4);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(dintArray[4]), 5);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(dintArray[5]), 6);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(dintArray[6]), 7);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(dintArray[7]), 8);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(dintArray[8]), 9);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(dintArray[9]), 10);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(dintArray[10]), 11);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(dintArray[11]), 0);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(dintArray[12]), 0);
 }
 
 /* Variable length tests */
@@ -231,17 +231,17 @@ BOOST_AUTO_TEST_CASE(CopyFromStaticToVariableArray) {
 
   CIEC_ARRAY_VARIABLE<CIEC_INT> intArray(intArraySource);
 
-  BOOST_CHECK_EQUAL(intArray[0], CIEC_INT(1));
-  BOOST_CHECK_EQUAL(intArray[1], CIEC_INT(2));
-  BOOST_CHECK_EQUAL(intArray[2], CIEC_INT(3));
-  BOOST_CHECK_EQUAL(intArray[3], CIEC_INT(4));
-  BOOST_CHECK_EQUAL(intArray[4], CIEC_INT(5));
-  BOOST_CHECK_EQUAL(intArray[5], CIEC_INT(6));
-  BOOST_CHECK_EQUAL(intArray[6], CIEC_INT(7));
-  BOOST_CHECK_EQUAL(intArray[7], CIEC_INT(8));
-  BOOST_CHECK_EQUAL(intArray[8], CIEC_INT(9));
-  BOOST_CHECK_EQUAL(intArray[9], CIEC_INT(10));
-  BOOST_CHECK_EQUAL(intArray[10], CIEC_INT(11));
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[0]), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[1]), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[2]), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[3]), 4);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[4]), 5);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[5]), 6);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[6]), 7);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[7]), 8);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[8]), 9);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[9]), 10);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[10]), 11);
 }
 
 BOOST_AUTO_TEST_CASE(CopyFromVariableToStaticArray)
@@ -265,11 +265,11 @@ BOOST_AUTO_TEST_CASE(CopyFromPlainOldToStaticArray) {
   static_cast<CIEC_INT &>(arraySource[4]) = CIEC_INT(256);
 
   CIEC_ARRAY_FIXED<CIEC_INT, 0, 4> arrayDestination(arraySource);
-  BOOST_CHECK_EQUAL(arrayDestination[0], 1);
-  BOOST_CHECK_EQUAL(arrayDestination[1], -32259);
-  BOOST_CHECK_EQUAL(arrayDestination[2], 256);
-  BOOST_CHECK_EQUAL(arrayDestination[3], -32259);
-  BOOST_CHECK_EQUAL(arrayDestination[4], 256);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(arrayDestination[0]), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(arrayDestination[1]), -32259);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(arrayDestination[2]), 256);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(arrayDestination[3]), -32259);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(arrayDestination[4]), 256);
 }
 
 BOOST_AUTO_TEST_CASE(CopyFromPlainOldToVariableArray)
@@ -283,11 +283,11 @@ BOOST_AUTO_TEST_CASE(CopyFromPlainOldToVariableArray)
   static_cast<CIEC_INT &>(arraySource[4]) = CIEC_INT(256);
 
   CIEC_ARRAY_VARIABLE<CIEC_INT> arrayDestination(arraySource);
-  BOOST_CHECK_EQUAL(arrayDestination[0], 1);
-  BOOST_CHECK_EQUAL(arrayDestination[1], -32259);
-  BOOST_CHECK_EQUAL(arrayDestination[2], 256);
-  BOOST_CHECK_EQUAL(arrayDestination[3], -32259);
-  BOOST_CHECK_EQUAL(arrayDestination[4], 256);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(arrayDestination[0]), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(arrayDestination[1]), -32259);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(arrayDestination[2]), 256);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(arrayDestination[3]), -32259);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(arrayDestination[4]), 256);
 }
 
 BOOST_AUTO_TEST_CASE(CopyFromVariableToPlainOldArray)
@@ -300,11 +300,11 @@ BOOST_AUTO_TEST_CASE(CopyFromVariableToPlainOldArray)
   (arraySource[4]) = CIEC_INT(256);
 
   CIEC_ARRAY<CIEC_INT> arrayDestination(arraySource);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(arrayDestination[0]), 1);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(arrayDestination[1]), -32259);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(arrayDestination[2]), 256);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(arrayDestination[3]), -32259);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(arrayDestination[4]), 256);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(arrayDestination[0])), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(arrayDestination[1])), -32259);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(arrayDestination[2])), 256);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(arrayDestination[3])), -32259);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(arrayDestination[4])), 256);
 }
 
 BOOST_AUTO_TEST_SUITE_END() // CIEC_ARRAY_TEMPLATE_function_test

@@ -89,9 +89,9 @@ class ST_FOR_ITER {
     bool isExpired() const {
       const typename B::TValueType byValue = static_cast<typename B::TValueType>(mBy);
       if(byValue > 0) {
-        return mInternalCounter > mTo ? true : false;
+        return static_cast<typename E::TValueType>(mInternalCounter) > static_cast<typename E::TValueType>(mTo) ? true : false;
       }
-      return mInternalCounter < mTo ? true : false;
+      return static_cast<typename E::TValueType>(mInternalCounter) < static_cast<typename E::TValueType>(mTo) ? true : false;
     }
 
     E &mCounter;

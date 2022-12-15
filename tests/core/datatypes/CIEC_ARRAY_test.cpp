@@ -126,11 +126,11 @@ BOOST_AUTO_TEST_CASE(Array_assignment_test_INT)
   static_cast<CIEC_INT &>(nTest[3]) = CIEC_INT(-32259);
   static_cast<CIEC_INT &>(nTest[4]) = CIEC_INT(256);
 
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[0]), 1);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[1]), -32259);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[2]), 256);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[3]), -32259);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[4]), 256);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[0])), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[1])), -32259);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[2])), 256);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[3])), -32259);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[4])), 256);
   BOOST_CHECK_EQUAL(nTest.getToStringBufferSize(), sizeof("[+32767,+32767,+32767,+32767,+32767]")); //use max length of INT
 }
 
@@ -140,55 +140,55 @@ BOOST_AUTO_TEST_CASE(Array_assignment_test_array)
   char acBuffer[30];
 
   BOOST_CHECK_EQUAL(nTest.fromString("[1,2,3,4,5]"), 11);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[0]), 1);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[1]), 2);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[2]), 3);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[3]), 4);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[4]), 5);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[0])), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[1])), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[2])), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[3])), 4);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[4])), 5);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 2), -1);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 30), 11);
   BOOST_CHECK_EQUAL(strcmp(acBuffer, "[1,2,3,4,5]"), 0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("[1, 2,3 , 4 ,5]"), 15);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[0]), 1);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[1]), 2);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[2]), 3);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[3]), 4);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[4]), 5);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[0])), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[1])), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[2])), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[3])), 4);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[4])), 5);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 2), -1);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 30), 11);
   BOOST_CHECK_EQUAL(strcmp(acBuffer, "[1,2,3,4,5]"), 0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("[  1,    2,3    , 4,5  ]"), 24);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[0]), 1);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[1]), 2);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[2]), 3);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[3]), 4);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[4]), 5);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[0])), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[1])), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[2])), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[3])), 4);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[4])), 5);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 2), -1);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 30), 11);
   BOOST_CHECK_EQUAL(strcmp(acBuffer, "[1,2,3,4,5]"), 0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("[3,1,2]"), 7);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[0]), 3);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[1]), 1);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[2]), 2);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[3]), 0);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[4]), 0);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[0])), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[1])), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[2])), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[3])), 0);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[4])), 0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("[3,1,2,4]"), 9);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[0]), 3);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[1]), 1);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[2]), 2);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[3]), 4);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[4]), 0);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[0])), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[1])), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[2])), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[3])), 4);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[4])), 0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("[3,1,2,4,7,8]"), 13);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[0]), 3);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[1]), 1);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[2]), 2);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[3]), 4);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest[4]), 7);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[0])), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[1])), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[2])), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[3])), 4);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[4])), 7);
 
   BOOST_CHECK_EQUAL(nTest.fromString("[3,1,2"), -1);
   BOOST_CHECK_EQUAL(nTest.fromString("10,20,30,40,50"), -1);
@@ -228,26 +228,26 @@ BOOST_AUTO_TEST_CASE(Array_copy_test){
 //  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(*nTest1[4]), 1);
 
   nTest1.setValue(nTest2);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest1[0]), 1);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest1[1]), 2);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest1[2]), 3);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest1[3]), 4);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest1[4]), 5);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest1[0])), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest1[1])), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest1[2])), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest1[3])), 4);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest1[4])), 5);
 
   BOOST_CHECK_EQUAL(nTest2.fromString("[5,4,2,3,1]"), 11);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest1[0]), 1);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest1[1]), 2);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest1[2]), 3);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest1[3]), 4);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest1[4]), 5);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest1[0])), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest1[1])), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest1[2])), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest1[3])), 4);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest1[4])), 5);
 
   CIEC_INT intTest(5);
   nTest1.setValue(intTest); //try to assign non-array. Shouldn't change or break anything
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest1[0]), 1);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest1[1]), 2);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest1[2]), 3);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest1[3]), 4);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest1[4]), 5);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest1[0])), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest1[1])), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest1[2])), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest1[3])), 4);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest1[4])), 5);
 }
 
 
@@ -273,11 +273,11 @@ BOOST_AUTO_TEST_CASE(Configure_test){
   static_cast<CIEC_INT &>((*pTest)[4]) = CIEC_INT(-32259);
   static_cast<CIEC_INT &>((*pTest)[7]) = CIEC_INT(256);
 
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>((*pTest)[0]), 1);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>((*pTest)[1]), -32259);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>((*pTest)[2]), 256);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>((*pTest)[4]), -32259);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>((*pTest)[7]), 256);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>((*pTest)[0])), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>((*pTest)[1])), -32259);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>((*pTest)[2])), 256);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>((*pTest)[4])), -32259);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>((*pTest)[7])), 256);
 
   pTest->setup(15, g_nStringIdSTRING);
   BOOST_CHECK_EQUAL(pTest->size(), 15);
@@ -577,9 +577,8 @@ BOOST_AUTO_TEST_CASE(Array_fromString_WStringArrayTest)
     nTest1.setValue(paEmptyArray); //shouldn't change or break anything
 
     BOOST_CHECK_EQUAL(nTest1.size(), 1);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_INT &>(nTest1[0]), 2);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest1[0])), 2);
     BOOST_CHECK_EQUAL(nTest1.getElementDataTypeID(), CIEC_ANY::e_INT);
-
   }
 
 BOOST_AUTO_TEST_CASE(Array_emptyArray)
@@ -595,7 +594,7 @@ void checkArrayOfStructTest_InitialValues(CIEC_ArrayOfStructTest &paStruct) {
   BOOST_CHECK_EQUAL(0, paStruct.val11().length());
   BOOST_CHECK_EQUAL(0, paStruct.val12().length());
   BOOST_CHECK_EQUAL(false, paStruct.val2());
-  BOOST_CHECK_EQUAL(0, paStruct.val31());
+  BOOST_CHECK_EQUAL(0, static_cast<CIEC_INT::TValueType>(paStruct.val31()));
 }
 
 void setDataArrayOfStructTest(CIEC_ArrayOfStructTest &paStruct, const char* paVal11, const char* paVal12, bool paVal2, int paVal31) {
@@ -613,7 +612,7 @@ void checkArrayOfStructTest_TestDataSet1(CIEC_ArrayOfStructTest &paStruct) {
   BOOST_CHECK_EQUAL(strcmp(paStruct.val11().getValue(), cTestStringData), 0);
   BOOST_CHECK_EQUAL(strcmp(paStruct.val12().getValue(), cTestStringData2), 0);
   BOOST_CHECK_EQUAL(1, paStruct.val2());
-  BOOST_CHECK_EQUAL(24534, paStruct.val31());
+  BOOST_CHECK_EQUAL(24534, static_cast<CIEC_INT::TValueType>(paStruct.val31()));
 }
 
 BOOST_AUTO_TEST_CASE(Array_arrayOfStructs)

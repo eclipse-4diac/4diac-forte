@@ -29,35 +29,35 @@ BOOST_AUTO_TEST_CASE(ToUsint_test) {
   CIEC_CHAR source('a');
   CIEC_USINT result;
   result = func_CHAR_TO_USINT(source);
-  BOOST_CHECK_EQUAL(result, 97);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_USINT::TValueType>(result), 97);
 }
 
 BOOST_AUTO_TEST_CASE(ToByte_test) {
   CIEC_CHAR source('a');
   CIEC_BYTE result;
   result = func_CHAR_TO_BYTE(source);
-  BOOST_CHECK_EQUAL(result, 97);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_BYTE::TValueType>(result), 97);
 }
 
 BOOST_AUTO_TEST_CASE(ToWord_test) {
   CIEC_CHAR source('a');
   CIEC_WORD result;
   result = func_CHAR_TO_WORD(source);
-  BOOST_CHECK_EQUAL(result, 97);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_WORD::TValueType>(result), 97);
 }
 
 BOOST_AUTO_TEST_CASE(ToDWord_test) {
   CIEC_CHAR source('a');
   CIEC_DWORD result;
   result = func_CHAR_TO_DWORD(source);
-  BOOST_CHECK_EQUAL(result, 97);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DWORD::TValueType>(result), 97);
 }
 
 BOOST_AUTO_TEST_CASE(ToLWord_test) {
   CIEC_CHAR source('a');
   CIEC_LWORD result;
   result = func_CHAR_TO_LWORD(source);
-  BOOST_CHECK_EQUAL(result, 97);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_LWORD::TValueType>(result), 97);
 }
 
 BOOST_AUTO_TEST_CASE(ToWChar_test) {

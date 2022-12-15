@@ -18,6 +18,7 @@
 #ifndef _FORTE_INT_H_
 #define _FORTE_INT_H_
 
+#include "iec61131_cast_helper.h"
 #include "forte_any_int.h"
 #include "forte_sint.h"
 #include "forte_usint.h"
@@ -51,6 +52,11 @@ class CIEC_INT : public CIEC_ANY_INT{
       setValueSimple(paValue);
     }
 
+    explicit CIEC_INT(const CIEC_ANY_INT& paValue) :
+        CIEC_ANY_INT() {
+      setValueSimple(paValue);
+    }
+
     explicit CIEC_INT(TForteInt16 paValue){
       setTINT16(paValue);
     }
@@ -63,27 +69,21 @@ class CIEC_INT : public CIEC_ANY_INT{
       return *this;
     }
 
-    CIEC_INT& operator =(const CIEC_SINT &paValue){
-      // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
-      return *this;
-    }
-
-    CIEC_INT& operator =(const CIEC_USINT &paValue){
-      // Simple value assignment - no self assignment check needed
+    template <typename T, std::enable_if_t<std::is_same_v<typename forte::core::mpl::implicit_cast_t<T, CIEC_INT>, CIEC_INT>, int> = 0>
+    CIEC_INT &operator=(const T &paValue) {
       setValueSimple(paValue);
       return *this;
     }
 
     CIEC_INT operator-() const {
-      return CIEC_INT(static_cast<TForteInt16>(-1 * *this));
+      return CIEC_INT(static_cast<CIEC_INT::TValueType>(-1 * static_cast<CIEC_INT::TValueType>(*this)));
     }
 
     /*! \brief Converts CIEC_INT to elementary 16 bit integer
      *
      *   Conversion operator for converting CIEC_INT to elementary 16 bit integer
      */
-    operator TForteInt16() const {
+    explicit operator TForteInt16() const {
       return getTINT16();
     }
 

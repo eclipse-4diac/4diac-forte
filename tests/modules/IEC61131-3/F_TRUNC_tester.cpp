@@ -17,10 +17,9 @@
 #include "F_TRUNC_tester_gen.cpp"
 #endif
 
-struct F_TRUNC_TestFixture : public CFBTestFixtureBase{
+struct F_TRUNC_TestFixture : public CFBTestFixtureBase {
 
-  F_TRUNC_TestFixture() : CFBTestFixtureBase(g_nStringIdF_TRUNC)
-  {
+  F_TRUNC_TestFixture() : CFBTestFixtureBase(g_nStringIdF_TRUNC) {
     setInputData({&mIn_TRUNC});
     setOutputData({&mOut_TRUNC});
     CFBTestFixtureBase::setup();
@@ -38,7 +37,7 @@ BOOST_FIXTURE_TEST_SUITE( F_TRUNC_Tests, F_TRUNC_TestFixture)
     /* trigger the inputevent */
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-    BOOST_CHECK_EQUAL(30, mOut_TRUNC);
+    BOOST_CHECK_EQUAL(30, static_cast<CIEC_INT::TValueType>(mOut_TRUNC));
   }
 
 BOOST_AUTO_TEST_SUITE_END()

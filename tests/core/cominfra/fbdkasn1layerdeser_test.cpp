@@ -380,19 +380,19 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     CIEC_USINT &nVal(*static_cast<CIEC_USINT *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abUSInt0, cg_unUSIntSerSize));
-    BOOST_CHECK_EQUAL(0, nVal);
+    BOOST_CHECK_EQUAL(0, static_cast<CIEC_USINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(0, *((CIEC_ANY::TLargestUIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abUSInt12, cg_unUSIntSerSize));
-    BOOST_CHECK_EQUAL(12, nVal);
+    BOOST_CHECK_EQUAL(12, static_cast<CIEC_USINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(12, *((CIEC_ANY::TLargestUIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abUSInt128, cg_unUSIntSerSize));
-    BOOST_CHECK_EQUAL(128, nVal);
+    BOOST_CHECK_EQUAL(128, static_cast<CIEC_USINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(128, *((CIEC_ANY::TLargestUIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abUSInt255, cg_unUSIntSerSize));
-    BOOST_CHECK_EQUAL(255, nVal);
+    BOOST_CHECK_EQUAL(255, static_cast<CIEC_USINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(255, *((CIEC_ANY::TLargestUIntValueType * ) nVal.getDataPtr()));
   }
 
@@ -430,23 +430,23 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     CIEC_UINT &nVal(*static_cast<CIEC_UINT *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abUInt0, cg_unUIntSerSize));
-    BOOST_CHECK_EQUAL(0, nVal);
+    BOOST_CHECK_EQUAL(0, static_cast<CIEC_UINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(0, *((CIEC_ANY::TLargestUIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abUInt255, cg_unUIntSerSize));
-    BOOST_CHECK_EQUAL(255, nVal);
+    BOOST_CHECK_EQUAL(255, static_cast<CIEC_UINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(255, *((CIEC_ANY::TLargestUIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abUInt256, cg_unUIntSerSize));
-    BOOST_CHECK_EQUAL(256, nVal);
+    BOOST_CHECK_EQUAL(256, static_cast<CIEC_UINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(256, *((CIEC_ANY::TLargestUIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abUInt65535, cg_unUIntSerSize));
-    BOOST_CHECK_EQUAL(65535, nVal);
+    BOOST_CHECK_EQUAL(65535, static_cast<CIEC_UINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(65535, *((CIEC_ANY::TLargestUIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abUInt40396, cg_unUIntSerSize));
-    BOOST_CHECK_EQUAL(40396, nVal);
+    BOOST_CHECK_EQUAL(40396, static_cast<CIEC_UINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(40396, *((CIEC_ANY::TLargestUIntValueType * ) nVal.getDataPtr()));
   }
 
@@ -484,31 +484,31 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     CIEC_UDINT &nVal(*static_cast<CIEC_UDINT *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abUDInt0, cg_unUDIntSerSize));
-    BOOST_CHECK_EQUAL(0, nVal);
+    BOOST_CHECK_EQUAL(0, static_cast<CIEC_UDINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(0, *((CIEC_ANY::TLargestUIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abUDInt255, cg_unUDIntSerSize));
-    BOOST_CHECK_EQUAL(255, nVal);
+    BOOST_CHECK_EQUAL(255, static_cast<CIEC_UDINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(255, *((CIEC_ANY::TLargestUIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abUDInt256, cg_unUDIntSerSize));
-    BOOST_CHECK_EQUAL(256, nVal);
+    BOOST_CHECK_EQUAL(256, static_cast<CIEC_UDINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(256, *((CIEC_ANY::TLargestUIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abUDInt65535, cg_unUDIntSerSize));
-    BOOST_CHECK_EQUAL(65535, nVal);
+    BOOST_CHECK_EQUAL(65535, static_cast<CIEC_UDINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(65535, *((CIEC_ANY::TLargestUIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abUDInt65536, cg_unUDIntSerSize));
-    BOOST_CHECK_EQUAL(65536, nVal);
+    BOOST_CHECK_EQUAL(65536, static_cast<CIEC_UDINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(65536, *((CIEC_ANY::TLargestUIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abUDInt4294967295, cg_unUDIntSerSize));
-    BOOST_CHECK_EQUAL(4294967295UL, nVal);
+    BOOST_CHECK_EQUAL(4294967295UL, static_cast<CIEC_UDINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(4294967295UL, *((CIEC_ANY::TLargestUIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abUDInt690586453, cg_unUDIntSerSize));
-    BOOST_CHECK_EQUAL(690586453, nVal);
+    BOOST_CHECK_EQUAL(690586453, static_cast<CIEC_UDINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(690586453, *((CIEC_ANY::TLargestUIntValueType * ) nVal.getDataPtr()));
   }
 
@@ -546,31 +546,31 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     CIEC_ULINT &nVal(*static_cast<CIEC_ULINT *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abULInt0, cg_unULIntSerSize));
-    BOOST_CHECK_EQUAL(0, nVal);
+    BOOST_CHECK_EQUAL(0U, static_cast<CIEC_ULINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abULInt255, cg_unULIntSerSize));
-    BOOST_CHECK_EQUAL(255, nVal);
+    BOOST_CHECK_EQUAL(255U, static_cast<CIEC_ULINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abULInt256, cg_unULIntSerSize));
-    BOOST_CHECK_EQUAL(256, nVal);
+    BOOST_CHECK_EQUAL(256U, static_cast<CIEC_ULINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abULInt65535, cg_unULIntSerSize));
-    BOOST_CHECK_EQUAL(65535, nVal);
+    BOOST_CHECK_EQUAL(65535U, static_cast<CIEC_ULINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abULInt65536, cg_unULIntSerSize));
-    BOOST_CHECK_EQUAL(65536, nVal);
+    BOOST_CHECK_EQUAL(65536U, static_cast<CIEC_ULINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abULInt4294967295, cg_unULIntSerSize));
-    BOOST_CHECK_EQUAL(4294967295ULL, nVal);
+    BOOST_CHECK_EQUAL(4294967295ULL, static_cast<CIEC_ULINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abULInt4294967296, cg_unULIntSerSize));
-    BOOST_CHECK_EQUAL(4294967296ULL, nVal);
+    BOOST_CHECK_EQUAL(4294967296ULL, static_cast<CIEC_ULINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abULInt18446744073709551615, cg_unULIntSerSize));
-    BOOST_CHECK_EQUAL(18446744073709551615ULL, nVal);
+    BOOST_CHECK_EQUAL(18446744073709551615ULL, static_cast<CIEC_ULINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abULInt3544923647067170873, cg_unULIntSerSize));
-    BOOST_CHECK_EQUAL(3544923647067170873ULL, nVal);
+    BOOST_CHECK_EQUAL(3544923647067170873ULL, static_cast<CIEC_ULINT::TValueType>(nVal));
   }
 
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_ULINT){
@@ -607,23 +607,23 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     CIEC_SINT &nVal(*static_cast<CIEC_SINT *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abSInt0, cg_unSIntSerSize));
-    BOOST_CHECK_EQUAL(0, nVal);
+    BOOST_CHECK_EQUAL(0, static_cast<CIEC_SINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(0, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abSIntm128, cg_unSIntSerSize));
-    BOOST_CHECK_EQUAL(-128, nVal);
+    BOOST_CHECK_EQUAL(-128, static_cast<CIEC_SINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(-128, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abSInt127, cg_unSIntSerSize));
-    BOOST_CHECK_EQUAL(127, nVal);
+    BOOST_CHECK_EQUAL(127, static_cast<CIEC_SINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(127, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abSIntm90, cg_unSIntSerSize));
-    BOOST_CHECK_EQUAL(-90, nVal);
+    BOOST_CHECK_EQUAL(-90, static_cast<CIEC_SINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(-90, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abSInt90, cg_unSIntSerSize));
-    BOOST_CHECK_EQUAL(90, nVal);
+    BOOST_CHECK_EQUAL(90, static_cast<CIEC_SINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(90, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
   }
 
@@ -661,39 +661,39 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     CIEC_INT &nVal(*static_cast<CIEC_INT *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abInt0, cg_unIntSerSize));
-    BOOST_CHECK_EQUAL(0, nVal);
+    BOOST_CHECK_EQUAL(0, static_cast<CIEC_INT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(0, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abIntm128, cg_unIntSerSize));
-    BOOST_CHECK_EQUAL(-128, nVal);
+    BOOST_CHECK_EQUAL(-128, static_cast<CIEC_INT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(-128, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abIntm129, cg_unIntSerSize));
-    BOOST_CHECK_EQUAL(-129, nVal);
+    BOOST_CHECK_EQUAL(-129, static_cast<CIEC_INT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(-129, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abInt127, cg_unIntSerSize));
-    BOOST_CHECK_EQUAL(127, nVal);
+    BOOST_CHECK_EQUAL(127, static_cast<CIEC_INT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(127, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abInt128, cg_unIntSerSize));
-    BOOST_CHECK_EQUAL(128, nVal);
+    BOOST_CHECK_EQUAL(128, static_cast<CIEC_INT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(128, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abIntm32768, cg_unIntSerSize));
-    BOOST_CHECK_EQUAL(-32768, nVal);
+    BOOST_CHECK_EQUAL(-32768, static_cast<CIEC_INT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(-32768, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abInt32767, cg_unIntSerSize));
-    BOOST_CHECK_EQUAL(32767, nVal);
+    BOOST_CHECK_EQUAL(32767, static_cast<CIEC_INT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(32767, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abIntm10934, cg_unIntSerSize));
-    BOOST_CHECK_EQUAL(-10934, nVal);
+    BOOST_CHECK_EQUAL(-10934, static_cast<CIEC_INT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(-10934, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abInt10934, cg_unIntSerSize));
-    BOOST_CHECK_EQUAL(10934, nVal);
+    BOOST_CHECK_EQUAL(10934, static_cast<CIEC_INT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(10934, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
   }
 
@@ -731,57 +731,57 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     CIEC_DINT &nVal(*static_cast<CIEC_DINT *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abDInt0, cg_unDIntSerSize));
-    BOOST_CHECK_EQUAL(0, nVal);
+    BOOST_CHECK_EQUAL(0, static_cast<CIEC_DINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(0, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abDIntm128, cg_unDIntSerSize));
     BOOST_CHECK_EQUAL(static_cast<TForteInt32>(-128), nVal.operator TForteInt32());
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abDIntm129, cg_unDIntSerSize));
-    BOOST_CHECK_EQUAL(-129, nVal);
+    BOOST_CHECK_EQUAL(-129, static_cast<CIEC_DINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(-129, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abDInt127, cg_unDIntSerSize));
-    BOOST_CHECK_EQUAL(127, nVal);
+    BOOST_CHECK_EQUAL(127, static_cast<CIEC_DINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(127, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abDInt128, cg_unDIntSerSize));
-    BOOST_CHECK_EQUAL(128, nVal);
+    BOOST_CHECK_EQUAL(128, static_cast<CIEC_DINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(128, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abDIntm32768, cg_unDIntSerSize));
-    BOOST_CHECK_EQUAL(-32768, nVal);
+    BOOST_CHECK_EQUAL(-32768, static_cast<CIEC_DINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(-32768, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abDIntm32769, cg_unDIntSerSize));
-    BOOST_CHECK_EQUAL(-32769, nVal);
+    BOOST_CHECK_EQUAL(-32769, static_cast<CIEC_DINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(-32769, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abDInt32767, cg_unDIntSerSize));
-    BOOST_CHECK_EQUAL(32767, nVal);
+    BOOST_CHECK_EQUAL(32767, static_cast<CIEC_DINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(32767, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abDInt32768, cg_unDIntSerSize));
-    BOOST_CHECK_EQUAL(32768, nVal);
+    BOOST_CHECK_EQUAL(32768, static_cast<CIEC_DINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(32768, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abDIntm2147483648, cg_unDIntSerSize));
-    BOOST_CHECK_EQUAL(-2147483648L, nVal);
+    BOOST_CHECK_EQUAL(-2147483648L, static_cast<CIEC_DINT::TValueType>(nVal));
 
     //the test didn't work correctly when not using this helper var
     TForteInt32 buf = -2147483648L;
     BOOST_CHECK_EQUAL(buf, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abDInt2147483647, cg_unDIntSerSize));
-    BOOST_CHECK_EQUAL(2147483647L, nVal);
+    BOOST_CHECK_EQUAL(2147483647L, static_cast<CIEC_DINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(2147483647L, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abDIntm800058586, cg_unDIntSerSize));
-    BOOST_CHECK_EQUAL(-800058586L, nVal);
+    BOOST_CHECK_EQUAL(-800058586L, static_cast<CIEC_DINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(-800058586L, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abDInt800058586, cg_unDIntSerSize));
-    BOOST_CHECK_EQUAL(800058586L, nVal);
+    BOOST_CHECK_EQUAL(800058586L, static_cast<CIEC_DINT::TValueType>(nVal));
     BOOST_CHECK_EQUAL(800058586L, *((CIEC_ANY::TLargestIntValueType * ) nVal.getDataPtr()));
   }
 
@@ -819,59 +819,59 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     CIEC_LINT &nVal(*static_cast<CIEC_LINT *>(nTestFB.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLInt0, cg_unLIntSerSize));
-    BOOST_CHECK_EQUAL(0, nVal);
+    BOOST_CHECK_EQUAL(0, static_cast<CIEC_LINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLIntm128, cg_unLIntSerSize));
-    BOOST_CHECK_EQUAL(-128, nVal);
+    BOOST_CHECK_EQUAL(-128, static_cast<CIEC_LINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLIntm129, cg_unLIntSerSize));
-    BOOST_CHECK_EQUAL(-129, nVal);
+    BOOST_CHECK_EQUAL(-129, static_cast<CIEC_LINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLInt127, cg_unLIntSerSize));
-    BOOST_CHECK_EQUAL(127, nVal);
+    BOOST_CHECK_EQUAL(127, static_cast<CIEC_LINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLInt128, cg_unLIntSerSize));
-    BOOST_CHECK_EQUAL(128, nVal);
+    BOOST_CHECK_EQUAL(128, static_cast<CIEC_LINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLIntm32768, cg_unLIntSerSize));
-    BOOST_CHECK_EQUAL(-32768, nVal);
+    BOOST_CHECK_EQUAL(-32768, static_cast<CIEC_LINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLIntm32769, cg_unLIntSerSize));
-    BOOST_CHECK_EQUAL(-32769, nVal);
+    BOOST_CHECK_EQUAL(-32769, static_cast<CIEC_LINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLInt32767, cg_unLIntSerSize));
-    BOOST_CHECK_EQUAL(32767, nVal);
+    BOOST_CHECK_EQUAL(32767, static_cast<CIEC_LINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLInt32768, cg_unLIntSerSize));
-    BOOST_CHECK_EQUAL(32768, nVal);
+    BOOST_CHECK_EQUAL(32768, static_cast<CIEC_LINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLIntm2147483648, cg_unLIntSerSize));
-    BOOST_CHECK_EQUAL(-2147483648LL, nVal);
+    BOOST_CHECK_EQUAL(-2147483648LL, static_cast<CIEC_LINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLIntm2147483649, cg_unLIntSerSize));
-    BOOST_CHECK_EQUAL(-2147483649LL, nVal);
+    BOOST_CHECK_EQUAL(-2147483649LL, static_cast<CIEC_LINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLInt2147483647, cg_unLIntSerSize));
-    BOOST_CHECK_EQUAL(2147483647LL, nVal);
+    BOOST_CHECK_EQUAL(2147483647LL, static_cast<CIEC_LINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLInt2147483648, cg_unLIntSerSize));
-    BOOST_CHECK_EQUAL(2147483648LL, nVal);
+    BOOST_CHECK_EQUAL(2147483648LL, static_cast<CIEC_LINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLIntm9223372036854775808, cg_unLIntSerSize));
 #ifndef __INT64_C
-    BOOST_CHECK_EQUAL((-9223372036854775807LL - 1), nVal);
+    BOOST_CHECK_EQUAL((-9223372036854775807LL - 1), static_cast<CIEC_LINT::TValueType>(nVal));
 #else
-    BOOST_CHECK_EQUAL(__INT64_C(-9223372036854775807LL - 1), nVal);
+    BOOST_CHECK_EQUAL(__INT64_C(-9223372036854775807LL - 1), static_cast<CIEC_LINT::TValueType>(nVal));
 #endif
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLInt9223372036854775807, cg_unLIntSerSize));
-    BOOST_CHECK_EQUAL(9223372036854775807LL, nVal);
+    BOOST_CHECK_EQUAL(9223372036854775807LL, static_cast<CIEC_LINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLIntm800058586, cg_unLIntSerSize));
-    BOOST_CHECK_EQUAL(-800058586LL, nVal);
+    BOOST_CHECK_EQUAL(-800058586LL, static_cast<CIEC_LINT::TValueType>(nVal));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abLInt800058586, cg_unLIntSerSize));
-    BOOST_CHECK_EQUAL(800058586LL, nVal);
+    BOOST_CHECK_EQUAL(800058586LL, static_cast<CIEC_LINT::TValueType>(nVal));
   }
 
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_LINT){
@@ -1154,7 +1154,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK_EQUAL(strcmp(acStrBuf, "T#3000ms"), 0);
     BOOST_CHECK_EQUAL(oWordVal, 40396);
     BOOST_CHECK_EQUAL(strcmp(oStringVal.getValue(), "HalloWorld"), 0);
-    BOOST_CHECK_EQUAL(oIntVal, -10934);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(oIntVal), -10934);
     BOOST_CHECK_EQUAL(oBoolVal, true);
     oTimeVal2.toString(acStrBuf, 20);
     BOOST_CHECK_EQUAL(strcmp(acStrBuf, "T#3022ms"), 0);
@@ -1210,16 +1210,16 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     CIEC_ARRAY<> &nSIntArray(*static_cast<CIEC_ARRAY<> *>(nTestFB4.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTesteeSInt.recvData(cg_abArraySINTm128_127_0_m90, cg_unSINT4SerSize));
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray[0]), -128);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray[1]), 127);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray[2]), 0);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray[3]), -90);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(static_cast<CIEC_SINT &>(nSIntArray[0])), -128);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(static_cast<CIEC_SINT &>(nSIntArray[1])), 127);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(static_cast<CIEC_SINT &>(nSIntArray[2])), 0);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(static_cast<CIEC_SINT &>(nSIntArray[3])), -90);
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTesteeSInt.recvData(cg_abArraySINTm90_90_127_0, cg_unSINT4SerSize));
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray[0]), -90);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray[1]), 90);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray[2]), 127);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray[3]), 0);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(static_cast<CIEC_SINT &>(nSIntArray[0])), -90);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(static_cast<CIEC_SINT &>(nSIntArray[1])), 90);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(static_cast<CIEC_SINT &>(nSIntArray[2])), 127);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(static_cast<CIEC_SINT &>(nSIntArray[3])), 0);
 
     CStringDictionary::TStringId anTypeSIntArray7[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdARRAY, 7, g_nStringIdSINT };
     CDeserTestMockCommFB nTestFBSIntArray7(1, anTypeSIntArray7);
@@ -1227,13 +1227,13 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     CIEC_ARRAY<> &nSIntArray7(*static_cast<CIEC_ARRAY<> *>(nTestFBSIntArray7.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTesteeSInt7.recvData(cg_abArraySINTm128_127_0_m90, cg_unSINT4SerSize));
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray7[0]), -128);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray7[1]), 127);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray7[2]), 0);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray7[3]), -90);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray7[4]), 0);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray7[5]), 0);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray7[6]), 0);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(static_cast<CIEC_SINT &>(nSIntArray7[0])), -128);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(static_cast<CIEC_SINT &>(nSIntArray7[1])), 127);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(static_cast<CIEC_SINT &>(nSIntArray7[2])), 0);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(static_cast<CIEC_SINT &>(nSIntArray7[3])), -90);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(static_cast<CIEC_SINT &>(nSIntArray7[4])), 0);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(static_cast<CIEC_SINT &>(nSIntArray7[5])), 0);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(static_cast<CIEC_SINT &>(nSIntArray7[6])), 0);
 
     CStringDictionary::TStringId anTypeSInt2[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdARRAY, 2, g_nStringIdSINT };
     CDeserTestMockCommFB nTestFBSInt2(1, anTypeSInt2);
@@ -1241,8 +1241,8 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     CIEC_ARRAY<> &nSIntArray2(*static_cast<CIEC_ARRAY<> *>(nTestFBSInt2.getRDs()));
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTesteeSInt2.recvData(cg_abArraySINTm128_127_0_m90, cg_unSINT4SerSize));
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray2[0]), -128);
-    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT &>(nSIntArray2[1]), 127);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(static_cast<CIEC_SINT &>(nSIntArray2[0])), -128);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(static_cast<CIEC_SINT &>(nSIntArray2[1])), 127);
 
     CStringDictionary::TStringId anTypeString[] = { g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdARRAY, 2, g_nStringIdSTRING };
     CDeserTestMockCommFB nTestFBString(1, anTypeString);

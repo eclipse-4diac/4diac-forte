@@ -39,6 +39,11 @@ class CIEC_USINT : public CIEC_ANY_INT{
       setValueSimple(pa_roValue);
     }
 
+    explicit CIEC_USINT(const CIEC_ANY_INT& paValue) :
+        CIEC_ANY_INT() {
+      setValueSimple(paValue);
+    }
+
     explicit CIEC_USINT(TForteUInt8 pa_nValue){
       setTUINT8(pa_nValue);
     }
@@ -50,11 +55,17 @@ class CIEC_USINT : public CIEC_ANY_INT{
       return *this;
     }
 
+    template <typename T, std::enable_if_t<std::is_same_v<typename forte::core::mpl::implicit_cast_t<T, CIEC_USINT>, CIEC_USINT>, int> = 0>
+    CIEC_USINT &operator=(const T &paValue) {
+      setValueSimple(paValue);
+      return *this;
+    }
+
     /*! \brief Converts CIEC_UDINT to elementary unsigned 16 bit integer
      *
      *   Conversion operator for converting CIEC_UDINT to elementary unsigned 16 bit integer
      */
-    operator TForteUInt8() const{
+    explicit operator TForteUInt8() const{
       return getTUINT8();
     }
 

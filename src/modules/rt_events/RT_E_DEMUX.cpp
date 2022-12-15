@@ -52,7 +52,7 @@ void FORTE_RT_E_DEMUX::executeEvent(int pa_nEIID){
    if(scm_nEventEIID == pa_nEIID){
     if(m_bInitialized){
       CEventConnection *eoCon;
-      switch(K()){
+      switch(static_cast<CIEC_UINT::TValueType>(K())){
         case 0:
           eoCon = getEOConUnchecked(scm_nEventEO0ID);
           if(eoCon->isConnected()){

@@ -119,11 +119,11 @@ void IOConfigFBMultiSlave::initHandle(IODeviceController::HandleDescriptor *paHa
 
 const char* IOConfigFBMultiSlave::handleInitEvent() {
   // Get master by id
-  mMaster = IOConfigFBMultiMaster::getMasterById(BusAdapterIn().MasterId());
+  mMaster = IOConfigFBMultiMaster::getMasterById(static_cast<CIEC_UINT::TValueType>(BusAdapterIn().MasterId()));
   if(nullptr == mMaster) {
     return scmMasterNotFound;
   }
-  mIndex = BusAdapterIn().Index();
+  mIndex = static_cast<CIEC_UINT::TValueType>(BusAdapterIn().Index());
 
   // Default parameters
   for(int i = 0; i < mSlaveConfigurationIONum; i++) {
@@ -131,7 +131,7 @@ const char* IOConfigFBMultiSlave::handleInitEvent() {
 
     TIEC_ANYPtr ptr = getDI(mSlaveConfigurationIO[i]);
     if(CIEC_ANY::e_UINT == ptr->getDataTypeID()) {
-      isSet = !!*static_cast<CIEC_UINT*>(ptr);
+      isSet = static_cast<CIEC_UINT::TValueType>(*static_cast<CIEC_UINT*>(ptr)) > 0 ? true : false;
     } else {
       DEVLOG_WARNING("[IOConfigFBMultiSlave] Unable to handle data type %d. Skip slave configuration\n", ptr->getDataTypeID());
       continue;

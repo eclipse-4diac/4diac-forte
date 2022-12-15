@@ -33,7 +33,7 @@ struct E_CTUD_TestFixture : public CFBTestFixtureBase{
 
     bool checkCU(unsigned int paPrevCV){
       if(paPrevCV < 65535){
-        if(((paPrevCV + 1) != mOutCV)){
+        if(((paPrevCV + 1) != static_cast<CIEC_UINT::TValueType>(mOutCV))){
           return false;
         }
         else if(!checkForSingleOutputEventOccurence(0)){
@@ -41,7 +41,7 @@ struct E_CTUD_TestFixture : public CFBTestFixtureBase{
         }
       }
       else{
-        if(65535 != mOutCV && !eventChainEmpty()){
+        if(65535 != static_cast<CIEC_UINT::TValueType>(mOutCV) && !eventChainEmpty()){
           return false;
         }
       }
@@ -54,15 +54,15 @@ struct E_CTUD_TestFixture : public CFBTestFixtureBase{
     bool checkCD(unsigned int paPrevCV){
       if(paPrevCV < 1){
         //no algorithm should have been executed
-        if(mOutCV != paPrevCV || !mOutQD || !eventChainEmpty()){
+        if(static_cast<CIEC_UINT::TValueType>(mOutCV) != paPrevCV || !mOutQD || !eventChainEmpty()){
           return false;
         }
       }
       else{
-        if(((paPrevCV - 1) != mOutCV)){
+        if(((paPrevCV - 1) != static_cast<CIEC_UINT::TValueType>(mOutCV))){
           return false;
         }
-        else if(mOutQD != (mOutCV < 1)){
+        else if(mOutQD != (static_cast<CIEC_UINT::TValueType>(mOutCV) < 1)){
           return false;
         }
         else if(!checkForSingleOutputEventOccurence(0)){
@@ -76,7 +76,7 @@ struct E_CTUD_TestFixture : public CFBTestFixtureBase{
     }
 
     bool checkR(){
-      if(0 != mOutCV){
+      if(0 != static_cast<CIEC_UINT::TValueType>(mOutCV)){
         return false;
       }
       if(!checkForSingleOutputEventOccurence(1)){
@@ -89,7 +89,7 @@ struct E_CTUD_TestFixture : public CFBTestFixtureBase{
     }
 
     bool checkLD(unsigned int paUsedPV){
-      if(paUsedPV != mInPV || mInPV != mOutCV || ((paUsedPV < 1) != (true == mOutQD))){
+      if(paUsedPV != static_cast<CIEC_UINT::TValueType>(mInPV) || static_cast<CIEC_UINT::TValueType>(mInPV) != static_cast<CIEC_UINT::TValueType>(mOutCV) || ((paUsedPV < 1) != (true == static_cast<CIEC_BOOL::TValueType>(mOutQD)))){
         return false;
       }
       if(!checkForSingleOutputEventOccurence(2)){
@@ -102,7 +102,7 @@ struct E_CTUD_TestFixture : public CFBTestFixtureBase{
     }
 
     bool checkBooleans(){
-      return !(mOutQU != (mOutCV >= mInPV) || (mOutQD != (mOutCV < 1)));
+      return func_NOT(func_OR(func_NE(mOutQU, func_GE(mOutCV, mInPV)), func_NE(mOutQD, func_LT(mOutCV, CIEC_UINT(1)))));
     }
 };
 
@@ -116,8 +116,8 @@ BOOST_FIXTURE_TEST_SUITE( CTUDTests, E_CTUD_TestFixture)
       triggerEvent(2);
       BOOST_CHECK(checkR());
       mInPV = CIEC_UINT(valuesToTest[j]);
-      for(unsigned int k = 0; k < static_cast<unsigned int>(mInPV + 3); k++){
-        prevCV = mOutCV;
+      for (unsigned int k = 0; k < static_cast<CIEC_UINT::TValueType>(mInPV) + 3; k++) {
+        prevCV = static_cast<CIEC_UINT::TValueType>(mOutCV);
         //Send event
         triggerEvent(0);
         BOOST_CHECK(checkCU(prevCV));

@@ -24,7 +24,7 @@ void IOConfigFBPartController::executeEvent(int paEIID) {
   if(IOConfigFBMultiAdapter().INIT() == paEIID) {
     if(IOConfigFBMultiAdapter().QI() == true) {
       // Get master by id
-      mMaster = IOConfigFBSplitController::getControllerById(IOConfigFBMultiAdapter().MasterId());
+      mMaster = IOConfigFBSplitController::getControllerById(static_cast<CIEC_UINT::TValueType>(IOConfigFBMultiAdapter().MasterId()));
 
       if(nullptr == mMaster) {
         QO() = CIEC_BOOL(false);

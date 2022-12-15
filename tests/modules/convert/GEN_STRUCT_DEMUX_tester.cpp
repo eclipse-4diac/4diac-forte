@@ -33,8 +33,8 @@ struct STRUCT_DEMUX_TestFixture_1 : public CFBTestFixtureBase{
     CIEC_Struct_Muxer_Test_Struct_1 mIn;
 
     void checkStructValues(){
-      BOOST_CHECK_EQUAL(mVar1, mIn.Var1());
-      BOOST_CHECK_EQUAL(mVar2, mIn.Var2());
+      BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(mVar1), static_cast<CIEC_INT::TValueType>(mIn.Var1()));
+      BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(mVar2), static_cast<CIEC_INT::TValueType>(mIn.Var2()));
       BOOST_CHECK_EQUAL(strcmp(mVar3.getValue(), mIn.Var3().getValue()), 0);
     }
 };
@@ -103,9 +103,9 @@ struct STRUCT_DEMUX_TestFixture_2 : public CFBTestFixtureBase{
     CIEC_Struct_Muxer_Test_Struct_2 mIn;
 
     void checkStructValues(){
-     BOOST_CHECK_EQUAL(mVar1, mIn.Var1());
+     BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(mVar1), static_cast<CIEC_INT::TValueType>(mIn.Var1()));
      BOOST_CHECK_EQUAL(strcmp(mVar2.getValue(), mIn.Var2().getValue()), 0);
-     BOOST_CHECK_EQUAL(mVar3, mIn.Var3());
+     BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(mVar3), static_cast<CIEC_INT::TValueType>(mIn.Var3()));
    }
 
 };

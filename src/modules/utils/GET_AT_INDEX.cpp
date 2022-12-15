@@ -50,9 +50,9 @@ void FORTE_GET_AT_INDEX::executeEvent(int pa_nEIID){
       //check if data types match
       if(rInArray.getElementDataTypeID() == st_OUT().getDataTypeID()){
         //now check array length of input array
-        if(INDEX() < rInArray.size()){
+        if(static_cast<CIEC_UINT::TValueType>(INDEX()) < rInArray.size()){
           //update the output value
-          st_OUT().setValue(rInArray[INDEX()]);
+          st_OUT().setValue(rInArray[static_cast<CIEC_UINT::TValueType>(INDEX())]);
           QO() = CIEC_BOOL(true);
         }
         else{

@@ -216,59 +216,59 @@ BOOST_AUTO_TEST_CASE(CASTS_LREAL_to_INTS)
 
 //toUSINT
   CIEC_ANY::specialCast(nTestLReal0, nTestUSInt);
-  BOOST_CHECK_EQUAL(nTestUSInt, 0U);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_USINT::TValueType>(nTestUSInt), 0U);
   CIEC_ANY::specialCast(nTestLReal1, nTestUSInt);
-  BOOST_CHECK_EQUAL(nTestUSInt, 1U);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_USINT::TValueType>(nTestUSInt), 1U);
   CIEC_ANY::specialCast(nTestLReal36, nTestUSInt);
-  BOOST_CHECK_EQUAL(nTestUSInt, 36U);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_USINT::TValueType>(nTestUSInt), 36U);
 
 //toINT
   CIEC_ANY::specialCast(nTestLReal0, nTestInt);
-  BOOST_CHECK_EQUAL(nTestInt, 0);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTestInt), 0);
   CIEC_ANY::specialCast(nTestLReal1, nTestInt);
-  BOOST_CHECK_EQUAL(nTestInt, 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTestInt), 1);
   CIEC_ANY::specialCast(nTestLReal36, nTestInt);
-  BOOST_CHECK_EQUAL(nTestInt, 36);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTestInt), 36);
 
-//toUINT
-    CIEC_ANY::specialCast(nTestLReal0, nTestUInt);
-    BOOST_CHECK_EQUAL(nTestUInt, 0U);
-    CIEC_ANY::specialCast(nTestLReal1, nTestUInt);
-    BOOST_CHECK_EQUAL(nTestUInt, 1U);
-    CIEC_ANY::specialCast(nTestLReal36, nTestUInt);
-    BOOST_CHECK_EQUAL(nTestUInt, 36U);
+  // toUINT
+  CIEC_ANY::specialCast(nTestLReal0, nTestUInt);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_UINT::TValueType>(nTestUInt), 0U);
+  CIEC_ANY::specialCast(nTestLReal1, nTestUInt);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_UINT::TValueType>(nTestUInt), 1U);
+  CIEC_ANY::specialCast(nTestLReal36, nTestUInt);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_UINT::TValueType>(nTestUInt), 36U);
 
-//toDINT
+  // toDINT
   CIEC_ANY::specialCast(nTestLReal0, nTestDInt);
-  BOOST_CHECK_EQUAL(nTestDInt, 0L);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(nTestDInt), 0L);
   CIEC_ANY::specialCast(nTestLReal1, nTestDInt);
-  BOOST_CHECK_EQUAL(nTestDInt, 1L);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(nTestDInt), 1L);
   CIEC_ANY::specialCast(nTestLReal36, nTestDInt);
-  BOOST_CHECK_EQUAL(nTestDInt, 36L);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(nTestDInt), 36L);
 
-//toUDINT
+  // toUDINT
   CIEC_ANY::specialCast(nTestLReal0, nTestUDInt);
-  BOOST_CHECK_EQUAL(nTestUDInt, 0UL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_UDINT::TValueType>(nTestUDInt), 0UL);
   CIEC_ANY::specialCast(nTestLReal1, nTestUDInt);
-  BOOST_CHECK_EQUAL(nTestUDInt, 1UL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_UDINT::TValueType>(nTestUDInt), 1UL);
   CIEC_ANY::specialCast(nTestLReal36, nTestUDInt);
-  BOOST_CHECK_EQUAL(nTestUDInt, 36UL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_UDINT::TValueType>(nTestUDInt), 36UL);
 
-//toLINT
+  // toLINT
   CIEC_ANY::specialCast(nTestLReal0, nTestLInt);
-  BOOST_CHECK_EQUAL(nTestLInt, 0LL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTestLInt), 0LL);
   CIEC_ANY::specialCast(nTestLReal1, nTestLInt);
-  BOOST_CHECK_EQUAL(nTestLInt, 1LL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTestLInt), 1LL);
   CIEC_ANY::specialCast(nTestLReal36, nTestLInt);
-  BOOST_CHECK_EQUAL(nTestLInt, 36LL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTestLInt), 36LL);
 
-//toULINT
+  // toULINT
   CIEC_ANY::specialCast(nTestLReal0, nTestULInt);
-  BOOST_CHECK_EQUAL(nTestULInt, 0ULL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_ULINT::TValueType>(nTestULInt), 0ULL);
   CIEC_ANY::specialCast(nTestLReal1, nTestULInt);
-  BOOST_CHECK_EQUAL(nTestULInt, 1ULL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_ULINT::TValueType>(nTestULInt), 1ULL);
   CIEC_ANY::specialCast(nTestLReal36, nTestULInt);
-  BOOST_CHECK_EQUAL(nTestULInt, 36ULL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_ULINT::TValueType>(nTestULInt), 36ULL);
 }
 
 BOOST_AUTO_TEST_CASE(CASTS_LREAL_to_REAL)

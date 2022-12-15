@@ -50,17 +50,16 @@ void FORTE_FB_RANDOM::setInitialValues(){
 
 void FORTE_FB_RANDOM::alg_INIT(){
 // WARNING - Don't forget to add #include <time.h>
-  if (SEED() == 0) {
+  if (static_cast<CIEC_UINT::TValueType>(SEED()) == 0) {
     srand((unsigned int) time(nullptr) );
   } else {
-    srand( SEED() );
+    srand(static_cast<CIEC_UINT::TValueType>(SEED()));
   }
 }
 
 void FORTE_FB_RANDOM::alg_REQ(){
   VAL() = CIEC_REAL(static_cast<TForteFloat>(rand())/static_cast<TForteFloat>(RAND_MAX));
 }
-
 
 void FORTE_FB_RANDOM::enterStateSTART(){
   m_nECCState = scm_nStateSTART;

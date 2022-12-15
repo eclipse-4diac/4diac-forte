@@ -55,14 +55,15 @@ BOOST_AUTO_TEST_CASE(standard_example_len)
 {
   CIEC_STRING sTestString("ASTRING");
   CIEC_UINT nLength(func_LEN(sTestString));
-  BOOST_TEST(nLength == 7);
+  BOOST_TEST(static_cast<CIEC_UINT::TValueType>(nLength) == 7);
 }
 
 BOOST_AUTO_TEST_CASE(len)
 {
   CIEC_STRING sTestString("Lorem ipsum dolor sit amet");
-  CIEC_UINT nLength(func_LEN(sTestString));
-  BOOST_TEST(nLength == 26);
+  CIEC_UINT nLength;
+  nLength = func_LEN(sTestString);
+  BOOST_TEST(static_cast<CIEC_UINT::TValueType>(nLength) == 26);
 }
 
 BOOST_AUTO_TEST_CASE(standard_example_left)
@@ -121,7 +122,7 @@ BOOST_AUTO_TEST_CASE(find_at_begin)
   CIEC_STRING sSearchString("Lorem");
   CIEC_UINT nIndex;
   nIndex = CIEC_UINT(func_FIND(sBigString, sSearchString).getUnsignedValue());
-  BOOST_TEST(1 == nIndex);
+  BOOST_TEST(1 == static_cast<CIEC_UINT::TValueType>(nIndex));
 }
 
 BOOST_AUTO_TEST_CASE(find_in_between)
@@ -130,7 +131,7 @@ BOOST_AUTO_TEST_CASE(find_in_between)
   CIEC_STRING sSearchString("dolor");
   CIEC_UINT nIndex;
   nIndex = CIEC_UINT(func_FIND(sBigString, sSearchString).getUnsignedValue());
-  BOOST_TEST(13 == nIndex);
+  BOOST_TEST(13 == static_cast<CIEC_UINT::TValueType>(nIndex));
 }
 
 BOOST_AUTO_TEST_CASE(find_at_the_end)
@@ -139,7 +140,7 @@ BOOST_AUTO_TEST_CASE(find_at_the_end)
   CIEC_STRING sSearchString("t");
   CIEC_UINT nIndex;
   nIndex = CIEC_UINT(func_FIND(sBigString, sSearchString).getUnsignedValue());
-  BOOST_TEST(21 == nIndex);
+  BOOST_TEST(21 == static_cast<CIEC_UINT::TValueType>(nIndex));
 }
 
 BOOST_AUTO_TEST_CASE(find_not_found)
@@ -148,7 +149,7 @@ BOOST_AUTO_TEST_CASE(find_not_found)
   CIEC_STRING sSearchString("Latin");
   CIEC_UINT nIndex;
   nIndex = CIEC_UINT(func_FIND(sBigString, sSearchString).getUnsignedValue());
-  BOOST_TEST(0 == nIndex);
+  BOOST_TEST(0 == static_cast<CIEC_UINT::TValueType>(nIndex));
 }
 
 BOOST_AUTO_TEST_CASE(standard_example_replace)
@@ -468,8 +469,13 @@ BOOST_AUTO_TEST_CASE(trunc)
   CIEC_REAL real(50.6f);
   CIEC_LREAL lreal(50.6);
 
-  BOOST_REQUIRE_EQUAL(CIEC_SINT(50), func_TRUNC<CIEC_SINT>(real));
-  BOOST_REQUIRE_EQUAL(CIEC_ULINT(50), func_TRUNC<CIEC_ULINT>(lreal));
+  // checking return type
+  BOOST_REQUIRE(true == static_cast<CIEC_BOOL::TValueType>(func_EQ(CIEC_SINT(50), func_TRUNC<CIEC_SINT>(real))));
+  BOOST_REQUIRE(true == static_cast<CIEC_BOOL::TValueType>(func_EQ(CIEC_ULINT(50), func_TRUNC<CIEC_ULINT>(lreal))));
+
+  // checking rare value
+  BOOST_REQUIRE(50 == static_cast<CIEC_SINT::TValueType>(func_TRUNC<CIEC_SINT>(real)));
+  BOOST_REQUIRE(50 == static_cast<CIEC_ULINT::TValueType>(CIEC_ULINT(50), func_TRUNC<CIEC_ULINT>(lreal)));
 }
 
 BOOST_AUTO_TEST_CASE(rol_unsigned)
@@ -566,7 +572,7 @@ BOOST_AUTO_TEST_CASE(mul_numbers) {
   CIEC_UINT result;
 
   result = func_MUL(sint, inte);
-  BOOST_REQUIRE_EQUAL(CIEC_UINT(30), result);
+  BOOST_REQUIRE_EQUAL(30, static_cast<CIEC_UINT::TValueType>(result));
 }
 
 BOOST_AUTO_TEST_CASE(mul_number_and_time) {
@@ -611,7 +617,7 @@ BOOST_AUTO_TEST_CASE(div_numbers) {
   CIEC_UINT result;
 
   result = func_DIV(sint, inte);
-  BOOST_REQUIRE_EQUAL(CIEC_UINT(5), result);
+  BOOST_REQUIRE_EQUAL(5, static_cast<CIEC_UINT::TValueType>(result));
 }
 
 BOOST_AUTO_TEST_CASE(div_number_and_time) {
@@ -1129,15 +1135,15 @@ BOOST_AUTO_TEST_CASE(func_minus)
 
   CIEC_TIME time(5);
 
-  BOOST_REQUIRE_EQUAL(CIEC_SINT(-5), func_MINUS(sint));
-  BOOST_REQUIRE_EQUAL(CIEC_INT(-5), func_MINUS(integer));
-  BOOST_REQUIRE_EQUAL(CIEC_DINT(-5), func_MINUS(dint));
-  BOOST_REQUIRE_EQUAL(CIEC_LINT(-5), func_MINUS(lint));
+  BOOST_REQUIRE(-5 == static_cast<CIEC_SINT::TValueType>(func_MINUS(sint)));
+  BOOST_REQUIRE(-5 == static_cast<CIEC_INT::TValueType>(func_MINUS(integer)));
+  BOOST_REQUIRE(-5 == static_cast<CIEC_DINT::TValueType>(func_MINUS(dint)));
+  BOOST_REQUIRE(-5 == static_cast<CIEC_LINT::TValueType>(func_MINUS(lint)));
 
-  BOOST_REQUIRE_EQUAL(CIEC_REAL(-5.0f), func_MINUS(real));
-  BOOST_REQUIRE_EQUAL(CIEC_LREAL(-5.0), func_MINUS(lreal));
+  BOOST_REQUIRE(-5.0f == static_cast<CIEC_REAL::TValueType>(func_MINUS(real)));
+  BOOST_REQUIRE(-5.0 == static_cast<CIEC_LREAL::TValueType>(func_MINUS(lreal)));
 
-  BOOST_REQUIRE_EQUAL(CIEC_TIME(-5), func_MINUS(time));
+  BOOST_REQUIRE(CIEC_TIME(-5) == func_MINUS(time));
 }
 
 BOOST_AUTO_TEST_CASE(func_concat_date_ulints) {
@@ -1313,9 +1319,9 @@ BOOST_AUTO_TEST_CASE(func_split_date_ulints) {
   CIEC_ULINT day;
 
   func_SPLIT_DATE(date, year, month, day);
-  BOOST_TEST(year == CIEC_ULINT(2017));
-  BOOST_TEST(month == CIEC_ULINT(3));
-  BOOST_TEST(day == CIEC_ULINT(20));
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(year) == 2017);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(month) == 3);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(day) == 20);
 }
 
 BOOST_AUTO_TEST_CASE(func_split_date_lints) {
@@ -1327,9 +1333,9 @@ BOOST_AUTO_TEST_CASE(func_split_date_lints) {
   CIEC_LINT day;
 
   func_SPLIT_DATE(date, year, month, day);
-  BOOST_TEST(year == CIEC_LINT(2017));
-  BOOST_TEST(month == CIEC_LINT(3));
-  BOOST_TEST(day == CIEC_LINT(20));
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(year) == 2017);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(month) == 3);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(day) == 20);
 }
 
 BOOST_AUTO_TEST_CASE(func_split_ldate_ulints) {
@@ -1341,9 +1347,9 @@ BOOST_AUTO_TEST_CASE(func_split_ldate_ulints) {
   CIEC_ULINT day;
 
   func_SPLIT_LDATE(date, year, month, day);
-  BOOST_TEST(year == CIEC_ULINT(2017));
-  BOOST_TEST(month == CIEC_ULINT(3));
-  BOOST_TEST(day == CIEC_ULINT(20));
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(year) == 2017);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(month) == 3);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(day) == 20);
 }
 
 BOOST_AUTO_TEST_CASE(func_split_ldate_lints) {
@@ -1355,9 +1361,9 @@ BOOST_AUTO_TEST_CASE(func_split_ldate_lints) {
   CIEC_LINT day;
 
   func_SPLIT_LDATE(date, year, month, day);
-  BOOST_TEST(year == CIEC_LINT(2017));
-  BOOST_TEST(month == CIEC_LINT(3));
-  BOOST_TEST(day == CIEC_LINT(20));
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(year) == 2017);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(month) == 3);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(day) == 20);
 }
 
 BOOST_AUTO_TEST_CASE(func_split_tod_ulints) {
@@ -1370,10 +1376,10 @@ BOOST_AUTO_TEST_CASE(func_split_tod_ulints) {
   CIEC_ULINT millisecond;
 
   func_SPLIT_TOD(given, hour, minute, second, millisecond);
-  BOOST_TEST(hour == CIEC_ULINT(15));
-  BOOST_TEST(minute == CIEC_ULINT(43));
-  BOOST_TEST(second == CIEC_ULINT(13));
-  BOOST_TEST(millisecond == CIEC_ULINT(574));
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(hour) == 15);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(minute) == 43);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(second) == 13);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(millisecond) == 574);
 }
 
 BOOST_AUTO_TEST_CASE(func_split_tod_lints) {
@@ -1386,10 +1392,10 @@ BOOST_AUTO_TEST_CASE(func_split_tod_lints) {
   CIEC_LINT millisecond;
 
   func_SPLIT_TOD(given, hour, minute, second, millisecond);
-  BOOST_TEST(hour == CIEC_LINT(15));
-  BOOST_TEST(minute == CIEC_LINT(43));
-  BOOST_TEST(second == CIEC_LINT(13));
-  BOOST_TEST(millisecond == CIEC_LINT(574));
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(hour) == 15);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(minute) == 43);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(second) == 13);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(millisecond) == 574);
 }
 
 BOOST_AUTO_TEST_CASE(func_split_ltod_ulints) {
@@ -1402,10 +1408,10 @@ BOOST_AUTO_TEST_CASE(func_split_ltod_ulints) {
   CIEC_ULINT millisecond;
 
   func_SPLIT_LTOD(given, hour, minute, second, millisecond);
-  BOOST_TEST(hour == CIEC_ULINT(15));
-  BOOST_TEST(minute == CIEC_ULINT(43));
-  BOOST_TEST(second == CIEC_ULINT(13));
-  BOOST_TEST(millisecond == CIEC_ULINT(574));
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(hour) == 15);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(minute) == 43);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(second) == 13);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(millisecond) == 574);
 }
 
 BOOST_AUTO_TEST_CASE(func_split_ltod_lints) {
@@ -1418,10 +1424,10 @@ BOOST_AUTO_TEST_CASE(func_split_ltod_lints) {
   CIEC_LINT millisecond;
 
   func_SPLIT_LTOD(given, hour, minute, second, millisecond);
-  BOOST_TEST(hour == CIEC_LINT(15));
-  BOOST_TEST(minute == CIEC_LINT(43));
-  BOOST_TEST(second == CIEC_LINT(13));
-  BOOST_TEST(millisecond == CIEC_LINT(574));
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(hour) == 15);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(minute) == 43);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(second) == 13);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(millisecond) == 574);
 }
 
 BOOST_AUTO_TEST_CASE(func_split_dt_ulints) {
@@ -1437,13 +1443,13 @@ BOOST_AUTO_TEST_CASE(func_split_dt_ulints) {
   CIEC_ULINT millisecond;
 
   func_SPLIT_DT(given, year, month, day, hour, minute, second, millisecond);
-  BOOST_TEST(year == CIEC_ULINT(2017));
-  BOOST_TEST(month == CIEC_ULINT(3));
-  BOOST_TEST(day == CIEC_ULINT(20));
-  BOOST_TEST(hour == CIEC_ULINT(15));
-  BOOST_TEST(minute == CIEC_ULINT(43));
-  BOOST_TEST(second == CIEC_ULINT(13));
-  BOOST_TEST(millisecond == CIEC_ULINT(574));
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(year) == 2017);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(month) == 3);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(day) == 20);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(hour) == 15);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(minute) == 43);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(second) == 13);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(millisecond) == 574);
 }
 
 BOOST_AUTO_TEST_CASE(func_split_dt_lints) {
@@ -1459,13 +1465,13 @@ BOOST_AUTO_TEST_CASE(func_split_dt_lints) {
   CIEC_LINT millisecond;
 
   func_SPLIT_DT(given, year, month, day, hour, minute, second, millisecond);
-  BOOST_TEST(year == CIEC_LINT(2017));
-  BOOST_TEST(month == CIEC_LINT(3));
-  BOOST_TEST(day == CIEC_LINT(20));
-  BOOST_TEST(hour == CIEC_LINT(15));
-  BOOST_TEST(minute == CIEC_LINT(43));
-  BOOST_TEST(second == CIEC_LINT(13));
-  BOOST_TEST(millisecond == CIEC_LINT(574));
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(year) == 2017);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(month) == 3);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(day) == 20);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(hour) == 15);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(minute) == 43);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(second) == 13);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(millisecond) == 574);
 }
 
 BOOST_AUTO_TEST_CASE(func_split_ldt_ulints) {
@@ -1481,13 +1487,13 @@ BOOST_AUTO_TEST_CASE(func_split_ldt_ulints) {
   CIEC_ULINT millisecond;
 
   func_SPLIT_LDT(given, year, month, day, hour, minute, second, millisecond);
-  BOOST_TEST(year == CIEC_ULINT(2017));
-  BOOST_TEST(month == CIEC_ULINT(3));
-  BOOST_TEST(day == CIEC_ULINT(20));
-  BOOST_TEST(hour == CIEC_ULINT(15));
-  BOOST_TEST(minute == CIEC_ULINT(43));
-  BOOST_TEST(second == CIEC_ULINT(13));
-  BOOST_TEST(millisecond == CIEC_ULINT(574));
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(year) == 2017);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(month) == 3);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(day) == 20);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(hour) == 15);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(minute) == 43);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(second) == 13);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(millisecond) == 574);
 }
 
 BOOST_AUTO_TEST_CASE(func_split_ldt_lints) {
@@ -1503,13 +1509,13 @@ BOOST_AUTO_TEST_CASE(func_split_ldt_lints) {
   CIEC_LINT millisecond;
 
   func_SPLIT_LDT(given, year, month, day, hour, minute, second, millisecond);
-  BOOST_TEST(year == CIEC_LINT(2017));
-  BOOST_TEST(month == CIEC_LINT(3));
-  BOOST_TEST(day == CIEC_LINT(20));
-  BOOST_TEST(hour == CIEC_LINT(15));
-  BOOST_TEST(minute == CIEC_LINT(43));
-  BOOST_TEST(second == CIEC_LINT(13));
-  BOOST_TEST(millisecond == CIEC_LINT(574));
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(year) == 2017);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(month) == 3);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(day) == 20);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(hour) == 15);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(minute) == 43);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(second) == 13);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(millisecond) == 574);
 }
 
 BOOST_AUTO_TEST_CASE(func_day_of_week) {
@@ -1518,7 +1524,7 @@ BOOST_AUTO_TEST_CASE(func_day_of_week) {
 
   CIEC_ULINT weekday;
   func_DAY_OF_WEEK(date, weekday);
-  BOOST_TEST(weekday == CIEC_ULINT(1));
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(weekday) == 1);
 }
 
   BOOST_AUTO_TEST_SUITE_END()

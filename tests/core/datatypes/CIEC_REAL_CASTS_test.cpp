@@ -216,59 +216,59 @@ BOOST_AUTO_TEST_CASE(CASTS_REAL_to_INTS)
 
 //toUSINT
   CIEC_ANY::specialCast(nTestReal0, nTestUSInt);
-  BOOST_CHECK_EQUAL(nTestUSInt, 0U);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_USINT::TValueType>(nTestUSInt), 0U);
   CIEC_ANY::specialCast(nTestReal1, nTestUSInt);
-  BOOST_CHECK_EQUAL(nTestUSInt, 1U);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_USINT::TValueType>(nTestUSInt), 1U);
   CIEC_ANY::specialCast(nTestReal36, nTestUSInt);
-  BOOST_CHECK_EQUAL(nTestUSInt, 36U);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_USINT::TValueType>(nTestUSInt), 36U);
 
 //toINT
   CIEC_ANY::specialCast(nTestReal0, nTestInt);
-  BOOST_CHECK_EQUAL(nTestInt, 0);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTestInt), 0);
   CIEC_ANY::specialCast(nTestReal1, nTestInt);
-  BOOST_CHECK_EQUAL(nTestInt, 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTestInt), 1);
   CIEC_ANY::specialCast(nTestReal36, nTestInt);
-  BOOST_CHECK_EQUAL(nTestInt, 36);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTestInt), 36);
 
-//toUINT
+// toUINT
   CIEC_ANY::specialCast(nTestReal0, nTestUInt);
-  BOOST_CHECK_EQUAL(nTestUInt, 0U);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_UINT::TValueType>(nTestUInt), 0U);
   CIEC_ANY::specialCast(nTestReal1, nTestUInt);
-  BOOST_CHECK_EQUAL(nTestUInt, 1U);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_UINT::TValueType>(nTestUInt), 1U);
   CIEC_ANY::specialCast(nTestReal36, nTestUInt);
-  BOOST_CHECK_EQUAL(nTestUInt, 36U);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_UINT::TValueType>(nTestUInt), 36U);
 
-//toDINT
+// toDINT
   CIEC_ANY::specialCast(nTestReal0, nTestDInt);
-  BOOST_CHECK_EQUAL(nTestDInt, 0L);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(nTestDInt), 0L);
   CIEC_ANY::specialCast(nTestReal1, nTestDInt);
-  BOOST_CHECK_EQUAL(nTestDInt, 1L);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(nTestDInt), 1L);
   CIEC_ANY::specialCast(nTestReal36, nTestDInt);
-  BOOST_CHECK_EQUAL(nTestDInt, 36L);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(nTestDInt), 36L);
 
 //toUDINT
   CIEC_ANY::specialCast(nTestReal0, nTestUDInt);
-  BOOST_CHECK_EQUAL(nTestUDInt, 0UL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_UDINT::TValueType>(nTestUDInt), 0UL);
   CIEC_ANY::specialCast(nTestReal1, nTestUDInt);
-  BOOST_CHECK_EQUAL(nTestUDInt, 1UL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_UDINT::TValueType>(nTestUDInt), 1UL);
   CIEC_ANY::specialCast(nTestReal36, nTestUDInt);
-  BOOST_CHECK_EQUAL(nTestUDInt, 36UL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_UDINT::TValueType>(nTestUDInt), 36UL);
 
 //toLINT
   CIEC_ANY::specialCast(nTestReal0, nTestLInt);
-  BOOST_CHECK_EQUAL(nTestLInt, 0LL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTestLInt), 0LL);
   CIEC_ANY::specialCast(nTestReal1, nTestLInt);
-  BOOST_CHECK_EQUAL(nTestLInt, 1LL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTestLInt), 1LL);
   CIEC_ANY::specialCast(nTestReal36, nTestLInt);
-  BOOST_CHECK_EQUAL(nTestLInt, 36LL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_LINT::TValueType>(nTestLInt), 36LL);
 
-//toULINT
+// toULINT
   CIEC_ANY::specialCast(nTestReal0, nTestULInt);
-  BOOST_CHECK_EQUAL(nTestULInt, 0ULL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_ULINT::TValueType>(nTestULInt), 0ULL);
   CIEC_ANY::specialCast(nTestReal1, nTestULInt);
-  BOOST_CHECK_EQUAL(nTestULInt, 1ULL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_ULINT::TValueType>(nTestULInt), 1ULL);
   CIEC_ANY::specialCast(nTestReal36, nTestULInt);
-  BOOST_CHECK_EQUAL(nTestULInt, 36ULL);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_ULINT::TValueType>(nTestULInt), 36ULL);
 }
 
 BOOST_AUTO_TEST_CASE(CASTS_REAL_to_LREAL)
@@ -408,10 +408,10 @@ BOOST_AUTO_TEST_CASE(Ctor_cast_to_REAL)
   CIEC_REAL realfromUsint(CIEC_USINT(1));
   CIEC_REAL realfromUint(CIEC_UINT(2));
 
-  BOOST_TEST(realfromSint == CIEC_SINT(-1));
-  BOOST_TEST(realfromInt == CIEC_INT(-2));
-  BOOST_TEST(realfromUsint == CIEC_USINT(1));
-  BOOST_TEST(realfromUint == CIEC_UINT(2));
+  BOOST_TEST(static_cast<CIEC_SINT::TValueType>(realfromSint) == -1);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(realfromInt) == -2);
+  BOOST_TEST(static_cast<CIEC_USINT::TValueType>(realfromUsint) == 1);
+  BOOST_TEST(static_cast<CIEC_UINT::TValueType>(realfromUint) == 2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

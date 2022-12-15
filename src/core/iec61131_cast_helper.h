@@ -22,6 +22,7 @@
 #include "datatype.h"
 
 #include <type_traits>
+#include <functional>
 
 #ifndef SRC_CORE_IEC61131_CAST_HELPER_CPP_
 #define SRC_CORE_IEC61131_CAST_HELPER_CPP_
@@ -50,6 +51,7 @@ class CIEC_UINT;
 class CIEC_UDINT;
 class CIEC_ULINT;
 
+class CIEC_ANY_INT;
 class CIEC_SINT;
 class CIEC_INT;
 class CIEC_DINT;
@@ -102,10 +104,14 @@ namespace forte {
       };
 
       /* Self-casts */
-      template<typename T> struct implicit_cast<T, T> {
+      template <typename T>
+      struct implicit_cast<T, T> {
           typedef T type;
           implicit_cast() = delete;
       };
+
+      template <typename T, typename U>
+      using implicit_cast_t = typename implicit_cast<T, U>::type;
 
       /* BOOL casts */
       ALLOW_IMPLICIT_CAST(CIEC_BOOL, CIEC_BYTE)
@@ -124,6 +130,16 @@ namespace forte {
 
       /* DWORD casts */
       ALLOW_IMPLICIT_CAST(CIEC_DWORD, CIEC_LWORD)
+
+      /* ANY_INT casts*/
+      ALLOW_IMPLICIT_CAST(CIEC_ANY_INT, CIEC_SINT)
+      ALLOW_IMPLICIT_CAST(CIEC_ANY_INT, CIEC_INT)
+      ALLOW_IMPLICIT_CAST(CIEC_ANY_INT, CIEC_DINT)
+      ALLOW_IMPLICIT_CAST(CIEC_ANY_INT, CIEC_LINT)
+      ALLOW_IMPLICIT_CAST(CIEC_ANY_INT, CIEC_USINT)
+      ALLOW_IMPLICIT_CAST(CIEC_ANY_INT, CIEC_UINT)
+      ALLOW_IMPLICIT_CAST(CIEC_ANY_INT, CIEC_UDINT)
+      ALLOW_IMPLICIT_CAST(CIEC_ANY_INT, CIEC_ULINT)
 
       /* USINT casts*/
       ALLOW_IMPLICIT_CAST(CIEC_USINT, CIEC_UINT)
@@ -540,6 +556,48 @@ namespace forte {
         typedef CIEC_LTIME type;
         get_sub_operator_result_type() = delete;
       };
+
+      template <class T, class R, class... Args>
+      std::is_convertible<std::invoke_result_t<T, Args...>, R> is_invokable_test(int);
+
+      template <class T, class R, class... Args>
+      std::false_type is_invokable_test(...);
+
+      template <class T, class R, class... Args>
+      using is_invokable = decltype(is_invokable_test<T, R, Args...>(0));
+
+      template <class T, class R, class... Args>
+      constexpr auto is_invokable_v = is_invokable<T, R, Args...>::value;
+
+      template <class L, class R = L>
+      using has_equality = is_invokable<std::equal_to<>, bool, L, R>;
+      template <class L, class R = L>
+      constexpr auto has_equality_v = has_equality<L, R>::value;
+
+      template <class L, class R = L>
+      using has_inequality = is_invokable<std::not_equal_to<>, bool, L, R>;
+      template <class L, class R = L>
+      constexpr auto has_inequality_v = has_inequality<L, R>::value;
+
+      template <class L, class R = L>
+      using has_greater = is_invokable<std::greater<>, bool, L, R>;
+      template <class L, class R = L>
+      constexpr auto has_greater_v = has_greater<L, R>::value;
+
+      template <class L, class R = L>
+      using has_less = is_invokable<std::less<>, bool, L, R>;
+      template <class L, class R = L>
+      constexpr auto has_less_v = has_less<L, R>::value;
+
+      template <class L, class R = L>
+      using has_greater_equal = is_invokable<std::greater_equal<>, bool, L, R>;
+      template <class L, class R = L>
+      constexpr auto has_greater_equal_v = has_greater_equal<L, R>::value;
+
+      template <class L, class R = L>
+      using has_less_equal = is_invokable<std::less_equal<>, bool, L, R>;
+      template <class L, class R = L>
+      constexpr auto has_less_equal_v = has_less_equal<L, R>::value;
     }
   }
 }

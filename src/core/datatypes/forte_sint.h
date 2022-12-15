@@ -38,6 +38,11 @@ class CIEC_SINT : public CIEC_ANY_INT{
       setValueSimple(paValue);
     }
 
+    explicit CIEC_SINT(const CIEC_ANY_INT& paValue) :
+        CIEC_ANY_INT() {
+      setValueSimple(paValue);
+    }
+
     explicit CIEC_SINT(TForteInt8 paValue){
       setTINT8(paValue);
     }
@@ -50,15 +55,21 @@ class CIEC_SINT : public CIEC_ANY_INT{
       return *this;
     }
 
+    template <typename T, std::enable_if_t<std::is_same_v<typename forte::core::mpl::implicit_cast_t<T, CIEC_SINT>, CIEC_SINT>, int> = 0>
+    CIEC_SINT &operator=(const T &paValue) {
+      setValueSimple(paValue);
+      return *this;
+    }
+
     CIEC_SINT operator-() const {
-      return CIEC_SINT(static_cast<TForteInt8>(-1 * *this));
+      return CIEC_SINT(static_cast<CIEC_SINT::TValueType>(-1) * static_cast<CIEC_SINT::TValueType>(*this));
     }
 
     /*! \brief Converts CIEC_SINT to elementary 8 bit integer
      *
      *   Conversion operator for converting CIEC_SINT to elementary 8 bit integer
      */
-    operator TForteInt8() const{
+    explicit operator TForteInt8() const{
       return getTINT8();
     }
 

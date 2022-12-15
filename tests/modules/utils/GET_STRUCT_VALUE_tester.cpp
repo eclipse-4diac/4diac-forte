@@ -103,7 +103,7 @@ BOOST_FIXTURE_TEST_SUITE( GET_STRUCT_VALUE_MainTests, GET_STRUCT_VALUE_Main_Test
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     BOOST_CHECK_EQUAL(true, mQO);
-    BOOST_CHECK_EQUAL(1, mOut);
+    BOOST_CHECK_EQUAL(1, static_cast<CIEC_INT::TValueType>(mOut));
   }
 
   BOOST_AUTO_TEST_CASE(secondLevel) {
@@ -111,7 +111,7 @@ BOOST_FIXTURE_TEST_SUITE( GET_STRUCT_VALUE_MainTests, GET_STRUCT_VALUE_Main_Test
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     BOOST_CHECK_EQUAL(true, mQO);
-    BOOST_CHECK_EQUAL(2, mOut);
+    BOOST_CHECK_EQUAL(2, static_cast<CIEC_INT::TValueType>(mOut));
   }
 
 

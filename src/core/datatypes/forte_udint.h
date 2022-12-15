@@ -50,6 +50,11 @@ class CIEC_UDINT : public CIEC_ANY_INT{
       setValueSimple(paValue);
     }
 
+    explicit CIEC_UDINT(const CIEC_ANY_INT& paValue) :
+        CIEC_ANY_INT() {
+      setValueSimple(paValue);
+    }
+
     explicit CIEC_UDINT(TForteUInt32 paValue){
       setTUINT32(paValue);
     }
@@ -62,14 +67,8 @@ class CIEC_UDINT : public CIEC_ANY_INT{
       return *this;
     }
 
-    CIEC_UDINT& operator =(const CIEC_UINT &paValue){
-      // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
-      return *this;
-    }
-
-    CIEC_UDINT& operator =(const CIEC_USINT &paValue){
-      // Simple value assignment - no self assignment check needed
+    template <typename T, std::enable_if_t<std::is_same_v<typename forte::core::mpl::implicit_cast_t<T, CIEC_UDINT>, CIEC_UDINT>, int> = 0>
+    CIEC_UDINT &operator=(const T &paValue) {
       setValueSimple(paValue);
       return *this;
     }
@@ -78,7 +77,7 @@ class CIEC_UDINT : public CIEC_ANY_INT{
      *
      *   Conversion operator for converting CIEC_UDINT to elementary unsigned 32 bit integer
      */
-    operator TForteUInt32() const{
+    explicit operator TForteUInt32() const{
       return getTUINT32();
     }
 

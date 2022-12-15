@@ -75,6 +75,11 @@ class CIEC_LINT : public CIEC_ANY_INT{
       setValueSimple(paValue);
     }
 
+    explicit CIEC_LINT(const CIEC_ANY_INT& paValue) :
+        CIEC_ANY_INT() {
+      setValueSimple(paValue);
+    }
+
     explicit CIEC_LINT(TForteInt64 paValue){
       setTINT64(paValue);
     }
@@ -87,51 +92,21 @@ class CIEC_LINT : public CIEC_ANY_INT{
       return *this;
     }
 
-    CIEC_LINT& operator =(const CIEC_DINT &paValue){
-      // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
-      return *this;
-    }
-
-    CIEC_LINT& operator =(const CIEC_UDINT &paValue){
-      // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
-      return *this;
-    }
-
-    CIEC_LINT& operator =(const CIEC_INT &paValue){
-      // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
-      return *this;
-    }
-
-    CIEC_LINT& operator =(const CIEC_UINT &paValue){
-      // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
-      return *this;
-    }
-
-    CIEC_LINT& operator =(const CIEC_SINT &paValue){
-      // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
-      return *this;
-    }
-
-    CIEC_LINT& operator =(const CIEC_USINT &paValue){
-      // Simple value assignment - no self assignment check needed
+    template <typename T, std::enable_if_t<std::is_same_v<typename forte::core::mpl::implicit_cast_t<T, CIEC_LINT>, CIEC_LINT>, int> = 0>
+    CIEC_LINT &operator=(const T &paValue) {
       setValueSimple(paValue);
       return *this;
     }
 
     CIEC_LINT operator-() const {
-      return CIEC_LINT(-1 * *this);
+      return CIEC_LINT(-1 * static_cast<CIEC_LINT::TValueType>(*this));
     }
 
     /*! \brief Converts CIEC_LINT to elementary byte
      *
      *   Conversion operator for converting CIEC_LINT to elementary 64 bit integer
      */
-    operator TForteInt64() const{
+    explicit operator TForteInt64() const{
       return getTINT64();
     }
 

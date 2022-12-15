@@ -12,6 +12,7 @@
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
+#include "../../../src/core/datatypes/forte_any_int.h"
 #include "../../../src/core/datatypes/forte_sint.h"
 
 BOOST_AUTO_TEST_SUITE(CIEC_SINT_function_test)
@@ -31,33 +32,40 @@ BOOST_AUTO_TEST_CASE(Assignment_test)
   CIEC_SINT nTest2;
 
   //initial value must be 0
-  BOOST_CHECK_EQUAL(nTest1, 0);
+  BOOST_TEST(0 == static_cast<CIEC_SINT::TValueType>(nTest1));
 
   nTest1 = CIEC_SINT(-128);
   nTest2 = nTest1;
-  BOOST_CHECK_EQUAL(nTest1, -128);
-  BOOST_CHECK_EQUAL(nTest2, -128);
+  BOOST_TEST(-128 == static_cast<CIEC_SINT::TValueType>(nTest1));
+  BOOST_TEST(-128 == static_cast<CIEC_SINT::TValueType>(nTest2));
 
   nTest1 = CIEC_SINT(-65);
   nTest2 = nTest1;
-  BOOST_CHECK_EQUAL(nTest1, -65);
-  BOOST_CHECK_EQUAL(nTest2, -65);
+  BOOST_TEST(-65 == static_cast<CIEC_SINT::TValueType>(nTest1));
+  BOOST_TEST(-65 == static_cast<CIEC_SINT::TValueType>(nTest2));
 
   nTest1 = CIEC_SINT(98);
   nTest2 = nTest1;
-  BOOST_CHECK_EQUAL(nTest1, 98);
-  BOOST_CHECK_EQUAL(nTest2, 98);
+  BOOST_TEST(98 == static_cast<CIEC_SINT::TValueType>(nTest1));
+  BOOST_TEST(98 == static_cast<CIEC_SINT::TValueType>(nTest2));
 
   nTest1 = CIEC_SINT(127);
   nTest2 = nTest1;
-  BOOST_CHECK_EQUAL(nTest1, 127);
-  BOOST_CHECK_EQUAL(nTest2, 127);
+  BOOST_TEST(127 == static_cast<CIEC_SINT::TValueType>(nTest1));
+  BOOST_TEST(127 == static_cast<CIEC_SINT::TValueType>(nTest2));
 
   //check that assignment operator does not intertwine objects
   nTest2 = CIEC_SINT(-74);
-  BOOST_CHECK_EQUAL(nTest1, 127);
-  BOOST_CHECK_EQUAL(nTest2, -74);
+  BOOST_TEST(127 == static_cast<CIEC_SINT::TValueType>(nTest1));
+  BOOST_TEST(-74 == static_cast<CIEC_SINT::TValueType>(nTest2));
+}
 
+BOOST_AUTO_TEST_CASE(ANY_INT_ASSIGNMENT_TEST) {
+  CIEC_ANY_INT anyInt(50);
+  CIEC_SINT test;
+
+  test = anyInt;
+  BOOST_TEST(50 == static_cast<CIEC_SINT::TValueType>(test));
 }
 
 BOOST_AUTO_TEST_CASE(Conversion_test)
@@ -85,7 +93,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   strcpy(cBuffer, "");
 
   BOOST_CHECK_EQUAL(nTest.fromString("-128"), 4);
-  BOOST_CHECK_EQUAL(nTest, -128);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(nTest), -128);
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 4);
   BOOST_CHECK_EQUAL(strcmp(cBuffer, "-128"), 0);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
@@ -93,7 +101,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = CIEC_SINT(0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("2#10000000"), 10);
-  BOOST_CHECK_EQUAL(nTest, -128);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(nTest), -128);
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 4);
   BOOST_CHECK_EQUAL(strcmp(cBuffer, "-128"), 0);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
@@ -101,7 +109,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = CIEC_SINT(0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("8#200"), 5);
-  BOOST_CHECK_EQUAL(nTest, -128);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(nTest), -128);
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 4);
   BOOST_CHECK_EQUAL(strcmp(cBuffer, "-128"), 0);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
@@ -109,7 +117,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   nTest = CIEC_SINT(0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("16#80"), 5);
-  BOOST_CHECK_EQUAL(nTest, -128);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(nTest), -128);
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 4);
   BOOST_CHECK_EQUAL(strcmp(cBuffer, "-128"), 0);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
@@ -118,106 +126,104 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 
 
   BOOST_CHECK_EQUAL(nTest.fromString("0"), 1);
-    BOOST_CHECK_EQUAL(nTest, 0);
-    BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 1);
-    BOOST_CHECK_EQUAL(strcmp(cBuffer, "0"), 0);
-    BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 1), -1);
-    strcpy(cBuffer, "");
+  BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(nTest), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 1);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "0"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 1), -1);
+  strcpy(cBuffer, "");
 
-    BOOST_CHECK_EQUAL(nTest.fromString("2#0"), 3);
-    BOOST_CHECK_EQUAL(nTest, 0);
-    BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 1);
-    BOOST_CHECK_EQUAL(strcmp(cBuffer, "0"), 0);
-    BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 1), -1);
-    strcpy(cBuffer, "");
+  BOOST_CHECK_EQUAL(nTest.fromString("2#0"), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(nTest), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 1);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "0"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 1), -1);
+  strcpy(cBuffer, "");
 
-    BOOST_CHECK_EQUAL(nTest.fromString("8#0"), 3);
-    BOOST_CHECK_EQUAL(nTest, 0);
-    BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 1);
-    BOOST_CHECK_EQUAL(strcmp(cBuffer, "0"), 0);
-    BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 1), -1);
-    strcpy(cBuffer, "");
+  BOOST_CHECK_EQUAL(nTest.fromString("8#0"), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(nTest), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 1);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "0"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 1), -1);
+  strcpy(cBuffer, "");
 
-    BOOST_CHECK_EQUAL(nTest.fromString("16#0"), 4);
-    BOOST_CHECK_EQUAL(nTest, 0);
-    BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 1);
-    BOOST_CHECK_EQUAL(strcmp(cBuffer, "0"), 0);
-    BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 1), -1);
-    strcpy(cBuffer, "");
+  BOOST_CHECK_EQUAL(nTest.fromString("16#0"), 4);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(nTest), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 1);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "0"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 1), -1);
+  strcpy(cBuffer, "");
 
+  BOOST_CHECK_EQUAL(nTest.fromString("99"), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(nTest), 99);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 2);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "99"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
+  strcpy(cBuffer, "");
+  nTest = CIEC_SINT(0);
 
-    BOOST_CHECK_EQUAL(nTest.fromString("99"), 2);
-    BOOST_CHECK_EQUAL(nTest, 99);
-    BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 2);
-    BOOST_CHECK_EQUAL(strcmp(cBuffer, "99"), 0);
-    BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-    strcpy(cBuffer, "");
-    nTest = CIEC_SINT(0);
+  BOOST_CHECK_EQUAL(nTest.fromString("2#1100011"), 9);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(nTest), 99);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 2);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "99"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
+  strcpy(cBuffer, "");
+  nTest = CIEC_SINT(0);
 
-    BOOST_CHECK_EQUAL(nTest.fromString("2#1100011"), 9);
-    BOOST_CHECK_EQUAL(nTest, 99);
-    BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 2);
-    BOOST_CHECK_EQUAL(strcmp(cBuffer, "99"), 0);
-    BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-    strcpy(cBuffer, "");
-    nTest = CIEC_SINT(0);
+  BOOST_CHECK_EQUAL(nTest.fromString("8#143"), 5);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(nTest), 99);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 2);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "99"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
+  strcpy(cBuffer, "");
+  nTest = CIEC_SINT(0);
 
-    BOOST_CHECK_EQUAL(nTest.fromString("8#143"), 5);
-    BOOST_CHECK_EQUAL(nTest, 99);
-    BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 2);
-    BOOST_CHECK_EQUAL(strcmp(cBuffer, "99"), 0);
-    BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-    strcpy(cBuffer, "");
-    nTest = CIEC_SINT(0);
+  BOOST_CHECK_EQUAL(nTest.fromString("16#63"), 5);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(nTest), 99);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 2);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "99"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
+  strcpy(cBuffer, "");
+  nTest = CIEC_SINT(0);
 
-    BOOST_CHECK_EQUAL(nTest.fromString("16#63"), 5);
-    BOOST_CHECK_EQUAL(nTest, 99);
-    BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 2);
-    BOOST_CHECK_EQUAL(strcmp(cBuffer, "99"), 0);
-    BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-    strcpy(cBuffer, "");
-    nTest = CIEC_SINT(0);
+  BOOST_CHECK_EQUAL(nTest.fromString("127"), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(nTest), 127);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 3);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "127"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
+  strcpy(cBuffer, "");
+  nTest = CIEC_SINT(0);
 
+  BOOST_CHECK_EQUAL(nTest.fromString("2#01111111"), 10);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(nTest), 127);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 3);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "127"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
+  strcpy(cBuffer, "");
+  nTest = CIEC_SINT(0);
 
-    BOOST_CHECK_EQUAL(nTest.fromString("127"), 3);
-    BOOST_CHECK_EQUAL(nTest, 127);
-    BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 3);
-    BOOST_CHECK_EQUAL(strcmp(cBuffer, "127"), 0);
-    BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-    strcpy(cBuffer, "");
-    nTest = CIEC_SINT(0);
+  BOOST_CHECK_EQUAL(nTest.fromString("8#177"), 5);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(nTest), 127);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 3);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "127"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
+  strcpy(cBuffer, "");
+  nTest = CIEC_SINT(0);
 
-    BOOST_CHECK_EQUAL(nTest.fromString("2#01111111"), 10);
-    BOOST_CHECK_EQUAL(nTest, 127);
-    BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 3);
-    BOOST_CHECK_EQUAL(strcmp(cBuffer, "127"), 0);
-    BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-    strcpy(cBuffer, "");
-    nTest = CIEC_SINT(0);
+  BOOST_CHECK_EQUAL(nTest.fromString("16#7F"), 5);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_SINT::TValueType>(nTest), 127);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 3);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "127"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
+  strcpy(cBuffer, "");
+  nTest = CIEC_SINT(0);
 
-    BOOST_CHECK_EQUAL(nTest.fromString("8#177"), 5);
-    BOOST_CHECK_EQUAL(nTest, 127);
-    BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 3);
-    BOOST_CHECK_EQUAL(strcmp(cBuffer, "127"), 0);
-    BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-    strcpy(cBuffer, "");
-    nTest = CIEC_SINT(0);
-
-    BOOST_CHECK_EQUAL(nTest.fromString("16#7F"), 5);
-    BOOST_CHECK_EQUAL(nTest, 127);
-    BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 5), 3);
-    BOOST_CHECK_EQUAL(strcmp(cBuffer, "127"), 0);
-    BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-    strcpy(cBuffer, "");
-    nTest = CIEC_SINT(0);
-
-    //testing values outside of allowed range
-    BOOST_CHECK_EQUAL(nTest.fromString("300"), -1);
-    BOOST_CHECK_EQUAL(nTest.fromString("2#100101100"), -1);
-    BOOST_CHECK_EQUAL(nTest.fromString("8#454"), -1);
-    BOOST_CHECK_EQUAL(nTest.fromString("10#300"), -1);
-    BOOST_CHECK_EQUAL(nTest.fromString("16#12C"), -1);
-    BOOST_CHECK_EQUAL(nTest.fromString("-130"), -1);
+  // testing values outside of allowed range
+  BOOST_CHECK_EQUAL(nTest.fromString("300"), -1);
+  BOOST_CHECK_EQUAL(nTest.fromString("2#100101100"), -1);
+  BOOST_CHECK_EQUAL(nTest.fromString("8#454"), -1);
+  BOOST_CHECK_EQUAL(nTest.fromString("10#300"), -1);
+  BOOST_CHECK_EQUAL(nTest.fromString("16#12C"), -1);
+  BOOST_CHECK_EQUAL(nTest.fromString("-130"), -1);
 
   //check invalid fromString string
   BOOST_CHECK_EQUAL(nTest.fromString("NOT A VALID STRING"), -1);

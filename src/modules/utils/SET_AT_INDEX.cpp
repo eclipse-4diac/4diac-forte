@@ -52,10 +52,10 @@ void FORTE_SET_AT_INDEX::executeEvent(int pa_nEIID){
       if(rInArray.getElementDataTypeID() == rOutArray.getElementDataTypeID() &&
         rInArray.getElementDataTypeID() == VALUE().getDataTypeID()){
           //now check array length of input array
-          if(INDEX() < rInArray.size() && rOutArray.size() >= rInArray.size()){
+          if(static_cast<CIEC_UINT::TValueType>(INDEX()) < rInArray.size() && rOutArray.size() >= rInArray.size()){
             //update the value
             rOutArray.setValue(rInArray);
-            rOutArray[INDEX()].saveAssign(VALUE());
+            rOutArray[static_cast<CIEC_UINT::TValueType>(INDEX())].saveAssign(VALUE());
             QO() = CIEC_BOOL(true);
           }
           else{

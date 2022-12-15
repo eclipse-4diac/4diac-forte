@@ -16,3 +16,7 @@
 DEFINE_FIRMWARE_DATATYPE(UINT, g_nStringIdUINT)
 
 const CIEC_UINT::TValueType CIEC_UINT::scm_nMaxVal = std::numeric_limits<CIEC_UINT::TValueType>::max();
+
+template CIEC_UINT &CIEC_UINT::operator=<>(const CIEC_ANY_INT &paValue);
+
+template CIEC_UINT &CIEC_UINT::operator=<>(const CIEC_USINT &paValue);

@@ -63,6 +63,11 @@ class CIEC_DINT : public CIEC_ANY_INT{
       setValueSimple(paValue);
     }
 
+    explicit CIEC_DINT(const CIEC_ANY_INT& paValue) :
+        CIEC_ANY_INT() {
+      setValueSimple(paValue);
+    }
+
     explicit CIEC_DINT(TForteInt32 paValue) {
       setTINT32(paValue);
     }
@@ -75,34 +80,14 @@ class CIEC_DINT : public CIEC_ANY_INT{
       return *this;
     }
 
-    CIEC_DINT& operator =(const CIEC_INT &paValue){
-      // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
-      return *this;
-    }
-    
-
-    CIEC_DINT& operator =(const CIEC_UINT &paValue){
-      // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
-      return *this;
-    }
-    
-    CIEC_DINT& operator =(const CIEC_SINT &paValue){
-      // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
-      return *this;
-    }
-    
-
-    CIEC_DINT& operator =(const CIEC_USINT &paValue){
-      // Simple value assignment - no self assignment check needed
+    template <typename T, std::enable_if_t<std::is_same_v<typename forte::core::mpl::implicit_cast_t<T, CIEC_DINT>, CIEC_DINT>, int> = 0>
+    CIEC_DINT &operator=(const T &paValue) {
       setValueSimple(paValue);
       return *this;
     }
 
     CIEC_DINT operator-() const {
-      return CIEC_DINT(-1 * *this);
+      return CIEC_DINT(-1 * static_cast<CIEC_DINT::TValueType>(*this));
     }
     
 
@@ -110,7 +95,7 @@ class CIEC_DINT : public CIEC_ANY_INT{
      *
      *   Conversion operator for converting CIEC_DINT to elementary 32 bit integer
      */
-    operator TForteInt32() const{
+    explicit operator TForteInt32() const{
       return getTINT32();
     }
 

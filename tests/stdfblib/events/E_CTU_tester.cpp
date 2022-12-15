@@ -71,11 +71,11 @@ BOOST_AUTO_TEST_CASE(EventCU) {
     triggerEvent(1);
     BOOST_CHECK(checkR());
     mInPV = CIEC_UINT(valuesToTest[j]);
-    for(unsigned int k = 0; k < static_cast<unsigned int>(mInPV + 3); k++) {
-      prevCV = mOutCV;
-      //Send event
-      triggerEvent(0);
-      BOOST_CHECK(checkCU(prevCV));
+    for (unsigned int k = 0; k < static_cast<CIEC_UINT::TValueType>(mInPV) + 3; k++) {
+        prevCV = static_cast<CIEC_UINT::TValueType>(mOutCV);
+        // Send event
+        triggerEvent(0);
+        BOOST_CHECK(checkCU(prevCV));
     }
   }
 }

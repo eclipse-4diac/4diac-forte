@@ -45,8 +45,8 @@ const SFBInterfaceSpec E_DEMUX::scm_stFBInterfaceSpec = {
 };
 
 void E_DEMUX::executeEvent(int pa_nEIID){
-  if(scm_nEventEIID == pa_nEIID && K() <= 3) {
-    sendOutputEvent(K());
+  if(scm_nEventEIID == pa_nEIID && static_cast<CIEC_BOOL::TValueType>(func_LE(K(), CIEC_UINT(3)))) {
+    sendOutputEvent(static_cast<CIEC_UINT::TValueType>(K()));
     // the value of K corresponds to the outputevent ID;
     // as a result of this we could make a generic E_DEMUX
     // and even a generic E_MUX

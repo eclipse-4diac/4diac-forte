@@ -188,58 +188,57 @@ const CIEC_DATE_AND_TIME func_CONCAT_DATE_TOD(const CIEC_DATE& paIN1, const CIEC
   struct tm *pstTime = paIN1.getTimeStruct();
 
   time_t t = static_cast<time_t>(static_cast<TForteUInt64>(paIN2) / 1000ULL);
-  pstTime->tm_hour = (int) (t / 3600);
-  pstTime->tm_min = (int) ((t % 3600) / 60);
-  pstTime->tm_sec = (int) (t % 60);
+  pstTime->tm_hour = static_cast<int>(t / 3600);
+  pstTime->tm_min = static_cast<int>((t % 3600) / 60);
+  pstTime->tm_sec = static_cast<int>(t % 60);
 
   retVal.setDateAndTime(*pstTime, paIN2.getMilliSeconds());
   return retVal;
 }
 
 const CIEC_DATE_AND_TIME func_CONCAT_DT(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &MONTH, const CIEC_ANY_INT &DAY, const CIEC_ANY_INT &HOUR, const CIEC_ANY_INT &MINUTE, const CIEC_ANY_INT &SECOND, const CIEC_ANY_INT &MILLISECOND) {
-  struct tm concatTime = {0};
-  memset(&concatTime, 0, sizeof(concatTime));
+  struct tm concatTime {};
   if(YEAR.isSigned()) {
-    concatTime.tm_year = YEAR.getSignedValue() - 1900;
+    concatTime.tm_year = static_cast<int>(YEAR.getSignedValue() - 1900);
   } else {
-    concatTime.tm_year = YEAR.getUnsignedValue() - 1900;
+    concatTime.tm_year = static_cast<int>(YEAR.getUnsignedValue() - 1900);
   }
 
   if (MONTH.isSigned()) {
-    concatTime.tm_mon = MONTH.getSignedValue() - 1;
+    concatTime.tm_mon = static_cast<int>(MONTH.getSignedValue() - 1);
   } else {
-    concatTime.tm_mon = MONTH.getUnsignedValue() - 1;
+    concatTime.tm_mon = static_cast<int>(MONTH.getUnsignedValue() - 1);
   }
 
   if (DAY.isSigned()) {
-    concatTime.tm_mday = DAY.getSignedValue();
+    concatTime.tm_mday = static_cast<int>(DAY.getSignedValue());
   } else {
-    concatTime.tm_mday = DAY.getUnsignedValue();
+    concatTime.tm_mday = static_cast<int>(DAY.getUnsignedValue());
   }
 
   if (HOUR.isSigned()) {
-    concatTime.tm_hour = HOUR.getSignedValue();
+    concatTime.tm_hour = static_cast<int>(HOUR.getSignedValue());
   } else {
-    concatTime.tm_hour = HOUR.getUnsignedValue();
+    concatTime.tm_hour = static_cast<int>(HOUR.getUnsignedValue());
   }
 
   if (MINUTE.isSigned()) {
-    concatTime.tm_min = MINUTE.getSignedValue();
+    concatTime.tm_min = static_cast<int>(MINUTE.getSignedValue());
   } else {
-    concatTime.tm_min = MINUTE.getUnsignedValue();
+    concatTime.tm_min = static_cast<int>(MINUTE.getUnsignedValue());
   }
 
   if (SECOND.isSigned()) {
-    concatTime.tm_sec = SECOND.getSignedValue();
+    concatTime.tm_sec = static_cast<int>(SECOND.getSignedValue());
   } else {
-    concatTime.tm_sec = SECOND.getUnsignedValue();
+    concatTime.tm_sec = static_cast<int>(SECOND.getUnsignedValue());
   }
 
   unsigned int millisecond = 0;
   if (MILLISECOND.isSigned()) {
-    millisecond = MILLISECOND.getSignedValue();
+    millisecond = static_cast<unsigned int>(MILLISECOND.getSignedValue());
   } else {
-    millisecond = MILLISECOND.getUnsignedValue();
+    millisecond = static_cast<unsigned int>(MILLISECOND.getUnsignedValue());
   }
   CIEC_DATE_AND_TIME retVal;
   retVal.setDateAndTime(concatTime, millisecond);
@@ -317,58 +316,58 @@ const CIEC_LDATE_AND_TIME func_CONCAT_LDATE_LTOD(const CIEC_LDATE& paIN1, const 
   struct tm *pstTime = paIN1.getTimeStruct();
 
   time_t t = static_cast<time_t>( paIN2 / 1000ULL);
-  pstTime->tm_hour = (int) (t / 3600);
-  pstTime->tm_min = (int) ((t % 3600) / 60);
-  pstTime->tm_sec = (int) (t % 60);
+  pstTime->tm_hour = static_cast<int>(t / 3600);
+  pstTime->tm_min = static_cast<int>((t % 3600) / 60);
+  pstTime->tm_sec = static_cast<int>(t % 60);
 
   retVal.setDateAndTime(*pstTime, paIN2.getMilliSeconds());
   return retVal;
 }
 
 const CIEC_LDATE_AND_TIME func_CONCAT_LDT(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &MONTH, const CIEC_ANY_INT &DAY, const CIEC_ANY_INT &HOUR, const CIEC_ANY_INT &MINUTE, const CIEC_ANY_INT &SECOND, const CIEC_ANY_INT &MILLISECOND) {
-  struct tm concatTime = {0};
-  memset(&concatTime, 0, sizeof(concatTime));
+  struct tm concatTime{};
+
   if(YEAR.isSigned()) {
-    concatTime.tm_year = YEAR.getSignedValue() - 1900;
+    concatTime.tm_year = static_cast<int>(YEAR.getSignedValue() - 1900);
   } else {
-    concatTime.tm_year = YEAR.getUnsignedValue() - 1900;
+    concatTime.tm_year = static_cast<int>(YEAR.getUnsignedValue() - 1900);
   }
 
   if (MONTH.isSigned()) {
-    concatTime.tm_mon = MONTH.getSignedValue() - 1;
+    concatTime.tm_mon = static_cast<int>(MONTH.getSignedValue() - 1);
   } else {
-    concatTime.tm_mon = MONTH.getUnsignedValue() - 1;
+    concatTime.tm_mon = static_cast<int>(MONTH.getUnsignedValue() - 1);
   }
 
   if (DAY.isSigned()) {
-    concatTime.tm_mday = DAY.getSignedValue();
+    concatTime.tm_mday = static_cast<int>(DAY.getSignedValue());
   } else {
-    concatTime.tm_mday = DAY.getUnsignedValue();
+    concatTime.tm_mday = static_cast<int>(DAY.getUnsignedValue());
   }
 
   if (HOUR.isSigned()) {
-    concatTime.tm_hour = HOUR.getSignedValue();
+    concatTime.tm_hour = static_cast<int>(HOUR.getSignedValue());
   } else {
-    concatTime.tm_hour = HOUR.getUnsignedValue();
+    concatTime.tm_hour = static_cast<int>(HOUR.getUnsignedValue());
   }
 
   if (MINUTE.isSigned()) {
-    concatTime.tm_min = MINUTE.getSignedValue();
+    concatTime.tm_min = static_cast<int>(MINUTE.getSignedValue());
   } else {
-    concatTime.tm_min = MINUTE.getUnsignedValue();
+    concatTime.tm_min = static_cast<int>(MINUTE.getUnsignedValue());
   }
 
   if (SECOND.isSigned()) {
-    concatTime.tm_sec = SECOND.getSignedValue();
+    concatTime.tm_sec = static_cast<int>(SECOND.getSignedValue());
   } else {
-    concatTime.tm_sec = SECOND.getUnsignedValue();
+    concatTime.tm_sec = static_cast<int>(SECOND.getUnsignedValue());
   }
 
   unsigned int millisecond = 0;
   if (MILLISECOND.isSigned()) {
-    millisecond = MILLISECOND.getSignedValue();
+    millisecond = static_cast<unsigned int>(MILLISECOND.getSignedValue());
   } else {
-    millisecond = MILLISECOND.getUnsignedValue();
+    millisecond = static_cast<unsigned int>(MILLISECOND.getUnsignedValue());
   }
   CIEC_LDATE_AND_TIME retVal;
   retVal.setDateAndTime(concatTime, millisecond);

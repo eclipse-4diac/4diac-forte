@@ -136,46 +136,46 @@ BOOST_AUTO_TEST_SUITE(convert_functions)
     CIEC_REAL roundUpReal(50.5f);
     CIEC_REAL roundDownReal(50.4f);
 
-    BOOST_TEST(func_REAL_TO_SINT(roundUpReal) == 51);
-    BOOST_TEST(func_REAL_TO_SINT(roundDownReal) == 50);
-    BOOST_TEST(func_REAL_TO_INT(roundUpReal) == 51);
-    BOOST_TEST(func_REAL_TO_INT(roundDownReal) == 50);
-    BOOST_TEST(func_REAL_TO_DINT(roundUpReal) == 51);
-    BOOST_TEST(func_REAL_TO_DINT(roundDownReal) == 50);
-    BOOST_TEST(func_REAL_TO_LINT(roundUpReal) == 51);
-    BOOST_TEST(func_REAL_TO_LINT(roundDownReal) == 50);
+    BOOST_TEST(static_cast<CIEC_SINT::TValueType>(func_REAL_TO_SINT(roundUpReal)) == 51);
+    BOOST_TEST(static_cast<CIEC_SINT::TValueType>(func_REAL_TO_SINT(roundDownReal)) == 50);
+    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_REAL_TO_INT(roundUpReal)) == 51);
+    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_REAL_TO_INT(roundDownReal)) == 50);
+    BOOST_TEST(static_cast<CIEC_DINT::TValueType>(func_REAL_TO_DINT(roundUpReal)) == 51);
+    BOOST_TEST(static_cast<CIEC_DINT::TValueType>(func_REAL_TO_DINT(roundDownReal)) == 50);
+    BOOST_TEST(static_cast<CIEC_LINT::TValueType>(func_REAL_TO_LINT(roundUpReal)) == 51);
+    BOOST_TEST(static_cast<CIEC_LINT::TValueType>(func_REAL_TO_LINT(roundDownReal)) == 50);
 
-    BOOST_TEST(func_REAL_TO_USINT(roundUpReal) == 51);
-    BOOST_TEST(func_REAL_TO_USINT(roundDownReal) == 50);
-    BOOST_TEST(func_REAL_TO_UINT(roundUpReal) == 51);
-    BOOST_TEST(func_REAL_TO_UINT(roundDownReal) == 50);
-    BOOST_TEST(func_REAL_TO_UDINT(roundUpReal) == 51);
-    BOOST_TEST(func_REAL_TO_UDINT(roundDownReal) == 50);
-    BOOST_TEST(func_REAL_TO_ULINT(roundUpReal) == 51);
-    BOOST_TEST(func_REAL_TO_ULINT(roundDownReal) == 50);
+    BOOST_TEST(static_cast<CIEC_USINT::TValueType>(func_REAL_TO_USINT(roundUpReal)) == 51);
+    BOOST_TEST(static_cast<CIEC_USINT::TValueType>(func_REAL_TO_USINT(roundDownReal)) == 50);
+    BOOST_TEST(static_cast<CIEC_UINT::TValueType>(func_REAL_TO_UINT(roundUpReal)) == 51);
+    BOOST_TEST(static_cast<CIEC_UINT::TValueType>(func_REAL_TO_UINT(roundDownReal)) == 50);
+    BOOST_TEST(static_cast<CIEC_UDINT::TValueType>(func_REAL_TO_UDINT(roundUpReal)) == 51);
+    BOOST_TEST(static_cast<CIEC_UDINT::TValueType>(func_REAL_TO_UDINT(roundDownReal)) == 50);
+    BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(func_REAL_TO_ULINT(roundUpReal)) == 51);
+    BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(func_REAL_TO_ULINT(roundDownReal)) == 50);
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_LREAL_TO_XINT) {
     CIEC_LREAL roundUpReal(50.5f);
     CIEC_LREAL roundDownReal(50.4f);
 
-    BOOST_TEST(func_LREAL_TO_SINT(roundUpReal) == 51);
-    BOOST_TEST(func_LREAL_TO_SINT(roundDownReal) == 50);
-    BOOST_TEST(func_LREAL_TO_INT(roundUpReal) == 51);
-    BOOST_TEST(func_LREAL_TO_INT(roundDownReal) == 50);
-    BOOST_TEST(func_LREAL_TO_DINT(roundUpReal) == 51);
-    BOOST_TEST(func_LREAL_TO_DINT(roundDownReal) == 50);
-    BOOST_TEST(func_LREAL_TO_LINT(roundUpReal) == 51);
-    BOOST_TEST(func_LREAL_TO_LINT(roundDownReal) == 50);
+    BOOST_TEST(static_cast<CIEC_SINT::TValueType>(func_LREAL_TO_SINT(roundUpReal)) == 51);
+    BOOST_TEST(static_cast<CIEC_SINT::TValueType>(func_LREAL_TO_SINT(roundDownReal)) == 50);
+    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LREAL_TO_INT(roundUpReal)) == 51);
+    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_LREAL_TO_INT(roundDownReal)) == 50);
+    BOOST_TEST(static_cast<CIEC_DINT::TValueType>(func_LREAL_TO_DINT(roundUpReal)) == 51);
+    BOOST_TEST(static_cast<CIEC_DINT::TValueType>(func_LREAL_TO_DINT(roundDownReal)) == 50);
+    BOOST_TEST(static_cast<CIEC_LINT::TValueType>(func_LREAL_TO_LINT(roundUpReal)) == 51);
+    BOOST_TEST(static_cast<CIEC_LINT::TValueType>(func_LREAL_TO_LINT(roundDownReal)) == 50);
 
-    BOOST_TEST(func_LREAL_TO_USINT(roundUpReal) == 51);
-    BOOST_TEST(func_LREAL_TO_USINT(roundDownReal) == 50);
-    BOOST_TEST(func_LREAL_TO_UINT(roundUpReal) == 51);
-    BOOST_TEST(func_LREAL_TO_UINT(roundDownReal) == 50);
-    BOOST_TEST(func_LREAL_TO_UDINT(roundUpReal) == 51);
-    BOOST_TEST(func_LREAL_TO_UDINT(roundDownReal) == 50);
-    BOOST_TEST(func_LREAL_TO_ULINT(roundUpReal) == 51);
-    BOOST_TEST(func_LREAL_TO_ULINT(roundDownReal) == 50);
+    BOOST_TEST(static_cast<CIEC_USINT::TValueType>(func_LREAL_TO_USINT(roundUpReal)) == 51);
+    BOOST_TEST(static_cast<CIEC_USINT::TValueType>(func_LREAL_TO_USINT(roundDownReal)) == 50);
+    BOOST_TEST(static_cast<CIEC_UINT::TValueType>(func_LREAL_TO_UINT(roundUpReal)) == 51);
+    BOOST_TEST(static_cast<CIEC_UINT::TValueType>(func_LREAL_TO_UINT(roundDownReal)) == 50);
+    BOOST_TEST(static_cast<CIEC_UDINT::TValueType>(func_LREAL_TO_UDINT(roundUpReal)) == 51);
+    BOOST_TEST(static_cast<CIEC_UDINT::TValueType>(func_LREAL_TO_UDINT(roundDownReal)) == 50);
+    BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(func_LREAL_TO_ULINT(roundUpReal)) == 51);
+    BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(func_LREAL_TO_ULINT(roundDownReal)) == 50);
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_S_LINT) {
@@ -183,7 +183,7 @@ BOOST_AUTO_TEST_SUITE(convert_functions)
     time.fromString("T#2d5h43m12s");
     CIEC_LINT timeInS;
     timeInS = func_TIME_IN_S_TO_LINT(time);
-    BOOST_TEST(timeInS == (INT64_C(172800) + INT64_C(18000) + INT64_C(2580) + INT64_C(12)));
+    BOOST_TEST(static_cast<CIEC_LINT::TValueType>(timeInS) == (INT64_C(172800) + INT64_C(18000) + INT64_C(2580) + INT64_C(12)));
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_MS_LINT) {
@@ -191,7 +191,7 @@ BOOST_AUTO_TEST_SUITE(convert_functions)
     time.fromString("T#2d5h43m12s44ms");
     CIEC_LINT timeInMs;
     timeInMs = func_TIME_IN_MS_TO_LINT(time);
-    BOOST_TEST(timeInMs == (INT64_C(172800000) + INT64_C(18000000) + INT64_C(2580000) + INT64_C(12000) + INT64_C(44)));
+    BOOST_TEST(static_cast<CIEC_LINT::TValueType>(timeInMs) == (INT64_C(172800000) + INT64_C(18000000) + INT64_C(2580000) + INT64_C(12000) + INT64_C(44)));
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_US_LINT) {
@@ -199,7 +199,7 @@ BOOST_AUTO_TEST_SUITE(convert_functions)
     time.fromString("T#2d5h43m12s44ms27us");
     CIEC_LINT timeInUs;
     timeInUs = func_TIME_IN_US_TO_LINT(time);
-    BOOST_TEST(timeInUs == (INT64_C(172800000000) + INT64_C(18000000000) + INT64_C(2580000000) + INT64_C(12000000) + INT64_C(44000) + INT64_C(27)));
+    BOOST_TEST(static_cast<CIEC_LINT::TValueType>(timeInUs) == (INT64_C(172800000000) + INT64_C(18000000000) + INT64_C(2580000000) + INT64_C(12000000) + INT64_C(44000) + INT64_C(27)));
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_NS_LINT) {
@@ -207,7 +207,7 @@ BOOST_AUTO_TEST_SUITE(convert_functions)
     time.fromString("T#2d5h43m12s44ms27us31ns");
     CIEC_LINT timeInNs;
     timeInNs = func_TIME_IN_NS_TO_LINT(time);
-    BOOST_TEST(timeInNs == (INT64_C(172800000000000) + INT64_C(18000000000000) + INT64_C(2580000000000) + INT64_C(12000000000) + INT64_C(44000000) + INT64_C(27000) + INT64_C(31)));
+    BOOST_TEST(static_cast<CIEC_LINT::TValueType>(timeInNs) == (INT64_C(172800000000000) + INT64_C(18000000000000) + INT64_C(2580000000000) + INT64_C(12000000000) + INT64_C(44000000) + INT64_C(27000) + INT64_C(31)));
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_S_ULINT) {
@@ -215,7 +215,7 @@ BOOST_AUTO_TEST_SUITE(convert_functions)
     time.fromString("T#2d5h43m12s");
     CIEC_ULINT timeInS;
     timeInS = func_TIME_IN_S_TO_ULINT(time);
-    BOOST_TEST(timeInS == (UINT64_C(172800) + UINT64_C(18000) + UINT64_C(2580) + UINT64_C(12)));
+    BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(timeInS) == (UINT64_C(172800) + UINT64_C(18000) + UINT64_C(2580) + UINT64_C(12)));
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_MS_ULINT) {
@@ -223,7 +223,7 @@ BOOST_AUTO_TEST_SUITE(convert_functions)
     time.fromString("T#2d5h43m12s44ms");
     CIEC_ULINT timeInMs;
     timeInMs = func_TIME_IN_MS_TO_ULINT(time);
-    BOOST_TEST(timeInMs == (UINT64_C(172800000) + UINT64_C(18000000) + UINT64_C(2580000) + UINT64_C(12000) + UINT64_C(44)));
+    BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(timeInMs) == (UINT64_C(172800000) + UINT64_C(18000000) + UINT64_C(2580000) + UINT64_C(12000) + UINT64_C(44)));
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_US_ULINT) {
@@ -231,7 +231,7 @@ BOOST_AUTO_TEST_SUITE(convert_functions)
     time.fromString("T#2d5h43m12s44ms27us");
     CIEC_ULINT timeInUs;
     timeInUs = func_TIME_IN_US_TO_ULINT(time);
-    BOOST_TEST(timeInUs == (UINT64_C(172800000000) + UINT64_C(18000000000) + UINT64_C(2580000000) + UINT64_C(12000000) + UINT64_C(44000) + UINT64_C(27)));
+    BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(timeInUs) == (UINT64_C(172800000000) + UINT64_C(18000000000) + UINT64_C(2580000000) + UINT64_C(12000000) + UINT64_C(44000) + UINT64_C(27)));
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_NS_ULINT) {
@@ -239,7 +239,7 @@ BOOST_AUTO_TEST_SUITE(convert_functions)
     time.fromString("T#2d5h43m12s44ms27us31ns");
     CIEC_ULINT timeInNs;
     timeInNs = func_TIME_IN_NS_TO_ULINT(time);
-    BOOST_TEST(timeInNs == (UINT64_C(172800000000000) + UINT64_C(18000000000000) + UINT64_C(2580000000000) + UINT64_C(12000000000) + UINT64_C(44000000) + UINT64_C(27000) + UINT64_C(31)));
+    BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(timeInNs) == (UINT64_C(172800000000000) + UINT64_C(18000000000000) + UINT64_C(2580000000000) + UINT64_C(12000000000) + UINT64_C(44000000) + UINT64_C(27000) + UINT64_C(31)));
   }
 
   BOOST_AUTO_TEST_CASE(CONVERT_TIME_TO_S_LREAL) {

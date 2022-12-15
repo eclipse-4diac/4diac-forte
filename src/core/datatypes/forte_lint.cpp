@@ -17,3 +17,17 @@ DEFINE_FIRMWARE_DATATYPE(LINT, g_nStringIdLINT);
 
 const CIEC_LINT::TValueType CIEC_LINT::scm_nMinVal = std::numeric_limits<CIEC_LINT::TValueType>::min();
 const CIEC_LINT::TValueType CIEC_LINT::scm_nMaxVal = std::numeric_limits<CIEC_LINT::TValueType>::max();
+
+template CIEC_LINT &CIEC_LINT::operator=<>(const CIEC_ANY_INT &paValue);
+
+template CIEC_LINT &CIEC_LINT::operator=<>(const CIEC_SINT &paValue);
+
+template CIEC_LINT &CIEC_LINT::operator=<>(const CIEC_INT &paValue);
+
+template CIEC_LINT &CIEC_LINT::operator=<>(const CIEC_DINT &paValue);
+
+template CIEC_LINT &CIEC_LINT::operator=<>(const CIEC_USINT &paValue);
+
+template CIEC_LINT &CIEC_LINT::operator=<>(const CIEC_UINT &paValue);
+
+template CIEC_LINT &CIEC_LINT::operator=<>(const CIEC_UDINT &paValue);

@@ -35,7 +35,7 @@ BOOST_FIXTURE_TEST_SUITE( F_TIME_IN_S_TO_LINT_Tests, F_TIME_IN_S_TO_LINT_TestFix
     /* trigger the inputevent */
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-    BOOST_CHECK_EQUAL(INT64_C(172800) + INT64_C(18000) + INT64_C(2580) + INT64_C(12), mOut_F_TIME_IN_S_TO_LINT);
+    BOOST_CHECK_EQUAL(INT64_C(172800) + INT64_C(18000) + INT64_C(2580) + INT64_C(12), static_cast<CIEC_LINT::TValueType>(mOut_F_TIME_IN_S_TO_LINT));
   }
 
   BOOST_AUTO_TEST_SUITE_END()

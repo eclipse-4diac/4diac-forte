@@ -37,8 +37,8 @@ const SFBInterfaceSpec E_CTU::scm_stFBInterfaceSpec = { 2, scm_anEventInputNames
 void E_CTU::executeEvent(int pa_nEIID) {
   switch(pa_nEIID){
     case scm_nEventCUID:
-      if(CV() < 65535) {
-        CV() = CIEC_UINT(CV() + 1);
+      if(static_cast<CIEC_BOOL::TValueType>(func_LT(CV(), CIEC_UINT(65535)))) {
+        CV() = func_ADD(CV(), CIEC_UINT(1));
         Q() = func_GE(CV(), PV());
         sendOutputEvent(scm_nEventCUOID);
       }

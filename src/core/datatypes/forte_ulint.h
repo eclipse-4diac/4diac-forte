@@ -54,6 +54,11 @@ class CIEC_ULINT : public CIEC_ANY_INT{
       setValueSimple(paValue);
     }
 
+    explicit CIEC_ULINT(const CIEC_ANY_INT& paValue) :
+        CIEC_ANY_INT() {
+      setValueSimple(paValue);
+    }
+
    explicit CIEC_ULINT(TForteUInt64 paValue){
       setTUINT64(paValue);
     }
@@ -66,20 +71,8 @@ class CIEC_ULINT : public CIEC_ANY_INT{
       return *this;
     }
 
-    CIEC_ULINT& operator =(const CIEC_UDINT &paValue) {
-      // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
-      return *this;
-    }
-
-    CIEC_ULINT& operator =(const CIEC_UINT &paValue) {
-      // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
-      return *this;
-    }
-
-    CIEC_ULINT& operator =(const CIEC_USINT &paValue) {
-      // Simple value assignment - no self assignment check needed
+    template <typename T, std::enable_if_t<std::is_same_v<typename forte::core::mpl::implicit_cast_t<T, CIEC_ULINT>, CIEC_ULINT>, int> = 0>
+    CIEC_ULINT &operator=(const T &paValue) {
       setValueSimple(paValue);
       return *this;
     }
@@ -88,7 +81,7 @@ class CIEC_ULINT : public CIEC_ANY_INT{
      *
      *   Conversion operator for converting CIEC_ULINT to elementary unsigned 64 bit integer
      */
-    operator TForteUInt64() const {
+    explicit operator TForteUInt64() const {
       return getTUINT64();
     }
 
