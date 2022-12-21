@@ -395,6 +395,15 @@ EMGMResponse CFunctionBlock::changeFBExecutionState(EMGMCommandType pa_unCommand
   return nRetVal;
 }
 
+EMGMResponse CFunctionBlock::changeFBExecutionState(const EMGMCommandType paCommand, size_t paAmountOfInternalFBs,
+    TFunctionBlockPtr *const paInternalFBs){
+  EMGMResponse nRetVal = changeFBExecutionState(paCommand);
+  if(EMGMResponse::Ready == nRetVal){
+    nRetVal = changeInternalFBExecutionState(paCommand, paAmountOfInternalFBs, paInternalFBs);
+  }
+  return nRetVal;
+}
+
 CIEC_ANY *CFunctionBlock::createDataPoint(const CStringDictionary::TStringId **pa_panDataTypeIds, TForteByte *pa_acDataBuf){
   CIEC_ANY *poRetVal = CTypeLib::createDataTypeInstance(**pa_panDataTypeIds, pa_acDataBuf);
   ++(*pa_panDataTypeIds);

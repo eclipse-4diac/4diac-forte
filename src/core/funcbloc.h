@@ -421,6 +421,15 @@ class CFunctionBlock {
       return mDOConns + paDONum;
     }
 
+    /*!\brief helper function for changeing the FB execution state for FBs with internal FBs
+     *
+     * @param paCommand the reqeusted state change (i.e., start, stop, kill, reset)
+     * @param paAmountOfInternalFBs number of internal FBs contained in this FB
+     * @param paInternalFBs  array with the internal FBs of this FB
+     * @return success status of the requested state change
+     */
+    EMGMResponse changeFBExecutionState(const EMGMCommandType paCommand, const size_t paAmountOfInternalFBs, TFunctionBlockPtr *const paInternalFBs);
+
     /*!\brief Function to create an data type instance of given type
      *
      * @param pa_panDataTypeIds pointer to the data type ids. If the datatype
