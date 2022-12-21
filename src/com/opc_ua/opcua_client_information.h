@@ -184,7 +184,10 @@ class CUA_ClientInformation {
         /**
          * Function called when the state of the client changed
          */
-        static void clientStateChangeCallback(UA_Client *paClient, UA_ClientState paClientState);
+        static void clientStateChangeCallback(UA_Client *paClient,
+                                              UA_SecureChannelState channelState,
+                                              UA_SessionState sessionState,
+                                              UA_StatusCode connectStatus);
     };
 
   private:

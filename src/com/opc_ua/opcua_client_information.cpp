@@ -108,8 +108,9 @@ bool CUA_ClientInformation::handleClientState() {
   }
 
   while(tryAnotherChangeImmediately) {
-    UA_ClientState currentState = UA_Client_getState(mClient);
-    if(UA_CLIENTSTATE_SESSION == currentState) {
+    UA_SessionState sessionState;
+    UA_Client_getState(mClient, nullptr, &sessionState, nullptr);
+    if(sessionState == UA_SESSIONSTATE_ACTIVATED) {
       if(initializeAllActions()) {
         noMoreChangesNeeded = true;
       } else {
@@ -117,8 +118,6 @@ bool CUA_ClientInformation::handleClientState() {
         mLastActionInitializationTry = getNanoSecondsMonotonic();
       }
       tryAnotherChangeImmediately = false;
-    } else if(UA_CLIENTSTATE_SESSION_RENEWED == currentState) {
-      DEVLOG_ERROR("[OPC UA CLIENT]: Client state is session renewed. Check what happens with the subscription here\n");
     } else {
       if(!connectClient()) {
         tryAnotherChangeImmediately = false;
@@ -284,7 +283,7 @@ bool CUA_ClientInformation::connectClient() {
   if(0 == mUsername.compare("")) {
     return (UA_STATUSCODE_GOOD == UA_Client_connect(mClient, mEndpointUrl.getValue()));
   } else {
-    return (UA_STATUSCODE_GOOD == UA_Client_connect_username(mClient, mEndpointUrl.getValue(), mUsername.c_str(), mPassword.c_str()));
+    return (UA_STATUSCODE_GOOD == UA_Client_connectUsername(mClient, mEndpointUrl.getValue(), mUsername.c_str(), mPassword.c_str()));
   }
 }
 
@@ -731,27 +730,24 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::deleteSubscriptionCallb
 }
 
 void CUA_ClientInformation::CUA_RemoteCallbackFunctions::clientStateChangeCallback( //We omit SONAR only for the parameters
-    UA_Client*, UA_ClientState paClientState //NOSONAR
+    UA_Client*,
+    UA_SecureChannelState channelState,
+    UA_SessionState sessionState,
+    UA_StatusCode connectStatus //NOSONAR
     ) {
   //Don't do anything here. If the subscription is deleted, deleteSubscriptionCallback will be called and handled there
-  switch(paClientState){
-    case UA_CLIENTSTATE_DISCONNECTED:
-      DEVLOG_INFO("[OPC UA CLIENT]: The client is disconnected\n");
-      break;
-    case UA_CLIENTSTATE_CONNECTED:
-      DEVLOG_INFO("[OPC UA CLIENT]: A TCP connection to the server is open\n");
-      break;
-    case UA_CLIENTSTATE_SECURECHANNEL:
-      DEVLOG_INFO("[OPC UA CLIENT]: A SecureChannel to the server is open\n");
-      break;
-    case UA_CLIENTSTATE_SESSION:
-      DEVLOG_INFO("[OPC UA CLIENT]: A session with the server is open\n");
-      break;
-    case UA_CLIENTSTATE_SESSION_RENEWED:
-      DEVLOG_INFO("[OPC UA CLIENT]: A session with the server is open (renewed)\n");
-      break;
-    default:
-      DEVLOG_ERROR("[OPC UA CLIENT]: Unknown state of client %d\n", paClientState);
+  if (channelState == UA_SECURECHANNELSTATE_CLOSED) {
+    DEVLOG_INFO("[OPC UA CLIENT]: The client is disconnected\n");
+  } else if (channelState != UA_SECURECHANNELSTATE_OPEN) {
+    DEVLOG_INFO("[OPC UA CLIENT]: A TCP connection to the server is open\n");
+  } else if (sessionState != UA_SESSIONSTATE_ACTIVATED) {
+    DEVLOG_INFO("[OPC UA CLIENT]: A SecureChannel to the server is open\n");
+  } else if (sessionState == UA_SESSIONSTATE_ACTIVATED) {
+    DEVLOG_INFO("[OPC UA CLIENT]: A session with the server is open\n");
+  }
+  if (connectStatus != UA_STATUSCODE_GOOD) {
+    DEVLOG_WARNING("[OPC UA CLIENT]: client error: channel %d, session %d, status 0x%08x\n",
+                   channelState, sessionState, connectStatus);
   }
   return;
 }

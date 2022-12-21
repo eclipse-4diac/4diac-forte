@@ -138,24 +138,16 @@ void COPC_UA_Local_Handler::generateServerStrings(TForteUInt16 paUAServerPort, U
   paServerStrings.mMdnsServerName = CIEC_STRING(helperBuffer);
 #endif //FORTE_COM_OPC_UA_MULTICAST
 
-  char hostname[scmMaxServerNameLength + 1];
+  paServerStrings.mAppURI = CIEC_STRING("org.eclipse.4diac.");
 #ifdef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
-  forte_snprintf(hostname, scmMaxServerNameLength, "%s-%s", FORTE_COM_OPC_UA_CUSTOM_HOSTNAME, helperBuffer);
+  paServerStrings.mHostname = CIEC_STRING(FORTE_COM_OPC_UA_CUSTOM_HOSTNAME);
+  paServerStrings.mHostname.append("-");
+  paServerStrings.mHostname.append(helperBuffer);
+  paServerStrings.mAppURI.append(paServerStrings.mHostname.getValue());
 #else
-  if(gethostname(hostname, scmMaxServerNameLength) == 0) {
-    size_t offset = strlen(hostname);
-    size_t nameLen = strlen(helperBuffer);
-    if(offset + nameLen + 1 > scmMaxServerNameLength) {
-      offset = std::max<size_t>(scmMaxServerNameLength - nameLen - 1, (size_t) 0);
-    }
-    forte_snprintf(hostname + offset, scmMaxServerNameLength - offset, "-%s", helperBuffer);
-  }
+  paServerStrings.mAppURI.append(helperBuffer);
 #endif
 
-  forte_snprintf(helperBuffer, scmMaxServerNameLength, "org.eclipse.4diac.%s", hostname);
-
-  paServerStrings.mAppURI = CIEC_STRING(helperBuffer);
-  paServerStrings.mHostname = CIEC_STRING(hostname);
 }
 
 void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings, UA_ServerConfig &paUaServerConfig) const {
@@ -165,12 +157,15 @@ void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings,
 #ifdef FORTE_COM_OPC_UA_MULTICAST
   paUaServerConfig.applicationDescription.applicationType = UA_APPLICATIONTYPE_DISCOVERYSERVER;
   // hostname will be added by mdns library
-  UA_String_deleteMembers(&paUaServerConfig.discovery.mdns.mdnsServerName);
-  paUaServerConfig.discovery.mdns.mdnsServerName = UA_String_fromChars(paServerStrings.mMdnsServerName.getValue());
+  UA_String_deleteMembers(&paUaServerConfig.mdnsConfig.mdnsServerName);
+  paUaServerConfig.mdnsConfig.mdnsServerName = UA_String_fromChars(paServerStrings.mMdnsServerName.getValue());
 #endif //FORTE_COM_OPC_UA_MULTICAST
 
+  UA_String_clear(&paUaServerConfig.customHostname);
+#ifdef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
   UA_String customHost = UA_STRING(paServerStrings.mHostname.getValue());
-  UA_ServerConfig_setCustomHostname(&paUaServerConfig, customHost);
+  UA_String_copy(&customHost, &paUaServerConfig.customHostname);
+#endif
 
   // delete pre-initialized values
   UA_LocalizedText_deleteMembers(&paUaServerConfig.applicationDescription.applicationName);
