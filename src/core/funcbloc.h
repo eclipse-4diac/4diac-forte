@@ -428,7 +428,7 @@ class CFunctionBlock {
      * @param paInternalFBs  array with the internal FBs of this FB
      * @return success status of the requested state change
      */
-    EMGMResponse changeFBExecutionState(const EMGMCommandType paCommand, const size_t paAmountOfInternalFBs, TFunctionBlockPtr *const paInternalFBs);
+    EMGMResponse changeFBExecutionStateHelper(const EMGMCommandType paCommand, const size_t paAmountOfInternalFBs, TFunctionBlockPtr *const paInternalFBs);
 
     /*!\brief Function to create an data type instance of given type
      *
