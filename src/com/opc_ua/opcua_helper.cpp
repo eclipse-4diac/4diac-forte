@@ -245,8 +245,8 @@ UA_StatusCode COPC_UA_Helper::getRemoteNodeForPath(UA_Client &paClient, const ch
     }
 
     //browsePaths is deleted inside
-    UA_TranslateBrowsePathsToNodeIdsRequest_deleteMembers(&request);
-    UA_TranslateBrowsePathsToNodeIdsResponse_deleteMembers(&response);
+    UA_TranslateBrowsePathsToNodeIdsRequest_clear(&request);
+    UA_TranslateBrowsePathsToNodeIdsResponse_clear(&response);
   }
 
   return retVal;

@@ -33,7 +33,7 @@ UA_DatatypeTest_copy(const UA_DatatypeTest *src, UA_DatatypeTest *dst) {
 }
 
 UA_DEPRECATED static UA_INLINE void
-UA_DatatypeTest_deleteMembers(UA_DatatypeTest *p) {
+UA_DatatypeTest_clear(UA_DatatypeTest *p) {
     UA_clear(p, &UA_UA_TYPES_FORDIACNAMESPACE[UA_UA_TYPES_FORDIACNAMESPACE_DATATYPETEST]);
 }
 

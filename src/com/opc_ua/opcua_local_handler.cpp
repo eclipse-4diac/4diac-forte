@@ -157,7 +157,7 @@ void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings,
 #ifdef FORTE_COM_OPC_UA_MULTICAST
   paUaServerConfig.applicationDescription.applicationType = UA_APPLICATIONTYPE_DISCOVERYSERVER;
   // hostname will be added by mdns library
-  UA_String_deleteMembers(&paUaServerConfig.mdnsConfig.mdnsServerName);
+  UA_String_clear(&paUaServerConfig.mdnsConfig.mdnsServerName);
   paUaServerConfig.mdnsConfig.mdnsServerName = UA_String_fromChars(paServerStrings.mMdnsServerName.getValue());
 #endif //FORTE_COM_OPC_UA_MULTICAST
 
@@ -168,8 +168,8 @@ void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings,
 #endif
 
   // delete pre-initialized values
-  UA_LocalizedText_deleteMembers(&paUaServerConfig.applicationDescription.applicationName);
-  UA_String_deleteMembers(&paUaServerConfig.applicationDescription.applicationUri);
+  UA_LocalizedText_clear(&paUaServerConfig.applicationDescription.applicationName);
+  UA_String_clear(&paUaServerConfig.applicationDescription.applicationUri);
 
   paUaServerConfig.applicationDescription.applicationUri = UA_String_fromChars(paServerStrings.mAppURI.getValue());
   paUaServerConfig.applicationDescription.applicationName.locale = UA_STRING_NULL;
@@ -178,8 +178,8 @@ void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings,
   FORTE_COM_OPC_UA_SERVER_PUB_INTERVAL;
 
   for(size_t i = 0; i < paUaServerConfig.endpointsSize; i++) {
-    UA_String_deleteMembers(&paUaServerConfig.endpoints[i].server.applicationUri);
-    UA_LocalizedText_deleteMembers(&paUaServerConfig.endpoints[i].server.applicationName);
+    UA_String_clear(&paUaServerConfig.endpoints[i].server.applicationUri);
+    UA_LocalizedText_clear(&paUaServerConfig.endpoints[i].server.applicationName);
     UA_String_copy(&paUaServerConfig.applicationDescription.applicationUri, &paUaServerConfig.endpoints[i].server.applicationUri);
     UA_LocalizedText_copy(&paUaServerConfig.applicationDescription.applicationName, &paUaServerConfig.endpoints[i].server.applicationName);
   }
@@ -305,7 +305,7 @@ void COPC_UA_Local_Handler::serverOnNetworkCallback(const UA_ServerOnNetwork *pa
       break;
     }
   }
-  UA_String_deleteMembers(&ldsStr);
+  UA_String_clear(&ldsStr);
 }
 
 void COPC_UA_Local_Handler::registerWithLds(const UA_String *paDiscoveryUrl) {
@@ -606,9 +606,9 @@ UA_StatusCode COPC_UA_Local_Handler::createVariableNode(const CCreateVariableInf
     DEVLOG_ERROR("[OPC UA LOCAL]: AddressSpace adding Variable Node %s failed. Error: %s\n", paCreateVariableInfo.mBrowseName->name.data,
       UA_StatusCode_name(retVal));
   }
-  UA_NodeId_deleteMembers(&parentNodeId);
-  UA_NodeId_deleteMembers(&requestedNodeId);
-  UA_VariableAttributes_deleteMembers(&variableAttributes);
+  UA_NodeId_clear(&parentNodeId);
+  UA_NodeId_clear(&requestedNodeId);
+  UA_VariableAttributes_clear(&variableAttributes);
   return retVal;
 }
 
@@ -838,9 +838,9 @@ UA_StatusCode COPC_UA_Local_Handler::createMethodNode(CCreateMethodInfo &paCreat
       paCreateMethodInfo.mLocalMethodInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
   }
 
-  UA_NodeId_deleteMembers(&parentNodeId);
-  UA_NodeId_deleteMembers(&requestedNodeId);
-  UA_MethodAttributes_deleteMembers(&methodAttributes);
+  UA_NodeId_clear(&parentNodeId);
+  UA_NodeId_clear(&requestedNodeId);
+  UA_MethodAttributes_clear(&methodAttributes);
   return retVal;
 }
 
@@ -998,8 +998,8 @@ UA_StatusCode COPC_UA_Local_Handler::createObjectNode(const CCreateObjectInfo &p
   if(UA_STATUSCODE_GOOD != retVal) {
     DEVLOG_ERROR("[OPC UA LOCAL]: Could not addObjectNode. Error: %s\n", UA_StatusCode_name(retVal));
   }
-  UA_NodeId_deleteMembers(&requestedNodeId);
-  UA_ObjectAttributes_deleteMembers(&oAttr);
+  UA_NodeId_clear(&requestedNodeId);
+  UA_ObjectAttributes_clear(&oAttr);
 
   return retVal;
 }
@@ -1283,11 +1283,11 @@ UA_StatusCode COPC_UA_Local_Handler::createFolders(const char *paFolders, CSingl
       UA_NodeId_copy(createInformation.mReturnedNodeId, tmp);
       createdNodeIds.pushBack(tmp);
 
-      UA_NodeId_deleteMembers(&parentNodeId);
+      UA_NodeId_clear(&parentNodeId);
       UA_NodeId_copy(createInformation.mReturnedNodeId, &parentNodeId);
     }
 
-    UA_NodeId_deleteMembers(&parentNodeId);
+    UA_NodeId_clear(&parentNodeId);
     for(CSinglyLinkedList<UA_NodeId*>::Iterator it = existingNodeIds.begin(); it != existingNodeIds.end(); ++it) {
       if(UA_STATUSCODE_GOOD != retVal) {
         UA_NodeId_delete(*it);

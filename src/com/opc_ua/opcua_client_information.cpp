@@ -170,7 +170,7 @@ UA_StatusCode CUA_ClientInformation::executeRead(CActionInfo& paActionInfo) {
     addAsyncCall();
   }
 
-  UA_ReadRequest_deleteMembers(&request);
+  UA_ReadRequest_clear(&request);
 
   return retVal;
 }
@@ -209,7 +209,7 @@ UA_StatusCode CUA_ClientInformation::executeWrite(CActionInfo& paActionInfo) {
     addAsyncCall();
   }
 
-  UA_WriteRequest_deleteMembers(&request);
+  UA_WriteRequest_clear(&request);
 
   return retVal;
 }
@@ -250,7 +250,7 @@ UA_StatusCode CUA_ClientInformation::executeCallMethod(CActionInfo& paActionInfo
     addAsyncCall();
   }
 
-  UA_CallRequest_deleteMembers(&request);
+  UA_CallRequest_clear(&request);
 
   return retVal;
 }
