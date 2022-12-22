@@ -1089,7 +1089,7 @@ template<typename T> const T func_REPLACE(const T &paIn1, const T &paIn2, const 
   return func_CONCAT(func_CONCAT(func_LEFT(paIn1, positionLeft), paIn2), func_RIGHT(paIn1, positionRight));
 }
 
-CIEC_ULINT func_FIND(const CIEC_ANY_STRING &paIn1, const CIEC_ANY_STRING &paIn2);
+CIEC_ANY_INT func_FIND(const CIEC_ANY_STRING &paIn1, const CIEC_ANY_STRING &paIn2);
 
 template <typename T>
 const T func_TOUPPER(const T &paIn) {

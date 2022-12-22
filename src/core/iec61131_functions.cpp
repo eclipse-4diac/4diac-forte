@@ -403,13 +403,12 @@ const CIEC_LTIME_OF_DAY func_CONCAT_LTOD(const CIEC_ANY_INT &HOUR, const CIEC_AN
   return CIEC_LTIME_OF_DAY(hour + minute + second + millisecond);
 }
 
-CIEC_ULINT func_FIND(const CIEC_ANY_STRING& pa_rsIn1, const CIEC_ANY_STRING& pa_rsIn2){
+CIEC_ANY_INT func_FIND(const CIEC_ANY_STRING &pa_rsIn1, const CIEC_ANY_STRING &pa_rsIn2) {
   const char* pc_Find = strstr(pa_rsIn1.getValue(), pa_rsIn2.getValue());
-  CIEC_ULINT temp;
   if (nullptr != pc_Find){
-    temp.setUnsignedValue(pc_Find - pa_rsIn1.getValue() + 1);
+    return CIEC_ANY_INT(pc_Find - pa_rsIn1.getValue() + 1);
   }
-  return temp;
+  return CIEC_ANY_INT(0);
 }
 
 const CIEC_TIME func_NOW_MONOTONIC() {
