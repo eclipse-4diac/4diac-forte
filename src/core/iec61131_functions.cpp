@@ -468,7 +468,7 @@ void func_SPLIT_LDT(const CIEC_LDATE_AND_TIME &paValue, CIEC_ANY_INT &YEAR, CIEC
   MILLISECOND.setUnsignedValue(paValue.getMilliSeconds());
 }
 
-void func_DAY_OF_WEEK(const CIEC_LDATE &paValue, CIEC_ANY_INT &WEEKDAY) {
+CIEC_ANY_INT func_DAY_OF_WEEK(const CIEC_LDATE &paValue) {
   struct tm *timeStruct = paValue.getTimeStruct();
-  WEEKDAY.setUnsignedValue(timeStruct->tm_wday);
+  return CIEC_ANY_INT(timeStruct->tm_wday);
 }

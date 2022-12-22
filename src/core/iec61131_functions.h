@@ -1143,7 +1143,7 @@ void func_SPLIT_LDT(const CIEC_LDATE_AND_TIME &paValue, CIEC_ANY_INT &YEAR, CIEC
  * 
  * This function differs from the standard in taking an LDATE, which can be implicitly cast from a DATE
  */
-void func_DAY_OF_WEEK(const CIEC_LDATE &paValue, CIEC_ANY_INT &WEEKDAY);
+CIEC_ANY_INT func_DAY_OF_WEEK(const CIEC_LDATE &paValue);
 
 /**
  * @brief returns current monotonic clock value as time span in nanoseconds

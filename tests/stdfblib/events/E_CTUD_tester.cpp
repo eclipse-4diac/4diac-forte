@@ -116,7 +116,7 @@ BOOST_FIXTURE_TEST_SUITE( CTUDTests, E_CTUD_TestFixture)
       triggerEvent(2);
       BOOST_CHECK(checkR());
       mInPV = CIEC_UINT(valuesToTest[j]);
-      for (unsigned int k = 0; k < static_cast<CIEC_UINT::TValueType>(mInPV) + 3; k++) {
+      for (unsigned int k = 0U; k < static_cast<CIEC_UINT::TValueType>(mInPV) + 3U; k++) {
         prevCV = static_cast<CIEC_UINT::TValueType>(mOutCV);
         //Send event
         triggerEvent(0);

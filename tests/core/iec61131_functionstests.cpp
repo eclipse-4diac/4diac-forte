@@ -1523,7 +1523,7 @@ BOOST_AUTO_TEST_CASE(func_day_of_week) {
   date.fromString("DATE#2017-03-20");
 
   CIEC_ULINT weekday;
-  func_DAY_OF_WEEK(date, weekday);
+  weekday = func_DAY_OF_WEEK(date);
   BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(weekday) == 1);
 }
 
