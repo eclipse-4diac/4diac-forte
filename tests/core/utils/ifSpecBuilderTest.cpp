@@ -22,6 +22,17 @@
 using namespace forte::core::util;
 
 
+static bool operator==(const SAdapterInstanceDef &a, const SAdapterInstanceDef &b) {
+  return
+    a.m_nAdapterTypeNameID == b.m_nAdapterTypeNameID &&
+    a.m_nAdapterNameID     == b.m_nAdapterNameID     &&
+    a.m_bIsPlug            == b.m_bIsPlug;
+}
+
+static std::ostream& operator<<(std::ostream &os, const SAdapterInstanceDef &ai) {
+  return os << '{' << ai.m_nAdapterTypeNameID << ", " << ai.m_nAdapterNameID << ", " << ai.m_bIsPlug << "}";
+}
+
 BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
   using CSpecEIReference = CSpecReference<CEventSpecTag, CInputSpecTag>;
   using CSpecEIRefRange = CSpecReferenceRange<CEventSpecTag, CInputSpecTag>;
@@ -30,6 +41,10 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
   static constexpr const CStringDictionary::TStringId constStringIdList2[] = {4, 5, 6};
   static constexpr std::array<TDataIOID, 3> staticBindings = {0, 1, 255};
   static constexpr std::array<TForteInt16, 1> staticIndexes = {0};
+  static constexpr std::array<SAdapterInstanceDef, 2> staticAdapters = {
+    SAdapterInstanceDef{1, 2, true},
+    SAdapterInstanceDef{3, 4, false},
+  };
 
   SFBInterfaceSpec ifspec;
   CMixedStorage storage;
@@ -366,6 +381,49 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
     uut.m_oOWith.setStaticBindings(staticBindings, staticIndexes);
     storage.clear();
     BOOST_CHECK(!uut.build(storage, ifspec));
+  }
+
+  BOOST_AUTO_TEST_CASE(IfSpecBuilder_StaticAdapters) {
+    CIfSpecBuilder uut;
+    uut.m_oAdapter.setStaticAdapters(staticAdapters);
+    build(uut);
+    BOOST_CHECK_EQUAL(ifspec.m_pstAdapterInstanceDefinition, staticAdapters.data());
+    BOOST_CHECK_EQUAL(ifspec.m_nNumAdapters, staticAdapters.size());
+  }
+
+  BOOST_AUTO_TEST_CASE(IfSpecBuilder_DynamicAdapters) {
+    CIfSpecBuilder uut;
+    uut.m_oAdapter.addAdapter(1, 2, true);
+    uut.m_oAdapter.addAdapter(3, 4, false);
+    uut.m_oIAdapter.addAdapter(5, 6);
+    uut.m_oOAdapter.addAdapter(7, 8);
+    build(uut);
+    BOOST_REQUIRE_EQUAL(ifspec.m_nNumAdapters, 4);
+    const auto adapter = ifspec.m_pstAdapterInstanceDefinition;
+    BOOST_CHECK_EQUAL(adapter[0], (SAdapterInstanceDef{2, 1, true }));
+    BOOST_CHECK_EQUAL(adapter[1], (SAdapterInstanceDef{4, 3, false}));
+    BOOST_CHECK_EQUAL(adapter[2], (SAdapterInstanceDef{6, 5, false}));
+    BOOST_CHECK_EQUAL(adapter[3], (SAdapterInstanceDef{8, 7, true }));
+  }
+
+  BOOST_AUTO_TEST_CASE(IfSpecBuilder_AdaptersCString) {
+    CIfSpecBuilder uut;
+    uut.m_oAdapter.addAdapter("adapter", "type", true);
+    build(uut);
+    BOOST_REQUIRE_EQUAL(ifspec.m_nNumAdapters, 1);
+    BOOST_CHECK_EQUAL(ifspec.m_pstAdapterInstanceDefinition[0], (SAdapterInstanceDef{strid("type"), strid("adapter"), true}));
+  }
+
+  BOOST_AUTO_TEST_CASE(IfSpecBuilder_AddToStaticAdapters) {
+    CIfSpecBuilder uut;
+    uut.m_oAdapter.setStaticAdapters(staticAdapters);
+    uut.m_oAdapter.addAdapter(5, 6, true);
+    build(uut);
+    BOOST_REQUIRE_EQUAL(ifspec.m_nNumAdapters, 3);
+    const auto adapter = ifspec.m_pstAdapterInstanceDefinition;
+    BOOST_CHECK_EQUAL(adapter[0], (SAdapterInstanceDef{1, 2, true }));
+    BOOST_CHECK_EQUAL(adapter[1], (SAdapterInstanceDef{3, 4, false}));
+    BOOST_CHECK_EQUAL(adapter[2], (SAdapterInstanceDef{6, 5, true}));
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_CombinedStaticAndDynamicString) {

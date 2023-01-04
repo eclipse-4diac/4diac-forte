@@ -212,6 +212,44 @@ std::tuple<const TDataIOID*, const TForteInt16*> CWithSpecBuilderBase::build(CMi
 }
 
 
+void CAdapterSpecBuilder::setStaticAdapters(const SAdapterInstanceDef *pa_aoStaticAdapters, std::size_t pa_nAdaptersCount) {
+  m_vDynamicList.clear();
+  m_aoStaticAdapters = pa_aoStaticAdapters;
+  m_unStaticAdaptersCount = pa_nAdaptersCount;
+}
+
+void CAdapterSpecBuilder::addAdapter(const CStringDictionary::TStringId pa_unName, const CStringDictionary::TStringId pa_unType, bool pa_bIsPlug) {
+  if (m_aoStaticAdapters) {
+    m_vDynamicList.insert(m_vDynamicList.end(), m_aoStaticAdapters, m_aoStaticAdapters + m_unStaticAdaptersCount);
+  }
+  m_aoStaticAdapters = nullptr;
+  m_unStaticAdaptersCount = 0;
+  m_vDynamicList.push_back({pa_unType, pa_unName, pa_bIsPlug});
+}
+
+void CAdapterSpecBuilder::addAdapter(const char *pa_sName, const char *pa_sType, bool pa_bIsPlug) {
+  auto &str_dict = CStringDictionary::getInstance();
+
+  addAdapter(
+      str_dict.insert(pa_sName),
+      str_dict.insert(pa_sType),
+      pa_bIsPlug
+  );
+}
+
+std::size_t CAdapterSpecBuilder::calcStorageSize() const {
+  return m_aoStaticAdapters ? 0 : m_vDynamicList.size() * sizeof(SAdapterInstanceDef);
+}
+
+std::tuple<const SAdapterInstanceDef*, TForteUInt8> CAdapterSpecBuilder::build(CMixedStorage &pa_oStorage) {
+  if (m_aoStaticAdapters) {
+    return {m_aoStaticAdapters, m_unStaticAdaptersCount};
+  }
+  const SAdapterInstanceDef *aidefPtr = pa_oStorage.write(m_vDynamicList.data(), m_vDynamicList.size());
+  return {aidefPtr, (TForteUInt8)m_vDynamicList.size()};
+}
+
+
 bool CIfSpecBuilder::build(CMixedStorage &pa_oStorage, SFBInterfaceSpec &pa_oInterfaceSpec) {
   if (!isGood()) {
     return false;
@@ -220,7 +258,8 @@ bool CIfSpecBuilder::build(CMixedStorage &pa_oStorage, SFBInterfaceSpec &pa_oInt
   std::size_t storageSize =
     m_oEI.calcStorageSize() + m_oEO.calcStorageSize() +
     m_oDI.calcStorageSize() + m_oDO.calcStorageSize() +
-    m_oIWith.calcStorageSize(m_oEI.getNumEvents()) + m_oOWith.calcStorageSize(m_oEO.getNumEvents());
+    m_oIWith.calcStorageSize(m_oEI.getNumEvents()) + m_oOWith.calcStorageSize(m_oEO.getNumEvents()) +
+    m_oAdapter.calcStorageSize();
   pa_oStorage.reserve(storageSize);
   std::tie(pa_oInterfaceSpec.m_aunEINames, pa_oInterfaceSpec.m_nNumEIs) = m_oEI.build(pa_oStorage);
   std::tie(pa_oInterfaceSpec.m_aunEONames, pa_oInterfaceSpec.m_nNumEOs) = m_oEO.build(pa_oStorage);
@@ -234,10 +273,7 @@ bool CIfSpecBuilder::build(CMixedStorage &pa_oStorage, SFBInterfaceSpec &pa_oInt
   ) = m_oDO.build(pa_oStorage);
   std::tie(pa_oInterfaceSpec.m_anEIWith, pa_oInterfaceSpec.m_anEIWithIndexes) = m_oIWith.build(pa_oStorage, m_oEI.getNumEvents());
   std::tie(pa_oInterfaceSpec.m_anEOWith, pa_oInterfaceSpec.m_anEOWithIndexes) = m_oOWith.build(pa_oStorage, m_oEO.getNumEvents());
-
-  // Adapters are not yet supported
-  pa_oInterfaceSpec.m_nNumAdapters = 0;
-  pa_oInterfaceSpec.m_pstAdapterInstanceDefinition = nullptr;
+  std::tie(pa_oInterfaceSpec.m_pstAdapterInstanceDefinition, pa_oInterfaceSpec.m_nNumAdapters) = m_oAdapter.build(pa_oStorage);
 
   m_bIsGood = pa_oStorage.size() <= storageSize;
   return isGood();

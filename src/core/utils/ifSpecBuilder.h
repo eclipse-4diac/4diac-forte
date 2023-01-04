@@ -579,6 +579,110 @@ class CWithSpecBuilder : public CWithSpecBuilderBase {
 };
 
 /**
+ * @brief Helper for CIfSpecBuilder managing adapters.
+ */
+class CAdapterSpecBuilder {
+  public:
+    /**
+     * @brief Set statically defined configuration.
+     * @param pa_aoStaticAdapters see SFBInterfaceSpec.m_pstAdapterInstanceDefinition
+     * @param pa_nAdaptersCount see SFBInterfaceSpec.m_nNumAdapters
+     */
+    void setStaticAdapters(const SAdapterInstanceDef *pa_aoStaticAdapters, std::size_t pa_nAdaptersCount);
+
+    /**
+     * @brief Sets statically defined configuration through std::array.
+     * @tparam N see SFBInterfaceSpec.m_nNumAdapters
+     * @param pa_aoStaticAdapters see SFBInterfaceSpec.m_pstAdapterInstanceDefinition
+     */
+    template<std::size_t N>
+    void setStaticAdapters(const std::array<SAdapterInstanceDef, N> &pa_aoStaticAdapters) {
+      setStaticAdapters(pa_aoStaticAdapters.data(), pa_aoStaticAdapters.size());
+    }
+
+    /**
+     * @brief Adds adapter port (socket/plug).
+     * @param pa_unName port name
+     * @param pa_unTypeName port type (adapter name)
+     * @param pa_bIsPlug true when port is plug (output)
+     */
+    void addAdapter(const CStringDictionary::TStringId pa_unName, const CStringDictionary::TStringId pa_unType, bool pa_bIsPlug);
+
+    /**
+     * @brief Adds adapter port (socket/plug) using C strings.
+     *
+     * C strings are automatically converted to CStringDictionary.
+     *
+     * @param pa_sName port name
+     * @param pa_sTypeName port type (adapter name)
+     * @param pa_bIsPlug true when port is plug (output)
+     */
+    void addAdapter(const char *pa_sName, const char *pa_sType, bool pa_bIsPlug);
+
+    /**
+     * @brief Calculates required dynamic data size.
+     * @return required dynamic data size
+     */
+    std::size_t calcStorageSize() const;
+    std::tuple<const SAdapterInstanceDef*, TForteUInt8> build(CMixedStorage &pa_oStorage);
+
+  private:
+    std::vector<SAdapterInstanceDef> m_vDynamicList;
+    std::size_t m_unStaticAdaptersCount = 0;
+    const SAdapterInstanceDef *m_aoStaticAdapters = nullptr;
+};
+
+/**
+ * @brief Base helper for CAdapterSpecBuilder.
+ */
+class CAdapterDirHelperBase {
+  public:
+    /**
+     * @brief Adds adapter port (socket/plug).
+     * @param pa_xName port name
+     * @param pa_xTypeName port type (adapter name)
+     * @tparam TNameType string type
+     */
+    template<typename TNameType>
+    void addAdapter(TNameType pa_xName, TNameType pa_xTypeName) {
+      m_roBuilder.addAdapter(pa_xName, pa_xTypeName, m_bIsPlug);
+    }
+
+  protected:
+    constexpr CAdapterDirHelperBase(CAdapterSpecBuilder &pa_roBuilder, bool pa_bIsPlug)
+      : m_roBuilder(pa_roBuilder), m_bIsPlug(pa_bIsPlug)
+    {}
+
+  private:
+    CAdapterSpecBuilder &m_roBuilder;
+    bool m_bIsPlug;
+};
+
+/**
+ * @brief Helper for CAdapterSpecBuilder handling different directions.
+ *
+ * @tparam DirTag defines input or output adapter
+ */
+template<class DirTag>
+class CAdapterDirHelper;
+
+template<>
+class CAdapterDirHelper<CInputSpecTag> : public CAdapterDirHelperBase {
+  public:
+    constexpr CAdapterDirHelper(CAdapterSpecBuilder &pa_roBuilder)
+      : CAdapterDirHelperBase(pa_roBuilder, false)
+    {}
+};
+
+template<>
+class CAdapterDirHelper<COutputSpecTag> : public CAdapterDirHelperBase {
+  public:
+    constexpr CAdapterDirHelper(CAdapterSpecBuilder &pa_roBuilder)
+      : CAdapterDirHelperBase(pa_roBuilder, true)
+    {}
+};
+
+/**
  * @brief @ref SFBInterfaceSpec structure builder
  *
  * Simplifies filling out @ref SFBInterfaceSpec structure and
@@ -586,12 +690,15 @@ class CWithSpecBuilder : public CWithSpecBuilderBase {
  */
 class CIfSpecBuilder {
   public:
-    CEventSpecBuilder<CInputSpecTag>  m_oEI;    ///< event inputs
-    CEventSpecBuilder<COutputSpecTag> m_oEO;    ///< event outputs
-    CDataSpecBuilder<CInputSpecTag>   m_oDI;    ///< data inputs
-    CDataSpecBuilder<COutputSpecTag>  m_oDO;    ///< data outputs
-    CWithSpecBuilder<CInputSpecTag>   m_oIWith; ///< input withs
-    CWithSpecBuilder<COutputSpecTag>  m_oOWith; ///< output withs
+    CEventSpecBuilder<CInputSpecTag>  m_oEI;       ///< event inputs
+    CEventSpecBuilder<COutputSpecTag> m_oEO;       ///< event outputs
+    CDataSpecBuilder<CInputSpecTag>   m_oDI;       ///< data inputs
+    CDataSpecBuilder<COutputSpecTag>  m_oDO;       ///< data outputs
+    CWithSpecBuilder<CInputSpecTag>   m_oIWith;    ///< input withs
+    CWithSpecBuilder<COutputSpecTag>  m_oOWith;    ///< output withs
+    CAdapterSpecBuilder               m_oAdapter;  ///< all adapters
+    CAdapterDirHelper<CInputSpecTag>  m_oIAdapter{m_oAdapter}; ///< input adapters
+    CAdapterDirHelper<COutputSpecTag> m_oOAdapter{m_oAdapter}; ///< output adapters
 
     /**
      * @brief Binds event to a single data port.
