@@ -20,6 +20,10 @@
 
 #include "../utils/mainparam_utils.h"
 
+#ifdef FORTE_IO_PLCNEXT
+#include "../../modules/PLCnext/plcNextDeviceStatus.h"
+#endif
+
 /*!\brief Check if the correct endianess has been configured.
  *
  * If the right endianess is not set this function will end FORTE.
@@ -70,6 +74,11 @@ int main(int argc, char *arg[]){
   checkEndianess();
 
   startupHook(argc, arg);
+
+#ifdef FORTE_IO_PLCNEXT
+  sleep(3);
+  DeviceStatus::startup();
+#endif
 
   const char *pIpPort = parseCommandLineArguments(argc, arg);
   if((0 != strlen(pIpPort)) && (nullptr != strchr(pIpPort, ':'))){
