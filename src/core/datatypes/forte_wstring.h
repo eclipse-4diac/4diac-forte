@@ -38,7 +38,9 @@
  */
 class CIEC_WSTRING : public CIEC_ANY_STRING {
   DECLARE_FIRMWARE_DATATYPE(WSTRING)
+
   public:
+    using TValueType = TForteWChar;
     CIEC_WSTRING() = default;
 
     CIEC_WSTRING(const CIEC_WSTRING& paValue) = default;

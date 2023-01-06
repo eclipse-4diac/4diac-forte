@@ -22,6 +22,41 @@
 
 #include "forte_string.h"
 #include "forte_uint.h"
+#include "forte_lword.h"
+#include "../../src/core/typelib.h"
+
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "iec61131_functionstests_gen.cpp"
+#endif
+
+/*** STRUCT for tests *********/
+class CIEC_EndianessTestStruct : public CIEC_STRUCT {
+  DECLARE_FIRMWARE_DATATYPE(EndianessTestStruct);
+
+public:
+  CIEC_EndianessTestStruct();
+
+  virtual ~CIEC_EndianessTestStruct() = default;
+
+  CIEC_EndianessTestStruct &operator=(const CIEC_EndianessTestStruct &paValue) {
+    if (this != &paValue) {
+      setValue(paValue);
+    }
+    return *this;
+  }
+
+private:
+  static const CStringDictionary::TStringId scm_unElementTypes[];
+  static const CStringDictionary::TStringId scm_unElementNames[];
+};
+
+const CStringDictionary::TStringId CIEC_EndianessTestStruct::scm_unElementTypes[] = {g_nStringIdBOOL, g_nStringIdDINT, g_nStringIdLWORD};
+const CStringDictionary::TStringId CIEC_EndianessTestStruct::scm_unElementNames[] = {g_nStringIdVal1, g_nStringIdVal2, g_nStringIdVal3};
+
+DEFINE_FIRMWARE_DATATYPE(EndianessTestStruct, g_nStringIdEndianessTestStruct)
+CIEC_EndianessTestStruct::CIEC_EndianessTestStruct() : CIEC_STRUCT(g_nStringIdEndianessTestStruct, 3, scm_unElementTypes, scm_unElementNames, e_APPLICATION + e_CONSTRUCTED + 1)
+{
+}
 
 BOOST_AUTO_TEST_SUITE(IEC61131_functions)
 
@@ -1527,4 +1562,196 @@ BOOST_AUTO_TEST_CASE(func_day_of_week) {
   BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(weekday) == 1);
 }
 
-  BOOST_AUTO_TEST_SUITE_END()
+BOOST_AUTO_TEST_CASE(func_to_little_endian) {
+  CIEC_SINT sint(10);
+  CIEC_INT inte(11);
+  CIEC_DINT dint(12);
+  CIEC_LINT lint(13);
+
+  CIEC_USINT usint(14);
+  CIEC_UINT uinte(15);
+  CIEC_UDINT udint(16);
+  CIEC_ULINT ulint(17);
+
+  CIEC_SINT toLittleSint;
+  CIEC_INT toLittleInt;
+  CIEC_DINT toLittleDint;
+  CIEC_LINT toLittleLint;
+
+  CIEC_USINT toLittleUsint;
+  CIEC_UINT toLittleUint;
+  CIEC_UDINT toLittleUdint;
+  CIEC_ULINT toLittleUlint;
+
+  toLittleSint = func_TO_LITTLE_ENDIAN(sint);
+  BOOST_TEST(static_cast<CIEC_SINT::TValueType>(toLittleSint) == 10);
+  toLittleInt = func_TO_LITTLE_ENDIAN(inte);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(toLittleInt) == 11);
+  toLittleDint = func_TO_LITTLE_ENDIAN(dint);
+  BOOST_TEST(static_cast<CIEC_DINT::TValueType>(toLittleDint) == 12);
+  toLittleLint = func_TO_LITTLE_ENDIAN(lint);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(toLittleLint) == 13);
+
+  toLittleUsint = func_TO_LITTLE_ENDIAN(usint);
+  BOOST_TEST(static_cast<CIEC_USINT::TValueType>(toLittleUsint) == 14);
+  toLittleUint = func_TO_LITTLE_ENDIAN(uinte);
+  BOOST_TEST(static_cast<CIEC_UINT::TValueType>(toLittleUint) == 15);
+  toLittleUdint = func_TO_LITTLE_ENDIAN(udint);
+  BOOST_TEST(static_cast<CIEC_UDINT::TValueType>(toLittleUdint) == 16);
+  toLittleUlint = func_TO_LITTLE_ENDIAN(ulint);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(toLittleUlint) == 17);
+}
+
+BOOST_AUTO_TEST_CASE(func_from_little_endian) {
+  CIEC_SINT sint(10);
+  CIEC_INT inte(11);
+  CIEC_DINT dint(12);
+  CIEC_LINT lint(13);
+
+  CIEC_USINT usint(14);
+  CIEC_UINT uinte(15);
+  CIEC_UDINT udint(16);
+  CIEC_ULINT ulint(17);
+
+  CIEC_SINT toLittleSint;
+  CIEC_INT toLittleInt;
+  CIEC_DINT toLittleDint;
+  CIEC_LINT toLittleLint;
+
+  CIEC_USINT toLittleUsint;
+  CIEC_UINT toLittleUint;
+  CIEC_UDINT toLittleUdint;
+  CIEC_ULINT toLittleUlint;
+
+  toLittleSint = func_FROM_LITTLE_ENDIAN(sint);
+  BOOST_TEST(static_cast<CIEC_SINT::TValueType>(toLittleSint) == 10);
+  toLittleInt = func_FROM_LITTLE_ENDIAN(inte);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(toLittleInt) == 11);
+  toLittleDint = func_FROM_LITTLE_ENDIAN(dint);
+  BOOST_TEST(static_cast<CIEC_DINT::TValueType>(toLittleDint) == 12);
+  toLittleLint = func_FROM_LITTLE_ENDIAN(lint);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(toLittleLint) == 13);
+
+  toLittleUsint = func_FROM_LITTLE_ENDIAN(usint);
+  BOOST_TEST(static_cast<CIEC_USINT::TValueType>(toLittleUsint) == 14);
+  toLittleUint = func_FROM_LITTLE_ENDIAN(uinte);
+  BOOST_TEST(static_cast<CIEC_UINT::TValueType>(toLittleUint) == 15);
+  toLittleUdint = func_FROM_LITTLE_ENDIAN(udint);
+  BOOST_TEST(static_cast<CIEC_UDINT::TValueType>(toLittleUdint) == 16);
+  toLittleUlint = func_FROM_LITTLE_ENDIAN(ulint);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(toLittleUlint) == 17);
+}
+
+BOOST_AUTO_TEST_CASE(func_to_big_endian)
+{
+  CIEC_SINT sint(10);
+  CIEC_INT inte(11);
+  CIEC_DINT dint(12);
+  CIEC_LINT lint(13);
+
+  CIEC_USINT usint(14);
+  CIEC_UINT uinte(15);
+  CIEC_UDINT udint(16);
+  CIEC_ULINT ulint(17);
+
+  CIEC_BYTE byte(18);
+  CIEC_WORD word(19);
+  CIEC_DWORD dword(20);
+  CIEC_LWORD lword(21);
+
+  CIEC_SINT toSint;
+  CIEC_INT toInt;
+  CIEC_DINT toDint;
+  CIEC_LINT toLint;
+
+  CIEC_USINT toUsint;
+  CIEC_UINT toUint;
+  CIEC_UDINT toUdint;
+  CIEC_ULINT toUlint;
+
+  CIEC_BYTE toByte;
+  CIEC_WORD toWord;
+  CIEC_DWORD toDword;
+  CIEC_LWORD toLword;
+
+  toSint = func_TO_BIG_ENDIAN(sint);
+  BOOST_TEST(static_cast<CIEC_SINT::TValueType>(toSint) == 10);
+  toInt = func_TO_BIG_ENDIAN(inte);
+  BOOST_TEST(static_cast<CIEC_INT::TValueType>(toInt) == 2816);
+  toDint = func_TO_BIG_ENDIAN(dint);
+  BOOST_TEST(static_cast<CIEC_DINT::TValueType>(toDint) == 201326592);
+  toLint = func_TO_BIG_ENDIAN(lint);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(toLint) == 936748722493063168);
+
+  toUsint = func_TO_BIG_ENDIAN(usint);
+  BOOST_TEST(static_cast<CIEC_USINT::TValueType>(toUsint) == 14);
+  toUint = func_TO_BIG_ENDIAN(uinte);
+  BOOST_TEST(static_cast<CIEC_UINT::TValueType>(toUint) == 3840);
+  toUdint = func_TO_BIG_ENDIAN(udint);
+  BOOST_TEST(static_cast<CIEC_UDINT::TValueType>(toUdint) == 268435456);
+  toUlint = func_TO_BIG_ENDIAN(ulint);
+  BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(toUlint) == 1224979098644774912);
+
+  toByte = func_TO_BIG_ENDIAN(byte);
+  BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(toByte) == 18);
+  toWord = func_TO_BIG_ENDIAN(word);
+  BOOST_TEST(static_cast<CIEC_WORD::TValueType>(toWord) == 4864);
+  toDword = func_TO_BIG_ENDIAN(dword);
+  BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(toDword) == 335544320);
+  toLword = func_TO_BIG_ENDIAN(lword);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(toLword) == 1513209474796486656);
+}
+
+BOOST_AUTO_TEST_CASE(func_to_big_endian_array_fixed) {
+  CIEC_ARRAY_FIXED<CIEC_LWORD, -1, 1> originalArray = {CIEC_LWORD(1), CIEC_LWORD(2), CIEC_LWORD(3)};
+  CIEC_ARRAY_FIXED<CIEC_LWORD, -1, 1> reversedArray;
+  reversedArray = func_TO_BIG_ENDIAN(originalArray);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[-1]) == 72057594037927936);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[0]) == 144115188075855872);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[1]) == 216172782113783808);
+}
+
+BOOST_AUTO_TEST_CASE(func_to_big_endian_array_variable) {
+  CIEC_ARRAY_VARIABLE<CIEC_LWORD> originalArray = {CIEC_LWORD(1), CIEC_LWORD(2), CIEC_LWORD(3)};
+  CIEC_ARRAY_VARIABLE<CIEC_LWORD> reversedArray(-1, 1);
+  reversedArray = func_TO_BIG_ENDIAN(originalArray);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[-1]) == 72057594037927936);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[0]) == 144115188075855872);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[1]) == 216172782113783808);
+}
+
+BOOST_AUTO_TEST_CASE(func_to_big_endian_array_variable_copy_ctor) {
+  CIEC_ARRAY_VARIABLE<CIEC_LWORD> originalArray = {CIEC_LWORD(1), CIEC_LWORD(2), CIEC_LWORD(3)};
+  CIEC_ARRAY_VARIABLE<CIEC_LWORD> reversedArray(func_TO_BIG_ENDIAN(originalArray));
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[0]) == 72057594037927936);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[1]) == 144115188075855872);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[2]) == 216172782113783808);
+}
+
+BOOST_AUTO_TEST_CASE(func_to_big_endian_array_typelib_copy_ctor) {
+  CIEC_ARRAY<CIEC_ANY> originalArray(3, g_nStringIdLWORD);
+  originalArray[0].setValue(CIEC_LWORD(1));
+  originalArray[1].setValue(CIEC_LWORD(2));
+  originalArray[2].setValue(CIEC_LWORD(3));
+
+  CIEC_ARRAY<CIEC_ANY> reversedArray(func_TO_BIG_ENDIAN(originalArray));
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reinterpret_cast<CIEC_LWORD&>(reversedArray[0])) == 72057594037927936);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reinterpret_cast<CIEC_LWORD&>(reversedArray[1])) == 144115188075855872);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reinterpret_cast<CIEC_LWORD&>(reversedArray[2])) == 216172782113783808);
+}
+
+BOOST_AUTO_TEST_CASE(func_to_big_endian_struct){
+  CIEC_EndianessTestStruct original;
+
+  (*static_cast<CIEC_BOOL *>(original.getMemberNamed(g_nStringIdVal1))) = CIEC_BOOL(true);
+  (*static_cast<CIEC_DINT *>(original.getMemberNamed(g_nStringIdVal2))) = CIEC_DINT(55);
+  (*static_cast<CIEC_LWORD *>(original.getMemberNamed(g_nStringIdVal3))) = CIEC_LWORD(65536UL);
+
+  CIEC_EndianessTestStruct reversed;
+  reversed = func_TO_BIG_ENDIAN(original);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(*reinterpret_cast<CIEC_BOOL *>(reversed.getMemberNamed(g_nStringIdVal1))) == true);
+  BOOST_TEST(static_cast<CIEC_DINT::TValueType>(*reinterpret_cast<CIEC_DINT *>(reversed.getMemberNamed(g_nStringIdVal2))) == 922746880);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(*reinterpret_cast<CIEC_LWORD *>(reversed.getMemberNamed(g_nStringIdVal3))) == 1099511627776);
+}
+
+BOOST_AUTO_TEST_SUITE_END()

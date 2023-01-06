@@ -30,23 +30,28 @@ using const_reference = const value_type &;
 CIEC_ARRAY_VARIABLE(intmax_t paLowerBound, intmax_t paUpperBound) : cmLowerBound(paLowerBound), cmUpperBound(paUpperBound),
     cmSize(static_cast<size_t>(paUpperBound - paLowerBound + 1)), data(cmSize) {
 }
+
 CIEC_ARRAY_VARIABLE(std::initializer_list<T> init) : cmLowerBound(0), cmUpperBound(init.size() - 1), cmSize(init.size()), data(init) {
 }
+
 CIEC_ARRAY_VARIABLE(const CIEC_ARRAY_VARIABLE &paSource) : cmLowerBound(paSource.cmLowerBound), cmUpperBound(paSource.cmUpperBound), cmSize(paSource.cmSize), data(paSource.data) {
 }
+
 template <typename U, intmax_t sourceLowerBound, intmax_t sourceUpperBound>
 CIEC_ARRAY_VARIABLE(const CIEC_ARRAY_FIXED<U, sourceLowerBound, sourceUpperBound> &paSource)
-    : cmLowerBound(paSource.getLowerBound()), cmUpperBound(paSource.getUpperBound()), cmSize(paSource.size()), data(paSource.begin(), paSource.end()) {
+    : cmLowerBound(paSource.getLowerBound()), cmUpperBound(paSource.getUpperBound()), cmSize(paSource.size()), data(paSource.cbegin(), paSource.cend()) {
 }
+
 CIEC_ARRAY_VARIABLE(const CIEC_ARRAY<T> &paSource)
     : cmLowerBound(paSource.getLowerBound()), cmUpperBound(paSource.getUpperBound()), cmSize(paSource.size()) {
-  for (auto element = paSource.begin(); element != paSource.end(); ++element) {
+  for (auto element = paSource.cbegin(); element != paSource.cend(); ++element) {
       data.push_back(*static_cast<const T *>(element));
   }
 }
+
 CIEC_ARRAY_VARIABLE(const CIEC_ARRAY_TYPELIB &paSource)
     : cmLowerBound(paSource.getLowerBound()), cmUpperBound(paSource.getUpperBound()), cmSize(paSource.size()) {
-  for (auto element = paSource.begin(); element != paSource.end(); ++element) {
+  for (auto element = paSource.cbegin(); element != paSource.cend(); ++element) {
     data.push_back(*static_cast<const T *>(element));
   }
 }
@@ -75,8 +80,8 @@ CIEC_ARRAY_VARIABLE<T> &operator=(const CIEC_ARRAY_COMMON<T> &paSource) {
   const intmax_t lowerBoundOffset = getLowerBound() - sourceLowerBound;
   const intmax_t upperBoundOffset = getUpperBound() - sourceUpperBound;
   
-  auto sourceIteratorBegin = paSource.begin();
-  auto sourceIteratorEnd = paSource.end();
+  auto sourceIteratorBegin = paSource.cbegin();
+  auto sourceIteratorEnd = paSource.cend();
   auto targetIteratorBegin = begin();
   if ((sourceLowerBound <= getUpperBound()) && (sourceUpperBound >= getLowerBound())) {
   // Target lowerBound is a bigger number than the source, so all elements below the target lowerbound cannot be copied, so shift start to first element which will be copied
@@ -102,6 +107,11 @@ CIEC_ARRAY_VARIABLE<T> &operator=(const std::initializer_list<T> paSource) {
   return *this;
 }
 
+CIEC_ARRAY_VARIABLE<T> &operator=(const CIEC_ARRAY_VARIABLE<T> &paSource) {
+  data = paSource.data;
+  return *this;
+}
+
 [[nodiscard]] intmax_t getLowerBound() const override {
   return cmLowerBound;
 }
@@ -122,11 +132,11 @@ CIEC_ARRAY_VARIABLE<T> &operator=(const std::initializer_list<T> paSource) {
   return data.data() + data.size();
 }
 
-[[nodiscard]] constexpr typename CIEC_ARRAY_COMMON<T>::const_iterator begin() const override {
+[[nodiscard]] constexpr typename CIEC_ARRAY_COMMON<T>::const_iterator cbegin() const override {
   return data.data();
 }
 
-[[nodiscard]] constexpr typename CIEC_ARRAY_COMMON<T>::const_iterator end() const override {
+[[nodiscard]] constexpr typename CIEC_ARRAY_COMMON<T>::const_iterator cend() const override {
   return data.data() + data.size();
 }
 

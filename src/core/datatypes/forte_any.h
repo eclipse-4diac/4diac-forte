@@ -302,27 +302,27 @@ class CIEC_ANY {
       return (mAnyData.mLargestUInt != 0);
     }
     TForteUInt32 getTUINT32() const{ //also used for TForteDWord
-      return (TForteUInt32)mAnyData.mLargestUInt;
+      return static_cast<TForteUInt32>(mAnyData.mLargestUInt);
     }
 
     TForteUInt16 getTUINT16() const{ //also used for TForteWord
-      return (TForteUInt16)mAnyData.mLargestUInt;
+      return static_cast<TForteUInt16>(mAnyData.mLargestUInt);
     }
 
     TForteUInt8 getTUINT8() const{ //also used for TForteByte
-      return (TForteUInt8)mAnyData.mLargestUInt;
+      return static_cast<TForteUInt8>(mAnyData.mLargestUInt);
     }
 
     TForteInt32 getTINT32() const{
-      return (TForteInt32)mAnyData.mLargestInt;
+      return static_cast<TForteInt32>(mAnyData.mLargestInt);
     }
 
     TForteInt16 getTINT16() const{
-      return (TForteInt16)mAnyData.mLargestInt;
+      return static_cast<TForteInt16>(mAnyData.mLargestInt);
     }
 
     TForteInt8 getTINT8() const{
-      return (TForteInt8)mAnyData.mLargestInt;
+      return static_cast<TForteInt8>(mAnyData.mLargestInt);
     }
 
     TForteChar getChar8() const {
@@ -334,11 +334,11 @@ class CIEC_ANY {
     }
 
     TForteUInt64 getTUINT64() const{ //also used for LWORD
-      return (TForteUInt64)mAnyData.mLargestUInt;
+      return static_cast<TForteUInt64>(mAnyData.mLargestUInt);
     }
 
     TForteInt64 getTINT64() const{
-      return (TForteInt64)mAnyData.mLargestInt;
+      return static_cast<TForteInt64>(mAnyData.mLargestInt);
     }
 #else
 #ifdef FORTE_LITTLE_ENDIAN

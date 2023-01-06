@@ -104,6 +104,5 @@ private:
 #endif
 };
 
-
 #endif // _CStringDictionary_H_
 

@@ -471,3 +471,120 @@ CIEC_ANY_INT func_DAY_OF_WEEK(const CIEC_LDATE &paValue) {
   struct tm *timeStruct = paValue.getTimeStruct();
   return CIEC_ANY_INT(timeStruct->tm_wday);
 }
+
+CIEC_ARRAY<CIEC_ANY> swapEndianess(const CIEC_ARRAY<CIEC_ANY> &paValue) {
+  CIEC_ARRAY<CIEC_ANY> reversed(paValue.size(), paValue.getElementTypeNameID());
+  for(size_t i = 0; i < paValue.size(); i++) {
+    switch (paValue[i].getDataTypeID()) {
+    case CIEC_ANY::e_BOOL:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_BOOL &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_SINT:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_SINT &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_INT:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_INT &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_DINT:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_DINT &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_LINT:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_LINT &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_USINT:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_USINT &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_UINT:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_UINT &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_UDINT:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_UDINT &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_ULINT:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_ULINT &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_BYTE:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_BYTE &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_WORD:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_WORD &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_DWORD:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_DWORD &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_LWORD:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_LWORD &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_DATE:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_DATE &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_TIME_OF_DAY:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_TIME_OF_DAY &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_DATE_AND_TIME:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_DATE_AND_TIME &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_TIME:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_TIME &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_CHAR:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_CHAR &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_WCHAR:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_WCHAR &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_LDATE:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_LDATE &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_LTIME_OF_DAY:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_LTIME_OF_DAY &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_LDATE_AND_TIME:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_LDATE_AND_TIME &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_LTIME:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_LDATE &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_REAL:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_REAL &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_LREAL:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_LREAL &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_STRING:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_STRING &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_WSTRING:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_WSTRING &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_ARRAY:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_ARRAY<CIEC_ANY> &>(paValue[i])));
+      break;
+    case CIEC_ANY::e_STRUCT:
+      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_STRUCT &>(paValue[i])));
+      break;
+    default:
+      break; // do nothing
+    }
+  }
+  return reversed;
+}
+
+#ifdef FORTE_LITTLE_ENDIAN
+CIEC_ARRAY<CIEC_ANY> func_TO_BIG_ENDIAN(const CIEC_ARRAY<CIEC_ANY> &paValue) {
+  return swapEndianess(paValue);
+}
+
+CIEC_ARRAY<CIEC_ANY> func_FROM_BIG_ENDIAN(const CIEC_ARRAY<CIEC_ANY> &paValue) {
+  return swapEndianess(paValue);
+}
+#endif
+#ifdef FORTE_BIG_ENDIAN
+CIEC_ARRAY<CIEC_ANY> func_TO_LITTLE_ENDIAN(const CIEC_ARRAY<CIEC_ANY> &paValue) {
+  return swapEndianess(paValue);
+}
+
+CIEC_ARRAY<CIEC_ANY> func_FROM_LITTLE_ENDIAN(const CIEC_ARRAY<CIEC_ANY> &paValue) {
+  return swapEndianess(paValue);
+}
+#endif

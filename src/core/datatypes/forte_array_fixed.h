@@ -19,8 +19,7 @@
 #include <devlog.h>
 
 template <typename T, intmax_t lowerBound, intmax_t upperBound>
-class CIEC_ARRAY_FIXED : public CIEC_ARRAY_COMMON<T>
-{
+class CIEC_ARRAY_FIXED : public CIEC_ARRAY_COMMON<T> {
 public:
     using difference_type = std::ptrdiff_t;
     using value_type = typename CIEC_ARRAY_COMMON<T>::value_type;
@@ -59,8 +58,8 @@ public:
           constexpr intmax_t lowerBoundOffset = lowerBound - sourceLowerBound;
           constexpr intmax_t upperBoundOffset = upperBound - sourceUpperBound;
 
-          auto sourceIteratorBegin = paSource.begin();
-          auto sourceIteratorEnd = paSource.end();
+          auto sourceIteratorBegin = paSource.cbegin();
+          auto sourceIteratorEnd = paSource.cend();
           auto targetIteratorBegin = begin();
 
           // Target lowerBound is a bigger number than the source, so all elements below
@@ -85,8 +84,8 @@ public:
       const intmax_t lowerBoundOffset = lowerBound - sourceLowerBound;
       const intmax_t upperBoundOffset = upperBound - sourceUpperBound;
 
-      auto sourceIteratorBegin = paSource.begin();
-      auto sourceIteratorEnd = paSource.end();
+      auto sourceIteratorBegin = paSource.cbegin();
+      auto sourceIteratorEnd = paSource.cend();
       auto targetIteratorBegin = begin();
 
       if ((sourceLowerBound <= upperBound) && (sourceUpperBound >= lowerBound)) {
@@ -113,8 +112,8 @@ public:
       const intmax_t lowerBoundOffset = lowerBound - sourceLowerBound;
       const intmax_t upperBoundOffset = upperBound - sourceUpperBound;
 
-      auto sourceIteratorBegin = paSource.begin();
-      auto sourceIteratorEnd = paSource.end();
+      auto sourceIteratorBegin = paSource.cbegin();
+      auto sourceIteratorEnd = paSource.cend();
       auto targetIteratorBegin = begin();
 
       if ((sourceLowerBound <= upperBound) && (sourceUpperBound >= lowerBound)) {
@@ -188,8 +187,8 @@ public:
       const intmax_t lowerBoundOffset = lowerBound - sourceLowerBound;
       const intmax_t upperBoundOffset = upperBound - sourceUpperBound;
 
-      auto sourceIteratorBegin = paSource.begin();
-      auto sourceIteratorEnd = paSource.end();
+      auto sourceIteratorBegin = paSource.cbegin();
+      auto sourceIteratorEnd = paSource.cend();
       auto targetIteratorBegin = begin();
 
       if ((sourceLowerBound <= upperBound) && (sourceUpperBound >= lowerBound)) {
@@ -259,14 +258,14 @@ public:
         return data.end();
     }
 
-    [[nodiscard]] constexpr const_iterator begin() const override
+    [[nodiscard]] constexpr const_iterator cbegin() const override
     {
-        return data.begin();
+        return data.cbegin();
     }
 
-    [[nodiscard]] constexpr const_iterator end() const override
+    [[nodiscard]] constexpr const_iterator cend() const override
     {
-        return data.end();
+        return data.cend();
     }
 
     [[nodiscard]] CIEC_ANY::EDataTypeID getElementDataTypeID() const override

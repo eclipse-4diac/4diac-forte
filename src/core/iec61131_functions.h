@@ -26,6 +26,10 @@
 #include <string.h>
 #include "iec61131_cast_helper.h"
 #include "./utils/staticassert.h"
+#include "./datatypes/forte_struct.h"
+#include "./datatypes/forte_array_common.h"
+#include "./datatypes/forte_array_fixed.h"
+#include "./datatypes/forte_array_variable.h"
 
 #include <algorithm>
 
@@ -107,7 +111,7 @@ inline const CIEC_LREAL func_TAN(const CIEC_LREAL &paIN){
 }
 
 inline const CIEC_REAL func_ASIN(const CIEC_REAL &paIN){
-    return CIEC_REAL(asinf(paIN));
+  return CIEC_REAL(asinf(paIN));
 }
 
 inline const CIEC_LREAL func_ASIN(const CIEC_LREAL &paIN){
@@ -131,7 +135,7 @@ inline const CIEC_LREAL func_ATAN(const CIEC_LREAL &paIN){
 }
 
 inline const CIEC_REAL func_EXP(const CIEC_REAL &paIN){
-    return CIEC_REAL(expf(paIN));
+  return CIEC_REAL(expf(paIN));
 }
 
 inline const CIEC_LREAL func_EXP(const CIEC_LREAL &paIN){
@@ -1158,5 +1162,395 @@ const CIEC_TIME func_NOW_MONOTONIC();
  * @return CIEC_DATE_AND_TIME of the current local time
  */
 const CIEC_DATE_AND_TIME func_NOW();
+
+template <typename T>
+T swapSimpleDataHelper(const T data) {
+  constexpr size_t dataSize = sizeof(T);
+  const char *const dataBytes = reinterpret_cast<const char *>(&data);
+  T swappedData;
+  char *const swappedDataBytes = reinterpret_cast<char*>(&swappedData);
+
+  if constexpr (1 == dataSize) {
+    return T(data);
+  } else if constexpr(2 == dataSize) {
+    *(swappedDataBytes) = *(dataBytes + 1);
+    *(swappedDataBytes + 1) = *(dataBytes);
+  } else if constexpr(4 == dataSize) {
+    *(swappedDataBytes + 0) = *(dataBytes + 3);
+    *(swappedDataBytes + 1) = *(dataBytes + 2);
+    *(swappedDataBytes + 2) = *(dataBytes + 1);
+    *(swappedDataBytes + 3) = *(dataBytes + 0);
+  } else if constexpr(8 == dataSize) {
+    *(swappedDataBytes + 0) = *(dataBytes + 7);
+    *(swappedDataBytes + 1) = *(dataBytes + 6);
+    *(swappedDataBytes + 2) = *(dataBytes + 5);
+    *(swappedDataBytes + 3) = *(dataBytes + 4);
+    *(swappedDataBytes + 4) = *(dataBytes + 3);
+    *(swappedDataBytes + 5) = *(dataBytes + 2);
+    *(swappedDataBytes + 6) = *(dataBytes + 1);
+    *(swappedDataBytes + 7) = *(dataBytes + 0);
+  } else {
+    static_assert(true, "Size of data is unhandled");
+  }
+  return swappedData;
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_MAGNITUDE, T>, T> swapEndianess(const T &paValue) {
+  const typename T::TValueType data = static_cast<typename T::TValueType>(paValue);
+  typename T::TValueType swappedData = swapSimpleDataHelper(data);
+  return T(swappedData);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_BIT, T>, T> swapEndianess(const T &paValue) {
+  const typename T::TValueType data = static_cast<typename T::TValueType>(paValue);
+  typename T::TValueType swappedData = swapSimpleDataHelper(data);
+  return T(swappedData);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_CHAR, T>, T> swapEndianess(const T &paValue) {
+  const typename T::TValueType data = static_cast<typename T::TValueType>(paValue);
+  typename T::TValueType swappedData = swapSimpleDataHelper(data);
+  return T(swappedData);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, T> swapEndianess(const T &paValue) {
+  const typename T::TValueType data = static_cast<typename T::TValueType>(paValue);
+  typename T::TValueType swappedData = swapSimpleDataHelper(data);
+  return T(swappedData);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_STRING, T>, T> swapEndianess(const T &paValue) {
+  if constexpr (std::is_same_v<CIEC_STRING, T>) {
+    return T(paValue);
+  } else if constexpr (std::is_same_v<CIEC_WSTRING, T>) {
+    T reversed(paValue);
+    const TForteUInt16 length = reversed.length();
+    for(TForteUInt16 i = 0; i < length; i += sizeof(typename T::TValueType)) {
+      *(reversed.getValue() + i) = *(paValue.getValue() + (i + 1));
+      *(reversed.getValue() + (i + 1)) = *(paValue.getValue() + i);
+    }
+    return reversed;
+  } else {
+    static_assert(true, "Unhandled/unknown subtype of CIEC_ANY_STRING");
+  }
+}
+
+CIEC_ARRAY<CIEC_ANY> swapEndianess(const CIEC_ARRAY<CIEC_ANY> &paValue);
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, T>
+swapEndianess(const T &paValue) {
+  T reversed(paValue);
+  CIEC_ANY *members = reversed.getMembers();
+  for (size_t i = 0; i < reversed.getStructSize(); ++i) {
+    switch (members[i].getDataTypeID()) {
+    case CIEC_ANY::e_BOOL:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_BOOL *>(members)[i]));
+      break;
+    case CIEC_ANY::e_SINT:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_SINT *>(members)[i]));
+      break;
+    case CIEC_ANY::e_INT:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_INT *>(members)[i]));
+      break;
+    case CIEC_ANY::e_DINT:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_DINT *>(members)[i]));
+      break;
+    case CIEC_ANY::e_LINT:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_LINT *>(members)[i]));
+      break;
+    case CIEC_ANY::e_USINT:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_USINT *>(members)[i]));
+      break;
+    case CIEC_ANY::e_UINT:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_UINT *>(members)[i]));
+      break;
+    case CIEC_ANY::e_UDINT:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_UDINT *>(members)[i]));
+      break;
+    case CIEC_ANY::e_ULINT:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_ULINT *>(members)[i]));
+      break;
+    case CIEC_ANY::e_BYTE:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_BYTE *>(members)[i]));
+      break;
+    case CIEC_ANY::e_WORD:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_WORD *>(members)[i]));
+      break;
+    case CIEC_ANY::e_DWORD:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_DWORD *>(members)[i]));
+      break;
+    case CIEC_ANY::e_LWORD:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_LWORD *>(members)[i]));
+      break;
+    case CIEC_ANY::e_DATE:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_DATE *>(members)[i]));
+      break;
+    case CIEC_ANY::e_TIME_OF_DAY:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_TIME_OF_DAY *>(members)[i]));
+      break;
+    case CIEC_ANY::e_DATE_AND_TIME:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_DATE_AND_TIME *>(members)[i]));
+      break;
+    case CIEC_ANY::e_TIME:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_TIME *>(members)[i]));
+      break;
+    case CIEC_ANY::e_CHAR:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_CHAR *>(members)[i]));
+      break;
+    case CIEC_ANY::e_WCHAR:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_WCHAR *>(members)[i]));
+      break;
+    case CIEC_ANY::e_LDATE:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_LDATE *>(members)[i]));
+      break;
+    case CIEC_ANY::e_LTIME_OF_DAY:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_LTIME_OF_DAY *>(members)[i]));
+      break;
+    case CIEC_ANY::e_LDATE_AND_TIME:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_LDATE_AND_TIME *>(members)[i]));
+      break;
+    case CIEC_ANY::e_LTIME:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_LDATE *>(members)[i]));
+      break;
+    case CIEC_ANY::e_REAL:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_REAL *>(members)[i]));
+      break;
+    case CIEC_ANY::e_LREAL:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_LREAL *>(members)[i]));
+      break;
+    case CIEC_ANY::e_STRING:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_STRING *>(members)[i]));
+      break;
+    case CIEC_ANY::e_WSTRING:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_WSTRING *>(members)[i]));
+      break;
+    case CIEC_ANY::e_ARRAY:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_ARRAY<CIEC_ANY> *>(members)[i]));
+      break;
+    case CIEC_ANY::e_STRUCT:
+      members[i].setValue(swapEndianess(static_cast<const CIEC_STRUCT *>(members)[i]));
+      break;
+    default:
+      break; //do nothing
+    }
+  }
+  return reversed;
+}
+
+template <template <typename, intmax_t, intmax_t> typename T, typename U, intmax_t lowerBound, intmax_t upperBound>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>, T<U, lowerBound, upperBound>> swapEndianess(const T<U, lowerBound, upperBound> &paValue) {
+  T<U, lowerBound, upperBound> reversed(paValue);
+  for (auto iter = reversed.begin(); iter != reversed.end(); iter++) {
+    *iter = swapEndianess(*iter);
+  }
+  return reversed;
+}
+
+template <template <typename> typename T, typename U>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> swapEndianess(const T<U> &paValue) {
+  T<U> reversed(paValue);
+  for (auto iter = reversed.begin(); iter != reversed.end(); iter++) {
+    *iter = swapEndianess(*iter);
+  }
+  return reversed;
+}
+
+#ifdef FORTE_LITTLE_ENDIAN
+template <typename T>
+T func_TO_LITTLE_ENDIAN(const T &paValue) {
+  return paValue;
+}
+
+template <typename T>
+T func_FROM_LITTLE_ENDIAN(const T &paValue) {
+  return paValue;
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_MAGNITUDE, T>, T> func_TO_BIG_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_BIT, T>, T> func_TO_BIG_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_CHAR, T>, T> func_TO_BIG_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, T> func_TO_BIG_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_STRING, T>, T> func_TO_BIG_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+CIEC_ARRAY<CIEC_ANY> func_TO_BIG_ENDIAN(const CIEC_ARRAY<CIEC_ANY> &paValue);
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, T> func_TO_BIG_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <template <typename, intmax_t, intmax_t> typename T, typename U, intmax_t lowerBound, intmax_t upperBound>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>, T<U, lowerBound, upperBound>> func_TO_BIG_ENDIAN(const T<U, lowerBound, upperBound> &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <template <typename> typename T, typename U>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> func_TO_BIG_ENDIAN(const T<U> &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_MAGNITUDE, T>, T> func_FROM_BIG_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_BIT, T>, T> func_FROM_BIG_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_CHAR, T>, T> func_FROM_BIG_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, T> func_FROM_BIG_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_STRING, T>, T> func_FROM_BIG_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+CIEC_ARRAY<CIEC_ANY> func_FROM_BIG_ENDIAN(const CIEC_ARRAY<CIEC_ANY> &paValue);
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, T> func_FROM_BIG_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <template <typename, intmax_t, intmax_t> typename T, typename U, intmax_t lowerBound, intmax_t upperBound>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>, T<U, lowerBound, upperBound>> func_FROM_BIG_ENDIAN(const T<U, lowerBound, upperBound> &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <template <typename> typename T, typename U>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> func_FROM_BIG_ENDIAN(const T<U> &paValue) {
+  return swapEndianess(paValue);
+}
+#endif
+
+#ifdef FORTE_BIG_ENDIAN
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_MAGNITUDE, T>, T> func_TO_LITTLE_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_BIT, T>, T> func_TO_LITTLE_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_CHAR, T>, T> func_TO_LITTLE_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, T> func_TO_LITTLE_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_STRING, T>, T> func_TO_LITTLE_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+CIEC_ARRAY<CIEC_ANY> func_TO_LITTLE_ENDIAN(const CIEC_ARRAY<CIEC_ANY> &paValue);
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, T> func_TO_LITTLE_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <template <typename, intmax_t, intmax_t> typename T, typename U, intmax_t lowerBound, intmax_t upperBound>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>, T<U, lowerBound, upperBound>> func_TO_LITTLE_ENDIAN(const T<U, lowerBound, upperBound> &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <template <typename> typename T, typename U>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> func_TO_LITTLE_ENDIAN(const T<U> &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_MAGNITUDE, T>, T> func_FROM_LITTLE_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_BIT, T>, T> func_FROM_LITTLE_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_CHAR, T>, T> func_FROM_LITTLE_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, T> func_FROM_LITTLE_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_STRING, T>, T> func_FROM_LITTLE_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+CIEC_ARRAY<CIEC_ANY> func_FROM_LITTLE_ENDIAN(const CIEC_ARRAY<CIEC_ANY> &paValue);
+
+template <typename T>
+typename std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, T> func_FROM_LITTLE_ENDIAN(const T &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <template <typename, intmax_t, intmax_t> typename T, typename U, intmax_t lowerBound, intmax_t upperBound>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>, T<U, lowerBound, upperBound>> func_FROM_LITTLE_ENDIAN(const T<U, lowerBound, upperBound> &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <template <typename> typename T, typename U>
+typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> func_FROM_LITTLE_ENDIAN(const T<U> &paValue) {
+  return swapEndianess(paValue);
+}
+
+template <typename T>
+T func_TO_BIG_ENDIAN(const T &paValue) {
+  return paValue;
+}
+
+template <typename T>
+T func_FROM_BIG_ENDIAN(const T &paValue) {
+  return paValue;
+}
+#endif
 
 #endif /* IEC61131_FUNCTIONS_H_ */

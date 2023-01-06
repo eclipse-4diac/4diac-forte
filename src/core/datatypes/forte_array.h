@@ -143,11 +143,11 @@ class CIEC_ARRAY : public CIEC_ARRAY_COMMON<T> {
       return static_cast<iterator>(getArray() + getUpperBound() + 1);
     }
 
-    [[nodiscard]] const_iterator begin() const override {
+    [[nodiscard]] const_iterator cbegin() const override {
       return static_cast<const_iterator>(getArray());
     }
 
-    [[nodiscard]] const_iterator end() const override {
+    [[nodiscard]] const_iterator cend() const override {
       return static_cast<const_iterator>(getArray() + getUpperBound() + 1);
     }
 
@@ -178,7 +178,7 @@ class CIEC_ARRAY : public CIEC_ARRAY_COMMON<T> {
         std::abort();
 #endif // FORTE_RTTI_AND_EXCEPTIONS
       }
-      return begin()[paIndex];
+      return cbegin()[paIndex];
     }
 
     [[nodiscard]] reference operator[](intmax_t paIndex) override {
@@ -195,8 +195,8 @@ class CIEC_ARRAY : public CIEC_ARRAY_COMMON<T> {
       const intmax_t lowerBoundOffset = getLowerBound() - sourceLowerBound;
       const intmax_t upperBoundOffset = getUpperBound() - sourceUpperBound;
   
-      auto sourceIteratorBegin = paSource.begin();
-      auto sourceIteratorEnd = paSource.end();
+      auto sourceIteratorBegin = paSource.cbegin();
+      auto sourceIteratorEnd = paSource.cend();
       auto targetIteratorBegin = begin();
       if ((sourceLowerBound <= getUpperBound()) && (sourceUpperBound >= getLowerBound())) {
       // Target lowerBound is a bigger number than the source, so all elements below the target lowerbound cannot be copied, so shift start to first element which will be copied

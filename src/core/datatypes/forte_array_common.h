@@ -57,9 +57,9 @@ public:
 
   [[nodiscard]] virtual iterator end() = 0;
 
-  [[nodiscard]] virtual const_iterator begin() const = 0;
+  [[nodiscard]] virtual const_iterator cbegin() const = 0;
 
-  [[nodiscard]] virtual const_iterator end() const = 0;
+  [[nodiscard]] virtual const_iterator cend() const = 0;
 
   [[nodiscard]] EDataTypeID getDataTypeID() const final {
     return CIEC_ANY::e_ARRAY;
