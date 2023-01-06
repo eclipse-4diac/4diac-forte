@@ -23,7 +23,6 @@ DEFINE_HANDLER(CXqueryHandler);
 
 CSyncObject CXqueryHandler::smXqueryMutex = CSyncObject();
 forte::arch::CSemaphore CXqueryHandler::mStateSemaphore = forte::arch::CSemaphore();
-bool CXqueryHandler::mIsSemaphoreEmpty = true;
 
 CXqueryHandler::CXqueryHandler(CDeviceExecution& pa_poDeviceExecution) : CExternalEventHandler(pa_poDeviceExecution){
   result = nullptr;
@@ -80,13 +79,13 @@ void CXqueryHandler::run(){
       TXqueryFBContainer::Iterator it = m_lstXqueryFBList.begin();
       CXqueryClientLayer *xc = *it;
       if(xc->getSfd() > -1){
-        int rc = basex_execute(xc->getSfd(), xc->getCommand(), &result, &info);
+        int rc = basex_execute(xc->getSfd(), xc->getCommand(), &result, &info);  
         if(rc == -1){ // general (i/o or the like) error
           DEVLOG_ERROR("An error occured during execution of '%s'.\n", xc->getCommand());
           free(result);
           free(info);
         }
-        if(rc == 1){ // database error while processing command
+        if(rc > 0){ // database error while processing command
           DEVLOG_ERROR("Processing of '%s' failed.\n", xc->getCommand());
         }else{
           if(e_Nothing != xc->recvData(result, strlen(result))){
@@ -102,10 +101,7 @@ void CXqueryHandler::run(){
 }
 
 void CXqueryHandler::resumeSuspend(){
-  if(mIsSemaphoreEmpty){ //avoid incrementing many times
     mStateSemaphore.inc();
-    mIsSemaphoreEmpty = false;
-  }
 }
 
 void CXqueryHandler::selfSuspend(){

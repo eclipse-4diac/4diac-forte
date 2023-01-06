@@ -28,7 +28,6 @@ class CXqueryHandler : public CExternalEventHandler, private CThread{
     static CSyncObject smXqueryMutex;
 
     static forte::arch::CSemaphore mStateSemaphore;
-    static bool mIsSemaphoreEmpty;
     void resumeSuspend();
     void selfSuspend();
 
