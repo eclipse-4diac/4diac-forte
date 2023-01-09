@@ -41,7 +41,7 @@ if [ -z "$FORTE_OUTPUT_DIR" ]; then
 fi
 
 COMMON_FLAGS="-DCMAKE_BUILD_TYPE=Debug \
-              -DFORTE_LOGLEVEL=Debug \
+              -DFORTE_LOGLEVEL=LOGDEBUG \
               -DFORTE_BUILD_EXECUTABLE=ON \
               -DFORTE_COM_ETH=ON \
               -DFORTE_MODULE_UTILS=ON \

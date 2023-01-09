@@ -270,7 +270,7 @@ if [ "${OPCUA_ENABLED}" -eq "1" ]; then
   fi    
   
   cd "${CURRENT_FOLDER}" && \
-  git checkout v1.0 && \
+  git checkout v1.3.4 && \
   git submodule update --recursive --init
 
 fi
