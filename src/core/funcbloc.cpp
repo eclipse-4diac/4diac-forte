@@ -397,7 +397,7 @@ EMGMResponse CFunctionBlock::changeFBExecutionState(EMGMCommandType pa_unCommand
 
 EMGMResponse CFunctionBlock::changeFBExecutionStateHelper(const EMGMCommandType paCommand, size_t paAmountOfInternalFBs,
     TFunctionBlockPtr *const paInternalFBs){
-  EMGMResponse nRetVal = changeFBExecutionState(paCommand);
+  EMGMResponse nRetVal = CFunctionBlock::changeFBExecutionState(paCommand);
   if(EMGMResponse::Ready == nRetVal){
     nRetVal = changeInternalFBExecutionState(paCommand, paAmountOfInternalFBs, paInternalFBs);
   }
