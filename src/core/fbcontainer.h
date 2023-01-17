@@ -52,6 +52,14 @@ namespace forte {
           return mFunctionBlocks;
         }
 
+        typedef CSinglyLinkedList<CFBContainer *> TFBContainerList;
+
+        TFBContainerList &getSubContainerList(){
+          return mSubContainers;
+        }
+
+        CFBContainer* getParent() const { return mParent;}
+
       protected:
 
         /*!\brief Create a new FB instance of given type and name
@@ -79,9 +87,6 @@ namespace forte {
 
         //! Change the execution state of all contained FBs and also recursively in all contained containers
         EMGMResponse changeContainedFBsExecutionState(EMGMCommandType paCommand);
-
-
-        typedef CSinglyLinkedList<CFBContainer *> TFBContainerList;
 
       private:
         /*!\brief Retrieve a FBContainer with given name. If it does not exist create it.

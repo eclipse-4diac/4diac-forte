@@ -13,10 +13,10 @@
  *    Martin Melik Merkumians
  *      - implementation for checkForActionEquivalentState
  *******************************************************************************/
-#include "fbcontainer.h"
 #include "funcbloc.h"
+#include "fbcontainer.h"
 
-using namespace forte::core;
+using namespace forte::core; 
 
 EMGMResponse checkForActionEquivalentState(const CFunctionBlock &paFB, const EMGMCommandType paCommand){
   CFunctionBlock::E_FBStates currentState = paFB.getState();
@@ -69,6 +69,7 @@ EMGMResponse CFBContainer::createFB(forte::core::TNameIdentifier::CIterator &paN
       if(nullptr != newFB){
         //we could create a FB now add it to the list of contained FBs
         mFunctionBlocks.pushBack(newFB);
+        newFB->setContainer(this);
         retval = EMGMResponse::Ready;
       }
       else{
@@ -164,7 +165,7 @@ CFunctionBlock* CFBContainer::getContainedFB(forte::core::TNameIdentifier::CIter
   return getFB(*paNameListIt);
 }
 
-CFBContainer *CFBContainer::getFBContainer(CStringDictionary::TStringId paContainerName)  {
+CFBContainer* CFBContainer::getFBContainer(CStringDictionary::TStringId paContainerName)  {
   CFBContainer *retVal = nullptr;
 
   if(CStringDictionary::scm_nInvalidStringId != paContainerName){

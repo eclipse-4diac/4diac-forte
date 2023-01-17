@@ -183,8 +183,11 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      * @return response of the command execution as defined in IEC 61499
      */
     EMGMResponse queryFBs(CIEC_STRING& paValue);
+    void createFBResponseMessage(const CFunctionBlock& paFb, const char* fullName, CIEC_STRING& paValue);
 
-    EMGMResponse queryConnections(CIEC_STRING &paValue);
+    EMGMResponse querySubapps(CIEC_STRING& paValue, CFBContainer& container, std::string prefix);
+
+    EMGMResponse queryConnections(CIEC_STRING &paValue, CFBContainer& container);
     void createEOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult);
     void createDOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult);
     void createAOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRING& paReqResult);

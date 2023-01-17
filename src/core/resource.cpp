@@ -16,6 +16,7 @@
  *    Martin Melik Merkumians - modify for removed implicit constructors
  *         for primitive types
  *    Martin Jobst - add CTF tracing integration
+ *    Fabio Gandolfi - send also subapps on requested resources
  *******************************************************************************/
 #include <fortenew.h>
 #include "resource.h"
@@ -138,7 +139,7 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
         retVal = createAdapterTypeResponseMessage(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
         break;
         case EMGMCommandType::QueryConnection:
-        retVal = queryConnections(paCommand.mAdditionalParams);
+        retVal = queryConnections(paCommand.mAdditionalParams, *this);
         break;
 #endif //FORTE_SUPPORT_QUERY_CMD
       default:
@@ -331,26 +332,57 @@ EMGMResponse CResource::queryAllAdapterTypes(CIEC_STRING & paValue){
 }
 
 EMGMResponse CResource::queryFBs(CIEC_STRING & paValue){
+
   for(TFunctionBlockList::Iterator itRunner(getFBList().begin()); itRunner != getFBList().end(); ++itRunner){
     if(itRunner != getFBList().begin()){
       paValue.append("\n");
     }
-    paValue.append("<FB name=\"");
-    paValue.append((static_cast<CFunctionBlock *>(*itRunner))->getInstanceName());
-    paValue.append("\" type=\"");
-    paValue.append(CStringDictionary::getInstance().get((static_cast<CFunctionBlock *>(*itRunner))->getFBTypeId()));
-    paValue.append("\"/>");
+    createFBResponseMessage(*static_cast<CFunctionBlock *>(*itRunner) ,(static_cast<CFunctionBlock *>(*itRunner))->getInstanceName(),paValue);
+  }
+
+  return querySubapps(paValue, *this, "");
+}
+
+
+EMGMResponse CResource::querySubapps(CIEC_STRING & paValue, CFBContainer& container, std::string prefix){
+
+  for(TFBContainerList::Iterator itRunner(container.getSubContainerList().begin()); itRunner != container.getSubContainerList().end(); ++itRunner){
+    CFBContainer* subapp = (static_cast<CFBContainer*>(*itRunner));
+
+    if(!prefix.empty()){
+      prefix += ".";
+    }
+    prefix += CStringDictionary::getInstance().get(subapp->getName());
+
+    for(TFunctionBlockList::Iterator itRunner2(subapp->getFBList().begin()); itRunner2 != subapp->getFBList().end(); ++itRunner2){
+
+      std::string fullFBName = (static_cast<CFunctionBlock *>(*itRunner2))->getInstanceName();
+      fullFBName = "." + fullFBName;
+      fullFBName = prefix + fullFBName;
+
+      if(itRunner2 != getFBList().begin()){
+        paValue.append("\n");
+      }
+
+      createFBResponseMessage(*static_cast<CFunctionBlock *>(*itRunner2) ,fullFBName.c_str(),paValue);
+    }
+    querySubapps(paValue,*subapp,prefix);
   }
   return EMGMResponse::Ready;
 }
 
-EMGMResponse CResource::queryConnections(CIEC_STRING & paReqResult){
+EMGMResponse CResource::queryConnections(CIEC_STRING & paReqResult, CFBContainer& container){
+
   EMGMResponse retVal = EMGMResponse::UnsupportedType;
-  //TODO check container list to support subapps issue[538333]
-  for(TFunctionBlockList::Iterator itRunner(getFBList().begin()); itRunner != getFBList().end(); ++itRunner){
-    createEOConnectionResponse(**itRunner, paReqResult);
-    createDOConnectionResponse(**itRunner, paReqResult);
-    createAOConnectionResponse(**itRunner, paReqResult);
+  for(TFunctionBlockList::Iterator itRunner2(container.getFBList().begin()); itRunner2 != container.getFBList().end(); ++itRunner2){ 
+    createEOConnectionResponse(**itRunner2, paReqResult);
+    createDOConnectionResponse(**itRunner2, paReqResult);
+    createAOConnectionResponse(**itRunner2, paReqResult);
+  }
+
+  for(TFBContainerList::Iterator itRunner(container.getSubContainerList().begin()); itRunner != container.getSubContainerList().end(); ++itRunner) {
+    CFBContainer* subapp = (static_cast<CFBContainer*>(*itRunner));
+    queryConnections(paReqResult,*subapp);
   }
   retVal = EMGMResponse::Ready;
   return retVal;
@@ -411,16 +443,41 @@ void CResource::createAOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRI
   }
 }
 
+void CResource::createFBResponseMessage(const CFunctionBlock& paFb, const char* fullName, CIEC_STRING& paValue){
+  paValue.append("<FB name=\"");
+  paValue.append(fullName);
+  paValue.append("\" type=\"");
+  paValue.append(CStringDictionary::getInstance().get(paFb.getFBTypeId()));
+  paValue.append("\"/>");
+}
+
 void CResource::createConnectionResponseMessage(const CStringDictionary::TStringId srcId, const CStringDictionary::TStringId dstId,
     const CFunctionBlock& paDstFb, const CFunctionBlock& paSrcFb, CIEC_STRING& paReqResult) const {
   paReqResult.append("<Connection Source=\"");
-  paReqResult.append(paSrcFb.getInstanceName());
-  paReqResult.append(".");
-  paReqResult.append(CStringDictionary::getInstance().get(srcId));
+
+  std::string fullName = paSrcFb.getInstanceName();
+  fullName += ".";
+  fullName += CStringDictionary::getInstance().get(srcId);
+
+  CFBContainer* parent = &(paSrcFb.getContainer());
+  while(CStringDictionary::getInstance().get(parent->getName()) != 0){
+    fullName = "." + fullName;
+    fullName = CStringDictionary::getInstance().get(parent->getName()) + fullName;
+    parent = parent->getParent();
+  }
+  paReqResult.append(fullName.c_str());
   paReqResult.append("\" Destination=\"");
-  paReqResult.append(paDstFb.getInstanceName());
-  paReqResult.append(".");
-  paReqResult.append(CStringDictionary::getInstance().get(dstId));
+  fullName = paDstFb.getInstanceName();
+  fullName += ".";
+  fullName += CStringDictionary::getInstance().get(dstId);
+
+  parent = &(paDstFb.getContainer());
+  while(CStringDictionary::getInstance().get(parent->getName()) != 0){
+    fullName = "." + fullName;
+    fullName = CStringDictionary::getInstance().get(parent->getName()) + fullName;
+    parent = parent->getParent();
+  }
+  paReqResult.append(fullName.c_str());
   paReqResult.append("\"/>");
 }
 

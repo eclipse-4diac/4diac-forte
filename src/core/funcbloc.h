@@ -36,6 +36,12 @@ class CTimerHandler;
 
 typedef CFunctionBlock *TFunctionBlockPtr;
 
+namespace forte {
+  namespace core {
+          class CFBContainer;
+     }
+}
+
 #ifdef FORTE_SUPPORT_MONITORING
 #include "mgmcmdstruct.h"
 namespace forte {
@@ -135,6 +141,14 @@ class CFunctionBlock {
 
     CResource* getResourcePtr() const {
       return m_poResource;
+    }
+
+    forte::core::CFBContainer& getContainer() const {
+      return *m_Container;
+    }
+
+    void setContainer(forte::core::CFBContainer* container) {
+      m_Container = container;
     }
 
     /*!\brief Get the timer of the device wher the FB is contained.
@@ -477,6 +491,7 @@ class CFunctionBlock {
     void configureGenericDI(TPortId paDIPortId, const CIEC_ANY *paRefValue);
 
     CResource *m_poResource; //!< A pointer to the resource containing the function block.
+    forte::core::CFBContainer *m_Container; //!< A pointer to the container containing the function block.
     CIEC_ANY *m_aoDIs; //!< A list of pointers to the data inputs. This allows to implement a general getDataInput()
     CIEC_ANY *m_aoDOs; //!< A list of pointers to the data outputs. This allows to implement a general getDataOutput()
 
