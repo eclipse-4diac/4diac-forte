@@ -18,6 +18,8 @@
 #include <open62541.h>
 #include "forte_any.h"
 
+class CIEC_STRUCT;
+
 class COPC_UA_Helper {
   public:
 
@@ -42,7 +44,7 @@ class COPC_UA_Helper {
      * @param paDestAny Place to store
      * @return The size of the source that was used
      */
-    static size_t convertFromOPCUAType(const void *paSrc, CIEC_ANY &paDestAny);
+    static size_t convertFromOPCUAType(void const * const paSrc, CIEC_ANY &paDestAny);
 
     /**
      * Fills a variant using the information from a CIEC_ANY type
@@ -232,6 +234,9 @@ class COPC_UA_Helper {
      */
     static void copyNodeIds(const UA_BrowsePathResult *paBrowsePathsResults, size_t paFolderCnt, int paFoundFolderOffset, UA_NodeId **paParentNodeId,
         UA_NodeId **paFoundNodeId);
+
+    static size_t convertStructToOPCUAType(const CIEC_STRUCT &paSrcStruct, void *paDest);
+    static size_t convertStructFromOPCUAType(void const * const paSrc, CIEC_STRUCT &paDestStruct);
 };
 
 #endif //FORTE_OPCUA_HELPER_H

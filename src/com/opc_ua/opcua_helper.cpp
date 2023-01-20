@@ -147,15 +147,27 @@ size_t COPC_UA_Helper::convertToOPCUAType(const CIEC_ANY &paSrcAny, void *paDest
       retVal += convertToOPCUAType(static_cast<const CIEC_ARRAY<>&>(paSrcAny)[static_cast<TForteUInt16>(i)], static_cast<char*>(paDest) + retVal);
     }
   } else if(CIEC_ANY::e_STRUCT == typeId) {
-    const CIEC_ANY *members = static_cast<const CIEC_STRUCT&>(paSrcAny).getMembers();
-    for(size_t i = 0; i < static_cast<const CIEC_STRUCT&>(paSrcAny).getStructSize(); i++) {
-      retVal += convertToOPCUAType(members[i], static_cast<char*>(paDest) + retVal);
-    }
+    return convertStructToOPCUAType(static_cast<const CIEC_STRUCT&>(paSrcAny), paDest);
   }
   return retVal;
 }
 
-size_t COPC_UA_Helper::convertFromOPCUAType(const void *paSrc, CIEC_ANY &paDestAny) {
+size_t COPC_UA_Helper::convertStructToOPCUAType(const CIEC_STRUCT &paSrcStruct, void *paDest){
+  size_t retVal = 0;
+  UA_DataTypeMember const * const uaMemberTypes = getOPCUATypeFromAny(paSrcStruct)->members;
+  CIEC_ANY const * const members = paSrcStruct.getMembers();
+
+  for(size_t i = 0; i < paSrcStruct.getStructSize(); i++){
+    if(uaMemberTypes != nullptr){
+         retVal += uaMemberTypes[i].padding;
+    }
+    retVal += convertToOPCUAType(members[i], static_cast<char*>(paDest) + retVal);
+  }
+  return retVal;
+}
+
+
+size_t COPC_UA_Helper::convertFromOPCUAType(void const * const paSrc, CIEC_ANY &paDestAny) {
   size_t retVal = 0;
 
   CIEC_ANY::EDataTypeID typeId = paDestAny.getDataTypeID();
@@ -166,11 +178,23 @@ size_t COPC_UA_Helper::convertFromOPCUAType(const void *paSrc, CIEC_ANY &paDestA
       retVal += convertFromOPCUAType(static_cast<const char*>(paSrc) + retVal, static_cast<CIEC_ARRAY<>&>(paDestAny)[static_cast<TForteUInt16>(i)]);
     }
   } else if(CIEC_ANY::e_STRUCT == typeId) {
-    CIEC_ANY *members = static_cast<CIEC_STRUCT&>(paDestAny).getMembers();
-    for(size_t i = 0; i < static_cast<CIEC_STRUCT&>(paDestAny).getStructSize(); i++) {
-      retVal += convertFromOPCUAType(static_cast<const char*>(paSrc) + retVal, members[i]);
-    }
+    return convertStructFromOPCUAType(paSrc, static_cast<CIEC_STRUCT&>(paDestAny));
   }
+  return retVal;
+}
+
+size_t COPC_UA_Helper::convertStructFromOPCUAType(void const * const paSrc, CIEC_STRUCT &paDestStruct){
+  size_t retVal = 0;
+  UA_DataTypeMember const * const uaMemberTypes = getOPCUATypeFromAny(paDestStruct)->members;
+  CIEC_ANY * const members = paDestStruct.getMembers();
+
+  for(size_t i = 0; i < paDestStruct.getStructSize(); i++){
+    if(uaMemberTypes != nullptr){
+      retVal += uaMemberTypes[i].padding;
+    }
+    retVal += convertFromOPCUAType(static_cast<const char*>(paSrc) + retVal, members[i]);
+  }
+
   return retVal;
 }
 
