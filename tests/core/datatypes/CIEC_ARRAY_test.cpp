@@ -134,6 +134,32 @@ BOOST_AUTO_TEST_CASE(Array_assignment_test_INT)
   BOOST_CHECK_EQUAL(nTest.getToStringBufferSize(), sizeof("[+32767,+32767,+32767,+32767,+32767]")); //use max length of INT
 }
 
+BOOST_AUTO_TEST_CASE(Array_assignment_test_INT_with_IEC_type_indices)
+{
+  CIEC_ARRAY_TYPELIB nTest(5, g_nStringIdINT);
+
+  BOOST_CHECK_EQUAL(nTest.size(), 5);
+
+  BOOST_CHECK_EQUAL(nTest[CIEC_USINT(0)].getDataTypeID(), CIEC_ANY::e_INT);
+  BOOST_CHECK_EQUAL(nTest[CIEC_USINT(1)].getDataTypeID(), CIEC_ANY::e_INT);
+  BOOST_CHECK_EQUAL(nTest[CIEC_USINT(2)].getDataTypeID(), CIEC_ANY::e_INT);
+  BOOST_CHECK_EQUAL(nTest[CIEC_USINT(3)].getDataTypeID(), CIEC_ANY::e_INT);
+  BOOST_CHECK_EQUAL(nTest[CIEC_USINT(4)].getDataTypeID(), CIEC_ANY::e_INT);
+
+  static_cast<CIEC_INT &>(nTest[CIEC_USINT(0)]) = CIEC_INT(1);
+  static_cast<CIEC_INT &>(nTest[CIEC_USINT(1)]) = CIEC_INT(-32259);
+  static_cast<CIEC_INT &>(nTest[CIEC_USINT(2)]) = CIEC_INT(256);
+  static_cast<CIEC_INT &>(nTest[CIEC_USINT(3)]) = CIEC_INT(-32259);
+  static_cast<CIEC_INT &>(nTest[CIEC_USINT(4)]) = CIEC_INT(256);
+
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[CIEC_USINT(0)])), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[CIEC_USINT(1)])), -32259);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[CIEC_USINT(2)])), 256);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[CIEC_USINT(3)])), -32259);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[CIEC_USINT(4)])), 256);
+  BOOST_CHECK_EQUAL(nTest.getToStringBufferSize(), sizeof("[+32767,+32767,+32767,+32767,+32767]")); // use max length of INT
+}
+
 BOOST_AUTO_TEST_CASE(Array_assignment_test_array)
 {
   CIEC_ARRAY_TYPELIB nTest(5, g_nStringIdINT);

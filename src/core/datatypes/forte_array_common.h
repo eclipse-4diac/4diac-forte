@@ -18,6 +18,7 @@
 #include <initializer_list>
 
 #include "forte_any_derived.h"
+#include "forte_any_int.h"
 
 /** \brief A common supertype for all CIEC_ARRAY variants, providing the minimal interface an array must provide
  */
@@ -52,6 +53,26 @@ public:
   [[nodiscard]] virtual const_reference at(intmax_t index) const = 0;
 
   [[nodiscard]] virtual const_reference operator[](intmax_t index) const = 0;
+
+  [[nodiscard]] reference at(const CIEC_ANY_INT &index) {
+    const intmax_t indexValue = index.getSignedValue();
+    return at(indexValue);
+  }
+
+  [[nodiscard]] reference operator[](const CIEC_ANY_INT &index) {
+    const intmax_t indexValue = index.getSignedValue();
+    return operator[](indexValue);
+  }
+
+  [[nodiscard]] const_reference at(const CIEC_ANY_INT &index) const {
+    const intmax_t indexValue = index.getSignedValue();
+    return at(indexValue);
+  }
+
+  [[nodiscard]] const_reference operator[](const CIEC_ANY_INT &index) const {
+    const intmax_t indexValue = index.getSignedValue();
+    return operator[](indexValue);
+  }
 
   [[nodiscard]] virtual iterator begin() = 0;
 

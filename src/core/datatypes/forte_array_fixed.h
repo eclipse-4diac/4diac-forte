@@ -30,6 +30,8 @@ public:
     using iterator = typename CIEC_ARRAY_COMMON<T>::iterator;
     using const_iterator = typename CIEC_ARRAY_COMMON<T>::const_iterator;
 
+    using CIEC_ARRAY_COMMON<T>::operator[];
+
     CIEC_ARRAY_FIXED() = default;
 
     /** @brief constructor for initializer list */
@@ -48,8 +50,7 @@ public:
 
     /** @brief copy constructor for same array type */
     template <typename U, intmax_t sourceLowerBound, intmax_t sourceUpperBound>
-    CIEC_ARRAY_FIXED(const CIEC_ARRAY_FIXED<U, sourceLowerBound, sourceUpperBound> &paSource)
-    {
+    CIEC_ARRAY_FIXED(const CIEC_ARRAY_FIXED<U, sourceLowerBound, sourceUpperBound> &paSource) {
         /* If lowerBound of the data source is within the range of the destination,
          * then the sources lowerBound must be smaller than the destination's upperBound.
          * and its upperBound higher than the destination's lowerBound
@@ -135,8 +136,7 @@ public:
       return *this;
     }
 
-    CIEC_ARRAY_FIXED &operator=(const CIEC_ARRAY_FIXED<T, lowerBound, upperBound> &paSource)
-    {
+    CIEC_ARRAY_FIXED &operator=(const CIEC_ARRAY_FIXED<T, lowerBound, upperBound> &paSource) {
         data = paSource.data;
         return *this;
     }
@@ -152,8 +152,7 @@ public:
     }
 
     template <typename U, intmax_t sourceLowerBound, intmax_t sourceUpperBound>
-    CIEC_ARRAY_FIXED &operator=(const CIEC_ARRAY_FIXED<U, sourceLowerBound, sourceUpperBound> &paSource)
-    {
+    CIEC_ARRAY_FIXED &operator=(const CIEC_ARRAY_FIXED<U, sourceLowerBound, sourceUpperBound> &paSource) {
         if constexpr ((sourceLowerBound <= upperBound) && (sourceUpperBound >= lowerBound)) {
           constexpr intmax_t lowerBoundOffset = lowerBound - sourceLowerBound;
           constexpr intmax_t upperBoundOffset = upperBound - sourceUpperBound;
@@ -209,40 +208,33 @@ public:
       }
     }
 
-    [[nodiscard]] intmax_t getLowerBound() const override
-    {
+    [[nodiscard]] intmax_t getLowerBound() const override {
         return lowerBound;
     }
 
-    [[nodiscard]] intmax_t getUpperBound() const override
-    {
+    [[nodiscard]] intmax_t getUpperBound() const override {
         return upperBound;
     }
 
-    [[nodiscard]] size_t size() const override
-    {
+    [[nodiscard]] size_t size() const override {
         return data.size();
     }
 
-    [[nodiscard]] reference at(intmax_t index) override
-    {
+    [[nodiscard]] reference at(intmax_t index) override {
         return data.at(getDataArrayIndex(index));
     }
 
     // PLC-like systems always want range checks
-    [[nodiscard]] reference operator[](intmax_t index) override
-    {
+    [[nodiscard]] reference operator[](intmax_t index) override {
         return data[getDataArrayIndex(index)];
     }
 
-    [[nodiscard]] const_reference at(intmax_t index) const override
-    {
+    [[nodiscard]] const_reference at(intmax_t index) const override {
         return data.at(getDataArrayIndex(index));
     }
 
     // PLC-like systems always want range checks
-    [[nodiscard]] const_reference operator[](intmax_t index) const override
-    {
+    [[nodiscard]] const_reference operator[](intmax_t index) const override {
         return data[getDataArrayIndex(index)];
     }
 

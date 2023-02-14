@@ -27,6 +27,9 @@ using pointer = value_type *;
 using const_pointer = const value_type *;
 using reference = value_type &;
 using const_reference = const value_type &;
+
+using CIEC_ARRAY_COMMON<T>::operator[];
+
 CIEC_ARRAY_VARIABLE(intmax_t paLowerBound, intmax_t paUpperBound) : cmLowerBound(paLowerBound), cmUpperBound(paUpperBound),
     cmSize(static_cast<size_t>(paUpperBound - paLowerBound + 1)), data(cmSize) {
 }

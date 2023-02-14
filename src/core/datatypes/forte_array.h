@@ -44,6 +44,8 @@ class CIEC_ARRAY : public CIEC_ARRAY_COMMON<T> {
     using iterator = typename CIEC_ARRAY_COMMON<T>::iterator;
     using const_iterator = typename CIEC_ARRAY_COMMON<T>::const_iterator;
 
+    using CIEC_ARRAY_COMMON<T>::operator[];
+
     CIEC_ARRAY(TForteUInt16 paLength, CStringDictionary::TStringId paArrayType) {
       setup(paLength, paArrayType);
     }

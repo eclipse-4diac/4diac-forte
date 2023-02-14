@@ -88,6 +88,25 @@ BOOST_AUTO_TEST_CASE(InitializeNegativeRangesStaticArray) {
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[0]), 11);
 }
 
+BOOST_AUTO_TEST_CASE(StaticArrayIndexAccesWithIECTypes)
+{
+  CIEC_ARRAY_FIXED<CIEC_INT, -10, 0> intArray = {CIEC_INT(1), CIEC_INT(2), CIEC_INT(3), CIEC_INT(4),
+                                                 CIEC_INT(5), CIEC_INT(6), CIEC_INT(7), CIEC_INT(8),
+                                                 CIEC_INT(9), CIEC_INT(10), CIEC_INT(11)};
+
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[CIEC_INT(-10)]), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[CIEC_INT(-9)]), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[CIEC_INT(-8)]), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[CIEC_INT(-7)]), 4);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[CIEC_INT(-6)]), 5);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[CIEC_INT(-5)]), 6);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[CIEC_INT(-4)]), 7);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[CIEC_INT(-3)]), 8);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[CIEC_INT(-2)]), 9);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[CIEC_INT(-1)]), 10);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[CIEC_INT(0)]), 11);
+}
+
 BOOST_AUTO_TEST_CASE(WriteElementsStaticArray) {
   CIEC_ARRAY_FIXED<CIEC_INT, 0, 10> intArray;
 
@@ -102,6 +121,35 @@ BOOST_AUTO_TEST_CASE(WriteElementsStaticArray) {
   intArray[8] = CIEC_INT(9);
   intArray[9] = CIEC_INT(10);
   intArray[10] = CIEC_INT(11);
+
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[0]), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[1]), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[2]), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[3]), 4);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[4]), 5);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[5]), 6);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[6]), 7);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[7]), 8);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[8]), 9);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[9]), 10);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[10]), 11);
+}
+
+BOOST_AUTO_TEST_CASE(WriteElementsStaticArrayWithIECTypeIndices)
+{
+  CIEC_ARRAY_FIXED<CIEC_INT, 0, 10> intArray;
+
+  intArray[CIEC_UINT(0)] = CIEC_INT(1);
+  intArray[CIEC_UINT(1)] = CIEC_INT(2);
+  intArray[CIEC_UINT(2)] = CIEC_INT(3);
+  intArray[CIEC_UINT(3)] = CIEC_INT(4);
+  intArray[CIEC_UINT(4)] = CIEC_INT(5);
+  intArray[CIEC_UINT(5)] = CIEC_INT(6);
+  intArray[CIEC_UINT(6)] = CIEC_INT(7);
+  intArray[CIEC_UINT(7)] = CIEC_INT(8);
+  intArray[CIEC_UINT(8)] = CIEC_INT(9);
+  intArray[CIEC_UINT(9)] = CIEC_INT(10);
+  intArray[CIEC_UINT(10)] = CIEC_INT(11);
 
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[0]), 1);
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(intArray[1]), 2);
@@ -220,6 +268,15 @@ BOOST_AUTO_TEST_CASE(VariableArrayAccess)
   BOOST_CHECK_EQUAL(boolArray[1], CIEC_BOOL(false));
   BOOST_CHECK_EQUAL(boolArray[2], CIEC_BOOL(false));
   BOOST_CHECK_EQUAL(boolArray[3], CIEC_BOOL(true));
+}
+
+BOOST_AUTO_TEST_CASE(VariableArrayAccessIECTypes)
+{
+  CIEC_ARRAY_VARIABLE<CIEC_BOOL> boolArray = {CIEC_BOOL(true), CIEC_BOOL(false), CIEC_BOOL(false), CIEC_BOOL(true)};
+  BOOST_CHECK_EQUAL(boolArray[CIEC_INT(0)], CIEC_BOOL(true));
+  BOOST_CHECK_EQUAL(boolArray[CIEC_INT(1)], CIEC_BOOL(false));
+  BOOST_CHECK_EQUAL(boolArray[CIEC_INT(2)], CIEC_BOOL(false));
+  BOOST_CHECK_EQUAL(boolArray[CIEC_INT(3)], CIEC_BOOL(true));
 }
 
 /* copy tests */
