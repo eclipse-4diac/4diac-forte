@@ -26,6 +26,8 @@
 #include "forte_byte.h"
 #include <limits>
 
+#include "forte_any_int.h"
+
 /*!\ingroup COREDTS CIEC_WORD represents the word data type according to IEC 61131.
  */
 class CIEC_WORD : public CIEC_ANY_BIT{
@@ -96,6 +98,10 @@ class CIEC_WORD : public CIEC_ANY_BIT{
       return PARTIAL_ACCESS<T,CIEC_WORD>(*this, paIndex);
     }
 
+    template <class T> PARTIAL_ACCESS<T, CIEC_WORD> partial(const CIEC_ANY_INT& paIndex){
+      size_t index = paIndex.getUnsignedValue();
+      return PARTIAL_ACCESS<T, CIEC_WORD>(*this, index);
+    }
 };
 
 #endif /*_FORTE_WORD_H_*/

@@ -23,6 +23,8 @@
 #include "../../../src/core/datatypes/forte_word.h"
 #include "../../../src/core/datatypes/forte_dword.h"
 
+#include "../../../src/core/datatypes/forte_sint.h"
+
 #include "CIEC_PARTIAL_test.h"
 
 using namespace boost::unit_test;
@@ -1193,7 +1195,27 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_DWORD_SET_VALUE_WORD_BYTE_BIT_CHECK_DWORD_B)
   nTestDWord.partial<CIEC_WORD>(1).partial<CIEC_BYTE>(0).partial<CIEC_BOOL>(5).setValue(nTestBool);
 
   BOOST_CHECK_EQUAL(nTestDWord, 0xBAF00BAC);
+}
 
+BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_READ_WITH_IEC_TYPE_INDEX)
+{
+  CIEC_DWORD nDWord(0xBE);
+  CIEC_BOOL bBool;
+  bBool = nDWord.partial<CIEC_BOOL>(CIEC_SINT(0));
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(bBool) == false);
+
+  bBool = nDWord.partial<CIEC_BOOL>(CIEC_SINT(1));
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(bBool) == true);
+}
+
+BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_WRITE_WITH_IEC_TYPE_INDEX)
+{
+  CIEC_DWORD nDWord;
+  nDWord.partial<CIEC_BOOL>(CIEC_SINT(0)) = CIEC_BOOL(true);
+  BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(nDWord) == 1U);
+
+  nDWord.partial<CIEC_BOOL>(CIEC_SINT(1)) = CIEC_BOOL(true);
+  BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(nDWord) == 3U);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -23,6 +23,8 @@
 #include "forte_any_bit.h"
 #include "forte_bool.h"
 
+#include "forte_any_int.h"
+
 /*!\ingroup COREDTS CIEC_BYTE represents the byte data type according to IEC 61131.
  */
 class CIEC_BYTE : public CIEC_ANY_BIT{
@@ -82,6 +84,10 @@ class CIEC_BYTE : public CIEC_ANY_BIT{
       return PARTIAL_ACCESS<T,CIEC_BYTE>(*this, paIndex);
     }
 
+    template <class T> PARTIAL_ACCESS<T, CIEC_BYTE> partial(const CIEC_ANY_INT& paIndex){
+      size_t index = paIndex.getUnsignedValue();
+      return PARTIAL_ACCESS<T, CIEC_BYTE>(*this, index);
+    }
 };
 
 #endif /*_FORTE_BYTE_H_*/

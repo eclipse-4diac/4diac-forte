@@ -27,6 +27,8 @@
 #include "forte_word.h"
 #include <limits>
 
+#include "forte_any_int.h"
+
 /*!\ingroup COREDTS CIEC_DWORD represents the dword data type according to IEC 61131.
  */
 class CIEC_DWORD : public CIEC_ANY_BIT {
@@ -108,6 +110,10 @@ class CIEC_DWORD : public CIEC_ANY_BIT {
       return PARTIAL_ACCESS<T,CIEC_DWORD>(*this, paIndex);
     }
 
+    template <class T> PARTIAL_ACCESS<T, CIEC_DWORD> partial(const CIEC_ANY_INT& paIndex){
+      size_t index = paIndex.getUnsignedValue();
+      return PARTIAL_ACCESS<T, CIEC_DWORD>(*this, index);
+    }
 };
 
 #endif /*_FORTE_DWORD_H_*/
