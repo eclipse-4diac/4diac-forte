@@ -70,7 +70,11 @@ class CIEC_STRING : public CIEC_ANY_STRING{
       public:
         PARTIAL_ACCESS_TYPE(char *paValue) {
           value = paValue;
-          setChar(*paValue);
+          if (value != nullptr) {
+            setChar(*paValue);
+          } else {
+            setChar('\0');
+          }
         }
 
         operator value_type() const {
@@ -78,8 +82,10 @@ class CIEC_STRING : public CIEC_ANY_STRING{
         }
 
         PARTIAL_ACCESS_TYPE& operator=(const CIEC_CHAR& paValue) {
-          *value = static_cast<value_type>(paValue);
-          return *this;
+          if (value != nullptr) {
+            *value = static_cast<value_type>(paValue);
+          }
+            return *this;
         }
 
       private:
@@ -89,11 +95,11 @@ class CIEC_STRING : public CIEC_ANY_STRING{
     [[nodiscard]] PARTIAL_ACCESS_TYPE at(const intmax_t paIndex) {
       if(paIndex < 1) {
         DEVLOG_ERROR("String index start at 1!\n");
-        return PARTIAL_ACCESS_TYPE(getValue());
+        return PARTIAL_ACCESS_TYPE(nullptr);
       }
       if(paIndex > length()) {
         DEVLOG_ERROR("String index %d outside of length!\n", paIndex);
-        return PARTIAL_ACCESS_TYPE(getValue() + length() - 1);
+        return PARTIAL_ACCESS_TYPE(nullptr);
       }
       return PARTIAL_ACCESS_TYPE(getValue() + paIndex - 1);
     }
@@ -101,11 +107,11 @@ class CIEC_STRING : public CIEC_ANY_STRING{
     [[nodiscard]] value_type at(intmax_t paIndex) const {
       if(paIndex < 1) {
         DEVLOG_ERROR("String index start at 1!\n");
-        return CIEC_CHAR(*getValue());
+        return CIEC_CHAR('\0');
       }
       if(paIndex > length()) {
         DEVLOG_ERROR("String index %d outside of length!\n", paIndex);
-        return CIEC_CHAR(*(getValue() + length() - 1));
+        return CIEC_CHAR('\0');
       }
       return CIEC_CHAR(*(getValue() + paIndex - 1));
     }
@@ -187,7 +193,6 @@ class CIEC_STRING : public CIEC_ANY_STRING{
         this->assign(roSrc.getValue(), roSrc.length());
       }
     }
-
   private:
 };
 

@@ -45,19 +45,19 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_FROM_CONST) {
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_AT_INDEX_0) {
-  // Vendor-specific behaviour for returning the first element and emitting an error
+  // Vendor-specific behaviour for returning NUL and emitting an error
   CIEC_STRING stringValue("Primetals");
   CIEC_CHAR testChar;
   testChar = stringValue[0];
-  BOOST_TEST(CIEC_CHAR('P') == testChar);
+  BOOST_TEST(CIEC_CHAR('\0') == testChar);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_WRITE_AT_INDEX_0) {
-  // Vendor-specific behaviour for returning the first element and emitting an error
+  // Vendor-specific behaviour emitting an error and ignore the write
   CIEC_STRING testString("Primxtals");
   CIEC_CHAR charValue('e');
   testString[0] = charValue;
-  BOOST_TEST(CIEC_STRING("erimxtals") == testString);
+  BOOST_TEST(CIEC_STRING("Primxtals") == testString);
 }
 
 /* These tests need also to be checked in the log, as both exhibit the 
@@ -76,19 +76,19 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_WRITE_AT_INDEX_END) {
   BOOST_TEST(CIEC_STRING("Primxtale") == testString);
 }
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_AT_INDEX_PAST_END) {
-  // Vendor-specific behaviour for returning the last element and emitting an error
+  // Vendor-specific behaviour for returning NUL and emitting an error
   CIEC_STRING stringValue("Primetals");
   CIEC_CHAR testChar;
   testChar = stringValue[10];
-  BOOST_TEST(CIEC_CHAR('s') == testChar);
+  BOOST_TEST(CIEC_CHAR('\0') == testChar);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_WRITE_AT_INDEX_PAST_END) {
-  // Vendor-specific behaviour for returning the last element and emitting an error
+  /// Vendor-specific behaviour emitting an error and ignore the write
   CIEC_STRING testString("Primxtals");
   CIEC_CHAR charValue('e');
   testString[10] = charValue;
-  BOOST_TEST(CIEC_STRING("Primxtale") == testString);
+  BOOST_TEST(CIEC_STRING("Primxtals") == testString);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
