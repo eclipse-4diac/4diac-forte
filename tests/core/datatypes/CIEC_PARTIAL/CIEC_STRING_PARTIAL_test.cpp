@@ -44,6 +44,27 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_FROM_CONST) {
   BOOST_TEST(CIEC_CHAR('e') == testChar);
 }
 
+BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_WITH_CIEC_TYPE_INDEX) {
+  CIEC_STRING stringValue("Primetals");
+  CIEC_CHAR testChar;
+  testChar = stringValue[CIEC_UDINT(5)];
+  BOOST_TEST(CIEC_CHAR('e') == testChar);
+}
+
+BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_WRITE_WITH_CIEC_TYPE_INDEX) {
+  CIEC_STRING testString("Primxtals");
+  CIEC_CHAR charValue('e');
+  testString[CIEC_UDINT(5)] = charValue;
+  BOOST_TEST(CIEC_STRING("Primetals") == testString);
+}
+
+BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_FROM_CONST_WITH_CIEC_TYPE_INDEX) {
+  const CIEC_STRING stringValue("Primetals");
+  CIEC_CHAR testChar;
+  testChar = stringValue[CIEC_UDINT(5)];
+  BOOST_TEST(CIEC_CHAR('e') == testChar);
+}
+
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_AT_INDEX_0) {
   // Vendor-specific behaviour for returning NUL and emitting an error
   CIEC_STRING stringValue("Primetals");

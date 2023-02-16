@@ -25,6 +25,7 @@
 #define _FORTE_STRING_H_
 
 #include "forte_any_string.h"
+#include "forte_any_int.h"
 #include "forte_char.h"
 
 #include "devlog.h"
@@ -122,6 +123,26 @@ class CIEC_STRING : public CIEC_ANY_STRING{
 
     [[nodiscard]] value_type operator[](intmax_t paIndex) const {
       return at(paIndex);
+    }
+
+    [[nodiscard]] PARTIAL_ACCESS_TYPE at(const CIEC_ANY_INT &paIndex) {
+      intmax_t index = paIndex.getSignedValue();
+      return at(index);
+    }
+
+    [[nodiscard]] value_type at(const CIEC_ANY_INT &paIndex) const {
+      intmax_t index = paIndex.getSignedValue();
+      return at(index);
+    }
+
+    [[nodiscard]] PARTIAL_ACCESS_TYPE operator[](const CIEC_ANY_INT &paIndex) {
+      intmax_t index = paIndex.getSignedValue();
+      return operator[](index);
+    }
+
+    [[nodiscard]] value_type operator[](const CIEC_ANY_INT &paIndex) const {
+      intmax_t index = paIndex.getSignedValue();
+      return operator[](index);
     }
 
     /*! \brief Converts string value to data type value
