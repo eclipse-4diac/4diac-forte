@@ -23,6 +23,7 @@
 #include "forte_string.h"
 #include "forte_uint.h"
 #include "forte_lword.h"
+#include "forte_any_bit_not_decorator.h"
 #include "../../src/core/typelib.h"
 
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -56,6 +57,14 @@ const CStringDictionary::TStringId CIEC_EndianessTestStruct::scm_unElementNames[
 DEFINE_FIRMWARE_DATATYPE(EndianessTestStruct, g_nStringIdEndianessTestStruct)
 CIEC_EndianessTestStruct::CIEC_EndianessTestStruct() : CIEC_STRUCT(g_nStringIdEndianessTestStruct, 3, scm_unElementTypes, scm_unElementNames, e_APPLICATION + e_CONSTRUCTED + 1)
 {
+}
+
+void testSTInIsOutBoolDummyFunction(CIEC_BOOL paIn, CIEC_BOOL &paOut) {
+  paOut = paIn;
+}
+
+void testSTInIsOutLWordDummyFunction(CIEC_LWORD paIn, CIEC_LWORD &paOut) {
+  paOut = paIn;
 }
 
 BOOST_AUTO_TEST_SUITE(IEC61131_functions)
@@ -1766,6 +1775,23 @@ BOOST_AUTO_TEST_CASE(func_to_big_endian_struct){
   BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(*reinterpret_cast<CIEC_BOOL *>(reversed.getMemberNamed(g_nStringIdVal1))) == true);
   BOOST_TEST(static_cast<CIEC_DINT::TValueType>(*reinterpret_cast<CIEC_DINT *>(reversed.getMemberNamed(g_nStringIdVal2))) == 922746880);
   BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(*reinterpret_cast<CIEC_LWORD *>(reversed.getMemberNamed(g_nStringIdVal3))) == 1099511627776);
+}
+
+BOOST_AUTO_TEST_CASE(output_negation_bool_test){
+  CIEC_BOOL inBool(false);
+  CIEC_BOOL outBool(false);
+  testSTInIsOutBoolDummyFunction(inBool, ST_EXTEND_LIFETIME(CIEC_ANY_BIT_NOT(outBool)));
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(outBool) == true);
+  inBool = CIEC_BOOL(true);
+  testSTInIsOutBoolDummyFunction(inBool, ST_EXTEND_LIFETIME(CIEC_ANY_BIT_NOT(outBool)));
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(outBool) == false);
+}
+
+BOOST_AUTO_TEST_CASE(output_negation_lword_test){
+  CIEC_LWORD inLword(0xFEFEFEFEFEFEFEFE);
+  CIEC_LWORD outLword(0);
+  testSTInIsOutLWordDummyFunction(inLword, ST_EXTEND_LIFETIME(CIEC_ANY_BIT_NOT(outLword)));
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(outLword) == 0x0101010101010101);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

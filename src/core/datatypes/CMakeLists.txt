@@ -61,6 +61,8 @@ forte_add_sourcefile_hcpp(forte_any)
 
 forte_add_sourcefile_hcpp(forte_state)
 
+forte_add_sourcefile_h(forte_any_bit_not_decorator.h)
+
 
 # include STRUCT Datatype-Support
 forte_add_sourcefile_hcpp(forte_struct)
