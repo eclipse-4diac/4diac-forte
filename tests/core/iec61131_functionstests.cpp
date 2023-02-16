@@ -432,6 +432,13 @@ BOOST_AUTO_TEST_CASE(add_function_LREAL_USINT)
 //  BOOST_TEST(static_cast<TForteDWord>(nResult) == 30020);
 //}
 
+BOOST_AUTO_TEST_CASE(add_different_int_types_of_literals) {
+  CIEC_LINT result;
+
+  result = func_ADD(CIEC_SINT(-9), CIEC_DINT(9));
+  BOOST_REQUIRE_EQUAL(static_cast<CIEC_LINT::TValueType>(CIEC_LINT(0)), static_cast<CIEC_LINT::TValueType>(result));
+}
+
 BOOST_AUTO_TEST_CASE(concat3)
 {
   CIEC_STRING sFristString("THIS_IS_THE_FIRST_STRING");
@@ -1053,6 +1060,13 @@ BOOST_AUTO_TEST_CASE(sub_ldt_ldt_with_sub_ldt_ldt) {
 
   result = func_SUB_LDT_LDT(dt1, dt2);
   BOOST_REQUIRE_EQUAL(CIEC_LTIME(1000000000000 - 500000000000), result);
+}
+
+BOOST_AUTO_TEST_CASE(sub_different_int_types_of_literals) {
+  CIEC_LINT result;
+
+  result = func_SUB(CIEC_SINT(-9), CIEC_DINT(9));
+  BOOST_REQUIRE_EQUAL(static_cast<CIEC_LINT::TValueType>(CIEC_LINT(-18)), static_cast<CIEC_LINT::TValueType>(result));
 }
 
 BOOST_AUTO_TEST_CASE(Partial_Bool_NOT_Operation) {

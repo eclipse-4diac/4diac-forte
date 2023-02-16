@@ -703,7 +703,7 @@ class SubOperation {
 
 public:
   static resultType call(const T &paIN1, const U &paIN2) {
-    return resultType(static_cast<typename resultType::TValueType>(paIN1) - static_cast<typename resultType::TValueType>(paIN2));
+    return resultType(static_cast<typename T::TValueType>(paIN1) - static_cast<typename U::TValueType>(paIN2));
   }
   SubOperation() = delete;
 };
