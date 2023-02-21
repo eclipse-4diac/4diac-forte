@@ -55,13 +55,13 @@ class CIEC_BYTE : public CIEC_ANY_BIT{
 
     CIEC_BYTE& operator =(const CIEC_BYTE &paValue){
       // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
+      setValue(paValue);
       return *this;
     }
 
     CIEC_BYTE &operator=(const CIEC_BOOL &paValue) {
       // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
+      setValue(paValue);
       return *this;
     }
 

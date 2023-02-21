@@ -45,7 +45,7 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
 
     CIEC_BOOL& operator =(const CIEC_BOOL &paValue) {
       // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
+      setValue(paValue);
       return *this;
     }
 

@@ -63,6 +63,18 @@ void testSTInIsOutBoolDummyFunction(CIEC_BOOL paIn, CIEC_BOOL &paOut) {
   paOut = paIn;
 }
 
+void testSTInIsOutByteDummyFunction(CIEC_BYTE paIn, CIEC_BYTE &paOut) {
+  paOut = paIn;
+}
+
+void testSTInIsOutWordDummyFunction(CIEC_WORD paIn, CIEC_WORD &paOut) {
+  paOut = paIn;
+}
+
+void testSTInIsOutDWordDummyFunction(CIEC_DWORD paIn, CIEC_DWORD &paOut) {
+  paOut = paIn;
+}
+
 void testSTInIsOutLWordDummyFunction(CIEC_LWORD paIn, CIEC_LWORD &paOut) {
   paOut = paIn;
 }
@@ -1792,6 +1804,34 @@ BOOST_AUTO_TEST_CASE(output_negation_lword_test){
   CIEC_LWORD outLword(0);
   testSTInIsOutLWordDummyFunction(inLword, ST_EXTEND_LIFETIME(CIEC_ANY_BIT_NOT(outLword)));
   BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(outLword) == 0x0101010101010101);
+}
+
+BOOST_AUTO_TEST_CASE(output_partial_BOOL_assignment_test) {
+  CIEC_BOOL inBool(true);
+  CIEC_LWORD outLword(0x00);
+  testSTInIsOutBoolDummyFunction(inBool, ST_EXTEND_LIFETIME(outLword.partial<CIEC_BOOL>(0)));
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(outLword) == 0x01);
+}
+
+BOOST_AUTO_TEST_CASE(output_partial_BYTE_assignment_test){
+  CIEC_BYTE inByte(0xFE);
+  CIEC_LWORD outLword(0x00);
+  testSTInIsOutByteDummyFunction(inByte, ST_EXTEND_LIFETIME(outLword.partial<CIEC_BYTE>(0)));
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(outLword) == 0xFE);
+}
+
+BOOST_AUTO_TEST_CASE(output_partial_WORD_assignment_test){
+  CIEC_WORD inWord(0xFEFE);
+  CIEC_LWORD outLword(0x00);
+  testSTInIsOutWordDummyFunction(inWord, ST_EXTEND_LIFETIME(outLword.partial<CIEC_WORD>(0)));
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(outLword) == 0xFEFE);
+}
+
+BOOST_AUTO_TEST_CASE(output_partial_DWORD_assignment_test){
+  CIEC_DWORD inDword(0xFEFEFEFE);
+  CIEC_LWORD outLword(0x00);
+  testSTInIsOutDWordDummyFunction(inDword, ST_EXTEND_LIFETIME(outLword.partial<CIEC_DWORD>(0)));
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(outLword) == 0xFEFEFEFE);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

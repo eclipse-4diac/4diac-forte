@@ -63,19 +63,19 @@ class CIEC_WORD : public CIEC_ANY_BIT{
 
     CIEC_WORD& operator =(const CIEC_WORD &paValue) {
       // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
+      setValue(paValue);
       return *this;
     }
 
     CIEC_WORD& operator =(const CIEC_BYTE &paValue) {
       // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
+      setValue(paValue);
       return *this;
     }
 
     CIEC_WORD &operator=(const CIEC_BOOL &paValue) {
       // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
+      setValue(paValue);
       return *this;
     }
 
