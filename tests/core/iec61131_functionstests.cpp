@@ -1240,6 +1240,18 @@ BOOST_AUTO_TEST_CASE(func_concat_date_lints) {
   BOOST_TEST(expected == testDate);
 }
 
+BOOST_AUTO_TEST_CASE(func_concat_date_and_sub) {
+  CIEC_LINT year(2017);
+  CIEC_LINT month(3);
+  CIEC_LINT day(20);
+  CIEC_STRING dateString;
+  CIEC_DATE expected;
+  expected.fromString("DATE#2017-03-20");
+
+  CIEC_TIME timeDiff = func_SUB(func_CONCAT_DATE(year, month, day), expected);
+  BOOST_TEST(static_cast<CIEC_TIME::TValueType>(timeDiff) == 0);
+}
+
 BOOST_AUTO_TEST_CASE(func_concat_dt_ulints) {
   CIEC_ULINT year(2017);
   CIEC_ULINT month(3);
