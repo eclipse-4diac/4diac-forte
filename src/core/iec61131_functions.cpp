@@ -416,7 +416,7 @@ const CIEC_TIME func_NOW_MONOTONIC() {
 }
 
 const CIEC_DATE_AND_TIME func_NOW() {
-  return CIEC_DATE_AND_TIME(forte_time() * 1000ULL);
+  return CIEC_DATE_AND_TIME(getNanoSecondsRealtime());
 }
 
 void func_SPLIT_DATE(const CIEC_DATE &paValue, CIEC_ANY_INT &YEAR, CIEC_ANY_INT &MONTH, CIEC_ANY_INT &DAY) {
