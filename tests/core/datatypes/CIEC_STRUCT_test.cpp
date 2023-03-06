@@ -925,7 +925,7 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
     BOOST_CHECK_EQUAL(paStruct.getStructTypeNameID(), 0);
     BOOST_CHECK_EQUAL(paStruct.getDataTypeID(), CIEC_ANY::e_STRUCT);
     BOOST_CHECK(nullptr == paStruct.getMembers());
-    BOOST_CHECK(nullptr == paStruct.getMemberNamed(0));
+    BOOST_CHECK(nullptr == paStruct.getMemberNamed(static_cast<CStringDictionary::TStringId>(0)));
 
     char acBuffer[3];
     BOOST_CHECK_EQUAL(paStruct.getToStringBufferSize(), sizeof("()"));

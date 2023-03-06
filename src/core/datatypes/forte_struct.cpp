@@ -257,7 +257,7 @@ int CIEC_STRUCT::toString(char* paValue, size_t paBufferSize) const {
   return nBytesUsed;
 }
 
-CIEC_ANY *CIEC_STRUCT::getMemberNamed(CStringDictionary::TStringId paMemberNameId){
+CIEC_ANY *CIEC_STRUCT::getMemberNamed(CStringDictionary::TStringId paMemberNameId) {
   CIEC_ANY *poRetVal = nullptr;
 
   CIEC_ANY *poMembers = getMembers();
@@ -271,6 +271,18 @@ CIEC_ANY *CIEC_STRUCT::getMemberNamed(CStringDictionary::TStringId paMemberNameI
   }
   return poRetVal;
 }
+
+CIEC_ANY* CIEC_STRUCT::getMemberNamed( char const*const paMemberName) {
+  CIEC_ANY* retVal = nullptr;
+
+  CStringDictionary::TStringId elementNameId = CStringDictionary::getInstance().getId(paMemberName);
+  if(CStringDictionary::scm_nInvalidStringId != elementNameId) {
+    retVal = getMemberNamed(elementNameId);
+  }
+
+  return retVal;
+}
+
 
 size_t CIEC_STRUCT::getToStringBufferSize() const {
   size_t retVal = 3; // 2 bytes for the open and closing brackets one for the '\0'

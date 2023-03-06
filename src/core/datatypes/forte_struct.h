@@ -115,10 +115,19 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
     }
     /*! \brief Get the struct's member var with the given name id
      *
-     * \param pa_unMemberNameId the string id of the member name
+     * \param paMemberNameId the string id of the member name
      * \return on a valid member name id a pointer to the member var otherwise 0
      */
     CIEC_ANY *getMemberNamed(CStringDictionary::TStringId paMemberNameId);
+
+
+    /*! \brief Get the struct's member var with the given name
+     *
+     * \param paMemberName name of the member to be checked for
+     * \return on a valid member name id a pointer to the member var otherwise 0
+     */
+    CIEC_ANY* getMemberNamed(char const* const paMemberName);
+
 
     size_t getToStringBufferSize() const override;
 

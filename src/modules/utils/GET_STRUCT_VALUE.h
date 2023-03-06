@@ -26,6 +26,8 @@ class FORTE_GET_STRUCT_VALUE : public CFunctionBlock {
 
     ~FORTE_GET_STRUCT_VALUE() override = default;
 
+    static CIEC_ANY* lookForMember(CIEC_STRUCT& paWhereToLook, char * paMemberName);
+
   private:
 
     CIEC_ANY &in_struct() {
@@ -45,10 +47,6 @@ class FORTE_GET_STRUCT_VALUE : public CFunctionBlock {
     };
 
     void executeEvent(int pa_nEIID) override;
-
-    CIEC_ANY* getMemberFromName(CIEC_STRUCT* paWhereToLook, char* paMemberName);
-
-    CIEC_ANY* lookForMember(CIEC_STRUCT* paWhereToLook, char* paMemberName);
 
     static const CStringDictionary::TStringId scm_anDataInputNames[];
     static const CStringDictionary::TStringId scm_anDataInputTypeIds[];

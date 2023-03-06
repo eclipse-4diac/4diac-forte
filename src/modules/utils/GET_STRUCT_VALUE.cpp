@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018, fortiss GmbH
+ * Copyright (c) 2018, 2023 fortiss GmbH, Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +8,7 @@
  *
  * Contributors:
  *   Jose Cabral - initial implementation
+ *   Alois Zoitl - reworked to make helpers usable for SET_STRUCT_VALUE
  *******************************************************************************/
 
 #include "GET_STRUCT_VALUE.h"
@@ -33,20 +34,8 @@ const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scm_anEventOutputName
 const SFBInterfaceSpec FORTE_GET_STRUCT_VALUE::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames,
   scm_anEOWith, scm_anEOWithIndexes, 2, scm_anDataInputNames, scm_anDataInputTypeIds, 2, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, nullptr };
 
-CIEC_ANY* FORTE_GET_STRUCT_VALUE::getMemberFromName(CIEC_STRUCT* paWhereToLook, char* paMemberName) {
-  CIEC_ANY* retVal = nullptr;
 
-  CStringDictionary::TStringId elementNameId = CStringDictionary::getInstance().getId(paMemberName);
-  if(CStringDictionary::scm_nInvalidStringId != elementNameId) {
-    retVal = paWhereToLook->getMemberNamed(elementNameId);
-  } else {
-    DEVLOG_ERROR("[GET_STRUCT_VALUE]: In instance %s, member %s was not found\n", getInstanceName(), paMemberName);
-  }
-
-  return retVal;
-}
-
-CIEC_ANY* FORTE_GET_STRUCT_VALUE::lookForMember(CIEC_STRUCT* paWhereToLook, char* paMemberName) {
+CIEC_ANY* FORTE_GET_STRUCT_VALUE::lookForMember(CIEC_STRUCT& paWhereToLook, char * paMemberName) {
   CIEC_ANY* retVal = nullptr;
 
   char* startOfName = paMemberName;
@@ -56,22 +45,18 @@ CIEC_ANY* FORTE_GET_STRUCT_VALUE::lookForMember(CIEC_STRUCT* paWhereToLook, char
     if('.' == *paMemberName) {
       *paMemberName = '\0';
 
-      CIEC_ANY *resultMember = getMemberFromName(paWhereToLook, startOfName);
+      CIEC_ANY *resultMember = paWhereToLook.getMemberNamed(startOfName);
 
       if(nullptr != resultMember) {
         if(CIEC_ANY::e_STRUCT == resultMember->getDataTypeID()) {
-          retVal = lookForMember(static_cast<CIEC_STRUCT*>(resultMember), paMemberName + 1);
+          retVal = lookForMember(static_cast<CIEC_STRUCT&>(*resultMember), paMemberName + 1);
           if(nullptr == retVal) {
             errorOcurred = true;
           }
         } else {
-          DEVLOG_ERROR("[GET_STRUCT_VALUE]: In instance %s, the non-struct member %s is followed by a sub-member which is not allowed\n", getInstanceName(),
-            startOfName);
           errorOcurred = true;
         }
       } else {
-        DEVLOG_ERROR("[GET_STRUCT_VALUE]: In instance %s, the member %s in structure %s doesn't exist\n", getInstanceName(), startOfName,
-          CStringDictionary::getInstance().get(paWhereToLook->getStructTypeNameID()));
         errorOcurred = true;
       }
     }
@@ -83,7 +68,7 @@ CIEC_ANY* FORTE_GET_STRUCT_VALUE::lookForMember(CIEC_STRUCT* paWhereToLook, char
   }
 
   if(!errorOcurred && nullptr == retVal) {
-    retVal = getMemberFromName(paWhereToLook, startOfName);
+    retVal = paWhereToLook.getMemberNamed(startOfName);
   }
 
   return retVal;
@@ -94,7 +79,7 @@ void FORTE_GET_STRUCT_VALUE::executeEvent(int paEIID) {
     QO() = CIEC_BOOL(false);
     if(CIEC_ANY::e_STRUCT == in_struct().getDataTypeID()) {
       CIEC_STRING copyOfMember = member();
-      CIEC_ANY *foundMember = lookForMember(static_cast<CIEC_STRUCT*>(&in_struct()), copyOfMember.getValue());
+      CIEC_ANY *foundMember = lookForMember(static_cast<CIEC_STRUCT&>(in_struct()), copyOfMember.getValue());
       if(nullptr != foundMember) {
         if(foundMember->getDataTypeID() == output().getDataTypeID()) {
           output().setValue(*foundMember);
@@ -103,7 +88,9 @@ void FORTE_GET_STRUCT_VALUE::executeEvent(int paEIID) {
           DEVLOG_ERROR("[GET_STRUCT_VALUE]: In instance %s, the member %s was found but it doesn't match the output type %d\n",
             getInstanceName(), member().getValue(), output().getDataTypeID());
         }
-      } //error logging was done already in the internal function
+      } else {
+        DEVLOG_ERROR("[GET_STRUCT_VALUE]: In instance %s, member %s was not found\n", getInstanceName(), member().getValue());
+      }
     } else {
       DEVLOG_ERROR("[GET_STRUCT_VALUE]: In instance %s, the input structure is not of type structure but of type %d\n", getInstanceName(),
         in_struct().getDataTypeID());
