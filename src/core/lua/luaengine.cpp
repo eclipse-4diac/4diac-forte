@@ -52,7 +52,7 @@ CLuaEngine::CLuaEngine() {
   lua_getfield(luaState, -1, "preload");
 
   // package, preload, luaJIT_BC_STfunc
-  luaL_loadbuffer(luaState, (char *)luaJIT_BC_STfunc, luaJIT_BC_STfunc_SIZE, NULL);
+  luaL_loadbuffer(luaState, (char *)luaJIT_BC_STfunc, luaJIT_BC_STfunc_SIZE, "STfunc_buffer");
 
   // package.preload.STfunc = luaJIT_BC_STfunc
   lua_setfield(luaState, -2, "STfunc");
@@ -267,7 +267,7 @@ bool CLuaEngine::luaPushArray(lua_State *paLuaState, CIEC_ARRAY<>& paArray) {
   /*if(!paArray) {
     return false;
   }*/
-  lua_createtable(paLuaState, paArray.size(), 0);
+  lua_createtable(paLuaState, paArray.size(), 2);
   for(int i = paArray.size(); i > 0; i--) {
     if(!luaPushAny(paLuaState, paArray[(TForteUInt16) (i - 1)])) { // index starts at 0
       lua_pop(paLuaState, 1); // pop table
@@ -275,6 +275,14 @@ bool CLuaEngine::luaPushArray(lua_State *paLuaState, CIEC_ARRAY<>& paArray) {
     }
     lua_rawseti(paLuaState, -2, i); // index starts at 1
   }
+  // push lower bound
+  lua_pushstring(paLuaState, 'lo');
+  lua_pushinteger(paLuaState, 1);
+  lua_rawset(paLuaState, -3);
+  // push upper bound
+  lua_pushstring(paLuaState, 'up');
+  lua_pushinteger(paLuaState, paArray.size());
+  lua_rawset(paLuaState, -3);
   return true;
 }
 

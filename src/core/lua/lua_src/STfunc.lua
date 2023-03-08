@@ -26,6 +26,39 @@
 local bit = require("bit")
 local STfunc = {}
 
+-- Function Wrapper
+function STfunc.wrapfunc(f, env, list, ...)
+  args = {...}
+  res = {f(unpack(args))} -- table.unpack in Lua version >= 5.2
+  for i, v in ipairs(list) do
+    env[v] = res[i+1]
+  end
+  return res[1]
+end
+
+-- Array Upper and Lower Bound
+function STfunc.UPPER_BOUND(arr, dim)
+  if dim < 1 then
+    error('dim < 1')
+  end
+  while dim > 1 do
+    arr = arr[arr.lo]
+    dim = dim - 1
+  end
+  return arr.up
+end
+
+function STfunc.LOWER_BOUND(arr, dim)
+  if dim < 1 then
+    error('dim < 1')
+  end
+  while dim > 1 do
+    arr = arr[arr.lo]
+    dim = dim - 1
+  end
+  return arr.lo
+end
+
 -- Arithmetic Functions
 function STfunc.ADD(a, ...)
   local sum = a
@@ -418,6 +451,79 @@ function STfunc.FIND(s1, s2)
     return 0
   end
   return ind
+end
+
+--WString functions
+function STfunc.WLEN(s)
+  return math.floor(#(s) / 2)
+end
+
+function STfunc.WLEFT(s, p)
+  return string.sub(s, 1, p*2)
+end
+
+function STfunc.WRIGHT(s, p)
+  return string.sub(s, -p*2)
+end
+
+function STfunc.WMID(s, p, n)
+  return string.sub(s, p*2 - 1, p*2 + n*2 - 2)
+end
+
+function STfunc.WCONCAT(...)
+  return table.concat({...})
+end
+
+function STfunc.WINSERT(s1, s2, p)
+  return string.sub(s1, 1, p*2-2) .. s2 .. string.sub(s1, p*2-1)
+end
+
+function STfunc.WDELETE(s1, p, n)
+  return string.sub(s1, 1, p*2-2) .. string.sub(s1, p*2 + n*2-1)
+end
+
+function STfunc.WREPLACE(s1, s2, p, n)
+  return string.sub(s1, 1, p*2-2) .. s2 .. string.sub(s1, p*2 + n*2 - 1)
+end
+
+function STfunc.WFIND(s1, s2)
+  ind, _ = string.find(s1, s2, 1, true)
+  while ind ~= nil and ind % 2 == 0 do
+    ind, _ = string.find(s1, s2, ind + 1, true)
+  end
+  if ind == nil then
+    return 0
+  end
+  return math.floor((ind + 1) / 2)
+end
+
+--Conversion functions
+function STfunc.BOOL_TO_INT(b)
+  if b then
+    return 1
+  else
+    return 0
+  end
+end
+
+function STfunc.BYTE_TO_BOOL(b)
+  return bit.band(b, 1) == 1
+end
+
+function STfunc.CHAR_TO_WCHAR(c)
+  return string.char(0, c)
+end
+
+function STfunc.VAL_TO_BYTE(n)
+  return bit.bor(n, 0x000000ff)
+end
+
+function STfunc.VAL_TO_WORD(n)
+  return bit.bor(n, 0x0000ffff)
+end
+
+function STfunc.VAL_TO_DWORD(n)
+  return bit.bor(n, 0xffffffff)
 end
 
 return STfunc
