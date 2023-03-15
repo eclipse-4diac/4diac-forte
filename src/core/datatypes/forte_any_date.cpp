@@ -22,11 +22,12 @@ TForteInt32 CIEC_ANY_DATE::getTimeZoneOffset(){
   if(sm_nTimeZoneOffset == -1){
     time_t t = 24 * 60 * 60; // 2. 1. 1970 00:00:00 for UTC
 
-    struct tm *ptm = forte_localtime(&t);
-    if(ptm->tm_mday < 2) {
-      sm_nTimeZoneOffset = 60 * ptm->tm_hour + ptm->tm_min - 24 * 60;
+    struct tm ptm;
+    forte_localtime(&t, &ptm);
+    if(ptm.tm_mday < 2) {
+      sm_nTimeZoneOffset = 60 * ptm.tm_hour + ptm.tm_min - 24 * 60;
     } else {
-      sm_nTimeZoneOffset = 60 * ptm->tm_hour + ptm->tm_min;
+      sm_nTimeZoneOffset = 60 * ptm.tm_hour + ptm.tm_min;
     }
   }
 
@@ -38,7 +39,7 @@ bool CIEC_ANY_DATE::setDateAndTime(struct tm &paTM, unsigned int paMilliSec) {
   paTM.tm_isdst = -1;
 
   time_t nTime;
-  nTime = forte_mktime(&paTM);
+  nTime = forte_timegm(&paTM);
 
   if(nTime == (time_t) -1) {
     return false;
@@ -48,14 +49,11 @@ bool CIEC_ANY_DATE::setDateAndTime(struct tm &paTM, unsigned int paMilliSec) {
   return true;
 }
 
-struct tm *CIEC_ANY_DATE::getTimeStruct() const {
+struct tm *CIEC_ANY_DATE::getTimeStruct(struct tm *const paTimeStruct) const {
   TForteUInt64 nToStringBuffer = getTUINT64();
   time_t nTime = static_cast<time_t>(nToStringBuffer / (1000ULL * 1000000ULL));
 
-  struct tm *pstRetVal;
-
-  pstRetVal = forte_localtime(&nTime);
-  return pstRetVal;
+  return forte_gmtime(&nTime, paTimeStruct);
 }
 
 unsigned int CIEC_ANY_DATE::getMilliSeconds() const{

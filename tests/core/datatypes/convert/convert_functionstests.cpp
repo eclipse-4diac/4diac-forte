@@ -42,9 +42,19 @@ BOOST_AUTO_TEST_SUITE(convert_functions)
     BOOST_TEST(ldt == expected);
   }
 
-  BOOST_AUTO_TEST_CASE(CONVERT_DT_TO_DATE) {
+  BOOST_AUTO_TEST_CASE(CONVERT_DT_TO_DATE_BEGIN_OF_DAY) {
     CIEC_DATE_AND_TIME date;
-    date.fromString("DT#2018-07-10-12:38:50.123");
+    date.fromString("DT#2018-07-10-00:00:00");
+
+    CIEC_DATE converted(func_DT_TO_DATE(date));
+    CIEC_DATE expected;
+    expected.fromString("D#2018-07-10");
+    BOOST_TEST(converted == expected);
+  }
+
+  BOOST_AUTO_TEST_CASE(CONVERT_DT_TO_DATE_END_OF_DAY) {
+    CIEC_DATE_AND_TIME date;
+    date.fromString("DT#2018-07-10-23:59:59");
 
     CIEC_DATE converted(func_DT_TO_DATE(date));
     CIEC_DATE expected;
@@ -72,9 +82,9 @@ BOOST_AUTO_TEST_SUITE(convert_functions)
     BOOST_TEST(ldt == expected);
   }
 
-  BOOST_AUTO_TEST_CASE(CONVERT_LDT_TO_LDATE) {
+  BOOST_AUTO_TEST_CASE(CONVERT_LDT_TO_LDATE_BEGIN_OF_DAY) {
     CIEC_LDATE_AND_TIME date;
-    date.fromString("LDT#2018-07-10-12:38:50.123");
+    date.fromString("LDT#2018-07-10-00:00:00");
 
     CIEC_LDATE converted(func_LDT_TO_LDATE(date));
     CIEC_LDATE expected;
@@ -82,9 +92,29 @@ BOOST_AUTO_TEST_SUITE(convert_functions)
     BOOST_TEST(converted == expected);
   }
 
-  BOOST_AUTO_TEST_CASE(CONVERT_LDT_TO_DATE) {
+  BOOST_AUTO_TEST_CASE(CONVERT_LDT_TO_DATE_BEGIN_OF_DAY) {
     CIEC_LDATE_AND_TIME date;
-    date.fromString("LDT#2018-07-10-12:38:50.123");
+    date.fromString("LDT#2018-07-10-00:00:00");
+
+    CIEC_DATE converted(func_LDT_TO_DATE(date));
+    CIEC_DATE expected;
+    expected.fromString("D#2018-07-10");
+    BOOST_TEST(converted == expected);
+  }
+
+  BOOST_AUTO_TEST_CASE(CONVERT_LDT_TO_LDATE_END_OF_DAY) {
+    CIEC_LDATE_AND_TIME date;
+    date.fromString("LDT#2018-07-10-23:59:59");
+
+    CIEC_LDATE converted(func_LDT_TO_LDATE(date));
+    CIEC_LDATE expected;
+    expected.fromString("LD#2018-07-10");
+    BOOST_TEST(converted == expected);
+  }
+
+  BOOST_AUTO_TEST_CASE(CONVERT_LDT_TO_DATE_END_OF_DAY) {
+    CIEC_LDATE_AND_TIME date;
+    date.fromString("LDT#2018-07-10-23:59:59");
 
     CIEC_DATE converted(func_LDT_TO_DATE(date));
     CIEC_DATE expected;

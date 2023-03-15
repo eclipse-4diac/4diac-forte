@@ -40,7 +40,7 @@ class CIEC_ANY_DATE : public CIEC_ANY_ELEMENTARY{
 
     /*! retrieve the time struct for the current value stored in this Data variable
      */
-    struct tm *getTimeStruct() const;
+    struct tm *getTimeStruct(struct tm *const paTimeStruct) const;
 
     /*! Get the milliseconds part of the data value
      */

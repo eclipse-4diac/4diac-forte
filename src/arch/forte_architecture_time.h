@@ -51,8 +51,8 @@ time_t forte_time(){
 #else
 
 inline
-struct tm* forte_localtime(const time_t* pa_time){
-  return localtime(pa_time);
+struct tm* forte_localtime(const time_t* paTime, struct tm* const paResult) {
+  return localtime_r(paTime, paResult);
 }
 
 inline
@@ -60,9 +60,11 @@ time_t forte_mktime(struct tm* pa_tm){
   return mktime(pa_tm);
 }
 
+time_t forte_timegm(struct tm* pa_tm);
+
 inline
-struct tm* forte_gmtime(const time_t* pa_time){
-  return gmtime(pa_time);
+struct tm* forte_gmtime(const time_t* const paTime, struct tm* const paResult){
+  return gmtime_r(paTime, paResult);
 }
 
 #ifndef FORTE_FAKE_TIME

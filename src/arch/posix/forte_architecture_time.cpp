@@ -32,3 +32,7 @@ uint_fast64_t getNanoSecondsRealtime() {
    static_cast<uint_fast64_t>(forte::core::constants::cNanosecondsPerSecond);
 }
 #endif
+
+time_t forte_timegm(struct tm *pa_tm) {
+  return timegm(pa_tm);
+}

@@ -23,20 +23,20 @@ inline const CIEC_DATE_AND_TIME func_LDT_TO_DT(const CIEC_LDATE_AND_TIME &paValu
   return CIEC_DATE_AND_TIME(static_cast<CIEC_LDATE_AND_TIME::TValueType>(paValue));
 }
 
-inline const CIEC_LDATE func_LDT_TO_LDATE(const CIEC_LDATE_AND_TIME &paVal){
+inline const CIEC_LDATE func_LDT_TO_LDATE(const CIEC_LDATE_AND_TIME &paVal) {
   TForteUInt64 nBuffer = paVal;
   time_t t = static_cast<time_t>(nBuffer / 1000000000ULL);
-  struct tm *ptm = forte_localtime(&t);
+  struct tm ptm;
 
-  if(nullptr == ptm){
-    return CIEC_DATE(0);
+  if(nullptr == forte_gmtime(&t, &ptm)) {
+    return CIEC_LDATE(0);
   }
 
-  ptm->tm_hour = 0;
-  ptm->tm_min = 0;
-  ptm->tm_sec = 0;
+  ptm.tm_hour = 0;
+  ptm.tm_min = 0;
+  ptm.tm_sec = 0;
 
-  t = forte_mktime(ptm);
+  t = forte_timegm(&ptm);
   if(static_cast<time_t>(-1) == t){
     return CIEC_LDATE(0);
   }
@@ -51,11 +51,11 @@ inline const CIEC_DATE func_LDT_TO_DATE(const CIEC_LDATE_AND_TIME &paValue) {
 inline const CIEC_LTIME_OF_DAY func_LDT_TO_LTOD(const CIEC_LDATE_AND_TIME &paValue) {
   TForteUInt64 nBuffer = paValue;
   time_t t = static_cast<time_t>(nBuffer/1000000000ULL);
-  struct tm *ptm = forte_localtime(&t);
-  if(nullptr == ptm) {
+  struct tm ptm;
+  if(nullptr == forte_gmtime(&t, &ptm)) {
     return CIEC_LTIME_OF_DAY(0);
   }
-  return CIEC_LTIME_OF_DAY(static_cast<TForteUInt64>((ptm->tm_hour * UINT64_C(3600) + ptm->tm_min * UINT64_C(60) + ptm->tm_sec) * UINT64_C(1000000000) + (nBuffer % UINT64_C(1000000000))));
+  return CIEC_LTIME_OF_DAY(static_cast<TForteUInt64>((ptm.tm_hour * UINT64_C(3600) + ptm.tm_min * UINT64_C(60) + ptm.tm_sec) * UINT64_C(1000000000) + (nBuffer % UINT64_C(1000000000))));
 }
 
 inline const CIEC_TIME_OF_DAY func_LDT_TO_TOD(const CIEC_LDATE_AND_TIME &paValue) {

@@ -110,10 +110,10 @@ int CIEC_LDATE_AND_TIME::fromString(const char *paValue){
 int CIEC_LDATE_AND_TIME::toString(char* paValue, size_t paBufferSize) const {
   int nRetVal = -1;
 
-  struct tm *ptm = getTimeStruct();
+  struct tm ptm;
 
-  if(nullptr != ptm){
-    nRetVal = forte_snprintf(paValue, paBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03u", 1900 + ptm->tm_year, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, getMilliSeconds());
+  if(nullptr != getTimeStruct(&ptm)){
+    nRetVal = forte_snprintf(paValue, paBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03u", 1900 + ptm.tm_year, ptm.tm_mon + 1, ptm.tm_mday, ptm.tm_hour, ptm.tm_min, ptm.tm_sec, getMilliSeconds());
     if((nRetVal < -1) || (nRetVal >= static_cast<int>(paBufferSize))) {
       nRetVal = -1;
     }
@@ -122,17 +122,6 @@ int CIEC_LDATE_AND_TIME::toString(char* paValue, size_t paBufferSize) const {
 }
 
 int CIEC_LDATE_AND_TIME::toGMTString(char* paValue, unsigned int paBufferSize) const{
-  TForteUInt64 nToStringBuffer = getTUINT64();
-  time_t t = static_cast<time_t>(nToStringBuffer / 1000);
-
-  struct tm *ptm = forte_gmtime(&t);
-  if(ptm == nullptr) {
-    return -1;
-  }
-  int nRetVal = forte_snprintf(paValue, paBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03d", 1900 + ptm->tm_year, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, (int) (nToStringBuffer % 1000));
-  if((nRetVal < -1) || (nRetVal >= (int) paBufferSize)){
-    nRetVal = -1;
-  }
-  return nRetVal;
+  return toString(paValue, paBufferSize);
 }
 

@@ -29,3 +29,7 @@ uint_fast64_t getNanoSecondsRealtime() {
   return static_cast<uint_fast64_t>(forte_time())*1000000000LL;
 }
 #endif
+
+time_t forte_timegm(struct tm *pa_tm) {
+  return timegm(pa_tm);
+}

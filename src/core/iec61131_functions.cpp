@@ -185,14 +185,15 @@ const CIEC_TIME func_SUB_DATE_DATE(const CIEC_DATE &paIN1, const CIEC_DATE &paIN
 const CIEC_DATE_AND_TIME func_CONCAT_DATE_TOD(const CIEC_DATE& paIN1, const CIEC_TIME_OF_DAY& paIN2){
   CIEC_DATE_AND_TIME retVal;
 
-  struct tm *pstTime = paIN1.getTimeStruct();
+  struct tm pstTime; 
+  paIN1.getTimeStruct(&pstTime);
 
   time_t t = static_cast<time_t>(static_cast<TForteUInt64>(paIN2) / 1000ULL);
-  pstTime->tm_hour = static_cast<int>(t / 3600);
-  pstTime->tm_min = static_cast<int>((t % 3600) / 60);
-  pstTime->tm_sec = static_cast<int>(t % 60);
+  pstTime.tm_hour = static_cast<int>(t / 3600);
+  pstTime.tm_min = static_cast<int>((t % 3600) / 60);
+  pstTime.tm_sec = static_cast<int>(t % 60);
 
-  retVal.setDateAndTime(*pstTime, paIN2.getMilliSeconds());
+  retVal.setDateAndTime(pstTime, paIN2.getMilliSeconds());
   return retVal;
 }
 
@@ -313,14 +314,15 @@ const CIEC_LTIME func_SUB_LDATE_LDATE(const CIEC_LDATE &paIN1, const CIEC_LDATE 
 const CIEC_LDATE_AND_TIME func_CONCAT_LDATE_LTOD(const CIEC_LDATE& paIN1, const CIEC_LTIME_OF_DAY& paIN2){
   CIEC_LDATE_AND_TIME retVal;
 
-  struct tm *pstTime = paIN1.getTimeStruct();
+  struct tm pstTime;
+  paIN1.getTimeStruct(&pstTime);
 
   time_t t = static_cast<time_t>( paIN2 / 1000ULL);
-  pstTime->tm_hour = static_cast<int>(t / 3600);
-  pstTime->tm_min = static_cast<int>((t % 3600) / 60);
-  pstTime->tm_sec = static_cast<int>(t % 60);
+  pstTime.tm_hour = static_cast<int>(t / 3600);
+  pstTime.tm_min = static_cast<int>((t % 3600) / 60);
+  pstTime.tm_sec = static_cast<int>(t % 60);
 
-  retVal.setDateAndTime(*pstTime, paIN2.getMilliSeconds());
+  retVal.setDateAndTime(pstTime, paIN2.getMilliSeconds());
   return retVal;
 }
 
@@ -424,10 +426,11 @@ void func_SPLIT_DATE(const CIEC_DATE &paValue, CIEC_ANY_INT &YEAR, CIEC_ANY_INT 
 }
 
 void func_SPLIT_LDATE(const CIEC_LDATE &paValue, CIEC_ANY_INT &YEAR, CIEC_ANY_INT &MONTH, CIEC_ANY_INT &DAY) {
-  struct tm *timeStruct = paValue.getTimeStruct();
-  YEAR.setUnsignedValue(timeStruct->tm_year + 1900);
-  MONTH.setUnsignedValue(timeStruct->tm_mon + 1);
-  DAY.setUnsignedValue(timeStruct->tm_mday);
+  struct tm timeStruct;
+  paValue.getTimeStruct(&timeStruct);
+  YEAR.setUnsignedValue(timeStruct.tm_year + 1900);
+  MONTH.setUnsignedValue(timeStruct.tm_mon + 1);
+  DAY.setUnsignedValue(timeStruct.tm_mday);
 }
 
 void func_SPLIT_TOD(const CIEC_TIME_OF_DAY &paValue, CIEC_ANY_INT &HOUR, CIEC_ANY_INT &MINUTE, CIEC_ANY_INT &SECOND, CIEC_ANY_INT &MILLISECOND) {
@@ -457,19 +460,22 @@ void func_SPLIT_DT(const CIEC_DATE_AND_TIME &paValue, CIEC_ANY_INT &YEAR, CIEC_A
 }
 
 void func_SPLIT_LDT(const CIEC_LDATE_AND_TIME &paValue, CIEC_ANY_INT &YEAR, CIEC_ANY_INT &MONTH, CIEC_ANY_INT &DAY, CIEC_ANY_INT &HOUR, CIEC_ANY_INT &MINUTE, CIEC_ANY_INT &SECOND, CIEC_ANY_INT &MILLISECOND) {
-  struct tm *timeStruct = paValue.getTimeStruct();
-  YEAR.setUnsignedValue(timeStruct->tm_year + 1900);
-  MONTH.setUnsignedValue(timeStruct->tm_mon + 1);
-  DAY.setUnsignedValue(timeStruct->tm_mday);
-  HOUR.setUnsignedValue(timeStruct->tm_hour);
-  MINUTE.setUnsignedValue(timeStruct->tm_min);
-  SECOND.setUnsignedValue(timeStruct->tm_sec);
+  struct tm timeStruct;
+  paValue.getTimeStruct(&timeStruct);
+
+  YEAR.setUnsignedValue(timeStruct.tm_year + 1900);
+  MONTH.setUnsignedValue(timeStruct.tm_mon + 1);
+  DAY.setUnsignedValue(timeStruct.tm_mday);
+  HOUR.setUnsignedValue(timeStruct.tm_hour);
+  MINUTE.setUnsignedValue(timeStruct.tm_min);
+  SECOND.setUnsignedValue(timeStruct.tm_sec);
   MILLISECOND.setUnsignedValue(paValue.getMilliSeconds());
 }
 
 CIEC_ANY_INT func_DAY_OF_WEEK(const CIEC_LDATE &paValue) {
-  struct tm *timeStruct = paValue.getTimeStruct();
-  return CIEC_ANY_INT(timeStruct->tm_wday);
+  struct tm timeStruct;
+  paValue.getTimeStruct(&timeStruct);
+  return CIEC_ANY_INT(timeStruct.tm_wday);
 }
 
 CIEC_ARRAY<CIEC_ANY> swapEndianess(const CIEC_ARRAY<CIEC_ANY> &paValue) {

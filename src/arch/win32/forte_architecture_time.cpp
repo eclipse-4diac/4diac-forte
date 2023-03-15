@@ -45,3 +45,7 @@ uint_fast64_t getNanoSecondsRealtime() {
   return (time - 116444736000000000LL) * 100LL; // convert to Unix Epoch and nanoseconds
 }
 #endif
+
+time_t forte_timegm(struct tm *pa_tm) {
+  return _mkgmtime(pa_tm);
+}

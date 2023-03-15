@@ -32,7 +32,7 @@ uint_fast64_t getNanoSecondsRealtime() {
 }
 
 time_t forte_time(){
-    return time(0)+fakeForteTime/1000;  //time() in s
+    return time(0) + fakeForteTime / 1000;  //time() in s
 }
 #endif
 

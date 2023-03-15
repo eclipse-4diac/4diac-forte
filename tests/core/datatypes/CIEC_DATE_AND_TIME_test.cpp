@@ -23,7 +23,14 @@ BOOST_AUTO_TEST_CASE(Type_test)
   BOOST_CHECK_EQUAL(nTest.getDataTypeID(), CIEC_ANY::e_DATE_AND_TIME);
   //check operator bool data type size
   BOOST_CHECK_EQUAL(sizeof(nTest.operator TForteUInt64()), sizeof(TForteUInt64));
+}
 
+BOOST_AUTO_TEST_CASE(CheckInternalTimeRepresentationIsUTC)
+{
+  CIEC_DATE_AND_TIME nTest;
+  nTest.fromString("DT#2017-03-20-00:00:00");
+  // compare with UTC timestamp of the date given above
+  BOOST_TEST(static_cast<CIEC_DATE_AND_TIME::TValueType>(nTest) == 1489968000000000000);
 }
 
 BOOST_AUTO_TEST_CASE(Operator_test)
@@ -82,7 +89,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.fromString("1994-06-22-14:23:54.8"), 21);
   BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 40), 23);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "1994-06-22-14:23:54.800"), 0);
+  BOOST_TEST(cBuffer == "1994-06-22-14:23:54.800");
   strcpy(cBuffer, "");
 
   nTest = CIEC_DATE_AND_TIME(0);
