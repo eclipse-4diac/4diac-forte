@@ -20,6 +20,9 @@
  *******************************************************************************/
 #include <fortenew.h>
 #include "resource.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "resource_gen.cpp"
+#endif
 #include "device.h"
 #include "adapter.h"
 #include "adapterconn.h"
@@ -344,21 +347,22 @@ EMGMResponse CResource::queryFBs(CIEC_STRING & paValue){
 }
 
 
-EMGMResponse CResource::querySubapps(CIEC_STRING & paValue, CFBContainer& container, std::string prefix){
+EMGMResponse CResource::querySubapps(CIEC_STRING & paValue, CFBContainer& container, const std::string prefix){
 
   for(TFBContainerList::Iterator itRunner(container.getSubContainerList().begin()); itRunner != container.getSubContainerList().end(); ++itRunner){
     CFBContainer* subapp = (static_cast<CFBContainer*>(*itRunner));
+    std::string subapp_prefix = prefix;
 
     if(!prefix.empty()){
-      prefix += ".";
+      subapp_prefix += ".";
     }
-    prefix += CStringDictionary::getInstance().get(subapp->getName());
+    subapp_prefix += CStringDictionary::getInstance().get(subapp->getName());
 
     for(TFunctionBlockList::Iterator itRunner2(subapp->getFBList().begin()); itRunner2 != subapp->getFBList().end(); ++itRunner2){
 
       std::string fullFBName = (static_cast<CFunctionBlock *>(*itRunner2))->getInstanceName();
       fullFBName = "." + fullFBName;
-      fullFBName = prefix + fullFBName;
+      fullFBName = subapp_prefix + fullFBName;
 
       if(itRunner2 != getFBList().begin()){
         paValue.append("\n");
@@ -366,7 +370,7 @@ EMGMResponse CResource::querySubapps(CIEC_STRING & paValue, CFBContainer& contai
 
       createFBResponseMessage(*static_cast<CFunctionBlock *>(*itRunner2) ,fullFBName.c_str(),paValue);
     }
-    querySubapps(paValue,*subapp,prefix);
+    querySubapps(paValue,*subapp,subapp_prefix);
   }
   return EMGMResponse::Ready;
 }
@@ -460,10 +464,13 @@ void CResource::createConnectionResponseMessage(const CStringDictionary::TString
   fullName += CStringDictionary::getInstance().get(srcId);
 
   CFBContainer* parent = &(paSrcFb.getContainer());
-  while(CStringDictionary::getInstance().get(parent->getName()) != 0){
-    fullName = "." + fullName;
-    fullName = CStringDictionary::getInstance().get(parent->getName()) + fullName;
-    parent = parent->getParent();
+
+  if(paSrcFb.getInstanceNameId() != g_nStringIdSTART ){
+    while(CStringDictionary::getInstance().get(parent->getName()) != 0){
+      fullName = "." + fullName;
+      fullName = CStringDictionary::getInstance().get(parent->getName()) + fullName;
+      parent = parent->getParent();
+    }
   }
   paReqResult.append(fullName.c_str());
   paReqResult.append("\" Destination=\"");
