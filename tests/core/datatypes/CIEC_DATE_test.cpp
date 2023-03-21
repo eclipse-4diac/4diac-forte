@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 {
   CIEC_DATE nTest;
 
-  char cBuffer[11];
+  char cBuffer[13];
   char cBufferFail[2];
 
   //check cast operator
@@ -79,73 +79,73 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 
   //TODO: Check if this is really a legal literal
   BOOST_CHECK_EQUAL(nTest.fromString("1994-06-22"), 10);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 13), 12);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(std::string("1994-06-22"), cBuffer);
+  BOOST_CHECK_EQUAL(std::string("D#1994-06-22"), cBuffer);
   strcpy(cBuffer, "");
   nTest = CIEC_DATE(0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("DATE#1994-06-22"), 15);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 13), 12);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(std::string("1994-06-22"), cBuffer);
+  BOOST_CHECK_EQUAL(std::string("D#1994-06-22"), cBuffer);
   strcpy(cBuffer, "");
   nTest = CIEC_DATE(0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("date#1994-06-22"), 15);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 13), 12);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(std::string("1994-06-22"), cBuffer);
+  BOOST_CHECK_EQUAL(std::string("D#1994-06-22"), cBuffer);
   strcpy(cBuffer, "");
   nTest = CIEC_DATE(0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("D#1994-06-22"), 12);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 13), 12);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(std::string("1994-06-22"), cBuffer);
+  BOOST_CHECK_EQUAL(std::string("D#1994-06-22"), cBuffer);
   strcpy(cBuffer, "");
   nTest = CIEC_DATE(0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("d#1994-06-22"), 12);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 13), 12);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(std::string("1994-06-22"), cBuffer);
+  BOOST_CHECK_EQUAL(std::string("D#1994-06-22"), cBuffer);
   strcpy(cBuffer, "");
   nTest = CIEC_DATE(0);
 
   //TODO: Check if this is really a legal literal
   BOOST_CHECK_EQUAL(nTest.fromString("2008-04-03"), 10);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 13), 12);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(std::string("2008-04-03"), cBuffer);
+  BOOST_CHECK_EQUAL(std::string("D#2008-04-03"), cBuffer);
   strcpy(cBuffer, "");
   nTest = CIEC_DATE(0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("DATE#2008-04-03"), 15);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 13), 12);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(std::string("2008-04-03"), cBuffer);
+  BOOST_CHECK_EQUAL(std::string("D#2008-04-03"), cBuffer);
   strcpy(cBuffer, "");
   nTest = CIEC_DATE(0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("date#2008-04-03"), 15);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 13), 12);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(std::string("2008-04-03"), cBuffer);
+  BOOST_CHECK_EQUAL(std::string("D#2008-04-03"), cBuffer);
   strcpy(cBuffer, "");
   nTest = CIEC_DATE(0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("D#2008-04-03"), 12);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 13), 12);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(std::string("2008-04-03"), cBuffer);
+  BOOST_CHECK_EQUAL(std::string("D#2008-04-03"), cBuffer);
   strcpy(cBuffer, "");
   nTest = CIEC_DATE(0);
 
   BOOST_CHECK_EQUAL(nTest.fromString("d#2008-04-03"), 12);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 13), 12);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(std::string("2008-04-03"), cBuffer);
+  BOOST_CHECK_EQUAL(std::string("D#2008-04-03"), cBuffer);
   strcpy(cBuffer, "");
 }
 

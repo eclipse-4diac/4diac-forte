@@ -112,7 +112,7 @@ int CIEC_DATE_AND_TIME::toString(char* paValue, size_t paBufferSize) const {
   struct tm ptm;
 
   if(nullptr != getTimeStruct(&ptm)){
-    nRetVal = forte_snprintf(paValue, paBufferSize, "%04d-%02d-%02d-%02d:%02d:%02d.%03u", 1900 + ptm.tm_year, ptm.tm_mon + 1, ptm.tm_mday, ptm.tm_hour, ptm.tm_min, ptm.tm_sec, getMilliSeconds());
+    nRetVal = forte_snprintf(paValue, paBufferSize, "DT#%04d-%02d-%02d-%02d:%02d:%02d.%03u", 1900 + ptm.tm_year, ptm.tm_mon + 1, ptm.tm_mday, ptm.tm_hour, ptm.tm_min, ptm.tm_sec, getMilliSeconds());
     if((nRetVal < -1) || (nRetVal >= static_cast<int>(paBufferSize))) {
       nRetVal = -1;
     }

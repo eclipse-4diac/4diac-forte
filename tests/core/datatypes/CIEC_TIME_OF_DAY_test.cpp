@@ -86,133 +86,133 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 
   nTest = CIEC_TIME_OF_DAY(0);
   BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.36"), 11);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 16);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_TEST(cBuffer == "15:36:55.360");
+  BOOST_TEST(cBuffer == "TOD#15:36:55.360");
   strcpy(cBuffer, "");
 
   nTest = CIEC_TIME_OF_DAY(0);
   BOOST_CHECK_EQUAL(nTest.fromString("15:36:55"), 8);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
-  BOOST_TEST(cBuffer == "15:36:55.000");
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 16);
+  BOOST_TEST(cBuffer == "TOD#15:36:55.000");
   strcpy(cBuffer, "");
 
   nTest = CIEC_TIME_OF_DAY(0);
   BOOST_CHECK_EQUAL(nTest.fromString("15:36:55."), 9);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "15:36:55.000"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 16);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "TOD#15:36:55.000"), 0);
   strcpy(cBuffer, "");
 
   nTest = CIEC_TIME_OF_DAY(0);
   BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.0"), 10);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "15:36:55.000"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 16);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "TOD#15:36:55.000"), 0);
   strcpy(cBuffer, "");
 
   nTest = CIEC_TIME_OF_DAY(0);
   BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.1"), 10);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "15:36:55.100"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 16);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "TOD#15:36:55.100"), 0);
   strcpy(cBuffer, "");
 
   nTest = CIEC_TIME_OF_DAY(0);
   BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.10"), 11);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "15:36:55.100"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 16);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "TOD#15:36:55.100"), 0);
 
   nTest = CIEC_TIME_OF_DAY(0);
   strcpy(cBuffer, "");
   BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.100"), 12);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "15:36:55.100"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 16);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "TOD#15:36:55.100"), 0);
   strcpy(cBuffer, "");
 
   nTest = CIEC_TIME_OF_DAY(0);
   BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.12"), 11);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "15:36:55.120"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 16);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "TOD#15:36:55.120"), 0);
   strcpy(cBuffer, "");
 
   nTest = CIEC_TIME_OF_DAY(0);
   BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.120"), 12);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "15:36:55.120"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 16);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "TOD#15:36:55.120"), 0);
   strcpy(cBuffer, "");
 
   nTest = CIEC_TIME_OF_DAY(0);
   BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.123"), 12);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "15:36:55.123"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 16);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "TOD#15:36:55.123"), 0);
   strcpy(cBuffer, "");
 
   nTest = CIEC_TIME_OF_DAY(0);
   BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.1234"), 13);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "15:36:55.123"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 16);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "TOD#15:36:55.123"), 0);
   strcpy(cBuffer, "");
 
   
   nTest = CIEC_TIME_OF_DAY(0);
   BOOST_CHECK_EQUAL(nTest.fromString("TIME_OF_DAY#15:36:55.36"), 23);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 16);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "15:36:55.360"), 0);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "TOD#15:36:55.360"), 0);
   strcpy(cBuffer, "");
 
   nTest = CIEC_TIME_OF_DAY(0);
   BOOST_CHECK_EQUAL(nTest.fromString("time_of_day#15:36:55.36"), 23);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 16);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "15:36:55.360"), 0);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "TOD#15:36:55.360"), 0);
   strcpy(cBuffer, "");
 
   nTest = CIEC_TIME_OF_DAY(0);
   BOOST_CHECK_EQUAL(nTest.fromString("TOD#15:36:55.36"), 15);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 16);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "15:36:55.360"), 0);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "TOD#15:36:55.360"), 0);
   strcpy(cBuffer, "");
 
   nTest = CIEC_TIME_OF_DAY(0);
   BOOST_CHECK_EQUAL(nTest.fromString("tod#15:36:55.36"), 15);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 16);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "15:36:55.360"), 0);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "TOD#15:36:55.360"), 0);
   strcpy(cBuffer, "");
 
   nTest = CIEC_TIME_OF_DAY(0);
   BOOST_CHECK_EQUAL(nTest.fromString("8:6:5.6"), 7);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 16);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "08:06:05.600"), 0);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "TOD#08:06:05.600"), 0);
   strcpy(cBuffer, "");
 
   nTest = CIEC_TIME_OF_DAY(0);
   BOOST_CHECK_EQUAL(nTest.fromString("TIME_OF_DAY#8:6:5.6"), 19);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 16);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "08:06:05.600"), 0);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "TOD#08:06:05.600"), 0);
   strcpy(cBuffer, "");
 
   nTest = CIEC_TIME_OF_DAY(0);
   BOOST_CHECK_EQUAL(nTest.fromString("time_of_day#8:6:5.6"), 19);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 16);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "08:06:05.600"), 0);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "TOD#08:06:05.600"), 0);
   strcpy(cBuffer, "");
 
   nTest = CIEC_TIME_OF_DAY(0);
   BOOST_CHECK_EQUAL(nTest.fromString("TOD#8:6:5.6"), 11);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 16);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "08:06:05.600"), 0);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "TOD#08:06:05.600"), 0);
   strcpy(cBuffer, "");
 
   nTest = CIEC_TIME_OF_DAY(0);
   BOOST_CHECK_EQUAL(nTest.fromString("tod#8:6:5.6"), 11);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 12);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 17), 16);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "08:06:05.600"), 0);
+  BOOST_CHECK_EQUAL(strcmp(cBuffer, "TOD#08:06:05.600"), 0);
   strcpy(cBuffer, "");
 
 }

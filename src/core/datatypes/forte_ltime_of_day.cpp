@@ -97,7 +97,7 @@ int CIEC_LTIME_OF_DAY::toString(char* paValue, size_t paBufferSize) const {
   TForteUInt64 ntoStingBuffer = getTUINT64();
   time_t t = static_cast<time_t>(ntoStingBuffer / (1000ULL * 1000000ULL));
 
-  int nRetVal = forte_snprintf(paValue, paBufferSize, "%02d:%02d:%02d.%03d",
+  int nRetVal = forte_snprintf(paValue, paBufferSize, "LTOD#%02d:%02d:%02d.%03d",
       (int) (t / 3600),
       (int) ((t % 3600) / 60),
       (int) (t % 60),
