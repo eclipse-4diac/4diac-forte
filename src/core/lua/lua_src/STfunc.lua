@@ -510,8 +510,12 @@ function STfunc.BYTE_TO_BOOL(b)
   return bit.band(b, 1) == 1
 end
 
+function STfunc.WCHAR_TO_BYTE(c)
+  return string.byte(c, 1, 1) * 256 + string.byte(c, 2, 2)
+end
+
 function STfunc.CHAR_TO_WCHAR(c)
-  return string.char(0, c)
+  return string.char(0) .. c
 end
 
 function STfunc.VAL_TO_BYTE(n)
@@ -524,6 +528,18 @@ end
 
 function STfunc.VAL_TO_DWORD(n)
   return bit.bor(n, 0xffffffff)
+end
+
+function STfunc.STRING_TO_WSTRING(s)
+  return string.gsub(s, '.', function(c)
+    return string.char(0) .. c
+    end)
+end
+
+function STfunc.WSTRING_TO_STRING(s)
+  return string.gsub(s, '..', function(c)
+    return string.sub(c, 2, 2)
+    end)
 end
 
 return STfunc
