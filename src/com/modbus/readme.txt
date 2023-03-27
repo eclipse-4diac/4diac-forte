@@ -16,6 +16,7 @@ modbus[(protocol:)ip:port:(slaveId):pollFreqency:readAddresses:sendAddresses(:re
   - protocol: tcp (tcp is default)
   - ip: 127.0.0.1 etc
   - port: default is 502
+  - to reuse a previous connection define only ip and port and leave everything up to slaveId empty
   - slaveId (optional): the slave id used by the modbus server (0xFF is standard)
   - pollFrequency: polling frequency in milliseconds
   - readAddresses: addresses can be specified between 0-65535
