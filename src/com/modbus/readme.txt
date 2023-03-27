@@ -40,3 +40,18 @@ modbus[(protocol:)ip:port:(slaveId):pollFreqency:readAddresses:sendAddresses(:re
   - byteTimeout (optional): timeout in milliseconds between two consecutive bytes (500ms is default)
 
 example: modbus[127.0.0.1:502:1000:3:1:0..3:]
+
+Modbus Client (RTU)
+modbus[rtu:port:baudrate:parity:databits:stopbits:flow:(slaveId):pollFreqency:readAddresses:sendAddresses(:responseTimeout:byteTimeout)]
+  - port: serial port (i.e. /dev/ttyUSB0 or COM1)
+  - baudrate: serial port baudrate (i.e. 9600)
+  - parity: N (none), E (even), or O (odd)
+  - databits: 8
+  - stopbits: 1
+  - flow:
+           + leave empty for none
+           + arduino - disable DTR and wait for Arduino to boot just in case
+           + delay - wait 2 seconds after connecting
+           + longdelay - wait 3 seconds after connecting
+  - to reuse a previous connection define only port and leave everything up to slaveId empty
+  - all other paramters are as for TCP
