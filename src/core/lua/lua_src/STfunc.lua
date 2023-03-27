@@ -27,9 +27,9 @@ local bit = require("bit")
 local STfunc = {}
 
 -- Function Wrapper
-function STfunc.wrapfunc(f, env, list, ...)
-  args = {...}
-  res = {f(unpack(args))} -- table.unpack in Lua version >= 5.2
+function STfunc.wrapfunc(f, fb, env, list, ...)
+  local args = {...}
+  local res = {f(fb, unpack(args))} -- table.unpack in Lua version >= 5.2
   for i, v in ipairs(list) do
     env[v] = res[i+1]
   end
@@ -57,6 +57,61 @@ function STfunc.LOWER_BOUND(arr, dim)
     dim = dim - 1
   end
   return arr.lo
+end
+
+-- Array generation
+local InitRange = {ind = 1, rloop = 1, rind = 1, init = {}, def = nil}
+
+function InitRange:new(o)
+  o = o or {}
+  setmetatable(o, self)
+  self.__index = self
+  return o
+end
+
+function InitRange:next()
+  local val = nil
+  if self.init[self.ind] == nil then
+    return self.def
+  end
+  if type(self.init[self.ind]) == 'table' then
+    val = self.init[self.ind][2][self.rind]
+    self.rind = self.rind + 1
+    if self.rind > #self.init[self.ind][2] then
+      self.rind = 1
+      self.rloop = self.rloop + 1
+    end
+    if self.rloop > self.init[self.ind][1] then
+      self.rloop = 1
+      self.ind = self.ind + 1
+    end
+  else
+    val = self.init[self.ind]
+    self.ind = self.ind + 1
+  end
+  return val
+end
+
+local function arraygen(ranges, ini)
+  local lo = ranges[1][1]
+  local up = ranges[1][2]
+  local arr = {lo = lo, up = up}
+  if #ranges > 1 then
+    local subranges = {table.unpack(ranges, 2)}
+    for i = lo, up do
+      arr[i] = arraygen(subranges, ini)
+    end
+  else
+    for i = lo, up do
+      arr[i] = ini:next()
+    end
+  end
+  return arr
+end
+
+function STfunc.array(ranges, def, init)
+  local ini = InitRange:new{init = init or {}, def = def}
+  return arraygen(ranges, ini)
 end
 
 -- Arithmetic Functions
@@ -334,8 +389,8 @@ function STfunc.SEL(g, in0, in1)
 end
 
 function STfunc.MUX(k, ...)
-  arr = {...}
-  n = #(arr)
+  local arr = {...}
+  local n = #(arr)
   if k < 0 or k > n-1 then
     return nil
   end
@@ -344,9 +399,9 @@ end
 
 --Comparison functions
 function STfunc.GT(...)
-  arr = {...}
-  n = #(arr)
-  last = arr[1]
+  local arr = {...}
+  local n = #(arr)
+  local last = arr[1]
   for i = 2, n do
     if last <= arr[i] then -- not last > arr[i]
       return false
@@ -357,9 +412,9 @@ function STfunc.GT(...)
 end
 
 function STfunc.GE(...)
-  arr = {...}
-  n = #(arr)
-  last = arr[1]
+  local arr = {...}
+  local n = #(arr)
+  local last = arr[1]
   for i = 2, n do
     if last < arr[i] then -- not last >= arr[i]
       return false
@@ -370,9 +425,9 @@ function STfunc.GE(...)
 end
 
 function STfunc.LT(...)
-  arr = {...}
-  n = #(arr)
-  last = arr[1]
+  local arr = {...}
+  local n = #(arr)
+  local last = arr[1]
   for i = 2, n do
     if last >= arr[i] then -- not last < arr[i]
       return false
@@ -383,9 +438,9 @@ function STfunc.LT(...)
 end
 
 function STfunc.LE(...)
-  arr = {...}
-  n = #(arr)
-  last = arr[1]
+  local arr = {...}
+  local n = #(arr)
+  local last = arr[1]
   for i = 2, n do
     if last > arr[i] then -- not last <= arr[i]
       return false
@@ -396,9 +451,9 @@ function STfunc.LE(...)
 end
 
 function STfunc.EQ(...)
-  arr = {...}
-  n = #(arr)
-  last = arr[1]
+  local arr = {...}
+  local n = #(arr)
+  local last = arr[1]
   for i = 2, n do
     if last ~= arr[i] then -- not last == arr[i]
       return false
@@ -446,7 +501,7 @@ function STfunc.REPLACE(s1, s2, p, n)
 end
 
 function STfunc.FIND(s1, s2)
-  ind, _ = string.find(s1, s2, 1, true)
+  local ind, _ = string.find(s1, s2, 1, true)
   if ind == nil then
     return 0
   end
@@ -487,7 +542,7 @@ function STfunc.WREPLACE(s1, s2, p, n)
 end
 
 function STfunc.WFIND(s1, s2)
-  ind, _ = string.find(s1, s2, 1, true)
+  local ind, _ = string.find(s1, s2, 1, true)
   while ind ~= nil and ind % 2 == 0 do
     ind, _ = string.find(s1, s2, ind + 1, true)
   end

@@ -276,11 +276,11 @@ bool CLuaEngine::luaPushArray(lua_State *paLuaState, CIEC_ARRAY<>& paArray) {
     lua_rawseti(paLuaState, -2, i); // index starts at 1
   }
   // push lower bound
-  lua_pushstring(paLuaState, 'lo');
+  lua_pushstring(paLuaState, "lo");
   lua_pushinteger(paLuaState, 1);
   lua_rawset(paLuaState, -3);
   // push upper bound
-  lua_pushstring(paLuaState, 'up');
+  lua_pushstring(paLuaState, "up");
   lua_pushinteger(paLuaState, paArray.size());
   lua_rawset(paLuaState, -3);
   return true;
@@ -290,9 +290,18 @@ bool CLuaEngine::luaGetArray(lua_State *paLuaState, CIEC_ARRAY<>& paArray, int p
   if(/*!paArray || */!lua_istable(paLuaState, paIndex)) {
     return false;
   }
-  for(int i = paArray.size(); i > 0; i--) {
-    lua_rawgeti(paLuaState, paIndex, i); // index starts at 1
-    bool res = luaGetAny(paLuaState, paArray[(TForteUInt16) (i - 1)], -1); // index starts at 0
+  int adjIndex = paIndex;
+  if (paIndex < 0) {
+    adjIndex -= 1;
+  }
+  lua_pushstring(paLuaState, "lo");
+  lua_rawget(paLuaState, adjIndex);
+  int lo = lua_tointeger(paLuaState, -1);
+  lua_pop(paLuaState, 1); // pop lo
+
+  for (int i = 0; i < paArray.size(); i++) {
+    lua_rawgeti(paLuaState, paIndex, i + lo); // use the lower bound as offset
+    bool res = luaGetAny(paLuaState, paArray[(TForteUInt16) i], -1);
     lua_pop(paLuaState, 1); // pop element
     if(!res) {
       return false;
