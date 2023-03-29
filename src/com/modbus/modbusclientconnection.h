@@ -72,6 +72,7 @@ class CModbusClientConnection : public CModbusConnection{
     uint8_t m_acRecvBuffer[cg_unIPLayerRecvBufferSize];
     unsigned int m_unBufFillSize;
 
+    CSyncObject m_oModbusLock;
 };
 
 #endif
