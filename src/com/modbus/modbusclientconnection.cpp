@@ -39,15 +39,12 @@ CModbusClientConnection::~CModbusClientConnection(){
   }
 }
 
-int CModbusClientConnection::readData(uint8_t *pa_pData){
-  for(unsigned int i = 0; i < m_unBufFillSize; i++){
-    pa_pData[i] = m_acRecvBuffer[i];
-  }
-
+int CModbusClientConnection::readData(void *pa_pData){
+  memcpy(pa_pData, m_acRecvBuffer, m_unBufFillSize);
   return (int) m_unBufFillSize;
 }
 
-int CModbusClientConnection::writeData(uint16_t *pa_pData, unsigned int pa_nDataSize){
+int CModbusClientConnection::writeData(const void *pa_pData, unsigned int pa_nDataSize){
   unsigned int dataIndex = 0;
 
   TModbusSendList::Iterator itEnd = m_lstSendList.end();
@@ -55,7 +52,19 @@ int CModbusClientConnection::writeData(uint16_t *pa_pData, unsigned int pa_nData
     if (dataIndex + it->m_nNrAddresses > pa_nDataSize) {
       break;
     }
-    modbus_write_registers(m_pModbusConn, it->m_nStartAddress, it->m_nNrAddresses, &pa_pData[dataIndex]);
+    switch (it->m_nSendFuncCode) {
+      case 5:
+      case 15:
+        modbus_write_bits(m_pModbusConn, it->m_nStartAddress, it->m_nNrAddresses, &((uint8_t*)pa_pData)[dataIndex]);
+        break;
+      case 6:
+      case 16:
+        modbus_write_registers(m_pModbusConn, it->m_nStartAddress, it->m_nNrAddresses, &((uint16_t*)pa_pData)[dataIndex]);
+        break;
+      default:
+        // TODO: error
+        break;
+    }
     dataIndex += it->m_nNrAddresses;
   }
 
@@ -121,8 +130,8 @@ void CModbusClientConnection::addNewPoll(TForteUInt32 pa_nPollInterval, unsigned
   m_unBufFillSize += nrBytes;
 }
 
-void CModbusClientConnection::addNewSend(unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses) {
-  SSendInformation sendInfo = {pa_nStartAddress, pa_nNrAddresses};
+void CModbusClientConnection::addNewSend(unsigned int pa_nSendFuncCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses) {
+  SSendInformation sendInfo = {pa_nSendFuncCode, pa_nStartAddress, pa_nNrAddresses};
 
   m_lstSendList.pushBack(sendInfo);
 }
