@@ -380,11 +380,6 @@ void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
   switch (paDataWatchEntry.mDataBuffer->getDataTypeID()){
     case CIEC_ANY::e_WSTRING:
     case CIEC_ANY::e_STRING:
-      consumedBytes = static_cast<CIEC_WSTRING*>(paDataWatchEntry.mDataBuffer)->toUTF8(acDataValue, bufferSize, false);
-      if(bufferSize != paDataWatchEntry.mDataBuffer->getToStringBufferSize() && 0 < consumedBytes) { //avoid re-running on strings which were already proven not to have any special character
-        consumedBytes += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(acDataValue));
-      }
-      break;
     case CIEC_ANY::e_CHAR:
     case CIEC_ANY::e_WCHAR:
       consumedBytes = paDataWatchEntry.mDataBuffer->toString(acDataValue, bufferSize);
@@ -417,7 +412,7 @@ size_t CMonitoringHandler::getExtraSizeForEscapedChars(const CIEC_ANY& paDataVal
   switch(paDataValue.getDataTypeID()){
     case CIEC_ANY::e_WSTRING:
     case CIEC_ANY::e_STRING:
-      retVal = forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<const CIEC_WSTRING&>(paDataValue).getValue());
+      retVal = forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<const CIEC_WSTRING&>(paDataValue).getValue()) + 10; //for opening and closing quotes or apos
      break;
     case CIEC_ANY::e_CHAR:
       retVal = 5 + 5 + 5; // Both outer quotes and symbol gets evetually replaced
