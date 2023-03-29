@@ -38,7 +38,7 @@ class CModbusClientConnection : public CModbusConnection{
     int connect() override;
     void disconnect() override;
 
-    void addNewPoll(TForteUInt32 pa_nPollInterval, unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses);
+    void addNewPoll(long pa_nPollInterval, unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses);
     void addNewSend(unsigned int pa_nSendFuncCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses);
 
     void setSlaveId(unsigned int pa_nSlaveId);

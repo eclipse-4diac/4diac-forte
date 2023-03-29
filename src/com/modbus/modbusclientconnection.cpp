@@ -97,7 +97,7 @@ void CModbusClientConnection::disconnect(){
   CModbusConnection::disconnect();
 }
 
-void CModbusClientConnection::addNewPoll(TForteUInt32 pa_nPollInterval, unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses){
+void CModbusClientConnection::addNewPoll(long pa_nPollInterval, unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses){
   CModbusPoll *newPoll = nullptr;
 
   TModbusPollList::Iterator itEnd = m_lstPollList.end();
@@ -219,7 +219,7 @@ void CModbusClientConnection::tryConnect(){
  * CModbusConnectionEvent class
  *************************************/
 CModbusConnectionEvent::CModbusConnectionEvent(long pa_nReconnectInterval) :
-    CModbusTimedEvent(pa_nReconnectInterval){
+    CModbusTimedEvent((TForteUInt32)pa_nReconnectInterval){
 }
 
 int CModbusConnectionEvent::executeEvent(modbus_t *pa_pModbusConn, void *pa_pRetVal){
