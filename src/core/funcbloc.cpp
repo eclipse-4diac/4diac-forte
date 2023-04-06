@@ -218,7 +218,7 @@ bool CFunctionBlock::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRe
   return retVal;
 }
 
-CIEC_ANY *CFunctionBlock::getDataOutput(CStringDictionary::TStringId pa_unDONameId) const {
+CIEC_ANY *CFunctionBlock::getDataOutput(CStringDictionary::TStringId pa_unDONameId) {
   CIEC_ANY *poRetVal = nullptr;
   unsigned int unDID = getDOID(pa_unDONameId);
 
@@ -228,7 +228,7 @@ CIEC_ANY *CFunctionBlock::getDataOutput(CStringDictionary::TStringId pa_unDOName
   return poRetVal;
 }
 
-CIEC_ANY *CFunctionBlock::getDataInput(CStringDictionary::TStringId pa_unDINameId) const {
+CIEC_ANY *CFunctionBlock::getDataInput(CStringDictionary::TStringId pa_unDINameId) {
   CIEC_ANY *poRetVal = nullptr;
   unsigned int unDID = getDIID(pa_unDINameId);
 
@@ -238,7 +238,7 @@ CIEC_ANY *CFunctionBlock::getDataInput(CStringDictionary::TStringId pa_unDINameI
   return poRetVal;
 }
 
-CIEC_ANY* CFunctionBlock::getDIFromPortId(TPortId paDIPortId) const{
+CIEC_ANY* CFunctionBlock::getDIFromPortId(TPortId paDIPortId) {
   CIEC_ANY *retVal = nullptr;
   if(paDIPortId < m_pstInterfaceSpec->m_nNumDIs){
     retVal = getDI(paDIPortId);
@@ -246,7 +246,7 @@ CIEC_ANY* CFunctionBlock::getDIFromPortId(TPortId paDIPortId) const{
   return retVal;
 }
 
-CIEC_ANY* CFunctionBlock::getDOFromPortId(TPortId paDOPortId) const{
+CIEC_ANY* CFunctionBlock::getDOFromPortId(TPortId paDOPortId) {
   CIEC_ANY *retVal = nullptr;
   if(paDOPortId < m_pstInterfaceSpec->m_nNumDOs){
     retVal = getDO(paDOPortId);

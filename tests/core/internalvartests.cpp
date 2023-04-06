@@ -29,7 +29,7 @@ class CInternalVarTestFB : public CBasicFB{
       CBasicFB(nullptr, &gcEmptyInterface, CStringDictionary::scm_nInvalidStringId, paVarInternals) {
     }
 
-    CIEC_ANY *getVarInternal(unsigned int paVarIntNum){
+    CIEC_ANY *getVarInternal(size_t paVarIntNum) override {
       return CBasicFB::getVarInternal(paVarIntNum);
     }
 

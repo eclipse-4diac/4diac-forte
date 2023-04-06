@@ -81,7 +81,7 @@ class CBasicFB : public CFunctionBlock {
      * @param pa_nVarIntNum number of the internal variable starting with 0
      * @return pointer to the internal variable
      */
-    CIEC_ANY* getVarInternal(unsigned int pa_nVarIntNum) {
+    virtual CIEC_ANY* getVarInternal(size_t pa_nVarIntNum) {
       return m_aoInternals[pa_nVarIntNum];
     }
 
