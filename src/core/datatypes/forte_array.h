@@ -482,6 +482,11 @@ class CIEC_ARRAY : public CIEC_ARRAY_COMMON<T> {
         (*paRunner)++;
       }
     }
+
+    [[nodiscard]] CIEC_ANY* clone(TForteByte *paDataBuf) const override {
+      static_assert((sizeof(CIEC_ANY) == sizeof(CIEC_ARRAY)), "Data type not the same size as CIEC_ANY");
+      return (nullptr != paDataBuf) ? new (paDataBuf) CIEC_ARRAY(*this) : new CIEC_ARRAY(*this);
+    }
 };
 
 class CIEC_ARRAY_TYPELIB : public CIEC_ARRAY<CIEC_ANY> {
@@ -496,14 +501,14 @@ class CIEC_ARRAY_TYPELIB : public CIEC_ARRAY<CIEC_ANY> {
       setup(paLength, paArrayType);
     }
 
-    static CIEC_ANY *createDataType(TForteByte *pa_acDataBuf) {
-      return (nullptr != pa_acDataBuf) ? new (pa_acDataBuf) CIEC_ARRAY_TYPELIB() : new CIEC_ARRAY_TYPELIB;
+    static CIEC_ANY *createDataType(TForteByte *paDataBuf) {
+      return (nullptr != paDataBuf) ? new (paDataBuf) CIEC_ARRAY_TYPELIB() : new CIEC_ARRAY_TYPELIB;
     };
     
     const static CTypeLib::CDataTypeEntry csm_oFirmwareDataTypeEntry_ARRAY_TYPELIB;
-    [[nodiscard]] CIEC_ANY* clone(TForteByte *pa_acDataBuf) const override {
+    [[nodiscard]] CIEC_ANY* clone(TForteByte *paDataBuf) const override {
       static_assert((sizeof(CIEC_ANY) == sizeof(CIEC_ARRAY_TYPELIB)), "Data type not the same size as CIEC_ANY");
-      return (nullptr != pa_acDataBuf) ? new (pa_acDataBuf) CIEC_ARRAY_TYPELIB(*this) : new CIEC_ARRAY_TYPELIB(*this);
+      return (nullptr != paDataBuf) ? new (paDataBuf) CIEC_ARRAY_TYPELIB(*this) : new CIEC_ARRAY_TYPELIB(*this);
     }
 
     [[nodiscard]] CStringDictionary::TStringId getTypeNameID() const override {
