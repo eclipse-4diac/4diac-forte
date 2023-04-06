@@ -12,6 +12,9 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "forte_usint.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "forte_usint_gen.cpp"
+#endif
 
 DEFINE_FIRMWARE_DATATYPE(USINT, g_nStringIdUSINT)
 

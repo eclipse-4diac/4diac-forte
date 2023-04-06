@@ -14,6 +14,9 @@
  *      - fixes behavior for getToStringBufferSize
  *******************************************************************************/
 #include "forte_wstring.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "forte_wstring_gen.cpp"
+#endif
 #include <devlog.h>
 
 #include "unicode_utils.h"

@@ -17,6 +17,9 @@
 #include <stdio.h>
 #include <ctype.h>
 #include "forte_date.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "forte_date_gen.cpp"
+#endif
 #include "../../arch/timerha.h"
 #include <forte_printer.h>
 #include <forte_architecture_time.h>

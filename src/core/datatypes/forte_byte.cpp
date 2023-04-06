@@ -13,6 +13,9 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "forte_byte.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "forte_byte_gen.cpp"
+#endif
 #include <limits>
 
 DEFINE_FIRMWARE_DATATYPE(BYTE, g_nStringIdBYTE)

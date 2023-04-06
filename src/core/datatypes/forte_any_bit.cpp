@@ -11,5 +11,8 @@
  *    Monika Wenger, Matthias Plasch - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "forte_any_bit.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "forte_any_bit_gen.cpp"
+#endif
 
 DEFINE_FIRMWARE_DATATYPE(ANY_BIT, g_nStringIdANY_BIT)

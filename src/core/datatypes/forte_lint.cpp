@@ -12,6 +12,9 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "forte_lint.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "forte_lint_gen.cpp"
+#endif
 
 DEFINE_FIRMWARE_DATATYPE(LINT, g_nStringIdLINT);
 

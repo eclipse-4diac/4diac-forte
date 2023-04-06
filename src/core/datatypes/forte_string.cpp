@@ -16,6 +16,9 @@
  *    Martin Melik Merkumians - fixes behavior for getToStringBufferSize
  *******************************************************************************/
 #include "forte_string.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "forte_string_gen.cpp"
+#endif
 #include <devlog.h>
 #include "forte_uint.h"
 #include "unicode_utils.h"

@@ -12,6 +12,9 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "forte_any_real.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "forte_any_real_gen.cpp"
+#endif
 
 DEFINE_FIRMWARE_DATATYPE(ANY_REAL, g_nStringIdANY_REAL)
 

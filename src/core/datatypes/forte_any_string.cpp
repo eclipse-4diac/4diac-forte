@@ -16,6 +16,9 @@
  *******************************************************************************/
 #include <fortenew.h>
 #include "forte_any_string.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "forte_any_string_gen.cpp"
+#endif
 #include "unicode_utils.h"
 #include <string.h>
 #include <stdlib.h>

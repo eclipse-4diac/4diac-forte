@@ -18,6 +18,9 @@
 #include <stdio.h>
 #include <errno.h>
 #include "forte_lreal.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "forte_lreal_gen.cpp"
+#endif
 
 #include "forte_real.h"
 #include "forte_string.h"

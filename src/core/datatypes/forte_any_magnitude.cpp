@@ -12,6 +12,9 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "forte_any_magnitude.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "forte_any_magnitude_gen.cpp"
+#endif
 
 DEFINE_FIRMWARE_DATATYPE(ANY_MAGNITUDE, g_nStringIdANY_MAGNITUDE)
 

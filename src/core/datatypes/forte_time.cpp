@@ -14,6 +14,9 @@
  *    Martin Melik Merkumians - added parsing for signed time literals
  *******************************************************************************/
 #include "forte_time.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "forte_time_gen.cpp"
+#endif
 
 #include "../../arch/timerha.h"
 #include <stdlib.h>

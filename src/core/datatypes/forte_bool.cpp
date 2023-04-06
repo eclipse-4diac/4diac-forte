@@ -13,6 +13,9 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "forte_bool.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "forte_bool_gen.cpp"
+#endif
 #include <stdlib.h>
 
 DEFINE_FIRMWARE_DATATYPE(BOOL, g_nStringIdBOOL)

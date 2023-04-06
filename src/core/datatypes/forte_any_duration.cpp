@@ -13,5 +13,8 @@
  *******************************************************************************/
 
 #include "forte_any_duration.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "forte_any_duration_gen.cpp"
+#endif
 
 DEFINE_FIRMWARE_DATATYPE(ANY_DURATION, g_nStringIdANY_DURATION)

@@ -112,7 +112,6 @@ class CAdapter;
 
 //!\ingroup CORE This define is used to create the implementation for the above definition.
 #define DEFINE_FIRMWARE_DATATYPE(datatypename, datatypenameid)\
-  extern const CStringDictionary::TStringId g_nStringId##datatypename; \
   const CTypeLib::CDataTypeEntry CIEC_##datatypename::csm_oFirmwareDataTypeEntry_##datatypename((datatypenameid), CIEC_##datatypename::createDataType);\
   FORTE_DUMMY_INIT_DEF(CIEC_##datatypename)
 

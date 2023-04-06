@@ -17,6 +17,9 @@
 #include <string.h>
 #include <ctype.h>
 #include "forte_time_of_day.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "forte_time_of_day_gen.cpp"
+#endif
 #include "../../arch/timerha.h"
 #include <forte_printer.h>
 

@@ -12,6 +12,9 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "forte_ulint.h"
+#ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
+#include "forte_ulint_gen.cpp"
+#endif
 
 DEFINE_FIRMWARE_DATATYPE(ULINT, g_nStringIdULINT)
 
