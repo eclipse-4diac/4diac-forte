@@ -103,16 +103,14 @@ EComResponse CTSNLayer::setVLANIDForSocket(const char* paId){
   if(scmMinVLANID <= id && scmMaxVLANID >= id){
     struct ifreq ifr;
     memset(&ifr, 0, sizeof(ifr));
-    CIEC_STRING interfaceName = "eth0.";
-    interfaceName.append(paId);
 
-    snprintf(ifr.ifr_name, sizeof(ifr.ifr_name), interfaceName.getValue());
+    snprintf(ifr.ifr_name, sizeof(ifr.ifr_name), "eth0.%u", id);
 
     if(0 == setsockopt(mSocketID, SOL_SOCKET, SO_BINDTODEVICE, (void *) &ifr, sizeof(ifr))){
       eRetVal = e_InitOk;
     }
     else{
-      DEVLOG_ERROR("[TSN LAYER] binding to interface %s not possible \n", interfaceName.getValue());
+      DEVLOG_ERROR("[TSN LAYER] binding to interface %s not possible \n", ifr.ifr_name);
     }
   }
   else{
