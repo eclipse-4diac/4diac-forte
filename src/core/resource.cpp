@@ -47,12 +47,7 @@ CResource::CResource(CResource* pa_poDevice, const SFBInterfaceSpec *pa_pstInter
 #ifdef FORTE_TRACE_CTF
 , tracePlatformContext(pa_nInstanceNameId, FORTE_TRACE_CTF_BUFFER_SIZE)
 #endif
-{
-#ifdef FORTE_DYNAMIC_TYPE_LOAD
-  luaEngine = new CLuaEngine();
-#endif
-  initializeResIf2InConnections();
-}
+{}
 
 CResource::CResource(const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
     CFunctionBlock(nullptr, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData), forte::core::CFBContainer(CStringDictionary::scm_nInvalidStringId, nullptr), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
@@ -63,11 +58,17 @@ CResource::CResource(const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringD
 #ifdef FORTE_TRACE_CTF
 , tracePlatformContext(pa_nInstanceNameId, FORTE_TRACE_CTF_BUFFER_SIZE)
 #endif
-{
+{}
+
+bool CResource::initialize() {
+  if(!CFunctionBlock::initialize()) {
+    return false;
+  }
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
   luaEngine = new CLuaEngine();
 #endif
   initializeResIf2InConnections();
+  return true;
 }
 
 CResource::~CResource(){

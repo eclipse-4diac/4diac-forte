@@ -144,8 +144,13 @@ CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId pa_nInstanceName
   }
 
   if(nullptr != poNewFB){
-    // perform reset to move it into idle state and set the initial values
-    poNewFB->changeFBExecutionState(EMGMCommandType::Reset);
+    if(poNewFB->initialize()) {
+      // perform reset to move it into idle state and set the initial values
+      poNewFB->changeFBExecutionState(EMGMCommandType::Reset);
+    } else {
+      deleteFB(poNewFB);
+      poNewFB = nullptr;
+    }
   }
 
   return poNewFB;

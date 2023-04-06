@@ -53,6 +53,8 @@ class CBasicFB : public CFunctionBlock {
     CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId,
         const SInternalVarsInformation *pa_pstVarInternals, TForteByte *pa_acFBConnData, TForteByte *pa_acBasicFBVarsData);
 
+    bool initialize() override;
+
     ~CBasicFB() override;
 
     CIEC_ANY* getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) override;
@@ -91,6 +93,7 @@ class CBasicFB : public CFunctionBlock {
 
     static void deleteInternalFBs(const size_t paAmountOfInternalFBs, TFunctionBlockPtr *paInternalFBs);
 
+    TForteByte *m_acBasicFBVarsData; //TODO remove once refactor is complete (currently needed for initialization-split)
   private:
     /*!\brief Get the pointer to a internal variable of the basic FB.
      *

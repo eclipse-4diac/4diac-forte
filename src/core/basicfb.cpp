@@ -18,20 +18,25 @@
 CBasicFB::CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId,
     const SInternalVarsInformation *pa_pstVarInternals, TForteByte *pa_acFBConnData, TForteByte *pa_acBasicFBVarsData) :
     CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acBasicFBVarsData), m_nECCState(0),
-        cm_pstVarInternals(pa_pstVarInternals) {
+        cm_pstVarInternals(pa_pstVarInternals), m_acBasicFBVarsData(pa_acBasicFBVarsData), m_aoInternals(nullptr) {
+}
 
-  m_aoInternals = nullptr;
-  if((nullptr != cm_pstVarInternals) && (cm_pstVarInternals->m_nNumIntVars) && (nullptr != pa_acBasicFBVarsData)) {
-    pa_acBasicFBVarsData += genFBVarsDataSize(m_pstInterfaceSpec->m_nNumDIs, m_pstInterfaceSpec->m_nNumDOs, m_pstInterfaceSpec->m_nNumAdapters);
+bool CBasicFB::initialize() {
+  if(!CFunctionBlock::initialize()) {
+    return false;
+  }
+  if((nullptr != cm_pstVarInternals) && (cm_pstVarInternals->m_nNumIntVars) && (nullptr != m_acBasicFBVarsData)) {
+    m_acBasicFBVarsData += genFBVarsDataSize(m_pstInterfaceSpec->m_nNumDIs, m_pstInterfaceSpec->m_nNumDOs, m_pstInterfaceSpec->m_nNumAdapters);
 
-    m_aoInternals = reinterpret_cast<CIEC_ANY*>(pa_acBasicFBVarsData);
+    m_aoInternals = reinterpret_cast<CIEC_ANY*>(m_acBasicFBVarsData);
 
     const CStringDictionary::TStringId *pnDataIds = cm_pstVarInternals->m_aunIntVarsDataTypeNames;
     for(int i = 0; i < cm_pstVarInternals->m_nNumIntVars; ++i) {
-      createDataPoint(&pnDataIds, pa_acBasicFBVarsData);
-      pa_acBasicFBVarsData += sizeof(CIEC_ANY);
+      createDataPoint(&pnDataIds, m_acBasicFBVarsData);
+      m_acBasicFBVarsData += sizeof(CIEC_ANY);
     }
   }
+  return true;
 }
 
 CBasicFB::~CBasicFB() {

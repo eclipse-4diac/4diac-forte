@@ -27,7 +27,14 @@ CAdapter::CAdapter(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfa
   m_poPeer(nullptr),
   m_aoLocalDIs(m_aoDIs),
   m_poAdapterConn(nullptr){
+}
+
+bool CAdapter::initialize() {
+  if(!CFunctionBlock::initialize()) {
+    return false;
+  }
   setupEventEntryList();
+  return true;
 }
 
 CAdapter::~CAdapter(){

@@ -104,6 +104,8 @@ class CCompositeFB: public CFunctionBlock {
         const SCFB_FBNData * const pa_cpoFBNData, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
     ~CCompositeFB() override;
 
+    bool initialize() override;
+
     /*!\brief Connects specific data input of a CFB with a specific data connection.
      *
      * \param pa_unDINameId    StringId of input name.

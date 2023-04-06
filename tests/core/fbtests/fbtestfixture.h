@@ -28,6 +28,8 @@ class CFBTestFixtureBase : public CFunctionBlock{
   public:
     ~CFBTestFixtureBase();
 
+    bool initialize() override;
+
     CStringDictionary::TStringId getFBTypeId() const {
       return mTypeId;
     }

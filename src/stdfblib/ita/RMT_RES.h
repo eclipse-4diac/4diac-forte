@@ -22,6 +22,8 @@ class RMT_RES : public CResource{
     RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_roDevice);
     ~RMT_RES() override;
 
+    bool initialize() override;
+
     void joinResourceThread() const;
 
   private:

@@ -30,6 +30,8 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
     DEV_MGR(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
     ~DEV_MGR() override;
 
+    bool initialize() override;
+
     bool executeCommand(char *paDest, char *paCommand) override;
 
     static const char *getResponseText(EMGMResponse paResp) {

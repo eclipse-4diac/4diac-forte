@@ -63,6 +63,7 @@ void createDev(const char *pa_acMGRID){
 #endif
 
   poDev = new RMT_DEV;
+  poDev->initialize();
 
   poDev->setMGR_ID(pa_acMGRID);
   poDev->startDevice();

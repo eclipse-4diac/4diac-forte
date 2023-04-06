@@ -81,6 +81,7 @@ BOOST_AUTO_TEST_CASE(sampleInteralVarList){
   TForteByte varsDataBuffer[CBasicFB::genBasicFBVarsDataSizeTemplate<0, 0, 3, 0>::value];
 
   CInternalVarTestFB testFB(&varData, varsDataBuffer);
+  BOOST_ASSERT(testFB.initialize());
 
   for(size_t i = 0; i < varData.m_nNumIntVars; i++){
     CIEC_ANY *var = testFB.getVar(&(varInternalNames[i]), 1);

@@ -33,6 +33,7 @@
 #endif
 
 CFunctionBlock::CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
+    m_pstInterfaceSpec(pa_pstInterfaceSpec), m_acFBConnData(pa_acFBConnData), m_acFBVarsData(pa_acFBVarsData),
    mEOConns(nullptr), m_apoDIConns(nullptr), mDOConns(nullptr),
    m_poInvokingExecEnv(nullptr), m_apoAdapters(nullptr), m_poResource(pa_poSrcRes), m_aoDIs(nullptr), m_aoDOs(nullptr), m_nFBInstanceName(pa_nInstanceNameId),
     m_enFBState(E_FBStates::Killed),   //put the FB in the killed state so that reseting it after creation will correctly initialize it
@@ -42,8 +43,11 @@ CFunctionBlock::CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *p
   mEIMonitorCount = nullptr;
   mEOMonitorCount = nullptr;
 #endif
+}
 
-  setupFBInterface(pa_pstInterfaceSpec, pa_acFBConnData, pa_acFBVarsData);
+bool CFunctionBlock::initialize() {
+  setupFBInterface(m_pstInterfaceSpec, m_acFBConnData, m_acFBVarsData);
+  return true;
 }
 
 CFunctionBlock::~CFunctionBlock(){

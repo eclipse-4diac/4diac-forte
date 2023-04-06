@@ -24,6 +24,8 @@ class EMB_RES : public CResource{
         CResource* pa_poDevice);
     ~EMB_RES() override;
 
+    bool initialize() override;
+
   private:
     static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 };

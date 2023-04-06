@@ -23,6 +23,7 @@ void vForteTask(void* pvParameters) {
   (void) pvParameters;
 
   RMT_DEV *poDev = new RMT_DEV;
+  poDev->initialize();
 
   poDev->setMGR_ID("localhost:61499");
   poDev->startDevice();

@@ -60,6 +60,8 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 
     ~CResource() override;
 
+    bool initialize() override;
+
     /*!\brief Execute the given management command
      *
      * Evaluates the m_sDestination parameter of the command if empty the resource tries

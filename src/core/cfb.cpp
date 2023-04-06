@@ -29,7 +29,12 @@ CCompositeFB::CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_ps
         m_apoEventConnections(nullptr),
         m_apoDataConnections(nullptr),
         mInterface2InternalEventCons(nullptr){
+}
 
+bool CCompositeFB::initialize() {
+  if(!CFunctionBlock::initialize()) {
+    return false;
+  }
   createInternalFBs();
 
   createEventConnections();
@@ -37,12 +42,12 @@ CCompositeFB::CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_ps
   setParams();
 
   //remove adapter-references for CFB
-  for(TForteUInt8 i = 0; i < pa_pstInterfaceSpec->m_nNumAdapters; i++){
+  for(TForteUInt8 i = 0; i < m_pstInterfaceSpec->m_nNumAdapters; i++){
     if(nullptr != m_apoAdapters){
       static_cast<CAdapter*>(m_apoAdapters[i])->setParentFB(nullptr, 0);
     }
   }
-
+  return true;
 }
 
 CCompositeFB::~CCompositeFB(){

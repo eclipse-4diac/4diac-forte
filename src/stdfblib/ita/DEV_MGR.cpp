@@ -576,9 +576,16 @@ void DEV_MGR::appendIdentifierName(CIEC_STRING& paDest, forte::core::TNameIdenti
 DEV_MGR::DEV_MGR(CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
     CCommFB(paInstanceNameId, paSrcRes, forte::com_infra::e_Server),
     m_poDevice(paSrcRes->getDevice()) {
+}
+
+bool DEV_MGR::initialize() {
+  if(!CCommFB::initialize()) {
+    return false;
+  }
   setupFBInterface(&scm_stFBInterfaceSpec, m_anFBConnData, m_anFBVarsData);
   mCommand.mAdditionalParams.reserve(255);
   mCommand.mAdditionalParams.clear();
+  return true;
 }
 
 DEV_MGR::~DEV_MGR(){

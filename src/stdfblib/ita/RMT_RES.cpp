@@ -46,6 +46,12 @@ const SFBInterfaceSpec RMT_RES::scm_stFBInterfaceSpec = {
 
 RMT_RES::RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_poDevice):
        CResource(pa_poDevice, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData){
+}
+
+bool RMT_RES::initialize() {
+  if(!CResource::initialize()) {
+    return false;
+  }
   addFB(CTypeLib::createFB(g_nStringIdSTART, g_nStringIdE_RESTART, this));
   addFB(CTypeLib::createFB(g_nStringIdMGR_FF, g_nStringIdE_SR, this));
   addFB(CTypeLib::createFB(g_nStringIdMGR, g_nStringIdDEV_MGR, this));
@@ -99,6 +105,7 @@ RMT_RES::RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_
   
   //Perform reset command normally done by the typelib during the creation process
   changeFBExecutionState(EMGMCommandType::Reset);
+  return true;
 }
 
 RMT_RES::~RMT_RES() = default;

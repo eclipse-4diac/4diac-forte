@@ -17,8 +17,15 @@ class CFunctionBlockMock : public CFunctionBlock{
   public:
     CFunctionBlockMock() :
         CFunctionBlock(nullptr, nullptr, 0, nullptr, nullptr){
+    }
+
+    bool initialize() override {
+      if(!CFunctionBlock::initialize()) {
+        return false;
+      }
       //mimick the behavior provided by typelib
       changeFBExecutionState(EMGMCommandType::Reset);
+      return true;
     }
 
     virtual CStringDictionary::TStringId getFBTypeId() const{
@@ -34,6 +41,7 @@ BOOST_AUTO_TEST_SUITE(ManagedObjectStateMachine)
 
   BOOST_AUTO_TEST_CASE(idleTest){
     CFunctionBlockMock testee;
+    BOOST_ASSERT(testee.initialize());
 
     BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Idle, testee.getState());
 
@@ -58,6 +66,7 @@ BOOST_AUTO_TEST_SUITE(ManagedObjectStateMachine)
 
   BOOST_AUTO_TEST_CASE(runningTest){
     CFunctionBlockMock testee;
+    BOOST_ASSERT(testee.initialize());
     putTesteeIntoRun(testee);
 
     BOOST_CHECK_EQUAL(false, testee.isCurrentlyDeleteable());
@@ -78,6 +87,7 @@ BOOST_AUTO_TEST_SUITE(ManagedObjectStateMachine)
 
     //we shold be able to kill it, use a new testee to have a clean running state
     CFunctionBlockMock killTestee;
+    BOOST_ASSERT(killTestee.initialize());
     putTesteeIntoRun(killTestee);
 
     BOOST_CHECK_EQUAL(EMGMResponse::Ready, killTestee.changeFBExecutionState(EMGMCommandType::Kill));
@@ -91,6 +101,7 @@ BOOST_AUTO_TEST_SUITE(ManagedObjectStateMachine)
 
   BOOST_AUTO_TEST_CASE(stoppedTest){
     CFunctionBlockMock testee;
+    BOOST_ASSERT(testee.initialize());
     putTesteeIntoStopped(testee);
 
     BOOST_CHECK(testee.isCurrentlyDeleteable());
@@ -109,6 +120,7 @@ BOOST_AUTO_TEST_SUITE(ManagedObjectStateMachine)
 
     //we should be able to reset it, use new testeee for a clean stopped state
     CFunctionBlockMock resetTestee;
+    BOOST_ASSERT(resetTestee.initialize());
     putTesteeIntoStopped(resetTestee);
 
     BOOST_CHECK_EQUAL(EMGMResponse::Ready, resetTestee.changeFBExecutionState(EMGMCommandType::Reset));
@@ -123,6 +135,7 @@ BOOST_AUTO_TEST_SUITE(ManagedObjectStateMachine)
 
   BOOST_AUTO_TEST_CASE(killedTest){
     CFunctionBlockMock testee;
+    BOOST_ASSERT(testee.initialize());
     putTesteeIntoKilled(testee);
 
     BOOST_CHECK(testee.isCurrentlyDeleteable());
@@ -157,6 +170,7 @@ BOOST_AUTO_TEST_SUITE(ManagedObjectStateMachine)
 
   BOOST_AUTO_TEST_CASE(testOtherCommands){
     CFunctionBlockMock testee;
+    BOOST_ASSERT(testee.initialize());
 
     //test for idle
     testAllOtherCommands(testee, CFunctionBlock::E_FBStates::Idle);

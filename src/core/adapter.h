@@ -45,6 +45,8 @@ class CAdapter : public CFunctionBlock{
     CAdapter(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpecSocket, const CStringDictionary::TStringId pa_nInstanceNameId, const SFBInterfaceSpec *pa_pstInterfaceSpecPlug, bool pa_bIsPlug, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
     ~CAdapter() override;
 
+    bool initialize() override;
+
     /*!\brief Returns if Adapter instance is a Plug
      */
     bool isPlug() const{

@@ -131,6 +131,8 @@ class CFunctionBlock {
      */
     static const TForteUInt16 scm_nMaxInterfaceEvents = 0x00FF;
 
+    virtual bool initialize();
+
     virtual ~CFunctionBlock();
 
     /*!\brief Get the resource the function block is contained in.
@@ -466,7 +468,8 @@ class CFunctionBlock {
     CDataConnection *mDOConns; //!< A list of data connections pointers storing for each data output the data connection. If the data output is not connected the pointer is 0.
     CEventChainExecutionThread *m_poInvokingExecEnv; //!< A pointer to the execution thread that invoked the FB. This value is stored here to reduce function parameters and reduce therefore stack usage.
     CAdapter **m_apoAdapters; //!< A list of pointers to the adapters. This allows to implement a general getAdapter().
-
+    TForteByte *m_acFBConnData; //TODO remove once refactor is complete (currently needed for initialization-split)
+    TForteByte *m_acFBVarsData; //TODO remove once refactor is complete (currently needed for initialization-split)
   private:
     /*!\brief Function providing the functionality of the FB (e.g. execute ECC for basic FBs).
      *

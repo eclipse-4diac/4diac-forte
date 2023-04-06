@@ -51,12 +51,18 @@ class CFBTestConn : public CDataConnection {
 CFBTestFixtureBase::CFBTestFixtureBase(CStringDictionary::TStringId paTypeId) :
     CFunctionBlock(CFBTestDataGlobalFixture::getResource(), nullptr, 0, nullptr, nullptr), mTypeId(paTypeId),
         mFBUnderTest(CTypeLib::createFB(paTypeId, paTypeId, getResourcePtr())), mFBConnData(nullptr), mFBVarsData(nullptr) {
+}
 
+bool CFBTestFixtureBase::initialize() {
+  if(!CFunctionBlock::initialize()) {
+    return false;
+  }
   changeFBExecutionState(EMGMCommandType::Reset);
   changeFBExecutionState(EMGMCommandType::Start);
   //assure that we are in running state
   BOOST_REQUIRE_EQUAL(CFunctionBlock::E_FBStates::Running, getState());
   BOOST_REQUIRE(nullptr != mFBUnderTest);
+  return true;
 }
 
 CFBTestFixtureBase::~CFBTestFixtureBase(){
@@ -107,6 +113,7 @@ void CFBTestFixtureBase::setup(const char* pa_acConfigString){
   if(pa_acConfigString != nullptr) {
     mFBUnderTest->configureFB(pa_acConfigString);
   }
+  BOOST_ASSERT(initialize());
 
   setupTestInterface();
   performDataInterfaceTests();

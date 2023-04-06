@@ -44,6 +44,7 @@ void createDev(const char *pa_acMGRID){
   signal(SIGTERM, endForte);
 
   poDev = new RMT_DEV;
+  poDev->initialize();
 
 #ifdef FORTE_FBTESTS
   CFBTestsManager::getInstance().runAllTests();
