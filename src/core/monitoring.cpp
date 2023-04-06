@@ -13,6 +13,7 @@
  *  Martin Melik Merkumians
  *    - adds functionality for W/CHAR
  *******************************************************************************/
+#include <forte_config.h>
 #include "monitoring.h"
 #include "resource.h"
 #include "device.h"

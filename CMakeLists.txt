@@ -128,8 +128,9 @@ endif(FORTE_SUPPORT_BOOT_FILE)
 set(FORTE_SUPPORT_MONITORING ON CACHE BOOL "Enable FORTE monitoring functionalities")
 mark_as_advanced(FORTE_SUPPORT_MONITORING)
 if(FORTE_SUPPORT_MONITORING)
-  forte_add_definition("-DFORTE_SUPPORT_MONITORING")
+  forte_add_custom_configuration("#define FORTE_SUPPORT_MONITORING")
 endif(FORTE_SUPPORT_MONITORING)
+
 
 if (WIN32)
   if (MSVC)
@@ -170,8 +171,8 @@ endif(NOT ("${FORTE_USE_LUATYPES}" STREQUAL "None"))
 SET(FORTE_TRACE_CTF OFF CACHE BOOL "FORTE Common Trace Format (CTF) tracing")
 SET(FORTE_TRACE_CTF_BUFFER_SIZE 4096 CACHE STRING "FORTE Common Trace Format (CTF) trace buffer size")
 if(FORTE_TRACE_CTF)
-    forte_add_definition("-DFORTE_TRACE_CTF")
-    forte_add_definition("-DFORTE_TRACE_CTF_BUFFER_SIZE=${FORTE_TRACE_CTF_BUFFER_SIZE}")
+  forte_add_custom_configuration("#define FORTE_TRACE_CTF")
+  forte_add_custom_configuration("#define FORTE_TRACE_CTF_BUFFER_SIZE ${FORTE_TRACE_CTF_BUFFER_SIZE}")
 endif(FORTE_TRACE_CTF)
 
 #######################################################################################
