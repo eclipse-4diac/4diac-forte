@@ -70,19 +70,19 @@ class CIEC_ARRAY : public CIEC_ARRAY_COMMON<T> {
     template<typename U>
     CIEC_ARRAY(const CIEC_ARRAY_VARIABLE<U> &paSource) {
       if (paSource.getUpperBound() > 0) {
-        setup(static_cast<TForteUInt16>(paSource.getUpperBound()), paSource[paSource.getLowerBound()].getTypeNameID());
-        for (intmax_t i = paSource.getLowerBound() < 0 ? 0 : paSource.getLowerBound(); i < paSource.getUpperBound(); ++i) {
+        setup(static_cast<TForteUInt16>(paSource.getUpperBound() + 1), paSource[paSource.getLowerBound()].getTypeNameID());
+        for (intmax_t i = paSource.getLowerBound() < 0 ? 0 : paSource.getLowerBound(); i <= paSource.getUpperBound(); ++i) {
           static_cast<T&>((*this)[i]) = paSource[i];
         }
       }
     }
 
-    // Plain old arrays start implicitly at 0 and their size is their upperBound
+    // Plain old arrays start implicitly at 0 and their size is their upperBound plus 1
     template<typename U, intmax_t lowerBound, intmax_t upperBound>
     CIEC_ARRAY(const CIEC_ARRAY_FIXED<U, lowerBound, upperBound> &paSource) {
       if (paSource.getUpperBound() > 0) {
-        setup(static_cast<TForteUInt16>(paSource.getUpperBound()), paSource[paSource.getLowerBound()].getTypeNameID());
-        for (intmax_t i = paSource.getLowerBound() < 0 ? 0 : paSource.getLowerBound(); i < paSource.getUpperBound(); ++i)
+        setup(static_cast<TForteUInt16>(paSource.getUpperBound() + 1), paSource[paSource.getLowerBound()].getTypeNameID());
+        for (intmax_t i = paSource.getLowerBound() < 0 ? 0 : paSource.getLowerBound(); i <= paSource.getUpperBound(); ++i)
         {
           static_cast<T&>((*this)[i]) = paSource[i];
         }
