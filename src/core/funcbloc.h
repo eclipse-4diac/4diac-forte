@@ -409,6 +409,52 @@ class CFunctionBlock {
      */
     void sendOutputEvent(size_t paEO);
 
+    /*!\brief Function to read data from an input connection into a variable of the FB.
+     *
+     * \param pa_poValue Variable to read into.
+     * \param pa_poConn Connection to read from.
+     */
+#ifdef FORTE_TRACE_CTF
+    void readData(size_t pa_nDONum, CIEC_ANY *pa_poValue, CDataConnection* pa_poConn);
+#else
+    void readData(size_t, CIEC_ANY *pa_poValue, CDataConnection* pa_poConn) {
+      if(!pa_poConn) {
+        return;
+      }
+#ifdef FORTE_SUPPORT_MONITORING
+      if(!pa_poValue->isForced()) {
+#endif //FORTE_SUPPORT_MONITORING
+        pa_poConn->readData(pa_poValue);
+#ifdef FORTE_SUPPORT_MONITORING
+      }
+#endif //FORTE_SUPPORT_MONITORING
+    }
+#endif //FORTE_TRACE_CTF
+
+    /*!\brief Function to write data to an output connection from a variable of the FB.
+     *
+     * \param pa_poValue Variable to write from.
+     * \param pa_poConn Connection to write into.
+     */
+#ifdef FORTE_TRACE_CTF
+    void writeData(size_t pa_nDONum, CIEC_ANY *pa_poValue, CDataConnection* pa_poConn);
+#else
+    void writeData(size_t, CIEC_ANY *pa_poValue, CDataConnection* pa_poConn) {
+      if(pa_poConn->isConnected()) {
+#ifdef FORTE_SUPPORT_MONITORING
+        if(!pa_poValue->isForced()) {
+#endif //FORTE_SUPPORT_MONITORING
+          pa_poConn->writeData(pa_poValue);
+#ifdef FORTE_SUPPORT_MONITORING
+        } else {
+          //when forcing we write back the value from the connection to keep the forced value on the output
+          pa_poConn->readData(pa_poValue);
+        }
+#endif //FORTE_SUPPORT_MONITORING
+      }
+    }
+#endif //FORTE_TRACE_CTF
+
     /*!\brief Function to send an output event via the adapter.
      *
      * \param pa_nAdapterID ID of Adapter in current FBs adapter list.
@@ -483,6 +529,18 @@ class CFunctionBlock {
      * \param pa_nEIID Event input ID where event occurred.
      */
     virtual void executeEvent(int pa_nEIID) = 0;
+
+    /*!\brief Function reading the values from input connections of the FB.
+     *
+     * \param pa_nEIID Event input ID where event occurred.
+     */
+    virtual void readInputData(size_t pa_nEIID);
+
+    /*!\brief Function writing the values to output connections of the FB.
+     *
+     * \param pa_nEIID Event output ID where event occurred.
+     */
+    virtual void writeOutputData(size_t paEO);
 
     /*!\brief Set the initial values of data inputs, outputs, and internal vars.
      *

@@ -301,35 +301,7 @@ void CFunctionBlock::sendOutputEvent(size_t paEO){
 #endif
 
   if(paEO < m_pstInterfaceSpec->m_nNumEOs) {
-    if(nullptr != m_pstInterfaceSpec->m_anEOWithIndexes && -1 != m_pstInterfaceSpec->m_anEOWithIndexes[paEO]) {
-      const TDataIOID *eiWithStart = &(m_pstInterfaceSpec->m_anEOWith[m_pstInterfaceSpec->m_anEOWithIndexes[paEO]]);
-      //TODO think on this lock
-      CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
-      for(size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
-        CDataConnection *con = getDOConUnchecked(eiWithStart[i]);
-        CIEC_ANY *dataOutput = getDO(eiWithStart[i]);
-        if(con->isConnected()) {
-#ifdef FORTE_SUPPORT_MONITORING
-          if(dataOutput->isForced() != true) {
-#endif //FORTE_SUPPORT_MONITORING
-            con->writeData(dataOutput);
-#ifdef FORTE_SUPPORT_MONITORING
-          } else {
-            //when forcing we write back the value from the connection to keep the forced value on the output
-            con->readData(dataOutput);
-          }
-#endif //FORTE_SUPPORT_MONITORING
-        }
-#ifdef FORTE_TRACE_CTF
-        std::string valueString;
-        valueString.reserve(dataOutput->getToStringBufferSize());
-        dataOutput->toString(valueString.data(), valueString.capacity());
-        barectf_default_trace_outputData(m_poResource->getTracePlatformContext().getContext(),
-                                         CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
-                                         static_cast<uint64_t>(eiWithStart[i]), valueString.c_str());
-#endif //FORTE_TRACE_CTF
-      }
-    }
+    writeOutputData(paEO);
 
     getEOConUnchecked(static_cast<TPortId>(paEO))->triggerEvent(m_poInvokingExecEnv);
 
@@ -363,32 +335,7 @@ void CFunctionBlock::receiveInputEvent(size_t paEIID, CEventChainExecutionThread
 
   if(E_FBStates::Running == getState()){
     if(paEIID < m_pstInterfaceSpec->m_nNumEIs) {
-      if(nullptr != m_pstInterfaceSpec->m_anEIWithIndexes && -1 != m_pstInterfaceSpec->m_anEIWithIndexes[paEIID]) {
-        const TDataIOID *eiWithStart = &(m_pstInterfaceSpec->m_anEIWith[m_pstInterfaceSpec->m_anEIWithIndexes[paEIID]]);
-
-        // TODO think on this lock
-        CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
-        for(size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
-          if(nullptr != m_apoDIConns[eiWithStart[i]]) {
-            CIEC_ANY *di = getDI(eiWithStart[i]);
-#ifdef FORTE_SUPPORT_MONITORING
-            if(true != di->isForced()) {
-#endif //FORTE_SUPPORT_MONITORING
-              m_apoDIConns[eiWithStart[i]]->readData(di);
-#ifdef FORTE_SUPPORT_MONITORING
-            }
-#endif //FORTE_SUPPORT_MONITORING
-#ifdef FORTE_TRACE_CTF
-            std::string valueString;
-            valueString.reserve(di->getToStringBufferSize());
-            di->toString(valueString.data(), valueString.capacity());
-            barectf_default_trace_inputData(m_poResource->getTracePlatformContext().getContext(),
-                                            CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
-                                            static_cast<uint64_t>(eiWithStart[i]), valueString.c_str());
-#endif //FORTE_TRACE_CTF
-          }
-        }
-      }
+      readInputData(paEIID);
 #ifdef FORTE_SUPPORT_MONITORING
       // Count Event for monitoring
       mEIMonitorCount[paEIID]++;
@@ -398,6 +345,78 @@ void CFunctionBlock::receiveInputEvent(size_t paEIID, CEventChainExecutionThread
     executeEvent(paEIID);
   }
 }
+
+void CFunctionBlock::readInputData(size_t paEIID) {
+  if(nullptr != m_pstInterfaceSpec->m_anEIWithIndexes && -1 != m_pstInterfaceSpec->m_anEIWithIndexes[paEIID]) {
+    const TDataIOID *eiWithStart = &(m_pstInterfaceSpec->m_anEIWith[m_pstInterfaceSpec->m_anEIWithIndexes[paEIID]]);
+
+    // TODO think on this lock
+    CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
+    for(size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
+      size_t nDINum = eiWithStart[i];
+      CIEC_ANY *di = getDI(nDINum);
+      readData(nDINum, di, m_apoDIConns[nDINum]);
+    }
+  }
+}
+
+#ifdef FORTE_TRACE_CTF
+void CFunctionBlock::readData(size_t pa_nDINum, CIEC_ANY *pa_poValue, CDataConnection* pa_poConn) {
+  if(!pa_poConn) {
+    return;
+  }
+#ifdef FORTE_SUPPORT_MONITORING
+  if(!pa_poValue->isForced()) {
+#endif //FORTE_SUPPORT_MONITORING
+    pa_poConn->readData(pa_poValue);
+#ifdef FORTE_SUPPORT_MONITORING
+  }
+#endif //FORTE_SUPPORT_MONITORING
+  std::string valueString;
+  valueString.reserve(pa_poValue->getToStringBufferSize());
+  pa_poValue->toString(valueString.data(), valueString.capacity());
+  barectf_default_trace_inputData(m_poResource->getTracePlatformContext().getContext(),
+          CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
+          static_cast<uint64_t>(pa_nDINum), valueString.c_str());
+}
+#endif //FORTE_TRACE_CTF
+
+void CFunctionBlock::writeOutputData(size_t paEO) {
+  if (nullptr != m_pstInterfaceSpec->m_anEOWithIndexes && -1 != m_pstInterfaceSpec->m_anEOWithIndexes[paEO]) {
+    const TDataIOID *eiWithStart = &(m_pstInterfaceSpec->m_anEOWith[m_pstInterfaceSpec->m_anEOWithIndexes[paEO]]);
+    //TODO think on this lock
+    CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
+    for (size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
+      size_t nDONum = eiWithStart[i];
+      CDataConnection *con = getDOConUnchecked(nDONum);
+      CIEC_ANY *dataOutput = getDO(nDONum);
+      writeData(nDONum, dataOutput, con);
+    }
+  }
+}
+
+#ifdef FORTE_TRACE_CTF
+void CFunctionBlock::writeData(size_t pa_nDONum, CIEC_ANY *pa_poValue, CDataConnection* pa_poConn) {
+  if(pa_poConn->isConnected()) {
+#ifdef FORTE_SUPPORT_MONITORING
+    if(pa_poValue->isForced() != true) {
+#endif //FORTE_SUPPORT_MONITORING
+      pa_poConn->writeData(pa_poValue);
+#ifdef FORTE_SUPPORT_MONITORING
+    } else {
+      //when forcing we write back the value from the connection to keep the forced value on the output
+      pa_poConn->readData(pa_poValue);
+    }
+#endif //FORTE_SUPPORT_MONITORING
+  }
+  std::string valueString;
+  valueString.reserve(pa_poValue->getToStringBufferSize());
+  pa_poValue->toString(valueString.data(), valueString.capacity());
+  barectf_default_trace_outputData(m_poResource->getTracePlatformContext().getContext(),
+                                   CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
+                                   static_cast<uint64_t>(pa_nDONum), valueString.c_str());
+}
+#endif //FORTE_TRACE_CTF
 
 EMGMResponse CFunctionBlock::changeFBExecutionState(EMGMCommandType pa_unCommand){
   EMGMResponse nRetVal = EMGMResponse::InvalidState;
