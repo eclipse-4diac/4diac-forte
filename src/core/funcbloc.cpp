@@ -126,7 +126,7 @@ bool CFunctionBlock::connectDI(TPortId paDIPortId, CDataConnection *pa_poDataCon
           configureGenericDI(paDIPortId, pa_poDataCon->getValue());
           bRetVal = true;
         }else{
-          DEVLOG_ERROR("%s cannot connect input data %s to more sources, using the latest connection attempt\n", CStringDictionary::getInstance().get(getFBTypeId()), CStringDictionary::getInstance().get(m_pstInterfaceSpec->m_aunDINames[paDIPortId]));
+          DEVLOG_ERROR("%s cannot connect input data %s to more sources, using the latest connection attempt\n", getInstanceName(), CStringDictionary::getInstance().get(m_pstInterfaceSpec->m_aunDINames[paDIPortId]));
         }
       }else{
         m_apoDIConns[paDIPortId] = pa_poDataCon;

@@ -35,7 +35,10 @@ bool CCompositeFB::initialize() {
   if(!CFunctionBlock::initialize()) {
     return false;
   }
-  createInternalFBs();
+
+  if(!createInternalFBs()){
+    return false;
+  }
 
   createEventConnections();
   createDataConnections();
@@ -204,14 +207,22 @@ void CCompositeFB::sendInternal2InterfaceOutputEvent(int pa_nEOID){
   sendOutputEvent(pa_nEOID);
 }
 
-void CCompositeFB::createInternalFBs(){
+bool CCompositeFB::createInternalFBs(){
   if(cm_cpoFBNData->m_nNumFBs){
     mInternalFBs = new TFunctionBlockPtr[cm_cpoFBNData->m_nNumFBs];
     for(unsigned int i = 0; i < cm_cpoFBNData->m_nNumFBs; ++i){
-      mInternalFBs[i] =
-          CTypeLib::createFB(cm_cpoFBNData->m_pstFBInstances[i].m_nFBInstanceNameId, cm_cpoFBNData->m_pstFBInstances[i].m_nFBTypeNameId, getResourcePtr());
+      const SCFB_FBInstanceData &cfbInstanceData(cm_cpoFBNData->m_pstFBInstances[i]);
+      mInternalFBs[i] = CTypeLib::createFB(cfbInstanceData.m_nFBInstanceNameId, cfbInstanceData.m_nFBTypeNameId, getResourcePtr());
+      if(mInternalFBs[i] == nullptr){
+        DEVLOG_ERROR("Cannot create internal FB (name: %s, type: %s) in CFB (type: %s)!\n",
+            CStringDictionary::getInstance().get(cfbInstanceData.m_nFBInstanceNameId),
+            CStringDictionary::getInstance().get(cfbInstanceData.m_nFBTypeNameId),
+            getFBTypeName());
+        return false;
+      }
     }
   }
+  return true;
 }
 
 void CCompositeFB::createEventConnections(){

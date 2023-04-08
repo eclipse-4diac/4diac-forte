@@ -128,7 +128,7 @@ class CCompositeFB: public CFunctionBlock {
   private:
     void executeEvent(int pa_nEIID) override;
 
-    void createInternalFBs();
+    bool createInternalFBs();
     void createEventConnections();
     void prepareIf2InEventCons();
     void establishConnection(CConnection *paCon, CFunctionBlock *paDstFb, CStringDictionary::TStringId paDstNameId);

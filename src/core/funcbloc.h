@@ -153,13 +153,21 @@ class CFunctionBlock {
       m_Container = container;
     }
 
-    /*!\brief Get the timer of the device wher the FB is contained.
+    /*!\brief Get the timer of the device where the FB is contained.
      */
     CTimerHandler& getTimer();
 
-    /*!\brief Returns the type of this FB instance
+    /*!\brief Returns the stringId for type name of this FB instance
      */
     virtual CStringDictionary::TStringId getFBTypeId() const = 0;
+
+
+    /*!\brief Returns the type name of this FB instance
+     */
+    const char * getFBTypeName(){
+      return CStringDictionary::getInstance().get(getFBTypeId());
+    }
+
     /*!\brief Get the ID of a specific event input of the FB.
      *
      * \param pa_unEINameId   StringId to the event input name.
