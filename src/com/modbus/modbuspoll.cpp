@@ -22,23 +22,21 @@ CModbusPoll::CModbusPoll(long pa_nPollInterval, unsigned int pa_nFunctionCode, u
 }
 
 CModbusPoll::~CModbusPoll(){
-  CSinglyLinkedList<SModbusPollData*>::Iterator itEnd = m_lPolls.end();
-  for(CSinglyLinkedList<SModbusPollData*>::Iterator it = m_lPolls.begin(); it != itEnd; ++it){
-    delete *it;
+  for(auto it : m_lPolls){
+    delete it;
   }
-  m_lPolls.clearAll();
+  m_lPolls.clear();
 }
 
 void CModbusPoll::addPollAddresses(unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses){
-  m_lPolls.pushBack(new SModbusPollData(pa_nStartAddress, pa_nNrAddresses));
+  m_lPolls.push_back(new SModbusPollData(pa_nStartAddress, pa_nNrAddresses));
 }
 
 int CModbusPoll::executeEvent(modbus_t *pa_pModbusConn, void *pa_pRetVal){
   restartTimer();
 
   int nrVals = 0;
-  CSinglyLinkedList<SModbusPollData*>::Iterator itEnd = m_lPolls.end();
-  for(CSinglyLinkedList<SModbusPollData*>::Iterator it = m_lPolls.begin(); it != itEnd; ++it){
+  for(auto it : m_lPolls){
     switch (m_nFunctionCode){
       case 1:
         nrVals += modbus_read_bits(pa_pModbusConn, it->m_nStartAddress, it->m_nNrAddresses, &((uint8_t*) pa_pRetVal)[nrVals]);

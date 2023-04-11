@@ -13,7 +13,7 @@
 #define MODBUSPOLL_H_
 
 #include "modbustimedevent.h"
-#include <fortelist.h>
+#include <vector>
 
 class CModbusPoll : public CModbusTimedEvent{
   public:
@@ -45,7 +45,7 @@ class CModbusPoll : public CModbusTimedEvent{
 
     unsigned int m_nFunctionCode;
 
-    CSinglyLinkedList<SModbusPollData*> m_lPolls;
+    std::vector<SModbusPollData*> m_lPolls;
 };
 
 #endif /* MODBUSPOLL_H_ */
