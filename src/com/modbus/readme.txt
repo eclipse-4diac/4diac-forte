@@ -12,7 +12,7 @@ Follow the steps below to set up your environment before compiling forte
 Parameter Documentation
 Modbus Client (TCP)
 At the moment the Modbus client can only be used for reading values from a Modbus server.
-modbus[(protocol:)ip:port:pollFreqency:functionCode:(slaveId):readAddresses:sendAddresses(:responseTimeout:byteTimeout)]
+modbus[(protocol:)ip:port:pollFreqency:readFunctionCode:sendFunctionCode:(slaveId):readAddresses:sendAddresses(:responseTimeout:byteTimeout)]
   - protocol: tcp (tcp is default)
   - ip: 127.0.0.1 etc
   - port: default is 502

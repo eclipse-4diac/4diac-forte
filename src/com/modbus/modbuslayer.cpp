@@ -519,7 +519,7 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
   *chrStorage = '\0';
   ++chrStorage;
 
-  pa_pCommonParams->m_nFuncCode = (unsigned int) forte::core::util::strtoul(chrStorage, nullptr, 10);
+  pa_pCommonParams->m_nReadFuncCode = (unsigned int) forte::core::util::strtoul(chrStorage, nullptr, 10);
 
   chrStorage = strchr(chrStorage, ':');
   if(chrStorage == nullptr){
@@ -528,6 +528,17 @@ int CModbusComLayer::processClientParams(char* pa_acLayerParams, STcpParams* pa_
   }
   *chrStorage = '\0';
   ++chrStorage;
+
+  pa_pCommonParams->m_nSendFuncCode = (unsigned int) forte::core::util::strtoul(chrStorage, nullptr, 10);
+
+  chrStorage = strchr(chrStorage, ':');
+  if(chrStorage == nullptr){
+    delete[] paramsAddress;
+    return -1;
+  }
+  *chrStorage = '\0';
+  ++chrStorage;
+
 
   // Search for optional parameter slave id
   char *chrSlave = strchr(chrStorage, ':');
