@@ -164,9 +164,10 @@ EMGMResponse CResource::changeFBExecutionState(EMGMCommandType pa_unCommand){
     retVal = changeContainedFBsExecutionState(pa_unCommand);
     if(EMGMResponse::Ready == retVal){
       if(EMGMCommandType::Start == pa_unCommand && nullptr != m_pstInterfaceSpec) { //on start, sample inputs
-        for(int i = 0; i < m_pstInterfaceSpec->m_nNumDIs; ++i) {
-          if(nullptr != m_apoDIConns[i]) {
-            m_apoDIConns[i]->readData(getDI(i));
+        for(TPortId i = 0; i < m_pstInterfaceSpec->m_nNumDIs; ++i) {
+          CDataConnection *conn = *getDIConUnchecked(i);
+          if(nullptr != conn) {
+            conn->readData(getDI(i));
           }
         }
       }

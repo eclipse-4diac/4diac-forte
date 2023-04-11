@@ -187,7 +187,9 @@ class CFunctionBlock {
       return static_cast<TEventID>(getPortId(pa_unEONameId, m_pstInterfaceSpec->m_nNumEOs, m_pstInterfaceSpec->m_aunEONames));
     }
 
-    CEventConnection* getEOConnection(CStringDictionary::TStringId paEONameId) const;
+    CEventConnection* getEOConnection(CStringDictionary::TStringId paEONameId);
+
+    const CEventConnection* getEOConnection(CStringDictionary::TStringId paEONameId) const;
 
     /*!\brief Connects specific data input of a FB with a specific data connection.
      *
@@ -234,9 +236,13 @@ class CFunctionBlock {
      */
     CIEC_ANY* getDOFromPortId(TPortId paDOPortId);
 
-    CDataConnection* getDOConnection(CStringDictionary::TStringId paDONameId) const;
+    CDataConnection* getDIConnection(CStringDictionary::TStringId paDINameId);
 
-    CDataConnection* getDIConnection(CStringDictionary::TStringId paDINameId) const;
+    const CDataConnection* getDIConnection(CStringDictionary::TStringId paDINameId) const;
+
+    CDataConnection* getDOConnection(CStringDictionary::TStringId paDONameId);
+
+    const CDataConnection* getDOConnection(CStringDictionary::TStringId paDONameId) const;
 
     /*!\brief if the data output is of generic type (i.e, ANY) this function allows an data connection to configure
      * the DO with the specific type coming from the other end of the connection
@@ -464,7 +470,7 @@ class CFunctionBlock {
 
     void setupAdapters(const SFBInterfaceSpec *pa_pstInterfaceSpec, TForteByte *pa_acFBData);
 
-    CEventConnection* getEOConUnchecked(TPortId paEONum) const {
+    virtual CEventConnection *getEOConUnchecked(TPortId paEONum) {
       return (mEOConns + paEONum);
     }
 
@@ -474,8 +480,18 @@ class CFunctionBlock {
      * @param pa_nDONum number of the data output starting with 0
      * @return pointer to the data output connection
      */
-    CDataConnection* getDOConUnchecked(TPortId paDONum) {
+    virtual CDataConnection *getDOConUnchecked(TPortId paDONum) {
       return mDOConns + paDONum;
+    }
+
+    /*! \brief Get the data input connection with given number
+     *
+     * Attention this function will not perform any range checks on the paDINum parameter!
+     * @param paDINum number of the data output starting with 0
+     * @return pointer to the data output connection
+     */
+    virtual CDataConnection **getDIConUnchecked(TPortId paDINum) {
+      return mDIConns + paDINum;
     }
 
     /*!\brief helper function for changeing the FB execution state for FBs with internal FBs
@@ -515,7 +531,7 @@ class CFunctionBlock {
 
     const SFBInterfaceSpec *m_pstInterfaceSpec; //!< Pointer to the interface specification
     CEventConnection *mEOConns; //!< A list of event connections pointers storing for each event output the event connection. If the output event is not connected the pointer is 0.
-    TDataConnectionPtr *m_apoDIConns; //!< A list of data connections pointers storing for each data input the data connection. If the data input is not connected the pointer is 0.
+    CDataConnection **mDIConns; //!< A list of data connections pointers storing for each data input the data connection. If the data input is not connected the pointer is 0.
     CDataConnection *mDOConns; //!< A list of data connections pointers storing for each data output the data connection. If the data output is not connected the pointer is 0.
     CIEC_ANY **mDIs; //!< A list of pointers to the data inputs. This allows to implement a general getDataInput()
     CIEC_ANY **mDOs; //!< A list of pointers to the data outputs. This allows to implement a general getDataOutput()
