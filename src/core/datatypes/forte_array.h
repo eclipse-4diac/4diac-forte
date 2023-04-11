@@ -17,6 +17,7 @@
  *    Martin Jobst - add support for repeat syntax
  *                 - add equals function
  *                 - collapse identical consecutive elements
+ *                 - add support for data types with different size
  *******************************************************************************/
 #ifndef _FORTE_ARRAY_H_
 #define _FORTE_ARRAY_H_
@@ -651,13 +652,17 @@ class CIEC_ARRAY : public CIEC_ARRAY_COMMON<T> {
       }
     }
 
-    [[nodiscard]] CIEC_ANY* clone(TForteByte *paDataBuf) const override {
-      static_assert((sizeof(CIEC_ANY) == sizeof(CIEC_ARRAY)), "Data type not the same size as CIEC_ANY");
-      return (nullptr != paDataBuf) ? new (paDataBuf) CIEC_ARRAY(*this) : new CIEC_ARRAY(*this);
+    [[nodiscard]] size_t getSizeof() const override {
+      return sizeof(CIEC_ARRAY);
+    }
+
+    [[nodiscard]] CIEC_ANY *clone(TForteByte *paDataBuf) const override {
+      return (nullptr != paDataBuf) ? new(paDataBuf) CIEC_ARRAY(*this) : new CIEC_ARRAY(*this);
     }
 };
 
 class CIEC_ARRAY_TYPELIB : public CIEC_ARRAY<CIEC_ANY> {
+  DECLARE_FIRMWARE_DATATYPE(ARRAY_TYPELIB)
   public:
     using CIEC_ARRAY<CIEC_ANY>::operator=;
 
@@ -668,22 +673,6 @@ class CIEC_ARRAY_TYPELIB : public CIEC_ARRAY<CIEC_ANY> {
     CIEC_ARRAY_TYPELIB(TForteUInt16 paLength, CStringDictionary::TStringId paArrayType) {
       setup(paLength, paArrayType);
     }
-
-    static CIEC_ANY *createDataType(TForteByte *paDataBuf) {
-      return (nullptr != paDataBuf) ? new (paDataBuf) CIEC_ARRAY_TYPELIB() : new CIEC_ARRAY_TYPELIB;
-    };
-    
-    const static CTypeLib::CDataTypeEntry csm_oFirmwareDataTypeEntry_ARRAY_TYPELIB;
-    [[nodiscard]] CIEC_ANY* clone(TForteByte *paDataBuf) const override {
-      static_assert((sizeof(CIEC_ANY) == sizeof(CIEC_ARRAY_TYPELIB)), "Data type not the same size as CIEC_ANY");
-      return (nullptr != paDataBuf) ? new (paDataBuf) CIEC_ARRAY_TYPELIB(*this) : new CIEC_ARRAY_TYPELIB(*this);
-    }
-
-    [[nodiscard]] CStringDictionary::TStringId getTypeNameID() const override {
-      return CIEC_ARRAY_TYPELIB::csm_oFirmwareDataTypeEntry_ARRAY_TYPELIB.getTypeNameId();
-    }
-
-    static int dummyInit();
 };
 
 #endif /* FORTE_SUPPORT_ARRAYS */

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2022 Primetals Technologies Austria GmbH
- *               2022 Martin Erich Jobst
+ *               2022 - 2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -11,6 +11,8 @@
  * Contributors:
  *    Martin Melik Merkumians, Martin Jobst
  *      - initial implementation and rework communication infrastructure
+ *    Martin Jobst
+ *      - add support for data types with different size
  *******************************************************************************/
 #pragma once
 
@@ -206,6 +208,15 @@ public:
           *targetIteratorBegin = *static_cast<const T *>(element);
         }
       }
+    }
+
+    [[nodiscard]] size_t getSizeof() const override {
+      return sizeof(CIEC_ARRAY_FIXED<T, lowerBound, upperBound>);
+    }
+
+    [[nodiscard]] CIEC_ANY *clone(TForteByte *paDataBuf) const override {
+      return (nullptr != paDataBuf) ? new(paDataBuf) CIEC_ARRAY_FIXED<T, lowerBound, upperBound>(*this)
+                                    : new CIEC_ARRAY_FIXED<T, lowerBound, upperBound>(*this);
     }
 
     [[nodiscard]] intmax_t getLowerBound() const override {

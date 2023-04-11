@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2007 - 2013 ACIN, nxtcontrol GmbH, Profactor GmbH, fortiss GmbH
+ *               2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -11,6 +12,8 @@
  *    Alois Zoitl, Ingo Hegny, Martin Melik Merkumians, Stanislav Meduna,
  *    Monika Wenger, Matthias Plasch
  *      - initial implementation and rework communication infrastructure
+ *    Martin Jobst
+ *      - add support for data types with different size
  *******************************************************************************/
 #include "forte_any.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -20,7 +23,7 @@
 #include "forte_lreal.h"
 #include <devlog.h>
 
-const CTypeLib::CDataTypeEntry CIEC_ANY::csmFirmwareDataTypeEntry_CIEC_ANY(g_nStringIdANY, CIEC_ANY::createDataType);
+const CTypeLib::CDataTypeEntry CIEC_ANY::csmFirmwareDataTypeEntry_CIEC_ANY(g_nStringIdANY, CIEC_ANY::createDataType, sizeof(CIEC_ANY));
 
 const char CIEC_ANY::scmAnyToStringResponse[] = "ND (ANY)";
 

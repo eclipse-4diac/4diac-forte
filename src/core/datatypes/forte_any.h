@@ -14,6 +14,7 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians - templated cast factory function
  *    Martin Jobst - add equals function
+ *                 - add support for data types with different size
  *******************************************************************************/
 #ifndef _ANY_H_
 #define _ANY_H_
@@ -111,6 +112,14 @@ class CIEC_ANY {
      */
     virtual void setValue(const CIEC_ANY &pa_roValue){
       setValueSimple(pa_roValue);
+    }
+
+    /*! \brief Get the allocation size of the data type object
+     *
+     * @return The allocation size in bytes
+     */
+    virtual size_t getSizeof() const {
+      return sizeof(CIEC_ANY);
     }
 
     /*! \brief Makes a clone of the data type object

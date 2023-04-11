@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2022 Primetals Technologies Austria GmbH
- *               2022 Martin Erich Jobst
+ *               2022 - 2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -11,6 +11,8 @@
  * Contributors:
  *    Martin Melik Merkumians, Martin Jobst
  *      - initial implementation and rework communication infrastructure
+ *    Martin Jobst
+ *      - add support for data types with different size
  *******************************************************************************/
 #pragma once
 
@@ -57,6 +59,14 @@ CIEC_ARRAY_VARIABLE(const CIEC_ARRAY_TYPELIB &paSource)
   for (auto element = paSource.cbegin(); element != paSource.cend(); ++element) {
     data.push_back(*static_cast<const T *>(element));
   }
+}
+
+[[nodiscard]] size_t getSizeof() const override {
+  return sizeof(CIEC_ARRAY_VARIABLE<T>);
+}
+
+[[nodiscard]] CIEC_ANY* clone(TForteByte *paDataBuf) const override {
+  return (nullptr != paDataBuf) ? new (paDataBuf) CIEC_ARRAY_VARIABLE<T>(*this) : new CIEC_ARRAY_VARIABLE<T>(*this);
 }
 
 [[nodiscard]] reference at(intmax_t index) override {
