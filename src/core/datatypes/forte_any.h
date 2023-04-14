@@ -123,6 +123,18 @@ class CIEC_ANY {
       setValueSimple(pa_roValue);
     }
 
+    /**
+     * @brief Unwrap ANY value if inside a container
+     * @return The unwrapped value or this value if not in a container
+     */
+    [[nodiscard]] virtual CIEC_ANY &unwrap() {
+      return *this;
+    }
+
+    [[nodiscard]] virtual const CIEC_ANY &unwrap() const {
+      return *this;
+    }
+
     /*! \brief Get the allocation size of the data type object
      *
      * @return The allocation size in bytes

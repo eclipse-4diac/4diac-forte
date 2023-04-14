@@ -15,8 +15,20 @@
 #SET(SOURCE_GROUP ${SOURCE_GROUP}\\core)
 
   forte_test_add_inc_directories(${CMAKE_CURRENT_SOURCE_DIR})
-  
+
   forte_test_add_sourcefile_cpp(CIEC_ANY_tests.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_ELEMENTARY_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_MAGNITUDE_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_NUM_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_REAL_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_INT_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_DURATION_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_BIT_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_CHARS_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_STRING_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_CHAR_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_DATE_VARIANT_test.cpp)
   forte_test_add_sourcefile_cpp(anytostringtests.cpp)
 
 #Unicode utilities

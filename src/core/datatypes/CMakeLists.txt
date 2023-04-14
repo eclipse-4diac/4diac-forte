@@ -61,6 +61,21 @@ forte_add_sourcefile_hcpp(forte_any)
 
 forte_add_sourcefile_hcpp(forte_state)
 
+forte_add_sourcefile_hcpp(forte_any_variant)
+  forte_add_sourcefile_hcpp(forte_any_elementary_variant)
+  forte_add_sourcefile_hcpp(forte_any_magnitude_variant)
+    forte_add_sourcefile_hcpp(forte_any_num_variant)
+      forte_add_sourcefile_hcpp(forte_any_real_variant)
+      forte_add_sourcefile_hcpp(forte_any_int_variant)
+    forte_add_sourcefile_hcpp(forte_any_duration_variant)
+  forte_add_sourcefile_hcpp(forte_any_bit_variant)
+  forte_add_sourcefile_hcpp(forte_any_chars_variant)
+    forte_add_sourcefile_hcpp(forte_any_string_variant)
+    forte_add_sourcefile_hcpp(forte_any_char_variant)
+  forte_add_sourcefile_hcpp(forte_any_date_variant)
+
+forte_add_sourcefile_h(forte_any_unique_ptr.h)
+
 forte_add_sourcefile_h(forte_any_bit_not_decorator.h)
 
 

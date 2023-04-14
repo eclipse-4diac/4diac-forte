@@ -42,6 +42,8 @@ class CIEC_ANY_ELEMENTARY : public CIEC_ANY {
     int toString(char* paValue, size_t paBufferSize) const override;
     int fromString(const char *pa_rsValue) override;
 
+    static EDataTypeID getElementaryDataTypeId(CStringDictionary::TStringId paTypeNameId);
+
   protected:
     CIEC_ANY_ELEMENTARY() = default;
 
@@ -49,8 +51,6 @@ class CIEC_ANY_ELEMENTARY : public CIEC_ANY {
 
     bool isTypeSpecifier(const char* paValue, const char* paHashPosition) const;
     bool isCastable(CStringDictionary::TStringId paTypeNameId) const;
-
-    static EDataTypeID getElementaryDataTypeId(CStringDictionary::TStringId paTypeNameId);
 
     const static std::map<CStringDictionary::TStringId, CIEC_ANY::EDataTypeID> scm_StringToTypeId;
 
