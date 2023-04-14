@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2007 - 2013 ACIN, nxtControl GmbH, fortiss GmbH
  *               2022 Primetals Technologies Austria GmbH
- *               2022 Martin Erich Jobst
+ *               2022 - 2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -14,11 +14,13 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians, Martin Jobst - added ctors for copying one type
  *      to another and iterators
+ *    Martin Jobst - add support for repeat syntax
  *******************************************************************************/
 #ifndef _FORTE_ARRAY_H_
 #define _FORTE_ARRAY_H_
 
 #include "forte_array_common.h"
+#include "forte_ulint.h"
 #include <stdexcept>
 #include <devlog.h>
 
@@ -278,31 +280,30 @@ class CIEC_ARRAY : public CIEC_ARRAY_COMMON<T> {
       int nRetVal = -1;
       const char *pcRunner = paValue;
       if('[' == paValue[0]){
-    
+        pcRunner++;
+
         CIEC_ANY *poBufVal = nullptr;
         intmax_t i = 0;
-        size_t unArraySize = size();
-        int nValueLen;
-    
+        auto unArraySize = static_cast<intmax_t>(size());
+
         while(('\0' != *pcRunner) && (']' != *pcRunner)) {
-          pcRunner++;
           findNextNonBlankSpace(&pcRunner);
     
-          initializeFromString(unArraySize, &nValueLen, i, pcRunner, &poBufVal);
-    
-          while(' ' == pcRunner[nValueLen]){
-            nValueLen++;
+          int valueLength = initializeFromString(unArraySize, i, pcRunner, &poBufVal);
+          if(0 > valueLength) {
+            break;
           }
-          if((0 < nValueLen) && ((',' == pcRunner[nValueLen]) || (']' == pcRunner[nValueLen]))){
-            pcRunner += nValueLen;
-          }
-          else{
+          pcRunner += valueLength;
+
+          findNextNonBlankSpace(&pcRunner);
+          if(',' == *pcRunner) {
+            pcRunner++;
+          } else {
             //we have an error or the end bracket
             break;
           }
-          i++;
         }
-        if(*pcRunner == ']'){
+        if(*pcRunner == ']') {
           //arrays have to and on a closing bracket
           nRetVal = static_cast<int>(pcRunner - paValue + 1); //+1 from the closing bracket
           // For the rest of the array size copy the default element
@@ -466,14 +467,57 @@ class CIEC_ARRAY : public CIEC_ARRAY_COMMON<T> {
       }
     }
 
-    void initializeFromString(size_t paArraySize, int *paValueLen, intmax_t paPosition, const char *paSrcString, CIEC_ANY **paBufVal) {
-      if (paPosition < static_cast<intmax_t>(paArraySize) ){
-        *paValueLen = ((*this)[paPosition]).fromString(paSrcString);
+    [[nodiscard]] int initializeFromString(intmax_t paArraySize, intmax_t &paPosition, const char *paSrcString, CIEC_ANY **paBufVal) {
+      // check repeat syntax (e.g., "255(1, 2, 3)")
+      CIEC_ULINT repeat;
+      const char *pcRunner = paSrcString;
+      intmax_t initialPosition = paPosition;
+      int repeatLength = repeat.fromString(pcRunner);
+      if(0 < repeatLength) {
+        pcRunner += repeatLength;
+        findNextNonBlankSpace(&pcRunner);
+        if('(' == *pcRunner) {
+          pcRunner++;
+          while(('\0' != *pcRunner) && (')' != *pcRunner)) {
+            findNextNonBlankSpace(&pcRunner);
+
+            int valueLength = initializeSimpleFromString(paArraySize, paPosition, pcRunner, paBufVal);
+            if(0 > valueLength) {
+              break;
+            }
+            pcRunner += valueLength;
+
+            findNextNonBlankSpace(&pcRunner);
+            if(',' == *pcRunner) {
+              pcRunner++;
+            } else {
+              //we have an error or the end parentheses
+              break;
+            }
+          }
+          if(*pcRunner == ')') { //repeat syntax elements have to and on a closing parentheses
+            intmax_t repeatSequenceLength = paPosition - initialPosition;
+            for(size_t rep = 1; rep < repeat.getUnsignedValue() && paPosition < paArraySize; ++rep) { // once added already
+              for(intmax_t seqIndex = 0; seqIndex < repeatSequenceLength && paPosition < paArraySize; ++seqIndex) {
+                (*this)[paPosition++].setValue((*this)[initialPosition + seqIndex]);
+              }
+            }
+            return static_cast<int>(pcRunner - paSrcString + 1); //+1 from the closing parentheses
+          }
+          return -1;
+        }
+      }
+      return initializeSimpleFromString(paArraySize, paPosition, paSrcString, paBufVal);
+    }
+
+    [[nodiscard]] int initializeSimpleFromString(intmax_t paArraySize, intmax_t &paPosition, const char *paSrcString, CIEC_ANY **paBufVal) {
+      if (paPosition < paArraySize) {
+        return ((*this)[paPosition++]).fromString(paSrcString);
       } else {
         if (nullptr == *paBufVal) {
           *paBufVal = (getReferenceElement())->clone(nullptr);
         }
-        *paValueLen = (*paBufVal)->fromString(paSrcString);
+        return (*paBufVal)->fromString(paSrcString);
       }
     }
 

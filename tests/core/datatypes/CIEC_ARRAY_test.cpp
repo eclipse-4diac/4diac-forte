@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2011 - 2015 ACIN, fortiss GmbH, Profactor, nxtControl
+ *               2023 Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +9,7 @@
  *
  * Contributors:
  *   Alois Zoitl, Micheal Hofmann, Stanislav Meduna, Ingo Hegny - initial API and implementation and/or initial documentation
+ *   Martin Jobst - add tests for repeat syntax
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -216,7 +218,30 @@ BOOST_AUTO_TEST_CASE(Array_assignment_test_array)
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[3])), 4);
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[4])), 7);
 
+  BOOST_CHECK_EQUAL(nTest.fromString("[1,2(2,3)]"), 10);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[0])), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[1])), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[2])), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[3])), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[4])), 3);
+
+  BOOST_CHECK_EQUAL(nTest.fromString("[2 ( 1, 2, 3 )]"), 15);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[0])), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[1])), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[2])), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[3])), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[4])), 2);
+
+  BOOST_CHECK_EQUAL(nTest.fromString("[1, 3 ( 2, 3 )]"), 15);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[0])), 1);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[1])), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[2])), 3);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[3])), 2);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest[4])), 3);
+
   BOOST_CHECK_EQUAL(nTest.fromString("[3,1,2"), -1);
+  BOOST_CHECK_EQUAL(nTest.fromString("[10,20(30,40,50"), -1);
+  BOOST_CHECK_EQUAL(nTest.fromString("[10,20(,30,40,50"), -1);
   BOOST_CHECK_EQUAL(nTest.fromString("10,20,30,40,50"), -1);
   BOOST_CHECK_EQUAL(nTest.fromString("10.0,20,30,40,50"), -1);
   BOOST_CHECK_EQUAL(nTest.fromString("10,20,test,40,50"), -1);
