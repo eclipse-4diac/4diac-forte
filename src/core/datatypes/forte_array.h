@@ -16,6 +16,7 @@
  *      to another and iterators
  *    Martin Jobst - add support for repeat syntax
  *                 - add equals function
+ *                 - collapse identical consecutive elements
  *******************************************************************************/
 #ifndef _FORTE_ARRAY_H_
 #define _FORTE_ARRAY_H_
@@ -26,6 +27,10 @@
 #include <devlog.h>
 
 #ifdef FORTE_SUPPORT_ARRAYS
+
+#ifndef CIEC_ARRAY_COLLAPSE_MAX_SIZE
+#define CIEC_ARRAY_COLLAPSE_MAX_SIZE 100
+#endif
 
 template <typename T, intmax_t lowerBound, intmax_t upperBound>
 class CIEC_ARRAY_FIXED;
@@ -344,13 +349,17 @@ class CIEC_ARRAY : public CIEC_ARRAY_COMMON<T> {
      */
     [[nodiscard]] int toString(char* paValue, size_t paBufferSize) const override {
       int nBytesUsed = -1;
+      size_t unSize = size();
+
+      if(unSize > CIEC_ARRAY_COLLAPSE_MAX_SIZE) {
+        return toCollapsedString(paValue, paBufferSize);
+      }
 
       if (paBufferSize) {
         *paValue = '[';
         paValue++;
         paBufferSize--;
         nBytesUsed = 1;
-        size_t unSize = size();
         const CIEC_ANY *poArray = getArray();
         for (size_t i = 0; i < unSize; ++i, ++poArray) {
           int nUsedBytesByElement = poArray->toString(paValue, paBufferSize);
@@ -381,6 +390,103 @@ class CIEC_ARRAY : public CIEC_ARRAY_COMMON<T> {
         nBytesUsed++;
       }
 
+      return nBytesUsed;
+    }
+
+    [[nodiscard]] int toCollapsedString(char* paValue, size_t paBufferSize) const {
+      int nBytesUsed = -1;
+
+      if (paBufferSize > 3) {
+        *paValue = '[';
+        paValue++;
+        paBufferSize--;
+        nBytesUsed = 1;
+        size_t unSize = size();
+        size_t count = 0;
+        const CIEC_ANY *poArray = getArray();
+        const CIEC_ANY *lastElement = nullptr;
+        for (size_t i = 0; i < unSize; ++i, ++poArray) {
+          if(lastElement != nullptr && !lastElement->equals(*poArray)) {
+            int usedBytesByElement = toCollapsedElementString(lastElement, count, nBytesUsed > 1, paValue, paBufferSize);
+            if (usedBytesByElement < 0) {
+              return -1;
+            }
+            paValue += usedBytesByElement;
+            paBufferSize -= static_cast<size_t>(usedBytesByElement);
+            nBytesUsed += usedBytesByElement;
+            count = 0;
+          }
+          lastElement = poArray;
+          count++;
+        }
+        if(lastElement) {
+          int usedBytesByElement = toCollapsedElementString(lastElement, count, nBytesUsed > 1, paValue,
+                                                                paBufferSize);
+          if (usedBytesByElement < 0) {
+            return -1;
+          }
+          paValue += usedBytesByElement;
+          paBufferSize -= static_cast<size_t>(usedBytesByElement);
+          nBytesUsed += usedBytesByElement;
+        }
+
+        if (paBufferSize < 2) {
+          return -1;
+        }
+        *paValue = ']';
+        paValue[1] = '\0';
+        nBytesUsed++;
+      }
+
+      return nBytesUsed;
+    }
+
+    [[nodiscard]] int toCollapsedElementString(const CIEC_ANY *paElement, size_t paCount, bool paComma, char* paValue, size_t paBufferSize) const {
+      int nBytesUsed = 0;
+
+      if (paComma) {
+        if(paBufferSize < 1) {
+          return -1;
+        }
+
+        *(paValue++) = ',';
+        paBufferSize--;
+        nBytesUsed++;
+      }
+
+      if(paCount > 1) {
+        int usedBytesByRepeat = CIEC_ULINT(paCount).toString(paValue, paBufferSize);
+        if (usedBytesByRepeat < 0) {
+          return -1;
+        }
+        paValue += usedBytesByRepeat;
+        paBufferSize -= static_cast<size_t>(usedBytesByRepeat);
+        nBytesUsed += usedBytesByRepeat;
+
+        if(paBufferSize < 1) {
+          return -1;
+        }
+        *(paValue++) = '(';
+        paBufferSize--;
+        nBytesUsed++;
+      }
+
+      int usedBytesByElement = paElement->toString(paValue, paBufferSize);
+      if (usedBytesByElement < 0) {
+        return -1;
+      }
+      paValue += usedBytesByElement;
+      paBufferSize -= static_cast<size_t>(usedBytesByElement);
+      nBytesUsed += usedBytesByElement;
+
+      if(paCount > 1) {
+        if(paBufferSize < 1) {
+          return -1;
+        }
+        *(paValue++) = ')';
+        paBufferSize--;
+        nBytesUsed++;
+      }
       return nBytesUsed;
     }
 

@@ -11,6 +11,7 @@
  *   Alois Zoitl, Micheal Hofmann, Stanislav Meduna, Ingo Hegny - initial API and implementation and/or initial documentation
  *   Martin Jobst - add tests for repeat syntax
  *                - add equals tests
+ *                - add tests for collapsing identical consecutive elements
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -248,6 +249,13 @@ BOOST_AUTO_TEST_CASE(Array_assignment_test_array)
   BOOST_CHECK_EQUAL(nTest.fromString("10,20,test,40,50"), -1);
   BOOST_CHECK_EQUAL(nTest.fromString("wrong string"), -1);
 
+  CIEC_ARRAY_TYPELIB nLargeTest(256, g_nStringIdINT);
+  BOOST_CHECK_EQUAL(nLargeTest.toString(acBuffer, 30), 8);
+  BOOST_CHECK_EQUAL(strcmp(acBuffer, "[256(0)]"), 0);
+
+  nLargeTest[17].setValue(CIEC_INT(4));
+  BOOST_CHECK_EQUAL(nLargeTest.toString(acBuffer, 30), 16);
+  BOOST_CHECK_EQUAL(strcmp(acBuffer, "[17(0),4,238(0)]"), 0);
 }
 
 
