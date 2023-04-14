@@ -2,7 +2,7 @@
  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN, nxtControl GmbH
  *   2018 TU Wien/ACIN
  *               2022 Primetals Technologies Austria GmbH
- *               2022 Martin Erich Jobst
+ *               2022 - 2023 Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -19,6 +19,7 @@
  *        castable CIEC types operator=
  *    Martin Jobst
  *      - add compare operators
+ *      - add equals function
  *******************************************************************************/
 #ifndef _FORTE_WSTRING_H_
 #define _FORTE_WSTRING_H_
@@ -168,6 +169,13 @@ class CIEC_WSTRING : public CIEC_ANY_STRING {
      *           -1 on error
      */
     int toString(char* paValue, size_t paBufferSize) const override;
+
+    [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
+      if(paOther.getDataTypeID() == CIEC_ANY::e_WSTRING) {
+        return 0 == strcmp(getValue(), static_cast<const CIEC_WSTRING&>(paOther).getValue());
+      }
+      return false;
+    }
 
     /*! \brief Returns the amount of bytes needed to create the IEC 61131 literal string
      *

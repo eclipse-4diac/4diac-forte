@@ -10,6 +10,7 @@
  * Contributors:
  *   Alois Zoitl, Micheal Hofmann, Stanislav Meduna, Ingo Hegny - initial API and implementation and/or initial documentation
  *   Martin Jobst - add tests for repeat syntax
+ *                - add equals tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -301,6 +302,23 @@ BOOST_AUTO_TEST_CASE(Array_copy_test){
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(nTest1[4])), 5);
 }
 
+BOOST_AUTO_TEST_CASE(Array_equality_test){
+  CIEC_ARRAY_TYPELIB nTest1(5, g_nStringIdINT);
+  CIEC_ARRAY_TYPELIB nTest2(5, g_nStringIdINT);
+
+  BOOST_CHECK(nTest1.equals(nTest2));
+  BOOST_CHECK(!nTest1.equals(CIEC_INT(0)));
+
+  BOOST_CHECK_EQUAL(nTest2.fromString("[1,2,3,4,5]"), 11);
+  BOOST_CHECK(!nTest1.equals(nTest2));
+  nTest1.setValue(nTest2);
+  BOOST_CHECK(nTest1.equals(nTest2));
+
+  BOOST_CHECK_EQUAL(nTest1.fromString("[5,4,2,3,1]"), 11);
+  BOOST_CHECK(!nTest1.equals(nTest2));
+  BOOST_CHECK_EQUAL(nTest2.fromString("[5,4,2,3,1]"), 11);
+  BOOST_CHECK(nTest1.equals(nTest2));
+}
 
 BOOST_AUTO_TEST_CASE(Configure_test){
   CIEC_ARRAY_TYPELIB *pTest = static_cast<CIEC_ARRAY_TYPELIB *>(CTypeLib::createDataTypeInstance(g_nStringIdARRAY, nullptr));

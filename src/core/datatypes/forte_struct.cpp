@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2010 - 2015 ACIN, fortiss GmbH
+ *               2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,6 +11,7 @@
  * Contributors:
  *    Ingo Hegny, Alois Zoitl
  *      - initial implementation and rework communication infrastructure
+ *    Martin Jobst - add equals function
  *******************************************************************************/
 #include "forte_struct.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -255,6 +257,23 @@ int CIEC_STRUCT::toString(char* paValue, size_t paBufferSize) const {
   }
 
   return nBytesUsed;
+}
+
+bool CIEC_STRUCT::equals(const CIEC_ANY &paOther) const {
+  if (paOther.getDataTypeID() == CIEC_ANY::e_STRUCT) {
+    auto otherStruct = static_cast<const CIEC_STRUCT &>(paOther);
+    if (getStructTypeNameID() == otherStruct.getStructTypeNameID()) {
+      const CIEC_ANY *members = getMembers();
+      const CIEC_ANY *otherMembers = otherStruct.getMembers();
+      for (size_t i = 0; i < getStructSize(); ++i) {
+        if(!members[i].equals(otherMembers[i])) {
+          return false;
+        }
+      }
+      return true;
+    }
+  }
+  return false;
 }
 
 CIEC_ANY *CIEC_STRUCT::getMemberNamed(CStringDictionary::TStringId paMemberNameId) {

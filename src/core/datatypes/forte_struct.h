@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2010 - 2013 ACIN
+ *               2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,6 +11,7 @@
  * Contributors:
  *    Ingo Hegny, Alois Zoitl, Monika Wenger
  *      - initial implementation and rework communication infrastructure
+ *    Martin Jobst - add equals function
  *******************************************************************************/
 #ifndef _FORTE_STRUCT_H_
 #define _FORTE_STRUCT_H_
@@ -105,6 +107,8 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      *           -1 on error
      */
     int toString(char* paValue, size_t paBufferSize) const override;
+
+    [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override;
 
     CIEC_ANY *getMembers(){
       return (nullptr != getSpecs()) ? getSpecs()->mMembers : static_cast<CIEC_ANY *>(nullptr);

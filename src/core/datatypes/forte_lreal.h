@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
  *               2022 Primetals Technologies Austria GmbH
+ *               2023 Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -14,6 +15,7 @@
  *    Martin Melik Merkumians - make TForteDFloat constructor explicit, 
  *      adds implicit cast constructor and operator=, removed built-in type operator=,
  *      added castable CIEC types operator=
+ *    Martin Jobst - add equals function
  *******************************************************************************/
 #ifndef _FORTE_LREAL_H_
 #define _FORTE_LREAL_H_
@@ -165,6 +167,13 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
      *           -1 on error
      */
     int toString(char* paValue, size_t paBufferSize) const override;
+
+    [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
+      if(paOther.getDataTypeID() == CIEC_ANY::e_LREAL) {
+        return getTDFLOAT() == static_cast<const CIEC_LREAL&>(paOther).getTDFLOAT();
+      }
+      return false;
+    }
 
     /*! \brief Casts TForteDFloat values to CIEC data types
      *  \param paSrcValue Source value for the cast

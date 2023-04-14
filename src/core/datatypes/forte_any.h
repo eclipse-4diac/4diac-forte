@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN, nxtcontrol GmbH, fortiss GmbH, 2018 TU Vienna/ACIN
+ *               2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -12,6 +13,7 @@
  *    Ingo Hegny, Martin Melik Merkumians, Stanislav Meduna, Monika Wenger
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians - templated cast factory function
+ *    Martin Jobst - add equals function
  *******************************************************************************/
 #ifndef _ANY_H_
 #define _ANY_H_
@@ -177,6 +179,20 @@ class CIEC_ANY {
      *           -1 on error
      */
     virtual int toString(char* paValue, size_t paBufferSize) const;
+
+    /*! \brief Compare for equality
+     *
+     * \param paOther The other value
+     * \return whether the values are equal
+     * \note This method does not perform implicit or explicit type promotion when comparing for equality
+     *       (e.g., <code>CIEC_INT(0).equals(CIEC_SINT(0))</code> yields <code>false</code>).
+     */
+    [[nodiscard]] virtual bool equals(const CIEC_ANY &paOther) const {
+      if(getDataTypeID() == paOther.getDataTypeID()) {
+        return mAnyData.mLargestUInt == paOther.mAnyData.mLargestUInt;
+      }
+      return false;
+    }
 
     /*! \brief determine whether we can cast the source to the destination and what kind of cast it is
      */

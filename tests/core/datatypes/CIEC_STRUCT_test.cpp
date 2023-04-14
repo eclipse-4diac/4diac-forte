@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2013 fortiss GmbH
+ *               2023 Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +9,7 @@
  *
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Martin Jobst - add equals tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -449,6 +451,19 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
     stStruct4.setValue(notStructType); //shouldn't change or break anything
     checkTestStruct3_TestDataSet1 (stStruct4);
 
+  }
+
+  BOOST_AUTO_TEST_CASE(Struct_equality_test){
+    CIEC_TestStruct1 struct1;
+    CIEC_TestStruct1 struct2;
+    CIEC_TestStruct2 struct3;
+
+    BOOST_CHECK(struct1.equals(struct2));
+    BOOST_CHECK(!struct1.equals(CIEC_INT(0)));
+    setupTestStruct1_TestDataSet1(struct1);
+    BOOST_CHECK(!struct1.equals(struct2));
+    struct1.setValue(struct2);
+    BOOST_CHECK(struct1.equals(struct2));
   }
 
   const char cTestFromString_String1[] = "String1";

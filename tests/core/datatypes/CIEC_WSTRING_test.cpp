@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2011 - 2014 ACIN, nxtControl, Profactor GmbH, fortiss GmbH
  *   2018 TU Wien/ACIN
+ *               2023 Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -12,6 +13,7 @@
  *   Stanislav Meduna, Matthias Plasch
  *    - initial API and implementation and/or initial documentation
  *   Martin Melik Merkumians - adds getToStringBufferSize tests
+ *   Martin Jobst - add equals tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -116,6 +118,25 @@ BOOST_AUTO_TEST_CASE(String_compare)
 
   BOOST_CHECK(!(CIEC_WSTRING(cWStringTest1) != sTest2));
   BOOST_CHECK_EQUAL(strcmp(sTest2.getValue(), cWStringTest2), 0);
+}
+
+BOOST_AUTO_TEST_CASE(String_equals)
+{
+  CIEC_WSTRING sTest1;
+  CIEC_WSTRING sTest2;
+  CIEC_WSTRING sTest3;
+
+  char cTest1[] = "Check string!";
+  char cTest2[] = "Check string!";
+  char cTest3[] = "checkstring!";
+
+  sTest1 = CIEC_WSTRING(cTest1);
+  sTest2 = CIEC_WSTRING(cTest2);
+  sTest3 = CIEC_WSTRING(cTest3);
+  BOOST_CHECK(sTest1.equals(sTest2));
+  BOOST_CHECK(!sTest1.equals(CIEC_INT(0)));
+  BOOST_CHECK(!sTest1.equals(sTest3));
+  BOOST_CHECK(!sTest2.equals(sTest3));
 }
 
 BOOST_AUTO_TEST_CASE(Memory_Allocation)

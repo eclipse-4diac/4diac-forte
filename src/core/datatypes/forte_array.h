@@ -15,6 +15,7 @@
  *    Martin Melik Merkumians, Martin Jobst - added ctors for copying one type
  *      to another and iterators
  *    Martin Jobst - add support for repeat syntax
+ *                 - add equals function
  *******************************************************************************/
 #ifndef _FORTE_ARRAY_H_
 #define _FORTE_ARRAY_H_
@@ -265,6 +266,23 @@ class CIEC_ARRAY : public CIEC_ARRAY_COMMON<T> {
           (*this)[i].setValue(*poSrcArray);
         }
       }
+    }
+
+    [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
+      if (paOther.getDataTypeID() == CIEC_ANY::e_ARRAY) {
+        auto otherArray = static_cast<const CIEC_ARRAY &>(paOther);
+        if(size() != otherArray.size()) {
+          return false;
+        }
+
+        for (intmax_t i = static_cast<intmax_t>(size()) - 1; i >= 0; --i) {
+          if(!(*this)[i].equals(otherArray[i])) {
+            return false;
+          }
+        }
+        return true;
+      }
+      return false;
     }
 
     /*! \brief Converts array value to data type value

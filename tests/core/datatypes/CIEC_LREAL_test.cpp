@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2011 - 2013 ACIN, nxtControl, fortiss GmbH
+ *               2023 Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +9,7 @@
  *
  * Contributors:
  *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
+ *   Martin Jobst - add equals tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -65,6 +67,26 @@ BOOST_AUTO_TEST_CASE(Assignment_test)
   BOOST_CHECK_EQUAL(nTest1, std::numeric_limits<TForteDFloat>::max());
   BOOST_CHECK_EQUAL(nTest2, -36.0);
 
+}
+
+BOOST_AUTO_TEST_CASE(Equality_test)
+{
+  CIEC_LREAL nTest1;
+  CIEC_LREAL nTest2;
+  CIEC_REAL nTest3;
+
+  BOOST_CHECK(nTest1.equals(nTest2));
+  BOOST_CHECK(!nTest1.equals(nTest3)); // different type
+
+  nTest1 = CIEC_LREAL(std::numeric_limits<TForteFloat>::min());
+  BOOST_CHECK(!nTest1.equals(nTest2));
+  nTest2 = nTest1;
+  BOOST_CHECK(nTest1.equals(nTest2));
+
+  nTest1 = CIEC_LREAL(2.28743e6);
+  BOOST_CHECK(!nTest1.equals(nTest2));
+  nTest2 = nTest1;
+  BOOST_CHECK(nTest1.equals(nTest2));
 }
 
 BOOST_AUTO_TEST_CASE(Conversion_test)

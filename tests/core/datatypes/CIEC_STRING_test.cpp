@@ -2,6 +2,7 @@
  * Copyright (c) 2011 - 2013 ACIN, nxtControl, Profactor GmbH, fortiss GmbH
  *              2018 TU Wien/ACIN
  *               2022 Primetals Technologies Austria GmbH
+ *               2023 Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -14,6 +15,7 @@
  *   Martin Melik Merkumians - adds getToStringBufferSize tests
  *    Martin Melik Merkumians - changes for removed implicit constructor for
  *      primitve types
+ *   Martin Jobst - add equals tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -267,6 +269,25 @@ BOOST_AUTO_TEST_CASE(String_compare)
 
   BOOST_CHECK(!(CIEC_STRING(cTest1) != sTest2));
   BOOST_CHECK_EQUAL(strcmp(sTest2.getValue(), cTest2), 0);
+}
+
+BOOST_AUTO_TEST_CASE(String_equals)
+{
+  CIEC_STRING sTest1;
+  CIEC_STRING sTest2;
+  CIEC_STRING sTest3;
+
+  char cTest1[] = "Check string!";
+  char cTest2[] = "Check string!";
+  char cTest3[] = "checkstring!";
+
+  sTest1 = CIEC_STRING(cTest1);
+  sTest2 = CIEC_STRING(cTest2);
+  sTest3 = CIEC_STRING(cTest3);
+  BOOST_CHECK(sTest1.equals(sTest2));
+  BOOST_CHECK(!sTest1.equals(CIEC_INT(0)));
+  BOOST_CHECK(!sTest1.equals(sTest3));
+  BOOST_CHECK(!sTest2.equals(sTest3));
 }
 
 BOOST_AUTO_TEST_CASE(String_binary_interface)

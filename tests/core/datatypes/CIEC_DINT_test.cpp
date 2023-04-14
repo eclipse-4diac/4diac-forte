@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2011 - 2014 ACIN, fortiss GmbH
+ *               2023 Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +9,7 @@
  *
  * Contributors:
  *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Martin Jobst - add equals tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -58,6 +60,20 @@ BOOST_AUTO_TEST_CASE(Assignment_test)
   nTest2 = CIEC_DINT(6874);
   BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(nTest1), std::numeric_limits<TForteInt32>::max());
   BOOST_CHECK_EQUAL(static_cast<CIEC_DINT::TValueType>(nTest2), 6874);
+}
+
+BOOST_AUTO_TEST_CASE(Equality_test)
+{
+  CIEC_DINT nTest1;
+  CIEC_DINT nTest2;
+
+  BOOST_CHECK(nTest1.equals(nTest2));
+  BOOST_CHECK(!nTest1.equals(CIEC_STRING("abc")));
+
+  nTest1 = CIEC_DINT(17);
+  BOOST_CHECK(!nTest1.equals(nTest2));
+  nTest2 = nTest1;
+  BOOST_CHECK(nTest1.equals(nTest2));
 }
 
 BOOST_AUTO_TEST_CASE(ANY_INT_ASSIGNMENT_TEST) {
