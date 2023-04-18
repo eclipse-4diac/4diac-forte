@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
+ *               2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -11,6 +12,7 @@
  *    Thomas Strasser, Alois Zoitl, Rene Smodic, Gunnar Grabmaier, Ingo Hegny,
  *    Martin Melik Merkumians, Monika Wenger
  *      - initial implementation and rework communication infrastructure
+ *    Martin Jobst - move allocation of data value to FB
  *******************************************************************************/
 #ifndef _DATACONN_H_
 #define _DATACONN_H_
@@ -23,9 +25,7 @@
 class CDataConnection : public CConnection {
 
   public:
-    CDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, const CIEC_ANY *paSrcDO);
-
-    ~CDataConnection() override;
+    CDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CIEC_ANY *paValue);
 
     EMGMResponse connect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
@@ -93,8 +93,6 @@ class CDataConnection : public CConnection {
     /*! \brief Value for storing the current data of the connection
      */
     CIEC_ANY *m_poValue;
-
-    TForteByte m_acDataBuf[sizeof(CIEC_ANY)];
 
     /*! \brief Flag for indicating that this connections needs special measures for casting.
      *

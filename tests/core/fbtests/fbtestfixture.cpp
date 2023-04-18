@@ -287,7 +287,7 @@ void CFBTestFixtureBase::createDataOutputConnections() {
     if(CFBTestConn::canBeConnected(mOutputDataBuffers[i], mFBUnderTest->getDataOutput(interfaceSpec->m_aunDONames[i]))) {
       CDataConnection *dataCon = mFBUnderTest->getDOConnection(interfaceSpec->m_aunDONames[i]);
       BOOST_REQUIRE_EQUAL(EMGMResponse::Ready, dataCon->connect(this, interfaceSpec->m_aunDONames[i]));
-      dataCon->getValue()->~CIEC_ANY();
+      std::destroy_at(dataCon->getValue());
       dataCon->setValue(mOutputDataBuffers[i]);
     }
   }

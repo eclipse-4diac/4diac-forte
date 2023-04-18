@@ -81,6 +81,11 @@ void CFunctionBlock::freeAllData(){
     }
 
     if(nullptr != mDOConns) {
+      for (int i = 0; i < m_pstInterfaceSpec->m_nNumDOs; ++i) {
+        if(CIEC_ANY* value = mDOConns[i].getValue(); nullptr != value) {
+          std::destroy_at(value);
+        }
+      }
       std::destroy_n(mDOConns, m_pstInterfaceSpec->m_nNumDOs);
     }
 
@@ -505,7 +510,7 @@ size_t CFunctionBlock::calculateFBVarsDataSize(const SFBInterfaceSpec &paInterfa
   result += paInterfaceSpec.m_nNumDOs * sizeof(CIEC_ANY *);
   pnDataIds = paInterfaceSpec.m_aunDODataTypeNames;
   for (int i = 0; i < paInterfaceSpec.m_nNumDOs; ++i) {
-    result += getDataPointSize(pnDataIds);
+    result += getDataPointSize(pnDataIds) * 2; // * 2 for connection buffer value
   }
 
   result += paInterfaceSpec.m_nNumAdapters * sizeof(TAdapterPtr);
@@ -567,8 +572,9 @@ void CFunctionBlock::setupFBInterface(const SFBInterfaceSpec *pa_pstInterfaceSpe
       pnDataIds = pa_pstInterfaceSpec->m_aunDODataTypeNames;
       for (i = 0; i < m_pstInterfaceSpec->m_nNumDOs; ++i) {
         mDOs[i] = createDataPoint(pnDataIds, varsData);
-        //create an data connection for each data output and initialize its source port
-        new(connData)CDataConnection(this, i, getDO(i));
+        CIEC_ANY* connVar = mDOs[i]->clone(varsData);
+        varsData += connVar->getSizeof();
+        new(connData)CDataConnection(this, i, connVar);
         connData += sizeof(CDataConnection);
       }
     } else {
