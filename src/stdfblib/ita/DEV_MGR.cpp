@@ -582,7 +582,7 @@ bool DEV_MGR::initialize() {
   if(!CCommFB::initialize()) {
     return false;
   }
-  setupFBInterface(&scm_stFBInterfaceSpec, m_anFBConnData, m_anFBVarsData);
+  setupFBInterface(&scm_stFBInterfaceSpec);
   mCommand.mAdditionalParams.reserve(255);
   mCommand.mAdditionalParams.clear();
   return true;

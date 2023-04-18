@@ -26,7 +26,7 @@ CResource *CFBTestDataGlobalFixture::smTestRes;
 
 CFBTestDataGlobalFixture::CFBTestDataGlobalFixture(){
   //setup is done in the setup so that boost_test can throw exceptions
-  smTestDev = new CDevice(&gscTestDevSpec, CStringDictionary::scm_nInvalidStringId, nullptr, nullptr);
+  smTestDev = new CDevice(&gscTestDevSpec, CStringDictionary::scm_nInvalidStringId);
   //mimick the behavior provided by typelib
   smTestDev->changeFBExecutionState(EMGMCommandType::Reset);
 

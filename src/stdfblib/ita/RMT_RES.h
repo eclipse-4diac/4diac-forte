@@ -29,8 +29,6 @@ class RMT_RES : public CResource{
   private:
     static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-    FORTE_FB_DATA_ARRAY(0,1,0, 0);
-
     static const CStringDictionary::TStringId scm_aunVarInputNameIds[];
     static const CStringDictionary::TStringId scm_aunDIDataTypeIds[];
 

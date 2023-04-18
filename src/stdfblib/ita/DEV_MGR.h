@@ -66,8 +66,6 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
 
     static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-    FORTE_FB_DATA_ARRAY(2, 3, 4, 0);
-
     //! The device the block is contained in
     CDevice &m_poDevice;
 

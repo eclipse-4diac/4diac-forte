@@ -25,7 +25,7 @@ CAdapter::CAdapter(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfa
   m_nParentAdapterListEventID(0),
   m_bIsPlug(pa_bIsPlug),
   m_poPeer(nullptr),
-  m_aoLocalDIs(m_aoDIs),
+  m_aoLocalDIs(mDIs),
   m_poAdapterConn(nullptr){
 }
 
@@ -72,7 +72,7 @@ bool CAdapter::connect(CAdapter *pa_poPeer, CAdapterConnection *pa_poAdConn){
   bool bRetVal = false;
   if (m_poPeer == nullptr) {
     m_poPeer = pa_poPeer;
-    m_aoDIs = pa_poPeer->m_aoDOs; //TODO: change is adapters of subtypes may be connected
+    mDIs = pa_poPeer->mDOs; //TODO: change is adapters of subtypes may be connected
     if (isSocket()) {
       m_poAdapterConn = pa_poAdConn;
     }
@@ -87,7 +87,7 @@ bool CAdapter::disconnect(CAdapterConnection *pa_poAdConn){
     return false; //connection requesting disconnect is not equal to established connection
   }
   m_poPeer = nullptr;
-  m_aoDIs = m_aoLocalDIs;
+  mDIs = m_aoLocalDIs;
   if (isSocket()) {
     m_poAdapterConn = nullptr;
   }

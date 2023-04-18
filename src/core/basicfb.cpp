@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
+ *               2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,30 +11,42 @@
  * Contributors:
  *    Thomas Strasser, Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny
  *      - initial implementation and rework communication infrastructure
+ *    Martin Jobst - account for data type size in FB initialization
  *******************************************************************************/
 #include <string.h>
 #include "basicfb.h"
 #include "resource.h"
 
-CBasicFB::CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId,
-    const SInternalVarsInformation *pa_pstVarInternals, TForteByte *pa_acFBConnData, TForteByte *pa_acBasicFBVarsData) :
-    CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acBasicFBVarsData), m_nECCState(0),
-        cm_pstVarInternals(pa_pstVarInternals), m_acBasicFBVarsData(pa_acBasicFBVarsData), m_aoInternals(nullptr) {
+CBasicFB::CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
+                   const CStringDictionary::TStringId pa_nInstanceNameId,
+                   const SInternalVarsInformation *pa_pstVarInternals) :
+        CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId), m_nECCState(0),
+        cm_pstVarInternals(pa_pstVarInternals), mBasicFBVarsData(nullptr), m_aoInternals(nullptr) {
+}
+
+CBasicFB::CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
+                   const CStringDictionary::TStringId pa_nInstanceNameId,
+                   const SInternalVarsInformation *pa_pstVarInternals, TForteByte *pa_acFBConnData,
+                   TForteByte *pa_acBasicFBVarsData) :
+        CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acBasicFBVarsData),
+        m_nECCState(0),
+        cm_pstVarInternals(pa_pstVarInternals), mBasicFBVarsData(nullptr), m_aoInternals(nullptr) {
 }
 
 bool CBasicFB::initialize() {
   if(!CFunctionBlock::initialize()) {
     return false;
   }
-  if((nullptr != cm_pstVarInternals) && (cm_pstVarInternals->m_nNumIntVars) && (nullptr != m_acBasicFBVarsData)) {
-    m_acBasicFBVarsData += genFBVarsDataSize(m_pstInterfaceSpec->m_nNumDIs, m_pstInterfaceSpec->m_nNumDOs, m_pstInterfaceSpec->m_nNumAdapters);
+  if((nullptr != cm_pstVarInternals) && (cm_pstVarInternals->m_nNumIntVars)) {
+    size_t basicVarsDataSize = calculateBasicFBVarsDataSize(*cm_pstVarInternals);
+    mBasicFBVarsData = basicVarsDataSize ? operator new(basicVarsDataSize) : nullptr;
 
-    m_aoInternals = reinterpret_cast<CIEC_ANY*>(m_acBasicFBVarsData);
-
+    auto *basicVarsData = reinterpret_cast<TForteByte *>(mBasicFBVarsData);
+    m_aoInternals = reinterpret_cast<CIEC_ANY**>(basicVarsData);
+    basicVarsData += cm_pstVarInternals->m_nNumIntVars * sizeof(CIEC_ANY *);
     const CStringDictionary::TStringId *pnDataIds = cm_pstVarInternals->m_aunIntVarsDataTypeNames;
     for(int i = 0; i < cm_pstVarInternals->m_nNumIntVars; ++i) {
-      createDataPoint(&pnDataIds, m_acBasicFBVarsData);
-      m_acBasicFBVarsData += sizeof(CIEC_ANY);
+      m_aoInternals[i] = createDataPoint(pnDataIds, basicVarsData);
     }
   }
   return true;
@@ -42,9 +55,26 @@ bool CBasicFB::initialize() {
 CBasicFB::~CBasicFB() {
   if(nullptr != m_aoInternals) {
     for(int i = 0; i < cm_pstVarInternals->m_nNumIntVars; ++i) {
-      getVarInternal(i)->~CIEC_ANY();
+      if(CIEC_ANY* value = m_aoInternals[i]; nullptr != value) {
+        std::destroy_at(value);
+      }
     }
   }
+  operator delete(mBasicFBVarsData);
+  mBasicFBVarsData = nullptr;
+}
+
+size_t CBasicFB::calculateBasicFBVarsDataSize(const SInternalVarsInformation &paVarInternals) {
+  size_t result = 0;
+  const CStringDictionary::TStringId *pnDataIds;
+
+  result += paVarInternals.m_nNumIntVars * sizeof(CIEC_ANY *);
+  pnDataIds = paVarInternals.m_aunIntVarsDataTypeNames;
+  for (int i = 0; i < paVarInternals.m_nNumIntVars; ++i) {
+    result += getDataPointSize(pnDataIds);
+  }
+
+  return result;
 }
 
 CIEC_ANY* CBasicFB::getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) {

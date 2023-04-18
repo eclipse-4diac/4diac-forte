@@ -27,6 +27,12 @@ private:
   SEventEntry mEventSourceEventEntry; //! the event entry to start the event chain
 
 public:
+  CEventSourceFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
+                 CStringDictionary::TStringId pa_nInstanceNameId) :
+          CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId),
+          m_poEventChainExecutor(nullptr),
+          mEventSourceEventEntry(this, cg_nExternalEventID) {
+  }
   CEventSourceFB(CResource *pa_poSrcRes,
            const SFBInterfaceSpec *pa_pstInterfaceSpec,
            const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
@@ -43,6 +49,6 @@ public:
 
 #define EVENT_SOURCE_FUNCTION_BLOCK_CTOR(fbclass) \
  fbclass(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : \
- CEventSourceFB( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData)
+ CEventSourceFB( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId)
 
 #endif /*_ESFB_H_*/

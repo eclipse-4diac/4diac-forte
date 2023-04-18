@@ -38,8 +38,8 @@
 #include "lua/luaadaptertypeentry.h"
 #endif
 
-CResource::CResource(CResource* pa_poDevice, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-    CFunctionBlock(pa_poDevice, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData), forte::core::CFBContainer(CStringDictionary::scm_nInvalidStringId, nullptr), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
+CResource::CResource(CResource* pa_poDevice, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId) :
+    CFunctionBlock(pa_poDevice, pa_pstInterfaceSpec, pa_nInstanceNameId), forte::core::CFBContainer(CStringDictionary::scm_nInvalidStringId, nullptr), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
     mResourceEventExecution(CEventChainExecutionThread::createEcet()), mResIf2InConnections(nullptr)
 #ifdef FORTE_SUPPORT_MONITORING
 , mMonitoringHandler(*this)
@@ -49,8 +49,8 @@ CResource::CResource(CResource* pa_poDevice, const SFBInterfaceSpec *pa_pstInter
 #endif
 {}
 
-CResource::CResource(const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-    CFunctionBlock(nullptr, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData), forte::core::CFBContainer(CStringDictionary::scm_nInvalidStringId, nullptr), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
+CResource::CResource(const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId) :
+    CFunctionBlock(nullptr, pa_pstInterfaceSpec, pa_nInstanceNameId), forte::core::CFBContainer(CStringDictionary::scm_nInvalidStringId, nullptr), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
     mResourceEventExecution(nullptr), mResIf2InConnections(nullptr)
 #ifdef FORTE_SUPPORT_MONITORING
 , mMonitoringHandler(*this)

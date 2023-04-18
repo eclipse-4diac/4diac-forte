@@ -1,6 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2018 ACIN, Profactor GmbH, nxtControl GmbH, fortiss GmbH,
  *                           Johannes Kepler University
+ *               2023 Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -13,6 +15,7 @@
  *    Stanislav Meduna, Patrick Smejkal,
  *      - initial implementation and rework communication infrastructure
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *    Martin Jobst - account for data type size in FB initialization
  *******************************************************************************/
 #ifndef _FUNCBLOC_H_
 #define _FUNCBLOC_H_
@@ -57,12 +60,10 @@ namespace forte {
  */
 #define FORTE_FB_DATA_ARRAY(a_nNumEOs, a_nNumDIs, a_nNumDOs, a_nNumAdapters) \
   union{ \
-    TForteByte m_anFBConnData[genFBConnDataSizeTemplate<a_nNumEOs, a_nNumDIs, a_nNumDOs>::value]; \
-    void *m_apoDummyConnPointerAlign; \
+    TForteByte m_anFBConnData[0]; \
   };\
   union{ \
-    TForteByte m_anFBVarsData[genFBVarsDataSizeTemplate<a_nNumDIs, a_nNumDOs, a_nNumAdapters>::value]; \
-    CIEC_ANY::TLargestUIntValueType m_uDummyDataAlign; \
+    TForteByte m_anFBVarsData[0]; \
   };
 #endif
 
@@ -282,7 +283,11 @@ class CFunctionBlock {
      */
     virtual bool configureFB(const char *pa_acConfigString);
 
-    void setupFBInterface(const SFBInterfaceSpec *pa_pstInterfaceSpec, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
+    static size_t calculateFBConnDataSize(const SFBInterfaceSpec &paInterfaceSpec);
+
+    static size_t calculateFBVarsDataSize(const SFBInterfaceSpec &paInterfaceSpec);
+
+    void setupFBInterface(const SFBInterfaceSpec *pa_pstInterfaceSpec);
 
     const SFBInterfaceSpec* getFBInterfaceSpec() const {
       return m_pstInterfaceSpec;
@@ -335,29 +340,6 @@ class CFunctionBlock {
       return m_enFBState;
     }
 
-    template<unsigned int ta_nNumEOs, unsigned int ta_nNumDIs, unsigned int ta_nNumDOs>
-    struct genFBConnDataSizeTemplate {
-        enum {
-          value = (sizeof(CEventConnection) * ta_nNumEOs + sizeof(TDataConnectionPtr) * ta_nNumDIs + sizeof(CDataConnection) * ta_nNumDOs)
-        };
-    };
-
-    static size_t genFBConnDataSize(unsigned int pa_nNumEOs, unsigned int pa_nNumDIs, unsigned int pa_nNumDOs) {
-      return (sizeof(CEventConnection) * pa_nNumEOs + sizeof(TDataConnectionPtr) * pa_nNumDIs + sizeof(CDataConnection) * pa_nNumDOs);
-    }
-
-    template<unsigned int ta_nNumDIs, unsigned int ta_nNumDOs, unsigned int ta_nNumAdapters = 0>
-    struct genFBVarsDataSizeTemplate {
-        enum {
-          value = (sizeof(CIEC_ANY) * ta_nNumDIs + sizeof(CIEC_ANY) * ta_nNumDOs + sizeof(TAdapterPtr) * ta_nNumAdapters)
-        };
-    };
-
-    static size_t genFBVarsDataSize(unsigned int pa_nNumDIs, unsigned int pa_nNumDOs, unsigned int pa_nNumAdapters = 0) {
-      return (sizeof(CIEC_ANY) * pa_nNumDIs + sizeof(CIEC_ANY) * pa_nNumDOs + sizeof(TAdapterPtr) * pa_nNumAdapters);
-
-    }
-
     /*! \brief Get the data input with given number
      *
      * Attention this function will not perform any range checks on the pa_nDINum parameter!
@@ -365,7 +347,7 @@ class CFunctionBlock {
      * @return pointer to the data input
      */
     TIEC_ANYPtr getDI(unsigned int pa_nDINum) const {
-      return m_aoDIs + pa_nDINum;
+      return mDIs[pa_nDINum];
     }
 
     /*! \brief Get the data output with given number
@@ -375,7 +357,7 @@ class CFunctionBlock {
      * @return pointer to the data output
      */
     CIEC_ANY* getDO(unsigned int pa_nDONum) const {
-      return m_aoDOs + pa_nDONum;
+      return mDOs[pa_nDONum];
     }
 
 #ifdef FORTE_SUPPORT_MONITORING
@@ -411,8 +393,13 @@ class CFunctionBlock {
      *                               sizeof(CIEC_ANY)) * Number of Data outputs +
      *                               sizeof(TAdapterPtr) * ta_nNumAdapters
      */
-    CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId,
-        TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
+    CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, CStringDictionary::TStringId pa_nInstanceNameId);
+
+    /**
+     * \deprecated Use CFunctionBlock(CResource *, const SFBInterfaceSpec *, const CStringDictionary::TStringId)
+     */
+    [[deprecated]] CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, CStringDictionary::TStringId pa_nInstanceNameId,
+                   TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
 
     static TPortId getPortId(CStringDictionary::TStringId pa_unPortNameId, TPortId pa_unMaxPortNames, const CStringDictionary::TStringId *pa_aunPortNames);
 
@@ -454,6 +441,16 @@ class CFunctionBlock {
      */
     EMGMResponse changeFBExecutionStateHelper(const EMGMCommandType paCommand, const size_t paAmountOfInternalFBs, TFunctionBlockPtr *const paInternalFBs);
 
+    /*!\brief Get the size of a data point
+     *
+     * @param pa_panDataTypeIds pointer to the data type ids. If the datatype
+     *        is an Array to more values are taken from the array. If the given
+     *        type is Any 0 is returned as necessary for maintaining the FB's interface.
+     *        The functions puts the pointer in the datatype array to the next data point's id.
+     * @return The size of the data point
+     */
+    static size_t getDataPointSize(const CStringDictionary::TStringId *&pa_panDataTypeIds);
+
     /*!\brief Function to create an data type instance of given type
      *
      * @param pa_panDataTypeIds pointer to the data type ids. If the datatype
@@ -464,7 +461,7 @@ class CFunctionBlock {
      * @return on success... pointer to the datatype instance
      *         on error... 0
      */
-    static CIEC_ANY* createDataPoint(const CStringDictionary::TStringId **pa_panDataTypeIds, TForteByte *pa_acDataBuf);
+    static CIEC_ANY* createDataPoint(const CStringDictionary::TStringId *&pa_panDataTypeIds, TForteByte *&pa_acDataBuf);
 
     static EMGMResponse changeInternalFBExecutionState(const EMGMCommandType paCommand, const size_t paAmountOfInternalFBs, TFunctionBlockPtr *const paInternalFBs);
 
@@ -474,10 +471,12 @@ class CFunctionBlock {
     CEventConnection *mEOConns; //!< A list of event connections pointers storing for each event output the event connection. If the output event is not connected the pointer is 0.
     TDataConnectionPtr *m_apoDIConns; //!< A list of data connections pointers storing for each data input the data connection. If the data input is not connected the pointer is 0.
     CDataConnection *mDOConns; //!< A list of data connections pointers storing for each data output the data connection. If the data output is not connected the pointer is 0.
+    CIEC_ANY **mDIs; //!< A list of pointers to the data inputs. This allows to implement a general getDataInput()
+    CIEC_ANY **mDOs; //!< A list of pointers to the data outputs. This allows to implement a general getDataOutput()
     CEventChainExecutionThread *m_poInvokingExecEnv; //!< A pointer to the execution thread that invoked the FB. This value is stored here to reduce function parameters and reduce therefore stack usage.
     CAdapter **m_apoAdapters; //!< A list of pointers to the adapters. This allows to implement a general getAdapter().
-    TForteByte *m_acFBConnData; //TODO remove once refactor is complete (currently needed for initialization-split)
-    TForteByte *m_acFBVarsData; //TODO remove once refactor is complete (currently needed for initialization-split)
+    void *mFBConnData; //!< Connection data buffer
+    void *mFBVarsData; //!< Variable data buffer
   private:
     /*!\brief Function providing the functionality of the FB (e.g. execute ECC for basic FBs).
      *
@@ -503,8 +502,6 @@ class CFunctionBlock {
 
     CResource *m_poResource; //!< A pointer to the resource containing the function block.
     forte::core::CFBContainer *m_Container; //!< A pointer to the container containing the function block.
-    CIEC_ANY *m_aoDIs; //!< A list of pointers to the data inputs. This allows to implement a general getDataInput()
-    CIEC_ANY *m_aoDOs; //!< A list of pointers to the data outputs. This allows to implement a general getDataOutput()
 
 #ifdef FORTE_SUPPORT_MONITORING
     void setupEventMonitoringData();
@@ -529,9 +526,6 @@ class CFunctionBlock {
      */
     bool m_bDeletable;
 
-    //FIXME remove these friends
-    friend class CAdapter;
-
 #ifdef FORTE_SUPPORT_MONITORING
     friend class forte::core::CMonitoringHandler;
 #endif //FORTE_SUPPORT_MONITORING
@@ -541,23 +535,9 @@ class CFunctionBlock {
 #endif //FORTE_FMU
 };
 
-template<>
-struct CFunctionBlock::genFBConnDataSizeTemplate<0, 0, 0> {
-    enum {
-      value = 1
-    };
-};
-
-template<>
-struct CFunctionBlock::genFBVarsDataSizeTemplate<0, 0, 0> {
-    enum {
-      value = 1
-    };
-};
-
 #define FUNCTION_BLOCK_CTOR(fbclass) \
  fbclass(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : \
- CFunctionBlock( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData)
+ CFunctionBlock( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId)
 
 #define FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(fbclass, fbBaseClass) \
  fbclass(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : \

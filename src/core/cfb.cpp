@@ -20,8 +20,19 @@
 #include "if2indco.h"
 
 CCompositeFB::CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-    const CStringDictionary::TStringId pa_nInstanceNameId, const SCFB_FBNData * const pa_cpoFBNData,
-    TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
+                           CStringDictionary::TStringId pa_nInstanceNameId, const SCFB_FBNData * pa_cpoFBNData) :
+        CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId),
+        mIf2InDConns(nullptr),
+        m_apoIn2IfDConns(nullptr),
+        cm_cpoFBNData(pa_cpoFBNData),
+        m_apoEventConnections(nullptr),
+        m_apoDataConnections(nullptr),
+        mInterface2InternalEventCons(nullptr){
+}
+
+CCompositeFB::CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
+                           CStringDictionary::TStringId pa_nInstanceNameId, const SCFB_FBNData * pa_cpoFBNData,
+                           TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
         CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData),
         mIf2InDConns(nullptr),
         m_apoIn2IfDConns(nullptr),

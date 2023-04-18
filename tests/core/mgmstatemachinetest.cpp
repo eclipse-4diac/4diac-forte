@@ -16,7 +16,7 @@
 class CFunctionBlockMock : public CFunctionBlock{
   public:
     CFunctionBlockMock() :
-        CFunctionBlock(nullptr, nullptr, 0, nullptr, nullptr){
+        CFunctionBlock(nullptr, nullptr, 0){
     }
 
     bool initialize() override {

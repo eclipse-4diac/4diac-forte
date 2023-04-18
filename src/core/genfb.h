@@ -59,8 +59,6 @@ class CGenFunctionBlock : public T {
 
     CStringDictionary::TStringId mConfiguredFBTypeNameId;
     SFBInterfaceSpec mGenInterfaceSpec;  //!< the interface spec for this specific instance of generic FB
-    TForteByte *mFBConnData;
-    TForteByte *mFBVarsData;
 };
 
 #include "genfb.tpp"

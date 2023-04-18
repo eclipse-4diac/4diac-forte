@@ -45,7 +45,7 @@ const SFBInterfaceSpec RMT_RES::scm_stFBInterfaceSpec = {
 
 
 RMT_RES::RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_poDevice):
-       CResource(pa_poDevice, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData){
+       CResource(pa_poDevice, &scm_stFBInterfaceSpec, pa_nInstanceNameId){
 }
 
 bool RMT_RES::initialize() {

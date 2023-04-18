@@ -93,10 +93,6 @@ class CFBTestFixtureBase : public CFunctionBlock{
 
     std::vector<CIEC_ANY *> mInputDataBuffers;
     std::vector<CIEC_ANY *> mOutputDataBuffers;
-
-    TForteByte *mFBConnData;
-    TForteByte *mFBVarsData;
-
 };
 
 

@@ -100,8 +100,11 @@ class CCompositeFB: public CFunctionBlock {
      * \param pa_acFBData         ByteArray for FB-specific data (DI, DO, int. Vars, ...)
      */
     CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-        const CStringDictionary::TStringId pa_nInstanceNameId,
-        const SCFB_FBNData * const pa_cpoFBNData, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
+                 CStringDictionary::TStringId pa_nInstanceNameId,
+                 const SCFB_FBNData * pa_cpoFBNData);
+    CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
+                 CStringDictionary::TStringId pa_nInstanceNameId,
+                 const SCFB_FBNData * pa_cpoFBNData, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
     ~CCompositeFB() override;
 
     bool initialize() override;

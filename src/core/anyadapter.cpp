@@ -46,10 +46,7 @@ void CAnyAdapter::typifyAnyAdapter(CAdapter *pa_poPeer){
   m_stCurrentFBInterfaceSpec.m_aunDONames = pa_poPeer->getAdapterInterfaceSpec()->m_aunDINames;
   m_stCurrentFBInterfaceSpec.m_aunDODataTypeNames = pa_poPeer->getAdapterInterfaceSpec()->m_aunDIDataTypeNames;
 
-  TForteByte *acFBConnData = new TForteByte[genAdapterFBConnDataSize(m_stCurrentFBInterfaceSpec.m_nNumEIs, m_stCurrentFBInterfaceSpec.m_nNumEOs, m_stCurrentFBInterfaceSpec.m_nNumDIs, m_stCurrentFBInterfaceSpec.m_nNumDOs)];
-  TForteByte *acFBVarsData = new TForteByte[genFBVarsDataSize(m_stCurrentFBInterfaceSpec.m_nNumDIs, m_stCurrentFBInterfaceSpec.m_nNumDOs)];
-
-  setupFBInterface(&m_stCurrentFBInterfaceSpec, acFBConnData, acFBVarsData);
+  setupFBInterface(&m_stCurrentFBInterfaceSpec);
   fillEventEntryList(m_ParentFB);
 }
 
@@ -58,7 +55,7 @@ bool CAnyAdapter::disconnect(CAdapterConnection *pa_poAdConn){
 
   //clean interface data and reset to empty interface
   freeAllData();
-  setupFBInterface(&scm_stFBInterfaceSpec, nullptr, nullptr);
+  setupFBInterface(&scm_stFBInterfaceSpec);
 
   return bRetVal;
 }

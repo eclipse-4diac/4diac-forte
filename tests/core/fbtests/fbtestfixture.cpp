@@ -49,8 +49,8 @@ class CFBTestConn : public CDataConnection {
 
 
 CFBTestFixtureBase::CFBTestFixtureBase(CStringDictionary::TStringId paTypeId) :
-    CFunctionBlock(CFBTestDataGlobalFixture::getResource(), nullptr, 0, nullptr, nullptr), mTypeId(paTypeId),
-        mFBUnderTest(CTypeLib::createFB(paTypeId, paTypeId, getResourcePtr())), mFBConnData(nullptr), mFBVarsData(nullptr) {
+    CFunctionBlock(CFBTestDataGlobalFixture::getResource(), nullptr, 0), mTypeId(paTypeId),
+        mFBUnderTest(CTypeLib::createFB(paTypeId, paTypeId, getResourcePtr())) {
 }
 
 bool CFBTestFixtureBase::initialize() {
@@ -91,8 +91,6 @@ CFBTestFixtureBase::~CFBTestFixtureBase(){
 
   if(nullptr != m_pstInterfaceSpec){
     freeAllData();  //clean the interface and connections first.
-    delete[] mFBConnData;
-    delete[] mFBVarsData;
     delete m_pstInterfaceSpec;
     m_pstInterfaceSpec = nullptr; //this stops the base classes from any wrong clean-up
   }
@@ -199,12 +197,7 @@ void CFBTestFixtureBase::setupTestInterface(){
   testerInterfaceSpec->m_nNumAdapters = 0;
   testerInterfaceSpec->m_pstAdapterInstanceDefinition = nullptr;
 
-  mFBConnData = (0 != testerInterfaceSpec->m_nNumDIs) ?
-      new TForteByte[genFBConnDataSize(testerInterfaceSpec->m_nNumEOs, testerInterfaceSpec->m_nNumDIs, testerInterfaceSpec->m_nNumDOs)] : nullptr;
-  mFBVarsData = (0 != testerInterfaceSpec->m_nNumDIs) ?
-      new TForteByte[genFBVarsDataSize(testerInterfaceSpec->m_nNumDIs, testerInterfaceSpec->m_nNumDOs)] : nullptr;
-
-  setupFBInterface(testerInterfaceSpec, mFBConnData, mFBVarsData);
+  setupFBInterface(testerInterfaceSpec);
 
   for(unsigned int i = 0; i < testerInterfaceSpec->m_nNumDIs; ++i){
     CIEC_ANY *di = getDI(i);

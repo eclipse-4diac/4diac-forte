@@ -1,5 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2008 - 2015 ACIN, fortiss GmbH, 2018 TU Vienna/ACIN
+ *               2023 Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,6 +12,7 @@
  *    Ingo Hegny, Alois Zoitl, Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik-Merkumians - fixes connect, prepares for working AnyAdapter
+ *    Martin Jobst - account for data type size in FB initialization
  *******************************************************************************/
 #ifndef _ADAPTER_H_
 #define _ADAPTER_H_
@@ -28,10 +31,10 @@ class CAdapterConnection;
 
 #define FORTE_ADAPTER_DATA_ARRAY(a_nNumEIs, a_nNumEOs, a_nNumDIs, a_nNumDOs, a_nNumAdapters) \
   union{ \
-    TForteByte m_anFBConnData[genAdapterFBConnDataSizeTemplate<a_nNumEIs, a_nNumEOs, a_nNumDIs, a_nNumDOs>::value]; \
+    TForteByte m_anFBConnData[0]; \
   };\
   union{ \
-    TForteByte m_anFBVarsData[genFBVarsDataSizeTemplate<a_nNumDIs, a_nNumDOs, a_nNumAdapters>::value]; \
+    TForteByte m_anFBVarsData[0]; \
   };
 
 /*!\ingroup CORE\brief Class for handling adapters.
@@ -120,18 +123,7 @@ class CAdapter : public CFunctionBlock{
       return m_poAdapterConn;
     }
 
-    static size_t genAdapterFBConnDataSize(unsigned int pa_nNumEIs, unsigned int pa_nNumEOs, unsigned int pa_nNumDIs, unsigned int pa_nNumDOs){
-      return genFBConnDataSize(((pa_nNumEIs < pa_nNumEOs) ? pa_nNumEOs : pa_nNumEIs), ((pa_nNumDIs < pa_nNumDOs) ? pa_nNumDOs : pa_nNumDIs), ((pa_nNumDIs < pa_nNumDOs) ? pa_nNumDOs : pa_nNumDIs)); //for outputs data connections are stored in this array, as plugs and sockets have invoerted size wee need to use the max here. unfortunately not very efficient. should be reconsidered.
-    }
-
   protected:
-    template<unsigned int ta_nNumEIs, unsigned int ta_nNumEOs, unsigned int ta_nNumDIs, unsigned int ta_nNumDOs>
-    struct genAdapterFBConnDataSizeTemplate{
-        enum {
-          value = genFBConnDataSizeTemplate<((ta_nNumEIs < ta_nNumEOs) ? ta_nNumEOs : ta_nNumEIs), ((ta_nNumDIs < ta_nNumDOs) ? ta_nNumDOs : ta_nNumDIs), ((ta_nNumDIs < ta_nNumDOs) ? ta_nNumDOs : ta_nNumDIs)>::value
-        };
-    };
-
     /**!
      *  @brief fills the event entry list of an adapter
      *
@@ -147,7 +139,7 @@ class CAdapter : public CFunctionBlock{
 
     const bool m_bIsPlug;
     CAdapter *m_poPeer;
-    CIEC_ANY *m_aoLocalDIs;
+    CIEC_ANY **m_aoLocalDIs;
     CAdapterConnection *m_poAdapterConn;
     SEventEntry *m_astEventEntry; //! the event entry list to start the event chain
 };

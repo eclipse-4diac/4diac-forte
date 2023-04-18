@@ -77,16 +77,11 @@ class CDeserTestMockCommFB : public forte::com_infra::CCommFB{
       m_oMockFBInterface.m_aunDONames = nullptr;
       m_oMockFBInterface.m_aunDODataTypeNames = pa_aunDODataTypeNames;
 
-      m_acFBConnData = new TForteByte[genFBConnDataSize(0, 2, pa_nNumRD + 2)];
-      m_acFBVarsData = new TForteByte[genFBVarsDataSize(2, pa_nNumRD + 2)];
-
-      setupFBInterface(&m_oMockFBInterface, m_acFBConnData, m_acFBVarsData);
+      setupFBInterface(&m_oMockFBInterface);
     }
 
     virtual ~CDeserTestMockCommFB(){
       freeAllData();
-      delete[] m_acFBConnData;
-      delete[] m_acFBVarsData;
       m_pstInterfaceSpec = nullptr;
     }
 
@@ -95,9 +90,6 @@ class CDeserTestMockCommFB : public forte::com_infra::CCommFB{
     static EMB_RES m_oResource;
 
     SFBInterfaceSpec m_oMockFBInterface;
-    TForteByte *m_acFBConnData;
-    TForteByte *m_acFBVarsData;
-
 };
 
 const CStringDictionary::TStringId CDeserTestMockCommFB::scm_anInputTypes[] = { g_nStringIdBOOL, g_nStringIdBOOL };
