@@ -1760,11 +1760,11 @@ BOOST_AUTO_TEST_CASE(func_to_big_endian_array_fixed) {
 
 BOOST_AUTO_TEST_CASE(func_to_big_endian_array_variable) {
   CIEC_ARRAY_VARIABLE<CIEC_LWORD> originalArray = {CIEC_LWORD(1), CIEC_LWORD(2), CIEC_LWORD(3)};
-  CIEC_ARRAY_VARIABLE<CIEC_LWORD> reversedArray(-1, 1);
+  CIEC_ARRAY_VARIABLE<CIEC_LWORD> reversedArray(0, 2); // copy/move assignment does not change bounds
   reversedArray = func_TO_BIG_ENDIAN(originalArray);
-  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[-1]) == 72057594037927936);
-  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[0]) == 144115188075855872);
-  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[1]) == 216172782113783808);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[0]) == 72057594037927936);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[1]) == 144115188075855872);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[2]) == 216172782113783808);
 }
 
 BOOST_AUTO_TEST_CASE(func_to_big_endian_array_variable_copy_ctor) {

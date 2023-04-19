@@ -19,152 +19,307 @@
 #include "forte_array_common.h"
 #include <vector>
 
-template <typename T>
-class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T>
-{
+template<typename T>
+class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
 public:
-using difference_type = std::ptrdiff_t;
-using value_type = T;
-using pointer = value_type *;
-using const_pointer = const value_type *;
-using reference = value_type &;
-using const_reference = const value_type &;
+    using difference_type = std::ptrdiff_t;
+    using value_type = T;
+    using pointer = value_type *;
+    using const_pointer = const value_type *;
+    using reference = value_type &;
+    using const_reference = const value_type &;
+    using iterator = typename std::vector<T>::iterator;
+    using const_iterator = typename std::vector<T>::const_iterator;
 
-using CIEC_ARRAY_COMMON<T>::operator[];
+    using CIEC_ARRAY_COMMON<T>::at;
+    using CIEC_ARRAY_COMMON<T>::operator[];
+    using CIEC_ARRAY_COMMON<T>::operator=;
 
-CIEC_ARRAY_VARIABLE(intmax_t paLowerBound, intmax_t paUpperBound) : cmLowerBound(paLowerBound), cmUpperBound(paUpperBound),
-    cmSize(static_cast<size_t>(paUpperBound - paLowerBound + 1)), data(cmSize) {
-}
+    /**
+     * @brief Construct an array based on lower and upper bound
+     * @param paLowerBound The lower bound
+     * @param paUpperBound The upper bound
+     */
+    CIEC_ARRAY_VARIABLE(intmax_t paLowerBound, intmax_t paUpperBound)
+            : cmLowerBound(paLowerBound), cmUpperBound(paUpperBound),
+              cmSize(static_cast<size_t>(paUpperBound - paLowerBound + 1)), data(cmSize) {
+    }
 
-CIEC_ARRAY_VARIABLE(std::initializer_list<T> init) : cmLowerBound(0), cmUpperBound(init.size() - 1), cmSize(init.size()), data(init) {
-}
+    /**
+     * @brief Construct an array from an initializer list
+     * @param init The initializer list
+     */
+    CIEC_ARRAY_VARIABLE(std::initializer_list<T> init)
+            : cmLowerBound(0), cmUpperBound(init.size() - 1), cmSize(init.size()), data(init) {
+    }
 
-CIEC_ARRAY_VARIABLE(const CIEC_ARRAY_VARIABLE &paSource) : cmLowerBound(paSource.cmLowerBound), cmUpperBound(paSource.cmUpperBound), cmSize(paSource.cmSize), data(paSource.data) {
-}
+    /**
+     * @brief Copy constructor
+     * @param paSource The original array
+     */
+    CIEC_ARRAY_VARIABLE(const CIEC_ARRAY_VARIABLE &paSource)
+            : cmLowerBound(paSource.cmLowerBound), cmUpperBound(paSource.cmUpperBound), cmSize(paSource.cmSize),
+              data(paSource.data) {
+    }
 
-template <typename U, intmax_t sourceLowerBound, intmax_t sourceUpperBound>
-CIEC_ARRAY_VARIABLE(const CIEC_ARRAY_FIXED<U, sourceLowerBound, sourceUpperBound> &paSource)
-    : cmLowerBound(paSource.getLowerBound()), cmUpperBound(paSource.getUpperBound()), cmSize(paSource.size()), data(paSource.cbegin(), paSource.cend()) {
-}
+    /**
+     * @brief Move constructor
+     * @param paSource The original array
+     */
+    CIEC_ARRAY_VARIABLE(CIEC_ARRAY_VARIABLE &&paSource)
+            : cmLowerBound(paSource.cmLowerBound), cmUpperBound(paSource.cmUpperBound), cmSize(paSource.cmSize),
+              data(std::move(paSource.data)) {
+    }
 
-CIEC_ARRAY_VARIABLE(const CIEC_ARRAY<T> &paSource)
-    : cmLowerBound(paSource.getLowerBound()), cmUpperBound(paSource.getUpperBound()), cmSize(paSource.size()) {
-  for (auto element = paSource.cbegin(); element != paSource.cend(); ++element) {
-      data.push_back(*static_cast<const T *>(element));
-  }
-}
+    /**
+     * @brief Copy constructor from dynamic array with different type
+     * @tparam U The original element type
+     * @param paSource The original array
+     */
+    template<typename U>
+    CIEC_ARRAY_VARIABLE(const CIEC_ARRAY<U> &paSource)
+            : cmLowerBound(paSource.getLowerBound()), cmUpperBound(paSource.getUpperBound()), cmSize(paSource.size()),
+              data(paSource.size()) {
+      if (paSource.size()) { // check if initialized
+        for (auto dest = data.begin(), source = paSource.begin();
+             source != paSource.end(); ++dest, ++source) {
+          dest->setValue(*source);
+        }
+      }
+    }
 
-CIEC_ARRAY_VARIABLE(const CIEC_ARRAY_TYPELIB &paSource)
-    : cmLowerBound(paSource.getLowerBound()), cmUpperBound(paSource.getUpperBound()), cmSize(paSource.size()) {
-  for (auto element = paSource.cbegin(); element != paSource.cend(); ++element) {
-    data.push_back(*static_cast<const T *>(element));
-  }
-}
+    /**
+     * @brief Copy constructor from common array with different type
+     * @tparam U The original element type
+     * @param paSource The original array
+     */
+    template<typename U>
+    CIEC_ARRAY_VARIABLE(const CIEC_ARRAY_COMMON<U> &paSource)
+            : cmLowerBound(paSource.getLowerBound()), cmUpperBound(paSource.getUpperBound()), cmSize(paSource.size()),
+              data(paSource.size()) {
+      if (paSource.size()) { // check if initialized
+        for (auto dest = data.begin(), source = paSource.begin(); source != paSource.end(); ++dest, ++source) {
+          dest->setValue(*source);
+        }
+      }
+    }
 
-[[nodiscard]] size_t getSizeof() const override {
-  return sizeof(CIEC_ARRAY_VARIABLE<T>);
-}
+    /**
+     * @brief Copy constructor from variable array with different type
+     * @tparam U The original element type
+     * @param paSource The original array
+     */
+    template<typename U, std::enable_if_t<std::is_assignable_v<T &, const U &>, bool> = true>
+    CIEC_ARRAY_VARIABLE(const CIEC_ARRAY_VARIABLE<U> &paSource)
+            : cmLowerBound(paSource.cmLowerBound), cmUpperBound(paSource.cmUpperBound), cmSize(paSource.cmSize),
+              data(paSource.begin(), paSource.end()) {
+    }
 
-[[nodiscard]] CIEC_ANY* clone(TForteByte *paDataBuf) const override {
-  return (nullptr != paDataBuf) ? new (paDataBuf) CIEC_ARRAY_VARIABLE<T>(*this) : new CIEC_ARRAY_VARIABLE<T>(*this);
-}
+    /**
+     * @brief Copy constructor from fixed array with different type
+     * @tparam U The original element type
+     * @tparam sourceLowerBound The original lower bound
+     * @tparam sourceUpperBound The original upper bound
+     * @param paSource The original array
+     */
+    template<typename U, intmax_t sourceLowerBound, intmax_t sourceUpperBound,
+            std::enable_if_t<std::is_assignable_v<T &, const U &>, bool> = true>
+    CIEC_ARRAY_VARIABLE(const CIEC_ARRAY_FIXED<U, sourceLowerBound, sourceUpperBound> &paSource)
+            : cmLowerBound(sourceLowerBound), cmUpperBound(sourceUpperBound), cmSize(paSource.size()),
+              data(paSource.begin(), paSource.end()) {
+    }
 
-[[nodiscard]] reference at(intmax_t index) override {
-  return data.at(getDataArrayIndex(index));
-}
+    /**
+     * @brief Copy assignment operator
+     * @param paSource The original array
+     * @return The assigned array
+     */
+    CIEC_ARRAY_VARIABLE &operator=(const CIEC_ARRAY_VARIABLE &paSource) {
+      assign(paSource, paSource.cmLowerBound, paSource.cmUpperBound);
+      return *this;
+    }
+
+    /**
+     * @brief Move assignment operator
+     * @param paSource The original array
+     * @return The assigned array
+     */
+    CIEC_ARRAY_VARIABLE &operator=(CIEC_ARRAY_VARIABLE &&paSource) {
+      assignMove(std::forward<CIEC_ARRAY_VARIABLE>(paSource), paSource.cmLowerBound, paSource.cmUpperBound);
+      return *this;
+    }
+
+    /**
+     * @brief Copy assignment operator from dynamic array
+     * @tparam U The original element type
+     * @param paSource The original array
+     * @return The assigned array
+     */
+    template<typename U>
+    CIEC_ARRAY_VARIABLE &operator=(const CIEC_ARRAY<U> &paSource) {
+      assignDynamic(paSource, paSource.getLowerBound(), paSource.getUpperBound());
+      return *this;
+    }
+
+    /**
+     * @brief Copy assignment operator from variable array
+     * @tparam U The original element type
+     * @param paSource The original array
+     * @return The assigned array
+     */
+    template<typename U, std::enable_if_t<std::is_assignable_v<T &, const U &>, bool> = true>
+    CIEC_ARRAY_VARIABLE &operator=(const CIEC_ARRAY_VARIABLE<U> &paSource) {
+      assign(paSource, paSource.cmLowerBound, paSource.cmUpperBound);
+      return *this;
+    }
+
+    /**
+     * @brief Copy assignment operator from fixed array
+     * @tparam U The original element type
+     * @tparam sourceLowerBound The original lower bound
+     * @tparam sourceUpperBound The original upper bound
+     * @param paSource The original array
+     * @return The assigned array
+     */
+    template<typename U, intmax_t sourceLowerBound, intmax_t sourceUpperBound,
+            std::enable_if_t<std::is_assignable_v<T &, const U &>, bool> = true>
+    CIEC_ARRAY_VARIABLE &operator=(const CIEC_ARRAY_FIXED<U, sourceLowerBound, sourceUpperBound> &paSource) {
+      assign(paSource, sourceLowerBound, sourceUpperBound);
+      return *this;
+    }
+
+    [[nodiscard]] size_t getSizeof() const override {
+      return sizeof(CIEC_ARRAY_VARIABLE<T>);
+    }
+
+    [[nodiscard]] CIEC_ANY *clone(TForteByte *paDataBuf) const override {
+      return (nullptr != paDataBuf) ? new(paDataBuf) CIEC_ARRAY_VARIABLE<T>(*this) : new CIEC_ARRAY_VARIABLE<T>(*this);
+    }
+
+    [[nodiscard]] reference at(intmax_t index) override {
+      return data.at(getDataArrayIndex(index));
+    }
 
 // PLC-like systems always want range checks
-[[nodiscard]] reference operator[](intmax_t index) override {
-  return data[getDataArrayIndex(index)];
-}
+    [[nodiscard]] reference operator[](intmax_t index) override {
+      return data[getDataArrayIndex(index)];
+    }
 
-[[nodiscard]] const_reference at(intmax_t index) const override {
-  return data.at(getDataArrayIndex(index));
-}
+    [[nodiscard]] const_reference at(intmax_t index) const override {
+      return data.at(getDataArrayIndex(index));
+    }
 
 // PLC-like systems always want range checks
-[[nodiscard]] const_reference operator[](intmax_t index) const override {
-  return data[getDataArrayIndex(index)];
-}
-
-CIEC_ARRAY_VARIABLE<T> &operator=(const CIEC_ARRAY_COMMON<T> &paSource) {
-  const intmax_t sourceLowerBound = paSource.getLowerBound();
-  const intmax_t sourceUpperBound = paSource.getUpperBound();
-  const intmax_t lowerBoundOffset = getLowerBound() - sourceLowerBound;
-  const intmax_t upperBoundOffset = getUpperBound() - sourceUpperBound;
-  
-  auto sourceIteratorBegin = paSource.cbegin();
-  auto sourceIteratorEnd = paSource.cend();
-  auto targetIteratorBegin = begin();
-  if ((sourceLowerBound <= getUpperBound()) && (sourceUpperBound >= getLowerBound())) {
-  // Target lowerBound is a bigger number than the source, so all elements below the target lowerbound cannot be copied, so shift start to first element which will be copied
-    if (getLowerBound() >= sourceLowerBound) {
-      sourceIteratorBegin += lowerBoundOffset;
-    } else {
-      targetIteratorBegin -= lowerBoundOffset; // lowerBoundOffset is negative here
+    [[nodiscard]] const_reference operator[](intmax_t index) const override {
+      return data[getDataArrayIndex(index)];
     }
 
-    if (getUpperBound() < sourceUpperBound) {
-      sourceIteratorEnd += upperBoundOffset; // upperBoundOffset is negative here
+    [[nodiscard]] constexpr intmax_t getLowerBound() const override {
+      return cmLowerBound;
     }
 
-    for (auto element = sourceIteratorBegin; element != sourceIteratorEnd; ++element, ++targetIteratorBegin) {
-      *targetIteratorBegin = *static_cast<const T *>(element);
+    [[nodiscard]] constexpr intmax_t getUpperBound() const override {
+      return cmUpperBound;
     }
-  }
-  return *this;
-}
 
-CIEC_ARRAY_VARIABLE<T> &operator=(const std::initializer_list<T> paSource) {
-  data = paSource;
-  return *this;
-}
+    [[nodiscard]] constexpr size_t size() const override {
+      return static_cast<size_t>(cmUpperBound - cmLowerBound + 1); // e.g., from 0 to 0 is still 1 element
+    }
 
-CIEC_ARRAY_VARIABLE<T> &operator=(const CIEC_ARRAY_VARIABLE<T> &paSource) {
-  data = paSource.data;
-  return *this;
-}
+    [[nodiscard]] iterator begin() noexcept {
+      return data.begin();
+    }
 
-[[nodiscard]] intmax_t getLowerBound() const override {
-  return cmLowerBound;
-}
+    [[nodiscard]] iterator end() noexcept {
+      return data.end();
+    }
 
-[[nodiscard]] intmax_t getUpperBound() const override {
-  return cmUpperBound;
-}
+    [[nodiscard]] const_iterator begin() const noexcept {
+      return data.begin();
+    }
 
-[[nodiscard]] size_t size() const override {
-  return cmUpperBound - cmLowerBound + 1; // e.g., from 0 to 0 is still 1 element
-}
+    [[nodiscard]] const_iterator end() const noexcept {
+      return data.end();
+    }
 
-[[nodiscard]] constexpr typename CIEC_ARRAY_COMMON<T>::iterator begin() override {
-  return data.data();
-}
+    [[nodiscard]] const_iterator cbegin() const noexcept {
+      return data.cbegin();
+    }
 
-[[nodiscard]] constexpr typename CIEC_ARRAY_COMMON<T>::iterator end() override {
-  return data.data() + data.size();
-}
+    [[nodiscard]] const_iterator cend() const noexcept {
+      return data.cend();
+    }
 
-[[nodiscard]] constexpr typename CIEC_ARRAY_COMMON<T>::const_iterator cbegin() const override {
-  return data.data();
-}
+    [[nodiscard]] CIEC_ANY::EDataTypeID getElementDataTypeID() const override {
+      return data[0].getDataTypeID();
+    }
 
-[[nodiscard]] constexpr typename CIEC_ARRAY_COMMON<T>::const_iterator cend() const override {
-  return data.data() + data.size();
-}
+    [[nodiscard]] CStringDictionary::TStringId getElementTypeNameID() const override {
+      return data[0].getTypeNameID();
+    }
 
-[[nodiscard]] CIEC_ANY::EDataTypeID getElementDataTypeID() const override {
-  return data[0].getDataTypeID();
-}
-~CIEC_ARRAY_VARIABLE() = default;
+    ~CIEC_ARRAY_VARIABLE() = default;
 
 private:
-  [[nodiscard]] size_t getDataArrayIndex(intmax_t paSTIndex) const {
-     return paSTIndex - cmLowerBound;
-  }
+    template<typename U>
+    inline void assign(const U &paArray, intmax_t sourceLowerBound, intmax_t sourceUpperBound) {
+      intmax_t begin = std::max(cmLowerBound, sourceLowerBound);
+      intmax_t end = std::min(cmUpperBound, sourceUpperBound);
+      for (intmax_t i = begin; i <= end; ++i) {
+        (*this)[i] = paArray[i];
+      }
+    }
 
-   const intmax_t cmLowerBound;
-   const intmax_t cmUpperBound;
-   const size_t cmSize;
-   std::vector<T> data;
+    template<typename U>
+    inline void assignMove(U &&paArray, intmax_t sourceLowerBound, intmax_t sourceUpperBound) {
+      intmax_t begin = std::max(cmLowerBound, sourceLowerBound);
+      intmax_t end = std::min(cmUpperBound, sourceUpperBound);
+      for (intmax_t i = begin; i <= end; ++i) {
+        (*this)[i] = std::move(paArray[i]);
+      }
+    }
+
+    template<typename U>
+    inline void assignDynamic(const U &paArray, intmax_t sourceLowerBound, intmax_t sourceUpperBound) {
+      if(paArray.size()) { // check if initialized
+        intmax_t begin = std::max(cmLowerBound, sourceLowerBound);
+        intmax_t end = std::min(cmUpperBound, sourceUpperBound);
+        for (intmax_t i = begin; i <= end; ++i) {
+          (*this)[i].setValue(paArray[i]);
+        }
+      }
+    }
+
+    [[nodiscard]] constexpr size_t getDataArrayIndex(intmax_t paSTIndex) const {
+      return static_cast<size_t>(paSTIndex - cmLowerBound);
+    }
+
+    const intmax_t cmLowerBound;
+    const intmax_t cmUpperBound;
+    const size_t cmSize;
+    std::vector<T> data;
 };
+
+static_assert(std::is_copy_constructible_v<CIEC_ARRAY_VARIABLE<CIEC_ANY>>);
+static_assert(std::is_move_constructible_v<CIEC_ARRAY_VARIABLE<CIEC_ANY>>);
+static_assert(std::is_copy_assignable_v<CIEC_ARRAY_VARIABLE<CIEC_ANY>>);
+static_assert(std::is_move_assignable_v<CIEC_ARRAY_VARIABLE<CIEC_ANY>>);
+static_assert(std::is_destructible_v<CIEC_ARRAY_VARIABLE<CIEC_ANY>>);
+static_assert(std::is_swappable_v<CIEC_ARRAY_VARIABLE<CIEC_ANY>>);
+
+static_assert(std::is_constructible_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY_VARIABLE<CIEC_UINT> &>);
+static_assert(std::is_constructible_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, CIEC_ARRAY_VARIABLE<CIEC_UINT> &&>);
+
+static_assert(std::is_assignable_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY_VARIABLE<CIEC_UINT> &>);
+static_assert(std::is_assignable_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, CIEC_ARRAY_VARIABLE<CIEC_UINT> &&>);
+
+static_assert(std::is_constructible_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY<CIEC_UINT> &>);
+static_assert(std::is_constructible_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY_TYPELIB &>);
+static_assert(std::is_constructible_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY_COMMON<CIEC_UINT> &>);
+static_assert(std::is_constructible_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY_FIXED<CIEC_UINT, 0, 0> &>);
+
+static_assert(std::is_assignable_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY<CIEC_UINT> &>);
+static_assert(std::is_assignable_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY_TYPELIB &>);
+static_assert(std::is_assignable_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY_COMMON<CIEC_UINT> &>);
+static_assert(std::is_assignable_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY_FIXED<CIEC_UINT, 0, 0> &>);
+
