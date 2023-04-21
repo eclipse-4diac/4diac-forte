@@ -34,8 +34,9 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "FreeRTOSLwIP")
     forte_set_timer(../fake_time/faketimerha)
   else(FORTE_FAKE_TIME)
     forte_set_timer(freertostiha)
-    forte_add_sourcefile_cpp(./forte_architecture_time.cpp)
   endif(FORTE_FAKE_TIME)
+  forte_add_sourcefile_cpp(./forte_architecture_time.cpp)
+
   forte_add_sourcefile_cpp(forte_architecture.cpp ../genforte_printer.cpp)
   forte_add_sourcefile_cpp(../genforte_realFunctions.cpp)
 
