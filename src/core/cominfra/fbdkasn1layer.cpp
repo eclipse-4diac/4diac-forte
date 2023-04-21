@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2010-2013 TU Wien ACIN, Profactor GmbH, nxtControl GmbH
+ *               2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -11,6 +12,7 @@
  *    Alois Zoitl, Ingo Hegny, Michael Hofmann, Stanislav Meduna,
  *    Martin Melik Merkumians
  *      - initial implementation, rework communication infrastructure, bug fixes
+ *    Martin Jobst - account for new FB layout and varying data type size
  *******************************************************************************/
 #include "fbdkasn1layer.h"
 #include "basecommfb.h"
@@ -49,26 +51,24 @@ CFBDKASN1ComLayer::CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * p
 
   if(nullptr != pa_poComFB){
     unsigned int sdNum = pa_poComFB->getNumSD();
-    CIEC_ANY *apoSDs = pa_poComFB->getSDs();
+    CIEC_ANY **apoSDs = pa_poComFB->getSDs();
     for(unsigned int i = 0; i < sdNum; ++i){
-      if(apoSDs != nullptr){
-        TForteByte typeSize = csm_aDataTags[apoSDs->getDataTypeID()][1];
+      if(apoSDs[i] != nullptr){
+        TForteByte typeSize = csm_aDataTags[apoSDs[i]->getDataTypeID()][1];
         if(typeSize != 255){
           mStatSerBufSize += typeSize + 1;
         }
-        ++apoSDs;
       }
     }
 
     unsigned int rdNum = pa_poComFB->getNumRD();
-    CIEC_ANY *apoRDs = pa_poComFB->getRDs();
+    CIEC_ANY **apoRDs = pa_poComFB->getRDs();
     for(unsigned int i = 0; i < rdNum; ++i){
-      if(nullptr != apoRDs){
-        TForteByte typeSize = csm_aDataTags[apoRDs->getDataTypeID()][1];
+      if(nullptr != apoRDs[i]){
+        TForteByte typeSize = csm_aDataTags[apoRDs[i]->getDataTypeID()][1];
         if(typeSize != 255){
           mDeserBufSize += typeSize + 1;
         }
-        ++apoRDs;
       }
     }
 
@@ -106,7 +106,7 @@ EComResponse CFBDKASN1ComLayer::sendData(void *pa_pvData, unsigned int pa_unSize
   EComResponse eRetVal = e_ProcessDataNoSocket;
 
   if(m_poBottomLayer != nullptr){
-    TConstIEC_ANYPtr apoSDs = static_cast<TConstIEC_ANYPtr > (pa_pvData);
+    TConstIEC_ANYPtr *apoSDs = static_cast<TConstIEC_ANYPtr *> (pa_pvData);
     unsigned int unNeededBufferSize = 0;
 
     if(nullptr == apoSDs){
@@ -114,7 +114,7 @@ EComResponse CFBDKASN1ComLayer::sendData(void *pa_pvData, unsigned int pa_unSize
      }
 
     for(size_t i = 0; i < pa_unSize; ++i){
-      unNeededBufferSize += getRequiredSerializationSize(apoSDs[i]);
+      unNeededBufferSize += getRequiredSerializationSize(*apoSDs[i]);
     }
     TForteByte *paUsedBuffer = nullptr;
     TForteByte *paDynSerBuffer = nullptr;
@@ -130,7 +130,7 @@ EComResponse CFBDKASN1ComLayer::sendData(void *pa_pvData, unsigned int pa_unSize
     int ser_size = -1; //stays negative if no Buffer for serialization is provided or error occurs while serialization
 
     if (nullptr != paUsedBuffer) {
-      ser_size = serializeFBDataPointArray(paUsedBuffer, unNeededBufferSize, apoSDs, pa_unSize);
+      ser_size = serializeDataPointArray(paUsedBuffer, unNeededBufferSize, apoSDs, pa_unSize);
     }
 
     if(ser_size > 0){
@@ -154,7 +154,7 @@ EComResponse CFBDKASN1ComLayer::recvData(const void *paData, unsigned int paSize
   EComResponse eRetVal = e_Nothing;
 
   if(m_poFb != nullptr){
-    CIEC_ANY *apoRDs = m_poFb->getRDs();
+    CIEC_ANY **apoRDs = m_poFb->getRDs();
     unsigned int unNumRD = m_poFb->getNumRD();
     unsigned int usedBufferSize = 0;
     TForteByte *usedBuffer = nullptr;
@@ -184,7 +184,7 @@ EComResponse CFBDKASN1ComLayer::recvData(const void *paData, unsigned int paSize
           eRetVal = e_ProcessDataDataTypeError;
           break;
         }
-        nBuf = deserializeDataPoint(usedBuffer, usedBufferSize, apoRDs[mDOPos]);
+        nBuf = deserializeDataPoint(usedBuffer, usedBufferSize, *apoRDs[mDOPos]);
       }
 
       // deserialize failed, copy data into buffer for next package
@@ -309,34 +309,6 @@ int CFBDKASN1ComLayer::serializeDataPoint(TForteByte* pa_pcBytes, int pa_nStream
     }
   }
   return nRetVal;
-}
-
-int CFBDKASN1ComLayer::serializeFBDataPointArray(TForteByte* pa_pcBytes, unsigned int pa_nStreamSize, TConstIEC_ANYPtr pa_aoData, unsigned int pa_nDataNum){
-  int nRetVal = -1;
-    if(0 == pa_nDataNum){
-      serializeNull(pa_pcBytes);
-      nRetVal = 1;
-    }
-    else{
-      if(nullptr == pa_aoData){
-        return -1;
-      }
-      int nRemainingBytes = pa_nStreamSize;
-      nRetVal = 0;
-      for(unsigned int i = 0; i < pa_nDataNum; i++){
-        int nBuf = serializeDataPoint(pa_pcBytes, nRemainingBytes, pa_aoData[i]);
-        if(0 < nBuf){
-          nRetVal += nBuf;
-          nRemainingBytes -= nBuf;
-          pa_pcBytes += nBuf;
-        }
-        else{
-          nRetVal = -1;
-          break;
-        }
-      }
-    }
-    return nRetVal;
 }
 
 void CFBDKASN1ComLayer::serializeTag(TForteByte* pa_pcBytes, const CIEC_ANY &pa_roCIECData){

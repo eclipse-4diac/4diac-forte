@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2010-2013 fortiss, TU Wien ACIN and others.
+ *               2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,6 +14,7 @@
  *    Monika Wenger - rename datatype files to forte_datatype
  *    Ingo Hegny - serialize/deserialize for STRUCT, changed datatype for IP-communication
  *    Stanislav Meduna - make serializeNull and isNull public
+ *    Martin Jobst - account for new FB layout and varying data type size
  *******************************************************************************/
 #ifndef _FBDKASN1LAYER_H_
 #define _FBDKASN1LAYER_H_
@@ -142,19 +144,6 @@ namespace forte {
         static bool isNull(const TForteByte* pa_pcBytes){
           return *pa_pcBytes == scm_nNull;
         }
-
-        /*!\brief Serialize an array of IEC data points from a FB into a byte array
-         *
-         *
-         * @param pa_pcBytes destination array for the serialization
-         * @param pa_nStreamSize size of the destination array
-         * @param pa_apoData  array of IEC data points
-         * @param pa_nDataNum length of the data point array
-         * @return on success the number of bytes written into the destination array,
-         *         -1 on error.
-         */
-        static int serializeFBDataPointArray(TForteByte* pa_pcBytes, unsigned int pa_nStreamSize, TConstIEC_ANYPtr pa_aoData, unsigned int pa_nDataNum);
-
 
         /*! \brief Serialization of data tag  according to IEC 61499 Compliance Profile for
          *   Feasibility Demonstrations based on ISO/IEC 8825 (ASN.1).

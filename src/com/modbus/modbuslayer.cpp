@@ -166,71 +166,71 @@ EComResponse CModbusComLayer::processInterrupt(){
   if(e_ProcessDataOk == m_eInterruptResp){
     switch (m_eConnectionState){
       case e_Connected: {
-        CIEC_ANY *apoRDs = m_poFb->getRDs();
+        CIEC_ANY **apoRDs = m_poFb->getRDs();
         unsigned int nrRDs = m_poFb->getNumRD();
 
         unsigned int dataIndex = 0;
 
         for(unsigned int i = 0; i < nrRDs; i++){
-          switch (apoRDs[i].getDataTypeID()){
+          switch (apoRDs[i]->getDataTypeID()){
             case CIEC_ANY::e_BOOL:
-              apoRDs[i].setValue(CIEC_BOOL(convertFBOutput<bool>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
+              apoRDs[i]->setValue(CIEC_BOOL(convertFBOutput<bool>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
               dataIndex += sizeof(bool);
               break;
             case CIEC_ANY::e_SINT:
-              apoRDs[i].setValue(CIEC_SINT(convertFBOutput<TForteInt8>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
+              apoRDs[i]->setValue(CIEC_SINT(convertFBOutput<TForteInt8>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
               dataIndex += sizeof(TForteInt8);
               break;
             case CIEC_ANY::e_INT:
-              apoRDs[i].setValue(CIEC_INT(convertFBOutput<TForteInt16>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
+              apoRDs[i]->setValue(CIEC_INT(convertFBOutput<TForteInt16>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
               dataIndex += sizeof(TForteInt16);
               break;
             case CIEC_ANY::e_DINT:
-              apoRDs[i].setValue(CIEC_DINT(convertFBOutput<TForteInt32>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
+              apoRDs[i]->setValue(CIEC_DINT(convertFBOutput<TForteInt32>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
               dataIndex += sizeof(TForteInt32);
               break;
             case CIEC_ANY::e_LINT:
-              apoRDs[i].setValue(CIEC_LINT(convertFBOutput<TForteInt64>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
+              apoRDs[i]->setValue(CIEC_LINT(convertFBOutput<TForteInt64>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
               dataIndex += sizeof(TForteInt64);
               break;
             case CIEC_ANY::e_USINT:
-              apoRDs[i].setValue(CIEC_USINT(convertFBOutput<TForteUInt8>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
+              apoRDs[i]->setValue(CIEC_USINT(convertFBOutput<TForteUInt8>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
               dataIndex += sizeof(TForteUInt8);
               break;
             case CIEC_ANY::e_UINT:
-              apoRDs[i].setValue(CIEC_UINT(convertFBOutput<TForteUInt16>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
+              apoRDs[i]->setValue(CIEC_UINT(convertFBOutput<TForteUInt16>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
               dataIndex += sizeof(TForteUInt16);
               break;
             case CIEC_ANY::e_UDINT:
-              apoRDs[i].setValue(CIEC_UDINT(convertFBOutput<TForteUInt32>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
+              apoRDs[i]->setValue(CIEC_UDINT(convertFBOutput<TForteUInt32>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
               dataIndex += sizeof(TForteUInt32);
               break;
             case CIEC_ANY::e_ULINT:
-              apoRDs[i].setValue(CIEC_ULINT(convertFBOutput<TForteUInt64>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
+              apoRDs[i]->setValue(CIEC_ULINT(convertFBOutput<TForteUInt64>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
               dataIndex += sizeof(TForteUInt64);
               break;
             case CIEC_ANY::e_BYTE:
-              apoRDs[i].setValue(CIEC_BYTE(convertFBOutput<TForteByte>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
+              apoRDs[i]->setValue(CIEC_BYTE(convertFBOutput<TForteByte>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
               dataIndex += sizeof(TForteByte);
               break;
             case CIEC_ANY::e_WORD:
-              apoRDs[i].setValue(CIEC_WORD(convertFBOutput<TForteWord>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
+              apoRDs[i]->setValue(CIEC_WORD(convertFBOutput<TForteWord>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
               dataIndex += sizeof(TForteWord);
               break;
             case CIEC_ANY::e_DWORD:
-              apoRDs[i].setValue(CIEC_DWORD(convertFBOutput<TForteDWord>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
+              apoRDs[i]->setValue(CIEC_DWORD(convertFBOutput<TForteDWord>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
               dataIndex += sizeof(TForteDWord);
               break;
             case CIEC_ANY::e_LWORD:
-              apoRDs[i].setValue(CIEC_LWORD(convertFBOutput<TForteLWord>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
+              apoRDs[i]->setValue(CIEC_LWORD(convertFBOutput<TForteLWord>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
               dataIndex += sizeof(TForteLWord);
               break;
             case CIEC_ANY::e_REAL:
-              apoRDs[i].setValue(CIEC_REAL(convertFBOutput<TForteFloat>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
+              apoRDs[i]->setValue(CIEC_REAL(convertFBOutput<TForteFloat>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
               dataIndex += sizeof(TForteFloat);
               break;
             case CIEC_ANY::e_LREAL:
-              apoRDs[i].setValue(CIEC_LREAL(convertFBOutput<TForteDFloat>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
+              apoRDs[i]->setValue(CIEC_LREAL(convertFBOutput<TForteDFloat>(&m_acRecvBuffer[dataIndex], m_unBufFillSize - dataIndex)));
               dataIndex += sizeof(TForteDFloat);
               break;
             default:

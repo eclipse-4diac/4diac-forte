@@ -316,7 +316,7 @@ EComResponse forte::com_infra::CHttpComLayer::recvServerData(CSinglyLinkedList<C
     if(noOfParameters == m_poFb->getNumRD()) {
       noOfParameters = 0;
       for(CSinglyLinkedList<CIEC_STRING>::Iterator iter = paParameterValues.begin(); iter != paParameterValues.end(); ++iter) {
-        m_poFb->getRDs()[noOfParameters++].setValue(*iter);
+        m_poFb->getRDs()[noOfParameters++]->setValue(*iter);
       }
     } else {
       DEVLOG_ERROR("[HTTP Layer] FB with path %s received a number of parameters of %u, while it has %u SDs\n", mPath.getValue(),
@@ -345,13 +345,13 @@ EComResponse CHttpComLayer::handleHTTPResponse(char *paData) {
   DEVLOG_DEBUG("[HTTP Layer] Handling received HTTP response\n");
   EComResponse eRetVal = e_ProcessDataRecvFaild;
   if(m_poFb != nullptr) {
-    CIEC_ANY* apoRDs = m_poFb->getRDs();
+    CIEC_ANY** apoRDs = m_poFb->getRDs();
     // Interpret HTTP response and set output status according to success/failure.
     CIEC_STRING responseCode;
     CIEC_STRING output;
     CHttpParser::parseResponse(output, responseCode, paData) ? eRetVal = e_ProcessDataOk : eRetVal = e_ProcessDataRecvFaild;
-    apoRDs[0].fromString(responseCode.getValue());
-    apoRDs[1].fromString(output.getValue());
+    apoRDs[0]->fromString(responseCode.getValue());
+    apoRDs[1]->fromString(output.getValue());
   } else {
     DEVLOG_ERROR("[HTTP Layer] No FB defined\n");
   }

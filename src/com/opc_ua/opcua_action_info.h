@@ -127,13 +127,13 @@ class CActionInfo {
      * Retrieves the array of CIEC_ANY to be sent
      * @return the array of CIEC_ANY to be sent
      */
-    const CIEC_ANY* getDataToSend() const;
+    const CIEC_ANY *const *getDataToSend() const;
 
     /**
      * Retrieves the array of CIEC_ANY where to receive the data
      * @return array of CIEC_ANY where to receive the data
      */
-    CIEC_ANY* getDataToReceive() const;
+    CIEC_ANY *const *getDataToReceive() const;
 
     /**
      * Retrieves the size of the array to send

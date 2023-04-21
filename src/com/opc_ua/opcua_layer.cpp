@@ -49,7 +49,7 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
         response = e_InitOk;
         mRDBuffer = new CIEC_ANY[getCommFB()->getNumRD()];
         for(size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
-          getCommFB()->getRDs()[i].clone(reinterpret_cast<TForteByte*>(&(mRDBuffer[i])));
+          getCommFB()->getRDs()[i]->clone(reinterpret_cast<TForteByte*>(&(mRDBuffer[i])));
         }
       }
     }
@@ -120,7 +120,7 @@ EComResponse COPC_UA_Layer::sendData(void *, unsigned int) {
 EComResponse COPC_UA_Layer::processInterrupt() {
   CCriticalRegion criticalRegion(mRDBufferMutex);
   for(size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
-    getCommFB()->getRDs()[i].setValue(mRDBuffer[i]);
+    getCommFB()->getRDs()[i]->setValue(mRDBuffer[i]);
   }
   setDataAlreadyPresentRead(false);
   return mInterruptResp;

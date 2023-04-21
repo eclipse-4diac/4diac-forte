@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2011-2014 fortiss and TU Wien ACIN.
+ *               2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,6 +10,7 @@
  *
  * Contributors:
  *    Alois Zoitl - initial implementation and rework communication infrastructure
+ *    Martin Jobst - account for new FB layout and varying data type size
  *******************************************************************************/
 #ifndef LOCALCOMLAYER_H_
 #define LOCALCOMLAYER_H_
@@ -42,7 +44,7 @@ namespace forte {
       private:
         EComResponse openConnection(char *pa_acLayerParameter) override;
         void closeConnection() override;
-        void setRDs(CLocalComLayer *pa_poSublLayer, CIEC_ANY *pa_aSDs, unsigned int pa_unNumSDs);
+        void setRDs(CLocalComLayer *pa_poSublLayer, CIEC_ANY **pa_aSDs, unsigned int pa_unNumSDs);
 
         class CLocalCommGroup {
           public:

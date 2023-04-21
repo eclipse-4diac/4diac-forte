@@ -75,13 +75,13 @@ EComResponse COpcComLayer::processInterrupt(){
     case e_ProcessDataOk:
       switch (m_eConnectionState){
       case e_Connected: {
-        CIEC_ANY *apoRDs = m_poFb->getRDs();
+        CIEC_ANY **apoRDs = m_poFb->getRDs();
         unsigned int nrRDs = m_poFb->getNumRD();
 
         TOpcProcessVarList::Iterator itEnd = m_lFBOutputVars.end();
         TOpcProcessVarList::Iterator it = m_lFBOutputVars.begin();
         for(unsigned int i = 0; i < nrRDs && it != itEnd; i++, ++it){
-          setOutputValue(&apoRDs[i], &it->updateValue());
+          setOutputValue(apoRDs[i], &it->updateValue());
         }
 
         break;
