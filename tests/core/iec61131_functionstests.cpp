@@ -248,6 +248,14 @@ BOOST_AUTO_TEST_CASE(replace_P_unsigned_0)
   BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
 }
 
+BOOST_AUTO_TEST_CASE(replace_P_plus_L_at_end)
+{
+  CIEC_STRING sIn1("123456789");
+  CIEC_STRING sIn2("aaa");
+  CIEC_STRING sResult(func_REPLACE(sIn1, sIn2, CIEC_UINT(7), CIEC_UINT(3)));
+  BOOST_TEST(sResult.getValue() == "12aaa");
+}
+
 BOOST_AUTO_TEST_CASE(standard_example_delete)
 {
   CIEC_STRING sIn1("ABXYC");

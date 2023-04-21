@@ -1079,7 +1079,7 @@ template<typename T> const T func_REPLACE(const T &paIn1, const T &paIn2, const 
     return paIn1;
   }
 
-  if((P + L) > paIn1.length()) {
+  if((P + L - 1) > paIn1.length()) { //STRINGs start at index 1, so we need to subtract 1
     DEVLOG_ERROR("REPLACE outside string boundaries!\n");
     return paIn1;
   }
