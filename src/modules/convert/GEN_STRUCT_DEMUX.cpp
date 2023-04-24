@@ -33,9 +33,8 @@ const TForteInt16 GEN_STRUCT_DEMUX::scm_anEOWithIndexes[] = {0};
 
 void GEN_STRUCT_DEMUX::executeEvent(int paEIID) {
   if(scm_nEventREQID == paEIID) {
-    CIEC_ANY *members = st_IN().getMembers();
     for (size_t i = 0; i < st_IN().getStructSize(); i++){
-      getDO(static_cast<unsigned int>(i))->setValue(members[i]);
+      getDO(static_cast<unsigned int>(i))->setValue(*st_IN().getMember(i));
     }
     sendOutputEvent(scm_nEventCNFID);
   }
@@ -65,7 +64,7 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
       // we could find the struct
       CIEC_STRUCT *structInstance = static_cast<CIEC_STRUCT*>(data);
 
-      TForteUInt16 structSize = structInstance->getStructSize();
+      size_t structSize = structInstance->getStructSize();
       if(structSize < 1 || structSize > 254) { //the structure size must be non zero and less than 255 (maximum number of data outputs)
         DEVLOG_ERROR("[GEN_STRUCT_DEMUX]: The structure %s has a size is not within range > 0 and < 255\n",
           CStringDictionary::getInstance().get(structTypeNameId));
@@ -92,13 +91,14 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
         diDataTypeNames[0] = structTypeNameId;
 
         for(size_t i = 0, typeNameIndex = 0; i < paInterfaceSpec.m_nNumDOs; i++, typeNameIndex++) {
+          CIEC_ANY &member = *structInstance->getMember(i);
           eoWith[i] = static_cast<TForteUInt8>(i);
           doNames[i] = structInstance->elementNames()[i];
-          doDataTypeNames[typeNameIndex] = (&(structInstance->getMembers()[i]))->getTypeNameID();
-          if((&(structInstance->getMembers()[i]))->getDataTypeID() == CIEC_ANY::e_ARRAY){
-            CIEC_ARRAY_TYPELIB *array = static_cast<CIEC_ARRAY_TYPELIB*>(&(structInstance->getMembers()[i]));
-            doDataTypeNames[typeNameIndex + 1] = static_cast<CStringDictionary::TStringId>(array->size());
-            doDataTypeNames[typeNameIndex + 2] = array->getElementTypeNameID();
+          doDataTypeNames[typeNameIndex] = member.getTypeNameID();
+          if(member.getDataTypeID() == CIEC_ANY::e_ARRAY){
+            CIEC_ARRAY_TYPELIB &array = static_cast<CIEC_ARRAY_TYPELIB&>(member);
+            doDataTypeNames[typeNameIndex + 1] = static_cast<CStringDictionary::TStringId>(array.size());
+            doDataTypeNames[typeNameIndex + 2] = array.getElementTypeNameID();
             typeNameIndex += 2;
           }
         }

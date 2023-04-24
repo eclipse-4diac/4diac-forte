@@ -35,29 +35,48 @@ class CIEC_EndianessTestStruct : public CIEC_STRUCT {
   DECLARE_FIRMWARE_DATATYPE(EndianessTestStruct);
 
 public:
-  CIEC_EndianessTestStruct();
+    CIEC_BOOL Var1;
+    CIEC_DINT Var2;
+    CIEC_LWORD Var3;
 
-  virtual ~CIEC_EndianessTestStruct() = default;
+    CIEC_EndianessTestStruct() = default;
 
-  CIEC_EndianessTestStruct &operator=(const CIEC_EndianessTestStruct &paValue) {
-    if (this != &paValue) {
-      setValue(paValue);
+    size_t getStructSize() const override {
+      return 3;
     }
-    return *this;
-  }
 
+    const CStringDictionary::TStringId* elementNames() const override {
+      return scm_unElementNames;
+    }
+
+    CStringDictionary::TStringId getStructTypeNameID() const override {
+      return g_nStringIdEndianessTestStruct;
+    }
+
+    CIEC_ANY *getMember(size_t paMemberIndex) override {
+      switch(paMemberIndex) {
+        case 0: return &Var1;
+        case 1: return &Var2;
+        case 2: return &Var3;
+      }
+      return nullptr;
+    }
+
+    const CIEC_ANY *getMember(size_t paMemberIndex) const override {
+      switch(paMemberIndex) {
+        case 0: return &Var1;
+        case 1: return &Var2;
+        case 2: return &Var3;
+      }
+      return nullptr;
+    }
 private:
-  static const CStringDictionary::TStringId scm_unElementTypes[];
   static const CStringDictionary::TStringId scm_unElementNames[];
 };
 
-const CStringDictionary::TStringId CIEC_EndianessTestStruct::scm_unElementTypes[] = {g_nStringIdBOOL, g_nStringIdDINT, g_nStringIdLWORD};
 const CStringDictionary::TStringId CIEC_EndianessTestStruct::scm_unElementNames[] = {g_nStringIdVal1, g_nStringIdVal2, g_nStringIdVal3};
 
 DEFINE_FIRMWARE_DATATYPE(EndianessTestStruct, g_nStringIdEndianessTestStruct)
-CIEC_EndianessTestStruct::CIEC_EndianessTestStruct() : CIEC_STRUCT(g_nStringIdEndianessTestStruct, 3, scm_unElementTypes, scm_unElementNames, e_APPLICATION + e_CONSTRUCTED + 1)
-{
-}
 
 void testSTInIsOutBoolDummyFunction(CIEC_BOOL paIn, CIEC_BOOL &paOut) {
   paOut = paIn;

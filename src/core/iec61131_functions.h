@@ -1250,104 +1250,13 @@ typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_STRING, T>, T> swapEndianes
 
 CIEC_ARRAY<CIEC_ANY> swapEndianess(const CIEC_ARRAY<CIEC_ANY> &paValue);
 
+void swapEndianessInplace(CIEC_STRUCT &paValue);
+
 template <typename T>
 typename std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, T>
 swapEndianess(const T &paValue) {
   T reversed(paValue);
-  CIEC_ANY *members = reversed.getMembers();
-  for (size_t i = 0; i < reversed.getStructSize(); ++i) {
-    switch (members[i].getDataTypeID()) {
-    case CIEC_ANY::e_BOOL:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_BOOL *>(members)[i]));
-      break;
-    case CIEC_ANY::e_SINT:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_SINT *>(members)[i]));
-      break;
-    case CIEC_ANY::e_INT:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_INT *>(members)[i]));
-      break;
-    case CIEC_ANY::e_DINT:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_DINT *>(members)[i]));
-      break;
-    case CIEC_ANY::e_LINT:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_LINT *>(members)[i]));
-      break;
-    case CIEC_ANY::e_USINT:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_USINT *>(members)[i]));
-      break;
-    case CIEC_ANY::e_UINT:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_UINT *>(members)[i]));
-      break;
-    case CIEC_ANY::e_UDINT:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_UDINT *>(members)[i]));
-      break;
-    case CIEC_ANY::e_ULINT:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_ULINT *>(members)[i]));
-      break;
-    case CIEC_ANY::e_BYTE:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_BYTE *>(members)[i]));
-      break;
-    case CIEC_ANY::e_WORD:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_WORD *>(members)[i]));
-      break;
-    case CIEC_ANY::e_DWORD:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_DWORD *>(members)[i]));
-      break;
-    case CIEC_ANY::e_LWORD:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_LWORD *>(members)[i]));
-      break;
-    case CIEC_ANY::e_DATE:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_DATE *>(members)[i]));
-      break;
-    case CIEC_ANY::e_TIME_OF_DAY:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_TIME_OF_DAY *>(members)[i]));
-      break;
-    case CIEC_ANY::e_DATE_AND_TIME:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_DATE_AND_TIME *>(members)[i]));
-      break;
-    case CIEC_ANY::e_TIME:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_TIME *>(members)[i]));
-      break;
-    case CIEC_ANY::e_CHAR:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_CHAR *>(members)[i]));
-      break;
-    case CIEC_ANY::e_WCHAR:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_WCHAR *>(members)[i]));
-      break;
-    case CIEC_ANY::e_LDATE:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_LDATE *>(members)[i]));
-      break;
-    case CIEC_ANY::e_LTIME_OF_DAY:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_LTIME_OF_DAY *>(members)[i]));
-      break;
-    case CIEC_ANY::e_LDATE_AND_TIME:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_LDATE_AND_TIME *>(members)[i]));
-      break;
-    case CIEC_ANY::e_LTIME:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_LDATE *>(members)[i]));
-      break;
-    case CIEC_ANY::e_REAL:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_REAL *>(members)[i]));
-      break;
-    case CIEC_ANY::e_LREAL:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_LREAL *>(members)[i]));
-      break;
-    case CIEC_ANY::e_STRING:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_STRING *>(members)[i]));
-      break;
-    case CIEC_ANY::e_WSTRING:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_WSTRING *>(members)[i]));
-      break;
-    case CIEC_ANY::e_ARRAY:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_ARRAY<CIEC_ANY> *>(members)[i]));
-      break;
-    case CIEC_ANY::e_STRUCT:
-      members[i].setValue(swapEndianess(static_cast<const CIEC_STRUCT *>(members)[i]));
-      break;
-    default:
-      break; //do nothing
-    }
-  }
+  swapEndianessInplace(reversed);
   return reversed;
 }
 

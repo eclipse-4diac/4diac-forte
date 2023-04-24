@@ -28,7 +28,6 @@
 #include "CIEC_ARRAY_test_gen.cpp"
 #endif
 
-#ifdef LAYOUT_REFACTOR //TODO Reenable after struct refactor is complete
 class CIEC_ArrayOfStructTest : public CIEC_STRUCT {
   DECLARE_FIRMWARE_DATATYPE(ArrayOfStructTest)
     ;
@@ -40,42 +39,53 @@ class CIEC_ArrayOfStructTest : public CIEC_STRUCT {
      */
 
   public:
-    CIEC_ArrayOfStructTest();
+    CIEC_ARRAY<CIEC_STRING> Var1;
+    CIEC_BOOL Var2;
+    CIEC_ARRAY<CIEC_INT> Var3;
 
-    CIEC_STRING& val11() {
-      return static_cast<CIEC_STRING &>((*static_cast<CIEC_ARRAY_TYPELIB *>(&getMembers()[0]))[0]);
+    CIEC_ArrayOfStructTest() :
+            Var1(sizeOfFirstArray, g_nStringIdSTRING), Var2(false), Var3(sizeOfSecondArray, g_nStringIdINT) {};
+
+    size_t getStructSize() const override {
+      return 3;
     }
 
-    CIEC_STRING& val12() {
-      return static_cast<CIEC_STRING &>((*static_cast<CIEC_ARRAY_TYPELIB *>(&getMembers()[0]))[1]);
+    const CStringDictionary::TStringId* elementNames() const override {
+      return scm_unElementNames;
     }
 
-    CIEC_BOOL& val2() {
-      return *static_cast<CIEC_BOOL*>(&getMembers()[1]);
+    CStringDictionary::TStringId getStructTypeNameID() const override {
+      return g_nStringIdArrayOfStructTest;
     }
 
-    CIEC_INT& val31() {
-      return static_cast<CIEC_INT &>((*static_cast<CIEC_ARRAY_TYPELIB *>(&getMembers()[2]))[0]);
+    CIEC_ANY *getMember(size_t paMemberIndex) override {
+      switch(paMemberIndex) {
+        case 0: return &Var1;
+        case 1: return &Var2;
+        case 2: return &Var3;
+      }
+      return nullptr;
+    }
+
+    const CIEC_ANY *getMember(size_t paMemberIndex) const override {
+      switch(paMemberIndex) {
+        case 0: return &Var1;
+        case 1: return &Var2;
+        case 2: return &Var3;
+      }
+      return nullptr;
     }
 
     static const unsigned int sizeOfFirstArray = 2;
     static const unsigned int sizeOfSecondArray = 1;
 
   private:
-    static const CStringDictionary::TStringId scm_unElementTypes[];
     static const CStringDictionary::TStringId scm_unElementNames[];
 };
 
-const CStringDictionary::TStringId CIEC_ArrayOfStructTest::scm_unElementTypes[] = { g_nStringIdARRAY, sizeOfFirstArray, g_nStringIdSTRING, g_nStringIdBOOL,
-  g_nStringIdARRAY, sizeOfSecondArray, g_nStringIdINT };
 const CStringDictionary::TStringId CIEC_ArrayOfStructTest::scm_unElementNames[] = { g_nStringIdVal1, g_nStringIdVal2, g_nStringIdVal3 };
 
 DEFINE_FIRMWARE_DATATYPE(ArrayOfStructTest, g_nStringIdArrayOfStructTest);
-
-CIEC_ArrayOfStructTest::CIEC_ArrayOfStructTest() :
-    CIEC_STRUCT(g_nStringIdArrayOfStructTest, 3, scm_unElementTypes, scm_unElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
-}
-#endif
 
 BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
 BOOST_AUTO_TEST_CASE(Array_assignment_test_BOOL)
@@ -669,19 +679,18 @@ BOOST_AUTO_TEST_CASE(Array_emptyArray)
 const char cTestStringData[] = "Check string!";
 const char cTestStringData2[] = "Check string 2!";
 
-#ifdef LAYOUT_REFACTOR //TODO Reenable after struct refactor is complete
 void checkArrayOfStructTest_InitialValues(CIEC_ArrayOfStructTest &paStruct) {
-  BOOST_CHECK_EQUAL(0, paStruct.val11().length());
-  BOOST_CHECK_EQUAL(0, paStruct.val12().length());
-  BOOST_CHECK_EQUAL(false, paStruct.val2());
-  BOOST_CHECK_EQUAL(0, static_cast<CIEC_INT::TValueType>(paStruct.val31()));
+  BOOST_CHECK_EQUAL(0, paStruct.Var1[0].length());
+  BOOST_CHECK_EQUAL(0, paStruct.Var1[1].length());
+  BOOST_CHECK_EQUAL(false, paStruct.Var2);
+  BOOST_CHECK_EQUAL(0, static_cast<CIEC_INT::TValueType>(paStruct.Var3[0]));
 }
 
 void setDataArrayOfStructTest(CIEC_ArrayOfStructTest &paStruct, const char* paVal11, const char* paVal12, bool paVal2, int paVal31) {
-  paStruct.val11() = CIEC_STRING(paVal11);
-  paStruct.val12() = CIEC_STRING(paVal12);
-  paStruct.val2() = CIEC_BOOL(paVal2);
-  paStruct.val31() = CIEC_INT(paVal31);
+  paStruct.Var1[0] = CIEC_STRING(paVal11);
+  paStruct.Var1[1] = CIEC_STRING(paVal12);
+  paStruct.Var2 = CIEC_BOOL(paVal2);
+  paStruct.Var3[0] = CIEC_INT(paVal31);
 }
 
 void setupArrayOfStructTest_TestDataSet1(CIEC_ArrayOfStructTest &paStruct) {
@@ -689,10 +698,10 @@ void setupArrayOfStructTest_TestDataSet1(CIEC_ArrayOfStructTest &paStruct) {
 }
 
 void checkArrayOfStructTest_TestDataSet1(CIEC_ArrayOfStructTest &paStruct) {
-  BOOST_CHECK_EQUAL(strcmp(paStruct.val11().getValue(), cTestStringData), 0);
-  BOOST_CHECK_EQUAL(strcmp(paStruct.val12().getValue(), cTestStringData2), 0);
-  BOOST_CHECK_EQUAL(1, paStruct.val2());
-  BOOST_CHECK_EQUAL(24534, static_cast<CIEC_INT::TValueType>(paStruct.val31()));
+  BOOST_CHECK_EQUAL(strcmp(paStruct.Var1[0].getValue(), cTestStringData), 0);
+  BOOST_CHECK_EQUAL(strcmp(paStruct.Var1[1].getValue(), cTestStringData2), 0);
+  BOOST_CHECK_EQUAL(1, paStruct.Var2);
+  BOOST_CHECK_EQUAL(24534, static_cast<CIEC_INT::TValueType>(paStruct.Var3[0]));
 }
 
 BOOST_AUTO_TEST_CASE(Array_arrayOfStructs)
@@ -749,7 +758,6 @@ BOOST_AUTO_TEST_CASE(Array_arrayOfStructs)
   BOOST_CHECK_EQUAL(strcmp(acBuffer, "[(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534])]"), 0);
 
 }
-#endif
 
   BOOST_AUTO_TEST_CASE(Array_arrayOfUndefined) {
     CIEC_ARRAY_TYPELIB nTest(3, g_nStringIdUNDEFINEDDATATYPE);

@@ -19,8 +19,32 @@
 DEFINE_FIRMWARE_DATATYPE(DataTypeTest, g_nStringIdDataTypeTest);
 
 CIEC_DataTypeTest::CIEC_DataTypeTest() :
-    CIEC_STRUCT(g_nStringIdDataTypeTest, 2, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_STRUCT(),
+    var_Name(""),
+    var_Age(0),
+    var_IsRegistered(false) {
 }
 
-const CStringDictionary::TStringId CIEC_DataTypeTest::scmElementTypes[] = { g_nStringIdSTRING, g_nStringIdSINT, g_nStringIdBOOL };
+CStringDictionary::TStringId CIEC_DataTypeTest::getStructTypeNameID() const {
+  return g_nStringIdDataTypeTest;
+}
+
+CIEC_ANY *CIEC_DataTypeTest::getMember(size_t paMemberIndex) {
+  switch (paMemberIndex) {
+    case 0: return &var_Name;
+    case 1: return &var_Age;
+    case 2: return &var_IsRegistered;
+  }
+  return nullptr;
+}
+
+const CIEC_ANY *CIEC_DataTypeTest::getMember(size_t paMemberIndex) const {
+  switch (paMemberIndex) {
+    case 0: return &var_Name;
+    case 1: return &var_Age;
+    case 2: return &var_IsRegistered;
+  }
+  return nullptr;
+}
+
 const CStringDictionary::TStringId CIEC_DataTypeTest::scmElementNames[] = { g_nStringIdName, g_nStringIdAge, g_nStringIdIsRegistered };

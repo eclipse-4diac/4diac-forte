@@ -567,13 +567,111 @@ CIEC_ARRAY<CIEC_ANY> swapEndianess(const CIEC_ARRAY<CIEC_ANY> &paValue) {
       reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_ARRAY<CIEC_ANY> &>(paValue[i])));
       break;
     case CIEC_ANY::e_STRUCT:
-      reversed[i].setValue(swapEndianess(reinterpret_cast<const CIEC_STRUCT &>(paValue[i])));
+      reversed[i].setValue(paValue[i]);
+      swapEndianessInplace(reinterpret_cast<CIEC_STRUCT &>(reversed[i]));
       break;
     default:
       break; // do nothing
     }
   }
   return reversed;
+}
+
+void swapEndianessInplace(CIEC_STRUCT &paValue) {
+  for (size_t i = 0; i < paValue.getStructSize(); ++i) {
+    CIEC_ANY &member = *paValue.getMember(i);
+    switch (member.getDataTypeID()) {
+      case CIEC_ANY::e_BOOL:
+        member.setValue(swapEndianess(static_cast<CIEC_BOOL &>(member)));
+        break;
+      case CIEC_ANY::e_SINT:
+        member.setValue(swapEndianess(static_cast<CIEC_SINT &>(member)));
+        break;
+      case CIEC_ANY::e_INT:
+        member.setValue(swapEndianess(static_cast<CIEC_INT &>(member)));
+        break;
+      case CIEC_ANY::e_DINT:
+        member.setValue(swapEndianess(static_cast<CIEC_DINT &>(member)));
+        break;
+      case CIEC_ANY::e_LINT:
+        member.setValue(swapEndianess(static_cast<CIEC_LINT &>(member)));
+        break;
+      case CIEC_ANY::e_USINT:
+        member.setValue(swapEndianess(static_cast<CIEC_USINT &>(member)));
+        break;
+      case CIEC_ANY::e_UINT:
+        member.setValue(swapEndianess(static_cast<CIEC_UINT &>(member)));
+        break;
+      case CIEC_ANY::e_UDINT:
+        member.setValue(swapEndianess(static_cast<CIEC_UDINT &>(member)));
+        break;
+      case CIEC_ANY::e_ULINT:
+        member.setValue(swapEndianess(static_cast<CIEC_ULINT &>(member)));
+        break;
+      case CIEC_ANY::e_BYTE:
+        member.setValue(swapEndianess(static_cast<CIEC_BYTE &>(member)));
+        break;
+      case CIEC_ANY::e_WORD:
+        member.setValue(swapEndianess(static_cast<CIEC_WORD &>(member)));
+        break;
+      case CIEC_ANY::e_DWORD:
+        member.setValue(swapEndianess(static_cast<CIEC_DWORD &>(member)));
+        break;
+      case CIEC_ANY::e_LWORD:
+        member.setValue(swapEndianess(static_cast<CIEC_LWORD &>(member)));
+        break;
+      case CIEC_ANY::e_DATE:
+        member.setValue(swapEndianess(static_cast<CIEC_DATE &>(member)));
+        break;
+      case CIEC_ANY::e_TIME_OF_DAY:
+        member.setValue(swapEndianess(static_cast<CIEC_TIME_OF_DAY &>(member)));
+        break;
+      case CIEC_ANY::e_DATE_AND_TIME:
+        member.setValue(swapEndianess(static_cast<CIEC_DATE_AND_TIME &>(member)));
+        break;
+      case CIEC_ANY::e_TIME:
+        member.setValue(swapEndianess(static_cast<CIEC_TIME &>(member)));
+        break;
+      case CIEC_ANY::e_CHAR:
+        member.setValue(swapEndianess(static_cast<CIEC_CHAR &>(member)));
+        break;
+      case CIEC_ANY::e_WCHAR:
+        member.setValue(swapEndianess(static_cast<CIEC_WCHAR &>(member)));
+        break;
+      case CIEC_ANY::e_LDATE:
+        member.setValue(swapEndianess(static_cast<CIEC_LDATE &>(member)));
+        break;
+      case CIEC_ANY::e_LTIME_OF_DAY:
+        member.setValue(swapEndianess(static_cast<CIEC_LTIME_OF_DAY &>(member)));
+        break;
+      case CIEC_ANY::e_LDATE_AND_TIME:
+        member.setValue(swapEndianess(static_cast<CIEC_LDATE_AND_TIME &>(member)));
+        break;
+      case CIEC_ANY::e_LTIME:
+        member.setValue(swapEndianess(static_cast<CIEC_LDATE &>(member)));
+        break;
+      case CIEC_ANY::e_REAL:
+        member.setValue(swapEndianess(static_cast<CIEC_REAL &>(member)));
+        break;
+      case CIEC_ANY::e_LREAL:
+        member.setValue(swapEndianess(static_cast<CIEC_LREAL &>(member)));
+        break;
+      case CIEC_ANY::e_STRING:
+        member.setValue(swapEndianess(static_cast<CIEC_STRING &>(member)));
+        break;
+      case CIEC_ANY::e_WSTRING:
+        member.setValue(swapEndianess(static_cast<CIEC_WSTRING &>(member)));
+        break;
+      case CIEC_ANY::e_ARRAY:
+        member.setValue(swapEndianess(static_cast<const CIEC_ARRAY<CIEC_ANY> &>(member)));
+        break;
+      case CIEC_ANY::e_STRUCT:
+        swapEndianessInplace(static_cast<CIEC_STRUCT &>(member));
+        break;
+      default:
+        break; //do nothing
+    }
+  }
 }
 
 #ifdef FORTE_LITTLE_ENDIAN

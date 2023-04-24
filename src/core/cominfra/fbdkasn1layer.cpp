@@ -535,10 +535,9 @@ int CFBDKASN1ComLayer::serializeValueStruct(TForteByte* pa_pcBytes, int pa_nStre
   int nStreamUsed = 0;
   int nTotalStreamUsed = 0;
 
-  int nStructSize = pa_roStruct.getStructSize();
-
-  for (int i = 0; i < nStructSize; i++){
-    const CIEC_ANY& ro_val = (pa_roStruct.getMembers())[i];
+  size_t structSize = pa_roStruct.getStructSize();
+  for (size_t i = 0; i < structSize; i++){
+    const CIEC_ANY& ro_val = *pa_roStruct.getMember(i);
     if (CIEC_ANY::e_BOOL == ro_val.getDataTypeID()) {
       //Handle BOOL-values differently, since value is encoded in tag
       nStreamUsed = serializeDataPoint(pa_pcBytes, pa_nStreamSize, ro_val);
@@ -855,8 +854,9 @@ int CFBDKASN1ComLayer::deserializeValueStruct(const TForteByte* pa_pcBytes, int 
   int nRetVal = 0;
   int nValueLen;
 
-  for (unsigned int i=0; i < pa_roIECData.getStructSize(); i++) {
-    CIEC_ANY& ro_val = (pa_roIECData.getMembers())[i];
+  size_t structSize = pa_roIECData.getStructSize();
+  for (size_t i = 0; i < structSize; i++){
+    CIEC_ANY& ro_val = *pa_roIECData.getMember(i);
     if (CIEC_ANY::e_BOOL == ro_val.getDataTypeID()) {
       //Hanlde BOOL-datatype differently since value is encoded in tag
       nValueLen = deserializeDataPoint(pa_pcBytes, pa_nStreamSize, ro_val);

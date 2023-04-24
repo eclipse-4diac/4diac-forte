@@ -35,9 +35,41 @@ class CIEC_TestStruct : public CIEC_STRUCT {
      */
 
   public:
-    CIEC_TestStruct();
+    CIEC_BOOL Var1;
+    CIEC_INT Var2;
+    CIEC_TIME Var3;
 
-    virtual ~CIEC_TestStruct() = default;
+    CIEC_TestStruct() = default;
+
+    size_t getStructSize() const override {
+      return 3;
+    }
+
+    const CStringDictionary::TStringId* elementNames() const override {
+      return scm_unElementNames;
+    }
+
+    CStringDictionary::TStringId getStructTypeNameID() const override {
+      return g_nStringIdTestStruct;
+    }
+
+    CIEC_ANY *getMember(size_t paMemberIndex) override {
+      switch(paMemberIndex) {
+        case 0: return &Var1;
+        case 1: return &Var2;
+        case 2: return &Var3;
+      }
+      return nullptr;
+    }
+
+    const CIEC_ANY *getMember(size_t paMemberIndex) const override {
+      switch(paMemberIndex) {
+        case 0: return &Var1;
+        case 1: return &Var2;
+        case 2: return &Var3;
+      }
+      return nullptr;
+    }
 
   private:
     static const CStringDictionary::TStringId scm_unElementTypes[];
@@ -48,9 +80,6 @@ const CStringDictionary::TStringId CIEC_TestStruct::scm_unElementTypes[] = { g_n
 const CStringDictionary::TStringId CIEC_TestStruct::scm_unElementNames[] = { g_nStringIdVal1, g_nStringIdVal2, g_nStringIdVal3 };
 
 DEFINE_FIRMWARE_DATATYPE(TestStruct, g_nStringIdTestStruct)
-CIEC_TestStruct::CIEC_TestStruct() :
-    CIEC_STRUCT(g_nStringIdTestStruct, 3, scm_unElementTypes, scm_unElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
-}
 
 BOOST_AUTO_TEST_SUITE (CIEC_TIME_STRUCT_AND_ARRAY_function_test) 
 
@@ -83,9 +112,9 @@ BOOST_AUTO_TEST_CASE(TimeStruct_element_access_test){
   BOOST_CHECK_EQUAL(stStruct.getMemberNamed(g_nStringIdVal2)->getDataTypeID(), CIEC_ANY::e_INT);
   BOOST_CHECK_EQUAL(stStruct.getMemberNamed(g_nStringIdVal3)->getDataTypeID(), CIEC_ANY::e_TIME);
 
-  BOOST_CHECK_EQUAL(stStruct.getMembers()[0].getDataTypeID(), CIEC_ANY::e_BOOL);
-  BOOST_CHECK_EQUAL(stStruct.getMembers()[1].getDataTypeID(), CIEC_ANY::e_INT);
-  BOOST_CHECK_EQUAL(stStruct.getMembers()[2].getDataTypeID(), CIEC_ANY::e_TIME);
+  BOOST_CHECK_EQUAL(stStruct.Var1.getDataTypeID(), CIEC_ANY::e_BOOL);
+  BOOST_CHECK_EQUAL(stStruct.Var2.getDataTypeID(), CIEC_ANY::e_INT);
+  BOOST_CHECK_EQUAL(stStruct.Var3.getDataTypeID(), CIEC_ANY::e_TIME);
 
   checkTestStruct_InitialValues(stStruct);
 

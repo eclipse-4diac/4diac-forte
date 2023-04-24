@@ -159,13 +159,12 @@ size_t COPC_UA_Helper::convertToOPCUAType(const CIEC_ANY &paSrcAny, void *paDest
 size_t COPC_UA_Helper::convertStructToOPCUAType(const CIEC_STRUCT &paSrcStruct, void *paDest){
   size_t retVal = 0;
   UA_DataTypeMember const * const uaMemberTypes = getOPCUATypeFromAny(paSrcStruct)->members;
-  CIEC_ANY const * const members = paSrcStruct.getMembers();
 
   for(size_t i = 0; i < paSrcStruct.getStructSize(); i++){
     if(uaMemberTypes != nullptr){
          retVal += uaMemberTypes[i].padding;
     }
-    retVal += convertToOPCUAType(members[i], static_cast<char*>(paDest) + retVal);
+    retVal += convertToOPCUAType(*paSrcStruct.getMember(i), static_cast<char*>(paDest) + retVal);
   }
   return retVal;
 }
@@ -192,13 +191,12 @@ size_t COPC_UA_Helper::convertFromOPCUAType(void const * const paSrc, CIEC_ANY &
 size_t COPC_UA_Helper::convertStructFromOPCUAType(void const * const paSrc, CIEC_STRUCT &paDestStruct){
   size_t retVal = 0;
   UA_DataTypeMember const * const uaMemberTypes = getOPCUATypeFromAny(paDestStruct)->members;
-  CIEC_ANY * const members = paDestStruct.getMembers();
 
   for(size_t i = 0; i < paDestStruct.getStructSize(); i++){
     if(uaMemberTypes != nullptr){
       retVal += uaMemberTypes[i].padding;
     }
-    retVal += convertFromOPCUAType(static_cast<const char*>(paSrc) + retVal, members[i]);
+    retVal += convertFromOPCUAType(static_cast<const char*>(paSrc) + retVal, *paDestStruct.getMember(i));
   }
 
   return retVal;

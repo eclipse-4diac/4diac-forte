@@ -12,6 +12,7 @@
  *    Ingo Hegny, Alois Zoitl, Monika Wenger
  *      - initial implementation and rework communication infrastructure
  *    Martin Jobst - add equals function
+ *                 - refactor struct memory layout
  *******************************************************************************/
 #ifndef _FORTE_STRUCT_H_
 #define _FORTE_STRUCT_H_
@@ -20,22 +21,9 @@
 
 class CIEC_STRUCT : public CIEC_ANY_DERIVED{
   public:
+    CIEC_STRUCT() = default;
 
-    typedef const char* TStructInitialValues;
-
-    CIEC_STRUCT(CStringDictionary::TStringId paTypeName, TForteUInt16 paLength, const CStringDictionary::TStringId paElementTypes[],
-        const CStringDictionary::TStringId paElementNames[], TForteUInt8 paTypeID, TStructInitialValues *paInitialValues = nullptr);
-
-    CIEC_STRUCT(const CIEC_STRUCT& paValue);
-
-    ~CIEC_STRUCT() override;
-
-    CIEC_STRUCT& operator =(const CIEC_STRUCT &paValue){
-      if(this != &paValue) {
-        setValue(paValue);
-      }
-      return *this;
-    }
+    ~CIEC_STRUCT() override = default;
 
     /*! \brief Get the Struct's type
      *
@@ -44,9 +32,8 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      *   \param - No parameters necessary.
      *   \return - the type-ID of the struct.
      */
-
-    TForteUInt8 getASN1StructType() const{
-      return (nullptr != getSpecs()) ? getSpecs()->mASN1Type : static_cast<TForteUInt8>(0);
+    virtual TForteUInt8 getASN1StructType() const {
+      return e_APPLICATION + e_CONSTRUCTED + 1;
     }
 
     /*! \brief Get the Struct's size
@@ -56,9 +43,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      *   \param - No parameters necessary.
      *   \return - the size of the struct.
      */
-    TForteUInt16 getStructSize() const{
-      return (nullptr != getSpecs()) ? getSpecs()->mNumberOfElements : static_cast<TForteUInt16>(0);
-    }
+    virtual size_t getStructSize() const = 0;
 
     /*! \brief Get the Struct's elementNames
      *
@@ -67,9 +52,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      *   \param - No parameters necessary.
      *   \return - pointer to array of StringIds.
      */
-    const CStringDictionary::TStringId* elementNames() const{
-      return (nullptr != getSpecs()) ? getSpecs()->mElementNames : nullptr;
-    }
+    virtual const CStringDictionary::TStringId* elementNames() const = 0;
 
     /*! \brief Get the Struct's type name
      *
@@ -78,9 +61,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      *   \param - No parameters necessary.
      *   \return - StringId of Struct's type name.
      */
-    CStringDictionary::TStringId getStructTypeNameID() const{
-      return (nullptr != getSpecs()) ? getSpecs()->mStructureTypeID : 0;
-    }
+    virtual CStringDictionary::TStringId getStructTypeNameID() const = 0;
 
     void setValue(const CIEC_ANY& paValue) override;
 
@@ -102,6 +83,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      *        -1 on on error
      */
     int fromString(const char *paValue) override;
+
     /*! \brief Converts data type value to string
      *
      *   This command implements a conversion function to C++ data type.
@@ -114,29 +96,6 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
 
     [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override;
 
-    CIEC_ANY *getMembers(){
-      return (nullptr != getSpecs()) ? getSpecs()->mMembers : static_cast<CIEC_ANY *>(nullptr);
-    }
-
-    const CIEC_ANY *getMembers() const{
-      return (nullptr != getSpecs()) ? getSpecs()->mMembers : static_cast<CIEC_ANY *>(nullptr);
-    }
-    /*! \brief Get the struct's member var with the given name id
-     *
-     * \param paMemberNameId the string id of the member name
-     * \return on a valid member name id a pointer to the member var otherwise 0
-     */
-    CIEC_ANY *getMemberNamed(CStringDictionary::TStringId paMemberNameId);
-
-
-    /*! \brief Get the struct's member var with the given name
-     *
-     * \param paMemberName name of the member to be checked for
-     * \return on a valid member name id a pointer to the member var otherwise 0
-     */
-    CIEC_ANY* getMemberNamed(char const* const paMemberName);
-
-  protected:
     /*! \brief helper method for accessing a member by index
      *
      * Mainly used for the generated accessor-functions.
@@ -145,10 +104,25 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      * \param paMemberIndex index into the member array
      * \return pointer to the member var
      */
-    CIEC_ANY* getMember(size_t paMemberIndex){
-      return &getMembers()[paMemberIndex];
-    }
+    virtual CIEC_ANY *getMember(size_t paMemberIndex) = 0;
 
+    virtual const CIEC_ANY *getMember(size_t paMemberIndex) const = 0;
+
+    /*! \brief Get the struct's member var with the given name id
+     *
+     * \param paMemberNameId the string id of the member name
+     * \return on a valid member name id a pointer to the member var otherwise 0
+     */
+    CIEC_ANY *getMemberNamed(CStringDictionary::TStringId paMemberNameId);
+
+    /*! \brief Get the struct's member var with the given name
+     *
+     * \param paMemberName name of the member to be checked for
+     * \return on a valid member name id a pointer to the member var otherwise 0
+     */
+    CIEC_ANY* getMemberNamed(const char * paMemberName);
+
+  protected:
     enum EASN1Tags {
       e_UNIVERSAL = 0, e_APPLICATION = 64, e_CONTEXT = 128, e_PRIVATE = 192
     };
@@ -156,48 +130,24 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
       e_PRIMITIVE = 0, e_CONSTRUCTED = 32
     };
 
-    //!Function to configure the array if it is created via the typelib
-    void setup(CStringDictionary::TStringId paTypeName, TForteUInt16 paLength, const CStringDictionary::TStringId paElementTypes[],
-        const CStringDictionary::TStringId paElementNames[], TForteUInt8 paTypeID, TStructInitialValues *paInitialValues = nullptr);
+    CIEC_STRUCT(const CIEC_STRUCT &) {};
 
-  private:
+    CIEC_STRUCT(CIEC_STRUCT &&) {};
 
-    class CStructSpecs {
-      public:
-        CStructSpecs(CStringDictionary::TStringId paTypeName, TForteUInt16 paLength, const CStringDictionary::TStringId paElementNames[], TForteUInt8 paTypeID) :
-            mASN1Type(paTypeID), mNumberOfElements(paLength), mStructureTypeID(paTypeName), mElementNames(paElementNames) {
-          mMembers = new CIEC_ANY[paLength];
-        }
+    CIEC_STRUCT &operator=(const CIEC_STRUCT &) {
+      return *this;
+    }
 
-        ~CStructSpecs() {
-          delete[] mMembers;
-        }
-
-        TForteUInt8 mASN1Type;
-        TForteUInt16 mNumberOfElements;
-        CStringDictionary::TStringId mStructureTypeID;
-        const CStringDictionary::TStringId *mElementNames;
-        CIEC_ANY *mMembers;
-
-        CStructSpecs(const CStructSpecs&) = delete;
+    CIEC_STRUCT &operator=(CIEC_STRUCT &&) {
+      return *this;
     };
 
-    void clear();
-
+private:
     static void findNextNonBlankSpace(const char** paRunner);
 
-    bool initializeFromString(int *paLength, CIEC_ANY *paMember, const char** paRunner, bool* paErrorOcurred);
+    int initializeFromString(const char *paValue);
 
-    const CStructSpecs* getSpecs() const {
-      return reinterpret_cast<const CStructSpecs*>(getGenData());
-    }
-
-    CStructSpecs* getSpecs() {
-      return reinterpret_cast<CStructSpecs*>(getGenData());
-    }
-
-    static CStringDictionary::TStringId parseNextElementId(const char *paRunner, int &paCounter);
-
+    static CStringDictionary::TStringId parseNextElementId(const char *&paRunner);
 };
 
 #endif /*_FORTE_STRUCT_H_*/

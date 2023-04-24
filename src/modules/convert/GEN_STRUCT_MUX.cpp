@@ -30,9 +30,8 @@ const TDataIOID GEN_STRUCT_MUX::scm_anEOWith[] = {0, 255};
 
 void GEN_STRUCT_MUX::executeEvent(int paEIID) {
   if(scm_nEventREQID == paEIID) {
-    CIEC_ANY *members = st_OUT().getMembers();
     for (size_t i = 0; i < st_OUT().getStructSize(); i++){
-      members[i].setValue(*getDI(static_cast<unsigned int>(i)));
+      st_OUT().getMember(i)->setValue(*getDI(static_cast<unsigned int>(i)));
     }
     sendOutputEvent(scm_nEventCNFID);
   }
@@ -62,7 +61,7 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
       // we could find the struct
       CIEC_STRUCT *structInstance = static_cast<CIEC_STRUCT*>(data);
 
-      TForteUInt16 structSize = structInstance->getStructSize();
+      size_t structSize = structInstance->getStructSize();
       if(structSize < 1 || structSize > 254) { //the structure size must be non zero and less than 255 (maximum number of data input)
         DEVLOG_ERROR("[GEN_STRUCT_MUX]: The structure %s has a size is not within range > 0 and < 255\n",
           CStringDictionary::getInstance().get(structTypeNameId));
@@ -89,13 +88,14 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
         doDataTypeNames[0] = structTypeNameId;
 
         for(size_t i = 0, typeNameIndex = 0; i < paInterfaceSpec.m_nNumDIs; i++, typeNameIndex++) {
+          CIEC_ANY &member = *structInstance->getMember(i);
           eiWith[i] = static_cast<TForteUInt8>(i);
           diNames[i] = structInstance->elementNames()[i];
-          diDataTypeNames[typeNameIndex] = (&(structInstance->getMembers()[i]))->getTypeNameID();
-          if((&(structInstance->getMembers()[i]))->getDataTypeID() == CIEC_ANY::e_ARRAY){
-            CIEC_ARRAY_TYPELIB *array = static_cast<CIEC_ARRAY_TYPELIB*>(&(structInstance->getMembers()[i]));
-            diDataTypeNames[typeNameIndex + 1] = static_cast<CStringDictionary::TStringId>(array->size());
-            diDataTypeNames[typeNameIndex + 2] = array->getElementTypeNameID();
+          diDataTypeNames[typeNameIndex] = member.getTypeNameID();
+          if(member.getDataTypeID() == CIEC_ANY::e_ARRAY){
+            CIEC_ARRAY_TYPELIB &array = static_cast<CIEC_ARRAY_TYPELIB&>(member);
+            diDataTypeNames[typeNameIndex + 1] = static_cast<CStringDictionary::TStringId>(array.size());
+            diDataTypeNames[typeNameIndex + 2] = array.getElementTypeNameID();
             typeNameIndex += 2;
           }
         }
@@ -130,7 +130,7 @@ size_t GEN_STRUCT_MUX::calcStructTypeNameSize(CIEC_STRUCT &paStruct){
   size_t structSize = paStruct.getStructSize();
   size_t numArrayMembers = 0;
   for(size_t i = 0; i < structSize; i++) {
-    if((&(paStruct.getMembers()[i]))->getDataTypeID() == CIEC_ANY::e_ARRAY){
+    if(paStruct.getMember(i)->getDataTypeID() == CIEC_ANY::e_ARRAY){
       numArrayMembers++;
     }
   }

@@ -25,22 +25,24 @@ class CIEC_DataTypeTest : public CIEC_STRUCT {
   public:
     CIEC_DataTypeTest();
 
-    ~CIEC_DataTypeTest() override = default;
+    CIEC_STRING var_Name;
+    CIEC_SINT var_Age;
+    CIEC_BOOL var_IsRegistered;
 
-    CIEC_STRING &Name() {
-      return *static_cast<CIEC_STRING*>(&getMembers()[0]);
+    size_t getStructSize() const override {
+      return 3;
     }
 
-    CIEC_SINT &Age() {
-      return *static_cast<CIEC_SINT*>(&getMembers()[1]);
+    const CStringDictionary::TStringId* elementNames() const override {
+      return scmElementNames;
     }
 
-    CIEC_BOOL &IsRegistered() {
-      return *static_cast<CIEC_BOOL*>(&getMembers()[2]);
-    }
+    CStringDictionary::TStringId getStructTypeNameID() const override;
+
+    CIEC_ANY *getMember(size_t paMemberIndex) override;
+    const CIEC_ANY *getMember(size_t paMemberIndex) const override;
 
   private:
-    static const CStringDictionary::TStringId scmElementTypes[];
     static const CStringDictionary::TStringId scmElementNames[];
 };
 
