@@ -32,11 +32,13 @@ BOOST_AUTO_TEST_SUITE(StringDictTests)
     const std::string sTestString("FORTE_4DIAC_TestString");
 
     BOOST_CHECK_EQUAL(CStringDictionary::scm_nInvalidStringId, CStringDictionary::getInstance().getId(sTestString.c_str()));
+    BOOST_CHECK_EQUAL(CStringDictionary::scm_nInvalidStringId, CStringDictionary::getInstance().getId(sTestString.c_str(), sTestString.size()));
 
     CStringDictionary::TStringId unNewID = CStringDictionary::getInstance().insert(sTestString.c_str());
     BOOST_CHECK(CStringDictionary::scm_nInvalidStringId != unNewID);
 
     BOOST_CHECK_EQUAL(unNewID, CStringDictionary::getInstance().getId(sTestString.c_str()));
+    BOOST_CHECK_EQUAL(unNewID, CStringDictionary::getInstance().getId(sTestString.c_str(), sTestString.size()));
 
     BOOST_CHECK_EQUAL(sTestString, CStringDictionary::getInstance().get(unNewID));
   }
@@ -47,6 +49,7 @@ BOOST_AUTO_TEST_SUITE(StringDictTests)
     BOOST_CHECK_EQUAL(sBool, "BOOL");
 
     BOOST_CHECK_EQUAL(g_nStringIdBOOL, CStringDictionary::getInstance().getId(sBool.c_str()));
+    BOOST_CHECK_EQUAL(g_nStringIdBOOL, CStringDictionary::getInstance().getId(sBool.c_str(), sBool.size()));
 
   }
 
@@ -54,6 +57,7 @@ BOOST_AUTO_TEST_SUITE(StringDictTests)
     std::string sTestString(CStringDictionary::getInstance().get(pa_unId));
     BOOST_CHECK_EQUAL(sTestString, pa_rsExpectedString);
     BOOST_CHECK_EQUAL(pa_unId, CStringDictionary::getInstance().getId(pa_rsExpectedString.c_str()));
+    BOOST_CHECK_EQUAL(pa_unId, CStringDictionary::getInstance().getId(pa_rsExpectedString.c_str(), pa_rsExpectedString.size()));
   }
 
   BOOST_AUTO_TEST_CASE(reinsertAvailableString){
@@ -103,6 +107,7 @@ BOOST_AUTO_TEST_SUITE(StringDictTests)
       //Check that every entry is still in the stringdict
       for(std::list<SBuffer>::iterator itRunner = stringList.begin(); itRunner != stringList.end(); ++itRunner){
         BOOST_CHECK_EQUAL(itRunner->mID, CStringDictionary::getInstance().getId(itRunner->mString.c_str()));
+        BOOST_CHECK_EQUAL(itRunner->mID, CStringDictionary::getInstance().getId(itRunner->mString.c_str(), itRunner->mString.size()));
         BOOST_CHECK_EQUAL(itRunner->mString, CStringDictionary::getInstance().get(itRunner->mID));
       }
     }
