@@ -1911,4 +1911,37 @@ BOOST_AUTO_TEST_CASE(cast_dint_to_dword_only_binary_transfer) {
   BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(result) == 0xFFFFFFFF);
 }
 
+BOOST_AUTO_TEST_CASE(up_and_down_cast_from_lword_to_bool_and_back) {
+  CIEC_LWORD inLword(0xFFFFFFFFFFFFFFFF);
+  CIEC_LWORD result;
+
+  result = func_BOOL_TO_LWORD(func_LWORD_TO_BOOL(inLword));
+  BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(result) == 1);
+}
+
+BOOST_AUTO_TEST_CASE(up_and_down_cast_from_lword_to_byte_and_back) {
+  CIEC_LWORD inLword(0xFFFFFFFFFFFFFFFF);
+  CIEC_LWORD result;
+
+  result = func_BYTE_TO_LWORD(func_LWORD_TO_BYTE(inLword));
+  BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(result) == 0xFF);
+}
+
+BOOST_AUTO_TEST_CASE(up_and_down_cast_from_lword_to_word_and_back) {
+  CIEC_LWORD inLword(0xFFFFFFFFFFFFFFFF);
+  CIEC_LWORD result;
+
+  result = func_WORD_TO_LWORD(func_LWORD_TO_WORD(inLword));
+  BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(result) == 0xFFFF);
+}
+
+BOOST_AUTO_TEST_CASE(up_and_down_cast_from_lword_to_dword_and_back)
+{
+  CIEC_LWORD inLword(0xFFFFFFFFFFFFFFFF);
+  CIEC_LWORD result;
+
+  result = func_DWORD_TO_LWORD(func_LWORD_TO_DWORD(inLword));
+  BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(result) == 0xFFFFFFFF);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

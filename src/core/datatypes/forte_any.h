@@ -87,9 +87,9 @@ class CIEC_ANY {
         typename std::make_unsigned_t<typename T::TValueType> fromValueUnsigned = static_cast<std::make_unsigned_t<typename T::TValueType>>(fromValue);
         typename U::TValueType toValue = static_cast<typename U::TValueType>(fromValueUnsigned);
         oToCast.setValueSimple(U(toValue));
-      } else if constexpr (std::is_base_of<CIEC_ANY_BIT, T>::value || //In other cases with ANY_BITs just do binary transfer
+      } else if constexpr (std::is_base_of<CIEC_ANY_BIT, T>::value && //special cast binary to bool
           std::is_base_of<CIEC_ANY_BIT, U>::value) {
-        oToCast.setValueSimple(paFromCast);
+        oToCast.setValueSimple(U(static_cast<typename U::TValueType>(static_cast<typename T::TValueType>(paFromCast))));
       } else if constexpr (std::is_base_of<CIEC_ANY_REAL, T>::value){
         specialCast(paFromCast, oToCast);
       } else if constexpr (std::is_base_of<CIEC_ANY_REAL, U>::value){
