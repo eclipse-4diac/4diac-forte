@@ -301,11 +301,11 @@ BOOST_AUTO_TEST_CASE(CASTS_WORD_to_REAL)
   nTestReal.setValue(nTestWord0);
   BOOST_CHECK_EQUAL(0.0f, nTestReal);
   nTestReal.setValue(nTestWord1);
-  BOOST_CHECK_EQUAL(1.0f, nTestReal); 
+  BOOST_CHECK_EQUAL(1.4013e-45f, nTestReal);
   nTestReal.setValue(nTestWord256);
-  BOOST_CHECK_EQUAL(256.0f, nTestReal); 
+  BOOST_CHECK_EQUAL(3.58732e-43f, nTestReal);
   nTestReal.setValue(nTestWord65535);
-  BOOST_CHECK_EQUAL(65535.0f, nTestReal); 
+  BOOST_CHECK_EQUAL(9.18341e-41f, nTestReal);
 
   CIEC_LREAL nTestLReal;
 
@@ -313,11 +313,11 @@ BOOST_AUTO_TEST_CASE(CASTS_WORD_to_REAL)
   nTestLReal.setValue(nTestWord0);
   BOOST_CHECK_EQUAL(0.0, nTestLReal);
   nTestLReal.setValue(nTestWord1);
-  BOOST_CHECK_EQUAL(1.0, nTestLReal); 
+  BOOST_CHECK_EQUAL(4.94066e-324, nTestLReal);
   nTestLReal.setValue(nTestWord256);
-  BOOST_CHECK_EQUAL(256.0, nTestLReal); 
+  BOOST_CHECK_EQUAL(1.26481e-321, nTestLReal);
   nTestLReal.setValue(nTestWord65535);
-  BOOST_CHECK_EQUAL(65535.0, nTestLReal); 
+  BOOST_CHECK_EQUAL(3.23786e-319, nTestLReal);
 }
 
 BOOST_AUTO_TEST_CASE(WORD_Castable_test)

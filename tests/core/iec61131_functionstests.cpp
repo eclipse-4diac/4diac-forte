@@ -1854,4 +1854,61 @@ BOOST_AUTO_TEST_CASE(output_partial_DWORD_assignment_test){
   BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(outLword) == 0xFEFEFEFE);
 }
 
+BOOST_AUTO_TEST_CASE(cast_word_to_int_then_int_to_dint_sign_extension_test) {
+  CIEC_WORD inWord(0xFFFF);
+  CIEC_INT intermediateInt;
+  CIEC_DINT result;
+  intermediateInt = func_WORD_TO_INT(inWord);
+  result = func_INT_TO_DINT(intermediateInt);
+  BOOST_TEST(static_cast<CIEC_DINT::TValueType>(result) == -1);
+}
+
+BOOST_AUTO_TEST_CASE(cast_sint_to_byte_only_binary_transfer) {
+  CIEC_SINT inSint(-1);
+  CIEC_BYTE result;
+
+  result = func_SINT_TO_BYTE(inSint);
+  BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(result) == 0xFF);
+}
+
+BOOST_AUTO_TEST_CASE(cast_sint_to_word_only_binary_transfer) {
+  CIEC_SINT inSint(-1);
+  CIEC_WORD result;
+
+  result = func_SINT_TO_WORD(inSint);
+  BOOST_TEST(static_cast<CIEC_WORD::TValueType>(result) == 0xFF);
+}
+
+BOOST_AUTO_TEST_CASE(cast_sint_to_dword_only_binary_transfer) {
+  CIEC_SINT inSint(-1);
+  CIEC_DWORD result;
+
+  result = func_SINT_TO_DWORD(inSint);
+  BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(result) == 0xFF);
+}
+
+BOOST_AUTO_TEST_CASE(cast_sint_to_lword_only_binary_transfer) {
+  CIEC_SINT inSint(-1);
+  CIEC_LWORD result;
+
+  result = func_SINT_TO_LWORD(inSint);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(result) == 0xFF);
+}
+
+BOOST_AUTO_TEST_CASE(cast_int_to_dword_only_binary_transfer) {
+  CIEC_INT inInt(-1);
+  CIEC_DWORD result;
+
+  result = func_INT_TO_DWORD(inInt);
+  BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(result) == 0xFFFF);
+}
+
+BOOST_AUTO_TEST_CASE(cast_dint_to_dword_only_binary_transfer) {
+  CIEC_DINT inDint(-1);
+  CIEC_DWORD result;
+
+  result = func_DINT_TO_DWORD(inDint);
+  BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(result) == 0xFFFFFFFF);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
