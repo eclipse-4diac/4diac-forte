@@ -18,7 +18,7 @@
 
 #endif
 
-DEFINE_FIRMWARE_DATATYPE(ANY_INT_VARIANT, g_nStringIdANY_INT_VARIANT)
+DEFINE_FIRMWARE_DATATYPE(ANY_INT_VARIANT, g_nStringIdANY_INT)
 
 void CIEC_ANY_INT_VARIANT::setValue(const CIEC_ANY &paValue) {
   switch (paValue.getDataTypeID()) {

@@ -27,8 +27,6 @@
 #include "forte_lint.h"
 #include "forte_ulint.h"
 
-DEFINE_FIRMWARE_DATATYPE(ANY_ELEMENTARY, g_nStringIdANY_ELEMENTARY)
-
 const std::map<CStringDictionary::TStringId, CIEC_ANY::EDataTypeID> CIEC_ANY_ELEMENTARY::scm_StringToTypeId = {
     {g_nStringIdANY, CIEC_ANY::e_ANY},
     {g_nStringIdBOOL, CIEC_ANY::e_BOOL},

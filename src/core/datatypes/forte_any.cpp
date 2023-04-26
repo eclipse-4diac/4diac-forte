@@ -23,35 +23,14 @@
 #include "forte_lreal.h"
 #include <devlog.h>
 
-const CTypeLib::CDataTypeEntry CIEC_ANY::csmFirmwareDataTypeEntry_CIEC_ANY(g_nStringIdANY, CIEC_ANY::createDataType, sizeof(CIEC_ANY));
-
 const char CIEC_ANY::scmAnyToStringResponse[] = "ND (ANY)";
 
 int CIEC_ANY::dummyInit(){
   return 0;
 }
 
-void CIEC_ANY::saveAssign(const CIEC_ANY &pa_roValue){
-  CIEC_ANY::EDataTypeID srcDTID = pa_roValue.getDataTypeID();
-  CIEC_ANY::EDataTypeID dstDTID = getDataTypeID();
-  if(dstDTID == srcDTID){
-    setValue(pa_roValue);
-  }
-  else{
-    if(e_ANY == dstDTID){
-      pa_roValue.clone((TForteByte*) this);
-    }
-    else if(isCastable(srcDTID, dstDTID)){
-      if((CIEC_ANY::e_LREAL == srcDTID) || (CIEC_ANY::e_REAL == srcDTID)){
-        specialCast(pa_roValue, *this);
-      }
-      else{
-        setValue(pa_roValue);
-      }
-    }
-    //TODO for the else case check for any and maybe clone it
-  }
-
+CStringDictionary::TStringId CIEC_ANY::getTypeNameID() const {
+  return g_nStringIdANY;
 }
 
 int CIEC_ANY::fromString(const char *pa_pacValue){

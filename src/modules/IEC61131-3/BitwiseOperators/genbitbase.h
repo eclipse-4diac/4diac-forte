@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c)2018 Johannes Kepler University
+ *               2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,11 +10,14 @@
  *
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Martin Jobst
+ *     - refactor for ANY variant
  *******************************************************************************/
 #ifndef _GENBITBASE_H_
 #define _GENBITBASE_H_
 
 #include "../genfb.h"
+#include "forte_any_bit_variant.h"
 
 class CGenBitBase : public CGenFunctionBlock<CFunctionBlock> {
 
@@ -21,8 +25,12 @@ class CGenBitBase : public CGenFunctionBlock<CFunctionBlock> {
     CGenBitBase(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
     ~CGenBitBase() override;
 
-    CIEC_ANY_BIT &st_OUT(){
-      return *static_cast<CIEC_ANY_BIT*>(getDO(0));
+    CIEC_ANY_BIT_VARIANT& var_IN(size_t paIndex) {
+      return *static_cast<CIEC_ANY_BIT_VARIANT *>(getDI(paIndex));
+    }
+
+    CIEC_ANY_BIT_VARIANT &var_OUT(){
+      return *static_cast<CIEC_ANY_BIT_VARIANT *>(getDO(0));
     }
 
     static const TEventID scm_nEventREQID = 0;

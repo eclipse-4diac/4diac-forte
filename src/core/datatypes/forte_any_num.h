@@ -21,8 +21,6 @@
 
  */
 class CIEC_ANY_NUM : public CIEC_ANY_MAGNITUDE {
-  DECLARE_FIRMWARE_DATATYPE(ANY_NUM)
-
   public:
     ~CIEC_ANY_NUM() override = default;
 

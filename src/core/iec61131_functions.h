@@ -567,16 +567,10 @@ template<typename T> const T func_MOVE(const T &paIN) {
   return T(paIN);
 }
 
-template<typename T, typename U> const T func_EXPT(const T &paIN1, const U &paIN2) {
+template<typename T, typename U> T func_EXPT(const T &paIN1, const U &paIN2) {
   static_assert((std::is_base_of<CIEC_ANY_REAL, T>::value), "IN1 not of type ANY_REAL");
   static_assert((std::is_base_of<CIEC_ANY_NUM, U>::value), "IN2 not of type ANY_NUM");
-  return T(pow(paIN1, paIN2));
-}
-
-//specialisation of function for base type double.
-//TODO consider how this and similar problems can be better solved with type traits and more generically
-inline double func_EXPT(double paIN1, double paIN2) {
-  return pow(paIN1, paIN2);
+  return T(static_cast<typename T::TValueType>(pow(static_cast<typename T::TValueType>(paIN1), static_cast<typename U::TValueType>(paIN2))));
 }
 
 /*************** ADD ********************/

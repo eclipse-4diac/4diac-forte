@@ -71,7 +71,6 @@ class CIEC_ANY {
     static CIEC_ANY *createDataType(TForteByte *pa_acDataBuf){
       return (nullptr != pa_acDataBuf) ? new (pa_acDataBuf) CIEC_ANY : new CIEC_ANY;
     }
-    const static CTypeLib::CDataTypeEntry csmFirmwareDataTypeEntry_CIEC_ANY;
 
     static int dummyInit();
 
@@ -111,8 +110,6 @@ class CIEC_ANY {
     }
 
     virtual ~CIEC_ANY() = default;
-
-    void saveAssign(const CIEC_ANY &pa_roValue);
 
     /*! \brief Set method for data type member value
      *
@@ -162,9 +159,7 @@ class CIEC_ANY {
       return CIEC_ANY::e_ANY;
     }
 
-    virtual CStringDictionary::TStringId getTypeNameID() const {
-      return csmFirmwareDataTypeEntry_CIEC_ANY.getTypeNameId();
-    }
+    virtual CStringDictionary::TStringId getTypeNameID() const;
 
     /*! \brief Get the pointer to the union char array
      *

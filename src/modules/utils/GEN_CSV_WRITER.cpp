@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2012 - 2015 ACIN, fortiss GmbH
  *                      2018 Johannes Kepler University
+ *               2023 Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,6 +12,8 @@
  *   Alois Zoitl
  *   - initial API and implementation and/or initial documentation
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *   Martin Jobst
+ *     - refactor for ANY variant
  *******************************************************************************/
 #include "GEN_CSV_WRITER.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -150,7 +153,7 @@ void GEN_CSV_WRITER::writeCSVFileLine() {
   if(nullptr != mCSVFile) {
     char acBuffer[scmWriteBufferSize];
     for(int i = 2; i < m_pstInterfaceSpec->m_nNumDIs; i++) {
-      int nLen = getDI(i)->toString(acBuffer, scmWriteBufferSize);
+      int nLen = getDI(i)->unwrap().toString(acBuffer, scmWriteBufferSize);
       fwrite(acBuffer, 1, nLen, mCSVFile);
       fwrite("; ", 1, 2, mCSVFile);
     }

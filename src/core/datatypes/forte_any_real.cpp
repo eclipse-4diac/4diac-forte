@@ -16,8 +16,6 @@
 #include "forte_any_real_gen.cpp"
 #endif
 
-DEFINE_FIRMWARE_DATATYPE(ANY_REAL, g_nStringIdANY_REAL)
-
 int CIEC_ANY_REAL::normalizeToStringRepresentation(char *paValue, size_t paBufferSize, int paUsedBytes) const {
   size_t i = 0;
   for (; i < paBufferSize; ++i) {

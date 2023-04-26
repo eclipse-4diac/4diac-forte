@@ -21,10 +21,10 @@
 
  */
 class CIEC_ANY_INT : public CIEC_ANY_NUM{
-  DECLARE_FIRMWARE_DATATYPE(ANY_INT)
-
   public:
-    explicit CIEC_ANY_INT(TLargestIntValueType paVal);
+    explicit CIEC_ANY_INT(TLargestIntValueType paVal) {
+      setSignedValue(paVal);
+    }
 
     ~CIEC_ANY_INT() override = default;
 

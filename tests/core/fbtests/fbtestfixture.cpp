@@ -38,8 +38,7 @@ struct SDeleteFunctor {
 class CFBTestConn : public CDataConnection {
   public:
     static bool canBeConnected(const CIEC_ANY *paSrcDataPoint, const CIEC_ANY *paDstDataPoint) {
-      bool bSpecialCast;
-      return CDataConnection::canBeConnected(paSrcDataPoint, paDstDataPoint, bSpecialCast);
+      return CDataConnection::canBeConnected(paSrcDataPoint, paDstDataPoint);
     }
   private:
     //you are not allowed to create this class therefor constructor and destructor are private
@@ -198,15 +197,6 @@ void CFBTestFixtureBase::setupTestInterface(){
   testerInterfaceSpec->m_pstAdapterInstanceDefinition = nullptr;
 
   setupFBInterface(testerInterfaceSpec);
-
-  for(unsigned int i = 0; i < testerInterfaceSpec->m_nNumDIs; ++i){
-    CIEC_ANY *di = getDI(i);
-    if(CIEC_ANY::e_ANY == di->getDataTypeID()){
-      //if one of the inputs is any reclone it with the type given in the test
-      di->~CIEC_ANY();
-      mOutputDataBuffers[i]->clone(reinterpret_cast<TForteByte *>(di));
-    }
- }
 }
 
 void CFBTestFixtureBase::performDataInterfaceTests() {

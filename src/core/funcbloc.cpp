@@ -192,8 +192,9 @@ bool CFunctionBlock::connectDI(TPortId paDIPortId, CDataConnection *paDataCon){
 }
 
 void CFunctionBlock::configureGenericDI(TPortId paDIPortId, const CIEC_ANY* paRefValue) {
-  if(getDI(paDIPortId)->getDataTypeID() == CIEC_ANY::e_ANY && (nullptr != paRefValue)) {
-    paRefValue->clone(reinterpret_cast<TForteByte *>(getDI(paDIPortId)));
+  CIEC_ANY *di = getDI(paDIPortId);
+  if(di->getDataTypeID() == CIEC_ANY::e_ANY && (nullptr != paRefValue)) {
+    di->setValue(paRefValue->unwrap());
   }
 }
 
@@ -239,7 +240,7 @@ bool CFunctionBlock::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRe
   if(m_pstInterfaceSpec->m_nNumDOs > paDOPortId){
     CIEC_ANY *dataOutput = getDO(paDOPortId);
     if(dataOutput->getDataTypeID() == CIEC_ANY::e_ANY){
-      paRefValue.clone(reinterpret_cast<TForteByte *>(dataOutput));
+      dataOutput->setValue(paRefValue);
       retVal = true;
     }
   }

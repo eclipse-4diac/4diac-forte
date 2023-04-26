@@ -127,7 +127,9 @@ const COPC_UA_Helper::UA_TypeConvert COPC_UA_Helper::scmMapForteTypeIdToOpcUa[] 
 
 const UA_DataType* COPC_UA_Helper::getOPCUATypeFromAny(const CIEC_ANY &paAnyType) {
   CIEC_ANY::EDataTypeID typeId = paAnyType.getDataTypeID();
-  if(typeId >= CIEC_ANY::e_BOOL && typeId <= CIEC_ANY::e_WSTRING) { //basic type
+  if(typeId == CIEC_ANY::e_ANY) {
+    return getOPCUATypeFromAny(paAnyType.unwrap());
+  } else if(typeId <= CIEC_ANY::e_WSTRING) { //basic type
     return scmMapForteTypeIdToOpcUa[typeId].mType;
   } else if(CIEC_ANY::e_ARRAY == typeId) {
     return getOPCUATypeFromAny(static_cast<const CIEC_ARRAY<>&>(paAnyType)[0]);
@@ -140,7 +142,9 @@ size_t COPC_UA_Helper::convertToOPCUAType(const CIEC_ANY &paSrcAny, void *paDest
   size_t retVal = 0;
 
   CIEC_ANY::EDataTypeID typeId = paSrcAny.getDataTypeID();
-  if(typeId >= CIEC_ANY::e_BOOL && typeId <= CIEC_ANY::e_WSTRING) { //basic type
+  if(typeId == CIEC_ANY::e_ANY) {
+    return convertToOPCUAType(paSrcAny.unwrap(), paDest);
+  } else if(typeId <= CIEC_ANY::e_WSTRING) { //basic type
     retVal = scmMapForteTypeIdToOpcUa[typeId].mToOPCUA(paSrcAny, paDest);
   } else if(CIEC_ANY::e_ARRAY == typeId) {
     for(size_t i = 0; i < static_cast<const CIEC_ARRAY<>&>(paSrcAny).size(); i++) {
@@ -171,7 +175,9 @@ size_t COPC_UA_Helper::convertFromOPCUAType(void const * const paSrc, CIEC_ANY &
   size_t retVal = 0;
 
   CIEC_ANY::EDataTypeID typeId = paDestAny.getDataTypeID();
-  if(typeId >= CIEC_ANY::e_BOOL && typeId <= CIEC_ANY::e_WSTRING) { //basic type
+  if(typeId == CIEC_ANY::e_ANY) {
+    return convertFromOPCUAType(paSrc, paDestAny.unwrap());
+  } else if(typeId <= CIEC_ANY::e_WSTRING) { //basic type
     retVal = scmMapForteTypeIdToOpcUa[typeId].mFromOPCUA(paSrc, paDestAny);
   } else if(CIEC_ANY::e_ARRAY == typeId) {
     for(size_t i = 0; i < static_cast<CIEC_ARRAY<>&>(paDestAny).size(); i++) {

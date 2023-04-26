@@ -18,7 +18,7 @@
 #include "funcbloc.h"
 
 CDataConnection::CDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CIEC_ANY *paValue)
-        : CConnection(paSrcFB, paSrcPortId), m_poValue(paValue), mSpecialCastConnection(false) {
+        : CConnection(paSrcFB, paSrcPortId), m_poValue(paValue) {
 }
 
 EMGMResponse CDataConnection::connect(CFunctionBlock *paDstFB,
@@ -49,7 +49,7 @@ EMGMResponse CDataConnection::connectToCFBInterface(CFunctionBlock *paDstFB,
 
 void CDataConnection::handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint){
   if(CIEC_ANY::e_ANY != paDstDataPoint.getDataTypeID()){
-    m_poValue = paDstDataPoint.clone(reinterpret_cast<TForteByte*>(m_poValue));
+    m_poValue->setValue(paDstDataPoint);
     getSourceId().mFB->configureGenericDO(getSourceId().mPortId, paDstDataPoint);
     if(isConnected()){
       //We already have some connection also set their correct type
@@ -76,19 +76,8 @@ CDataConnection::disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringI
   return retval;
 }
 
-void CDataConnection::readData(CIEC_ANY *pa_poValue) const{
-  if(m_poValue){
-    if(!mSpecialCastConnection){
-      pa_poValue->setValue(*m_poValue);
-    }
-    else{
-      CIEC_ANY::specialCast(*m_poValue, *pa_poValue);
-    }
-  }
-}
-
 bool CDataConnection::canBeConnected(const CIEC_ANY *pa_poSrcDataPoint,
-    const CIEC_ANY *pa_poDstDataPoint, bool &pa_rbSpecialCast){
+    const CIEC_ANY *pa_poDstDataPoint){
   CIEC_ANY::EDataTypeID eSrcId = pa_poSrcDataPoint->getDataTypeID();
   CIEC_ANY::EDataTypeID eDstId = pa_poDstDataPoint->getDataTypeID();
   bool bCanConnect = false;
@@ -103,15 +92,9 @@ bool CDataConnection::canBeConnected(const CIEC_ANY *pa_poSrcDataPoint,
     }
     else{
       bCanConnect = CIEC_ANY::isCastable(eSrcId, eDstId);
-      pa_rbSpecialCast = ((bCanConnect) && needsSpecialCast(eSrcId));
     }
   }
   return bCanConnect;
-}
-
-bool CDataConnection::needsSpecialCast(CIEC_ANY::EDataTypeID pa_eSrcDTId){
-  //we want to cast from floating point data to an integer data type
-  return ((CIEC_ANY::e_LREAL == pa_eSrcDTId) || (CIEC_ANY::e_REAL == pa_eSrcDTId));
 }
 
 EMGMResponse CDataConnection::establishDataConnection(CFunctionBlock *paDstFB, TPortId paDstPortId,
@@ -123,7 +106,7 @@ EMGMResponse CDataConnection::establishDataConnection(CFunctionBlock *paDstFB, T
       handleAnySrcPortConnection(*paDstDataPoint);
       retVal = EMGMResponse::Ready;
     } else {
-      if (canBeConnected(m_poValue, paDstDataPoint, mSpecialCastConnection)) {
+      if (canBeConnected(m_poValue, paDstDataPoint)) {
         retVal = EMGMResponse::Ready;
       }
     }

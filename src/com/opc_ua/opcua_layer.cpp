@@ -222,7 +222,7 @@ bool COPC_UA_Layer::checkFanOutTypes(const CDataConnection &paPortConnection, CI
       if(!getRemoteAny(&newRemoteType, *it, false)) {
         return false;
       } else {
-        if(newRemoteType->getDataTypeID() != (*paResult)->getDataTypeID()) {
+        if(newRemoteType->unwrap().getDataTypeID() != (*paResult)->unwrap().getDataTypeID()) {
           DEVLOG_ERROR("[OPC UA LAYER]: FB %s has one RD which is connected to many data inputs and the types are not the same.\n",
             getCommFB()->getInstanceName());
           return false;

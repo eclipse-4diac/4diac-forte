@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2011 -2013 ACIN
+ *               2023 Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,68 +10,83 @@
  * Contributors:
  *   Monika Wenger
  *   - initial API and implementation and/or initial documentation
+ *   Martin Jobst
+ *     - refactor for ANY variant
  *******************************************************************************/
-#ifndef _F_SHL_H_
-#define _F_SHL_H_
 
-#include <funcbloc.h>
+#pragma once
 
-class FORTE_F_SHL : public CFunctionBlock {
+#include "funcbloc.h"
+#include "forte_any_bit_variant.h"
+#include "forte_any_int_variant.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
+
+
+class FORTE_F_SHL: public CFunctionBlock {
   DECLARE_FIRMWARE_FB(FORTE_F_SHL)
 
-  private:
-    static const CStringDictionary::TStringId scm_anDataInputNames[];
-    static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-    CIEC_ANY_BIT& st_IN() {
-      return *static_cast<CIEC_ANY_BIT*>(getDI(0));
-    }
-    ;
+private:
+  static const CStringDictionary::TStringId scm_anDataInputNames[];
+  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+  
+  static const CStringDictionary::TStringId scm_anDataOutputNames[];
+  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+  
+  static const TEventID scm_nEventREQID = 0;
+  
+  static const TDataIOID scm_anEIWith[];
+  static const TForteInt16 scm_anEIWithIndexes[];
+  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  
+  static const TEventID scm_nEventCNFID = 0;
+  
+  static const TDataIOID scm_anEOWith[]; 
+  static const TForteInt16 scm_anEOWithIndexes[];
+  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  
 
-    CIEC_ANY_INT& N() {
-      return *static_cast<CIEC_ANY_INT*>(getDI(1));
-    }
-    ;
+  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-    static const CStringDictionary::TStringId scm_anDataOutputNames[];
-    static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-    CIEC_ANY_BIT& st_OUT() {
-      return *static_cast<CIEC_ANY_BIT*>(getDO(0));
-    }
-    ;
+  void executeEvent(int pa_nEIID);
 
-    static const TEventID scm_nEventREQID = 0;
-    static const TForteInt16 scm_anEIWithIndexes[];
-    static const TDataIOID scm_anEIWith[];
-    static const CStringDictionary::TStringId scm_anEventInputNames[];
+  void readInputData(size_t pa_nEIID) override;
+  void writeOutputData(size_t pa_nEIID) override;
 
-    static const TEventID scm_nEventCNFID = 0;
-    static const TForteInt16 scm_anEOWithIndexes[];
-    static const TDataIOID scm_anEOWith[];
-    static const CStringDictionary::TStringId scm_anEventOutputNames[];
+public:
+  FORTE_F_SHL(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
-    static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-
-    FORTE_FB_DATA_ARRAY(1, 2, 1, 0)
-    ;
-
-    void executeEvent(int pa_nEIID) override;
-
-  public:
-    FUNCTION_BLOCK_CTOR(FORTE_F_SHL){
-  };
-
-  template<typename T> void calculateValue() {
-    T oIn;
-    CIEC_ULINT oN;
-
-    oIn.saveAssign(st_IN());
-    oN.saveAssign(N());
-    st_OUT().saveAssign(func_SHL(oIn, oN));
+  CIEC_ANY_BIT_VARIANT var_IN;
+  CIEC_ANY_INT_VARIANT var_N;
+  CIEC_ANY_BIT_VARIANT var_OUT;
+  
+  CIEC_ANY_BIT_VARIANT var_conn_OUT;
+  CEventConnection conn_CNF;
+  CDataConnection *conn_IN;
+  CDataConnection *conn_N;
+  CDataConnection conn_OUT;
+  
+  CIEC_ANY *getDI(size_t) override;
+  CIEC_ANY *getDO(size_t) override;
+  CEventConnection *getEOConUnchecked(TPortId) override;
+  CDataConnection **getDIConUnchecked(TPortId) override;
+  CDataConnection *getDOConUnchecked(TPortId) override;
+  
+  void evt_REQ(const CIEC_ANY_BIT_VARIANT &pa_IN, const CIEC_ANY_INT_VARIANT &pa_N, CIEC_ANY_BIT_VARIANT &pa_OUT) {
+    var_IN = pa_IN;
+    var_N = pa_N;
+    receiveInputEvent(scm_nEventREQID, nullptr);
+    pa_OUT = var_OUT;
   }
-
-  ~FORTE_F_SHL() override = default;
-
+  
+  void operator()(const CIEC_ANY_BIT_VARIANT &pa_IN, const CIEC_ANY_INT_VARIANT &pa_N, CIEC_ANY_BIT_VARIANT &pa_OUT) {
+    evt_REQ(pa_IN, pa_N, pa_OUT);
+  }
+  
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+
 

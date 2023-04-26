@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2014 - 2015 Profactor GmbH, fortiss GmbH
  *                      2018 Johannes Kepler University
+ *               2023 Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,6 +12,8 @@
  *   Matthias Plasch, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *   Martin Jobst
+ *     - refactor for ANY variant
  *******************************************************************************/
 #include "GEN_VALUES2ARRAY.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -48,7 +51,7 @@ void GEN_VALUES2ARRAY::executeEvent(int paEIID){
 
       for(unsigned int input_index = 0; input_index < m_nDInputs; input_index++){
         //copy input values to array
-        OUT_Array()[input_index].saveAssign(*getDI(input_index));
+        OUT_Array()[input_index].setValue(*getDI(input_index));
       }
 
       sendOutputEvent(scm_nEventCNFID);

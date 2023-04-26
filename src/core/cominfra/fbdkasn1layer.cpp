@@ -54,7 +54,7 @@ CFBDKASN1ComLayer::CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * p
     CIEC_ANY **apoSDs = pa_poComFB->getSDs();
     for(unsigned int i = 0; i < sdNum; ++i){
       if(apoSDs[i] != nullptr){
-        TForteByte typeSize = csm_aDataTags[apoSDs[i]->getDataTypeID()][1];
+        TForteByte typeSize = csm_aDataTags[apoSDs[i]->unwrap().getDataTypeID()][1];
         if(typeSize != 255){
           mStatSerBufSize += typeSize + 1;
         }
@@ -65,7 +65,7 @@ CFBDKASN1ComLayer::CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * p
     CIEC_ANY **apoRDs = pa_poComFB->getRDs();
     for(unsigned int i = 0; i < rdNum; ++i){
       if(nullptr != apoRDs[i]){
-        TForteByte typeSize = csm_aDataTags[apoRDs[i]->getDataTypeID()][1];
+        TForteByte typeSize = csm_aDataTags[apoRDs[i]->unwrap().getDataTypeID()][1];
         if(typeSize != 255){
           mDeserBufSize += typeSize + 1;
         }
@@ -312,23 +312,25 @@ int CFBDKASN1ComLayer::serializeDataPoint(TForteByte* pa_pcBytes, int pa_nStream
 }
 
 void CFBDKASN1ComLayer::serializeTag(TForteByte* pa_pcBytes, const CIEC_ANY &pa_roCIECData){
-#ifdef FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
-  if (CIEC_ANY::e_External == pa_roCIECData.getDataTypeID()) {
-    pa_pcBytes[0] = pa_roCIECData.getTag();
-  } else {
-#endif /* FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES */
-    if (CIEC_ANY::e_STRUCT != pa_roCIECData.getDataTypeID()) {
-      pa_pcBytes[0] = csm_aDataTags[pa_roCIECData.getDataTypeID()][0];
-    }
-    else {
+  CIEC_ANY::EDataTypeID eDataType = pa_roCIECData.getDataTypeID();
+
+  switch(eDataType) {
+    case CIEC_ANY::e_ANY:
+      serializeTag(pa_pcBytes, pa_roCIECData.unwrap());
+      break;
+    case CIEC_ANY::e_STRUCT:
       //get ASN1-tag from implementing datatype for STRUCT-datatypes
       pa_pcBytes[0] = ((CIEC_STRUCT&) pa_roCIECData).getASN1StructType();
-    }
-      //TODO add bool stuff here
+      break;
 #ifdef FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
+    case CIEC_ANY::e_External:
+      pa_pcBytes[0] = pa_roCIECData.getTag();
+      break;
+#endif /* FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES */
+    default:
+      pa_pcBytes[0] = csm_aDataTags[eDataType][0];
+      break;
   }
-#endif/* FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES */
-
 }
 
 int CFBDKASN1ComLayer::serializeValue(TForteByte* pa_pcBytes, int pa_nStreamSize, const CIEC_ANY &pa_roCIECData){
@@ -342,6 +344,9 @@ int CFBDKASN1ComLayer::serializeValue(TForteByte* pa_pcBytes, int pa_nStreamSize
   }
   else{
     switch (eDataType){
+      case CIEC_ANY::e_ANY:
+        nRetVal = serializeValue(pa_pcBytes, pa_nStreamSize, pa_roCIECData.unwrap());
+        break;
       case CIEC_ANY::e_BOOL:
         if(!((CIEC_BOOL &) pa_roCIECData).operator bool()){
           //data of bool is encoded in the tag; if CIEC_BOOL == false => Tag must be e_APPLICATION + e_PRIMITIVE
@@ -598,6 +603,9 @@ bool CFBDKASN1ComLayer::deserializeTag(const TForteByte pa_cByte, CIEC_ANY &pa_r
   CIEC_ANY::EDataTypeID eDataType = pa_roCIECData.getDataTypeID();
 
   switch(eDataType){
+    case CIEC_ANY::e_ANY:
+      bRetVal = deserializeTag(pa_cByte, pa_roCIECData.unwrap());
+      break;
     case CIEC_ANY::e_BOOL:
       bRetVal = (((e_APPLICATION + e_PRIMITIVE) == pa_cByte) || ((e_APPLICATION + e_PRIMITIVE + CIEC_ANY::e_BOOL) == pa_cByte));
       if(bRetVal){
@@ -625,11 +633,14 @@ int CFBDKASN1ComLayer::deserializeValue(const TForteByte* pa_pcBytes, int pa_nSt
   CIEC_ANY::EDataTypeID eDataType = pa_roCIECData.getDataTypeID();
 
   if (scmSimpleEncodableDataTypes.find(eDataType) != scmSimpleEncodableDataTypes.end())
-  { // e_ANY to e_DATE_AND_TIME can be handled the same way
+  { // e_SINT to e_DATE_AND_TIME can be handled the same way
     nRetVal = deserializeValueSimpleDataType(pa_pcBytes, pa_nStreamSize, pa_roCIECData);
   }
   else{
     switch (eDataType){
+      case CIEC_ANY::e_ANY:
+        nRetVal = deserializeValue(pa_pcBytes, pa_nStreamSize, pa_roCIECData.unwrap());
+        break;
       case CIEC_ANY::e_BOOL:
         //bool data is decoded in the bool tag
         nRetVal = 0;
@@ -869,6 +880,9 @@ unsigned int CFBDKASN1ComLayer::getRequiredSerializationSize(const CIEC_ANY &pa_
   unsigned int unRetVal = 0;
 
   switch (pa_roCIECData.getDataTypeID()){
+    case CIEC_ANY::e_ANY:
+      unRetVal = getRequiredSerializationSize(pa_roCIECData.unwrap());
+      break;
     case CIEC_ANY::e_STRING:
       unRetVal += ((CIEC_STRING&)pa_roCIECData).length() + 3;
       break;

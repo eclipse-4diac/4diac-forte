@@ -380,6 +380,7 @@ void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
   int consumedBytes = paDataWatchEntry.mDataBuffer->toString(acDataValue, bufferSize);
   if(consumedBytes > 0 && static_cast<size_t>(consumedBytes) < bufferSize) {
     switch (paDataWatchEntry.mDataBuffer->getDataTypeID()) {
+      case CIEC_ANY::e_ANY:
       case CIEC_ANY::e_WSTRING:
       case CIEC_ANY::e_STRING:
       case CIEC_ANY::e_CHAR:
@@ -404,10 +405,13 @@ size_t CMonitoringHandler::getExtraSizeForEscapedChars(const CIEC_ANY& paDataVal
   size_t retVal = 0;
 
   switch(paDataValue.getDataTypeID()){
+    case CIEC_ANY::e_ANY:
+      retVal = getExtraSizeForEscapedChars(paDataValue.unwrap());
+      break;
     case CIEC_ANY::e_WSTRING:
     case CIEC_ANY::e_STRING:
       retVal = forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<const CIEC_WSTRING&>(paDataValue).getValue()) + 10; //for opening and closing quotes or apos
-     break;
+      break;
     case CIEC_ANY::e_CHAR:
       retVal = 5 + 5 + 5; // Both outer quotes and symbol gets evetually replaced
       break;
