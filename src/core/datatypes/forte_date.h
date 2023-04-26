@@ -78,6 +78,10 @@ class CIEC_DATE : public CIEC_ANY_DATE {
      *           -1 on error
      */
     int toString(char* paValue, size_t paBufferSize) const override;
+
+    /*! \brief calculates buffer size needed for toString conversion
+     */
+    size_t getToStringBufferSize() const override;
 };
 
 inline bool operator==(const CIEC_DATE left, const CIEC_DATE &right) {

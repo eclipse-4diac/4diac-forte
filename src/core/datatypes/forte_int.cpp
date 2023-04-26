@@ -27,3 +27,7 @@ template CIEC_INT &CIEC_INT::operator=<>(const CIEC_ANY_INT &paValue);
 template CIEC_INT &CIEC_INT::operator=<>(const CIEC_SINT &paValue);
 
 template CIEC_INT &CIEC_INT::operator=<>(const CIEC_USINT &paValue);
+
+size_t CIEC_INT::getToStringBufferSize() const {
+  return sizeof("-32768");
+}

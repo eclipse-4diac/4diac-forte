@@ -58,6 +58,10 @@ class CIEC_WCHAR : public CIEC_ANY_CHAR{
 
     int fromString(const char *paValue) override;
 
+    /*! \brief calculates buffer size needed for toString conversion
+     */
+    size_t getToStringBufferSize() const override;
+
     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_WCHAR;
     }

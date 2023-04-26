@@ -85,3 +85,7 @@ int CIEC_DATE::toString(char* paValue, size_t paBufferSize) const {
   }
   return nRetVal;
 }
+
+size_t CIEC_DATE::getToStringBufferSize() const {
+  return sizeof("D#1970-01-01");
+}

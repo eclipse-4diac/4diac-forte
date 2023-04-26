@@ -21,3 +21,7 @@ DEFINE_FIRMWARE_DATATYPE(USINT, g_nStringIdUSINT)
 const CIEC_USINT::TValueType CIEC_USINT::scm_nMaxVal = std::numeric_limits<CIEC_USINT::TValueType>::max();
 
 template CIEC_USINT &CIEC_USINT::operator=<>(const CIEC_ANY_INT &paValue);
+
+size_t CIEC_USINT::getToStringBufferSize() const {
+  return sizeof("255");
+}

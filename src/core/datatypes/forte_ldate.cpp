@@ -78,10 +78,14 @@ int CIEC_LDATE::toString(char* paValue, size_t paBufferSize) const {
   struct tm ptm;
 
   if (nullptr != getTimeStruct(&ptm)) {
-    nRetVal = forte_snprintf(paValue, paBufferSize, "%04d-%02d-%02d", 1900 + ptm.tm_year, ptm.tm_mon + 1, ptm.tm_mday);
+    nRetVal = forte_snprintf(paValue, paBufferSize, "LD#%04d-%02d-%02d", 1900 + ptm.tm_year, ptm.tm_mon + 1, ptm.tm_mday);
     if((nRetVal < -1) || (nRetVal >= static_cast<int>(paBufferSize))) {
       nRetVal = -1;
     }
   }
   return nRetVal;
+}
+
+size_t CIEC_LDATE::getToStringBufferSize() const {
+  return sizeof("LD#1970-01-01");
 }

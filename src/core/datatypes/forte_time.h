@@ -77,6 +77,10 @@ class CIEC_TIME : public CIEC_ANY_DURATION {
      */
     int toString(char* paValue, size_t paBufferSize) const override;
 
+    /*! \brief calculates buffer size needed for toString conversion
+     */
+    size_t getToStringBufferSize() const override;
+
     TValueType getInSeconds() const;
     TValueType getInMilliSeconds() const;
     TValueType getInMicroSeconds() const;

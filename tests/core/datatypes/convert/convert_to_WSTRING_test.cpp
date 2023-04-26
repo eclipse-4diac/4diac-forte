@@ -10,6 +10,7 @@
  *   Matthias Plasch - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
+#include "forte_boost_output_support.h"
 
 #include "convert_functions.h"
 #include "../../../src/core/datatypes/forte_wstring.h"
@@ -85,7 +86,7 @@ BOOST_AUTO_TEST_CASE(BOOLS_AND_BITS_to_WSTRING_test)
   sResult = CIEC_WSTRING("18446744073709551615");
   sTest = func_LWORD_TO_WSTRING(nLWTest);
   //check result value
-  BOOST_CHECK(sTest == sResult);
+  BOOST_TEST(sTest == sResult);
   //check length value
   BOOST_CHECK_EQUAL(sTest.length(), 20);
 }

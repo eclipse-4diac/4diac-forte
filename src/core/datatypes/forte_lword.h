@@ -110,6 +110,10 @@ class CIEC_LWORD : public CIEC_ANY_BIT{
       return getTUINT64();
     }
 
+    /*! \brief calculates buffer size needed for toString conversion
+     */
+    size_t getToStringBufferSize() const override;
+
     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_LWORD;
     }

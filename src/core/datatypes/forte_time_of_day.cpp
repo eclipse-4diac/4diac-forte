@@ -110,3 +110,6 @@ int CIEC_TIME_OF_DAY::toString(char* paValue, size_t paBufferSize) const {
   return nRetVal;
 }
 
+size_t CIEC_TIME_OF_DAY::getToStringBufferSize() const {
+  return sizeof("TOD#00:00:00.000");
+}

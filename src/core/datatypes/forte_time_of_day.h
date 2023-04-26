@@ -55,6 +55,10 @@ class CIEC_TIME_OF_DAY : public CIEC_ANY_DATE{
       return getTUINT64();
     }
 
+    /*! \brief calculates buffer size needed for toString conversion
+     */
+    size_t getToStringBufferSize() const override;
+
     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_TIME_OF_DAY;
     }

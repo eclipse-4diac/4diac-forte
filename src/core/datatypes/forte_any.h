@@ -61,9 +61,6 @@ class CIEC_ANY {
       e_Max = 65535 // Guarantees at least 16 bits - otherwise gcc will optimizes on some platforms
     };
 
-    // ordering of sizes is according to EDataTypeID, that the ID can be used to get the proper value, +1 for \0
-    const static TForteByte csmStringBufferSize[];
-
     typedef TForteUInt64 TLargestUIntValueType;
     typedef TForteInt64 TLargestIntValueType;
 

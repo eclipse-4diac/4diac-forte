@@ -73,6 +73,10 @@ class CIEC_SINT : public CIEC_ANY_INT{
       return getTINT8();
     }
 
+    /*! \brief calculates buffer size needed for toString conversion
+     */
+    size_t getToStringBufferSize() const override;
+
     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_SINT;
     }

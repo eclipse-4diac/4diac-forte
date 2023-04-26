@@ -63,9 +63,13 @@ class CIEC_LDATE_AND_TIME : public CIEC_ANY_DATE {
       return getTUINT64();
     }
 
+    /*! \brief calculates buffer size needed for toString conversion
+     */
+    size_t getToStringBufferSize() const override;
+
     EDataTypeID getDataTypeID() const override {
-          return CIEC_ANY::e_LDATE_AND_TIME;
-        }
+      return CIEC_ANY::e_LDATE_AND_TIME;
+    }
 
   /*! \brief Converts string value to data type value
    *

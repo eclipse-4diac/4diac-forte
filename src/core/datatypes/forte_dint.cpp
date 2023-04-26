@@ -30,3 +30,7 @@ template CIEC_DINT &CIEC_DINT::operator=<>(const CIEC_INT &paValue);
 template CIEC_DINT &CIEC_DINT::operator=<>(const CIEC_USINT &paValue);
 
 template CIEC_DINT &CIEC_DINT::operator=<>(const CIEC_UINT &paValue);
+
+size_t CIEC_DINT::getToStringBufferSize() const {
+  return sizeof("-2147483648");
+}

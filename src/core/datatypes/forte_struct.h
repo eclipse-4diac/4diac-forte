@@ -84,6 +84,10 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
 
     void setValue(const CIEC_ANY& paValue) override;
 
+    /*! \brief calculates buffer size needed for toString conversion
+     */
+    size_t getToStringBufferSize() const override;
+
     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_STRUCT;
     }
@@ -131,9 +135,6 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED{
      * \return on a valid member name id a pointer to the member var otherwise 0
      */
     CIEC_ANY* getMemberNamed(char const* const paMemberName);
-
-
-    size_t getToStringBufferSize() const override;
 
   protected:
     /*! \brief helper method for accessing a member by index

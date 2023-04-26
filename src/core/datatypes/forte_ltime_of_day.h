@@ -93,6 +93,10 @@ class CIEC_LTIME_OF_DAY : public CIEC_ANY_DATE {
      *           -1 on error
      */
     int toString(char* paValue, size_t paBufferSize) const override;
+
+    /*! \brief calculates buffer size needed for toString conversion
+     */
+    size_t getToStringBufferSize() const override;
 };
 
 #endif /*_FORTE_LTOD_H_*/
