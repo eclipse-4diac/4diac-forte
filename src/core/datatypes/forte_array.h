@@ -832,8 +832,8 @@ private:
       if (mElementSize && mElementDataTypeEntry) { // check if initialized
         mData = operator new(paArray.size() * mElementSize);
         auto *dest = static_cast<TForteByte *>(mData);
-        for (auto &elem: paArray) {
-          elem.clone(dest);
+        for (intmax_t i = paArray.getLowerBound(), end = paArray.getUpperBound(); i <= end; ++i) {
+          paArray[i].clone(dest);
           dest += mElementSize;
           mSize++; // increment size one-by-one to track allocated elements for destruction
         }
