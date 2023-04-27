@@ -351,7 +351,7 @@ template<>
 class XorOperation<CIEC_BOOL, CIEC_BOOL> {
   public:
     static CIEC_BOOL call(const CIEC_BOOL &paIN1, const CIEC_BOOL &paIN2) {
-      return CIEC_BOOL(paIN1 != paIN2);
+      return CIEC_BOOL(paIN1.operator bool() != paIN2.operator bool());
     }
   private:
     XorOperation() = default;
