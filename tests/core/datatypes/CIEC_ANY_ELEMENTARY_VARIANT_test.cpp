@@ -96,4 +96,119 @@ BOOST_AUTO_TEST_SUITE(CIEC_ANY_ELEMENTARY_VARIANT_function_test)
       BOOST_TEST(!test1.equals(test2));
     }
 
+
+    BOOST_AUTO_TEST_CASE(Comparisons_test) {
+      CIEC_ANY_ELEMENTARY_VARIANT test1;
+      CIEC_ANY_ELEMENTARY_VARIANT test2;
+
+      // initial value
+      BOOST_CHECK(test1 == test2);
+      BOOST_CHECK(!(test1 != test2));
+      BOOST_CHECK(test1 <= test2);
+      BOOST_CHECK(!(test1 < test2));
+      BOOST_CHECK(test1 >= test2);
+      BOOST_CHECK(!(test1 > test2));
+
+      // same types
+      test1 = CIEC_DINT(17);
+      test2 = CIEC_DINT(4);
+
+      BOOST_CHECK(!(test1 == test2));
+      BOOST_CHECK(test1 != test2);
+      BOOST_CHECK(!(test1 <= test2));
+      BOOST_CHECK(!(test1 < test2));
+      BOOST_CHECK(test1 >= test2);
+      BOOST_CHECK(test1 > test2);
+
+      test2 = CIEC_DINT(21);
+
+      BOOST_CHECK(!(test1 == test2));
+      BOOST_CHECK(test1 != test2);
+      BOOST_CHECK(test1 <= test2);
+      BOOST_CHECK(test1 < test2);
+      BOOST_CHECK(!(test1 >= test2));
+      BOOST_CHECK(!(test1 > test2));
+
+      // different types (signed)
+      test1 = CIEC_DINT(17);
+      test2 = CIEC_LINT(4);
+
+      BOOST_CHECK(!(test1 == test2));
+      BOOST_CHECK(test1 != test2);
+      BOOST_CHECK(!(test1 <= test2));
+      BOOST_CHECK(!(test1 < test2));
+      BOOST_CHECK(test1 >= test2);
+      BOOST_CHECK(test1 > test2);
+
+      test2 = CIEC_SINT(21);
+
+      BOOST_CHECK(!(test1 == test2));
+      BOOST_CHECK(test1 != test2);
+      BOOST_CHECK(test1 <= test2);
+      BOOST_CHECK(test1 < test2);
+      BOOST_CHECK(!(test1 >= test2));
+      BOOST_CHECK(!(test1 > test2));
+
+      // different types (unsigned)
+      test1 = CIEC_UDINT(17);
+      test2 = CIEC_ULINT(4);
+
+      BOOST_CHECK(!(test1 == test2));
+      BOOST_CHECK(test1 != test2);
+      BOOST_CHECK(!(test1 <= test2));
+      BOOST_CHECK(!(test1 < test2));
+      BOOST_CHECK(test1 >= test2);
+      BOOST_CHECK(test1 > test2);
+
+      test2 = CIEC_USINT(21);
+
+      BOOST_CHECK(!(test1 == test2));
+      BOOST_CHECK(test1 != test2);
+      BOOST_CHECK(test1 <= test2);
+      BOOST_CHECK(test1 < test2);
+      BOOST_CHECK(!(test1 >= test2));
+      BOOST_CHECK(!(test1 > test2));
+
+      // different types (signed & unsigned)
+      test1 = CIEC_DINT(17);
+      test2 = CIEC_USINT(4);
+
+      BOOST_CHECK(!(test1 == test2));
+      BOOST_CHECK(test1 != test2);
+      BOOST_CHECK(!(test1 <= test2));
+      BOOST_CHECK(!(test1 < test2));
+      BOOST_CHECK(test1 >= test2);
+      BOOST_CHECK(test1 > test2);
+
+      test2 = CIEC_USINT(21);
+
+      BOOST_CHECK(!(test1 == test2));
+      BOOST_CHECK(test1 != test2);
+      BOOST_CHECK(test1 <= test2);
+      BOOST_CHECK(test1 < test2);
+      BOOST_CHECK(!(test1 >= test2));
+      BOOST_CHECK(!(test1 > test2));
+
+      // different types (incomparable)
+      test1 = CIEC_DINT(17);
+      test2 = CIEC_STRING("abc");
+
+      BOOST_CHECK(!(test1 == test2));
+      BOOST_CHECK(test1 != test2);
+      BOOST_CHECK(test1 <= test2);
+      BOOST_CHECK(test1 < test2);
+      BOOST_CHECK(!(test1 >= test2));
+      BOOST_CHECK(!(test1 > test2));
+
+      test1 = CIEC_STRING("abc");
+      test2 = CIEC_DINT(17);
+
+      BOOST_CHECK(!(test1 == test2));
+      BOOST_CHECK(test1 != test2);
+      BOOST_CHECK(test1 <= test2);
+      BOOST_CHECK(test1 < test2);
+      BOOST_CHECK(!(test1 >= test2));
+      BOOST_CHECK(!(test1 > test2));
+    }
+
 BOOST_AUTO_TEST_SUITE_END()

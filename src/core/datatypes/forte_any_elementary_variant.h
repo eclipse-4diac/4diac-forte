@@ -96,7 +96,7 @@ DECLARE_FIRMWARE_DATATYPE(ANY_ELEMENTARY_VARIANT)
 public:
     using TIecAnyElementaryVariantType::variant;
     using TIecAnyElementaryVariantType::operator=;
-    template<class> static inline constexpr bool always_false_v = false;
+    template<class...> static inline constexpr bool always_false_v = false;
 
     CIEC_ANY_ELEMENTARY_VARIANT(const CIEC_ANY_ELEMENTARY_VARIANT &paVal) : CIEC_ANY_ELEMENTARY(), variant(paVal) {}
 
@@ -122,7 +122,34 @@ public:
     [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
       return unwrap().equals(paOther.unwrap());
     }
+
+    [[nodiscard]] static int compare(const CIEC_ANY_ELEMENTARY_VARIANT &paValue,
+                                     const CIEC_ANY_ELEMENTARY_VARIANT &paOther);
 };
+
+inline bool operator==(const CIEC_ANY_ELEMENTARY_VARIANT &paValue, const CIEC_ANY_ELEMENTARY_VARIANT &paOther) {
+  return CIEC_ANY_ELEMENTARY_VARIANT::compare(paValue, paOther) == 0;
+}
+
+inline bool operator!=(const CIEC_ANY_ELEMENTARY_VARIANT &paValue, const CIEC_ANY_ELEMENTARY_VARIANT &paOther) {
+  return CIEC_ANY_ELEMENTARY_VARIANT::compare(paValue, paOther) != 0;
+}
+
+inline bool operator<(const CIEC_ANY_ELEMENTARY_VARIANT &paValue, const CIEC_ANY_ELEMENTARY_VARIANT &paOther) {
+  return CIEC_ANY_ELEMENTARY_VARIANT::compare(paValue, paOther) < 0;
+}
+
+inline bool operator<=(const CIEC_ANY_ELEMENTARY_VARIANT &paValue, const CIEC_ANY_ELEMENTARY_VARIANT &paOther) {
+  return CIEC_ANY_ELEMENTARY_VARIANT::compare(paValue, paOther) <= 0;
+}
+
+inline bool operator>(const CIEC_ANY_ELEMENTARY_VARIANT &paValue, const CIEC_ANY_ELEMENTARY_VARIANT &paOther) {
+  return CIEC_ANY_ELEMENTARY_VARIANT::compare(paValue, paOther) > 0;
+}
+
+inline bool operator>=(const CIEC_ANY_ELEMENTARY_VARIANT &paValue, const CIEC_ANY_ELEMENTARY_VARIANT &paOther) {
+  return CIEC_ANY_ELEMENTARY_VARIANT::compare(paValue, paOther) >= 0;
+}
 
 static_assert(std::is_copy_constructible_v<CIEC_ANY_ELEMENTARY_VARIANT>);
 static_assert(std::is_move_constructible_v<CIEC_ANY_ELEMENTARY_VARIANT>);

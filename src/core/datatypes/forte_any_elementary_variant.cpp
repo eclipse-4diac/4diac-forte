@@ -291,3 +291,20 @@ size_t CIEC_ANY_ELEMENTARY_VARIANT::getToStringBufferSize() const {
   return result;
 }
 
+int CIEC_ANY_ELEMENTARY_VARIANT::compare(const CIEC_ANY_ELEMENTARY_VARIANT &paValue,
+                                         const CIEC_ANY_ELEMENTARY_VARIANT &paOther) {
+  return std::visit([](auto &&value, auto &&other) -> int {
+      using T = std::decay_t<decltype(value)>;
+      using U = std::decay_t<decltype(other)>;
+      using commonType = std::conditional_t<std::is_same_v<T, U>, T, typename forte::core::mpl::get_castable_type<T, U>::type>;
+      if constexpr (std::is_base_of_v<CIEC_ANY_STRING, commonType>) {
+        return strcmp(static_cast<commonType>(value).getValue(), static_cast<commonType>(other).getValue());
+      } else if constexpr (!std::is_same_v<commonType, forte::core::mpl::NullType>) {
+        return static_cast<int>(static_cast<typename commonType::TValueType>(static_cast<commonType >(value)) -
+                                static_cast<typename commonType::TValueType>(static_cast<commonType >(other)));
+      } else {
+        return -1;
+      }
+  }, paValue, paOther);;
+}
+
