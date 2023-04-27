@@ -31,27 +31,27 @@ BOOST_AUTO_TEST_CASE(Assignment_test)
   CIEC_CHAR test2;
 
   //initial value must be 0
-  BOOST_CHECK_EQUAL(test1, 0);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_CHAR::TValueType>(test1), 0);
 
   test1 = CIEC_CHAR(0);
   test2 = test1;
-  BOOST_CHECK_EQUAL(test1, 0);
-  BOOST_CHECK_EQUAL(test2, 0);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_CHAR::TValueType>(test1), 0);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_CHAR::TValueType>(test2), 0);
 
   test1 = CIEC_CHAR(12);
   test2 = test1;
-  BOOST_CHECK_EQUAL(test1, 12);
-  BOOST_CHECK_EQUAL(test2, 12);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_CHAR::TValueType>(test1), 12);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_CHAR::TValueType>(test2), 12);
 
   test1 = CIEC_CHAR(255);
   test2 = test1;
-  BOOST_CHECK_EQUAL(test1, 255);
-  BOOST_CHECK_EQUAL(test2, 255);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_CHAR::TValueType>(test1), 255);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_CHAR::TValueType>(test2), 255);
 
   //check that assignment operator does not intertwine objects
   test2 = CIEC_CHAR(128);
-  BOOST_CHECK_EQUAL(test1, 255);
-  BOOST_CHECK_EQUAL(test2, 128);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_CHAR::TValueType>(test1), 255);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_CHAR::TValueType>(test2), 128);
 
 }
 
