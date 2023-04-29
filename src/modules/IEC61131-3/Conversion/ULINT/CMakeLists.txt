@@ -25,11 +25,11 @@ forte_add_sourcefile_hcpp(F_ULINT_TO_UDINT)
 forte_add_sourcefile_hcpp(F_ULINT_TO_UINT)
 forte_add_sourcefile_hcpp(F_ULINT_TO_USINT)
 forte_add_sourcefile_hcpp(F_ULINT_TO_WORD)
-forte_add_sourcefile_hcpp(F_ULINT_TO_STRING)
+forte_add_sourcefile_hcpp(F_ULINT_AS_STRING)
 forte_add_sourcefile_hcpp(F_ULINT_TO_REAL)
 forte_add_sourcefile_hcpp(F_ULINT_TO_LREAL)
 
 
 if(FORTE_USE_WSTRING_DATATYPE)
-  forte_add_sourcefile_hcpp(F_ULINT_TO_WSTRING)
+  forte_add_sourcefile_hcpp(F_ULINT_AS_WSTRING)
 endif(FORTE_USE_WSTRING_DATATYPE)

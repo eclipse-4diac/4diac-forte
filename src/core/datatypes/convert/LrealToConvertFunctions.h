@@ -62,14 +62,14 @@ inline const CIEC_INT func_LREAL_TO_INT(const CIEC_LREAL &paVal){
   return CIEC_ANY::cast<CIEC_INT>(paVal);
 }
 
-inline const CIEC_STRING func_LREAL_TO_STRING(const CIEC_LREAL &paVal){
+inline const CIEC_STRING func_LREAL_AS_STRING(const CIEC_LREAL &paVal){
   CIEC_STRING string;
   stringConverter(string, paVal);
   return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
-inline const CIEC_WSTRING func_LREAL_TO_WSTRING(const CIEC_LREAL &paVal){
+inline const CIEC_WSTRING func_LREAL_AS_WSTRING(const CIEC_LREAL &paVal){
   CIEC_WSTRING string;
   stringConverter(string, paVal);
   return string;

@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2019 TU Wien/ACIN
+ * Copyright (c) 2023 Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -7,59 +8,83 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Martin Melik Merkumians
- *   - initial API and implementation and/or initial documentation
+ *   Martin Jobst
+ *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef _F_TIME_IN_NS_TO_LINT_H_
-#define _F_TIME_IN_NS_TO_LINT_H_
+#pragma once
 
-#include <simplefb.h>
-#include <forte_lint.h>
-#include <forte_time.h>
+#include "simplefb.h"
+#include "forte_time.h"
+#include "forte_lint.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 
-class FORTE_F_TIME_IN_NS_TO_LINT: public CSimpleFB{
+
+class FORTE_F_TIME_IN_NS_TO_LINT: public CSimpleFB {
   DECLARE_FIRMWARE_FB(FORTE_F_TIME_IN_NS_TO_LINT)
 
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_TIME &st_IN() {
-    return *static_cast<CIEC_TIME*>(getDI(0));
-  };
-
+  
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_LINT &st_OUT() {
-    return *static_cast<CIEC_LINT*>(getDO(0));
-  };
-
+  
   static const TEventID scm_nEventREQID = 0;
-  static const TForteInt16 scm_anEIWithIndexes[];
+  
   static const TDataIOID scm_anEIWith[];
+  static const TForteInt16 scm_anEIWithIndexes[];
   static const CStringDictionary::TStringId scm_anEventInputNames[];
-
+  
   static const TEventID scm_nEventCNFID = 0;
+  
+  static const TDataIOID scm_anEOWith[]; 
   static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
   static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  CIEC_ANY *getVarInternal(size_t) override;
+  void alg_REQ(void);
 
-   FORTE_FB_DATA_ARRAY(1, 1, 1, 0);
+  void executeEvent(int pa_nEIID) override;
 
-    void executeEvent(int paEIID) override;
-    void alg_REQ();
+  void readInputData(size_t pa_nEIID) override;
+  void writeOutputData(size_t pa_nEIID) override;
 
 public:
-  FORTE_F_TIME_IN_NS_TO_LINT(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : 
-       CSimpleFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId,
-              nullptr, m_anFBConnData, m_anFBVarsData){
-  };
+  FORTE_F_TIME_IN_NS_TO_LINT(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
-  ~FORTE_F_TIME_IN_NS_TO_LINT() override = default;
 
+  CIEC_TIME var_IN;
+  CIEC_LINT var_OUT;
+  
+  CIEC_LINT var_conn_OUT;
+  CEventConnection conn_CNF;
+  CDataConnection *conn_IN;
+  CDataConnection conn_OUT;
+  
+  CIEC_ANY *getDI(size_t) override;
+  CIEC_ANY *getDO(size_t) override;
+  CEventConnection *getEOConUnchecked(TPortId) override;
+  CDataConnection **getDIConUnchecked(TPortId) override;
+  CDataConnection *getDOConUnchecked(TPortId) override;
+  
+  void evt_REQ(const CIEC_TIME &pa_IN, CIEC_LINT &pa_OUT) {
+    var_IN = pa_IN;
+    receiveInputEvent(scm_nEventREQID, nullptr);
+    pa_OUT = var_OUT;
+  }
+  
+  void operator()(const CIEC_TIME &pa_IN, CIEC_LINT &pa_OUT) {
+    evt_REQ(pa_IN, pa_OUT);
+  }
+  
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+
 
