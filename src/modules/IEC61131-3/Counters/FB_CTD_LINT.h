@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2009 - 2011 ACIN
+ * Copyright (c) 2023 Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -7,60 +8,93 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Monika Wenger, Alois Zoitl, Ingo Hengy
- *   - initial API and implementation and/or initial documentation
+ *   Martin Jobst
+ *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _FB_CTD_LINT_H_
-#define _FB_CTD_LINT_H_
 
-#include <funcbloc.h>
+#pragma once
 
-class FB_CTD_LINT: public CFunctionBlock{
-  DECLARE_FIRMWARE_FB(FB_CTD_LINT)
+#include "simplefb.h"
+#include "forte_bool.h"
+#include "forte_lint.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
+
+
+class FORTE_FB_CTD_LINT: public CSimpleFB {
+  DECLARE_FIRMWARE_FB(FORTE_FB_CTD_LINT)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[], scm_aunDIDataTypeIds[];
-  static const CStringDictionary::TStringId scm_anDataOutputNames[], scm_aunDODataTypeIds[];
+  static const CStringDictionary::TStringId scm_anDataInputNames[];
+  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+  
+  static const CStringDictionary::TStringId scm_anDataOutputNames[];
+  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+  
   static const TEventID scm_nEventREQID = 0;
-  static const TForteInt16 scm_anEIWithIndexes[];
+  
   static const TDataIOID scm_anEIWith[];
+  static const TForteInt16 scm_anEIWithIndexes[];
   static const CStringDictionary::TStringId scm_anEventInputNames[];
-
+  
   static const TEventID scm_nEventCNFID = 0;
+  
+  static const TDataIOID scm_anEOWith[]; 
   static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
   static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-
-  FORTE_FB_DATA_ARRAY(1,3,2, 0);
+  CIEC_ANY *getVarInternal(size_t) override;
+  void alg_REQ(void);
 
   void executeEvent(int pa_nEIID) override;
 
-
-  CIEC_BOOL& CD() {
-    return *static_cast<CIEC_BOOL*>(getDI(0));
-  }
-  CIEC_BOOL& LD() {
-    return *static_cast<CIEC_BOOL*>(getDI(1));
-  }
-  CIEC_LINT& PV() {
-    return *static_cast<CIEC_LINT*>(getDI(2));
-  }
-
-
-  CIEC_BOOL& Q() {
-    return *static_cast<CIEC_BOOL*>(getDO(0));
-  }
-  CIEC_LINT& CV() {
-    return *static_cast<CIEC_LINT*>(getDO(1));
-  }
+  void readInputData(size_t pa_nEIID) override;
+  void writeOutputData(size_t pa_nEIID) override;
 
 public:
-  FUNCTION_BLOCK_CTOR(FB_CTD_LINT){};
-  ~FB_CTD_LINT() override = default;
+  FORTE_FB_CTD_LINT(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
+
+  CIEC_BOOL var_CD;
+  CIEC_BOOL var_LD;
+  CIEC_LINT var_PV;
+  CIEC_BOOL var_Q;
+  CIEC_LINT var_CV;
+  
+  CIEC_BOOL var_conn_Q;
+  CIEC_LINT var_conn_CV;
+  CEventConnection conn_CNF;
+  CDataConnection *conn_CD;
+  CDataConnection *conn_LD;
+  CDataConnection *conn_PV;
+  CDataConnection conn_Q;
+  CDataConnection conn_CV;
+  
+  CIEC_ANY *getDI(size_t) override;
+  CIEC_ANY *getDO(size_t) override;
+  CEventConnection *getEOConUnchecked(TPortId) override;
+  CDataConnection **getDIConUnchecked(TPortId) override;
+  CDataConnection *getDOConUnchecked(TPortId) override;
+  
+  void evt_REQ(const CIEC_BOOL &pa_CD, const CIEC_BOOL &pa_LD, const CIEC_LINT &pa_PV, CIEC_BOOL &pa_Q, CIEC_LINT &pa_CV) {
+    var_CD = pa_CD;
+    var_LD = pa_LD;
+    var_PV = pa_PV;
+    receiveInputEvent(scm_nEventREQID, nullptr);
+    pa_Q = var_Q;
+    pa_CV = var_CV;
+  }
+  
+  void operator()(const CIEC_BOOL &pa_CD, const CIEC_BOOL &pa_LD, const CIEC_LINT &pa_PV, CIEC_BOOL &pa_Q, CIEC_LINT &pa_CV) {
+    evt_REQ(pa_CD, pa_LD, pa_PV, pa_Q, pa_CV);
+  }
+  
 };
 
-#endif /*_FB_CTD_LINT_H_*/
+
 
