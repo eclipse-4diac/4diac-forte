@@ -142,48 +142,61 @@ inline const CIEC_LREAL func_EXP(const CIEC_LREAL &paIN){
   return CIEC_LREAL(exp(paIN));
 }
 
-template<typename T> const T func_ROL(const T &paIn, const CIEC_ANY_INT &paN) {
+template<typename T>
+auto func_ROL(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::mpl::get_equivalent_CIEC_class<T>::type  {
   static_assert((std::is_base_of<CIEC_ANY_BIT, T>::value), "T not of ANY_BIT");
+  using returnType = typename forte::core::mpl::get_equivalent_CIEC_class<T>::type;
   if((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()) {
-    return T(static_cast<typename T::TValueType>((paIn << paN.getUnsignedValue()) | (paIn >> (sizeof(typename T::TValueType) * 8 - paN.getUnsignedValue()))));
+    return returnType(static_cast<typename returnType::TValueType>((paIn << paN.getUnsignedValue()) | (paIn >> (sizeof(typename returnType::TValueType) * 8 - paN.getUnsignedValue()))));
+  } else {
+    DEVLOG_ERROR("value of input N is less than zero");
+    return returnType(static_cast<typename returnType::TValueType>(0));
   }
-  DEVLOG_ERROR("value of input N is less than zero");
-  return T(static_cast<typename T::TValueType>(0));
 }
 
-template<typename T> const T func_ROR(const T &paIn, const CIEC_ANY_INT &paN) {
+template<typename T>
+auto func_ROR(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::mpl::get_equivalent_CIEC_class<T>::type {
   static_assert((std::is_base_of<CIEC_ANY_BIT, T>::value), "T not of ANY_BIT");
+  using returnType = typename forte::core::mpl::get_equivalent_CIEC_class<T>::type;
   if((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()) {
-    return T(static_cast<typename T::TValueType>((paIn >> paN.getUnsignedValue()) | (paIn << (sizeof(typename T::TValueType) * 8 - paN.getUnsignedValue()))));
+    return returnType(static_cast<typename returnType::TValueType>((paIn >> paN.getUnsignedValue()) | (paIn << (sizeof(typename returnType::TValueType) * 8 - paN.getUnsignedValue()))));
+  } else {
+    DEVLOG_ERROR("value of input N is less than zero");
+    return returnType(static_cast<typename returnType::TValueType>(0));
   }
-  DEVLOG_ERROR("value of input N is less than zero");
-  return T(static_cast<typename T::TValueType>(0));
 }
 
-template<typename T> const T func_SHL(const T &paIn, const CIEC_ANY_INT &paN) {
+template <typename T>
+auto func_SHL(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::mpl::get_equivalent_CIEC_class<T>::type {
   static_assert((std::is_base_of<CIEC_ANY_BIT, T>::value), "T not of ANY_BIT");
-  if((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()) {
-    return T(static_cast<typename T::TValueType>(paIn << paN.getUnsignedValue()));
+  using returnType = typename forte::core::mpl::get_equivalent_CIEC_class<T>::type;
+  if ((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()) {
+    return returnType(static_cast<typename returnType::TValueType>(paIn << paN.getUnsignedValue()));
+  } else {
+    DEVLOG_ERROR("value of input N is less than zero");
+    return returnType(static_cast<typename T::TValueType>(0));
   }
-  DEVLOG_ERROR("value of input N is less than zero");
-  return T(static_cast<typename T::TValueType>(0));
-}
-template<typename T> const T func_SHR(const T &paIn, const CIEC_ANY_INT &paN) {
-  static_assert((std::is_base_of<CIEC_ANY_BIT, T>::value), "T not of ANY_BIT");
-  if((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()) {
-    return T(static_cast<typename T::TValueType>(paIn >> paN.getUnsignedValue()));
-  }
-  DEVLOG_ERROR("value of input N is less than zero");
-  return T(static_cast<typename T::TValueType>(0));
 }
 
-template<> const CIEC_BOOL func_ROL(const CIEC_BOOL &paIn, const CIEC_ANY_INT &paN);
+template<typename T>
+auto func_SHR(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::mpl::get_equivalent_CIEC_class<T>::type {
+  static_assert((std::is_base_of<CIEC_ANY_BIT, T>::value), "T not of ANY_BIT");
+  using returnType = typename forte::core::mpl::get_equivalent_CIEC_class<T>::type;
+  if((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()) {
+    return returnType(static_cast<typename returnType::TValueType>(paIn >> paN.getUnsignedValue()));
+  } else {
+    DEVLOG_ERROR("value of input N is less than zero");
+    return returnType(static_cast<typename returnType::TValueType>(0));
+  }
+}
 
-template<> const CIEC_BOOL func_ROR(const CIEC_BOOL &paIn, const CIEC_ANY_INT &paN);
+template<> auto func_ROL(const CIEC_BOOL &paIn, const CIEC_ANY_INT &paN) -> CIEC_BOOL;
 
-template<> const CIEC_BOOL func_SHL(const CIEC_BOOL &paIn, const CIEC_ANY_INT &paN);
+template<> auto func_ROR(const CIEC_BOOL &paIn, const CIEC_ANY_INT &paN) -> CIEC_BOOL;
 
-template<> const CIEC_BOOL func_SHR(const CIEC_BOOL &paIn, const CIEC_ANY_INT &paN);
+template<> auto func_SHL(const CIEC_BOOL &paIn, const CIEC_ANY_INT &paN) -> CIEC_BOOL;
+
+template<> auto func_SHR(const CIEC_BOOL &paIn, const CIEC_ANY_INT &paN) -> CIEC_BOOL;
 
 template<typename T, typename U, template<typename A> class F, typename C> typename forte::core::mpl::get_castable_type<T, U>::type APPLY(const T &paIN1,
     const U &paIN2) {
@@ -549,6 +562,7 @@ template<typename T> const T func_MOD(const T &paIN1, const T &paIN2) {
   }
   return T(paIN1.getSignedValue() % paIN2.getSignedValue());
 }
+
 template<typename T> const T func_MOVE(const T &paIN) {
   return T(paIN);
 }
