@@ -132,7 +132,7 @@ const UA_DataType* COPC_UA_Helper::getOPCUATypeFromAny(const CIEC_ANY &paAnyType
   } else if(typeId <= CIEC_ANY::e_WSTRING) { //basic type
     return scmMapForteTypeIdToOpcUa[typeId].mType;
   } else if(CIEC_ANY::e_ARRAY == typeId) {
-    return getOPCUATypeFromAny(static_cast<const CIEC_ARRAY<>&>(paAnyType)[0]);
+    return getOPCUATypeFromAny(static_cast<const CIEC_ARRAY&>(paAnyType)[0]);
   } else {
     return getExternalOPCUATypeFromAny(paAnyType);
   }
@@ -147,8 +147,8 @@ size_t COPC_UA_Helper::convertToOPCUAType(const CIEC_ANY &paSrcAny, void *paDest
   } else if(typeId <= CIEC_ANY::e_WSTRING) { //basic type
     retVal = scmMapForteTypeIdToOpcUa[typeId].mToOPCUA(paSrcAny, paDest);
   } else if(CIEC_ANY::e_ARRAY == typeId) {
-    for(size_t i = 0; i < static_cast<const CIEC_ARRAY<>&>(paSrcAny).size(); i++) {
-      retVal += convertToOPCUAType(static_cast<const CIEC_ARRAY<>&>(paSrcAny)[static_cast<TForteUInt16>(i)], static_cast<char*>(paDest) + retVal);
+    for(size_t i = 0; i < static_cast<const CIEC_ARRAY&>(paSrcAny).size(); i++) {
+      retVal += convertToOPCUAType(static_cast<const CIEC_ARRAY&>(paSrcAny)[static_cast<TForteUInt16>(i)], static_cast<char*>(paDest) + retVal);
     }
   } else if(CIEC_ANY::e_STRUCT == typeId) {
     return convertStructToOPCUAType(static_cast<const CIEC_STRUCT&>(paSrcAny), paDest);
@@ -179,8 +179,8 @@ size_t COPC_UA_Helper::convertFromOPCUAType(void const * const paSrc, CIEC_ANY &
   } else if(typeId <= CIEC_ANY::e_WSTRING) { //basic type
     retVal = scmMapForteTypeIdToOpcUa[typeId].mFromOPCUA(paSrc, paDestAny);
   } else if(CIEC_ANY::e_ARRAY == typeId) {
-    for(size_t i = 0; i < static_cast<CIEC_ARRAY<>&>(paDestAny).size(); i++) {
-      retVal += convertFromOPCUAType(static_cast<const char*>(paSrc) + retVal, static_cast<CIEC_ARRAY<>&>(paDestAny)[static_cast<TForteUInt16>(i)]);
+    for(size_t i = 0; i < static_cast<CIEC_ARRAY&>(paDestAny).size(); i++) {
+      retVal += convertFromOPCUAType(static_cast<const char*>(paSrc) + retVal, static_cast<CIEC_ARRAY&>(paDestAny)[static_cast<TForteUInt16>(i)]);
     }
   } else if(CIEC_ANY::e_STRUCT == typeId) {
     return convertStructFromOPCUAType(paSrc, static_cast<CIEC_STRUCT&>(paDestAny));

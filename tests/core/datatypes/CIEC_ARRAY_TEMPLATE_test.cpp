@@ -313,7 +313,7 @@ BOOST_AUTO_TEST_CASE(CopyFromVariableToStaticArray)
 }
 
 BOOST_AUTO_TEST_CASE(CopyFromPlainOldToStaticArray) {
-  CIEC_ARRAY_TYPELIB arraySource(5, g_nStringIdINT);
+  CIEC_ARRAY_DYNAMIC arraySource(5, g_nStringIdINT);
 
   static_cast<CIEC_INT &>(arraySource[0]) = CIEC_INT(1);
   static_cast<CIEC_INT &>(arraySource[1]) = CIEC_INT(-32259);
@@ -331,7 +331,7 @@ BOOST_AUTO_TEST_CASE(CopyFromPlainOldToStaticArray) {
 
 BOOST_AUTO_TEST_CASE(CopyFromPlainOldToVariableArray)
 {
-  CIEC_ARRAY_TYPELIB arraySource(5, g_nStringIdINT);
+  CIEC_ARRAY_DYNAMIC arraySource(5, g_nStringIdINT);
 
   static_cast<CIEC_INT &>(arraySource[0]) = CIEC_INT(1);
   static_cast<CIEC_INT &>(arraySource[1]) = CIEC_INT(-32259);
@@ -356,7 +356,7 @@ BOOST_AUTO_TEST_CASE(CopyFromVariableToPlainOldArray)
   (arraySource[3]) = CIEC_INT(-32259);
   (arraySource[4]) = CIEC_INT(256);
 
-  CIEC_ARRAY<CIEC_INT> arrayDestination(arraySource);
+  CIEC_ARRAY_DYNAMIC arrayDestination(arraySource);
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(arrayDestination[0])), 1);
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(arrayDestination[1])), -32259);
   BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(arrayDestination[2])), 256);

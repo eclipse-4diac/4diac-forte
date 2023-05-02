@@ -79,11 +79,10 @@
   forte_test_add_sourcefile_cpp(CIEC_STRING_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_WSTRING_test.cpp)
 
-IF (FORTE_SUPPORT_ARRAYS)
+#ARRAY-Datatypes
   forte_test_add_sourcefile_cpp(CIEC_ARRAY_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_ARRAY_TEMPLATE_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_TIME_STRUCT_AND_ARRAY_test.cpp)
-ENDIF(FORTE_SUPPORT_ARRAYS)
 
 #ANY_DURATION and ANY_DATE-Datatypes
   forte_test_add_sourcefile_cpp(CIEC_TIME_test.cpp)

@@ -13,6 +13,7 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Jobst
  *      - add support for data types with different size
+ *      - refactored array type structure
  *******************************************************************************/
 #pragma once
 
@@ -30,6 +31,10 @@ public:
     using const_reference = const value_type &;
     using iterator = typename std::vector<T>::iterator;
     using const_iterator = typename std::vector<T>::const_iterator;
+
+    using CIEC_ARRAY::at;
+    using CIEC_ARRAY::operator[];
+    using CIEC_ARRAY::operator=;
 
     using CIEC_ARRAY_COMMON<T>::at;
     using CIEC_ARRAY_COMMON<T>::operator[];
@@ -72,20 +77,14 @@ public:
     }
 
     /**
-     * @brief Copy constructor from dynamic array with different type
+     * @brief Copy constructor from common array
      * @tparam U The original element type
      * @param paSource The original array
      */
-    template<typename U>
-    CIEC_ARRAY_VARIABLE(const CIEC_ARRAY<U> &paSource)
+    CIEC_ARRAY_VARIABLE(const CIEC_ARRAY &paSource)
             : cmLowerBound(paSource.getLowerBound()), cmUpperBound(paSource.getUpperBound()), cmSize(paSource.size()),
               data(paSource.size()) {
-      if (paSource.size()) { // check if initialized
-        for (auto dest = data.begin(), source = paSource.begin();
-             source != paSource.end(); ++dest, ++source) {
-          dest->setValue(*source);
-        }
-      }
+      assignDynamic(paSource, paSource.getLowerBound(), paSource.getUpperBound());
     }
 
     /**
@@ -97,11 +96,7 @@ public:
     CIEC_ARRAY_VARIABLE(const CIEC_ARRAY_COMMON<U> &paSource)
             : cmLowerBound(paSource.getLowerBound()), cmUpperBound(paSource.getUpperBound()), cmSize(paSource.size()),
               data(paSource.size()) {
-      if (paSource.size()) { // check if initialized
-        for (auto dest = data.begin(), source = paSource.begin(); source != paSource.end(); ++dest, ++source) {
-          dest->setValue(*source);
-        }
-      }
+      assignDynamic(paSource, paSource.getLowerBound(), paSource.getUpperBound());
     }
 
     /**
@@ -146,18 +141,6 @@ public:
      */
     CIEC_ARRAY_VARIABLE &operator=(CIEC_ARRAY_VARIABLE &&paSource) {
       assignMove(std::forward<CIEC_ARRAY_VARIABLE>(paSource), paSource.cmLowerBound, paSource.cmUpperBound);
-      return *this;
-    }
-
-    /**
-     * @brief Copy assignment operator from dynamic array
-     * @tparam U The original element type
-     * @param paSource The original array
-     * @return The assigned array
-     */
-    template<typename U>
-    CIEC_ARRAY_VARIABLE &operator=(const CIEC_ARRAY<U> &paSource) {
-      assignDynamic(paSource, paSource.getLowerBound(), paSource.getUpperBound());
       return *this;
     }
 
@@ -258,6 +241,11 @@ public:
       return data[0].getTypeNameID();
     }
 
+    [[nodiscard]] int fromString(const char *) override {
+      DEVLOG_ERROR("Parsing variable-size array from string is not supported\n");
+      return -1; // not supported
+    }
+
     ~CIEC_ARRAY_VARIABLE() = default;
 
 private:
@@ -313,13 +301,11 @@ static_assert(std::is_constructible_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, CIEC_ARRA
 static_assert(std::is_assignable_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY_VARIABLE<CIEC_UINT> &>);
 static_assert(std::is_assignable_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, CIEC_ARRAY_VARIABLE<CIEC_UINT> &&>);
 
-static_assert(std::is_constructible_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY<CIEC_UINT> &>);
-static_assert(std::is_constructible_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY_TYPELIB &>);
+static_assert(std::is_constructible_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY &>);
 static_assert(std::is_constructible_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY_COMMON<CIEC_UINT> &>);
 static_assert(std::is_constructible_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY_FIXED<CIEC_UINT, 0, 0> &>);
 
-static_assert(std::is_assignable_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY<CIEC_UINT> &>);
-static_assert(std::is_assignable_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY_TYPELIB &>);
+static_assert(std::is_assignable_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY &>);
 static_assert(std::is_assignable_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY_COMMON<CIEC_UINT> &>);
 static_assert(std::is_assignable_v<CIEC_ARRAY_VARIABLE<CIEC_ULINT>, const CIEC_ARRAY_FIXED<CIEC_UINT, 0, 0> &>);
 

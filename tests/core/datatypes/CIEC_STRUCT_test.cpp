@@ -137,11 +137,11 @@ DEFINE_FIRMWARE_DATATYPE(TestStruct2, g_nStringIdTestStruct2)
      */
 
     public:
-      CIEC_ARRAY<CIEC_STRING> Var1;
+      CIEC_ARRAY_FIXED<CIEC_STRING, 0, 1> Var1;
       CIEC_BOOL Var2;
-      CIEC_ARRAY<CIEC_INT> Var3;
+      CIEC_ARRAY_FIXED<CIEC_INT, 0, 0> Var3;
       
-      CIEC_TestStruct3() : Var1(sizeOfFirstArray, g_nStringIdSTRING), Var2(true), Var3(sizeOfSecondArray, g_nStringIdINT) {
+      CIEC_TestStruct3() : Var1(), Var2(true), Var3() {
         Var3[0] = CIEC_INT(9);
       };
 
@@ -342,16 +342,16 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
     BOOST_CHECK_EQUAL(stStruct3.getMemberNamed(g_nStringIdVal1)->getDataTypeID(), CIEC_ANY::e_ARRAY);
     BOOST_CHECK_EQUAL(stStruct3.getMember(0)->getDataTypeID(), CIEC_ANY::e_ARRAY);
     for(size_t i = 0; i < CIEC_TestStruct3::sizeOfFirstArray; i++){
-      BOOST_CHECK_EQUAL((*static_cast<CIEC_ARRAY<> *>(stStruct3.getMemberNamed(g_nStringIdVal1)))[i].getDataTypeID(), CIEC_ANY::e_STRING);
-    BOOST_CHECK_EQUAL((*static_cast<CIEC_ARRAY<> *>(stStruct3.getMember(0)))[i].getDataTypeID(), CIEC_ANY::e_STRING);
+      BOOST_CHECK_EQUAL((*static_cast<CIEC_ARRAY *>(stStruct3.getMemberNamed(g_nStringIdVal1)))[i].getDataTypeID(), CIEC_ANY::e_STRING);
+    BOOST_CHECK_EQUAL((*static_cast<CIEC_ARRAY *>(stStruct3.getMember(0)))[i].getDataTypeID(), CIEC_ANY::e_STRING);
     }
     BOOST_CHECK_EQUAL(stStruct3.getMemberNamed(g_nStringIdVal2)->getDataTypeID(), CIEC_ANY::e_BOOL);
     BOOST_CHECK_EQUAL(stStruct3.getMember(1)->getDataTypeID(), CIEC_ANY::e_BOOL);
 
     BOOST_CHECK_EQUAL(stStruct3.getMemberNamed(g_nStringIdVal3)->getDataTypeID(), CIEC_ANY::e_ARRAY);
     for(size_t i = 0; i < CIEC_TestStruct3::sizeOfSecondArray; i++){
-      BOOST_CHECK_EQUAL((*static_cast<CIEC_ARRAY<> *>(stStruct3.getMemberNamed(g_nStringIdVal3)))[i].getDataTypeID(), CIEC_ANY::e_INT);
-      BOOST_CHECK_EQUAL((*static_cast<CIEC_ARRAY<> *>(stStruct3.getMember(2)))[i].getDataTypeID(), CIEC_ANY::e_INT);
+      BOOST_CHECK_EQUAL((*static_cast<CIEC_ARRAY *>(stStruct3.getMemberNamed(g_nStringIdVal3)))[i].getDataTypeID(), CIEC_ANY::e_INT);
+      BOOST_CHECK_EQUAL((*static_cast<CIEC_ARRAY *>(stStruct3.getMember(2)))[i].getDataTypeID(), CIEC_ANY::e_INT);
     }
 
     checkTestStruct3_InitialValues(stStruct3);

@@ -69,14 +69,14 @@ FORTE_SET_AT_INDEX::FORTE_SET_AT_INDEX(const CStringDictionary::TStringId pa_nIn
 void FORTE_SET_AT_INDEX::executeEvent(int pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID:
-      if (std::holds_alternative<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY_COMMON<CIEC_ANY>>>(var_IN_ARRAY)) {
-        auto &inArray = std::get<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY_COMMON<CIEC_ANY>>>(var_IN_ARRAY);
+      if (std::holds_alternative<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>>(var_IN_ARRAY)) {
+        auto &inArray = std::get<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>>(var_IN_ARRAY);
         // check if data types match and index is within bounds
         if (inArray->getElementDataTypeID() == var_VALUE.unwrap().getDataTypeID()
             && static_cast<CIEC_UINT::TValueType>(var_INDEX) >= inArray->getLowerBound()
             && static_cast<CIEC_UINT::TValueType>(var_INDEX) <= inArray->getUpperBound()) {
           var_OUT_ARRAY = var_IN_ARRAY;
-          auto &outArray = std::get<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY_COMMON<CIEC_ANY>>>(var_OUT_ARRAY);
+          auto &outArray = std::get<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>>(var_OUT_ARRAY);
           outArray->at(var_INDEX).setValue(var_VALUE.unwrap());
           var_QO = CIEC_BOOL(true);
         } else {

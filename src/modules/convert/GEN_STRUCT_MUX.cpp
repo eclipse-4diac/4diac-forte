@@ -93,7 +93,7 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
           diNames[i] = structInstance->elementNames()[i];
           diDataTypeNames[typeNameIndex] = member.getTypeNameID();
           if(member.getDataTypeID() == CIEC_ANY::e_ARRAY){
-            CIEC_ARRAY_TYPELIB &array = static_cast<CIEC_ARRAY_TYPELIB&>(member);
+            CIEC_ARRAY &array = static_cast<CIEC_ARRAY&>(member);
             diDataTypeNames[typeNameIndex + 1] = static_cast<CStringDictionary::TStringId>(array.size());
             diDataTypeNames[typeNameIndex + 2] = array.getElementTypeNameID();
             typeNameIndex += 2;

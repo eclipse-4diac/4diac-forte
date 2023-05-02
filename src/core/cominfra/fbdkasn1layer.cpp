@@ -365,11 +365,9 @@ int CFBDKASN1ComLayer::serializeValue(TForteByte* pa_pcBytes, int pa_nStreamSize
       case CIEC_ANY::e_STRING:
         nRetVal = serializeValueString(pa_pcBytes, pa_nStreamSize, static_cast<const CIEC_STRING &>(pa_roCIECData));
         break;
-#ifdef FORTE_SUPPORT_ARRAYS
       case CIEC_ANY::e_ARRAY:
-        nRetVal = serializeArray(pa_pcBytes, pa_nStreamSize, static_cast<const CIEC_ARRAY_TYPELIB &>(pa_roCIECData));
+        nRetVal = serializeArray(pa_pcBytes, pa_nStreamSize, static_cast<const CIEC_ARRAY &>(pa_roCIECData));
         break;
-#endif /* FORTE_SUPPORT_ARRAYS */
       case CIEC_ANY::e_STRUCT:
         nRetVal = serializeValueStruct(pa_pcBytes, pa_nStreamSize, static_cast<const CIEC_STRUCT &>(pa_roCIECData));
         break;
@@ -477,9 +475,7 @@ int CFBDKASN1ComLayer::serializeValueWString(TForteByte* pa_pcBytes, int pa_nStr
 }
 #endif
 
-#ifdef FORTE_SUPPORT_ARRAYS
-
-int CFBDKASN1ComLayer::serializeArray(TForteByte *pa_pcBytes, int pa_nStreamSize, const CIEC_ARRAY_TYPELIB &pa_roArray) {
+int CFBDKASN1ComLayer::serializeArray(TForteByte *pa_pcBytes, int pa_nStreamSize, const CIEC_ARRAY &pa_roArray) {
   int nRetVal = -1;
   size_t nArraySize = pa_roArray.size();
 
@@ -529,7 +525,6 @@ int CFBDKASN1ComLayer::serializeArray(TForteByte *pa_pcBytes, int pa_nStreamSize
   }
   return nRetVal;
 }
-#endif
 
 int CFBDKASN1ComLayer::serializeValueStruct(TForteByte* pa_pcBytes, int pa_nStreamSize, const CIEC_STRUCT & pa_roStruct) {
   int nStreamUsed = 0;
@@ -656,11 +651,9 @@ int CFBDKASN1ComLayer::deserializeValue(const TForteByte* pa_pcBytes, int pa_nSt
       case CIEC_ANY::e_STRING:
         nRetVal = deserializeValueString(pa_pcBytes, pa_nStreamSize, static_cast<CIEC_STRING &>(pa_roCIECData));
         break;
-#ifdef FORTE_SUPPORT_ARRAYS
       case CIEC_ANY::e_ARRAY:
-        nRetVal = deserializeArray(pa_pcBytes, pa_nStreamSize, static_cast<CIEC_ARRAY_TYPELIB &>(pa_roCIECData));
+        nRetVal = deserializeArray(pa_pcBytes, pa_nStreamSize, static_cast<CIEC_ARRAY &>(pa_roCIECData));
         break;
-#endif /* FORTE_SUPPORT_ARRAYS*/
       case CIEC_ANY::e_STRUCT:
         nRetVal = deserializeValueStruct(pa_pcBytes, pa_nStreamSize, static_cast<CIEC_STRUCT &>(pa_roCIECData));
         break;
@@ -757,9 +750,7 @@ int CFBDKASN1ComLayer::deserializeValueString(const TForteByte* pa_pcBytes, int 
   return nRetVal;
 }
 
-#ifdef FORTE_SUPPORT_ARRAYS
-
-int CFBDKASN1ComLayer::deserializeArray(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_ARRAY_TYPELIB &pa_roArray) {
+int CFBDKASN1ComLayer::deserializeArray(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_ARRAY &pa_roArray) {
   int nRetVal = -1;
 
   if(pa_nStreamSize >= 2){
@@ -823,7 +814,7 @@ int CFBDKASN1ComLayer::deserializeArray(const TForteByte* pa_pcBytes, int pa_nSt
   return nRetVal;
 }
 
-int CFBDKASN1ComLayer::deserializeValueBoolArray(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_ARRAY_TYPELIB &pa_roArray, TForteUInt16 pa_unDecodedArraySize) {
+int CFBDKASN1ComLayer::deserializeValueBoolArray(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_ARRAY &pa_roArray, TForteUInt16 pa_unDecodedArraySize) {
   int nRetVal = 0;
   CIEC_BOOL oBoolVal;  //buffer value for handling to large input data
 
@@ -847,8 +838,6 @@ int CFBDKASN1ComLayer::deserializeValueBoolArray(const TForteByte* pa_pcBytes, i
   }
   return nRetVal;
 }
-
-#endif
 
 int CFBDKASN1ComLayer::deserializeValueStruct(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_STRUCT &pa_roIECData){
   int nRetVal = 0;
@@ -891,20 +880,18 @@ unsigned int CFBDKASN1ComLayer::getRequiredSerializationSize(const CIEC_ANY &pa_
       unRetVal += ((CIEC_WSTRING&)pa_roCIECData).toUTF16(nullptr, 0) + 3;
       break;
 #endif
-#ifdef FORTE_SUPPORT_ARRAYS
     case CIEC_ANY::e_ARRAY:
       unRetVal += 3;
-      if (((CIEC_ARRAY_TYPELIB &)pa_roCIECData).getElementDataTypeID() == CIEC_ANY::e_BOOL) {
-        unRetVal += ((CIEC_ARRAY_TYPELIB &)pa_roCIECData).size();
+      if (((CIEC_ARRAY &)pa_roCIECData).getElementDataTypeID() == CIEC_ANY::e_BOOL) {
+        unRetVal += ((CIEC_ARRAY &)pa_roCIECData).size();
       } else {
-        for (TForteUInt16 j = 0; j < ((CIEC_ARRAY_TYPELIB &)pa_roCIECData).size(); ++j) {
-          unRetVal += getRequiredSerializationSize((((CIEC_ARRAY_TYPELIB &)pa_roCIECData)[j]));
+        for (TForteUInt16 j = 0; j < ((CIEC_ARRAY &)pa_roCIECData).size(); ++j) {
+          unRetVal += getRequiredSerializationSize((((CIEC_ARRAY &)pa_roCIECData)[j]));
         }
         // First element with tag, subsequent ones without - adjust
-        unRetVal -= ((CIEC_ARRAY_TYPELIB &)pa_roCIECData).size() - 1;
+        unRetVal -= ((CIEC_ARRAY &)pa_roCIECData).size() - 1;
       }
       break;
-#endif
 #ifdef FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
     case CIEC_ANY::e_External:
       unRetVal += pa_roCIECData.getRequiredSerializationSize();

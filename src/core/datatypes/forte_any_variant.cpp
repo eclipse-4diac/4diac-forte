@@ -107,8 +107,8 @@ void CIEC_ANY_VARIANT::setValue(const CIEC_ANY &paValue) {
       operator=(static_cast<const CIEC_WSTRING &>(paValue));
       break;
     case e_ARRAY:
-      operator=(CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY_COMMON<CIEC_ANY>>(
-              static_cast<CIEC_ARRAY_COMMON<CIEC_ANY> *>(paValue.clone(nullptr))));
+      operator=(CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>(
+              static_cast<CIEC_ARRAY *>(paValue.clone(nullptr))));
       break;
     case e_STRUCT:
       operator=(CIEC_ANY_UNIQUE_PTR<CIEC_STRUCT>(static_cast<CIEC_STRUCT *>(paValue.clone(nullptr))));
@@ -210,7 +210,7 @@ bool CIEC_ANY_VARIANT::setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId) {
 CIEC_ANY &CIEC_ANY_VARIANT::unwrap() {
   return std::visit([](auto &&value) -> CIEC_ANY & {
       using T = std::decay_t<decltype(value)>;
-      if constexpr (std::is_same_v<T, CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY_COMMON<CIEC_ANY>>>) {
+      if constexpr (std::is_same_v<T, CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>>) {
         return *value;
       } else if constexpr (std::is_same_v<T, CIEC_ANY_UNIQUE_PTR<CIEC_STRUCT>>) {
         return *value;
@@ -225,7 +225,7 @@ CIEC_ANY &CIEC_ANY_VARIANT::unwrap() {
 const CIEC_ANY &CIEC_ANY_VARIANT::unwrap() const {
   return std::visit([](auto &&value) -> const CIEC_ANY & {
       using T = std::decay_t<decltype(value)>;
-      if constexpr (std::is_same_v<T, CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY_COMMON<CIEC_ANY>>>) {
+      if constexpr (std::is_same_v<T, CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>>) {
         return *value;
       } else if constexpr (std::is_same_v<T, CIEC_ANY_UNIQUE_PTR<CIEC_STRUCT>>) {
         return *value;
@@ -252,8 +252,8 @@ int CIEC_ANY_VARIANT::fromString(const char *paValue) {
         nRetVal = value->fromString(paValue);
         switch (value->getDataTypeID()) {
           case e_ARRAY:
-            operator=(CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY_COMMON<CIEC_ANY>>(
-                    static_cast<CIEC_ARRAY_COMMON<CIEC_ANY> *>(value)));
+            operator=(CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>(
+                    static_cast<CIEC_ARRAY *>(value)));
             break;
           case e_STRUCT:
             operator=(CIEC_ANY_UNIQUE_PTR<CIEC_STRUCT>(static_cast<CIEC_STRUCT *>(value)));

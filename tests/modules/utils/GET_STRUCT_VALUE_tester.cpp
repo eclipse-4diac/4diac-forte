@@ -21,15 +21,15 @@ class CIEC_GET_STRUCT_VALUE_Struct_test1 : public CIEC_STRUCT {
   DECLARE_FIRMWARE_DATATYPE(GET_STRUCT_VALUE_Struct_test1)
 
     /* Struct:
-     *   Val1 : String[3]
+     *   Val1 : String[2]
      *   Val2 : INT
      */
 
   public:
-    CIEC_ARRAY<CIEC_STRING> Var1;
+    CIEC_ARRAY_FIXED<CIEC_STRING, 0, 1> Var1;
     CIEC_INT Var2;
 
-    CIEC_GET_STRUCT_VALUE_Struct_test1() : Var1(sizeOfFirstArray, g_nStringIdSTRING), Var2(0) {}
+    CIEC_GET_STRUCT_VALUE_Struct_test1() : Var1(), Var2(0) {}
 
     size_t getStructSize() const override {
       return 2;

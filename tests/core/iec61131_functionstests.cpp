@@ -1834,12 +1834,12 @@ BOOST_AUTO_TEST_CASE(func_to_big_endian_array_variable_copy_ctor) {
 }
 
 BOOST_AUTO_TEST_CASE(func_to_big_endian_array_typelib_copy_ctor) {
-  CIEC_ARRAY<CIEC_ANY> originalArray(3, g_nStringIdLWORD);
+  CIEC_ARRAY_DYNAMIC originalArray(3, g_nStringIdLWORD);
   originalArray[0].setValue(CIEC_LWORD(1));
   originalArray[1].setValue(CIEC_LWORD(2));
   originalArray[2].setValue(CIEC_LWORD(3));
 
-  CIEC_ARRAY<CIEC_ANY> reversedArray(func_TO_BIG_ENDIAN(originalArray));
+  CIEC_ARRAY_DYNAMIC reversedArray(func_TO_BIG_ENDIAN(originalArray));
   BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reinterpret_cast<CIEC_LWORD&>(reversedArray[0])) == 72057594037927936);
   BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reinterpret_cast<CIEC_LWORD&>(reversedArray[1])) == 144115188075855872);
   BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reinterpret_cast<CIEC_LWORD&>(reversedArray[2])) == 216172782113783808);

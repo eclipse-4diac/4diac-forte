@@ -67,8 +67,8 @@ FORTE_GET_AT_INDEX::FORTE_GET_AT_INDEX(const CStringDictionary::TStringId pa_nIn
 void FORTE_GET_AT_INDEX::executeEvent(int pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID:
-      if (std::holds_alternative<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY_COMMON<CIEC_ANY>>>(var_IN_ARRAY)) {
-        auto &inArray = std::get<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY_COMMON<CIEC_ANY>>>(var_IN_ARRAY);
+      if (std::holds_alternative<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>>(var_IN_ARRAY)) {
+        auto &inArray = std::get<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>>(var_IN_ARRAY);
         // check if index is within bounds
         if (static_cast<CIEC_UINT::TValueType>(var_INDEX) >= inArray->getLowerBound()
             && static_cast<CIEC_UINT::TValueType>(var_INDEX) <= inArray->getUpperBound()) {

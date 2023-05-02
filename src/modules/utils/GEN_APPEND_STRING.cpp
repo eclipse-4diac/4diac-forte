@@ -81,7 +81,7 @@ void GEN_APPEND_STRING::executeEvent(int paEIID){
       else{
         if(pDataInput->getDataTypeID() == CIEC_ANY::e_ARRAY){
           //get number of array elements
-          nArrayElements = (static_cast<CIEC_ARRAY<>*>(pDataInput))->size();
+          nArrayElements = (static_cast<CIEC_ARRAY *>(pDataInput))->size();
           //number of required bytes (including brackets '[' ']' and ',' separators
           nRequiredBytes = static_cast<TForteUInt16>(nArrayElements * scm_maxStringBufSize + nArrayElements + 1);
         }

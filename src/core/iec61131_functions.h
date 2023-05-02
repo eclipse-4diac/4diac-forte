@@ -30,6 +30,7 @@
 #include "./datatypes/forte_array_common.h"
 #include "./datatypes/forte_array_fixed.h"
 #include "./datatypes/forte_array_variable.h"
+#include "./datatypes/forte_array_dynamic.h"
 
 #include <algorithm>
 
@@ -1248,7 +1249,7 @@ typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_STRING, T>, T> swapEndianes
   }
 }
 
-CIEC_ARRAY<CIEC_ANY> swapEndianess(const CIEC_ARRAY<CIEC_ANY> &paValue);
+void swapEndianessInplace(CIEC_ARRAY &paValue);
 
 void swapEndianessInplace(CIEC_STRUCT &paValue);
 
@@ -1314,7 +1315,7 @@ typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_STRING, T>, T> func_TO_BIG_
   return swapEndianess(paValue);
 }
 
-CIEC_ARRAY<CIEC_ANY> func_TO_BIG_ENDIAN(const CIEC_ARRAY<CIEC_ANY> &paValue);
+CIEC_ARRAY_DYNAMIC func_TO_BIG_ENDIAN(const CIEC_ARRAY_DYNAMIC &paValue);
 
 template <typename T>
 typename std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, T> func_TO_BIG_ENDIAN(const T &paValue) {
@@ -1356,7 +1357,7 @@ typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_STRING, T>, T> func_FROM_BI
   return swapEndianess(paValue);
 }
 
-CIEC_ARRAY<CIEC_ANY> func_FROM_BIG_ENDIAN(const CIEC_ARRAY<CIEC_ANY> &paValue);
+CIEC_ARRAY_DYNAMIC func_FROM_BIG_ENDIAN(const CIEC_ARRAY_DYNAMIC &paValue);
 
 template <typename T>
 typename std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, T> func_FROM_BIG_ENDIAN(const T &paValue) {
@@ -1400,7 +1401,7 @@ typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_STRING, T>, T> func_TO_LITT
   return swapEndianess(paValue);
 }
 
-CIEC_ARRAY<CIEC_ANY> func_TO_LITTLE_ENDIAN(const CIEC_ARRAY<CIEC_ANY> &paValue);
+CIEC_ARRAY_DYNAMIC func_TO_LITTLE_ENDIAN(const CIEC_ARRAY_DYNAMIC &paValue);
 
 template <typename T>
 typename std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, T> func_TO_LITTLE_ENDIAN(const T &paValue) {
@@ -1442,7 +1443,7 @@ typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_STRING, T>, T> func_FROM_LI
   return swapEndianess(paValue);
 }
 
-CIEC_ARRAY<CIEC_ANY> func_FROM_LITTLE_ENDIAN(const CIEC_ARRAY<CIEC_ANY> &paValue);
+CIEC_ARRAY_DYNAMIC func_FROM_LITTLE_ENDIAN(const CIEC_ARRAY_DYNAMIC &paValue);
 
 template <typename T>
 typename std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, T> func_FROM_LITTLE_ENDIAN(const T &paValue) {

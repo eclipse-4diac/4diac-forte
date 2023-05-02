@@ -13,12 +13,16 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Jobst
  *      - add support for data types with different size
+ *      - refactored array type structure
  *******************************************************************************/
 #pragma once
 
 #include "forte_array_common.h"
 #include <array>
 #include <devlog.h>
+
+template<typename T>
+class CIEC_ARRAY_VARIABLE;
 
 template<typename T, intmax_t lowerBound, intmax_t upperBound>
 class CIEC_ARRAY_FIXED : public CIEC_ARRAY_COMMON<T> {
@@ -31,6 +35,10 @@ public:
     using const_reference = typename CIEC_ARRAY_COMMON<T>::const_reference;
     using iterator = typename std::array<T, 0>::iterator;
     using const_iterator = typename std::array<T, 0>::const_iterator;
+
+    using CIEC_ARRAY::at;
+    using CIEC_ARRAY::operator[];
+    using CIEC_ARRAY::operator=;
 
     using CIEC_ARRAY_COMMON<T>::at;
     using CIEC_ARRAY_COMMON<T>::operator[];
@@ -62,12 +70,11 @@ public:
     CIEC_ARRAY_FIXED(CIEC_ARRAY_FIXED &&paSource) : data(std::move(paSource.data)) {}
 
     /**
-     * Copy constructor from dynamic array
+     * Copy constructor from common array
      * @tparam U The original element type
      * @param paSource The original array
      */
-    template<typename U>
-    CIEC_ARRAY_FIXED(const CIEC_ARRAY<U> &paSource) {
+    CIEC_ARRAY_FIXED(const CIEC_ARRAY &paSource) {
       assignDynamic(paSource, paSource.getLowerBound(), paSource.getUpperBound());
     }
 
@@ -121,18 +128,6 @@ public:
      */
     CIEC_ARRAY_FIXED &operator=(CIEC_ARRAY_FIXED &&paSource) {
       data = std::move(paSource.data);
-      return *this;
-    }
-
-    /**
-     * @brief Copy assignment operator from dynamic array
-     * @tparam U The original element type
-     * @param paSource The original array
-     * @return The assigned array
-     */
-    template<typename U>
-    CIEC_ARRAY_FIXED &operator=(const CIEC_ARRAY<U> &paSource) {
-      assignDynamic(paSource, paSource.getLowerBound(), paSource.getUpperBound());
       return *this;
     }
 
@@ -236,6 +231,40 @@ public:
       return data[0].getTypeNameID();
     }
 
+    [[nodiscard]] int fromString(const char *paValue) override {
+      int nRetVal = -1;
+      const char *pcRunner = paValue;
+      if ('[' == paValue[0]) {
+        pcRunner++;
+
+        value_type bufVal;
+        iterator iter = begin();
+
+        while (('\0' != *pcRunner) && (']' != *pcRunner)) {
+          CIEC_ARRAY::findNextNonBlankSpace(&pcRunner);
+
+          int valueLength = initializeFromString(iter, pcRunner, bufVal);
+          if (0 > valueLength) {
+            break;
+          }
+          pcRunner += valueLength;
+
+          CIEC_ARRAY::findNextNonBlankSpace(&pcRunner);
+          if (',' == *pcRunner) {
+            pcRunner++;
+          } else { //we have an error or the end bracket
+            break;
+          }
+        }
+        if (*pcRunner == ']') { //arrays have to and on a closing bracket
+          nRetVal = static_cast<int>(pcRunner - paValue + 1); //+1 from the closing bracket
+          // For the rest of the array size copy the default element
+          std::fill(iter, end(), T());
+        }
+      }
+      return nRetVal;
+    }
+
     ~CIEC_ARRAY_FIXED() = default;
 
 private:
@@ -263,6 +292,58 @@ private:
       return static_cast<size_t>(paSTIndex - lowerBound);
     }
 
+    [[nodiscard]] int initializeFromString(iterator &paPosition, const char *paSrcString, reference paBufVal) {
+      // check repeat syntax (e.g., "255(1, 2, 3)")
+      CIEC_ULINT repeat;
+      const char *pcRunner = paSrcString;
+      iterator initialPosition = paPosition;
+      int repeatLength = repeat.fromString(pcRunner);
+      if (0 < repeatLength) {
+        pcRunner += repeatLength;
+        CIEC_ARRAY::findNextNonBlankSpace(&pcRunner);
+        if ('(' == *pcRunner) {
+          pcRunner++;
+          while (('\0' != *pcRunner) && (')' != *pcRunner)) {
+            CIEC_ARRAY::findNextNonBlankSpace(&pcRunner);
+
+            int valueLength = initializeSimpleFromString(paPosition, pcRunner, paBufVal);
+            if (0 > valueLength) {
+              break;
+            }
+            pcRunner += valueLength;
+
+            CIEC_ARRAY::findNextNonBlankSpace(&pcRunner);
+            if (',' == *pcRunner) {
+              pcRunner++;
+            } else {
+              //we have an error or the end parentheses
+              break;
+            }
+          }
+          if (*pcRunner == ')') { //repeat syntax elements have to and on a closing parentheses
+            intmax_t repeatSequenceLength = paPosition - initialPosition;
+            for (size_t rep = 1;
+                 rep < repeat.getUnsignedValue() && paPosition != end(); ++rep) { // once added already
+              for (intmax_t seqIndex = 0; seqIndex < repeatSequenceLength && paPosition != end(); ++seqIndex) {
+                (paPosition++)->setValue(*(initialPosition + seqIndex));
+              }
+            }
+            return static_cast<int>(pcRunner - paSrcString + 1); //+1 from the closing parentheses
+          }
+          return -1;
+        }
+      }
+      return initializeSimpleFromString(paPosition, paSrcString, paBufVal);
+    }
+
+    [[nodiscard]] int initializeSimpleFromString(iterator &paPosition, const char *paSrcString, reference paBufVal) {
+      if (paPosition != end()) {
+        return (paPosition++)->fromString(paSrcString);
+      } else {
+        return paBufVal.fromString(paSrcString);
+      }
+    }
+
     std::array<T, cmSize> data;
 };
 
@@ -279,13 +360,11 @@ static_assert(std::is_constructible_v<CIEC_ARRAY_FIXED<CIEC_ULINT, 0, 0>, CIEC_A
 static_assert(std::is_assignable_v<CIEC_ARRAY_FIXED<CIEC_ULINT, 0, 0>, const CIEC_ARRAY_FIXED<CIEC_UINT, 0, 0> &>);
 static_assert(std::is_assignable_v<CIEC_ARRAY_FIXED<CIEC_ULINT, 0, 0>, CIEC_ARRAY_FIXED<CIEC_UINT, 0, 0> &&>);
 
-static_assert(std::is_constructible_v<CIEC_ARRAY_FIXED<CIEC_ULINT, 0, 0>, const CIEC_ARRAY<CIEC_UINT> &>);
-static_assert(std::is_constructible_v<CIEC_ARRAY_FIXED<CIEC_ULINT, 0, 0>, const CIEC_ARRAY_TYPELIB &>);
+static_assert(std::is_constructible_v<CIEC_ARRAY_FIXED<CIEC_ULINT, 0, 0>, const CIEC_ARRAY &>);
 static_assert(std::is_constructible_v<CIEC_ARRAY_FIXED<CIEC_ULINT, 0, 0>, const CIEC_ARRAY_COMMON<CIEC_UINT> &>);
 static_assert(std::is_constructible_v<CIEC_ARRAY_FIXED<CIEC_ULINT, 0, 0>, const CIEC_ARRAY_VARIABLE<CIEC_UINT> &>);
 
-static_assert(std::is_assignable_v<CIEC_ARRAY_FIXED<CIEC_ULINT, 0, 0>, const CIEC_ARRAY<CIEC_UINT> &>);
-static_assert(std::is_assignable_v<CIEC_ARRAY_FIXED<CIEC_ULINT, 0, 0>, const CIEC_ARRAY_TYPELIB &>);
+static_assert(std::is_assignable_v<CIEC_ARRAY_FIXED<CIEC_ULINT, 0, 0>, const CIEC_ARRAY &>);
 static_assert(std::is_assignable_v<CIEC_ARRAY_FIXED<CIEC_ULINT, 0, 0>, const CIEC_ARRAY_COMMON<CIEC_UINT> &>);
 static_assert(std::is_assignable_v<CIEC_ARRAY_FIXED<CIEC_ULINT, 0, 0>, const CIEC_ARRAY_VARIABLE<CIEC_UINT> &>);
 

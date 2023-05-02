@@ -949,7 +949,7 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_MultiDatas){
 
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_ARRAY){
   CFBDKASN1ComLayerTestMock nTestee;
-  CIEC_ARRAY<> nVal(5, g_nStringIdBOOL);
+  CIEC_ARRAY_DYNAMIC nVal(5, g_nStringIdBOOL);
   TIEC_ANYPtr poArray[1];
   poArray[0] = &nVal;
 
@@ -983,7 +983,7 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_ARRAY){
   BOOST_CHECK(std::equal(cg_abArrayBool01010, cg_abArrayBool01010 + cg_unBOOL5SerSize, ((TForteByte *)nTestee.getSendDataPtr())));
 
 
-  CIEC_ARRAY<> nSIntArray(4, g_nStringIdSINT);
+  CIEC_ARRAY_DYNAMIC nSIntArray(4, g_nStringIdSINT);
   poArray[0] = &nSIntArray;
 
   static_cast<CIEC_SINT &>(nSIntArray[0]) = CIEC_SINT(-128);
@@ -1004,7 +1004,7 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_ARRAY){
   BOOST_CHECK_EQUAL(nTestee.getSendDataSize(), cg_unSINT4SerSize);
   BOOST_CHECK(std::equal(cg_abArraySINTm90_90_127_0, cg_abArraySINTm90_90_127_0 + cg_unSINT4SerSize, ((TForteByte *)nTestee.getSendDataPtr())));
 
-  CIEC_ARRAY<> nStringArray(2, g_nStringIdSTRING);
+  CIEC_ARRAY_DYNAMIC nStringArray(2, g_nStringIdSTRING);
   poArray[0] = &nStringArray;
 
   static_cast<CIEC_STRING &>(nStringArray[1]) = CIEC_STRING("HalloWorld");

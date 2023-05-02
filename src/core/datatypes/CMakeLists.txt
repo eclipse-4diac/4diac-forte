@@ -82,15 +82,11 @@ forte_add_sourcefile_h(forte_any_bit_not_decorator.h)
 # include STRUCT Datatype-Support
 forte_add_sourcefile_hcpp(forte_struct)
 
-set(FORTE_SUPPORT_ARRAYS ON CACHE BOOL "Enable Forte Array Datatypes")
-mark_as_advanced(FORTE_SUPPORT_ARRAYS)
-if(FORTE_SUPPORT_ARRAYS)
-  forte_add_sourcefile_hcpp(forte_array)
-  forte_add_sourcefile_h(forte_array_common.h)
-  forte_add_sourcefile_h(forte_array_variable.h)
-  forte_add_sourcefile_h(forte_array_fixed.h)
-  forte_add_definition("-DFORTE_SUPPORT_ARRAYS")
-endif(FORTE_SUPPORT_ARRAYS)
+forte_add_sourcefile_hcpp(forte_array)
+forte_add_sourcefile_h(forte_array_common.h)
+forte_add_sourcefile_h(forte_array_variable.h)
+forte_add_sourcefile_h(forte_array_fixed.h)
+forte_add_sourcefile_hcpp(forte_array_dynamic)
 
 
 set(FORTE_USE_WSTRING_DATATYPE ON CACHE BOOL "Enable Forte WSTRING Datatypes")

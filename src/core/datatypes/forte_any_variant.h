@@ -89,7 +89,7 @@ using TIecAnyVariantType = std::variant<
         CIEC_TIME_OF_DAY,
         CIEC_LTIME_OF_DAY,
 // ANY_DERIVED
-        CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY_COMMON<CIEC_ANY>>,
+        CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>,
         CIEC_ANY_UNIQUE_PTR<CIEC_STRUCT>
 // end
 >;

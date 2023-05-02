@@ -168,7 +168,7 @@ void checkArrayOfStructTest_TestDataSet1(CIEC_TestStruct &paStruct) {
 }
 
 BOOST_AUTO_TEST_CASE(arrayOfStructs_access_test) {
-  CIEC_ARRAY_TYPELIB nTest(3, g_nStringIdTestStruct);
+  CIEC_ARRAY_DYNAMIC nTest(3, g_nStringIdTestStruct);
 
   BOOST_CHECK_EQUAL(nTest.size(), 3);
   BOOST_CHECK_EQUAL(nTest.getElementDataTypeID(), CIEC_ANY::e_STRUCT);
@@ -194,7 +194,7 @@ BOOST_AUTO_TEST_CASE(arrayOfStructs_access_test) {
 }
 
 BOOST_AUTO_TEST_CASE(arrayOfStructs_TIME_parser_test) {
-  CIEC_ARRAY_TYPELIB nTest(3, g_nStringIdTestStruct);
+  CIEC_ARRAY_DYNAMIC nTest(3, g_nStringIdTestStruct);
 
   CIEC_TIME timeVar = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
 

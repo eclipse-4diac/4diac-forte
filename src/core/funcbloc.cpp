@@ -29,6 +29,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "forte_array_dynamic.h"
+
 #ifdef FORTE_TRACE_CTF
 #include "trace/barectf_platform_forte.h"
 #endif
@@ -504,11 +506,9 @@ size_t CFunctionBlock::getDataPointSize(const CStringDictionary::TStringId *&pa_
   CStringDictionary::TStringId dataTypeId = *(pa_panDataTypeIds++);
   auto *entry = static_cast<CTypeLib::CDataTypeEntry *>(CTypeLib::findType(dataTypeId,
                                                                            CTypeLib::getDTLibStart()));
-#ifdef FORTE_SUPPORT_ARRAYS
   if (g_nStringIdARRAY == dataTypeId) {
     pa_panDataTypeIds += 2;
   }
-#endif
   return nullptr != entry ? entry->getSize() : 0;
 }
 
@@ -518,15 +518,13 @@ CIEC_ANY *CFunctionBlock::createDataPoint(const CStringDictionary::TStringId *&p
   if(nullptr != poRetVal) {
     paDataBuf += poRetVal->getSizeof();
   }
-#ifdef FORTE_SUPPORT_ARRAYS
   if(g_nStringIdARRAY == dataTypeId){
     if(nullptr != poRetVal){
       //For an array we have to do more
-      (static_cast<CIEC_ARRAY_TYPELIB *>(poRetVal))->setup(static_cast<TForteUInt16>(*paDataTypeIds), paDataTypeIds[1]);
+      (static_cast<CIEC_ARRAY_DYNAMIC *>(poRetVal))->setup(static_cast<TForteUInt16>(*paDataTypeIds), paDataTypeIds[1]);
     }
     paDataTypeIds += 2;
   }
-#endif
   return poRetVal;
 }
 
