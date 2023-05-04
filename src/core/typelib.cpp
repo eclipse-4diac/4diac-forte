@@ -22,6 +22,7 @@
 #include "adapterconn.h"
 #include "resource.h"
 #include "if2indco.h"
+#include "adapter.h"
 #include <stddef.h>
 
 CTypeLib::CTypeEntry::CTypeEntry(CStringDictionary::TStringId pa_nTypeNameId) :
@@ -97,10 +98,18 @@ CAdapter *CTypeLib::createAdapter(CStringDictionary::TStringId pa_nInstanceNameI
     if(nullptr == poNewAdapter) {
       m_eLastErrorMSG = EMGMResponse::Overflow;
     }
-  } //no generic adapters supported
+  } else { // no generic adapters supported
+    m_eLastErrorMSG = EMGMResponse::UnsupportedType;
+  }
 
-    return poNewAdapter;
+  if(nullptr != poNewAdapter){
+    if(!poNewAdapter->initialize()) {
+      delete poNewAdapter;
+      poNewAdapter = nullptr;
+    }
+  }
 
+  return poNewAdapter;
 }
 
 CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId pa_nInstanceNameId, CStringDictionary::TStringId pa_nFBTypeId, CResource *pa_poRes) {
