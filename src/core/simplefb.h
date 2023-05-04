@@ -26,9 +26,9 @@ public:
     CSimpleFB(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
               CStringDictionary::TStringId paInstanceNameId, const SInternalVarsInformation *paVarInternals) : CBasicFB(paSrcRes, paInterfaceSpec, paInstanceNameId, paVarInternals) {}
 
-    CSimpleFB(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
+    [[deprecated]] CSimpleFB(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
               CStringDictionary::TStringId paInstanceNameId, const SInternalVarsInformation *paVarInternals,
-              TForteByte *paFBConnData, TForteByte *paBasicFBVarsData) : CBasicFB(paSrcRes, paInterfaceSpec, paInstanceNameId, paVarInternals, paFBConnData, paBasicFBVarsData){}
+              TForteByte *paFBConnData, TForteByte *paBasicFBVarsData);
 };
 
 #endif /* SRC_CORE_SIMPLEFB_H_ */

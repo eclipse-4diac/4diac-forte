@@ -59,10 +59,10 @@ class CBasicFB : public CFunctionBlock {
      * @deprecated Use CBasicFB(CResource *, const SFBInterfaceSpec *, CStringDictionary::TStringId,
      *                          const SInternalVarsInformation *)
      */
-    CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-             CStringDictionary::TStringId pa_nInstanceNameId,
-             const SInternalVarsInformation *pa_pstVarInternals, TForteByte *pa_acFBConnData,
-             TForteByte *pa_acBasicFBVarsData);
+    [[deprecated]] CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
+                            CStringDictionary::TStringId pa_nInstanceNameId,
+                            const SInternalVarsInformation *pa_pstVarInternals, TForteByte *pa_acFBConnData,
+                            TForteByte *pa_acBasicFBVarsData);
 
     bool initialize() override;
 

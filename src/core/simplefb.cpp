@@ -17,3 +17,9 @@
 
 #include "simplefb.h"
 
+CSimpleFB::CSimpleFB(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
+                     CStringDictionary::TStringId paInstanceNameId, const SInternalVarsInformation *paVarInternals,
+                     TForteByte *paFBConnData, TForteByte *paBasicFBVarsData) : CBasicFB(paSrcRes, paInterfaceSpec,
+                                                                                         paInstanceNameId,
+                                                                                         paVarInternals, paFBConnData,
+                                                                                         paBasicFBVarsData) {}

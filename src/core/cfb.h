@@ -102,9 +102,12 @@ class CCompositeFB: public CFunctionBlock {
     CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
                  CStringDictionary::TStringId pa_nInstanceNameId,
                  const SCFB_FBNData * pa_cpoFBNData);
-    CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-                 CStringDictionary::TStringId pa_nInstanceNameId,
-                 const SCFB_FBNData * pa_cpoFBNData, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
+
+    [[deprecated]] CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
+                                CStringDictionary::TStringId pa_nInstanceNameId,
+                                const SCFB_FBNData *pa_cpoFBNData, TForteByte *pa_acFBConnData,
+                                TForteByte *pa_acFBVarsData);
+
     ~CCompositeFB() override;
 
     bool initialize() override;
