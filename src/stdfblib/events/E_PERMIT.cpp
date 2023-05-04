@@ -10,31 +10,124 @@
  *   Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny
  *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
+
 #include "E_PERMIT.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "E_PERMIT_gen.cpp"
 #endif
 
-DEFINE_FIRMWARE_FB(E_PERMIT, g_nStringIdE_PERMIT)
+#include "criticalregion.h"
+#include "resource.h"
+#include "forte_bool.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 
-const CStringDictionary::TStringId E_PERMIT::scm_anDataInputNames[] = {g_nStringIdPERMIT};
-const CStringDictionary::TStringId E_PERMIT::scm_aunDIDataTypeIds[] = {g_nStringIdBOOL};
+DEFINE_FIRMWARE_FB(FORTE_E_PERMIT, g_nStringIdE_PERMIT)
 
-const TForteInt16 E_PERMIT::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID E_PERMIT::scm_anEIWith[] = { 0, 255 };
-const CStringDictionary::TStringId E_PERMIT::scm_anEventInputNames[] = { g_nStringIdEI };
-
-const CStringDictionary::TStringId E_PERMIT::scm_anEventOutputNames[] = { g_nStringIdEO };
-
-const SFBInterfaceSpec
-    E_PERMIT::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1,
-      scm_anEventOutputNames, nullptr, nullptr, 1, scm_anDataInputNames, scm_aunDIDataTypeIds, 0, nullptr, nullptr,
-      0,
-      nullptr
+const CStringDictionary::TStringId FORTE_E_PERMIT::scm_anDataInputNames[] = {g_nStringIdPERMIT};
+const CStringDictionary::TStringId FORTE_E_PERMIT::scm_anDataInputTypeIds[] = {g_nStringIdBOOL};
+const TDataIOID FORTE_E_PERMIT::scm_anEIWith[] = {0, 255};
+const TForteInt16 FORTE_E_PERMIT::scm_anEIWithIndexes[] = {0};
+const CStringDictionary::TStringId FORTE_E_PERMIT::scm_anEventInputNames[] = {g_nStringIdEI};
+const TForteInt16 FORTE_E_PERMIT::scm_anEOWithIndexes[] = {-1};
+const CStringDictionary::TStringId FORTE_E_PERMIT::scm_anEventOutputNames[] = {g_nStringIdEO};
+const SFBInterfaceSpec FORTE_E_PERMIT::scm_stFBInterfaceSpec = {
+  1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
+  1, scm_anEventOutputNames, nullptr, scm_anEOWithIndexes,
+  1, scm_anDataInputNames, scm_anDataInputTypeIds,
+  0, nullptr, nullptr,
+  0, nullptr
 };
 
-void E_PERMIT::executeEvent(int pa_nEIID){
-  if((scm_nEventEIID == pa_nEIID) && (PERMIT())){
-    sendOutputEvent(scm_nEventEOID);
+FORTE_E_PERMIT::FORTE_E_PERMIT(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
+    CBasicFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, nullptr),
+    var_PERMIT(CIEC_BOOL(0)),
+    conn_EO(this, 0),
+    conn_PERMIT(nullptr) {
+}
+
+
+
+void FORTE_E_PERMIT::executeEvent(int pa_nEIID){
+  do {
+    switch(m_nECCState) {
+      case scm_nStateSTART:
+        if((scm_nEventEIID == pa_nEIID) && (var_PERMIT)) enterStateEO();
+        else return; //no transition cleared
+        break;
+      case scm_nStateEO:
+        if(1) enterStateSTART();
+        else return; //no transition cleared
+        break;
+      default:
+        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 2.", m_nECCState.operator TForteUInt16 ());
+        m_nECCState = 0; // 0 is always the initial state
+        return;
+    }
+    pa_nEIID = cg_nInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
+  } while(true);
+}
+
+void FORTE_E_PERMIT::readInputData(size_t pa_nEIID) {
+  switch(pa_nEIID) {
+    case scm_nEventEIID: {
+      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      readData(0, &var_PERMIT, conn_PERMIT);
+      break;
+    }
+    default:
+      break;
   }
 }
+
+void FORTE_E_PERMIT::writeOutputData(size_t pa_nEIID) {
+}
+
+CIEC_ANY *FORTE_E_PERMIT::getDI(size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_PERMIT;
+  }
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_E_PERMIT::getDO(size_t) {
+  return nullptr;
+}
+
+CEventConnection *FORTE_E_PERMIT::getEOConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_EO;
+  }
+  return nullptr;
+}
+
+CDataConnection **FORTE_E_PERMIT::getDIConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_PERMIT;
+  }
+  return nullptr;
+}
+
+CDataConnection *FORTE_E_PERMIT::getDOConUnchecked(TPortId) {
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_E_PERMIT::getVarInternal(size_t) {
+  return nullptr;
+}
+
+
+void FORTE_E_PERMIT::enterStateSTART(void) {
+  m_nECCState = scm_nStateSTART;
+}
+
+void FORTE_E_PERMIT::enterStateEO(void) {
+  m_nECCState = scm_nStateEO;
+  sendOutputEvent(scm_nEventEOID);
+}
+
+
+

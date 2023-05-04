@@ -10,45 +10,65 @@
  *   Alois Zoitl, Ingo Hegny
  *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _E_F_TRIG_H_
-#define _E_F_TRIG_H_
 
-#include <funcbloc.h>
+#pragma once
 
-// cppcheck-suppress noConstructor
-class E_F_TRIG: public CFunctionBlock{
-  DECLARE_FIRMWARE_FB(E_F_TRIG)
+#include "cfb.h"
+#include "typelib.h"
+#include "forte_bool.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
+
+
+class FORTE_E_F_TRIG: public CCompositeFB {
+  DECLARE_FIRMWARE_FB(FORTE_E_F_TRIG)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[], scm_aunDIDataTypeIds[];
-
+  static const CStringDictionary::TStringId scm_anDataInputNames[];
+  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
   static const TEventID scm_nEventEIID = 0;
-  static const TForteInt16 scm_anEIWithIndexes[];
   static const TDataIOID scm_anEIWith[];
+  static const TForteInt16 scm_anEIWithIndexes[];
   static const CStringDictionary::TStringId scm_anEventInputNames[];
-
   static const TEventID scm_nEventEOID = 0;
+  static const TForteInt16 scm_anEOWithIndexes[];
   static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-  FORTE_FB_DATA_ARRAY(1,1,0, 0);
+  static const SCFB_FBInstanceData scm_astInternalFBs[];
+  static const SCFB_FBParameter scm_astParamters[];
+  static const SCFB_FBConnectionData scm_astEventConnections[];
+  static const SCFB_FBFannedOutConnectionData scm_astFannedOutEventConnections[];
+  static const SCFB_FBConnectionData scm_astDataConnections[];
+  static const SCFB_FBFannedOutConnectionData scm_astFannedOutDataConnections[];
+  static const SCFB_FBNData scm_stFBNData;
 
-  bool m_bOldVal;
-
-
-  void executeEvent(int pa_nEIID) override;
-  
-  CIEC_BOOL& QI() {
-     return *static_cast<CIEC_BOOL*>(getDI(0));
-  }
+  void readInputData(size_t pa_nEIID) override;
+  void writeOutputData(size_t pa_nEIID) override;
 
 public:
-  FUNCTION_BLOCK_CTOR(E_F_TRIG), m_bOldVal(false) {
-  };
+  FORTE_E_F_TRIG(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
-  ~E_F_TRIG() override = default;
-
+  CIEC_BOOL var_QI;
+  CEventConnection conn_EO;
+  CDataConnection *conn_QI;
+  CIEC_ANY *getDI(size_t) override;
+  CIEC_ANY *getDO(size_t) override;
+  CEventConnection *getEOConUnchecked(TPortId) override;
+  CDataConnection **getDIConUnchecked(TPortId) override;
+  CDataConnection *getDOConUnchecked(TPortId) override;
+  void evt_EI(const CIEC_BOOL &pa_QI) {
+    var_QI = pa_QI;
+    receiveInputEvent(scm_nEventEIID, nullptr);
+  }
+  void operator()(const CIEC_BOOL &pa_QI) {
+    evt_EI(pa_QI);
+  }
 };
 
-#endif //_E_F_TRIG_H_
+
+

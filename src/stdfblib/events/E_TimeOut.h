@@ -9,13 +9,19 @@
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _E_TIMEOUT_H_
-#define _E_TIMEOUT_H_
 
-#include <esfb.h>
-#include <typelib.h>
-#include "../arch/timerha.h"
+#pragma once
+
+#include "esfb.h"
+#include "typelib.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 #include "ATimeOut.h"
+
+#include "../arch/timerha.h"
 
 // cppcheck-suppress noConstructor
 class FORTE_E_TimeOut : public CEventSourceFB{
@@ -25,15 +31,12 @@ class FORTE_E_TimeOut : public CEventSourceFB{
     static const TForteInt16 scm_anEOWithIndexes[];
     static const SAdapterInstanceDef scm_astAdapterInstances[];
 
-    FORTE_ATimeOut& TimeOutSocket(){
-      return (*static_cast<FORTE_ATimeOut*>(m_apoAdapters[0]));
+    FORTE_ATimeOut& var_TimeOutSocket(){
+      return *static_cast<FORTE_ATimeOut*>(m_apoAdapters[0]);
     }
     ;
     static const int scm_nTimeOutSocketAdpNum = 0;
     static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-
-    FORTE_FB_DATA_ARRAY(0, 0, 0, 1)
-    ;
 
     bool mActive; //!> flag to indicate that the timed fb is currently active
     STimedFBListEntry mTimeListEntry; //!> The Timer list entry of this timed FB
@@ -56,4 +59,3 @@ class FORTE_E_TimeOut : public CEventSourceFB{
 
 };
 
-#endif //_E_TIMEOUT_H_

@@ -10,42 +10,74 @@
  *   Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny
  *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _E_RS_H_
-#define _E_RS_H_
 
-#include <funcbloc.h>
+#pragma once
 
-class E_RS: public CFunctionBlock{
-  DECLARE_FIRMWARE_FB(E_RS)
+#include "basicfb.h"
+#include "forte_bool.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
+
+
+class FORTE_E_RS: public CBasicFB {
+  DECLARE_FIRMWARE_FB(FORTE_E_RS)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataOutputNames[], scm_aunDODataTypeIds[];
-
+  static const CStringDictionary::TStringId scm_anDataOutputNames[];
+  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
   static const TEventID scm_nEventRID = 0;
   static const TEventID scm_nEventSID = 1;
+  static const TForteInt16 scm_anEIWithIndexes[];
   static const CStringDictionary::TStringId scm_anEventInputNames[];
-
   static const TEventID scm_nEventEOID = 0;
+  static const TDataIOID scm_anEOWith[]; 
   static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
   static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
- 
+  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  CIEC_ANY *getVarInternal(size_t) override;
+  void alg_SET(void);
+  void alg_RESET(void);
+  static const TForteInt16 scm_nStateSTART = 0;
+  static const TForteInt16 scm_nStateSET = 1;
+  static const TForteInt16 scm_nStateRESET = 2;
+  
+  void enterStateSTART(void);
+  void enterStateSET(void);
+  void enterStateRESET(void);
+
   void executeEvent(int pa_nEIID) override;
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-
-  FORTE_FB_DATA_ARRAY(1,0,1, 0);
-
-  CIEC_BOOL& Q() {
-     return *static_cast<CIEC_BOOL*>(getDO(0));
-  }
+  void readInputData(size_t pa_nEIID) override;
+  void writeOutputData(size_t pa_nEIID) override;
 
 public:
-  FUNCTION_BLOCK_CTOR(E_RS){
-  };
-  ~E_RS() override = default;
+  FORTE_E_RS(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
+  CIEC_BOOL var_Q;
+  CIEC_BOOL var_conn_Q;
+  CEventConnection conn_EO;
+  CDataConnection conn_Q;
+  CIEC_ANY *getDI(size_t) override;
+  CIEC_ANY *getDO(size_t) override;
+  CEventConnection *getEOConUnchecked(TPortId) override;
+  CDataConnection **getDIConUnchecked(TPortId) override;
+  CDataConnection *getDOConUnchecked(TPortId) override;
+  void evt_R(CIEC_BOOL &pa_Q) {
+    receiveInputEvent(scm_nEventRID, nullptr);
+    pa_Q = var_Q;
+  }
+  void evt_S(CIEC_BOOL &pa_Q) {
+    receiveInputEvent(scm_nEventSID, nullptr);
+    pa_Q = var_Q;
+  }
+  void operator()(CIEC_BOOL &pa_Q) {
+    evt_R(pa_Q);
+  }
 };
 
-#endif //_E_RS_H_
+
+

@@ -9,10 +9,14 @@
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
+
 #include "E_TimeOut.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "E_TimeOut_gen.cpp"
 #endif
+
+#include "criticalregion.h"
+#include "resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_E_TimeOut, g_nStringIdE_TimeOut)
 
@@ -26,14 +30,14 @@ void FORTE_E_TimeOut::executeEvent(int pa_nEIID){
     mActive = false;
     sendAdapterEvent(scm_nTimeOutSocketAdpNum, FORTE_ATimeOut::scm_nEventTimeOutID);
   }
-  else if(TimeOutSocket().START() == pa_nEIID){
+  else if(var_TimeOutSocket().evt_START() == pa_nEIID){
     if(!mActive){
       setEventChainExecutor(m_poInvokingExecEnv);  // delay notification should be execute in the same thread on as from where it has been triggered.
-      getTimer().registerTimedFB(&mTimeListEntry, TimeOutSocket().DT());
+      getTimer().registerTimedFB(&mTimeListEntry, var_TimeOutSocket().var_DT());
       mActive = true;
     }
   }
-  else if(TimeOutSocket().STOP() == pa_nEIID){
+  else if(var_TimeOutSocket().evt_STOP() == pa_nEIID){
     if(mActive){
       getTimer().unregisterTimedFB(this);
       mActive = false;

@@ -9,42 +9,53 @@
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _E_RTIMEOUT_H_
-#define _E_RTIMEOUT_H_
 
-#include <cfb.h>
-#include <typelib.h>
+#pragma once
+
+#include "cfb.h"
+#include "typelib.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
 #include "ARTimeOut.h"
 
-class FORTE_E_RTimeOut: public CCompositeFB{
+
+class FORTE_E_RTimeOut: public CCompositeFB {
   DECLARE_FIRMWARE_FB(FORTE_E_RTimeOut)
 
 private:
-  static const TForteInt16 scm_anEOWithIndexes[];
+  static const int scm_nTimeOutSocketAdpNum = 0;
+  
   static const SAdapterInstanceDef scm_astAdapterInstances[];
 
-  FORTE_ARTimeOut& TimeOutSocket() {
-    return (*static_cast<FORTE_ARTimeOut*>(m_apoAdapters[0]));
-  };
-  static const int scm_nTimeOutSocketAdpNum = 0;
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-   FORTE_FB_DATA_ARRAY(0, 0, 0, 1);
-
   static const SCFB_FBInstanceData scm_astInternalFBs[];
-
+  static const SCFB_FBParameter scm_astParamters[];
   static const SCFB_FBConnectionData scm_astEventConnections[];
-
+  static const SCFB_FBFannedOutConnectionData scm_astFannedOutEventConnections[];
   static const SCFB_FBConnectionData scm_astDataConnections[];
+  static const SCFB_FBFannedOutConnectionData scm_astFannedOutDataConnections[];
   static const SCFB_FBNData scm_stFBNData;
 
+  void readInputData(size_t pa_nEIID) override;
+  void writeOutputData(size_t pa_nEIID) override;
+
 public:
-  COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_E_RTimeOut){
+  FORTE_E_RTimeOut(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
+
+  CIEC_ANY *getDI(size_t) override;
+  CIEC_ANY *getDO(size_t) override;
+  FORTE_ARTimeOut &var_TimeOutSocket() {
+    return *static_cast<FORTE_ARTimeOut*>(m_apoAdapters[0]);
   };
-
-  ~FORTE_E_RTimeOut() override = default;
-
+  
+  CEventConnection *getEOConUnchecked(TPortId) override;
+  CDataConnection **getDIConUnchecked(TPortId) override;
+  CDataConnection *getDOConUnchecked(TPortId) override;
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+
 

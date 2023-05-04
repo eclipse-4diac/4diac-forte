@@ -10,50 +10,69 @@
  *   Alois Zoitl, Gerhard Ebenhofer
  *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _E_REND_H_
-#define _E_REND_H_
 
-#include <funcbloc.h>
+#pragma once
 
-// cppcheck-suppress noConstructor
-class E_REND: public CFunctionBlock{
-  DECLARE_FIRMWARE_FB(E_REND)
+#include "basicfb.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
+
+
+class FORTE_E_REND: public CBasicFB {
+  DECLARE_FIRMWARE_FB(FORTE_E_REND)
 
 private:
-
   static const TEventID scm_nEventEI1ID = 0;
   static const TEventID scm_nEventEI2ID = 1;
   static const TEventID scm_nEventRID = 2;
+  static const TForteInt16 scm_anEIWithIndexes[];
   static const CStringDictionary::TStringId scm_anEventInputNames[];
-
   static const TEventID scm_nEventEOID = 0;
+  static const TForteInt16 scm_anEOWithIndexes[];
   static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
-  static const int scm_nStateSTART = 0;
-  static const int scm_nStateR = 1;
-  static const int scm_nStateR1 = 2;
-  static const int scm_nStateEI1 = 3;
-  static const int scm_nStateEO = 4;
-  static const int scm_nStateEI2 = 5;
-  static const int scm_nStateR2 = 6;
-
-  bool m_bE1Occ;
-  bool m_bE2Occ;
-
+  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  CIEC_ANY *getVarInternal(size_t) override;
+  static const TForteInt16 scm_nStateSTART = 0;
+  static const TForteInt16 scm_nStateEI1 = 1;
+  static const TForteInt16 scm_nStateEO = 2;
+  static const TForteInt16 scm_nStateEI2 = 3;
+  
+  void enterStateSTART(void);
+  void enterStateEI1(void);
+  void enterStateEO(void);
+  void enterStateEI2(void);
 
   void executeEvent(int pa_nEIID) override;
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-
-  FORTE_FB_DATA_ARRAY(1,0,0, 0);
+  void readInputData(size_t pa_nEIID) override;
+  void writeOutputData(size_t pa_nEIID) override;
 
 public:
-  FUNCTION_BLOCK_CTOR(E_REND),
-    m_bE1Occ(false),
-    m_bE2Occ(false){
-  };
-  ~E_REND() override = default;
+  FORTE_E_REND(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
+  CEventConnection conn_EO;
+  CIEC_ANY *getDI(size_t) override;
+  CIEC_ANY *getDO(size_t) override;
+  CEventConnection *getEOConUnchecked(TPortId) override;
+  CDataConnection **getDIConUnchecked(TPortId) override;
+  CDataConnection *getDOConUnchecked(TPortId) override;
+  void evt_EI1() {
+    receiveInputEvent(scm_nEventEI1ID, nullptr);
+  }
+  void evt_EI2() {
+    receiveInputEvent(scm_nEventEI2ID, nullptr);
+  }
+  void evt_R() {
+    receiveInputEvent(scm_nEventRID, nullptr);
+  }
+  void operator()() {
+    evt_EI1();
+  }
 };
 
-#endif //_E_REND_H_
+
+

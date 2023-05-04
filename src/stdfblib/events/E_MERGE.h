@@ -10,38 +10,61 @@
  *   Alois Zoitl, Gerhard Ebenhofer
  *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _E_MERGE_H_
-#define _E_MERGE_H_
 
-#include <funcbloc.h>
+#pragma once
 
-class E_MERGE: public CFunctionBlock{
-  DECLARE_FIRMWARE_FB(E_MERGE)
+#include "basicfb.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
+
+
+class FORTE_E_MERGE: public CBasicFB {
+  DECLARE_FIRMWARE_FB(FORTE_E_MERGE)
 
 private:
-
   static const TEventID scm_nEventEI1ID = 0;
   static const TEventID scm_nEventEI2ID = 1;
+  static const TForteInt16 scm_anEIWithIndexes[];
   static const CStringDictionary::TStringId scm_anEventInputNames[];
-
   static const TEventID scm_nEventEOID = 0;
+  static const TForteInt16 scm_anEOWithIndexes[];
   static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
-
-  void executeEvent(int pa_nEIID) override {
-    if((scm_nEventEI1ID == pa_nEIID)||(scm_nEventEI2ID == pa_nEIID)){
-      sendOutputEvent(scm_nEventEOID);
-    }
-  };
-
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
+  CIEC_ANY *getVarInternal(size_t) override;
+  static const TForteInt16 scm_nStateSTART = 0;
+  static const TForteInt16 scm_nStateEO = 1;
+  
+  void enterStateSTART(void);
+  void enterStateEO(void);
 
-  FORTE_FB_DATA_ARRAY(1,0,0, 0);
+  void executeEvent(int pa_nEIID) override;
+
+  void readInputData(size_t pa_nEIID) override;
+  void writeOutputData(size_t pa_nEIID) override;
+
 public:
-  FUNCTION_BLOCK_CTOR(E_MERGE){
-  };
-  ~E_MERGE() override = default;
+  FORTE_E_MERGE(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
+  CEventConnection conn_EO;
+  CIEC_ANY *getDI(size_t) override;
+  CIEC_ANY *getDO(size_t) override;
+  CEventConnection *getEOConUnchecked(TPortId) override;
+  CDataConnection **getDIConUnchecked(TPortId) override;
+  CDataConnection *getDOConUnchecked(TPortId) override;
+  void evt_EI1() {
+    receiveInputEvent(scm_nEventEI1ID, nullptr);
+  }
+  void evt_EI2() {
+    receiveInputEvent(scm_nEventEI2ID, nullptr);
+  }
+  void operator()() {
+    evt_EI1();
+  }
 };
 
-#endif //_E_MERGE_H_
+
+
