@@ -62,6 +62,9 @@ if(FORTE_MODULE_POWERLINK)
     
     forte_add_link_directories(${FORTE_MODULE_POWERLINK_LIB_DIR})
     
+    forte_add_startup_hook(powerlinkStartupHook)
+    forte_add_sourcefile_cpp(startup.cpp)
+    
     forte_add_include_directories(${FORTE_MODULE_POWERLINK_LIB_DIR}/Include)
     forte_add_include_directories(${FORTE_MODULE_POWERLINK_LIB_DIR}/SharedBuff)
     forte_add_include_directories(${FORTE_MODULE_POWERLINK_LIB_DIR}/ObjDicts/CiA302-4_MN)

@@ -224,6 +224,12 @@ MACRO(forte_add_handler CLASSNAME FILENAME)
     set_property(GLOBAL APPEND PROPERTY FORTE_HANDLER_FILENAME "${FILENAME}.h")
 ENDMACRO(forte_add_handler)
 
+
+MACRO(forte_add_startup_hook FUNCTION_NAME)
+    set_property(GLOBAL APPEND PROPERTY FORTE_STARTUP_HOOK_FUNCTIONS ${FUNCTION_NAME})
+ENDMACRO(forte_add_startup_hook)
+
+
 #MACRO(forte_add_module NAME DIRECTORY DESCRIPTION)
 # Additional parameters are interpreted as dependencies
 MACRO(forte_add_module NAME ONOFF DESCRIPTION)

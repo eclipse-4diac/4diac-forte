@@ -38,6 +38,9 @@ if (FORTE_MODULE_ROS)
   forte_add_sourcefile_hcpp(TRIGGER_SERVICE_SERVER)
   forte_add_sourcefile_hcpp(EXECUTE_ACTION_CLIENT)
   forte_add_sourcefile_hcpp(EXECUTE_ACTION_SERVER)
+  
+  forte_add_startup_hook(rosStartupHook)
+  forte_add_sourcefile_cpp(startup.cpp)
 
 
   find_package(catkin QUIET COMPONENTS actionlib reapp_msgs roscpp std_msgs std_srvs topic_tools)

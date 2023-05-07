@@ -12,6 +12,7 @@
  *******************************************************************************/
 #include "../forte_architecture.h"
 #include "../devlog.h"
+#include "../startuphook.h"
 #include "../../stdfblib/ita/RMT_DEV.h"
 #include "../utils/mainparam_utils.h"
 
@@ -61,6 +62,8 @@ void createDev(const char *pa_acMGRID){
 int main(int argc, char *arg[]){
 
   if(CForteArchitecture::initialize()){
+
+    startupHook(argc, arg);
 
     const char *pIpPort = parseCommandLineArguments(argc, arg);
     if((0 != strlen(pIpPort)) && (nullptr != strchr(pIpPort, ':'))){

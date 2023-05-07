@@ -195,6 +195,25 @@ file(REMOVE ${CMAKE_BINARY_DIR}/core/deviceExecutionHandlers_new.cpp)
 
 
 #############################################################################
+# Configure startuphook
+#############################################################################
+GET_PROPERTY(STARTUP_HOOK_FUNCTIONS GLOBAL PROPERTY FORTE_STARTUP_HOOK_FUNCTIONS)
+LIST(APPEND STARTUP_HOOK_FUNCTIONS_LIST ${STARTUP_HOOK_FUNCTIONS})
+
+SET(FORTE_STARTUP_HOOKS_DECLS "")
+SET(FORTE_STARTUP_HOOKS_CALLS "")
+
+FOREACH(STARTUP_HOOK_FUNCTION ${STARTUP_HOOK_FUNCTIONS_LIST})
+  SET(FORTE_STARTUP_HOOKS_DECLS  "${FORTE_STARTUP_HOOKS_DECLS}void ${STARTUP_HOOK_FUNCTION}(int argc, char *arg[]); \n")
+  
+  SET(FORTE_STARTUP_HOOKS_CALLS  "${FORTE_STARTUP_HOOKS_CALLS}  ${STARTUP_HOOK_FUNCTION}(argc, arg);\n")
+ENDFOREACH()
+
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/arch/startuphook.cpp.in ${CMAKE_BINARY_DIR}/src_gen/startuphook_new.cpp)
+forte_replacefile_if_changed(${CMAKE_BINARY_DIR}/src_gen/startuphook_new.cpp ${CMAKE_BINARY_DIR}/src_gen/startuphook.cpp)
+file(REMOVE ${CMAKE_BINARY_DIR}/src_gen/startuphook_new.cpp)
+
+#############################################################################
 # Load FORTE Extension Files
 #############################################################################
 
