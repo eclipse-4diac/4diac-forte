@@ -22,48 +22,53 @@
 //********************************************************************************************
 //   WORD_TO_*  functions
 //********************************************************************************************
-inline const CIEC_DINT func_WORD_TO_DINT(const CIEC_WORD &paVal) {
-  return CIEC_ANY::cast<CIEC_DINT>(paVal);
-}
-
-inline const CIEC_BYTE func_WORD_TO_BYTE(const CIEC_WORD &paVal) {
-  return CIEC_ANY::cast<CIEC_BYTE>(paVal);
-}
-
-inline const CIEC_INT func_WORD_TO_INT(const CIEC_WORD &paVal) {
-  return CIEC_ANY::cast<CIEC_INT>(paVal);
-}
-
-inline const CIEC_LINT func_WORD_TO_LINT(const CIEC_WORD &paVal){
-  return CIEC_ANY::cast<CIEC_LINT>(paVal);
-}
 
 inline const CIEC_LWORD func_WORD_TO_LWORD(const CIEC_WORD &paVal){
   return CIEC_ANY::cast<CIEC_LWORD>(paVal);
-}
-
-inline const CIEC_SINT func_WORD_TO_SINT(const CIEC_WORD &paVal) {
-  return CIEC_ANY::cast<CIEC_SINT>(paVal);
 }
 
 inline const CIEC_DWORD func_WORD_TO_DWORD(const CIEC_WORD &paVal) {
   return CIEC_ANY::cast<CIEC_DWORD>(paVal);
 }
 
-inline const CIEC_UDINT func_WORD_TO_UDINT(const CIEC_WORD &paVal) {
-  return CIEC_ANY::cast<CIEC_UDINT>(paVal);
+inline const CIEC_BYTE func_WORD_TO_BYTE(const CIEC_WORD &paVal) {
+  return CIEC_ANY::cast<CIEC_BYTE>(paVal);
+}
+
+inline const CIEC_BOOL func_WORD_TO_BOOL(const CIEC_WORD &paVal) {
+  return CIEC_ANY::cast<CIEC_BOOL>(paVal);
+}
+
+inline const CIEC_LINT func_WORD_TO_LINT(const CIEC_WORD &paVal){
+  return CIEC_ANY::cast<CIEC_LINT>(paVal);
+}
+
+inline const CIEC_DINT func_WORD_TO_DINT(const CIEC_WORD &paVal) {
+  return CIEC_ANY::cast<CIEC_DINT>(paVal);
+}
+
+inline const CIEC_INT func_WORD_TO_INT(const CIEC_WORD &paVal) {
+  return CIEC_ANY::cast<CIEC_INT>(paVal);
+}
+
+inline const CIEC_SINT func_WORD_TO_SINT(const CIEC_WORD &paVal) {
+  return CIEC_ANY::cast<CIEC_SINT>(paVal);
 }
 
 inline const CIEC_ULINT func_WORD_TO_ULINT(const CIEC_WORD &paVal){
   return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 
-inline const CIEC_USINT func_WORD_TO_USINT(const CIEC_WORD &paVal) {
-  return CIEC_ANY::cast<CIEC_USINT>(paVal);
+inline const CIEC_UDINT func_WORD_TO_UDINT(const CIEC_WORD &paVal) {
+  return CIEC_ANY::cast<CIEC_UDINT>(paVal);
 }
 
 inline const CIEC_UINT func_WORD_TO_UINT(const CIEC_WORD &paVal) {
   return CIEC_ANY::cast<CIEC_UINT>(paVal);
+}
+
+inline const CIEC_USINT func_WORD_TO_USINT(const CIEC_WORD &paVal) {
+  return CIEC_ANY::cast<CIEC_USINT>(paVal);
 }
 
 inline const CIEC_STRING func_WORD_TO_STRING(const CIEC_WORD &paVal) {

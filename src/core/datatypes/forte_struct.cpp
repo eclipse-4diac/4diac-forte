@@ -302,7 +302,6 @@ CIEC_ANY* CIEC_STRUCT::getMemberNamed( char const*const paMemberName) {
   return retVal;
 }
 
-
 size_t CIEC_STRUCT::getToStringBufferSize() const {
   size_t retVal = 3; // 2 bytes for the open and closing brackets one for the '\0'
   TForteUInt16 nSize = getStructSize();

@@ -285,11 +285,11 @@ BOOST_AUTO_TEST_CASE(CASTS_BYTE_to_REAL)
   nTestReal.setValue(nTestByte0);
   BOOST_CHECK_EQUAL(0.0f, nTestReal);
   nTestReal.setValue(nTestByte1);
-  BOOST_CHECK_EQUAL(1.0f, nTestReal); 
+  BOOST_CHECK_EQUAL(1.4013e-45f, nTestReal);
   nTestReal.setValue(nTestByte45);
-  BOOST_CHECK_EQUAL(45.0f, nTestReal); 
+  BOOST_CHECK_EQUAL(6.30584e-44f, nTestReal);
   nTestReal.setValue(nTestByte255);
-  BOOST_CHECK_EQUAL(255.0f, nTestReal); 
+  BOOST_CHECK_EQUAL(3.57331e-43f, nTestReal);
 
   CIEC_LREAL nTestLReal;
 
@@ -297,11 +297,11 @@ BOOST_AUTO_TEST_CASE(CASTS_BYTE_to_REAL)
   nTestLReal.setValue(nTestByte0);
   BOOST_CHECK_EQUAL(0.0, nTestLReal);
   nTestLReal.setValue(nTestByte1);
-  BOOST_CHECK_EQUAL(1.0, nTestLReal); 
+  BOOST_CHECK_EQUAL(4.94066e-324, nTestLReal);
   nTestLReal.setValue(nTestByte45);
-  BOOST_CHECK_EQUAL(45.0, nTestLReal); 
+  BOOST_CHECK_EQUAL(2.2233e-322, nTestLReal);
   nTestLReal.setValue(nTestByte255);
-  BOOST_CHECK_EQUAL(255.0, nTestLReal); 
+  BOOST_CHECK_EQUAL(1.25987e-321, nTestLReal);
 }
 
 BOOST_AUTO_TEST_CASE(BYTE_Castable_test)

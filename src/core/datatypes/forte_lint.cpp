@@ -34,3 +34,7 @@ template CIEC_LINT &CIEC_LINT::operator=<>(const CIEC_USINT &paValue);
 template CIEC_LINT &CIEC_LINT::operator=<>(const CIEC_UINT &paValue);
 
 template CIEC_LINT &CIEC_LINT::operator=<>(const CIEC_UDINT &paValue);
+
+size_t CIEC_LINT::getToStringBufferSize() const {
+  return sizeof("-9223372036854775808");
+}

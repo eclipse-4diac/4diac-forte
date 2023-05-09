@@ -104,3 +104,7 @@ int CIEC_WCHAR::fromString(const char *paValue) {
 
   return -1; //no match so something must be wrong
 }
+
+size_t CIEC_WCHAR::getToStringBufferSize() const {
+  return sizeof("$0000");
+}

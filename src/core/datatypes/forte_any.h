@@ -62,9 +62,6 @@ class CIEC_ANY {
       e_Max = 65535 // Guarantees at least 16 bits - otherwise gcc will optimizes on some platforms
     };
 
-    // ordering of sizes is according to EDataTypeID, that the ID can be used to get the proper value, +1 for \0
-    const static TForteByte csmStringBufferSize[];
-
     typedef TForteUInt64 TLargestUIntValueType;
     typedef TForteInt64 TLargestIntValueType;
 
@@ -81,16 +78,28 @@ class CIEC_ANY {
     template<typename U, typename T>
     static typename forte::core::mpl::implicit_or_explicit_cast<T, U>::type cast(const T paFromCast){
       U oToCast;
-      if (std::is_base_of<CIEC_ANY_BIT, T>::value ||
-          std::is_base_of<CIEC_ANY_BIT, U>::value) {
-        oToCast.setValueSimple(paFromCast);
-      } else
-      if(std::is_base_of<CIEC_ANY_REAL, T>::value){
+      // If interacting with integers, add or remove sign extension
+      if constexpr (std::is_base_of_v<CIEC_ANY_BIT, T> &&
+          std::is_base_of_v<CIEC_ANY_INT, U>) {
+        oToCast.setValueSimple(U(static_cast<typename U::TValueType>(static_cast<typename T::TValueType>(paFromCast))));
+      } else if constexpr (std::is_base_of_v<CIEC_ANY_INT, T> &&
+          std::is_base_of_v<CIEC_ANY_BIT, U>) {
+        typename T::TValueType fromValue = static_cast<typename T::TValueType>(paFromCast);
+        typename std::make_unsigned_t<typename T::TValueType> fromValueUnsigned = static_cast<std::make_unsigned_t<typename T::TValueType>>(fromValue);
+        typename U::TValueType toValue = static_cast<typename U::TValueType>(fromValueUnsigned);
+        oToCast.setValueSimple(U(toValue));
+      } else if constexpr (std::is_base_of_v<CIEC_ANY_BIT, T> && //special cast binary to bool
+          std::is_base_of_v<CIEC_ANY_BIT, U>) {
+          if constexpr (std::is_base_of_v<CIEC_BOOL, U>) { // reinterpret C/C++ bool to binary transfer
+            oToCast.setValueSimple(U(static_cast<typename T::TValueType>(paFromCast) % 2 == 1 ? true : false));
+          } else {
+            oToCast.setValueSimple(U(static_cast<typename U::TValueType>(static_cast<typename T::TValueType>(paFromCast))));
+          }
+      } else if constexpr (std::is_base_of_v<CIEC_ANY_REAL, T>){
         specialCast(paFromCast, oToCast);
-      } else if(std::is_base_of<CIEC_ANY_REAL, U>::value){
+      } else if constexpr (std::is_base_of_v<CIEC_ANY_REAL, U>){
         oToCast.setValue(paFromCast);
-      }
-      else{
+      } else {
         oToCast.setValueSimple(paFromCast);
       }
       return oToCast;

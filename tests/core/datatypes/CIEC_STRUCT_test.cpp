@@ -891,7 +891,7 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
 
   void toStringTest_testStruct2(float pa_fVal1, int pa_nVal2, bool pa_bVal3, int pa_nVal4, const char* pa_acResult){
       CIEC_TestStruct2 stStruct;
-  BOOST_CHECK_EQUAL(stStruct.getToStringBufferSize(), sizeof("(Val1:=123456789.123,Val2:=+32767,Val3:=FALSE,Val4:=+32767)"));
+      BOOST_CHECK_EQUAL(stStruct.getToStringBufferSize(), sizeof("(Val1:=-1.175494351E-38,Val2:=+32767,Val3:=FALSE,Val4:=+32767)"));
       int nResultLenght = static_cast<int>(strlen(pa_acResult));
       char acBuffer[60];
 
@@ -899,7 +899,7 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
         setDataTestStruct2(stStruct, pa_fVal1, pa_nVal2, pa_bVal3, pa_nVal4);
         BOOST_CHECK_EQUAL(stStruct.toString(acBuffer, i), nResultLenght);
         BOOST_CHECK_EQUAL(strcmp(acBuffer, pa_acResult), 0);
-    BOOST_CHECK_EQUAL(stStruct.getToStringBufferSize(), sizeof("(Val1:=123456789.123,Val2:=+32767,Val3:=FALSE,Val4:=+32767)"));
+        BOOST_CHECK_EQUAL(stStruct.getToStringBufferSize(), sizeof("(Val1:=-1.175494351E-38,Val2:=+32767,Val3:=FALSE,Val4:=+32767)"));
       }
       for(int i = 0; i <= nResultLenght; i++){
         BOOST_CHECK_EQUAL(stStruct.toString(acBuffer, i), -1);

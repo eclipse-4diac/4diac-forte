@@ -127,3 +127,6 @@ int CIEC_DATE_AND_TIME::toGMTString(char* paValue, unsigned int paBufferSize) co
   return toString(paValue, paBufferSize);
 }
 
+size_t CIEC_DATE_AND_TIME::getToStringBufferSize() const {
+  return sizeof("DT#1970-01-01-00:00:00.000");
+}

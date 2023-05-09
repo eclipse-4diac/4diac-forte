@@ -139,7 +139,11 @@ class CIEC_LREAL : public CIEC_ANY_REAL{
       return getTDFLOAT();
     }
 
-     EDataTypeID getDataTypeID() const override {
+    /*! \brief calculates buffer size needed for toString conversion
+     */
+    size_t getToStringBufferSize() const override;
+
+    EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_LREAL;
     }
 

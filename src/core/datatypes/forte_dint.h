@@ -90,7 +90,6 @@ class CIEC_DINT : public CIEC_ANY_INT{
       return CIEC_DINT(-1 * static_cast<CIEC_DINT::TValueType>(*this));
     }
     
-
     /*! \brief Converts CIEC_DINT to elementary byte
      *
      *   Conversion operator for converting CIEC_DINT to elementary 32 bit integer
@@ -98,6 +97,10 @@ class CIEC_DINT : public CIEC_ANY_INT{
     explicit operator TForteInt32() const{
       return getTINT32();
     }
+
+    /*! \brief calculates buffer size needed for toString conversion
+     */
+    size_t getToStringBufferSize() const override;
 
     EDataTypeID getDataTypeID() const override {
       return CIEC_ANY::e_DINT;

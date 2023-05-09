@@ -81,6 +81,13 @@ void CIEC_LREAL::setValue(const CIEC_ANY& paValue){
     case e_LINT:
       setTDFLOAT(static_cast<TForteInt64>(static_cast<const CIEC_LINT&>(paValue)));
       break;
+    case CIEC_ANY::e_BYTE:
+    case CIEC_ANY::e_WORD:
+    case CIEC_ANY::e_DWORD:
+    case CIEC_ANY::e_LWORD:
+      // bit string will cast to the binary representation of the real value
+      setValueSimple(paValue);
+      break;
     default: //UINT types
       setTDFLOAT(static_cast<TForteUInt64>(static_cast<const CIEC_ULINT&>(paValue)));
       break;
@@ -131,4 +138,8 @@ void CIEC_LREAL::castLRealData(const CIEC_LREAL &paSrcValue, CIEC_ANY &paDestVal
     }
       break;
   }
+}
+
+size_t CIEC_LREAL::getToStringBufferSize() const {
+  return sizeof("-2.2250738585072014E-308"); //Minimal double number, negative for additional sign
 }

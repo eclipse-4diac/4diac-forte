@@ -373,34 +373,27 @@ void CMonitoringHandler::updateMonitringData(){
 
 void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
     SDataWatchEntry &paDataWatchEntry){
-  size_t bufferSize = paDataWatchEntry.mDataBuffer->getToStringBufferSize() + getExtraSizeForEscapedChars(*paDataWatchEntry.mDataBuffer);
   appendPortTag(paResponse, paDataWatchEntry.mPortId);
   paResponse.append("<Data value=\"");
+  size_t bufferSize = paDataWatchEntry.mDataBuffer->getToStringBufferSize() + getExtraSizeForEscapedChars(*paDataWatchEntry.mDataBuffer);
   char* acDataValue = new char [bufferSize]; //TODO try to directly use the response string instead
-  int consumedBytes = -1;
-  switch (paDataWatchEntry.mDataBuffer->getDataTypeID()){
-    case CIEC_ANY::e_WSTRING:
-    case CIEC_ANY::e_STRING:
-    case CIEC_ANY::e_CHAR:
-    case CIEC_ANY::e_WCHAR:
-      consumedBytes = paDataWatchEntry.mDataBuffer->toString(acDataValue, bufferSize);
-      consumedBytes += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(acDataValue));
-      break;
-    case CIEC_ANY::e_ARRAY:
-    case CIEC_ANY::e_STRUCT:
-      consumedBytes = paDataWatchEntry.mDataBuffer->toString(acDataValue, bufferSize);
-      if(bufferSize != paDataWatchEntry.mDataBuffer->getToStringBufferSize() && 0 < consumedBytes) { //avoid re-running on elements which were already proven not to have any special character
+  int consumedBytes = paDataWatchEntry.mDataBuffer->toString(acDataValue, bufferSize);
+  if(consumedBytes > 0 && static_cast<size_t>(consumedBytes) < bufferSize) {
+    switch (paDataWatchEntry.mDataBuffer->getDataTypeID()) {
+      case CIEC_ANY::e_WSTRING:
+      case CIEC_ANY::e_STRING:
+      case CIEC_ANY::e_CHAR:
+      case CIEC_ANY::e_WCHAR:
+      case CIEC_ANY::e_ARRAY:
+      case CIEC_ANY::e_STRUCT:
         consumedBytes += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(acDataValue));
-      }
-      break;
-    default:
-      consumedBytes = paDataWatchEntry.mDataBuffer->toString(acDataValue, bufferSize);
-      break;
-  }
-  if(-1 != consumedBytes){
+        break;
+      default:
+        break;
+    }
     acDataValue[consumedBytes] = '\0';
+    paResponse.append(acDataValue);
   }
-  paResponse.append(acDataValue);
   paResponse.append("\" forced=\"");
   paResponse.append((paDataWatchEntry.mDataBuffer->isForced()) ? "true" : "false");
   paResponse.append("\"/></Port>");

@@ -301,11 +301,11 @@ BOOST_AUTO_TEST_CASE(CASTS_DWORD_to_REAL)
   nTestReal.setValue(nTestDWord0);
   BOOST_CHECK_EQUAL(0.0f, nTestReal);
   nTestReal.setValue(nTestDWord1);
-  BOOST_CHECK_EQUAL(1.0f, nTestReal); 
+  BOOST_CHECK_EQUAL(1.4013e-45f, nTestReal);
   nTestReal.setValue(nTestDWord65536);
-  BOOST_CHECK_EQUAL(65536.0f, nTestReal); 
+  BOOST_CHECK_EQUAL(9.18355e-41f, nTestReal);
   nTestReal.setValue(nTestDWord4294967295);
-  BOOST_CHECK_EQUAL(4294967295.0f, nTestReal); 
+  BOOST_CHECK(std::isnan(nTestReal));
 
   CIEC_LREAL nTestLReal;
 
@@ -313,11 +313,11 @@ BOOST_AUTO_TEST_CASE(CASTS_DWORD_to_REAL)
   nTestLReal.setValue(nTestDWord0);
   BOOST_CHECK_EQUAL(0.0, nTestLReal);
   nTestLReal.setValue(nTestDWord1);
-  BOOST_CHECK_EQUAL(1.0, nTestLReal); 
+  BOOST_CHECK_EQUAL(4.94066e-324, nTestLReal);
   nTestLReal.setValue(nTestDWord65536);
-  BOOST_CHECK_EQUAL(65536.0, nTestLReal); 
+  BOOST_CHECK_EQUAL(3.23791e-319, nTestLReal);
   nTestLReal.setValue(nTestDWord4294967295);
-  BOOST_CHECK_EQUAL(4294967295.0, nTestLReal); 
+  BOOST_TEST(2.1219957904712067e-314 == static_cast<CIEC_LREAL::TValueType>(nTestLReal));
 }
 
 BOOST_AUTO_TEST_CASE(DWORD_Castable_test)

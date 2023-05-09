@@ -22,9 +22,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
     forte_set_timer(../fake_time/faketimerha)
   else(FORTE_FAKE_TIME)
     forte_set_timer(../posix/pctimeha)
-    forte_add_sourcefile_cpp(forte_architecture_time.cpp)
   endif(FORTE_FAKE_TIME)
-
+  forte_add_sourcefile_cpp(forte_architecture_time.cpp)
 
   forte_add_to_executable_cpp(main)
 

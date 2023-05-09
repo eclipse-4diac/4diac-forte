@@ -219,3 +219,7 @@ void CIEC_TIME::setFromNanoSeconds(TValueType paValue) {
           paValue * (csmForteTimeBaseUnitsPerSecond / forte::core::constants::cNanosecondsPerSecond) :
           paValue / (forte::core::constants::cNanosecondsPerSecond / csmForteTimeBaseUnitsPerSecond));
 }
+
+size_t CIEC_TIME::getToStringBufferSize() const {
+  return sizeof("T#-18446744073709551615ns");
+}

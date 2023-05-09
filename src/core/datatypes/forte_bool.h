@@ -83,6 +83,10 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
      */
     int toString(char* paValue, size_t paBufferSize) const override;
 
+    /*! \brief calculates buffer size needed for toString conversion
+     */
+    size_t getToStringBufferSize() const override;
+
   private:
 };
 

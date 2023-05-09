@@ -248,6 +248,14 @@ BOOST_AUTO_TEST_CASE(replace_P_unsigned_0)
   BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
 }
 
+BOOST_AUTO_TEST_CASE(replace_P_plus_L_at_end)
+{
+  CIEC_STRING sIn1("123456789");
+  CIEC_STRING sIn2("aaa");
+  CIEC_STRING sResult(func_REPLACE(sIn1, sIn2, CIEC_UINT(7), CIEC_UINT(3)));
+  BOOST_TEST(sResult.getValue() == "12aaa");
+}
+
 BOOST_AUTO_TEST_CASE(standard_example_delete)
 {
   CIEC_STRING sIn1("ABXYC");
@@ -527,8 +535,7 @@ BOOST_AUTO_TEST_CASE(insert_P_signed_negative_number)
   BOOST_TEST(sResult.getValue() == "Lorem  sit");
 }
 
-BOOST_AUTO_TEST_CASE(trunc)
-{
+BOOST_AUTO_TEST_CASE(trunc) {
   CIEC_REAL real(50.6f);
   CIEC_LREAL lreal(50.6);
 
@@ -541,8 +548,7 @@ BOOST_AUTO_TEST_CASE(trunc)
   BOOST_REQUIRE(50 == static_cast<CIEC_ULINT::TValueType>(CIEC_ULINT(50), func_TRUNC<CIEC_ULINT>(lreal)));
 }
 
-BOOST_AUTO_TEST_CASE(rol_unsigned)
-{
+BOOST_AUTO_TEST_CASE(rol_unsigned) {
   CIEC_BYTE byte(128);
   CIEC_BYTE result;
   CIEC_USINT usint(1);
@@ -563,8 +569,7 @@ BOOST_AUTO_TEST_CASE(rol_unsigned)
   BOOST_REQUIRE_EQUAL(0x8, result);
 }
 
-BOOST_AUTO_TEST_CASE(rol_signed)
-{
+BOOST_AUTO_TEST_CASE(rol_signed) {
   CIEC_BYTE byte(128);
   CIEC_BYTE result;
   CIEC_USINT sint(5);
@@ -585,8 +590,7 @@ BOOST_AUTO_TEST_CASE(rol_signed)
   BOOST_REQUIRE_EQUAL(0x80, result);
 }
 
-BOOST_AUTO_TEST_CASE(shl_unsigned)
-{
+BOOST_AUTO_TEST_CASE(shl_unsigned) {
   CIEC_BYTE byte(1);
   CIEC_BYTE result;
   CIEC_USINT usint(1);
@@ -607,8 +611,7 @@ BOOST_AUTO_TEST_CASE(shl_unsigned)
   BOOST_REQUIRE_EQUAL(0x10, result);
 }
 
-BOOST_AUTO_TEST_CASE(shl_signed)
-{
+BOOST_AUTO_TEST_CASE(shl_signed) {
   CIEC_BYTE byte(1);
   CIEC_BYTE result;
   CIEC_USINT sint(5);
@@ -617,16 +620,52 @@ BOOST_AUTO_TEST_CASE(shl_signed)
   CIEC_ULINT lint(8);
 
   result = func_SHL(byte, sint);
-  BOOST_REQUIRE_EQUAL(0x20, result);
+  BOOST_REQUIRE(0x20 == result);
 
   result = func_SHL(byte, inte);
-  BOOST_REQUIRE_EQUAL(0x40, result);
+  BOOST_REQUIRE(0x40 == result);
 
   result = func_SHL(byte, dint);
-  BOOST_REQUIRE_EQUAL(0x80, result);
+  BOOST_REQUIRE(0x80 == result);
 
   result = func_SHL(byte, lint);
-  BOOST_REQUIRE_EQUAL(0x0, result);
+  BOOST_REQUIRE(0x0 == result);
+}
+
+BOOST_AUTO_TEST_CASE(shl_partial_argument) {
+  CIEC_WORD word(1);
+  CIEC_BYTE result;
+  CIEC_USINT usint(1);
+
+  result = func_SHL(word.partial<CIEC_BYTE>(0), usint);
+  BOOST_REQUIRE(0x2 == result);
+}
+
+BOOST_AUTO_TEST_CASE(shr_partial_argument) {
+  CIEC_WORD word(2);
+  CIEC_BYTE result;
+  CIEC_USINT usint(1);
+
+  result = func_SHR(word.partial<CIEC_BYTE>(0), usint);
+  BOOST_REQUIRE(0x1 == result);
+}
+
+BOOST_AUTO_TEST_CASE(rol_partial_argument) {
+  CIEC_WORD word(128);
+  CIEC_BYTE result;
+  CIEC_USINT usint(1);
+
+  result = func_ROL(word.partial<CIEC_BYTE>(0), usint);
+  BOOST_REQUIRE(0x1 == result);
+}
+
+BOOST_AUTO_TEST_CASE(ror_partial_argument) {
+  CIEC_WORD word(1);
+  CIEC_BYTE result;
+  CIEC_USINT usint(1);
+
+  result = func_ROR(word.partial<CIEC_BYTE>(0), usint);
+  BOOST_REQUIRE(0x80 == result);
 }
 
 BOOST_AUTO_TEST_CASE(mul_numbers) {

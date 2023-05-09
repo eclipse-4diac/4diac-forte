@@ -24,6 +24,127 @@
 
 BOOST_AUTO_TEST_SUITE(convert_functions)
 
+  BOOST_AUTO_TEST_CASE(cast_lword_to_bool) {
+    CIEC_LWORD trueResult(0xFF);
+    CIEC_LWORD falseResult(0xFE);
+
+    BOOST_TEST(func_LWORD_TO_BOOL(trueResult) == CIEC_BOOL(true));
+    BOOST_TEST(func_LWORD_TO_BOOL(falseResult) == CIEC_BOOL(false));
+  }
+
+  BOOST_AUTO_TEST_CASE(cast_dword_to_bool) {
+    CIEC_DWORD trueResult(0xFF);
+    CIEC_DWORD falseResult(0xFE);
+
+    BOOST_TEST(func_DWORD_TO_BOOL(trueResult) == CIEC_BOOL(true));
+    BOOST_TEST(func_DWORD_TO_BOOL(falseResult) == CIEC_BOOL(false));
+  }
+
+  BOOST_AUTO_TEST_CASE(cast_word_to_bool) {
+    CIEC_WORD trueResult(0xFF);
+    CIEC_WORD falseResult(0xFE);
+
+    BOOST_TEST(func_WORD_TO_BOOL(trueResult) == CIEC_BOOL(true));
+    BOOST_TEST(func_WORD_TO_BOOL(falseResult) == CIEC_BOOL(false));
+  }
+
+  BOOST_AUTO_TEST_CASE(cast_byte_to_bool) {
+    CIEC_BYTE trueResult(0xFF);
+    CIEC_BYTE falseResult(0xFE);
+
+    BOOST_TEST(func_BYTE_TO_BOOL(trueResult) == CIEC_BOOL(true));
+    BOOST_TEST(func_BYTE_TO_BOOL(falseResult) == CIEC_BOOL(false));
+  }
+
+  BOOST_AUTO_TEST_CASE(cast_word_to_int_then_int_to_dint_sign_extension_test) {
+    CIEC_WORD inWord(0xFFFF);
+    CIEC_INT intermediateInt;
+    CIEC_DINT result;
+    intermediateInt = func_WORD_TO_INT(inWord);
+    result = func_INT_TO_DINT(intermediateInt);
+    BOOST_TEST(static_cast<CIEC_DINT::TValueType>(result) == -1);
+  }
+
+  BOOST_AUTO_TEST_CASE(cast_sint_to_byte_only_binary_transfer) {
+    CIEC_SINT inSint(-1);
+    CIEC_BYTE result;
+
+    result = func_SINT_TO_BYTE(inSint);
+    BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(result) == 0xFF);
+  }
+
+  BOOST_AUTO_TEST_CASE(cast_sint_to_word_only_binary_transfer) {
+    CIEC_SINT inSint(-1);
+    CIEC_WORD result;
+
+    result = func_SINT_TO_WORD(inSint);
+    BOOST_TEST(static_cast<CIEC_WORD::TValueType>(result) == 0xFF);
+  }
+
+  BOOST_AUTO_TEST_CASE(cast_sint_to_dword_only_binary_transfer) {
+    CIEC_SINT inSint(-1);
+    CIEC_DWORD result;
+
+    result = func_SINT_TO_DWORD(inSint);
+    BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(result) == 0xFF);
+  }
+
+  BOOST_AUTO_TEST_CASE(cast_sint_to_lword_only_binary_transfer) {
+    CIEC_SINT inSint(-1);
+    CIEC_LWORD result;
+
+    result = func_SINT_TO_LWORD(inSint);
+    BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(result) == 0xFF);
+  }
+
+  BOOST_AUTO_TEST_CASE(cast_int_to_dword_only_binary_transfer) {
+    CIEC_INT inInt(-1);
+    CIEC_DWORD result;
+
+    result = func_INT_TO_DWORD(inInt);
+    BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(result) == 0xFFFF);
+  }
+
+  BOOST_AUTO_TEST_CASE(cast_dint_to_dword_only_binary_transfer) {
+    CIEC_DINT inDint(-1);
+    CIEC_DWORD result;
+
+    result = func_DINT_TO_DWORD(inDint);
+    BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(result) == 0xFFFFFFFF);
+  }
+
+  BOOST_AUTO_TEST_CASE(up_and_down_cast_from_lword_to_bool_and_back) {
+    CIEC_LWORD inLword(0xFFFFFFFFFFFFFFFF);
+    CIEC_LWORD result;
+
+    result = func_BOOL_TO_LWORD(func_LWORD_TO_BOOL(inLword));
+    BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(result) == 1);
+  }
+
+  BOOST_AUTO_TEST_CASE(up_and_down_cast_from_lword_to_byte_and_back) {
+    CIEC_LWORD inLword(0xFFFFFFFFFFFFFFFF);
+    CIEC_LWORD result;
+
+    result = func_BYTE_TO_LWORD(func_LWORD_TO_BYTE(inLword));
+    BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(result) == 0xFF);
+  }
+
+  BOOST_AUTO_TEST_CASE(up_and_down_cast_from_lword_to_word_and_back) {
+    CIEC_LWORD inLword(0xFFFFFFFFFFFFFFFF);
+    CIEC_LWORD result;
+
+    result = func_WORD_TO_LWORD(func_LWORD_TO_WORD(inLword));
+    BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(result) == 0xFFFF);
+  }
+
+  BOOST_AUTO_TEST_CASE(up_and_down_cast_from_lword_to_dword_and_back) {
+    CIEC_LWORD inLword(0xFFFFFFFFFFFFFFFF);
+    CIEC_LWORD result;
+
+    result = func_DWORD_TO_LWORD(func_LWORD_TO_DWORD(inLword));
+    BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(result) == 0xFFFFFFFF);
+  }
+
   BOOST_AUTO_TEST_CASE(CONVERT_DT_TO_TOD) {
     CIEC_DATE_AND_TIME date;
     date.fromString("DT#2018-07-10-12:38:50.123");

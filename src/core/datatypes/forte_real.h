@@ -135,6 +135,10 @@ class CIEC_REAL : public CIEC_ANY_REAL{
      */
     int toString(char* paValue, size_t paBufferSize) const override;
 
+    /*! \brief calculates buffer size needed for toString conversion
+     */
+    size_t getToStringBufferSize() const override;
+
     [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
       if(paOther.getDataTypeID() == CIEC_ANY::e_REAL) {
         return getTFLOAT() == static_cast<const CIEC_REAL&>(paOther).getTFLOAT();

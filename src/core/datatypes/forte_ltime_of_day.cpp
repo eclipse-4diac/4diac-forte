@@ -111,3 +111,6 @@ int CIEC_LTIME_OF_DAY::toString(char* paValue, size_t paBufferSize) const {
   return nRetVal;
 }
 
+size_t CIEC_LTIME_OF_DAY::getToStringBufferSize() const {
+  return sizeof("LTOD#00:00:00.000");
+}

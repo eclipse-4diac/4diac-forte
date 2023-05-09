@@ -85,7 +85,11 @@ class CIEC_DATE_AND_TIME : public CIEC_ANY_DATE {
        *   \return number of bytes used in the buffer without trailing 0x00
        *           -1 on error
        */
-    virtual int toGMTString(char* paValue, unsigned int paBufferSize) const ;
+    int toGMTString(char* paValue, unsigned int paBufferSize) const ;
+
+    /*! \brief calculates buffer size needed for toString conversion
+     */
+    size_t getToStringBufferSize() const override;
 };
 
 inline bool operator==(const CIEC_DATE_AND_TIME left, const CIEC_DATE_AND_TIME &right) {
