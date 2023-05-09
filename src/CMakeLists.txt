@@ -290,9 +290,11 @@ GET_PROPERTY(link_flags GLOBAL PROPERTY FORTE_LINK_FLAGS)
 
 add_library(FORTE_LITE OBJECT ${SOURCE_FILES}) #no executables.
 
+list(JOIN link_flags " " link_flags_string)
+
 if(FORTE_BUILD_EXECUTABLE)
   ADD_EXECUTABLE (forte $<TARGET_OBJECTS:FORTE_LITE> ${SOURCE_EXECUTABLE_CPP} ${FORTE_EXECUTABLE_H})
-  set_target_properties(forte PROPERTIES LINK_FLAGS "${link_flags}")
+  set_target_properties(forte PROPERTIES LINK_FLAGS "${link_flags_string}")
   target_compile_features(forte PUBLIC cxx_std_17)
   TARGET_LINK_LIBRARIES (forte ${LINK_LIBRARY})
   ADD_DEPENDENCIES (forte FORTE_LITE)
@@ -302,7 +304,7 @@ endif(FORTE_BUILD_EXECUTABLE)
 
 if(FORTE_BUILD_STATIC_LIBRARY)
   ADD_LIBRARY (forte-static STATIC $<TARGET_OBJECTS:FORTE_LITE>)
-  set_target_properties(forte-static PROPERTIES LINK_FLAGS "${link_flags}")
+  set_target_properties(forte-static PROPERTIES LINK_FLAGS "${link_flags_string}")
   target_compile_features(forte-static PUBLIC cxx_std_17)
   TARGET_LINK_LIBRARIES (forte-static ${LINK_LIBRARY})
   ADD_DEPENDENCIES (forte-static FORTE_LITE)
@@ -312,7 +314,7 @@ endif(FORTE_BUILD_STATIC_LIBRARY)
 
 if(FORTE_BUILD_SHARED_LIBRARY)
   ADD_LIBRARY (forte-shared SHARED $<TARGET_OBJECTS:FORTE_LITE>)
-  set_target_properties(forte-shared PROPERTIES LINK_FLAGS "${link_flags}")
+  set_target_properties(forte-shared PROPERTIES LINK_FLAGS "${link_flags_string}")
   target_compile_features(forte-shared PUBLIC cxx_std_17)
   TARGET_LINK_LIBRARIES (forte-shared ${LINK_LIBRARY})
   ADD_DEPENDENCIES (forte-shared FORTE_LITE)
