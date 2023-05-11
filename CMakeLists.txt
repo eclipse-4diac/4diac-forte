@@ -18,7 +18,7 @@
 #      - add CTF tracing support
 # *******************************************************************************/
 
-CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.13)
 
 PROJECT(FORTE)
 
@@ -174,6 +174,18 @@ if(FORTE_TRACE_CTF)
   forte_add_custom_configuration("#define FORTE_TRACE_CTF")
   forte_add_custom_configuration("#define FORTE_TRACE_CTF_BUFFER_SIZE ${FORTE_TRACE_CTF_BUFFER_SIZE}")
 endif(FORTE_TRACE_CTF)
+
+#######################################################################################
+# stacktrace
+#######################################################################################
+SET(FORTE_STACKTRACE OFF CACHE BOOL "Enable generation of stacktraces on error")
+SET(FORTE_STACKTRACE_IMPL "boost" CACHE STRING "FORTE stacktrace implementation")
+set_property(CACHE FORTE_STACKTRACE_IMPL PROPERTY STRINGS boost cxx23)
+if(FORTE_STACKTRACE)
+  forte_add_custom_configuration("#define FORTE_STACKTRACE")
+  string(TOUPPER "${FORTE_STACKTRACE_IMPL}" FORTE_STACKTRACE_IMPL_UPPER)
+  forte_add_custom_configuration("#define FORTE_STACKTRACE_${FORTE_STACKTRACE_IMPL_UPPER}")
+endif(FORTE_STACKTRACE)
 
 #######################################################################################
 # Early definition of option how to generate stringlist for every source file

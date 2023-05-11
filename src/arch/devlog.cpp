@@ -34,6 +34,18 @@
 #  include <cinttypes>
 # endif //< stdc11
 
+#ifdef FORTE_STACKTRACE
+#include <iostream>
+
+#ifdef FORTE_STACKTRACE_BOOST
+#include <boost/stacktrace.hpp>
+#endif // FORTE_STACKTRACE_BOOST
+
+#ifdef FORTE_STACKTRACE_CXX23
+#include <stacktrace>
+#endif // FORTE_STACKTRACE_CXX23
+#endif // FORTE_STACKTRACE
+
 static const char* scLogLevel[] = { "INFO", "WARNING", "ERROR", "DEBUG", "TRACE" };
 
 //this define allows to provide an own log handler (see LMS for an example of this)
@@ -51,6 +63,18 @@ static char sMsgBuf[scMsgBufSize]; //!<Buffer for the messages created by the va
 
 static CSyncObject sMessageLock;
 
+#ifdef FORTE_STACKTRACE_BOOST
+static void printStacktrace() {
+  std::cerr << boost::stacktrace::stacktrace() << std::endl;
+}
+#endif // FORTE_STACKTRACE_BOOST
+
+#ifdef FORTE_STACKTRACE_CXX23
+static void printStacktrace() {
+  std::cerr << std::stacktrace::current() << std::endl;
+}
+#endif // FORTE_STACKTRACE_CXX23
+
 void logMessage(E_MsgLevel paLevel, const char *paMessage, ...) {
   CCriticalRegion crticalRegion(sMessageLock);
   va_list pstArgPtr;
@@ -60,6 +84,12 @@ void logMessage(E_MsgLevel paLevel, const char *paMessage, ...) {
   va_end(pstArgPtr);
 
   printLogMessage(paLevel, sMsgBuf);
+
+#ifdef FORTE_STACKTRACE
+  if(paLevel == E_MsgLevel::Error) {
+    printStacktrace();
+  }
+#endif // FORTE_STACKTRACE
 }
 
 void printLogMessage(E_MsgLevel paLevel, const char *paMessage) {

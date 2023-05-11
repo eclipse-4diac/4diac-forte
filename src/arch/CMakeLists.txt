@@ -35,6 +35,26 @@ SET(FORTE_LOGGER_BUFFER_SIZE "300" CACHE STRING "Buffer's length of the logger")
 mark_as_advanced(FORTE_LOGGER_BUFFER_SIZE)
 forte_add_custom_configuration("#define FORTE_LOGGER_BUFFER_SIZE ${FORTE_LOGGER_BUFFER_SIZE}")
 
+if (FORTE_STACKTRACE)
+    if (FORTE_STACKTRACE_IMPL MATCHES "boost")
+        find_package(Boost REQUIRED)
+        forte_add_link_library(backtrace)
+        forte_add_custom_configuration("#define BOOST_STACKTRACE_USE_BACKTRACE")
+
+        if (WIN32 OR MINGW)
+            forte_add_link_flags(-no-pie)
+        elseif (UNIX)
+            forte_add_link_flags(-rdynamic)
+            forte_add_link_library(dl)
+        endif ()
+    endif ()
+
+    if (FORTE_STACKTRACE_IMPL MATCHES "cxx23")
+        if (CMAKE_COMPILER_IS_GNUCXX)
+            forte_add_link_library(-lstdc++_libbacktrace)
+        endif ()
+    endif ()
+endif ()
 
 forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/src_gen/startuphook.cpp) # created file
 
