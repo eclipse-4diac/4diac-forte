@@ -59,7 +59,7 @@ void FORTE_FieldsToServiceQueryForm::enterStateREQ(){
   sendOutputEvent( scm_nEventCNFID);
 }
 
-void FORTE_FieldsToServiceQueryForm::executeEvent(int pa_nEIID){
+void FORTE_FieldsToServiceQueryForm::executeEvent(TEventID pa_nEIID){
   bool bTransitionCleared;
   do{
     bTransitionCleared = true;

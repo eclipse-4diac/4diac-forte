@@ -45,7 +45,7 @@ class GEN_APPEND_STRING : public CGenFunctionBlock<CFunctionBlock> {
     //self-defined members
     size_t mDInputs;
 
-     void executeEvent(int paEIID) override;
+     void executeEvent(TEventID paEIID) override;
      bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
     GEN_APPEND_STRING(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);

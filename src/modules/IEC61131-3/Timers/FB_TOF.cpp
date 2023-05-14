@@ -34,7 +34,7 @@ const CStringDictionary::TStringId FB_TOF::scm_anEventOutputNames[] = { g_nStrin
 const SFBInterfaceSpec FB_TOF::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith,
   scm_anEOWithIndexes, 2, scm_anDataInputNames, scm_aunDIDataTypeIds, 2, scm_anDataOutputNames, scm_aunDODataTypeIds, 0, nullptr };
 
-void FB_TOF::executeEvent(int pa_nEIID) {
+void FB_TOF::executeEvent(TEventID pa_nEIID) {
   if(scm_nEventREQID == pa_nEIID) {
     if(st_IN() == true) {
       Q() = CIEC_BOOL(true);

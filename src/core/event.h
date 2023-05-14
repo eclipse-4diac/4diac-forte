@@ -22,7 +22,7 @@
  *  With the current implementation at max 255 event inputs per FB are possible.
  *  That should be enough.
  */
-typedef TForteUInt8 TEventID;
+typedef size_t TEventID;
 
 class CConnectionPoint;
 

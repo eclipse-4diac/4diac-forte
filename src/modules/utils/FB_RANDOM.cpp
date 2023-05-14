@@ -82,7 +82,7 @@ void FORTE_FB_RANDOM::alg_REQ(){
 }
 
 
-void FORTE_FB_RANDOM::executeEvent(int pa_nEIID){
+void FORTE_FB_RANDOM::executeEvent(TEventID pa_nEIID){
   do {
     switch(m_nECCState) {
       case scm_nStateSTART:
@@ -108,7 +108,7 @@ void FORTE_FB_RANDOM::executeEvent(int pa_nEIID){
   } while(true);
 }
 
-void FORTE_FB_RANDOM::readInputData(size_t pa_nEIID) {
+void FORTE_FB_RANDOM::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventINITID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
@@ -124,7 +124,7 @@ void FORTE_FB_RANDOM::readInputData(size_t pa_nEIID) {
   }
 }
 
-void FORTE_FB_RANDOM::writeOutputData(size_t pa_nEIID) {
+void FORTE_FB_RANDOM::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventINITOID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);

@@ -46,7 +46,7 @@ FORTE_E_MERGE::FORTE_E_MERGE(CStringDictionary::TStringId pa_nInstanceNameId, CR
 
 
 
-void FORTE_E_MERGE::executeEvent(int pa_nEIID){
+void FORTE_E_MERGE::executeEvent(TEventID pa_nEIID){
   do {
     switch(m_nECCState) {
       case scm_nStateSTART:
@@ -68,10 +68,10 @@ void FORTE_E_MERGE::executeEvent(int pa_nEIID){
   } while(true);
 }
 
-void FORTE_E_MERGE::readInputData(size_t pa_nEIID) {
+void FORTE_E_MERGE::readInputData(TEventID pa_nEIID) {
 }
 
-void FORTE_E_MERGE::writeOutputData(size_t pa_nEIID) {
+void FORTE_E_MERGE::writeOutputData(TEventID pa_nEIID) {
 }
 
 CIEC_ANY *FORTE_E_MERGE::getDI(size_t) {

@@ -70,7 +70,7 @@ void FORTE_DWORD2DWORD::alg_REQ(void) {
 }
 
 
-void FORTE_DWORD2DWORD::executeEvent(int pa_nEIID){
+void FORTE_DWORD2DWORD::executeEvent(TEventID pa_nEIID){
   switch(pa_nEIID) {
     case scm_nEventREQID:
       alg_REQ();
@@ -81,7 +81,7 @@ void FORTE_DWORD2DWORD::executeEvent(int pa_nEIID){
   sendOutputEvent(scm_nEventCNFID);
 }
 
-void FORTE_DWORD2DWORD::readInputData(size_t pa_nEIID) {
+void FORTE_DWORD2DWORD::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
@@ -93,7 +93,7 @@ void FORTE_DWORD2DWORD::readInputData(size_t pa_nEIID) {
   }
 }
 
-void FORTE_DWORD2DWORD::writeOutputData(size_t pa_nEIID) {
+void FORTE_DWORD2DWORD::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCNFID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);

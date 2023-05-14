@@ -42,7 +42,7 @@ const SFBInterfaceSpec FORTE_EC_KILL_ELEM::scm_stFBInterfaceSpec = {
 };
 
 
-void FORTE_EC_KILL_ELEM::executeEvent(int pa_nEIID){
+void FORTE_EC_KILL_ELEM::executeEvent(TEventID pa_nEIID){
   switch(pa_nEIID){
     case scm_nEventREQID:
       QO() = QI();

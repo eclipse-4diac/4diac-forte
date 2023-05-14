@@ -122,7 +122,7 @@ void CFBTestFixtureBase::setup(const char* pa_acConfigString){
   createDataOutputConnections();
 }
 
-void CFBTestFixtureBase::executeEvent(int paEIID){
+void CFBTestFixtureBase::executeEvent(TEventID paEIID){
   CCriticalRegion criticalRegion(mOutputEventLock);
   mFBOutputEvents.push_back(paEIID);
 }

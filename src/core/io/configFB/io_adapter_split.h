@@ -39,12 +39,12 @@ namespace forte {
           }
 
           static const TEventID scmEventINITID = 0;
-          int INIT() const {
+          TEventID INIT() const {
             return m_nParentAdapterListEventID + scmEventINITID;
           }
 
           static const TEventID scmEventINITOID = 0;
-          int INITO() const {
+          TEventID INITO() const {
             return m_nParentAdapterListEventID + scmEventINITOID;
           }
       };

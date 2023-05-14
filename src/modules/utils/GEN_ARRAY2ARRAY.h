@@ -51,7 +51,7 @@ private:
   CStringDictionary::TStringId m_ValueTypeID;
   unsigned int m_nArrayLength;
 
-  void executeEvent(int paEIID) override;
+  void executeEvent(TEventID paEIID) override;
   bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
   GEN_ARRAY2ARRAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);

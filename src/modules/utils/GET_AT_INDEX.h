@@ -52,10 +52,10 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(TEventID pa_nEIID);
 
-  void readInputData(size_t pa_nEIID) override;
-  void writeOutputData(size_t pa_nEIID) override;
+  void readInputData(TEventID pa_nEIID) override;
+  void writeOutputData(TEventID pa_nEIID) override;
 
 public:
   FORTE_GET_AT_INDEX(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);

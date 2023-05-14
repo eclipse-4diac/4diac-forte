@@ -53,10 +53,10 @@ private:
   void enterStateCD(void);
   void enterStateLD(void);
 
-  void executeEvent(int pa_nEIID) override;
+  void executeEvent(TEventID pa_nEIID) override;
 
-  void readInputData(size_t pa_nEIID) override;
-  void writeOutputData(size_t pa_nEIID) override;
+  void readInputData(TEventID pa_nEIID) override;
+  void writeOutputData(TEventID pa_nEIID) override;
 
 public:
   FORTE_E_CTD(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);

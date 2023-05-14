@@ -33,7 +33,7 @@ class CFunctionBlockMock : public CFunctionBlock{
     }
 
   private:
-    virtual void executeEvent(int){
+    virtual void executeEvent(TEventID){
     }
 };
 

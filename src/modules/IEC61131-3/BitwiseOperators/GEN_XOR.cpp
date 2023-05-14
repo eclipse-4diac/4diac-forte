@@ -29,7 +29,7 @@ GEN_XOR::GEN_XOR(const CStringDictionary::TStringId paInstanceNameId, CResource 
 
 GEN_XOR::~GEN_XOR() = default;
 
-void GEN_XOR::executeEvent(int paEIID) {
+void GEN_XOR::executeEvent(TEventID paEIID) {
   switch (paEIID) {
     case scm_nEventREQID:
       if(getFBInterfaceSpec()->m_nNumDIs) {

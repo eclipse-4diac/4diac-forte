@@ -53,9 +53,9 @@ GEN_F_MUX::~GEN_F_MUX(){
   delete[] m_anEOWithIndexes;
 }
 
-void GEN_F_MUX::executeEvent(int paEIID){
+void GEN_F_MUX::executeEvent(TEventID paEIID){
 
-  if(-1 < paEIID && static_cast<size_t>(paEIID) < mEInputs) {
+  if(static_cast<size_t>(paEIID) < mEInputs) {
 
     size_t startIndex = paEIID * mDOutputs;
     bool status = true;

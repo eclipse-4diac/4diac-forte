@@ -63,7 +63,7 @@ FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const CStringDictionary::TStringId 
     conn_QO(this, 0, &var_conn_QO) {
 };
 
-void FORTE_OUT_ANY_CONSOLE::executeEvent(int pa_nEIID) {
+void FORTE_OUT_ANY_CONSOLE::executeEvent(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID:
       var_QO = var_QI;
@@ -79,7 +79,7 @@ void FORTE_OUT_ANY_CONSOLE::executeEvent(int pa_nEIID) {
   }
 }
 
-void FORTE_OUT_ANY_CONSOLE::readInputData(size_t pa_nEIID) {
+void FORTE_OUT_ANY_CONSOLE::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
@@ -93,7 +93,7 @@ void FORTE_OUT_ANY_CONSOLE::readInputData(size_t pa_nEIID) {
   }
 }
 
-void FORTE_OUT_ANY_CONSOLE::writeOutputData(size_t pa_nEIID) {
+void FORTE_OUT_ANY_CONSOLE::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCNFID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);

@@ -35,7 +35,7 @@ GEN_ADD::GEN_ADD(const CStringDictionary::TStringId pa_nInstanceNameId, CResourc
 GEN_ADD::~GEN_ADD(){
 }
 
-void GEN_ADD::executeEvent(int paEIID){
+void GEN_ADD::executeEvent(TEventID paEIID){
   switch (paEIID){
     case scm_nEventREQID:
       if(m_nDInputs) {

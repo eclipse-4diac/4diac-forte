@@ -86,7 +86,7 @@ void IOConfigFBSplitController::onStop() {
   sendAdapterEvent(scmSplitAdapter[mSplitIterator], IOConfigFBSplitAdapter::scmEventINITID);
 }
 
-void IOConfigFBSplitController::executeEvent(int paEIID) {
+void IOConfigFBSplitController::executeEvent(TEventID paEIID) {
   IOConfigFBController::executeEvent(paEIID);
 
   if(mSplitIterator < scmSplitAdapterNum) {

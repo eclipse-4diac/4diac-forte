@@ -60,10 +60,10 @@ const SCFB_FBNData FORTE_E_RTimeOut::scm_stFBNData = {
 };
 
 
-void FORTE_E_RTimeOut::readInputData(size_t pa_nEIID) {
+void FORTE_E_RTimeOut::readInputData(TEventID pa_nEIID) {
 }
 
-void FORTE_E_RTimeOut::writeOutputData(size_t pa_nEIID) {
+void FORTE_E_RTimeOut::writeOutputData(TEventID pa_nEIID) {
 }
 
 CIEC_ANY *FORTE_E_RTimeOut::getDI(size_t) {

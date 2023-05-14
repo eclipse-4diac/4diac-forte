@@ -41,7 +41,7 @@ const CIEC_STRING GEN_CSV_WRITER::scmOK("OK");
 const CIEC_STRING GEN_CSV_WRITER::scmFileAlreadyOpened("File already opened");
 const CIEC_STRING GEN_CSV_WRITER::scmFileNotOpened("File not opened");
 
-void GEN_CSV_WRITER::executeEvent(int paEIID) {
+void GEN_CSV_WRITER::executeEvent(TEventID paEIID) {
   if(scm_nEventINITID == paEIID) {
     if(QI()) {
       openCSVFile();

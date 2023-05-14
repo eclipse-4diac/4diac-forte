@@ -53,7 +53,7 @@ class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
     static const TDataIOID scm_anEOWith[];
     static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
-    void executeEvent(int paEIID) override;
+    void executeEvent(TEventID paEIID) override;
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
   public:

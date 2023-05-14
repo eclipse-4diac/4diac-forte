@@ -60,7 +60,7 @@ private:
 
    FORTE_FB_DATA_ARRAY(2, 2, 3, 0);
 
-  void executeEvent(int pa_nEIID) override;
+  void executeEvent(TEventID pa_nEIID) override;
 
 public:
   FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(FORTE_IB, CProcessInterface){

@@ -134,7 +134,7 @@ class CAdapter : public CFunctionBlock{
     TForteUInt16 m_nParentAdapterListEventID;
 
   private:
-    void executeEvent(int pa_nEIID) override;
+    void executeEvent(TEventID pa_nEIID) override;
     void setupEventEntryList();
 
     const bool m_bIsPlug;

@@ -26,7 +26,7 @@ class GEN_OR : public CGenBitBase {
 
   private:
 
-    void executeEvent(int paEIID) override;
+    void executeEvent(TEventID paEIID) override;
 
     GEN_OR(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
     ~GEN_OR() override;

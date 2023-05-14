@@ -40,7 +40,7 @@ private:
   CIEC_TIME start;
   CIEC_TIME count;
 
-  void executeEvent(int pa_nEIID) override;
+  void executeEvent(TEventID pa_nEIID) override;
 
   CIEC_BOOL& st_IN() {
      return *static_cast<CIEC_BOOL*>(getDI(0));

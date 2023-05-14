@@ -28,7 +28,7 @@ const TForteInt16 GEN_STRUCT_MUX::scm_anEOWithIndexes[] = {0};
 const TDataIOID GEN_STRUCT_MUX::scm_anEOWith[] = {0, 255};
 
 
-void GEN_STRUCT_MUX::executeEvent(int paEIID) {
+void GEN_STRUCT_MUX::executeEvent(TEventID paEIID) {
   if(scm_nEventREQID == paEIID) {
     for (size_t i = 0; i < st_OUT().getStructSize(); i++){
       st_OUT().getMember(i)->setValue(*getDI(static_cast<unsigned int>(i)));

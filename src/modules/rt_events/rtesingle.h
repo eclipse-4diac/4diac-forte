@@ -38,7 +38,7 @@ private:
   * \return if true the succeeding EC part will be activated.
   */
   virtual bool checkActivation(int pa_nEIID) = 0;
-    void executeEvent(int pa_nEIID) override {
+    void executeEvent(TEventID pa_nEIID) override {
       if(0 != pa_nEIID) { //it is not the init event
         if(m_bInitialized && checkActivation(pa_nEIID)) {
           CEventConnection *eoCon = getEOConUnchecked(1);

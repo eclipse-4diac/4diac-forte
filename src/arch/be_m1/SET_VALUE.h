@@ -64,7 +64,7 @@ class FORTE_SET_VALUE : public CFunctionBlock{
     FORTE_FB_DATA_ARRAY(2, 3, 1, 0)
     ;
 
-    void executeEvent(int pa_nEIID) override;
+    void executeEvent(TEventID pa_nEIID) override;
 
     void *driverId;
 

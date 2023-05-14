@@ -70,7 +70,7 @@ const SCFB_FBNData FORTE_E_R_TRIG::scm_stFBNData = {
 };
 
 
-void FORTE_E_R_TRIG::readInputData(size_t pa_nEIID) {
+void FORTE_E_R_TRIG::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventEIID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
@@ -82,7 +82,7 @@ void FORTE_E_R_TRIG::readInputData(size_t pa_nEIID) {
   }
 }
 
-void FORTE_E_R_TRIG::writeOutputData(size_t pa_nEIID) {
+void FORTE_E_R_TRIG::writeOutputData(TEventID pa_nEIID) {
 }
 
 CIEC_ANY *FORTE_E_R_TRIG::getDI(size_t paIndex) {

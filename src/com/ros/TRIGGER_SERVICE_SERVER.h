@@ -91,7 +91,7 @@ class FORTE_TRIGGER_SERVICE_SERVER : public CEventSourceFB{
     FORTE_FB_DATA_ARRAY(2, 5, 2, 0)
     ;
 
-    void executeEvent(int pa_nEIID) override;
+    void executeEvent(TEventID pa_nEIID) override;
 
     bool triggerCallback(std_srvs::Trigger::Request &pa_req, std_srvs::Trigger::Response &pa_resp);
 

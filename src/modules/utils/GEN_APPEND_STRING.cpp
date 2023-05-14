@@ -45,9 +45,9 @@ GEN_APPEND_STRING::~GEN_APPEND_STRING(){
   delete[] m_anEIWith;
 }
 
-void GEN_APPEND_STRING::executeEvent(int paEIID){
+void GEN_APPEND_STRING::executeEvent(TEventID paEIID){
 
-  if(paEIID < 1 && paEIID > -1){
+  if(paEIID == scm_nEventREQID){
     //pointers to data inputs and data output
     CIEC_ANY *pDataInput;
     CIEC_ANY *pDataOutput = getDO(0);

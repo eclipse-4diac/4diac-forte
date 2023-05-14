@@ -46,7 +46,7 @@ FORTE_E_REND::FORTE_E_REND(CStringDictionary::TStringId pa_nInstanceNameId, CRes
 
 
 
-void FORTE_E_REND::executeEvent(int pa_nEIID){
+void FORTE_E_REND::executeEvent(TEventID pa_nEIID){
   do {
     switch(m_nECCState) {
       case scm_nStateSTART:
@@ -80,10 +80,10 @@ void FORTE_E_REND::executeEvent(int pa_nEIID){
   } while(true);
 }
 
-void FORTE_E_REND::readInputData(size_t pa_nEIID) {
+void FORTE_E_REND::readInputData(TEventID pa_nEIID) {
 }
 
-void FORTE_E_REND::writeOutputData(size_t pa_nEIID) {
+void FORTE_E_REND::writeOutputData(TEventID pa_nEIID) {
 }
 
 CIEC_ANY *FORTE_E_REND::getDI(size_t) {

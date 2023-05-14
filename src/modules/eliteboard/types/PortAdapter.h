@@ -45,9 +45,9 @@ private:
   static const SFBInterfaceSpec scm_stFBInterfaceSpecPlug;
 
 public:
-  int MAPO() { return m_nParentAdapterListEventID + scm_nEventMAPOID; }
+  TEventID MAPO() { return m_nParentAdapterListEventID + scm_nEventMAPOID; }
 
-  int MAP() { return m_nParentAdapterListEventID + scm_nEventMAPID; }
+  TEventID MAP() { return m_nParentAdapterListEventID + scm_nEventMAPID; }
 
   CIEC_DWORD &GPIO_Port_Addr() {
     return *static_cast<CIEC_DWORD *>((isSocket()) ? getDO(0) : getDI(0));

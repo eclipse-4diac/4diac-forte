@@ -58,7 +58,7 @@ void IOConfigFBMultiMaster::onStop() {
   sendAdapterEvent(scmBusAdapterAdpNum, IOConfigFBMultiAdapter::scmEventINITID);
 }
 
-void IOConfigFBMultiMaster::executeEvent(int paEIID) {
+void IOConfigFBMultiMaster::executeEvent(TEventID paEIID) {
   IOConfigFBController::executeEvent(paEIID);
 
   if(BusAdapterOut().INITO() == paEIID) {

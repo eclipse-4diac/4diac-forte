@@ -40,7 +40,7 @@ const SFBInterfaceSpec FORTE_X20DO4623::scm_stFBInterfaceSpec = {
 };
 
 
-void FORTE_X20DO4623::executeEvent(int pa_nEIID){
+void FORTE_X20DO4623::executeEvent(TEventID pa_nEIID){
   switch(pa_nEIID){
     case scm_nEventINITID:
       if(QI() == true){

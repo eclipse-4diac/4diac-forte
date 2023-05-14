@@ -37,7 +37,7 @@ class CDevice : public CResource {
     CDeviceExecution mDeviceExecution;
 
   protected:
-    void executeEvent(int) override {
+    void executeEvent(TEventID) override {
     }
 
   public:

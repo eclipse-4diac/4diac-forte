@@ -53,15 +53,15 @@ public:
   }
   
 
-  int evt_TimeOut() {
+  TEventID evt_TimeOut() {
     return m_nParentAdapterListEventID + scm_nEventTimeOutID;
   }
   
-  int evt_START() {
+  TEventID evt_START() {
     return m_nParentAdapterListEventID + scm_nEventSTARTID;
   }
   
-  int evt_STOP() {
+  TEventID evt_STOP() {
     return m_nParentAdapterListEventID + scm_nEventSTOPID;
   }
   

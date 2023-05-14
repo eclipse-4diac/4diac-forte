@@ -57,7 +57,7 @@ void FORTE_FieldsPreferredProvider::enterStateREQ(){
   sendOutputEvent( scm_nEventCNFID);
 }
 
-void FORTE_FieldsPreferredProvider::executeEvent(int pa_nEIID){
+void FORTE_FieldsPreferredProvider::executeEvent(TEventID pa_nEIID){
   bool bTransitionCleared;
   do{
     bTransitionCleared = true;

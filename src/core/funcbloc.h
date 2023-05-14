@@ -279,7 +279,7 @@ class CFunctionBlock {
      * \param paEIID ID of the input event that has occurred.
      * \param paExecEnv Event chain execution environment the FB will be executed in (used for adding output events).
      */
-    void receiveInputEvent(size_t paEIID, CEventChainExecutionThread *paExecEnv);
+    void receiveInputEvent(TEventID paEIID, CEventChainExecutionThread *paExecEnv);
 
     /*!\brief Configuration interface used by the typelib to parameterize generic function blocks.
      *
@@ -413,7 +413,7 @@ class CFunctionBlock {
      *
      * \param pa_nEO Event output ID where event should be fired.
      */
-    void sendOutputEvent(size_t paEO);
+    void sendOutputEvent(TEventID paEO);
 
     /*!\brief Function to read data from an input connection into a variable of the FB.
      *
@@ -466,7 +466,7 @@ class CFunctionBlock {
      * \param pa_nAdapterID ID of Adapter in current FBs adapter list.
      * \param pa_nEID Event ID where event should be fired.
      */
-    void sendAdapterEvent(size_t paAdapterID, size_t paEID) const;
+    void sendAdapterEvent(size_t paAdapterID, TEventID paEID) const;
 
     void setupAdapters(const SFBInterfaceSpec *pa_pstInterfaceSpec, TForteByte *pa_acFBData);
 
@@ -544,19 +544,19 @@ class CFunctionBlock {
      *
      * \param pa_nEIID Event input ID where event occurred.
      */
-    virtual void executeEvent(int pa_nEIID) = 0;
+    virtual void executeEvent(TEventID pa_nEIID) = 0;
 
     /*!\brief Function reading the values from input connections of the FB.
      *
      * \param pa_nEIID Event input ID where event occurred.
      */
-    virtual void readInputData(size_t pa_nEIID);
+    virtual void readInputData(TEventID pa_nEIID);
 
     /*!\brief Function writing the values to output connections of the FB.
      *
      * \param pa_nEIID Event output ID where event occurred.
      */
-    virtual void writeOutputData(size_t paEO);
+    virtual void writeOutputData(TEventID paEO);
 
     /*!\brief Set the initial values of data inputs, outputs, and internal vars.
      *

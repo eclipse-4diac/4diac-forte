@@ -70,7 +70,7 @@ void FORTE_UINT2UINT::alg_REQ(void) {
 }
 
 
-void FORTE_UINT2UINT::executeEvent(int pa_nEIID){
+void FORTE_UINT2UINT::executeEvent(TEventID pa_nEIID){
   switch(pa_nEIID) {
     case scm_nEventREQID:
       alg_REQ();
@@ -81,7 +81,7 @@ void FORTE_UINT2UINT::executeEvent(int pa_nEIID){
   sendOutputEvent(scm_nEventCNFID);
 }
 
-void FORTE_UINT2UINT::readInputData(size_t pa_nEIID) {
+void FORTE_UINT2UINT::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
@@ -93,7 +93,7 @@ void FORTE_UINT2UINT::readInputData(size_t pa_nEIID) {
   }
 }
 
-void FORTE_UINT2UINT::writeOutputData(size_t pa_nEIID) {
+void FORTE_UINT2UINT::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCNFID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);

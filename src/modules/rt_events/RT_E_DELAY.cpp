@@ -53,7 +53,7 @@ FORTE_RT_E_DELAY::FORTE_RT_E_DELAY(const CStringDictionary::TStringId paInstance
   mTimeListEntry.mType = e_SingleShot;
 }
 
-void FORTE_RT_E_DELAY::executeEvent(int paEIID){
+void FORTE_RT_E_DELAY::executeEvent(TEventID paEIID){
   switch(paEIID){
     case cg_nExternalEventID:
       sendOutputEvent(scm_nEventEOID);

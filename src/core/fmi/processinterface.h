@@ -27,7 +27,7 @@ class CFMUProcessInterface : public CProcessInterfaceBase{
 
     ~CFMUProcessInterface() override;
 
-    virtual void executeEvent(int ){};
+    virtual void executeEvent(TEventID ){};
 
   protected:
     bool initialise(bool paIsInput);

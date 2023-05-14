@@ -65,7 +65,7 @@ class FORTE_SET_LOCAL_ADS_ADDRESS : public CFunctionBlock{
 
     FORTE_FB_DATA_ARRAY(1, 2, 3, 0);
 
-    void executeEvent(int pa_nEIID) override;
+    void executeEvent(TEventID pa_nEIID) override;
 
   public:
     FUNCTION_BLOCK_CTOR (FORTE_SET_LOCAL_ADS_ADDRESS) { };

@@ -47,7 +47,7 @@ FORTE_RT_E_DEMUX::FORTE_RT_E_DEMUX(const CStringDictionary::TStringId pa_nInstan
     m_bInitialized = false;
 }
 
-void FORTE_RT_E_DEMUX::executeEvent(int pa_nEIID){
+void FORTE_RT_E_DEMUX::executeEvent(TEventID pa_nEIID){
 
    if(scm_nEventEIID == pa_nEIID){
     if(m_bInitialized){

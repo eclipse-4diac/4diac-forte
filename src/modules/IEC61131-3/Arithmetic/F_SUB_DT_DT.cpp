@@ -61,7 +61,7 @@ FORTE_F_SUB_DT_DT::FORTE_F_SUB_DT_DT(const CStringDictionary::TStringId pa_nInst
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_SUB_DT_DT::executeEvent(int pa_nEIID) {
+void FORTE_F_SUB_DT_DT::executeEvent(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID:
       var_OUT = func_SUB_DT_DT(var_IN1, var_IN2);
@@ -70,7 +70,7 @@ void FORTE_F_SUB_DT_DT::executeEvent(int pa_nEIID) {
   }
 }
 
-void FORTE_F_SUB_DT_DT::readInputData(size_t pa_nEIID) {
+void FORTE_F_SUB_DT_DT::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
@@ -83,7 +83,7 @@ void FORTE_F_SUB_DT_DT::readInputData(size_t pa_nEIID) {
   }
 }
 
-void FORTE_F_SUB_DT_DT::writeOutputData(size_t pa_nEIID) {
+void FORTE_F_SUB_DT_DT::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCNFID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);

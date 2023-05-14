@@ -60,7 +60,7 @@ FORTE_TEST_CONDITION::~FORTE_TEST_CONDITION() {
 }
 
 
-void FORTE_TEST_CONDITION::executeEvent(int paEIID) {
+void FORTE_TEST_CONDITION::executeEvent(TEventID paEIID) {
   if(scm_nEventREQID == paEIID) {
     smExecutedTests++;
     if(check()) {

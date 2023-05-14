@@ -96,7 +96,7 @@ private:
 
   FORTE_FB_DATA_ARRAY(1, 0, 0, 11);
 
-  void executeEvent(int pa_nEIID) override;
+  void executeEvent(TEventID pa_nEIID) override;
  
   void setConfig() {}
   

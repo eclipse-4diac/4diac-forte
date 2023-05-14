@@ -39,7 +39,7 @@ private:
   bool edgeFlag;
   CIEC_TIME start;
 
-  void executeEvent(int pa_nEIID) override;
+  void executeEvent(TEventID pa_nEIID) override;
 
   CIEC_BOOL& st_IN() {
      return *static_cast<CIEC_BOOL*>(getDI(0));

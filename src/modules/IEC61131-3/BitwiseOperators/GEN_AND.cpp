@@ -29,7 +29,7 @@ GEN_AND::GEN_AND(const CStringDictionary::TStringId paInstanceNameId, CResource 
 
 GEN_AND::~GEN_AND() = default;
 
-void GEN_AND::executeEvent(int paEIID) {
+void GEN_AND::executeEvent(TEventID paEIID) {
   switch (paEIID) {
     case scm_nEventREQID:
       if(getFBInterfaceSpec()->m_nNumDIs) {

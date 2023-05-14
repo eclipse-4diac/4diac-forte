@@ -72,7 +72,7 @@ void FORTE_FieldsToEventFilter::enterStateREQ(){
   sendOutputEvent( scm_nEventCNFID);
 }
 
-void FORTE_FieldsToEventFilter::executeEvent(int pa_nEIID){
+void FORTE_FieldsToEventFilter::executeEvent(TEventID pa_nEIID){
   bool bTransitionCleared;
   do{
     bTransitionCleared = true;

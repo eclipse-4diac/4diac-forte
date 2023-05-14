@@ -45,11 +45,11 @@ class FORTE_WagoBusAdapter : public forte::core::io::IOConfigFBMultiAdapter {
       return *static_cast<CIEC_UINT*>((isSocket()) ? getDO(2) : getDI(2));
     };
 
-    int INITO(){
+    TEventID INITO(){
       return m_nParentAdapterListEventID + scm_nEventINITOID;
     }
 
-    int INIT(){
+    TEventID INIT(){
       return m_nParentAdapterListEventID + scm_nEventINITID;
     }
 

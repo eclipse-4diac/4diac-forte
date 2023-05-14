@@ -47,7 +47,7 @@ FORTE_E_SPLIT::FORTE_E_SPLIT(CStringDictionary::TStringId pa_nInstanceNameId, CR
 
 
 
-void FORTE_E_SPLIT::executeEvent(int pa_nEIID){
+void FORTE_E_SPLIT::executeEvent(TEventID pa_nEIID){
   do {
     switch(m_nECCState) {
       case scm_nStateSTART:
@@ -67,10 +67,10 @@ void FORTE_E_SPLIT::executeEvent(int pa_nEIID){
   } while(true);
 }
 
-void FORTE_E_SPLIT::readInputData(size_t pa_nEIID) {
+void FORTE_E_SPLIT::readInputData(TEventID pa_nEIID) {
 }
 
-void FORTE_E_SPLIT::writeOutputData(size_t pa_nEIID) {
+void FORTE_E_SPLIT::writeOutputData(TEventID pa_nEIID) {
 }
 
 CIEC_ANY *FORTE_E_SPLIT::getDI(size_t) {

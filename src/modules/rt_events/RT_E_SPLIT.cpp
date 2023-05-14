@@ -41,7 +41,7 @@ const SFBInterfaceSpec FORTE_RT_E_SPLIT::scm_stFBInterfaceSpec = {
 };
 
 
-void FORTE_RT_E_SPLIT::executeEvent(int pa_nEIID){
+void FORTE_RT_E_SPLIT::executeEvent(TEventID pa_nEIID){
   if(scm_nEventEIID == pa_nEIID){
     if(m_bInitialized){
       CEventConnection *eoCon;

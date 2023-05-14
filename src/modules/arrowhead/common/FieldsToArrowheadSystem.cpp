@@ -59,7 +59,7 @@ void FORTE_FieldsToArrowheadSystem::enterStateREQ(){
   sendOutputEvent( scm_nEventCNFID);
 }
 
-void FORTE_FieldsToArrowheadSystem::executeEvent(int pa_nEIID){
+void FORTE_FieldsToArrowheadSystem::executeEvent(TEventID pa_nEIID){
   bool bTransitionCleared;
   do{
     bTransitionCleared = true;

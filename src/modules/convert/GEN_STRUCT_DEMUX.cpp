@@ -31,7 +31,7 @@ const TDataIOID GEN_STRUCT_DEMUX::scm_anEIWith[] = {0, 255};
 const TForteInt16 GEN_STRUCT_DEMUX::scm_anEOWithIndexes[] = {0};
 
 
-void GEN_STRUCT_DEMUX::executeEvent(int paEIID) {
+void GEN_STRUCT_DEMUX::executeEvent(TEventID paEIID) {
   if(scm_nEventREQID == paEIID) {
     for (size_t i = 0; i < st_IN().getStructSize(); i++){
       getDO(static_cast<unsigned int>(i))->setValue(*st_IN().getMember(i));

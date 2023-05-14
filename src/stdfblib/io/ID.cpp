@@ -42,7 +42,7 @@ const SFBInterfaceSpec FORTE_ID::scm_stFBInterfaceSpec = {
 };
 
 
-void FORTE_ID::executeEvent(int pa_nEIID){
+void FORTE_ID::executeEvent(TEventID pa_nEIID){
   QO() = QI();
   switch(pa_nEIID){
     case cg_nExternalEventID:

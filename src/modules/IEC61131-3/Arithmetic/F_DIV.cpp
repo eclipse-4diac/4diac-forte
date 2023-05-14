@@ -61,7 +61,7 @@ FORTE_F_DIV::FORTE_F_DIV(const CStringDictionary::TStringId pa_nInstanceNameId, 
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_DIV::executeEvent(int pa_nEIID) {
+void FORTE_F_DIV::executeEvent(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID:
       var_OUT = std::visit([](auto &&paIN1, auto&&paIN2) -> CIEC_ANY_NUM_VARIANT {
@@ -81,7 +81,7 @@ void FORTE_F_DIV::executeEvent(int pa_nEIID) {
   }
 }
 
-void FORTE_F_DIV::readInputData(size_t pa_nEIID) {
+void FORTE_F_DIV::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
@@ -94,7 +94,7 @@ void FORTE_F_DIV::readInputData(size_t pa_nEIID) {
   }
 }
 
-void FORTE_F_DIV::writeOutputData(size_t pa_nEIID) {
+void FORTE_F_DIV::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCNFID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);

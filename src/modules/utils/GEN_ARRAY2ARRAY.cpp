@@ -39,7 +39,7 @@ GEN_ARRAY2ARRAY::~GEN_ARRAY2ARRAY(){
   delete[] m_anDataOutputTypeIds;
 }
 
-void GEN_ARRAY2ARRAY::executeEvent(int paEIID){
+void GEN_ARRAY2ARRAY::executeEvent(TEventID paEIID){
   switch (paEIID){
     case scm_nEventREQID:
 

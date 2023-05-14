@@ -38,7 +38,7 @@ const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scm_anEventOutputNam
 
 const SFBInterfaceSpec FORTE_ADS_SERVER_CONFIG::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 5, scm_anDataInputNames, scm_anDataInputTypeIds, 2, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
 
-void FORTE_ADS_SERVER_CONFIG::executeEvent(int pa_nEIID){
+void FORTE_ADS_SERVER_CONFIG::executeEvent(TEventID pa_nEIID){
   switch (pa_nEIID){
     case scm_nEventINITID:
       if(QI()) {

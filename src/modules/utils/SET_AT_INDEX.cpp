@@ -66,7 +66,7 @@ FORTE_SET_AT_INDEX::FORTE_SET_AT_INDEX(const CStringDictionary::TStringId pa_nIn
     conn_OUT_ARRAY(this, 1, &var_conn_OUT_ARRAY) {
 };
 
-void FORTE_SET_AT_INDEX::executeEvent(int pa_nEIID) {
+void FORTE_SET_AT_INDEX::executeEvent(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID:
       if (std::holds_alternative<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>>(var_IN_ARRAY)) {
@@ -90,7 +90,7 @@ void FORTE_SET_AT_INDEX::executeEvent(int pa_nEIID) {
   }
 }
 
-void FORTE_SET_AT_INDEX::readInputData(size_t pa_nEIID) {
+void FORTE_SET_AT_INDEX::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
@@ -104,7 +104,7 @@ void FORTE_SET_AT_INDEX::readInputData(size_t pa_nEIID) {
   }
 }
 
-void FORTE_SET_AT_INDEX::writeOutputData(size_t pa_nEIID) {
+void FORTE_SET_AT_INDEX::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCNFID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);

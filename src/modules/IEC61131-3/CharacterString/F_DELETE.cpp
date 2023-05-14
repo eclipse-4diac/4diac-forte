@@ -63,7 +63,7 @@ FORTE_F_DELETE::FORTE_F_DELETE(const CStringDictionary::TStringId pa_nInstanceNa
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_DELETE::executeEvent(int pa_nEIID) {
+void FORTE_F_DELETE::executeEvent(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID:
       var_OUT = std::visit([](auto &&paIN, auto&&paL, auto&&paP) -> CIEC_ANY_STRING_VARIANT {
@@ -74,7 +74,7 @@ void FORTE_F_DELETE::executeEvent(int pa_nEIID) {
   }
 }
 
-void FORTE_F_DELETE::readInputData(size_t pa_nEIID) {
+void FORTE_F_DELETE::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
@@ -88,7 +88,7 @@ void FORTE_F_DELETE::readInputData(size_t pa_nEIID) {
   }
 }
 
-void FORTE_F_DELETE::writeOutputData(size_t pa_nEIID) {
+void FORTE_F_DELETE::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCNFID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);

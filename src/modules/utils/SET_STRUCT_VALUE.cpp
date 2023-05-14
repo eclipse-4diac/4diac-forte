@@ -79,7 +79,7 @@ CIEC_ANY *FORTE_SET_STRUCT_VALUE::lookForMember(CIEC_STRUCT &paWhereToLook, char
   return member;
 }
 
-void FORTE_SET_STRUCT_VALUE::executeEvent(int pa_nEIID) {
+void FORTE_SET_STRUCT_VALUE::executeEvent(TEventID pa_nEIID) {
   switch (pa_nEIID) {
     case scm_nEventREQID:
       var_out_struct = var_in_struct;
@@ -110,7 +110,7 @@ void FORTE_SET_STRUCT_VALUE::executeEvent(int pa_nEIID) {
   }
 }
 
-void FORTE_SET_STRUCT_VALUE::readInputData(size_t pa_nEIID) {
+void FORTE_SET_STRUCT_VALUE::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
@@ -124,7 +124,7 @@ void FORTE_SET_STRUCT_VALUE::readInputData(size_t pa_nEIID) {
   }
 }
 
-void FORTE_SET_STRUCT_VALUE::writeOutputData(size_t pa_nEIID) {
+void FORTE_SET_STRUCT_VALUE::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCNFID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);

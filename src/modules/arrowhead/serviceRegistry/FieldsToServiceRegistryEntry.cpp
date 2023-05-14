@@ -62,7 +62,7 @@ void FORTE_FieldsToServiceRegistryEntry::enterStateREQ(){
   sendOutputEvent( scm_nEventCNFID);
 }
 
-void FORTE_FieldsToServiceRegistryEntry::executeEvent(int pa_nEIID){
+void FORTE_FieldsToServiceRegistryEntry::executeEvent(TEventID pa_nEIID){
   bool bTransitionCleared;
   do{
     bTransitionCleared = true;

@@ -90,7 +90,7 @@ private:
   void enterStateSTART();
   void enterStateREQ();
 
-  virtual void executeEvent(int pa_nEIID) override;
+  virtual void executeEvent(TEventID pa_nEIID) override;
 
 public:
   FORTE_FieldsToServiceRequestForm(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : 

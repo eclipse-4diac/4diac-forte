@@ -77,7 +77,7 @@ void FORTE_FieldsToServiceRequestForm::enterStateREQ(){
   sendOutputEvent( scm_nEventCNFID);
 }
 
-void FORTE_FieldsToServiceRequestForm::executeEvent(int pa_nEIID){
+void FORTE_FieldsToServiceRequestForm::executeEvent(TEventID pa_nEIID){
   bool bTransitionCleared;
   do{
     bTransitionCleared = true;

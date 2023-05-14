@@ -51,7 +51,7 @@ FORTE_E_SELECT::FORTE_E_SELECT(CStringDictionary::TStringId pa_nInstanceNameId, 
 
 
 
-void FORTE_E_SELECT::executeEvent(int pa_nEIID){
+void FORTE_E_SELECT::executeEvent(TEventID pa_nEIID){
   do {
     switch(m_nECCState) {
       case scm_nStateSTART:
@@ -73,7 +73,7 @@ void FORTE_E_SELECT::executeEvent(int pa_nEIID){
   } while(true);
 }
 
-void FORTE_E_SELECT::readInputData(size_t pa_nEIID) {
+void FORTE_E_SELECT::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventEI0ID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
@@ -90,7 +90,7 @@ void FORTE_E_SELECT::readInputData(size_t pa_nEIID) {
   }
 }
 
-void FORTE_E_SELECT::writeOutputData(size_t pa_nEIID) {
+void FORTE_E_SELECT::writeOutputData(TEventID pa_nEIID) {
 }
 
 CIEC_ANY *FORTE_E_SELECT::getDI(size_t paIndex) {

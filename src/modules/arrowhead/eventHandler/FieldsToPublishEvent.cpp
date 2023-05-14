@@ -59,7 +59,7 @@ void FORTE_FieldsToPublishEvent::enterStateREQ(){
   sendOutputEvent( scm_nEventCNFID);
 }
 
-void FORTE_FieldsToPublishEvent::executeEvent(int pa_nEIID){
+void FORTE_FieldsToPublishEvent::executeEvent(TEventID pa_nEIID){
   bool bTransitionCleared;
   do{
     bTransitionCleared = true;

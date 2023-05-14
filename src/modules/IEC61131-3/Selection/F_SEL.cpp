@@ -63,7 +63,7 @@ FORTE_F_SEL::FORTE_F_SEL(const CStringDictionary::TStringId pa_nInstanceNameId, 
     conn_OUT(this, 0, &var_conn_OUT) {
 };
 
-void FORTE_F_SEL::executeEvent(int pa_nEIID) {
+void FORTE_F_SEL::executeEvent(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID:
       var_OUT = var_G ? var_IN1 : var_IN0;
@@ -72,7 +72,7 @@ void FORTE_F_SEL::executeEvent(int pa_nEIID) {
   }
 }
 
-void FORTE_F_SEL::readInputData(size_t pa_nEIID) {
+void FORTE_F_SEL::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
@@ -86,7 +86,7 @@ void FORTE_F_SEL::readInputData(size_t pa_nEIID) {
   }
 }
 
-void FORTE_F_SEL::writeOutputData(size_t pa_nEIID) {
+void FORTE_F_SEL::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCNFID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);

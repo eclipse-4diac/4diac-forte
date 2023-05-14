@@ -57,7 +57,7 @@ private:
 
    FORTE_FB_DATA_ARRAY(2, 2, 2, 0);
 
-  void executeEvent(int pa_nEIID) override;
+  void executeEvent(TEventID pa_nEIID) override;
 
 public:
   FORTE_SVIreceive_1(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :

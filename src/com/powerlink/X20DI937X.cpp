@@ -34,7 +34,7 @@ const CStringDictionary::TStringId FORTE_X20DI937X::scm_anEventOutputNames[] = {
 
 const SFBInterfaceSpec FORTE_X20DI937X::scm_stFBInterfaceSpec = { 3, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 3, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 3, scm_anDataInputNames, scm_anDataInputTypeIds, 15, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
 
-void FORTE_X20DI937X::executeEvent(int pa_nEIID){
+void FORTE_X20DI937X::executeEvent(TEventID pa_nEIID){
   switch (pa_nEIID){
     case scm_nEventINITID: {
       //#error add code for INIT event!

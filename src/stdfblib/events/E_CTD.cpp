@@ -73,7 +73,7 @@ void FORTE_E_CTD::alg_LOAD(void) {
 }
 
 
-void FORTE_E_CTD::executeEvent(int pa_nEIID){
+void FORTE_E_CTD::executeEvent(TEventID pa_nEIID){
   do {
     switch(m_nECCState) {
       case scm_nStateSTART:
@@ -99,7 +99,7 @@ void FORTE_E_CTD::executeEvent(int pa_nEIID){
   } while(true);
 }
 
-void FORTE_E_CTD::readInputData(size_t pa_nEIID) {
+void FORTE_E_CTD::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCDID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
@@ -115,7 +115,7 @@ void FORTE_E_CTD::readInputData(size_t pa_nEIID) {
   }
 }
 
-void FORTE_E_CTD::writeOutputData(size_t pa_nEIID) {
+void FORTE_E_CTD::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCDOID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);

@@ -55,7 +55,7 @@ void FORTE_E_T_FF::alg_TOGGLE(void) {
 }
 
 
-void FORTE_E_T_FF::executeEvent(int pa_nEIID){
+void FORTE_E_T_FF::executeEvent(TEventID pa_nEIID){
   do {
     switch(m_nECCState) {
       case scm_nStateSTART:
@@ -75,10 +75,10 @@ void FORTE_E_T_FF::executeEvent(int pa_nEIID){
   } while(true);
 }
 
-void FORTE_E_T_FF::readInputData(size_t pa_nEIID) {
+void FORTE_E_T_FF::readInputData(TEventID pa_nEIID) {
 }
 
-void FORTE_E_T_FF::writeOutputData(size_t pa_nEIID) {
+void FORTE_E_T_FF::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventEOID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);

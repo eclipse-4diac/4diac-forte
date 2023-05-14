@@ -46,7 +46,7 @@ class GEN_ARRAY2VALUES : public CGenFunctionBlock<CFunctionBlock> {
     size_t mDOutputs;
     CStringDictionary::TStringId mValueTypeID;
 
-    void executeEvent(int paEIID) override;
+    void executeEvent(TEventID paEIID) override;
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
     GEN_ARRAY2VALUES(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);

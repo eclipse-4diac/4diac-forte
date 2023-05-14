@@ -40,7 +40,7 @@ const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_SERVER::scm_anEventOutpu
 
 const SFBInterfaceSpec FORTE_EXECUTE_ACTION_SERVER::scm_stFBInterfaceSpec = { 2, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 2, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 6, scm_anDataInputNames, scm_anDataInputTypeIds, 6, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
 
-void FORTE_EXECUTE_ACTION_SERVER::executeEvent(int pa_nEIID){
+void FORTE_EXECUTE_ACTION_SERVER::executeEvent(TEventID pa_nEIID){
   switch (pa_nEIID){
     case scm_nEventINITID:
 

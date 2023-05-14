@@ -89,7 +89,7 @@ const SCFB_FBNData FORTE_E_TRAIN::scm_stFBNData = {
 };
 
 
-void FORTE_E_TRAIN::readInputData(size_t pa_nEIID) {
+void FORTE_E_TRAIN::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventSTARTID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
@@ -106,7 +106,7 @@ void FORTE_E_TRAIN::readInputData(size_t pa_nEIID) {
   }
 }
 
-void FORTE_E_TRAIN::writeOutputData(size_t pa_nEIID) {
+void FORTE_E_TRAIN::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventEOID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);

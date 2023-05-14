@@ -51,7 +51,7 @@ FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstance
   mTimeListEntry.mType = e_Periodic;
 }
 
-void FORTE_RT_E_CYCLE::executeEvent(int paEIID){
+void FORTE_RT_E_CYCLE::executeEvent(TEventID paEIID){
   switch(paEIID){
     case cg_nExternalEventID:
       sendOutputEvent(scm_nEventEOID);

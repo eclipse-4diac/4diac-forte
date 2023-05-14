@@ -35,7 +35,7 @@ const CStringDictionary::TStringId FORTE_SET_VALUE::scm_anEventOutputNames[] = {
 
 const SFBInterfaceSpec FORTE_SET_VALUE::scm_stFBInterfaceSpec = { 2, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 2, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 3, scm_anDataInputNames, scm_anDataInputTypeIds, 1, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
 
-void FORTE_SET_VALUE::executeEvent(int pa_nEIID){
+void FORTE_SET_VALUE::executeEvent(TEventID pa_nEIID){
   switch (pa_nEIID){
     case scm_nEventINITID:
       if(init()){

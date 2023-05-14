@@ -49,7 +49,7 @@ class GEN_ADD : public CGenFunctionBlock<CFunctionBlock> {
     //self-defined members
     unsigned int m_nDInputs;
 
-    void executeEvent(int paEIID) override;
+    void executeEvent(TEventID paEIID) override;
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
     GEN_ADD(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);

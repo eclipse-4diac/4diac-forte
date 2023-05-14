@@ -37,7 +37,7 @@ const SFBInterfaceSpec FORTE_SVIsend_1::scm_stFBInterfaceSpec = {
 };
 
 
-void FORTE_SVIsend_1::executeEvent(int pa_nEIID){
+void FORTE_SVIsend_1::executeEvent(TEventID pa_nEIID){
   switch(pa_nEIID){
     case scm_nEventINITID:
       if(true == QI()){

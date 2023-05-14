@@ -113,7 +113,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
   protected:
     CResource(const SFBInterfaceSpec *pa_pstInterfaceSpec, CStringDictionary::TStringId pa_nInstanceNameId);
 
-    void executeEvent(int) override {
+    void executeEvent(TEventID) override {
     }
 
     /*!Wrapper for simplifying connection creation in resources

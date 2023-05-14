@@ -55,7 +55,7 @@ const SFBInterfaceSpec DEV_MGR::scm_stFBInterfaceSpec = {
 
 const char * const DEV_MGR::scm_sMGMResponseTexts[13] = { "RDY", "BAD_PARAMS", "LOCAL_TERMINATION", "SYSTEM_TERMINATION", "NOT_READY", "UNSUPPORTED_CMD", "UNSUPPORTED_TYPE", "NO_SUCH_OBJECT", "INVALID_OBJECT", "INVALID_OPERATION", "INVALID_STATE", "OVERFLOW", "INVALID_DST" };
 
-void DEV_MGR::executeEvent(int paEIID){
+void DEV_MGR::executeEvent(TEventID paEIID){
   if(scm_nEventINITID == paEIID){
 #ifdef FORTE_SUPPORT_BOOT_FILE
     if((true == QI()) && (false == QO())){

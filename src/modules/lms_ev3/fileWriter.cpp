@@ -49,7 +49,7 @@ const char * const fileWriter::scmOK = "OK";
 const char * const fileWriter::scmNotInitialised = "Not initialized";
 const char * const fileWriter::scmCouldNotWrite = "Could not write";
 
-void fileWriter::executeEvent(int pa_nEIID){ //TODO: manage output and status
+void fileWriter::executeEvent(TEventID pa_nEIID){ //TODO: manage output and status
   switch (pa_nEIID){
     case scm_nEventINITID:
       if(true == QI()){

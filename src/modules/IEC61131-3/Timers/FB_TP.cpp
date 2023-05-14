@@ -34,7 +34,7 @@ const CStringDictionary::TStringId FB_TP::scm_anEventOutputNames[] = { g_nString
 const SFBInterfaceSpec FB_TP::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith,
   scm_anEOWithIndexes, 2, scm_anDataInputNames, scm_aunDIDataTypeIds, 2, scm_anDataOutputNames, scm_aunDODataTypeIds, 0, nullptr };
 
-void FB_TP::executeEvent(int pa_nEIID) {
+void FB_TP::executeEvent(TEventID pa_nEIID) {
   if(pa_nEIID == scm_nEventREQID) {
     if(edgeFlag) {
       if(func_GE(ET(), PT())) {

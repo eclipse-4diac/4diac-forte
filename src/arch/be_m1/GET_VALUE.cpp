@@ -42,7 +42,7 @@ const SFBInterfaceSpec FORTE_GET_VALUE::scm_stFBInterfaceSpec = {
 };
 
 
-void FORTE_GET_VALUE::executeEvent(int pa_nEIID){
+void FORTE_GET_VALUE::executeEvent(TEventID pa_nEIID){
   switch(pa_nEIID){
     case scm_nEventINITID:
     if (init()) {

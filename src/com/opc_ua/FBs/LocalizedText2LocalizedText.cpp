@@ -42,7 +42,7 @@ const SFBInterfaceSpec FORTE_LocalizedText2LocalizedText::scm_stFBInterfaceSpec 
 };
 
 
-void FORTE_LocalizedText2LocalizedText::executeEvent(int pa_nEIID){
+void FORTE_LocalizedText2LocalizedText::executeEvent(TEventID pa_nEIID){
   if(scm_nEventREQID == pa_nEIID) {
     st_OUT() = st_IN();
     sendOutputEvent(scm_nEventCNFID);

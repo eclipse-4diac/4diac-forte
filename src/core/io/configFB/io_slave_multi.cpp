@@ -36,7 +36,7 @@ IOConfigFBMultiSlave::~IOConfigFBMultiSlave() {
   delete[] mSlaveConfigurationIOIsDefault;
 }
 
-void IOConfigFBMultiSlave::executeEvent(int paEIID) {
+void IOConfigFBMultiSlave::executeEvent(TEventID paEIID) {
   if(BusAdapterIn().INIT() == paEIID) {
     if(BusAdapterIn().QI() == true) {
       // Handle initialization event

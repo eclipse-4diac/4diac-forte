@@ -39,7 +39,7 @@ const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scm_anEventOutpu
 
 const SFBInterfaceSpec FORTE_SET_LOCAL_ADS_ADDRESS::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 2, scm_anDataInputNames, scm_anDataInputTypeIds, 3, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
 
-void FORTE_SET_LOCAL_ADS_ADDRESS::executeEvent(int pa_nEIID){
+void FORTE_SET_LOCAL_ADS_ADDRESS::executeEvent(TEventID pa_nEIID){
   switch (pa_nEIID){
     case scm_nEventINITID:
       AmsNetId desiredAddress(std::string(PARAMS().getValue()));

@@ -45,7 +45,7 @@ GEN_ARRAY2VALUES::~GEN_ARRAY2VALUES(){
   delete[] m_anEOWith;
 }
 
-void GEN_ARRAY2VALUES::executeEvent(int paEIID){
+void GEN_ARRAY2VALUES::executeEvent(TEventID paEIID){
   switch (paEIID){
     case scm_nEventREQID:
 

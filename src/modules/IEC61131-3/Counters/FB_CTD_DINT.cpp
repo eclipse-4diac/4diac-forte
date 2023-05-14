@@ -84,7 +84,7 @@ void FORTE_FB_CTD_DINT::alg_REQ(void) {
 }
 
 
-void FORTE_FB_CTD_DINT::executeEvent(int pa_nEIID){
+void FORTE_FB_CTD_DINT::executeEvent(TEventID pa_nEIID){
   switch(pa_nEIID) {
     case scm_nEventREQID:
       alg_REQ();
@@ -95,7 +95,7 @@ void FORTE_FB_CTD_DINT::executeEvent(int pa_nEIID){
   sendOutputEvent(scm_nEventCNFID);
 }
 
-void FORTE_FB_CTD_DINT::readInputData(size_t pa_nEIID) {
+void FORTE_FB_CTD_DINT::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
@@ -109,7 +109,7 @@ void FORTE_FB_CTD_DINT::readInputData(size_t pa_nEIID) {
   }
 }
 
-void FORTE_FB_CTD_DINT::writeOutputData(size_t pa_nEIID) {
+void FORTE_FB_CTD_DINT::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCNFID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);

@@ -63,7 +63,7 @@ namespace forte {
 
           static const int scm_nBusAdapterInAdpNum = 1;
 
-          void executeEvent(int paEIID) override;
+          void executeEvent(TEventID paEIID) override;
 
           IODeviceMultiController& getController() {
             return (*static_cast<IODeviceMultiController*>(mMaster->getDeviceController()));

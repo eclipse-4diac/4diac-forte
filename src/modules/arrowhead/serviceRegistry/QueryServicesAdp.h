@@ -50,7 +50,7 @@ private:
 
  public:
   static const TEventID scm_nEventqueriedID = 0;
-  int queried() {
+  TEventID queried() {
     return m_nParentAdapterListEventID + scm_nEventqueriedID;
   }
  private:
@@ -60,7 +60,7 @@ private:
 
  public:
   static const TEventID scm_nEventqueryID = 0;
-  int query() {
+  TEventID query() {
     return m_nParentAdapterListEventID + scm_nEventqueryID;
   }
  private:

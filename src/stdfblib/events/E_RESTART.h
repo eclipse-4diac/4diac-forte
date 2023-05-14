@@ -39,7 +39,7 @@ private:
 
   TEventID mEventToSend;
 
-  void executeEvent(int pa_nEIID) override;
+  void executeEvent(TEventID pa_nEIID) override;
 
 public:
   EVENT_SOURCE_FUNCTION_BLOCK_CTOR(E_RESTART),

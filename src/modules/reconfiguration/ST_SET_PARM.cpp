@@ -39,7 +39,7 @@ const CStringDictionary::TStringId FORTE_ST_SET_PARM::scm_anEventOutputNames[] =
 const SFBInterfaceSpec FORTE_ST_SET_PARM::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames,
   scm_anEOWith, scm_anEOWithIndexes, 5, scm_anDataInputNames, scm_anDataInputTypeIds, 2, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, nullptr };
 
-void FORTE_ST_SET_PARM::executeEvent(int pa_nEIID) {
+void FORTE_ST_SET_PARM::executeEvent(TEventID pa_nEIID) {
   switch(pa_nEIID){
     case scm_nEventREQID:
       QO() = QI();

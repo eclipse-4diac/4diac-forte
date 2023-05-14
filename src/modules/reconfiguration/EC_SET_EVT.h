@@ -65,7 +65,7 @@ private:
   
   FORTE_FB_DATA_ARRAY(1, 4, 2, 0);
 
-  void executeEvent(int pa_nEIID) override;
+  void executeEvent(TEventID pa_nEIID) override;
   void executeRQST();
 
 public:

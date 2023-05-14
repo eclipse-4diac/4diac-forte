@@ -53,10 +53,10 @@ private:
 
   CIEC_ANY *lookForMember(CIEC_STRUCT &paWhereToLook, char *paMemberName);
 
-  void executeEvent(int pa_nEIID);
+  void executeEvent(TEventID pa_nEIID);
 
-  void readInputData(size_t pa_nEIID) override;
-  void writeOutputData(size_t pa_nEIID) override;
+  void readInputData(TEventID pa_nEIID) override;
+  void writeOutputData(TEventID pa_nEIID) override;
 
 public:
   FORTE_GET_STRUCT_VALUE(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);

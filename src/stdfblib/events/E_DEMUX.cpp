@@ -55,7 +55,7 @@ FORTE_E_DEMUX::FORTE_E_DEMUX(CStringDictionary::TStringId pa_nInstanceNameId, CR
 
 
 
-void FORTE_E_DEMUX::executeEvent(int pa_nEIID){
+void FORTE_E_DEMUX::executeEvent(TEventID pa_nEIID){
   do {
     switch(m_nECCState) {
       case scm_nStateSTART:
@@ -99,7 +99,7 @@ void FORTE_E_DEMUX::executeEvent(int pa_nEIID){
   } while(true);
 }
 
-void FORTE_E_DEMUX::readInputData(size_t pa_nEIID) {
+void FORTE_E_DEMUX::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventEIID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
@@ -111,7 +111,7 @@ void FORTE_E_DEMUX::readInputData(size_t pa_nEIID) {
   }
 }
 
-void FORTE_E_DEMUX::writeOutputData(size_t pa_nEIID) {
+void FORTE_E_DEMUX::writeOutputData(TEventID pa_nEIID) {
 }
 
 CIEC_ANY *FORTE_E_DEMUX::getDI(size_t paIndex) {

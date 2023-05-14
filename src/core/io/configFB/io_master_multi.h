@@ -46,7 +46,7 @@ namespace forte {
 
           void onStop() override;
 
-          void executeEvent(int paEIID) override;
+          void executeEvent(TEventID paEIID) override;
 
         private:
           static TMasterList mInstances;

@@ -37,7 +37,7 @@ class CInternalVarTestFB : public CBasicFB{
       return CStringDictionary::scm_nInvalidStringId;
     }
 
-    virtual void executeEvent(int){
+    virtual void executeEvent(TEventID){
       //nothiing to do here
     }
 };

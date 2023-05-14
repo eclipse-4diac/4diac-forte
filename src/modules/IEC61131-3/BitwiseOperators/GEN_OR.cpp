@@ -29,7 +29,7 @@ GEN_OR::GEN_OR(const CStringDictionary::TStringId paInstanceNameId, CResource *p
 
 GEN_OR::~GEN_OR() = default;
 
-void GEN_OR::executeEvent(int paEIID) {
+void GEN_OR::executeEvent(TEventID paEIID) {
   switch (paEIID) {
     case scm_nEventREQID:
       if(getFBInterfaceSpec()->m_nNumDIs) {

@@ -322,7 +322,7 @@ TPortId CFunctionBlock::getAdapterPortId(CStringDictionary::TStringId paAdapterN
   return cg_unInvalidPortId;
 }
 
-void CFunctionBlock::sendOutputEvent(size_t paEO){
+void CFunctionBlock::sendOutputEvent(TEventID paEO){
   FORTE_TRACE("OutputEvent: Function Block sending event: %d (maxid: %d)\n", paEO, m_pstInterfaceSpec->m_nNumEOs - 1);
 
 #ifdef FORTE_TRACE_CTF
@@ -343,7 +343,7 @@ void CFunctionBlock::sendOutputEvent(size_t paEO){
   }
 }
 
-void CFunctionBlock::sendAdapterEvent(size_t paAdapterID, size_t paEID) const{
+void CFunctionBlock::sendAdapterEvent(size_t paAdapterID, TEventID paEID) const{
   if((paAdapterID < m_pstInterfaceSpec->m_nNumAdapters) && (nullptr != m_apoAdapters[paAdapterID])){
     m_apoAdapters[paAdapterID]->receiveInputEvent(paEID, m_poInvokingExecEnv);
   }
@@ -353,7 +353,7 @@ bool CFunctionBlock::configureFB(const char *){
   return true;
 }
 
-void CFunctionBlock::receiveInputEvent(size_t paEIID, CEventChainExecutionThread *paExecEnv){
+void CFunctionBlock::receiveInputEvent(TEventID paEIID, CEventChainExecutionThread *paExecEnv){
   FORTE_TRACE("InputEvent: Function Block (%s) got event: %d (maxid: %d)\n", CStringDictionary::getInstance().get(getInstanceNameId()), paEIID, m_pstInterfaceSpec->m_nNumEIs - 1);
 
 #ifdef FORTE_TRACE_CTF
@@ -377,7 +377,7 @@ void CFunctionBlock::receiveInputEvent(size_t paEIID, CEventChainExecutionThread
   }
 }
 
-void CFunctionBlock::readInputData(size_t paEIID) {
+void CFunctionBlock::readInputData(TEventID paEIID) {
   if(nullptr != m_pstInterfaceSpec->m_anEIWithIndexes && -1 != m_pstInterfaceSpec->m_anEIWithIndexes[paEIID]) {
     const TDataIOID *eiWithStart = &(m_pstInterfaceSpec->m_anEIWith[m_pstInterfaceSpec->m_anEIWithIndexes[paEIID]]);
 
@@ -413,7 +413,7 @@ void CFunctionBlock::readData(size_t pa_nDINum, CIEC_ANY *pa_poValue, CDataConne
 }
 #endif //FORTE_TRACE_CTF
 
-void CFunctionBlock::writeOutputData(size_t paEO) {
+void CFunctionBlock::writeOutputData(TEventID paEO) {
   if (nullptr != m_pstInterfaceSpec->m_anEOWithIndexes && -1 != m_pstInterfaceSpec->m_anEOWithIndexes[paEO]) {
     const TDataIOID *eiWithStart = &(m_pstInterfaceSpec->m_anEOWith[m_pstInterfaceSpec->m_anEOWithIndexes[paEO]]);
     //TODO think on this lock

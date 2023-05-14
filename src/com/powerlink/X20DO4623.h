@@ -82,7 +82,7 @@ private:
 
   FORTE_FB_DATA_ARRAY(2, 7, 3, 0);
 
-  void executeEvent(int pa_nEIID) override;
+  void executeEvent(TEventID pa_nEIID) override;
 
   // Variables for mapping between inputs and POWERLINK stack
   SEplMapping m_oEplMapping;

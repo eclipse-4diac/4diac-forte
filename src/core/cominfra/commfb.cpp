@@ -51,7 +51,7 @@ EMGMResponse CCommFB::changeFBExecutionState(EMGMCommandType pa_unCommand) {
   return retVal;
 }
 
-void CCommFB::executeEvent(int paEIID) {
+void CCommFB::executeEvent(TEventID paEIID) {
   EComResponse resp = e_Nothing;
 
   switch (paEIID) {

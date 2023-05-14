@@ -64,7 +64,7 @@ CLuaBFB::CLuaBFB(CStringDictionary::TStringId paInstanceNameId, const CLuaBFBTyp
 
 CLuaBFB::~CLuaBFB() = default;
 
-void CLuaBFB::executeEvent(int paEIID) {
+void CLuaBFB::executeEvent(TEventID paEIID) {
   CLuaEngine *luaEngine = getResource().getLuaEngine();
   luaEngine->load(mTypeEntry);
   luaEngine->load(this);

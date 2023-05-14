@@ -31,7 +31,7 @@ class GEN_STRUCT_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
     static const TForteInt16 scm_anEOWithIndexes[];
     static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
-    void executeEvent(int paEIID) override;
+    void executeEvent(TEventID paEIID) override;
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
     CIEC_STRUCT& st_IN() {

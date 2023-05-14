@@ -58,8 +58,8 @@ private:
   static const SCFB_FBFannedOutConnectionData scm_astFannedOutDataConnections[];
   static const SCFB_FBNData scm_stFBNData;
 
-  void readInputData(size_t pa_nEIID) override;
-  void writeOutputData(size_t pa_nEIID) override;
+  void readInputData(TEventID pa_nEIID) override;
+  void writeOutputData(TEventID pa_nEIID) override;
 
 public:
   FORTE_RT_E_TRAIN(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);

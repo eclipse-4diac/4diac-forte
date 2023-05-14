@@ -35,7 +35,7 @@ GEN_E_DEMUX::~GEN_E_DEMUX(){
   delete[] m_anEventOutputNames;
 }
 
-void GEN_E_DEMUX::executeEvent(int paEIID){
+void GEN_E_DEMUX::executeEvent(TEventID paEIID){
   if(scm_nEventEIID == paEIID && static_cast<CIEC_UINT::TValueType>(K()) < m_pstInterfaceSpec->m_nNumEOs) {
     sendOutputEvent(static_cast<CIEC_UINT::TValueType>(K())); // the value of K corresponds to the output event ID;
   }

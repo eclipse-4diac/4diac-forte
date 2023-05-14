@@ -185,7 +185,7 @@ CIEC_ANY *CCompositeFB::getVar(CStringDictionary::TStringId *paNameList,
   return retVal;
 }
 
-void CCompositeFB::executeEvent(int pa_nEIID){
+void CCompositeFB::executeEvent(TEventID pa_nEIID){
   if(cgInternal2InterfaceMarker & pa_nEIID){
     sendInternal2InterfaceOutputEvent(static_cast<TEventID>(pa_nEIID
         & cgInternal2InterfaceRemovalMask));
@@ -197,7 +197,7 @@ void CCompositeFB::executeEvent(int pa_nEIID){
   }
 }
 
-void CCompositeFB::sendInternal2InterfaceOutputEvent(int pa_nEOID){
+void CCompositeFB::sendInternal2InterfaceOutputEvent(TEventID pa_nEOID){
   //handle sampling of internal 2 interface data connections
   if((pa_nEOID < m_pstInterfaceSpec->m_nNumEOs) && (nullptr != m_pstInterfaceSpec->m_anEOWithIndexes) &&
     (-1 != m_pstInterfaceSpec->m_anEOWithIndexes[pa_nEOID])){

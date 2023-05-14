@@ -76,7 +76,7 @@ void FORTE_E_STOPWATCH::alg_calcDiff(void) {
 }
 
 
-void FORTE_E_STOPWATCH::executeEvent(int pa_nEIID){
+void FORTE_E_STOPWATCH::executeEvent(TEventID pa_nEIID){
   do {
     switch(m_nECCState) {
       case scm_nStateSTART:
@@ -100,10 +100,10 @@ void FORTE_E_STOPWATCH::executeEvent(int pa_nEIID){
   } while(true);
 }
 
-void FORTE_E_STOPWATCH::readInputData(size_t pa_nEIID) {
+void FORTE_E_STOPWATCH::readInputData(TEventID pa_nEIID) {
 }
 
-void FORTE_E_STOPWATCH::writeOutputData(size_t pa_nEIID) {
+void FORTE_E_STOPWATCH::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventEOID: {
       CCriticalRegion criticalRegion(getResource().m_oResDataConSync);

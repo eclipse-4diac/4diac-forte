@@ -74,7 +74,7 @@ private:
   static constexpr size_t pin_cnt = 16;
   std::array<CIEC_WSTRING *, pin_cnt> mRegistered;
 
-  void executeEvent(int pa_nEIID) override;
+  void executeEvent(TEventID pa_nEIID) override;
   void deregister_handles();
   void register_handles();
 

@@ -25,7 +25,7 @@ class GEN_AND : public CGenBitBase {
   DECLARE_GENERIC_FIRMWARE_FB(GEN_AND)
 
   private:
-    void executeEvent(int paEIID) override;
+    void executeEvent(TEventID paEIID) override;
 
     GEN_AND(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
     ~GEN_AND() override;

@@ -41,7 +41,7 @@ FORTE_POWERLINK_MN::~FORTE_POWERLINK_MN(){
   shutdownStack();
 }
 
-void FORTE_POWERLINK_MN::executeEvent(int pa_nEIID){
+void FORTE_POWERLINK_MN::executeEvent(TEventID pa_nEIID){
   switch (pa_nEIID){
     case scm_nEventINITID:
 

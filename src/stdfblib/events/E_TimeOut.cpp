@@ -25,7 +25,7 @@ const SAdapterInstanceDef FORTE_E_TimeOut::scm_astAdapterInstances[] = { { g_nSt
 
 const SFBInterfaceSpec FORTE_E_TimeOut::scm_stFBInterfaceSpec = { 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, nullptr, 1, scm_astAdapterInstances };
 
-void FORTE_E_TimeOut::executeEvent(int pa_nEIID){
+void FORTE_E_TimeOut::executeEvent(TEventID pa_nEIID){
   if(cg_nExternalEventID == pa_nEIID){
     mActive = false;
     sendAdapterEvent(scm_nTimeOutSocketAdpNum, FORTE_ATimeOut::scm_nEventTimeOutID);

@@ -49,7 +49,7 @@ const char * const fileReader::scmOK = "OK";
 const char * const fileReader::scmNotInitialised = "Not initialized";
 const char * const fileReader::scmCouldNotRead = "Could not read";
 
-void fileReader::executeEvent(int pa_nEIID){ //TODO: manage output and status
+void fileReader::executeEvent(TEventID pa_nEIID){ //TODO: manage output and status
   switch (pa_nEIID){
     case scm_nEventINITID:
       if(true == QI()){
