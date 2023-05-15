@@ -49,7 +49,7 @@ FORTE_RT_E_REND::FORTE_RT_E_REND(const CStringDictionary::TStringId pa_nInstance
        m_nState(0) {
 }
 
-bool FORTE_RT_E_REND::checkActivation(int pa_nEIID){
+bool FORTE_RT_E_REND::checkActivation(TEventID pa_nEIID){
   bool bRetval = false;
 
   if(scm_nEventEI1ID == pa_nEIID){

@@ -211,15 +211,14 @@ bool COPC_UA_Layer::getRemoteAny(CIEC_ANY **paResult, const CConnectionPoint &pa
 
 bool COPC_UA_Layer::checkFanOutTypes(const CDataConnection &paPortConnection, CIEC_ANY **paResult) const {
 
-  for(CSinglyLinkedList<CConnectionPoint>::Iterator it = paPortConnection.getDestinationList().begin(); it != paPortConnection.getDestinationList().end();
-      ++it) {
-    if(paPortConnection.getDestinationList().begin() == it) { //first one
-      if(!getRemoteAny(paResult, *it, false)) {
+  for(const auto& it : paPortConnection.getDestinationList()){
+    if(paPortConnection.getDestinationList().front() == it) { //first one
+      if(!getRemoteAny(paResult, it, false)) {
         return false;
       }
     } else {
       CIEC_ANY* newRemoteType;
-      if(!getRemoteAny(&newRemoteType, *it, false)) {
+      if(!getRemoteAny(&newRemoteType, it, false)) {
         return false;
       } else {
         if(newRemoteType->unwrap().getDataTypeID() != (*paResult)->unwrap().getDataTypeID()) {

@@ -53,9 +53,8 @@ void CDataConnection::handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint)
     getSourceId().mFB->configureGenericDO(getSourceId().mPortId, paDstDataPoint);
     if(isConnected()){
       //We already have some connection also set their correct type
-      for(TDestinationIdList::Iterator it = mDestinationIds.begin();
-          it != mDestinationIds.end(); ++it){
-        it->mFB->connectDI(it->mPortId, this);
+      for(const auto& it : mDestinationIds){
+        it.mFB->connectDI(it.mPortId, this);
       }
     }
   }
@@ -116,7 +115,7 @@ EMGMResponse CDataConnection::establishDataConnection(CFunctionBlock *paDstFB, T
     retVal = CConnection::addDestination(CConnectionPoint(paDstFB, paDstPortId));
     if(EMGMResponse::Ready == retVal && !paDstFB->connectDI(paDstPortId, this)) {
       retVal = EMGMResponse::InvalidState;
-      mDestinationIds.popFront(); //empty the list so that the have created connection is not here anymore
+      mDestinationIds.pop_back(); //remove the newly created connection from the list
     }
   }
   return retVal;

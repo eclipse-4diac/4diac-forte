@@ -49,7 +49,7 @@ FORTE_RT_E_R_TRIG::FORTE_RT_E_R_TRIG(const CStringDictionary::TStringId pa_nInst
     m_bWasHigh = false;
 }
 
-bool FORTE_RT_E_R_TRIG::checkActivation(int ){
+bool FORTE_RT_E_R_TRIG::checkActivation(TEventID ){
   bool bRetval = false;
 
   if((QI() == true)&&(!m_bWasHigh)){

@@ -21,9 +21,8 @@ CInterface2InternalDataConnection::CInterface2InternalDataConnection() :
 }
 
 void CInterface2InternalDataConnection::cloneInputInterfaceValue(){
-  for(TDestinationIdList::Iterator it = mDestinationIds.begin();
-      it != mDestinationIds.end(); ++it){
-    it->mFB->connectDI(it->mPortId, this);
+  for(const auto& it : mDestinationIds){
+    it.mFB->connectDI(it.mPortId, this);
   }
 }
 

@@ -63,7 +63,7 @@ private:
 
    FORTE_FB_DATA_ARRAY(2, 5, 1, 0);
 
-   bool checkActivation(int) override;
+   bool checkActivation(TEventID) override;
 
 public:
 

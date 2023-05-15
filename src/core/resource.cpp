@@ -399,13 +399,11 @@ void CResource::createEOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRI
   if(spec->m_nNumEOs > 0){
     for(size_t i = 0; spec->m_aunEONames[i] != spec->m_aunEONames[spec->m_nNumEOs]; i++){
       const CEventConnection* eConn = paFb.getEOConnection(spec->m_aunEONames[i]);
-      for(CSinglyLinkedList<CConnectionPoint>::Iterator itRunnerDst(eConn->getDestinationList().begin()); itRunnerDst != eConn->getDestinationList().end();
-          ++itRunnerDst){
-        if(itRunnerDst != eConn->getDestinationList().begin()){
+      for(const auto& it : eConn->getDestinationList()){
+        if(it != eConn->getDestinationList().front()){
           paReqResult.append("\n");
         }
-        createConnectionResponseMessage(spec->m_aunEONames[i], itRunnerDst->mFB->getFBInterfaceSpec()->m_aunEINames[itRunnerDst->mPortId], *itRunnerDst->mFB,
-            paFb, paReqResult);
+        createConnectionResponseMessage(spec->m_aunEONames[i], it.mFB->getFBInterfaceSpec()->m_aunEINames[it.mPortId], *it.mFB, paFb, paReqResult);
       }
     }
   }
@@ -416,13 +414,11 @@ void CResource::createDOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRI
   if(spec->m_nNumDOs > 0){
     for(size_t i = 0; spec->m_aunDONames[i] != spec->m_aunDONames[spec->m_nNumDOs]; i++){
       const CDataConnection * const dConn = paFb.getDOConnection(spec->m_aunDONames[i]);
-      for(CSinglyLinkedList<CConnectionPoint>::Iterator itRunnerDst(dConn->getDestinationList().begin()); itRunnerDst != dConn->getDestinationList().end();
-          ++itRunnerDst){
-        if(itRunnerDst != dConn->getDestinationList().begin()){
+      for(const auto& it : dConn->getDestinationList()){
+        if(it != dConn->getDestinationList().front()){
           paReqResult.append("\n");
         }
-        createConnectionResponseMessage(spec->m_aunDONames[i], itRunnerDst->mFB->getFBInterfaceSpec()->m_aunDINames[itRunnerDst->mPortId], *itRunnerDst->mFB,
-            paFb, paReqResult);
+        createConnectionResponseMessage(spec->m_aunDONames[i], it.mFB->getFBInterfaceSpec()->m_aunDINames[it.mPortId], *it.mFB, paFb, paReqResult);
       }
     }
   }
@@ -438,10 +434,10 @@ void CResource::createAOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRI
         if(i != 0){
           paReqResult.append("\n");
         }
-        if(!aConn->getDestinationList().isEmpty()){
-          CSinglyLinkedList<CConnectionPoint>::Iterator itRunnerDst(aConn->getDestinationList().begin());
+        if(!aConn->isEmpty()){
+          const auto & dest = aConn->getDestinationList().front();
           createConnectionResponseMessage(spec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID,
-              itRunnerDst->mFB->getFBInterfaceSpec()->m_pstAdapterInstanceDefinition[itRunnerDst->mPortId].m_nAdapterNameID, *itRunnerDst->mFB, paFb,
+              dest.mFB->getFBInterfaceSpec()->m_pstAdapterInstanceDefinition[dest.mPortId].m_nAdapterNameID, *dest.mFB, paFb,
               paReqResult);
         }
       }

@@ -49,7 +49,7 @@ FORTE_RT_E_PERMIT::FORTE_RT_E_PERMIT(const CStringDictionary::TStringId pa_nInst
            m_anFBConnData, m_anFBVarsData) {
 }
 
-bool FORTE_RT_E_PERMIT::checkActivation(int ){
+bool FORTE_RT_E_PERMIT::checkActivation(TEventID ){
   return PERMIT();
 }
 

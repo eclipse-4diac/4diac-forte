@@ -47,7 +47,7 @@ FORTE_RT_E_SELECT::FORTE_RT_E_SELECT(const CStringDictionary::TStringId pa_nInst
            m_anFBConnData, m_anFBVarsData) {
 }
 
-bool FORTE_RT_E_SELECT::checkActivation(int pa_nEIID){
+bool FORTE_RT_E_SELECT::checkActivation(TEventID pa_nEIID){
   return (((scm_nEventEI0ID == pa_nEIID) && (G() == false))||
           ((scm_nEventEI1ID == pa_nEIID) && (G() == true)));
 }

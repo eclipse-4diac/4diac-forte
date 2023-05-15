@@ -61,7 +61,7 @@ private:
 
    FORTE_FB_DATA_ARRAY(2, 3, 1, 0);
 
-   bool checkActivation(int) override { return true; }
+   bool checkActivation(TEventID) override { return true; }
 
 public:
   FORTE_RT_E_EC_COUPLER(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);

@@ -20,6 +20,7 @@
 #include "fortelist.h"
 #include "mgmcmd.h"
 #include "stringdict.h"
+#include <vector>
 
 //forward declaration of a few classes to reduce include file dependencies
 class CFunctionBlock;
@@ -38,6 +39,10 @@ class CConnectionPoint {
     bool operator==(const CConnectionPoint & paRight) const{
       return ((mFB == paRight.mFB) && (mPortId == paRight.mPortId));
     }
+
+    bool operator!=(const CConnectionPoint & paRight) const{
+      return !(*this == paRight);
+    }
 };
 static_assert(std::is_trivial_v<CConnectionPoint>);
 
@@ -46,6 +51,9 @@ static_assert(std::is_trivial_v<CConnectionPoint>);
 
 class CConnection{
   public:
+
+    using TDestinationIdList = std::vector<CConnectionPoint>;
+
     CConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId);
 
     virtual ~CConnection() = default;
@@ -97,7 +105,7 @@ class CConnection{
      * \return TRUE if there is no destination in the connection.
      */
     bool isEmpty() const{
-      return mDestinationIds.isEmpty();
+      return mDestinationIds.empty();
     }
 
     bool isConnected() const{
@@ -112,7 +120,7 @@ class CConnection{
 
     /*! \brief Get list of destinations of the connection
      */
-    const CSinglyLinkedList<CConnectionPoint>& getDestinationList() const {
+    const TDestinationIdList& getDestinationList() const {
         return mDestinationIds;
     }
 
@@ -126,8 +134,6 @@ class CConnection{
     CConnectionPoint& getSourceId(){
       return mSourceId;
     }
-
-    typedef CSinglyLinkedList<CConnectionPoint> TDestinationIdList;
 
     /*!\brief a list of destinations the connection is connected to.
      *

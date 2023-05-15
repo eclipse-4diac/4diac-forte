@@ -64,7 +64,7 @@ private:
 
    FORTE_FB_DATA_ARRAY(2, 5, 1, 0);
 
-   bool checkActivation(int pa_nEIID) override;
+   bool checkActivation(TEventID pa_nEIID) override;
 
 public:
   FORTE_RT_E_SELECT(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
