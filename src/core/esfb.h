@@ -24,7 +24,7 @@ private:
 /* \brief the event chain executor used by this ES.
  */
   CEventChainExecutionThread *m_poEventChainExecutor;
-  SEventEntry mEventSourceEventEntry; //! the event entry to start the event chain
+  TEventEntry mEventSourceEventEntry; //! the event entry to start the event chain
 
 public:
   CEventSourceFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
@@ -46,7 +46,7 @@ public:
   void setEventChainExecutor(CEventChainExecutionThread *pa_poEventChainExecutor) { m_poEventChainExecutor = pa_poEventChainExecutor; };
   CEventChainExecutionThread * getEventChainExecutor() { return m_poEventChainExecutor; };
 
-  SEventEntry *getEventSourceEventEntry() { return &mEventSourceEventEntry; };
+  TEventEntry *getEventSourceEventEntry() { return &mEventSourceEventEntry; };
 };
 
 #define EVENT_SOURCE_FUNCTION_BLOCK_CTOR(fbclass) \

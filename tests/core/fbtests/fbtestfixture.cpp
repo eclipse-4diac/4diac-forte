@@ -129,9 +129,9 @@ void CFBTestFixtureBase::executeEvent(TEventID paEIID){
 
 void CFBTestFixtureBase::triggerEvent(TPortId paEIId) {
   CEventChainExecutionThread *execThread = getResource().getResourceEventExecution();
-  SEventEntry entry(mFBUnderTest, paEIId);
+  TEventEntry entry(mFBUnderTest, paEIId);
 
-  execThread->startEventChain(&entry);
+  execThread->startEventChain(entry);
 
   //Wait till event execution for this input event has finished
   do {

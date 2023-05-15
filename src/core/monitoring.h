@@ -120,7 +120,7 @@ namespace forte {
         TFBMonitoringList mFBMonitoringList;
 
         //!Event entry for triggering input events
-        SEventEntry mTriggerEvent;
+        TEventEntry mTriggerEvent;
 
         CResource &mResource; //!< The resource this monitoring handler manages
 

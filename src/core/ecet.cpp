@@ -38,16 +38,16 @@ void CEventChainExecutionThread::mainRun(){
   if(externalEventOccured()){
     transferExternalEvents();
   }
-  if(mEventListEnd == mEventListStart && *mEventListEnd == nullptr){
+  if(mEventListEnd == mEventListStart && mEventListEnd->mFB == nullptr){
     mProcessingEvents = false;
     selfSuspend();
     mProcessingEvents = true; //set this flag here to true as well in case the suspend just went through and processing was not finished
   }
   else{
-    if(nullptr != *mEventListStart){
-      (*mEventListStart)->mFB->receiveInputEvent((*mEventListStart)->mPortId, this);
+    if(nullptr != mEventListStart->mFB){
+      mEventListStart->mFB->receiveInputEvent(mEventListStart->mPortId, this);
     }
-    *mEventListStart = nullptr;
+    mEventListStart->mFB = nullptr;
     if(mEventListEnd == mEventListStart){ 
       return;//let's suspend next time call mainrun to reduce duplicate code
     }
@@ -63,12 +63,16 @@ void CEventChainExecutionThread::mainRun(){
 }
 
 void CEventChainExecutionThread::clear(){
-  memset(mEventList, 0, cg_nEventChainEventListSize * sizeof(TEventEntryPtr));
+  for(ssize_t i = 0; i < cg_nEventChainEventListSize; i++){
+    mEventList[i].mFB = nullptr;
+  }
   mEventListEnd = mEventListStart = &mEventList[cg_nEventChainEventListSize - 1];
 
   {
     CCriticalRegion criticalRegion(mExternalEventListSync);
-    memset(mExternalEventList, 0, cg_nEventChainExternalEventListSize * sizeof(TEventEntryPtr));
+    for(ssize_t i = 0; i < cg_nEventChainExternalEventListSize; i++){
+      mExternalEventList[i].mFB = nullptr;
+    }
     mExternalEventListEnd = mExternalEventListStart = &mExternalEventList[cg_nEventChainExternalEventListSize - 1];
   }
 }
@@ -77,11 +81,11 @@ void CEventChainExecutionThread::transferExternalEvents(){
   CCriticalRegion criticalRegion(mExternalEventListSync);
   //this while is built in a way that it checks also if we got here by accident
   while(mExternalEventListStart != mExternalEventListEnd){
-    if(nullptr != *mExternalEventListStart){
-      //add only valid entries
-      addEventEntry(*mExternalEventListStart);
-      *mExternalEventListStart = nullptr;
-
+      if(mExternalEventListStart->mFB != nullptr){
+        //add only valid entries
+        addEventEntry(*mExternalEventListStart);
+        mExternalEventListStart->mFB = nullptr;
+      }
       if(mExternalEventListStart == &mExternalEventList[0]){
         //wrap the ringbuffer
         mExternalEventListStart = &mExternalEventList[cg_nEventChainExternalEventListSize - 1];
@@ -89,22 +93,21 @@ void CEventChainExecutionThread::transferExternalEvents(){
       else{
         mExternalEventListStart--;
       }
-    }
   }
   //the queue is full and pop out last one
-  if(nullptr != *mExternalEventListStart){
+  if(mExternalEventListStart->mFB != nullptr){
       addEventEntry(*mExternalEventListStart);
-      *mExternalEventListStart = nullptr;
+      mExternalEventListStart->mFB = nullptr;
   }
 }
 
-void CEventChainExecutionThread::startEventChain(SEventEntry *paEventToAdd){
+void CEventChainExecutionThread::startEventChain(TEventEntry paEventToAdd){
   FORTE_TRACE("CEventChainExecutionThread::startEventChain\n");
   {
     CCriticalRegion criticalRegion(mExternalEventListSync);
-    if(nullptr == *mExternalEventListEnd){
+    if(mExternalEventListEnd->mFB == nullptr){
       *mExternalEventListEnd = paEventToAdd;
-      TEventEntryPtr* pstNextEventListElem;
+      TEventEntryPtr pstNextEventListElem;
 
       if(mExternalEventListEnd == &mExternalEventList[0]){
         //wrap the ringbuffer
@@ -127,10 +130,10 @@ void CEventChainExecutionThread::startEventChain(SEventEntry *paEventToAdd){
   } // End critical region
 }
 
-void CEventChainExecutionThread::addEventEntry(SEventEntry *paEventToAdd){
-  if(nullptr == *mEventListEnd){
+void CEventChainExecutionThread::addEventEntry(TEventEntry paEventToAdd){
+  if(mEventListEnd->mFB == nullptr){
     *mEventListEnd = paEventToAdd;
-    TEventEntryPtr* pstNextEventListElem;
+    TEventEntryPtr pstNextEventListElem;
 
     if(mEventListEnd == &mEventList[0]){
       //wrap the ringbuffer

@@ -141,7 +141,7 @@ class CAdapter : public CFunctionBlock{
     CAdapter *m_poPeer;
     CIEC_ANY **m_aoLocalDIs;
     CAdapterConnection *m_poAdapterConn;
-    SEventEntry *m_astEventEntry; //! the event entry list to start the event chain
+    TEventEntry *m_astEventEntry; //! the event entry list to start the event chain
 };
 
 #endif /*_ADAPTER_H_*/

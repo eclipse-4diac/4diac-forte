@@ -42,7 +42,7 @@ void CDeviceExecution::startNewEventChain(CEventSourceFB* paECStartFB) const {
   if(nullptr != paECStartFB) {
     CEventChainExecutionThread *poEventChainExecutor = paECStartFB->getEventChainExecutor();
     if(nullptr != poEventChainExecutor) {
-      poEventChainExecutor->startEventChain(paECStartFB->getEventSourceEventEntry());
+      poEventChainExecutor->startEventChain(*paECStartFB->getEventSourceEventEntry());
     } else {
       DEVLOG_ERROR("[CDeviceExecution] Couldn't start new event chain because the event has no CEventChainExecutionThread");
     }

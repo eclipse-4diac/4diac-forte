@@ -56,7 +56,7 @@ void CEventConnection::triggerEvent(CEventChainExecutionThread *pa_poExecEnv) co
   if(nullptr != pa_poExecEnv) {
     for(TDestinationIdList::Iterator it = mDestinationIds.begin();
         nullptr != it.getPosition(); ++it){
-      pa_poExecEnv->addEventEntry(&(*it));
+      pa_poExecEnv->addEventEntry(*it);
     }
   }
 }

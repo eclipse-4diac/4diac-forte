@@ -33,13 +33,13 @@ class CEventChainExecutionThread : public CThread{
      *
      * \param pa_poEventToAdd event of the EC to start
      */
-    void startEventChain(SEventEntry *paEventToAdd);
+    void startEventChain(TEventEntry paEventToAdd);
 
     /*!\brief Add an new event entry to the event chain
      *
      * \param pa_poEventToAdd new event entry
      */
-    void addEventEntry(SEventEntry *paEventToAdd);
+    void addEventEntry(TEventEntry paEventToAdd);
 
     /*!\brief allow to start, stop, and kill the execution of the event chain execution thread
      *
@@ -68,9 +68,9 @@ class CEventChainExecutionThread : public CThread{
      * This list stores the necessary information for all events to deliver that occurred within this event chain.
      */
 
-    TEventEntryPtr mEventList[cg_nEventChainEventListSize];
-    TEventEntryPtr* mEventListStart;
-    TEventEntryPtr* mEventListEnd;
+    TEventEntry mEventList[cg_nEventChainEventListSize];
+    TEventEntryPtr mEventListStart;
+    TEventEntryPtr mEventListEnd;
     //@}
 
     void mainRun();
@@ -113,9 +113,9 @@ class CEventChainExecutionThread : public CThread{
      * Event-Chain execution was sleeping. with this second list we omit the need for a mutex protection of the event
      * list. This is a great performance gain.
      */
-    TEventEntryPtr mExternalEventList[cg_nEventChainExternalEventListSize];
-    TEventEntryPtr* mExternalEventListStart;
-    TEventEntryPtr* mExternalEventListEnd;
+    TEventEntry mExternalEventList[cg_nEventChainExternalEventListSize];
+    TEventEntryPtr mExternalEventListStart;
+    TEventEntryPtr mExternalEventListEnd;
     //@}
 
     //! SyncObject for protecting the list in regard to several accesses

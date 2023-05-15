@@ -188,7 +188,7 @@ EMGMResponse CMonitoringHandler::triggerEvent(forte::core::TNameIdentifier &paNa
       //otherwise the triggerEvent structure needs to be moved to another place!
       mTriggerEvent.mFB = fB;
       mTriggerEvent.mPortId = eventId;
-      mResource.getResourceEventExecution()->startEventChain(&mTriggerEvent);
+      mResource.getResourceEventExecution()->startEventChain(mTriggerEvent);
       eRetVal = EMGMResponse::Ready;
     }
     else{

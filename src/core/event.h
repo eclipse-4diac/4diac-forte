@@ -15,6 +15,7 @@
 #define _EVENT_H_
 
 #include "../arch/datatype.h"
+#include "conn.h"
 
 
 /*! \ingroup CORE\brief Datatype for holding the IDs of event inputs.
@@ -24,7 +25,6 @@
  */
 typedef size_t TEventID;
 
-class CConnectionPoint;
 
 //!\ingroup CORE Constant for the invalid event input id
 const TEventID cg_nInvalidEventID = cg_unInvalidPortId;
@@ -38,8 +38,8 @@ const TPortId cgInternal2InterfaceRemovalMask = 0xFF;
 
 /*!\ingroup CORE \brief Structure to hold the information needed for delivering input events to FBs.
 */
-typedef CConnectionPoint SEventEntry;
+typedef CConnectionPoint TEventEntry;
 
-typedef SEventEntry *TEventEntryPtr;
+typedef TEventEntry *TEventEntryPtr;
 
 #endif /*_EVENT_H_*/

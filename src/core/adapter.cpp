@@ -102,7 +102,7 @@ bool CAdapter::isCompatible(CAdapter *pa_poPeer) const {
 void CAdapter::executeEvent(TEventID pa_nEIID){
   if (nullptr != m_poPeer) {
     if (nullptr != m_poPeer->m_astEventEntry[pa_nEIID].mFB) {
-      m_poInvokingExecEnv->addEventEntry(&(m_poPeer->m_astEventEntry[pa_nEIID]));
+      m_poInvokingExecEnv->addEventEntry(m_poPeer->m_astEventEntry[pa_nEIID]);
     } else {
       m_poPeer->m_poInvokingExecEnv = m_poInvokingExecEnv;
       m_poPeer->sendOutputEvent(pa_nEIID);
@@ -111,5 +111,5 @@ void CAdapter::executeEvent(TEventID pa_nEIID){
 }
 
 void CAdapter::setupEventEntryList(){
-  m_astEventEntry = new SEventEntry[m_pstInterfaceSpec->m_nNumEOs];
+  m_astEventEntry = new TEventEntry[m_pstInterfaceSpec->m_nNumEOs];
 }
