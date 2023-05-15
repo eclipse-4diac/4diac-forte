@@ -322,27 +322,6 @@ TPortId CFunctionBlock::getAdapterPortId(CStringDictionary::TStringId paAdapterN
   return cg_unInvalidPortId;
 }
 
-void CFunctionBlock::sendOutputEvent(TEventID paEO){
-  FORTE_TRACE("OutputEvent: Function Block sending event: %d (maxid: %d)\n", paEO, m_pstInterfaceSpec->m_nNumEOs - 1);
-
-#ifdef FORTE_TRACE_CTF
-  barectf_default_trace_sendOutputEvent(m_poResource->getTracePlatformContext().getContext(),
-                                        CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
-                                        static_cast<uint64_t>(paEO));
-#endif
-
-  if(paEO < m_pstInterfaceSpec->m_nNumEOs) {
-    writeOutputData(paEO);
-
-    getEOConUnchecked(static_cast<TPortId>(paEO))->triggerEvent(m_poInvokingExecEnv);
-
-#ifdef FORTE_SUPPORT_MONITORING
-    // Count Event for monitoring
-    mEOMonitorCount[paEO]++;
-#endif //FORTE_SUPPORT_MONITORING
-  }
-}
-
 void CFunctionBlock::sendAdapterEvent(size_t paAdapterID, TEventID paEID) const{
   if((paAdapterID < m_pstInterfaceSpec->m_nNumAdapters) && (nullptr != m_apoAdapters[paAdapterID])){
     m_apoAdapters[paAdapterID]->receiveInputEvent(paEID, m_poInvokingExecEnv);
@@ -351,30 +330,6 @@ void CFunctionBlock::sendAdapterEvent(size_t paAdapterID, TEventID paEID) const{
 
 bool CFunctionBlock::configureFB(const char *){
   return true;
-}
-
-void CFunctionBlock::receiveInputEvent(TEventID paEIID, CEventChainExecutionThread *paExecEnv){
-  FORTE_TRACE("InputEvent: Function Block (%s) got event: %d (maxid: %d)\n", CStringDictionary::getInstance().get(getInstanceNameId()), paEIID, m_pstInterfaceSpec->m_nNumEIs - 1);
-
-#ifdef FORTE_TRACE_CTF
-  barectf_default_trace_receiveInputEvent(m_poResource->getTracePlatformContext().getContext(),
-                                          CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
-                                          static_cast<uint64_t>(paEIID));
-
-  traceInstanceData();
-#endif
-
-  if(E_FBStates::Running == getState()){
-    if(paEIID < m_pstInterfaceSpec->m_nNumEIs) {
-      readInputData(paEIID);
-#ifdef FORTE_SUPPORT_MONITORING
-      // Count Event for monitoring
-      mEIMonitorCount[paEIID]++;
-#endif //FORTE_SUPPORT_MONITORING
-    }
-    m_poInvokingExecEnv = paExecEnv;
-    executeEvent(paEIID);
-  }
 }
 
 void CFunctionBlock::readInputData(TEventID paEIID) {
@@ -682,3 +637,21 @@ TForteUInt32 &CFunctionBlock::getEOMonitorData(TEventID paEOID){
 }
 
 #endif //FORTE_SUPPORT_MONITORING
+
+//********************************** below here are CTF Tracing specific functions **********************************************************
+#ifdef FORTE_TRACE_CTF
+void CFunctionBlock::traceInputEvent(TEventID paEIID){
+  barectf_default_trace_receiveInputEvent(m_poResource->getTracePlatformContext().getContext(),
+                                          CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
+                                          static_cast<uint64_t>(paEIID));
+  traceInstanceData();
+}
+
+void CFunctionBlock::traceOutputEvent(TEventID paEOID){
+  barectf_default_trace_sendOutputEvent(m_poResource->getTracePlatformContext().getContext(),
+                                        CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
+                                        static_cast<uint64_t>(paEOID));
+}
+
+#endif
+

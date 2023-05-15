@@ -282,7 +282,25 @@ class CFunctionBlock {
      * \param paEIID ID of the input event that has occurred.
      * \param paExecEnv Event chain execution environment the FB will be executed in (used for adding output events).
      */
-    void receiveInputEvent(TEventID paEIID, CEventChainExecutionThread *paExecEnv);
+    void receiveInputEvent(TEventID paEIID, CEventChainExecutionThread *paExecEnv){
+      FORTE_TRACE("InputEvent: Function Block (%s) got event: %d (maxid: %d)\n", CStringDictionary::getInstance().get(getInstanceNameId()), paEIID, m_pstInterfaceSpec->m_nNumEIs - 1);
+
+      #ifdef FORTE_TRACE_CTF
+        traceInputEvent(paEIID);
+      #endif
+
+      if(E_FBStates::Running == getState()){
+        if(paEIID < m_pstInterfaceSpec->m_nNumEIs) {
+          readInputData(paEIID);
+          #ifdef FORTE_SUPPORT_MONITORING
+                // Count Event for monitoring
+                mEIMonitorCount[paEIID]++;
+          #endif //FORTE_SUPPORT_MONITORING
+        }
+        m_poInvokingExecEnv = paExecEnv;
+        executeEvent(paEIID);
+      }
+    }
 
     /*!\brief Configuration interface used by the typelib to parameterize generic function blocks.
      *
@@ -381,9 +399,11 @@ class CFunctionBlock {
     virtual CFunctionBlock *getFB(forte::core::TNameIdentifier::CIterator &paNameListIt);
 
 #endif //FORTE_SUPPORT_MONITORING
+
 #ifdef FORTE_TRACE_CTF
     virtual void traceInstanceData() {}
 #endif //FORTE_TRACE_CTF
+
   protected:
 
     /*!\brief The main constructor for a function block.
@@ -416,7 +436,24 @@ class CFunctionBlock {
      *
      * \param pa_nEO Event output ID where event should be fired.
      */
-    void sendOutputEvent(TEventID paEO);
+    void sendOutputEvent(TEventID paEO){
+      FORTE_TRACE("OutputEvent: Function Block sending event: %d (maxid: %d)\n", paEO, m_pstInterfaceSpec->m_nNumEOs - 1);
+
+      #ifdef FORTE_TRACE_CTF
+        traceOutputEvent(paEO);
+      #endif
+
+      if(paEO < m_pstInterfaceSpec->m_nNumEOs) {
+        writeOutputData(paEO);
+
+        getEOConUnchecked(static_cast<TPortId>(paEO))->triggerEvent(m_poInvokingExecEnv);
+
+        #ifdef FORTE_SUPPORT_MONITORING
+            // Count Event for monitoring
+            mEOMonitorCount[paEO]++;
+        #endif //FORTE_SUPPORT_MONITORING
+      }
+    }
 
     /*!\brief Function to read data from an input connection into a variable of the FB.
      *
@@ -588,6 +625,10 @@ class CFunctionBlock {
     TForteUInt32 *mEIMonitorCount;
 #endif
 
+#ifdef FORTE_TRACE_CTF
+    void traceInputEvent(TEventID paEIID);
+    void traceOutputEvent(TEventID paEOID);
+#endif
     //! the instance name of the object
     CStringDictionary::TStringId m_nFBInstanceName;
 
