@@ -75,7 +75,7 @@ void FORTE_F_LIMIT::executeEvent(TEventID pa_nEIID) {
 void FORTE_F_LIMIT::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       readData(0, &var_MN, conn_MN);
       readData(2, &var_MX, conn_MX);
       readData(1, &var_IN, conn_IN);
@@ -89,7 +89,7 @@ void FORTE_F_LIMIT::readInputData(TEventID pa_nEIID) {
 void FORTE_F_LIMIT::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCNFID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, &var_OUT, &conn_OUT);
       break;
     }

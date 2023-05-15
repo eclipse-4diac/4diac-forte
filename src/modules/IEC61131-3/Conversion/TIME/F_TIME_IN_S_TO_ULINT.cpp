@@ -86,7 +86,7 @@ void FORTE_F_TIME_IN_S_TO_ULINT::executeEvent(TEventID pa_nEIID){
 void FORTE_F_TIME_IN_S_TO_ULINT::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       readData(0, &var_IN, conn_IN);
       break;
     }
@@ -98,7 +98,7 @@ void FORTE_F_TIME_IN_S_TO_ULINT::readInputData(TEventID pa_nEIID) {
 void FORTE_F_TIME_IN_S_TO_ULINT::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCNFID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, &var_OUT, &conn_OUT);
       break;
     }

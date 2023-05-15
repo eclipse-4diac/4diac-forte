@@ -84,7 +84,7 @@ void FORTE_USINT2USINT::executeEvent(TEventID pa_nEIID){
 void FORTE_USINT2USINT::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       readData(0, &var_IN, conn_IN);
       break;
     }
@@ -96,7 +96,7 @@ void FORTE_USINT2USINT::readInputData(TEventID pa_nEIID) {
 void FORTE_USINT2USINT::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCNFID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, &var_OUT, &conn_OUT);
       break;
     }

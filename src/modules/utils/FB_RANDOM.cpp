@@ -111,12 +111,12 @@ void FORTE_FB_RANDOM::executeEvent(TEventID pa_nEIID){
 void FORTE_FB_RANDOM::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventINITID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       readData(0, &var_SEED, conn_SEED);
       break;
     }
     case scm_nEventREQID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       break;
     }
     default:
@@ -127,11 +127,11 @@ void FORTE_FB_RANDOM::readInputData(TEventID pa_nEIID) {
 void FORTE_FB_RANDOM::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventINITOID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       break;
     }
     case scm_nEventCNFID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, &var_VAL, &conn_VAL);
       break;
     }

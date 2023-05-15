@@ -76,12 +76,12 @@ void FORTE_E_SELECT::executeEvent(TEventID pa_nEIID){
 void FORTE_E_SELECT::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventEI0ID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       readData(0, &var_G, conn_G);
       break;
     }
     case scm_nEventEI1ID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       readData(0, &var_G, conn_G);
       break;
     }

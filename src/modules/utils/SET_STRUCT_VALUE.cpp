@@ -113,7 +113,7 @@ void FORTE_SET_STRUCT_VALUE::executeEvent(TEventID pa_nEIID) {
 void FORTE_SET_STRUCT_VALUE::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       readData(1, &var_member, conn_member);
       readData(0, &var_in_struct, conn_in_struct);
       readData(2, &var_element_value, conn_element_value);
@@ -127,7 +127,7 @@ void FORTE_SET_STRUCT_VALUE::readInputData(TEventID pa_nEIID) {
 void FORTE_SET_STRUCT_VALUE::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCNFID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, &var_out_struct, &conn_out_struct);
       break;
     }

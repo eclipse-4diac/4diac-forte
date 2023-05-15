@@ -106,7 +106,7 @@ void FORTE_E_STOPWATCH::readInputData(TEventID pa_nEIID) {
 void FORTE_E_STOPWATCH::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventEOID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, &var_TD, &conn_TD);
       break;
     }

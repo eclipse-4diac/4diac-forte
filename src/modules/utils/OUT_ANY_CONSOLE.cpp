@@ -82,7 +82,7 @@ void FORTE_OUT_ANY_CONSOLE::executeEvent(TEventID pa_nEIID) {
 void FORTE_OUT_ANY_CONSOLE::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       readData(0, &var_QI, conn_QI);
       readData(2, &var_IN, conn_IN);
       readData(1, &var_LABEL, conn_LABEL);
@@ -96,7 +96,7 @@ void FORTE_OUT_ANY_CONSOLE::readInputData(TEventID pa_nEIID) {
 void FORTE_OUT_ANY_CONSOLE::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCNFID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, &var_QO, &conn_QO);
       break;
     }

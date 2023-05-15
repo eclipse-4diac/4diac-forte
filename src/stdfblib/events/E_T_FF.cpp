@@ -81,7 +81,7 @@ void FORTE_E_T_FF::readInputData(TEventID pa_nEIID) {
 void FORTE_E_T_FF::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventEOID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, &var_Q, &conn_Q);
       break;
     }

@@ -206,7 +206,7 @@ void CCompositeFB::sendInternal2InterfaceOutputEvent(TEventID pa_nEOID){
 
       // TODO think on this lock
       {
-        CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+        RES_DATA_CON_CRITICAL_REGION();
         for(int i = 0; poEOWithStart[i] != 255; ++i){
           if(nullptr != m_apoIn2IfDConns[poEOWithStart[i]]){
             m_apoIn2IfDConns[poEOWithStart[i]]->readData(getDO(poEOWithStart[i]));

@@ -54,6 +54,9 @@ namespace forte {
 }
 #endif //FORTE_SUPPORT_MONITORING
 
+
+#define RES_DATA_CON_CRITICAL_REGION()  CCriticalRegion criticalRegion(getResource().m_oResDataConSync)
+
 #ifndef FORTE_FB_DATA_ARRAY  //with this check we can overwrite this define in a platform specific file (e.g., config.h)
 /*! Define that adds the data array to a SIFB, simple FB or CFB
  * May be overwritten by a platform specific version that adapts for example some alignment requirements

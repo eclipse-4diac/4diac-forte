@@ -101,12 +101,12 @@ void FORTE_E_CTU::executeEvent(TEventID pa_nEIID){
 void FORTE_E_CTU::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCUID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       readData(0, &var_PV, conn_PV);
       break;
     }
     case scm_nEventRID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       break;
     }
     default:
@@ -117,13 +117,13 @@ void FORTE_E_CTU::readInputData(TEventID pa_nEIID) {
 void FORTE_E_CTU::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCUOID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, &var_Q, &conn_Q);
       writeData(1, &var_CV, &conn_CV);
       break;
     }
     case scm_nEventROID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, &var_Q, &conn_Q);
       writeData(1, &var_CV, &conn_CV);
       break;

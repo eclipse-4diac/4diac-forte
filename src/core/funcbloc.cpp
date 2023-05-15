@@ -382,7 +382,7 @@ void CFunctionBlock::readInputData(TEventID paEIID) {
     const TDataIOID *eiWithStart = &(m_pstInterfaceSpec->m_anEIWith[m_pstInterfaceSpec->m_anEIWithIndexes[paEIID]]);
 
     // TODO think on this lock
-    CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
+    RES_DATA_CON_CRITICAL_REGION();
     for(size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
       TDataIOID nDINum = eiWithStart[i];
       CIEC_ANY *di = getDI(nDINum);
@@ -417,7 +417,7 @@ void CFunctionBlock::writeOutputData(TEventID paEO) {
   if (nullptr != m_pstInterfaceSpec->m_anEOWithIndexes && -1 != m_pstInterfaceSpec->m_anEOWithIndexes[paEO]) {
     const TDataIOID *eiWithStart = &(m_pstInterfaceSpec->m_anEOWith[m_pstInterfaceSpec->m_anEOWithIndexes[paEO]]);
     //TODO think on this lock
-    CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
+    RES_DATA_CON_CRITICAL_REGION();
     for (size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
       size_t nDONum = eiWithStart[i];
       CDataConnection *con = getDOConUnchecked(nDONum);

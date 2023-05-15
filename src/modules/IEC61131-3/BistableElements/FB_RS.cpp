@@ -86,7 +86,7 @@ void FORTE_FB_RS::executeEvent(TEventID pa_nEIID){
 void FORTE_FB_RS::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       readData(0, &var_S, conn_S);
       readData(1, &var_R1, conn_R1);
       break;
@@ -99,7 +99,7 @@ void FORTE_FB_RS::readInputData(TEventID pa_nEIID) {
 void FORTE_FB_RS::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCNFID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, &var_Q1, &conn_Q1);
       break;
     }

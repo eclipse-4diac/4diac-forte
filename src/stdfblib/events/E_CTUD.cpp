@@ -129,20 +129,20 @@ void FORTE_E_CTUD::executeEvent(TEventID pa_nEIID){
 void FORTE_E_CTUD::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCUID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       readData(0, &var_PV, conn_PV);
       break;
     }
     case scm_nEventCDID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       break;
     }
     case scm_nEventRID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       break;
     }
     case scm_nEventLDID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       readData(0, &var_PV, conn_PV);
       break;
     }
@@ -154,21 +154,21 @@ void FORTE_E_CTUD::readInputData(TEventID pa_nEIID) {
 void FORTE_E_CTUD::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCOID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, &var_QU, &conn_QU);
       writeData(2, &var_CV, &conn_CV);
       writeData(1, &var_QD, &conn_QD);
       break;
     }
     case scm_nEventROID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, &var_QU, &conn_QU);
       writeData(2, &var_CV, &conn_CV);
       writeData(1, &var_QD, &conn_QD);
       break;
     }
     case scm_nEventLDOID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, &var_QU, &conn_QU);
       writeData(1, &var_QD, &conn_QD);
       writeData(2, &var_CV, &conn_CV);

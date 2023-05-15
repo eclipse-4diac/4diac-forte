@@ -101,7 +101,7 @@ const SCFB_FBNData FORTE_RT_E_TRAIN::scm_stFBNData = {
 void FORTE_RT_E_TRAIN::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventSTARTID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       readData(0, &var_DT, conn_DT);
       readData(1, &var_N, conn_N);
       readData(2, &var_Deadline, conn_Deadline);
@@ -109,7 +109,7 @@ void FORTE_RT_E_TRAIN::readInputData(TEventID pa_nEIID) {
       break;
     }
     case scm_nEventSTOPID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       break;
     }
     default:
@@ -120,7 +120,7 @@ void FORTE_RT_E_TRAIN::readInputData(TEventID pa_nEIID) {
 void FORTE_RT_E_TRAIN::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventEOID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       writeData(0, &var_CV, &conn_CV);
       break;
     }

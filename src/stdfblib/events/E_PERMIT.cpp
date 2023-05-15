@@ -74,7 +74,7 @@ void FORTE_E_PERMIT::executeEvent(TEventID pa_nEIID){
 void FORTE_E_PERMIT::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventEIID: {
-      CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
+      RES_DATA_CON_CRITICAL_REGION();
       readData(0, &var_PERMIT, conn_PERMIT);
       break;
     }
