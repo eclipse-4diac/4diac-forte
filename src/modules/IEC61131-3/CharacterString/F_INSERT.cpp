@@ -72,6 +72,9 @@ void FORTE_F_INSERT::executeEvent(int pa_nEIID) {
           if constexpr (std::is_same_v<T, U>) {
             return func_INSERT(paIN1, paIN2, paP);
           }
+          DEVLOG_ERROR("Inserting incompatible types %s and %s\n",
+                       CStringDictionary::getInstance().get(paIN1.getTypeNameID()),
+                       CStringDictionary::getInstance().get(paIN2.getTypeNameID()));
           return CIEC_ANY_STRING_VARIANT();
       }, var_IN1, var_IN2, var_P);
       sendOutputEvent(scm_nEventCNFID);

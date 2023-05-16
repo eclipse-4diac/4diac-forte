@@ -69,6 +69,9 @@ void FORTE_F_ROL::executeEvent(int pa_nEIID) {
           if constexpr (!std::is_same<T, CIEC_BOOL>::value) {
             return func_ROL(paIN, paN);
           }
+          DEVLOG_ERROR("Rotating left incompatible types %s and %s\n",
+                       CStringDictionary::getInstance().get(paIN.getTypeNameID()),
+                       CStringDictionary::getInstance().get(paN.getTypeNameID()));
           return CIEC_ANY_BIT_VARIANT();
       }, var_IN, var_N);
       sendOutputEvent(scm_nEventCNFID);

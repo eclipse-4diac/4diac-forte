@@ -48,6 +48,9 @@ void GEN_ADD::executeEvent(int paEIID){
               if constexpr (!std::is_same<deductedType, forte::core::mpl::NullType>::value) {
                 return func_ADD(paOUT, paIN);
               }
+              DEVLOG_ERROR("Adding incompatible types %s and %s\n",
+                           CStringDictionary::getInstance().get(paOUT.getTypeNameID()),
+                           CStringDictionary::getInstance().get(paIN.getTypeNameID()));
               return paOUT;
           }, var_OUT(), var_IN(i));
         }

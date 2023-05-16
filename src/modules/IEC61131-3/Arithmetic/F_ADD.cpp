@@ -71,6 +71,9 @@ void FORTE_F_ADD::executeEvent(int pa_nEIID) {
         if constexpr (!std::is_same<deductedType, forte::core::mpl::NullType>::value) {
           return func_ADD(paIN1, paIN2);
         }
+        DEVLOG_ERROR("Adding incompatible types %s and %s\n",
+                     CStringDictionary::getInstance().get(paIN1.getTypeNameID()),
+                     CStringDictionary::getInstance().get(paIN2.getTypeNameID()));
         return CIEC_ANY_MAGNITUDE_VARIANT();
       }, var_IN1, var_IN2);
       sendOutputEvent(scm_nEventCNFID);

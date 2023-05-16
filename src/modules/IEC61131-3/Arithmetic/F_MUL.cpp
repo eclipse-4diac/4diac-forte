@@ -71,6 +71,9 @@ void FORTE_F_MUL::executeEvent(int pa_nEIID) {
         if constexpr (!std::is_same<deductedType, forte::core::mpl::NullType>::value) {
           return func_MUL(paIN1, paIN2);
         }
+        DEVLOG_ERROR("Multiplying incompatible types %s and %s\n",
+                     CStringDictionary::getInstance().get(paIN1.getTypeNameID()),
+                     CStringDictionary::getInstance().get(paIN2.getTypeNameID()));
         return CIEC_ANY_NUM_VARIANT();
       }, var_IN1, var_IN2);
       sendOutputEvent(scm_nEventCNFID);

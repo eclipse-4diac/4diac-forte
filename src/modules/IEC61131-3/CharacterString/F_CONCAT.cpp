@@ -70,6 +70,9 @@ void FORTE_F_CONCAT::executeEvent(int pa_nEIID) {
           if constexpr (std::is_same_v<T, U>) {
             return func_CONCAT(paIN1, paIN2);
           }
+          DEVLOG_ERROR("Concatenating incompatible types %s and %s\n",
+                       CStringDictionary::getInstance().get(paIN1.getTypeNameID()),
+                       CStringDictionary::getInstance().get(paIN2.getTypeNameID()));
           return CIEC_ANY_STRING_VARIANT();
       }, var_IN1, var_IN2);
       sendOutputEvent(scm_nEventCNFID);

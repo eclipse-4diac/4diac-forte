@@ -74,6 +74,9 @@ void FORTE_F_REPLACE::executeEvent(int pa_nEIID) {
           if constexpr (std::is_same_v<T, U>) {
             return func_REPLACE(paIN1, paIN2, paP, paL);
           }
+          DEVLOG_ERROR("Replacing incompatible types %s and %s\n",
+                       CStringDictionary::getInstance().get(paIN1.getTypeNameID()),
+                       CStringDictionary::getInstance().get(paIN2.getTypeNameID()));
           return CIEC_ANY_STRING_VARIANT();
       }, var_IN1, var_IN2, var_P, var_L);
       sendOutputEvent(scm_nEventCNFID);
