@@ -1177,6 +1177,20 @@ const CIEC_TIME func_NOW_MONOTONIC();
  */
 const CIEC_DATE_AND_TIME func_NOW();
 
+/**
+ * @brief Return if an ANY_REAL is a valid number
+ * 
+ * @tparam T Needs to be a subtype of CIEC_ANY_REAL
+ * @param paValue The value to be checked
+ * @return CIEC_BOOL false if inf or NaN, true otherwise
+ */
+template <typename T>
+CIEC_BOOL func_IS_VALID(const T& paValue) {
+  static_assert((std::is_base_of_v<CIEC_ANY_REAL, T>), "T not of ANY_REAL");
+  const typename T::TValueType value = static_cast<typename T::TValueType>(paValue);
+  return CIEC_BOOL(!(std::isnan(value) || std::isinf(value)));
+}
+
 template <typename T>
 T swapSimpleDataHelper(const T data) {
   constexpr size_t dataSize = sizeof(T);

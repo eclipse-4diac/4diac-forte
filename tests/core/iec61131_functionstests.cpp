@@ -15,6 +15,9 @@
  *   Martin Melik-Merkumians - adds test for TRUNC
  *******************************************************************************/
 
+#include <math.h>
+#include <limits>
+
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
@@ -1883,6 +1886,36 @@ BOOST_AUTO_TEST_CASE(output_partial_DWORD_assignment_test){
   CIEC_LWORD outLword(0x00);
   testSTInIsOutDWordDummyFunction(inDword, ST_EXTEND_LIFETIME(outLword.partial<CIEC_DWORD>(0)));
   BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(outLword) == 0xFEFEFEFE);
+}
+
+BOOST_AUTO_TEST_CASE(is_valid_REAL){
+  CIEC_REAL valid0(0.0f);
+  CIEC_REAL validMax(std::numeric_limits<float>::max());
+  CIEC_REAL validMin(std::numeric_limits<float>::min());
+  CIEC_REAL inValidInf(std::numeric_limits<float>::infinity());
+  CIEC_REAL inValidNaN(NAN);
+  
+  
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(valid0)) == true);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(validMax)) == true);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(validMin)) == true);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(inValidInf)) == false);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(inValidNaN)) == false);
+}
+
+BOOST_AUTO_TEST_CASE(is_valid_LREAL)
+{
+  CIEC_LREAL valid0(0.0);
+  CIEC_LREAL validMax(std::numeric_limits<double>::max());
+  CIEC_LREAL validMin(std::numeric_limits<double>::min());
+  CIEC_LREAL inValidInf(std::numeric_limits<double>::infinity());
+  CIEC_LREAL inValidNaN(NAN);
+
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(valid0)) == true);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(validMax)) == true);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(validMin)) == true);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(inValidInf)) == false);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(inValidNaN)) == false);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
