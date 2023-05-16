@@ -132,12 +132,12 @@ class CIEC_Struct_Muxer_Test_Struct_4 : public CIEC_STRUCT {
   DECLARE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_4)
 
   public:
-    CIEC_INT data[255];
+    CIEC_INT data[256];
 
     CIEC_Struct_Muxer_Test_Struct_4() = default;
 
     size_t getStructSize() const override {
-      return 255;
+      return 256;
     }
 
     const CStringDictionary::TStringId* elementNames() const override {
@@ -147,14 +147,14 @@ class CIEC_Struct_Muxer_Test_Struct_4 : public CIEC_STRUCT {
     CStringDictionary::TStringId getStructTypeNameID() const override;
 
     CIEC_ANY *getMember(size_t paMemberIndex) override {
-      if(paMemberIndex < 255) {
+      if(paMemberIndex < 256) {
         return &data[paMemberIndex];
       }
       return nullptr;
     }
 
     const CIEC_ANY *getMember(size_t paMemberIndex) const override {
-      if(paMemberIndex < 255) {
+      if(paMemberIndex < 256) {
         return &data[paMemberIndex];
       }
       return nullptr;

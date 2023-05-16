@@ -151,7 +151,7 @@ BOOST_CHECK(nullptr == fb);
 
 BOOST_AUTO_TEST_CASE(bigStruct) {
 CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_DEMUX_1Struct_Muxer_Test_Struct_4, nullptr);
-BOOST_CHECK(nullptr == fb);
+BOOST_CHECK(nullptr != fb);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -291,7 +291,8 @@ const CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_4::scm_unElemen
   g_nStringIdVar251,
   g_nStringIdVar252,
   g_nStringIdVar253,
-  g_nStringIdVar254 };
+  g_nStringIdVar254,
+  g_nStringIdVar255 };
 
 CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_4::getStructTypeNameID() const {
   return g_nStringIdStruct_Muxer_Test_Struct_4;

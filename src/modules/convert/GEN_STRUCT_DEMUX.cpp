@@ -65,10 +65,7 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
       CIEC_STRUCT *structInstance = static_cast<CIEC_STRUCT*>(data);
 
       size_t structSize = structInstance->getStructSize();
-      if(structSize < 1 || structSize > 254) { //the structure size must be non zero and less than 255 (maximum number of data outputs)
-        DEVLOG_ERROR("[GEN_STRUCT_DEMUX]: The structure %s has a size is not within range > 0 and < 255\n",
-          CStringDictionary::getInstance().get(structTypeNameId));
-      } else {
+      if(structSize != 0 && structSize < cg_unInvalidPortId) { //the structure size must be non zero and less than cg_unInvalidPortId (maximum number of data outputs)
         TDataIOID *eoWith = new TDataIOID[structSize + 1];
         CStringDictionary::TStringId *doDataTypeNames = new CStringDictionary::TStringId[GEN_STRUCT_MUX::calcStructTypeNameSize(*structInstance)];
         CStringDictionary::TStringId *doNames = new CStringDictionary::TStringId[structSize];
@@ -104,6 +101,9 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
         }
         eoWith[paInterfaceSpec.m_nNumDOs] = scmWithListDelimiter;
         retval = true;
+      } else {
+        DEVLOG_ERROR("[GEN_STRUCT_DEMUX]: The structure %s has a size is not within range > 0 and < %ud\n",
+                     CStringDictionary::getInstance().get(structTypeNameId), cg_unInvalidPortId);
       }
     } else {
       DEVLOG_ERROR("[GEN_STRUCT_DEMUX]: data type is not a structure: %s\n", CStringDictionary::getInstance().get(structTypeNameId));
