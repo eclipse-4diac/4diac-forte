@@ -23,11 +23,11 @@ const CStringDictionary::TStringId FORTE_WagoBusAdapter::scm_anDataOutputNames[]
 
 const CStringDictionary::TStringId FORTE_WagoBusAdapter::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdUINT, g_nStringIdUINT};
 
-const TDataIOID FORTE_WagoBusAdapter::scm_anEIWith[] = {0, 255};
+const TDataIOID FORTE_WagoBusAdapter::scm_anEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_WagoBusAdapter::scm_anEIWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_WagoBusAdapter::scm_anEventInputNames[] = {g_nStringIdINITO};
 
-const TDataIOID FORTE_WagoBusAdapter::scm_anEOWith[] = {2, 1, 0, 255};
+const TDataIOID FORTE_WagoBusAdapter::scm_anEOWith[] = {2, 1, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_WagoBusAdapter::scm_anEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_WagoBusAdapter::scm_anEventOutputNames[] = {g_nStringIdINIT};
 

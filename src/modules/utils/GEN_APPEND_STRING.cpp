@@ -29,7 +29,7 @@ const CStringDictionary::TStringId GEN_APPEND_STRING::scm_anDataOutputTypeIds[] 
 
 const TForteInt16 GEN_APPEND_STRING::scm_anEIWithIndexes[] = { 0 };
 
-const TDataIOID GEN_APPEND_STRING::scm_anEOWith[] = { 0, 255 };
+const TDataIOID GEN_APPEND_STRING::scm_anEOWith[] = { 0, scmWithListDelimiter };
 const TForteInt16 GEN_APPEND_STRING::scm_anEOWithIndexes[] = { 0, -1 };
 
 //default value is set to 100 (sufficient for several data types)

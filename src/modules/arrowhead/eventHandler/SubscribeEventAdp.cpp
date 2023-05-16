@@ -24,7 +24,7 @@ const CStringDictionary::TStringId FORTE_SubscribeEventAdp::scm_anDataOutputType
 const TForteInt16 FORTE_SubscribeEventAdp::scm_anEIWithIndexes[] = {-1, -1, -1};
 const CStringDictionary::TStringId FORTE_SubscribeEventAdp::scm_anEventInputNames[] = {g_nStringIdSubscribed, g_nStringIdUnsubscribed};
 
-const TDataIOID FORTE_SubscribeEventAdp::scm_anEOWith[] = {0, 1, 255, 1, 0, 255};
+const TDataIOID FORTE_SubscribeEventAdp::scm_anEOWith[] = {0, 1, scmWithListDelimiter, 1, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_SubscribeEventAdp::scm_anEOWithIndexes[] = {0, 3, -1};
 const CStringDictionary::TStringId FORTE_SubscribeEventAdp::scm_anEventOutputNames[] = {g_nStringIdSubscribe, g_nStringIdUnsubscribe};
 

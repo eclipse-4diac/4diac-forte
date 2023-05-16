@@ -29,7 +29,7 @@ DEFINE_FIRMWARE_FB(FORTE_E_PERMIT, g_nStringIdE_PERMIT)
 
 const CStringDictionary::TStringId FORTE_E_PERMIT::scm_anDataInputNames[] = {g_nStringIdPERMIT};
 const CStringDictionary::TStringId FORTE_E_PERMIT::scm_anDataInputTypeIds[] = {g_nStringIdBOOL};
-const TDataIOID FORTE_E_PERMIT::scm_anEIWith[] = {0, 255};
+const TDataIOID FORTE_E_PERMIT::scm_anEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_PERMIT::scm_anEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_E_PERMIT::scm_anEventInputNames[] = {g_nStringIdEI};
 const TForteInt16 FORTE_E_PERMIT::scm_anEOWithIndexes[] = {-1};

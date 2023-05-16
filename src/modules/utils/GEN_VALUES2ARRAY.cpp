@@ -30,7 +30,7 @@ const CStringDictionary::TStringId GEN_VALUES2ARRAY::scm_anDataOutputNames[] = {
 const TForteInt16 GEN_VALUES2ARRAY::scm_anEIWithIndexes[] = { 0 };
 const CStringDictionary::TStringId GEN_VALUES2ARRAY::scm_anEventInputNames[] = { g_nStringIdREQ };
 
-const TDataIOID GEN_VALUES2ARRAY::scm_anEOWith[] = { 0, 255 };
+const TDataIOID GEN_VALUES2ARRAY::scm_anEOWith[] = { 0, scmWithListDelimiter };
 const TForteInt16 GEN_VALUES2ARRAY::scm_anEOWithIndexes[] = { 0, -1 };
 const CStringDictionary::TStringId GEN_VALUES2ARRAY::scm_anEventOutputNames[] = { g_nStringIdCNF };
 

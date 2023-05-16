@@ -24,7 +24,7 @@ const CStringDictionary::TStringId GEN_E_MUX::scm_anDataOutputNames[] = { g_nStr
 const CStringDictionary::TStringId GEN_E_MUX::scm_aunDODataTypeIds[] = { g_nStringIdUINT };
 
 const TForteInt16 GEN_E_MUX::scm_anEOWithIndexes[] = { 0 };
-const TDataIOID GEN_E_MUX::scm_anEOWith[] = { 0, 255 };
+const TDataIOID GEN_E_MUX::scm_anEOWith[] = { 0, scmWithListDelimiter };
 const CStringDictionary::TStringId GEN_E_MUX::scm_anEventOutputNames[] = { g_nStringIdEO };
 
 GEN_E_MUX::GEN_E_MUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :

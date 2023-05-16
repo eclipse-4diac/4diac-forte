@@ -84,7 +84,7 @@ bool GEN_ADD::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &
   static const std::array<CStringDictionary::TStringId, 1>anEventOutputNames = { g_nStringIdCNF };
   static const std::array<CStringDictionary::TStringId, 1>anDataOutputNames = { g_nStringIdOUT };
   static const std::array<CStringDictionary::TStringId, 1>anDataOutputTypeIds = { g_nStringIdANY_MAGNITUDE };
-  static constexpr std::array<TDataIOID, 2> anEOWith = { 0, 255 };
+  static constexpr std::array<TDataIOID, 2> anEOWith = { 0, scmWithListDelimiter };
   static constexpr std::array<TForteInt16, 1> anEOWithIndexes = { 0 };
 
   forte::core::util::CIfSpecBuilder isb;

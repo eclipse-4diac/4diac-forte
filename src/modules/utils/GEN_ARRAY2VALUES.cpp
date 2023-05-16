@@ -28,7 +28,7 @@ DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2VALUES, g_nStringIdGEN_ARRAY2VALUES)
 const CStringDictionary::TStringId GEN_ARRAY2VALUES::scm_anDataInputNames[] = { g_nStringIdIN };
 
 const TForteInt16 GEN_ARRAY2VALUES::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID GEN_ARRAY2VALUES::scm_anEIWith[] = { 0, 255 };
+const TDataIOID GEN_ARRAY2VALUES::scm_anEIWith[] = { 0, scmWithListDelimiter };
 const CStringDictionary::TStringId GEN_ARRAY2VALUES::scm_anEventInputNames[] = { g_nStringIdREQ };
 
 const TForteInt16 GEN_ARRAY2VALUES::scm_anEOWithIndexes[] = { 0, -1 };

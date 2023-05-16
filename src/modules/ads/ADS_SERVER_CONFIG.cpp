@@ -29,10 +29,10 @@ const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scm_anDataOutputName
 const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scm_anDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdWSTRING };
 
 const TForteInt16 FORTE_ADS_SERVER_CONFIG::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID FORTE_ADS_SERVER_CONFIG::scm_anEIWith[] = { 0, 255 };
+const TDataIOID FORTE_ADS_SERVER_CONFIG::scm_anEIWith[] = { 0, scmWithListDelimiter };
 const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scm_anEventInputNames[] = { g_nStringIdINIT };
 
-const TDataIOID FORTE_ADS_SERVER_CONFIG::scm_anEOWith[] = { 0, 1, 255 };
+const TDataIOID FORTE_ADS_SERVER_CONFIG::scm_anEOWith[] = { 0, 1, scmWithListDelimiter };
 const TForteInt16 FORTE_ADS_SERVER_CONFIG::scm_anEOWithIndexes[] = { 0, -1 };
 const CStringDictionary::TStringId FORTE_ADS_SERVER_CONFIG::scm_anEventOutputNames[] = { g_nStringIdINITO };
 

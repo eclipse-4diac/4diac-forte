@@ -37,11 +37,11 @@ const CStringDictionary::TStringId FORTE_FB_CTU::scm_anDataOutputNames[] = {g_nS
 
 const CStringDictionary::TStringId FORTE_FB_CTU::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdINT};
 
-const TDataIOID FORTE_FB_CTU::scm_anEIWith[] = {0, 1, 255};
+const TDataIOID FORTE_FB_CTU::scm_anEIWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_FB_CTU::scm_anEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_FB_CTU::scm_anEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_FB_CTU::scm_anEOWith[] = {0, 1, 255};
+const TDataIOID FORTE_FB_CTU::scm_anEOWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_FB_CTU::scm_anEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_FB_CTU::scm_anEventOutputNames[] = {g_nStringIdCNF};
 

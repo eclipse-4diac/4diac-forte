@@ -30,7 +30,7 @@ DEFINE_FIRMWARE_FB(FORTE_E_DEMUX, g_nStringIdE_DEMUX)
 
 const CStringDictionary::TStringId FORTE_E_DEMUX::scm_anDataInputNames[] = {g_nStringIdK};
 const CStringDictionary::TStringId FORTE_E_DEMUX::scm_anDataInputTypeIds[] = {g_nStringIdUINT};
-const TDataIOID FORTE_E_DEMUX::scm_anEIWith[] = {0, 255};
+const TDataIOID FORTE_E_DEMUX::scm_anEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_DEMUX::scm_anEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_E_DEMUX::scm_anEventInputNames[] = {g_nStringIdEI};
 const TForteInt16 FORTE_E_DEMUX::scm_anEOWithIndexes[] = {-1, -1, -1, -1};

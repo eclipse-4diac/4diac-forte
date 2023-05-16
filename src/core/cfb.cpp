@@ -207,7 +207,7 @@ void CCompositeFB::sendInternal2InterfaceOutputEvent(TEventID pa_nEOID){
       // TODO think on this lock
       {
         RES_DATA_CON_CRITICAL_REGION();
-        for(int i = 0; poEOWithStart[i] != 255; ++i){
+        for(int i = 0; poEOWithStart[i] != scmWithListDelimiter; ++i){
           if(nullptr != m_apoIn2IfDConns[poEOWithStart[i]]){
             m_apoIn2IfDConns[poEOWithStart[i]]->readData(getDO(poEOWithStart[i]));
           }

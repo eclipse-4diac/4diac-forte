@@ -29,7 +29,7 @@ const CStringDictionary::TStringId CGenBitBase::scmDataOutputTypeIds[] = {g_nStr
 const TForteInt16 CGenBitBase::scmEIWithIndexes[] = { 0 };
 const CStringDictionary::TStringId CGenBitBase::scmEventInputNames[] = {g_nStringIdREQ };
 
-const TDataIOID CGenBitBase::scmEOWith[] = { 0, 255 };
+const TDataIOID CGenBitBase::scmEOWith[] = { 0, scmWithListDelimiter };
 const TForteInt16 CGenBitBase::scmEOWithIndexes[] = { 0, -1 };
 const CStringDictionary::TStringId CGenBitBase::scmEventOutputNames[] = { g_nStringIdCNF };
 

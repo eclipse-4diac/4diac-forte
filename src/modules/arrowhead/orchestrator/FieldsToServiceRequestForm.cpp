@@ -26,10 +26,10 @@ const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scm_anDataO
 const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scm_anDataOutputTypeIds[] = {g_nStringIdServiceRequestForm};
 
 const TForteInt16 FORTE_FieldsToServiceRequestForm::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_FieldsToServiceRequestForm::scm_anEIWith[] = {0, 1, 5, 4, 3, 2, 255};
+const TDataIOID FORTE_FieldsToServiceRequestForm::scm_anEIWith[] = {0, 1, 5, 4, 3, 2, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scm_anEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_FieldsToServiceRequestForm::scm_anEOWith[] = {0, 255};
+const TDataIOID FORTE_FieldsToServiceRequestForm::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_FieldsToServiceRequestForm::scm_anEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scm_anEventOutputNames[] = {g_nStringIdCNF};
 

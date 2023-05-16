@@ -22,7 +22,7 @@ const CStringDictionary::TStringId FORTE_RegisterService::scm_anDataInputNames[]
 const CStringDictionary::TStringId FORTE_RegisterService::scm_anDataInputTypeIds[] = {g_nStringIdServiceRegistryEntry, g_nStringIdWSTRING};
 
 const TForteInt16 FORTE_RegisterService::scm_anEIWithIndexes[] = {0, 3};
-const TDataIOID FORTE_RegisterService::scm_anEIWith[] = {0, 1, 255, 0, 1, 255};
+const TDataIOID FORTE_RegisterService::scm_anEIWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_RegisterService::scm_anEventInputNames[] = {g_nStringIdregister, g_nStringIdunregister};
 
 const TForteInt16 FORTE_RegisterService::scm_anEOWithIndexes[] = {-1, -1, -1};

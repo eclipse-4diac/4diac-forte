@@ -32,11 +32,11 @@ const CStringDictionary::TStringId FORTE_F_ADD_TOD_TIME::scm_anDataOutputNames[]
 
 const CStringDictionary::TStringId FORTE_F_ADD_TOD_TIME::scm_anDataOutputTypeIds[] = {g_nStringIdTIME_OF_DAY};
 
-const TDataIOID FORTE_F_ADD_TOD_TIME::scm_anEIWith[] = {0, 1, 255};
+const TDataIOID FORTE_F_ADD_TOD_TIME::scm_anEIWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_F_ADD_TOD_TIME::scm_anEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_ADD_TOD_TIME::scm_anEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_F_ADD_TOD_TIME::scm_anEOWith[] = {0, 255};
+const TDataIOID FORTE_F_ADD_TOD_TIME::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_ADD_TOD_TIME::scm_anEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_ADD_TOD_TIME::scm_anEventOutputNames[] = {g_nStringIdCNF};
 

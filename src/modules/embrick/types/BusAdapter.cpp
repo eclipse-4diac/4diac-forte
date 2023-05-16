@@ -31,12 +31,12 @@ const CStringDictionary::TStringId EmbrickBusAdapter::scm_anDataOutputNames[] =
 const CStringDictionary::TStringId EmbrickBusAdapter::scm_anDataOutputTypeIds[] =
     { g_nStringIdBOOL, g_nStringIdUINT, g_nStringIdUINT, g_nStringIdUINT };
 
-const TDataIOID EmbrickBusAdapter::scm_anEIWith[] = { 0, 255 };
+const TDataIOID EmbrickBusAdapter::scm_anEIWith[] = { 0, scmWithListDelimiter };
 const TForteInt16 EmbrickBusAdapter::scm_anEIWithIndexes[] = { 0, -1 };
 const CStringDictionary::TStringId EmbrickBusAdapter::scm_anEventInputNames[] =
     { g_nStringIdINITO };
 
-const TDataIOID EmbrickBusAdapter::scm_anEOWith[] = { 2, 3, 1, 0, 255 };
+const TDataIOID EmbrickBusAdapter::scm_anEOWith[] = { 2, 3, 1, 0, scmWithListDelimiter };
 const TForteInt16 EmbrickBusAdapter::scm_anEOWithIndexes[] = { 0, -1 };
 const CStringDictionary::TStringId EmbrickBusAdapter::scm_anEventOutputNames[] =
     { g_nStringIdINIT };

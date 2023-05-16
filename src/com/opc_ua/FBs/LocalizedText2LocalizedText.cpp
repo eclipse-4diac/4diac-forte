@@ -27,10 +27,10 @@ const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scm_anData
 const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scm_anDataOutputTypeIds[] = {g_nStringIdLocalizedText};
 
 const TForteInt16 FORTE_LocalizedText2LocalizedText::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_LocalizedText2LocalizedText::scm_anEIWith[] = {0, 255};
+const TDataIOID FORTE_LocalizedText2LocalizedText::scm_anEIWith[] = {0, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scm_anEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_LocalizedText2LocalizedText::scm_anEOWith[] = {0, 255};
+const TDataIOID FORTE_LocalizedText2LocalizedText::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_LocalizedText2LocalizedText::scm_anEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scm_anEventOutputNames[] = {g_nStringIdCNF};
 

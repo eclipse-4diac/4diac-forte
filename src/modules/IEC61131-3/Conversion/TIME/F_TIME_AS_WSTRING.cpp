@@ -37,11 +37,11 @@ const CStringDictionary::TStringId FORTE_F_TIME_AS_WSTRING::scm_anDataOutputName
 
 const CStringDictionary::TStringId FORTE_F_TIME_AS_WSTRING::scm_anDataOutputTypeIds[] = {g_nStringIdWSTRING};
 
-const TDataIOID FORTE_F_TIME_AS_WSTRING::scm_anEIWith[] = {0, 255};
+const TDataIOID FORTE_F_TIME_AS_WSTRING::scm_anEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_TIME_AS_WSTRING::scm_anEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_TIME_AS_WSTRING::scm_anEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_F_TIME_AS_WSTRING::scm_anEOWith[] = {0, 255};
+const TDataIOID FORTE_F_TIME_AS_WSTRING::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_TIME_AS_WSTRING::scm_anEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_TIME_AS_WSTRING::scm_anEventOutputNames[] = {g_nStringIdCNF};
 

@@ -24,7 +24,7 @@ const CStringDictionary::TStringId GEN_E_DEMUX::scm_anDataInputNames[] = { g_nSt
 const CStringDictionary::TStringId GEN_E_DEMUX::scm_aunDIDataTypeIds[] = { g_nStringIdUINT };
 
 const TForteInt16 GEN_E_DEMUX::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID GEN_E_DEMUX::scm_anEIWith[] = { 0, 255 };
+const TDataIOID GEN_E_DEMUX::scm_anEIWith[] = { 0, scmWithListDelimiter };
 const CStringDictionary::TStringId GEN_E_DEMUX::scm_anEventInputNames[] = { g_nStringIdEI };
 
 GEN_E_DEMUX::GEN_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :

@@ -22,7 +22,7 @@ const CStringDictionary::TStringId FORTE_ArrowheadPublish::scm_anDataInputNames[
 const CStringDictionary::TStringId FORTE_ArrowheadPublish::scm_anDataInputTypeIds[] = {g_nStringIdPublishEvent, g_nStringIdWSTRING};
 
 const TForteInt16 FORTE_ArrowheadPublish::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_ArrowheadPublish::scm_anEIWith[] = {0, 1, 255};
+const TDataIOID FORTE_ArrowheadPublish::scm_anEIWith[] = {0, 1, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_ArrowheadPublish::scm_anEventInputNames[] = {g_nStringIdpublish};
 
 const TForteInt16 FORTE_ArrowheadPublish::scm_anEOWithIndexes[] = {-1, -1};

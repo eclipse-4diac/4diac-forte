@@ -26,10 +26,10 @@ const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scm_anDataOutputN
 const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scm_anDataOutputTypeIds[] = {g_nStringIdPublishEvent};
 
 const TForteInt16 FORTE_FieldsToPublishEvent::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_FieldsToPublishEvent::scm_anEIWith[] = {0, 1, 2, 255};
+const TDataIOID FORTE_FieldsToPublishEvent::scm_anEIWith[] = {0, 1, 2, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scm_anEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_FieldsToPublishEvent::scm_anEOWith[] = {0, 255};
+const TDataIOID FORTE_FieldsToPublishEvent::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_FieldsToPublishEvent::scm_anEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scm_anEventOutputNames[] = {g_nStringIdCNF};
 

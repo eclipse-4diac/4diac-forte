@@ -28,10 +28,10 @@ const CStringDictionary::TStringId FORTE_POWERLINK_MN::scm_anDataOutputNames[] =
 const CStringDictionary::TStringId FORTE_POWERLINK_MN::scm_anDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING };
 
 const TForteInt16 FORTE_POWERLINK_MN::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID FORTE_POWERLINK_MN::scm_anEIWith[] = { 0, 1, 2, 3, 255 };
+const TDataIOID FORTE_POWERLINK_MN::scm_anEIWith[] = { 0, 1, 2, 3, scmWithListDelimiter };
 const CStringDictionary::TStringId FORTE_POWERLINK_MN::scm_anEventInputNames[] = { g_nStringIdINIT };
 
-const TDataIOID FORTE_POWERLINK_MN::scm_anEOWith[] = { 0, 1, 255 };
+const TDataIOID FORTE_POWERLINK_MN::scm_anEOWith[] = { 0, 1, scmWithListDelimiter };
 const TForteInt16 FORTE_POWERLINK_MN::scm_anEOWithIndexes[] = { 0, -1 };
 const CStringDictionary::TStringId FORTE_POWERLINK_MN::scm_anEventOutputNames[] = { g_nStringIdINITO };
 

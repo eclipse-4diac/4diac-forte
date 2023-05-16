@@ -31,10 +31,10 @@ const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scm_anDataOutput
 const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scm_anDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdDINT, g_nStringIdSTRING };
 
 const TForteInt16 FORTE_EXECUTE_ACTION_CLIENT::scm_anEIWithIndexes[] = { 0, 4 };
-const TDataIOID FORTE_EXECUTE_ACTION_CLIENT::scm_anEIWith[] = { 0, 1, 2, 255, 0, 3, 4, 5, 255 };
+const TDataIOID FORTE_EXECUTE_ACTION_CLIENT::scm_anEIWith[] = { 0, 1, 2, scmWithListDelimiter, 0, 3, 4, 5, scmWithListDelimiter };
 const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scm_anEventInputNames[] = { g_nStringIdINIT, g_nStringIdREQ };
 
-const TDataIOID FORTE_EXECUTE_ACTION_CLIENT::scm_anEOWith[] = { 0, 1, 255, 0, 1, 2, 4, 3, 255, 5, 255 };
+const TDataIOID FORTE_EXECUTE_ACTION_CLIENT::scm_anEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, 2, 4, 3, scmWithListDelimiter, 5, scmWithListDelimiter };
 const TForteInt16 FORTE_EXECUTE_ACTION_CLIENT::scm_anEOWithIndexes[] = { 0, 3, 9 };
 const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scm_anEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF };
 

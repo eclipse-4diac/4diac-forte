@@ -25,11 +25,11 @@ const CStringDictionary::TStringId FORTE_QueryServicesAdp::scm_anDataOutputNames
 
 const CStringDictionary::TStringId FORTE_QueryServicesAdp::scm_anDataOutputTypeIds[] = {g_nStringIdServiceQueryForm, g_nStringIdWSTRING};
 
-const TDataIOID FORTE_QueryServicesAdp::scm_anEIWith[] = {0, 255};
+const TDataIOID FORTE_QueryServicesAdp::scm_anEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_QueryServicesAdp::scm_anEIWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_QueryServicesAdp::scm_anEventInputNames[] = {g_nStringIdqueried};
 
-const TDataIOID FORTE_QueryServicesAdp::scm_anEOWith[] = {0, 1, 255};
+const TDataIOID FORTE_QueryServicesAdp::scm_anEOWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_QueryServicesAdp::scm_anEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_QueryServicesAdp::scm_anEventOutputNames[] = {g_nStringIdquery};
 

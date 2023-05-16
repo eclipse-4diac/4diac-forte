@@ -31,10 +31,10 @@ const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scm_anDataOutpu
 const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scm_anDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdSTRING };
 
 const TForteInt16 FORTE_TRIGGER_SERVICE_SERVER::scm_anEIWithIndexes[] = { 0, 4 };
-const TDataIOID FORTE_TRIGGER_SERVICE_SERVER::scm_anEIWith[] = { 0, 1, 2, 255, 0, 3, 4, 255 };
+const TDataIOID FORTE_TRIGGER_SERVICE_SERVER::scm_anEIWith[] = { 0, 1, 2, scmWithListDelimiter, 0, 3, 4, scmWithListDelimiter };
 const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scm_anEventInputNames[] = { g_nStringIdINIT, g_nStringIdRSP };
 
-const TDataIOID FORTE_TRIGGER_SERVICE_SERVER::scm_anEOWith[] = { 0, 1, 255, 0, 1, 255 };
+const TDataIOID FORTE_TRIGGER_SERVICE_SERVER::scm_anEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter };
 const TForteInt16 FORTE_TRIGGER_SERVICE_SERVER::scm_anEOWithIndexes[] = { 0, 3, -1 };
 const CStringDictionary::TStringId FORTE_TRIGGER_SERVICE_SERVER::scm_anEventOutputNames[] = { g_nStringIdINITO, g_nStringIdIND };
 

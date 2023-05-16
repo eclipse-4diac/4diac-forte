@@ -25,7 +25,7 @@ const CStringDictionary::TStringId GEN_STRUCT_MUX::scm_anDataOutputNames[] = { g
 
 const TForteInt16 GEN_STRUCT_MUX::scm_anEIWithIndexes[] = {0};
 const TForteInt16 GEN_STRUCT_MUX::scm_anEOWithIndexes[] = {0};
-const TDataIOID GEN_STRUCT_MUX::scm_anEOWith[] = {0, 255};
+const TDataIOID GEN_STRUCT_MUX::scm_anEOWith[] = {0, scmWithListDelimiter};
 
 
 void GEN_STRUCT_MUX::executeEvent(TEventID paEIID) {

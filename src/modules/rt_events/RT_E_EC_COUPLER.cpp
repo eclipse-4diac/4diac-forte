@@ -26,10 +26,10 @@ const CStringDictionary::TStringId FORTE_RT_E_EC_COUPLER::scm_anDataOutputNames[
 const CStringDictionary::TStringId FORTE_RT_E_EC_COUPLER::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL};
 
 const TForteInt16 FORTE_RT_E_EC_COUPLER::scm_anEIWithIndexes[] = {0, -1};
-const TDataIOID FORTE_RT_E_EC_COUPLER::scm_anEIWith[] = {0, 1, 2, 3, 255};
+const TDataIOID FORTE_RT_E_EC_COUPLER::scm_anEIWith[] = {0, 1, 2, 3, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_RT_E_EC_COUPLER::scm_anEventInputNames[] = {g_nStringIdINIT, g_nStringIdEI};
 
-const TDataIOID FORTE_RT_E_EC_COUPLER::scm_anEOWith[] = {0, 255};
+const TDataIOID FORTE_RT_E_EC_COUPLER::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_RT_E_EC_COUPLER::scm_anEOWithIndexes[] = {0, -1, -1};
 const CStringDictionary::TStringId FORTE_RT_E_EC_COUPLER::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdEO};
 

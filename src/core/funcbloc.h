@@ -115,7 +115,7 @@ struct SFBInterfaceSpec {
  */
 class CFunctionBlock {
   public:
-    const static TDataIOID scmWithListDelimiter = cg_unInvalidPortId; //!< value identifying the end of a with list
+    constexpr static TDataIOID scmWithListDelimiter = cg_unInvalidPortId; //!< value identifying the end of a with list
 
     /*!\brief Possible states of a runable object.
      *

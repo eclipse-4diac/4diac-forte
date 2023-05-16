@@ -27,7 +27,7 @@ const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scm_anEventOutputNames[] = 
 const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scm_anDataInputNames[] = { g_nStringIdIN };
 
 const TForteInt16 GEN_STRUCT_DEMUX::scm_anEIWithIndexes[] = {0};
-const TDataIOID GEN_STRUCT_DEMUX::scm_anEIWith[] = {0, 255};
+const TDataIOID GEN_STRUCT_DEMUX::scm_anEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 GEN_STRUCT_DEMUX::scm_anEOWithIndexes[] = {0};
 
 

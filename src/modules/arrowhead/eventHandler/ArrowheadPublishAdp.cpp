@@ -24,7 +24,7 @@ const CStringDictionary::TStringId FORTE_ArrowheadPublishAdp::scm_anDataOutputTy
 const TForteInt16 FORTE_ArrowheadPublishAdp::scm_anEIWithIndexes[] = {-1, -1};
 const CStringDictionary::TStringId FORTE_ArrowheadPublishAdp::scm_anEventInputNames[] = {g_nStringIdpublished};
 
-const TDataIOID FORTE_ArrowheadPublishAdp::scm_anEOWith[] = {0, 1, 255};
+const TDataIOID FORTE_ArrowheadPublishAdp::scm_anEOWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_ArrowheadPublishAdp::scm_anEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_ArrowheadPublishAdp::scm_anEventOutputNames[] = {g_nStringIdpublish};
 

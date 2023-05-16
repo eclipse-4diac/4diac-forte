@@ -24,10 +24,10 @@ const CStringDictionary::TStringId FB_TP::scm_aunDIDataTypeIds[] = { g_nStringId
 const CStringDictionary::TStringId FB_TP::scm_aunDODataTypeIds[] = { g_nStringIdBOOL, g_nStringIdTIME };
 
 const TForteInt16 FB_TP::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID FB_TP::scm_anEIWith[] = { 0, 1, 255 };
+const TDataIOID FB_TP::scm_anEIWith[] = { 0, 1, scmWithListDelimiter };
 const CStringDictionary::TStringId FB_TP::scm_anEventInputNames[] = { g_nStringIdREQ };
 
-const TDataIOID FB_TP::scm_anEOWith[] = { 0, 1, 255 };
+const TDataIOID FB_TP::scm_anEOWith[] = { 0, 1, scmWithListDelimiter };
 const TForteInt16 FB_TP::scm_anEOWithIndexes[] = { 0 };
 const CStringDictionary::TStringId FB_TP::scm_anEventOutputNames[] = { g_nStringIdCNF };
 

@@ -23,7 +23,7 @@ DEFINE_FIRMWARE_FB(FORTE_E_R_TRIG, g_nStringIdE_R_TRIG)
 
 const CStringDictionary::TStringId FORTE_E_R_TRIG::scm_anDataInputNames[] = {g_nStringIdQI};
 const CStringDictionary::TStringId FORTE_E_R_TRIG::scm_anDataInputTypeIds[] = {g_nStringIdBOOL};
-const TDataIOID FORTE_E_R_TRIG::scm_anEIWith[] = {0, 255};
+const TDataIOID FORTE_E_R_TRIG::scm_anEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_R_TRIG::scm_anEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_E_R_TRIG::scm_anEventInputNames[] = {g_nStringIdEI};
 const TForteInt16 FORTE_E_R_TRIG::scm_anEOWithIndexes[] = {-1};

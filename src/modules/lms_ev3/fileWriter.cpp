@@ -30,10 +30,10 @@ const CStringDictionary::TStringId fileWriter::scm_anDataOutputNames[] = {g_nStr
 const CStringDictionary::TStringId fileWriter::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
 
 const TForteInt16 fileWriter::scm_anEIWithIndexes[] = {0, 3};
-const TDataIOID fileWriter::scm_anEIWith[] = {0, 1, 255, 0, 2, 3, 4, 255};
+const TDataIOID fileWriter::scm_anEIWith[] = {0, 1, scmWithListDelimiter, 0, 2, 3, 4, scmWithListDelimiter};
 const CStringDictionary::TStringId fileWriter::scm_anEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
 
-const TDataIOID fileWriter::scm_anEOWith[] = {0, 1, 255, 0, 1, 255};
+const TDataIOID fileWriter::scm_anEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 fileWriter::scm_anEOWithIndexes[] = {0, 3, -1};
 const CStringDictionary::TStringId fileWriter::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
 

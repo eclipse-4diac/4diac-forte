@@ -29,7 +29,7 @@ DEFINE_FIRMWARE_FB(FORTE_E_SELECT, g_nStringIdE_SELECT)
 
 const CStringDictionary::TStringId FORTE_E_SELECT::scm_anDataInputNames[] = {g_nStringIdG};
 const CStringDictionary::TStringId FORTE_E_SELECT::scm_anDataInputTypeIds[] = {g_nStringIdBOOL};
-const TDataIOID FORTE_E_SELECT::scm_anEIWith[] = {0, 255, 0, 255};
+const TDataIOID FORTE_E_SELECT::scm_anEIWith[] = {0, scmWithListDelimiter, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_SELECT::scm_anEIWithIndexes[] = {0, 2};
 const CStringDictionary::TStringId FORTE_E_SELECT::scm_anEventInputNames[] = {g_nStringIdEI0, g_nStringIdEI1};
 const TForteInt16 FORTE_E_SELECT::scm_anEOWithIndexes[] = {-1};

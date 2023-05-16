@@ -24,7 +24,7 @@ const CStringDictionary::TStringId FORTE_RegisterServiceAdp::scm_anDataOutputTyp
 const TForteInt16 FORTE_RegisterServiceAdp::scm_anEIWithIndexes[] = {-1, -1, -1};
 const CStringDictionary::TStringId FORTE_RegisterServiceAdp::scm_anEventInputNames[] = {g_nStringIddoneRegister, g_nStringIddoneUnregister};
 
-const TDataIOID FORTE_RegisterServiceAdp::scm_anEOWith[] = {0, 1, 255, 0, 1, 255};
+const TDataIOID FORTE_RegisterServiceAdp::scm_anEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_RegisterServiceAdp::scm_anEOWithIndexes[] = {0, 3, -1};
 const CStringDictionary::TStringId FORTE_RegisterServiceAdp::scm_anEventOutputNames[] = {g_nStringIdregisterService, g_nStringIdunregisterService};
 

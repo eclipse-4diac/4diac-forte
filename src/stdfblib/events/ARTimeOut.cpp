@@ -24,7 +24,7 @@ const CStringDictionary::TStringId FORTE_ARTimeOut::scm_anDataOutputNames[] = {g
 const CStringDictionary::TStringId FORTE_ARTimeOut::scm_anDataOutputTypeIds[] = {g_nStringIdTIME};
 const TForteInt16 FORTE_ARTimeOut::scm_anEIWithIndexes[] = {-1};
 const CStringDictionary::TStringId FORTE_ARTimeOut::scm_anEventInputNames[] = {g_nStringIdTimeOut};
-const TDataIOID FORTE_ARTimeOut::scm_anEOWith[] = {0, 255};
+const TDataIOID FORTE_ARTimeOut::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_ARTimeOut::scm_anEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_ARTimeOut::scm_anEventOutputNames[] = {g_nStringIdSTART, g_nStringIdSTOP};
 

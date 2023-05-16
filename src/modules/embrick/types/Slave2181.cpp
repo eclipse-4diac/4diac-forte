@@ -47,11 +47,11 @@ const CStringDictionary::TStringId EmbrickSlave2181::scm_anDataOutputTypeIds[] =
 
 const TForteInt16 EmbrickSlave2181::scm_anEIWithIndexes[] = { 0 };
 const TDataIOID EmbrickSlave2181::scm_anEIWith[] = { 1, 2, 5, 3, 4, 6, 7, 8, 9, 10, 11,
-    12, 13, 14, 15, 16, 0, 255 };
+    12, 13, 14, 15, 16, 0, scmWithListDelimiter };
 const CStringDictionary::TStringId EmbrickSlave2181::scm_anEventInputNames[] = {
     g_nStringIdMAP };
 
-const TDataIOID EmbrickSlave2181::scm_anEOWith[] = { 0, 255, 0, 1, 255 };
+const TDataIOID EmbrickSlave2181::scm_anEOWith[] = { 0, scmWithListDelimiter, 0, 1, scmWithListDelimiter };
 const TForteInt16 EmbrickSlave2181::scm_anEOWithIndexes[] = { 0, 2, -1 };
 const CStringDictionary::TStringId EmbrickSlave2181::scm_anEventOutputNames[] = {
     g_nStringIdMAPO, g_nStringIdIND };

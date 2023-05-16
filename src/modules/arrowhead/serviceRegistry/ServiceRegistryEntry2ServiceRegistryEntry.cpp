@@ -26,10 +26,10 @@ const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEnt
 const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scm_anDataOutputTypeIds[] = {g_nStringIdServiceRegistryEntry};
 
 const TForteInt16 FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scm_anEIWith[] = {0, 255};
+const TDataIOID FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scm_anEIWith[] = {0, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scm_anEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scm_anEOWith[] = {0, 255};
+const TDataIOID FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scm_anEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scm_anEventOutputNames[] = {g_nStringIdCNF};
 

@@ -29,11 +29,11 @@ const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scm_anDataOutputNames[] = {
 
 const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scm_anDataOutputTypeIds[] = {g_nStringIdUINT};
 
-const TDataIOID FORTE_RT_E_TRAIN::scm_anEIWith[] = {0, 1, 2, 3, 255};
+const TDataIOID FORTE_RT_E_TRAIN::scm_anEIWith[] = {0, 1, 2, 3, scmWithListDelimiter};
 const TForteInt16 FORTE_RT_E_TRAIN::scm_anEIWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scm_anEventInputNames[] = {g_nStringIdSTART, g_nStringIdSTOP};
 
-const TDataIOID FORTE_RT_E_TRAIN::scm_anEOWith[] = {0, 255};
+const TDataIOID FORTE_RT_E_TRAIN::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_RT_E_TRAIN::scm_anEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scm_anEventOutputNames[] = {g_nStringIdEO};
 

@@ -39,7 +39,7 @@ const CStringDictionary::TStringId FORTE_E_STOPWATCH::scm_anDataOutputTypeIds[] 
 const TForteInt16 FORTE_E_STOPWATCH::scm_anEIWithIndexes[] = {-1, -1};
 const CStringDictionary::TStringId FORTE_E_STOPWATCH::scm_anEventInputNames[] = {g_nStringIdSTART, g_nStringIdSTOP};
 
-const TDataIOID FORTE_E_STOPWATCH::scm_anEOWith[] = {0, 255};
+const TDataIOID FORTE_E_STOPWATCH::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_STOPWATCH::scm_anEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_E_STOPWATCH::scm_anEventOutputNames[] = {g_nStringIdEO};
 

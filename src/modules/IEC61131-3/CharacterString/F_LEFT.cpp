@@ -32,11 +32,11 @@ const CStringDictionary::TStringId FORTE_F_LEFT::scm_anDataOutputNames[] = {g_nS
 
 const CStringDictionary::TStringId FORTE_F_LEFT::scm_anDataOutputTypeIds[] = {g_nStringIdANY_STRING};
 
-const TDataIOID FORTE_F_LEFT::scm_anEIWith[] = {0, 1, 255};
+const TDataIOID FORTE_F_LEFT::scm_anEIWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_F_LEFT::scm_anEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_LEFT::scm_anEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_F_LEFT::scm_anEOWith[] = {0, 255};
+const TDataIOID FORTE_F_LEFT::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_F_LEFT::scm_anEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_F_LEFT::scm_anEventOutputNames[] = {g_nStringIdCNF};
 

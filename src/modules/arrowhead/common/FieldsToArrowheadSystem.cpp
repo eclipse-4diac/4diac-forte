@@ -26,10 +26,10 @@ const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scm_anDataOutp
 const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scm_anDataOutputTypeIds[] = {g_nStringIdArrowheadSystem};
 
 const TForteInt16 FORTE_FieldsToArrowheadSystem::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_FieldsToArrowheadSystem::scm_anEIWith[] = {3, 2, 1, 0, 255};
+const TDataIOID FORTE_FieldsToArrowheadSystem::scm_anEIWith[] = {3, 2, 1, 0, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scm_anEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_FieldsToArrowheadSystem::scm_anEOWith[] = {0, 255};
+const TDataIOID FORTE_FieldsToArrowheadSystem::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_FieldsToArrowheadSystem::scm_anEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scm_anEventOutputNames[] = {g_nStringIdCNF};
 

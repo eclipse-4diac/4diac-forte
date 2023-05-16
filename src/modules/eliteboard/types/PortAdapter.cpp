@@ -25,7 +25,7 @@ const CStringDictionary::TStringId FORTE_PortAdapter::scm_anDataOutputTypeIds[] 
 const TForteInt16 FORTE_PortAdapter::scm_anEIWithIndexes[] = {-1};
 const CStringDictionary::TStringId FORTE_PortAdapter::scm_anEventInputNames[] = {g_nStringIdMAPO};
 
-const TDataIOID FORTE_PortAdapter::scm_anEOWith[] = {0, 255};
+const TDataIOID FORTE_PortAdapter::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_PortAdapter::scm_anEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_PortAdapter::scm_anEventOutputNames[] = {g_nStringIdMAP};
 

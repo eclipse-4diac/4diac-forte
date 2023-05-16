@@ -39,10 +39,10 @@ const CStringDictionary::TStringId DEV_MGR::scm_anDataOutputNames[] = {g_nString
 const CStringDictionary::TStringId DEV_MGR::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING};
 
 const TForteInt16 DEV_MGR::scm_anEIWithIndexes[] = {0, -1};
-const TDataIOID DEV_MGR::scm_anEIWith[] = {0, 1, 255};
+const TDataIOID DEV_MGR::scm_anEIWith[] = {0, 1, scmWithListDelimiter};
 const CStringDictionary::TStringId DEV_MGR::scm_anEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
 
-const TDataIOID DEV_MGR::scm_anEOWith[] = {0, 1, 255, 2, 3, 255};
+const TDataIOID DEV_MGR::scm_anEOWith[] = {0, 1, scmWithListDelimiter, 2, 3, scmWithListDelimiter};
 const TForteInt16 DEV_MGR::scm_anEOWithIndexes[] = {0, -1, 3};
 const CStringDictionary::TStringId DEV_MGR::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
 

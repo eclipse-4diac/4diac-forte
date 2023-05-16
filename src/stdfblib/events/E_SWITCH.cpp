@@ -29,7 +29,7 @@ DEFINE_FIRMWARE_FB(FORTE_E_SWITCH, g_nStringIdE_SWITCH)
 
 const CStringDictionary::TStringId FORTE_E_SWITCH::scm_anDataInputNames[] = {g_nStringIdG};
 const CStringDictionary::TStringId FORTE_E_SWITCH::scm_anDataInputTypeIds[] = {g_nStringIdBOOL};
-const TDataIOID FORTE_E_SWITCH::scm_anEIWith[] = {0, 255};
+const TDataIOID FORTE_E_SWITCH::scm_anEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_E_SWITCH::scm_anEIWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_E_SWITCH::scm_anEventInputNames[] = {g_nStringIdEI};
 const TForteInt16 FORTE_E_SWITCH::scm_anEOWithIndexes[] = {-1, -1};

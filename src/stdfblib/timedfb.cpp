@@ -16,7 +16,7 @@
 #endif
 
 const CStringDictionary::TStringId CTimedFB::scm_aunEINameIds[] = {g_nStringIdSTART, g_nStringIdSTOP};
-const TDataIOID CTimedFB::scm_anEIWith[] = {0, 255};
+const TDataIOID CTimedFB::scm_anEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 CTimedFB::scm_anEIWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId CTimedFB::scm_aunEONameIds[] = {g_nStringIdEO};
 

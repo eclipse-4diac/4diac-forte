@@ -25,11 +25,11 @@ const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scm_anDataOutpu
 
 const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scm_anDataOutputTypeIds[] = {g_nStringIdServiceRequestForm, g_nStringIdWSTRING};
 
-const TDataIOID FORTE_OrchestratorRequestAdp::scm_anEIWith[] = {0, 255};
+const TDataIOID FORTE_OrchestratorRequestAdp::scm_anEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_OrchestratorRequestAdp::scm_anEIWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scm_anEventInputNames[] = {g_nStringIdresponseReceived};
 
-const TDataIOID FORTE_OrchestratorRequestAdp::scm_anEOWith[] = {0, 1, 255};
+const TDataIOID FORTE_OrchestratorRequestAdp::scm_anEOWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_OrchestratorRequestAdp::scm_anEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scm_anEventOutputNames[] = {g_nStringIdrequestOrchestator};
 

@@ -25,10 +25,10 @@ const CStringDictionary::TStringId FORTE_CFB_TEST::scm_anDataOutputNames[] = {g_
 const CStringDictionary::TStringId FORTE_CFB_TEST::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL};
 
 const TForteInt16 FORTE_CFB_TEST::scm_anEIWithIndexes[] = {0, 2};
-const TDataIOID FORTE_CFB_TEST::scm_anEIWith[] = {0, 255, 0, 255};
+const TDataIOID FORTE_CFB_TEST::scm_anEIWith[] = {0, scmWithListDelimiter, 0, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_CFB_TEST::scm_anEventInputNames[] = {g_nStringIdSET, g_nStringIdRESET};
 
-const TDataIOID FORTE_CFB_TEST::scm_anEOWith[] = {0, 255, 0, 255};
+const TDataIOID FORTE_CFB_TEST::scm_anEOWith[] = {0, scmWithListDelimiter, 0, scmWithListDelimiter};
 const TForteInt16 FORTE_CFB_TEST::scm_anEOWithIndexes[] = {0, 2, -1};
 const CStringDictionary::TStringId FORTE_CFB_TEST::scm_anEventOutputNames[] = {g_nStringIdCNF, g_nStringIdCHANGED};
 
