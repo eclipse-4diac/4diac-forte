@@ -129,11 +129,11 @@ class CFunctionBlock {
 
     /*! \brief Indicator that the given EventID is an included adapter's eventID.
      *
-     * This will allow 255 Input and Output Events.
-     *
      * EventIDs > scm_nMaxInterfaceEvents: highByte indicates (AdapterID+1)
      */
-    static const TEventID scm_nMaxInterfaceEvents = 0x00FF;
+    static const TEventID scm_nMaxInterfaceEvents = cg_unInvalidPortId;
+    static_assert((scm_nMaxInterfaceEvents & (scm_nMaxInterfaceEvents + 1)) == 0,
+                  "scm_nMaxInterfaceEvents must be a valid bitmask");
 
     virtual bool initialize();
 
