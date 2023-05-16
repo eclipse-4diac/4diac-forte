@@ -173,7 +173,7 @@ bool GEN_APPEND_STRING::createInterfaceSpec(const char *paConfigString, SFBInter
     paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
     paInterfaceSpec.m_anEOWith = scm_anEOWith;
     paInterfaceSpec.m_anEOWithIndexes = scm_anEOWithIndexes;
-    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(mDInputs);
+    paInterfaceSpec.m_nNumDIs = mDInputs;
     paInterfaceSpec.m_aunDINames = m_anDataInputNames;
     paInterfaceSpec.m_aunDIDataTypeNames = m_anDataInputTypeIds;
     paInterfaceSpec.m_nNumDOs = 1;

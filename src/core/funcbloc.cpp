@@ -130,7 +130,7 @@ void CFunctionBlock::freeAllData(){
 void CFunctionBlock::setupAdapters(const SFBInterfaceSpec *pa_pstInterfaceSpec, TForteByte *pa_acFBData){
   if((nullptr != pa_pstInterfaceSpec) && (nullptr != pa_acFBData) && (pa_pstInterfaceSpec->m_nNumAdapters)) {
     m_apoAdapters = reinterpret_cast<TAdapterPtr *>(pa_acFBData);
-    for(unsigned int i = 0; i < pa_pstInterfaceSpec->m_nNumAdapters; ++i) {
+    for(TPortId i = 0; i < pa_pstInterfaceSpec->m_nNumAdapters; ++i) {
       //set pointer to right place in pa_acFBData
       m_apoAdapters[i] = CTypeLib::createAdapter(pa_pstInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID,
         pa_pstInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterTypeNameID, getResourcePtr(),

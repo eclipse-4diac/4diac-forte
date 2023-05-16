@@ -129,7 +129,7 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
     BOOST_REQUIRE(e.isGood());
   }
 
-  void test_events(CIfSpecBuilder &uut, TForteUInt8 &n, const CStringDictionary::TStringId *&f) {
+  void test_events(CIfSpecBuilder &uut, TEventID &n, const CStringDictionary::TStringId *&f) {
     build(uut);
     BOOST_REQUIRE_EQUAL(n, 2);
     BOOST_REQUIRE_NE(f, nullptr);
@@ -191,7 +191,7 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
     BOOST_CHECK_EQUAL(ifspec.m_anEOWithIndexes[0], -1);
   }
 
-  void test_data(CIfSpecBuilder &uut, TForteUInt8 &n, const CStringDictionary::TStringId *&f, const CStringDictionary::TStringId *&t, CStringDictionary::TStringId dataTypeId = -1u) {
+  void test_data(CIfSpecBuilder &uut, TPortId &n, const CStringDictionary::TStringId *&f, const CStringDictionary::TStringId *&t, CStringDictionary::TStringId dataTypeId = -1u) {
     build(uut);
     BOOST_REQUIRE_EQUAL(n, 2);
     BOOST_REQUIRE_NE(f, nullptr);

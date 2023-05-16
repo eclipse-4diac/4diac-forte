@@ -56,7 +56,7 @@ bool CCompositeFB::initialize() {
   setParams();
 
   //remove adapter-references for CFB
-  for(TForteUInt8 i = 0; i < m_pstInterfaceSpec->m_nNumAdapters; i++){
+  for(TPortId i = 0; i < m_pstInterfaceSpec->m_nNumAdapters; i++){
     if(nullptr != m_apoAdapters){
       static_cast<CAdapter*>(m_apoAdapters[i])->setParentFB(nullptr, 0);
     }

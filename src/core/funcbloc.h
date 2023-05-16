@@ -72,7 +72,7 @@ namespace forte {
 
 typedef CAdapter *TAdapterPtr;
 
-typedef TForteUInt8 TDataIOID; //!< \ingroup CORE Type for holding an data In- or output ID (max value 254)
+typedef TPortId TDataIOID; //!< \ingroup CORE Type for holding an data In- or output ID
 
 /*!\ingroup CORE\brief Structure to hold all data of adapters instantiated in the function block.
  */
@@ -93,21 +93,21 @@ struct SCFB_FBInstanceData {
 /*!\ingroup CORE\brief Structure to hold all the data for specifying a function block interface.
  */
 struct SFBInterfaceSpec {
-    TForteUInt8 m_nNumEIs; //!< Number of event inputs (max 254)
+    TEventID m_nNumEIs; //!< Number of event inputs
     const CStringDictionary::TStringId *m_aunEINames; //!< List of the event input names
     const TDataIOID *m_anEIWith; //!< Input WITH reference list. This list contains an array of input data ids. For each input event the associated data inputs are listed. The start for each input event is specified in the m_anEIWithIndexes field. The end is defined trough the value 255.
     const TForteInt16 *m_anEIWithIndexes; //!< Index list for each input event. This list gives for each input event an entry in the m_anEIWith. Input events are numbered starting from 0. if the input event has no assciated data inputs -1 is the entry at this event inputs postion.
-    TForteUInt8 m_nNumEOs; //!< Number of event outputs (max 254)
+    TEventID m_nNumEOs; //!< Number of event outputs
     const CStringDictionary::TStringId *m_aunEONames; //!< List of the event output names
     const TDataIOID *m_anEOWith; //!< Output WITH reference list. This list contains an array of output data ids. For each output event the associated data outputs are listed. The start for each output event is specified in the m_anEOWithIndexes field. The end is defined trough the value 255.
     const TForteInt16 *m_anEOWithIndexes; //!< Index list for each output event. This list gives for each output event an entry in the m_anEOWith. Output events are numbered starting from 0. if the output event has no assciated data outputs -1 is the entry at this event outputs postion. Additionally at the postion m_nNumEOs in this list an index to an own list in the m_anEOWith list is stored specifying all output data port that are not associated with any output event. That values will be updated on every FB invocation.
-    TForteUInt8 m_nNumDIs; //!< Number of data inputs (max 254)
+    TPortId m_nNumDIs; //!< Number of data inputs
     const CStringDictionary::TStringId *m_aunDINames; //!< List of the data input names
     const CStringDictionary::TStringId *m_aunDIDataTypeNames; //!< List of the data type names for the data inputs
-    TForteUInt8 m_nNumDOs; //!< Number of data outputs (max 254)
+    TPortId m_nNumDOs; //!< Number of data outputs
     const CStringDictionary::TStringId *m_aunDONames; //!< List of the data output names
     const CStringDictionary::TStringId *m_aunDODataTypeNames; //!< List of the data type names for the data outputs
-    TForteUInt8 m_nNumAdapters; //!< Number of Adapters
+    TPortId m_nNumAdapters; //!< Number of Adapters
     const SAdapterInstanceDef *m_pstAdapterInstanceDefinition; //!< List of adapter instances
 };
 
@@ -133,7 +133,7 @@ class CFunctionBlock {
      *
      * EventIDs > scm_nMaxInterfaceEvents: highByte indicates (AdapterID+1)
      */
-    static const TForteUInt16 scm_nMaxInterfaceEvents = 0x00FF;
+    static const TEventID scm_nMaxInterfaceEvents = 0x00FF;
 
     virtual bool initialize();
 

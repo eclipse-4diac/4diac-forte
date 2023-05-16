@@ -76,7 +76,7 @@ class CDeserTestMockCommFB : public forte::com_infra::CCommFB{
       m_oMockFBInterface.m_nNumDIs = 2;
       m_oMockFBInterface.m_aunDINames = nullptr;
       m_oMockFBInterface.m_aunDIDataTypeNames = scm_anInputTypes;
-      m_oMockFBInterface.m_nNumDOs = static_cast<TForteUInt8>(pa_nNumRD + 2U);
+      m_oMockFBInterface.m_nNumDOs = pa_nNumRD + 2U;
       m_oMockFBInterface.m_aunDONames = nullptr;
       m_oMockFBInterface.m_aunDODataTypeNames = pa_aunDODataTypeNames;
 

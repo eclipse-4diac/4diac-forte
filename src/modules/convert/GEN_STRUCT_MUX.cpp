@@ -79,7 +79,7 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
         paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
         paInterfaceSpec.m_anEOWith = scm_anEOWith;
         paInterfaceSpec.m_anEOWithIndexes = scm_anEOWithIndexes;
-        paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(structSize);
+        paInterfaceSpec.m_nNumDIs = structSize;
         paInterfaceSpec.m_aunDINames = diNames;
         paInterfaceSpec.m_aunDIDataTypeNames = diDataTypeNames;
         paInterfaceSpec.m_nNumDOs = 1;
@@ -89,7 +89,7 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
 
         for(size_t i = 0, typeNameIndex = 0; i < paInterfaceSpec.m_nNumDIs; i++, typeNameIndex++) {
           CIEC_ANY &member = *structInstance->getMember(i);
-          eiWith[i] = static_cast<TForteUInt8>(i);
+          eiWith[i] = i;
           diNames[i] = structInstance->elementNames()[i];
           diDataTypeNames[typeNameIndex] = member.getTypeNameID();
           if(member.getDataTypeID() == CIEC_ANY::e_ARRAY){

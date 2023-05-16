@@ -126,7 +126,7 @@ void CBasicFB::traceInstanceData() {
   std::vector<const char *> outputs_c_str(outputs.size());
   std::vector<const char *> internals_c_str(internals.size());
 
-  for(TForteUInt8 i = 0; i < inputs.size(); ++i) {
+  for(TPortId i = 0; i < inputs.size(); ++i) {
     CIEC_ANY *value = getDI(i);
     std::string &valueString = inputs[i];
     valueString.reserve(value->getToStringBufferSize());
@@ -134,7 +134,7 @@ void CBasicFB::traceInstanceData() {
     inputs_c_str[i] = valueString.c_str();
   }
 
-  for(TForteUInt8 i = 0; i < outputs.size(); ++i) {
+  for(TPortId i = 0; i < outputs.size(); ++i) {
     CIEC_ANY *value = getDO(i);
     std::string &valueString = outputs[i];
     valueString.reserve(value->getToStringBufferSize());
@@ -142,7 +142,7 @@ void CBasicFB::traceInstanceData() {
     outputs_c_str[i] = valueString.c_str();
   }
 
-  for(TForteUInt8 i = 0; i < internals.size(); ++i) {
+  for(TPortId i = 0; i < internals.size(); ++i) {
     CIEC_ANY *value = getVarInternal(i);
     std::string &valueString = internals[i];
     valueString.reserve(value->getToStringBufferSize());

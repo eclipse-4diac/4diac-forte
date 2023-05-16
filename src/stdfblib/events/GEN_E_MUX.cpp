@@ -49,7 +49,7 @@ bool GEN_E_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
     ++acPos;
     if('M' != *acPos){
       //we have an underscore and it is not the first underscore after E
-      paInterfaceSpec.m_nNumEIs = static_cast<TForteUInt8>(forte::core::util::strtoul(acPos, nullptr, 10));
+      paInterfaceSpec.m_nNumEIs = static_cast<TEventID>(forte::core::util::strtoul(acPos, nullptr, 10));
 
       if(paInterfaceSpec.m_nNumEIs < CFunctionBlock::scm_nMaxInterfaceEvents && paInterfaceSpec.m_nNumEIs >= 2){
         m_anEventInputNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumEIs];

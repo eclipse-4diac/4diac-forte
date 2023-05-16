@@ -85,14 +85,14 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
         paInterfaceSpec.m_nNumDIs = 1;
         paInterfaceSpec.m_aunDINames = scm_anDataInputNames;
         paInterfaceSpec.m_aunDIDataTypeNames = diDataTypeNames;
-        paInterfaceSpec.m_nNumDOs = static_cast<TForteUInt8>(structSize);
+        paInterfaceSpec.m_nNumDOs = structSize;
         paInterfaceSpec.m_aunDONames = doNames;
         paInterfaceSpec.m_aunDODataTypeNames = doDataTypeNames;
         diDataTypeNames[0] = structTypeNameId;
 
         for(size_t i = 0, typeNameIndex = 0; i < paInterfaceSpec.m_nNumDOs; i++, typeNameIndex++) {
           CIEC_ANY &member = *structInstance->getMember(i);
-          eoWith[i] = static_cast<TForteUInt8>(i);
+          eoWith[i] = i;
           doNames[i] = structInstance->elementNames()[i];
           doDataTypeNames[typeNameIndex] = member.getTypeNameID();
           if(member.getDataTypeID() == CIEC_ANY::e_ARRAY){
