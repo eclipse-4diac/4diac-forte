@@ -303,6 +303,9 @@ int CIEC_ANY_ELEMENTARY_VARIANT::compare(const CIEC_ANY_ELEMENTARY_VARIANT &paVa
         return static_cast<int>(static_cast<typename commonType::TValueType>(static_cast<commonType >(value)) -
                                 static_cast<typename commonType::TValueType>(static_cast<commonType >(other)));
       } else {
+        DEVLOG_ERROR("Comparing incompatible types %s and %s\n",
+                     CStringDictionary::getInstance().get(value.getTypeNameID()),
+                     CStringDictionary::getInstance().get(other.getTypeNameID()));
         return -1;
       }
   }, paValue, paOther);;
