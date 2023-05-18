@@ -50,11 +50,11 @@ private:
   static const TForteInt16 scm_nStateCU = 1;
   static const TForteInt16 scm_nStateR = 2;
   
-  void enterStateSTART(void);
-  void enterStateCU(void);
-  void enterStateR(void);
+  void enterStateSTART(CEventChainExecutionThread * const paECET);
+  void enterStateCU(CEventChainExecutionThread * const paECET);
+  void enterStateR(CEventChainExecutionThread * const paECET);
 
-  void executeEvent(TEventID pa_nEIID) override;
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
 
   void readInputData(TEventID pa_nEIID) override;
   void writeOutputData(TEventID pa_nEIID) override;

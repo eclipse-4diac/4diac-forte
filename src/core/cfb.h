@@ -127,7 +127,7 @@ class CCompositeFB: public CFunctionBlock {
 #endif
 
   private:
-    void executeEvent(TEventID pa_nEIID) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
 
     bool createInternalFBs();
     void createEventConnections();
@@ -136,7 +136,7 @@ class CCompositeFB: public CFunctionBlock {
     void createDataConnections();
     void prepareIf2InDataCons();
     void setParams();
-    void sendInternal2InterfaceOutputEvent(TEventID pa_nEOID);
+    void sendInternal2InterfaceOutputEvent(TEventID pa_nEOID, CEventChainExecutionThread *paECET);
 
     //!Acquire the functionblock for a given function block number this may be a contained fb, an adapter, or the composite itself.
     CFunctionBlock *getFunctionBlock(int pa_nFBNum);

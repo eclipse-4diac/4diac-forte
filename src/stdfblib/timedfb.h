@@ -42,9 +42,9 @@ protected:
   STimedFBListEntry mTimeListEntry; //!> The Timer list entry of this timed FB
 /*!\brief execute the input events of timed FBs as far it is possible
  *
- * Derived Timed FBs only normaly need only the start event es this is different for each timed FB type (e.g. periodic vs. onetimeshot)
+ * Derived Timed FBs only normally need only the start event as this is different for each timed FB type (e.g. periodic vs. onetimeshot)
  */
-  void executeEvent(TEventID pa_nEIID) override;
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
 
   CIEC_TIME& DT() {
      return *static_cast<CIEC_TIME*>(getDI(0));

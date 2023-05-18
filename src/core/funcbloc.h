@@ -308,8 +308,7 @@ class CFunctionBlock {
                 mEIMonitorCount[paEIID]++;
           #endif //FORTE_SUPPORT_MONITORING
         }
-        mInvokingExecEnv = paExecEnv;
-        executeEvent(paEIID);
+        executeEvent(paEIID, paExecEnv);
       }
     }
 
@@ -447,11 +446,22 @@ class CFunctionBlock {
 
     static TPortId getPortId(CStringDictionary::TStringId pa_unPortNameId, TPortId pa_unMaxPortNames, const CStringDictionary::TStringId *pa_aunPortNames);
 
+
+    /**
+     * \deprecated Use void sendOutputEvent(CEventChainExecutionThread *paECET, TEventID paEO)
+     * Will be removed when all FBs are migrated to new interface
+     */
+    [[deprecated]] void sendOutputEvent(TEventID paEO){
+      sendOutputEvent(paEO, mInvokingExecEnv);
+    }
+
     /*!\brief Function to send an output event of the FB.
      *
-     * \param pa_nEO Event output ID where event should be fired.
+     * \param paECET the event chain execution thread to be used for sending output events
+     * \param paEO Event output ID where event should be fired.
+     * \param paExecEnv Event chain execution environment where the event will be sent to.
      */
-    void sendOutputEvent(TEventID paEO){
+    void sendOutputEvent(TEventID paEO, CEventChainExecutionThread * const paECET){
       FORTE_TRACE("OutputEvent: Function Block sending event: %d (maxid: %d)\n", paEO, mInterfaceSpec->m_nNumEOs - 1);
 
       #ifdef FORTE_TRACE_CTF
@@ -460,8 +470,7 @@ class CFunctionBlock {
 
       if(paEO < mInterfaceSpec->m_nNumEOs) {
         writeOutputData(paEO);
-
-        getEOConUnchecked(static_cast<TPortId>(paEO))->triggerEvent(mInvokingExecEnv);
+        getEOConUnchecked(static_cast<TPortId>(paEO))->triggerEvent(paECET);
 
         #ifdef FORTE_SUPPORT_MONITORING
             // Count Event for monitoring
@@ -530,8 +539,17 @@ class CFunctionBlock {
      *
      * \param pa_nAdapterID ID of Adapter in current FBs adapter list.
      * \param pa_nEID Event ID where event should be fired.
+     * \param paExecEnv Event chain execution environment where the event will be sent to.
      */
-    void sendAdapterEvent(size_t paAdapterID, TEventID paEID) const;
+    void sendAdapterEvent(TPortId paAdapterID, TEventID paEID, CEventChainExecutionThread * const paECET) const;
+
+    /**
+     * \deprecated Use void  void sendAdapterEvent(CEventChainExecutionThread *paECET, size_t paAdapterID, TEventID paEID)
+     * Will be removed when all FBs are migrated to new interface
+     */
+    [[deprecated]] void sendAdapterEvent(TPortId paAdapterID, TEventID paEID) const{
+      sendAdapterEvent(paAdapterID, paEID, mInvokingExecEnv);
+    }
 
     void setupAdapters(const SFBInterfaceSpec *pa_pstInterfaceSpec, TForteByte *pa_acFBData);
 
@@ -628,11 +646,28 @@ class CFunctionBlock {
     void *mFBConnData; //!< Connection data buffer
     void *mFBVarsData; //!< Variable data buffer
   private:
+
     /*!\brief Function providing the functionality of the FB (e.g. execute ECC for basic FBs).
      *
-     * \param pa_nEIID Event input ID where event occurred.
+     * \param paECET the event chain execution thread this FB was invoked from
+     * \param paEIID Event input ID where event occurred.
+     * \param paExecEnv Event chain execution environment the FB will be executed in (used for adding output events).
+     *
+     * TODO turn into pure virtual method when all
      */
-    virtual void executeEvent(TEventID pa_nEIID) = 0;
+    virtual void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) {
+      //default implementation for legacy FB support
+      mInvokingExecEnv = paECET;
+      executeEvent(paEIID);
+    }
+
+    /**
+     * \deprecated Use void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET)
+     * Will be removed when all FBs are migrated to new interface
+     */
+    [[deprectated]] virtual void executeEvent(TEventID ) {
+
+    }
 
     /*!\brief Function reading the values from input connections of the FB.
      *

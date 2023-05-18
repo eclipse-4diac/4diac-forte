@@ -73,21 +73,21 @@ void FORTE_E_CTU::alg_CU(void) {
 }
 
 
-void FORTE_E_CTU::executeEvent(TEventID pa_nEIID){
+void FORTE_E_CTU::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
   do {
     switch(m_nECCState) {
       case scm_nStateSTART:
-        if((scm_nEventCUID == pa_nEIID) && (func_LT(var_CV, CIEC_UINT(65535)))) enterStateCU();
+        if((scm_nEventCUID == paEIID) && (func_LT(var_CV, CIEC_UINT(65535)))) enterStateCU(paECET);
         else
-        if(scm_nEventRID == pa_nEIID) enterStateR();
+        if(scm_nEventRID == paEIID) enterStateR(paECET);
         else return; //no transition cleared
         break;
       case scm_nStateCU:
-        if(1) enterStateSTART();
+        if(1) enterStateSTART(paECET);
         else return; //no transition cleared
         break;
       case scm_nStateR:
-        if(1) enterStateSTART();
+        if(1) enterStateSTART(paECET);
         else return; //no transition cleared
         break;
       default:
@@ -95,7 +95,7 @@ void FORTE_E_CTU::executeEvent(TEventID pa_nEIID){
         m_nECCState = 0; // 0 is always the initial state
         return;
     }
-    pa_nEIID = cg_nInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
+    paEIID = cg_nInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
   } while(true);
 }
 
@@ -177,20 +177,20 @@ CIEC_ANY *FORTE_E_CTU::getVarInternal(size_t) {
 }
 
 
-void FORTE_E_CTU::enterStateSTART(void) {
+void FORTE_E_CTU::enterStateSTART(CEventChainExecutionThread* const paECET) {
   m_nECCState = scm_nStateSTART;
 }
 
-void FORTE_E_CTU::enterStateCU(void) {
+void FORTE_E_CTU::enterStateCU(CEventChainExecutionThread* const paECET) {
   m_nECCState = scm_nStateCU;
   alg_CU();
-  sendOutputEvent(scm_nEventCUOID);
+  sendOutputEvent(scm_nEventCUOID, paECET);
 }
 
-void FORTE_E_CTU::enterStateR(void) {
+void FORTE_E_CTU::enterStateR(CEventChainExecutionThread* const paECET) {
   m_nECCState = scm_nStateR;
   alg_R();
-  sendOutputEvent(scm_nEventROID);
+  sendOutputEvent(scm_nEventROID, paECET);
 }
 
 

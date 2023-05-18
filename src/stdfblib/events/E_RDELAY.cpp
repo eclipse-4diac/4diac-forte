@@ -21,10 +21,10 @@ E_RDELAY::E_RDELAY(const CStringDictionary::TStringId paInstanceNameId, CResourc
     CTimedFB( paInstanceNameId, paSrcRes, e_SingleShot){
 }
 
-void E_RDELAY::executeEvent(TEventID pa_nEIID){
-  switch(pa_nEIID){
+void E_RDELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
+  switch(paEIID){
     case cg_nExternalEventID:
-      sendOutputEvent(csm_nEOID);
+      sendOutputEvent(csm_nEOID, getEventChainExecutor());
       mActive = false;
       break;
     case csm_nEventSTARTID:
@@ -32,12 +32,12 @@ void E_RDELAY::executeEvent(TEventID pa_nEIID){
         //remove from the list as we want to be added with a new delay
         getTimer().unregisterTimedFB(this);
       }
-      setEventChainExecutor(mInvokingExecEnv);  // E_RDELAY will execute in the same thread on as from where it has been triggered.
+      setEventChainExecutor(paECET);  // E_RDELAY will execute in the same thread on as from where it has been triggered.
       getTimer().registerTimedFB( &mTimeListEntry, DT());
       mActive = true;
       break;
     default:
-      CTimedFB::executeEvent(pa_nEIID);
+      CTimedFB::executeEvent(paEIID, paECET);
       break;
   }
 }

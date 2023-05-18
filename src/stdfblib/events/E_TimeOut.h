@@ -41,7 +41,7 @@ class FORTE_E_TimeOut : public CEventSourceFB{
     bool mActive; //!> flag to indicate that the timed fb is currently active
     STimedFBListEntry mTimeListEntry; //!> The Timer list entry of this timed FB
 
-    void executeEvent(TEventID pa_nEIID) override;
+    void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
 
   public:
     EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_E_TimeOut){

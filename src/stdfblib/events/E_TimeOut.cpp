@@ -32,19 +32,19 @@ const SFBInterfaceSpec FORTE_E_TimeOut::scm_stFBInterfaceSpec = {
   1, scm_astAdapterInstances
 };
 
-void FORTE_E_TimeOut::executeEvent(TEventID pa_nEIID){
-  if(cg_nExternalEventID == pa_nEIID){
+void FORTE_E_TimeOut::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
+  if(cg_nExternalEventID == paEIID){
     mActive = false;
-    sendAdapterEvent(scm_nTimeOutSocketAdpNum, FORTE_ATimeOut::scm_nEventTimeOutID);
+    sendAdapterEvent(scm_nTimeOutSocketAdpNum, FORTE_ATimeOut::scm_nEventTimeOutID, getEventChainExecutor());
   }
-  else if(var_TimeOutSocket().evt_START() == pa_nEIID){
+  else if(var_TimeOutSocket().evt_START() == paEIID){
     if(!mActive){
-      setEventChainExecutor(mInvokingExecEnv);  // delay notification should be execute in the same thread on as from where it has been triggered.
+      setEventChainExecutor(paECET);  // delay notification should be execute in the same thread on as from where it has been triggered.
       getTimer().registerTimedFB(&mTimeListEntry, var_TimeOutSocket().var_DT());
       mActive = true;
     }
   }
-  else if(var_TimeOutSocket().evt_STOP() == pa_nEIID){
+  else if(var_TimeOutSocket().evt_STOP() == paEIID){
     if(mActive){
       getTimer().unregisterTimedFB(this);
       mActive = false;

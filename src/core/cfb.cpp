@@ -173,19 +173,18 @@ CIEC_ANY *CCompositeFB::getVar(CStringDictionary::TStringId *paNameList,
   return retVal;
 }
 
-void CCompositeFB::executeEvent(TEventID pa_nEIID){
-  if(cgInternal2InterfaceMarker & pa_nEIID){
-    sendInternal2InterfaceOutputEvent(static_cast<TEventID>(pa_nEIID
-        & cgInternal2InterfaceRemovalMask));
+void CCompositeFB::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
+  if(cgInternal2InterfaceMarker & paEIID){
+    sendInternal2InterfaceOutputEvent(static_cast<TEventID>(paEIID & cgInternal2InterfaceRemovalMask), paECET);
   }
   else{
-    if(pa_nEIID < mInterfaceSpec->m_nNumEIs && nullptr != mInterface2InternalEventCons[pa_nEIID]){
-      mInterface2InternalEventCons[pa_nEIID]->triggerEvent(mInvokingExecEnv);
+    if(paEIID < mInterfaceSpec->m_nNumEIs && nullptr != mInterface2InternalEventCons[paEIID]){
+      mInterface2InternalEventCons[paEIID]->triggerEvent(paECET);
     }
   }
 }
 
-void CCompositeFB::sendInternal2InterfaceOutputEvent(TEventID pa_nEOID){
+void CCompositeFB::sendInternal2InterfaceOutputEvent(TEventID pa_nEOID, CEventChainExecutionThread *paECET){
   //handle sampling of internal 2 interface data connections
   if((pa_nEOID < mInterfaceSpec->m_nNumEOs) && (nullptr != mInterfaceSpec->m_anEOWithIndexes) &&
     (-1 != mInterfaceSpec->m_anEOWithIndexes[pa_nEOID])){
@@ -203,7 +202,7 @@ void CCompositeFB::sendInternal2InterfaceOutputEvent(TEventID pa_nEOID){
       }
   }
 
-  sendOutputEvent(pa_nEOID);
+  sendOutputEvent(pa_nEOID, paECET);
 }
 
 bool CCompositeFB::createInternalFBs(){

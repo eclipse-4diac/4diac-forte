@@ -53,21 +53,21 @@ FORTE_E_SWITCH::FORTE_E_SWITCH(CStringDictionary::TStringId pa_nInstanceNameId, 
 
 
 
-void FORTE_E_SWITCH::executeEvent(TEventID pa_nEIID){
+void FORTE_E_SWITCH::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
   do {
     switch(m_nECCState) {
       case scm_nStateSTART:
-        if((scm_nEventEIID == pa_nEIID) && (func_NOT<CIEC_BOOL>(var_G))) enterStateG0();
+        if((scm_nEventEIID == paEIID) && (func_NOT<CIEC_BOOL>(var_G))) enterStateG0(paECET);
         else
-        if((scm_nEventEIID == pa_nEIID) && (var_G)) enterStateG1();
+        if((scm_nEventEIID == paEIID) && (var_G)) enterStateG1(paECET);
         else return; //no transition cleared
         break;
       case scm_nStateG0:
-        if(1) enterStateSTART();
+        if(1) enterStateSTART(paECET);
         else return; //no transition cleared
         break;
       case scm_nStateG1:
-        if(1) enterStateSTART();
+        if(1) enterStateSTART(paECET);
         else return; //no transition cleared
         break;
       default:
@@ -75,7 +75,7 @@ void FORTE_E_SWITCH::executeEvent(TEventID pa_nEIID){
         m_nECCState = 0; // 0 is always the initial state
         return;
     }
-    pa_nEIID = cg_nInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
+    paEIID = cg_nInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
   } while(true);
 }
 
@@ -129,18 +129,18 @@ CIEC_ANY *FORTE_E_SWITCH::getVarInternal(size_t) {
 }
 
 
-void FORTE_E_SWITCH::enterStateSTART(void) {
+void FORTE_E_SWITCH::enterStateSTART(CEventChainExecutionThread * const paECET) {
   m_nECCState = scm_nStateSTART;
 }
 
-void FORTE_E_SWITCH::enterStateG0(void) {
+void FORTE_E_SWITCH::enterStateG0(CEventChainExecutionThread * const paECET) {
   m_nECCState = scm_nStateG0;
-  sendOutputEvent(scm_nEventEO0ID);
+  sendOutputEvent(scm_nEventEO0ID, paECET);
 }
 
-void FORTE_E_SWITCH::enterStateG1(void) {
+void FORTE_E_SWITCH::enterStateG1(CEventChainExecutionThread * const paECET) {
   m_nECCState = scm_nStateG1;
-  sendOutputEvent(scm_nEventEO1ID);
+  sendOutputEvent(scm_nEventEO1ID, paECET);
 }
 
 

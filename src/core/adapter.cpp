@@ -99,13 +99,12 @@ bool CAdapter::isCompatible(CAdapter *pa_poPeer) const {
   return ((getFBTypeId() == pa_poPeer->getFBTypeId()) || ((getFBTypeId() == g_nStringIdANY_ADAPTER) && (g_nStringIdANY_ADAPTER != pa_poPeer->getFBTypeId())) || ((getFBTypeId() != g_nStringIdANY_ADAPTER) && (g_nStringIdANY_ADAPTER == pa_poPeer->getFBTypeId())));
 }
 
-void CAdapter::executeEvent(TEventID pa_nEIID){
+void CAdapter::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
   if (nullptr != m_poPeer) {
-    if (nullptr != m_poPeer->m_astEventEntry[pa_nEIID].mFB) {
-      mInvokingExecEnv->addEventEntry(m_poPeer->m_astEventEntry[pa_nEIID]);
+    if (nullptr != m_poPeer->m_astEventEntry[paEIID].mFB) {
+      paECET->addEventEntry(m_poPeer->m_astEventEntry[paEIID]);
     } else {
-      m_poPeer->mInvokingExecEnv = mInvokingExecEnv;
-      m_poPeer->sendOutputEvent(pa_nEIID);
+      m_poPeer->sendOutputEvent(paEIID, paECET);
     }
   }
 }

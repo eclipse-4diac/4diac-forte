@@ -385,9 +385,9 @@ TPortId CFunctionBlock::getAdapterPortId(CStringDictionary::TStringId paAdapterN
   return cgInvalidPortId;
 }
 
-void CFunctionBlock::sendAdapterEvent(size_t paAdapterID, TEventID paEID) const{
+void CFunctionBlock::sendAdapterEvent(TPortId paAdapterID, TEventID paEID, CEventChainExecutionThread * const paECET) const{
   if((paAdapterID < mInterfaceSpec->m_nNumAdapters) && (nullptr != m_apoAdapters[paAdapterID])){
-    m_apoAdapters[paAdapterID]->receiveInputEvent(paEID, mInvokingExecEnv);
+    m_apoAdapters[paAdapterID]->receiveInputEvent(paEID, paECET);
   }
 }
 

@@ -43,10 +43,10 @@ CTimedFB::CTimedFB(const CStringDictionary::TStringId paInstanceNameId, CResourc
   mTimeListEntry.mTimedFB = this;
 }
 
-void CTimedFB::executeEvent(TEventID pa_nEIID){
-  switch(pa_nEIID){
+void CTimedFB::executeEvent(TEventID paEIID, CEventChainExecutionThread * const ){
+  switch(paEIID){
     case cg_nExternalEventID:
-      sendOutputEvent(csm_nEOID);
+      sendOutputEvent(csm_nEOID, getEventChainExecutor());
       break;
     case csm_nEventSTOPID:
       if(mActive){
