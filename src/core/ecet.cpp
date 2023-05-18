@@ -38,66 +38,31 @@ void CEventChainExecutionThread::mainRun(){
   if(externalEventOccured()){
     transferExternalEvents();
   }
-  if(mEventListEnd == mEventListStart && mEventListEnd->mFB == nullptr){
+  TEventEntry *event = mEventList.pop();
+  if(nullptr == event){
     mProcessingEvents = false;
     selfSuspend();
     mProcessingEvents = true; //set this flag here to true as well in case the suspend just went through and processing was not finished
   }
   else{
-    if(nullptr != mEventListStart->mFB){
-      mEventListStart->mFB->receiveInputEvent(mEventListStart->mPortId, this);
-    }
-    mEventListStart->mFB = nullptr;
-    if(mEventListEnd == mEventListStart){ 
-      return;//let's suspend next time call mainrun to reduce duplicate code
-    }
-
-    if(mEventListStart == &mEventList[0]){
-      //wrap the ringbuffer
-      mEventListStart = &mEventList[cg_nEventChainEventListSize - 1];
-    }
-    else{
-      mEventListStart--;
-    }
+    event->mFB->receiveInputEvent(event->mPortId, this);
   }
 }
 
 void CEventChainExecutionThread::clear(){
-  for(ssize_t i = 0; i < cg_nEventChainEventListSize; i++){
-    mEventList[i].mFB = nullptr;
-  }
-  mEventListEnd = mEventListStart = &mEventList[cg_nEventChainEventListSize - 1];
+  mEventList.clear();
 
   {
     CCriticalRegion criticalRegion(mExternalEventListSync);
-    for(ssize_t i = 0; i < cg_nEventChainExternalEventListSize; i++){
-      mExternalEventList[i].mFB = nullptr;
-    }
-    mExternalEventListEnd = mExternalEventListStart = &mExternalEventList[cg_nEventChainExternalEventListSize - 1];
+    mExternalEventList.clear();
   }
 }
 
 void CEventChainExecutionThread::transferExternalEvents(){
   CCriticalRegion criticalRegion(mExternalEventListSync);
   //this while is built in a way that it checks also if we got here by accident
-  while(mExternalEventListStart != mExternalEventListEnd){
-      if(mExternalEventListStart->mFB != nullptr){
-        //add only valid entries
-        addEventEntry(*mExternalEventListStart);
-        mExternalEventListStart->mFB = nullptr;
-      }
-      if(mExternalEventListStart == &mExternalEventList[0]){
-        //wrap the ringbuffer
-        mExternalEventListStart = &mExternalEventList[cg_nEventChainExternalEventListSize - 1];
-      }
-      else{
-        mExternalEventListStart--;
-      }
-  }
-  //the queue is full and pop out last one
-  if(mExternalEventListStart->mFB != nullptr){
-      addEventEntry(*mExternalEventListStart);
-      mExternalEventListStart->mFB = nullptr;
+  while(!mExternalEventList.isEmpty()){
+    addEventEntry(*mExternalEventList.pop());
   }
 }
 
@@ -105,22 +70,7 @@ void CEventChainExecutionThread::startEventChain(TEventEntry paEventToAdd){
   FORTE_TRACE("CEventChainExecutionThread::startEventChain\n");
   {
     CCriticalRegion criticalRegion(mExternalEventListSync);
-    if(mExternalEventListEnd->mFB == nullptr){
-      *mExternalEventListEnd = paEventToAdd;
-      TEventEntryPtr pstNextEventListElem;
-
-      if(mExternalEventListEnd == &mExternalEventList[0]){
-        //wrap the ringbuffer
-        pstNextEventListElem = &mExternalEventList[cg_nEventChainExternalEventListSize - 1];
-      }
-      else{
-        pstNextEventListElem = (mExternalEventListEnd - 1);
-      }
-
-      if(mExternalEventListStart != pstNextEventListElem){
-        //the list is not full
-        mExternalEventListEnd = pstNextEventListElem;
-      }
+    if(mExternalEventList.push(paEventToAdd)){
       mProcessingEvents = true;
       resumeSelfSuspend();
     }
@@ -131,24 +81,7 @@ void CEventChainExecutionThread::startEventChain(TEventEntry paEventToAdd){
 }
 
 void CEventChainExecutionThread::addEventEntry(TEventEntry paEventToAdd){
-  if(mEventListEnd->mFB == nullptr){
-    *mEventListEnd = paEventToAdd;
-    TEventEntryPtr pstNextEventListElem;
-
-    if(mEventListEnd == &mEventList[0]){
-      //wrap the ringbuffer
-      pstNextEventListElem = &mEventList[cg_nEventChainEventListSize - 1];
-    }
-    else{
-      pstNextEventListElem = (mEventListEnd - 1);
-    }
-
-    if(mEventListStart != pstNextEventListElem){
-      //the list is not full
-      mEventListEnd = pstNextEventListElem;
-    }
-  }
-  else{
+  if(!mEventList.push(paEventToAdd)){
     DEVLOG_ERROR("Event queue is full, event dropped!\n");
   }
 }

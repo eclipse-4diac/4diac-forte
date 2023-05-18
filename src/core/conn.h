@@ -15,6 +15,8 @@
 #ifndef _CONN_H_
 #define _CONN_H_
 
+#include <type_traits>
+
 #include "fortelist.h"
 #include "mgmcmd.h"
 #include "stringdict.h"
@@ -31,13 +33,13 @@ class CConnectionPoint {
         mFB(paFB), mPortId(paPortId){
     }
 
-    CConnectionPoint():mFB(nullptr), mPortId(0) {
-    }
+    CConnectionPoint() = default;
 
     bool operator==(const CConnectionPoint & paRight) const{
       return ((mFB == paRight.mFB) && (mPortId == paRight.mPortId));
     }
 };
+static_assert(std::is_trivial_v<CConnectionPoint>);
 
 /*!\ingroup CORE \brief Base class for handling a connection.
  */
