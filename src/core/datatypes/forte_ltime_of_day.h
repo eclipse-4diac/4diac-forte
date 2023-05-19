@@ -26,7 +26,7 @@
 /*!\ingroup COREDTS CIEC_LTIME_OF_DAY represents the time data types according to IEC 61131.
  */
 
-class CIEC_LTIME_OF_DAY : public CIEC_ANY_DATE {
+class CIEC_LTIME_OF_DAY final : public CIEC_ANY_DATE {
   DECLARE_FIRMWARE_DATATYPE(LTIME_OF_DAY)
   public:
     CIEC_LTIME_OF_DAY() = default;

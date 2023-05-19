@@ -26,7 +26,7 @@
 
 /*!\ingroup COREDTS CIEC_INT represents the int data type according to IEC 61131.
  */
-class CIEC_INT : public CIEC_ANY_INT{
+class CIEC_INT final : public CIEC_ANY_INT{
   DECLARE_FIRMWARE_DATATYPE(INT)
 
   public:

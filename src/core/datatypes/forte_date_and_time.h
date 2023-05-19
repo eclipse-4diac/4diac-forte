@@ -23,7 +23,7 @@
 /*!\ingroup COREDTS CIEC_DATE_AND_TIME represents the time data types according to IEC 61131.
  */
 
-class CIEC_DATE_AND_TIME : public CIEC_ANY_DATE {
+class CIEC_DATE_AND_TIME final : public CIEC_ANY_DATE {
     DECLARE_FIRMWARE_DATATYPE(DATE_AND_TIME)
   public:
     CIEC_DATE_AND_TIME() = default;

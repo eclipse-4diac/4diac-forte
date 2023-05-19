@@ -31,7 +31,7 @@
 
 /*!\ingroup COREDTS CIEC_LREAL represents the lreal data type according to IEC 61131.
  */
-class CIEC_LREAL : public CIEC_ANY_REAL{
+class CIEC_LREAL final : public CIEC_ANY_REAL{
   DECLARE_FIRMWARE_DATATYPE(LREAL)
 
   public:

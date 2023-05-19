@@ -29,7 +29,7 @@
 
 /*!\ingroup COREDTS CIEC_LINT represents the dint data type according to IEC 61131.
  */
-class CIEC_LINT : public CIEC_ANY_INT{
+class CIEC_LINT final : public CIEC_ANY_INT{
   DECLARE_FIRMWARE_DATATYPE(LINT)
 
   public:

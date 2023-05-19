@@ -23,7 +23,7 @@
 
 /*!\ingroup COREDTS CIEC_UINT represents the uint data type according to IEC 61131.
  */
-class CIEC_UINT : public CIEC_ANY_INT{
+class CIEC_UINT final : public CIEC_ANY_INT{
   DECLARE_FIRMWARE_DATATYPE(UINT)
 
   public:

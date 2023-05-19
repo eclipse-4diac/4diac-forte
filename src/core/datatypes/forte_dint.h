@@ -27,7 +27,7 @@
 
 /*!\ingroup COREDTS CIEC_DINT represents the dint data type according to IEC 61131.
  */
-class CIEC_DINT : public CIEC_ANY_INT{
+class CIEC_DINT final : public CIEC_ANY_INT{
   DECLARE_FIRMWARE_DATATYPE(DINT)
 
   public:

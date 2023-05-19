@@ -36,7 +36,7 @@
 
 /*!\ingroup COREDTS CIEC_STRING represents the string data type according to IEC 61131.
  */
-class CIEC_STRING : public CIEC_ANY_STRING{
+class CIEC_STRING final : public CIEC_ANY_STRING{
   DECLARE_FIRMWARE_DATATYPE(STRING)
 
   public:
