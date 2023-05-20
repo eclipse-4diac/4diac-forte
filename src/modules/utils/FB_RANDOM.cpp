@@ -112,7 +112,7 @@ void FORTE_FB_RANDOM::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventINITID: {
       RES_DATA_CON_CRITICAL_REGION();
-      readData(0, &var_SEED, conn_SEED);
+      readData(0, var_SEED, conn_SEED);
       break;
     }
     case scm_nEventREQID: {
@@ -132,7 +132,7 @@ void FORTE_FB_RANDOM::writeOutputData(TEventID pa_nEIID) {
     }
     case scm_nEventCNFID: {
       RES_DATA_CON_CRITICAL_REGION();
-      writeData(0, &var_VAL, &conn_VAL);
+      writeData(0, var_VAL, conn_VAL);
       break;
     }
     default:

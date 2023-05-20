@@ -107,7 +107,7 @@ void FORTE_E_CTD::readInputData(TEventID pa_nEIID) {
     }
     case scm_nEventLDID: {
       RES_DATA_CON_CRITICAL_REGION();
-      readData(0, &var_PV, conn_PV);
+      readData(0, var_PV, conn_PV);
       break;
     }
     default:
@@ -119,14 +119,14 @@ void FORTE_E_CTD::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCDOID: {
       RES_DATA_CON_CRITICAL_REGION();
-      writeData(0, &var_Q, &conn_Q);
-      writeData(1, &var_CV, &conn_CV);
+      writeData(0, var_Q, conn_Q);
+      writeData(1, var_CV, conn_CV);
       break;
     }
     case scm_nEventLDOID: {
       RES_DATA_CON_CRITICAL_REGION();
-      writeData(0, &var_Q, &conn_Q);
-      writeData(1, &var_CV, &conn_CV);
+      writeData(0, var_Q, conn_Q);
+      writeData(1, var_CV, conn_CV);
       break;
     }
     default:

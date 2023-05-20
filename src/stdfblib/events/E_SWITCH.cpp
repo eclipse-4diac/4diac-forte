@@ -82,7 +82,7 @@ void FORTE_E_SWITCH::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventEIID: {
       RES_DATA_CON_CRITICAL_REGION();
-      readData(0, &var_G, conn_G);
+      readData(0, var_G, conn_G);
       break;
     }
     default:

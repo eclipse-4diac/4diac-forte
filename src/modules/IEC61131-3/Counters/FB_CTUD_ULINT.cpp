@@ -119,11 +119,11 @@ void FORTE_FB_CTUD_ULINT::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID: {
       RES_DATA_CON_CRITICAL_REGION();
-      readData(0, &var_CU, conn_CU);
-      readData(1, &var_CD, conn_CD);
-      readData(2, &var_R, conn_R);
-      readData(3, &var_LD, conn_LD);
-      readData(4, &var_PV, conn_PV);
+      readData(0, var_CU, conn_CU);
+      readData(1, var_CD, conn_CD);
+      readData(2, var_R, conn_R);
+      readData(3, var_LD, conn_LD);
+      readData(4, var_PV, conn_PV);
       break;
     }
     default:
@@ -135,9 +135,9 @@ void FORTE_FB_CTUD_ULINT::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCNFID: {
       RES_DATA_CON_CRITICAL_REGION();
-      writeData(0, &var_QU, &conn_QU);
-      writeData(1, &var_QD, &conn_QD);
-      writeData(2, &var_CV, &conn_CV);
+      writeData(0, var_QU, conn_QU);
+      writeData(1, var_QD, conn_QD);
+      writeData(2, var_CV, conn_CV);
       break;
     }
     default:

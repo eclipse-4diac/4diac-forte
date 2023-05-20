@@ -107,7 +107,7 @@ void FORTE_E_STOPWATCH::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventEOID: {
       RES_DATA_CON_CRITICAL_REGION();
-      writeData(0, &var_TD, &conn_TD);
+      writeData(0, var_TD, conn_TD);
       break;
     }
     default:

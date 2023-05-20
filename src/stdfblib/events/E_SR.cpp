@@ -91,7 +91,7 @@ void FORTE_E_SR::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventEOID: {
       RES_DATA_CON_CRITICAL_REGION();
-      writeData(0, &var_Q, &conn_Q);
+      writeData(0, var_Q, conn_Q);
       break;
     }
     default:

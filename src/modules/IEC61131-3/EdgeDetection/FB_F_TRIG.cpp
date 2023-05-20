@@ -91,7 +91,7 @@ void FORTE_FB_F_TRIG::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID: {
       RES_DATA_CON_CRITICAL_REGION();
-      readData(0, &var_CLK, conn_CLK);
+      readData(0, var_CLK, conn_CLK);
       break;
     }
     default:
@@ -103,7 +103,7 @@ void FORTE_FB_F_TRIG::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCNFID: {
       RES_DATA_CON_CRITICAL_REGION();
-      writeData(0, &var_Q, &conn_Q);
+      writeData(0, var_Q, conn_Q);
       break;
     }
     default:

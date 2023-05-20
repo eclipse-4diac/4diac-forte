@@ -102,10 +102,10 @@ void FORTE_RT_E_TRAIN::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventSTARTID: {
       RES_DATA_CON_CRITICAL_REGION();
-      readData(0, &var_DT, conn_DT);
-      readData(1, &var_N, conn_N);
-      readData(2, &var_Deadline, conn_Deadline);
-      readData(3, &var_WCET, conn_WCET);
+      readData(0, var_DT, conn_DT);
+      readData(1, var_N, conn_N);
+      readData(2, var_Deadline, conn_Deadline);
+      readData(3, var_WCET, conn_WCET);
       break;
     }
     case scm_nEventSTOPID: {
@@ -121,7 +121,7 @@ void FORTE_RT_E_TRAIN::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventEOID: {
       RES_DATA_CON_CRITICAL_REGION();
-      writeData(0, &var_CV, &conn_CV);
+      writeData(0, var_CV, conn_CV);
       break;
     }
     default:

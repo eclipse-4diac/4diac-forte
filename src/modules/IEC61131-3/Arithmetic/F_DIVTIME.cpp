@@ -76,8 +76,8 @@ void FORTE_F_DIVTIME::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID: {
       RES_DATA_CON_CRITICAL_REGION();
-      readData(0, &var_IN1, conn_IN1);
-      readData(1, &var_IN2, conn_IN2);
+      readData(0, var_IN1, conn_IN1);
+      readData(1, var_IN2, conn_IN2);
       break;
     }
     default:
@@ -89,7 +89,7 @@ void FORTE_F_DIVTIME::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCNFID: {
       RES_DATA_CON_CRITICAL_REGION();
-      writeData(0, &var_OUT, &conn_OUT);
+      writeData(0, var_OUT, conn_OUT);
       break;
     }
     default:

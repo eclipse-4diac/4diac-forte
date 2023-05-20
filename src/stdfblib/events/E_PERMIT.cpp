@@ -75,7 +75,7 @@ void FORTE_E_PERMIT::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventEIID: {
       RES_DATA_CON_CRITICAL_REGION();
-      readData(0, &var_PERMIT, conn_PERMIT);
+      readData(0, var_PERMIT, conn_PERMIT);
       break;
     }
     default:

@@ -41,9 +41,9 @@ class CDataConnection : public CConnection {
  *     - TRUE ... write successful
  *     - FALSE ... no such data connection exists
  */
-    void writeData(const CIEC_ANY *pa_poValue){
+    void writeData(const CIEC_ANY& paValue){
       if(m_poValue){
-        m_poValue->setValue(pa_poValue->unwrap());
+        m_poValue->setValue(paValue.unwrap());
       }
     };
 
@@ -52,9 +52,9 @@ class CDataConnection : public CConnection {
  *   Read data value from connection data variable to FB data input.
  *   \param pa_poValue pointer to FB data input
  */
-    void readData(CIEC_ANY *pa_poValue) const {
+    void readData(CIEC_ANY& pa_poValue) const {
       if(m_poValue){
-        pa_poValue->setValue(m_poValue->unwrap());
+        pa_poValue.setValue(m_poValue->unwrap());
       }
     }
 

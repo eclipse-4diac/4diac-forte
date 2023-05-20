@@ -442,16 +442,16 @@ class CFunctionBlock {
      * \param pa_poConn Connection to read from.
      */
 #ifdef FORTE_TRACE_CTF
-    void readData(size_t pa_nDONum, CIEC_ANY *pa_poValue, CDataConnection* pa_poConn);
+    void readData(size_t paDONum, CIEC_ANY &paValue, CDataConnection* paConn);
 #else
-    void readData(size_t, CIEC_ANY *pa_poValue, CDataConnection* pa_poConn) {
-      if(!pa_poConn) {
+    void readData(size_t, CIEC_ANY &paValue, CDataConnection* paConn) {
+      if(!paConn) {
         return;
       }
 #ifdef FORTE_SUPPORT_MONITORING
-      if(!pa_poValue->isForced()) {
+      if(!paValue.isForced()) {
 #endif //FORTE_SUPPORT_MONITORING
-        pa_poConn->readData(pa_poValue);
+        paConn->readData(paValue);
 #ifdef FORTE_SUPPORT_MONITORING
       }
 #endif //FORTE_SUPPORT_MONITORING
@@ -464,21 +464,21 @@ class CFunctionBlock {
      * \param pa_poConn Connection to write into.
      */
 #ifdef FORTE_TRACE_CTF
-    void writeData(size_t pa_nDONum, CIEC_ANY *pa_poValue, CDataConnection* pa_poConn);
+    void writeData(size_t paDONum, CIEC_ANY& paValue, CDataConnection& paConn);
 #else
-    void writeData(size_t, CIEC_ANY *pa_poValue, CDataConnection* pa_poConn) {
-      if(pa_poConn->isConnected()) {
+    void writeData(size_t, CIEC_ANY& paValue, CDataConnection& paConn) {
+      if(paConn.isConnected()) {
 #ifdef FORTE_SUPPORT_MONITORING
-        if(!pa_poValue->isForced()) {
+        if(!paValue.isForced()) {
 #endif //FORTE_SUPPORT_MONITORING
-          pa_poConn->writeData(pa_poValue);
+          paConn.writeData(paValue);
 #ifdef FORTE_SUPPORT_MONITORING
         } else {
           //when forcing we write back the value from the connection to keep the forced value on the output
-          pa_poConn->readData(pa_poValue);
+          paConn.readData(paValue);
         }
 #endif //FORTE_SUPPORT_MONITORING
-      }
+			}
     }
 #endif //FORTE_TRACE_CTF
 

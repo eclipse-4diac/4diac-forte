@@ -167,7 +167,7 @@ EMGMResponse CResource::changeFBExecutionState(EMGMCommandType pa_unCommand){
         for(TPortId i = 0; i < m_pstInterfaceSpec->m_nNumDIs; ++i) {
           CDataConnection *conn = *getDIConUnchecked(i);
           if(nullptr != conn) {
-            conn->readData(getDI(i));
+            conn->readData(*getDI(i));
           }
         }
       }
@@ -258,7 +258,7 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
           if(nullptr != con){
             //if we have got a connection it was a DO mirror the forced value there
             CCriticalRegion criticalRegion(m_oResDataConSync);
-            con->writeData(var);
+            con->writeData(*var);
           }
         }
         retVal = EMGMResponse::Ready;
