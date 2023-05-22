@@ -603,8 +603,9 @@ UA_StatusCode COPC_UA_Local_Handler::createVariableNode(const CCreateVariableInf
     paCreateVariableInfo.mReturnedNodeId); // return Node Id
 
   if(UA_STATUSCODE_GOOD != retVal) {
-    DEVLOG_ERROR("[OPC UA LOCAL]: AddressSpace adding Variable Node %s failed. Error: %s\n", paCreateVariableInfo.mBrowseName->name.data,
-      UA_StatusCode_name(retVal));
+    DEVLOG_ERROR("[OPC UA LOCAL]: AddressSpace adding Variable Node %.*s failed. Error: %s\n",
+                 paCreateVariableInfo.mBrowseName->name.length, paCreateVariableInfo.mBrowseName->name.data,
+                 UA_StatusCode_name(retVal));
   }
   UA_NodeId_clear(&parentNodeId);
   UA_NodeId_clear(&requestedNodeId);
