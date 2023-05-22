@@ -40,7 +40,11 @@ class CEventChainExecutionThread : public CThread{
      *
      * \param pa_poEventToAdd new event entry
      */
-    void addEventEntry(TEventEntry paEventToAdd);
+    void addEventEntry(TEventEntry paEventToAdd){
+      if(!mEventList.push(paEventToAdd)){
+        DEVLOG_ERROR("Event queue is full, event dropped!\n");
+      }
+    }
 
     /*!\brief allow to start, stop, and kill the execution of the event chain execution thread
      *

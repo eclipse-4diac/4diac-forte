@@ -80,12 +80,6 @@ void CEventChainExecutionThread::startEventChain(TEventEntry paEventToAdd){
   } // End critical region
 }
 
-void CEventChainExecutionThread::addEventEntry(TEventEntry paEventToAdd){
-  if(!mEventList.push(paEventToAdd)){
-    DEVLOG_ERROR("Event queue is full, event dropped!\n");
-  }
-}
-
 void CEventChainExecutionThread::changeExecutionState(EMGMCommandType paCommand){
   switch (paCommand){
     case EMGMCommandType::Start:
