@@ -38,29 +38,48 @@ class CIEC_EndianessTestStruct : public CIEC_STRUCT {
   DECLARE_FIRMWARE_DATATYPE(EndianessTestStruct);
 
 public:
-  CIEC_EndianessTestStruct();
+    CIEC_BOOL Var1;
+    CIEC_DINT Var2;
+    CIEC_LWORD Var3;
 
-  virtual ~CIEC_EndianessTestStruct() = default;
+    CIEC_EndianessTestStruct() = default;
 
-  CIEC_EndianessTestStruct &operator=(const CIEC_EndianessTestStruct &paValue) {
-    if (this != &paValue) {
-      setValue(paValue);
+    size_t getStructSize() const override {
+      return 3;
     }
-    return *this;
-  }
 
+    const CStringDictionary::TStringId* elementNames() const override {
+      return scm_unElementNames;
+    }
+
+    CStringDictionary::TStringId getStructTypeNameID() const override {
+      return g_nStringIdEndianessTestStruct;
+    }
+
+    CIEC_ANY *getMember(size_t paMemberIndex) override {
+      switch(paMemberIndex) {
+        case 0: return &Var1;
+        case 1: return &Var2;
+        case 2: return &Var3;
+      }
+      return nullptr;
+    }
+
+    const CIEC_ANY *getMember(size_t paMemberIndex) const override {
+      switch(paMemberIndex) {
+        case 0: return &Var1;
+        case 1: return &Var2;
+        case 2: return &Var3;
+      }
+      return nullptr;
+    }
 private:
-  static const CStringDictionary::TStringId scm_unElementTypes[];
   static const CStringDictionary::TStringId scm_unElementNames[];
 };
 
-const CStringDictionary::TStringId CIEC_EndianessTestStruct::scm_unElementTypes[] = {g_nStringIdBOOL, g_nStringIdDINT, g_nStringIdLWORD};
 const CStringDictionary::TStringId CIEC_EndianessTestStruct::scm_unElementNames[] = {g_nStringIdVal1, g_nStringIdVal2, g_nStringIdVal3};
 
 DEFINE_FIRMWARE_DATATYPE(EndianessTestStruct, g_nStringIdEndianessTestStruct)
-CIEC_EndianessTestStruct::CIEC_EndianessTestStruct() : CIEC_STRUCT(g_nStringIdEndianessTestStruct, 3, scm_unElementTypes, scm_unElementNames, e_APPLICATION + e_CONSTRUCTED + 1)
-{
-}
 
 void testSTInIsOutBoolDummyFunction(CIEC_BOOL paIn, CIEC_BOOL &paOut) {
   paOut = paIn;
@@ -1802,11 +1821,11 @@ BOOST_AUTO_TEST_CASE(func_to_big_endian_array_fixed) {
 
 BOOST_AUTO_TEST_CASE(func_to_big_endian_array_variable) {
   CIEC_ARRAY_VARIABLE<CIEC_LWORD> originalArray = {CIEC_LWORD(1), CIEC_LWORD(2), CIEC_LWORD(3)};
-  CIEC_ARRAY_VARIABLE<CIEC_LWORD> reversedArray(-1, 1);
+  CIEC_ARRAY_VARIABLE<CIEC_LWORD> reversedArray(0, 2); // copy/move assignment does not change bounds
   reversedArray = func_TO_BIG_ENDIAN(originalArray);
-  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[-1]) == 72057594037927936);
-  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[0]) == 144115188075855872);
-  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[1]) == 216172782113783808);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[0]) == 72057594037927936);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[1]) == 144115188075855872);
+  BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[2]) == 216172782113783808);
 }
 
 BOOST_AUTO_TEST_CASE(func_to_big_endian_array_variable_copy_ctor) {
@@ -1818,12 +1837,12 @@ BOOST_AUTO_TEST_CASE(func_to_big_endian_array_variable_copy_ctor) {
 }
 
 BOOST_AUTO_TEST_CASE(func_to_big_endian_array_typelib_copy_ctor) {
-  CIEC_ARRAY<CIEC_ANY> originalArray(3, g_nStringIdLWORD);
+  CIEC_ARRAY_DYNAMIC originalArray(3, g_nStringIdLWORD);
   originalArray[0].setValue(CIEC_LWORD(1));
   originalArray[1].setValue(CIEC_LWORD(2));
   originalArray[2].setValue(CIEC_LWORD(3));
 
-  CIEC_ARRAY<CIEC_ANY> reversedArray(func_TO_BIG_ENDIAN(originalArray));
+  CIEC_ARRAY_DYNAMIC reversedArray(func_TO_BIG_ENDIAN(originalArray));
   BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reinterpret_cast<CIEC_LWORD&>(reversedArray[0])) == 72057594037927936);
   BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reinterpret_cast<CIEC_LWORD&>(reversedArray[1])) == 144115188075855872);
   BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reinterpret_cast<CIEC_LWORD&>(reversedArray[2])) == 216172782113783808);

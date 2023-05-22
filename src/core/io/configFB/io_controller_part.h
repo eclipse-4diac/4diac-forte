@@ -46,7 +46,7 @@ namespace forte {
 
           static const int scmSplitAdapterAdpNum = 0;
 
-          void executeEvent(int paEIID) override;
+          void executeEvent(TEventID paEIID) override;
 
           virtual void initHandles() = 0;
 

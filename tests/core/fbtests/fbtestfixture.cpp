@@ -38,8 +38,7 @@ struct SDeleteFunctor {
 class CFBTestConn : public CDataConnection {
   public:
     static bool canBeConnected(const CIEC_ANY *paSrcDataPoint, const CIEC_ANY *paDstDataPoint) {
-      bool bSpecialCast;
-      return CDataConnection::canBeConnected(paSrcDataPoint, paDstDataPoint, bSpecialCast);
+      return CDataConnection::canBeConnected(paSrcDataPoint, paDstDataPoint);
     }
   private:
     //you are not allowed to create this class therefor constructor and destructor are private
@@ -49,8 +48,8 @@ class CFBTestConn : public CDataConnection {
 
 
 CFBTestFixtureBase::CFBTestFixtureBase(CStringDictionary::TStringId paTypeId) :
-    CFunctionBlock(CFBTestDataGlobalFixture::getResource(), nullptr, 0, nullptr, nullptr), mTypeId(paTypeId),
-        mFBUnderTest(CTypeLib::createFB(paTypeId, paTypeId, getResourcePtr())), mFBConnData(nullptr), mFBVarsData(nullptr) {
+    CFunctionBlock(CFBTestDataGlobalFixture::getResource(), nullptr, 0), mTypeId(paTypeId),
+        mFBUnderTest(CTypeLib::createFB(paTypeId, paTypeId, getResourcePtr())) {
 }
 
 bool CFBTestFixtureBase::initialize() {
@@ -91,8 +90,6 @@ CFBTestFixtureBase::~CFBTestFixtureBase(){
 
   if(nullptr != m_pstInterfaceSpec){
     freeAllData();  //clean the interface and connections first.
-    delete[] mFBConnData;
-    delete[] mFBVarsData;
     delete m_pstInterfaceSpec;
     m_pstInterfaceSpec = nullptr; //this stops the base classes from any wrong clean-up
   }
@@ -125,16 +122,16 @@ void CFBTestFixtureBase::setup(const char* pa_acConfigString){
   createDataOutputConnections();
 }
 
-void CFBTestFixtureBase::executeEvent(int paEIID){
+void CFBTestFixtureBase::executeEvent(TEventID paEIID){
   CCriticalRegion criticalRegion(mOutputEventLock);
   mFBOutputEvents.push_back(paEIID);
 }
 
 void CFBTestFixtureBase::triggerEvent(TPortId paEIId) {
   CEventChainExecutionThread *execThread = getResource().getResourceEventExecution();
-  SEventEntry entry(mFBUnderTest, paEIId);
+  TEventEntry entry(mFBUnderTest, paEIId);
 
-  execThread->startEventChain(&entry);
+  execThread->startEventChain(entry);
 
   //Wait till event execution for this input event has finished
   do {
@@ -199,21 +196,7 @@ void CFBTestFixtureBase::setupTestInterface(){
   testerInterfaceSpec->m_nNumAdapters = 0;
   testerInterfaceSpec->m_pstAdapterInstanceDefinition = nullptr;
 
-  mFBConnData = (0 != testerInterfaceSpec->m_nNumDIs) ?
-      new TForteByte[genFBConnDataSize(testerInterfaceSpec->m_nNumEOs, testerInterfaceSpec->m_nNumDIs, testerInterfaceSpec->m_nNumDOs)] : nullptr;
-  mFBVarsData = (0 != testerInterfaceSpec->m_nNumDIs) ?
-      new TForteByte[genFBVarsDataSize(testerInterfaceSpec->m_nNumDIs, testerInterfaceSpec->m_nNumDOs)] : nullptr;
-
-  setupFBInterface(testerInterfaceSpec, mFBConnData, mFBVarsData);
-
-  for(unsigned int i = 0; i < testerInterfaceSpec->m_nNumDIs; ++i){
-    CIEC_ANY *di = getDI(i);
-    if(CIEC_ANY::e_ANY == di->getDataTypeID()){
-      //if one of the inputs is any reclone it with the type given in the test
-      di->~CIEC_ANY();
-      mOutputDataBuffers[i]->clone(reinterpret_cast<TForteByte *>(di));
-    }
- }
+  setupFBInterface(testerInterfaceSpec);
 }
 
 void CFBTestFixtureBase::performDataInterfaceTests() {
@@ -294,7 +277,7 @@ void CFBTestFixtureBase::createDataOutputConnections() {
     if(CFBTestConn::canBeConnected(mOutputDataBuffers[i], mFBUnderTest->getDataOutput(interfaceSpec->m_aunDONames[i]))) {
       CDataConnection *dataCon = mFBUnderTest->getDOConnection(interfaceSpec->m_aunDONames[i]);
       BOOST_REQUIRE_EQUAL(EMGMResponse::Ready, dataCon->connect(this, interfaceSpec->m_aunDONames[i]));
-      dataCon->getValue()->~CIEC_ANY();
+      std::destroy_at(dataCon->getValue());
       dataCon->setValue(mOutputDataBuffers[i]);
     }
   }

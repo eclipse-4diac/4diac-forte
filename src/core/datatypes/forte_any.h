@@ -14,6 +14,7 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians - templated cast factory function
  *    Martin Jobst - add equals function
+ *                 - add support for data types with different size
  *******************************************************************************/
 #ifndef _ANY_H_
 #define _ANY_H_
@@ -70,7 +71,6 @@ class CIEC_ANY {
     static CIEC_ANY *createDataType(TForteByte *pa_acDataBuf){
       return (nullptr != pa_acDataBuf) ? new (pa_acDataBuf) CIEC_ANY : new CIEC_ANY;
     }
-    const static CTypeLib::CDataTypeEntry csmFirmwareDataTypeEntry_CIEC_ANY;
 
     static int dummyInit();
 
@@ -111,8 +111,6 @@ class CIEC_ANY {
 
     virtual ~CIEC_ANY() = default;
 
-    void saveAssign(const CIEC_ANY &pa_roValue);
-
     /*! \brief Set method for data type member value
      *
      *  The data type value is set through the copy assignment
@@ -120,6 +118,26 @@ class CIEC_ANY {
      */
     virtual void setValue(const CIEC_ANY &pa_roValue){
       setValueSimple(pa_roValue);
+    }
+
+    /**
+     * @brief Unwrap ANY value if inside a container
+     * @return The unwrapped value or this value if not in a container
+     */
+    [[nodiscard]] virtual CIEC_ANY &unwrap() {
+      return *this;
+    }
+
+    [[nodiscard]] virtual const CIEC_ANY &unwrap() const {
+      return *this;
+    }
+
+    /*! \brief Get the allocation size of the data type object
+     *
+     * @return The allocation size in bytes
+     */
+    virtual size_t getSizeof() const {
+      return sizeof(CIEC_ANY);
     }
 
     /*! \brief Makes a clone of the data type object
@@ -141,9 +159,7 @@ class CIEC_ANY {
       return CIEC_ANY::e_ANY;
     }
 
-    virtual CStringDictionary::TStringId getTypeNameID() const {
-      return csmFirmwareDataTypeEntry_CIEC_ANY.getTypeNameId();
-    }
+    virtual CStringDictionary::TStringId getTypeNameID() const;
 
     /*! \brief Get the pointer to the union char array
      *

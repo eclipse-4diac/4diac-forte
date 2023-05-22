@@ -23,7 +23,7 @@ const SFBInterfaceSpec EMB_RES::scm_stFBInterfaceSpec = {0, nullptr, nullptr, nu
 
 EMB_RES::EMB_RES(CStringDictionary::TStringId pa_nInstanceNameId,
     CResource* pa_poDevice) :
-  CResource(pa_poDevice, nullptr, pa_nInstanceNameId, nullptr, nullptr){
+  CResource(pa_poDevice, nullptr, pa_nInstanceNameId){
 }
 
 bool EMB_RES::initialize() {

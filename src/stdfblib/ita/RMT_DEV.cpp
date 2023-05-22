@@ -25,7 +25,7 @@ const SFBInterfaceSpec RMT_DEV::scm_stFBInterfaceSpec = { 0, nullptr, nullptr, n
     nullptr};
 
 RMT_DEV::RMT_DEV() :
-  CDevice(&scm_stFBInterfaceSpec, CStringDictionary::scm_nInvalidStringId, m_anFBConnData, m_anFBVarsData),
+  CDevice(&scm_stFBInterfaceSpec, CStringDictionary::scm_nInvalidStringId),
       MGR(g_nStringIdMGR, this){
 }
 

@@ -60,7 +60,7 @@ namespace forte {
             return *static_cast<CIEC_WSTRING*>(getDO(1));
           }
 
-          void executeEvent(int paEIID) override;
+          void executeEvent(TEventID paEIID) override;
 
           /*! @brief Creates an instance of the corresponding Device Controller
            *

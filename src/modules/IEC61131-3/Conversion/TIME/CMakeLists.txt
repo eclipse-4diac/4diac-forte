@@ -15,7 +15,7 @@
 #############################################################################
 # TIME_TO_xxx Conversion
 #############################################################################
-forte_add_sourcefile_hcpp(F_TIME_TO_STRING)
+forte_add_sourcefile_hcpp(F_TIME_AS_STRING)
 forte_add_sourcefile_hcpp(F_TIME_IN_S_TO_LINT)
 forte_add_sourcefile_hcpp(F_TIME_IN_MS_TO_LINT)
 forte_add_sourcefile_hcpp(F_TIME_IN_US_TO_LINT)
@@ -30,5 +30,5 @@ forte_add_sourcefile_hcpp(F_TIME_IN_US_TO_LREAL)
 forte_add_sourcefile_hcpp(F_TIME_IN_NS_TO_LREAL)
 
 if(FORTE_USE_WSTRING_DATATYPE)
-  forte_add_sourcefile_hcpp(F_TIME_TO_WSTRING)
+  forte_add_sourcefile_hcpp(F_TIME_AS_WSTRING)
 endif(FORTE_USE_WSTRING_DATATYPE)

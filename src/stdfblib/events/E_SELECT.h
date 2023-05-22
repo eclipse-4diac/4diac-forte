@@ -10,42 +10,69 @@
  *   Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny
  *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _E_SELECT_H_
-#define _E_SELECT_H_
 
-#include <funcbloc.h>
+#pragma once
 
-class E_SELECT: public CFunctionBlock{
-  DECLARE_FIRMWARE_FB(E_SELECT)
+#include "basicfb.h"
+#include "forte_bool.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
+
+
+class FORTE_E_SELECT: public CBasicFB {
+  DECLARE_FIRMWARE_FB(FORTE_E_SELECT)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[], scm_aunDIDataTypeIds[];
-
+  static const CStringDictionary::TStringId scm_anDataInputNames[];
+  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
   static const TEventID scm_nEventEI0ID = 0;
   static const TEventID scm_nEventEI1ID = 1;
-  static const TForteInt16 scm_anEIWithIndexes[];
   static const TDataIOID scm_anEIWith[];
+  static const TForteInt16 scm_anEIWithIndexes[];
   static const CStringDictionary::TStringId scm_anEventInputNames[];
-
   static const TEventID scm_nEventEOID = 0;
+  static const TForteInt16 scm_anEOWithIndexes[];
   static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
-
-  void executeEvent(int pa_nEIID) override;
-
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-
-  FORTE_FB_DATA_ARRAY(1,0,1, 0);
+  CIEC_ANY *getVarInternal(size_t) override;
+  static const TForteInt16 scm_nStateSTART = 0;
+  static const TForteInt16 scm_nStateEO = 1;
   
-  CIEC_BOOL& G() {
-     return *static_cast<CIEC_BOOL*>(getDI(0));
-  }
+  void enterStateSTART(void);
+  void enterStateEO(void);
+
+  void executeEvent(TEventID pa_nEIID) override;
+
+  void readInputData(TEventID pa_nEIID) override;
+  void writeOutputData(TEventID pa_nEIID) override;
 
 public:
-  FUNCTION_BLOCK_CTOR(E_SELECT){
-  };
-  ~E_SELECT() override = default;
+  FORTE_E_SELECT(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
+  CIEC_BOOL var_G;
+  CEventConnection conn_EO;
+  CDataConnection *conn_G;
+  CIEC_ANY *getDI(size_t) override;
+  CIEC_ANY *getDO(size_t) override;
+  CEventConnection *getEOConUnchecked(TPortId) override;
+  CDataConnection **getDIConUnchecked(TPortId) override;
+  CDataConnection *getDOConUnchecked(TPortId) override;
+  void evt_EI0(const CIEC_BOOL &pa_G) {
+    var_G = pa_G;
+    receiveInputEvent(scm_nEventEI0ID, nullptr);
+  }
+  void evt_EI1(const CIEC_BOOL &pa_G) {
+    var_G = pa_G;
+    receiveInputEvent(scm_nEventEI1ID, nullptr);
+  }
+  void operator()(const CIEC_BOOL &pa_G) {
+    evt_EI0(pa_G);
+  }
 };
 
-#endif //_E_SELECT_H_
+
+

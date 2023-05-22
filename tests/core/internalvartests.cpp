@@ -25,12 +25,11 @@ const SFBInterfaceSpec gcEmptyInterface = { 0, nullptr, nullptr, nullptr, 0, nul
 
 class CInternalVarTestFB : public CBasicFB{
   public:
-    CInternalVarTestFB(const SInternalVarsInformation *paVarInternals, TForteByte *paBasicFBVarsData) :
-      CBasicFB(nullptr, &gcEmptyInterface, CStringDictionary::scm_nInvalidStringId,
-            paVarInternals, nullptr, paBasicFBVarsData) {
+    CInternalVarTestFB(const SInternalVarsInformation *paVarInternals) :
+      CBasicFB(nullptr, &gcEmptyInterface, CStringDictionary::scm_nInvalidStringId, paVarInternals) {
     }
 
-    CIEC_ANY *getVarInternal(unsigned int paVarIntNum){
+    CIEC_ANY *getVarInternal(size_t paVarIntNum) override {
       return CBasicFB::getVarInternal(paVarIntNum);
     }
 
@@ -38,7 +37,7 @@ class CInternalVarTestFB : public CBasicFB{
       return CStringDictionary::scm_nInvalidStringId;
     }
 
-    virtual void executeEvent(int){
+    virtual void executeEvent(TEventID){
       //nothiing to do here
     }
 };
@@ -48,10 +47,9 @@ BOOST_AUTO_TEST_SUITE(internal_vars)
 
 BOOST_AUTO_TEST_CASE(checkNullInternalVarsAreAllowed){
   //check that we can create an FB where we have a 0 internal struct which has all parts set to zero
-  TForteByte varsDataBuffer[10];
   CStringDictionary::TStringId namelist[1] = {g_nStringIdDT};
 
-  CInternalVarTestFB testFB(nullptr, varsDataBuffer);
+  CInternalVarTestFB testFB(nullptr);
   BOOST_CHECK(nullptr == testFB.getVar(namelist, 1));
   //check that we should at least get the ECC variable
   namelist[0] = CStringDictionary::getInstance().insert("!ECC");
@@ -62,10 +60,9 @@ BOOST_AUTO_TEST_CASE(checkNullInternalVarsAreAllowed){
 BOOST_AUTO_TEST_CASE(checkEmptyInternalVarsAreAllowed){
   //check that we can create an FB where we have a var internal struct which has all parts set to zero
   SInternalVarsInformation varData = {0,nullptr,nullptr};
-  TForteByte varsDataBuffer[10];
   CStringDictionary::TStringId namelist[1] = {g_nStringIdDT};
 
-  CInternalVarTestFB testFB(&varData, varsDataBuffer);
+  CInternalVarTestFB testFB(&varData);
   BOOST_CHECK(nullptr == testFB.getVar(namelist, 1));
   //check that we should at least get the ECC variable
   namelist[0] = CStringDictionary::getInstance().insert("!ECC");
@@ -78,9 +75,8 @@ BOOST_AUTO_TEST_CASE(sampleInteralVarList){
   CStringDictionary::TStringId varInternalTypeIds[] = {g_nStringIdBOOL, g_nStringIdBOOL, g_nStringIdUINT};
 
   SInternalVarsInformation varData{3, varInternalNames, varInternalTypeIds};
-  TForteByte varsDataBuffer[CBasicFB::genBasicFBVarsDataSizeTemplate<0, 0, 3, 0>::value];
 
-  CInternalVarTestFB testFB(&varData, varsDataBuffer);
+  CInternalVarTestFB testFB(&varData);
   BOOST_ASSERT(testFB.initialize());
 
   for(size_t i = 0; i < varData.m_nNumIntVars; i++){

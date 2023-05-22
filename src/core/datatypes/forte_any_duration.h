@@ -20,7 +20,6 @@
  *  IEC 61131.
  */
 class CIEC_ANY_DURATION : public CIEC_ANY_MAGNITUDE {
-  DECLARE_FIRMWARE_DATATYPE(ANY_DURATION)
 public:
   /*! \brief The common C/C++ internal representation type for ANY_DURATION */
   typedef TLargestIntValueType TValueType;

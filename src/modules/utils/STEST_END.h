@@ -29,7 +29,7 @@ private:
 
   FORTE_FB_DATA_ARRAY(0, 0, 0, 0);
 
-  void executeEvent(int pa_nEIID) override;
+  void executeEvent(TEventID pa_nEIID) override;
 
 public:
   FUNCTION_BLOCK_CTOR(FORTE_STEST_END){

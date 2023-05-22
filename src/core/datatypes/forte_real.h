@@ -30,7 +30,7 @@
 
 /*!\ingroup COREDTS CIEC_REAL represents the real data type according to IEC 61131.
  */
-class CIEC_REAL : public CIEC_ANY_REAL{
+class CIEC_REAL final : public CIEC_ANY_REAL{
   DECLARE_FIRMWARE_DATATYPE(REAL)
 
   public:

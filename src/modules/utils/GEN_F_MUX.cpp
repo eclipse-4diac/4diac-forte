@@ -53,9 +53,9 @@ GEN_F_MUX::~GEN_F_MUX(){
   delete[] m_anEOWithIndexes;
 }
 
-void GEN_F_MUX::executeEvent(int paEIID){
+void GEN_F_MUX::executeEvent(TEventID paEIID){
 
-  if(-1 < paEIID && static_cast<size_t>(paEIID) < mEInputs) {
+  if(static_cast<size_t>(paEIID) < mEInputs) {
 
     size_t startIndex = paEIID * mDOutputs;
     bool status = true;
@@ -233,25 +233,25 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
     m_anEOWith[0] = 0; //for QO and STATUS
     m_anEOWith[1] = 1;
 
-    for(unsigned int out_with = 2; out_with < mDOutputs + 2; out_with++) {
-      m_anEOWith[out_with] = static_cast<TForteUInt8>(out_with);
+    for(TPortId out_with = 2; out_with < mDOutputs + 2; out_with++) {
+      m_anEOWith[out_with] = out_with;
     }
     //set '255' separator
     m_anEOWith[mDOutputs + 2] = scmWithListDelimiter;
 
     //create the interface Specification
-    paInterfaceSpec.m_nNumEIs = static_cast<TForteUInt8>(mEInputs);
+    paInterfaceSpec.m_nNumEIs = mEInputs;
     paInterfaceSpec.m_aunEINames = m_anEventInputNames;
     paInterfaceSpec.m_anEIWith = m_anEIWith;
     paInterfaceSpec.m_anEIWithIndexes = m_anEIWithIndexes;
-    paInterfaceSpec.m_nNumEOs = static_cast<TForteUInt8>(mEOutputs);
+    paInterfaceSpec.m_nNumEOs = mEOutputs;
     paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
     paInterfaceSpec.m_anEOWith = m_anEOWith;
     paInterfaceSpec.m_anEOWithIndexes = m_anEOWithIndexes;
-    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(mDInputs);
+    paInterfaceSpec.m_nNumDIs = mDInputs;
     paInterfaceSpec.m_aunDINames = m_anDataInputNames;
     paInterfaceSpec.m_aunDIDataTypeNames = m_anDataInputTypeIds;
-    paInterfaceSpec.m_nNumDOs = static_cast<TForteUInt8>(mDOutputs + 2);
+    paInterfaceSpec.m_nNumDOs = mDOutputs + 2;
     paInterfaceSpec.m_aunDONames = m_anDataOutputNames;
     paInterfaceSpec.m_aunDODataTypeNames = m_anDataOutputTypeIds;
     return true;

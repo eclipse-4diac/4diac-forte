@@ -23,7 +23,7 @@
 
 /*!\ingroup COREDTS CIEC_USINT represents the usint data type according to IEC 61131.
  */
-class CIEC_USINT : public CIEC_ANY_INT{
+class CIEC_USINT final : public CIEC_ANY_INT{
   DECLARE_FIRMWARE_DATATYPE(USINT)
 
   public:

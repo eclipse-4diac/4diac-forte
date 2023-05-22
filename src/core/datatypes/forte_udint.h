@@ -24,7 +24,7 @@
 
 /*!\ingroup COREDTS CIEC_UDINT represents the udint data type according to IEC 61131.
  */
-class CIEC_UDINT : public CIEC_ANY_INT{
+class CIEC_UDINT final : public CIEC_ANY_INT{
   DECLARE_FIRMWARE_DATATYPE(UDINT)
 
   public:

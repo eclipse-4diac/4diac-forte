@@ -55,7 +55,7 @@ class CLuaBFB : public CBasicFB {
         CResource *paResource);
     ~CLuaBFB() override;
 
-    void executeEvent(int paEIID) override;
+    void executeEvent(TEventID paEIID) override;
 
     CStringDictionary::TStringId getFBTypeId() const override {
       return mTypeEntry->getTypeNameId();

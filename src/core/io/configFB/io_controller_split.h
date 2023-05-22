@@ -44,7 +44,7 @@ namespace forte {
 
           void onStop() override;
 
-          void executeEvent(int paEIID) override;
+          void executeEvent(TEventID paEIID) override;
 
         private:
           const TForteUInt8* scmSplitAdapter;

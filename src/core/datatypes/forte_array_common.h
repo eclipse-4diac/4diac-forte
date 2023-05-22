@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2022 Primetals Technologies Austria GmbH
+ *               2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,6 +11,9 @@
  * Contributors:
  *    Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
+ *    Martin Jobst
+ *      - refactored for common assignment operators
+ *      - refactored array type structure
  *******************************************************************************/
 #pragma once
 
@@ -17,77 +21,70 @@
 #include <inttypes.h>
 #include <initializer_list>
 
-#include "forte_any_derived.h"
+#include "forte_array.h"
 #include "forte_any_int.h"
+#include "iec61131_cast_helper.h"
 
-/** \brief A common supertype for all CIEC_ARRAY variants, providing the minimal interface an array must provide
+/** \brief A common supertype for all typed CIEC_ARRAY variants, providing the minimal interface an array must provide
  */
-template <typename T>
-class CIEC_ARRAY_COMMON : public CIEC_ANY_DERIVED
-{
+template<typename T>
+class CIEC_ARRAY_COMMON : public CIEC_ARRAY {
 public:
-  using difference_type = std::ptrdiff_t;
-  using value_type = T;
-  using pointer = value_type *;
-  using const_pointer = const value_type *;
-  using reference = value_type &;
-  using const_reference = const value_type &;
-  using iterator = pointer;
-  using const_iterator = const_pointer;
+    using value_type = T;
+    using pointer = value_type *;
+    using const_pointer = const value_type *;
+    using reference = value_type &;
+    using const_reference = const value_type &;
 
-  [[nodiscard]] virtual intmax_t getLowerBound() const = 0;
+    using CIEC_ARRAY::at;
+    using CIEC_ARRAY::operator[];
+    using CIEC_ARRAY::operator=;
 
-  [[nodiscard]] virtual intmax_t getUpperBound() const = 0;
+    [[nodiscard]] reference at(intmax_t index) override = 0;
 
-  [[nodiscard]] virtual size_t size() const = 0;
+    [[nodiscard]] reference operator[](intmax_t index) override = 0;
 
-  [[nodiscard]] virtual CIEC_ANY::EDataTypeID getElementDataTypeID() const = 0;
+    [[nodiscard]] const_reference at(intmax_t index) const override = 0;
 
-  virtual CIEC_ARRAY_COMMON &operator=(std::initializer_list<T> paSource) = 0;
-  virtual CIEC_ARRAY_COMMON &operator=(const CIEC_ARRAY_COMMON<T> &paSource) = 0;
+    [[nodiscard]] const_reference operator[](intmax_t index) const override = 0;
 
-  [[nodiscard]] virtual reference at(intmax_t index) = 0;
+    [[nodiscard]] reference at(const CIEC_ANY_INT &index) override {
+      const intmax_t indexValue = index.getSignedValue();
+      return at(indexValue);
+    }
 
-  [[nodiscard]] virtual reference operator[](intmax_t index) = 0;
+    [[nodiscard]] reference operator[](const CIEC_ANY_INT &index) override {
+      const intmax_t indexValue = index.getSignedValue();
+      return operator[](indexValue);
+    }
 
-  [[nodiscard]] virtual const_reference at(intmax_t index) const = 0;
+    [[nodiscard]] const_reference at(const CIEC_ANY_INT &index) const override {
+      const intmax_t indexValue = index.getSignedValue();
+      return at(indexValue);
+    }
 
-  [[nodiscard]] virtual const_reference operator[](intmax_t index) const = 0;
+    [[nodiscard]] const_reference operator[](const CIEC_ANY_INT &index) const override {
+      const intmax_t indexValue = index.getSignedValue();
+      return operator[](indexValue);
+    }
 
-  [[nodiscard]] reference at(const CIEC_ANY_INT &index) {
-    const intmax_t indexValue = index.getSignedValue();
-    return at(indexValue);
-  }
+    CIEC_ARRAY_COMMON &operator=(std::initializer_list<T> paSource) {
+      if(size()) { // check if initialized
+        intmax_t begin = getLowerBound();
+        intmax_t end = std::min(getUpperBound(), getLowerBound() + paSource.size() - 1);
+        for (intmax_t i = begin; i <= end; ++i) {
+          (*this)[i].setValue(paSource.begin()[i]);
+        }
+      }
+      return *this;
+    }
 
-  [[nodiscard]] reference operator[](const CIEC_ANY_INT &index) {
-    const intmax_t indexValue = index.getSignedValue();
-    return operator[](indexValue);
-  }
+    ~CIEC_ARRAY_COMMON() override = default;
 
-  [[nodiscard]] const_reference at(const CIEC_ANY_INT &index) const {
-    const intmax_t indexValue = index.getSignedValue();
-    return at(indexValue);
-  }
-
-  [[nodiscard]] const_reference operator[](const CIEC_ANY_INT &index) const {
-    const intmax_t indexValue = index.getSignedValue();
-    return operator[](indexValue);
-  }
-
-  [[nodiscard]] virtual iterator begin() = 0;
-
-  [[nodiscard]] virtual iterator end() = 0;
-
-  [[nodiscard]] virtual const_iterator cbegin() const = 0;
-
-  [[nodiscard]] virtual const_iterator cend() const = 0;
-
-  [[nodiscard]] EDataTypeID getDataTypeID() const final {
-    return CIEC_ANY::e_ARRAY;
-  }
-
-  ~CIEC_ARRAY_COMMON() override = default;
-
-  protected:
+protected:
     CIEC_ARRAY_COMMON() = default;
 };
+
+static_assert(std::is_copy_assignable_v<CIEC_ARRAY_COMMON<CIEC_ANY>>);
+static_assert(std::is_destructible_v<CIEC_ARRAY_COMMON<CIEC_ANY>>);
+

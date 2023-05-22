@@ -32,28 +32,28 @@ inline const CIEC_LTIME func_TIME_TO_LTIME(const CIEC_TIME &paValue) {
 }
 
 /** Non-standard functions */
-inline const CIEC_STRING func_TIME_TO_STRING(const CIEC_TIME &paVal) {
+inline const CIEC_STRING func_TIME_AS_STRING(const CIEC_TIME &paVal) {
   CIEC_STRING string;
   stringConverter(string, paVal);
   return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
-inline const CIEC_WSTRING func_TIME_TO_WSTRING(const CIEC_TIME &paVal) {
+inline const CIEC_WSTRING func_TIME_AS_WSTRING(const CIEC_TIME &paVal) {
   CIEC_WSTRING string;
   stringConverter(string, paVal);
   return string;
 }
 #endif
 
-inline const CIEC_STRING func_LTIME_TO_STRING(const CIEC_LTIME &paVal) {
+inline const CIEC_STRING func_LTIME_AS_STRING(const CIEC_LTIME &paVal) {
   CIEC_STRING string;
   stringConverter(string, paVal);
   return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
-inline const CIEC_WSTRING func_LTIME_TO_WSTRING(const CIEC_LTIME &paVal){
+inline const CIEC_WSTRING func_LTIME_AS_WSTRING(const CIEC_LTIME &paVal){
   CIEC_WSTRING string;
   stringConverter(string, paVal);
   return string;

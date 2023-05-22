@@ -37,31 +37,32 @@ private:
   * \param pa_nEIID the event id of the event that triggered the FB
   * \return if true the succeeding EC part will be activated.
   */
-  virtual bool checkActivation(int pa_nEIID) = 0;
-    void executeEvent(int pa_nEIID) override {
-      if(0 != pa_nEIID) { //it is not the init event
-        if(m_bInitialized && checkActivation(pa_nEIID)) {
-          CEventConnection *eoCon = getEOConUnchecked(1);
-          if(eoCon->isConnected()) {
-            eoCon->triggerEvent(&m_oECEO);
-            m_oECEO.resumeSelfSuspend();
-          }
+  virtual bool checkActivation(TEventID pa_nEIID) = 0;
+
+  void executeEvent(TEventID pa_nEIID) override {
+    if(0 != pa_nEIID) { //it is not the init event
+      if(m_bInitialized && checkActivation(pa_nEIID)) {
+        CEventConnection *eoCon = getEOConUnchecked(1);
+        if(eoCon->isConnected()) {
+          eoCon->triggerEvent(&m_oECEO);
+          m_oECEO.resumeSelfSuspend();
         }
-      } else { // we got init
-        if(QI() == true) {
-          if(!m_bInitialized) {
-            m_oECEO.changeExecutionState(EMGMCommandType::Start);
-            m_bInitialized = true;
-          }
-          m_oECEO.setDeadline(Deadline());
-        } else {
-          m_oECEO.changeExecutionState(EMGMCommandType::Stop);
-          m_bInitialized = false;
-        }
-        QO() = QI();
-        sendOutputEvent(0);
       }
+    } else { // we got init
+      if(QI() == true) {
+        if(!m_bInitialized) {
+          m_oECEO.changeExecutionState(EMGMCommandType::Start);
+          m_bInitialized = true;
+        }
+        m_oECEO.setDeadline(Deadline());
+      } else {
+        m_oECEO.changeExecutionState(EMGMCommandType::Stop);
+        m_bInitialized = false;
+      }
+      QO() = QI();
+      sendOutputEvent(0);
     }
+  }
 
 public:
 

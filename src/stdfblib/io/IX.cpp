@@ -25,10 +25,10 @@ const CStringDictionary::TStringId FORTE_IX::scm_anDataOutputNames[] = {g_nStrin
 const CStringDictionary::TStringId FORTE_IX::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdBOOL};
 
 const TForteInt16 FORTE_IX::scm_anEIWithIndexes[] = {0, 3};
-const TDataIOID FORTE_IX::scm_anEIWith[] = {0, 1, 255, 0, 255};
+const TDataIOID FORTE_IX::scm_anEIWith[] = {0, 1, scmWithListDelimiter, 0, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_IX::scm_anEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
 
-const TDataIOID FORTE_IX::scm_anEOWith[] = {0, 1, 255, 0, 1, 2, 255, 0, 1, 2, 255};
+const TDataIOID FORTE_IX::scm_anEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, 2, scmWithListDelimiter, 0, 1, 2, scmWithListDelimiter};
 const TForteInt16 FORTE_IX::scm_anEOWithIndexes[] = {0, 3, 7, -1};
 const CStringDictionary::TStringId FORTE_IX::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF, g_nStringIdIND};
 
@@ -40,7 +40,7 @@ const SFBInterfaceSpec FORTE_IX::scm_stFBInterfaceSpec = {
 };
 
 
-void FORTE_IX::executeEvent(int pa_nEIID){
+void FORTE_IX::executeEvent(TEventID pa_nEIID){
   QO() = QI();
   switch(pa_nEIID){
     case cg_nExternalEventID:

@@ -69,7 +69,7 @@ class FORTE_ADS_SERVER_CONFIG : public CFunctionBlock{
 
     FORTE_FB_DATA_ARRAY(1, 5, 2, 0);
 
-    void executeEvent(int pa_nEIID) override;
+    void executeEvent(TEventID pa_nEIID) override;
 
   public:
     FUNCTION_BLOCK_CTOR (FORTE_ADS_SERVER_CONFIG) { };

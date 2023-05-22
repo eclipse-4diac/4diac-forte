@@ -126,7 +126,7 @@ class FORTE_EXECUTE_ACTION_CLIENT : public CEventSourceFB{
     FORTE_FB_DATA_ARRAY(2, 6, 6, 0)
     ;
 
-    void executeEvent(int pa_nEIID) override;
+    void executeEvent(TEventID pa_nEIID) override;
 
     void doneCallback(const actionlib::SimpleClientGoalState& state, const ExecuteResultConstPtr& result);
     void activeCallback();

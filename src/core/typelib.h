@@ -1,5 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+ *               2023 Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,6 +12,8 @@
  *    Alois Zoitl, Gunnar Grabmair, Rene Smodic, Gerhard Ebenhofer,
  *    Martin Melik Merkumians, Ingo Hegny, Micheal Hofmann
  *      - initial implementation and rework communication infrastructure
+ *    Martin Jobst
+ *      - add support for data types with different size
  *******************************************************************************/
 #ifndef _TYPELIB_H_
 #define _TYPELIB_H_
@@ -97,22 +101,24 @@ class CAdapter;
 //!\ingroup CORE This define is used to create the definition necessary for Firmware datatype in order to get them automatically added to the FirmwareType list.
 #define DECLARE_FIRMWARE_DATATYPE(datatypename) \
    public:  \
-    static CIEC_ANY *createDataType(TForteByte *pa_acDataBuf){ \
-      return (0 != pa_acDataBuf)  ? new(pa_acDataBuf)CIEC_##datatypename() : new CIEC_##datatypename;\
+    static CIEC_ANY *createDataType(TForteByte *paDataBuf){ \
+      return (0 != paDataBuf) ? new(paDataBuf)CIEC_##datatypename() : new CIEC_##datatypename; \
     }; \
     const static CTypeLib::CDataTypeEntry csm_oFirmwareDataTypeEntry_##datatypename; \
-    virtual CIEC_ANY* clone(TForteByte *pa_acDataBuf) const { \
-      static_assert((sizeof(CIEC_ANY) == sizeof(CIEC_##datatypename)), "Data type not the same size as CIEC_ANY"); \
-      return (0 != pa_acDataBuf)  ? new(pa_acDataBuf)CIEC_##datatypename(*this) : new CIEC_##datatypename(*this); } \
-    virtual CStringDictionary::TStringId getTypeNameID() const { \
+    size_t getSizeof() const override { \
+      return sizeof(CIEC_##datatypename); \
+    } \
+    CIEC_ANY* clone(TForteByte *paDataBuf) const override { \
+      return (0 != paDataBuf) ? new(paDataBuf)CIEC_##datatypename(*this) : new CIEC_##datatypename(*this); } \
+    CStringDictionary::TStringId getTypeNameID() const override { \
         return CIEC_##datatypename::csm_oFirmwareDataTypeEntry_##datatypename.getTypeNameId(); \
-    }\
+    } \
   FORTE_DUMMY_INIT_DEC \
   private:
 
 //!\ingroup CORE This define is used to create the implementation for the above definition.
 #define DEFINE_FIRMWARE_DATATYPE(datatypename, datatypenameid)\
-  const CTypeLib::CDataTypeEntry CIEC_##datatypename::csm_oFirmwareDataTypeEntry_##datatypename((datatypenameid), CIEC_##datatypename::createDataType);\
+  const CTypeLib::CDataTypeEntry CIEC_##datatypename::csm_oFirmwareDataTypeEntry_##datatypename((datatypenameid), CIEC_##datatypename::createDataType, sizeof(CIEC_##datatypename));\
   FORTE_DUMMY_INIT_DEF(CIEC_##datatypename)
 
 struct SFBInterfaceSpec;
@@ -173,14 +179,17 @@ class CTypeLib{
 //! The base class for all data type entries in the type lib.
   class CDataTypeEntry : public CTypeEntry{
     public:
-      CDataTypeEntry(CStringDictionary::TStringId pa_nTypeNameId, TDataTypeCreateFunc pa_pfuncDTCreateFunc);
+      CDataTypeEntry(CStringDictionary::TStringId paTypeNameId, TDataTypeCreateFunc paDTCreateFunc, size_t paSize);
       ~CDataTypeEntry() override;
       virtual CIEC_ANY *createDataTypeInstance(TForteByte *pa_acDataBuf){
-        return m_pfuncDTCreateFunc(pa_acDataBuf);
+        return mDTCreateFunc(pa_acDataBuf);
       };
+      [[nodiscard]] size_t getSize() const {
+        return mSize;
+      }
     protected:
-       TDataTypeCreateFunc m_pfuncDTCreateFunc;
-
+      TDataTypeCreateFunc mDTCreateFunc;
+      size_t mSize;
   };
 
 public:

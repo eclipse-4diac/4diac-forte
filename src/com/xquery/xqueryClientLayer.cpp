@@ -114,7 +114,7 @@ forte::com_infra::EComResponse CXqueryClientLayer::sendData(void *pa_pvData, uns
 forte::com_infra::EComResponse CXqueryClientLayer::recvData(const void *pa_pvData, unsigned int pa_unSize){
   EComResponse retVal = e_Nothing;
   if(pa_unSize > 0) {
-    m_poFb->getRDs()[0].fromString(static_cast<const char *>(pa_pvData));
+    m_poFb->getRDs()[0]->fromString(static_cast<const char *>(pa_pvData));
     m_poFb->interruptCommFB(this);
     retVal = e_ProcessDataOk;
   }

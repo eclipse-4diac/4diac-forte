@@ -88,7 +88,7 @@ bool FORTE_EliteBoard::configurePortFB(int index) {
   return true;
 }
 
-void FORTE_EliteBoard::executeEvent(int pa_nEIID) {
+void FORTE_EliteBoard::executeEvent(TEventID pa_nEIID) {
 
   if (pa_nEIID == scm_nEventMAPID) {
     // start initialisation chain

@@ -16,7 +16,7 @@
 #endif
 
 const CStringDictionary::TStringId CTimedFB::scm_aunEINameIds[] = {g_nStringIdSTART, g_nStringIdSTOP};
-const TDataIOID CTimedFB::scm_anEIWith[] = {0, 255};
+const TDataIOID CTimedFB::scm_anEIWith[] = {0, scmWithListDelimiter};
 const TForteInt16 CTimedFB::scm_anEIWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId CTimedFB::scm_aunEONameIds[] = {g_nStringIdEO};
 
@@ -43,7 +43,7 @@ const SFBInterfaceSpec CTimedFB::scm_stFBInterfaceSpec = {
 };
 
 CTimedFB::CTimedFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, ETimerActivationType paType) :
-      CEventSourceFB( paSrcRes, &scm_stFBInterfaceSpec, paInstanceNameId, m_anFBConnData, m_anFBVarsData){
+      CEventSourceFB( paSrcRes, &scm_stFBInterfaceSpec, paInstanceNameId){
   setEventChainExecutor(paSrcRes->getResourceEventExecution());
   mActive = false;
   mTimeListEntry.mTimeOut = 0;
@@ -53,7 +53,7 @@ CTimedFB::CTimedFB(const CStringDictionary::TStringId paInstanceNameId, CResourc
   mTimeListEntry.mTimedFB = this;
 }
 
-void CTimedFB::executeEvent(int pa_nEIID){
+void CTimedFB::executeEvent(TEventID pa_nEIID){
   switch(pa_nEIID){
     case cg_nExternalEventID:
       sendOutputEvent(csm_nEOID);

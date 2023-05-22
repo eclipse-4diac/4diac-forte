@@ -39,10 +39,10 @@ const CStringDictionary::TStringId DEV_MGR::scm_anDataOutputNames[] = {g_nString
 const CStringDictionary::TStringId DEV_MGR::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdSTRING, g_nStringIdSTRING};
 
 const TForteInt16 DEV_MGR::scm_anEIWithIndexes[] = {0, -1};
-const TDataIOID DEV_MGR::scm_anEIWith[] = {0, 1, 255};
+const TDataIOID DEV_MGR::scm_anEIWith[] = {0, 1, scmWithListDelimiter};
 const CStringDictionary::TStringId DEV_MGR::scm_anEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
 
-const TDataIOID DEV_MGR::scm_anEOWith[] = {0, 1, 255, 2, 3, 255};
+const TDataIOID DEV_MGR::scm_anEOWith[] = {0, 1, scmWithListDelimiter, 2, 3, scmWithListDelimiter};
 const TForteInt16 DEV_MGR::scm_anEOWithIndexes[] = {0, -1, 3};
 const CStringDictionary::TStringId DEV_MGR::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
 
@@ -55,7 +55,7 @@ const SFBInterfaceSpec DEV_MGR::scm_stFBInterfaceSpec = {
 
 const char * const DEV_MGR::scm_sMGMResponseTexts[13] = { "RDY", "BAD_PARAMS", "LOCAL_TERMINATION", "SYSTEM_TERMINATION", "NOT_READY", "UNSUPPORTED_CMD", "UNSUPPORTED_TYPE", "NO_SUCH_OBJECT", "INVALID_OBJECT", "INVALID_OPERATION", "INVALID_STATE", "OVERFLOW", "INVALID_DST" };
 
-void DEV_MGR::executeEvent(int paEIID){
+void DEV_MGR::executeEvent(TEventID paEIID){
   if(scm_nEventINITID == paEIID){
 #ifdef FORTE_SUPPORT_BOOT_FILE
     if((true == QI()) && (false == QO())){
@@ -582,7 +582,7 @@ bool DEV_MGR::initialize() {
   if(!CCommFB::initialize()) {
     return false;
   }
-  setupFBInterface(&scm_stFBInterfaceSpec, m_anFBConnData, m_anFBVarsData);
+  setupFBInterface(&scm_stFBInterfaceSpec);
   mCommand.mAdditionalParams.reserve(255);
   mCommand.mAdditionalParams.clear();
   return true;

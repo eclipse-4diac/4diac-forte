@@ -24,15 +24,15 @@ private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   CStringDictionary::TStringId *m_anDataInputTypeIds;
 
-  CIEC_ARRAY<> &IN_Array() {
-    return *static_cast<CIEC_ARRAY<>*>(getDI(0));
+  CIEC_ARRAY &IN_Array() {
+    return *static_cast<CIEC_ARRAY*>(getDI(0));
   };
 
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   CStringDictionary::TStringId *m_anDataOutputTypeIds;
 
-  CIEC_ARRAY<> &OUT_Array() {
-    return *static_cast<CIEC_ARRAY<>*>(getDO(0));
+  CIEC_ARRAY &OUT_Array() {
+    return *static_cast<CIEC_ARRAY*>(getDO(0));
   };
 
   static const TEventID scm_nEventREQID = 0;
@@ -51,7 +51,7 @@ private:
   CStringDictionary::TStringId m_ValueTypeID;
   unsigned int m_nArrayLength;
 
-  void executeEvent(int paEIID) override;
+  void executeEvent(TEventID paEIID) override;
   bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
   GEN_ARRAY2ARRAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);

@@ -26,16 +26,16 @@ const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scm_anDataOutputNames[] 
 const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scm_anDataOutputTypeIds[] = { g_nStringIdINT, g_nStringIdINT, g_nStringIdINT };
 
 const TForteInt16 FORTE_GET_CHAN_INFO::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID FORTE_GET_CHAN_INFO::scm_anEIWith[] = { 0, 255 };
+const TDataIOID FORTE_GET_CHAN_INFO::scm_anEIWith[] = { 0, scmWithListDelimiter };
 const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scm_anEventInputNames[] = { g_nStringIdINIT };
 
-const TDataIOID FORTE_GET_CHAN_INFO::scm_anEOWith[] = { 0, 1, 2, 255 };
+const TDataIOID FORTE_GET_CHAN_INFO::scm_anEOWith[] = { 0, 1, 2, scmWithListDelimiter };
 const TForteInt16 FORTE_GET_CHAN_INFO::scm_anEOWithIndexes[] = { 0, -1 };
 const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scm_anEventOutputNames[] = { g_nStringIdINITO };
 
 const SFBInterfaceSpec FORTE_GET_CHAN_INFO::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 1, scm_anDataInputNames, scm_anDataInputTypeIds, 3, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
 
-void FORTE_GET_CHAN_INFO::executeEvent(int pa_nEIID){
+void FORTE_GET_CHAN_INFO::executeEvent(TEventID pa_nEIID){
   switch (pa_nEIID){
     case scm_nEventINITID:
       if(init()){

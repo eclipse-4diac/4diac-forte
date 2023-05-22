@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2011 - 2019 ACIN, fortiss GmbH
+ *               2023 Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,77 +12,86 @@
  *   - initial API and implementation and/or initial documentation
  *   Jose Cabral:
  *   - Fix calculateValueString to use template variable
+ *   Martin Jobst
+ *     - refactor for ANY variant
  *******************************************************************************/
-#ifndef _F_SEL_H_
-#define _F_SEL_H_
 
-#include <funcbloc.h>
+#pragma once
 
-class FORTE_F_SEL : public CFunctionBlock {
+#include "funcbloc.h"
+#include "forte_bool.h"
+#include "forte_any_variant.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
+
+
+class FORTE_F_SEL: public CFunctionBlock {
   DECLARE_FIRMWARE_FB(FORTE_F_SEL)
 
-  private:
-    static const CStringDictionary::TStringId scm_anDataInputNames[];
-    static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-    CIEC_BOOL& G() {
-      return *static_cast<CIEC_BOOL*>(getDI(0));
-    }
-    ;
+private:
+  static const CStringDictionary::TStringId scm_anDataInputNames[];
+  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+  
+  static const CStringDictionary::TStringId scm_anDataOutputNames[];
+  static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+  
+  static const TEventID scm_nEventREQID = 0;
+  
+  static const TDataIOID scm_anEIWith[];
+  static const TForteInt16 scm_anEIWithIndexes[];
+  static const CStringDictionary::TStringId scm_anEventInputNames[];
+  
+  static const TEventID scm_nEventCNFID = 0;
+  
+  static const TDataIOID scm_anEOWith[]; 
+  static const TForteInt16 scm_anEOWithIndexes[];
+  static const CStringDictionary::TStringId scm_anEventOutputNames[];
+  
 
-    CIEC_ANY& IN0() {
-      return *static_cast<CIEC_ANY*>(getDI(1));
-    }
-    ;
+  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-    CIEC_ANY& IN1() {
-      return *static_cast<CIEC_ANY*>(getDI(2));
-    }
-    ;
+  void executeEvent(TEventID pa_nEIID);
 
-    static const CStringDictionary::TStringId scm_anDataOutputNames[];
-    static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-    CIEC_ANY& st_OUT() {
-      return *static_cast<CIEC_ANY*>(getDO(0));
-    }
-    ;
+  void readInputData(TEventID pa_nEIID) override;
+  void writeOutputData(TEventID pa_nEIID) override;
 
-    static const TEventID scm_nEventREQID = 0;
-    static const TForteInt16 scm_anEIWithIndexes[];
-    static const TDataIOID scm_anEIWith[];
-    static const CStringDictionary::TStringId scm_anEventInputNames[];
+public:
+  FORTE_F_SEL(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
-    static const TEventID scm_nEventCNFID = 0;
-    static const TForteInt16 scm_anEOWithIndexes[];
-    static const TDataIOID scm_anEOWith[];
-    static const CStringDictionary::TStringId scm_anEventOutputNames[];
-
-    static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-
-    FORTE_FB_DATA_ARRAY(1, 3, 1, 0)
-    ;
-
-    void executeEvent(int pa_nEIID) override;
-
-  public:
-    FUNCTION_BLOCK_CTOR(FORTE_F_SEL){
-  };
-
-  ~FORTE_F_SEL() override = default;
-
-  template<typename T> void calculateValue() {
-    T oIn0;
-    T oIn1;
-    oIn0.saveAssign(IN0());
-    oIn1.saveAssign(IN1());
-
-    st_OUT().saveAssign(func_SEL<T> (G(), oIn0, oIn1));
+  CIEC_BOOL var_G;
+  CIEC_ANY_VARIANT var_IN0;
+  CIEC_ANY_VARIANT var_IN1;
+  CIEC_ANY_VARIANT var_OUT;
+  
+  CIEC_ANY_VARIANT var_conn_OUT;
+  CEventConnection conn_CNF;
+  CDataConnection *conn_G;
+  CDataConnection *conn_IN0;
+  CDataConnection *conn_IN1;
+  CDataConnection conn_OUT;
+  
+  CIEC_ANY *getDI(size_t) override;
+  CIEC_ANY *getDO(size_t) override;
+  CEventConnection *getEOConUnchecked(TPortId) override;
+  CDataConnection **getDIConUnchecked(TPortId) override;
+  CDataConnection *getDOConUnchecked(TPortId) override;
+  
+  void evt_REQ(const CIEC_BOOL &pa_G, const CIEC_ANY_VARIANT &pa_IN0, const CIEC_ANY_VARIANT &pa_IN1, CIEC_ANY_VARIANT &pa_OUT) {
+    var_G = pa_G;
+    var_IN0 = pa_IN0;
+    var_IN1 = pa_IN1;
+    receiveInputEvent(scm_nEventREQID, nullptr);
+    pa_OUT = var_OUT;
   }
-
-  template<typename T> void calculateValueString() {
-    calculateValue<T>();
+  
+  void operator()(const CIEC_BOOL &pa_G, const CIEC_ANY_VARIANT &pa_IN0, const CIEC_ANY_VARIANT &pa_IN1, CIEC_ANY_VARIANT &pa_OUT) {
+    evt_REQ(pa_G, pa_IN0, pa_IN1, pa_OUT);
   }
-
+  
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+
 

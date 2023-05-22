@@ -44,7 +44,7 @@ const SFBInterfaceSpec E_RESTART::scm_stFBInterfaceSpec = {
   nullptr
 };
 
-void E_RESTART::executeEvent(int pa_nEIID) {
+void E_RESTART::executeEvent(TEventID pa_nEIID) {
   if(cg_nExternalEventID == pa_nEIID && cg_nInvalidEventID != mEventToSend) {
     sendOutputEvent(mEventToSend);
     if(csmSTOPID == mEventToSend) {

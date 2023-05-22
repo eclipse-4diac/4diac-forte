@@ -36,11 +36,11 @@ private:
 
  public:
   static const TEventID scm_nEventdoneRegisterID = 0;
-  int doneRegister() {
+  TEventID doneRegister() {
     return m_nParentAdapterListEventID + scm_nEventdoneRegisterID;
   }
   static const TEventID scm_nEventdoneUnregisterID = 1;
-  int doneUnregister() {
+  TEventID doneUnregister() {
     return m_nParentAdapterListEventID + scm_nEventdoneUnregisterID;
   }
  private:
@@ -49,11 +49,11 @@ private:
 
  public:
   static const TEventID scm_nEventregisterServiceID = 0;
-  int registerService() {
+  TEventID registerService() {
     return m_nParentAdapterListEventID + scm_nEventregisterServiceID;
   }
   static const TEventID scm_nEventunregisterServiceID = 1;
-  int unregisterService() {
+  TEventID unregisterService() {
     return m_nParentAdapterListEventID + scm_nEventunregisterServiceID;
   }
  private:

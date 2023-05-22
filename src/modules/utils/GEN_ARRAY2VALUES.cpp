@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2014 Profactor GmbH, fortiss GmbH
  *                      2018 Johannes Kepler University
+ *               2023 Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,6 +12,8 @@
  *   Matthias Plasch, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *   Martin Jobst
+ *     - refactor for ANY variant
  *******************************************************************************/
 #include "GEN_ARRAY2VALUES.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -25,7 +28,7 @@ DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2VALUES, g_nStringIdGEN_ARRAY2VALUES)
 const CStringDictionary::TStringId GEN_ARRAY2VALUES::scm_anDataInputNames[] = { g_nStringIdIN };
 
 const TForteInt16 GEN_ARRAY2VALUES::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID GEN_ARRAY2VALUES::scm_anEIWith[] = { 0, 255 };
+const TDataIOID GEN_ARRAY2VALUES::scm_anEIWith[] = { 0, scmWithListDelimiter };
 const CStringDictionary::TStringId GEN_ARRAY2VALUES::scm_anEventInputNames[] = { g_nStringIdREQ };
 
 const TForteInt16 GEN_ARRAY2VALUES::scm_anEOWithIndexes[] = { 0, -1 };
@@ -42,13 +45,13 @@ GEN_ARRAY2VALUES::~GEN_ARRAY2VALUES(){
   delete[] m_anEOWith;
 }
 
-void GEN_ARRAY2VALUES::executeEvent(int paEIID){
+void GEN_ARRAY2VALUES::executeEvent(TEventID paEIID){
   switch (paEIID){
     case scm_nEventREQID:
 
       for(size_t output_index = 0; output_index < mDOutputs; output_index++) {
         //copy input values to array
-        getDO(static_cast<unsigned int>(output_index))->saveAssign((IN_Array()[output_index]));
+        getDO(static_cast<unsigned int>(output_index))->setValue((IN_Array()[output_index]));
       }
 
       sendOutputEvent(scm_nEventCNFID);
@@ -118,7 +121,7 @@ bool GEN_ARRAY2VALUES::createInterfaceSpec(const char *paConfigString, SFBInterf
     paInterfaceSpec.m_nNumDIs = 1;
     paInterfaceSpec.m_aunDINames = scm_anDataInputNames;
     paInterfaceSpec.m_aunDIDataTypeNames = m_anDataInputTypeIds;
-    paInterfaceSpec.m_nNumDOs = static_cast<TForteUInt8>(mDOutputs);
+    paInterfaceSpec.m_nNumDOs = mDOutputs;
     paInterfaceSpec.m_aunDONames = m_anDataOutputNames;
     paInterfaceSpec.m_aunDODataTypeNames = m_anDataOutputTypeIds;
     return true;

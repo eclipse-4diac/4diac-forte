@@ -22,7 +22,7 @@
 /*!\ingroup COREDTS CIEC_TIME represents the time data types according to IEC 61131.
  */
 
-class CIEC_TIME : public CIEC_ANY_DURATION {
+class CIEC_TIME final : public CIEC_ANY_DURATION {
   DECLARE_FIRMWARE_DATATYPE(TIME)
   public:
     CIEC_TIME() = default;

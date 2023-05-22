@@ -264,7 +264,7 @@ mark_as_advanced(FORTE_TicksPerSecond)
 SET(FORTE_EventChainEventListSize "256" CACHE STRING "FORTE eventchain event list size")
 mark_as_advanced(FORTE_EventChainEventListSize)
 
-SET(FORTE_EventChainExternalEventListSize "10" CACHE STRING "FORTE eventchain external event list size")
+SET(FORTE_EventChainExternalEventListSize "16" CACHE STRING "FORTE eventchain external event list size")
 mark_as_advanced(FORTE_EventChainExternalEventListSize)
 
 SET(FORTE_CommunicationInterruptQueueSize "10" CACHE STRING "FORTE Communication interrupt queue size")

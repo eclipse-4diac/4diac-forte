@@ -28,10 +28,10 @@ const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scm_anDataOut
 const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scm_anDataOutputTypeIds[] = {g_nStringIdANY};
 
 const TForteInt16 FORTE_GetArrayResponseFromJSON::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_GetArrayResponseFromJSON::scm_anEIWith[] = {0, 255};
+const TDataIOID FORTE_GetArrayResponseFromJSON::scm_anEIWith[] = {0, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scm_anEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_GetArrayResponseFromJSON::scm_anEOWith[] = {0, 255};
+const TDataIOID FORTE_GetArrayResponseFromJSON::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_GetArrayResponseFromJSON::scm_anEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scm_anEventOutputNames[] = {g_nStringIdCNF};
 
@@ -53,7 +53,7 @@ bool FORTE_GetArrayResponseFromJSON::isResponseEmpty(char* paText) {
   return true;
 }
 
-void FORTE_GetArrayResponseFromJSON::executeEvent(int paEIID) {
+void FORTE_GetArrayResponseFromJSON::executeEvent(TEventID paEIID) {
   if(scm_nEventREQID == paEIID && CIEC_ANY::e_ARRAY == output().getDataTypeID() && CIEC_ANY::e_STRUCT == output_Array()[0]->getDataTypeID()) {
     //clean the output first
     output_Array().setup(output_Array().size(), static_cast<CIEC_STRUCT*>(output_Array()[0])->getStructTypeNameID());

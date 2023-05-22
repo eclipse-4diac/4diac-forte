@@ -11,45 +11,31 @@
  *    Thomas Strasser, Alois Zoitl, Ingo Hegny,
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#include <string.h>
 #include "conn.h"
+#include <algorithm>
 
 CConnection::CConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId) :
-    mSourceId(paSrcFB, paSrcPortId){
+    mSourceId(paSrcFB, paSrcPortId) {
+
 }
 
 EMGMResponse CConnection::addDestination(const CConnectionPoint &paDestPoint){
   EMGMResponse retval = EMGMResponse::InvalidState;
 
   if(!dstExists(paDestPoint)){ // check if there is up to now no such fan out with this destination
-    mDestinationIds.pushBack(paDestPoint);
+    mDestinationIds.push_back(paDestPoint);
     retval = EMGMResponse::Ready;
   }
   return retval;
 }
 
 EMGMResponse CConnection::removeDestination(const CConnectionPoint &paDestPoint){
-  EMGMResponse retval = EMGMResponse::InvalidState;
-
-  TDestinationIdList::Iterator itRunner = mDestinationIds.begin();
-  TDestinationIdList::Iterator itRefNode = mDestinationIds.end();
-
-  while(itRunner != mDestinationIds.end()){
-    if(paDestPoint == (*itRunner)){
-      retval = EMGMResponse::Ready;
-      if(itRefNode == mDestinationIds.end()){
-        mDestinationIds.popFront();
-      }
-      else{
-        mDestinationIds.eraseAfter(itRefNode);
-      }
-      break;
-    }
-    itRefNode = itRunner;
-    ++itRunner;
+  auto it = std::remove(mDestinationIds.begin(), mDestinationIds.end(), paDestPoint);
+  if(it != mDestinationIds.end()){
+    mDestinationIds.erase(it, mDestinationIds.end());
+    return EMGMResponse::Ready;
   }
-
-  return retval;
+  return EMGMResponse::InvalidState;
 }
 
 void CConnection::setSource(CFunctionBlock *paSrcFB, TPortId paSrcPortId){
@@ -58,15 +44,12 @@ void CConnection::setSource(CFunctionBlock *paSrcFB, TPortId paSrcPortId){
 }
 
 bool CConnection::dstExists(const CConnectionPoint& paDestPoint) const {
-  bool bRetVal = false;
-  for(TDestinationIdList::Iterator it = mDestinationIds.begin();
-      it != mDestinationIds.end(); ++it){
-    if(paDestPoint == (*it)){
-      bRetVal = true;
-      break;
+  for(const auto& runner : mDestinationIds){
+    if(runner == paDestPoint){
+      return true;
     }
   }
-  return bRetVal;
+  return false;
 }
 
 

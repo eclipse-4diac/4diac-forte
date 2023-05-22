@@ -254,11 +254,10 @@ CIEC_ANY::EDataTypeID fmuInstance::getConnectedDataType(unsigned int portIndex, 
 void fmuInstance::fillInterfaceElementsArray(CFunctionBlock* pa_poFB, bool isInput, bool isEvent){
 
   if(isEvent){
-    unsigned int noOfElements = isInput ? pa_poFB->getFBInterfaceSpec()->m_nNumEIs : pa_poFB->getFBInterfaceSpec()->m_nNumEOs;
-    for(unsigned int i = 0; i < noOfElements; i++){
+    TEventID noOfElements = isInput ? pa_poFB->getFBInterfaceSpec()->m_nNumEIs : pa_poFB->getFBInterfaceSpec()->m_nNumEOs;
+    for(TEventID i = 0; i < noOfElements; i++){
       fmuValueContainer* newValue = new fmuValueContainer(fmuValueContainer::valueType::INTEGER, true);
-      newValue->setEventCounterPointer(
-        isInput ? &(pa_poFB->getEIMonitorData(static_cast<TEventID>(i))) : &(pa_poFB->getEOMonitorData(static_cast<TEventID>(i))));
+      newValue->setEventCounterPointer(isInput ? &(pa_poFB->getEIMonitorData(i)) : &(pa_poFB->getEOMonitorData(i)));
       mOutputsAndInputs.push_back(newValue);
       FMU_DEBUG_LOG(this, "VARIABLES: INTERFACE: " << pa_poFB->getInstanceName() << "." << CStringDictionary::getInstance().get(isInput ? pa_poFB->getFBInterfaceSpec()->m_aunEINames[i] : pa_poFB->getFBInterfaceSpec()->m_aunEONames[i]) << " ADDED SUCCESSFULLY\n")
     }

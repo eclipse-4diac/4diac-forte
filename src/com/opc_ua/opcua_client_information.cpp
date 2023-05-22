@@ -187,7 +187,7 @@ UA_StatusCode CUA_ClientInformation::executeWrite(CActionInfo& paActionInfo) {
   request.nodesToWrite = ids;
 
   size_t indexOfNodePair = 0;
-  const CIEC_ANY *dataToSend = paActionInfo.getDataToSend();
+  const CIEC_ANY *const *dataToSend = paActionInfo.getDataToSend();
   for(CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itNodePair = paActionInfo.getNodePairInfo().begin();
       itNodePair != paActionInfo.getNodePairInfo().end(); ++itNodePair, indexOfNodePair++) {
 
@@ -196,7 +196,7 @@ UA_StatusCode CUA_ClientInformation::executeWrite(CActionInfo& paActionInfo) {
     UA_NodeId_copy((*itNodePair)->mNodeId, &ids[indexOfNodePair].nodeId);
     ids[indexOfNodePair].value.hasValue = true;
 
-    COPC_UA_Helper::fillVariant(ids[indexOfNodePair].value.value, dataToSend[indexOfNodePair]);
+    COPC_UA_Helper::fillVariant(ids[indexOfNodePair].value.value, *dataToSend[indexOfNodePair]);
   }
 
   UA_RemoteCallHandle *remoteCallHandle = new UA_RemoteCallHandle(paActionInfo, *this);
@@ -228,7 +228,7 @@ UA_StatusCode CUA_ClientInformation::executeCallMethod(CActionInfo& paActionInfo
   methodRequest->inputArgumentsSize = paActionInfo.getSendSize();
   methodRequest->inputArguments = static_cast<UA_Variant *>(UA_Array_new(methodRequest->inputArgumentsSize, &UA_TYPES[UA_TYPES_VARIANT]));
 
-  const CIEC_ANY *dataToSend = paActionInfo.getDataToSend();
+  const CIEC_ANY *const *dataToSend = paActionInfo.getDataToSend();
 
   CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itNodePair = paActionInfo.getNodePairInfo().begin();
   UA_NodeId_copy((*itNodePair)->mNodeId, &methodRequest->methodId);
@@ -236,7 +236,7 @@ UA_StatusCode CUA_ClientInformation::executeCallMethod(CActionInfo& paActionInfo
   UA_NodeId_copy((*itNodePair)->mNodeId, &methodRequest->objectId);
 
   for(size_t i = 0; i < methodRequest->inputArgumentsSize; i++) {
-    COPC_UA_Helper::fillVariant(methodRequest->inputArguments[i], dataToSend[i]);
+    COPC_UA_Helper::fillVariant(methodRequest->inputArguments[i], *dataToSend[i]);
   }
 
   UA_RemoteCallHandle *remoteCallHandle = new UA_RemoteCallHandle(paActionInfo, *this);

@@ -24,7 +24,7 @@ const CStringDictionary::TStringId GEN_E_DEMUX::scm_anDataInputNames[] = { g_nSt
 const CStringDictionary::TStringId GEN_E_DEMUX::scm_aunDIDataTypeIds[] = { g_nStringIdUINT };
 
 const TForteInt16 GEN_E_DEMUX::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID GEN_E_DEMUX::scm_anEIWith[] = { 0, 255 };
+const TDataIOID GEN_E_DEMUX::scm_anEIWith[] = { 0, scmWithListDelimiter };
 const CStringDictionary::TStringId GEN_E_DEMUX::scm_anEventInputNames[] = { g_nStringIdEI };
 
 GEN_E_DEMUX::GEN_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
@@ -35,7 +35,7 @@ GEN_E_DEMUX::~GEN_E_DEMUX(){
   delete[] m_anEventOutputNames;
 }
 
-void GEN_E_DEMUX::executeEvent(int paEIID){
+void GEN_E_DEMUX::executeEvent(TEventID paEIID){
   if(scm_nEventEIID == paEIID && static_cast<CIEC_UINT::TValueType>(K()) < m_pstInterfaceSpec->m_nNumEOs) {
     sendOutputEvent(static_cast<CIEC_UINT::TValueType>(K())); // the value of K corresponds to the output event ID;
   }
@@ -48,7 +48,7 @@ bool GEN_E_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
     ++acPos;
     if('D' != *acPos){
       //we have an underscore and it is not the first underscore after E
-      paInterfaceSpec.m_nNumEOs = static_cast<TForteUInt8>(forte::core::util::strtoul(acPos, nullptr, 10));
+      paInterfaceSpec.m_nNumEOs = static_cast<TEventID>(forte::core::util::strtoul(acPos, nullptr, 10));
 
       if(paInterfaceSpec.m_nNumEOs < CFunctionBlock::scm_nMaxInterfaceEvents){
         m_anEventOutputNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumEOs];

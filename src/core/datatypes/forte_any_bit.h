@@ -26,8 +26,6 @@
 /*!\ingroup COREDTS IIEC_ANY_BIT represents any bit data types according to IEC 61131.
  */
 class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY{
-  DECLARE_FIRMWARE_DATATYPE(ANY_BIT)
-
   public:
     ~CIEC_ANY_BIT() override = default;
 

@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2010-2013 fortiss, TU Wien ACIN and others.
+ *               2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,6 +14,7 @@
  *    Monika Wenger - rename datatype files to forte_datatype
  *    Ingo Hegny - serialize/deserialize for STRUCT, changed datatype for IP-communication
  *    Stanislav Meduna - make serializeNull and isNull public
+ *    Martin Jobst - account for new FB layout and varying data type size
  *******************************************************************************/
 #ifndef _FBDKASN1LAYER_H_
 #define _FBDKASN1LAYER_H_
@@ -26,7 +28,7 @@
 
 class CIEC_TIME;
 class CIEC_STRUCT;
-class CIEC_ARRAY_TYPELIB;
+class CIEC_ARRAY;
 class CIEC_STRING;
 class CIEC_WSTRING;
 
@@ -143,19 +145,6 @@ namespace forte {
           return *pa_pcBytes == scm_nNull;
         }
 
-        /*!\brief Serialize an array of IEC data points from a FB into a byte array
-         *
-         *
-         * @param pa_pcBytes destination array for the serialization
-         * @param pa_nStreamSize size of the destination array
-         * @param pa_apoData  array of IEC data points
-         * @param pa_nDataNum length of the data point array
-         * @return on success the number of bytes written into the destination array,
-         *         -1 on error.
-         */
-        static int serializeFBDataPointArray(TForteByte* pa_pcBytes, unsigned int pa_nStreamSize, TConstIEC_ANYPtr pa_aoData, unsigned int pa_nDataNum);
-
-
         /*! \brief Serialization of data tag  according to IEC 61499 Compliance Profile for
          *   Feasibility Demonstrations based on ISO/IEC 8825 (ASN.1).
          *
@@ -174,9 +163,7 @@ namespace forte {
         static int serializeValueWString(TForteByte* pa_pcBytes, int pa_nStreamSize, const CIEC_WSTRING & pa_roWString);
 #endif //FORTE_USE_WSTRING_DATATYPE
         static int serializeValueStruct(TForteByte* pa_pcBytes, int pa_nStreamSize, const CIEC_STRUCT & pa_roWString);
-#ifdef FORTE_SUPPORT_ARRAYS
-        static int serializeArray(TForteByte *pa_pcBytes, int pa_nStreamSize, const CIEC_ARRAY_TYPELIB &pa_roArray);
-#endif //FORTE_SUPPORT_ARRAYS
+        static int serializeArray(TForteByte *pa_pcBytes, int pa_nStreamSize, const CIEC_ARRAY &pa_roArray);
         /**@}*/
 
 
@@ -199,10 +186,8 @@ namespace forte {
         static int deserializeValueWString(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_WSTRING &pa_roIECData);
 #endif //FORTE_USE_WSTRING_DATATYPE
         static int deserializeValueString(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_STRING &pa_roIECData);
-#ifdef FORTE_SUPPORT_ARRAYS
-        static int deserializeArray(const TForteByte *pa_pcBytes, int pa_nStreamSize, CIEC_ARRAY_TYPELIB &pa_roArray);
-        static int deserializeValueBoolArray(const TForteByte *pa_pcBytes, int pa_nStreamSize, CIEC_ARRAY_TYPELIB &pa_roArray, TForteUInt16 pa_unDecodedArraySize);
-#endif //FORTE_SUPPORT_ARRAYS
+        static int deserializeArray(const TForteByte *pa_pcBytes, int pa_nStreamSize, CIEC_ARRAY &pa_roArray);
+        static int deserializeValueBoolArray(const TForteByte *pa_pcBytes, int pa_nStreamSize, CIEC_ARRAY &pa_roArray, TForteUInt16 pa_unDecodedArraySize);
         static int deserializeValueStruct(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_STRUCT &pa_roIECData);
         /**@}*/
 

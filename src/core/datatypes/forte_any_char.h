@@ -22,8 +22,6 @@
  *  IEC 61131.
  */
 class CIEC_ANY_CHAR : public CIEC_ANY_CHARS {
-  DECLARE_FIRMWARE_DATATYPE(ANY_CHAR)
-
   public:
     CIEC_ANY_CHAR(const CIEC_ANY_CHAR &pa_roVal) :
         CIEC_ANY_CHARS() {

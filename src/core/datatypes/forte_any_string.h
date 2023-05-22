@@ -22,8 +22,6 @@
 /*!\ingroup COREDTS IIEC_ANY_STRING represents any bit data types according to IEC 61131.
  */
 class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
-  DECLARE_FIRMWARE_DATATYPE(ANY_STRING)
-
   public:
     static const unsigned int scm_unMaxStringLen = 65534; //save one for the \0 needed for allocated length
 

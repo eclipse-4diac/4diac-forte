@@ -22,7 +22,7 @@ E_DELAY::E_DELAY(const CStringDictionary::TStringId paInstanceNameId, CResource 
          CTimedFB( paInstanceNameId, paSrcRes, e_SingleShot){
 }
 
-void E_DELAY::executeEvent(int pa_nEIID){
+void E_DELAY::executeEvent(TEventID pa_nEIID){
   if(cg_nExternalEventID == pa_nEIID ){
     sendOutputEvent(csm_nEOID);
     mActive = false;

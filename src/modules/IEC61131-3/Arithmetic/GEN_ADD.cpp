@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2014 Profactor GmbH, fortiss GmbH
  *                      2018 Johannes Kepler University
+ *               2023 Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,6 +12,8 @@
  *   Matthias Plasch, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *   Martin Jobst
+ *     - refactor for ANY variant
  *******************************************************************************/
 
 #include "GEN_ADD.h"
@@ -19,7 +22,6 @@
 #endif
 
 #include <ifSpecBuilder.h>
-#include <anyhelper.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <forte_printer.h>
@@ -33,13 +35,27 @@ GEN_ADD::GEN_ADD(const CStringDictionary::TStringId pa_nInstanceNameId, CResourc
 GEN_ADD::~GEN_ADD(){
 }
 
-void GEN_ADD::executeEvent(int paEIID){
+void GEN_ADD::executeEvent(TEventID paEIID){
   switch (paEIID){
     case scm_nEventREQID:
-
-      anyMagnitudeFBHelper<GEN_ADD>(st_OUT().getDataTypeID(), *this);
+      if(m_nDInputs) {
+        var_OUT() = var_IN(0);
+        for (size_t i = 1; i < m_nDInputs; ++i) {
+          var_OUT() = std::visit([](auto &&paOUT, auto &&paIN) -> CIEC_ANY_MAGNITUDE_VARIANT {
+              using T = std::decay_t<decltype(paOUT)>;
+              using U = std::decay_t<decltype(paIN)>;
+              using deductedType = typename forte::core::mpl::get_add_operator_result_type<T, U>::type;
+              if constexpr (!std::is_same<deductedType, forte::core::mpl::NullType>::value) {
+                return func_ADD(paOUT, paIN);
+              }
+              DEVLOG_ERROR("Adding incompatible types %s and %s\n",
+                           CStringDictionary::getInstance().get(paOUT.getTypeNameID()),
+                           CStringDictionary::getInstance().get(paIN.getTypeNameID()));
+              return paOUT;
+          }, var_OUT(), var_IN(i));
+        }
+      }
       sendOutputEvent(scm_nEventCNFID);
-
       break;
   }
 }
@@ -68,7 +84,7 @@ bool GEN_ADD::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &
   static const std::array<CStringDictionary::TStringId, 1>anEventOutputNames = { g_nStringIdCNF };
   static const std::array<CStringDictionary::TStringId, 1>anDataOutputNames = { g_nStringIdOUT };
   static const std::array<CStringDictionary::TStringId, 1>anDataOutputTypeIds = { g_nStringIdANY_MAGNITUDE };
-  static constexpr std::array<TDataIOID, 2> anEOWith = { 0, 255 };
+  static constexpr std::array<TDataIOID, 2> anEOWith = { 0, scmWithListDelimiter };
   static constexpr std::array<TForteInt16, 1> anEOWithIndexes = { 0 };
 
   forte::core::util::CIfSpecBuilder isb;

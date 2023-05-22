@@ -13,6 +13,7 @@
 #include "forte_boost_output_support.h"
 #include "../../src/core/typelib.h"
 #include "../../src/core/datatypes/forte_any.h"
+#include "../../src/core/datatypes/forte_any_variant.h"
 #include "../../src/core/datatypes/forte_bool.h"
 #include "../../src/core/datatypes/forte_sint.h"
 #include "../../src/core/datatypes/forte_int.h"
@@ -45,7 +46,7 @@
 BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createANY){
-    TForteByte acDataBuf[sizeof(CIEC_ANY)];
+    TForteByte acDataBuf[sizeof(CIEC_ANY_VARIANT)];
     CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdANY, acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_ANY, poVal->getDataTypeID());
 

@@ -71,7 +71,7 @@ private:
   STimedFBListEntry mTimeListEntry;
   CEventChainExecutionThread mECEO;
 
-  void executeEvent(int paEIID) override;
+  void executeEvent(TEventID paEIID) override;
 
 public:
   FORTE_RT_E_DELAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);

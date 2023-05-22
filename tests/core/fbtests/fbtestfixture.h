@@ -65,7 +65,7 @@ class CFBTestFixtureBase : public CFunctionBlock{
     void setOutputData(std::initializer_list<TIEC_ANYPtr> paOutputData);
 
   private:
-    void executeEvent(int paEIID) override;
+    void executeEvent(TEventID paEIID) override;
 
     void setupTestInterface();
     void performFBDeleteTests();
@@ -93,10 +93,6 @@ class CFBTestFixtureBase : public CFunctionBlock{
 
     std::vector<CIEC_ANY *> mInputDataBuffers;
     std::vector<CIEC_ANY *> mOutputDataBuffers;
-
-    TForteByte *mFBConnData;
-    TForteByte *mFBVarsData;
-
 };
 
 

@@ -16,8 +16,8 @@
 
 template<class T>
 CGenFunctionBlock<T>::CGenFunctionBlock(CResource *paSrcRes, const CStringDictionary::TStringId paInstanceNameId) :
-    T(paSrcRes, nullptr, paInstanceNameId, nullptr, nullptr),
-    mConfiguredFBTypeNameId(CStringDictionary::scm_nInvalidStringId), mGenInterfaceSpec(), mFBConnData(nullptr), mFBVarsData(nullptr) {
+    T(paSrcRes, nullptr, paInstanceNameId),
+    mConfiguredFBTypeNameId(CStringDictionary::scm_nInvalidStringId), mGenInterfaceSpec() {
 
   static_assert((std::is_base_of<CFunctionBlock, T>::value), "TFunctionBlock");
 }
@@ -26,8 +26,6 @@ template<class T>
 CGenFunctionBlock<T>::~CGenFunctionBlock(){
   if(nullptr != T::m_pstInterfaceSpec){
     T::freeAllData();  //clean the interface and connections first.
-    delete[] mFBConnData;
-    delete[] mFBVarsData;
     T::m_pstInterfaceSpec = nullptr; //this stops the base classes from any wrong clean-up
   }
 }
@@ -36,9 +34,7 @@ template<class T>
 bool CGenFunctionBlock<T>::configureFB(const char *paConfigString){
   setConfiguredTypeNameId(CStringDictionary::getInstance().insert(paConfigString));
   if(createInterfaceSpec(paConfigString, mGenInterfaceSpec)){
-    mFBConnData = new TForteByte[T::genFBConnDataSize(mGenInterfaceSpec.m_nNumEOs, mGenInterfaceSpec.m_nNumDIs, mGenInterfaceSpec.m_nNumDOs)];
-    mFBVarsData = new TForteByte[T::genFBVarsDataSize(mGenInterfaceSpec.m_nNumDIs, mGenInterfaceSpec.m_nNumDOs)];
-    T::setupFBInterface(&mGenInterfaceSpec, mFBConnData, mFBVarsData);
+    T::setupFBInterface(&mGenInterfaceSpec);
     return true;
   }
   return false;

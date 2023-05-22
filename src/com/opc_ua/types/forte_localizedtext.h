@@ -23,18 +23,23 @@ class CIEC_LocalizedText : public CIEC_STRUCT {
   public:
     CIEC_LocalizedText();
 
-    ~CIEC_LocalizedText() override = default;
+    CIEC_STRING var_locale;
+    CIEC_STRING var_text;
 
-    CIEC_STRING &locale() {
-      return *static_cast<CIEC_STRING*>(&getMembers()[0]);
+    size_t getStructSize() const override {
+      return 2;
     }
 
-    CIEC_STRING &text() {
-      return *static_cast<CIEC_STRING*>(&getMembers()[1]);
+    const CStringDictionary::TStringId* elementNames() const override {
+      return scmElementNames;
     }
+
+    CStringDictionary::TStringId getStructTypeNameID() const override;
+
+    CIEC_ANY *getMember(size_t paMemberIndex) override;
+    const CIEC_ANY *getMember(size_t paMemberIndex) const override;
 
   private:
-    static const CStringDictionary::TStringId scmElementTypes[];
     static const CStringDictionary::TStringId scmElementNames[];
 };
 

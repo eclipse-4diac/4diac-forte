@@ -100,8 +100,14 @@ class CCompositeFB: public CFunctionBlock {
      * \param pa_acFBData         ByteArray for FB-specific data (DI, DO, int. Vars, ...)
      */
     CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-        const CStringDictionary::TStringId pa_nInstanceNameId,
-        const SCFB_FBNData * const pa_cpoFBNData, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
+                 CStringDictionary::TStringId pa_nInstanceNameId,
+                 const SCFB_FBNData * pa_cpoFBNData);
+
+    [[deprecated]] CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
+                                CStringDictionary::TStringId pa_nInstanceNameId,
+                                const SCFB_FBNData *pa_cpoFBNData, TForteByte *pa_acFBConnData,
+                                TForteByte *pa_acFBVarsData);
+
     ~CCompositeFB() override;
 
     bool initialize() override;
@@ -126,7 +132,7 @@ class CCompositeFB: public CFunctionBlock {
 #endif
 
   private:
-    void executeEvent(int pa_nEIID) override;
+    void executeEvent(TEventID pa_nEIID) override;
 
     bool createInternalFBs();
     void createEventConnections();
@@ -135,7 +141,7 @@ class CCompositeFB: public CFunctionBlock {
     void createDataConnections();
     void prepareIf2InDataCons();
     void setParams();
-    void sendInternal2InterfaceOutputEvent(int pa_nEOID);
+    void sendInternal2InterfaceOutputEvent(TEventID pa_nEOID);
 
     //!Acquire the functionblock for a given function block number this may be a contained fb, an adapter, or the composite itself.
     CFunctionBlock *getFunctionBlock(int pa_nFBNum);

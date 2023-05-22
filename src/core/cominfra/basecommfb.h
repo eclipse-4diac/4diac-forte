@@ -1,6 +1,8 @@
 /*******************************************************************************
  * Copyright (c) 2006-2015 ACIN, Profactor GmbH, fortiss GmbH
  *                      2018 Johannes Kepler University
+ *               2023 Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -12,6 +14,7 @@
  *    Martin Melik-Merkumians, Ingo Hegny, Patrick Smejkal
  *      - initial implementation and rework communication infrastructure
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *    Martin Jobst - account for new FB layout and varying data type size
  *******************************************************************************/
 #ifndef _SRC_CORE_COMINFRA_BASECOMMFB_H_
 #define _SRC_CORE_COMINFRA_BASECOMMFB_H_
@@ -44,12 +47,12 @@ namespace forte {
         return m_pstInterfaceSpec->m_nNumDOs - 2;
       }
 
-      CIEC_ANY *getSDs() {
-        return getDI(2);
+      CIEC_ANY **getSDs() {
+        return mDIs + 2;
       }
 
-      CIEC_ANY *getRDs() {
-        return getDO(2);
+      CIEC_ANY **getRDs() {
+        return mDOs + 2;
       }
 
       void interruptCommFB(CComLayer *pa_poComLayer);

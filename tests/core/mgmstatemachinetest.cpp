@@ -16,7 +16,7 @@
 class CFunctionBlockMock : public CFunctionBlock{
   public:
     CFunctionBlockMock() :
-        CFunctionBlock(nullptr, nullptr, 0, nullptr, nullptr){
+        CFunctionBlock(nullptr, nullptr, 0){
     }
 
     bool initialize() override {
@@ -33,7 +33,7 @@ class CFunctionBlockMock : public CFunctionBlock{
     }
 
   private:
-    virtual void executeEvent(int){
+    virtual void executeEvent(TEventID){
     }
 };
 

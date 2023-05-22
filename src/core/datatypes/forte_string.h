@@ -36,7 +36,7 @@
 
 /*!\ingroup COREDTS CIEC_STRING represents the string data type according to IEC 61131.
  */
-class CIEC_STRING : public CIEC_ANY_STRING{
+class CIEC_STRING final : public CIEC_ANY_STRING{
   DECLARE_FIRMWARE_DATATYPE(STRING)
 
   public:
@@ -215,14 +215,12 @@ class CIEC_STRING : public CIEC_ANY_STRING{
      */
     size_t getToStringBufferSize() const override;
 
-  protected:
     void setValue(const CIEC_ANY &pa_roValue) override {
       if(pa_roValue.getDataTypeID() == CIEC_ANY::e_STRING){
         const CIEC_STRING &roSrc(static_cast<const CIEC_STRING &>(pa_roValue));
         this->assign(roSrc.getValue(), roSrc.length());
       }
     }
-  private:
 };
 
 inline

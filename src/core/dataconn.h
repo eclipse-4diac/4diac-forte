@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
+ *               2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -11,6 +12,7 @@
  *    Thomas Strasser, Alois Zoitl, Rene Smodic, Gunnar Grabmaier, Ingo Hegny,
  *    Martin Melik Merkumians, Monika Wenger
  *      - initial implementation and rework communication infrastructure
+ *    Martin Jobst - move allocation of data value to FB
  *******************************************************************************/
 #ifndef _DATACONN_H_
 #define _DATACONN_H_
@@ -23,9 +25,7 @@
 class CDataConnection : public CConnection {
 
   public:
-    CDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, const CIEC_ANY *paSrcDO);
-
-    ~CDataConnection() override;
+    CDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CIEC_ANY *paValue);
 
     EMGMResponse connect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
@@ -43,7 +43,7 @@ class CDataConnection : public CConnection {
  */
     void writeData(const CIEC_ANY *pa_poValue){
       if(m_poValue){
-        m_poValue->setValue(*pa_poValue);
+        m_poValue->setValue(pa_poValue->unwrap());
       }
     };
 
@@ -52,7 +52,11 @@ class CDataConnection : public CConnection {
  *   Read data value from connection data variable to FB data input.
  *   \param pa_poValue pointer to FB data input
  */
-    void readData(CIEC_ANY *pa_poValue) const;
+    void readData(CIEC_ANY *pa_poValue) const {
+      if(m_poValue){
+        pa_poValue->setValue(m_poValue->unwrap());
+      }
+    }
 
 /*! \brief Set class member variable m_poValue.
  *
@@ -77,30 +81,13 @@ class CDataConnection : public CConnection {
      *
      * @param pa_poSrcDataPoint  data point of the connection's source (if 0 than it is a any data type)
      * @param pa_poDstDataPoint  data point of the connection's destination (if 0 than it is a any data type)
-     * @param pa_rbSpecialCast   connection requires special cast (e.g., float datatype to int datatype conversion)
      * @return true if a connection between the given end points is valid
      */
-    static bool canBeConnected(const CIEC_ANY *pa_poSrcDataPoint, const CIEC_ANY *pa_poDstDataPoint,
-        bool &pa_rbSpecialCast);
-
-    /*! \brief check if the the given data type needs special treatment in conversions
-         *
-         * @param pa_eSrcDTId  data type
-         * @return true if special treatment is necessary
-         */
-    static bool needsSpecialCast(CIEC_ANY::EDataTypeID pa_eSrcDTId);
+    static bool canBeConnected(const CIEC_ANY *pa_poSrcDataPoint, const CIEC_ANY *pa_poDstDataPoint);
 
     /*! \brief Value for storing the current data of the connection
      */
     CIEC_ANY *m_poValue;
-
-    TForteByte m_acDataBuf[sizeof(CIEC_ANY)];
-
-    /*! \brief Flag for indicating that this connections needs special measures for casting.
-     *
-     * Currently this is only necessary for  (L)REAL to ANY_INT data connections
-     */
-    bool mSpecialCastConnection;
   private:
 
     void handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint);

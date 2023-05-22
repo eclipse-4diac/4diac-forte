@@ -33,9 +33,9 @@ struct STRUCT_MUX_TestFixture_1 : public CFBTestFixtureBase{
     CIEC_Struct_Muxer_Test_Struct_1 mOut;
 
     void checkStructValues(){
-      BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(mVar1), static_cast<CIEC_INT::TValueType>(mOut.Var1()));
-      BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(mVar2), static_cast<CIEC_INT::TValueType>(mOut.Var2()));
-      BOOST_CHECK_EQUAL(strcmp(mVar3.getValue(), mOut.Var3().getValue()), 0);
+      BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(mVar1), static_cast<CIEC_INT::TValueType>(mOut.Var1));
+      BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(mVar2), static_cast<CIEC_INT::TValueType>(mOut.Var2));
+      BOOST_CHECK_EQUAL(strcmp(mVar3.getValue(), mOut.Var3.getValue()), 0);
     }
 };
 
@@ -103,9 +103,9 @@ struct STRUCT_MUX_TestFixture_2 : public CFBTestFixtureBase{
     CIEC_Struct_Muxer_Test_Struct_2 mOut;
 
     void checkStructValues(){
-     BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(mVar1), static_cast<CIEC_INT::TValueType>(mOut.Var1()));
-     BOOST_CHECK_EQUAL(strcmp(mVar2.getValue(), mOut.Var2().getValue()), 0);
-     BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(mVar3), static_cast<CIEC_INT::TValueType>(mOut.Var3()));
+     BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(mVar1), static_cast<CIEC_INT::TValueType>(mOut.Var1));
+     BOOST_CHECK_EQUAL(strcmp(mVar2.getValue(), mOut.Var2.getValue()), 0);
+     BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(mVar3), static_cast<CIEC_INT::TValueType>(mOut.Var3));
    }
 
 };
@@ -151,7 +151,7 @@ BOOST_CHECK(nullptr == fb);
 
 BOOST_AUTO_TEST_CASE(bigStruct) {
 CFunctionBlock *fb = CTypeLib::createFB(g_nStringIdInstanceName, g_nStringIdSTRUCT_MUX_1Struct_Muxer_Test_Struct_4, nullptr);
-BOOST_CHECK(nullptr == fb);
+BOOST_CHECK(nullptr != fb);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

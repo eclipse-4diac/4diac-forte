@@ -21,7 +21,7 @@ E_RDELAY::E_RDELAY(const CStringDictionary::TStringId paInstanceNameId, CResourc
     CTimedFB( paInstanceNameId, paSrcRes, e_SingleShot){
 }
 
-void E_RDELAY::executeEvent(int pa_nEIID){
+void E_RDELAY::executeEvent(TEventID pa_nEIID){
   switch(pa_nEIID){
     case cg_nExternalEventID:
       sendOutputEvent(csm_nEOID);

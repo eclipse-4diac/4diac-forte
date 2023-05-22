@@ -50,7 +50,7 @@ class CIEC_WCHAR : public CIEC_ANY_CHAR{
      *
      *   Conversion operator for converting CIEC_WCHAR to elementary byte
      */
-    operator TForteWChar() const {
+    explicit operator TForteWChar() const {
       return getChar16();
     }
 

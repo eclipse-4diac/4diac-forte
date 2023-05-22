@@ -25,14 +25,13 @@ const CStringDictionary::TStringId GEN_STRUCT_MUX::scm_anDataOutputNames[] = { g
 
 const TForteInt16 GEN_STRUCT_MUX::scm_anEIWithIndexes[] = {0};
 const TForteInt16 GEN_STRUCT_MUX::scm_anEOWithIndexes[] = {0};
-const TDataIOID GEN_STRUCT_MUX::scm_anEOWith[] = {0, 255};
+const TDataIOID GEN_STRUCT_MUX::scm_anEOWith[] = {0, scmWithListDelimiter};
 
 
-void GEN_STRUCT_MUX::executeEvent(int paEIID) {
+void GEN_STRUCT_MUX::executeEvent(TEventID paEIID) {
   if(scm_nEventREQID == paEIID) {
-    CIEC_ANY *members = st_OUT().getMembers();
     for (size_t i = 0; i < st_OUT().getStructSize(); i++){
-      members[i].setValue(*getDI(static_cast<unsigned int>(i)));
+      st_OUT().getMember(i)->setValue(*getDI(static_cast<unsigned int>(i)));
     }
     sendOutputEvent(scm_nEventCNFID);
   }
@@ -62,11 +61,8 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
       // we could find the struct
       CIEC_STRUCT *structInstance = static_cast<CIEC_STRUCT*>(data);
 
-      TForteUInt16 structSize = structInstance->getStructSize();
-      if(structSize < 1 || structSize > 254) { //the structure size must be non zero and less than 255 (maximum number of data input)
-        DEVLOG_ERROR("[GEN_STRUCT_MUX]: The structure %s has a size is not within range > 0 and < 255\n",
-          CStringDictionary::getInstance().get(structTypeNameId));
-      } else {
+      size_t structSize = structInstance->getStructSize();
+      if(structSize != 0 && structSize < cg_unInvalidPortId) { //the structure size must be non zero and less than cg_unInvalidPortId (maximum number of data input)
         TDataIOID *eiWith = new TDataIOID[structSize + 1];
         CStringDictionary::TStringId *diDataTypeNames = new CStringDictionary::TStringId[calcStructTypeNameSize(*structInstance)];
         CStringDictionary::TStringId *diNames = new CStringDictionary::TStringId[structSize];
@@ -80,7 +76,7 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
         paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
         paInterfaceSpec.m_anEOWith = scm_anEOWith;
         paInterfaceSpec.m_anEOWithIndexes = scm_anEOWithIndexes;
-        paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(structSize);
+        paInterfaceSpec.m_nNumDIs = structSize;
         paInterfaceSpec.m_aunDINames = diNames;
         paInterfaceSpec.m_aunDIDataTypeNames = diDataTypeNames;
         paInterfaceSpec.m_nNumDOs = 1;
@@ -89,18 +85,22 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
         doDataTypeNames[0] = structTypeNameId;
 
         for(size_t i = 0, typeNameIndex = 0; i < paInterfaceSpec.m_nNumDIs; i++, typeNameIndex++) {
-          eiWith[i] = static_cast<TForteUInt8>(i);
+          CIEC_ANY &member = *structInstance->getMember(i);
+          eiWith[i] = i;
           diNames[i] = structInstance->elementNames()[i];
-          diDataTypeNames[typeNameIndex] = (&(structInstance->getMembers()[i]))->getTypeNameID();
-          if((&(structInstance->getMembers()[i]))->getDataTypeID() == CIEC_ANY::e_ARRAY){
-            CIEC_ARRAY_TYPELIB *array = static_cast<CIEC_ARRAY_TYPELIB*>(&(structInstance->getMembers()[i]));
-            diDataTypeNames[typeNameIndex + 1] = static_cast<CStringDictionary::TStringId>(array->size());
-            diDataTypeNames[typeNameIndex + 2] = array->getElementTypeNameID();
+          diDataTypeNames[typeNameIndex] = member.getTypeNameID();
+          if(member.getDataTypeID() == CIEC_ANY::e_ARRAY){
+            CIEC_ARRAY &array = static_cast<CIEC_ARRAY&>(member);
+            diDataTypeNames[typeNameIndex + 1] = static_cast<CStringDictionary::TStringId>(array.size());
+            diDataTypeNames[typeNameIndex + 2] = array.getElementTypeNameID();
             typeNameIndex += 2;
           }
         }
         eiWith[paInterfaceSpec.m_nNumDIs] = scmWithListDelimiter;
         retval = true;
+      } else {
+        DEVLOG_ERROR("[GEN_STRUCT_MUX]: The structure %s has a size is not within range > 0 and < %ud\n",
+                     CStringDictionary::getInstance().get(structTypeNameId), cg_unInvalidPortId);
       }
     } else {
       DEVLOG_ERROR("[GEN_STRUCT_MUX]: data type is not a structure: %s\n", CStringDictionary::getInstance().get(structTypeNameId));
@@ -130,7 +130,7 @@ size_t GEN_STRUCT_MUX::calcStructTypeNameSize(CIEC_STRUCT &paStruct){
   size_t structSize = paStruct.getStructSize();
   size_t numArrayMembers = 0;
   for(size_t i = 0; i < structSize; i++) {
-    if((&(paStruct.getMembers()[i]))->getDataTypeID() == CIEC_ANY::e_ARRAY){
+    if(paStruct.getMember(i)->getDataTypeID() == CIEC_ANY::e_ARRAY){
       numArrayMembers++;
     }
   }

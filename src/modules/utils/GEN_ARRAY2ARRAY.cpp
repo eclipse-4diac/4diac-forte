@@ -23,10 +23,10 @@ const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scm_anDataInputNames[] = { g
 const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scm_anDataOutputNames[] = { g_nStringIdOUT };
 
 const TForteInt16 GEN_ARRAY2ARRAY::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID GEN_ARRAY2ARRAY::scm_anEIWith[] = { 0, 255 };
+const TDataIOID GEN_ARRAY2ARRAY::scm_anEIWith[] = { 0, scmWithListDelimiter };
 const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scm_anEventInputNames[] = { g_nStringIdREQ };
 
-const TDataIOID GEN_ARRAY2ARRAY::scm_anEOWith[] = { 0, 255 };
+const TDataIOID GEN_ARRAY2ARRAY::scm_anEOWith[] = { 0, scmWithListDelimiter };
 const TForteInt16 GEN_ARRAY2ARRAY::scm_anEOWithIndexes[] = { 0, -1 };
 const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scm_anEventOutputNames[] = { g_nStringIdCNF };
 
@@ -39,7 +39,7 @@ GEN_ARRAY2ARRAY::~GEN_ARRAY2ARRAY(){
   delete[] m_anDataOutputTypeIds;
 }
 
-void GEN_ARRAY2ARRAY::executeEvent(int paEIID){
+void GEN_ARRAY2ARRAY::executeEvent(TEventID paEIID){
   switch (paEIID){
     case scm_nEventREQID:
 

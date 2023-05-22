@@ -26,10 +26,10 @@ const CStringDictionary::TStringId FORTE_FieldsToArrowheadCloud::scm_anDataOutpu
 const CStringDictionary::TStringId FORTE_FieldsToArrowheadCloud::scm_anDataOutputTypeIds[] = {g_nStringIdArrowheadCloud};
 
 const TForteInt16 FORTE_FieldsToArrowheadCloud::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_FieldsToArrowheadCloud::scm_anEIWith[] = {0, 1, 2, 6, 5, 4, 3, 255};
+const TDataIOID FORTE_FieldsToArrowheadCloud::scm_anEIWith[] = {0, 1, 2, 6, 5, 4, 3, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_FieldsToArrowheadCloud::scm_anEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_FieldsToArrowheadCloud::scm_anEOWith[] = {0, 255};
+const TDataIOID FORTE_FieldsToArrowheadCloud::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_FieldsToArrowheadCloud::scm_anEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_FieldsToArrowheadCloud::scm_anEventOutputNames[] = {g_nStringIdCNF};
 
@@ -66,7 +66,7 @@ void FORTE_FieldsToArrowheadCloud::enterStateREQ(){
   sendOutputEvent( scm_nEventCNFID);
 }
 
-void FORTE_FieldsToArrowheadCloud::executeEvent(int pa_nEIID){
+void FORTE_FieldsToArrowheadCloud::executeEvent(TEventID pa_nEIID){
   bool bTransitionCleared;
   do{
     bTransitionCleared = true;

@@ -9,60 +9,73 @@
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _ARTIMEOUT_H_
-#define _ARTIMEOUT_H_
 
-#include <adapter.h>
-#include <typelib.h>
+#pragma once
 
-class FORTE_ARTimeOut: public CAdapter{
+#include "adapter.h"
+#include "typelib.h"
+#include "forte_time.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
+
+
+class FORTE_ARTimeOut: public CAdapter {
   DECLARE_ADAPTER_TYPE(FORTE_ARTimeOut)
 
 private:
- private:
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
- public:
-  CIEC_TIME &DT() {
-    return *static_cast<CIEC_TIME*>((isSocket()) ? getDO(0) : getDI(0));
-  };
-
- public:
-  static const TEventID scm_nEventTimeOutID = 0;
-    int TimeOut() const {
-    return m_nParentAdapterListEventID + scm_nEventTimeOutID;
-  }
- private:
+  public:
+    static const TEventID scm_nEventTimeOutID = 0;
+  
+  private:
   static const TForteInt16 scm_anEIWithIndexes[];
   static const CStringDictionary::TStringId scm_anEventInputNames[];
-
- public:
-  static const TEventID scm_nEventSTARTID = 0;
-    int START() const {
-    return m_nParentAdapterListEventID + scm_nEventSTARTID;
-  }
-  static const TEventID scm_nEventSTOPID = 1;
-    int STOP() const {
-    return m_nParentAdapterListEventID + scm_nEventSTOPID;
-  }
- private:
+  public:
+    static const TEventID scm_nEventSTARTID = 0;
+    static const TEventID scm_nEventSTOPID = 1;
+  
+  private:
+  static const TDataIOID scm_anEOWith[]; 
   static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
   static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpecSocket;
-
+  
   static const SFBInterfaceSpec scm_stFBInterfaceSpecPlug;
 
-   FORTE_ADAPTER_DATA_ARRAY(1, 2, 0, 1, 0);
+public:
+  CIEC_TIME &var_DT() {
+    return *static_cast<CIEC_TIME*>((isSocket()) ? getDO(0) : getDI(0));
+  }
+  
+
+  TEventID evt_TimeOut() {
+    return m_nParentAdapterListEventID + scm_nEventTimeOutID;
+  }
+  
+  TEventID evt_START() {
+    return m_nParentAdapterListEventID + scm_nEventSTARTID;
+  }
+  
+  TEventID evt_STOP() {
+    return m_nParentAdapterListEventID + scm_nEventSTOPID;
+  }
+  
+
+private:
+  FORTE_ADAPTER_DATA_ARRAY(1, 2, 0, 1, 0);
 
 public:
-  ADAPTER_CTOR(FORTE_ARTimeOut){
-  };
+  FORTE_ARTimeOut(CStringDictionary::TStringId pa_anAdapterInstanceName, CResource *pa_poSrcRes, bool pa_bIsPlug) :
+      CAdapter(pa_poSrcRes, &scm_stFBInterfaceSpecSocket, pa_anAdapterInstanceName, &scm_stFBInterfaceSpecPlug, pa_bIsPlug, m_anFBConnData, m_anFBVarsData) {	
+   };
 
-  ~FORTE_ARTimeOut() override = default;
-
+  virtual ~FORTE_ARTimeOut() = default;
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+
 

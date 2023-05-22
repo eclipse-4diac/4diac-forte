@@ -15,6 +15,7 @@
 #define _EVENT_H_
 
 #include "../arch/datatype.h"
+#include "conn.h"
 
 
 /*! \ingroup CORE\brief Datatype for holding the IDs of event inputs.
@@ -22,24 +23,27 @@
  *  With the current implementation at max 255 event inputs per FB are possible.
  *  That should be enough.
  */
-typedef TForteUInt8 TEventID;
+typedef size_t TEventID;
 
-class CConnectionPoint;
 
 //!\ingroup CORE Constant for the invalid event input id
 const TEventID cg_nInvalidEventID = cg_unInvalidPortId;
-//!\ingroup CORE Constant for the invalid event input id
-const TEventID cg_nExternalEventID = 254;
+//!\ingroup CORE Constant for the external event input id
+const TEventID cg_nExternalEventID = cg_nInvalidEventID - 1;
 
 //!\brief With this marker events are anotated that are from the internals of a CFB to the interface of the CFB
-const TPortId cgInternal2InterfaceMarker = 0x100;
+const TPortId cgInternal2InterfaceMarker = cg_unInvalidPortId + 1;
+static_assert((cgInternal2InterfaceMarker & (cgInternal2InterfaceMarker - 1)) == 0,
+              "cgInternal2InterfaceMarker must be a power of 2");
 
-const TPortId cgInternal2InterfaceRemovalMask = 0xFF;
+const TPortId cgInternal2InterfaceRemovalMask = cg_unInvalidPortId;
+static_assert((cgInternal2InterfaceRemovalMask & (cgInternal2InterfaceRemovalMask + 1)) == 0,
+              "cgInternal2InterfaceRemovalMask must be a valid bitmask");
 
 /*!\ingroup CORE \brief Structure to hold the information needed for delivering input events to FBs.
 */
-typedef CConnectionPoint SEventEntry;
+typedef CConnectionPoint TEventEntry;
 
-typedef SEventEntry *TEventEntryPtr;
+typedef TEventEntry *TEventEntryPtr;
 
 #endif /*_EVENT_H_*/

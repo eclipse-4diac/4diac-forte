@@ -1,5 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2006 - 2015 Profactor GmbH, ACIN, fortiss GmbH
+ *               2023 Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +11,7 @@
  * Contributors:
  *    Gunnar Grabmaier, Alois Zoitl, Thomas Strasser, Ingo Hegny, Monika Wenger
  *      - initial implementation and rework communication infrastructure
+ *    Martin Jobst - move allocation of data value to FB
  *******************************************************************************/
 #ifndef _IF2INDCO_H_
 #define _IF2INDCO_H_
@@ -23,7 +26,6 @@ class CFunctionBlock;
 class CInterface2InternalDataConnection : public CDataConnection{
   public:
     CInterface2InternalDataConnection();
-    ~CInterface2InternalDataConnection() override;
 
     /*! \brief Clones interface data value (CFB data input) to internal FB data input.
      */

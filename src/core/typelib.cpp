@@ -1,5 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+ *               2023 Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,6 +12,8 @@
  *    Alois Zoitl, Thomas Strasser, Smodic Rene, Gerhard Ebenhofer,
  *    Ingo Hegny, Monika Wenger
  *      - initial implementation and rework communication infrastructure
+ *    Martin Jobst
+ *      - add support for data types with different size
  *******************************************************************************/
 #include "./datatypes/forte_any.h"
 #include "typelib.h"
@@ -18,6 +22,7 @@
 #include "adapterconn.h"
 #include "resource.h"
 #include "if2indco.h"
+#include "adapter.h"
 #include <stddef.h>
 
 CTypeLib::CTypeEntry::CTypeEntry(CStringDictionary::TStringId pa_nTypeNameId) :
@@ -53,8 +58,8 @@ CTypeLib::addAdapterType(this);
 
 CTypeLib::CAdapterTypeEntry::~CAdapterTypeEntry() = default;
 
-CTypeLib::CDataTypeEntry::CDataTypeEntry(CStringDictionary::TStringId paTypeNameId, TDataTypeCreateFunc pafuncDTCreateFunc) :
-    CTypeEntry(paTypeNameId), m_pfuncDTCreateFunc(pafuncDTCreateFunc) {
+CTypeLib::CDataTypeEntry::CDataTypeEntry(CStringDictionary::TStringId paTypeNameId, TDataTypeCreateFunc pafuncDTCreateFunc, size_t paSize) :
+    CTypeEntry(paTypeNameId), mDTCreateFunc(pafuncDTCreateFunc), mSize(paSize) {
   CTypeLib::addDataType(this);
 }
 
@@ -93,10 +98,18 @@ CAdapter *CTypeLib::createAdapter(CStringDictionary::TStringId pa_nInstanceNameI
     if(nullptr == poNewAdapter) {
       m_eLastErrorMSG = EMGMResponse::Overflow;
     }
-  } //no generic adapters supported
+  } else { // no generic adapters supported
+    m_eLastErrorMSG = EMGMResponse::UnsupportedType;
+  }
 
-    return poNewAdapter;
+  if(nullptr != poNewAdapter){
+    if(!poNewAdapter->initialize()) {
+      delete poNewAdapter;
+      poNewAdapter = nullptr;
+    }
+  }
 
+  return poNewAdapter;
 }
 
 CFunctionBlock *CTypeLib::createFB(CStringDictionary::TStringId pa_nInstanceNameId, CStringDictionary::TStringId pa_nFBTypeId, CResource *pa_poRes) {

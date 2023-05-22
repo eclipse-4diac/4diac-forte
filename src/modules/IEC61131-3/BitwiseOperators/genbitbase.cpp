@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c)2018 Johannes Kepler University
+ *               2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,6 +10,8 @@
  *
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Martin Jobst
+ *     - refactor for ANY variant
  *******************************************************************************/
 #include "genbitbase.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -26,7 +29,7 @@ const CStringDictionary::TStringId CGenBitBase::scmDataOutputTypeIds[] = {g_nStr
 const TForteInt16 CGenBitBase::scmEIWithIndexes[] = { 0 };
 const CStringDictionary::TStringId CGenBitBase::scmEventInputNames[] = {g_nStringIdREQ };
 
-const TDataIOID CGenBitBase::scmEOWith[] = { 0, 255 };
+const TDataIOID CGenBitBase::scmEOWith[] = { 0, scmWithListDelimiter };
 const TForteInt16 CGenBitBase::scmEOWithIndexes[] = { 0, -1 };
 const CStringDictionary::TStringId CGenBitBase::scmEventOutputNames[] = { g_nStringIdCNF };
 
@@ -46,7 +49,7 @@ bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
   if (nullptr != pcPos) {
     pcPos++;
     //we have an underscore and it is the first underscore after AND
-    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(forte::core::util::strtoul(pcPos, nullptr, 10));
+    paInterfaceSpec.m_nNumDIs = static_cast<TPortId>(forte::core::util::strtoul(pcPos, nullptr, 10));
     DEVLOG_DEBUG("DIs: %d;\n", paInterfaceSpec.m_nNumDIs);
   } else {
     return false;

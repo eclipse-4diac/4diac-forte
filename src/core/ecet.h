@@ -16,6 +16,7 @@
 
 #include "event.h"
 #include "datatypes/forte_time.h"
+#include "utils/ringbuf.h"
 #include <forte_thread.h>
 #include <forte_sync.h>
 #include <forte_sem.h>
@@ -33,13 +34,17 @@ class CEventChainExecutionThread : public CThread{
      *
      * \param pa_poEventToAdd event of the EC to start
      */
-    void startEventChain(SEventEntry *paEventToAdd);
+    void startEventChain(TEventEntry paEventToAdd);
 
     /*!\brief Add an new event entry to the event chain
      *
      * \param pa_poEventToAdd new event entry
      */
-    void addEventEntry(SEventEntry *paEventToAdd);
+    void addEventEntry(TEventEntry paEventToAdd){
+      if(!mEventList.push(paEventToAdd)){
+        DEVLOG_ERROR("Event queue is full, event dropped!\n");
+      }
+    }
 
     /*!\brief allow to start, stop, and kill the execution of the event chain execution thread
      *
@@ -62,16 +67,11 @@ class CEventChainExecutionThread : public CThread{
     static CEventChainExecutionThread* createEcet();
 
   protected:
-    //@{
     /*! \brief List of input events to deliver.
      *
      * This list stores the necessary information for all events to deliver that occurred within this event chain.
      */
-
-    TEventEntryPtr mEventList[cg_nEventChainEventListSize];
-    TEventEntryPtr* mEventListStart;
-    TEventEntryPtr* mEventListEnd;
-    //@}
+    forte::core::util::CRingBuffer<TEventEntry, cg_nEventChainEventListSize> mEventList;
 
     void mainRun();
 
@@ -96,7 +96,7 @@ class CEventChainExecutionThread : public CThread{
        * big issue.
        * TODO perform test to verify this assumption
        */
-      return (mExternalEventListStart != mExternalEventListEnd);
+      return !mExternalEventList.isEmpty();
     }
 
     //! Transfer elements stored in the external event list to the main event list
@@ -106,17 +106,13 @@ class CEventChainExecutionThread : public CThread{
       mSuspendSemaphore.waitIndefinitely();
     }
 
-    //@{
     /*! \brief List of external events that occurred during one FB's execution
      *
      * This list stores external events that may have occurred during the execution of a FB or during when the
      * Event-Chain execution was sleeping. with this second list we omit the need for a mutex protection of the event
      * list. This is a great performance gain.
      */
-    TEventEntryPtr mExternalEventList[cg_nEventChainExternalEventListSize];
-    TEventEntryPtr* mExternalEventListStart;
-    TEventEntryPtr* mExternalEventListEnd;
-    //@}
+    forte::core::util::CRingBuffer<TEventEntry, cg_nEventChainExternalEventListSize> mExternalEventList;
 
     //! SyncObject for protecting the list in regard to several accesses
     CSyncObject mExternalEventListSync;

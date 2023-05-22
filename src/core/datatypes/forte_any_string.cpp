@@ -24,8 +24,6 @@
 #include <stdlib.h>
 #include <devlog.h>
 
-DEFINE_FIRMWARE_DATATYPE(ANY_STRING, g_nStringIdANY_STRING)
-
 char CIEC_ANY_STRING::sm_acNullString[1] = {'\0'};
 
 CIEC_ANY_STRING::~CIEC_ANY_STRING(){

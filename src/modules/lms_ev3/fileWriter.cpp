@@ -30,10 +30,10 @@ const CStringDictionary::TStringId fileWriter::scm_anDataOutputNames[] = {g_nStr
 const CStringDictionary::TStringId fileWriter::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
 
 const TForteInt16 fileWriter::scm_anEIWithIndexes[] = {0, 3};
-const TDataIOID fileWriter::scm_anEIWith[] = {0, 1, 255, 0, 2, 3, 4, 255};
+const TDataIOID fileWriter::scm_anEIWith[] = {0, 1, scmWithListDelimiter, 0, 2, 3, 4, scmWithListDelimiter};
 const CStringDictionary::TStringId fileWriter::scm_anEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
 
-const TDataIOID fileWriter::scm_anEOWith[] = {0, 1, 255, 0, 1, 255};
+const TDataIOID fileWriter::scm_anEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 fileWriter::scm_anEOWithIndexes[] = {0, 3, -1};
 const CStringDictionary::TStringId fileWriter::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
 
@@ -49,7 +49,7 @@ const char * const fileWriter::scmOK = "OK";
 const char * const fileWriter::scmNotInitialised = "Not initialized";
 const char * const fileWriter::scmCouldNotWrite = "Could not write";
 
-void fileWriter::executeEvent(int pa_nEIID){ //TODO: manage output and status
+void fileWriter::executeEvent(TEventID pa_nEIID){ //TODO: manage output and status
   switch (pa_nEIID){
     case scm_nEventINITID:
       if(true == QI()){

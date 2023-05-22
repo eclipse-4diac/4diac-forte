@@ -22,7 +22,7 @@
 
 /*!\ingroup COREDTS CIEC_SINT represents the SINT data type according to IEC 61131.
  */
-class CIEC_SINT : public CIEC_ANY_INT{
+class CIEC_SINT final : public CIEC_ANY_INT{
   DECLARE_FIRMWARE_DATATYPE(SINT)
 
   public:

@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2011-2014 fortiss and TU Wien ACIN.
+ *               2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,6 +11,7 @@
  * Contributors:
  *    Alois Zoitl - initial implementation and bug fixes
  *    Patrik Smejkal - rename interrupt in interruptCCommFB
+ *    Martin Jobst - account for new FB layout and varying data type size
  *******************************************************************************/
 #include "localcomlayer.h"
 #include "commfb.h"
@@ -32,7 +34,7 @@ CLocalComLayer::~CLocalComLayer(){
 
 EComResponse CLocalComLayer::sendData(void *, unsigned int){
   CCriticalRegion criticalRegion(m_poFb->getResource().m_oResDataConSync);
-  CIEC_ANY *aSDs = m_poFb->getSDs();
+  CIEC_ANY **aSDs = m_poFb->getSDs();
   unsigned int unNumSDs = m_poFb->getNumSD();
 
   // go through GroupList and trigger all Subscribers
@@ -42,18 +44,18 @@ EComResponse CLocalComLayer::sendData(void *, unsigned int){
   return e_ProcessDataOk;
 }
 
-void CLocalComLayer::setRDs(CLocalComLayer *pa_poSublLayer, CIEC_ANY *pa_aSDs, unsigned int pa_unNumSDs){
+void CLocalComLayer::setRDs(CLocalComLayer *pa_poSublLayer, CIEC_ANY **pa_aSDs, unsigned int pa_unNumSDs){
   CSyncObject *poTargetResDataConSync = nullptr;
   if(m_poFb->getResourcePtr() != pa_poSublLayer->m_poFb->getResourcePtr()){
     poTargetResDataConSync = &(pa_poSublLayer->m_poFb->getResourcePtr()->m_oResDataConSync);
     poTargetResDataConSync->lock();
   }
 
-  CIEC_ANY *aRDs = pa_poSublLayer->m_poFb->getRDs();
+  CIEC_ANY **aRDs = pa_poSublLayer->m_poFb->getRDs();
 
   for(unsigned int i = 0; (i < pa_unNumSDs) && (i < pa_poSublLayer->m_poFb->getNumRD()); ++i){
-    if(aRDs[i].getDataTypeID() == pa_aSDs[i].getDataTypeID()){
-      aRDs[i].setValue(pa_aSDs[i]);
+    if(aRDs[i]->getDataTypeID() == pa_aSDs[i]->getDataTypeID()){
+      aRDs[i]->setValue(*pa_aSDs[i]);
     }
   }
 

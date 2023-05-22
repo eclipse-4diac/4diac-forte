@@ -28,10 +28,10 @@ const CStringDictionary::TStringId FORTE_EC_SET_EVT::scm_anDataOutputNames[] = {
 const CStringDictionary::TStringId FORTE_EC_SET_EVT::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
 
 const TForteInt16 FORTE_EC_SET_EVT::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_EC_SET_EVT::scm_anEIWith[] = {0, 3, 1, 2, 255};
+const TDataIOID FORTE_EC_SET_EVT::scm_anEIWith[] = {0, 3, 1, 2, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_EC_SET_EVT::scm_anEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_EC_SET_EVT::scm_anEOWith[] = {0, 1, 255};
+const TDataIOID FORTE_EC_SET_EVT::scm_anEOWith[] = {0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_EC_SET_EVT::scm_anEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_EC_SET_EVT::scm_anEventOutputNames[] = {g_nStringIdCNF};
 
@@ -43,7 +43,7 @@ const SFBInterfaceSpec FORTE_EC_SET_EVT::scm_stFBInterfaceSpec = {
 };
 
 
-void FORTE_EC_SET_EVT::executeEvent(int pa_nEIID){
+void FORTE_EC_SET_EVT::executeEvent(TEventID pa_nEIID){
   switch(pa_nEIID){
     case scm_nEventREQID:
       QO() = QI();

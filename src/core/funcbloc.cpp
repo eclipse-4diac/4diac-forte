@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2018 Profactor GmbH, ACIN, fortiss GmbH,
  *                           Johannes Kepler University
- *               2022 Martin Erich Jobst
+ *               2022 - 2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -16,6 +16,7 @@
  *      - initial implementation and rework communication infrastructure
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *    Martin Jobst - add CTF tracing integration
+ *                 - account for data type size in FB initialization
  *******************************************************************************/
 #include "funcbloc.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -28,25 +29,46 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "forte_array_dynamic.h"
+
 #ifdef FORTE_TRACE_CTF
 #include "trace/barectf_platform_forte.h"
 #endif
 
-CFunctionBlock::CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-    m_pstInterfaceSpec(pa_pstInterfaceSpec), m_acFBConnData(pa_acFBConnData), m_acFBVarsData(pa_acFBVarsData),
-   mEOConns(nullptr), m_apoDIConns(nullptr), mDOConns(nullptr),
-   m_poInvokingExecEnv(nullptr), m_apoAdapters(nullptr), m_poResource(pa_poSrcRes), m_aoDIs(nullptr), m_aoDOs(nullptr), m_nFBInstanceName(pa_nInstanceNameId),
-    m_enFBState(E_FBStates::Killed),   //put the FB in the killed state so that reseting it after creation will correctly initialize it
-    m_bDeletable(true){
-
+CFunctionBlock::CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
+                               CStringDictionary::TStringId pa_nInstanceNameId) :
+        m_pstInterfaceSpec(pa_pstInterfaceSpec),
+        mEOConns(nullptr), mDIConns(nullptr), mDOConns(nullptr), mDIs(nullptr), mDOs(nullptr),
+        m_poInvokingExecEnv(nullptr), m_apoAdapters(nullptr),
+        mFBConnData(nullptr), mFBVarsData(nullptr),
+        m_poResource(pa_poSrcRes), m_Container(nullptr),
 #ifdef FORTE_SUPPORT_MONITORING
-  mEIMonitorCount = nullptr;
-  mEOMonitorCount = nullptr;
+        mEOMonitorCount(nullptr), mEIMonitorCount(nullptr),
 #endif
+        m_nFBInstanceName(pa_nInstanceNameId),
+        m_enFBState(
+                E_FBStates::Killed),   //put the FB in the killed state so that reseting it after creation will correctly initialize it
+        m_bDeletable(true) {
+}
+
+CFunctionBlock::CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
+                               CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *, TForteByte *) :
+        m_pstInterfaceSpec(pa_pstInterfaceSpec),
+        mEOConns(nullptr), mDIConns(nullptr), mDOConns(nullptr), mDIs(nullptr), mDOs(nullptr),
+        m_poInvokingExecEnv(nullptr), m_apoAdapters(nullptr),
+        mFBConnData(nullptr), mFBVarsData(nullptr),
+        m_poResource(pa_poSrcRes), m_Container(nullptr),
+#ifdef FORTE_SUPPORT_MONITORING
+        mEOMonitorCount(nullptr), mEIMonitorCount(nullptr),
+#endif
+        m_nFBInstanceName(pa_nInstanceNameId),
+        m_enFBState(
+                E_FBStates::Killed),   //put the FB in the killed state so that reseting it after creation will correctly initialize it
+        m_bDeletable(true) {
 }
 
 bool CFunctionBlock::initialize() {
-  setupFBInterface(m_pstInterfaceSpec, m_acFBConnData, m_acFBVarsData);
+  setupFBInterface(m_pstInterfaceSpec);
   return true;
 }
 
@@ -56,23 +78,46 @@ CFunctionBlock::~CFunctionBlock(){
 
 void CFunctionBlock::freeAllData(){
   if(nullptr != m_pstInterfaceSpec){
-    for(int i = 0; i < m_pstInterfaceSpec->m_nNumEOs; ++i){
-      (mEOConns + i)->~CEventConnection();
+    if(nullptr != mEOConns) {
+      std::destroy_n(mEOConns, m_pstInterfaceSpec->m_nNumEOs);
     }
 
-    for(int i = 0; i < m_pstInterfaceSpec->m_nNumDIs; ++i){
-      getDI(i)->~CIEC_ANY();
+    if(nullptr != mDOConns) {
+      for (int i = 0; i < m_pstInterfaceSpec->m_nNumDOs; ++i) {
+        if(CIEC_ANY* value = mDOConns[i].getValue(); nullptr != value) {
+          std::destroy_at(value);
+        }
+      }
+      std::destroy_n(mDOConns, m_pstInterfaceSpec->m_nNumDOs);
     }
 
-    for(int i = 0; i < m_pstInterfaceSpec->m_nNumDOs; ++i){
-      getDO(i)->~CIEC_ANY();
-      (mDOConns + i)->~CDataConnection();
+    if(nullptr != mDIs) {
+      for (int i = 0; i < m_pstInterfaceSpec->m_nNumDIs; ++i) {
+        if(CIEC_ANY* value = mDIs[i]; nullptr != value) {
+          std::destroy_at(value);
+        }
+      }
     }
 
-    for(unsigned int i = 0; i < m_pstInterfaceSpec->m_nNumAdapters; ++i){
-      delete m_apoAdapters[i];
+    if(nullptr != mDOs) {
+      for (int i = 0; i < m_pstInterfaceSpec->m_nNumDOs; ++i) {
+        if(CIEC_ANY* value = mDOs[i]; nullptr != value) {
+          std::destroy_at(value);
+        }
+      }
+    }
+
+    if(nullptr != m_apoAdapters) {
+      for (unsigned int i = 0; i < m_pstInterfaceSpec->m_nNumAdapters; ++i) {
+        delete m_apoAdapters[i];
+      }
     }
   }
+
+  operator delete(mFBConnData);
+  mFBConnData = nullptr;
+  operator delete(mFBVarsData);
+  mFBVarsData = nullptr;
 
 #ifdef  FORTE_SUPPORT_MONITORING
   delete[] mEOMonitorCount;
@@ -85,7 +130,7 @@ void CFunctionBlock::freeAllData(){
 void CFunctionBlock::setupAdapters(const SFBInterfaceSpec *pa_pstInterfaceSpec, TForteByte *pa_acFBData){
   if((nullptr != pa_pstInterfaceSpec) && (nullptr != pa_acFBData) && (pa_pstInterfaceSpec->m_nNumAdapters)) {
     m_apoAdapters = reinterpret_cast<TAdapterPtr *>(pa_acFBData);
-    for(unsigned int i = 0; i < pa_pstInterfaceSpec->m_nNumAdapters; ++i) {
+    for(TPortId i = 0; i < pa_pstInterfaceSpec->m_nNumAdapters; ++i) {
       //set pointer to right place in pa_acFBData
       m_apoAdapters[i] = CTypeLib::createAdapter(pa_pstInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID,
         pa_pstInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterTypeNameID, getResourcePtr(),
@@ -101,7 +146,7 @@ CTimerHandler& CFunctionBlock::getTimer(){
   return m_poResource->getDevice().getTimer();
 }
 
-CEventConnection *CFunctionBlock::getEOConnection(CStringDictionary::TStringId paEONameId) const{
+CEventConnection *CFunctionBlock::getEOConnection(CStringDictionary::TStringId paEONameId) {
   CEventConnection *retVal = nullptr;
   TPortId portId = getPortId(paEONameId, m_pstInterfaceSpec->m_nNumEOs, m_pstInterfaceSpec->m_aunEONames);
   if(cg_unInvalidPortId != portId){
@@ -110,27 +155,37 @@ CEventConnection *CFunctionBlock::getEOConnection(CStringDictionary::TStringId p
   return retVal;
 }
 
-bool CFunctionBlock::connectDI(TPortId paDIPortId, CDataConnection *pa_poDataCon){
+const CEventConnection *CFunctionBlock::getEOConnection(CStringDictionary::TStringId paEONameId) const {
+  const CEventConnection *retVal = nullptr;
+  TPortId portId = getPortId(paEONameId, m_pstInterfaceSpec->m_nNumEOs, m_pstInterfaceSpec->m_aunEONames);
+  if(cg_unInvalidPortId != portId){
+    retVal = const_cast<CFunctionBlock*>(this)->getEOConUnchecked(portId);
+  }
+  return retVal;
+}
+
+bool CFunctionBlock::connectDI(TPortId paDIPortId, CDataConnection *paDataCon){
   bool bRetVal = false;
 
   if(m_pstInterfaceSpec->m_nNumDIs > paDIPortId){ //catch invalid ID
-    if(nullptr == pa_poDataCon){
-      m_apoDIConns[paDIPortId] = nullptr;
+    if(nullptr == paDataCon){
+      *getDIConUnchecked(paDIPortId) = nullptr;
       bRetVal = true;
     }
     else{
       //only perform connection checks if it is not a disconnection request.
-      if(nullptr != m_apoDIConns[paDIPortId]){
-        if(m_apoDIConns[paDIPortId] == pa_poDataCon){
+      CDataConnection *conn = *getDIConUnchecked(paDIPortId);
+      if(nullptr != conn){
+        if(conn == paDataCon){
           //we have a reconfiguration attempt
-          configureGenericDI(paDIPortId, pa_poDataCon->getValue());
+          configureGenericDI(paDIPortId, paDataCon->getValue());
           bRetVal = true;
         }else{
           DEVLOG_ERROR("%s cannot connect input data %s to more sources, using the latest connection attempt\n", getInstanceName(), CStringDictionary::getInstance().get(m_pstInterfaceSpec->m_aunDINames[paDIPortId]));
         }
       }else{
-        m_apoDIConns[paDIPortId] = pa_poDataCon;
-        configureGenericDI(paDIPortId, pa_poDataCon->getValue());
+        *getDIConUnchecked(paDIPortId) = paDataCon;
+        configureGenericDI(paDIPortId, paDataCon->getValue());
         bRetVal = true;
       }
     }
@@ -139,25 +194,44 @@ bool CFunctionBlock::connectDI(TPortId paDIPortId, CDataConnection *pa_poDataCon
 }
 
 void CFunctionBlock::configureGenericDI(TPortId paDIPortId, const CIEC_ANY* paRefValue) {
-  if(getDI(paDIPortId)->getDataTypeID() == CIEC_ANY::e_ANY && (nullptr != paRefValue)) {
-    paRefValue->clone(reinterpret_cast<TForteByte *>(getDI(paDIPortId)));
+  CIEC_ANY *di = getDI(paDIPortId);
+  if(di->getDataTypeID() == CIEC_ANY::e_ANY && (nullptr != paRefValue)) {
+    di->setValue(paRefValue->unwrap());
   }
 }
 
-CDataConnection *CFunctionBlock::getDOConnection(CStringDictionary::TStringId paDONameId) const{
+CDataConnection *CFunctionBlock::getDIConnection(CStringDictionary::TStringId paDINameId) {
   CDataConnection *retVal = nullptr;
-  TPortId doPortID = getDOID(paDONameId);
+  TPortId doPortID = getDIID(paDINameId);
   if(cg_unInvalidPortId != doPortID){
-    retVal = mDOConns + doPortID;
+    retVal = *getDIConUnchecked(doPortID);
   }
   return retVal;
 }
 
-CDataConnection *CFunctionBlock::getDIConnection(CStringDictionary::TStringId paDINameId) const{
+const CDataConnection *CFunctionBlock::getDIConnection(CStringDictionary::TStringId paDINameId) const {
+  const CDataConnection *retVal = nullptr;
+  TPortId doPortID = getDIID(paDINameId);
+  if(cg_unInvalidPortId != doPortID){
+    retVal = *const_cast<CFunctionBlock*>(this)->getDIConUnchecked(doPortID);
+  }
+  return retVal;
+}
+
+CDataConnection *CFunctionBlock::getDOConnection(CStringDictionary::TStringId paDONameId) {
   CDataConnection *retVal = nullptr;
-  TPortId diPortID = getDIID(paDINameId);
-  if(cg_unInvalidPortId != diPortID){
-    retVal = m_apoDIConns[diPortID];
+  TPortId doPortID = getDOID(paDONameId);
+  if(cg_unInvalidPortId != doPortID){
+    retVal = getDOConUnchecked(doPortID);
+  }
+  return retVal;
+}
+
+const CDataConnection *CFunctionBlock::getDOConnection(CStringDictionary::TStringId paDONameId) const {
+  const CDataConnection *retVal = nullptr;
+  TPortId doPortID = getDOID(paDONameId);
+  if(cg_unInvalidPortId != doPortID){
+    retVal = const_cast<CFunctionBlock*>(this)->getDOConUnchecked(doPortID);
   }
   return retVal;
 }
@@ -168,14 +242,14 @@ bool CFunctionBlock::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRe
   if(m_pstInterfaceSpec->m_nNumDOs > paDOPortId){
     CIEC_ANY *dataOutput = getDO(paDOPortId);
     if(dataOutput->getDataTypeID() == CIEC_ANY::e_ANY){
-      paRefValue.clone(reinterpret_cast<TForteByte *>(dataOutput));
+      dataOutput->setValue(paRefValue);
       retVal = true;
     }
   }
   return retVal;
 }
 
-CIEC_ANY *CFunctionBlock::getDataOutput(CStringDictionary::TStringId pa_unDONameId) const {
+CIEC_ANY *CFunctionBlock::getDataOutput(CStringDictionary::TStringId pa_unDONameId) {
   CIEC_ANY *poRetVal = nullptr;
   unsigned int unDID = getDOID(pa_unDONameId);
 
@@ -185,7 +259,7 @@ CIEC_ANY *CFunctionBlock::getDataOutput(CStringDictionary::TStringId pa_unDOName
   return poRetVal;
 }
 
-CIEC_ANY *CFunctionBlock::getDataInput(CStringDictionary::TStringId pa_unDINameId) const {
+CIEC_ANY *CFunctionBlock::getDataInput(CStringDictionary::TStringId pa_unDINameId) {
   CIEC_ANY *poRetVal = nullptr;
   unsigned int unDID = getDIID(pa_unDINameId);
 
@@ -195,7 +269,7 @@ CIEC_ANY *CFunctionBlock::getDataInput(CStringDictionary::TStringId pa_unDINameI
   return poRetVal;
 }
 
-CIEC_ANY* CFunctionBlock::getDIFromPortId(TPortId paDIPortId) const{
+CIEC_ANY* CFunctionBlock::getDIFromPortId(TPortId paDIPortId) {
   CIEC_ANY *retVal = nullptr;
   if(paDIPortId < m_pstInterfaceSpec->m_nNumDIs){
     retVal = getDI(paDIPortId);
@@ -203,7 +277,7 @@ CIEC_ANY* CFunctionBlock::getDIFromPortId(TPortId paDIPortId) const{
   return retVal;
 }
 
-CIEC_ANY* CFunctionBlock::getDOFromPortId(TPortId paDOPortId) const{
+CIEC_ANY* CFunctionBlock::getDOFromPortId(TPortId paDOPortId) {
   CIEC_ANY *retVal = nullptr;
   if(paDOPortId < m_pstInterfaceSpec->m_nNumDOs){
     retVal = getDO(paDOPortId);
@@ -248,56 +322,7 @@ TPortId CFunctionBlock::getAdapterPortId(CStringDictionary::TStringId paAdapterN
   return cg_unInvalidPortId;
 }
 
-void CFunctionBlock::sendOutputEvent(size_t paEO){
-  FORTE_TRACE("OutputEvent: Function Block sending event: %d (maxid: %d)\n", paEO, m_pstInterfaceSpec->m_nNumEOs - 1);
-
-#ifdef FORTE_TRACE_CTF
-  barectf_default_trace_sendOutputEvent(m_poResource->getTracePlatformContext().getContext(),
-                                        CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
-                                        static_cast<uint64_t>(paEO));
-#endif
-
-  if(paEO < m_pstInterfaceSpec->m_nNumEOs) {
-    if(nullptr != m_pstInterfaceSpec->m_anEOWithIndexes && -1 != m_pstInterfaceSpec->m_anEOWithIndexes[paEO]) {
-      const TDataIOID *eiWithStart = &(m_pstInterfaceSpec->m_anEOWith[m_pstInterfaceSpec->m_anEOWithIndexes[paEO]]);
-      //TODO think on this lock
-      CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
-      for(size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
-        CDataConnection *con = getDOConUnchecked(eiWithStart[i]);
-        CIEC_ANY *dataOutput = getDO(eiWithStart[i]);
-        if(con->isConnected()) {
-#ifdef FORTE_SUPPORT_MONITORING
-          if(dataOutput->isForced() != true) {
-#endif //FORTE_SUPPORT_MONITORING
-            con->writeData(dataOutput);
-#ifdef FORTE_SUPPORT_MONITORING
-          } else {
-            //when forcing we write back the value from the connection to keep the forced value on the output
-            con->readData(dataOutput);
-          }
-#endif //FORTE_SUPPORT_MONITORING
-        }
-#ifdef FORTE_TRACE_CTF
-        std::string valueString;
-        valueString.reserve(dataOutput->getToStringBufferSize());
-        dataOutput->toString(valueString.data(), valueString.capacity());
-        barectf_default_trace_outputData(m_poResource->getTracePlatformContext().getContext(),
-                                         CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
-                                         static_cast<uint64_t>(eiWithStart[i]), valueString.c_str());
-#endif //FORTE_TRACE_CTF
-      }
-    }
-
-    getEOConUnchecked(static_cast<TPortId>(paEO))->triggerEvent(m_poInvokingExecEnv);
-
-#ifdef FORTE_SUPPORT_MONITORING
-    // Count Event for monitoring
-    mEOMonitorCount[paEO]++;
-#endif //FORTE_SUPPORT_MONITORING
-  }
-}
-
-void CFunctionBlock::sendAdapterEvent(size_t paAdapterID, size_t paEID) const{
+void CFunctionBlock::sendAdapterEvent(size_t paAdapterID, TEventID paEID) const{
   if((paAdapterID < m_pstInterfaceSpec->m_nNumAdapters) && (nullptr != m_apoAdapters[paAdapterID])){
     m_apoAdapters[paAdapterID]->receiveInputEvent(paEID, m_poInvokingExecEnv);
   }
@@ -307,54 +332,78 @@ bool CFunctionBlock::configureFB(const char *){
   return true;
 }
 
-void CFunctionBlock::receiveInputEvent(size_t paEIID, CEventChainExecutionThread *paExecEnv){
-  FORTE_TRACE("InputEvent: Function Block (%s) got event: %d (maxid: %d)\n", CStringDictionary::getInstance().get(getInstanceNameId()), paEIID, m_pstInterfaceSpec->m_nNumEIs - 1);
+void CFunctionBlock::readInputData(TEventID paEIID) {
+  if(nullptr != m_pstInterfaceSpec->m_anEIWithIndexes && -1 != m_pstInterfaceSpec->m_anEIWithIndexes[paEIID]) {
+    const TDataIOID *eiWithStart = &(m_pstInterfaceSpec->m_anEIWith[m_pstInterfaceSpec->m_anEIWithIndexes[paEIID]]);
 
-#ifdef FORTE_TRACE_CTF
-  barectf_default_trace_receiveInputEvent(m_poResource->getTracePlatformContext().getContext(),
-                                          CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
-                                          static_cast<uint64_t>(paEIID));
-
-  traceInstanceData();
-#endif
-
-  if(E_FBStates::Running == getState()){
-    if(paEIID < m_pstInterfaceSpec->m_nNumEIs) {
-      if(nullptr != m_pstInterfaceSpec->m_anEIWithIndexes && -1 != m_pstInterfaceSpec->m_anEIWithIndexes[paEIID]) {
-        const TDataIOID *eiWithStart = &(m_pstInterfaceSpec->m_anEIWith[m_pstInterfaceSpec->m_anEIWithIndexes[paEIID]]);
-
-        // TODO think on this lock
-        CCriticalRegion criticalRegion(m_poResource->m_oResDataConSync);
-        for(size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
-          if(nullptr != m_apoDIConns[eiWithStart[i]]) {
-            CIEC_ANY *di = getDI(eiWithStart[i]);
-#ifdef FORTE_SUPPORT_MONITORING
-            if(true != di->isForced()) {
-#endif //FORTE_SUPPORT_MONITORING
-              m_apoDIConns[eiWithStart[i]]->readData(di);
-#ifdef FORTE_SUPPORT_MONITORING
-            }
-#endif //FORTE_SUPPORT_MONITORING
-#ifdef FORTE_TRACE_CTF
-            std::string valueString;
-            valueString.reserve(di->getToStringBufferSize());
-            di->toString(valueString.data(), valueString.capacity());
-            barectf_default_trace_inputData(m_poResource->getTracePlatformContext().getContext(),
-                                            CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
-                                            static_cast<uint64_t>(eiWithStart[i]), valueString.c_str());
-#endif //FORTE_TRACE_CTF
-          }
-        }
-      }
-#ifdef FORTE_SUPPORT_MONITORING
-      // Count Event for monitoring
-      mEIMonitorCount[paEIID]++;
-#endif //FORTE_SUPPORT_MONITORING
+    // TODO think on this lock
+    RES_DATA_CON_CRITICAL_REGION();
+    for(size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
+      TDataIOID nDINum = eiWithStart[i];
+      CIEC_ANY *di = getDI(nDINum);
+      CDataConnection *conn = *getDIConUnchecked(nDINum);
+      readData(nDINum, di, conn);
     }
-    m_poInvokingExecEnv = paExecEnv;
-    executeEvent(paEIID);
   }
 }
+
+#ifdef FORTE_TRACE_CTF
+void CFunctionBlock::readData(size_t pa_nDINum, CIEC_ANY *pa_poValue, CDataConnection* pa_poConn) {
+  if(!pa_poConn) {
+    return;
+  }
+#ifdef FORTE_SUPPORT_MONITORING
+  if(!pa_poValue->isForced()) {
+#endif //FORTE_SUPPORT_MONITORING
+    pa_poConn->readData(pa_poValue);
+#ifdef FORTE_SUPPORT_MONITORING
+  }
+#endif //FORTE_SUPPORT_MONITORING
+  std::string valueString;
+  valueString.reserve(pa_poValue->getToStringBufferSize());
+  pa_poValue->toString(valueString.data(), valueString.capacity());
+  barectf_default_trace_inputData(m_poResource->getTracePlatformContext().getContext(),
+          CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
+          static_cast<uint64_t>(pa_nDINum), valueString.c_str());
+}
+#endif //FORTE_TRACE_CTF
+
+void CFunctionBlock::writeOutputData(TEventID paEO) {
+  if (nullptr != m_pstInterfaceSpec->m_anEOWithIndexes && -1 != m_pstInterfaceSpec->m_anEOWithIndexes[paEO]) {
+    const TDataIOID *eiWithStart = &(m_pstInterfaceSpec->m_anEOWith[m_pstInterfaceSpec->m_anEOWithIndexes[paEO]]);
+    //TODO think on this lock
+    RES_DATA_CON_CRITICAL_REGION();
+    for (size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
+      size_t nDONum = eiWithStart[i];
+      CDataConnection *con = getDOConUnchecked(nDONum);
+      CIEC_ANY *dataOutput = getDO(nDONum);
+      writeData(nDONum, dataOutput, con);
+    }
+  }
+}
+
+#ifdef FORTE_TRACE_CTF
+void CFunctionBlock::writeData(size_t pa_nDONum, CIEC_ANY *pa_poValue, CDataConnection* pa_poConn) {
+  if(pa_poConn->isConnected()) {
+#ifdef FORTE_SUPPORT_MONITORING
+    if(pa_poValue->isForced() != true) {
+#endif //FORTE_SUPPORT_MONITORING
+      pa_poConn->writeData(pa_poValue);
+#ifdef FORTE_SUPPORT_MONITORING
+    } else {
+      //when forcing we write back the value from the connection to keep the forced value on the output
+      pa_poConn->readData(pa_poValue);
+    }
+#endif //FORTE_SUPPORT_MONITORING
+  }
+  std::string valueString;
+  valueString.reserve(pa_poValue->getToStringBufferSize());
+  pa_poValue->toString(valueString.data(), valueString.capacity());
+  barectf_default_trace_outputData(m_poResource->getTracePlatformContext().getContext(),
+                                   CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
+                                   static_cast<uint64_t>(pa_nDONum), valueString.c_str());
+}
+#endif //FORTE_TRACE_CTF
 
 EMGMResponse CFunctionBlock::changeFBExecutionState(EMGMCommandType pa_unCommand){
   EMGMResponse nRetVal = EMGMResponse::InvalidState;
@@ -408,18 +457,29 @@ EMGMResponse CFunctionBlock::changeFBExecutionStateHelper(const EMGMCommandType 
   return nRetVal;
 }
 
-CIEC_ANY *CFunctionBlock::createDataPoint(const CStringDictionary::TStringId **pa_panDataTypeIds, TForteByte *pa_acDataBuf){
-  CIEC_ANY *poRetVal = CTypeLib::createDataTypeInstance(**pa_panDataTypeIds, pa_acDataBuf);
-  ++(*pa_panDataTypeIds);
-#ifdef FORTE_SUPPORT_ARRAYS
-  if(g_nStringIdARRAY == (*pa_panDataTypeIds)[-1]){
+size_t CFunctionBlock::getDataPointSize(const CStringDictionary::TStringId *&pa_panDataTypeIds) {
+  CStringDictionary::TStringId dataTypeId = *(pa_panDataTypeIds++);
+  auto *entry = static_cast<CTypeLib::CDataTypeEntry *>(CTypeLib::findType(dataTypeId,
+                                                                           CTypeLib::getDTLibStart()));
+  if (g_nStringIdARRAY == dataTypeId) {
+    pa_panDataTypeIds += 2;
+  }
+  return nullptr != entry ? entry->getSize() : 0;
+}
+
+CIEC_ANY *CFunctionBlock::createDataPoint(const CStringDictionary::TStringId *&paDataTypeIds, TForteByte *&paDataBuf){
+  CStringDictionary::TStringId dataTypeId = *(paDataTypeIds++);
+  CIEC_ANY *poRetVal = CTypeLib::createDataTypeInstance(dataTypeId, paDataBuf);
+  if(nullptr != poRetVal) {
+    paDataBuf += poRetVal->getSizeof();
+  }
+  if(g_nStringIdARRAY == dataTypeId){
     if(nullptr != poRetVal){
       //For an array we have to do more
-      (static_cast<CIEC_ARRAY_TYPELIB *>(poRetVal))->setup(static_cast<TForteUInt16>(**pa_panDataTypeIds), (*pa_panDataTypeIds)[1]);
+      (static_cast<CIEC_ARRAY_DYNAMIC *>(poRetVal))->setup(static_cast<TForteUInt16>(*paDataTypeIds), paDataTypeIds[1]);
     }
-    (*pa_panDataTypeIds) += 2;
+    paDataTypeIds += 2;
   }
-#endif
   return poRetVal;
 }
 
@@ -433,74 +493,104 @@ EMGMResponse CFunctionBlock::changeInternalFBExecutionState(const EMGMCommandTyp
   return nRetVal;
 }
 
-void CFunctionBlock::setupFBInterface(const SFBInterfaceSpec *pa_pstInterfaceSpec, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData){
+size_t CFunctionBlock::calculateFBConnDataSize(const SFBInterfaceSpec &paInterfaceSpec) {
+  return sizeof(CEventConnection) * paInterfaceSpec.m_nNumEOs +
+         sizeof(TDataConnectionPtr) * paInterfaceSpec.m_nNumDIs +
+         sizeof(CDataConnection) * paInterfaceSpec.m_nNumDOs;
+}
+
+size_t CFunctionBlock::calculateFBVarsDataSize(const SFBInterfaceSpec &paInterfaceSpec) {
+  size_t result = 0;
+  const CStringDictionary::TStringId *pnDataIds;
+
+  result += paInterfaceSpec.m_nNumDIs * sizeof(CIEC_ANY *);
+  pnDataIds = paInterfaceSpec.m_aunDIDataTypeNames;
+  for (int i = 0; i < paInterfaceSpec.m_nNumDIs; ++i) {
+    result += getDataPointSize(pnDataIds);
+  }
+
+  result += paInterfaceSpec.m_nNumDOs * sizeof(CIEC_ANY *);
+  pnDataIds = paInterfaceSpec.m_aunDODataTypeNames;
+  for (int i = 0; i < paInterfaceSpec.m_nNumDOs; ++i) {
+    result += getDataPointSize(pnDataIds) * 2; // * 2 for connection buffer value
+  }
+
+  result += paInterfaceSpec.m_nNumAdapters * sizeof(TAdapterPtr);
+  return result;
+}
+
+void CFunctionBlock::setupFBInterface(const SFBInterfaceSpec *pa_pstInterfaceSpec) {
+  freeAllData();
+
   m_pstInterfaceSpec = const_cast<SFBInterfaceSpec *>(pa_pstInterfaceSpec);
 
-  if(nullptr != pa_pstInterfaceSpec){
-    if((nullptr != pa_acFBConnData) && (nullptr != pa_acFBVarsData)){
-      TPortId i;
-      if(m_pstInterfaceSpec->m_nNumEOs){
-        mEOConns = reinterpret_cast<CEventConnection *>(pa_acFBConnData);
+  if (nullptr != pa_pstInterfaceSpec) {
+    size_t connDataSize = calculateFBConnDataSize(*pa_pstInterfaceSpec);
+    size_t varsDataSize = calculateFBVarsDataSize(*pa_pstInterfaceSpec);
+    mFBConnData = connDataSize ? operator new(connDataSize) : nullptr;
+    mFBVarsData = varsDataSize ? operator new(varsDataSize) : nullptr;
 
-        for(i = 0; i < m_pstInterfaceSpec->m_nNumEOs; ++i){
-          //create an event connection for each event output and initialize its source port
-          new (pa_acFBConnData)CEventConnection(this, i);
-          pa_acFBConnData += sizeof(CEventConnection);
-        }
-      }
-      else{
-        mEOConns = nullptr;
-      }
+    auto *connData = reinterpret_cast<TForteByte *>(mFBConnData);
+    auto *varsData = reinterpret_cast<TForteByte *>(mFBVarsData);
 
-      const CStringDictionary::TStringId *pnDataIds;
-      if(m_pstInterfaceSpec->m_nNumDIs){
-        m_apoDIConns = reinterpret_cast<TDataConnectionPtr *>(pa_acFBConnData);
-        pa_acFBConnData += sizeof(TDataConnectionPtr) * m_pstInterfaceSpec->m_nNumDIs;
+    TPortId i;
+    if (m_pstInterfaceSpec->m_nNumEOs) {
+      mEOConns = reinterpret_cast<CEventConnection *>(connData);
 
-        //let m_aoDIs point to the first data input
-        m_aoDIs = reinterpret_cast<CIEC_ANY *>(pa_acFBVarsData);
-
-        pnDataIds = pa_pstInterfaceSpec->m_aunDIDataTypeNames;
-        for(i = 0; i < m_pstInterfaceSpec->m_nNumDIs; ++i){
-          m_apoDIConns[i] = nullptr;
-          createDataPoint(&pnDataIds, pa_acFBVarsData);
-          pa_acFBVarsData += sizeof(CIEC_ANY);
-        }
+      for (i = 0; i < m_pstInterfaceSpec->m_nNumEOs; ++i) {
+        //create an event connection for each event output and initialize its source port
+        new(connData)CEventConnection(this, i);
+        connData += sizeof(CEventConnection);
       }
-      else{
-        m_apoDIConns = nullptr;
-        m_aoDIs = nullptr;
-      }
-
-      if(m_pstInterfaceSpec->m_nNumDOs){
-        //let mDOConns point to the first data output connection
-        mDOConns = reinterpret_cast<CDataConnection *>(pa_acFBConnData);
-
-        //let m_aoDIs point to the first data output
-        m_aoDOs = reinterpret_cast<CIEC_ANY *>(pa_acFBVarsData);
-
-        pnDataIds = pa_pstInterfaceSpec->m_aunDODataTypeNames;
-        for(i = 0; i < m_pstInterfaceSpec->m_nNumDOs; ++i){
-          createDataPoint(&pnDataIds, pa_acFBVarsData);
-          pa_acFBVarsData += sizeof(CIEC_ANY);
-          //create an data connection for each data output and initialize its source port
-          new (pa_acFBConnData)CDataConnection(this, i, getDO(i));
-          pa_acFBConnData += sizeof(CDataConnection);
-        }
-      }
-      else{
-        mDOConns = nullptr;
-        m_aoDOs = nullptr;
-      }
-      if(m_pstInterfaceSpec->m_nNumAdapters){
-        setupAdapters(pa_pstInterfaceSpec, pa_acFBVarsData);
-      }
+    } else {
+      mEOConns = nullptr;
     }
+
+    const CStringDictionary::TStringId *pnDataIds;
+    if (m_pstInterfaceSpec->m_nNumDIs) {
+      mDIConns = reinterpret_cast<TDataConnectionPtr *>(connData);
+      connData += sizeof(TDataConnectionPtr) * m_pstInterfaceSpec->m_nNumDIs;
+
+      mDIs = reinterpret_cast<CIEC_ANY **>(varsData);
+      varsData += m_pstInterfaceSpec->m_nNumDIs * sizeof(CIEC_ANY *);
+
+      pnDataIds = pa_pstInterfaceSpec->m_aunDIDataTypeNames;
+      for (i = 0; i < m_pstInterfaceSpec->m_nNumDIs; ++i) {
+        mDIs[i] = createDataPoint(pnDataIds, varsData);
+        mDIConns[i] = nullptr;
+      }
+    } else {
+      mDIConns = nullptr;
+      mDIs = nullptr;
+    }
+
+    if (m_pstInterfaceSpec->m_nNumDOs) {
+      //let mDOConns point to the first data output connection
+      mDOConns = reinterpret_cast<CDataConnection *>(connData);
+
+      mDOs = reinterpret_cast<CIEC_ANY **>(varsData);
+      varsData += m_pstInterfaceSpec->m_nNumDOs * sizeof(CIEC_ANY *);
+
+      pnDataIds = pa_pstInterfaceSpec->m_aunDODataTypeNames;
+      for (i = 0; i < m_pstInterfaceSpec->m_nNumDOs; ++i) {
+        mDOs[i] = createDataPoint(pnDataIds, varsData);
+        CIEC_ANY* connVar = mDOs[i]->clone(varsData);
+        varsData += connVar->getSizeof();
+        new(connData)CDataConnection(this, i, connVar);
+        connData += sizeof(CDataConnection);
+      }
+    } else {
+      mDOConns = nullptr;
+      mDOs = nullptr;
+    }
+    if (m_pstInterfaceSpec->m_nNumAdapters) {
+      setupAdapters(pa_pstInterfaceSpec, varsData);
+    }
+
 #ifdef FORTE_SUPPORT_MONITORING
     setupEventMonitoringData();
 #endif
   }
-
 }
 
 TPortId CFunctionBlock::getPortId(CStringDictionary::TStringId pa_unPortNameId, TPortId pa_unMaxPortNames, const CStringDictionary::TStringId* pa_aunPortNames){
@@ -547,3 +637,21 @@ TForteUInt32 &CFunctionBlock::getEOMonitorData(TEventID paEOID){
 }
 
 #endif //FORTE_SUPPORT_MONITORING
+
+//********************************** below here are CTF Tracing specific functions **********************************************************
+#ifdef FORTE_TRACE_CTF
+void CFunctionBlock::traceInputEvent(TEventID paEIID){
+  barectf_default_trace_receiveInputEvent(m_poResource->getTracePlatformContext().getContext(),
+                                          CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
+                                          static_cast<uint64_t>(paEIID));
+  traceInstanceData();
+}
+
+void CFunctionBlock::traceOutputEvent(TEventID paEOID){
+  barectf_default_trace_sendOutputEvent(m_poResource->getTracePlatformContext().getContext(),
+                                        CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
+                                        static_cast<uint64_t>(paEOID));
+}
+
+#endif
+

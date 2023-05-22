@@ -30,16 +30,16 @@ const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scm_anDataOutput
 const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scm_anDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdSTRING };
 
 const TForteInt16 FORTE_SET_LOCAL_ADS_ADDRESS::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID FORTE_SET_LOCAL_ADS_ADDRESS::scm_anEIWith[] = { 0, 255 };
+const TDataIOID FORTE_SET_LOCAL_ADS_ADDRESS::scm_anEIWith[] = { 0, scmWithListDelimiter };
 const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scm_anEventInputNames[] = { g_nStringIdINIT };
 
-const TDataIOID FORTE_SET_LOCAL_ADS_ADDRESS::scm_anEOWith[] = { 0, 1, 2, 255 };
+const TDataIOID FORTE_SET_LOCAL_ADS_ADDRESS::scm_anEOWith[] = { 0, 1, 2, scmWithListDelimiter };
 const TForteInt16 FORTE_SET_LOCAL_ADS_ADDRESS::scm_anEOWithIndexes[] = { 0, -1 };
 const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scm_anEventOutputNames[] = { g_nStringIdINITO };
 
 const SFBInterfaceSpec FORTE_SET_LOCAL_ADS_ADDRESS::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 2, scm_anDataInputNames, scm_anDataInputTypeIds, 3, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
 
-void FORTE_SET_LOCAL_ADS_ADDRESS::executeEvent(int pa_nEIID){
+void FORTE_SET_LOCAL_ADS_ADDRESS::executeEvent(TEventID pa_nEIID){
   switch (pa_nEIID){
     case scm_nEventINITID:
       AmsNetId desiredAddress(std::string(PARAMS().getValue()));

@@ -20,7 +20,7 @@ IOConfigFBPartController::IOConfigFBPartController(CResource *paSrcRes, const SF
     IOConfigFBBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mMaster(nullptr) {
 }
 
-void IOConfigFBPartController::executeEvent(int paEIID) {
+void IOConfigFBPartController::executeEvent(TEventID paEIID) {
   if(IOConfigFBMultiAdapter().INIT() == paEIID) {
     if(IOConfigFBMultiAdapter().QI() == true) {
       // Get master by id

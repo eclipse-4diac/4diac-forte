@@ -61,7 +61,7 @@ private:
    FORTE_FB_DATA_ARRAY(2, 4, 1, 0);
 
 
-   bool checkActivation(int) override { return true; } //we activate on every input event
+   bool checkActivation(TEventID) override { return true; } //we activate on every input event
 
 
 public:

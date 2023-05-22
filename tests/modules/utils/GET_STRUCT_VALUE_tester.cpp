@@ -21,26 +21,50 @@ class CIEC_GET_STRUCT_VALUE_Struct_test1 : public CIEC_STRUCT {
   DECLARE_FIRMWARE_DATATYPE(GET_STRUCT_VALUE_Struct_test1)
 
     /* Struct:
-     *   Val1 : String[3]
+     *   Val1 : String[2]
      *   Val2 : INT
      */
 
   public:
-    CIEC_GET_STRUCT_VALUE_Struct_test1() :
-        CIEC_STRUCT(g_nStringIdGET_STRUCT_VALUE_Struct_test1, 2, scm_unElementTypes, scm_unElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_ARRAY_FIXED<CIEC_STRING, 0, 1> Var1;
+    CIEC_INT Var2;
+
+    CIEC_GET_STRUCT_VALUE_Struct_test1() : Var1(), Var2(0) {}
+
+    size_t getStructSize() const override {
+      return 2;
     }
 
-    virtual ~CIEC_GET_STRUCT_VALUE_Struct_test1() = default;
+    const CStringDictionary::TStringId* elementNames() const override {
+      return scm_unElementNames;
+    }
+
+    CStringDictionary::TStringId getStructTypeNameID() const override {
+      return g_nStringIdGET_STRUCT_VALUE_Struct_test1;
+    }
+
+    CIEC_ANY *getMember(size_t paMemberIndex) override {
+      switch(paMemberIndex) {
+        case 0: return &Var1;
+        case 1: return &Var2;
+      }
+      return nullptr;
+    }
+
+    const CIEC_ANY *getMember(size_t paMemberIndex) const override {
+      switch(paMemberIndex) {
+        case 0: return &Var1;
+        case 1: return &Var2;
+      }
+      return nullptr;
+    }
 
     static const unsigned int sizeOfFirstArray = 2;
 
   private:
-    static const CStringDictionary::TStringId scm_unElementTypes[];
     static const CStringDictionary::TStringId scm_unElementNames[];
 };
 
-const CStringDictionary::TStringId CIEC_GET_STRUCT_VALUE_Struct_test1::scm_unElementTypes[] = { g_nStringIdARRAY, sizeOfFirstArray, g_nStringIdSTRING,
-  g_nStringIdINT };
 const CStringDictionary::TStringId CIEC_GET_STRUCT_VALUE_Struct_test1::scm_unElementNames[] = { g_nStringIdVal1, g_nStringIdVal2 };
 
 DEFINE_FIRMWARE_DATATYPE(GET_STRUCT_VALUE_Struct_test1, g_nStringIdGET_STRUCT_VALUE_Struct_test1)
@@ -54,18 +78,43 @@ class CIEC_GET_STRUCT_VALUE_Struct_test2 : public CIEC_STRUCT {
      */
 
   public:
-    CIEC_GET_STRUCT_VALUE_Struct_test2() :
-        CIEC_STRUCT(g_nStringIdGET_STRUCT_VALUE_Struct_test2, 2, scm_unElementTypes, scm_unElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_INT Var1;
+    CIEC_GET_STRUCT_VALUE_Struct_test1 Var2;
+
+    CIEC_GET_STRUCT_VALUE_Struct_test2() = default;
+
+    size_t getStructSize() const override {
+      return 2;
     }
 
-    virtual ~CIEC_GET_STRUCT_VALUE_Struct_test2() = default;
+    const CStringDictionary::TStringId* elementNames() const override {
+      return scm_unElementNames;
+    }
 
-  private:
-    static const CStringDictionary::TStringId scm_unElementTypes[];
+    CStringDictionary::TStringId getStructTypeNameID() const override {
+      return g_nStringIdGET_STRUCT_VALUE_Struct_test2;
+    }
+
+    CIEC_ANY *getMember(size_t paMemberIndex) override {
+      switch(paMemberIndex) {
+        case 0: return &Var1;
+        case 1: return &Var2;
+      }
+      return nullptr;
+    }
+
+    const CIEC_ANY *getMember(size_t paMemberIndex) const override {
+      switch(paMemberIndex) {
+        case 0: return &Var1;
+        case 1: return &Var2;
+      }
+      return nullptr;
+    }
+
+private:
     static const CStringDictionary::TStringId scm_unElementNames[];
 };
 
-const CStringDictionary::TStringId CIEC_GET_STRUCT_VALUE_Struct_test2::scm_unElementTypes[] = { g_nStringIdINT, g_nStringIdGET_STRUCT_VALUE_Struct_test1 };
 const CStringDictionary::TStringId CIEC_GET_STRUCT_VALUE_Struct_test2::scm_unElementNames[] = { g_nStringIdVal1, g_nStringIdVal2 };
 
 DEFINE_FIRMWARE_DATATYPE(GET_STRUCT_VALUE_Struct_test2, g_nStringIdGET_STRUCT_VALUE_Struct_test2)
@@ -138,13 +187,6 @@ BOOST_FIXTURE_TEST_SUITE( GET_STRUCT_VALUE_MainTests, GET_STRUCT_VALUE_Main_Test
 
   BOOST_AUTO_TEST_CASE(accessNonStruct) {
     mMember = CIEC_STRING("Val1.Val1");
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-    BOOST_CHECK_EQUAL(false, mQO);
-  }
-
-  BOOST_AUTO_TEST_CASE(wrongOutputType) {
-    mMember = CIEC_STRING("Val2.Val1");
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     BOOST_CHECK_EQUAL(false, mQO);

@@ -64,7 +64,7 @@ BOOST_AUTO_TEST_CASE(ToWChar_test) {
   CIEC_CHAR source('a');
   CIEC_WCHAR result;
   result = func_CHAR_TO_WCHAR(source);
-  BOOST_CHECK_EQUAL(result, 97);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_WCHAR::TValueType>(result), 97);
 }
 
 BOOST_AUTO_TEST_CASE(ToString_test) {

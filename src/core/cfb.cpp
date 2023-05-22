@@ -20,8 +20,19 @@
 #include "if2indco.h"
 
 CCompositeFB::CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-    const CStringDictionary::TStringId pa_nInstanceNameId, const SCFB_FBNData * const pa_cpoFBNData,
-    TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
+                           CStringDictionary::TStringId pa_nInstanceNameId, const SCFB_FBNData * pa_cpoFBNData) :
+        CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId),
+        mIf2InDConns(nullptr),
+        m_apoIn2IfDConns(nullptr),
+        cm_cpoFBNData(pa_cpoFBNData),
+        m_apoEventConnections(nullptr),
+        m_apoDataConnections(nullptr),
+        mInterface2InternalEventCons(nullptr){
+}
+
+CCompositeFB::CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
+                           CStringDictionary::TStringId pa_nInstanceNameId, const SCFB_FBNData * pa_cpoFBNData,
+                           TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
         CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData),
         mIf2InDConns(nullptr),
         m_apoIn2IfDConns(nullptr),
@@ -45,7 +56,7 @@ bool CCompositeFB::initialize() {
   setParams();
 
   //remove adapter-references for CFB
-  for(TForteUInt8 i = 0; i < m_pstInterfaceSpec->m_nNumAdapters; i++){
+  for(TPortId i = 0; i < m_pstInterfaceSpec->m_nNumAdapters; i++){
     if(nullptr != m_apoAdapters){
       static_cast<CAdapter*>(m_apoAdapters[i])->setParentFB(nullptr, 0);
     }
@@ -174,7 +185,7 @@ CIEC_ANY *CCompositeFB::getVar(CStringDictionary::TStringId *paNameList,
   return retVal;
 }
 
-void CCompositeFB::executeEvent(int pa_nEIID){
+void CCompositeFB::executeEvent(TEventID pa_nEIID){
   if(cgInternal2InterfaceMarker & pa_nEIID){
     sendInternal2InterfaceOutputEvent(static_cast<TEventID>(pa_nEIID
         & cgInternal2InterfaceRemovalMask));
@@ -186,7 +197,7 @@ void CCompositeFB::executeEvent(int pa_nEIID){
   }
 }
 
-void CCompositeFB::sendInternal2InterfaceOutputEvent(int pa_nEOID){
+void CCompositeFB::sendInternal2InterfaceOutputEvent(TEventID pa_nEOID){
   //handle sampling of internal 2 interface data connections
   if((pa_nEOID < m_pstInterfaceSpec->m_nNumEOs) && (nullptr != m_pstInterfaceSpec->m_anEOWithIndexes) &&
     (-1 != m_pstInterfaceSpec->m_anEOWithIndexes[pa_nEOID])){
@@ -195,8 +206,8 @@ void CCompositeFB::sendInternal2InterfaceOutputEvent(int pa_nEOID){
 
       // TODO think on this lock
       {
-        CCriticalRegion criticalRegion(getResource().m_oResDataConSync);
-        for(int i = 0; poEOWithStart[i] != 255; ++i){
+        RES_DATA_CON_CRITICAL_REGION();
+        for(int i = 0; poEOWithStart[i] != scmWithListDelimiter; ++i){
           if(nullptr != m_apoIn2IfDConns[poEOWithStart[i]]){
             m_apoIn2IfDConns[poEOWithStart[i]]->readData(getDO(poEOWithStart[i]));
           }

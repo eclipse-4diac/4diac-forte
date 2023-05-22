@@ -1,5 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2008 - 2015 nxtControl GmbH, ACIN, fortiss GmbH
+ *               2023 Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +11,8 @@
  * Contributors:
  *    Stanislav Meduna, Alois Zoitl, Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
+ *    Martin Jobst
+ *      - add string functions accepting a size parameter
  *******************************************************************************/
 #include "stringdict.h"
 #include <fortenew.h>
@@ -101,17 +105,20 @@ const char *CStringDictionary::get(TStringId pa_nId){
   return adr;
 }
 
+CStringDictionary::TStringId CStringDictionary::insert(const char *paStr) {
+  return insert(paStr, strlen(paStr));
+}
+
 // insert a string and return a string id (InvalidTStringId for no memory or other error)
-CStringDictionary::TStringId CStringDictionary::insert(const char *pa_sStr){
+CStringDictionary::TStringId CStringDictionary::insert(const char *paStr, size_t paStrSize){
   TStringId nRetVal = scm_nInvalidStringId;
 
-  if(nullptr != pa_sStr){
-    if('\0' != *pa_sStr){
+  if(nullptr != paStr){
+    if('\0' != *paStr){
       unsigned int idx;
-      nRetVal = findEntry(pa_sStr, idx);
+      nRetVal = findEntry(paStr, paStrSize, idx);
       if(scm_nInvalidStringId == nRetVal){
-        TStringId len = static_cast<TStringId>(strlen(pa_sStr));
-        TStringId nRequiredSize = m_nNextString + len + 1;
+        size_t nRequiredSize = m_nNextString + paStrSize + 1;
 
         if(m_nNrOfStrings >= m_nMaxNrOfStrings){
 #ifdef FORTE_STRING_DICT_FIXED_MEMORY
@@ -134,7 +141,7 @@ CStringDictionary::TStringId CStringDictionary::insert(const char *pa_sStr){
           }
 #endif
         }
-        nRetVal = insertAt(pa_sStr, idx, len);
+        nRetVal = insertAt(paStr, idx, paStrSize);
       }
     }
     else{
@@ -144,9 +151,8 @@ CStringDictionary::TStringId CStringDictionary::insert(const char *pa_sStr){
   return nRetVal;
 }
 
-// Find an exact match or place to be the new index
-CStringDictionary::TStringId CStringDictionary::findEntry(const char *pa_sStr, unsigned int &pa_rnIdx) const{
-  pa_rnIdx = 0;
+CStringDictionary::TStringId CStringDictionary::findEntry(const char *paStr, unsigned int &paIdx) const{
+  paIdx = 0;
   if(m_nNrOfStrings == 0) {
     return scm_nInvalidStringId;
   }
@@ -156,23 +162,60 @@ CStringDictionary::TStringId CStringDictionary::findEntry(const char *pa_sStr, u
   unsigned int low = 0, high = m_nNrOfStrings;
 
   while(low < high){
-    pa_rnIdx = (low + high) / 2;
+    paIdx = (low + high) / 2;
 
-    r = strcmp(pa_sStr, getStringAddress(m_pnStringIdBufAddr[pa_rnIdx]));
+    r = strcmp(paStr, getStringAddress(m_pnStringIdBufAddr[paIdx]));
 
     if(!r){
-      return m_pnStringIdBufAddr[pa_rnIdx];
+      return m_pnStringIdBufAddr[paIdx];
     }
 
     if(r > 0) {
-      low = pa_rnIdx + 1;
+      low = paIdx + 1;
     } else {
-      high = pa_rnIdx;
+      high = paIdx;
     }
   }
 
   if(r > 0) {
-    pa_rnIdx++;
+    paIdx++;
+  }
+
+  return scm_nInvalidStringId;
+}
+
+// Find an exact match or place to be the new index
+CStringDictionary::TStringId CStringDictionary::findEntry(const char *paStr, size_t paStrSize, unsigned int &paIdx) const{
+  paIdx = 0;
+  if(m_nNrOfStrings == 0) {
+    return scm_nInvalidStringId;
+  }
+
+  int r = 0;
+
+  unsigned int low = 0, high = m_nNrOfStrings;
+
+  while(low < high){
+    paIdx = (low + high) / 2;
+
+    r = strncmp(paStr, getStringAddress(m_pnStringIdBufAddr[paIdx]), paStrSize);
+    if(!r) {
+      r = -static_cast<int>(getStringAddress(m_pnStringIdBufAddr[paIdx])[paStrSize]);
+    }
+
+    if(!r){
+      return m_pnStringIdBufAddr[paIdx];
+    }
+
+    if(r > 0) {
+      low = paIdx + 1;
+    } else {
+      high = paIdx;
+    }
+  }
+
+  if(r > 0) {
+    paIdx++;
   }
 
   return scm_nInvalidStringId;
@@ -198,7 +241,7 @@ bool CStringDictionary::reallocateStringIdBuf(unsigned int pa_nNewMaxNrOfStrings
 }
 
 // Reallocate the string buffer
-bool CStringDictionary::reallocateStringBuf(TForteUInt32 pa_nNewBufSize){
+bool CStringDictionary::reallocateStringBuf(size_t pa_nNewBufSize){
   bool bRetval = true;
   if(pa_nNewBufSize > m_nStringBufSize){
     char *adr = (char *) forte_malloc(pa_nNewBufSize * sizeof(char));
@@ -217,7 +260,7 @@ bool CStringDictionary::reallocateStringBuf(TForteUInt32 pa_nNewBufSize){
 }
 
 // Insert the string at the specified position
-CStringDictionary::TStringId CStringDictionary::insertAt(const char *pa_sStr, unsigned int pa_nIdx, unsigned int pa_nLen){
+CStringDictionary::TStringId CStringDictionary::insertAt(const char *pa_sStr, unsigned int pa_nIdx, size_t pa_nLen){
   TStringId id = m_nNextString;
   char *p = getStringAddress(m_nNextString);
 

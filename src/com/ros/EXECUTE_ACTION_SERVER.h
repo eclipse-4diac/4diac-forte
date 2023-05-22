@@ -124,7 +124,7 @@ class FORTE_EXECUTE_ACTION_SERVER : public CEventSourceFB{
     FORTE_FB_DATA_ARRAY(2, 6, 6, 0)
     ;
 
-    void executeEvent(int pa_nEIID) override;
+    void executeEvent(TEventID pa_nEIID) override;
 
     void ActionExecuteCB(const ExecuteGoalConstPtr &pa_goal);
 

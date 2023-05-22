@@ -24,7 +24,7 @@ const CStringDictionary::TStringId GEN_E_MUX::scm_anDataOutputNames[] = { g_nStr
 const CStringDictionary::TStringId GEN_E_MUX::scm_aunDODataTypeIds[] = { g_nStringIdUINT };
 
 const TForteInt16 GEN_E_MUX::scm_anEOWithIndexes[] = { 0 };
-const TDataIOID GEN_E_MUX::scm_anEOWith[] = { 0, 255 };
+const TDataIOID GEN_E_MUX::scm_anEOWith[] = { 0, scmWithListDelimiter };
 const CStringDictionary::TStringId GEN_E_MUX::scm_anEventOutputNames[] = { g_nStringIdEO };
 
 GEN_E_MUX::GEN_E_MUX(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
@@ -35,7 +35,7 @@ GEN_E_MUX::~GEN_E_MUX(){
   delete[] m_anEventInputNames;
 }
 
-void GEN_E_MUX::executeEvent(int paEIID){
+void GEN_E_MUX::executeEvent(TEventID paEIID){
   if(paEIID < m_pstInterfaceSpec->m_nNumEIs){
     K() = CIEC_UINT(static_cast<TForteUInt16>(paEIID));
     sendOutputEvent(scm_nEventEOID);
@@ -49,7 +49,7 @@ bool GEN_E_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
     ++acPos;
     if('M' != *acPos){
       //we have an underscore and it is not the first underscore after E
-      paInterfaceSpec.m_nNumEIs = static_cast<TForteUInt8>(forte::core::util::strtoul(acPos, nullptr, 10));
+      paInterfaceSpec.m_nNumEIs = static_cast<TEventID>(forte::core::util::strtoul(acPos, nullptr, 10));
 
       if(paInterfaceSpec.m_nNumEIs < CFunctionBlock::scm_nMaxInterfaceEvents && paInterfaceSpec.m_nNumEIs >= 2){
         m_anEventInputNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumEIs];

@@ -29,7 +29,7 @@ const CStringDictionary::TStringId GEN_APPEND_STRING::scm_anDataOutputTypeIds[] 
 
 const TForteInt16 GEN_APPEND_STRING::scm_anEIWithIndexes[] = { 0 };
 
-const TDataIOID GEN_APPEND_STRING::scm_anEOWith[] = { 0, 255 };
+const TDataIOID GEN_APPEND_STRING::scm_anEOWith[] = { 0, scmWithListDelimiter };
 const TForteInt16 GEN_APPEND_STRING::scm_anEOWithIndexes[] = { 0, -1 };
 
 //default value is set to 100 (sufficient for several data types)
@@ -45,9 +45,9 @@ GEN_APPEND_STRING::~GEN_APPEND_STRING(){
   delete[] m_anEIWith;
 }
 
-void GEN_APPEND_STRING::executeEvent(int paEIID){
+void GEN_APPEND_STRING::executeEvent(TEventID paEIID){
 
-  if(paEIID < 1 && paEIID > -1){
+  if(paEIID == scm_nEventREQID){
     //pointers to data inputs and data output
     CIEC_ANY *pDataInput;
     CIEC_ANY *pDataOutput = getDO(0);
@@ -81,7 +81,7 @@ void GEN_APPEND_STRING::executeEvent(int paEIID){
       else{
         if(pDataInput->getDataTypeID() == CIEC_ANY::e_ARRAY){
           //get number of array elements
-          nArrayElements = (static_cast<CIEC_ARRAY<>*>(pDataInput))->size();
+          nArrayElements = (static_cast<CIEC_ARRAY *>(pDataInput))->size();
           //number of required bytes (including brackets '[' ']' and ',' separators
           nRequiredBytes = static_cast<TForteUInt16>(nArrayElements * scm_maxStringBufSize + nArrayElements + 1);
         }
@@ -173,7 +173,7 @@ bool GEN_APPEND_STRING::createInterfaceSpec(const char *paConfigString, SFBInter
     paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
     paInterfaceSpec.m_anEOWith = scm_anEOWith;
     paInterfaceSpec.m_anEOWithIndexes = scm_anEOWithIndexes;
-    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(mDInputs);
+    paInterfaceSpec.m_nNumDIs = mDInputs;
     paInterfaceSpec.m_aunDINames = m_anDataInputNames;
     paInterfaceSpec.m_aunDIDataTypeNames = m_anDataInputTypeIds;
     paInterfaceSpec.m_nNumDOs = 1;

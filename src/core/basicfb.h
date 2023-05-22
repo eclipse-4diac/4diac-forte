@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
+ *               2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,6 +11,7 @@
  * Contributors:
  *    Thomas Strasser, Gunnar Grabmair, Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny
  *      - initial implementation and rework communication infrastructure
+ *    Martin Jobst - account for data type size in FB initialization
  *******************************************************************************/
 #ifndef _BASICFB_H_
 #define _BASICFB_H_
@@ -23,10 +25,10 @@
  */
 #define FORTE_BASIC_FB_DATA_ARRAY(a_nNumEOs, a_nNumDIs, a_nNumDOs, a_nNumIntVars, a_nNumAdapters) \
   union{ \
-    TForteByte m_anFBConnData[genFBConnDataSizeTemplate<a_nNumEOs, a_nNumDIs, a_nNumDOs>::value]; \
+    TForteByte m_anFBConnData[0]; \
   };\
   union{ \
-    TForteByte m_anFBVarsData[genBasicFBVarsDataSizeTemplate<a_nNumDIs, a_nNumDOs, a_nNumIntVars, a_nNumAdapters>::value]; \
+    TForteByte m_anFBVarsData[0]; \
   };
 
 #endif
@@ -49,27 +51,24 @@ class CBasicFB : public CFunctionBlock {
   public:
     /*!\brief The main constructur for a basic function block.
      */
+    CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
+             CStringDictionary::TStringId pa_nInstanceNameId,
+             const SInternalVarsInformation *pa_pstVarInternals);
 
-    CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId,
-        const SInternalVarsInformation *pa_pstVarInternals, TForteByte *pa_acFBConnData, TForteByte *pa_acBasicFBVarsData);
+    /*!
+     * @deprecated Use CBasicFB(CResource *, const SFBInterfaceSpec *, CStringDictionary::TStringId,
+     *                          const SInternalVarsInformation *)
+     */
+    [[deprecated]] CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
+                            CStringDictionary::TStringId pa_nInstanceNameId,
+                            const SInternalVarsInformation *pa_pstVarInternals, TForteByte *pa_acFBConnData,
+                            TForteByte *pa_acBasicFBVarsData);
 
     bool initialize() override;
 
     ~CBasicFB() override;
 
     CIEC_ANY* getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) override;
-
-    template<unsigned int ta_nNumDIs, unsigned int ta_nNumDOs, unsigned int ta_nNumIntVars, unsigned int ta_nNumAdapters = 0>
-    struct genBasicFBVarsDataSizeTemplate {
-        enum {
-          value = ((sizeof(TDataConnectionPtr) + sizeof(CIEC_ANY)) * ta_nNumIntVars + genFBVarsDataSizeTemplate<ta_nNumDIs, ta_nNumDOs, ta_nNumAdapters>::value)
-        };
-    };
-
-    static size_t genBasicFBVarsDataSize(unsigned int pa_nNumDIs, unsigned int pa_nNumDOs, unsigned int pa_nNumIntVars, unsigned int pa_nNumAdapters = 0) {
-      return ((sizeof(TDataConnectionPtr) + sizeof(CIEC_ANY)) * pa_nNumIntVars + genFBVarsDataSize(pa_nNumDIs, pa_nNumDOs, pa_nNumAdapters));
-    }
-    ;
 
 #ifdef FORTE_TRACE_CTF
     void traceInstanceData() override;
@@ -82,8 +81,8 @@ class CBasicFB : public CFunctionBlock {
      * @param pa_nVarIntNum number of the internal variable starting with 0
      * @return pointer to the internal variable
      */
-    CIEC_ANY* getVarInternal(unsigned int pa_nVarIntNum) {
-      return m_aoInternals + pa_nVarIntNum;
+    virtual CIEC_ANY* getVarInternal(size_t pa_nVarIntNum) {
+      return m_aoInternals[pa_nVarIntNum];
     }
 
     CIEC_STATE m_nECCState; //! the current state of the ecc. start value is 0 = initial state id
@@ -93,7 +92,9 @@ class CBasicFB : public CFunctionBlock {
 
     static void deleteInternalFBs(const size_t paAmountOfInternalFBs, TFunctionBlockPtr *paInternalFBs);
 
-    TForteByte *m_acBasicFBVarsData; //TODO remove once refactor is complete (currently needed for initialization-split)
+    static size_t calculateBasicFBVarsDataSize(const SInternalVarsInformation &paVarInternals);
+
+    void *mBasicFBVarsData;
   private:
     /*!\brief Get the pointer to a internal variable of the basic FB.
      *
@@ -102,7 +103,7 @@ class CBasicFB : public CFunctionBlock {
      */
     CIEC_ANY* getInternalVar(CStringDictionary::TStringId pa_nInternalName);
 
-    CIEC_ANY *m_aoInternals; //!< A list of pointers to the internal variables.
+    CIEC_ANY **m_aoInternals; //!< A list of pointers to the internal variables.
 
 #ifdef FORTE_FMU
         friend class fmuInstance;

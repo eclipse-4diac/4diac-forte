@@ -26,10 +26,10 @@ const CStringDictionary::TStringId FORTE_RT_E_SELECT::scm_anDataOutputNames[] = 
 const CStringDictionary::TStringId FORTE_RT_E_SELECT::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL};
 
 const TForteInt16 FORTE_RT_E_SELECT::scm_anEIWithIndexes[] = {0, 5, 7};
-const TDataIOID FORTE_RT_E_SELECT::scm_anEIWith[] = {0, 2, 3, 4, 255, 1, 255, 1, 255};
+const TDataIOID FORTE_RT_E_SELECT::scm_anEIWith[] = {0, 2, 3, 4, scmWithListDelimiter, 1, scmWithListDelimiter, 1, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_RT_E_SELECT::scm_anEventInputNames[] = {g_nStringIdINIT, g_nStringIdEI0, g_nStringIdEI1};
 
-const TDataIOID FORTE_RT_E_SELECT::scm_anEOWith[] = {0, 255};
+const TDataIOID FORTE_RT_E_SELECT::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_RT_E_SELECT::scm_anEOWithIndexes[] = {0, -1, -1};
 const CStringDictionary::TStringId FORTE_RT_E_SELECT::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdEO};
 
@@ -47,7 +47,7 @@ FORTE_RT_E_SELECT::FORTE_RT_E_SELECT(const CStringDictionary::TStringId pa_nInst
            m_anFBConnData, m_anFBVarsData) {
 }
 
-bool FORTE_RT_E_SELECT::checkActivation(int pa_nEIID){
+bool FORTE_RT_E_SELECT::checkActivation(TEventID pa_nEIID){
   return (((scm_nEventEI0ID == pa_nEIID) && (G() == false))||
           ((scm_nEventEI1ID == pa_nEIID) && (G() == true)));
 }

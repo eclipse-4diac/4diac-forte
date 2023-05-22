@@ -26,10 +26,10 @@ const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scm_anDataOu
 const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scm_anDataOutputTypeIds[] = {g_nStringIdPreferredProvider};
 
 const TForteInt16 FORTE_FieldsToPreferredProvider::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_FieldsToPreferredProvider::scm_anEIWith[] = {0, 1, 255};
+const TDataIOID FORTE_FieldsToPreferredProvider::scm_anEIWith[] = {0, 1, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scm_anEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_FieldsToPreferredProvider::scm_anEOWith[] = {0, 255};
+const TDataIOID FORTE_FieldsToPreferredProvider::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_FieldsToPreferredProvider::scm_anEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scm_anEventOutputNames[] = {g_nStringIdCNF};
 
@@ -61,7 +61,7 @@ void FORTE_FieldsToPreferredProvider::enterStateREQ(){
   sendOutputEvent( scm_nEventCNFID);
 }
 
-void FORTE_FieldsToPreferredProvider::executeEvent(int pa_nEIID){
+void FORTE_FieldsToPreferredProvider::executeEvent(TEventID pa_nEIID){
   bool bTransitionCleared;
   do{
     bTransitionCleared = true;

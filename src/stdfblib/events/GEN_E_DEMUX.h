@@ -30,7 +30,7 @@ class GEN_E_DEMUX : public CGenFunctionBlock<CFunctionBlock>{
 
     CStringDictionary::TStringId *m_anEventOutputNames;
 
-    void executeEvent(int paEIID) override;
+    void executeEvent(TEventID paEIID) override;
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
     CIEC_UINT& K(){

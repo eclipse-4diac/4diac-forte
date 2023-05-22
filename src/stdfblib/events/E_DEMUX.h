@@ -10,43 +10,78 @@
  *   Alois Zoitl, Gerhard Ebenhofer
  *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _E_DEMUX_H_
-#define _E_DEMUX_H_
 
-#include <funcbloc.h>
+#pragma once
 
-class E_DEMUX: public CFunctionBlock{
-  DECLARE_FIRMWARE_FB(E_DEMUX)
+#include "basicfb.h"
+#include "forte_uint.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
+
+
+class FORTE_E_DEMUX: public CBasicFB {
+  DECLARE_FIRMWARE_FB(FORTE_E_DEMUX)
 
 private:
-  static const CStringDictionary::TStringId scm_anDataInputNames[], scm_aunDIDataTypeIds[];
-
+  static const CStringDictionary::TStringId scm_anDataInputNames[];
+  static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
   static const TEventID scm_nEventEIID = 0;
-  static const TForteInt16 scm_anEIWithIndexes[];
   static const TDataIOID scm_anEIWith[];
+  static const TForteInt16 scm_anEIWithIndexes[];
   static const CStringDictionary::TStringId scm_anEventInputNames[];
-
   static const TEventID scm_nEventEO0ID = 0;
   static const TEventID scm_nEventEO1ID = 1;
   static const TEventID scm_nEventEO2ID = 2;
   static const TEventID scm_nEventEO3ID = 3;
+  static const TForteInt16 scm_anEOWithIndexes[];
   static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-
-  FORTE_FB_DATA_ARRAY(4,1,0,0);
-
-  void executeEvent(int pa_nEIID) override;
+  CIEC_ANY *getVarInternal(size_t) override;
+  static const TForteInt16 scm_nStateSTART = 0;
+  static const TForteInt16 scm_nStateState = 1;
+  static const TForteInt16 scm_nStateState_1 = 2;
+  static const TForteInt16 scm_nStateState_2 = 3;
+  static const TForteInt16 scm_nStateState_3 = 4;
+  static const TForteInt16 scm_nStateState_4 = 5;
   
-  CIEC_UINT& K() {
-     return *static_cast<CIEC_UINT*>(getDI(0));
-  }
+  void enterStateSTART(void);
+  void enterStateState(void);
+  void enterStateState_1(void);
+  void enterStateState_2(void);
+  void enterStateState_3(void);
+  void enterStateState_4(void);
+
+  void executeEvent(TEventID pa_nEIID) override;
+
+  void readInputData(TEventID pa_nEIID) override;
+  void writeOutputData(TEventID pa_nEIID) override;
 
 public:
-  FUNCTION_BLOCK_CTOR(E_DEMUX){
-  };
-  ~E_DEMUX() override = default;
+  FORTE_E_DEMUX(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
+  CIEC_UINT var_K;
+  CEventConnection conn_EO0;
+  CEventConnection conn_EO1;
+  CEventConnection conn_EO2;
+  CEventConnection conn_EO3;
+  CDataConnection *conn_K;
+  CIEC_ANY *getDI(size_t) override;
+  CIEC_ANY *getDO(size_t) override;
+  CEventConnection *getEOConUnchecked(TPortId) override;
+  CDataConnection **getDIConUnchecked(TPortId) override;
+  CDataConnection *getDOConUnchecked(TPortId) override;
+  void evt_EI(const CIEC_UINT &pa_K) {
+    var_K = pa_K;
+    receiveInputEvent(scm_nEventEIID, nullptr);
+  }
+  void operator()(const CIEC_UINT &pa_K) {
+    evt_EI(pa_K);
+  }
 };
 
-#endif //_E_DEMUX_H_
+
+

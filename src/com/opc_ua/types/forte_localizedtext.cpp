@@ -19,8 +19,29 @@
 DEFINE_FIRMWARE_DATATYPE(LocalizedText, g_nStringIdLocalizedText);
 
 CIEC_LocalizedText::CIEC_LocalizedText() :
-    CIEC_STRUCT(g_nStringIdLocalizedText, 2, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_STRUCT(),
+    var_locale(""),
+    var_text("") {
 }
 
-const CStringDictionary::TStringId CIEC_LocalizedText::scmElementTypes[] = { g_nStringIdSTRING, g_nStringIdSTRING };
+CStringDictionary::TStringId CIEC_LocalizedText::getStructTypeNameID() const {
+  return g_nStringIdLocalizedText;
+}
+
+CIEC_ANY *CIEC_LocalizedText::getMember(size_t paMemberIndex) {
+  switch (paMemberIndex) {
+    case 0: return &var_locale;
+    case 1: return &var_text;
+  }
+  return nullptr;
+}
+
+const CIEC_ANY *CIEC_LocalizedText::getMember(size_t paMemberIndex) const {
+  switch (paMemberIndex) {
+    case 0: return &var_locale;
+    case 1: return &var_text;
+  }
+  return nullptr;
+}
+
 const CStringDictionary::TStringId CIEC_LocalizedText::scmElementNames[] = { g_nStringIdlocale, g_nStringIdtext };

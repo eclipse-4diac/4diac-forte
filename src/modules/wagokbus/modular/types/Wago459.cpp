@@ -25,10 +25,10 @@ const CStringDictionary::TStringId FORTE_Wago459::scm_anDataOutputNames[] = {g_n
 const CStringDictionary::TStringId FORTE_Wago459::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING};
 
 const TForteInt16 FORTE_Wago459::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_Wago459::scm_anEIWith[] = {1, 2, 3, 4, 0, 255};
+const TDataIOID FORTE_Wago459::scm_anEIWith[] = {1, 2, 3, 4, 0, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_Wago459::scm_anEventInputNames[] = {g_nStringIdMAP};
 
-const TDataIOID FORTE_Wago459::scm_anEOWith[] = {0, 255, 0, 1, 255};
+const TDataIOID FORTE_Wago459::scm_anEOWith[] = {0, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_Wago459::scm_anEOWithIndexes[] = {0, 2, -1};
 const CStringDictionary::TStringId FORTE_Wago459::scm_anEventOutputNames[] = {g_nStringIdMAPO, g_nStringIdIND};
 

@@ -25,7 +25,7 @@ CAdapter::CAdapter(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfa
   m_nParentAdapterListEventID(0),
   m_bIsPlug(pa_bIsPlug),
   m_poPeer(nullptr),
-  m_aoLocalDIs(m_aoDIs),
+  m_aoLocalDIs(mDIs),
   m_poAdapterConn(nullptr){
 }
 
@@ -51,7 +51,7 @@ CAdapter::~CAdapter(){
 }
 
 void CAdapter::fillEventEntryList(CFunctionBlock* paParentFB){
-  for (TForteUInt16 i = 0; i < m_pstInterfaceSpec->m_nNumEOs; ++i) {
+  for (TEventID i = 0; i < m_pstInterfaceSpec->m_nNumEOs; ++i) {
     m_astEventEntry[i].mFB = paParentFB;
     m_astEventEntry[i].mPortId = static_cast<TPortId>(m_nParentAdapterListEventID + i);
   }
@@ -72,7 +72,7 @@ bool CAdapter::connect(CAdapter *pa_poPeer, CAdapterConnection *pa_poAdConn){
   bool bRetVal = false;
   if (m_poPeer == nullptr) {
     m_poPeer = pa_poPeer;
-    m_aoDIs = pa_poPeer->m_aoDOs; //TODO: change is adapters of subtypes may be connected
+    mDIs = pa_poPeer->mDOs; //TODO: change is adapters of subtypes may be connected
     if (isSocket()) {
       m_poAdapterConn = pa_poAdConn;
     }
@@ -87,7 +87,7 @@ bool CAdapter::disconnect(CAdapterConnection *pa_poAdConn){
     return false; //connection requesting disconnect is not equal to established connection
   }
   m_poPeer = nullptr;
-  m_aoDIs = m_aoLocalDIs;
+  mDIs = m_aoLocalDIs;
   if (isSocket()) {
     m_poAdapterConn = nullptr;
   }
@@ -99,10 +99,10 @@ bool CAdapter::isCompatible(CAdapter *pa_poPeer) const {
   return ((getFBTypeId() == pa_poPeer->getFBTypeId()) || ((getFBTypeId() == g_nStringIdANY_ADAPTER) && (g_nStringIdANY_ADAPTER != pa_poPeer->getFBTypeId())) || ((getFBTypeId() != g_nStringIdANY_ADAPTER) && (g_nStringIdANY_ADAPTER == pa_poPeer->getFBTypeId())));
 }
 
-void CAdapter::executeEvent(int pa_nEIID){
+void CAdapter::executeEvent(TEventID pa_nEIID){
   if (nullptr != m_poPeer) {
     if (nullptr != m_poPeer->m_astEventEntry[pa_nEIID].mFB) {
-      m_poInvokingExecEnv->addEventEntry(&(m_poPeer->m_astEventEntry[pa_nEIID]));
+      m_poInvokingExecEnv->addEventEntry(m_poPeer->m_astEventEntry[pa_nEIID]);
     } else {
       m_poPeer->m_poInvokingExecEnv = m_poInvokingExecEnv;
       m_poPeer->sendOutputEvent(pa_nEIID);
@@ -111,5 +111,5 @@ void CAdapter::executeEvent(int pa_nEIID){
 }
 
 void CAdapter::setupEventEntryList(){
-  m_astEventEntry = new SEventEntry[m_pstInterfaceSpec->m_nNumEOs];
+  m_astEventEntry = new TEventEntry[m_pstInterfaceSpec->m_nNumEOs];
 }

@@ -38,8 +38,8 @@
 #include "lua/luaadaptertypeentry.h"
 #endif
 
-CResource::CResource(CResource* pa_poDevice, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-    CFunctionBlock(pa_poDevice, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData), forte::core::CFBContainer(CStringDictionary::scm_nInvalidStringId, nullptr), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
+CResource::CResource(CResource* pa_poDevice, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId) :
+    CFunctionBlock(pa_poDevice, pa_pstInterfaceSpec, pa_nInstanceNameId), forte::core::CFBContainer(CStringDictionary::scm_nInvalidStringId, nullptr), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
     mResourceEventExecution(CEventChainExecutionThread::createEcet()), mResIf2InConnections(nullptr)
 #ifdef FORTE_SUPPORT_MONITORING
 , mMonitoringHandler(*this)
@@ -49,8 +49,8 @@ CResource::CResource(CResource* pa_poDevice, const SFBInterfaceSpec *pa_pstInter
 #endif
 {}
 
-CResource::CResource(const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-    CFunctionBlock(nullptr, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData), forte::core::CFBContainer(CStringDictionary::scm_nInvalidStringId, nullptr), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
+CResource::CResource(const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId) :
+    CFunctionBlock(nullptr, pa_pstInterfaceSpec, pa_nInstanceNameId), forte::core::CFBContainer(CStringDictionary::scm_nInvalidStringId, nullptr), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
     mResourceEventExecution(nullptr), mResIf2InConnections(nullptr)
 #ifdef FORTE_SUPPORT_MONITORING
 , mMonitoringHandler(*this)
@@ -164,9 +164,10 @@ EMGMResponse CResource::changeFBExecutionState(EMGMCommandType pa_unCommand){
     retVal = changeContainedFBsExecutionState(pa_unCommand);
     if(EMGMResponse::Ready == retVal){
       if(EMGMCommandType::Start == pa_unCommand && nullptr != m_pstInterfaceSpec) { //on start, sample inputs
-        for(int i = 0; i < m_pstInterfaceSpec->m_nNumDIs; ++i) {
-          if(nullptr != m_apoDIConns[i]) {
-            m_apoDIConns[i]->readData(getDI(i));
+        for(TPortId i = 0; i < m_pstInterfaceSpec->m_nNumDIs; ++i) {
+          CDataConnection *conn = *getDIConUnchecked(i);
+          if(nullptr != conn) {
+            conn->readData(getDI(i));
           }
         }
       }
@@ -398,13 +399,11 @@ void CResource::createEOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRI
   if(spec->m_nNumEOs > 0){
     for(size_t i = 0; spec->m_aunEONames[i] != spec->m_aunEONames[spec->m_nNumEOs]; i++){
       const CEventConnection* eConn = paFb.getEOConnection(spec->m_aunEONames[i]);
-      for(CSinglyLinkedList<CConnectionPoint>::Iterator itRunnerDst(eConn->getDestinationList().begin()); itRunnerDst != eConn->getDestinationList().end();
-          ++itRunnerDst){
-        if(itRunnerDst != eConn->getDestinationList().begin()){
+      for(const auto& it : eConn->getDestinationList()){
+        if(it != eConn->getDestinationList().front()){
           paReqResult.append("\n");
         }
-        createConnectionResponseMessage(spec->m_aunEONames[i], itRunnerDst->mFB->getFBInterfaceSpec()->m_aunEINames[itRunnerDst->mPortId], *itRunnerDst->mFB,
-            paFb, paReqResult);
+        createConnectionResponseMessage(spec->m_aunEONames[i], it.mFB->getFBInterfaceSpec()->m_aunEINames[it.mPortId], *it.mFB, paFb, paReqResult);
       }
     }
   }
@@ -415,13 +414,11 @@ void CResource::createDOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRI
   if(spec->m_nNumDOs > 0){
     for(size_t i = 0; spec->m_aunDONames[i] != spec->m_aunDONames[spec->m_nNumDOs]; i++){
       const CDataConnection * const dConn = paFb.getDOConnection(spec->m_aunDONames[i]);
-      for(CSinglyLinkedList<CConnectionPoint>::Iterator itRunnerDst(dConn->getDestinationList().begin()); itRunnerDst != dConn->getDestinationList().end();
-          ++itRunnerDst){
-        if(itRunnerDst != dConn->getDestinationList().begin()){
+      for(const auto& it : dConn->getDestinationList()){
+        if(it != dConn->getDestinationList().front()){
           paReqResult.append("\n");
         }
-        createConnectionResponseMessage(spec->m_aunDONames[i], itRunnerDst->mFB->getFBInterfaceSpec()->m_aunDINames[itRunnerDst->mPortId], *itRunnerDst->mFB,
-            paFb, paReqResult);
+        createConnectionResponseMessage(spec->m_aunDONames[i], it.mFB->getFBInterfaceSpec()->m_aunDINames[it.mPortId], *it.mFB, paFb, paReqResult);
       }
     }
   }
@@ -437,10 +434,10 @@ void CResource::createAOConnectionResponse(const CFunctionBlock& paFb, CIEC_STRI
         if(i != 0){
           paReqResult.append("\n");
         }
-        if(!aConn->getDestinationList().isEmpty()){
-          CSinglyLinkedList<CConnectionPoint>::Iterator itRunnerDst(aConn->getDestinationList().begin());
+        if(!aConn->isEmpty()){
+          const auto & dest = aConn->getDestinationList().front();
           createConnectionResponseMessage(spec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID,
-              itRunnerDst->mFB->getFBInterfaceSpec()->m_pstAdapterInstanceDefinition[itRunnerDst->mPortId].m_nAdapterNameID, *itRunnerDst->mFB, paFb,
+              dest.mFB->getFBInterfaceSpec()->m_pstAdapterInstanceDefinition[dest.mPortId].m_nAdapterNameID, *dest.mFB, paFb,
               paReqResult);
         }
       }

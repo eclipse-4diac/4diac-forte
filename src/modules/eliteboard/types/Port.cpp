@@ -91,7 +91,7 @@ void FORTE_Port::register_handles() {
   }
 }
 
-void FORTE_Port::executeEvent(int pa_nEIID) {
+void FORTE_Port::executeEvent(TEventID pa_nEIID) {
   if (pa_nEIID == st_PortInAdapter().MAP()) {
     deregister_handles();
     register_handles();

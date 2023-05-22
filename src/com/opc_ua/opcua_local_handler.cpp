@@ -441,7 +441,7 @@ UA_StatusCode COPC_UA_Local_Handler::initializeVariable(CActionInfo &paActionInf
 
   size_t indexOfNodePair = 0;
   CSinglyLinkedList<UA_NodeId*> referencedNodes;
-  const CIEC_ANY *variables = paWrite ? paActionInfo.getDataToSend() : paActionInfo.getDataToReceive();
+  const CIEC_ANY *const *variables = paWrite ? paActionInfo.getDataToSend() : paActionInfo.getDataToReceive();
   for(CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator itMain = paActionInfo.getNodePairInfo().begin();
       itMain != paActionInfo.getNodePairInfo().end() && UA_STATUSCODE_GOOD == retVal; ++itMain, indexOfNodePair++) {
 
@@ -451,12 +451,12 @@ UA_StatusCode COPC_UA_Local_Handler::initializeVariable(CActionInfo &paActionInf
 
     if(UA_STATUSCODE_GOOD == retVal) {
       if(nodeExists) {
-        retVal = handleExistingVariable(paActionInfo, **itMain, variables[indexOfNodePair], indexOfNodePair, paWrite);
+        retVal = handleExistingVariable(paActionInfo, **itMain, *variables[indexOfNodePair], indexOfNodePair, paWrite);
 
         handlePresentNodes(presentNodes, referencedNodes, UA_STATUSCODE_GOOD != retVal);
       } else { //node does not exist
         //presentNodes shouldn't have any allocated NodeId at this point
-        retVal = handleNonExistingVariable(paActionInfo, **itMain, variables[indexOfNodePair], indexOfNodePair, referencedNodes, paWrite);
+        retVal = handleNonExistingVariable(paActionInfo, **itMain, *variables[indexOfNodePair], indexOfNodePair, referencedNodes, paWrite);
       }
     }
   }
@@ -767,8 +767,8 @@ UA_StatusCode COPC_UA_Local_Handler::handleExistingMethod(CActionInfo &paActionI
 void COPC_UA_Local_Handler::createMethodArguments(CActionInfo &paActionInfo, CCreateMethodInfo &paCreateMethodInfo) const {
   const SFBInterfaceSpec *interfaceFB = paActionInfo.getLayer().getCommFB()->getFBInterfaceSpec();
 
-  const CIEC_ANY *dataToSend = paActionInfo.getDataToSend();
-  const CIEC_ANY *dataToReceive = paActionInfo.getDataToReceive();
+  const CIEC_ANY *const *dataToSend = paActionInfo.getDataToSend();
+  const CIEC_ANY *const *dataToReceive = paActionInfo.getDataToReceive();
 
   paCreateMethodInfo.mOutputArguments = static_cast<UA_Argument*>(UA_Array_new(paCreateMethodInfo.mOutputSize, &UA_TYPES[UA_TYPES_ARGUMENT]));
   paCreateMethodInfo.mInputArguments = static_cast<UA_Argument*>(UA_Array_new(paCreateMethodInfo.mInputSize, &UA_TYPES[UA_TYPES_ARGUMENT]));
@@ -779,12 +779,12 @@ void COPC_UA_Local_Handler::createMethodArguments(CActionInfo &paActionInfo, CCr
       arg = &(paCreateMethodInfo.mOutputArguments)[i];
       UA_Argument_init(arg);
       arg->name = UA_STRING_ALLOC(CStringDictionary::getInstance().get(interfaceFB->m_aunDINames[i + 2])); //we store the names of the SDs/RDs as names for the arguments names. Not so nice. + 2 skips the QI and ID
-      arg->dataType = COPC_UA_Helper::getOPCUATypeFromAny(dataToSend[i])->typeId;
+      arg->dataType = COPC_UA_Helper::getOPCUATypeFromAny(*dataToSend[i])->typeId;
     } else {
       arg = &(paCreateMethodInfo.mInputArguments)[i - paCreateMethodInfo.mOutputSize];
       UA_Argument_init(arg);
       arg->name = UA_STRING_ALLOC(CStringDictionary::getInstance().get(interfaceFB->m_aunDONames[i - paCreateMethodInfo.mOutputSize + 2])); // + 2 skips the QO and STATUS
-      arg->dataType = COPC_UA_Helper::getOPCUATypeFromAny(dataToReceive[i - paCreateMethodInfo.mOutputSize])->typeId;
+      arg->dataType = COPC_UA_Helper::getOPCUATypeFromAny(*dataToReceive[i - paCreateMethodInfo.mOutputSize])->typeId;
     }
 
     arg->arrayDimensionsSize = 0;
@@ -865,12 +865,12 @@ UA_StatusCode COPC_UA_Local_Handler::initializeDeleteNode(const CActionInfo&) co
 
 UA_StatusCode COPC_UA_Local_Handler::executeWrite(CActionInfo &paActionInfo) {
   UA_StatusCode retVal = UA_STATUSCODE_GOOD;
-  const CIEC_ANY *dataToSend = paActionInfo.getDataToSend();
+  const CIEC_ANY *const *dataToSend = paActionInfo.getDataToSend();
   size_t indexOfNodePair = 0;
   for(CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator it = paActionInfo.getNodePairInfo().begin(); it != paActionInfo.getNodePairInfo().end();
       ++it, indexOfNodePair++) {
 
-    retVal = updateNodeValue(*(*it)->mNodeId, &dataToSend[indexOfNodePair]);
+    retVal = updateNodeValue(*(*it)->mNodeId, dataToSend[indexOfNodePair]);
     if(UA_STATUSCODE_GOOD != retVal) {
       DEVLOG_ERROR("[OPC UA LOCAL]: Could not convert value to write for port %d at FB %s. Error: %s\n", indexOfNodePair,
         paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
@@ -887,10 +887,10 @@ UA_StatusCode COPC_UA_Local_Handler::executeCreateMethod(CActionInfo &paActionIn
   UA_StatusCode retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
   CLocalMethodCall *localMethodCall = getLocalMethodCall(static_cast<CLocalMethodInfo&>(paActionInfo));
   if(localMethodCall) {
-    const CIEC_ANY *dataToSend = paActionInfo.getDataToSend();
+    const CIEC_ANY *const *dataToSend = paActionInfo.getDataToSend();
     // copy SD values to output
     for(size_t i = 0; i < localMethodCall->mSendHandle.mSize; i++) {
-      COPC_UA_Helper::fillVariant(*localMethodCall->mSendHandle.mData[i], dataToSend[i]);
+      COPC_UA_Helper::fillVariant(*localMethodCall->mSendHandle.mData[i], *dataToSend[i]);
     }
 
     localMethodCall->mActionInfo.getResultReady().inc();

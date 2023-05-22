@@ -26,10 +26,10 @@ const CStringDictionary::TStringId FORTE_FieldsToArrowheadService::scm_anDataOut
 const CStringDictionary::TStringId FORTE_FieldsToArrowheadService::scm_anDataOutputTypeIds[] = {g_nStringIdArrowheadService};
 
 const TForteInt16 FORTE_FieldsToArrowheadService::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_FieldsToArrowheadService::scm_anEIWith[] = {0, 1, 2, 255};
+const TDataIOID FORTE_FieldsToArrowheadService::scm_anEIWith[] = {0, 1, 2, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_FieldsToArrowheadService::scm_anEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_FieldsToArrowheadService::scm_anEOWith[] = {0, 255};
+const TDataIOID FORTE_FieldsToArrowheadService::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_FieldsToArrowheadService::scm_anEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_FieldsToArrowheadService::scm_anEventOutputNames[] = {g_nStringIdCNF};
 
@@ -68,7 +68,7 @@ void FORTE_FieldsToArrowheadService::enterStateREQ(){
   sendOutputEvent( scm_nEventCNFID);
 }
 
-void FORTE_FieldsToArrowheadService::executeEvent(int pa_nEIID){
+void FORTE_FieldsToArrowheadService::executeEvent(TEventID pa_nEIID){
   bool bTransitionCleared;
   do{
     bTransitionCleared = true;

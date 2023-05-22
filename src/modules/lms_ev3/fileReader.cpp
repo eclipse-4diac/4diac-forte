@@ -30,10 +30,10 @@ const CStringDictionary::TStringId fileReader::scm_anDataOutputNames[] = {g_nStr
 const CStringDictionary::TStringId fileReader::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdWSTRING, g_nStringIdSTRING};
 
 const TForteInt16 fileReader::scm_anEIWithIndexes[] = {0, 3};
-const TDataIOID fileReader::scm_anEIWith[] = {0, 1, 255, 0, 255};
+const TDataIOID fileReader::scm_anEIWith[] = {0, 1, scmWithListDelimiter, 0, scmWithListDelimiter};
 const CStringDictionary::TStringId fileReader::scm_anEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
 
-const TDataIOID fileReader::scm_anEOWith[] = {0, 1, 2, 255, 0, 1, 2, 255};
+const TDataIOID fileReader::scm_anEOWith[] = {0, 1, 2, scmWithListDelimiter, 0, 1, 2, scmWithListDelimiter};
 const TForteInt16 fileReader::scm_anEOWithIndexes[] = {0, 4, -1};
 const CStringDictionary::TStringId fileReader::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
 
@@ -49,7 +49,7 @@ const char * const fileReader::scmOK = "OK";
 const char * const fileReader::scmNotInitialised = "Not initialized";
 const char * const fileReader::scmCouldNotRead = "Could not read";
 
-void fileReader::executeEvent(int pa_nEIID){ //TODO: manage output and status
+void fileReader::executeEvent(TEventID pa_nEIID){ //TODO: manage output and status
   switch (pa_nEIID){
     case scm_nEventINITID:
       if(true == QI()){

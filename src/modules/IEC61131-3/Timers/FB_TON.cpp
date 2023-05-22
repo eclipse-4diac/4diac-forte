@@ -24,17 +24,17 @@ const CStringDictionary::TStringId FB_TON::scm_aunDIDataTypeIds[] = { g_nStringI
 const CStringDictionary::TStringId FB_TON::scm_aunDODataTypeIds[] = { g_nStringIdBOOL, g_nStringIdTIME };
 
 const TForteInt16 FB_TON::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID FB_TON::scm_anEIWith[] = { 0, 1, 255 };
+const TDataIOID FB_TON::scm_anEIWith[] = { 0, 1, scmWithListDelimiter };
 const CStringDictionary::TStringId FB_TON::scm_anEventInputNames[] = { g_nStringIdREQ };
 
-const TDataIOID FB_TON::scm_anEOWith[] = { 0, 1, 255 };
+const TDataIOID FB_TON::scm_anEOWith[] = { 0, 1, scmWithListDelimiter };
 const TForteInt16 FB_TON::scm_anEOWithIndexes[] = { 0 };
 const CStringDictionary::TStringId FB_TON::scm_anEventOutputNames[] = { g_nStringIdCNF };
 
 const SFBInterfaceSpec FB_TON::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith,
   scm_anEOWithIndexes, 2, scm_anDataInputNames, scm_aunDIDataTypeIds, 2, scm_anDataOutputNames, scm_aunDODataTypeIds, 0, nullptr };
 
-void FB_TON::executeEvent(int pa_nEIID) {
+void FB_TON::executeEvent(TEventID pa_nEIID) {
   if(scm_nEventREQID == pa_nEIID) {
     if(st_IN() == false) {
       Q() = CIEC_BOOL(false);

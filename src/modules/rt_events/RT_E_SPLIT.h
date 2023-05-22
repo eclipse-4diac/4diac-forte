@@ -74,7 +74,7 @@ private:
    bool m_bInitialized;
 
 
-  void executeEvent(int pa_nEIID) override;
+  void executeEvent(TEventID pa_nEIID) override;
 
 public:
   FUNCTION_BLOCK_CTOR(FORTE_RT_E_SPLIT){

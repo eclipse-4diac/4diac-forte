@@ -26,10 +26,10 @@ const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scm_anDataOutputNames[] = {
 const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL};
 
 const TForteInt16 FORTE_RT_E_CYCLE::scm_anEIWithIndexes[] = {0, -1};
-const TDataIOID FORTE_RT_E_CYCLE::scm_anEIWith[] = {0, 1, 2, 255};
+const TDataIOID FORTE_RT_E_CYCLE::scm_anEIWith[] = {0, 1, 2, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scm_anEventInputNames[] = {g_nStringIdSTART, g_nStringIdSTOP};
 
-const TDataIOID FORTE_RT_E_CYCLE::scm_anEOWith[] = {0, 255};
+const TDataIOID FORTE_RT_E_CYCLE::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_RT_E_CYCLE::scm_anEOWithIndexes[] = {-1, 0};
 const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scm_anEventOutputNames[] = {g_nStringIdEO};
 
@@ -51,7 +51,7 @@ FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstance
   mTimeListEntry.mType = e_Periodic;
 }
 
-void FORTE_RT_E_CYCLE::executeEvent(int paEIID){
+void FORTE_RT_E_CYCLE::executeEvent(TEventID paEIID){
   switch(paEIID){
     case cg_nExternalEventID:
       sendOutputEvent(scm_nEventEOID);

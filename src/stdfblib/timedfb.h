@@ -45,7 +45,7 @@ protected:
  *
  * Derived Timed FBs only normaly need only the start event es this is different for each timed FB type (e.g. periodic vs. onetimeshot)
  */
-  void executeEvent(int pa_nEIID) override;
+  void executeEvent(TEventID pa_nEIID) override;
 
   CIEC_TIME& DT() {
      return *static_cast<CIEC_TIME*>(getDI(0));

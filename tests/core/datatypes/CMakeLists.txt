@@ -15,8 +15,20 @@
 #SET(SOURCE_GROUP ${SOURCE_GROUP}\\core)
 
   forte_test_add_inc_directories(${CMAKE_CURRENT_SOURCE_DIR})
-  
+
   forte_test_add_sourcefile_cpp(CIEC_ANY_tests.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_ELEMENTARY_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_MAGNITUDE_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_NUM_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_REAL_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_INT_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_DURATION_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_BIT_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_CHARS_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_STRING_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_CHAR_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_DATE_VARIANT_test.cpp)
   forte_test_add_sourcefile_cpp(anytostringtests.cpp)
 
 #Unicode utilities
@@ -67,11 +79,10 @@
   forte_test_add_sourcefile_cpp(CIEC_STRING_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_WSTRING_test.cpp)
 
-IF (FORTE_SUPPORT_ARRAYS)
+#ARRAY-Datatypes
   forte_test_add_sourcefile_cpp(CIEC_ARRAY_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_ARRAY_TEMPLATE_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_TIME_STRUCT_AND_ARRAY_test.cpp)
-ENDIF(FORTE_SUPPORT_ARRAYS)
 
 #ANY_DURATION and ANY_DATE-Datatypes
   forte_test_add_sourcefile_cpp(CIEC_TIME_test.cpp)

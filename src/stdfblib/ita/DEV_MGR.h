@@ -66,8 +66,6 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
 
     static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-    FORTE_FB_DATA_ARRAY(2, 3, 4, 0);
-
     //! The device the block is contained in
     CDevice &m_poDevice;
 
@@ -127,7 +125,7 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
      */
     static int parseIdentifier(char *paIdentifierStart, forte::core::TNameIdentifier &paIdentifier);
 
-    void executeEvent(int pa_nEIID) override;
+    void executeEvent(TEventID pa_nEIID) override;
 
 #ifdef FORTE_SUPPORT_MONITORING
     static bool parseMonitoringData(char *paRequestPartLeft, forte::core::SManagementCMD &paCommand);

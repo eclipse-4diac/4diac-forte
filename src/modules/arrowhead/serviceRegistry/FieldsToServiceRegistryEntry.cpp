@@ -26,10 +26,10 @@ const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scm_anDat
 const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scm_anDataOutputTypeIds[] = {g_nStringIdServiceRegistryEntry};
 
 const TForteInt16 FORTE_FieldsToServiceRegistryEntry::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_FieldsToServiceRegistryEntry::scm_anEIWith[] = {6, 5, 4, 3, 2, 1, 0, 255};
+const TDataIOID FORTE_FieldsToServiceRegistryEntry::scm_anEIWith[] = {6, 5, 4, 3, 2, 1, 0, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scm_anEventInputNames[] = {g_nStringIdREQ};
 
-const TDataIOID FORTE_FieldsToServiceRegistryEntry::scm_anEOWith[] = {0, 255};
+const TDataIOID FORTE_FieldsToServiceRegistryEntry::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_FieldsToServiceRegistryEntry::scm_anEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scm_anEventOutputNames[] = {g_nStringIdCNF};
 
@@ -62,7 +62,7 @@ void FORTE_FieldsToServiceRegistryEntry::enterStateREQ(){
   sendOutputEvent( scm_nEventCNFID);
 }
 
-void FORTE_FieldsToServiceRegistryEntry::executeEvent(int pa_nEIID){
+void FORTE_FieldsToServiceRegistryEntry::executeEvent(TEventID pa_nEIID){
   bool bTransitionCleared;
   do{
     bTransitionCleared = true;

@@ -37,7 +37,7 @@
  *  "wstring" is implemented like the "string" - the following first implementation
  *  "typedef std::basic_string<wchar_t> TWSTRING; didn't work well"
  */
-class CIEC_WSTRING : public CIEC_ANY_STRING {
+class CIEC_WSTRING final : public CIEC_ANY_STRING {
   DECLARE_FIRMWARE_DATATYPE(WSTRING)
 
   public:

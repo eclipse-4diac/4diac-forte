@@ -133,7 +133,7 @@ class FORTE_X20DI9371 : public CFunctionBlock, public IEplCNCallback{
     FORTE_FB_DATA_ARRAY(2, 3, 15, 0)
     ;
 
-    void executeEvent(int pa_nEIID) override;
+    void executeEvent(TEventID pa_nEIID) override;
 
     // Variables for mapping between inputs and POWERLINK stack
 

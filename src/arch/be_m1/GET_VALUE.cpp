@@ -27,10 +27,10 @@ const CStringDictionary::TStringId FORTE_GET_VALUE::scm_anDataOutputNames[] = {g
 const CStringDictionary::TStringId FORTE_GET_VALUE::scm_anDataOutputTypeIds[] = {g_nStringIdINT, g_nStringIdSINT};
 
 const TForteInt16 FORTE_GET_VALUE::scm_anEIWithIndexes[] = {0, 2};
-const TDataIOID FORTE_GET_VALUE::scm_anEIWith[] = {0, 255, 1, 255};
+const TDataIOID FORTE_GET_VALUE::scm_anEIWith[] = {0, scmWithListDelimiter, 1, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_GET_VALUE::scm_anEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
 
-const TDataIOID FORTE_GET_VALUE::scm_anEOWith[] = {0, 255, 0, 1, 255};
+const TDataIOID FORTE_GET_VALUE::scm_anEOWith[] = {0, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
 const TForteInt16 FORTE_GET_VALUE::scm_anEOWithIndexes[] = {0, 2, -1};
 const CStringDictionary::TStringId FORTE_GET_VALUE::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
 
@@ -42,7 +42,7 @@ const SFBInterfaceSpec FORTE_GET_VALUE::scm_stFBInterfaceSpec = {
 };
 
 
-void FORTE_GET_VALUE::executeEvent(int pa_nEIID){
+void FORTE_GET_VALUE::executeEvent(TEventID pa_nEIID){
   switch(pa_nEIID){
     case scm_nEventINITID:
     if (init()) {

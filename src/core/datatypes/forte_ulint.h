@@ -27,7 +27,7 @@
 /*!\ingroup COREDTS CIEC_ULINT represents the ulint data type according to IEC 61131.
  *  @author mw & az
  */
-class CIEC_ULINT : public CIEC_ANY_INT{
+class CIEC_ULINT final : public CIEC_ANY_INT{
   DECLARE_FIRMWARE_DATATYPE(ULINT)
 
   public:

@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2018 TU Wien/ACIN
- *               2022 Martin Erich Jobst
+ *               2022 - 2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,6 +13,7 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Jobst
  *      - multi algorithm support
+ *      - account for data type size in FB initialization
  *******************************************************************************/
 
 #ifndef SRC_CORE_SIMPLEFB_H_
@@ -21,15 +22,13 @@
 #include "basicfb.h"
 
 class CSimpleFB : public CBasicFB {
-  public:
-    CSimpleFB(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
-        const SInternalVarsInformation *paVarInternals, TForteByte *paFBConnData, TForteByte *paBasicFBVarsData);
+public:
+    CSimpleFB(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
+              CStringDictionary::TStringId paInstanceNameId, const SInternalVarsInformation *paVarInternals) : CBasicFB(paSrcRes, paInterfaceSpec, paInstanceNameId, paVarInternals) {}
 
-    CSimpleFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId,
-        const SInternalVarsInformation *pa_pstVarInternals, TForteByte *pa_acFBConnData, TForteByte *pa_acBasicFBVarsData,
-        const SCFB_FBInstanceData *const pa_astInternalFBs, const size_t pa_numberOfInternalFbs);
-
-    ~CSimpleFB() override;
+    [[deprecated]] CSimpleFB(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
+              CStringDictionary::TStringId paInstanceNameId, const SInternalVarsInformation *paVarInternals,
+              TForteByte *paFBConnData, TForteByte *paBasicFBVarsData);
 };
 
 #endif /* SRC_CORE_SIMPLEFB_H_ */

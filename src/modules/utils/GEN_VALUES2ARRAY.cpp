@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2014 - 2015 Profactor GmbH, fortiss GmbH
  *                      2018 Johannes Kepler University
+ *               2023 Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,6 +12,8 @@
  *   Matthias Plasch, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *   Martin Jobst
+ *     - refactor for ANY variant
  *******************************************************************************/
 #include "GEN_VALUES2ARRAY.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -27,7 +30,7 @@ const CStringDictionary::TStringId GEN_VALUES2ARRAY::scm_anDataOutputNames[] = {
 const TForteInt16 GEN_VALUES2ARRAY::scm_anEIWithIndexes[] = { 0 };
 const CStringDictionary::TStringId GEN_VALUES2ARRAY::scm_anEventInputNames[] = { g_nStringIdREQ };
 
-const TDataIOID GEN_VALUES2ARRAY::scm_anEOWith[] = { 0, 255 };
+const TDataIOID GEN_VALUES2ARRAY::scm_anEOWith[] = { 0, scmWithListDelimiter };
 const TForteInt16 GEN_VALUES2ARRAY::scm_anEOWithIndexes[] = { 0, -1 };
 const CStringDictionary::TStringId GEN_VALUES2ARRAY::scm_anEventOutputNames[] = { g_nStringIdCNF };
 
@@ -42,13 +45,13 @@ GEN_VALUES2ARRAY::~GEN_VALUES2ARRAY(){
   delete[] m_anEIWith;
 }
 
-void GEN_VALUES2ARRAY::executeEvent(int paEIID){
+void GEN_VALUES2ARRAY::executeEvent(TEventID paEIID){
   switch (paEIID){
     case scm_nEventREQID:
 
       for(unsigned int input_index = 0; input_index < m_nDInputs; input_index++){
         //copy input values to array
-        OUT_Array()[input_index].saveAssign(*getDI(input_index));
+        OUT_Array()[input_index].setValue(*getDI(input_index));
       }
 
       sendOutputEvent(scm_nEventCNFID);
@@ -115,7 +118,7 @@ bool GEN_VALUES2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterf
     paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
     paInterfaceSpec.m_anEOWith = scm_anEOWith;
     paInterfaceSpec.m_anEOWithIndexes = scm_anEOWithIndexes;
-    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(m_nDInputs);
+    paInterfaceSpec.m_nNumDIs = m_nDInputs;
     paInterfaceSpec.m_aunDINames = m_anDataInputNames;
     paInterfaceSpec.m_aunDIDataTypeNames = m_anDataInputTypeIds;
     paInterfaceSpec.m_nNumDOs = 1;

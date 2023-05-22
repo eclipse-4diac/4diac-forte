@@ -28,16 +28,16 @@ const CStringDictionary::TStringId FORTE_X20AI4622::scm_anDataOutputNames[] = { 
 const CStringDictionary::TStringId FORTE_X20AI4622::scm_anDataOutputTypeIds[] = { g_nStringIdBOOL, g_nStringIdUSINT, g_nStringIdSTRING, g_nStringIdINT, g_nStringIdINT, g_nStringIdINT, g_nStringIdINT };
 
 const TForteInt16 FORTE_X20AI4622::scm_anEIWithIndexes[] = { 0, 4 };
-const TDataIOID FORTE_X20AI4622::scm_anEIWith[] = { 0, 1, 2, 255, 0, 255 };
+const TDataIOID FORTE_X20AI4622::scm_anEIWith[] = { 0, 1, 2, scmWithListDelimiter, 0, scmWithListDelimiter };
 const CStringDictionary::TStringId FORTE_X20AI4622::scm_anEventInputNames[] = { g_nStringIdINIT, g_nStringIdREQ };
 
-const TDataIOID FORTE_X20AI4622::scm_anEOWith[] = { 0, 1, 2, 255, 2, 3, 4, 5, 6, 0, 255 };
+const TDataIOID FORTE_X20AI4622::scm_anEOWith[] = { 0, 1, 2, scmWithListDelimiter, 2, 3, 4, 5, 6, 0, scmWithListDelimiter };
 const TForteInt16 FORTE_X20AI4622::scm_anEOWithIndexes[] = { 0, 4, -1 };
 const CStringDictionary::TStringId FORTE_X20AI4622::scm_anEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF };
 
 const SFBInterfaceSpec FORTE_X20AI4622::scm_stFBInterfaceSpec = { 2, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 2, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 3, scm_anDataInputNames, scm_anDataInputTypeIds, 7, scm_anDataOutputNames, scm_anDataOutputTypeIds, 0, 0 };
 
-void FORTE_X20AI4622::executeEvent(int pa_nEIID){
+void FORTE_X20AI4622::executeEvent(TEventID pa_nEIID){
   switch (pa_nEIID){
     case scm_nEventINITID:
       if(QI() == true){

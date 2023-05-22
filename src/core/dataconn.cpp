@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
+ *               2023 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -11,25 +12,13 @@
  *    Thomas Strasser, Alois Zoitl, Rene Smodic, Gunnar Grabmaier, Ingo Hegny,
  *    Matthias Plasch
  *      - initial implementation and rework communication infrastructure
+ *    Martin Jobst - move allocation of data value to FB
  *******************************************************************************/
 #include "dataconn.h"
 #include "funcbloc.h"
 
-CDataConnection::CDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId,
-    const CIEC_ANY *paSrcDO) :
-    CConnection(paSrcFB, paSrcPortId),
-        m_poValue(nullptr),
-        mSpecialCastConnection(false){
-
-  if((nullptr != paSrcDO) && (CIEC_ANY::e_ANY != paSrcDO->getDataTypeID())){
-    m_poValue = paSrcDO->clone(m_acDataBuf);
-  }
-}
-
-CDataConnection::~CDataConnection(){
-  if(nullptr != m_poValue){
-    m_poValue->~CIEC_ANY();
-  }
+CDataConnection::CDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CIEC_ANY *paValue)
+        : CConnection(paSrcFB, paSrcPortId), m_poValue(paValue) {
 }
 
 EMGMResponse CDataConnection::connect(CFunctionBlock *paDstFB,
@@ -60,13 +49,12 @@ EMGMResponse CDataConnection::connectToCFBInterface(CFunctionBlock *paDstFB,
 
 void CDataConnection::handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint){
   if(CIEC_ANY::e_ANY != paDstDataPoint.getDataTypeID()){
-    m_poValue = paDstDataPoint.clone(m_acDataBuf);
+    m_poValue->setValue(paDstDataPoint);
     getSourceId().mFB->configureGenericDO(getSourceId().mPortId, paDstDataPoint);
     if(isConnected()){
       //We already have some connection also set their correct type
-      for(TDestinationIdList::Iterator it = mDestinationIds.begin();
-          it != mDestinationIds.end(); ++it){
-        it->mFB->connectDI(it->mPortId, this);
+      for(const auto& it : mDestinationIds){
+        it.mFB->connectDI(it.mPortId, this);
       }
     }
   }
@@ -87,19 +75,8 @@ CDataConnection::disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringI
   return retval;
 }
 
-void CDataConnection::readData(CIEC_ANY *pa_poValue) const{
-  if(m_poValue){
-    if(!mSpecialCastConnection){
-      pa_poValue->setValue(*m_poValue);
-    }
-    else{
-      CIEC_ANY::specialCast(*m_poValue, *pa_poValue);
-    }
-  }
-}
-
 bool CDataConnection::canBeConnected(const CIEC_ANY *pa_poSrcDataPoint,
-    const CIEC_ANY *pa_poDstDataPoint, bool &pa_rbSpecialCast){
+    const CIEC_ANY *pa_poDstDataPoint){
   CIEC_ANY::EDataTypeID eSrcId = pa_poSrcDataPoint->getDataTypeID();
   CIEC_ANY::EDataTypeID eDstId = pa_poDstDataPoint->getDataTypeID();
   bool bCanConnect = false;
@@ -114,28 +91,23 @@ bool CDataConnection::canBeConnected(const CIEC_ANY *pa_poSrcDataPoint,
     }
     else{
       bCanConnect = CIEC_ANY::isCastable(eSrcId, eDstId);
-      pa_rbSpecialCast = ((bCanConnect) && needsSpecialCast(eSrcId));
     }
   }
   return bCanConnect;
-}
-
-bool CDataConnection::needsSpecialCast(CIEC_ANY::EDataTypeID pa_eSrcDTId){
-  //we want to cast from floating point data to an integer data type
-  return ((CIEC_ANY::e_LREAL == pa_eSrcDTId) || (CIEC_ANY::e_REAL == pa_eSrcDTId));
 }
 
 EMGMResponse CDataConnection::establishDataConnection(CFunctionBlock *paDstFB, TPortId paDstPortId,
     CIEC_ANY *paDstDataPoint){
   EMGMResponse retVal = EMGMResponse::InvalidOperation;
 
-  if(nullptr == m_poValue){
-    handleAnySrcPortConnection(*paDstDataPoint);
-    retVal = EMGMResponse::Ready;
-  }
-  else{
-    if(canBeConnected(m_poValue, paDstDataPoint, mSpecialCastConnection)){
+  if(m_poValue) {
+    if (m_poValue->getDataTypeID() == CIEC_ANY::e_ANY) {
+      handleAnySrcPortConnection(*paDstDataPoint);
       retVal = EMGMResponse::Ready;
+    } else {
+      if (canBeConnected(m_poValue, paDstDataPoint)) {
+        retVal = EMGMResponse::Ready;
+      }
     }
   }
 
@@ -143,7 +115,7 @@ EMGMResponse CDataConnection::establishDataConnection(CFunctionBlock *paDstFB, T
     retVal = CConnection::addDestination(CConnectionPoint(paDstFB, paDstPortId));
     if(EMGMResponse::Ready == retVal && !paDstFB->connectDI(paDstPortId, this)) {
       retVal = EMGMResponse::InvalidState;
-      mDestinationIds.popFront(); //empty the list so that the have created connection is not here anymore
+      mDestinationIds.pop_back(); //remove the newly created connection from the list
     }
   }
   return retVal;

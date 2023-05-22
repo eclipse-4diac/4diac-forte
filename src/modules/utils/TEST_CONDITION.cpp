@@ -31,7 +31,7 @@ const CStringDictionary::TStringId FORTE_TEST_CONDITION::scm_anDataInputNames[] 
 const CStringDictionary::TStringId FORTE_TEST_CONDITION::scm_anDataInputTypeIds[] = {g_nStringIdBOOL};
 
 const TForteInt16 FORTE_TEST_CONDITION::scm_anEIWithIndexes[] = {0};
-const TDataIOID FORTE_TEST_CONDITION::scm_anEIWith[] = {0, 255};
+const TDataIOID FORTE_TEST_CONDITION::scm_anEIWith[] = {0, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_TEST_CONDITION::scm_anEventInputNames[] = {g_nStringIdREQ};
 
 const TForteInt16 FORTE_TEST_CONDITION::scm_anEOWithIndexes[] = {-1, -1};
@@ -60,7 +60,7 @@ FORTE_TEST_CONDITION::~FORTE_TEST_CONDITION() {
 }
 
 
-void FORTE_TEST_CONDITION::executeEvent(int paEIID) {
+void FORTE_TEST_CONDITION::executeEvent(TEventID paEIID) {
   if(scm_nEventREQID == paEIID) {
     smExecutedTests++;
     if(check()) {

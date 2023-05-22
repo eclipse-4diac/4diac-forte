@@ -188,7 +188,7 @@ EMGMResponse CMonitoringHandler::triggerEvent(forte::core::TNameIdentifier &paNa
       //otherwise the triggerEvent structure needs to be moved to another place!
       mTriggerEvent.mFB = fB;
       mTriggerEvent.mPortId = eventId;
-      mResource.getResourceEventExecution()->startEventChain(&mTriggerEvent);
+      mResource.getResourceEventExecution()->startEventChain(mTriggerEvent);
       eRetVal = EMGMResponse::Ready;
     }
     else{
@@ -380,6 +380,7 @@ void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
   int consumedBytes = paDataWatchEntry.mDataBuffer->toString(acDataValue, bufferSize);
   if(consumedBytes > 0 && static_cast<size_t>(consumedBytes) < bufferSize) {
     switch (paDataWatchEntry.mDataBuffer->getDataTypeID()) {
+      case CIEC_ANY::e_ANY:
       case CIEC_ANY::e_WSTRING:
       case CIEC_ANY::e_STRING:
       case CIEC_ANY::e_CHAR:
@@ -404,10 +405,13 @@ size_t CMonitoringHandler::getExtraSizeForEscapedChars(const CIEC_ANY& paDataVal
   size_t retVal = 0;
 
   switch(paDataValue.getDataTypeID()){
+    case CIEC_ANY::e_ANY:
+      retVal = getExtraSizeForEscapedChars(paDataValue.unwrap());
+      break;
     case CIEC_ANY::e_WSTRING:
     case CIEC_ANY::e_STRING:
       retVal = forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<const CIEC_WSTRING&>(paDataValue).getValue()) + 10; //for opening and closing quotes or apos
-     break;
+      break;
     case CIEC_ANY::e_CHAR:
       retVal = 5 + 5 + 5; // Both outer quotes and symbol gets evetually replaced
       break;
@@ -415,7 +419,7 @@ size_t CMonitoringHandler::getExtraSizeForEscapedChars(const CIEC_ANY& paDataVal
       retVal = 5 + 5 + 5; //Both outer quotes and symbol gets evetually replaced
     break;
     case CIEC_ANY::e_ARRAY:
-      retVal = getExtraSizeForEscapedCharsArray(static_cast<const CIEC_ARRAY_TYPELIB &>(paDataValue));
+      retVal = getExtraSizeForEscapedCharsArray(static_cast<const CIEC_ARRAY &>(paDataValue));
       break;
     case CIEC_ANY::e_STRUCT:
       retVal = getExtraSizeForEscapedCharsStruct(static_cast<const CIEC_STRUCT&>(paDataValue));
@@ -427,7 +431,7 @@ size_t CMonitoringHandler::getExtraSizeForEscapedChars(const CIEC_ANY& paDataVal
   return retVal;
 }
 
-size_t CMonitoringHandler::getExtraSizeForEscapedCharsArray(const CIEC_ARRAY_TYPELIB &paDataValue)
+size_t CMonitoringHandler::getExtraSizeForEscapedCharsArray(const CIEC_ARRAY &paDataValue)
 {
   size_t retVal = 0;
 
@@ -453,18 +457,18 @@ size_t CMonitoringHandler::getExtraSizeForEscapedCharsArray(const CIEC_ARRAY_TYP
 size_t CMonitoringHandler::getExtraSizeForEscapedCharsStruct(const CIEC_STRUCT& paDataValue) {
   size_t retVal = 0;
 
-  const CIEC_ANY* members = paDataValue.getMembers();
   for(size_t i = 0; i < paDataValue.getStructSize(); i++) {
-    switch(members[i].getDataTypeID()){
+    const CIEC_ANY *member = paDataValue.getMember(i);
+    switch(member->getDataTypeID()){
       case CIEC_ANY::e_WSTRING:
       case CIEC_ANY::e_STRING:
-        retVal += forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<const CIEC_WSTRING&>(members[i]).getValue()) + 10; //for opening and closing quotes or apos
+        retVal += forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<const CIEC_WSTRING*>(member)->getValue()) + 10; //for opening and closing quotes or apos
         break;
       case CIEC_ANY::e_ARRAY:
-        retVal += getExtraSizeForEscapedCharsArray(static_cast<const CIEC_ARRAY_TYPELIB &>(members[i]));
+        retVal += getExtraSizeForEscapedCharsArray(*static_cast<const CIEC_ARRAY *>(member));
         break;
       case CIEC_ANY::e_STRUCT:
-        retVal += getExtraSizeForEscapedCharsStruct(static_cast<const CIEC_STRUCT&>(members[i]));
+        retVal += getExtraSizeForEscapedCharsStruct(*static_cast<const CIEC_STRUCT *>(member));
         break;
       default:
         break;

@@ -27,8 +27,8 @@ class GEN_VALUES2ARRAY : public CGenFunctionBlock<CFunctionBlock>{
     static const CStringDictionary::TStringId scm_anDataOutputNames[];
     CStringDictionary::TStringId *m_anDataOutputTypeIds;
 
-    CIEC_ARRAY<> &OUT_Array(){
-      return *static_cast<CIEC_ARRAY<> *>(getDO(0));
+    CIEC_ARRAY &OUT_Array(){
+      return *static_cast<CIEC_ARRAY *>(getDO(0));
     }
 
     static const TEventID scm_nEventREQID = 0;
@@ -45,7 +45,7 @@ class GEN_VALUES2ARRAY : public CGenFunctionBlock<CFunctionBlock>{
     unsigned int m_nDInputs;
     CStringDictionary::TStringId m_ValueTypeID;
 
-     void executeEvent(int paEIID) override;
+     void executeEvent(TEventID paEIID) override;
      bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
     GEN_VALUES2ARRAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);

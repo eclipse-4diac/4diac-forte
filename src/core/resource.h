@@ -55,8 +55,7 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
      *  \param pa_acFBData           Byte-array for resource-specific data
      */
     CResource(CResource* pa_poDevice, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-        const CStringDictionary::TStringId pa_nInstanceNameId,
-        TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
+        CStringDictionary::TStringId pa_nInstanceNameId);
 
     ~CResource() override;
 
@@ -112,11 +111,9 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
 #endif
 
   protected:
-    CResource(const SFBInterfaceSpec *pa_pstInterfaceSpec,
-        const CStringDictionary::TStringId pa_nInstanceNameId,
-        TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
+    CResource(const SFBInterfaceSpec *pa_pstInterfaceSpec, CStringDictionary::TStringId pa_nInstanceNameId);
 
-    void executeEvent(int) override {
+    void executeEvent(TEventID) override {
     }
 
     /*!Wrapper for simplifying connection creation in resources

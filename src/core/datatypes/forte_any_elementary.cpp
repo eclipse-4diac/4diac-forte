@@ -27,8 +27,6 @@
 #include "forte_lint.h"
 #include "forte_ulint.h"
 
-DEFINE_FIRMWARE_DATATYPE(ANY_ELEMENTARY, g_nStringIdANY_ELEMENTARY)
-
 const std::map<CStringDictionary::TStringId, CIEC_ANY::EDataTypeID> CIEC_ANY_ELEMENTARY::scm_StringToTypeId = {
     {g_nStringIdANY, CIEC_ANY::e_ANY},
     {g_nStringIdBOOL, CIEC_ANY::e_BOOL},
@@ -44,9 +42,22 @@ const std::map<CStringDictionary::TStringId, CIEC_ANY::EDataTypeID> CIEC_ANY_ELE
     {g_nStringIdWORD, CIEC_ANY::e_WORD},
     {g_nStringIdDWORD, CIEC_ANY::e_DWORD},
     {g_nStringIdLWORD, CIEC_ANY::e_LWORD},
+    {g_nStringIdT, CIEC_ANY::e_TIME},
+    {g_nStringIdTIME, CIEC_ANY::e_TIME},
+    {g_nStringIdD, CIEC_ANY::e_DATE},
     {g_nStringIdDATE, CIEC_ANY::e_DATE},
+    {g_nStringIdTOD, CIEC_ANY::e_TIME_OF_DAY},
     {g_nStringIdTIME_OF_DAY, CIEC_ANY::e_TIME_OF_DAY},
+    {g_nStringIdDT, CIEC_ANY::e_DATE_AND_TIME},
     {g_nStringIdDATE_AND_TIME, CIEC_ANY::e_DATE_AND_TIME},
+    {g_nStringIdLT, CIEC_ANY::e_LTIME},
+    {g_nStringIdLTIME, CIEC_ANY::e_LTIME},
+    {g_nStringIdLD, CIEC_ANY::e_LDATE},
+    {g_nStringIdLDATE, CIEC_ANY::e_LDATE},
+    {g_nStringIdLTOD, CIEC_ANY::e_LTIME_OF_DAY},
+    {g_nStringIdLTIME_OF_DAY, CIEC_ANY::e_LTIME_OF_DAY},
+    {g_nStringIdLDT, CIEC_ANY::e_LDATE_AND_TIME},
+    {g_nStringIdLDATE_AND_TIME, CIEC_ANY::e_LDATE_AND_TIME},
     {g_nStringIdCHAR, CIEC_ANY::e_CHAR},
     {g_nStringIdWCHAR, CIEC_ANY::e_WCHAR},
     {g_nStringIdREAL, CIEC_ANY::e_REAL},

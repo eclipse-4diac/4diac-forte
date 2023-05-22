@@ -32,7 +32,7 @@ namespace forte {
     protected:
       CCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, forte::com_infra::EComServiceType pa_eCommServiceType);
 
-      void executeEvent(int pa_nEIID) override;
+      void executeEvent(TEventID pa_nEIID) override;
 
       static const TEventID scm_nEventINITID = 0;
       static const TEventID scm_nEventINITOID = 0;

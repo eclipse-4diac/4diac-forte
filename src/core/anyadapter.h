@@ -36,11 +36,11 @@ class CAnyAdapter : public CAdapter{
     bool disconnect(CAdapterConnection *pa_poAdConn) override;
 
     //! Helper functions allowing to retrieve interface information from any_adpaters TODO look for Doxygen grouping syntax
-    TForteUInt8 getNumEIs() const {
+    TEventID getNumEIs() const {
       return m_pstInterfaceSpec->m_nNumEIs;
     }
 
-    TForteUInt8 getNumEOs() const {
+    TEventID getNumEOs() const {
       return m_pstInterfaceSpec->m_nNumEOs;
     }
 
@@ -52,7 +52,7 @@ class CAnyAdapter : public CAdapter{
       return m_pstInterfaceSpec->m_anEIWith;
     }
 
-    TForteUInt8 getNumDIs() const {
+    TPortId getNumDIs() const {
       return m_pstInterfaceSpec->m_nNumDIs;
     }
 
@@ -64,7 +64,7 @@ class CAnyAdapter : public CAdapter{
       return getDI(0);
     }
 
-    TForteUInt8 getNumDOs() const {
+    TPortId getNumDOs() const {
       return m_pstInterfaceSpec->m_nNumDOs;
     }
 

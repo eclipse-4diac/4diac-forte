@@ -51,7 +51,7 @@ EMGMResponse CCommFB::changeFBExecutionState(EMGMCommandType pa_unCommand) {
   return retVal;
 }
 
-void CCommFB::executeEvent(int paEIID) {
+void CCommFB::executeEvent(TEventID paEIID) {
   EComResponse resp = e_Nothing;
 
   switch (paEIID) {
@@ -180,7 +180,8 @@ void CCommFB::configureDIs(const char* paDIConfigString, SFBInterfaceSpec& paInt
 
   if (forte::com_infra::e_DataInputs == (forte::com_infra::e_DataInputs & m_eCommServiceType)) {
       //TODO: Check range of sParamA
-      paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(paInterfaceSpec.m_nNumDIs + forte::core::util::strtol(paDIConfigString, nullptr, 10));
+      paInterfaceSpec.m_nNumDIs = paInterfaceSpec.m_nNumDIs +
+                                  static_cast<TPortId>(forte::core::util::strtol(paDIConfigString, nullptr, 10));
       diDataTypeNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
       diNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
       eiWith = new TDataIOID[paInterfaceSpec.m_nNumDIs - 2 + scmMinWithLength];
@@ -202,9 +203,9 @@ void CCommFB::configureDIs(const char* paDIConfigString, SFBInterfaceSpec& paInt
     eiWith[3] = 0;
     eiWith[4] = 1;
 
-    size_t i;
+    TPortId i;
     for (i = 0; i < paInterfaceSpec.m_nNumDIs - 2U; i++) {
-      eiWith[i + 5U] = static_cast<TForteUInt8>(i + 2U);
+      eiWith[i + 5U] = i + 2U;
     }
     eiWith[i + 5U] = scmWithListDelimiter;
 
@@ -227,7 +228,8 @@ void CCommFB::configureDOs(const char* paDOConfigString, SFBInterfaceSpec& paInt
 
   if(forte::com_infra::e_DataOutputs == (forte::com_infra::e_DataOutputs & m_eCommServiceType)){
     //TODO: Check range of sParamA
-    paInterfaceSpec.m_nNumDOs = static_cast<TForteUInt8>(paInterfaceSpec.m_nNumDOs + forte::core::util::strtol(paDOConfigString, nullptr, 10));
+    paInterfaceSpec.m_nNumDOs = paInterfaceSpec.m_nNumDOs +
+                                static_cast<TPortId>(forte::core::util::strtol(paDOConfigString, nullptr, 10));
     doDataTypeNames  = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDOs];
     doNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDOs];
     eoWith = new TDataIOID[paInterfaceSpec.m_nNumDOs - 2 + scmMinWithLength];
@@ -250,9 +252,9 @@ void CCommFB::configureDOs(const char* paDOConfigString, SFBInterfaceSpec& paInt
   eoWith[3] = 0;
   eoWith[4] = 1;
 
-  size_t i;
+  TPortId i;
   for(i = 0; i < paInterfaceSpec.m_nNumDOs - 2U; i++){
-    eoWith[i + 5U] = static_cast<TForteUInt8>(i + 2U);
+    eoWith[i + 5U] = i + 2U;
   }
   eoWith[i + 5U] = scmWithListDelimiter;
 

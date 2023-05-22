@@ -26,10 +26,10 @@ const CStringDictionary::TStringId FORTE_RT_E_PERMIT::scm_anDataOutputNames[] = 
 const CStringDictionary::TStringId FORTE_RT_E_PERMIT::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL};
 
 const TForteInt16 FORTE_RT_E_PERMIT::scm_anEIWithIndexes[] = {0, 5};
-const TDataIOID FORTE_RT_E_PERMIT::scm_anEIWith[] = {0, 2, 3, 4, 255, 1, 255};
+const TDataIOID FORTE_RT_E_PERMIT::scm_anEIWith[] = {0, 2, 3, 4, scmWithListDelimiter, 1, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_RT_E_PERMIT::scm_anEventInputNames[] = {g_nStringIdINIT, g_nStringIdEI};
 
-const TDataIOID FORTE_RT_E_PERMIT::scm_anEOWith[] = {0, 255};
+const TDataIOID FORTE_RT_E_PERMIT::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_RT_E_PERMIT::scm_anEOWithIndexes[] = {0, -1, -1};
 const CStringDictionary::TStringId FORTE_RT_E_PERMIT::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdEO};
 
@@ -49,7 +49,7 @@ FORTE_RT_E_PERMIT::FORTE_RT_E_PERMIT(const CStringDictionary::TStringId pa_nInst
            m_anFBConnData, m_anFBVarsData) {
 }
 
-bool FORTE_RT_E_PERMIT::checkActivation(int ){
+bool FORTE_RT_E_PERMIT::checkActivation(TEventID ){
   return PERMIT();
 }
 

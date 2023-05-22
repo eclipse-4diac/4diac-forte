@@ -34,11 +34,11 @@ const CStringDictionary::TStringId EmbrickMaster::scm_anDataOutputTypeIds[] = {
     g_nStringIdBOOL, g_nStringIdWSTRING };
 
 const TForteInt16 EmbrickMaster::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID EmbrickMaster::scm_anEIWith[] = { 0, 3, 5, 4, 1, 2, 255 };
+const TDataIOID EmbrickMaster::scm_anEIWith[] = { 0, 3, 5, 4, 1, 2, scmWithListDelimiter };
 const CStringDictionary::TStringId EmbrickMaster::scm_anEventInputNames[] = {
     g_nStringIdINIT };
 
-const TDataIOID EmbrickMaster::scm_anEOWith[] = { 0, 1, 255, 0, 1, 255 };
+const TDataIOID EmbrickMaster::scm_anEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter };
 const TForteInt16 EmbrickMaster::scm_anEOWithIndexes[] = { 0, 3, -1 };
 const CStringDictionary::TStringId EmbrickMaster::scm_anEventOutputNames[] = {
     g_nStringIdINITO, g_nStringIdIND };

@@ -75,14 +75,14 @@ inline const CIEC_CHAR func_BYTE_TO_CHAR(const CIEC_BYTE &paVal) {
   return CIEC_ANY::cast<CIEC_CHAR>(paVal);
 }
 
-inline const CIEC_STRING func_BYTE_TO_STRING(const CIEC_BYTE &paVal) {
+inline const CIEC_STRING func_BYTE_AS_STRING(const CIEC_BYTE &paVal) {
   CIEC_STRING string;
   stringConverter(string, paVal);
   return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
-inline const CIEC_WSTRING func_BYTE_TO_WSTRING(const CIEC_BYTE &paVal){
+inline const CIEC_WSTRING func_BYTE_AS_WSTRING(const CIEC_BYTE &paVal){
   CIEC_WSTRING string;
   stringConverter(string, paVal);
   return string;

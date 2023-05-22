@@ -47,9 +47,9 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
       if(UA_STATUSCODE_GOOD == mHandler->initializeAction(*mActionInfo)) {
         CCriticalRegion criticalRegion(mRDBufferMutex);
         response = e_InitOk;
-        mRDBuffer = new CIEC_ANY[getCommFB()->getNumRD()];
+        mRDBuffer = new CIEC_ANY*[getCommFB()->getNumRD()];
         for(size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
-          getCommFB()->getRDs()[i].clone(reinterpret_cast<TForteByte*>(&(mRDBuffer[i])));
+          mRDBuffer[i] = getCommFB()->getRDs()[i]->clone(nullptr);
         }
       }
     }
@@ -64,7 +64,13 @@ void COPC_UA_Layer::closeConnection() {
     mHandler->uninitializeAction(*mActionInfo);
     mHandler = nullptr;
     delete mActionInfo;
-    delete[] mRDBuffer;
+    if(mRDBuffer) {
+      for (size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
+        delete mRDBuffer[i];
+      }
+      delete[] mRDBuffer;
+      mRDBuffer = nullptr;
+    }
   }
 }
 
@@ -79,8 +85,8 @@ EComResponse COPC_UA_Layer::recvData(const void *paData, unsigned int) {
         CCriticalRegion criticalRegion(mRDBufferMutex);
         for(size_t i = 0; i < handleRecv->mSize; i++) {
           if(UA_Variant_isScalar(handleRecv->mData[i]) && handleRecv->mData[i]->data
-            && handleRecv->mData[i]->type == COPC_UA_Helper::getOPCUATypeFromAny((mRDBuffer + handleRecv->mOffset)[i])) {
-            COPC_UA_Helper::convertFromOPCUAType(handleRecv->mData[i]->data, (mRDBuffer + handleRecv->mOffset)[i]);
+            && handleRecv->mData[i]->type == COPC_UA_Helper::getOPCUATypeFromAny(*mRDBuffer[handleRecv->mOffset + i])) {
+            COPC_UA_Helper::convertFromOPCUAType(handleRecv->mData[i]->data, *mRDBuffer[handleRecv->mOffset + i]);
           } else {
             DEVLOG_ERROR("[OPC UA LAYER]: RD_%d of FB %s has no data, is not a scalar or there is a type mismatch\n", handleRecv->mOffset + i,
               getCommFB()->getInstanceName());
@@ -120,7 +126,7 @@ EComResponse COPC_UA_Layer::sendData(void *, unsigned int) {
 EComResponse COPC_UA_Layer::processInterrupt() {
   CCriticalRegion criticalRegion(mRDBufferMutex);
   for(size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
-    getCommFB()->getRDs()[i].setValue(mRDBuffer[i]);
+    getCommFB()->getRDs()[i]->setValue(*mRDBuffer[i]);
   }
   setDataAlreadyPresentRead(false);
   return mInterruptResp;
@@ -205,18 +211,17 @@ bool COPC_UA_Layer::getRemoteAny(CIEC_ANY **paResult, const CConnectionPoint &pa
 
 bool COPC_UA_Layer::checkFanOutTypes(const CDataConnection &paPortConnection, CIEC_ANY **paResult) const {
 
-  for(CSinglyLinkedList<CConnectionPoint>::Iterator it = paPortConnection.getDestinationList().begin(); it != paPortConnection.getDestinationList().end();
-      ++it) {
-    if(paPortConnection.getDestinationList().begin() == it) { //first one
-      if(!getRemoteAny(paResult, *it, false)) {
+  for(const auto& it : paPortConnection.getDestinationList()){
+    if(paPortConnection.getDestinationList().front() == it) { //first one
+      if(!getRemoteAny(paResult, it, false)) {
         return false;
       }
     } else {
       CIEC_ANY* newRemoteType;
-      if(!getRemoteAny(&newRemoteType, *it, false)) {
+      if(!getRemoteAny(&newRemoteType, it, false)) {
         return false;
       } else {
-        if(newRemoteType->getDataTypeID() != (*paResult)->getDataTypeID()) {
+        if(newRemoteType->unwrap().getDataTypeID() != (*paResult)->unwrap().getDataTypeID()) {
           DEVLOG_ERROR("[OPC UA LAYER]: FB %s has one RD which is connected to many data inputs and the types are not the same.\n",
             getCommFB()->getInstanceName());
           return false;

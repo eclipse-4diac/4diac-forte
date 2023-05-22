@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2012 - 2015 ACIN, fortiss GmbH
  *                      2018 Johannes Kepler University
+ *               2023 Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,6 +12,8 @@
  *   Alois Zoitl
  *   - initial API and implementation and/or initial documentation
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *   Martin Jobst
+ *     - refactor for ANY variant
  *******************************************************************************/
 #include "GEN_CSV_WRITER.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -29,7 +32,7 @@ const CStringDictionary::TStringId GEN_CSV_WRITER::scm_anDataOutputTypeIds[] = {
 const CStringDictionary::TStringId GEN_CSV_WRITER::scm_anEventInputNames[] = { g_nStringIdINIT, g_nStringIdREQ };
 
 const TForteInt16 GEN_CSV_WRITER::scm_anEIWithIndexes[] = { 0, 3 };
-const TDataIOID GEN_CSV_WRITER::scm_anEOWith[] = { 0, 1, 255, 0, 1, 255 };
+const TDataIOID GEN_CSV_WRITER::scm_anEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter };
 const TForteInt16 GEN_CSV_WRITER::scm_anEOWithIndexes[] = { 0, 3, -1 };
 const CStringDictionary::TStringId GEN_CSV_WRITER::scm_anEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF };
 
@@ -38,7 +41,7 @@ const CIEC_STRING GEN_CSV_WRITER::scmOK("OK");
 const CIEC_STRING GEN_CSV_WRITER::scmFileAlreadyOpened("File already opened");
 const CIEC_STRING GEN_CSV_WRITER::scmFileNotOpened("File not opened");
 
-void GEN_CSV_WRITER::executeEvent(int paEIID) {
+void GEN_CSV_WRITER::executeEvent(TEventID paEIID) {
   if(scm_nEventINITID == paEIID) {
     if(QI()) {
       openCSVFile();
@@ -70,7 +73,7 @@ bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfac
   const char *acPos = strrchr(paConfigString, '_');
   if(nullptr != acPos){
     acPos++;
-    paInterfaceSpec.m_nNumDIs = static_cast<TForteUInt8>(forte::core::util::strtoul(acPos, nullptr, 10) + 2); // we have in addition to the SDs a QI and FILE_NAME data inputs
+    paInterfaceSpec.m_nNumDIs = static_cast<TPortId>(forte::core::util::strtoul(acPos, nullptr, 10) + 2); // we have in addition to the SDs a QI and FILE_NAME data inputs
 
     m_anDataInputNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
     m_anDataInputTypeIds = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
@@ -150,7 +153,7 @@ void GEN_CSV_WRITER::writeCSVFileLine() {
   if(nullptr != mCSVFile) {
     char acBuffer[scmWriteBufferSize];
     for(int i = 2; i < m_pstInterfaceSpec->m_nNumDIs; i++) {
-      int nLen = getDI(i)->toString(acBuffer, scmWriteBufferSize);
+      int nLen = getDI(i)->unwrap().toString(acBuffer, scmWriteBufferSize);
       fwrite(acBuffer, 1, nLen, mCSVFile);
       fwrite("; ", 1, 2, mCSVFile);
     }

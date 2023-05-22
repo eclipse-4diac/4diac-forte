@@ -37,16 +37,15 @@ class CDevice : public CResource {
     CDeviceExecution mDeviceExecution;
 
   protected:
-    void executeEvent(int) override {
+    void executeEvent(TEventID) override {
     }
 
   public:
     /*! \brief Sets up all the necessary data and classes necessary for execution.
      *
      */
-    CDevice(const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData,
-        TForteByte *pa_acFBVarsData) :
-        CResource(pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData), mDeviceExecution(*this) {
+    CDevice(const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId) :
+        CResource(pa_pstInterfaceSpec, pa_nInstanceNameId), mDeviceExecution(*this) {
     }
 
     ~CDevice() override = default;

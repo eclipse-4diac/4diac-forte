@@ -74,14 +74,14 @@ inline const CIEC_WORD func_UINT_TO_WORD(const CIEC_UINT &paVal) {
   return CIEC_ANY::cast<CIEC_WORD>(paVal);
 }
 
-inline const CIEC_STRING func_UINT_TO_STRING(const CIEC_UINT &paVal) {
+inline const CIEC_STRING func_UINT_AS_STRING(const CIEC_UINT &paVal) {
   CIEC_STRING string;
   stringConverter(string, paVal);
   return string;
 }
 
 #ifdef FORTE_USE_WSTRING_DATATYPE
-inline const CIEC_WSTRING func_UINT_TO_WSTRING(const CIEC_UINT &paVal){
+inline const CIEC_WSTRING func_UINT_AS_WSTRING(const CIEC_UINT &paVal){
   CIEC_WSTRING string;
   stringConverter(string, paVal);
   return string;
