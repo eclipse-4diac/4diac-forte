@@ -25,9 +25,11 @@
 #include "forte_bool.h"
 #include "forte_byte.h"
 #include "forte_word.h"
-#include <limits>
 
 #include "forte_any_int.h"
+#include "forte_any_bit_partial.h"
+
+#include <limits>
 
 /*!\ingroup COREDTS CIEC_DWORD represents the dword data type according to IEC 61131.
  */
@@ -37,8 +39,8 @@ class CIEC_DWORD : public CIEC_ANY_BIT {
   public:
     typedef TForteDWord TValueType;
 
-    static const TValueType scm_nMinVal = 0;
-    static const TValueType scm_nMaxVal;
+    static constexpr TValueType scm_nMinVal = std::numeric_limits<CIEC_DWORD::TValueType>::min();
+    static constexpr TValueType scm_nMaxVal = std::numeric_limits<CIEC_DWORD::TValueType>::max();
 
     CIEC_DWORD() = default;
 
@@ -69,25 +71,25 @@ class CIEC_DWORD : public CIEC_ANY_BIT {
 
     CIEC_DWORD& operator =(const CIEC_DWORD &paValue) {
       // Simple value assignment - no self assignment check needed
-      setValue(paValue);
+      setValueSimple(paValue);
       return *this;
     }
 
     CIEC_DWORD& operator =(const CIEC_WORD &paValue) {
       // Simple value assignment - no self assignment check needed
-      setValue(paValue);
+      setValueSimple(paValue);
       return *this;
     }
 
     CIEC_DWORD& operator =(const CIEC_BYTE &paValue) {
       // Simple value assignment - no self assignment check needed
-      setValue(paValue);
+      setValueSimple(paValue);
       return *this;
     }
 
     CIEC_DWORD &operator=(const CIEC_BOOL &paValue) {
       // Simple value assignment - no self assignment check needed
-      setValue(paValue);
+      setValueSimple(paValue);
       return *this;
     }
 
@@ -110,13 +112,13 @@ class CIEC_DWORD : public CIEC_ANY_BIT {
     /*! \brief Partial access within a CIEC_DWORD (e.g. [DWORD].partial<CIEC_BOOL>(1))
      *
      */
-    template <class T> PARTIAL_ACCESS<T, CIEC_DWORD> partial(size_t paIndex) {
-      return PARTIAL_ACCESS<T,CIEC_DWORD>(*this, paIndex);
+    template <class T> CIEC_ANY_BIT_PARTIAL<T, CIEC_DWORD> partial(size_t paIndex) {
+      return CIEC_ANY_BIT_PARTIAL<T, CIEC_DWORD>(*this, paIndex);
     }
 
-    template <class T> PARTIAL_ACCESS<T, CIEC_DWORD> partial(const CIEC_ANY_INT& paIndex){
+    template <class T> CIEC_ANY_BIT_PARTIAL<T, CIEC_DWORD> partial(const CIEC_ANY_INT& paIndex){
       size_t index = paIndex.getUnsignedValue();
-      return PARTIAL_ACCESS<T, CIEC_DWORD>(*this, index);
+      return CIEC_ANY_BIT_PARTIAL<T, CIEC_DWORD>(*this, index);
     }
 };
 

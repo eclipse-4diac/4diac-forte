@@ -24,9 +24,11 @@
 #include "forte_any_bit.h"
 #include "forte_bool.h"
 #include "forte_byte.h"
-#include <limits>
 
 #include "forte_any_int.h"
+#include "forte_any_bit_partial.h"
+
+#include <limits>
 
 /*!\ingroup COREDTS CIEC_WORD represents the word data type according to IEC 61131.
  */
@@ -36,8 +38,8 @@ class CIEC_WORD : public CIEC_ANY_BIT{
   public:
     typedef TForteWord TValueType;
 
-    static const TValueType scm_nMinVal = 0;
-    static const TValueType scm_nMaxVal;
+    static constexpr TValueType scm_nMinVal = std::numeric_limits<CIEC_WORD::TValueType>::min();
+    static constexpr TValueType scm_nMaxVal = std::numeric_limits<CIEC_WORD::TValueType>::max();
 
     CIEC_WORD() = default;
 
@@ -63,19 +65,19 @@ class CIEC_WORD : public CIEC_ANY_BIT{
 
     CIEC_WORD& operator =(const CIEC_WORD &paValue) {
       // Simple value assignment - no self assignment check needed
-      setValue(paValue);
+      setValueSimple(paValue);
       return *this;
     }
 
     CIEC_WORD& operator =(const CIEC_BYTE &paValue) {
       // Simple value assignment - no self assignment check needed
-      setValue(paValue);
+      setValueSimple(paValue);
       return *this;
     }
 
     CIEC_WORD &operator=(const CIEC_BOOL &paValue) {
       // Simple value assignment - no self assignment check needed
-      setValue(paValue);
+      setValueSimple(paValue);
       return *this;
     }
 
@@ -98,13 +100,13 @@ class CIEC_WORD : public CIEC_ANY_BIT{
     /*! \brief Partial access within a CIEC_WORD (e.g. [WORD].partial<CIEC_BOOL>(1))
      *
      */
-    template <class T> PARTIAL_ACCESS<T, CIEC_WORD> partial(size_t paIndex) {
-      return PARTIAL_ACCESS<T,CIEC_WORD>(*this, paIndex);
+    template <class T> CIEC_ANY_BIT_PARTIAL<T, CIEC_WORD> partial(size_t paIndex) {
+      return CIEC_ANY_BIT_PARTIAL<T, CIEC_WORD>(*this, paIndex);
     }
 
-    template <class T> PARTIAL_ACCESS<T, CIEC_WORD> partial(const CIEC_ANY_INT& paIndex){
+    template <class T> CIEC_ANY_BIT_PARTIAL<T, CIEC_WORD> partial(const CIEC_ANY_INT& paIndex){
       size_t index = paIndex.getUnsignedValue();
-      return PARTIAL_ACCESS<T, CIEC_WORD>(*this, index);
+      return CIEC_ANY_BIT_PARTIAL<T, CIEC_WORD>(*this, index);
     }
 };
 

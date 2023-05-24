@@ -16,11 +16,8 @@
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "forte_byte_gen.cpp"
 #endif
-#include <limits>
 
 DEFINE_FIRMWARE_DATATYPE(BYTE, g_nStringIdBYTE)
-
-const CIEC_BYTE::TValueType CIEC_BYTE::scm_nMaxVal = std::numeric_limits<CIEC_BYTE::TValueType>::max();
 
 size_t CIEC_BYTE::getToStringBufferSize() const {
   return sizeof("255");
