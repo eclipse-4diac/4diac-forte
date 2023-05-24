@@ -427,13 +427,6 @@ BOOST_AUTO_TEST_SUITE(convert_functions)
     BOOST_TEST(
       timeInNs == static_cast<CIEC_LREAL>(INT64_C(172800000000000) + INT64_C(18000000000000) + INT64_C(2580000000000) + INT64_C(12000000000) + INT64_C(44000000) + INT64_C(27000) + INT64_C(31)));
   }
-
-  BOOST_AUTO_TEST_CASE(USINT_TO_BCD_BYTE) {
-    CIEC_USINT number11(11);
-    CIEC_BYTE result;
-    result = func_USINT_TO_BCD_BYTE(number11);
-    BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(result) == 0x11);
-  }
   
   /**** BYTE_BCD_TO_* ****/
   BOOST_AUTO_TEST_CASE(BYTE_BCD_TO_USINT) {
@@ -749,6 +742,250 @@ BOOST_AUTO_TEST_SUITE(convert_functions)
     BOOST_TEST(static_cast<ResultType::TValueType>(result) == 256);
     result = func_LWORD_BCD_TO_ULINT(source5);
     BOOST_TEST(static_cast<ResultType::TValueType>(result) == 257);
+  }
+
+  /**** USINT_TO_BCD_* ****/
+  BOOST_AUTO_TEST_CASE(USINT_TO_BCD_BYTE) {
+    using SourceType = CIEC_USINT;
+    using ResultType = CIEC_BYTE;
+    SourceType number1(11);
+    SourceType number2(99);
+    SourceType number3(101);
+    CIEC_BYTE result;
+    result = func_USINT_TO_BCD_BYTE(number1);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x11);
+    result = func_USINT_TO_BCD_BYTE(number2);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x99);
+    result = func_USINT_TO_BCD_BYTE(number3);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x01);
+  }
+
+  BOOST_AUTO_TEST_CASE(USINT_TO_BCD_WORD) {
+    using SourceType = CIEC_USINT;
+    using ResultType = CIEC_WORD;
+    SourceType number1(11);
+    SourceType number2(99);
+    SourceType number3(101);
+    ResultType result;
+    result = func_USINT_TO_BCD_WORD(number1);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x11);
+    result = func_USINT_TO_BCD_WORD(number2);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x99);
+    result = func_USINT_TO_BCD_WORD(number3);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x101);
+  }
+
+  BOOST_AUTO_TEST_CASE(USINT_TO_BCD_DWORD) {
+    using SourceType = CIEC_USINT;
+    using ResultType = CIEC_DWORD;
+    SourceType number1(11);
+    SourceType number2(99);
+    SourceType number3(101);
+    ResultType result;
+    result = func_USINT_TO_BCD_DWORD(number1);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x11);
+    result = func_USINT_TO_BCD_DWORD(number2);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x99);
+    result = func_USINT_TO_BCD_DWORD(number3);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x101);
+  }
+
+  BOOST_AUTO_TEST_CASE(USINT_TO_BCD_LWORD) {
+    using SourceType = CIEC_USINT;
+    using ResultType = CIEC_LWORD;
+    SourceType number1(11);
+    SourceType number2(99);
+    SourceType number3(101);
+    ResultType result;
+    result = func_USINT_TO_BCD_LWORD(number1);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x11);
+    result = func_USINT_TO_BCD_LWORD(number2);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x99);
+    result = func_USINT_TO_BCD_LWORD(number3);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x101);
+  }
+
+  /**** UINT_TO_BCD_* ****/
+  BOOST_AUTO_TEST_CASE(UINT_TO_BCD_BYTE) {
+    using SourceType = CIEC_UINT;
+    using ResultType = CIEC_BYTE;
+    SourceType number1(11);
+    SourceType number2(99);
+    SourceType number3(101);
+    CIEC_BYTE result;
+    result = func_UINT_TO_BCD_BYTE(number1);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x11);
+    result = func_UINT_TO_BCD_BYTE(number2);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x99);
+    result = func_UINT_TO_BCD_BYTE(number3);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x01);
+  }
+  
+  BOOST_AUTO_TEST_CASE(UINT_TO_BCD_WORD) {
+    using SourceType = CIEC_UINT;
+    using ResultType = CIEC_WORD;
+    SourceType number1(11);
+    SourceType number2(99);
+    SourceType number3(101);
+    ResultType result;
+    result = func_UINT_TO_BCD_WORD(number1);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x11);
+    result = func_UINT_TO_BCD_WORD(number2);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x99);
+    result = func_UINT_TO_BCD_WORD(number3);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x101);
+  }
+
+  BOOST_AUTO_TEST_CASE(UINT_TO_BCD_DWORD) {
+    using SourceType = CIEC_UINT;
+    using ResultType = CIEC_DWORD;
+    SourceType number1(11);
+    SourceType number2(99);
+    SourceType number3(101);
+    ResultType result;
+    result = func_UINT_TO_BCD_DWORD(number1);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x11);
+    result = func_UINT_TO_BCD_DWORD(number2);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x99);
+    result = func_UINT_TO_BCD_DWORD(number3);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x101);
+  }
+
+  BOOST_AUTO_TEST_CASE(UINT_TO_BCD_LWORD) {
+    using SourceType = CIEC_UINT;
+    using ResultType = CIEC_LWORD;
+    SourceType number1(11);
+    SourceType number2(99);
+    SourceType number3(101);
+    ResultType result;
+    result = func_UINT_TO_BCD_LWORD(number1);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x11);
+    result = func_UINT_TO_BCD_LWORD(number2);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x99);
+    result = func_UINT_TO_BCD_LWORD(number3);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x101);
+  }
+
+  /**** UDINT_TO_BCD_* ****/
+  BOOST_AUTO_TEST_CASE(UDINT_TO_BCD_BYTE) {
+    using SourceType = CIEC_UDINT;
+    using ResultType = CIEC_BYTE;
+    SourceType number1(11);
+    SourceType number2(99);
+    SourceType number3(101);
+    CIEC_BYTE result;
+    result = func_UDINT_TO_BCD_BYTE(number1);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x11);
+    result = func_UDINT_TO_BCD_BYTE(number2);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x99);
+    result = func_UDINT_TO_BCD_BYTE(number3);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x01);
+  }
+  
+  BOOST_AUTO_TEST_CASE(UDINT_TO_BCD_WORD) {
+    using SourceType = CIEC_UDINT;
+    using ResultType = CIEC_WORD;
+    SourceType number1(11);
+    SourceType number2(99);
+    SourceType number3(101);
+    ResultType result;
+    result = func_UDINT_TO_BCD_WORD(number1);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x11);
+    result = func_UDINT_TO_BCD_WORD(number2);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x99);
+    result = func_UDINT_TO_BCD_WORD(number3);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x101);
+  }
+
+  BOOST_AUTO_TEST_CASE(UDINT_TO_BCD_DWORD) {
+    using SourceType = CIEC_UDINT;
+    using ResultType = CIEC_DWORD;
+    SourceType number1(11);
+    SourceType number2(99);
+    SourceType number3(101);
+    ResultType result;
+    result = func_UDINT_TO_BCD_DWORD(number1);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x11);
+    result = func_UDINT_TO_BCD_DWORD(number2);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x99);
+    result = func_UDINT_TO_BCD_DWORD(number3);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x101);
+  }
+
+  BOOST_AUTO_TEST_CASE(UDINT_TO_BCD_LWORD) {
+    using SourceType = CIEC_UDINT;
+    using ResultType = CIEC_LWORD;
+    SourceType number1(11);
+    SourceType number2(99);
+    SourceType number3(101);
+    ResultType result;
+    result = func_UDINT_TO_BCD_LWORD(number1);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x11);
+    result = func_UDINT_TO_BCD_LWORD(number2);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x99);
+    result = func_UDINT_TO_BCD_LWORD(number3);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x101);
+  }
+
+    /**** ULINT_TO_BCD_* ****/
+  BOOST_AUTO_TEST_CASE(ULINT_TO_BCD_BYTE) {
+    using SourceType = CIEC_ULINT;
+    using ResultType = CIEC_BYTE;
+    SourceType number1(11);
+    SourceType number2(99);
+    SourceType number3(101);
+    CIEC_BYTE result;
+    result = func_ULINT_TO_BCD_BYTE(number1);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x11);
+    result = func_ULINT_TO_BCD_BYTE(number2);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x99);
+    result = func_ULINT_TO_BCD_BYTE(number3);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x01);
+  }
+  
+  BOOST_AUTO_TEST_CASE(ULINT_TO_BCD_WORD) {
+    using SourceType = CIEC_ULINT;
+    using ResultType = CIEC_WORD;
+    SourceType number1(11);
+    SourceType number2(99);
+    SourceType number3(101);
+    ResultType result;
+    result = func_ULINT_TO_BCD_WORD(number1);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x11);
+    result = func_ULINT_TO_BCD_WORD(number2);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x99);
+    result = func_ULINT_TO_BCD_WORD(number3);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x101);
+  }
+
+  BOOST_AUTO_TEST_CASE(ULINT_TO_BCD_DWORD) {
+    using SourceType = CIEC_ULINT;
+    using ResultType = CIEC_DWORD;
+    SourceType number1(11);
+    SourceType number2(99);
+    SourceType number3(101);
+    ResultType result;
+    result = func_ULINT_TO_BCD_DWORD(number1);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x11);
+    result = func_ULINT_TO_BCD_DWORD(number2);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x99);
+    result = func_ULINT_TO_BCD_DWORD(number3);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x101);
+  }
+
+  BOOST_AUTO_TEST_CASE(ULINT_TO_BCD_LWORD) {
+    using SourceType = CIEC_ULINT;
+    using ResultType = CIEC_LWORD;
+    SourceType number1(11);
+    SourceType number2(99);
+    SourceType number3(101);
+    ResultType result;
+    result = func_ULINT_TO_BCD_LWORD(number1);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x11);
+    result = func_ULINT_TO_BCD_LWORD(number2);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x99);
+    result = func_ULINT_TO_BCD_LWORD(number3);
+    BOOST_TEST(static_cast<ResultType::TValueType>(result) == 0x101);
   }
 
   BOOST_AUTO_TEST_SUITE_END()

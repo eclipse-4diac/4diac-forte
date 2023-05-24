@@ -116,33 +116,92 @@ inline const CIEC_ULINT func_LWORD_BCD_TO_ULINT(const CIEC_LWORD &paVal) {
 //   **_TO_BCD_*  functions
 //********************************************************************************************
 
+template<typename U, typename T>
+const U func_TO_BCD(const T& paVal) {
+  static_assert(std::is_base_of_v<CIEC_ANY_BIT, U>);
+  static_assert(std::is_base_of_v<CIEC_ANY_INT, T>);
+  using SourcePrimitive = typename T::TValueType;
+  using TargetPrimitive = typename U::TValueType;
+  constexpr size_t targetWidth = sizeof(TargetPrimitive);
+
+  SourcePrimitive sourceValue = static_cast<SourcePrimitive>(paVal);
+  SourcePrimitive divisor = 10;
+
+  TargetPrimitive bcdValue = 0;
+  for(size_t i = 0; i < targetWidth; ++i) {
+    bcdValue += static_cast<TargetPrimitive>((sourceValue % divisor) << (i * 8));
+    sourceValue /= divisor;
+    bcdValue += static_cast<TargetPrimitive>((sourceValue % divisor) << (i * 8 + 4));
+    sourceValue /= divisor;
+  }
+  return U(bcdValue);
+}
+
 inline const CIEC_BYTE func_USINT_TO_BCD_BYTE(const CIEC_USINT &paVal) {
-  const CIEC_USINT::TValueType valuePrimitive = static_cast<CIEC_USINT::TValueType>(paVal);
-  return CIEC_BYTE(static_cast<CIEC_BYTE::TValueType>(valuePrimitive / 10 * 16 + valuePrimitive % 10));
-  //return func_TO_BCD<CIEC_BYTE>(paVal);
+  return func_TO_BCD<CIEC_BYTE>(paVal);
+}
+
+inline const CIEC_WORD func_USINT_TO_BCD_WORD(const CIEC_USINT &paVal) {
+  return func_TO_BCD<CIEC_WORD>(paVal);
+}
+
+inline const CIEC_DWORD func_USINT_TO_BCD_DWORD(const CIEC_USINT &paVal) {
+  return func_TO_BCD<CIEC_DWORD>(paVal);
+}
+
+inline const CIEC_LWORD func_USINT_TO_BCD_LWORD(const CIEC_USINT &paVal) {
+  return func_TO_BCD<CIEC_LWORD>(paVal);
+}
+
+/**** UINT_TO_BCD_* ****/
+inline const CIEC_BYTE func_UINT_TO_BCD_BYTE(const CIEC_UINT &paVal) {
+  return func_TO_BCD<CIEC_BYTE>(paVal);
 }
 
 inline const CIEC_WORD func_UINT_TO_BCD_WORD(const CIEC_UINT &paVal) {
-  const CIEC_UINT::TValueType primitiveValue = static_cast<CIEC_UINT::TValueType>(paVal);
-  const CIEC_WORD::TValueType lowerDigits = static_cast<CIEC_WORD::TValueType>(func_USINT_TO_BCD_BYTE(CIEC_USINT(static_cast<CIEC_USINT::TValueType>(primitiveValue / 100)))) << 8;
-  const CIEC_WORD::TValueType upperDigits = static_cast<CIEC_WORD::TValueType>(func_USINT_TO_BCD_BYTE(CIEC_USINT(static_cast<CIEC_USINT::TValueType>(primitiveValue % 100))));
+  return func_TO_BCD<CIEC_WORD>(paVal);
+}
 
-  return CIEC_WORD(lowerDigits + upperDigits);
+inline const CIEC_DWORD func_UINT_TO_BCD_DWORD(const CIEC_UINT &paVal) {
+  return func_TO_BCD<CIEC_DWORD>(paVal);
+}
+
+inline const CIEC_LWORD func_UINT_TO_BCD_LWORD(const CIEC_UINT &paVal) {
+  return func_TO_BCD<CIEC_LWORD>(paVal);
+}
+
+/**** UDINT_TO_BCD_* ****/
+inline const CIEC_BYTE func_UDINT_TO_BCD_BYTE(const CIEC_UDINT &paVal) {
+  return func_TO_BCD<CIEC_BYTE>(paVal);
+}
+
+inline const CIEC_WORD func_UDINT_TO_BCD_WORD(const CIEC_UDINT &paVal) {
+  return func_TO_BCD<CIEC_WORD>(paVal);
 }
 
 inline const CIEC_DWORD func_UDINT_TO_BCD_DWORD(const CIEC_UDINT &paVal) {
-  const CIEC_UDINT::TValueType primitiveValue = static_cast<CIEC_UDINT::TValueType>(paVal);
-  const CIEC_DWORD::TValueType upperDigits = static_cast<CIEC_DWORD::TValueType>(func_UINT_TO_BCD_WORD(CIEC_UINT(static_cast<CIEC_UINT::TValueType>(primitiveValue / 10000)))) << 16;
-  const CIEC_DWORD::TValueType lowerDigits = static_cast<CIEC_DWORD::TValueType>(func_UINT_TO_BCD_WORD(CIEC_UINT(static_cast<CIEC_UINT::TValueType>(primitiveValue % 10000))));
-  return CIEC_DWORD(upperDigits + lowerDigits);
+  return func_TO_BCD<CIEC_DWORD>(paVal);
+}
+
+inline const CIEC_LWORD func_UDINT_TO_BCD_LWORD(const CIEC_UDINT &paVal) {
+  return func_TO_BCD<CIEC_LWORD>(paVal);
+}
+
+/**** ULINT_TO_BCD_* ****/
+inline const CIEC_BYTE func_ULINT_TO_BCD_BYTE(const CIEC_ULINT &paVal) {
+  return func_TO_BCD<CIEC_BYTE>(paVal);
+}
+
+inline const CIEC_WORD func_ULINT_TO_BCD_WORD(const CIEC_ULINT &paVal) {
+  return func_TO_BCD<CIEC_WORD>(paVal);
+}
+
+inline const CIEC_DWORD func_ULINT_TO_BCD_DWORD(const CIEC_ULINT &paVal) {
+  return func_TO_BCD<CIEC_DWORD>(paVal);
 }
 
 inline const CIEC_LWORD func_ULINT_TO_BCD_LWORD(const CIEC_ULINT &paVal) {
-  const CIEC_ULINT::TValueType primitiveValue = static_cast<CIEC_ULINT::TValueType>(paVal);
-  const CIEC_LWORD::TValueType upperDigits = static_cast<CIEC_LWORD::TValueType>(func_UDINT_TO_BCD_DWORD(CIEC_UDINT(static_cast<CIEC_UDINT::TValueType>(primitiveValue / 100000000)))) << 32;
-  const CIEC_LWORD::TValueType lowerDigits = static_cast<CIEC_LWORD::TValueType>(func_UDINT_TO_BCD_DWORD(CIEC_UDINT(static_cast<CIEC_UDINT::TValueType>(primitiveValue % 100000000))));
-
-  return CIEC_LWORD(upperDigits + lowerDigits);
+  return func_TO_BCD<CIEC_LWORD>(paVal);
 }
 
 #endif /* SRC_CORE_DATATYPES_CONVERT_BCDCONVERTFUNCTIONS_H_ */
