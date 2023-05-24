@@ -63,7 +63,7 @@ void CFakeTimerHandler::startOutputEvent() {
   if(fakeSleepFb) {
     CEventChainExecutionThread *execThread = getExecThread();
     if(execThread) {
-        fakeSleepFb->receiveInputEvent(-1, execThread);
+        fakeSleepFb->receiveInputEvent(cg_nExternalEventID, execThread);
         execThread->resumeSelfSuspend();
     }
   }
