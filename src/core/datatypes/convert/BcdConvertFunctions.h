@@ -44,8 +44,30 @@ const U func_BCD_TO(const T& paVal) {
   return U(targetValue);
 }
 
+/**** *_BCD_TO_* ****/
+template<typename T>
+const CIEC_USINT func_BCD_TO_USINT(const T &paVal) {
+  return func_BCD_TO<CIEC_USINT>(paVal);
+}
+
+template<typename T>
+const CIEC_UINT func_BCD_TO_UINT(const T &paVal) {
+  return func_BCD_TO<CIEC_UINT>(paVal);
+}
+
+template<typename T>
+const CIEC_UDINT func_BCD_TO_UDINT(const T &paVal) {
+  return func_BCD_TO<CIEC_UDINT>(paVal);
+}
+
+template<typename T>
+const CIEC_ULINT func_BCD_TO_ULINT(const T &paVal) {
+  return func_BCD_TO<CIEC_ULINT>(paVal);
+}
+
 /**** BYTE_BCD_TO_* ****/
-inline const CIEC_USINT func_BYTE_BCD_TO_USINT(const CIEC_BYTE &paVal) {
+inline const CIEC_USINT func_BYTE_BCD_TO_USINT(const CIEC_BYTE &paVal)
+{
   return func_BCD_TO<CIEC_USINT>(paVal);
 }
 
@@ -137,6 +159,28 @@ const U func_TO_BCD(const T& paVal) {
   return U(bcdValue);
 }
 
+/**** *_TO_BCD_* ****/
+template<typename T>
+const CIEC_BYTE func_TO_BCD_BYTE(const T &paVal) {
+  return func_TO_BCD<CIEC_BYTE>(paVal);
+}
+
+template<typename T>
+const CIEC_WORD func_TO_BCD_WORD(const T &paVal) {
+  return func_TO_BCD<CIEC_WORD>(paVal);
+}
+
+template<typename T>
+const CIEC_DWORD func_TO_BCD_DWORD(const T &paVal) {
+  return func_TO_BCD<CIEC_DWORD>(paVal);
+}
+
+template<typename T>
+const CIEC_LWORD func_TO_BCD_LWORD(const T &paVal) {
+  return func_TO_BCD<CIEC_LWORD>(paVal);
+}
+
+/**** USINT_TO_BCD_* ****/
 inline const CIEC_BYTE func_USINT_TO_BCD_BYTE(const CIEC_USINT &paVal) {
   return func_TO_BCD<CIEC_BYTE>(paVal);
 }
