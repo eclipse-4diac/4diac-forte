@@ -46,7 +46,7 @@ namespace forte {
          */
         EMGMResponse addFB(CFunctionBlock *pa_poFuncBlock);
 
-        typedef CSinglyLinkedList<CFunctionBlock *> TFunctionBlockList;
+        typedef std::vector<CFunctionBlock *> TFunctionBlockList;
 
         TFunctionBlockList &getFBList(){
           return mFunctionBlocks;
@@ -83,6 +83,9 @@ namespace forte {
          *
          */
         CFunctionBlock *getFB(CStringDictionary::TStringId paFBName);
+        TFunctionBlockList::iterator getFBIterator(CStringDictionary::TStringId paFBName);
+        bool fBIteratorIsValid(TFunctionBlockList::iterator iterator, CStringDictionary::TStringId paFBName);
+
         CFBContainer *getFBContainer(CStringDictionary::TStringId paContainerName);
         TFBContainerList::iterator getFBContainerIterator(CStringDictionary::TStringId paContainerName);
 

@@ -338,7 +338,7 @@ EMGMResponse CResource::queryAllAdapterTypes(CIEC_STRING & paValue){
 
 EMGMResponse CResource::queryFBs(CIEC_STRING & paValue){
 
-  for(TFunctionBlockList::Iterator itRunner(getFBList().begin()); itRunner != getFBList().end(); ++itRunner){
+  for(TFunctionBlockList::iterator itRunner = getFBList().begin(); itRunner != getFBList().end(); ++itRunner){
     if(itRunner != getFBList().begin()){
       paValue.append("\n");
     }
@@ -360,7 +360,7 @@ EMGMResponse CResource::querySubapps(CIEC_STRING & paValue, CFBContainer& contai
     }
     subapp_prefix += CStringDictionary::getInstance().get(subapp->getName());
 
-    for(TFunctionBlockList::Iterator itRunner2(subapp->getFBList().begin()); itRunner2 != subapp->getFBList().end(); ++itRunner2){
+    for(TFunctionBlockList::iterator itRunner2 = subapp->getFBList().begin(); itRunner2 != subapp->getFBList().end(); ++itRunner2){
 
       std::string fullFBName = (static_cast<CFunctionBlock *>(*itRunner2))->getInstanceName();
       fullFBName = "." + fullFBName;
@@ -380,7 +380,7 @@ EMGMResponse CResource::querySubapps(CIEC_STRING & paValue, CFBContainer& contai
 EMGMResponse CResource::queryConnections(CIEC_STRING & paReqResult, CFBContainer& container){
 
   EMGMResponse retVal = EMGMResponse::UnsupportedType;
-  for(TFunctionBlockList::Iterator itRunner2(container.getFBList().begin()); itRunner2 != container.getFBList().end(); ++itRunner2){ 
+  for(TFunctionBlockList::iterator itRunner2 = container.getFBList().begin(); itRunner2 != container.getFBList().end(); ++itRunner2){
     createEOConnectionResponse(**itRunner2, paReqResult);
     createDOConnectionResponse(**itRunner2, paReqResult);
     createAOConnectionResponse(**itRunner2, paReqResult);

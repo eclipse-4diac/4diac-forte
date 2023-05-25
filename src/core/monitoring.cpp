@@ -146,7 +146,7 @@ EMGMResponse CMonitoringHandler::readWatches(CIEC_STRING &paResponse){
   paResponse.clear();
   if(nullptr == mResource.getResourcePtr()){
     //we are in the device
-    for(CFBContainer::TFunctionBlockList::Iterator itRunner = mResource.getFBList().begin();
+    for(CFBContainer::TFunctionBlockList::iterator itRunner = mResource.getFBList().begin();
         itRunner != mResource.getFBList().end();
         ++itRunner){
       ((CResource*) (*itRunner))->getMonitoringHandler().readResourceWatches(paResponse);
