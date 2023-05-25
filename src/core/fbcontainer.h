@@ -52,7 +52,7 @@ namespace forte {
           return mFunctionBlocks;
         }
 
-        typedef CSinglyLinkedList<CFBContainer *> TFBContainerList;
+        typedef std::vector<CFBContainer *> TFBContainerList;
 
         TFBContainerList &getSubContainerList(){
           return mSubContainers;
@@ -84,6 +84,7 @@ namespace forte {
          */
         CFunctionBlock *getFB(CStringDictionary::TStringId paFBName);
         CFBContainer *getFBContainer(CStringDictionary::TStringId paContainerName);
+        TFBContainerList::iterator getFBContainerIterator(CStringDictionary::TStringId paContainerName);
 
         //! Change the execution state of all contained FBs and also recursively in all contained containers
         EMGMResponse changeContainedFBsExecutionState(EMGMCommandType paCommand);

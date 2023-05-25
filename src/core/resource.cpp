@@ -351,7 +351,7 @@ EMGMResponse CResource::queryFBs(CIEC_STRING & paValue){
 
 EMGMResponse CResource::querySubapps(CIEC_STRING & paValue, CFBContainer& container, const std::string prefix){
 
-  for(TFBContainerList::Iterator itRunner(container.getSubContainerList().begin()); itRunner != container.getSubContainerList().end(); ++itRunner){
+  for(TFBContainerList::iterator itRunner(container.getSubContainerList().begin()); itRunner != container.getSubContainerList().end(); ++itRunner){
     CFBContainer* subapp = (static_cast<CFBContainer*>(*itRunner));
     std::string subapp_prefix = prefix;
 
@@ -386,7 +386,7 @@ EMGMResponse CResource::queryConnections(CIEC_STRING & paReqResult, CFBContainer
     createAOConnectionResponse(**itRunner2, paReqResult);
   }
 
-  for(TFBContainerList::Iterator itRunner(container.getSubContainerList().begin()); itRunner != container.getSubContainerList().end(); ++itRunner) {
+  for(TFBContainerList::iterator itRunner(container.getSubContainerList().begin()); itRunner != container.getSubContainerList().end(); ++itRunner) {
     CFBContainer* subapp = (static_cast<CFBContainer*>(*itRunner));
     queryConnections(paReqResult,*subapp);
   }

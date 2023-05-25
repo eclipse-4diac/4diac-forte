@@ -43,10 +43,10 @@ CFBContainer::~CFBContainer() {
   }
   mFunctionBlocks.clearAll();
 
-  for (TFBContainerList::Iterator itRunner(mSubContainers.begin()); itRunner != mSubContainers.end(); ++itRunner) {
+  for (TFBContainerList::iterator itRunner(mSubContainers.begin()); itRunner != mSubContainers.end(); ++itRunner) {
     delete (*itRunner);
   }
-  mSubContainers.clearAll();
+  mSubContainers.clear();
 }
 
 EMGMResponse CFBContainer::addFB(CFunctionBlock* pa_poFuncBlock){
@@ -166,26 +166,37 @@ CFunctionBlock* CFBContainer::getContainedFB(forte::core::TNameIdentifier::CIter
 }
 
 CFBContainer* CFBContainer::getFBContainer(CStringDictionary::TStringId paContainerName)  {
-  CFBContainer *retVal = nullptr;
-
-  if(CStringDictionary::scm_nInvalidStringId != paContainerName){
-    for(TFBContainerList::Iterator it = mSubContainers.begin(); it != mSubContainers.end();
-        ++it){
-      if(paContainerName == ((*(*it)).getName())){
-        retVal = (*it);
-        break;
-      }
-    }
+  TFBContainerList::iterator it = getFBContainerIterator(paContainerName);
+  if(it != mSubContainers.end() && (*it)->getName() == paContainerName){
+    return *it;
   }
-  return retVal;
+  return nullptr;
 }
 
-CFBContainer *CFBContainer::findOrCreateContainer(CStringDictionary::TStringId paContainerName){
-  CFBContainer *retVal = getFBContainer(paContainerName);
-  if(nullptr == retVal && nullptr == getFB(paContainerName)) {
-    //the container with the given name does not exist but only create it if there is no FB with the same name.
+CFBContainer::TFBContainerList::iterator CFBContainer::getFBContainerIterator(CStringDictionary::TStringId paContainerName)  {
+  if(CStringDictionary::scm_nInvalidStringId != paContainerName && !mSubContainers.empty()){
+    TFBContainerList::iterator it = std::lower_bound(mSubContainers.begin(), mSubContainers.end(), paContainerName,
+                                                     [](CFBContainer* container, CStringDictionary::TStringId paContainerName)
+                                                     { return container->getName() < paContainerName; });
+      return it;
+  }
+  return mSubContainers.end();
+}
+
+CFBContainer *CFBContainer::findOrCreateContainer(CStringDictionary::TStringId paContainerName) {
+  CFBContainer *retVal;
+  if (mSubContainers.empty()) {
     retVal = new CFBContainer(paContainerName, this);
-    mSubContainers.pushBack(retVal);
+    mSubContainers.insert(mSubContainers.begin(), retVal);
+  } else {
+    TFBContainerList::iterator it = getFBContainerIterator(paContainerName);
+    if (nullptr == getFB(paContainerName) && (it == mSubContainers.end() || (*it)->getName() != paContainerName)) {
+      //the container with the given name does not exist but only create it if there is no FB with the same name.
+      retVal = new CFBContainer(paContainerName, this);
+      mSubContainers.insert(it, retVal);
+    } else {
+      retVal = (*it);
+    }
   }
   return retVal;
 }
@@ -193,7 +204,7 @@ CFBContainer *CFBContainer::findOrCreateContainer(CStringDictionary::TStringId p
 EMGMResponse CFBContainer::changeContainedFBsExecutionState(EMGMCommandType paCommand){
   EMGMResponse retVal = EMGMResponse::Ready;
 
-  for(TFBContainerList::Iterator it(mSubContainers.begin());
+  for(TFBContainerList::iterator it(mSubContainers.begin());
       ((it != mSubContainers.end()) && (EMGMResponse::Ready == retVal));
       ++it){
     retVal = (*it)->changeContainedFBsExecutionState(paCommand);
