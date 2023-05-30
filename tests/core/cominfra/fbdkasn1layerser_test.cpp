@@ -912,17 +912,14 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_MultiDatas){
   CIEC_BOOL *poBoolVal;
   CIEC_TIME *poTimeVal2;
 
-  TForteByte aoData[sizeof(CIEC_ANY) * 6];
-  CIEC_ANY *aoArray = reinterpret_cast<CIEC_ANY *>(aoData);
-
   TIEC_ANYPtr poArray[6];
 
-  poArray[0] = poTimeVal1 = new(reinterpret_cast<TForteByte *>(aoArray))CIEC_TIME();
-  poArray[1] = poWordVal = new(reinterpret_cast<TForteByte *>(aoArray + 1))CIEC_WORD();
-  poArray[2] = poStringVal = new(reinterpret_cast<TForteByte *>(aoArray + 2))CIEC_STRING();
-  poArray[3] = poIntVal = new(reinterpret_cast<TForteByte *>(aoArray  + 3))CIEC_INT();
-  poArray[4] = poBoolVal = new(reinterpret_cast<TForteByte *>(aoArray + 4))CIEC_BOOL();
-  poArray[5] = poTimeVal2 = new(reinterpret_cast<TForteByte *>(aoArray + 5))CIEC_TIME();
+  poArray[0] = poTimeVal1 = new CIEC_TIME();
+  poArray[1] = poWordVal = new CIEC_WORD();
+  poArray[2] = poStringVal = new CIEC_STRING();
+  poArray[3] = poIntVal = new CIEC_INT();
+  poArray[4] = poBoolVal = new CIEC_BOOL();
+  poArray[5] = poTimeVal2 = new CIEC_TIME();
 
   poTimeVal1->fromString("T#3000ms");
   *poWordVal = CIEC_WORD(40396);
@@ -940,11 +937,12 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_MultiDatas){
 
   TForteByte acSmallBuf[nSerSize - 1];
   BOOST_CHECK_EQUAL(nTestee.serializeDataPointArray(acSmallBuf, nSerSize - 2, const_cast<TConstIEC_ANYPtr *>(poArray), 6), -1);
-
-  //free memory
-  for(size_t i = 0; i < 6; ++i){
-    poArray[i]->~CIEC_ANY();
-  }
+  delete poTimeVal1;
+  delete poWordVal;
+  delete poStringVal;
+  delete poIntVal;
+  delete poBoolVal;
+  delete poTimeVal2;
 }
 
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_ARRAY){

@@ -25,13 +25,13 @@
 
 DEFINE_FIRMWARE_DATATYPE(STRING, g_nStringIdSTRING);
 
-int CIEC_STRING::fromString(const char *pa_pacValue){
-  int nSrcLen = determineEscapedStringLength(pa_pacValue, '\'');
+int CIEC_STRING::fromString(const char *paValue){
+  int nSrcLen = determineEscapedStringLength(paValue, '\'');
   int nSrcCappedLength = nSrcLen;
 
   if(0 < nSrcLen){
-    if((nSrcLen >= 7) && (0 == strncmp(pa_pacValue, "STRING#", 7))){
-      pa_pacValue += 7;
+    if((nSrcLen >= 7) && (0 == strncmp(paValue, "STRING#", 7))){
+      paValue += 7;
       nSrcCappedLength -= 7;
     }
 
@@ -40,13 +40,13 @@ int CIEC_STRING::fromString(const char *pa_pacValue){
     }
 
 
-    if (*pa_pacValue == '\'') {
+    if (*paValue == '\'') {
       reserve(static_cast<TForteUInt16>(nSrcCappedLength));
-      if(unescapeFromString(pa_pacValue, '\'') < 0) {
+      if(unescapeFromString(paValue, '\'') < 0) {
         return -1;
       }
     } else {
-      assign(pa_pacValue, static_cast<TForteUInt16>(nSrcCappedLength));
+      assign(paValue, static_cast<TForteUInt16>(nSrcCappedLength));
     }
   }
 
@@ -109,9 +109,9 @@ size_t CIEC_STRING::getToStringBufferSize() const {
 }
 
 #ifdef FORTE_UNICODE_SUPPORT
-int CIEC_STRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescape) {
+int CIEC_STRING::fromUTF8(const char *paValue, int paLen, bool paUnescape) {
 
-  int nSrcLen = pa_nLen >= 0 ? pa_nLen : (pa_bUnescape ? determineEscapedStringLength(pa_pacValue, '\'') : static_cast<int>(strlen(pa_pacValue)));
+  int nSrcLen = paLen >= 0 ? paLen : (paUnescape ? determineEscapedStringLength(paValue, '\'') : static_cast<int>(strlen(paValue)));
   int nSrcCappedLength = nSrcLen;
 
   if(0 <= nSrcLen){
@@ -128,7 +128,7 @@ int CIEC_STRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescap
     }
 
     unsigned int nMaxWidth;
-    int nLength = CUnicodeUtilities::checkUTF8(pa_pacValue, nSrcCappedLength, nMaxWidth);
+    int nLength = CUnicodeUtilities::checkUTF8(paValue, nSrcCappedLength, nMaxWidth);
     if (nLength < 0) {
       DEVLOG_WARNING("Invalid UTF-8 string given to fromString!\n");
       fromCharString("***INVALID UTF-8***");
@@ -143,11 +143,11 @@ int CIEC_STRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescap
     }
 
     TForteUInt32 nCodepoint;
-    const char *pRunner = pa_pacValue;
+    const char *pRunner = paValue;
     TForteByte *pEncBuffer = (TForteByte *) getValue();
     TForteByte *pEncRunner = pEncBuffer;
 
-    while (*pRunner && (pRunner-pa_pacValue) < nSrcCappedLength && (pEncRunner-pEncBuffer) < nLength) {
+    while (*pRunner && (pRunner-paValue) < nSrcCappedLength && (pEncRunner-pEncBuffer) < nLength) {
       int nRes;
       nRes = CUnicodeUtilities::parseUTF8Codepoint((const TForteByte *) pRunner, nCodepoint);
       pRunner += nRes;
@@ -163,7 +163,7 @@ int CIEC_STRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescap
     *pEncRunner = '\0';
     setLength(static_cast<TForteUInt16>(pEncRunner - pEncBuffer));
 
-    if (pa_bUnescape) {
+    if (paUnescape) {
       nLength = unescapeFromString(getValue(), '\'');
       if (nLength < 0) {
         return -1;
@@ -178,7 +178,7 @@ int CIEC_STRING::toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) cons
   size_t nNeededLength = paEscape ? 2 : 0; // Leading and trailing delimiter
   int nRes;
 
-  const unsigned char *pRunner = (const unsigned char *) getValue();
+  const unsigned char *pRunner = reinterpret_cast<const unsigned char *>(getValue());
   while (*pRunner) {
     nRes = CUnicodeUtilities::encodeUTF8Codepoint(nullptr, 0, (TForteUInt32) *pRunner);
     if (nRes < 0) {
@@ -206,7 +206,7 @@ int CIEC_STRING::toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) cons
     *pEncRunner++ = '\'';
   }
 
-  pRunner = (const unsigned char *) getValue();
+  pRunner = reinterpret_cast<const unsigned char *>(getValue());
   while (*pRunner) {
     nRes = CUnicodeUtilities::encodeUTF8Codepoint((TForteByte *) pEncRunner, static_cast<unsigned int>(pDataEnd - pEncRunner), (TForteUInt32) *pRunner);
     if(nRes == 1 && paEscape) {

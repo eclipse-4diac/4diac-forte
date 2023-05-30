@@ -275,7 +275,12 @@ EComResponse CCommFB::receiveData() {
 
   const unsigned int comInterruptQueueCountCopy = m_unComInterruptQueueCount;
   for (size_t i = 0; i < comInterruptQueueCountCopy; ++i) {
-    eResp = m_apoInterruptQueue[i]->processInterrupt();
+    if(m_apoInterruptQueue[i] == nullptr) {
+      DEVLOG_ERROR("Attempt to process nullptr in CommFB::receiveData");
+      eResp = e_Nothing;
+    } else {
+      eResp = m_apoInterruptQueue[i]->processInterrupt();
+    }
     if (eResp > eRetVal) {
       eRetVal = eResp;
     }

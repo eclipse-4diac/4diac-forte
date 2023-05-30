@@ -22,7 +22,7 @@ class CIEC_CHAR : public CIEC_ANY_CHAR{
   DECLARE_FIRMWARE_DATATYPE(CHAR)
 
   public:
-    typedef TForteChar TValueType;
+    using TValueType = TForteChar;
 
     static const TValueType scm_nMinVal = 0;
     static const TValueType scm_nMaxVal;

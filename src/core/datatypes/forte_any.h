@@ -65,13 +65,6 @@ class CIEC_ANY {
     typedef TForteUInt64 TLargestUIntValueType;
     typedef TForteInt64 TLargestIntValueType;
 
-    /* the following functions have to be added by hand as they the default DECLARE_FIRMWARE_DATATYPE and DEFINE_FIRMWARE_DATATYPE
-     * does not work here.
-     */
-    static CIEC_ANY *createDataType(TForteByte *pa_acDataBuf){
-      return (nullptr != pa_acDataBuf) ? new (pa_acDataBuf) CIEC_ANY : new CIEC_ANY;
-    }
-
     static int dummyInit();
 
     template<typename U, typename T>
@@ -146,9 +139,7 @@ class CIEC_ANY {
      *   This clone object is necessary for establishing data-connections.
      *   Pure virtual function implementation.
      */
-    virtual CIEC_ANY* clone(TForteByte *pa_acDataBuf) const {
-      return createDataType(pa_acDataBuf); //there is nothing to clone in any impl
-    }
+    virtual CIEC_ANY* clone(TForteByte *pa_acDataBuf) const = 0;
 
     /*! \brief Get data type id method
      *
@@ -190,7 +181,7 @@ class CIEC_ANY {
      *   \return number of bytes taken used from the buffer
      *        -1 on on error
      */
-    virtual int fromString(const char *pa_pacValue);
+    virtual int fromString(const char *pa_pacValue) = 0;
 
     /*! \brief Converts data type value to string
      *
@@ -198,12 +189,12 @@ class CIEC_ANY {
      *   to IEC61131 conform data type (string format).
      *   This function is necessary for communication with a proper engineering system.
      *   Pure virtual function implementation.
-     *   \param pa_pacValue buffer for storing the string representation
-     *   \param pa_nBufferSize size in bytes available in the buffer
+     *   \param paValue buffer for storing the string representation
+     *   \param paBufferSize size in bytes available in the buffer
      *   \return number of bytes used in the buffer without trailing 0x00
      *           -1 on error
      */
-    virtual int toString(char* paValue, size_t paBufferSize) const;
+    virtual int toString(char* paValue, size_t paBufferSize) const = 0;
 
     /*! \brief Compare for equality
      *
@@ -233,7 +224,7 @@ class CIEC_ANY {
 
     /*! \brief calculates buffer size needed for toString conversion
          */
-    virtual size_t getToStringBufferSize() const;
+    virtual size_t getToStringBufferSize() const = 0;
 
 #ifdef FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
     /*! \brief the following methods have to be implemented if a custom datatype is added to the forte which is not supported by the default seralize mechanism. */
@@ -467,10 +458,6 @@ class CIEC_ANY {
     }
 
     static CStringDictionary::TStringId parseTypeName(const char *pa_pacValue, const char *pa_pacHashPos);
-
-  private:
-    const static int scmMaxTypeNameLength = 14;
-    static const char scmAnyToStringResponse[];
 
   public:
     CIEC_ANY(const CIEC_ANY&) = delete;

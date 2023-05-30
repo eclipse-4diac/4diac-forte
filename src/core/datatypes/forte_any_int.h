@@ -28,27 +28,37 @@ class CIEC_ANY_INT : public CIEC_ANY_NUM{
 
     ~CIEC_ANY_INT() override = default;
 
-    bool isSigned() const{
+    CIEC_ANY *clone(TForteByte *) const override {
+      DEVLOG_ERROR("Attempt to call clone on CIEC_ANY_INT\n");
+      return nullptr;
+    }
+
+    bool isSigned() const {
       return e_LINT >= getDataTypeID();
     }
 
-    TLargestUIntValueType getUnsignedValue() const{
+    TLargestUIntValueType getUnsignedValue() const {
       return getLargestUInt();
     }
 
-    TLargestIntValueType getSignedValue() const{
+    TLargestIntValueType getSignedValue() const {
       return getLargestInt();
     }
 
-     void setSignedValue(TLargestIntValueType m_nVal){
+     void setSignedValue(TLargestIntValueType m_nVal) {
        setLargestInt(m_nVal);
      }
 
-     void setUnsignedValue(TLargestIntValueType m_nVal){
+     void setUnsignedValue(TLargestIntValueType m_nVal) {
        setLargestInt(m_nVal);
      }
 
     CIEC_ANY_INT() = default;
+
+    size_t getToStringBufferSize() const {
+      DEVLOG_ERROR("Calling CIEC_ANY_INT getToStringBufferSize is invalid!\n");
+      return 0;
+    }
 };
 
 #endif /*_MANY_INT_H_*/

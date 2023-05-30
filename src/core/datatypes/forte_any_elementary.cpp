@@ -116,7 +116,8 @@ int CIEC_ANY_ELEMENTARY::toString(char* paValue, size_t paBufferSize) const {
       bSigned = false;
       break;
     default:
-      return CIEC_ANY::toString(paValue, paBufferSize);
+      DEVLOG_ERROR("Attempt to call CIEC_ANY::toString in CIEC_ANY_ELEMENTARY\n");
+      return -1;
   }
 
   if(true == bSigned){
@@ -173,7 +174,8 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *paValue){
   }
 
   if(e_ANY == getDataTypeID()){
-    nRetVal = CIEC_ANY::fromString(paValue);
+    DEVLOG_ERROR("Attempt to call CIEC_ANY::fromString in CIEC_ANY_ELEMENTARY\n");
+    return -1;
     //TODO think of a check if it is really an any elementary that has been created
   }
   else{
