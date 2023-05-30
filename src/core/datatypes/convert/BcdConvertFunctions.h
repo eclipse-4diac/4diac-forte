@@ -66,8 +66,7 @@ const CIEC_ULINT func_BCD_TO_ULINT(const T &paVal) {
 }
 
 /**** BYTE_BCD_TO_* ****/
-inline const CIEC_USINT func_BYTE_BCD_TO_USINT(const CIEC_BYTE &paVal)
-{
+inline const CIEC_USINT func_BYTE_BCD_TO_USINT(const CIEC_BYTE &paVal) {
   return func_BCD_TO<CIEC_USINT>(paVal);
 }
 
