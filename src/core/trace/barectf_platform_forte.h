@@ -25,7 +25,7 @@
 class BarectfPlatformFORTE final {
 private:
     std::ofstream output;
-    std::unique_ptr<std::uint8_t []> buffer;
+    std::unique_ptr<uint8_t []> buffer;
     barectf_default_ctx context;
 
     static uint64_t getClock(void *const data);

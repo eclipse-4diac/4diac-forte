@@ -46,7 +46,7 @@ const struct barectf_platform_callbacks BarectfPlatformFORTE::barectfCallbacks =
 
 BarectfPlatformFORTE::BarectfPlatformFORTE(std::string filename, size_t bufferSize) : output(filename,
                                                                                              std::ios::binary),
-                                                                                      buffer(new std::uint8_t[bufferSize]) {
+                                                                                      buffer(new uint8_t[bufferSize]) {
   barectf_init(&context, buffer.get(), static_cast<uint32_t>(bufferSize), barectfCallbacks, this);
   openPacket(this);
 }
