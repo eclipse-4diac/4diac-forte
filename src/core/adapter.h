@@ -31,10 +31,10 @@ class CAdapterConnection;
 
 #define FORTE_ADAPTER_DATA_ARRAY(a_nNumEIs, a_nNumEOs, a_nNumDIs, a_nNumDOs, a_nNumAdapters) \
   union{ \
-    TForteByte m_anFBConnData[0]; \
+    TForteByte m_anFBConnData[1]; \
   };\
   union{ \
-    TForteByte m_anFBVarsData[0]; \
+    TForteByte m_anFBVarsData[1]; \
   };
 
 /*!\ingroup CORE\brief Class for handling adapters.

@@ -63,10 +63,10 @@ namespace forte {
  */
 #define FORTE_FB_DATA_ARRAY(a_nNumEOs, a_nNumDIs, a_nNumDOs, a_nNumAdapters) \
   union{ \
-    TForteByte m_anFBConnData[0]; \
+    TForteByte m_anFBConnData[1]; \
   };\
   union{ \
-    TForteByte m_anFBVarsData[0]; \
+    TForteByte m_anFBVarsData[1]; \
   };
 #endif
 
