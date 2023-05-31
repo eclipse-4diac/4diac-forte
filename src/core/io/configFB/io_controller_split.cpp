@@ -21,8 +21,8 @@ TControllerList IOConfigFBSplitController::mInstances;
 TForteUInt16 IOConfigFBSplitController::mInstancesIncrement = 0;
 
 IOConfigFBSplitController::IOConfigFBSplitController(const TForteUInt8* const paSplitAdapter, const TForteUInt8 paSplitAdapterNum, CResource *paSrcRes,
-    const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-    IOConfigFBController(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), scmSplitAdapter(paSplitAdapter),
+    const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+    IOConfigFBController(paSrcRes, paInterfaceSpec, paInstanceNameId), scmSplitAdapter(paSplitAdapter),
         scmSplitAdapterNum(paSplitAdapterNum), mSplitIterator(0) {
   mId = mInstancesIncrement++;
   mInstances.pushBack(this);

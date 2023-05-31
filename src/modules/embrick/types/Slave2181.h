@@ -110,8 +110,6 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-  FORTE_FB_DATA_ARRAY(2, 18, 2, 2)
-
   static const TForteUInt8 scmSlaveConfigurationIO[];
   static const TForteUInt8 scmSlaveConfigurationIONum;
 

@@ -57,19 +57,6 @@ namespace forte {
 
 #define RES_DATA_CON_CRITICAL_REGION()  CCriticalRegion criticalRegion(getResource().m_oResDataConSync)
 
-#ifndef FORTE_FB_DATA_ARRAY  //with this check we can overwrite this define in a platform specific file (e.g., config.h)
-/*! Define that adds the data array to a SIFB, simple FB or CFB
- * May be overwritten by a platform specific version that adapts for example some alignment requirements
- */
-#define FORTE_FB_DATA_ARRAY(a_nNumEOs, a_nNumDIs, a_nNumDOs, a_nNumAdapters) \
-  union{ \
-    TForteByte m_anFBConnData[1]; \
-  };\
-  union{ \
-    TForteByte m_anFBVarsData[1]; \
-  };
-#endif
-
 typedef CAdapter *TAdapterPtr;
 
 typedef TPortId TDataIOID; //!< \ingroup CORE Type for holding an data In- or output ID
@@ -424,12 +411,6 @@ class CFunctionBlock {
      */
     CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, CStringDictionary::TStringId pa_nInstanceNameId);
 
-    /**
-     * \deprecated Use CFunctionBlock(CResource *, const SFBInterfaceSpec *, const CStringDictionary::TStringId)
-     */
-    [[deprecated]] CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, CStringDictionary::TStringId pa_nInstanceNameId,
-                   TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
-
     static TPortId getPortId(CStringDictionary::TStringId pa_unPortNameId, TPortId pa_unMaxPortNames, const CStringDictionary::TStringId *pa_aunPortNames);
 
     /*!\brief Function to send an output event of the FB.
@@ -659,7 +640,7 @@ class CFunctionBlock {
 
 #define FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(fbclass, fbBaseClass) \
  fbclass(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : \
- fbBaseClass( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData)
+ fbBaseClass( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId)
 
 
 #ifdef OPTIONAL

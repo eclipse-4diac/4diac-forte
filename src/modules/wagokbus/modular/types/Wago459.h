@@ -84,7 +84,6 @@ class FORTE_Wago459: public WagoSlaveBase{
     static const int scm_nBusAdapterInAdpNum = 1;
     static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-    FORTE_FB_DATA_ARRAY(2, 5, 2, 2);
 
 };
 

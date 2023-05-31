@@ -15,8 +15,8 @@
 #include "processinterface.h"
 #include <unistd.h>
 
-CProcessInterface::CProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-    CI2CProcessInterface(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData){
+CProcessInterface::CProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+    CI2CProcessInterface(paSrcRes, paInterfaceSpec, paInstanceNameId){
 }
 
 CProcessInterface::~CProcessInterface(){

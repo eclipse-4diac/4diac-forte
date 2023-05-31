@@ -58,7 +58,6 @@ private:
   
   CDevice &m_poDevice;
 
-  FORTE_FB_DATA_ARRAY(1, 3, 2, 0);
 
   void executeEvent(TEventID pa_nEIID) override;
   void executeRQST();

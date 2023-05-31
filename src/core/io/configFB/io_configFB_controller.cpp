@@ -24,9 +24,8 @@ const char * const IOConfigFBController::scmInitializing = "Waiting for initiali
 const char * const IOConfigFBController::scmFailedToInit = "Failed to initialize controller.";
 const char * const IOConfigFBController::scmStopped = "Stopped";
 
-IOConfigFBController::IOConfigFBController(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
-    TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-    IOConfigFBBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mStarting(false), mErrorCounter(0), mController(nullptr),
+IOConfigFBController::IOConfigFBController(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+    IOConfigFBBase(paSrcRes, paInterfaceSpec, paInstanceNameId), mStarting(false), mErrorCounter(0), mController(nullptr),
         mPerformRestart(false) {
 }
 

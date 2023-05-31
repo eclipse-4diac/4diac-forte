@@ -72,7 +72,6 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-   FORTE_FB_DATA_ARRAY(3, 7, 1, 0);
 
   CEventChainExecutionThread m_oECEO1, m_oECEO2;
   bool m_bInitialized;

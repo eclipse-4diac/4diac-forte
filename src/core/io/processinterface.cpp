@@ -23,9 +23,8 @@ const char * const ProcessInterface::scmMappedWrongDirectionOutput = "Mapped inv
 const char * const ProcessInterface::scmMappedWrongDirectionInput = "Mapped invalid direction. An I block requires an input handle.";
 const char * const ProcessInterface::scmMappedWrongDataType = "Mapped invalid data type.";
 
-ProcessInterface::ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
-    TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), IOObserver() {
+ProcessInterface::ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId), IOObserver() {
   mIsListening = false;
   mIsReady = false;
 }

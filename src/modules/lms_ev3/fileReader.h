@@ -75,7 +75,7 @@ class fileReader: public CFunctionBlock{
     bool readFile();
     std::fstream mFile;
 
-    FORTE_FB_DATA_ARRAY(2, 2, 3, 0);
+
 };
 
 #endif //close the ifdef sequence from the beginning of the file

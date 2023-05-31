@@ -23,7 +23,7 @@ namespace forte {
       class IOConfigFBSplitAdapter : public CAdapter {
         public:
           IOConfigFBSplitAdapter(CResource *paSrcRes, const SFBInterfaceSpec *patInterfaceSpecSocket, const CStringDictionary::TStringId paInstanceNameId,
-              const SFBInterfaceSpec *paInterfaceSpecPlug, bool paIsPlug, TForteByte *paFBConnData, TForteByte *paFBVarsData);
+              const SFBInterfaceSpec *paInterfaceSpecPlug, bool paIsPlug);
           ~IOConfigFBSplitAdapter() override;
 
           CIEC_BOOL &QO() {

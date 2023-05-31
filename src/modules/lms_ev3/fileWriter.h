@@ -83,7 +83,7 @@ class fileWriter: public CFunctionBlock{
 
     std::fstream mFile;
 
-    FORTE_FB_DATA_ARRAY(2, 5, 2, 0);
+
 };
 
 #endif //close the ifdef sequence from the beginning of the file

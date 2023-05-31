@@ -33,8 +33,7 @@ namespace forte {
        */
       class IOConfigFBController : public IOConfigFBBase {
         public:
-          IOConfigFBController(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
-              TForteByte *paFBConnData, TForteByte *paFBVarsData);
+          IOConfigFBController(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
           ~IOConfigFBController() override;
 
           IODeviceController* getDeviceController() {

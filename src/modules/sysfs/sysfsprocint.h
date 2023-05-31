@@ -21,8 +21,7 @@
 class CSysFsProcessInterface : public CProcessInterfaceBase {
 
   public:
-    CSysFsProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
-        TForteByte *paFBConnData, TForteByte *paFBVarsData);
+    CSysFsProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
     ~CSysFsProcessInterface() override;
 
     class CIOHandler : public CExternalEventHandler, public CThread {

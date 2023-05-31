@@ -69,8 +69,6 @@ private:
   static const int scm_nBusAdapterAdpNum = 0;
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-  FORTE_FB_DATA_ARRAY(2, 6, 2, 1)
-
   virtual void setInitialValues();
 
 protected:

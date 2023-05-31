@@ -53,7 +53,6 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-   FORTE_FB_DATA_ARRAY(1, 1, 3, 0);
 
   void executeEvent(TEventID pa_nEIID) override;
 

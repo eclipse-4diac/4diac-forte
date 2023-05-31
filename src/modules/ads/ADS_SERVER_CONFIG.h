@@ -67,7 +67,6 @@ class FORTE_ADS_SERVER_CONFIG : public CFunctionBlock{
 
     static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-    FORTE_FB_DATA_ARRAY(1, 5, 2, 0);
 
     void executeEvent(TEventID pa_nEIID) override;
 

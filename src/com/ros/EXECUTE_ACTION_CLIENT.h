@@ -123,8 +123,6 @@ class FORTE_EXECUTE_ACTION_CLIENT : public CEventSourceFB{
 
     static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-    FORTE_FB_DATA_ARRAY(2, 6, 6, 0)
-    ;
 
     void executeEvent(TEventID pa_nEIID) override;
 

@@ -34,14 +34,6 @@ public:
           mEventSourceEventEntry(this, cg_nExternalEventID) {
   }
 
-  [[deprecated]] CEventSourceFB(CResource *pa_poSrcRes,
-                                const SFBInterfaceSpec *pa_pstInterfaceSpec,
-                                const CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *pa_acFBConnData,
-                                TForteByte *pa_acFBVarsData) :
-    CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData),
-    m_poEventChainExecutor(nullptr),
-    mEventSourceEventEntry(this, cg_nExternalEventID){
-  }
   ~CEventSourceFB() override = default;
   void setEventChainExecutor(CEventChainExecutionThread *pa_poEventChainExecutor) { m_poEventChainExecutor = pa_poEventChainExecutor; };
   CEventChainExecutionThread * getEventChainExecutor() { return m_poEventChainExecutor; };

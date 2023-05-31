@@ -42,7 +42,7 @@ const SFBInterfaceSpec FORTE_RT_E_DELAY::scm_stFBInterfaceSpec = {
 
 
 FORTE_RT_E_DELAY::FORTE_RT_E_DELAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-            CEventSourceFB( paSrcRes, &scm_stFBInterfaceSpec,  paInstanceNameId, m_anFBConnData, m_anFBVarsData){
+            CEventSourceFB( paSrcRes, &scm_stFBInterfaceSpec,  paInstanceNameId){
   setEventChainExecutor(&mECEO);
   mActive = false;
   mInitialized = false;

@@ -132,7 +132,7 @@ class FORTE_Wago1405_6: public WagoSlaveBase{
     static const int scm_nBusAdapterInAdpNum = 1;
     static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-     FORTE_FB_DATA_ARRAY(2, 17, 2, 2);
+
 };
 
 #endif //close the ifdef sequence from the beginning of the file

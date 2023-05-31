@@ -89,9 +89,7 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-   FORTE_FB_DATA_ARRAY(5, 11, 1, 0);
 
-   
   CEventChainExecutionThread m_oECEO0;
   CEventChainExecutionThread m_oECEO1;
   CEventChainExecutionThread m_oECEO2;

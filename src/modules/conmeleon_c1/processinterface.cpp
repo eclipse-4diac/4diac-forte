@@ -57,8 +57,8 @@ CConmeleonC1ProcessInterface::EIOState CConmeleonC1ProcessInterface::smDOUsage[4
     CConmeleonC1ProcessInterface::enFree
 };
 
-CConmeleonC1ProcessInterface::CConmeleonC1ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mChannelNr(-1), mCallingFB(enUnsupported){
+CConmeleonC1ProcessInterface::CConmeleonC1ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId), mChannelNr(-1), mCallingFB(enUnsupported){
 
   // initialize the ADC settings
   smADC.setPGA(CONMELEON::FS4096);        // maximum input voltage of ADC is 3.3V so we use 4.096V as full scale setting

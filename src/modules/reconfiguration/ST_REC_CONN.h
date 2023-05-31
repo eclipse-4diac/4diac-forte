@@ -85,8 +85,6 @@ private:
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
   //! The device the block is contained in
   CDevice &m_poDevice;
-  
-  FORTE_FB_DATA_ARRAY(1, 10, 2, 0);
 
   void executeEvent(TEventID pa_nEIID) override;
   void executeRQST();

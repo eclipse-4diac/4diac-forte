@@ -66,12 +66,9 @@ public:
   }
   
 
-private:
-  FORTE_ADAPTER_DATA_ARRAY(1, 2, 0, 1, 0);
-
 public:
   FORTE_ARTimeOut(CStringDictionary::TStringId pa_anAdapterInstanceName, CResource *pa_poSrcRes, bool pa_bIsPlug) :
-      CAdapter(pa_poSrcRes, &scm_stFBInterfaceSpecSocket, pa_anAdapterInstanceName, &scm_stFBInterfaceSpecPlug, pa_bIsPlug, m_anFBConnData, m_anFBVarsData) {	
+      CAdapter(pa_poSrcRes, &scm_stFBInterfaceSpecSocket, pa_anAdapterInstanceName, &scm_stFBInterfaceSpecPlug, pa_bIsPlug) {
    };
 
   virtual ~FORTE_ARTimeOut() = default;

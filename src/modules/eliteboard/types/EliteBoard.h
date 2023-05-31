@@ -94,7 +94,6 @@ private:
     return (*static_cast<FORTE_PortAdapter *>(m_apoAdapters[10]));
   };
 
-  FORTE_FB_DATA_ARRAY(1, 0, 0, 11);
 
   void executeEvent(TEventID pa_nEIID) override;
  

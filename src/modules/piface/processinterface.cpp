@@ -14,9 +14,8 @@
 
 CPiFaceProcessInterface::CPiFaceProcessInterface(CResource *paSrcRes,
     const SFBInterfaceSpec *paInterfaceSpec,
-    const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData,
-    TForteByte *paFBVarsData) :
-    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData),
+    const CStringDictionary::TStringId paInstanceNameId) :
+    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId),
         mPin(0){
 }
 

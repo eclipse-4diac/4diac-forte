@@ -51,22 +51,6 @@ CFunctionBlock::CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *p
         m_bDeletable(true) {
 }
 
-CFunctionBlock::CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-                               CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *, TForteByte *) :
-        m_pstInterfaceSpec(pa_pstInterfaceSpec),
-        mEOConns(nullptr), mDIConns(nullptr), mDOConns(nullptr), mDIs(nullptr), mDOs(nullptr),
-        m_poInvokingExecEnv(nullptr), m_apoAdapters(nullptr),
-        mFBConnData(nullptr), mFBVarsData(nullptr),
-        m_poResource(pa_poSrcRes), m_Container(nullptr),
-#ifdef FORTE_SUPPORT_MONITORING
-        mEOMonitorCount(nullptr), mEIMonitorCount(nullptr),
-#endif
-        m_nFBInstanceName(pa_nInstanceNameId),
-        m_enFBState(
-                E_FBStates::Killed),   //put the FB in the killed state so that reseting it after creation will correctly initialize it
-        m_bDeletable(true) {
-}
-
 bool CFunctionBlock::initialize() {
   setupFBInterface(m_pstInterfaceSpec);
   return true;

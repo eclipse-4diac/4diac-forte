@@ -37,7 +37,6 @@ protected:
 
   static const TEventID csm_nEOID = 0;
 
-  FORTE_FB_DATA_ARRAY(1,1,0, 0);
 
   bool mActive; //!> flag to indicate that the timed fb is currently active
   STimedFBListEntry mTimeListEntry; //!> The Timer list entry of this timed FB

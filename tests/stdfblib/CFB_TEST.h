@@ -46,7 +46,6 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-   FORTE_FB_DATA_ARRAY(2, 1, 1, 0);
 
   static const SCFB_FBInstanceData scm_astInternalFBs[];
 

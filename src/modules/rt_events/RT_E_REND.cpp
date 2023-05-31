@@ -44,8 +44,7 @@ const SFBInterfaceSpec FORTE_RT_E_REND::scm_stFBInterfaceSpec = {
 FORTE_RT_E_REND::FORTE_RT_E_REND(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
        CRTEventSingle(
            pa_poSrcRes,
-           &scm_stFBInterfaceSpec, pa_nInstanceNameId,
-           m_anFBConnData, m_anFBVarsData),
+           &scm_stFBInterfaceSpec, pa_nInstanceNameId),
        m_nState(0) {
 }
 

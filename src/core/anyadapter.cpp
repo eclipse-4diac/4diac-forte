@@ -23,7 +23,7 @@ DEFINE_GENERIC_ADAPTER_TYPE(CAnyAdapter, g_nStringIdANY_ADAPTER)
 const SFBInterfaceSpec CAnyAdapter::scm_stFBInterfaceSpec = { 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr };
 
 CAnyAdapter::CAnyAdapter(CStringDictionary::TStringId pa_anAdapterInstanceName, CResource *pa_poSrcRes, bool pa_bIsPlug) :
-    CAdapter(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_anAdapterInstanceName, &scm_stFBInterfaceSpec, pa_bIsPlug, nullptr, nullptr), m_ParentFB(nullptr),
+    CAdapter(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_anAdapterInstanceName, &scm_stFBInterfaceSpec, pa_bIsPlug), m_ParentFB(nullptr),
     m_nParentAdapterlistID(0){
   memset(&m_stCurrentFBInterfaceSpec, 0, sizeof(SFBInterfaceSpec));
 }

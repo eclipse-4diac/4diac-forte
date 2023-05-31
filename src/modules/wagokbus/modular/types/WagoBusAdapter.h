@@ -73,7 +73,7 @@ class FORTE_WagoBusAdapter : public forte::core::io::IOConfigFBMultiAdapter {
     static const TEventID scm_nEventINITOID = 0;
     static const TEventID scm_nEventINITID = 0;
 
-    FORTE_ADAPTER_DATA_ARRAY(1, 1, 1, 3, 0);
+
 };
 
 #endif //close the ifdef sequence from the beginning of the file

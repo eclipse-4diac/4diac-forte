@@ -86,8 +86,6 @@ class FORTE_TRIGGER_SERVICE_CLIENT : public CEventSourceFB{
 
     static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-    FORTE_FB_DATA_ARRAY(2, 3, 4, 0)
-    ;
 
     void executeEvent(TEventID pa_nEIID) override;
 

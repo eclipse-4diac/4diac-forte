@@ -23,7 +23,7 @@ namespace forte {
 
 #define FUNCTION_BLOCK_CTOR_FOR_IO_SPLIT_CONTROLLER(fbclass) \
  fbclass(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) : \
- IOConfigFBSplitController( (const TForteUInt8* const) &scmSplitAdapter, scmSplitAdapterNum, paSrcRes, &scm_stFBInterfaceSpec, paInstanceNameId, m_anFBConnData, m_anFBVarsData)
+ IOConfigFBSplitController( (const TForteUInt8* const) &scmSplitAdapter, scmSplitAdapterNum, paSrcRes, &scm_stFBInterfaceSpec, paInstanceNameId)
 
       class IOConfigFBSplitController;
 
@@ -32,7 +32,7 @@ namespace forte {
       class IOConfigFBSplitController : public IOConfigFBController {
         public:
           IOConfigFBSplitController(const TForteUInt8* const paSplitAdapter, const TForteUInt8 paSplitAdapterNum, CResource *paSrcRes,
-              const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
+              const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
 
           static IOConfigFBSplitController* getControllerById(TForteUInt16 paId);
 

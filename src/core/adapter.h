@@ -23,19 +23,11 @@ class CAdapterConnection;
 
 #define ADAPTER_CTOR(fbclass) \
  fbclass(CStringDictionary::TStringId pa_anAdapterInstanceName, CResource *pa_poSrcRes, bool pa_bIsPlug) : \
- CAdapter( pa_poSrcRes, &scm_stFBInterfaceSpecSocket, pa_anAdapterInstanceName, &scm_stFBInterfaceSpecPlug, pa_bIsPlug, m_anFBConnData, m_anFBVarsData)
+ CAdapter( pa_poSrcRes, &scm_stFBInterfaceSpecSocket, pa_anAdapterInstanceName, &scm_stFBInterfaceSpecPlug, pa_bIsPlug)
 
 #define ADAPTER_CTOR_WITH_BASE_CLASS(fbclass, fbBaseClass) \
  fbclass(CStringDictionary::TStringId pa_anAdapterInstanceName, CResource *pa_poSrcRes, bool pa_bIsPlug) : \
- fbBaseClass( pa_poSrcRes, &scm_stFBInterfaceSpecSocket, pa_anAdapterInstanceName, &scm_stFBInterfaceSpecPlug, pa_bIsPlug, m_anFBConnData, m_anFBVarsData)
-
-#define FORTE_ADAPTER_DATA_ARRAY(a_nNumEIs, a_nNumEOs, a_nNumDIs, a_nNumDOs, a_nNumAdapters) \
-  union{ \
-    TForteByte m_anFBConnData[1]; \
-  };\
-  union{ \
-    TForteByte m_anFBVarsData[1]; \
-  };
+ fbBaseClass( pa_poSrcRes, &scm_stFBInterfaceSpecSocket, pa_anAdapterInstanceName, &scm_stFBInterfaceSpecPlug, pa_bIsPlug)
 
 /*!\ingroup CORE\brief Class for handling adapters.
  *
@@ -45,7 +37,7 @@ class CAdapter : public CFunctionBlock{
     /*!\brief The main constructor for an adapter instance.
      */
     //TODO: think on interface
-    CAdapter(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpecSocket, const CStringDictionary::TStringId pa_nInstanceNameId, const SFBInterfaceSpec *pa_pstInterfaceSpecPlug, bool pa_bIsPlug, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
+    CAdapter(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpecSocket, const CStringDictionary::TStringId pa_nInstanceNameId, const SFBInterfaceSpec *pa_pstInterfaceSpecPlug, bool pa_bIsPlug);
     ~CAdapter() override;
 
     bool initialize() override;

@@ -43,7 +43,7 @@ const SFBInterfaceSpec FORTE_RT_E_DEMUX::scm_stFBInterfaceSpec = {
 FORTE_RT_E_DEMUX::FORTE_RT_E_DEMUX(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
        CFunctionBlock(
            pa_poSrcRes,
-           &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData) {
+           &scm_stFBInterfaceSpec, pa_nInstanceNameId) {
     m_bInitialized = false;
 }
 

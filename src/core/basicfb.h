@@ -18,21 +18,6 @@
 
 #include "funcbloc.h"
 
-#ifndef FORTE_BASIC_FB_DATA_ARRAY  //with this check we can overwrite this define in a platform specific file (e.g., config.h)
-
-/*! Define that adds the data array to a Basic FB
- * May be overwritten by a platform specific version that adapts for example some alignment requirements
- */
-#define FORTE_BASIC_FB_DATA_ARRAY(a_nNumEOs, a_nNumDIs, a_nNumDOs, a_nNumIntVars, a_nNumAdapters) \
-  union{ \
-    TForteByte m_anFBConnData[1]; \
-  };\
-  union{ \
-    TForteByte m_anFBVarsData[1]; \
-  };
-
-#endif
-
 /*!\ingroup CORE
  * \brief structure to hold the data needed for creating the internal vars
  *
@@ -54,15 +39,6 @@ class CBasicFB : public CFunctionBlock {
     CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
              CStringDictionary::TStringId pa_nInstanceNameId,
              const SInternalVarsInformation *pa_pstVarInternals);
-
-    /*!
-     * @deprecated Use CBasicFB(CResource *, const SFBInterfaceSpec *, CStringDictionary::TStringId,
-     *                          const SInternalVarsInformation *)
-     */
-    [[deprecated]] CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-                            CStringDictionary::TStringId pa_nInstanceNameId,
-                            const SInternalVarsInformation *pa_pstVarInternals, TForteByte *pa_acFBConnData,
-                            TForteByte *pa_acBasicFBVarsData);
 
     bool initialize() override;
 

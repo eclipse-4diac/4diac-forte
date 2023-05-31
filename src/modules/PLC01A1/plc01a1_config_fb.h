@@ -120,7 +120,6 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-   FORTE_FB_DATA_ARRAY(2, 18, 2, 0);
 
 virtual void setInitialValues();
 

@@ -59,7 +59,6 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-   FORTE_FB_DATA_ARRAY(2, 3, 1, 0);
 
    bool checkActivation(TEventID) override { return true; }
 

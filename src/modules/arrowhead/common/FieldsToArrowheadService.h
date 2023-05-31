@@ -62,7 +62,7 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-   FORTE_BASIC_FB_DATA_ARRAY(1, 3, 1, 0, 0);
+
   void alg_REQ();
   static const TForteInt16 scm_nStateSTART = 0;
   static const TForteInt16 scm_nStateREQ = 1;
@@ -75,7 +75,7 @@ private:
 public:
   FORTE_FieldsToArrowheadService(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : 
        CBasicFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId,
-              0, m_anFBConnData, m_anFBVarsData){
+              0){
   };
 
   ~FORTE_FieldsToArrowheadService() override = default;
