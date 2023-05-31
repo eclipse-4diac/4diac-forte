@@ -76,7 +76,7 @@ int CIEC_WCHAR::fromString(const char *paValue) {
 
   if('$' == paValue[bufferCount]) { // Escape sequence, so the next symbol must either be a hex number or a special symbol
     if('"' == paValue[bufferCount + 2]) { // if there is only one symbol it will get considered as special symbol
-      const char controlSymbol = toupper(paValue[bufferCount + 1]);
+      const char controlSymbol = static_cast<char>(toupper(static_cast<unsigned char>(paValue[bufferCount + 1])));
       switch(controlSymbol) {
         case '$': *this = CIEC_WCHAR('$'); break;
         case '"': *this = CIEC_WCHAR('"'); break;
@@ -93,10 +93,11 @@ int CIEC_WCHAR::fromString(const char *paValue) {
     if(forte::core::util::isHexDigit(paValue[bufferCount + 1]) && forte::core::util::isHexDigit(paValue[bufferCount + 2]) 
       && forte::core::util::isHexDigit(paValue[bufferCount + 3]) && forte::core::util::isHexDigit(paValue[bufferCount + 4])
       && '"' == paValue[bufferCount + 5]) { // if there are two symbols it is a hex code
-      const TForteWChar codePoint = (forte::core::util::charHexDigitToInt(paValue[bufferCount + 1]) << 12) +
-       (forte::core::util::charHexDigitToInt(paValue[bufferCount + 2]) << 8) +
-       (forte::core::util::charHexDigitToInt(paValue[bufferCount + 3]) << 4) +
-       (forte::core::util::charHexDigitToInt(paValue[bufferCount + 4]) );
+      TForteWChar codePoint = static_cast<TForteWChar>(
+              (forte::core::util::charHexDigitToInt(paValue[bufferCount + 1]) << 12) +
+              (forte::core::util::charHexDigitToInt(paValue[bufferCount + 2]) << 8) +
+              (forte::core::util::charHexDigitToInt(paValue[bufferCount + 3]) << 4) +
+              (forte::core::util::charHexDigitToInt(paValue[bufferCount + 4])));
       *this = CIEC_WCHAR(codePoint);
       return bufferCount + 6; // Three symbols for code point and closing '
     }

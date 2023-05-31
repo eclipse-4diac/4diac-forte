@@ -165,8 +165,8 @@ CFBContainer* CFBContainer::getFBContainer(CStringDictionary::TStringId paContai
 CFBContainer::TFBContainerList::iterator CFBContainer::getFBContainerIterator(CStringDictionary::TStringId paContainerName)  {
   if(CStringDictionary::scm_nInvalidStringId != paContainerName && !mSubContainers.empty()){
     return std::lower_bound(mSubContainers.begin(), mSubContainers.end(), paContainerName,
-                                                     [](CFBContainer* container, CStringDictionary::TStringId paContainerName)
-                                                     { return container->getName() < paContainerName; });
+                                                     [](CFBContainer* container, CStringDictionary::TStringId containerName)
+                                                     { return container->getName() < containerName; });
   }
   return mSubContainers.end();
 }

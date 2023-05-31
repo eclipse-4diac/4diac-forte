@@ -111,7 +111,7 @@ void FORTE_E_DEMUX::readInputData(TEventID pa_nEIID) {
   }
 }
 
-void FORTE_E_DEMUX::writeOutputData(TEventID pa_nEIID) {
+void FORTE_E_DEMUX::writeOutputData(TEventID) {
 }
 
 CIEC_ANY *FORTE_E_DEMUX::getDI(size_t paIndex) {

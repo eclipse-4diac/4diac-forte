@@ -84,7 +84,7 @@ void FORTE_E_RS::executeEvent(TEventID pa_nEIID){
   } while(true);
 }
 
-void FORTE_E_RS::readInputData(TEventID pa_nEIID) {
+void FORTE_E_RS::readInputData(TEventID) {
 }
 
 void FORTE_E_RS::writeOutputData(TEventID pa_nEIID) {

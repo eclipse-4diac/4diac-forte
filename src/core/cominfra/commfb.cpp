@@ -102,7 +102,7 @@ EComResponse CCommFB::sendData() {
   if (true == QI()) {
     if (m_eCommServiceType != e_Subscriber) {
       if (nullptr != m_poTopOfComStack) {
-        resp = m_poTopOfComStack->sendData(static_cast<void*>(getSDs()), m_pstInterfaceSpec->m_nNumDIs - 2);
+        resp = m_poTopOfComStack->sendData(static_cast<void*>(getSDs()), static_cast<unsigned int>(m_pstInterfaceSpec->m_nNumDIs - 2));
         if ((resp == e_ProcessDataOk) && (m_eCommServiceType != e_Publisher)) {
           // client and server will not directly send a cnf/ind event
           resp = e_Nothing;

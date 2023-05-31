@@ -34,7 +34,7 @@ class CIEC_CHAR : public CIEC_ANY_CHAR{
       setValueSimple(paValue);
     }
 
-    explicit CIEC_CHAR(char paValue) {
+    explicit CIEC_CHAR(const TForteChar paValue) {
       setChar(paValue);
     }
 

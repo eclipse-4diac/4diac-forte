@@ -15,13 +15,14 @@
 #include "criticalregion.h"
 
 using namespace forte::core::io;
+using namespace std::string_literals;
 
-const char * const ProcessInterface::scmOK = "OK";
-const char * const ProcessInterface::scmWaitingForHandle = "Waiting for handle..";
-const char * const ProcessInterface::scmFailedToRegister = "Failed to register observer.";
-const char * const ProcessInterface::scmMappedWrongDirectionOutput = "Mapped invalid direction. A Q block requires an output handle.";
-const char * const ProcessInterface::scmMappedWrongDirectionInput = "Mapped invalid direction. An I block requires an input handle.";
-const char * const ProcessInterface::scmMappedWrongDataType = "Mapped invalid data type.";
+const std::string ProcessInterface::scmOK = "OK"s;
+const std::string ProcessInterface::scmWaitingForHandle = "Waiting for handle.."s;
+const std::string ProcessInterface::scmFailedToRegister = "Failed to register observer."s;
+const std::string ProcessInterface::scmMappedWrongDirectionOutput = "Mapped invalid direction. A Q block requires an output handle."s;
+const std::string ProcessInterface::scmMappedWrongDirectionInput = "Mapped invalid direction. An I block requires an input handle."s;
+const std::string ProcessInterface::scmMappedWrongDataType = "Mapped invalid data type."s;
 
 ProcessInterface::ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
     CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId), IOObserver() {

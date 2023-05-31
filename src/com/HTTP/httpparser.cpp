@@ -40,7 +40,7 @@ bool CHttpParser::changePutPostData(std::string& paDest, const std::string& paDa
     helperChar += sizeof("length: ") - 1;
     *helperChar = '\0';
     paDest = std::string(paDest.c_str()); // will shrink the length of the string to the new ending
-    char contentLength[scmMaxLengthOfContent];
+    char contentLength[std::numeric_limits<size_t>::digits10 + 1];
     snprintf(contentLength, sizeof(contentLength), "%zu", strlen(paData.c_str()));
     paDest.append(contentLength);
     CHttpParser::addHeaderEnding(paDest);

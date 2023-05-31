@@ -103,8 +103,8 @@ bool CActionInfo::checkAction() const {
   if(checkNodePairInfo()) {
 
     forte::com_infra::EComServiceType fbType = mLayer.getCommFB()->getComServiceType();
-    unsigned int noOfRDs = mLayer.getCommFB()->getNumRD();
-    unsigned int noOfSDs = mLayer.getCommFB()->getNumSD();
+    TPortId noOfRDs = mLayer.getCommFB()->getNumRD();
+    TPortId noOfSDs = mLayer.getCommFB()->getNumSD();
 
     switch(mAction){
       case eRead:
@@ -152,7 +152,7 @@ bool CActionInfo::checkNodePairInfo() const {
   return retVal;
 }
 
-bool CActionInfo::checkReadAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const {
+bool CActionInfo::checkReadAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId paNoOfSDs) const {
   bool retVal = false;
   if(mEndpoint.empty()) {
     if(forte::com_infra::e_Subscriber == paFbType && paNoOfRDs == getNoOfNodePairs()) {
@@ -174,7 +174,7 @@ bool CActionInfo::checkReadAction(forte::com_infra::EComServiceType paFbType, un
   return retVal;
 }
 
-bool CActionInfo::checkWriteAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const {
+bool CActionInfo::checkWriteAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId paNoOfSDs) const {
   bool retVal = false;
   if(mEndpoint.empty()) {
     if(forte::com_infra::e_Publisher == paFbType && paNoOfSDs == getNoOfNodePairs()) {
@@ -196,7 +196,7 @@ bool CActionInfo::checkWriteAction(forte::com_infra::EComServiceType paFbType, u
   return retVal;
 }
 
-bool CActionInfo::checkCreateMethodAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int) const {
+bool CActionInfo::checkCreateMethodAction(forte::com_infra::EComServiceType paFbType, TPortId, TPortId) const {
   bool retVal = false;
   if(forte::com_infra::e_Server == paFbType && 1 == getNoOfNodePairs()) {
     retVal = true;
@@ -207,7 +207,7 @@ bool CActionInfo::checkCreateMethodAction(forte::com_infra::EComServiceType paFb
   return retVal;
 }
 
-bool CActionInfo::checkCallMethodAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int) const {
+bool CActionInfo::checkCallMethodAction(forte::com_infra::EComServiceType paFbType, TPortId, TPortId) const {
   bool retVal = false;
   if(forte::com_infra::e_Client == paFbType && 1 == getNoOfNodePairs() && !(*(mNodePair.begin()))->mBrowsePath.empty()) {
     retVal = true;
@@ -219,7 +219,7 @@ bool CActionInfo::checkCallMethodAction(forte::com_infra::EComServiceType paFbTy
   return retVal;
 }
 
-bool CActionInfo::checkSubscribeAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int) const {
+bool CActionInfo::checkSubscribeAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId) const {
   bool retVal = false;
   if(forte::com_infra::e_Subscriber == paFbType && paNoOfRDs == getNoOfNodePairs()) {
     retVal = true;
@@ -231,7 +231,7 @@ bool CActionInfo::checkSubscribeAction(forte::com_infra::EComServiceType paFbTyp
   return retVal;
 }
 
-bool CActionInfo::checkCreateObjectAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int paNoOfSDs) const {
+bool CActionInfo::checkCreateObjectAction(forte::com_infra::EComServiceType paFbType, TPortId, TPortId paNoOfSDs) const {
   bool retVal = false;
   if(forte::com_infra::e_Publisher == paFbType && 2 == getNoOfNodePairs() && 0 == paNoOfSDs) {
     retVal = true;
@@ -243,7 +243,7 @@ bool CActionInfo::checkCreateObjectAction(forte::com_infra::EComServiceType paFb
   return retVal;
 }
 
-bool CActionInfo::checkCreateVariableAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int paNoOfSDs) const {
+bool CActionInfo::checkCreateVariableAction(forte::com_infra::EComServiceType paFbType, TPortId, TPortId paNoOfSDs) const {
   bool retVal = false;
   if(forte::com_infra::e_Publisher == paFbType && 3 == getNoOfNodePairs() && 0 == paNoOfSDs) {
     retVal = true;
@@ -255,7 +255,7 @@ bool CActionInfo::checkCreateVariableAction(forte::com_infra::EComServiceType pa
   return retVal;
 }
 
-bool CActionInfo::checkDeleteNodeAction(forte::com_infra::EComServiceType paFbType, unsigned int, unsigned int paNoOfSDs) const {
+bool CActionInfo::checkDeleteNodeAction(forte::com_infra::EComServiceType paFbType, TPortId, TPortId paNoOfSDs) const {
   bool retVal = false;
   if(forte::com_infra::e_Publisher == paFbType && 1 == getNoOfNodePairs() && 0 == paNoOfSDs) {
     retVal = true;

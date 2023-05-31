@@ -154,7 +154,11 @@ void GEN_CSV_WRITER::writeCSVFileLine() {
     char acBuffer[scmWriteBufferSize];
     for(TPortId i = 2; i < m_pstInterfaceSpec->m_nNumDIs; i++) {
       int nLen = getDI(i)->unwrap().toString(acBuffer, scmWriteBufferSize);
-      fwrite(acBuffer, 1, nLen, mCSVFile);
+      if(nLen >= 0) {
+        fwrite(acBuffer, 1, static_cast<size_t>(nLen), mCSVFile);
+      } else {
+        DEVLOG_ERROR("[GEN_CSV_WRITER]: Can't get string value for input %d\n", i);
+      }
       fwrite("; ", 1, 2, mCSVFile);
     }
     fwrite("\n", 1, 1, mCSVFile);

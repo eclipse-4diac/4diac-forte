@@ -83,7 +83,7 @@ void FORTE_E_PERMIT::readInputData(TEventID pa_nEIID) {
   }
 }
 
-void FORTE_E_PERMIT::writeOutputData(TEventID pa_nEIID) {
+void FORTE_E_PERMIT::writeOutputData(TEventID) {
 }
 
 CIEC_ANY *FORTE_E_PERMIT::getDI(size_t paIndex) {

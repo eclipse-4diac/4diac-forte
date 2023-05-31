@@ -87,7 +87,7 @@ class CFBTestFixtureBase : public CFunctionBlock{
      *
      * TODO add timestamps to the list
      */
-    std::deque<int> mFBOutputEvents;
+    std::deque<TEventID> mFBOutputEvents;
 
     CSyncObject mOutputEventLock;
 

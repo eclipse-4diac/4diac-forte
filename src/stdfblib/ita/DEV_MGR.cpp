@@ -265,7 +265,7 @@ bool DEV_MGR::parseWriteConnectionData(char *paRequestPartLeft, forte::core::SMa
       return false;
     }
     *endOfSource = '\0';
-    paCommand.mAdditionalParams = CIEC_STRING(paRequestPartLeft);
+    paCommand.mAdditionalParams = CIEC_STRING(paRequestPartLeft, strlen(paRequestPartLeft));
     char *addParams = new char[paCommand.mAdditionalParams.getStorage().length() + 1]();
     strcpy(addParams, paCommand.mAdditionalParams.getStorage().c_str());
     forte::core::util::transformEscapedXMLToNonEscapedText(addParams);

@@ -1167,7 +1167,7 @@ BOOST_AUTO_TEST_CASE(Partial_Byte_NOT_Operation)
   CIEC_BYTE result;
 
   result = func_NOT(lword.partial<CIEC_BYTE>(4));
-  BOOST_REQUIRE_EQUAL(result, CIEC_BYTE(~0xA5));
+  BOOST_REQUIRE_EQUAL(result, CIEC_BYTE(static_cast<TForteByte>(~0xA5)));
 }
 
 BOOST_AUTO_TEST_CASE(Partial_DWord_NOT_Operation)
@@ -1185,7 +1185,7 @@ BOOST_AUTO_TEST_CASE(Partial_Word_NOT_Operation)
   CIEC_WORD result;
 
   result = func_NOT(lword.partial<CIEC_WORD>(0));
-  BOOST_REQUIRE_EQUAL(result, CIEC_WORD(~0xA5A5));
+  BOOST_REQUIRE_EQUAL(result, CIEC_WORD(static_cast<TForteWord>(~0xA5A5)));
 }
 
 BOOST_AUTO_TEST_CASE(Partial_LWord_EQ_Operation)

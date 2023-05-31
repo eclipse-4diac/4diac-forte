@@ -205,8 +205,8 @@ namespace forte {
         TForteUInt32 mDeserBufSize;
         unsigned int mDeserBufPos;
 
-        TForteByte mDIPos;
-        TForteByte mDOPos;
+        TPortId mDIPos;
+        TPortId mDOPos;
     };
 
   }

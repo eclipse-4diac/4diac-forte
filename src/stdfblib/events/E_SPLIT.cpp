@@ -67,10 +67,10 @@ void FORTE_E_SPLIT::executeEvent(TEventID pa_nEIID){
   } while(true);
 }
 
-void FORTE_E_SPLIT::readInputData(TEventID pa_nEIID) {
+void FORTE_E_SPLIT::readInputData(TEventID) {
 }
 
-void FORTE_E_SPLIT::writeOutputData(TEventID pa_nEIID) {
+void FORTE_E_SPLIT::writeOutputData(TEventID) {
 }
 
 CIEC_ANY *FORTE_E_SPLIT::getDI(size_t) {

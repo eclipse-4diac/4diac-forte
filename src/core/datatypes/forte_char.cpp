@@ -85,8 +85,9 @@ int CIEC_CHAR::fromString(const char *paValue) {
 
     if(forte::core::util::isHexDigit(paValue[bufferCount + 1]) && forte::core::util::isHexDigit(paValue[bufferCount + 2]) 
       && '\'' == paValue[bufferCount + 3]) { // if there are two symbols it is a hex code
-      const TForteChar codePoint = (forte::core::util::charHexDigitToInt(paValue[bufferCount + 1]) << 4) +
-       forte::core::util::charHexDigitToInt(paValue[bufferCount + 2]);
+      const TForteChar codePoint = static_cast<TForteChar>(
+              (forte::core::util::charHexDigitToInt(paValue[bufferCount + 1]) << 4) +
+              forte::core::util::charHexDigitToInt(paValue[bufferCount + 2]));
       *this = CIEC_CHAR(codePoint);
       return bufferCount + 4; // Three symbols for code point and closing '
     }

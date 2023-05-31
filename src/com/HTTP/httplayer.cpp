@@ -67,7 +67,7 @@ EComResponse CHttpComLayer::openConnection(char *paLayerParameter) {
 
 EComResponse CHttpComLayer::openClientConnection(char* paLayerParameter) {
   EComResponse eRetVal = e_InitInvalidId;
-  unsigned int numberOfSD = m_poFb->getNumSD();
+  TPortId numberOfSD = m_poFb->getNumSD();
 
   if(2 == m_poFb->getNumRD()) {
     CParameterParser parser(paLayerParameter, ';', 3); //IP:PORT;POST|PUT|GET;[content-type]
@@ -320,7 +320,7 @@ EComResponse forte::com_infra::CHttpComLayer::recvServerData(CSinglyLinkedList<s
     if(noOfParameters == m_poFb->getNumRD()) {
       noOfParameters = 0;
       for(CSinglyLinkedList<std::string>::Iterator iter = paParameterValues.begin(); iter != paParameterValues.end(); ++iter) {
-        m_poFb->getRDs()[noOfParameters++]->setValue(CIEC_STRING(iter->c_str()));
+        m_poFb->getRDs()[noOfParameters++]->setValue(CIEC_STRING(*iter));
       }
     } else {
       DEVLOG_ERROR("[HTTP Layer] FB with path %s received a number of parameters of %u, while it has %u SDs\n", mPath.c_str(),

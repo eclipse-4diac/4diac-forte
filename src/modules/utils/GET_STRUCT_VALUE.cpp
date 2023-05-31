@@ -52,7 +52,7 @@ const SFBInterfaceSpec FORTE_GET_STRUCT_VALUE::scm_stFBInterfaceSpec = {
 FORTE_GET_STRUCT_VALUE::FORTE_GET_STRUCT_VALUE(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
     CFunctionBlock( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId),
     var_in_struct(CIEC_ANY_VARIANT()),
-    var_member(CIEC_STRING("")),
+    var_member(CIEC_STRING("", 0)),
     var_QO(CIEC_BOOL(0)),
     var_output(CIEC_ANY_VARIANT()),
     var_conn_QO(var_QO),

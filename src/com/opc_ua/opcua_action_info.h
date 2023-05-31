@@ -177,7 +177,7 @@ class CActionInfo {
      * @param paNoOfSDs Number of SDs present in the FB
      * @return True if the read action is valid, false otherwise
      */
-    bool checkReadAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const;
+    bool checkReadAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId paNoOfSDs) const;
 
     /**
      * Specific check for write action
@@ -186,7 +186,7 @@ class CActionInfo {
      * @param paNoOfSDs Number of SDs present in the FB
      * @return True if the write action is valid, false otherwise
      */
-    bool checkWriteAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const;
+    bool checkWriteAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId paNoOfSDs) const;
 
     /**
      * Specific check for create method action
@@ -195,7 +195,7 @@ class CActionInfo {
      * @param paNoOfSDs Number of SDs present in the FB
      * @return True if the create method action is valid, false otherwise
      */
-    bool checkCreateMethodAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const;
+    bool checkCreateMethodAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId paNoOfSDs) const;
 
     /**
      * Specific check for call method action
@@ -204,7 +204,7 @@ class CActionInfo {
      * @param paNoOfSDs Number of SDs present in the FB
      * @return True if the call method action is valid, false otherwise
      */
-    bool checkCallMethodAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const;
+    bool checkCallMethodAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId paNoOfSDs) const;
 
     /**
      * Specific check for subscribe action
@@ -213,7 +213,7 @@ class CActionInfo {
      * @param paNoOfSDs Number of SDs present in the FB
      * @return True if the subscribe action is valid, false otherwise
      */
-    bool checkSubscribeAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const;
+    bool checkSubscribeAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId paNoOfSDs) const;
 
     /**
      * Specific check for create object action
@@ -222,7 +222,7 @@ class CActionInfo {
      * @param paNoOfSDs Number of SDs present in the FB
      * @return True if the create object action is valid, false otherwise
      */
-    bool checkCreateObjectAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const;
+    bool checkCreateObjectAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId paNoOfSDs) const;
 
     /**
      * Specific check for create variable action
@@ -231,7 +231,7 @@ class CActionInfo {
      * @param paNoOfSDs Number of SDs present in the FB
      * @return True if the create variable action is valid, false otherwise
      */
-    bool checkCreateVariableAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const;
+    bool checkCreateVariableAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId paNoOfSDs) const;
 
     /**
      * Specific check for delete node action
@@ -240,7 +240,7 @@ class CActionInfo {
      * @param paNoOfSDs Number of SDs present in the FB
      * @return True if the delete node action is valid, false otherwise
      */
-    bool checkDeleteNodeAction(forte::com_infra::EComServiceType paFbType, unsigned int paNoOfRDs, unsigned int paNoOfSDs) const;
+    bool checkDeleteNodeAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId paNoOfSDs) const;
 
     /**
      * The type of action to execute

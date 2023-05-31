@@ -20,6 +20,8 @@
 #include <forte_sync.h>
 #include "../../stdfblib/io/processinterfacebase.h"
 
+#include <string>
+
 namespace forte {
   namespace core {
     namespace io {
@@ -68,12 +70,12 @@ namespace forte {
           bool mIsReady;
           CSyncObject mSyncMutex;
 
-          static const char * const scmOK;
-          static const char * const scmWaitingForHandle;
-          static const char * const scmFailedToRegister;
-          static const char * const scmMappedWrongDirectionOutput;
-          static const char * const scmMappedWrongDirectionInput;
-          static const char * const scmMappedWrongDataType;
+          static const std::string scmOK;
+          static const std::string scmWaitingForHandle;
+          static const std::string scmFailedToRegister;
+          static const std::string scmMappedWrongDirectionOutput;
+          static const std::string scmMappedWrongDirectionInput;
+          static const std::string scmMappedWrongDataType;
       };
 
     } //namespace IO

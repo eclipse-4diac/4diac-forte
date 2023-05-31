@@ -654,7 +654,7 @@ BOOST_AUTO_TEST_CASE(Array_fromString_WStringArrayTest)
     BOOST_CHECK_EQUAL(paEmptyArray.toString(acBuffer, 30), 2);
 
     CIEC_ARRAY_DYNAMIC nTest1(1, g_nStringIdINT);
-    nTest1.fromString("[2]");
+    BOOST_CHECK_EQUAL(nTest1.fromString("[2]"), 3);
     paEmptyArray.setValue(nTest1); //shouldn't change or break anything
 
     BOOST_CHECK_EQUAL(paEmptyArray.size(), 0);
@@ -689,7 +689,7 @@ void setDataArrayOfStructTest(CIEC_ArrayOfStructTest &paStruct, const char* paVa
   paStruct.Var1[0] = CIEC_STRING(paVal11);
   paStruct.Var1[1] = CIEC_STRING(paVal12);
   paStruct.Var2 = CIEC_BOOL(paVal2);
-  paStruct.Var3[0] = CIEC_INT(paVal31);
+  paStruct.Var3[0] = CIEC_INT(static_cast<TForteInt16>(paVal31));
 }
 
 void setupArrayOfStructTest_TestDataSet1(CIEC_ArrayOfStructTest &paStruct) {
