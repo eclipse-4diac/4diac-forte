@@ -29,6 +29,8 @@
 #include "forte_any_bit_not_decorator.h"
 #include "../../src/core/typelib.h"
 
+using namespace std::string_literals;
+
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "iec61131_functionstests_gen.cpp"
 #endif
@@ -119,14 +121,14 @@ BOOST_AUTO_TEST_CASE(to_upper)
 {
   CIEC_STRING sTestString("shall_be_to_upper");
   CIEC_STRING sToUpperString(func_TOUPPER(sTestString));
-  BOOST_TEST(sToUpperString.getValue() == "SHALL_BE_TO_UPPER");
+  BOOST_TEST(sToUpperString.getStorage() == "SHALL_BE_TO_UPPER"s);
 }
 
 BOOST_AUTO_TEST_CASE(to_lower)
 {
   CIEC_STRING sTestString("SHALL_BE_TO_LOWER");
   CIEC_STRING sToLowerString(func_TOLOWER(sTestString));
-  BOOST_TEST(sToLowerString.getValue() == "shall_be_to_lower");
+  BOOST_TEST(sToLowerString.getStorage() == "shall_be_to_lower"s);
 }
 
 BOOST_AUTO_TEST_CASE(standard_example_len)
@@ -148,42 +150,42 @@ BOOST_AUTO_TEST_CASE(standard_example_left)
 {
   CIEC_STRING sTestString("ASTR");
   CIEC_STRING sLeftString(func_LEFT(sTestString, CIEC_INT(3)));
-  BOOST_TEST(sLeftString.getValue() == "AST");
+  BOOST_TEST(sLeftString.getStorage() == "AST"s);
 }
 
 BOOST_AUTO_TEST_CASE(left)
 {
   CIEC_STRING sTestString("SHALL_BE_CROPPED_HERE_THIS_SHOULD_NOT_BE_SEEN");
   CIEC_STRING sLeftString(func_LEFT(sTestString, CIEC_INT(21)));
-  BOOST_TEST(sLeftString.getValue() == "SHALL_BE_CROPPED_HERE");
+  BOOST_TEST(sLeftString.getStorage() == "SHALL_BE_CROPPED_HERE"s);
 }
 
 BOOST_AUTO_TEST_CASE(standard_example_right)
 {
   CIEC_STRING sTestString("ASTR");
   CIEC_STRING sRightString(func_RIGHT(sTestString, CIEC_INT(3)));
-  BOOST_TEST(sRightString.getValue() == "STR");
+  BOOST_TEST(sRightString.getStorage() == "STR"s);
 }
 
 BOOST_AUTO_TEST_CASE(right)
 {
   CIEC_STRING sTestString("THIS_SHOULD_BE_CROPPED_THIS_SHOULD_BE_SEEN");
   CIEC_STRING sRightString(func_RIGHT(sTestString, CIEC_INT(19)));
-  BOOST_TEST(sRightString.getValue() == "THIS_SHOULD_BE_SEEN");
+  BOOST_TEST(sRightString.getStorage() == "THIS_SHOULD_BE_SEEN"s);
 }
 
 BOOST_AUTO_TEST_CASE(standard_example_mid)
 {
   CIEC_STRING sTestString("ASTR");
   CIEC_STRING sMidString(func_MID(sTestString, CIEC_INT(2), CIEC_INT(2)));
-  BOOST_TEST(sMidString.getValue() == "ST");
+  BOOST_TEST(sMidString.getStorage() == "ST"s);
 }
 
 BOOST_AUTO_TEST_CASE(mid)
 {
   CIEC_STRING sTestString("THIS_SHOULD_NOT_BE_SEEN_THIS_SHALL_BE_SEEN_THIS_SHOULD_NOT_BE_SEEN");
   CIEC_STRING sMidString(func_MID(sTestString, CIEC_INT(18), CIEC_INT(25)));
-  BOOST_TEST(sMidString.getValue() == "THIS_SHALL_BE_SEEN");
+  BOOST_TEST(sMidString.getStorage() == "THIS_SHALL_BE_SEEN"s);
 }
 
 BOOST_AUTO_TEST_CASE(concat)
@@ -191,7 +193,7 @@ BOOST_AUTO_TEST_CASE(concat)
   CIEC_STRING sFristString("THIS_IS_THE_FIRST_STRING");
   CIEC_STRING sSecondString("_THIS_IS_THE_SECOND_STRING");
   CIEC_STRING sConcatString(func_CONCAT(sFristString, sSecondString));
-  BOOST_TEST(sConcatString.getValue() == "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING");
+  BOOST_TEST(sConcatString.getStorage() == "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING"s);
 }
 
 BOOST_AUTO_TEST_CASE(find_at_begin)
@@ -235,7 +237,7 @@ BOOST_AUTO_TEST_CASE(standard_example_replace)
   CIEC_STRING sIn1("ABCDE");
   CIEC_STRING sIn2("X");
   CIEC_STRING sResult(func_REPLACE(sIn1, sIn2, CIEC_INT(2), CIEC_INT(3)));
-  BOOST_TEST(sResult.getValue() == "ABXE");
+  BOOST_TEST(sResult.getStorage() == "ABXE"s);
 }
 
 BOOST_AUTO_TEST_CASE(replace)
@@ -243,7 +245,7 @@ BOOST_AUTO_TEST_CASE(replace)
   CIEC_STRING sIn1("Lorem ipsum dolor sit");
   CIEC_STRING sIn2("muspi");
   CIEC_STRING sResult(func_REPLACE(sIn1, sIn2, CIEC_INT(5), CIEC_INT(7)));
-  BOOST_TEST(sResult.getValue() == "Lorem muspi dolor sit");
+  BOOST_TEST(sResult.getStorage() == "Lorem muspi dolor sit"s);
 }
 
 BOOST_AUTO_TEST_CASE(replace_P_signed_0)
@@ -251,7 +253,7 @@ BOOST_AUTO_TEST_CASE(replace_P_signed_0)
   CIEC_STRING sIn1("Lorem ipsum dolor sit");
   CIEC_STRING sIn2("muspi");
   CIEC_STRING sResult(func_REPLACE(sIn1, sIn2, CIEC_INT(5), CIEC_INT(0)));
-  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+  BOOST_TEST(sResult.getStorage() == "Lorem ipsum dolor sit"s);
 }
 
 BOOST_AUTO_TEST_CASE(replace_P_signed_negative_number)
@@ -259,7 +261,7 @@ BOOST_AUTO_TEST_CASE(replace_P_signed_negative_number)
   CIEC_STRING sIn1("Lorem ipsum dolor sit");
   CIEC_STRING sIn2("muspi");
   CIEC_STRING sResult(func_REPLACE(sIn1, sIn2, CIEC_INT(5), CIEC_INT(-200)));
-  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+  BOOST_TEST(sResult.getStorage() == "Lorem ipsum dolor sit"s);
 }
 
 BOOST_AUTO_TEST_CASE(replace_P_unsigned_0)
@@ -267,7 +269,7 @@ BOOST_AUTO_TEST_CASE(replace_P_unsigned_0)
   CIEC_STRING sIn1("Lorem ipsum dolor sit");
   CIEC_STRING sIn2("muspi");
   CIEC_STRING sResult(func_REPLACE(sIn1, sIn2, CIEC_UINT(5), CIEC_UINT(0)));
-  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+  BOOST_TEST(sResult.getStorage() == "Lorem ipsum dolor sit"s);
 }
 
 BOOST_AUTO_TEST_CASE(replace_P_plus_L_at_end)
@@ -275,70 +277,70 @@ BOOST_AUTO_TEST_CASE(replace_P_plus_L_at_end)
   CIEC_STRING sIn1("123456789");
   CIEC_STRING sIn2("aaa");
   CIEC_STRING sResult(func_REPLACE(sIn1, sIn2, CIEC_UINT(7), CIEC_UINT(3)));
-  BOOST_TEST(sResult.getValue() == "12aaa");
+  BOOST_TEST(sResult.getStorage() == "12aaa"s);
 }
 
 BOOST_AUTO_TEST_CASE(standard_example_delete)
 {
   CIEC_STRING sIn1("ABXYC");
   CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(2), CIEC_INT(3)));
-  BOOST_TEST(sResult.getValue() == "ABC");
+  BOOST_TEST(sResult.getStorage() == "ABC"s);
 }
 
 BOOST_AUTO_TEST_CASE(delete_function)
 {
   CIEC_STRING sIn1("Lorem ipsum dolor sit");
   CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(6), CIEC_INT(12)));
-  BOOST_TEST(sResult.getValue() == "Lorem ipsum sit");
+  BOOST_TEST(sResult.getStorage() == "Lorem ipsum sit"s);
 }
 
 BOOST_AUTO_TEST_CASE(delete_function_L_unsigned_0)
 {
   CIEC_STRING sIn1("Lorem ipsum dolor sit");
   CIEC_STRING sResult(func_DELETE(sIn1, CIEC_UINT(0), CIEC_INT(12)));
-  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+  BOOST_TEST(sResult.getStorage() == "Lorem ipsum dolor sit"s);
 }
 
 BOOST_AUTO_TEST_CASE(delete_function_L_signed_0)
 {
   CIEC_STRING sIn1("Lorem ipsum dolor sit");
   CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(0), CIEC_INT(12)));
-  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+  BOOST_TEST(sResult.getStorage() == "Lorem ipsum dolor sit"s);
 }
 
 BOOST_AUTO_TEST_CASE(delete_function_L_signed_negative_number)
 {
   CIEC_STRING sIn1("Lorem ipsum dolor sit");
   CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(-4), CIEC_INT(12)));
-  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+  BOOST_TEST(sResult.getStorage() == "Lorem ipsum dolor sit"s);
 }
 
 BOOST_AUTO_TEST_CASE(delete_function_P_unsigned_0)
 {
   CIEC_STRING sIn1("Lorem ipsum dolor sit");
   CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(6), CIEC_UINT(0)));
-  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+  BOOST_TEST(sResult.getStorage() == "Lorem ipsum dolor sit"s);
 }
 
 BOOST_AUTO_TEST_CASE(delete_function_P_signed_0)
 {
   CIEC_STRING sIn1("Lorem ipsum dolor sit");
   CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(6), CIEC_INT(0)));
-  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+  BOOST_TEST(sResult.getStorage() == "Lorem ipsum dolor sit"s);
 }
 
 BOOST_AUTO_TEST_CASE(delete_function_P_signed_negative_number)
 {
   CIEC_STRING sIn1("Lorem ipsum dolor sit");
   CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(6), CIEC_INT(-32370)));
-  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+  BOOST_TEST(sResult.getStorage() == "Lorem ipsum dolor sit"s);
 }
 
 BOOST_AUTO_TEST_CASE(delete_function_length_exceeding_string)
 {
   CIEC_STRING sIn1("Lorem ipsum dolor sit");
   CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(6), CIEC_INT(30)));
-  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+  BOOST_TEST(sResult.getStorage() == "Lorem ipsum dolor sit"s);
 }
 
 BOOST_AUTO_TEST_CASE(eq_true)
@@ -496,7 +498,7 @@ BOOST_AUTO_TEST_CASE(concat3)
   CIEC_STRING sSecondString("_THIS_IS_THE_SECOND_STRING");
   CIEC_STRING sThirdString("_THIS_IS_THE_THIRD_STRING");
   CIEC_STRING sConcatString(func_CONCAT(sFristString, sSecondString, sThirdString));
-  BOOST_TEST(sConcatString.getValue() == "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING_THIS_IS_THE_THIRD_STRING");
+  BOOST_TEST(sConcatString.getStorage() == "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING_THIS_IS_THE_THIRD_STRING"s);
 }
 
 BOOST_AUTO_TEST_CASE(concat4)
@@ -506,7 +508,7 @@ BOOST_AUTO_TEST_CASE(concat4)
   CIEC_STRING sThirdString("_THIS_IS_THE_THIRD_STRING");
   CIEC_STRING sForthString("_THIS_IS_THE_FORTH_STRING");
   CIEC_STRING sConcatString(func_CONCAT(sFristString, sSecondString, sThirdString, sForthString));
-  BOOST_TEST(sConcatString.getValue() == "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING_THIS_IS_THE_THIRD_STRING_THIS_IS_THE_FORTH_STRING");
+  BOOST_TEST(sConcatString.getStorage() == "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING_THIS_IS_THE_THIRD_STRING_THIS_IS_THE_FORTH_STRING"s);
 }
 
 BOOST_AUTO_TEST_CASE(standard_example_insert)
@@ -514,7 +516,7 @@ BOOST_AUTO_TEST_CASE(standard_example_insert)
   CIEC_STRING sIn1("ABC");
   CIEC_STRING sIn2("XY");
   CIEC_STRING sResult = func_INSERT(sIn1, sIn2, CIEC_UINT(2));
-  BOOST_TEST(sResult.getValue() == "ABXYC");
+  BOOST_TEST(sResult.getStorage() == "ABXYC"s);
 }
 
 BOOST_AUTO_TEST_CASE(insert)
@@ -522,7 +524,7 @@ BOOST_AUTO_TEST_CASE(insert)
   CIEC_STRING sIn1("Lorem  sit");
   CIEC_STRING sIn2("ipsum dolor");
   CIEC_STRING sResult = func_INSERT(sIn1, sIn2, CIEC_UINT(6));
-  BOOST_TEST(sResult.getValue() == "Lorem ipsum dolor sit");
+  BOOST_TEST(sResult.getStorage() == "Lorem ipsum dolor sit"s);
 }
 
 BOOST_AUTO_TEST_CASE(insert_P_larger_than_input_string)
@@ -530,7 +532,7 @@ BOOST_AUTO_TEST_CASE(insert_P_larger_than_input_string)
   CIEC_STRING sIn1("Lorem  sit");
   CIEC_STRING sIn2("ipsum dolor");
   CIEC_STRING sResult = func_INSERT(sIn1, sIn2, CIEC_UINT(11));
-  BOOST_TEST(sResult.getValue() == "Lorem  sit");
+  BOOST_TEST(sResult.getStorage() == "Lorem  sit"s);
 }
 
 BOOST_AUTO_TEST_CASE(insert_P_unsigned_0)
@@ -538,7 +540,7 @@ BOOST_AUTO_TEST_CASE(insert_P_unsigned_0)
   CIEC_STRING sIn1("Lorem  sit");
   CIEC_STRING sIn2("ipsum dolor");
   CIEC_STRING sResult = func_INSERT(sIn1, sIn2, CIEC_UINT(0));
-  BOOST_TEST(sResult.getValue() == "Lorem  sit");
+  BOOST_TEST(sResult.getStorage() == "Lorem  sit"s);
 }
 
 BOOST_AUTO_TEST_CASE(insert_P_signed_0)
@@ -546,7 +548,7 @@ BOOST_AUTO_TEST_CASE(insert_P_signed_0)
   CIEC_STRING sIn1("Lorem  sit");
   CIEC_STRING sIn2("ipsum dolor");
   CIEC_STRING sResult = func_INSERT(sIn1, sIn2, CIEC_INT(0));
-  BOOST_TEST(sResult.getValue() == "Lorem  sit");
+  BOOST_TEST(sResult.getStorage() == "Lorem  sit"s);
 }
 
 BOOST_AUTO_TEST_CASE(insert_P_signed_negative_number)
@@ -554,7 +556,7 @@ BOOST_AUTO_TEST_CASE(insert_P_signed_negative_number)
   CIEC_STRING sIn1("Lorem  sit");
   CIEC_STRING sIn2("ipsum dolor");
   CIEC_STRING sResult = func_INSERT(sIn1, sIn2, CIEC_INT(-20));
-  BOOST_TEST(sResult.getValue() == "Lorem  sit");
+  BOOST_TEST(sResult.getStorage() == "Lorem  sit"s);
 }
 
 BOOST_AUTO_TEST_CASE(trunc) {

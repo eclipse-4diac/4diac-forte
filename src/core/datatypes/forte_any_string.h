@@ -11,8 +11,7 @@
  *    Thomas Strasser, Alois Zoitl, Stanislav Meduna, Monika Wenger, Ingo Hegny
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians
- *      - fixes behavior for getToStringBufferSize, removed built-in type operator=,
- *      added fromCharString protected function
+ *      - fixes behavior for getToStringBufferSize, removed built-in type operator=
  *******************************************************************************/
 #ifndef _ANY_STR_H_
 #define _ANY_STR_H_
@@ -23,7 +22,7 @@
  */
 class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
   public:
-    static const unsigned int scm_unMaxStringLen = 65534; //save one for the \0 needed for allocated length
+    static constexpr size_t scmMaxStringLen = 65534; //save one for the \0 needed for allocated length
 
     ~CIEC_ANY_STRING() override;
 
@@ -47,42 +46,42 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
      *     - Actual value of the object.
      */
 
-    char* getValue(){
+    virtual char* getValue() {
       return ((char *) ((nullptr != getGenData()) ? reinterpret_cast<char*>(getGenData() + 4) : sm_acNullString));
     }
 
-    const char *getValue() const{
+    virtual const char *getValue() const {
       return (const char *) ((nullptr != getGenData()) ? reinterpret_cast<const char*>(getGenData() + 4) : sm_acNullString);
     }
 
-    TForteUInt16 length() const{
+    virtual TForteUInt16 length() const {
       return (nullptr != getGenData()) ? (*((TForteUInt16 *) (getGenData()))) : static_cast<TForteUInt16>(0);
     }
 
-    void clear(){
+    virtual void clear() {
       assign("", 0);
     }
 
-    bool empty() const{
+    virtual bool empty() const{
       return length() == 0;
     }
 
     /*! Assign arbitrary data (can contain '0x00')
      */
-    void assign(const char *pa_poData, TForteUInt16 pa_nLen);
+    virtual void assign(const char *pa_poData, TForteUInt16 pa_nLen);
 
     /*! Append arbitrary data (can contain '0x00')
      */
-    void append(const char *pa_poData, TForteUInt16 pa_nLen);
+    virtual void append(const char *pa_poData, TForteUInt16 pa_nLen);
 
-    /*! Append arbitrary data (can contain '0x00')
+    /*! Append data, cannot contain '0x00' as this is used to identify the end of the cstring
      */
-    void append(const char *pa_poData);
+    virtual void append(const char *pa_poData);
 
     /*! Try to reserve enough space to hold a string with given length.
      *  After this function the string will be at least of the size given.
      */
-    void reserve(TForteUInt16 pa_nRequestedSize);
+    virtual void reserve(TForteUInt16 pa_nRequestedSize);
 
     /*! Retrieve the current allocated size
      *
@@ -93,20 +92,6 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
     }
 
 #ifdef FORTE_UNICODE_SUPPORT
-    /*! \brief Converts a UTF-8 encoded string to a variable
-     *
-     *   This command implements a conversion function from a UTF-16
-     *   encoded string (found e.g. in XML to the internal
-     *   ISO 10646 Row 00 encoding.
-     *   \param pa_pacBuffer  Reference to the given UTF-8 encoded byte array
-     *   \param pa_nLen  Length to read (-1 for null-terminated)
-     *   \param pa_bUnescape  Handle $-escapes and delimiter characters at the beginning and end
-     *   \return Can be the following response:
-     *   \return number of bytes used from srcString
-     *       -1 on error
-     */
-    virtual int fromUTF8(const char *, int, bool){return 0;}
-
     /*! \brief Converts the variable to a UTF-8 representation
      *
      *   This command implements a conversion function from a WSTRING
@@ -131,7 +116,7 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
      *   delimiter and return the length including the delimiters.
      *   If the string does not start with the delimiter, this method is equivalent to strlen.
      *
-     *   Note: the returned length can be > scm_unMaxStringLen, so even larger strings
+     *   Note: the returned length can be > scmMaxStringLen, so even larger strings
      *   can be truncated and their end still be found
      *
      *   \param pa_pacValue  Source string
@@ -142,18 +127,18 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
 
     static bool handleDollarEscapedChar(const char **pa_pacValue, bool pa_bWide, TForteUInt16 &pa_rnValue);
     // Use null as destination for just determining the need of escaping
-    static int dollarEscapeChar(char *pa_pacValue, char pa_cValue, unsigned int pa_nBufferSize);
+    static int dollarEscapeChar(char *pa_pacValue, char pa_cValue, unsigned int pa_nBufferSize, const EDataTypeID typeID);
     static bool parseEscapedHexNum(const char **pa_pacValue, bool pa_bWide, TForteUInt16 &pa_rnValue);
 
     /*! \brief Unescape the input string.
      *
      *  As the unescaping never makes the string longer, it can be used in-place
-     *  @param pa_pacValue  the source trong to unescape from
-     *  @param pa_cDelimiter string delimiting character (i.e., ' for STRING, " for WSTRING)
+     *  @param paValue  the source trong to unescape from
+     *  @param paDelimiter string delimiting character (i.e., ' for STRING, " for WSTRING)
      *  @return on success number of bytes take from src string
      *          -1 on error
      */
-    int unescapeFromString(const char *pa_pacValue, char pa_cDelimiter);
+    int unescapeFromString(const char *paValue, char paDelimiter);
 
     void setLength(TForteUInt16 pa_unVal){
       TForteByte *pBuf = getGenData();
@@ -168,8 +153,6 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
         *((TForteUInt16 *) (pBuf + 2)) = pa_unVal;
       }
     }
-
-    void fromCharString(const char* const paValue);
 
     CIEC_ANY_STRING() = default;
 };

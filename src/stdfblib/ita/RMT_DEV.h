@@ -22,37 +22,35 @@
 
 
 class RMT_DEV : public CDevice{
+  public:
+    RMT_RES MGR;
 
+    RMT_DEV();
+    ~RMT_DEV() override;
 
-public:
-  RMT_RES MGR;
+    bool initialize() override;
 
-  RMT_DEV();
-  ~RMT_DEV() override;
+  /*! \brief Adds additional functionality to the originals execute func of the device.
+  *
+  * This is that it waits till the thread of the MGR resource has anded
+  */
+    int startDevice() override;
 
-  bool initialize() override;
+    EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand) override;
 
-/*! \brief Adds additional functionality to the originals execute func of the device.
- *
- * This is that it waits till the thread of the MGR resource has anded
- */
-  int startDevice() override;
+    void setMGR_ID(const char * const pa_acConn);
 
-  EMGMResponse changeFBExecutionState(EMGMCommandType pa_unCommand) override;
+  private:
+    CInterface2InternalDataConnection m_oDConnMGR_ID;
 
-  void setMGR_ID(const char * const pa_acConn);
+    static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-private:
-  CInterface2InternalDataConnection m_oDConnMGR_ID;
+    static const CStringDictionary::TStringId scm_aunDINameIds[];
+    static const CStringDictionary::TStringId scm_aunDIDataTypeIds[];
 
-  static const SFBInterfaceSpec scm_stFBInterfaceSpec;
-
-  static const CStringDictionary::TStringId scm_aunDINameIds[];
-  static const CStringDictionary::TStringId scm_aunDIDataTypeIds[];
-
-  CIEC_WSTRING& MGR_ID() {
-     return *static_cast<CIEC_WSTRING*>(getDI(0));
-  }
+    CIEC_WSTRING& MGR_ID() {
+      return *static_cast<CIEC_WSTRING*>(getDI(0));
+    }
 };
 
 #endif /*RMT_DEV_H_*/

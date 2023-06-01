@@ -77,7 +77,7 @@ bool CIEC_WSTRING::fromUTF16(const TForteByte *pa_pacBuffer, unsigned int pa_nBu
     nNeededLength += nRes;
   }
 
-  if(nNeededLength > scm_unMaxStringLen) {
+  if(nNeededLength > scmMaxStringLen) {
     return false;
   }
 
@@ -189,10 +189,10 @@ int CIEC_WSTRING::fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnesca
       return 0;
     }
 
-    if(nSrcLen > static_cast<int>(scm_unMaxStringLen)){
+    if(nSrcLen > static_cast<int>(scmMaxStringLen)){
       // If we get a to large string we will truncate it
       // This is a conservative guess
-      nSrcCappedLength = scm_unMaxStringLen;
+      nSrcCappedLength = scmMaxStringLen;
       DEVLOG_WARNING("Too large string, destination will be truncated!\n");
     }
 
@@ -276,7 +276,7 @@ int CIEC_WSTRING::toUTF8(char* paBuffer, size_t paBufferSize, bool paEscape) con
 
   pRunner = getValue();
   while(*pRunner){
-    int nRes = dollarEscapeChar(pEncRunner, *pRunner, static_cast<unsigned int>(pDataEnd - pEncRunner));
+    int nRes = dollarEscapeChar(pEncRunner, *pRunner, static_cast<unsigned int>(pDataEnd - pEncRunner), getDataTypeID());
 
     if(nRes < 0) {
       return -1;
@@ -325,4 +325,18 @@ size_t CIEC_WSTRING::getToStringBufferSize() const {
     }
   }
   return neededBufferSize + 2 + 1; // For Quotes and \0
+}
+
+void CIEC_WSTRING::fromCharString(const char* const paValue){
+  if(nullptr != paValue){
+    size_t nLen = strlen(paValue);
+    if (nLen > scmMaxStringLen) {
+      //If we get a to large string we will truncate it
+      nLen = scmMaxStringLen;
+      DEVLOG_WARNING("Too large string given in assignment, destination will be truncated!\n");
+    }
+    assign(paValue, static_cast<TForteUInt16>(nLen));
+  } else {
+    DEVLOG_WARNING("CIEC_WSTRING::fromCharString - Attempt to assign null, no action performed!\n");
+  }
 }

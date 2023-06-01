@@ -60,6 +60,8 @@
 #include "fbdkasn1layerdeser_test_gen.cpp"
 #endif
 
+using namespace std::string_literals;
+
 class CDeserTestMockCommFB : public forte::com_infra::CCommFB{
   public:
     CDeserTestMockCommFB(TForteUInt8 pa_nNumRD, const CStringDictionary::TStringId * const pa_aunDODataTypeNames) :
@@ -1005,7 +1007,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abStringHalloWorld, cg_unStringHalloWorldSerSize));
     BOOST_CHECK_EQUAL(nVal.length(), 10);
-    BOOST_CHECK_EQUAL(strcmp(nVal.getValue(), "HalloWorld"), 0);
+    BOOST_TEST(nVal.getStorage() == "HalloWorld");
   }
 
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_STRING){
@@ -1046,11 +1048,11 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abWStringHalloWorld, cg_unWStringHalloWorldSerSize));
     BOOST_CHECK_EQUAL(nVal.length(), 10);
-    BOOST_CHECK_EQUAL(strcmp(nVal.getValue(), "HalloWorld"), 0);
+    BOOST_TEST(nVal.getValue() == "HalloWorld");
 
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.recvData(cg_abWStringNihongo, cg_unWStringNihongoSerSize));
     BOOST_CHECK_EQUAL(nVal.length(), 9);
-    BOOST_CHECK_EQUAL(strcmp(nVal.getValue(), (const char * ) cg_abWStringNihongoUTF8), 0);
+    BOOST_TEST(nVal.getValue() == reinterpret_cast<const char *>(cg_abWStringNihongoUTF8));
   }
 
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_WSTRING){
@@ -1148,7 +1150,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
 
     BOOST_CHECK_EQUAL(strcmp(acStrBuf, "T#3000ms"), 0);
     BOOST_CHECK_EQUAL(oWordVal, 40396);
-    BOOST_CHECK_EQUAL(strcmp(oStringVal.getValue(), "HalloWorld"), 0);
+    BOOST_TEST(oStringVal.getStorage() == "HalloWorld"s);
     BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(oIntVal), -10934);
     BOOST_CHECK_EQUAL(oBoolVal, true);
     oTimeVal2.toString(acStrBuf, 20);
@@ -1247,7 +1249,7 @@ BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)
     BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTesteeString.recvData(cg_abArrayStringEmptyHalloWorld, cg_unString2SerSize));
     BOOST_CHECK_EQUAL(static_cast<CIEC_STRING &>(nStringArray[0]).length(), 0);
     BOOST_CHECK_EQUAL(static_cast<CIEC_STRING &>(nStringArray[1]).length(), 10);
-    BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nStringArray[1]).getValue(), "HalloWorld"), 0);
+    BOOST_TEST(static_cast<CIEC_STRING &>(nStringArray[1]).getStorage() == "HalloWorld"s);
   }
 
   BOOST_AUTO_TEST_CASE(Single_Deserialize_Negative_Test_BOOLARRAY){

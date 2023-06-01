@@ -42,9 +42,9 @@ void FORTE_ADS_SERVER_CONFIG::executeEvent(TEventID pa_nEIID){
   switch (pa_nEIID){
     case scm_nEventINITID:
       if(QI()) {
-        QO() = CIEC_BOOL(forte::ads::CAdsConnectionManager::getInstance().addConnection(FRIENDLY_NAME().getValue(), SERVER_ADS_ADDRESS().getValue(), static_cast<CIEC_UDINT::TValueType>(ADS_PORT()), SERVER_IPV4_OR_HOSTNAME().getValue()));
+        QO() = CIEC_BOOL(forte::ads::CAdsConnectionManager::getInstance().addConnection(FRIENDLY_NAME().getStorage().c_str(), SERVER_ADS_ADDRESS().getStorage().c_str(), static_cast<CIEC_UDINT::TValueType>(ADS_PORT()), SERVER_IPV4_OR_HOSTNAME().getStorage().c_str()));
       } else {
-        forte::ads::CAdsConnectionManager::getInstance().removeConnection(FRIENDLY_NAME().getValue());
+        forte::ads::CAdsConnectionManager::getInstance().removeConnection(FRIENDLY_NAME().getStorage().c_str());
         QO() = CIEC_BOOL(false);
       }
       sendOutputEvent(scm_nEventINITOID);

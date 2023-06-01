@@ -85,14 +85,14 @@ void FORTE_GET_STRUCT_VALUE::executeEvent(TEventID pa_nEIID) {
     case scm_nEventREQID:
       if (std::holds_alternative<CIEC_ANY_UNIQUE_PTR<CIEC_STRUCT>>(var_in_struct)) {
         auto &inStruct = std::get<CIEC_ANY_UNIQUE_PTR<CIEC_STRUCT>>(var_in_struct);
-        std::string memberName(var_member.getValue()); // will be modified by lookForMember
+        std::string memberName(var_member.getStorage()); // will be modified by lookForMember
         CIEC_ANY *member = lookForMember(*inStruct, memberName.data());
         if (nullptr != member) {
           var_output.setValue(*member);
           var_QO = CIEC_BOOL(true);
         } else {
           DEVLOG_ERROR("[GET_STRUCT_VALUE]: In instance %s, member %s was not found\n", getInstanceName(),
-                       var_member.getValue());
+                       var_member.getStorage().c_str());
           var_QO = CIEC_BOOL(false);
         }
       } else {

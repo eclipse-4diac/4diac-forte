@@ -450,7 +450,7 @@ int CFBDKASN1ComLayer::serializeValueString(TForteByte* pa_pcBytes, int pa_nStre
     pa_pcBytes[0] = (TForteByte) ((unStringLen >> 8) & 0x00FF);
     pa_pcBytes[1] = (TForteByte) (unStringLen & 0x00FF);
     pa_pcBytes += 2;
-    memcpy(pa_pcBytes, pa_roString.getValue(), unStringLen);
+    memcpy(pa_pcBytes, pa_roString.getStorage().c_str(), unStringLen);
     nRetVal = unStringLen + 2;
   }
   return nRetVal;

@@ -43,6 +43,8 @@
 #include "stringlist.h"
 #endif
 
+using namespace std::string_literals;
+
 BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
 
   BOOST_AUTO_TEST_CASE(createANY){
@@ -287,11 +289,11 @@ BOOST_AUTO_TEST_SUITE(TypeLibDataTypeTests)
     TForteByte acDataBuf[sizeof(CIEC_STRING)];
     CIEC_ANY *poVal = CTypeLib::createDataTypeInstance(g_nStringIdSTRING, acDataBuf);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_STRING, poVal->getDataTypeID());
-    BOOST_CHECK_EQUAL("", static_cast<CIEC_STRING *>(poVal)->getValue());
+    BOOST_TEST(""s == static_cast<CIEC_STRING *>(poVal)->getStorage());
 
     poVal = CTypeLib::createDataTypeInstance(g_nStringIdSTRING, nullptr);
     BOOST_CHECK_EQUAL(CIEC_ANY::e_STRING, poVal->getDataTypeID());
-    BOOST_CHECK_EQUAL("", static_cast<CIEC_STRING *>(poVal)->getValue());
+    BOOST_TEST(""s == static_cast<CIEC_STRING *>(poVal)->getStorage());
     delete poVal;
   }
 

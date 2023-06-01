@@ -26,3 +26,7 @@ file_list.txt
 *.a
 /src/forte
 /src/src
+
+# IDE files
+/.vscode/
+/.vs/

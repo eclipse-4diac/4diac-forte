@@ -43,7 +43,7 @@ class GEN_CSV_WRITER_TestFixture : public CFBTestFixtureBase {
         closeFile();
       }
 
-      BOOST_CHECK_EQUAL(unlink(mFILE_NAME.getValue()), 0);
+      BOOST_CHECK_EQUAL(unlink(mFILE_NAME.getStorage().c_str()), 0);
     }
 
     CIEC_BOOL mQI;
@@ -78,7 +78,7 @@ class GEN_CSV_WRITER_TestFixture : public CFBTestFixtureBase {
       BOOST_CHECK(!mIsOpen);
 
       std::stringstream buffer;
-      buffer << std::ifstream(mFILE_NAME.getValue()).rdbuf();
+      buffer << std::ifstream(mFILE_NAME.getStorage().c_str()).rdbuf();
       return buffer.str();
     }
 

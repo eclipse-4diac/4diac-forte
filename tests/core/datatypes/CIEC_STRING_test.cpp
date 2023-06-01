@@ -22,6 +22,8 @@
 
 #include "../../../src/core/datatypes/forte_string.h"
 
+using namespace std::string_literals;
+
 BOOST_AUTO_TEST_SUITE(CIEC_STRING_function_test)
 BOOST_AUTO_TEST_CASE(Type_test)
 {
@@ -80,12 +82,12 @@ BOOST_AUTO_TEST_CASE(String_manipulation_interface)
 
   sTest = CIEC_STRING(cTest);
   BOOST_CHECK(! sTest.empty());
-  BOOST_CHECK_EQUAL(sTest.length(), 22);
-  BOOST_CHECK_EQUAL(strcmp(sTest.getValue(), cTest), 0);
+  BOOST_TEST(sTest.length() == 22);
+  BOOST_TEST(sTest.getStorage() == cTest);
 
   CIEC_STRING* psTest = new CIEC_STRING(cTest);
-  BOOST_CHECK_EQUAL(psTest->length(), 22);
-  BOOST_CHECK_EQUAL(strcmp(psTest->getValue(), cTest), 0);
+  BOOST_TEST(psTest->length() == 22);
+  BOOST_TEST(psTest->getStorage() == cTest);
   delete psTest;
 
 }
@@ -98,16 +100,16 @@ BOOST_AUTO_TEST_CASE(String_assignment)
   char cTest2[] = "Check string!";
 
   sTest1 = CIEC_STRING(cTest1);
-  BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), cTest1), 0);
+  BOOST_TEST(sTest1.getStorage() == cTest1);
 
   sTest2 = sTest1;
-  BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), cTest1), 0);
+  BOOST_TEST(sTest1.getStorage() == cTest1);
 
-  BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), sTest2.getValue()), 0);
-  BOOST_CHECK_EQUAL(sTest1.length(), 28);
-  BOOST_CHECK_EQUAL(sTest2.length(), 28);
+  BOOST_TEST(sTest1 == sTest2);
+  BOOST_TEST(sTest1.length() == 28);
+  BOOST_TEST(sTest2.length() == 28);
   sTest2 = CIEC_STRING(cTest2);
-  BOOST_CHECK((0 != strcmp(sTest1.getValue(), sTest2.getValue())));
+  BOOST_TEST(sTest1 != sTest2);
 }
 
 BOOST_AUTO_TEST_CASE(String_clear)
@@ -137,75 +139,85 @@ BOOST_AUTO_TEST_CASE(String_clear)
 BOOST_AUTO_TEST_CASE(String_re_assignment)
 {
   CIEC_STRING test1("123456789");
-  BOOST_CHECK_EQUAL(test1.length(), 9);
+  BOOST_TEST(test1.getStorage() == "123456789"s);
+  BOOST_TEST(test1.length() == 9);
 
   test1.clear();
-  BOOST_CHECK_EQUAL(test1.length(), 0);
+  BOOST_TEST(test1.getStorage() == ""s);
+  BOOST_TEST(test1.length() == 0);
 
   test1.assign("123456789", 9);
-  BOOST_CHECK_EQUAL(test1.length(), 9);
+  BOOST_TEST(test1.getStorage() == "123456789"s);
+  BOOST_TEST(test1.length() == 9);
 
   test1.assign("123456", 6); //smaller string
-  BOOST_CHECK_EQUAL(test1.length(), 6);
+  BOOST_TEST(test1.getStorage() == "123456"s);
+  BOOST_TEST(test1.length() == 6);
 
   test1.assign("12345678", 8); //bigger string
-  BOOST_CHECK_EQUAL(test1.length(), 8);
+  BOOST_TEST(test1.getStorage() == "12345678"s);
+  BOOST_TEST(test1.length() == 8);
 
   test1.assign("1234567890", 9); //length to assign smaller than actual string coming from a smaller string
-  BOOST_CHECK_EQUAL(test1.length(), 9);
+  BOOST_TEST(test1.getStorage() == "123456789"s);
+  BOOST_TEST(test1.length() == 9);
 
   test1.assign("1234", 3);//length to assign smaller than actual string coming from a bigger string
-  BOOST_CHECK_EQUAL(test1.length(), 3);
+  BOOST_TEST(test1.getStorage() == "123"s);
+  BOOST_TEST(test1.length() == 3);
 
   test1.assign(nullptr, 0);//shouldn't do anything
-  BOOST_CHECK_EQUAL(test1.length(), 3);
+  BOOST_TEST(test1.getStorage() == ""s);
+  BOOST_TEST(test1.length() == 0);
 
   test1.assign("\0", 0);
-  BOOST_CHECK_EQUAL(test1.length(), 0);
+  BOOST_TEST(test1.getStorage() == ""s);
+  BOOST_TEST(test1.length() == 0);
 
   test1.assign("0", 1);
-  BOOST_CHECK_EQUAL(test1.length(), 1);
+  BOOST_TEST(test1.getStorage() == "0"s);
+  BOOST_TEST(test1.length() == 1);
 
   test1.assign("", 0);
-  BOOST_CHECK_EQUAL(test1.length(), 0);
+  BOOST_TEST(test1.getStorage() == ""s);
+  BOOST_TEST(test1.length() == 0);
 }
 
-BOOST_AUTO_TEST_CASE(String_append)
-{
+BOOST_AUTO_TEST_CASE(String_append) {
   CIEC_STRING test1("123456789");
   BOOST_CHECK_EQUAL(test1.length(), 9);
 
   test1.append("");
   BOOST_CHECK_EQUAL(test1.length(), 9);
-  BOOST_CHECK_EQUAL(strcmp(test1.getValue(), "123456789"), 0);
+  BOOST_TEST(test1.getStorage() == "123456789"s);
 
   test1.append("0");
   BOOST_CHECK_EQUAL(test1.length(), 10);
-  BOOST_CHECK_EQUAL(strcmp(test1.getValue(), "1234567890"), 0);
+  BOOST_TEST(test1.getStorage() == "1234567890"s);
 
   test1.append("\0");
   BOOST_CHECK_EQUAL(test1.length(), 10);
-  BOOST_CHECK_EQUAL(strcmp(test1.getValue(), "1234567890"), 0);
+  BOOST_TEST(test1.getStorage() == "1234567890"s);
 
   test1.append("123", 1);
   BOOST_CHECK_EQUAL(test1.length(), 11);
-  BOOST_CHECK_EQUAL(strcmp(test1.getValue(), "12345678901"), 0);
+  BOOST_TEST(test1.getStorage() == "12345678901"s);
 
   test1.append("");
   BOOST_CHECK_EQUAL(test1.length(), 11);
-  BOOST_CHECK_EQUAL(strcmp(test1.getValue(), "12345678901"), 0);
+  BOOST_TEST(test1.getStorage() == "12345678901"s);
 
   test1.append(nullptr, 0); //shouldn't do anything
   BOOST_CHECK_EQUAL(test1.length(), 11);
-  BOOST_CHECK_EQUAL(strcmp(test1.getValue(), "12345678901"), 0);
+  BOOST_TEST(test1.getStorage() == "12345678901"s);
 
   test1.append("1\03"); // {'1', '3', '\0'}
   BOOST_CHECK_EQUAL(test1.length(), 13);
-  BOOST_CHECK_EQUAL(strcmp(test1.getValue(), "123456789011\3"), 0);
+  BOOST_TEST(test1.getStorage() == "123456789011\3"s);
 
   test1.append(nullptr, 0);//shouldn't do anything
   BOOST_CHECK_EQUAL(test1.length(), 13);
-  BOOST_CHECK_EQUAL(strcmp(test1.getValue(), "123456789011\3"), 0);
+  BOOST_TEST(test1.getStorage() == "123456789011\3"s);
 
   test1.clear();
   test1.append("\0"); //append to empty string
@@ -216,8 +228,7 @@ BOOST_AUTO_TEST_CASE(String_append)
 
 }
 
-BOOST_AUTO_TEST_CASE(String_compare)
-{
+BOOST_AUTO_TEST_CASE(String_compare) {
   CIEC_STRING sTest1;
   CIEC_STRING sTest2;
   CIEC_STRING sTest3;
@@ -230,49 +241,48 @@ BOOST_AUTO_TEST_CASE(String_compare)
   sTest2 = CIEC_STRING(cTest2);
   sTest3 = CIEC_STRING(cTest3);
   BOOST_CHECK(sTest1 == sTest2);
-  BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), cTest1), 0);
-  BOOST_CHECK_EQUAL(strcmp(sTest2.getValue(), cTest2), 0);
+  BOOST_TEST(sTest1.getStorage() == cTest1);
+  BOOST_TEST(sTest2.getStorage() == cTest2);
 
   BOOST_CHECK(!(sTest1 == sTest3));
-  BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), cTest1), 0);
-  BOOST_CHECK_EQUAL(strcmp(sTest3.getValue(), cTest3), 0);
+  BOOST_TEST(sTest1.getStorage() == cTest1);
+  BOOST_TEST(sTest3.getStorage() == cTest3);
 
   BOOST_CHECK(sTest2 != sTest3);
-  BOOST_CHECK_EQUAL(strcmp(sTest2.getValue(), cTest2), 0);
-  BOOST_CHECK_EQUAL(strcmp(sTest3.getValue(), cTest3), 0);
+  BOOST_TEST(sTest2.getStorage() == cTest2);
+  BOOST_TEST(sTest3.getStorage() == cTest3);
 
   BOOST_CHECK(!(sTest2 != sTest1));
-  BOOST_CHECK_EQUAL(strcmp(sTest2.getValue(), cTest2), 0);
-  BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), cTest1), 0);
+  BOOST_TEST(sTest2.getStorage() == cTest2);
+  BOOST_TEST(sTest1.getStorage() == cTest1);
   
 
   BOOST_CHECK(sTest1 == CIEC_STRING(cTest2));
-  BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), cTest1), 0);
+  BOOST_TEST(sTest1.getStorage() == cTest1);
 
   BOOST_CHECK(CIEC_STRING(cTest2) == sTest1);
-  BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), cTest1), 0);
+  BOOST_TEST(sTest1.getStorage() == cTest1);
 
   BOOST_CHECK(!(sTest1 == CIEC_STRING(cTest3)));
-  BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), cTest1), 0);
+  BOOST_TEST(sTest1.getStorage() == cTest1);
 
   BOOST_CHECK(!(CIEC_STRING(cTest3) == sTest1));
-  BOOST_CHECK_EQUAL(strcmp(sTest1.getValue(), cTest1), 0);
+  BOOST_TEST(sTest1.getStorage() == cTest1);
 
   BOOST_CHECK(sTest2 != CIEC_STRING(cTest3));
-  BOOST_CHECK_EQUAL(strcmp(sTest2.getValue(), cTest2), 0);
+  BOOST_TEST(sTest2.getStorage() == cTest2);
 
   BOOST_CHECK(CIEC_STRING(cTest3) != sTest2);
-  BOOST_CHECK_EQUAL(strcmp(sTest2.getValue(), cTest2), 0);
+  BOOST_TEST(sTest2.getStorage() == cTest2);
 
   BOOST_CHECK(!(sTest2 != CIEC_STRING(cTest1)));
-  BOOST_CHECK_EQUAL(strcmp(sTest2.getValue(), cTest2), 0);
+  BOOST_TEST(sTest2.getStorage() == cTest2);
 
   BOOST_CHECK(!(CIEC_STRING(cTest1) != sTest2));
-  BOOST_CHECK_EQUAL(strcmp(sTest2.getValue(), cTest2), 0);
+  BOOST_TEST(sTest2.getStorage() == cTest2);
 }
 
-BOOST_AUTO_TEST_CASE(String_equals)
-{
+BOOST_AUTO_TEST_CASE(String_equals) {
   CIEC_STRING sTest1;
   CIEC_STRING sTest2;
   CIEC_STRING sTest3;
@@ -298,15 +308,15 @@ BOOST_AUTO_TEST_CASE(String_binary_interface)
   BOOST_CHECK_EQUAL(sTest1.length(), 0);
   sTest1.assign(cTest, static_cast<TForteUInt16>(sizeof(cTest)-1));
   BOOST_CHECK_EQUAL(sTest1.length(), 22);
-  BOOST_CHECK_EQUAL(memcmp(sTest1.getValue(), cTest, 22), 0);
+  BOOST_TEST(sTest1.getStorage() == std::string(cTest, sizeof(cTest) - 1));
 
   sTest2 = sTest1;
   BOOST_CHECK_EQUAL(sTest2.length(), 22);
-  BOOST_CHECK_EQUAL(memcmp(sTest2.getValue(), cTest, 22), 0);
+  BOOST_TEST(sTest2.getStorage() == std::string(cTest, sizeof(cTest) - 1));
 
   CIEC_STRING* psTest = new CIEC_STRING(sTest1);
   BOOST_CHECK_EQUAL(psTest->length(), 22);
-  BOOST_CHECK_EQUAL(memcmp(psTest->getValue(), cTest, 22), 0);
+  BOOST_TEST(psTest->getStorage() == std::string(cTest, sizeof(cTest) - 1));
   delete psTest;
 }
 
@@ -314,72 +324,19 @@ BOOST_AUTO_TEST_CASE(Memory_Allocation)
 {
   CIEC_STRING sTest;
 
-  BOOST_CHECK_EQUAL(sTest.length(), 0);
-  BOOST_CHECK_EQUAL(strlen(sTest.getValue()),0);
-  BOOST_CHECK_EQUAL(sTest.getValue()[0],'\0');
+  BOOST_TEST(sTest.length() == 0);
   sTest.reserve(10);
-  BOOST_CHECK_EQUAL(sTest.length(), 0);
-  BOOST_CHECK_EQUAL(strlen(sTest.getValue()),0);
-  BOOST_CHECK_EQUAL(sTest.getValue()[0],'\0');
+  BOOST_TEST(sTest.length() == 0);
   sTest = CIEC_STRING("Test");
-  BOOST_CHECK_EQUAL(sTest.length(), 4);
+  BOOST_TEST(sTest.length() == 4);
   sTest = CIEC_STRING("Test with more than ten characters");
-  BOOST_CHECK_EQUAL(sTest.length(), 34);
+  BOOST_TEST(sTest.length() == 34);
 
   sTest = CIEC_STRING("Test Test");
-  BOOST_CHECK_EQUAL(sTest.length(), 9);
+  BOOST_TEST(sTest.length() == 9);
 
   sTest = CIEC_STRING("");
-  BOOST_CHECK_EQUAL(sTest.length(), 0);
-}
-
-BOOST_AUTO_TEST_CASE(String_fromUTF8)
-{
-  const TForteByte cASCII1[] = { 0 };
-  const TForteByte cASCII2[] = { 'A', 0 };
-  const TForteByte cASCII3[] = { 0x7f, 0 };
-  const TForteByte cUpper1[] = { 'A', 0xc2, 0xa2, 'A', 0 };
-  const TForteByte cUpper2[] = { 'A', 0xe2, 0x82, 0xac, 'B', 0 };
-  const TForteByte cUpper3[] = { 0xf0, 0xa4, 0xad, 0xa2, 0 };
-  const TForteByte cInvalid1[] = { 0x80, 0 };
-  const TForteByte cInvalid2[] = { 0xfe, 0x80, 0x80, 0x80, 0x80, 0x80, 0 };
-
-  int nRes;
-  CIEC_STRING sTest;
-
-  nRes = sTest.fromUTF8((const char *) cASCII1, -1, false);
-  BOOST_CHECK_EQUAL(strlen((const char *)cASCII1), nRes);
-  BOOST_CHECK_EQUAL(sTest.length(), 0);
-
-  nRes = sTest.fromUTF8((const char *) cASCII2, -1, false);
-  BOOST_CHECK_EQUAL(strlen((const char *)cASCII2), nRes);
-  BOOST_CHECK(! strcmp("A", sTest.getValue()));
-
-  nRes = sTest.fromUTF8((const char *) cASCII3, -1, false);
-  BOOST_CHECK_EQUAL(strlen((const char *)cASCII3), nRes);
-  BOOST_CHECK(! strcmp("\x7f", sTest.getValue()));
-
-  nRes = sTest.fromUTF8((const char *) cUpper1, -1, false);
-  BOOST_CHECK_EQUAL(strlen((const char *)cUpper1), nRes);
-  BOOST_CHECK(! strcmp("A\xa2""A", sTest.getValue()));
-
-  nRes = sTest.fromUTF8((const char *) cUpper2, -1, false);
-  BOOST_CHECK_EQUAL(strlen((const char *)cUpper2), nRes);
-  BOOST_CHECK(! strcmp("A?B", sTest.getValue()));
-
-  nRes = sTest.fromUTF8((const char *) cUpper2, 4, false);
-  BOOST_CHECK_EQUAL(4, nRes);
-  BOOST_CHECK(! strcmp("A?", sTest.getValue()));
-
-  nRes = sTest.fromUTF8((const char *) cUpper3, -1, false);
-  BOOST_CHECK_EQUAL(strlen((const char *)cUpper3), nRes);
-  BOOST_CHECK(! strcmp("?", sTest.getValue()));
-
-  nRes = sTest.fromUTF8((const char *) cInvalid1, -1, false);
-  BOOST_CHECK_EQUAL(-1, nRes);
-
-  nRes = sTest.fromUTF8((const char *) cInvalid2, -1, false);
-  BOOST_CHECK_EQUAL(-1, nRes);
+  BOOST_TEST(sTest.length() == 0);
 }
 
 BOOST_AUTO_TEST_CASE(String_toUTF8)
@@ -428,110 +385,115 @@ BOOST_AUTO_TEST_CASE(String_toUTF8)
   BOOST_CHECK_EQUAL(nRes, 4);
 }
 
-char cTestLiteral1[] = "Test String";
-char cTestResult1[] = "Test String";
-char cTestToStringResult1[] = "\'Test String\'";
-char cTestLiteral2[] = "\'This is another test string!\'";
-char cTestResult2[] = "This is another test string!";
-char cTestDollarLiteral[] ="\'$$\'";
-char cTestDollarResult[] = "$";
-char cTestDollarToStringResult[] = "\'$$\'";
-char cTestLineFeedLiteral[] = "\'$L$l\'";
-char cTestLineFeedResult[] = {0x10, 0x10, '\0'};
-char cTestLineFeedToStringResult[] = "\'$l$l\'";
-char cTestNewLineLiteral[] = "\'$N$n\'";
-char cTestNewLineResult[] = "\n\n";
-char cTestNewLineToStringResult[] = "\'$n$n\'";
-char cTestFormFeedLiteral[] = "\'$P$p\'";
-char cTestFormFeedResult[] = "\f\f";
-char cTestFormFeedToStringResult[] = "\'$p$p\'";
-char cTestCarriageReturnLiteral[] = "\'$R$r\'";
-char cTestCarriageReturnResult[] = "\r\r";
-char cTestCarriageReturnToStringResult[] = "\'$r$r\'";
-char cTestTabLiteral[] = "\'$T$t\'";
-char cTestTabResult[] = "\t\t";
-char cTestTabToStringResult[] = "\'$t$t\'";
-char cTestSingleQuoteLiteral[] = "\'$\'\'";
-char cTestSingleQuoteResult[] = "\'";
-char cTestSingleQuoteToStringResult[] = "\'$\'\'";
-char cTestDoubleQuoteLiteral[] = "\'$\"\'";
-char cTestDoubleQuoteResult[] = "\"";
-char cTestDoubleQuoteToStringResult[] = "\'$\"\'";
-char cTestEscapedCharacterLiteral[] = "\'$30\'";
-char cTestEscapedCharacterResult[] = "0";
-char cTestEscapedCharacterToStringResult[] = "\'0\'";
+const char cTestLiteral1[] = "Test String";
+
+const char cTestLiteral2[] = "\'This is another test string!\'";
+const char cTestResult2[] = "This is another test string!";
+
+const char cTestDollarLiteral[] ="\'$$\'";
+const char cTestDollarResult[] = "$";
+const char cTestDollarToStringResult[] = "\'$$\'";
+
+const char cTestLineFeedLiteral[] = "\'$L$l\'";
+const char cTestLineFeedResult[] = {0x10, 0x10, '\0'};
+const char cTestLineFeedToStringResult[] = "\'$l$l\'";
+const char cTestNewLineLiteral[] = "\'$N$n\'";
+const char cTestNewLineResult[] = "\n\n";
+const char cTestNewLineToStringResult[] = "\'$n$n\'";
+const char cTestFormFeedLiteral[] = "\'$P$p\'";
+const char cTestFormFeedResult[] = "\f\f";
+const char cTestFormFeedToStringResult[] = "\'$p$p\'";
+const char cTestCarriageReturnLiteral[] = "\'$R$r\'";
+const char cTestCarriageReturnResult[] = "\r\r";
+const char cTestCarriageReturnToStringResult[] = "\'$r$r\'";
+const char cTestTabLiteral[] = "\'$T$t\'";
+const char cTestTabResult[] = "\t\t";
+const char cTestTabToStringResult[] = "\'$t$t\'";
+const char cTestSingleQuoteLiteral[] = "\'$\'\'";
+const char cTestSingleQuoteResult[] = "\'";
+const char cTestSingleQuoteToStringResult[] = "\'$\'\'";
+const char cTestDoubleQuoteLiteral[] = "\'\"\'";
+const char cTestDoubleQuoteResult[] = "\"";
+const char cTestDoubleQuoteToStringResult[] = "\'\"\'";
+const char cTestEscapedCharacterLiteral[] = "\'$30\'";
+const char cTestEscapedCharacterResult[] = "0";
+const char cTestEscapedCharacterToStringResult[] = "\'0\'";
 
 BOOST_AUTO_TEST_CASE(String_fromString)
 {
   CIEC_STRING sTestee;
 
-  BOOST_CHECK_EQUAL(strlen(cTestLiteral1), sTestee.fromString(cTestLiteral1));
-  BOOST_CHECK_EQUAL(sTestee.length(), strlen(cTestResult1));
-  BOOST_CHECK_EQUAL(0, strcmp(sTestee.getValue(), cTestResult1));
+  BOOST_TEST(-1 == sTestee.fromString(cTestLiteral1));
+  BOOST_TEST(sTestee.length() == 0);
+  sTestee.clear();
 
-  BOOST_CHECK_EQUAL(strlen(cTestLiteral2), sTestee.fromString(cTestLiteral2));
-  BOOST_CHECK_EQUAL(sTestee.length(), strlen(cTestResult2));
-  BOOST_CHECK_EQUAL(0, strcmp(sTestee.getValue(), cTestResult2));
+  BOOST_TEST(strlen(cTestLiteral2) == sTestee.fromString(cTestLiteral2));
+  BOOST_TEST(sTestee.length() == strlen(cTestResult2));
+  BOOST_TEST(sTestee.getStorage() == cTestResult2);
+  sTestee.clear();
 
-  BOOST_CHECK_EQUAL(strlen(cTestDollarLiteral), sTestee.fromString(cTestDollarLiteral));
-  BOOST_CHECK_EQUAL(sTestee.length(), strlen(cTestDollarResult));
-  BOOST_CHECK_EQUAL(0, strcmp(sTestee.getValue(), cTestDollarResult));
+  BOOST_TEST(strlen(cTestDollarLiteral) == sTestee.fromString(cTestDollarLiteral));
+  BOOST_TEST(sTestee.length() == strlen(cTestDollarResult));
+  BOOST_TEST(sTestee.getStorage() == cTestDollarResult);
+  sTestee.clear();
 
-  BOOST_CHECK_EQUAL(strlen(cTestLineFeedLiteral), sTestee.fromString(cTestLineFeedLiteral));
-  BOOST_CHECK_EQUAL(sTestee.length(), strlen(cTestLineFeedResult));
-  BOOST_CHECK_EQUAL(0, strcmp(sTestee.getValue(), cTestLineFeedResult));
+  BOOST_TEST(strlen(cTestLineFeedLiteral) == sTestee.fromString(cTestLineFeedLiteral));
+  BOOST_TEST(sTestee.length() == strlen(cTestLineFeedResult));
+  BOOST_TEST(sTestee.getStorage() == std::string(cTestLineFeedResult));
+  sTestee.clear();
 
-  BOOST_CHECK_EQUAL(strlen(cTestDollarLiteral), sTestee.fromString(cTestDollarLiteral));
-  BOOST_CHECK_EQUAL(sTestee.length(), strlen(cTestDollarResult));
-  BOOST_CHECK_EQUAL(0, strcmp(sTestee.getValue(), cTestDollarResult));
+  BOOST_TEST(strlen(cTestDollarLiteral) == sTestee.fromString(cTestDollarLiteral));
+  BOOST_TEST(sTestee.length() == strlen(cTestDollarResult));
+  BOOST_TEST(sTestee.getStorage() == cTestDollarResult);
+  sTestee.clear();
 
-  BOOST_CHECK_EQUAL(strlen(cTestFormFeedLiteral), sTestee.fromString(cTestFormFeedLiteral));
-  BOOST_CHECK_EQUAL(sTestee.length(), strlen(cTestFormFeedResult));
-  BOOST_CHECK_EQUAL(0, strcmp(sTestee.getValue(), cTestFormFeedResult));
+  BOOST_TEST(strlen(cTestFormFeedLiteral) == sTestee.fromString(cTestFormFeedLiteral));
+  BOOST_TEST(sTestee.length() == strlen(cTestFormFeedResult));
+  BOOST_TEST(sTestee.getStorage() == cTestFormFeedResult);
+  sTestee.clear();
 
-  BOOST_CHECK_EQUAL(strlen(cTestCarriageReturnLiteral), sTestee.fromString(cTestCarriageReturnLiteral));
-  BOOST_CHECK_EQUAL(sTestee.length(), strlen(cTestCarriageReturnResult));
-  BOOST_CHECK_EQUAL(0, strcmp(sTestee.getValue(), cTestCarriageReturnResult));
+  BOOST_TEST(strlen(cTestCarriageReturnLiteral) == sTestee.fromString(cTestCarriageReturnLiteral));
+  BOOST_TEST(sTestee.length() == strlen(cTestCarriageReturnResult));
+  BOOST_TEST(sTestee.getStorage() == cTestCarriageReturnResult);
+  sTestee.clear();
 
-  BOOST_CHECK_EQUAL(strlen(cTestTabLiteral), sTestee.fromString(cTestTabLiteral));
-  BOOST_CHECK_EQUAL(sTestee.length(), strlen(cTestTabResult));
-  BOOST_CHECK_EQUAL(0, strcmp(sTestee.getValue(), cTestTabResult));
+  BOOST_TEST(strlen(cTestTabLiteral) == sTestee.fromString(cTestTabLiteral));
+  BOOST_TEST(sTestee.length() == strlen(cTestTabResult));
+  BOOST_TEST(sTestee.getStorage() == cTestTabResult);
+  sTestee.clear();
 
-  BOOST_CHECK_EQUAL(strlen(cTestSingleQuoteLiteral), sTestee.fromString(cTestSingleQuoteLiteral));
-  BOOST_CHECK_EQUAL(sTestee.length(), strlen(cTestSingleQuoteResult));
-  BOOST_CHECK_EQUAL(0, strcmp(sTestee.getValue(), cTestSingleQuoteResult));
+  BOOST_TEST(strlen(cTestSingleQuoteLiteral) == sTestee.fromString(cTestSingleQuoteLiteral));
+  BOOST_TEST(sTestee.length() == strlen(cTestSingleQuoteResult));
+  BOOST_TEST(sTestee.getStorage() == cTestSingleQuoteResult);
+  sTestee.clear();
 
-  BOOST_CHECK_EQUAL(strlen(cTestDoubleQuoteLiteral), sTestee.fromString(cTestDoubleQuoteLiteral));
-  BOOST_CHECK_EQUAL(sTestee.length(), strlen(cTestDoubleQuoteResult));
-  BOOST_CHECK_EQUAL(0, strcmp(sTestee.getValue(), cTestDoubleQuoteResult));
+  BOOST_TEST(strlen(cTestDoubleQuoteLiteral) == sTestee.fromString(cTestDoubleQuoteLiteral));
+  BOOST_TEST(sTestee.length() == strlen(cTestDoubleQuoteResult));
+  BOOST_TEST(sTestee.getStorage() == cTestDoubleQuoteResult);
+  sTestee.clear();
 
-  BOOST_CHECK_EQUAL(strlen(cTestEscapedCharacterLiteral), sTestee.fromString(cTestEscapedCharacterLiteral));
-  BOOST_CHECK_EQUAL(sTestee.length(), strlen(cTestEscapedCharacterResult));
-  BOOST_CHECK_EQUAL(0, strcmp(sTestee.getValue(), cTestEscapedCharacterResult));
+  BOOST_TEST(strlen(cTestEscapedCharacterLiteral) == sTestee.fromString(cTestEscapedCharacterLiteral));
+  BOOST_TEST(sTestee.length() == strlen(cTestEscapedCharacterResult));
+  BOOST_TEST(sTestee.getStorage() == cTestEscapedCharacterResult);
 }
 
 void stringTypedFromString(const std::string &pa_sSrc, const char* pa_acResult){
   CIEC_STRING sTestee;
-  BOOST_CHECK_EQUAL(pa_sSrc.length(), sTestee.fromString(pa_sSrc.c_str()));
-  BOOST_CHECK_EQUAL(sTestee.length(), strlen(pa_acResult));
-  BOOST_CHECK_EQUAL(0, strcmp(sTestee.getValue(), pa_acResult));
+  BOOST_TEST(pa_sSrc.length() == sTestee.fromString(pa_sSrc.c_str()));
+  BOOST_TEST(sTestee.length() == strlen(pa_acResult));
+  BOOST_TEST(sTestee.getStorage() == pa_acResult);
 }
 
-BOOST_AUTO_TEST_CASE(String_fromString_typed)
-{
-  stringTypedFromString(std::string("STRING#") + cTestLiteral1, cTestResult1);
-  stringTypedFromString(std::string("STRING#") + cTestLiteral2, cTestResult2);
-  stringTypedFromString(std::string("STRING#") + cTestDollarLiteral, cTestDollarResult);
+BOOST_AUTO_TEST_CASE(String_fromString_typed) {
+  const std::string typePrefix("STRING#");
+  stringTypedFromString(typePrefix + cTestLiteral2, cTestResult2);
+  stringTypedFromString(typePrefix + cTestDollarLiteral, cTestDollarResult);
 }
 
 BOOST_AUTO_TEST_CASE(String_toString)
 {
   CIEC_STRING sTestee;
   char acBuffer[200];
-
-  sTestee = CIEC_STRING(cTestResult1);
-  BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cTestToStringResult1));
-  BOOST_CHECK_EQUAL(0, strncmp(cTestToStringResult1, acBuffer, strlen(cTestToStringResult1)));
 
   sTestee = CIEC_STRING(cTestResult2);
   BOOST_CHECK_EQUAL(sTestee.toString(acBuffer, 200), strlen(cTestLiteral2));

@@ -42,7 +42,7 @@ const SFBInterfaceSpec FORTE_SET_LOCAL_ADS_ADDRESS::scm_stFBInterfaceSpec = { 1,
 void FORTE_SET_LOCAL_ADS_ADDRESS::executeEvent(TEventID pa_nEIID){
   switch (pa_nEIID){
     case scm_nEventINITID:
-      AmsNetId desiredAddress(std::string(PARAMS().getValue()));
+      AmsNetId desiredAddress(std::string(PARAMS().getStorage().c_str()));
       if(QI()){
         AdsSetLocalAddress(desiredAddress);
         AmsAddr actualAddress = { 0 };

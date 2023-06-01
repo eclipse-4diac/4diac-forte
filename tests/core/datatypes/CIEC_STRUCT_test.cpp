@@ -27,6 +27,8 @@
 #include "CIEC_STRUCT_test_gen.cpp"
 #endif
 
+using namespace std::string_literals;
+
 /***********************************************************/
 class CIEC_TestStruct1 : public CIEC_STRUCT {
   DECLARE_FIRMWARE_DATATYPE(TestStruct1)
@@ -208,7 +210,7 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
   }
 
   void checkTestStruct1_TestDataSet1(CIEC_TestStruct1 &paStruct){
-    BOOST_CHECK_EQUAL(strcmp((*static_cast<CIEC_STRING *>(paStruct.getMemberNamed(g_nStringIdVal1))).getValue(), cTestStringData), 0);
+    BOOST_TEST((*static_cast<CIEC_STRING *>(paStruct.getMemberNamed(g_nStringIdVal1))).getStorage() == cTestStringData);
     BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(paStruct.getMemberNamed(g_nStringIdVal2))));
     BOOST_CHECK_EQUAL(24534, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(paStruct.getMemberNamed(g_nStringIdVal3))));
   }
@@ -257,8 +259,8 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
   }
 
   void checkTestStruct3_TestDataSet1(CIEC_TestStruct3 &pa_stStruct){
-    BOOST_CHECK_EQUAL(strcmp(pa_stStruct.Var1[0].getValue(), cTestStringData), 0);
-    BOOST_CHECK_EQUAL(strcmp(pa_stStruct.Var1[1].getValue(), cTestStringData2), 0);
+    BOOST_TEST(pa_stStruct.Var1[0].getStorage() == cTestStringData);
+    BOOST_TEST(pa_stStruct.Var1[1].getStorage() == cTestStringData2);
     BOOST_CHECK_EQUAL(1, pa_stStruct.Var2);
     BOOST_CHECK_EQUAL(24534, static_cast<CIEC_INT::TValueType>(pa_stStruct.Var3[0]));
   }
@@ -285,17 +287,17 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
 
     char cTest[] = "Check string!";
     (*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))) = CIEC_STRING(cTest);
-    BOOST_CHECK_EQUAL(strcmp((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getValue(), cTest), 0);
+    BOOST_TEST((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getStorage() == cTest);
     BOOST_CHECK_EQUAL(false, (*static_cast<CIEC_BOOL *>(stStruct1.getMemberNamed(g_nStringIdVal2))));
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(stStruct1.getMemberNamed(g_nStringIdVal3))));
 
     (*static_cast<CIEC_BOOL *>(stStruct1.getMemberNamed(g_nStringIdVal2))) = CIEC_BOOL(true);
-    BOOST_CHECK_EQUAL(strcmp((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getValue(), cTest), 0);
+    BOOST_TEST((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getStorage() == cTest);
     BOOST_CHECK_EQUAL(true, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_BOOL *>(stStruct1.getMemberNamed(g_nStringIdVal2))));
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(stStruct1.getMemberNamed(g_nStringIdVal3))));
 
     (*static_cast<CIEC_INT *>(stStruct1.getMemberNamed(g_nStringIdVal3))) = CIEC_INT(24534);
-    BOOST_CHECK_EQUAL(strcmp((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getValue(), cTest), 0);
+    BOOST_TEST((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getStorage() == cTest);
     BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(stStruct1.getMemberNamed(g_nStringIdVal2))));
     BOOST_CHECK_EQUAL(24534, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(stStruct1.getMemberNamed(g_nStringIdVal3))));
 
@@ -357,26 +359,26 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
     checkTestStruct3_InitialValues(stStruct3);
 
     stStruct3.Var1[0] = CIEC_STRING(cTest);
-    BOOST_CHECK_EQUAL(strcmp(stStruct3.Var1[0].getValue(), cTest), 0);
+    BOOST_TEST(stStruct3.Var1[0].getStorage() == cTest);
     BOOST_CHECK_EQUAL(stStruct3.Var1[1].length(), 0);
     BOOST_CHECK_EQUAL(true, stStruct3.Var2);
     BOOST_CHECK_EQUAL(9, static_cast<CIEC_INT::TValueType>(stStruct3.Var3[0]));
 
     stStruct3.Var1[1] = CIEC_STRING(cTest2);
-    BOOST_CHECK_EQUAL(strcmp(stStruct3.Var1[0].getValue(), cTest), 0);
-    BOOST_CHECK_EQUAL(strcmp(stStruct3.Var1[1].getValue(), cTest2), 0);
+    BOOST_TEST(stStruct3.Var1[0].getStorage() == cTest);
+    BOOST_TEST(stStruct3.Var1[1].getStorage() == cTest2);
     BOOST_CHECK_EQUAL(true, stStruct3.Var2);
     BOOST_CHECK_EQUAL(9, static_cast<CIEC_INT::TValueType>(stStruct3.Var3[0]));
 
     stStruct3.Var2 = CIEC_BOOL(false);
-    BOOST_CHECK_EQUAL(strcmp(stStruct3.Var1[0].getValue(), cTest), 0);
-    BOOST_CHECK_EQUAL(strcmp(stStruct3.Var1[1].getValue(), cTest2), 0);
+    BOOST_TEST(stStruct3.Var1[0].getStorage() == cTest);
+    BOOST_TEST(stStruct3.Var1[1].getStorage() == cTest2);
     BOOST_CHECK_EQUAL(false, stStruct3.Var2);
     BOOST_CHECK_EQUAL(9, static_cast<CIEC_INT::TValueType>(stStruct3.Var3[0]));
 
     stStruct3.Var3[0] = CIEC_INT(24534);
-    BOOST_CHECK_EQUAL(strcmp(stStruct3.Var1[0].getValue(), cTest), 0);
-    BOOST_CHECK_EQUAL(strcmp(stStruct3.Var1[1].getValue(), cTest2), 0);
+    BOOST_TEST(stStruct3.Var1[0].getStorage() == cTest);
+    BOOST_TEST(stStruct3.Var1[1].getStorage() == cTest2);
     BOOST_CHECK_EQUAL(false, stStruct3.Var2);
     BOOST_CHECK_EQUAL(24534, static_cast<CIEC_INT::TValueType>(stStruct3.Var3[0]));
   }
@@ -490,7 +492,7 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
   const char cTestFromString_String2[] = "String2";
 
   void checkTestStruct1_fromStringTestData(CIEC_TestStruct1 &pa_stStruct){
-    BOOST_CHECK_EQUAL(strcmp((*static_cast<CIEC_STRING *>(pa_stStruct.getMemberNamed(g_nStringIdVal1))).getValue(), cTestFromString_String1), 0);
+    BOOST_TEST((*static_cast<CIEC_STRING *>(pa_stStruct.getMemberNamed(g_nStringIdVal1))).getStorage() == cTestFromString_String1);
     BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(pa_stStruct.getMemberNamed(g_nStringIdVal2))));
     BOOST_CHECK_EQUAL(23451, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(pa_stStruct.getMemberNamed(g_nStringIdVal3))));
   }
@@ -548,7 +550,7 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
     const char cTestString10[] = { "(Val1:='String1',Val2:=true)" }; //missing last value
 
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestString10), strlen(cTestString10));
-    BOOST_CHECK_EQUAL(strcmp((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getValue(), cTestFromString_String1), 0);
+    BOOST_TEST((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getStorage() == cTestFromString_String1);
     BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(stStruct1.getMemberNamed(g_nStringIdVal2))));
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(stStruct1.getMemberNamed(g_nStringIdVal3))));
     stStruct1 = stStruct2;
@@ -556,7 +558,7 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
     const char cTestString11[] = { "(Val1:='String1',Val3:=23451)" }; //missing value in the middle
 
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestString11), strlen(cTestString11));
-    BOOST_CHECK_EQUAL(strcmp((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getValue(), cTestFromString_String1), 0);
+    BOOST_TEST((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getStorage() == cTestFromString_String1);
     BOOST_CHECK_EQUAL(false, (*static_cast<CIEC_BOOL *>(stStruct1.getMemberNamed(g_nStringIdVal2))));
     BOOST_CHECK_EQUAL(23451, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(stStruct1.getMemberNamed(g_nStringIdVal3))));
     stStruct1 = stStruct2;
@@ -564,7 +566,7 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
     const char cTestString12[] = { "(Val2:=true,Val3:=23451)" }; //missing first value
 
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestString12), strlen(cTestString12));
-    BOOST_CHECK_EQUAL(strcmp((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getValue(), ""), 0);
+    BOOST_TEST((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getStorage() == "");
     BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(stStruct1.getMemberNamed(g_nStringIdVal2))));
     BOOST_CHECK_EQUAL(23451, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(stStruct1.getMemberNamed(g_nStringIdVal3))));
     stStruct1 = stStruct2;
@@ -572,7 +574,7 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
     const char cTestString13[] = { "(Val2:=true)" }; //missing two values
 
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestString13), strlen(cTestString13));
-    BOOST_CHECK_EQUAL(strcmp((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getValue(), ""), 0);
+    BOOST_TEST((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getStorage() == "");
     BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(stStruct1.getMemberNamed(g_nStringIdVal2))));
     BOOST_CHECK_EQUAL(0, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(stStruct1.getMemberNamed(g_nStringIdVal3))));
     stStruct1 = stStruct2;
@@ -584,22 +586,22 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
     //don't initialize structure for next tests
 
     BOOST_CHECK_EQUAL(stStruct1.fromString("(Val3:=23451)"), strlen("(Val3:=23451)"));
-    BOOST_CHECK_EQUAL(strcmp((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getValue(), ""), 0);
+    BOOST_TEST((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getStorage() == "");
     BOOST_CHECK_EQUAL(false, (*static_cast<CIEC_BOOL *>(stStruct1.getMemberNamed(g_nStringIdVal2))));
     BOOST_CHECK_EQUAL(23451, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(stStruct1.getMemberNamed(g_nStringIdVal3))));
 
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestString13), strlen(cTestString13)); //"(Val2:=true)"
-    BOOST_CHECK_EQUAL(strcmp((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getValue(), ""), 0);
+    BOOST_TEST((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getStorage() == "");
     BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(stStruct1.getMemberNamed(g_nStringIdVal2))));
     BOOST_CHECK_EQUAL(23451, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(stStruct1.getMemberNamed(g_nStringIdVal3)))); // keeps old value
 
     BOOST_CHECK_EQUAL(stStruct1.fromString("(Val1:='String1')"), strlen("(Val1:='String1')")); //"(Val1:='String1')"
-    BOOST_CHECK_EQUAL(strcmp((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getValue(), cTestFromString_String1), 0);
+    BOOST_TEST((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getStorage() == cTestFromString_String1);
     BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(stStruct1.getMemberNamed(g_nStringIdVal2)))); //keeps old value
     BOOST_CHECK_EQUAL(23451, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(stStruct1.getMemberNamed(g_nStringIdVal3)))); // keeps old value
 
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestString14), strlen(cTestString14));
-    BOOST_CHECK_EQUAL(strcmp((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getValue(), cTestFromString_String1), 0); //keeps old value
+    BOOST_TEST((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getStorage() == cTestFromString_String1); //keeps old value
     BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(stStruct1.getMemberNamed(g_nStringIdVal2)))); //keeps old value
     BOOST_CHECK_EQUAL(23451, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(stStruct1.getMemberNamed(g_nStringIdVal3)))); // keeps old value
 
@@ -712,8 +714,8 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
   }
 
   void checkTestStruct3_fromStringTestData(CIEC_TestStruct3 &pa_stStruct){
-    BOOST_CHECK_EQUAL(strcmp(pa_stStruct.Var1[0].getValue(), cTestFromString_String1), 0);
-    BOOST_CHECK_EQUAL(strcmp(pa_stStruct.Var1[1].getValue(), cTestFromString_String2), 0);
+    BOOST_TEST(pa_stStruct.Var1[0].getStorage() == cTestFromString_String1);
+    BOOST_TEST(pa_stStruct.Var1[1].getStorage() == cTestFromString_String2);
     BOOST_CHECK_EQUAL(true, pa_stStruct.Var2);
     BOOST_CHECK_EQUAL(13, static_cast<CIEC_INT::TValueType>(pa_stStruct.Var3[0]));
   }
@@ -779,8 +781,8 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
     const char cTestString10[] = { "(Val2:=TRUE,Val3:=[13])" }; //missing first value, without initializer, other two with initializer
 
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestString10), strlen(cTestString10));
-    BOOST_CHECK_EQUAL(strcmp(stStruct1.Var1[0].getValue(), ""), 0);
-    BOOST_CHECK_EQUAL(strcmp(stStruct1.Var1[1].getValue(), ""), 0);
+    BOOST_TEST(stStruct1.Var1[0].getStorage() == ""s);
+    BOOST_TEST(stStruct1.Var1[1].getStorage() == ""s);
     BOOST_CHECK_EQUAL(true, stStruct1.Var2);
     BOOST_CHECK_EQUAL(13, static_cast<CIEC_INT::TValueType>(stStruct1.Var3[0]));
     stStruct1 = stStruct2;
@@ -788,8 +790,8 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
     const char cTestString11[] = { "(Val1:=[\'String1\',\'String2\'],Val3:=[13])" }; //missing value in the middle, with initializer
 
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestString11), strlen(cTestString11));
-    BOOST_CHECK_EQUAL(strcmp(stStruct1.Var1[0].getValue(), cTestFromString_String1), 0);
-    BOOST_CHECK_EQUAL(strcmp(stStruct1.Var1[1].getValue(), cTestFromString_String2), 0);
+    BOOST_TEST(stStruct1.Var1[0].getStorage() == cTestFromString_String1);
+    BOOST_TEST(stStruct1.Var1[1].getStorage() == cTestFromString_String2);
     BOOST_CHECK_EQUAL(true, stStruct1.Var2);
     BOOST_CHECK_EQUAL(13, static_cast<CIEC_INT::TValueType>(stStruct1.Var3[0]));
     stStruct1 = stStruct2;
@@ -797,8 +799,8 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
     const char cTestString12[] = { "(Val1:=[\'String1\',\'String2\'],Val2:=TRUE)" }; //missing last value, with initializer
 
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestString12), strlen(cTestString12));
-    BOOST_CHECK_EQUAL(strcmp(stStruct1.Var1[0].getValue(), cTestFromString_String1), 0);
-    BOOST_CHECK_EQUAL(strcmp(stStruct1.Var1[1].getValue(), cTestFromString_String2), 0);
+    BOOST_TEST(stStruct1.Var1[0].getStorage() == cTestFromString_String1);
+    BOOST_TEST(stStruct1.Var1[1].getStorage() == cTestFromString_String2);
     BOOST_CHECK_EQUAL(true, stStruct1.Var2);
     BOOST_CHECK_EQUAL(9, static_cast<CIEC_INT::TValueType>(stStruct1.Var3[0]));
     stStruct1 = stStruct2;
@@ -806,8 +808,8 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
     const char cTestString13[] = { "(Val1:=[\'String1\',\'String2\'])" }; //missing two values with initializer
 
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestString13), strlen(cTestString13));
-    BOOST_CHECK_EQUAL(strcmp(stStruct1.Var1[0].getValue(), cTestFromString_String1), 0);
-    BOOST_CHECK_EQUAL(strcmp(stStruct1.Var1[1].getValue(), cTestFromString_String2), 0);
+    BOOST_TEST(stStruct1.Var1[0].getStorage() == cTestFromString_String1);
+    BOOST_TEST(stStruct1.Var1[1].getStorage() == cTestFromString_String2);
     BOOST_CHECK_EQUAL(true, stStruct1.Var2);
     BOOST_CHECK_EQUAL(9, static_cast<CIEC_INT::TValueType>(stStruct1.Var3[0]));
     stStruct1 = stStruct2;
@@ -815,8 +817,8 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
     const char cTestString14[] = { "(Val2:=FALSE)" }; //missing two values, one with and the other without initializer
 
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestString14), strlen(cTestString14));
-    BOOST_CHECK_EQUAL(strcmp(stStruct1.Var1[0].getValue(), ""), 0);
-    BOOST_CHECK_EQUAL(strcmp(stStruct1.Var1[1].getValue(), ""), 0);
+    BOOST_TEST(stStruct1.Var1[0].getStorage() == ""s);
+    BOOST_TEST(stStruct1.Var1[1].getStorage() == ""s);
     BOOST_CHECK_EQUAL(false, stStruct1.Var2);
     BOOST_CHECK_EQUAL(9, static_cast<CIEC_INT::TValueType>(stStruct1.Var3[0]));
     stStruct1 = stStruct2;
@@ -824,35 +826,35 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
     const char cTestString15[] = { "()" }; //missing all values
 
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestString15), strlen(cTestString15));
-    BOOST_CHECK_EQUAL(strcmp(stStruct1.Var1[0].getValue(), ""), 0);
-    BOOST_CHECK_EQUAL(strcmp(stStruct1.Var1[1].getValue(), ""), 0);
+    BOOST_TEST(stStruct1.Var1[0].getStorage() == ""s);
+    BOOST_TEST(stStruct1.Var1[1].getStorage() == ""s);
     BOOST_CHECK_EQUAL(true, stStruct1.Var2);
     BOOST_CHECK_EQUAL(9, static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT::TValueType>(stStruct1.Var3[0])));
     stStruct1 = stStruct2;
 
     const char cTestString16[] = { "(Val1:=[\'String1\',\'String2\'],Val2:=TRUE,Val3:=[13],Val2:=FALSE)" }; //identifier duplicate. No error and take last value?
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestString16), strlen(cTestString16));
-    BOOST_CHECK_EQUAL(strcmp(stStruct1.Var1[0].getValue(), cTestFromString_String1), 0);
-    BOOST_CHECK_EQUAL(strcmp(stStruct1.Var1[1].getValue(), cTestFromString_String2), 0);
+    BOOST_TEST(stStruct1.Var1[0].getStorage() == cTestFromString_String1);
+    BOOST_TEST(stStruct1.Var1[1].getStorage() == cTestFromString_String2);
     BOOST_CHECK_EQUAL(false, stStruct1.Var2);
     BOOST_CHECK_EQUAL(13, static_cast<CIEC_INT::TValueType>(stStruct1.Var3[0]));
 
     //don't initialize structure for next tests
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestString12), strlen(cTestString12)); //"(Val1:=[\'String1\',\'String2\'],Val2:=TRUE)"
-    BOOST_CHECK_EQUAL(strcmp(stStruct1.Var1[0].getValue(), cTestFromString_String1), 0); //keeps old value
-    BOOST_CHECK_EQUAL(strcmp(stStruct1.Var1[1].getValue(), cTestFromString_String2), 0); //keeps old value
+    BOOST_TEST(stStruct1.Var1[0].getStorage() == cTestFromString_String1); //keeps old value
+    BOOST_TEST(stStruct1.Var1[1].getStorage() == cTestFromString_String2); //keeps old value
     BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(stStruct1.getMemberNamed(g_nStringIdVal2))));
     BOOST_CHECK_EQUAL(13, static_cast<CIEC_INT::TValueType>(stStruct1.Var3[0])); //keeps old value
 
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestString14), strlen(cTestString14)); //"(Val2:=FALSE)"
-    BOOST_CHECK_EQUAL(strcmp(stStruct1.Var1[0].getValue(), cTestFromString_String1), 0); //keeps old value
-    BOOST_CHECK_EQUAL(strcmp(stStruct1.Var1[1].getValue(), cTestFromString_String2), 0); //keeps old value
+    BOOST_TEST(stStruct1.Var1[0].getStorage() == cTestFromString_String1); //keeps old value
+    BOOST_TEST(stStruct1.Var1[1].getStorage() == cTestFromString_String2); //keeps old value
     BOOST_CHECK_EQUAL(false, (*static_cast<CIEC_BOOL *>(stStruct1.getMemberNamed(g_nStringIdVal2))));
     BOOST_CHECK_EQUAL(13, static_cast<CIEC_INT::TValueType>(stStruct1.Var3[0])); //keeps old value
 
     BOOST_CHECK_EQUAL(stStruct1.fromString(cTestString15), strlen(cTestString15)); //"()"
-    BOOST_CHECK_EQUAL(strcmp(stStruct1.Var1[0].getValue(), cTestFromString_String1), 0); //keeps old value
-    BOOST_CHECK_EQUAL(strcmp(stStruct1.Var1[1].getValue(), cTestFromString_String2), 0); //keeps old value
+    BOOST_TEST(stStruct1.Var1[0].getStorage() == cTestFromString_String1); //keeps old value
+    BOOST_TEST(stStruct1.Var1[1].getStorage() == cTestFromString_String2); //keeps old value
     BOOST_CHECK_EQUAL(false, (*static_cast<CIEC_BOOL *>(stStruct1.getMemberNamed(g_nStringIdVal2)))); //keeps old value
     BOOST_CHECK_EQUAL(13, static_cast<CIEC_INT::TValueType>(stStruct1.Var3[0])); //keeps old value
 

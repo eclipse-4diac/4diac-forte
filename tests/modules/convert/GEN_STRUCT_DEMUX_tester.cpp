@@ -35,7 +35,7 @@ struct STRUCT_DEMUX_TestFixture_1 : public CFBTestFixtureBase{
     void checkStructValues(){
       BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(mVar1), static_cast<CIEC_INT::TValueType>(mIn.Var1));
       BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(mVar2), static_cast<CIEC_INT::TValueType>(mIn.Var2));
-      BOOST_CHECK_EQUAL(strcmp(mVar3.getValue(), mIn.Var3.getValue()), 0);
+      BOOST_TEST(mVar3 == mIn.Var3);
     }
 };
 
@@ -104,7 +104,7 @@ struct STRUCT_DEMUX_TestFixture_2 : public CFBTestFixtureBase{
 
     void checkStructValues(){
      BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(mVar1), static_cast<CIEC_INT::TValueType>(mIn.Var1));
-     BOOST_CHECK_EQUAL(strcmp(mVar2.getValue(), mIn.Var2.getValue()), 0);
+     BOOST_TEST(mVar2 == mIn.Var2);
      BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(mVar3), static_cast<CIEC_INT::TValueType>(mIn.Var3));
    }
 

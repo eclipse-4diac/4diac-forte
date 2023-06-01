@@ -70,7 +70,7 @@ void CIEC_LREAL::setValue(const CIEC_ANY& paValue){
       setTDFLOAT(static_cast<TForteFloat>(static_cast<const CIEC_REAL &>(paValue)));
       break;
     case e_STRING:
-      (*this).fromString(reinterpret_cast<const CIEC_STRING&>(paValue).getValue());
+      (*this).fromString(reinterpret_cast<const CIEC_STRING&>(paValue).getStorage().c_str());
       break;
     case e_WSTRING:
       (*this).fromString(reinterpret_cast<const CIEC_WSTRING&>(paValue).getValue());

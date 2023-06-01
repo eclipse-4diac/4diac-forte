@@ -250,7 +250,7 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
     CIEC_ANY *var = fb->getVar(&portName, 1);
     if(nullptr != var){
       // 0 is not supported in the fromString method
-      if((paValue.length() > 0) && (paValue.length() == var->fromString(paValue.getValue()))){
+      if((paValue.length() > 0) && (paValue.length() == var->fromString(paValue.getStorage().c_str()))){
         //if we cannot parse the full value the value is not valid
         if(paForce){
           var->setForced(true);
@@ -277,22 +277,44 @@ EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, CIEC
   if(nullptr != var){
     int nUsedChars = -1;
     switch (var->getDataTypeID()){
-      case CIEC_ANY::e_WSTRING:
-      case CIEC_ANY::e_STRING:{
-        size_t bufferSize = var->getToStringBufferSize() + forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<CIEC_WSTRING&>(*var).getValue());
-        nUsedChars = static_cast<CIEC_WSTRING&>(*var).toUTF8(paValue.getValue(), bufferSize, false);
+      case CIEC_ANY::e_WSTRING: {
+        const size_t bufferSize = var->getToStringBufferSize() + forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<CIEC_WSTRING&>(*var).getValue());
+        char *buffer = new char[bufferSize]();
+        nUsedChars = static_cast<CIEC_WSTRING &>(*var).toUTF8(buffer, bufferSize, false);
         if(bufferSize != var->getToStringBufferSize() && 0 < nUsedChars) { //avoid re-running on strings which were already proven not to have any special character
-          nUsedChars += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(paValue.getValue()));
+          nUsedChars += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(buffer));
         }
+        if(-1 != nUsedChars){
+          paValue.assign(buffer, nUsedChars);
+        }
+        delete[] (buffer);
+        break;
+      }
+      case CIEC_ANY::e_STRING: {
+        const size_t bufferSize = var->getToStringBufferSize() + forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<CIEC_STRING&>(*var).getStorage().c_str());
+        char *buffer = new char[bufferSize]();
+        nUsedChars = static_cast<CIEC_STRING &>(*var).toUTF8(buffer, bufferSize, false);
+        if(bufferSize != var->getToStringBufferSize() && 0 < nUsedChars) { //avoid re-running on strings which were already proven not to have any special character
+          nUsedChars += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(buffer));
+        }
+        if(-1 != nUsedChars){
+          paValue.assign(buffer, nUsedChars);
+        }
+        delete[] (buffer);
         break;
       }
       default:
-        nUsedChars = var->toString(paValue.getValue(), paValue.getCapacity());
+        const size_t bufferSize = var->getToStringBufferSize();
+        char *buffer = new char[bufferSize]();
+        nUsedChars = var->toString(buffer, sizeof(buffer));
+        if(-1 != nUsedChars){
+          paValue.assign(buffer, nUsedChars);
+        }
+        delete[] (buffer);
         break;
     }
 
     if(-1 != nUsedChars){
-      paValue.assign(paValue.getValue(), static_cast<TForteUInt16>(nUsedChars));
       retVal = EMGMResponse::Ready;
     }
     else{
@@ -559,12 +581,12 @@ void CResource::createAdapterInterfaceResponseMessage(const SFBInterfaceSpec* pa
     }
     if(!plugs.empty()){
       paReqResult.append("<Plugs>\n         ");
-      paReqResult.append(plugs.getValue());
+      paReqResult.append(plugs);
       paReqResult.append("</Plugs>\n   ");
     }
     if(!sockets.empty()){
       paReqResult.append("<Sockets>\n         ");
-      paReqResult.append(sockets.getValue());
+      paReqResult.append(sockets);
       paReqResult.append("</Sockets>\n   ");
     }
   }
@@ -588,9 +610,9 @@ void CResource::createInterfaceResponseMessage(CIEC_STRING& paReqResult, const c
   paReqResult.append("<");
   paReqResult.append(pa_pcType);
   paReqResult.append(" Name=\"");
-  paReqResult.append(paName.getValue());
+  paReqResult.append(paName);
   paReqResult.append("\" Type=\"");
-  paReqResult.append(paType.getValue());
+  paReqResult.append(paType);
   if(nullptr != paEWithIndexes && -1 != paEWithIndexes[pa_nIndex]){
     paReqResult.append("\">\n         ");
     for(int nRunIndex = paEWithIndexes[pa_nIndex]; scmWithListDelimiter != paEWith[nRunIndex]; nRunIndex++){
@@ -610,7 +632,7 @@ void CResource::createInterfaceResponseMessage(CIEC_STRING& paReqResult, const c
 EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNameId,
     CIEC_STRING& paLuaScriptAsString){
   EMGMResponse retVal = EMGMResponse::UnsupportedType;
-  if(nullptr != strstr(paLuaScriptAsString.getValue(), "internalFBs")){ // CFBType
+  if(nullptr != strstr(paLuaScriptAsString.getStorage().c_str(), "internalFBs")){ // CFBType
     if(CLuaCFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != nullptr){
       retVal = EMGMResponse::Ready;
     }

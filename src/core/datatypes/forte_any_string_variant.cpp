@@ -39,7 +39,7 @@ void CIEC_ANY_STRING_VARIANT::setValue(const CIEC_ANY &paValue) {
 bool CIEC_ANY_STRING_VARIANT::setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId) {
   switch (paDataTypeId) {
     case e_STRING:
-      operator=(CIEC_STRING(""));
+      operator=(CIEC_STRING("", 0));
       return true;
     case e_WSTRING:
       operator=(CIEC_WSTRING(""));

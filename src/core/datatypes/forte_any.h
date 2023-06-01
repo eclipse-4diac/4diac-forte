@@ -173,7 +173,7 @@ class CIEC_ANY {
 
     /*! \brief Converts string value to data type value
      *
-     *   This command implements a conversion function from IEC61131
+     *   This command implements a conversion function from IEC 61131
      *   data type (string format) to a C++ conform type.
      *   This function is necessary for communication with a proper engineering system.
      *   Pure virtual function implementation.

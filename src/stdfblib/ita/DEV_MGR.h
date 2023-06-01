@@ -32,7 +32,7 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
 
     bool initialize() override;
 
-    bool executeCommand(char *paDest, char *paCommand) override;
+    bool executeCommand(const char *const paDest, char *paCommand) override;
 
     static const char *getResponseText(EMGMResponse paResp) {
       return scm_sMGMResponseTexts[static_cast<std::underlying_type_t<EMGMResponse>>(paResp)];
@@ -45,7 +45,7 @@ class DEV_MGR: public forte::com_infra::CCommFB, public IBootFileCallback {
      */
     static const char * const scm_sMGMResponseTexts[13];
 
-    EMGMResponse parseAndExecuteMGMCommand(char *paDest, char *paCommand);
+    EMGMResponse parseAndExecuteMGMCommand(const char *const paDest, char *paCommand);
 
     static const CStringDictionary::TStringId scm_anDataInputNames[];
     static const CStringDictionary::TStringId scm_anDataInputTypeIds[];

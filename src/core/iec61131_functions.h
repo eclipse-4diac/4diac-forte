@@ -987,12 +987,16 @@ template<typename T> const T func_LEFT(const T &paIn, const CIEC_ANY_INT &paL) {
       DEVLOG_ERROR("string shorter than input L");
       return paIn;
     } else {
-      T temp;
-      temp.reserve(static_cast<TForteUInt16>(paL.getUnsignedValue()));
-      memcpy(temp.getValue(), paIn.getValue(), static_cast<TForteUInt16>(paL.getUnsignedValue()));
-      temp.getValue()[paL.getUnsignedValue()] = '\0';
-      temp.assign(temp.getValue(), paL.getUnsignedValue());
-      return temp;
+      if constexpr (std::is_same_v<CIEC_STRING,T>) {
+        return CIEC_STRING(paIn.getStorage().substr(0, paL.getUnsignedValue()));
+      } else {
+        T temp;
+        temp.reserve(static_cast<TForteUInt16>(paL.getUnsignedValue()));
+        memcpy(temp.getValue(), paIn.getValue(), static_cast<TForteUInt16>(paL.getUnsignedValue()));
+        temp.getValue()[paL.getUnsignedValue()] = '\0';
+        temp.assign(temp.getValue(), paL.getUnsignedValue());
+        return temp;
+      }
     }
   }
 }
@@ -1006,13 +1010,18 @@ template<typename T> const T func_RIGHT(const T &paIn, const CIEC_ANY_INT &paL) 
       DEVLOG_ERROR("string shorter than input L");
       return paIn;
     } else {
-      T temp;
-      temp.reserve(static_cast<TForteUInt16>(paL.getUnsignedValue()));
-      memcpy(temp.getValue(), paIn.getValue() + (paIn.length() - static_cast<TForteUInt16>(paL.getUnsignedValue())),
-        static_cast<TForteUInt16>(paL.getUnsignedValue()));
-      temp.getValue()[paL.getUnsignedValue()] = '\0';
-      temp.assign(temp.getValue(), paL.getUnsignedValue());
-      return temp;
+      if constexpr (std::is_same_v<CIEC_STRING,T>) {
+        const CIEC_STRING::storage_type &storage = paIn.getStorage();
+        return CIEC_STRING(storage.substr(storage.length() - paL.getUnsignedValue()));
+      } else {
+        T temp;
+        temp.reserve(static_cast<TForteUInt16>(paL.getUnsignedValue()));
+        memcpy(temp.getValue(), paIn.getValue() + (paIn.length() - static_cast<TForteUInt16>(paL.getUnsignedValue())),
+          static_cast<TForteUInt16>(paL.getUnsignedValue()));
+        temp.getValue()[paL.getUnsignedValue()] = '\0';
+        temp.assign(temp.getValue(), paL.getUnsignedValue());
+        return temp;
+      }
     }
   }
 }
@@ -1022,25 +1031,28 @@ template<typename T> const T func_MID(const T &paIn, const CIEC_ANY_INT &paL, co
     DEVLOG_ERROR("value of input P is less than zero\n");
     return paIn;
   } else {
-    CIEC_INT len_right = CIEC_INT(paIn.length() - paP.getUnsignedValue() + 1);
-    CIEC_INT len_left = CIEC_INT(paL.getUnsignedValue());
-    return func_LEFT(func_RIGHT(paIn, len_right), len_left);
+    CIEC_INT lenRight = CIEC_INT(paIn.length() - paP.getUnsignedValue() + 1);
+    CIEC_INT lenLeft = CIEC_INT(paL.getUnsignedValue());
+    return func_LEFT(func_RIGHT(paIn, lenRight), lenLeft);
   }
 }
 
 template<typename T> const T func_CONCAT(const T &paIn1, const T &paIn2) {
   static_assert((std::is_base_of<CIEC_ANY_STRING, T>::value), "T not of ANY_STRING");
   T temp(paIn1);
-  temp.reserve(static_cast<TForteUInt16>(paIn1.length() + paIn2.length()));
-  temp.append(paIn2.getValue(), paIn2.length());
-  return temp;
+  if constexpr (std::is_same_v<CIEC_STRING,T>) {
+    temp.append(paIn2);
+    return temp;
+  } else {
+    temp.reserve(static_cast<TForteUInt16>(paIn1.length() + paIn2.length()));
+    temp.append(paIn2.getValue(), paIn2.length());
+    return temp;
+  }
 }
 
-#if __cplusplus >= 201103L //stdc11
 template<typename T, typename ... Args> const T func_CONCAT(const T &paIn1, Args ... args) {
   return func_CONCAT(paIn1, func_CONCAT(args...));
 }
-#endif
 
 template<typename T> const T func_INSERT(const T &paIn1, const T &paIn2, const CIEC_ANY_INT &paP) {
   if(CIEC_UINT::scm_nMaxVal < (paIn1.length() + paIn2.length())) {
@@ -1115,26 +1127,74 @@ template<typename T> const T func_REPLACE(const T &paIn1, const T &paIn2, const 
   return func_CONCAT(func_CONCAT(func_LEFT(paIn1, positionLeft), paIn2), func_RIGHT(paIn1, positionRight));
 }
 
-CIEC_ANY_INT func_FIND(const CIEC_ANY_STRING &paIn1, const CIEC_ANY_STRING &paIn2);
+template <typename T, typename U>
+CIEC_ANY_INT func_FIND(const T &paIn1, const U &paIn2) {
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "paIn1 must be of type CIEC_ANY_STRING");
+  static_assert(std::is_base_of_v<CIEC_ANY_CHARS, U>, "paIn2 must be of type CIEC_ANY_CHARS");
+  if constexpr(std::is_same_v<T, CIEC_STRING>) {
+    static_assert(std::is_same_v<U, CIEC_STRING> || std::is_same_v<U,CIEC_CHAR>, "FIND in STRING only with STRING or CHAR");
+    if constexpr(std::is_same_v<U, CIEC_STRING>) {
+      const auto findIndex = paIn1.getStorage().find(paIn2.getStorage());
+      if (findIndex != std::string::npos) {
+        return CIEC_ANY_INT(findIndex + 1);
+      }
+    }
+    else if constexpr (std::is_same_v<U, CIEC_CHAR>) {
+      const auto findIndex = paIn1.getStorage().find(static_cast<CIEC_CHAR::TValueType>(paIn2));
+      if (findIndex != std::string::npos) {
+        return CIEC_ANY_INT(findIndex + 1);
+      }   
+    }
+    return CIEC_ANY_INT(0);
+  } else if constexpr(std::is_same_v<T, CIEC_WSTRING>) {
+    static_assert(std::is_same_v<U, CIEC_WSTRING> || std::is_same_v<U, CIEC_WCHAR>, "FIND in WSTRING only with WSTRING or WCHAR");
+    if constexpr(std::is_same_v<U, CIEC_WSTRING>) {
+      const char* pc_Find = strstr(paIn1.getValue(), paIn2.getValue());
+      if (nullptr != pc_Find){
+        return CIEC_ANY_INT(pc_Find - paIn1.getValue() + 1);
+      }
+    } else if constexpr(std::is_same_v<U, CIEC_WCHAR>) {
+      const char* pc_Find = strstr(paIn1.getValue(), static_cast<CIEC_WCHAR::TValueType>(paIn2));
+      if (nullptr != pc_Find){
+        return CIEC_ANY_INT(pc_Find - paIn1.getValue() + 1);
+      }
+    }
+    return CIEC_ANY_INT(0);
+  }
+}
 
 template <typename T>
 const T func_TOUPPER(const T &paIn) {
-  T temp(paIn);
-  char *current = temp.getValue();
-  for(size_t i = 0; i <= paIn.length(); ++i) {
-    current[i] = static_cast<char>(toupper(current[i]));
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "Operand must be of type ANY_STRING!");
+  if constexpr (std::is_same_v<CIEC_STRING, T>) {
+    CIEC_STRING::storage_type buffer(paIn.getStorage());
+    std::transform(buffer.begin(), buffer.end(), buffer.begin(), ::toupper);
+    return CIEC_STRING(buffer);
+  } else {
+    T temp(paIn);
+    char *current = temp.getValue();
+    for(size_t i = 0; i <= paIn.length(); ++i) {
+      current[i] = static_cast<char>(toupper(current[i]));
+    }
+    return temp;
   }
-  return temp;
 }
 
 template <typename T>
 const T func_TOLOWER(const T &paIn) {
-  T temp(paIn);
-  char *current = temp.getValue();
-  for(size_t i = 0; i <= paIn.length(); ++i) {
-    current[i] = static_cast<char>(tolower(current[i]));
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "Operand must be of type ANY_STRING!");
+  if constexpr (std::is_same_v<CIEC_STRING, T>) {
+    CIEC_STRING::storage_type buffer(paIn.getStorage());
+    std::transform(buffer.begin(), buffer.end(), buffer.begin(), ::tolower);
+    return CIEC_STRING(buffer);
+  } else {
+    T temp(paIn);
+    char *current = temp.getValue();
+    for(size_t i = 0; i <= paIn.length(); ++i) {
+      current[i] = static_cast<char>(tolower(current[i]));
+    }
+    return temp;
   }
-  return temp;
 }
 
 const CIEC_DATE_AND_TIME func_CONCAT_DATE_TOD(const CIEC_DATE &paIN1, const CIEC_TIME_OF_DAY &paIN2);
@@ -1208,8 +1268,8 @@ CIEC_BOOL func_IS_VALID(const T& paValue) {
  */
 template <typename T>
 CIEC_BOOL func_IS_VALID_BCD(const T& paValue) {
-  static_assert(std::is_base_of_v<CIEC_ANY_BIT, T>); // any bit type is allowed
-  static_assert(!std::is_same_v<CIEC_BOOL, T>); // but not BOOL
+  static_assert(std::is_base_of_v<CIEC_ANY_BIT, T>, "Operand must be of ANY_BIT (excluding BOOL)"); // any bit type is allowed
+  static_assert(!std::is_same_v<CIEC_BOOL, T>, "Operand must be of ANY_BIT, but not BOOL"); // but not BOOL
   using ValueType = typename T::TValueType;
   constexpr size_t valueTypeSize = sizeof(ValueType);
   constexpr ValueType mask = 0x0F;

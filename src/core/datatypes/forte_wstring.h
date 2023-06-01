@@ -83,7 +83,7 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
      *   \return number of bytes used from srcString
      *       -1 on error
      */
-    int fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescape) override;
+    int fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescape);
 
     /*! \brief Converts the WSTRING to a UTF-8 representation
      *
@@ -189,6 +189,7 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
     size_t getToStringBufferSize() const override;
 
   protected:
+    void fromCharString(const char *const paValue);
 
   private:
 };

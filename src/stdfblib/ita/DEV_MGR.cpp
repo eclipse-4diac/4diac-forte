@@ -83,7 +83,11 @@ void DEV_MGR::executeEvent(TEventID paEIID){
 
 void DEV_MGR::executeRQST(){
   mCommand.mAdditionalParams.clear();
-  EMGMResponse resp = parseAndExecuteMGMCommand(DST().getValue(), RQST().getValue());
+  char *request = new char[RQST().length() + 1];
+  strcpy(request, RQST().getStorage().c_str());
+
+  EMGMResponse resp = parseAndExecuteMGMCommand(DST().getStorage().c_str(), request);
+  delete[](request);
 
 #ifdef FORTE_SUPPORT_MONITORING
   if (0 != mCommand.mMonitorResponse.length()) {
@@ -262,9 +266,11 @@ bool DEV_MGR::parseWriteConnectionData(char *paRequestPartLeft, forte::core::SMa
     }
     *endOfSource = '\0';
     paCommand.mAdditionalParams = CIEC_STRING(paRequestPartLeft);
-    char *addParams = paCommand.mAdditionalParams.getValue();
+    char *addParams = new char[paCommand.mAdditionalParams.getStorage().length() + 1]();
+    strcpy(addParams, paCommand.mAdditionalParams.getStorage().c_str());
     forte::core::util::transformEscapedXMLToNonEscapedText(addParams);
     paCommand.mAdditionalParams.assign(addParams, static_cast<TForteUInt16>(strlen(addParams)));
+    delete[](addParams);
     *endOfSource = '"'; // restore the string
     paRequestPartLeft = strchr(endOfSource + 1, '\"');
     if(nullptr != paRequestPartLeft){
@@ -374,13 +380,13 @@ void DEV_MGR::parseWriteData(char *paRequestPartLeft, forte::core::SManagementCM
         paCommand.mCMD = EMGMCommandType::MonitoringClearForce;
       }
     } else if ((2 == paCommand.mAdditionalParams.length()) &&
-      (('$' == paCommand.mAdditionalParams.getValue()[0]) &&
-        (('e' == paCommand.mAdditionalParams.getValue()[1]) ||('E' == paCommand.mAdditionalParams.getValue()[1]) ))){
+      (('$' == paCommand.mAdditionalParams.getStorage()[0]) &&
+        (('e' == paCommand.mAdditionalParams.getStorage()[1]) ||('E' == paCommand.mAdditionalParams.getStorage()[1]) ))){
       paCommand.mCMD = EMGMCommandType::MonitoringTriggerEvent;
     }else if ((3 == paCommand.mAdditionalParams.length()) &&
-      (('$' == paCommand.mAdditionalParams.getValue()[0]) &&
-       (('e' == paCommand.mAdditionalParams.getValue()[1]) ||('E' == paCommand.mAdditionalParams.getValue()[1]) ) &&
-       (('r' == paCommand.mAdditionalParams.getValue()[2]) ||('R' == paCommand.mAdditionalParams.getValue()[2]) ) )){
+      (('$' == paCommand.mAdditionalParams.getStorage()[0]) &&
+       (('e' == paCommand.mAdditionalParams.getStorage()[1]) ||('E' == paCommand.mAdditionalParams.getStorage()[1]) ) &&
+       (('r' == paCommand.mAdditionalParams.getStorage()[2]) ||('R' == paCommand.mAdditionalParams.getStorage()[2]) ) )){
       paCommand.mCMD = EMGMCommandType::MonitoringResetEventCount;
     }else
 #endif // FORTE_SUPPORT_MONITORING
@@ -502,18 +508,18 @@ void DEV_MGR::generateLongResponse(EMGMResponse paResp, forte::core::SManagement
       RESP().append("<Connection Source=\"");
       appendIdentifierName(RESP(), paCMD.mFirstParam);
       RESP().append("\" Destination=\"");
-      RESP().append(paCMD.mAdditionalParams.getValue());
+      RESP().append(paCMD.mAdditionalParams);
       RESP().append("\" />");
     }
 #ifdef FORTE_SUPPORT_QUERY_CMD
     else if(paCMD.mCMD == EMGMCommandType::QueryConnection){
       if ((paCMD.mFirstParam.isEmpty()) &&
           (paCMD.mSecondParam.isEmpty())) { //src & dst = *
-          RESP().append(paCMD.mAdditionalParams.getValue());
+          RESP().append(paCMD.mAdditionalParams);
       }
       else { //either src or dst = * (both != * should be treated by generateResponse
         RESP().append("<EndpointList>\n    ");
-        RESP().append(paCMD.mAdditionalParams.getValue());
+        RESP().append(paCMD.mAdditionalParams);
         RESP().append("\n  </EndpointList>");
       }
     }
@@ -521,40 +527,40 @@ void DEV_MGR::generateLongResponse(EMGMResponse paResp, forte::core::SManagement
       if(!paCMD.mFirstParam.isEmpty()) {  //Name != "*"
         if(!paCMD.mSecondParam.isEmpty()){ //Type != "*"
           RESP().append("<FBStatus Status=\"");
-          RESP().append(paCMD.mAdditionalParams.getValue());
+          RESP().append(paCMD.mAdditionalParams);
           RESP().append("\" />");
         } else { //Type == "*"
           RESP().append("<FB Name=\"");
           appendIdentifierName(RESP(), paCMD.mFirstParam);
           RESP().append("\" Type=\"");
-          RESP().append(paCMD.mAdditionalParams.getValue());
+          RESP().append(paCMD.mAdditionalParams);
           RESP().append("\" />");
         }
       }
       else{
         RESP().append("<FBList>\n    ");
-        RESP().append(paCMD.mAdditionalParams.getValue());
+        RESP().append(paCMD.mAdditionalParams);
         RESP().append("\n  </FBList>");
       }
     }
     else if(paCMD.mCMD == EMGMCommandType::QueryFBTypes || paCMD.mCMD == EMGMCommandType::QueryAdapterTypes){
       RESP().append("<NameList>\n    ");
-      RESP().append(paCMD.mAdditionalParams.getValue());
+      RESP().append(paCMD.mAdditionalParams);
       RESP().append("\n  </NameList>");
     }
     else if(paCMD.mCMD == EMGMCommandType::QueryDTTypes){
       RESP().append("<DTList>\n    ");
-      RESP().append(paCMD.mAdditionalParams.getValue());
+      RESP().append(paCMD.mAdditionalParams);
       RESP().append("\n  </DTList>");
     }
     else if(paCMD.mCMD == EMGMCommandType::QueryFBType){
       RESP().append("<FBType Comment=\"generated\" ");
-      RESP().append(paCMD.mAdditionalParams.getValue());
+      RESP().append(paCMD.mAdditionalParams);
       RESP().append("  </FBType>");
     }
     else if(paCMD.mCMD == EMGMCommandType::QueryAdapterType){
       RESP().append("<AdapterType Comment=\"generated\" ");
-      RESP().append(paCMD.mAdditionalParams.getValue());
+      RESP().append(paCMD.mAdditionalParams);
       RESP().append("   <Service Comment=\"generated\" LeftInterface=\"SOCKET\" RightInterface=\"PLUG\"/>\n</AdapterType>");
     }
 #endif
@@ -593,7 +599,7 @@ DEV_MGR::~DEV_MGR(){
   m_pstInterfaceSpec = nullptr;  //block any wrong cleanup in the generic fb base class of CBaseCommFB
 }
 
-EMGMResponse DEV_MGR::parseAndExecuteMGMCommand(char *paDest, char *paCommand){
+EMGMResponse DEV_MGR::parseAndExecuteMGMCommand(const char *const paDest, char *paCommand){
   EMGMResponse eResp = EMGMResponse::InvalidObject;
   if(nullptr != strchr(paCommand, '>')){
     mCommand.mDestination = (strlen(paDest) != 0) ? CStringDictionary::getInstance().insert(paDest) : CStringDictionary::scm_nInvalidStringId;
@@ -691,7 +697,7 @@ void DEV_MGR::generateMonitorResponse(EMGMResponse paResp, forte::core::SManagem
     RESP().append(">\n  ");
     if(paCMD.mCMD == EMGMCommandType::MonitoringReadWatches) {
       RESP().append("<Watches>\n    ");
-      RESP().append(paCMD.mMonitorResponse.getValue());
+      RESP().append(paCMD.mMonitorResponse);
       RESP().append("\n  </Watches>");
     }
     RESP().append("\n</Response>");
@@ -701,7 +707,7 @@ void DEV_MGR::generateMonitorResponse(EMGMResponse paResp, forte::core::SManagem
 
 #endif // FORTE_SUPPORT_MONITORING
 
-bool DEV_MGR::executeCommand(char *paDest, char *paCommand){
+bool DEV_MGR::executeCommand(const char *const paDest, char *paCommand){
   EMGMResponse eResp = parseAndExecuteMGMCommand(paDest, paCommand);
   if(eResp != EMGMResponse::Ready){
     DEVLOG_ERROR("Boot file error. DEV_MGR says error is %s\n", DEV_MGR::getResponseText(eResp));

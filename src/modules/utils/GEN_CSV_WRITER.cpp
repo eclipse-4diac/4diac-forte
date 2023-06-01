@@ -120,18 +120,18 @@ bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfac
 void GEN_CSV_WRITER::openCSVFile() {
   QO() = CIEC_BOOL(false);
   if(nullptr == mCSVFile) {
-    mCSVFile = fopen(FILE_NAME().getValue(), "w+");
+    mCSVFile = fopen(FILE_NAME().getStorage().c_str(), "w+");
     if(nullptr != mCSVFile) {
       QO() = CIEC_BOOL(true);
       STATUS() = scmOK;
-      DEVLOG_INFO("[GEN_CSV_WRITER]: File %s successfully opened\n", FILE_NAME().getValue());
+      DEVLOG_INFO("[GEN_CSV_WRITER]: File %s successfully opened\n", FILE_NAME().getStorage().c_str());
     } else {
       STATUS() = CIEC_STRING(strerror(errno));
-      DEVLOG_ERROR("[GEN_CSV_WRITER]: Couldn't open file %s. Error: %s\n", FILE_NAME().getValue(), STATUS().getValue());
+      DEVLOG_ERROR("[GEN_CSV_WRITER]: Couldn't open file %s. Error: %s\n", FILE_NAME().getStorage().c_str(), STATUS().getStorage().c_str());
     }
   } else {
     STATUS() = scmFileAlreadyOpened;
-    DEVLOG_ERROR("[GEN_CSV_WRITER]: Can't open file %s since it is already opened\n", FILE_NAME().getValue());
+    DEVLOG_ERROR("[GEN_CSV_WRITER]: Can't open file %s since it is already opened\n", FILE_NAME().getStorage().c_str());
   }
 }
 
@@ -140,10 +140,10 @@ void GEN_CSV_WRITER::closeCSVFile() {
   if(nullptr != mCSVFile) {
     if(0 == fclose(mCSVFile)) {
       STATUS() = scmOK;
-      DEVLOG_INFO("[GEN_CSV_WRITER]: File %s successfully closed\n", FILE_NAME().getValue());
+      DEVLOG_INFO("[GEN_CSV_WRITER]: File %s successfully closed\n", FILE_NAME().getStorage().c_str());
     } else {
       STATUS() = CIEC_STRING(strerror(errno));
-      DEVLOG_ERROR("[GEN_CSV_WRITER]: Couldn't close file %s. Error: %s\n", FILE_NAME().getValue(), STATUS().getValue());
+      DEVLOG_ERROR("[GEN_CSV_WRITER]: Couldn't close file %s. Error: %s\n", FILE_NAME().getStorage().c_str(), STATUS().getStorage().c_str());
     }
     mCSVFile = nullptr;
   }
@@ -152,7 +152,7 @@ void GEN_CSV_WRITER::closeCSVFile() {
 void GEN_CSV_WRITER::writeCSVFileLine() {
   if(nullptr != mCSVFile) {
     char acBuffer[scmWriteBufferSize];
-    for(int i = 2; i < m_pstInterfaceSpec->m_nNumDIs; i++) {
+    for(size_t i = 2; i < m_pstInterfaceSpec->m_nNumDIs; i++) {
       int nLen = getDI(i)->unwrap().toString(acBuffer, scmWriteBufferSize);
       fwrite(acBuffer, 1, nLen, mCSVFile);
       fwrite("; ", 1, 2, mCSVFile);
@@ -161,6 +161,6 @@ void GEN_CSV_WRITER::writeCSVFileLine() {
   } else {
     QO() = CIEC_BOOL(false);
     STATUS() = scmFileNotOpened;
-    DEVLOG_ERROR("[GEN_CSV_WRITER]: Can't write to file %s since it is not opened\n", FILE_NAME().getValue());
+    DEVLOG_ERROR("[GEN_CSV_WRITER]: Can't write to file %s since it is not opened\n", FILE_NAME().getStorage().c_str());
   }
 }

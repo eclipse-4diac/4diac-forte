@@ -1323,14 +1323,14 @@ WorkingClient;<Request ID="1,322" Action="CREATE"><FB Name="CreatedVariables.DIN
 WorkingClient;<Request ID="1,323" Action="CREATE"><FB Name="CreatedVariables.CLIENT_1_3" Type="CLIENT_0_1" /></Request>
 WorkingClient;<Request ID="1,324" Action="WRITE"><Connection Source="opc_ua[READ;opc.tcp://localhost:4840#;/Objects/createdPropertyLT]" Destination="CreatedVariables.CLIENT_1_3.ID" /></Request>
 WorkingClient;<Request ID="1,325" Action="CREATE"><FB Name="CreatedVariables.F_EQ_3" Type="F_EQ" /></Request>
-WorkingClient;<Request ID="1,326" Action="WRITE"><Connection Source="STRING#JustAText" Destination="CreatedVariables.F_EQ_3.IN2" /></Request>
+WorkingClient;<Request ID="1,326" Action="WRITE"><Connection Source="STRING#&apos;JustAText&apos;" Destination="CreatedVariables.F_EQ_3.IN2" /></Request>
 WorkingClient;<Request ID="1,327" Action="CREATE"><FB Name="CreatedVariables.CLIENT_1_1_3" Type="CLIENT_1_0" /></Request>
 WorkingClient;<Request ID="1,328" Action="WRITE"><Connection Source="opc_ua[WRITE;opc.tcp://localhost:4840#;/Objects/createdPropertyLT]" Destination="CreatedVariables.CLIENT_1_1_3.ID" /></Request>
 WorkingClient;<Request ID="1,329" Action="CREATE"><FB Name="CreatedVariables.remoteVar1_3" Type="TEST_CONDITION" /></Request>
 WorkingClient;<Request ID="1,330" Action="CREATE"><FB Name="CreatedVariables.remoteVar2_3" Type="TEST_CONDITION" /></Request>
 WorkingClient;<Request ID="1,331" Action="CREATE"><FB Name="CreatedVariables.DINT2DINT_2" Type="LocalizedText2LocalizedText" /></Request>
 WorkingClient;<Request ID="1,332" Action="CREATE"><FB Name="CreatedVariables.GET_STRUCT_VALUE" Type="GET_STRUCT_VALUE" /></Request>
-WorkingClient;<Request ID="1,333" Action="WRITE"><Connection Source="text" Destination="CreatedVariables.GET_STRUCT_VALUE.member" /></Request>
+WorkingClient;<Request ID="1,333" Action="WRITE"><Connection Source="&apos;text&apos;" Destination="CreatedVariables.GET_STRUCT_VALUE.member" /></Request>
 WorkingClient;<Request ID="1,334" Action="CREATE"><FB Name="CreatedVariables.LocalizedText2LocalizedText" Type="LocalizedText2LocalizedText" /></Request>
 WorkingClient;<Request ID="1,335" Action="WRITE"><Connection Source="(text:=&apos;IEC61499&apos;,locale:=&apos;en-EN&apos;)" Destination="CreatedVariables.LocalizedText2LocalizedText.IN" /></Request>
 WorkingClient;<Request ID="1,336" Action="CREATE"><FB Name="CreatedVariables.DINT2DINT_1" Type="DINT2DINT" /></Request>

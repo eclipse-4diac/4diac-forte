@@ -51,7 +51,7 @@ bool CIEC_ANY_CHARS_VARIANT::setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId)
       operator=(CIEC_WCHAR(0));
       return true;
     case e_STRING:
-      operator=(CIEC_STRING(""));
+      operator=(CIEC_STRING("", 0));
       return true;
     case e_WSTRING:
       operator=(CIEC_WSTRING(""));
