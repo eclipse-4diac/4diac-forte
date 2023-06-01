@@ -442,9 +442,9 @@ class CFunctionBlock {
      * \param pa_poConn Connection to read from.
      */
 #ifdef FORTE_TRACE_CTF
-    void readData(size_t paDONum, CIEC_ANY &paValue, CDataConnection* paConn);
+    void readData(size_t paDONum, CIEC_ANY &paValue, const CDataConnection *const paConn);
 #else
-    void readData(size_t, CIEC_ANY &paValue, CDataConnection* paConn) {
+    void readData(size_t, CIEC_ANY &paValue, const CDataConnection *const paConn) {
       if(!paConn) {
         return;
       }

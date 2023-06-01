@@ -332,7 +332,7 @@ void CFunctionBlock::readInputData(TEventID paEIID) {
 }
 
 #ifdef FORTE_TRACE_CTF
-void CFunctionBlock::readData(size_t paDINum, CIEC_ANY& paValue, CDataConnection* paConn) {
+void CFunctionBlock::readData(size_t paDINum, CIEC_ANY& paValue, const CDataConnection *const paConn) {
   if(!paConn) {
     return;
   }
