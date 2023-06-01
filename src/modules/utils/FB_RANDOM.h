@@ -64,6 +64,8 @@ private:
   void readInputData(TEventID pa_nEIID) override;
   void writeOutputData(TEventID pa_nEIID) override;
 
+  unsigned int mSeedValue;
+
 public:
   FORTE_FB_RANDOM(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 

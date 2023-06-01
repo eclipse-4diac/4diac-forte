@@ -71,14 +71,14 @@ FORTE_FB_RANDOM::FORTE_FB_RANDOM(CStringDictionary::TStringId pa_nInstanceNameId
 void FORTE_FB_RANDOM::alg_INIT(){
 // WARNING - Don't forget to add #include <time.h>
   if (static_cast<CIEC_UINT::TValueType>(var_SEED) == 0) {
-    srand((unsigned int) time(nullptr) );
+    mSeedValue = static_cast<unsigned int>(time(nullptr));
   } else {
-    srand(static_cast<CIEC_UINT::TValueType>(var_SEED));
+    mSeedValue = static_cast<unsigned int>(static_cast<CIEC_UINT::TValueType>(var_SEED));
   }
 }
 
 void FORTE_FB_RANDOM::alg_REQ(){
-  var_VAL = CIEC_REAL(static_cast<TForteFloat>(rand())/static_cast<TForteFloat>(RAND_MAX));
+  var_VAL = CIEC_REAL(static_cast<TForteFloat>(rand_r(&mSeedValue))/static_cast<TForteFloat>(RAND_MAX));
 }
 
 

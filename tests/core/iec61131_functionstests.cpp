@@ -15,6 +15,9 @@
  *   Martin Melik-Merkumians - adds test for TRUNC
  *******************************************************************************/
 
+#include <math.h>
+#include <limits>
+
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
@@ -1902,6 +1905,324 @@ BOOST_AUTO_TEST_CASE(output_partial_DWORD_assignment_test){
   CIEC_LWORD outLword(0x00);
   testSTInIsOutDWordDummyFunction(inDword, ST_EXTEND_LIFETIME(outLword.partial<CIEC_DWORD>(0)));
   BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(outLword) == 0xFEFEFEFE);
+}
+
+BOOST_AUTO_TEST_CASE(is_valid_REAL){
+  CIEC_REAL valid0(0.0f);
+  CIEC_REAL validMax(std::numeric_limits<float>::max());
+  CIEC_REAL validMin(std::numeric_limits<float>::min());
+  CIEC_REAL inValidInf(std::numeric_limits<float>::infinity());
+  CIEC_REAL inValidNaN(NAN);
+  
+  
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(valid0)) == true);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(validMax)) == true);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(validMin)) == true);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(inValidInf)) == false);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(inValidNaN)) == false);
+}
+
+BOOST_AUTO_TEST_CASE(is_valid_LREAL)
+{
+  CIEC_LREAL valid0(0.0);
+  CIEC_LREAL validMax(std::numeric_limits<double>::max());
+  CIEC_LREAL validMin(std::numeric_limits<double>::min());
+  CIEC_LREAL inValidInf(std::numeric_limits<double>::infinity());
+  CIEC_LREAL inValidNaN(NAN);
+
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(valid0)) == true);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(validMax)) == true);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(validMin)) == true);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(inValidInf)) == false);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID(inValidNaN)) == false);
+}
+
+BOOST_AUTO_TEST_CASE(is_valid_bcd_BYTE) {
+  using TestType = CIEC_BYTE;
+  TestType test;
+  test = TestType(0x00U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+  test = TestType(0x01U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+  test = TestType(0x02U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+  test = TestType(0x03U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+  test = TestType(0x04U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+  test = TestType(0x05U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+  test = TestType(0x06U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+  test = TestType(0x07U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+  test = TestType(0x08U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+  test = TestType(0x09U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+  test = TestType(0x0AU);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+  test = TestType(0x0BU);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+  test = TestType(0x0CU);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+  test = TestType(0x0DU);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+  test = TestType(0x0EU);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+  test = TestType(0x0FU);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+  test = TestType(0x00U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+  test = TestType(0x10U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+  test = TestType(0x20U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+  test = TestType(0x30U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+  test = TestType(0x40U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+  test = TestType(0x50U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+  test = TestType(0x60U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+  test = TestType(0x70U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+  test = TestType(0x80U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+  test = TestType(0x90U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+  test = TestType(0xA0U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+  test = TestType(0xB0U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+  test = TestType(0xC0U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+  test = TestType(0xD0U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+  test = TestType(0xE0U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+  test = TestType(0xF0U);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+}
+
+BOOST_AUTO_TEST_CASE(is_valid_bcd_WORD) {
+  using TestType = CIEC_WORD;
+  constexpr size_t valueTypeSize = sizeof(TestType::TValueType);
+  TestType test;
+  for(size_t i = 0; i < valueTypeSize; ++i) {
+    const size_t bitShift = i * 8;
+    test = TestType(0x00U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x01U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x02U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x03U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x04U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x05U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x06 << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x07U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x08U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x09U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x0AU << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0x0BU << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0x0CU << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0x0DU << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0x0EU << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0x0FU << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0x00U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x10U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x20U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x30U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x40U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x50U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x60U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x70U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x80U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x90U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0xA0U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0xB0U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0xC0U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0xD0U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0xE0U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0xF0U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+  }
+}
+
+BOOST_AUTO_TEST_CASE(is_valid_bcd_DWORD) {
+  using TestType = CIEC_DWORD;
+  constexpr size_t valueTypeSize = sizeof(TestType::TValueType);
+  TestType test;
+  for(size_t i = 0; i < valueTypeSize; ++i) {
+    const size_t bitShift = i * 8;
+    test = TestType(0x00U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x01U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x02U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x03U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x04U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x05U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x06 << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x07U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x08U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x09U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x0AU << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0x0BU << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0x0CU << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0x0DU << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0x0EU << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0x0FU << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0x00U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x10U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x20U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x30U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x40U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x50U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x60U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x70U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x80U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x90U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0xA0U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0xB0U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0xC0U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0xD0U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0xE0U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0xF0U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+  }
+}
+
+BOOST_AUTO_TEST_CASE(is_valid_bcd_LWORD) {
+  using TestType = CIEC_LWORD;
+  constexpr size_t valueTypeSize = sizeof(TestType::TValueType);
+  TestType test;
+  for(size_t i = 0; i < valueTypeSize; ++i) {
+    const size_t bitShift = i * 8;
+    test = TestType(0x00U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x01U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x02U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x03U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x04U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x05U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x06 << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x07U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x08U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x09U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x0AU << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0x0BU << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0x0CU << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0x0DU << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0x0EU << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0x0FU << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0x00U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x10U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x20U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x30U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x40U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x50U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x60U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x70U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x80U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0x90U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == true);
+    test = TestType(0xA0U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0xB0U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0xC0U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0xD0U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0xE0U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+    test = TestType(0xF0U << bitShift);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(func_IS_VALID_BCD(test)) == false);
+  }
 }
 
 BOOST_AUTO_TEST_SUITE_END()

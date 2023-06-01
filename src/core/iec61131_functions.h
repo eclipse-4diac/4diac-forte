@@ -1172,6 +1172,45 @@ const CIEC_TIME func_NOW_MONOTONIC();
  */
 const CIEC_DATE_AND_TIME func_NOW();
 
+/**
+ * @brief Return if an ANY_REAL is a valid number
+ * 
+ * @tparam T Needs to be a subtype of CIEC_ANY_REAL
+ * @param paValue The value to be checked
+ * @return CIEC_BOOL false if inf or NaN, true otherwise
+ */
+template <typename T>
+CIEC_BOOL func_IS_VALID(const T& paValue) {
+  static_assert((std::is_base_of_v<CIEC_ANY_REAL, T>), "T not of ANY_REAL");
+  const typename T::TValueType value = static_cast<typename T::TValueType>(paValue);
+  return CIEC_BOOL(!(std::isnan(value) || std::isinf(value)));
+}
+
+/**
+ * @brief Checks if the ANY_BIT contains a valid BCD number
+ *
+ * @tparam T Needs to be a subtype of CIEC_ANY_BIT
+ * @param paValue The value to be checked
+ * @return CIEC_BOOL false if not a valid BCD, true otherwise
+ */
+template <typename T>
+CIEC_BOOL func_IS_VALID_BCD(const T& paValue) {
+  static_assert(std::is_base_of_v<CIEC_ANY_BIT, T>); // any bit type is allowed
+  static_assert(!std::is_same_v<CIEC_BOOL, T>); // but not BOOL
+  using ValueType = typename T::TValueType;
+  constexpr size_t valueTypeSize = sizeof(ValueType);
+  constexpr ValueType mask = 0x0F;
+  constexpr size_t nibble = 4;
+  const ValueType value = static_cast<ValueType>(paValue);
+  for (size_t i = 0U; i < valueTypeSize; i++) {
+    const size_t bitShift = i * 8;
+    if (((value >> bitShift) & mask) > 9U || ((value >> (bitShift + nibble)) & mask) > 9U) {
+      return CIEC_BOOL(false);
+    }
+  }
+  return CIEC_BOOL(true);
+}
+
 template <typename T>
 T swapSimpleDataHelper(const T data) {
   constexpr size_t dataSize = sizeof(T);
