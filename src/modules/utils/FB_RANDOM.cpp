@@ -26,9 +26,6 @@
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
 
-#include <time.h>
-#include <stdlib.h>
-
 DEFINE_FIRMWARE_FB(FORTE_FB_RANDOM, g_nStringIdFB_RANDOM)
 
 const CStringDictionary::TStringId FORTE_FB_RANDOM::scm_anDataInputNames[] = {g_nStringIdSEED};
@@ -65,20 +62,22 @@ FORTE_FB_RANDOM::FORTE_FB_RANDOM(CStringDictionary::TStringId pa_nInstanceNameId
     conn_INITO(this, 0),
     conn_CNF(this, 1),
     conn_SEED(nullptr),
-    conn_VAL(this, 0, &var_conn_VAL) {
+    conn_VAL(this, 0, &var_conn_VAL),
+    mDistribution(0.0f, 1.0f) {
+      mRandomGenerator.seed(mRandomDevice());
 }
 
 void FORTE_FB_RANDOM::alg_INIT(){
-// WARNING - Don't forget to add #include <time.h>
   if (static_cast<CIEC_UINT::TValueType>(var_SEED) == 0) {
-    mSeedValue = static_cast<unsigned int>(time(nullptr));
+    mRandomGenerator.seed(mRandomDevice());
   } else {
-    mSeedValue = static_cast<unsigned int>(static_cast<CIEC_UINT::TValueType>(var_SEED));
+    const CIEC_UINT::TValueType seedValue = static_cast<CIEC_UINT::TValueType>(var_SEED);
+    mRandomGenerator.seed(seedValue);
   }
 }
 
 void FORTE_FB_RANDOM::alg_REQ(){
-  var_VAL = CIEC_REAL(static_cast<TForteFloat>(rand_r(&mSeedValue))/static_cast<TForteFloat>(RAND_MAX));
+  var_VAL = CIEC_REAL(mDistribution(mRandomGenerator));
 }
 
 
