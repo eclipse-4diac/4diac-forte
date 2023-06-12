@@ -1,5 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2017-2018 Marc Jakobi, github.com/MrcJkb, fortiss GmbH
+ * Copyright (c) 2017, 2023 Marc Jakobi, github.com/MrcJkb
+ *                          fortiss GmbH
+ *                          Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +11,7 @@
  * Contributors:
  *    Marc Jakobi - initial implementation for HTTP clients
  *    Jose Cabral - Merge old HTTPIpLayer to this one and use CIEC_STRING
+ *    Martin Melik Merkumians - change CIEC_STRING to std::string
  ********************************************************************************/
 
 #ifndef _HTTPCOMLAYER_H_
@@ -33,7 +36,7 @@ namespace forte {
         EComResponse sendData(void *paData, unsigned int paSize) override; // top interface, called from top
         EComResponse recvData(const void *paData, unsigned int paSize) override;
 
-        EComResponse recvServerData(CSinglyLinkedList<CIEC_STRING>& paParameterNames, CSinglyLinkedList<CIEC_STRING>& paParameterValues);
+        EComResponse recvServerData(CSinglyLinkedList<std::string> &paParameterNames, CSinglyLinkedList<std::string> &paParameterValues);
 
         EComResponse openConnection(char* paLayerParameter) override;
 
@@ -53,7 +56,7 @@ namespace forte {
           e_NOTSET,
         };
 
-        CIEC_STRING& getHost();
+        std::string &getHost();
 
         TForteUInt16 getPort() const;
 
@@ -90,20 +93,20 @@ namespace forte {
         /** Represents the HTTP request type (0 = GET, 1 = PUT). */
         ERequestType mRequestType;
         /** HTTP Host */
-        CIEC_STRING mHost;
+        std::string mHost;
         /** Path in host */
-        CIEC_STRING mPath;
+        std::string mPath;
         /** Data to be sent */
-        CIEC_STRING mReqData;
+        std::string mReqData;
         /** Port of the host */
         TForteUInt16 mPort;
         /** Request  to be sent to Host */
-        CIEC_STRING mRequest;
+        std::string mRequest;
 
         char mRecvBuffer[cg_unIPLayerRecvBufferSize];
         unsigned int mBufFillSize;
 
-        CIEC_STRING mContentType;
+        std::string mContentType;
 
         bool mCorrectlyInitialized;
 
