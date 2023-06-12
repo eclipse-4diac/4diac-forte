@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 ACIN
+ * Copyright (c) 2013, 2023 ACIN
+ *                          Primetals Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,13 +9,12 @@
  *
  * Contributors:
  * Martin Melik Merkumians - initial API and implementation and/or initial documentation
+ *                         - Change CIEC_STRING to std::string
  *******************************************************************************/
-
 
 #include "MQTTHandler.h"
 #include "../../core/cominfra/commfb.h"
 #include <criticalregion.h>
-#include <string>
 
 #include "MQTTClientConfigParser.h"
 
@@ -28,8 +28,8 @@ MQTTAsync_connectOptions MQTTHandler::smClientConnectionOptions =
 CSyncObject MQTTHandler::smMQTTMutex;
 
 MQTTAsync MQTTHandler::smClient = nullptr;
-CIEC_STRING MQTTHandler::smClientId;
-CIEC_STRING MQTTHandler::smAddress;
+std::string MQTTHandler::smClientId;
+std::string MQTTHandler::smAddress;
 std::string MQTTHandler::scmUsername;
 std::string MQTTHandler::scmPassword;
 
@@ -191,9 +191,9 @@ int MQTTHandler::mqttSubscribe(const MQTTComLayer* paLayer){
 
 int MQTTHandler::registerLayer(const char* paAddress, const char* paClientId, MQTTComLayer* paLayer){
   if(smClient == nullptr){
-    smClientId = CIEC_STRING(paClientId);
-    smAddress = CIEC_STRING(paAddress);
-    MQTTAsync_create(&smClient, smAddress.getValue(), smClientId.getValue(), MQTTCLIENT_PERSISTENCE_NONE, nullptr);
+    smClientId = std::string(paClientId);
+    smAddress = std::string(paAddress);
+    MQTTAsync_create(&smClient, smAddress.c_str(), smClientId.c_str(), MQTTCLIENT_PERSISTENCE_NONE, nullptr);
     smClientConnectionOptions.keepAliveInterval = 20;
     smClientConnectionOptions.cleansession = 1;
     smClientConnectionOptions.onSuccess = onMqttConnectionSucceed;
@@ -203,7 +203,7 @@ int MQTTHandler::registerLayer(const char* paAddress, const char* paClientId, MQ
     if("" != gMqttClientConfigFile) { //file was provided
 
       CMQTTClientConfigFileParser::MQTTConfigFromFile result = CMQTTClientConfigFileParser::MQTTConfigFromFile(scmUsername, scmPassword);
-      std::string endpoint = smAddress.getValue();
+      std::string endpoint = smAddress;
 
       if(CMQTTClientConfigFileParser::loadConfig(gMqttClientConfigFile, endpoint, result)) {
         smClientConnectionOptions.username = scmUsername.c_str();
@@ -223,7 +223,7 @@ int MQTTHandler::registerLayer(const char* paAddress, const char* paClientId, MQ
       }
       smMQTTS_STATE = CONNECTION_ASKED;
     }
-  } else if((smClientId != CIEC_STRING(paClientId)) || (smAddress != CIEC_STRING(paAddress))){
+  } else if((smClientId != std::string(paClientId)) || (smAddress != std::string(paAddress))){
     return eWrongClientID;
   }
   {

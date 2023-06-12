@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 ACIN
+ * Copyright (c) 2013, 2023 ACIN
+ *                          Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,8 +9,8 @@
  *
  * Contributors:
  * Martin Melik Merkumians - initial API and implementation and/or initial documentation
+ *                         - Change CIEC_STRING to std::string
  *******************************************************************************/
-
 
 #include "MQTTComLayer.h"
 #include "../../core/utils/parameterParser.h"
@@ -31,7 +32,7 @@ EComResponse MQTTComLayer::sendData(void* paData, unsigned int paSize) {
   message.payloadlen = paSize;
   message.qos = QOS;
   message.retained = 0;
-  int errorCode = MQTTAsync_sendMessage(getExtEvHandler<MQTTHandler>().getClient(), mTopicName.getValue(), &message, nullptr);
+  int errorCode = MQTTAsync_sendMessage(getExtEvHandler<MQTTHandler>().getClient(), mTopicName.c_str(), &message, nullptr);
   if (0 != errorCode) {
     return e_ProcessDataSendFailed;
   }
@@ -65,7 +66,7 @@ EComResponse MQTTComLayer::openConnection(char* paLayerParameter) {
   EComResponse eRetVal = e_InitInvalidId;
   CParameterParser parser(paLayerParameter, ',', mNoOfParameters);
   if(mNoOfParameters == parser.parseParameters()){
-    mTopicName = CIEC_STRING(parser[Topic]);
+    mTopicName = std::string(parser[Topic]);
     if( MQTTHandler::eRegisterLayerSucceeded ==
         getExtEvHandler<MQTTHandler>().registerLayer(parser[Address], parser[ClientID], this)) {
       eRetVal = e_InitOk;

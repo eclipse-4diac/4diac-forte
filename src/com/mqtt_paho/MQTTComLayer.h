@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 ACIN
+ * Copyright (c) 2013, 2023 ACIN
+ *                          Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,17 +9,18 @@
  *
  * Contributors:
  * Martin Melik Merkumians - initial API and implementation and/or initial documentation
+ *                         - Change CIEC_STRING to std::string
  *******************************************************************************/
-
 
 #ifndef MQTTCOMLAYER_H_
 #define MQTTCOMLAYER_H_
 
 #include "comlayer.h"
-#include "../../core/datatypes/forte_string.h"
 extern "C" {
 #include <MQTTAsync.h>
 }
+
+#include <string>
 
 #define QOS 0
 
@@ -38,11 +40,11 @@ public:
   EComResponse processInterrupt() override;
 
   char const* getTopicName() const {
-    return mTopicName.getValue();
+    return mTopicName.c_str();
   }
 
 private:
-  CIEC_STRING mTopicName;
+  std::string mTopicName;
 
   static const unsigned int mNoOfParameters = 3;
   static const unsigned int mBufferSize = 255;
