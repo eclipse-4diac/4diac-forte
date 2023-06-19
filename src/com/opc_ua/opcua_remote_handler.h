@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2018 - 2019 fortiss GmbH
+ * Copyright (c) 2018, 2023 fortiss GmbH
+ *                          Primetals Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,13 +10,14 @@
  *
  * Contributors:
  *    Jose Cabral, Kirill Dorofeev - initial implementation
+ *    Martin Melik Merkumians - Change CIEC_STRING to std::string
  *******************************************************************************/
 
 #ifndef SRC_MODULES_OPC_UA_OPCUACLIENTHANDLER_H_
 #define SRC_MODULES_OPC_UA_OPCUACLIENTHANDLER_H_
 
-#include <forte_thread.h>
-#include <forte_config.h>
+#include "forte_thread.h"
+#include "forte_config.h"
 #include "opcua_handler_abstract.h"
 #include "opcua_client_information.h"
 
@@ -257,7 +259,7 @@ class COPC_UA_Remote_Handler : public COPC_UA_HandlerAbstract, public COPC_UA_Cl
      * @param paEndpoint Endpoint of the client
      * @return 0 if an error occurred, a pointer to the client otherwise
      */
-    CUA_ClientInformation* getClient(const CIEC_STRING &paEndpoint);
+    CUA_ClientInformation* getClient(const std::string &paEndpoint);
 
     /**
      * Adds an action to a client. This is performed when an action is initialized

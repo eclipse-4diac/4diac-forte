@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 fortiss GmbH
+ * Copyright (c) 2019, 2023 fortiss GmbH, Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,13 +9,15 @@
  *
  * Contributors:
  *    Jose Cabral - initial implementation
+ *    Martin Melik Merkumians - Change CIEC_STRING to std::string
  *******************************************************************************/
 
 #ifndef SRC_MODULES_OPC_UA_OPCUA_ACTION_INFO_H_
 #define SRC_MODULES_OPC_UA_OPCUA_ACTION_INFO_H_
 
-#include <forte_sem.h>
+#include "forte_sem.h"
 #include "opcua_layer.h"
+#include <string>
 
 /**
  * Each Communication FB (PUBLISH, SUBSCRIBE, CLIENT, SERVER) is considered an action to be executed in the OPC UA library, either locally or remotely.
@@ -45,11 +47,11 @@ class CActionInfo {
      * 2-Tuple to reference a specific node in an OPC UA server composed of the node ID and browsepath of the node
      */
     struct CNodePairInfo {
-        CNodePairInfo(UA_NodeId *paNodeId, const char *paBrowsePath) :
+        CNodePairInfo(UA_NodeId *paNodeId, const std::string &paBrowsePath) :
             mNodeId(paNodeId), mBrowsePath(paBrowsePath) {
         }
         UA_NodeId *mNodeId;
-        CIEC_STRING mBrowsePath;
+        std::string mBrowsePath;
     };
 
     /**
@@ -58,7 +60,7 @@ class CActionInfo {
      * @param paAction The action to be executed
      * @param paEndpoint The endpoint of a remote OPC UA in case the action is to be executed remotely. An empty endpoint means that the action is to be executed locally
      */
-    explicit CActionInfo(COPC_UA_Layer &paLayer, UA_ActionType paAction, const CIEC_STRING &paEndpoint);
+    explicit CActionInfo(COPC_UA_Layer &paLayer, UA_ActionType paAction, const std::string &paEndpoint);
 
     /**
      * Destructor of the class
@@ -85,7 +87,7 @@ class CActionInfo {
      * Getter of the enpoint
      * @return A constant reference of the endpoint
      */
-    const CIEC_STRING& getEndpoint() const {
+    const std::string &getEndpoint() const {
       return mEndpoint;
     }
 
@@ -103,8 +105,7 @@ class CActionInfo {
      */
     size_t getNoOfNodePairs() const {
       size_t noOfPairs = 0;
-      for(CSinglyLinkedList<CNodePairInfo*>::Iterator it = mNodePair.begin(); it != mNodePair.end(); ++it, noOfPairs++)
-        ;
+      for(CSinglyLinkedList<CNodePairInfo*>::Iterator it = mNodePair.begin(); it != mNodePair.end(); ++it, noOfPairs++);
       return noOfPairs;
     }
 
@@ -254,7 +255,7 @@ class CActionInfo {
     /**
      * Empty if the action is executed locally, other value otherwise
      */
-    CIEC_STRING mEndpoint;
+    std::string mEndpoint;
 
     /**
      * List of the node pair information about the nodes the action is accessing
@@ -288,7 +289,7 @@ class CActionInfo {
          * @param paResult Place to store the endpoint
          * @return True if an endpoint was found, false otherwise
          */
-        static bool getEndpoint(const char *paEndpoint, CIEC_STRING &paResult);
+        static bool getEndpoint(const char *paEndpoint, std::string &paResult);
 
         /**
          * Checks if a pair in a string form is valid and stores it in the result list. The node pair has format BROWSENAME,NODEID where BROWSENAME is a path string. @see parseNodeId for the format of NODEID
@@ -355,7 +356,7 @@ class CLocalMethodInfo : public CActionInfo {
      * @param paEndpoint The endpoint of a remote OPC UA in case the action is to be executed remotely. An empty endpoint means that the action is to be executed locally
      * @param paTypes A list of type converters of the connections of the FB of the action (SDs/RDs)
      */
-    explicit CLocalMethodInfo(COPC_UA_Layer &paLayer, const CIEC_STRING &paEndpoint);
+    explicit CLocalMethodInfo(COPC_UA_Layer &paLayer, const std::string &paEndpoint);
 
     /**
      * Destructor of the class

@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2015-2019 Florian Froschermeier <florian.froschermeier@tum.de>,
- *               fortiss GmbH
+ * Copyright (c) 2015, 2023 Florian Froschermeier <florian.froschermeier@tum.de>,
+ *                          fortiss GmbH, Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -15,6 +15,7 @@
  *      - refactoring and adaption to new concept
  *    Jose Cabral:
  *      - refactoring to cleaner architecture
+ *    Martin Melik Merkumians - Change CIEC_STRING to std::string
  *******************************************************************************/
 
 #include "../../core/devexec.h"
@@ -22,13 +23,14 @@
 #include "../../core/cominfra/basecommfb.h"
 #include "../../core/utils/parameterParser.h"
 #include "../../core/utils/string_utils.h"
-#include <criticalregion.h>
-#include <forte_printer.h>
+#include "criticalregion.h"
+#include "forte_printer.h"
 #include "../../arch/utils/mainparam_utils.h"
 #include "opcua_local_handler.h"
+#include <string>
 
 #ifndef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
-#include <sockhand.h>
+#include "sockhand.h"
 #endif
 
 const char *const COPC_UA_Local_Handler::mEnglishLocaleForNodes = "en-US";
@@ -37,6 +39,7 @@ const char *const COPC_UA_Local_Handler::mDefaultDescriptionForVariableNodes = "
 TForteUInt16 gOpcuaServerPort = FORTE_COM_OPC_UA_PORT;
 
 using namespace forte::com_infra;
+using namespace std::string_literals;
 
 DEFINE_HANDLER(COPC_UA_Local_Handler);
 
@@ -135,15 +138,15 @@ void COPC_UA_Local_Handler::generateServerStrings(TForteUInt16 paUAServerPort, U
   forte_snprintf(helperBuffer, scmMaxServerNameLength, "forte_%d", paUAServerPort);
 
 #ifdef FORTE_COM_OPC_UA_MULTICAST
-  paServerStrings.mMdnsServerName = CIEC_STRING(helperBuffer);
+  paServerStrings.mMdnsServerName = std::string(helperBuffer);
 #endif //FORTE_COM_OPC_UA_MULTICAST
 
-  paServerStrings.mAppURI = CIEC_STRING("org.eclipse.4diac.");
+  paServerStrings.mAppURI = "org.eclipse.4diac."s;
 #ifdef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
-  paServerStrings.mHostname = CIEC_STRING(FORTE_COM_OPC_UA_CUSTOM_HOSTNAME);
-  paServerStrings.mHostname.append("-");
+  paServerStrings.mHostname = std::string(FORTE_COM_OPC_UA_CUSTOM_HOSTNAME);
+  paServerStrings.mHostname.append("-"s);
   paServerStrings.mHostname.append(helperBuffer);
-  paServerStrings.mAppURI.append(paServerStrings.mHostname.getValue());
+  paServerStrings.mAppURI.append(paServerStrings.mHostname);
 #else
   paServerStrings.mAppURI.append(helperBuffer);
 #endif
@@ -171,9 +174,9 @@ void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings,
   UA_LocalizedText_clear(&paUaServerConfig.applicationDescription.applicationName);
   UA_String_clear(&paUaServerConfig.applicationDescription.applicationUri);
 
-  paUaServerConfig.applicationDescription.applicationUri = UA_String_fromChars(paServerStrings.mAppURI.getValue());
+  paUaServerConfig.applicationDescription.applicationUri = UA_String_fromChars(paServerStrings.mAppURI.c_str());
   paUaServerConfig.applicationDescription.applicationName.locale = UA_STRING_NULL;
-  paUaServerConfig.applicationDescription.applicationName.text = UA_String_fromChars(paServerStrings.mHostname.getValue());
+  paUaServerConfig.applicationDescription.applicationName.text = UA_String_fromChars(paServerStrings.mHostname.c_str());
   paUaServerConfig.publishingIntervalLimits.min =
   FORTE_COM_OPC_UA_SERVER_PUB_INTERVAL;
 
@@ -494,12 +497,12 @@ UA_StatusCode COPC_UA_Local_Handler::handleExistingVariable(CActionInfo &paActio
               retVal = registerVariableCallBack(*paNodePairInfo.mNodeId, paActionInfo, paIndexOfNodePair);
             } else {
               DEVLOG_ERROR("[OPC UA LOCAL]: At FB %s RD_%d the node %s has already a FB who is reading from it. Cannot add another one\n",
-                paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair, paNodePairInfo.mBrowsePath.getValue());
+                paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair, paNodePairInfo.mBrowsePath.c_str());
               retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
             }
           } else {
             DEVLOG_ERROR("[OPC UA LOCAL]: At FB %s RD_%d the node %s could not retrieve context. Error: %s\n",
-              paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair, paNodePairInfo.mBrowsePath.getValue(), UA_StatusCode_name(retVal));
+                         paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair, paNodePairInfo.mBrowsePath.c_str(), UA_StatusCode_name(retVal));
           }
         } else {
           DEVLOG_ERROR("[OPC UA LOCAL]: Cannot set write permission of node for port %d. Error: %s\n", paIndexOfNodePair, UA_StatusCode_name(retVal));
@@ -521,7 +524,7 @@ UA_StatusCode COPC_UA_Local_Handler::handleExistingVariable(CActionInfo &paActio
 UA_StatusCode COPC_UA_Local_Handler::handleNonExistingVariable(CActionInfo &paActionInfo, CActionInfo::CNodePairInfo &paNodePairInfo,
     const CIEC_ANY &paVariable, size_t paIndexOfNodePair, CSinglyLinkedList<UA_NodeId*> &paReferencedNodes, bool paWrite) {
 
-  CIEC_STRING nodeName;
+  std::string nodeName;
   UA_StatusCode retVal = splitAndCreateFolders(paNodePairInfo.mBrowsePath, nodeName, paReferencedNodes);
   if(UA_STATUSCODE_GOOD == retVal) {
     CCreateVariableInfo variableInformation;
@@ -691,7 +694,7 @@ UA_StatusCode COPC_UA_Local_Handler::initializeCreateMethod(CActionInfo &paActio
     } else { //node does not exist
       //presentNodes shouldn't have any allocated NodeId at this point
 
-      CIEC_STRING nodeName;
+      std::string nodeName;
       retVal = splitAndCreateFolders((*itMethodNodePairInfo)->mBrowsePath, nodeName, referencedNodes);
       if(UA_STATUSCODE_GOOD == retVal) {
         CCreateMethodInfo methodInformation(static_cast<CLocalMethodInfo&>(paActionInfo));
@@ -731,14 +734,14 @@ UA_StatusCode COPC_UA_Local_Handler::handleExistingMethod(CActionInfo &paActionI
   CSinglyLinkedList<CActionInfo::CNodePairInfo*>::Iterator it = paActionInfo.getNodePairInfo().begin();
   UA_StatusCode retVal = UA_STATUSCODE_GOOD;
 
-  DEVLOG_INFO("[OPC UA LOCAL]: Adding a callback for an existing method at %s\n", (*it)->mBrowsePath.getValue());
+  DEVLOG_INFO("[OPC UA LOCAL]: Adding a callback for an existing method at %s\n", (*it)->mBrowsePath.c_str());
 
   //check if the method was already referenced by another FB
   for(CSinglyLinkedList<UA_ParentNodeHandler>::Iterator iter = mMethodsContexts.begin(); iter != mMethodsContexts.end(); ++iter) {
     if(UA_NodeId_equal(&paParentNode, (*iter).mParentNodeId) && UA_NodeId_equal((*it)->mNodeId, (*iter).mMethodNodeId)) {
       DEVLOG_ERROR(
-        "[OPC UA LOCAL]: The FB %s is trying to reference a local method at %s which has already a FB who is referencing it. Cannot add another one\n",
-        paActionInfo.getLayer().getCommFB()->getInstanceName(), (*it)->mBrowsePath.getValue());
+          "[OPC UA LOCAL]: The FB %s is trying to reference a local method at %s which has already a FB who is referencing it. Cannot add another one\n",
+          paActionInfo.getLayer().getCommFB()->getInstanceName(), (*it)->mBrowsePath.c_str());
       retVal = UA_STATUSCODE_BADINTERNALERROR;
       break;
     }
@@ -922,7 +925,7 @@ UA_StatusCode COPC_UA_Local_Handler::executeCreateObject(CActionInfo &paActionIn
     if(UA_STATUSCODE_GOOD == retVal) {
       if(!nodeExists) {
 
-        CIEC_STRING nodeName;
+        std::string nodeName;
         retVal = splitAndCreateFolders((*itInstance)->mBrowsePath, nodeName, referencedNodes);
         if(UA_STATUSCODE_GOOD == retVal) {
           CCreateObjectInfo createInformation;
@@ -986,14 +989,13 @@ UA_StatusCode COPC_UA_Local_Handler::createObjectNode(const CCreateObjectInfo &p
       paCreateObjectInfo.mBrowseName->name.length, reinterpret_cast<const char*>(paCreateObjectInfo.mBrowseName->name.data));
   }
 
-  CIEC_STRING nodeName;
-  nodeName.assign(reinterpret_cast<const char*>(paCreateObjectInfo.mBrowseName->name.data),
-    static_cast<TForteUInt16>(paCreateObjectInfo.mBrowseName->name.length));
+  std::string nodeName(reinterpret_cast<const char*>(paCreateObjectInfo.mBrowseName->name.data),
+    paCreateObjectInfo.mBrowseName->name.length);
 
   UA_ObjectAttributes oAttr;
   UA_ObjectAttributes_init(&oAttr);
-  oAttr.description = UA_LOCALIZEDTEXT_ALLOC("", nodeName.getValue());
-  oAttr.displayName = UA_LOCALIZEDTEXT_ALLOC("", nodeName.getValue());
+  oAttr.description = UA_LOCALIZEDTEXT_ALLOC("", nodeName.c_str());
+  oAttr.displayName = UA_LOCALIZEDTEXT_ALLOC("", nodeName.c_str());
   retVal = UA_Server_addObjectNode(mUaServer, requestedNodeId, parentNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT), *paCreateObjectInfo.mBrowseName,
     *paCreateObjectInfo.mTypeNodeId, oAttr, nullptr, paCreateObjectInfo.mReturnedNodeId);
   if(UA_STATUSCODE_GOOD != retVal) {
@@ -1028,7 +1030,7 @@ UA_StatusCode COPC_UA_Local_Handler::executeCreateVariable(CActionInfo &paAction
       if(UA_STATUSCODE_GOOD == retVal) {
         if(!nodeExists) {
 
-          CIEC_STRING nodeName;
+          std::string nodeName;
           retVal = splitAndCreateFolders((*itInstance)->mBrowsePath, nodeName, referencedNodes);
           if(UA_STATUSCODE_GOOD == retVal) {
             CCreateVariableInfo createInformation;
@@ -1120,9 +1122,9 @@ UA_StatusCode COPC_UA_Local_Handler::executeDeleteObject(CActionInfo &paActionIn
   return retVal;
 }
 
-void COPC_UA_Local_Handler::initializeCreateInfo(CIEC_STRING &paNodeName, const CActionInfo::CNodePairInfo &paNodePairInfo, const UA_NodeId *paParentNodeId,
+void COPC_UA_Local_Handler::initializeCreateInfo(std::string &paNodeName, const CActionInfo::CNodePairInfo &paNodePairInfo, const UA_NodeId *paParentNodeId,
     CCreateInfo &paResult) const {
-  COPC_UA_Helper::getBrowsenameFromNodeName(paNodeName.getValue(), scmDefaultBrowsenameNameSpace, *paResult.mBrowseName); //this cannot fail here anymore, since it was checked already with getNode
+  COPC_UA_Helper::getBrowsenameFromNodeName(paNodeName.c_str(), scmDefaultBrowsenameNameSpace, *paResult.mBrowseName); //this cannot fail here anymore, since it was checked already with getNode
   paResult.mRequestedNodeId = paNodePairInfo.mNodeId;
   paResult.mParentNodeId = paParentNodeId;
 }
@@ -1137,7 +1139,7 @@ UA_StatusCode COPC_UA_Local_Handler::getNode(CActionInfo::CNodePairInfo &paNodeP
     size_t firstNonExistingNode = 0;
 
     CSinglyLinkedList<UA_NodeId*> existingNodeIds;
-    retVal = translateBrowseNameAndStore(paNodePairInfo.mBrowsePath.getValue(), &browsePaths, &pathCount, &firstNonExistingNode, existingNodeIds);
+    retVal = translateBrowseNameAndStore(paNodePairInfo.mBrowsePath.c_str(), &browsePaths, &pathCount, &firstNonExistingNode, existingNodeIds);
     if(UA_STATUSCODE_GOOD == retVal) {
       if(firstNonExistingNode == pathCount) { //all nodes exist
         *paIsPresent = true;
@@ -1306,45 +1308,36 @@ UA_StatusCode COPC_UA_Local_Handler::createFolders(const char *paFolders, CSingl
   return retVal;
 }
 
-UA_StatusCode COPC_UA_Local_Handler::splitAndCreateFolders(const CIEC_STRING &paBrowsePath, CIEC_STRING &paNodeName,
+UA_StatusCode COPC_UA_Local_Handler::splitAndCreateFolders(const std::string &paBrowsePath, std::string &paNodeName,
     CSinglyLinkedList<UA_NodeId*> &paRreferencedNodes) const {
-  CIEC_STRING folders;
+  std::string folders;
   UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
   if(splitFoldersFromNode(paBrowsePath, folders, paNodeName)) {
     retVal = UA_STATUSCODE_GOOD;
     if(!folders.empty()) {
-      retVal = createFolders(folders.getValue(), paRreferencedNodes);
+      retVal = createFolders(folders.c_str(), paRreferencedNodes);
     }
   }
   return retVal;
 }
 
-bool COPC_UA_Local_Handler::splitFoldersFromNode(const CIEC_STRING &paOriginal, CIEC_STRING &paFolder, CIEC_STRING &paNodeName) const {
-
+bool COPC_UA_Local_Handler::splitFoldersFromNode(const std::string &paOriginal, std::string &paFolder, std::string &paNodeName) const {
   bool retVal = false;
 
-  if(COPC_UA_Helper::isBrowsePathValid(paOriginal.getValue())) {
-    retVal = true;
-
-    CIEC_STRING copyOfOriginal(paOriginal);
-
-    char *begin = copyOfOriginal.getValue();
-    char *runner = begin + copyOfOriginal.length() - 1;
-
-    if('/' == *runner) { // remove tailing slash
-      *runner = '\0';
-      runner--;
+  if(COPC_UA_Helper::isBrowsePathValid(paOriginal)) {
+    const auto originalLength = paOriginal.length();
+    auto originalEndIterIndex = 0;
+    if(paOriginal.back() == '/') {
+      ++originalEndIterIndex;
     }
+    auto findIndex = paOriginal.rfind('/', originalLength - (originalEndIterIndex + 1));
+    if(findIndex != std::string::npos) {
+      retVal = true;
+      paNodeName = std::string(paOriginal.begin() + findIndex + 1, paOriginal.end() - originalEndIterIndex);
 
-    while('/' != *runner) {
-      runner--;
-    }
-
-    *runner = '\0';
-    paNodeName = CIEC_STRING(runner + 1);
-
-    if(begin != runner) {
-      paFolder = CIEC_STRING(begin);
+      if(findIndex != 0) { // if '/' was not only found at the beginning, e.g. the Node is not at the root
+        paFolder = std::string(paOriginal.begin(), paOriginal.begin() + findIndex);
+      }
     }
   }
 

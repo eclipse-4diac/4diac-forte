@@ -15,8 +15,8 @@
 #define SRC_MODULES_OPC_UA_OPCUA_CLIENT_CONFIG_PARSER_H_
 
 #include "utils/configFileParser.h"
-#include <core/datatypes/forte_string.h>
-#include <open62541.h>
+#include "core/datatypes/forte_string.h"
+#include "open62541.h"
 #include <string>
 
 /**

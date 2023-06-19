@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 fortiss GmbH
+ * Copyright (c) 2019, 2023 fortiss GmbH, Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,15 +9,16 @@
  *
  * Contributors:
  *    Jose Cabral - initial implementation
+ *    Martin Melik Merkumians - Change CIEC_STRING to std::string
  *******************************************************************************/
 
 #ifndef SRC_MODULES_OPC_UA_OPCUA_CLIENT_INFORMATION_H_
 #define SRC_MODULES_OPC_UA_OPCUA_CLIENT_INFORMATION_H_
 
 #include "opcua_action_info.h"
-#include <fortelist.h>
-#include <forte_sync.h>
-#include <criticalregion.h>
+#include "fortelist.h"
+#include "forte_sync.h"
+#include "criticalregion.h"
 #include <string>
 
 /**
@@ -31,7 +32,7 @@ class CUA_ClientInformation {
      * Constructor of the class
      * @param paEndpoint Endpoint of the remote
      */
-    explicit CUA_ClientInformation(const CIEC_STRING &paEndpoint);
+    explicit CUA_ClientInformation(const std::string &paEndpoint);
 
     /**
      * Destructor of the class
@@ -89,7 +90,7 @@ class CUA_ClientInformation {
      * Getter of the endpoint
      * @return Endpoint of the clinet
      */
-    const CIEC_STRING& getEndpoint() const {
+    const std::string& getEndpoint() const {
       return mEndpointUrl;
     }
 
@@ -356,7 +357,7 @@ class CUA_ClientInformation {
     /**
      * Endpoint of the remote
      */
-    CIEC_STRING mEndpointUrl;
+    std::string mEndpointUrl;
 
     /**
      * Username to be used to connect to the server

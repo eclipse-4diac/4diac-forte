@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016, 2019 fortiss GmbH
+ * Copyright (c) 2016, 2019 fortiss GmbH, Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,13 +10,16 @@
  * Contributors:
  *    Stefan Profanter
  *      - initial implementation
+ *    Martin Melik Merkumians - Change CIEC_STRING to std::string
  *******************************************************************************/
 
 #ifndef FORTE_OPCUA_HELPER_H
 #define FORTE_OPCUA_HELPER_H
 
-#include <open62541.h>
+#include "open62541.h"
 #include "forte_any.h"
+
+#include <string>
 
 class CIEC_STRUCT;
 
@@ -122,7 +125,7 @@ class COPC_UA_Helper {
      * @param paBrowsepath browsepath to be checked
      * @return True if the browsepath is valid, false otherwise
      */
-    static bool isBrowsePathValid(const char *paBrowsepath);
+    static bool isBrowsePathValid(const std::string &paBrowsepath);
 
     /**
      * Get the node id of the node which is represented by the given path in a remote server
