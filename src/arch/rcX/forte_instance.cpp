@@ -108,6 +108,8 @@ void forteStopInstance(int pa_nSig, TForteInstance pa_resultDevice){
  */
 void createDev(const char *pa_acMGRID, TForteInstance* pa_resultDevice){
   RMT_DEV *poDev = new RMT_DEV;
+  poDev->initialize();
+
   poDev->setMGR_ID(pa_acMGRID);
   poDev->startDevice();
   *pa_resultDevice = poDev;

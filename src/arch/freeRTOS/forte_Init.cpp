@@ -114,6 +114,8 @@ void forteStopInstance(int paSig, TForteInstance paInstance) {
  */
 void createDev(const char *paMGRID, TForteInstance* paInstance) {
   RMT_DEV *device = new RMT_DEV;
+  device->initialize();
+
   device->setMGR_ID(paMGRID);
   device->startDevice();
   *paInstance = device;
