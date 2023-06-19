@@ -16,7 +16,7 @@
 #include "extevhan.h"
 #include <forte_sync.h>
 #include <comlayer.h>
-#include <fortelist.h>
+#include <vector>
 
 class CModbusHandler : public CExternalEventHandler{
     DECLARE_HANDLER(CModbusHandler)
@@ -51,12 +51,14 @@ class CModbusHandler : public CExternalEventHandler{
         forte::com_infra::CComLayer* m_pCallback;
     };
 
-    typedef CSinglyLinkedList<TComContainer> TCallbackList;
+    typedef std::vector<TComContainer> TCallbackList;
     TCallbackList m_lstComCallbacks;
 
     CSyncObject m_oSync;
 
     static TCallbackDescriptor m_nCallbackDescCount;
+
+    TCallbackList::iterator findComCallbackUnlocked(TCallbackDescriptor pa_nCallbackDesc);
 };
 
 #endif // _MODBUSHANDLER_H_

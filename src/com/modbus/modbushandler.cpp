@@ -9,6 +9,7 @@
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
+#include <algorithm>
 #include "modbushandler.h"
 #include "devlog.h"
 #include "../core/devexec.h"
@@ -28,50 +29,40 @@ CModbusHandler::TCallbackDescriptor CModbusHandler::addComCallback(forte::com_in
   CCriticalRegion criticalRegion(m_oSync);
   m_nCallbackDescCount++;
   TComContainer stNewNode = { m_nCallbackDescCount, pa_pComCallback };
-  m_lstComCallbacks.pushBack(stNewNode);
+  m_lstComCallbacks.push_back(stNewNode);
 
   return m_nCallbackDescCount;
+}
+
+CModbusHandler::TCallbackList::iterator CModbusHandler::findComCallbackUnlocked(TCallbackDescriptor pa_nCallbackDesc) {
+  return std::find_if(
+           m_lstComCallbacks.begin(),
+           m_lstComCallbacks.end(),
+           [pa_nCallbackDesc](const TComContainer &cc) {
+             return cc.m_nCallbackDesc == pa_nCallbackDesc;
+           }
+         );
 }
 
 void CModbusHandler::removeComCallback(CModbusHandler::TCallbackDescriptor pa_nCallbackDesc){
   CCriticalRegion criticalRegion(m_oSync);
 
-  TCallbackList::Iterator itRunner(m_lstComCallbacks.begin());
-
-  if(itRunner->m_nCallbackDesc == pa_nCallbackDesc){
-    m_lstComCallbacks.popFront();
-  }
-  else{
-    TCallbackList::Iterator itLastPos(itRunner);
-    TCallbackList::Iterator itEnd(m_lstComCallbacks.end());
-    ++itRunner;
-    while(itRunner != itEnd){
-      if(itRunner->m_nCallbackDesc == pa_nCallbackDesc){
-        m_lstComCallbacks.eraseAfter(itLastPos);
-        break;
-      }
-      itLastPos = itRunner;
-      ++itRunner;
-    }
+  auto itDelCb = findComCallbackUnlocked(pa_nCallbackDesc);
+  if (itDelCb != m_lstComCallbacks.end()) {
+    m_lstComCallbacks.erase(itDelCb);
   }
 }
 
 void CModbusHandler::executeComCallback(CModbusHandler::TCallbackDescriptor pa_nCallbackDesc){
   m_oSync.lock();
-  TCallbackList::Iterator itEnd(m_lstComCallbacks.end());
-  TCallbackList::Iterator itCurrent(m_lstComCallbacks.begin());
-  for(TCallbackList::Iterator itCallback = m_lstComCallbacks.begin(); itCallback != itEnd; ++itCallback){
-    itCurrent = itCallback;
-
-    if(itCurrent->m_nCallbackDesc == pa_nCallbackDesc){
-      forte::com_infra::CComLayer *comLayer = itCurrent->m_pCallback;
-      m_oSync.unlock();
-      if(forte::com_infra::e_Nothing != comLayer->recvData(nullptr,0)){
-        startNewEventChain(comLayer->getCommFB());
-      }
-      m_oSync.lock();
-      break;
+  auto itCallback = findComCallbackUnlocked(pa_nCallbackDesc);
+  if (itCallback != m_lstComCallbacks.end()) {
+    forte::com_infra::CComLayer *comLayer = itCallback->m_pCallback;
+    m_oSync.unlock();
+    if(forte::com_infra::e_Nothing != comLayer->recvData(nullptr,0)){
+      startNewEventChain(comLayer->getCommFB());
     }
+  } else {
+    m_oSync.unlock();
   }
-  m_oSync.unlock();
 }
