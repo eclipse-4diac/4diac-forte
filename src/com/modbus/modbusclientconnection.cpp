@@ -27,9 +27,8 @@ CModbusClientConnection::~CModbusClientConnection() {
   if (m_bConnected){
     disconnect();
   }
-  TModbusPollList::Iterator itEnd(m_lstPollList.end());
-  for(TModbusPollList::Iterator itRunner = m_lstPollList.begin(); itRunner != itEnd; ++itRunner){
-    delete *itRunner;
+  for (auto itRunner : m_lstPollList) {
+    delete itRunner;
   }
   if (m_pModbusConnEvent != nullptr){
     delete m_pModbusConnEvent;
@@ -44,27 +43,26 @@ int CModbusClientConnection::readData(void *pa_pData) {
 int CModbusClientConnection::writeData(const void *pa_pData, unsigned int pa_nDataSize) {
   unsigned int dataIndex = 0;
 
-  TModbusSendList::Iterator itEnd = m_lstSendList.end();
-  for (TModbusSendList::Iterator it = m_lstSendList.begin(); it!=itEnd; ++it) {
-    if (dataIndex + it->m_nNrAddresses > pa_nDataSize) {
+  for (auto &it : m_lstSendList) {
+    if (dataIndex + it.m_nNrAddresses > pa_nDataSize) {
       break;
     }
 
     CCriticalRegion criticalRegion(m_oModbusLock);
-    switch (it->m_nSendFuncCode) {
+    switch (it.m_nSendFuncCode) {
       case 5:
       case 15:
-        modbus_write_bits(m_pModbusConn, it->m_nStartAddress, it->m_nNrAddresses, &((uint8_t*)pa_pData)[dataIndex]);
+        modbus_write_bits(m_pModbusConn, it.m_nStartAddress, it.m_nNrAddresses, &((uint8_t*)pa_pData)[dataIndex]);
         break;
       case 6:
       case 16:
-        modbus_write_registers(m_pModbusConn, it->m_nStartAddress, it->m_nNrAddresses, &((uint16_t*)pa_pData)[dataIndex]);
+        modbus_write_registers(m_pModbusConn, it.m_nStartAddress, it.m_nNrAddresses, &((uint16_t*)pa_pData)[dataIndex]);
         break;
       default:
         // TODO: error
         break;
     }
-    dataIndex += it->m_nNrAddresses;
+    dataIndex += it.m_nNrAddresses;
   }
 
   return (int)dataIndex;
@@ -97,16 +95,15 @@ void CModbusClientConnection::disconnect(){
 void CModbusClientConnection::addNewPoll(long pa_nPollInterval, unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses){
   CModbusPoll *newPoll = nullptr;
 
-  TModbusPollList::Iterator itEnd = m_lstPollList.end();
-  for(TModbusPollList::Iterator it = m_lstPollList.begin(); it != itEnd; ++it){
+  for (auto it : m_lstPollList) {
     if(it->getUpdateInterval() == pa_nPollInterval && it->getFunctionCode() == pa_nFunctionCode){
       it->addPollAddresses(pa_nStartAddress, pa_nNrAddresses);
-      newPoll = *it;
+      newPoll = it;
       break;
     }
   }
   if(newPoll == nullptr){
-    m_lstPollList.pushBack(new CModbusPoll(pa_nPollInterval, pa_nFunctionCode, pa_nStartAddress, pa_nNrAddresses));
+    m_lstPollList.push_back(new CModbusPoll(pa_nPollInterval, pa_nFunctionCode, pa_nStartAddress, pa_nNrAddresses));
     m_nNrOfPolls++;
     m_anRecvBuffPosition[m_nNrOfPolls - 1] = m_unBufFillSize;
   }
@@ -132,7 +129,7 @@ void CModbusClientConnection::addNewPoll(long pa_nPollInterval, unsigned int pa_
 void CModbusClientConnection::addNewSend(unsigned int pa_nSendFuncCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses) {
   SSendInformation sendInfo = {pa_nSendFuncCode, pa_nStartAddress, pa_nNrAddresses};
 
-  m_lstSendList.pushBack(sendInfo);
+  m_lstSendList.push_back(sendInfo);
 }
 
 void CModbusClientConnection::setSlaveId(unsigned int pa_nSlaveId){
@@ -157,9 +154,9 @@ void CModbusClientConnection::tryPolling(){
   unsigned int nrErrors = 0;
   bool dataReturned = false;
 
-  unsigned int index = 0;
-  TModbusPollList::Iterator itEnd(m_lstPollList.end());
-  for(TModbusPollList::Iterator itPoll = m_lstPollList.begin(); itPoll != itEnd; ++itPoll, ++index){
+  for (size_t index = 0; index < m_lstPollList.size(); ++index) {
+    auto itPoll = m_lstPollList[index];
+
     if(itPoll->readyToExecute()){
       CCriticalRegion criticalRegion(m_oModbusLock);
 
@@ -203,8 +200,7 @@ void CModbusClientConnection::tryConnect(){
         m_bConnected = true;
 
         // Start polling
-        TModbusPollList::Iterator itEnd(m_lstPollList.end());
-        for(TModbusPollList::Iterator itPoll = m_lstPollList.begin(); itPoll != itEnd; ++itPoll){
+        for (auto itPoll : m_lstPollList) {
           itPoll->activate();
         }
       }

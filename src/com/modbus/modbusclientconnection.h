@@ -12,9 +12,9 @@
 #ifndef _MODBUSCLIENTCONNECTION_H_
 #define _MODBUSCLIENTCONNECTION_H_
 
+#include <vector>
 #include "modbusconnection.h"
 #include "modbustimedevent.h"
-#include "fortelist.h"
 
 class CModbusPoll;
 
@@ -58,10 +58,10 @@ class CModbusClientConnection : public CModbusConnection{
 
     modbus_connection_event::CModbusConnectionEvent *m_pModbusConnEvent;
 
-    typedef CSinglyLinkedList<CModbusPoll*> TModbusPollList;
+    typedef std::vector<CModbusPoll*> TModbusPollList;
     TModbusPollList m_lstPollList;
 
-    typedef CSinglyLinkedList<SSendInformation> TModbusSendList;
+    typedef std::vector<SSendInformation> TModbusSendList;
     TModbusSendList m_lstSendList;
 
     unsigned int m_nNrOfPolls;
