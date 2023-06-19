@@ -31,10 +31,18 @@ if [ -d "$forte_bin_dir" ]; then
   
   cd "./$forte_bin_dir"
   
-  cmake -G "Eclipse CDT4 - Unix Makefiles" -D TOOLCHAIN_ROOT=/opt/pxc/2.2.1 \
-    -D CMAKE_TOOLCHAIN_FILE=$1/axcf2152.cmake \
-    -DFORTE_ARCHITECTURE=PLCnext -DFORTE_COM_ETH=ON -DFORTE_COM_FBDK=ON -DFORTE_COM_LOCAL=ON -DFORTE_TESTS=OFF \
-    -DFORTE_MODULE_CONVERT=ON -DFORTE_MODULE_IEC61131=ON -DFORTE_MODULE_UTILS=ON ../../org.eclipse.4diac.forte
+  cmake -G "Eclipse CDT4 - Unix Makefiles" \
+    -DTOOLCHAIN_ROOT=/opt/pxc/2.2.1 \
+    -DCMAKE_TOOLCHAIN_FILE=$1/axcf2152.cmake \
+    -DFORTE_ARCHITECTURE=PLCnext \
+    -DFORTE_COM_ETH=ON \
+    -DFORTE_COM_FBDK=ON \
+    -DFORTE_COM_LOCAL=ON \
+    -DFORTE_TESTS=OFF \
+    -DFORTE_MODULE_CONVERT=ON \
+    -DFORTE_MODULE_IEC61131=ON \
+    -DFORTE_MODULE_UTILS=ON \
+    ../../org.eclipse.4diac.forte
 else
   echo "unable to create ${forte_bin_dir}"
   exit 1
