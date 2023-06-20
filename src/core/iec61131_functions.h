@@ -143,6 +143,19 @@ inline const CIEC_LREAL func_EXP(const CIEC_LREAL &paIN){
   return CIEC_LREAL(exp(paIN));
 }
 
+template <typename T, typename U>
+inline auto func_ATAN2(const T& paY, const U& paX) -> typename forte::core::mpl::get_castable_type_t<T, U> {
+  static_assert(std::is_base_of_v<CIEC_ANY_REAL, T>, "T not of ANY_REAL");
+  static_assert(std::is_base_of_v<CIEC_ANY_REAL, U>, "U not of ANY_REAL");
+  using ReturnType = typename forte::core::mpl::get_castable_type_t<T, U>;
+  using XValueType = typename U::TValueType;
+  using YValueType = typename T::TValueType;
+  using ReturnValueType = typename ReturnType::TValueType;
+  const ReturnValueType xValue = static_cast<ReturnValueType>(static_cast<XValueType>(paX));
+  const ReturnValueType yValue = static_cast<ReturnValueType>(static_cast<YValueType>(paY));
+  return ReturnType(static_cast<ReturnValueType>(std::atan2(yValue, xValue)));
+}
+
 template<typename T>
 auto func_ROL(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::mpl::get_equivalent_CIEC_class<T>::type  {
   static_assert((std::is_base_of<CIEC_ANY_BIT, T>::value), "T not of ANY_BIT");
