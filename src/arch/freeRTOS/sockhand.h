@@ -30,9 +30,11 @@
 
 #undef connect //gets confused with connect function of conn.h and childs
 
+#if !defined(CONFIG_IDF_CMAKE)
 inline int connect(int s, const struct sockaddr *name, socklen_t namelen) {
   return lwip_connect(s, name, namelen);
 }
+#endif
 
 //these include needs to be last
 #include "../gensockhand.h"
