@@ -61,8 +61,5 @@ std::string CROSManager::ciecStringToStdString(const CIEC_STRING &pa_DataInput){
 }
 
 CIEC_STRING CROSManager::stdStringToCiecString(const std::string &pa_inputString){
-  int stringLength = static_cast<int>(std::strlen(pa_inputString.c_str()));
-  CIEC_STRING tmpString;
-  tmpString.assign(pa_inputString.c_str(), static_cast<TForteUInt16>(stringLength));
-  return tmpString;
+  return CIEC_STRING(pa_inputString.c_str());
 }

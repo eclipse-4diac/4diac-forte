@@ -22,13 +22,14 @@
 #include <commfb.h>
 
 using namespace forte::com_infra;
+using namespace std::string_literals;
 
 CROSLayer::CROSLayer(CComLayer* pa_poUpperLayer, CBaseCommFB* pa_poComFB) :
     CComLayer(pa_poUpperLayer, pa_poComFB){
 
   m_eInterruptResp = e_ProcessDataOk;
-  m_TopicName = "";
-  m_TopicType = "";
+  m_TopicName = ""s;
+  m_TopicType = ""s;
   m_NumSDs = -1;
   m_NumRDs = -1;
 }
@@ -69,13 +70,13 @@ EComResponse CROSLayer::openConnection(char *pa_acLayerParameter){
 
       m_TopicType = layerParams.substr(doublePoint + 1);
 
-      if("std_msgs/Float64" == m_TopicType) {
+      if("std_msgs/Float64"s == m_TopicType) {
         m_Pub = m_Nh.advertise < std_msgs::Float64 > (m_TopicName, 100);
-      } else if("std_msgs/Int32" == m_TopicType) {
+      } else if("std_msgs/Int32"s == m_TopicType) {
         m_Pub = m_Nh.advertise < std_msgs::Int32 > (m_TopicName, 100);
-      } else if("std_msgs/Bool" == m_TopicType) {
+      } else if("std_msgs/Bool"s == m_TopicType) {
         m_Pub = m_Nh.advertise < std_msgs::Bool > (m_TopicName, 100);
-      } else if("std_msgs/String" == m_TopicType) {
+      } else if("std_msgs/String"s == m_TopicType) {
         m_Pub = m_Nh.advertise < std_msgs::String > (m_TopicName, 100);
       } else {
         DEVLOG_ERROR("[ROSLAYER] Publisher could not be initialized: unknown topic type \n");
@@ -116,28 +117,26 @@ void CROSLayer::handleReceivedValue(const boost::shared_ptr<const topic_tools::S
   }
   else if(1 == m_NumRDs){
 
-    if("std_msgs/Float64" == m_TopicType){
+    if("std_msgs/Float64"s == m_TopicType){
       boost::shared_ptr < std_msgs::Float64 > instantiated = pa_Message->instantiate<std_msgs::Float64>();
       double ROSValue = instantiated->data;
       *(CIEC_LREAL *) DataArray = ROSValue;
     }
-    else if("std_msgs/Int32" == m_TopicType){
+    else if("std_msgs/Int32"s == m_TopicType){
       boost::shared_ptr < std_msgs::Int32 > instantiated = pa_Message->instantiate<std_msgs::Int32>();
       int ROSValue = instantiated->data;
       *(CIEC_DINT *) DataArray = ROSValue;
     }
-    else if("std_msgs/Bool" == m_TopicType){
+    else if("std_msgs/Bool"s == m_TopicType){
       boost::shared_ptr < std_msgs::Bool > instantiated = pa_Message->instantiate<std_msgs::Bool>();
       bool ROSValue = instantiated->data;
       *(CIEC_BOOL *) DataArray = ROSValue;
     }
-    else if("std_msgs/String" == m_TopicType){
+    else if("std_msgs/String"s == m_TopicType){
       boost::shared_ptr < std_msgs::String > instantiated = pa_Message->instantiate<std_msgs::String>();
       std::string ROSValue = instantiated->data;
 
-      int stringLength = static_cast<int>(std::strlen(ROSValue.c_str()));
-      CIEC_STRING tmpString;
-      tmpString.assign(ROSValue.c_str(), static_cast<TForteUInt16>(stringLength));
+      CIEC_STRING tmpString(ROSValue.c_str());
 
       *(CIEC_STRING *) DataArray = tmpString;
     }
@@ -203,7 +202,7 @@ EComResponse CROSLayer::sendData(void *, unsigned int){
         std_msgs::String ROSValue;
 
         CIEC_STRING ciecString = *(CIEC_STRING *) DataArray;
-        const char * buf = ciecString.getValue();
+        const char *const buf = ciecString.getValue();
         std::size_t len = std::strlen(buf);
         std::string tmpString(buf, 0, len);
 
