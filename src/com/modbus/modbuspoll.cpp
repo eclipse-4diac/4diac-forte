@@ -44,7 +44,7 @@ int CModbusPoll::readOneBlock(modbus_t *pa_pModbusConn, CModbusIOBlock *pa_pIOBl
   int nrVals = 0;
   unsigned int dataIndex = 0;
   const CModbusIOBlock::TModbusRangeList &lReads = pa_pIOBlock->getReads();
-  void *pData = pa_pIOBlock->getCache();
+  uint8_t *pData = (uint8_t*)pa_pIOBlock->getCache();
   for (auto &it : lReads) {
     const unsigned int nextDataIndex = dataIndex + it.m_nNrAddresses * CModbusIOBlock::getRegisterSize(it.m_eFunction);
     if (nextDataIndex > pa_pIOBlock->getReadSize()) {
@@ -52,16 +52,16 @@ int CModbusPoll::readOneBlock(modbus_t *pa_pModbusConn, CModbusIOBlock *pa_pIOBl
     }
     switch (it.m_eFunction){
       case eCoil:
-        nrVals += modbus_read_bits(pa_pModbusConn, it.m_nStartAddress, it.m_nNrAddresses, &((uint8_t*)pData)[dataIndex]);
+        nrVals += modbus_read_bits(pa_pModbusConn, it.m_nStartAddress, it.m_nNrAddresses, &pData[dataIndex]);
         break;
       case eDiscreteInput:
-        nrVals += modbus_read_input_bits(pa_pModbusConn, it.m_nStartAddress, it.m_nNrAddresses, &((uint8_t*)pData)[dataIndex]);
+        nrVals += modbus_read_input_bits(pa_pModbusConn, it.m_nStartAddress, it.m_nNrAddresses, &pData[dataIndex]);
         break;
       case eHoldingRegister:
-        nrVals += modbus_read_registers(pa_pModbusConn, it.m_nStartAddress, it.m_nNrAddresses, &((uint16_t*)pData)[dataIndex]);
+        nrVals += modbus_read_registers(pa_pModbusConn, it.m_nStartAddress, it.m_nNrAddresses, (uint16_t*)&pData[dataIndex]);
         break;
       case eInputRegister:
-        nrVals += modbus_read_input_registers(pa_pModbusConn, it.m_nStartAddress, it.m_nNrAddresses, &((uint16_t*)pData)[dataIndex]);
+        nrVals += modbus_read_input_registers(pa_pModbusConn, it.m_nStartAddress, it.m_nNrAddresses, (uint16_t*)&pData[dataIndex]);
         break;
       default:
         //TODO Error
