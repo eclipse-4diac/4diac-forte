@@ -54,12 +54,12 @@ unsigned int CModbusComLayer::convertDataInput(void *pa_poInData, unsigned int p
   TForteUInt8 *convertedData = (TForteUInt8*)pa_poConvertedData;
   unsigned int outLength = 0;
 
-  CIEC_ANY *apoSDs = static_cast<CIEC_ANY*>(pa_poInData);
+  CIEC_ANY **apoSDs = static_cast<CIEC_ANY**>(pa_poInData);
   unsigned int nrSDs = pa_nDataSize;
 
   for(unsigned int i = 0; i < nrSDs; i++){
-    CIEC_ANY *anyVal = &apoSDs[i];
-    switch (apoSDs[i].getDataTypeID()){
+    CIEC_ANY *anyVal = apoSDs[i];
+    switch (anyVal->getDataTypeID()) {
       case CIEC_ANY::e_BOOL: // 1bit data type
       {
         TForteUInt8 out = (bool) *(CIEC_BOOL*) anyVal;
