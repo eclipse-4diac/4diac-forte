@@ -77,7 +77,7 @@ void FORTE_FB_CTD::alg_REQ(void) {
   if (var_LD) {
     var_CV = var_PV;
   }
-  else if (func_AND<CIEC_BOOL>(var_CD, func_GT(var_CV, CIEC_INT(-32768)))) {
+  else if (func_AND<CIEC_BOOL>(var_CD, func_GT(var_CV, CIEC_INT(std::numeric_limits<CIEC_INT::TValueType>::min())))) {
     var_CV = func_SUB<CIEC_INT>(var_CV, CIEC_INT(1));
   }
   var_Q = func_LE(var_CV, CIEC_INT(0));
