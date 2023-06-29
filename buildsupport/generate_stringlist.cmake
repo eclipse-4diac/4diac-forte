@@ -1,5 +1,7 @@
 #*******************************************************************************
-# Copyright (c) 2010 - 2014 Profactor GmbH, ACIN, fortiss GmbH
+# Copyright (c) 2010, 2023 Profactor GmbH, ACIN, fortiss GmbH
+#                          Martin Erich Jobst
+#
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -8,7 +10,10 @@
 #
 # Contributors:
 #     Michael Hofmann, Alois Zoitl, Ingo Hegny, Gerhard Ebenhofer, Matthias Plasch - initial API and implementation and/or initial documentation
+#     Martin Jobst - fixed handling of empty string constants
 # *******************************************************************************/
+
+cmake_policy(SET CMP0007 NEW)
 
 MESSAGE(Generate Stringlist)
 MESSAGE("Source Dir: ${FORTE_SOURCE_DIR}")
@@ -52,7 +57,7 @@ FOREACH(FBLIB_FILE ${FBLIB_STRUCT})
       string(LENGTH ${STR} len)
     math(EXPR len ${len}-11)
       string(SUBSTRING ${STR} 11 ${len} OUTSTR)
-    list(APPEND scm_acConstStringBuf ${OUTSTR})
+    list(APPEND scm_acConstStringBuf "${OUTSTR}")
     ENDFOREACH(STR)
 
     FOREACH(STR_ERR ${REGEX_STRINGS_ERROR})
@@ -69,8 +74,8 @@ list(SORT scm_acConstStringBuf)
 list(REMOVE_DUPLICATES scm_acConstStringBuf)
 SET(STRINGLIST_H "")
 SET(STRINGLIST_CPP "")
-FOREACH(STR IN ITEMS ${scm_acConstStringBuf})
-  string(LENGTH ${STR} len)
+FOREACH(STR IN LISTS scm_acConstStringBuf)
+  string(LENGTH "${STR}" len)
   math(EXPR len ${len}+1) # \0 is only one character
   list(APPEND scm_aunIdList ${LENGTH_COUNT})
   SET(STRINGLIST_H "${STRINGLIST_H}const CStringDictionary::TStringId g_nStringId${STR} = ${LENGTH_COUNT};\n")
@@ -94,7 +99,7 @@ ENDIF(FORTE_LINKED_STRINGDICT)
 
 SET(scm_aunIdList_Str "")
 SET(FIRST TRUE)
-FOREACH(NUM ${scm_aunIdList})
+FOREACH(NUM IN LISTS scm_aunIdList)
   if(FIRST)
     SET(scm_aunIdList_Str "${scm_aunIdList_Str}${NUM}")
   SET(FIRST FALSE)
@@ -108,7 +113,7 @@ IF(WIN32)
   string(LENGTH "1" len)
   math(EXPR cnt ${len})
 ENDIF(WIN32)
-FOREACH(STR IN ITEMS ${scm_acConstStringBuf})
+FOREACH(STR IN LISTS scm_acConstStringBuf)
   SET(scm_acConstStringBuf_Str "${scm_acConstStringBuf_Str}${STR}\\0")
   IF(WIN32)
   string(LENGTH ${scm_acConstStringBuf_Str} len)

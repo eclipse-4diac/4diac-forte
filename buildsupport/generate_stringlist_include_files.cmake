@@ -1,5 +1,7 @@
 #*******************************************************************************
-# Copyright (c) 2012 Profactor GmbH
+# Copyright (c) 2012, 2023 Profactor GmbH
+#                          Martin Erich Jobst
+#
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -8,7 +10,10 @@
 # 
 # Contributors:
 #     Michael Hofmann - initial API and implementation and/or initial documentation
+#     Martin Jobst - fixed handling of empty string constants
 # *******************************************************************************/
+
+cmake_policy(SET CMP0007 NEW)
 
 # Just the File name
 
@@ -70,7 +75,9 @@ IF(NOT REGEX_STRINGS)
   ENDIF(NOT REGEX_TEMPLATE)
   
   list(REMOVE_DUPLICATES REGEX_STRINGS)
-  list(REMOVE_ITEM REGEX_STRINGS "g_nStringId${REGEX_STRINGS_CODE_DEFINED}")
+  IF(REGEX_STRINGS_CODE_DEFINED)
+    list(REMOVE_ITEM REGEX_STRINGS "g_nStringId${REGEX_STRINGS_CODE_DEFINED}")
+  ENDIF(REGEX_STRINGS_CODE_DEFINED)
   # Sanity check for old files
   STRING(REGEX MATCHALL  "#include \"${FBLIB_FILE_NAME}\"" REGEX_STRINGS_MISSING_INCLUDE ${FILE_STRING})
   IF(REGEX_STRINGS)
@@ -88,14 +95,14 @@ IF(NOT REGEX_STRINGS)
   ENDIF(REGEX_STRINGS)
 
   SET(scm_acLocalConstStringBuf "")
-  FOREACH(STR ${REGEX_STRINGS})
-    string(LENGTH ${STR} len)
+  FOREACH(STR IN LISTS REGEX_STRINGS)
+    string(LENGTH "${STR}" len)
     math(EXPR len ${len}-11)
-    string(SUBSTRING ${STR} 11 ${len} OUTSTR)
+    string(SUBSTRING "${STR}" 11 ${len} OUTSTR)
     
-    list(APPEND scm_acLocalConstStringBuf ${OUTSTR})
+    list(APPEND scm_acLocalConstStringBuf "${OUTSTR}")
   ENDFOREACH(STR)
-  
+
   SET(${FBLIB_FILE}_externals "")
   list(SORT scm_acLocalConstStringBuf)
   list(REMOVE_DUPLICATES scm_acLocalConstStringBuf)
