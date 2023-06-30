@@ -32,7 +32,7 @@ EComResponse MQTTComLayer::sendData(void* paData, unsigned int paSize) {
   if (mClient == nullptr) {
     return e_ProcessDataSendFailed;
   }
-  int errorCode = mClient->sendData(paData, paSize, mTopicName.getValue());
+  int errorCode = mClient->sendData(paData, paSize, mTopicName.c_str());
   if (0 != errorCode) {
     return e_ProcessDataSendFailed;
   }
@@ -65,11 +65,9 @@ EComResponse MQTTComLayer::openConnection(char* paLayerParameter) {
   EComResponse eRetVal = e_InitInvalidId;
   CParameterParser parser(paLayerParameter, ',', mNoOfParameters);
   if (mNoOfParameters == parser.parseParameters()) {
-    mTopicName.fromString(parser[Topic]);
-    std::string address = parser[Address];
-    std::string clientId = parser[ClientID];
+    mTopicName = parser[Topic];
     if (MQTTHandler::eRegisterLayerSucceeded ==
-      getExtEvHandler<MQTTHandler>().registerLayer(address, clientId, this)) {
+      getExtEvHandler<MQTTHandler>().registerLayer(parser[Address], parser[ClientID], this)) {
       if (mClient != nullptr) {
         eRetVal = e_InitOk;
       }

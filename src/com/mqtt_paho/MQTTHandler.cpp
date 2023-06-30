@@ -45,10 +45,10 @@ void MQTTHandler::startNewEventChain(MQTTComLayer* layer) {
   CExternalEventHandler::startNewEventChain(layer->getCommFB());
 }
 
-std::shared_ptr<CMQTTClient> MQTTHandler::getClient(std::string& paAddress, std::string& paClientId) {
+std::shared_ptr<CMQTTClient> MQTTHandler::getClient(const std::string& paAddress, const std::string& paClientId) {
   for (std::shared_ptr<CMQTTClient> client : mClients) {
     if (paAddress == client->getAddress()) {
-      if (paClientId.compare(client->getClientId()) == 0) {
+      if (paClientId == client->getClientId()) {
         return client;
       }
       else {
@@ -67,7 +67,7 @@ std::shared_ptr<CMQTTClient> MQTTHandler::getClient(std::string& paAddress, std:
 }
 
 
-int MQTTHandler::registerLayer(std::string& paAddress, std::string& paClientId, MQTTComLayer* paLayer) {
+int MQTTHandler::registerLayer(const std::string& paAddress, const std::string& paClientId, MQTTComLayer* paLayer) {
   std::shared_ptr<CMQTTClient> client = getClient(paAddress, paClientId);
   if (client == nullptr) {
     return eConnectionFailed;

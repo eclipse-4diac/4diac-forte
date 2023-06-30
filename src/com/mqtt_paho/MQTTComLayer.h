@@ -39,8 +39,8 @@ public:
 
   EComResponse processInterrupt() override;
 
-  char const* getTopicName() const {
-    return mTopicName.getValue();
+  const std::string& getTopicName() const {
+    return mTopicName;
   }
 
   std::shared_ptr<CMQTTClient> getClient() {

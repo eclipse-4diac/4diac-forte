@@ -49,7 +49,7 @@ class CMQTTClientConfigFileParser {
      * @param paResult Place to store the results
      * @return True if no error occurred, false otherwise
      */
-    static bool loadConfig(std::string &paFileLocation, std::string &paEndpoint, MQTTConfigFromFile &paResult);
+    static bool loadConfig(const std::string &paFileLocation, const std::string &paEndpoint, MQTTConfigFromFile &paResult);
 
     explicit CMQTTClientConfigFileParser() = delete;
     virtual ~CMQTTClientConfigFileParser() = delete;

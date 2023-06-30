@@ -39,7 +39,7 @@ public:
     eConnectionFailed
   };
 
-  int registerLayer(std::string& paAddress, std::string& paClientId, MQTTComLayer* paLayer);
+  int registerLayer(const std::string& paAddress, const std::string& paClientId, MQTTComLayer* paLayer);
 
   void unregisterLayer(MQTTComLayer* paLayer);
 
@@ -68,7 +68,7 @@ protected:
   void run() override;
 
 private:
-  std::shared_ptr<CMQTTClient> getClient(std::string& paAddress, std::string& paClientId);
+  std::shared_ptr<CMQTTClient> getClient(const std::string& paAddress, const std::string& paClientId);
 
   static CSyncObject smMQTTMutex;
   static const int smSleepTime = 5000;

@@ -32,7 +32,7 @@ public:
     ALL_SUBSCRIBED,
   };
 
-  CMQTTClient(std::string& paAddress, std::string& paClientId, MQTTHandler& paHandler);
+  CMQTTClient(const std::string& paAddress, const std::string& paClientId, MQTTHandler& paHandler);
 
   ~CMQTTClient();
 
@@ -58,7 +58,7 @@ public:
 
   void removeLayer(MQTTComLayer* paLayer);
 
-  int sendData(void* paData, unsigned int paSize, char* paTopicName);
+  int sendData(void *paData, unsigned int paSize, const std::string& paTopicName);
 
   int mqttSubscribe(const MQTTComLayer* paLayer);
   int mqttConnect();
@@ -69,7 +69,7 @@ public:
   static void onMqttConnectionSucceed(void* paContext, MQTTAsync_successData* paResponse);
   static void onMqttConnectionFailed(void* paContext, MQTTAsync_failureData* paResponse);
 
-  static std::shared_ptr<CMQTTClient> getNewClient(std::string& paAddress, std::string& paClientId, MQTTHandler& paHandler);
+  static std::shared_ptr<CMQTTClient> getNewClient(const std::string&  paAddress, const std::string&  paClientId, MQTTHandler& paHandler);
 
 private:
 

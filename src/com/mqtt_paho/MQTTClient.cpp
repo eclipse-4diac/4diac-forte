@@ -17,7 +17,7 @@
 
 std::string gMqttClientConfigFile;
 
-CMQTTClient::CMQTTClient(std::string& paAddress, std::string& paClientId, MQTTHandler& paHandler) :
+CMQTTClient::CMQTTClient(const std::string& paAddress, const std::string& paClientId, MQTTHandler& paHandler) :
   mAddress(paAddress),
   mClientId(paClientId),
   mAsClient(nullptr),
@@ -36,7 +36,7 @@ CMQTTClient::~CMQTTClient() {
   }
 }
 
-std::shared_ptr<CMQTTClient> CMQTTClient::getNewClient(std::string& paAddress, std::string& paClientId, MQTTHandler& paHandler) {
+std::shared_ptr<CMQTTClient> CMQTTClient::getNewClient(const std::string& paAddress, const std::string& paClientId, MQTTHandler& paHandler) {
   std::shared_ptr<CMQTTClient> newClient = std::make_shared<CMQTTClient>(paAddress, paClientId, paHandler);
   {
     CCriticalRegion sectionState(newClient->mMQTTMutex);
@@ -47,13 +47,13 @@ std::shared_ptr<CMQTTClient> CMQTTClient::getNewClient(std::string& paAddress, s
   }
 }
 
-int CMQTTClient::sendData(void* paData, unsigned int paSize, char* paTopicName) {
+int CMQTTClient::sendData(void* paData, unsigned int paSize, const std::string& paTopicName) {
   MQTTAsync_message message = MQTTAsync_message_initializer;
   message.payload = paData;
   message.payloadlen = paSize;
   message.qos = QOS;
   message.retained = 0;
-  return MQTTAsync_sendMessage(mAsClient, paTopicName, &message, NULL);
+  return MQTTAsync_sendMessage(mAsClient, paTopicName.c_str(), &message, NULL);
 }
 
 /*
@@ -76,7 +76,7 @@ int CMQTTClient::onMqttMessageArrived(void* paContext, char* paTopicName, int, M
     unsigned int payLoadSize = static_cast<unsigned int>(paMessage->payloadlen);
 
     for (MQTTComLayer* layer : client->mLayers) {
-      if (0 == strcmp(layer->getTopicName(), paTopicName)) {
+      if (layer->getTopicName() == paTopicName) {
         if (forte::com_infra::e_Nothing != layer->recvData(pPayLoad, payLoadSize)) {
           client->mHandler.startNewEventChain(layer);
         }
@@ -160,12 +160,12 @@ int CMQTTClient::mqttConnect() {
 }
 
 int CMQTTClient::mqttSubscribe(const MQTTComLayer* paLayer) {
-  DEVLOG_INFO("MQTT: Subscribing to topic -%s-\n", paLayer->getTopicName());
+  DEVLOG_INFO("MQTT: Subscribing to topic -%s-\n", paLayer->getTopicName().c_str());
   MQTTAsync_responseOptions opts = MQTTAsync_responseOptions_initializer;
   opts.onSuccess = onSubscribeSucceed;
   opts.onFailure = onSubscribeFailed;
   opts.context = (void*)paLayer;
-  int rc = MQTTAsync_subscribe(mAsClient, paLayer->getTopicName(), QOS, &opts);
+  int rc = MQTTAsync_subscribe(mAsClient, paLayer->getTopicName().c_str(), QOS, &opts);
   if (MQTTASYNC_SUCCESS != rc) { //call failed
     CCriticalRegion sectionState(mMQTTMutex);
     DEVLOG_INFO("MQTT: Subscribe Request failed with val = %d\n", rc);
