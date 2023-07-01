@@ -34,7 +34,8 @@ const CStringDictionary::TStringId FORTE_IX::scm_anEventOutputNames[] = {g_nStri
 
 const SFBInterfaceSpec FORTE_IX::scm_stFBInterfaceSpec = {
   2,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  3,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  2,  scm_anDataInputNames, scm_anDataInputTypeIds,
+  3,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,
+  2,  scm_anDataInputNames, scm_anDataInputTypeIds,
   3,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
   0, nullptr
 };
@@ -48,7 +49,7 @@ void FORTE_IX::executeEvent(TEventID pa_nEIID){
       break;
     case scm_nEventINITID:
       if(true == QI()){
-        QO() = CIEC_BOOL(CProcessInterface::initialise(true));  //initialise as input
+        QO() = CIEC_BOOL(CProcessInterface::initialise(true)); //initialise as input
       }
       else{
         QO() = CIEC_BOOL(CProcessInterface::deinitialise());
