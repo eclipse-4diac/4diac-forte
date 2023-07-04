@@ -1,5 +1,6 @@
 #/************************************************************************************
 # Copyright (c) 2016, 2023 fortiss GmbH, HR Agrartechnik GmbH
+#
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -10,7 +11,8 @@
 #  Guru Chandrasekhara - initial API and implementation and/or initial documentation
 # * Jose Cabral - Cleaning
 #   Christoph Binder - add possibility to configure simulated time
-#   FRanz Hoepfinger - add memory allocation config.
+#   Franz Hoepfinger - add memory allocation config.
+#                    - add stack size config.
 # ************************************************************************************/
 
 
@@ -43,7 +45,11 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "FreeRTOSLwIP")
       forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR}/fortealloc/genfortealloc/)  
       forte_add_sourcefile_h(fortealloc/genfortealloc/fortealloc.h)
   endif()
-
+  
+  SET(FORTE_FREERTOS_MINIMAL_STACK_SIZE "15000" CACHE STRING "Allow to set a special stack size for forte threads")
+  mark_as_advanced(FORTE_FREERTOS_MINIMAL_STACK_SIZE)
+  forte_add_custom_configuration("#define configMINIMAL_STACK_SIZE_FORTE ${FORTE_FREERTOS_MINIMAL_STACK_SIZE}")
+  
   set(FORTE_LOGLEVEL "NOLOG" CACHE STRING "Loglevel to use" FORCE)
   SET(FORTE_FreeRTOSLwIP_INCLUDES "" CACHE STRING "Folders to include from the FreeRTOS OS and the LwIP stack")
 
