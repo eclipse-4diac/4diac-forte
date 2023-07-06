@@ -65,7 +65,6 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpecPlug;
 
-   FORTE_ADAPTER_DATA_ARRAY(2, 2, 0, 2, 0);
 
 public:
   ADAPTER_CTOR(FORTE_RegisterServiceAdp){

@@ -72,7 +72,6 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpecPlug;
 
-   FORTE_ADAPTER_DATA_ARRAY(1, 1, 1, 2, 0);
 
 public:
   ADAPTER_CTOR(FORTE_QueryServicesAdp){

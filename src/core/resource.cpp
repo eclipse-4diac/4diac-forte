@@ -167,7 +167,7 @@ EMGMResponse CResource::changeFBExecutionState(EMGMCommandType pa_unCommand){
         for(TPortId i = 0; i < m_pstInterfaceSpec->m_nNumDIs; ++i) {
           CDataConnection *conn = *getDIConUnchecked(i);
           if(nullptr != conn) {
-            conn->readData(getDI(i));
+            conn->readData(*getDI(i));
           }
         }
       }
@@ -258,7 +258,7 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
           if(nullptr != con){
             //if we have got a connection it was a DO mirror the forced value there
             CCriticalRegion criticalRegion(m_oResDataConSync);
-            con->writeData(var);
+            con->writeData(*var);
           }
         }
         retVal = EMGMResponse::Ready;
@@ -338,7 +338,7 @@ EMGMResponse CResource::queryAllAdapterTypes(CIEC_STRING & paValue){
 
 EMGMResponse CResource::queryFBs(CIEC_STRING & paValue){
 
-  for(TFunctionBlockList::Iterator itRunner(getFBList().begin()); itRunner != getFBList().end(); ++itRunner){
+  for(TFunctionBlockList::iterator itRunner = getFBList().begin(); itRunner != getFBList().end(); ++itRunner){
     if(itRunner != getFBList().begin()){
       paValue.append("\n");
     }
@@ -351,7 +351,7 @@ EMGMResponse CResource::queryFBs(CIEC_STRING & paValue){
 
 EMGMResponse CResource::querySubapps(CIEC_STRING & paValue, CFBContainer& container, const std::string prefix){
 
-  for(TFBContainerList::Iterator itRunner(container.getSubContainerList().begin()); itRunner != container.getSubContainerList().end(); ++itRunner){
+  for(TFBContainerList::iterator itRunner(container.getSubContainerList().begin()); itRunner != container.getSubContainerList().end(); ++itRunner){
     CFBContainer* subapp = (static_cast<CFBContainer*>(*itRunner));
     std::string subapp_prefix = prefix;
 
@@ -360,7 +360,7 @@ EMGMResponse CResource::querySubapps(CIEC_STRING & paValue, CFBContainer& contai
     }
     subapp_prefix += CStringDictionary::getInstance().get(subapp->getName());
 
-    for(TFunctionBlockList::Iterator itRunner2(subapp->getFBList().begin()); itRunner2 != subapp->getFBList().end(); ++itRunner2){
+    for(TFunctionBlockList::iterator itRunner2 = subapp->getFBList().begin(); itRunner2 != subapp->getFBList().end(); ++itRunner2){
 
       std::string fullFBName = (static_cast<CFunctionBlock *>(*itRunner2))->getInstanceName();
       fullFBName = "." + fullFBName;
@@ -380,13 +380,13 @@ EMGMResponse CResource::querySubapps(CIEC_STRING & paValue, CFBContainer& contai
 EMGMResponse CResource::queryConnections(CIEC_STRING & paReqResult, CFBContainer& container){
 
   EMGMResponse retVal = EMGMResponse::UnsupportedType;
-  for(TFunctionBlockList::Iterator itRunner2(container.getFBList().begin()); itRunner2 != container.getFBList().end(); ++itRunner2){ 
+  for(TFunctionBlockList::iterator itRunner2 = container.getFBList().begin(); itRunner2 != container.getFBList().end(); ++itRunner2){
     createEOConnectionResponse(**itRunner2, paReqResult);
     createDOConnectionResponse(**itRunner2, paReqResult);
     createAOConnectionResponse(**itRunner2, paReqResult);
   }
 
-  for(TFBContainerList::Iterator itRunner(container.getSubContainerList().begin()); itRunner != container.getSubContainerList().end(); ++itRunner) {
+  for(TFBContainerList::iterator itRunner(container.getSubContainerList().begin()); itRunner != container.getSubContainerList().end(); ++itRunner) {
     CFBContainer* subapp = (static_cast<CFBContainer*>(*itRunner));
     queryConnections(paReqResult,*subapp);
   }

@@ -34,7 +34,6 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-  FORTE_FB_DATA_ARRAY(1,2,2, 0);
 
   bool edgeFlag;
   CIEC_TIME start;

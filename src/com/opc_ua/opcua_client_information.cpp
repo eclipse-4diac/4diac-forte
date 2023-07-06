@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 fortiss GmbH
+ * Copyright (c) 2019, 2023 fortiss GmbH, Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *    Jose Cabral - initial implementation
+ *    Martin Melik Merkumians - Change CIEC_STRING to std::string
  *******************************************************************************/
 
 #include <forte_architecture_time.h>
@@ -20,7 +21,7 @@
 
 std::string gOpcuaClientConfigFile;
 
-CUA_ClientInformation::CUA_ClientInformation(const CIEC_STRING &paEndpoint) :
+CUA_ClientInformation::CUA_ClientInformation(const std::string &paEndpoint) :
     mEndpointUrl(paEndpoint), mClient(nullptr), mSubscriptionInfo(nullptr), mMissingAsyncCalls(0), mNeedsReconnection(false), mWaitToInitializeActions(false),
         mIsClientValid(true),
         mLastReconnectionTry(0), mLastActionInitializationTry(0), mSomeActionWasInitialized(false) {
@@ -51,9 +52,8 @@ bool CUA_ClientInformation::configureClient() {
 bool CUA_ClientInformation::configureClientFromFile(UA_ClientConfig &paConfig) {
   bool retVal = true;
 
-  if("" != gOpcuaClientConfigFile){ //file was provided
-
-    std::string endpoint = mEndpointUrl.getValue();
+  if(!gOpcuaClientConfigFile.empty()){ //file was provided
+    std::string endpoint = mEndpointUrl;
     CUA_ClientConfigFileParser::UA_ConfigFromFile result = CUA_ClientConfigFileParser::UA_ConfigFromFile(paConfig, mUsername, mPassword);
 
     retVal = CUA_ClientConfigFileParser::loadConfig(gOpcuaClientConfigFile, endpoint, result);
@@ -69,7 +69,7 @@ bool CUA_ClientInformation::configureClientFromFile(UA_ClientConfig &paConfig) {
 }
 
 void CUA_ClientInformation::uninitializeClient() {
-  DEVLOG_INFO("[OPC UA CLIENT]: Uninitializing client %s\n", mEndpointUrl.getValue());
+  DEVLOG_INFO("[OPC UA CLIENT]: Uninitializing client %s\n", mEndpointUrl.c_str());
   mActionsToBeInitialized.clearAll();
   for(CSinglyLinkedList<CActionInfo *>::Iterator itReferencingActions = mActionsReferencingIt.begin(); itReferencingActions != mActionsReferencingIt.end();
       ++itReferencingActions) {
@@ -122,13 +122,13 @@ bool CUA_ClientInformation::handleClientState() {
       if(!connectClient()) {
         tryAnotherChangeImmediately = false;
         DEVLOG_ERROR(("[OPC UA CLIENT]: Couldn't connect to endpoint %s. Forte will try to reconnect in %u milliseconds\n"),
-          mEndpointUrl.getValue(),
-          static_cast<unsigned int>(scmConnectionRetryTimeoutNano / 1E6));
+                     mEndpointUrl.c_str(),
+                     static_cast<unsigned int>(scmConnectionRetryTimeoutNano / 1E6));
         mNeedsReconnection = true;
         mLastReconnectionTry = getNanoSecondsMonotonic();
       } else { //if connection succeeded, don't break the while and try to handle subscriptions immediately
         mNeedsReconnection = false;
-        DEVLOG_INFO("[OPC UA CLIENT]: Client connected to endpoint %s\n", mEndpointUrl.getValue());
+        DEVLOG_INFO("[OPC UA CLIENT]: Client connected to endpoint %s\n", mEndpointUrl.c_str());
       }
     }
   }
@@ -281,9 +281,9 @@ bool CUA_ClientInformation::isActionInitialized(const CActionInfo &paActionInfo)
 
 bool CUA_ClientInformation::connectClient() {
   if(0 == mUsername.compare("")) {
-    return (UA_STATUSCODE_GOOD == UA_Client_connect(mClient, mEndpointUrl.getValue()));
+    return (UA_STATUSCODE_GOOD == UA_Client_connect(mClient, mEndpointUrl.c_str()));
   } else {
-    return (UA_STATUSCODE_GOOD == UA_Client_connectUsername(mClient, mEndpointUrl.getValue(), mUsername.c_str(), mPassword.c_str()));
+    return (UA_STATUSCODE_GOOD == UA_Client_connectUsername(mClient, mEndpointUrl.c_str(), mUsername.c_str(), mPassword.c_str()));
   }
 }
 
@@ -326,7 +326,7 @@ bool CUA_ClientInformation::initializeAction(CActionInfo& paActionInfo) {
 
       if(!somethingFailed && !(*itNodePair)->mBrowsePath.empty()) { //if browsepath was given, look for NodeId, even if NodeID was also provided
         UA_NodeId *nodeId;
-        UA_StatusCode retVal = COPC_UA_Helper::getRemoteNodeForPath(*mClient, (*itNodePair)->mBrowsePath.getValue(), nullptr, &nodeId); //we don't care about the parent
+        UA_StatusCode retVal = COPC_UA_Helper::getRemoteNodeForPath(*mClient, (*itNodePair)->mBrowsePath.c_str(), nullptr, &nodeId); //we don't care about the parent
 
         if(UA_STATUSCODE_GOOD != retVal) {
           DEVLOG_ERROR("[OPC UA CLIENT]: The index %u of the FB %s could not be initialized because the requested nodeId was not found. Error: %s\n",
@@ -363,7 +363,7 @@ bool CUA_ClientInformation::initializeCallMethod(CActionInfo& paActionInfo) {
   UA_NodeId *methodNode;
   UA_NodeId *parentNode;
 
-  UA_StatusCode retVal = COPC_UA_Helper::getRemoteNodeForPath(*mClient, (*itNodePair)->mBrowsePath.getValue(), &parentNode, &methodNode);
+  UA_StatusCode retVal = COPC_UA_Helper::getRemoteNodeForPath(*mClient, (*itNodePair)->mBrowsePath.c_str(), &parentNode, &methodNode);
 
   if(UA_STATUSCODE_GOOD != retVal) {
     DEVLOG_ERROR("[OPC UA CLIENT]: The method call from FB %s failed because the requested node was not found. Error: %s\n",
@@ -460,11 +460,11 @@ bool CUA_ClientInformation::createSubscription() {
   request.requestedPublishingInterval = FORTE_COM_OPC_UA_CLIENT_PUB_INTERVAL;
   UA_CreateSubscriptionResponse response = UA_Client_Subscriptions_create(mClient, request, this, nullptr, CUA_RemoteCallbackFunctions::deleteSubscriptionCallback);
   if(UA_STATUSCODE_GOOD == response.responseHeader.serviceResult) {
-    DEVLOG_INFO("[OPC UA CLIENT]: Create subscription to %s succeeded, id %u\n", mEndpointUrl.getValue(), response.subscriptionId);
+    DEVLOG_INFO("[OPC UA CLIENT]: Create subscription to %s succeeded, id %u\n", mEndpointUrl.c_str(), response.subscriptionId);
     mSubscriptionInfo->mSubscriptionId = response.subscriptionId;
     return true;
   } else {
-    DEVLOG_ERROR("[OPC UA CLIENT]: Create subscription to %s failed. Error: %s\n", mEndpointUrl.getValue(), UA_StatusCode_name(response.responseHeader.serviceResult));
+    DEVLOG_ERROR("[OPC UA CLIENT]: Create subscription to %s failed. Error: %s\n", mEndpointUrl.c_str(), UA_StatusCode_name(response.responseHeader.serviceResult));
   }
 
   return false;
@@ -565,8 +565,8 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::readAsyncCallback(UA_Cl
       for(size_t i = 0; i < paResponse->resultsSize; i++) {
         if(paResponse->results[i].hasStatus && UA_STATUSCODE_GOOD != paResponse->results[i].status) {
           DEVLOG_ERROR("[OPC UA CLIENT]: Reading for FB %s in client %s failed because the response for index %u has status %s\n",
-            remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().getValue(), i,
-            UA_StatusCode_name(paResponse->results[i].status));
+                       remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().c_str(), i,
+                       UA_StatusCode_name(paResponse->results[i].status));
           varHandle.mFailed = true;
           break;
         }
@@ -581,14 +581,14 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::readAsyncCallback(UA_Cl
       }
     } else {
       DEVLOG_ERROR("[OPC UA CLIENT]: Reading for FB %s in client %s failed because the response size is %u but the FB has %u values to read\n",
-        remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().getValue(),
-        paResponse->resultsSize, remoteCallHandle->mActionInfo.getNoOfNodePairs());
+                   remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().c_str(),
+                   paResponse->resultsSize, remoteCallHandle->mActionInfo.getNoOfNodePairs());
       varHandle.mFailed = true;
     }
   } else {
     DEVLOG_ERROR("[OPC UA CLIENT]: Reading for FB %s in client %s failed. Error: %s\n",
-      remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().getValue(),
-      UA_StatusCode_name(paResponse->responseHeader.serviceResult));
+                 remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().c_str(),
+                 UA_StatusCode_name(paResponse->responseHeader.serviceResult));
     varHandle.mFailed = true;
   }
 
@@ -607,21 +607,21 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::writeAsyncCallback(UA_C
       for(size_t i = 0; i < paResponse->resultsSize; i++) {
         if(UA_STATUSCODE_GOOD != paResponse->results[i]) {
           DEVLOG_ERROR("[OPC UA CLIENT]: Writing for FB %s in client %s failed because the response for index %u has status %s\n",
-            remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().getValue(), i,
-            UA_StatusCode_name(paResponse->results[i]));
+                       remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().c_str(), i,
+                       UA_StatusCode_name(paResponse->results[i]));
           varHandle.mFailed = true;
           break;
         }
       }
     } else {
       DEVLOG_ERROR("[OPC UA CLIENT]: Writing for FB %s in client %s failed because the response size is %u but the FB has %u values to write\n",
-        remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().getValue(),
-        paResponse->resultsSize, remoteCallHandle->mActionInfo.getNoOfNodePairs());
+                   remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().c_str(),
+                   paResponse->resultsSize, remoteCallHandle->mActionInfo.getNoOfNodePairs());
       varHandle.mFailed = true;
     }
   } else {
     DEVLOG_ERROR("[OPC UA CLIENT]: Writing for FB %s in client %s failed. Error: %s\n",
-      remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().getValue(),
+      remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().c_str(),
       UA_StatusCode_name(paResponse->responseHeader.serviceResult));
     varHandle.mFailed = true;
   }
@@ -648,16 +648,16 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::callMethodAsyncCallback
 
         if(remoteCallHandle->mActionInfo.getLayer().getCommFB()->getNumRD() != response->results[0].outputArgumentsSize) {
           DEVLOG_ERROR(
-            "[OPC UA CLIENT]: Calling for FB %s in client %s failed because the number of RD connectors of the client %u does not match the number of returned values %u from the method call\n",
-            remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().getValue(),
-            remoteCallHandle->mActionInfo.getLayer().getCommFB()->getNumRD(), response->results->outputArgumentsSize);
+              "[OPC UA CLIENT]: Calling for FB %s in client %s failed because the number of RD connectors of the client %u does not match the number of returned values %u from the method call\n",
+              remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().c_str(),
+              remoteCallHandle->mActionInfo.getLayer().getCommFB()->getNumRD(), response->results->outputArgumentsSize);
           somethingFailed = true;
         } else {
           for(size_t i = 0; i < response->results->inputArgumentResultsSize; i++) {
             if(UA_STATUSCODE_GOOD != response->results->inputArgumentResults[i]) {
               DEVLOG_ERROR("[OPC UA CLIENT]: Calling for FB %s in client %s failed because the input response for index %u has status %s\n",
-                remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().getValue(), i,
-                UA_StatusCode_name(response->results->inputArgumentResults[i]));
+                           remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().c_str(), i,
+                           UA_StatusCode_name(response->results->inputArgumentResults[i]));
               somethingFailed = true;
               break;
             }
@@ -665,19 +665,19 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::callMethodAsyncCallback
         }
       } else {
         DEVLOG_ERROR("[OPC UA CLIENT]: Calling for FB %s in client %s failed with the specific error: %s\n",
-          remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().getValue(),
-          UA_StatusCode_name(response->results->statusCode));
+                     remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().c_str(),
+                     UA_StatusCode_name(response->results->statusCode));
         somethingFailed = true;
       }
     } else {
       DEVLOG_ERROR("[OPC UA CLIENT]: Calling for FB %s in client %s failed because the response size is %u, different from 1\n",
-        remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().getValue(),
+        remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().c_str(),
         response->resultsSize);
       somethingFailed = true;
     }
   } else {
     DEVLOG_ERROR("[OPC UA CLIENT]: Calling for FB %s in client %s failed with the main error: %s\n",
-      remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().getValue(),
+      remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(), remoteCallHandle->mActionInfo.getEndpoint().c_str(),
       UA_StatusCode_name(response->responseHeader.serviceResult));
     somethingFailed = true;
   }
@@ -725,7 +725,7 @@ void CUA_ClientInformation::CUA_RemoteCallbackFunctions::subscriptionValueChange
 
 void CUA_ClientInformation::CUA_RemoteCallbackFunctions::deleteSubscriptionCallback(UA_Client *, UA_UInt32 paSubscriptionId, void *paSubscriptionContext) { //NOSONAR
   DEVLOG_INFO("[OPC UA CLIENT]: Subscription Id %u was deleted in client with endpoint %s\n", paSubscriptionId,
-    static_cast<CUA_ClientInformation*>(paSubscriptionContext)->mEndpointUrl.getValue());
+              static_cast<CUA_ClientInformation *>(paSubscriptionContext)->mEndpointUrl.c_str());
   static_cast<CUA_ClientInformation*>(paSubscriptionContext)->resetSubscription(false);
 }
 

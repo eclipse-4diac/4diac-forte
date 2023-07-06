@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2018 - 2019 fortiss GmbH
+ * Copyright (c) 2018, 2023 fortiss GmbH
+ *                          Primetals Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,6 +10,7 @@
  *
  * Contributors:
  *    Jose Cabral, Kirill Dorofeev - initial implementation
+ *    Martin Melik Merkumians - Change CIEC_STRING to std::string
  *******************************************************************************/
 
 #include "opcua_remote_handler.h"
@@ -216,7 +218,7 @@ UA_StatusCode COPC_UA_Remote_Handler::getClientAndAddAction(CActionInfo& paActio
   return retVal;
 }
 
-CUA_ClientInformation* COPC_UA_Remote_Handler::getClient(const CIEC_STRING &paEndpoint) {
+CUA_ClientInformation* COPC_UA_Remote_Handler::getClient(const std::string &paEndpoint) {
   CCriticalRegion allClientsRegion(mAllClientListMutex);
 
   CUA_ClientInformation *client = nullptr;
@@ -307,7 +309,7 @@ bool COPC_UA_Remote_Handler::handleClients() {
   if(isAlive() && !failedClients.isEmpty()) {
     for(CSinglyLinkedList<CUA_ClientInformation *>::Iterator itClientInformation = failedClients.begin(); itClientInformation != failedClients.end();
         ++itClientInformation) {
-      DEVLOG_ERROR("[OPC UA REMOTE]: There was a problem checking remote %s.\n", (*itClientInformation)->getEndpoint().getValue());
+      DEVLOG_ERROR("[OPC UA REMOTE]: There was a problem checking remote %s.\n", (*itClientInformation)->getEndpoint().c_str());
 
       //we cannot use COPC_UA_Client_IterationList::remove here because it locks mIterationClientsMutex
       CCriticalRegion newClientsRegion(getNewClientsMutex());

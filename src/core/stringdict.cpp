@@ -114,38 +114,33 @@ CStringDictionary::TStringId CStringDictionary::insert(const char *paStr, size_t
   TStringId nRetVal = scm_nInvalidStringId;
 
   if(nullptr != paStr){
-    if('\0' != *paStr){
-      unsigned int idx;
-      nRetVal = findEntry(paStr, paStrSize, idx);
-      if(scm_nInvalidStringId == nRetVal){
-        size_t nRequiredSize = m_nNextString + paStrSize + 1;
+    unsigned int idx;
+    nRetVal = findEntry(paStr, paStrSize, idx);
+    if(scm_nInvalidStringId == nRetVal){
+      size_t nRequiredSize = m_nNextString + paStrSize + 1;
 
-        if(m_nNrOfStrings >= m_nMaxNrOfStrings){
+      if(m_nNrOfStrings >= m_nMaxNrOfStrings){
 #ifdef FORTE_STRING_DICT_FIXED_MEMORY
-          return scm_nInvalidStringId;
+        return scm_nInvalidStringId;
 #else
-          //grow exponentially by 1.5 according to Herb Sutter best strategy
-          if(!reallocateStringIdBuf((m_nMaxNrOfStrings * 3) >> 1)){
-            return scm_nInvalidStringId;
-          }
+        //grow exponentially by 1.5 according to Herb Sutter best strategy
+        if(!reallocateStringIdBuf((m_nMaxNrOfStrings * 3) >> 1)){
+          return scm_nInvalidStringId;
+        }
 #endif
 
-        }
-        if(nRequiredSize > m_nStringBufSize){
-#ifdef FORTE_STRING_DICT_FIXED_MEMORY
-          return scm_nInvalidStringId;
-#else
-          //grow exponentially by 1.5 according to Herb Sutter best strategy
-          if(!reallocateStringBuf((nRequiredSize * 3) >> 1)){
-            return scm_nInvalidStringId;
-          }
-#endif
-        }
-        nRetVal = insertAt(paStr, idx, paStrSize);
       }
-    }
-    else{
-      DEVLOG_WARNING("[CStringDictionary::insert] String to insert was empty\n");
+      if(nRequiredSize > m_nStringBufSize){
+#ifdef FORTE_STRING_DICT_FIXED_MEMORY
+        return scm_nInvalidStringId;
+#else
+        //grow exponentially by 1.5 according to Herb Sutter best strategy
+        if(!reallocateStringBuf((nRequiredSize * 3) >> 1)){
+          return scm_nInvalidStringId;
+        }
+#endif
+      }
+      nRetVal = insertAt(paStr, idx, paStrSize);
     }
   }
   return nRetVal;

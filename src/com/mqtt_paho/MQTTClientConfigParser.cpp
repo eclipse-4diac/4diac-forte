@@ -20,7 +20,7 @@ const char *const CMQTTClientConfigFileParser::mConfigKeysNames[] = {
   "username",
   "password" };
 
-bool CMQTTClientConfigFileParser::loadConfig(std::string &paFileLocation, std::string &paEndpoint, MQTTConfigFromFile &paResult) {
+bool CMQTTClientConfigFileParser::loadConfig(const std::string &paFileLocation, const std::string &paEndpoint, MQTTConfigFromFile &paResult) {
   bool retVal = true;
 
   CConfigFileParser configFileParser(paFileLocation);

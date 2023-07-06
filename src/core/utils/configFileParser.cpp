@@ -13,6 +13,7 @@
 #include "configFileParser.h"
 #include "../../arch/devlog.h"
 #include "parameterParser.h"
+#include <string.h>
 
 CConfigFileParser::CConfigFileParser(const std::string &paFileLocation) {
   mConfigFile = fopen(paFileLocation.c_str(), "r");

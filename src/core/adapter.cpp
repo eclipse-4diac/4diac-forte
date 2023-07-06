@@ -20,8 +20,8 @@
 #include "adapterconn.h"
 #include "ecet.h"
 
-CAdapter::CAdapter(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpecSocket, const CStringDictionary::TStringId pa_nInstanceNameId, const SFBInterfaceSpec *pa_pstInterfaceSpecPlug, bool pa_bIsPlug, TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData) :
-  CFunctionBlock(pa_poSrcRes, (pa_bIsPlug) ? pa_pstInterfaceSpecPlug : pa_pstInterfaceSpecSocket, pa_nInstanceNameId, pa_acFBConnData, pa_acFBVarsData),
+CAdapter::CAdapter(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpecSocket, const CStringDictionary::TStringId pa_nInstanceNameId, const SFBInterfaceSpec *pa_pstInterfaceSpecPlug, bool pa_bIsPlug) :
+  CFunctionBlock(pa_poSrcRes, (pa_bIsPlug) ? pa_pstInterfaceSpecPlug : pa_pstInterfaceSpecSocket, pa_nInstanceNameId),
   m_nParentAdapterListEventID(0),
   m_bIsPlug(pa_bIsPlug),
   m_poPeer(nullptr),

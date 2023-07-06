@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2018 fortiss GmbH
- *               2021 HIT robot group
+ * Copyright (c) 2018, 2023 fortiss GmbH
+ *               HIT robot group
+ *               Primetals Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,6 +11,7 @@
  * Contributors:
  *    Jose Cabral - initial API and implementation and/or initial documentation
  *    Tibalt Zhao - remove the client http layer when socket error in recv
+ *    Martin Melik Merkumians - Change CIEC_STRING to std::string
  *******************************************************************************/
 
 #ifndef SRC_MODULES_HTTP_OPCUAHANDLER_H_
@@ -41,15 +43,15 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
 
     forte::com_infra::EComResponse recvData(const void *paData, unsigned int paSize) override;
 
-    bool sendClientData(forte::com_infra::CHttpComLayer* paLayer, CIEC_STRING& paToSend);
+    bool sendClientData(forte::com_infra::CHttpComLayer *paLayer, const std::string &paToSend);
 
-    bool addServerPath(forte::com_infra::CHttpComLayer* paLayer, CIEC_STRING& paPath);
+    bool addServerPath(forte::com_infra::CHttpComLayer *paLayer, const std::string &paPath);
 
-    void removeServerPath(CIEC_STRING& paPath);
+    void removeServerPath(const std::string &paPath);
 
-    void sendServerAnswer(forte::com_infra::CHttpComLayer* paLayer, CIEC_STRING& paAnswer);
+    void sendServerAnswer(forte::com_infra::CHttpComLayer *paLayer, const std::string &paAnswer);
 
-    void sendServerAnswerFromRecv(forte::com_infra::CHttpComLayer* paLayer, CIEC_STRING& paAnswer);
+    void sendServerAnswerFromRecv(forte::com_infra::CHttpComLayer *paLayer, const std::string &paAnswer);
 
     void forceClose(forte::com_infra::CHttpComLayer* paLayer);
 
@@ -82,7 +84,7 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
 
     void selfSuspend();
 
-    void sendServerAnswerHelper(forte::com_infra::CHttpComLayer* paLayer, CIEC_STRING& paAnswer, bool paFromRecv);
+    void sendServerAnswerHelper(forte::com_infra::CHttpComLayer *paLayer, const std::string &paAnswer, bool paFromRecv);
 
     void forceCloseHelper(forte::com_infra::CHttpComLayer* paLayer, bool paFromRecv);
 
@@ -92,7 +94,7 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
 
     void removeSocketFromAccepted(const CIPComSocketHandler::TSocketDescriptor paSocket);
 
-    void handlerReceivedWrongPath(const CIPComSocketHandler::TSocketDescriptor paSocket, CIEC_STRING& paPath);
+    void handlerReceivedWrongPath(const CIPComSocketHandler::TSocketDescriptor paSocket, const std::string &paPath);
 
     void clearServerLayers();
 
@@ -102,7 +104,7 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
 
     struct HTTPServerWaiting {
         forte::com_infra::CHttpComLayer* mLayer;
-        CIEC_STRING mPath;
+        std::string mPath;
         CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor> mSockets; //to handle many connections to the same path
     };
 

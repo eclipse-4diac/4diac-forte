@@ -54,7 +54,6 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-   FORTE_FB_DATA_ARRAY(1, 3, 1, 0);
 
   bool mActive; //!> flag to indicate that the timed fb is currently active
   STimedFBListEntry mTimeListEntry;

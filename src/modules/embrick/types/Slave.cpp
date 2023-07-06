@@ -20,9 +20,8 @@ const char * const EmbrickSlave::scmError = "Error";
 const char * const EmbrickSlave::scmUnknown = "Invalid status code";
 
 EmbrickSlave::EmbrickSlave(const TForteUInt8* const paSlaveConfigurationIO, const TForteUInt8 paSlaveConfigurationIO_num, int paType, CResource *paSrcRes,
-    const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-        forte::core::io::IOConfigFBMultiSlave(paSlaveConfigurationIO, paSlaveConfigurationIO_num, paType, paSrcRes, paInterfaceSpec, paInstanceNameId,
-          paFBConnData, paFBVarsData), mSlave(0) {
+    const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+        forte::core::io::IOConfigFBMultiSlave(paSlaveConfigurationIO, paSlaveConfigurationIO_num, paType, paSrcRes, paInterfaceSpec, paInstanceNameId), mSlave(0) {
 }
 
 EmbrickSlave::~EmbrickSlave() {

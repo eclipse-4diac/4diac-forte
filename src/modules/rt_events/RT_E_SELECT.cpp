@@ -43,8 +43,7 @@ const SFBInterfaceSpec FORTE_RT_E_SELECT::scm_stFBInterfaceSpec = {
 FORTE_RT_E_SELECT::FORTE_RT_E_SELECT(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
        CRTEventSingle(
            pa_poSrcRes,
-           &scm_stFBInterfaceSpec, pa_nInstanceNameId,
-           m_anFBConnData, m_anFBVarsData) {
+           &scm_stFBInterfaceSpec, pa_nInstanceNameId) {
 }
 
 bool FORTE_RT_E_SELECT::checkActivation(TEventID pa_nEIID){

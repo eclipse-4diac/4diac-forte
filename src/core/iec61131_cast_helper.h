@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2018 TU Vienna/ACIN
- *               2022 Primetals Technologies Austria GmbH
+ *               2022, 2023 Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -110,8 +110,17 @@ namespace forte {
           implicit_cast() = delete;
       };
 
+      /** @brief is T implicitly castable to U?
+       * 
+       * @param T type to be cast
+       * @param U goal type of the cast
+       * @return NullType if not castable, type U if castable
+      */
       template <typename T, typename U>
       using implicit_cast_t = typename implicit_cast<T, U>::type;
+
+      template<typename T, typename U>
+      constexpr auto is_implicitly_castable_v = std::is_same_v<implicit_cast_t<T,U>, U>;
 
       /* BOOL casts */
       ALLOW_IMPLICIT_CAST(CIEC_BOOL, CIEC_BYTE)

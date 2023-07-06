@@ -48,8 +48,6 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpecPlug;
 
-  FORTE_ADAPTER_DATA_ARRAY(1, 1, 1, 4, 0)
-
 public:
   ADAPTER_CTOR_FOR_IO_MULTI(EmbrickBusAdapter){
 };

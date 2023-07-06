@@ -20,13 +20,10 @@ using namespace modbus_connection_event;
  * CModbusClientConnection class
  *************************************/
 
-CModbusClientConnection::CModbusClientConnection(CModbusHandler* pa_modbusHandler) :
-    CModbusConnection(pa_modbusHandler), m_pModbusConnEvent(nullptr), m_nNrOfPolls(0), m_nSlaveId(0xFF), m_unBufFillSize(0){
-  memset(m_anRecvBuffPosition, 0, sizeof(m_anRecvBuffPosition)); //TODO change this to  m_anRecvBuffPosition{0} in the extended list when fully switching to C++11
-  memset(m_acRecvBuffer, 0, sizeof(m_acRecvBuffer)); //TODO change this to  m_acRecvBuffer{0} in the extended list when fully switching to C++11
+CModbusClientConnection::CModbusClientConnection(CModbusHandler *pa_modbusHandler) : CModbusConnection(pa_modbusHandler), m_pModbusConnEvent(nullptr), m_nNrOfPolls(0), m_nSlaveId(0xFF), m_unBufFillSize(0), m_anRecvBuffPosition{0}, m_acRecvBuffer{0} {
 }
 
-CModbusClientConnection::~CModbusClientConnection(){
+CModbusClientConnection::~CModbusClientConnection() {
   if (m_bConnected){
     disconnect();
   }
@@ -39,12 +36,12 @@ CModbusClientConnection::~CModbusClientConnection(){
   }
 }
 
-int CModbusClientConnection::readData(void *pa_pData){
+int CModbusClientConnection::readData(void *pa_pData) {
   memcpy(pa_pData, m_acRecvBuffer, m_unBufFillSize);
   return (int) m_unBufFillSize;
 }
 
-int CModbusClientConnection::writeData(const void *pa_pData, unsigned int pa_nDataSize){
+int CModbusClientConnection::writeData(const void *pa_pData, unsigned int pa_nDataSize) {
   unsigned int dataIndex = 0;
 
   TModbusSendList::Iterator itEnd = m_lstSendList.end();

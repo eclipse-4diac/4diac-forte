@@ -64,8 +64,6 @@ class FORTE_POWERLINK_MN : public CFunctionBlock{
 
     static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-    FORTE_FB_DATA_ARRAY(1, 4, 2, 0)
-    ;
 
     void executeEvent(TEventID pa_nEIID) override;
 

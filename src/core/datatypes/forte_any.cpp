@@ -23,8 +23,6 @@
 #include "forte_lreal.h"
 #include <devlog.h>
 
-const char CIEC_ANY::scmAnyToStringResponse[] = "ND (ANY)";
-
 int CIEC_ANY::dummyInit(){
   return 0;
 }
@@ -33,50 +31,8 @@ CStringDictionary::TStringId CIEC_ANY::getTypeNameID() const {
   return g_nStringIdANY;
 }
 
-int CIEC_ANY::fromString(const char *pa_pacValue){
-  int nRetVal = -1;
-
-  if(e_ANY == getDataTypeID()){
-    //we should only be here if it is really an unparameterized generic data type
-    const char *acHashPos = strchr(pa_pacValue, '#');
-    if(nullptr != acHashPos){
-      CStringDictionary::TStringId nTypeNameId = parseTypeName(pa_pacValue, acHashPos);
-      if(CStringDictionary::scm_nInvalidStringId != nTypeNameId && nullptr != CTypeLib::createDataTypeInstance(nTypeNameId, (TForteByte *) this)) {
-        nRetVal = fromString(pa_pacValue); //some of the datatypes require the type upfront for correct parsing e.g., time
-        if(0 > nRetVal) {
-          //if it didn't work change us back to an any
-          CIEC_ANY::createDataType((TForteByte *) this);
-        }
-      }
-    }
-  }
-  return nRetVal;
-}
-
-CStringDictionary::TStringId CIEC_ANY::parseTypeName(const char *pa_pacValue, const char *pa_pacHashPos){
-  CStringDictionary::TStringId nRetVal = CStringDictionary::scm_nInvalidStringId;
-
-  int nLen = static_cast<int>(pa_pacHashPos - pa_pacValue);
-
-  if(nLen < scmMaxTypeNameLength){
-    char acTypeNameBuf[scmMaxTypeNameLength];
-    strncpy(acTypeNameBuf, pa_pacValue, nLen);
-    acTypeNameBuf[nLen] = '\0';
-    nRetVal = CStringDictionary::getInstance().getId(acTypeNameBuf);
-  }
-  return nRetVal;
-}
-
-int CIEC_ANY::toString(char* paValue, size_t paBufferSize) const {
-  int nRetVal = -1;
-  if(sizeof(scmAnyToStringResponse) <= paBufferSize) {
-     nRetVal = sizeof(scmAnyToStringResponse) - 1;
-
-    //don't use snprintf here since it brings big usage and performance overheads
-    memcpy(paValue, scmAnyToStringResponse, nRetVal);
-    paValue[nRetVal] = '\0';
-  }
-  return nRetVal;
+CStringDictionary::TStringId CIEC_ANY::parseTypeName(const char *pa_pacValue, const char *pa_pacHashPos) {
+  return CStringDictionary::getInstance().getId(pa_pacValue, static_cast<size_t>(pa_pacHashPos - pa_pacValue));
 }
 
 bool CIEC_ANY::isCastable(EDataTypeID pa_eSource, EDataTypeID pa_eDestination, bool &pa_rbUpCast, bool &pa_rbDownCast){
@@ -184,8 +140,4 @@ void CIEC_ANY::specialCast(const CIEC_ANY &pa_roSrcValue, CIEC_ANY &pa_roDstValu
       DEVLOG_ERROR("CIEC_ANY::specialCast: special cast for unsupported source data type requested!\n");
       break;
   }
-}
-
-size_t CIEC_ANY::getToStringBufferSize() const {
-  return sizeof(scmAnyToStringResponse);
 }

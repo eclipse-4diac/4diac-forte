@@ -103,11 +103,6 @@ class CCompositeFB: public CFunctionBlock {
                  CStringDictionary::TStringId pa_nInstanceNameId,
                  const SCFB_FBNData * pa_cpoFBNData);
 
-    [[deprecated]] CCompositeFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-                                CStringDictionary::TStringId pa_nInstanceNameId,
-                                const SCFB_FBNData *pa_cpoFBNData, TForteByte *pa_acFBConnData,
-                                TForteByte *pa_acFBVarsData);
-
     ~CCompositeFB() override;
 
     bool initialize() override;
@@ -166,6 +161,6 @@ class CCompositeFB: public CFunctionBlock {
 
 #define COMPOSITE_FUNCTION_BLOCK_CTOR(fbclass) \
  fbclass(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : \
- CCompositeFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, &scm_stFBNData, m_anFBConnData, m_anFBVarsData)
+ CCompositeFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, &scm_stFBNData)
 
 #endif /*_CFB_H_*/

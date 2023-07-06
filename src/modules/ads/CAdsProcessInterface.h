@@ -22,7 +22,7 @@ namespace forte {
 
     class CAdsProcessInterface : public CProcessInterfaceBase{
       public:
-        CAdsProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData);
+        CAdsProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
         ~CAdsProcessInterface() override;
 
       protected:

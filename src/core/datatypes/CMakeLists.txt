@@ -77,6 +77,7 @@ forte_add_sourcefile_hcpp(forte_any_variant)
 forte_add_sourcefile_h(forte_any_unique_ptr.h)
 
 forte_add_sourcefile_h(forte_any_bit_not_decorator.h)
+forte_add_sourcefile_h(forte_any_bit_partial.h)
 
 
 # include STRUCT Datatype-Support

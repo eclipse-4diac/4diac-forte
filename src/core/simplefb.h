@@ -25,10 +25,6 @@ class CSimpleFB : public CBasicFB {
 public:
     CSimpleFB(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
               CStringDictionary::TStringId paInstanceNameId, const SInternalVarsInformation *paVarInternals) : CBasicFB(paSrcRes, paInterfaceSpec, paInstanceNameId, paVarInternals) {}
-
-    [[deprecated]] CSimpleFB(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
-              CStringDictionary::TStringId paInstanceNameId, const SInternalVarsInformation *paVarInternals,
-              TForteByte *paFBConnData, TForteByte *paBasicFBVarsData);
 };
 
 #endif /* SRC_CORE_SIMPLEFB_H_ */

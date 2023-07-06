@@ -61,8 +61,6 @@ class FORTE_SET_VALUE : public CFunctionBlock{
 
     static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-    FORTE_FB_DATA_ARRAY(2, 3, 1, 0)
-    ;
 
     void executeEvent(TEventID pa_nEIID) override;
 

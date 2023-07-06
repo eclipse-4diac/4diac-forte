@@ -23,8 +23,8 @@ const char * const CI2CProcessInterface::scmInvalidParam = "Invalid parameter";
 const char * const CI2CProcessInterface::scmCouldNotRead = "Could not read value";
 const char * const CI2CProcessInterface::scmCouldNotWrite = "Could not write value";
 
-CI2CProcessInterface::CI2CProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mFd(-1), mValueAddress(-1){
+CI2CProcessInterface::CI2CProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId), mFd(-1), mValueAddress(-1){
 }
 
 CI2CProcessInterface::~CI2CProcessInterface() = default;

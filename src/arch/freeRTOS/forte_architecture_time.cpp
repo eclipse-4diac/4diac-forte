@@ -29,7 +29,8 @@ uint_fast64_t getNanoSecondsRealtime() {
 #endif
 
 time_t forte_timegm(struct tm *pa_tm) {
-  return timegm(pa_tm);
+  time_t tm = mktime(pa_tm);
+  return mktime(gmtime(&tm));
 }
 
 struct tm* forte_localtime(const time_t* paTime, struct tm* const paResult) {

@@ -51,22 +51,6 @@ CFunctionBlock::CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *p
         m_bDeletable(true) {
 }
 
-CFunctionBlock::CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-                               CStringDictionary::TStringId pa_nInstanceNameId, TForteByte *, TForteByte *) :
-        m_pstInterfaceSpec(pa_pstInterfaceSpec),
-        mEOConns(nullptr), mDIConns(nullptr), mDOConns(nullptr), mDIs(nullptr), mDOs(nullptr),
-        m_poInvokingExecEnv(nullptr), m_apoAdapters(nullptr),
-        mFBConnData(nullptr), mFBVarsData(nullptr),
-        m_poResource(pa_poSrcRes), m_Container(nullptr),
-#ifdef FORTE_SUPPORT_MONITORING
-        mEOMonitorCount(nullptr), mEIMonitorCount(nullptr),
-#endif
-        m_nFBInstanceName(pa_nInstanceNameId),
-        m_enFBState(
-                E_FBStates::Killed),   //put the FB in the killed state so that reseting it after creation will correctly initialize it
-        m_bDeletable(true) {
-}
-
 bool CFunctionBlock::initialize() {
   setupFBInterface(m_pstInterfaceSpec);
   return true;
@@ -342,29 +326,29 @@ void CFunctionBlock::readInputData(TEventID paEIID) {
       TDataIOID nDINum = eiWithStart[i];
       CIEC_ANY *di = getDI(nDINum);
       CDataConnection *conn = *getDIConUnchecked(nDINum);
-      readData(nDINum, di, conn);
+      readData(nDINum, *di, conn);
     }
   }
 }
 
 #ifdef FORTE_TRACE_CTF
-void CFunctionBlock::readData(size_t pa_nDINum, CIEC_ANY *pa_poValue, CDataConnection* pa_poConn) {
-  if(!pa_poConn) {
+void CFunctionBlock::readData(size_t paDINum, CIEC_ANY& paValue, const CDataConnection *const paConn) {
+  if(!paConn) {
     return;
   }
 #ifdef FORTE_SUPPORT_MONITORING
-  if(!pa_poValue->isForced()) {
+  if(!paValue.isForced()) {
 #endif //FORTE_SUPPORT_MONITORING
-    pa_poConn->readData(pa_poValue);
+    paConn->readData(paValue);
 #ifdef FORTE_SUPPORT_MONITORING
   }
 #endif //FORTE_SUPPORT_MONITORING
   std::string valueString;
-  valueString.reserve(pa_poValue->getToStringBufferSize());
-  pa_poValue->toString(valueString.data(), valueString.capacity());
+  valueString.reserve(paValue.getToStringBufferSize());
+  paValue.toString(valueString.data(), valueString.capacity());
   barectf_default_trace_inputData(m_poResource->getTracePlatformContext().getContext(),
           CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
-          static_cast<uint64_t>(pa_nDINum), valueString.c_str());
+          static_cast<uint64_t>(paDINum), valueString.c_str());
 }
 #endif //FORTE_TRACE_CTF
 
@@ -377,31 +361,31 @@ void CFunctionBlock::writeOutputData(TEventID paEO) {
       size_t nDONum = eiWithStart[i];
       CDataConnection *con = getDOConUnchecked(nDONum);
       CIEC_ANY *dataOutput = getDO(nDONum);
-      writeData(nDONum, dataOutput, con);
+      writeData(nDONum, *dataOutput, *con);
     }
   }
 }
 
 #ifdef FORTE_TRACE_CTF
-void CFunctionBlock::writeData(size_t pa_nDONum, CIEC_ANY *pa_poValue, CDataConnection* pa_poConn) {
-  if(pa_poConn->isConnected()) {
+void CFunctionBlock::writeData(size_t paDONum, CIEC_ANY& paValue, CDataConnection& paConn) {
+	if(paConn.isConnected()) {
 #ifdef FORTE_SUPPORT_MONITORING
-    if(pa_poValue->isForced() != true) {
+    if(paValue.isForced() != true) {
 #endif //FORTE_SUPPORT_MONITORING
-      pa_poConn->writeData(pa_poValue);
+      paConn.writeData(pa.Value);
 #ifdef FORTE_SUPPORT_MONITORING
     } else {
       //when forcing we write back the value from the connection to keep the forced value on the output
-      pa_poConn->readData(pa_poValue);
+      paConn.readData(paValue);
     }
 #endif //FORTE_SUPPORT_MONITORING
   }
   std::string valueString;
-  valueString.reserve(pa_poValue->getToStringBufferSize());
-  pa_poValue->toString(valueString.data(), valueString.capacity());
+  valueString.reserve(paValue.getToStringBufferSize());
+  paValue.toString(valueString.data(), valueString.capacity());
   barectf_default_trace_outputData(m_poResource->getTracePlatformContext().getContext(),
                                    CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
-                                   static_cast<uint64_t>(pa_nDONum), valueString.c_str());
+                                   static_cast<uint64_t>(paDONum), valueString.c_str());
 }
 #endif //FORTE_TRACE_CTF
 

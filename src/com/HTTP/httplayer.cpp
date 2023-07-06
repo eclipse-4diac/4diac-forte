@@ -1,5 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2017-2018 Marc Jakobi, github.com/MrcJkb, fortiss GmbH
+ * Copyright (c) 2017, 2023 Marc Jakobi, github.com/MrcJkb
+ *                          fortiss GmbH
+ *                          Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +11,7 @@
  * Contributors:
  *    Marc Jakobi - initial implementation for HTTP clients
  *    Jose Cabral - Merge old HTTPIpLayer to this one and use CIEC_STRING
+ *    Martin Melik Merkumians - change CIEC_STRING to std::string
  ********************************************************************************/
 
 #include "httplayer.h"
@@ -20,6 +23,7 @@
 #include "comtypes.h"
 
 using namespace forte::com_infra;
+using namespace std::string_literals;
 
 CHttpComLayer::CHttpComLayer(CComLayer* paUpperLayer, CBaseCommFB* paComFB) :
     CComLayer(paUpperLayer, paComFB), mInterruptResp(e_Nothing), mRequestType(e_NOTSET), mPort(80), mBufFillSize(0), mCorrectlyInitialized(false),
@@ -38,7 +42,7 @@ EComResponse CHttpComLayer::openConnection(char *paLayerParameter) {
     switch(m_poFb->getComServiceType()){
       case e_Server:
         if(1 == m_poFb->getNumSD()) {
-          mPath = CIEC_STRING(paLayerParameter);
+          mPath = std::string(paLayerParameter);
           if(getExtEvHandler<CHTTP_Handler>().addServerPath(this, mPath)) {
             eRetVal = e_InitOk;
           }
@@ -76,7 +80,7 @@ EComResponse CHttpComLayer::openClientConnection(char* paLayerParameter) {
           if(checkSDInPOSTAndPUT(numberOfSD)) {
             CHttpParser::createPutPostRequest(mRequest, mHost, mPath, mReqData, mContentType, mRequestType);
             eRetVal = e_InitOk;
-            DEVLOG_INFO("[HTTP Layer] FB with PUT/POST request initialized. Host: %s, Path: %s\n", mHost.getValue(), mPath.getValue());
+            DEVLOG_INFO("[HTTP Layer] FB with PUT/POST request initialized. Host: %s, Path: %s\n", mHost.c_str(), mPath.c_str());
           }
           break;
         case e_GET:
@@ -85,7 +89,7 @@ EComResponse CHttpComLayer::openClientConnection(char* paLayerParameter) {
           }
           CHttpParser::createGetRequest(mRequest, mHost, mPath);
           eRetVal = e_InitOk;
-          DEVLOG_INFO("[HTTP Layer] FB with GET request initialized. Host: %s, Path: %s\n", mHost.getValue(), mPath.getValue());
+          DEVLOG_INFO("[HTTP Layer] FB with GET request initialized. Host: %s, Path: %s\n", mHost.c_str(), mPath.c_str());
           break;
         default:
           break;
@@ -160,9 +164,9 @@ bool CHttpComLayer::handleContentAndRequestType(CParameterParser &paParser, size
   bool everythingOK = true;
   if(1 < paNoOfParameters) {
     if(3 == paNoOfParameters) {
-      mContentType = CIEC_STRING(paParser[2]);
+      mContentType = std::string(paParser[2]);
     } else {
-      mContentType = CIEC_STRING("text/html");
+      mContentType = "text/html"s;
     }
     everythingOK = storeRequestType(paParser[1]);
   } else {
@@ -177,23 +181,23 @@ bool CHttpComLayer::handleAddress(const char* paAddress, size_t paNoOfSDs) {
 
   //look for parameters
   CParameterParser parser(paAddress, '?', 2); //IP:PORT/PATH?PARAMETERS
-  CIEC_STRING addressToParse(paAddress);
+  std::string addressToParse(paAddress);
   if(2 == parser.parseParameters() && (e_PUT == mRequestType || e_POST == mRequestType)) {
     if(0 == paNoOfSDs) { //if SDs are present, the parameters in PARAMS are ignored
-      mReqData = CIEC_STRING(parser[1]);
-      mContentType = CIEC_STRING("application/x-www-form-urlencoded");
+      mReqData = std::string(parser[1]);
+      mContentType = "application/x-www-form-urlencoded"s;
     }
-    addressToParse = CIEC_STRING(parser[0]);
+    addressToParse = std::string(parser[0]);
   }
 
-  char* firstSlash = strchr(addressToParse.getValue(), '/');
+  char *firstSlash = strchr(addressToParse.data(), '/');
 
   if(firstSlash) {
-    mPath = CIEC_STRING(firstSlash);
+    mPath = std::string(firstSlash);
     *firstSlash = '\0';
-    CParameterParser portParser(addressToParse.getValue(), ':', 2);
+    CParameterParser portParser(addressToParse.c_str(), ':', 2);
     if(2 == portParser.parseParameters()) {
-      mHost = CIEC_STRING(portParser[0]);
+      mHost = std::string(portParser[0]);
       mPort = static_cast<TForteUInt16>(forte::core::util::strtoul(portParser[1], nullptr, 10));
     } else {
       mHost = addressToParse;
@@ -233,7 +237,7 @@ void CHttpComLayer::sendDataAsServer(const void *paData) {
   if(!serializeData(apoSDs[0])) {
     error = true;
   } else {
-    CHttpParser::createResponse(mRequest, CIEC_STRING("HTTP/1.1 200 OK"), CIEC_STRING("text/plain"), mReqData);
+    CHttpParser::createResponse(mRequest, "HTTP/1.1 200 OK"s, "text/plain"s, mReqData);
   }
   if(error) {
     getExtEvHandler<CHTTP_Handler>().forceClose(this);
@@ -284,7 +288,7 @@ EComResponse CHttpComLayer::recvData(const void *paData, unsigned int paSize) {
           mInterruptResp = e_ProcessDataRecvFaild;
         } else {
           if(e_ProcessDataOk != (mInterruptResp = handleHTTPResponse(mRecvBuffer))) {
-            DEVLOG_ERROR("[HTTP Layer] FB with host: %s:%u couldn't handle the HTTP response\n", mHost.getValue(), mPort);
+            DEVLOG_ERROR("[HTTP Layer] FB with host: %s:%u couldn't handle the HTTP response\n", mHost.c_str(), mPort);
           } else {
             //TODO Trigger event?
           }
@@ -294,7 +298,7 @@ EComResponse CHttpComLayer::recvData(const void *paData, unsigned int paSize) {
         break;
     }
   } else {
-    DEVLOG_ERROR("[HTTP Layer]The FB is not initialized\n");
+    DEVLOG_ERROR("[HTTP Layer] The FB is not initialized\n");
   }
   if(e_ProcessDataOk == mInterruptResp) {
     m_poFb->interruptCommFB(this);
@@ -302,32 +306,32 @@ EComResponse CHttpComLayer::recvData(const void *paData, unsigned int paSize) {
   return mInterruptResp;
 }
 
-EComResponse forte::com_infra::CHttpComLayer::recvServerData(CSinglyLinkedList<CIEC_STRING>&, CSinglyLinkedList<CIEC_STRING>& paParameterValues) {
+EComResponse forte::com_infra::CHttpComLayer::recvServerData(CSinglyLinkedList<std::string>&, CSinglyLinkedList<std::string>& paParameterValues) {
   //for now, the parameterNames are not taken in account, and the parameters are put in the same order they arrived
 
   mInterruptResp = e_Nothing;
   bool failed = false;
   if(0 < m_poFb->getNumSD()) {
     unsigned int noOfParameters = 0;
-    for(CSinglyLinkedList<CIEC_STRING>::Iterator iter = paParameterValues.begin(); iter != paParameterValues.end(); ++iter) {
+    for(CSinglyLinkedList<std::string>::Iterator iter = paParameterValues.begin(); iter != paParameterValues.end(); ++iter) {
       noOfParameters++;
     }
 
     if(noOfParameters == m_poFb->getNumRD()) {
       noOfParameters = 0;
-      for(CSinglyLinkedList<CIEC_STRING>::Iterator iter = paParameterValues.begin(); iter != paParameterValues.end(); ++iter) {
-        m_poFb->getRDs()[noOfParameters++]->setValue(*iter);
+      for(CSinglyLinkedList<std::string>::Iterator iter = paParameterValues.begin(); iter != paParameterValues.end(); ++iter) {
+        m_poFb->getRDs()[noOfParameters++]->setValue(CIEC_STRING(iter->c_str()));
       }
     } else {
-      DEVLOG_ERROR("[HTTP Layer] FB with path %s received a number of parameters of %u, while it has %u SDs\n", mPath.getValue(),
+      DEVLOG_ERROR("[HTTP Layer] FB with path %s received a number of parameters of %u, while it has %u SDs\n", mPath.c_str(),
         static_cast<TForteUInt16>(noOfParameters), m_poFb->getNumRD());
       failed = true;
     }
   }
 
   if(failed) {
-    CIEC_STRING toSend;
-    CIEC_STRING result("HTTP/1.1 400 Bad Request");
+    std::string toSend;
+    std::string result("HTTP/1.1 400 Bad Request"s);
     mReqData.clear();
     CHttpParser::createResponse(toSend, result, mContentType, mReqData);
     getExtEvHandler<CHTTP_Handler>().sendServerAnswerFromRecv(this, toSend);
@@ -347,11 +351,11 @@ EComResponse CHttpComLayer::handleHTTPResponse(char *paData) {
   if(m_poFb != nullptr) {
     CIEC_ANY** apoRDs = m_poFb->getRDs();
     // Interpret HTTP response and set output status according to success/failure.
-    CIEC_STRING responseCode;
-    CIEC_STRING output;
+    std::string responseCode;
+    std::string output;
     CHttpParser::parseResponse(output, responseCode, paData) ? eRetVal = e_ProcessDataOk : eRetVal = e_ProcessDataRecvFaild;
-    apoRDs[0]->fromString(responseCode.getValue());
-    apoRDs[1]->fromString(output.getValue());
+    apoRDs[0]->fromString(responseCode.c_str());
+    apoRDs[1]->fromString(output.c_str());
   } else {
     DEVLOG_ERROR("[HTTP Layer] No FB defined\n");
   }
@@ -373,7 +377,7 @@ void CHttpComLayer::closeConnection() {
 bool CHttpComLayer::serializeData(const CIEC_ANY& paCIECData) {
   size_t bufferSize = paCIECData.getToStringBufferSize();
   mReqData.reserve(static_cast<TForteUInt16>(bufferSize));
-  char *buffer = mReqData.getValue();
+  char *buffer = mReqData.data();
   int nWrittenBytes;
   switch(paCIECData.getDataTypeID()){
     case CIEC_ANY::e_WSTRING:
@@ -391,7 +395,7 @@ bool CHttpComLayer::serializeData(const CIEC_ANY& paCIECData) {
   return true;
 }
 
-CIEC_STRING& forte::com_infra::CHttpComLayer::getHost() {
+std::string& forte::com_infra::CHttpComLayer::getHost() {
   return mHost;
 }
 

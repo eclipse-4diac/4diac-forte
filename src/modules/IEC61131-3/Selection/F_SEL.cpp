@@ -76,9 +76,9 @@ void FORTE_F_SEL::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID: {
       RES_DATA_CON_CRITICAL_REGION();
-      readData(0, &var_G, conn_G);
-      readData(2, &var_IN1, conn_IN1);
-      readData(1, &var_IN0, conn_IN0);
+      readData(0, var_G, conn_G);
+      readData(2, var_IN1, conn_IN1);
+      readData(1, var_IN0, conn_IN0);
       break;
     }
     default:
@@ -90,7 +90,7 @@ void FORTE_F_SEL::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCNFID: {
       RES_DATA_CON_CRITICAL_REGION();
-      writeData(0, &var_OUT, &conn_OUT);
+      writeData(0, var_OUT, conn_OUT);
       break;
     }
     default:

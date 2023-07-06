@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2016, 2017 ACIN - fortiss GmbH
+ * Copyright (c) 2016, 2017, 2023 ACIN - fortiss GmbH,
+ *                                Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,12 +10,13 @@
  * Contributors:
  * Martin Melik Merkumians - initial API and implementation and/or initial documentation
  * Jose Cabral - Move to a new file and make it more generic
+ * Martin Melik Merkumians - change CIEC_STRING to char*
  *******************************************************************************/
 
 #ifndef SRC_CORE_UTILS_PARAMETERPARSER_H_
 #define SRC_CORE_UTILS_PARAMETERPARSER_H_
 
-#include "../datatypes/forte_string.h"
+#include <stddef.h>
 #include <vector>
 
 class CParameterParser{
@@ -27,6 +29,8 @@ class CParameterParser{
      * @param paExpectedNumParams Expected number of parameters if known. Not providing it, will still work, but performance is improved when provided
      */
     CParameterParser(const char* paParameters, const char paSeparator, size_t paExpectedNumParams = 0);
+
+    virtual ~CParameterParser();
 
     /**
      * Parse the string using the separator passed in the constructor
@@ -46,7 +50,7 @@ class CParameterParser{
     const char* operator[](const size_t paIndex);
 
   private:
-    CIEC_STRING mParameters;
+    char* mParameters;
     std::vector<const char *> mParameterLocations;
     const char mSeparator;
 

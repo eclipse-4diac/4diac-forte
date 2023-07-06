@@ -44,8 +44,7 @@ const SFBInterfaceSpec FORTE_RT_E_MERGE::scm_stFBInterfaceSpec = {
 FORTE_RT_E_MERGE::FORTE_RT_E_MERGE(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
        CRTEventSingle(
            pa_poSrcRes,
-           &scm_stFBInterfaceSpec, pa_nInstanceNameId,
-           m_anFBConnData, m_anFBVarsData) {
+           &scm_stFBInterfaceSpec, pa_nInstanceNameId) {
 }
 
 

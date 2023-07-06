@@ -42,10 +42,10 @@
 
 
 #define set4X(var, offset, b3, b2, b1, b0) \
-  var.partial<CIEC_BOOL>(0+offset)=b0;\
-  var.partial<CIEC_BOOL>(1+offset)=b1;\
-  var.partial<CIEC_BOOL>(2+offset)=b2;\
-  var.partial<CIEC_BOOL>(3+offset)=b3;
+  var.partial<CIEC_BOOL>(0+offset)=CIEC_BOOL(b0);\
+  var.partial<CIEC_BOOL>(1+offset)=CIEC_BOOL(b1);\
+  var.partial<CIEC_BOOL>(2+offset)=CIEC_BOOL(b2);\
+  var.partial<CIEC_BOOL>(3+offset)=CIEC_BOOL(b3);
 
 #define set4X_0(var, offset) set4X(var, offset, 0, 0, 0, 0)
 #define set4X_1(var, offset) set4X(var, offset, 0, 0, 0, 1)

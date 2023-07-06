@@ -62,8 +62,6 @@ private:
   
   //! The device the block is contained in
   CDevice &m_poDevice;
-  
-  FORTE_FB_DATA_ARRAY(1, 4, 2, 0);
 
   void executeEvent(TEventID pa_nEIID) override;
   void executeRQST();

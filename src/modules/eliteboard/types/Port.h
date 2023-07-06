@@ -68,7 +68,6 @@ private:
     return (*static_cast<FORTE_PortAdapter *>(m_apoAdapters[0]));
   };
 
-  FORTE_FB_DATA_ARRAY(0, 16, 0, 1);
 
   // The (maximum) number  of IO pins available on a GPIO port.
   static constexpr size_t pin_cnt = 16;
@@ -82,8 +81,7 @@ private:
 public:
   FORTE_Port(const CStringDictionary::TStringId pa_nInstanceNameId,
              CResource *pa_poSrcRes)
-      : CFunctionBlock(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId,
-                       m_anFBConnData, m_anFBVarsData),
+      : CFunctionBlock(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId),
         mRegistered{} {};
 
   ~FORTE_Port() override = default;

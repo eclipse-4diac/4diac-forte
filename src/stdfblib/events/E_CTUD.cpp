@@ -130,7 +130,7 @@ void FORTE_E_CTUD::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCUID: {
       RES_DATA_CON_CRITICAL_REGION();
-      readData(0, &var_PV, conn_PV);
+      readData(0, var_PV, conn_PV);
       break;
     }
     case scm_nEventCDID: {
@@ -143,7 +143,7 @@ void FORTE_E_CTUD::readInputData(TEventID pa_nEIID) {
     }
     case scm_nEventLDID: {
       RES_DATA_CON_CRITICAL_REGION();
-      readData(0, &var_PV, conn_PV);
+      readData(0, var_PV, conn_PV);
       break;
     }
     default:
@@ -155,23 +155,23 @@ void FORTE_E_CTUD::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCOID: {
       RES_DATA_CON_CRITICAL_REGION();
-      writeData(0, &var_QU, &conn_QU);
-      writeData(2, &var_CV, &conn_CV);
-      writeData(1, &var_QD, &conn_QD);
+      writeData(0, var_QU, conn_QU);
+      writeData(2, var_CV, conn_CV);
+      writeData(1, var_QD, conn_QD);
       break;
     }
     case scm_nEventROID: {
       RES_DATA_CON_CRITICAL_REGION();
-      writeData(0, &var_QU, &conn_QU);
-      writeData(2, &var_CV, &conn_CV);
-      writeData(1, &var_QD, &conn_QD);
+      writeData(0, var_QU, conn_QU);
+      writeData(2, var_CV, conn_CV);
+      writeData(1, var_QD, conn_QD);
       break;
     }
     case scm_nEventLDOID: {
       RES_DATA_CON_CRITICAL_REGION();
-      writeData(0, &var_QU, &conn_QU);
-      writeData(1, &var_QD, &conn_QD);
-      writeData(2, &var_CV, &conn_CV);
+      writeData(0, var_QU, conn_QU);
+      writeData(1, var_QD, conn_QD);
+      writeData(2, var_CV, conn_CV);
       break;
     }
     default:

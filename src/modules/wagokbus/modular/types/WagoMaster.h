@@ -66,7 +66,6 @@ class FORTE_WagoMaster : public forte::core::io::IOConfigFBMultiMaster {
     static const int scm_nBusAdapterOutAdpNum = 0;
     static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-    FORTE_FB_DATA_ARRAY(2, 2, 2, 1);
 
   virtual void setInitialValues();
 

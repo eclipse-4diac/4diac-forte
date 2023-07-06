@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2018 fortiss GmbH
- *               2021 HIT robot group
+ * Copyright (c) 2018, 2023 fortiss GmbH
+ *               HIT robot group
+ *               Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,6 +11,7 @@
  * Contributors:
  *    Jose Cabral - initial API and implementation and/or initial documentation
  *    Tibalt Zhao - remove the client http layer when socket error in recv
+ *    Martin Melik Merkumians - Change CIEC_STRING to std::string
  *******************************************************************************/
 
 #include "http_handler.h"
@@ -22,8 +24,10 @@
 #include <forte_printer.h>
 #include "comlayer.h"
 #include <forte_config.h>
+#include <string>
 
 using namespace forte::com_infra;
+using namespace std::string_literals;
 
 TForteUInt16 gHTTPServerPort = FORTE_COM_HTTP_LISTENING_PORT;
 
@@ -170,9 +174,9 @@ bool CHTTP_Handler::recvServers(const CIPComSocketHandler::TSocketDescriptor paS
 
   bool found = false;
   if(!mServerLayers.isEmpty()) {
-    CIEC_STRING path;
-    CSinglyLinkedList<CIEC_STRING> parameterNames;
-    CSinglyLinkedList<CIEC_STRING> parameterValues;
+    std::string path;
+    CSinglyLinkedList<std::string> parameterNames;
+    CSinglyLinkedList<std::string> parameterValues;
     bool noParsingError = false;
     switch(CHttpParser::getTypeOfRequest(sRecvBuffer)){
       case CHttpComLayer::e_GET:
@@ -180,7 +184,7 @@ bool CHTTP_Handler::recvServers(const CIPComSocketHandler::TSocketDescriptor paS
         break;
       case CHttpComLayer::e_POST:
       case CHttpComLayer::e_PUT: {
-        CIEC_STRING content;
+        std::string content;
         noParsingError = CHttpParser::parsePutPostRequest(path, content, sRecvBuffer);
         parameterValues.pushBack(content);
         break;
@@ -224,24 +228,24 @@ void CHTTP_Handler::removeSocketFromAccepted(const CIPComSocketHandler::TSocketD
   }
 }
 
-void CHTTP_Handler::handlerReceivedWrongPath(const CIPComSocketHandler::TSocketDescriptor paSocket, CIEC_STRING &paPath) {
-  DEVLOG_ERROR("[HTTP Handler] Path %s has no FB registered\n", paPath.getValue());
+void CHTTP_Handler::handlerReceivedWrongPath(const CIPComSocketHandler::TSocketDescriptor paSocket, const std::string &paPath) {
+  DEVLOG_ERROR("[HTTP Handler] Path %s has no FB registered\n", paPath.c_str());
 
-  CIEC_STRING toSend;
-  CIEC_STRING result("HTTP/1.1 404 Not Found");
-  CIEC_STRING mContentType("text/html");
-  CIEC_STRING mReqData;
+  std::string toSend;
+  std::string result("HTTP/1.1 404 Not Found"s);
+  std::string mContentType("text/html"s);
+  std::string mReqData;
   CHttpParser::createResponse(toSend, result, mContentType, mReqData);
-  if(toSend.length() != CIPComSocketHandler::sendDataOnTCP(paSocket, toSend.getValue(), toSend.length())) {
-    DEVLOG_ERROR("[HTTP Handler]: Error sending back the answer %s \n", toSend.getValue());
+  if(toSend.length() != CIPComSocketHandler::sendDataOnTCP(paSocket, toSend.c_str(), toSend.length())) {
+    DEVLOG_ERROR("[HTTP Handler]: Error sending back the answer %s \n", toSend.c_str());
   }
   removeAndCloseSocket(paSocket);
 }
 
-bool CHTTP_Handler::sendClientData(forte::com_infra::CHttpComLayer *paLayer, CIEC_STRING &paToSend) {
-  CIPComSocketHandler::TSocketDescriptor newSocket = CIPComSocketHandler::openTCPClientConnection(paLayer->getHost().getValue(), paLayer->getPort());
+bool CHTTP_Handler::sendClientData(forte::com_infra::CHttpComLayer *paLayer, const std::string &paToSend) {
+  CIPComSocketHandler::TSocketDescriptor newSocket = CIPComSocketHandler::openTCPClientConnection(paLayer->getHost().data(), paLayer->getPort());
   if(CIPComSocketHandler::scmInvalidSocketDescriptor != newSocket) {
-    if(paToSend.length() == CIPComSocketHandler::sendDataOnTCP(newSocket, paToSend.getValue(), paToSend.length())) {
+    if(paToSend.length() == CIPComSocketHandler::sendDataOnTCP(newSocket, paToSend.c_str(), paToSend.length())) {
       CCriticalRegion criticalRegion(mClientMutex);
       HTTPClientWaiting *toAdd = new HTTPClientWaiting();
       toAdd->mLayer = paLayer;
@@ -253,21 +257,21 @@ bool CHTTP_Handler::sendClientData(forte::com_infra::CHttpComLayer *paLayer, CIE
       resumeSelfsuspend();
       return true;
     } else {
-      DEVLOG_ERROR("[HTTP Handler]: Couldn't send data to client %s:%u\n", paLayer->getHost().getValue(), paLayer->getPort());
+      DEVLOG_ERROR("[HTTP Handler]: Couldn't send data to client %s:%u\n", paLayer->getHost().c_str(), paLayer->getPort());
       removeAndCloseSocket(newSocket);
     }
   } else {
-    DEVLOG_ERROR("[HTTP Handler]: Couldn't open client connection for %s:%u\n", paLayer->getHost().getValue(), paLayer->getPort());
+    DEVLOG_ERROR("[HTTP Handler]: Couldn't open client connection for %s:%u\n", paLayer->getHost().c_str(), paLayer->getPort());
   }
   return false;
 }
 
-bool CHTTP_Handler::addServerPath(forte::com_infra::CHttpComLayer *paLayer, CIEC_STRING &paPath) {
+bool CHTTP_Handler::addServerPath(forte::com_infra::CHttpComLayer *paLayer, const std::string &paPath) {
   CCriticalRegion criticalRegion(mServerMutex);
 
   for(CSinglyLinkedList<HTTPServerWaiting*>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter) {
     if((*iter)->mPath == paPath) {
-      DEVLOG_ERROR("[HTTP Handler]: The listening  path \"%s\" was already added to the http server. Cannot add it again\n", paPath.getValue());
+      DEVLOG_ERROR("[HTTP Handler]: The listening path \"%s\" was already added to the http server. Cannot add it again\n", paPath.c_str());
       return false;
     }
   }
@@ -277,11 +281,11 @@ bool CHTTP_Handler::addServerPath(forte::com_infra::CHttpComLayer *paLayer, CIEC
   toAdd->mLayer = paLayer;
   toAdd->mPath = paPath;
   mServerLayers.pushBack(toAdd);
-  DEVLOG_INFO("[HTTP Handler]: The listening  path \"%s\" was added to the http server\n", paPath.getValue());
+  DEVLOG_INFO("[HTTP Handler]: The listening path \"%s\" was added to the http server\n", paPath.c_str());
   return true;
 }
 
-void CHTTP_Handler::removeServerPath(CIEC_STRING &paPath) {
+void CHTTP_Handler::removeServerPath(const std::string &paPath) {
   CCriticalRegion criticalRegion(mServerMutex);
 
   for(CSinglyLinkedList<HTTPServerWaiting*>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter) {
@@ -301,11 +305,11 @@ void CHTTP_Handler::removeServerPath(CIEC_STRING &paPath) {
   }
 }
 
-void CHTTP_Handler::sendServerAnswer(forte::com_infra::CHttpComLayer *paLayer, CIEC_STRING &paAnswer) {
+void CHTTP_Handler::sendServerAnswer(forte::com_infra::CHttpComLayer *paLayer, const std::string &paAnswer) {
   sendServerAnswerHelper(paLayer, paAnswer, false);
 }
 
-void CHTTP_Handler::sendServerAnswerFromRecv(forte::com_infra::CHttpComLayer *paLayer, CIEC_STRING &paAnswer) {
+void CHTTP_Handler::sendServerAnswerFromRecv(forte::com_infra::CHttpComLayer *paLayer, const std::string &paAnswer) {
   sendServerAnswerHelper(paLayer, paAnswer, true);
 }
 
@@ -344,7 +348,7 @@ void CHTTP_Handler::checkClientLayers() {
       // wait until result is ready
       CIEC_DATE_AND_TIME currentTime(func_NOW());
       if(currentTime.getMilliSeconds() - (*iter)->mStartTime.getMilliSeconds() > scmSendTimeout * 1000) {
-        DEVLOG_ERROR("[HTTP Handler]: Timeout at client %s:%u \n", (*iter)->mLayer->getHost().getValue(), (*iter)->mLayer->getPort());
+        DEVLOG_ERROR("[HTTP Handler]: Timeout at client %s:%u \n", (*iter)->mLayer->getHost().c_str(), (*iter)->mLayer->getPort());
         removeAndCloseSocket((*iter)->mSocket);
         clientsToDelete.pushBack(*iter);
         (*iter)->mLayer->recvData(nullptr, 0); //indicates timeout
@@ -438,7 +442,7 @@ void CHTTP_Handler::selfSuspend() {
   mSuspendSemaphore.waitIndefinitely();
 }
 
-void CHTTP_Handler::sendServerAnswerHelper(forte::com_infra::CHttpComLayer *paLayer, CIEC_STRING &paAnswer, bool paFromRecv) {
+void CHTTP_Handler::sendServerAnswerHelper(forte::com_infra::CHttpComLayer *paLayer, const std::string &paAnswer, bool paFromRecv) {
   if(!paFromRecv) {
     mServerMutex.lock();
   }
@@ -446,8 +450,8 @@ void CHTTP_Handler::sendServerAnswerHelper(forte::com_infra::CHttpComLayer *paLa
   for(CSinglyLinkedList<HTTPServerWaiting*>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter) {
     if((*iter)->mLayer == paLayer) {
       CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor>::Iterator iterSocket = (*iter)->mSockets.begin();
-      if(paAnswer.length() != CIPComSocketHandler::sendDataOnTCP(*iterSocket, paAnswer.getValue(), paAnswer.length())) {
-        DEVLOG_ERROR("[HTTP Handler]: Error sending back the answer %s \n", paAnswer.getValue());
+      if(paAnswer.length() != CIPComSocketHandler::sendDataOnTCP(*iterSocket, paAnswer.c_str(), paAnswer.length())) {
+        DEVLOG_ERROR("[HTTP Handler]: Error sending back the answer %s \n", paAnswer.c_str());
       }
       removeAndCloseSocket(*iterSocket);
       (*iter)->mSockets.popFront();

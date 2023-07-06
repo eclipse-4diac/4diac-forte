@@ -22,8 +22,7 @@
 class CPiFaceProcessInterface : public CProcessInterfaceBase{
   public:
     CPiFaceProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
-        const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData,
-        TForteByte *paFBVarsData);
+        const CStringDictionary::TStringId paInstanceNameId);
 
     ~CPiFaceProcessInterface() override;
 

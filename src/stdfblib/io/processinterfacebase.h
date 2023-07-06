@@ -20,8 +20,8 @@
 class CProcessInterfaceBase : public CEventSourceFB{
   public:
     CProcessInterfaceBase(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec,
-        const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-          CEventSourceFB(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData){
+        const CStringDictionary::TStringId paInstanceNameId) :
+          CEventSourceFB(paSrcRes, paInterfaceSpec, paInstanceNameId){
   setEventChainExecutor(paSrcRes->getResourceEventExecution());
     }
 

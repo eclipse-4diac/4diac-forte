@@ -16,12 +16,23 @@
 #include <cctype>
 
 CParameterParser::CParameterParser(const char* paParameters, const char paSeparator, size_t paExpectedNumParams) :
-    mParameters(paParameters), mSeparator(paSeparator) {
+    mSeparator(paSeparator) {
   mParameterLocations.reserve(paExpectedNumParams);
+  if (paParameters != nullptr)
+  { // make a copy of the parameter string for porcessing
+    mParameters = new char[strlen(paParameters) + 1]();
+    strcpy(mParameters, paParameters);
+      } else { // if nullptr provide valid empty size-1 char array
+        mParameters = new char[1]();
+      }
+}
+
+CParameterParser::~CParameterParser() {
+  delete[] mParameters;
 }
 
 size_t CParameterParser::parseParameters() {
-  char* parsePosition = mParameters.getValue();
+  char* parsePosition = mParameters;
   bool endOfString = ('\0' == *parsePosition);
   if(endOfString) { //empty string
     saveStartPositionForParameterSubstring(parsePosition);

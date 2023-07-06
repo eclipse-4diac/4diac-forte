@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 fortiss GmbH
+ * Copyright (c) 2019, 2023 fortiss GmbH, Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,6 +9,7 @@
  *
  * Contributors:
  *    Jose Cabral - initial implementation
+ *    Martin Melik Merkumians - Change CIEC_STRING to std::string
  *******************************************************************************/
 
 #include "opcua_action_info.h"
@@ -18,7 +19,7 @@
 const char *const CActionInfo::mActionNames[] = { "READ", "WRITE", "CREATE_METHOD", "CALL_METHOD", "SUBSCRIBE", "CREATE_OBJECT", "CREATE_VARIABLE",
   "DELETE_OBJECT", "DELETE_VARIABLE" };
 
-CActionInfo::CActionInfo(COPC_UA_Layer &paLayer, UA_ActionType paAction, const CIEC_STRING &paEndpoint) :
+CActionInfo::CActionInfo(COPC_UA_Layer &paLayer, UA_ActionType paAction, const std::string &paEndpoint) :
     mAction(paAction), mLayer(paLayer), mEndpoint(paEndpoint) {
 }
 
@@ -44,7 +45,7 @@ CActionInfo* CActionInfo::getActionInfoFromParams(const char *paParams, COPC_UA_
     CActionInfo::UA_ActionType action = CActionParser::getActionEnum(mainParser[CActionParser::eActionType]);
     if(CActionInfo::eActionUnknown != action) {
 
-      CIEC_STRING endpoint;
+      std::string endpoint;
       size_t startOfNodePairs = CActionParser::eNodePairs;
 
       if(!CActionParser::getEndpoint(mainParser[CActionParser::eEndpoint], endpoint)) {
@@ -74,7 +75,6 @@ CActionInfo* CActionInfo::getActionInfoFromParams(const char *paParams, COPC_UA_
         retVal = nullptr;
       }
     }
-
   } else {
     DEVLOG_ERROR("[OPC UA ACTION]: Parameters %s should have at least %d parts, separated by a semicolon\n", paParams, scmMinimumAmounOfParameters);
   }
@@ -284,10 +284,11 @@ CActionInfo::UA_ActionType CActionInfo::CActionParser::getActionEnum(const char 
   return action;
 }
 
-bool CActionInfo::CActionParser::getEndpoint(const char *paEndpoint, CIEC_STRING &paResult) {
-  if(nullptr != strchr(paEndpoint, '#')) {
-    paResult = CIEC_STRING(paEndpoint);
-    paResult.assign(paResult.getValue(), static_cast<TForteUInt16>(paResult.length() - 1)); //remove #
+bool CActionInfo::CActionParser::getEndpoint(const char *paEndpoint, std::string &paResult) {
+  std::string endPoint = std::string(paEndpoint);
+  if(endPoint.back() == '#') {
+    endPoint.pop_back();
+    paResult = endPoint;
     return true;
   }
   return false;
@@ -296,22 +297,22 @@ bool CActionInfo::CActionParser::getEndpoint(const char *paEndpoint, CIEC_STRING
 bool CActionInfo::CActionParser::handlePair(const char *paPair, CSinglyLinkedList<CNodePairInfo*> &paResult) {
   bool retVal = false;
   CParameterParser pairParser(paPair, ',');
-  CIEC_STRING browsePathResult;
+  std::string browsePathResult;
   UA_NodeId *nodeIdResult = nullptr;
   size_t noOfParameters = pairParser.parseParameters();
   if(CActionParser::eMaxNumberOfPositions == noOfParameters) {
-    browsePathResult = CIEC_STRING(pairParser[CActionParser::eBrowseName]);
+    browsePathResult = std::string(pairParser[CActionParser::eBrowseName]);
     nodeIdResult = parseNodeId(pairParser[CActionParser::eNodeId]);
     retVal = nodeIdResult;
   } else if(CActionParser::eMaxNumberOfPositions - 1 == noOfParameters) { //no NodeId was provided
-    browsePathResult = CIEC_STRING(pairParser[CActionParser::eBrowseName]);
+    browsePathResult = std::string(pairParser[CActionParser::eBrowseName]);
     retVal = true;
   } else {
     DEVLOG_ERROR("[OPC UA ACTION]: The pair %s doesn't have the proper format BROWSENAME,NODEID\n", paPair);
   }
 
   if(retVal) {
-    paResult.pushBack(new CNodePairInfo(nodeIdResult, browsePathResult.getValue()));
+    paResult.pushBack(new CNodePairInfo(nodeIdResult, browsePathResult));
   }
 
   return retVal;
@@ -389,7 +390,7 @@ bool CActionInfo::CActionParser::parseIdentifier(const char *paIdentifier, UA_No
 
 // **** METHOD ACTION *****//
 
-CLocalMethodInfo::CLocalMethodInfo(COPC_UA_Layer &paLayer, const CIEC_STRING &paEndpoint) :
+CLocalMethodInfo::CLocalMethodInfo(COPC_UA_Layer &paLayer, const std::string &paEndpoint) :
     CActionInfo(paLayer, eCreateMethod, paEndpoint) {
 }
 

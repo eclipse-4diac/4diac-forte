@@ -55,13 +55,12 @@ private:
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-   FORTE_FB_DATA_ARRAY(2, 3, 1, 0);
 
   void executeEvent(TEventID pa_nEIID) override;
 
 public:
   FORTE_SVIsend_1(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
-       BE_SVIFB( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData){
+       BE_SVIFB( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId){
   };
 
   ~FORTE_SVIsend_1() override = default;

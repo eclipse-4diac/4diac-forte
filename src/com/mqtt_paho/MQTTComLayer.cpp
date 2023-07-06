@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2014 ACIN
+ * Copyright (c) 2013, 2023 ACIN
+ *                          Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,30 +9,30 @@
  *
  * Contributors:
  * Martin Melik Merkumians - initial API and implementation and/or initial documentation
+ *                         - Change CIEC_STRING to std::string
  *******************************************************************************/
-
 
 #include "MQTTComLayer.h"
 #include "../../core/utils/parameterParser.h"
 #include "MQTTHandler.h"
+#include "MQTTClient.h"
 #include "commfb.h"
+#include <string>
 
 using namespace forte::com_infra;
 
-MQTTComLayer::MQTTComLayer(CComLayer* paUpperLayer, CBaseCommFB * pFB) : CComLayer(paUpperLayer, pFB),
-    mUsedBuffer(0), mInterruptResp(e_Nothing){
+MQTTComLayer::MQTTComLayer(CComLayer* paUpperLayer, CBaseCommFB* pFB) : CComLayer(paUpperLayer, pFB),
+mUsedBuffer(0), mInterruptResp(e_Nothing) {
   memset(mDataBuffer, 0, mBufferSize); //TODO change this to  dataBuffer{0} in the extended list when fully switching to C++11
 }
 
 MQTTComLayer::~MQTTComLayer() = default;
 
 EComResponse MQTTComLayer::sendData(void* paData, unsigned int paSize) {
-  MQTTAsync_message message = MQTTAsync_message_initializer;
-  message.payload = paData;
-  message.payloadlen = paSize;
-  message.qos = QOS;
-  message.retained = 0;
-  int errorCode = MQTTAsync_sendMessage(getExtEvHandler<MQTTHandler>().getClient(), mTopicName.getValue(), &message, nullptr);
+  if (mClient == nullptr) {
+    return e_ProcessDataSendFailed;
+  }
+  int errorCode = mClient->sendData(paData, paSize, mTopicName.c_str());
   if (0 != errorCode) {
     return e_ProcessDataSendFailed;
   }
@@ -39,8 +40,8 @@ EComResponse MQTTComLayer::sendData(void* paData, unsigned int paSize) {
   return e_ProcessDataOk;
 }
 
-EComResponse MQTTComLayer::recvData(const void* paData,  unsigned int paSize) {
-  if(paSize > mBufferSize){
+EComResponse MQTTComLayer::recvData(const void* paData, unsigned int paSize) {
+  if (paSize > mBufferSize) {
     paSize = mBufferSize; //Rest of the message is discarded
   }
   memcpy(mDataBuffer, paData, paSize);
@@ -51,29 +52,28 @@ EComResponse MQTTComLayer::recvData(const void* paData,  unsigned int paSize) {
 }
 
 EComResponse MQTTComLayer::processInterrupt() {
-  if(e_ProcessDataOk == mInterruptResp) {
-    if((0 < mUsedBuffer) && (nullptr != m_poTopLayer)) {
+  if (e_ProcessDataOk == mInterruptResp) {
+    if ((0 < mUsedBuffer) && (nullptr != m_poTopLayer)) {
       mInterruptResp = m_poTopLayer->recvData(mDataBuffer, mUsedBuffer);
       mUsedBuffer = 0;
     }
   }
-
   return mInterruptResp;
 }
 
 EComResponse MQTTComLayer::openConnection(char* paLayerParameter) {
   EComResponse eRetVal = e_InitInvalidId;
   CParameterParser parser(paLayerParameter, ',', mNoOfParameters);
-  if(mNoOfParameters == parser.parseParameters()){
-    mTopicName = CIEC_STRING(parser[Topic]);
-    if( MQTTHandler::eRegisterLayerSucceeded ==
-        getExtEvHandler<MQTTHandler>().registerLayer(parser[Address], parser[ClientID], this)) {
-      eRetVal = e_InitOk;
-    } else {
-      eRetVal = e_InitInvalidId;
+  if (mNoOfParameters == parser.parseParameters()) {
+    mTopicName = parser[Topic];
+    if (MQTTHandler::eRegisterLayerSucceeded ==
+      getExtEvHandler<MQTTHandler>().registerLayer(parser[Address], parser[ClientID], this)) {
+      if (mClient != nullptr) {
+        eRetVal = e_InitOk;
+      }
     }
 
-    switch (m_poFb->getComServiceType()){
+    switch (m_poFb->getComServiceType()) {
     case e_Server:
       // TODO: Not implemented yet
       eRetVal = e_InitTerminated;
@@ -90,7 +90,6 @@ EComResponse MQTTComLayer::openConnection(char* paLayerParameter) {
       break;
     }
   }
-
   return eRetVal;
 }
 

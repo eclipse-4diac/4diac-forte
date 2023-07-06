@@ -18,8 +18,6 @@
 
 DEFINE_FIRMWARE_DATATYPE(WORD, g_nStringIdWORD)
 
-const CIEC_WORD::TValueType CIEC_WORD::scm_nMaxVal = std::numeric_limits<CIEC_WORD::TValueType>::max();
-
 size_t CIEC_WORD::getToStringBufferSize() const {
   return sizeof("65535");
 }

@@ -74,7 +74,7 @@ void FORTE_E_F_TRIG::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventEIID: {
       RES_DATA_CON_CRITICAL_REGION();
-      readData(0, &var_QI, conn_QI);
+      readData(0, var_QI, conn_QI);
       break;
     }
     default:

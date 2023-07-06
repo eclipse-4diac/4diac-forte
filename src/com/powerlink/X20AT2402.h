@@ -80,8 +80,6 @@ class FORTE_X20AT2402 : public CFunctionBlock, public IEplCNCallback{
 
     static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-    FORTE_FB_DATA_ARRAY(2, 3, 5, 0)
-    ;
 
     void executeEvent(TEventID pa_nEIID) override;
 

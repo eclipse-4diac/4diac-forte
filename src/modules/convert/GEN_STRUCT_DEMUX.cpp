@@ -102,7 +102,7 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
         eoWith[paInterfaceSpec.m_nNumDOs] = scmWithListDelimiter;
         retval = true;
       } else {
-        DEVLOG_ERROR("[GEN_STRUCT_DEMUX]: The structure %s has a size is not within range > 0 and < %ud\n",
+        DEVLOG_ERROR("[GEN_STRUCT_DEMUX]: The structure %s has a size is not within range > 0 and < %u\n",
                      CStringDictionary::getInstance().get(structTypeNameId), cg_unInvalidPortId);
       }
     } else {

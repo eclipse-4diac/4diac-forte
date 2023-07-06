@@ -52,7 +52,6 @@ private:
   static const int scm_nregisterServiceAdpNum = 0;
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-   FORTE_FB_DATA_ARRAY(2, 2, 0, 1);
 
   static const SCFB_FBConnectionData scm_astEventConnections[];
 

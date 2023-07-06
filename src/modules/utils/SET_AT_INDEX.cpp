@@ -94,9 +94,9 @@ void FORTE_SET_AT_INDEX::readInputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventREQID: {
       RES_DATA_CON_CRITICAL_REGION();
-      readData(0, &var_IN_ARRAY, conn_IN_ARRAY);
-      readData(1, &var_INDEX, conn_INDEX);
-      readData(2, &var_VALUE, conn_VALUE);
+      readData(0, var_IN_ARRAY, conn_IN_ARRAY);
+      readData(1, var_INDEX, conn_INDEX);
+      readData(2, var_VALUE, conn_VALUE);
       break;
     }
     default:
@@ -108,8 +108,8 @@ void FORTE_SET_AT_INDEX::writeOutputData(TEventID pa_nEIID) {
   switch(pa_nEIID) {
     case scm_nEventCNFID: {
       RES_DATA_CON_CRITICAL_REGION();
-      writeData(0, &var_QO, &conn_QO);
-      writeData(1, &var_OUT_ARRAY, &conn_OUT_ARRAY);
+      writeData(0, var_QO, conn_QO);
+      writeData(1, var_OUT_ARRAY, conn_OUT_ARRAY);
       break;
     }
     default:

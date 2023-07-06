@@ -28,6 +28,9 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
 
     typedef bool TValueType;
 
+    static constexpr TValueType scm_nMinVal = std::numeric_limits<CIEC_BOOL::TValueType>::min();
+    static constexpr TValueType scm_nMaxVal = std::numeric_limits<CIEC_BOOL::TValueType>::max();
+
     CIEC_BOOL() {
       setTBOOL8(false);
     }
@@ -45,7 +48,7 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
 
     CIEC_BOOL& operator =(const CIEC_BOOL &paValue) {
       // Simple value assignment - no self assignment check needed
-      setValue(paValue);
+      setValueSimple(paValue);
       return *this;
     }
 

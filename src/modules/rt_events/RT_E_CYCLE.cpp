@@ -41,7 +41,7 @@ const SFBInterfaceSpec FORTE_RT_E_CYCLE::scm_stFBInterfaceSpec = {
 };
 
 FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-            CEventSourceFB( paSrcRes, &scm_stFBInterfaceSpec,  paInstanceNameId, m_anFBConnData, m_anFBVarsData){
+            CEventSourceFB( paSrcRes, &scm_stFBInterfaceSpec,  paInstanceNameId){
   setEventChainExecutor(&mECEO);
   mActive = false;
   mTimeListEntry.mTimeOut = 0;

@@ -63,7 +63,6 @@ private:
   static const int scm_nrequestOrchestrationAdpNum = 0;
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-   FORTE_FB_DATA_ARRAY(1, 2, 1, 1);
 
   static const SCFB_FBConnectionData scm_astEventConnections[];
 

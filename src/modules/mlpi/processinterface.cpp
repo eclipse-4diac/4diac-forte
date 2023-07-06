@@ -25,8 +25,8 @@ const char * const CMLPIFaceProcessInterface::scmCallToApiFailed = "Call to API 
 
 MLPIHANDLE CMLPIFaceProcessInterface::smConnection  = MLPI_INVALIDHANDLE;
 
-CMLPIFaceProcessInterface::CMLPIFaceProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mVariableName(0){
+CMLPIFaceProcessInterface::CMLPIFaceProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId), mVariableName(0){
 }
 
 CMLPIFaceProcessInterface::~CMLPIFaceProcessInterface(){

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2019 fortiss GmbH
+ * Copyright (c) 2016, 2023 fortiss GmbH, Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,6 +10,7 @@
  * Contributors:
  *    Stefan Profanter
  *      - initial implementation
+ *    Martin Melik Merkumians - Change CIEC_STRING to std::string
  *******************************************************************************/
 
 #include "opcua_helper.h"
@@ -213,22 +214,22 @@ void COPC_UA_Helper::fillVariant(UA_Variant &paVariant, const CIEC_ANY &paDataSo
   UA_delete(varValue, paVariant.type);
 }
 
-bool COPC_UA_Helper::isBrowsePathValid(const char *paBrowsepath) {
+bool COPC_UA_Helper::isBrowsePathValid(const std::string &paBrowsepath) {
   bool retVal = false;
 
-  if('/' == *paBrowsepath) {
-    size_t lenghtOfBrowsename = strlen(paBrowsepath);
-    if('/' == *(paBrowsepath + lenghtOfBrowsename - 1)) { //remove trailing slash
+  if(!paBrowsepath.empty() && '/' == paBrowsepath.front()) {
+    size_t lenghtOfBrowsename = paBrowsepath.length();
+    if('/' == paBrowsepath.back()) { //check if last character is '/'
       lenghtOfBrowsename--;
     }
 
     if(1 < lenghtOfBrowsename) {
       retVal = true;
     } else {
-      DEVLOG_ERROR("[OPC UA HELPER]: Browsepath %s doesn't provide  a valid nodename\n", paBrowsepath);
+      DEVLOG_ERROR("[OPC UA HELPER]: Browsepath %s doesn't provide a valid nodename\n", paBrowsepath.c_str());
     }
   } else {
-    DEVLOG_ERROR("[OPC UA HELPER]: Browsepath %s should start with a slash\n", paBrowsepath);
+    DEVLOG_ERROR("[OPC UA HELPER]: Browsepath %s should start with a slash\n", paBrowsepath.c_str());
   }
 
   return retVal;
@@ -286,15 +287,22 @@ UA_StatusCode COPC_UA_Helper::prepareBrowseArgument(const char *paNodePathConst,
     return UA_STATUSCODE_BADINVALIDARGUMENT;
   }
 
-  CIEC_STRING copyOfOriginal(paNodePathConst);
+  auto startNodePath = paNodePathConst;
+  auto nodePathLength = strlen(paNodePathConst);
+  auto endNodePath = startNodePath + (nodePathLength - 1);
 
-  char *nodePath = copyOfOriginal.getValue();
-
-  if('/' == nodePath[copyOfOriginal.length() - 1]) { // remove tailing slash
-    nodePath[copyOfOriginal.length() - 1] = '\0';
+  if('/' == *paNodePathConst) { // remove starting slash
+    ++startNodePath;
+    --nodePathLength;
   }
 
-  CParameterParser folderParser(nodePath + 1, '/'); // + 1 to skip the first slash
+  if('/' == *endNodePath) { // remove tailing slash
+    --nodePathLength;
+  }
+
+  std::string copyOfOriginal(startNodePath, nodePathLength);
+
+  CParameterParser folderParser(copyOfOriginal.c_str(), '/');
 
   (*paFolderCount) = folderParser.parseParameters();
 
@@ -349,21 +357,21 @@ bool COPC_UA_Helper::getBrowsenameFromNodeName(const char *paNodeName, UA_UInt16
   bool retVal = true;
 
   UA_UInt16 browsenameNamespace = paDefaultNamespace;
-  CIEC_STRING targetName;
+  std::string targetName;
   CParameterParser browseNameParser(paNodeName, ':');
   size_t parsingResult = browseNameParser.parseParameters();
   if(scmMaxNoOfParametersInBrowseName == parsingResult) {
     browsenameNamespace = static_cast<UA_UInt16>(forte::core::util::strtol(browseNameParser[0], nullptr, 10));
-    targetName = CIEC_STRING(browseNameParser[1]);
+    targetName = std::string(browseNameParser[1]);
   } else if(1 == parsingResult) {
-    targetName = CIEC_STRING(browseNameParser[0]);
+    targetName = std::string(browseNameParser[0]);
   } else {
     DEVLOG_ERROR("[OPC UA HELPER]: Error by parsing FB browse path %s\n", paNodeName);
     retVal = false;
   }
 
   if(retVal) {
-    paBrowseName = UA_QUALIFIEDNAME_ALLOC(browsenameNamespace, targetName.getValue());
+    paBrowseName = UA_QUALIFIEDNAME_ALLOC(browsenameNamespace, targetName.c_str());
   }
   return retVal;
 }

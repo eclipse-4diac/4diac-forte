@@ -26,7 +26,6 @@ class E_RESTART : public CEventSourceFB{
 private:
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
-  FORTE_FB_DATA_ARRAY(3,0,0, 0);
 
   static const TEventID csmCOLDID = 0;
   static const TEventID csmWARMID = 1;

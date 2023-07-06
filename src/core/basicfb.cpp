@@ -24,15 +24,6 @@ CBasicFB::CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfa
         cm_pstVarInternals(pa_pstVarInternals), mBasicFBVarsData(nullptr), m_aoInternals(nullptr) {
 }
 
-CBasicFB::CBasicFB(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-                   const CStringDictionary::TStringId pa_nInstanceNameId,
-                   const SInternalVarsInformation *pa_pstVarInternals, TForteByte *pa_acFBConnData,
-                   TForteByte *pa_acBasicFBVarsData) :
-        CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId, pa_acFBConnData, pa_acBasicFBVarsData),
-        m_nECCState(0),
-        cm_pstVarInternals(pa_pstVarInternals), mBasicFBVarsData(nullptr), m_aoInternals(nullptr) {
-}
-
 bool CBasicFB::initialize() {
   if(!CFunctionBlock::initialize()) {
     return false;

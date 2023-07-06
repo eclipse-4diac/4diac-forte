@@ -19,7 +19,7 @@ forte_add_network_layer(PAHOMQTT OFF "mqtt" MQTTComLayer MQTTComLayer "Enable Pa
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 if(FORTE_COM_PAHOMQTT)
-  forte_add_sourcefile_hcpp( MQTTComLayer MQTTHandler MQTTClientConfigParser)
+  forte_add_sourcefile_hcpp( MQTTComLayer MQTTHandler MQTTClient MQTTClientConfigParser)
   
   forte_add_handler(MQTTHandler MQTTHandler)
   

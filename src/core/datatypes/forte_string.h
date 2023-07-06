@@ -36,7 +36,7 @@
 
 /*!\ingroup COREDTS CIEC_STRING represents the string data type according to IEC 61131.
  */
-class CIEC_STRING final : public CIEC_ANY_STRING{
+class CIEC_STRING final : public CIEC_ANY_STRING {
   DECLARE_FIRMWARE_DATATYPE(STRING)
 
   public:
@@ -71,7 +71,7 @@ class CIEC_STRING final : public CIEC_ANY_STRING{
 
       public:
         PARTIAL_ACCESS_TYPE(char *paValue) {
-          value = paValue;
+          value = reinterpret_cast<pointer_type>(paValue);
           if (value != nullptr) {
             setChar(*paValue);
           } else {
@@ -91,7 +91,7 @@ class CIEC_STRING final : public CIEC_ANY_STRING{
         }
 
       private:
-        char *value;
+        pointer_type value;
     };
 
     [[nodiscard]] PARTIAL_ACCESS_TYPE at(const intmax_t paIndex) {
@@ -155,7 +155,7 @@ class CIEC_STRING final : public CIEC_ANY_STRING{
      *   \return number of bytes taken used from the buffer
      *        -1 on on error
      */
-    int fromString(const char *pa_pacValue) override;
+    int fromString(const char *paValue) override;
 
     /*! \brief Converts data type value to string
      *
@@ -181,22 +181,22 @@ class CIEC_STRING final : public CIEC_ANY_STRING{
      *   This command implements a conversion function from a UTF-8
      *   encoded string (found e.g. in XML to the internal
      *   ISO 10646 Row 00 encoding.
-     *   \param pa_pacValue  Reference to the given UTF-8 encoded byte array
-     *   \param pa_nLen  Length to read (-1 for null-terminated)
-     *   \param pa_bUnescape  Handle $-escapes and delimiter characters at the beginning and end
+     *   \param paValue  Reference to the given UTF-8 encoded byte array
+     *   \param paLen  Length to read (-1 for null-terminated)
+     *   \param paUnescape  Handle $-escapes and delimiter characters at the beginning and end
      *   \return number of bytes used from srcString
      *       -1 on error
      */
 #ifdef FORTE_UNICODE_SUPPORT
-    int fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescape) override;
+    int fromUTF8(const char *paValue, int paLen, bool paUnescape) override;
 #endif
     /*! \brief Converts the STRING to a UTF-8 representation
      *
      *   This command implements a conversion function from a STRING
      *   to a UTF-8 encoding, usable e.g. for the serialization.
-     *   \param pa_pacBuffer  Reference to the output buffer. If 0, only the needed size will be computed.
-     *   \param pa_nBufferSize  Size of the provided buffer.
-     *   \param pa_bEscape  Produce $-escapes and delimiter characters at the beginning and end
+     *   \param paBuffer  Reference to the output buffer. If 0, only the needed size will be computed.
+     *   \param paBufferSize  Size of the provided buffer.
+     *   \param paEscape  Produce $-escapes and delimiter characters at the beginning and end
      *   \return number of bytes used in the buffer
      *           -1 on error
      */
@@ -215,9 +215,9 @@ class CIEC_STRING final : public CIEC_ANY_STRING{
      */
     size_t getToStringBufferSize() const override;
 
-    void setValue(const CIEC_ANY &pa_roValue) override {
-      if(pa_roValue.getDataTypeID() == CIEC_ANY::e_STRING){
-        const CIEC_STRING &roSrc(static_cast<const CIEC_STRING &>(pa_roValue));
+    void setValue(const CIEC_ANY &paValue) override {
+      if(paValue.getDataTypeID() == CIEC_ANY::e_STRING){
+        const CIEC_STRING &roSrc(static_cast<const CIEC_STRING &>(paValue));
         this->assign(roSrc.getValue(), roSrc.length());
       }
     }

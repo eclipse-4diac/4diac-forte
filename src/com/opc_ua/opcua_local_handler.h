@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2015-2019 Florian Froschermeier <florian.froschermeier@tum.de>,
- *               fortiss GmbH
+ * Copyright (c) 2015, 2023 Florian Froschermeier <florian.froschermeier@tum.de>,
+ *                          fortiss GmbH, Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -15,6 +15,7 @@
  *      - refactoring and adaption to new concept
  *    Jose Cabral:
  *      - refactoring to cleaner architecture
+ *    Martin Melik Merkumians - Change CIEC_STRING to std::string
  *******************************************************************************/
 
 #ifndef SRC_MODULES_OPC_UA_OPCUALOCALHANDLER_H_
@@ -27,6 +28,7 @@
 #include "../../core/fortelist.h"
 #include "opcua_handler_abstract.h"
 #include "opcua_helper.h"
+#include <string>
 
 /**
  * Class to handle all action that are executed on a local OPC UA server
@@ -35,7 +37,6 @@
 class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
   DECLARE_HANDLER(COPC_UA_Local_Handler)
   public:
-
     /**
      * Starts OPC UA Server
      */
@@ -118,10 +119,10 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * Structure to contain all needed strings to configure the server
      */
     struct UA_ServerStrings {
-        CIEC_STRING mHostname;
-        CIEC_STRING mAppURI;
+        std::string mHostname;
+        std::string mAppURI;
 #ifdef FORTE_COM_OPC_UA_MULTICAST
-        CIEC_STRING mMdnsServerName;
+        std::string mMdnsServerName;
 #endif //FORTE_COM_OPC_UA_MULTICAST
     };
 
@@ -283,7 +284,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param paParentNodeId Information containing the parent node ID
      * @param paResult Place to store the results
      */
-    void initializeCreateInfo(CIEC_STRING &paNodeName, const CActionInfo::CNodePairInfo &paNodePairInfo, const UA_NodeId *paParentNodeId,
+    void initializeCreateInfo(std::string &paNodeName, const CActionInfo::CNodePairInfo &paNodePairInfo, const UA_NodeId *paParentNodeId,
         CCreateInfo &paResult) const;
 
     /**
@@ -571,7 +572,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param paRreferencedNodes List of nodes that are used by this browsename. It will include all folders, but not the end node since it was not created yet
      * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
      */
-    UA_StatusCode splitAndCreateFolders(const CIEC_STRING &paBrowsePath, CIEC_STRING &paNodeName, CSinglyLinkedList<UA_NodeId*> &paRreferencedNodes) const;
+    UA_StatusCode splitAndCreateFolders(const std::string &paBrowsePath, std::string &paNodeName, CSinglyLinkedList<UA_NodeId*> &paRreferencedNodes) const;
 
     /**
      * Split a string into folders and node name. The provided place for store of the folder and node name are only
@@ -581,7 +582,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
      * @param paNodeName Place to store the node name part of the string
      * @return True if the provided string is a valid path, false otherwise
      */
-    bool splitFoldersFromNode(const CIEC_STRING &paOriginal, CIEC_STRING &paFolder, CIEC_STRING &paNodeName) const;
+    bool splitFoldersFromNode(const std::string &paOriginal, std::string &paFolder, std::string &paNodeName) const;
 
     /**
      * If paFailed is true, it deletes all NodeIds from paPresentNodes, otherwise it copies them to paReferencedNodes.

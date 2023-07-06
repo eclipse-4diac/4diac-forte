@@ -57,19 +57,6 @@ namespace forte {
 
 #define RES_DATA_CON_CRITICAL_REGION()  CCriticalRegion criticalRegion(getResource().m_oResDataConSync)
 
-#ifndef FORTE_FB_DATA_ARRAY  //with this check we can overwrite this define in a platform specific file (e.g., config.h)
-/*! Define that adds the data array to a SIFB, simple FB or CFB
- * May be overwritten by a platform specific version that adapts for example some alignment requirements
- */
-#define FORTE_FB_DATA_ARRAY(a_nNumEOs, a_nNumDIs, a_nNumDOs, a_nNumAdapters) \
-  union{ \
-    TForteByte m_anFBConnData[0]; \
-  };\
-  union{ \
-    TForteByte m_anFBVarsData[0]; \
-  };
-#endif
-
 typedef CAdapter *TAdapterPtr;
 
 typedef TPortId TDataIOID; //!< \ingroup CORE Type for holding an data In- or output ID
@@ -424,12 +411,6 @@ class CFunctionBlock {
      */
     CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, CStringDictionary::TStringId pa_nInstanceNameId);
 
-    /**
-     * \deprecated Use CFunctionBlock(CResource *, const SFBInterfaceSpec *, const CStringDictionary::TStringId)
-     */
-    [[deprecated]] CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec, CStringDictionary::TStringId pa_nInstanceNameId,
-                   TForteByte *pa_acFBConnData, TForteByte *pa_acFBVarsData);
-
     static TPortId getPortId(CStringDictionary::TStringId pa_unPortNameId, TPortId pa_unMaxPortNames, const CStringDictionary::TStringId *pa_aunPortNames);
 
     /*!\brief Function to send an output event of the FB.
@@ -461,16 +442,16 @@ class CFunctionBlock {
      * \param pa_poConn Connection to read from.
      */
 #ifdef FORTE_TRACE_CTF
-    void readData(size_t pa_nDONum, CIEC_ANY *pa_poValue, CDataConnection* pa_poConn);
+    void readData(size_t paDONum, CIEC_ANY &paValue, const CDataConnection *const paConn);
 #else
-    void readData(size_t, CIEC_ANY *pa_poValue, CDataConnection* pa_poConn) {
-      if(!pa_poConn) {
+    void readData(size_t, CIEC_ANY &paValue, const CDataConnection *const paConn) {
+      if(!paConn) {
         return;
       }
 #ifdef FORTE_SUPPORT_MONITORING
-      if(!pa_poValue->isForced()) {
+      if(!paValue.isForced()) {
 #endif //FORTE_SUPPORT_MONITORING
-        pa_poConn->readData(pa_poValue);
+        paConn->readData(paValue);
 #ifdef FORTE_SUPPORT_MONITORING
       }
 #endif //FORTE_SUPPORT_MONITORING
@@ -483,21 +464,21 @@ class CFunctionBlock {
      * \param pa_poConn Connection to write into.
      */
 #ifdef FORTE_TRACE_CTF
-    void writeData(size_t pa_nDONum, CIEC_ANY *pa_poValue, CDataConnection* pa_poConn);
+    void writeData(size_t paDONum, CIEC_ANY& paValue, CDataConnection& paConn);
 #else
-    void writeData(size_t, CIEC_ANY *pa_poValue, CDataConnection* pa_poConn) {
-      if(pa_poConn->isConnected()) {
+    void writeData(size_t, CIEC_ANY& paValue, CDataConnection& paConn) {
+      if(paConn.isConnected()) {
 #ifdef FORTE_SUPPORT_MONITORING
-        if(!pa_poValue->isForced()) {
+        if(!paValue.isForced()) {
 #endif //FORTE_SUPPORT_MONITORING
-          pa_poConn->writeData(pa_poValue);
+          paConn.writeData(paValue);
 #ifdef FORTE_SUPPORT_MONITORING
         } else {
           //when forcing we write back the value from the connection to keep the forced value on the output
-          pa_poConn->readData(pa_poValue);
+          paConn.readData(paValue);
         }
 #endif //FORTE_SUPPORT_MONITORING
-      }
+			}
     }
 #endif //FORTE_TRACE_CTF
 
@@ -659,7 +640,7 @@ class CFunctionBlock {
 
 #define FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(fbclass, fbBaseClass) \
  fbclass(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) : \
- fbBaseClass( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, m_anFBConnData, m_anFBVarsData)
+ fbBaseClass( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId)
 
 
 #ifdef OPTIONAL

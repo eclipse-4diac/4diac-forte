@@ -21,8 +21,8 @@ const char * const CFMUProcessInterface::scmOK = "OK";
 const char * const CFMUProcessInterface::scmNOTINITIALIZED = "Not initialized";
 const char * const CFMUProcessInterface::scmINTERNALERROR = "Internal Error";
 
-CFMUProcessInterface::CFMUProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId, TForteByte *paFBConnData, TForteByte *paFBVarsData) :
-    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId, paFBConnData, paFBVarsData), mInitialized(false), mValue(0){
+CFMUProcessInterface::CFMUProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+    CProcessInterfaceBase(paSrcRes, paInterfaceSpec, paInstanceNameId), mInitialized(false), mValue(0){
 }
 
 CFMUProcessInterface::CFMUProcessInterface(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :

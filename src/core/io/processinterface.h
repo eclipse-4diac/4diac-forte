@@ -27,8 +27,7 @@ namespace forte {
       class ProcessInterface : public CProcessInterfaceBase, public IOObserver {
 
         public:
-          ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId,
-              TForteByte *paFBConnData, TForteByte *paFBVarsData);
+          ProcessInterface(CResource *paSrcRes, const SFBInterfaceSpec *paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId);
           ~ProcessInterface() override;
 
           bool onChange() override;
