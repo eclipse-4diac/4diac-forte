@@ -372,7 +372,7 @@ void CFunctionBlock::writeData(size_t paDONum, CIEC_ANY& paValue, CDataConnectio
 #ifdef FORTE_SUPPORT_MONITORING
     if(paValue.isForced() != true) {
 #endif //FORTE_SUPPORT_MONITORING
-      paConn.writeData(pa.Value);
+      paConn.writeData(paValue);
 #ifdef FORTE_SUPPORT_MONITORING
     } else {
       //when forcing we write back the value from the connection to keep the forced value on the output
