@@ -353,16 +353,17 @@ CFunctionBlock *CCompositeFB::getFunctionBlock(int pa_nFBNum){
   if(-1 == pa_nFBNum){
     poRetVal = this;
   }
-  else if(0 <= pa_nFBNum){
-    if(scm_nAdapterMarker == (scm_nAdapterMarker & pa_nFBNum)){
-      pa_nFBNum &= scm_nAdapterFBRange;
-      if(pa_nFBNum < m_pstInterfaceSpec->m_nNumAdapters){
-        poRetVal = m_apoAdapters[pa_nFBNum];
+  else if(0 <= pa_nFBNum)  {
+    TForteUInt32 fbNum = static_cast<TForteUInt32>(pa_nFBNum);
+    if(scm_nAdapterMarker == (scm_nAdapterMarker & fbNum)){
+      fbNum &= scm_nAdapterFBRange;
+      if(fbNum < m_pstInterfaceSpec->m_nNumAdapters){
+        poRetVal = m_apoAdapters[fbNum];
       }
     }
     else{
-      if(static_cast<unsigned int>(pa_nFBNum) < cm_cpoFBNData->m_nNumFBs){
-        poRetVal = mInternalFBs[pa_nFBNum];
+      if(fbNum < cm_cpoFBNData->m_nNumFBs){
+        poRetVal = mInternalFBs[fbNum];
       }
     }
   }

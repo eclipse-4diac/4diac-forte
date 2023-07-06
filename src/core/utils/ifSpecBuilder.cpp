@@ -24,68 +24,70 @@
 using namespace forte::core::util;
 
 
-void CStringIdListSpecBuilder::setStaticList(const CStringDictionary::TStringId *pa_aunStaticList, std::size_t pa_nItemsCount) {
-  m_vDynamicList.clear();
-  m_aunStaticList = pa_aunStaticList;
-  m_unStaticListSize = (TForteUInt8)pa_nItemsCount;
+void CStringIdListSpecBuilder::setStaticList(const CStringDictionary::TStringId *paStaticList, std::size_t paItemsCount) {
+  mDynamicList.clear();
+  cmStaticList = paStaticList;
+  mStaticListSize = paItemsCount;
 }
 
-int CStringIdListSpecBuilder::addString(CStringDictionary::TStringId pa_unString) {
+int CStringIdListSpecBuilder::addString(CStringDictionary::TStringId paString) {
   if (!isGood()) {
     return -1;
   }
-  if (m_aunStaticList) {
-    m_vDynamicList.insert(m_vDynamicList.end(), m_aunStaticList, m_aunStaticList + m_unStaticListSize);
+  if (cmStaticList) {
+    mDynamicList.insert(mDynamicList.end(), cmStaticList, cmStaticList + mStaticListSize);
   }
-  m_aunStaticList = nullptr;
-  m_unStaticListSize = 0;
-  m_vDynamicList.push_back(pa_unString);
-  return (int)m_vDynamicList.size() - 1;
+  cmStaticList = nullptr;
+  mStaticListSize = 0;
+  mDynamicList.push_back(paString);
+  return (int)mDynamicList.size() - 1;
 }
 
-int CStringIdListSpecBuilder::addString(const char *pa_sString) {
-  return addString(CStringDictionary::getInstance().insert(pa_sString));
+int CStringIdListSpecBuilder::addString(const char *paString) {
+  return addString(CStringDictionary::getInstance().insert(paString));
 }
 
-int CStringIdListSpecBuilder::findString(const char *pa_sString) const {
-  auto nString = CStringDictionary::getInstance().getId(pa_sString);
-  if (nString == CStringDictionary::scm_nInvalidStringId)
+int CStringIdListSpecBuilder::findString(const char *paString) const {
+  auto nString = CStringDictionary::getInstance().getId(paString);
+  if (nString == CStringDictionary::scm_nInvalidStringId) {
     return -1;
+  }
   return findString(nString);
 }
 
-int CStringIdListSpecBuilder::findString(CStringDictionary::TStringId pa_unString) const {
+int CStringIdListSpecBuilder::findString(CStringDictionary::TStringId paStringId) const {
   int retVal = -1;
-  if (m_aunStaticList) {
-    const auto end = m_aunStaticList + m_unStaticListSize;
-    auto pos = std::find(m_aunStaticList, end, pa_unString);
+  if (cmStaticList) {
+    const auto end = cmStaticList + mStaticListSize;
+    auto pos = std::find(cmStaticList, end, paStringId);
     if (pos != end) {
-      retVal = (int)(pos - m_aunStaticList);
+      retVal = (int)(pos - cmStaticList);
     }
   } else {
-    auto pos = std::find(m_vDynamicList.begin(), m_vDynamicList.end(), pa_unString);
-    if (pos != m_vDynamicList.end()) {
-      retVal = (int)(pos - m_vDynamicList.begin());
+    auto pos = std::find(mDynamicList.begin(), mDynamicList.end(), paStringId);
+    if (pos != mDynamicList.end()) {
+      retVal = (int)(pos - mDynamicList.begin());
     }
   }
   return retVal;
 }
 
 std::size_t CStringIdListSpecBuilder::calcStorageSize() const {
-  return m_aunStaticList ? 0 : m_vDynamicList.size() * sizeof(CStringDictionary::TStringId);
+  return cmStaticList ? 0 : mDynamicList.size() * sizeof(CStringDictionary::TStringId);
 }
 
-std::tuple<const CStringDictionary::TStringId*, TForteUInt8> CStringIdListSpecBuilder::build(CMixedStorage &pa_oStorage) const {
-  if (m_aunStaticList) {
-    return {m_aunStaticList, m_unStaticListSize};
+std::tuple<const CStringDictionary::TStringId*, TForteUInt8> CStringIdListSpecBuilder::build(CMixedStorage &paStorage) const {
+  if (cmStaticList) {
+    return {cmStaticList, mStaticListSize};
   }
-  const CStringDictionary::TStringId* listPtr = pa_oStorage.write(m_vDynamicList.data(), m_vDynamicList.size());
-  return {listPtr, (TForteUInt8)m_vDynamicList.size()};
+  const CStringDictionary::TStringId* listPtr = paStorage.write(mDynamicList.data(), mDynamicList.size());
+  return {listPtr, (TForteUInt8)mDynamicList.size()};
 }
 
 
-static bool makeName(char *pa_sName, const char *pa_sPrefix, int pa_nNumber) {
-  return forte_snprintf(pa_sName, sizeof(TIdentifier), "%s%d", pa_sPrefix, pa_nNumber) < (int)sizeof(TIdentifier);
+static bool makeName(char *paName, const char *paPrefix, int paNumber) {
+  const int retVal = forte_snprintf(paName, sizeof(TIdentifier), "%s%d", paPrefix, paNumber);
+  return (retVal < static_cast<int>(sizeof(TIdentifier)) && retVal > 0);
 }
 
 std::pair<int, int> CEventSpecBuilderBase::addEventRange(const char *pa_sPrefix, int pa_nRangeSize) {

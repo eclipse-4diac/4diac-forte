@@ -360,7 +360,7 @@ class CFunctionBlock {
      * @param pa_nDINum number of the data input starting with 0
      * @return pointer to the data input
      */
-    virtual CIEC_ANY* getDI(size_t pa_nDINum) {
+    virtual CIEC_ANY* getDI(TPortId pa_nDINum) {
       return mDIs[pa_nDINum];
     }
 
@@ -370,7 +370,7 @@ class CFunctionBlock {
      * @param pa_nDONum number of the data output starting with 0
      * @return pointer to the data output
      */
-    virtual CIEC_ANY* getDO(size_t pa_nDONum) {
+    virtual CIEC_ANY* getDO(TPortId pa_nDONum) {
       return mDOs[pa_nDONum];
     }
 

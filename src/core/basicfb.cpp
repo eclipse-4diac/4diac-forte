@@ -36,7 +36,7 @@ bool CBasicFB::initialize() {
     m_aoInternals = reinterpret_cast<CIEC_ANY**>(basicVarsData);
     basicVarsData += cm_pstVarInternals->m_nNumIntVars * sizeof(CIEC_ANY *);
     const CStringDictionary::TStringId *pnDataIds = cm_pstVarInternals->m_aunIntVarsDataTypeNames;
-    for(int i = 0; i < cm_pstVarInternals->m_nNumIntVars; ++i) {
+    for(TPortId i = 0; i < cm_pstVarInternals->m_nNumIntVars; ++i) {
       m_aoInternals[i] = createDataPoint(pnDataIds, basicVarsData);
     }
   }
@@ -45,7 +45,7 @@ bool CBasicFB::initialize() {
 
 CBasicFB::~CBasicFB() {
   if(nullptr != m_aoInternals) {
-    for(int i = 0; i < cm_pstVarInternals->m_nNumIntVars; ++i) {
+    for(TPortId i = 0; i < cm_pstVarInternals->m_nNumIntVars; ++i) {
       if(CIEC_ANY* value = m_aoInternals[i]; nullptr != value) {
         std::destroy_at(value);
       }
@@ -61,7 +61,7 @@ size_t CBasicFB::calculateBasicFBVarsDataSize(const SInternalVarsInformation &pa
 
   result += paVarInternals.m_nNumIntVars * sizeof(CIEC_ANY *);
   pnDataIds = paVarInternals.m_aunIntVarsDataTypeNames;
-  for (int i = 0; i < paVarInternals.m_nNumIntVars; ++i) {
+  for (TPortId i = 0; i < paVarInternals.m_nNumIntVars; ++i) {
     result += getDataPointSize(pnDataIds);
   }
 

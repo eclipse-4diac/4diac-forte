@@ -67,7 +67,7 @@ void CFunctionBlock::freeAllData(){
     }
 
     if(nullptr != mDOConns) {
-      for (int i = 0; i < m_pstInterfaceSpec->m_nNumDOs; ++i) {
+      for (TPortId i = 0; i < m_pstInterfaceSpec->m_nNumDOs; ++i) {
         if(CIEC_ANY* value = mDOConns[i].getValue(); nullptr != value) {
           std::destroy_at(value);
         }
@@ -76,7 +76,7 @@ void CFunctionBlock::freeAllData(){
     }
 
     if(nullptr != mDIs) {
-      for (int i = 0; i < m_pstInterfaceSpec->m_nNumDIs; ++i) {
+      for (TPortId i = 0; i < m_pstInterfaceSpec->m_nNumDIs; ++i) {
         if(CIEC_ANY* value = mDIs[i]; nullptr != value) {
           std::destroy_at(value);
         }
@@ -84,7 +84,7 @@ void CFunctionBlock::freeAllData(){
     }
 
     if(nullptr != mDOs) {
-      for (int i = 0; i < m_pstInterfaceSpec->m_nNumDOs; ++i) {
+      for (TPortId i = 0; i < m_pstInterfaceSpec->m_nNumDOs; ++i) {
         if(CIEC_ANY* value = mDOs[i]; nullptr != value) {
           std::destroy_at(value);
         }
@@ -92,7 +92,7 @@ void CFunctionBlock::freeAllData(){
     }
 
     if(nullptr != m_apoAdapters) {
-      for (unsigned int i = 0; i < m_pstInterfaceSpec->m_nNumAdapters; ++i) {
+      for (TPortId i = 0; i < m_pstInterfaceSpec->m_nNumAdapters; ++i) {
         delete m_apoAdapters[i];
       }
     }
@@ -151,23 +151,23 @@ const CEventConnection *CFunctionBlock::getEOConnection(CStringDictionary::TStri
 bool CFunctionBlock::connectDI(TPortId paDIPortId, CDataConnection *paDataCon){
   bool bRetVal = false;
 
-  if(m_pstInterfaceSpec->m_nNumDIs > paDIPortId){ //catch invalid ID
+  if(m_pstInterfaceSpec->m_nNumDIs > paDIPortId) { //catch invalid ID
     if(nullptr == paDataCon){
       *getDIConUnchecked(paDIPortId) = nullptr;
       bRetVal = true;
     }
-    else{
+    else {
       //only perform connection checks if it is not a disconnection request.
       CDataConnection *conn = *getDIConUnchecked(paDIPortId);
-      if(nullptr != conn){
-        if(conn == paDataCon){
+      if(nullptr != conn) {
+        if(conn == paDataCon) {
           //we have a reconfiguration attempt
           configureGenericDI(paDIPortId, paDataCon->getValue());
           bRetVal = true;
-        }else{
+        } else {
           DEVLOG_ERROR("%s cannot connect input data %s to more sources, using the latest connection attempt\n", getInstanceName(), CStringDictionary::getInstance().get(m_pstInterfaceSpec->m_aunDINames[paDIPortId]));
         }
-      }else{
+      } else {
         *getDIConUnchecked(paDIPortId) = paDataCon;
         configureGenericDI(paDIPortId, paDataCon->getValue());
         bRetVal = true;
@@ -187,7 +187,7 @@ void CFunctionBlock::configureGenericDI(TPortId paDIPortId, const CIEC_ANY* paRe
 CDataConnection *CFunctionBlock::getDIConnection(CStringDictionary::TStringId paDINameId) {
   CDataConnection *retVal = nullptr;
   TPortId doPortID = getDIID(paDINameId);
-  if(cg_unInvalidPortId != doPortID){
+  if(cg_unInvalidPortId != doPortID) {
     retVal = *getDIConUnchecked(doPortID);
   }
   return retVal;
@@ -196,7 +196,7 @@ CDataConnection *CFunctionBlock::getDIConnection(CStringDictionary::TStringId pa
 const CDataConnection *CFunctionBlock::getDIConnection(CStringDictionary::TStringId paDINameId) const {
   const CDataConnection *retVal = nullptr;
   TPortId doPortID = getDIID(paDINameId);
-  if(cg_unInvalidPortId != doPortID){
+  if(cg_unInvalidPortId != doPortID) {
     retVal = *const_cast<CFunctionBlock*>(this)->getDIConUnchecked(doPortID);
   }
   return retVal;
@@ -205,7 +205,7 @@ const CDataConnection *CFunctionBlock::getDIConnection(CStringDictionary::TStrin
 CDataConnection *CFunctionBlock::getDOConnection(CStringDictionary::TStringId paDONameId) {
   CDataConnection *retVal = nullptr;
   TPortId doPortID = getDOID(paDONameId);
-  if(cg_unInvalidPortId != doPortID){
+  if(cg_unInvalidPortId != doPortID) {
     retVal = getDOConUnchecked(doPortID);
   }
   return retVal;
@@ -214,7 +214,7 @@ CDataConnection *CFunctionBlock::getDOConnection(CStringDictionary::TStringId pa
 const CDataConnection *CFunctionBlock::getDOConnection(CStringDictionary::TStringId paDONameId) const {
   const CDataConnection *retVal = nullptr;
   TPortId doPortID = getDOID(paDONameId);
-  if(cg_unInvalidPortId != doPortID){
+  if(cg_unInvalidPortId != doPortID) {
     retVal = const_cast<CFunctionBlock*>(this)->getDOConUnchecked(doPortID);
   }
   return retVal;
@@ -235,7 +235,7 @@ bool CFunctionBlock::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRe
 
 CIEC_ANY *CFunctionBlock::getDataOutput(CStringDictionary::TStringId pa_unDONameId) {
   CIEC_ANY *poRetVal = nullptr;
-  unsigned int unDID = getDOID(pa_unDONameId);
+  TPortId unDID = getDOID(pa_unDONameId);
 
   if(cg_unInvalidPortId != unDID){
     poRetVal = getDO(unDID);
@@ -245,7 +245,7 @@ CIEC_ANY *CFunctionBlock::getDataOutput(CStringDictionary::TStringId pa_unDOName
 
 CIEC_ANY *CFunctionBlock::getDataInput(CStringDictionary::TStringId pa_unDINameId) {
   CIEC_ANY *poRetVal = nullptr;
-  unsigned int unDID = getDIID(pa_unDINameId);
+  TPortId unDID = getDIID(pa_unDINameId);
 
   if(cg_unInvalidPortId != unDID){
     poRetVal = getDI(unDID);
@@ -274,7 +274,7 @@ CIEC_ANY *CFunctionBlock::getVar(CStringDictionary::TStringId *paNameList,
 
   CIEC_ANY *poRetVal = nullptr;
   if(1 == paNameListSize){
-    unsigned int portId = getDIID(*paNameList);
+    TPortId portId = getDIID(*paNameList);
     if(cg_unInvalidPortId != portId){
       poRetVal = getDI(portId);
     }
@@ -423,7 +423,7 @@ EMGMResponse CFunctionBlock::changeFBExecutionState(EMGMCommandType pa_unCommand
   }
 
   if(EMGMResponse::Ready == nRetVal && nullptr != m_pstInterfaceSpec) {
-    for(int i = 0; i < m_pstInterfaceSpec->m_nNumAdapters; ++i) {
+    for(TPortId i = 0; i < m_pstInterfaceSpec->m_nNumAdapters; ++i) {
       if(nullptr != m_apoAdapters[i]) {
         m_apoAdapters[i]->changeFBExecutionState(pa_unCommand);
       }
@@ -489,13 +489,13 @@ size_t CFunctionBlock::calculateFBVarsDataSize(const SFBInterfaceSpec &paInterfa
 
   result += paInterfaceSpec.m_nNumDIs * sizeof(CIEC_ANY *);
   pnDataIds = paInterfaceSpec.m_aunDIDataTypeNames;
-  for (int i = 0; i < paInterfaceSpec.m_nNumDIs; ++i) {
+  for (TPortId i = 0; i < paInterfaceSpec.m_nNumDIs; ++i) {
     result += getDataPointSize(pnDataIds);
   }
 
   result += paInterfaceSpec.m_nNumDOs * sizeof(CIEC_ANY *);
   pnDataIds = paInterfaceSpec.m_aunDODataTypeNames;
-  for (int i = 0; i < paInterfaceSpec.m_nNumDOs; ++i) {
+  for (TPortId i = 0; i < paInterfaceSpec.m_nNumDOs; ++i) {
     result += getDataPointSize(pnDataIds) * 2; // * 2 for connection buffer value
   }
 

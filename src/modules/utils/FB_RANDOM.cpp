@@ -56,14 +56,14 @@ const SFBInterfaceSpec FORTE_FB_RANDOM::scm_stFBInterfaceSpec = {
 
 FORTE_FB_RANDOM::FORTE_FB_RANDOM(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
     CBasicFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, nullptr),
+    mDistribution(0.0f, 1.0f),
     var_SEED(CIEC_UINT(0)),
     var_VAL(CIEC_REAL(0)),
     var_conn_VAL(var_VAL),
     conn_INITO(this, 0),
     conn_CNF(this, 1),
     conn_SEED(nullptr),
-    conn_VAL(this, 0, &var_conn_VAL),
-    mDistribution(0.0f, 1.0f) {
+    conn_VAL(this, 0, &var_conn_VAL) {
       mRandomGenerator.seed(mRandomDevice());
 }
 

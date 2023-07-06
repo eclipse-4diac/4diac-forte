@@ -201,7 +201,7 @@ BOOST_AUTO_TEST_CASE(find_at_begin)
   CIEC_STRING sBigString("Lorem ipsum dolor sit amet");
   CIEC_STRING sSearchString("Lorem");
   CIEC_UINT nIndex;
-  nIndex = CIEC_UINT(func_FIND(sBigString, sSearchString).getUnsignedValue());
+  nIndex = func_FIND(sBigString, sSearchString);
   BOOST_TEST(1 == static_cast<CIEC_UINT::TValueType>(nIndex));
 }
 
@@ -210,7 +210,7 @@ BOOST_AUTO_TEST_CASE(find_in_between)
   CIEC_STRING sBigString("Lorem ipsum dolor sit amet");
   CIEC_STRING sSearchString("dolor");
   CIEC_UINT nIndex;
-  nIndex = CIEC_UINT(func_FIND(sBigString, sSearchString).getUnsignedValue());
+  nIndex = func_FIND(sBigString, sSearchString);
   BOOST_TEST(13 == static_cast<CIEC_UINT::TValueType>(nIndex));
 }
 
@@ -219,7 +219,7 @@ BOOST_AUTO_TEST_CASE(find_at_the_end)
   CIEC_STRING sBigString("Lorem ipsum dolor sit");
   CIEC_STRING sSearchString("t");
   CIEC_UINT nIndex;
-  nIndex = CIEC_UINT(func_FIND(sBigString, sSearchString).getUnsignedValue());
+  nIndex = func_FIND(sBigString, sSearchString);
   BOOST_TEST(21 == static_cast<CIEC_UINT::TValueType>(nIndex));
 }
 
@@ -228,7 +228,7 @@ BOOST_AUTO_TEST_CASE(find_not_found)
   CIEC_STRING sBigString("Lorem ipsum dolor sit");
   CIEC_STRING sSearchString("Latin");
   CIEC_UINT nIndex;
-  nIndex = CIEC_UINT(func_FIND(sBigString, sSearchString).getUnsignedValue());
+  nIndex = func_FIND(sBigString, sSearchString);
   BOOST_TEST(0 == static_cast<CIEC_UINT::TValueType>(nIndex));
 }
 

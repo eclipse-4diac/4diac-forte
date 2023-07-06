@@ -571,10 +571,11 @@ template<typename T, typename U> typename forte::core::mpl::get_castable_type<T,
 }
 
 template<typename T> const T func_MOD(const T &paIN1, const T &paIN2) {
+  using ValueType = typename T::TValueType;
   if(0 == static_cast<typename T::TValueType>(paIN2)) {
     return T(0);
   }
-  return T(paIN1.getSignedValue() % paIN2.getSignedValue());
+  return T(static_cast<ValueType>(paIN1.getSignedValue()) % static_cast<ValueType>(paIN2.getSignedValue()));
 }
 
 template<typename T> const T func_MOVE(const T &paIN) {
@@ -949,16 +950,28 @@ const CIEC_UDINT func_LREAL_TRUNC_UDINT(const CIEC_LREAL &paIN);
 const CIEC_ULINT func_LREAL_TRUNC_ULINT(const CIEC_LREAL &paIN);
 
 template<typename T> const CIEC_TIME func_MUL_TIME(const CIEC_TIME& paIN1, const T& paIN2){
-  return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paIN1) * static_cast<typename T::TValueType>(paIN2));
+  using TimeValueType = CIEC_TIME::TValueType;
+  using In2ValueType = typename T::TValueType;
+  using MulValueType = std::conditional_t<std::is_floating_point_v<In2ValueType>, TForteDFloat, TimeValueType>;
+
+  return CIEC_TIME(static_cast<TimeValueType>(static_cast<MulValueType>(static_cast<TimeValueType>(paIN1)) * static_cast<In2ValueType>(paIN2)));
 }
 
 template<typename T> const CIEC_LTIME func_MUL_LTIME(const CIEC_LTIME &paIN1, const T &paIN2) {
-  return CIEC_LTIME(static_cast<CIEC_LTIME::TValueType>(paIN1) * static_cast<typename T::TValueType>(paIN2));
+  using LTimeValueType = CIEC_LTIME::TValueType;
+  using In2ValueType = typename T::TValueType;
+  using MulValueType = std::conditional_t<std::is_floating_point_v<In2ValueType>, TForteDFloat, LTimeValueType>;
+
+  return CIEC_LTIME(static_cast<LTimeValueType>(static_cast<MulValueType>(static_cast<LTimeValueType>(paIN1)) * static_cast<In2ValueType>(paIN2)));
 }
 
 template<typename T> const CIEC_TIME func_DIV_TIME(const CIEC_TIME& paIN1, const T& paIN2) {
-  if(0 != static_cast<typename T::TValueType>(paIN2)) {
-    return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paIN1) / static_cast<typename T::TValueType>(paIN2));
+  using TimeValueType = CIEC_TIME::TValueType;
+  using In2ValueType = typename T::TValueType;
+  using MulValueType = std::conditional_t<std::is_floating_point_v<In2ValueType>, TForteDFloat, TimeValueType>;
+
+  if(0 != static_cast<In2ValueType>(paIN2)) {
+    return CIEC_TIME(static_cast<TimeValueType>(static_cast<MulValueType>(static_cast<TimeValueType>(paIN1)) / static_cast<In2ValueType>(paIN2)));
   } else {
     DEVLOG_ERROR("Division by zero!\n");
     return CIEC_TIME(0);
@@ -966,8 +979,12 @@ template<typename T> const CIEC_TIME func_DIV_TIME(const CIEC_TIME& paIN1, const
 }
 
 template<typename T> const CIEC_LTIME func_DIV_LTIME(const CIEC_LTIME &paIN1, const T &paIN2) {
-  if(0 != static_cast<typename T::TValueType>(paIN2)) {
-    return CIEC_LTIME(static_cast<CIEC_LTIME::TValueType>(paIN1) / static_cast<typename T::TValueType>(paIN2));
+  using LTimeValueType = CIEC_LTIME::TValueType;
+  using In2ValueType = typename T::TValueType;
+  using MulValueType = std::conditional_t<std::is_floating_point_v<In2ValueType>, TForteDFloat, LTimeValueType>;
+
+  if(0 != static_cast<In2ValueType>(paIN2)) {
+    return CIEC_LTIME(static_cast<LTimeValueType>(static_cast<MulValueType>(static_cast<LTimeValueType>(paIN1)) / static_cast<In2ValueType>(paIN2)));
   } else {
     DEVLOG_ERROR("Division by zero!\n");
     return CIEC_LTIME(0);
@@ -975,10 +992,12 @@ template<typename T> const CIEC_LTIME func_DIV_LTIME(const CIEC_LTIME &paIN1, co
 }
 
 template<typename T> CIEC_ANY_INT func_LEN(const T& paVal){
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "T not of ANY_STRING");
   return CIEC_ANY_INT(paVal.length());
 }
 
 template<typename T> const T func_LEFT(const T &paIn, const CIEC_ANY_INT &paL) {
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "T not of ANY_STRING");
   if(true == paL.isSigned() && 0 > paL.getSignedValue()) {
     DEVLOG_ERROR("value of input L is less than zero");
     return paIn;
@@ -994,7 +1013,7 @@ template<typename T> const T func_LEFT(const T &paIn, const CIEC_ANY_INT &paL) {
         temp.reserve(static_cast<TForteUInt16>(paL.getUnsignedValue()));
         memcpy(temp.getValue(), paIn.getValue(), static_cast<TForteUInt16>(paL.getUnsignedValue()));
         temp.getValue()[paL.getUnsignedValue()] = '\0';
-        temp.assign(temp.getValue(), paL.getUnsignedValue());
+        temp.assign(temp.getValue(), static_cast<TForteUInt16>(paL.getUnsignedValue()));
         return temp;
       }
     }
@@ -1002,6 +1021,7 @@ template<typename T> const T func_LEFT(const T &paIn, const CIEC_ANY_INT &paL) {
 }
 
 template<typename T> const T func_RIGHT(const T &paIn, const CIEC_ANY_INT &paL) {
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "T not of ANY_STRING");
   if(true == paL.isSigned() && 0 > paL.getSignedValue()) {
     DEVLOG_ERROR("value of input L is less than zero");
     return paIn;
@@ -1019,7 +1039,7 @@ template<typename T> const T func_RIGHT(const T &paIn, const CIEC_ANY_INT &paL) 
         memcpy(temp.getValue(), paIn.getValue() + (paIn.length() - static_cast<TForteUInt16>(paL.getUnsignedValue())),
           static_cast<TForteUInt16>(paL.getUnsignedValue()));
         temp.getValue()[paL.getUnsignedValue()] = '\0';
-        temp.assign(temp.getValue(), paL.getUnsignedValue());
+        temp.assign(temp.getValue(), static_cast<TForteUInt16>(paL.getUnsignedValue()));
         return temp;
       }
     }
@@ -1027,12 +1047,13 @@ template<typename T> const T func_RIGHT(const T &paIn, const CIEC_ANY_INT &paL) 
 }
 
 template<typename T> const T func_MID(const T &paIn, const CIEC_ANY_INT &paL, const CIEC_ANY_INT &paP) {
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "T not of ANY_STRING");
   if(true == paP.isSigned() && 0 > paP.getSignedValue()) {
     DEVLOG_ERROR("value of input P is less than zero\n");
     return paIn;
   } else {
-    CIEC_INT lenRight = CIEC_INT(paIn.length() - paP.getUnsignedValue() + 1);
-    CIEC_INT lenLeft = CIEC_INT(paL.getUnsignedValue());
+    CIEC_INT lenRight = CIEC_INT(static_cast<CIEC_INT::TValueType>(paIn.length() - paP.getUnsignedValue() + 1));
+    CIEC_INT lenLeft = CIEC_INT(static_cast<CIEC_INT::TValueType>(paL.getUnsignedValue()));
     return func_LEFT(func_RIGHT(paIn, lenRight), lenLeft);
   }
 }
@@ -1055,6 +1076,7 @@ template<typename T, typename ... Args> const T func_CONCAT(const T &paIn1, Args
 }
 
 template<typename T> const T func_INSERT(const T &paIn1, const T &paIn2, const CIEC_ANY_INT &paP) {
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>);
   if(CIEC_UINT::scm_nMaxVal < (paIn1.length() + paIn2.length())) {
     DEVLOG_ERROR("result would be longer than maximum allowed length");
     return paIn1;
@@ -1070,11 +1092,12 @@ template<typename T> const T func_INSERT(const T &paIn1, const T &paIn2, const C
     DEVLOG_ERROR("INSERT called with P exceeding input string length!\n");
     return paIn1;
   }
-  CIEC_INT positionRight = CIEC_INT(paIn1.length() - paP.getSignedValue());
+  CIEC_INT positionRight = CIEC_INT(static_cast<CIEC_INT::TValueType>(paIn1.length() - paP.getSignedValue()));
   return func_CONCAT(func_CONCAT(func_LEFT(paIn1, paP), paIn2), func_RIGHT(paIn1, positionRight));
 }
 
 template<typename T> const T func_DELETE(const T &paIn, const CIEC_ANY_INT &paL, const CIEC_ANY_INT &paP) {
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>);
   const CIEC_ANY::TLargestUIntValueType L = paL.isSigned() ? static_cast<CIEC_ANY::TLargestUIntValueType>(std::max(CIEC_ANY::TLargestIntValueType(0), paL.getSignedValue())) : paL.getUnsignedValue();
 
   const CIEC_ANY::TLargestUIntValueType P = paP.isSigned() ? static_cast<CIEC_ANY::TLargestUIntValueType>(std::max(CIEC_ANY::TLargestIntValueType(0), paP.getSignedValue())) : paP.getUnsignedValue();
@@ -1094,12 +1117,13 @@ template<typename T> const T func_DELETE(const T &paIn, const CIEC_ANY_INT &paL,
     return paIn;
   }
 
-  CIEC_UINT positionRight = CIEC_UINT(paIn.length() - (L + P - 1));
-  CIEC_UINT positionLeft = CIEC_UINT(P - 1);
+  CIEC_UINT positionRight = CIEC_UINT(static_cast<CIEC_UINT::TValueType>(paIn.length() - (L + P - 1)));
+  CIEC_UINT positionLeft = CIEC_UINT(static_cast<CIEC_UINT::TValueType>(P - 1));
   return func_CONCAT(func_LEFT(paIn, positionLeft), func_RIGHT(paIn, positionRight));
 }
 
 template<typename T> const T func_REPLACE(const T &paIn1, const T &paIn2, const CIEC_ANY_INT &paL, const CIEC_ANY_INT &paP) {
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>);
   const CIEC_ANY::TLargestUIntValueType L = paL.isSigned() ? static_cast<CIEC_ANY::TLargestUIntValueType>(std::max(CIEC_ANY::TLargestIntValueType(0), paL.getSignedValue())) : paL.getUnsignedValue();
   const CIEC_ANY::TLargestUIntValueType P = paP.isSigned() ? static_cast<CIEC_ANY::TLargestUIntValueType>(std::max(CIEC_ANY::TLargestIntValueType(0), paP.getSignedValue())) : paP.getUnsignedValue();
 
@@ -1122,8 +1146,8 @@ template<typename T> const T func_REPLACE(const T &paIn1, const T &paIn2, const 
     DEVLOG_ERROR("REPLACE exceeds length of string!\n");
   }
 
-  CIEC_INT positionRight = CIEC_INT(paIn1.length() - (L + P - 1));
-  CIEC_INT positionLeft = CIEC_INT(P - 1);
+  CIEC_INT positionRight = CIEC_INT(static_cast<CIEC_INT::TValueType>(paIn1.length() - (L + P - 1)));
+  CIEC_INT positionLeft = CIEC_INT(static_cast<CIEC_INT::TValueType>(P - 1));
   return func_CONCAT(func_CONCAT(func_LEFT(paIn1, positionLeft), paIn2), func_RIGHT(paIn1, positionRight));
 }
 

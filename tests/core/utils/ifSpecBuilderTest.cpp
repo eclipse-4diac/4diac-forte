@@ -170,8 +170,8 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
     auto range = uut.m_oEI.addEventRange("E", 2);
     test_events(uut, ifspec.m_nNumEIs, ifspec.m_aunEINames);
     BOOST_CHECK(range.isValid());
-    BOOST_CHECK_EQUAL(*range.m_oFirst, 0);
-    BOOST_CHECK_EQUAL(*range.m_oLast, 1);
+    BOOST_CHECK_EQUAL(*range.mFirst, 0);
+    BOOST_CHECK_EQUAL(*range.mLast, 1);
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_AddEventReturningReference) {
@@ -224,8 +224,8 @@ BOOST_AUTO_TEST_SUITE(IfSpecBuilder_Test)
     auto range = uut.m_oDI.addDataRange("D", 2);
     test_data(uut, ifspec.m_nNumDIs, ifspec.m_aunDINames, ifspec.m_aunDIDataTypeNames, strid("ANY"));
     BOOST_CHECK(range.isValid());
-    BOOST_CHECK_EQUAL(*range.m_oFirst, 0);
-    BOOST_CHECK_EQUAL(*range.m_oLast, 1);
+    BOOST_CHECK_EQUAL(*range.mFirst, 0);
+    BOOST_CHECK_EQUAL(*range.mLast, 1);
   }
 
   BOOST_AUTO_TEST_CASE(IfSpecBuilder_AddDataReturningReference) {

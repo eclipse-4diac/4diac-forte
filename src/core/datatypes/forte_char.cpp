@@ -69,7 +69,7 @@ int CIEC_CHAR::fromString(const char *paValue) {
 
   if('$' == paValue[bufferCount]) { // Escape sequence, so the next symbol must either be a hex number or a special symbol
     if('\'' == paValue[bufferCount + 2]) { // if there is only one symbol it will get considered as special symbol
-      const char controlSymbol = toupper(paValue[bufferCount + 1]);
+      const char controlSymbol = static_cast<char>(toupper(static_cast<unsigned char>(paValue[bufferCount + 1])));
       switch(controlSymbol) {
         case '$': *this = CIEC_CHAR('$'); break;
         case '\'': *this = CIEC_CHAR('\''); break;

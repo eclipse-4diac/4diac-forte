@@ -57,7 +57,7 @@ const SFBInterfaceSpec FORTE_F_STRING_AS_REAL::scm_stFBInterfaceSpec = {
 
 FORTE_F_STRING_AS_REAL::FORTE_F_STRING_AS_REAL(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
     CSimpleFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, nullptr),
-    var_IN(CIEC_STRING("")),
+    var_IN(CIEC_STRING("", 0)),
     var_OUT(CIEC_REAL(0)),
     var_conn_OUT(var_OUT),
     conn_CNF(this, 0),

@@ -39,11 +39,11 @@ namespace forte {
         return m_eCommServiceType;
       }
 
-      unsigned int getNumSD() const {
+      TPortId getNumSD() const {
         return m_pstInterfaceSpec->m_nNumDIs - 2;
       }
 
-      unsigned int getNumRD() const {
+      TPortId getNumRD() const {
         return m_pstInterfaceSpec->m_nNumDOs - 2;
       }
 

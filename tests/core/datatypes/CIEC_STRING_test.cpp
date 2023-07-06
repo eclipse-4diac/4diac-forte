@@ -570,7 +570,7 @@ BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_NoSpecialSymbols)
 {
   CIEC_STRING testString("4diac 4 ever!");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(13 + 2 + 1, bufferSize);
 }
 
@@ -578,7 +578,7 @@ BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_Dollar)
 {
   CIEC_STRING testString("$");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // '$$'\0
 }
 
@@ -586,7 +586,7 @@ BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_SingleQuote)
 {
   CIEC_STRING testString("\'");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // '$''\0
 }
 
@@ -594,7 +594,7 @@ BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_DoubleQuote)
 {
   CIEC_STRING testString("\"");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(1 + 2 + 1, bufferSize); // '"'\0
 }
 
@@ -602,7 +602,7 @@ BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_LineFeed)
 {
   CIEC_STRING testString("\x10");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // '$L'\0
 }
 
@@ -610,7 +610,7 @@ BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_NewLine)
 {
   CIEC_STRING testString("\n");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // '$N'\0
 }
 
@@ -618,7 +618,7 @@ BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_FormFeed)
 {
   CIEC_STRING testString("\f");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // '$P'\0
 }
 
@@ -626,7 +626,7 @@ BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_CarriageReturn)
 {
   CIEC_STRING testString("\r");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // '$R'\0
 }
 
@@ -634,7 +634,7 @@ BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_Tab)
 {
   CIEC_STRING testString("\t");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // '$T'\0
 }
 
@@ -642,7 +642,7 @@ BOOST_AUTO_TEST_CASE(String_getToStringBufferSize_NonCommonSymbol)
 {
   CIEC_STRING testString("\x8A");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(3 + 2 + 1, bufferSize); // '$8A'\0
 }
 
@@ -651,7 +651,7 @@ BOOST_AUTO_TEST_CASE(Implicit_cast_from_CHAR)
   CIEC_CHAR testChar('4');
   CIEC_STRING resultString(testChar);
 
-  unsigned int bufferSize = resultString.getToStringBufferSize();
+  size_t bufferSize = resultString.getToStringBufferSize();
 
   BOOST_TEST(4 == bufferSize); //'<symbol>'\0 = 4
   BOOST_TEST(CIEC_STRING("4") == resultString);
@@ -664,7 +664,7 @@ BOOST_AUTO_TEST_CASE(Assignment_from_CHAR)
 
   resultString = testChar;
 
-  unsigned int bufferSize = resultString.getToStringBufferSize();
+  size_t bufferSize = resultString.getToStringBufferSize();
 
   BOOST_CHECK_EQUAL(4, bufferSize); //'<symbol>'\0 = 4
   BOOST_CHECK_EQUAL(CIEC_STRING("4"), resultString);

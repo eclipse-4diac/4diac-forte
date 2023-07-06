@@ -79,7 +79,7 @@ void CIEC_LREAL::setValue(const CIEC_ANY& paValue){
     case e_INT:
     case e_DINT:
     case e_LINT:
-      setTDFLOAT(static_cast<TForteInt64>(static_cast<const CIEC_LINT&>(paValue)));
+      setTDFLOAT(static_cast<CIEC_LREAL::TValueType>(static_cast<TForteInt64>(static_cast<const CIEC_LINT&>(paValue))));
       break;
     case CIEC_ANY::e_BYTE:
     case CIEC_ANY::e_WORD:
@@ -89,7 +89,7 @@ void CIEC_LREAL::setValue(const CIEC_ANY& paValue){
       setValueSimple(paValue);
       break;
     default: //UINT types
-      setTDFLOAT(static_cast<TForteUInt64>(static_cast<const CIEC_ULINT&>(paValue)));
+      setTDFLOAT(static_cast<CIEC_LREAL::TValueType>(static_cast<TForteUInt64>(static_cast<const CIEC_ULINT&>(paValue))));
       break;
   }
 }

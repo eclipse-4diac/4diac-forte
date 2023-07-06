@@ -44,7 +44,7 @@ namespace forte {
       private:
         EComResponse openConnection(char *pa_acLayerParameter) override;
         void closeConnection() override;
-        void setRDs(CLocalComLayer *pa_poSublLayer, CIEC_ANY **pa_aSDs, unsigned int pa_unNumSDs);
+        void setRDs(CLocalComLayer *pa_poSublLayer, CIEC_ANY **pa_aSDs, TPortId pa_unNumSDs);
 
         class CLocalCommGroup {
           public:

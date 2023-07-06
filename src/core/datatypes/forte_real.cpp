@@ -68,7 +68,7 @@ void CIEC_REAL::setValue(const CIEC_ANY& paValue){
     setValueSimple(paValue);
     break;
   case e_LREAL:
-    setTFLOAT(static_cast<TForteDFloat>(static_cast<const CIEC_LREAL&>(paValue)));
+    setTFLOAT(static_cast<CIEC_REAL::TValueType>(static_cast<CIEC_LREAL::TValueType>(static_cast<const CIEC_LREAL &>(paValue))));
     break;
   case e_STRING:
     (*this).fromString(((CIEC_STRING&)paValue).getStorage().c_str());
@@ -80,7 +80,7 @@ void CIEC_REAL::setValue(const CIEC_ANY& paValue){
   case e_INT:
   case e_DINT:
   case e_LINT:
-    setTFLOAT(static_cast<TForteInt64>(static_cast<const CIEC_LINT&>(paValue)));
+    setTFLOAT(static_cast<CIEC_REAL::TValueType>(static_cast<CIEC_LINT::TValueType>(static_cast<const CIEC_LINT &>(paValue))));
     break;
   case CIEC_ANY::e_BYTE:
   case CIEC_ANY::e_WORD:
@@ -89,7 +89,7 @@ void CIEC_REAL::setValue(const CIEC_ANY& paValue){
     setValueSimple(paValue);
     break;
   default: //UINT types
-    setTFLOAT(static_cast<TForteUInt64>(static_cast<const CIEC_ULINT&>(paValue)));
+    setTFLOAT(static_cast<CIEC_REAL::TValueType>(static_cast<CIEC_ULINT::TValueType>(static_cast<const CIEC_ULINT &>(paValue))));
     break;
   }
 }

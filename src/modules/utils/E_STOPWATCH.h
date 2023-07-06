@@ -66,7 +66,7 @@ private:
 
   void executeEvent(TEventID pa_nEIID) override;
 
-  void readInputData(TEventID pa_nEIID) override;
+  void readInputData(TEventID) override;
   void writeOutputData(TEventID pa_nEIID) override;
 
 public:

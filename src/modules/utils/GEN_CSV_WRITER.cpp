@@ -19,7 +19,6 @@
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "GEN_CSV_WRITER_gen.cpp"
 #endif
-#include <string.h>
 #include <errno.h>
 #include <devlog.h>
 
@@ -36,10 +35,9 @@ const TDataIOID GEN_CSV_WRITER::scm_anEOWith[] = { 0, 1, scmWithListDelimiter, 0
 const TForteInt16 GEN_CSV_WRITER::scm_anEOWithIndexes[] = { 0, 3, -1 };
 const CStringDictionary::TStringId GEN_CSV_WRITER::scm_anEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF };
 
-
-const CIEC_STRING GEN_CSV_WRITER::scmOK("OK");
-const CIEC_STRING GEN_CSV_WRITER::scmFileAlreadyOpened("File already opened");
-const CIEC_STRING GEN_CSV_WRITER::scmFileNotOpened("File not opened");
+const CIEC_STRING GEN_CSV_WRITER::scmOK(scmOKString, std::char_traits<char>::length(scmOKString));
+const CIEC_STRING GEN_CSV_WRITER::scmFileAlreadyOpened(scmFileAlreadyOpenedString, std::char_traits<char>::length(scmFileAlreadyOpenedString));
+const CIEC_STRING GEN_CSV_WRITER::scmFileNotOpened(scmFileNotOpenedString, std::char_traits<char>::length(scmFileNotOpenedString));
 
 void GEN_CSV_WRITER::executeEvent(TEventID paEIID) {
   if(scm_nEventINITID == paEIID) {
@@ -126,7 +124,8 @@ void GEN_CSV_WRITER::openCSVFile() {
       STATUS() = scmOK;
       DEVLOG_INFO("[GEN_CSV_WRITER]: File %s successfully opened\n", FILE_NAME().getStorage().c_str());
     } else {
-      STATUS() = CIEC_STRING(strerror(errno));
+      const char* errorCode = strerror(errno); 
+      STATUS() = CIEC_STRING(errorCode, strlen(errorCode));
       DEVLOG_ERROR("[GEN_CSV_WRITER]: Couldn't open file %s. Error: %s\n", FILE_NAME().getStorage().c_str(), STATUS().getStorage().c_str());
     }
   } else {
@@ -142,7 +141,8 @@ void GEN_CSV_WRITER::closeCSVFile() {
       STATUS() = scmOK;
       DEVLOG_INFO("[GEN_CSV_WRITER]: File %s successfully closed\n", FILE_NAME().getStorage().c_str());
     } else {
-      STATUS() = CIEC_STRING(strerror(errno));
+      const char *errorCode = strerror(errno);
+      STATUS() = CIEC_STRING(errorCode, strlen(errorCode));
       DEVLOG_ERROR("[GEN_CSV_WRITER]: Couldn't close file %s. Error: %s\n", FILE_NAME().getStorage().c_str(), STATUS().getStorage().c_str());
     }
     mCSVFile = nullptr;
@@ -152,7 +152,7 @@ void GEN_CSV_WRITER::closeCSVFile() {
 void GEN_CSV_WRITER::writeCSVFileLine() {
   if(nullptr != mCSVFile) {
     char acBuffer[scmWriteBufferSize];
-    for(size_t i = 2; i < m_pstInterfaceSpec->m_nNumDIs; i++) {
+    for(TPortId i = 2; i < m_pstInterfaceSpec->m_nNumDIs; i++) {
       int nLen = getDI(i)->unwrap().toString(acBuffer, scmWriteBufferSize);
       fwrite(acBuffer, 1, nLen, mCSVFile);
       fwrite("; ", 1, 2, mCSVFile);

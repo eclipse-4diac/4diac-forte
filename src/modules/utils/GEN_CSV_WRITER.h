@@ -73,6 +73,9 @@ class GEN_CSV_WRITER : public CGenFunctionBlock<CFunctionBlock> {
 
     TDataIOID *m_anEIWith;
 
+    static constexpr char scmOKString[] = "OK";
+    static constexpr char scmFileAlreadyOpenedString[] = "File already opened";
+    static constexpr char scmFileNotOpenedString[] = "File not opened";
     static const CIEC_STRING scmOK;
     static const CIEC_STRING scmFileAlreadyOpened;
     static const CIEC_STRING scmFileNotOpened;

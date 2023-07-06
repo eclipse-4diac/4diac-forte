@@ -18,7 +18,7 @@
  *    Martin Jobst - add CTF tracing integration
  *    Fabio Gandolfi - send also subapps on requested resources
  *******************************************************************************/
-#include <fortenew.h>
+#include "fortenew.h"
 #include "resource.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "resource_gen.cpp"
@@ -37,6 +37,8 @@
 #include "lua/luabfbtypeentry.h"
 #include "lua/luaadaptertypeentry.h"
 #endif
+
+#include <string>
 
 CResource::CResource(CResource* pa_poDevice, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId) :
     CFunctionBlock(pa_poDevice, pa_pstInterfaceSpec, pa_nInstanceNameId), forte::core::CFBContainer(CStringDictionary::scm_nInvalidStringId, nullptr), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
@@ -284,8 +286,8 @@ EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, CIEC
         if(bufferSize != var->getToStringBufferSize() && 0 < nUsedChars) { //avoid re-running on strings which were already proven not to have any special character
           nUsedChars += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(buffer));
         }
-        if(-1 != nUsedChars){
-          paValue.assign(buffer, nUsedChars);
+        if(-1 < nUsedChars && static_cast<size_t>(nUsedChars) < CIEC_STRING::scmMaxStringLen){
+          paValue.assign(buffer, static_cast<TForteUInt16>(nUsedChars));
         }
         delete[] (buffer);
         break;
@@ -297,8 +299,8 @@ EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, CIEC
         if(bufferSize != var->getToStringBufferSize() && 0 < nUsedChars) { //avoid re-running on strings which were already proven not to have any special character
           nUsedChars += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(buffer));
         }
-        if(-1 != nUsedChars){
-          paValue.assign(buffer, nUsedChars);
+        if(-1 < nUsedChars && static_cast<size_t>(nUsedChars) < CIEC_STRING::scmMaxStringLen){
+          paValue.assign(buffer, static_cast<TForteUInt16>(nUsedChars));
         }
         delete[] (buffer);
         break;
@@ -307,8 +309,8 @@ EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, CIEC
         const size_t bufferSize = var->getToStringBufferSize();
         char *buffer = new char[bufferSize]();
         nUsedChars = var->toString(buffer, sizeof(buffer));
-        if(-1 != nUsedChars){
-          paValue.assign(buffer, nUsedChars);
+        if(-1 < nUsedChars && static_cast<size_t>(nUsedChars) < CIEC_STRING::scmMaxStringLen){
+          paValue.assign(buffer, static_cast<TForteUInt16>(nUsedChars));
         }
         delete[] (buffer);
         break;
@@ -571,12 +573,16 @@ void CResource::createAdapterInterfaceResponseMessage(const SFBInterfaceSpec* pa
   if(paInterfaceSpec->m_nNumAdapters > 0){
     CIEC_STRING sockets;
     CIEC_STRING plugs;
-    for(int i = 0; i < paInterfaceSpec->m_nNumAdapters; i++){
+    for(TPortId i = 0; i < paInterfaceSpec->m_nNumAdapters; i++){
       if(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_bIsPlug){
-        createInterfaceResponseMessage(plugs, "AdapterDeclaration", CIEC_STRING(CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID)), CIEC_STRING(CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterTypeNameID)));
+        const char *adapterName = CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID);
+        const char *adapterTypeName = CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterTypeNameID);
+        createInterfaceResponseMessage(plugs, "AdapterDeclaration", CIEC_STRING(adapterName, strlen(adapterName)), CIEC_STRING(adapterTypeName, strlen(adapterTypeName)));
       }
       else{
-        createInterfaceResponseMessage(sockets, "AdapterDeclaration", CIEC_STRING(CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID)), CIEC_STRING(CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterTypeNameID)));
+        const char *adapterName = CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID);
+        const char *adapterTypeName = CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterTypeNameID);
+        createInterfaceResponseMessage(sockets, "AdapterDeclaration", CIEC_STRING(adapterName, strlen(adapterName)), CIEC_STRING(adapterTypeName, strlen(adapterTypeName)));
       }
     }
     if(!plugs.empty()){
@@ -594,28 +600,32 @@ void CResource::createAdapterInterfaceResponseMessage(const SFBInterfaceSpec* pa
 
 void CResource::createInterfaceResponseMessages(CIEC_STRING &paReqResult, const char *pa_pcType,
     const CStringDictionary::TStringId* paNameList, const CStringDictionary::TStringId* paTypeList,
-    const int pa_nNumberOfElements, const TDataIOID* paEWith, const TForteInt16* paEWithIndexes, const CStringDictionary::TStringId* paDNameList){
-  for(int nIndex = 0; nIndex < pa_nNumberOfElements; nIndex++){
+    const TEventID pa_nNumberOfElements, const TDataIOID* paEWith, const TForteInt16* paEWithIndexes, const CStringDictionary::TStringId* paDNameList){
+  for(TEventID nIndex = 0; nIndex < pa_nNumberOfElements; nIndex++){
     if(nullptr != paTypeList){
-      createInterfaceResponseMessage(paReqResult, pa_pcType, CIEC_STRING(CStringDictionary::getInstance().get(paNameList[nIndex])), CIEC_STRING(CStringDictionary::getInstance().get(paTypeList[nIndex])));
+      const char *name = CStringDictionary::getInstance().get(paNameList[nIndex]);
+      const char *type = CStringDictionary::getInstance().get(paTypeList[nIndex]);
+      createInterfaceResponseMessage(paReqResult, pa_pcType, CIEC_STRING(name, strlen(name)), CIEC_STRING(type, strlen(type)));
     }
     else{
-      createInterfaceResponseMessage(paReqResult, pa_pcType, CIEC_STRING(CStringDictionary::getInstance().get(paNameList[nIndex])), CIEC_STRING("Event"), paEWith, paEWithIndexes, nIndex, paDNameList);
+      const char *name = CStringDictionary::getInstance().get(paNameList[nIndex]);
+      constexpr char event[] = "Event";
+      createInterfaceResponseMessage(paReqResult, pa_pcType, CIEC_STRING(name, strlen(name)), CIEC_STRING(event, std::char_traits<char>::length(event)), paEWith, paEWithIndexes, nIndex, paDNameList);
     }
   }
 }
 
 void CResource::createInterfaceResponseMessage(CIEC_STRING& paReqResult, const char* pa_pcType, const CIEC_STRING& paName, const CIEC_STRING& paType,
-    const TDataIOID* paEWith, const TForteInt16* paEWithIndexes, const int pa_nIndex, const CStringDictionary::TStringId* paENameList) const {
+    const TDataIOID* paEWith, const TForteInt16* paEWithIndexes, const TEventID paIndex, const CStringDictionary::TStringId* paENameList) const {
   paReqResult.append("<");
   paReqResult.append(pa_pcType);
   paReqResult.append(" Name=\"");
   paReqResult.append(paName);
   paReqResult.append("\" Type=\"");
   paReqResult.append(paType);
-  if(nullptr != paEWithIndexes && -1 != paEWithIndexes[pa_nIndex]){
+  if(nullptr != paEWithIndexes && -1 != paEWithIndexes[paIndex]){
     paReqResult.append("\">\n         ");
-    for(int nRunIndex = paEWithIndexes[pa_nIndex]; scmWithListDelimiter != paEWith[nRunIndex]; nRunIndex++){
+    for(int nRunIndex = paEWithIndexes[paIndex]; scmWithListDelimiter != paEWith[nRunIndex]; nRunIndex++){
       paReqResult.append("<With Var=\"");
       paReqResult.append(CStringDictionary::getInstance().get(paENameList[paEWith[nRunIndex]]));
       paReqResult.append("\"/>\n      ");
