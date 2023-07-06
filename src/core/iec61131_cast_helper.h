@@ -409,6 +409,9 @@ namespace forte {
           get_castable_type() = delete;
       };
 
+      template <class T, class U>
+      using get_castable_type_t = typename get_castable_type<T, U>::type;
+
       template<typename T, typename U> struct implicit_or_explicit_cast{
           typedef typename std::conditional<std::is_same<NullType, typename explicit_cast<T, U>::type>::value, typename implicit_cast<T, U>::type, typename explicit_cast<T, U>::type>::type type;
           implicit_or_explicit_cast() = delete;

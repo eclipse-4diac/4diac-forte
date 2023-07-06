@@ -2225,4 +2225,33 @@ BOOST_AUTO_TEST_CASE(is_valid_bcd_LWORD) {
   }
 }
 
+BOOST_AUTO_TEST_CASE(ATAN2_function_REALs, *boost::unit_test::tolerance(0.00001))
+{
+  CIEC_REAL result;
+  CIEC_REAL paramX(5);
+  CIEC_REAL paramY(10);
+
+  result = func_ATAN2(paramY, paramX);
+  BOOST_TEST(static_cast<CIEC_REAL::TValueType>(result) == 1.10714877f);
+}
+
+BOOST_AUTO_TEST_CASE(ATAN2_function_LREALs, *boost::unit_test::tolerance(0.00001)) {
+  CIEC_LREAL result;
+  CIEC_LREAL paramX(5);
+  CIEC_LREAL paramY(10);
+
+  result = func_ATAN2(paramY, paramX);
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(result) == 1.1071487177940904);
+}
+
+BOOST_AUTO_TEST_CASE(ATAN2_function_REAL_LREAL_mixed, *boost::unit_test::tolerance(0.00001))
+{
+  CIEC_LREAL result;
+  CIEC_LREAL paramX(5);
+  CIEC_REAL paramY(10);
+
+  result = func_ATAN2(paramY, paramX);
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(result) == 1.1071487177940904);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

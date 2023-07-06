@@ -20,6 +20,7 @@
 #include "forte_array.h"
 #include "forte_array_fixed.h"
 #include "forte_array_variable.h"
+#include <random>
 
 
 class FORTE_FB_RANDOM: public CBasicFB {
@@ -64,7 +65,9 @@ private:
   void readInputData(TEventID pa_nEIID) override;
   void writeOutputData(TEventID pa_nEIID) override;
 
-  unsigned int mSeedValue;
+  std::random_device mRandomDevice;  // Will be used to obtain a seed for the random number engine
+  std::mt19937 mRandomGenerator; // Standard mersenne_twister_engine 
+  std::uniform_real_distribution<float> mDistribution;
 
 public:
   FORTE_FB_RANDOM(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
