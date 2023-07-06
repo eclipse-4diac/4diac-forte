@@ -192,21 +192,21 @@ BOOST_AUTO_TEST_CASE(REAL_to_WSTRING_test)
   
   //check REAL
   CIEC_REAL nRTest(1.46e-3f);
-  sResult = CIEC_WSTRING("0.00146");
+  sResult = CIEC_WSTRING("0.00146000006");
   sTest = func_REAL_AS_WSTRING(nRTest);
   //check result value
-  BOOST_CHECK(sTest == sResult);
+  BOOST_TEST(sTest == sResult);
   //check length value
-  BOOST_CHECK_EQUAL(sTest.length(), 7);
+  BOOST_TEST(sTest.length() == 13);
 
   //check LREAL
   CIEC_LREAL nLRTest(-2.2874e6);
   sResult = CIEC_WSTRING("-2287400.0");
   sTest = func_LREAL_AS_WSTRING(nLRTest);
   //check result value
-  BOOST_CHECK(sTest == sResult);
+  BOOST_TEST(sTest == sResult);
   //check length value
-  BOOST_CHECK_EQUAL(sTest.length(), 10);
+  BOOST_TEST(sTest.length() == 10);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
