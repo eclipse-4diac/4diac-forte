@@ -22,7 +22,7 @@
  */
 class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
   public:
-    static constexpr size_t scmMaxStringLen = 65534; //save one for the \0 needed for allocated length
+    static constexpr size_t scmMaxStringLen = 65534; //STRING: 0 is reserved, so 65534 is max / WSTRING: save one for the \0 needed for allocated length
 
     ~CIEC_ANY_STRING() override;
 
@@ -81,7 +81,7 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
     /*! Try to reserve enough space to hold a string with given length.
      *  After this function the string will be at least of the size given.
      */
-    virtual void reserve(TForteUInt16 pa_nRequestedSize);
+    virtual void reserve(const TForteUInt16 pa_nRequestedSize);
 
     /*! Retrieve the current allocated size
      *

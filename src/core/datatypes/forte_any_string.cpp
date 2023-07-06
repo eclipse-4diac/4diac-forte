@@ -67,7 +67,7 @@ void CIEC_ANY_STRING::append(const char *pa_poData, TForteUInt16 pa_nLen) {
   }
 }
 
-void CIEC_ANY_STRING::reserve(TForteUInt16 pa_nRequestedSize){
+void CIEC_ANY_STRING::reserve(const TForteUInt16 pa_nRequestedSize){
   if(getCapacity() < pa_nRequestedSize + 1){
     bool firstAlloc = (getGenData() == nullptr);
     TForteUInt16 nLength = length();

@@ -120,26 +120,26 @@ int CIEC_STRING::fromString(const char *paValue) {
   return -1;
 }
 
-void CIEC_STRING::reserve(TForteUInt16 paRequestedSize) {
+void CIEC_STRING::reserve(const TForteUInt16 paRequestedSize) {
   mValue.reserve(paRequestedSize);
 }
 
-void CIEC_STRING::assign(const char *paData, TForteUInt16 paLen) {
+void CIEC_STRING::assign(const char *paData, const TForteUInt16 paLen) {
   mValue.assign(paData, paLen);
 }
 
-void CIEC_STRING::append(const char *paData, TForteUInt16 paLen) {
+void CIEC_STRING::append(const char *paData, const TForteUInt16 paLen) {
   mValue.append(paData, paLen);
 }
 
 /*! Append data, cannot contain '0x00' as this is used to identify the end of the cstring
  */
 void CIEC_STRING::append(const char *paData) {
-  mValue.append(paData);
+  this->append(paData, static_cast < TForteUInt16>(strlen(paData)));
 }
 
 void CIEC_STRING::append(const CIEC_STRING &paValue) {
-  mValue.append(paValue.mValue);
+  this->append(paValue.getStorage());
 }
 
 void CIEC_STRING::append(const std::string &paValue) {

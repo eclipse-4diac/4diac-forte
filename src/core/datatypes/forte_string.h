@@ -36,7 +36,7 @@
 
 /*!\ingroup COREDTS CIEC_STRING represents the string data type according to IEC 61131.
  */
-class CIEC_STRING final : public CIEC_ANY_STRING {
+class CIEC_STRING : public CIEC_ANY_STRING {
   DECLARE_FIRMWARE_DATATYPE(STRING)
 
   // CIEC_STRING to CIEC_STRING comparison operators
@@ -149,6 +149,11 @@ class CIEC_STRING final : public CIEC_ANY_STRING {
       return *this;
     };
 
+    CIEC_STRING &operator=(CIEC_STRING &&paValue) {
+      getStorageMutable() = std::move(paValue.getStorageMutable());
+      return *this;
+    }
+
     CIEC_STRING &operator =(const CIEC_CHAR& paValue) {
       mValue = storage_type(1, static_cast<TForteChar>(paValue));
       return *this;
@@ -174,21 +179,21 @@ class CIEC_STRING final : public CIEC_ANY_STRING {
       return getStorage();
     }
 
-    void reserve(TForteUInt16 pa_nRequestedSize) override;
+    void reserve(const TForteUInt16 paRequestedSize) override;
 
-    void assign(const char *paData, TForteUInt16 paLen) override;
+    void assign(const char *paData, const TForteUInt16 paLen) override;
 
     /*! Append arbitrary data (can contain '0x00')
      */
-    void append(const char *paData, TForteUInt16 paLen) override;
+    void append(const char *paData, const TForteUInt16 paLen) override;
 
     /*! Append data, cannot contain '0x00' as this is used to identify the end of the cstring
      */
     void append(const char *paData) override;
 
-    void append(const CIEC_STRING &paValue);
+    virtual void append(const CIEC_STRING &paValue);
 
-    void append(const std::string &paValue);
+    virtual void append(const std::string &paValue);
 
     int compare(const CIEC_STRING& paValue) const;
 
@@ -360,7 +365,7 @@ class CIEC_STRING final : public CIEC_ANY_STRING {
       }
     }
 
-    private:
+    protected:
       storage_type& getStorageMutable();
 
       storage_type mValue;

@@ -1061,7 +1061,7 @@ template<typename T> const T func_MID(const T &paIn, const CIEC_ANY_INT &paL, co
 template<typename T> const T func_CONCAT(const T &paIn1, const T &paIn2) {
   static_assert((std::is_base_of<CIEC_ANY_STRING, T>::value), "T not of ANY_STRING");
   T temp(paIn1);
-  if constexpr (std::is_same_v<CIEC_STRING,T>) {
+  if constexpr (std::is_base_of_v<CIEC_STRING,T>) {
     temp.append(paIn2);
     return temp;
   } else {
@@ -1155,9 +1155,9 @@ template <typename T, typename U>
 CIEC_ANY_INT func_FIND(const T &paIn1, const U &paIn2) {
   static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "paIn1 must be of type CIEC_ANY_STRING");
   static_assert(std::is_base_of_v<CIEC_ANY_CHARS, U>, "paIn2 must be of type CIEC_ANY_CHARS");
-  if constexpr(std::is_same_v<T, CIEC_STRING>) {
-    static_assert(std::is_same_v<U, CIEC_STRING> || std::is_same_v<U,CIEC_CHAR>, "FIND in STRING only with STRING or CHAR");
-    if constexpr(std::is_same_v<U, CIEC_STRING>) {
+  if constexpr(std::is_base_of_v<T, CIEC_STRING>) {
+    static_assert(std::is_base_of_v<U, CIEC_STRING> || std::is_same_v<U, CIEC_CHAR>, "FIND in STRING only with STRING or CHAR");
+    if constexpr(std::is_base_of_v<U, CIEC_STRING>) {
       const auto findIndex = paIn1.getStorage().find(paIn2.getStorage());
       if (findIndex != std::string::npos) {
         return CIEC_ANY_INT(findIndex + 1);
@@ -1190,7 +1190,7 @@ CIEC_ANY_INT func_FIND(const T &paIn1, const U &paIn2) {
 template <typename T>
 const T func_TOUPPER(const T &paIn) {
   static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "Operand must be of type ANY_STRING!");
-  if constexpr (std::is_same_v<CIEC_STRING, T>) {
+  if constexpr (std::is_base_of_v<CIEC_STRING, T>) {
     CIEC_STRING::storage_type buffer(paIn.getStorage());
     std::transform(buffer.begin(), buffer.end(), buffer.begin(), ::toupper);
     return CIEC_STRING(buffer);
@@ -1207,7 +1207,7 @@ const T func_TOUPPER(const T &paIn) {
 template <typename T>
 const T func_TOLOWER(const T &paIn) {
   static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "Operand must be of type ANY_STRING!");
-  if constexpr (std::is_same_v<CIEC_STRING, T>) {
+  if constexpr (std::is_base_of_v<CIEC_STRING, T>) {
     CIEC_STRING::storage_type buffer(paIn.getStorage());
     std::transform(buffer.begin(), buffer.end(), buffer.begin(), ::tolower);
     return CIEC_STRING(buffer);

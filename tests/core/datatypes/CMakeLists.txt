@@ -75,6 +75,7 @@
   forte_test_add_sourcefile_cpp(CIEC_WCHAR_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_WCHAR_CASTS_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_STRING_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_STRING_FIXED_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_WSTRING_test.cpp)
 
 #ARRAY-Datatypes
