@@ -77,7 +77,7 @@ void FORTE_FB_CTU_LINT::alg_REQ(void) {
   if (var_R) {
     var_CV = CIEC_LINT(0);
   }
-  else if (func_AND<CIEC_BOOL>(var_CU, func_LT(var_CV, CIEC_LINT(9223372036854775807)))) {
+  else if (func_AND<CIEC_BOOL>(var_CU, func_LT(var_CV, CIEC_LINT(std::numeric_limits<CIEC_LINT::TValueType>::max())))) {
     var_CV = func_ADD<CIEC_LINT>(var_CV, CIEC_LINT(1));
   }
   var_Q = func_GE(var_CV, var_PV);

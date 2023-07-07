@@ -93,7 +93,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 {
   CIEC_LREAL nTest;
 
-  char cBuffer[12];
+  char cBuffer[50];
   char cBufferFail[2];
 
   //check cast operator
@@ -118,8 +118,8 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.fromString("-1E-37"), 6);
   BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(nTest), -1.0E-37);
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 10), 6);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "-1e-37"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, sizeof(cBuffer)), 23);
+  BOOST_TEST(cBuffer == "-1.0000000000000001e-37");
 
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   strcpy(cBuffer, "");
@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
 
   BOOST_CHECK_EQUAL(nTest.fromString("0"), 1);
   BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(nTest), 0.0);
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 3);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, sizeof(cBuffer)), 3);
   BOOST_CHECK_EQUAL(strcmp(cBuffer, "0.0"), 0);
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 0), -1);
   strcpy(cBuffer, "");
@@ -136,8 +136,8 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.fromString("3.2523E15"), 9);
   BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(nTest), 3.2523e15);
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 10);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "3.2523e+15"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, sizeof(cBuffer)), 18);
+  BOOST_TEST(cBuffer == "3252300000000000.0");
 
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   strcpy(cBuffer, "");
@@ -146,8 +146,8 @@ BOOST_AUTO_TEST_CASE(Conversion_test)
   BOOST_CHECK_EQUAL(nTest.fromString("1E37"), 4);
   BOOST_CHECK_EQUAL(static_cast<TForteDFloat>(nTest), 1e37);
 
-  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, 11), 5);
-  BOOST_CHECK_EQUAL(strcmp(cBuffer, "1e+37"), 0);
+  BOOST_CHECK_EQUAL(nTest.toString(cBuffer, sizeof(cBuffer)), 22);
+  BOOST_TEST(cBuffer == "9.9999999999999995e+36");
 
   BOOST_CHECK_EQUAL(nTest.toString(cBufferFail, 2), -1);
   strcpy(cBuffer, "");

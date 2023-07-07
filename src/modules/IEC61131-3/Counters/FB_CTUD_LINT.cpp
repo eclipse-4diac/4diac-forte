@@ -90,10 +90,10 @@ void FORTE_FB_CTUD_LINT::alg_REQ(void) {
     }
     else {
       if (func_NOT<CIEC_BOOL>(func_AND<CIEC_BOOL>(var_CU, var_CD))) {
-        if (func_AND<CIEC_BOOL>(var_CU, func_LT(var_CV, CIEC_LINT(9223372036854775807)))) {
+        if (func_AND<CIEC_BOOL>(var_CU, func_LT(var_CV, CIEC_LINT(std::numeric_limits<CIEC_LINT::TValueType>::max())))) {
           var_CV = func_ADD<CIEC_LINT>(var_CV, CIEC_LINT(1));
         }
-        else if (func_AND<CIEC_BOOL>(var_CD, func_GT(var_CV, CIEC_LINT(-9223372036854775808)))) {
+        else if (func_AND<CIEC_BOOL>(var_CD, func_GT(var_CV, CIEC_LINT(std::numeric_limits<CIEC_LINT::TValueType>::min())))) {
           var_CV = func_SUB<CIEC_LINT>(var_CV, CIEC_LINT(1));
         }
       }

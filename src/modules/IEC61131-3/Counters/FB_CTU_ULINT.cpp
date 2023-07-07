@@ -77,7 +77,7 @@ void FORTE_FB_CTU_ULINT::alg_REQ(void) {
   if (var_R) {
     var_CV = CIEC_ULINT(0);
   }
-  else if (func_AND<CIEC_BOOL>(var_CU, func_LT(var_CV, CIEC_ULINT(18446744073709551615)))) {
+  else if (func_AND<CIEC_BOOL>(var_CU, func_LT(var_CV, CIEC_ULINT(std::numeric_limits<CIEC_ULINT::TValueType>::max())))) {
     var_CV = func_ADD<CIEC_ULINT>(var_CV, CIEC_ULINT(1));
   }
   var_Q = func_GE(var_CV, var_PV);

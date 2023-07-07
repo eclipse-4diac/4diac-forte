@@ -186,28 +186,27 @@ BOOST_AUTO_TEST_CASE(TIME_to_STRING_test)
   BOOST_CHECK_EQUAL(sTest.length(), 8);
 }
 
-BOOST_AUTO_TEST_CASE(REAL_to_STRING_test)
-{
+BOOST_AUTO_TEST_CASE(REAL_to_STRING_test) {
   CIEC_STRING sTest;
   CIEC_STRING sResult;
   
   //check REAL
   CIEC_REAL nRTest(1.46e-3f);
-  sResult = CIEC_STRING("0.00146");
+  sResult = CIEC_STRING("0.00146000006");
   sTest = func_REAL_AS_STRING(nRTest);
   //check result value
-  BOOST_CHECK(sTest == sResult);
+  BOOST_TEST(sTest == sResult);
   //check length value
-  BOOST_CHECK_EQUAL(sTest.length(), 7);
+  BOOST_TEST(sTest.length() == 13);
 
   //check LREAL
   CIEC_LREAL nLRTest(-2.2874e6);
   sResult = CIEC_STRING("-2287400.0");
   sTest = func_LREAL_AS_STRING(nLRTest);
   //check result value
-  BOOST_CHECK(sTest == sResult);
+  BOOST_TEST(sTest == sResult);
   //check length value
-  BOOST_CHECK_EQUAL(sTest.length(), 10);
+  BOOST_TEST(sTest.length() == 10);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
