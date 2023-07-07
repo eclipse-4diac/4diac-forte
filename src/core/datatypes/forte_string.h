@@ -308,4 +308,8 @@ class CIEC_STRING final : public CIEC_ANY_STRING {
       storage_type mValue;
 };
 
+inline CIEC_STRING operator ""_STRING(const char* paValue, size_t paLength) {
+  return CIEC_STRING(paValue, paLength);
+}
+
 #endif /*_FORTE_STRING_H_*/

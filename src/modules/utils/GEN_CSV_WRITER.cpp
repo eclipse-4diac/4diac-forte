@@ -35,9 +35,9 @@ const TDataIOID GEN_CSV_WRITER::scm_anEOWith[] = { 0, 1, scmWithListDelimiter, 0
 const TForteInt16 GEN_CSV_WRITER::scm_anEOWithIndexes[] = { 0, 3, -1 };
 const CStringDictionary::TStringId GEN_CSV_WRITER::scm_anEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF };
 
-const CIEC_STRING GEN_CSV_WRITER::scmOK(scmOKString, std::char_traits<char>::length(scmOKString));
-const CIEC_STRING GEN_CSV_WRITER::scmFileAlreadyOpened(scmFileAlreadyOpenedString, std::char_traits<char>::length(scmFileAlreadyOpenedString));
-const CIEC_STRING GEN_CSV_WRITER::scmFileNotOpened(scmFileNotOpenedString, std::char_traits<char>::length(scmFileNotOpenedString));
+const CIEC_STRING GEN_CSV_WRITER::scmOK = "OK"_STRING;
+const CIEC_STRING GEN_CSV_WRITER::scmFileAlreadyOpened = "File already opened"_STRING;
+const CIEC_STRING GEN_CSV_WRITER::scmFileNotOpened = "File not opened"_STRING;
 
 void GEN_CSV_WRITER::executeEvent(TEventID paEIID) {
   if(scm_nEventINITID == paEIID) {

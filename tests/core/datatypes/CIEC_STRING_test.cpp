@@ -35,6 +35,18 @@ BOOST_AUTO_TEST_CASE(Type_test)
 
 }
 
+BOOST_AUTO_TEST_CASE(String_literal)
+{
+  CIEC_STRING test1 = ""_STRING;
+  BOOST_TEST(test1.getStorage() == ""s);
+
+  CIEC_STRING test2 = "test"_STRING;
+  BOOST_TEST(test2.getStorage() == "test"s);
+
+  CIEC_STRING test3 = "abc\0def"_STRING;
+  BOOST_TEST(test3.getStorage() == "abc\0def"s);
+}
+
 BOOST_AUTO_TEST_CASE(String_length)
 {
   CIEC_STRING test1;
