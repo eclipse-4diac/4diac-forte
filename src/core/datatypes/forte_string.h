@@ -39,6 +39,7 @@
 class CIEC_STRING final : public CIEC_ANY_STRING {
   DECLARE_FIRMWARE_DATATYPE(STRING)
 
+  // CIEC_STRING to CIEC_STRING comparison operators
   friend bool operator==(const CIEC_STRING &paLeft, const CIEC_STRING &paRight) {
     return paLeft.getStorage() == paRight.getStorage();
   }
@@ -66,6 +67,55 @@ class CIEC_STRING final : public CIEC_ANY_STRING {
   friend std::ostream &operator<<(std::ostream &out, const CIEC_STRING &variable) {
     out << variable.getStorage();
     return out;
+  }
+
+  // CIEC_STRING to std::string and vice versa comparison operators
+  friend bool operator==(const std::string &paLeft, const CIEC_STRING &paRight) {
+    return paLeft == paRight.getStorage();
+  }
+
+  friend bool operator!=(const std::string &paLeft, const CIEC_STRING &paRight) {
+    return !(paLeft == paRight);
+  }
+
+  friend bool operator>(const std::string &paLeft, const CIEC_STRING &paRight) {
+    return paLeft > paRight.getStorage();
+  }
+
+  friend bool operator<(const std::string &paLeft, const CIEC_STRING &paRight) {
+    return paLeft < paRight.getStorage();
+  }
+
+  friend bool operator>=(const std::string &paLeft, const CIEC_STRING &paRight) {
+    return paLeft >= paRight.getStorage();
+  }
+
+  friend bool operator<=(const std::string &paLeft, const CIEC_STRING &paRight) {
+    return paLeft <= paRight.getStorage();
+  }
+
+  friend bool operator==(const CIEC_STRING &paLeft, const std::string &paRight) {
+    return paLeft.getStorage() == paRight;
+  }
+
+  friend bool operator!=(const CIEC_STRING &paLeft, const std::string &paRight) {
+    return !(paLeft == paRight);
+  }
+
+  friend bool operator>(const CIEC_STRING &paLeft, const std::string &paRight) {
+    return paLeft.getStorage() > paRight;
+  }
+
+  friend bool operator<(const CIEC_STRING &paLeft, const std::string &paRight) {
+    return paLeft.getStorage() < paRight;
+  }
+
+  friend bool operator>=(const CIEC_STRING &paLeft, const std::string &paRight) {
+    return paLeft.getStorage() >= paRight;
+  }
+
+  friend bool operator<=(const CIEC_STRING &paLeft, const std::string &paRight) {
+    return paLeft.getStorage() <= paRight;
   }
 
   public:
@@ -114,6 +164,14 @@ class CIEC_STRING final : public CIEC_ANY_STRING {
 
     bool empty() const override {
       return mValue.empty();
+    }
+    
+    const char* c_str() const {
+      return getStorage().c_str();
+    }
+
+    explicit operator std::string() const {
+      return getStorage();
     }
 
     void reserve(TForteUInt16 pa_nRequestedSize) override;
