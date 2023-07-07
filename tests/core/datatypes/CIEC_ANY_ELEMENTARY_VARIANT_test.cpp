@@ -191,7 +191,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_ANY_ELEMENTARY_VARIANT_function_test)
 
       // different types (incomparable)
       test1 = CIEC_DINT(17);
-      test2 = CIEC_STRING("abc");
+      test2 = "abc"_STRING;
 
       BOOST_CHECK(!(test1 == test2));
       BOOST_CHECK(test1 != test2);
@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_ANY_ELEMENTARY_VARIANT_function_test)
       BOOST_CHECK(!(test1 >= test2));
       BOOST_CHECK(!(test1 > test2));
 
-      test1 = CIEC_STRING("abc");
+      test1 = "abc"_STRING;
       test2 = CIEC_DINT(17);
 
       BOOST_CHECK(!(test1 == test2));

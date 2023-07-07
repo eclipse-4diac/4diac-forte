@@ -15,6 +15,6 @@
 
 ${FORTE_STARTUP_HOOKS_DECLS}
 
-void startupHook(int argc, char *arg[]){
+void startupHook([[maybe_unused]] int argc, [[maybe_unused]] char *arg[]){
 ${FORTE_STARTUP_HOOKS_CALLS}
 }

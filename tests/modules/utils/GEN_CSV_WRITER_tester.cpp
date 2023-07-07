@@ -29,7 +29,7 @@ class GEN_CSV_WRITER_TestFixture : public CFBTestFixtureBase {
       BOOST_CHECK(std::tmpnam(tempName));
 
       mQI = CIEC_BOOL(true);
-      mFILE_NAME = CIEC_STRING(tempName);
+      mFILE_NAME = CIEC_STRING(tempName, strlen(tempName));
 
       triggerEvent(InputEventINIT);
 
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_SUITE(GEN_CSV_WRITER_Tests)
   BOOST_FIXTURE_TEST_CASE(validWrite, GEN_CSV_WRITER_TestFixtureIntString) {
     mQI = CIEC_BOOL(true);
     mSD_1 = CIEC_INT(1);
-    mSD_2 = CIEC_STRING("Test");
+    mSD_2 = "Test"_STRING;
 
     triggerEvent(InputEventREQ);
 
@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_SUITE(GEN_CSV_WRITER_Tests)
 
     mQI = CIEC_BOOL(true);
     mSD_1 = CIEC_INT(20);
-    mSD_2 = CIEC_STRING("Test2");
+    mSD_2 = "Test2"_STRING;
 
     triggerEvent(InputEventREQ);
 

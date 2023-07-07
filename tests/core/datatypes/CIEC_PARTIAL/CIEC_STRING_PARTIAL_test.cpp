@@ -24,42 +24,42 @@ BOOST_AUTO_TEST_SUITE(CIEC_ANY_STRING_PARTIAL)
 BOOST_AUTO_TEST_SUITE(CIEC_STRING_PARTIAL)
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ) {
-  CIEC_STRING stringValue("Primetals");
+  CIEC_STRING stringValue("Primetals"_STRING);
   CIEC_CHAR testChar;
   testChar = stringValue[5];
   BOOST_TEST(CIEC_CHAR('e') == testChar);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_WRITE) {
-  CIEC_STRING testString("Primxtals");
+  CIEC_STRING testString("Primxtals"_STRING);
   CIEC_CHAR charValue('e');
   testString[5] = charValue;
-  BOOST_TEST(CIEC_STRING("Primetals") == testString);
+  BOOST_TEST("Primetals"_STRING == testString);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_FROM_CONST) {
-  const CIEC_STRING stringValue("Primetals");
+  const CIEC_STRING stringValue("Primetals"_STRING);
   CIEC_CHAR testChar;
   testChar = stringValue[5];
   BOOST_TEST(CIEC_CHAR('e') == testChar);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_WITH_CIEC_TYPE_INDEX) {
-  CIEC_STRING stringValue("Primetals");
+  CIEC_STRING stringValue("Primetals"_STRING);
   CIEC_CHAR testChar;
   testChar = stringValue[CIEC_UDINT(5)];
   BOOST_TEST(CIEC_CHAR('e') == testChar);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_WRITE_WITH_CIEC_TYPE_INDEX) {
-  CIEC_STRING testString("Primxtals");
+  CIEC_STRING testString("Primxtals"_STRING);
   CIEC_CHAR charValue('e');
   testString[CIEC_UDINT(5)] = charValue;
-  BOOST_TEST(CIEC_STRING("Primetals") == testString);
+  BOOST_TEST("Primetals"_STRING == testString);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_FROM_CONST_WITH_CIEC_TYPE_INDEX) {
-  const CIEC_STRING stringValue("Primetals");
+  const CIEC_STRING stringValue("Primetals"_STRING);
   CIEC_CHAR testChar;
   testChar = stringValue[CIEC_UDINT(5)];
   BOOST_TEST(CIEC_CHAR('e') == testChar);
@@ -67,7 +67,7 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_FROM_CONST_WITH_CIEC_TYPE_INDEX)
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_AT_INDEX_0) {
   // Vendor-specific behaviour for returning NUL and emitting an error
-  CIEC_STRING stringValue("Primetals");
+  CIEC_STRING stringValue("Primetals"_STRING);
   CIEC_CHAR testChar;
   testChar = stringValue[0];
   BOOST_TEST(CIEC_CHAR('\0') == testChar);
@@ -75,30 +75,30 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_AT_INDEX_0) {
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_WRITE_AT_INDEX_0) {
   // Vendor-specific behaviour emitting an error and ignore the write
-  CIEC_STRING testString("Primxtals");
+  CIEC_STRING testString("Primxtals"_STRING);
   CIEC_CHAR charValue('e');
   testString[0] = charValue;
-  BOOST_TEST(CIEC_STRING("Primxtals") == testString);
+  BOOST_TEST("Primxtals"_STRING == testString);
 }
 
 /* These tests need also to be checked in the log, as both exhibit the 
  * same result, but the latter two emit an error at the devlog console */
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_AT_INDEX_END) {
-  CIEC_STRING stringValue("Primetals");
+  CIEC_STRING stringValue("Primetals"_STRING);
   CIEC_CHAR testChar;
   testChar = stringValue[9];
   BOOST_TEST(CIEC_CHAR('s') == testChar);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_WRITE_AT_INDEX_END) {
-  CIEC_STRING testString("Primxtals");
+  CIEC_STRING testString("Primxtals"_STRING);
   CIEC_CHAR charValue('e');
   testString[9] = charValue;
-  BOOST_TEST(CIEC_STRING("Primxtale") == testString);
+  BOOST_TEST("Primxtale"_STRING == testString);
 }
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_AT_INDEX_PAST_END) {
   // Vendor-specific behaviour for returning NUL and emitting an error
-  CIEC_STRING stringValue("Primetals");
+  CIEC_STRING stringValue("Primetals"_STRING);
   CIEC_CHAR testChar;
   testChar = stringValue[10];
   BOOST_TEST(CIEC_CHAR('\0') == testChar);
@@ -106,10 +106,10 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_AT_INDEX_PAST_END) {
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_WRITE_AT_INDEX_PAST_END) {
   /// Vendor-specific behaviour emitting an error and ignore the write
-  CIEC_STRING testString("Primxtals");
+  CIEC_STRING testString("Primxtals"_STRING);
   CIEC_CHAR charValue('e');
   testString[10] = charValue;
-  BOOST_TEST(CIEC_STRING("Primxtals") == testString);
+  BOOST_TEST("Primxtals"_STRING == testString);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

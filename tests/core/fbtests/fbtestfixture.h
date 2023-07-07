@@ -45,7 +45,7 @@ class CFBTestFixtureBase : public CFunctionBlock{
      */
     void triggerEvent(TPortId paEIId);
 
-    int pullFirstChainEventID();
+    TEventID pullFirstChainEventID();
 
     bool eventChainEmpty();
 
@@ -59,7 +59,7 @@ class CFBTestFixtureBase : public CFunctionBlock{
      * @param paExpectedEOId the output event Id to be checked for
      * @return true if only one event of the given Id is in the event queue
      */
-    bool checkForSingleOutputEventOccurence(int paExpectedEOId);
+    bool checkForSingleOutputEventOccurence(TEventID paExpectedEOId);
 
     void setInputData(std::initializer_list<TIEC_ANYPtr> paInputData);
     void setOutputData(std::initializer_list<TIEC_ANYPtr> paOutputData);

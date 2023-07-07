@@ -50,7 +50,7 @@ BOOST_FIXTURE_TEST_SUITE( STRUCT_DEMUX_MainTests, STRUCT_DEMUX_TestFixture_1)
   BOOST_AUTO_TEST_CASE(changeValueCheck) {
     mIn.Var1 = CIEC_INT(-256);
     mIn.Var2 = CIEC_INT(23145);
-    mIn.Var3 = CIEC_STRING("My Test String!");
+    mIn.Var3 = "My Test String!"_STRING;
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     checkStructValues();
@@ -59,7 +59,7 @@ BOOST_FIXTURE_TEST_SUITE( STRUCT_DEMUX_MainTests, STRUCT_DEMUX_TestFixture_1)
   BOOST_AUTO_TEST_CASE(updateValueCheck) {
     mIn.Var1 = CIEC_INT(12);
     mIn.Var2 = CIEC_INT(11111);
-    mIn.Var3 = CIEC_STRING("string!");
+    mIn.Var3 = "string!"_STRING;
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     checkStructValues();
@@ -68,7 +68,7 @@ BOOST_FIXTURE_TEST_SUITE( STRUCT_DEMUX_MainTests, STRUCT_DEMUX_TestFixture_1)
 
     mIn.Var1 = CIEC_INT(32255);
     mIn.Var2 = CIEC_INT(12345);
-    mIn.Var3 = CIEC_STRING("new string!");
+    mIn.Var3 = "new string!"_STRING;
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     checkStructValues();
@@ -77,7 +77,7 @@ BOOST_FIXTURE_TEST_SUITE( STRUCT_DEMUX_MainTests, STRUCT_DEMUX_TestFixture_1)
   BOOST_AUTO_TEST_CASE(steadyStateValueCheck) {
     mIn.Var1 = CIEC_INT(13);
     mIn.Var2 = CIEC_INT(234);
-    mIn.Var3 = CIEC_STRING("stable value");
+    mIn.Var3 = "stable value"_STRING;
 
     for(size_t i = 0; i < 45; i++){
       triggerEvent(0);
@@ -120,7 +120,7 @@ BOOST_FIXTURE_TEST_SUITE( STRUCT_DEMUX_SecondStructTest, STRUCT_DEMUX_TestFixtur
 
   BOOST_AUTO_TEST_CASE(changeValueCheck) {
     mIn.Var1 = CIEC_INT(1234);
-    mIn.Var2 = CIEC_STRING("this is the second struct!");
+    mIn.Var2 = "this is the second struct!"_STRING;
     mIn.Var3 = CIEC_INT(-2345);
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));

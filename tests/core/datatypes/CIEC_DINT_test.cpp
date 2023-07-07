@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE(Equality_test)
   CIEC_DINT nTest2;
 
   BOOST_CHECK(nTest1.equals(nTest2));
-  BOOST_CHECK(!nTest1.equals(CIEC_STRING("abc")));
+  BOOST_CHECK(!nTest1.equals("abc"_STRING));
 
   nTest1 = CIEC_DINT(17);
   BOOST_CHECK(!nTest1.equals(nTest2));

@@ -148,7 +148,7 @@ struct GET_STRUCT_VALUE_Main_TestFixture : public GET_STRUCT_VALUE_GenericTestFi
 BOOST_FIXTURE_TEST_SUITE( GET_STRUCT_VALUE_MainTests, GET_STRUCT_VALUE_Main_TestFixture)
 
   BOOST_AUTO_TEST_CASE(firstLevel) {
-    mMember = CIEC_STRING("Val1");
+    mMember = "Val1"_STRING;
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     BOOST_CHECK_EQUAL(true, mQO);
@@ -156,7 +156,7 @@ BOOST_FIXTURE_TEST_SUITE( GET_STRUCT_VALUE_MainTests, GET_STRUCT_VALUE_Main_Test
   }
 
   BOOST_AUTO_TEST_CASE(secondLevel) {
-    mMember = CIEC_STRING("Val2.Val2");
+    mMember = "Val2.Val2"_STRING;
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     BOOST_CHECK_EQUAL(true, mQO);
@@ -165,35 +165,35 @@ BOOST_FIXTURE_TEST_SUITE( GET_STRUCT_VALUE_MainTests, GET_STRUCT_VALUE_Main_Test
 
 
   BOOST_AUTO_TEST_CASE(firstLevelWrongName) {
-    mMember = CIEC_STRING("xVal1");
+    mMember = "xVal1"_STRING;
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     BOOST_CHECK_EQUAL(false, mQO);
   }
 
   BOOST_AUTO_TEST_CASE(firstLevelWrongNameWithSecondLevel) {
-    mMember = CIEC_STRING("xVal1.Val2");
+    mMember = "xVal1.Val2"_STRING;
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     BOOST_CHECK_EQUAL(false, mQO);
   }
 
   BOOST_AUTO_TEST_CASE(secondLevelWrongName) {
-    mMember = CIEC_STRING("Val2.xVal2");
+    mMember = "Val2.xVal2"_STRING;
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     BOOST_CHECK_EQUAL(false, mQO);
   }
 
   BOOST_AUTO_TEST_CASE(accessNonStruct) {
-    mMember = CIEC_STRING("Val1.Val1");
+    mMember = "Val1.Val1"_STRING;
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     BOOST_CHECK_EQUAL(false, mQO);
   }
 
   BOOST_AUTO_TEST_CASE(WrongEventInput) {
-    mMember = CIEC_STRING("Val2.Val1");
+    mMember = "Val2.Val1"_STRING;
     triggerEvent(1);
     BOOST_CHECK(eventChainEmpty());
   }
@@ -216,7 +216,7 @@ struct GET_STRUCT_VALUE_WRONG_OUTPUT_TYPE_TestFixture : public GET_STRUCT_VALUE_
 BOOST_FIXTURE_TEST_SUITE( GET_STRUCT_VALUE_WRONG_OUTPUT_TYPETests, GET_STRUCT_VALUE_WRONG_OUTPUT_TYPE_TestFixture)
 
   BOOST_AUTO_TEST_CASE(wrongInputType) {
-    mMember = CIEC_STRING("Val1");
+    mMember = "Val1"_STRING;
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
     BOOST_CHECK_EQUAL(false, mQO);

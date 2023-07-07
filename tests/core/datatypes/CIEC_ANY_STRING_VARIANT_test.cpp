@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_ANY_STRING_VARIANT_function_test)
       BOOST_TEST('\0' == std::get<CIEC_STRING>(test2).getStorage()[0]);
 
       // assign value
-      test1 = CIEC_STRING("abc");
+      test1 = "abc"_STRING;
       BOOST_TEST("abc"s == std::get<CIEC_STRING>(test1).getStorage());
 
       // assign each other
@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_ANY_STRING_VARIANT_function_test)
       CIEC_ANY_STRING_VARIANT test2;
 
       BOOST_TEST(test1.equals(test2));
-      test1 = CIEC_STRING("abc");
+      test1 = "abc"_STRING;
       BOOST_TEST(!test1.equals(test2));
       test2.setValue(test1);
       BOOST_TEST(test1.equals(test2));

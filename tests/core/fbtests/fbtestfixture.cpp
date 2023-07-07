@@ -140,9 +140,9 @@ void CFBTestFixtureBase::triggerEvent(TPortId paEIId) {
 
 }
 
-int CFBTestFixtureBase::pullFirstChainEventID() {
+TEventID CFBTestFixtureBase::pullFirstChainEventID() {
   CCriticalRegion criticalRegion(mOutputEventLock);
-  int retVal = mFBOutputEvents.front();
+  TEventID retVal = mFBOutputEvents.front();
   mFBOutputEvents.pop_front();
   return retVal;
 }
@@ -156,7 +156,7 @@ void CFBTestFixtureBase::clearEventChain() {
   mFBOutputEvents.clear();
 }
 
-bool CFBTestFixtureBase::checkForSingleOutputEventOccurence(int paExpectedEOId) {
+bool CFBTestFixtureBase::checkForSingleOutputEventOccurence(TEventID paExpectedEOId) {
   //Test if event chain is not empty, that the first entry is the expected one and that no furhter events are there
   return (!eventChainEmpty() && (pullFirstChainEventID() == paExpectedEOId) && eventChainEmpty());
 }

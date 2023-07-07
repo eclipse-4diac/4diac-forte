@@ -190,14 +190,14 @@ DEFINE_FIRMWARE_DATATYPE(TestStruct3, g_nStringIdTestStruct3)
 BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
 
 //*********************** TESTS *************************************************************************************************/
-  void setDataTestStruct1(CIEC_TestStruct1 &paStruct, const char* paVal1, bool paVal2, int paVal3){
-    (* static_cast<CIEC_STRING *>(paStruct.getMemberNamed(g_nStringIdVal1))) = CIEC_STRING(paVal1);
+  void setDataTestStruct1(CIEC_TestStruct1 &paStruct, std::string paVal1, bool paVal2, int paVal3){
+    (* static_cast<CIEC_STRING *>(paStruct.getMemberNamed(g_nStringIdVal1))) = CIEC_STRING(std::move(paVal1));
     (* static_cast<CIEC_BOOL *>(paStruct.getMemberNamed(g_nStringIdVal2))) = CIEC_BOOL(paVal2);
     (* static_cast<CIEC_INT *>(paStruct.getMemberNamed(g_nStringIdVal3))) = CIEC_INT(static_cast<TForteInt16>(paVal3));
   }
 
-  const char cTestStringData[] = "Check string!";
-  const char cTestStringData2[] = "Check string 2!";
+  const std::string cTestStringData = "Check string!"s;
+  const std::string cTestStringData2 = "Check string 2!"s;
 
   void setupTestStruct1_TestDataSet1(CIEC_TestStruct1 &paStruct){
     setDataTestStruct1(paStruct, cTestStringData, true, 24534);
@@ -240,9 +240,9 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
     BOOST_CHECK_EQUAL(31234, static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(pa_stStruct.getMemberNamed(g_nStringIdVal4))));
   }
 
-  void setDataTestStruct3(CIEC_TestStruct3&paStruct, const char* paVal11, const char* paVal12, bool paVal2, int paVal31){
-    paStruct.Var1[0] = CIEC_STRING(paVal11);
-    paStruct.Var1[1] = CIEC_STRING(paVal12);
+  void setDataTestStruct3(CIEC_TestStruct3&paStruct, std::string paVal11, std::string paVal12, bool paVal2, int paVal31){
+    paStruct.Var1[0] = CIEC_STRING(std::move(paVal11));
+    paStruct.Var1[1] = CIEC_STRING(std::move(paVal12));
     paStruct.Var2 = CIEC_BOOL(paVal2);
     paStruct.Var3[0] = CIEC_INT(static_cast<TForteInt16>(paVal31));
   }
@@ -285,7 +285,7 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
 
     checkTestStruct1_InitialValues(stStruct1);
 
-    char cTest[] = "Check string!";
+    const std::string cTest = "Check string!"s;
     (*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))) = CIEC_STRING(cTest);
     BOOST_TEST((*static_cast<CIEC_STRING *>(stStruct1.getMemberNamed(g_nStringIdVal1))).getStorage() == cTest);
     BOOST_CHECK_EQUAL(false, (*static_cast<CIEC_BOOL *>(stStruct1.getMemberNamed(g_nStringIdVal2))));
@@ -340,7 +340,7 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
 
     //***************** Test struct 3 ********************************************************
 
-    char cTest2[] = "Check string 2!";
+    const std::string cTest2 = "Check string 2!"s;
     BOOST_CHECK_EQUAL(stStruct3.getMemberNamed(g_nStringIdVal1)->getDataTypeID(), CIEC_ANY::e_ARRAY);
     BOOST_CHECK_EQUAL(stStruct3.getMember(0)->getDataTypeID(), CIEC_ANY::e_ARRAY);
     for(intmax_t i = 0; i < CIEC_TestStruct3::sizeOfFirstArray; i++){
@@ -488,8 +488,8 @@ BOOST_AUTO_TEST_SUITE (CIEC_STRUCT_function_test)
     BOOST_CHECK(struct1.equals(struct2));
   }
 
-  const char cTestFromString_String1[] = "String1";
-  const char cTestFromString_String2[] = "String2";
+  const std::string cTestFromString_String1 = "String1"s;
+  const std::string cTestFromString_String2 = "String2"s;
 
   void checkTestStruct1_fromStringTestData(CIEC_TestStruct1 &pa_stStruct){
     BOOST_TEST((*static_cast<CIEC_STRING *>(pa_stStruct.getMemberNamed(g_nStringIdVal1))).getStorage() == cTestFromString_String1);

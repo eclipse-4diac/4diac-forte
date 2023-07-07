@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE(ToWChar_test) {
 BOOST_AUTO_TEST_CASE(ToString_test) {
   CIEC_CHAR source('a');
   CIEC_STRING result;
-  CIEC_STRING expected("a");
+  CIEC_STRING expected("a"_STRING);
   result = func_CHAR_TO_STRING(source);
   BOOST_CHECK_EQUAL(result, expected);
 }

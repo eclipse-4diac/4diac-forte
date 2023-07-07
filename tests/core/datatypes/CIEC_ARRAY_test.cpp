@@ -386,7 +386,7 @@ BOOST_AUTO_TEST_CASE(Configure_test){
   BOOST_CHECK_EQUAL((*pTest)[13].getDataTypeID(), CIEC_ANY::e_STRING);
   BOOST_CHECK_EQUAL((*pTest)[14].getDataTypeID(), CIEC_ANY::e_STRING);
 
-  static_cast<CIEC_STRING &>((*pTest)[0]) = CIEC_STRING("Hansi");
+  static_cast<CIEC_STRING &>((*pTest)[0]) = "Hansi"_STRING;
   BOOST_CHECK_EQUAL(static_cast<CIEC_STRING &>((*pTest)[0]).length(), 5);
   BOOST_TEST("Hansi"s == static_cast<CIEC_STRING &>((*pTest)[0]).getStorage());
 
@@ -675,8 +675,8 @@ BOOST_AUTO_TEST_CASE(Array_emptyArray)
     checkEmptyArray(nTest);
 }
 
-const char cTestStringData[] = "Check string!";
-const char cTestStringData2[] = "Check string 2!";
+const std::string cTestStringData = "Check string!"s;
+const std::string cTestStringData2 = "Check string 2!"s;
 
 void checkArrayOfStructTest_InitialValues(CIEC_ArrayOfStructTest &paStruct) {
   BOOST_CHECK_EQUAL(0, paStruct.Var1[0].length());
@@ -685,9 +685,9 @@ void checkArrayOfStructTest_InitialValues(CIEC_ArrayOfStructTest &paStruct) {
   BOOST_CHECK_EQUAL(0, static_cast<CIEC_INT::TValueType>(paStruct.Var3[0]));
 }
 
-void setDataArrayOfStructTest(CIEC_ArrayOfStructTest &paStruct, const char* paVal11, const char* paVal12, bool paVal2, int paVal31) {
-  paStruct.Var1[0] = CIEC_STRING(paVal11);
-  paStruct.Var1[1] = CIEC_STRING(paVal12);
+void setDataArrayOfStructTest(CIEC_ArrayOfStructTest &paStruct, const std::string paVal11, const std::string paVal12, bool paVal2, int paVal31) {
+  paStruct.Var1[0] = CIEC_STRING(std::move(paVal11));
+  paStruct.Var1[1] = CIEC_STRING(std::move(paVal12));
   paStruct.Var2 = CIEC_BOOL(paVal2);
   paStruct.Var3[0] = CIEC_INT(static_cast<TForteInt16>(paVal31));
 }
@@ -741,7 +741,7 @@ BOOST_AUTO_TEST_CASE(Array_arrayOfStructs)
   BOOST_CHECK_EQUAL(strcmp(acBuffer, "[(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534])]"), 0);
 
   CIEC_ARRAY_DYNAMIC nTest1(3, g_nStringIdArrayOfStructTest);
-  nTest1.fromString("[(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534])]");
+  (void) nTest1.fromString("[(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534])]");
 
   for(size_t i = 0; i < 3; i++) {
     CIEC_ArrayOfStructTest &toTest = static_cast<CIEC_ArrayOfStructTest&>(nTest1[i]);
