@@ -80,6 +80,10 @@ class CIEC_STRING_FIXED final : public CIEC_STRING {
 
     using CIEC_STRING::operator=;
 
+    size_t getMaximumLength() const override {
+      return maxLength;
+    }
+
     void reserve(const TForteUInt16 paRequestedSize) override {
       if (paRequestedSize > maxLength) {
         DEVLOG_WARNING("Attempt to reserve %zu chars, which is more than the CIEC_STRING_FIXED<%zu> shall support!", paRequestedSize, maxLength);

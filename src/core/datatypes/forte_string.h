@@ -179,6 +179,10 @@ class CIEC_STRING : public CIEC_ANY_STRING {
       return getStorage();
     }
 
+    virtual size_t getMaximumLength() const {
+      return scmMaxStringLen;
+    }
+
     void reserve(const TForteUInt16 paRequestedSize) override;
 
     void assign(const char *paData, const TForteUInt16 paLen) override;
@@ -218,12 +222,25 @@ class CIEC_STRING : public CIEC_ANY_STRING {
       using pointer_type = CIEC_CHAR::TValueType*;
 
       public:
-        PARTIAL_ACCESS_TYPE(char *paValue) {
-          value = reinterpret_cast<pointer_type>(paValue);
-          if (value != nullptr) {
-            setChar(*paValue);
+        using CIEC_CHAR::operator=;
+
+        PARTIAL_ACCESS_TYPE(CIEC_STRING &paOriginalString, const size_t paIndex) : mOriginalString(paOriginalString), mIndex(paIndex) {
+          if (mOriginalString.length() >= paIndex && paIndex > 0) {
+            setChar(mOriginalString.getStorage()[paIndex - 1]);
           } else {
             setChar('\0');
+          }
+        }
+
+        virtual ~PARTIAL_ACCESS_TYPE() {
+          if (mIndex > 0 && mIndex < mOriginalString.getMaximumLength()) {
+            if (mOriginalString.length() < mIndex) {
+              mOriginalString.getStorageMutable().resize(mIndex);
+            }
+            const value_type value = operator value_type();
+            if(mOriginalString.getStorage()[mIndex - 1] != value) {
+              mOriginalString.getStorageMutable()[mIndex - 1] = value;
+            }
           }
         }
 
@@ -231,27 +248,21 @@ class CIEC_STRING : public CIEC_ANY_STRING {
           return getChar8();
         }
 
-        PARTIAL_ACCESS_TYPE& operator=(const CIEC_CHAR& paValue) {
-          if (value != nullptr) {
-            *value = static_cast<value_type>(paValue);
-          }
-            return *this;
-        }
-
       private:
-        pointer_type value;
+        CIEC_STRING &mOriginalString;
+        const size_t mIndex;
     };
 
     [[nodiscard]] PARTIAL_ACCESS_TYPE at(const intmax_t paIndex) {
       if(paIndex < 1) {
         DEVLOG_ERROR("String index start at 1!\n");
-        return PARTIAL_ACCESS_TYPE(nullptr);
+        return PARTIAL_ACCESS_TYPE(*this, 0);
       }
-      if(paIndex > length()) {
-        DEVLOG_ERROR("String index %d outside of length!\n", paIndex);
-        return PARTIAL_ACCESS_TYPE(nullptr);
+      const size_t index = static_cast<size_t>(paIndex);
+      if(index > getMaximumLength()) {
+        DEVLOG_ERROR("String index %zu outside of maximum length!\n", index);
       }
-      return PARTIAL_ACCESS_TYPE(getStorageMutable().data() + paIndex - 1);
+      return PARTIAL_ACCESS_TYPE(*this, index);
     }
 
     [[nodiscard]] value_type at(intmax_t paIndex) const {

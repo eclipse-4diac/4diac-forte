@@ -27,13 +27,12 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ) {
   CIEC_STRING stringValue("Primetals"_STRING);
   CIEC_CHAR testChar;
   testChar = stringValue[5];
-  BOOST_TEST(CIEC_CHAR('e') == testChar);
+  BOOST_TEST('e'_CHAR == testChar);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_WRITE) {
   CIEC_STRING testString("Primxtals"_STRING);
-  CIEC_CHAR charValue('e');
-  testString[5] = charValue;
+  testString[5] = 'e'_CHAR;
   BOOST_TEST("Primetals"_STRING == testString);
 }
 
@@ -41,20 +40,19 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_FROM_CONST) {
   const CIEC_STRING stringValue("Primetals"_STRING);
   CIEC_CHAR testChar;
   testChar = stringValue[5];
-  BOOST_TEST(CIEC_CHAR('e') == testChar);
+  BOOST_TEST('e'_CHAR == testChar);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_WITH_CIEC_TYPE_INDEX) {
   CIEC_STRING stringValue("Primetals"_STRING);
   CIEC_CHAR testChar;
   testChar = stringValue[CIEC_UDINT(5)];
-  BOOST_TEST(CIEC_CHAR('e') == testChar);
+  BOOST_TEST('e'_CHAR == testChar);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_WRITE_WITH_CIEC_TYPE_INDEX) {
   CIEC_STRING testString("Primxtals"_STRING);
-  CIEC_CHAR charValue('e');
-  testString[CIEC_UDINT(5)] = charValue;
+  testString[CIEC_UDINT(5)] = 'e'_CHAR;
   BOOST_TEST("Primetals"_STRING == testString);
 }
 
@@ -62,7 +60,7 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_FROM_CONST_WITH_CIEC_TYPE_INDEX)
   const CIEC_STRING stringValue("Primetals"_STRING);
   CIEC_CHAR testChar;
   testChar = stringValue[CIEC_UDINT(5)];
-  BOOST_TEST(CIEC_CHAR('e') == testChar);
+  BOOST_TEST('e'_CHAR == testChar);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_AT_INDEX_0) {
@@ -70,14 +68,13 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_AT_INDEX_0) {
   CIEC_STRING stringValue("Primetals"_STRING);
   CIEC_CHAR testChar;
   testChar = stringValue[0];
-  BOOST_TEST(CIEC_CHAR('\0') == testChar);
+  BOOST_TEST('\0'_CHAR == testChar);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_WRITE_AT_INDEX_0) {
   // Vendor-specific behaviour emitting an error and ignore the write
   CIEC_STRING testString("Primxtals"_STRING);
-  CIEC_CHAR charValue('e');
-  testString[0] = charValue;
+  testString[0] = 'e'_CHAR;
   BOOST_TEST("Primxtals"_STRING == testString);
 }
 
@@ -87,13 +84,12 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_AT_INDEX_END) {
   CIEC_STRING stringValue("Primetals"_STRING);
   CIEC_CHAR testChar;
   testChar = stringValue[9];
-  BOOST_TEST(CIEC_CHAR('s') == testChar);
+  BOOST_TEST('s'_CHAR == testChar);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_WRITE_AT_INDEX_END) {
   CIEC_STRING testString("Primxtals"_STRING);
-  CIEC_CHAR charValue('e');
-  testString[9] = charValue;
+  testString[9] = 'e'_CHAR;
   BOOST_TEST("Primxtale"_STRING == testString);
 }
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_AT_INDEX_PAST_END) {
@@ -101,15 +97,21 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_AT_INDEX_PAST_END) {
   CIEC_STRING stringValue("Primetals"_STRING);
   CIEC_CHAR testChar;
   testChar = stringValue[10];
-  BOOST_TEST(CIEC_CHAR('\0') == testChar);
+  BOOST_TEST('\0'_CHAR == testChar);
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_WRITE_AT_INDEX_PAST_END) {
-  /// Vendor-specific behaviour emitting an error and ignore the write
+  /// Vendor-specific behaviour fill all symbols between requested index and former last symbol with \0
   CIEC_STRING testString("Primxtals"_STRING);
-  CIEC_CHAR charValue('e');
-  testString[10] = charValue;
-  BOOST_TEST("Primxtals"_STRING == testString);
+  testString[10] = 'e'_CHAR;
+  BOOST_TEST("Primxtalse"_STRING == testString);
+}
+
+BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_WRITE_ON_EMPTY_STRING) {
+  /// Vendor-specific behaviour fill all symbols between requested index and former last symbol with \0
+  CIEC_STRING testString;
+  testString[5] = 'e'_CHAR;
+  BOOST_TEST("\0\0\0\0e"_STRING == testString);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
