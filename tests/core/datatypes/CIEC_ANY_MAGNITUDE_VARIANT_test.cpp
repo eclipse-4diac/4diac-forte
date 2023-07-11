@@ -49,7 +49,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_ANY_MAGNITUDE_VARIANT_function_test)
       BOOST_CHECK_EQUAL(paValue.getDataTypeID(), CIEC_ANY::e_ANY);
       BOOST_CHECK_EQUAL(paValue.unwrap().getDataTypeID(), paDataTypeId);
       BOOST_CHECK_EQUAL(paValue.toString(buf, sizeof(buf)), strlen(paString));
-      BOOST_CHECK_EQUAL(std::strcmp(paString, buf), 0);
+      BOOST_TEST(paString == buf);
     }
 
     BOOST_AUTO_TEST_CASE(String_Conversion_test) {
@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_ANY_MAGNITUDE_VARIANT_function_test)
       checkStringConversion(test, "T#311ms", CIEC_ANY::e_TIME);
       checkStringConversion(test, "LT#311ms", CIEC_ANY::e_LTIME);
       checkStringConversion(test, "REAL#3.125", CIEC_ANY::e_REAL);
-      checkStringConversion(test, "LREAL#3.1251234", CIEC_ANY::e_LREAL);
+      checkStringConversion(test, "LREAL#3.1251234000000001", CIEC_ANY::e_LREAL);
       checkStringConversion(test, "LINT#123123123123", CIEC_ANY::e_LINT);
       checkStringConversion(test, "ULINT#123123123123123", CIEC_ANY::e_ULINT);
     }

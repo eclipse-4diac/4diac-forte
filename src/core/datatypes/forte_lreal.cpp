@@ -52,8 +52,7 @@ int CIEC_LREAL::fromString(const char *paValue){
 }
 
 int CIEC_LREAL::toString(char* paValue, size_t paBufferSize) const {
-  int nRetVal;
-  nRetVal = forte_snprintf(paValue, paBufferSize, "%.*g", 15, getTDFLOAT());
+  int nRetVal = forte_snprintf(paValue, paBufferSize, "%.*g", std::numeric_limits<CIEC_LREAL::TValueType>::max_digits10, getTDFLOAT());
   if((nRetVal < -1) || (nRetVal >= static_cast<int>(paBufferSize))) {
     return -1;
   }

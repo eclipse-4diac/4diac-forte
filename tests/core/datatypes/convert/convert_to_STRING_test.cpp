@@ -186,19 +186,18 @@ BOOST_AUTO_TEST_CASE(TIME_to_STRING_test)
   BOOST_TEST(sTest.length() == 8);
 }
 
-BOOST_AUTO_TEST_CASE(REAL_to_STRING_test)
-{
+BOOST_AUTO_TEST_CASE(REAL_to_STRING_test) {
   CIEC_STRING sTest;
   CIEC_STRING sResult;
   
   //check REAL
   CIEC_REAL nRTest(1.46e-3f);
-  sResult = "0.00146"_STRING;
+  sResult = "0.00146000006"_STRING;
   sTest = func_REAL_AS_STRING(nRTest);
   //check result value
   BOOST_TEST(sTest == sResult);
   //check length value
-  BOOST_TEST(sTest.length() == 7);
+  BOOST_TEST(sTest.length() == 13);
 
   //check LREAL
   CIEC_LREAL nLRTest(-2.2874e6);

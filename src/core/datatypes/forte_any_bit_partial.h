@@ -46,6 +46,11 @@ class CIEC_ANY_BIT_PARTIAL final : public PartialType {
       *this = PartialType(partialValue);
     }
 
+    CIEC_ANY_BIT_PARTIAL& operator=(const CIEC_ANY_BIT_PARTIAL &paValue) {
+      *this = PartialType(paValue);
+      return *this;
+    }
+
     ~CIEC_ANY_BIT_PARTIAL() override {
       if(mIndex <= scmMaxIndex) {
         constexpr SourceValueType maskTemplate = std::numeric_limits<PartialValueType>::max();
