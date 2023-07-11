@@ -87,7 +87,6 @@ void DEV_MGR::executeRQST(){
   strcpy(request, RQST().getStorage().c_str());
 
   EMGMResponse resp = parseAndExecuteMGMCommand(DST().getStorage().c_str(), request);
-  delete[](request);
 
 #ifdef FORTE_SUPPORT_MONITORING
   if (0 != mCommand.mMonitorResponse.length()) {
@@ -100,6 +99,8 @@ void DEV_MGR::executeRQST(){
   else{
     generateResponse(mCommand.mID, resp);
   }
+
+  delete[](request);
 }
 
 char *DEV_MGR::parseRequest(char *paRequestString, forte::core::SManagementCMD &paCommand){
