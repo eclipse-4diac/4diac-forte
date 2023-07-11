@@ -440,30 +440,31 @@ EMGMResponse CFunctionBlock::changeFBExecutionStateHelper(const EMGMCommandType 
   return nRetVal;
 }
 
-size_t CFunctionBlock::getDataPointSize(const CStringDictionary::TStringId *&pa_panDataTypeIds) {
-  CStringDictionary::TStringId dataTypeId = *(pa_panDataTypeIds++);
+size_t CFunctionBlock::getDataPointSize(const CStringDictionary::TStringId *&paDataTypeIds) {
+  CStringDictionary::TStringId dataTypeId = *paDataTypeIds;
   auto *entry = static_cast<CTypeLib::CDataTypeEntry *>(CTypeLib::findType(dataTypeId,
                                                                            CTypeLib::getDTLibStart()));
-  if (g_nStringIdARRAY == dataTypeId) {
-    pa_panDataTypeIds += 2;
-  }
+  nextDataPoint(paDataTypeIds);
   return nullptr != entry ? entry->getSize() : 0;
 }
 
-CIEC_ANY *CFunctionBlock::createDataPoint(const CStringDictionary::TStringId *&paDataTypeIds, TForteByte *&paDataBuf){
-  CStringDictionary::TStringId dataTypeId = *(paDataTypeIds++);
+CIEC_ANY *CFunctionBlock::createDataPoint(const CStringDictionary::TStringId *&paDataTypeIds, TForteByte *&paDataBuf) {
+  CStringDictionary::TStringId dataTypeId = *paDataTypeIds;
   CIEC_ANY *poRetVal = CTypeLib::createDataTypeInstance(dataTypeId, paDataBuf);
-  if(nullptr != poRetVal) {
+  if (nullptr != poRetVal) {
+    if (g_nStringIdARRAY == dataTypeId) {
+      static_cast<CIEC_ARRAY_DYNAMIC *>(poRetVal)->setup(paDataTypeIds + 1);
+    }
     paDataBuf += poRetVal->getSizeof();
   }
-  if(g_nStringIdARRAY == dataTypeId){
-    if(nullptr != poRetVal){
-      //For an array we have to do more
-      (static_cast<CIEC_ARRAY_DYNAMIC *>(poRetVal))->setup(static_cast<TForteUInt16>(*paDataTypeIds), paDataTypeIds[1]);
-    }
+  nextDataPoint(paDataTypeIds);
+  return poRetVal;
+}
+
+void CFunctionBlock::nextDataPoint(const CStringDictionary::TStringId *&paDataTypeIds) {
+  while(*(paDataTypeIds++) == g_nStringIdARRAY) {
     paDataTypeIds += 2;
   }
-  return poRetVal;
 }
 
 EMGMResponse CFunctionBlock::changeInternalFBExecutionState(const EMGMCommandType paCommand, const size_t paAmountOfInternalFBs, TFunctionBlockPtr *const paInternalFBs) {

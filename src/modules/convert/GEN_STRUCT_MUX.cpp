@@ -84,17 +84,11 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
         paInterfaceSpec.m_aunDODataTypeNames = doDataTypeNames;
         doDataTypeNames[0] = structTypeNameId;
 
-        for(size_t i = 0, typeNameIndex = 0; i < paInterfaceSpec.m_nNumDIs; i++, typeNameIndex++) {
+        for(size_t i = 0; i < paInterfaceSpec.m_nNumDIs; i++) {
           CIEC_ANY &member = *structInstance->getMember(i);
           eiWith[i] = i;
           diNames[i] = structInstance->elementNames()[i];
-          diDataTypeNames[typeNameIndex] = member.getTypeNameID();
-          if(member.getDataTypeID() == CIEC_ANY::e_ARRAY){
-            CIEC_ARRAY &array = static_cast<CIEC_ARRAY&>(member);
-            diDataTypeNames[typeNameIndex + 1] = static_cast<CStringDictionary::TStringId>(array.size());
-            diDataTypeNames[typeNameIndex + 2] = array.getElementTypeNameID();
-            typeNameIndex += 2;
-          }
+          fillDataPointSpec(member, diDataTypeNames);
         }
         eiWith[paInterfaceSpec.m_nNumDIs] = scmWithListDelimiter;
         retval = true;
@@ -128,13 +122,10 @@ CStringDictionary::TStringId GEN_STRUCT_MUX::getStructNameId(const char *paConfi
 
 size_t GEN_STRUCT_MUX::calcStructTypeNameSize(CIEC_STRUCT &paStruct){
   size_t structSize = paStruct.getStructSize();
-  size_t numArrayMembers = 0;
+  size_t result = 0;
   for(size_t i = 0; i < structSize; i++) {
-    if(paStruct.getMember(i)->getDataTypeID() == CIEC_ANY::e_ARRAY){
-      numArrayMembers++;
-    }
+    result += getDataPointSpecSize(*paStruct.getMember(i));
   }
-
-  return structSize + numArrayMembers * 2; //arrays need to additional entries
+  return result;
 }
 

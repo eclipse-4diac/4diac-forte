@@ -526,17 +526,17 @@ class CFunctionBlock {
 
     /*!\brief Get the size of a data point
      *
-     * @param pa_panDataTypeIds pointer to the data type ids. If the datatype
+     * @param paDataTypeIds pointer to the data type ids. If the datatype
      *        is an Array to more values are taken from the array. If the given
      *        type is Any 0 is returned as necessary for maintaining the FB's interface.
      *        The functions puts the pointer in the datatype array to the next data point's id.
      * @return The size of the data point
      */
-    static size_t getDataPointSize(const CStringDictionary::TStringId *&pa_panDataTypeIds);
+    static size_t getDataPointSize(const CStringDictionary::TStringId *&paDataTypeIds);
 
     /*!\brief Function to create an data type instance of given type
      *
-     * @param pa_panDataTypeIds pointer to the data type ids. If the datatype
+     * @param paDataTypeIds pointer to the data type ids. If the datatype
      *        is an Array to more values are taken from the array. If the given
      *        type is Any 0 is returned as necessary for maintaining the FB's interface.
      *        The functions puts the pointer in the datatype array to the next data point's id.
@@ -544,7 +544,14 @@ class CFunctionBlock {
      * @return on success... pointer to the datatype instance
      *         on error... 0
      */
-    static CIEC_ANY* createDataPoint(const CStringDictionary::TStringId *&pa_panDataTypeIds, TForteByte *&pa_acDataBuf);
+    static CIEC_ANY* createDataPoint(const CStringDictionary::TStringId *&paDataTypeIds, TForteByte *&pa_acDataBuf);
+
+    /*!\brief Function to skip to the next data point
+     *
+     * @param pa_panDataTypeIds pointer to the data type ids. If the datatype
+     *        is an Array to more values are taken from the array.
+     */
+    static void nextDataPoint(const CStringDictionary::TStringId *&paDataTypeIds);
 
     static EMGMResponse changeInternalFBExecutionState(const EMGMCommandType paCommand, const size_t paAmountOfInternalFBs, TFunctionBlockPtr *const paInternalFBs);
 

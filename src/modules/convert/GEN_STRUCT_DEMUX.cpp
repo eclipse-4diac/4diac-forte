@@ -87,17 +87,11 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
         paInterfaceSpec.m_aunDODataTypeNames = doDataTypeNames;
         diDataTypeNames[0] = structTypeNameId;
 
-        for(size_t i = 0, typeNameIndex = 0; i < paInterfaceSpec.m_nNumDOs; i++, typeNameIndex++) {
-          CIEC_ANY &member = *structInstance->getMember(i);
+        for(size_t i = 0; i < structSize; ++i) {
+          const CIEC_ANY &member = *structInstance->getMember(i);
           eoWith[i] = i;
           doNames[i] = structInstance->elementNames()[i];
-          doDataTypeNames[typeNameIndex] = member.getTypeNameID();
-          if(member.getDataTypeID() == CIEC_ANY::e_ARRAY){
-            CIEC_ARRAY &array = static_cast<CIEC_ARRAY&>(member);
-            doDataTypeNames[typeNameIndex + 1] = static_cast<CStringDictionary::TStringId>(array.size());
-            doDataTypeNames[typeNameIndex + 2] = array.getElementTypeNameID();
-            typeNameIndex += 2;
-          }
+          fillDataPointSpec(member, doDataTypeNames);
         }
         eoWith[paInterfaceSpec.m_nNumDOs] = scmWithListDelimiter;
         retval = true;

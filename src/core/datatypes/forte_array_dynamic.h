@@ -452,6 +452,9 @@ public:
     //!Function to configure the array if it is created via the typelib
     void setup(intmax_t paLowerBound, intmax_t paUpperBound, CStringDictionary::TStringId paArrayType);
 
+    //!Function to configure the array if it is created via the typelib
+    void setup(const CStringDictionary::TStringId *paParameters);
+
     [[nodiscard]] size_t size() const override {
       return mSize;
     }

@@ -21,6 +21,8 @@
 #include <array>
 #include <devlog.h>
 
+#include "forte_ulint.h"
+
 template<typename T>
 class CIEC_ARRAY_VARIABLE;
 

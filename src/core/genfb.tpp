@@ -98,3 +98,32 @@ void CGenFunctionBlock<T>::generateGenericDataPointArrays(const char * const paP
   }
 }
 
+template<class T>
+size_t CGenFunctionBlock<T>::getDataPointSpecSize(const CIEC_ANY &paValue) {
+  CIEC_ANY::EDataTypeID dataTypeId = paValue.getDataTypeID();
+  if(dataTypeId == CIEC_ANY::e_ARRAY) {
+    const CIEC_ARRAY &arrayValue = static_cast<const CIEC_ARRAY&>(paValue);
+    if(arrayValue.size() > 0) {
+      return 3 + getDataPointSpecSize(arrayValue[arrayValue.getLowerBound()]);
+    }
+    return 4;
+  }
+  return 1;
+}
+
+template<class T>
+void CGenFunctionBlock<T>::fillDataPointSpec(const CIEC_ANY &paValue, CStringDictionary::TStringId *&paDataTypeIds) {
+  *(paDataTypeIds++) = paValue.getTypeNameID();
+  CIEC_ANY::EDataTypeID dataTypeId = paValue.getDataTypeID();
+  if(dataTypeId == CIEC_ANY::e_ARRAY) {
+    const CIEC_ARRAY &arrayValue = static_cast<const CIEC_ARRAY&>(paValue);
+    *(paDataTypeIds++) = static_cast<CStringDictionary::TStringId>(arrayValue.getLowerBound());
+    *(paDataTypeIds++) = static_cast<CStringDictionary::TStringId>(arrayValue.getUpperBound());
+    if(arrayValue.size() > 0) {
+      fillDataPointSpec(arrayValue[arrayValue.getLowerBound()], paDataTypeIds);
+    } else {
+      *(paDataTypeIds++) = arrayValue.getElementTypeNameID();
+    }
+  }
+}
+

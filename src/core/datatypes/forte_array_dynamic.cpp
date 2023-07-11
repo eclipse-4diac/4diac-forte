@@ -64,6 +64,29 @@ void CIEC_ARRAY_DYNAMIC::setup(intmax_t paLowerBound, intmax_t paUpperBound, CSt
   }
 }
 
+void CIEC_ARRAY_DYNAMIC::setup(const CStringDictionary::TStringId *paParameters) {
+  clear();
+  mLowerBound = static_cast<intmax_t>(paParameters[0]);
+  mUpperBound = static_cast<intmax_t>(paParameters[1]);
+  CStringDictionary::TStringId elementType = paParameters[2];
+
+  mElementDataTypeEntry = static_cast<CTypeLib::CDataTypeEntry *>(CTypeLib::findType(elementType,
+                                                                                     CTypeLib::getDTLibStart()));
+  if (mElementDataTypeEntry) {
+    auto size = static_cast<size_t>(mUpperBound - mLowerBound + 1);
+    mElementSize = mElementDataTypeEntry->getSize();
+    mData = operator new(size * mElementSize);
+    auto *dest = static_cast<TForteByte *>(mData);
+    for (; mSize < size; ++mSize) { // increment size one-by-one to track allocated elements for destruction
+      CIEC_ANY *element = mElementDataTypeEntry->createDataTypeInstance(dest);
+      if(elementType == g_nStringIdARRAY) {
+        static_cast<CIEC_ARRAY_DYNAMIC *>(element)->setup(paParameters + 3);
+      }
+      dest += mElementSize;
+    }
+  }
+}
+
 int CIEC_ARRAY_DYNAMIC::fromString(const char *paValue) {
   int nRetVal = -1;
   const char *pcRunner = paValue;
