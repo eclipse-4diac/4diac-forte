@@ -68,7 +68,7 @@ class CIEC_ANY {
     static int dummyInit();
 
     template<typename U, typename T>
-    static typename forte::core::mpl::implicit_or_explicit_cast<T, U>::type cast(const T paFromCast){
+    static typename forte::core::mpl::implicit_or_explicit_cast_t<T, U> cast(const T paFromCast){
       U oToCast;
       // If interacting with integers, add or remove sign extension
       if constexpr (std::is_base_of_v<CIEC_ANY_BIT, T> &&
