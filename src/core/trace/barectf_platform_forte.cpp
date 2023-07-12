@@ -17,7 +17,7 @@
 #include <chrono>
 #include "forte_architecture_time.h"
 
-uint64_t BarectfPlatformFORTE::getClock(void *const data) {
+uint64_t BarectfPlatformFORTE::getClock(void *const) {
   return getNanoSecondsMonotonic();
 }
 

@@ -346,8 +346,9 @@ void CFunctionBlock::readData(size_t paDINum, CIEC_ANY& paValue, const CDataConn
   valueString.reserve(paValue.getToStringBufferSize());
   paValue.toString(valueString.data(), valueString.capacity());
   barectf_default_trace_inputData(m_poResource->getTracePlatformContext().getContext(),
-          CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
-          static_cast<uint64_t>(paDINum), valueString.c_str());
+                                  getFBTypeName() ?: "null",
+                                  getInstanceName() ?: "null",
+                                  static_cast<uint64_t>(paDINum), valueString.c_str());
 }
 #endif //FORTE_TRACE_CTF
 
@@ -383,7 +384,8 @@ void CFunctionBlock::writeData(size_t paDONum, CIEC_ANY& paValue, CDataConnectio
   valueString.reserve(paValue.getToStringBufferSize());
   paValue.toString(valueString.data(), valueString.capacity());
   barectf_default_trace_outputData(m_poResource->getTracePlatformContext().getContext(),
-                                   CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
+                                   getFBTypeName() ?: "null",
+                                   getInstanceName() ?: "null",
                                    static_cast<uint64_t>(paDONum), valueString.c_str());
 }
 #endif //FORTE_TRACE_CTF
@@ -648,14 +650,16 @@ TForteUInt32 &CFunctionBlock::getEOMonitorData(TEventID paEOID){
 #ifdef FORTE_TRACE_CTF
 void CFunctionBlock::traceInputEvent(TEventID paEIID){
   barectf_default_trace_receiveInputEvent(m_poResource->getTracePlatformContext().getContext(),
-                                          CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
+                                          getFBTypeName() ?: "null",
+                                          getInstanceName() ?: "null",
                                           static_cast<uint64_t>(paEIID));
   traceInstanceData();
 }
 
 void CFunctionBlock::traceOutputEvent(TEventID paEOID){
   barectf_default_trace_sendOutputEvent(m_poResource->getTracePlatformContext().getContext(),
-                                        CStringDictionary::getInstance().get(m_nFBInstanceName) ?: "null",
+                                        getFBTypeName() ?: "null",
+                                        getInstanceName() ?: "null",
                                         static_cast<uint64_t>(paEOID));
 }
 
