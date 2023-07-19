@@ -13,7 +13,8 @@
  *******************************************************************************/
 
 #include "barectf_platform_forte.h"
-
+#include <iomanip>
+#include <chrono>
 #include "forte_architecture_time.h"
 
 uint64_t BarectfPlatformFORTE::getClock(void *const data) {
@@ -53,7 +54,7 @@ BarectfPlatformFORTE::BarectfPlatformFORTE(std::string filename, size_t bufferSi
 
 BarectfPlatformFORTE::BarectfPlatformFORTE(CStringDictionary::TStringId instanceName, size_t bufferSize)
         : BarectfPlatformFORTE(
-        std::string("trace_") + (CStringDictionary::getInstance().get(instanceName) ?: "null") + ".ctf",
+        std::string("trace_") + (CStringDictionary::getInstance().get(instanceName) ?: "null") + dateCapture() + ".ctf",
         bufferSize) {
 }
 
@@ -62,4 +63,16 @@ BarectfPlatformFORTE::~BarectfPlatformFORTE() {
     closePacket(this);
   }
   output.flush();
+}
+
+std::string BarectfPlatformFORTE::dateCapture() {
+  const auto now = std::chrono::system_clock::now();
+  const std::time_t time = std::chrono::system_clock::to_time_t(now);
+  const auto millisecondsPart = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count() % 1000;
+  struct tm ptm;
+  forte_localtime(&time, &ptm);
+  std::ostringstream stream;
+  stream << std::put_time(&ptm, "_%Y%m%d_%H%M%S");
+  stream << std::setfill('0') << std::setw(3) << millisecondsPart;
+  return stream.str();
 }

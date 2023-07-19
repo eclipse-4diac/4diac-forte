@@ -33,6 +33,7 @@ private:
     static void openPacket(void *data);
     static void closePacket(void * data);
     static const struct barectf_platform_callbacks barectfCallbacks;
+    static std::string dateCapture(void);
 public:
     barectf_default_ctx *getContext() {
       return &context;
