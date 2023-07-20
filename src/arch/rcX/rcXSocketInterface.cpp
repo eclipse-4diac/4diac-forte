@@ -601,7 +601,7 @@ RX_RESULT CrcXSocketInterface::sendData(TSocketDescriptor pa_nSockD, char* pa_pc
   return retVal;
 }
 //TODO: Check if it's possible to write, using TLR_QUE_GET_LOAD which should be less than 128
-int CrcXSocketInterface::sendDataOnTCP(TSocketDescriptor pa_nSockD, char* pa_pcData, unsigned int pa_unSize){
+int CrcXSocketInterface::sendDataOnTCP(TSocketDescriptor pa_nSockD, const char* pa_pcData, unsigned int pa_unSize){
   int bytesSent = -1;
   if(CrcXSocketInterface::getInstance().isInitialized()){
     TCPIP_DATA_TCP_CMD_SEND_REQ_T tData;
