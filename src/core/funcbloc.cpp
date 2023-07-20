@@ -46,8 +46,7 @@ CFunctionBlock::CFunctionBlock(CResource *pa_poSrcRes, const SFBInterfaceSpec *p
         mEOMonitorCount(nullptr), mEIMonitorCount(nullptr),
 #endif
         m_nFBInstanceName(pa_nInstanceNameId),
-        m_enFBState(
-                E_FBStates::Killed),   //put the FB in the killed state so that reseting it after creation will correctly initialize it
+        m_enFBState(E_FBStates::Idle), // put the FB in the idle state to avoid a useless reset after creation
         m_bDeletable(true) {
 }
 

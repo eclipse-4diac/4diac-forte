@@ -39,9 +39,6 @@ bool RMT_DEV::initialize() {
   //we nee to manually crate this interface2internal connection as the MGR is not managed by device
   m_oDConnMGR_ID.setSource(this, 0);
   m_oDConnMGR_ID.connect(&MGR, g_nStringIdMGR_ID);
-
-  //Perform reset command normally done by the typelib during the creation process
-  changeFBExecutionState(EMGMCommandType::Reset);
   return true;
 }
 
