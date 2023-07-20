@@ -1,6 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2014, 2018 ACIN, fortiss GmbH
- *               2018 Johannes Kepler University
+ * Copyright (c) 2011, 2023 ACIN, fortiss GmbH
+ *                          Johannes Kepler University
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,6 +12,7 @@
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *   Alois Zoitl - migrated fb tests to boost test infrastructure
+ *   Martin Jobst - add reset tests
  *******************************************************************************/
 #ifndef TESTS_CORE_FBTESTS_FBTESTFIXTURE_H_
 #define TESTS_CORE_FBTESTS_FBTESTFIXTURE_H_
@@ -68,6 +71,7 @@ class CFBTestFixtureBase : public CFunctionBlock{
     void executeEvent(TEventID paEIID) override;
 
     void setupTestInterface();
+    void performFBResetTests();
     void performFBDeleteTests();
 
     /* Check if all data inputs and data outputs as given in the interface struct can be accessed and
@@ -80,6 +84,7 @@ class CFBTestFixtureBase : public CFunctionBlock{
     void createDataOutputConnections();
 
     CStringDictionary::TStringId mTypeId;
+    std::string mConfigString;
     CFunctionBlock *mFBUnderTest;
     std::vector<CInterface2InternalDataConnection *> mDIConnections;
 

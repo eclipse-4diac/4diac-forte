@@ -388,6 +388,28 @@ void CFunctionBlock::writeData(size_t paDONum, CIEC_ANY& paValue, CDataConnectio
 }
 #endif //FORTE_TRACE_CTF
 
+void CFunctionBlock::setInitialValues() {
+  if(m_pstInterfaceSpec) {
+    const CStringDictionary::TStringId *pnDataIds;
+
+    pnDataIds = m_pstInterfaceSpec->m_aunDIDataTypeNames;
+    for (TPortId i = 0; i < m_pstInterfaceSpec->m_nNumDIs; ++i) {
+      TForteByte *varsData = nullptr;
+      CIEC_ANY *value = createDataPoint(pnDataIds, varsData);
+      if (value) { getDI(i)->setValue(*value); }
+      delete value;
+    }
+
+    pnDataIds = m_pstInterfaceSpec->m_aunDODataTypeNames;
+    for (TPortId i = 0; i < m_pstInterfaceSpec->m_nNumDOs; ++i) {
+      TForteByte *varsData = nullptr;
+      CIEC_ANY *value = createDataPoint(pnDataIds, varsData);
+      if (value) { getDO(i)->setValue(*value); }
+      delete value;
+    }
+  }
+}
+
 EMGMResponse CFunctionBlock::changeFBExecutionState(EMGMCommandType pa_unCommand){
   EMGMResponse nRetVal = EMGMResponse::InvalidState;
   switch (pa_unCommand){

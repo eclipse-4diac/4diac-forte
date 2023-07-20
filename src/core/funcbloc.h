@@ -482,6 +482,16 @@ class CFunctionBlock {
     }
 #endif //FORTE_TRACE_CTF
 
+    /*!\brief Set the initial values of data inputs, outputs, and internal vars.
+     *
+     * The default implementation initializes all input, output, and internal variables
+     * to the implicit default value corresponding to the type of the variable.
+     *
+     * Any FB with explicit default values still has to override setInitialValues for proper Reset behavior,
+     * other FBs may choose to override for improved performance.
+     */
+    virtual void setInitialValues();
+
     /*!\brief Function to send an output event via the adapter.
      *
      * \param pa_nAdapterID ID of Adapter in current FBs adapter list.
@@ -585,16 +595,6 @@ class CFunctionBlock {
      * \param pa_nEIID Event output ID where event occurred.
      */
     virtual void writeOutputData(TEventID paEO);
-
-    /*!\brief Set the initial values of data inputs, outputs, and internal vars.
-     *
-     * Functionblocks which need to specify special initial values for their
-     * data inputs, outputs, or internal vars other than 0 need to implement this
-     * function. The function will be invoked on entering the IDLE state (i.e.,
-     * on creation and on RESET).
-     */
-    virtual void setInitialValues() {
-    }
 
   public:
     CFunctionBlock(const CFunctionBlock&) = delete;

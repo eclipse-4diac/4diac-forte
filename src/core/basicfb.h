@@ -79,6 +79,8 @@ class CBasicFB : public CFunctionBlock {
      */
     CIEC_ANY* getInternalVar(CStringDictionary::TStringId pa_nInternalName);
 
+    void setInitialValues() override;
+
     CIEC_ANY **m_aoInternals; //!< A list of pointers to the internal variables.
 
 #ifdef FORTE_FMU

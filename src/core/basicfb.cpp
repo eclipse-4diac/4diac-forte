@@ -55,6 +55,19 @@ CBasicFB::~CBasicFB() {
   mBasicFBVarsData = nullptr;
 }
 
+void CBasicFB::setInitialValues() {
+  CFunctionBlock::setInitialValues();
+  if(cm_pstVarInternals) {
+    const CStringDictionary::TStringId *pnDataIds = cm_pstVarInternals->m_aunIntVarsDataTypeNames;
+    for (TPortId i = 0; i < cm_pstVarInternals->m_nNumIntVars; ++i) {
+      TForteByte *varsData = nullptr;
+      CIEC_ANY *value = createDataPoint(pnDataIds, varsData);
+      if (value) { getDI(i)->setValue(*value); }
+      delete value;
+    }
+  }
+}
+
 size_t CBasicFB::calculateBasicFBVarsDataSize(const SInternalVarsInformation &paVarInternals) {
   size_t result = 0;
   const CStringDictionary::TStringId *pnDataIds;

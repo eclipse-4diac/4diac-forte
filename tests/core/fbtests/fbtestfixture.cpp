@@ -1,6 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2014, 2018 ACIN, fortiss GmbH
- *               2018 Johannes Kepler University
+ * Copyright (c) 2011, 2023 ACIN, fortiss GmbH
+ *                          Johannes Kepler University
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,6 +12,7 @@
  * Contributors:
  *   Alois Zoitl  - initial API and implementation and/or initial documentation
  *   Alois Zoitl - migrated fb tests to boost test infrastructure
+ *   Martin Jobst - add reset tests
  *******************************************************************************/
 #include "fbtestfixture.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -67,6 +70,8 @@ bool CFBTestFixtureBase::initialize() {
 CFBTestFixtureBase::~CFBTestFixtureBase(){
   const SFBInterfaceSpec* interfaceSpec = mFBUnderTest->getFBInterfaceSpec();
 
+  performFBResetTests();
+
   for(size_t i = 0; i < interfaceSpec->m_nNumEOs; i++) {
    CEventConnection *eventCon = mFBUnderTest->getEOConnection(interfaceSpec->m_aunEONames[i]);
    BOOST_CHECK_EQUAL(EMGMResponse::Ready, eventCon->disconnect(this, interfaceSpec->m_aunEONames[i]));
@@ -95,6 +100,31 @@ CFBTestFixtureBase::~CFBTestFixtureBase(){
   }
 }
 
+void CFBTestFixtureBase::performFBResetTests() {
+  const SFBInterfaceSpec* interfaceSpec = mFBUnderTest->getFBInterfaceSpec();
+
+  BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeFBExecutionState(EMGMCommandType::Stop));
+  BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeFBExecutionState(EMGMCommandType::Reset));
+
+  CFunctionBlock *freshInstance = CTypeLib::createFB(mTypeId, mTypeId, getResourcePtr());
+  BOOST_REQUIRE(freshInstance != nullptr);
+
+  if(!mConfigString.empty()) {
+    freshInstance->configureFB(mConfigString.c_str());
+  }
+
+  for(size_t i = 0; i < interfaceSpec->m_nNumDIs; ++i) {
+    BOOST_TEST(mFBUnderTest->getDI(i)->equals(*freshInstance->getDI(i)));
+  }
+  for(size_t i = 0; i < interfaceSpec->m_nNumDOs; ++i) {
+    BOOST_TEST(mFBUnderTest->getDO(i)->equals(*freshInstance->getDO(i)));
+  }
+
+  BOOST_CHECK(CTypeLib::deleteFB(freshInstance));
+
+  BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeFBExecutionState(EMGMCommandType::Start));
+}
+
 void CFBTestFixtureBase::performFBDeleteTests() {
   BOOST_CHECK(!mFBUnderTest->isCurrentlyDeleteable());
 
@@ -108,6 +138,7 @@ void CFBTestFixtureBase::performFBDeleteTests() {
 
 void CFBTestFixtureBase::setup(const char* pa_acConfigString){
   if(pa_acConfigString != nullptr) {
+    mConfigString = pa_acConfigString;
     mFBUnderTest->configureFB(pa_acConfigString);
   }
   BOOST_ASSERT(initialize());
