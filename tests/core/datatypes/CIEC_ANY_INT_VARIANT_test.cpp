@@ -22,6 +22,22 @@ BOOST_AUTO_TEST_SUITE(CIEC_ANY_INT_VARIANT_function_test)
       BOOST_CHECK_EQUAL(test.getDataTypeID(), CIEC_ANY::e_ANY);
     }
 
+    BOOST_AUTO_TEST_CASE(Initialization_test) {
+      // assign value
+      CIEC_ANY_INT_VARIANT test1 = CIEC_DINT(17);
+      BOOST_TEST(17 == static_cast<CIEC_DINT::TValueType>(std::get<CIEC_DINT>(test1)));
+  
+      // assign generic value
+      CIEC_DINT test3 = CIEC_DINT(4);
+      CIEC_ANY_INT &test4 = test3;
+      CIEC_ANY_INT_VARIANT test2 = test4;
+      BOOST_TEST(4 == static_cast<CIEC_DINT::TValueType>(std::get<CIEC_DINT>(test2)));
+  
+      // assign each other
+      CIEC_ANY_INT_VARIANT test5 = test1;
+      BOOST_TEST(17 == static_cast<CIEC_DINT::TValueType>(std::get<CIEC_DINT>(test5)));
+    }
+  
     BOOST_AUTO_TEST_CASE(Assignment_test) {
       CIEC_ANY_INT_VARIANT test1;
       CIEC_ANY_INT_VARIANT test2;
@@ -33,6 +49,12 @@ BOOST_AUTO_TEST_SUITE(CIEC_ANY_INT_VARIANT_function_test)
       // assign value
       test1 = CIEC_DINT(17);
       BOOST_TEST(17 == static_cast<CIEC_DINT::TValueType>(std::get<CIEC_DINT>(test1)));
+
+      // assign generic value
+      CIEC_DINT test3 = CIEC_DINT(4);
+      CIEC_ANY_INT &test4 = test3;
+      test2 = test4;
+      BOOST_TEST(4 == static_cast<CIEC_DINT::TValueType>(std::get<CIEC_DINT>(test2)));
 
       // assign each other
       test2.setValue(test1);

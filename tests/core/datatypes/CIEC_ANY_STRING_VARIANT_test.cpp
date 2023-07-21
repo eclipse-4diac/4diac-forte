@@ -24,21 +24,43 @@ BOOST_AUTO_TEST_SUITE(CIEC_ANY_STRING_VARIANT_function_test)
       BOOST_CHECK_EQUAL(test.getDataTypeID(), CIEC_ANY::e_ANY);
     }
 
+    BOOST_AUTO_TEST_CASE(Initialization_test) {
+      // assign value
+      CIEC_ANY_STRING_VARIANT test1 = "abc"_STRING;
+      BOOST_TEST("abc"s == std::get<CIEC_STRING>(test1));
+
+      // assign generic value
+      CIEC_STRING test3 = "abc"_STRING;
+      CIEC_ANY_STRING &test4 = test3;
+      CIEC_ANY_STRING_VARIANT test2 = test4;
+      BOOST_TEST("abc"s == std::get<CIEC_STRING>(test2));
+
+      // assign each other
+      CIEC_ANY_STRING_VARIANT test5 = test1;
+      BOOST_TEST("abc"s == std::get<CIEC_STRING>(test5));
+    }
+
     BOOST_AUTO_TEST_CASE(Assignment_test) {
       CIEC_ANY_STRING_VARIANT test1;
       CIEC_ANY_STRING_VARIANT test2;
 
-      // initial value must be 0
-      BOOST_TEST('\0' == std::get<CIEC_STRING>(test1).getStorage()[0]);
-      BOOST_TEST('\0' == std::get<CIEC_STRING>(test2).getStorage()[0]);
+      // initial value must be empty string
+      BOOST_TEST(std::get<CIEC_STRING>(test1).empty());
+      BOOST_TEST(std::get<CIEC_STRING>(test2).empty());
 
       // assign value
       test1 = "abc"_STRING;
-      BOOST_TEST("abc"s == std::get<CIEC_STRING>(test1).getStorage());
+      BOOST_TEST("abc"s == std::get<CIEC_STRING>(test1));
+
+      // assign generic value
+      CIEC_STRING test3 = "abc"_STRING;
+      CIEC_ANY_STRING &test4 = test3;
+      test2 = test4;
+      BOOST_TEST("abc"s == std::get<CIEC_STRING>(test2));
 
       // assign each other
       test2.setValue(test1);
-      BOOST_TEST("abc"s == std::get<CIEC_STRING>(test2).getStorage());
+      BOOST_TEST("abc"s == std::get<CIEC_STRING>(test2));
 
       // assign dynamic value
       test2.setValue(CIEC_WSTRING("abc"));

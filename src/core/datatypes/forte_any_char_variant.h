@@ -37,8 +37,17 @@ public:
 
     CIEC_ANY_CHAR_VARIANT(const CIEC_ANY_CHAR_VARIANT &paVal) : CIEC_ANY_CHAR(), variant(paVal) {}
 
+    CIEC_ANY_CHAR_VARIANT(const CIEC_ANY_CHAR &paVal) {
+      setValue(paVal.unwrap());
+    }
+
     CIEC_ANY_CHAR_VARIANT &operator=(const CIEC_ANY_CHAR_VARIANT &paOther) {
       variant::operator=(paOther);
+      return *this;
+    }
+
+    CIEC_ANY_CHAR_VARIANT &operator=(const CIEC_ANY_CHAR &paOther) {
+      setValue(paOther.unwrap());
       return *this;
     }
 
@@ -63,6 +72,8 @@ public:
 
 static_assert(std::is_copy_constructible_v<CIEC_ANY_CHAR_VARIANT>);
 static_assert(std::is_move_constructible_v<CIEC_ANY_CHAR_VARIANT>);
+static_assert(std::is_constructible_v<CIEC_ANY_CHAR_VARIANT, const CIEC_ANY_CHAR &>);
 static_assert(std::is_copy_assignable_v<CIEC_ANY_CHAR_VARIANT>);
+static_assert(std::is_assignable_v<CIEC_ANY_CHAR_VARIANT, const CIEC_ANY_CHAR &>);
 static_assert(std::is_destructible_v<CIEC_ANY_CHAR_VARIANT>);
 
