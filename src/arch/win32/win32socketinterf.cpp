@@ -118,7 +118,7 @@ CWin32SocketInterface::TSocketDescriptor CWin32SocketInterface::acceptTCPConnect
   return nRetVal;
 }
 
-int CWin32SocketInterface::sendDataOnTCP(TSocketDescriptor pa_nSockD, char* pa_pcData, unsigned int pa_unSize){
+int CWin32SocketInterface::sendDataOnTCP(TSocketDescriptor pa_nSockD, const char* pa_pcData, unsigned int pa_unSize){
   // This function sends all data in the buffer before it returns!
   int nToSend = pa_unSize;
   int nRetVal = 0;
