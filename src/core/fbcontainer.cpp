@@ -111,6 +111,7 @@ EMGMResponse CFBContainer::deleteFB(forte::core::TNameIdentifier::CIterator &paN
       TFunctionBlockList::iterator it = getFBIterator(fBNameId);
       if(fBIteratorIsValid(it,fBNameId) && (*it)->isCurrentlyDeleteable()){
         mFunctionBlocks.erase(it);
+        CTypeLib::deleteFB(*it);
         retval = EMGMResponse::Ready;
       } else {
         retval = EMGMResponse::InvalidState;
