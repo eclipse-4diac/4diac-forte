@@ -19,7 +19,7 @@
 
 #include <memory>
 
-#define QOS 0
+#define MQTT_QOS 0
 
 //raw[].mqtt[tcp://localhost:1883, ClientID, Topic]
 

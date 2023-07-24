@@ -161,12 +161,12 @@ void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings,
   paUaServerConfig.applicationDescription.applicationType = UA_APPLICATIONTYPE_DISCOVERYSERVER;
   // hostname will be added by mdns library
   UA_String_clear(&paUaServerConfig.mdnsConfig.mdnsServerName);
-  paUaServerConfig.mdnsConfig.mdnsServerName = UA_String_fromChars(paServerStrings.mMdnsServerName.getValue());
+  paUaServerConfig.mdnsConfig.mdnsServerName = UA_String_fromChars(paServerStrings.mMdnsServerName.c_str());
 #endif //FORTE_COM_OPC_UA_MULTICAST
 
   UA_String_clear(&paUaServerConfig.customHostname);
 #ifdef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
-  UA_String customHost = UA_STRING(paServerStrings.mHostname.getValue());
+  UA_String customHost = UA_String_fromChars(paServerStrings.mHostname.c_str());
   UA_String_copy(&customHost, &paUaServerConfig.customHostname);
 #endif
 

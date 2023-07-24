@@ -51,7 +51,7 @@ int CMQTTClient::sendData(void* paData, unsigned int paSize, const std::string& 
   MQTTAsync_message message = MQTTAsync_message_initializer;
   message.payload = paData;
   message.payloadlen = paSize;
-  message.qos = QOS;
+  message.qos = MQTT_QOS;
   message.retained = 0;
   return MQTTAsync_sendMessage(mAsClient, paTopicName.c_str(), &message, NULL);
 }
@@ -165,7 +165,7 @@ int CMQTTClient::mqttSubscribe(const MQTTComLayer* paLayer) {
   opts.onSuccess = onSubscribeSucceed;
   opts.onFailure = onSubscribeFailed;
   opts.context = (void*)paLayer;
-  int rc = MQTTAsync_subscribe(mAsClient, paLayer->getTopicName().c_str(), QOS, &opts);
+  int rc = MQTTAsync_subscribe(mAsClient, paLayer->getTopicName().c_str(), MQTT_QOS, &opts);
   if (MQTTASYNC_SUCCESS != rc) { //call failed
     CCriticalRegion sectionState(mMQTTMutex);
     DEVLOG_INFO("MQTT: Subscribe Request failed with val = %d\n", rc);
