@@ -26,22 +26,12 @@ const TEventID E_RESTART::csmWARMID;
 const TEventID E_RESTART::csmSTOPID;
 
 const SFBInterfaceSpec E_RESTART::scm_stFBInterfaceSpec = {
-  0,
-  nullptr,
-  nullptr,
-  nullptr,
-  3,
-  scm_aunEONameIds,
-  nullptr,
-  nullptr,
-  0,
-  nullptr,
-  nullptr,
-  0,
-  nullptr,
-  nullptr,
-  0,
-  nullptr
+  0, nullptr, nullptr, nullptr,
+  3, scm_aunEONameIds, nullptr, nullptr,
+  0, nullptr, nullptr,
+  0, nullptr, nullptr,
+  0, nullptr,
+  0, nullptr
 };
 
 void E_RESTART::executeEvent(TEventID pa_nEIID) {

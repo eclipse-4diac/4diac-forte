@@ -31,8 +31,15 @@ const TDataIOID FB_TON::scm_anEOWith[] = { 0, 1, scmWithListDelimiter };
 const TForteInt16 FB_TON::scm_anEOWithIndexes[] = { 0 };
 const CStringDictionary::TStringId FB_TON::scm_anEventOutputNames[] = { g_nStringIdCNF };
 
-const SFBInterfaceSpec FB_TON::scm_stFBInterfaceSpec = { 1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes, 1, scm_anEventOutputNames, scm_anEOWith,
-  scm_anEOWithIndexes, 2, scm_anDataInputNames, scm_aunDIDataTypeIds, 2, scm_anDataOutputNames, scm_aunDODataTypeIds, 0, nullptr };
+const SFBInterfaceSpec FB_TON::scm_stFBInterfaceSpec = {
+  1, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
+  1, scm_anEventOutputNames, scm_anEOWith,
+  scm_anEOWithIndexes,
+  2, scm_anDataInputNames, scm_aunDIDataTypeIds,
+  2, scm_anDataOutputNames, scm_aunDODataTypeIds,
+  0, nullptr,
+  0, nullptr
+};
 
 void FB_TON::executeEvent(TEventID pa_nEIID) {
   if(scm_nEventREQID == pa_nEIID) {

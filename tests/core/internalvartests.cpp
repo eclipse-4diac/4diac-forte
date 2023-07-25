@@ -21,7 +21,14 @@
 # include "stringlist.h"
 #endif
 
-const SFBInterfaceSpec gcEmptyInterface = { 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr };
+const SFBInterfaceSpec gcEmptyInterface = {
+  0, nullptr, nullptr, nullptr, 
+  0, nullptr, nullptr, nullptr, 
+  0, nullptr, nullptr, 
+  0, nullptr, nullptr, 
+  0, nullptr, 
+  0, nullptr
+};
 
 class CInternalVarTestFB : public CBasicFB{
   public:

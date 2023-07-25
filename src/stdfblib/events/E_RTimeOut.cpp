@@ -28,6 +28,7 @@ const SFBInterfaceSpec FORTE_E_RTimeOut::scm_stFBInterfaceSpec = {
   0, nullptr, nullptr, nullptr,
   0, nullptr, nullptr,
   0, nullptr, nullptr,
+  0, nullptr,
   1, scm_astAdapterInstances
 };
 

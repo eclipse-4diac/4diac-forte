@@ -36,6 +36,7 @@ const SFBInterfaceSpec FORTE_E_REND::scm_stFBInterfaceSpec = {
   1, scm_anEventOutputNames, nullptr, scm_anEOWithIndexes,
   0, nullptr, nullptr,
   0, nullptr, nullptr,
+  0, nullptr,
   0, nullptr
 };
 

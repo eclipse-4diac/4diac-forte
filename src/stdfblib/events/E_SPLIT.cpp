@@ -36,6 +36,7 @@ const SFBInterfaceSpec FORTE_E_SPLIT::scm_stFBInterfaceSpec = {
   2, scm_anEventOutputNames, nullptr, scm_anEOWithIndexes,
   0, nullptr, nullptr,
   0, nullptr, nullptr,
+  0, nullptr,
   0, nullptr
 };
 

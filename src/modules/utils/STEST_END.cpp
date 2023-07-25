@@ -26,6 +26,7 @@ const SFBInterfaceSpec FORTE_STEST_END::scm_stFBInterfaceSpec = {
   1,  scm_anEventInputNames,  nullptr,  scm_anEIWithIndexes,
   0,  nullptr,  nullptr, nullptr,  0,  nullptr, nullptr,
   0,  nullptr, nullptr,
+  0, nullptr,
   0, nullptr
 };
 

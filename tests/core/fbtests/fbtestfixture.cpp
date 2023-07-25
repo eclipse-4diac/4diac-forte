@@ -224,6 +224,8 @@ void CFBTestFixtureBase::setupTestInterface(){
   testerInterfaceSpec->m_nNumDOs = 0;
   testerInterfaceSpec->m_aunDONames = nullptr;
   testerInterfaceSpec->m_aunDODataTypeNames = nullptr;
+  testerInterfaceSpec->mNumDIOs = 0;
+  testerInterfaceSpec->mDIONames = nullptr;
   testerInterfaceSpec->m_nNumAdapters = 0;
   testerInterfaceSpec->m_pstAdapterInstanceDefinition = nullptr;
 

@@ -28,7 +28,7 @@ EMGMResponse CDataConnection::connect(CFunctionBlock *paDstFB,
   TPortId dstPortId = paDstFB->getDIID(paDstPortNameId);
   if(cgInvalidPortId != dstPortId){
     CIEC_ANY *dstDataPoint = paDstFB->getDIFromPortId(dstPortId);
-    retVal = establishDataConnection(paDstFB, dstPortId, dstDataPoint);
+    retVal = CDataConnection::establishDataConnection(paDstFB, dstPortId, dstDataPoint);
   }
   return retVal;
 }

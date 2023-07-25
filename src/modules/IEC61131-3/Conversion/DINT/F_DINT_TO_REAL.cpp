@@ -51,6 +51,7 @@ const SFBInterfaceSpec FORTE_F_DINT_TO_REAL::scm_stFBInterfaceSpec = {
   1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
   1, scm_anDataInputNames, scm_anDataInputTypeIds,
   1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+  0, nullptr,
   0, nullptr
 };
 

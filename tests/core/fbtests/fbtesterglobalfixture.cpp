@@ -16,10 +16,14 @@
 #endif
 #include <boost/test/unit_test.hpp>
 
-const static SFBInterfaceSpec gscTestDevSpec = { 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr,
-          nullptr, 0, nullptr, nullptr, 0, nullptr, nullptr,
-          0,
-          nullptr };
+const static SFBInterfaceSpec gscTestDevSpec = {
+  0, nullptr, nullptr, nullptr,
+  0, nullptr, nullptr, nullptr,
+  0, nullptr, nullptr,
+  0, nullptr, nullptr,
+  0, nullptr,
+  0, nullptr
+};
 
 CDevice *CFBTestDataGlobalFixture::smTestDev;
 CResource *CFBTestDataGlobalFixture::smTestRes;

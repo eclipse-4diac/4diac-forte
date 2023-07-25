@@ -33,9 +33,10 @@ const TForteInt16 FORTE_CFB_TEST::scm_anEOWithIndexes[] = {0, 2, -1};
 const CStringDictionary::TStringId FORTE_CFB_TEST::scm_anEventOutputNames[] = {g_nStringIdCNF, g_nStringIdCHANGED};
 
 const SFBInterfaceSpec FORTE_CFB_TEST::scm_stFBInterfaceSpec = {
-  2,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  1,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+  2, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
+  2, scm_anEventOutputNames, scm_anEOWith,scm_anEOWithIndexes, 1, scm_anDataInputNames, scm_anDataInputTypeIds,
+  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+  0, nullptr,
   0, nullptr
 };
 

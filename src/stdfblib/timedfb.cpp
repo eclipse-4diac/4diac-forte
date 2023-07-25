@@ -24,22 +24,12 @@ const CStringDictionary::TStringId CTimedFB::scm_aunDINameIds[] = {g_nStringIdDT
 const CStringDictionary::TStringId CTimedFB::scm_aunDIDataTypeNameIds[] = {g_nStringIdTIME};
 
 const SFBInterfaceSpec CTimedFB::scm_stFBInterfaceSpec = {
-  2,
-  scm_aunEINameIds,
-  scm_anEIWith,
-  scm_anEIWithIndexes,
-  1,
-  scm_aunEONameIds,
-  nullptr,
-  nullptr,
-  1,
-  scm_aunDINameIds,
-  scm_aunDIDataTypeNameIds,
-  0,
-  nullptr,
-  nullptr,
-  0,
-  nullptr
+  2, scm_aunEINameIds, scm_anEIWith, scm_anEIWithIndexes,
+  1, scm_aunEONameIds, nullptr, nullptr,
+  1, scm_aunDINameIds, scm_aunDIDataTypeNameIds,
+  0, nullptr, nullptr,
+  0, nullptr,
+  0, nullptr
 };
 
 CTimedFB::CTimedFB(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes, ETimerActivationType paType) :

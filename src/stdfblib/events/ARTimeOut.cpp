@@ -33,6 +33,7 @@ const SFBInterfaceSpec FORTE_ARTimeOut::scm_stFBInterfaceSpecSocket = {
   2, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
   0, nullptr, nullptr,
   1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+  0, nullptr,
   0, nullptr
 };
 
@@ -41,6 +42,7 @@ const SFBInterfaceSpec FORTE_ARTimeOut::scm_stFBInterfaceSpecPlug = {
   1, scm_anEventInputNames, nullptr, scm_anEIWithIndexes,
   1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
   0, nullptr, nullptr,
+  0, nullptr,
   0, nullptr
 };
 

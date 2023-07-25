@@ -25,8 +25,7 @@ BOOST_AUTO_TEST_CASE(ST_ITER_CIEC_INT_IMPLICIT_BY)
     CIEC_INT runner;
     CIEC_INT start(0);
     CIEC_INT to(42);
-    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_INT>(runner, start, to))
-    {
+    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_INT>(runner, start, to)) {
     }
     BOOST_TEST(static_cast<CIEC_INT::TValueType>(runner) == (static_cast<CIEC_INT::TValueType>(to) + 1));
 }
@@ -37,8 +36,7 @@ BOOST_AUTO_TEST_CASE(ST_ITER_CIEC_INT_EXPLICIT_BY)
     CIEC_INT start(0);
     CIEC_INT to(42);
     CIEC_INT by(2);
-    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_INT>(runner, start, to, by))
-    {
+    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_INT>(runner, start, to, by)) {
     }
     BOOST_TEST(static_cast<CIEC_INT::TValueType>(runner) == (static_cast<CIEC_INT::TValueType>(to) + 2));
 }
@@ -48,8 +46,7 @@ BOOST_AUTO_TEST_CASE(ST_ITER_CIEC_UINT_IMPLICIT_BY)
     CIEC_UINT runner;
     CIEC_UINT start(0);
     CIEC_UINT to(42);
-    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_UINT>(runner, start, to))
-    {
+    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_UINT>(runner, start, to)) {
     }
     BOOST_TEST(static_cast<CIEC_UINT::TValueType>(runner) == (static_cast<CIEC_UINT::TValueType>(to) + 1));
 }
@@ -60,8 +57,7 @@ BOOST_AUTO_TEST_CASE(ST_ITER_CIEC_UINT_EXPLICIT_BY)
     CIEC_UINT start(0);
     CIEC_UINT to(42);
     CIEC_UINT by(2);
-    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_UINT>(runner, start, to, by))
-    {
+    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_UINT>(runner, start, to, by)) {
     }
     BOOST_TEST(static_cast<CIEC_UINT::TValueType>(runner) == (static_cast<CIEC_UINT::TValueType>(to) + 2));
 }
@@ -71,8 +67,7 @@ BOOST_AUTO_TEST_CASE(ST_ITER_CIEC_INT_IMPLICIT_BY_OVERFLOW)
     CIEC_INT runner;
     CIEC_INT start(CIEC_INT::scm_nMaxVal - 2);
     CIEC_INT to(CIEC_INT::scm_nMaxVal);
-    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_INT>(runner, start, to))
-    {
+    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_INT>(runner, start, to)) {
     }
     BOOST_TEST(static_cast<CIEC_INT::TValueType>(runner) == CIEC_INT::scm_nMaxVal);
 }
@@ -83,8 +78,7 @@ BOOST_AUTO_TEST_CASE(ST_ITER_CIEC_INT_EXPLICIT_BY_OVERFLOW)
     CIEC_INT start(CIEC_INT::scm_nMaxVal - 2);
     CIEC_INT to(CIEC_INT::scm_nMaxVal);
     CIEC_INT by(1);
-    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_INT>(runner, start, to, by))
-    {
+    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_INT>(runner, start, to, by)) {
     }
     BOOST_TEST(static_cast<CIEC_INT::TValueType>(runner) == CIEC_INT::scm_nMaxVal);
 }
@@ -94,8 +88,7 @@ BOOST_AUTO_TEST_CASE(ST_ITER_CIEC_UINT_IMPLICIT_BY_OVERFLOW)
     CIEC_UINT runner;
     CIEC_UINT start(CIEC_UINT::scm_nMaxVal - 2);
     CIEC_UINT to(CIEC_UINT::scm_nMaxVal);
-    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_UINT>(runner, start, to))
-    {
+    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_UINT>(runner, start, to)) {
     }
     BOOST_TEST(static_cast<CIEC_UINT::TValueType>(runner) == CIEC_UINT::scm_nMaxVal);
 }
@@ -106,8 +99,7 @@ BOOST_AUTO_TEST_CASE(ST_ITER_CIEC_UINT_EXPLICIT_BY_OVERFLOW)
     CIEC_UINT start(CIEC_UINT::scm_nMaxVal - 2);
     CIEC_UINT to(CIEC_UINT::scm_nMaxVal);
     CIEC_UINT by(1);
-    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_UINT>(runner, start, to, by))
-    {
+    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_UINT>(runner, start, to, by)) {
     }
     BOOST_TEST(static_cast<CIEC_UINT::TValueType>(runner) == CIEC_UINT::scm_nMaxVal);
 }
@@ -118,8 +110,7 @@ BOOST_AUTO_TEST_CASE(ST_ITER_CIEC_INT_EXPLICIT_BY_UNDERFLOW)
     CIEC_INT start(CIEC_INT::scm_nMinVal + 2);
     CIEC_INT to(CIEC_INT::scm_nMinVal);
     CIEC_INT by(-1);
-    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_INT>(runner, start, to, by))
-    {
+    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_INT>(runner, start, to, by)) {
     }
     BOOST_TEST(static_cast<CIEC_INT::TValueType>(runner) == CIEC_INT::scm_nMinVal);
 }
@@ -130,8 +121,7 @@ BOOST_AUTO_TEST_CASE(ST_ITER_CIEC_UINT_EXPLICIT_BY_UNDERFLOW)
     CIEC_UINT start(CIEC_UINT::scm_nMinVal + 2);
     CIEC_UINT to(CIEC_UINT::scm_nMinVal);
     CIEC_INT by(-1);
-    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_UINT, CIEC_INT>(runner, start, to, by))
-    {
+    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_UINT, CIEC_INT>(runner, start, to, by)) {
     }
     BOOST_TEST(static_cast<CIEC_UINT::TValueType>(runner) == 0);
 }
@@ -142,8 +132,7 @@ BOOST_AUTO_TEST_CASE(ST_ITER_CIEC_INT_ABORT_BEFORE_FIRST_LOOP)
     CIEC_INT start(0);
     CIEC_INT to(-1);
     CIEC_INT by(1);
-    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_INT>(runner, start, to, by))
-    {
+    for (auto st_lv_synthetic_1 : ST_FOR_ITER<CIEC_INT>(runner, start, to, by)) {
     }
     BOOST_TEST(static_cast<CIEC_INT::TValueType>(runner) == 0);
 }

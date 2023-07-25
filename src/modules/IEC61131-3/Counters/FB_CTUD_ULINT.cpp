@@ -51,6 +51,7 @@ const SFBInterfaceSpec FORTE_FB_CTUD_ULINT::scm_stFBInterfaceSpec = {
   1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
   5, scm_anDataInputNames, scm_anDataInputTypeIds,
   3, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+  0, nullptr,
   0, nullptr
 };
 

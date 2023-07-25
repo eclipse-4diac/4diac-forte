@@ -20,7 +20,14 @@
 
 DEFINE_GENERIC_ADAPTER_TYPE(CAnyAdapter, g_nStringIdANY_ADAPTER)
 
-const SFBInterfaceSpec CAnyAdapter::scm_stFBInterfaceSpec = { 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr };
+const SFBInterfaceSpec CAnyAdapter::scm_stFBInterfaceSpec = {
+  0, nullptr, nullptr, nullptr,
+  0, nullptr, nullptr, nullptr,
+  0, nullptr, nullptr,
+  0, nullptr, nullptr,
+  0, nullptr,
+  0, nullptr
+};
 
 CAnyAdapter::CAnyAdapter(CStringDictionary::TStringId pa_anAdapterInstanceName, CResource *pa_poSrcRes, bool pa_bIsPlug) :
     CAdapter(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_anAdapterInstanceName, &scm_stFBInterfaceSpec, pa_bIsPlug), m_ParentFB(nullptr),
@@ -45,6 +52,8 @@ void CAnyAdapter::typifyAnyAdapter(CAdapter *pa_poPeer){
   m_stCurrentFBInterfaceSpec.m_nNumDOs = pa_poPeer->getAdapterInterfaceSpec()->m_nNumDIs;
   m_stCurrentFBInterfaceSpec.m_aunDONames = pa_poPeer->getAdapterInterfaceSpec()->m_aunDINames;
   m_stCurrentFBInterfaceSpec.m_aunDODataTypeNames = pa_poPeer->getAdapterInterfaceSpec()->m_aunDIDataTypeNames;
+  m_stCurrentFBInterfaceSpec.mNumDIOs = pa_poPeer->getAdapterInterfaceSpec()->mNumDIOs;
+  m_stCurrentFBInterfaceSpec.mDIONames = pa_poPeer->getAdapterInterfaceSpec()->mDIONames;
 
   setupFBInterface(&m_stCurrentFBInterfaceSpec);
   fillEventEntryList(m_ParentFB);

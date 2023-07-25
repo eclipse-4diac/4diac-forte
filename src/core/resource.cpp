@@ -705,19 +705,23 @@ CConnection *CResource::getConnection(forte::core::TNameIdentifier &paSrcNameLis
     forte::core::TNameIdentifier::CIterator runner(paSrcNameList.begin());
 
     CFunctionBlock *srcFB = getContainedFB(runner);
-    if((nullptr != srcFB) && (runner.isLastEntry())){
+    if((nullptr != srcFB) && (runner.isLastEntry())) {
       //only use the found result if we have really the last result in the list
       con = srcFB->getEOConnection(portName);
-      if(nullptr == con){
-        //it is not an event connection try data connection next
-        con = srcFB->getDOConnection(portName);
-        if(nullptr == con){
-          //it is not an data connection try data connection next
-          //TODO think if it would be better to move this to CFunctionBlock
-          CAdapter *adp = srcFB->getAdapter(portName);
-          if((nullptr != adp) && (adp->isPlug())){
-            //only plugs hold the connection object
-            con = adp->getAdapterConnection();
+      if(nullptr == con) {
+        //it is not an event connection try inout data connection next
+        con = srcFB->getDIOOutConnection(portName);
+        if(nullptr == con) {
+          //it is not an inout connection try data connection next
+          con = srcFB->getDOConnection(portName);
+          if(nullptr == con) {
+            //it is not an data connection try data connection next
+            //TODO think if it would be better to move this to CFunctionBlock
+            CAdapter *adp = srcFB->getAdapter(portName);
+            if((nullptr != adp) && (adp->isPlug())){
+              //only plugs hold the connection object
+              con = adp->getAdapterConnection();
+            }
           }
         }
       }

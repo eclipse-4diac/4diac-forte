@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2018 ACIN, Profactor GmbH, nxtControl GmbH, fortiss GmbH,
- *                           Johannes Kepler University
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2005, 2023 ACIN, Profactor GmbH, nxtControl GmbH, fortiss GmbH,
+ *                          Johannes Kepler University, Martin Erich Jobst,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -24,6 +24,7 @@
 #include "mgmcmd.h"
 #include "event.h"
 #include "dataconn.h"
+#include "inoutdataconn.h"
 #include "eventconn.h"
 #include "stringdict.h"
 #include "../arch/devlog.h"
@@ -82,18 +83,20 @@ struct SCFB_FBInstanceData {
 struct SFBInterfaceSpec {
     TEventID m_nNumEIs; //!< Number of event inputs
     const CStringDictionary::TStringId *m_aunEINames; //!< List of the event input names
-    const TDataIOID *m_anEIWith; //!< Input WITH reference list. This list contains an array of input data ids. For each input event the associated data inputs are listed. The start for each input event is specified in the m_anEIWithIndexes field. The end is defined trough the value 255.
+    const TDataIOID *m_anEIWith; //!< Input WITH reference list. This list contains an array of input data ids. For each input event the associated data inputs are listed. The start for each input event is specified in the m_anEIWithIndexes field. The end is defined by the value scmWithListDelimiter.
     const TForteInt16 *m_anEIWithIndexes; //!< Index list for each input event. This list gives for each input event an entry in the m_anEIWith. Input events are numbered starting from 0. if the input event has no assciated data inputs -1 is the entry at this event inputs postion.
     TEventID m_nNumEOs; //!< Number of event outputs
     const CStringDictionary::TStringId *m_aunEONames; //!< List of the event output names
-    const TDataIOID *m_anEOWith; //!< Output WITH reference list. This list contains an array of output data ids. For each output event the associated data outputs are listed. The start for each output event is specified in the m_anEOWithIndexes field. The end is defined trough the value 255.
-    const TForteInt16 *m_anEOWithIndexes; //!< Index list for each output event. This list gives for each output event an entry in the m_anEOWith. Output events are numbered starting from 0. if the output event has no assciated data outputs -1 is the entry at this event outputs postion. Additionally at the postion m_nNumEOs in this list an index to an own list in the m_anEOWith list is stored specifying all output data port that are not associated with any output event. That values will be updated on every FB invocation.
+    const TDataIOID *m_anEOWith; //!< Output WITH reference list. This list contains an array of output data ids. For each output event the associated data outputs are listed. The start for each output event is specified in the m_anEOWithIndexes field. The end is defined by the value scmWithListDelimiter.
+    const TForteInt16 *m_anEOWithIndexes; //!< Index list for each output event. This list gives for each output event an entry in the m_anEOWith. Output events are numbered starting from 0. If the output event has no assciated data outputs -1 is the entry at this event outputs postion. Additionally at the postion m_nNumEOs in this list an index to an own list in the m_anEOWith list is stored specifying all output data port that are not associated with any output event. That values will be updated on every FB invocation.
     TPortId m_nNumDIs; //!< Number of data inputs
     const CStringDictionary::TStringId *m_aunDINames; //!< List of the data input names
     const CStringDictionary::TStringId *m_aunDIDataTypeNames; //!< List of the data type names for the data inputs
     TPortId m_nNumDOs; //!< Number of data outputs
     const CStringDictionary::TStringId *m_aunDONames; //!< List of the data output names
     const CStringDictionary::TStringId *m_aunDODataTypeNames; //!< List of the data type names for the data outputs
+    TPortId mNumDIOs;  //!< Number of data inouts
+    const CStringDictionary::TStringId *mDIONames;         //!< List of the data inout names
     TPortId m_nNumAdapters; //!< Number of Adapters
     const SAdapterInstanceDef *m_pstAdapterInstanceDefinition; //!< List of adapter instances
 };
@@ -103,6 +106,7 @@ struct SFBInterfaceSpec {
 class CFunctionBlock {
   public:
     constexpr static TDataIOID scmWithListDelimiter = cgInvalidPortId; //!< value identifying the end of a with list
+    constexpr static TForteInt16 scmNoDataAssociated = cgInvalidPortId; //!< value identifying the end of a with list
 
     /*!\brief Possible states of a runable object.
      *
@@ -194,6 +198,8 @@ class CFunctionBlock {
      */
     virtual bool connectDI(TPortId paDIPortId, CDataConnection *pa_poDataCon);
 
+    virtual bool connectDIO(TPortId paDIPortId, CInOutDataConnection *paDataCon);
+
     /*! \brief Gets the index of the m_acDINames array of a specific data output of a FB
      *
      * \param paDINameId  StringId of the data input name.
@@ -215,16 +221,26 @@ class CFunctionBlock {
     CIEC_ANY* getDIFromPortId(TPortId paDIPortId);
 
     /*! \brief Gets the index of the m_acDONames array of a specific data output of a FB
-     * \param pa_unDONameId  StringId of the data input name.
+     * \param paDONameId  StringId of the data input name.
      * \return Returns index of the Data Output Array of a FB
      */
-    TPortId getDOID(CStringDictionary::TStringId pa_unDONameId) const {
-      return getPortId(pa_unDONameId, mInterfaceSpec->m_nNumDOs, mInterfaceSpec->m_aunDONames);
+    TPortId getDOID(CStringDictionary::TStringId paDONameId) const {
+      return getPortId(paDONameId, mInterfaceSpec->m_nNumDOs, mInterfaceSpec->m_aunDONames);
+    }
+
+    /*! \brief Gets the index of the m_acDONames array of a specific data output of a FB
+     * \param paDONameId  StringId of the data input name.
+     * \return Returns index of the Data Output Array of a FB
+     */
+    TPortId getDIOID(CStringDictionary::TStringId paDIONameId) const {
+      return getPortId(paDIONameId, mInterfaceSpec->mNumDIOs, mInterfaceSpec->mDIONames);
     }
 
     /*!\brief get the pointer to a data output using the portId as identifier
      */
     CIEC_ANY* getDOFromPortId(TPortId paDOPortId);
+
+    CIEC_ANY* getDIOFromPortId(TPortId paDIPortId);
 
     CDataConnection* getDIConnection(CStringDictionary::TStringId paDINameId);
 
@@ -233,6 +249,14 @@ class CFunctionBlock {
     CDataConnection* getDOConnection(CStringDictionary::TStringId paDONameId);
 
     const CDataConnection* getDOConnection(CStringDictionary::TStringId paDONameId) const;
+
+    CInOutDataConnection *getDIOInConnection(CStringDictionary::TStringId paDIONameId);
+
+    const CInOutDataConnection *getDIOInConnection(CStringDictionary::TStringId paDIONameId) const;
+
+    CInOutDataConnection *getDIOOutConnection(CStringDictionary::TStringId paDIONameId);
+
+    const CInOutDataConnection *getDIOOutConnection(CStringDictionary::TStringId paDIONameId) const;
 
     /*!\brief if the data output is of generic type (i.e, ANY) this function allows an data connection to configure
      * the DO with the specific type coming from the other end of the connection
@@ -374,6 +398,16 @@ class CFunctionBlock {
       return mDOs[paDONum];
     }
 
+    /*! \brief Get the data output with given number
+     *
+     * Attention this function will not perform any range checks on the pa_nDONum parameter!
+     * @param pa_nDONum number of the data output starting with 0
+     * @return pointer to the data output
+     */
+    virtual CIEC_ANY* getDIO(TPortId paDIONum) {
+      return mDIOs[paDIONum];
+    }
+
 #ifdef FORTE_SUPPORT_MONITORING
     TForteUInt32 &getEIMonitorData(TEventID paEIID);
 
@@ -508,7 +542,7 @@ class CFunctionBlock {
     /*! \brief Get the data output connection with given number
      *
      * Attention this function will not perform any range checks on the pa_nDONum parameter!
-     * @param pa_nDONum number of the data output starting with 0
+     * @param paDONum number of the data output starting with 0
      * @return pointer to the data output connection
      */
     virtual CDataConnection *getDOConUnchecked(TPortId paDONum) {
@@ -518,11 +552,25 @@ class CFunctionBlock {
     /*! \brief Get the data input connection with given number
      *
      * Attention this function will not perform any range checks on the paDINum parameter!
-     * @param paDINum number of the data output starting with 0
-     * @return pointer to the data output connection
+     * @param paDINum number of the data input starting with 0
+     * @return pointer to the data input connection
      */
     virtual CDataConnection **getDIConUnchecked(TPortId paDINum) {
       return mDIConns + paDINum;
+    }
+
+    /*! \brief Get the data inout connection with given number
+     *
+     * Attention this function will not perform any range checks on the paDIONum parameter!
+     * @param paDIONum number of the data inout starting with 0
+     * @return pointer to the data inout connection
+     */
+    virtual CInOutDataConnection **getDIOInConUnchecked(TPortId paDIONum) {
+      return mDIOConns + paDIONum;
+    }
+
+    virtual CInOutDataConnection *getDIOOutConUnchecked(TPortId) {
+      return nullptr;
     }
 
     /*!\brief helper function for changeing the FB execution state for FBs with internal FBs
@@ -568,11 +616,13 @@ class CFunctionBlock {
     void freeAllData();
 
     const SFBInterfaceSpec *mInterfaceSpec; //!< Pointer to the interface specification
-    CEventConnection *mEOConns; //!< A list of event connections pointers storing for each event output the event connection. If the output event is not connected the pointer is 0.
-    CDataConnection **mDIConns; //!< A list of data connections pointers storing for each data input the data connection. If the data input is not connected the pointer is 0.
-    CDataConnection *mDOConns; //!< A list of data connections pointers storing for each data output the data connection. If the data output is not connected the pointer is 0.
+    CEventConnection *mEOConns; //!< A list of event connections pointers storing for each event output the event connection. If the output event is not connected the pointer is nullptr.
+    CDataConnection **mDIConns; //!< A list of data connections pointers storing for each data input the data connection. If the data input is not connected the pointer is nullptr.
+    CDataConnection *mDOConns; //!< A list of data connections pointers storing for each data output the data connection. If the data output is not connected the pointer is nullptr.
+    CInOutDataConnection **mDIOConns; //!< A list of inout data connections pointers storing for each data inout the data connection. If the data inout is not connected the pointer is nullptr.
     CIEC_ANY **mDIs; //!< A list of pointers to the data inputs. This allows to implement a general getDataInput()
     CIEC_ANY **mDOs; //!< A list of pointers to the data outputs. This allows to implement a general getDataOutput()
+    CIEC_ANY **mDIOs; //!< A list of pointers to the data outputs. This allows to implement a general getDataOutput()
     CEventChainExecutionThread *mInvokingExecEnv; //!< A pointer to the execution thread that invoked the FB. This value is stored here to reduce function parameters and reduce therefore stack usage.
     CAdapter **m_apoAdapters; //!< A list of pointers to the adapters. This allows to implement a general getAdapter().
     void *mFBConnData; //!< Connection data buffer
@@ -601,6 +651,7 @@ class CFunctionBlock {
 
   private:
     void configureGenericDI(TPortId paDIPortId, const CIEC_ANY *paRefValue);
+    void configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY *paRefValue);
 
     CResource *mResource; //!< A pointer to the resource containing the function block.
     forte::core::CFBContainer *mContainer; //!< A pointer to the container containing the function block.

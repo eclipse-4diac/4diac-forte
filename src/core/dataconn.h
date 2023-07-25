@@ -21,10 +21,9 @@
 #include "./datatypes/forte_any.h"
 #include "conn.h"
 
-/*! \ingroup CORE\brief Class for handling a data connection.
+/*! \ingroup CORE \brief Class for handling a data connection.
  */
 class CDataConnection : public CConnection {
-
   public:
     CDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CIEC_ANY *paValue);
 
@@ -78,7 +77,6 @@ class CDataConnection : public CConnection {
     }
 
   protected:
-
     /*! \brief check if the the given data points are compatible so that a connection can be established
      *
      * @param paSrcDataPoint  data point of the connection's source (if 0 than it is a any data type)
@@ -87,13 +85,13 @@ class CDataConnection : public CConnection {
      */
     static bool canBeConnected(const CIEC_ANY *paSrcDataPoint, const CIEC_ANY *paDstDataPoint);
 
+    virtual EMGMResponse establishDataConnection(CFunctionBlock *paDstFB, TPortId paDstPortId, CIEC_ANY *paDstDataPoint);
+
+    void handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint);
+
     /*! \brief Value for storing the current data of the connection
      */
     CIEC_ANY *mValue;
-  private:
-    void handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint);
-
-    EMGMResponse establishDataConnection(CFunctionBlock *paDstFB, TPortId paDstPortId, CIEC_ANY *paDstDataPoint);
 };
 
 typedef CDataConnection *TDataConnectionPtr;

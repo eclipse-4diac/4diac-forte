@@ -47,9 +47,10 @@ const TForteInt16 DEV_MGR::scm_anEOWithIndexes[] = {0, -1, 3};
 const CStringDictionary::TStringId DEV_MGR::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
 
 const SFBInterfaceSpec DEV_MGR::scm_stFBInterfaceSpec = {
-  2,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  3,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  4,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+  2, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
+  2, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes, 3, scm_anDataInputNames, scm_anDataInputTypeIds,
+  4, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+  0, nullptr,
   0, nullptr
 };
 

@@ -25,23 +25,13 @@ const CStringDictionary::TStringId RMT_RES::scm_aunDIDataTypeIds[] = {g_nStringI
 
 
 const SFBInterfaceSpec RMT_RES::scm_stFBInterfaceSpec = {
-  0,
-  nullptr,
-  nullptr,
-  nullptr,
-  0,
-  nullptr,
-  nullptr,
-  nullptr,
-  1,
-  scm_aunVarInputNameIds,
-  scm_aunDIDataTypeIds,
-  0,
-  nullptr,
-  nullptr,
-  0,
-  nullptr
-  };
+  0, nullptr, nullptr, nullptr,
+  0, nullptr, nullptr, nullptr,
+  1, scm_aunVarInputNameIds, scm_aunDIDataTypeIds,
+  0, nullptr, nullptr,
+  0, nullptr,
+  0, nullptr
+};
 
 
 RMT_RES::RMT_RES(CStringDictionary::TStringId pa_nInstanceNameId, CResource* pa_poDevice):

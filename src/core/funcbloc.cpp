@@ -24,6 +24,7 @@
 #endif
 #include "adapter.h"
 #include "device.h"
+#include "connectiondestinationtype.h"
 #include "utils/criticalregion.h"
 #include "../arch/timerha.h"
 #include <string.h>
@@ -154,8 +155,7 @@ bool CFunctionBlock::connectDI(TPortId paDIPortId, CDataConnection *paDataCon){
     if(nullptr == paDataCon){
       *getDIConUnchecked(paDIPortId) = nullptr;
       bRetVal = true;
-    }
-    else {
+    } else {
       //only perform connection checks if it is not a disconnection request.
       CDataConnection *conn = *getDIConUnchecked(paDIPortId);
       if(nullptr != conn) {
@@ -180,6 +180,42 @@ void CFunctionBlock::configureGenericDI(TPortId paDIPortId, const CIEC_ANY* paRe
   CIEC_ANY *di = getDI(paDIPortId);
   if(di->getDataTypeID() == CIEC_ANY::e_ANY && (nullptr != paRefValue)) {
     di->setValue(paRefValue->unwrap());
+  }
+}
+
+bool CFunctionBlock::connectDIO(TPortId paDIOPortId, CInOutDataConnection *paDataCon){
+  if(mInterfaceSpec->mNumDIOs > paDIOPortId) { //catch invalid ID
+    if(nullptr == paDataCon){
+      *getDIOInConUnchecked(paDIOPortId) = nullptr;
+      return true;
+    }
+    else {
+      //only perform connection checks if it is not a disconnection request.
+      CDataConnection *conn = *getDIOInConUnchecked(paDIOPortId);
+      if(nullptr != conn) {
+        if(conn == paDataCon) {
+          //we have a reconfiguration attempt
+          configureGenericDIO(paDIOPortId, paDataCon->getValue());
+          getDIOOutConUnchecked(paDIOPortId)->setValue(paDataCon->getValue());
+          return true;
+        } else {
+          DEVLOG_ERROR("%s cannot connect InOut data %s to more sources, using the latest connection attempt\n", getInstanceName(), CStringDictionary::getInstance().get(mInterfaceSpec->mDIONames[paDIOPortId]));
+        }
+      } else {
+        *getDIOInConUnchecked(paDIOPortId) = paDataCon;
+        configureGenericDIO(paDIOPortId, paDataCon->getValue());
+        getDIOOutConUnchecked(paDIOPortId)->setValue(paDataCon->getValue());
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+void CFunctionBlock::configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY* paRefValue) {
+  CIEC_ANY *dio = getDIO(paDIOPortId);
+  if(dio->getDataTypeID() == CIEC_ANY::e_ANY && (nullptr != paRefValue)) {
+    dio->setValue(paRefValue->unwrap());
   }
 }
 
@@ -215,6 +251,42 @@ const CDataConnection *CFunctionBlock::getDOConnection(CStringDictionary::TStrin
   TPortId doPortID = getDOID(paDONameId);
   if(cgInvalidPortId != doPortID) {
     retVal = const_cast<CFunctionBlock*>(this)->getDOConUnchecked(doPortID);
+  }
+  return retVal;
+}
+
+CInOutDataConnection *CFunctionBlock::getDIOInConnection(CStringDictionary::TStringId paDIONameId) {
+  CInOutDataConnection *retVal = nullptr;
+  TPortId doPortID = getDIOID(paDIONameId);
+  if(cgInvalidPortId != doPortID) {
+    retVal = *getDIOInConUnchecked(doPortID);
+  }
+  return retVal;
+}
+
+const CInOutDataConnection *CFunctionBlock::getDIOInConnection(CStringDictionary::TStringId paDIONameId) const {
+  const CInOutDataConnection *retVal = nullptr;
+  TPortId doPortID = getDIOID(paDIONameId);
+  if(cgInvalidPortId != doPortID) {
+    retVal = *const_cast<CFunctionBlock*>(this)->getDIOInConUnchecked(doPortID);
+  }
+  return retVal;
+}
+
+CInOutDataConnection *CFunctionBlock::getDIOOutConnection(CStringDictionary::TStringId paDIONameId) {
+  CInOutDataConnection *retVal = nullptr;
+  TPortId doPortID = getDIOID(paDIONameId);
+  if(cgInvalidPortId != doPortID) {
+    retVal = getDIOOutConUnchecked(doPortID);
+  }
+  return retVal;
+}
+
+const CInOutDataConnection *CFunctionBlock::getDIOOutConnection(CStringDictionary::TStringId paDIONameId) const {
+  const CInOutDataConnection *retVal = nullptr;
+  TPortId doPortID = getDIOID(paDIONameId);
+  if(cgInvalidPortId != doPortID) {
+    retVal = const_cast<CFunctionBlock*>(this)->getDIOOutConUnchecked(doPortID);
   }
   return retVal;
 }
@@ -268,23 +340,31 @@ CIEC_ANY* CFunctionBlock::getDOFromPortId(TPortId paDOPortId) {
   return retVal;
 }
 
+CIEC_ANY* CFunctionBlock::getDIOFromPortId(TPortId paDIPortId) {
+  if(paDIPortId < mInterfaceSpec->mNumDIOs){
+    return getDIO(paDIPortId);
+  }
+  return nullptr;
+}
+
 CIEC_ANY *CFunctionBlock::getVar(CStringDictionary::TStringId *paNameList,
     unsigned int paNameListSize){
 
-  CIEC_ANY *poRetVal = nullptr;
   if(1 == paNameListSize){
     TPortId portId = getDIID(*paNameList);
     if(cgInvalidPortId != portId){
-      poRetVal = getDI(portId);
+      return getDI(portId);
     }
-    else{
-      portId = getDOID(*paNameList);
-      if(cgInvalidPortId != portId){
-        poRetVal = getDO(portId);
-      }
+    portId = getDOID(*paNameList);
+    if(cgInvalidPortId != portId){
+        return getDO(portId);
+    }
+    portId = getDIOID(*paNameList);
+    if(cgInvalidPortId != portId){
+        return getDIO(portId);
     }
   }
-  return poRetVal;
+  return nullptr;
 }
 
 CAdapter *CFunctionBlock::getAdapter(CStringDictionary::TStringId paAdapterNameId) const{
@@ -316,7 +396,7 @@ bool CFunctionBlock::configureFB(const char *){
 }
 
 void CFunctionBlock::readInputData(TEventID paEIID) {
-  if(nullptr != mInterfaceSpec->m_anEIWithIndexes && -1 != mInterfaceSpec->m_anEIWithIndexes[paEIID]) {
+  if(nullptr != mInterfaceSpec->m_anEIWithIndexes && scmNoDataAssociated != mInterfaceSpec->m_anEIWithIndexes[paEIID]) {
     const TDataIOID *eiWithStart = &(mInterfaceSpec->m_anEIWith[mInterfaceSpec->m_anEIWithIndexes[paEIID]]);
 
     // TODO think on this lock

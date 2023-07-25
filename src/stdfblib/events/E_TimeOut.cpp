@@ -23,7 +23,14 @@ DEFINE_FIRMWARE_FB(FORTE_E_TimeOut, g_nStringIdE_TimeOut)
 const TForteInt16 FORTE_E_TimeOut::scm_anEOWithIndexes[] = { -1 };
 const SAdapterInstanceDef FORTE_E_TimeOut::scm_astAdapterInstances[] = { { g_nStringIdATimeOut, g_nStringIdTimeOutSocket, false } };
 
-const SFBInterfaceSpec FORTE_E_TimeOut::scm_stFBInterfaceSpec = { 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, 0, nullptr, nullptr, 0, nullptr, nullptr, 1, scm_astAdapterInstances };
+const SFBInterfaceSpec FORTE_E_TimeOut::scm_stFBInterfaceSpec = {
+  0, nullptr, nullptr, nullptr,
+  0, nullptr, nullptr, nullptr,
+  0, nullptr, nullptr,
+  0, nullptr, nullptr,
+  0, nullptr,
+  1, scm_astAdapterInstances
+};
 
 void FORTE_E_TimeOut::executeEvent(TEventID pa_nEIID){
   if(cg_nExternalEventID == pa_nEIID){

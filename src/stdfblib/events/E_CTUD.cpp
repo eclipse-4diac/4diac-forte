@@ -44,6 +44,7 @@ const SFBInterfaceSpec FORTE_E_CTUD::scm_stFBInterfaceSpec = {
   3, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
   1, scm_anDataInputNames, scm_anDataInputTypeIds,
   3, scm_anDataOutputNames, scm_anDataOutputTypeIds,
+  0, nullptr,
   0, nullptr
 };
 
