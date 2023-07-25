@@ -16,6 +16,9 @@
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\net)
 forte_add_sourcefile_hcpp(GEN_CLIENT GEN_PUBLISH  GEN_SERVER  GEN_SUBSCRIBE)
 
+forte_add_sourcefile_hcpp(PUBLISH_1)
+forte_add_sourcefile_hcpp(SUBSCRIBE_1)
+
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 if (FORTE_COM_LOCAL) 
