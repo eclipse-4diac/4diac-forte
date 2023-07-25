@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2018 ACIN, Profactor GmbH, fortiss GmbH,
- *                           Johannes Kepler University
- *               2022 Primetals Technologies Austria GmbH
- *               2022 Martin Erich Jobst
+ * Copyright (c) 2005, 2022 ACIN, Profactor GmbH, fortiss GmbH,
+ *                          Johannes Kepler University,
+ *                          Primetals Technologies Austria GmbH,
+ *                          Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -165,8 +165,8 @@ EMGMResponse CResource::changeFBExecutionState(EMGMCommandType pa_unCommand){
   if(EMGMResponse::Ready == retVal){
     retVal = changeContainedFBsExecutionState(pa_unCommand);
     if(EMGMResponse::Ready == retVal){
-      if(EMGMCommandType::Start == pa_unCommand && nullptr != m_pstInterfaceSpec) { //on start, sample inputs
-        for(TPortId i = 0; i < m_pstInterfaceSpec->m_nNumDIs; ++i) {
+      if(EMGMCommandType::Start == pa_unCommand && nullptr != mInterfaceSpec) { //on start, sample inputs
+        for(TPortId i = 0; i < mInterfaceSpec->m_nNumDIs; ++i) {
           CDataConnection *conn = *getDIConUnchecked(i);
           if(nullptr != conn) {
             conn->readData(*getDI(i));
@@ -204,7 +204,7 @@ EMGMResponse CResource::createConnection(forte::core::SManagementCMD &paCommand)
 EMGMResponse CResource::createConnection(forte::core::TNameIdentifier &paSrcNameList, forte::core::TNameIdentifier &paDstNameList){
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
-  CConnection *con = getConnection(paSrcNameList);
+  CConnection *const con = getConnection(paSrcNameList);
   if(nullptr != con){
     CStringDictionary::TStringId portName = paDstNameList.back();
     paDstNameList.popBack();
@@ -221,7 +221,7 @@ EMGMResponse CResource::createConnection(forte::core::TNameIdentifier &paSrcName
 EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcNameList, forte::core::TNameIdentifier &paDstNameList){
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
-  CConnection *con = getConnection(paSrcNameList);
+  CConnection *const con = getConnection(paSrcNameList);
   if(nullptr != con){
     CStringDictionary::TStringId portName = paDstNameList.back();
     paDstNameList.popBack();
@@ -249,7 +249,7 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
   }
 
   if((nullptr != fb) && (runner.isLastEntry())){
-    CIEC_ANY *var = fb->getVar(&portName, 1);
+    CIEC_ANY *const var = fb->getVar(&portName, 1);
     if(nullptr != var){
       // 0 is not supported in the fromString method
       if((paValue.length() > 0) && (paValue.length() == var->fromString(paValue.getStorage().c_str()))){
@@ -275,7 +275,7 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
 
 EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, CIEC_STRING & paValue){
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
-  CIEC_ANY *var = getVariable(paNameList);
+  CIEC_ANY *const var = getVariable(paNameList);
   if(nullptr != var){
     int nUsedChars = -1;
     switch (var->getDataTypeID()){
@@ -728,9 +728,9 @@ CConnection *CResource::getConnection(forte::core::TNameIdentifier &paSrcNameLis
 
 CConnection *CResource::getResIf2InConnection(CStringDictionary::TStringId paResInput) const{
   CConnection *con = nullptr;
-  if(nullptr != m_pstInterfaceSpec){
+  if(nullptr != mInterfaceSpec){
     TPortId inPortId = getDIID(paResInput);
-    if(cg_unInvalidPortId != inPortId){
+    if(cgInvalidPortId != inPortId){
       con = mResIf2InConnections + inPortId;
     }
   }
@@ -738,9 +738,9 @@ CConnection *CResource::getResIf2InConnection(CStringDictionary::TStringId paRes
 }
 
 void CResource::initializeResIf2InConnections(){
-  if(nullptr != m_pstInterfaceSpec){
-    mResIf2InConnections = new CInterface2InternalDataConnection[m_pstInterfaceSpec->m_nNumDIs];
-    for(TPortId i = 0; i < m_pstInterfaceSpec->m_nNumDIs; i++){
+  if(nullptr != mInterfaceSpec){
+    mResIf2InConnections = new CInterface2InternalDataConnection[mInterfaceSpec->m_nNumDIs];
+    for(TPortId i = 0; i < mInterfaceSpec->m_nNumDIs; i++){
       (mResIf2InConnections + i)->setSource(this, i);
     }
   }

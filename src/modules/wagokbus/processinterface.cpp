@@ -50,7 +50,7 @@ bool WagoPFCProcessInterface::initialise(bool paInput) {
       }
 
       mInitialized = true;
-      setEventChainExecutor(m_poInvokingExecEnv);
+      setEventChainExecutor(mInvokingExecEnv);
     }
   }
   return mInitialized;

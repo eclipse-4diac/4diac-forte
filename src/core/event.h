@@ -27,16 +27,16 @@ typedef size_t TEventID;
 
 
 //!\ingroup CORE Constant for the invalid event input id
-const TEventID cg_nInvalidEventID = cg_unInvalidPortId;
+const TEventID cg_nInvalidEventID = cgInvalidPortId;
 //!\ingroup CORE Constant for the external event input id
 const TEventID cg_nExternalEventID = cg_nInvalidEventID - 1;
 
 //!\brief With this marker events are anotated that are from the internals of a CFB to the interface of the CFB
-const TPortId cgInternal2InterfaceMarker = cg_unInvalidPortId + 1;
+const TPortId cgInternal2InterfaceMarker = cgInvalidPortId + 1;
 static_assert((cgInternal2InterfaceMarker & (cgInternal2InterfaceMarker - 1)) == 0,
               "cgInternal2InterfaceMarker must be a power of 2");
 
-const TPortId cgInternal2InterfaceRemovalMask = cg_unInvalidPortId;
+const TPortId cgInternal2InterfaceRemovalMask = cgInvalidPortId;
 static_assert((cgInternal2InterfaceRemovalMask & (cgInternal2InterfaceRemovalMask + 1)) == 0,
               "cgInternal2InterfaceRemovalMask must be a valid bitmask");
 

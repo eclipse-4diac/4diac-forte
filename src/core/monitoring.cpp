@@ -195,7 +195,7 @@ EMGMResponse CMonitoringHandler::triggerEvent(forte::core::TNameIdentifier &paNa
     else{
       eventId = fB->getEOID(portName);
       if(cg_nInvalidEventID != eventId){
-        fB->m_poInvokingExecEnv = mResource.getResourceEventExecution();
+        fB->mInvokingExecEnv = mResource.getResourceEventExecution();
         fB->sendOutputEvent(eventId);
         mResource.getResourceEventExecution()->resumeSelfSuspend();
         eRetVal = EMGMResponse::Ready;

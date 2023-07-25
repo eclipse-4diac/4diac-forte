@@ -40,11 +40,11 @@ namespace forte {
       }
 
       TPortId getNumSD() const {
-        return m_pstInterfaceSpec->m_nNumDIs - 2;
+        return mInterfaceSpec->m_nNumDIs - 2;
       }
 
       TPortId getNumRD() const {
-        return m_pstInterfaceSpec->m_nNumDOs - 2;
+        return mInterfaceSpec->m_nNumDOs - 2;
       }
 
       CIEC_ANY **getSDs() {

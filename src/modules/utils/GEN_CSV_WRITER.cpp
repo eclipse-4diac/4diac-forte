@@ -152,7 +152,7 @@ void GEN_CSV_WRITER::closeCSVFile() {
 void GEN_CSV_WRITER::writeCSVFileLine() {
   if(nullptr != mCSVFile) {
     char acBuffer[scmWriteBufferSize];
-    for(TPortId i = 2; i < m_pstInterfaceSpec->m_nNumDIs; i++) {
+    for(TPortId i = 2; i < mInterfaceSpec->m_nNumDIs; i++) {
       int nLen = getDI(i)->unwrap().toString(acBuffer, scmWriteBufferSize);
       if(nLen >= 0) {
         fwrite(acBuffer, 1, static_cast<size_t>(nLen), mCSVFile);

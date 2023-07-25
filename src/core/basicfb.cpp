@@ -96,7 +96,7 @@ CIEC_ANY* CBasicFB::getInternalVar(CStringDictionary::TStringId pa_nInternalName
   CIEC_ANY *retVal = nullptr;
   if(nullptr != cm_pstVarInternals) {
     TPortId unVarId = getPortId(pa_nInternalName, cm_pstVarInternals->m_nNumIntVars, cm_pstVarInternals->m_aunIntVarsNames);
-    if(cg_unInvalidPortId != unVarId) {
+    if(cgInvalidPortId != unVarId) {
       retVal = getVarInternal(unVarId);
     }
   }
@@ -123,8 +123,8 @@ void CBasicFB::deleteInternalFBs(const size_t paAmountOfInternalFBs, TFunctionBl
 
 #ifdef FORTE_TRACE_CTF
 void CBasicFB::traceInstanceData() {
-  std::vector<std::string> inputs(m_pstInterfaceSpec->m_nNumDIs);
-  std::vector<std::string> outputs(m_pstInterfaceSpec->m_nNumDOs);
+  std::vector<std::string> inputs(mInterfaceSpec->m_nNumDIs);
+  std::vector<std::string> outputs(mInterfaceSpec->m_nNumDOs);
   std::vector<std::string> internals(cm_pstVarInternals ? cm_pstVarInternals->m_nNumIntVars : 0);
   std::vector<const char *> inputs_c_str(inputs.size());
   std::vector<const char *> outputs_c_str(outputs.size());

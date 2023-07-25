@@ -45,7 +45,7 @@ void FORTE_TRIGGER_SERVICE_CLIENT::executeEvent(TEventID pa_nEIID){
     case scm_nEventINITID:
       //initiate
       if(!m_Initiated && QI()){
-        setEventChainExecutor(m_poInvokingExecEnv);
+        setEventChainExecutor(mInvokingExecEnv);
         m_RosNamespace = getExtEvHandler<CROSManager>(*this).ciecStringToStdString(NAMESPACE());
         m_RosMsgName = getExtEvHandler<CROSManager>(*this).ciecStringToStdString(SRVNAME());
         m_nh = new ros::NodeHandle(m_RosNamespace);

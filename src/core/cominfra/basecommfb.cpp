@@ -41,14 +41,14 @@ CBaseCommFB::CBaseCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, 
 CBaseCommFB::~CBaseCommFB() {
   closeConnection();
 
-  if(nullptr != m_pstInterfaceSpec) {
+  if(nullptr != mInterfaceSpec) {
     //Free the memory allocated for the interface, only do this if we dynamically created it (i.e., getManagesFBData is true)
-    delete[](m_pstInterfaceSpec->m_anEIWith);
-    delete[](m_pstInterfaceSpec->m_anEOWith);
-    delete[](m_pstInterfaceSpec->m_aunDINames);
-    delete[](m_pstInterfaceSpec->m_aunDIDataTypeNames);
-    delete[](m_pstInterfaceSpec->m_aunDONames);
-    delete[](m_pstInterfaceSpec->m_aunDODataTypeNames);
+    delete[](mInterfaceSpec->m_anEIWith);
+    delete[](mInterfaceSpec->m_anEOWith);
+    delete[](mInterfaceSpec->m_aunDINames);
+    delete[](mInterfaceSpec->m_aunDIDataTypeNames);
+    delete[](mInterfaceSpec->m_aunDONames);
+    delete[](mInterfaceSpec->m_aunDODataTypeNames);
   }
 }
 

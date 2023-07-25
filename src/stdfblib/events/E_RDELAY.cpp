@@ -32,7 +32,7 @@ void E_RDELAY::executeEvent(TEventID pa_nEIID){
         //remove from the list as we want to be added with a new delay
         getTimer().unregisterTimedFB(this);
       }
-      setEventChainExecutor(m_poInvokingExecEnv);  // E_RDELAY will execute in the same thread on as from where it has been triggered.
+      setEventChainExecutor(mInvokingExecEnv);  // E_RDELAY will execute in the same thread on as from where it has been triggered.
       getTimer().registerTimedFB( &mTimeListEntry, DT());
       mActive = true;
       break;

@@ -24,9 +24,9 @@ CGenFunctionBlock<T>::CGenFunctionBlock(CResource *paSrcRes, const CStringDictio
 
 template<class T>
 CGenFunctionBlock<T>::~CGenFunctionBlock(){
-  if(nullptr != T::m_pstInterfaceSpec){
+  if(nullptr != T::mInterfaceSpec){
     T::freeAllData();  //clean the interface and connections first.
-    T::m_pstInterfaceSpec = nullptr; //this stops the base classes from any wrong clean-up
+    T::mInterfaceSpec = nullptr; //this stops the base classes from any wrong clean-up
   }
 }
 

@@ -88,7 +88,7 @@ class CAdapter : public CFunctionBlock{
      *  Is required mainly by the anyadapter
      */
     const SFBInterfaceSpec* getAdapterInterfaceSpec() const{
-      return m_pstInterfaceSpec;
+      return mInterfaceSpec;
     }
 
     const TForteInt16 *getEventInputWithIndices() const{

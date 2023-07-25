@@ -36,7 +36,7 @@ GEN_E_MUX::~GEN_E_MUX(){
 }
 
 void GEN_E_MUX::executeEvent(TEventID paEIID){
-  if(paEIID < m_pstInterfaceSpec->m_nNumEIs){
+  if(paEIID < mInterfaceSpec->m_nNumEIs){
     K() = CIEC_UINT(static_cast<TForteUInt16>(paEIID));
     sendOutputEvent(scm_nEventEOID);
   }

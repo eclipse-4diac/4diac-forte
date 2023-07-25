@@ -51,7 +51,7 @@ CAdapter::~CAdapter(){
 }
 
 void CAdapter::fillEventEntryList(CFunctionBlock* paParentFB){
-  for (TEventID i = 0; i < m_pstInterfaceSpec->m_nNumEOs; ++i) {
+  for (TEventID i = 0; i < mInterfaceSpec->m_nNumEOs; ++i) {
     m_astEventEntry[i].mFB = paParentFB;
     m_astEventEntry[i].mPortId = static_cast<TPortId>(m_nParentAdapterListEventID + i);
   }
@@ -102,14 +102,14 @@ bool CAdapter::isCompatible(CAdapter *pa_poPeer) const {
 void CAdapter::executeEvent(TEventID pa_nEIID){
   if (nullptr != m_poPeer) {
     if (nullptr != m_poPeer->m_astEventEntry[pa_nEIID].mFB) {
-      m_poInvokingExecEnv->addEventEntry(m_poPeer->m_astEventEntry[pa_nEIID]);
+      mInvokingExecEnv->addEventEntry(m_poPeer->m_astEventEntry[pa_nEIID]);
     } else {
-      m_poPeer->m_poInvokingExecEnv = m_poInvokingExecEnv;
+      m_poPeer->mInvokingExecEnv = mInvokingExecEnv;
       m_poPeer->sendOutputEvent(pa_nEIID);
     }
   }
 }
 
 void CAdapter::setupEventEntryList(){
-  m_astEventEntry = new TEventEntry[m_pstInterfaceSpec->m_nNumEOs];
+  m_astEventEntry = new TEventEntry[mInterfaceSpec->m_nNumEOs];
 }

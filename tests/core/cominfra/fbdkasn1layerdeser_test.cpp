@@ -87,7 +87,7 @@ class CDeserTestMockCommFB : public forte::com_infra::CCommFB{
 
     virtual ~CDeserTestMockCommFB(){
       freeAllData();
-      m_pstInterfaceSpec = nullptr;
+      mInterfaceSpec = nullptr;
     }
 
   private:

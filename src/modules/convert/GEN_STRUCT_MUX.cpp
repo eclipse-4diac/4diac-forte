@@ -42,11 +42,11 @@ GEN_STRUCT_MUX::GEN_STRUCT_MUX(const CStringDictionary::TStringId paInstanceName
 }
 
 GEN_STRUCT_MUX::~GEN_STRUCT_MUX(){
-  if(nullptr!= m_pstInterfaceSpec){
-    delete[](m_pstInterfaceSpec->m_anEIWith);
-    delete[](m_pstInterfaceSpec->m_aunDINames);
-    delete[](m_pstInterfaceSpec->m_aunDIDataTypeNames);
-    delete[](m_pstInterfaceSpec->m_aunDODataTypeNames);
+  if(nullptr!= mInterfaceSpec){
+    delete[](mInterfaceSpec->m_anEIWith);
+    delete[](mInterfaceSpec->m_aunDINames);
+    delete[](mInterfaceSpec->m_aunDIDataTypeNames);
+    delete[](mInterfaceSpec->m_aunDODataTypeNames);
   }
 }
 
@@ -62,7 +62,7 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
       CIEC_STRUCT *structInstance = static_cast<CIEC_STRUCT*>(data);
 
       size_t structSize = structInstance->getStructSize();
-      if(structSize != 0 && structSize < cg_unInvalidPortId) { //the structure size must be non zero and less than cg_unInvalidPortId (maximum number of data input)
+      if(structSize != 0 && structSize < cgInvalidPortId) { //the structure size must be non zero and less than cgInvalidPortId (maximum number of data input)
         TDataIOID *eiWith = new TDataIOID[structSize + 1];
         CStringDictionary::TStringId *diDataTypeNames = new CStringDictionary::TStringId[calcStructTypeNameSize(*structInstance)];
         CStringDictionary::TStringId *diNames = new CStringDictionary::TStringId[structSize];
@@ -94,7 +94,7 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
         retval = true;
       } else {
         DEVLOG_ERROR("[GEN_STRUCT_MUX]: The structure %s has a size is not within range > 0 and < %u\n",
-                     CStringDictionary::getInstance().get(structTypeNameId), cg_unInvalidPortId);
+                     CStringDictionary::getInstance().get(structTypeNameId), cgInvalidPortId);
       }
     } else {
       DEVLOG_ERROR("[GEN_STRUCT_MUX]: data type is not a structure: %s\n", CStringDictionary::getInstance().get(structTypeNameId));

@@ -41,7 +41,7 @@ EMGMResponse CAdapterConnection::connect(CFunctionBlock *paDstFB, CStringDiction
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
   TPortId portId = paDstFB->getAdapterPortId(paDstPortNameId);
-  if(cg_unInvalidPortId != portId){
+  if(cgInvalidPortId != portId){
     if(!isConnected()){
       CAdapter *socket = paDstFB->getAdapter(paDstPortNameId);
       typifyAnyAdapter(socket, mPlug);
@@ -77,7 +77,7 @@ EMGMResponse CAdapterConnection::disconnect(CFunctionBlock *paDstFB, CStringDict
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
   TPortId portId = paDstFB->getAdapterPortId(paDstPortNameId);
-  if(cg_unInvalidPortId != portId){
+  if(cgInvalidPortId != portId){
     retVal = CConnection::removeDestination(CConnectionPoint(paDstFB, portId));
     if(EMGMResponse::Ready == retVal){
       performDisconnect();

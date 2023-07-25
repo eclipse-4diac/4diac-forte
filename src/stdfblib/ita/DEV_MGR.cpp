@@ -597,7 +597,7 @@ bool DEV_MGR::initialize() {
 
 DEV_MGR::~DEV_MGR(){
   freeAllData();
-  m_pstInterfaceSpec = nullptr;  //block any wrong cleanup in the generic fb base class of CBaseCommFB
+  mInterfaceSpec = nullptr;  //block any wrong cleanup in the generic fb base class of CBaseCommFB
 }
 
 EMGMResponse DEV_MGR::parseAndExecuteMGMCommand(const char *const paDest, char *paCommand){

@@ -143,7 +143,7 @@ void ProcessInterface::onHandle(IOHandle* paHandle) {
     }
 
     if(mDirection == IOMapper::In) {
-      setEventChainExecutor(m_poInvokingExecEnv);
+      setEventChainExecutor(mInvokingExecEnv);
     }
 
     STATUS() = CIEC_STRING(scmOK);
