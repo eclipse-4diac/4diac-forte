@@ -12,6 +12,7 @@
 # *   Martin Melik-Merkumians - removing illegal casts
 # *   Martin Melik-Merkumians - adding TIME IN RESOLUTION TO FBs
 # *******************************************************************************/
+forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 #############################################################################
 # TIME_TO_xxx Conversion
 #############################################################################

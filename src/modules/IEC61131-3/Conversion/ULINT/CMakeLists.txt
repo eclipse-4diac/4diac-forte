@@ -11,6 +11,7 @@
 # *   - initial API and implementation and/or initial documentation
 # *   Martin Melik-Merkumians - removing illegal casts
 # *******************************************************************************/
+forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 #############################################################################
 # ULINT_TO_xxx Conversion
 ############################################################################# 
