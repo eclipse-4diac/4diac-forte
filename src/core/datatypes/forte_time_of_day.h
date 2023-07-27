@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2008 - 2013 nxtControl GmbH, ACIN, Profactor GmbH, fortiss GmbH
- *               2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2008, 2023 nxtControl GmbH, ACIN, Profactor GmbH, fortiss GmbH
+ *                          Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -15,6 +16,7 @@
  *    Martin Melik Merkumians - make TForteUInt64 constructor explicit,
  *      removed built-in type operator=, removed operator++, update timebase to 
  *      nanoseconds
+ *    Martin Jobst - add user-defined literal
  *******************************************************************************/
 #ifndef _FORTE_TOD_H_
 #define _FORTE_TOD_H_
@@ -35,7 +37,7 @@ class CIEC_TIME_OF_DAY : public CIEC_ANY_DATE{
       setValueSimple(paValue);
     }
 
-    explicit CIEC_TIME_OF_DAY(TForteUInt64 paValue){
+    explicit CIEC_TIME_OF_DAY(const TValueType paValue) {
       setTUINT64(paValue);
     }
 
@@ -86,5 +88,9 @@ class CIEC_TIME_OF_DAY : public CIEC_ANY_DATE{
      */
     int toString(char* paValue, size_t paBufferSize) const override;
 };
+
+inline CIEC_TIME_OF_DAY operator ""_TIME_OF_DAY(unsigned long long int paValue) {
+  return CIEC_TIME_OF_DAY(static_cast<CIEC_TIME_OF_DAY::TValueType>(paValue));
+}
 
 #endif /*_FORTE_TOD_H_*/

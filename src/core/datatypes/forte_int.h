@@ -1,6 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
- *               2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2005, 2023 Profactor GmbH, ACIN
+ *                          Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -14,6 +16,7 @@
  *    Martin Melik Merkumians - make TForteInt16 constructor explicit,
  *        added valid cast constructors, removed built-in type operator=, added
  *        castable CIEC types operator=
+ *    Martin Jobst - add user-defined literal
  *******************************************************************************/
 #ifndef _FORTE_INT_H_
 #define _FORTE_INT_H_
@@ -57,7 +60,7 @@ class CIEC_INT final : public CIEC_ANY_INT{
       setValueSimple(paValue);
     }
 
-    explicit CIEC_INT(TForteInt16 paValue){
+    explicit CIEC_INT(const TValueType paValue) {
       setTINT16(paValue);
     }
 
@@ -95,5 +98,9 @@ class CIEC_INT final : public CIEC_ANY_INT{
       return CIEC_ANY::e_INT;
     }
 };
+
+inline CIEC_INT operator ""_INT(unsigned long long int paValue) {
+  return CIEC_INT(static_cast<CIEC_INT::TValueType>(paValue));
+}
 
 #endif /*_FORTE_INT_H_*/

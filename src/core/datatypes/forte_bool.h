@@ -1,6 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
- *               2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2005, 2023 Profactor GmbH, ACIN
+ *                          Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -13,6 +15,7 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians - make bool constructor explicit,
  *        removed built-in type operator=
+ *    Martin Jobst - add user-defined literal
  *******************************************************************************/
 #ifndef _FORTE_BOOL_H_
 #define _FORTE_BOOL_H_
@@ -40,7 +43,7 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
       *this = paValue;
     }
 
-    explicit CIEC_BOOL(bool paValue) {
+    explicit CIEC_BOOL(const TValueType paValue) {
       setTBOOL8(paValue);
     }
 
@@ -92,5 +95,12 @@ class CIEC_BOOL : public CIEC_ANY_BIT{
 
   private:
 };
+
+const CIEC_BOOL true_BOOL = CIEC_BOOL(true);
+const CIEC_BOOL false_BOOL = CIEC_BOOL(false);
+
+inline CIEC_BOOL operator ""_BOOL(unsigned long long int paValue) {
+  return CIEC_BOOL(paValue);
+}
 
 #endif /*_FORTE_BOOL_H_*/

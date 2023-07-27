@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2008 - 2013 nxtControl GmbH, ACIN, fortiss GmbH
- *               2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2008, 2023 nxtControl GmbH, ACIN, fortiss GmbH
+ *                          Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,6 +14,7 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians - make TForteUInt64 constructor explicit,
  *        removed built-in type operator=, removed operator++
+ *    Martin Jobst - add user-defined literal
  *******************************************************************************/
 #ifndef _FORTE_LDATE_H_
 #define _FORTE_LDATE_H_
@@ -38,7 +40,7 @@ class CIEC_LDATE final : public CIEC_ANY_DATE {
       setValue(paValue);
     }
 
-    explicit CIEC_LDATE(TForteUInt64 paValue) {
+    explicit CIEC_LDATE(const TValueType paValue) {
       setTUINT64(paValue);
     }
 
@@ -94,5 +96,9 @@ class CIEC_LDATE final : public CIEC_ANY_DATE {
      */
     int toString(char* paValue, size_t paBufferSize) const override;
 };
+
+inline CIEC_LDATE operator ""_LDATE(unsigned long long int paValue) {
+  return CIEC_LDATE(static_cast<CIEC_LDATE::TValueType>(paValue));
+}
 
 #endif /*_FORTE_LDATE_H_*/

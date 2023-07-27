@@ -1,5 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2022, 2023 Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +10,7 @@
  *
  * Contributors:
  *   Martin Melik Merkumians - initial API and implementation and/or initial documentation
+ *   Martin Jobst - add user-defined literal tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -23,6 +26,18 @@ BOOST_AUTO_TEST_CASE(Type_test)
   BOOST_CHECK_EQUAL(test.getDataTypeID(), CIEC_ANY::e_WCHAR);
   //check operator bool data type size
   BOOST_CHECK_EQUAL(sizeof(test.operator TForteWChar()), sizeof(TForteWChar));
+}
+
+BOOST_AUTO_TEST_CASE(Literal_test)
+{
+  CIEC_WCHAR test1 = u'a'_WCHAR;
+  BOOST_TEST(static_cast<CIEC_WCHAR::TValueType>(test1) == u'a');
+
+  CIEC_WCHAR test2 = u'\0'_WCHAR;
+  BOOST_TEST(static_cast<CIEC_WCHAR::TValueType>(test2) == u'\0');
+
+  CIEC_WCHAR test3 = 0x30_WCHAR;
+  BOOST_TEST(static_cast<CIEC_WCHAR::TValueType>(test3) == 0x30);
 }
 
 BOOST_AUTO_TEST_CASE(Assignment_test)

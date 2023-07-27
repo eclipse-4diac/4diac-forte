@@ -1,5 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2014 ACIN, fortiss GmbH
+ * Copyright (c) 2011, 2023 ACIN, fortiss GmbH
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +10,7 @@
  *
  * Contributors:
  *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Martin Jobst - add user-defined literal tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -25,6 +28,21 @@ BOOST_AUTO_TEST_SUITE(CIEC_BOOL_function_test)
     //check operator bool data type size
     BOOST_CHECK_EQUAL(sizeof(bTest.operator bool()), sizeof(bool));
 
+  }
+
+  BOOST_AUTO_TEST_CASE(Literal_test)
+  {
+    CIEC_BOOL test1 = 0_BOOL;
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(test1) == false);
+
+    CIEC_BOOL test2 = 1_BOOL;
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(test2) == true);
+
+    CIEC_BOOL test3 = false_BOOL;
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(test3) == false);
+
+    CIEC_BOOL test4 = true_BOOL;
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(test4) == true);
   }
 
   BOOST_AUTO_TEST_CASE(Assignment_test){

@@ -1,6 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN
- *               2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2005, 2023 Profactor GmbH, ACIN
+ *                          Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -13,6 +15,7 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians - make TForteInt8 constructor explicit,
  *      removed built-in type operator=
+ *    Martin Jobst - add user-defined literal
  *******************************************************************************/
 #ifndef _FORTE_SINT_H_
 #define _FORTE_SINT_H_
@@ -43,7 +46,7 @@ class CIEC_SINT final : public CIEC_ANY_INT{
       setValueSimple(paValue);
     }
 
-    explicit CIEC_SINT(TForteInt8 paValue){
+    explicit CIEC_SINT(const TValueType paValue) {
       setTINT8(paValue);
     }
 
@@ -81,5 +84,9 @@ class CIEC_SINT final : public CIEC_ANY_INT{
       return CIEC_ANY::e_SINT;
     }
 };
+
+inline CIEC_SINT operator ""_SINT(unsigned long long int paValue) {
+  return CIEC_SINT(static_cast<CIEC_SINT::TValueType>(paValue));
+}
 
 #endif /*_FORTE_SINT_H_*/

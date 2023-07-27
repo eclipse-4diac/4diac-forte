@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2014 ACIN, fortiss GmbH
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2011, 2023 ACIN, fortiss GmbH
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,6 +11,7 @@
  * Contributors:
  *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl - initial API and implementation and/or initial documentation
  *   Martin Jobst - add equals tests
+ *                - add user-defined literal tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -26,6 +28,18 @@ BOOST_AUTO_TEST_CASE(Type_test)
   //check operator bool data type size
   BOOST_CHECK_EQUAL(sizeof(nTest.operator TForteInt32()), sizeof(TForteInt32));
 
+}
+
+BOOST_AUTO_TEST_CASE(Literal_test)
+{
+  CIEC_DINT test1 = 0_DINT;
+  BOOST_TEST(static_cast<CIEC_DINT::TValueType>(test1) == 0);
+
+  CIEC_DINT test2 = 2147483647_DINT;
+  BOOST_TEST(static_cast<CIEC_DINT::TValueType>(test2) == CIEC_DINT::scm_nMaxVal);
+
+  CIEC_DINT test3 = -2147483648_DINT;
+  BOOST_TEST(static_cast<CIEC_DINT::TValueType>(test3) == CIEC_DINT::scm_nMinVal);
 }
 
 BOOST_AUTO_TEST_CASE(Assignment_test)

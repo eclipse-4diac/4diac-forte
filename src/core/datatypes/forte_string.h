@@ -130,7 +130,7 @@ class CIEC_STRING : public CIEC_ANY_STRING {
     CIEC_STRING(const CIEC_STRING& paValue) : CIEC_ANY_STRING(), mValue(paValue.getStorage()) {
     };
 
-    CIEC_STRING(const CIEC_CHAR &paValue) : mValue(1, static_cast<TForteChar>(paValue)) {
+    CIEC_STRING(const CIEC_CHAR &paValue) : mValue(1, static_cast<char>(static_cast<CIEC_CHAR::TValueType>(paValue))) {
     }
 
     CIEC_STRING(CIEC_STRING &&paValue) : mValue(std::move(paValue.mValue)) {};
@@ -155,7 +155,7 @@ class CIEC_STRING : public CIEC_ANY_STRING {
     }
 
     CIEC_STRING &operator =(const CIEC_CHAR& paValue) {
-      mValue = storage_type(1, static_cast<TForteChar>(paValue));
+      mValue = storage_type(1, static_cast<char>(static_cast<CIEC_CHAR::TValueType>(paValue)));
       return *this;
     };
 
@@ -226,7 +226,7 @@ class CIEC_STRING : public CIEC_ANY_STRING {
 
         PARTIAL_ACCESS_TYPE(CIEC_STRING &paOriginalString, const size_t paIndex) : mOriginalString(paOriginalString), mIndex(paIndex) {
           if (mOriginalString.length() >= paIndex && paIndex > 0) {
-            setChar(mOriginalString.getStorage()[paIndex - 1]);
+            setChar(static_cast<TForteChar>(mOriginalString.getStorage()[paIndex - 1]));
           } else {
             setChar('\0');
           }
@@ -239,7 +239,7 @@ class CIEC_STRING : public CIEC_ANY_STRING {
             }
             const value_type value = operator value_type();
             if(mOriginalString.getStorage()[mIndex - 1] != value) {
-              mOriginalString.getStorageMutable()[mIndex - 1] = value;
+              mOriginalString.getStorageMutable()[mIndex - 1] = static_cast<char>(value);
             }
           }
         }
@@ -274,7 +274,7 @@ class CIEC_STRING : public CIEC_ANY_STRING {
         DEVLOG_ERROR("String index %d outside of length!\n", paIndex);
         return CIEC_CHAR('\0');
       }
-      return CIEC_CHAR(getStorage()[paIndex - 1]);
+      return CIEC_CHAR(static_cast<CIEC_CHAR::TValueType>(getStorage()[static_cast<size_t>(paIndex - 1)]));
     }
 
     [[nodiscard]] PARTIAL_ACCESS_TYPE operator[](intmax_t paIndex) {

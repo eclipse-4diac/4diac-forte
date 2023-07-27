@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2013 ACIN, nxtControl, fortiss GmbH
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2011, 2023 ACIN, nxtControl, fortiss GmbH
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,6 +11,7 @@
  * Contributors:
  *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
  *   Martin Jobst - add equals tests
+ *                - add user-defined literal tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -27,6 +29,30 @@ BOOST_AUTO_TEST_CASE(Type_test)
   //check operator bool data type size
   BOOST_REQUIRE_EQUAL(sizeof(nTest.operator TForteDFloat()), sizeof(TForteDFloat));
 
+}
+
+BOOST_AUTO_TEST_CASE(Literal_test)
+{
+  CIEC_LREAL test1 = 0.0_LREAL;
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(test1) == 0.0);
+
+  CIEC_LREAL test2 = 3.1415_LREAL;
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(test2) == 3.1415);
+
+  CIEC_LREAL test3 = -3.1415_LREAL;
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(test3) == -3.1415);
+
+  CIEC_LREAL test4 = 3.1415e4_LREAL;
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(test4) == 3.1415e4);
+
+  CIEC_LREAL test5 = -3.1415e4_LREAL;
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(test5) == -3.1415e4);
+
+  CIEC_LREAL test6 = 31415_LREAL;
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(test6) == 3.1415e4f);
+
+  CIEC_LREAL test7 = -31415_LREAL;
+  BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(test7) == -3.1415e4f);
 }
 
 BOOST_AUTO_TEST_CASE(Assignment_test)

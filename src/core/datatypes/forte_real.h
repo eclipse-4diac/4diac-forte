@@ -1,7 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 Pr3factor GmbH, ACIN, fortiss GmbH
- *               2022 Primetals Technologies Austria GmbH
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2005, 2023 Pr3factor GmbH, ACIN, fortiss GmbH
+ *                          Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -15,6 +16,7 @@
  *    Martin Melik Merkumians - make TForteFloat constructor explicit,
  *        removed built-in type operator=, added castable CIEC types operator=
  *    Martin Jobst - add equals function
+ *                 - add user-defined literal
  *******************************************************************************/
 #ifndef _FORTE_REAL_H_
 #define _FORTE_REAL_H_
@@ -63,7 +65,7 @@ class CIEC_REAL final : public CIEC_ANY_REAL{
       setValue(paValue);
     }
 
-    explicit CIEC_REAL(TForteFloat paValue) {
+    explicit CIEC_REAL(const TValueType paValue) {
       setTFLOAT(paValue);
     }
 
@@ -152,5 +154,13 @@ class CIEC_REAL final : public CIEC_ANY_REAL{
      */
     static void castRealData(const CIEC_REAL &paSrcValue, CIEC_ANY &paDestValue);
 };
+
+inline CIEC_REAL operator ""_REAL(unsigned long long int paValue) {
+  return CIEC_REAL(static_cast<CIEC_REAL::TValueType>(paValue));
+}
+
+inline CIEC_REAL operator ""_REAL(long double paValue) {
+  return CIEC_REAL(static_cast<CIEC_REAL::TValueType>(paValue));
+}
 
 #endif /*_FORTE_REAL_H_*/

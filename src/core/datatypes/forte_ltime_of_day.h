@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2008 - 2013 nxtControl GmbH, ACIN, Profactor GmbH, fortiss GmbH
- *               2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2008, 2023 nxtControl GmbH, ACIN, Profactor GmbH, fortiss GmbH
+ *                          Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -14,6 +15,7 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians - make TForteUInt64 constructor explicit,
  *      removed built-in type operator=, removed operator++
+ *    Martin Jobst - add user-defined literal
  *******************************************************************************/
 #ifndef _FORTE_LTOD_H_
 #define _FORTE_LTOD_H_
@@ -41,7 +43,7 @@ class CIEC_LTIME_OF_DAY final : public CIEC_ANY_DATE {
       setValue(paValue);
     }
 
-    explicit CIEC_LTIME_OF_DAY(TForteUInt64 paValue){
+    explicit CIEC_LTIME_OF_DAY(const TValueType paValue) {
       setTUINT64(paValue);
     }
 
@@ -98,5 +100,9 @@ class CIEC_LTIME_OF_DAY final : public CIEC_ANY_DATE {
      */
     size_t getToStringBufferSize() const override;
 };
+
+inline CIEC_LTIME_OF_DAY operator ""_LTIME_OF_DAY(unsigned long long int paValue) {
+  return CIEC_LTIME_OF_DAY(static_cast<CIEC_LTIME_OF_DAY::TValueType>(paValue));
+}
 
 #endif /*_FORTE_LTOD_H_*/

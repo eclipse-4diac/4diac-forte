@@ -1,5 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2011, 2013 ACIN, fortiss GmbH
+ * Copyright (c) 2011, 2023 ACIN, fortiss GmbH
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +10,7 @@
  *
  * Contributors:
  *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Martin Jobst - add user-defined literal tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include <string>
@@ -23,6 +26,18 @@ BOOST_AUTO_TEST_CASE(Type_test)
   BOOST_CHECK_EQUAL(nTest.getDataTypeID(), CIEC_ANY::e_LTIME);
   //check operator bool data type size
   BOOST_CHECK_EQUAL(sizeof(nTest.operator TForteInt64()), sizeof(TForteInt64));
+}
+
+BOOST_AUTO_TEST_CASE(Literal_test)
+{
+  CIEC_LTIME test1 = 0_LTIME;
+  BOOST_TEST(static_cast<CIEC_LTIME::TValueType>(test1) == 0);
+
+  CIEC_LTIME test2 = 9223372036854775807_LTIME;
+  BOOST_TEST(static_cast<CIEC_LTIME::TValueType>(test2) == std::numeric_limits<TForteInt64>::max());
+
+  CIEC_LTIME test3 = -9223372036854775808_LTIME;
+  BOOST_TEST(static_cast<CIEC_LTIME::TValueType>(test3) == std::numeric_limits<TForteInt64>::min());
 }
 
 BOOST_AUTO_TEST_CASE(Operator_test)

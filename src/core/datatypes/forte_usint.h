@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN, fortiss GmbH
- *               2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2005, 2023 Profactor GmbH, ACIN, fortiss GmbH
+ *                          Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -14,6 +15,7 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians - make TForteUInt8 constructor explicit,
  *        removed built-in type operator=
+ *    Martin Jobst - add user-defined literal
  *******************************************************************************/
 #ifndef _FORTE_USINT_H_
 #define _FORTE_USINT_H_
@@ -44,8 +46,8 @@ class CIEC_USINT final : public CIEC_ANY_INT{
       setValueSimple(paValue);
     }
 
-    explicit CIEC_USINT(TForteUInt8 pa_nValue){
-      setTUINT8(pa_nValue);
+    explicit CIEC_USINT(const TValueType paValue) {
+      setTUINT8(paValue);
     }
 
     ~CIEC_USINT() override = default;
@@ -77,5 +79,9 @@ class CIEC_USINT final : public CIEC_ANY_INT{
       return CIEC_ANY::e_USINT;
     }
 };
+
+inline CIEC_USINT operator ""_USINT(unsigned long long int paValue) {
+  return CIEC_USINT(static_cast<CIEC_USINT::TValueType>(paValue));
+}
 
 #endif /*_FORTE_USINT_H_*/

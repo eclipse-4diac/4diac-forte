@@ -1,5 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2011 ACIN, nxtControl
+ * Copyright (c) 2011, 2023 ACIN, nxtControl
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +10,7 @@
  *
  * Contributors:
  *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
+ *   Martin Jobst - add user-defined literal tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -23,6 +26,15 @@ BOOST_AUTO_TEST_CASE(Type_test)
   BOOST_CHECK_EQUAL(nTest.getDataTypeID(), CIEC_ANY::e_DATE_AND_TIME);
   //check operator bool data type size
   BOOST_CHECK_EQUAL(sizeof(nTest.operator TForteUInt64()), sizeof(TForteUInt64));
+}
+
+BOOST_AUTO_TEST_CASE(Literal_test)
+{
+  CIEC_DATE_AND_TIME test1 = 0_DATE_AND_TIME;
+  BOOST_TEST(static_cast<CIEC_DATE_AND_TIME::TValueType>(test1) == 0);
+
+  CIEC_DATE_AND_TIME test2 = 18446744073709551615_DATE_AND_TIME;
+  BOOST_TEST(static_cast<CIEC_DATE_AND_TIME::TValueType>(test2) == std::numeric_limits<TForteUInt64>::max());
 }
 
 BOOST_AUTO_TEST_CASE(CheckInternalTimeRepresentationIsUTC)

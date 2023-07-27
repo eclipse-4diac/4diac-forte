@@ -1,7 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2014 ACIN, nxtControl, Profactor GmbH, fortiss GmbH
- *   2018 TU Wien/ACIN
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2011, 2023 ACIN, nxtControl, Profactor GmbH, fortiss GmbH
+ *                          TU Wien/ACIN
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -14,6 +15,7 @@
  *    - initial API and implementation and/or initial documentation
  *   Martin Melik Merkumians - adds getToStringBufferSize tests
  *   Martin Jobst - add equals tests
+ *                - add user-defined literal tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -30,6 +32,17 @@ BOOST_AUTO_TEST_CASE(Type_test)
   //check operator const char* data type size
   BOOST_CHECK_EQUAL(sizeof(sTest.getValue()), sizeof(char*));
 
+}
+
+BOOST_AUTO_TEST_CASE(Literal_test) {
+  CIEC_WSTRING test1 = u""_WSTRING;
+  BOOST_REQUIRE_EQUAL(test1.getValue(), "");
+
+  CIEC_WSTRING test2 = u"test"_WSTRING;
+  BOOST_REQUIRE_EQUAL(test2.getValue(), "test");
+
+  CIEC_WSTRING test3 = u"test\x20ac"_WSTRING;
+  BOOST_REQUIRE_EQUAL(test3.getValue(), "test\xe2\x82\xac");
 }
 
 BOOST_AUTO_TEST_CASE(String_manilulation_interface)

@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2022, 2023 Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
  *               
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,6 +11,7 @@
  * Contributors:
  *    Martin Melik-Merkumians
  *      - initial implementation and rework communication infrastructure
+ *    Martin Jobst - add user-defined literal
  *******************************************************************************/
 #ifndef _FORTE_WCHAR_H_
 #define _FORTE_WCHAR_H_
@@ -34,7 +36,7 @@ class CIEC_WCHAR : public CIEC_ANY_CHAR{
       setValueSimple(paValue);
     }
 
-    explicit CIEC_WCHAR(char16_t paValue) {
+    explicit CIEC_WCHAR(const TValueType paValue) {
       setChar16(paValue);
     }
 
@@ -66,5 +68,13 @@ class CIEC_WCHAR : public CIEC_ANY_CHAR{
       return CIEC_ANY::e_WCHAR;
     }
 };
+
+inline CIEC_WCHAR operator ""_WCHAR(char16_t paValue) {
+  return CIEC_WCHAR(static_cast<CIEC_WCHAR::TValueType>(paValue));
+}
+
+inline CIEC_WCHAR operator ""_WCHAR(unsigned long long int paValue) {
+  return CIEC_WCHAR(static_cast<CIEC_WCHAR::TValueType>(paValue));
+}
 
 #endif /*_FORTE_WCHAR_H_*/

@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2013 ACIN, nxtControl, fortiss GmbH
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2011, 2023 ACIN, nxtControl, fortiss GmbH
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,6 +11,7 @@
  * Contributors:
  *   Martin Melik Merkumians, Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
  *   Martin Jobst - add equals tests
+ *                - add user-defined literal tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include <boost/test/tools/floating_point_comparison.hpp>
@@ -29,6 +31,30 @@ BOOST_AUTO_TEST_CASE(Type_test)
   //check operator bool data type size
   BOOST_REQUIRE_EQUAL(sizeof(nTest.operator TForteFloat()), sizeof(TForteFloat));
 
+}
+
+BOOST_AUTO_TEST_CASE(Literal_test)
+{
+  CIEC_REAL test1 = 0.0_REAL;
+  BOOST_TEST(static_cast<CIEC_REAL::TValueType>(test1) == 0.0f);
+
+  CIEC_REAL test2 = 3.1415_REAL;
+  BOOST_TEST(static_cast<CIEC_REAL::TValueType>(test2) == 3.1415f);
+
+  CIEC_REAL test3 = -3.1415_REAL;
+  BOOST_TEST(static_cast<CIEC_REAL::TValueType>(test3) == -3.1415f);
+
+  CIEC_REAL test4 = 3.1415e4_REAL;
+  BOOST_TEST(static_cast<CIEC_REAL::TValueType>(test4) == 3.1415e4f);
+
+  CIEC_REAL test5 = -3.1415e4_REAL;
+  BOOST_TEST(static_cast<CIEC_REAL::TValueType>(test5) == -3.1415e4f);
+
+  CIEC_REAL test6 = 31415_REAL;
+  BOOST_TEST(static_cast<CIEC_REAL::TValueType>(test6) == 3.1415e4f);
+
+  CIEC_REAL test7 = -31415_REAL;
+  BOOST_TEST(static_cast<CIEC_REAL::TValueType>(test7) == -3.1415e4f);
 }
 
 BOOST_AUTO_TEST_CASE(Assignment_test)
