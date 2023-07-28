@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2018 ACIN, Profactor GmbH, fortiss GmbH,
- *                           Johannes Kepler University
- *               2022 Primetals Technologies Austria GmbH
- *               2022 Martin Erich Jobst
+ * Copyright (c) 2005, 2022 ACIN, Profactor GmbH, fortiss GmbH,
+ *                          Johannes Kepler University,
+ *                          Primetals Technologies Austria GmbH,
+ *                          Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -18,7 +18,7 @@
  *    Martin Jobst - add CTF tracing integration
  *    Fabio Gandolfi - send also subapps on requested resources
  *******************************************************************************/
-#include <fortenew.h>
+#include "fortenew.h"
 #include "resource.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "resource_gen.cpp"
@@ -37,6 +37,8 @@
 #include "lua/luabfbtypeentry.h"
 #include "lua/luaadaptertypeentry.h"
 #endif
+
+#include <string>
 
 CResource::CResource(CResource* pa_poDevice, const SFBInterfaceSpec *pa_pstInterfaceSpec, const CStringDictionary::TStringId pa_nInstanceNameId) :
     CFunctionBlock(pa_poDevice, pa_pstInterfaceSpec, pa_nInstanceNameId), forte::core::CFBContainer(CStringDictionary::scm_nInvalidStringId, nullptr), // the fbcontainer of resources does not have a seperate name as it is stored in the resource
@@ -163,8 +165,8 @@ EMGMResponse CResource::changeFBExecutionState(EMGMCommandType pa_unCommand){
   if(EMGMResponse::Ready == retVal){
     retVal = changeContainedFBsExecutionState(pa_unCommand);
     if(EMGMResponse::Ready == retVal){
-      if(EMGMCommandType::Start == pa_unCommand && nullptr != m_pstInterfaceSpec) { //on start, sample inputs
-        for(TPortId i = 0; i < m_pstInterfaceSpec->m_nNumDIs; ++i) {
+      if(EMGMCommandType::Start == pa_unCommand && nullptr != mInterfaceSpec) { //on start, sample inputs
+        for(TPortId i = 0; i < mInterfaceSpec->m_nNumDIs; ++i) {
           CDataConnection *conn = *getDIConUnchecked(i);
           if(nullptr != conn) {
             conn->readData(*getDI(i));
@@ -202,7 +204,7 @@ EMGMResponse CResource::createConnection(forte::core::SManagementCMD &paCommand)
 EMGMResponse CResource::createConnection(forte::core::TNameIdentifier &paSrcNameList, forte::core::TNameIdentifier &paDstNameList){
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
-  CConnection *con = getConnection(paSrcNameList);
+  CConnection *const con = getConnection(paSrcNameList);
   if(nullptr != con){
     CStringDictionary::TStringId portName = paDstNameList.back();
     paDstNameList.popBack();
@@ -219,7 +221,7 @@ EMGMResponse CResource::createConnection(forte::core::TNameIdentifier &paSrcName
 EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcNameList, forte::core::TNameIdentifier &paDstNameList){
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
-  CConnection *con = getConnection(paSrcNameList);
+  CConnection *const con = getConnection(paSrcNameList);
   if(nullptr != con){
     CStringDictionary::TStringId portName = paDstNameList.back();
     paDstNameList.popBack();
@@ -247,10 +249,10 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
   }
 
   if((nullptr != fb) && (runner.isLastEntry())){
-    CIEC_ANY *var = fb->getVar(&portName, 1);
+    CIEC_ANY *const var = fb->getVar(&portName, 1);
     if(nullptr != var){
       // 0 is not supported in the fromString method
-      if((paValue.length() > 0) && (paValue.length() == var->fromString(paValue.getValue()))){
+      if((paValue.length() > 0) && (paValue.length() == var->fromString(paValue.getStorage().c_str()))){
         //if we cannot parse the full value the value is not valid
         if(paForce){
           var->setForced(true);
@@ -273,26 +275,48 @@ EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, con
 
 EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, CIEC_STRING & paValue){
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
-  CIEC_ANY *var = getVariable(paNameList);
+  CIEC_ANY *const var = getVariable(paNameList);
   if(nullptr != var){
     int nUsedChars = -1;
     switch (var->getDataTypeID()){
-      case CIEC_ANY::e_WSTRING:
-      case CIEC_ANY::e_STRING:{
-        size_t bufferSize = var->getToStringBufferSize() + forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<CIEC_WSTRING&>(*var).getValue());
-        nUsedChars = static_cast<CIEC_WSTRING&>(*var).toUTF8(paValue.getValue(), bufferSize, false);
+      case CIEC_ANY::e_WSTRING: {
+        const size_t bufferSize = var->getToStringBufferSize() + forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<CIEC_WSTRING&>(*var).getValue());
+        char *buffer = new char[bufferSize]();
+        nUsedChars = static_cast<CIEC_WSTRING &>(*var).toUTF8(buffer, bufferSize, false);
         if(bufferSize != var->getToStringBufferSize() && 0 < nUsedChars) { //avoid re-running on strings which were already proven not to have any special character
-          nUsedChars += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(paValue.getValue()));
+          nUsedChars += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(buffer));
         }
+        if(-1 < nUsedChars && static_cast<size_t>(nUsedChars) < CIEC_STRING::scmMaxStringLen){
+          paValue.assign(buffer, static_cast<TForteUInt16>(nUsedChars));
+        }
+        delete[] (buffer);
+        break;
+      }
+      case CIEC_ANY::e_STRING: {
+        const size_t bufferSize = var->getToStringBufferSize() + forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<CIEC_STRING&>(*var).getStorage().c_str());
+        char *buffer = new char[bufferSize]();
+        nUsedChars = static_cast<CIEC_STRING &>(*var).toUTF8(buffer, bufferSize, false);
+        if(bufferSize != var->getToStringBufferSize() && 0 < nUsedChars) { //avoid re-running on strings which were already proven not to have any special character
+          nUsedChars += static_cast<int>(forte::core::util::transformNonEscapedToEscapedXMLText(buffer));
+        }
+        if(-1 < nUsedChars && static_cast<size_t>(nUsedChars) < CIEC_STRING::scmMaxStringLen){
+          paValue.assign(buffer, static_cast<TForteUInt16>(nUsedChars));
+        }
+        delete[] (buffer);
         break;
       }
       default:
-        nUsedChars = var->toString(paValue.getValue(), paValue.getCapacity());
+        const size_t bufferSize = var->getToStringBufferSize();
+        char *buffer = new char[bufferSize]();
+        nUsedChars = var->toString(buffer, sizeof(buffer));
+        if(-1 < nUsedChars && static_cast<size_t>(nUsedChars) < CIEC_STRING::scmMaxStringLen){
+          paValue.assign(buffer, static_cast<TForteUInt16>(nUsedChars));
+        }
+        delete[] (buffer);
         break;
     }
 
     if(-1 != nUsedChars){
-      paValue.assign(paValue.getValue(), static_cast<TForteUInt16>(nUsedChars));
       retVal = EMGMResponse::Ready;
     }
     else{
@@ -549,22 +573,26 @@ void CResource::createAdapterInterfaceResponseMessage(const SFBInterfaceSpec* pa
   if(paInterfaceSpec->m_nNumAdapters > 0){
     CIEC_STRING sockets;
     CIEC_STRING plugs;
-    for(int i = 0; i < paInterfaceSpec->m_nNumAdapters; i++){
+    for(TPortId i = 0; i < paInterfaceSpec->m_nNumAdapters; i++){
       if(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_bIsPlug){
-        createInterfaceResponseMessage(plugs, "AdapterDeclaration", CIEC_STRING(CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID)), CIEC_STRING(CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterTypeNameID)));
+        const char *adapterName = CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID);
+        const char *adapterTypeName = CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterTypeNameID);
+        createInterfaceResponseMessage(plugs, "AdapterDeclaration", CIEC_STRING(adapterName, strlen(adapterName)), CIEC_STRING(adapterTypeName, strlen(adapterTypeName)));
       }
       else{
-        createInterfaceResponseMessage(sockets, "AdapterDeclaration", CIEC_STRING(CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID)), CIEC_STRING(CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterTypeNameID)));
+        const char *adapterName = CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterNameID);
+        const char *adapterTypeName = CStringDictionary::getInstance().get(paInterfaceSpec->m_pstAdapterInstanceDefinition[i].m_nAdapterTypeNameID);
+        createInterfaceResponseMessage(sockets, "AdapterDeclaration", CIEC_STRING(adapterName, strlen(adapterName)), CIEC_STRING(adapterTypeName, strlen(adapterTypeName)));
       }
     }
     if(!plugs.empty()){
       paReqResult.append("<Plugs>\n         ");
-      paReqResult.append(plugs.getValue());
+      paReqResult.append(plugs);
       paReqResult.append("</Plugs>\n   ");
     }
     if(!sockets.empty()){
       paReqResult.append("<Sockets>\n         ");
-      paReqResult.append(sockets.getValue());
+      paReqResult.append(sockets);
       paReqResult.append("</Sockets>\n   ");
     }
   }
@@ -572,28 +600,32 @@ void CResource::createAdapterInterfaceResponseMessage(const SFBInterfaceSpec* pa
 
 void CResource::createInterfaceResponseMessages(CIEC_STRING &paReqResult, const char *pa_pcType,
     const CStringDictionary::TStringId* paNameList, const CStringDictionary::TStringId* paTypeList,
-    const int pa_nNumberOfElements, const TDataIOID* paEWith, const TForteInt16* paEWithIndexes, const CStringDictionary::TStringId* paDNameList){
-  for(int nIndex = 0; nIndex < pa_nNumberOfElements; nIndex++){
+    const TEventID pa_nNumberOfElements, const TDataIOID* paEWith, const TForteInt16* paEWithIndexes, const CStringDictionary::TStringId* paDNameList){
+  for(TEventID nIndex = 0; nIndex < pa_nNumberOfElements; nIndex++){
     if(nullptr != paTypeList){
-      createInterfaceResponseMessage(paReqResult, pa_pcType, CIEC_STRING(CStringDictionary::getInstance().get(paNameList[nIndex])), CIEC_STRING(CStringDictionary::getInstance().get(paTypeList[nIndex])));
+      const char *name = CStringDictionary::getInstance().get(paNameList[nIndex]);
+      const char *type = CStringDictionary::getInstance().get(paTypeList[nIndex]);
+      createInterfaceResponseMessage(paReqResult, pa_pcType, CIEC_STRING(name, strlen(name)), CIEC_STRING(type, strlen(type)));
     }
     else{
-      createInterfaceResponseMessage(paReqResult, pa_pcType, CIEC_STRING(CStringDictionary::getInstance().get(paNameList[nIndex])), CIEC_STRING("Event"), paEWith, paEWithIndexes, nIndex, paDNameList);
+      const char *name = CStringDictionary::getInstance().get(paNameList[nIndex]);
+      constexpr char event[] = "Event";
+      createInterfaceResponseMessage(paReqResult, pa_pcType, CIEC_STRING(name, strlen(name)), CIEC_STRING(event, std::char_traits<char>::length(event)), paEWith, paEWithIndexes, nIndex, paDNameList);
     }
   }
 }
 
 void CResource::createInterfaceResponseMessage(CIEC_STRING& paReqResult, const char* pa_pcType, const CIEC_STRING& paName, const CIEC_STRING& paType,
-    const TDataIOID* paEWith, const TForteInt16* paEWithIndexes, const int pa_nIndex, const CStringDictionary::TStringId* paENameList) const {
+    const TDataIOID* paEWith, const TForteInt16* paEWithIndexes, const TEventID paIndex, const CStringDictionary::TStringId* paENameList) const {
   paReqResult.append("<");
   paReqResult.append(pa_pcType);
   paReqResult.append(" Name=\"");
-  paReqResult.append(paName.getValue());
+  paReqResult.append(paName);
   paReqResult.append("\" Type=\"");
-  paReqResult.append(paType.getValue());
-  if(nullptr != paEWithIndexes && -1 != paEWithIndexes[pa_nIndex]){
+  paReqResult.append(paType);
+  if(nullptr != paEWithIndexes && -1 != paEWithIndexes[paIndex]){
     paReqResult.append("\">\n         ");
-    for(int nRunIndex = paEWithIndexes[pa_nIndex]; scmWithListDelimiter != paEWith[nRunIndex]; nRunIndex++){
+    for(int nRunIndex = paEWithIndexes[paIndex]; scmWithListDelimiter != paEWith[nRunIndex]; nRunIndex++){
       paReqResult.append("<With Var=\"");
       paReqResult.append(CStringDictionary::getInstance().get(paENameList[paEWith[nRunIndex]]));
       paReqResult.append("\"/>\n      ");
@@ -610,7 +642,7 @@ void CResource::createInterfaceResponseMessage(CIEC_STRING& paReqResult, const c
 EMGMResponse CResource::createFBTypeFromLua(CStringDictionary::TStringId typeNameId,
     CIEC_STRING& paLuaScriptAsString){
   EMGMResponse retVal = EMGMResponse::UnsupportedType;
-  if(nullptr != strstr(paLuaScriptAsString.getValue(), "internalFBs")){ // CFBType
+  if(nullptr != strstr(paLuaScriptAsString.getStorage().c_str(), "internalFBs")){ // CFBType
     if(CLuaCFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != nullptr){
       retVal = EMGMResponse::Ready;
     }
@@ -696,9 +728,9 @@ CConnection *CResource::getConnection(forte::core::TNameIdentifier &paSrcNameLis
 
 CConnection *CResource::getResIf2InConnection(CStringDictionary::TStringId paResInput) const{
   CConnection *con = nullptr;
-  if(nullptr != m_pstInterfaceSpec){
+  if(nullptr != mInterfaceSpec){
     TPortId inPortId = getDIID(paResInput);
-    if(cg_unInvalidPortId != inPortId){
+    if(cgInvalidPortId != inPortId){
       con = mResIf2InConnections + inPortId;
     }
   }
@@ -706,9 +738,9 @@ CConnection *CResource::getResIf2InConnection(CStringDictionary::TStringId paRes
 }
 
 void CResource::initializeResIf2InConnections(){
-  if(nullptr != m_pstInterfaceSpec){
-    mResIf2InConnections = new CInterface2InternalDataConnection[m_pstInterfaceSpec->m_nNumDIs];
-    for(TPortId i = 0; i < m_pstInterfaceSpec->m_nNumDIs; i++){
+  if(nullptr != mInterfaceSpec){
+    mResIf2InConnections = new CInterface2InternalDataConnection[mInterfaceSpec->m_nNumDIs];
+    for(TPortId i = 0; i < mInterfaceSpec->m_nNumDIs; i++){
       (mResIf2InConnections + i)->setSource(this, i);
     }
   }

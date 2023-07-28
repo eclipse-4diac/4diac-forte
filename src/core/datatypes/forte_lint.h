@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2009 - 2013 ACIN
- *               2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2009, 2023 ACIN
+ *                          Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -14,7 +15,8 @@
  *    Martin Melik Merkumians - make TForteInt64 constructor explicit,
  *      adds casts constructors, removed built-in type operator=, added
  *      castable CIEC types operator=
-  *******************************************************************************/
+ *    Martin Jobst - add user-defined literal
+ *******************************************************************************/
 #ifndef _FORTE_LINT_H_
 #define _FORTE_LINT_H_
 
@@ -80,7 +82,7 @@ class CIEC_LINT final : public CIEC_ANY_INT{
       setValueSimple(paValue);
     }
 
-    explicit CIEC_LINT(TForteInt64 paValue){
+    explicit CIEC_LINT(const TValueType paValue) {
       setTINT64(paValue);
     }
 
@@ -118,5 +120,9 @@ class CIEC_LINT final : public CIEC_ANY_INT{
       return CIEC_ANY::e_LINT;
     }
 };
+
+inline CIEC_LINT operator ""_LINT(unsigned long long int paValue) {
+  return CIEC_LINT(static_cast<CIEC_LINT::TValueType>(paValue));
+}
 
 #endif /*_FORTE_LINT_H_*/

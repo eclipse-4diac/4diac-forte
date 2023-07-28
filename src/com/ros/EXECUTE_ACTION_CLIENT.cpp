@@ -72,7 +72,7 @@ void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(TEventID pa_nEIID){
         if(QI() && !m_GoalActive){
           if(m_ActionClient->isServerConnected()){
             //register the external eventchain on the thread of the Request event
-            setEventChainExecutor(m_poInvokingExecEnv);
+            setEventChainExecutor(mInvokingExecEnv);
             reapp_msgs::ExecuteGoal goal;
             goal.id1 = ID1();
             goal.id2 = ID2();

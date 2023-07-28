@@ -4,7 +4,7 @@ doubleInit;<Request ID="3" Action="CREATE"><FB Name="DoubleInit.E_SR_1" Type="E_
 doubleInit;<Request ID="4" Action="CREATE"><FB Name="DoubleInit.DoubleInit1" Type="TEST_CONDITION" /></Request>
 doubleInit;<Request ID="5" Action="CREATE"><FB Name="DoubleInit.CSV_WRITER_1_1" Type="CSV_WRITER_1" /></Request>
 doubleInit;<Request ID="6" Action="WRITE"><Connection Source="1" Destination="DoubleInit.CSV_WRITER_1_1.QI" /></Request>
-doubleInit;<Request ID="7" Action="WRITE"><Connection Source="csvWriteTest.csv" Destination="DoubleInit.CSV_WRITER_1_1.FILE_NAME" /></Request>
+doubleInit;<Request ID="7" Action="WRITE"><Connection Source="&apos;csvWriteTest.csv&apos;" Destination="DoubleInit.CSV_WRITER_1_1.FILE_NAME" /></Request>
 doubleInit;<Request ID="8" Action="CREATE"><FB Name="DoubleInit.E_SWITCH_1" Type="E_SWITCH" /></Request>
 doubleInit;<Request ID="9" Action="CREATE"><FB Name="DoubleInit.endNormal_1" Type="STEST_END" /></Request>
 doubleInit;<Request ID="10" Action="CREATE"><FB Name="DoubleInit.DoubleInit2" Type="TEST_CONDITION" /></Request>

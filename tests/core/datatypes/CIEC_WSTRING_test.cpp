@@ -1,7 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2011 - 2014 ACIN, nxtControl, Profactor GmbH, fortiss GmbH
- *   2018 TU Wien/ACIN
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2011, 2023 ACIN, nxtControl, Profactor GmbH, fortiss GmbH
+ *                          TU Wien/ACIN
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -14,6 +15,7 @@
  *    - initial API and implementation and/or initial documentation
  *   Martin Melik Merkumians - adds getToStringBufferSize tests
  *   Martin Jobst - add equals tests
+ *                - add user-defined literal tests
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
@@ -30,6 +32,17 @@ BOOST_AUTO_TEST_CASE(Type_test)
   //check operator const char* data type size
   BOOST_CHECK_EQUAL(sizeof(sTest.getValue()), sizeof(char*));
 
+}
+
+BOOST_AUTO_TEST_CASE(Literal_test) {
+  CIEC_WSTRING test1 = u""_WSTRING;
+  BOOST_REQUIRE_EQUAL(test1.getValue(), "");
+
+  CIEC_WSTRING test2 = u"test"_WSTRING;
+  BOOST_REQUIRE_EQUAL(test2.getValue(), "test");
+
+  CIEC_WSTRING test3 = u"test\x20ac"_WSTRING;
+  BOOST_REQUIRE_EQUAL(test3.getValue(), "test\xe2\x82\xac");
 }
 
 BOOST_AUTO_TEST_CASE(String_manilulation_interface)
@@ -254,7 +267,7 @@ BOOST_AUTO_TEST_CASE(WString_fromUTF8)
   const TForteByte cASCII2[] = { 'A', 0 };
   const TForteByte cASCII3[] = { 0x7f, 0 };
   const TForteByte cUpper1[] = { 'A', 0xc2, 0xa2, 'A', 0 };
-  const TForteByte cUpper2[] = { 'A', 0xe2, 0x82, 0xac, 'B', 0 };
+  const TForteByte cUpper2[]= { 'A', 0xe2, 0x82, 0xac, 'B', 0 };
   const TForteByte cUpper2Capped[] = { 'A', 0xe2, 0x82, 0xac, 0 };
   const TForteByte cUpper3[] = { 0xf0, 0xa4, 0xad, 0xa2, 0 };
   const TForteByte cInvalid1[] = { 0x80, 0 };
@@ -515,7 +528,7 @@ BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_NoSpecialSymbols)
 {
   CIEC_WSTRING testString("4diac 4 ever!");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(13 + 2 + 1, bufferSize);
 }
 
@@ -523,7 +536,7 @@ BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_Dollar)
 {
   CIEC_WSTRING testString("$");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // "$$"\0
 }
 
@@ -531,7 +544,7 @@ BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_SingleQuote)
 {
   CIEC_WSTRING testString("\'");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(1 + 2 + 1, bufferSize); // "'"\0
 }
 
@@ -539,7 +552,7 @@ BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_DoubleQuote)
 {
   CIEC_WSTRING testString("\"");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // "$""\0
 }
 
@@ -547,7 +560,7 @@ BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_LineFeed)
 {
   CIEC_WSTRING testString("\x10");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // "$L"\0
 }
 
@@ -555,7 +568,7 @@ BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_NewLine)
 {
   CIEC_WSTRING testString("\n");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // "$N"\0
 }
 
@@ -563,7 +576,7 @@ BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_FormFeed)
 {
   CIEC_WSTRING testString("\f");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // "$P"\0
 }
 
@@ -571,7 +584,7 @@ BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_CarriageReturn)
 {
   CIEC_WSTRING testString("\r");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // "$R"\0
 }
 
@@ -579,7 +592,7 @@ BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_Tab)
 {
   CIEC_WSTRING testString("\t");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(2 + 2 + 1, bufferSize); // "$T"\0
 }
 
@@ -587,7 +600,7 @@ BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_NonCommonSymbol_1ByteUsed)
 {
   CIEC_WSTRING testString("\x8A");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(5 + 2 + 1, bufferSize); // "$008A"\0
 }
 
@@ -595,7 +608,7 @@ BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_NonCommonSymbol_2BytesUsed)
 {
   CIEC_WSTRING testString("\xDA\x8A");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(5 + 2 + 1, bufferSize); // "$008A"\0
 }
 
@@ -603,7 +616,7 @@ BOOST_AUTO_TEST_CASE(WString_getToStringBufferSize_NonCommonSymbol_Two_OneBytesU
 {
   CIEC_WSTRING testString("\x8B\x8A");
 
-  unsigned int bufferSize = testString.getToStringBufferSize();
+  size_t bufferSize = testString.getToStringBufferSize();
   BOOST_CHECK_EQUAL(5 + 5 + 2 + 1, bufferSize); // "$008A"\0
 }
 
@@ -611,7 +624,7 @@ BOOST_AUTO_TEST_CASE(Implicit_cast_from_WCHAR){
   CIEC_WCHAR testChar(u'\u00df');
   CIEC_WSTRING resultString(testChar);
 
-  unsigned int bufferSize = resultString.getToStringBufferSize();
+  size_t bufferSize = resultString.getToStringBufferSize();
 
   BOOST_CHECK_EQUAL(8, bufferSize); // "<symbol>" = 3
   BOOST_TEST(CIEC_WSTRING("ß") == resultString);
@@ -624,7 +637,7 @@ BOOST_AUTO_TEST_CASE(Assignment_from_WCHAR)
 
   resultString = testChar;
 
-  unsigned int bufferSize = resultString.getToStringBufferSize();
+  size_t bufferSize = resultString.getToStringBufferSize();
 
   BOOST_CHECK_EQUAL(8, bufferSize); // "<symbol>" = 3
   BOOST_TEST(CIEC_WSTRING("ß") == resultString);

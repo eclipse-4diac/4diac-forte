@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 -2014 AIT
+ * Copyright (c) 2012 - 2023 AIT, Davor Cihlar
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,44 +8,31 @@
  *
  * Contributors:
  *   Filip Andren - initial API and implementation and/or initial documentation
+ *   Davor Cihlar - multiple FBs sharing a single Modbus connection
  *******************************************************************************/
 #ifndef MODBUSPOLL_H_
 #define MODBUSPOLL_H_
 
 #include "modbustimedevent.h"
-#include <fortelist.h>
+#include <vector>
+
+class CModbusIOBlock;
+class CModbusHandler;
 
 class CModbusPoll : public CModbusTimedEvent{
   public:
-    CModbusPoll(long pa_nPollInterval, unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses);
+    CModbusPoll(CModbusHandler* pa_pModbusHandler, long pa_nPollInterval);
     ~CModbusPoll() override;
 
     int executeEvent(modbus_t *pa_pModbusConn, void *pa_pRetVal) override;
 
-    void setFunctionCode(unsigned int pa_nFunctionCode){
-      m_nFunctionCode = pa_nFunctionCode;
-    }
-    unsigned int getFunctionCode(){
-      return m_nFunctionCode;
-    }
-
-    void addPollAddresses(unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses);
+    void addPollBlock(CModbusIOBlock *pa_pIOBlock);
 
   private:
+    CModbusHandler *const m_pModbusHandler;
+    std::vector<CModbusIOBlock*> m_lPolls;
 
-    struct SModbusPollData{
-        unsigned int m_nStartAddress;
-        unsigned int m_nNrAddresses;
-
-        SModbusPollData(unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses) :
-            m_nStartAddress(pa_nStartAddress), m_nNrAddresses(pa_nNrAddresses){
-        }
-        ;
-    };
-
-    unsigned int m_nFunctionCode;
-
-    CSinglyLinkedList<SModbusPollData*> m_lPolls;
+    int readOneBlock(modbus_t *pa_pModbusConn, CModbusIOBlock *pa_pIOBlock);
 };
 
 #endif /* MODBUSPOLL_H_ */

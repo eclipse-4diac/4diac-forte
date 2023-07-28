@@ -1,7 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
- *               2022 Primetals Technologies Austria GmbH
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2005, 2023 Profactor GmbH, ACIN
+ *                          Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -16,6 +17,7 @@
  *      adds implicit cast constructor and operator=, removed built-in type operator=,
  *      added castable CIEC types operator=
  *    Martin Jobst - add equals function
+ *                 - add user-defined literal
  *******************************************************************************/
 #ifndef _FORTE_LREAL_H_
 #define _FORTE_LREAL_H_
@@ -79,7 +81,7 @@ class CIEC_LREAL final : public CIEC_ANY_REAL{
       setValue(paValue);
     }
 
-    explicit CIEC_LREAL(TForteDFloat paValue){
+    explicit CIEC_LREAL(const TValueType paValue) {
       setTDFLOAT(paValue);
     }
 
@@ -185,5 +187,13 @@ class CIEC_LREAL final : public CIEC_ANY_REAL{
      */
     static void castLRealData(const CIEC_LREAL &paSrcValue, CIEC_ANY &paDestValue);
 };
+
+inline CIEC_LREAL operator ""_LREAL(unsigned long long int paValue) {
+  return CIEC_LREAL(static_cast<CIEC_LREAL::TValueType>(paValue));
+}
+
+inline CIEC_LREAL operator ""_LREAL(long double paValue) {
+  return CIEC_LREAL(static_cast<CIEC_LREAL::TValueType>(paValue));
+}
 
 #endif /*_FORTE_LREAL_H_*/

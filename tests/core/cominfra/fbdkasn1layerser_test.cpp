@@ -838,7 +838,7 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_STRING){
   BOOST_CHECK_EQUAL(nTestee.getSendDataSize(), cg_unStringEmptySerSize);
   BOOST_CHECK(std::equal(cg_abStringEmpty, cg_abStringEmpty + cg_unStringEmptySerSize, ((TForteByte *)nTestee.getSendDataPtr())));
 
-  nVal = CIEC_STRING("HalloWorld");
+  nVal = "HalloWorld"_STRING;
   BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.sendData(poArray, 1));
   BOOST_CHECK_EQUAL(nTestee.getSendDataSize(), cg_unStringHalloWorldSerSize);
   BOOST_CHECK(std::equal(cg_abStringHalloWorld, cg_abStringHalloWorld + cg_unStringHalloWorldSerSize, ((TForteByte *)nTestee.getSendDataPtr())));
@@ -923,7 +923,7 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_MultiDatas){
 
   poTimeVal1->fromString("T#3000ms");
   *poWordVal = CIEC_WORD(40396);
-  *poStringVal = CIEC_STRING("HalloWorld");
+  *poStringVal = "HalloWorld"_STRING;
   *poIntVal = CIEC_INT(-10934);
   *poBoolVal = CIEC_BOOL(true);
   poTimeVal2->fromString("T#3s22ms");
@@ -1005,7 +1005,7 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_ARRAY){
   CIEC_ARRAY_DYNAMIC nStringArray(2, g_nStringIdSTRING);
   poArray[0] = &nStringArray;
 
-  static_cast<CIEC_STRING &>(nStringArray[1]) = CIEC_STRING("HalloWorld");
+  static_cast<CIEC_STRING &>(nStringArray[1]) = "HalloWorld"_STRING;
   BOOST_CHECK_EQUAL(forte::com_infra::e_ProcessDataOk, nTestee.sendData(poArray, 1));
   BOOST_CHECK_EQUAL(nTestee.getSendDataSize(), cg_unString2SerSize);
   BOOST_CHECK(std::equal(cg_abArrayStringEmptyHalloWorld, cg_abArrayStringEmptyHalloWorld + cg_unString2SerSize, ((TForteByte *)nTestee.getSendDataPtr())));

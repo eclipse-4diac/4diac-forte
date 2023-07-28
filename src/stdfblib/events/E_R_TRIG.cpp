@@ -82,7 +82,7 @@ void FORTE_E_R_TRIG::readInputData(TEventID pa_nEIID) {
   }
 }
 
-void FORTE_E_R_TRIG::writeOutputData(TEventID pa_nEIID) {
+void FORTE_E_R_TRIG::writeOutputData(TEventID) {
 }
 
 CIEC_ANY *FORTE_E_R_TRIG::getDI(size_t paIndex) {

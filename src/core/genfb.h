@@ -40,6 +40,9 @@ class CGenFunctionBlock : public T {
         CStringDictionary::TStringId* paDataTypeNamesArrayStart,
         CStringDictionary::TStringId* paNamesArrayStart, size_t paNumGenericDataPoints);
 
+    static size_t getDataPointSpecSize(const CIEC_ANY &paValue);
+    static void fillDataPointSpec(const CIEC_ANY &paValue, CStringDictionary::TStringId *&paDataTypeIds);
+
   private:
     /*! \brief parse the config string and generate the according interface specification
      *

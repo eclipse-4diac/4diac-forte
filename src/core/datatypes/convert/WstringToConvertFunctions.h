@@ -87,9 +87,8 @@ inline const CIEC_USINT func_WSTRING_AS_USINT(const CIEC_WSTRING &paVal){
 }
 
 inline const CIEC_STRING func_WSTRING_TO_STRING(const CIEC_WSTRING &paVal){
-  CIEC_STRING tempVal;
   const char *pacBuffer = paVal.getValue();
-  tempVal.fromString(pacBuffer);
+  CIEC_STRING tempVal(pacBuffer, strlen(pacBuffer)); // TODO: implementation wrong, needs to be fixed with WSTRING
   return tempVal;
 }
 

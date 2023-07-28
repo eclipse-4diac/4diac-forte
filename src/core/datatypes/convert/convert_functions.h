@@ -61,7 +61,7 @@
  * This file implements the type conversion functions as defined by IEC 61131-3 in subclause 2.5.1.5.1
  */
 
-inline void stringConverter(CIEC_ANY_STRING &paString, const CIEC_ANY &paVal) {
+inline void stringConverter(CIEC_WSTRING &paString, const CIEC_ANY &paVal) {
     size_t bufferSize = paVal.getToStringBufferSize();
 
     paString.reserve(static_cast<TForteUInt16>(bufferSize));
@@ -69,6 +69,14 @@ inline void stringConverter(CIEC_ANY_STRING &paString, const CIEC_ANY &paVal) {
     int nWrittenBytes = paVal.toString(pacBuffer, bufferSize);
     nWrittenBytes = nWrittenBytes > -1 ? nWrittenBytes : 0;
     paString.assign(pacBuffer, static_cast<TForteUInt16>(nWrittenBytes));
+}
+
+inline void stringConverter(CIEC_STRING &paString, const CIEC_ANY &paVal) {
+    size_t bufferSize = paVal.getToStringBufferSize();
+    char *const buffer = new char[bufferSize]();
+    paVal.toString(buffer, bufferSize);
+    paString.assign(buffer, static_cast<TForteUInt16>(strlen(buffer))); // max length 65534, cast to silence to compiler
+    delete[](buffer);
 }
 
 #include "TimeOfDayToConvertFunctions.h"

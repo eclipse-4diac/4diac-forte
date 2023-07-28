@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2006 - 2015 Profactor GmbH, ACIN, fortiss GmbH
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2006, 2023 Profactor GmbH, ACIN, fortiss GmbH
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -17,7 +17,7 @@
 #include "funcbloc.h"
 
 CInterface2InternalDataConnection::CInterface2InternalDataConnection() :
-    CDataConnection(nullptr, cg_unInvalidPortId, nullptr){
+    CDataConnection(nullptr, cgInvalidPortId, nullptr){
 }
 
 void CInterface2InternalDataConnection::cloneInputInterfaceValue(){
@@ -28,6 +28,6 @@ void CInterface2InternalDataConnection::cloneInputInterfaceValue(){
 
 void CInterface2InternalDataConnection::setSource(CFunctionBlock *paSrcFB, TPortId paSrcPortId){
   CConnection::setSource(paSrcFB, paSrcPortId);
-  m_poValue = paSrcFB->getDIFromPortId(paSrcPortId);
+  mValue = paSrcFB->getDIFromPortId(paSrcPortId);
 }
 

@@ -28,6 +28,8 @@
 #include "CIEC_ARRAY_test_gen.cpp"
 #endif
 
+using namespace std::string_literals;
+
 class CIEC_ArrayOfStructTest : public CIEC_STRUCT {
   DECLARE_FIRMWARE_DATATYPE(ArrayOfStructTest)
     ;
@@ -384,9 +386,9 @@ BOOST_AUTO_TEST_CASE(Configure_test){
   BOOST_CHECK_EQUAL((*pTest)[13].getDataTypeID(), CIEC_ANY::e_STRING);
   BOOST_CHECK_EQUAL((*pTest)[14].getDataTypeID(), CIEC_ANY::e_STRING);
 
-  static_cast<CIEC_STRING &>((*pTest)[0]) = CIEC_STRING("Hansi");
+  static_cast<CIEC_STRING &>((*pTest)[0]) = "Hansi"_STRING;
   BOOST_CHECK_EQUAL(static_cast<CIEC_STRING &>((*pTest)[0]).length(), 5);
-  BOOST_CHECK_EQUAL(strcmp("Hansi", static_cast<CIEC_STRING &>((*pTest)[0]).getValue()), 0);
+  BOOST_TEST("Hansi"s == static_cast<CIEC_STRING &>((*pTest)[0]).getStorage());
 
   delete pTest;
 }
@@ -400,7 +402,7 @@ BOOST_AUTO_TEST_CASE(Array_fromString_StringArrayTest)
   const char cTestString3[] = {"[\'String 10\',\'String 20\',\'String 30\',\'String 4\',\'String 5\']"};
   const char cTestString3fromStringResult[] = {"[\'String 10\',\'String 20\',\'String 30\']"};
   const char cTestString4[] = {"[\'String 1\',\'String 2\',\'String 3]"};
-  const char cTestString5[] = {"[\'String $$1\',\'String $\'2\',\'String $\"3\']"};
+  const char cTestString5[] = {"[\'String $$1\',\'String $\'2\',\'String \"3\']"};
   const char cTestString6[] = {"[  \'String 1\',\'String 2\',\'String 3\']"};
   const char cTestString7[] = {"[\'String 1\'  ,\'String 2\',\'String 3\']"};
   const char cTestString8[] = {"[  \'String 1\'  ,\'String 2\',\'String 3\']"};
@@ -413,106 +415,106 @@ BOOST_AUTO_TEST_CASE(Array_fromString_StringArrayTest)
   char acBuffer[50];
 
   BOOST_CHECK_EQUAL(nTest.fromString(cTestString1), strlen(cTestString1));
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[0]).getValue(), "String 1"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[1]).getValue(), "String 2"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[2]).getValue(), "String 3"), 0);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[0]).getStorage() == "String 1"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[1]).getStorage() == "String 2"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[2]).getStorage() == "String 3"s);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 2), -1);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 50), strlen(cTestString1));
   BOOST_CHECK_EQUAL(strcmp(acBuffer, cTestString1), 0);
 
   BOOST_CHECK_EQUAL(nTest.fromString(cTestString2), strlen(cTestString2));
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[0]).getValue(), "String 1"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[1]).getValue(), ""), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[2]).getValue(), ""), 0);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[0]).getStorage() == "String 1"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[1]).getStorage() == ""s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[2]).getStorage() == ""s);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 2), -1);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 50), strlen(cTestString2fromStringResult));
   BOOST_CHECK_EQUAL(strcmp(acBuffer, cTestString2fromStringResult), 0);
 
   BOOST_CHECK_EQUAL(nTest.fromString(cTestString3), strlen(cTestString3));
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[0]).getValue(), "String 10"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[1]).getValue(), "String 20"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[2]).getValue(), "String 30"), 0);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[0]).getStorage() == "String 10"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[1]).getStorage() == "String 20"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[2]).getStorage() == "String 30"s);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 2), -1);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 50), strlen(cTestString3fromStringResult));
   BOOST_CHECK_EQUAL(strcmp(acBuffer, cTestString3fromStringResult), 0);
 
   CIEC_ARRAY_DYNAMIC nTest2(3, g_nStringIdSTRING);
   BOOST_CHECK_EQUAL(nTest2.fromString(cTestString4), -1);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest2[0]).getValue(), "String 1"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest2[1]).getValue(), "String 2"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest2[2]).getValue(), ""), 0);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest2[0]).getStorage() == "String 1"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest2[1]).getStorage() == "String 2"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest2[2]).getStorage() == ""s);
 
   BOOST_CHECK_EQUAL(nTest.fromString(cTestString5), strlen(cTestString5));
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[0]).getValue(), "String $1"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[1]).getValue(), "String \'2"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[2]).getValue(), "String \"3"), 0);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[0]).getStorage() == "String $1"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[1]).getStorage() == "String \'2"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[2]).getStorage() == "String \"3"s);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 2), -1);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 50), strlen(cTestString5));
-  BOOST_CHECK_EQUAL(strcmp(acBuffer, cTestString5), 0);
+  BOOST_TEST(acBuffer == cTestString5);
 
   BOOST_CHECK_EQUAL(nTest.fromString(cTestString6), strlen(cTestString6));
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[0]).getValue(), "String 1"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[1]).getValue(), "String 2"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[2]).getValue(), "String 3"), 0);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[0]).getStorage() == "String 1"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[1]).getStorage() == "String 2"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[2]).getStorage() == "String 3"s);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 2), -1);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 50), strlen(cTestString1)); //length stays as in string 1
   BOOST_CHECK_EQUAL(strcmp(acBuffer, cTestString1), 0);
 
   BOOST_CHECK_EQUAL(nTest.fromString(cTestString7), strlen(cTestString7));
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[0]).getValue(), "String 1"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[1]).getValue(), "String 2"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[2]).getValue(), "String 3"), 0);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[0]).getStorage() == "String 1"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[1]).getStorage() == "String 2"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[2]).getStorage() == "String 3"s);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 2), -1);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 50), strlen(cTestString1)); //length stays as in string 1
   BOOST_CHECK_EQUAL(strcmp(acBuffer, cTestString1), 0);
 
   BOOST_CHECK_EQUAL(nTest.fromString(cTestString8), strlen(cTestString8));
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[0]).getValue(), "String 1"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[1]).getValue(), "String 2"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[2]).getValue(), "String 3"), 0);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[0]).getStorage() == "String 1"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[1]).getStorage() == "String 2"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[2]).getStorage() == "String 3"s);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 2), -1);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 50), strlen(cTestString1)); //length stays as in string 1
   BOOST_CHECK_EQUAL(strcmp(acBuffer, cTestString1), 0);
 
   BOOST_CHECK_EQUAL(nTest.fromString(cTestString9), strlen(cTestString9));
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[0]).getValue(), "String 1"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[1]).getValue(), "String 2"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[2]).getValue(), "String 3"), 0);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[0]).getStorage() == "String 1"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[1]).getStorage() == "String 2"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[2]).getStorage() == "String 3"s);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 2), -1);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 50), strlen(cTestString1)); //length stays as in string 1
   BOOST_CHECK_EQUAL(strcmp(acBuffer, cTestString1), 0);
 
   BOOST_CHECK_EQUAL(nTest.fromString(cTestString10), strlen(cTestString10));
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[0]).getValue(), "String 1"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[1]).getValue(), "String 2"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[2]).getValue(), "String 3"), 0);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[0]).getStorage() == "String 1"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[1]).getStorage() == "String 2"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[2]).getStorage() == "String 3"s);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 2), -1);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 50), strlen(cTestString1)); //length stays as in string 1
   BOOST_CHECK_EQUAL(strcmp(acBuffer, cTestString1), 0);
 
   BOOST_CHECK_EQUAL(nTest.fromString(cTestString11), strlen(cTestString11));
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[0]).getValue(), "String 1"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[1]).getValue(), "String 2"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[2]).getValue(), "String 3"), 0);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[0]).getStorage() == "String 1"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[1]).getStorage() == "String 2"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[2]).getStorage() == "String 3"s);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 2), -1);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 50), strlen(cTestString1)); //length stays as in string 1
   BOOST_CHECK_EQUAL(strcmp(acBuffer, cTestString1), 0);
 
   BOOST_CHECK_EQUAL(nTest.fromString(cTestString12), strlen(cTestString12));
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[0]).getValue(), "String 1"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[1]).getValue(), "String 2"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[2]).getValue(), "String 3"), 0);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[0]).getStorage() == "String 1"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[1]).getStorage() == "String 2"s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[2]).getStorage() == "String 3"s);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 2), -1);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 50), strlen(cTestString1)); //length stays as in string 1
   BOOST_CHECK_EQUAL(strcmp(acBuffer, cTestString1), 0);
 
   BOOST_CHECK_EQUAL(nTest.fromString(cTestString13), strlen(cTestString13));
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[0]).getValue(), " String 1 "), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[1]).getValue(), " String 2 "), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_STRING &>(nTest[2]).getValue(), " String 3 "), 0);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[0]).getStorage() == " String 1 "s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[1]).getStorage() == " String 2 "s);
+  BOOST_TEST(static_cast<CIEC_STRING &>(nTest[2]).getStorage() == " String 3 "s);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 2), -1);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 50), strlen(cTestString1) + 6); //length stays as in string 1 + the empty spaces in strings
-  BOOST_CHECK_EQUAL(strcmp(acBuffer, "[\' String 1 \',\' String 2 \',\' String 3 \']"), 0);
+  BOOST_TEST(acBuffer == "[\' String 1 \',\' String 2 \',\' String 3 \']");
   BOOST_CHECK_EQUAL(nTest.getToStringBufferSize(), sizeof("[\' String 1 \',\' String 2 \',\' String 3 \']"));
 
 }
@@ -526,7 +528,7 @@ BOOST_AUTO_TEST_CASE(Array_fromString_WStringArrayTest)
   const char cTestString3[] = {"[\"String 10\",\"String 20\",\"String 30\",\"String 4\",\"String 5\"]"};
   const char cTestString3fromStringResult[] = {"[\"String 10\",\"String 20\",\"String 30\"]"};
   const char cTestString4[] = {"[\"String 1\",\"String 2\",\"String 3]"};
-  const char cTestString5[] = {"[\"String $$1\",\"String $\'2\",\"String $\"3\"]"};
+  const char cTestString5[] = {"[\"String $$1\",\"String \'2\",\"String $\"3\"]"};
   const char cTestString6[] = {"[  \"String 1\",\"String 2\",\"String 3\"]"};
   const char cTestString7[] = {"[\"String 1\"  ,\"String 2\",\"String 3\"]"};
   const char cTestString8[] = {"[  \"String 1\"  ,\"String 2\",\"String 3\"]"};
@@ -571,7 +573,7 @@ BOOST_AUTO_TEST_CASE(Array_fromString_WStringArrayTest)
   BOOST_CHECK_EQUAL(nTest.fromString(cTestString5), strlen(cTestString5));
   BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_WSTRING &>(nTest[0]).getValue(), "String $1"), 0);
   BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_WSTRING &>(nTest[1]).getValue(), "String \'2"), 0);
-  BOOST_CHECK_EQUAL(strcmp(static_cast<CIEC_WSTRING &>(nTest[2]).getValue(), "String \"3"), 0);
+  BOOST_TEST(static_cast<CIEC_WSTRING &>(nTest[2]).getValue() == "String \"3");
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 2), -1);
   BOOST_CHECK_EQUAL(nTest.toString(acBuffer, 50), strlen(cTestString5));
   BOOST_CHECK_EQUAL(strcmp(acBuffer, cTestString5), 0);
@@ -652,7 +654,7 @@ BOOST_AUTO_TEST_CASE(Array_fromString_WStringArrayTest)
     BOOST_CHECK_EQUAL(paEmptyArray.toString(acBuffer, 30), 2);
 
     CIEC_ARRAY_DYNAMIC nTest1(1, g_nStringIdINT);
-    nTest1.fromString("[2]");
+    BOOST_CHECK_EQUAL(nTest1.fromString("[2]"), 3);
     paEmptyArray.setValue(nTest1); //shouldn't change or break anything
 
     BOOST_CHECK_EQUAL(paEmptyArray.size(), 0);
@@ -673,8 +675,8 @@ BOOST_AUTO_TEST_CASE(Array_emptyArray)
     checkEmptyArray(nTest);
 }
 
-const char cTestStringData[] = "Check string!";
-const char cTestStringData2[] = "Check string 2!";
+const std::string cTestStringData = "Check string!"s;
+const std::string cTestStringData2 = "Check string 2!"s;
 
 void checkArrayOfStructTest_InitialValues(CIEC_ArrayOfStructTest &paStruct) {
   BOOST_CHECK_EQUAL(0, paStruct.Var1[0].length());
@@ -683,11 +685,11 @@ void checkArrayOfStructTest_InitialValues(CIEC_ArrayOfStructTest &paStruct) {
   BOOST_CHECK_EQUAL(0, static_cast<CIEC_INT::TValueType>(paStruct.Var3[0]));
 }
 
-void setDataArrayOfStructTest(CIEC_ArrayOfStructTest &paStruct, const char* paVal11, const char* paVal12, bool paVal2, int paVal31) {
-  paStruct.Var1[0] = CIEC_STRING(paVal11);
-  paStruct.Var1[1] = CIEC_STRING(paVal12);
+void setDataArrayOfStructTest(CIEC_ArrayOfStructTest &paStruct, const std::string paVal11, const std::string paVal12, bool paVal2, int paVal31) {
+  paStruct.Var1[0] = CIEC_STRING(std::move(paVal11));
+  paStruct.Var1[1] = CIEC_STRING(std::move(paVal12));
   paStruct.Var2 = CIEC_BOOL(paVal2);
-  paStruct.Var3[0] = CIEC_INT(paVal31);
+  paStruct.Var3[0] = CIEC_INT(static_cast<TForteInt16>(paVal31));
 }
 
 void setupArrayOfStructTest_TestDataSet1(CIEC_ArrayOfStructTest &paStruct) {
@@ -695,8 +697,8 @@ void setupArrayOfStructTest_TestDataSet1(CIEC_ArrayOfStructTest &paStruct) {
 }
 
 void checkArrayOfStructTest_TestDataSet1(CIEC_ArrayOfStructTest &paStruct) {
-  BOOST_CHECK_EQUAL(strcmp(paStruct.Var1[0].getValue(), cTestStringData), 0);
-  BOOST_CHECK_EQUAL(strcmp(paStruct.Var1[1].getValue(), cTestStringData2), 0);
+  BOOST_TEST(paStruct.Var1[0].getStorage() == cTestStringData);
+  BOOST_TEST(paStruct.Var1[1].getStorage() == cTestStringData2);
   BOOST_CHECK_EQUAL(1, paStruct.Var2);
   BOOST_CHECK_EQUAL(24534, static_cast<CIEC_INT::TValueType>(paStruct.Var3[0]));
 }
@@ -739,7 +741,7 @@ BOOST_AUTO_TEST_CASE(Array_arrayOfStructs)
   BOOST_CHECK_EQUAL(strcmp(acBuffer, "[(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534])]"), 0);
 
   CIEC_ARRAY_DYNAMIC nTest1(3, g_nStringIdArrayOfStructTest);
-  nTest1.fromString("[(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534])]");
+  (void) nTest1.fromString("[(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534]),(Val1:=['Check string!','Check string 2!'],Val2:=TRUE,Val3:=[24534])]");
 
   for(size_t i = 0; i < 3; i++) {
     CIEC_ArrayOfStructTest &toTest = static_cast<CIEC_ArrayOfStructTest&>(nTest1[i]);

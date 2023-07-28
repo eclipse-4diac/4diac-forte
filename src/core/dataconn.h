@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2005, 2023 Profactor GmbH, ACIN, fortiss GmbH,
+ *                          Martin Erich Jobst,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -33,67 +34,66 @@ class CDataConnection : public CConnection {
 
     EMGMResponse disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
-/*! \brief Write connection data value.
- *
- *   Write data value from FB data output to connection data variable.
- *   \param pa_poValue pointer to FB data output
- *   \return Can be the following response:
- *     - TRUE ... write successful
- *     - FALSE ... no such data connection exists
- */
-    void writeData(const CIEC_ANY& paValue){
-      if(m_poValue){
-        m_poValue->setValue(paValue.unwrap());
+    /*! \brief Write connection data value.
+    *
+    *   Write data value from FB data output to connection data variable.
+    *   \param paValue pointer to FB data output
+    *   \return Can be the following response:
+    *     - TRUE ... write successful
+    *     - FALSE ... no such data connection exists
+    */
+    void writeData(const CIEC_ANY& paValue) {
+      if(mValue){
+        mValue->setValue(paValue.unwrap());
       }
     };
 
-/*! \brief Read connection data value.
- *
- *   Read data value from connection data variable to FB data input.
- *   \param pa_poValue pointer to FB data input
- */
-    void readData(CIEC_ANY& pa_poValue) const {
-      if(m_poValue){
-        pa_poValue.setValue(m_poValue->unwrap());
+    /*! \brief Read connection data value.
+    *
+    *   Read data value from connection data variable to FB data input.
+    *   \param paValue pointer to FB data input
+    */
+    void readData(CIEC_ANY& paValue) const {
+      if(mValue){
+        paValue.setValue(mValue->unwrap());
       }
     }
 
-/*! \brief Set class member variable m_poValue.
- *
- *   Set class member variable m_poValue.
- *   \param pa_poValue ... pointer to data variable
- */
-    void setValue(CIEC_ANY *pa_poValue) {
-      m_poValue = pa_poValue;
+    /*! \brief Set class member variable m_poValue.
+     *
+     *   Set class member variable mValue.
+     *   \param paValue ... pointer to data variable
+     */
+    virtual void setValue(CIEC_ANY *paValue) {
+      mValue = paValue;
     }
-/*! \brief Get class member variable m_poValue.
- *
- *   Get class member variable m_poValue.
- *   \return pointer to class member variable m_poValue
- */
+
+    /*! \brief Get class member variable m_poValue.
+    *
+    *   Get class member variable mValue.
+    *   \return pointer to class member variable m_poValue
+    */
     CIEC_ANY* getValue() {
-      return m_poValue;
+      return mValue;
     }
 
   protected:
 
     /*! \brief check if the the given data points are compatible so that a connection can be established
      *
-     * @param pa_poSrcDataPoint  data point of the connection's source (if 0 than it is a any data type)
-     * @param pa_poDstDataPoint  data point of the connection's destination (if 0 than it is a any data type)
+     * @param paSrcDataPoint  data point of the connection's source (if 0 than it is a any data type)
+     * @param paDstDataPoint  data point of the connection's destination (if 0 than it is a any data type)
      * @return true if a connection between the given end points is valid
      */
-    static bool canBeConnected(const CIEC_ANY *pa_poSrcDataPoint, const CIEC_ANY *pa_poDstDataPoint);
+    static bool canBeConnected(const CIEC_ANY *paSrcDataPoint, const CIEC_ANY *paDstDataPoint);
 
     /*! \brief Value for storing the current data of the connection
      */
-    CIEC_ANY *m_poValue;
+    CIEC_ANY *mValue;
   private:
-
     void handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint);
 
     EMGMResponse establishDataConnection(CFunctionBlock *paDstFB, TPortId paDstPortId, CIEC_ANY *paDstDataPoint);
-
 };
 
 typedef CDataConnection *TDataConnectionPtr;

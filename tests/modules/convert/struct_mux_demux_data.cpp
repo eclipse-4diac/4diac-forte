@@ -298,3 +298,10 @@ CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_4::getStructTypeNameI
   return g_nStringIdStruct_Muxer_Test_Struct_4;
 };
 
+DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_5, g_nStringIdStruct_Muxer_Test_Struct_5)
+const CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_5::scm_unElementNames[] = { g_nStringIdVar1, g_nStringIdVar2, g_nStringIdVar3 };
+
+CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_5::getStructTypeNameID() const {
+  return g_nStringIdStruct_Muxer_Test_Struct_5;
+};
+

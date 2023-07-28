@@ -34,7 +34,7 @@ class CIEC_STATE : public CIEC_ANY_INT {
       setValueSimple(paValue);
     }
 
-    explicit CIEC_STATE(const TForteUInt16 paValue){
+    explicit CIEC_STATE(const TValueType paValue) {
       setTUINT16(paValue);
     }
 

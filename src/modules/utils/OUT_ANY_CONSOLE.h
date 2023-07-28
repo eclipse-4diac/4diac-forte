@@ -78,7 +78,7 @@ public:
   CDataConnection **getDIConUnchecked(TPortId) override;
   CDataConnection *getDOConUnchecked(TPortId) override;
   
-  void evt_REQ(const CIEC_BOOL &pa_QI, const CIEC_STRING &pa_LABEL, const CIEC_ANY_VARIANT &pa_IN, CIEC_BOOL &pa_QO) {
+  void evt_REQ(const CIEC_BOOL &pa_QI, const CIEC_STRING &pa_LABEL, const CIEC_ANY &pa_IN, CIEC_BOOL &pa_QO) {
     var_QI = pa_QI;
     var_LABEL = pa_LABEL;
     var_IN = pa_IN;
@@ -86,7 +86,7 @@ public:
     pa_QO = var_QO;
   }
   
-  void operator()(const CIEC_BOOL &pa_QI, const CIEC_STRING &pa_LABEL, const CIEC_ANY_VARIANT &pa_IN, CIEC_BOOL &pa_QO) {
+  void operator()(const CIEC_BOOL &pa_QI, const CIEC_STRING &pa_LABEL, const CIEC_ANY &pa_IN, CIEC_BOOL &pa_QO) {
     evt_REQ(pa_QI, pa_LABEL, pa_IN, pa_QO);
   }
   

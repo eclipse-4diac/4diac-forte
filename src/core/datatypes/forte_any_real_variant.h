@@ -38,8 +38,17 @@ public:
 
     CIEC_ANY_REAL_VARIANT(const CIEC_ANY_REAL_VARIANT &paVal) : CIEC_ANY_REAL(), variant(paVal) {}
 
+    CIEC_ANY_REAL_VARIANT(const CIEC_ANY_REAL &paVal) {
+      setValue(paVal.unwrap());
+    }
+
     CIEC_ANY_REAL_VARIANT &operator=(const CIEC_ANY_REAL_VARIANT &paOther) {
       variant::operator=(paOther);
+      return *this;
+    }
+
+    CIEC_ANY_REAL_VARIANT &operator=(const CIEC_ANY_REAL &paOther) {
+      setValue(paOther.unwrap());
       return *this;
     }
 
@@ -64,6 +73,8 @@ public:
 
 static_assert(std::is_copy_constructible_v<CIEC_ANY_REAL_VARIANT>);
 static_assert(std::is_move_constructible_v<CIEC_ANY_REAL_VARIANT>);
+static_assert(std::is_constructible_v<CIEC_ANY_REAL_VARIANT, const CIEC_ANY_REAL &>);
 static_assert(std::is_copy_assignable_v<CIEC_ANY_REAL_VARIANT>);
+static_assert(std::is_assignable_v<CIEC_ANY_REAL_VARIANT, const CIEC_ANY_REAL &>);
 static_assert(std::is_destructible_v<CIEC_ANY_REAL_VARIANT>);
 

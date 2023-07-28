@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 -2015 AIT, fortiss GmbH
+ * Copyright (c) 2012 - 2023 AIT, fortiss GmbH, Davor Cihlar
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,15 +8,19 @@
  *
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Davor Cihlar - multiple FBs sharing a single Modbus connection
  *******************************************************************************/
 #ifndef _MODBUSHANDLER_H_
 #define _MODBUSHANDLER_H_
 
 #include <forte_config.h>
 #include "extevhan.h"
-#include <forte_sync.h>
-#include <comlayer.h>
-#include <fortelist.h>
+
+namespace forte {
+  namespace com_infra {
+    class CModbusComLayer;
+  }
+}
 
 class CModbusHandler : public CExternalEventHandler{
     DECLARE_HANDLER(CModbusHandler)
@@ -40,23 +44,7 @@ class CModbusHandler : public CExternalEventHandler{
       return 0;
     }
 
-    TCallbackDescriptor addComCallback(forte::com_infra::CComLayer* pa_pComCallback);
-    void removeComCallback(TCallbackDescriptor pa_nCallbackDesc);
-
-    void executeComCallback(TCallbackDescriptor pa_nCallbackDesc);
-
-  private:
-    struct TComContainer{
-        TCallbackDescriptor m_nCallbackDesc;
-        forte::com_infra::CComLayer* m_pCallback;
-    };
-
-    typedef CSinglyLinkedList<TComContainer> TCallbackList;
-    TCallbackList m_lstComCallbacks;
-
-    CSyncObject m_oSync;
-
-    static TCallbackDescriptor m_nCallbackDescCount;
+    void executeComCallback(forte::com_infra::CModbusComLayer* pa_pComCallback);
 };
 
 #endif // _MODBUSHANDLER_H_

@@ -11,6 +11,7 @@
 # *   - initial API and implementation and/or initial documentation
 # *   Martin Melik Merkumians - Removes invalid casts
 # *******************************************************************************/
+forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 #############################################################################
 # BOOL_TO_xxx Conversion
 #############################################################################

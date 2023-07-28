@@ -42,7 +42,7 @@ CStringDictionary::CStringDictionary(){
   m_nMaxNrOfStrings = 0;
   m_nNrOfStrings = 0;
   m_nNextString = CStringDictionary::scm_nInvalidStringId;
-  unsigned int nStringBufSize = cg_unStringDictInitialStringBufSize;
+  size_t nStringBufSize = cg_unStringDictInitialStringBufSize;
   if(nStringBufSize < g_nStringIdNextFreeId){
     nStringBufSize = (g_nStringIdNextFreeId * 3) >> 1;
   }

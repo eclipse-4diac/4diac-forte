@@ -16,12 +16,14 @@
 #include "forte_localizedtext_gen.cpp"
 #endif
 
+using namespace std::string_literals;
+
 DEFINE_FIRMWARE_DATATYPE(LocalizedText, g_nStringIdLocalizedText);
 
 CIEC_LocalizedText::CIEC_LocalizedText() :
     CIEC_STRUCT(),
-    var_locale(""),
-    var_text("") {
+    var_locale(""s),
+    var_text(""s) {
 }
 
 CStringDictionary::TStringId CIEC_LocalizedText::getStructTypeNameID() const {

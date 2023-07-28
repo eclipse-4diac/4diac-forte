@@ -68,10 +68,10 @@ void FORTE_E_MERGE::executeEvent(TEventID pa_nEIID){
   } while(true);
 }
 
-void FORTE_E_MERGE::readInputData(TEventID pa_nEIID) {
+void FORTE_E_MERGE::readInputData(TEventID) {
 }
 
-void FORTE_E_MERGE::writeOutputData(TEventID pa_nEIID) {
+void FORTE_E_MERGE::writeOutputData(TEventID) {
 }
 
 CIEC_ANY *FORTE_E_MERGE::getDI(size_t) {

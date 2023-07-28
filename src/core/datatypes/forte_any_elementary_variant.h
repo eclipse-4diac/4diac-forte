@@ -100,8 +100,17 @@ public:
 
     CIEC_ANY_ELEMENTARY_VARIANT(const CIEC_ANY_ELEMENTARY_VARIANT &paVal) : CIEC_ANY_ELEMENTARY(), variant(paVal) {}
 
+    CIEC_ANY_ELEMENTARY_VARIANT(const CIEC_ANY_ELEMENTARY &paVal) {
+      setValue(paVal.unwrap());
+    }
+
     CIEC_ANY_ELEMENTARY_VARIANT &operator=(const CIEC_ANY_ELEMENTARY_VARIANT &paOther) {
       variant::operator=(paOther);
+      return *this;
+    }
+
+    CIEC_ANY_ELEMENTARY_VARIANT &operator=(const CIEC_ANY_ELEMENTARY &paOther) {
+      setValue(paOther.unwrap());
       return *this;
     }
 
@@ -153,6 +162,8 @@ inline bool operator>=(const CIEC_ANY_ELEMENTARY_VARIANT &paValue, const CIEC_AN
 
 static_assert(std::is_copy_constructible_v<CIEC_ANY_ELEMENTARY_VARIANT>);
 static_assert(std::is_move_constructible_v<CIEC_ANY_ELEMENTARY_VARIANT>);
+static_assert(std::is_constructible_v<CIEC_ANY_ELEMENTARY_VARIANT, const CIEC_ANY_ELEMENTARY &>);
 static_assert(std::is_copy_assignable_v<CIEC_ANY_ELEMENTARY_VARIANT>);
+static_assert(std::is_assignable_v<CIEC_ANY_ELEMENTARY_VARIANT, const CIEC_ANY_ELEMENTARY &>);
 static_assert(std::is_destructible_v<CIEC_ANY_ELEMENTARY_VARIANT>);
 

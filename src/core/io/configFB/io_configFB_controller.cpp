@@ -120,7 +120,7 @@ bool IOConfigFBController::init(int paDelay) {
 
   setConfig();
 
-  setEventChainExecutor(m_poInvokingExecEnv);
+  setEventChainExecutor(mInvokingExecEnv);
   mController->start();
 
   return true;

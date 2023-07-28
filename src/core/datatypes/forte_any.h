@@ -68,7 +68,7 @@ class CIEC_ANY {
     static int dummyInit();
 
     template<typename U, typename T>
-    static typename forte::core::mpl::implicit_or_explicit_cast<T, U>::type cast(const T paFromCast){
+    static typename forte::core::mpl::implicit_or_explicit_cast_t<T, U> cast(const T paFromCast){
       U oToCast;
       // If interacting with integers, add or remove sign extension
       if constexpr (std::is_base_of_v<CIEC_ANY_BIT, T> &&
@@ -173,7 +173,7 @@ class CIEC_ANY {
 
     /*! \brief Converts string value to data type value
      *
-     *   This command implements a conversion function from IEC61131
+     *   This command implements a conversion function from IEC 61131
      *   data type (string format) to a C++ conform type.
      *   This function is necessary for communication with a proper engineering system.
      *   Pure virtual function implementation.

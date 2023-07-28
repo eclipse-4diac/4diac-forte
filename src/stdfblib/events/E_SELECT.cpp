@@ -90,7 +90,7 @@ void FORTE_E_SELECT::readInputData(TEventID pa_nEIID) {
   }
 }
 
-void FORTE_E_SELECT::writeOutputData(TEventID pa_nEIID) {
+void FORTE_E_SELECT::writeOutputData(TEventID) {
 }
 
 CIEC_ANY *FORTE_E_SELECT::getDI(size_t paIndex) {

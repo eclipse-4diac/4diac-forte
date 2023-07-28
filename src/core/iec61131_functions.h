@@ -157,9 +157,9 @@ inline auto func_ATAN2(const T& paY, const U& paX) -> typename forte::core::mpl:
 }
 
 template<typename T>
-auto func_ROL(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::mpl::get_equivalent_CIEC_class<T>::type  {
+auto func_ROL(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::mpl::get_equivalent_CIEC_class_t<T>  {
   static_assert((std::is_base_of<CIEC_ANY_BIT, T>::value), "T not of ANY_BIT");
-  using returnType = typename forte::core::mpl::get_equivalent_CIEC_class<T>::type;
+  using returnType = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
   if((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()) {
     return returnType(static_cast<typename returnType::TValueType>((paIn << paN.getUnsignedValue()) | (paIn >> (sizeof(typename returnType::TValueType) * 8 - paN.getUnsignedValue()))));
   } else {
@@ -169,9 +169,9 @@ auto func_ROL(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::m
 }
 
 template<typename T>
-auto func_ROR(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::mpl::get_equivalent_CIEC_class<T>::type {
+auto func_ROR(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::mpl::get_equivalent_CIEC_class_t<T> {
   static_assert((std::is_base_of<CIEC_ANY_BIT, T>::value), "T not of ANY_BIT");
-  using returnType = typename forte::core::mpl::get_equivalent_CIEC_class<T>::type;
+  using returnType = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
   if((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()) {
     return returnType(static_cast<typename returnType::TValueType>((paIn >> paN.getUnsignedValue()) | (paIn << (sizeof(typename returnType::TValueType) * 8 - paN.getUnsignedValue()))));
   } else {
@@ -181,9 +181,9 @@ auto func_ROR(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::m
 }
 
 template <typename T>
-auto func_SHL(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::mpl::get_equivalent_CIEC_class<T>::type {
+auto func_SHL(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::mpl::get_equivalent_CIEC_class_t<T> {
   static_assert((std::is_base_of<CIEC_ANY_BIT, T>::value), "T not of ANY_BIT");
-  using returnType = typename forte::core::mpl::get_equivalent_CIEC_class<T>::type;
+  using returnType = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
   if ((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()) {
     return returnType(static_cast<typename returnType::TValueType>(paIn << paN.getUnsignedValue()));
   } else {
@@ -193,9 +193,9 @@ auto func_SHL(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::m
 }
 
 template<typename T>
-auto func_SHR(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::mpl::get_equivalent_CIEC_class<T>::type {
+auto func_SHR(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::mpl::get_equivalent_CIEC_class_t<T> {
   static_assert((std::is_base_of<CIEC_ANY_BIT, T>::value), "T not of ANY_BIT");
-  using returnType = typename forte::core::mpl::get_equivalent_CIEC_class<T>::type;
+  using returnType = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
   if((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()) {
     return returnType(static_cast<typename returnType::TValueType>(paIn >> paN.getUnsignedValue()));
   } else {
@@ -214,7 +214,7 @@ template<> auto func_SHR(const CIEC_BOOL &paIn, const CIEC_ANY_INT &paN) -> CIEC
 
 template<typename T, typename U, template<typename A> class F, typename C> typename forte::core::mpl::get_castable_type<T, U>::type APPLY(const T &paIN1,
     const U &paIN2) {
-  static_assert((forte::core::mpl::are_of_subtype<C, T, U>::value), "Template instantiation with incompatible types");
+  static_assert(forte::core::mpl::are_of_subtype_v<C, T, U>, "Template instantiation with incompatible types");
   using tImplicitCastType = typename forte::core::mpl::get_castable_type<T, U>::type;
   static_assert(!(std::is_same<tImplicitCastType, forte::core::mpl::NullType>::value), "No implicit cast possible");
   const tImplicitCastType Result(F<tImplicitCastType>::call(static_cast<tImplicitCastType>(paIN1), static_cast<tImplicitCastType>(paIN2)));
@@ -265,10 +265,10 @@ class AndOperation<CIEC_BOOL, CIEC_BOOL> {
 };
 
 template<typename T, typename U>
-typename forte::core::mpl::get_castable_type<typename forte::core::mpl::get_equivalent_CIEC_class<T>::type, typename forte::core::mpl::get_equivalent_CIEC_class<U>::type>::type func_AND(const T &paIN1, const U &paIN2) {
-    using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class<T>::type;
-    using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class<U>::type;
-    static_assert((forte::core::mpl::are_of_subtype<CIEC_ANY_BIT, tTClass, tUClass>::value), "Template instantiation with incompatible types");
+typename forte::core::mpl::get_castable_type<typename forte::core::mpl::get_equivalent_CIEC_class_t<T>, typename forte::core::mpl::get_equivalent_CIEC_class_t<U>>::type func_AND(const T &paIN1, const U &paIN2) {
+    using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
+    using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<U>;
+    static_assert(forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, tTClass, tUClass>, "Template instantiation with incompatible types");
     using tImplicitCastType = typename forte::core::mpl::get_castable_type<tTClass, tUClass>::type;
     static_assert(!(std::is_same<tImplicitCastType, forte::core::mpl::NullType>::value), "No implicit cast possible");
     return AndOperation<tTClass, tUClass>::call(paIN1, paIN2);
@@ -319,10 +319,10 @@ class OrOperation<CIEC_BOOL, CIEC_BOOL> {
 
 
 template<typename T, typename U>
-typename forte::core::mpl::get_castable_type<typename forte::core::mpl::get_equivalent_CIEC_class<T>::type, typename forte::core::mpl::get_equivalent_CIEC_class<U>::type>::type func_OR(const T &paIN1, const U &paIN2) {
-  using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class<T>::type;
-  using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class<U>::type;
-  static_assert((forte::core::mpl::are_of_subtype<CIEC_ANY_BIT, tTClass, tUClass>::value), "Template instantiation with incompatible types");
+typename forte::core::mpl::get_castable_type<typename forte::core::mpl::get_equivalent_CIEC_class_t<T>, typename forte::core::mpl::get_equivalent_CIEC_class_t<U>>::type func_OR(const T &paIN1, const U &paIN2) {
+  using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
+  using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<U>;
+  static_assert(forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, tTClass, tUClass>, "Template instantiation with incompatible types");
   using tImplicitCastType = typename forte::core::mpl::get_castable_type<tTClass, tUClass>::type;
   static_assert(!(std::is_same<tImplicitCastType, forte::core::mpl::NullType>::value), "No implicit cast possible");
   return OrOperation<tTClass, tUClass>::call(paIN1, paIN2);
@@ -372,19 +372,19 @@ class XorOperation<CIEC_BOOL, CIEC_BOOL> {
 };
 
 template<typename T, typename U>
-typename forte::core::mpl::get_castable_type<typename forte::core::mpl::get_equivalent_CIEC_class<T>::type, typename forte::core::mpl::get_equivalent_CIEC_class<U>::type>::type func_XOR(const T &paIN1, const U &paIN2) {
-  using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class<T>::type ;
-  using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class<U>::type;
-  static_assert((forte::core::mpl::are_of_subtype<CIEC_ANY_BIT, tTClass, tUClass>::value), "Template instantiation with incompatible types");
+typename forte::core::mpl::get_castable_type<typename forte::core::mpl::get_equivalent_CIEC_class_t<T>, typename forte::core::mpl::get_equivalent_CIEC_class_t<U>>::type func_XOR(const T &paIN1, const U &paIN2) {
+  using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T> ;
+  using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<U>;
+  static_assert(forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, tTClass, tUClass>, "Template instantiation with incompatible types");
   using tImplicitCastType = typename forte::core::mpl::get_castable_type<tTClass, tUClass>::type;
   static_assert(!(std::is_same<tImplicitCastType, forte::core::mpl::NullType>::value), "No implicit cast possible");
   return XorOperation<tTClass, tUClass>::call(paIN1, paIN2);
 }
 
 template <typename T>
-const typename forte::core::mpl::get_equivalent_CIEC_class<T>::type func_NOT(const T& paIN) {
+const typename forte::core::mpl::get_equivalent_CIEC_class_t<T> func_NOT(const T& paIN) {
   static_assert((std::is_base_of<CIEC_ANY_BIT, T>::value), "NOT function only for ANY_BIT");
-  using tResultType = typename forte::core::mpl::get_equivalent_CIEC_class<T>::type;
+  using tResultType = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
   if constexpr (std::is_same<tResultType, CIEC_BOOL>::value) {
     return tResultType(!paIN);
   } else {
@@ -393,10 +393,10 @@ const typename forte::core::mpl::get_equivalent_CIEC_class<T>::type func_NOT(con
 }
 
 template<typename T, typename U> const CIEC_BOOL func_GT(const T &paIN1, const U &paIN2) {
-  static_assert((forte::core::mpl::are_of_subtype<CIEC_ANY_ELEMENTARY, T, U>::value), "Template instantiation with incompatible types");
-  if constexpr (forte::core::mpl::are_of_subtype<CIEC_ANY_BIT, T, U>::value) { //ANY_BITs can be also partial accesses
-    using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class<T>::type ;
-    using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class<U>::type;
+  static_assert(forte::core::mpl::are_of_subtype_v<CIEC_ANY_ELEMENTARY, T, U>, "Template instantiation with incompatible types");
+  if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { //ANY_BITs can be also partial accesses
+    using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
+    using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<U>;
     using tImplicitCastType = typename forte::core::mpl::get_castable_type<tTClass, tUClass>::type;
     static_assert(!(std::is_same<tImplicitCastType, forte::core::mpl::NullType>::value), "No implicit cast possible");
     return func_GT<tImplicitCastType>(static_cast<tImplicitCastType>(paIN1), static_cast<tImplicitCastType>(paIN2));
@@ -416,9 +416,9 @@ template<typename T> const CIEC_BOOL func_GT(const T &paIN1, const T &paIN2) {
 }
 
 template<typename T, typename U> const CIEC_BOOL func_EQ(const T &paIN1, const U &paIN2) {
-  if constexpr (forte::core::mpl::are_of_subtype<CIEC_ANY_BIT, T, U>::value) { //ANY_BITs can be also partial accesses
-    using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class<T>::type;
-    using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class<U>::type;
+  if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { //ANY_BITs can be also partial accesses
+    using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
+    using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<U>;
     using tImplicitCastType = typename forte::core::mpl::get_castable_type<tTClass, tUClass>::type ;
     static_assert(!(std::is_same<tImplicitCastType, forte::core::mpl::NullType>::value), "No implicit cast possible");
     return func_EQ<tImplicitCastType>(static_cast<tImplicitCastType>(paIN1), static_cast<tImplicitCastType>(paIN2));
@@ -438,10 +438,10 @@ template<typename T> const CIEC_BOOL func_EQ(const T &paIN1, const T &paIN2) {
 }
 
 template<typename T, typename U> const CIEC_BOOL func_GE(const T &paIN1, const U &paIN2) {
-  static_assert((forte::core::mpl::are_of_subtype<CIEC_ANY_ELEMENTARY, T, U>::value), "Template instantiation with incompatible types");
-  if constexpr (forte::core::mpl::are_of_subtype<CIEC_ANY_BIT, T, U>::value) { //ANY_BITs can be also partial accesses
-    using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class<T>::type;
-    using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class<U>::type;
+  static_assert(forte::core::mpl::are_of_subtype_v<CIEC_ANY_ELEMENTARY, T, U>, "Template instantiation with incompatible types");
+  if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { //ANY_BITs can be also partial accesses
+    using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
+    using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<U>;
     using tImplicitCastType = typename forte::core::mpl::get_castable_type<tTClass, tUClass>::type ;
     static_assert(!(std::is_same<tImplicitCastType, forte::core::mpl::NullType>::value), "No implicit cast possible");
     return func_GE<tImplicitCastType>(static_cast<tImplicitCastType>(paIN1), static_cast<tImplicitCastType>(paIN2));
@@ -461,10 +461,10 @@ template<typename T> const CIEC_BOOL func_GE(const T &paIN1, const T &paIN2) {
 }
 
 template<typename T, typename U> const CIEC_BOOL func_LE(const T &paIN1, const U &paIN2) {
-  static_assert((forte::core::mpl::are_of_subtype<CIEC_ANY_ELEMENTARY, T, U>::value), "Template instantiation with incompatible types");
-  if constexpr (forte::core::mpl::are_of_subtype<CIEC_ANY_BIT, T, U>::value) { //ANY_BITs can be also partial accesses
-    using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class<T>::type;
-    using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class<U>::type;
+  static_assert(forte::core::mpl::are_of_subtype_v<CIEC_ANY_ELEMENTARY, T, U>, "Template instantiation with incompatible types");
+  if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { //ANY_BITs can be also partial accesses
+    using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
+    using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<U>;
     using tImplicitCastType = typename forte::core::mpl::get_castable_type<tTClass, tUClass>::type;
     static_assert(!(std::is_same<tImplicitCastType, forte::core::mpl::NullType>::value), "No implicit cast possible");
     return func_LE<tImplicitCastType>(static_cast<tImplicitCastType>(paIN1), static_cast<tImplicitCastType>(paIN2));
@@ -484,10 +484,10 @@ template<typename T> const CIEC_BOOL func_LE(const T &paIN1, const T &paIN2) {
 }
 
 template<typename T, typename U> const CIEC_BOOL func_LT(const T &paIN1, const U &paIN2) {
-  static_assert((forte::core::mpl::are_of_subtype<CIEC_ANY_ELEMENTARY, T, U>::value), "Template instantiation with incompatible types");
-  if constexpr (forte::core::mpl::are_of_subtype<CIEC_ANY_BIT, T, U>::value) { //ANY_BITs can be also partial accesses
-    using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class<T>::type;
-    using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class<U>::type;
+  static_assert(forte::core::mpl::are_of_subtype_v<CIEC_ANY_ELEMENTARY, T, U>, "Template instantiation with incompatible types");
+  if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { //ANY_BITs can be also partial accesses
+    using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
+    using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<U>;
     using tImplicitCastType = typename forte::core::mpl::get_castable_type<tTClass, tUClass>::type;
     static_assert(!(std::is_same<tImplicitCastType, forte::core::mpl::NullType>::value), "No implicit cast possible");
     return func_LT<tImplicitCastType>(static_cast<tImplicitCastType>(paIN1), static_cast<tImplicitCastType>(paIN2));
@@ -507,9 +507,9 @@ template<typename T> const CIEC_BOOL func_LT(const T &paIN1, const T &paIN2) {
 }
 
 template<typename T, typename U> const CIEC_BOOL func_NE(const T &paIN1, const U &paIN2) {
-  if constexpr (forte::core::mpl::are_of_subtype<CIEC_ANY_BIT, T, U>::value) { //ANY_BITs can be also partial accesses
-    using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class<T>::type;
-    using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class<U>::type;
+  if constexpr (forte::core::mpl::are_of_subtype_v<CIEC_ANY_BIT, T, U>) { //ANY_BITs can be also partial accesses
+    using tTClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<T>;
+    using tUClass = typename forte::core::mpl::get_equivalent_CIEC_class_t<U>;
     using tImplicitCastType = typename forte::core::mpl::get_castable_type<tTClass, tUClass>::type ;
     static_assert(!(std::is_same<tImplicitCastType, forte::core::mpl::NullType>::value), "No implicit cast possible");
     return func_NE<tImplicitCastType>(static_cast<tImplicitCastType>(paIN1), static_cast<tImplicitCastType>(paIN2));
@@ -571,10 +571,11 @@ template<typename T, typename U> typename forte::core::mpl::get_castable_type<T,
 }
 
 template<typename T> const T func_MOD(const T &paIN1, const T &paIN2) {
+  using ValueType = typename T::TValueType;
   if(0 == static_cast<typename T::TValueType>(paIN2)) {
     return T(0);
   }
-  return T(paIN1.getSignedValue() % paIN2.getSignedValue());
+  return T(static_cast<ValueType>(paIN1.getSignedValue()) % static_cast<ValueType>(paIN2.getSignedValue()));
 }
 
 template<typename T> const T func_MOVE(const T &paIN) {
@@ -949,16 +950,28 @@ const CIEC_UDINT func_LREAL_TRUNC_UDINT(const CIEC_LREAL &paIN);
 const CIEC_ULINT func_LREAL_TRUNC_ULINT(const CIEC_LREAL &paIN);
 
 template<typename T> const CIEC_TIME func_MUL_TIME(const CIEC_TIME& paIN1, const T& paIN2){
-  return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paIN1) * static_cast<typename T::TValueType>(paIN2));
+  using TimeValueType = CIEC_TIME::TValueType;
+  using In2ValueType = typename T::TValueType;
+  using MulValueType = std::conditional_t<std::is_floating_point_v<In2ValueType>, TForteDFloat, TimeValueType>;
+
+  return CIEC_TIME(static_cast<TimeValueType>(static_cast<MulValueType>(static_cast<TimeValueType>(paIN1)) * static_cast<In2ValueType>(paIN2)));
 }
 
 template<typename T> const CIEC_LTIME func_MUL_LTIME(const CIEC_LTIME &paIN1, const T &paIN2) {
-  return CIEC_LTIME(static_cast<CIEC_LTIME::TValueType>(paIN1) * static_cast<typename T::TValueType>(paIN2));
+  using LTimeValueType = CIEC_LTIME::TValueType;
+  using In2ValueType = typename T::TValueType;
+  using MulValueType = std::conditional_t<std::is_floating_point_v<In2ValueType>, TForteDFloat, LTimeValueType>;
+
+  return CIEC_LTIME(static_cast<LTimeValueType>(static_cast<MulValueType>(static_cast<LTimeValueType>(paIN1)) * static_cast<In2ValueType>(paIN2)));
 }
 
 template<typename T> const CIEC_TIME func_DIV_TIME(const CIEC_TIME& paIN1, const T& paIN2) {
-  if(0 != static_cast<typename T::TValueType>(paIN2)) {
-    return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paIN1) / static_cast<typename T::TValueType>(paIN2));
+  using TimeValueType = CIEC_TIME::TValueType;
+  using In2ValueType = typename T::TValueType;
+  using MulValueType = std::conditional_t<std::is_floating_point_v<In2ValueType>, TForteDFloat, TimeValueType>;
+
+  if(0 != static_cast<In2ValueType>(paIN2)) {
+    return CIEC_TIME(static_cast<TimeValueType>(static_cast<MulValueType>(static_cast<TimeValueType>(paIN1)) / static_cast<In2ValueType>(paIN2)));
   } else {
     DEVLOG_ERROR("Division by zero!\n");
     return CIEC_TIME(0);
@@ -966,8 +979,12 @@ template<typename T> const CIEC_TIME func_DIV_TIME(const CIEC_TIME& paIN1, const
 }
 
 template<typename T> const CIEC_LTIME func_DIV_LTIME(const CIEC_LTIME &paIN1, const T &paIN2) {
-  if(0 != static_cast<typename T::TValueType>(paIN2)) {
-    return CIEC_LTIME(static_cast<CIEC_LTIME::TValueType>(paIN1) / static_cast<typename T::TValueType>(paIN2));
+  using LTimeValueType = CIEC_LTIME::TValueType;
+  using In2ValueType = typename T::TValueType;
+  using MulValueType = std::conditional_t<std::is_floating_point_v<In2ValueType>, TForteDFloat, LTimeValueType>;
+
+  if(0 != static_cast<In2ValueType>(paIN2)) {
+    return CIEC_LTIME(static_cast<LTimeValueType>(static_cast<MulValueType>(static_cast<LTimeValueType>(paIN1)) / static_cast<In2ValueType>(paIN2)));
   } else {
     DEVLOG_ERROR("Division by zero!\n");
     return CIEC_LTIME(0);
@@ -975,10 +992,12 @@ template<typename T> const CIEC_LTIME func_DIV_LTIME(const CIEC_LTIME &paIN1, co
 }
 
 template<typename T> CIEC_ANY_INT func_LEN(const T& paVal){
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "T not of ANY_STRING");
   return CIEC_ANY_INT(paVal.length());
 }
 
 template<typename T> const T func_LEFT(const T &paIn, const CIEC_ANY_INT &paL) {
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "T not of ANY_STRING");
   if(true == paL.isSigned() && 0 > paL.getSignedValue()) {
     DEVLOG_ERROR("value of input L is less than zero");
     return paIn;
@@ -987,17 +1006,22 @@ template<typename T> const T func_LEFT(const T &paIn, const CIEC_ANY_INT &paL) {
       DEVLOG_ERROR("string shorter than input L");
       return paIn;
     } else {
-      T temp;
-      temp.reserve(static_cast<TForteUInt16>(paL.getUnsignedValue()));
-      memcpy(temp.getValue(), paIn.getValue(), static_cast<TForteUInt16>(paL.getUnsignedValue()));
-      temp.getValue()[paL.getUnsignedValue()] = '\0';
-      temp.assign(temp.getValue(), paL.getUnsignedValue());
-      return temp;
+      if constexpr (std::is_same_v<CIEC_STRING,T>) {
+        return CIEC_STRING(paIn.getStorage().substr(0, paL.getUnsignedValue()));
+      } else {
+        T temp;
+        temp.reserve(static_cast<TForteUInt16>(paL.getUnsignedValue()));
+        memcpy(temp.getValue(), paIn.getValue(), static_cast<TForteUInt16>(paL.getUnsignedValue()));
+        temp.getValue()[paL.getUnsignedValue()] = '\0';
+        temp.assign(temp.getValue(), static_cast<TForteUInt16>(paL.getUnsignedValue()));
+        return temp;
+      }
     }
   }
 }
 
 template<typename T> const T func_RIGHT(const T &paIn, const CIEC_ANY_INT &paL) {
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "T not of ANY_STRING");
   if(true == paL.isSigned() && 0 > paL.getSignedValue()) {
     DEVLOG_ERROR("value of input L is less than zero");
     return paIn;
@@ -1006,43 +1030,53 @@ template<typename T> const T func_RIGHT(const T &paIn, const CIEC_ANY_INT &paL) 
       DEVLOG_ERROR("string shorter than input L");
       return paIn;
     } else {
-      T temp;
-      temp.reserve(static_cast<TForteUInt16>(paL.getUnsignedValue()));
-      memcpy(temp.getValue(), paIn.getValue() + (paIn.length() - static_cast<TForteUInt16>(paL.getUnsignedValue())),
-        static_cast<TForteUInt16>(paL.getUnsignedValue()));
-      temp.getValue()[paL.getUnsignedValue()] = '\0';
-      temp.assign(temp.getValue(), paL.getUnsignedValue());
-      return temp;
+      if constexpr (std::is_same_v<CIEC_STRING,T>) {
+        const CIEC_STRING::storage_type &storage = paIn.getStorage();
+        return CIEC_STRING(storage.substr(storage.length() - paL.getUnsignedValue()));
+      } else {
+        T temp;
+        temp.reserve(static_cast<TForteUInt16>(paL.getUnsignedValue()));
+        memcpy(temp.getValue(), paIn.getValue() + (paIn.length() - static_cast<TForteUInt16>(paL.getUnsignedValue())),
+          static_cast<TForteUInt16>(paL.getUnsignedValue()));
+        temp.getValue()[paL.getUnsignedValue()] = '\0';
+        temp.assign(temp.getValue(), static_cast<TForteUInt16>(paL.getUnsignedValue()));
+        return temp;
+      }
     }
   }
 }
 
 template<typename T> const T func_MID(const T &paIn, const CIEC_ANY_INT &paL, const CIEC_ANY_INT &paP) {
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "T not of ANY_STRING");
   if(true == paP.isSigned() && 0 > paP.getSignedValue()) {
     DEVLOG_ERROR("value of input P is less than zero\n");
     return paIn;
   } else {
-    CIEC_INT len_right = CIEC_INT(paIn.length() - paP.getUnsignedValue() + 1);
-    CIEC_INT len_left = CIEC_INT(paL.getUnsignedValue());
-    return func_LEFT(func_RIGHT(paIn, len_right), len_left);
+    CIEC_INT lenRight = CIEC_INT(static_cast<CIEC_INT::TValueType>(paIn.length() - paP.getUnsignedValue() + 1));
+    CIEC_INT lenLeft = CIEC_INT(static_cast<CIEC_INT::TValueType>(paL.getUnsignedValue()));
+    return func_LEFT(func_RIGHT(paIn, lenRight), lenLeft);
   }
 }
 
 template<typename T> const T func_CONCAT(const T &paIn1, const T &paIn2) {
-  static_assert((std::is_base_of<CIEC_ANY_STRING, T>::value), "T not of ANY_STRING");
+  static_assert((std::is_base_of_v<CIEC_ANY_STRING, T>), "T not of ANY_STRING");
   T temp(paIn1);
-  temp.reserve(static_cast<TForteUInt16>(paIn1.length() + paIn2.length()));
-  temp.append(paIn2.getValue(), paIn2.length());
-  return temp;
+  if constexpr (std::is_base_of_v<CIEC_STRING,T>) {
+    temp.append(paIn2);
+    return temp;
+  } else {
+    temp.reserve(static_cast<TForteUInt16>(paIn1.length() + paIn2.length()));
+    temp.append(paIn2.getValue(), paIn2.length());
+    return temp;
+  }
 }
 
-#if __cplusplus >= 201103L //stdc11
 template<typename T, typename ... Args> const T func_CONCAT(const T &paIn1, Args ... args) {
   return func_CONCAT(paIn1, func_CONCAT(args...));
 }
-#endif
 
 template<typename T> const T func_INSERT(const T &paIn1, const T &paIn2, const CIEC_ANY_INT &paP) {
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>);
   if(CIEC_UINT::scm_nMaxVal < (paIn1.length() + paIn2.length())) {
     DEVLOG_ERROR("result would be longer than maximum allowed length");
     return paIn1;
@@ -1058,11 +1092,12 @@ template<typename T> const T func_INSERT(const T &paIn1, const T &paIn2, const C
     DEVLOG_ERROR("INSERT called with P exceeding input string length!\n");
     return paIn1;
   }
-  CIEC_INT positionRight = CIEC_INT(paIn1.length() - paP.getSignedValue());
+  CIEC_INT positionRight = CIEC_INT(static_cast<CIEC_INT::TValueType>(paIn1.length() - paP.getSignedValue()));
   return func_CONCAT(func_CONCAT(func_LEFT(paIn1, paP), paIn2), func_RIGHT(paIn1, positionRight));
 }
 
 template<typename T> const T func_DELETE(const T &paIn, const CIEC_ANY_INT &paL, const CIEC_ANY_INT &paP) {
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>);
   const CIEC_ANY::TLargestUIntValueType L = paL.isSigned() ? static_cast<CIEC_ANY::TLargestUIntValueType>(std::max(CIEC_ANY::TLargestIntValueType(0), paL.getSignedValue())) : paL.getUnsignedValue();
 
   const CIEC_ANY::TLargestUIntValueType P = paP.isSigned() ? static_cast<CIEC_ANY::TLargestUIntValueType>(std::max(CIEC_ANY::TLargestIntValueType(0), paP.getSignedValue())) : paP.getUnsignedValue();
@@ -1082,12 +1117,13 @@ template<typename T> const T func_DELETE(const T &paIn, const CIEC_ANY_INT &paL,
     return paIn;
   }
 
-  CIEC_UINT positionRight = CIEC_UINT(paIn.length() - (L + P - 1));
-  CIEC_UINT positionLeft = CIEC_UINT(P - 1);
+  CIEC_UINT positionRight = CIEC_UINT(static_cast<CIEC_UINT::TValueType>(paIn.length() - (L + P - 1)));
+  CIEC_UINT positionLeft = CIEC_UINT(static_cast<CIEC_UINT::TValueType>(P - 1));
   return func_CONCAT(func_LEFT(paIn, positionLeft), func_RIGHT(paIn, positionRight));
 }
 
 template<typename T> const T func_REPLACE(const T &paIn1, const T &paIn2, const CIEC_ANY_INT &paL, const CIEC_ANY_INT &paP) {
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>);
   const CIEC_ANY::TLargestUIntValueType L = paL.isSigned() ? static_cast<CIEC_ANY::TLargestUIntValueType>(std::max(CIEC_ANY::TLargestIntValueType(0), paL.getSignedValue())) : paL.getUnsignedValue();
   const CIEC_ANY::TLargestUIntValueType P = paP.isSigned() ? static_cast<CIEC_ANY::TLargestUIntValueType>(std::max(CIEC_ANY::TLargestIntValueType(0), paP.getSignedValue())) : paP.getUnsignedValue();
 
@@ -1110,31 +1146,79 @@ template<typename T> const T func_REPLACE(const T &paIn1, const T &paIn2, const 
     DEVLOG_ERROR("REPLACE exceeds length of string!\n");
   }
 
-  CIEC_INT positionRight = CIEC_INT(paIn1.length() - (L + P - 1));
-  CIEC_INT positionLeft = CIEC_INT(P - 1);
+  CIEC_INT positionRight = CIEC_INT(static_cast<CIEC_INT::TValueType>(paIn1.length() - (L + P - 1)));
+  CIEC_INT positionLeft = CIEC_INT(static_cast<CIEC_INT::TValueType>(P - 1));
   return func_CONCAT(func_CONCAT(func_LEFT(paIn1, positionLeft), paIn2), func_RIGHT(paIn1, positionRight));
 }
 
-CIEC_ANY_INT func_FIND(const CIEC_ANY_STRING &paIn1, const CIEC_ANY_STRING &paIn2);
+template <typename T, typename U>
+CIEC_ANY_INT func_FIND(const T &paIn1, const U &paIn2) {
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "paIn1 must be of type CIEC_ANY_STRING");
+  static_assert(std::is_base_of_v<CIEC_ANY_CHARS, U>, "paIn2 must be of type CIEC_ANY_CHARS");
+  if constexpr(std::is_base_of_v<T, CIEC_STRING>) {
+    static_assert(std::is_base_of_v<U, CIEC_STRING> || std::is_same_v<U, CIEC_CHAR>, "FIND in STRING only with STRING or CHAR");
+    if constexpr(std::is_base_of_v<U, CIEC_STRING>) {
+      const auto findIndex = paIn1.getStorage().find(paIn2.getStorage());
+      if (findIndex != std::string::npos) {
+        return CIEC_ANY_INT(findIndex + 1);
+      }
+    }
+    else if constexpr (std::is_same_v<U, CIEC_CHAR>) {
+      const auto findIndex = paIn1.getStorage().find(static_cast<CIEC_CHAR::TValueType>(paIn2));
+      if (findIndex != std::string::npos) {
+        return CIEC_ANY_INT(findIndex + 1);
+      }   
+    }
+    return CIEC_ANY_INT(0);
+  } else if constexpr(std::is_same_v<T, CIEC_WSTRING>) {
+    static_assert(std::is_same_v<U, CIEC_WSTRING> || std::is_same_v<U, CIEC_WCHAR>, "FIND in WSTRING only with WSTRING or WCHAR");
+    if constexpr(std::is_same_v<U, CIEC_WSTRING>) {
+      const char* pc_Find = strstr(paIn1.getValue(), paIn2.getValue());
+      if (nullptr != pc_Find){
+        return CIEC_ANY_INT(pc_Find - paIn1.getValue() + 1);
+      }
+    } else if constexpr(std::is_same_v<U, CIEC_WCHAR>) {
+      const char* pc_Find = strstr(paIn1.getValue(), static_cast<CIEC_WCHAR::TValueType>(paIn2));
+      if (nullptr != pc_Find){
+        return CIEC_ANY_INT(pc_Find - paIn1.getValue() + 1);
+      }
+    }
+    return CIEC_ANY_INT(0);
+  }
+}
 
 template <typename T>
 const T func_TOUPPER(const T &paIn) {
-  T temp(paIn);
-  char *current = temp.getValue();
-  for(size_t i = 0; i <= paIn.length(); ++i) {
-    current[i] = static_cast<char>(toupper(current[i]));
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "Operand must be of type ANY_STRING!");
+  if constexpr (std::is_base_of_v<CIEC_STRING, T>) {
+    CIEC_STRING::storage_type buffer(paIn.getStorage());
+    std::transform(buffer.begin(), buffer.end(), buffer.begin(), ::toupper);
+    return CIEC_STRING(buffer);
+  } else {
+    T temp(paIn);
+    char *current = temp.getValue();
+    for(size_t i = 0; i <= paIn.length(); ++i) {
+      current[i] = static_cast<char>(toupper(current[i]));
+    }
+    return temp;
   }
-  return temp;
 }
 
 template <typename T>
 const T func_TOLOWER(const T &paIn) {
-  T temp(paIn);
-  char *current = temp.getValue();
-  for(size_t i = 0; i <= paIn.length(); ++i) {
-    current[i] = static_cast<char>(tolower(current[i]));
+  static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "Operand must be of type ANY_STRING!");
+  if constexpr (std::is_base_of_v<CIEC_STRING, T>) {
+    CIEC_STRING::storage_type buffer(paIn.getStorage());
+    std::transform(buffer.begin(), buffer.end(), buffer.begin(), ::tolower);
+    return CIEC_STRING(buffer);
+  } else {
+    T temp(paIn);
+    char *current = temp.getValue();
+    for(size_t i = 0; i <= paIn.length(); ++i) {
+      current[i] = static_cast<char>(tolower(current[i]));
+    }
+    return temp;
   }
-  return temp;
 }
 
 const CIEC_DATE_AND_TIME func_CONCAT_DATE_TOD(const CIEC_DATE &paIN1, const CIEC_TIME_OF_DAY &paIN2);
@@ -1208,8 +1292,8 @@ CIEC_BOOL func_IS_VALID(const T& paValue) {
  */
 template <typename T>
 CIEC_BOOL func_IS_VALID_BCD(const T& paValue) {
-  static_assert(std::is_base_of_v<CIEC_ANY_BIT, T>); // any bit type is allowed
-  static_assert(!std::is_same_v<CIEC_BOOL, T>); // but not BOOL
+  static_assert(std::is_base_of_v<CIEC_ANY_BIT, T>, "Operand must be of ANY_BIT (excluding BOOL)"); // any bit type is allowed
+  static_assert(!std::is_same_v<CIEC_BOOL, T>, "Operand must be of ANY_BIT, but not BOOL"); // but not BOOL
   using ValueType = typename T::TValueType;
   constexpr size_t valueTypeSize = sizeof(ValueType);
   constexpr ValueType mask = 0x0F;

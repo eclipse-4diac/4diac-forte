@@ -34,7 +34,7 @@ class CIEC_CHAR : public CIEC_ANY_CHAR{
       setValueSimple(paValue);
     }
 
-    explicit CIEC_CHAR(char paValue) {
+    explicit CIEC_CHAR(const TValueType paValue) {
       setChar(paValue);
     }
 
@@ -69,6 +69,14 @@ class CIEC_CHAR : public CIEC_ANY_CHAR{
 
 inline bool operator==(const CIEC_CHAR &lhs, const CIEC_CHAR &rhs) {
   return static_cast<CIEC_CHAR::TValueType>(lhs) == static_cast<CIEC_CHAR::TValueType>(rhs);
+}
+
+inline CIEC_CHAR operator ""_CHAR(char paValue) {
+  return CIEC_CHAR(static_cast<CIEC_CHAR::TValueType>(paValue));
+}
+
+inline CIEC_CHAR operator ""_CHAR(unsigned long long int paValue) {
+  return CIEC_CHAR(static_cast<CIEC_CHAR::TValueType>(paValue));
 }
 
 #endif /*_FORTE_CHAR_H_*/

@@ -102,9 +102,6 @@ bool RMT_RES::initialize() {
   command.mSecondParam.pushBack(g_nStringIdMGR);
   command.mSecondParam.pushBack(g_nStringIdID);
   createConnection(command);
-  
-  //Perform reset command normally done by the typelib during the creation process
-  changeFBExecutionState(EMGMCommandType::Reset);
   return true;
 }
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 -2014 AIT
+ * Copyright (c) 2012 - 2023 AIT, Davor Cihlar
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,11 +8,18 @@
  *
  * Contributors:
  *   Filip Andren - initial API and implementation and/or initial documentation
+ *   Davor Cihlar - multiple FBs sharing a single Modbus connection
  *******************************************************************************/
 #include "modbusclientconnection.h"
 #include "devlog.h"
 #include "modbuspoll.h"
 #include <forte_thread.h>
+#include <unistd.h> // for sleep
+// for open and disabling DTR
+#include <termios.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 using namespace modbus_connection_event;
 
@@ -20,54 +27,45 @@ using namespace modbus_connection_event;
  * CModbusClientConnection class
  *************************************/
 
-CModbusClientConnection::CModbusClientConnection(CModbusHandler *pa_modbusHandler) : CModbusConnection(pa_modbusHandler), m_pModbusConnEvent(nullptr), m_nNrOfPolls(0), m_nSlaveId(0xFF), m_unBufFillSize(0), m_anRecvBuffPosition{0}, m_acRecvBuffer{0} {
+CModbusClientConnection::CModbusClientConnection(CModbusHandler* pa_modbusHandler) :
+    CModbusConnection(pa_modbusHandler), m_pModbusConnEvent(nullptr), m_nSlaveId(0xFF){
 }
 
 CModbusClientConnection::~CModbusClientConnection() {
   if (m_bConnected){
     disconnect();
   }
-  TModbusPollList::Iterator itEnd(m_lstPollList.end());
-  for(TModbusPollList::Iterator itRunner = m_lstPollList.begin(); itRunner != itEnd; ++itRunner){
-    delete *itRunner;
+  for (auto itRunner : m_lstPollList) {
+    delete itRunner;
   }
   if (m_pModbusConnEvent != nullptr){
     delete m_pModbusConnEvent;
   }
 }
 
-int CModbusClientConnection::readData(void *pa_pData) {
-  memcpy(pa_pData, m_acRecvBuffer, m_unBufFillSize);
-  return (int) m_unBufFillSize;
+int CModbusClientConnection::readData(CModbusIOBlock* pa_pIOBlock, void* pa_pData, unsigned int pa_nMaxDataSize){
+  const unsigned int size = std::min(pa_nMaxDataSize, pa_pIOBlock->getReadSize());
+  memcpy(pa_pData, pa_pIOBlock->getCache(), size);
+  return (int)size;
 }
 
-int CModbusClientConnection::writeData(const void *pa_pData, unsigned int pa_nDataSize) {
-  unsigned int dataIndex = 0;
-
-  TModbusSendList::Iterator itEnd = m_lstSendList.end();
-  for (TModbusSendList::Iterator it = m_lstSendList.begin(); it!=itEnd; ++it) {
-    if (dataIndex + it->m_nNrAddresses > pa_nDataSize) {
-      break;
-    }
-
-    CCriticalRegion criticalRegion(m_oModbusLock);
-    switch (it->m_nSendFuncCode) {
-      case 5:
-      case 15:
-        modbus_write_bits(m_pModbusConn, it->m_nStartAddress, it->m_nNrAddresses, &((uint8_t*)pa_pData)[dataIndex]);
-        break;
-      case 6:
-      case 16:
-        modbus_write_registers(m_pModbusConn, it->m_nStartAddress, it->m_nNrAddresses, &((uint16_t*)pa_pData)[dataIndex]);
-        break;
-      default:
-        // TODO: error
-        break;
-    }
-    dataIndex += it->m_nNrAddresses;
+void CModbusClientConnection::writeDataRange(EModbusFunction pa_eFunction, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses, const void *pa_pData){
+  CCriticalRegion criticalRegion(m_oModbusLock);
+  if (!m_bConnected) {
+    // TODO: error
+    return;
   }
-
-  return (int)dataIndex;
+  switch (pa_eFunction) {
+    case eCoil:
+      modbus_write_bits(m_pModbusConn, pa_nStartAddress, pa_nNrAddresses, (const uint8_t*)pa_pData);
+      break;
+    case eHoldingRegister:
+      modbus_write_registers(m_pModbusConn, pa_nStartAddress, pa_nNrAddresses, (const uint16_t*)pa_pData);
+      break;
+    default:
+      // TODO: error
+      break;
+  }
 }
 
 int CModbusClientConnection::connect(){
@@ -77,7 +75,7 @@ int CModbusClientConnection::connect(){
     modbus_set_slave(m_pModbusConn, m_nSlaveId);
   }
 
-  m_pModbusConnEvent = new CModbusConnectionEvent(1000);
+  m_pModbusConnEvent = new CModbusConnectionEvent(1000, getFlowControl(), getDevice());
   m_pModbusConnEvent->activate();
 
   this->start();
@@ -94,45 +92,21 @@ void CModbusClientConnection::disconnect(){
   CModbusConnection::disconnect();
 }
 
-void CModbusClientConnection::addNewPoll(long pa_nPollInterval, unsigned int pa_nFunctionCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses){
+void CModbusClientConnection::addNewPoll(long pa_nPollInterval, CModbusIOBlock* pa_pIOBlock){
   CModbusPoll *newPoll = nullptr;
 
-  TModbusPollList::Iterator itEnd = m_lstPollList.end();
-  for(TModbusPollList::Iterator it = m_lstPollList.begin(); it != itEnd; ++it){
-    if(it->getUpdateInterval() == pa_nPollInterval && it->getFunctionCode() == pa_nFunctionCode){
-      it->addPollAddresses(pa_nStartAddress, pa_nNrAddresses);
-      newPoll = *it;
+  for (auto it : m_lstPollList) {
+    if(it->getUpdateInterval() == pa_nPollInterval){
+      newPoll = it;
       break;
     }
   }
   if(newPoll == nullptr){
-    m_lstPollList.pushBack(new CModbusPoll(pa_nPollInterval, pa_nFunctionCode, pa_nStartAddress, pa_nNrAddresses));
-    m_nNrOfPolls++;
-    m_anRecvBuffPosition[m_nNrOfPolls - 1] = m_unBufFillSize;
+    newPoll = new CModbusPoll(m_pModbusHandler, pa_nPollInterval);
+    m_lstPollList.push_back(newPoll);
   }
 
-  // Count bytes
-  unsigned int nrBytes = 0;
-  switch (pa_nFunctionCode){
-    case 1:
-    case 2:
-      nrBytes = pa_nNrAddresses;
-      break;
-    case 3:
-    case 4:
-      nrBytes = pa_nNrAddresses * 2;
-      break;
-  }
-  for(unsigned int i = m_unBufFillSize; i < m_unBufFillSize + nrBytes; i++){
-    m_acRecvBuffer[i] = 0;
-  }
-  m_unBufFillSize += nrBytes;
-}
-
-void CModbusClientConnection::addNewSend(unsigned int pa_nSendFuncCode, unsigned int pa_nStartAddress, unsigned int pa_nNrAddresses) {
-  SSendInformation sendInfo = {pa_nSendFuncCode, pa_nStartAddress, pa_nNrAddresses};
-
-  m_lstSendList.pushBack(sendInfo);
+  newPoll->addPollBlock(pa_pIOBlock);
 }
 
 void CModbusClientConnection::setSlaveId(unsigned int pa_nSlaveId){
@@ -154,16 +128,15 @@ void CModbusClientConnection::run(){
 }
 
 void CModbusClientConnection::tryPolling(){
-  unsigned int nrErrors = 0;
-  bool dataReturned = false;
+  unsigned int nrErrors = 0, nrPolls = 0;
 
-  unsigned int index = 0;
-  TModbusPollList::Iterator itEnd(m_lstPollList.end());
-  for(TModbusPollList::Iterator itPoll = m_lstPollList.begin(); itPoll != itEnd; ++itPoll, ++index){
+  for (size_t index = 0; index < m_lstPollList.size(); ++index) {
+    auto itPoll = m_lstPollList[index];
+
     if(itPoll->readyToExecute()){
       CCriticalRegion criticalRegion(m_oModbusLock);
 
-      int nrVals = itPoll->executeEvent(m_pModbusConn, (void*) &m_acRecvBuffer[m_anRecvBuffPosition[index]]); // retVal);
+      int nrVals = itPoll->executeEvent(m_pModbusConn, 0);
 
       if(nrVals < 0){
         DEVLOG_ERROR("Error reading input status :: %s\n", modbus_strerror(errno));
@@ -171,20 +144,16 @@ void CModbusClientConnection::tryPolling(){
 
         nrErrors++;
       }
-      else if(nrVals > 0){
-        dataReturned = true;
-      }
+      ++nrPolls;
     }
   }
 
-  if(dataReturned) {
-    m_pModbusHandler->executeComCallback(m_nComCallbackId);
-  }
-
-  if((nrErrors == m_nNrOfPolls) && (0 != m_nNrOfPolls)){
+  if((nrErrors == nrPolls) && nrPolls && !m_lstPollList.empty()){
+    DEVLOG_WARNING("Too many errors on Modbus, reconnecting\n");
+    CCriticalRegion criticalRegion(m_oModbusLock);
     modbus_close(m_pModbusConn); // in any case it is worth trying to close the socket
     m_bConnected = false;
-    m_pModbusConnEvent = new CModbusConnectionEvent(1000);
+    m_pModbusConnEvent = new CModbusConnectionEvent(1000, getFlowControl(), getDevice());
     m_pModbusConnEvent->activate();
   }
 }
@@ -192,6 +161,7 @@ void CModbusClientConnection::tryPolling(){
 void CModbusClientConnection::tryConnect(){
   if(m_pModbusConnEvent != nullptr){
     if(m_pModbusConnEvent->readyToExecute()){
+      CCriticalRegion criticalRegion(m_oModbusLock);
       if(m_pModbusConnEvent->executeEvent(m_pModbusConn, nullptr) < 0) {
         DEVLOG_ERROR("Connection to Modbus server failed: %s\n", modbus_strerror(errno));
       } else {
@@ -203,8 +173,7 @@ void CModbusClientConnection::tryConnect(){
         m_bConnected = true;
 
         // Start polling
-        TModbusPollList::Iterator itEnd(m_lstPollList.end());
-        for(TModbusPollList::Iterator itPoll = m_lstPollList.begin(); itPoll != itEnd; ++itPoll){
+        for (auto itPoll : m_lstPollList) {
           itPoll->activate();
         }
       }
@@ -215,8 +184,9 @@ void CModbusClientConnection::tryConnect(){
 /*************************************
  * CModbusConnectionEvent class
  *************************************/
-CModbusConnectionEvent::CModbusConnectionEvent(long pa_nReconnectInterval) :
-    CModbusTimedEvent((TForteUInt32)pa_nReconnectInterval){
+CModbusConnectionEvent::CModbusConnectionEvent(long pa_nReconnectInterval, EModbusFlowControl pa_enFlowControl, const char *pa_acDevice) :
+    CModbusTimedEvent((TForteUInt32)pa_nReconnectInterval), m_enFlowControl(pa_enFlowControl){
+  strcpy(m_acDevice, pa_acDevice);
 }
 
 int CModbusConnectionEvent::executeEvent(modbus_t *pa_pModbusConn, void *pa_pRetVal){
@@ -224,6 +194,51 @@ int CModbusConnectionEvent::executeEvent(modbus_t *pa_pModbusConn, void *pa_pRet
 
   restartTimer();
 
-  return modbus_connect(pa_pModbusConn);
+  switch (m_enFlowControl) {
+    case eFlowArduino: {
+      int fd = open(m_acDevice, O_RDWR);
+      if (fd >= 0) {
+        termios tty;
+        tcgetattr(fd, &tty);
+        if (tty.c_cflag & (HUPCL | CRTSCTS)) {
+          tty.c_cflag &= ~(HUPCL | CRTSCTS);
+          if (!tcsetattr(fd, TCSANOW, &tty)) {
+            DEVLOG_INFO("Hardware flow control for Modbus RTU disabled\n");
+            // Disabling DTR is not perfect and it will be toggled by this open for disabling it.
+            // Therefore, wait for Arduino to boot only if flags weren't previously set.
+            sleep(2);
+          } else {
+            DEVLOG_ERROR("Failed disabling flow control for Modbus RTU\n");
+            return -1;
+          }
+        } else {
+          DEVLOG_INFO("Hardware flow control for Modbus RTU was already disabled\n");
+        }
+        close(fd);
+      }
+      break;
+    }
+    default:
+      // ignore
+      break;
+  };
+
+  int retVal = modbus_connect(pa_pModbusConn);
+
+  if (retVal >= 0) {
+    switch (m_enFlowControl) {
+      case eFlowLongDelay:
+        sleep(3);
+        // fall through
+      case eFlowDelay:
+        sleep(2);
+        break;
+      default:
+        // ignore
+        break;
+    }
+  }
+
+  return retVal;
 }
 

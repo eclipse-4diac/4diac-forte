@@ -22,6 +22,22 @@ BOOST_AUTO_TEST_SUITE(CIEC_ANY_DATE_VARIANT_function_test)
       BOOST_CHECK_EQUAL(test.getDataTypeID(), CIEC_ANY::e_ANY);
     }
 
+    BOOST_AUTO_TEST_CASE(Initialization_test) {
+      // assign value
+      CIEC_ANY_DATE_VARIANT test1 = CIEC_DATE(17);
+      BOOST_TEST(17 == static_cast<CIEC_DATE::TValueType>(std::get<CIEC_DATE>(test1)));
+  
+      // assign generic value
+      CIEC_DATE test3 = CIEC_DATE(4);
+      CIEC_ANY_DATE &test4 = test3;
+      CIEC_ANY_DATE_VARIANT test2 = test4;
+      BOOST_TEST(4 == static_cast<CIEC_DATE::TValueType>(std::get<CIEC_DATE>(test2)));
+  
+      // assign each other
+      CIEC_ANY_DATE_VARIANT test5 = test1;
+      BOOST_TEST(17 == static_cast<CIEC_DATE::TValueType>(std::get<CIEC_DATE>(test5)));
+    }
+  
     BOOST_AUTO_TEST_CASE(Assignment_test) {
       CIEC_ANY_DATE_VARIANT test1;
       CIEC_ANY_DATE_VARIANT test2;
@@ -33,6 +49,12 @@ BOOST_AUTO_TEST_SUITE(CIEC_ANY_DATE_VARIANT_function_test)
       // assign value
       test1 = CIEC_DATE(17);
       BOOST_TEST(17 == static_cast<CIEC_DATE::TValueType>(std::get<CIEC_DATE>(test1)));
+
+      // assign generic value
+      CIEC_DATE test3 = CIEC_DATE(4);
+      CIEC_ANY_DATE &test4 = test3;
+      test2 = test4;
+      BOOST_TEST(4 == static_cast<CIEC_DATE::TValueType>(std::get<CIEC_DATE>(test2)));
 
       // assign each other
       test2.setValue(test1);

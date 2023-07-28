@@ -1,7 +1,9 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
- *               2020 Johannes Kepler University Linz
- *               2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2005, 2023 Profactor GmbH, ACIN
+ *                          Johannes Kepler University Linz
+ *                          Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -16,6 +18,7 @@
  *    Martin Melik Merkumians - changes multibit access index from template
  *      parameter to call argument, make TForteByte constructor explicit,
  *      removed built-in type operator=
+ *    Martin Jobst - add user-defined literal
  *******************************************************************************/
 #ifndef _FORTE_BYTE_H_
 #define _FORTE_BYTE_H_
@@ -50,7 +53,7 @@ class CIEC_BYTE : public CIEC_ANY_BIT{
       setValueSimple(paValue);
     }
 
-    explicit CIEC_BYTE(TForteByte paValue) {
+    explicit CIEC_BYTE(const TValueType paValue) {
       setTUINT8(paValue);
     }
 
@@ -96,5 +99,9 @@ class CIEC_BYTE : public CIEC_ANY_BIT{
       return CIEC_ANY_BIT_PARTIAL<T, CIEC_BYTE>(*this, index);
     }
 };
+
+inline CIEC_BYTE operator ""_BYTE(unsigned long long int paValue) {
+  return CIEC_BYTE(static_cast<CIEC_BYTE::TValueType>(paValue));
+}
 
 #endif /*_FORTE_BYTE_H_*/

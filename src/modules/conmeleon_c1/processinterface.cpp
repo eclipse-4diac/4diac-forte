@@ -73,7 +73,7 @@ CConmeleonC1ProcessInterface::~CConmeleonC1ProcessInterface(){
 bool CConmeleonC1ProcessInterface::initialise(bool m_bInputOrOutput){
 
   CIEC_INT param;
-  param.fromString(PARAMS().getValue());
+  param.fromString(PARAMS().getStorage().c_str());
   mChannelNr = param;
   setCallingFBType(m_bInputOrOutput);
 

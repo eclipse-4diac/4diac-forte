@@ -45,11 +45,11 @@ GEN_STRUCT_DEMUX::GEN_STRUCT_DEMUX(const CStringDictionary::TStringId paInstance
 }
 
 GEN_STRUCT_DEMUX::~GEN_STRUCT_DEMUX(){
-  if(nullptr != m_pstInterfaceSpec){
-    delete[](m_pstInterfaceSpec->m_anEOWith);
-    delete[](m_pstInterfaceSpec->m_aunDIDataTypeNames);
-    delete[](m_pstInterfaceSpec->m_aunDONames);
-    delete[](m_pstInterfaceSpec->m_aunDODataTypeNames);
+  if(nullptr != mInterfaceSpec){
+    delete[](mInterfaceSpec->m_anEOWith);
+    delete[](mInterfaceSpec->m_aunDIDataTypeNames);
+    delete[](mInterfaceSpec->m_aunDONames);
+    delete[](mInterfaceSpec->m_aunDODataTypeNames);
   }
 }
 
@@ -65,7 +65,7 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
       CIEC_STRUCT *structInstance = static_cast<CIEC_STRUCT*>(data);
 
       size_t structSize = structInstance->getStructSize();
-      if(structSize != 0 && structSize < cg_unInvalidPortId) { //the structure size must be non zero and less than cg_unInvalidPortId (maximum number of data outputs)
+      if(structSize != 0 && structSize < cgInvalidPortId) { //the structure size must be non zero and less than cgInvalidPortId (maximum number of data outputs)
         TDataIOID *eoWith = new TDataIOID[structSize + 1];
         CStringDictionary::TStringId *doDataTypeNames = new CStringDictionary::TStringId[GEN_STRUCT_MUX::calcStructTypeNameSize(*structInstance)];
         CStringDictionary::TStringId *doNames = new CStringDictionary::TStringId[structSize];
@@ -87,23 +87,17 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
         paInterfaceSpec.m_aunDODataTypeNames = doDataTypeNames;
         diDataTypeNames[0] = structTypeNameId;
 
-        for(size_t i = 0, typeNameIndex = 0; i < paInterfaceSpec.m_nNumDOs; i++, typeNameIndex++) {
-          CIEC_ANY &member = *structInstance->getMember(i);
+        for(size_t i = 0; i < structSize; ++i) {
+          const CIEC_ANY &member = *structInstance->getMember(i);
           eoWith[i] = i;
           doNames[i] = structInstance->elementNames()[i];
-          doDataTypeNames[typeNameIndex] = member.getTypeNameID();
-          if(member.getDataTypeID() == CIEC_ANY::e_ARRAY){
-            CIEC_ARRAY &array = static_cast<CIEC_ARRAY&>(member);
-            doDataTypeNames[typeNameIndex + 1] = static_cast<CStringDictionary::TStringId>(array.size());
-            doDataTypeNames[typeNameIndex + 2] = array.getElementTypeNameID();
-            typeNameIndex += 2;
-          }
+          fillDataPointSpec(member, doDataTypeNames);
         }
         eoWith[paInterfaceSpec.m_nNumDOs] = scmWithListDelimiter;
         retval = true;
       } else {
         DEVLOG_ERROR("[GEN_STRUCT_DEMUX]: The structure %s has a size is not within range > 0 and < %u\n",
-                     CStringDictionary::getInstance().get(structTypeNameId), cg_unInvalidPortId);
+                     CStringDictionary::getInstance().get(structTypeNameId), cgInvalidPortId);
       }
     } else {
       DEVLOG_ERROR("[GEN_STRUCT_DEMUX]: data type is not a structure: %s\n", CStringDictionary::getInstance().get(structTypeNameId));

@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2005, 2023 Profactor GmbH, ACIN, fortiss GmbH
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -18,7 +18,7 @@
 #include "funcbloc.h"
 
 CDataConnection::CDataConnection(CFunctionBlock *paSrcFB, TPortId paSrcPortId, CIEC_ANY *paValue)
-        : CConnection(paSrcFB, paSrcPortId), m_poValue(paValue) {
+        : CConnection(paSrcFB, paSrcPortId), mValue(paValue) {
 }
 
 EMGMResponse CDataConnection::connect(CFunctionBlock *paDstFB,
@@ -26,7 +26,7 @@ EMGMResponse CDataConnection::connect(CFunctionBlock *paDstFB,
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
   TPortId dstPortId = paDstFB->getDIID(paDstPortNameId);
-  if(cg_unInvalidPortId != dstPortId){
+  if(cgInvalidPortId != dstPortId){
     CIEC_ANY *dstDataPoint = paDstFB->getDIFromPortId(dstPortId);
     retVal = establishDataConnection(paDstFB, dstPortId, dstDataPoint);
   }
@@ -49,7 +49,7 @@ EMGMResponse CDataConnection::connectToCFBInterface(CFunctionBlock *paDstFB,
 
 void CDataConnection::handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint){
   if(CIEC_ANY::e_ANY != paDstDataPoint.getDataTypeID()){
-    m_poValue->setValue(paDstDataPoint);
+    mValue->setValue(paDstDataPoint);
     getSourceId().mFB->configureGenericDO(getSourceId().mPortId, paDstDataPoint);
     if(isConnected()){
       //We already have some connection also set their correct type
@@ -65,7 +65,7 @@ CDataConnection::disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringI
   EMGMResponse retval = EMGMResponse::NoSuchObject;
   TPortId dstPortId = paDstFB->getDIID(paDstPortNameId);
 
-  if(cg_unInvalidPortId != dstPortId){
+  if(cgInvalidPortId != dstPortId){
     retval = CConnection::removeDestination(CConnectionPoint(paDstFB, dstPortId));
     if(EMGMResponse::Ready == retval){
       // the CConnection class didn't respond an error
@@ -75,10 +75,10 @@ CDataConnection::disconnect(CFunctionBlock *paDstFB, CStringDictionary::TStringI
   return retval;
 }
 
-bool CDataConnection::canBeConnected(const CIEC_ANY *pa_poSrcDataPoint,
-    const CIEC_ANY *pa_poDstDataPoint){
-  CIEC_ANY::EDataTypeID eSrcId = pa_poSrcDataPoint->getDataTypeID();
-  CIEC_ANY::EDataTypeID eDstId = pa_poDstDataPoint->getDataTypeID();
+bool CDataConnection::canBeConnected(const CIEC_ANY *paSrcDataPoint,
+    const CIEC_ANY *paDstDataPoint){
+  CIEC_ANY::EDataTypeID eSrcId = paSrcDataPoint->getDataTypeID();
+  CIEC_ANY::EDataTypeID eDstId = paDstDataPoint->getDataTypeID();
   bool bCanConnect = false;
 
   if(eSrcId == eDstId){
@@ -88,8 +88,7 @@ bool CDataConnection::canBeConnected(const CIEC_ANY *pa_poSrcDataPoint,
     if(((eSrcId == CIEC_ANY::e_ANY) && (eDstId != CIEC_ANY::e_ANY))
         || ((eSrcId != CIEC_ANY::e_ANY) && (eDstId == CIEC_ANY::e_ANY))){
       bCanConnect = true;
-    }
-    else{
+    } else {
       bCanConnect = CIEC_ANY::isCastable(eSrcId, eDstId);
     }
   }
@@ -100,12 +99,12 @@ EMGMResponse CDataConnection::establishDataConnection(CFunctionBlock *paDstFB, T
     CIEC_ANY *paDstDataPoint){
   EMGMResponse retVal = EMGMResponse::InvalidOperation;
 
-  if(m_poValue) {
-    if (m_poValue->getDataTypeID() == CIEC_ANY::e_ANY) {
+  if(mValue) {
+    if (mValue->getDataTypeID() == CIEC_ANY::e_ANY) {
       handleAnySrcPortConnection(*paDstDataPoint);
       retVal = EMGMResponse::Ready;
     } else {
-      if (canBeConnected(m_poValue, paDstDataPoint)) {
+      if (canBeConnected(mValue, paDstDataPoint)) {
         retVal = EMGMResponse::Ready;
       }
     }

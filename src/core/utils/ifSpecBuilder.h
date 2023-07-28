@@ -43,11 +43,11 @@ template<class TypeTag, class DirTag>
 class CSpecReference {
   public:
     constexpr CSpecReference() = default;
-    constexpr CSpecReference(int pa_nRef) {
-      if (pa_nRef < 0 || pa_nRef >= maxVal) {
-        ref = maxVal;
+    constexpr CSpecReference(int paRef) {
+      if (paRef < 0) {
+        mRef = scmMaxRefValue;
       } else {
-        ref = (TDataIOID)pa_nRef;
+        mRef = static_cast<TDataIOID>(paRef);
       }
     }
 
@@ -56,7 +56,7 @@ class CSpecReference {
      * @return true if valid
      */
     constexpr bool isValid() const {
-      return ref != maxVal;
+      return mRef != scmMaxRefValue;
     }
 
     /**
@@ -64,13 +64,13 @@ class CSpecReference {
      * @return port index
      */
     constexpr auto operator*() const {
-      return ref;
+      return mRef;
     }
 
   private:
-    static constexpr auto maxVal = std::numeric_limits<TDataIOID>::max();
+    static constexpr auto scmMaxRefValue = std::numeric_limits<TDataIOID>::max();
 
-    TDataIOID ref = maxVal;
+    TDataIOID mRef = scmMaxRefValue;
 };
 
 /**
@@ -87,15 +87,15 @@ class CSpecReferenceRange {
   public:
     using TCSpecReference = CSpecReference<TypeTag, DirTag>;
 
-    TCSpecReference m_oFirst;   ///< first port reference
-    TCSpecReference m_oLast;    ///< last port reference
+    TCSpecReference mFirst;   ///< first port reference
+    TCSpecReference mLast;    ///< last port reference
 
     constexpr CSpecReferenceRange() = default;
-    constexpr CSpecReferenceRange(TCSpecReference pa_oFirst, TCSpecReference pa_oLast)
-      : m_oFirst(pa_oFirst), m_oLast(pa_oLast)
+    constexpr CSpecReferenceRange(TCSpecReference paFirst, TCSpecReference paLast)
+      : mFirst(paFirst), mLast(paLast)
     {}
-    constexpr CSpecReferenceRange(std::pair<int, int> pa_oRangePair)
-      : CSpecReferenceRange(std::get<0>(pa_oRangePair), std::get<1>(pa_oRangePair))
+    constexpr CSpecReferenceRange(std::pair<int, int> paRangePair)
+      : CSpecReferenceRange(std::get<0>(paRangePair), std::get<1>(paRangePair))
     {}
 
     /**
@@ -103,9 +103,9 @@ class CSpecReferenceRange {
      * @param offset offset within the range
      * @return reference to one port
      */
-    constexpr TCSpecReference operator[](int offset) const {
-      int id = *m_oFirst + offset;
-      return { isValid() && id >= *m_oFirst && id <= *m_oLast ? id : -1 };
+    constexpr TCSpecReference operator[](int paOffset) const {
+      int id = *mFirst + paOffset;
+      return { isValid() && id >= *mFirst && id <= *mLast ? id : -1 };
     }
 
     /**
@@ -113,7 +113,7 @@ class CSpecReferenceRange {
      * @return true if valid
      */
     constexpr bool isValid() const {
-      return m_oFirst.isValid() && m_oLast.isValid();
+      return mFirst.isValid() && mLast.isValid();
     }
 };
 
@@ -124,71 +124,71 @@ class CSpecReferenceRange {
  */
 class CStringIdListSpecBuilder {
   public:
-    CStringIdListSpecBuilder(std::size_t pa_unMaxItems) : m_unMaxItems(pa_unMaxItems)
+    CStringIdListSpecBuilder(std::size_t paMaxItems) : cmMaxItems(paMaxItems)
     {}
 
     /**
      * @brief Sets list to the statically allocated one.
-     * @param pa_aunStaticList statically allocated list
-     * @param pa_nItemsCount number of items in the list
+     * @param paStaticList statically allocated list
+     * @param paItemsCount number of items in the list
      */
-    void setStaticList(const CStringDictionary::TStringId *pa_aunStaticList, std::size_t pa_nItemsCount);
+    void setStaticList(const CStringDictionary::TStringId *paStaticList, std::size_t paItemsCount);
 
     /**
      * @brief Add string from dictionary to list.
-     * @param pa_unString string ID to add
+     * @param paStringId string ID to add
      * @return index of the added string
      */
-    int addString(const CStringDictionary::TStringId pa_unString);
+    int addString(const CStringDictionary::TStringId paStringId);
     /**
      * @brief Add C string to list.
      *
      * The string will be first added to CStringDictionary.
      *
-     * @param pa_sString C string to add
+     * @param paString C string to add
      * @return index of the added string
      */
-    int addString(const char *pa_sString);
+    int addString(const char *paString);
 
     /**
      * @brief Returns the number of added strings.
      * @return number of added strings
      */
     std::size_t getNumStrings() const {
-      return m_aunStaticList ? m_unStaticListSize : m_vDynamicList.size();
+      return cmStaticList ? mStaticListSize : mDynamicList.size();
     }
 
     /**
      * @brief Refurns index of the specified C string.
-     * @param pa_sString string to find
+     * @param paString string to find
      * @return index of the specified string
      */
-    int findString(const char *pa_sString) const;
+    int findString(const char *paString) const;
     /**
      * @brief Refurns index of the specified dictionary string ID.
-     * @param pa_unString string ID to find
+     * @param paStringId string ID to find
      * @return index of the specified string
      */
-    int findString(CStringDictionary::TStringId pa_unString) const;
+    int findString(CStringDictionary::TStringId paStringId) const;
 
     /**
      * @brief Calculates required dynamic data size.
      * @return required dynamic data size
      */
     std::size_t calcStorageSize() const;
-    std::tuple<const CStringDictionary::TStringId*, TForteUInt8> build(CMixedStorage &pa_oStorage) const;
+    std::tuple<const CStringDictionary::TStringId*, TForteUInt8> build(CMixedStorage &paStorage) const;
 
     /**
      * @brief Checks configuration status.
      * @return true if everything's ok
      */
-    bool isGood() const { return getNumStrings() <= m_unMaxItems; }
+    bool isGood() const { return getNumStrings() <= cmMaxItems; }
 
   private:
-    const std::size_t m_unMaxItems;
-    std::vector<CStringDictionary::TStringId> m_vDynamicList;
-    std::size_t m_unStaticListSize = 0;
-    const CStringDictionary::TStringId *m_aunStaticList = nullptr;
+    const std::size_t cmMaxItems;
+    std::vector<CStringDictionary::TStringId> mDynamicList;
+    std::size_t mStaticListSize = 0;
+    const CStringDictionary::TStringId *cmStaticList = nullptr;
 };
 
 /**
@@ -573,7 +573,7 @@ class CWithSpecBuilder : public CWithSpecBuilderBase {
      */
     void bindRange(TCSpecEventReference pa_oEventRef, TCSpecDataReferenceRange pa_oDataRefRange) {
       if (check(pa_oEventRef.isValid() && pa_oDataRefRange.isValid())) {
-        CWithSpecBuilderBase::bindRange(*pa_oEventRef, *pa_oDataRefRange.m_oFirst, *pa_oDataRefRange.m_oLast);
+        CWithSpecBuilderBase::bindRange(*pa_oEventRef, *pa_oDataRefRange.mFirst, *pa_oDataRefRange.mLast);
       }
     }
 };

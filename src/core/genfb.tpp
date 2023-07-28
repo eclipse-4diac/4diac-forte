@@ -24,9 +24,9 @@ CGenFunctionBlock<T>::CGenFunctionBlock(CResource *paSrcRes, const CStringDictio
 
 template<class T>
 CGenFunctionBlock<T>::~CGenFunctionBlock(){
-  if(nullptr != T::m_pstInterfaceSpec){
+  if(nullptr != T::mInterfaceSpec){
     T::freeAllData();  //clean the interface and connections first.
-    T::m_pstInterfaceSpec = nullptr; //this stops the base classes from any wrong clean-up
+    T::mInterfaceSpec = nullptr; //this stops the base classes from any wrong clean-up
   }
 }
 
@@ -95,6 +95,35 @@ void CGenFunctionBlock<T>::generateGenericDataPointArrays(const char * const paP
 
   for(size_t i = 0; i < paNumGenericDataPoints; i++){
     paDataTypeNamesArrayStart[i] = g_nStringIdANY;
+  }
+}
+
+template<class T>
+size_t CGenFunctionBlock<T>::getDataPointSpecSize(const CIEC_ANY &paValue) {
+  CIEC_ANY::EDataTypeID dataTypeId = paValue.getDataTypeID();
+  if(dataTypeId == CIEC_ANY::e_ARRAY) {
+    const CIEC_ARRAY &arrayValue = static_cast<const CIEC_ARRAY&>(paValue);
+    if(arrayValue.size() > 0) {
+      return 3 + getDataPointSpecSize(arrayValue[arrayValue.getLowerBound()]);
+    }
+    return 4;
+  }
+  return 1;
+}
+
+template<class T>
+void CGenFunctionBlock<T>::fillDataPointSpec(const CIEC_ANY &paValue, CStringDictionary::TStringId *&paDataTypeIds) {
+  *(paDataTypeIds++) = paValue.getTypeNameID();
+  CIEC_ANY::EDataTypeID dataTypeId = paValue.getDataTypeID();
+  if(dataTypeId == CIEC_ANY::e_ARRAY) {
+    const CIEC_ARRAY &arrayValue = static_cast<const CIEC_ARRAY&>(paValue);
+    *(paDataTypeIds++) = static_cast<CStringDictionary::TStringId>(arrayValue.getLowerBound());
+    *(paDataTypeIds++) = static_cast<CStringDictionary::TStringId>(arrayValue.getUpperBound());
+    if(arrayValue.size() > 0) {
+      fillDataPointSpec(arrayValue[arrayValue.getLowerBound()], paDataTypeIds);
+    } else {
+      *(paDataTypeIds++) = arrayValue.getElementTypeNameID();
+    }
   }
 }
 

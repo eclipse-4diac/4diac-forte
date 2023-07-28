@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 -2015 AIT, fortiss GmbH
+ * Copyright (c) 2012 - 2023 AIT, fortiss GmbH, Davor Cihlar
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,11 +8,15 @@
  *
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Davor Cihlar - multiple FBs sharing a single Modbus connection
  *******************************************************************************/
 #ifndef MODBUSCOMLAYER_H_
 #define MODBUSCOMLAYER_H_
 
+#include <vector>
 #include <forte_config.h>
+#include "modbusioblock.h"
+#include "modbusenums.h"
 #include "comlayer.h"
 #include <stdint.h>
 
@@ -44,20 +48,27 @@ namespace forte {
           char m_cParity;
           int m_nDataBit;
           int m_nStopBit;
+          EModbusFlowControl m_enFlowControl;
+        };
+        struct SAddrRange {
+          EModbusFunction m_eFunction;
+          unsigned int m_nStartAddress;
+          unsigned int m_nNrAddresses;
         };
         struct SCommonParams {
           unsigned int m_nNrPolls;
           unsigned int m_nNrSends;
           long m_nPollFrequency;
-          unsigned int m_nReadFuncCode;
-          unsigned int m_nSendFuncCode;
           unsigned int m_nSlaveId;
-          unsigned int m_nReadStartAddress[100];
-          unsigned int m_nReadNrAddresses[100];
-          unsigned int m_nSendStartAddress[100];
-          unsigned int m_nSendNrAddresses[100];
+          SAddrRange m_stRead[100];
+          SAddrRange m_stSend[100];
           unsigned int m_nResponseTimeout;
           unsigned int m_nByteTimeout;
+        };
+        struct SConnection {
+          char m_acIdString[256];
+          unsigned int m_nUseCount;
+          CModbusConnection *m_pConnection;
         };
 
         template<typename T>
@@ -68,11 +79,14 @@ namespace forte {
         EComResponse openConnection(char *pa_acLayerParameter) override;
         void closeConnection() override;
 
-        //int processClientParams(char* pa_acLayerParams, char* pa_acIp, unsigned int &pa_nPort, long &pa_nPollFrequency, unsigned int &pa_nFuncCode, unsigned int &pa_nSlaveId, unsigned int *pa_nStartAddress, unsigned int *pa_nNrAddresses);
-        int processClientParams(char* pa_acLayerParams, STcpParams* pa_pTcpParams, SRtuParams* pa_pRtuParams, SCommonParams* pa_pCommonParams);
+        EModbusFunction decodeFunction(const char* pa_acParam, int *strIndex, EModbusFunction pa_eDefaultFunction=eHoldingRegister);
+        int processClientParams(const char* pa_acLayerParams, STcpParams* pa_pTcpParams, SRtuParams* pa_pRtuParams, SCommonParams* pa_pCommonParams, char* pa_acIdString);
         int findNextStartAddress(const char* pa_acString, int pa_nStartIndex);
         int findNextStopAddress(const char* pa_acString, int pa_nStartIndex);
         bool isIp(const char* pa_acIp);
+
+        CModbusConnection* getClientConnection(const char* pa_acIdString);
+        void putConnection(CModbusConnection *pa_pModbusConn);
 
         EComResponse m_eInterruptResp;
 
@@ -80,6 +94,10 @@ namespace forte {
 
         TForteByte m_acRecvBuffer[cg_unIPLayerRecvBufferSize];
         unsigned int m_unBufFillSize;
+
+        CModbusIOBlock m_IOBlock;
+
+        static std::vector<SConnection> sm_lstConnections;
     };
 
   }

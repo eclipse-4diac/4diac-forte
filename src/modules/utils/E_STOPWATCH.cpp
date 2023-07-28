@@ -100,7 +100,7 @@ void FORTE_E_STOPWATCH::executeEvent(TEventID pa_nEIID){
   } while(true);
 }
 
-void FORTE_E_STOPWATCH::readInputData(TEventID pa_nEIID) {
+void FORTE_E_STOPWATCH::readInputData(TEventID) {
 }
 
 void FORTE_E_STOPWATCH::writeOutputData(TEventID pa_nEIID) {

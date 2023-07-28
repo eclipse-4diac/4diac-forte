@@ -52,7 +52,7 @@ namespace forte {
          * @return on success the number of bytes written into the destination array,
          *         -1 on error.
          */
-        static int serializeDataPointArray(TForteByte* pa_pcBytes, unsigned int pa_nStreamSize, TConstIEC_ANYPtr *pa_apoData, unsigned int pa_nDataNum);
+        static int serializeDataPointArray(TForteByte* pa_pcBytes, const size_t pa_nStreamSize, TConstIEC_ANYPtr *pa_apoData, size_t pa_nDataNum);
         /*!\brief Serialize one IEC data point into a byte array
          *
          * @param pa_pcBytes destination array for the serialization
@@ -84,7 +84,7 @@ namespace forte {
          * @param pa_nDataNum length of the data point array
          * @return true on success
          */
-        static bool deserializeDataPointArray(const TForteByte* pa_pcBytes, unsigned int pa_nStreamSize, TIEC_ANYPtr *pa_apoData, unsigned int pa_nDataNum);
+        static bool deserializeDataPointArray(const TForteByte* pa_pcBytes, unsigned int pa_nStreamSize, TIEC_ANYPtr *pa_apoData, size_t pa_nDataNum);
 
         /*!\brief Deserialize an array of IEC data points from a byte array
          *
@@ -191,7 +191,7 @@ namespace forte {
         static int deserializeValueStruct(const TForteByte* pa_pcBytes, int pa_nStreamSize, CIEC_STRUCT &pa_roIECData);
         /**@}*/
 
-        static unsigned int getRequiredSerializationSize(const CIEC_ANY &pa_roCIECData);
+        static size_t getRequiredSerializationSize(const CIEC_ANY &pa_roCIECData);
 
         EComResponse openConnection(char *pa_acLayerParameter) override;
         void closeConnection() override;
@@ -205,8 +205,8 @@ namespace forte {
         TForteUInt32 mDeserBufSize;
         unsigned int mDeserBufPos;
 
-        TForteByte mDIPos;
-        TForteByte mDOPos;
+        TPortId mDIPos;
+        TPortId mDOPos;
     };
 
   }

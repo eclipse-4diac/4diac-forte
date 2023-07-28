@@ -71,7 +71,7 @@ size_t convertFromOPCUAToIECSpecific<CIEC_TIME_OF_DAY, UA_DateTime>(const void*,
 
 template<>
 size_t convertFromIECToOPCUASpecific<CIEC_STRING, UA_String>(const CIEC_ANY &paSrc, void *paDest) {
-  *static_cast<UA_String*>(paDest) = UA_String_fromChars(static_cast<const CIEC_STRING&>(paSrc).getValue());
+  *static_cast<UA_String*>(paDest) = UA_String_fromChars(static_cast<const CIEC_STRING&>(paSrc).getStorage().c_str());
   return sizeof(UA_String);
 }
 

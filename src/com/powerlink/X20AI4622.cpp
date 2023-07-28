@@ -70,7 +70,7 @@ void FORTE_X20AI4622::executeEvent(TEventID pa_nEIID){
         m_oSync.lock();
         SEplMapping::TEplMappingList::Iterator itEnd = m_oEplMapping.m_lCurrentValues.end();
         SEplMapping::TEplMappingList::Iterator it = m_oEplMapping.m_lCurrentValues.begin();
-        for(int i = 3; i < m_pstInterfaceSpec->m_nNumDOs && it != itEnd; i++, ++it){
+        for(int i = 3; i < mInterfaceSpec->m_nNumDOs && it != itEnd; i++, ++it){
           short ioVal = 0x0000;
           ioVal = *((short*) (it->m_pchCurrentValue));
           *static_cast<CIEC_INT*>(getDO(i)) = ioVal;

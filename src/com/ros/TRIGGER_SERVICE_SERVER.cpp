@@ -81,7 +81,7 @@ void FORTE_TRIGGER_SERVICE_SERVER::executeEvent(TEventID pa_nEIID){
 
 //TODO use or delete first parameter
 bool FORTE_TRIGGER_SERVICE_SERVER::triggerCallback(std_srvs::Trigger::Request &, std_srvs::Trigger::Response &pa_resp){
-  setEventChainExecutor(m_poInvokingExecEnv);
+  setEventChainExecutor(mInvokingExecEnv);
   getExtEvHandler<CROSManager>(*this).startChain(this);
 
   // is a response available

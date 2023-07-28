@@ -57,7 +57,7 @@ const SFBInterfaceSpec FORTE_F_STRING_TO_WSTRING::scm_stFBInterfaceSpec = {
 
 FORTE_F_STRING_TO_WSTRING::FORTE_F_STRING_TO_WSTRING(CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
     CSimpleFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, nullptr),
-    var_IN(CIEC_STRING("")),
+    var_IN(CIEC_STRING("", 0)),
     var_OUT(CIEC_WSTRING("")),
     var_conn_OUT(var_OUT),
     conn_CNF(this, 0),

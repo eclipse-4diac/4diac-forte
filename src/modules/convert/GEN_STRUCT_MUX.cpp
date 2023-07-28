@@ -42,11 +42,11 @@ GEN_STRUCT_MUX::GEN_STRUCT_MUX(const CStringDictionary::TStringId paInstanceName
 }
 
 GEN_STRUCT_MUX::~GEN_STRUCT_MUX(){
-  if(nullptr!= m_pstInterfaceSpec){
-    delete[](m_pstInterfaceSpec->m_anEIWith);
-    delete[](m_pstInterfaceSpec->m_aunDINames);
-    delete[](m_pstInterfaceSpec->m_aunDIDataTypeNames);
-    delete[](m_pstInterfaceSpec->m_aunDODataTypeNames);
+  if(nullptr!= mInterfaceSpec){
+    delete[](mInterfaceSpec->m_anEIWith);
+    delete[](mInterfaceSpec->m_aunDINames);
+    delete[](mInterfaceSpec->m_aunDIDataTypeNames);
+    delete[](mInterfaceSpec->m_aunDODataTypeNames);
   }
 }
 
@@ -62,7 +62,7 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
       CIEC_STRUCT *structInstance = static_cast<CIEC_STRUCT*>(data);
 
       size_t structSize = structInstance->getStructSize();
-      if(structSize != 0 && structSize < cg_unInvalidPortId) { //the structure size must be non zero and less than cg_unInvalidPortId (maximum number of data input)
+      if(structSize != 0 && structSize < cgInvalidPortId) { //the structure size must be non zero and less than cgInvalidPortId (maximum number of data input)
         TDataIOID *eiWith = new TDataIOID[structSize + 1];
         CStringDictionary::TStringId *diDataTypeNames = new CStringDictionary::TStringId[calcStructTypeNameSize(*structInstance)];
         CStringDictionary::TStringId *diNames = new CStringDictionary::TStringId[structSize];
@@ -84,23 +84,17 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
         paInterfaceSpec.m_aunDODataTypeNames = doDataTypeNames;
         doDataTypeNames[0] = structTypeNameId;
 
-        for(size_t i = 0, typeNameIndex = 0; i < paInterfaceSpec.m_nNumDIs; i++, typeNameIndex++) {
+        for(size_t i = 0; i < paInterfaceSpec.m_nNumDIs; i++) {
           CIEC_ANY &member = *structInstance->getMember(i);
           eiWith[i] = i;
           diNames[i] = structInstance->elementNames()[i];
-          diDataTypeNames[typeNameIndex] = member.getTypeNameID();
-          if(member.getDataTypeID() == CIEC_ANY::e_ARRAY){
-            CIEC_ARRAY &array = static_cast<CIEC_ARRAY&>(member);
-            diDataTypeNames[typeNameIndex + 1] = static_cast<CStringDictionary::TStringId>(array.size());
-            diDataTypeNames[typeNameIndex + 2] = array.getElementTypeNameID();
-            typeNameIndex += 2;
-          }
+          fillDataPointSpec(member, diDataTypeNames);
         }
         eiWith[paInterfaceSpec.m_nNumDIs] = scmWithListDelimiter;
         retval = true;
       } else {
         DEVLOG_ERROR("[GEN_STRUCT_MUX]: The structure %s has a size is not within range > 0 and < %u\n",
-                     CStringDictionary::getInstance().get(structTypeNameId), cg_unInvalidPortId);
+                     CStringDictionary::getInstance().get(structTypeNameId), cgInvalidPortId);
       }
     } else {
       DEVLOG_ERROR("[GEN_STRUCT_MUX]: data type is not a structure: %s\n", CStringDictionary::getInstance().get(structTypeNameId));
@@ -128,13 +122,10 @@ CStringDictionary::TStringId GEN_STRUCT_MUX::getStructNameId(const char *paConfi
 
 size_t GEN_STRUCT_MUX::calcStructTypeNameSize(CIEC_STRUCT &paStruct){
   size_t structSize = paStruct.getStructSize();
-  size_t numArrayMembers = 0;
+  size_t result = 0;
   for(size_t i = 0; i < structSize; i++) {
-    if(paStruct.getMember(i)->getDataTypeID() == CIEC_ANY::e_ARRAY){
-      numArrayMembers++;
-    }
+    result += getDataPointSpecSize(*paStruct.getMember(i));
   }
-
-  return structSize + numArrayMembers * 2; //arrays need to additional entries
+  return result;
 }
 

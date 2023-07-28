@@ -42,8 +42,17 @@ public:
 
     CIEC_ANY_BIT_VARIANT(const CIEC_ANY_BIT_VARIANT &paVal) : CIEC_ANY_BIT(), variant(paVal) {}
 
+    CIEC_ANY_BIT_VARIANT(const CIEC_ANY_BIT &paVal) {
+      setValue(paVal.unwrap());
+    }
+
     CIEC_ANY_BIT_VARIANT &operator=(const CIEC_ANY_BIT_VARIANT &paOther) {
       variant::operator=(paOther);
+      return *this;
+    }
+
+    CIEC_ANY_BIT_VARIANT &operator=(const CIEC_ANY_BIT &paOther) {
+      setValue(paOther.unwrap());
       return *this;
     }
 
@@ -68,6 +77,8 @@ public:
 
 static_assert(std::is_copy_constructible_v<CIEC_ANY_BIT_VARIANT>);
 static_assert(std::is_move_constructible_v<CIEC_ANY_BIT_VARIANT>);
+static_assert(std::is_constructible_v<CIEC_ANY_BIT_VARIANT, const CIEC_ANY_BIT &>);
 static_assert(std::is_copy_assignable_v<CIEC_ANY_BIT_VARIANT>);
+static_assert(std::is_assignable_v<CIEC_ANY_BIT_VARIANT, const CIEC_ANY_BIT &>);
 static_assert(std::is_destructible_v<CIEC_ANY_BIT_VARIANT>);
 

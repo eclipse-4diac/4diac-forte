@@ -33,7 +33,7 @@ namespace forte {
     EComResponse CRawDataComLayer::sendData( void *paData, unsigned int){
       TConstIEC_ANYPtr *apoSDs = static_cast<TConstIEC_ANYPtr *>(paData);
       const CIEC_STRING &val(static_cast<const CIEC_STRING&>(*apoSDs[0]));
-      m_poBottomLayer->sendData((void*)val.getValue(), val.length());
+      m_poBottomLayer->sendData((void*)val.getStorage().c_str(), val.length());
       return e_ProcessDataOk;
     }
 

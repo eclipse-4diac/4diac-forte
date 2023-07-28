@@ -189,7 +189,7 @@ bool CIEC_ANY_ELEMENTARY_VARIANT::setDefaultValue(CIEC_ANY::EDataTypeID paDataTy
       operator=(CIEC_LREAL(0.0));
       return true;
     case e_STRING:
-      operator=(CIEC_STRING(""));
+      operator=(CIEC_STRING("", 0));
       return true;
     case e_WSTRING:
       operator=(CIEC_WSTRING(""));
@@ -298,7 +298,16 @@ int CIEC_ANY_ELEMENTARY_VARIANT::compare(const CIEC_ANY_ELEMENTARY_VARIANT &paVa
       using U = std::decay_t<decltype(other)>;
       using commonType = std::conditional_t<std::is_same_v<T, U>, T, typename forte::core::mpl::get_castable_type<T, U>::type>;
       if constexpr (std::is_base_of_v<CIEC_ANY_STRING, commonType>) {
-        return strcmp(static_cast<commonType>(value).getValue(), static_cast<commonType>(other).getValue());
+        if constexpr (std::is_same_v<T,U> && std::is_same_v<T, CIEC_STRING>) {
+          return static_cast<CIEC_STRING>(value).compare(static_cast<CIEC_STRING>(other));
+        } else if constexpr (std::is_same_v<T,U> && std::is_same_v<T, CIEC_WSTRING>) {
+          return strcmp(static_cast<commonType>(value).getValue(), static_cast<commonType>(other).getValue());
+        } else {
+          DEVLOG_ERROR("Comparing incompatible types %s and %s\n",
+                     CStringDictionary::getInstance().get(value.getTypeNameID()),
+                     CStringDictionary::getInstance().get(other.getTypeNameID()));
+          return -1;
+        }
       } else if constexpr (!std::is_same_v<commonType, forte::core::mpl::NullType>) {
         return static_cast<int>(static_cast<typename commonType::TValueType>(static_cast<commonType >(value)) -
                                 static_cast<typename commonType::TValueType>(static_cast<commonType >(other)));

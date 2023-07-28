@@ -11,12 +11,14 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
+#include <string>
+
 #ifndef SRC_STDFBLIB_ITA_IBOOTFILECALLBACK_H_
 #define SRC_STDFBLIB_ITA_IBOOTFILECALLBACK_H_
 
 class IBootFileCallback{
   public: 
-    virtual bool executeCommand(char *pa_acDest, char *pa_acCommand) = 0;
+    virtual bool executeCommand(const char *const pa_acDest, char *pa_acCommand) = 0;
 };
 
 #endif /* SRC_STDFBLIB_ITA_IBOOTFILECALLBACK_H_ */

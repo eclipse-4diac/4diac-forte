@@ -1,6 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
- *               2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2005, 2023 Profactor GmbH, ACIN
+ *                          Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -13,6 +15,7 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians - make TForteUInt32 constructor explicit,
  *      removed built-in type operator=, added castable CIEC types operator=
+ *    Martin Jobst - add user-defined literal
  *******************************************************************************/
 #ifndef _FORTE_UDINT_H_
 #define _FORTE_UDINT_H_
@@ -55,7 +58,7 @@ class CIEC_UDINT final : public CIEC_ANY_INT{
       setValueSimple(paValue);
     }
 
-    explicit CIEC_UDINT(TForteUInt32 paValue){
+    explicit CIEC_UDINT(const TValueType paValue) {
       setTUINT32(paValue);
     }
 
@@ -89,5 +92,9 @@ class CIEC_UDINT final : public CIEC_ANY_INT{
       return CIEC_ANY::e_UDINT;
     }
 };
+
+inline CIEC_UDINT operator ""_UDINT(unsigned long long int paValue) {
+  return CIEC_UDINT(static_cast<CIEC_UDINT::TValueType>(paValue));
+}
 
 #endif /*_FORTE_UDINT_H_*/

@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2008 - 2013 nxtControl GmbH, ACIN, fortiss GmbH
- *               2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2008, 2023 nxtControl GmbH, ACIN, fortiss GmbH
+ *                          Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,7 +14,8 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik Merkumians - make TForteUInt64 constructor explicit,
  *        removed built-in type operator=, removed operator++
-  *******************************************************************************/
+ *    Martin Jobst - add user-defined literal
+ *******************************************************************************/
 #ifndef _FORTE_DATE_AND_TIME_H_
 #define _FORTE_DATE_AND_TIME_H_
 
@@ -32,7 +34,7 @@ class CIEC_DATE_AND_TIME final : public CIEC_ANY_DATE {
       setValueSimple(paValue);
     }
 
-    explicit CIEC_DATE_AND_TIME(TForteUInt64 paValue) {
+    explicit CIEC_DATE_AND_TIME(const TValueType paValue) {
       setTUINT64(paValue);
     }
 
@@ -98,6 +100,10 @@ inline bool operator==(const CIEC_DATE_AND_TIME left, const CIEC_DATE_AND_TIME &
 
 inline bool operator!=(const CIEC_DATE_AND_TIME left, const CIEC_DATE_AND_TIME &right) {
   return !(left == right);
+}
+
+inline CIEC_DATE_AND_TIME operator ""_DATE_AND_TIME(unsigned long long int paValue) {
+  return CIEC_DATE_AND_TIME(static_cast<CIEC_DATE_AND_TIME::TValueType>(paValue));
 }
 
 #endif /*_FORTE_DATE_AND_TIME_H_*/

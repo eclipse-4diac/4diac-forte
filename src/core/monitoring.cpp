@@ -1,3 +1,4 @@
+
 /*******************************************************************************
  * Copyright (c) 2015, 2018, 2022 fortiss GmbH, Johannes Kepler University
  *  Primetals Technologies Austria GmbH
@@ -194,7 +195,7 @@ EMGMResponse CMonitoringHandler::triggerEvent(forte::core::TNameIdentifier &paNa
     else{
       eventId = fB->getEOID(portName);
       if(cg_nInvalidEventID != eventId){
-        fB->m_poInvokingExecEnv = mResource.getResourceEventExecution();
+        fB->mInvokingExecEnv = mResource.getResourceEventExecution();
         fB->sendOutputEvent(eventId);
         mResource.getResourceEventExecution()->resumeSelfSuspend();
         eRetVal = EMGMResponse::Ready;
@@ -334,7 +335,7 @@ void CMonitoringHandler::readResourceWatches(CIEC_STRING &paResponse){
 
     for(TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin(); itRunner != mFBMonitoringList.end(); ++itRunner){
       paResponse.append("<FB name=\"");
-      paResponse.append(itRunner->mFullFBName.getValue());
+      paResponse.append(itRunner->mFullFBName);
       paResponse.append("\">");
 
       //add the data watches
@@ -408,8 +409,10 @@ size_t CMonitoringHandler::getExtraSizeForEscapedChars(const CIEC_ANY& paDataVal
     case CIEC_ANY::e_ANY:
       retVal = getExtraSizeForEscapedChars(paDataValue.unwrap());
       break;
-    case CIEC_ANY::e_WSTRING:
     case CIEC_ANY::e_STRING:
+      retVal = forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<const CIEC_STRING &>(paDataValue).getStorage().c_str()) + 10; // for opening and closing quotes or apos
+      break;
+    case CIEC_ANY::e_WSTRING:
       retVal = forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<const CIEC_WSTRING&>(paDataValue).getValue()) + 10; //for opening and closing quotes or apos
       break;
     case CIEC_ANY::e_CHAR:
@@ -431,13 +434,16 @@ size_t CMonitoringHandler::getExtraSizeForEscapedChars(const CIEC_ANY& paDataVal
   return retVal;
 }
 
-size_t CMonitoringHandler::getExtraSizeForEscapedCharsArray(const CIEC_ARRAY &paDataValue)
-{
+size_t CMonitoringHandler::getExtraSizeForEscapedCharsArray(const CIEC_ARRAY &paDataValue) {
   size_t retVal = 0;
 
   switch(paDataValue[0].getDataTypeID()){
-    case CIEC_ANY::e_WSTRING:
     case CIEC_ANY::e_STRING:
+    for(size_t i = 0; i < paDataValue.size(); i++) {
+        retVal += forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<const CIEC_STRING&>(paDataValue[static_cast<TForteUInt16>(i)]).getStorage().c_str()) + 10; //for opening and closing quotes or apos
+      }
+      break;
+    case CIEC_ANY::e_WSTRING:
       for(size_t i = 0; i < paDataValue.size(); i++) {
         retVal += forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<const CIEC_WSTRING&>(paDataValue[static_cast<TForteUInt16>(i)]).getValue()) + 10; //for opening and closing quotes or apos
       }
@@ -460,8 +466,10 @@ size_t CMonitoringHandler::getExtraSizeForEscapedCharsStruct(const CIEC_STRUCT& 
   for(size_t i = 0; i < paDataValue.getStructSize(); i++) {
     const CIEC_ANY *member = paDataValue.getMember(i);
     switch(member->getDataTypeID()){
-      case CIEC_ANY::e_WSTRING:
       case CIEC_ANY::e_STRING:
+        retVal += forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<const CIEC_STRING *>(member)->getStorage().c_str()) + 10; // for opening and closing quotes or apos
+        break;
+      case CIEC_ANY::e_WSTRING:
         retVal += forte::core::util::getExtraSizeForXMLEscapedChars(static_cast<const CIEC_WSTRING*>(member)->getValue()) + 10; //for opening and closing quotes or apos
         break;
       case CIEC_ANY::e_ARRAY:

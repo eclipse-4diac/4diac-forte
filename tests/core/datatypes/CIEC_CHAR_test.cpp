@@ -25,6 +25,18 @@ BOOST_AUTO_TEST_CASE(Type_test)
   BOOST_CHECK_EQUAL(sizeof(test.operator TForteChar()), sizeof(TForteChar));
 }
 
+BOOST_AUTO_TEST_CASE(Char_literal)
+{
+  CIEC_CHAR test1 = 'a'_CHAR;
+  BOOST_TEST(static_cast<CIEC_CHAR::TValueType>(test1) == 'a');
+
+  CIEC_CHAR test2 = '\0'_CHAR;
+  BOOST_TEST(static_cast<CIEC_CHAR::TValueType>(test2) == '\0');
+
+  CIEC_CHAR test3 = 0x30_CHAR;
+  BOOST_TEST(static_cast<CIEC_CHAR::TValueType>(test3) == 0x30);
+}
+
 BOOST_AUTO_TEST_CASE(Assignment_test)
 {
   CIEC_CHAR test1;

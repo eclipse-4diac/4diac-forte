@@ -80,10 +80,10 @@ void FORTE_E_REND::executeEvent(TEventID pa_nEIID){
   } while(true);
 }
 
-void FORTE_E_REND::readInputData(TEventID pa_nEIID) {
+void FORTE_E_REND::readInputData(TEventID) {
 }
 
-void FORTE_E_REND::writeOutputData(TEventID pa_nEIID) {
+void FORTE_E_REND::writeOutputData(TEventID) {
 }
 
 CIEC_ANY *FORTE_E_REND::getDI(size_t) {

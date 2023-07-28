@@ -89,7 +89,7 @@ int CIEC_STRUCT::initializeFromString(const char *paValue) {
       findNextNonBlankSpace(&pcRunner);
       CIEC_ANY *member = getMemberNamed(elementNameId);
       if(nullptr != member) {
-        int valueLength = member->fromString(pcRunner);
+        const int valueLength = member->fromString(pcRunner);
         if (0 <= valueLength) {
           pcRunner += valueLength;
           nRetVal = static_cast<int>(pcRunner - paValue);

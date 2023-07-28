@@ -37,6 +37,9 @@ void listHelp(){
 #ifdef FORTE_COM_HTTP
   printf("%-20s Set the listening port for the HTTP server\n", "  -Hp <port>");
 #endif //FORTE_COM_HTTP
+#ifdef FORTE_TRACE_CTF
+  printf("%-20s Set the output directory for TRACE_CTF\n", "  -t <directory>");
+#endif //FORTE_TRACE_CTF
 }
 
 /*!\brief Parses the command line arguments passed to the main function
@@ -81,6 +84,12 @@ const char *parseCommandLineArguments(int argc, char *arg[]){
             }
             break;
 #endif //FORTE_COM_HTTP
+#ifdef FORTE_TRACE_CTF
+          case 't':
+            void barectfSetup(std::string directory);
+            barectfSetup(arg[i + 1] ?: "");
+            break;
+#endif //FORTE_TRACE_CTF
           default: //! Unknown parameter or -h -> Lists the help for FORTE
             return "";
         }

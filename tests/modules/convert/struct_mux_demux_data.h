@@ -17,6 +17,7 @@
 
 #include "forte_int.h"
 #include "forte_string.h"
+#include "forte_array_fixed.h"
 
 
 class CIEC_Struct_Muxer_Test_Struct_1 : public CIEC_STRUCT {
@@ -161,6 +162,47 @@ class CIEC_Struct_Muxer_Test_Struct_4 : public CIEC_STRUCT {
     }
   private:
     static const CStringDictionary::TStringId scm_unElementNames[];
+};
+
+class CIEC_Struct_Muxer_Test_Struct_5 : public CIEC_STRUCT {
+DECLARE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_5)
+
+public:
+  CIEC_INT Var1;
+  CIEC_ARRAY_FIXED<CIEC_INT, 0, 3> Var2;
+  CIEC_ARRAY_FIXED<CIEC_ARRAY_FIXED<CIEC_INT, 0, 3>, 0, 1> Var3;
+
+  CIEC_Struct_Muxer_Test_Struct_5() = default;
+
+  size_t getStructSize() const override {
+    return 3;
+  }
+
+  const CStringDictionary::TStringId* elementNames() const override {
+    return scm_unElementNames;
+  }
+
+  CStringDictionary::TStringId getStructTypeNameID() const override;
+
+  CIEC_ANY *getMember(size_t paMemberIndex) override {
+    switch(paMemberIndex) {
+      case 0: return &Var1;
+      case 1: return &Var2;
+      case 2: return &Var3;
+    }
+    return nullptr;
+  }
+
+  const CIEC_ANY *getMember(size_t paMemberIndex) const override {
+    switch(paMemberIndex) {
+      case 0: return &Var1;
+      case 1: return &Var2;
+      case 2: return &Var3;
+    }
+    return nullptr;
+  }
+private:
+  static const CStringDictionary::TStringId scm_unElementNames[];
 };
 
 

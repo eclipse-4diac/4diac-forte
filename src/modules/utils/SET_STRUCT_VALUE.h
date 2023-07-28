@@ -79,15 +79,15 @@ public:
   CDataConnection **getDIConUnchecked(TPortId) override;
   CDataConnection *getDOConUnchecked(TPortId) override;
   
-  void evt_REQ(const CIEC_ANY_VARIANT &pa_in_struct, const CIEC_STRING &pa_member, const CIEC_ANY_VARIANT &pa_element_value, CIEC_ANY_VARIANT &pa_out_struct) {
+  void evt_REQ(const CIEC_ANY &pa_in_struct, const CIEC_STRING &pa_member, const CIEC_ANY &pa_element_value, CIEC_ANY &pa_out_struct) {
     var_in_struct = pa_in_struct;
     var_member = pa_member;
     var_element_value = pa_element_value;
     receiveInputEvent(scm_nEventREQID, nullptr);
-    pa_out_struct = var_out_struct;
+    pa_out_struct.setValue(var_out_struct.unwrap());
   }
   
-  void operator()(const CIEC_ANY_VARIANT &pa_in_struct, const CIEC_STRING &pa_member, const CIEC_ANY_VARIANT &pa_element_value, CIEC_ANY_VARIANT &pa_out_struct) {
+  void operator()(const CIEC_ANY &pa_in_struct, const CIEC_STRING &pa_member, const CIEC_ANY &pa_element_value, CIEC_ANY &pa_out_struct) {
     evt_REQ(pa_in_struct, pa_member, pa_element_value, pa_out_struct);
   }
   

@@ -14,6 +14,8 @@
 #include "forte_boost_output_support.h"
 #include "../../../src/core/datatypes/forte_any_string_variant.h"
 
+using namespace std::string_literals;
+
 BOOST_AUTO_TEST_SUITE(CIEC_ANY_STRING_VARIANT_function_test)
 
     BOOST_AUTO_TEST_CASE(Type_test) {
@@ -22,25 +24,47 @@ BOOST_AUTO_TEST_SUITE(CIEC_ANY_STRING_VARIANT_function_test)
       BOOST_CHECK_EQUAL(test.getDataTypeID(), CIEC_ANY::e_ANY);
     }
 
+    BOOST_AUTO_TEST_CASE(Initialization_test) {
+      // assign value
+      CIEC_ANY_STRING_VARIANT test1 = "abc"_STRING;
+      BOOST_TEST("abc"s == std::get<CIEC_STRING>(test1));
+
+      // assign generic value
+      CIEC_STRING test3 = "abc"_STRING;
+      CIEC_ANY_STRING &test4 = test3;
+      CIEC_ANY_STRING_VARIANT test2 = test4;
+      BOOST_TEST("abc"s == std::get<CIEC_STRING>(test2));
+
+      // assign each other
+      CIEC_ANY_STRING_VARIANT test5 = test1;
+      BOOST_TEST("abc"s == std::get<CIEC_STRING>(test5));
+    }
+
     BOOST_AUTO_TEST_CASE(Assignment_test) {
       CIEC_ANY_STRING_VARIANT test1;
       CIEC_ANY_STRING_VARIANT test2;
 
-      // initial value must be 0
-      BOOST_TEST('\0' == std::get<CIEC_STRING>(test1).getValue()[0]);
-      BOOST_TEST('\0' == std::get<CIEC_STRING>(test2).getValue()[0]);
+      // initial value must be empty string
+      BOOST_TEST(std::get<CIEC_STRING>(test1).empty());
+      BOOST_TEST(std::get<CIEC_STRING>(test2).empty());
 
       // assign value
-      test1 = CIEC_STRING("abc");
-      BOOST_CHECK_EQUAL(std::strcmp("abc", std::get<CIEC_STRING>(test1).getValue()), 0);
+      test1 = "abc"_STRING;
+      BOOST_TEST("abc"s == std::get<CIEC_STRING>(test1));
+
+      // assign generic value
+      CIEC_STRING test3 = "abc"_STRING;
+      CIEC_ANY_STRING &test4 = test3;
+      test2 = test4;
+      BOOST_TEST("abc"s == std::get<CIEC_STRING>(test2));
 
       // assign each other
       test2.setValue(test1);
-      BOOST_CHECK_EQUAL(std::strcmp("abc", std::get<CIEC_STRING>(test2).getValue()), 0);
+      BOOST_TEST("abc"s == std::get<CIEC_STRING>(test2));
 
       // assign dynamic value
       test2.setValue(CIEC_WSTRING("abc"));
-      BOOST_CHECK_EQUAL(std::strcmp("abc", std::get<CIEC_WSTRING>(test2).getValue()), 0);
+      BOOST_TEST(std::strcmp("abc", std::get<CIEC_WSTRING>(test2).getValue()) == 0);
     }
 
     void checkStringConversion(CIEC_ANY_STRING_VARIANT &paValue, const char *paString, CIEC_ANY::EDataTypeID paDataTypeId) {
@@ -63,7 +87,7 @@ BOOST_AUTO_TEST_SUITE(CIEC_ANY_STRING_VARIANT_function_test)
       CIEC_ANY_STRING_VARIANT test2;
 
       BOOST_TEST(test1.equals(test2));
-      test1 = CIEC_STRING("abc");
+      test1 = "abc"_STRING;
       BOOST_TEST(!test1.equals(test2));
       test2.setValue(test1);
       BOOST_TEST(test1.equals(test2));

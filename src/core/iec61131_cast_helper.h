@@ -84,12 +84,23 @@ namespace forte {
           NullType() = delete;
       };
 
-      template<typename CommonSubtype, typename T, typename U> struct are_of_subtype{
-          enum {
-            value = (std::is_base_of<CommonSubtype, T>::value && std::is_base_of<CommonSubtype, U>::value)
-          };
-          are_of_subtype() = delete;
+      template<typename CommonSubtype, typename T, typename U>
+      struct are_of_subtype {
+        enum {
+          value = (std::is_base_of<CommonSubtype, T>::value && std::is_base_of<CommonSubtype, U>::value)
+        };
+        are_of_subtype() = delete;
       };
+
+      /** @brief Are T and U subtyped of CommonSubType?
+       *
+       * @tparam CommonSubType the supertype to be checked against
+       * @tparam T type 1
+       * @tparam U type 2
+       * @return NullType if not known, default CIEC class otherwise
+       */
+      template<typename CommonSubtype, typename T, typename U>
+      constexpr auto are_of_subtype_v = are_of_subtype<CommonSubtype, T, U>::value;
 
       /* For PARTIAL classes, which derive from their base CIEC class, which can be used to identify the CIEC class*/
       template<typename T> struct get_equivalent_CIEC_class {
@@ -97,23 +108,31 @@ namespace forte {
         get_equivalent_CIEC_class() = delete;
       };
 
+      /** @brief What is the CIEC class of a CIEC class or specialist subtype?
+       *
+       * @param T type to be checked
+       * @return NullType if not known, default CIEC class otherwise
+       */
+      template <typename T>
+      using get_equivalent_CIEC_class_t = typename get_equivalent_CIEC_class<T>::type;
+
       /* invalid implicit casts */
-      template<typename T, typename U> struct implicit_cast{
-          typedef NullType type;
-          implicit_cast() = delete;
+      template<typename T, typename U> struct implicit_cast {
+        typedef NullType type;
+        implicit_cast() = delete;
       };
 
       /* Self-casts */
       template <typename T>
       struct implicit_cast<T, T> {
-          typedef T type;
-          implicit_cast() = delete;
+        typedef T type;
+        implicit_cast() = delete;
       };
 
       /** @brief is T implicitly castable to U?
        * 
-       * @param T type to be cast
-       * @param U goal type of the cast
+       * @tparam T type to be cast
+       * @tparam U goal type of the cast
        * @return NullType if not castable, type U if castable
       */
       template <typename T, typename U>
@@ -405,17 +424,30 @@ namespace forte {
       ALLOW_EXPLICIT_CAST(CIEC_WSTRING, CIEC_STRING)
 
       template<typename T, typename U> struct get_castable_type{
-          typedef typename std::conditional<std::is_same<NullType, typename implicit_cast<T, U>::type>::value, typename implicit_cast<U, T>::type, typename implicit_cast<T, U>::type>::type type;
-          get_castable_type() = delete;
+        typedef typename std::conditional<std::is_same<NullType, typename implicit_cast<T, U>::type>::value, typename implicit_cast<U, T>::type, typename implicit_cast<T, U>::type>::type type;
+        get_castable_type() = delete;
       };
 
+      /** @brief Return the implicitly castable type of T and U
+       * @tparam T type 1
+       * @tparam U type 2
+       * @return A common type or NullType if none exists
+       */
       template <class T, class U>
       using get_castable_type_t = typename get_castable_type<T, U>::type;
 
-      template<typename T, typename U> struct implicit_or_explicit_cast{
-          typedef typename std::conditional<std::is_same<NullType, typename explicit_cast<T, U>::type>::value, typename implicit_cast<T, U>::type, typename explicit_cast<T, U>::type>::type type;
-          implicit_or_explicit_cast() = delete;
+      template<typename T, typename U> struct implicit_or_explicit_cast {
+        typedef typename std::conditional<std::is_same<NullType, typename explicit_cast<T, U>::type>::value, typename implicit_cast<T, U>::type, typename explicit_cast<T, U>::type>::type type;
+        implicit_or_explicit_cast() = delete;
       };
+
+      /** @brief Return the implicitly or explicitly castable type of T and U
+       * @tparam T type 1
+       * @tparam U type 2
+       * @return A common type or NullType if none exists
+      */
+      template<typename T, typename U>
+      using implicit_or_explicit_cast_t = typename implicit_or_explicit_cast<T, U>::type;
 
       template <typename T, typename U>
       struct get_div_operator_result_type {

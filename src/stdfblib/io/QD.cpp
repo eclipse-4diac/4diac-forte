@@ -37,7 +37,8 @@ const CStringDictionary::TStringId FORTE_QD::scm_anEventOutputNames[] = {g_nStri
 
 const SFBInterfaceSpec FORTE_QD::scm_stFBInterfaceSpec = {
   2,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  3,  scm_anDataInputNames, scm_anDataInputTypeIds,
+  2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,
+  3,  scm_anDataInputNames, scm_anDataInputTypeIds,
   2,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
   0, nullptr
 };

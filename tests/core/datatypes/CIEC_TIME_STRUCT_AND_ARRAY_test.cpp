@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_SUITE (CIEC_TIME_STRUCT_AND_ARRAY_function_test)
 //STRUCT TESTS
 void setDataTestStruct(CIEC_TestStruct &paStruct, bool paVal1, int paVal2, CIEC_TIME::TValueType paVal3){
   (* static_cast<CIEC_BOOL *>(paStruct.getMemberNamed(g_nStringIdVal1))) = CIEC_BOOL(paVal1);
-  (* static_cast<CIEC_INT *>(paStruct.getMemberNamed(g_nStringIdVal2))) = CIEC_INT(paVal2);
+  (* static_cast<CIEC_INT *>(paStruct.getMemberNamed(g_nStringIdVal2))) = CIEC_INT(static_cast<TForteInt16>(paVal2));
   (* static_cast<CIEC_TIME *>(paStruct.getMemberNamed(g_nStringIdVal3))) = CIEC_TIME(paVal3);
 }
 

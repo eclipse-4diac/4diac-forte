@@ -33,7 +33,7 @@ struct F_TRUNC_TestFixture : public CFBTestFixtureBase {
 BOOST_FIXTURE_TEST_SUITE( F_TRUNC_Tests, F_TRUNC_TestFixture)
 
   BOOST_AUTO_TEST_CASE(validTruncationFromRealToInt){
-    mIn_TRUNC = CIEC_REAL(30.45343);
+    mIn_TRUNC = CIEC_REAL(30.45343f);
     /* trigger the inputevent */
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));

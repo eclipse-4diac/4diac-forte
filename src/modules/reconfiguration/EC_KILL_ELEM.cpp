@@ -66,12 +66,10 @@ void FORTE_EC_KILL_ELEM::executeRQST(){
   EMGMResponse resp = m_poDevice.executeMGMCommand(theCommand);
 
   //calculate return value
-  CIEC_STRING retVal(DEV_MGR::getResponseText(resp));
-  CIEC_STRING compareVal(DEV_MGR::getResponseText(EMGMResponse::Ready));
-  QO() = CIEC_BOOL(retVal == compareVal);
-
-  DEVLOG_DEBUG("%s\n", DEV_MGR::getResponseText(resp));
-  STATUS() = CIEC_WSTRING(DEV_MGR::getResponseText(resp));
+  QO() = CIEC_BOOL(resp == EMGMResponse::Ready);
+  const std::string retVal(DEV_MGR::getResponseText(resp));
+  DEVLOG_DEBUG("%s\n", retVal.c_str());
+  STATUS() = CIEC_WSTRING(retVal.c_str());
 }
 
 

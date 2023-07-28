@@ -52,7 +52,7 @@ const SFBInterfaceSpec FORTE_OUT_ANY_CONSOLE::scm_stFBInterfaceSpec = {
 FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
     CFunctionBlock( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId),
     var_QI(CIEC_BOOL(0)),
-    var_LABEL(CIEC_STRING("")),
+    var_LABEL(CIEC_STRING("", 0)),
     var_IN(CIEC_ANY_VARIANT()),
     var_QO(CIEC_BOOL(0)),
     var_conn_QO(var_QO),
@@ -68,7 +68,7 @@ void FORTE_OUT_ANY_CONSOLE::executeEvent(TEventID pa_nEIID) {
     case scm_nEventREQID:
       var_QO = var_QI;
       if (var_QI) {
-        DEVLOG_INFO(" %s = ", var_LABEL.getValue());
+        DEVLOG_INFO(" %s = ", var_LABEL.getStorage().c_str());
         size_t bufferSize = var_IN.getToStringBufferSize();
         std::string buffer(bufferSize, 0);
         var_IN.toString(buffer.data(), buffer.capacity());

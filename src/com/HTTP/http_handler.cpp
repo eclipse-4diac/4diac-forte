@@ -139,7 +139,7 @@ bool CHTTP_Handler::recvClients(const CIPComSocketHandler::TSocketDescriptor paS
   CCriticalRegion criticalRegion(mClientMutex);
   for(CSinglyLinkedList<HTTPClientWaiting*>::Iterator iter = mClientLayers.begin(); iter != mClientLayers.end(); ++iter) {
     if((*iter)->mSocket == paSocket) {
-      if(e_ProcessDataOk == (*iter)->mLayer->recvData(sRecvBuffer, paRecvLength)) {
+      if(e_ProcessDataOk == (*iter)->mLayer->recvData(sRecvBuffer, static_cast<unsigned int>(paRecvLength))) {
         startNewEventChain((*iter)->mLayer->getCommFB());
       }
       removeAndCloseSocket(paSocket);
@@ -236,7 +236,7 @@ void CHTTP_Handler::handlerReceivedWrongPath(const CIPComSocketHandler::TSocketD
   std::string mContentType("text/html"s);
   std::string mReqData;
   CHttpParser::createResponse(toSend, result, mContentType, mReqData);
-  if(toSend.length() != CIPComSocketHandler::sendDataOnTCP(paSocket, toSend.c_str(), toSend.length())) {
+  if(static_cast<int>(toSend.length()) != CIPComSocketHandler::sendDataOnTCP(paSocket, toSend.c_str(), static_cast<unsigned int>(toSend.length()))) {
     DEVLOG_ERROR("[HTTP Handler]: Error sending back the answer %s \n", toSend.c_str());
   }
   removeAndCloseSocket(paSocket);
@@ -245,7 +245,7 @@ void CHTTP_Handler::handlerReceivedWrongPath(const CIPComSocketHandler::TSocketD
 bool CHTTP_Handler::sendClientData(forte::com_infra::CHttpComLayer *paLayer, const std::string &paToSend) {
   CIPComSocketHandler::TSocketDescriptor newSocket = CIPComSocketHandler::openTCPClientConnection(paLayer->getHost().data(), paLayer->getPort());
   if(CIPComSocketHandler::scmInvalidSocketDescriptor != newSocket) {
-    if(paToSend.length() == CIPComSocketHandler::sendDataOnTCP(newSocket, paToSend.c_str(), paToSend.length())) {
+    if(static_cast<int>(paToSend.length()) == CIPComSocketHandler::sendDataOnTCP(newSocket, paToSend.c_str(), static_cast<unsigned int>(paToSend.length()))) {
       CCriticalRegion criticalRegion(mClientMutex);
       HTTPClientWaiting *toAdd = new HTTPClientWaiting();
       toAdd->mLayer = paLayer;
@@ -450,7 +450,7 @@ void CHTTP_Handler::sendServerAnswerHelper(forte::com_infra::CHttpComLayer *paLa
   for(CSinglyLinkedList<HTTPServerWaiting*>::Iterator iter = mServerLayers.begin(); iter != mServerLayers.end(); ++iter) {
     if((*iter)->mLayer == paLayer) {
       CSinglyLinkedList<CIPComSocketHandler::TSocketDescriptor>::Iterator iterSocket = (*iter)->mSockets.begin();
-      if(paAnswer.length() != CIPComSocketHandler::sendDataOnTCP(*iterSocket, paAnswer.c_str(), paAnswer.length())) {
+      if(static_cast<int>(paAnswer.length()) != CIPComSocketHandler::sendDataOnTCP(*iterSocket, paAnswer.c_str(), static_cast<unsigned int>(paAnswer.length()))) {
         DEVLOG_ERROR("[HTTP Handler]: Error sending back the answer %s \n", paAnswer.c_str());
       }
       removeAndCloseSocket(*iterSocket);

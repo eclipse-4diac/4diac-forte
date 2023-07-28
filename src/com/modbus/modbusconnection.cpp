@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 -2014 AIT, fortiss GmbH
+ * Copyright (c) 2012 - 2023 AIT, fortiss GmbH, Davor Cihlar
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,15 +8,16 @@
  *
  * Contributors:
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Davor Cihlar - multiple FBs sharing a single Modbus connection
  *******************************************************************************/
 #include "modbusconnection.h"
 #include "modbuslayer.h"
 #include "../../core/cominfra/basecommfb.h"
 
-CModbusConnection::CModbusConnection(CModbusHandler* pa_modbusHandler) : m_pModbusConn(nullptr), m_pModbusHandler(pa_modbusHandler), m_nComCallbackId(0),
+CModbusConnection::CModbusConnection(CModbusHandler* pa_modbusHandler) : m_pModbusConn(nullptr), m_pModbusHandler(pa_modbusHandler),
   m_bConnected(false), m_paIPAddress(nullptr), m_nPort(0),
-  m_chDevice(nullptr), m_nBaud(0), m_cParity(0), m_nDataBit(0),
-   m_nStopBit(0), m_nResponseTimeout(0), m_nByteTimeout(0){
+  m_chDevice{0}, m_nBaud(0), m_cParity(0), m_nDataBit(0),
+  m_nStopBit(0), m_enFlowControl(eFlowNone), m_nResponseTimeout(0), m_nByteTimeout(0){
 }
     
 CModbusConnection::~CModbusConnection(){
@@ -26,10 +27,8 @@ CModbusConnection::~CModbusConnection(){
 int CModbusConnection::connect(){
   if (m_paIPAddress != nullptr) {
     m_pModbusConn = modbus_new_tcp(m_paIPAddress, m_nPort);
-  } else if (m_chDevice != nullptr) {
-    m_pModbusConn = modbus_new_rtu(m_chDevice, m_nBaud, m_cParity, m_nDataBit, m_nStopBit);
   } else {
-    return -1;
+    m_pModbusConn = modbus_new_rtu(m_chDevice, m_nBaud, m_cParity, m_nDataBit, m_nStopBit);
   }
 
 #if 0
@@ -63,7 +62,7 @@ void CModbusConnection::setPort(unsigned int pa_nPort){
 }
 
 void CModbusConnection::setDevice(const char* pa_chDevice) {
-  m_chDevice = pa_chDevice;
+  strcpy(m_chDevice, pa_chDevice);
 }
 
 void CModbusConnection::setBaud(int pa_nBaud) {
@@ -82,6 +81,10 @@ void CModbusConnection::setStopBit(int pa_nStopBit) {
   m_nStopBit = pa_nStopBit;
 }
 
+void CModbusConnection::setFlowControl(EModbusFlowControl pa_enFlowControl){
+  m_enFlowControl = pa_enFlowControl;
+}
+
 void CModbusConnection::setResponseTimeout(unsigned int pa_nResponseTimeout){
   m_nResponseTimeout = pa_nResponseTimeout;
 }
@@ -90,6 +93,19 @@ void CModbusConnection::setByteTimeout(unsigned int pa_nByteTimeout){
   m_nByteTimeout = pa_nByteTimeout;
 }
 
-void CModbusConnection::setComCallback(forte::com_infra::CModbusComLayer* pa_poModbusLayer){
-  m_nComCallbackId = m_pModbusHandler->addComCallback(pa_poModbusLayer);
+int CModbusConnection::writeData(CModbusIOBlock* pa_pIOBlock, const void* pa_pData, unsigned int pa_nDataSize){
+  unsigned int dataIndex = 0;
+  const CModbusIOBlock::TModbusRangeList &lSends = pa_pIOBlock->getSends();
+  for (auto &it : lSends) {
+    const unsigned int nextDataIndex = dataIndex + it.m_nNrAddresses * CModbusIOBlock::getRegisterSize(it.m_eFunction);
+    if (nextDataIndex > pa_nDataSize) {
+      const unsigned int maxNrAddresses = (pa_nDataSize - dataIndex) / CModbusIOBlock::getRegisterSize(it.m_eFunction);
+      DEVLOG_WARNING("Modbus writing %u instead of %u registers from address %u\n", maxNrAddresses, it.m_nNrAddresses, it.m_nStartAddress);
+      writeDataRange(it.m_eFunction, it.m_nStartAddress, maxNrAddresses, (const uint8_t*)pa_pData + dataIndex);
+      break;
+    }
+    writeDataRange(it.m_eFunction, it.m_nStartAddress, it.m_nNrAddresses, (const uint8_t*)pa_pData + dataIndex);
+    dataIndex = nextDataIndex;
+  }
+  return (int)dataIndex;
 }

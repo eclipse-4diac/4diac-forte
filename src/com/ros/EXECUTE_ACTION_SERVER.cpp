@@ -126,7 +126,7 @@ void FORTE_EXECUTE_ACTION_SERVER::ActionExecuteCB(const ExecuteGoalConstPtr &pa_
   m_GoalConstPtr = pa_goal;
   ros::Rate r(2); //2Hz
 
-  setEventChainExecutor(m_poInvokingExecEnv);
+  setEventChainExecutor(mInvokingExecEnv);
   //DEVLOG_DEBUG("[EXEC_SERVER] Received goal is: %s \n", mGoalConstPtr->command.c_str());
   getExtEvHandler<CROSManager>(*this).startChain(this);
 

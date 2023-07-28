@@ -17,10 +17,10 @@
 
 #include "fbcontainer.h"
 #include "funcbloc.h"
-#include <forte_sync.h>
+#include "forte_sync.h"
 
 #ifdef FORTE_SUPPORT_MONITORING
-#include <monitoring.h>
+#include "monitoring.h"
 #endif
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
@@ -200,10 +200,10 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
     void createDataInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, CIEC_STRING& paReqResult);
     void createAdapterInterfaceResponseMessage(const SFBInterfaceSpec* paInterfaceSpec, CIEC_STRING& paReqResult);
     void createInterfaceResponseMessages(CIEC_STRING& paReqResult, const char *paType, const CStringDictionary::TStringId* paNameList,
-        const CStringDictionary::TStringId* paTypeList, const int pa_nNumberOfElements = 0, const TDataIOID* paEWith = nullptr, const TForteInt16* paEWithIndexes = nullptr,
+        const CStringDictionary::TStringId* paTypeList, const TEventID pa_nNumberOfElements = 0, const TDataIOID* paEWith = nullptr, const TForteInt16* paEWithIndexes = nullptr,
         const CStringDictionary::TStringId* paDNameList = nullptr);
     void createInterfaceResponseMessage(CIEC_STRING& paReqResult, const char* pa_pcType, const CIEC_STRING& paName, const CIEC_STRING& paType,
-        const TDataIOID* paEWith = nullptr, const TForteInt16* paEWithIndexes = nullptr, const int pa_nIndex = 0,
+        const TDataIOID* paEWith = nullptr, const TForteInt16* paEWithIndexes = nullptr, const TEventID paIndex = 0,
         const CStringDictionary::TStringId* paENameList = nullptr) const;
 
 #endif //FORTE_SUPPORT_QUERY_CMD

@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2008 - 2015 nxtControl GmbH, ACIN, fortiss GmbH
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2008, 2023 nxtControl GmbH, ACIN, fortiss GmbH,
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -17,9 +17,11 @@
 #ifndef _CStringDictionary_H_
 #define _CStringDictionary_H_
 
-#include <forte_config.h>
+#include "forte_config.h"
 #include "singlet.h"
-#include <datatype.h>
+#include "datatype.h"
+
+#include <limits>
 
 /**\ingroup CORE\brief Manages a dictionary of strings that can be referenced by ids
  *
@@ -29,10 +31,10 @@
 class CStringDictionary{
   DECLARE_SINGLETON(CStringDictionary)
 public:
-  typedef TForteUInt32 TStringId;
+  typedef size_t TStringId;
 
   //!\brief Invalid string id
-  static const TStringId scm_nInvalidStringId = 0xffffffff;
+  static const TStringId scm_nInvalidStringId = std::numeric_limits<TStringId>::max();
 
 
   /*!\brief Get a string from the dictionary

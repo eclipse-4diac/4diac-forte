@@ -29,7 +29,7 @@ class GEN_CSV_WRITER_TestFixture : public CFBTestFixtureBase {
       BOOST_CHECK(std::tmpnam(tempName));
 
       mQI = CIEC_BOOL(true);
-      mFILE_NAME = CIEC_STRING(tempName);
+      mFILE_NAME = CIEC_STRING(tempName, strlen(tempName));
 
       triggerEvent(InputEventINIT);
 
@@ -43,7 +43,7 @@ class GEN_CSV_WRITER_TestFixture : public CFBTestFixtureBase {
         closeFile();
       }
 
-      BOOST_CHECK_EQUAL(unlink(mFILE_NAME.getValue()), 0);
+      BOOST_CHECK_EQUAL(unlink(mFILE_NAME.getStorage().c_str()), 0);
     }
 
     CIEC_BOOL mQI;
@@ -78,7 +78,7 @@ class GEN_CSV_WRITER_TestFixture : public CFBTestFixtureBase {
       BOOST_CHECK(!mIsOpen);
 
       std::stringstream buffer;
-      buffer << std::ifstream(mFILE_NAME.getValue()).rdbuf();
+      buffer << std::ifstream(mFILE_NAME.getStorage().c_str()).rdbuf();
       return buffer.str();
     }
 
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_SUITE(GEN_CSV_WRITER_Tests)
   BOOST_FIXTURE_TEST_CASE(validWrite, GEN_CSV_WRITER_TestFixtureIntString) {
     mQI = CIEC_BOOL(true);
     mSD_1 = CIEC_INT(1);
-    mSD_2 = CIEC_STRING("Test");
+    mSD_2 = "Test"_STRING;
 
     triggerEvent(InputEventREQ);
 
@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_SUITE(GEN_CSV_WRITER_Tests)
 
     mQI = CIEC_BOOL(true);
     mSD_1 = CIEC_INT(20);
-    mSD_2 = CIEC_STRING("Test2");
+    mSD_2 = "Test2"_STRING;
 
     triggerEvent(InputEventREQ);
 

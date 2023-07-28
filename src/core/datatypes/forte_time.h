@@ -1,5 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN; 2019 TU Wien/ACIN
+ * Copyright (c) 2005, 2023 Profactor GmbH, ACIN, TU Wien/ACIN
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -13,6 +15,7 @@
  *    Martin Melik-Merkumians - added getInNanoSeconds, setFromNanoSeconds,
  *      changed defines to constants, added literal parsing for micro and
  *      nanoseconds, removed built-in type operator=, removed operator++
+ *    Martin Jobst - add user-defined literal
  *******************************************************************************/
 #ifndef _FORTE_TIME_H_
 #define _FORTE_TIME_H_
@@ -31,7 +34,7 @@ class CIEC_TIME final : public CIEC_ANY_DURATION {
       setValueSimple(paValue);
     }
 
-    explicit CIEC_TIME(TValueType paValue){
+    explicit CIEC_TIME(const TValueType paValue){
       setLargestInt(paValue);
     }
 
@@ -91,5 +94,9 @@ class CIEC_TIME final : public CIEC_ANY_DURATION {
     void setFromMicroSeconds(TValueType paValue);
     void setFromNanoSeconds(TValueType paValue);
 };
+
+inline CIEC_TIME operator ""_TIME(unsigned long long int paValue) {
+  return CIEC_TIME(static_cast<CIEC_TIME::TValueType>(paValue));
+}
 
 #endif /*_FORTE_TIME_H_*/

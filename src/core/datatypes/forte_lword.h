@@ -1,7 +1,9 @@
 /*******************************************************************************
- * Copyright (c) 2010 - 2013 ACIN
- *               2020 Johannes Kepler University Linz
- *               2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2010, 2023 ACIN
+ *                          Johannes Kepler University Linz
+ *                          Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -16,7 +18,8 @@
  *      parameter to call argument, make TForteLWord constructor explicit, adds
  *      implicit cast constructor, removed built-in type operator=, added
  *        castable CIEC types operator=
-  *******************************************************************************/
+ *    Martin Jobst - add user-defined literal
+ *******************************************************************************/
 #ifndef _FORTE_LWORD_H_
 #define _FORTE_LWORD_H_
 
@@ -69,7 +72,7 @@ class CIEC_LWORD : public CIEC_ANY_BIT{
       setValueSimple(paValue);
     }
 
-    explicit CIEC_LWORD(TForteLWord paValue){
+    explicit CIEC_LWORD(const TValueType paValue) {
       setTUINT64(paValue);
     }
     ~CIEC_LWORD() override = default;
@@ -133,5 +136,9 @@ class CIEC_LWORD : public CIEC_ANY_BIT{
     }
 
 };
+
+inline CIEC_LWORD operator ""_LWORD(unsigned long long int paValue) {
+  return CIEC_LWORD(static_cast<CIEC_LWORD::TValueType>(paValue));
+}
 
 #endif /*_FORTE_LWORD_H_*/

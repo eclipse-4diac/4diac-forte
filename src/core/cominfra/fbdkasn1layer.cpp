@@ -50,9 +50,9 @@ CFBDKASN1ComLayer::CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * p
   CComLayer(pa_poUpperLayer, pa_poComFB), mStatSerBuf(nullptr), mStatSerBufSize(0), mDeserBuf(nullptr), mDeserBufSize(0), mDeserBufPos(0), mDIPos(0), mDOPos(0){
 
   if(nullptr != pa_poComFB){
-    unsigned int sdNum = pa_poComFB->getNumSD();
+    TPortId sdNum = pa_poComFB->getNumSD();
     CIEC_ANY **apoSDs = pa_poComFB->getSDs();
-    for(unsigned int i = 0; i < sdNum; ++i){
+    for(TPortId i = 0; i < sdNum; ++i){
       if(apoSDs[i] != nullptr){
         TForteByte typeSize = csm_aDataTags[apoSDs[i]->unwrap().getDataTypeID()][1];
         if(typeSize != 255){
@@ -61,9 +61,9 @@ CFBDKASN1ComLayer::CFBDKASN1ComLayer(CComLayer* pa_poUpperLayer, CBaseCommFB * p
       }
     }
 
-    unsigned int rdNum = pa_poComFB->getNumRD();
+    TPortId rdNum = pa_poComFB->getNumRD();
     CIEC_ANY **apoRDs = pa_poComFB->getRDs();
-    for(unsigned int i = 0; i < rdNum; ++i){
+    for(TPortId i = 0; i < rdNum; ++i){
       if(nullptr != apoRDs[i]){
         TForteByte typeSize = csm_aDataTags[apoRDs[i]->unwrap().getDataTypeID()][1];
         if(typeSize != 255){
@@ -107,7 +107,7 @@ EComResponse CFBDKASN1ComLayer::sendData(void *pa_pvData, unsigned int pa_unSize
 
   if(m_poBottomLayer != nullptr){
     TConstIEC_ANYPtr *apoSDs = static_cast<TConstIEC_ANYPtr *> (pa_pvData);
-    unsigned int unNeededBufferSize = 0;
+    size_t unNeededBufferSize = 0;
 
     if(nullptr == apoSDs){
        return e_ProcessDataDataTypeError;
@@ -155,7 +155,7 @@ EComResponse CFBDKASN1ComLayer::recvData(const void *paData, unsigned int paSize
 
   if(m_poFb != nullptr){
     CIEC_ANY **apoRDs = m_poFb->getRDs();
-    unsigned int unNumRD = m_poFb->getNumRD();
+    TPortId unNumRD = m_poFb->getNumRD();
     unsigned int usedBufferSize = 0;
     TForteByte *usedBuffer = nullptr;
 
@@ -267,17 +267,21 @@ const TForteByte CFBDKASN1ComLayer::csm_aDataTags[][2] = {
     {e_APPLICATION + e_CONSTRUCTED + e_ARRAY_TAG, 255},
     {e_APPLICATION + e_CONSTRUCTED + e_STRUCT_TAG, 255}};
 
-int CFBDKASN1ComLayer::serializeDataPointArray(TForteByte *pa_pcBytes, unsigned int pa_nStreamSize, TConstIEC_ANYPtr *pa_apoData, unsigned int pa_nDataNum){
+int CFBDKASN1ComLayer::serializeDataPointArray(TForteByte *pa_pcBytes, const size_t pa_nStreamSize, TConstIEC_ANYPtr *pa_apoData, size_t pa_nDataNum){
   int nRetVal = -1;
   if(0 == pa_nDataNum){
     serializeNull(pa_pcBytes);
     nRetVal = 1;
   }
-  else{
-    int nRemainingBytes = pa_nStreamSize;
+  else {
+    if (pa_nStreamSize > std::numeric_limits<int>::max()) {
+      DEVLOG_ERROR("FBDK ASN1 Layer: pa_nStreamSize too big!\n");
+      return -1;
+    }
+    int nRemainingBytes = static_cast<int>(pa_nStreamSize);
     int nBuf;
     nRetVal = 0;
-    for(unsigned int i = 0; i < pa_nDataNum; i++){
+    for(size_t i = 0; i < pa_nDataNum; i++){
       if(nullptr != (pa_apoData[i])){
         nBuf = serializeDataPoint(pa_pcBytes, nRemainingBytes, *pa_apoData[i]);
         if(0 < nBuf){
@@ -450,7 +454,7 @@ int CFBDKASN1ComLayer::serializeValueString(TForteByte* pa_pcBytes, int pa_nStre
     pa_pcBytes[0] = (TForteByte) ((unStringLen >> 8) & 0x00FF);
     pa_pcBytes[1] = (TForteByte) (unStringLen & 0x00FF);
     pa_pcBytes += 2;
-    memcpy(pa_pcBytes, pa_roString.getValue(), unStringLen);
+    memcpy(pa_pcBytes, pa_roString.getStorage().c_str(), unStringLen);
     nRetVal = unStringLen + 2;
   }
   return nRetVal;
@@ -553,13 +557,13 @@ int CFBDKASN1ComLayer::serializeValueStruct(TForteByte* pa_pcBytes, int pa_nStre
   return nTotalStreamUsed;
 }
 
-bool CFBDKASN1ComLayer::deserializeDataPointArray(const TForteByte* pa_pcBytes, unsigned int pa_nStreamSize, TIEC_ANYPtr *pa_apoData, unsigned int pa_nDataNum){
+bool CFBDKASN1ComLayer::deserializeDataPointArray(const TForteByte* pa_pcBytes, unsigned int pa_nStreamSize, TIEC_ANYPtr *pa_apoData, size_t pa_nDataNum){
   bool bRetval = true;
   if(0 == pa_nDataNum){
     bRetval = ((pa_nStreamSize == 1) && (isNull(pa_pcBytes)));
   }
   else{
-    for(unsigned int i = 0; i < pa_nDataNum; ++i){
+    for(size_t i = 0; i < pa_nDataNum; ++i){
       if(nullptr == pa_apoData[i]){
         bRetval = false;
         break;
@@ -865,8 +869,8 @@ int CFBDKASN1ComLayer::deserializeValueStruct(const TForteByte* pa_pcBytes, int 
 }
 
 
-unsigned int CFBDKASN1ComLayer::getRequiredSerializationSize(const CIEC_ANY &pa_roCIECData){
-  unsigned int unRetVal = 0;
+size_t CFBDKASN1ComLayer::getRequiredSerializationSize(const CIEC_ANY &pa_roCIECData){
+  size_t unRetVal = 0;
 
   switch (pa_roCIECData.getDataTypeID()){
     case CIEC_ANY::e_ANY:

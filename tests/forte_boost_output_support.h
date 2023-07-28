@@ -115,9 +115,7 @@ std::ostream& boost_test_print_type(std::ostream &out, const CIEC_WCHAR &variabl
 
 inline
 std::ostream& boost_test_print_type(std::ostream &out, const CIEC_STRING &variable) {
-  char outputString[variable.getToStringBufferSize()];
-  variable.toString(outputString, sizeof(outputString));
-  out << outputString;
+  out << variable.getStorage();
   return out;
 }
 

@@ -93,7 +93,7 @@ void FORTE_FB_CTUD_DINT::alg_REQ(void) {
         if (func_AND<CIEC_BOOL>(var_CU, func_LT(var_CV, CIEC_DINT(std::numeric_limits<CIEC_DINT::TValueType>::max())))) {
           var_CV = func_ADD<CIEC_DINT>(var_CV, CIEC_DINT(1));
         }
-        else if (func_AND<CIEC_BOOL>(var_CD, func_GT(var_CV, CIEC_DINT(-std::numeric_limits<CIEC_DINT::TValueType>::min())))) {
+        else if (func_AND<CIEC_BOOL>(var_CD, func_GT(var_CV, CIEC_DINT(std::numeric_limits<CIEC_DINT::TValueType>::min())))) {
           var_CV = func_SUB<CIEC_DINT>(var_CV, CIEC_DINT(1));
         }
       }

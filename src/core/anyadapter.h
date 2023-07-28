@@ -37,27 +37,27 @@ class CAnyAdapter : public CAdapter{
 
     //! Helper functions allowing to retrieve interface information from any_adpaters TODO look for Doxygen grouping syntax
     TEventID getNumEIs() const {
-      return m_pstInterfaceSpec->m_nNumEIs;
+      return mInterfaceSpec->m_nNumEIs;
     }
 
     TEventID getNumEOs() const {
-      return m_pstInterfaceSpec->m_nNumEOs;
+      return mInterfaceSpec->m_nNumEOs;
     }
 
     const TForteInt16* getEIWithIndexes() const {
-      return m_pstInterfaceSpec->m_anEIWithIndexes;
+      return mInterfaceSpec->m_anEIWithIndexes;
     }
 
     const TDataIOID* getEIWiths() const {
-      return m_pstInterfaceSpec->m_anEIWith;
+      return mInterfaceSpec->m_anEIWith;
     }
 
     TPortId getNumDIs() const {
-      return m_pstInterfaceSpec->m_nNumDIs;
+      return mInterfaceSpec->m_nNumDIs;
     }
 
     const CStringDictionary::TStringId* getDataInputNames() const {
-      return m_pstInterfaceSpec->m_aunDINames;
+      return mInterfaceSpec->m_aunDINames;
     }
 
     TIEC_ANYPtr getDataInputs(){
@@ -65,11 +65,11 @@ class CAnyAdapter : public CAdapter{
     }
 
     TPortId getNumDOs() const {
-      return m_pstInterfaceSpec->m_nNumDOs;
+      return mInterfaceSpec->m_nNumDOs;
     }
 
     const CStringDictionary::TStringId* getDataOutputNames() const {
-      return m_pstInterfaceSpec->m_aunDONames;
+      return mInterfaceSpec->m_aunDONames;
     }
 
     TIEC_ANYPtr getDataOutputs(){

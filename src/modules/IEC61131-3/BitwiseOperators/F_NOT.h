@@ -72,13 +72,13 @@ public:
   CDataConnection **getDIConUnchecked(TPortId) override;
   CDataConnection *getDOConUnchecked(TPortId) override;
   
-  void evt_REQ(const CIEC_ANY_BIT_VARIANT &pa_IN, CIEC_ANY_BIT_VARIANT &pa_OUT) {
+  void evt_REQ(const CIEC_ANY_BIT &pa_IN, CIEC_ANY_BIT &pa_OUT) {
     var_IN = pa_IN;
     receiveInputEvent(scm_nEventREQID, nullptr);
-    pa_OUT = var_OUT;
+    pa_OUT.setValue(var_OUT.unwrap());
   }
   
-  void operator()(const CIEC_ANY_BIT_VARIANT &pa_IN, CIEC_ANY_BIT_VARIANT &pa_OUT) {
+  void operator()(const CIEC_ANY_BIT &pa_IN, CIEC_ANY_BIT &pa_OUT) {
     evt_REQ(pa_IN, pa_OUT);
   }
   

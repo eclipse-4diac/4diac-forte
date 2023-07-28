@@ -51,6 +51,7 @@ trace:
             payload-field-type:
               class: structure
               members:
+                - typeName: string # FB type name
                 - instanceName: string # FB instance name
                 - eventId: uint64 # Event id
           # sendOutputEvent()
@@ -58,6 +59,7 @@ trace:
             payload-field-type:
               class: structure
               members:
+                - typeName: string # FB type name
                 - instanceName: string # FB instance name
                 - eventId: uint64 # Event id
           # inputData
@@ -65,6 +67,7 @@ trace:
             payload-field-type:
               class: structure
               members:
+                - typeName: string # FB type name
                 - instanceName: string # FB instance name
                 - dataId: uint64 # Data id
                 - value: string # Data value
@@ -73,6 +76,7 @@ trace:
             payload-field-type:
               class: structure
               members:
+                - typeName: string # FB type name
                 - instanceName: string # FB instance name
                 - dataId: uint64 # Data id
                 - value: string # Data value
@@ -81,6 +85,7 @@ trace:
             payload-field-type:
               class: structure
               members:
+                - typeName: string # FB type name
                 - instanceName: string # FB instance name
                 - inputs: # Data values
                     field-type:

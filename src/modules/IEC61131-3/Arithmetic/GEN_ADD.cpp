@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2014 Profactor GmbH, fortiss GmbH
- *                      2018 Johannes Kepler University
- *               2023 Martin Erich Jobst
+ * Copyright (c) 2014, 2023 Profactor GmbH, fortiss GmbH,
+ *                          Johannes Kepler University, Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.

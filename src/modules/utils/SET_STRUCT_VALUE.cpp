@@ -52,7 +52,7 @@ const SFBInterfaceSpec FORTE_SET_STRUCT_VALUE::scm_stFBInterfaceSpec = {
 FORTE_SET_STRUCT_VALUE::FORTE_SET_STRUCT_VALUE(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
     CFunctionBlock( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId),
     var_in_struct(CIEC_ANY_VARIANT()),
-    var_member(CIEC_STRING("")),
+    var_member(CIEC_STRING("", 0)),
     var_element_value(CIEC_ANY_VARIANT()),
     var_out_struct(CIEC_ANY_VARIANT()),
     var_conn_out_struct(var_out_struct),
@@ -85,7 +85,7 @@ void FORTE_SET_STRUCT_VALUE::executeEvent(TEventID pa_nEIID) {
       var_out_struct = var_in_struct;
       if (std::holds_alternative<CIEC_ANY_UNIQUE_PTR<CIEC_STRUCT>>(var_out_struct)) {
         auto &outStruct = std::get<CIEC_ANY_UNIQUE_PTR<CIEC_STRUCT>>(var_out_struct);
-        std::string memberName(var_member.getValue()); // will be modified by lookForMember
+        std::string memberName(var_member.getStorage()); // will be modified by lookForMember
         CIEC_ANY *member = lookForMember(*outStruct, memberName.data());
         if (nullptr != member) {
           if (member->getDataTypeID() == var_element_value.unwrap().getDataTypeID()) {
@@ -93,11 +93,11 @@ void FORTE_SET_STRUCT_VALUE::executeEvent(TEventID pa_nEIID) {
           } else {
             DEVLOG_ERROR(
                     "[SET_STRUCT_VALUE]: In instance %s, the member %s was found but it doesn't match the given type %d\n",
-                    getInstanceName(), var_member.getValue(), var_element_value.unwrap().getDataTypeID());
+                    getInstanceName(), var_member.getStorage().c_str(), var_element_value.unwrap().getDataTypeID());
           }
         } else {
           DEVLOG_ERROR("[SET_STRUCT_VALUE]: In instance %s, member %s was not found\n", getInstanceName(),
-                       var_member.getValue());
+                       var_member.getStorage().c_str());
         }
       } else {
         DEVLOG_ERROR(

@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN, nxtControl GmbH
- *   2018 TU Wien/ACIN
- *               2022 Primetals Technologies Austria GmbH
- *               2022 - 2023 Martin Erich Jobst
+ * Copyright (c) 2005, 2023 Profactor GmbH, ACIN, nxtControl GmbH, TU Wien/ACIN
+ *                          Primetals Technologies Austria GmbH
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -20,6 +20,7 @@
  *    Martin Jobst
  *      - add compare operators
  *      - add equals function
+ *      - add user-defined literal
  *******************************************************************************/
 #ifndef _FORTE_WSTRING_H_
 #define _FORTE_WSTRING_H_
@@ -55,12 +56,25 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
       char *to_next;
       converter.out(mb, &value, &value + 1, from_next, buf, buf + converter.max_length(), to_next);
       // error checking skipped for brevity
-      std::size_t size = to_next - buf;
+      std::size_t size = static_cast<size_t>(to_next - buf);
       assign(buf, static_cast<TForteUInt16>(size));
     }
 
     explicit CIEC_WSTRING(const char* paValue) {
       fromCharString(paValue);
+    }
+
+    CIEC_WSTRING(const char16_t *paValue, size_t paLength) {
+      auto &converter = std::use_facet<std::codecvt<char16_t, char, std::mbstate_t>>(std::locale());
+      std::mbstate_t mb{};
+      char buf[paLength * converter.max_length()];
+      const char16_t *from_next;
+      char *to_next;
+      converter.out(mb, paValue, paValue + paLength, from_next,
+                    buf, buf + paLength * static_cast<size_t>(converter.max_length()), to_next);
+      // error checking skipped for brevity
+      std::size_t size = static_cast<size_t>(to_next - buf);
+      assign(buf, static_cast<TForteUInt16>(size));
     }
 
     ~CIEC_WSTRING() override = default;
@@ -83,7 +97,7 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
      *   \return number of bytes used from srcString
      *       -1 on error
      */
-    int fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescape) override;
+    int fromUTF8(const char *pa_pacValue, int pa_nLen, bool pa_bUnescape);
 
     /*! \brief Converts the WSTRING to a UTF-8 representation
      *
@@ -189,6 +203,7 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
     size_t getToStringBufferSize() const override;
 
   protected:
+    void fromCharString(const char *const paValue);
 
   private:
 };
@@ -221,6 +236,10 @@ bool operator >=(const CIEC_WSTRING &paLeft, const CIEC_WSTRING &paRight){
 inline
 bool operator <=(const CIEC_WSTRING &paLeft, const CIEC_WSTRING &paRight){
   return (0 >= strcmp(paLeft.getValue(), paRight.getValue()));
+}
+
+inline CIEC_WSTRING operator ""_WSTRING(const char16_t *paValue, size_t paLength) {
+  return CIEC_WSTRING(paValue, paLength);
 }
 
 #endif

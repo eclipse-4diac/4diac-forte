@@ -17,6 +17,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <string>
+
 class CIEC_STRING;
 class IBootFileCallback;
 
@@ -54,8 +56,8 @@ class ForteBootFileLoader {
     bool mNeedsExit;
 
     bool openBootFile();
-    bool readLine(CIEC_STRING &line);
-    bool hasCommandEnded(const CIEC_STRING &line) const;
+    bool readLine(std::string &line);
+    bool hasCommandEnded(const std::string &line) const;
 };
 
 #endif /* SRC_STDFBLIB_ITA_FORTEBOOTFILELOADER_H_ */

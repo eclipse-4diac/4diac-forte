@@ -55,6 +55,6 @@ typedef char TIdentifier[cg_nIdentifierLength + 1]; //!<Type to hold an identifi
 
 typedef size_t TPortId;   //!<Type for holding an optimized FORTE internal port number.
 
-const TPortId cg_unInvalidPortId = 65535; //!< \ingroup CORE constant defining the max possible number of an FB Port (event or data, in or output)
+const TPortId cgInvalidPortId = 65535; //!< \ingroup CORE constant defining the max possible number of an FB Port (event or data, in or output)
 
 #endif // DATATYPES_H_
