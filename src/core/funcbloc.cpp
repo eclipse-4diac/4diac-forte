@@ -345,7 +345,7 @@ void CFunctionBlock::readData(size_t paDINum, CIEC_ANY& paValue, const CDataConn
   std::string valueString;
   valueString.reserve(paValue.getToStringBufferSize());
   paValue.toString(valueString.data(), valueString.capacity());
-  barectf_default_trace_inputData(m_poResource->getTracePlatformContext().getContext(),
+  barectf_default_trace_inputData(mResource->getTracePlatformContext().getContext(),
                                   getFBTypeName() ?: "null",
                                   getInstanceName() ?: "null",
                                   static_cast<uint64_t>(paDINum), valueString.c_str());
@@ -383,7 +383,7 @@ void CFunctionBlock::writeData(size_t paDONum, CIEC_ANY& paValue, CDataConnectio
   std::string valueString;
   valueString.reserve(paValue.getToStringBufferSize());
   paValue.toString(valueString.data(), valueString.capacity());
-  barectf_default_trace_outputData(m_poResource->getTracePlatformContext().getContext(),
+  barectf_default_trace_outputData(mResource->getTracePlatformContext().getContext(),
                                    getFBTypeName() ?: "null",
                                    getInstanceName() ?: "null",
                                    static_cast<uint64_t>(paDONum), valueString.c_str());
@@ -649,7 +649,7 @@ TForteUInt32 &CFunctionBlock::getEOMonitorData(TEventID paEOID){
 //********************************** below here are CTF Tracing specific functions **********************************************************
 #ifdef FORTE_TRACE_CTF
 void CFunctionBlock::traceInputEvent(TEventID paEIID){
-  barectf_default_trace_receiveInputEvent(m_poResource->getTracePlatformContext().getContext(),
+  barectf_default_trace_receiveInputEvent(mResource->getTracePlatformContext().getContext(),
                                           getFBTypeName() ?: "null",
                                           getInstanceName() ?: "null",
                                           static_cast<uint64_t>(paEIID));
@@ -657,7 +657,7 @@ void CFunctionBlock::traceInputEvent(TEventID paEIID){
 }
 
 void CFunctionBlock::traceOutputEvent(TEventID paEOID){
-  barectf_default_trace_sendOutputEvent(m_poResource->getTracePlatformContext().getContext(),
+  barectf_default_trace_sendOutputEvent(mResource->getTracePlatformContext().getContext(),
                                         getFBTypeName() ?: "null",
                                         getInstanceName() ?: "null",
                                         static_cast<uint64_t>(paEOID));
