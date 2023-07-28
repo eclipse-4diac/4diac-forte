@@ -25,12 +25,14 @@
 void checkEndianess();
 
 //this keeps away a lot of rtti and exception handling stuff
+#ifndef __cpp_exceptions
 extern "C" void __cxa_pure_virtual(void){
   //TODO maybe add some reporting here
   //Although we should never get here
   //if we are here something very very bad has happened e.g., stack overflow or other memory corruption
 
 }
+#endif
 
 RMT_DEV *poDev = 0;
 
