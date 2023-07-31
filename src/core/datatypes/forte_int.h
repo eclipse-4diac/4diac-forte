@@ -17,19 +17,20 @@
  *        added valid cast constructors, removed built-in type operator=, added
  *        castable CIEC types operator=
  *    Martin Jobst - add user-defined literal
+ *                 - add ANY_SIGNED
  *******************************************************************************/
 #ifndef _FORTE_INT_H_
 #define _FORTE_INT_H_
 
 #include "iec61131_cast_helper.h"
-#include "forte_any_int.h"
+#include "forte_any_signed.h"
 #include "forte_sint.h"
 #include "forte_usint.h"
 #include <limits>
 
 /*!\ingroup COREDTS CIEC_INT represents the int data type according to IEC 61131.
  */
-class CIEC_INT final : public CIEC_ANY_INT{
+class CIEC_INT final : public CIEC_ANY_SIGNED {
   DECLARE_FIRMWARE_DATATYPE(INT)
 
   public:
@@ -41,22 +42,22 @@ class CIEC_INT final : public CIEC_ANY_INT{
     CIEC_INT() = default;
 
     CIEC_INT(const CIEC_INT& paValue) :
-        CIEC_ANY_INT() {
+            CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 
     CIEC_INT(const CIEC_SINT& paValue) :
-        CIEC_ANY_INT() {
+            CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 
     CIEC_INT(const CIEC_USINT& paValue) :
-        CIEC_ANY_INT() {
+            CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 
     explicit CIEC_INT(const CIEC_ANY_INT& paValue) :
-        CIEC_ANY_INT() {
+            CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 

@@ -16,11 +16,12 @@
  *      adds casts constructors, removed built-in type operator=, added
  *      castable CIEC types operator=
  *    Martin Jobst - add user-defined literal
+ *                 - add ANY_SIGNED
  *******************************************************************************/
 #ifndef _FORTE_LINT_H_
 #define _FORTE_LINT_H_
 
-#include "forte_any_int.h"
+#include "forte_any_signed.h"
 #include "forte_dint.h"
 #include "forte_int.h"
 #include "forte_sint.h"
@@ -31,7 +32,7 @@
 
 /*!\ingroup COREDTS CIEC_LINT represents the dint data type according to IEC 61131.
  */
-class CIEC_LINT final : public CIEC_ANY_INT{
+class CIEC_LINT final : public CIEC_ANY_SIGNED {
   DECLARE_FIRMWARE_DATATYPE(LINT)
 
   public:
@@ -43,42 +44,42 @@ class CIEC_LINT final : public CIEC_ANY_INT{
     CIEC_LINT() = default;
 
     CIEC_LINT(const CIEC_LINT& paValue) :
-        CIEC_ANY_INT() {
+            CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 
     CIEC_LINT(const CIEC_DINT& paValue) :
-        CIEC_ANY_INT() {
+            CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 
     CIEC_LINT(const CIEC_UDINT& paValue) :
-        CIEC_ANY_INT() {
+            CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 
     CIEC_LINT(const CIEC_INT& paValue) :
-        CIEC_ANY_INT() {
+            CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 
     CIEC_LINT(const CIEC_UINT& paValue) :
-        CIEC_ANY_INT() {
+            CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 
     CIEC_LINT(const CIEC_SINT& paValue) :
-        CIEC_ANY_INT() {
+            CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 
     CIEC_LINT(const CIEC_USINT& paValue) :
-        CIEC_ANY_INT() {
+            CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 
     explicit CIEC_LINT(const CIEC_ANY_INT& paValue) :
-        CIEC_ANY_INT() {
+            CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 

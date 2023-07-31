@@ -20,13 +20,13 @@
 #ifndef _FORTE_UINT_H_
 #define _FORTE_UINT_H_
 
-#include "forte_any_int.h"
+#include "forte_any_unsigned.h"
 #include "forte_usint.h"
 #include <limits>
 
 /*!\ingroup COREDTS CIEC_UINT represents the uint data type according to IEC 61131.
  */
-class CIEC_UINT final : public CIEC_ANY_INT{
+class CIEC_UINT final : public CIEC_ANY_UNSIGNED {
   DECLARE_FIRMWARE_DATATYPE(UINT)
 
   public:
@@ -38,18 +38,18 @@ class CIEC_UINT final : public CIEC_ANY_INT{
     CIEC_UINT() = default;
 
     CIEC_UINT(const CIEC_UINT& paValue) :
-        CIEC_ANY_INT(){
+            CIEC_ANY_UNSIGNED(){
       setValueSimple(paValue);
     }
 
     CIEC_UINT(const CIEC_USINT& paValue) :
-        CIEC_ANY_INT(){
+            CIEC_ANY_UNSIGNED(){
       setValueSimple(paValue);
     }
 
     template <typename T, std::enable_if_t<std::is_same_v<typename forte::core::mpl::implicit_cast_t<T, CIEC_UINT>, CIEC_UINT>, int> = 0>
     explicit CIEC_UINT(const T& paValue) :
-        CIEC_ANY_INT(){
+            CIEC_ANY_UNSIGNED(){
       setValueSimple(paValue);
     }
 
