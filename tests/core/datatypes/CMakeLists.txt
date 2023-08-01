@@ -22,6 +22,8 @@
   forte_test_add_sourcefile_cpp(CIEC_ANY_NUM_VARIANT_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_ANY_REAL_VARIANT_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_ANY_INT_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_SIGNED_VARIANT_test.cpp)
+  forte_test_add_sourcefile_cpp(CIEC_ANY_UNSIGNED_VARIANT_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_ANY_DURATION_VARIANT_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_ANY_BIT_VARIANT_test.cpp)
   forte_test_add_sourcefile_cpp(CIEC_ANY_CHARS_VARIANT_test.cpp)

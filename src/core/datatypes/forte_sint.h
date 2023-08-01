@@ -16,16 +16,17 @@
  *    Martin Melik Merkumians - make TForteInt8 constructor explicit,
  *      removed built-in type operator=
  *    Martin Jobst - add user-defined literal
+ *                 - add ANY_SIGNED
  *******************************************************************************/
 #ifndef _FORTE_SINT_H_
 #define _FORTE_SINT_H_
 
-#include "forte_any_int.h"
+#include "forte_any_signed.h"
 #include <limits>
 
 /*!\ingroup COREDTS CIEC_SINT represents the SINT data type according to IEC 61131.
  */
-class CIEC_SINT final : public CIEC_ANY_INT{
+class CIEC_SINT final : public CIEC_ANY_SIGNED {
   DECLARE_FIRMWARE_DATATYPE(SINT)
 
   public:
@@ -37,12 +38,12 @@ class CIEC_SINT final : public CIEC_ANY_INT{
     CIEC_SINT() = default;
 
     CIEC_SINT(const CIEC_SINT& paValue) :
-        CIEC_ANY_INT(){
+            CIEC_ANY_SIGNED(){
       setValueSimple(paValue);
     }
 
     explicit CIEC_SINT(const CIEC_ANY_INT& paValue) :
-        CIEC_ANY_INT() {
+            CIEC_ANY_SIGNED() {
       setValueSimple(paValue);
     }
 

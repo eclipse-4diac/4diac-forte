@@ -19,7 +19,7 @@
 #ifndef _FORTE_ULINT_H_
 #define _FORTE_ULINT_H_
 
-#include "forte_any_int.h"
+#include "forte_any_unsigned.h"
 #include "forte_udint.h"
 #include "forte_uint.h"
 #include "forte_usint.h"
@@ -29,7 +29,7 @@
 /*!\ingroup COREDTS CIEC_ULINT represents the ulint data type according to IEC 61131.
  *  @author mw & az
  */
-class CIEC_ULINT final : public CIEC_ANY_INT{
+class CIEC_ULINT final : public CIEC_ANY_UNSIGNED {
   DECLARE_FIRMWARE_DATATYPE(ULINT)
 
   public:
@@ -40,24 +40,24 @@ class CIEC_ULINT final : public CIEC_ANY_INT{
 
     CIEC_ULINT() = default;
 
-    CIEC_ULINT(const CIEC_ULINT& paValue) : CIEC_ANY_INT() {
+    CIEC_ULINT(const CIEC_ULINT& paValue) : CIEC_ANY_UNSIGNED() {
       setValueSimple(paValue);
     }
 
-    CIEC_ULINT(const CIEC_UDINT& paValue) : CIEC_ANY_INT() {
+    CIEC_ULINT(const CIEC_UDINT& paValue) : CIEC_ANY_UNSIGNED() {
       setValueSimple(paValue);
     }
 
-    CIEC_ULINT(const CIEC_UINT& paValue) : CIEC_ANY_INT() {
+    CIEC_ULINT(const CIEC_UINT& paValue) : CIEC_ANY_UNSIGNED() {
       setValueSimple(paValue);
     }
 
-    CIEC_ULINT(const CIEC_USINT& paValue) : CIEC_ANY_INT() {
+    CIEC_ULINT(const CIEC_USINT& paValue) : CIEC_ANY_UNSIGNED() {
       setValueSimple(paValue);
     }
 
     explicit CIEC_ULINT(const CIEC_ANY_INT& paValue) :
-        CIEC_ANY_INT() {
+            CIEC_ANY_UNSIGNED() {
       setValueSimple(paValue);
     }
 

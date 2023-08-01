@@ -20,14 +20,14 @@
 #ifndef _FORTE_UDINT_H_
 #define _FORTE_UDINT_H_
 
-#include "forte_any_int.h"
+#include "forte_any_unsigned.h"
 #include "forte_uint.h"
 #include "forte_usint.h"
 #include <limits>
 
 /*!\ingroup COREDTS CIEC_UDINT represents the udint data type according to IEC 61131.
  */
-class CIEC_UDINT final : public CIEC_ANY_INT{
+class CIEC_UDINT final : public CIEC_ANY_UNSIGNED {
   DECLARE_FIRMWARE_DATATYPE(UDINT)
 
   public:
@@ -39,22 +39,22 @@ class CIEC_UDINT final : public CIEC_ANY_INT{
     CIEC_UDINT() = default;
 
     CIEC_UDINT(const CIEC_UDINT& paValue) :
-        CIEC_ANY_INT() {
+            CIEC_ANY_UNSIGNED() {
       setValueSimple(paValue);
     }
 
     CIEC_UDINT(const CIEC_UINT& paValue) :
-        CIEC_ANY_INT() {
+            CIEC_ANY_UNSIGNED() {
       setValueSimple(paValue);
     }
 
     CIEC_UDINT(const CIEC_USINT& paValue) :
-        CIEC_ANY_INT() {
+            CIEC_ANY_UNSIGNED() {
       setValueSimple(paValue);
     }
 
     explicit CIEC_UDINT(const CIEC_ANY_INT& paValue) :
-        CIEC_ANY_INT() {
+            CIEC_ANY_UNSIGNED() {
       setValueSimple(paValue);
     }
 

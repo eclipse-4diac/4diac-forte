@@ -20,12 +20,12 @@
 #ifndef _FORTE_USINT_H_
 #define _FORTE_USINT_H_
 
-#include "forte_any_int.h"
+#include "forte_any_unsigned.h"
 #include <limits>
 
 /*!\ingroup COREDTS CIEC_USINT represents the usint data type according to IEC 61131.
  */
-class CIEC_USINT final : public CIEC_ANY_INT{
+class CIEC_USINT final : public CIEC_ANY_UNSIGNED {
   DECLARE_FIRMWARE_DATATYPE(USINT)
 
   public:
@@ -37,12 +37,12 @@ class CIEC_USINT final : public CIEC_ANY_INT{
     CIEC_USINT() = default;
 
     CIEC_USINT(const CIEC_USINT& pa_roValue) :
-        CIEC_ANY_INT() {
+            CIEC_ANY_UNSIGNED() {
       setValueSimple(pa_roValue);
     }
 
     explicit CIEC_USINT(const CIEC_ANY_INT& paValue) :
-        CIEC_ANY_INT() {
+            CIEC_ANY_UNSIGNED() {
       setValueSimple(paValue);
     }
 
