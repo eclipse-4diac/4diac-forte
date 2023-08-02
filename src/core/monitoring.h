@@ -88,7 +88,7 @@ namespace forte {
 
         EMGMResponse addWatch(forte::core::TNameIdentifier &paNameList);
         EMGMResponse removeWatch(forte::core::TNameIdentifier &paNameList);
-        EMGMResponse readWatches(CIEC_STRING &pa_roResponse);
+        EMGMResponse readWatches(std::string &paResponse);
         EMGMResponse clearForce(forte::core::TNameIdentifier &paNameList);
         EMGMResponse triggerEvent(forte::core::TNameIdentifier &paNameList);
         EMGMResponse resetEventCount(forte::core::TNameIdentifier &paNameList);
@@ -98,15 +98,13 @@ namespace forte {
         static bool removeDataWatch(SFBMonitoringEntry& pa_roFBMonitoringEntry, CStringDictionary::TStringId pa_unPortId);
         static void addEventWatch(SFBMonitoringEntry& paFBMonitoringEntry, CStringDictionary::TStringId paPortId, TForteUInt32& paEventData);
         static bool removeEventWatch(SFBMonitoringEntry& pa_roFBMonitoringEntry, CStringDictionary::TStringId pa_unPortId);
-        void readResourceWatches(CIEC_STRING &pa_roResponse);
+        void readResourceWatches(std::string &paResponse);
 
         void updateMonitringData();
 
-        static void appendDataWatch(CIEC_STRING &pa_roResponse,
-            SDataWatchEntry &pa_roDataWatchEntry);
-        static void appendPortTag(CIEC_STRING &pa_roResponse,
-            CStringDictionary::TStringId pa_unPortId);
-        void appendEventWatch(CIEC_STRING &pa_roResponse, SEventWatchEntry &pa_roEventWatchEntry);
+        static void appendDataWatch(std::string &paResponse, SDataWatchEntry &pa_roDataWatchEntry);
+        static void appendPortTag(std::string &paResponse, CStringDictionary::TStringId pa_unPortId);
+        void appendEventWatch(std::string &paResponse, SEventWatchEntry &pa_roEventWatchEntry);
 
         static void createFullFBName(CIEC_STRING &paFullName, forte::core::TNameIdentifier &paNameList);
 

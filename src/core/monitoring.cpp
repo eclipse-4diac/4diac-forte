@@ -22,8 +22,11 @@
 #include "utils/criticalregion.h"
 #include "utils/string_utils.h"
 
-
+using namespace std::string_literals;
 using namespace forte::core;
+
+const std::string cgClosingXMLTag = "\">"s;
+
 
 CMonitoringHandler::CMonitoringHandler(CResource &paResource) :
     mTriggerEvent(nullptr, 0),
@@ -143,7 +146,7 @@ EMGMResponse CMonitoringHandler::removeWatch(forte::core::TNameIdentifier &paNam
   return eRetVal;
 }
 
-EMGMResponse CMonitoringHandler::readWatches(CIEC_STRING &paResponse){
+EMGMResponse CMonitoringHandler::readWatches(std::string &paResponse){
   paResponse.clear();
   if(nullptr == mResource.getResourcePtr()){
     //we are in the device
@@ -325,18 +328,18 @@ bool CMonitoringHandler::removeEventWatch(SFBMonitoringEntry &paFBMonitoringEntr
   return bRetVal;
 }
 
-void CMonitoringHandler::readResourceWatches(CIEC_STRING &paResponse){
+void CMonitoringHandler::readResourceWatches(std::string &paResponse){
   if(!mFBMonitoringList.isEmpty()){
-    paResponse.append("<Resource name=\"");
-    paResponse.append(mResource.getInstanceName());
-    paResponse.append("\">");
+    paResponse += "<Resource name=\""s;
+    paResponse += mResource.getInstanceName();
+    paResponse += cgClosingXMLTag;
 
     updateMonitringData();
 
     for(TFBMonitoringList::Iterator itRunner = mFBMonitoringList.begin(); itRunner != mFBMonitoringList.end(); ++itRunner){
-      paResponse.append("<FB name=\"");
-      paResponse.append(itRunner->mFullFBName);
-      paResponse.append("\">");
+      paResponse += "<FB name=\""s;
+      paResponse += itRunner->mFullFBName.c_str();
+      paResponse += cgClosingXMLTag;
 
       //add the data watches
       for(TDataWatchList::Iterator itDataRunner = itRunner->m_lstWatchedDataPoints.begin(); itDataRunner != itRunner->m_lstWatchedDataPoints.end(); ++itDataRunner){
@@ -348,9 +351,9 @@ void CMonitoringHandler::readResourceWatches(CIEC_STRING &paResponse){
         appendEventWatch(paResponse, *itEventRunner);
       }
 
-      paResponse.append("</FB>");
+      paResponse += "</FB>"s;
     }
-    paResponse.append("</Resource>");
+    paResponse += "</Resource>"s;
   }
 }
 
@@ -372,12 +375,11 @@ void CMonitoringHandler::updateMonitringData(){
 }
 
 
-void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
-    SDataWatchEntry &paDataWatchEntry){
+void CMonitoringHandler::appendDataWatch(std::string &paResponse, SDataWatchEntry &paDataWatchEntry){
   appendPortTag(paResponse, paDataWatchEntry.mPortId);
-  paResponse.append("<Data value=\"");
+  paResponse += "<Data value=\""s;
   size_t bufferSize = paDataWatchEntry.mDataBuffer->getToStringBufferSize() + getExtraSizeForEscapedChars(*paDataWatchEntry.mDataBuffer);
-  char* acDataValue = new char [bufferSize]; //TODO try to directly use the response string instead
+  char* acDataValue = new char [bufferSize];
   int consumedBytes = paDataWatchEntry.mDataBuffer->toString(acDataValue, bufferSize);
   if(consumedBytes > 0 && static_cast<size_t>(consumedBytes) < bufferSize) {
     switch (paDataWatchEntry.mDataBuffer->getDataTypeID()) {
@@ -394,11 +396,11 @@ void CMonitoringHandler::appendDataWatch(CIEC_STRING &paResponse,
         break;
     }
     acDataValue[consumedBytes] = '\0';
-    paResponse.append(acDataValue);
+    paResponse += acDataValue;
   }
-  paResponse.append("\" forced=\"");
-  paResponse.append((paDataWatchEntry.mDataBuffer->isForced()) ? "true" : "false");
-  paResponse.append("\"/></Port>");
+  paResponse += "\" forced=\""s;
+  paResponse += (paDataWatchEntry.mDataBuffer->isForced()) ? "true"s : "false"s;
+  paResponse += "\"/></Port>"s;
   delete [] acDataValue;
 }
 
@@ -486,27 +488,27 @@ size_t CMonitoringHandler::getExtraSizeForEscapedCharsStruct(const CIEC_STRUCT& 
   return retVal;
 }
 
-void CMonitoringHandler::appendPortTag(CIEC_STRING &paResponse,
+void CMonitoringHandler::appendPortTag(std::string &paResponse,
     CStringDictionary::TStringId paPortId){
-  paResponse.append("<Port name=\"");
-  paResponse.append(CStringDictionary::getInstance().get(paPortId));
-  paResponse.append("\">");
+  paResponse += "<Port name=\""s;
+  paResponse += CStringDictionary::getInstance().get(paPortId);
+  paResponse += cgClosingXMLTag;
 }
 
-void CMonitoringHandler::appendEventWatch(CIEC_STRING &paResponse, SEventWatchEntry &paEventWatchEntry){
+void CMonitoringHandler::appendEventWatch(std::string &paResponse, SEventWatchEntry &paEventWatchEntry){
   appendPortTag(paResponse, paEventWatchEntry.mPortId);
 
   CIEC_UDINT udint(paEventWatchEntry.mEventDataBuf);
   CIEC_ULINT ulint(mResource.getDevice().getTimer().getForteTime());
 
-  paResponse.append("<Data value=\"");
+  paResponse += "<Data value=\""s;
   char buf[21]; // the bigest number in an ulint is 18446744073709551616, TODO directly use pa_roResponse
   udint.toString(buf, sizeof(buf));
-  paResponse.append(buf);
-  paResponse.append("\" time=\"");
+  paResponse += buf;
+  paResponse += "\" time=\""s;
   ulint.toString(buf, sizeof(buf));
-  paResponse.append(buf);
-  paResponse.append("\"/>\n</Port>");
+  paResponse += buf;
+  paResponse += "\"/>\n</Port>"s;
 }
 
 void CMonitoringHandler::createFullFBName(CIEC_STRING &paFullName, forte::core::TNameIdentifier &paNameList){

@@ -77,7 +77,7 @@ namespace forte {
 
 #ifdef FORTE_SUPPORT_MONITORING
         /*\brief pointer to the response to generate the correct response */
-        CIEC_STRING mMonitorResponse;
+        std::string mMonitorResponse;
 #endif
 
     };
