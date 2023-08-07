@@ -163,7 +163,7 @@ auto func_ROL(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::m
   if((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()) {
     return returnType(static_cast<typename returnType::TValueType>((paIn << paN.getUnsignedValue()) | (paIn >> (sizeof(typename returnType::TValueType) * 8 - paN.getUnsignedValue()))));
   } else {
-    DEVLOG_ERROR("value of input N is less than zero");
+    DEVLOG_ERROR("value of input N is less than zero\n");
     return returnType(static_cast<typename returnType::TValueType>(0));
   }
 }
@@ -175,7 +175,7 @@ auto func_ROR(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::m
   if((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()) {
     return returnType(static_cast<typename returnType::TValueType>((paIn >> paN.getUnsignedValue()) | (paIn << (sizeof(typename returnType::TValueType) * 8 - paN.getUnsignedValue()))));
   } else {
-    DEVLOG_ERROR("value of input N is less than zero");
+    DEVLOG_ERROR("value of input N is less than zero\n");
     return returnType(static_cast<typename returnType::TValueType>(0));
   }
 }
@@ -187,7 +187,7 @@ auto func_SHL(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::m
   if ((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()) {
     return returnType(static_cast<typename returnType::TValueType>(paIn << paN.getUnsignedValue()));
   } else {
-    DEVLOG_ERROR("value of input N is less than zero");
+    DEVLOG_ERROR("value of input N is less than zero\n");
     return returnType(static_cast<typename T::TValueType>(0));
   }
 }
@@ -199,7 +199,7 @@ auto func_SHR(const T &paIn, const CIEC_ANY_INT &paN) -> typename forte::core::m
   if((true == paN.isSigned() && 0 <= paN.getSignedValue()) || false == paN.isSigned()) {
     return returnType(static_cast<typename returnType::TValueType>(paIn >> paN.getUnsignedValue()));
   } else {
-    DEVLOG_ERROR("value of input N is less than zero");
+    DEVLOG_ERROR("value of input N is less than zero\n");
     return returnType(static_cast<typename returnType::TValueType>(0));
   }
 }
@@ -999,11 +999,11 @@ template<typename T> CIEC_ANY_INT func_LEN(const T& paVal){
 template<typename T> const T func_LEFT(const T &paIn, const CIEC_ANY_INT &paL) {
   static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "T not of ANY_STRING");
   if(true == paL.isSigned() && 0 > paL.getSignedValue()) {
-    DEVLOG_ERROR("value of input L is less than zero");
+    DEVLOG_ERROR("value of input L is less than zero\n");
     return paIn;
   } else {
     if(paIn.length() < paL.getUnsignedValue()) {
-      DEVLOG_ERROR("string shorter than input L");
+      DEVLOG_ERROR("string shorter than input L\n");
       return paIn;
     } else {
       if constexpr (std::is_same_v<CIEC_STRING,T>) {
@@ -1023,11 +1023,11 @@ template<typename T> const T func_LEFT(const T &paIn, const CIEC_ANY_INT &paL) {
 template<typename T> const T func_RIGHT(const T &paIn, const CIEC_ANY_INT &paL) {
   static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "T not of ANY_STRING");
   if(true == paL.isSigned() && 0 > paL.getSignedValue()) {
-    DEVLOG_ERROR("value of input L is less than zero");
+    DEVLOG_ERROR("value of input L is less than zero\n");
     return paIn;
   } else {
     if(paIn.length() < paL.getUnsignedValue()) {
-      DEVLOG_ERROR("string shorter than input L");
+      DEVLOG_ERROR("string shorter than input L\n");
       return paIn;
     } else {
       if constexpr (std::is_same_v<CIEC_STRING,T>) {
@@ -1078,7 +1078,7 @@ template<typename T, typename ... Args> const T func_CONCAT(const T &paIn1, Args
 template<typename T> const T func_INSERT(const T &paIn1, const T &paIn2, const CIEC_ANY_INT &paP) {
   static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>);
   if(CIEC_UINT::scm_nMaxVal < (paIn1.length() + paIn2.length())) {
-    DEVLOG_ERROR("result would be longer than maximum allowed length");
+    DEVLOG_ERROR("result would be longer than maximum allowed length\n");
     return paIn1;
   }
   const CIEC_ANY::TLargestUIntValueType P = paP.isSigned() ? static_cast<CIEC_ANY::TLargestUIntValueType>(std::max(CIEC_ANY::TLargestIntValueType(0), paP.getSignedValue())) : paP.getUnsignedValue();
