@@ -343,6 +343,27 @@ FUNCTION(forte_add_all_sourcefiles_cpp)
   forte_add_sourcefile_with_path_cpp(${FILES})
 ENDFUNCTION(forte_add_all_sourcefiles_cpp)
 
+FUNCTION(forte_add_all_sourcefiles_recursive)
+  forte_add_all_sourcefiles_recursive_h()
+  forte_add_all_sourcefiles_recursive_c()
+  forte_add_all_sourcefiles_recursive_cpp()
+ENDFUNCTION(forte_add_all_sourcefiles_recursive)
+
+FUNCTION(forte_add_all_sourcefiles_recursive_h)
+  file(GLOB_RECURSE FILES LIST_DIRECTORIES false CONFIGURE_DEPENDS "*.h")
+  forte_add_sourcefile_with_path_h(${FILES})
+ENDFUNCTION(forte_add_all_sourcefiles_recursive_h)
+
+FUNCTION(forte_add_all_sourcefiles_recursive_c)
+  file(GLOB_RECURSE FILES LIST_DIRECTORIES false CONFIGURE_DEPENDS "*.c")
+  forte_add_sourcefile_with_path_c(${FILES})
+ENDFUNCTION(forte_add_all_sourcefiles_recursive_c)
+
+FUNCTION(forte_add_all_sourcefiles_recursive_cpp)
+  file(GLOB_RECURSE FILES LIST_DIRECTORIES false CONFIGURE_DEPENDS "*.cpp")
+  forte_add_sourcefile_with_path_cpp(${FILES})
+ENDFUNCTION(forte_add_all_sourcefiles_recursive_cpp)
+
 ## forte_add_systemtest_hard (test_name bootfile_name timeout)
 ## Fails if any error has been logged
 FUNCTION(forte_add_systemtest_hard arg1 arg2 arg3)
