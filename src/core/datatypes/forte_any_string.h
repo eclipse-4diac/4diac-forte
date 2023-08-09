@@ -127,7 +127,7 @@ class CIEC_ANY_STRING : public CIEC_ANY_CHARS {
 
     static bool handleDollarEscapedChar(const char **pa_pacValue, bool pa_bWide, TForteUInt16 &pa_rnValue);
     // Use null as destination for just determining the need of escaping
-    static int dollarEscapeChar(char *pa_pacValue, char pa_cValue, unsigned int pa_nBufferSize, const EDataTypeID typeID);
+    static int dollarEscapeChar(char *paValue, char paSymbol, unsigned int paBufferSize, const EDataTypeID paTypeID);
     static bool parseEscapedHexNum(const char **pa_pacValue, bool pa_bWide, TForteUInt16 &pa_rnValue);
 
     /*! \brief Unescape the input string.

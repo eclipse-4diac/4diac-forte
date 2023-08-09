@@ -23,6 +23,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <devlog.h>
+#include <cstdio>
 
 char CIEC_ANY_STRING::sm_acNullString[1] = {'\0'};
 
@@ -150,16 +151,16 @@ bool CIEC_ANY_STRING::handleDollarEscapedChar(const char **pa_pacValue, bool pa_
   return bRetVal;
 }
 
-int CIEC_ANY_STRING::dollarEscapeChar(char *pa_pacValue, char pa_cValue, unsigned int pa_nBufferSize, const EDataTypeID typeID) {
+int CIEC_ANY_STRING::dollarEscapeChar(char *paValue, char paSymbol, unsigned int paBufferSize, const EDataTypeID paTypeID) {
   unsigned int nUsedBytes = 1;
-  char cVal = pa_cValue;
-  switch(pa_cValue){
+  char cVal = paSymbol;
+  switch(paSymbol){
     case '$':
       ++nUsedBytes;
       cVal = '$';
       break;
     case '\'':
-      if(typeID == CIEC_ANY::e_STRING) {
+      if(paTypeID == CIEC_ANY::e_STRING) {
         ++nUsedBytes;
         cVal = '\'';
       }
@@ -185,25 +186,38 @@ int CIEC_ANY_STRING::dollarEscapeChar(char *pa_pacValue, char pa_cValue, unsigne
       cVal = 't';
       break;
     case '\"':
-      if(typeID == CIEC_ANY::e_WSTRING) {
+      if(paTypeID == CIEC_ANY::e_WSTRING) {
         ++nUsedBytes;
         cVal = '\"';
       }
       break;
     default:
+      if(!isprint(paSymbol) && paTypeID == CIEC_ANY::e_STRING) {
+        nUsedBytes += 2; // '$xx'
+      }
       break;
   }
 
-  if (pa_pacValue == nullptr)
+  if (paValue == nullptr) {
     return nUsedBytes;
+  }
 
-  if (nUsedBytes > pa_nBufferSize)
+  if (nUsedBytes > paBufferSize) {
     return -1;
+  }
 
-  if (nUsedBytes == 2)
-    *pa_pacValue++ = '$';
-
-  *pa_pacValue = cVal;
+  if(nUsedBytes == 3) {
+    *paValue = '$';
+    char hex[3];
+    std::snprintf(hex, sizeof(hex), "%02X", paSymbol);
+    *(++paValue) = hex[0];
+    *(++paValue) = hex[1];
+  } else if (nUsedBytes == 2) {
+    *paValue = '$';
+    *(++paValue) = cVal;
+  } else {
+    *paValue = cVal;
+  }
 
   return nUsedBytes;
 }
