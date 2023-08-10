@@ -512,6 +512,23 @@ BOOST_AUTO_TEST_CASE(String_toString) {
   BOOST_TEST(cTestEscapedCharacterToStringResult.c_str() == acBuffer);
 }
 
+BOOST_AUTO_TEST_CASE(String_to_string_nonprintable_sybmol_nul) {
+  CIEC_STRING testString("\0"_STRING);
+  const size_t bufferSize = 6;
+  char cStringBuffer[bufferSize];
+  BOOST_TEST(5 == testString.toString(cStringBuffer, bufferSize));
+  BOOST_TEST("'$00'" == cStringBuffer);
+}
+
+BOOST_AUTO_TEST_CASE(String_to_string_nonprintable_sybmol_esc)
+{
+  CIEC_STRING testString("\x1b"_STRING);
+  const size_t bufferSize = 6;
+  char cStringBuffer[bufferSize];
+  BOOST_TEST(5 == testString.toString(cStringBuffer, bufferSize));
+  BOOST_TEST("'$1B'" == cStringBuffer);
+}
+
 BOOST_AUTO_TEST_CASE(String_toString_faultcase_buffer_size_zero) {
   CIEC_STRING testString("4diac 4 ever!"_STRING);
   const size_t bufferSize = 50;

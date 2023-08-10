@@ -96,8 +96,10 @@ BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_READ_AT_INDEX_PAST_END) {
   // Vendor-specific behaviour for returning NUL and emitting an error
   CIEC_STRING stringValue("Primetals"_STRING);
   CIEC_CHAR testChar;
+  BOOST_TEST(stringValue.length() == 9);
   testChar = stringValue[10];
   BOOST_TEST('\0'_CHAR == testChar);
+  BOOST_TEST(stringValue.length() == 9); // length must remain constant
 }
 
 BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_STRING_WRITE_AT_INDEX_PAST_END) {

@@ -1058,10 +1058,13 @@ template<typename T> const T func_MID(const T &paIn, const CIEC_ANY_INT &paL, co
   }
 }
 
-template<typename T> const T func_CONCAT(const T &paIn1, const T &paIn2) {
-  static_assert((std::is_base_of_v<CIEC_ANY_STRING, T>), "T not of ANY_STRING");
-  T temp(paIn1);
-  if constexpr (std::is_base_of_v<CIEC_STRING,T>) {
+template<typename T, typename U> auto func_CONCAT(const T &paIn1, const U &paIn2) -> typename forte::core::mpl::get_concat_result_type_t<T, U> {
+  using Returntype = typename forte::core::mpl::get_concat_result_type_t<T, U>;
+  static_assert((std::is_base_of_v<CIEC_ANY_CHARS, T>), "T not of ANY_CHARS");
+  static_assert((std::is_base_of_v<CIEC_ANY_CHARS, U>), "U not of ANY_CHARS");
+  static_assert((std::is_base_of_v<CIEC_ANY_CHARS, Returntype>), "Returntype not of ANY_CHARS");
+  Returntype temp(paIn1);
+  if constexpr (std::is_base_of_v<CIEC_STRING, Returntype>) {
     temp.append(paIn2);
     return temp;
   } else {

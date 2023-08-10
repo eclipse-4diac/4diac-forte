@@ -23,7 +23,9 @@
 
 #include "iec61131_functions.h"
 
+#include "forte_char.h"
 #include "forte_string.h"
+#include "forte_string_fixed.h"
 #include "forte_uint.h"
 #include "forte_lword.h"
 #include "forte_any_bit_not_decorator.h"
@@ -188,12 +190,53 @@ BOOST_AUTO_TEST_CASE(mid)
   BOOST_TEST(sMidString == "THIS_SHALL_BE_SEEN"_STRING);
 }
 
-BOOST_AUTO_TEST_CASE(concat)
-{
+BOOST_AUTO_TEST_CASE(concat) {
   CIEC_STRING sFristString("THIS_IS_THE_FIRST_STRING"_STRING);
   CIEC_STRING sSecondString("_THIS_IS_THE_SECOND_STRING"_STRING);
   CIEC_STRING sConcatString(func_CONCAT(sFristString, sSecondString));
   BOOST_TEST(sConcatString == "THIS_IS_THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING"_STRING);
+}
+
+BOOST_AUTO_TEST_CASE(concat_fixed_string_and_string) {
+  CIEC_STRING_FIXED<16> sFristString("THE_FIRST_STRING"_STRING);
+  CIEC_STRING sSecondString("_THIS_IS_THE_SECOND_STRING"_STRING);
+  CIEC_STRING sConcatString(func_CONCAT(sFristString, sSecondString));
+  BOOST_TEST(sConcatString == "THE_FIRST_STRING_THIS_IS_THE_SECOND_STRING"_STRING);
+}
+
+BOOST_AUTO_TEST_CASE(concat_string_and_fixed_string) {
+  CIEC_STRING sFristString("THIS_IS_THE_FIRST_STRING"_STRING);
+  CIEC_STRING_FIXED<18> sSecondString("_THE_SECOND_STRING"_STRING);
+  CIEC_STRING sConcatString(func_CONCAT(sFristString, sSecondString));
+  BOOST_TEST(sConcatString == "THIS_IS_THE_FIRST_STRING_THE_SECOND_STRING"_STRING);
+}
+
+BOOST_AUTO_TEST_CASE(concat_fixed_string_and_fixed_string) {
+  CIEC_STRING_FIXED<16> sFristString("THE_FIRST_STRING"_STRING);
+  CIEC_STRING_FIXED<18> sSecondString("_THE_SECOND_STRING"_STRING);
+  CIEC_STRING sConcatString(func_CONCAT(sFristString, sSecondString));
+  BOOST_TEST(sConcatString == "THE_FIRST_STRING_THE_SECOND_STRING"_STRING);
+}
+
+BOOST_AUTO_TEST_CASE(concat_string_and_char) {
+  CIEC_STRING sFristString("THIS_IS_THE_FIRST_STRING_"_STRING);
+  CIEC_CHAR sChar2('1'_CHAR);
+  CIEC_STRING sConcatString(func_CONCAT(sFristString, sChar2));
+  BOOST_TEST(sConcatString == "THIS_IS_THE_FIRST_STRING_1"_STRING);
+}
+
+BOOST_AUTO_TEST_CASE(concat_char_and_string) {
+  CIEC_CHAR sChar1('2'_CHAR);
+  CIEC_STRING sSecondString("_THIS_IS_THE_SECOND_STRING"_STRING);
+  CIEC_STRING sConcatString(func_CONCAT(sChar1, sSecondString));
+  BOOST_TEST(sConcatString == "2_THIS_IS_THE_SECOND_STRING"_STRING);
+}
+
+BOOST_AUTO_TEST_CASE(concat_char_and_char) {
+  CIEC_CHAR sChar1('2'_CHAR);
+  CIEC_CHAR sChar2('1'_CHAR);
+  CIEC_STRING sConcatString(func_CONCAT(sChar1, sChar2));
+  BOOST_TEST(sConcatString == "21"_STRING);
 }
 
 BOOST_AUTO_TEST_CASE(find_at_begin)

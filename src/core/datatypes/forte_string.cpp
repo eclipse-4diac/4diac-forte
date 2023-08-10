@@ -183,7 +183,7 @@ int CIEC_STRING::toString(char* paValue, size_t paBufferSize) const {
         if(nUsedBytes >= paBufferSize) {
           return -1;
         }
-        nUsedBytes += dollarEscapeChar(paValue+nUsedBytes, acValue[i], 2, getDataTypeID());
+        nUsedBytes += dollarEscapeChar(paValue+nUsedBytes, acValue[i], 3, getDataTypeID());
       }
 
     } else{

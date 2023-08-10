@@ -234,11 +234,11 @@ class CIEC_STRING : public CIEC_ANY_STRING {
 
         virtual ~PARTIAL_ACCESS_TYPE() {
           if (mIndex > 0 && mIndex < mOriginalString.getMaximumLength()) {
-            if (mOriginalString.length() < mIndex) {
-              mOriginalString.getStorageMutable().resize(mIndex);
-            }
             const value_type value = operator value_type();
-            if(mOriginalString.getStorage()[mIndex - 1] != value) {
+            if (mOriginalString.length() < mIndex && value != '\0') {
+              mOriginalString.getStorageMutable().resize(mIndex);
+              mOriginalString.getStorageMutable()[mIndex - 1] = static_cast<char>(value);
+            } else if (mOriginalString.getStorage()[mIndex - 1] != value) {
               mOriginalString.getStorageMutable()[mIndex - 1] = static_cast<char>(value);
             }
           }

@@ -61,8 +61,11 @@ class CIEC_LINT;
 class CIEC_REAL;
 class CIEC_LREAL;
 
+class CIEC_ANY_CHARS;
+class CIEC_ANY_CHAR;
 class CIEC_CHAR;
 class CIEC_WCHAR;
+class CIEC_ANY_STRING;
 class CIEC_STRING;
 class CIEC_WSTRING;
 
@@ -618,6 +621,83 @@ namespace forte {
         typedef CIEC_LTIME type;
         get_sub_operator_result_type() = delete;
       };
+
+      template<typename T>
+      struct get_any_chars_base_type {
+        typedef std::conditional_t<std::is_base_of_v<CIEC_ANY_CHARS,T>, std::conditional_t<std::is_base_of_v<CIEC_STRING, T>, CIEC_STRING, std::conditional_t<std::is_base_of_v<CIEC_WSTRING, T>, CIEC_WSTRING, T> >, NullType> type;
+        get_any_chars_base_type() = delete;
+      };
+
+      template <typename T>
+      using get_any_chars_base_type_t = typename get_any_chars_base_type<T>::type;
+
+      template <typename T, typename U>
+      struct get_concat_result_type_helper {
+        typedef NullType type;
+        get_concat_result_type_helper() = delete;
+      };
+
+      template <>
+      struct get_concat_result_type_helper<CIEC_STRING, CIEC_STRING> {
+        typedef CIEC_STRING type;
+        get_concat_result_type_helper() = delete;
+      };
+
+      template <>
+      struct get_concat_result_type_helper<CIEC_STRING, CIEC_CHAR> {
+        typedef CIEC_STRING type;
+        get_concat_result_type_helper() = delete;
+      };
+
+      template <>
+      struct get_concat_result_type_helper<CIEC_CHAR, CIEC_STRING> {
+        typedef CIEC_STRING type;
+        get_concat_result_type_helper() = delete;
+      };
+
+      template <>
+      struct get_concat_result_type_helper<CIEC_CHAR, CIEC_CHAR> {
+        typedef CIEC_STRING type;
+        get_concat_result_type_helper() = delete;
+      };
+
+      template <>
+      struct get_concat_result_type_helper<CIEC_WSTRING, CIEC_WSTRING> {
+        typedef CIEC_WSTRING type;
+        get_concat_result_type_helper() = delete;
+      };
+
+      template <>
+      struct get_concat_result_type_helper<CIEC_WCHAR, CIEC_WSTRING> {
+        typedef CIEC_WSTRING type;
+        get_concat_result_type_helper() = delete;
+      };
+
+      template <>
+      struct get_concat_result_type_helper<CIEC_WSTRING, CIEC_WCHAR> {
+        typedef CIEC_WSTRING type;
+        get_concat_result_type_helper() = delete;
+      };
+
+      template <>
+      struct get_concat_result_type_helper<CIEC_WCHAR, CIEC_WCHAR> {
+        typedef CIEC_WSTRING type;
+        get_concat_result_type_helper() = delete;
+      };
+
+      template <typename T, typename U>
+      using get_concat_result_type_helper_t = typename get_concat_result_type_helper<T, U>::type;
+
+      template <typename T, typename U>
+      struct get_concat_result_type {
+        using tBaseType = get_any_chars_base_type_t<T>;
+        using uBaseType = get_any_chars_base_type_t<U>;
+        typedef get_concat_result_type_helper_t<tBaseType, uBaseType> type;
+        get_concat_result_type() = delete;
+      };
+
+      template <typename T, typename U>
+      using get_concat_result_type_t = typename get_concat_result_type<T, U>::type;
 
       template <class T, class R, class... Args>
       std::is_convertible<std::invoke_result_t<T, Args...>, R> is_invokable_test(int);
