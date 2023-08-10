@@ -235,7 +235,6 @@ BOOST_AUTO_TEST_CASE(concat_char_and_string) {
 BOOST_AUTO_TEST_CASE(concat_char_and_char) {
   CIEC_CHAR sChar1('2'_CHAR);
   CIEC_CHAR sChar2('1'_CHAR);
-  CIEC_STRING sSecondString("_THIS_IS_THE_SECOND_STRING"_STRING);
   CIEC_STRING sConcatString(func_CONCAT(sChar1, sChar2));
   BOOST_TEST(sConcatString == "21"_STRING);
 }
