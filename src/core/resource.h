@@ -114,6 +114,15 @@ class CResource : public CFunctionBlock, public forte::core::CFBContainer{
     CResource(const SFBInterfaceSpec *paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
 
     void executeEvent(TEventID) override {
+      // nothing to do here for a resource
+    }
+
+    void readInputData(TEventID) override {
+      // nothing to read from for a resource
+    }
+
+    void writeOutputData(TEventID) override {
+      // nothing to write to for a resource
     }
 
     /*!Wrapper for simplifying connection creation in resources

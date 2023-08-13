@@ -673,13 +673,13 @@ class CFunctionBlock {
      *
      * \param paEIID Event input ID where event occurred.
      */
-    virtual void readInputData(TEventID paEIID);
+    virtual void readInputData(TEventID paEIID) = 0;
 
     /*!\brief Function writing the values to output connections of the FB.
      *
      * \param paEIID Event output ID where event occurred.
      */
-    virtual void writeOutputData(TEventID paEO);
+    virtual void writeOutputData(TEventID paEO) = 0;
 
   public:
     CFunctionBlock(const CFunctionBlock&) = delete;

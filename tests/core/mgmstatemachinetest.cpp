@@ -28,12 +28,18 @@ class CFunctionBlockMock : public CFunctionBlock{
       return true;
     }
 
-    virtual CStringDictionary::TStringId getFBTypeId() const{
+    CStringDictionary::TStringId getFBTypeId() const override {
       return CStringDictionary::scmInvalidStringId;
     }
 
   private:
-    virtual void executeEvent(TEventID){
+    void executeEvent(TEventID) override {
+    }
+
+    void readInputData(TEventID) override{
+    }
+
+    void writeOutputData(TEventID) override{
     }
 };
 

@@ -40,12 +40,18 @@ class CInternalVarTestFB : public CBasicFB{
       return CBasicFB::getVarInternal(paVarIntNum);
     }
 
-    virtual CStringDictionary::TStringId getFBTypeId() const {
+    CStringDictionary::TStringId getFBTypeId() const override {
       return CStringDictionary::scmInvalidStringId;
     }
 
-    virtual void executeEvent(TEventID){
+    void executeEvent(TEventID) override {
       //nothiing to do here
+    }
+
+    void readInputData(TEventID) override{
+    }
+
+    void writeOutputData(TEventID) override{
     }
 };
 

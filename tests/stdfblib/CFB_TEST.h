@@ -58,6 +58,9 @@ private:
   static const SCFB_FBFannedOutConnectionData scmFannedOutDataConnections[];
   static const SCFB_FBNData scmFBNData;
 
+  void readInputData(TEventID paEI) override;
+  void writeOutputData(TEventID paEO) override;
+
 public:
   COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_CFB_TEST){
   };

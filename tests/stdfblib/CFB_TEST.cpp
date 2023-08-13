@@ -14,6 +14,9 @@
 #include "CFB_TEST_gen.cpp"
 #endif
 
+#include "resource.h"
+#include "criticalregion.h"
+
 DEFINE_FIRMWARE_FB(FORTE_CFB_TEST, g_nStringIdCFB_TEST)
 
 const CStringDictionary::TStringId FORTE_CFB_TEST::scmDataInputNames[] = {g_nStringIdQI};
@@ -88,4 +91,13 @@ const SCFB_FBNData FORTE_CFB_TEST::scmFBNData = {
   0, nullptr
 };
 
+void FORTE_CFB_TEST::readInputData(TEventID) {
+  RES_DATA_CON_CRITICAL_REGION();
+  readData(0, *mDIs[0], mDIConns[0]);
+}
+
+void FORTE_CFB_TEST::writeOutputData(TEventID) {
+  RES_DATA_CON_CRITICAL_REGION();
+  writeData(0, *mDOs[0], mDOConns[0]);
+}
 

@@ -395,21 +395,6 @@ bool CFunctionBlock::configureFB(const char *){
   return true;
 }
 
-void CFunctionBlock::readInputData(TEventID paEIID) {
-  if(nullptr != mInterfaceSpec->mEIWithIndexes && scmNoDataAssociated != mInterfaceSpec->mEIWithIndexes[paEIID]) {
-    const TDataIOID *eiWithStart = &(mInterfaceSpec->mEIWith[mInterfaceSpec->mEIWithIndexes[paEIID]]);
-
-    // TODO think on this lock
-    RES_DATA_CON_CRITICAL_REGION();
-    for(size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
-      TDataIOID nDINum = eiWithStart[i];
-      CIEC_ANY *di = getDI(nDINum);
-      CDataConnection *conn = *getDIConUnchecked(nDINum);
-      readData(nDINum, *di, conn);
-    }
-  }
-}
-
 #ifdef FORTE_TRACE_CTF
 void CFunctionBlock::readData(size_t paDINum, CIEC_ANY& paValue, const CDataConnection *const paConn) {
   if(!paConn) {
@@ -431,20 +416,6 @@ void CFunctionBlock::readData(size_t paDINum, CIEC_ANY& paValue, const CDataConn
                                   static_cast<uint64_t>(paDINum), valueString.c_str());
 }
 #endif //FORTE_TRACE_CTF
-
-void CFunctionBlock::writeOutputData(TEventID paEO) {
-  if (nullptr != mInterfaceSpec->mEOWithIndexes && -1 != mInterfaceSpec->mEOWithIndexes[paEO]) {
-    const TDataIOID *eiWithStart = &(mInterfaceSpec->mEOWith[mInterfaceSpec->mEOWithIndexes[paEO]]);
-    //TODO think on this lock
-    RES_DATA_CON_CRITICAL_REGION();
-    for (size_t i = 0; eiWithStart[i] != scmWithListDelimiter; ++i) {
-      size_t nDONum = eiWithStart[i];
-      CDataConnection *con = getDOConUnchecked(nDONum);
-      CIEC_ANY *dataOutput = getDO(nDONum);
-      writeData(nDONum, *dataOutput, *con);
-    }
-  }
-}
 
 #ifdef FORTE_TRACE_CTF
 void CFunctionBlock::writeData(size_t paDONum, CIEC_ANY& paValue, CDataConnection& paConn) {

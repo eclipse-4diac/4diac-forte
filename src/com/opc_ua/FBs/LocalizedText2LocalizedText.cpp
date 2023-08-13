@@ -16,6 +16,9 @@
 #include "LocalizedText2LocalizedText_gen.cpp"
 #endif
 
+#include "criticalregion.h"
+#include "resource.h"
+
 DEFINE_FIRMWARE_FB(FORTE_LocalizedText2LocalizedText, g_nStringIdLocalizedText2LocalizedText)
 
 const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmDataInputNames[] = {g_nStringIdIN};
@@ -49,5 +52,27 @@ void FORTE_LocalizedText2LocalizedText::executeEvent(TEventID paEIID){
   }
 }
 
+void FORTE_LocalizedText2LocalizedText::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventREQID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      readData(0, *mDIs[0], mDIConns[0]);
+      break;
+    }
+    default:
+      break;
+  }
+}
 
+void FORTE_LocalizedText2LocalizedText::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventCNFID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      writeData(0, *mDOs[0], mDOConns[0]);
+      break;
+    }
+    default:
+      break;
+  }
+}
 

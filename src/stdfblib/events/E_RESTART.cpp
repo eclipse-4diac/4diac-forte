@@ -46,6 +46,12 @@ void E_RESTART::executeEvent(TEventID paEIID) {
   }
 }
 
+void E_RESTART::readInputData(TEventID) {
+}
+
+void E_RESTART::writeOutputData(TEventID) {
+}
+
 EMGMResponse E_RESTART::changeFBExecutionState(EMGMCommandType paCommand){
   EMGMResponse eRetVal = CFunctionBlock::changeFBExecutionState(paCommand);
   if(EMGMResponse::Ready == eRetVal){

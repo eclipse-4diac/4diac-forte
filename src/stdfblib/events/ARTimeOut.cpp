@@ -46,4 +46,34 @@ const SFBInterfaceSpec FORTE_ARTimeOut::scmFBInterfaceSpecPlug = {
   0, nullptr
 };
 
+void FORTE_ARTimeOut::readInputData(const TEventID paEIID) {
+  if(isSocket()) {
+    // nothing to do
+  } else {
+    switch(paEIID) {
+      case scmEventSTARTID: {
+        RES_DATA_CON_CRITICAL_REGION();
+        readData(0, *mDIs[0], mDIConns[0]);
+        break;
+      }
+      default:
+        break;
+    }
+  }
+}
 
+void FORTE_ARTimeOut::writeOutputData(const TEventID paEIID) {
+  if(isSocket()) {
+    switch(paEIID) {
+      case scmEventSTARTID: {
+        RES_DATA_CON_CRITICAL_REGION();
+        writeData(0, *mDOs[0], mDOConns[0]);
+        break;
+      }
+      default:
+        break;
+    }
+  } else {
+    // nothing to do
+  }
+}

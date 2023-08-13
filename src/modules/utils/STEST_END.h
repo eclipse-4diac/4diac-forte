@@ -1,5 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2013 - 2015 Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2013, 2023 Profactor GmbH, fortiss GmbH
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +11,7 @@
  * Contributors:
  *   Michael Hofmann, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
+ *   Martin Jobst - add readInputData and writeOutputData
  *******************************************************************************/
 #ifndef _STEST_END_H_
 #define _STEST_END_H_
@@ -29,6 +32,12 @@ private:
 
 
   void executeEvent(TEventID paEIID) override;
+
+  void readInputData(TEventID) override {
+  }
+
+  void writeOutputData(TEventID) override {
+  }
 
 public:
   FUNCTION_BLOCK_CTOR(FORTE_STEST_END){

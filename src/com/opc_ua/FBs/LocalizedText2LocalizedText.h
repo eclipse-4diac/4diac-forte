@@ -47,6 +47,9 @@ private:
 
   void executeEvent(TEventID paEIID) override;
 
+  void readInputData(TEventID paEIID) override;
+  void writeOutputData(TEventID paEIID) override;
+
 public:
   FUNCTION_BLOCK_CTOR(FORTE_LocalizedText2LocalizedText){
   };

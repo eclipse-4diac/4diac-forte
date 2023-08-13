@@ -40,6 +40,9 @@ private:
 
   void executeEvent(TEventID paEIID) override;
 
+  void readInputData(TEventID paEI) override;
+  void writeOutputData(TEventID paEO) override;
+
 public:
   EVENT_SOURCE_FUNCTION_BLOCK_CTOR(E_RESTART),
         mEventToSend(cgInvalidEventID) {

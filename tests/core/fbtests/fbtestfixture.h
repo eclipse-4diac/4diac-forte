@@ -70,6 +70,12 @@ class CFBTestFixtureBase : public CFunctionBlock{
   private:
     void executeEvent(TEventID paEIID) override;
 
+    void readInputData(TEventID) override {
+    }
+
+    void writeOutputData(TEventID) override {
+    }
+
     void setupTestInterface();
     void performFBResetTests();
     void performFBDeleteTests();

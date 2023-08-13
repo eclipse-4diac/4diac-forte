@@ -20,7 +20,6 @@
 
 DEFINE_FIRMWARE_FB(FORTE_E_TimeOut, g_nStringIdE_TimeOut)
 
-const TForteInt16 FORTE_E_TimeOut::scmEOWithIndexes[] = { -1 };
 const SAdapterInstanceDef FORTE_E_TimeOut::scmAdapterInstances[] = { { g_nStringIdATimeOut, g_nStringIdTimeOutSocket, false } };
 
 const SFBInterfaceSpec FORTE_E_TimeOut::scmFBInterfaceSpec = {
@@ -50,6 +49,12 @@ void FORTE_E_TimeOut::executeEvent(TEventID paEIID, CEventChainExecutionThread *
       mActive = false;
     }
   }
+}
+
+void FORTE_E_TimeOut::readInputData(TEventID) {
+}
+
+void FORTE_E_TimeOut::writeOutputData(TEventID) {
 }
 
 EMGMResponse FORTE_E_TimeOut::changeFBExecutionState(EMGMCommandType paCommand){

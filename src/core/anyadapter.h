@@ -77,6 +77,11 @@ class CAnyAdapter : public CAdapter{
     }
 
   protected:
+    void readInputData(TEventID) override {
+    }
+
+    void writeOutputData(TEventID) override {
+    }
 
   private:
     static const SFBInterfaceSpec scmFBInterfaceSpec; //! interface spec for the empty interface of an any adapter will be used for plug and socket

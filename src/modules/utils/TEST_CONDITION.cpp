@@ -1,5 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2019, fortiss GmbH
+ * Copyright (c) 2019, 2023 fortiss GmbH
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +10,7 @@
  *
  * Contributors:
  *   Jose Cabral - initial implementation
+ *   Martin Jobst - add readInputData and writeOutputData
  *******************************************************************************/
 
 #include "TEST_CONDITION.h"
@@ -15,9 +18,9 @@
 #include "TEST_CONDITION_gen.cpp"
 #endif
 
-#include <devlog.h>
-#include <resource.h>
-#include <criticalregion.h>
+#include "devlog.h"
+#include "resource.h"
+#include "criticalregion.h"
 
 unsigned int FORTE_TEST_CONDITION::smExecutedTests = 0;
 unsigned int FORTE_TEST_CONDITION::smFailedTests = 0;
@@ -34,7 +37,6 @@ const TForteInt16 FORTE_TEST_CONDITION::scmEIWithIndexes[] = {0};
 const TDataIOID FORTE_TEST_CONDITION::scmEIWith[] = {0, scmWithListDelimiter};
 const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmEventInputNames[] = {g_nStringIdREQ};
 
-const TForteInt16 FORTE_TEST_CONDITION::scmEOWithIndexes[] = {-1, -1};
 const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmEventOutputNames[] = {g_nStringIdCNF};
 
 const SFBInterfaceSpec FORTE_TEST_CONDITION::scmFBInterfaceSpec = {
@@ -73,5 +75,13 @@ void FORTE_TEST_CONDITION::executeEvent(TEventID paEIID) {
     }
     sendOutputEvent(scmEventCNFID);
   }
+}
+
+void FORTE_TEST_CONDITION::readInputData(TEventID) {
+  RES_DATA_CON_CRITICAL_REGION();
+  readData(0, *mDIs[0], mDIConns[0]);
+}
+
+void FORTE_TEST_CONDITION::writeOutputData(TEventID) {
 }
 

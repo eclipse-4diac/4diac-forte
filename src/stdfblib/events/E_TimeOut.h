@@ -28,7 +28,6 @@ class FORTE_E_TimeOut : public CEventSourceFB{
   DECLARE_FIRMWARE_FB(FORTE_E_TimeOut)
 
   private:
-    static const TForteInt16 scmEOWithIndexes[];
     static const SAdapterInstanceDef scmAdapterInstances[];
 
     FORTE_ATimeOut& var_TimeOutSocket(){
@@ -42,6 +41,9 @@ class FORTE_E_TimeOut : public CEventSourceFB{
     STimedFBListEntry mTimeListEntry; //!> The Timer list entry of this timed FB
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
+
+    void readInputData(TEventID paEI) override;
+    void writeOutputData(TEventID paEO) override;
 
   public:
     EVENT_SOURCE_FUNCTION_BLOCK_CTOR(FORTE_E_TimeOut){

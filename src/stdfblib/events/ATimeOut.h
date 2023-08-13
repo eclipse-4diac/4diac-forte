@@ -22,7 +22,7 @@
 #include "forte_array_variable.h"
 
 
-class FORTE_ATimeOut: public CAdapter {
+class FORTE_ATimeOut final : public CAdapter {
   DECLARE_ADAPTER_TYPE(FORTE_ATimeOut)
 
 private:
@@ -30,41 +30,39 @@ private:
   static const CStringDictionary::TStringId scmDataOutputTypeIds[];
   public:
     static const TEventID scmEventTimeOutID = 0;
-  
   private:
   static const TForteInt16 scmEIWithIndexes[];
   static const CStringDictionary::TStringId scmEventInputNames[];
   public:
     static const TEventID scmEventSTARTID = 0;
     static const TEventID scmEventSTOPID = 1;
-  
   private:
-  static const TDataIOID scmEOWith[]; 
+  static const TDataIOID scmEOWith[];
   static const TForteInt16 scmEOWithIndexes[];
   static const CStringDictionary::TStringId scmEventOutputNames[];
 
   static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
-  
+
   static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
 
+  void readInputData(TEventID paEIID) override;
+  void writeOutputData(TEventID paEIID) override;
 public:
   CIEC_TIME &var_DT() {
     return *static_cast<CIEC_TIME*>((isSocket()) ? getDO(0) : getDI(0));
   }
-  
 
   TEventID evt_TimeOut() {
     return mParentAdapterListEventID + scmEventTimeOutID;
   }
-  
+
   TEventID evt_START() {
     return mParentAdapterListEventID + scmEventSTARTID;
   }
-  
+
   TEventID evt_STOP() {
     return mParentAdapterListEventID + scmEventSTOPID;
   }
-  
 
 public:
   FORTE_ATimeOut(CStringDictionary::TStringId paAdapterInstanceName, CResource *paSrcRes, bool paIsPlug) :
@@ -73,6 +71,5 @@ public:
 
   virtual ~FORTE_ATimeOut() = default;
 };
-
 
 
