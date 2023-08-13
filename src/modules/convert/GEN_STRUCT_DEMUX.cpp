@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2020 Johannes Kepler University
+ * Copyright (c) 2020, 2023 Johannes Kepler University
+ *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,6 +10,7 @@
  *
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "GEN_STRUCT_DEMUX.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -18,6 +20,8 @@
 #include <stdio.h>
 #include "GEN_STRUCT_DEMUX.h"
 
+#include "resource.h"
+#include "criticalregion.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_STRUCT_DEMUX, g_nStringIdGEN_STRUCT_DEMUX);
 
@@ -25,11 +29,6 @@ const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scm_anEventInputNames[] = {
 const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scm_anEventOutputNames[] = { g_nStringIdCNF };
 
 const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scm_anDataInputNames[] = { g_nStringIdIN };
-
-const TForteInt16 GEN_STRUCT_DEMUX::scm_anEIWithIndexes[] = {0};
-const TDataIOID GEN_STRUCT_DEMUX::scm_anEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 GEN_STRUCT_DEMUX::scm_anEOWithIndexes[] = {0};
-
 
 void GEN_STRUCT_DEMUX::executeEvent(TEventID paEIID) {
   if(scm_nEventREQID == paEIID) {
@@ -46,10 +45,21 @@ GEN_STRUCT_DEMUX::GEN_STRUCT_DEMUX(const CStringDictionary::TStringId paInstance
 
 GEN_STRUCT_DEMUX::~GEN_STRUCT_DEMUX(){
   if(nullptr != mInterfaceSpec){
-    delete[](mInterfaceSpec->m_anEOWith);
     delete[](mInterfaceSpec->m_aunDIDataTypeNames);
     delete[](mInterfaceSpec->m_aunDONames);
     delete[](mInterfaceSpec->m_aunDODataTypeNames);
+  }
+}
+
+void GEN_STRUCT_DEMUX::readInputData(TEventID) {
+  RES_DATA_CON_CRITICAL_REGION();
+  readData(0, *mDIs[0], mDIConns[0]);
+}
+
+void GEN_STRUCT_DEMUX::writeOutputData(TEventID) {
+  RES_DATA_CON_CRITICAL_REGION();
+  for(TPortId i = 0; i < mInterfaceSpec->m_nNumDOs; ++i) {
+    writeData(i, *mDOs[i], mDOConns[i]);
   }
 }
 
@@ -66,19 +76,14 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
 
       size_t structSize = structInstance->getStructSize();
       if(structSize != 0 && structSize < cgInvalidPortId) { //the structure size must be non zero and less than cgInvalidPortId (maximum number of data outputs)
-        TDataIOID *eoWith = new TDataIOID[structSize + 1];
         CStringDictionary::TStringId *doDataTypeNames = new CStringDictionary::TStringId[GEN_STRUCT_MUX::calcStructTypeNameSize(*structInstance)];
         CStringDictionary::TStringId *doNames = new CStringDictionary::TStringId[structSize];
         CStringDictionary::TStringId *diDataTypeNames = new CStringDictionary::TStringId[1];
 
         paInterfaceSpec.m_nNumEIs = 1;
         paInterfaceSpec.m_aunEINames = scm_anEventInputNames;
-        paInterfaceSpec.m_anEIWith = scm_anEIWith;
-        paInterfaceSpec.m_anEIWithIndexes = scm_anEIWithIndexes;
         paInterfaceSpec.m_nNumEOs = 1;
         paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
-        paInterfaceSpec.m_anEOWith = eoWith;
-        paInterfaceSpec.m_anEOWithIndexes = scm_anEOWithIndexes;
         paInterfaceSpec.m_nNumDIs = 1;
         paInterfaceSpec.m_aunDINames = scm_anDataInputNames;
         paInterfaceSpec.m_aunDIDataTypeNames = diDataTypeNames;
@@ -89,11 +94,9 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
 
         for(size_t i = 0; i < structSize; ++i) {
           const CIEC_ANY &member = *structInstance->getMember(i);
-          eoWith[i] = i;
           doNames[i] = structInstance->elementNames()[i];
           fillDataPointSpec(member, doDataTypeNames);
         }
-        eoWith[paInterfaceSpec.m_nNumDOs] = scmWithListDelimiter;
         retval = true;
       } else {
         DEVLOG_ERROR("[GEN_STRUCT_DEMUX]: The structure %s has a size is not within range > 0 and < %u\n",

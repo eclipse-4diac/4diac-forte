@@ -1,6 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2014 Profactor GmbH, fortiss GbmH
- *                      2018 Johannes Kepler University
+ * Copyright (c) 2014, 2023 Profactor GmbH, fortiss GbmH
+ *                          Johannes Kepler University
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,6 +13,7 @@
  *   Matthias Plasch, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #ifndef _GEN_ARRAY2VALUES_H_
 #define _GEN_ARRAY2VALUES_H_
@@ -33,13 +36,9 @@ class GEN_ARRAY2VALUES : public CGenFunctionBlock<CFunctionBlock> {
     ;
 
     static const TEventID scm_nEventREQID = 0;
-    static const TForteInt16 scm_anEIWithIndexes[];
-    static const TDataIOID scm_anEIWith[];
     static const CStringDictionary::TStringId scm_anEventInputNames[];
 
     static const TEventID scm_nEventCNFID = 0;
-    static const TForteInt16 scm_anEOWithIndexes[];
-    TDataIOID *m_anEOWith;
     static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
     //self-defined members
@@ -47,6 +46,10 @@ class GEN_ARRAY2VALUES : public CGenFunctionBlock<CFunctionBlock> {
     CStringDictionary::TStringId mValueTypeID;
 
     void executeEvent(TEventID paEIID) override;
+
+    void readInputData(TEventID paEI) override;
+    void writeOutputData(TEventID paEO) override;
+
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
     GEN_ARRAY2VALUES(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);

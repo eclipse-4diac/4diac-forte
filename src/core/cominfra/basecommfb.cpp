@@ -43,8 +43,6 @@ CBaseCommFB::~CBaseCommFB() {
 
   if(nullptr != mInterfaceSpec) {
     //Free the memory allocated for the interface, only do this if we dynamically created it (i.e., getManagesFBData is true)
-    delete[](mInterfaceSpec->m_anEIWith);
-    delete[](mInterfaceSpec->m_anEOWith);
     delete[](mInterfaceSpec->m_aunDINames);
     delete[](mInterfaceSpec->m_aunDIDataTypeNames);
     delete[](mInterfaceSpec->m_aunDONames);

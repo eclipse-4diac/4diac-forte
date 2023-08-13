@@ -14,6 +14,7 @@
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *   Martin Jobst
  *     - refactor for ANY variant
+ *     - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "GEN_VALUES2ARRAY.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -21,28 +22,26 @@
 #endif
 
 #include <stdio.h>
-#include <forte_printer.h>
+#include "forte_printer.h"
+#include "resource.h"
+#include "criticalregion.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_VALUES2ARRAY, g_nStringIdGEN_VALUES2ARRAY)
 
 const CStringDictionary::TStringId GEN_VALUES2ARRAY::scm_anDataOutputNames[] = { g_nStringIdOUT };
 
-const TForteInt16 GEN_VALUES2ARRAY::scm_anEIWithIndexes[] = { 0 };
 const CStringDictionary::TStringId GEN_VALUES2ARRAY::scm_anEventInputNames[] = { g_nStringIdREQ };
 
-const TDataIOID GEN_VALUES2ARRAY::scm_anEOWith[] = { 0, scmWithListDelimiter };
-const TForteInt16 GEN_VALUES2ARRAY::scm_anEOWithIndexes[] = { 0, -1 };
 const CStringDictionary::TStringId GEN_VALUES2ARRAY::scm_anEventOutputNames[] = { g_nStringIdCNF };
 
 GEN_VALUES2ARRAY::GEN_VALUES2ARRAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), m_anDataInputNames(nullptr), m_anDataInputTypeIds(nullptr), m_anDataOutputTypeIds(nullptr), m_anEIWith(nullptr), m_nDInputs(0), m_ValueTypeID(CStringDictionary::CStringDictionary::scm_nInvalidStringId){
+    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), m_anDataInputNames(nullptr), m_anDataInputTypeIds(nullptr), m_anDataOutputTypeIds(nullptr), m_nDInputs(0), m_ValueTypeID(CStringDictionary::CStringDictionary::scm_nInvalidStringId){
 }
 
 GEN_VALUES2ARRAY::~GEN_VALUES2ARRAY(){
   delete[] m_anDataInputNames;
   delete[] m_anDataInputTypeIds;
   delete[] m_anDataOutputTypeIds;
-  delete[] m_anEIWith;
 }
 
 void GEN_VALUES2ARRAY::executeEvent(TEventID paEIID){
@@ -58,6 +57,18 @@ void GEN_VALUES2ARRAY::executeEvent(TEventID paEIID){
 
       break;
   }
+}
+
+void GEN_VALUES2ARRAY::readInputData(TEventID) {
+  RES_DATA_CON_CRITICAL_REGION();
+  for(TPortId i = 0; i < mInterfaceSpec->m_nNumDIs; ++i) {
+    readData(i, *mDIs[i], mDIConns[i]);
+  }
+}
+
+void GEN_VALUES2ARRAY::writeOutputData(TEventID) {
+  RES_DATA_CON_CRITICAL_REGION();
+  writeData(0, *mDOs[0], mDOConns[0]);
 }
 
 bool GEN_VALUES2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec){
@@ -100,24 +111,11 @@ bool GEN_VALUES2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterf
     m_anDataOutputTypeIds[1] = m_nDInputs;
     m_anDataOutputTypeIds[2] = m_ValueTypeID;
 
-    //get input with-indices for the data vars
-    m_anEIWith = new TDataIOID[m_nDInputs + 1];
-
-    //in-withs
-    for(size_t in_with = 0; in_with < m_nDInputs; ++in_with){
-      m_anEIWith[in_with] = static_cast<TDataIOID>(in_with);
-    }
-    m_anEIWith[m_nDInputs] = scmWithListDelimiter;
-
     //create the interface Specification
     paInterfaceSpec.m_nNumEIs = 1;
     paInterfaceSpec.m_aunEINames = scm_anEventInputNames;
-    paInterfaceSpec.m_anEIWith = m_anEIWith;
-    paInterfaceSpec.m_anEIWithIndexes = scm_anEIWithIndexes;
     paInterfaceSpec.m_nNumEOs = 1;
     paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
-    paInterfaceSpec.m_anEOWith = scm_anEOWith;
-    paInterfaceSpec.m_anEOWithIndexes = scm_anEOWithIndexes;
     paInterfaceSpec.m_nNumDIs = m_nDInputs;
     paInterfaceSpec.m_aunDINames = m_anDataInputNames;
     paInterfaceSpec.m_aunDIDataTypeNames = m_anDataInputTypeIds;

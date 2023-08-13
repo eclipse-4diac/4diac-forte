@@ -1,6 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2014 - 2015 Profactor GmbH, fortiss GmbH
- *                      2018 Johannes Kepler University
+ * Copyright (c) 2014, 2023 Profactor GmbH, fortiss GmbH
+ *                          Johannes Kepler University
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,23 +13,23 @@
  *   Matthias Plasch, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "GEN_ARRAY2ARRAY.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "GEN_ARRAY2ARRAY_gen.cpp"
 #endif
 
+#include "resource.h"
+#include "criticalregion.h"
+
 DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY, g_nStringIdGEN_ARRAY2ARRAY)
 
 const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scm_anDataInputNames[] = { g_nStringIdIN };
 const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scm_anDataOutputNames[] = { g_nStringIdOUT };
 
-const TForteInt16 GEN_ARRAY2ARRAY::scm_anEIWithIndexes[] = { 0 };
-const TDataIOID GEN_ARRAY2ARRAY::scm_anEIWith[] = { 0, scmWithListDelimiter };
 const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scm_anEventInputNames[] = { g_nStringIdREQ };
 
-const TDataIOID GEN_ARRAY2ARRAY::scm_anEOWith[] = { 0, scmWithListDelimiter };
-const TForteInt16 GEN_ARRAY2ARRAY::scm_anEOWithIndexes[] = { 0, -1 };
 const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scm_anEventOutputNames[] = { g_nStringIdCNF };
 
 GEN_ARRAY2ARRAY::GEN_ARRAY2ARRAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
@@ -49,6 +51,16 @@ void GEN_ARRAY2ARRAY::executeEvent(TEventID paEIID){
 
       break;
   }
+}
+
+void GEN_ARRAY2ARRAY::readInputData(TEventID) {
+  RES_DATA_CON_CRITICAL_REGION();
+  readData(0, *mDIs[0], mDIConns[0]);
+}
+
+void GEN_ARRAY2ARRAY::writeOutputData(TEventID) {
+  RES_DATA_CON_CRITICAL_REGION();
+  writeData(0, *mDOs[0], mDOConns[0]);
 }
 
 bool GEN_ARRAY2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec){
@@ -89,12 +101,8 @@ bool GEN_ARRAY2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterfa
     //create the interface Specification
     paInterfaceSpec.m_nNumEIs = 1;
     paInterfaceSpec.m_aunEINames = scm_anEventInputNames;
-    paInterfaceSpec.m_anEIWith = scm_anEIWith;
-    paInterfaceSpec.m_anEIWithIndexes = scm_anEIWithIndexes;
     paInterfaceSpec.m_nNumEOs = 1;
     paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
-    paInterfaceSpec.m_anEOWith = scm_anEOWith;
-    paInterfaceSpec.m_anEOWithIndexes = scm_anEOWithIndexes;
     paInterfaceSpec.m_nNumDIs = 1;
     paInterfaceSpec.m_aunDINames = scm_anDataInputNames;
     paInterfaceSpec.m_aunDIDataTypeNames = m_anDataInputTypeIds;

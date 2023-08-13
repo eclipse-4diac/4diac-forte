@@ -13,6 +13,7 @@
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *   Martin Jobst
  *     - refactor for ANY variant
+ *     - add generic readInputData and writeOutputData
  *******************************************************************************/
 
 #include "GEN_ADD.h"
@@ -20,10 +21,12 @@
 #include "GEN_ADD_gen.cpp"
 #endif
 
-#include <ifSpecBuilder.h>
 #include <ctype.h>
 #include <stdio.h>
-#include <forte_printer.h>
+#include "ifSpecBuilder.h"
+#include "forte_printer.h"
+#include "resource.h"
+#include "criticalregion.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_ADD, g_nStringIdGEN_ADD)
 
@@ -59,6 +62,18 @@ void GEN_ADD::executeEvent(TEventID paEIID){
   }
 }
 
+void GEN_ADD::readInputData(TEventID) {
+  RES_DATA_CON_CRITICAL_REGION();
+  for(TPortId i = 0; i < mInterfaceSpec->m_nNumDIs; ++i) {
+    readData(i, *mDIs[i], mDIConns[i]);
+  }
+}
+
+void GEN_ADD::writeOutputData(TEventID) {
+  RES_DATA_CON_CRITICAL_REGION();
+  writeData(0, *mDOs[0], mDOConns[0]);
+}
+
 bool GEN_ADD::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec){
   const char *pcPos = strrchr(paConfigString, '_');
 
@@ -91,8 +106,6 @@ bool GEN_ADD::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &
   isb.m_oEO.setStaticEvents(anEventOutputNames);
   auto DIRange = isb.m_oDI.addDataRange("IN", m_nDInputs, g_nStringIdANY_MAGNITUDE);
   isb.m_oDO.setStaticData(anDataOutputNames, anDataOutputTypeIds);
-  isb.m_oIWith.bindRange(isb.m_oEI[g_nStringIdREQ], DIRange);
-  isb.m_oOWith.setStaticBindings(anEOWith, anEOWithIndexes);
 
   return isb.build(m_oIfSpecStorage, paInterfaceSpec);
 }

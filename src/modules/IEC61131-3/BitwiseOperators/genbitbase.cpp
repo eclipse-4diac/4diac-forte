@@ -12,6 +12,7 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *   Martin Jobst
  *     - refactor for ANY variant
+ *     - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "genbitbase.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
@@ -20,27 +21,37 @@
 
 #include <ctype.h>
 #include <stdio.h>
-#include <forte_printer.h>
+#include "forte_printer.h"
+#include "resource.h"
+#include "criticalregion.h"
 
 
 const CStringDictionary::TStringId CGenBitBase::scmDataOutputNames[] = { g_nStringIdOUT };
 const CStringDictionary::TStringId CGenBitBase::scmDataOutputTypeIds[] = {g_nStringIdANY_BIT };
 
-const TForteInt16 CGenBitBase::scmEIWithIndexes[] = { 0 };
 const CStringDictionary::TStringId CGenBitBase::scmEventInputNames[] = {g_nStringIdREQ };
 
-const TDataIOID CGenBitBase::scmEOWith[] = { 0, scmWithListDelimiter };
-const TForteInt16 CGenBitBase::scmEOWithIndexes[] = { 0, -1 };
 const CStringDictionary::TStringId CGenBitBase::scmEventOutputNames[] = { g_nStringIdCNF };
 
 CGenBitBase::CGenBitBase(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), mDataInputNames(nullptr), mDataInputTypeIds(nullptr), mEIWith(nullptr){
+    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), mDataInputNames(nullptr), mDataInputTypeIds(nullptr) {
 }
 
 CGenBitBase::~CGenBitBase(){
   delete[] mDataInputNames;
   delete[] mDataInputTypeIds;
-  delete[] mEIWith;
+}
+
+void CGenBitBase::readInputData(TEventID) {
+  RES_DATA_CON_CRITICAL_REGION();
+  for(TPortId i = 0; i < mInterfaceSpec->m_nNumDIs; ++i) {
+    readData(i, *mDIs[i], mDIConns[i]);
+  }
+}
+
+void CGenBitBase::writeOutputData(TEventID) {
+  RES_DATA_CON_CRITICAL_REGION();
+  writeData(0, *mDOs[0], mDOConns[0]);
 }
 
 bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
@@ -75,25 +86,11 @@ bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
       mDataInputTypeIds[di] = g_nStringIdANY_BIT;
     }
 
-    //now create the WITH constructs...
-    //the With-Indexes for the data variables
-    mEIWith = new TDataIOID[paInterfaceSpec.m_nNumDIs + 1]; //for inputs + '255' separators at the list end
-
-    //in-withs
-    for (size_t in_with = 0; in_with < paInterfaceSpec.m_nNumDIs; ++in_with) {
-      mEIWith[in_with] = static_cast<TDataIOID>(in_with);
-    }
-    mEIWith[paInterfaceSpec.m_nNumDIs] = scmWithListDelimiter;
-
     //setup the interface Specification
     paInterfaceSpec.m_nNumEIs = 1;
     paInterfaceSpec.m_aunEINames = scmEventInputNames;
-    paInterfaceSpec.m_anEIWith = mEIWith;
-    paInterfaceSpec.m_anEIWithIndexes = scmEIWithIndexes;
     paInterfaceSpec.m_nNumEOs = 1;
     paInterfaceSpec.m_aunEONames = scmEventOutputNames;
-    paInterfaceSpec.m_anEOWith = scmEOWith;
-    paInterfaceSpec.m_anEOWithIndexes = scmEOWithIndexes;
     paInterfaceSpec.m_aunDINames = mDataInputNames;
     paInterfaceSpec.m_aunDIDataTypeNames = mDataInputTypeIds;
     paInterfaceSpec.m_nNumDOs = 1;

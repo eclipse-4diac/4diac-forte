@@ -1,5 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2013 ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2005, 2023 ACIN, Profactor GmbH, fortiss GmbH
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,22 +11,24 @@
  * Contributors:
  *   Alois Zoitl, Gunnar Grabmair, Ingo Hegny, GErhard Ebenhofer
  *    - initial API and implementation and/or initial documentation
+ *   Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "timedfb.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "timedfb_gen.cpp"
 #endif
 
+#include "resource.h"
+#include "criticalregion.h"
+
 const CStringDictionary::TStringId CTimedFB::scm_aunEINameIds[] = {g_nStringIdSTART, g_nStringIdSTOP};
-const TDataIOID CTimedFB::scm_anEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 CTimedFB::scm_anEIWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId CTimedFB::scm_aunEONameIds[] = {g_nStringIdEO};
 
 const CStringDictionary::TStringId CTimedFB::scm_aunDINameIds[] = {g_nStringIdDT};
 const CStringDictionary::TStringId CTimedFB::scm_aunDIDataTypeNameIds[] = {g_nStringIdTIME};
 
 const SFBInterfaceSpec CTimedFB::scm_stFBInterfaceSpec = {
-  2, scm_aunEINameIds, scm_anEIWith, scm_anEIWithIndexes,
+  2, scm_aunEINameIds, nullptr, nullptr,
   1, scm_aunEONameIds, nullptr, nullptr,
   1, scm_aunDINameIds, scm_aunDIDataTypeNameIds,
   0, nullptr, nullptr,
@@ -63,6 +67,14 @@ void CTimedFB::executeEvent(TEventID paEIID, CEventChainExecutionThread * const 
     default:
       break;
   }
+}
+
+void CTimedFB::readInputData(TEventID) {
+  RES_DATA_CON_CRITICAL_REGION();
+  readData(0, *mDIs[0], mDIConns[0]);
+}
+
+void CTimedFB::writeOutputData(TEventID) {
 }
 
 EMGMResponse CTimedFB::changeFBExecutionState(EMGMCommandType pa_unCommand){

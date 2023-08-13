@@ -12,6 +12,7 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *   Martin Jobst
  *     - refactor for ANY variant
+ *     - add generic readInputData and writeOutputData
  *******************************************************************************/
 #ifndef _GENBITBASE_H_
 #define _GENBITBASE_H_
@@ -43,13 +44,12 @@ class CGenBitBase : public CGenFunctionBlock<CFunctionBlock> {
     static const CStringDictionary::TStringId scmDataOutputNames[];
     static const CStringDictionary::TStringId scmDataOutputTypeIds[];
 
-    static const TForteInt16 scmEIWithIndexes[];
-    TDataIOID *mEIWith;
     static const CStringDictionary::TStringId scmEventInputNames[];
 
-    static const TForteInt16 scmEOWithIndexes[];
-    static const TDataIOID scmEOWith[];
     static const CStringDictionary::TStringId scmEventOutputNames[];
+
+    void readInputData(TEventID paEI) override;
+    void writeOutputData(TEventID paEO) override;
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 };

@@ -1,5 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2014 ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2005, 2023 ACIN, Profactor GmbH, fortiss GmbH
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,6 +12,7 @@
  *   Alois Zoitl, Thomas Strasser, Gunnar Grabmair, Martin Melik Merkumians,
  *   Ingo Hegny, Gerhard Ebenhofer
  *    - initial API and implementation and/or initial documentation
+ *   Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #ifndef _TIMEDFB_H_
 #define _TIMEDFB_H_
@@ -25,10 +28,7 @@ private:
 protected:
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
   static const CStringDictionary::TStringId scm_aunEINameIds[];
-  static const TDataIOID scm_anEIWith[];
-  static const TForteInt16 scm_anEIWithIndexes[];
   static const CStringDictionary::TStringId scm_aunEONameIds[];
-  static const TForteInt16 scm_anEOWithIndexes[];
   static const CStringDictionary::TStringId scm_aunDINameIds[];
   static const CStringDictionary::TStringId scm_aunDIDataTypeNameIds[];
 
@@ -45,6 +45,9 @@ protected:
  * Derived Timed FBs only normally need only the start event as this is different for each timed FB type (e.g. periodic vs. onetimeshot)
  */
   void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
+
+  void readInputData(TEventID paEI) override;
+  void writeOutputData(TEventID paEO) override;
 
   CIEC_TIME& DT() {
      return *static_cast<CIEC_TIME*>(getDI(0));

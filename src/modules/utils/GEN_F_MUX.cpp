@@ -1,6 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2012 - 2013 Profactor GmbH, ACIN
- *                      2018 Johannes Kepler University
+ * Copyright (c) 2012, 2023 Profactor GmbH, ACIN
+ *                          Johannes Kepler University
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,14 +13,19 @@
  *   Matthias Plasch, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "GEN_F_MUX.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "GEN_F_MUX_gen.cpp"
 #endif
-#include <forte_printer.h>
+
 #include <ctype.h>
 #include <stdio.h>
+
+#include "forte_printer.h"
+#include "resource.h"
+#include "criticalregion.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_F_MUX, g_nStringIdGEN_F_MUX);
 
@@ -31,10 +38,6 @@ GEN_F_MUX::GEN_F_MUX(const CStringDictionary::TStringId paInstanceNameId, CResou
   m_anDataInputNames(nullptr),
   m_anDataOutputTypeIds(nullptr),
   m_anDataInputTypeIds(nullptr),
-  m_anEIWithIndexes(nullptr),
-  m_anEIWith(nullptr),
-  m_anEOWithIndexes(nullptr),
-  m_anEOWith(nullptr),
   mEInputs(0),
   mEOutputs(0),
   mDInputs(0),
@@ -47,10 +50,6 @@ GEN_F_MUX::~GEN_F_MUX(){
   delete[] m_anDataInputTypeIds;
   delete[] m_anDataOutputNames;
   delete[] m_anDataOutputTypeIds;
-  delete[] m_anEIWith;
-  delete[] m_anEIWithIndexes;
-  delete[] m_anEOWith;
-  delete[] m_anEOWithIndexes;
 }
 
 void GEN_F_MUX::executeEvent(TEventID paEIID){
@@ -86,6 +85,21 @@ void GEN_F_MUX::executeEvent(TEventID paEIID){
     }
 
     sendOutputEvent(0);
+  }
+}
+
+void GEN_F_MUX::readInputData(TEventID paEI) {
+  RES_DATA_CON_CRITICAL_REGION();
+  for(TPortId i = 0; i < mDOutputs; ++i) {
+    TPortId index = paEI * mDOutputs + i;
+    readData(index, *mDIs[index], mDIConns[index]);
+  }
+}
+
+void GEN_F_MUX::writeOutputData(TEventID) {
+  RES_DATA_CON_CRITICAL_REGION();
+  for(TPortId i = 0; i < mInterfaceSpec->m_nNumDOs; ++i) {
+    writeData(i, *mDOs[i], mDOConns[i]);
   }
 }
 
@@ -192,62 +206,11 @@ bool GEN_F_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
 
     generateGenericDataPointArrays("OUT_", &(m_anDataOutputTypeIds[2]), &(m_anDataOutputNames[2]), mDOutputs);
 
-    //now create the WITH constructs...
-    //first the With-Indexes Events
-    m_anEIWithIndexes = new TForteInt16[mEInputs];
-    m_anEOWithIndexes = new TForteInt16[2]; //contains terminating -1 value
-
-    for(size_t ei_index = 0; ei_index < mEInputs; ei_index++) {
-      if(ei_index == 0){
-        m_anEIWithIndexes[ei_index] = 0;
-      }
-      else{
-        m_anEIWithIndexes[ei_index] = static_cast<TForteInt16>(ei_index * (mDOutputs + 1));
-      }
-    }
-
-    m_anEOWithIndexes[0] = 0;
-    m_anEOWithIndexes[1] = -1;
-
-    //second the With-Indexes for the data variables
-    m_anEIWith = new TDataIOID[mDInputs + mEInputs]; //for inputs per event + '255' separators between withs
-    m_anEOWith = new TDataIOID[mDOutputs + 2 + 1]; //for outputs only one '255' separator since one output event is needed + 2 for QO and STATUS
-
-    //in-withs
-    int withListIndex = 0;
-    int dataIndex = 0;
-    for(size_t in_block = 0; in_block < mEInputs; in_block++) {
-
-      for(size_t in_with = 0; in_with < mDOutputs; in_with++) {
-        m_anEIWith[withListIndex] = static_cast<TDataIOID>(dataIndex);
-        withListIndex++;
-        dataIndex++;
-      }
-
-      //set '255' separator
-      m_anEIWith[withListIndex] = scmWithListDelimiter;
-      withListIndex++;
-    }
-
-    //out-withs
-    m_anEOWith[0] = 0; //for QO and STATUS
-    m_anEOWith[1] = 1;
-
-    for(TPortId out_with = 2; out_with < mDOutputs + 2; out_with++) {
-      m_anEOWith[out_with] = out_with;
-    }
-    //set '255' separator
-    m_anEOWith[mDOutputs + 2] = scmWithListDelimiter;
-
     //create the interface Specification
     paInterfaceSpec.m_nNumEIs = mEInputs;
     paInterfaceSpec.m_aunEINames = m_anEventInputNames;
-    paInterfaceSpec.m_anEIWith = m_anEIWith;
-    paInterfaceSpec.m_anEIWithIndexes = m_anEIWithIndexes;
     paInterfaceSpec.m_nNumEOs = mEOutputs;
     paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
-    paInterfaceSpec.m_anEOWith = m_anEOWith;
-    paInterfaceSpec.m_anEOWithIndexes = m_anEOWithIndexes;
     paInterfaceSpec.m_nNumDIs = mDInputs;
     paInterfaceSpec.m_aunDINames = m_anDataInputNames;
     paInterfaceSpec.m_aunDIDataTypeNames = m_anDataInputTypeIds;

@@ -14,6 +14,7 @@
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *   Martin Jobst
  *     - refactor for ANY variant
+ *     - add generic readInputData and writeOutputData
  *******************************************************************************/
 
 #ifndef _GEN_ADD_H_
@@ -38,18 +39,19 @@ class GEN_ADD : public CGenFunctionBlock<CFunctionBlock> {
     }
 
     static const TEventID scm_nEventREQID = 0;
-    static const TForteInt16 scm_anEIWithIndexes[];
     static const CStringDictionary::TStringId scm_anEventInputNames[];
 
     static const TEventID scm_nEventCNFID = 0;
-    static const TForteInt16 scm_anEOWithIndexes[];
-    static const TDataIOID scm_anEOWith[];
     static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
     //self-defined members
     unsigned int m_nDInputs;
 
     void executeEvent(TEventID paEIID) override;
+
+    void readInputData(TEventID paEI) override;
+    void writeOutputData(TEventID paEO) override;
+
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
     GEN_ADD(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);

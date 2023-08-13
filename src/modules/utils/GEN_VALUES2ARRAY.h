@@ -11,6 +11,7 @@
  *   Matthias Plasch, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #ifndef _GEN_VALUES2ARRAY_H_
 #define _GEN_VALUES2ARRAY_H_
@@ -32,21 +33,21 @@ class GEN_VALUES2ARRAY : public CGenFunctionBlock<CFunctionBlock>{
     }
 
     static const TEventID scm_nEventREQID = 0;
-    static const TForteInt16 scm_anEIWithIndexes[];
-    TDataIOID *m_anEIWith;
     static const CStringDictionary::TStringId scm_anEventInputNames[];
 
     static const TEventID scm_nEventCNFID = 0;
-    static const TForteInt16 scm_anEOWithIndexes[];
-    static const TDataIOID scm_anEOWith[];
     static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
     //self-defined members
     unsigned int m_nDInputs;
     CStringDictionary::TStringId m_ValueTypeID;
 
-     void executeEvent(TEventID paEIID) override;
-     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
+    void executeEvent(TEventID paEIID) override;
+
+    void readInputData(TEventID paEI) override;
+    void writeOutputData(TEventID paEO) override;
+
+    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
     GEN_VALUES2ARRAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);
     ~GEN_VALUES2ARRAY() override;

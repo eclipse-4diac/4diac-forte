@@ -14,13 +14,16 @@
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *   Martin Jobst
  *     - refactor for ANY variant
+ *     - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "GEN_CSV_WRITER.h"
 #ifdef FORTE_ENABLE_GENERATED_SOURCE_CPP
 #include "GEN_CSV_WRITER_gen.cpp"
 #endif
 #include <errno.h>
-#include <devlog.h>
+#include "devlog.h"
+#include "resource.h"
+#include "criticalregion.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_CSV_WRITER, g_nStringIdGEN_CSV_WRITER);
 
@@ -30,9 +33,6 @@ const CStringDictionary::TStringId GEN_CSV_WRITER::scm_anDataOutputTypeIds[] = {
 
 const CStringDictionary::TStringId GEN_CSV_WRITER::scm_anEventInputNames[] = { g_nStringIdINIT, g_nStringIdREQ };
 
-const TForteInt16 GEN_CSV_WRITER::scm_anEIWithIndexes[] = { 0, 3 };
-const TDataIOID GEN_CSV_WRITER::scm_anEOWith[] = { 0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter };
-const TForteInt16 GEN_CSV_WRITER::scm_anEOWithIndexes[] = { 0, 3, -1 };
 const CStringDictionary::TStringId GEN_CSV_WRITER::scm_anEventOutputNames[] = { g_nStringIdINITO, g_nStringIdCNF };
 
 const CIEC_STRING GEN_CSV_WRITER::scmOK = "OK"_STRING;
@@ -57,14 +57,40 @@ void GEN_CSV_WRITER::executeEvent(TEventID paEIID) {
 }
 
 GEN_CSV_WRITER::GEN_CSV_WRITER(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), mCSVFile(nullptr), m_anDataInputNames(nullptr), m_anDataInputTypeIds(nullptr), m_anEIWith(nullptr){
+    CGenFunctionBlock<CFunctionBlock>(paSrcRes, paInstanceNameId), mCSVFile(nullptr), m_anDataInputNames(nullptr), m_anDataInputTypeIds(nullptr) {
 }
 
 GEN_CSV_WRITER::~GEN_CSV_WRITER(){
   delete[] m_anDataInputNames;
   delete[] m_anDataInputTypeIds;
-  delete[] m_anEIWith;
   closeCSVFile();
+}
+
+void GEN_CSV_WRITER::readInputData(TEventID paEI) {
+  switch(paEI) {
+    case scm_nEventINITID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      readData(0, *mDIs[0], mDIConns[0]);
+      readData(1, *mDIs[1], mDIConns[1]);
+      break;
+    }
+    case scm_nEventREQID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      readData(0, *mDIs[0], mDIConns[0]);
+      for(TPortId i = 2; i < mInterfaceSpec->m_nNumDIs; i++){
+        readData(i, *mDIs[i], mDIConns[i]);
+      }
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+void GEN_CSV_WRITER::writeOutputData(TEventID) {
+  RES_DATA_CON_CRITICAL_REGION();
+  writeData(0, *mDOs[0], mDOConns[0]);
+  writeData(1, *mDOs[1], mDOConns[1]);
 }
 
 bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
@@ -83,28 +109,11 @@ bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfac
 
     generateGenericDataPointArrays("SD_", &(m_anDataInputTypeIds[2]), &(m_anDataInputNames[2]), paInterfaceSpec.m_nNumDIs - 2);
 
-    m_anEIWith = new TDataIOID[3 + paInterfaceSpec.m_nNumDIs];
-
-    m_anEIWith[0] = 0;
-    m_anEIWith[1] = 1;
-    m_anEIWith[2] = scmWithListDelimiter;
-    m_anEIWith[3] = 0;
-
-    for(TDataIOID i = 2; i < paInterfaceSpec.m_nNumDIs; i++){
-      m_anEIWith[i + 2] = i;
-    }
-
-    m_anEIWith[2 + paInterfaceSpec.m_nNumDIs] = scmWithListDelimiter;
-
     //create the interface Specification
     paInterfaceSpec.m_nNumEIs = 2;
     paInterfaceSpec.m_aunEINames = scm_anEventInputNames;
-    paInterfaceSpec.m_anEIWith = m_anEIWith;
-    paInterfaceSpec.m_anEIWithIndexes = scm_anEIWithIndexes;
     paInterfaceSpec.m_nNumEOs = 2;
     paInterfaceSpec.m_aunEONames = scm_anEventOutputNames;
-    paInterfaceSpec.m_anEOWith = scm_anEOWith;
-    paInterfaceSpec.m_anEOWithIndexes = scm_anEOWithIndexes;
     paInterfaceSpec.m_aunDINames = m_anDataInputNames;
     paInterfaceSpec.m_aunDIDataTypeNames = m_anDataInputTypeIds;
     paInterfaceSpec.m_nNumDOs = 2;

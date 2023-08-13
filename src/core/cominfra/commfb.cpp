@@ -1,6 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2006-2014 ACIN, Profactor GmbH, fortiss GmbH
- *                      2018 Johannes Kepler University
+ * Copyright (c) 2006, 2023 ACIN, Profactor GmbH, fortiss GmbH
+ *                          Johannes Kepler University
+ *                          Martin Erich Jobst
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -12,6 +14,7 @@
  *    Patrick Smejkal
  *      - initial implementation and rework communication infrastructure
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include <fortenew.h>
 #include <string.h>
@@ -24,6 +27,7 @@
 #include "../resource.h"
 #include "comlayer.h"
 #include "comlayersmanager.h"
+#include "criticalregion.h"
 
 using namespace forte::com_infra;
 
@@ -32,9 +36,6 @@ const CStringDictionary::TStringId CCommFB::scm_aunRequesterEventOutputNameIds[2
 
 const CStringDictionary::TStringId CCommFB::scm_aunResponderEventInputNameIds[2] = { g_nStringIdINIT, g_nStringIdRSP };
 const CStringDictionary::TStringId CCommFB::scm_aunResponderEventOutputNameIds[2] = { g_nStringIdINITO, g_nStringIdIND };
-
-const TForteInt16 CCommFB::scm_anEIWithIndexes[] = { 0, 3 };
-const TForteInt16 CCommFB::scm_anEOWithIndexes[] = { 0, 3, -1 };
 
 CCommFB::CCommFB(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes, forte::com_infra::EComServiceType pa_eCommServiceType) :
   CBaseCommFB(pa_nInstanceNameId, pa_poSrcRes, pa_eCommServiceType) {
@@ -94,6 +95,46 @@ void CCommFB::executeEvent(TEventID paEIID) {
     else {
       sendOutputEvent(scm_nReceiveNotificationEventID);
     }
+  }
+}
+
+void CCommFB::readInputData(TEventID paEI) {
+  switch(paEI) {
+    case scm_nEventINITID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      readData(0, *mDIs[0], mDIConns[0]);
+      readData(1, *mDIs[1], mDIConns[1]);
+      break;
+    }
+    case scm_nSendNotificationEventID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      for(TPortId i = 0; i < mInterfaceSpec->m_nNumDIs; ++i) {
+        readData(i, *mDIs[i], mDIConns[i]);
+      }
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+void CCommFB::writeOutputData(TEventID paEO) {
+  switch(paEO) {
+    case scm_nEventINITOID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      writeData(0, *mDOs[0], mDOConns[0]);
+      writeData(1, *mDOs[1], mDOConns[1]);
+      break;
+    }
+    case scm_nReceiveNotificationEventID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      for(TPortId i = 0; i < mInterfaceSpec->m_nNumDOs; ++i) {
+        writeData(i, *mDOs[i], mDOConns[i]);
+      }
+      break;
+    }
+    default:
+      break;
   }
 }
 
@@ -165,8 +206,6 @@ bool CCommFB::createInterfaceSpec(const char* paConfigString, SFBInterfaceSpec& 
       paInterfaceSpec.m_aunEONames = scm_aunResponderEventOutputNameIds;
     }
   }
-  paInterfaceSpec.m_anEIWithIndexes = scm_anEIWithIndexes;
-  paInterfaceSpec.m_anEOWithIndexes = scm_anEOWithIndexes;
 
   return true;
 }
@@ -174,7 +213,6 @@ bool CCommFB::createInterfaceSpec(const char* paConfigString, SFBInterfaceSpec& 
 void CCommFB::configureDIs(const char* paDIConfigString, SFBInterfaceSpec& paInterfaceSpec) const {
   CStringDictionary::TStringId* diDataTypeNames;
   CStringDictionary::TStringId* diNames;
-  TDataIOID* eiWith;
 
   paInterfaceSpec.m_nNumDIs = 2;
 
@@ -184,30 +222,15 @@ void CCommFB::configureDIs(const char* paDIConfigString, SFBInterfaceSpec& paInt
                                   static_cast<TPortId>(forte::core::util::strtol(paDIConfigString, nullptr, 10));
       diDataTypeNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
       diNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
-      eiWith = new TDataIOID[paInterfaceSpec.m_nNumDIs - 2 + scmMinWithLength];
 
       generateGenericDataPointArrays("SD_", &(diDataTypeNames[2]), &(diNames[2]), paInterfaceSpec.m_nNumDIs - 2);
     }
     else {
       diDataTypeNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
       diNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDIs];
-      eiWith = new TDataIOID[scmMinWithLength];
     }
     paInterfaceSpec.m_aunDIDataTypeNames = diDataTypeNames;
     paInterfaceSpec.m_aunDINames = diNames;
-    paInterfaceSpec.m_anEIWith = eiWith;
-
-    eiWith[0] = 0;
-    eiWith[1] = 1;
-    eiWith[2] = scmWithListDelimiter;
-    eiWith[3] = 0;
-    eiWith[4] = 1;
-
-    TPortId i;
-    for (i = 0; i < paInterfaceSpec.m_nNumDIs - 2U; i++) {
-      eiWith[i + 5U] = i + 2U;
-    }
-    eiWith[i + 5U] = scmWithListDelimiter;
 
     diDataTypeNames[0] = g_nStringIdBOOL;
     diNames[0] = g_nStringIdQI;
@@ -222,7 +245,6 @@ void CCommFB::configureDIs(const char* paDIConfigString, SFBInterfaceSpec& paInt
 void CCommFB::configureDOs(const char* paDOConfigString, SFBInterfaceSpec& paInterfaceSpec) const {
   CStringDictionary::TStringId* doDataTypeNames;
   CStringDictionary::TStringId* doNames;
-  TDataIOID* eoWith;
 
   paInterfaceSpec.m_nNumDOs = 2;
 
@@ -232,31 +254,16 @@ void CCommFB::configureDOs(const char* paDOConfigString, SFBInterfaceSpec& paInt
                                 static_cast<TPortId>(forte::core::util::strtol(paDOConfigString, nullptr, 10));
     doDataTypeNames  = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDOs];
     doNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDOs];
-    eoWith = new TDataIOID[paInterfaceSpec.m_nNumDOs - 2 + scmMinWithLength];
 
     generateGenericDataPointArrays("RD_", &(doDataTypeNames[2]), &(doNames[2]), paInterfaceSpec.m_nNumDOs - 2);
   }
   else{
     doDataTypeNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDOs];
     doNames = new CStringDictionary::TStringId[paInterfaceSpec.m_nNumDOs];
-    eoWith = new TDataIOID[scmMinWithLength];
   }
 
   paInterfaceSpec.m_aunDONames = doNames;
   paInterfaceSpec.m_aunDODataTypeNames = doDataTypeNames;
-  paInterfaceSpec.m_anEOWith = eoWith;
-
-  eoWith[0] = 0;
-  eoWith[1] = 1;
-  eoWith[2] = scmWithListDelimiter;
-  eoWith[3] = 0;
-  eoWith[4] = 1;
-
-  TPortId i;
-  for(i = 0; i < paInterfaceSpec.m_nNumDOs - 2U; i++){
-    eoWith[i + 5U] = i + 2U;
-  }
-  eoWith[i + 5U] = scmWithListDelimiter;
 
   doDataTypeNames[0] = g_nStringIdBOOL;
   doNames[0] = g_nStringIdQO;
