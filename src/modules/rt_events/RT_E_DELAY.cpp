@@ -15,49 +15,58 @@
 #include "RT_E_DELAY_gen.cpp"
 #endif
 
+#include "criticalregion.h"
+#include "resource.h"
+
 DEFINE_FIRMWARE_FB(FORTE_RT_E_DELAY, g_nStringIdRT_E_DELAY)
 
 const CStringDictionary::TStringId FORTE_RT_E_DELAY::scm_anDataInputNames[] = {g_nStringIdQI, g_nStringIdDT, g_nStringIdTmin, g_nStringIdDeadline, g_nStringIdWCET};
-
 const CStringDictionary::TStringId FORTE_RT_E_DELAY::scm_anDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME};
-
 const CStringDictionary::TStringId FORTE_RT_E_DELAY::scm_anDataOutputNames[] = {g_nStringIdQO};
-
 const CStringDictionary::TStringId FORTE_RT_E_DELAY::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL};
-
-const TForteInt16 FORTE_RT_E_DELAY::scm_anEIWithIndexes[] = {0, 5, -1};
 const TDataIOID FORTE_RT_E_DELAY::scm_anEIWith[] = {0, 2, 3, 4, scmWithListDelimiter, 1, scmWithListDelimiter};
+const TForteInt16 FORTE_RT_E_DELAY::scm_anEIWithIndexes[] = {0, 5, -1};
 const CStringDictionary::TStringId FORTE_RT_E_DELAY::scm_anEventInputNames[] = {g_nStringIdINIT, g_nStringIdSTART, g_nStringIdSTOP};
-
 const TDataIOID FORTE_RT_E_DELAY::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_RT_E_DELAY::scm_anEOWithIndexes[] = {0, -1, -1};
+const TForteInt16 FORTE_RT_E_DELAY::scm_anEOWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_RT_E_DELAY::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdEO};
-
 const SFBInterfaceSpec FORTE_RT_E_DELAY::scm_stFBInterfaceSpec = {
-  3,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  2,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  5,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+  3, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
+  2, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
+  5, scm_anDataInputNames, scm_anDataInputTypeIds,
+  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
   0, nullptr,
   0, nullptr
 };
 
-
-FORTE_RT_E_DELAY::FORTE_RT_E_DELAY(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-            CEventSourceFB( paSrcRes, &scm_stFBInterfaceSpec,  paInstanceNameId){
+FORTE_RT_E_DELAY::FORTE_RT_E_DELAY(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
+        CEventSourceFB( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId),
+    var_conn_QO(var_QO),
+    conn_INITO(this, 0),
+    conn_EO(this, 1),
+    conn_QI(nullptr),
+    conn_DT(nullptr),
+    conn_Tmin(nullptr),
+    conn_Deadline(nullptr),
+    conn_WCET(nullptr),
+    conn_QO(this, 0, &var_conn_QO),
+    mTimeListEntry{.mTimedFB = this, .mType = e_SingleShot} {
   setEventChainExecutor(&mECEO);
-  mActive = false;
-  mInitialized = false;
-  mTimeListEntry.mTimeOut = 0;
-  mTimeListEntry.mInterval = 0;
-  mTimeListEntry.mNext = nullptr;
-  mTimeListEntry.mTimedFB = this;
-  mTimeListEntry.mType = e_SingleShot;
+};
+
+void FORTE_RT_E_DELAY::setInitialValues() {
+  var_QI = 0_BOOL;
+  var_DT = 0_TIME;
+  var_Tmin = 0_TIME;
+  var_Deadline = 0_TIME;
+  var_WCET = 0_TIME;
+  var_QO = 0_BOOL;
 }
 
-void FORTE_RT_E_DELAY::executeEvent(TEventID paEIID){
-  switch(paEIID){
+void FORTE_RT_E_DELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+  switch(paEIID) {
     case cg_nExternalEventID:
-      sendOutputEvent(scm_nEventEOID);
+      sendOutputEvent(scm_nEventEOID, paECET);
       mActive = false;
       break;
     case scm_nEventSTOPID:
@@ -68,30 +77,27 @@ void FORTE_RT_E_DELAY::executeEvent(TEventID paEIID){
       break;
     case scm_nEventSTARTID:
       if((!mActive)&&(mInitialized)){
-        getTimer().registerTimedFB(&mTimeListEntry, DT());
+        getTimer().registerTimedFB(&mTimeListEntry, var_DT);
         mActive = true;
       }
       break;
     case scm_nEventINITID:
-      if(QI() == true){
+      if(var_QI == true){
         if(!mInitialized){
           //m_oECEO.start();
           mInitialized = true;
         }
-        mECEO.setDeadline(Deadline());
+        mECEO.setDeadline(var_Deadline);
       }
       else{
-       // m_oECEO.end();
         mInitialized = false;
         mECEO.setDeadline(CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0)));
       }
-      QO() = QI();
-      sendOutputEvent(scm_nEventINITOID);
-    default:
+      var_QO = var_QI;
+      sendOutputEvent(scm_nEventINITOID, paECET);
       break;
   }
 }
-
 
 EMGMResponse FORTE_RT_E_DELAY::changeFBExecutionState(EMGMCommandType paCommand){
   mECEO.changeExecutionState(paCommand);
@@ -102,3 +108,101 @@ EMGMResponse FORTE_RT_E_DELAY::changeFBExecutionState(EMGMCommandType paCommand)
   }
   return eRetVal;
 }
+
+void FORTE_RT_E_DELAY::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scm_nEventINITID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      readData(0, var_QI, conn_QI);
+      readData(2, var_Tmin, conn_Tmin);
+      readData(3, var_Deadline, conn_Deadline);
+      readData(4, var_WCET, conn_WCET);
+      break;
+    }
+    case scm_nEventSTARTID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      readData(1, var_DT, conn_DT);
+      break;
+    }
+    case scm_nEventSTOPID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+void FORTE_RT_E_DELAY::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scm_nEventINITOID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      writeData(0, var_QO, conn_QO);
+      break;
+    }
+    case scm_nEventEOID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+CIEC_ANY *FORTE_RT_E_DELAY::getDI(size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_QI;
+    case 1: return &var_DT;
+    case 2: return &var_Tmin;
+    case 3: return &var_Deadline;
+    case 4: return &var_WCET;
+  }
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_RT_E_DELAY::getDO(size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_QO;
+  }
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_RT_E_DELAY::getDIO(size_t) {
+  return nullptr;
+}
+
+CEventConnection *FORTE_RT_E_DELAY::getEOConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_INITO;
+    case 1: return &conn_EO;
+  }
+  return nullptr;
+}
+
+CDataConnection **FORTE_RT_E_DELAY::getDIConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_QI;
+    case 1: return &conn_DT;
+    case 2: return &conn_Tmin;
+    case 3: return &conn_Deadline;
+    case 4: return &conn_WCET;
+  }
+  return nullptr;
+}
+
+CDataConnection *FORTE_RT_E_DELAY::getDOConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_QO;
+  }
+  return nullptr;
+}
+
+CInOutDataConnection **FORTE_RT_E_DELAY::getDIOInConUnchecked(TPortId) {
+  return nullptr;
+}
+
+CInOutDataConnection *FORTE_RT_E_DELAY::getDIOOutConUnchecked(TPortId) {
+  return nullptr;
+}
+
+

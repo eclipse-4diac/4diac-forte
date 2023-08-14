@@ -22,22 +22,15 @@
 DEFINE_FIRMWARE_FB(FORTE_RT_E_TRAIN, g_nStringIdRT_E_TRAIN)
 
 const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scm_anDataInputNames[] = {g_nStringIdDT, g_nStringIdN, g_nStringIdDeadline, g_nStringIdWCET};
-
 const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scm_anDataInputTypeIds[] = {g_nStringIdTIME, g_nStringIdUINT, g_nStringIdTIME, g_nStringIdTIME};
-
 const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scm_anDataOutputNames[] = {g_nStringIdCV};
-
 const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scm_anDataOutputTypeIds[] = {g_nStringIdUINT};
-
 const TDataIOID FORTE_RT_E_TRAIN::scm_anEIWith[] = {0, 1, 2, 3, scmWithListDelimiter};
 const TForteInt16 FORTE_RT_E_TRAIN::scm_anEIWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scm_anEventInputNames[] = {g_nStringIdSTART, g_nStringIdSTOP};
-
 const TDataIOID FORTE_RT_E_TRAIN::scm_anEOWith[] = {0, scmWithListDelimiter};
 const TForteInt16 FORTE_RT_E_TRAIN::scm_anEOWithIndexes[] = {0};
 const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scm_anEventOutputNames[] = {g_nStringIdEO};
-
-
 const SFBInterfaceSpec FORTE_RT_E_TRAIN::scm_stFBInterfaceSpec = {
   2, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
   1, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
@@ -49,11 +42,6 @@ const SFBInterfaceSpec FORTE_RT_E_TRAIN::scm_stFBInterfaceSpec = {
 
 FORTE_RT_E_TRAIN::FORTE_RT_E_TRAIN(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
     CCompositeFB(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId, &scm_stFBNData),
-    var_DT(CIEC_TIME(0)),
-    var_N(CIEC_UINT(0)),
-    var_Deadline(CIEC_TIME(0)),
-    var_WCET(CIEC_TIME(0)),
-    var_CV(CIEC_UINT(0)),
     var_conn_CV(var_CV),
     conn_EO(this, 0),
     conn_DT(nullptr),
@@ -62,6 +50,14 @@ FORTE_RT_E_TRAIN::FORTE_RT_E_TRAIN(const CStringDictionary::TStringId pa_nInstan
     conn_WCET(nullptr),
     conn_CV(this, 0, &var_conn_CV) {
 };
+
+void FORTE_RT_E_TRAIN::setInitialValues() {
+  var_DT = 0_TIME;
+  var_N = 0_UINT;
+  var_Deadline = 0_TIME;
+  var_WCET = 0_TIME;
+  var_CV = 0_UINT;
+}
 
 const SCFB_FBInstanceData FORTE_RT_E_TRAIN::scm_astInternalFBs[] = {
   {g_nStringIdRT_E_CYCLE, g_nStringIdRT_E_CYCLE},
@@ -99,8 +95,8 @@ const SCFB_FBNData FORTE_RT_E_TRAIN::scm_stFBNData = {
 };
 
 
-void FORTE_RT_E_TRAIN::readInputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
+void FORTE_RT_E_TRAIN::readInputData(TEventID paEIID) {
+  switch(paEIID) {
     case scm_nEventSTARTID: {
       RES_DATA_CON_CRITICAL_REGION();
       readData(0, var_DT, conn_DT);
@@ -118,8 +114,8 @@ void FORTE_RT_E_TRAIN::readInputData(TEventID pa_nEIID) {
   }
 }
 
-void FORTE_RT_E_TRAIN::writeOutputData(TEventID pa_nEIID) {
-  switch(pa_nEIID) {
+void FORTE_RT_E_TRAIN::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
     case scm_nEventEOID: {
       RES_DATA_CON_CRITICAL_REGION();
       writeData(0, var_CV, conn_CV);
@@ -147,6 +143,10 @@ CIEC_ANY *FORTE_RT_E_TRAIN::getDO(size_t paIndex) {
   return nullptr;
 }
 
+CIEC_ANY *FORTE_RT_E_TRAIN::getDIO(size_t) {
+  return nullptr;
+}
+
 CEventConnection *FORTE_RT_E_TRAIN::getEOConUnchecked(TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_EO;
@@ -168,6 +168,14 @@ CDataConnection *FORTE_RT_E_TRAIN::getDOConUnchecked(TPortId paIndex) {
   switch(paIndex) {
     case 0: return &conn_CV;
   }
+  return nullptr;
+}
+
+CInOutDataConnection **FORTE_RT_E_TRAIN::getDIOInConUnchecked(TPortId) {
+  return nullptr;
+}
+
+CInOutDataConnection *FORTE_RT_E_TRAIN::getDIOOutConUnchecked(TPortId) {
   return nullptr;
 }
 

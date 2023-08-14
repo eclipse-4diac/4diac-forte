@@ -15,47 +15,52 @@
 #include "RT_E_CYCLE_gen.cpp"
 #endif
 
+#include "criticalregion.h"
+#include "resource.h"
+
 DEFINE_FIRMWARE_FB(FORTE_RT_E_CYCLE, g_nStringIdRT_E_CYCLE)
 
 const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scm_anDataInputNames[] = {g_nStringIdDT, g_nStringIdDeadline, g_nStringIdWCET};
-
 const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scm_anDataInputTypeIds[] = {g_nStringIdTIME, g_nStringIdTIME, g_nStringIdTIME};
-
 const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scm_anDataOutputNames[] = {g_nStringIdQO};
-
 const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL};
-
-const TForteInt16 FORTE_RT_E_CYCLE::scm_anEIWithIndexes[] = {0, -1};
 const TDataIOID FORTE_RT_E_CYCLE::scm_anEIWith[] = {0, 1, 2, scmWithListDelimiter};
+const TForteInt16 FORTE_RT_E_CYCLE::scm_anEIWithIndexes[] = {0, -1};
 const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scm_anEventInputNames[] = {g_nStringIdSTART, g_nStringIdSTOP};
-
-const TDataIOID FORTE_RT_E_CYCLE::scm_anEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_RT_E_CYCLE::scm_anEOWithIndexes[] = {-1, 0};
+const TForteInt16 FORTE_RT_E_CYCLE::scm_anEOWithIndexes[] = {-1};
 const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scm_anEventOutputNames[] = {g_nStringIdEO};
-
 const SFBInterfaceSpec FORTE_RT_E_CYCLE::scm_stFBInterfaceSpec = {
-  2,  scm_anEventInputNames,  scm_anEIWith,  scm_anEIWithIndexes,
-  1,  scm_anEventOutputNames,  scm_anEOWith, scm_anEOWithIndexes,  3,  scm_anDataInputNames, scm_anDataInputTypeIds,
-  1,  scm_anDataOutputNames, scm_anDataOutputTypeIds,
+  2, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
+  1, scm_anEventOutputNames, nullptr, scm_anEOWithIndexes,
+  3, scm_anDataInputNames, scm_anDataInputTypeIds,
+  1, scm_anDataOutputNames, scm_anDataOutputTypeIds,
   0, nullptr,
   0, nullptr
 };
 
-FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes) :
-            CEventSourceFB( paSrcRes, &scm_stFBInterfaceSpec,  paInstanceNameId){
+FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
+        CEventSourceFB( pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId),
+    var_conn_QO(var_QO),
+    conn_EO(this, 0),
+    conn_DT(nullptr),
+    conn_Deadline(nullptr),
+    conn_WCET(nullptr),
+    conn_QO(this, 0, &var_conn_QO),
+    mTimeListEntry{.mTimedFB = this, .mType = e_Periodic} {
   setEventChainExecutor(&mECEO);
-  mActive = false;
-  mTimeListEntry.mTimeOut = 0;
-  mTimeListEntry.mInterval = 0;
-  mTimeListEntry.mNext = nullptr;
-  mTimeListEntry.mTimedFB = this;
-  mTimeListEntry.mType = e_Periodic;
+};
+
+void FORTE_RT_E_CYCLE::setInitialValues() {
+  var_DT = 0_TIME;
+  var_Deadline = 0_TIME;
+  var_WCET = 0_TIME;
+  var_QO = 0_BOOL;
 }
 
-void FORTE_RT_E_CYCLE::executeEvent(TEventID paEIID){
-  switch(paEIID){
+void FORTE_RT_E_CYCLE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+  switch(paEIID) {
     case cg_nExternalEventID:
-      sendOutputEvent(scm_nEventEOID);
+      sendOutputEvent(scm_nEventEOID, paECET);
       break;
     case scm_nEventSTOPID:
       if(mActive){
@@ -66,12 +71,10 @@ void FORTE_RT_E_CYCLE::executeEvent(TEventID paEIID){
       break;
     case scm_nEventSTARTID:
       if(!mActive){
-        mECEO.setDeadline(Deadline());
-        getTimer().registerTimedFB( &mTimeListEntry, DT());
+        mECEO.setDeadline(var_Deadline);
+        getTimer().registerTimedFB(&mTimeListEntry, var_DT);
         mActive = true;
       }
-      break;
-    default:
       break;
   }
 }
@@ -85,3 +88,77 @@ EMGMResponse FORTE_RT_E_CYCLE::changeFBExecutionState(EMGMCommandType paCommand)
   }
   return eRetVal;
 }
+
+void FORTE_RT_E_CYCLE::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scm_nEventSTARTID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      readData(0, var_DT, conn_DT);
+      readData(1, var_Deadline, conn_Deadline);
+      readData(2, var_WCET, conn_WCET);
+      break;
+    }
+    case scm_nEventSTOPID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+void FORTE_RT_E_CYCLE::writeOutputData(TEventID) {
+}
+
+CIEC_ANY *FORTE_RT_E_CYCLE::getDI(size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_DT;
+    case 1: return &var_Deadline;
+    case 2: return &var_WCET;
+  }
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_RT_E_CYCLE::getDO(size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_QO;
+  }
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_RT_E_CYCLE::getDIO(size_t) {
+  return nullptr;
+}
+
+CEventConnection *FORTE_RT_E_CYCLE::getEOConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_EO;
+  }
+  return nullptr;
+}
+
+CDataConnection **FORTE_RT_E_CYCLE::getDIConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_DT;
+    case 1: return &conn_Deadline;
+    case 2: return &conn_WCET;
+  }
+  return nullptr;
+}
+
+CDataConnection *FORTE_RT_E_CYCLE::getDOConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_QO;
+  }
+  return nullptr;
+}
+
+CInOutDataConnection **FORTE_RT_E_CYCLE::getDIOInConUnchecked(TPortId) {
+  return nullptr;
+}
+
+CInOutDataConnection *FORTE_RT_E_CYCLE::getDIOOutConUnchecked(TPortId) {
+  return nullptr;
+}
+
+

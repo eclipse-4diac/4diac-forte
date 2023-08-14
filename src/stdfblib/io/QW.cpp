@@ -15,24 +15,21 @@
 #include "QW_gen.cpp"
 #endif
 
+#include "criticalregion.h"
+#include "resource.h"
+
 DEFINE_FIRMWARE_FB(FORTE_QW, g_nStringIdQW)
 
 const CStringDictionary::TStringId FORTE_QW::scm_anDataInputNames[] = {g_nStringIdQI, g_nStringIdPARAMS, g_nStringIdOUT};
-
 const CStringDictionary::TStringId FORTE_QW::scm_anDataInputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING, g_nStringIdWORD};
-
 const CStringDictionary::TStringId FORTE_QW::scm_anDataOutputNames[] = {g_nStringIdQO, g_nStringIdSTATUS};
-
 const CStringDictionary::TStringId FORTE_QW::scm_anDataOutputTypeIds[] = {g_nStringIdBOOL, g_nStringIdSTRING};
-
-const TForteInt16 FORTE_QW::scm_anEIWithIndexes[] = {0, 3};
 const TDataIOID FORTE_QW::scm_anEIWith[] = {0, 1, scmWithListDelimiter, 0, 2, scmWithListDelimiter};
+const TForteInt16 FORTE_QW::scm_anEIWithIndexes[] = {0, 3};
 const CStringDictionary::TStringId FORTE_QW::scm_anEventInputNames[] = {g_nStringIdINIT, g_nStringIdREQ};
-
 const TDataIOID FORTE_QW::scm_anEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_QW::scm_anEOWithIndexes[] = {0, 3, -1};
+const TForteInt16 FORTE_QW::scm_anEOWithIndexes[] = {0, 3};
 const CStringDictionary::TStringId FORTE_QW::scm_anEventOutputNames[] = {g_nStringIdINITO, g_nStringIdCNF};
-
 const SFBInterfaceSpec FORTE_QW::scm_stFBInterfaceSpec = {
   2, scm_anEventInputNames, scm_anEIWith, scm_anEIWithIndexes,
   2, scm_anEventOutputNames, scm_anEOWith, scm_anEOWithIndexes,
@@ -42,25 +39,138 @@ const SFBInterfaceSpec FORTE_QW::scm_stFBInterfaceSpec = {
   0, nullptr
 };
 
-void FORTE_QW::executeEvent(TEventID pa_nEIID){
-  QO() = QI();
-  switch(pa_nEIID){
+FORTE_QW::FORTE_QW(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes) :
+        CProcessInterface(pa_poSrcRes, &scm_stFBInterfaceSpec, pa_nInstanceNameId),
+    var_conn_QO(var_QO),
+    var_conn_STATUS(var_STATUS),
+    conn_INITO(this, 0),
+    conn_CNF(this, 1),
+    conn_QI(nullptr),
+    conn_PARAMS(nullptr),
+    conn_OUT(nullptr),
+    conn_QO(this, 0, &var_conn_QO),
+    conn_STATUS(this, 1, &var_conn_STATUS) {
+};
+
+void FORTE_QW::setInitialValues() {
+  var_QI = 0_BOOL;
+  var_PARAMS = ""_STRING;
+  var_OUT = 0_WORD;
+  var_QO = 0_BOOL;
+  var_STATUS = ""_STRING;
+}
+
+void FORTE_QW::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+  switch(paEIID) {
     case scm_nEventINITID:
-      if(true == QI()){
-        QO() = CIEC_BOOL(CProcessInterface::initialise(false)); //initialise as output
+      if (var_QI) {
+        var_QO = CIEC_BOOL(CProcessInterface::initialise(false)); //initialise as output
+      } else {
+        var_QO = CIEC_BOOL(CProcessInterface::deinitialise());
       }
-      else{
-        QO() = CIEC_BOOL(CProcessInterface::deinitialise());
-      }
-      sendOutputEvent(scm_nEventINITOID);
+      sendOutputEvent(scm_nEventINITOID, paECET);
       break;
     case scm_nEventREQID:
-      if(true == QI()){
-        QO() = CIEC_BOOL(CProcessInterface::writeWord());
+      if (var_QI) {
+        var_QO = CIEC_BOOL(CProcessInterface::write(var_OUT));
+      } else {
+        var_QO = false_BOOL;
       }
-      sendOutputEvent(scm_nEventCNFID);
+      sendOutputEvent(scm_nEventCNFID, paECET);
       break;
   }
+}
+
+void FORTE_QW::readInputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scm_nEventINITID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      readData(0, var_QI, conn_QI);
+      readData(1, var_PARAMS, conn_PARAMS);
+      break;
+    }
+    case scm_nEventREQID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      readData(0, var_QI, conn_QI);
+      readData(2, var_OUT, conn_OUT);
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+void FORTE_QW::writeOutputData(TEventID paEIID) {
+  switch(paEIID) {
+    case scm_nEventINITOID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      writeData(0, var_QO, conn_QO);
+      writeData(1, var_STATUS, conn_STATUS);
+      break;
+    }
+    case scm_nEventCNFID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      writeData(0, var_QO, conn_QO);
+      writeData(1, var_STATUS, conn_STATUS);
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+CIEC_ANY *FORTE_QW::getDI(size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_QI;
+    case 1: return &var_PARAMS;
+    case 2: return &var_OUT;
+  }
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_QW::getDO(size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_QO;
+    case 1: return &var_STATUS;
+  }
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_QW::getDIO(size_t) {
+  return nullptr;
+}
+
+CEventConnection *FORTE_QW::getEOConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_INITO;
+    case 1: return &conn_CNF;
+  }
+  return nullptr;
+}
+
+CDataConnection **FORTE_QW::getDIConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_QI;
+    case 1: return &conn_PARAMS;
+    case 2: return &conn_OUT;
+  }
+  return nullptr;
+}
+
+CDataConnection *FORTE_QW::getDOConUnchecked(TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_QO;
+    case 1: return &conn_STATUS;
+  }
+  return nullptr;
+}
+
+CInOutDataConnection **FORTE_QW::getDIOInConUnchecked(TPortId) {
+  return nullptr;
+}
+
+CInOutDataConnection *FORTE_QW::getDIOOutConUnchecked(TPortId) {
+  return nullptr;
 }
 
 

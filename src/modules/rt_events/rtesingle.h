@@ -10,8 +10,8 @@
  *   Alois Zoitl, Gerhard Ebenhofer, Ingo Hegny
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef RTESINGLE_H_
-#define RTESINGLE_H_
+
+#pragma once
 
 #include <funcbloc.h>
 #include <ecet.h>
@@ -24,12 +24,8 @@ class CRTEventSingle: public CFunctionBlock{
 private:
   CEventChainExecutionThread m_oECEO;
   CSyncObject m_oSyncObj;              //!<Lock for protected the RT_E_FB from mutual events
-  //CIEC_TIME *m_poDeadline;
   bool m_bInitialized;
 
-  virtual CIEC_TIME &Deadline() = 0;
-  virtual CIEC_BOOL &QI() = 0;
-  virtual CIEC_BOOL &QO() = 0;
   /*! \brief check if the succeeding EC part needs to be activated.
   *
   * This function makes the assumption that the input event with
@@ -39,9 +35,9 @@ private:
   */
   virtual bool checkActivation(TEventID pa_nEIID) = 0;
 
-  void executeEvent(TEventID pa_nEIID) override {
-    if(0 != pa_nEIID) { //it is not the init event
-      if(m_bInitialized && checkActivation(pa_nEIID)) {
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override {
+    if(paEIID) { //it is not the init event
+      if(m_bInitialized && checkActivation(paEIID)) {
         CEventConnection *eoCon = getEOConUnchecked(1);
         if(eoCon->isConnected()) {
           eoCon->triggerEvent(&m_oECEO);
@@ -49,31 +45,29 @@ private:
         }
       }
     } else { // we got init
-      if(QI() == true) {
+      if(var_QI == true) {
         if(!m_bInitialized) {
           m_oECEO.changeExecutionState(EMGMCommandType::Start);
           m_bInitialized = true;
         }
-        m_oECEO.setDeadline(Deadline());
+        m_oECEO.setDeadline(var_Deadline);
       } else {
         m_oECEO.changeExecutionState(EMGMCommandType::Stop);
         m_bInitialized = false;
       }
-      QO() = QI();
-      sendOutputEvent(0);
+      var_QO = var_QI;
+      sendOutputEvent(0, paECET);
     }
   }
 
 public:
-
-
   CRTEventSingle(CResource *pa_poSrcRes, const SFBInterfaceSpec *pa_pstInterfaceSpec,
-        const CStringDictionary::TStringId pa_nInstanceNameId) :
-   CFunctionBlock( pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId)
-  {
-      m_bInitialized = false;
+                 const CStringDictionary::TStringId pa_nInstanceNameId) :
+          CFunctionBlock(pa_poSrcRes, pa_pstInterfaceSpec, pa_nInstanceNameId) {
   };
-  ~CRTEventSingle() override = default;
+
+  CIEC_BOOL var_QI;
+  CIEC_TIME var_Deadline;
+  CIEC_BOOL var_QO;
 };
 
-#endif /*RTESINGLE_H_*/

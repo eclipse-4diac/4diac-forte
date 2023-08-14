@@ -9,11 +9,19 @@
  * Contributors:
  *   Alois Zoitl, Waldemar Eisenmenger - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _QX_H_
-#define _QX_H_
 
-#include <processinterface.h>
+#pragma once
 
+#include "funcbloc.h"
+#include "forte_bool.h"
+#include "forte_string.h"
+#include "iec61131_functions.h"
+#include "forte_array_common.h"
+#include "forte_array.h"
+#include "forte_array_fixed.h"
+#include "forte_array_variable.h"
+
+#include "processinterface.h"
 
 /*! /brief generic class for QX function blocks providing access to one boolean physical output
  *
@@ -36,57 +44,78 @@
  * TODO a higher flexibility and easier use could be achieve if the base class would be a template parameter. However
  *   currently it is very hard to templatize a function block class.
  */
-class FORTE_QX: public CProcessInterface{
+class FORTE_QX final : public CProcessInterface {
   DECLARE_FIRMWARE_FB(FORTE_QX)
 
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  CIEC_BOOL &QI() {
-    return *static_cast<CIEC_BOOL*>(getDI(0));
-  };
-
-  CIEC_STRING &PARAMS() {
-    return *static_cast<CIEC_STRING*>(getDI(1));
-  };
-
-  CIEC_BOOL &st_OUT() {
-    return *static_cast<CIEC_BOOL*>(getDI(2));
-  };
-
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  CIEC_BOOL &QO() {
-    return *static_cast<CIEC_BOOL*>(getDO(0));
-  };
-
-  CIEC_STRING &STATUS() {
-    return *static_cast<CIEC_STRING*>(getDO(1));
-  };
-
   static const TEventID scm_nEventINITID = 0;
   static const TEventID scm_nEventREQID = 1;
-  static const TForteInt16 scm_anEIWithIndexes[];
   static const TDataIOID scm_anEIWith[];
+  static const TForteInt16 scm_anEIWithIndexes[];
   static const CStringDictionary::TStringId scm_anEventInputNames[];
-
   static const TEventID scm_nEventINITOID = 0;
   static const TEventID scm_nEventCNFID = 1;
+  static const TDataIOID scm_anEOWith[]; 
   static const TForteInt16 scm_anEOWithIndexes[];
-  static const TDataIOID scm_anEOWith[];
   static const CStringDictionary::TStringId scm_anEventOutputNames[];
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
+  void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-  void executeEvent(TEventID pa_nEIID) override;
+  void readInputData(TEventID paEIID) override;
+  void writeOutputData(TEventID paEIID) override;
+  void setInitialValues() override;
 
 public:
-  FUNCTION_BLOCK_CTOR_WITH_BASE_CLASS(FORTE_QX, CProcessInterface){
-  };
+  FORTE_QX(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
 
-  ~FORTE_QX() override = default;
-
+  CIEC_BOOL var_QI;
+  CIEC_STRING var_PARAMS;
+  CIEC_BOOL var_OUT;
+  CIEC_BOOL var_QO;
+  CIEC_STRING var_STATUS;
+  CIEC_BOOL var_conn_QO;
+  CIEC_STRING var_conn_STATUS;
+  CEventConnection conn_INITO;
+  CEventConnection conn_CNF;
+  CDataConnection *conn_QI;
+  CDataConnection *conn_PARAMS;
+  CDataConnection *conn_OUT;
+  CDataConnection conn_QO;
+  CDataConnection conn_STATUS;
+  CIEC_ANY *getDI(size_t) override;
+  CIEC_ANY *getDO(size_t) override;
+  CIEC_ANY *getDIO(size_t) override;
+  CEventConnection *getEOConUnchecked(TPortId) override;
+  CDataConnection **getDIConUnchecked(TPortId) override;
+  CDataConnection *getDOConUnchecked(TPortId) override;
+  CInOutDataConnection **getDIOInConUnchecked(TPortId) override;
+  CInOutDataConnection *getDIOOutConUnchecked(TPortId) override;
+  void evt_INIT(const CIEC_BOOL &pa_QI, const CIEC_STRING &pa_PARAMS, const CIEC_BOOL &pa_OUT, CIEC_BOOL &pa_QO, CIEC_STRING &pa_STATUS) {
+    var_QI = pa_QI;
+    var_PARAMS = pa_PARAMS;
+    var_OUT = pa_OUT;
+    receiveInputEvent(scm_nEventINITID, nullptr);
+    pa_QO = var_QO;
+    pa_STATUS = var_STATUS;
+  }
+  void evt_REQ(const CIEC_BOOL &pa_QI, const CIEC_STRING &pa_PARAMS, const CIEC_BOOL &pa_OUT, CIEC_BOOL &pa_QO, CIEC_STRING &pa_STATUS) {
+    var_QI = pa_QI;
+    var_PARAMS = pa_PARAMS;
+    var_OUT = pa_OUT;
+    receiveInputEvent(scm_nEventREQID, nullptr);
+    pa_QO = var_QO;
+    pa_STATUS = var_STATUS;
+  }
+  void operator()(const CIEC_BOOL &pa_QI, const CIEC_STRING &pa_PARAMS, const CIEC_BOOL &pa_OUT, CIEC_BOOL &pa_QO, CIEC_STRING &pa_STATUS) {
+    evt_INIT(pa_QI, pa_PARAMS, pa_OUT, pa_QO, pa_STATUS);
+  }
 };
 
-#endif //close the ifdef sequence from the beginning of the file
+
+

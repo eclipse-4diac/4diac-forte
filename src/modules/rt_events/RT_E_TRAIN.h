@@ -24,29 +24,23 @@
 #include "forte_array_variable.h"
 
 
-class FORTE_RT_E_TRAIN: public CCompositeFB {
+class FORTE_RT_E_TRAIN final : public CCompositeFB {
   DECLARE_FIRMWARE_FB(FORTE_RT_E_TRAIN)
 
 private:
   static const CStringDictionary::TStringId scm_anDataInputNames[];
   static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
-  
   static const CStringDictionary::TStringId scm_anDataOutputNames[];
   static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
-  
   static const TEventID scm_nEventSTARTID = 0;
   static const TEventID scm_nEventSTOPID = 1;
-  
   static const TDataIOID scm_anEIWith[];
   static const TForteInt16 scm_anEIWithIndexes[];
   static const CStringDictionary::TStringId scm_anEventInputNames[];
-  
   static const TEventID scm_nEventEOID = 0;
-  
   static const TDataIOID scm_anEOWith[]; 
   static const TForteInt16 scm_anEOWithIndexes[];
   static const CStringDictionary::TStringId scm_anEventOutputNames[];
-  
 
   static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
@@ -58,8 +52,9 @@ private:
   static const SCFB_FBFannedOutConnectionData scm_astFannedOutDataConnections[];
   static const SCFB_FBNData scm_stFBNData;
 
-  void readInputData(TEventID pa_nEIID) override;
-  void writeOutputData(TEventID pa_nEIID) override;
+  void readInputData(TEventID paEIID) override;
+  void writeOutputData(TEventID paEIID) override;
+  void setInitialValues() override;
 
 public:
   FORTE_RT_E_TRAIN(const CStringDictionary::TStringId pa_nInstanceNameId, CResource *pa_poSrcRes);
@@ -69,7 +64,6 @@ public:
   CIEC_TIME var_Deadline;
   CIEC_TIME var_WCET;
   CIEC_UINT var_CV;
-  
   CIEC_UINT var_conn_CV;
   CEventConnection conn_EO;
   CDataConnection *conn_DT;
@@ -77,13 +71,14 @@ public:
   CDataConnection *conn_Deadline;
   CDataConnection *conn_WCET;
   CDataConnection conn_CV;
-  
   CIEC_ANY *getDI(size_t) override;
   CIEC_ANY *getDO(size_t) override;
+  CIEC_ANY *getDIO(size_t) override;
   CEventConnection *getEOConUnchecked(TPortId) override;
   CDataConnection **getDIConUnchecked(TPortId) override;
   CDataConnection *getDOConUnchecked(TPortId) override;
-  
+  CInOutDataConnection **getDIOInConUnchecked(TPortId) override;
+  CInOutDataConnection *getDIOOutConUnchecked(TPortId) override;
   void evt_START(const CIEC_TIME &pa_DT, const CIEC_UINT &pa_N, const CIEC_TIME &pa_Deadline, const CIEC_TIME &pa_WCET, CIEC_UINT &pa_CV) {
     var_DT = pa_DT;
     var_N = pa_N;
@@ -100,11 +95,9 @@ public:
     receiveInputEvent(scm_nEventSTOPID, nullptr);
     pa_CV = var_CV;
   }
-  
   void operator()(const CIEC_TIME &pa_DT, const CIEC_UINT &pa_N, const CIEC_TIME &pa_Deadline, const CIEC_TIME &pa_WCET, CIEC_UINT &pa_CV) {
     evt_START(pa_DT, pa_N, pa_Deadline, pa_WCET, pa_CV);
   }
-  
 };
 
 
