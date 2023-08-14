@@ -126,6 +126,13 @@ class CCompositeFB: public CFunctionBlock {
     CFunctionBlock *getFB(forte::core::TNameIdentifier::CIterator &paNameListIt) override;
 #endif
 
+  protected:
+    CDataConnection *getIn2IfConUnchecked(TPortId paIndex) {
+      return mIn2IfDConns[paIndex];
+    }
+
+    virtual void readInternal2InterfaceOutputData(TEventID paEOID) = 0;
+
   private:
     void executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET) override;
 
@@ -136,7 +143,6 @@ class CCompositeFB: public CFunctionBlock {
     void createDataConnections();
     void prepareIf2InDataCons();
     void setParams();
-    void sendInternal2InterfaceOutputEvent(TEventID paEOID, CEventChainExecutionThread *paECET);
 
     //!Acquire the functionblock for a given function block number this may be a contained fb, an adapter, or the composite itself.
     CFunctionBlock *getFunctionBlock(int paFBNum);

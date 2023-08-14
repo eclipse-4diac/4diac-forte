@@ -42,6 +42,7 @@ private:
 
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;
+  void readInternal2InterfaceOutputData(TEventID paEOID) override;
 
 public:
   FORTE_E_RTimeOut(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);

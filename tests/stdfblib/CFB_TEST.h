@@ -60,6 +60,7 @@ private:
 
   void readInputData(TEventID paEI) override;
   void writeOutputData(TEventID paEO) override;
+  void readInternal2InterfaceOutputData(TEventID paEOID) override;
 
 public:
   COMPOSITE_FUNCTION_BLOCK_CTOR(FORTE_CFB_TEST){

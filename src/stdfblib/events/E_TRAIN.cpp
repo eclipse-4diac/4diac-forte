@@ -119,6 +119,18 @@ void FORTE_E_TRAIN::writeOutputData(TEventID paEIID) {
   }
 }
 
+void FORTE_E_TRAIN::readInternal2InterfaceOutputData(TEventID paEOID) {
+  switch(paEOID) {
+    case scmEventEOID: {
+      RES_DATA_CON_CRITICAL_REGION();
+      if(CDataConnection *conn = getIn2IfConUnchecked(0); conn) { conn->readData(var_CV); }
+      break;
+    }
+    default:
+      break;
+  }
+}
+
 CIEC_ANY *FORTE_E_TRAIN::getDI(size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_DT;

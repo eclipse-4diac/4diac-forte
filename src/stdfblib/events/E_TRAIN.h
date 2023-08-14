@@ -39,7 +39,7 @@ private:
   static const TForteInt16 scmEIWithIndexes[];
   static const CStringDictionary::TStringId scmEventInputNames[];
   static const TEventID scmEventEOID = 0;
-  static const TDataIOID scmEOWith[]; 
+  static const TDataIOID scmEOWith[];
   static const TForteInt16 scmEOWithIndexes[];
   static const CStringDictionary::TStringId scmEventOutputNames[];
 
@@ -55,6 +55,7 @@ private:
 
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;
+  void readInternal2InterfaceOutputData(TEventID paEOID) override;
 
 public:
   FORTE_E_TRAIN(const CStringDictionary::TStringId paInstanceNameId, CResource *paSrcRes);

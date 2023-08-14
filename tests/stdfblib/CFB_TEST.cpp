@@ -101,3 +101,8 @@ void FORTE_CFB_TEST::writeOutputData(TEventID) {
   writeData(0, *mDOs[0], mDOConns[0]);
 }
 
+void FORTE_CFB_TEST::readInternal2InterfaceOutputData(TEventID) {
+  RES_DATA_CON_CRITICAL_REGION();
+  if(CDataConnection *conn = getIn2IfConUnchecked(0); conn) { conn->readData(*mDOs[0]); }
+}
+

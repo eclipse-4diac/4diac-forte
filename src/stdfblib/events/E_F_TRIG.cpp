@@ -86,6 +86,9 @@ void FORTE_E_F_TRIG::readInputData(TEventID paEIID) {
 void FORTE_E_F_TRIG::writeOutputData(TEventID) {
 }
 
+void FORTE_E_F_TRIG::readInternal2InterfaceOutputData(TEventID) {
+}
+
 CIEC_ANY *FORTE_E_F_TRIG::getDI(size_t paIndex) {
   switch(paIndex) {
     case 0: return &var_QI;

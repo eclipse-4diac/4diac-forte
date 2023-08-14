@@ -67,6 +67,9 @@ void FORTE_E_RTimeOut::readInputData(TEventID) {
 void FORTE_E_RTimeOut::writeOutputData(TEventID) {
 }
 
+void FORTE_E_RTimeOut::readInternal2InterfaceOutputData(TEventID) {
+}
+
 CIEC_ANY *FORTE_E_RTimeOut::getDI(size_t) {
   return nullptr;
 }

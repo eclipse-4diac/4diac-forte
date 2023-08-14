@@ -54,6 +54,7 @@ private:
 
   void readInputData(TEventID paEIID) override;
   void writeOutputData(TEventID paEIID) override;
+  void readInternal2InterfaceOutputData(TEventID paEOID) override;
   void setInitialValues() override;
 
 public:

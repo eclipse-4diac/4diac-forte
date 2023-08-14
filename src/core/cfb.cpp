@@ -175,34 +175,15 @@ CIEC_ANY *CCompositeFB::getVar(CStringDictionary::TStringId *paNameList,
 
 void CCompositeFB::executeEvent(TEventID paEIID, CEventChainExecutionThread * const paECET){
   if(cgInternal2InterfaceMarker & paEIID){
-    sendInternal2InterfaceOutputEvent(static_cast<TEventID>(paEIID & cgInternal2InterfaceRemovalMask), paECET);
+    TEventID internalEvent = static_cast<TEventID>(paEIID & cgInternal2InterfaceRemovalMask);
+    readInternal2InterfaceOutputData(internalEvent);
+    sendOutputEvent(internalEvent, paECET);
   }
   else{
     if(paEIID < mInterfaceSpec->mNumEIs && nullptr != mInterface2InternalEventCons[paEIID]){
       mInterface2InternalEventCons[paEIID]->triggerEvent(paECET);
     }
   }
-}
-
-void CCompositeFB::sendInternal2InterfaceOutputEvent(TEventID paEOID, CEventChainExecutionThread *paECET){
-  //handle sampling of internal 2 interface data connections
-  if((paEOID < mInterfaceSpec->mNumEOs) && (nullptr != mInterfaceSpec->mEOWithIndexes) &&
-    (-1 != mInterfaceSpec->mEOWithIndexes[paEOID])){
-      const TDataIOID *poEOWithStart =
-          &(mInterfaceSpec->mEOWith[mInterfaceSpec->mEOWithIndexes[paEOID]]);
-
-      // TODO think on this lock
-      {
-        RES_DATA_CON_CRITICAL_REGION();
-        for(int i = 0; poEOWithStart[i] != scmWithListDelimiter; ++i){
-          if(nullptr != mIn2IfDConns[poEOWithStart[i]]){
-            mIn2IfDConns[poEOWithStart[i]]->readData(*getDO(poEOWithStart[i]));
-          }
-        }
-      }
-  }
-
-  sendOutputEvent(paEOID, paECET);
 }
 
 bool CCompositeFB::createInternalFBs(){
