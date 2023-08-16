@@ -13,7 +13,7 @@
  *    Michael Hofmann - rework communication infrastructure
  *******************************************************************************/
 
-#include <fortenew.h>
+#include "fortenew.h"
 #include "comlayersmanager.h"
 #include <string.h>
 
