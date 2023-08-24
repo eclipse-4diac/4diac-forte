@@ -1795,8 +1795,7 @@ BOOST_AUTO_TEST_CASE(func_from_little_endian) {
   BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(toLittleUlint) == 17);
 }
 
-BOOST_AUTO_TEST_CASE(func_to_big_endian)
-{
+BOOST_AUTO_TEST_CASE(func_to_big_endian) {
   CIEC_SINT sint(10);
   CIEC_INT inte(11);
   CIEC_DINT dint(12);
@@ -2297,6 +2296,27 @@ BOOST_AUTO_TEST_CASE(ATAN2_function_REAL_LREAL_mixed, *boost::unit_test::toleran
 
   result = func_ATAN2(paramY, paramX);
   BOOST_TEST(static_cast<CIEC_LREAL::TValueType>(result) == 1.1071487177940904);
+}
+
+BOOST_AUTO_TEST_CASE(overloaded_to_lint_function) {
+  CIEC_LINT result;
+
+  result = func_TO_LINT(1_SINT);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(result) == 1);
+  result = func_TO_LINT(2_INT);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(result) == 2);
+  result = func_TO_LINT(3_DINT);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(result) == 3);
+  result = func_TO_LINT(4_LINT);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(result) == 4);
+  result = func_TO_LINT(5_USINT);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(result) == 5);
+  result = func_TO_LINT(6_UINT);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(result) == 6);
+  result = func_TO_LINT(7_UDINT);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(result) == 7);
+  result = func_TO_LINT(8_ULINT);
+  BOOST_TEST(static_cast<CIEC_LINT::TValueType>(result) == 8);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
